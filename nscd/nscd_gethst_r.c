@@ -76,7 +76,7 @@ __nscd_gethostbyaddr_r (const char *addr, int len, int type,
   if (!((len == INADDRSZ && type == AF_INET)
 	|| (len == IN6ADDRSZ && type == AF_INET6)))
     /* LEN and TYPE do not match.  */
-    return 1;
+    return -1;
 
   reqtype = type == AF_INET6 ? GETHOSTBYADDRv6 : GETHOSTBYADDR;
 
@@ -127,7 +127,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   if (sock == -1)
     {
       __nss_not_use_nscd_group = 1;
-      return 1;
+      return -1;
     }
 
   req.version = NSCD_VERSION;
@@ -137,21 +137,21 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   if (nbytes != sizeof (request_header))
     {
       __close (sock);
-      return 1;
+      return -1;
     }
 
   nbytes = __write (sock, key, req.key_len);
   if (nbytes != req.key_len)
     {
       __close (sock);
-      return 1;
+      return -1;
     }
 
   nbytes = __read (sock, &hst_resp, sizeof (hst_response_header));
   if (nbytes != sizeof (hst_response_header))
     {
       __close (sock);
-      return 1;
+      return -1;
     }
 
   if (hst_resp.found == -1)
@@ -159,7 +159,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       /* The daemon does not cache this database.  */
       __close (sock);
       __nss_not_use_nscd_hosts = 1;
-      return 1;
+      return -1;
     }
 
   if (hst_resp.found == 1)
@@ -191,7 +191,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	no_room:
 	  __set_errno (ERANGE);
 	  __close (sock);
-	  return -1;
+	  return ERANGE;
 	}
       cp += align1;
 
@@ -270,7 +270,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       if (__readv (sock, vec, n) != total_len)
 	{
 	  __close (sock);
-	  return 1;
+	  return -1;
 	}
 
       /*  Now we also can read the aliases.  */
@@ -291,7 +291,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       if (__read (sock, resultbuf->h_aliases[0], total_len) != total_len)
 	{
 	  __close (sock);
-	  return 1;
+	  return -1;
 	}
 
       __close (sock);
@@ -305,6 +305,6 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       __close (sock);
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      return -1;
+      return ENOENT;
     }
 }

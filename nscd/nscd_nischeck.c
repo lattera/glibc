@@ -20,7 +20,7 @@
 /* nscd_nischeck: Check, if everybody has read permissions for NIS+ table.
    Return value:
     0: Everybody can read the NIS+ table
-    1: Only authenticated Users could read the NIS+ table */
+    1: Only authenticated users could read the NIS+ table */
 
 #include <argp.h>
 #include <error.h>
@@ -86,7 +86,7 @@ main (int argc, char **argv)
 static void
 print_version (FILE *stream, struct argp_state *state)
 {
-  fprintf (stream, "nscd_checknis (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, "nscd_nischeck (GNU %s) %s\n", PACKAGE, VERSION);
   fprintf (stream, gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\

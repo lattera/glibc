@@ -1268,6 +1268,57 @@ The host database contains an entry for the name, but it doesn't have an
 associated Internet address.
 @end table
 
+The lookup functions above all have one in common: they are not
+reentrant and therefore unusable in multi-threaded applications.
+Therefore provides the GNU C library a new set of functions which can be
+used in this context.
+
+@comment netdb.h
+@comment GNU
+@deftypefun int gethostbyname_r (const char *restrict @var{name}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
+The @code{gethostbyname_r} function returns information about the host
+named @var{name}.  The caller must pass a pointer to an object of type
+@code{struct hostent} in the @var{result_buf} parameter.  In addition
+the function may need extra buffer space and the caller must pass an
+pointer and the size of the buffer in the @var{buf} and @var{buflen}
+parameters.
+
+A pointer to the buffer, in which the result is stored, is available in
+@code{*@var{result}} after the function call successfully returned.
+Success is signalled by a zero return value.  If the function failed the
+return value is an error number.  In addition to the errors defined for
+@code{gethostbyname} it can also be @code{ERANGE}.  In this case the
+call should be repeated with a larger buffer.  Additional error
+information is not stored in the global variable @code{h_errno} but
+instead in the object pointed to by @var{h_errnop}.
+@end deftypefun
+
+@comment netdb.h
+@comment GNU
+@deftypefun int gethostbyname2_r (const char *@var{name}, int @var{af}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
+The @code{gethostbyname2_r} function is like @code{gethostbyname_r}, but
+allows the caller to specify the desired address family (e.g.@:
+@code{AF_INET} or @code{AF_INET6}) for the result.
+@end deftypefun
+
+@comment netdb.h
+@comment GNU
+@deftypefun int gethostbyaddr_r (const char *@var{addr}, int @var{length}, int @var{format}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
+The @code{gethostbyaddr_r} function returns information about the host
+with Internet address @var{addr}.  The parameter @var{addr} is not
+really a pointer to char - it can be a pointer to an IPv4 or an IPv6
+address. The @var{length} argument is the size (in bytes) of the address
+at @var{addr}.  @var{format} specifies the address format; for an IPv4
+Internet address, specify a value of @code{AF_INET}; for an IPv6
+Internet address, use @code{AF_INET6}.
+
+Similar to the @code{gethostbyname_r} function, the caller must provide
+buffers for the result and memory used internally.  In case of success
+the funciton returns zero.  Otherwise the value is an error number where
+@code{ERANGE} has the special meaning that the caller-provided buffer is
+too small.
+@end deftypefun
+
 You can also scan the entire hosts database one entry at a time using
 @code{sethostent}, @code{gethostent}, and @code{endhostent}.  Be careful
 in using these functions, because they are not reentrant.

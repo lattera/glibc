@@ -1,5 +1,25 @@
 1999-06-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nss/getXXbyYY_r.c: Return error code not -1.
+	* nss/getXXent_r.c: Likewise.
+	* nss/getXXbyYY.c: Expect return alue to be ERANGE if buffer is too
+	small.
+	* nscd/nscd_getgr_r.c: Return -1 in case nscd is not available and
+	value > 0 for error.
+	* nscd/nscd_gethst_r.c: Likewise.
+	* nscd/nscd_getpw_r.c: Likewise.
+
+1999-06-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/bits/ioctl-types.h: Add missing line
+	disciplines.
+
+1999-06-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/nscd_nischeck.c: Fix typos.
+
+1999-06-17  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Don't fail
 	always when oact is NULL.
 	Patch by Christian Meder <meder@isr.uni-stuttgart.de>.

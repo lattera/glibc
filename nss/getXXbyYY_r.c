@@ -122,7 +122,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
     {
       *h_errnop = NETDB_INTERNAL;
       *result = NULL;
-      return -1;
+      return errno;
     }
 # define resbuf (*resbuf)
 # include "digits_dots.c"
@@ -137,7 +137,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
     {
       nscd_status = NSCD_NAME (ADD_VARIABLES, resbuf, buffer, buflen
 			       H_ERRNO_VAR);
-      if (nscd_status < 1)
+      if (nscd_status >= 0)
 	{
 	  *result = nscd_status == 0 ? resbuf : NULL;
 	  return nscd_status;
@@ -162,7 +162,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	    {
 	      *h_errnop = NETDB_INTERNAL;
 	      *result = NULL;
-	      return -1;
+	      return errno;
 	    }
 #endif /* need _res */
 #ifdef NEED__RES_HCONF
@@ -205,7 +205,7 @@ done:
 #ifdef POSTPROCESS
   POSTPROCESS;
 #endif
-  return status == NSS_STATUS_SUCCESS ? 0 : -1;
+  return status == NSS_STATUS_SUCCESS ? 0 : errno;
 }
 
 #define do_weak_alias(n1, n2) weak_alias (n1, (n2))

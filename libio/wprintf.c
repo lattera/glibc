@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdarg.h>
+#include <stdio.h>
 #include <wchar.h>
 
 /* Write formatted output to stdout from the format string FORMAT.  */

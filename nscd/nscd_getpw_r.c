@@ -42,7 +42,7 @@ __nscd_getpwnam_r (const char *name, struct passwd *resultbuf, char *buffer,
 		   size_t buflen)
 {
   if (name == NULL)
-    return 1;
+    return -1;
 
   return nscd_getpw_r (name, strlen (name) + 1, GETPWBYNAME, resultbuf,
 		       buffer, buflen);
@@ -100,7 +100,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   if (sock == -1)
     {
       __nss_not_use_nscd_passwd = 1;
-      return 1;
+      return -1;
     }
 
   req.version = NSCD_VERSION;
@@ -110,21 +110,21 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   if (nbytes != sizeof (request_header))
     {
       __close (sock);
-      return 1;
+      return -1;
     }
 
   nbytes = __write (sock, key, keylen);
   if (nbytes != keylen)
     {
       __close (sock);
-      return 1;
+      return -1;
     }
 
   nbytes = __read (sock, &pw_resp, sizeof (pw_response_header));
   if (nbytes != sizeof (pw_response_header))
     {
       __close (sock);
-      return 1;
+      return -1;
     }
 
   if (pw_resp.found == -1)
@@ -132,7 +132,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       /* The daemon does not cache this database.  */
       __close (sock);
       __nss_not_use_nscd_passwd = 1;
-      return 1;
+      return -1;
     }
 
   if (pw_resp.found == 1)
@@ -146,7 +146,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	{
 	  __set_errno (ERANGE);
 	  __close (sock);
-	  return -1;
+	  return ERANGE;
 	}
 
       /* Set the information we already have.  */
@@ -172,13 +172,13 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 
       __close (sock);
 
-      return nbytes == total ? 0 : 1;
+      return nbytes == total ? 0 : -1;
     }
   else
     {
       __close (sock);
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      return -1;
+      return ENOENT;
     }
 }

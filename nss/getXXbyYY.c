@@ -114,12 +114,13 @@ FUNCTION_NAME (ADD_PARAMS)
     }
 
   while (buffer != NULL
-	 && INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &resbuf, buffer,
-				       buffer_size, &result H_ERRNO_VAR) != 0
+	 && (INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &resbuf, buffer,
+					buffer_size, &result H_ERRNO_VAR)
+	     == ERANGE)
 #ifdef NEED_H_ERRNO
 	 && h_errno_tmp == NETDB_INTERNAL
 #endif
-	 && errno == ERANGE)
+	 )
     {
       char *new_buf;
       buffer_size += BUFLEN;

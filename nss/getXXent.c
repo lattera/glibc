@@ -85,11 +85,11 @@ GETFUNC_NAME (void)
 
   while (buffer != NULL
 	 && INTERNAL (REENTRANT_GETNAME) (&resbuf, buffer, buffer_size, &result
-					  H_ERRNO_VAR) != 0
+					  H_ERRNO_VAR) == ERANGE
 #ifdef NEED_H_ERRNO
 	 && h_errno == NETDB_INTERNAL
 #endif
-	 && errno == ERANGE)
+	 )
     {
       char *new_buf;
       buffer_size += BUFLEN;

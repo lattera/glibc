@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -228,7 +228,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
     {
       __set_h_errno (NETDB_INTERNAL);
       *result = NULL;
-      return -1;
+      return errno;
     }
 #endif /* need _res */
 
@@ -288,7 +288,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
   __libc_lock_unlock (lock);
 
   *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
-  return status == NSS_STATUS_SUCCESS ? 0 : -1;
+  return status == NSS_STATUS_SUCCESS ? 0 : errno;
 }
 #define do_weak_alias(n1, n2) weak_alias (n1, n2)
 do_weak_alias (INTERNAL (REENTRANT_GETNAME), REENTRANT_GETNAME)

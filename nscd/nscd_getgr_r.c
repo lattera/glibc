@@ -102,7 +102,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   if (sock == -1)
     {
       __nss_not_use_nscd_group = 1;
-      return 1;
+      return -1;
     }
 
   req.version = NSCD_VERSION;
@@ -117,14 +117,14 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   if (__writev (sock, vec, 2) != sizeof (request_header) + keylen)
     {
       __close (sock);
-      return 1;
+      return -1;
     }
 
   nbytes = __read (sock, &gr_resp, sizeof (gr_response_header));
   if (nbytes != sizeof (gr_response_header))
     {
       __close (sock);
-      return 1;
+      return -1;
     }
 
   if (gr_resp.found == -1)
@@ -132,7 +132,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       /* The daemon does not cache this database.  */
       __close (sock);
       __nss_not_use_nscd_group = 1;
-      return 1;
+      return -1;
     }
 
   if (gr_resp.found == 1)
@@ -153,7 +153,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	no_room:
 	  __set_errno (ERANGE);
 	  __close (sock);
-	  return -1;
+	  return ERANGE;
 	}
 
       p += align;
@@ -186,7 +186,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       if (__readv (sock, vec, 2) != total_len)
 	{
 	  __close (sock);
-	  return 1;
+	  return -1;
 	}
 
       /* Clear the terminating entry.  */
@@ -209,7 +209,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	  __close (sock);
 	  /* The `errno' to some value != ERANGE.  */
 	  __set_errno (ENOENT);
-	  return -1;
+	  return ENOENT;
 	}
 
       __close (sock);
@@ -220,6 +220,6 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       __close (sock);
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      return -1;
+      return ENOENT;
     }
 }
