@@ -27,9 +27,9 @@ use @var{errno}.
                                   different threads.
 * Threads and Signal Handling:: Why you should avoid mixing the two, and
                                   how to do it if you must.
-* Threads and Fork::            Interactions between threads and the 
+* Threads and Fork::            Interactions between threads and the
                                   @code{fork} function.
-* Streams and Fork::            Interactions between stdio streams and 
+* Streams and Fork::            Interactions between stdio streams and
                                   @code{fork}.
 * Miscellaneous Thread Functions:: A grab bag of utility routines.
 @end menu
@@ -595,6 +595,25 @@ thread if the mutex is already locked by another thread (or by the
 calling thread in the case of a ``fast'' mutex). Instead,
 @code{pthread_mutex_trylock} returns immediately with the error code
 @code{EBUSY}.
+@end deftypefun
+
+@comment pthread.h
+@comment POSIX
+@deftypefun int pthread_mutex_timedlock (pthread_mutex_t *@var{mutex}, const struct timespec *@var{abstime})
+The @code{pthread_mutex_timedlock} is similar to the
+@code{pthread_mutex_lock} function but instead of blocking for in
+indefinite time if the mutex is locked by another thread, it returns
+when the time specified in @var{abstime} is reached.
+
+This function can only be used on standard (``timed'') and ``error
+checking'' mutexes.  It behaves just like @code{pthread_mutex_lock} for
+all other types.
+
+If the mutex is successfully locked, the function returns zero.  If the
+time specified in @var{abstime} is reached without the mutex being locked,
+@code{ETIMEDOUT} is returned.
+
+This function was introduced in the POSIX.1d revision of the POSIX standard.
 @end deftypefun
 
 @comment pthread.h
@@ -1254,7 +1273,7 @@ interaction between @code{fork} and some library features like
 When @code{fork} is called by one of the threads of a process, it creates a new
 process which is copy of the  calling process. Effectively, in addition to
 copying certain system objects, the function takes a snapshot of the memory
-areas of the parent process, and creates identical areas in the child. 
+areas of the parent process, and creates identical areas in the child.
 To make matters more complicated, with threads it's possible for two or more
 threads to concurrently call fork to create two or more child processes.
 
@@ -1311,7 +1330,7 @@ Registering a triplet of handlers is an atomic operation with respect to fork.
 If new handlers are registered at about the same time as a fork occurs, either
 all three handlers will be called, or none of them will be called.
 
-The handlers are inherited by the child process, and there is no 
+The handlers are inherited by the child process, and there is no
 way to remove them, short of using @code{exec} to load a new
 pocess image.
 
@@ -1324,7 +1343,7 @@ are not running in the child process. Thus, if a mutex is locked by a
 thread other than the thread calling @code{fork}, that mutex will remain
 locked forever in the child process, possibly blocking the execution of
 the child process. Or if some shared data, such as a linked list, was in the
-middle of being updated by a thread in the parent process, the child 
+middle of being updated by a thread in the parent process, the child
 will get a copy of the incompletely updated data which it cannot use.
 
 To avoid this, install handlers with @code{pthread_atfork} as follows: have the
@@ -1363,7 +1382,7 @@ ensure this is to use @code{flockfile} to lock the stream prior to calling
 @code{fork} and then unlock it with @code{funlockfile} inside the parent
 process, provided that the parent's threads properly honor these locks.
 Nothing special needs to be done in the child process, since the library
-internally resets all stream locks. 
+internally resets all stream locks.
 
 Note that the stream locks are not shared between the parent and child.
 For example, even if you ensure that, say, the stream @code{stdout} is properly
