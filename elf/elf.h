@@ -363,8 +363,8 @@ typedef struct
 #define SHF_MASKPROC	     0xf0000000	/* Processor-specific */
 #define SHF_ORDERED	     (1 << 30)	/* Special ordering requirement
 					   (Solaris).  */
-#define SHF_EXCLUDE	     (1 << 31)	/* Section is excluded unless refereced
-					   or allocated (Solaris).  */
+#define SHF_EXCLUDE	     (1 << 31)	/* Section is excluded unless
+					   referenced or allocated (Solaris).*/
 
 /* Section group handling.  */
 #define GRP_COMDAT	0x1		/* Mark group as COMDAT.  */
