@@ -82,10 +82,7 @@ nrl_domainname (void)
 				    &herror))
 	    {
 	      if (herror == NETDB_INTERNAL && errno == ERANGE)
-		{
-		  tmpbuflen *= 2;
-		  tmpbuf = alloca (tmpbuflen);
-		}
+		tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);
 	      else
 		break;
 	    }
@@ -97,10 +94,7 @@ nrl_domainname (void)
 	      /* The name contains no domain information.  Use the name
 		 now to get more information.  */
 	      while (__gethostname (tmpbuf, tmpbuflen))
-		{
-		  tmpbuflen *= 2;
-		  tmpbuf = alloca (tmpbuflen);
-		}
+		tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);
 
 	      if ((c = strchr (tmpbuf, '.')))
 		domain = __strdup (++c);
@@ -113,10 +107,8 @@ nrl_domainname (void)
 					    &h, &herror))
 		    {
 		      if (herror == NETDB_INTERNAL && errno == ERANGE)
-			{
-			  tmpbuflen *= 2;
-			  tmpbuf = alloca (tmpbuflen);
-			}
+			tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+						2 * tmpbuflen);
 		      else
 			break;
 		    }
@@ -135,10 +127,8 @@ nrl_domainname (void)
 						tmpbuflen, &h, &herror))
 			{
 			  if (herror == NETDB_INTERNAL && errno == ERANGE)
-			    {
-			      tmpbuflen *= 2;
-			      tmpbuf = alloca (tmpbuflen);
-			    }
+			    tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+						    2 * tmpbuflen);
 			  else
 			    break;
 			}
@@ -213,10 +203,8 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 			if (herrno == NETDB_INTERNAL)
 			  {
 			    if (errno == ERANGE)
-			      {
-				tmpbuflen *= 2;
-				tmpbuf = alloca (tmpbuflen);
-			      }
+			      tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+						      2 * tmpbuflen);
 			    else
 			      {
 				__set_h_errno (herrno);
@@ -238,10 +226,8 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 					      &h, &herrno))
 		      {
 			if (errno == ERANGE)
-			  {
-			    tmpbuflen *= 2;
-			    tmpbuf = alloca (tmpbuflen);
-			  }
+			  tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+						  2 * tmpbuflen);
 			else
 			  {
 			    break;
@@ -384,10 +370,8 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		if (herrno == NETDB_INTERNAL)
 		  {
 		    if (errno == ERANGE)
-		      {
-			tmpbuflen *= 2;
-			tmpbuf = __alloca (tmpbuflen);
-		      }
+		      tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+					      2 * tmpbuflen);
 		    else
 		      {
 			__set_errno (serrno);

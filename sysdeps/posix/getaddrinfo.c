@@ -50,6 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/un.h>
 #include <sys/utsname.h>
 #include <net/if.h>
+#include <nsswitch.h>
 
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
@@ -269,12 +270,11 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
   int i, herrno;						\
   size_t tmpbuflen;						\
   struct hostent th;						\
-  char *tmpbuf;							\
+  char *tmpbuf = NULL;							\
   tmpbuflen = 512;						\
   no_data = 0;							\
   do {								\
-    tmpbuflen *= 2;						\
-    tmpbuf = __alloca (tmpbuflen);				\
+    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);	\
     rc = __gethostbyname2_r (name, _family, &th, tmpbuf,	\
          tmpbuflen, &h, &herrno);				\
   } while (rc == ERANGE && herrno == NETDB_INTERNAL);		\
@@ -295,7 +295,7 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
       for (i = 0; h->h_addr_list[i]; i++)			\
 	{							\
 	  if (*pat == NULL) {					\
-	    *pat = __alloca (sizeof(struct gaih_addrtuple));	\
+	    *pat = __alloca (sizeof (struct gaih_addrtuple));	\
 	    (*pat)->scopeid = 0;				\
 	  }							\
 	  (*pat)->next = NULL;					\
@@ -306,6 +306,59 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
 	}							\
     }								\
  }
+
+#define gethosts2(_family, _type)				\
+ {								\
+  int i, herrno;						\
+  size_t tmpbuflen;						\
+  struct hostent th;						\
+  char *tmpbuf = NULL;						\
+  tmpbuflen = 512;						\
+  no_data = 0;							\
+  do {								\
+    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);	\
+    rc = 0;							\
+    status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf,	\
+           tmpbuflen, &rc, &herrno));			        \
+  } while (rc == ERANGE && herrno == NETDB_INTERNAL);		\
+  if (status == NSS_STATUS_SUCCESS && rc == 0)			\
+    h = &th;							\
+  else								\
+    h = NULL;							\
+  if (rc != 0)							\
+    {								\
+      if (herrno == NETDB_INTERNAL)				\
+	{							\
+	  __set_h_errno (herrno);				\
+	  return -EAI_SYSTEM;					\
+	}							\
+      if (herrno == TRY_AGAIN)					\
+	no_data = EAI_AGAIN;					\
+      else							\
+	no_data = herrno == NO_DATA;				\
+    }								\
+  else if (h != NULL)						\
+    {								\
+      for (i = 0; h->h_addr_list[i]; i++)			\
+	{							\
+	  if (*pat == NULL) {					\
+	    *pat = __alloca (sizeof (struct gaih_addrtuple));	\
+	    (*pat)->scopeid = 0;				\
+	  }							\
+	  (*pat)->next = NULL;					\
+	  (*pat)->family = _family;				\
+	  memcpy ((*pat)->addr, h->h_addr_list[i],		\
+		 sizeof(_type));				\
+	  pat = &((*pat)->next);				\
+	}							\
+    }								\
+ }
+
+typedef enum nss_status (*nss_gethostbyname2_r)
+  (const char *name, int af, struct hostent *host,
+   char *buffer, size_t buflen, int *errnop,
+   int *h_errnop);
+extern service_user *__nss_hosts_database attribute_hidden;
 
 static int
 gaih_inet (const char *name, const struct gaih_service *service,
@@ -488,7 +541,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  struct hostent *h;
 	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
-	  int no_inet6_data;
+	  int no_inet6_data = 0;
 	  int old_res_options = _res.options;
 
 	  /* If we are looking for both IPv4 and IPv6 address we don't
@@ -496,16 +549,64 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	     addresses to IPv6 addresses.  Currently this is decided
 	     by setting the RES_USE_INET6 bit in _res.options.  */
 	  if (req->ai_family == AF_UNSPEC)
-	    _res.options &= ~RES_USE_INET6;
+	    {
+	      service_user *nip = NULL;
+	      enum nss_status inet6_status, status = NSS_STATUS_UNAVAIL;
+	      int no_more;
+	      nss_gethostbyname2_r fct;
 
-	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
-	    gethosts (AF_INET6, struct in6_addr);
-	  no_inet6_data = no_data;
+	      if (__nss_hosts_database != NULL)
+		{
+		  no_more = 0;
+		  nip = __nss_hosts_database;
+		}
+	      else
+		no_more = __nss_database_lookup ("hosts", NULL,
+						 "dns [!UNAVAIL=return] files", &nip);
 
-	  if (req->ai_family == AF_UNSPEC)
-	    _res.options = old_res_options;
+	      _res.options &= ~RES_USE_INET6;
 
-	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
+	      while (!no_more)
+		{
+		  fct = __nss_lookup_function (nip, "gethostbyname2_r");
+
+		  gethosts2 (AF_INET6, struct in6_addr);
+		  no_inet6_data = no_data;
+		  inet6_status = status;
+		  gethosts2 (AF_INET, struct in_addr);
+
+		  /* If we found one address for AF_INET or AF_INET6,
+		     don't continue the search.  */
+		  if (inet6_status == NSS_STATUS_SUCCESS ||
+		      status == NSS_STATUS_SUCCESS)
+		    break;
+
+		  /* We can have different states for AF_INET
+		     and AF_INET6. Try to find a usefull one for
+		     both.  */
+		  if (inet6_status == NSS_STATUS_TRYAGAIN)
+		    status = NSS_STATUS_TRYAGAIN;
+		  else if (status == NSS_STATUS_UNAVAIL &&
+			   inet6_status != NSS_STATUS_UNAVAIL)
+		    status = inet6_status;
+
+		  if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
+		    break;
+
+		  if (nip->next == NULL)
+		    no_more = -1;
+		  else
+		    nip = nip->next;
+		}
+
+	      _res.options = old_res_options;
+	    }
+	  else if (req->ai_family == AF_INET6)
+	    {
+	      gethosts (AF_INET6, struct in6_addr);
+	      no_inet6_data = no_data;
+	    }
+	  else if (req->ai_family == AF_INET)
 	    gethosts (AF_INET, struct in_addr);
 
 	  if (no_data != 0 && no_inet6_data != 0)

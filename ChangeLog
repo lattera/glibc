@@ -1,3 +1,21 @@
+2002-11-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/getnameinfo.c: Use extend_alloca where appropriate.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+
+	* include/alloca.h (extend_alloca): New define.  Based on stack
+	direction it'll try to append to the previouls allocated buffer.
+
+2002-11-07  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): If AF_UNSPEC is set,
+	use the same service for AF_INET and AF_INET6.
+
+2002-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/localealias.c (read_alias_file): Use only about 400 bytes
+	of stack space instead of 16k.
+
 2002-11-18  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/arena.c
