@@ -1,3 +1,7 @@
+2000-08-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/syscalls.list: Use __setrlimit as strong name.
+
 2000-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* grp/initgroups.c (initgroups): Deallocate groups array.
