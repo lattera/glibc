@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.0 {
     # global variables
-    __ctype_b; __ctype_tolower; __ctype_toupper;
+    __ctype_b; __ctype_tolower; __ctype_toupper; _tolower; _toupper;
 
     # i*
     isalnum; isalpha; isascii; isblank; iscntrl; isdigit; isgraph; islower;
