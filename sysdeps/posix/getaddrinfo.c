@@ -190,7 +190,7 @@ gaih_local (const char *name, const struct gaih_service *service,
 
 static int
 gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
-	       struct gaih_servtuple **st)
+	       struct gaih_servtuple *st)
 {
   struct servent *s;
   size_t tmpbuflen = 1024;
@@ -216,14 +216,10 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
     }
   while (r);
 
-  *st = malloc (sizeof (struct gaih_servtuple));
-  if (*st == NULL)
-    return -EAI_MEMORY;
-
-  (*st)->next = NULL;
-  (*st)->socktype = tp->socktype;
-  (*st)->protocol = tp->protocol;
-  (*st)->port = s->s_port;
+  st->next = NULL;
+  st->socktype = tp->socktype;
+  st->protocol = tp->protocol;
+  st->port = s->s_port;
 
   return 0;
 }
@@ -297,7 +293,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	{
 	  if (tp->name != NULL)
 	    {
-	      if ((rc = gaih_inet_serv (service->name, tp, &st)))
+	      st = (struct gaih_servtuple *)
+		__alloca (sizeof (struct gaih_servtuple));
+
+	      if ((rc = gaih_inet_serv (service->name, tp, st)))
 		return rc;
 	    }
 	  else
@@ -305,13 +304,18 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      struct gaih_servtuple **pst = &st;
 	      for (tp++; tp->name; tp++)
 		{
-		  if ((rc = gaih_inet_serv (service->name, tp, pst)))
+		  struct gaih_servtuple *newp = (struct gaih_servtuple *)
+		    __alloca (sizeof (struct gaih_servtuple));
+
+		  if ((rc = gaih_inet_serv (service->name, tp, newp)))
 		    {
 		      if (rc & GAIH_OKIFUNSPEC)
 			continue;
 		      return rc;
 		    }
-		  pst = &((*pst)->next);
+
+		  *pst = newp;
+		  pst = &(newp->next);
 		}
 	      if (st == &nullserv)
 		return (GAIH_OKIFUNSPEC | -EAI_SERVICE);

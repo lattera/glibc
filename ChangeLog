@@ -1,5 +1,11 @@
 1999-05-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet_serv): Change fourth
+	parameter to struct gaih_servtuple *.  Adapt appropriately.
+	(gaih_inet): Use alloca to allocate room for gaih_inet_serv calls.
+	This fixes a memory leak.
+	Reported by Mikolaj J. Habryn <dichro-glibcbug@rcpt.to>.
+
 	* sysdeps/unix/sysv/linux/sys/procfs.h: Remove greg_t, gregset_t,
 	and fpregset_t definition.  They are defined in ucontext.h.
 
