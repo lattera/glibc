@@ -1,3 +1,8 @@
+2002-04-14  Bruno Haible  <bruno@clisp.org>
+
+	* locale/programs/charmap.c (charmap_read): Don't access result if
+	result == NULL.
+
 2002-02-17  Andreas Schwab  <schwab@suse.de>
 
 	* reldep7.c: New file.

@@ -194,7 +194,7 @@ character map file `%s' not found"), filename));
 default character map file `%s' not found"), DEFAULT_CHARMAP));
     }
 
-  if (result->code_set_name == NULL)
+  if (result != NULL && result->code_set_name == NULL)
     /* The input file does not specify a code set name.  This
        shouldn't happen but we should cope with it.  */
     result->code_set_name = basename (filename);
