@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,11 +18,11 @@ Boston, MA 02111-1307, USA.  */
 
 /* Tree search generalized from Knuth (6.2.2) Algorithm T just like
    the AT&T man page says.
-  
+
    The node_t structure is for internal use only, lint doesn't grok it.
-  
+
    Written by reading the System V Interface Definition, not the code.
-  
+
    Totally public domain.  */
 /*LINTLIBRARY*/
 
@@ -52,7 +52,7 @@ node	**rootp;	 address of tree root
 int	(*compar)();	 ordering function
 */
 void *
-tsearch (key, vrootp, compar)
+__tsearch (key, vrootp, compar)
      const void *key;
      void **vrootp;
      __compar_fn_t compar;
@@ -85,10 +85,11 @@ tsearch (key, vrootp, compar)
 
   return q;
 }
+weak_alias (__tsearch, tsearch)
 
 
 void *
-tfind (key, vrootp, compar)
+__tfind (key, vrootp, compar)
      const void *key;
      const void **vrootp;
      __compar_fn_t compar;
@@ -112,6 +113,7 @@ tfind (key, vrootp, compar)
     }
     return NULL;
 }
+weak_alias (__tfind, tfind)
 
 
 /* delete node with given key
@@ -120,7 +122,7 @@ node	**rootp;	address of the root of tree
 int	(*compar)();	comparison function
 */
 void *
-tdelete (key, vrootp, compar)
+__tdelete (key, vrootp, compar)
      const void *key;
      void **vrootp;
      __compar_fn_t compar;
@@ -168,6 +170,7 @@ tdelete (key, vrootp, compar)
   *rootp = q;				/* link parent to new node */
   return p;
 }
+weak_alias (__tfind, tfind)
 
 
 /* Walk the nodes of a tree
@@ -198,13 +201,13 @@ trecurse (vroot, action, level)
 }
 
 
-/* void twalk(root, action)	Walk the nodes of a tree 
+/* void twalk(root, action)	Walk the nodes of a tree
 node	*root;			Root of the tree to be walked
 void	(*action)();		Function to be called at each node
 PTR
 */
 void
-twalk (vroot, action)
+__twalk (vroot, action)
      const void *vroot;
      __action_fn_t action;
 {
@@ -213,3 +216,4 @@ twalk (vroot, action)
   if (root != NULL && action != NULL)
     trecurse (root, action, 0);
 }
+weak_alias (__twalk, twalk)

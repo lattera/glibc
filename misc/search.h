@@ -1,5 +1,5 @@
 /* search.h -- declarations for System V style searching functions.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -106,12 +106,18 @@ VISIT;
 
 extern void *tsearch __P ((__const void * __key, void **__rootp,
 			   __compar_fn_t compar));
+extern void *__tsearch __P ((__const void * __key, void **__rootp,
+			     __compar_fn_t compar));
 
 extern void *tfind __P ((__const void * __key, __const void ** __rootp,
 			 __compar_fn_t compar));
+extern void *__tfind __P ((__const void * __key, __const void ** __rootp,
+			   __compar_fn_t compar));
 
 extern void *tdelete __P ((__const void * __key, void ** __rootp,
 			   __compar_fn_t compar));
+extern void *__tdelete __P ((__const void * __key, void ** __rootp,
+			     __compar_fn_t compar));
 
 #ifndef __ACTION_FN_T
 #define __ACTION_FN_T
@@ -122,14 +128,19 @@ typedef void (*__action_fn_t) __P ((__const void *__nodep,
 
 extern void twalk __P ((__const void * __root, __action_fn_t action));
 
+extern void __twalk __P ((__const void * __root, __action_fn_t action));
 
-extern void * lfind __P ((__const void * __key, __const void * __base,
-			  size_t * __nmemb, size_t __size,
+
+/* Perform linear search for KEY by comparing by COMPAR in an array
+   [BASE,BASE+NMEMB*SIZE).  */
+extern void * lfind __P ((__const void *__key, __const void *__base,
+			  size_t *__nmemb, size_t __size,
 			  __compar_fn_t __compar));
 
-extern void * lsearch __P ((__const void * __key, __const void * __base,
-			    size_t * __nmemb, size_t __size,
-			    __compar_fn_t __compar));
+/* Perform linear search for KEY by comparing by COMPAR function in
+   array [BASE,BASE+NMEMB*SIZE) and insert entry if not found.  */
+extern void * lsearch __P ((__const void *__key, void *__base, size_t *__nmemb,
+			    size_t __size, __compar_fn_t __compar));
 
 __END_DECLS
 

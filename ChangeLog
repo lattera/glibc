@@ -1,3 +1,20 @@
+Fri Jun  7 1996 05:29:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/lsearch.c: New file.  Implementation of lfind and
+	lsearch functions.
+
+	* misc/search.h: Add prototype for functions from tsearch
+	family with __ prefix.
+	Correct prototype for lsearch: BASE parameter must not be
+	const.
+
+	* misc/tsearch.c: prepend all global function names with __
+	and make normal names weak aliases.
+
+Fri Jun  7 00:15:24 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Make-dist (sysdep_dirs): Skip CVS dirs.
+
 Thu Jun  6 16:12:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* malloc/Makefile (distribute): Change malloc/gmalloc-head.c to
