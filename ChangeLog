@@ -1,3 +1,20 @@
+1999-02-15  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* stdio-common/_itoa.c (_itoa): Correct parameters to
+	udiv_qrnnd_preinv.
+
+1999-02-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* misc/sys/cdefs.h: Undefine __PMT since it might be defined
+	before (e.g. in glob.h).
+	Closes PR libc/959.
+
+1999-02-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/mips/fpu_control.h: Fix typo.
+	Patch by Sylvain Pion <Sylvain.Pion@sophia.inria.fr>.
+	Remove __setfpucw.
+
 1999-02-10  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/pipe.c (__pipe): Don't call __socket_shutdown on

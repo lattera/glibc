@@ -1,8 +1,8 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>
-   and Ulrich Drepper <drepper@gnu.ai.mit.edu>.
+   and Ulrich Drepper <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -285,7 +285,7 @@ _itoa (value, buflim, base, upper_case)
 
 		xl = ((mp_limb_t) value) << big_normalization_steps;
 		udiv_qrnnd_preinv (x1lo, x, r, xl, big_base_norm,
-				   big_normalization_steps);
+				   brec->big.base_ninv);
 		t[2] = x >> big_normalization_steps;
 
 		if (big_normalization_steps == 0)
@@ -295,7 +295,7 @@ _itoa (value, buflim, base, upper_case)
 			| (x1lo >> (32 - big_normalization_steps)));
 		xl = x1lo << big_normalization_steps;
 		udiv_qrnnd_preinv (t[0], x, xh, xl, big_base_norm,
-				   big_normalization_steps);
+				   brec->big.base_ninv);
 		t[1] = x >> big_normalization_steps;
 #elif UDIV_NEEDS_NORMALIZATION
 		mp_limb_t x, xh, xl;
