@@ -1,3 +1,15 @@
+2002-08-05  Roland McGrath  <roland@redhat.com>
+
+	* include/rpc/svc.h: Use libc_hidden_proto for xprt_register,
+	xprt_unregister.
+	* sunrpc/svc.c: Add libc_hidden_def.
+	* include/rpc/pmap_clnt.h: Use libc_hidden_proto for pmap_getport,
+	pmap_set, pmap_unset.
+	* sunrpc/pmap_clnt.c: Add libc_hidden_def.
+	* sunrpc/pm_getport.c: Likewise.
+	* include/rpc/auth_des.h: Use libc_hidden_proto for getpublickey.
+	* sunrpc/publickey.c: Add libc_hidden_def.
+
 2002-08-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (_dl_start): Don't use memset.  Use same tricks as for
