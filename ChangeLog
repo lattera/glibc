@@ -1,3 +1,7 @@
+2000-06-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/string.h: Add prototype for __strdup.
+
 2000-06-22  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/unix/syscalls.list (sys_mknod): Fix signatures.
