@@ -487,7 +487,7 @@ extern void _dl_reloc_overflow (struct link_map *map,
                                 const Elf64_Sym *refsym)
                                 attribute_hidden;
 
-static inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -497,7 +497,7 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 
 #if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
 /* This computes the value used by TPREL* relocs.  */
-static Elf64_Addr __attribute__ ((const))
+auto inline Elf64_Addr __attribute__ ((always_inline, const))
 elf_machine_tprel (struct link_map *map,
 		   struct link_map *sym_map,
 		   const Elf64_Sym *sym,
@@ -518,7 +518,7 @@ elf_machine_tprel (struct link_map *map,
 
 /* Perform the relocation specified by RELOC and SYM (which is fully
    resolved).  MAP is the object containing the reloc.  */
-static inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
@@ -803,11 +803,24 @@ elf_machine_rela (struct link_map *map,
   MODIFIED_CODE_NOQUEUE (reloc_addr);
 }
 
-static inline void
+auto inline void __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
   /* elf_machine_runtime_setup handles this.  */
+}
+
+auto inline void __attribute__ ((always_inline))
+elf_machine_rel (struct link_map *map, const Elf64_Rel *reloc,
+		 const ElfW(Sym) *sym, const struct r_found_version *version,
+		 void *const reloc_addr)
+{
+}
+
+auto inline void __attribute__ ((always_inline))
+elf_machine_rel_relative (ElfW(Addr) l_addr, const Elf64_Rel *reloc,
+			  void *const reloc_addr)
+{
 }
 
 #endif /* RESOLVE */

@@ -1,3 +1,14 @@
+2005-02-14  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Define
+	with auto inline, and attribute always_inline.
+	(elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
+	(elf_machine_rel, elf_machine_rel_relative): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
+	(elf_machine_rel, elf_machine_rel_relative): Likewise.
+	(elf_machine_tprel): Likewise.
+
 2005-02-14  Andreas Schwab  <schwab@suse.de>
 
 	* manual/filesys.texi (Random Access Directory): Fix type of file
