@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,10 +71,6 @@ __pipe (fds)
       __mach_port_deallocate (__mach_task_self (), sock2);
       return __hurd_fail (err);
     }
-
-  /* Shut down the unused sides of the sockets.  */
-  __socket_shutdown (sock1, 1);
-  __socket_shutdown (sock2, 0);
 
   /* Put the sockets into file descriptors.  */
 
