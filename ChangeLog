@@ -1,3 +1,9 @@
+2003-04-02  Daniel Jacobowitz  <drow@mvista.com>
+
+	* configure.in: Check for __register_frame_info in both
+	-lgcc and -lgcc_eh.
+	* configure: Regenerated.
+
 2003-04-01  Roland McGrath  <roland@redhat.com>
 
 	* scripts/abilist.awk: Allow dots in soname suffix.

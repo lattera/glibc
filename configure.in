@@ -1604,19 +1604,13 @@ abort () {}
 __bzero () {}
 dl_iterate_phdr () {}
 EOF
-dnl No \ in command here because it ends up inside ''.
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS -DCHECK__register_frame_info
-			    -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&AS_MESSAGE_LOG_FD]); then
-  libc_cv_gcc_dwarf2_unwind_info=static
-else
-  libc_cv_gcc_dwarf2_unwind_info=no
-fi
-# Some platforms' specs put -lgcc first.  The second one doesn't hurt.
 libc_unwind_check="${CC-cc} $CFLAGS -DCHECK__register_frame_info \
-                            -nostdlib -nostartfiles -o conftest conftest.c \
-			    -lgcc -lgcc_eh -lgcc"
-if AC_TRY_COMMAND([$libc_unwind_check >&AS_MESSAGE_LOG_FD]); then
+			    -nostdlib -nostartfiles -o conftest conftest.c \
+			    -lgcc"
+# Some platforms' specs put -lgcc first.  The second one doesn't hurt.
+if AC_TRY_COMMAND([$libc_unwind_check >&AS_MESSAGE_LOG_FD]) ||
+   AC_TRY_COMMAND([$libc_unwind_check -lgcc_eh -lgcc >&AS_MESSAGE_LOG_FD])
+then
   if $libc_unwind_check -v 2>&1 >/dev/null \
      | grep -q -- --eh-frame-hdr; then
     libc_cv_gcc_dwarf2_unwind_info=no_registry_needed

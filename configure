@@ -5548,28 +5548,23 @@ abort () {}
 __bzero () {}
 dl_iterate_phdr () {}
 EOF
-if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame_info
-			    -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&5'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  libc_cv_gcc_dwarf2_unwind_info=static
-else
-  libc_cv_gcc_dwarf2_unwind_info=no
-fi
-# Some platforms' specs put -lgcc first.  The second one doesn't hurt.
 libc_unwind_check="${CC-cc} $CFLAGS -DCHECK__register_frame_info \
-                            -nostdlib -nostartfiles -o conftest conftest.c \
-			    -lgcc -lgcc_eh -lgcc"
+			    -nostdlib -nostartfiles -o conftest conftest.c \
+			    -lgcc"
+# Some platforms' specs put -lgcc first.  The second one doesn't hurt.
 if { ac_try='$libc_unwind_check >&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
+  (exit $ac_status); }; } ||
+   { ac_try='$libc_unwind_check -lgcc_eh -lgcc >&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }
+then
   if $libc_unwind_check -v 2>&1 >/dev/null \
      | grep -q -- --eh-frame-hdr; then
     libc_cv_gcc_dwarf2_unwind_info=no_registry_needed
@@ -5622,7 +5617,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5625 "configure"
+#line 5620 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5690,7 +5685,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5693 "configure"
+#line 5688 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
