@@ -29,7 +29,7 @@ td_ta_clear_event (ta_arg, event)
   td_thragent_t *const ta = (td_thragent_t *) ta_arg;
   td_err_e err;
   psaddr_t eventmask = 0;
-  void *copy;
+  void *copy = NULL;
 
   LOG ("td_ta_clear_event");
 
