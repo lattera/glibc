@@ -48,7 +48,7 @@ unsigned int bshort[5][0x100 / sizeof (int)];
 unsigned int blong[1][0x1000 / sizeof (int)];
 unsigned int vlong[1][0x2000 / sizeof (int)];
 
-long int
+static long int
 fac (long int n)
 {
   if (n == 0)
