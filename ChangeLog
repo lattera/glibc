@@ -1,5 +1,7 @@
 2000-05-09  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/ldconfig.c: Include elf.h.
+
 	* elf/dl-sym.c (_dl_sym): Test ref not result for non-zero.
 	(_dl_vsym): Likewise.
 	Reported by Owen Taylor <otaylor@redhat.com>.

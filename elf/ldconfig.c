@@ -19,6 +19,7 @@
 
 #include <argp.h>
 #include <dirent.h>
+#include <elf.h>
 #include <error.h>
 #include <errno.h>
 #include <libintl.h>
