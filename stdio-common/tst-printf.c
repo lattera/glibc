@@ -20,6 +20,7 @@
 #include </usr/include/stdio.h>
 #define EXIT_SUCCESS 0
 #else
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -262,9 +263,31 @@ I am ready for my first lesson today.";
     puts ("");
   }
 
+  printf ("printf (\"%%hhu\", %u) = %hhu\n", UCHAR_MAX + 2, UCHAR_MAX + 2);
+  printf ("printf (\"%%hu\", %u) = %hu\n", USHRT_MAX + 2, USHRT_MAX + 2);
+
   puts ("--- Should be no further output. ---");
   rfg1 ();
   rfg2 ();
+
+  {
+    char bytes[7];
+    char buf[20];
+
+    memset (bytes, '\xff', sizeof bytes);
+    sprintf (buf, "foo%hhn\n", &bytes[3]);
+    if (bytes[0] != '\xff' || bytes[1] != '\xff' || bytes[2] != '\xff'
+	|| bytes[4] != '\xff' || bytes[5] != '\xff' || bytes[6] != '\xff')
+      {
+	puts ("%hhn overwrite more bytes");
+	result = 1;
+      }
+    if (bytes[3] != 3)
+      {
+	puts ("%hhn wrote incorrect value");
+	result = 1;
+      }
+  }
 
   return result != 0;
 }

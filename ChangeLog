@@ -1,3 +1,10 @@
+2000-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfprintf.c (process_arg): Handle %hhn.
+	Add missing case in va_arg handling for numbers.
+	* stdio-common/tst-printf.c (main): Add tests for %hhu and %hhn
+	handling.  Reported by Joseph S. Myers <jsm28@cam.ac.uk>.
+
 2000-09-20  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconvdata/iso-2022-jp.c (BODY for FROM_LOOP): Reject 0x80.
