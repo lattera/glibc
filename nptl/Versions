@@ -1,6 +1,6 @@
 libc {
   GLIBC_2.0 {
-    pthread_attr_destroy;
+    pthread_attr_destroy; pthread_attr_init;
     pthread_attr_getdetachstate; pthread_attr_setdetachstate;
     pthread_attr_getinheritsched; pthread_attr_setinheritsched;
     pthread_attr_getschedparam; pthread_attr_setschedparam;
@@ -115,10 +115,6 @@ libpthread {
     pthread_rwlock_init; pthread_rwlock_destroy;
     pthread_rwlock_rdlock; pthread_rwlock_wrlock; pthread_rwlock_unlock;
     pthread_rwlock_tryrdlock; pthread_rwlock_trywrlock;
-
-    __pthread_rwlock_init; __pthread_rwlock_destroy;
-    __pthread_rwlock_rdlock; __pthread_rwlock_wrlock; __pthread_rwlock_unlock;
-    __pthread_rwlock_tryrdlock; __pthread_rwlock_trywrlock;
 
     pthread_rwlockattr_init; pthread_rwlockattr_destroy;
     pthread_rwlockattr_getpshared; pthread_rwlockattr_setpshared;

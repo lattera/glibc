@@ -1,3 +1,13 @@
+2002-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/flockfile.c (flockfile): Change into weak alias.
+	* sysdeps/unix/sysv/linux/raise.c (gsignal): Add weak alias to raise.
+	* Versions [libc: GLIBC_2.0]: Add pthread_attr_init.
+	[libpthread: GLIBC_2.1]: Remove __pthread_rwlock_init,
+	__pthread_rwlock_destroy, __pthread_rwlock_rdlock,
+	__pthread_rwlock_wrlock, __pthread_rwlock_unlock,
+	__pthread_rwlock_tryrdlock and __pthread_rwlock_trywrlock.
+
 2002-12-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Use ENTER_KERNEL

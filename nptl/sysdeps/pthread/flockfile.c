@@ -30,4 +30,4 @@ __flockfile (stream)
   _IO_lock_lock (*stream->_lock);
 }
 strong_alias (__flockfile, _IO_flockfile)
-strong_alias (__flockfile, flockfile)
+weak_alias (__flockfile, flockfile)
