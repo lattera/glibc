@@ -1,4 +1,8 @@
-2001-07-23  Stephen L Moshier <moshier@mediaone.net>
+2001-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Add more definitions from Sun's latest version.
+
+2001-07-23  Stephen L Moshier  <moshier@mediaone.net>
 
 	* sysdeps/ieee754/ldbl-128/s_log1pl.c (__log1pl): Return proper
 	sign for 0 input and set divide by zero exception for -1 input.
