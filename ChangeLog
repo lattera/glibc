@@ -1,3 +1,8 @@
+2001-05-07  Andreas Jaeger  <aj@suse.de>
+
+	* scripts/config.guess: Imported from gnu.org.
+	* scripts/config.sub: Likewise.
+	
 2001-05-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/features.h (__USE_EXTERN_INLINES): Don't define if
