@@ -1,5 +1,5 @@
 /* _longjmp_unwind -- Clean up stack frames unwound by longjmp.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,9 @@
 #include <stddef.h>
 #include <bits/libc-lock.h>
 
+#ifndef SHARED
 weak_extern (__pthread_cleanup_upto);
+#endif
 
 void
 _longjmp_unwind (jmp_buf env, int val)

@@ -1,6 +1,5 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,26 +16,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <fork.h>
+#include <signal.h>
+#include <unistd.h>
 #include <bits/libc-lock.h>
 
 #ifndef SHARED
-weak_extern (__pthread_fork);
+weak_extern (__pthread_raise)
 #endif
 
-struct fork_block __fork_block =
+/* Raise the signal SIG.  */
+int
+raise (sig)
+     int sig;
 {
-  .lock = PTHREAD_MUTEX_INITIALIZER,
-  .prepare_list = { &__fork_block.prepare_list, &__fork_block.prepare_list },
-  .parent_list = { &__fork_block.parent_list, &__fork_block.parent_list },
-  .child_list = { &__fork_block.child_list, &__fork_block.child_list }
-};
-
-pid_t
-__libc_fork (void)
-{
-  return __libc_maybe_call2 (pthread_fork, (&__fork_block), ARCH_FORK ());
+  return __libc_maybe_call2 (pthread_raise, (sig),
+			     __kill (__getpid (), sig));
 }
-weak_alias (__libc_fork, __fork)
-weak_alias (__libc_fork, fork)
+libc_hidden_def (raise)
+weak_alias (raise, gsignal)

@@ -1,5 +1,5 @@
 /* POSIX.1 `sigaction' call for Linux/i386.
-   Copyright (C) 1991,95,96,97,98,99,2000,02 Free Software Foundation, Inc.
+   Copyright (C) 1991,95,96,97,98,99,2000,02,03 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -154,27 +154,10 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 }
 libc_hidden_def (__libc_sigaction)
 
-#ifndef SIGCANCEL
+#ifndef LIBC_SIGACTION
 weak_alias (__libc_sigaction, __sigaction)
 libc_hidden_weak (__sigaction)
 weak_alias (__libc_sigaction, sigaction)
-#else
-int
-__sigaction (sig, act, oact)
-     int sig;
-     const struct sigaction *act;
-     struct sigaction *oact;
-{
-  if (sig == SIGCANCEL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  return __libc_sigaction (sig, act, oact);
-}
-libc_hidden_weak (__sigaction)
-weak_alias (__sigaction, sigaction)
 #endif
 
 /* NOTE: Please think twice before making any changes to the bits of

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,7 +25,7 @@
 
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
-__old_pthread_cond_signal (cond)
+__pthread_cond_signal_2_0 (cond)
      pthread_cond_t *cond;
 {
   pthread_cond_t **realp = (pthread_cond_t **) cond;
@@ -41,6 +41,6 @@ __old_pthread_cond_signal (cond)
 
   return __pthread_cond_signal (*realp);
 }
-compat_symbol (libpthread, __old_pthread_cond_signal, pthread_cond_signal,
+compat_symbol (libpthread, __pthread_cond_signal_2_0, pthread_cond_signal,
 	       GLIBC_2_0);
 #endif

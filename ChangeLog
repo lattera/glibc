@@ -1,3 +1,25 @@
+2003-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/sigaction.c (__sigaction,
+	sigaction): Protect weak_alias and libc_hidden_weak with
+	#ifndef LIBC_SIGACTION.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c (__sigaction,
+	sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c (__sigaction,
+	sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigaction.c (__sigaction,
+	sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c (__sigaction,
+	sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c (__sigaction,
+	sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c (__sigaction,
+	sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction,
+	sigaction): Likewise.  Remove SIGCANCEL handling here.
+	* sysdeps/unix/sysv/linux/sigaction.c (__sigaction, sigaction):
+	Likewise.
+
 2003-01-02  Art Haas  <ahaas@airmail.net>
 
 	* login/tst-utmp.c: Convert GCC extension initializer syntax to C99.

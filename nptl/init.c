@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -30,6 +30,7 @@
 #include <tls.h>
 #include <fork.h>
 #include <version.h>
+#include <shlib-compat.h>
 
 
 /* XXX For the time being...  */
@@ -56,7 +57,9 @@ extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 static struct pthread_functions pthread_functions =
   {
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
     .ptr___pthread_attr_init_2_0 = __pthread_attr_init_2_0,
+#endif
     .ptr___pthread_attr_init_2_1 = __pthread_attr_init_2_1,
     .ptr_pthread_attr_getdetachstate = __pthread_attr_getdetachstate,
     .ptr_pthread_attr_setdetachstate = __pthread_attr_setdetachstate,
@@ -70,11 +73,18 @@ static struct pthread_functions pthread_functions =
     .ptr_pthread_attr_setscope = __pthread_attr_setscope,
     .ptr_pthread_condattr_destroy = __pthread_condattr_destroy,
     .ptr_pthread_condattr_init = __pthread_condattr_init,
-    .ptr_pthread_cond_broadcast = __pthread_cond_broadcast,
-    .ptr_pthread_cond_destroy = __pthread_cond_destroy,
-    .ptr_pthread_cond_init = __pthread_cond_init,
-    .ptr_pthread_cond_signal = __pthread_cond_signal,
-    .ptr_pthread_cond_wait = __pthread_cond_wait,
+    .ptr___pthread_cond_broadcast = __pthread_cond_broadcast,
+    .ptr___pthread_cond_destroy = __pthread_cond_destroy,
+    .ptr___pthread_cond_init = __pthread_cond_init,
+    .ptr___pthread_cond_signal = __pthread_cond_signal,
+    .ptr___pthread_cond_wait = __pthread_cond_wait,
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+    .ptr___pthread_cond_broadcast_2_0 = __pthread_cond_broadcast_2_0,
+    .ptr___pthread_cond_destroy_2_0 = __pthread_cond_destroy_2_0,
+    .ptr___pthread_cond_init_2_0 = __pthread_cond_init_2_0,
+    .ptr___pthread_cond_signal_2_0 = __pthread_cond_signal_2_0,
+    .ptr___pthread_cond_wait_2_0 = __pthread_cond_wait_2_0,
+#endif
     .ptr_pthread_equal = __pthread_equal,
     .ptr___pthread_exit = __pthread_exit,
     .ptr_pthread_getschedparam = __pthread_getschedparam,

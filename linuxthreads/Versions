@@ -16,6 +16,12 @@ libc {
   GLIBC_2.1 {
     pthread_attr_init;
   }
+  GLIBC_2.3.2 {
+    # Changed pthread_cond_t.
+    pthread_cond_init; pthread_cond_destroy;
+    pthread_cond_wait; pthread_cond_signal;
+    pthread_cond_broadcast;
+  }
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread
     __libc_dl_error_tsd;

@@ -59,6 +59,7 @@ void __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
     THREAD_SETMEM(self, p_in_sighandler, NULL);
 }
 
+#ifdef SHARED
 void siglongjmp (sigjmp_buf env, int val)
 {
   __libc_siglongjmp (env, val);
@@ -68,3 +69,4 @@ void longjmp (jmp_buf env, int val)
 {
   __libc_longjmp (env, val);
 }
+#endif

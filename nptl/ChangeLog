@@ -1,3 +1,56 @@
+2003-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* Versions [libc] (GLIBC_2.3.2): Export pthread_cond_broadcast,
+	pthread_cond_destroy, pthread_cond_init, pthread_cond_signal
+	and pthread_cond_wait.
+	* old_pthread_cond_broadcast.c (__old_pthread_cond_broadcast):
+	Renamed to...
+	(__pthread_cond_broadcast_2_0): ... this.
+	* old_pthread_cond_destroy.c (__old_pthread_cond_destroy):
+	Renamed to...
+	(__pthread_cond_destroy_2_0): ... this.
+	* old_pthread_cond_init.c (__old_pthread_cond_init):
+	Renamed to...
+	(__pthread_cond_init_2_0): ... this.
+	* old_pthread_cond_signal.c (__old_pthread_cond_signal):
+	Renamed to...
+	(__pthread_cond_signal_2_0): ... this.
+	* old_pthread_cond_wait.c (__old_pthread_cond_wait):
+	Renamed to...
+	(__pthread_cond_wait_2_0): ... this.
+	* pthread_cond_destroy.c: Include shlib-compat.h.
+	(pthread_cond_destroy): Change strong_alias into versioned_symbol.
+	* pthread_cond_init.c: Include shlib-compat.h.
+	(pthread_cond_init): Change strong_alias into versioned_symbol.
+	* pthreadP.h (struct pthread_functions): Rename ptr_pthread_cond_*
+	fields to ptr___pthread_cond_* and add ptr___pthread_cond_*_2_0
+	fields.
+	(__pthread_cond_broadcast_2_0, __pthread_cond_destroy_2_0,
+	__pthread_cond_init_2_0, __pthread_cond_signal_2_0,
+	__pthread_cond_wait_2_0): New prototypes.
+	(__old_pthread_cond_broadcast, __old_pthread_cond_destroy,
+	__old_pthread_cond_init, __old_pthread_cond_signal,
+	__old_pthread_cond_wait): Removed.
+	* init.c: Include shlib-compat.h.
+	(pthread_functions): Guard ptr___pthread_attr_init_2_0
+	initialization with SHLIB_COMPAT (GLIBC_2_0, GLIBC_2_1).
+	Rename ptr_pthread_cond_* to ptr___pthread_cond_*, initialize
+	ptr___pthread_cond_*_2_0 fields.
+	* forward.c: Export both pthread_cond_*@@GLIBC_2.3.2 and
+	pthread_cond_*@GLIBC_2.0 compatibility symbols.
+
+	* sysdeps/pthread/sigaction.c (SIGCANCEL): Only define if
+	LIBC_SIGACTION was not yet defined.
+	[!defined LIBC_SIGACTION]: Define LIBC_SIGACTION, #include self.
+	[!defined LIBC_SIGACTION] (__sigaction): New function and
+	libc_hidden_weak.
+	[!defined LIBC_SIGACTION] (sigaction): New weak_alias.
+	[defined LIBC_SIGACTION]: #include_next <sigaction.c>.
+
+2003-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (CFLAGS-pthread_atfork.c): Add -DNOT_IN_libc.
+
 2003-01-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_cond_t):

@@ -452,6 +452,10 @@ extern void __pthread_sighandler(int signo, SIGCONTEXT ctx);
 extern void __pthread_sighandler_rt(int signo, struct siginfo *si,
 				    struct ucontext *uc);
 extern void __pthread_null_sighandler(int sig);
+extern int __pthread_sigaction (int sig, const struct sigaction *act,
+				struct sigaction *oact);
+extern int __pthread_sigwait (const sigset_t *set, int *sig);
+extern int __pthread_raise (int sig);
 
 /* Cancellation.  */
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
@@ -505,11 +509,12 @@ struct pthread_functions
   int (*ptr_pthread_attr_setscope) (pthread_attr_t *, int);
   int (*ptr_pthread_condattr_destroy) (pthread_condattr_t *);
   int (*ptr_pthread_condattr_init) (pthread_condattr_t *);
-  int (*ptr_pthread_cond_broadcast) (pthread_cond_t *);
-  int (*ptr_pthread_cond_destroy) (pthread_cond_t *);
-  int (*ptr_pthread_cond_init) (pthread_cond_t *, const pthread_condattr_t *);
-  int (*ptr_pthread_cond_signal) (pthread_cond_t *);
-  int (*ptr_pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
+  int (*ptr___pthread_cond_broadcast) (pthread_cond_t *);
+  int (*ptr___pthread_cond_destroy) (pthread_cond_t *);
+  int (*ptr___pthread_cond_init) (pthread_cond_t *,
+				  const pthread_condattr_t *);
+  int (*ptr___pthread_cond_signal) (pthread_cond_t *);
+  int (*ptr___pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
   int (*ptr_pthread_equal) (pthread_t, pthread_t);
   void (*ptr___pthread_exit) (void *);
   int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
@@ -528,10 +533,14 @@ struct pthread_functions
   void (*ptr_pthread_cleanup_upto) (__jmp_buf target,
 				    char *targetframe);
   pthread_descr (*ptr_pthread_thread_self) (void);
-  int (*ptr_pthread_internal_tsd_set) (int key, const void * pointer);
+  int (*ptr_pthread_internal_tsd_set) (int key, const void *pointer);
   void * (*ptr_pthread_internal_tsd_get) (int key);
   void ** __attribute__ ((__const__))
     (*ptr_pthread_internal_tsd_address) (int key);
+  int (*ptr_pthread_sigaction) (int sig, const struct sigaction * act,
+				struct sigaction *oact);
+  int (*ptr_pthread_sigwait) (const sigset_t *set, int *sig);
+  int (*ptr_pthread_raise) (int sig);
 };
 
 /* Variable in libc.so.  */

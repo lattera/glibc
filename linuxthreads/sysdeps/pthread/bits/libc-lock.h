@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  LinuxThreads version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001,2002
+   Copyright (C) 1996,1997,1998,1999,2000,2001,2002,2003
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -108,7 +108,7 @@ typedef pthread_key_t __libc_key_t;
 #endif
 #if defined _LIBC && !defined NOT_IN_libc && defined SHARED
 # define __libc_maybe_call2(FUNC, ARGS, ELSE) \
-  ({__libc_pthread_functions.ptr_##FUNC != NULL \
+  ({__builtin_expect (__libc_pthread_functions.ptr_##FUNC != NULL, 0) \
     ? __libc_pthread_functions.ptr_##FUNC ARGS : ELSE; })
 #else
 # define __libc_maybe_call2(FUNC, ARGS, ELSE) __libc_maybe_call (__##FUNC, ARGS, ELSE)

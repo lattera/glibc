@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <shlib-compat.h>
 #include "pthreadP.h"
 
 
@@ -26,4 +27,5 @@ __pthread_cond_destroy (cond)
 {
   return 0;
 }
-strong_alias (__pthread_cond_destroy, pthread_cond_destroy)
+versioned_symbol (libpthread, __pthread_cond_destroy,
+		  pthread_cond_destroy, GLIBC_2_3_2);

@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test whether all cancellable functions are cancellable.
-# Copyright (C) 2002 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -67,11 +67,12 @@ C["__xpg_sigpause"]=1
 /:$/ {
   if (seen)
     {
-      # signals.c in linuxthreads does the cancellation checks not using
-      # *_{enable,disable}_asynccancel.
+      # signals.c and sigwait.c in linuxthreads do the cancellation checks
+      # not using *_{enable,disable}_asynccancel.
       # Similarly pt-system.o* is allowed to call __libc_system directly.
       if ((!seen_enable || !seen_disable) \
 	  && !(object ~ /^signals.o/) \
+	  && !(object ~ /^sigwait.o/) \
 	  && !(object ~ /^pt-system.o/))
 	{
 	  printf "in '$1'(%s) %s'\''s cancellation missing\n", object, seen

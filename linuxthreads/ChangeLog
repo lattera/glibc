@@ -1,5 +1,66 @@
 2003-01-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cancel-wrappers.sh: Exclude sigwait.c as well, it does not have
+	cancellation tests.
+
+2003-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* internals.h (struct pthread_functions): Rename
+	ptr_pthread_cond_* fields to ptr___pthread_cond_*.
+	* pthread.c (pthread_functions): Adjust.
+	* forward.c: Export both pthread_cond_*@@GLIBC_2.3.2 and
+	pthread_cond_*@GLIBC_2.0 compatibility symbols.
+	* Versions [libc] (GLIBC_2.3.2): Export pthread_cond_broadcast,
+	pthread_cond_destroy, pthread_cond_init, pthread_cond_signal
+	and pthread_cond_wait.
+
+	* sysdeps/pthread/bits/pthreadtypes.h (__pthread_cond_align_t): New
+	type.
+	(pthread_cond_t): Add __align member, shorten __padding.
+	* sysdeps/pthread/pthread.h (PHTREAD_COND_INITIALIZER): Initialize
+	__padding and __align too.
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_maybe_call2): Add
+	__builtin_expect.
+	* sysdeps/pthread/sigaction.c: New file.
+	* sysdeps/unix/sysv/linux/raise.c: New file.
+	* sysdeps/unix/sysv/linux/sigwait.c: New file.
+	* sysdeps/unix/sysv/linux/fork.c (__pthread_fork): Protect
+	weak_extern with #ifndef SHARED.
+	* sysdeps/unix/sysv/linux/jmp-unwind.c (__pthread_cleanup_upto):
+	Likewise.
+	* signals.c (__sigaction): Renamed to...
+	(__pthread_sigaction): ... this.
+	(__sigaction): New strong alias, #ifdef SHARED only.
+	(sigaction): Protect with #ifdef SHARED.
+	(sigwait): Renamed to...
+	(__pthread_sigwait): ... this.
+	(sigwait): New strong alias, #ifdef SHARED only.
+	(raise): Renamed to...
+	(__pthread_raise): ... this.
+	(raise): New strong alias, #ifdef SHARED only.
+	* internals.h (__pthread_sigaction, __pthread_sigwait,
+	__pthread_raise): New prototypes.
+	(struct pthread_functions): Add ptr_pthread_sigaction,
+	ptr_pthread_sigwait, ptr_pthread_raise.
+	* pthread.c (pthread_functions): Renamed to...
+	(__pthread_functions): ... this.  No longer static, no longer
+	SHARED only.  Initialize ptr_pthread_sigaction, ptr_pthread_sigwait
+	and ptr_pthread_raise.
+	[SHARED] (ptr_pthread_functions): Change to &__pthread_functions.
+	* libc-cancellation.c (__pthread_thread_self): Remove weak_extern.
+	* ptfork.c (__fork, __vfork): Protect with #ifdef SHARED.
+	* ptlongjmp.c (siglongjmp, longjmp): Protect with #ifdef SHARED.
+
+	* Makefile (tests, tests-static): Add tst-cancel-static.
+	* tst-cancel-static.c: New test.
+
+2003-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (CFLAGS-pthread_atfork.c): Add -DNOT_IN_libc.
+
+2003-01-02  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/pthread/bits/pthreadtypes.h (pthread_cond_t): Add padding.
 	* condvar.c: Add symbol versioning.  The compatibility versions
 	are the same as the change in the interface does not effect this

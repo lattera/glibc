@@ -1,6 +1,6 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -22,12 +22,16 @@
    exact file anyway.  */
 #ifndef LIBC_SIGACTION
 
-/* We use the libc implementation but we tell it to not allow
-   SIGCANCEL to be handled.  */
-# define SIGCANCEL __SIGRTMIN
+# include <bits/libc-lock.h>
+
 # define LIBC_SIGACTION	1
 
-# include <nptl/sysdeps/pthread/sigaction.c>
+# include <linuxthreads/sysdeps/pthread/sigaction.c>
+
+# ifndef NOT_IN_libc
+#  ifndef SHARED
+weak_extern (__pthread_sigaction)
+#  endif
 
 int
 __sigaction (sig, act, oact)
@@ -35,14 +39,12 @@ __sigaction (sig, act, oact)
      const struct sigaction *act;
      struct sigaction *oact;
 {
-  if (sig == SIGCANCEL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  return __libc_sigaction (sig, act, oact);
+  return __libc_maybe_call2 (pthread_sigaction, (sig, act, oact),
+			     __libc_sigaction (sig, act, oact));
 }
+# else
+weak_alias (__libc_sigaction, __sigaction)
+# endif
 libc_hidden_weak (__sigaction)
 weak_alias (__sigaction, sigaction)
 

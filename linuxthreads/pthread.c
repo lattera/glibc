@@ -230,8 +230,7 @@ extern void *__dso_handle __attribute__ ((weak));
 extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 #endif
 
-#ifdef SHARED
-static struct pthread_functions pthread_functions =
+struct pthread_functions __pthread_functions =
   {
 #if !(USE_TLS && HAVE___THREAD)
     .ptr_pthread_internal_tsd_set = __pthread_internal_tsd_set,
@@ -256,11 +255,11 @@ static struct pthread_functions pthread_functions =
     .ptr_pthread_attr_setscope = __pthread_attr_setscope,
     .ptr_pthread_condattr_destroy = __pthread_condattr_destroy,
     .ptr_pthread_condattr_init = __pthread_condattr_init,
-    .ptr_pthread_cond_broadcast = __pthread_cond_broadcast,
-    .ptr_pthread_cond_destroy = __pthread_cond_destroy,
-    .ptr_pthread_cond_init = __pthread_cond_init,
-    .ptr_pthread_cond_signal = __pthread_cond_signal,
-    .ptr_pthread_cond_wait = __pthread_cond_wait,
+    .ptr___pthread_cond_broadcast = __pthread_cond_broadcast,
+    .ptr___pthread_cond_destroy = __pthread_cond_destroy,
+    .ptr___pthread_cond_init = __pthread_cond_init,
+    .ptr___pthread_cond_signal = __pthread_cond_signal,
+    .ptr___pthread_cond_wait = __pthread_cond_wait,
     .ptr_pthread_equal = __pthread_equal,
     .ptr___pthread_exit = __pthread_exit,
     .ptr_pthread_getschedparam = __pthread_getschedparam,
@@ -275,9 +274,13 @@ static struct pthread_functions pthread_functions =
     .ptr_pthread_setcanceltype = __pthread_setcanceltype,
     .ptr_pthread_do_exit = __pthread_do_exit,
     .ptr_pthread_thread_self = __pthread_thread_self,
-    .ptr_pthread_cleanup_upto = __pthread_cleanup_upto
+    .ptr_pthread_cleanup_upto = __pthread_cleanup_upto,
+    .ptr_pthread_sigaction = __pthread_sigaction,
+    .ptr_pthread_sigwait = __pthread_sigwait,
+    .ptr_pthread_raise = __pthread_raise
   };
-# define ptr_pthread_functions &pthread_functions
+#ifdef SHARED
+# define ptr_pthread_functions &__pthread_functions
 #else
 # define ptr_pthread_functions NULL
 #endif

@@ -73,8 +73,8 @@ union sighandler __sighandler[NSIG] =
 
 /* The wrapper around sigaction.  Install our own signal handler
    around the signal. */
-int __sigaction(int sig, const struct sigaction * act,
-              struct sigaction * oact)
+int __pthread_sigaction(int sig, const struct sigaction * act,
+			struct sigaction * oact)
 {
   struct sigaction newact;
   struct sigaction *newactp;
@@ -118,10 +118,13 @@ int __sigaction(int sig, const struct sigaction * act,
     }
   return 0;
 }
-strong_alias(__sigaction, sigaction)
+#ifdef SHARED
+strong_alias(__pthread_sigaction, __sigaction)
+strong_alias(__pthread_sigaction, sigaction)
+#endif
 
 /* sigwait -- synchronously wait for a signal */
-int sigwait(const sigset_t * set, int * sig)
+int __pthread_sigwait(const sigset_t * set, int * sig)
 {
   volatile pthread_descr self = thread_self();
   sigset_t mask;
@@ -173,10 +176,13 @@ int sigwait(const sigset_t * set, int * sig)
   *sig = THREAD_GETMEM(self, p_signal);
   return 0;
 }
+#ifdef SHARED
+strong_alias (__pthread_sigwait, sigwait)
+#endif
 
 /* Redefine raise() to send signal to calling thread only,
    as per POSIX 1003.1c */
-int raise (int sig)
+int __pthread_raise (int sig)
 {
   int retcode = pthread_kill(pthread_self(), sig);
   if (retcode == 0)
@@ -186,3 +192,6 @@ int raise (int sig)
     return -1;
   }
 }
+#ifdef SHARED
+strong_alias (__pthread_raise, raise)
+#endif

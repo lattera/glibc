@@ -29,7 +29,6 @@
 
 # ifndef SHARED
 weak_extern (__pthread_do_exit)
-weak_extern (__pthread_thread_self)
 # endif
 
 int __libc_multiple_threads attribute_hidden;

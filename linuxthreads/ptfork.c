@@ -78,6 +78,7 @@ pid_t __pthread_fork (struct fork_block *b)
   return pid;
 }
 
+#ifdef SHARED
 pid_t __fork (void)
 {
   return __libc_fork ();
@@ -89,3 +90,4 @@ pid_t __vfork(void)
   return __libc_fork ();
 }
 weak_alias (__vfork, vfork);
+#endif

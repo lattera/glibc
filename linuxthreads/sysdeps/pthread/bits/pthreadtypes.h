@@ -53,12 +53,20 @@ typedef struct __pthread_attr_s
 
 
 /* Conditions (not abstract because of PTHREAD_COND_INITIALIZER */
+
+#ifdef __GLIBC_HAVE_LONG_LONG
+__extension__ typedef long long __pthread_cond_align_t;
+#else
+typedef long __pthread_cond_align_t;
+#endif
+
 typedef struct
 {
   struct _pthread_fastlock __c_lock; /* Protect against concurrent access */
   _pthread_descr __c_waiting;        /* Threads waiting on this condition */
   char __padding[48 - sizeof (struct _pthread_fastlock)
-		 - sizeof (_pthread_descr)];
+		 - sizeof (_pthread_descr) - sizeof (__pthread_cond_align_t)];
+  __pthread_cond_align_t __align;
 } pthread_cond_t;
 
 
