@@ -4,8 +4,10 @@
 
 2001-11-09  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-load.c (_dl_map_object_from_fd): Delete code to remove
-	from object list when DF_1_NOOPEN is seen.  This is done in lose.
+	* elf/dl-load.c (lose): Remove some unnecessary code.  The new
+	object is always the last in the list.
+	(_dl_map_object_from_fd): Delete code to remove from object list
+	when DF_1_NOOPEN is seen.  This is done in lose.
 
 2001-11-08  Ulrich Drepper  <drepper@redhat.com>
 
