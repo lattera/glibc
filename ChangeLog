@@ -39,6 +39,15 @@
 	* iconvdata/Makefile: Don't try to run iconv tests when cross
 	compiling.
 
+1999-07-27  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init): Move the inline
+	assembler code to switch stacks and call init1 outside this
+	function.  Inside `init' the code was optimized away by gcc
+	2.95 since it was "clearly" unreachable.
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler):
+	Do something similar for the trampoline code.
+
 1999-07-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only return information
