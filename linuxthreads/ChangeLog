@@ -1,3 +1,8 @@
+2000-06-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Remove OPEN_MAX and
+	LINK_MAX definitions if necessary.
+
 2000-06-04  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	Added missing fork time handling of global libio lock.
