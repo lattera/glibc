@@ -1,5 +1,8 @@
 2002-12-29  Roland McGrath  <roland@redhat.com>
 
+	* Makerules ($(common-objpfx)%.h $(common-objpfx)%.h.d): Fix sed
+	pattern for prepending $(..) so it doesn't affect $(foo).
+
 	* math/Makefile (generated): Add $(addsuffix .c .S,$(calls:s_%=m_%)).
 
 2002-12-29  Jakub Jelinek  <jakub@redhat.com>
