@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,7 +132,7 @@ typedef unsigned int uint;
 
 /* These size-specific names are used by some of the inet code.  */
 
-#if !defined (__GNUC__) || __GNUC__ < 2 || __GNUC_MINOR__ < 7
+#if !defined __GNUC__ || __GNUC__ < 2 || __GNUC_MINOR__ < 7
 
 /* These types are defined by the ISO C 9x header <inttypes.h>. */
 # ifndef __int8_t_defined

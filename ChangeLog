@@ -1,3 +1,8 @@
+1998-04-03 06:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/getcwd.c: Make compilable with kernels
+	before 2.1.92.
+
 1998-04-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add s_getcwd entry.

@@ -40,6 +40,7 @@ extern int __syscall_getcwd (char *buf, unsigned long size);
 static int no_syscall_getcwd;
 static int no_new_dcache = 1;
 #else
+# define no_syscall_getcwd 1
 static int no_new_dcache;
 #endif
 
