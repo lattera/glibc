@@ -430,6 +430,7 @@ setlocale (int category, const char *locale)
     }
 }
 
+extern struct loaded_l10nfile *_nl_locale_file_list[];
 
 static void __attribute__ ((unused))
 free_mem (void)
@@ -440,17 +441,30 @@ free_mem (void)
     if (category != LC_ALL)
       {
 	struct locale_data *here = *_nl_current[category];
+	struct loaded_l10nfile *runp = _nl_locale_file_list[category];
 
 	/* If this category is already "C" don't do anything.  */
-	if (here == _nl_C[category])
-	  continue;
+	if (here != _nl_C[category])
+	  {
+	    /* We have to be prepared that sometime later me still
+	       might need the locale information.  */
+	    setdata (category, _nl_C[category]);
+	    setname (category, _nl_C_name);
 
-	/* We have to be prepared that sometime later me still might
-	   need the locale information.  */
-	setdata (category, _nl_C[category]);
-	setname (category, _nl_C_name);
+	    _nl_unload_locale (here);
+	  }
 
-	_nl_unload_locale (here);
+	while (runp != NULL)
+	  {
+	    struct loaded_l10nfile *curr = runp;
+	    struct locale_data *data = (struct locale_data *) runp->data;
+
+	    if (data != NULL && data != here && data != _nl_C[category])
+	      _nl_unload_locale (data);
+	    runp = runp->next;
+	    free ((char *) curr->filename);
+	    free (curr);
+	  }
       }
 
   setname (LC_ALL, _nl_C_name);

@@ -454,10 +454,10 @@ The calling process is not privileged.
 
 @comment grp.h
 @comment BSD
-@deftypefun int initgroups (const char *@var{user}, gid_t @var{gid})
+@deftypefun int initgroups (const char *@var{user}, gid_t @var{group})
 The @code{initgroups} function sets the process's supplementary group
-IDs to be the normal default for the user name @var{user}. If @var{gid}
-is not -1, it includes that group also.
+IDs to be the normal default for the user name @var{user}.  The group
+@var{group} is automatically included.
 
 This function works by scanning the group database for all the groups
 @var{user} belongs to.  It then calls @code{setgroups} with the list it
@@ -465,6 +465,52 @@ has constructed.
 
 The return values and error conditions are the same as for
 @code{setgroups}.
+@end deftypefun
+
+If you are interested in the groups a particular user belongs to, but do
+not want to change the process's supplementary group IDs, you can use
+@code{getgrouplist}.  To use @code{getgrouplist}, your programs should
+include the header file @file{grp.h}.
+@pindex grp.h
+
+@comment grp.h
+@comment BSD
+@deftypefun int getgrouplist (const char *@var{user}, gid_t @var{group}, gid_t *@var{groups}, int *@var{ngroups})
+The @code{getgrouplist} function scans the group database for all the
+groups @var{user} belongs to.  Up to *@var{ngroups} group IDs
+corresponding to these groups are stored in the array @var{groups}; the
+return value from the function is the number of group IDs actually
+stored.  If *@var{ngroups} is smaller than the total number of groups
+found, then @code{getgrouplist} returns a value of @code{-1} and stores
+the actual number of groups in *@var{ngroups}.  The group @var{group} is
+automatically included in the list of groups returned by
+@code{getgrouplist}.
+
+Here's how to use @code{getgrouplist} to read all supplementary groups
+for @var{user}:
+
+@smallexample
+@group
+gid_t *
+supplementary_groups (char *user)
+@{
+  int ngroups = 16;
+  gid_t *groups
+    = (gid_t *) xmalloc (ngroups * sizeof (gid_t));
+  struct passwd *pw = getpwnam (user);
+
+  if (pw == NULL)
+    return NULL;
+
+  if (getgrouplist (pw->pw_name, pw->pw_gid, groups, &ngroups) < 0)
+    @{
+      groups = xrealloc (ngroups * sizeof (gid_t));
+      getgrouplist (pw->pw_name, pw->pw_gid, groups, &ngroups);
+    @}
+  return groups;
+@}
+@end group
+@end smallexample
 @end deftypefun
 
 @node Enable/Disable Setuid
