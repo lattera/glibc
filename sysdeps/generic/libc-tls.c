@@ -47,6 +47,12 @@ static struct
 static struct link_map static_map;
 
 
+/* Additional definitions needed by TLS initialization.  */
+#ifdef TLS_INIT_HELPER
+TLS_INIT_HELPER
+#endif
+
+
 void
 __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 {

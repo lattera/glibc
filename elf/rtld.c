@@ -117,6 +117,11 @@ static hp_timing_t relocate_time;
 static hp_timing_t load_time;
 #endif
 
+/* Additional definitions needed by TLS initialization.  */
+#ifdef TLS_INIT_HELPER
+TLS_INIT_HELPER
+#endif
+
 static ElfW(Addr) _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 				   hp_timing_t start_time);
 
@@ -257,10 +262,12 @@ _dl_start (void *arg)
 	INSTALL_DTV ((char *) tlsblock + bootstrap_map.l_tls_offset,
 		     initdtv);
 
-	TLS_INIT_TP ((char *) tlsblock + bootstrap_map.l_tls_offset);
+	if (TLS_INIT_TP ((char *) tlsblock + bootstrap_map.l_tls_offset) != 0)
+	  _dl_fatal_printf ("cannot setup thread-local storage\n");
 # elif TLS_DTV_AT_TP
 	INSTALL_DTV (tlsblock, initdtv);
-	TLS_INIT_TP (tlsblock);
+	if (TLS_INIT_TP (tlsblock) != 0)
+	  _dl_fatal_printf ("cannot setup thread-local storage\n");
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif

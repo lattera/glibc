@@ -185,8 +185,8 @@
 #endif
 
 /* On x86, the set_thread_area syscall was introduced in 2.5.29, but its
-   semantics was changed in 2.5.30.  */
-#if __LINUX_KERNEL_VERSION >= 132382 && defined __i386__
+   semantics was changed in 2.5.30, and again after 2.3.31.  */
+#if __LINUX_KERNEL_VERSION >= 132384 && defined __i386__
 # define __ASSUME_SET_THREAD_AREA_SYSCALL	1
 #endif
 
