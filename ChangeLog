@@ -47,6 +47,7 @@
 
 	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c (__get_clockfreq):
 	Use hp_timing_t type.
+	* sysdeps/generic/get_clockfreq.c (__get_clockfreq): Likewise.
 
 	* sysdeps/unix/sysv/linux/ia64/get_clockfreq.c: New file.
 

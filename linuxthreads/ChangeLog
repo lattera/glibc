@@ -1,5 +1,9 @@
 2001-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/getcpuclockid.c: Make function generic, test
+	using #ifdef whether the clock is available.
+	* sysdeps/unix/sysv/linux/i386/getcpuclockid.c: Removed.
+
 	* sysdeps/ia64/Versions: New file.
 
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c (_init): We don't
