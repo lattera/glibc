@@ -9,6 +9,8 @@
 	* iconv/iconv_prog.c (process_block): Remove const from second
 	parameter.
 	(main): Remove const from addr definition.
+	* manual/charset.texi (Generic Conversion Interface): Remove from
+	inbuf parameter of iconv.
 
 	* intl/dcigettext.c: Fix typo in comment.
 

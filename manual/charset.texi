@@ -1690,7 +1690,7 @@ even file to file can be implemented on top of it.
 
 @comment iconv.h
 @comment XPG2
-@deftypefun size_t iconv (iconv_t @var{cd}, const char **@var{inbuf}, size_t *@var{inbytesleft}, char **@var{outbuf}, size_t *@var{outbytesleft})
+@deftypefun size_t iconv (iconv_t @var{cd}, char **@var{inbuf}, size_t *@var{inbytesleft}, char **@var{outbuf}, size_t *@var{outbytesleft})
 @cindex stateful
 The @code{iconv} function converts the text in the input buffer
 according to the rules associated with the descriptor @var{cd} and
