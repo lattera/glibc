@@ -1,5 +1,13 @@
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/SJIS.irreversible: Remove unnecessary entries.
+	* iconvdata/EUC-JP.irreversible: Remove unnecessary entries.
+
+	* iconvdata/sjis.c: Enable round-trip mapping of backslash and tilde.
+	* iconvdata/jis0208.c: Likewise.
+	* iconvdata/jis0212.c: Likewise.
+	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 	* math/test-misc.c (main): More tests for frexp and some for
 	fpclassify and isnormal.
 
