@@ -114,6 +114,10 @@ extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
      weak_function
 #endif
      ;
+#if defined NOT_IN_libc && defined IS_IN_libpthread
+hidden_proto (__pthread_unwind)
+#endif
+
 
 /* Called when a thread reacts on a cancellation request.  */
 static inline void

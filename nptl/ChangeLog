@@ -1,3 +1,12 @@
+2003-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/librt-cancellation.c (__pthread_unwind): Remove
+	definition.
+	* pthreadP.h (__pthread_unwind): Add hidden_proto if used in
+	libpthread compilation.
+	* unwind.c (__pthread_unwind): Add hidden_def.
+	* Versions (libpthread) [GLIBC_PRIVATE]: Add __pthread_unwind.
+
 2003-07-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* libc-cancellation.c (__libc_cleanup_routine): Define.

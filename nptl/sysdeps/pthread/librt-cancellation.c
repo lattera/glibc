@@ -25,21 +25,6 @@
 
 
 #ifdef IS_IN_librt
-
-/* XXX Hack ahead.  In librt we currently do not have access to a
-   function equivalent to __pthread_unwind.  Therefore we just raise a
-   signal.  */
-void
-attribute_hidden
-__pthread_unwind (__pthread_unwind_buf_t *buf)
-{
-  INTERNAL_SYSCALL_DECL (err);
-  while (1)
-    INTERNAL_SYSCALL (tkill, err, 2, THREAD_GETMEM (THREAD_SELF, tid),
-		      SIGCANCEL);
-}
-
-
 /* The next two functions are similar to pthread_setcanceltype() but
    more specialized for the use in the cancelable functions like write().
    They do not need to check parameters etc.  */
