@@ -15,3 +15,8 @@ sysdep_routines += osf_select osf_gettimeofday osf_settimeofday \
 
 CFLAGS-ioperm.c = -Wa,-mev6
 endif
+
+ifeq ($(subdir),signal)
+sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
+		   rt_sigqueueinfo rt_sigaction rt_sigpending
+endif

@@ -89,11 +89,6 @@ endif
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
 
-ifeq ($(subdir),signal)
-sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
-		   rt_sigqueueinfo rt_sigaction rt_sigpending
-endif
-
 ifeq ($(subdir),dirent)
 sysdep_routines += getdents64
 endif

@@ -22,6 +22,9 @@
 #include <stddef.h>
 #include <signal.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
+
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must
    translate it here.  */
@@ -62,8 +65,8 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      result = __syscall_rt_sigaction (sig, act ? &kact : NULL,
-				       oact ? &koact : NULL, _NSIG / 8);
+      result = INLINE_SYSCALL (rt_sigaction, 4, sig, act ? &kact : NULL,
+			       oact ? &koact : NULL, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	{

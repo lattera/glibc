@@ -198,6 +198,101 @@
 #define _DOARGS_5(n)	movl n(%esp), %edi; _DOARGS_4 (n-4)
 #define _POPARGS_5	_POPARGS_4; popl %edi
 
+#else	/* !__ASSEMBLER__ */
+
+/* Define a macro which expands inline into the wrapper code for a system
+   call.  */
+#undef INLINE_SYSCALL
+#define INLINE_SYSCALL(name, nr, args...) \
+  ({									      \
+    unsigned int resultvar;						      \
+    EXTRAVARS_##nr(args)						      \
+    asm volatile (							      \
+    PUSHARGS_##nr							      \
+    DOARGS_##nr								      \
+    "int $0x80\n\t"							      \
+    POPARGS_##nr							      \
+    : "=a" (resultvar)							      \
+    ASMFMT_##nr(args)							      \
+    "i" (__NR_##name) : "memory", "cc");				      \
+    if (resultvar >= 0xfffff001)					      \
+      {									      \
+	__set_errno (-resultvar);					      \
+	resultvar = 0xffffffff;						      \
+      }									      \
+    (int) resultvar; })
+
+
+#define PUSHARGS_0	/* Nothing */
+#define DOARGS_0	"movl %1, %%eax\n\t"
+#define POPARGS_0	/* Nothing */
+#define _PUSHARGS_0	/* Nothing */
+#define _DOARGS_0 	/* Nothing */
+#define _POPARGS_0	/* Nothing */
+#define ASMFMT_0()	:
+#define EXTRAVARS_0()	/* Nothing */
+
+#define PUSHARGS_1	"xchgl %%ebx, %%edx\n\t" _PUSHARGS_0
+#define DOARGS_1	_DOARGS_0 "movl %3, %%eax\n\t"
+#define POPARGS_1	_POPARGS_0 "xchgl %%edx, %%ebx"
+#define _PUSHARGS_1	_PUSHARGS_0 "pushl %%ebx\n\t"
+#define _DOARGS_1	"movl %3, %%ebx\n\t" _DOARGS_0
+#define _POPARGS_1	"popl %%ebx\n\t" _POPARGS_0
+#define ASMFMT_1(arg1) \
+	, "=d" (use_edx) : "1" (arg1),
+#define EXTRAVARS_1(arg1) \
+	unsigned long int use_edx;
+
+#define PUSHARGS_2	PUSHARGS_1
+#define DOARGS_2	_DOARGS_0 "movl %5, %%eax\n\t"
+#define POPARGS_2	POPARGS_1
+#define _PUSHARGS_2	_PUSHARGS_1
+#define _DOARGS_2	_DOARGS_1
+#define _POPARGS_2	_POPARGS_1
+#define ASMFMT_2(arg1, arg2) \
+	, "=&d" (use_edx), "=c" (use_ecx) : "1" (arg1), "2" (use_ecx),
+#define EXTRAVARS_2(arg1, arg2) \
+	unsigned long int use_ecx = (unsigned long int) (arg2), use_edx;
+
+#define PUSHARGS_3	_PUSHARGS_3
+#define DOARGS_3	_DOARGS_3 "movl %6, %%eax\n\t"
+#define POPARGS_3	_POPARGS_3
+#define _PUSHARGS_3	_PUSHARGS_2
+#define _DOARGS_3	_DOARGS_2
+#define _POPARGS_3	_POPARGS_2
+#define ASMFMT_3(arg1, arg2, arg3) \
+	, "=d" (use_edx), "=c" (use_ecx) \
+	: "0" (arg1), "2" (use_ecx), "1" (use_edx),
+#define EXTRAVARS_3(arg1, arg2, arg3) \
+	unsigned long int use_ecx = (unsigned long int) (arg2); \
+	unsigned long int use_edx = (unsigned long int) (arg3);
+
+#define PUSHARGS_4	_PUSHARGS_4
+#define DOARGS_4	_DOARGS_4 "movl %7, %%eax\n\t"
+#define POPARGS_4	_POPARGS_4
+#define _PUSHARGS_4	_PUSHARGS_3
+#define _DOARGS_4	_DOARGS_3
+#define _POPARGS_4	_POPARGS_3
+#define ASMFMT_4(arg1, arg2, arg3, arg4) \
+	, "=d" (use_edx), "=c" (use_ecx) \
+	: "0" (arg1), "2" (use_ecx), "1" (use_edx), "S" (arg4),
+#define EXTRAVARS_4(arg1, arg2, arg3, arg4) \
+	unsigned long int use_ecx = (unsigned long int) (arg2); \
+	unsigned long int use_edx = (unsigned long int) (arg3);
+
+#define PUSHARGS_5	_PUSHARGS_5
+#define DOARGS_5	_DOARGS_5 "movl %8, %%eax\n\t"
+#define POPARGS_5	_POPARGS_5
+#define _PUSHARGS_5	PUSHARGS_4
+#define _DOARGS_5	_DOARGS_4
+#define _POPARGS_5	_POPARGS_4
+#define ASMFMT_5(arg1, arg2, arg3, arg4, arg5) \
+	, "=d" (use_edx), "=c" (use_ecx) \
+	: "0" (arg1), "2" (use_ecx), "1" (use_edx), "S" (arg4), "D" (arg5),
+#define EXTRAVARS_5(arg1, arg2, arg3, arg4, arg5) \
+	unsigned long int use_ecx = (unsigned long int) (arg2); \
+	unsigned long int use_edx = (unsigned long int) (arg3);
+
 #endif	/* __ASSEMBLER__ */
 
 #endif /* linux/i386/sysdep.h */
