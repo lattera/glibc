@@ -1,5 +1,5 @@
 /* Internal header for GNU gettext internationalization functions.
-   Copyright (C) 1995, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 2000, 2001 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,8 +19,6 @@
 #ifndef _GETTEXT_H
 #define _GETTEXT_H 1
 
-#include <stdio.h>
-
 #if HAVE_LIMITS_H || _LIBC
 # include <limits.h>
 #endif
@@ -37,9 +35,8 @@
 /* The following contortions are an attempt to use the C preprocessor
    to determine an unsigned integral type that is 32 bits wide.  An
    alternative approach is to use autoconf's AC_CHECK_SIZEOF macro, but
-   doing that would require that the configure script compile and *run*
-   the resulting executable.  Locally running cross-compiled executables
-   is usually not possible.  */
+   as of version autoconf-2.13, the AC_CHECK_SIZEOF macro doesn't work
+   when cross-compiling.  */
 
 #if __STDC__
 # define UINT_MAX_32_BITS 4294967295U

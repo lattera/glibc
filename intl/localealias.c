@@ -1,5 +1,5 @@
 /* Handle aliases for locale names.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -73,7 +73,6 @@ void free ();
 # endif
 #endif
 
-#include "gettext.h"
 #include "gettextP.h"
 
 /* @@ end of prolog @@ */
@@ -99,40 +98,14 @@ __libc_lock_define_initialized (static, lock);
 # define internal_function
 #endif
 
-/* For those loosing systems which don't have `alloca' we have to add
+/* For those losing systems which don't have `alloca' we have to add
    some additional code emulating it.  */
 #ifdef HAVE_ALLOCA
-/* Nothing has to be done.  */
-# define ADD_BLOCK(list, address) /* nothing */
-# define FREE_BLOCKS(list) /* nothing */
+# define freea(p) /* nothing */
 #else
-struct block_list
-{
-  void *address;
-  struct block_list *next;
-};
-# define ADD_BLOCK(list, addr)						      \
-  do {									      \
-    struct block_list *newp = (struct block_list *) malloc (sizeof (*newp));  \
-    /* If we cannot get a free block we cannot add the new element to	      \
-       the list.  */							      \
-    if (newp != NULL) {							      \
-      newp->address = (addr);						      \
-      newp->next = (list);						      \
-      (list) = newp;							      \
-    }									      \
-  } while (0)
-# define FREE_BLOCKS(list)						      \
-  do {									      \
-    while (list != NULL) {						      \
-      struct block_list *old = list;					      \
-      list = list->next;						      \
-      free (old);							      \
-    }									      \
-  } while (0)
-# undef alloca
-# define alloca(size) (malloc (size))
-#endif	/* have alloca */
+# define alloca(n) malloc (n)
+# define freea(p) free (p)
+#endif
 
 #if defined _LIBC_REENTRANT || defined HAVE_FGETS_UNLOCKED
 # undef fgets
@@ -235,16 +208,12 @@ read_alias_file (fname, fname_len)
      const char *fname;
      int fname_len;
 {
-#ifndef HAVE_ALLOCA
-  struct block_list *block_list = NULL;
-#endif
   FILE *fp;
   char *full_fname;
   size_t added;
   static const char aliasfile[] = "/locale.alias";
 
   full_fname = (char *) alloca (fname_len + sizeof aliasfile);
-  ADD_BLOCK (block_list, full_fname);
 #ifdef HAVE_MEMPCPY
   mempcpy (mempcpy (full_fname, fname, fname_len),
 	   aliasfile, sizeof aliasfile);
@@ -254,11 +223,9 @@ read_alias_file (fname, fname_len)
 #endif
 
   fp = fopen (full_fname, "r");
+  freea (full_fname);
   if (fp == NULL)
-    {
-      FREE_BLOCKS (block_list);
-      return 0;
-    }
+    return 0;
 
   added = 0;
   while (!feof (fp))
@@ -331,10 +298,7 @@ read_alias_file (fname, fname_len)
 
 	      if (nmap >= maxmap)
 		if (__builtin_expect (extend_alias_table (), 0))
-		  {
-		    FREE_BLOCKS (block_list);
-		    return added;
-		  }
+		  return added;
 
 	      alias_len = strlen (alias) + 1;
 	      value_len = strlen (value) + 1;
@@ -347,10 +311,7 @@ read_alias_file (fname, fname_len)
 					? alias_len + value_len : 1024));
 		  char *new_pool = (char *) realloc (string_space, new_size);
 		  if (new_pool == NULL)
-		    {
-		      FREE_BLOCKS (block_list);
-		      return added;
-		    }
+		    return added;
 
 		  if (__builtin_expect (string_space != new_pool, 0))
 		    {
@@ -389,7 +350,6 @@ read_alias_file (fname, fname_len)
     qsort (map, nmap, sizeof (struct alias_map),
 	   (int (*) PARAMS ((const void *, const void *))) alias_compare);
 
-  FREE_BLOCKS (block_list);
   return added;
 }
 

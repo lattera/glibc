@@ -1,3 +1,133 @@
+2001-03-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/loadmsgcat.c (_nl_load_domain) [!_LIBC]: Use fstat, not fstat64.
+
+2001-03-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/gettextP.h (struct expression): Add operators lnot, less_than,
+	greater_than, less_or_equal, greater_or_equal. Replace args2/args3
+	union by a 'nargs' counter and an 'args[]' array.
+	* intl/plural.y: Don't include stdarg.h.
+	(new_exp): Take an array of arguments instead of varargs.
+	(new_exp_0, new_exp_1, new_exp_2, new_exp_3): New functions.
+	('?' ':'): Make right-associative.
+	(EQUOP2): New token, replaces '=' and '!'.
+	(CMPOP2): New token.
+	(ADDOP2): New token, replaces '+' and '-'.
+	(MULOP2): New token, replaces '*', '/' and '%'.
+	('!'): New token.
+	(exp): Add rules for CMPOP2 and '!'. Don't call YYABORT.
+	(start): Call YYABORT here.
+	(FREE_EXPRESSION): Update.
+	(yylex): Don't skip "\\n". Recognize comparison and '!' operators.
+	Update for new token symbols.
+	* intl/loadmsgcat.c (plvar, plone, germanic_plural,
+	init_germanic_plural): Update.
+	* intl/dcigettext.c (_nl_find_msg): Optimize for space.
+	(plural_eval): Recognize comparison and '!' operators. Optimize for
+	space.
+
+2001-03-10  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/loadmsgcat.c (_nl_load_domain): locale_charset() doesn't return
+	NULL any more.
+
+2001-01-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/loadmsgcat.c: Include headers needed for alloca().
+	(freea): New macro.
+	(_nl_load_domain): Add fallback code for platforms lacking alloca.
+	* intl/localealias.c: (ADD_BLOCK, FREE_BLOCK): Remove macros.
+	(freea): New macro.
+	(read_alias_file): Simplify fallback code for platforms lacking
+	alloca.
+
+2001-01-07  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/gettextP.h (__gettextdebug): Remove declaration.
+	(__gettext_free_exp, __gettextparse): Convert prototype to K&R C
+	syntax.
+	(gettext_free_exp__, gettextparse__): New non-libc declarations.
+	* intl/plural.y [!_LIBC]: Define gettextparse__, gettext_free_exp__,
+	not __gettextparse, __gettext_free_exp.
+	* intl/loadmsgcat.c [!_LIBC]: Use gettextparse__, not __gettextparse.
+
+2001-02-24  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c: Update comment about HAVE_LOCALE_NULL.
+
+2001-01-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/loadmsgcat.c (_nl_load_domain): Add fallback code for platforms
+	lacking strtoul, like SunOS4.
+
+2001-01-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/l10nflist.c (_nl_normalize_codeset): Use tolower, not _tolower.
+
+2001-01-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/bindtextdom.c (set_binding_values): Convert prototype to K&R C
+	syntax.
+	* intl/dcigettext.c (transcmp): Convert to K&R C syntax.
+	* intl/explodename.c (_nl_find_language): Convert to K&R C syntax.
+	* intl/plural.y (__gettext_free_exp, yylex, yyerror): Convert to K&R C
+	syntax.
+
+2001-01-07  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/gettextP.h (gettext__, dgettext__, dcgettext__, textdomain__,
+	bindtextdomain__, bind_textdomain_codeset__): New declarations, from
+	old libgettext.h.
+	* intl/bindtextdom.c: Include libgnuintl.h instead of libgettext.h.
+	* intl/dcgettext.c: Likewise.
+	* intl/dcigettext.c: Likewise.
+	* intl/dcngettext.c: Likewise.
+	* intl/dngettext.c: Likewise.
+	* intl/finddomain.c: Likewise.
+	* intl/ngettext.c: Likewise.
+	* intl/textdomain.c: Likewise.
+	* intl/dgettext.c: Include libgnuintl.h instead of libgettext.h.
+	Include gettextP.h.
+	* intl/gettext.c: Likewise.  Don't include locale.h.
+
+2001-03-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/gettextP.h (ZERO): New macro.
+	(struct binding): Always use ZERO.
+	* intl/bindtextdom.c (offsetof): Provide fallback for platforms that
+	lack it, like SunOS4.
+	(set_binding_values): Use offsetof, not sizeof.
+	* intl/dcigettext.c (offsetof): Provide fallback for platforms that
+	lack it, like SunOS4.
+	(ZERO): Remove macro.
+	(struct transmem_list): Use ZERO.
+	(DCIGETTEXT): Use offsetof, not sizeof.
+
+2001-03-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/gettextP.h: Include <stddef.h>. Include gettext.h, for
+	nls_uint32.
+	* intl/bindtextdom.c: Don't include gettext.h.
+	* intl/dcgettext.c: Likewise.
+	* intl/dcigettext.c: Likewise.
+	* intl/dcngettext.c: Likewise.
+	* intl/dngettext.c: Likewise.
+	* intl/finddomain.c: Likewise.
+	* intl/localealias.c: Likewise.
+	* intl/ngettext.c: Likewise.
+	* intl/plural.y: Likewise.
+	* intl/textdomain.c: Likewise.
+
+2001-03-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/gettext.h: Don't include <stdio.h>.
+
+2001-03-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/Makefile (CPPFLAGS): Set LOCALEDIR instead of GNULOCALEDIR.
+	* intl/dcigettext.c (_nl_default_dirname): Initialize with LOCALEDIR.
+
 2001-03-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/i386/i686/tempname.c: New file.

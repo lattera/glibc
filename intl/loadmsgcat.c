@@ -33,6 +33,23 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef __GNUC__
+# define alloca __builtin_alloca
+# define HAVE_ALLOCA 1
+#else
+# if defined HAVE_ALLOCA_H || defined _LIBC
+#  include <alloca.h>
+# else
+#  ifdef _AIX
+ #pragma alloca
+#  else
+#   ifndef alloca
+char *alloca ();
+#   endif
+#  endif
+# endif
+#endif
+
 #if defined STDC_HEADERS || defined _LIBC
 # include <stdlib.h>
 #endif
@@ -81,6 +98,25 @@
 # define munmap __munmap
 #endif
 
+/* Names for the libintl functions are a problem.  They must not clash
+   with existing names and they should follow ANSI C.  But this source
+   code is also used in GNU C Library where the names have a __
+   prefix.  So we have to make a difference here.  */
+#ifdef _LIBC
+# define PLURAL_PARSE __gettextparse
+#else
+# define PLURAL_PARSE gettextparse__
+#endif
+
+/* For those losing systems which don't have `alloca' we have to add
+   some additional code emulating it.  */
+#ifdef HAVE_ALLOCA
+# define freea(p) /* nothing */
+#else
+# define alloca(n) malloc (n)
+# define freea(p) free (p)
+#endif
+
 /* We need a sign, whether a new catalog was loaded, which can be associated
    with all translations.  This is important if the translations are
    cached by one of GCC's features.  */
@@ -93,10 +129,12 @@ int _nl_msg_cat_cntr;
    form determination.  It represents the expression  "n != 1".  */
 static const struct expression plvar =
 {
+  .nargs = 0,
   .operation = var,
 };
 static const struct expression plone =
 {
+  .nargs = 0,
   .operation = num,
   .val =
   {
@@ -105,13 +143,14 @@ static const struct expression plone =
 };
 static struct expression germanic_plural =
 {
+  .nargs = 2,
   .operation = not_equal,
   .val =
   {
-    .args2 =
+    .args =
     {
-      .left = (struct expression *) &plvar,
-      .right = (struct expression *) &plone
+      [0] = (struct expression *) &plvar,
+      [1] = (struct expression *) &plone
     }
   }
 };
@@ -132,14 +171,17 @@ init_germanic_plural ()
 {
   if (plone.val.num == 0)
     {
+      plvar.nargs = 0;
       plvar.operation = var;
 
+      plone.nargs = 0;
       plone.operation = num;
       plone.val.num = 1;
 
+      germanic_plural.nargs = 2;
       germanic_plural.operation = not_equal;
-      germanic_plural.val.args2.left = &plvar;
-      germanic_plural.val.args2.right = &plone;
+      germanic_plural.val.args[0] = &plvar;
+      germanic_plural.val.args[1] = &plone;
     }
 }
 
@@ -157,7 +199,11 @@ _nl_load_domain (domain_file)
 {
   int fd;
   size_t size;
+#ifdef _LIBC
   struct stat64 st;
+#else
+  struct stat st;
+#endif
   struct mo_file_header *data = (struct mo_file_header *) -1;
   int use_mmap = 0;
   struct loaded_domain *domain;
@@ -180,7 +226,12 @@ _nl_load_domain (domain_file)
     return;
 
   /* We must know about the size of the file.  */
-  if (__builtin_expect (fstat64 (fd, &st) != 0, 0)
+  if (
+#ifdef _LIBC
+      __builtin_expect (fstat64 (fd, &st) != 0, 0)
+#else
+      __builtin_expect (fstat (fd, &st) != 0, 0)
+#endif
       || __builtin_expect ((size = (size_t) st.st_size) != st.st_size, 0)
       || __builtin_expect (size < sizeof (struct mo_file_header), 0))
     {
@@ -343,8 +394,6 @@ _nl_load_domain (domain_file)
 #  if HAVE_ICONV
 		  extern const char *locale_charset (void);
 		  outcharset = locale_charset ();
-		  if (outcharset == NULL)
-		    outcharset = "";
 #  endif
 # endif
 		}
@@ -363,6 +412,8 @@ _nl_load_domain (domain_file)
 	  domain->conv = iconv_open (outcharset, charset);
 #  endif
 # endif
+
+	  freea (charset);
 	}
 #endif /* _LIBC || HAVE_ICONV */
     }
@@ -381,12 +432,19 @@ _nl_load_domain (domain_file)
 	{
 	  /* First get the number.  */
 	  char *endp;
+	  unsigned long int n;
 	  struct parse_args args;
 
 	  nplurals += 9;
 	  while (*nplurals != '\0' && isspace (*nplurals))
 	    ++nplurals;
-	  domain->nplurals = strtoul (nplurals, &endp, 10);
+#if defined HAVE_STRTOUL || defined _LIBC
+	  n = strtoul (nplurals, &endp, 10);
+#else
+	  for (endp = nplurals, n = 0; *endp >= '0' && *endp <= '9'; endp++)
+	    n = n * 10 + (*endp - '0');
+#endif
+	  domain->nplurals = n;
 	  if (nplurals == endp)
 	    goto no_plural;
 
@@ -396,7 +454,7 @@ _nl_load_domain (domain_file)
 	     is passed down to the parser.  */
 	  plural += 7;
 	  args.cp = plural;
-	  if (__gettextparse (&args) != 0)
+	  if (PLURAL_PARSE (&args) != 0)
 	    goto no_plural;
 	  domain->plural = args.res;
 	}

@@ -1,5 +1,5 @@
-/* Header describing internals of gettext library
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Header describing internals of libintl library.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 #ifndef _GETTEXTP_H
 #define _GETTEXTP_H
 
+#include <stddef.h>		/* Get size_t.  */
+
 #ifdef _LIBC
 # include "../iconv/gconv_int.h"
 #else
@@ -29,6 +31,8 @@
 #endif
 
 #include "loadinfo.h"
+
+#include "gettext.h"		/* Get nls_uint32.  */
 
 /* @@ end of prolog @@ */
 
@@ -74,35 +78,35 @@ SWAP (i)
    plural form.  */
 struct expression
 {
+  int nargs;			/* Number of arguments.  */
   enum operator
   {
+    /* Without arguments:  */
     var,			/* The variable "n".  */
     num,			/* Decimal number.  */
+    /* Unary operators:  */
+    lnot,			/* Logical NOT.  */
+    /* Binary operators:  */
     mult,			/* Multiplication.  */
     divide,			/* Division.  */
     module,			/* Module operation.  */
     plus,			/* Addition.  */
     minus,			/* Subtraction.  */
+    less_than,			/* Comparison.  */
+    greater_than,		/* Comparison.  */
+    less_or_equal,		/* Comparison.  */
+    greater_or_equal,		/* Comparison.  */
     equal,			/* Comparision for equality.  */
     not_equal,			/* Comparision for inequality.  */
     land,			/* Logical AND.  */
     lor,			/* Logical OR.  */
+    /* Ternary operators:  */
     qmop			/* Question mark operator.  */
   } operation;
   union
   {
     unsigned long int num;	/* Number value for `num'.  */
-    struct
-    {
-      struct expression *left;	/* Left expression in binary operation.  */
-      struct expression *right;	/* Right expression in binary operation.  */
-    } args2;
-    struct
-    {
-      struct expression *bexp;	/* Boolean expression in ?: operation.  */
-      struct expression *tbranch; /* True-branch in ?: operation.  */
-      struct expression *fbranch; /* False-branch in ?: operation.  */
-    } args3;
+    struct expression *args[3];	/* Up to three arguments.  */
   } val;
 };
 
@@ -115,6 +119,7 @@ struct parse_args
 };
 
 
+/* The representation of an opened message catalog.  */
 struct loaded_domain
 {
   const char *data;
@@ -139,18 +144,27 @@ struct loaded_domain
   unsigned long int nplurals;
 };
 
+/* We want to allocate a string at the end of the struct.  But ISO C
+   doesn't allow zero sized arrays.  */
+#ifdef __GNUC__
+# define ZERO 0
+#else
+# define ZERO 1
+#endif
+
+/* A set of settings bound to a message domain.  Used to store settings
+   from bindtextdomain() and bind_textdomain_codeset().  */
 struct binding
 {
   struct binding *next;
   char *dirname;
   char *codeset;
-#ifdef __GNUC__
-  char domainname[0];
-#else
-  char domainname[1];
-#endif
+  char domainname[ZERO];
 };
 
+/* A counter which is incremented each time some previous translations
+   become invalid.
+   This variable is part of the external ABI of the GNU libintl.  */
 extern int _nl_msg_cat_cntr;
 
 struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
@@ -164,32 +178,62 @@ void _nl_unload_domain PARAMS ((struct loaded_domain *__domain))
      internal_function;
 
 #ifdef _LIBC
-extern char *__ngettext PARAMS ((const char *msgid1, const char *msgid2,
-				 unsigned long int n));
-extern char *__dngettext PARAMS ((const char *domainname, const char *msgid1,
-				  const char *msgid2, unsigned long int n));
-extern char *__dcngettext PARAMS ((const char *domainname, const char *msgid1,
-				   const char *msgid2, unsigned long int n,
-				   int category));
-extern char *__dcigettext PARAMS ((const char *domainname, const char *msgid1,
-				   const char *msgid2, int plural,
-				   unsigned long int n, int category));
+extern char *__gettext PARAMS ((const char *__msgid));
+extern char *__dgettext PARAMS ((const char *__domainname,
+				 const char *__msgid));
+extern char *__dcgettext PARAMS ((const char *__domainname,
+				  const char *__msgid, int __category));
+extern char *__ngettext PARAMS ((const char *__msgid1, const char *__msgid2,
+				 unsigned long int __n));
+extern char *__dngettext PARAMS ((const char *__domainname,
+				  const char *__msgid1, const char *__msgid2,
+				  unsigned long int n));
+extern char *__dcngettext PARAMS ((const char *__domainname,
+				   const char *__msgid1, const char *__msgid2,
+				   unsigned long int __n, int __category));
+extern char *__dcigettext PARAMS ((const char *__domainname,
+				   const char *__msgid1, const char *__msgid2,
+				   int __plural, unsigned long int __n,
+				   int __category));
+extern char *__textdomain PARAMS ((const char *__domainname));
+extern char *__bindtextdomain PARAMS ((const char *__domainname,
+				       const char *__dirname));
+extern char *__bind_textdomain_codeset PARAMS ((const char *__domainname,
+						const char *__codeset));
 #else
-extern char *ngettext__ PARAMS ((const char *msgid1, const char *msgid2,
-				 unsigned long int n));
-extern char *dngettext__ PARAMS ((const char *domainname, const char *msgid1,
-				  const char *msgid2, unsigned long int n));
-extern char *dcngettext__ PARAMS ((const char *domainname, const char *msgid1,
-				   const char *msgid2, unsigned long int n,
-				   int category));
-extern char *dcigettext__ PARAMS ((const char *domainname, const char *msgid1,
-				   const char *msgid2, int plural,
-				   unsigned long int n, int category));
+extern char *gettext__ PARAMS ((const char *__msgid));
+extern char *dgettext__ PARAMS ((const char *__domainname,
+				 const char *__msgid));
+extern char *dcgettext__ PARAMS ((const char *__domainname,
+				  const char *__msgid, int __category));
+extern char *ngettext__ PARAMS ((const char *__msgid1, const char *__msgid2,
+				 unsigned long int __n));
+extern char *dngettext__ PARAMS ((const char *__domainname,
+				  const char *__msgid1, const char *__msgid2,
+				  unsigned long int __n));
+extern char *dcngettext__ PARAMS ((const char *__domainname,
+				   const char *__msgid1, const char *__msgid2,
+				   unsigned long int __n, int __category));
+extern char *dcigettext__ PARAMS ((const char *__domainname,
+				   const char *__msgid1, const char *__msgid2,
+				   int __plural, unsigned long int __n,
+				   int __category));
+extern char *textdomain__ PARAMS ((const char *__domainname));
+extern char *bindtextdomain__ PARAMS ((const char *__domainname,
+				       const char *__dirname));
+extern char *bind_textdomain_codeset__ PARAMS ((const char *__domainname,
+						const char *__codeset));
 #endif
 
-extern int __gettextdebug;
-extern void __gettext_free_exp (struct expression *exp) internal_function;
-extern int __gettextparse (void *arg);
+#ifdef _LIBC
+extern void __gettext_free_exp PARAMS ((struct expression *exp))
+     internal_function;
+extern int __gettextparse PARAMS ((void *arg));
+#else
+extern void gettext_free_exp__ PARAMS ((struct expression *exp))
+     internal_function;
+extern int gettextparse__ PARAMS ((void *arg));
+#endif
 
 /* @@ begin of epilog @@ */
 

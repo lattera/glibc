@@ -81,7 +81,7 @@ CFLAGS-tst-translit.c = -DOBJPFX=\"$(objpfx)\"
 
 $(objpfx)tst-translit.out: $(objpfx)tst-gettext.out
 
-CPPFLAGS += -D'GNULOCALEDIR="$(msgcatdir)"' \
+CPPFLAGS += -D'LOCALEDIR="$(msgcatdir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(msgcatdir)"'
 BISONFLAGS = --yacc --name-prefix=__gettext --output
 

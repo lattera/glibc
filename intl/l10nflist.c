@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -389,7 +389,7 @@ _nl_normalize_codeset (codeset, name_len)
 
       for (cnt = 0; cnt < name_len; ++cnt)
 	if (isalpha (codeset[cnt]))
-	  *wp++ = _tolower (codeset[cnt]);
+	  *wp++ = tolower (codeset[cnt]);
 	else if (isdigit (codeset[cnt]))
 	  *wp++ = codeset[cnt];
 

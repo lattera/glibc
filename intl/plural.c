@@ -11,7 +11,11 @@
 #define yychar __gettextchar
 #define yydebug __gettextdebug
 #define yynerrs __gettextnerrs
-#define	NUMBER	257
+#define	EQUOP2	257
+#define	CMPOP2	258
+#define	ADDOP2	259
+#define	MULOP2	260
+#define	NUMBER	261
 
 #line 1 "plural.y"
 
@@ -38,25 +42,127 @@
 # include <config.h>
 #endif
 
-#include <stdarg.h>
 #include <stdlib.h>
-#include "gettext.h"
 #include "gettextP.h"
+
+/* Names for the libintl functions are a problem.  They must not clash
+   with existing names and they should follow ANSI C.  But this source
+   code is also used in GNU C Library where the names have a __
+   prefix.  So we have to make a difference here.  */
+#ifdef _LIBC
+# define FREE_EXPRESSION __gettext_free_exp
+#else
+# define FREE_EXPRESSION gettext_free_exp__
+# define __gettextparse gettextparse__
+#endif
 
 #define YYLEX_PARAM	&((struct parse_args *) arg)->cp
 #define YYPARSE_PARAM	arg
 
-#line 36 "plural.y"
+#line 45 "plural.y"
 typedef union {
   unsigned long int num;
+  enum operator op;
   struct expression *exp;
 } YYSTYPE;
-#line 41 "plural.y"
+#line 51 "plural.y"
 
 /* Prototypes for local functions.  */
-static struct expression *new_exp (enum operator op, int n, ...);
-static int yylex (YYSTYPE *lval, const char **pexp);
-static void yyerror (const char *str);
+static struct expression *new_exp PARAMS ((int nargs, enum operator op,
+					   struct expression * const *args));
+static inline struct expression *new_exp_0 PARAMS ((enum operator op));
+static inline struct expression *new_exp_1 PARAMS ((enum operator op,
+						   struct expression *right));
+static struct expression *new_exp_2 PARAMS ((enum operator op,
+					     struct expression *left,
+					     struct expression *right));
+static inline struct expression *new_exp_3 PARAMS ((enum operator op,
+						   struct expression *bexp,
+						   struct expression *tbranch,
+						   struct expression *fbranch));
+static int yylex PARAMS ((YYSTYPE *lval, const char **pexp));
+static void yyerror PARAMS ((const char *str));
+
+/* Allocation of expressions.  */
+
+static struct expression *
+new_exp (nargs, op, args)
+     int nargs;
+     enum operator op;
+     struct expression * const *args;
+{
+  int i;
+  struct expression *newp;
+
+  /* If any of the argument could not be malloc'ed, just return NULL.  */
+  for (i = nargs - 1; i >= 0; i--)
+    if (args[i] == NULL)
+      goto fail;
+
+  /* Allocate a new expression.  */
+  newp = (struct expression *) malloc (sizeof (*newp));
+  if (newp != NULL)
+    {
+      newp->nargs = nargs;
+      newp->operation = op;
+      for (i = nargs - 1; i >= 0; i--)
+	newp->val.args[i] = args[i];
+      return newp;
+    }
+
+ fail:
+  for (i = nargs - 1; i >= 0; i--)
+    FREE_EXPRESSION (args[i]);
+
+  return NULL;
+}
+
+static inline struct expression *
+new_exp_0 (op)
+     enum operator op;
+{
+  return new_exp (0, op, NULL);
+}
+
+static inline struct expression *
+new_exp_1 (op, right)
+     enum operator op;
+     struct expression *right;
+{
+  struct expression *args[1];
+
+  args[0] = right;
+  return new_exp (1, op, args);
+}
+
+static struct expression *
+new_exp_2 (op, left, right)
+     enum operator op;
+     struct expression *left;
+     struct expression *right;
+{
+  struct expression *args[2];
+
+  args[0] = left;
+  args[1] = right;
+  return new_exp (2, op, args);
+}
+
+static inline struct expression *
+new_exp_3 (op, bexp, tbranch, fbranch)
+     enum operator op;
+     struct expression *bexp;
+     struct expression *tbranch;
+     struct expression *fbranch;
+{
+  struct expression *args[3];
+
+  args[0] = bexp;
+  args[1] = tbranch;
+  args[2] = fbranch;
+  return new_exp (3, op, args);
+}
+
 #include <stdio.h>
 
 #ifndef __cplusplus
@@ -67,24 +173,24 @@ static void yyerror (const char *str);
 
 
 
-#define	YYFINAL		31
+#define	YYFINAL		27
 #define	YYFLAG		-32768
-#define	YYNTBASE	18
+#define	YYNTBASE	16
 
-#define YYTRANSLATE(x) ((unsigned)(x) <= 257 ? yytranslate[x] : 20)
+#define YYTRANSLATE(x) ((unsigned)(x) <= 261 ? yytranslate[x] : 18)
 
 static const char yytranslate[] = {     0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     7,     2,     2,     2,    12,     5,     2,    16,
-    17,    10,     8,     2,     9,     2,    11,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,    14,     2,     2,
-     6,     2,     3,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,    10,     2,     2,     2,     2,     5,     2,    14,
+    15,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+     2,     2,     2,     2,     2,     2,     2,    12,     2,     2,
+     2,     2,     3,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     2,     2,     2,     2,    15,
+     2,     2,     2,     2,     2,     2,     2,     2,     2,    13,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     4,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -99,30 +205,30 @@ static const char yytranslate[] = {     0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-     2,     2,     2,     2,     2,     1,    13
+     2,     2,     2,     2,     2,     1,     6,     7,     8,     9,
+    11
 };
 
 #if YYDEBUG != 0
 static const short yyprhs[] = {     0,
-     0,     2,     8,    12,    16,    20,    24,    28,    32,    36,
-    40,    44,    46,    48
+     0,     2,     8,    12,    16,    20,    24,    28,    32,    35,
+    37,    39
 };
 
-static const short yyrhs[] = {    19,
-     0,    19,     3,    19,    14,    19,     0,    19,     4,    19,
-     0,    19,     5,    19,     0,    19,     6,    19,     0,    19,
-     7,    19,     0,    19,     8,    19,     0,    19,     9,    19,
-     0,    19,    10,    19,     0,    19,    11,    19,     0,    19,
-    12,    19,     0,    15,     0,    13,     0,    16,    19,    17,
-     0
+static const short yyrhs[] = {    17,
+     0,    17,     3,    17,    12,    17,     0,    17,     4,    17,
+     0,    17,     5,    17,     0,    17,     6,    17,     0,    17,
+     7,    17,     0,    17,     8,    17,     0,    17,     9,    17,
+     0,    10,    17,     0,    13,     0,    11,     0,    14,    17,
+    15,     0
 };
 
 #endif
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-    59,    65,    70,    75,    80,    85,    90,    95,   100,   105,
-   110,   115,   120,   126
+   170,   178,   182,   186,   190,   194,   198,   202,   206,   210,
+   214,   219
 };
 #endif
 
@@ -130,67 +236,61 @@ static const short yyrline[] = { 0,
 #if YYDEBUG != 0 || defined (YYERROR_VERBOSE)
 
 static const char * const yytname[] = {   "$","error","$undefined.","'?'","'|'",
-"'&'","'='","'!'","'+'","'-'","'*'","'/'","'%'","NUMBER","':'","'n'","'('","')'",
+"'&'","EQUOP2","CMPOP2","ADDOP2","MULOP2","'!'","NUMBER","':'","'n'","'('","')'",
 "start","exp", NULL
 };
 #endif
 
 static const short yyr1[] = {     0,
-    18,    19,    19,    19,    19,    19,    19,    19,    19,    19,
-    19,    19,    19,    19
+    16,    17,    17,    17,    17,    17,    17,    17,    17,    17,
+    17,    17
 };
 
 static const short yyr2[] = {     0,
-     1,     5,     3,     3,     3,     3,     3,     3,     3,     3,
-     3,     1,     1,     3
+     1,     5,     3,     3,     3,     3,     3,     3,     2,     1,
+     1,     3
 };
 
 static const short yydefact[] = {     0,
-    13,    12,     0,     1,     0,     0,     0,     0,     0,     0,
-     0,     0,     0,     0,     0,    14,     0,     3,     4,     5,
-     6,     7,     8,     9,    10,    11,     0,     2,     0,     0,
-     0
+     0,    11,    10,     0,     1,     9,     0,     0,     0,     0,
+     0,     0,     0,     0,    12,     0,     3,     4,     5,     6,
+     7,     8,     0,     2,     0,     0,     0
 };
 
-static const short yydefgoto[] = {    29,
-     4
+static const short yydefgoto[] = {    25,
+     5
 };
 
-static const short yypact[] = {    58,
--32768,-32768,    58,    37,    10,    58,    58,    58,    58,    58,
-    58,    58,    58,    58,    58,-32768,    25,    45,    52,    57,
-    57,    65,    65,-32768,-32768,-32768,    58,    37,     1,     2,
--32768
+static const short yypact[] = {    -9,
+    -9,-32768,-32768,    -9,    34,-32768,    11,    -9,    -9,    -9,
+    -9,    -9,    -9,    -9,-32768,    24,    39,    43,    16,    26,
+    -3,-32768,    -9,    34,    21,    53,-32768
 };
 
 static const short yypgoto[] = {-32768,
-    -3
+    -1
 };
 
 
-#define	YYLAST		77
+#define	YYLAST		53
 
 
-static const short yytable[] = {     5,
-    30,    31,    17,    18,    19,    20,    21,    22,    23,    24,
-    25,    26,     6,     7,     8,     9,    10,    11,    12,    13,
-    14,    15,     0,    28,     0,     0,    16,     6,     7,     8,
-     9,    10,    11,    12,    13,    14,    15,     0,    27,     6,
-     7,     8,     9,    10,    11,    12,    13,    14,    15,     8,
-     9,    10,    11,    12,    13,    14,    15,     9,    10,    11,
-    12,    13,    14,    15,    11,    12,    13,    14,    15,     0,
-     1,     0,     2,     3,    13,    14,    15
+static const short yytable[] = {     6,
+     1,     2,     7,     3,     4,    14,    16,    17,    18,    19,
+    20,    21,    22,     8,     9,    10,    11,    12,    13,    14,
+    26,    24,    12,    13,    14,    15,     8,     9,    10,    11,
+    12,    13,    14,    13,    14,    23,     8,     9,    10,    11,
+    12,    13,    14,    10,    11,    12,    13,    14,    11,    12,
+    13,    14,    27
 };
 
-static const short yycheck[] = {     3,
-     0,     0,     6,     7,     8,     9,    10,    11,    12,    13,
-    14,    15,     3,     4,     5,     6,     7,     8,     9,    10,
-    11,    12,    -1,    27,    -1,    -1,    17,     3,     4,     5,
-     6,     7,     8,     9,    10,    11,    12,    -1,    14,     3,
-     4,     5,     6,     7,     8,     9,    10,    11,    12,     5,
-     6,     7,     8,     9,    10,    11,    12,     6,     7,     8,
-     9,    10,    11,    12,     8,     9,    10,    11,    12,    -1,
-    13,    -1,    15,    16,    10,    11,    12
+static const short yycheck[] = {     1,
+    10,    11,     4,    13,    14,     9,     8,     9,    10,    11,
+    12,    13,    14,     3,     4,     5,     6,     7,     8,     9,
+     0,    23,     7,     8,     9,    15,     3,     4,     5,     6,
+     7,     8,     9,     8,     9,    12,     3,     4,     5,     6,
+     7,     8,     9,     5,     6,     7,     8,     9,     6,     7,
+     8,     9,     0
 };
 #define YYPURE 1
 
@@ -738,100 +838,78 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 60 "plural.y"
+#line 171 "plural.y"
 {
+	    if (yyvsp[0].exp == NULL)
+	      YYABORT;
 	    ((struct parse_args *) arg)->res = yyvsp[0].exp;
 	  ;
     break;}
 case 2:
-#line 66 "plural.y"
+#line 179 "plural.y"
 {
-	    if ((yyval.exp = new_exp (qmop, 3, yyvsp[-4].exp, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_3 (qmop, yyvsp[-4].exp, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 3:
-#line 71 "plural.y"
+#line 183 "plural.y"
 {
-	    if ((yyval.exp = new_exp (lor, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_2 (lor, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 4:
-#line 76 "plural.y"
+#line 187 "plural.y"
 {
-	    if ((yyval.exp = new_exp (land, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_2 (land, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 5:
-#line 81 "plural.y"
+#line 191 "plural.y"
 {
-	    if ((yyval.exp = new_exp (equal, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_2 (yyvsp[-1].op, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 6:
-#line 86 "plural.y"
+#line 195 "plural.y"
 {
-	    if ((yyval.exp = new_exp (not_equal, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_2 (yyvsp[-1].op, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 7:
-#line 91 "plural.y"
+#line 199 "plural.y"
 {
-	    if ((yyval.exp = new_exp (plus, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_2 (yyvsp[-1].op, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 8:
-#line 96 "plural.y"
+#line 203 "plural.y"
 {
-	    if ((yyval.exp = new_exp (minus, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_2 (yyvsp[-1].op, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 9:
-#line 101 "plural.y"
+#line 207 "plural.y"
 {
-	    if ((yyval.exp = new_exp (mult, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_1 (lnot, yyvsp[0].exp);
 	  ;
     break;}
 case 10:
-#line 106 "plural.y"
+#line 211 "plural.y"
 {
-	    if ((yyval.exp = new_exp (divide, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    yyval.exp = new_exp_0 (var);
 	  ;
     break;}
 case 11:
-#line 111 "plural.y"
+#line 215 "plural.y"
 {
-	    if ((yyval.exp = new_exp (module, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
-	      YYABORT
+	    if ((yyval.exp = new_exp_0 (num)) != NULL)
+	      yyval.exp->val.num = yyvsp[0].num;
 	  ;
     break;}
 case 12:
-#line 116 "plural.y"
+#line 220 "plural.y"
 {
-	    if ((yyval.exp = new_exp (var, 0)) == NULL)
-	      YYABORT
-	  ;
-    break;}
-case 13:
-#line 121 "plural.y"
-{
-	    if ((yyval.exp = new_exp (num, 0)) == NULL)
-	      YYABORT;
-	    yyval.exp->val.num = yyvsp[0].num
-	  ;
-    break;}
-case 14:
-#line 127 "plural.y"
-{
-	    yyval.exp = yyvsp[-1].exp
+	    yyval.exp = yyvsp[-1].exp;
 	  ;
     break;}
 }
@@ -1056,73 +1134,29 @@ yyerrhandle:
     }
   return 1;
 }
-#line 132 "plural.y"
+#line 225 "plural.y"
 
-
-static struct expression *
-new_exp (enum operator op, int n, ...)
-{
-  struct expression *newp = (struct expression *) calloc (1, sizeof (*newp));
-  va_list va;
-
-  va_start (va, n);
-
-  if (newp == NULL)
-    while (n-- > 0)
-      __gettext_free_exp (va_arg (va, struct expression *));
-  else
-    {
-      newp->operation = op;
-      if (n > 0)
-	{
-	  newp->val.args3.bexp = va_arg (va, struct expression *);
-	  newp->val.args3.tbranch = va_arg (va, struct expression *);
-
-	  if (n > 2)
-	    newp->val.args3.fbranch = va_arg (va, struct expression *);
-
-	  if (newp->val.args3.bexp == NULL
-	      || newp->val.args3.tbranch == NULL
-	      || (n > 2 && newp->val.args3.fbranch == NULL))
-	    {
-	      __gettext_free_exp (newp);
-	      newp = NULL;
-	    }
-	}
-    }
-
-  va_end (va);
-
-  return newp;
-}
 
 void
 internal_function
-__gettext_free_exp (struct expression *exp)
+FREE_EXPRESSION (exp)
+     struct expression *exp;
 {
   if (exp == NULL)
     return;
 
   /* Handle the recursive case.  */
-  switch (exp->operation)
+  switch (exp->nargs)
     {
-    case qmop:
-      __gettext_free_exp (exp->val.args3.fbranch);
+    case 3:
+      FREE_EXPRESSION (exp->val.args[2]);
       /* FALLTHROUGH */
-
-    case mult:
-    case divide:
-    case module:
-    case plus:
-    case minus:
-    case equal:
-    case not_equal:
-    case land:
-    case lor:
-      __gettext_free_exp (exp->val.args2.right);
-      __gettext_free_exp (exp->val.args2.left);
-      break;
-
+    case 2:
+      FREE_EXPRESSION (exp->val.args[1]);
+      /* FALLTHROUGH */
+    case 1:
+      FREE_EXPRESSION (exp->val.args[0]);
+      /* FALLTHROUGH */
     default:
       break;
     }
@@ -1132,19 +1166,15 @@ __gettext_free_exp (struct expression *exp)
 
 
 static int
-yylex (YYSTYPE *lval, const char **pexp)
+yylex (lval, pexp)
+     YYSTYPE *lval;
+     const char **pexp;
 {
   const char *exp = *pexp;
   int result;
 
   while (1)
     {
-      if (exp[0] == '\\' && exp[1] == '\n')
-	{
-	  exp += 2;
-	  continue;
-	}
-
       if (exp[0] == '\0')
 	{
 	  *pexp = exp;
@@ -1176,11 +1206,23 @@ yylex (YYSTYPE *lval, const char **pexp)
       break;
 
     case '=':
-    case '!':
       if (exp[0] == '=')
-	++exp;
+	{
+	  ++exp;
+	  lval->op = equal;
+	  result = EQUOP2;
+	}
       else
 	result = YYERRCODE;
+      break;
+
+    case '!':
+      if (exp[0] == '=')
+	{
+	  ++exp;
+	  lval->op = not_equal;
+	  result = EQUOP2;
+	}
       break;
 
     case '&':
@@ -1191,12 +1233,54 @@ yylex (YYSTYPE *lval, const char **pexp)
 	result = YYERRCODE;
       break;
 
-    case 'n':
+    case '<':
+      if (exp[0] == '=')
+	{
+	  ++exp;
+	  lval->op = less_or_equal;
+	}
+      else
+	lval->op = less_than;
+      result = CMPOP2;
+      break;
+
+    case '>':
+      if (exp[0] == '=')
+	{
+	  ++exp;
+	  lval->op = greater_or_equal;
+	}
+      else
+	lval->op = greater_than;
+      result = CMPOP2;
+      break;
+
     case '*':
+      lval->op = mult;
+      result = MULOP2;
+      break;
+
     case '/':
+      lval->op = divide;
+      result = MULOP2;
+      break;
+
     case '%':
+      lval->op = module;
+      result = MULOP2;
+      break;
+
     case '+':
+      lval->op = plus;
+      result = ADDOP2;
+      break;
+
     case '-':
+      lval->op = minus;
+      result = ADDOP2;
+      break;
+
+    case 'n':
     case '?':
     case ':':
     case '(':
@@ -1227,7 +1311,8 @@ yylex (YYSTYPE *lval, const char **pexp)
 
 
 static void
-yyerror (const char *str)
+yyerror (str)
+     const char *str;
 {
   /* Do nothing.  We don't print error messages here.  */
 }
