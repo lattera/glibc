@@ -56,7 +56,7 @@ MIGFLAGS = -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0 \
 	   $(+includes) $(migdefines) -subrprefix __
 # Putting CC in the enivronment makes the mig wrapper script
 # use the same compiler setup we are using to run cpp.
-MIG := CC='${CC}' $(MIG)
+MIG := CC='${CC}' CPP='${CPP}' $(MIG)
 
 .SUFFIXES: .defs	# Just to set specified_rule_matched.
 

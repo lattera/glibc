@@ -1,3 +1,9 @@
+2002-01-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/powerpc/intr-msg.h: Remove extraneous backslash.
+
+	* mach/Machrules (MIG): Set CPP as well as CC.
+
 2001-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Always use C
