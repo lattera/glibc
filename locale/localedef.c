@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include "error.h"
 
 #include "localedef.h"
 
@@ -58,10 +59,6 @@ static const struct option long_options[] =
     { "version", no_argument, NULL, 'V' },
     { NULL, 0, NULL, 0 }
   };
-
-
-/* This is defined in error-msg.h.  */
-extern int warning_cntr;
 
 
 /* Prototypes for local functions.  */
@@ -169,7 +166,7 @@ main(int argc, char *argv[])
 
   /* We are now able to write the data files.  If warning were given we
      do it only if it is explicitly requested (--force).  */
-  if (warning_cntr == 0 || force_output != 0)
+  if (error_message_count == 0 || force_output != 0)
     if (cannot_write != 0)
       error (0, 0, gettext ("cannot write output file `%s': %s"),
 	     output_path, strerror (cannot_write));

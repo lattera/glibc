@@ -70,13 +70,13 @@ glob/%.h: %.h
 
 glob/configure: glob/configure.in
 	cd glob; autoconf $(ACFLAGS)
-	test -d CVS && cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
+	test ! -d CVS || cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 
 glob/ChangeLog: ../ChangeLog
 	changelog-extract --regexp 'posix/(glob|fnmatch).*' < $< > $@.new
 	chmod a-w $@.new
 	mv -f $@.new $@
-	test -d CVS && cvs commit -mRegenerated $@
+	test ! -d CVS || cvs commit -mRegenerated $@
 
 %.Z: %
 	compress -c $< > $@-tmp

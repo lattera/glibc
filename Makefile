@@ -31,7 +31,7 @@ all: lib others
 define autoconf-it
 autoconf $(ACFLAGS) $< > $@.new
 mv -f $@.new $@
-test -d CVS && cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
+test ! -d CVS || cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
 
 configure: configure.in; $(autoconf-it)
@@ -79,7 +79,7 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 					      no-libc.a bin lib		\
 					      data headers others)
 
-headers := features.h errno.h sys/errno.h errnos.h limits.h
+headers := features.h errno.h sys/errno.h errnos.h limits.h values.h
 aux	 = sysdep $(libc-init) version
 
 echo-headers: subdir_echo-headers

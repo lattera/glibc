@@ -58,6 +58,19 @@ AC_CANONICAL_HOST
 # $machine, $vendor, and $os, and changes them whenever convenient.
 config_machine=$host_cpu config_vendor=$host_vendor config_os=$host_os
 
+# Some configurations imply other options.
+case "$host_os" in
+gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
+  # These systems always use GNU tools.
+  gnu_ld=yes gnu_as=yes
+esac
+case "$host_os" in
+gnu* | linux* | sysv4* | solaris2*)
+  # These systems always use the ELF format.
+  elf=yes
+esac
+
+# Compute the list of sysdep directories for this configuration.
 sysdep_dir=$srcdir/sysdeps
 AC_MSG_CHECKING(sysdep dirs)
 AC_CACHE_VAL(libc_cv_sysdirs, [dnl
@@ -107,19 +120,6 @@ none)
 *)
   base_os='' ;;
 esac
-
-# Some configurations imply other options.
-case "$os" in
-gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
-  # These systems always use GNU tools.
-  gnu_ld=yes gnu_as=yes
-esac
-case "$os" in
-gnu* | linux* | sysv4* | solaris2*)
-  # These systems always use the ELF format.
-  elf=yes
-esac
-
 
 # For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
 tail=$os

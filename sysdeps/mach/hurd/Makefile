@@ -108,7 +108,7 @@ $(objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $(hurd)/errnos.h-tmp
 	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
-	test -d CVS && \
+	test ! -d CVS || \
 	  (cd $(hurd); cvs commit -m'Regenerated from $^' errnos.h)
 	touch $@
 
@@ -117,7 +117,7 @@ $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@-tmp
 	mv -f $@-tmp $@
-	test -d CVS && cvs commit -m'Regenerated from $^' $@
+	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
 
 # We install the real libc.a as libcrt.a and as libc.a we install a linker
 # script which does -( -lcrt -lmachuser -lhurduser -).

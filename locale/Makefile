@@ -25,7 +25,7 @@ headers		= locale.h
 distribute	= localeinfo.h categories.def \
 		  $(localedef-modules:=.c) $(locale-modules:=.c) \
 		  $(lib-modules:=.c) config.h hash.h iso-4217.def \
-		  keyword.gperf keyword.h localedef.h token.h
+		  keyword.gperf keyword.h localedef.h token.h error.h
 routines	= setlocale loadlocale localeconv nl_langinfo
 categories	= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%)

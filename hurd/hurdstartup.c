@@ -78,9 +78,6 @@ _hurd_startup (void **argptr, void (*main) (int *data))
   int argc, envc;
   int *argcptr;
 
-  /* Basic Mach initialization, must be done before RPCs can be done.  */
-  __mach_init ();
-
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
     LOSE;
@@ -104,21 +101,19 @@ _hurd_startup (void **argptr, void (*main) (int *data))
 
   if (err || in_bootstrap == MACH_PORT_NULL)
     {
-#if 0
       /* Either we have no bootstrap port, or the RPC to the exec server
 	 failed.  Try to snarf the args in the canonical Mach way.
 	 Hopefully either they will be on the stack as expected, or the
 	 stack will be zeros so we don't crash.  Set all our other
 	 variables to have empty information.  */
 
-      ENTRY_SP (argptr);
-      /* SNARF_ARGS (ARGPTR, ARGC, ARGV, ENVP) snarfs the arguments and
-	 environment from the stack, assuming they were put there by the
-	 microkernel.  */
-XXX XXX XXX
-      
-      SNARF_ARGS (argptr, argc, argv, envp);
-#endif
+      argcptr = (int *) argptr;
+      argc = argcptr[0];
+      argv = (char **) &argcptr[1];
+      envp = &argv[argc + 1];
+      envc = 0;
+      while (envp[envc])
+	++envc;
 
       data.flags = 0;
       args = env = NULL;
@@ -137,8 +132,6 @@ XXX XXX XXX
   /* Turn the block of null-separated strings we were passed for the
      arguments and environment into vectors of pointers to strings.  */
 
-
-  
   if (! argv)
     {
       /* Count up the arguments so we can allocate ARGV.  */
@@ -184,12 +177,15 @@ extern void _start();
     vm_address_t user_entry = 0;
 #endif
 
-    *d = data;
-    _hurd_init_dtable = d->dtable;
-    _hurd_init_dtablesize = d->dtablesize;
-    d->phdr = phdr;
-    d->phdrsz = phdrsz;
-    d->user_entry = user_entry;
+    if ((void *) d != argv[0])
+      {
+	*d = data;
+	_hurd_init_dtable = d->dtable;
+	_hurd_init_dtablesize = d->dtablesize;
+	d->phdr = phdr;
+	d->phdrsz = phdrsz;
+	d->user_entry = user_entry;
+      }
 
     (*main) (argcptr);
   }

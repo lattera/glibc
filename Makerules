@@ -363,7 +363,7 @@ lib%.so: lib%_pic.a
 # Don't try to use -lc when making libc.so itself.
 # Also omits crti.o and crtn.o, which we do not want
 # since we define our own `.init' section specially.
-LDFLAGS-c.so = -nostdlib
+LDFLAGS-c.so = -nostdlib -nostartfiles
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -Wl,-dynamic-linker -Wl,/lib/ld.so -e __libc_print_version
 endif
@@ -664,6 +664,6 @@ $(gpl2lgpl): %: $(..)gpl2lgpl.sed /home/gd/gnu/lib/%
 # So I don't edit them by mistake.
 	chmod a-w $@-tmp
 	mv -f $@-tmp $@
-	test -d CVS && cvs commit -m'Updated from $^' $@
+	test ! -d CVS || cvs commit -m'Updated from $^' $@
 endif
 endif

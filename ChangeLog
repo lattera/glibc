@@ -1,3 +1,34 @@
+Fri May 19 17:16:46 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/init-first.c: In cthreads case, handle
+ 	args on stack from kernel.
+
+	* posix/Makefile, sysdeps/alpha/Makefile,
+	* sysdeps/mach/hurd/Makefile, sysdeps/sparc/Makefile, Makefile,
+	* Makerules, Make-dist: Fix "cvs commit" cmds in rules to not fail
+	in the absence of CVS dirs.
+
+	* hurd/hurdstartup.c: Don't call __mach_init.  Grok args from the
+ 	kernel on the stack properly.
+
+	* set-init.c: Never call _init/_fini; just run __libc_subinit.
+
+	* Makerules (LDFLAGS-c.so): Add -nostartfiles.
+	* mach/Machrules (LDFLAGS-$(interface.so)): Likewise.
+
+	* configure.in: Move defaulting of --with-elf and --with-gnu-*
+ 	based on host os outside the AC_CACHE_VAL for the sysdirs
+ 	calculation.
+
+	* Makeconfig (localedir, nlsdir): New variables.
+
+	* values.h: New file.
+	* Makefile (headers): Add values.h.
+
+	* locale/Makefile (distribute): Add error.h.
+	* locale/localedef.c: Include "error.h".
+	(main): Use error_message_count instead of warning_cntr.
+
 Wed May 17 16:50:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	Merged 1003.2 locale and localedef programs by Ulrich Drepper.

@@ -167,7 +167,7 @@ subdirs := $(filter-out crypt,$(subdirs))
 define autoconf-it
 autoconf $(ACFLAGS) $< > $@.new
 mv -f $@.new $@
-test -d CVS && cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
+test ! -d CVS || cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
 
 configure: configure.in; $(autoconf-it)
@@ -210,7 +210,7 @@ README: README.template version.c
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
 # Make it unwritable so I won't change it by mistake.
 	chmod 444 $@
-	test -d CVS && commit -m'Remade for $(release)-$(version)' $@
+	test ! -d CVS || commit -m'Remade for $(release)-$(version)' $@
 
 
 endif	# Subdirectory vs. parent makefile

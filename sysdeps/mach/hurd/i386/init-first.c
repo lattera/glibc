@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include "hurdstartup.h"
 #include "set-hooks.h"
 #include "hurdmalloc.h"		/* XXX */
@@ -118,9 +119,23 @@ init (int *data, int retaddr)
     {
       /* Initialize cthreads, which will allocate us a new stack to run on.  */
       void *newsp = (*_cthread_init_routine) ();
+      struct hurd_startup_data *od;
+
       /* Copy the argdata from the old stack to the new one.  */
       newsp = memcpy (newsp - ((char *) &d[1] - (char *) data), data,
-		      (char *) &d[1] - (char *) data);
+		      (char *) d - (char *) data);
+
+      /* Set up the Hurd startup data block immediately following
+	 the argument and environment pointers on the new stack.  */
+      od = (newsp + ((char *) d - (char *) data));
+      if ((void *) argv[0] == d)
+	/* We were started up by the kernel with arguments on the stack.
+	   There is no Hurd startup data, so zero the block.  */
+	memset (od, 0, sizeof *od);
+      else
+	/* Copy the Hurd startup data block to the new stack.  */
+	*od = *d;
+
       data = newsp;
     }
 

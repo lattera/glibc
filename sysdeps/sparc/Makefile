@@ -46,7 +46,7 @@ $(divrem:%=$(sysdep_dir)/sparc/%.S): $(sysdep_dir)/sparc/divrem.m4
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@-tmp
 	mv -f $@-tmp $@
-	test -d CVS && cvs commit -m'Regenerated from $<' $@
+	test ! -d CVS || cvs commit -m'Regenerated from $<' $@
 
 sysdep-realclean := $(sysdep-realclean) $(divrem:%=sysdeps/sparc/%.S)
 

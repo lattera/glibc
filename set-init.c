@@ -19,24 +19,5 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include "set-hooks.h"
 
-DEFINE_HOOK_RUNNER (__libc_subinit, __libc_subinit_runner,
+DEFINE_HOOK_RUNNER (__libc_subinit, __libc_init,
 		    (int argc, char **argv, char **envp), (argc, argv, envp))
-
-void
-__libc_init (argc, argv, envp)
-     int argc;
-     char **argv;
-     char **envp;
-{
-  __libc_subinit_runner (argc, argv, envp);
-
-#ifdef HAVE_ELF
-  {
-    /* These functions are defined in crti.o to run the .init and .fini
-       sections, which are used for initializers in ELF.  */
-    extern void _init __P ((void)), _fini __P ((void));
-    atexit (_fini);		/* Arrange for _fini to run at exit.  */
-    _init ();
-  }
-#endif
-}

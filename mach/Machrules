@@ -199,6 +199,6 @@ extra-libs += $(interface-library)
 # shared object is absent, ld may choose a static library someplace and
 # produce a bogus libmachuser.so.
 interface.so = $(interface-library:lib%=%.so)
-LDFLAGS-$(interface.so) = -nostdlib
+LDFLAGS-$(interface.so) = -nostdlib -nostartfiles
 
 endif
