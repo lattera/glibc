@@ -190,7 +190,7 @@ cat <<EOF |
   CP949
   JOHAB
   BIG5
-  BIG5HKSCS
+  BIG5HKSCS         BIG5-HKSCS
   EUC-JP
   EUC-CN            GB2312
   GBK

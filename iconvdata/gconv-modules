@@ -382,6 +382,8 @@ alias	ISO-IR-199//		ISO-8859-14//
 alias	LATIN8//		ISO-8859-14//
 alias	L8//			ISO-8859-14//
 alias	ISO_8859-14:1998//	ISO-8859-14//
+alias	ISO_8859-14//		ISO-8859-14//
+alias	ISO-CELTIC//		ISO-8859-14//
 module	ISO-8859-14//		INTERNAL		ISO8859-14	1
 module	INTERNAL		ISO-8859-14//		ISO8859-14	1
 
@@ -1036,6 +1038,7 @@ module	BIG5//			INTERNAL		BIG5		1
 module	INTERNAL		BIG5//			BIG5		1
 
 #	from			to			module		cost
+alias	BIG5-HKSCS//		BIG5HKSCS//
 module	BIG5HKSCS//		INTERNAL		BIG5HKSCS	1
 module	INTERNAL		BIG5HKSCS//		BIG5HKSCS	1
 
