@@ -188,7 +188,7 @@ install_handler (void)
   else
     {
       const char *where;
-      int all = __strcasecmp (sigs, "all");
+      int all = __strcasecmp (sigs, "all") == 0;
 
 #define INSTALL_FOR_SIG(sig, name) \
       where = __strcasestr (sigs, name);				      \

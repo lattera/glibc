@@ -1,3 +1,9 @@
+1998-11-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/segfault.c (install_handler): Correct test for
+	SEGFAULT_HANDLER=all.
+	Patch by Zack Weinberg.
+
 1998-11-28 23:23 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
  
 	* sysdeps/unix/sysv/linux/configure.in: Test for symlinks in 
