@@ -1,5 +1,32 @@
 2002-08-11  Roland McGrath  <roland@redhat.com>
 
+	* sunrpc/svc_authux.c (_svcauth_unix): Remove spurious printf (ugh!).
+
+	* sysdeps/i386/bits/byteswap.h (__bswap_16, __bswap_32, __bswap_64):
+	Evaluate argument exactly once.  Remove __volatile__ from asm's.
+
+	* include/unistd.h: Use libc_hidden_proto for getdomainname
+	and getlogin_r.
+	* sysdeps/generic/getdomain.c: Add libc_hidden_def.
+	* sysdeps/mach/hurd/getdomain.c: Likewise.
+	* sysdeps/unix/getlogin_r.c: Likewise.
+	* sysdeps/mach/hurd/getlogin_r.c: Likewise.
+	* sysdeps/generic/getlogin_r.c: Likewise.
+
+	* include/rpc/auth_des.h: Use libc_hidden_proto for rtime.
+	* sunrpc/rtime.c: Add libc_hidden_def.
+
+	* include/string.h: Use libc_hidden_proto for basename.
+	* string/basename.c [_LIBC]: Add libc_hidden_def.
+
+	* sysdeps/unix/sysv/linux/opensock.c (__opensock): socket -> __socket.
+
+	* locale/loadarchive.c: munmap -> __munmap throughout.
+
+	* include/netdb.h: Use libc_hidden_proto for gai_strerror.
+	* sysdeps/posix/gai_strerror.c: Add libc_hidden_def.
+	* sysdeps/generic/gai_strerror.c: Likewise.
+
 	* include/sys/errno.h: New file.
 
 	* include/signal.h: No libc_hidden_proto for raise,

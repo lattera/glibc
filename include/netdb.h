@@ -31,6 +31,7 @@ libc_hidden_proto (ruserok_af)
 libc_hidden_proto (getaddrinfo)
 libc_hidden_proto (getnameinfo)
 libc_hidden_proto (freeaddrinfo)
+libc_hidden_proto (gai_strerror)
 
 /* Document internal interfaces.  */
 extern int __gethostent_r (struct hostent *__restrict __result_buf,

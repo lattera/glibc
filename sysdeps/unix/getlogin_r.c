@@ -1,5 +1,5 @@
 /* Reentrant function to return the current login name.  Unix version.
-   Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,96,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ getlogin_r (name, name_len)
      getlogin().  */
 
   result = __ttyname_r (0, real_tty_path, sizeof (tty_pathname));
-  
+
   if (result != 0)
     return result;
 
@@ -86,3 +86,4 @@ getlogin_r (name, name_len)
 
   return result;
 }
+libc_hidden_def (getlogin_r)

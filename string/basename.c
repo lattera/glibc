@@ -1,5 +1,5 @@
 /* Return the name-within-directory of a file name.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,3 +37,6 @@ basename (filename)
   char *p = strrchr (filename, '/');
   return p ? p + 1 : (char *) filename;
 }
+#ifdef _LIBC
+libc_hidden_def (basename)
+#endif

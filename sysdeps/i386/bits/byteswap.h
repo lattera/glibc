@@ -31,18 +31,20 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_16(x) \
      (__extension__							      \
-      ({ register unsigned short int __v;				      \
-	 if (__builtin_constant_p (x))					      \
-	   __v = __bswap_constant_16 (x);				      \
+      ({ register unsigned short int __v, __x = (x);			      \
+	 if (__builtin_constant_p (__x))				      \
+	   __v = __bswap_constant_16 (__x);				      \
 	 else								      \
-	   __asm__ __volatile__ ("rorw $8, %w0"				      \
-				 : "=r" (__v)				      \
-				 : "0" ((unsigned short int) (x))	      \
-				 : "cc");				      \
+	   __asm__ ("rorw $8, %w0"					      \
+		    : "=r" (__v)					      \
+ 		    : "0" (__x)						      \
+ 		    : "cc");						      \
 	 __v; }))
 #else
 /* This is better than nothing.  */
-# define __bswap_16(x) __bswap_constant_16 (x)
+# define __bswap_16(x) \
+     (__extension__							      \
+      ({ register unsigned short int __x = (x); __bswap_constant_16 (__x); }))
 #endif
 
 
@@ -55,33 +57,33 @@
 /* To swap the bytes in a word the i486 processors and up provide the
    `bswap' opcode.  On i386 we have to use three instructions.  */
 # if !defined __i486__ && !defined __pentium__ && !defined __pentiumpro__
-#  define __bswap_32(x) \
+#  define __bswap_32(x)							      \
      (__extension__							      \
-      ({ register unsigned int __v;					      \
-	 if (__builtin_constant_p (x))					      \
-	   __v = __bswap_constant_32 (x);				      \
+      ({ register unsigned int __v, __x = (x);				      \
+	 if (__builtin_constant_p (__x))				      \
+	   __v = __bswap_constant_32 (__x);				      \
 	 else								      \
-	   __asm__ __volatile__ ("rorw $8, %w0;"			      \
-				 "rorl $16, %0;"			      \
-				 "rorw $8, %w0"				      \
-				 : "=r" (__v)				      \
-				 : "0" ((unsigned int) (x))		      \
-				 : "cc");				      \
+	   __asm__ ("rorw $8, %w0;"					      \
+		    "rorl $16, %0;"					      \
+		    "rorw $8, %w0"					      \
+		    : "=r" (__v)					      \
+		    : "0" (__x)						      \
+		    : "cc");						      \
 	 __v; }))
 # else
 #  define __bswap_32(x) \
      (__extension__							      \
-      ({ register unsigned int __v;					      \
-	 if (__builtin_constant_p (x))					      \
-	   __v = __bswap_constant_32 (x);				      \
+      ({ register unsigned int __v, __x = (x);				      \
+	 if (__builtin_constant_p (__x))				      \
+	   __v = __bswap_constant_32 (__x);				      \
 	 else								      \
-	   __asm__ __volatile__ ("bswap %0"				      \
-				 : "=r" (__v)				      \
-				 : "0" ((unsigned int) (x)));		      \
+	   __asm__ ("bswap %0" : "=r" (__v) : "0" (__x));		      \
 	 __v; }))
 # endif
 #else
-# define __bswap_32(x) __bswap_constant_32 (x)
+# define __bswap_16(x) \
+     (__extension__							      \
+      ({ register unsigned int __x = (x); __bswap_constant_32 (__x); }))
 #endif
 
 
@@ -101,11 +103,11 @@
      (__extension__							      \
       ({ union { __extension__ unsigned long long int __ll;		      \
 		 unsigned long int __l[2]; } __w, __r;			      \
-         if (__builtin_constant_p (x))					      \
-	   __r.__ll = __bswap_constant_64 (x);				      \
+	 __w.__ll = (x);						      \
+         if (__builtin_constant_p (__w.__ll))				      \
+	   __r.__ll = __bswap_constant_64 (__w.__ll);			      \
 	 else								      \
 	   {								      \
-	     __w.__ll = (x);						      \
 	     __r.__l[0] = __bswap_32 (__w.__l[1]);			      \
 	     __r.__l[1] = __bswap_32 (__w.__l[0]);			      \
 	   }								      \

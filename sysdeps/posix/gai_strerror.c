@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pjb27@cam.ac.uk>, 1997.
 
@@ -56,3 +56,4 @@ gai_strerror (int code)
 
   return _("Unknown error");
 }
+libc_hidden_def (gai_strerror)

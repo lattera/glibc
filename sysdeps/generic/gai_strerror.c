@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,3 +26,4 @@ gai_strerror (int code)
   snprintf (buffer, sizeof buffer, "Unknown error (%d)", code);
   return buffer;
 }
+libc_hidden_def (gai_strerror)

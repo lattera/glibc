@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,3 +29,4 @@ getdomainname (char *name, size_t len)
   ssize_t n = _hurd_get_host_config ("/etc/nisdomain", name, len);
   return n < 0 ? -1 : 0;
 }
+libc_hidden_def (getdomainname)

@@ -10,6 +10,8 @@ libc_hidden_proto (execlp)
 libc_hidden_proto (execvp)
 libc_hidden_proto (getpid)
 libc_hidden_proto (getsid)
+libc_hidden_proto (getdomainname)
+libc_hidden_proto (getlogin_r)
 
 
 /* Now define the internal interfaces.  */

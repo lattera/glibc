@@ -205,7 +205,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  if (calculate_head_size ((const struct locarhead *) result)
 	      > archive_stat.st_size)
 	    {
-	      (void) munmap (result, archive_stat.st_size);
+	      (void) __munmap (result, archive_stat.st_size);
 	      goto close_and_out;
 	    }
 	  __close (fd);
@@ -389,7 +389,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  newp = (struct archmapped *) malloc (sizeof (struct archmapped));
 	  if (newp == NULL)
 	    {
-	      (void) munmap (addr, to - from);
+	      (void) __munmap (addr, to - from);
 	      return NULL;
 	    }
 
@@ -473,13 +473,13 @@ _nl_archive_subfreeres (void)
 
       assert (archmapped == &headmap);
       archmapped = NULL;
-      (void) munmap (headmap.ptr, headmap.len);
+      (void) __munmap (headmap.ptr, headmap.len);
       am = headmap.next;
       while (am != NULL)
 	{
 	  struct archmapped *dead = am;
 	  am = am->next;
-	  (void) munmap (dead->ptr, dead->len);
+	  (void) __munmap (dead->ptr, dead->len);
 	  free (dead);
 	}
     }

@@ -67,7 +67,7 @@ __opensock (void)
     {
       assert (last_type != 0);
 
-      result = socket (last_family, last_type, 0);
+      result = __socket (last_family, last_type, 0);
       if (result != -1 || errno != EAFNOSUPPORT)
 	/* Maybe the socket type isn't supported anymore (module is
 	   unloaded).  In this case again try to find the type.  */
@@ -102,7 +102,7 @@ __opensock (void)
       if (afs[cnt].family == AF_NETROM || afs[cnt].family == AF_X25)
 	type = SOCK_SEQPACKET;
 
-      result = socket (afs[cnt].family, type, 0);
+      result = __socket (afs[cnt].family, type, 0);
       if (result != -1)
 	{
 	  /* Found an available family.  */
