@@ -106,9 +106,12 @@ common-generated += errnos.d stamp-errnos
 libc-name = crt
 
 ifeq (,$(subdir))
-install-others += $(inst_libdir)/libc.a $(inst_libdir)/libc_p.a
+install-others += $(inst_libdir)/libc.a
 $(inst_libdir)/libc.a: $(hurd)/libc-ldscript $(+force); $(do-install)
+ifeq (yes,$(build-profile))
+install-others += $(inst_libdir)/libc_p.a
 $(inst_libdir)/libc_p.a: $(hurd)/libc_p-ldscript $(+force); $(do-install)
+endif
 endif
 
 # Make sure these are used to build the libc.so shared object too.  There
