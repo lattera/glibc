@@ -802,19 +802,41 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  }
 	else
 	  {
+	    int crit = __spin_lock_locked (&ss->critical_section_lock);
+
 	    wait_for_reply
-	      = (_hurdsig_abort_rpcs (ss, signo, 1,
+	      = (_hurdsig_abort_rpcs (ss,
+				      /* In a critical section, any RPC
+					 should be cancelled instead of
+					 restarted, regardless of
+					 SA_RESTART, so the the entire
+					 "atomic" operation can be aborted
+					 as a unit.  */
+				      crit ? 0 : signo, 1,
 				      &thread_state, &state_changed,
 				      &reply)
 		 != MACH_PORT_NULL);
 
-	    if (__spin_lock_locked (&ss->critical_section_lock))
+	    if (crit)
 	      {
 		/* The thread is in a critical section.  Mark the signal as
 		   pending.  When it finishes the critical section, it will
 		   check for pending signals.  */
 		mark_pending ();
-		assert (! state_changed);
+		if (state_changed)
+		  /* Some cases of interrupting an RPC must change the
+		     thread state to back out the call.  Normally this
+		     change is rolled into the warping to the handler and
+		     sigreturn, but we are not running the handler now
+		     because the thread is in a critical section.  Instead,
+		     mutate the thread right away for the RPC interruption
+		     and resume it; the RPC will return early so the
+		     critical section can end soon.  */
+		  __thread_set_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
+				      (natural_t *) &thread_state.basic,
+				      MACHINE_THREAD_STATE_COUNT);
+		/* */
+		ss->intr_port = MACH_PORT_NULL;
 		__thread_resume (ss->thread);
 		break;
 	      }
