@@ -1,3 +1,12 @@
+Thu Oct 26 18:13:33 1995  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/bind.c (bind): Swap args to dir_link.
+	* sysdeps/mach/hurd/link.c (__link): Ditto.
+	* sysdeps/mach/hurd/mknod.c (__mknod): Ditto.
+	Include "stdio-common/_itoa.h" instead of "stdio/_itoa.h".
+
+	* sysdeps/mach/hurd/symlink.c (__symlink): Ditto.
+
 Thu Oct 26 00:11:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c: New file.
