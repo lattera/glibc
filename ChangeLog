@@ -1,3 +1,9 @@
+1999-07-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Versions.def (libnss_hesiod): Add GLIBC_2.2.
+	* hesiod/Versions (libnss_hesiod) [GLIBC_2.2]: Add
+	_nss_hesiod_initgroups.
+
 1999-07-11  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/brk.c (static_data_start): New variable.
