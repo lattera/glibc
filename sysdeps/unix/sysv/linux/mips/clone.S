@@ -72,7 +72,7 @@ NESTED(__clone,4*SZREG,sp)
 	/* Something bad happened -- no child created */
 error:
 	addiu		sp,32
-#ifdef PIC
+#ifdef __PIC__
 	la		t9,__syscall_error
 	jr		t9
 #else

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -39,10 +39,10 @@ __sigsetjmp_aux (jmp_buf env, int savemask, int sp, int fp)
   asm volatile ("sw $31, %0" : : "m" (env[0].__jmpbuf[0].__pc));
 
   /* .. and the stack pointer;  */
-  env[0].__jmpbuf[0].__sp = sp;
+  env[0].__jmpbuf[0].__sp = (void *) sp;
 
   /* .. and the FP; it'll be in s8. */
-  env[0].__jmpbuf[0].__fp = fp;
+  env[0].__jmpbuf[0].__fp = (void *) fp;
 
   /* .. and the GP; */
   asm volatile ("sw $gp, %0" : : "m" (env[0].__jmpbuf[0].__gp));
