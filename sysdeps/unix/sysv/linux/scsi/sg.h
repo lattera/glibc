@@ -34,7 +34,7 @@
 /* Same structure as used by readv() Linux system call. It defines one
    scatter-gather element. */
 typedef struct sg_iovec
-{                      
+{
   void * iov_base;            /* Starting address  */
   size_t iov_len;             /* Length in bytes  */
 } sg_iovec_t;
@@ -42,11 +42,12 @@ typedef struct sg_iovec
 
 typedef struct sg_io_hdr
 {
-  char interface_id;          /* [i] 'S' for SCSI generic (required) */
+  int interface_id;           /* [i] 'S' for SCSI generic (required) */
+  int dxfer_direction;        /* [i] data transfer direction  */
   unsigned char cmd_len;      /* [i] SCSI command length ( <= 16 bytes) */
-  unsigned char iovec_count;  /* [i] 0 implies no scatter gather */
   unsigned char mx_sb_len;    /* [i] max length to write to sbp */
   int dxfer_direction;        /* [i] data transfer direction  */
+  unsigned short int iovec_count; /* [i] 0 implies no scatter gather */
   unsigned int dxfer_len;     /* [i] byte count of data transfer */
   void * dxferp;              /* [i], [*io] points to data transfer memory
 				 or scatter gather list */
@@ -166,9 +167,13 @@ typedef struct sg_req_info {
 
 #define SG_GET_VERSION_NUM 0x2282 /* Example: version 2.1.34 yields 20134 */
 
-/* Returns -EBUSY if occupied else takes as input: 0 -> do nothing,
-   1 -> device reset or  2 -> bus reset (may not be activated yet) */
+/* Returns -EBUSY if occupied. 3rd argument pointer to int (see next) */
 #define SG_SCSI_RESET 0x2284
+/* Associated values that can be given to SG_SCSI_RESET follow */
+#define SG_SCSI_RESET_NOTHING	0
+#define SG_SCSI_RESET_DEVICE	1
+#define SG_SCSI_RESET_BUS	2
+#define SG_SCSI_RESET_HOST	3
 
 /* synchronous SCSI command ioctl, (only in version 3 interface) */
 #define SG_IO 0x2285   /* similar effect as write() followed by read() */
@@ -243,7 +248,7 @@ struct sg_header
 
 
 /* IOCTLs: The following are not required (or ignored) when the sg_io_hdr_t
-	   interface is used. That are kept for backward compatibility with
+	   interface is used. They are kept for backward compatibility with
 	   the original and version 2 drivers. */
 
 #define SG_SET_TIMEOUT		0x2201	/* Set timeout; *(int *)arg==timeout.  */

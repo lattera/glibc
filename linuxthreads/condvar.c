@@ -77,6 +77,10 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   pthread_extricate_if extr;
   int already_canceled = 0;
 
+  /* Check whether the mutex is locked and owned by this thread.  */
+  if (mutex->__m_owner != self)
+    return EINVAL;
+
   /* Set up extrication interface */
   extr.pu_object = cond;
   extr.pu_extricate_func = cond_extricate_func;
@@ -380,6 +384,10 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
                            const struct timespec * abstime)
 {
+  /* Check whether the mutex is locked and owned by this thread.  */
+  if (mutex->__m_owner != self)
+    return EINVAL;
+
   /* Indirect call through pointer! */
   return pthread_cond_tw_rel(cond, mutex, abstime);
 }

@@ -1,5 +1,9 @@
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* condvar.c (pthread_cond_wait): Check whether mutex is owned by
+	current thread and return error if not.
+	(pthread_cond_timedwait): Likewise.
+
 	* mutex.c (__pthread_once): Handle cancelled init function correctly.
 	(pthread_once_cancelhandler): New function.
 	Patch by Kaz Kylheku <kaz@ashi.footprints.net>.
