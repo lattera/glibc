@@ -65,6 +65,7 @@ enum tok_kind {
 	TOK_INT,
 	TOK_SHORT,
 	TOK_LONG,
+	TOK_HYPER,
 	TOK_UNSIGNED,
 	TOK_FLOAT,
 	TOK_DOUBLE,

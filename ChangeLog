@@ -1,9 +1,32 @@
+2001-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/Dist: Add ucontext_i.h.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Dist: Likewise.
+
+2001-04-04  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/s390/swapcontext.c: New file.
+
 2001-04-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/powerpc/dl-machine.h (ELF_MACHINE_NO_REL): Move to right
 	place.
 
 2001-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/rpc_scan.c (symbols): Add entry for HYPER.
+	* sunrpc/rpc_scan.h (enum tok_kind): Add TOK_HYPER.
+	* sunrpc/rpc_parse.c (get_type): Handle TOK_HYPER.
+	(unsigned_dec): Likewise.
+	Patch by atai@jezebel.dreamhost.com.
 
 	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Pass
 	pointer to int as last parameter of yp_match.
