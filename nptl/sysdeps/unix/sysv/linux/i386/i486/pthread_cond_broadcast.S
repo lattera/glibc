@@ -70,13 +70,24 @@ __pthread_cond_broadcast:
 3:	movl	%ecx, (%ebx)
 	movl	%eax, 4(%ebx)
 
+	/* Unlock.  */
+	LOCK
+	decl	cond_lock-wakeup_seq(%ebx)
+	jne	7f
+
 	/* Wake up all threads.  */
-	movl	$FUTEX_WAKE, %ecx
+8:	movl	$FUTEX_WAKE, %ecx
 	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
 	movl	$0x7fffffff, %edx
 	ENTER_KERNEL
 
+	xorl	%eax, %eax
+	popl	%ebx
+	popl	%esi
+	ret
+
+	.align	16
 	/* Unlock.  */
 4:	LOCK
 	decl	cond_lock-wakeup_seq(%ebx)
@@ -98,10 +109,14 @@ __pthread_cond_broadcast:
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
-5:
-	leal	cond_lock-wakeup_seq(%ebx), %eax
+5:	leal	cond_lock-wakeup_seq(%ebx), %eax
 	call	__lll_mutex_unlock_wake
 	jmp	6b
+
+	/* Unlock in loop requires waekup.  */
+7:	leal	cond_lock-wakeup_seq(%ebx), %eax
+	call	__lll_mutex_unlock_wake
+	jmp	8b
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
 versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
 		  GLIBC_2_3_2)

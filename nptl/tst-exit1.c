@@ -24,8 +24,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 20
-
 static pthread_barrier_t b;
 
 
@@ -46,7 +44,7 @@ tf (void *arg)
 static int
 do_test (void)
 {
-  if (pthread_barrier_init (&b, NULL, N + 1) != 0)
+  if (pthread_barrier_init (&b, NULL, 2) != 0)
     {
       puts ("barrier_init failed");
       exit (1);
