@@ -1,5 +1,5 @@
 /* Helper code for POSIX timer implementation on LinuxThreads.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -370,6 +370,7 @@ thread_expire_timer (struct thread_node *self, struct timer_node *timer)
    timers in chronological order as close to their scheduled time as
    possible.  */
 static void *
+__attribute__ ((noreturn))
 thread_func (void *arg)
 {
   struct thread_node *self = arg;
@@ -437,11 +438,13 @@ thread_func (void *arg)
       else
 	pthread_cond_wait (&self->cond, &__timer_mutex);
     }
-
+  /* These statements will never be executed since the while loop
+     loops forever:
   pthread_mutex_unlock (&__timer_mutex);
   pthread_cleanup_pop (1);
 
   return NULL;
+  */
 }
 
 

@@ -1,5 +1,8 @@
 2001-04-21  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/pthread/timer_routines.c (thread_func): Add noreturn
+	attribute, remove statements that will never be executed.
+
 	* manager.c (__pthread_manager): Add noreturn
 	attribute.
 	(pthread_start_thread): Likewise, remove return statement.
