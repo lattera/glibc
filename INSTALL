@@ -1,404 +1,389 @@
-Library Maintenance
-*******************
+Installing the GNU C Library
+****************************
 
-Adding New Functions
-====================
+   Installation of the GNU C library is relatively simple, but usually
+requires several GNU tools to be installed already.
 
-   The process of building the library is driven by the makefiles, which
-make heavy use of special features of GNU `make'.  The makefiles are
-very complex, and you probably don't want to try to understand them.
-But what they do is fairly straightforward, and only requires that you
-define a few variables in the right places.
+   Before you do anything else, you should read the file `FAQ' found at
+the top level of the source tree.  This file answers common questions
+and describes problems you may experience with compilation and
+installation.  It is updated more frequently than this manual.
 
-   The library sources are divided into subdirectories, grouped by
-topic.
+   To configure the GNU C library for your system, run the shell script
+`configure' with `sh'.  You might use an argument which is the
+conventional GNU name for your system configuration--for example,
+`i486-pc-linux-gnu', for Linux running on i486.  *Note Installation:
+(gcc.info)Installation, for a full description of standard GNU
+configuration names.  If you omit the configuration name, `configure'
+will try to guess one for you by inspecting the system it is running
+on.  It may or may not be able to come up with a guess, and the guess
+might be wrong.  `configure' will tell you the canonical name of the
+chosen configuration before proceeding.
 
-   The `string' subdirectory has all the string-manipulation functions,
-`math' has all the mathematical functions, etc.
+   Here are some options that you should specify (if appropriate) when
+you run `configure':
 
-   Each subdirectory contains a simple makefile, called `Makefile',
-which defines a few `make' variables and then includes the global
-makefile `Rules' with a line like:
+`--with-binutils=DIRECTORY'
+     Use the binutils (assembler and linker) in `DIRECTORY', not the
+     ones the C compiler would default to.  You could use this option if
+     the default binutils on your system cannot deal with all the
+     constructs in the GNU C library.  (`configure' will detect the
+     problem and suppress these constructs, so the library will still
+     be usable, but functionality may be lost--for example, you can not
+     build a shared libc with old binutils.)
 
-     include ../Rules
+`--without-fp'
+`--nfp'
+     Use this option if your computer lacks hardware floating-point
+     support and your operating system does not emulate an FPU.
 
-The basic variables that a subdirectory makefile defines are:
+`--prefix=DIRECTORY'
+     Install machine-independent data files in subdirectories of
+     `DIRECTORY'.  (You can also set this in `configparms'; see below.)
+     The default is to install in `/usr/local'.
 
-`subdir'
-     The name of the subdirectory, for example `stdio'.  This variable
-     *must* be defined.
+`--exec-prefix=DIRECTORY'
+     Install the library and other machine-dependent files in
+     subdirectories of `DIRECTORY'.  (You can also set this in
+     `configparms'; see below.)  The default is to use <prefix>/bin and
+     <prefix>/sbin.
 
-`headers'
-     The names of the header files in this section of the library, such
-     as `stdio.h'.
+`--enable-shared'
+`--disable-shared'
+     Enable or disable building of an ELF shared library on systems that
+     support it.  The default is to build the shared library on systems
+     using ELF when the GNU `binutils' are available.
 
-`routines'
-`aux'
-     The names of the modules (source files) in this section of the
-     library.  These should be simple names, such as `strlen' (rather
-     than complete file names, such as `strlen.c').  Use `routines' for
-     modules that define functions in the library, and `aux' for
-     auxiliary modules containing things like data definitions.  But the
-     values of `routines' and `aux' are just concatenated, so there
-     really is no practical difference.
+`--enable-profile'
+`--disable-profile'
+     Enable or disable building of the profiled C library, `-lc_p'.  The
+     default is to build the profiled library.  You may wish to disable
+     it if you don't plan to do profiling, because it doubles the build
+     time of compiling just the unprofiled static library.
 
-`tests'
-     The names of test programs for this section of the library.  These
-     should be simple names, such as `tester' (rather than complete file
-     names, such as `tester.c').  `make tests' will build and run all
-     the test programs.  If a test program needs input, put the test
-     data in a file called `TEST-PROGRAM.input'; it will be given to
-     the test program on its standard input.  If a test program wants
-     to be run with arguments, put the arguments (all on a single line)
-     in a file called `TEST-PROGRAM.args'.  Test programs should exit
-     with zero status when the test passes, and nonzero status when the
-     test indicates a bug in the library or error in building.
+`--enable-omitfp'
+     Enable building a highly-optimized but possibly undebuggable C
+     library.  This causes the normal static and shared (if enabled) C
+     libraries to be compiled with maximal optimization, including the
+     `-fomit-frame-pointer' switch that makes debugging impossible on
+     many machines, and without debugging information (which makes the
+     binaries substantially smaller).  An additional static library is
+     compiled with no optimization and full debugging information, and
+     installed as `-lc_g'.
 
-`others'
-     The names of "other" programs associated with this section of the
-     library.  These are programs which are not tests per se, but are
-     other small programs included with the library.  They are built by
-     `make others'.
+`--enable-add-ons[=LIST]'
+     Certain components of the C library are distributed separately
+     from the rest of the sources.  In particular, the `crypt' function
+     and its friends are separated due to US export control
+     regulations, and the threading support code for Linux is
+     maintained separately.  You can get these "add-on" packages from
+     the same place you got the libc sources.  To use them, unpack them
+     into your source tree, and give `configure' the `--enable-add-ons'
+     option.
 
-`install-lib'
-`install-data'
-`install'
-     Files to be installed by `make install'.  Files listed in
-     `install-lib' are installed in the directory specified by `libdir'
-     in `configparms' or `Makeconfig' (*note Installation::.).  Files
-     listed in `install-data' are installed in the directory specified
-     by `datadir' in `configparms' or `Makeconfig'.  Files listed in
-     `install' are installed in the directory specified by `bindir' in
-     `configparms' or `Makeconfig'.
+     If you do not wish to use some add-on package that you have
+     present in your source tree, give this option a list of the
+     add-ons that you *do* want used, like this:
+     `--enable-add-ons=crypt,linuxthreads'
 
-`distribute'
-     Other files from this subdirectory which should be put into a
-     distribution tar file.  You need not list here the makefile itself
-     or the source and header files listed in the other standard
-     variables.  Only define `distribute' if there are files used in an
-     unusual way that should go into the distribution.
+`--with-headers=DIRECTORY'
+     Search only DIRECTORY and the C compiler's private directory for
+     header files not found in the libc sources.  `/usr/include' will
+     not be searched if this option is given.  On Linux, DIRECTORY
+     should be the kernel's private include directory (usually
+     `/usr/src/linux/include').
 
-`generated'
-     Files which are generated by `Makefile' in this subdirectory.
-     These files will be removed by `make clean', and they will never
-     go into a distribution.
+     This option is primarily of use on a system where the headers in
+     `/usr/include' come from an older version of glibc.  Conflicts can
+     occasionally happen in this case.  Note that Linux libc5 qualifies
+     as an older version of glibc.  You can also use this option if you
+     want to compile glibc with a newer set of kernel headers than the
+     ones found in `/usr/include'.
 
-`extra-objs'
-     Extra object files which are built by `Makefile' in this
-     subdirectory.  This should be a list of file names like `foo.o';
-     the files will actually be found in whatever directory object
-     files are being built in.  These files will be removed by
-     `make clean'.  This variable is used for secondary object files
-     needed to build `others' or `tests'.
+   You should not build the library in the same directory as the
+sources, because there are bugs in `make clean'.  Make a directory for
+the build, and run `configure' from that directory, like this:
 
-Porting the GNU C Library
-=========================
+     mkdir linux
+     cd linux
+     ../configure
 
-   The GNU C library is written to be easily portable to a variety of
-machines and operating systems.  Machine- and operating system-dependent
-functions are well separated to make it easy to add implementations for
-new machines or operating systems.  This section describes the layout of
-the library source tree and explains the mechanisms used to select
-machine-dependent code to use.
+`configure' looks for the sources in whatever directory you specified
+for finding `configure' itself.  It does not matter where in the file
+system the source and build directories are--as long as you specify the
+source directory when you run `configure', you will get the proper
+results.
 
-   All the machine-dependent and operating system-dependent files in the
-library are in the subdirectory `sysdeps' under the top-level library
-source directory.  This directory contains a hierarchy of
-subdirectories (*note Hierarchy Conventions::.).
+   This feature lets you keep sources and binaries in different
+directories, and that makes it easy to build the library for several
+different machines from the same set of sources.  Simply create a build
+directory for each target machine, and run `configure' in that
+directory specifying the target machine's configuration name.
 
-   Each subdirectory of `sysdeps' contains source files for a
-particular machine or operating system, or for a class of machine or
-operating system (for example, systems by a particular vendor, or all
-machines that use IEEE 754 floating-point format).  A configuration
-specifies an ordered list of these subdirectories.  Each subdirectory
-implicitly appends its parent directory to the list.  For example,
-specifying the list `unix/bsd/vax' is equivalent to specifying the list
-`unix/bsd/vax unix/bsd unix'.  A subdirectory can also specify that it
-implies other subdirectories which are not directly above it in the
-directory hierarchy.  If the file `Implies' exists in a subdirectory,
-it lists other subdirectories of `sysdeps' which are appended to the
-list, appearing after the subdirectory containing the `Implies' file.
-Lines in an `Implies' file that begin with a `#' character are ignored
-as comments.  For example, `unix/bsd/Implies' contains:
-     # BSD has Internet-related things.
-     unix/inet
+   The library has a number of special-purpose configuration parameters.
+These are defined in the file `configparms'; see the comments in that
+file for the details.  To change them, copy `configparms' into your
+build directory and modify it as appropriate for your system.
+`configure' will not notice your modifications if you change the file
+in the source directory.
 
-and `unix/Implies' contains:
-     posix
+   It is easy to configure the GNU C library for cross-compilation by
+setting a few variables in `configparms'.  Set `CC' to the
+cross-compiler for the target you configured the library for; it is
+important to use this same `CC' value when running `configure', like
+this: `CC=TARGET-gcc configure TARGET'.  Set `BUILD_CC' to the compiler
+to use for for programs run on the build system as part of compiling
+the library.  You may need to set `AR' and `RANLIB' to cross-compiling
+versions of `ar' and `ranlib' if the native tools are not configured to
+work with object files for the target you configured for.
 
-So the final list is `unix/bsd/vax unix/bsd unix/inet unix posix'.
+   Some of the machine-dependent code for some machines uses extensions
+in the GNU C compiler, so you may need to compile the library with GCC.
+(In fact, all of the existing complete ports require GCC.)
 
-   `sysdeps' has a "special" subdirectory called `generic'.  It is
-always implicitly appended to the list of subdirectories, so you
-needn't put it in an `Implies' file, and you should not create any
-subdirectories under it intended to be new specific categories.
-`generic' serves two purposes.  First, the makefiles do not bother to
-look for a system-dependent version of a file that's not in `generic'.
-This means that any system-dependent source file must have an analogue
-in `generic', even if the routines defined by that file are not
-implemented on other platforms.  Second. the `generic' version of a
-system-dependent file is used if the makefiles do not find a version
-specific to the system you're compiling for.
+   To build the library and related programs, type `make'.  This will
+produce a lot of output, some of which may look like errors from `make'
+(but isn't).  Look for error messages from `make' containing `***'.
+Those indicate that something is really wrong.
 
-   If it is possible to implement the routines in a `generic' file in
-machine-independent C, using only other machine-independent functions in
-the C library, then you should do so.  Otherwise, make them stubs.  A
-"stub" function is a function which cannot be implemented on a
-particular machine or operating system.  Stub functions always return an
-error, and set `errno' to `ENOSYS' (Function not implemented).  *Note
-Error Reporting::.  If you define a stub function, you must place the
-statement `stub_warning(FUNCTION)', where FUNCTION is the name of your
-function, after its definition; also, you must include the file
-`<stub-tag.h>' into your file.  This causes the function to be listed
-in the installed `<gnu/stubs.h>', and makes GNU ld warn when the
-function is used.
+   The compilation process takes several hours even on fast hardware;
+expect at least two hours for the default configuration on i586 for
+Linux.  For Hurd times are much longer.  All current releases of GCC
+have a problem which causes them to take several minutes to compile
+certain files in the iconvdata directory.  Do not panic if the compiler
+appears to hang.
 
-   Some rare functions are only useful on specific systems and aren't
-defined at all on others; these do not appear anywhere in the
-system-independent source code or makefiles (including the `generic'
-directory), only in the system-dependent `Makefile' in the specific
-system's subdirectory.
+   To build and run some test programs which exercise some of the
+library facilities, type `make check'.  This will produce several files
+with names like `PROGRAM.out'.
 
-   If you come across a file that is in one of the main source
-directories (`string', `stdio', etc.), and you want to write a machine-
-or operating system-dependent version of it, move the file into
-`sysdeps/generic' and write your new implementation in the appropriate
-system-specific subdirectory.  Note that if a file is to be
-system-dependent, it *must not* appear in one of the main source
-directories.
+   To format the `GNU C Library Reference Manual' for printing, type
+`make dvi'.  You need a working TeX installation to do this.
 
-   There are a few special files that may exist in each subdirectory of
-`sysdeps':
+   To install the library and its header files, and the Info files of
+the manual, type `make install'.  This will build things if necessary,
+before installing them.  If you want to install the files in a different
+place than the one specified at configuration time you can specify a
+value for the Makefile variable `install_root' on the command line.
+This is useful to create chroot'ed environment or to prepare binary
+releases.
 
-`Makefile'
-     A makefile for this machine or operating system, or class of
-     machine or operating system.  This file is included by the library
-     makefile `Makerules', which is used by the top-level makefile and
-     the subdirectory makefiles.  It can change the variables set in the
-     including makefile or add new rules.  It can use GNU `make'
-     conditional directives based on the variable `subdir' (see above)
-     to select different sets of variables and rules for different
-     sections of the library.  It can also set the `make' variable
-     `sysdep-routines', to specify extra modules to be included in the
-     library.  You should use `sysdep-routines' rather than adding
-     modules to `routines' because the latter is used in determining
-     what to distribute for each subdirectory of the main source tree.
+   For now (in this alpha version, and at least on RedHat Linux), if you
+are trying to install this as your default libraries, a different
+installation method is recommended.  Move `/usr/include' out of the
+way, create a new `/usr/include' directory (don't forget the symlinks
+`/usr/include/asm' and `/usr/include/linux', that should point to
+`/usr/src/linux/include/asm' and `/usr/src/linux/include/linux' -or
+wherever you keep your kernel sources-respectively), build normally and
+install into somewhere else via `install_root'. Then move your
+`/usr/include' back, and copy the newly created stuff by hand over the
+old. Remember to copy programs and shared libraries into `FILENAME.new'
+and then move `FILENAME.new' to `FILENAME', as the files might be in
+use. You will have to `ranlib' your copies of the static libraries
+`/usr/lib/libNAME.a'. You will see that `libbsd-compat.a', `libieee.a',
+and `libmcheck.a' are just object files, not archives. This is normal.
+Copy the new header files over the old ones by something like
+`cd /usr; (cd INSTALL_ROOT; tar cf - include) | tar xf -'.
 
-     Each makefile in a subdirectory in the ordered list of
-     subdirectories to be searched is included in order.  Since several
-     system-dependent makefiles may be included, each should append to
-     `sysdep-routines' rather than simply setting it:
+Recommended Tools to Install the GNU C Library
+==============================================
 
-          sysdep-routines := $(sysdep-routines) foo bar
+   We recommend installing the following GNU tools before attempting to
+build the GNU C library:
 
-`Subdirs'
-     This file contains the names of new whole subdirectories under the
-     top-level library source tree that should be included for this
-     system.  These subdirectories are treated just like the
-     system-independent subdirectories in the library source tree, such
-     as `stdio' and `math'.
+   * GNU `make' 3.75
 
-     Use this when there are completely new sets of functions and header
-     files that should go into the library for the system this
-     subdirectory of `sysdeps' implements.  For example,
-     `sysdeps/unix/inet/Subdirs' contains `inet'; the `inet' directory
-     contains various network-oriented operations which only make sense
-     to put in the library on systems that support the Internet.
+     You need the latest version of GNU `make'.  Modifying the GNU C
+     Library to work with other `make' programs would be so hard that we
+     recommend you port GNU `make' instead.  *Really.*  We recommend
+     version GNU `make' version 3.75.  Versions 3.76 and 3.76.1 are
+     known to have bugs which only show up in big projects like GNU
+     `libc'.
 
-`Dist'
-     This file contains the names of files (relative to the
-     subdirectory of `sysdeps' in which it appears) which should be
-     included in the distribution.  List any new files used by rules in
-     the `Makefile' in the same directory, or header files used by the
-     source files in that directory.  You don't need to list files that
-     are implementations (either C or assembly source) of routines
-     whose names are given in the machine-independent makefiles in the
-     main source tree.
+   * GCC 2.8.1/EGCS 1.0.2
 
-`configure'
-     This file is a shell script fragment to be run at configuration
-     time.  The top-level `configure' script uses the shell `.' command
-     to read the `configure' file in each system-dependent directory
-     chosen, in order.  The `configure' files are often generated from
-     `configure.in' files using Autoconf.
+     On most platforms, the GNU C library can only be compiled with the
+     GNU C compiler family.  We recommend GCC version 2.8.1 and EGCS
+     version 1.0.2 or later versions of these two; earlier versions may
+     have problems.
 
-     A system-dependent `configure' script will usually add things to
-     the shell variables `DEFS' and `config_vars'; see the top-level
-     `configure' script for details.  The script can check for
-     `--with-PACKAGE' options that were passed to the top-level
-     `configure'.  For an option `--with-PACKAGE=VALUE' `configure'
-     sets the shell variable `with_PACKAGE' (with any dashes in PACKAGE
-     converted to underscores) to VALUE; if the option is just
-     `--with-PACKAGE' (no argument), then it sets `with_PACKAGE' to
-     `yes'.
+   * GNU `binutils' 2.8.1.0.23
 
-`configure.in'
-     This file is an Autoconf input fragment to be processed into the
-     file `configure' in this subdirectory.  *Note Introduction:
-     (autoconf.info)Introduction, for a description of Autoconf.  You
-     should write either `configure' or `configure.in', but not both.
-     The first line of `configure.in' should invoke the `m4' macro
-     `GLIBC_PROVIDES'.  This macro does several `AC_PROVIDE' calls for
-     Autoconf macros which are used by the top-level `configure'
-     script; without this, those macros might be invoked again
-     unnecessarily by Autoconf.
+     Using the GNU `binutils' (assembler, linker, and related tools) is
+     preferable when possible, and they are required to build an ELF
+     shared C library.  Version 2.1 of the library uses ELF symbol
+     versioning extensively.  Support for this feature is incomplete or
+     buggy before binutils 2.8.1.0.23, so you must use at least this
+     version.
 
-   That is the general system for how system-dependencies are isolated.
+   * GNU `texinfo' 3.11
 
-Layout of the `sysdeps' Directory Hierarchy
--------------------------------------------
+     To correctly translate and install the Texinfo documentation you
+     need this version of the `texinfo' package.  Earlier versions do
+     not understand all the tags used in the document, and the
+     installation mechanisms for the info files is not present or works
+     differently.
 
-   A GNU configuration name has three parts: the CPU type, the
-manufacturer's name, and the operating system.  `configure' uses these
-to pick the list of system-dependent directories to look for.  If the
-`--nfp' option is *not* passed to `configure', the directory
-`MACHINE/fpu' is also used.  The operating system often has a "base
-operating system"; for example, if the operating system is `Linux', the
-base operating system is `unix/sysv'.  The algorithm used to pick the
-list of directories is simple: `configure' makes a list of the base
-operating system, manufacturer, CPU type, and operating system, in that
-order.  It then concatenates all these together with slashes in
-between, to produce a directory name; for example, the configuration
-`i686-linux-gnu' results in `unix/sysv/linux/i386/i686'.  `configure'
-then tries removing each element of the list in turn, so
-`unix/sysv/linux' and `unix/sysv' are also tried, among others.  Since
-the precise version number of the operating system is often not
-important, and it would be very inconvenient, for example, to have
-identical `irix6.2' and `irix6.3' directories, `configure' tries
-successively less specific operating system names by removing trailing
-suffixes starting with a period.
+     On some Debian Linux based systems the `install-info' program
+     supplied with the system works differently from the one we expect.
+     You must therefore run `make install' like this:
 
-   As an example, here is the complete list of directories that would be
-tried for the configuration `i686-linux-gnu' (with the `crypt' and
-`linuxthreads' add-on):
+          make INSTALL_INFO=/path/to/GNU/install-info install
 
-     sysdeps/i386/elf
-     crypt/sysdeps/unix
-     linuxthreads/sysdeps/unix/sysv/linux
-     linuxthreads/sysdeps/pthread
-     linuxthreads/sysdeps/unix/sysv
-     linuxthreads/sysdeps/unix
-     linuxthreads/sysdeps/i386/i686
-     linuxthreads/sysdeps/i386
-     linuxthreads/sysdeps/pthread/no-cmpxchg
-     sysdeps/unix/sysv/linux/i386
-     sysdeps/unix/sysv/linux
-     sysdeps/gnu
-     sysdeps/unix/common
-     sysdeps/unix/mman
-     sysdeps/unix/inet
-     sysdeps/unix/sysv/i386/i686
-     sysdeps/unix/sysv/i386
-     sysdeps/unix/sysv
-     sysdeps/unix/i386
-     sysdeps/unix
-     sysdeps/posix
-     sysdeps/i386/i686
-     sysdeps/i386/i486
-     sysdeps/libm-i387/i686
-     sysdeps/i386/fpu
-     sysdeps/libm-i387
-     sysdeps/i386
-     sysdeps/wordsize-32
-     sysdeps/ieee754
-     sysdeps/libm-ieee754
-     sysdeps/generic
+   * GNU `awk' 3.0
 
-   Different machine architectures are conventionally subdirectories at
-the top level of the `sysdeps' directory tree.  For example,
-`sysdeps/sparc' and `sysdeps/m68k'.  These contain files specific to
-those machine architectures, but not specific to any particular
-operating system.  There might be subdirectories for specializations of
-those architectures, such as `sysdeps/m68k/68020'. Code which is
-specific to the floating-point coprocessor used with a particular
-machine should go in `sysdeps/MACHINE/fpu'.
+     Several files used during the build are generated using features
+     of GNU `awk' that are not found in other implementations.
 
-   There are a few directories at the top level of the `sysdeps'
-hierarchy that are not for particular machine architectures.
+If you change any of the `configure.in' files you will also need
 
-`generic'
-     As described above (*note Porting::.), this is the subdirectory
-     that every configuration implicitly uses after all others.
+   * GNU `autoconf' 2.12
 
-`ieee754'
-     This directory is for code using the IEEE 754 floating-point
-     format, where the C type `float' is IEEE 754 single-precision
-     format, and `double' is IEEE 754 double-precision format.  Usually
-     this directory is referred to in the `Implies' file in a machine
-     architecture-specific directory, such as `m68k/Implies'.
+and if you change any of the message translation files you will need
 
-`libm-ieee754'
-     This directory contains an implementation of a mathematical library
-     usable on platforms which use IEEE 754 conformant floating-point
-     arithmetic.
+   * GNU `gettext' 0.10 or later
 
-`libm-i387'
-     This is a special case.  Ideally the code should be in
-     `sysdeps/i386/fpu' but for various reasons it is kept aside.
+You may also need these packages if you upgrade your source tree using
+patches, although we try to avoid this.
 
-`posix'
-     This directory contains implementations of things in the library in
-     terms of POSIX.1 functions.  This includes some of the POSIX.1
-     functions themselves.  Of course, POSIX.1 cannot be completely
-     implemented in terms of itself, so a configuration using just
-     `posix' cannot be complete.
+Supported Configurations
+========================
 
-`unix'
-     This is the directory for Unix-like things.  *Note Porting to
-     Unix::.  `unix' implies `posix'.  There are some special-purpose
-     subdirectories of `unix':
+   The GNU C Library currently supports configurations that match the
+following patterns:
 
-    `unix/common'
-          This directory is for things common to both BSD and System V
-          release 4.  Both `unix/bsd' and `unix/sysv/sysv4' imply
-          `unix/common'.
+     alpha-ANYTHING-linux
+     arm-ANYTHING-linuxaout
+     arm-ANYTHING-none
+     iX86-ANYTHING-gnu
+     iX86-ANYTHING-linux
+     m68k-ANYTHING-linux
+     powerpc-ANYTHING-linux
+     sparc-ANYTHING-linux
+     sparc64-ANYTHING-linux
 
-    `unix/inet'
-          This directory is for `socket' and related functions on Unix
-          systems.  `unix/inet/Subdirs' enables the `inet' top-level
-          subdirectory.  `unix/common' implies `unix/inet'.
+   Former releases of this library (version 1.09.1 and perhaps earlier
+versions) used to run on the following configurations:
 
-`mach'
-     This is the directory for things based on the Mach microkernel
-     from CMU (including the GNU operating system).  Other basic
-     operating systems (VMS, for example) would have their own
-     directories at the top level of the `sysdeps' hierarchy, parallel
-     to `unix' and `mach'.
+     alpha-dec-osf1
+     alpha-ANYTHING-linuxecoff
+     iX86-ANYTHING-bsd4.3
+     iX86-ANYTHING-isc2.2
+     iX86-ANYTHING-isc3.N
+     iX86-ANYTHING-sco3.2
+     iX86-ANYTHING-sco3.2v4
+     iX86-ANYTHING-sysv
+     iX86-ANYTHING-sysv4
+     iX86-force_cpu386-none
+     iX86-sequent-bsd
+     i960-nindy960-none
+     m68k-hp-bsd4.3
+     m68k-mvme135-none
+     m68k-mvme136-none
+     m68k-sony-newsos3
+     m68k-sony-newsos4
+     m68k-sun-sunos4.N
+     mips-dec-ultrix4.N
+     mips-sgi-irix4.N
+     sparc-sun-solaris2.N
+     sparc-sun-sunos4.N
 
-Porting the GNU C Library to Unix Systems
------------------------------------------
+   Since no one has volunteered to test and fix these configurations,
+they are not supported at the moment.  They probably don't compile;
+they definitely don't work anymore.  Porting the library is not hard.
+If you are interested in doing a port, please contact the glibc
+maintainers by sending electronic mail to <bug-glibc@gnu.org>.
 
-   Most Unix systems are fundamentally very similar.  There are
-variations between different machines, and variations in what
-facilities are provided by the kernel.  But the interface to the
-operating system facilities is, for the most part, pretty uniform and
-simple.
+   Each case of `iX86' can be `i386', `i486', `i586', or `i686'.  All
+of those configurations produce a library that can run on any of these
+processors.  The library will be optimized for the specified processor,
+but will not use instructions not available on all of them.
 
-   The code for Unix systems is in the directory `unix', at the top
-level of the `sysdeps' hierarchy.  This directory contains
-subdirectories (and subdirectory trees) for various Unix variants.
+   While no other configurations are supported, there are handy aliases
+for these few.  (These aliases work in other GNU software as well.)
 
-   The functions which are system calls in most Unix systems are
-implemented in assembly code, which is generated automatically from
-specifications in files named `syscalls.list'.  There are several such
-files, one in `sysdeps/unix' and others in its subdirectories.  Some
-special system calls are implemented in files that are named with a
-suffix of `.S'; for example, `_exit.S'.  Files ending in `.S' are run
-through the C preprocessor before being fed to the assembler.
+     decstation
+     hp320-bsd4.3 hp300bsd
+     i486-gnu
+     i586-linux
+     i386-sco
+     i386-sco3.2v4
+     i386-sequent-dynix
+     i386-svr4
+     news
+     sun3-sunos4.N sun3
+     sun4-solaris2.N sun4-sunos5.N
+     sun4-sunos4.N sun4
 
-   These files all use a set of macros that should be defined in
-`sysdep.h'.  The `sysdep.h' file in `sysdeps/unix' partially defines
-them; a `sysdep.h' file in another directory must finish defining them
-for the particular machine and operating system variant.  See
-`sysdeps/unix/sysdep.h' and the machine-specific `sysdep.h'
-implementations to see what these macros are and what they should do.
+Useful hints for the installation
+=================================
 
-   The system-specific makefile for the `unix' directory
-(`sysdeps/unix/Makefile') gives rules to generate several files from
-the Unix system you are building the library on (which is assumed to be
-the target system you are building the library *for*).  All the
-generated files are put in the directory where the object files are
-kept; they should not affect the source tree itself.  The files
-generated are `ioctls.h', `errnos.h', `sys/param.h', and `errlist.c'
-(for the `stdio' section of the library).
+   There are a some more or less obvious methods one should know when
+compiling GNU libc:
+
+   * Better never compile in the source directory.  Create a new
+     directory and run the `configure' from there.  Everything should
+     happen automagically.
+
+   * You can use the `-j' option of GNU make by changing the line
+     specifying `PARALLELMAKE' in the Makefile generated during the
+     configuration.
+
+     It is not useful to start the `make' process using the `-j' option
+     since this option is not propagated down to the sub-`make's.
+
+   * If you made some changes after a complete build and only want to
+     check these changes run `make' while specifying the list of
+     subdirs it has to visit.
+
+          make subdirs="nss elf"
+
+     The above build run will only visit the subdirectories `nss' and
+     `elf'.  Beside this it updates the `libc' files itself.
+
+Reporting Bugs
+==============
+
+   There are probably bugs in the GNU C library.  There are certainly
+errors and omissions in this manual.  If you report them, they will get
+fixed.  If you don't, no one will ever know about them and they will
+remain unfixed for all eternity, if not longer.
+
+   To report a bug, first you must find it.  Hopefully, this will be the
+hard part.  Once you've found a bug, make sure it's really a bug.  A
+good way to do this is to see if the GNU C library behaves the same way
+some other C library does.  If so, probably you are wrong and the
+libraries are right (but not necessarily).  If not, one of the libraries
+is probably wrong.
+
+   Once you're sure you've found a bug, try to narrow it down to the
+smallest test case that reproduces the problem.  In the case of a C
+library, you really only need to narrow it down to one library function
+call, if possible.  This should not be too difficult.
+
+   The final step when you have a simple test case is to report the bug.
+When reporting a bug, send your test case, the results you got, the
+results you expected, what you think the problem might be (if you've
+thought of anything), your system type, and the version of the GNU C
+library which you are using.  Also include the files `config.status'
+and `config.make' which are created by running `configure'; they will
+be in whatever directory was current when you ran `configure'.
+
+   If you think you have found some way in which the GNU C library does
+not conform to the ISO and POSIX standards (*note Standards and
+Portability::.), that is definitely a bug.  Report it!
+
+   Send bug reports to the Internet address <bug-glibc@gnu.org> using
+the `glibcbug' script which is installed by the GNU C library.  If you
+have other problems with installation or use, please report those as
+well.
+
+   If you are not sure how a function should behave, and this manual
+doesn't tell you, that's a bug in the manual.  Report that too!  If the
+function's behavior disagrees with the manual, then either the library
+or the manual has a bug, so report the disagreement.  If you find any
+errors or omissions in this manual, please report them to the Internet
+address <bug-glibc-manual@gnu.org>.  If you refer to specific sections
+when reporting on the manual, please include the section names for
+easier identification.
 

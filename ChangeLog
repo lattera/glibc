@@ -1,3 +1,8 @@
+1998-05-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/TESTS: ISO-2022-KR has not really ASCII as a subset
+	(the designation sequence is disturbing).
+
 1998-05-17  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* sunrpc/svc_tcp.c: Add FreeBSD DoS patch.

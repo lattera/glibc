@@ -387,6 +387,7 @@ svctcp_recv (xprt, msg)
       cd->x_id = msg->rm_xid;
       return (TRUE);
     }
+  cd->strm_stat = XPRT_DIED;	/* XXXX */
   return (FALSE);
 }
 

@@ -567,6 +567,12 @@ set_input_fragment (RECSTREAM *rstrm)
     return FALSE;
   header = ntohl (header);
   rstrm->last_frag = ((header & LAST_FRAG) == 0) ? FALSE : TRUE;
+  /*
+   * Sanity check. Try not to accept wildly incorrect
+   * record sizes.
+   */
+  if ((header & (~LAST_FRAG)) > rstrm->recvsize)
+    return(FALSE);
   rstrm->fbtbc = header & ~LAST_FRAG;
   return TRUE;
 }
