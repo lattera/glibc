@@ -1,3 +1,9 @@
+1999-05-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Set socket address to
+	loopback if no name is given and AI_PASSIVE is not set.
+	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl> [PR libc/1136].
+
 1999-05-23  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/set-host.c (_hurd_set_host_config): Use mode 0644, not 0600.
