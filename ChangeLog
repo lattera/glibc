@@ -1,5 +1,7 @@
 2002-03-03  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/x86_64/bits/wordsize.h: New file.
+
 	* elf/nodlopenmod2.c: Provide prototype to avoid warning.
 	* elf/tst-tlsmod1.c: Likewise.
 
