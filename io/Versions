@@ -80,4 +80,8 @@ libc {
     # s*
     statfs64; statvfs; statvfs64;
   }
+  GLIBC_2.1.1 {
+    # l*
+    lockf64;
+  }
 }

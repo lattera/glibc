@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ routines :=							      \
 	statvfs fstatvfs statvfs64 fstatvfs64			      \
 	umask chmod fchmod mkdir				      \
 	open open64 close read write lseek lseek64 access euidaccess  \
-	fcntl flock lockf					      \
+	fcntl flock lockf lockf64				      \
 	dup dup2 pipe						      \
 	creat creat64						      \
 	chdir fchdir						      \
