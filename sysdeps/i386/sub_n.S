@@ -1,24 +1,22 @@
 /* i80386 __mpn_sub_n -- Add two limb vectors of the same length > 0 and store
    sum in a third limb vector.
+   Copyright (C) 1992, 1994, 1995, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU MP Library.
 
-Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+   The GNU MP Library is free software; you can redistribute it and/or modify
+   it under the terms of the GNU Library General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or (at your
+   option) any later version.
 
-This file is part of the GNU MP Library.
+   The GNU MP Library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+   License for more details.
 
-The GNU MP Library is free software; you can redistribute it and/or modify
-it under the terms of the GNU Library General Public License as published by
-the Free Software Foundation; either version 2 of the License, or (at your
-option) any later version.
-
-The GNU MP Library is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-License for more details.
-
-You should have received a copy of the GNU Library General Public License
-along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA 02111-1307, USA. */
+   You should have received a copy of the GNU Library General Public License
+   along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
+   the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA. */
 
 /*
   INPUT PARAMETERS
@@ -47,7 +45,7 @@ C_SYMBOL_NAME(__mpn_sub_n:)
 	shrl	$3,%ecx			/* compute count for unrolled loop */
 	negl	%eax
 	andl	$7,%eax			/* get index where to start loop */
-	jz	Loop			/* necessary special case for 0 */
+	jz	L(oop)			/* necessary special case for 0 */
 	incl	%ecx			/* adjust loop count */
 	shll	$2,%eax			/* adjustment for pointers... */
 	subl	%eax,%edi		/* ... since they are offset ... */
@@ -57,18 +55,18 @@ C_SYMBOL_NAME(__mpn_sub_n:)
 #ifdef PIC
 /* Calculate start address in loop for PIC.  Due to limitations in some
    assemblers, Loop-L0-3 cannot be put into the leal */
-	call	L0
-L0:	leal	(%eax,%eax,8),%eax
+	call	L(0)
+L(0):	leal	(%eax,%eax,8),%eax
 	addl	(%esp),%eax
-	addl	$(Loop-L0-3),%eax 
+	addl	$(L(oop)-L(0)-3),%eax
 	addl	$4,%esp
 #else
 /* Calculate start address in loop for non-PIC.  */
- 	leal	(Loop - 3)(%eax,%eax,8),%eax
+ 	leal	(L(oop) - 3)(%eax,%eax,8),%eax
 #endif
 	jmp	*%eax			/* jump into loop */
 	ALIGN (3)
-Loop:	movl	(%esi),%eax
+L(oop):	movl	(%esi),%eax
 	sbbl	(%edx),%eax
 	movl	%eax,(%edi)
 	movl	4(%esi),%eax
@@ -96,7 +94,7 @@ Loop:	movl	(%esi),%eax
 	leal	32(%esi),%esi
 	leal	32(%edx),%edx
 	decl	%ecx
-	jnz	Loop
+	jnz	L(oop)
 
 	sbbl	%eax,%eax
 	negl	%eax

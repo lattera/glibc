@@ -188,14 +188,21 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  finaladdr = reloc->r_addend;
 	}
       else
-	finaladdr = (loadbase + (Elf32_Word) (char *) sym->st_value +
-		     reloc->r_addend);
+	finaladdr = (loadbase + (Elf32_Word) (char *) sym->st_value
+		     + reloc->r_addend);
     }
 
   /* This is an if/else if chain because GCC 2.7.2.[012] turns case
      statements into non-PIC table lookups.  When a later version
      comes out that fixes this, this should be changed.  */
-  if (rinfo == R_PPC_ADDR16_LO)
+  if (rinfo == R_PPC_UADDR32 ||
+      rinfo == R_PPC_GLOB_DAT ||
+      rinfo == R_PPC_ADDR32 ||
+      rinfo == R_PPC_RELATIVE)
+    {
+      *reloc_addr = finaladdr;
+    }
+  else if (rinfo == R_PPC_ADDR16_LO)
     {
       *(Elf32_Half*) reloc_addr = finaladdr;
     }
@@ -205,32 +212,29 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
   else if (rinfo == R_PPC_ADDR16_HA)
     {
-      *(Elf32_Half*) reloc_addr = finaladdr + 0x8000 >> 16;
+      *(Elf32_Half*) reloc_addr = (finaladdr + 0x8000) >> 16;
     }
+#ifndef RTLD_BOOTSTRAP
   else if (rinfo == R_PPC_REL24)
     {
       Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
-      assert (delta << 6 >> 6 == delta);
+      if (delta << 6 >> 6 != delta)
+	_dl_signal_error (0, map->l_name,
+			  "R_PPC_REL24 relocation out of range");
       *reloc_addr = *reloc_addr & 0xfc000003 | delta & 0x3fffffc;
-    }
-  else if (rinfo == R_PPC_UADDR32 ||
-      rinfo == R_PPC_GLOB_DAT ||
-      rinfo == R_PPC_ADDR32 ||
-      rinfo == R_PPC_RELATIVE)
-    {
-      *reloc_addr = finaladdr;
     }
   else if (rinfo == R_PPC_ADDR24)
     {
-      assert (finaladdr << 6 >> 6 == finaladdr);
+      if (finaladdr << 6 >> 6 != finaladdr)
+	_dl_signal_error (0, map->l_name,
+			  "R_PPC_ADDR24 relocation out of range");
       *reloc_addr = *reloc_addr & 0xfc000003 | finaladdr & 0x3fffffc;
     }
   else if (rinfo == R_PPC_COPY)
     {
-      /* Memcpy is safe to use here, because ld.so doesn't have any
-	 COPY relocs (it's self-contained).  */
       memcpy (reloc_addr, (char *) finaladdr, sym->st_size);
     }
+#endif
   else if (rinfo == R_PPC_REL32)
     {
       *reloc_addr = finaladdr - (Elf32_Word) (char *) reloc_addr;
@@ -239,41 +243,44 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     {
       Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
       if (delta << 6 >> 6 == delta)
-	*reloc_addr = OPCODE_B(delta);
+	*reloc_addr = OPCODE_B (delta);
       else if (finaladdr <= 0x01fffffc || finaladdr >= 0xfe000000)
-	*reloc_addr = OPCODE_BA(finaladdr);
+	*reloc_addr = OPCODE_BA (finaladdr);
       else
 	{
-	  Elf32_Word *plt = (Elf32_Word *)((char *)map->l_addr +
-					   map->l_info[DT_PLTGOT]->d_un.d_val);
-	  Elf32_Word index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
-	  Elf32_Word offset = index * 2 + PLT_INITIAL_ENTRY_WORDS;
+	  Elf32_Word *plt;
+	  Elf32_Word index;
+
+	  plt = (Elf32_Word *)((char *)map->l_addr
+			       + map->l_info[DT_PLTGOT]->d_un.d_val);
+	  index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
 
 	  if (index >= PLT_DOUBLE_SIZE)
 	    {
-	     /* Slots greater than or equal to 2^13 have 4 words
-		available instead of two.  */
-	      plt[offset  ] = OPCODE_LI (11,finaladdr);
-	      plt[offset+1] = OPCODE_ADDIS (11,11,finaladdr + 0x8000 >> 16);
-	      plt[offset+2] = OPCODE_MTCTR (11);
-	      plt[offset+3] = OPCODE_BCTR ();
+	      /* Slots greater than or equal to 2^13 have 4 words available
+		 instead of two.  */
+	      reloc_addr[0] = OPCODE_LI (11, finaladdr);
+	      reloc_addr[1] = OPCODE_ADDIS (11, 11, finaladdr + 0x8000 >> 16);
+	      reloc_addr[2] = OPCODE_MTCTR (11);
+	      reloc_addr[3] = OPCODE_BCTR ();
 	    }
 	  else
 	    {
 	      Elf32_Word num_plt_entries;
-	      Elf32_Word rel_offset_words;
 
 	      num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
 				 / sizeof(Elf32_Rela));
-	      rel_offset_words = PLT_DATA_START_WORDS (num_plt_entries);
 
-	      plt[offset  ] = OPCODE_LI (11,index * 4);
-	      plt[offset+1] = OPCODE_B (-(4 * (offset + 1
-					       - PLT_LONGBRANCH_ENTRY_WORDS)));
-	      plt[index + rel_offset_words] = finaladdr;
+	      reloc_addr[0] = OPCODE_LI (11, index*4);
+	      reloc_addr[1] =
+		OPCODE_B (-(4*(index*2
+			       + 1
+			       - PLT_LONGBRANCH_ENTRY_WORDS
+			       + PLT_INITIAL_ENTRY_WORDS)));
+	      plt[index+PLT_DATA_START_WORDS (num_plt_entries)] = finaladdr;
 	    }
 	}
-      MODIFIED_CODE(reloc_addr);
+      MODIFIED_CODE (reloc_addr);
     }
   else
     assert (! "unexpected dynamic reloc type");
@@ -295,7 +302,28 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #define elf_machine_pltrel_p(type) ((type) == R_PPC_JMP_SLOT)
 
 /* Set up the loaded object described by L so its unrelocated PLT
-   entries will jump to the on-demand fixup code in dl-runtime.c.  */
+   entries will jump to the on-demand fixup code in dl-runtime.c.
+   Also install a small trampoline to be used by entries that have
+   been relocated to an address too far away for a single branch.  */
+
+/* A PLT entry does one of three things:
+   (i)   Jumps to the actual routine. Such entries are set up above, in
+         elf_machine_rela.
+
+   (ii)  Jumps to the actual routine via glue at the start of the PLT.
+         We do this by putting the address of the routine in space
+         allocated at the end of the PLT, and when the PLT entry is
+         called we load the offset of that word (from the start of the
+         space) into r11, then call the glue, which loads the word and
+         branches to that address. These entries are set up in
+         elf_machine_rela, but the glue is set up here.
+
+   (iii) Loads the index of this PLT entry (we count the double-size
+	 entries as one entry for this purpose) into r11, then
+	 branches to code at the start of the PLT. This code then
+	 calls `fixup', in dl-runtime.c, via the glue in the macro
+	 ELF_MACHINE_RUNTIME_TRAMPOLINE, which resets the PLT entry to
+	 be one of the above two types. These entries are set up here.  */
 static inline void
 elf_machine_runtime_setup (struct link_map *map, int lazy)
 {
@@ -316,54 +344,78 @@ elf_machine_runtime_setup (struct link_map *map, int lazy)
       if (lazy)
 	for (i = 0; i < num_plt_entries; i++)
 	{
-	  Elf32_Word offset = PLT_ENTRY_START_WORDS(i);
+	  Elf32_Word offset = PLT_ENTRY_START_WORDS (i);
 
 	  if (i >= PLT_DOUBLE_SIZE)
 	    {
-	      plt[offset	] = OPCODE_LI (11, i * 4);
-	      plt[offset+1] = OPCODE_ADDIS (11, 11, i * 4 + 0x8000 >> 16);
+	      plt[offset  ] = OPCODE_LI (11, i * 4);
+	      plt[offset+1] = OPCODE_ADDIS (11, 11, (i * 4 + 0x8000) >> 16);
 	      plt[offset+2] = OPCODE_B (-(4 * (offset + 2)));
 	    }
 	  else
 	    {
-	      plt[offset	] = OPCODE_LI (11, i * 4);
-	      plt[offset+1] = OPCODE_B(-(4 * (offset + 1)));
+	      plt[offset  ] = OPCODE_LI (11, i * 4);
+	      plt[offset+1] = OPCODE_B (-(4 * (offset + 1)));
 	    }
+	}
 
-	  /* Multiply index of entry, by 0xC.  */
-	  plt[0] = OPCODE_SLWI (12, 11, 1);
-	  plt[1] = OPCODE_ADD (11, 12, 11);
-	  if ((Elf32_Word) (char *) _dl_runtime_resolve <= 0x01fffffc
-	      || (Elf32_Word) (char *) _dl_runtime_resolve >= 0xfe000000)
-	    {
-	      plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) map);
-	      plt[3] = OPCODE_ADDIS (12, 12,
-				     (Elf32_Word) (char *) map + 0x8000 >> 16);
-	      plt[4] = OPCODE_BA ((Elf32_Word) (char *) _dl_runtime_resolve);
-	    }
+      /* Multiply index of entry by 3 (in r11).  */
+      plt[0] = OPCODE_SLWI (12, 11, 1);
+      plt[1] = OPCODE_ADD (11, 12, 11);
+      if ((Elf32_Word) (char *) _dl_runtime_resolve <= 0x01fffffc ||
+	  (Elf32_Word) (char *) _dl_runtime_resolve >= 0xfe000000)
+	{
+	  /* Load address of link map in r12.  */
+	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) map);
+	  plt[3] = OPCODE_ADDIS (12, 12, (((Elf32_Word) (char *) map
+					   + 0x8000) >> 16));
+
+	  /* Call _dl_runtime_resolve.  */
+	  plt[4] = OPCODE_BA ((Elf32_Word) (char *) _dl_runtime_resolve);
 	}
       else
 	{
+	  /* Get address of _dl_runtime_resolve in CTR.  */
 	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) _dl_runtime_resolve);
-	  plt[3] = OPCODE_ADDIS(12, 12, 0x8000 +
-				((Elf32_Word) (char *) _dl_runtime_resolve
-				 >> 16));
+	  plt[3] = OPCODE_ADDIS (12, 12, ((((Elf32_Word) (char *)
+					    _dl_runtime_resolve)
+					   + 0x8000) >> 16));
 	  plt[4] = OPCODE_MTCTR (12);
+
+	  /* Load address of link map in r12.  */
 	  plt[5] = OPCODE_LI (12, (Elf32_Word) (char *) map);
-	  plt[6] = OPCODE_ADDIS (12, 12, ((Elf32_Word) (char *) map
-					  + 0x8000 >> 16));
+	  plt[6] = OPCODE_ADDIS (12, 12, (((Elf32_Word) (char *) map
+					   + 0x8000) >> 16));
+
+	  /* Call _dl_runtime_resolve.  */
 	  plt[7] = OPCODE_BCTR ();
 	}
+
+
+      /* Convert the index in r11 into an actual address, and get the
+	 word at that address.  */
       plt[PLT_LONGBRANCH_ENTRY_WORDS] =
-	OPCODE_ADDIS (11, 11, (Elf32_Word) (char*) (plt + rel_offset_words)
-		      + 0x8000 >> 16);
+	OPCODE_ADDIS (11, 11, (((Elf32_Word) (char*) (plt + rel_offset_words)
+				+ 0x8000) >> 16));
       plt[PLT_LONGBRANCH_ENTRY_WORDS+1] =
-	OPCODE_LWZ(11,(Elf32_Word)(char*)(plt+rel_offset_words),11);
+	OPCODE_LWZ (11, (Elf32_Word) (char*) (plt+rel_offset_words), 11);
+
+      /* Call the procedure at that address.  */
       plt[PLT_LONGBRANCH_ENTRY_WORDS+2] = OPCODE_MTCTR (11);
       plt[PLT_LONGBRANCH_ENTRY_WORDS+3] = OPCODE_BCTR ();
 
+
+      /* Now, we've modified code (quite a lot of code, possibly).  We
+	 need to write the changes from the data cache to a
+	 second-level unified cache, then make sure that stale data in
+	 the instruction cache is removed.  (In a multiprocessor
+	 system, the effect is more complex.)
+
+	 Assumes the cache line size is at least 32 bytes, or at least
+	 that dcbst and icbi apply to 32-byte lines. At present, all
+	 PowerPC processors have line sizes of exactly 32 bytes.  */
+
       size_modified = lazy ? rel_offset_words : PLT_INITIAL_ENTRY_WORDS;
-      /* Now we need to keep the caches in sync.  */
       for (i = 0; i < size_modified; i+=8)
 	PPC_DCBST (plt + i);
       PPC_SYNC;
@@ -411,7 +463,7 @@ _dl_runtime_resolve:
  # The code that calls this has put parameters for `fixup' in r12 and r11.
 	mr 3,12
 	mr 4,11
-	bl fixup
+	bl fixup@local
  # 'fixup' returns the address we want to branch to.
 	mtctr 3
  # Put the registers back...
@@ -440,8 +492,9 @@ _dl_runtime_resolve:
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.	*/
 #define RTLD_START \
+static ElfW(Addr) _dl_start (void *arg) __attribute__((unused)); \
 asm ("\
-	.text
+	.section \".text\"
 	.align 2
 	.globl _start
 	.type _start,@function
@@ -535,16 +588,34 @@ _start:
 	.previous
 ");
 
+/* The idea here is that to conform to the ABI, we are supposed to try
+   to load dynamic objects between 0x10000 (we actually use 0x40000 as
+   the lower bound, to increase the chance of a memory reference from
+   a null pointer giving a segfault) and the program's load address.
+   Regrettably, in this code we can't find the program's load address,
+   so we punt and choose 0x01800000, which is below the ABI's
+   recommended default, and what GNU ld currently chooses. We only use
+   the address as a preference for mmap, so if we get it wrong the
+   worst that happens is that it gets mapped somewhere else.
+
+   FIXME: Unfortunately, 'somewhere else' is probably right after the
+   program's break, which causes malloc to fail.  We really need more
+   information here about the way memory is mapped.  */
+
 #define ELF_PREFERRED_ADDRESS_DATA					      \
-static ElfW(Addr) _dl_preferred_address = 0;
+static ElfW(Addr) _dl_preferred_address = 1;
 
 #define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref)		      \
 ( {									      \
    ElfW(Addr) prefd;							      \
-   if (mapstartpref != 0 && _dl_preferred_address == 0)			      \
+   if (mapstartpref != 0 && _dl_preferred_address == 1)			      \
      _dl_preferred_address = mapstartpref;				      \
    if (mapstartpref != 0)						      \
      prefd = mapstartpref;						      \
+   else if (_dl_preferred_address == 1)					      \
+     prefd = _dl_preferred_address =					      \
+	  (0x01800000 - maplength - 0x10000) &				      \
+	   ~(_dl_pagesize - 1);						      \
    else if (_dl_preferred_address < maplength + 0x50000)		      \
      prefd = 0;								      \
    else									      \
@@ -556,7 +627,7 @@ static ElfW(Addr) _dl_preferred_address = 0;
 
 #define ELF_FIXED_ADDRESS(loader, mapstart)				      \
 ( {									      \
-   if (mapstart != 0 && _dl_preferred_address < mapstart)		      \
+   if (mapstart != 0 && _dl_preferred_address == 1)			      \
      _dl_preferred_address = mapstart;					      \
 } )
 

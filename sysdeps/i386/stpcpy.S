@@ -1,7 +1,6 @@
-/* stpcpy -- copy SRC to DEST returning the address of the terminating '\0'
-	     in DEST.
+/* Copy SRC to DEST returning the address of the terminating '\0' in DEST.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper (drepper@gnu.ai.mit.edu).
 
@@ -56,32 +55,32 @@ ENTRY (__stpcpy)
 	   is achieved by the use of index+base addressing mode.  As the
 	   loop counter we use the destination address because this is
 	   also the result.  */
-L1:	addl $4, %eax		/* increment loop counter */
+L(1):	addl $4, %eax		/* increment loop counter */
 
 	movb (%eax,%ecx), %dl	/* load current char */
 	movb %dl, (%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L2			/* yes, then exit */
+	jz L(2)			/* yes, then exit */
 
 	movb 1(%eax,%ecx), %dl	/* load current char */
 	movb %dl, 1(%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L3			/* yes, then exit */
+	jz L(3)			/* yes, then exit */
 
 	movb 2(%eax,%ecx), %dl	/* load current char */
 	movb %dl, 2(%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L4			/* yes, then exit */
+	jz L(4)			/* yes, then exit */
 
 	movb 3(%eax,%ecx), %dl	/* load current char */
 	movb %dl, 3(%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jnz L1			/* no, then continue loop */
+	jnz L(1)		/* no, then continue loop */
 
 	incl %eax		/* correct loop counter */
-L4:	incl %eax
-L3:	incl %eax
-L2:
+L(4):	incl %eax
+L(3):	incl %eax
+L(2):
 	ret
 END (__stpcpy)
 

@@ -1,6 +1,6 @@
 /* strlen -- Compute length og NUL terminated string.
    Highly optimized version for ix86, x>=5.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -20,6 +20,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include "asm-syntax.h"
 
 /* This version is especially optimized for the i586 (and following?)
    processors.  This is mainly done by using the two pipelines.  The
@@ -46,24 +47,24 @@ ENTRY(strlen)
 
 	andl %eax, %edx		/* separate last two bits of address */
 
-	jz L1			/* aligned => start loop */
-	jp L0			/* exactly two bits set */
+	jz L(1)			/* aligned => start loop */
+	jp L(0)			/* exactly two bits set */
 
 	cmpb %dh, (%eax)	/* is byte NUL? */
-	je L2			/* yes => return */
+	je L(2)			/* yes => return */
 
 	incl %eax		/* increment pointer */
 	cmpb %dh, (%eax)	/* is byte NUL? */
 
-	je L2			/* yes => return */
+	je L(2)			/* yes => return */
 
 	incl %eax		/* increment pointer */
 	xorl $2, %edx
 
-	jz L1
+	jz L(1)
 
-L0:	cmpb %dh, (%eax)	/* is byte NUL? */
-	je L2			/* yes => return */
+L(0):	cmpb %dh, (%eax)	/* is byte NUL? */
+	je L(2)			/* yes => return */
 
 	incl %eax		/* increment pointer */
 	xorl %edx, %edx		/* We need %edx == 0 for later */
@@ -91,7 +92,7 @@ L0:	cmpb %dh, (%eax)	/* is byte NUL? */
 
 	 Note: %edx == 0 in any case here.  */
 
-L1:
+L(1):
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl $4, %eax		/* adjust pointer for *next* word */
 
@@ -99,29 +100,13 @@ L1:
 	addl $magic, %ecx	/* add magic word */
 
 	decl %edx		/* complete negation of word */
-	jnc L3			/* previous addl caused overflow? */
+	jnc L(3)		/* previous addl caused overflow? */
 
 	xorl %ecx, %edx		/* (word+magic)^word */
 
 	andl $~magic, %edx	/* any of the carry flags set? */
 
-	jne L3			/* yes => determine byte */
-
-
-	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
-	addl $4, %eax		/* adjust pointer for *next* word */
-
-	subl %ecx, %edx		/* first step to negate word */
-	addl $magic, %ecx	/* add magic word */
-
-	decl %edx		/* complete negation of word */
-	jnc L3			/* previous addl caused overflow? */
-
-	xorl %ecx, %edx		/* (word+magic)^word */
-
-	andl $~magic, %edx	/* any of the carry flags set? */
-
-	jne L3			/* yes => determine byte */
+	jne L(3)		/* yes => determine byte */
 
 
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
@@ -131,13 +116,13 @@ L1:
 	addl $magic, %ecx	/* add magic word */
 
 	decl %edx		/* complete negation of word */
-	jnc L3			/* previous addl caused overflow? */
+	jnc L(3)		/* previous addl caused overflow? */
 
 	xorl %ecx, %edx		/* (word+magic)^word */
 
 	andl $~magic, %edx	/* any of the carry flags set? */
 
-	jne L3			/* yes => determine byte */
+	jne L(3)		/* yes => determine byte */
 
 
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
@@ -147,35 +132,51 @@ L1:
 	addl $magic, %ecx	/* add magic word */
 
 	decl %edx		/* complete negation of word */
-	jnc L3			/* previous addl caused overflow? */
+	jnc L(3)		/* previous addl caused overflow? */
 
 	xorl %ecx, %edx		/* (word+magic)^word */
 
 	andl $~magic, %edx	/* any of the carry flags set? */
 
-	je L1			/* no => start loop again */
+	jne L(3)		/* yes => determine byte */
 
 
-L3:	subl $4, %eax		/* correct too early pointer increment */
+	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
+	addl $4, %eax		/* adjust pointer for *next* word */
+
+	subl %ecx, %edx		/* first step to negate word */
+	addl $magic, %ecx	/* add magic word */
+
+	decl %edx		/* complete negation of word */
+	jnc L(3)		/* previous addl caused overflow? */
+
+	xorl %ecx, %edx		/* (word+magic)^word */
+
+	andl $~magic, %edx	/* any of the carry flags set? */
+
+	je L(1)			/* no => start loop again */
+
+
+L(3):	subl $4, %eax		/* correct too early pointer increment */
 	subl $magic, %ecx
 
 	cmpb $0, %cl		/* lowest byte NUL? */
-	jz L2			/* yes => return */
+	jz L(2)			/* yes => return */
 
 	inc %eax		/* increment pointer */
 	testb %ch, %ch		/* second byte NUL? */
 
-	jz L2			/* yes => return */
+	jz L(2)			/* yes => return */
 
 	shrl $16, %ecx		/* make upper bytes accessible */
 	incl %eax		/* increment pointer */
 
 	cmpb $0, %cl		/* is third byte NUL? */
-	jz L2			/* yes => return */
+	jz L(2)			/* yes => return */
 
 	incl %eax		/* increment pointer */
 
-L2:	subl 4(%esp), %eax	/* now compute the length as difference
+L(2):	subl 4(%esp), %eax	/* now compute the length as difference
 				   between start and terminating NUL
 				   character */
 

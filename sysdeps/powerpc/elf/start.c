@@ -29,6 +29,7 @@ asm ("\
 	.section \".text\"
 	.align 2
 	.globl _start
+	.type _start,@function
 _start:
  # save the stack pointer, in case we're statically linked under Linux
 	mr 8,1

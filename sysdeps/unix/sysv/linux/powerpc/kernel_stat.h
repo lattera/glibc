@@ -1,4 +1,4 @@
-/* Optimized strlen implementation for PowerPC.
+/* Definition of `struct stat' used in the kernel.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,36 +17,29 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-	.section	".text"
-	.align 2
-	.globl strlen
-	.type	 strlen,@function
-strlen:
-	rlwinm 7,3,0,0,29
-	lis 8,0x7f7f
-	lwz 11,0(7)
-	ori 8,8,32639
-	rlwinm 4,3,3,27,28
-	li 9,-1
-	or 10,11,8
-	and 0,11,8
-	srw 9,9,4
-	add 0,0,8
-	nor 0,10,0
-	and. 11,0,9
-	bc 4,2,.L2
-.L3:
-	lwzu 11,4(7)
-	or 10,11,8
-	and 0,11,8
-	add 0,0,8
-	nor. 11,10,0
-	bc 12,2,.L3
-.L2:
-	subf 0,3,7
-	cntlzw 3,11
-	srwi 3,3,3
-	add 3,0,3
-	blr
-.Lfe1:
-	.size	 strlen,.Lfe1-strlen
+struct kernel_stat
+  {
+    unsigned int st_dev;
+    unsigned int st_ino;
+    unsigned int st_mode;
+    unsigned short st_nlink;
+    unsigned int st_uid;
+    unsigned int st_gid;
+    unsigned int st_rdev;
+    unsigned long int st_size;
+    unsigned long int st_blksize;
+    unsigned long int st_blocks;
+    unsigned long int st_atime;
+    unsigned long int __unused1;
+#define _HAVE___UNUSED1
+    unsigned long int st_mtime;
+    unsigned long int __unused2;
+#define _HAVE___UNUSED2
+    unsigned long int st_ctime;
+    unsigned long int __unused3;
+#define _HAVE___UNUSED3
+    unsigned long int __unused4;
+#define _HAVE___UNUSED4
+    unsigned long int __unused5;
+#define _HAVE___UNUSED5
+  };

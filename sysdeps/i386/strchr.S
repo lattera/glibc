@@ -1,6 +1,6 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -57,34 +57,34 @@ ENTRY (strchr)
 	      boundaries are multiples of 4.  */
 
 	testb $3, %eax		/* correctly aligned ? */
-	jz L11			/* yes => begin loop */
+	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */
-	je L6			/* target found => return */
+	je L(6)			/* target found => return */
 	testb %cl, %cl		/* is NUL? */
-	jz L2			/* yes => return NULL */
+	jz L(2)			/* yes => return NULL */
 	incl %eax		/* increment pointer */
 
 	testb $3, %eax		/* correctly aligned ? */
-	jz L11			/* yes => begin loop */
+	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */
-	je L6			/* target found => return */
+	je L(6)			/* target found => return */
 	testb %cl, %cl		/* is NUL? */
-	jz L2			/* yes => return NULL */
+	jz L(2)			/* yes => return NULL */
 	incl %eax		/* increment pointer */
 
 	testb $3, %eax		/* correctly aligned ? */
-	jz L11			/* yes => begin loop */
+	jz L(11)		/* yes => begin loop */
 	movb (%eax), %cl	/* load byte in question (we need it twice) */
 	cmpb %cl, %dl		/* compare byte */
-	je L6			/* target found => return */
+	je L(6)			/* target found => return */
 	testb %cl, %cl		/* is NUL? */
-	jz L2			/* yes => return NULL */
+	jz L(2)			/* yes => return NULL */
 	incl %eax		/* increment pointer */
 
 	/* No we have reached alignment.  */
-	jmp L11			/* begin loop */
+	jmp L(11)		/* begin loop */
 
       /* We exit the loop if adding MAGIC_BITS to LONGWORD fails to
 	 change any of the hole bits of LONGWORD.
@@ -116,9 +116,9 @@ ENTRY (strchr)
 
 	ALIGN(4)
 
-L1:	addl $16, %eax		/* adjust pointer for whole round */
+L(1):	addl $16, %eax		/* adjust pointer for whole round */
 
-L11:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
+L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
 				   are now 0 */
 	movl $0xfefefeff, %edi	/* magic value */
@@ -132,7 +132,7 @@ L11:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	   representation with more than 32 bits) not alter then last
 	   overflow, we can now test this condition.  If no carry is signaled
 	   no overflow must have occurred in the last byte => it was 0.	*/
-	jnc L7
+	jnc L(7)
 
 	/* We are only interested in carry bits that change due to the
 	   previous add, so remove original bits */
@@ -144,7 +144,7 @@ L11:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 
 	/* If at least one byte of the word is C we don't get 0 in %edi.  */
-	jnz L7			/* found it => return pointer */
+	jnz L(7)		/* found it => return pointer */
 
 	/* Now we made sure the dword does not contain the character we are
 	   looking for.  But because we deal with strings we have to check
@@ -155,12 +155,12 @@ L11:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L2			/* highest byte is NUL => return NULL */
+	jnc L(2)		/* highest byte is NUL => return NULL */
 	xorl %ecx, %edi		/* (word+magic)^word */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L2			/* found NUL => return NULL */
+	jnz L(2)		/* found NUL => return NULL */
 
 	movl 4(%eax), %ecx	/* get word (= 4 bytes) in question */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -169,23 +169,23 @@ L11:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* C */
-	jnc L71			/* highest byte is C => return pointer */
+	jnc L(71)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L71			/* found it => return pointer */
+	jnz L(71)		/* found it => return pointer */
 	xorl %edx, %ecx		/* restore original dword without reload */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L2			/* highest byte is NUL => return NULL */
+	jnc L(2)		/* highest byte is NUL => return NULL */
 	xorl %ecx, %edi		/* (word+magic)^word */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L2			/* found NUL => return NULL */
+	jnz L(2)		/* found NUL => return NULL */
 
 	movl 8(%eax), %ecx	/* get word (= 4 bytes) in question */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -194,23 +194,23 @@ L11:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* C */
-	jnc L72			/* highest byte is C => return pointer */
+	jnc L(72)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L72			/* found it => return pointer */
+	jnz L(72)		/* found it => return pointer */
 	xorl %edx, %ecx		/* restore original dword without reload */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L2			/* highest byte is NUL => return NULL */
+	jnc L(2)		/* highest byte is NUL => return NULL */
 	xorl %ecx, %edi		/* (word+magic)^word */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L2			/* found NUL => return NULL */
+	jnz L(2)		/* found NUL => return NULL */
 
 	movl 12(%eax), %ecx	/* get word (= 4 bytes) in question */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -219,59 +219,59 @@ L11:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* C */
-	jnc L73			/* highest byte is C => return pointer */
+	jnc L(73)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L73			/* found it => return pointer */
+	jnz L(73)		/* found it => return pointer */
 	xorl %edx, %ecx		/* restore original dword without reload */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L2			/* highest byte is NUL => return NULL */
+	jnc L(2)		/* highest byte is NUL => return NULL */
 	xorl %ecx, %edi		/* (word+magic)^word */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jz L1			/* no NUL found => restart loop */
+	jz L(1)			/* no NUL found => restart loop */
 
-L2:	/* Return NULL.  */
+L(2):	/* Return NULL.  */
 	xorl %eax, %eax		/* load NULL in return value register */
 	popl %edi		/* restore saved register content */
 	ret
 
-L73:	addl $4, %eax		/* adjust pointer */
-L72:	addl $4, %eax
-L71:	addl $4, %eax
+L(73):	addl $4, %eax		/* adjust pointer */
+L(72):	addl $4, %eax
+L(71):	addl $4, %eax
 
 	/* We now scan for the byte in which the character was matched.
 	   But we have to take care of the case that a NUL char is
 	   found before this in the dword.  */
 
-L7:	testb %cl, %cl		/* is first byte C? */
-	jz L6			/* yes => return pointer */
+L(7):	testb %cl, %cl		/* is first byte C? */
+	jz L(6)			/* yes => return pointer */
 	cmpb %dl, %cl		/* is first byte NUL? */
-	je L2			/* yes => return NULL */
+	je L(2)			/* yes => return NULL */
 	incl %eax		/* it's not in the first byte */
 
 	testb %ch, %ch		/* is second byte C? */
-	jz L6			/* yes => return pointer */
+	jz L(6)			/* yes => return pointer */
 	cmpb %dl, %ch		/* is second byte NUL? */
-	je L2			/* yes => return NULL? */
+	je L(2)			/* yes => return NULL? */
 	incl %eax		/* it's not in the second byte */
 
 	shrl $16, %ecx		/* make upper byte accessible */
 	testb %cl, %cl		/* is third byte C? */
-	jz L6			/* yes => return pointer */
+	jz L(6)			/* yes => return pointer */
 	cmpb %dl, %cl		/* is third byte NUL? */
-	je L2			/* yes => return NULL */
+	je L(2)			/* yes => return NULL */
 
 	/* It must be in the fourth byte and it cannot be NUL.  */
 	incl %eax
 
-L6:	popl %edi		/* restore saved register content */
+L(6):	popl %edi		/* restore saved register content */
 
 	ret
 END (strchr)

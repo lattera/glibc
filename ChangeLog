@@ -1,3 +1,111 @@
+1997-04-01 00:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/Makefile: Prevent inlining for test-{float,double,longdouble}.
+	* math/libm-test.c (initialize): Make strings unique and force
+	values to memory.
+
+	* posix/regex.c: Debug debugging code.
+
+	* sysdeps/i386/asm-syntax.h: Define `L' macro to emit correct
+	syntax for local label.
+	* sysdeps/i386/add_n.S: Use correct local label syntax for the
+	binary format.
+	* sysdeps/i386/addmul_1.S: Likewise.
+	* sysdeps/i386/lshift.S: Likewise.
+	* sysdeps/i386/memchr.S: Likewise.
+	* sysdeps/i386/memset.S: Likewise.
+	* sysdeps/i386/mul_1.S: Likewise.
+	* sysdeps/i386/rshift.S: Likewise.
+	* sysdeps/i386/stpcpy.S: Likewise.
+	* sysdeps/i386/stpncpy.S: Likewise.
+	* sysdeps/i386/strchr.S: Likewise.
+	* sysdeps/i386/strcspn.S: Likewise.
+	* sysdeps/i386/strlen.S: Likewise.
+	* sysdeps/i386/strpbrk.S: Likewise.
+	* sysdeps/i386/strrchr.S: Likewise.
+	* sysdeps/i386/strspn.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/i386/sub_n.S: Likewise.
+	* sysdeps/i386/submul_1.S: Likewise.
+	* sysdeps/i386/i486/strcat.S: Likewise.
+	* sysdeps/i386/i486/strlen.S: Likewise.
+	* sysdeps/i386/i586/add_n.S: Likewise.
+	* sysdeps/i386/i586/addmul_1.S: Likewise.
+	* sysdeps/i386/i586/lshift.S: Likewise.
+	* sysdeps/i386/i586/memset.S: Likewise.
+	* sysdeps/i386/i586/mul_1.S: Likewise.
+	* sysdeps/i386/i586/rshift.S: Likewise.
+	* sysdeps/i386/i586/strchr.S: Likewise.
+	* sysdeps/i386/i586/strlen.S: Likewise.
+	* sysdeps/i386/i586/sub_n.S: Likewise.
+	* sysdeps/i386/i586/submul_1.S: Likewise.
+
+	* sysdeps/stub/s_log2l.c: Correct function name.
+
+	* time/africa: Updated from ADO tzdata1997e.
+	* time/aantarctica: Likewise.
+	* time/asia: Likewise.
+	* time/australia: Likewise.
+	* time/europe: Likewise.
+	* time/northamerica: Likewise.
+	* time/southamerica: Likewise.
+	* time/private.h: Updated from ADO tzcode1997d.
+	* time/scheck.c: Likewise.
+
+1997-03-31 12:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Add kernel_*.h files.
+
+1997-03-23 01:41  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/strlen.s: Rewrote for more speed.
+	* string/tst-strlen.c: Also test various string alignments.
+
+1997-03-19 06:11  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/statbuf.h: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/kernel_stat.h: Added.
+
+	* sysdeps/powerpc/dl-machine.h (ELF_PREFERRED_ADDRESS): Assume
+	program base address is 0x01800000 if we can't otherwise tell what
+	it is.
+	(elf_machine_rela): Replace `assertion failed' with real error
+	messages.
+
+	* sysdeps/powerpc/dl-machine.h: More comments, more GNU indenting.
+	Put in extra parentheses to make explicit the relative precedence
+	of + and >>.
+
+	* sysdeps/powerpc/bsd-setjmp.S: Add `__setjmp' symbol so the tests
+	pass.
+	* sysdeps/powerpc/clone.S: Rewrite.  Probably still doesn't work.
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/sysdep.h: Use .section "text"
+	instead of .text.
+
+1997-03-31 02:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/tst-tsearch.c: Don't write to stderr, write to stdout
+	instead.
+
+	* inet/inet_ntoa.c (inet_ntoa): Complete rewrite.  Now uses
+	thread-specific memory in multi-threaded programs.
+
+	* sysdeps/stub/s_exp2.c: New file.  Stub version for exp2 function.
+	* sysdeps/stub/s_exp2f.c: New file.
+	* sysdeps/stub/s_exp2l.c: New file.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+	* sysdeps/unix/sysv/linux/netatalk/atalk.h: Rename to...
+	* sysdeps/unix/sysv/linux/netatalk/at.h: ...this.
+	Suggested by a sun <asun@zoology.washington.edu>.
+
+1997-03-30 14:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip_icmp.h: Add former contents
+	of <netinet/icmp.h>.
+	Patch by a sun <asun@zoology.washington.edu>.
+
 1997-03-30 03:42  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/libm-test.c: Add definition of ctanh_test, clog_test, and
@@ -1418,7 +1526,7 @@
 	* sysdeps/powerpc/fpu_control.h: Added.
 	* sysdeps/powerpc/jmp_buf.h: Added.
 	* sysdeps/powerpc/setjmp.S: Added.
-	* sysdeps/powerpc/strlen.s: Added.
+	* sysdeps/powerpc/strlen.S: Added.
 	* sysdeps/powerpc/elf/start.c: Added.
 	* sysdeps/powerpc/fpu_control.h: Added.
 	* sysdeps/powerpc/jmp_buf.h: Added.
@@ -1437,7 +1545,6 @@
 	* sysdeps/unix/sysv/linux/powerpc/sysdep.c: Added.
 	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Added.
 	* sysdeps/unix/sysv/linux/powerpc/termbits.h: Added.
-	* sysdeps/unix/sysv/linux/powerpc/sys/syscall.h: Added.
 
 1997-03-05 05:24  Geoff Keating  <geoffk@ozemail.com.au>
 

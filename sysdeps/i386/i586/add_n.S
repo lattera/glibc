@@ -1,24 +1,22 @@
 /* Pentium __mpn_add_n -- Add two limb vectors of the same length > 0 and store
    sum in a third limb vector.
+   Copyright (C) 1992, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU MP Library.
 
-Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
+   The GNU MP Library is free software; you can redistribute it and/or modify
+   it under the terms of the GNU Library General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or (at your
+   option) any later version.
 
-This file is part of the GNU MP Library.
+   The GNU MP Library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+   License for more details.
 
-The GNU MP Library is free software; you can redistribute it and/or modify
-it under the terms of the GNU Library General Public License as published by
-the Free Software Foundation; either version 2 of the License, or (at your
-option) any later version.
-
-The GNU MP Library is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-License for more details.
-
-You should have received a copy of the GNU Library General Public License
-along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA 02111-1307, USA. */
+   You should have received a copy of the GNU Library General Public License
+   along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
+   the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA. */
 
 /*
    INPUT PARAMETERS
@@ -52,14 +50,14 @@ C_SYMBOL_NAME(__mpn_add_n:)
 	shrl	$3,%ecx
 	andl	$7,%edx
 	testl	%ecx,%ecx		/* zero carry flag */
-	jz	Lend
+	jz	L(end)
 	pushl	%edx
 
 	ALIGN (3)
-Loop:	movl	28(%edi),%eax		/* fetch destination cache line */
+L(oop):	movl	28(%edi),%eax		/* fetch destination cache line */
 	leal	32(%edi),%edi
 
-L1:	movl	(%esi),%eax
+L(1):	movl	(%esi),%eax
 	movl	4(%esi),%edx
 	adcl	%ebx,%eax
 	movl	4(%ebp),%ebx
@@ -68,7 +66,7 @@ L1:	movl	(%esi),%eax
 	movl	%eax,-32(%edi)
 	movl	%edx,-28(%edi)
 
-L2:	movl	8(%esi),%eax
+L(2):	movl	8(%esi),%eax
 	movl	12(%esi),%edx
 	adcl	%ebx,%eax
 	movl	12(%ebp),%ebx
@@ -77,7 +75,7 @@ L2:	movl	8(%esi),%eax
 	movl	%eax,-24(%edi)
 	movl	%edx,-20(%edi)
 
-L3:	movl	16(%esi),%eax
+L(3):	movl	16(%esi),%eax
 	movl	20(%esi),%edx
 	adcl	%ebx,%eax
 	movl	20(%ebp),%ebx
@@ -86,7 +84,7 @@ L3:	movl	16(%esi),%eax
 	movl	%eax,-16(%edi)
 	movl	%edx,-12(%edi)
 
-L4:	movl	24(%esi),%eax
+L(4):	movl	24(%esi),%eax
 	movl	28(%esi),%edx
 	adcl	%ebx,%eax
 	movl	28(%ebp),%ebx
@@ -98,14 +96,14 @@ L4:	movl	24(%esi),%eax
 	leal	32(%esi),%esi
 	leal	32(%ebp),%ebp
 	decl	%ecx
-	jnz	Loop
+	jnz	L(oop)
 
 	popl	%edx
-Lend:
+L(end):
 	decl	%edx			/* test %edx w/o clobbering carry */
-	js	Lend2
+	js	L(end2)
 	incl	%edx
-Loop2:
+L(oop2):
 	leal	4(%edi),%edi
 	movl	(%esi),%eax
 	adcl	%ebx,%eax
@@ -114,8 +112,8 @@ Loop2:
 	leal	4(%esi),%esi
 	leal	4(%ebp),%ebp
 	decl	%edx
-	jnz	Loop2
-Lend2:
+	jnz	L(oop2)
+L(end2):
 	movl	(%esi),%eax
 	adcl	%ebx,%eax
 	movl	%eax,(%edi)

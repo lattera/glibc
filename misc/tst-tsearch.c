@@ -112,7 +112,7 @@ walk_action (const void *nodep, const VISIT which, const int depth)
       if (depths[key] != depth)
 	{
 	  fputs ("Depth for one element is not constant during tree walk.\n",
-		 stderr);
+		 stdout);
 	}
     }
 }
@@ -129,7 +129,7 @@ walk_tree (void *root, int expected_count)
   for (i = 0; i < expected_count; ++i)
     if (z[i] != 1)
       {
-	fputs ("Node was not visited.\n", stderr);
+	fputs ("Node was not visited.\n", stdout);
 	error = 1;
       }
 
@@ -139,7 +139,7 @@ walk_tree (void *root, int expected_count)
   if (max_depth > expected_count)
 #endif
     {
-      fputs ("Depth too large during tree walk.\n", stderr);
+      fputs ("Depth too large during tree walk.\n", stdout);
       error = 1;
     }
 }
@@ -196,7 +196,7 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	    {
 	      if (tfind (x + j, (const void **) root, cmp_fn) != NULL)
 		{
-		  fputs ("Found element which is not in tree yet.\n", stderr);
+		  fputs ("Found element which is not in tree yet.\n", stdout);
 		  error = 1;
 		}
 	      elem = tsearch (x + j, root, cmp_fn);
@@ -204,7 +204,7 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 		  || tfind (x + j, (const void **) root, cmp_fn) == NULL)
 		{
 		  fputs ("Couldn't find element after it was added.\n",
-			 stderr);
+			 stdout);
 		  error = 1;
 		}
 	    }
@@ -219,7 +219,7 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	  elem = tfind (x + j, (const void **) root, cmp_fn);
 	  if (elem == NULL || tdelete (x + j, root, cmp_fn) == NULL)
 	    {
-	      fputs ("Error deleting element.\n", stderr);
+	      fputs ("Error deleting element.\n", stdout);
 	      error = 1;
 	    }
 	  break;
@@ -227,7 +227,7 @@ mangle_tree (enum order how, enum action what, void **root, int lag)
 	case find:
 	  if (tfind (x + j, (const void **) root, cmp_fn) == NULL)
 	    {
-	      fputs ("Couldn't find element after it was added.\n", stderr);
+	      fputs ("Couldn't find element after it was added.\n", stdout);
 	      error = 1;
 	    }
 	  break;
@@ -252,10 +252,10 @@ main (int argc, char **argv)
 
   /* Do this loop several times to get different permutations for the
      random case.  */
-  fputs ("Series I\n", stderr);
+  fputs ("Series I\n", stdout);
   for (i = 0; i < PASSES; ++i)
     {
-      fprintf (stderr, "Pass %d... ", i + 1);
+      fprintf (stdout, "Pass %d... ", i + 1);
       fflush (stdout);
       error = 0;
 
@@ -301,14 +301,14 @@ main (int argc, char **argv)
 	  mangle_tree (randomorder, build_and_del, &root, j);
 	}
 
-      fputs (error ? " failed!\n" : " ok.\n", stderr);
+      fputs (error ? " failed!\n" : " ok.\n", stdout);
       total_error |= error;
     }
 
-  fputs ("Series II\n", stderr);
+  fputs ("Series II\n", stdout);
   for (i = 1; i < SIZE; i *= 2)
     {
-      fprintf (stderr, "For size %d... ", i);
+      fprintf (stdout, "For size %d... ", i);
       fflush (stdout);
       error = 0;
 
@@ -321,7 +321,7 @@ main (int argc, char **argv)
       mangle_tree (ascending, build_and_del, &root, i);
       mangle_tree (descending, build_and_del, &root, i);
 
-      fputs (error ? " failed!\n" : " ok.\n", stderr);
+      fputs (error ? " failed!\n" : " ok.\n", stdout);
       total_error |= error;
     }
 

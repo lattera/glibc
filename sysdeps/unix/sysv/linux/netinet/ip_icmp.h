@@ -24,6 +24,74 @@
 
 __BEGIN_DECLS
 
+struct icmphdr
+{
+  u_int8_t type;		/* message type */
+  u_int8_t code;		/* type sub-code */
+  u_int16_t checksum;
+  union
+  {
+    struct
+    {
+      u_int16_t	id;
+      u_int16_t	sequence;
+    } echo;			/* echo datagram */
+    u_int32_t	gateway;	/* gateway address */
+    struct
+    {
+      u_int16_t	__unused;
+      u_int16_t	mtu;
+    } frag;			/* path mtu discovery */
+  } un;
+};
+
+#define ICMP_ECHOREPLY		0	/* Echo Reply			*/
+#define ICMP_DEST_UNREACH	3	/* Destination Unreachable	*/
+#define ICMP_SOURCE_QUENCH	4	/* Source Quench		*/
+#define ICMP_REDIRECT		5	/* Redirect (change route)	*/
+#define ICMP_ECHO		8	/* Echo Request			*/
+#define ICMP_TIME_EXCEEDED	11	/* Time Exceeded		*/
+#define ICMP_PARAMETERPROB	12	/* Parameter Problem		*/
+#define ICMP_TIMESTAMP		13	/* Timestamp Request		*/
+#define ICMP_TIMESTAMPREPLY	14	/* Timestamp Reply		*/
+#define ICMP_INFO_REQUEST	15	/* Information Request		*/
+#define ICMP_INFO_REPLY		16	/* Information Reply		*/
+#define ICMP_ADDRESS		17	/* Address Mask Request		*/
+#define ICMP_ADDRESSREPLY	18	/* Address Mask Reply		*/
+#define NR_ICMP_TYPES		18
+
+
+/* Codes for UNREACH. */
+#define ICMP_NET_UNREACH	0	/* Network Unreachable		*/
+#define ICMP_HOST_UNREACH	1	/* Host Unreachable		*/
+#define ICMP_PROT_UNREACH	2	/* Protocol Unreachable		*/
+#define ICMP_PORT_UNREACH	3	/* Port Unreachable		*/
+#define ICMP_FRAG_NEEDED	4	/* Fragmentation Needed/DF set	*/
+#define ICMP_SR_FAILED		5	/* Source Route failed		*/
+#define ICMP_NET_UNKNOWN	6
+#define ICMP_HOST_UNKNOWN	7
+#define ICMP_HOST_ISOLATED	8
+#define ICMP_NET_ANO		9
+#define ICMP_HOST_ANO		10
+#define ICMP_NET_UNR_TOS	11
+#define ICMP_HOST_UNR_TOS	12
+#define ICMP_PKT_FILTERED	13	/* Packet filtered */
+#define ICMP_PREC_VIOLATION	14	/* Precedence violation */
+#define ICMP_PREC_CUTOFF	15	/* Precedence cut off */
+#define NR_ICMP_UNREACH		15	/* instead of hardcoding immediate value */
+
+/* Codes for REDIRECT. */
+#define ICMP_REDIR_NET		0	/* Redirect Net			*/
+#define ICMP_REDIR_HOST		1	/* Redirect Host		*/
+#define ICMP_REDIR_NETTOS	2	/* Redirect Net for TOS		*/
+#define ICMP_REDIR_HOSTTOS	3	/* Redirect Host for TOS	*/
+
+/* Codes for TIME_EXCEEDED. */
+#define ICMP_EXC_TTL		0	/* TTL count exceeded		*/
+#define ICMP_EXC_FRAGTIME	1	/* Fragment Reass time exceeded	*/
+
+
+#ifdef __USE_BSD
 /*
  * Copyright (c) 1982, 1986, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -65,31 +133,37 @@ __BEGIN_DECLS
 /*
  * Internal of an ICMP Router Advertisement
  */
-struct icmp_ra_addr {
-	u_int32_t ira_addr;
-	u_int32_t ira_preference;
+struct icmp_ra_addr
+{
+  u_int32_t ira_addr;
+  u_int32_t ira_preference;
 };
 
-struct icmp {
+struct icmp
+{
   u_int8_t  icmp_type;	/* type of message, see below */
   u_int8_t  icmp_code;	/* type sub code */
   u_int16_t icmp_cksum;	/* ones complement checksum of struct */
-  union {
+  union
+  {
     u_char ih_pptr;		/* ICMP_PARAMPROB */
     struct in_addr ih_gwaddr;	/* gateway address */
-    struct ih_idseq {		/* echo datagram */	
+    struct ih_idseq		/* echo datagram */
+    {
       u_int16_t icd_id;
       u_int16_t icd_seq;
     } ih_idseq;
     u_int32_t ih_void;
 
     /* ICMP_UNREACH_NEEDFRAG -- Path MTU Discovery (RFC1191) */
-    struct ih_pmtu {	
+    struct ih_pmtu
+    {
       u_int16_t ipm_void;
       u_int16_t ipm_nextmtu;
     } ih_pmtu;
 
-    struct ih_rtradv {
+    struct ih_rtradv
+    {
       u_int8_t irt_num_addrs;
       u_int8_t irt_wpa;
       u_int16_t irt_lifetime;
@@ -105,13 +179,16 @@ struct icmp {
 #define	icmp_num_addrs	icmp_hun.ih_rtradv.irt_num_addrs
 #define	icmp_wpa	icmp_hun.ih_rtradv.irt_wpa
 #define	icmp_lifetime	icmp_hun.ih_rtradv.irt_lifetime
-  union {
-    struct {
+  union
+  {
+    struct
+    {
       u_int32_t its_otime;
       u_int32_t its_rtime;
       u_int32_t its_ttime;
     } id_ts;
-    struct {
+    struct
+    {
       struct ip idi_ip;
       /* options and then 64 bits of data */
     } id_ip;
@@ -149,11 +226,9 @@ struct icmp {
 #endif
 
 /* Definition of type and code fields. */
-#define	ICMP_ECHOREPLY		0		/* echo reply */
+/* defined above: ICMP_ECHOREPLY, ICMP_REDIRECT, ICMP_ECHO */
 #define	ICMP_UNREACH		3		/* dest unreachable, codes: */
 #define	ICMP_SOURCEQUENCH	4		/* packet lost, slow down */
-#define	ICMP_REDIRECT		5		/* shorter route, codes: */
-#define	ICMP_ECHO		8		/* echo service */
 #define	ICMP_ROUTERADVERT	9		/* router advertisement */
 #define	ICMP_ROUTERSOLICIT	10		/* router solicitation */
 #define	ICMP_TIMXCEED		11		/* time exceeded, code: */
@@ -204,6 +279,8 @@ struct icmp {
 	(type) == ICMP_TSTAMP || (type) == ICMP_TSTAMPREPLY || \
 	(type) == ICMP_IREQ || (type) == ICMP_IREQREPLY || \
 	(type) == ICMP_MASKREQ || (type) == ICMP_MASKREPLY)
+
+#endif /* __USE_BSD */
 
 __END_DECLS
 

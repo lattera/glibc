@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in STR less
    than N.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -54,7 +54,7 @@ ENTRY (memchr)
 	/* If my must not test more than three characters test
 	   them one by one.  This is especially true for 0.  */
 	cmpl $4, %esi
-	jb L3
+	jb L(3)
 
 	/* At the moment %edx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
@@ -71,30 +71,30 @@ ENTRY (memchr)
 	   reached. Don't use a loop for better performance.  */
 
 	testb $3, %eax		/* correctly aligned ? */
-	je L2			/* yes => begin loop */
+	je L(2)			/* yes => begin loop */
 	cmpb %dl, (%eax)	/* compare byte */
-	je L9			/* target found => return */
+	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length counter */
-	je L4			/* len==0 => return NULL */
+	je L(4)			/* len==0 => return NULL */
 
 	testb $3, %eax		/* correctly aligned ? */
-	je L2			/* yes => begin loop */
+	je L(2)			/* yes => begin loop */
 	cmpb %dl, (%eax)	/* compare byte */
-	je L9			/* target found => return */
+	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length counter */
-	je L4			/* len==0 => return NULL */
+	je L(4)			/* len==0 => return NULL */
 
 	testb $3, %eax		/* correctly aligned ? */
-	je L2			/* yes => begin loop */
+	je L(2)			/* yes => begin loop */
 	cmpb %dl, (%eax)	/* compare byte */
-	je L9			/* target found => return */
+	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length counter */
 	/* no test for len==0 here, because this is done in the
 	   loop head */
-	jmp L2
+	jmp L(2)
 
       /* We exit the loop if adding MAGIC_BITS to LONGWORD fails to
 	 change any of the hole bits of LONGWORD.
@@ -127,7 +127,7 @@ ENTRY (memchr)
 
 	ALIGN (4)
 
-L1:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
+L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
 				   are now 0 */
@@ -141,7 +141,7 @@ L1:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	   representation with more than 32 bits) not alter then last
 	   overflow, we can now test this condition.  If no carry is signaled
 	   no overflow must have occurred in the last byte => it was 0.	*/
-	jnc L8
+	jnc L(8)
 
 	/* We are only interested in carry bits that change due to the
 	   previous add, so remove original bits */
@@ -153,7 +153,7 @@ L1:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 
 	/* If at least one byte of the word is C we don't get 0 in %edi.  */
-	jnz L8			/* found it => return pointer */
+	jnz L(8)		/* found it => return pointer */
 
 	/* This process is unfolded four times for better performance.
 	   we don't increment the source pointer each time.  Instead we
@@ -169,12 +169,12 @@ L1:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L7			/* highest byte is C => return pointer */
+	jnc L(7)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L7			/* found it => return pointer */
+	jnz L(7)		/* found it => return pointer */
 
 	movl 8(%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
@@ -183,12 +183,12 @@ L1:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L6			/* highest byte is C => return pointer */
+	jnc L(6)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L6			/* found it => return pointer */
+	jnz L(6)		/* found it => return pointer */
 
 	movl 12(%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
@@ -197,21 +197,21 @@ L1:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L5			/* highest byte is C => return pointer */
+	jnc L(5)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L5			/* found it => return pointer */
+	jnz L(5)		/* found it => return pointer */
 
 	/* Adjust both counters for a full round, i.e. 16 bytes.  */
 	addl $16, %eax
-L2:	subl $16, %esi
-	jae L1			/* Still more than 16 bytes remaining */
+L(2):	subl $16, %esi
+	jae L(1)		/* Still more than 16 bytes remaining */
 
 	/* Process remaining bytes separately.  */
 	cmpl $4-16, %esi	/* rest < 4 bytes? */
-	jb L3			/* yes, than test byte by byte */
+	jb L(3)			/* yes, than test byte by byte */
 
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
@@ -220,16 +220,16 @@ L2:	subl $16, %esi
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L8			/* highest byte is C => return pointer */
+	jnc L(8)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jne L8			/* found it => return pointer */
+	jne L(8)		/* found it => return pointer */
 	addl $4, %eax		/* adjust source pointer */
 
 	cmpl $8-16, %esi	/* rest < 8 bytes? */
-	jb L3			/* yes, than test byte by byte */
+	jb L(3)			/* yes, than test byte by byte */
 
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
@@ -238,16 +238,16 @@ L2:	subl $16, %esi
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L8			/* highest byte is C => return pointer */
+	jnc L(8)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jne L8			/* found it => return pointer */
+	jne L(8)		/* found it => return pointer */
 	addl $4, %eax		/* adjust source pointer */
 
 	cmpl $12-16, %esi	/* rest < 12 bytes? */
-	jb L3			/* yes, than test byte by byte */
+	jb L(3)			/* yes, than test byte by byte */
 
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
@@ -256,60 +256,60 @@ L2:	subl $16, %esi
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L8			/* highest byte is C => return pointer */
+	jnc L(8)		/* highest byte is C => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jne L8			/* found it => return pointer */
+	jne L(8)		/* found it => return pointer */
 	addl $4, %eax		/* adjust source pointer */
 
 	/* Check the remaining bytes one by one.  */
-L3:	andl $3, %esi		/* mask out uninteresting bytes */
-	jz L4			/* no remaining bytes => return NULL */
+L(3):	andl $3, %esi		/* mask out uninteresting bytes */
+	jz L(4)			/* no remaining bytes => return NULL */
 
 	cmpb %dl, (%eax)	/* compare byte with C */
-	je L9			/* equal, than return pointer */
+	je L(9)			/* equal, than return pointer */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length */
-	jz L4			/* no remaining bytes => return NULL */
+	jz L(4)			/* no remaining bytes => return NULL */
 
 	cmpb %dl, (%eax)	/* compare byte with C */
-	je L9			/* equal, than return pointer */
+	je L(9)			/* equal, than return pointer */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length */
-	jz L4			/* no remaining bytes => return NULL */
+	jz L(4)			/* no remaining bytes => return NULL */
 
 	cmpb %dl, (%eax)	/* compare byte with C */
-	je L9			/* equal, than return pointer */
+	je L(9)			/* equal, than return pointer */
 
-L4:	/* no byte found => return NULL */
+L(4):	/* no byte found => return NULL */
 	xorl %eax, %eax
-	jmp L9
+	jmp L(9)
 
 	/* add missing source pointer increments */
-L5:	addl $4, %eax
-L6:	addl $4, %eax
-L7:	addl $4, %eax
+L(5):	addl $4, %eax
+L(6):	addl $4, %eax
+L(7):	addl $4, %eax
 
 	/* Test for the matching byte in the word.  %ecx contains a NUL
 	   char in the byte which originally was the byte we are looking
 	   at.  */
-L8:	testb %cl, %cl		/* test first byte in dword */
-	jz L9			/* if zero => return pointer */
+L(8):	testb %cl, %cl		/* test first byte in dword */
+	jz L(9)			/* if zero => return pointer */
 	incl %eax		/* increment source pointer */
 
 	testb %ch, %ch		/* test second byte in dword */
-	jz L9			/* if zero => return pointer */
+	jz L(9)			/* if zero => return pointer */
 	incl %eax		/* increment source pointer */
 
 	testl $0xff0000, %ecx	/* test third byte in dword */
-	jz L9			/* if zero => return pointer */
+	jz L(9)			/* if zero => return pointer */
 	incl %eax		/* increment source pointer */
 
 	/* No further test needed we we know it is one of the four bytes.  */
 
-L9:	popl %edi		/* pop saved registers */
+L(9):	popl %edi		/* pop saved registers */
 	popl %esi
 
 	ret

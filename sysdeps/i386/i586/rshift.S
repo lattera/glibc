@@ -1,23 +1,21 @@
 /* Pentium optimized __mpn_rshift --
+   Copyright (C) 1992, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU MP Library.
 
-Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
+   The GNU MP Library is free software; you can redistribute it and/or modify
+   it under the terms of the GNU Library General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or (at your
+   option) any later version.
 
-This file is part of the GNU MP Library.
+   The GNU MP Library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+   License for more details.
 
-The GNU MP Library is free software; you can redistribute it and/or modify
-it under the terms of the GNU Library General Public License as published by
-the Free Software Foundation; either version 2 of the License, or (at your
-option) any later version.
-
-The GNU MP Library is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-License for more details.
-
-You should have received a copy of the GNU Library General Public License
-along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA 02111-1307, USA. */
+   You should have received a copy of the GNU Library General Public License
+   along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
+   the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA. */
 
 /*
   INPUT PARAMETERS
@@ -46,15 +44,15 @@ C_SYMBOL_NAME(__mpn_rshift:)
 
 /* We can use faster code for shift-by-1 under certain conditions.  */
 	cmp	$1,%ecx
-	jne	Lnormal
+	jne	L(normal)
 	leal	4(%edi),%eax
 	cmpl	%esi,%eax
-	jnc	Lspecial		/* jump if res_ptr + 1 >= s_ptr */
+	jnc	L(special)		/* jump if res_ptr + 1 >= s_ptr */
 	leal	(%edi,%ebp,4),%eax
 	cmpl	%eax,%esi
-	jnc	Lspecial		/* jump if s_ptr >= res_ptr + size */
+	jnc	L(special)		/* jump if s_ptr >= res_ptr + size */
 
-Lnormal:
+L(normal):
 	movl	(%esi),%edx
 	addl	$4,%esi
 	xorl	%eax,%eax
@@ -64,12 +62,12 @@ Lnormal:
 	decl	%ebp
 	pushl	%ebp
 	shrl	$3,%ebp
-	jz	Lend
+	jz	L(end)
 
 	movl	(%edi),%eax		/* fetch destination cache line */
 
 	ALIGN	(2)
-Loop:	movl	28(%edi),%eax		/* fetch destination cache line */
+L(oop):	movl	28(%edi),%eax		/* fetch destination cache line */
 	movl	%edx,%ebx
 
 	movl	(%esi),%eax
@@ -103,21 +101,23 @@ Loop:	movl	28(%edi),%eax		/* fetch destination cache line */
 	addl	$32,%esi
 	addl	$32,%edi
 	decl	%ebp
-	jnz	Loop
+	jnz	L(oop)
 
-Lend:	popl	%ebp
+L(end):	popl	%ebp
 	andl	$7,%ebp
-	jz	Lend2
-Loop2:	movl	(%esi),%eax
+	jz	L(end2)
+L(oop2):
+	movl	(%esi),%eax
 	shrdl	%cl,%eax,%edx		/* compute result limb */
 	movl	%edx,(%edi)
 	movl	%eax,%edx
 	addl	$4,%esi
 	addl	$4,%edi
 	decl	%ebp
-	jnz	Loop2
+	jnz	L(oop2)
 
-Lend2:	shrl	%cl,%edx		/* compute most significant limb */
+L(end2):
+	shrl	%cl,%edx		/* compute most significant limb */
 	movl	%edx,(%edi)		/* store it */
 
 	popl	%eax			/* pop carry limb */
@@ -133,7 +133,7 @@ Lend2:	shrl	%cl,%edx		/* compute most significant limb */
    function is documented to work for overlapping source and destination.
 */
 
-Lspecial:
+L(special):
 	leal	-4(%edi,%ebp,4),%edi
 	leal	-4(%esi,%ebp,4),%esi
 
@@ -147,12 +147,13 @@ Lspecial:
 	shrl	$1,%edx
 	incl	%ebp
 	decl	%ebp
-	jz	LLend
+	jz	L(Lend)
 
 	movl	(%edi),%eax		/* fetch destination cache line */
 
 	ALIGN	(2)
-LLoop:	movl	-28(%edi),%eax		/* fetch destination cache line */
+L(Loop):
+	movl	-28(%edi),%eax		/* fetch destination cache line */
 	movl	%edx,%ebx
 
 	movl	(%esi),%eax
@@ -186,14 +187,16 @@ LLoop:	movl	-28(%edi),%eax		/* fetch destination cache line */
 	leal	-32(%esi),%esi		/* use leal not to clobber carry */
 	leal	-32(%edi),%edi
 	decl	%ebp
-	jnz	LLoop
+	jnz	L(Loop)
 
-LLend:	popl	%ebp
+L(Lend):
+	popl	%ebp
 	sbbl	%eax,%eax		/* save carry in %eax */
 	andl	$7,%ebp
-	jz	LLend2
+	jz	L(Lend2)
 	addl	%eax,%eax		/* restore carry from eax */
-LLoop2:	movl	%edx,%ebx
+L(Loop2):
+	movl	%edx,%ebx
 	movl	(%esi),%edx
 	rcrl	$1,%edx
 	movl	%ebx,(%edi)
@@ -201,11 +204,12 @@ LLoop2:	movl	%edx,%ebx
 	leal	-4(%esi),%esi		/* use leal not to clobber carry */
 	leal	-4(%edi),%edi
 	decl	%ebp
-	jnz	LLoop2
+	jnz	L(Loop2)
 
-	jmp	LL1
-LLend2:	addl	%eax,%eax		/* restore carry from eax */
-LL1:	movl	%edx,(%edi)		/* store last limb */
+	jmp	L(L1)
+L(Lend2):
+	addl	%eax,%eax		/* restore carry from eax */
+L(L1):	movl	%edx,(%edi)		/* store last limb */
 
 	movl	$0,%eax
 	rcrl	$1,%eax

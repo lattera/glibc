@@ -1,24 +1,22 @@
 /* Pentium __mpn_mul_1 -- Multiply a limb vector with a limb and store
    the result in a second limb vector.
+   Copyright (C) 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU MP Library.
 
-Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
+   The GNU MP Library is free software; you can redistribute it and/or modify
+   it under the terms of the GNU Library General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or (at your
+   option) any later version.
 
-This file is part of the GNU MP Library.
+   The GNU MP Library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+   License for more details.
 
-The GNU MP Library is free software; you can redistribute it and/or modify
-it under the terms of the GNU Library General Public License as published by
-the Free Software Foundation; either version 2 of the License, or (at your
-option) any later version.
-
-The GNU MP Library is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-License for more details.
-
-You should have received a copy of the GNU Library General Public License
-along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA 02111-1307, USA. */
+   You should have received a copy of the GNU Library General Public License
+   along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
+   the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA. */
 
 /*
    INPUT PARAMETERS
@@ -57,7 +55,7 @@ C_SYMBOL_NAME(__mpn_mul_1:)
 	INSN2(xor,l	,R(ebx),R(ebx))
 	ALIGN (3)
 
-Loop:	INSN2(adc,l	,R(ebx),$0)
+L(oop):	INSN2(adc,l	,R(ebx),$0)
 	INSN2(mov,l	,R(eax),MEM_INDEX(s1_ptr,size,4))
 
 	INSN1(mul,l	,R(s2_limb))
@@ -68,7 +66,7 @@ Loop:	INSN2(adc,l	,R(ebx),$0)
 	INSN1(inc,l	,R(size))
 
 	INSN2(mov,l	,R(ebx),R(edx))
-	INSN1(jnz,	,Loop)
+	INSN1(jnz,	,L(oop))
 
 	INSN2(adc,l	,R(ebx),$0)
 	INSN2(mov,l	,R(eax),R(ebx))

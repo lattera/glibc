@@ -2947,7 +2947,7 @@ basic_tests (void)
 static void
 initialize (void)
 {
-  fpstack_test ("*init*");
+  fpstack_test ("start *init*");
   plus_zero = 0.0;
   nan_value = plus_zero / plus_zero;	/* Suppress GCC warning */
 
@@ -2955,8 +2955,14 @@ initialize (void)
   plus_infty = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
   minus_infty = -CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
 
+  (void) &plus_zero;
+  (void) &nan_value;
+  (void) &minus_zero;
+  (void) &plus_infty;
+  (void) &minus_infty;
+
   /* Test to make sure we start correctly.  */
-  fpstack_test ("*init*");
+  fpstack_test ("end *init*");
 }
 
 

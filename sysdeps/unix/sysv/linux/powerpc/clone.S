@@ -27,22 +27,30 @@
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
 
-ENTRY(clone)
+ENTRY(__clone)
 	/* Set up stack frame, save registers.  */
-	stwu 1,-20(1)
+	stwu 1,-32(1)
 	stw 31,16(1)
+	stw 30,20(1)
 
-	/* Check for child_stack == NULL, fn == NULL.  */
-	mr. 31,4
+	/* Check for child_stack == NULL || fn == NULL.  */
+	cmpwi 0,4,0
 	cmpwi 1,3,0
 	cror 2+0*4,2+0*4,2+1*4
 	beq- 0,badargs
 
-	/* Save 'fn' and its argument on the new stack.  */
-	stw 3,0(4)
-	stw 6,4(4)
+	/* Set up stack frame for child.  */
+	addi 4,4,-16
+	clrrwi 4,4,4
+	li 0,0
+	stw 0,0(4)
 
-	/* 'flags' argument is (only) parameter to clone syscall.  */
+	/* Save new stack, fn, args across syscall.  */
+	mr 30,3		/* Function in r30.  */
+	mr 31,6		/* Arguments in r31.  */
+
+	/* 'flags' argument is first parameter to clone syscall. (The other
+	   argument is the stack pointer, already in r4.)  */
 	mr 3,5
 
 	/* Do the call.  */
@@ -51,22 +59,22 @@ ENTRY(clone)
 	beq child
 
 	/* Parent.  Restore registers & return.  */
-	lwz 31,20(1)
-	addi 1,1,20
+	lwz 31,16(1)
+	lwz 30,20(1)
+	addi 1,1,32
 	blr
 
 child:
-	/* Get address of procedure to call.  */
-	lwz 0,0(31)
-	/* Set up argument register.  */
-	lwz 3,4(31)
-	mtlr 0
-	/* Switch to new stack.  */
-	mr 1,31
 	/* Call procedure.  */
+	mtlr 30
+	mr 3,31
 	blrl
 	/* Call _exit with result from procedure.  */
-	DO_CALL (SYS_ify (exit))
+#ifdef PIC
+	b _exit@plt
+#else
+	b _exit
+#endif
 
 badargs:
 	li 3,-EINVAL
@@ -76,3 +84,7 @@ error:
 #else
 	b __syscall_error
 #endif
+
+PSEUDO_END (__clone)
+
+weak_alias (__clone, clone)

@@ -43,7 +43,7 @@
 
 #ifdef PIC
 #define PSEUDO(name, syscall_name, args)				      \
-  .text;								      \
+  .section ".text";							      \
   ENTRY (name)								      \
     DO_CALL (SYS_ify (syscall_name));					      \
     bnslr;								      \
@@ -56,6 +56,7 @@
     bnslr;                                                                    \
     b __syscall_error
 #endif
+
 #define ret	/* Nothing (should be 'blr', but never reached).  */
 
 #endif	/* ASSEMBLER */

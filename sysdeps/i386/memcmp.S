@@ -1,22 +1,21 @@
-/* memcmp -- compare two memory blocks for differences in the first COUNT
-	     bytes.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Compare two memory blocks for differences in the first COUNT bytes.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
 #include "asm-syntax.h"
@@ -44,7 +43,7 @@ ENTRY (memcmp)
 
 	repe			/* Compare at most %ecx bytes.  */
 	cmpsb
-	jz L1			/* If even last byte was equal we return 0.  */
+	jz L(1)			/* If even last byte was equal we return 0.  */
 
 	/* The memory blocks are not equal.  So result of the last
 	   subtraction is present in the carry flag.  It is set when
@@ -59,7 +58,7 @@ ENTRY (memcmp)
 	   Note that the following operation does not change 0xffffffff.  */
 	orb $1, %al		/* Change 0 to 1.  */
 
-L1:	popl %esi		/* Restore registers.  */
+L(1):	popl %esi		/* Restore registers.  */
 	movl %edx, %edi
 
 	ret

@@ -1,25 +1,25 @@
 /* strcspn (str, ss) -- Return the length of the initial segement of STR
 			which contains no characters from SS.
-For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
-Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
-This file is part of the GNU C Library.
+   For Intel 80x86, x>=3.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+   Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
 #include "asm-syntax.h"
@@ -114,28 +114,28 @@ ENTRY (strpbrk)
 /* Don't change the "testb $0xff,%%cl" to "testb %%cl,%%cl".  We want
    longer instructions so that the next loop aligns without adding nops.  */
 
-L2:	movb (%eax), %cl	/* get byte from stopset */
+L(2):	movb (%eax), %cl	/* get byte from stopset */
 	testb %cl, %cl		/* is NUL char? */
-	jz L1			/* yes => start compare loop */
+	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 1(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L1			/* yes => start compare loop */
+	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 2(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L1			/* yes => start compare loop */
+	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 3(%eax), %cl	/* get byte from stopset */
 	addl $4, %eax		/* increment stopset pointer */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 	testb $0xff, %cl	/* is NUL char? */
-	jnz L2			/* no => process next dword from stopset */
+	jnz L(2)		/* no => process next dword from stopset */
 
-L1:	leal -4(%edx), %eax	/* prepare loop */
+L(1):	leal -4(%edx), %eax	/* prepare loop */
 
 	/* We use a neat trick for the following loop.  Normally we would
 	   have to test for two termination conditions
@@ -146,33 +146,33 @@ L1:	leal -4(%edx), %eax	/* prepare loop */
 	   value in the table.  But the value of NUL is NUL so the loop
 	   terminates for NUL in every case.  */
 
-L3:	addl $4, %eax		/* adjust pointer for full loop round */
+L(3):	addl $4, %eax		/* adjust pointer for full loop round */
 
 	movb (%eax), %cl	/* get byte from string */
 	cmpb %cl, (%esp,%ecx)	/* is it contained in stopset? */
-	je L4			/* yes => return */
+	je L(4)			/* yes => return */
 
 	movb 1(%eax), %cl	/* get byte from string */
 	cmpb %cl, (%esp,%ecx)	/* is it contained in stopset? */
-	je L5			/* yes => return */
+	je L(5)			/* yes => return */
 
 	movb 2(%eax), %cl	/* get byte from string */
 	cmpb %cl, (%esp,%ecx)	/* is it contained in stopset? */
-	je L6			/* yes => return */
+	je L(6)			/* yes => return */
 
 	movb 3(%eax), %cl	/* get byte from string */
 	cmpb %cl, (%esp,%ecx)	/* is it contained in stopset? */
-	jne L3			/* yes => return */
+	jne L(3)			/* yes => return */
 
 	incl %eax		/* adjust pointer */
-L6:	incl %eax
-L5:	incl %eax
+L(6):	incl %eax
+L(5):	incl %eax
 
-L4:	addl $256, %esp		/* remove stopset */
+L(4):	addl $256, %esp		/* remove stopset */
 
 	orb %cl, %cl		/* was last character NUL? */
-	jnz L7			/* no => return pointer */
+	jnz L(7)			/* no => return pointer */
 	xorl %eax, %eax		/* return NULL */
 
-L7:	ret
+L(7):	ret
 END (strpbrk)

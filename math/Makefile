@@ -73,6 +73,9 @@ tests = test-float test-double $(test-longdouble-$(long-double-fcts))
 # XXX This test is disabled for now since the functions are too buggy.
 #test-longdouble-yes = test-longdouble
 
+CFLAGS-test-float.c = -fno-inline
+CFLAGS-test-double.c = -fno-inline
+CFLAGS-test-longdouble.c = -fno-inline
 LDLIBS-test-float = libm
 LDLIBS-test-double = libm
 LDLIBS-test-longdouble = libm

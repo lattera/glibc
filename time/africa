@@ -1,4 +1,4 @@
-# @(#)africa	7.16
+# @(#)africa	7.17
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -403,8 +403,10 @@ Rule	Libya	1986	only	-	Oct	 3	0:00	0	-
 Rule	Libya	1987	1989	-	Apr	 1	0:00	1:00	S
 Rule	Libya	1987	1990	-	Oct	 1	0:00	0	-
 Rule	Libya	1990	only	-	May	 4	0:00	1:00	S
-Rule	Libya	1996	max	-	Mar	30	2:00s	1:00	S
-Rule	Libya	1996	max	-	Sep	30	2:00s	0	-
+Rule	Libya	1996	only	-	Mar	30	2:00s	1:00	S
+Rule	Libya	1996	only	-	Sep	30	2:00s	0	-
+Rule	Libya	1997	max	-	Mar	lastThu	2:00s	1:00	S
+Rule	Libya	1997	max	-	Oct	Thu>=1	2:00s	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Africa/Tripoli	0:52:44 -	LMT	1920
 			1:00	Libya	CE%sT	1959
@@ -525,9 +527,10 @@ Zone Atlantic/St_Helena	-0:22:48 -	LMT	1890		# Jamestown
 			-0:06	-	SHT	1951	# St Helena Time (?)
 			 0:00	-	GMT
 # The other parts of the St Helena territory are similar:
-#	Tristan da Cunha: on GMT, says Whitman
-#	Ascension: on GMT, says usno1995
-#	Gough, Inaccessible, Nightingale: no information, but probably GMT
+#	Tristan da Cunha: on GMT, say Whitman and the CIA
+#	Ascension: on GMT, says usno1995 and the CIA
+#	Gough (scientific station since 1955): on GMT, says the CIA
+#	Inaccessible, Nightingale: no information, but probably GMT
 
 # Sao Tome and Principe
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -577,7 +580,8 @@ Rule	SA	1943	1944	-	Mar	Sun>=15	2:00	0	-
 Zone Africa/Johannesburg 1:52:00 -	LMT	1892 Feb 8
 			1:30	-	SAT	1903 Mar
 			2:00	SA	SA%sT
-# Prince Edward Is
+# Marion and Prince Edward Is
+# weather station since 1947
 # no information
 
 # Sudan

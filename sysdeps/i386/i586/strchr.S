@@ -1,6 +1,6 @@
-/* strchr -- find character CH in a NUL terminated string.
+/* Find character CH in a NUL terminated string.
    Highly optimized version for ix85, x>=5.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -20,6 +20,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include "asm-syntax.h"
 
 /* This version is especially optimized for the i586 (and following?)
    processors.  This is mainly done by using the two pipelines.  The
@@ -67,38 +68,38 @@ ENTRY (strchr)
 	orl %ecx, %edx		/* and finally c|c|c|c */
 	andl $3, %edi		/* mask alignment bits */
 
-	jz L11			/* alignment is 0 => start loop */
+	jz L(11)		/* alignment is 0 => start loop */
 
 	movb %dl, %cl		/* 0 is needed below */
-	jp L0			/* exactly two bits set */
+	jp L(0)			/* exactly two bits set */
 
 	xorb (%eax), %cl	/* is byte the one we are looking for? */
-	jz L2			/* yes => return pointer */
+	jz L(2)			/* yes => return pointer */
 
 	xorb %dl, %cl		/* load single byte and test for NUL */
-	je L3			/* yes => return NULL */
+	je L(3)			/* yes => return NULL */
 
 	movb 1(%eax), %cl	/* load single byte */
 	incl %eax
 
 	cmpb %cl, %dl		/* is byte == C? */
-	je L2			/* aligned => return pointer */
+	je L(2)			/* aligned => return pointer */
 
 	cmpb $0, %cl		/* is byte NUL? */
-	je L3			/* yes => return NULL */
+	je L(3)			/* yes => return NULL */
 
 	incl %eax
 	decl %edi
 
-	jne L11
+	jne L(11)
 
-L0:	movb (%eax), %cl	/* load single byte */
+L(0):	movb (%eax), %cl	/* load single byte */
 
 	cmpb %cl, %dl		/* is byte == C? */
-	je L2			/* aligned => return pointer */
+	je L(2)			/* aligned => return pointer */
 
 	cmpb $0, %cl		/* is byte NUL? */
-	je L3			/* yes => return NULL */
+	je L(3)			/* yes => return NULL */
 
 	incl %eax		/* increment pointer */
 
@@ -106,7 +107,7 @@ L0:	movb (%eax), %cl	/* load single byte */
 	   four instruction up to `L1' will not be executed in the loop
 	   because the same code is found at the end of the loop, but
 	   there it is executed in parallel with other instructions.  */
-L11:	movl (%eax), %ecx
+L(11):	movl (%eax), %ecx
 	movl $magic, %ebp
 
 	movl $magic, %edi
@@ -135,17 +136,17 @@ L11:	movl (%eax), %ecx
 	   C allows us to overlap the test for 0 in the next word with
 	   the test for C.  */
 
-L1:	xorl %ecx, %ebp			/* (word^magic) */
+L(1):	xorl %ecx, %ebp			/* (word^magic) */
 	addl %ecx, %edi			/* add magic word */
 
 	leal 4(%eax), %eax		/* increment pointer */
-	jnc L4				/* previous addl caused overflow? */
+	jnc L(4)			/* previous addl caused overflow? */
 
 		movl %ecx, %ebx		/* duplicate original word */
 	orl $magic, %ebp		/* (word^magic)|magic */
 
 	addl $1, %ebp			/* (word^magic)|magic == 0xffffffff? */
-	jne L4				/* yes => we found word with NUL */
+	jne L(4)				/* yes => we found word with NUL */
 
 		movl $magic, %esi	/* load magic value */
 		xorl %edx, %ebx		/* clear words which are C */
@@ -154,7 +155,7 @@ L1:	xorl %ecx, %ebp			/* (word^magic) */
 		addl %ebx, %esi		/* (word+magic) */
 
 					movl $magic, %edi
-		jnc L5			/* previous addl caused overflow? */
+		jnc L(5)		/* previous addl caused overflow? */
 
 					movl %edi, %ebp
 		xorl %ebx, %esi		/* (word+magic)^word */
@@ -163,19 +164,19 @@ L1:	xorl %ecx, %ebp			/* (word^magic) */
 		orl $magic, %esi	/* ((word+magic)^word)|magic */
 
 		addl $1, %esi		/* ((word+magic)^word)|magic==0xf..f?*/
-		jne L5			/* yes => we found word with C */
+		jne L(5)		/* yes => we found word with C */
 
 					xorl %ecx, %ebp
 					addl %ecx, %edi
 
 					leal 4(%eax), %eax
-					jnc L4
+					jnc L(4)
 
 						movl %ecx, %ebx
 					orl $magic, %ebp
 
 					addl $1, %ebp
-					jne L4
+					jne L(4)
 
 						movl $magic, %esi
 						xorl %edx, %ebx
@@ -184,7 +185,7 @@ L1:	xorl %ecx, %ebp			/* (word^magic) */
 						addl %ebx, %esi
 
 	movl $magic, %edi
-						jnc L5
+						jnc L(5)
 
 	movl %edi, %ebp
 						xorl %ebx, %esi
@@ -193,19 +194,19 @@ L1:	xorl %ecx, %ebp			/* (word^magic) */
 						orl $magic, %esi
 
 						addl $1, %esi
-						jne L5
+						jne L(5)
 
 	xorl %ecx, %ebp
 	addl %ecx, %edi
 
 	leal 4(%eax), %eax
-	jnc L4
+	jnc L(4)
 
 		movl %ecx, %ebx
 	orl $magic, %ebp
 
 	addl $1, %ebp
-	jne L4
+	jne L(4)
 
 		movl $magic, %esi
 		xorl %edx, %ebx
@@ -214,7 +215,7 @@ L1:	xorl %ecx, %ebp			/* (word^magic) */
 		addl %ebx, %esi
 
 					movl $magic, %edi
-		jnc L5
+		jnc L(5)
 
 					movl %edi, %ebp
 		xorl %ebx, %esi
@@ -223,19 +224,19 @@ L1:	xorl %ecx, %ebp			/* (word^magic) */
 		orl $magic, %esi
 
 		addl $1, %esi
-		jne L5
+		jne L(5)
 
 					xorl %ecx, %ebp
 					addl %ecx, %edi
 
 					leal 4(%eax), %eax
-					jnc L4
+					jnc L(4)
 
 						movl %ecx, %ebx
 					orl $magic, %ebp
 
 					addl $1, %ebp
-					jne L4
+					jne L(4)
 
 						movl $magic, %esi
 						xorl %edx, %ebx
@@ -244,7 +245,7 @@ L1:	xorl %ecx, %ebp			/* (word^magic) */
 						addl %ebx, %esi
 
 	movl $magic, %edi
-						jnc L5
+						jnc L(5)
 
 	movl %edi, %ebp
 						xorl %ebx, %esi
@@ -254,29 +255,29 @@ L1:	xorl %ecx, %ebp			/* (word^magic) */
 
 						addl $1, %esi
 
-						je L1
+						je L(1)
 
 	/* We know there is no NUL byte but a C byte in the word.
 	   %ebx contains NUL in this particular byte.  */
-L5:	subl $4, %eax		/* adjust pointer */
+L(5):	subl $4, %eax		/* adjust pointer */
 	testb %bl, %bl		/* first byte == C? */
 
-	jz L2			/* yes => return pointer */
+	jz L(2)			/* yes => return pointer */
 
 	incl %eax		/* increment pointer */
 	testb %bh, %bh		/* second byte == C? */
 
-	jz L2			/* yes => return pointer */
+	jz L(2)			/* yes => return pointer */
 
 	shrl $16, %ebx		/* make upper bytes accessible */
 	incl %eax		/* increment pointer */
 
 	cmp $0, %bl		/* third byte == C */
-	je L2			/* yes => return pointer */
+	je L(2)			/* yes => return pointer */
 
 	incl %eax		/* increment pointer */
 
-L2:	popl %ebp		/* restore saved registers */
+L(2):	popl %ebp		/* restore saved registers */
 	popl %ebx
 
 	popl %esi
@@ -286,38 +287,38 @@ L2:	popl %ebp		/* restore saved registers */
 
 	/* We know there is a NUL byte in the word.  But we have to test
 	   whether there is an C byte before it in the word.  */
-L4:	subl $4, %eax		/* adjust pointer */
+L(4):	subl $4, %eax		/* adjust pointer */
 	cmpb %dl, %cl		/* first byte == C? */
 
-	je L2			/* yes => return pointer */
+	je L(2)			/* yes => return pointer */
 
 	cmpb $0, %cl		/* first byte == NUL? */
-	je L3			/* yes => return NULL */
+	je L(3)			/* yes => return NULL */
 
 	incl %eax		/* increment pointer */
 
 	cmpb %dl, %ch		/* second byte == C? */
-	je L2			/* yes => return pointer */
+	je L(2)			/* yes => return pointer */
 
 	cmpb $0, %ch		/* second byte == NUL? */
-	je L3			/* yes => return NULL */
+	je L(3)			/* yes => return NULL */
 
 	shrl $16, %ecx		/* make upper bytes accessible */
 	incl %eax		/* increment pointer */
 
 	cmpb %dl, %cl		/* third byte == C? */
-	je L2			/* yes => return pointer */
+	je L(2)			/* yes => return pointer */
 
 	cmpb $0, %cl		/* third byte == NUL? */
-	je L3			/* yes => return NULL */
+	je L(3)			/* yes => return NULL */
 
 	incl %eax		/* increment pointer */
 
 	/* The test four the fourth byte is necessary!  */
 	cmpb %dl, %ch		/* fourth byte == C? */
-	je L2			/* yes => return pointer */
+	je L(2)			/* yes => return pointer */
 
-L3:	xorl %eax, %eax		/* set return value = NULL */
+L(3):	xorl %eax, %eax		/* set return value = NULL */
 
 	popl %ebp		/* restore saved registers */
 	popl %ebx

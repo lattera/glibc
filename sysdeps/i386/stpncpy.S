@@ -1,7 +1,7 @@
-/* stpncpy -- copy no more then N bytes from SRC to DEST, returning the
-	      address of the terminating '\0' in DEST.
+/* copy no more then N bytes from SRC to DEST, returning the address of
+   the terminating '\0' in DEST.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -45,98 +45,98 @@ ENTRY (__stpncpy)
 
 	subl %eax, %esi		/* magic: reduce number of loop variants
 				   to one using addressing mode */
-	jmp L1			/* jump to loop "head" */
+	jmp L(1)		/* jump to loop "head" */
 
 	ALIGN(4)
 
 	/* Four times unfolded loop with two loop counters.  We get the
 	   the third value (the source address) by using the index+base
 	   addressing mode.  */
-L2:	movb (%eax,%esi), %dl	/* load current char */
+L(2):	movb (%eax,%esi), %dl	/* load current char */
 	movb %dl, (%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L7			/* yes, then exit */
+	jz L(7)			/* yes, then exit */
 
 	movb 1(%eax,%esi), %dl	/* load current char */
 	movb %dl, 1(%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L6			/* yes, then exit */
+	jz L(6)			/* yes, then exit */
 
 	movb 2(%eax,%esi), %dl	/* load current char */
 	movb %dl, 2(%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L5			/* yes, then exit */
+	jz L(5)			/* yes, then exit */
 
 	movb 3(%eax,%esi), %dl	/* load current char */
 	movb %dl, 3(%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L4			/* yes, then exit */
+	jz L(4)			/* yes, then exit */
 
 	addl $4, %eax		/* increment loop counter for full round */
 
-L1:	subl $4, %ecx		/* still more than 4 bytes allowed? */
-	jae L2			/* yes, then go to start of loop */
+L(1):	subl $4, %ecx		/* still more than 4 bytes allowed? */
+	jae L(2)		/* yes, then go to start of loop */
 
 	/* The maximal remaining 15 bytes are not processed in a loop.  */
 
 	addl $4, %ecx		/* correct above subtraction */
-	jz L9			/* maximal allowed char reached => go to end */
+	jz L(9)			/* maximal allowed char reached => go to end */
 
 	movb (%eax,%esi), %dl	/* load current char */
 	movb %dl, (%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L3			/* yes, then exit */
+	jz L(3)			/* yes, then exit */
 
 	incl %eax		/* increment pointer */
 	decl %ecx		/* decrement length counter */
-	jz L9			/* no more allowed => exit */
+	jz L(9)			/* no more allowed => exit */
 
 	movb (%eax,%esi), %dl	/* load current char */
 	movb %dl, (%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L3			/* yes, then exit */
+	jz L(3)			/* yes, then exit */
 
 	incl %eax		/* increment pointer */
 	decl %ecx		/* decrement length counter */
-	jz L9			/* no more allowed => exit */
+	jz L(9)			/* no more allowed => exit */
 
 	movb (%eax,%esi), %dl	/* load current char */
 	movb %dl, (%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
-	jz L3			/* yes, then exit */
+	jz L(3)			/* yes, then exit */
 
 	incl %eax		/* increment pointer */
-	jmp L9			/* we don't have to test for counter underflow
+	jmp L(9)		/* we don't have to test for counter underflow
 				   because we know we had a most 3 bytes
 				   remaining => exit */
 
 	/* When coming from the main loop we have to adjust the pointer.  */
-L4:	decl %ecx		/* decrement counter */
+L(4):	decl %ecx		/* decrement counter */
 	incl %eax		/* increment pointer */
 
-L5:	decl %ecx		/* increment pointer */
+L(5):	decl %ecx		/* increment pointer */
 	incl %eax		/* increment pointer */
 
-L6:	decl %ecx		/* increment pointer */
+L(6):	decl %ecx		/* increment pointer */
 	incl %eax		/* increment pointer */
-L7:
+L(7):
 
 	addl $3, %ecx		/* correct pre-decrementation of counter
 				   at the beginning of the loop; but why 3
 				   and not 4?  Very simple, we have to count
 				   the NUL char we already wrote.  */
-	jz L9			/* counter is also 0 => exit */
+	jz L(9)			/* counter is also 0 => exit */
 
 	/* We now have to fill the rest of the buffer with NUL.  This
 	   is done in a tricky way.  Please note that the addressing mode
 	   used below is not the same we used above.  Here we use the
 	   %ecx register.  */
-L8:
+L(8):
 	movb $0, (%ecx,%eax)	/* store NUL char */
-L3:	decl %ecx		/* all bytes written? */
-	jnz L8			/* no, then again */
+L(3):	decl %ecx		/* all bytes written? */
+	jnz L(8)		/* no, then again */
 
-L9:	popl %esi		/* restore saved register content */
+L(9):	popl %esi		/* restore saved register content */
 
 	ret
 END (__stpncpy)

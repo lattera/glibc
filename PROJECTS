@@ -58,6 +58,13 @@ contact <bug-glibc@prep.ai.mit.edu>
 
      - exp2
      - log2
+     - nearbyint
+     - ceil
+     - round
+     - rinttol
+     - rinttoll
+     - roundtol
+     - roundtoll
 
      each with float, double, and long double arguments.  Writing these
      functions should be possible when following the implementation of
@@ -68,7 +75,6 @@ contact <bug-glibc@prep.ai.mit.edu>
      implementation should be possible today.  I mention here the names
      and the way to write them (argument is z = x + iy):
 
-     - cexp(z)	= e^x (cos y + i sin y)
      - sin(z)	= 1/(2i) (e^(iz) - e^-(iz)) = sin(x) cosh(y) + i cos(x) sinh(y)
      - cos(z)	= 1/2 (e^(iz) + e^-(iz)) = cos(x) cosh(y) - i sin(x) sinh(y)
      - tan(z)	= 1/i (e^(iz) - e^-(iz))/(e^(iz) + e^-(iz))
@@ -77,8 +83,6 @@ contact <bug-glibc@prep.ai.mit.edu>
      - acos(z)	= -i ln(z + sqrt(z^2-1))
      - atan(z)	= 1/(2i) ln((1+iz)/(1-iz))
      - acot(z)	= -1/(2i) ln((iz+1)/(iz-1))
-     - sinh(z)	= 1/2 (e^z - e^-z)
-     - cosh(z)	= 1/2 (e^z + e^-z)
      - tanh(z)	= (e^z - e^-z)/(e^z + e^-z)
      - coth(z)	= (e^z + e^-z)/(e^z - e^-z)
 

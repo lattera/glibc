@@ -33,8 +33,16 @@ __cexp (__complex__ double x)
 	{
 	  double exp_val = __exp (__real__ x);
 
-	  __real__ retval = exp_val * __cos (__imag__ x);
-	  __imag__ retval = exp_val * __sin (__imag__ x);
+	  if (isfinite (exp_val))
+	    {
+	      __real__ retval = exp_val * __cos (__imag__ x);
+	      __imag__ retval = exp_val * __sin (__imag__ x);
+	    }
+	  else
+	    {
+	      __real__ retval = __copysign (exp_val, __cos (__imag__ x));
+	      __imag__ retval = __copysign (exp_val, __sin (__imag__ x));
+	    }
 	}
       else
 	{
@@ -48,14 +56,17 @@ __cexp (__complex__ double x)
     {
       if (isfinite (__imag__ x))
 	{
-	  if (signbit (__real__ x) == 0 && __imag__ x == 0.0)
-	    retval = HUGE_VAL;
+	  double value = signbit (__real__ x) ? 0.0 : HUGE_VAL;
+
+	  if (__imag__ x == 0.0)
+	    {
+	      __real__ retval = value;
+	      __imag__ retval = __imag__ x;
+	    }
 	  else
 	    {
-	      double value = signbit (__real__ x) ? 0.0 : HUGE_VAL;
-
-	      __real__ retval = value * __cos (__imag__ x);
-	      __imag__ retval = value * __sin (__imag__ x);
+	      __real__ retval = __copysign (value, __cos (__imag__ x));
+	      __imag__ retval = __copysign (value, __sin (__imag__ x));
 	    }
 	}
       else if (signbit (__real__ x) == 0)
@@ -64,7 +75,10 @@ __cexp (__complex__ double x)
 	  __imag__ retval = __nan ("");
 	}
       else
-	retval = 0.0;
+	{
+	  __real__ retval = 0.0;
+	  __imag__ retval = __copysign (0.0, __imag__ x);
+	}
     }
   else
     {

@@ -63,3 +63,18 @@
 #undef ALIGN
 #define ALIGN(log) .align 1<<log
 #endif
+
+#undef L
+#ifdef __ELF__
+#ifdef __STDC__
+#define L(body)	.L##body
+#else
+#define L(body)	.L/**/body
+#endif
+#else
+#ifdef __STDC__
+#define L(body) L##body
+#else
+#define L(body) L/**/body
+#endif
+#endif

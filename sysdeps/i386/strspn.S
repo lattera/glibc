@@ -1,7 +1,7 @@
 /* strcspn (str, ss) -- Return the length of the initial segment of STR
 			which contains only characters from SS.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -114,28 +114,28 @@ ENTRY (strspn)
 /* Don't change the "testb $0xff,%%cl" to "testb %%cl,%%cl".  We want
    longer instructions so that the next loop aligns without adding nops.  */
 
-L2:	movb (%eax), %cl	/* get byte from stopset */
+L(2):	movb (%eax), %cl	/* get byte from stopset */
 	testb %cl, %cl		/* is NUL char? */
-	jz L1			/* yes => start compare loop */
+	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 1(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L1			/* yes => start compare loop */
+	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 2(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L1			/* yes => start compare loop */
+	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 3(%eax), %cl	/* get byte from stopset */
 	addl $4, %eax		/* increment stopset pointer */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 	testb $0xff, %cl	/* is NUL char? */
-	jnz L2			/* no => process next dword from stopset */
+	jnz L(2)		/* no => process next dword from stopset */
 
-L1:	leal -4(%edx), %eax	/* prepare loop */
+L(1):	leal -4(%edx), %eax	/* prepare loop */
 
 	/* We use a neat trick for the following loop.  Normally we would
 	   have to test for two termination conditions
@@ -146,29 +146,29 @@ L1:	leal -4(%edx), %eax	/* prepare loop */
 	   value in the table.  But the value of NUL is NUL so the loop
 	   terminates for NUL in every case.  */
 
-L3:	addl $4, %eax		/* adjust pointer for full loop round */
+L(3):	addl $4, %eax		/* adjust pointer for full loop round */
 
 	movb (%eax), %cl	/* get byte from string */
 	testb %cl, (%esp,%ecx)	/* is it contained in skipset? */
-	jz L4			/* no => return */
+	jz L(4)			/* no => return */
 
 	movb 1(%eax), %cl	/* get byte from string */
 	testb %cl, (%esp,%ecx)	/* is it contained in skipset? */
-	jz L5			/* no => return */
+	jz L(5)			/* no => return */
 
 	movb 2(%eax), %cl	/* get byte from string */
 	testb %cl, (%esp,%ecx)	/* is it contained in skipset? */
-	jz L6			/* no => return */
+	jz L(6)			/* no => return */
 
 	movb 3(%eax), %cl	/* get byte from string */
 	testb %cl, (%esp,%ecx)	/* is it contained in skipset? */
-	jnz L3			/* yes => start loop again */
+	jnz L(3)		/* yes => start loop again */
 
 	incl %eax		/* adjust pointer */
-L6:	incl %eax
-L5:	incl %eax
+L(6):	incl %eax
+L(5):	incl %eax
 
-L4:	subl %edx, %eax		/* we have to return the number of valid
+L(4):	subl %edx, %eax		/* we have to return the number of valid
 				   characters, so compute distance to first
 				   non-valid character */
 	addl $256, %esp		/* remove stopset */

@@ -6,26 +6,33 @@ main(int argc, char *argv[])
 {
   static const size_t lens[] = { 0, 1, 0, 2, 0, 1, 0, 3,
 				 0, 1, 0, 2, 0, 1, 0, 4 };
-  char buf[24];
-  size_t words;
+  char basebuf[24 + 32];
+  size_t base;
 
-  for (words = 0; words < 4; ++words)
+  for (base = 0; base < 32; ++base)
     {
-      size_t last;
-      memset (buf, 'a', words * 4);
+      char *buf = basebuf + base;
+      size_t words;
 
-      for (last = 0; last < 16; ++last)
-        {
-	  buf[words * 4 + 0] = (last & 1) != 0 ? 'b' : '\0';
-	  buf[words * 4 + 1] = (last & 2) != 0 ? 'c' : '\0';
-	  buf[words * 4 + 2] = (last & 4) != 0 ? 'd' : '\0';
-	  buf[words * 4 + 3] = (last & 8) != 0 ? 'e' : '\0';
-	  buf[words * 4 + 4] = '\0';
+      for (words = 0; words < 4; ++words)
+	{
+	  size_t last;
+	  memset (buf, 'a', words * 4);
 
-	  if (strlen (buf) != words * 4 + lens[last])
+	  for (last = 0; last < 16; ++last)
 	    {
-	      printf ("failed for words=%d and last=%d\n", words, last);
-	      return 1;
+	      buf[words * 4 + 0] = (last & 1) != 0 ? 'b' : '\0';
+	      buf[words * 4 + 1] = (last & 2) != 0 ? 'c' : '\0';
+	      buf[words * 4 + 2] = (last & 4) != 0 ? 'd' : '\0';
+	      buf[words * 4 + 3] = (last & 8) != 0 ? 'e' : '\0';
+	      buf[words * 4 + 4] = '\0';
+
+	      if (strlen (buf) != words * 4 + lens[last])
+		{
+		  printf ("failed for base=%d, words=%d, and last=%d\n",
+			  base, words, last);
+		  return 1;
+		}
 	    }
         }
     }

@@ -1,8 +1,9 @@
-# @(#)antarctica	7.7
+# @(#)antarctica	7.8
 
-# From Paul Eggert (1997-01-20):
+# From Paul Eggert (1997-03-28):
 # To keep things manageable, we list only locations occupied year-round;
-# see <URL:http://earth.agu.org/amen/nations.html> (1996-05-24).
+# see <URL:http://earth.agu.org/amen/nations.html> (1996-05-24)
+# and <URL:http://www.spri.cam.ac.uk/bob/periant.htm> (1996-09-05).
 # Unless otherwise specified, we have no time zone information.
 #
 # Except for the French entries,
@@ -29,7 +30,7 @@ Rule	ChileAQ	1970	max	-	Mar	Sun>=9	0:00	0	-
 # 5 others
 
 # Australia - territories
-# Heard Island, McDonald Islands
+# Heard Island, McDonald Islands (uninhabited)
 #
 # year-round bases
 # Casey, Bailey Peninsula, since 1969
@@ -70,9 +71,10 @@ Zone Antarctica/Mawson	0	-	___	1954 Feb 13
 #
 # Martin-de-Vivies Base, Amsterdam Island, -374105+0773155, since 1950
 # Alfred-Faure Base, Crozet Islands, -462551+0515152, since 1964
-# Port-aux-Francais, Kerguelen Islands, -492110+0701303, since 1951
+# Port-aux-Francais, Kerguelen Islands, -492110+0701303, since 1951;
+#	a whaling and sealing station operated 1908-14, 1920-29, and 1951-56
 #
-# St Paul Island - near Amsterdam, uninhabited since 1927
+# St Paul Island - near Amsterdam, uninhabited since 1931
 #
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Indian/Kerguelen	0	-	___	1950	# Port-aux-Francais
@@ -107,8 +109,8 @@ Zone Antarctica/DumontDUrville 0 -	___	1947
 # King Sejong, King George Island, since 1988
 
 # New Zealand - claims
-# Balleny Islands
-# Scott Island
+# Balleny Islands (never inhabited)
+# Scott Island (never inhabited)
 #
 # year-round base
 # Scott, Ross Island, since 1957-01, is like Antarctica/McMurdo.
@@ -124,10 +126,10 @@ Rule	NZAQ	1976	1989	-	Mar	Sun>=1	2:00s	0	S
 Rule	NZAQ	1990	max	-	Mar	Sun>=15	2:00s	0	S
 
 # Norway - territories
-# Bouvet (uninhabited)
+# Bouvet (never inhabited)
 #
 # claims
-# Peter I Island (uninhabited)
+# Peter I Island (never inhabited)
 
 # Poland - year-round base
 # Arctowski, King George Island, since 1977
@@ -147,7 +149,11 @@ Rule	NZAQ	1990	max	-	Mar	Sun>=15	2:00s	0	S
 #
 # British Antarctic Territories (BAT) claims
 # South Orkney Islands
+#	scientific station from 1903
+#	whaling station at Signy I 1920-1926
 # South Shetland Islands
+#	whaling station at Deception I 1912-1931
+#	scientific station from 1943
 #
 # year-round bases
 # Halley, Coates Land, -7535-2619, since 1956-01-06
