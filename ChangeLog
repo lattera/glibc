@@ -22,8 +22,8 @@
 	* iconvdata/TESTS: Add TCVN5712-1.
 	* iconvdata/gconv-modules: Likewise.
 	* iconvdata/tcvn5712-1.c: New file.
-	* iconvdata/testdata/TCVN5712-1: New file.
-	* iconvdata/testdata/TCVN5712-1..UTF8: New file.
+	* iconvdata/testdata/TCVN-5712: New file.
+	* iconvdata/testdata/TCVN-5712..UTF8: New file.
 
 2001-12-04  Ulrich Drepper  <drepper@redhat.com>
 
