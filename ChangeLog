@@ -1,3 +1,8 @@
+2000-06-09  Jes Sorensen  <jes@linuxcare.com>
+
+	* elf/dl-libc.c (__libc_dlsym): Use DL_SYMBOL_ADDRESS() to obtain
+	the address of a symbol so function pointers are handled properly.
+
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/Dist: Add bp-asm.h.

@@ -111,7 +111,7 @@ __libc_dlsym (void *__map, const char *__name)
   args.name = __name;
 
   return (dlerror_run (do_dlsym, &args) ? NULL
-	  : (void *) (args.loadbase + args.ref->st_value));
+	  : (void *) (DL_SYMBOL_ADDRESS (args.loadbase, args.ref)));
 }
 
 int
