@@ -1,3 +1,10 @@
+2002-09-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel)
+	(case R_386_TLS_DTPMOD32): Don't use addend.
+	[case R_386_TLS_TPOFF32]: Remove redundant SYM_MAP != NULL check.
+	(elf_machine_rela): Add support for TLS relocs.
+
 2002-09-14  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (manual/%): Add this pattern target to the iconvdata/% rule.

@@ -1,3 +1,7 @@
+2002-09-11  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/pt-machine.h: New file.
+
 2002-09-04  Bruno Haible  <bruno@clisp.org>
 
 	* pthread.c: Include <sys/time.h>.
