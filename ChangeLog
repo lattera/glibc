@@ -62,7 +62,7 @@
 
 	* libio/iolibio.h (_IO_pos_BAD): Define of type _IO_fpos64_t.
 
-	* libio/libioP.c (FILEBUF_LITERAL): Also initialize new _offset
+	* libio/libioP.h (FILEBUF_LITERAL): Also initialize new _offset
 	element.
 
 1998-08-21  Roland McGrath  <roland@baalperazim.frob.com>
