@@ -122,8 +122,8 @@ noexpr      "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER
-height   279
-width    216
+height   297
+width    210
 END LC_PAPER
 
 LC_TELEPHONE
@@ -135,7 +135,7 @@ int_prefix     "<U0034><U0034>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-measurement    2
+measurement    1
 END LC_MEASUREMENT
 
 LC_NAME
