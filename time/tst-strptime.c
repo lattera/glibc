@@ -18,25 +18,32 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <locale.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 
 static const struct
 {
+  const char *locale;
   const char *input;
   const char *format;
   int wday;
   int yday;
+  int mon;
+  int mday;
 } day_tests[] =
 {
-  { "2000-01-01", "%Y-%m-%d", 6, 0 },
-  { "03/03/00", "%D", 5, 62 },
-  { "9/9/99", "%x", 4, 251 },
-  { "19990502123412", "%Y%m%d%H%M%S", 0, 121 },
-  { "2001 20 Mon", "%Y %U %a", 1, 140 },
-  { "2001 21 Mon", "%Y %W %a", 1, 140 },
+  { "C", "2000-01-01", "%Y-%m-%d", 6, 0, 0, 1 },
+  { "C", "03/03/00", "%D", 5, 62, 2, 3 },
+  { "C", "9/9/99", "%x", 4, 251, 8, 9 },
+  { "C", "19990502123412", "%Y%m%d%H%M%S", 0, 121, 4, 2 },
+  { "C", "2001 20 Mon", "%Y %U %a", 1, 140, 4, 21 },
+  { "C", "2001 21 Mon", "%Y %W %a", 1, 140, 4, 21 },
+  { "ja_JP.EUC-JP", "2001 20 \xb7\xee", "%Y %U %a", 1, 140, 4, 21 },
+  { "ja_JP.EUC-JP", "2001 21 \xb7\xee", "%Y %W %a", 1, 140, 4, 21 },
 };
 
 
@@ -114,6 +121,12 @@ main (int argc, char *argv[])
     {
       memset (&tm, '\0', sizeof (tm));
 
+      if (setlocale (LC_ALL, day_tests[i].locale) == NULL)
+	{
+	  printf ("cannot set locale %s: %m\n", day_tests[i].locale);
+	  exit (EXIT_FAILURE);
+	}
+
       if (*strptime (day_tests[i].input, day_tests[i].format, &tm) != '\0')
 	{
 	  printf ("not all of `%s' read\n", day_tests[i].input);
@@ -121,11 +134,12 @@ main (int argc, char *argv[])
 	}
 
       printf ("strptime (\"%s\", \"%s\", ...)\n"
-	      "\tshould be: wday = %d, yday = %3d\n"
-	      "\t       is: wday = %d, yday = %3d\n",
+	      "\tshould be: wday = %d, yday = %3d, mon = %2d, mday = %2d\n"
+	      "\t       is: wday = %d, yday = %3d, mon = %2d, mday = %2d\n",
 	      day_tests[i].input, day_tests[i].format,
 	      day_tests[i].wday, day_tests[i].yday,
-	      tm.tm_wday, tm.tm_yday);
+	      day_tests[i].mon, day_tests[i].mday,
+	      tm.tm_wday, tm.tm_yday, tm.tm_mon, tm.tm_mday);
 
       if (tm.tm_wday != day_tests[i].wday)
 	{
@@ -139,7 +153,21 @@ main (int argc, char *argv[])
 		  day_tests[i].input, tm.tm_yday, day_tests[i].yday);
 	  result = 1;
 	}
+      if (tm.tm_mon != day_tests[i].mon)
+	{
+	  printf ("month for `%s' incorrect: %d instead of %d\n",
+		  day_tests[i].input, tm.tm_mon, day_tests[i].mon);
+	  result = 1;
+	}
+      if (tm.tm_mday != day_tests[i].mday)
+	{
+	  printf ("monthday for `%s' incorrect: %d instead of %d\n",
+		  day_tests[i].input, tm.tm_mday, day_tests[i].mday);
+	  result = 1;
+	}
     }
+
+  setlocale (LC_ALL, "C");
 
   result |= test_tm ();
 

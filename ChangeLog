@@ -1,3 +1,8 @@
+2001-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tst-strptime.c: Add tests in different locales.
+	* time/Makefile (tst-strptime-ENV): Define.
+
 2001-08-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* catgets/catgets.c (catclose): Be liberal about catalog_desc in

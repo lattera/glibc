@@ -755,7 +755,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  {
 	    /* We have to convert the multibyte input sequence to wide
 	       characters.  */
-	    char buf[0];
+	    char buf[1];
 	    mbstate_t cstate;
 
 	    memset (&cstate, '\0', sizeof (cstate));
@@ -1058,7 +1058,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  }
 #else
 		{
-		  char buf[0];
+		  char buf[1];
 
 		  buf[0] = c;
 

@@ -49,3 +49,5 @@ CFLAGS-test_time.c = -Wno-format
 
 tst-getdate-ENV= DATEMSK=datemsk TZDIR=${common-objpfx}timezone/testdata
 test_time-ARGS= EST5EDT CST
+
+tst-strptime-ENV = LOCPATH=${common-objpfx}localedata
