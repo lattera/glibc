@@ -1794,8 +1794,34 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ALPHA_GLOB_DAT	25	/* Create GOT entry */
 #define R_ALPHA_JMP_SLOT	26	/* Create PLT entry */
 #define R_ALPHA_RELATIVE	27	/* Adjust by program base */
+#define R_ALPHA_TLS_GD_HI	28
+#define R_ALPHA_TLS_GD_LO	29
+#define R_ALPHA_TLS_GD_16	30
+#define R_ALPHA_TLS_LDM_HI	31
+#define R_ALPHA_TLS_LDM_LO	32
+#define R_ALPHA_TLS_LDM_16	33
+#define R_ALPHA_TLS_LDO_HI	34
+#define R_ALPHA_TLS_LDO_LO	35
+#define R_ALPHA_TLS_LDO_16	36
+#define R_ALPHA_TLS_IE_HI	37
+#define R_ALPHA_TLS_IE_LO	38
+#define R_ALPHA_TLS_IE_16	39
+#define R_ALPHA_TLS_LE_HI	40
+#define R_ALPHA_TLS_LE_LO	41
+#define R_ALPHA_TLS_LE_16	42
+#define R_ALPHA_DTPMOD32	43
+#define R_ALPHA_DTPOFF32	44
+#define R_ALPHA_TPOFF32		45
 /* Keep this the last entry.  */
-#define R_ALPHA_NUM		28
+#define R_ALPHA_NUM		46
+
+/* Magic values of the LITUSE relocation addend.  */
+#define LITUSE_ALPHA_ADDR	0
+#define LITUSE_ALPHA_BASE	1
+#define LITUSE_ALPHA_BYTOFF	2
+#define LITUSE_ALPHA_JSR	3
+#define LITUSE_ALPHA_TLS_GD	4
+#define LITUSE_ALPHA_TLS_LDM	5
 
 
 /* PowerPC specific declarations */
