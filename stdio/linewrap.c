@@ -50,6 +50,32 @@ unwrap_stream (FILE *stream, struct line_wrap_data *d)
   stream->__io_funcs.__fileno = d->fileno;
   stream->__io_funcs.__seek = d->seek;
 }
+
+/* If WRAPPER_COOKIE points to a 0 pointer, then STREAM is assumed to be
+   wrapped, and will be unwrapped, storing the wrapper cookie into
+   WRAPPER_COOKIE.  Otherwise, nothing is done.  */
+static inline void
+ensure_unwrapped (FILE *stream, struct line_wrap_data **wrapper_cookie)
+{
+  if (*wrapper_cookie == 0)
+    {
+      *wrapper_cookie = stream->__cookie;
+      unwrap_stream (stream, *wrapper_cookie);
+    }
+}
+
+/* If WRAPPER_COOKIE points to a non-0 pointer, then STREAM is assumed to
+   *have been unwrapped with ensure_unwrapped, will be wrapped with
+   *WRAPPER_COOKIE, and *WRAPPER_COOKIE zeroed.  Otherwise, nothing is done. */
+static inline void
+ensure_wrapped (FILE *stream, struct line_wrap_data **wrapper_cookie)
+{
+  if (*wrapper_cookie)
+    {
+      wrap_stream (stream, *wrapper_cookie);
+      *wrapper_cookie = 0;
+    }
+}
 
 /* Cookie io functions that might get called on a wrapped stream.
    Must pass the original cookie to the original functions.  */
@@ -68,26 +94,26 @@ lwfileno (void *cookie)
   return (*d->fileno) (d->cookie);
 }
 
-/* This function is called when STREAM must be flushed.
-   C is EOF or a character to be appended to the buffer contents.  */
-void
-__line_wrap_output (FILE *stream, int c)
+/* Process STREAM's buffer so that line wrapping is done from POINT_OFFS to
+   the end of its buffer.  If WRAPPER_COOKIE is 0, and it's necessary to
+   flush some data, STREAM is unwrapped, and the line wrap stdio cookie
+   stored in WRAPPER_COOKIE; otherwise, stream is assumed to already be
+   unwrapped, and WRAPPER_COOKIE to point to the line wrap data.  Returns C
+   or EOF if C was output.  */
+static inline int
+lwupdate (FILE *stream, int c, struct line_wrap_data **wrapper_cookie)
 {
   char *buf, *nl;
   size_t len;
-
-  /* Extract our data and restore the stream's original cookie
-     and output function so writes we do really go out.  */
-  struct line_wrap_data *d = stream->__cookie;
-  unwrap_stream (stream, d);
+  struct line_wrap_data *d = *wrapper_cookie ?: stream->__cookie;
 
   /* Scan the buffer for newlines.  */
-  buf = stream->__buffer;
+  buf = stream->__buffer + d->point_offs;
   while ((buf < stream->__bufp || (c != EOF && c != '\n')) && !stream->__error)
     {
       size_t r;
 
-      if (d->point == 0 && d->lmargin != 0)
+      if (d->point_col == 0 && d->lmargin != 0)
 	{
 	  /* We are starting a new line.  Print spaces to the left margin.  */
 	  const size_t pad = d->lmargin;
@@ -106,16 +132,18 @@ __line_wrap_output (FILE *stream, int c)
 	      size_t i;
 	      char *olimit;
 
+	      ensure_unwrapped (stream, wrapper_cookie);
+
 	      len = stream->__bufp - buf;
 	      olimit = stream->__put_limit;
 	      stream->__bufp = stream->__put_limit = buf;
 	      for (i = 0; i < pad; ++i)
 		(*d->output) (stream, ' ');
 	      stream->__put_limit = olimit;
-	      memcpy (stream->__bufp, buf, len);
+	      memmove (stream->__bufp, buf, len);
 	      stream->__bufp += len;
 	    }
-	  d->point = pad;
+	  d->point_col = pad;
 	}
 
       len = stream->__bufp - buf;
@@ -125,12 +153,12 @@ __line_wrap_output (FILE *stream, int c)
 	{
 	  /* The buffer ends in a partial line.  */
 
-	  if (d->point + len + (c != EOF && c != '\n') <= d->rmargin)
+	  if (d->point_col + len + (c != EOF && c != '\n') <= d->rmargin)
 	    {
 	      /* The remaining buffer text is a partial line and fits
 		 within the maximum line width.  Advance point for the
 		 characters to be written and stop scanning.  */
-	      d->point += len;
+	      d->point_col += len;
 	      break;
 	    }
 	  else
@@ -138,11 +166,11 @@ __line_wrap_output (FILE *stream, int c)
 	       the end of the buffer.  */
 	    nl = stream->__bufp;
 	}
-      else if (d->point + (nl - buf) <= d->rmargin)
+      else if (d->point_col + (nl - buf) <= d->rmargin)
 	{
 	  /* The buffer contains a full line that fits within the maximum
 	     line width.  Reset point and scan the next line.  */
-	  d->point = 0;
+	  d->point_col = 0;
 	  buf = nl + 1;
 	  continue;
 	}
@@ -156,10 +184,10 @@ __line_wrap_output (FILE *stream, int c)
 	     newline and anything after it in the buffer.  */
 	  if (nl < stream->__bufp)
 	    {
-	      memcpy (buf + (r - d->point), nl, stream->__bufp - nl);
-	      stream->__bufp -= buf + (r - d->point) - nl;
+	      memmove (buf + (r - d->point_col), nl, stream->__bufp - nl);
+	      stream->__bufp -= buf + (r - d->point_col) - nl;
 	      /* Reset point for the next line and start scanning it.  */
-	      d->point = 0;
+	      d->point_col = 0;
 	      buf += r + 1; /* Skip full line plus \n. */
 	    }
 	  else
@@ -167,8 +195,8 @@ __line_wrap_output (FILE *stream, int c)
 	      /* The buffer ends with a partial line that is beyond the
 		 maximum line width.  Advance point for the characters
 		 written, and discard those past the max from the buffer.  */
-	      d->point += len;
-	      stream->__bufp -= d->point - r;
+	      d->point_col += len;
+	      stream->__bufp -= d->point_col - r;
 	      if (c != '\n')
 		/* Swallow the extra character too.  */
 		c = EOF;
@@ -184,7 +212,7 @@ __line_wrap_output (FILE *stream, int c)
 	  char *p, *nextline;
 	  int i;
 
-	  p = buf + (r + 1 - d->point);
+	  p = buf + (r + 1 - d->point_col);
 	  while (p >= buf && !isblank (*p))
 	    --p;
 	  nextline = p + 1;	/* This will begin the next line.  */
@@ -201,7 +229,7 @@ __line_wrap_output (FILE *stream, int c)
 	    {
 	      /* A single word that is greater than the maximum line width.
 		 Oh well.  Put it on an overlong line by itself.  */
-	      p = buf + (r + 1 - d->point);
+	      p = buf + (r + 1 - d->point_col);
 	      /* Find the end of the long word.  */
 	      do
 		++p;
@@ -209,7 +237,7 @@ __line_wrap_output (FILE *stream, int c)
 	      if (p == nl)
 		{
 		  /* It already ends a line.  No fussing required.  */
-		  d->point = 0;
+		  d->point_col = 0;
 		  buf = nl + 1;
 		  continue;
 		}
@@ -228,14 +256,17 @@ __line_wrap_output (FILE *stream, int c)
 	  if (nextline - (nl + 1) < d->wmargin)
 	    /* The margin needs more blanks than we removed.
 	       Output the first line so we can use the space.  */
-	    (*d->output) (stream, '\n');
+	    {
+	      ensure_unwrapped (stream, wrapper_cookie);
+	      (*d->output) (stream, '\n');
+	    }
 	  else
 	    /* We can fit the newline and blanks in before
 	       the next word.  */
 	    *stream->__bufp++ = '\n';
 
 	  /* Reset the counter of what has been output this line.  */
-	  d->point = 0;
+	  d->point_col = 0;
 
 	  /* Add blanks up to the wrap margin column.  */
 	  for (i = 0; i < d->wmargin; ++i)
@@ -244,7 +275,7 @@ __line_wrap_output (FILE *stream, int c)
 	  /* Copy the tail of the original buffer into the current buffer
 	     position.  */
 	  if (stream->__bufp != nextline)
-	    memcpy (stream->__bufp, nextline, buf + len - nextline);
+	    memmove (stream->__bufp, nextline, buf + len - nextline);
 	  len -= nextline - buf;
 
 	  /* Continue the scan on the remaining lines in the buffer.  */
@@ -255,16 +286,33 @@ __line_wrap_output (FILE *stream, int c)
 	}
     }
 
+  /* Remember that we've scanned as far as the end of the buffer.  */
+  d->point_offs = stream->__bufp - stream->__buffer;
+
+  return c;
+}
+
+/* This function is called when STREAM must be flushed.
+   C is EOF or a character to be appended to the buffer contents.  */
+void
+__line_wrap_output (FILE *stream, int c)
+{
+  struct line_wrap_data *d = 0;
+
+  c = lwupdate (stream, c, &d);
+
   if (!stream->__error)
     {
+      ensure_unwrapped (stream, &d);
       (*d->output) (stream, c);
+      d->point_offs = 0;	/* The buffer now holds nothing.  */
       if (c == '\n')
-	d->point = 0;
+	d->point_col = 0;
       else if (c != EOF)
-	++d->point;
+	++d->point_col;
     }
 
-  wrap_stream (stream, d);
+  ensure_wrapped (stream, &d);
 }
 
 /* Modify STREAM so that it prefixes lines written on it with LMARGIN spaces
@@ -285,7 +333,8 @@ line_wrap_stream (FILE *stream, size_t lmargin, size_t rmargin, size_t wmargin)
   fflush (stream);
 
   /* Initialize our wrapping state.  */
-  d->point = 0;
+  d->point_col = 0;
+  d->point_offs = 0;
 
   /* Save the original cookie and output and close hooks.  */
   d->cookie = stream->__cookie;
@@ -326,8 +375,28 @@ line_wrapped (FILE *stream)
   return (stream->__room_funcs.__output == &__line_wrap_output);
 }
 
+/* If STREAM is not line-wrapped, return 0.  Otherwise all pending text
+   buffered text in STREAM so that the POINT_OFFS field refers to the last
+   position in the stdio buffer, and return the line wrap state object for
+   STREAM.  Since all text has been processed, this means that (1) the
+   POINT_COL field refers to the column at which any new text would be added,
+   and (2) any changes to the margin parameters will only affect new text.  */
+struct line_wrap_data *
+__line_wrap_update (FILE *stream)
+{
+  if (line_wrapped (stream))
+    {
+      struct line_wrap_data *d = stream->__cookie, *wc = 0;
+      lwupdate (stream, EOF, &wc);
+      ensure_wrapped (stream, &wc);
+      return d;
+    }
+  else
+    return 0;
+}
+
 /* If STREAM is not line-wrapped return -1, else return its left margin.  */
-size_t
+inline size_t
 line_wrap_lmargin (FILE *stream)
 {
   if (! line_wrapped (stream))
@@ -337,22 +406,22 @@ line_wrap_lmargin (FILE *stream)
 
 /* If STREAM is not line-wrapped return -1, else set its left margin to
    LMARGIN and return the old value.  */
-size_t
+inline size_t
 line_wrap_set_lmargin (FILE *stream, size_t lmargin)
 {
-  if (! line_wrapped (stream))
-    return -1;
-  else
+  struct line_wrap_data *d = __line_wrap_update (stream);
+  if (d)
     {
-      struct line_wrap_data *d = stream->__cookie;
       size_t old = d->lmargin;
       d->lmargin = lmargin;
       return old;
     }
+  else
+    return -1;
 }
 
 /* If STREAM is not line-wrapped return -1, else return its left margin.  */
-size_t
+inline size_t
 line_wrap_rmargin (FILE *stream)
 {
   if (! line_wrapped (stream))
@@ -362,22 +431,22 @@ line_wrap_rmargin (FILE *stream)
 
 /* If STREAM is not line-wrapped return -1, else set its right margin to
    RMARGIN and return the old value.  */
-size_t
+inline size_t
 line_wrap_set_rmargin (FILE *stream, size_t rmargin)
 {
-  if (! line_wrapped (stream))
-    return -1;
-  else
+  struct line_wrap_data *d = __line_wrap_update (stream);
+  if (d)
     {
-      struct line_wrap_data *d = stream->__cookie;
       size_t old = d->rmargin;
       d->rmargin = rmargin;
       return old;
     }
+  else
+    return -1;
 }
 
 /* If STREAM is not line-wrapped return -1, else return its wrap margin.  */
-size_t
+inline size_t
 line_wrap_wmargin (FILE *stream)
 {
   if (! line_wrapped (stream))
@@ -387,28 +456,27 @@ line_wrap_wmargin (FILE *stream)
 
 /* If STREAM is not line-wrapped return -1, else set its left margin to
    WMARGIN and return the old value.  */
-size_t
+inline size_t
 line_wrap_set_wmargin (FILE *stream, size_t wmargin)
 {
-  if (! line_wrapped (stream))
-    return -1;
-  else
+  struct line_wrap_data *d = __line_wrap_update (stream);
+  if (d)
     {
-      struct line_wrap_data *d = stream->__cookie;
       size_t old = d->wmargin;
       d->wmargin = wmargin;
       return old;
     }
+  else
+    return -1;
 }
 
 /* If STREAM is not line-wrapped return -1, else return the column number of
    the current output point.  */
-size_t
+inline size_t
 line_wrap_point (FILE *stream)
 {
-  if (! line_wrapped (stream))
-    return -1;
-  return ((struct line_wrap_data *)stream->__cookie)->point;
+  struct line_wrap_data *d = __line_wrap_update (stream);
+  return d ? d->point_col : -1;
 }
 
 #ifdef TEST
