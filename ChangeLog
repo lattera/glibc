@@ -1,11 +1,38 @@
+2001-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile: Add support for IBM1132, IBM1133, and IBM1162
+	modules.
+	* iconvdata/TESTS: Likewise.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/ibm1132.c: New file.
+	* iconvdata/ibm1132.h: New file.
+	* iconvdata/ibm1133.c: New file.
+	* iconvdata/ibm1133.h: New file.
+	* iconvdata/ibm1162.c: New file.
+	* iconvdata/ibm1162.h: New file.
+	* iconvdata/testdata/IBM1132: New file.
+	* iconvdata/testdata/IBM1132..UTF8: New file.
+	* iconvdata/testdata/IBM1133: New file.
+	* iconvdata/testdata/IBM1133..UTF8: New file.
+	* iconvdata/testdata/IBM1162: New file.
+	* iconvdata/testdata/IBM1162..UTF8: New file.
+	Patches by Masahide Washizawa <WASHI@jp.ibm.com>.
+
+	* string/string.h: Fix typo in comment.
+	* wcsmbs/wchar.h: Likewise.
+
+2001-10-30  Joseph S. Myers  <jsm28@cam.ac.uk>
+
+	* manual/getopt.texi (getopt_long, getopt_long_only): Include
+	const in type of longopts parameter.
+
 2001-10-29  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/ieee754/dbl-64/mpa.h: Add prototypes for internal
-	functions.
+	* sysdeps/ieee754/dbl-64/mpa.h: Add prototypes for internal functions.
 
 2001-10-29  Kevin Ryde <user42@zip.com.au>
 
-	* stdio.texi (Integer Conversions): Corrections to sample printf
+	* manual/stdio.texi (Integer Conversions): Corrections to sample printf
 	output, clarify `#' behaviour on 0.
 	(Floating-Point Conversions): Clarify that %g only uses %e when
 	the exponent would be greater than 1.

@@ -157,7 +157,7 @@ extern char *strchr (__const char *__s, int __c) __THROW __attribute_pure__;
 extern char *strrchr (__const char *__s, int __c) __THROW __attribute_pure__;
 
 #ifdef __USE_GNU
-/* This funciton is similar to `strchr'.  But it returns a pointer to
+/* This function is similar to `strchr'.  But it returns a pointer to
    the closing NUL byte in case C is not found in S.  */
 extern char *strchrnul (__const char *__s, int __c) __THROW __attribute_pure__;
 #endif

@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-10-26
+GNU C Library NEWS -- history of user-visible changes.  2001-10-31
 Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -11,8 +11,8 @@ Version 2.2.5
 * Stephen Moshier implemented powl and cbrtl for the 128-bit
   long double format.
 
-* Masahide Washizawa contributed iconv modules for IBM1160 and IBM1161
-  charsets.
+* Masahide Washizawa contributed iconv modules for IBM1132, IBM1133, IBM1160,
+  IBM1161, and IBM1162 charsets.
 
 * Andreas Jaeger contributed a port to x86_64/Linux.
 
@@ -1331,4 +1331,4 @@ Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 
 Local variables:
 version-control: never
-end:
+End:

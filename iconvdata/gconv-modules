@@ -1024,6 +1024,27 @@ module	IBM1161//		INTERNAL		IBM1161		1
 module	INTERNAL		IBM1161//		IBM1161		1
 
 #	from			to			module		cost
+alias	IBM-1132//		IBM1132//
+alias	CP1132//		IBM1132//
+alias	CSIBM1132//		IBM1132//
+module	IBM1132//		INTERNAL		IBM1132		1
+module	INTERNAL		IBM1132//		IBM1132		1
+
+#	from			to			module		cost
+alias	IBM-1133//		IBM1133//
+alias	CP1133//		IBM1133//
+alias	CSIBM1133//		IBM1133//
+module	IBM1133//		INTERNAL		IBM1133		1
+module	INTERNAL		IBM1133//		IBM1133		1
+
+#	from			to			module		cost
+alias	IBM-1162//		IBM1162//
+alias	CP1162//		IBM1162//
+alias	CSIBM11621162//		IBM1162//
+module	IBM1162//		INTERNAL		IBM1162		1
+module	INTERNAL		IBM1162//		IBM1162		1
+
+#	from			to			module		cost
 alias	EUCKR//			EUC-KR//
 alias	CSEUCKR//		EUC-KR//
 alias	OSF0004000a//		EUC-KR//

@@ -184,7 +184,7 @@ extern wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
      __THROW __attribute_pure__;
 
 #ifdef __USE_GNU
-/* This funciton is similar to `wcschr'.  But it returns a pointer to
+/* This function is similar to `wcschr'.  But it returns a pointer to
    the closing NUL wide character in case C is not found in S.  */
 extern wchar_t *wcschrnul (__const wchar_t *__s, wchar_t __wc)
      __THROW __attribute_pure__;
