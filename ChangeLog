@@ -1,3 +1,8 @@
+2001-06-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/wordexp.c: Add missing free.
+	Patch by yeti@physics.muni.cz.
+
 2001-06-02  Tom Browder  <tbrowder@home.com>
 
 	* misc/tst-tsearch.c (mangle_tree): Ensure array indices are
