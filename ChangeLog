@@ -1,3 +1,9 @@
+1999-10-11  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/siginfo.h (SI_KERNEL): Added.
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Likewise.
+	Closes PR libc/1384.
+
 1999-10-20  Andreas Schwab  <schwab@suse.de>
 
 	* math/Makefile (libm-tests-generated): Remove libm-test.stmp.

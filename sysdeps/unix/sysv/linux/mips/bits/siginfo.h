@@ -122,8 +122,10 @@ enum
 # define SI_ASYNCIO	SI_ASYNCIO
   SI_QUEUE,			/* Sent by sigqueue.  */
 # define SI_QUEUE	SI_QUEUE
-  SI_USER			/* Sent by kill, sigsend, raise.  */
+  SI_USER,			/* Sent by kill, sigsend, raise.  */
 # define SI_USER	SI_USER
+  SI_KERNEL = 0x80		/* Send by kernel.  */
+#define SI_KERNEL	SI_KERNEL
 };
 
 
