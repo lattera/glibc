@@ -1,3 +1,12 @@
+2000-08-03  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/unix/sysv/syscalls.list (time, utime): Correct signatures.
+	* io/test-utime.c: Test passing NULL as utimbuf* arg.
+
+	* posix/regex.c (EXTEND_BUFFER_HIGH_BOUND): Remove macro.
+	(MOVE_BUFFER_POINTER): Handle high_bound properly.
+	(EXTEND_BUFFER): Don't call EXTEND_BUFFER_HIGH_BOUND.
+
 2000-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/big5.c: Updated.
