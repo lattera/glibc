@@ -1,5 +1,9 @@
 2002-09-29  Jakub Jelinek  <jakub@redhat.com>
 
+	* stdlib/longlong.h (__udiv_qrnnd): Remove PARAMS from prototype.
+
+2002-09-29  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/sparc/sysdep.h (inline_syscall0): Make asm
 	volatile.
 	(inline_syscall1, inline_syscall2, inline_syscall3, inline_syscall4,
