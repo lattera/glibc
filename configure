@@ -3509,86 +3509,6 @@ echo "$as_me:$LINENO: result: $libc_cv_prog_ld_gnu" >&5
 echo "${ECHO_T}$libc_cv_prog_ld_gnu" >&6
 gnu_ld=$libc_cv_prog_ld_gnu
 
-if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}mig", so it can be a program name with args.
-set dummy ${ac_tool_prefix}mig; ac_word=$2
-echo "$as_me:$LINENO: checking for $ac_word" >&5
-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_MIG+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test -n "$MIG"; then
-  ac_cv_prog_MIG="$MIG" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-  for ac_exec_ext in '' $ac_executable_extensions; do
-  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_MIG="${ac_tool_prefix}mig"
-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-done
-
-fi
-fi
-MIG=$ac_cv_prog_MIG
-if test -n "$MIG"; then
-  echo "$as_me:$LINENO: result: $MIG" >&5
-echo "${ECHO_T}$MIG" >&6
-else
-  echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-fi
-
-fi
-if test -z "$ac_cv_prog_MIG"; then
-  ac_ct_MIG=$MIG
-  # Extract the first word of "mig", so it can be a program name with args.
-set dummy mig; ac_word=$2
-echo "$as_me:$LINENO: checking for $ac_word" >&5
-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_ac_ct_MIG+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test -n "$ac_ct_MIG"; then
-  ac_cv_prog_ac_ct_MIG="$ac_ct_MIG" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-  for ac_exec_ext in '' $ac_executable_extensions; do
-  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_MIG="mig"
-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-done
-
-  test -z "$ac_cv_prog_ac_ct_MIG" && ac_cv_prog_ac_ct_MIG="MISSING"
-fi
-fi
-ac_ct_MIG=$ac_cv_prog_ac_ct_MIG
-if test -n "$ac_ct_MIG"; then
-  echo "$as_me:$LINENO: result: $ac_ct_MIG" >&5
-echo "${ECHO_T}$ac_ct_MIG" >&6
-else
-  echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-fi
-
-  MIG=$ac_ct_MIG
-else
-  MIG="$ac_cv_prog_MIG"
-fi
-
 
 # Accept binutils 2.10.1 or newer (and also any ia64 2.9 version)
 # XXX Commented out because it filters out too many good versions.
@@ -4860,7 +4780,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 4863 "configure"
+#line 4783 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5163,7 +5083,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5166 "configure"
+#line 5086 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5262,7 +5182,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5265 "configure"
+#line 5185 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5330,7 +5250,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5333 "configure"
+#line 5253 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
@@ -6905,7 +6825,6 @@ s,@AR@,$AR,;t t
 s,@RANLIB@,$RANLIB,;t t
 s,@ac_ct_RANLIB@,$ac_ct_RANLIB,;t t
 s,@MIG@,$MIG,;t t
-s,@ac_ct_MIG@,$ac_ct_MIG,;t t
 s,@CCVERSION@,$CCVERSION,;t t
 s,@SYSINCLUDES@,$SYSINCLUDES,;t t
 s,@libc_cv_gcc_static_libgcc@,$libc_cv_gcc_static_libgcc,;t t

@@ -1,5 +1,14 @@
 2002-10-17  Roland McGrath  <roland@redhat.com>
 
+	* configure.in (MIG): Just AC_SUBST it here.
+	* configure: Regenerated.
+	* sysdeps/mach/configure.in (MIG): Do the AC_CHECK_TOOL here.
+	Adding final - argument to all AC_CHECK_HEADER uses for .defs files.
+	* sysdeps/mach/configure: Regenerated.
+
+	* aclocal.m4 (GLIBC_PROVIDES): Add AC_PROVIDE([_AS_TR_SH_PREPARE])
+	and AC_PROVIDE([_AS_CR_PREPARE]).
+
 	* aclocal.m4 (GLIBC_PROVIDES): Add AC_PROVIDE([_AS_ECHO_N_PREPARE]).
 	Remove AC_LANG(C) call, instead just define([_AC_LANG], [C]).
 

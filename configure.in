@@ -652,7 +652,7 @@ fi
 AC_SUBST(cross_compiling)
 AC_PROG_CPP
 LIBC_PROG_BINUTILS
-AC_CHECK_TOOL(MIG, mig, MISSING)
+AC_SUBST(MIG)dnl Needed by sysdeps/mach/configure.in
 
 # Accept binutils 2.10.1 or newer (and also any ia64 2.9 version)
 # XXX Commented out because it filters out too many good versions.

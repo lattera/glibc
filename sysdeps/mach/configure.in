@@ -1,16 +1,16 @@
 sinclude(./aclocal.m4)dnl Autoconf lossage.
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
-dnl Autoconf weirdness requires that AC_CHECK_TOOL be in the main configure.in,
-dnl but only on Mach-based configurations is the tool needed.
+AC_CHECK_TOOL(MIG, mig, MISSING)
 if test "x$MIG" = xMISSING; then
   AC_MSG_ERROR([cannot find required build tool mig])
 fi
 
 ### Sanity checks for Mach header installation
-AC_CHECK_HEADER(mach/mach_types.h,, [AC_MSG_ERROR([cannot find Mach headers])])
+AC_CHECK_HEADER(mach/mach_types.h,,
+                [AC_MSG_ERROR([cannot find Mach headers])], -)
 AC_CHECK_HEADER(mach/mach_types.defs,, [dnl
-AC_MSG_ERROR([cannot find Mach .defs files])])
+AC_MSG_ERROR([cannot find Mach .defs files])], -)
 
 dnl
 dnl mach_TYPE_CHECK(foo_t, bar_t)
@@ -61,7 +61,7 @@ for ifc in mach mach4 \
 	   i386/mach_i386 \
 	   ; do
   AC_CHECK_HEADER(mach/${ifc}.defs, [dnl
-  mach_interface_list="$mach_interface_list $ifc"])
+  mach_interface_list="$mach_interface_list $ifc"],, -)
 done
 if test "x$mach_interface_list" = x; then
   AC_MSG_ERROR([what manner of Mach is this?])
@@ -79,7 +79,7 @@ fi
 AC_CHECK_HEADER(mach/machine/ndr_def.h, [dnl
   DEFINES="$DEFINES -DNDR_DEF_HEADER='<mach/machine/ndr_def.h>'"], [dnl
 AC_CHECK_HEADER(machine/ndr_def.h, [dnl
-  DEFINES="$DEFINES -DNDR_DEF_HEADER='<machine/ndr_def.h>'"])])
+  DEFINES="$DEFINES -DNDR_DEF_HEADER='<machine/ndr_def.h>'"],, -)], -)
 
 AC_CACHE_CHECK(for i386_io_perm_modify in mach_i386.defs,
 	       libc_cv_mach_i386_ioports, [dnl
