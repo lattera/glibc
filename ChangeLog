@@ -1,3 +1,8 @@
+1998-11-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/mktime.c (__mktime_internal): Handle broken down times
+	around the time of the DST switches more correctly.
+
 1998-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile (libdl-routines): Add dlopenold.
@@ -30,23 +35,23 @@
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Add .L prefix to symbols
 	used in macro magic.
 
-1998-11-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-        * sysdeps/unix/sysv/linux/netatalk/at.h: Include <linux/atalk.h> 
-        before <sys/socket.h> to make sockaddr_at available to 
-        <sys/socket.h>. 
+1998-11-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+        * sysdeps/unix/sysv/linux/netatalk/at.h: Include <linux/atalk.h>
+        before <sys/socket.h> to make sockaddr_at available to
+        <sys/socket.h>.
 
 	* posix/glob.h: Remove __P from parameter lists of declarations.
- 
-1998-11-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* time/tzset.c (tz_compute): Remove unused parameter timer. 
-	Change caller. 
- 
-1998-11-02  Mark Kettenis  <kettenis@phys.uva.nl> 
- 
-	* sysdeps/generic/bits/types.h (__ipc_pid_t): New typedef. 
- 
+
+1998-11-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* time/tzset.c (tz_compute): Remove unused parameter timer.
+	Change caller.
+
+1998-11-02  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/generic/bits/types.h (__ipc_pid_t): New typedef.
+
 1998-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/setgroups.c (setgroups): Remove
