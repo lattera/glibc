@@ -60,7 +60,7 @@
      while (atomic_compare_and_exchange_acq (__memp, __oldval + __value,      \
 					     __oldval));		      \
 									      \
-     __value; })
+     __oldval; })
 #endif
 
 
@@ -74,23 +74,53 @@
 #endif
 
 
+#ifndef atomic_increment_and_test
+# define atomic_increment_and_test(mem) \
+  (atomic_exchange_and_add (mem, 1) == 0)
+#endif
+
+
 #ifndef atomic_decrement
 # define atomic_decrement(mem) atomic_add (mem, -1)
 #endif
 
 
+#ifndef atomic_decrement_and_test
+# define atomic_decrement_and_test(mem) \
+  (atomic_exchange_and_add (mem, -1) == 0)
+#endif
+
+
+#ifdef atomic_add_negative
+# define atomic_add_negative(mem, value) \
+  (atomic_exchange_and_add (mem, value) < 0)
+#endif
+
+
+#ifndef atomic_add_zero
+# define atomic_add_zero(mem, value) \
+  (atomic_exchange_and_add (mem, value) == 0)
+#endif
+
+
 #ifndef atomic_bit_set
 # define atomic_bit_set(mem, bit) \
-  (void) ({ __typeof (mem) __memp = (mem);				      \
-	    __typeof (*mem) __mask = (1 << (bit));			      \
-	    __typeof (*mem) __oldval;					      \
+  (void) atomic_bit_test_set(mem, bit)
+#endif
+
+
+#ifndef atomic_bit_test_set
+# define atomic_bit_test_set(mem, bit) \
+  ({ __typeof (*mem) __oldval;						      \
+     __typeof (mem) __memp = (mem);					      \
+     __typeof (*mem) __mask = (1 << (bit));				      \
 									      \
-	    do								      \
-	      __oldval = *__memp;					      \
-	     while (atomic_compare_and_exchange_acq (__memp,		      \
-						     __oldval | __mask,	      \
-						     __oldval));	      \
-	      }})
+     do									      \
+       __oldval = (*__memp);						      \
+     while (atomic_compare_and_exchange_acq (__memp,			      \
+					     __oldval | __mask, __oldval));   \
+									      \
+     __oldval & __mask; })
 #endif
 
 

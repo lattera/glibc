@@ -1,6 +1,7 @@
 2003-02-04  Ulrich Drepper  <drepper@redhat.com>
 
-	* atomic.h (atomic_compare_and_exchange_acq): Use
+	* atomic.h: Add a couple more default implementations.
+	(atomic_compare_and_exchange_acq): Use
 	__arch_compare_and_exchange_32_acq in return value definition.  It
 	always exists.
 	(atomic_bit_set): Renamed from atomic_set_bit.
