@@ -60,7 +60,7 @@ envz_entry (const char *envz, size_t envz_len, const char *name)
 char *
 envz_get (const char *envz, size_t envz_len, const char *name)
 {
-  const char *entry = envz_entry (envz, envz_len, name);
+  char *entry = envz_entry (envz, envz_len, name);
   if (entry)
     {
       while (*entry && *entry != SEP)

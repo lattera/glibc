@@ -4,7 +4,8 @@ Fri May 10 16:22:44 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
  	ARGV parm.
 	* string/argz.h (__argz_create, argz_create): Restore const
  	keyword.
-
+	* string/envz.c (envz_get): Don't declare ENTRY const.
+	
 Fri May 10 11:48:03 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* string/argz.h (argz_create): Fix param type.
