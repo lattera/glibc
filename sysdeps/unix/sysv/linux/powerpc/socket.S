@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,38 +47,38 @@
 
 	.text
 ENTRY(__socket)
-	stwu %r1,-48(%r1)
+	stwu r1,-48(r1)
 #if NARGS >= 1
-	stw  %r3,stackblock(%r1)
+	stw  r3,stackblock(r1)
 #endif
 #if NARGS >= 2
-	stw  %r4,4+stackblock(%r1)
+	stw  r4,4+stackblock(r1)
 #endif
 #if NARGS >= 3
-	stw  %r5,8+stackblock(%r1)
+	stw  r5,8+stackblock(r1)
 #endif
 #if NARGS >= 4
-	stw  %r6,12+stackblock(%r1)
+	stw  r6,12+stackblock(r1)
 #endif
 #if NARGS >= 5
-	stw  %r7,16+stackblock(%r1)
+	stw  r7,16+stackblock(r1)
 #endif
 #if NARGS >= 6
-	stw  %r8,20+stackblock(%r1)
+	stw  r8,20+stackblock(r1)
 #endif
 #if NARGS >= 7
-	stw  %r9,24+stackblock(%r1)
+	stw  r9,24+stackblock(r1)
 #endif
 #if NARGS >= 8
-	stw  %r10,28+stackblock(%r1)
+	stw  r10,28+stackblock(r1)
 #endif
 #if NARGS >= 9
 #error too many arguments!
 #endif
-	li	%r3,P(SOCKOP_,socket)
-	addi	%r4,%r1,stackblock
+	li	r3,P(SOCKOP_,socket)
+	addi	r4,r1,stackblock
 	DO_CALL(SYS_ify(socketcall))
-	addi	%r1,%r1,48
+	addi	r1,r1,48
 	PSEUDO_RET
 PSEUDO_END (__socket)
 

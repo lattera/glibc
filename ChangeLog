@@ -1,6 +1,9 @@
 1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/unix/sysv/linux/powerpc/brk.S: Adjust asm syntax.
+	* sysdeps/unix/sysv/linux/powerpc/socket.S: Adjust asm syntax.
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/brk.S: Likewise.
 
 	* sysdeps/powerpc/Makefile [math] (libm-support): Remove t_sqrt.
 
