@@ -1,3 +1,8 @@
+Mon Jul  8 01:37:34 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
+
+	* string/argz-insert.c (__argz_insert): (__argz_insert): Use
+	memmove instead of memcpy for possible overlapping strings.
+
 Sun Jul  7 18:42:06 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/gnu/errlist.awk (BEGIN): Initialize associative array ALIAS,
@@ -29,8 +34,9 @@ Fri May 31 11:48:46 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	(line_wrap_set_lmargin, line_wrap_set_rmargin,
 	line_wrap_set_wmargin, line_wrap_point): Use __line_wrap_update.
 
+
 	* stdio/linewrap.h (struct line_wrap_data): Rename POINT field to
-	POINT_COL.  Add POINT_OFFS field.
+	POINT_COL. Add POINT_OFFS field.
 	(__line_wrap_update): New decl.
 	(line_wrap_set_lmargin, line_wrap_set_rmargin,
 	line_wrap_set_wmargin, line_wrap_point): Use __line_wrap_update.
