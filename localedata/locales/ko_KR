@@ -1179,13 +1179,13 @@ order_start forward
 <U044E>
 <U044F>
 %%%
-% HANGUL SYLLABLES 
+% HANGUL SYLLABLES
 <UAC00>
 ..
 <UD7A3>
 %%%
 % HANJA. For the moment, Hanjas defined in KS X 1001
-% are enumerated in the order they're listed in KS X 1001. 
+% are enumerated in the order they're listed in KS X 1001.
 <U4F3D>
 <U4F73>
 <U5047>
@@ -6153,33 +6153,33 @@ abmon    "<U0020><U0031><UC6D4>";"<U0020><U0032><UC6D4>";/
          "<U0020><U0039><UC6D4>";"<U0031><U0030><UC6D4>";/
          "<U0031><U0031><UC6D4>";"<U0031><U0032><UC6D4>"
 
-mon      "<UC77C><UC6D4>";"<UC774><UC6D4>";/
-         "<UC0BC><UC6D4>";"<UC0AC><UC6D4>";/
-         "<UC624><UC6D4>";"<UC720><UC6D4>";/
-         "<UCE60><UC6D4>";"<UD314><UC6D4>";/
-         "<UAD6C><UC6D4>";"<UC2DC><UC6D4>";/
-         "<UC2ED><UC77C><UC6D4>";"<UC2ED><UC774><UC6D4>"
+mon      "<U0031><UC6D4>";"<U0032><UC6D4>";/
+         "<U0033><UC6D4>";"<U0034><UC6D4>";/
+         "<U0035><UC6D4>";"<U0036><UC6D4>";/
+         "<U0037><UC6D4>";"<U0038><UC6D4>";/
+         "<U0039><UC6D4>";"<U0031><U0030><UC6D4>";/
+         "<U0031><U0031><UC6D4>";"<U0031><U0032><UC6D4>"
 
 % Appropriate date and time representation (%c)
 % "%x (%a) %r"
 d_t_fmt "<U0025><U0078><U0020><U0028><U0025><U0061><U0029><U0020><U0025><U0072>"
 
 % Appropriate date representation (%x)
-% "%Y<NYEON> %m<WEOL> %d<IL>   
+% "%Y<NYEON> %m<WEOL> %d<IL>
 d_fmt /
 "<U0025><U0059><UB144><U0020><U0025><U006D><UC6D4><U0020><U0025><U0064><UC77C>"
 %d_fmt	"<U0025><U0059><UB144><U0020><U0025><U006D><UC6D4><U0020><U0025><U0065><UC77C>"
 
 % Appropriate time representation (%X)
-%  "%H<SI> %M<BUN> %S<CHO>" 
+%  "%H<SI> %M<BUN> %S<CHO>"
 t_fmt    "<U0025><U0048><UC2DC><U0020><U0025><U004D><UBD84><U0020><U0025><U0053><UCD08>"
 
-% Strings for AM/PM (%p) 
+% Strings for AM/PM (%p)
 % "<O><JEON>";"<O><HU>"
 am_pm	"<UC624><UC804>";"<UC624><UD6C4>"
 
 % Appropriate AM/PM time representation (%r)
-%  "%p %H<SI> %M<BUN> %S<CHO>" 
+%  "%p %H<SI> %M<BUN> %S<CHO>"
 t_fmt_ampm "<U0025><U0070><U0020><U0025><U0049><UC2DC><U0020><U0025><U004D><UBD84><U0020><U0025><U0053><UCD08>"
 
 % Appropriate date representation (date(1))  "%Y. %m. %d. (%a) %H:%M:%S %Z"
@@ -6219,7 +6219,7 @@ tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
 
 %    "(%A) %l"  : (areacode) local_number
 tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
-%    Alternative form : 
+%    Alternative form :
 %    "%A-%l"  : areacode-local_number
 %tel_dom_fmt    "<U0025><U0041><U002D><U0020><U0025><U006C>"
 int_prefix     "<U0038><U0032>"

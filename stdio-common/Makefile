@@ -52,7 +52,8 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 scanf1 scanf2 scanf3 scanf4 scanf5 scanf7 scanf8 scanf9 scanf10 \
 	 scanf11 scanf12 tst-tmpnam tst-cookie tst-obprintf tst-sscanf \
 	 tst-swprintf tst-fseek tst-fmemopen test-vfprintf tst-gets \
-	 tst-perror tst-sprintf tst-rndseek tst-fdopen tst-fphex bug14 bug15
+	 tst-perror tst-sprintf tst-rndseek tst-fdopen tst-fphex bug14 bug15 \
+	 tst-popen
 
 test-srcs = tst-unbputc tst-printf
 

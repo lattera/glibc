@@ -1,3 +1,9 @@
+2004-07-14  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/kr_KO: Change month names to use latin numbers instead
+	of hangul numeric pronounciation.  Patch from Changwoo
+	Ryu.[BZ #25]
+
 2004-07-17  Petter Reinholdtsen  <pere@hungry.com>
 
 	* charmaps/IBM874: Add new alias WINDOWS-874 for IBM874 [BZ #244].

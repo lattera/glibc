@@ -1,3 +1,13 @@
+2004-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #282]
+	* libio/iopopen.c (_IO_new_popen): Use _IO_init instead of
+	_IO_no_init.  Remove wd from struct locked_FILE.
+	(_IO_wproc_jumps): Remove.
+	Reported by Andrew Josey <a.josey@opengroup.org>.
+	* stdio-common/Makefile (tests): Add tst-popen.
+	* stdio-common/tst-popen.c: New test.
+
 2004-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/bits/posix1_lim.h: Fix values for _POSIX_CHILD_MAX and

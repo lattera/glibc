@@ -106,7 +106,6 @@ struct _IO_proc_file
 typedef struct _IO_proc_file _IO_proc_file;
 
 static const struct _IO_jump_t _IO_proc_jumps;
-static const struct _IO_jump_t _IO_wproc_jumps;
 
 static struct _IO_proc_file *proc_file_chain;
 
@@ -213,7 +212,6 @@ _IO_new_popen (command, mode)
 #ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
 #endif
-    struct _IO_wide_data wd;
   } *new_f;
   _IO_FILE *fp;
 
@@ -224,7 +222,7 @@ _IO_new_popen (command, mode)
   new_f->fpx.file.file._lock = &new_f->lock;
 #endif
   fp = &new_f->fpx.file.file;
-  _IO_no_init (fp, 0, 0, &new_f->wd, &_IO_wproc_jumps);
+  INTUSE(_IO_init) (fp, 0);
   _IO_JUMPS (&new_f->fpx.file) = &_IO_proc_jumps;
   _IO_new_file_init (&new_f->fpx.file);
 #if  !_IO_UNIFIED_JUMPTABLES
@@ -287,29 +285,6 @@ _IO_new_proc_close (fp)
 }
 
 static const struct _IO_jump_t _IO_proc_jumps = {
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_new_file_finish),
-  JUMP_INIT(overflow, _IO_new_file_overflow),
-  JUMP_INIT(underflow, _IO_new_file_underflow),
-  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
-  JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
-  JUMP_INIT(xsputn, _IO_new_file_xsputn),
-  JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
-  JUMP_INIT(seekoff, _IO_new_file_seekoff),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_new_file_setbuf),
-  JUMP_INIT(sync, _IO_new_file_sync),
-  JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
-  JUMP_INIT(read, INTUSE(_IO_file_read)),
-  JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
-  JUMP_INIT(close, _IO_new_proc_close),
-  JUMP_INIT(stat, INTUSE(_IO_file_stat)),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};
-
-static const struct _IO_jump_t _IO_wproc_jumps = {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_new_file_finish),
   JUMP_INIT(overflow, _IO_new_file_overflow),
