@@ -65,7 +65,9 @@ Cambridge, MA 02139, USA.  */
 #endif
 #endif
 
+#ifndef _AMIGA
 #include <pwd.h>
+#endif
 
 #if !defined(__GNU_LIBRARY__) && !defined(STDC_HEADERS)
 extern int errno;
@@ -160,6 +162,7 @@ extern void bcopy ();
 #ifdef	__GNUC__
 __inline
 #endif
+#ifndef __SASC
 static char *
 my_realloc (p, n)
      char *p;
@@ -172,7 +175,8 @@ my_realloc (p, n)
   return (char *) realloc (p, n);
 }
 #define	realloc	my_realloc
-#endif
+#endif /* __SASC */
+#endif /* __GNU_LIBRARY__ */
 
 
 #if	!defined(__alloca) && !defined(__GNU_LIBRARY__)
@@ -332,7 +336,7 @@ glob (pattern, flags, errfunc, pglob)
 	      if (onealt == NULL)
 		{
 		  if (!(flags & GLOB_APPEND))
-		    globfree (&pglob);
+		    globfree (pglob);
 		  return GLOB_NOSPACE;
 		}
 #endif
@@ -391,7 +395,11 @@ glob (pattern, flags, errfunc, pglob)
   if (filename == NULL)
     {
       filename = pattern;
+#ifdef _AMIGA
+      dirname = (char *) "";
+#else
       dirname = (char *) ".";
+#endif
       dirlen = 0;
     }
   else if (filename == pattern)
@@ -433,6 +441,10 @@ glob (pattern, flags, errfunc, pglob)
 	{
 	  /* Look up home directory.  */
 	  dirname = getenv ("HOME");
+#ifdef _AMIGA
+	  if (dirname == NULL || dirname[0] == '\0')
+	    dirname = "SYS:";
+#else
 	  if (dirname == NULL || dirname[0] == '\0')
 	    {
 	      extern char *getlogin __P ((void));
@@ -446,13 +458,19 @@ glob (pattern, flags, errfunc, pglob)
 	    }
 	  if (dirname == NULL || dirname[0] == '\0')
 	    dirname = (char *) "~"; /* No luck.  */
+#endif
 	}
       else
 	{
+#ifdef _AMIGA
+	  if (dirname == NULL || dirname[0] == '\0')
+	    dirname = "SYS:";
+#else
 	  /* Look up specific user's home directory.  */
 	  struct passwd *p = getpwnam (dirname + 1);
 	  if (p != NULL)
 	    dirname = p->pw_dir;
+#endif
 	}
     }
 
@@ -774,7 +792,11 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 
 	    if (fnmatch (pattern, name,
 			 (!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0) |
-			 ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)) == 0)
+			 ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
+#ifdef _AMIGA
+			 | FNM_CASEFOLD
+#endif
+			 ) == 0)
 	      {
 		struct globlink *new
 		  = (struct globlink *) __alloca (sizeof (struct globlink));

@@ -1,5 +1,9 @@
 Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* posix/glob.c [_AMIGA]: Don't include <pwd.h>.
+	(glob): Remove bogus & in call to globfree.
+	[_AMIGA]: Use AmigaDOS file name conventions.
+
 	* time/Makefile (zonenames): Target removed.
 	(extra-objs): Remove it from here.
 	Include the z.* files directly instead of including zonenames; use
