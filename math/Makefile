@@ -74,13 +74,37 @@ routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
 long-c-yes = $(calls:=l)
 distribute += $(long-c-yes:=.c)
 
+include ../Makeconfig
+
 # Rules for the test suite.
-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
-	test-ifloat test-idouble test-matherr test-fenv \
-	atest-exp atest-sincos atest-exp2 basic-test
+tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
+
+ifneq (no,$(PERL))
+libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
+	test-ifloat test-idouble
+libm-tests.o = $(addsuffix .o,$(libm-tests))
+
+tests += $(libm-tests)
+libm-tests-generated = libm-test-ulps.h libm-test.c libm-test.stmp
+generated += $(libm-tests-generated)
+
+
+ulps-file= $(firstword $(wildcard $(config-sysdirs:%=$(..)%/libm-test-ulps)))
+
+$(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl
+	$(PERL) gen-libm-test.pl -u $< -o $(objdir)/math/
+	@echo > $@
+
+$(objpfx)test-float.o: $(objpfx)libm-test.stmp
+$(objpfx)test-ifloat.o: $(objpfx)libm-test.stmp
+$(objpfx)test-double.o: $(objpfx)libm-test.stmp
+$(objpfx)test-idouble.o: $(objpfx)libm-test.stmp
+$(objpfx)test-ldouble.o: $(objpfx)libm-test.stmp
+$(objpfx)test-ildoubl.o: $(objpfx)libm-test.stmp
+endif
 
 CFLAGS-test-float.c = -fno-inline -ffloat-store
 CFLAGS-test-double.c = -fno-inline -ffloat-store
@@ -100,7 +124,7 @@ LDLIBS-atest-exp = math/libm
 LDLIBS-atest-sincos = math/libm
 LDLIBS-atest-exp2 = math/libm
 
-distribute += libm-test.c
+distribute += libm-test.inc gen-libm-test.pl
 
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode

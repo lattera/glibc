@@ -1,6 +1,6 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@arthur.pfalz.de>, 1997.
+   Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,12 +18,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #define FUNC(function) function
-#define MATHTYPE double
+#define FLOAT double
 #define TEST_MSG "testing double (without inline functions)\n"
 #define MATHCONST(x) x
-#define CHOOSE(Clongdouble,Cdouble,Cfloat) Cdouble
+#define CHOOSE(Clongdouble,Cdouble,Cfloat,Cinlinelongdouble,Cinlinedouble,Cinlinefloat) Cdouble
 #define PRINTF_EXPR "e"
 #define PRINTF_XEXPR "a"
+#define PRINTF_NEXPR "f"
 #define TEST_DOUBLE 1
 
 #ifndef __NO_MATH_INLINES

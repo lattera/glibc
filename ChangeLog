@@ -1,3 +1,19 @@
+1999-10-18  Andreas Jaeger  <aj@suse.de>
+
+	Added improved math testsuite:
+	* math/libm-test.inc: New file, contains all tests from
+	libm-test.c but in a different form.
+	* math/libm-test.c: Removed.
+	* sysdeps/generic/libm-test-ulps: New file: Fallback ulps file.
+	* math/gen-libm-test.pl: New file: Preprocessor.
+	* math/test-double.c: Adopted to new testsuite.
+	* math/test-idouble.c: Likewise.
+	* math/test-float.c: Likewise.
+	* math/test-ifloat.c: Likewise.
+	* math/test-ldouble.c: Likewise.
+	* math/test-ildoubl.c: Likewise.
+	* math/Makefile: Added rules to generate new suite.
+
 1999-10-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/rcmd.c (iruserok2): Initialize isbad to -1 [PR libc/1405].
