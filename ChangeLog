@@ -1,3 +1,8 @@
+1998-03-30  Joel Klecker  <espy@debian.org>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile
+	(sysdep-others,install-bin): Add lddlibc4.
+
 1999-05-02  H.J. Lu  <hjl@gnu.org>
 
 	* timezone/zic.c (dolink): Remove the symlink destination first.
