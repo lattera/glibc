@@ -1,3 +1,15 @@
+Thu Aug 31 13:23:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/i386/brk.S [PIC]: Set __curbrk through the GOT.
+
+	Rewrote i386 setjmp code in assembly, so as to avoid fighting
+	with the compiler for the register values.
+	* sysdeps/i386/setjmp.S, sysdeps/i386/__longjmp.S: New files.
+	* sysdeps/i386/setjmp.c, sysdeps/i386/__longjmp.c: Files removed.
+	* sysdeps/i386/jmp_buf.h [! _ASM] (__jmp_buf): Define as array of ints.
+	[__USE_MISC || _ASM] (JB_*): New macros, for indices therein.
+	(_JMPBUF_UNWINDS): Use JB_SP.
+
 Wed Aug 30 16:44:55 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/select.c: Deal with out of order replies

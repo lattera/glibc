@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* longjmp for i386.
+Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,34 +18,18 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
+#define _ASM
+#include <jmp_buf.h>
 
-#ifndef	SYS_brk
-#define	SYS_brk	17
-#endif
-
-.data
-.globl C_SYMBOL_NAME(__curbrk)
-C_LABEL(__curbrk)
-#ifdef	HAVE_GNU_LD
-	.long C_SYMBOL_NAME(_end)
-#else
-	.long C_SYMBOL_NAME(end)
-#endif
-
-.text
-SYSCALL__ (brk, 1)
-	movl 4(%esp), %eax
-#ifdef	PIC
-	/* Standard PIC nonsense to store into `__curbrk' through the GOT.  */
-	call here
-here:	popl %ecx
-	addl $_GLOBAL_OFFSET_TABLE_+[.-here], %ecx
-	movl C_SYMBOL_NAME(__curbrk@GOT)(%ecx), %ecx
-	movl %eax, (%ecx)
-#else
-	movl %eax, C_SYMBOL_NAME(__curbrk)
-#endif
-	xorl %eax, %eax
-	ret
-
-weak_alias (__brk, brk)
+ENTRY (__longjmp)
+	movl 4(%esp), %ecx	/* User's jmp_buf in %ecx.  */
+	movl 8(%esp), %eax	/* Second argument is return value.  */
+     	/* Restore registers.  */
+	movl JB_BX(%ecx), %ebx
+	movl JB_SI(%ecx), %esi
+	movl JB_DI(%ecx), %edi
+	movl JB_BP(%ecx), %ebp
+	movl JB_SP(%ecx), %esp
+	/* Jump to saved PC.  */
+     	movl JB_PC(%ecx), %ecx
+     	jmp *%ecx
