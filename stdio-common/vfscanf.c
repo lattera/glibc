@@ -55,30 +55,35 @@
 
 # undef va_list
 # define va_list	_IO_va_list
-# define ungetc(c, s)	((void) ((int) c != EOF && --read_in),		      \
-			 _IO_ungetc (c, s))
+# define ungetc(c, s)	((void) ((int) c == EOF				      \
+				 || (--read_in,				      \
+				     _IO_sputbackc (s, (unsigned char) c))))
 # define inchar()	(c == EOF ? EOF					      \
 			 : ((c = _IO_getc_unlocked (s)),		      \
 			    (void) (c != EOF && ++read_in), c))
 # define encode_error()	do {						      \
 			  if (errp != NULL) *errp |= 4;			      \
 			  _IO_funlockfile (s);				      \
+			  __libc_cleanup_end (0);			      \
 			  __set_errno (EILSEQ);				      \
 			  return done;					      \
 			} while (0)
 # define conv_error()	do {						      \
 			  if (errp != NULL) *errp |= 2;			      \
 			  _IO_funlockfile (s);				      \
+			  __libc_cleanup_end (0);			      \
 			  return done;					      \
 			} while (0)
 # define input_error()	do {						      \
 			  _IO_funlockfile (s);				      \
 			  if (errp != NULL) *errp |= 1;			      \
+			  __libc_cleanup_end (0);			      \
 			  return done ?: EOF;				      \
 			} while (0)
 # define memory_error()	do {						      \
 			  _IO_funlockfile (s);				      \
 			  __set_errno (ENOMEM);				      \
+			  __libc_cleanup_end (0);			      \
 			  return EOF;					      \
 			} while (0)
 # define ARGCHECK(s, format)						      \

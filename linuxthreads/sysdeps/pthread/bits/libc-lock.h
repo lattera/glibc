@@ -131,6 +131,12 @@ typedef pthread_key_t __libc_key_t;
     }									      \
   }
 
+/* Sometimes we have to exit the block in the middle.  */
+#define __libc_cleanup_end(DOIT) \
+    if (_avail) {							      \
+      _pthread_cleanup_pop_restore (&_buffer, (DOIT));			      \
+    }
+
 /* Create thread-specific key.  */
 #define __libc_key_create(KEY, DESTRUCTOR) \
   (__pthread_key_create != NULL ? __pthread_key_create (KEY, DESTRUCTOR) : 1)

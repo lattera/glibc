@@ -1,3 +1,7 @@
+1998-07-14 19:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/pthread/bits/libc-lock.h: Define __libc_cleanup_end.
+
 1998-07-11  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* Examples/ex6.c: Include <unistd.h> for usleep.

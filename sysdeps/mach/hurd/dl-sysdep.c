@@ -37,16 +37,24 @@
 #include <ctype.h>
 #include <sys/stat.h>
 
-#include "dl-machine.h"
+#include <entry.h>
+#include <dl-machine.h>
+#include <dl-procinfo.h>
 
 extern void __mach_init (void);
 
 extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
+extern void ENTRY_POINT (void);
 
-uid_t __libc_uid;
 int __libc_enable_secure;
+int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
+				   of init-first.  */
+/* This variable containts the lowest stack address ever used.  */
+void *__libc_stack_end;
+unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
+ 
 
 struct hurd_startup_data *_dl_hurd_data;
 
@@ -86,8 +94,6 @@ _dl_sysdep_start (void **start_argptr,
 		  void (*dl_main) (const Elf32_Phdr *phdr, Elf32_Word phent,
 				   Elf32_Addr *user_entry))
 {
-  extern void _start ();
-
   void go (int *argdata)
     {
       extern unsigned int _dl_skip_args; /* rtld.c */
@@ -103,21 +109,20 @@ _dl_sysdep_start (void **start_argptr,
 	{
 	  static struct hurd_startup_data nodata;
 	  _dl_hurd_data = &nodata;
-	  nodata.user_entry = (vm_address_t) &_start;
+	  nodata.user_entry = (vm_address_t) &ENTRY_POINT;
 	}
       else
 	_dl_hurd_data = (void *) p;
 
-      __libc_uid = __getuid ();
       __libc_enable_secure = _dl_hurd_data->flags & EXEC_SECURE;
 
       if (_dl_hurd_data->flags & EXEC_STACK_ARGS &&
 	  _dl_hurd_data->user_entry == 0)
-	_dl_hurd_data->user_entry = (vm_address_t) &_start;
+	_dl_hurd_data->user_entry = (vm_address_t) &ENTRY_POINT;
 
 unfmh();			/* XXX */
 
-      if (_dl_hurd_data->user_entry == (vm_address_t) &_start)
+      if (_dl_hurd_data->user_entry == (vm_address_t) &ENTRY_POINT)
 	/* We were invoked as a command, not as the program interpreter.
 	   The generic ld.so code supports this: it will parse the args
 	   as "ld.so PROGRAM [ARGS...]".  For booting the Hurd, we
@@ -576,9 +581,31 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
 
 void
+internal_function
 _dl_show_auxv (void)
 {
   /* There is nothing to print.  Hurd has no auxiliary vector.  */
+}
+
+
+/* Return an array of useful/necessary hardware capability names.  */
+const struct r_strlenpair *
+internal_function
+_dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
+		      size_t *max_capstrlen)
+{
+  struct r_strlenpair *result;
+
+  /* Return an empty array.  Hurd has no hardware capabilities.  */
+  result = (struct r_strlenpair *) malloc (sizeof (*result));
+  if (result == NULL)
+    _dl_signal_error (ENOMEM, NULL, "cannot create capability list");
+
+  result[0].str = (char *) result;	/* Does not really matter.  */
+  result[0].len = 0;
+
+  *sz = 1;
+  return result;
 }
 
 void weak_function

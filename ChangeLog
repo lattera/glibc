@@ -1,3 +1,23 @@
+1998-07-14 19:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfscanf.c (ungetc): Use _IO_sputbackc, not _IO_ungetc.
+	[_USE_IN_LIBIO] (encode_error): Free cancelation handler.
+	(conv_error): Likewise.
+	(input_error): Likewise.
+	(memory_error): Likewise.
+
+1998-07-12  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/dl-sysdep.c: Bring in sync with generic
+	implementation.  Include <entry.h>.  Replace references to symbol
+	_start with macro ENTRY_POINT.
+	(__libc_uid): Remove.
+	(__libc_multiple_libcs): New variable.
+	(__libc_stack_end): New variable.
+	(_dl_hwcap_mask): New variable.
+	(_dl_important_hwcaps): New function.
+	(_dl_show_auxv): Mark internal.
+
 1998-07-14  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* mach/Makefile: Create target directory before generating
