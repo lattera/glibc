@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -1016,7 +1016,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	      || fnmatch (pattern, name,
 			  (!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0) |
 			  ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
-#ifdef _AMIGA
+#if defined _AMIGA || defined VMS
 			  | FNM_CASEFOLD
 #endif
 			 ) == 0)
