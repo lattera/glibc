@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,8 +82,8 @@ trampoline (sig, code, context, addr)
   /* XXX should save/restore FP regs */
 
   /* Call the user's handler.  */
-  (*((void (*) __P ((int sig, int code, struct sigcontext *context,
-		       PTR addr))) handlers[sig]))
+  (*((void (*) (int sig, int code, struct sigcontext *context,
+		PTR addr)) handlers[sig]))
     (sig, code, context, addr);
 
   /* Restore the call-clobbered registers.  */

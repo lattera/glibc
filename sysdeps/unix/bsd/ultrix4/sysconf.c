@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ian Lance Taylor (ian@airs.com).
 
@@ -27,9 +27,9 @@
 /* This is an Ultrix header file.  */
 #include <sys/sysinfo.h>
 
-extern int __getsysinfo __P ((unsigned int op, void *buffer,
-			      size_t nbytes, int *start, void *arg));
-extern long int __default_sysconf __P ((int name));
+extern int __getsysinfo (unsigned int op, void *buffer,
+			 size_t nbytes, int *start, void *arg);
+extern long int __default_sysconf (int name);
 
 long int
 __sysconf (name)

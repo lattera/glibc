@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994,1996,1997,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,8 +50,8 @@
 #include <errno.h>
 
 /* Defined in __sigvec.S.  */
-extern int __raw_sigvec __P ((int sig, CONST struct sigvec *vec,
-			      struct sigvec *ovec));
+extern int __raw_sigvec (int sig, CONST struct sigvec *vec,
+			 struct sigvec *ovec);
 
 /* User-specified signal handlers.  */
 #define mytramp 1
@@ -146,8 +146,8 @@ trampoline (sig)
   glsave[2] = g6;
 
   /* Call the user's handler.  */
-  (*((void (*) __P ((int sig, int code, struct sigcontext *context,
-		     void *addr))) handlers[sig]))
+  (*((void (*) (int sig, int code, struct sigcontext *context,
+		void *addr)) handlers[sig]))
     (sig, code, context, addr);
 
   /* Restore the Y register.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,98, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 
 
-extern int __getdents __P ((int fd, char *buf, size_t nbytes));
+extern int __getdents (int fd, char *buf, size_t nbytes);
 
 /* For Solaris we need a special version of this file since the
    definition of `struct dirent' is not the same for the kernel and

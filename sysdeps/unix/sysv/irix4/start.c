@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995,1996,1997,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,8 +44,8 @@
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
-extern void __libc_init __P ((int argc, char **argv, char **envp));
-extern int main __P ((int argc, char **argv, char **envp));
+extern void __libc_init (int argc, char **argv, char **envp);
+extern int main (int argc, char **argv, char **envp);
 
 /* Use the stack pointer to access the arguments.  This assumes that
    we can guess how big the frame will be.  */

@@ -1,5 +1,5 @@
 /* Special startup code for ARM a.out binaries.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,8 +45,8 @@ int __data_start = 0;
 weak_alias (__data_start, data_start)
 #endif
 
-extern void __libc_init __P ((int argc, char **argv, char **envp));
-extern int main __P ((int argc, char **argv, char **envp));
+extern void __libc_init (int argc, char **argv, char **envp);
+extern int main (int argc, char **argv, char **envp);
 
 /* N.B.: It is important that this be the first function.
    This file is the first thing in the text section.  */

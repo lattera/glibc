@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1994,97,2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <sys/types.h>
 #include <grp.h>
 
-extern int __syssgi __P ((int, ...));
+extern int __syssgi (int, ...);
 
 /* Set the group set for the current user to GROUPS (N of them).  */
 int

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,14 +36,13 @@
 typedef void (*handler_type) (int sig, int code, struct sigcontext *);
 
 /* Defined in signal.S.  */
-extern __sighandler_t __raw_signal __P((int sig, __sighandler_t func,
-					void (*)(int sig, int code,
-						 struct sigcontext *,
-						 handler_type)));
+extern __sighandler_t __raw_signal (int sig, __sighandler_t func,
+				    void (*)(int sig, int code,
+					     struct sigcontext *,
+					     handler_type));
 
-extern void __handler __P((int sig, int code,
-			   struct sigcontext *,
-			   handler_type));
+extern void __handler (int sig, int code, struct sigcontext *,
+		       handler_type);
 
 __sighandler_t
 signal (sig, func)
