@@ -1,3 +1,8 @@
+2003-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-dst.h (DL_DST_REQUIRED): Avoid the complex operations if
+	CNT == 0.
+
 2003-12-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regexec.c (get_subexp): Only set bkref_str after the first
