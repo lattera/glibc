@@ -1165,7 +1165,7 @@ the future then the libc may need to change again.
 
 IPv6 will not work with a 2.0.x kernel.  When kernel 2.2 is released it
 should contain all the necessary support; until then you should use the
-latest 2.1.x release you can find.  As of 98/11/26 the currently recommended 
+latest 2.1.x release you can find.  As of 98/11/26 the currently recommended
 kernel for IPv6 is 2.1.129.
 
 Also, as of the 2.1 release the IPv6 API provided by GNU libc is not
@@ -1207,6 +1207,20 @@ Looijaard describes a different way installing glibc2 as secondary libc at
 <http://huizen.dds.nl/~frodol/glibc>.
 
 Please note that this is not a complete list.
+
+??	The timezone string for Sydney/Australia is wrong since even when
+	daylight saving time is in effect the timezone string is EST.
+
+{UD} The problem for some timezones is that the local authorities decided
+to use the term "summer time" instead of "daylight saving time".  In this
+case the abbreviation character `S' is the same as the standard one.  So,
+for Sydney we have
+
+	Eastern Standard Time	= EST
+	Eastern Summer Time	= EST
+
+Great!  To get this bug fixed convince the authorities to change the laws
+and regulations of the country this effects.  glibc behaves correctly.
 
 
 Answers were given by:
