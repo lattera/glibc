@@ -170,7 +170,7 @@ main(argc, argv)
 
 	/* Get each key/data pair and add them to the database. */
 	for (recno = 1; !interrupted; ++recno) {
-		if (dbtype == DB_RECNO)
+		if (dbtype == DB_RECNO) {
 			if (checkprint) {
 				if (dbt_rprint(&data))
 					break;
@@ -178,7 +178,7 @@ main(argc, argv)
 				if (dbt_rdump(&data))
 					break;
 			}
-		else
+		} else {
 			if (checkprint) {
 				if (dbt_rprint(&key))
 					break;
@@ -192,6 +192,7 @@ fmt:					warnx("odd number of key/data pairs");
 					goto err;
 				}
 			}
+		}
 		switch (errno =
 		    dbp->put(dbp, NULL, &key, &data, db_nooverwrite)) {
 		case 0:

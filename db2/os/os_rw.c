@@ -123,7 +123,7 @@ __os_write(fd, addr, len, nwp)
 {
 	size_t offset;
 	ssize_t nw;
-	u_int8_t *taddr;
+	const u_int8_t *taddr;
 
 	for (taddr = addr,
 	    offset = 0; offset < len; taddr += nw, offset += nw)

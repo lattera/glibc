@@ -1,3 +1,18 @@
+1999-06-14  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h [!__GNUC__]: Use correct
+	word order.
+	* sysdeps/unix/sysv/linux/alpha/sys/sysmacros.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/sysmacros.h: New file.
+
+1999-06-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* db2/db/db.c: Restore __nss_db_open alias.
+	* db2/db_int.h: Use <db.h> instead of "db.h" to find header in
+	include.
+	* db2/os/os_rw.c (__os_write): Maintain const correctness.
+	* db2/progs/db_load/db_load.c (main): Avoid ambiguous `else'.
+
 1999-06-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/printf-parse.h (parse_one_spec): Don't set

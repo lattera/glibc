@@ -84,6 +84,11 @@ static const char sccsid[] = "@(#)db.c	10.75 (Sleepycat) 12/3/98";
 		}							\
 }
 
+#ifdef _LIBC
+#define db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp) \
+  __nss_db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
+#endif
+
 /*
  * db_open --
  *	Main library interface to the DB access methods.
@@ -709,6 +714,11 @@ err:	/* Close the file descriptor. */
 
 	return (ret);
 }
+
+#ifdef _LIBC
+# undef db_open
+weak_alias (__nss_db_open, db_open)
+#endif
 
 /*
  * __db_close --

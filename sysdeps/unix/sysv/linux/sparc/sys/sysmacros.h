@@ -20,30 +20,22 @@
 #ifndef _SYS_SYSMACROS_H
 #define _SYS_SYSMACROS_H	1
 
+#include <bits/wordsize.h>
+
 /* For compatibility we provide alternative names.
 
    The problem here is that compilers other than GCC probably don't
    have the `long long' type and so `dev_t' is actually an array.  */
-#if defined __GNUC__ && __GNUC__ >= 2
+#if __WORDSIZE == 64 || (defined __GNUC__ && __GNUC__ >= 2)
 # define major(dev) ((int)(((dev) >> 8) & 0xff))
 # define minor(dev) ((int)((dev) & 0xff))
 # define makedev(major, minor) ((((unsigned int) (major)) << 8) \
 				| ((unsigned int) (minor)))
 #else
-/* We need to know the word order here.  This assumes that the word order
-   is consistent with the byte order.  */
-# include <endian.h>
-# if __BYTE_ORDER == __BIG_ENDIAN
-#  define major(dev) (((dev).__val[1] >> 8) & 0xff)
-#  define minor(dev) ((dev).__val[1] & 0xff)
-#  define makedev(major, minor) { 0, ((((unsigned int) (major)) << 8) \
-				      | ((unsigned int) (minor))) }
-# else
-#  define major(dev) (((dev).__val[0] >> 8) & 0xff)
-#  define minor(dev) ((dev).__val[0] & 0xff)
-#  define makedev(major, minor) { ((((unsigned int) (major)) << 8) \
-				   | ((unsigned int) (minor))), 0 }
-# endif
+# define major(dev) (((dev).__val[1] >> 8) & 0xff)
+# define minor(dev) ((dev).__val[1] & 0xff)
+# define makedev(major, minor) { 0, ((((unsigned int) (major)) << 8) \
+				     | ((unsigned int) (minor))) }
 #endif
 
 #endif /* sys/sysmacros.h */
