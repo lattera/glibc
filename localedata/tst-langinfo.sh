@@ -287,8 +287,8 @@ ja_JP.EUC-JP         ERA_D_FMT   "%EY%m·î%dÆü"
 ja_JP.EUC-JP         ERA_D_T_FMT "%EY%m·î%dÆü %H»þ%MÊ¬%SÉÃ"
 ja_JP.EUC-JP         RADIXCHAR   .
 ja_JP.EUC-JP         THOUSEP     ,
-ja_JP.EUC-JP         YESEXPR     ^[yY£ù£Ù]
-ja_JP.EUC-JP         NOEXPR      ^[nN£î£Î]
+ja_JP.EUC-JP         YESEXPR     ^([yY£ù£Ù]|¤Ï¤¤|¥Ï¥¤)
+ja_JP.EUC-JP         NOEXPR      ^([nN£î£Î]|¤¤¤¤¤¨|¥¤¥¤¥¨)
 # Is CRNCYSTR supposed to be the national or international sign?
 # ja_JP.EUC-JP         CRNCYSTR    JPY
 ja_JP.EUC-JP         CODESET     EUC-JP
