@@ -332,22 +332,17 @@ recommend version GNU @code{make} version 3.79.  All earlier
 versions have severe bugs or lack features.
 
 @item
-EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95 or newer
+GCC 2.95 or newer
 
 The GNU C library can only be compiled with the GNU C compiler family.
-As of the 2.1 release, EGCS 1.0.3 or higher is required.  GCC 2.8.1 can
-also be used (but see the FAQ for reasons why you might not want to).
-Earlier versions simply are too buggy.  As of this writing, GCC 2.95.2
-is the compiler we advise to use.
+As of the 2.2 release, GCC 2.95.2 or higher is required.  As of this
+writing, GCC 2.95.2 is the compiler we advise to use.
 
 You can use whatever compiler you like to compile programs that use GNU
 libc, but be aware that both GCC 2.7 and 2.8 have bugs in their
 floating-point support that may be triggered by the math library.
 
-On Alpha machines you need at least EGCS 1.1.1.  Earlier versions don't
-work reliably.
-
-For PPC you might need some patches even on top of the last EGCS version.
+For PPC you might need some patches even on top of the last GCC version.
 See the FAQ.
 
 @item

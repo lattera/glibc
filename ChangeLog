@@ -1,3 +1,8 @@
+2000-11-16  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Tools for Compilation): Update
+	documentation for GCC 2.95.2.
+
 2000-11-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only return -EAI_AGAIN
@@ -20,8 +25,7 @@
 
 2000-11-16  Ulrich Drepper  <drepper@redhat.com>
 
-	* libio/freopen.c (freopen): Reset _mode after succesful
-	reopening.
+	* libio/freopen.c (freopen): Reset _mode after succesful reopening.
 	* libio/freopen64.c (freopen64): Likewise.
 	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
 
