@@ -38,3 +38,4 @@ __execve (file, argv, envp)
 
   return INLINE_SYSCALL (execve, 3, file, argv, envp);
 }
+weak_alias (__execve, execve)
