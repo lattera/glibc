@@ -1,5 +1,5 @@
 /* Conversion module for UTF-16.
-   Copyright (C) 1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -307,7 +307,7 @@ gconv_end (struct __gconv_step *data)
 	    inptr += 2;							      \
 	    u2 = bswap_16 (get16 (inptr));				      \
 	    if (__builtin_expect (u2 < 0xdc00, 0)			      \
-		|| __builtin_expect (u2 == 0xdfff, 0))			      \
+		|| __builtin_expect (u2 > 0xdfff, 0))			      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
 		inptr -= 2;						      \
@@ -343,7 +343,7 @@ gconv_end (struct __gconv_step *data)
 	    inptr += 2;							      \
 	    u2 = get16 (inptr);						      \
 	    if (__builtin_expect (u2 < 0xdc00, 0)			      \
-		|| __builtin_expect (u2 >= 0xdfff, 0))			      \
+		|| __builtin_expect (u2 > 0xdfff, 0))			      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
 		inptr -= 2;						      \
