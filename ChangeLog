@@ -21,7 +21,7 @@
 2004-09-30  Andreas Jaeger  <aj@suse.de>
 
 	* nscd/Makefile (CFLAGS-nscd_initgroups.c): Set to -fpie.
-	(CFLAGS-initgrcache.c): Likewise.
+	(CFLAGS-initgrcache.c): Set to -fexceptions.
 
 2004-09-29  Ulrich Drepper  <drepper@redhat.com>
 
