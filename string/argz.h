@@ -32,8 +32,8 @@ __BEGIN_DECLS
 /* Make a '\0' separated arg vector from a unix argv vector, returning it in
    ARGZ, and the total length in LEN.  If a memory allocation error occurs,
    ENOMEM is returned, otherwise 0.  The result can be destroyed using free. */
-error_t __argz_create __P ((char *const argv[], char **argz, size_t *len));
-error_t argz_create __P ((char *const *argv[], char **argz, size_t *len));
+error_t __argz_create __P ((char *argv[], char **argz, size_t *len));
+error_t argz_create __P ((char **argv[], char **argz, size_t *len));
 
 /* Make a '\0' separated arg vector from a SEP separated list in
    STRING, returning it in ARGZ, and the total length in LEN.  If a
