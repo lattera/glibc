@@ -1,3 +1,10 @@
+2004-02-10  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/configure.in: Move `retcode' check to ...
+	* sysdeps/mach/configure.in: ... here.
+	* sysdeps/mach/hurd/configure: Regenerated.
+	* sysdeps/mach/configure.in: Regenerated.
+
 2004-02-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/_i18n_number.h: Finish last patch.
