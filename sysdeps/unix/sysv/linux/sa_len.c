@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,11 +18,15 @@
 
 #include <sys/socket.h>
 
+#include <netash/ash.h>
 #include <netatalk/at.h>
 #include <netax25/ax25.h>
+#include <neteconet/ec.h>
 #include <netinet/in.h>
 #include <netipx/ipx.h>
+#include <netpacket/packet.h>
 #include <netrose/rose.h>
+#include <sys/un.h>
 
 int
 __libc_sa_len (sa_family_t af)
@@ -31,14 +35,22 @@ __libc_sa_len (sa_family_t af)
     {
     case AF_APPLETALK:
       return sizeof (struct sockaddr_at);
+    case AF_ASH:
+      return sizeof (struct sockaddr_ash);
     case AF_AX25:
       return sizeof (struct sockaddr_ax25);
+    case AF_ECONET:
+      return sizeof (struct sockaddr_ec);
     case AF_INET:
       return sizeof (struct sockaddr_in);
     case AF_INET6:
       return sizeof (struct sockaddr_in6);
     case AF_IPX:
       return sizeof (struct sockaddr_ipx);
+    case AF_LOCAL:
+      return sizeof (struct sockaddr_un);
+    case AF_PACKET:
+      return sizeof (struct sockaddr_ll);
     case AF_ROSE:
       return sizeof (struct sockaddr_rose);
     }
