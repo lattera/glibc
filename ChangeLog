@@ -1,5 +1,10 @@
 2000-04-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getdents.c (__getdents): Avoid initial
+	lseek call be passing in a buffer which never allow a successful
+	first getdents syscall if not at leas the initial entry can be
+	stored in the user buffer.
+
 	* localedata/Makefile: Add rules to clean up directories created by
 	new strfmon tests.
 

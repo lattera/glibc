@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
+#include <assert.h>
 #include <errno.h>
 #include <dirent.h>
 #include <stddef.h>
@@ -33,7 +34,7 @@
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 
 
-extern int __syscall_getdents __P ((int fd, char *buf, size_t nbytes));
+extern int __syscall_getdents (int fd, char *buf, size_t nbytes);
 
 /* For Linux we need a special version of this file since the
    definition of `struct dirent' is not the same for the kernel and
@@ -67,7 +68,7 @@ ssize_t
 internal_function
 __getdents (int fd, char *buf, size_t nbytes)
 {
-  off_t last_offset = __lseek (fd, 0, SEEK_CUR);
+  off_t last_offset = -1;
   size_t red_nbytes;
   struct kernel_dirent *skdp, *kdp;
   struct dirent *dp;
@@ -75,8 +76,10 @@ __getdents (int fd, char *buf, size_t nbytes)
   const size_t size_diff = (offsetof (struct dirent, d_name)
 			    - offsetof (struct kernel_dirent, d_name));
 
-  red_nbytes = nbytes - ((nbytes / (offsetof (struct dirent, d_name) + 14))
-			 * size_diff);
+  red_nbytes = MIN (nbytes
+		    - ((nbytes / (offsetof (struct dirent, d_name) + 14))
+		       * size_diff),
+		    nbytes - size_diff);
 
   dp = (struct dirent *) buf;
   skdp = kdp = __alloca (red_nbytes);
@@ -97,6 +100,7 @@ __getdents (int fd, char *buf, size_t nbytes)
 	{
 	  /* Our heuristic failed.  We read too many entries.  Reset
 	     the stream.  */
+	  assert (last_offset != -1);
 	  __lseek (fd, last_offset, SEEK_SET);
 
 	  if ((char *) dp == buf)

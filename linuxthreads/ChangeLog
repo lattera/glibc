@@ -1,3 +1,9 @@
+2000-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* signals.c (sigaction): Fix return value for the case SIG is one
+	of the signals the implementation uses.
+	Patch by Xavier.Leroy@inria.fr.
+
 2000-04-01  Andreas Jaeger  <aj@suse.de>
 
 	* attr.c: Use shlib-compat macros.
