@@ -187,16 +187,12 @@ internal_function
 _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		      size_t *max_capstrlen)
 {
-  struct r_strlenpair *result;
+  static struct r_strlenpair result;
+  static char buf[1];
 
-  /* XXX We don't try to find the capabilities in this case.  */
-  result = (struct r_strlenpair *) malloc (sizeof (*result));
-  if (result == NULL)
-    _dl_signal_error (ENOMEM, NULL, N_("cannot create capability list"));
-
-  result[0].str = (char *) result;	/* Does not really matter.  */
-  result[0].len = 0;
+  result.str = buf;	/* Does not really matter.  */
+  result.len = 0;
 
   *sz = 1;
-  return result;
+  return &result;
 }
