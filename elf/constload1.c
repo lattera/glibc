@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <error.h>
 #include <mcheck.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 int
