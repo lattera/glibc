@@ -1,3 +1,8 @@
+2002-09-26  Roland McGrath  <roland@redhat.com>
+
+	* stdlib/longlong.h: Replaced with current version from GCC mainline,
+	last modified 2002-09-22  Kazu Hirata  <kazu@cs.umass.edu>.
+
 2002-09-25  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add syscall_exit.
