@@ -1,5 +1,5 @@
 /* File descriptors.
-   Copyright (C) 1993,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,96,97,98,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -135,7 +135,7 @@ _hurd_fd_get (int fd)
 /* Check if ERR should generate a signal.
    Returns the signal to take, or zero if none.  */
 
-_HURD_FD_H_EXTERN_INLINE error_t
+_HURD_FD_H_EXTERN_INLINE int
 _hurd_fd_error_signal (error_t err)
 {
   switch (err)
