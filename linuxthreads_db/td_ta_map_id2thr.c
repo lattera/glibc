@@ -24,19 +24,35 @@
 td_err_e
 td_ta_map_id2thr (const td_thragent_t *ta, pthread_t pt, td_thrhandle_t *th)
 {
-  struct pthread_handle_struct *handles = ta->handles;
   struct pthread_handle_struct phc;
-  int pthread_threads_max = ta->pthread_threads_max;
+  struct _pthread_descr_struct pds;
+  int pthread_threads_max;
 
   LOG (__FUNCTION__);
 
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
+  /* Make the following expression a bit smaller.  */
+  pthread_threads_max = ta->pthread_threads_max;
+
   /* We can compute the entry in the handle array we want.  */
-  if (ps_pdread (ta->ph, handles + pt % pthread_threads_max, &phc,
+  if (ps_pdread (ta->ph, ta->handles + pt % pthread_threads_max, &phc,
 		 sizeof (struct pthread_handle_struct)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   /* Test whether this entry is in use.  */
   if (phc.h_descr == NULL)
+    return TD_BADTH;
+
+  /* Next test: get the descriptor to see whether this is not an old
+     thread handle.  */
+  if (ps_pdread (ta->ph, phc.h_descr, &pds,
+		 sizeof (struct _pthread_descr_struct)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+  if (pds.p_tid != pt)
     return TD_BADTH;
 
   /* Create the `td_thrhandle_t' object.  */

@@ -34,6 +34,10 @@ td_ta_event_getmsg (const td_thragent_t *ta, td_event_msg_t *msg)
 
   LOG (__FUNCTION__);
 
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
   /* Get the pointer to the thread descriptor with the last event.  */
   if (ps_pdread (ta->ph, ta->pthread_last_event,
 		 &addr, sizeof (void *)) != PS_OK)

@@ -25,27 +25,31 @@ td_err_e
 td_ta_tsd_iter (const td_thragent_t *ta, td_key_iter_f *callback,
 		void *cbdata_p)
 {
-  struct pthread_key_struct *keys = ta->keys;
-  int pthread_keys_max = ta->pthread_keys_max;
+  struct pthread_key_struct *keys;
+  int pthread_keys_max;
   int cnt;
 
-  /* XXX We have to figure out what has to be done.  */
   LOG (__FUNCTION__);
 
-  /* Now get all descriptors, one after the other.  */
-  for (cnt = 0; cnt < pthread_keys_max; ++cnt, ++keys)
-    {
-      struct pthread_key_struct key;
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
 
-      if (ps_pdread (ta->ph, keys, &key,
-		     sizeof (struct pthread_key_struct)) != PS_OK)
+  pthread_keys_max = ta->pthread_keys_max;
+  keys = (struct pthread_key_struct *) alloca (sizeof (keys[0])
+					       * pthread_keys_max);
+
+  /* Read all the information about the keys.  */
+  if (ps_pdread (ta->ph, ta->keys, keys,
+		 sizeof (keys[0]) * pthread_keys_max) != PS_OK)
 	return TD_ERR;	/* XXX Other error value?  */
 
-      if (key.in_use
-	  /* Return with an error if the callback returns a nonzero value.  */
-	  && callback (cnt, key.destr, cbdata_p) != 0)
-	return TD_DBERR;
-    }
+  /* Now get all descriptors, one after the other.  */
+  for (cnt = 0; cnt < pthread_keys_max; ++cnt)
+    if (keys[cnt].in_use
+	/* Return with an error if the callback returns a nonzero value.  */
+	&& callback (cnt, keys[cnt].destr, cbdata_p) != 0)
+      return TD_DBERR;
 
   return TD_OK;
 }

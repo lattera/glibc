@@ -26,5 +26,10 @@ td_ta_enable_stats (const td_thragent_t *ta, int enable)
 {
   /* XXX We have to figure out what has to be done.  */
   LOG (__FUNCTION__);
+
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
   return TD_OK;
 }

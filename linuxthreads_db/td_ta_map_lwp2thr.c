@@ -24,38 +24,57 @@
 td_err_e
 td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
 {
-  struct pthread_handle_struct *handles = ta->handles;
   int pthread_threads_max = ta->pthread_threads_max;
+  size_t sizeof_descr = ta->sizeof_descr;
+  struct pthread_handle_struct phc[pthread_threads_max];
   size_t cnt;
+#ifdef ALL_THREADS_STOPPED
+  int num;
+#else
+# define num 1
+#endif
 
   LOG (__FUNCTION__);
 
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
+  /* Read all the descriptors.  */
+  if (ps_pdread (ta->ph, ta->handles, phc,
+		 sizeof (struct pthread_handle_struct) * pthread_threads_max)
+      != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+#ifdef ALL_THREADS_STOPPED
+  /* Read the number of currently active threads.  */
+  if (ps_pdread (ta->ph, ta->pthread_handles_num, &num, sizeof (int)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+#endif
+
   /* Get the entries one after the other and find out whether the ID
      matches.  */
-  for (cnt = 0; cnt < pthread_threads_max; ++cnt, ++handles)
-    {
-      struct pthread_handle_struct phc;
-      struct _pthread_descr_struct pds;
+  for (cnt = 0; cnt < pthread_threads_max && num > 0; ++cnt)
+    if (phc[cnt].h_descr != NULL)
+      {
+	struct _pthread_descr_struct pds;
 
-      if (ps_pdread (ta->ph, handles, &phc,
-		     sizeof (struct pthread_handle_struct)) != PS_OK)
-	return TD_ERR;	/* XXX Other error value?  */
+#ifdef ALL_THREADS_STOPPED
+	/* First count this active thread.  */
+	--num;
+#endif
 
-      if (phc.h_descr != NULL)
-	{
-	  if (ps_pdread (ta->ph, phc.h_descr, &pds,
-			 sizeof (struct _pthread_descr_struct)) != PS_OK)
-	    return TD_ERR;	/* XXX Other error value?  */
+	if (ps_pdread (ta->ph, phc[cnt].h_descr, &pds, sizeof_descr) != PS_OK)
+	  return TD_ERR;	/* XXX Other error value?  */
 
-	  if (pds.p_pid == lwpid)
-	    {
-	      /* Found it.  Now fill in the `td_thrhandle_t' object.  */
-	      th->th_ta_p = (td_thragent_t *) ta;
-	      th->th_unique = phc.h_descr;
+	if (pds.p_pid == lwpid)
+	  {
+	    /* Found it.  Now fill in the `td_thrhandle_t' object.  */
+	    th->th_ta_p = (td_thragent_t *) ta;
+	    th->th_unique = phc[cnt].h_descr;
 
-	      return TD_OK;
-	    }
-	}
+	    return TD_OK;
+	  }
     }
 
   return TD_NOLWP;

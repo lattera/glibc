@@ -26,13 +26,26 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
 		void *cbdata_p, td_thr_state_e state, int ti_pri,
 		sigset_t *ti_sigmask_p, unsigned int ti_user_flags)
 {
-  int pthread_threads_max = ta->pthread_threads_max;
-  size_t sizeof_descr = ta->sizeof_descr;
-  struct pthread_handle_struct phc[pthread_threads_max];
-  int num;
+  int pthread_threads_max;
+  size_t sizeof_descr;
+  struct pthread_handle_struct *phc;
   int cnt;
+#ifdef ALL_THREADS_STOPPED
+  int num;
+#else
+# define num 1
+#endif
 
   LOG (__FUNCTION__);
+
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
+  pthread_threads_max = ta->pthread_threads_max;
+  sizeof_descr = ta->sizeof_descr;
+  phc = (struct pthread_handle_struct *) alloca (sizeof (phc[0])
+						 * pthread_threads_max);
 
   /* Read all the descriptors.  */
   if (ps_pdread (ta->ph, ta->handles, phc,
@@ -40,10 +53,11 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
       != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
+#ifdef ALL_THREADS_STOPPED
   /* Read the number of currently active threads.  */
-  if (ps_pdread (ta->ph, ta->pthread_handles_num, &num, sizeof (int))
-      != PS_OK)
+  if (ps_pdread (ta->ph, ta->pthread_handles_num, &num, sizeof (int)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
+#endif
 
   /* Now get all descriptors, one after the other.  */
   for (cnt = 0; cnt < pthread_threads_max && num > 0; ++cnt)
@@ -52,8 +66,10 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
 	struct _pthread_descr_struct pds;
 	td_thrhandle_t th;
 
+#ifdef ALL_THREADS_STOPPED
 	/* First count this active thread.  */
 	--num;
+#endif
 
 	if (ps_pdread (ta->ph, phc[cnt].h_descr, &pds, sizeof_descr)
 	    != PS_OK)

@@ -69,6 +69,7 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
   infop->ti_startfunc = pds.p_start_args.start_routine;
   memcpy (&infop->ti_events, &pds.p_eventbuf.eventmask,
 	  sizeof (td_thr_events_t));
+  infop->ti_traceme = pds.p_report_events != 0;
 
   return TD_OK;
 }

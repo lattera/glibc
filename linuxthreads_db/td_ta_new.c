@@ -25,10 +25,16 @@
 #include "thread_dbP.h"
 
 
+/* Datatype for the list of known thread agents.  Normally there will
+   be exactly one so we don't spend much though on making it fast.  */
+struct agent_list *__td_agent_list;
+
+
 td_err_e
 td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
 {
   psaddr_t addr;
+  struct agent_list *elemp;
 
   LOG (__FUNCTION__);
 
@@ -129,6 +135,20 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
 	  != PS_OK)
 	goto free_return;
     }
+
+  /* Now add the new agent descriptor to the list.  */
+  elemp = (struct agent_list *) malloc (sizeof (struct agent_list));
+  if (elemp == NULL)
+    {
+      /* Argh, now that everything else worked...  */
+      free (*ta);
+      return TD_MALLOC;
+    }
+
+  /* We don't care for thread-safety here.  */
+  elemp->ta = *ta;
+  elemp->next = __td_agent_list;
+  __td_agent_list = elemp;
 
   return TD_OK;
 }

@@ -31,6 +31,10 @@ td_ta_event_addr (const td_thragent_t *ta, td_event_e event, td_notify_t *addr)
 
   LOG (__FUNCTION__);
 
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
   switch (event)
     {
     case TD_CREATE:

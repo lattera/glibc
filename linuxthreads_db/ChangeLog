@@ -1,3 +1,28 @@
+1999-11-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* thread_dbP.h (ta_ok): New function.
+	* td_ta_new.c: Add new handle to list.
+	* td_ta_delete.c: Remove handle from list.
+	* td_ta_clear_event.c: Use ta_ok to check for correct ta parameter.
+	* td_ta_enable_stats.c: Likewise.
+	* td_ta_event_addr.c: Likewise.
+	* td_ta_event_getmsg.c: Likewise.
+	* td_ta_get_nthreads.c: Likewise.
+	* td_ta_get_ph.c: Likewise.
+	* td_ta_get_stats.c: Likewise.
+	* td_ta_map_id2thr.c: Likewise.
+	* td_ta_map_lwp2thr.c: Likewise.
+	* td_ta_reset_stats.c: Likewise.
+	* td_ta_set_event.c: Likewise.
+	* td_ta_setconcurrency.c: Likewise.
+	* td_ta_thr_iter.c: Likewise.
+
+	* td_ta_tsd_iter.c: Optimize memory retrieving.
+
+	* Versions: New file.
+
+	* td_thr_get_info.c (td_thr_get_info): Initialize ti_traceme.
+
 1999-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* td_ta_thr_iter.c (td_ta_thr_iter): Optimize a bit.  Read all

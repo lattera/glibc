@@ -50,4 +50,29 @@ struct td_thragent
 };
 
 
+/* Type used internally to keep track of thread agent descriptors.  */
+struct agent_list
+{
+  td_thragent_t *ta;
+  struct agent_list *next;
+};
+
+/* List of all known descriptors.  */
+extern struct agent_list *__td_agent_list;
+
+/* Function used to test for correct thread agent pointer.  */
+static inline int
+ta_ok (const td_thragent_t *ta)
+{
+  struct agent_list *runp = __td_agent_list;
+
+  if (ta == NULL)
+    return 0;
+
+  while (runp != NULL && runp->ta != ta)
+    runp = runp->next;
+
+  return runp != NULL;
+}
+
 #endif /* thread_dbP.h */

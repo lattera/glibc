@@ -28,6 +28,29 @@ td_ta_delete (td_thragent_t *ta)
 {
   LOG (__FUNCTION__);
 
+  /* Safety check.  */
+  if (ta == NULL || __td_agent_list == NULL)
+    return TD_BADTA;
+
+  /* Remove the handle from the list.  */
+  if (ta == __td_agent_list->ta)
+    /* It's the first element of the list.  */
+    __td_agent_list = __td_agent_list->next;
+  else
+    {
+      /* We have to search for it.  */
+      struct agent_list *runp = __td_agent_list;
+
+      while (runp->next != NULL && runp->next->ta != ta)
+	runp = runp->next;
+
+      if (runp->next == NULL)
+	/* It's not a valid decriptor since it is not in the list.  */
+	return TD_BADTA;
+
+      runp->next = runp->next->next;
+    }
+
   /* The handle was allocated in `td_ta_new'.  */
   free (ta);
 

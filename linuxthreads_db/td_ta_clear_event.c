@@ -31,6 +31,10 @@ td_ta_clear_event (ta, event)
 
   LOG (__FUNCTION__);
 
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
   /* Write the new value into the thread data structure.  */
   if (ps_pdread (ta->ph, ta->pthread_threads_eventsp,
 		 &old_event, sizeof (td_thrhandle_t)) != PS_OK)

@@ -28,6 +28,10 @@ td_ta_get_nthreads (const td_thragent_t *ta, int *np)
 
   LOG (__FUNCTION__);
 
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
   /* Access the variable `__pthread_handles_num'.  */
   if (ps_pglobal_lookup (ta->ph, LIBPTHREAD_SO, "__pthread_handles_num",
 		         &addr) != PS_OK)
