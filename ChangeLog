@@ -1,5 +1,9 @@
 2003-09-05  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/bits/string.h (__memrchr): Do addition in assembler
+	to make it conforming C.
+	* sysdeps/i386/i486/bits/string.h (__memrchr): Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/fcntl.c (__fcntl_nocancel): Change
 	prototype to use variable argument lists and get the possible one
 	argument via va_arg.

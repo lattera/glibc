@@ -484,7 +484,8 @@ __memrchr (__const void *__s, int __c, size_t __n)
     ("std\n\t"
      "repne; scasb\n\t"
      "cmovne %2,%0\n\t"
-     "cld"
+     "cld\n\t"
+     "incl %0"
      : "=D" (__res), "=&c" (__d0), "=&r" (__d1)
      : "a" (__c), "0" (__s + __n - 1), "1" (__n), "2" (-1),
        "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
@@ -495,13 +496,14 @@ __memrchr (__const void *__s, int __c, size_t __n)
      "repne; scasb\n\t"
      "je 1f\n\t"
      "orl $-1,%0\n"
-     "1:\tcld"
+     "1:\tcld\n\t"
+     "incl %0"
      : "=D" (__res), "=&c" (__d0)
      : "a" (__c), "0" (__s + __n - 1), "1" (__n),
        "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
 # endif
-  return __res + 1;
+  return __res;
 }
 # ifdef __USE_GNU
 #  define memrchr(s, c, n) __memrchr ((s), (c), (n))
