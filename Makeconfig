@@ -508,18 +508,19 @@ link-libc-bounded = $(common-objpfx)libc_b.a $(gnulib) $(common-objpfx)libc_b.a
 link-extra-libs-bounded = $(foreach lib,$(LDLIBS-$(@F:%-bp=%)),$(common-objpfx)$(lib)_b.a)
 
 ifndef gnulib
-ifneq ($(have-as-needed),yes)
- libgcc_eh := -lgcc_eh
-else
- libgcc_eh := -Wl,--as-needed -lgcc_s$(libgcc_s_suffix) -Wl,--no-as-needed
-endif
 ifneq ($(have-cc-with-libunwind),yes)
- gnulib := -lgcc $(libgcc_eh)
- static-gnulib := -lgcc -lgcc_eh
+  libunwind =
 else
- gnulib := -lgcc $(libgcc_eh) -lunwind
- static-gnulib := -lgcc -lgcc_eh -lunwind
+  libunwind = -lunwind
 endif
+ifneq ($(have-as-needed),yes)
+ libgcc_eh := -lgcc_eh $(libunwind)
+else
+ libgcc_eh := -Wl,--as-needed -lgcc_s$(libgcc_s_suffix) $(libunwind) -Wl,--no-as-needed
+endif
+gnulib := -lgcc $(libgcc_eh)
+static-gnulib := -lgcc -lgcc_eh $(libunwind)
+libc.so-gnulib := -lgcc
 endif
 ifeq ($(elf),yes)
 +preinit = $(addprefix $(csu-objpfx),crti.o)

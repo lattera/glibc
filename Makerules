@@ -581,8 +581,8 @@ build-shlib-objlist = $(build-module-helper-objlist) \
 # Also omits crti.o and crtn.o, which we do not want
 # since we define our own `.init' section specially.
 LDFLAGS-c.so = -nostdlib -nostartfiles
-# But we still want to link libc.so against $(static-gnulib).
-LDLIBS-c.so += $(static-gnulib)
+# But we still want to link libc.so against $(libc.so-gnulib).
+LDLIBS-c.so += $(libc.so-gnulib)
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
 # If lazy relocation is disabled add the -z now flag.

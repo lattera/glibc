@@ -1,3 +1,15 @@
+2004-09-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (libunwind): New.
+	(libgcc_eh): Add $(libunwind).
+	(gnulib): Always set to -lgcc $(libgcc_eh).
+	(static-gnulib): Always set to -lgcc -lgcc_eh $(libunwind).
+	(libc.so-gnulib): New.
+	* Makerules (LDLIBS-c.so): Use $(libc.so-gnulib) instead of
+	$(static-gnulib).
+	* configure.in (libc_cv_cc_with_libunwind): Set to yes if gcc
+	uses -lunwind for static binaries.
+
 22004-06-05  Joseph S. Myers  <jsm@polyomino.org.uk>
 
 	* malloc/Makefile (install-bin): Remove memusage.

@@ -1260,13 +1260,17 @@ EOF
   fi
 
   AC_CACHE_CHECK(for libunwind-support in compiler,
-		 libc_cv_cc_with_libunwind, [dnl
-    AC_TRY_LINK([#include <libunwind.h>], [
-      unw_context_t uc;
-      unw_cursor_t c;
-      unw_getcontext (&uc);
-      unw_init_local (&c, &uc)],
-        libc_cv_cc_with_libunwind=yes, libc_cv_cc_with_libunwind=no)])
+		 libc_cv_cc_with_libunwind, [
+    cat > conftest.c <<EOF
+int main (void) { return 0; }
+EOF
+    if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static -o conftest \
+       conftest.c -v 2>&1 >/dev/null | grep -q " -lunwind "; then
+      libc_cv_cc_with_libunwind=yes
+    else
+      libc_cv_cc_with_libunwind=no
+    fi
+    rm -f conftest*])
   AC_SUBST(libc_cv_cc_with_libunwind)
   if test $libc_cv_cc_with_libunwind = yes; then
     AC_DEFINE(HAVE_CC_WITH_LIBUNWIND)
