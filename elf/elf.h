@@ -490,6 +490,7 @@ typedef struct
 #define DT_VERSYM	0x6ffffff0
 
 /* These were chosen by Sun.  */
+#define DT_FLAGS_1	0x6ffffffb	/* State flags, see DF_1_* below.  */
 #define	DT_VERDEF	0x6ffffffc	/* Address of version definition
 					   table */
 #define	DT_VERDEFNUM	0x6ffffffd	/* Number of version definitions */
@@ -505,6 +506,16 @@ typedef struct
 #define DT_FILTER       0x7fffffff      /* Shared object to get values from */
 #define DT_EXTRATAGIDX(tag)	((Elf32_Word)-((Elf32_Sword) (tag) <<1>>1)-1)
 #define DT_EXTRANUM	3
+
+/* State flags selectable in the `d_un.d_val' element of the DT_FLAGS_1
+   entry in the dynamic section.  */
+#define DF_1_NOW	0x00000001	/* Set RTLD_NOW for this object.  */
+#define DF_1_GLOBAL	0x00000002	/* Set RTLD_GLOBAL for this object.  */
+#define DF_1_GROUP	0x00000004	/* Set RTLD_GROUP for this object.  */
+#define DF_1_NODELETE	0x00000008	/* Set RTLD_NODELETE for this object.*/
+#define DF_1_LOADFLTR	0x00000010	/* Trigger filtee loading at runtime.*/
+#define DF_1_INITFIRST	0x00000020	/* Set RTLD_INITFIRST for this object*/
+#define DF_1_NOOPEN	0x00000040	/* Set RTLD_NOOPEN for this object.  */
 
 /* Version definition sections.  */
 

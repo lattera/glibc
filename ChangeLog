@@ -3,6 +3,8 @@
 	* elf/elf.h: Define more EM_* constants, ELFCLASSNUM, ELFDATANUM,
 	EV_NUM, Elf32_Nhdr, Elf64_Nhdr and various note section values.
 
+	* elf/elf.h: Add DT_FLAGS_1 and the DF_1_* flag definitions.
+
 1998-07-29  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (__lseek): New function.
