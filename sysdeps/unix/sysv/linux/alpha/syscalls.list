@@ -16,7 +16,6 @@ oldsemctl	EXTRA	semctl		i:iiii	__old_semctl	semctl@GLIBC_2.0
 sigstack	-	sigstack	2	sigstack
 vfork		-	vfork		0	__vfork		vfork
 
-getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 open		-	open		Ci:siv	__libc_open	__open open !__libc_open64 __open64 open64
 open64		open	-
