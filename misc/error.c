@@ -88,7 +88,7 @@ extern void __error_at_line (int status, int errnum, const char *file_name,
 # define error_at_line __error_at_line
 
 # ifdef USE_IN_LIBIO
-# include <libio/iolibio.h>
+#  include <libio/iolibio.h>
 #  define fflush(s) INTUSE(_IO_fflush) (s)
 #  undef putc
 #  define putc(c, fp) INTUSE(_IO_putc) (c, fp)
@@ -96,21 +96,30 @@ extern void __error_at_line (int status, int errnum, const char *file_name,
 
 #else /* not _LIBC */
 
+# if !HAVE_DECL_STRERROR_R && STRERROR_R_CHAR_P
+#  ifndef HAVE_DECL_STRERROR_R
+"this configure-time declaration test was not run"
+#  endif
+char *strerror_r ();
+# endif
+
 /* The calling program should define program_name and set it to the
    name of the executing program.  */
 extern char *program_name;
 
-# ifdef HAVE_STRERROR_R
+# if HAVE_STRERROR_R || defined strerror_r
 #  define __strerror_r strerror_r
 # else
 #  if HAVE_STRERROR
-#   ifndef strerror		/* On some systems, strerror is a macro */
+#   ifndef HAVE_DECL_STRERROR
+"this configure-time declaration test was not run"
+#   endif
+#   if !HAVE_DECL_STRERROR
 char *strerror ();
 #   endif
 #  else
 static char *
-private_strerror (errnum)
-     int errnum;
+private_strerror (int errnum)
 {
   extern char *sys_errlist[];
   extern int sys_nerr;
@@ -121,9 +130,43 @@ private_strerror (errnum)
 }
 #   define strerror private_strerror
 #  endif /* HAVE_STRERROR */
-# endif	/* HAVE_STRERROR_R */
+# endif	/* HAVE_STRERROR_R || defined strerror_r */
 #endif	/* not _LIBC */
 
+static void
+print_errno_message (int errnum)
+{
+  char const *s;
+
+#if defined HAVE_STRERROR_R || _LIBC
+  char errbuf[1024];
+# if STRERROR_R_CHAR_P || _LIBC
+  s = __strerror_r (errnum, errbuf, sizeof errbuf);
+# else
+  if (__strerror_r (errnum, errbuf, sizeof errbuf) == 0)
+    s = errbuf;
+  else
+    s = 0;
+# endif
+#else
+  s = strerror (errnum);
+#endif
+
+#if !_LIBC
+  if (! s)
+    s = _("Unknown system error");
+#endif
+
+#if _LIBC && USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    {
+      __fwprintf (stderr, L": %s", s);
+      return;
+    }
+#endif
+
+  fprintf (stderr, ": %s", s);
+}
 
 #ifdef VA_START
 static void
@@ -180,25 +223,12 @@ error_tail (int status, int errnum, const char *message, va_list args)
 
   ++error_message_count;
   if (errnum)
-    {
-#if defined HAVE_STRERROR_R || _LIBC
-      char errbuf[1024];
-      char *s = __strerror_r (errnum, errbuf, sizeof errbuf);
+    print_errno_message (errnum);
 # if _LIBC && USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	__fwprintf (stderr, L": %s", s);
-      else
-# endif
-	fprintf (stderr, ": %s", s);
-#else
-      fprintf (stderr, ": %s", strerror (errnum));
-#endif
-    }
-#if _LIBC && USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
     putwc (L'\n', stderr);
   else
-#endif
+# endif
     putc ('\n', stderr);
   fflush (stderr);
   if (status)
@@ -255,7 +285,7 @@ error (status, errnum, message, va_alist)
 
   ++error_message_count;
   if (errnum)
-    fprintf (stderr, ": %s", strerror (errnum));
+    print_errno_message (errnum);
   putc ('\n', stderr);
   fflush (stderr);
   if (status)
@@ -346,7 +376,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 
   ++error_message_count;
   if (errnum)
-    fprintf (stderr, ": %s", strerror (errnum));
+    print_errno_message (errnum);
   putc ('\n', stderr);
   fflush (stderr);
   if (status)
