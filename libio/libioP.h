@@ -440,7 +440,7 @@ extern int _IO_outfloat __P ((double __value, _IO_FILE *__sb, int __type,
 			      int __sign_mode, int __fill));
 
 extern _IO_FILE *_IO_list_all;
-extern void (*_IO_cleanup_registration_needed) __P ((void));
+extern void (*_IO_cleanup_registration_needed) __PMT ((void));
 
 #ifndef EOF
 # define EOF (-1)
