@@ -84,6 +84,10 @@ __libc_rwlock_define (extern, _nl_state_lock)
 # define BIND_TEXTDOMAIN_CODESET bind_textdomain_codeset__
 #endif
 
+/* Prototypes for local functions.  */
+static void set_binding_values (const char *domainname, const char **dirnamep,
+				const char **codesetp);
+     
 /* Specifies the directory name *DIRNAMEP and the output codeset *CODESETP
    to be used for the DOMAINNAME message catalog.
    If *DIRNAMEP or *CODESETP is NULL, the corresponding attribute is not

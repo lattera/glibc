@@ -10,6 +10,8 @@ extern char *__dcgettext (__const char *__domainname,
 extern char *__textdomain (__const char *__domainname);
 extern char *__bindtextdomain (__const char *__domainname,
 			       __const char *__dirname);
+extern char *__bind_textdomain_codeset (__const char *__domainname,
+					__const char *__codeset);
 extern const char _libc_intl_domainname[];
 
 /* Define the macros `_' and `N_' for conveniently marking translatable

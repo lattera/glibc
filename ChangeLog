@@ -1,3 +1,9 @@
+2000-05-08  Andreas Jaeger  <aj@suse.de>
+
+	* include/libintl.h: Add prototype for __bind_textdomain_codeset.
+
+	* intl/bindtextdom.c (set_binding_values): Add prototype.
+
 2000-05-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Fix arguments in
