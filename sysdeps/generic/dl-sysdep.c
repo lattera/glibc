@@ -95,7 +95,7 @@ _dl_sysdep_start (void **start_argptr,
 #else
   unsigned int seen = 0;
 # define M(type) (1 << (type))
-# define set_seen(val) seen |= M ((tag)->a_type)
+# define set_seen(tag) seen |= M ((tag)->a_type)
 #endif
 
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
