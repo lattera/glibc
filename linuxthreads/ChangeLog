@@ -1,3 +1,8 @@
+2003-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Rename macros to
+	match changes in NPTL sysdep-cancel.h.
+
 2003-04-11  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (multidir): Don't set the variable here with $(shell ...).
