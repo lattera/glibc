@@ -28,6 +28,13 @@
 
 #include "kernel-features.h"
 
+/* Variable to signal whether SIOCGIFCONF is not available.  */
+#if __ASSUME_SIOCGIFNAME == 0
+static int old_siocgifconf;
+#else
+# define old_siocgifconf 0
+#endif
+
 /* Try to get a socket to talk to the kernel.  */
 #if defined SIOCGIFINDEX || defined SIOCGIFNAME
 static int
@@ -122,11 +129,6 @@ if_nameindex (void)
   unsigned int nifs, i;
   int rq_len;
   struct if_nameindex *idx = NULL;
-# if __ASSUME_SIOCGIFNAME == 0
-  static int old_siocgifconf;
-# else
-#  define old_siocgifconf 0
-# endif
 # define RQ_IFS	4
 
   if (fd < 0)
@@ -281,24 +283,19 @@ if_indextoname (unsigned int ifindex, char *ifname)
 
 void
 internal_function
-__protocol_avaliable (int *have_inet, int *have_inet6)
+__protocol_available (int *have_inet, int *have_inet6)
 {
   int fd = opensock ();
   unsigned int nifs;
   int rq_len;
   struct ifconf ifc;
-# if __ASSUME_SIOCGIFNAME == 0
-  static int old_siocgifconf;
-# else
-#  define old_siocgifconf 0
-# endif
 # define RQ_IFS	4
 
   /* Wirst case assumption.  */
   *have_inet = 0;
   *have_inet6 = 0;
 
-  if (fd == NULL)
+  if (fd < 0)
     /* We cannot open the socket.  No networking at all?  */
     return;
 

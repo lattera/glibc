@@ -1,3 +1,9 @@
+1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Move
+	old_siocfifconf definition to toplevel.
+	(__protocol_available): Remove old_siocfifconf definition.
+
 1999-08-25  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/sysv/linux/ptsname.c: Add checks to make sure we're

@@ -55,7 +55,7 @@ stub_warning (if_nameindex)
 
 void
 internal_function
-__protocol_avaliable (int *have_inet, have_inet6)
+__protocol_available (int *have_inet, have_inet6)
 {
   /* By default we assume that IPv4 is avaialble, IPv6 not.  */
   *have_inet = 1;
