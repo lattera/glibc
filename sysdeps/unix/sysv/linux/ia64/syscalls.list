@@ -2,7 +2,6 @@
 
 umount2		-	umount		2	__umount2	umount2
 
-getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 
 # semaphore and shm system calls

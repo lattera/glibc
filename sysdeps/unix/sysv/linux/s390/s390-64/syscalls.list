@@ -1,6 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 vfork		-	vfork		0	__vfork		vfork
 
 # semaphore and shm system calls
