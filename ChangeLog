@@ -1,5 +1,11 @@
 Fri Nov 10 14:15:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* malloc/malloc.c (align): Assert that space for alignment
+	adjustment is same original space.
+
+	* hurd/hurdprio.c (_hurd_priority_which_map): Cast vm_deallocate
+	arg to vm_address_t.
+
 	* hurd/hurdsig.c (_hurd_internal_post_signal): For SIGNO == 0,
 	skip straight to pending check.  When UNTRACED, resume process
 	from suspension first.

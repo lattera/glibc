@@ -68,7 +68,7 @@ _hurd_priority_which_map (enum __priority_which which, int who,
 	    continue;
 	  if (twsz)
 	    /* Gratuitous.  */
-	    __vm_deallocate (__mach_task_self (), tw, twsz);
+	    __vm_deallocate (__mach_task_self (), (vm_address_t) tw, twsz);
 	  if (pi != oldpi && oldpi != pibuf)
 	    /* Old buffer from last call was not reused; free it.  */
 	    __vm_deallocate (__mach_task_self (),
