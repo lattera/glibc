@@ -42,25 +42,26 @@ Cambridge, MA 02139, USA.  */
 
 #if PAGE_COPY_THRESHOLD
 
+#include <assert.h>
+
 #define PAGE_COPY_FWD_MAYBE(dstp, srcp, nbytes_left, nbytes)		      \
   do									      \
     {									      \
       if ((nbytes) >= PAGE_COPY_THRESHOLD &&				      \
-	  PAGE_OFFSET (dstp) == PAGE_OFFSET (srcp))			      \
+	  PAGE_OFFSET ((dstp) - (srcp)) == 0) 				      \
 	{								      \
 	  /* The amount to copy is past the threshold for copying	      \
 	     pages virtually with kernel VM operations, and the		      \
 	     source and destination addresses have the same alignment.  */    \
-	  size_t nbytes_before = PAGE_OFFSET (PAGE_SIZE - PAGE_OFFSET (dstp));\
+	  size_t nbytes_before = PAGE_OFFSET (-(dstp));			      \
 	  if (nbytes_before != 0)					      \
 	    {								      \
 	      /* First copy the words before the first page boundary.  */     \
 	      WORD_COPY_FWD (dstp, srcp, nbytes_left, nbytes_before);	      \
-	      nbytes_before -= nbytes_left;				      \
+	      assert (nbytes_left == 0);				      \
 	      nbytes -= nbytes_before;					      \
 	    }								      \
-	  if (nbytes_before == 0)					      \
-	    PAGE_COPY_FWD (dstp, srcp, nbytes_left, nbytes);		      \
+	  PAGE_COPY_FWD (dstp, srcp, nbytes_left, nbytes);		      \
 	}								      \
     } while (0)
 
