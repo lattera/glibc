@@ -957,7 +957,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 #else
 	  /* Uh-oh, the binary expects TLS support but we cannot
 	     provide it.  */
-	  _dl_fatal_printf ("cannot handle file '%s' with TLS data", name);
+	  _dl_fatal_printf ("cannot handle file '%s' with TLS data\n", name);
 #endif
 	  break;
 	}

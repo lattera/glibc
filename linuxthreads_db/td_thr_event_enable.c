@@ -31,13 +31,27 @@ td_thr_event_enable (th, onoff)
   LOG ("td_thr_event_enable");
 
   /* Write the new value into the thread data structure.  */
-  if (th->th_unique != NULL)
-    if (ps_pdwrite (th->th_ta_p->ph,
-		    ((char *) th->th_unique
-		     + offsetof (struct _pthread_descr_struct,
-				 p_report_events)),
-		    &onoff, sizeof (int)) != PS_OK)
-      return TD_ERR;	/* XXX Other error value?  */
+  if (th->th_unique == NULL)
+    {
+      psaddr_t addr;
+
+      if (td_lookup (th->th_ta_p->ph, LINUXTHREADS_INITIAL_REPORT_EVENTS,
+		     &addr) != PS_OK)
+	/* Cannot read the symbol.  This should not happen.  */
+	return TD_ERR;
+
+      if (ps_pdwrite (th->th_ta_p->ph, addr, &onoff, sizeof (int)) != PS_OK)
+	return TD_ERR;
+
+      return TD_OK;
+    }
+
+  if (ps_pdwrite (th->th_ta_p->ph,
+		  ((char *) th->th_unique
+		   + offsetof (struct _pthread_descr_struct,
+			       p_report_events)),
+		  &onoff, sizeof (int)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
 
   return TD_OK;
 }

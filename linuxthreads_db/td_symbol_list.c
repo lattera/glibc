@@ -1,5 +1,5 @@
 /* Return list of symbols the library can request.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -36,6 +36,7 @@ static const char *symbol_list_arr[] =
   [LINUXTHREADS_CREATE_EVENT] = "__linuxthreads_create_event",
   [LINUXTHREADS_DEATH_EVENT] = "__linuxthreads_death_event",
   [LINUXTHREADS_REAP_EVENT] = "__linuxthreads_reap_event",
+  [LINUXTHREADS_INITIAL_REPORT_EVENTS] = "__linuxthreads_initial_report_events",
   [NUM_MESSAGES] = NULL
 };
 

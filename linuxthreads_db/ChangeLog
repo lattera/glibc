@@ -1,3 +1,11 @@
+2002-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* thread_dbP.h: Define LINUXTHREADS_INITIAL_REPORT_EVENTS.
+	* td_thr_event_enable.c (td_thr_event_enable): If th->th_unique is
+	null write to __linuxthreads_initial_report_events.
+	* td_symbol_list.c (symbol_list_arr): Add
+	__linuxthreads_initial_report_events.
+
 2002-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_thr_clear_event.c: Yet more changes to help with TLS-enabled
