@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -26,12 +26,5 @@ drand48_r (buffer, result)
      struct drand48_data *buffer;
      double *result;
 {
-  /* be generous for the arguments, detect some errors.  */
-  if (buffer == NULL)
-    {
-      errno = EFAULT;
-      return -1;
-    }
-
   return erand48_r (buffer->X, buffer, result);
 }

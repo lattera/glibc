@@ -1,4 +1,43 @@
+Thu Mar 14 06:01:07 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* string/strnlen.c: New file.
+	* string/Makefile (routines): Add strnlen.
+	* string/string.h [__USE_GNU] (strnlen): Declare new function.
+	[__OPTIMIZE__]: Define extern inline implementation of it.
+
+	* stdlib/erand48_r.c: Use __mpn_construct_double instead of ldexp and
+	addition, to avoid using anything from -lm.
+
+Mon Mar  4 21:57:14 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/Makefile: New file.
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (SYS_ify): Redefine.
+	(CALL_MCOUNT): New macro, empty unless [PROF].
+	(ENTRY): Do CALL_MCOUNT just after the label.
+	(JUMPTARGET): New macro.
+	(SYSCALL_ERROR_HANDLER): Fix syntax.
+
+Thu Mar 14 04:20:48 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/init-first.c (init): Call `__personality'
+	function instead of using inline asm i386 syscall.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add personality syscall.
+
+	* posix/unistd.h [__USE_BSD]: Declare usleep.
+
 Tue Mar 12 04:57:57 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* misc/efgcvt.c (MAXDIG): New macro computed from <floats.h> constants.
+	(fcvt, ecvt): Use it for buffer size.
+
+	* stdlib/drand48-iter.c (__drand48_iterate): Use u_int64_t instead of
+	conditionalizing long vs long long.
+
+	* stdlib/drand48-iter.c (__drand48_iterate): Don't check for null
+	pointers; never return EFAULT.
+	* stdlib/drand48_r.c (drand48_r): Likewise.
+	* stdlib/erand48_r.c (erand48_r): Likewise.
 
 	* setjmp/Makefile (tests): Add jmpbug.
 	* setjmp/jmpbug.c: New file.

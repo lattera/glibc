@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2 January 1996
+GNU C Library NEWS -- history of user-visible changes.  14 March 1996
 
 Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -179,6 +179,9 @@ Version 1.10
 
 * New macro `strdupa' copies a string like `strdup', but uses local stack
   space from `alloca' instead of dynamic heap space from `malloc'.
+
+* New function `strnlen' is like `strlen' but searches only a given maximum
+  number of characters for the null terminator.
 
 Version 1.09
 

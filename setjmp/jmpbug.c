@@ -10,23 +10,31 @@ sub5 (jmp_buf buf)
   longjmp (buf, 1);
 }
 
-int
-main (void)
+void
+test (int x)
 {
   jmp_buf buf;
   char *foo;
   int arr[100];
 
-  arr[77] = 76;
+  arr[77] = x;
   if (setjmp (buf))
     {
       printf ("made it ok; %d\n", arr[77]);
-      exit (0);
+      return;
     }
 
   foo = (char *) alloca (128);
   sub5 (buf);
+}
 
-  /* NOTREACHED */
-  return 1;
+int
+main (void)
+{
+  int i;
+
+  for (i = 123; i < 345; ++i)
+    test (i);
+
+  return 0;
 }

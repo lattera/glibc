@@ -20,7 +20,7 @@ Boston, MA 02111-1307, USA.  */
 #include <errno.h>
 #include <stdlib.h>
 #include <limits.h>
-
+#include <sys/types.h>
 
 /* Global state for non-reentrent functions.  */
 struct drand48_data __libc_drand48_data;
@@ -31,12 +31,7 @@ __drand48_iterate (xsubi, buffer)
      unsigned short int xsubi[3];
      struct drand48_data *buffer;
 {
-  /* Be generous for the arguments, detect some errors.  */
-  if (xsubi == NULL || buffer == NULL)
-    {
-      errno = EFAULT;
-      return -1;
-    }
+  u_int64_t X, a, result;
 
   /* Initialize buffer, if not yet done.  */
   if (!buffer->init)
@@ -58,42 +53,28 @@ __drand48_iterate (xsubi, buffer)
      48 bits.  Because we compute the modulus it does not care how
      many bits really are computed.  */
 
-  if (sizeof (long int) >= 6)
+  if (sizeof (unsigned short int) == 2)
     {
-      /* The `long' data type is sufficent.  */
-      unsigned long int X, a, result;
+      X = (xsubi[2] << 16 | xsubi[1]) << 16 | xsubi[0];
+      a = (buffer->a[2] << 16 | buffer->a[1]) << 16 | buffer->a[0];
 
-#define ONE_STEP							    \
-      if (sizeof (unsigned short int) == 2)				    \
-	{								    \
-	  X = (xsubi[2] << 16 | xsubi[1]) << 16 | xsubi[0];		    \
-	  a = (buffer->a[2] << 16 | buffer->a[1]) << 16 | buffer->a[0];	    \
-									    \
-	  result = X * a + buffer->c;					    \
-									    \
-	  xsubi[0] = result & 0xffff;					    \
-	  result >>= 16;						    \
-	  xsubi[1] = result & 0xffff;					    \
-	  result >>= 16;						    \
-	  xsubi[2] = result & 0xffff;					    \
-	}								    \
-      else								    \
-	{								    \
-	  X = xsubi[2] << 16 | xsubi[1] >> 16;				    \
-	  a = buffer->a[2] << 16 | buffer->a[1] >> 16;			    \
-									    \
-	  result = X * a + buffer->c;					    \
-									    \
-	  xsubi[0] = result >> 16 & 0xffffffffl;			    \
-	  xsubi[1] = result << 16 & 0xffff0000l;			    \
-	}
-      ONE_STEP;
+      result = X * a + buffer->c;
+
+      xsubi[0] = result & 0xffff;
+      result >>= 16;
+      xsubi[1] = result & 0xffff;
+      result >>= 16;
+      xsubi[2] = result & 0xffff;
     }
   else
     {
-      /* We have to use the `long long' data type.  */
-      unsigned long long int X, a, result;
-      ONE_STEP;
+      X = xsubi[2] << 16 | xsubi[1] >> 16;
+      a = buffer->a[2] << 16 | buffer->a[1] >> 16;
+
+      result = X * a + buffer->c;
+
+      xsubi[0] = result >> 16 & 0xffffffffl;
+      xsubi[1] = result << 16 & 0xffff0000l;
     }
 
   return 0;

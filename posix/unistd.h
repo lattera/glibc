@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -179,6 +179,12 @@ extern unsigned int alarm __P ((unsigned int __seconds));
    signal afterwards is undefined.  There is no return value to indicate
    error, but if `sleep' returns SECONDS, it probably didn't work.  */
 extern unsigned int sleep __P ((unsigned int __seconds));
+
+#ifdef __USE_BSD
+/* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
+   or ignored.  Return value is not necessarily useful.  */
+extern unsigned int usleep __P ((unsigned __useconds));
+#endif
 
 
 /* Suspend the process until a signal arrives.

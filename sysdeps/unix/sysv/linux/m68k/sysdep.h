@@ -23,6 +23,17 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
 
+/* For Linux we can use the system call table in the header file
+	/usr/include/asm/unistd.h
+   of the kernel.  But these symbols do not follow the SYS_* syntax
+   so we have to redefine the `SYS_ify' macro here.  */
+#undef SYS_ify
+#ifdef __STDC__
+# define SYS_ify(syscall_name)	__NR_##syscall_name
+#else
+# define SYS_ify(syscall_name)	__NR_/**/syscall_name
+#endif
+
 #ifdef ASSEMBLER
 
 #define POUND #
@@ -32,7 +43,26 @@ Cambridge, MA 02139, USA.  */
   .globl name;								      \
   .type name, @function;						      \
   .align 4;								      \
-  name##:
+  C_LABEL(name)								      \
+  CALL_MCOUNT
+
+/* If compiled for profiling, call `_mcount' at the start of each function.  */
+#ifdef	PROF
+/* The mcount code relies on a normal frame pointer being on the stack
+   to locate our caller, so push one just for its benefit.  */
+#define CALL_MCOUNT \
+  move.l %fp, -(%sp); move.l %sp, %fp;					      \
+  jbsr JUMPTARGET (_mcount);						      \
+  move.l (%sp)+, %fp;
+#else
+#define CALL_MCOUNT		/* Do nothing.  */
+#endif
+
+#ifdef PIC
+#define JUMPTARGET(name)	name##@PLTPC
+#else
+#define JUMPTARGET(name)	name
+#endif
 
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
@@ -53,7 +83,7 @@ Cambridge, MA 02139, USA.  */
 /* Store (- %d0) into errno through the GOT.  */
 #define SYSCALL_ERROR_HANDLER						      \
 syscall_error:								      \
-    move.l (errno@GOTPC.l, %pc), %a0;					      \
+    move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \
     move.l %d0, (%a0);							      \
     move.l POUND -1, %d0;						      \
