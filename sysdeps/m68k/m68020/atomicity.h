@@ -45,7 +45,7 @@ atomic_add (volatile uint32_t *mem, int val)
 {
   /* XXX Use cas here as well?  */
   __asm__ __volatile__ ("add%.l %0,%1"
-			: : "ir" (val), "m" (*mem) : "memory");
+			: : "id" (val), "m" (*mem) : "memory");
 }
 
 static inline int
