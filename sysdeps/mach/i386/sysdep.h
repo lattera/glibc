@@ -44,6 +44,11 @@ Cambridge, MA 02139, USA.  */
 		  "g" (ptr), "m" (*(long int *) (fn)) : "%esp"); 	      \
   } while (0)
 
+#define RETURN_TO(sp, pc, retval) \
+  asm volatile ("movl %0, %%esp; jmp %*%1 # %2" \
+		: : "g" (sp), "r" (pc), "a" (retval))
+
+
 #define STACK_GROWTH_DOWN
 
 #include_next <sysdep.h>

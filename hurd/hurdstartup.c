@@ -26,8 +26,10 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #include <hurd/threadvar.h>
 #include <unistd.h>
+#include <elf.h>
 #include "set-hooks.h"
 #include "hurdmalloc.h"		/* XXX */
+#include "hurdstartup.h"
 
 mach_port_t *_hurd_init_dtable;
 mach_msg_type_number_t _hurd_init_dtablesize;
@@ -41,38 +43,9 @@ unsigned long int __hurd_sigthread_stack_base;
 unsigned long int __hurd_sigthread_stack_end;
 unsigned long int *__hurd_sigthread_variables;
 
-vm_address_t _hurd_stack_base;
-vm_size_t _hurd_stack_size;
-
-/* Things that want to be run before _hurd_init or much anything else.
-   Importantly, these are called before anything tries to use malloc.  */
-DEFINE_HOOK (_hurd_preinit_hook, (void));
-
 extern void __mach_init (void);
-extern void __libc_init (int argc, char **argv, char **envp);
-
-void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
-void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
 
 int _hurd_split_args (char *, size_t, char **);
-
-/* These communicate values from _hurd_startup to start1,
-   where we cannot use the stack for anything.  */
-struct info
-  {
-    char *args, *env;
-    mach_port_t *portarray;
-    int *intarray;
-    mach_msg_type_number_t argslen, envlen, portarraysize, intarraysize;
-    int flags;
-    char **argv, **envp;
-    int argc;
-    void (*hurd_main) (int, char **, char **,
-		       mach_port_t *, mach_msg_type_number_t,
-		       int *, mach_msg_type_number_t);
-  };
-
-static void start1 (struct info *) __attribute__ ((__noreturn__));
 
 
 /* Entry point.  This is the first thing in the text segment.
@@ -92,24 +65,21 @@ static void start1 (struct info *) __attribute__ ((__noreturn__));
    This is unfortunate but preferable to machine-dependent frobnication to copy
    the state from the old stack to the new one.  */
 
+
 void
-_hurd_startup (void **argptr,
-	       void (*main) (int, char **, char **,
-			     mach_port_t *, mach_msg_type_number_t,
-			     int *, mach_msg_type_number_t))
+_hurd_startup (void **argptr, void (*main) (int *data))
 {
   error_t err;
   mach_port_t in_bootstrap;
-  struct info i;
+  char *args, *env;
+  mach_msg_type_number_t argslen, envlen;
+  struct hurd_startup_data data;
+  char **argv, **envp;
+  int argc, envc;
+  int *argcptr;
 
   /* Basic Mach initialization, must be done before RPCs can be done.  */
   __mach_init ();
-
-  /* Run things that want to do initialization as soon as possible.  We do
-     this before exec_startup so that no out of line data arrives and
-     clutters up the address space before brk initialization.  */
-
-  RUN_HOOK (_hurd_preinit_hook, ());
 
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))
@@ -120,153 +90,113 @@ _hurd_startup (void **argptr,
       /* Call the exec server on our bootstrap port and
 	 get all our standard information from it.  */
 
-      i.argslen = i.envlen = 0;
-      _hurd_init_dtablesize = i.portarraysize = i.intarraysize = 0;
+      argslen = envlen = 0;
+      data.dtablesize = data.portarraysize = data.intarraysize = 0;
 
       err = __exec_startup (in_bootstrap,
-			    &_hurd_stack_base, &_hurd_stack_size,
-			    &i.flags,
-			    &i.args, &i.argslen, &i.env, &i.envlen,
-			    &_hurd_init_dtable, &_hurd_init_dtablesize,
-			    &i.portarray, &i.portarraysize,
-			    &i.intarray, &i.intarraysize);
+			    &data.stack_base, &data.stack_size,
+			    &data.flags, &args, &argslen, &env, &envlen,
+			    &data.dtable, &data.dtablesize,
+			    &data.portarray, &data.portarraysize,
+			    &data.intarray, &data.intarraysize);
       __mach_port_deallocate (__mach_task_self (), in_bootstrap);
     }
 
   if (err || in_bootstrap == MACH_PORT_NULL)
     {
+#if 0
       /* Either we have no bootstrap port, or the RPC to the exec server
 	 failed.  Try to snarf the args in the canonical Mach way.
 	 Hopefully either they will be on the stack as expected, or the
 	 stack will be zeros so we don't crash.  Set all our other
 	 variables to have empty information.  */
 
+      ENTRY_SP (argptr);
       /* SNARF_ARGS (ARGPTR, ARGC, ARGV, ENVP) snarfs the arguments and
 	 environment from the stack, assuming they were put there by the
 	 microkernel.  */
-      SNARF_ARGS (argptr, i.argc, i.argv, i.envp);
+XXX XXX XXX
+      
+      SNARF_ARGS (argptr, argc, argv, envp);
+#endif
 
-      i.flags = 0;
-      i.args = i.env = NULL;
-      i.argslen = i.envlen = 0;
-      _hurd_init_dtable = NULL;
-      _hurd_init_dtablesize = 0;
-      i.portarray = NULL;
-      i.portarraysize = 0;
-      i.intarray = NULL;
-      i.intarraysize = 0;
+      data.flags = 0;
+      args = env = NULL;
+      argslen = envlen = 0;
+      data.dtable = NULL;
+      data.dtablesize = 0;
+      data.portarray = NULL;
+      data.portarraysize = 0;
+      data.intarray = NULL;
+      data.intarraysize = 0;
     }
   else
-    i.argv = i.envp = NULL;
-
-  i.hurd_main = main;
-
-  /* The user might have defined a value for this, to get more variables.
-     Otherwise it will be zero on startup.  We must make sure it is set
-     properly before before cthreads initialization, so cthreads can know
-     how much space to leave for thread variables.  */
-  if (__hurd_threadvar_max < _HURD_THREADVAR_MAX)
-    __hurd_threadvar_max = _HURD_THREADVAR_MAX;
-
-  /* Do cthreads initialization and switch to the cthread stack.  */
-
-  if (_cthread_init_routine != NULL)
-    CALL_WITH_SP (start1, i, (*_cthread_init_routine) ());
-  else
-    start1 (&i);
-
-  /* Should never get here.  */
-  LOSE;
-}
-
-
-static void
-start1 (struct info *info)
-{
-  register int envc = 0;
-
-  {
-    /* Check if the stack we are now on is different from
-       the one described by _hurd_stack_{base,size}.  */
-
-    char dummy;
-    const vm_address_t newsp = (vm_address_t) &dummy;
-
-    if (_hurd_stack_size != 0 && (newsp < _hurd_stack_base ||
-				  newsp - _hurd_stack_base > _hurd_stack_size))
-      /* The new stack pointer does not intersect with the
-	 stack the exec server set up for us, so free that stack.  */
-      __vm_deallocate (__mach_task_self (),
-		       _hurd_stack_base, _hurd_stack_size);
-  }
-
-  if (__hurd_threadvar_stack_mask == 0)
-    {
-      /* We are not using cthreads, so we will have just a single allocated
-	 area for the per-thread variables of the main user thread.  */
-      unsigned long int i;
-      __hurd_threadvar_stack_offset
-	= (unsigned long int) malloc (__hurd_threadvar_max *
-				      sizeof (unsigned long int));
-      if (__hurd_threadvar_stack_offset == 0)
-	__libc_fatal ("Can't allocate single-threaded per-thread variables.");
-      for (i = 0; i < __hurd_threadvar_max; ++i)
-	((unsigned long int *) __hurd_threadvar_stack_offset)[i] = 0;
-    }
+    argv = envp = NULL;
 
 
   /* Turn the block of null-separated strings we were passed for the
      arguments and environment into vectors of pointers to strings.  */
 
-  if (! info->argv)
-    {
-      if (info->args)
-	/* Count up the arguments so we can allocate ARGV.  */
-	info->argc = _hurd_split_args (args, argslen, NULL);
-      if (! info->args || info->argc == 0)
-	{
-	  /* No arguments passed; set argv to { NULL }.  */
-	  info->argc = 0;
-	  info->args = NULL;
-	  info->argv = (char **) &info->args;
-	}
-    }
 
-  if (! info->envp)
-    {
-      if (info->env)
-	/* Count up the environment variables so we can allocate ENVP.  */
-	envc = _hurd_split_args (info->env, info->envlen, NULL);
-      if (! info->env || envc == 0)
-	{
-	  /* No environment passed; set __environ to { NULL }.  */
-	  info->env = NULL;
-	  info->envp = (char **) &env;
-	}
-    }
-
-  if (! info->argv)
-    {
-      /* There were some arguments.
-	 Allocate space for the vectors of pointers and fill them in.  */
-      info->argv = __alloca ((info->argc + 1) * sizeof (char *));
-      _hurd_split_args (info->args, info->argslen, info->argv);
-    }
   
-  if (! info->envp)
+  if (! argv)
     {
-      /* There was some environment.
-	 Allocate space for the vectors of pointers and fill them in.  */
-      info->envp = __alloca ((envc + 1) * sizeof (char *));
-      _hurd_split_args (info->env, info->envlen, info->envp);
+      /* Count up the arguments so we can allocate ARGV.  */
+      argc = _hurd_split_args (args, argslen, NULL);
+      /* Count up the environment variables so we can allocate ENVP.  */
+      envc = _hurd_split_args (env, envlen, NULL);
+
+      /* There were some arguments.  Allocate space for the vectors of
+	 pointers and fill them in.  We allocate the space for the
+	 environment pointers immediately after the argv pointers because
+	 the ELF ABI will expect it.  */
+      argcptr = __alloca (sizeof (int) +
+			  (argc + 1 + envc + 1) * sizeof (char *) +
+			  sizeof (struct hurd_startup_data));
+      *argcptr = argc;
+      argv = (void *) (argcptr + 1);
+      _hurd_split_args (args, argslen, argv);
+
+      /* There was some environment.  */
+      envp = &argv[argc + 1];
+      _hurd_split_args (env, envlen, envp);
     }
 
-  (*info->hurd_main) (info->argc, info->argv, info->envp,
-		      info->portarray, info->portarraysize,
-		      info->intarray, info->intarraysize);
+  {
+    struct hurd_startup_data *d = (void *) &envp[envc + 1];
+
+    /* XXX hardcoded until exec_startup changes */
+#ifdef PIC
+#if 0
+    const Elf32_Ehdr *ehdr = (const void *) 0x08000000;
+    vm_address_t phdr = 0x08000000 + ehdr->e_phoff;
+    vm_size_t phdrsz = ehdr->e_phnum * ehdr->e_phentsize;
+    vm_address_t user_entry = ehdr->e_entry;
+#else
+    vm_address_t phdr = 0;
+    vm_size_t phdrsz = 0;
+extern void _start();
+    vm_address_t user_entry = (vm_address_t) &_start;
+#endif
+#else
+    vm_address_t phdr = 0;
+    vm_size_t phdrsz = 0;
+    vm_address_t user_entry = 0;
+#endif
+
+    *d = data;
+    _hurd_init_dtable = d->dtable;
+    _hurd_init_dtablesize = d->dtablesize;
+    d->phdr = phdr;
+    d->phdrsz = phdrsz;
+    d->user_entry = user_entry;
+
+    (*main) (argcptr);
+  }
 
   /* Should never get here.  */
   LOSE;
+  abort ();
 }
 
 /* Split ARGSLEN bytes at ARGS into words, breaking at NUL characters.  If

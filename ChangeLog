@@ -1,4 +1,10 @@
+Wed May 10 21:00:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/i386/sysdep.h (RETURN_TO): New macro.
+
 Tue May  9 01:26:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makerules (install-lib.so): Add %.so for each %_pic.a.
 
 	* sysdeps/i386/elf/start.S (__data_start): Define this symbol as
  	the first thing in .data.
@@ -108,6 +114,7 @@ Tue May  2 01:52:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* sysdeps/i386/elf/start.S: New file.
 	* sysdeps/generic/dl-sysdep.c: New file.
 	* sysdeps/mach/hurd/dl-sysdep.c: New file.
+	* sysdeps/mach/hurd/i386/init-first.c: New file.
 	* sysdeps/i386/init-first.c: New file.
 	* sysdeps/stub/init-first.c: New file.
 	
