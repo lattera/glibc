@@ -1,3 +1,9 @@
+2003-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Don't treat
+	architectures with separate register stack special here when
+	computing default stack size.
+
 2003-12-17  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (tst-cancelx7-ARGS): New variable.
