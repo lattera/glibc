@@ -1,5 +1,8 @@
 2002-11-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/raise.c (raise): Use INTERNAL_SYSCALL if
+	possible since gettid cannot fail.
+
 	* sysdeps/x86_64/pthreaddef.h: New file.
 
 	* sysdeps/i386/pthreaddef.h (gettid): Removed.

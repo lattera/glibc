@@ -31,7 +31,12 @@ raise (sig)
   pid_t selftid = pd->tid;
   if (selftid == 0)
     {
+      /* This system call is not supposed to fail.  */
+#ifdef INTERNAL_SYSCALL
+      selftid = INTERNAL_SYSCALL (gettid, 0);
+#else
       selftid = INLINE_SYSCALL (gettid, 0);
+#endif
       THREAD_SETMEM (pd, tid, selftid);
     }
 
