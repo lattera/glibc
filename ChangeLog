@@ -1,3 +1,8 @@
+2001-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/newlocale.c (__newlocale): Fix test for setting all
+	categories.
+
 2001-01-19  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/chroot.c (chroot): Revert 1999-02-27 changes,
