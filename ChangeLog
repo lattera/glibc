@@ -1,3 +1,10 @@
+2002-10-17  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/bug-regex11.c: Add a test case for the bug reported by
+	Paolo Bonzini <bonzini@gnu.org>.
+	* posix/regexec.c (sift_states_bkref): Use correct destination of
+	the back reference.
+
 2002-10-17  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Don't check DF_STATIC_TLS.

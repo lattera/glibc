@@ -1945,7 +1945,7 @@ sift_states_bkref (preg, mctx, sctx, str_idx, dest_nodes)
                 continue;
 
               if (check_dst_limits (dfa, &sctx->limits, mctx, node,
-                                    str_idx, dfa->nexts[node], to_idx))
+                                    str_idx, dst_node, to_idx))
                 continue;
               if (sctx->check_subexp == dfa->nodes[node].opr.idx)
                 {
