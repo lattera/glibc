@@ -1,3 +1,12 @@
+2004-08-15  Roland McGrath  <roland@redhat.com>
+
+	[BZ #227]
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_BRK_PAGE_ROUNDED): New macro.
+	* sysdeps/unix/sysv/linux/dl-sysdep.c (frob_brk)
+	[! __ASSUME_BRK_PAGE_ROUNDED]: Adjust the break up if it falls within
+	the partial page after the dynamic linker's own data segment.
+
 2004-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Optimize generation of
