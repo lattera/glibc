@@ -39,6 +39,8 @@
 
 #define __XDR_HEADER__
 #include <features.h>
+#include <sys/types.h>
+#include <rpc/types.h>
 
 /* We need FILE.  */
 #include <stdio.h>
@@ -91,8 +93,17 @@ enum xdr_op
  * This is the number of bytes per unit of external data.
  */
 #define BYTES_PER_XDR_UNIT	(4)
+/*
+ * This only works if the above is a power of 2.  But it's defined to be
+ * 4 by the appropriate RFCs.  So it will work.  And it's normally quicker
+ * than the old routine.
+ */
+#if 1
+#define RNDUP(x)  (((x) + BYTES_PER_XDR_UNIT - 1) & ~(BYTES_PER_XDR_UNIT - 1))
+#else /* this is the old routine */
 #define RNDUP(x)  ((((x) + BYTES_PER_XDR_UNIT - 1) / BYTES_PER_XDR_UNIT) \
 		    * BYTES_PER_XDR_UNIT)
+#endif
 
 /*
  * The XDR handle.
@@ -108,7 +119,7 @@ struct XDR
       {
 	bool_t (*x_getlong) __P ((XDR * __xdrs, long *__lp));
 	/* get a long from underlying stream */
-	bool_t (*x_putlong) __P ((XDR * __xdrs, long *__lp));
+	bool_t (*x_putlong) __P ((XDR * __xdrs, __const long *__lp));
 	/* put a long to " */
 	bool_t (*x_getbytes) __P ((XDR * __xdrs, caddr_t __addr, u_int __len));
 	/* get some bytes from " */
@@ -243,6 +254,9 @@ struct xdr_discrim
 
 /*
  * These are the "generic" xdr routines.
+ * None of these can have const applied because it's not possible to
+ * know whether the call is a read or a write to the passed parameter
+ * also, the XDR structure is always updated by some of these calls.
  */
 extern bool_t xdr_void __P ((void));
 extern bool_t xdr_int __P ((XDR * __xdrs, int *__ip));
@@ -294,8 +308,8 @@ extern bool_t xdr_netobj __P ((XDR * __xdrs, struct netobj * __np));
  */
 
 /* XDR using memory buffers */
-extern void xdrmem_create __P ((XDR * __xdrs, caddr_t __addr, u_int __size,
-				enum xdr_op __op));
+extern void xdrmem_create __P ((XDR * __xdrs, __const caddr_t __addr,
+				u_int __size, enum xdr_op __op));
 
 /* XDR using stdio library */
 extern void xdrstdio_create __P ((XDR * __xdrs, FILE * __file,

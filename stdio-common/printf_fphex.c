@@ -189,7 +189,7 @@ __printf_fphex (FILE *fp,
 
   if (special)
     {
-      int width = info->prec > info->width ? info->prec : info->width;
+      int width = info->width;
 
       if (negative || info->showsign || info->space)
 	--width;

@@ -20,12 +20,12 @@
 
 	.text
 ENTRY (syscall)
-	mr	0,3
-	mr	3,4
-	mr	4,5
-	mr	5,6
-	mr	6,7
-	mr	7,8
+	mr   %r0,%r3
+	mr   %r3,%r4
+	mr   %r4,%r5
+	mr   %r5,%r6
+	mr   %r6,%r7
+	mr   %r7,%r8
 	sc
 	bnslr
 #ifdef PIC

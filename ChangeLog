@@ -1,3 +1,225 @@
+1997-05-21 02:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* gnu-versions.h (_GNU_OBSTACK_INTERFACE_VERSION): Set to 2 since
+	interface was changed with addition of _obstack_memory_used.
+	Suggested by Ian Taylor <ian@cygnus.com>.
+
+	* malloc/obstack.c: Include <config.h>.  Include <stdlib.h> only
+	if __GNU_LIBRARY__ or HAVE_STDLIB_H is defined.
+	Reported by Ian Taylor <ian@cygnus.com>.
+
+	* dirent/Makefile (routines): Add versionsort.
+	* dirent/dirent.h: Add prototype for versionsort.
+	* dirent/versionsort.c: New file.
+	* manual/filesys.texi: Add documentation for versionsort.
+	* manual/string.texi: Add documentation for strverscmp.
+	* string/Makefile (routines): Add strverscmp.
+	(tests): Add tst-svc.
+	* string/string.h: Add prototype for strverscmp.
+	* string/strverscmp.c: New file.
+	* string/tst-svc.c: New file.  Test for strverscmp.
+	* string/tst-svc.input: New file.  Input data for tst-svc.
+	* string/tst-svc.expect: New file.  Expected out from tst-svc.
+
+	* math/Makefile (calls): Add s_signbit.
+
+	* po/sv.po: Update.
+
+	* resolv/nss_dns/dns-host.c: Add casts to prevent warnings.
+	* sunrpc/pmap_rmt.c: Likewise.
+
+	* string/basename.c: Don't use ISO C definition style.
+	Include <config.h> is HAVE_CONFIG_H is defined.
+
+	* sunrpc/proto.h: Add `const' wherever possible.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+	* sunrpc/rpc_parse.c: Delete comma from end of enum definition.
+	* sunrpc/xdr.c: Little code cleanups.
+	* sunrpc/xdr_flaot.c: Likewise.
+	Patches by Matthew Wilcox <matthew.wilcox@chbs.mhs.ciba.com>.
+
+	* sysdeps/i386/fpu/__math.h (__finite): Fix typo.
+
+	* sysdeps/unix/sysv/linux/shmdt.c: Add cast to prevent warning.
+
+	* time/europe: Update from tzdata1997f.
+	* time/zic.c: Update from tzcode1997e.
+
+1997-05-20 19:20  Miguel de Icaza <miguel@athena.nuclecu.unam.mx>
+
+	* sysdeps/sparc/setjmp.S: Flush windows.
+	Bug found by Richard Henderson.
+
+1997-05-19 12:54  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* misc/efgcvt_r.c (fcvt_r, ecvt_r): Rewritten as to fit the specs.
+
+1997-05-19 18:41  Thorsten Kukuk  <kukuk@uni-paderborn.de>
+
+	* nis/nss_nisplus/nisplus-spwd.c (_nss_nisplus_parse_spent): Use
+	atol instead of atoi.
+
+1997-05-18 00:22  Philip Blundell <pjb27@cam.ac.uk>
+
+	* inet/Makefile (routines): Add if_index.
+	* sysdeps/unix/sysv/linux/if_index.c: New file.
+	* sysdeps/stub/if_index.c: New file.
+	* sysdeps/unix/sysv/linux/net/if.h: Add prototypes for routines in
+	if_index.c (required by IPv6 basic API).
+	* sysdeps/unix/sysv/linux/netinet/in.h: Add struct ipv6_pktinfo.
+
+1997-05-17 23:29  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: Update IPv6 definitions
+	for new advanced API draft.
+
+1997-05-13 21:33  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/printf_fp.c: Only use the field width for deciding
+	on padding when printing special values.
+	* stdio-common/printf_fphex.c: Likewise.
+
+1997-05-15 13:14  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	Changes by Thomas Bushnell <thomas@gnu.ai.mit.edu>:
+	* hurd/hurdauth.c (_S_msg_add_auth): Implement correctly.
+
+1997-05-12 14:50  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurdsig_init): Double size of sigthread stack;
+	msg_add_auth was overflowing it.
+
+1997-05-12 21:20  Richard Henderson  <rth@tamu.edu>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol_skip): Call _dl_signal_error
+	when we can't find the symbol.
+
+1997-05-12 16:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c: Fix handling of 32-bit Windog environments.
+	Patch by Arnold Robbins <arnold@skeeve.atl.ga.us>.
+
+1997-05-10 23:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Add cacheflush.
+
+1997-05-10 11:40  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/ldd.bash.in: Remove spurious quote character from version
+	message.
+
+1997-05-10 08:49  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/programs/locale.c (write_charmaps): Don't get stuck in a
+	loop if the file ends in a long line without newline.
+	* locale/programs/charmap.c (charmap_read): Likewise.
+
+1997-05-12 03:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/rpc/xdr.h: Include more headers to be self-contained.
+	* sunrpc/rpc/svc_auth.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/rpc_msg.h: Likewise.
+	* sunrpc/rpc/pmap_rmt.h: Likewise.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/auth_unix.h: Likewise.
+	* sysdeps/generic/rpc/auth.h: Likewise.
+	Patches by Michael Deutschmann <ldeutsch@mail.netshop.net>.
+
+1997-05-11 15:29  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/stub/sigaction.c (__sigaction): Correct typo.
+	* sysdeps/standalone/arm/errnos.h: New file.
+	* sysdeps/stub/sys/param.h: Add dummy definition of MAXSYMLINKS.
+	* sysdeps/unix/arm/fork.S: New file.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: New file.
+	* sysdeps/stub/tempname.c (__stdio_gen_tempname): Add missing
+	`streamptr' argument.
+	* sysdeps/stub/vdprintf.c: Remove second copy of file (!), include
+	<stdarg.h> to get va_list defined, return 0 not NULL.
+	* sysdeps/unix/sysv/linux/statfsbuf.h: Include <gnu/types.h>.
+	* sysdeps/unix/sysv/linux/arm/syscall.S: New file.
+	* sysdeps/stub/direntry.h (struct dirent): Add missing ';'.
+	* sysdeps/stub/seekdir.c (seekdir): Likewise.
+	* sysdeps/stub/dirfd.c (dirfd): Argument dirp is DIR*, not FILE*.
+	* sysdeps/standalone/dirstream.h: Define struct __dirstream
+	not DIR; <dirent.h> provides typedef.
+	* sysdeps/unix/sysv/linux/arm/clone.S: New file.
+	* sysdeps/unix/sysv/linux/arm/socket.S: New file.
+	* sysdeps/stub/sysconf.c (__sysconf): Fix typos.
+
+1997-05-01 06:35  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/Dist: New file.
+	* sysdeps/powerpc/Makefile: New file.
+	* sysdeps/powerpc/fclrexcpt.c: New file.
+	* sysdeps/powerpc/fegetenv.c: New file.
+	* sysdeps/powerpc/fegetround.c: New file.
+	* sysdeps/powerpc/feholdexcpt.c: New file.
+	* sysdeps/powerpc/fenvbits.h: New file.
+	* sysdeps/powerpc/fenv_const.c: New file.
+	* sysdeps/powerpc/fenv_libc.h: New file.
+	* sysdeps/powerpc/fesetenv.c: New file.
+	* sysdeps/powerpc/fesetround.c: New file.
+	* sysdeps/powerpc/feupdateenv.c: New file.
+	* sysdeps/powerpc/fgetexcptflg.c: New file.
+	* sysdeps/powerpc/fraiseexcpt.c: New file.
+	* sysdeps/powerpc/fsetexcptflg.c: New file.
+	* sysdeps/powerpc/ftestexcept.c: New file.
+	* sysdeps/powerpc/mathbits.h: New file.
+
+	* sysdeps/powerpc/dl-machine.h: Wrap in #ifndef dl_machine_h;
+	define elf_machine_lookup_noexec_p, elf_machine_lookup_noplt_p,
+	ELF_MACHINE_RELOC_NOPLT; consequent changes to elf_machine_rela.
+
+	* sysdeps/powerpc/__math.h: Remove definition for hypot and __sgn.
+
+	* sysdep/powerpc/fpu_control.h: Correct IEEE default mode.
+
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Don't use .text, but
+	instead .section ".text".
+
+1997-04-25 05:06  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/__longjmp.S: Use symbolic register numbering.
+	* sysdeps/powerpc/bsd-_setjmp.S: Likewise.
+	* sysdeps/powerpc/bsd-setjmp.S: Likewise.
+	* sysdeps/powerpc/setjmp.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/syscall.S: Likewise.
+
+1997-04-20 04:37  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/strchr.s: New file.
+	* sysdeps/powerpc/strcmp.s: New (ugly) file.
+	* sysdeps/powerpc/memset.s: New file.
+	* string/tester.c: Include prototype and _GNU_SOURCE to make
+	standalone compilation possible. Give strcmp a better
+	test. Give memset a better test.
+
+1997-04-05 06:34  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/strlen.s: Fixed bugs (how did it ever pass its
+	tests before?). Changed to symbolic register numbering as an
+	experiment.
+	* sysdeps/powerpc/ffs.c: Don't include bstring.h, it doesn't
+	exist.
+	* sysdeps/rs6000/ffs.c: Likewise.
+
+1997-05-12 02:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/sys/time.h: Make second argument of setitimer const.
+	Patch by Michael Deutschmann <ldeutsch@mail.netshop.net>.
+	* sysdeps/stub/setitimer.c: Likewise.
+	* sysdeps/mach/hurd/setitimer.c: Likewise.
+
 1997-05-10 11:46  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/rpcsvc/nis_callback.x: New, from tirpcsrc-2.3.

@@ -93,10 +93,6 @@ xdr_int (xdrs, ip)
      int *ip;
 {
 
-#ifdef lint
-  (void) (xdr_short (xdrs, (short *) ip));
-  return (xdr_long (xdrs, (long *) ip));
-#else
 #if INT_MAX < LONG_MAX
   long l;
 
@@ -123,7 +119,6 @@ xdr_int (xdrs, ip)
 #else
 #error unexpected integer sizes in_xdr_int()
 #endif
-#endif
 }
 
 /*
@@ -134,10 +129,6 @@ xdr_u_int (xdrs, up)
      XDR *xdrs;
      u_int *up;
 {
-#ifdef lint
-  (void) (xdr_short (xdrs, (short *) up));
-  return (xdr_u_long (xdrs, (u_long *) up));
-#else
 #if UINT_MAX < ULONG_MAX
   u_long l;
 
@@ -163,7 +154,6 @@ xdr_u_int (xdrs, up)
   return xdr_short (xdrs, (short *) up);
 #else
 #error unexpected integer sizes in_xdr_u_int()
-#endif
 #endif
 }
 
@@ -349,7 +339,6 @@ xdr_enum (xdrs, ep)
      XDR *xdrs;
      enum_t *ep;
 {
-#ifndef lint
   enum sizecheck
     {
       SIZEVAL
@@ -392,10 +381,6 @@ xdr_enum (xdrs, ep)
     {
       return FALSE;
     }
-#else /* lint */
-  (void) (xdr_short (xdrs, (short *) ep));
-  return xdr_long (xdrs, (long *) ep);
-#endif /* lint */
 }
 
 /*

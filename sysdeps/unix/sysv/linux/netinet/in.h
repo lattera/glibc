@@ -259,7 +259,7 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
 
 /* IPV6 socket options.  */
 #define IPV6_ADDRFORM		1
-#define IPV6_RXINFO		2
+#define IPV6_PKTINFO		2
 #define IPV6_RXHOPOPTS		3
 #define IPV6_RXDSTOPTS		4
 #define IPV6_RXSRCRT		5
@@ -267,8 +267,6 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
 #define IPV6_CHECKSUM		7
 #define IPV6_HOPLIMIT		8
 
-#define IPV6_TXINFO		IPV6_RXINFO
-#define SCM_SRCINFO		IPV6_TXINFO
 #define SCM_SRCRT		IPV6_RXSRCRT
 
 #define IPV6_UNICAST_HOPS	16
@@ -305,6 +303,14 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
 
 /* Bind socket to a priviledged IP port.  */
 extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
+
+
+/* IPv6 packet information.  */
+struct in6_pktinfo 
+  {
+    struct in6_addr ipi6_addr;    /* src/dst IPv6 address */
+    int             ipi6_ifindex; /* send/recv interface index */
+  };
 
 __END_DECLS
 

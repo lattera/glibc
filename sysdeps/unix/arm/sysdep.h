@@ -19,3 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/arm/sysdep.h>
 
+/* Some definitions to allow the assembler in sysdeps/unix/*.S to build
+   without needing ARM-specific versions of all the files.  */
+
+#define ret		RETINSTR(mov, pc, r14)
+#define MOVE(a,b)	mov b,a

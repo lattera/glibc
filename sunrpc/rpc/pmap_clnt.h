@@ -38,6 +38,8 @@
 #ifndef _RPC_PMAP_CLNT_H
 #define _RPC_PMAP_CLNT_H	1
 #include <features.h>
+#include <rpc/types.h>
+#include <rpc/xdr.h>
 
 __BEGIN_DECLS
 
@@ -70,23 +72,23 @@ extern bool_t pmap_set __P ((__const u_long __program, __const u_long __vers,
 extern bool_t pmap_unset __P ((__const u_long __program, __const u_long __vers));
 extern struct pmaplist *pmap_getmaps __P ((struct sockaddr_in *__address));
 extern enum clnt_stat pmap_rmtcall __P ((struct sockaddr_in *__addr,
-					 __const u_long __prog, 
+					 __const u_long __prog,
 					 __const u_long __vers,
-					 __const u_long __proc, 
+					 __const u_long __proc,
 					 xdrproc_t __xdrargs,
 					 caddr_t __argsp, xdrproc_t __xdrres,
 					 caddr_t __resp, struct timeval __tout,
 					 u_long *__port_ptr));
-extern enum clnt_stat clnt_broadcast __P ((__const u_long __prog, 
+extern enum clnt_stat clnt_broadcast __P ((__const u_long __prog,
 					   __const u_long __vers,
-					   __const u_long __proc, 
+					   __const u_long __proc,
 					   xdrproc_t __xargs,
 					   caddr_t __argsp,
 					   xdrproc_t __xresults,
 					   caddr_t __resultsp,
 					   resultproc_t __eachresult));
 extern u_short pmap_getport __P ((struct sockaddr_in *__address,
-				  __const u_long __program, 
+				  __const u_long __program,
 				  __const u_long __version,
 				  u_int __protocol));
 

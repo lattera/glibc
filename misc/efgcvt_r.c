@@ -37,6 +37,7 @@
 #define FLOOR APPEND(floor, FLOAT_NAME_EXT)
 #define FABS APPEND(fabs, FLOAT_NAME_EXT)
 #define LOG10 APPEND(log10, FLOAT_NAME_EXT)
+#define EXP APPEND(exp, FLOAT_NAME_EXT)
 
 
 int
@@ -54,9 +55,12 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
       return -1;
     }
 
-  *sign = value < 0.0;
-  if (*sign)
-    value = - value;
+  if (isfinite (value))
+    {
+      *sign = signbit (value) != 0;
+      if (*sign)
+	value = -value;
+    }
 
   n = snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", ndigit, value);
   if (n < 0)
@@ -66,16 +70,29 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
   while (i < n && isdigit (buf[i]))
     ++i;
   *decpt = i;
-  do
-    ++i;
-  while (! isdigit (buf[i]));
-  memmove (&buf[i - *decpt], buf, n - (i - *decpt));
+
+  if (i == 0)
+    {
+      /* Value is Inf or NaN.  */
+      *sign = 0;
+      return 0;
+    }
+
+  if (i < n)
+    {
+      do
+	++i;
+      while (i < n && !isdigit (buf[i]));
+      memmove (&buf[*decpt], &buf[i], n - i);
+      buf[n - (i - *decpt)] = 0;
+    }
 
   return 0;
 }
 
 #define weak_extern2(name) weak_extern (name)
 weak_extern2 (FLOOR) weak_extern2 (LOG10) weak_extern2 (FABS)
+weak_extern2 (EXP)
 
 int
 APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
@@ -84,24 +101,55 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
      char *buf;
      size_t len;
 {
-  FLOAT_TYPE (*log10_function) (FLOAT_TYPE) = &LOG10;
+  int exponent = 0;
 
-  if (log10_function)
+  if (isfinite (value) && value != 0.0)
     {
-      /* Use the reasonable code if -lm is included.  */
-      ndigit -= (int) FLOOR (LOG10 (FABS (value)));
-      if (ndigit < 0)
-	ndigit = 0;
-    }
-  else
-    {
-      /* Slow code that doesn't require -lm functions.  */
-      FLOAT_TYPE d;
-      for (d = value < 0.0 ? - value : value;
-	   ndigit > 0 && d >= 10.0;
-	   d *= 0.1)
-	--ndigit;
+      FLOAT_TYPE (*log10_function) (FLOAT_TYPE) = &LOG10;
+
+      if (log10_function)
+	{
+	  /* Use the reasonable code if -lm is included.  */
+	  FLOAT_TYPE dexponent;
+	  dexponent = FLOOR (LOG10 (FABS (value)));
+	  value *= EXP (dexponent * -M_LN10);
+	  exponent = (int) dexponent;
+	}
+      else
+	{
+	  /* Slow code that doesn't require -lm functions.  */
+	  FLOAT_TYPE d;
+	  if (value < 0.0)
+	    d = -value;
+	  else
+	    d = value;
+	  if (d < 1.0)
+	    {
+	      do
+		{
+		  d *= 10.0;
+		  exponent--;
+		}
+	      while (d < 1.0);
+	    }
+	  else if (d >= 10.0)
+	    {
+	      do
+		{
+		  d *= 0.1;
+		  exponent++;
+		}
+	      while (d >= 10.0);
+	    }
+	  if (value < 0.0)
+	    value = -d;
+	  else
+	    value = d;
+	}
     }
 
-  return APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len);
+  if (APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit - 1, decpt, sign, buf, len))
+    return -1;
+  *decpt += exponent;
+  return 0;
 }

@@ -164,10 +164,10 @@ __sysconf (name)
     case _SC_SEMAPHORES:
     case _SC_SHARED_MEMORY_OBJECTS:
 
-    case _SC_AIO_LIST_MAX:
+    case _SC_AIO_LISTIO_MAX:
     case _SC_AIO_MAX:
     case _SC_AIO_PRIO_DELTA_MAX:
-    case _SC_DELAYTIME_MAX:
+    case _SC_DELAYTIMER_MAX:
     case _SC_MQ_OPEN_MAX:
     case _SC_MQ_PRIO_MAX:
     case _SC_VERSION:

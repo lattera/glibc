@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <errno.h>
 #include <sys/time.h>
@@ -310,9 +309,8 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
 int
-DEFUN(__setitimer, (which, new, old),
-      enum __itimer_which which AND
-      struct itimerval *new AND struct itimerval *old)
+__setitimer (enum __itimer_which which, const struct itimerval *new,
+	     struct itimerval *old)
 {
   void *crit;
 

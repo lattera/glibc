@@ -67,7 +67,8 @@ distribute += $(long-m-yes:=.c)
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,
 # and we don't want to have to link every program with -lm.
-calls = s_isinf s_isnan s_finite s_copysign s_modf s_scalbn s_frexp s_ldexp
+calls = s_isinf s_isnan s_finite s_copysign s_modf s_scalbn s_frexp s_ldexp \
+	s_signbit
 routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
 long-c-yes = $(calls:=l)
 distribute += $(long-c-yes:=.c)

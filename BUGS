@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1997-03-22T04:31:41+0100 drepper>
+Time-stamp: <1997-05-12T02:39:19+0200 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -29,8 +29,7 @@ Severity: [  *] to [***]
 
 [ **]  There are problems with signal handling when using LinuxThreads.
 
-[ **]  The `cbrtl' function is inaccurate.  The algorithm used for `double'
-       and `float' is not usable for `long double'.
+[ **]  The `cbrtl' function for ix86 does not work in the moment.
 
 [ **]  Not really a bug, but it could lead to such:
        The RPC code is ugly ugly ugly.  It's more or less verbatim taken

@@ -183,7 +183,12 @@ Library.
   slow.
 
 * plenty of time (approx 1h for i?86-linux on i586@133 or 2.5h on
-  i486@66 or 4.5h on i486@33).  For Hurd systems times are much higher.
+  i486@66 or 4.5h on i486@33), both for shared and static only).
+  For Hurd systems times are much higher.
+
+  For Atari Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) James Troup
+  <J.J.Troup@comp.brad.ac.uk> reports for a full build (shared, static,
+  and profiled) a compile time of 45h34m.
 
   If you have some more measurements let me know.
 
@@ -578,6 +583,10 @@ something like this:
 
 GROUP ( libc.so.6 ld.so.1 libc.a )
 
+or in ix86/Linux and alpha/Linux:
+
+GROUP ( libc.so.6 ld-linux.so.2 libc.a )
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q18]	``The prototypes for `connect', `accept', `getsockopt',
@@ -699,7 +708,7 @@ Answers were given by:
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
 {RM} Roland McGrath, <roland@gnu.ai.mit.edu>
 {HJL} H.J. Lu, <hjl@gnu.ai.mit.edu>
-{AJ} Andreas Jaeger, <aj@arthur.pfalz.de>
+{AJ} Andreas Jaeger, <aj@arthur.rhein-neckar.de>
 {EY} Eric Youngdale, <eric@andante.jic.com>
 
 Local Variables:

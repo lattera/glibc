@@ -1,3 +1,6 @@
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
@@ -28,6 +31,7 @@ DEFUN(check, (thing, number), int thing AND int number)
 }
 
 /* Complain if first two args don't strcmp as equal.  */
+void equal(CONST char *a, CONST char *b, int number);
 void
 DEFUN(equal, (a, b, number), CONST char *a AND CONST char *b AND int number)
 {
@@ -53,6 +57,41 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(strcmp("abce", "abcd") > 0, 7);
   check(strcmp("a\203", "a") > 0, 8);		/* Tricky if char signed. */
   check(strcmp("a\203", "a\003") > 0, 9);
+
+  {
+    char buf1[0x40], buf2[0x40];
+    int i, j;
+    for (i=0; i < 0x10; i++)
+      for (j = 0; j < 0x10; j++)
+      {
+	int k;
+	for (k = 0; k < 0x3f; k++)
+	  {
+	    buf1[j] = '0' ^ (k & 4);
+	    buf2[j] = '4' ^ (k & 4);
+	  }
+	buf1[i] = buf1[0x3f] = 0;
+	buf2[j] = buf2[0x3f] = 0;
+	for (k = 0; k < 0xf; k++)
+	  {
+	    int cnum = 0x10+0x10*k+0x100*j+0x1000*i;
+	    check(strcmp(buf1+i,buf2+j) == 0, cnum);
+	    buf1[i+k] = 'A' + i + k;
+	    buf1[i+k+1] = 0;
+	    check(strcmp(buf1+i,buf2+j) > 0, cnum+1);
+	    check(strcmp(buf2+j,buf1+i) < 0, cnum+2);
+	    buf2[j+k] = 'B' + i + k;
+	    buf2[j+k+1] = 0;
+	    check(strcmp(buf1+i,buf2+j) < 0, cnum+3);
+	    check(strcmp(buf2+j,buf1+i) > 0, cnum+4);
+	    buf2[j+k] = 'A' + i + k;
+	    buf1[i] = 'A' + i + 0x80;
+	    check(strcmp(buf1+i,buf2+j) > 0, cnum+5);
+	    check(strcmp(buf2+j,buf1+i) < 0, cnum+6);
+	    buf1[i] = 'A' + i;
+	  }
+      }
+   }
 
   /* Test strcpy next because we need it to set up other tests.  */
   it = "strcpy";
@@ -671,6 +710,43 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   (void) memset(one+2, 010045, 1);
   equal(one, "ax\045xe", 6);		/* Unsigned char convert. */
+
+  /* Test for more complex versions of memset, for all alignments and
+     lengths up to 256. This test takes a little while, perhaps it should
+     be made weaker? */
+  {
+    char data[512];
+    int i;
+    int j;
+    int k;
+    int c;
+    
+    for (i = 0; i < 512; i++)
+      data[i] = 'x';
+    for (c = 0; c <= 'y'; c += 'y')  /* check for memset(,0,) and
+					memset(,'y',) */
+      for (j = 0; j < 256; j++)
+	for (i = 0; i < 256; i++)
+	  {
+	    memset(data+i,c,j);
+	    for (k = 0; k < i; k++)
+	      if (data[k] != 'x')
+		goto fail;
+	    for (k = i; k < i+j; k++)
+	      {
+		if (data[k] != c)
+		  goto fail;
+		data[k] = 'x';
+	      }
+	    for (k = i+j; k < 512; k++)
+	      if (data[k] != 'x')
+		goto fail;
+	    continue;
+
+	  fail:
+	    check(0,7+i+j*256+(c != 0)*256*256); 
+	  }
+  }
 
   /* bcopy - much like memcpy.
      Berklix manual is silent about overlap, so don't test it.  */

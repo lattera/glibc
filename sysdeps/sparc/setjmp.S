@@ -25,6 +25,7 @@ ENTRY (__sigsetjmp)
 	/* Save our SP and FP; in the delay slot of the jump, save our
 	   return PC.  Save the signal mask if requested with a tail-call
 	   for simplicity; it always returns zero.  */
+	ta   ST_FLUSH_WINDOWS
 #ifdef PIC
 	mov  %o7,%g1
 2:

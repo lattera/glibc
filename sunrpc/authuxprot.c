@@ -46,6 +46,7 @@ static char sccsid[] = "@(#)authunix_prot.c 1.15 87/08/11 Copyr 1984 Sun Micro";
 
 /*
  * XDR for unix authentication parameters.
+ * Unfortunately, none of these can be declared const.
  */
 bool_t
 xdr_authunix_parms (XDR * xdrs, struct authunix_parms *p)

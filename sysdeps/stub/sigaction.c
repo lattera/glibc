@@ -26,7 +26,7 @@ int
 __sigaction (sig, act, oact)
      int sig;
      const struct sigaction *act;
-     struct sigaction *OACT;
+     struct sigaction *oact;
 {
   if (sig <= 0 || sig >= NSIG)
     {

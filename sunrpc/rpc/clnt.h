@@ -38,6 +38,9 @@
 
 #define _RPC_CLNT_H	1
 #include <features.h>
+#include <sys/types.h>
+#include <rpc/types.h>
+#include <rpc/auth.h>
 
 __BEGIN_DECLS
 
@@ -130,13 +133,13 @@ struct CLIENT {
   AUTH	*cl_auth;		 /* authenticator */
   struct clnt_ops {
     enum clnt_stat (*cl_call) __P ((CLIENT *, u_long, xdrproc_t,
-				    caddr_t, xdrproc_t, 
-				    caddr_t, struct timeval));	
+				    caddr_t, xdrproc_t,
+				    caddr_t, struct timeval));
 			       	/* call remote procedure */
     void (*cl_abort) __P ((void));  /* abort a call */
-    void (*cl_geterr) __P ((CLIENT *, struct rpc_err *));	
+    void (*cl_geterr) __P ((CLIENT *, struct rpc_err *));
 				/* get specific error code */
-    bool_t (*cl_freeres) __P ((CLIENT *, xdrproc_t, caddr_t)); 
+    bool_t (*cl_freeres) __P ((CLIENT *, xdrproc_t, caddr_t));
 				/* frees results */
     void (*cl_destroy) __P ((CLIENT *)); /* destroy this structure */
     bool_t (*cl_control) __P ((CLIENT *, int, char *));
@@ -270,7 +273,7 @@ struct CLIENT {
  *	u_long prog;
  *	u_long vers;
  */
-extern CLIENT *clntraw_create __P ((__const u_long __prog, 
+extern CLIENT *clntraw_create __P ((__const u_long __prog,
 				    __const u_long __vers));
 
 
@@ -283,7 +286,7 @@ extern CLIENT *clntraw_create __P ((__const u_long __prog,
  *	u_ong vers;	-- version number
  *	char *prot;	-- protocol
  */
-extern CLIENT *clnt_create __P ((__const char *__host, __const u_long __prog, 
+extern CLIENT *clnt_create __P ((__const char *__host, __const u_long __prog,
 				 __const u_long __vers, __const char *__prot));
 
 
@@ -334,7 +337,7 @@ extern CLIENT *clntudp_bufcreate __P ((struct sockaddr_in *__raddr,
 				       int *__sockp, u_int __sendsz,
 				       u_int __recvsz));
 
-extern int callrpc __P ((__const char *__host, __const u_long __prognum, 
+extern int callrpc __P ((__const char *__host, __const u_long __prognum,
 			 __const u_long __versnum, __const u_long __procnum,
 			 __const xdrproc_t __inproc, __const char *__in,
 			 __const xdrproc_t __outproc, char *__out));
@@ -354,9 +357,9 @@ extern void clnt_perrno __P ((enum clnt_stat __num));	/* stderr */
 /*
  * Print an English error message, given the client error code
  */
-extern void clnt_perror __P ((CLIENT *__clnt, __const char *__msg)); 
+extern void clnt_perror __P ((CLIENT *__clnt, __const char *__msg));
 							/* stderr */
-extern char *clnt_sperror __P ((CLIENT *__clnt, __const char *__msg)); 
+extern char *clnt_sperror __P ((CLIENT *__clnt, __const char *__msg));
 							/* string */
 
 /*

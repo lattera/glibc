@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 /* Seek to position POS in DIRP.  */
 void
 seekdir (dirp, pos)
-     DIR *dirp
+     DIR *dirp;
      off_t pos;
 {
   if (dirp == NULL)

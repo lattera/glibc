@@ -71,7 +71,7 @@ extern void fegetexceptflag __P ((fexcept_t *__flagp, int __excepts));
 /* Raise the supported exceptions represented by EXCEPTS.  */
 extern void feraiseexcept __P ((int __excepts));
 
-/* Set complete status for exceptions inidicated by EXCEPTS according to
+/* Set complete status for exceptions indicated by EXCEPTS according to
    the representation in the object pointed to by FLAGP.  */
 extern void fesetexceptflag __P ((__const fexcept_t *__flagp, int __excepts));
 

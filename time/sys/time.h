@@ -112,10 +112,10 @@ extern int getitimer __P ((enum __itimer_which __which,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
 extern int __setitimer __P ((enum __itimer_which __which,
-			     struct itimerval *__new,
+			     __const struct itimerval *__new,
 			     struct itimerval *__old));
 extern int setitimer __P ((enum __itimer_which __which,
-			   struct itimerval *__new,
+			   __const struct itimerval *__new,
 			   struct itimerval *__old));
 
 /* Change the access time of FILE to TVP[0] and

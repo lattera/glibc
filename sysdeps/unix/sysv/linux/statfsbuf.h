@@ -19,6 +19,8 @@
 #ifndef _STATFSBUF_H
 #define _STATFSBUF_H
 
+#include <gnu/types.h>  /* for __fsid_t */
+
 struct statfs
   {
     int f_type;

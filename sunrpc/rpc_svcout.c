@@ -51,10 +51,10 @@ static const char ROUTINE[] = "local";
 
 char _errbuf[256];		/* For all messages */
 
-static void internal_proctype (proc_list * plist);
+static void internal_proctype (const proc_list * plist);
 static void p_xdrfunc (const char *rname, const char *typename);
-static void write_real_program (definition * def);
-static void write_program (definition * def, const char *storage);
+static void write_real_program (const definition * def);
+static void write_program (const definition * def, const char *storage);
 static void printerr (const char *err, const char *transp);
 static void printif (const char *proc, const char *transp,
 		     const char *prefix, const char *arg);
@@ -78,7 +78,7 @@ p_xdrfunc (const char *rname, const char *typename)
 }
 
 void
-internal_proctype (proc_list * plist)
+internal_proctype (const proc_list * plist)
 {
   f_print (fout, "static ");
   ptype (plist->res_prefix, plist->res_type, 1);
@@ -321,7 +321,7 @@ write_programs (const char *storage)
    Unpacks single user argument of printmsg_1 to call-by-value format
    expected by printmsg_1. */
 static void
-write_real_program (definition * def)
+write_real_program (const definition * def)
 {
   version_list *vp;
   proc_list *proc;
@@ -388,7 +388,7 @@ write_real_program (definition * def)
 }
 
 static void
-write_program (definition * def, const char *storage)
+write_program (const definition * def, const char *storage)
 {
   version_list *vp;
   proc_list *proc;
@@ -566,7 +566,7 @@ printif (const char *proc, const char *transp, const char *prefix,
 }
 
 int
-nullproc (proc_list * proc)
+nullproc (const proc_list * proc)
 {
   for (; proc != NULL; proc = proc->next)
     {

@@ -34,20 +34,16 @@
 #define _FPU_MASK_UM  0x20 /* underflow */
 #define _FPU_MASK_XM  0x08 /* inexact */
 #define _FPU_MASK_IM  0x80 /* invalid operation */
-#define _FPU_MASK_VXCVI 0x100 /* invalid operation for integer convert */
-#define _FPU_MASK_VXSQRT 0x200 /* invalid operation for square root */
-#define _FPU_MASK_VXSOFT 0x400 /* invalid operation raised by software */
 
-#define _FPU_RESERVED 0xfffff800 /* These bits are reserved are not changed. */
+#define _FPU_RESERVED 0xffffff00 /* These bits are reserved are not changed. */
 
-/* The fdlibm code requires no interrupts for exceptions.  Don't
-   change the rounding mode, it would break long double I/O!  */
+/* The fdlibm code requires no interrupts for exceptions.  */
 #define _FPU_DEFAULT  0x00000000 /* Default value.  */
 
 /* IEEE:  same as above, but (some) exceptions;
    we leave the 'inexact' exception off.
  */
-#define _FPU_IEEE     0x000003f0
+#define _FPU_IEEE     0x000000f0
 
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
@@ -59,7 +55,7 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
   tmp[1]; } )
 #define _FPU_SETCW(cw) { \
   fpu_control_t tmp[2] __attribute__ ((__aligned__(8))); \
-  tmp[0] = 0xFFF80000; /* arbitrary, more-or-less */ \
+  tmp[0] = 0xFFF80000; /* More-or-less arbitrary; this is a QNaN. */ \
   tmp[1] = cw; \
   __asm__ ("lfd 0,%0; mtfsf 255,0" : : "m" (*tmp) : "fr0"); \
 }

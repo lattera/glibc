@@ -1194,7 +1194,7 @@ _hurdsig_init (void)
   err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
   assert_perror (err);
 
-  stacksize = __vm_page_size * 4; /* Small stack for signal thread.  */
+  stacksize = __vm_page_size * 8; /* Small stack for signal thread.  */
   err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
 			     _hurd_msgport_receive,
 			     (vm_address_t *) &__hurd_sigthread_stack_base,

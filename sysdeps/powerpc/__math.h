@@ -64,25 +64,6 @@ fabs (double __x)
   return __value;
 }
 
-/* Optimized versions for some non-standardized functions.  */
-#ifdef __USE_MISC
-
-__MATH_INLINE double hypot (double __x, double __y);
-__MATH_INLINE double
-hypot (double __x, double __y)
-{
-  return sqrt (__x * __x + __y * __y);
-}
-
-__MATH_INLINE double __sgn (double __x);
-__MATH_INLINE double
-sgn (double __x)
-{
-  return (__x == 0.0 ? 0.0 : (__x > 0.0 ? 1.0 : -1.0));
-}
-
-#endif /* __USE_MISC  */
-
 #endif /* __NO_MATH_INLINES  */
 #endif /* __GNUC__  */
 

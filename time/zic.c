@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.83";
+static char	elsieid[] = "@(#)zic.c	7.87";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -141,8 +141,10 @@ static int		leapcnt;
 static int		linenum;
 static time_t		max_time;
 static int		max_year;
+static int		max_year_representable;
 static time_t		min_time;
 static int		min_year;
+static int		min_year_representable;
 static int		noise;
 static const char *	rfilename;
 static int		rlinenum;
@@ -430,7 +432,7 @@ const char * const	string;
 
 	cp = ecpyalloc("warning: ");
 	cp = ecatalloc(cp, string);
-	error(string);
+	error(cp);
 	ifree(cp);
 	--errors;
 }
@@ -649,6 +651,8 @@ setboundaries P((void))
 	}
 	min_year = TM_YEAR_BASE + gmtime(&min_time)->tm_year;
 	max_year = TM_YEAR_BASE + gmtime(&max_time)->tm_year;
+	min_year_representable = min_year;
+	max_year_representable = max_year;
 }
 
 static int
@@ -1218,6 +1222,7 @@ const char * const		timep;
 				rp->r_todisstd = FALSE;
 				rp->r_todisgmt = FALSE;
 				*ep = '\0';
+				break;
 			case 'g':	/* Greenwich */
 			case 'u':	/* Universal */
 			case 'z':	/* Zulu */
@@ -1249,7 +1254,11 @@ const char * const		timep;
 	} else if (sscanf(cp, scheck(cp, "%d"), &rp->r_loyear) != 1) {
 		error(_("invalid starting year"));
 		return;
-	}
+	} else if (noise)
+		if (rp->r_loyear < min_year_representable)
+			warning(_("starting year too low to be represented"));
+		else if (rp->r_loyear > max_year_representable)
+			warning(_("starting year too high to be represented"));
 	cp = hiyearp;
 	if ((lp = byword(cp, end_years)) != NULL) switch ((int) lp->l_value) {
 		case YR_MINIMUM:
@@ -1269,7 +1278,11 @@ const char * const		timep;
 	} else if (sscanf(cp, scheck(cp, "%d"), &rp->r_hiyear) != 1) {
 		error(_("invalid ending year"));
 		return;
-	}
+	} else if (noise)
+		if (rp->r_loyear < min_year_representable)
+			warning(_("starting year too low to be represented"));
+		else if (rp->r_loyear > max_year_representable)
+			warning(_("starting year too high to be represented"));
 	if (rp->r_loyear > rp->r_hiyear) {
 		error(_("starting year greater than ending year"));
 		return;

@@ -1,7 +1,7 @@
 /****** rpc_clntout.c ******/
 
 void write_stubs(void);
-void printarglist(proc_list *proc, 
+void printarglist(proc_list *proc,
 		  const char *addargname, const char *addargtype);
 
 /****** rpc_cout.c ******/
@@ -15,9 +15,9 @@ void emit_single_in_line(declaration *decl, int flag, relation rel);
 void print_datadef(definition *def);
 void print_funcdef(definition *def);
 void pxdrfuncdecl(const char *name, int pointerp);
-void pprocdef(proc_list *proc, version_list *vp, 
+void pprocdef(proc_list *proc, version_list *vp,
 	      const char *addargtype, int server_p, int mode);
-void pdeclaration(const char *name, declaration *dec, int tab, 
+void pdeclaration(const char *name, declaration *dec, int tab,
 		  const char *separator);
 
 /****** rpc_main.c ******/
@@ -36,7 +36,7 @@ void write_sample_clnt_main(void);
    /* see rpc_scan.h */
 
 /****** rpc_svcout.c ******/
-int nullproc(proc_list *proc);
+int nullproc(const proc_list *proc);
 void write_svc_aux(int nomain);
 void write_msg_out(void);
 

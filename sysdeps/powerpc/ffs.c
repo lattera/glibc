@@ -18,11 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <bstring.h>
-
-#undef	ffs
-
-#ifdef	__GNUC__
+#include <string.h>
 
 int
 ffs (int x)
@@ -32,7 +28,3 @@ ffs (int x)
   asm ("cntlzw %0,%1" : "=r" (cnt) : "r" (x & -x));
   return 32 - cnt;
 }
-
-#else
-#include <sysdeps/generic/ffs.c>
-#endif

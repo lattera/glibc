@@ -400,7 +400,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= n;
 	  /* Get canonical name.  */
 	  n = strlen (tbuf) + 1;	/* For the \0.  */
-	  if (n > buflen)
+	  if ((size_t) n > buflen)
 	    {
 	      ++had_error;
 	      continue;
@@ -423,7 +423,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  cp += n;
 	  /* Get canonical name. */
 	  n = strlen (tbuf) + 1;   /* For the \0.  */
-	  if (n > buflen)
+	  if ((size_t) n > buflen)
 	    {
 	      ++had_error;
 	      continue;

@@ -17,6 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef dl_machine_h
+#define dl_machine_h
+
 #define ELF_MACHINE_NAME "powerpc"
 
 #include <assert.h>
@@ -134,317 +137,12 @@ elf_machine_load_address (void)
 
   /* So now work out the difference between where the branch actually points,
      and the offset of that location in memory from the start of the file.  */
-  return (Elf32_Addr)branchaddr - *got +
-    (*branchaddr & 0x3fffffc |
-     (int)(*branchaddr << 6 & 0x80000000) >> 6);
+  return ((Elf32_Addr)branchaddr - *got
+	  + (*branchaddr & 0x3fffffc
+	     | (int)(*branchaddr << 6 & 0x80000000) >> 6));
 }
 
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) /* nothing */
-
-/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
-   LOADADDR is the load address of the object; INFO is an array indexed
-   by DT_* of the .dynamic section info.  */
-
-#ifdef RESOLVE
-
-static inline void
-elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
-		  const Elf32_Sym *sym, const struct r_found_version *version)
-{
-  const Elf32_Sym *const refsym = sym;
-  Elf32_Addr *const reloc_addr = (Elf32_Addr *)(map->l_addr + reloc->r_offset);
-  Elf32_Word loadbase, finaladdr;
-  const int rinfo = ELF32_R_TYPE (reloc->r_info);
-
-  if (rinfo == R_PPC_NONE)
-    return;
-
-  assert (sym != NULL);
-  if (ELF32_ST_TYPE (sym->st_info) == STT_SECTION ||
-      rinfo == R_PPC_RELATIVE)
-    {
-      /* Has already been relocated.  */
-      loadbase = map->l_addr;
-      finaladdr = loadbase + reloc->r_addend;
-    }
-  else
-    {
-      int flags;
-
-      /* We never want to use a PLT entry as the destination of a
-	 reloc, when what is being relocated is a branch. This is
-	 partly for efficiency, but mostly so we avoid loops.  */
-      if (rinfo == R_PPC_REL24 ||
-	  rinfo == R_PPC_ADDR24 ||
-	  rinfo == R_PPC_JMP_SLOT)
-	flags = DL_LOOKUP_NOPLT;
-      else if (rinfo == R_PPC_COPY)
-	flags = DL_LOOKUP_NOEXEC;
-      else
-	flags = 0;
-
-      loadbase = (Elf32_Word) (char *) (RESOLVE (&sym, version, flags));
-      if (sym == NULL)
-	{
-	  /* Weak symbol that wasn't actually defined anywhere.  */
-	  assert(loadbase == 0);
-	  finaladdr = reloc->r_addend;
-	}
-      else
-	finaladdr = (loadbase + (Elf32_Word) (char *) sym->st_value
-		     + reloc->r_addend);
-    }
-
-  /* This is an if/else if chain because GCC 2.7.2.[012] turns case
-     statements into non-PIC table lookups.  When a later version
-     comes out that fixes this, this should be changed.  */
-  if (rinfo == R_PPC_UADDR32 ||
-      rinfo == R_PPC_GLOB_DAT ||
-      rinfo == R_PPC_ADDR32 ||
-      rinfo == R_PPC_RELATIVE)
-    {
-      *reloc_addr = finaladdr;
-    }
-  else if (rinfo == R_PPC_ADDR16_LO)
-    {
-      *(Elf32_Half*) reloc_addr = finaladdr;
-    }
-  else if (rinfo == R_PPC_ADDR16_HI)
-    {
-      *(Elf32_Half*) reloc_addr = finaladdr >> 16;
-    }
-  else if (rinfo == R_PPC_ADDR16_HA)
-    {
-      *(Elf32_Half*) reloc_addr = (finaladdr + 0x8000) >> 16;
-    }
-#ifndef RTLD_BOOTSTRAP
-  else if (rinfo == R_PPC_REL24)
-    {
-      Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
-      if (delta << 6 >> 6 != delta)
-	_dl_signal_error (0, map->l_name,
-			  "R_PPC_REL24 relocation out of range");
-      *reloc_addr = *reloc_addr & 0xfc000003 | delta & 0x3fffffc;
-    }
-  else if (rinfo == R_PPC_ADDR24)
-    {
-      if (finaladdr << 6 >> 6 != finaladdr)
-	_dl_signal_error (0, map->l_name,
-			  "R_PPC_ADDR24 relocation out of range");
-      *reloc_addr = *reloc_addr & 0xfc000003 | finaladdr & 0x3fffffc;
-    }
-  else if (rinfo == R_PPC_COPY)
-    {
-      if (sym->st_size != refsym->st_size)
-	{
-	  const char *strtab;
-
-	  strtab = ((void *) map->l_addr
-		    + map->l_info[DT_STRTAB]->d_un.d_ptr);
-	  _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
-			    "' has different size in shared object, "
-			    "consider re-linking\n", NULL);
-	}
-      memcpy (reloc_addr, (char *) finaladdr, MIN (sym->st_size,
-						   refsym->st_size));
-    }
-#endif
-  else if (rinfo == R_PPC_REL32)
-    {
-      *reloc_addr = finaladdr - (Elf32_Word) (char *) reloc_addr;
-    }
-  else if (rinfo == R_PPC_JMP_SLOT)
-    {
-      Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
-      if (delta << 6 >> 6 == delta)
-	*reloc_addr = OPCODE_B (delta);
-      else if (finaladdr <= 0x01fffffc || finaladdr >= 0xfe000000)
-	*reloc_addr = OPCODE_BA (finaladdr);
-      else
-	{
-	  Elf32_Word *plt;
-	  Elf32_Word index;
-
-	  plt = (Elf32_Word *)((char *)map->l_addr
-			       + map->l_info[DT_PLTGOT]->d_un.d_val);
-	  index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
-
-	  if (index >= PLT_DOUBLE_SIZE)
-	    {
-	      /* Slots greater than or equal to 2^13 have 4 words available
-		 instead of two.  */
-	      reloc_addr[0] = OPCODE_LI (11, finaladdr);
-	      reloc_addr[1] = OPCODE_ADDIS (11, 11, finaladdr + 0x8000 >> 16);
-	      reloc_addr[2] = OPCODE_MTCTR (11);
-	      reloc_addr[3] = OPCODE_BCTR ();
-	    }
-	  else
-	    {
-	      Elf32_Word num_plt_entries;
-
-	      num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
-				 / sizeof(Elf32_Rela));
-
-	      reloc_addr[0] = OPCODE_LI (11, index*4);
-	      reloc_addr[1] =
-		OPCODE_B (-(4*(index*2
-			       + 1
-			       - PLT_LONGBRANCH_ENTRY_WORDS
-			       + PLT_INITIAL_ENTRY_WORDS)));
-	      plt[index+PLT_DATA_START_WORDS (num_plt_entries)] = finaladdr;
-	    }
-	}
-      MODIFIED_CODE (reloc_addr);
-    }
-  else
-    assert (! "unexpected dynamic reloc type");
-
-  if (rinfo == R_PPC_ADDR16_LO ||
-      rinfo == R_PPC_ADDR16_HI ||
-      rinfo == R_PPC_ADDR16_HA ||
-      rinfo == R_PPC_REL24 ||
-      rinfo == R_PPC_ADDR24)
-    MODIFIED_CODE_NOQUEUE (reloc_addr);
-}
-
-#define ELF_MACHINE_NO_REL 1
-
-#endif
-
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
-#define elf_machine_pltrel_p(type) ((type) == R_PPC_JMP_SLOT)
-
-/* Set up the loaded object described by L so its unrelocated PLT
-   entries will jump to the on-demand fixup code in dl-runtime.c.
-   Also install a small trampoline to be used by entries that have
-   been relocated to an address too far away for a single branch.  */
-
-/* A PLT entry does one of three things:
-   (i)   Jumps to the actual routine. Such entries are set up above, in
-         elf_machine_rela.
-
-   (ii)  Jumps to the actual routine via glue at the start of the PLT.
-         We do this by putting the address of the routine in space
-         allocated at the end of the PLT, and when the PLT entry is
-         called we load the offset of that word (from the start of the
-         space) into r11, then call the glue, which loads the word and
-         branches to that address. These entries are set up in
-         elf_machine_rela, but the glue is set up here.
-
-   (iii) Loads the index of this PLT entry (we count the double-size
-	 entries as one entry for this purpose) into r11, then
-	 branches to code at the start of the PLT. This code then
-	 calls `fixup', in dl-runtime.c, via the glue in the macro
-	 ELF_MACHINE_RUNTIME_TRAMPOLINE, which resets the PLT entry to
-	 be one of the above two types. These entries are set up here.  */
-static inline void
-elf_machine_runtime_setup (struct link_map *map, int lazy)
-{
-  if (map->l_info[DT_JMPREL])
-    {
-      int i;
-      /* Fill in the PLT. Its initial contents are directed to a
-	 function earlier in the PLT which arranges for the dynamic
-	 linker to be called back.  */
-      Elf32_Word *plt = (Elf32_Word *) ((char *) map->l_addr
-					+ map->l_info[DT_PLTGOT]->d_un.d_val);
-      Elf32_Word num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
-				    / sizeof (Elf32_Rela));
-      Elf32_Word rel_offset_words = PLT_DATA_START_WORDS (num_plt_entries);
-      extern void _dl_runtime_resolve (void);
-      Elf32_Word size_modified;
-
-      if (lazy)
-	for (i = 0; i < num_plt_entries; i++)
-	{
-	  Elf32_Word offset = PLT_ENTRY_START_WORDS (i);
-
-	  if (i >= PLT_DOUBLE_SIZE)
-	    {
-	      plt[offset  ] = OPCODE_LI (11, i * 4);
-	      plt[offset+1] = OPCODE_ADDIS (11, 11, (i * 4 + 0x8000) >> 16);
-	      plt[offset+2] = OPCODE_B (-(4 * (offset + 2)));
-	    }
-	  else
-	    {
-	      plt[offset  ] = OPCODE_LI (11, i * 4);
-	      plt[offset+1] = OPCODE_B (-(4 * (offset + 1)));
-	    }
-	}
-
-      /* Multiply index of entry by 3 (in r11).  */
-      plt[0] = OPCODE_SLWI (12, 11, 1);
-      plt[1] = OPCODE_ADD (11, 12, 11);
-      if ((Elf32_Word) (char *) _dl_runtime_resolve <= 0x01fffffc ||
-	  (Elf32_Word) (char *) _dl_runtime_resolve >= 0xfe000000)
-	{
-	  /* Load address of link map in r12.  */
-	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) map);
-	  plt[3] = OPCODE_ADDIS (12, 12, (((Elf32_Word) (char *) map
-					   + 0x8000) >> 16));
-
-	  /* Call _dl_runtime_resolve.  */
-	  plt[4] = OPCODE_BA ((Elf32_Word) (char *) _dl_runtime_resolve);
-	}
-      else
-	{
-	  /* Get address of _dl_runtime_resolve in CTR.  */
-	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) _dl_runtime_resolve);
-	  plt[3] = OPCODE_ADDIS (12, 12, ((((Elf32_Word) (char *)
-					    _dl_runtime_resolve)
-					   + 0x8000) >> 16));
-	  plt[4] = OPCODE_MTCTR (12);
-
-	  /* Load address of link map in r12.  */
-	  plt[5] = OPCODE_LI (12, (Elf32_Word) (char *) map);
-	  plt[6] = OPCODE_ADDIS (12, 12, (((Elf32_Word) (char *) map
-					   + 0x8000) >> 16));
-
-	  /* Call _dl_runtime_resolve.  */
-	  plt[7] = OPCODE_BCTR ();
-	}
-
-
-      /* Convert the index in r11 into an actual address, and get the
-	 word at that address.  */
-      plt[PLT_LONGBRANCH_ENTRY_WORDS] =
-	OPCODE_ADDIS (11, 11, (((Elf32_Word) (char*) (plt + rel_offset_words)
-				+ 0x8000) >> 16));
-      plt[PLT_LONGBRANCH_ENTRY_WORDS+1] =
-	OPCODE_LWZ (11, (Elf32_Word) (char*) (plt+rel_offset_words), 11);
-
-      /* Call the procedure at that address.  */
-      plt[PLT_LONGBRANCH_ENTRY_WORDS+2] = OPCODE_MTCTR (11);
-      plt[PLT_LONGBRANCH_ENTRY_WORDS+3] = OPCODE_BCTR ();
-
-
-      /* Now, we've modified code (quite a lot of code, possibly).  We
-	 need to write the changes from the data cache to a
-	 second-level unified cache, then make sure that stale data in
-	 the instruction cache is removed.  (In a multiprocessor
-	 system, the effect is more complex.)
-
-	 Assumes the cache line size is at least 32 bytes, or at least
-	 that dcbst and icbi apply to 32-byte lines. At present, all
-	 PowerPC processors have line sizes of exactly 32 bytes.  */
-
-      size_modified = lazy ? rel_offset_words : PLT_INITIAL_ENTRY_WORDS;
-      for (i = 0; i < size_modified; i+=8)
-	PPC_DCBST (plt + i);
-      PPC_SYNC;
-      for (i = 0; i < size_modified; i+=8)
-	PPC_ICBI (plt + i);
-      PPC_ISYNC;
-    }
-}
-
-static inline void
-elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
-{
-  assert (ELF32_R_TYPE (reloc->r_info) == R_PPC_JMP_SLOT);
-  /* elf_machine_runtime_setup handles this. */
-}
 
 /* The PLT uses Elf32_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
@@ -617,7 +315,7 @@ _start:
    information here about the way memory is mapped.  */
 
 #define ELF_PREFERRED_ADDRESS_DATA					      \
-static ElfW(Addr) _dl_preferred_address = 1;
+static ElfW(Addr) _dl_preferred_address = 1
 
 #define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref)		      \
 ( {									      \
@@ -645,4 +343,326 @@ static ElfW(Addr) _dl_preferred_address = 1;
      _dl_preferred_address = mapstart;					      \
 } )
 
+/* We require the address of the PLT entry returned from fixup, not
+   the first word of the PLT entry. */
 #define ELF_FIXUP_RETURNS_ADDRESS 1
+
+/* Nonzero iff TYPE should not be allowed to resolve to one of
+   the main executable's symbols, as for a COPY reloc.  */
+#define elf_machine_lookup_noexec_p(type) ((type) == R_PPC_COPY)
+
+/* Nonzero iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.  */
+/* We never want to use a PLT entry as the destination of a
+   reloc, when what is being relocated is a branch. This is
+   partly for efficiency, but mostly so we avoid loops.  */
+#define elf_machine_lookup_noplt_p(type) ((type) == R_PPC_REL24 ||            \
+					  (type) == R_PPC_ADDR24 ||           \
+					  (type) == R_PPC_JMP_SLOT)
+
+/* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
+#define ELF_MACHINE_RELOC_NOPLT	R_PPC_JMP_SLOT
+
+/* Nonzero iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.  */
+#define elf_machine_pltrel_p(type) ((type) == R_PPC_JMP_SLOT)
+
+/* Set up the loaded object described by L so its unrelocated PLT
+   entries will jump to the on-demand fixup code in dl-runtime.c.
+   Also install a small trampoline to be used by entries that have
+   been relocated to an address too far away for a single branch.  */
+
+/* A PLT entry does one of three things:
+   (i)   Jumps to the actual routine. Such entries are set up above, in
+         elf_machine_rela.
+
+   (ii)  Jumps to the actual routine via glue at the start of the PLT.
+         We do this by putting the address of the routine in space
+         allocated at the end of the PLT, and when the PLT entry is
+         called we load the offset of that word (from the start of the
+         space) into r11, then call the glue, which loads the word and
+         branches to that address. These entries are set up in
+         elf_machine_rela, but the glue is set up here.
+
+   (iii) Loads the index of this PLT entry (we count the double-size
+	 entries as one entry for this purpose) into r11, then
+	 branches to code at the start of the PLT. This code then
+	 calls `fixup', in dl-runtime.c, via the glue in the macro
+	 ELF_MACHINE_RUNTIME_TRAMPOLINE, which resets the PLT entry to
+	 be one of the above two types. These entries are set up here.  */
+static inline void
+elf_machine_runtime_setup (struct link_map *map, int lazy)
+{
+  if (map->l_info[DT_JMPREL])
+    {
+      int i;
+      /* Fill in the PLT. Its initial contents are directed to a
+	 function earlier in the PLT which arranges for the dynamic
+	 linker to be called back.  */
+      Elf32_Word *plt = (Elf32_Word *) ((char *) map->l_addr
+					+ map->l_info[DT_PLTGOT]->d_un.d_val);
+      Elf32_Word num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
+				    / sizeof (Elf32_Rela));
+      Elf32_Word rel_offset_words = PLT_DATA_START_WORDS (num_plt_entries);
+      extern void _dl_runtime_resolve (void);
+      Elf32_Word size_modified;
+
+      if (lazy)
+	for (i = 0; i < num_plt_entries; i++)
+	{
+	  Elf32_Word offset = PLT_ENTRY_START_WORDS (i);
+
+	  if (i >= PLT_DOUBLE_SIZE)
+	    {
+	      plt[offset  ] = OPCODE_LI (11, i * 4);
+	      plt[offset+1] = OPCODE_ADDIS (11, 11, (i * 4 + 0x8000) >> 16);
+	      plt[offset+2] = OPCODE_B (-(4 * (offset + 2)));
+	    }
+	  else
+	    {
+	      plt[offset  ] = OPCODE_LI (11, i * 4);
+	      plt[offset+1] = OPCODE_B (-(4 * (offset + 1)));
+	    }
+	}
+
+      /* Multiply index of entry by 3 (in r11).  */
+      plt[0] = OPCODE_SLWI (12, 11, 1);
+      plt[1] = OPCODE_ADD (11, 12, 11);
+      if ((Elf32_Word) (char *) _dl_runtime_resolve <= 0x01fffffc ||
+	  (Elf32_Word) (char *) _dl_runtime_resolve >= 0xfe000000)
+	{
+	  /* Load address of link map in r12.  */
+	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) map);
+	  plt[3] = OPCODE_ADDIS (12, 12, (((Elf32_Word) (char *) map
+					   + 0x8000) >> 16));
+
+	  /* Call _dl_runtime_resolve.  */
+	  plt[4] = OPCODE_BA ((Elf32_Word) (char *) _dl_runtime_resolve);
+	}
+      else
+	{
+	  /* Get address of _dl_runtime_resolve in CTR.  */
+	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) _dl_runtime_resolve);
+	  plt[3] = OPCODE_ADDIS (12, 12, ((((Elf32_Word) (char *)
+					    _dl_runtime_resolve)
+					   + 0x8000) >> 16));
+	  plt[4] = OPCODE_MTCTR (12);
+
+	  /* Load address of link map in r12.  */
+	  plt[5] = OPCODE_LI (12, (Elf32_Word) (char *) map);
+	  plt[6] = OPCODE_ADDIS (12, 12, (((Elf32_Word) (char *) map
+					   + 0x8000) >> 16));
+
+	  /* Call _dl_runtime_resolve.  */
+	  plt[7] = OPCODE_BCTR ();
+	}
+
+
+      /* Convert the index in r11 into an actual address, and get the
+	 word at that address.  */
+      plt[PLT_LONGBRANCH_ENTRY_WORDS] =
+	OPCODE_ADDIS (11, 11, (((Elf32_Word) (char*) (plt + rel_offset_words)
+				+ 0x8000) >> 16));
+      plt[PLT_LONGBRANCH_ENTRY_WORDS+1] =
+	OPCODE_LWZ (11, (Elf32_Word) (char*) (plt+rel_offset_words), 11);
+
+      /* Call the procedure at that address.  */
+      plt[PLT_LONGBRANCH_ENTRY_WORDS+2] = OPCODE_MTCTR (11);
+      plt[PLT_LONGBRANCH_ENTRY_WORDS+3] = OPCODE_BCTR ();
+
+
+      /* Now, we've modified code (quite a lot of code, possibly).  We
+	 need to write the changes from the data cache to a
+	 second-level unified cache, then make sure that stale data in
+	 the instruction cache is removed.  (In a multiprocessor
+	 system, the effect is more complex.)
+
+	 Assumes the cache line size is at least 32 bytes, or at least
+	 that dcbst and icbi apply to 32-byte lines. At present, all
+	 PowerPC processors have line sizes of exactly 32 bytes.  */
+
+      size_modified = lazy ? rel_offset_words : PLT_INITIAL_ENTRY_WORDS;
+      for (i = 0; i < size_modified; i+=8)
+	PPC_DCBST (plt + i);
+      PPC_SYNC;
+      for (i = 0; i < size_modified; i+=8)
+	PPC_ICBI (plt + i);
+      PPC_ISYNC;
+    }
+}
+
+static inline void
+elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
+{
+  assert (ELF32_R_TYPE (reloc->r_info) == R_PPC_JMP_SLOT);
+  /* elf_machine_runtime_setup handles this. */
+}
+
+#endif /* dl_machine_h */
+
+#ifdef RESOLVE
+
+/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+   LOADADDR is the load address of the object; INFO is an array indexed
+   by DT_* of the .dynamic section info.  */
+
+static inline void
+elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
+		  const Elf32_Sym *sym, const struct r_found_version *version)
+{
+  const Elf32_Sym *const refsym = sym;
+  Elf32_Addr *const reloc_addr = (Elf32_Addr *)(map->l_addr + reloc->r_offset);
+  Elf32_Word loadbase, finaladdr;
+  const int rinfo = ELF32_R_TYPE (reloc->r_info);
+
+  if (rinfo == R_PPC_NONE)
+    return;
+
+  assert (sym != NULL);
+  /* The condition on the next two lines is a hack around a bug in Solaris
+     tools on Sparc.  It's not clear whether it should really be here at all,
+     but if not the binutils need to be changed.  */
+  if ((sym->st_shndx != SHN_UNDEF
+       && ELF32_ST_BIND (sym->st_info) == STB_LOCAL)
+      || rinfo == R_PPC_RELATIVE)
+    {
+      /* Has already been relocated.  */
+      loadbase = map->l_addr;
+      finaladdr = loadbase + reloc->r_addend;
+    }
+  else
+    {
+      loadbase = (Elf32_Word) (char *) (RESOLVE (&sym, version,
+						 ELF32_R_TYPE(reloc->r_info)));
+      if (sym == NULL)
+	{
+	  /* Weak symbol that wasn't actually defined anywhere.  */
+	  assert(loadbase == 0);
+	  finaladdr = reloc->r_addend;
+	}
+      else
+	finaladdr = (loadbase + (Elf32_Word) (char *) sym->st_value
+		     + reloc->r_addend);
+    }
+
+  /* This is an if/else if chain because GCC 2.7.2.[012] turns case
+     statements into non-PIC table lookups.  When a later version
+     comes out that fixes this, this should be changed.  */
+  if (rinfo == R_PPC_UADDR32 ||
+      rinfo == R_PPC_GLOB_DAT ||
+      rinfo == R_PPC_ADDR32 ||
+      rinfo == R_PPC_RELATIVE)
+    {
+      *reloc_addr = finaladdr;
+    }
+  else if (rinfo == R_PPC_ADDR16_LO)
+    {
+      *(Elf32_Half*) reloc_addr = finaladdr;
+    }
+  else if (rinfo == R_PPC_ADDR16_HI)
+    {
+      *(Elf32_Half*) reloc_addr = finaladdr >> 16;
+    }
+  else if (rinfo == R_PPC_ADDR16_HA)
+    {
+      *(Elf32_Half*) reloc_addr = (finaladdr + 0x8000) >> 16;
+    }
+#ifndef RTLD_BOOTSTRAP
+  else if (rinfo == R_PPC_REL24)
+    {
+      Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
+      if (delta << 6 >> 6 != delta)
+	{
+	  _dl_signal_error(0, map->l_name,
+			   "R_PPC_REL24 relocation out of range");
+	}
+      *reloc_addr = *reloc_addr & 0xfc000003 | delta & 0x3fffffc;
+    }
+  else if (rinfo == R_PPC_ADDR24)
+    {
+      if (finaladdr << 6 >> 6 != finaladdr)
+	{
+	  _dl_signal_error(0, map->l_name,
+			   "R_PPC_ADDR24 relocation out of range");
+	}
+      *reloc_addr = *reloc_addr & 0xfc000003 | finaladdr & 0x3fffffc;
+    }
+  else if (rinfo == R_PPC_COPY)
+    {
+      if (sym->st_size != refsym->st_size)
+	{
+	  const char *strtab;
+
+	  strtab = ((void *) map->l_addr
+		    + map->l_info[DT_STRTAB]->d_un.d_ptr);
+	  _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
+			    "' has different size in shared object, "
+			    "consider re-linking\n", NULL);
+	}
+      memcpy (reloc_addr, (char *) finaladdr, MIN (sym->st_size,
+						   refsym->st_size));
+    }
+#endif
+  else if (rinfo == R_PPC_REL32)
+    {
+      *reloc_addr = finaladdr - (Elf32_Word) (char *) reloc_addr;
+    }
+  else if (rinfo == R_PPC_JMP_SLOT)
+    {
+      Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
+      if (delta << 6 >> 6 == delta)
+	*reloc_addr = OPCODE_B (delta);
+      else if (finaladdr <= 0x01fffffc || finaladdr >= 0xfe000000)
+	*reloc_addr = OPCODE_BA (finaladdr);
+      else
+	{
+	  Elf32_Word *plt;
+	  Elf32_Word index;
+
+	  plt = (Elf32_Word *)((char *)map->l_addr
+			       + map->l_info[DT_PLTGOT]->d_un.d_val);
+	  index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
+
+	  if (index >= PLT_DOUBLE_SIZE)
+	    {
+	      /* Slots greater than or equal to 2^13 have 4 words available
+		 instead of two.  */
+	      reloc_addr[0] = OPCODE_LI (11, finaladdr);
+	      reloc_addr[1] = OPCODE_ADDIS (11, 11, finaladdr + 0x8000 >> 16);
+	      reloc_addr[2] = OPCODE_MTCTR (11);
+	      reloc_addr[3] = OPCODE_BCTR ();
+	    }
+	  else
+	    {
+	      Elf32_Word num_plt_entries;
+
+	      num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
+				 / sizeof(Elf32_Rela));
+
+	      reloc_addr[0] = OPCODE_LI (11, index*4);
+	      reloc_addr[1] =
+		OPCODE_B (-(4*(index*2
+			       + 1
+			       - PLT_LONGBRANCH_ENTRY_WORDS
+			       + PLT_INITIAL_ENTRY_WORDS)));
+	      plt[index+PLT_DATA_START_WORDS (num_plt_entries)] = finaladdr;
+	    }
+	}
+      MODIFIED_CODE (reloc_addr);
+    }
+  else
+    assert (! "unexpected dynamic reloc type");
+
+  if (rinfo == R_PPC_ADDR16_LO ||
+      rinfo == R_PPC_ADDR16_HI ||
+      rinfo == R_PPC_ADDR16_HA ||
+      rinfo == R_PPC_REL24 ||
+      rinfo == R_PPC_ADDR24)
+    MODIFIED_CODE_NOQUEUE (reloc_addr);
+}
+
+#define ELF_MACHINE_NO_REL 1
+
+#endif
+
+

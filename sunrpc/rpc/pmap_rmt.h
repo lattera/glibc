@@ -39,7 +39,9 @@
 
 #define _RPC_PMAP_RMT_H	1
 #include <features.h>
-
+#include <sys/types.h>
+#include <rpc/types.h>
+#include <rpc/xdr.h>
 
 __BEGIN_DECLS
 

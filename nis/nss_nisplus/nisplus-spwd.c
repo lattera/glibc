@@ -90,47 +90,47 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
   if (cp == NULL)
     return 0;
   *cp++ = '\0';
-  sp->sp_lstchg = atoi (line);
+  sp->sp_lstchg = atol (line);
 
   line = cp;
   cp = strchr (line, ':');
   if (cp == NULL)
     return 0;
   *cp++ = '\0';
-  sp->sp_min = atoi(line);
+  sp->sp_min = atol(line);
 
   line = cp;
   cp = strchr (line, ':');
   if (cp == NULL)
     return 0;
   *cp++ = '\0';
-  sp->sp_max = atoi(line);
+  sp->sp_max = atol(line);
 
   line = cp;
   cp = strchr (line, ':');
   if (cp == NULL)
     return 0;
   *cp++ = '\0';
-  sp->sp_warn = atoi(line);
+  sp->sp_warn = atol(line);
 
   line = cp;
   cp = strchr (line, ':');
   if (cp == NULL)
     return 0;
   *cp++ = '\0';
-  sp->sp_inact = atoi(line);
+  sp->sp_inact = atol(line);
 
   line = cp;
   cp = strchr (line, ':');
   if (cp == NULL)
     return 0;
   *cp++ = '\0';
-  sp->sp_expire = atoi(line);
+  sp->sp_expire = atol(line);
 
   line = cp;
   if (line == NULL)
     return 0;
-  sp->sp_flag = atoi(line);
+  sp->sp_flag = atol(line);
 
   return 1;
 }

@@ -609,6 +609,56 @@ strncmp ("hello, world", "hello, stupid world!!!", 5)
 @end smallexample
 
 @comment string.h
+@comment GNU
+@deftypefun int strverscmp (const char *@var{s1}, const char *@var{s2})
+The @code{strverscmp} function compares the string @var{s1} against
+@var{s2}, considering them as holding indices/version numbers.  Return
+value follows the same conventions as found in the @code{strverscmp}
+function.  In fact, if @var{s1} and @var{s2} contain no digits,
+@code{strverscmp} behaves like @code{strcmp}.
+
+Basically, we compare strings normaly (character by character), until
+we find a digit in each string - then we enter a special comparison
+mode, where each sequence of digit is taken as a whole.  If we reach the
+end of these two parts without noticing a difference, we return to the
+standard comparison mode.  There are two types of numeric parts:
+"integral" and "fractionnal" (these laters begins with a '0'). The types
+of the numeric parts affect the way we sort them:
+
+@itemize @bullet
+@item
+integral/integral: we compare values as you would expect.
+
+@item
+fractionnal/integral: the fractionnal part is less than the integral one.
+Again, no surprise.
+
+@item
+fractionnal/fractionnal: the things become a bit more complex.
+if the common prefix contains only leading zeroes, the longest part is less
+than the other one; else the comparison behaves normaly.
+@end itemize
+
+@smallexample
+strverscmp ("no digit", "no digit")
+    @result{} 0    /* @r{same behaviour as strverscmp.} */
+strverscmp ("item#99", "item#100")
+    @result{} <0   /* @r{same prefix, but 99 < 100.} */
+strverscmp ("alpha1", "alpha001")
+    @result{} >0   /* @r{fractionnal part inferior to integral one.} */
+strverscmp ("part1_f012", "part1_f01")
+    @result{} >0   /* @r{two fractionnal parts.} */
+strverscmp ("foo.009", "foo.0")
+    @result{} <0   /* @r{idem, but with leading zeroes only.} */
+@end smallexample
+
+This function is especially usefull when dealing with filename sorting,
+because filenames frequently hold indices/version numbers.
+
+@code{strverscmp} is a GNU extension.
+@end deftypefun
+
+@comment string.h
 @comment BSD
 @deftypefun int bcmp (const void *@var{a1}, const void *@var{a2}, size_t @var{size})
 This is an obsolete alias for @code{memcmp}, derived from BSD.

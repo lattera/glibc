@@ -1568,7 +1568,7 @@ static reg_errcode_t compile_range _RE_ARGS ((const char **p_ptr,
    MSC and drop MAX_BUF_SIZE a bit.  Otherwise you may end up
    reallocating to 0 bytes.  Such thing is not going to work too well.
    You have been warned!!  */
-#ifdef _MSC_VER
+#if defined(_MSC_VER)  && !defined(WIN32)
 /* Microsoft C 16-bit versions limit malloc to approx 65512 bytes.
    The REALLOC define eliminates a flurry of conversion warnings,
    but is not required. */

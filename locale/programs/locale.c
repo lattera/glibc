@@ -504,9 +504,9 @@ write_charmaps (void)
 		    if (fscanf (fp, " <code_set_name> %as", &name) == 1)
 		      break;
 
-		    do
-		      fgets (junk, sizeof junk, fp);
-		    while (strchr (junk, '\n') == NULL);
+		    while (fgets (junk, sizeof junk, fp) != NULL
+			   && strchr (junk, '\n') == NULL)
+		      continue;
 		  }
 
 		fclose (fp);

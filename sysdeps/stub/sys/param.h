@@ -6,3 +6,5 @@
    the installed headers on the system.  */
 
 #include <limits.h>
+
+#define MAXSYMLINKS  1

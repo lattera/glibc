@@ -23,7 +23,7 @@ subdir		:= dirent
 
 headers		:= dirent.h direntry.h
 routines	:= opendir closedir readdir readdir_r rewinddir \
-		   seekdir telldir scandir alphasort \
+		   seekdir telldir scandir alphasort versionsort \
 		   getdents dirfd
 distribute := dirstream.h
 

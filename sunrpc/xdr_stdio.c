@@ -46,9 +46,9 @@ static char sccsid[] = "@(#)xdr_stdio.c 1.16 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/xdr.h>
 
 static bool_t xdrstdio_getlong (XDR *, long *);
-static bool_t xdrstdio_putlong (XDR *, long *);
+static bool_t xdrstdio_putlong (XDR *, const long *);
 static bool_t xdrstdio_getbytes (XDR *, caddr_t, u_int);
-static bool_t xdrstdio_putbytes (XDR *, caddr_t, u_int);
+static bool_t xdrstdio_putbytes (XDR *, const caddr_t, u_int);
 static u_int xdrstdio_getpos (XDR *);
 static bool_t xdrstdio_setpos (XDR *, u_int);
 static long *xdrstdio_inline (XDR *, int);
@@ -114,7 +114,7 @@ xdrstdio_getlong (xdrs, lp)
 }
 
 static bool_t
-xdrstdio_putlong (XDR *xdrs, long *lp)
+xdrstdio_putlong (XDR *xdrs, const long *lp)
 {
 
   long mycopy = htonl (*lp);
@@ -127,7 +127,7 @@ xdrstdio_putlong (XDR *xdrs, long *lp)
 static bool_t
 xdrstdio_getbytes (xdrs, addr, len)
      XDR *xdrs;
-     caddr_t addr;
+     const caddr_t addr;
      u_int len;
 {
 
@@ -137,7 +137,7 @@ xdrstdio_getbytes (xdrs, addr, len)
 }
 
 static bool_t
-xdrstdio_putbytes (XDR *xdrs, caddr_t addr, u_int len)
+xdrstdio_putbytes (XDR *xdrs, const caddr_t addr, u_int len)
 {
   if ((len != 0) && (fwrite (addr, (int) len, 1, (FILE *) xdrs->x_private) != 1))
     return FALSE;

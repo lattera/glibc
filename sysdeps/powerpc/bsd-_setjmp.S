@@ -24,7 +24,7 @@
 #include <sysdep.h>
 
 ENTRY (_setjmp)
-	li 4,0				/* Set second argument to 0.  */
+	li %r4,0			/* Set second argument to 0.  */
 #ifdef PIC
 	b __sigsetjmp@plt
 #else

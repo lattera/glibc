@@ -68,78 +68,78 @@
  # them, the others we must save.
 
 	.section ".text"
-	.align 3
+	.align 2
 	.globl strlen
 	.type strlen,@function
 strlen:
  # On entry, r3 points to the string, and it's left that way.
- # We use r6 to store 0x01010101, and r7 to store 0x7f7f7f7f.
+ # We use r6 to store 0xfefefeff, and r7 to store 0x7f7f7f7f.
  # r4 is used to keep the current index into the string; r5 holds
  # the number of padding bits we prepend to the string to make it
  # start at a word boundary. r8 holds the 'current' word.
  # r9-12 are temporaries. r0 is used as a temporary and for discarded
  # results.
-	clrrwi 4,3,2
-	lis 6,0xfeff
-	lis 7,0x7f7f
-	rlwinm 10,3,0,29,29
-	lwz 8,0(4)
-	addi 7,7,0x7f7f
-	rlwinm 5,3,3,27,28
-	cmpwi 1,10,0
-	li 9,-1
+	clrrwi %r4,%r3,2
+	lis   %r6,0xfeff
+	lis   %r7,0x7f7f
+	rlwinm %r10,%r3,0,29,29
+	lwz   %r8,0(%r4)
+	addi  %r7,%r7,0x7f7f
+	rlwinm %r5,%r3,3,27,28
+	cmpwi %cr1,%r10,0
+	li    %r9,-1
  # That's the setup done, now do the first pair of words.
  # We make an exception and use method (2) on the first two words, to reduce
  # overhead.
-	srw 9,9,5
-	and 0,7,8
-	or 10,7,8
-	add 0,0,7
-	nor 0,10,0
-	and. 8,0,9
-	bne done0
+	srw   %r9,%r9,%r5
+	and   %r0,%r7,%r8
+	or    %r10,%r7,%r8
+	add   %r0,%r0,%r7
+	nor   %r0,%r10,%r0
+	and.  %r8,%r0,%r9
+	bne   done0
  # Handle second word of pair. Put addi between branches to avoid hurting
  # branch prediction.
-	addi 6,6,0xfffffeff
-
-	bne 1,loop
-	lwzu 8,4(4)
-	and 0,7,8
-	or 10,7,8
-	add 0,0,7
-	nor. 0,10,0
-	bne done0
+	addi  %r6,%r6,0xfffffeff
+	
+	bne   %cr1,loop
+	lwzu  %r8,4(%r4)
+	and   %r0,%r7,%r8
+	or    %r10,%r7,%r8
+	add   %r0,%r0,%r7
+	nor.  %r8,%r10,%r0
+	bne   done0
 
  # The loop.
+	
+loop:	lwz   %r8,4(%r4)
+	lwzu  %r9,8(%r4)
+	add   %r0,%r6,%r8
+	nor   %r10,%r7,%r8
+	and.  %r0,%r0,%r10
+	add   %r11,%r6,%r9
+	nor   %r12,%r7,%r9
+	bne   done1
+	and.  %r0,%r11,%r12
+	beq   loop
 
-loop:	lwz 8,4(4)
-	lwzu 9,8(4)
-	add 0,6,8
-	nor 10,7,8
-	and. 0,0,10
-	add 11,6,9
-	nor 12,7,9
-	bne done1
-	and. 0,11,12
-	beq loop
-
-	and 0,7,9
-	or 10,7,9
-	b done2
-
-done1:	addi 4,4,-4
-	and 0,7,9
-	or 10,7,9
-done2:	add 0,0,7
-	nor 0,10,0
-
+	and   %r0,%r7,%r9
+	add   %r0,%r0,%r7
+	andc  %r8,%r12,%r0
+	b     done0
+	
+done1:	and   %r0,%r7,%r8
+	subi  %r4,%r4,4
+	add   %r0,%r0,%r7
+	andc  %r8,%r10,%r0
+	
  # When we get to here, r4 points to the first word in the string that
  # contains a zero byte, and the most significant set bit in r8 is in that
  # byte.
-done0:	cntlzw 11,8
-	subf 0,3,4
-	srwi 11,11,3
-	add 3,0,11
+done0:	cntlzw %r11,%r8
+	subf  %r0,%r3,%r4
+	srwi  %r11,%r11,3
+	add   %r3,%r0,%r11
 	blr
 0:
 	.size	 strlen,0b-strlen

@@ -144,4 +144,23 @@ struct ifconf
 #define	ifc_buf	ifc_ifcu.ifcu_buf	/* Buffer address.  */
 #define	ifc_req	ifc_ifcu.ifcu_req	/* Array of structures.  */
 
+
+/* Convert an interface name to an index, and vice versa.  */
+
+unsigned int  if_nametoindex(const char *ifname);
+char  *if_indextoname(unsigned int ifindex, char *ifname);
+
+/* Return a list of all interfaces and their indices.  */
+
+struct if_nameindex {
+  unsigned int   if_index;  /* 1, 2, ... */
+  char          *if_name;   /* null terminated name: "eth0", ... */
+};
+
+struct if_nameindex  *if_nameindex(void);
+
+/* Free the data returned from if_nameindex.  */
+
+void  if_freenameindex(struct if_nameindex *ptr);
+
 #endif /* net/if.h */

@@ -46,6 +46,10 @@
 
 #define _RPC_AUTH_UNIX_H	1
 #include <features.h>
+#include <sys/types.h>
+#include <rpc/types.h>
+#include <rpc/auth.h>
+#include <rpc/xdr.h>
 
 __BEGIN_DECLS
 

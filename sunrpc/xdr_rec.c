@@ -54,9 +54,9 @@ static char sccsid[] = "@(#)xdr_rec.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 
 static bool_t xdrrec_getlong (XDR *, long *);
-static bool_t xdrrec_putlong (XDR *, long *);
+static bool_t xdrrec_putlong (XDR *, const long *);
 static bool_t xdrrec_getbytes (XDR *, caddr_t, u_int);
-static bool_t xdrrec_putbytes (XDR *, caddr_t, u_int);
+static bool_t xdrrec_putbytes (XDR *, const caddr_t, u_int);
 static u_int xdrrec_getpos (XDR *);
 static bool_t xdrrec_setpos (XDR *, u_int);
 static long *xdrrec_inline (XDR *, int);
@@ -221,7 +221,7 @@ xdrrec_getlong (xdrs, lp)
 static bool_t
 xdrrec_putlong (xdrs, lp)
      XDR *xdrs;
-     long *lp;
+     const long *lp;
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   int32_t *dest_lp = (int32_t *) rstrm->out_finger;
@@ -276,7 +276,7 @@ xdrrec_getbytes (xdrs, addr, len)
 static bool_t
 xdrrec_putbytes (xdrs, addr, len)
      XDR *xdrs;
-     caddr_t addr;
+     const caddr_t addr;
      u_int len;
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;

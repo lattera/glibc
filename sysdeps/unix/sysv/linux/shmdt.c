@@ -26,5 +26,5 @@ int
 shmdt (shmaddr)
      const void *shmaddr;
 {
-  return __ipc (IPCOP_shmdt, 0, 0, 0, shmaddr);
+  return __ipc (IPCOP_shmdt, 0, 0, 0, (void *) shmaddr);
 }

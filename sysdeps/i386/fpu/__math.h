@@ -460,7 +460,7 @@ __finite (double __x)
 {
   register int __result;
   __asm__ __volatile__
-    ("orl	$x0x800fffff, %0\n\t"
+    ("orl	$0x800fffff, %0\n\t"
      "incl	%0\n\t"
      "shrl	$31, %0"
      : "=q" (__result) : "0" (((int *) &__x)[1]));

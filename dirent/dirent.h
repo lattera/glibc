@@ -175,6 +175,10 @@ extern int scandir __P ((__const char *__dir,
 /* Function to compare two `struct dirent's alphabetically.  */
 extern int alphasort __P ((__const __ptr_t, __const __ptr_t));
 
+# ifdef __USE_GNU
+/* Function to compare two `struct dirent's by name & version.  */
+extern int versionsort __P ((__const __ptr_t, __const __ptr_t));
+#endif
 
 /* Read directory entries from FD into BUF, reading at most NBYTES.
    Reading starts at offset *BASEP, and *BASEP is updated with the new

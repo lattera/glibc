@@ -50,7 +50,7 @@
     b __syscall_error@plt
 #else
 #define PSEUDO(name, syscall_name, args)                                      \
-  .text;								      \
+  .section ".text";							      \
   ENTRY (name)                                                                \
     DO_CALL (SYS_ify (syscall_name));				              \
     bnslr;                                                                    \

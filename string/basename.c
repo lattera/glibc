@@ -17,10 +17,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <string.h>
 
 char *
-basename (const char *filename)
+basename (filename)
+     const char *filename;
 {
   char *p = strrchr (filename, '/');
   return p ? p + 1 : (char *) filename;

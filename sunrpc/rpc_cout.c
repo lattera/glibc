@@ -45,10 +45,10 @@ char cout_rcsid[] =
 #include "proto.h"
 
 static void emit_enum(definition *def);
-static void emit_program(definition *def);
-static void emit_union(definition *def);
+static void emit_program(const definition *def);
+static void emit_union(const definition *def);
 static void emit_struct(definition *def);
-static void emit_typedef(definition *def);
+static void emit_typedef(const definition *def);
 static int findtype(const definition *def, const char *type);
 static int undefined(const char *type);
 static void print_generic_header(const char *procname, int pointerp);
@@ -59,8 +59,8 @@ static void print_ifclose(int indent);
 static void print_ifstat(int indent, const char *prefix, const char *type,
 			 relation rel, const char *amax,
 			 const char *objname, const char *name);
-static void print_stat(int indent, declaration *dec);
-static void print_header(definition *def);
+static void print_stat(int indent, const declaration *dec);
+static void print_header(const definition *def);
 static void print_trailer(void);
 static char *upcase(const char *str);
 
@@ -77,15 +77,16 @@ emit(definition *def)
 		emit_program(def);
 		return;
 	}
-	if(def->def_kind == DEF_TYPEDEF)
+	if (def->def_kind == DEF_TYPEDEF)
 	  {
 	  /* now we need to handle declarations like
-   struct typedef foo foo;
-   since we don't want this to be expanded into 2 calls to xdr_foo */
+		struct typedef foo foo;
+	     since we don't want this to be expanded
+	     into 2 calls to xdr_foo */
 
- 	if(strcmp(def->def.ty.old_type,def->def_name)==0)
-	  return;
-      };
+	    if (strcmp(def->def.ty.old_type,def->def_name)==0)
+	      return;
+	  };
 
 	print_header(def);
 	switch (def->def_kind) {
@@ -102,7 +103,8 @@ emit(definition *def)
 		emit_typedef(def);
 		break;
 	default:
-	  /* can't happen */
+		/* can't happen */
+		break;
 	}
 	print_trailer();
 }
@@ -110,7 +112,6 @@ emit(definition *def)
 static int
 findtype(const definition *def, const char *type)
 {
-
 	if (def->def_kind == DEF_PROGRAM || def->def_kind == DEF_CONST) {
 		return (0);
 	} else {
@@ -122,10 +123,7 @@ static int
 undefined(const char *type)
 {
 	definition *def;
-
 	def = (definition *) FINDVAL(defined, type, findtype);
-
-
 	return (def == NULL);
 }
 
@@ -153,33 +151,25 @@ print_generic_header(const char *procname, int pointerp)
 }
 
 static void
-print_header(definition *def)
+print_header(const definition *def)
 {
+	print_generic_header(def->def_name,
+			     def->def_kind != DEF_TYPEDEF ||
+			     !isvectordef(def->def.ty.old_type,
+					  def->def.ty.rel));
 
-/*
-  decl_list *dl;
-  bas_type *ptr;
-  int i;
- */
+	/* Now add Inline support */
 
-  print_generic_header( def->def_name,
-		       def->def_kind != DEF_TYPEDEF ||
-		       !isvectordef(def->def.ty.old_type, def->def.ty.rel));
-
-  /* Now add Inline support */
-
-
-  if(inlineflag == 0 )
-    return;
-  /*May cause lint to complain. but  ... */
-f_print(fout, "\t register long *buf;\n\n");
-
+	if(inlineflag == 0 )
+		return;
+	/*May cause lint to complain. but  ... */
+	f_print(fout, "\t register long *buf;\n\n");
 }
 
 static void
-print_prog_header(proc_list *plist)
+print_prog_header(const proc_list *plist)
 {
-  print_generic_header( plist->args.argname, 1 );
+	print_generic_header(plist->args.argname, 1 );
 }
 
 static void
@@ -308,7 +298,7 @@ emit_enum(definition *def)
 }
 
 static void
-emit_program(definition *def)
+emit_program(const definition *def)
 {
 	decl_list *dl;
 	version_list *vlist;
@@ -327,7 +317,7 @@ emit_program(definition *def)
 }
 
 static void
-emit_union(definition *def)
+emit_union(const definition *def)
 {
   declaration *dflt;
   case_list *cl;
@@ -393,6 +383,8 @@ emit_union(definition *def)
   f_print(fout, "\t}\n");
 }
 
+/* this may be const.  i haven't traced this one through yet. */
+
 static void
 emit_struct(definition *def)
 {
@@ -445,9 +437,6 @@ emit_struct(definition *def)
 				print_stat(1,&dl->decl);
 			return;
 		};
-
-
-
 
 		flag=PUT;
 		for(j=0; j<2; j++){
@@ -605,7 +594,7 @@ emit_struct(definition *def)
 
 
 static void
-emit_typedef(definition *def)
+emit_typedef(const definition *def)
 {
 	const char *prefix = def->def.ty.old_prefix;
 	const char *type = def->def.ty.old_type;
@@ -617,7 +606,7 @@ emit_typedef(definition *def)
 }
 
 static void
-print_stat(int indent, declaration *dec)
+print_stat(int indent, const declaration *dec)
 {
 	const char *prefix = dec->prefix;
 	const char *type = dec->type;

@@ -23,7 +23,7 @@
 
 int
 dirfd (dirp)
-     FILE *dirp;
+     DIR *dirp;
 {
   __set_errno (ENOSYS);
   return -1;

@@ -370,7 +370,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	  stat = RPC_CANTRECV;
 	  goto done_broad;
 	}
-      if (inlen < sizeof (u_long))
+      if ((size_t) inlen < sizeof (u_long))
 	goto recv_again;
       /*
        * see if reply transaction id matches sent id.

@@ -43,38 +43,38 @@
 
 	.text
 ENTRY(P(__,socket))
-	stwu 1,-48(1)
+	stwu %r1,-48(%r1)
 #if NARGS >= 1
-	stw 3,stackblock(1)
+	stw  %r3,stackblock(%r1)
 #endif
 #if NARGS >= 2
-	stw 4,4+stackblock(1)
+	stw  %r4,4+stackblock(%r1)
 #endif
 #if NARGS >= 3
-	stw 5,8+stackblock(1)
+	stw  %r5,8+stackblock(%r1)
 #endif
 #if NARGS >= 4
-	stw 6,12+stackblock(1)
+	stw  %r6,12+stackblock(%r1)
 #endif
 #if NARGS >= 5
-	stw 7,16+stackblock(1)
+	stw  %r7,16+stackblock(%r1)
 #endif
 #if NARGS >= 6
-	stw 8,20+stackblock(1)
+	stw  %r8,20+stackblock(%r1)
 #endif
 #if NARGS >= 7
-	stw 9,24+stackblock(1)
+	stw  %r9,24+stackblock(%r1)
 #endif
 #if NARGS >= 8
-	stw 10,28+stackblock(1)
+	stw  %r10,28+stackblock(%r1)
 #endif
 #if NARGS >= 9
 #error too many arguments!
 #endif
-	li 3,P(SOCKOP_,socket)
-	addi 4,1,stackblock
+	li   %r3,P(SOCKOP_,socket)
+	addi %r4,%r1,stackblock
 	DO_CALL(SYS_ify(socketcall))
-	addi 1,1,48
+	addi %r1,%r1,48
 	bnslr
 #ifdef PIC
 	b __syscall_error@plt

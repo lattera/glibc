@@ -332,6 +332,18 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 		     reference_name, version, skip_map, 0))
 	break;
 
+  if (current_value.s == NULL &&
+      (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
+    {
+      /* We could find no value for a strong reference.  */
+      static const char msg[] = "undefined symbol: ";
+      const size_t len = strlen (undef_name);
+      char buf[sizeof msg + len];
+      memcpy (buf, msg, sizeof msg - 1);
+      memcpy (&buf[sizeof msg - 1], undef_name, len + 1);
+      _dl_signal_error (0, reference_name, buf);
+    }
+
   *ref = current_value.s;
   return current_value.a;
 }

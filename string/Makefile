@@ -24,7 +24,7 @@ subdir	:= string
 headers	:= string.h strings.h memory.h endian.h bytesex.h \
 	   argz.h envz.h
 
-routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
+routines	:= strcat strchr strcmp strcoll strcpy strcspn strverscmp	\
 		   strdup strndup	\
 		   strerror _strerror strerror_r strlen strnlen		\
 		   strncat strncmp strncpy				\
@@ -40,7 +40,8 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   envz basename					\
 		   strcoll_l strxfrm_l
 
-tests		:= tester testcopy test-ffs tst-strlen stratcliff
+tests		:= tester testcopy test-ffs tst-strlen stratcliff \
+	           tst-svc
 distribute	:= memcopy.h pagecopy.h
 
 
@@ -50,3 +51,6 @@ tester-ENV = LANGUAGE=C
 CFLAGS-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
+
+tests: $(objpfx)tst-svc.out
+	cmp tst-svc.expect $(objpfx)tst-svc.out

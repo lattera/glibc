@@ -42,6 +42,8 @@
 
 #define _RPC_AUTH_H	1
 #include <features.h>
+#include <sys/types.h>
+#include <rpc/types.h>
 #include <rpc/xdr.h>
 
 __BEGIN_DECLS
@@ -99,7 +101,7 @@ struct AUTH {
   struct auth_ops {
     void (*ah_nextverf) __P ((AUTH *));
     int  (*ah_marshal) __P ((AUTH *, XDR *));	/* nextverf & serialize */
-    int  (*ah_validate) __P ((AUTH *, struct opaque_auth *));	
+    int  (*ah_validate) __P ((AUTH *, struct opaque_auth *));
 						/* validate verifier */
     int  (*ah_refresh) __P ((AUTH *));		/* refresh credentials */
     void (*ah_destroy) __P ((AUTH *));     	/* destroy this structure */
@@ -163,7 +165,7 @@ extern AUTH *authunix_create __P ((char *__machname, __uid_t __uid,
 				   __gid_t *__aup_gids));
 extern AUTH *authunix_create_default __P ((void));
 extern AUTH *authnone_create __P ((void));
-extern AUTH *authdes_create __P ((char *__servername, u_int __window, 
+extern AUTH *authdes_create __P ((char *__servername, u_int __window,
 				  struct sockaddr *__syncaddr,
 				  des_block *__ckey));
 

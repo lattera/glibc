@@ -336,7 +336,7 @@ __printf_fp (FILE *fp,
 
   if (special)
     {
-      int width = info->prec > info->width ? info->prec : info->width;
+      int width = info->width;
 
       if (is_neg || info->showsign || info->space)
 	--width;
