@@ -1,5 +1,5 @@
 /* Return a reference to locale information record.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -50,7 +50,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   int cnt;
 
   /* We treat LC_ALL in the same way as if all bits were set.  */
-  if (category_mask == LC_ALL)
+  if (category_mask == 1 << LC_ALL)
     category_mask = (1 << __LC_LAST) - 1 - (1 << LC_ALL);
 
   /* Sanity check for CATEGORY argument.  */
