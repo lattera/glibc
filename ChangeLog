@@ -1,3 +1,9 @@
+2001-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Pass
+	pointer to int as last parameter of yp_match.
+	Patch by kanazawa@flab.fujitsu.co.jp.
+
 2001-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/netdb.h (gai_strerror): Make return value const.

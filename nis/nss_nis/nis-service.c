@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -228,6 +228,7 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
       char key[strlen (name) + strlen (protocol) + 2];
       char *cp, *domain, *result;
       size_t keylen, len;
+      int int_len;
 
       /* If this fails, the other solution will also fail. */
       if (yp_get_default_domain (&domain))
@@ -239,7 +240,8 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
       stpcpy (cp, protocol);
       keylen = strlen (key);
       status = yperr2nss (yp_match (domain, "services.byservicename", key,
-				    keylen, &result, &len));
+				    keylen, &result, &int_len));
+      len = int_len;
 
       /* If we found the key, it's ok and parse the result. If not,
 	 fall through and parse the complete table. */
