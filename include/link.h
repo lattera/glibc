@@ -189,6 +189,7 @@ struct link_map
     unsigned int l_need_tls_init:1; /* Nonzero if GL(dl_init_static_tls)
 				       should be called on this link map
 				       when relocation finishes.  */
+    unsigned int l_used:1;	/* Nonzero if the DSO is used.  */
     /* Array with version names.  */
     unsigned int l_nversions;
     struct r_found_version *l_versions;

@@ -344,6 +344,9 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 				  symbol_scope, version, type_class,
 				  flags, skip_map);
 
+  /* The object is used.  */
+  current_value.m->l_used = 1;
+
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,

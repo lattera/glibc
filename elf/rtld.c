@@ -1526,6 +1526,44 @@ cannot allocate TLS data structures for initial thread");
 		_dl_printf ("\n");
 	    }
 	}
+      else if (GLRO(dl_debug_mask) & DL_DEBUG_UNUSED)
+	{
+	  /* Look through the dependencies of the main executable
+	     and determine which of them is not actually
+	     required.  */
+	  struct link_map *l = GL(dl_loaded);
+
+	  /* Relocate the main executable.  */
+	  struct relocate_args args = { .l = l, .lazy = GLRO(dl_lazy) };
+	  _dl_receive_error (print_unresolved, relocate_doit, &args);
+
+	  /* This loop depends on the dependencies of the executable to
+	     correspond in number and order to the DT_NEEDED entries.  */
+	  ElfW(Dyn) *dyn = GL(dl_loaded)->l_ld;
+	  bool first = true;
+	  while (dyn->d_tag != DT_NULL)
+	    {
+	      if (dyn->d_tag == DT_NEEDED)
+		{
+		  l = l->l_next;
+
+		  if (!l->l_used)
+		    {
+		      if (first)
+			{
+			  _dl_printf ("Unused direct dependencies:\n");
+			  first = false;
+			}
+
+		      _dl_printf ("\t%s\n", l->l_name);
+		    }
+		}
+
+	      ++dyn;
+	    }
+
+	  _exit (first != true);
+	}
       else if (! GL(dl_loaded)->l_info[DT_NEEDED])
 	_dl_printf ("\tstatically linked\n");
       else
@@ -1534,6 +1572,10 @@ cannot allocate TLS data structures for initial thread");
 	    if (l->l_faked)
 	      /* The library was not found.  */
 	      _dl_printf ("\t%s => not found\n", l->l_libname->name);
+	    else if (l->l_libname->name[0] == '/')
+	      _dl_printf ("\t%s (0x%0*Zx)\n", l->l_libname->name,
+			  (int) sizeof l->l_map_start * 2,
+			  (size_t) l->l_map_start);
 	    else
 	      _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
 			  l->l_name, (int) sizeof l->l_map_start * 2,
@@ -1962,6 +2004,8 @@ process_dl_debug (const char *dl_debug)
 	| DL_DEBUG_BINDINGS | DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
       { LEN_AND_STR ("statistics"), "display relocation statistics",
 	DL_DEBUG_STATISTICS },
+      { LEN_AND_STR ("unused"), "determined unused DSOs",
+	DL_DEBUG_UNUSED },
       { LEN_AND_STR ("help"), "display this help message and exit",
 	DL_DEBUG_HELP },
     };

@@ -293,8 +293,8 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
   no_data = 0;								      \
   while (1) {								      \
     rc = 0;								      \
-    status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf,		      \
-			  tmpbuflen, &rc, &herrno, NULL, &localcanon));	      \
+    status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf, tmpbuflen,	      \
+				&rc, &herrno, NULL, &localcanon));	      \
     if (rc != ERANGE || herrno != NETDB_INTERNAL)			      \
       break;								      \
     tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);		      \
@@ -343,7 +343,7 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
 	  pat = &((*pat)->next);					      \
 	}								      \
 									      \
-      if (localcanon !=	NULL)						      \
+      if (localcanon !=	NULL && canon == NULL)				      \
 	canon = strdupa (localcanon);					      \
 									      \
       if (_family == AF_INET6 && i > 0)					      \

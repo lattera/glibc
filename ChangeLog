@@ -1,3 +1,16 @@
+2004-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/link.h (struct link_map): Add l_used element.
+	* sysdeps/generic/ldsodefs.h: Define DL_DEBUG_UNUSED.
+	* elf/rtld.c (process_dl_debug): Recognize unused.
+	(dl_main): When unused debug flag is set check for unused direct
+	dependencies.
+	When printing dependencies and SONAME starts with /, omit the SONAME =>
+	part.
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Mark object in which the
+	symbol has been found as used.
+	* elf/ldd.bash.in: Add -u option.
+
 2004-09-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/nscd_setup_thread.c (setup_thread):

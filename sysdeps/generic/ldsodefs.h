@@ -375,9 +375,10 @@ struct rtld_global_ro
 #define DL_DEBUG_RELOC      (1 << 5)
 #define DL_DEBUG_FILES      (1 << 6)
 #define DL_DEBUG_STATISTICS (1 << 7)
+#define DL_DEBUG_UNUSED	    (1 << 8)
 /* These two are used only internally.  */
-#define DL_DEBUG_HELP       (1 << 8)
-#define DL_DEBUG_PRELINK    (1 << 9)
+#define DL_DEBUG_HELP       (1 << 9)
+#define DL_DEBUG_PRELINK    (1 << 10)
 
   /* Cached value of `getpagesize ()'.  */
   EXTERN size_t _dl_pagesize;
