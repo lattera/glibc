@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,10 @@ ENTRY (syscall)
 
 	/* Normally encoding the system call number in the instruction is
 	   good.  But we pay the price here.  */
-	
+
 	sub sp, sp, $0xc		@ get 3 words on the stack
 	orr r0, r0, $0xef000000		@ make up a SWI instruction
-	orr r0, r0, $SWI_BASE  
+	orr r0, r0, $SWI_BASE
 	str r0, [sp]
 	ldr r0, _reti
 	str r0, [sp, $4]
@@ -43,5 +43,5 @@ _ret:	add sp, sp, $0xc
 	RETINSTR(mov, pc, r14)
 
 _reti:	.word	0xe51ff004	@ ldr pc, [pc, $4]
-	
+
 PSEUDO_END (syscall)
