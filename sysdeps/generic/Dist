@@ -1,6 +1,16 @@
-make_siglist.c signame.c signame.h
+make_siglist.c
+signame.c
+signame.h
 det_endian.c
 entry.h
 errno-loc.c
 getresgid.c
 getresuid.c
+endutxent.c
+getutxent.c
+getutxid.c
+getutxline.c
+pututxline.c
+setutxent.c
+updwtmpx.c
+utmpxname.c

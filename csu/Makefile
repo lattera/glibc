@@ -114,6 +114,9 @@ endif
 
 include ../Rules
 
+# Make these in the lib pass so they're available in time to link things with.
+subdir_lib: $(extra-objs:%=$(objpfx)%)
+
 define link-relocatable
 $(CC) -nostdlib -nostartfiles -r -o $@ $^
 endef

@@ -47,7 +47,7 @@ distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
 				  os_func.h) \
 	     $(addprefix mutex/,x86.gcc uts4.cc.s sparc.gcc parisc.hp \
 				parisc.gcc alpha.gcc alpha.dec README \
-				68020.gcc tsl_parisc.s)
+				68020.gcc tsl_parisc.s sco.cc)
 
 vpath %.c $(subdir-dirs)
 

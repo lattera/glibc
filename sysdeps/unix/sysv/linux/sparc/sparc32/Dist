@@ -1,4 +1,3 @@
-__sigtrampoline.S
 bits/mman.h
 clone.S
 pipe.S

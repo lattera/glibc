@@ -1,3 +1,24 @@
+1998-07-04 17:11 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* csu/Makefile: Build crt files in lib pass.
+	* db2/Makefile (distribute): Add mutex/sco.cc.
+	* mach/Machrules: Don't generate .udeps files if no_deps is set.
+	* sysdeps/unix/Makefile: Don't generate sysd-syscalls or
+	s-proto.d if avoid-generated is set.
+
+	* sysdeps/alpha/Dist: List only one file per line.
+	* sysdeps/generic/Dist: Likewise.
+	* sysdeps/m68k/fpu/switch/Dist: Likewise.
+	* sysdeps/sparc/sparc32/Dist: Likewise.
+	* sysdeps/unix/Dist: Likewise.
+	* sysdeps/unix/sysv/irix4/Dist: Likewise.
+
+	* sysdeps/mach/hurd/i386/Dist: New file.
+	* sysdeps/generic/Dist: Add endutxent.c, getutxent.c, getutxid.c,
+	getutxline.c, pututxline.c, setutxent.c, updwtmpx.c, and utmpxname.c.
+	* sysdeps/unix/sysv/linux/Dist: Add getresuid.c and getresgid.c.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Dist: Remove __sigtrampoline.S.
+
 1998-07-04 10:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/Makefile (routines): Add iofread_u and iofwrite_u.

@@ -77,3 +77,5 @@ xstatconv.c
 getdents64.c
 __sendmsg.S
 __recvmsg.S
+getresuid.c
+getresgid.c

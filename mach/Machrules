@@ -104,6 +104,7 @@ define include-%.defs
 echo '#include <$(firstword $($*.defs) $*.defs)>'
 endef
 
+ifndef no_deps
 # Not an implicit rule so the stamps are never removed as intermediates!
 $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp:
 	rm -f $@
@@ -128,6 +129,7 @@ $(patsubst %,$(objpfx)%.udeps,$(user-interfaces)):
 			  $(@:.udeps=_server.c) $(@:.udeps=_server.h):,' \
 	    $(sed-remove-objpfx) > $@.new
 	mv -f $@.new $@
+endif
 
 # Look for the server stub files where they will be written.
 vpath %_server.c $(addprefix $(objpfx),$(sort $(dir $(server-interfaces))))

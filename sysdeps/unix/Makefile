@@ -270,6 +270,7 @@ endif
 
 endif
 
+ifndef avoid-generated
 ifndef inhibit-unix-syscalls
 
 # Sysdep dirs unix/... can contain a file syscalls.list,
@@ -311,4 +312,5 @@ $(common-objpfx)s-proto.d: $(common-objpfx)%.d: $(..)sysdeps/unix/%.S \
 common-generated += s-proto.d
 postclean-generated += sysd-syscalls
 
+endif
 endif
