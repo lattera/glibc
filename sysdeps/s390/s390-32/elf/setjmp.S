@@ -1,5 +1,5 @@
 /* setjmp for s390, ELF version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -34,6 +34,7 @@ END (setjmp)
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
 	.weak  C_SYMBOL_NAME (_setjmp)
+strong_alias (_setjmp, __GI__setjmp)
 ENTRY(__setjmp)
 	lhi    %r3,0                /* second argument of zero */
 

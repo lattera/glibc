@@ -1,5 +1,5 @@
 /* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  Vax version.
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,10 +23,11 @@
 
 #include <sysdep.h>
 
-ENTRY (setjmp)
+ENTRY (_setjmp)
 	popl r0			/* Pop return PC.  */
 	popl r1			/* Pop jmp_buf argument.  */
 	pushl $0		/* Push second argument of zero.  */
 	pushl r1		/* Push back first argument.  */
 	pushl r0		/* Push back return PC.  */
 	jmp C_SYMBOL_NAME (__sigsetjmp)
+strong_alias (_setjmp, __GI__setjmp)

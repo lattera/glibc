@@ -65,10 +65,10 @@ asm ("\n/*@_init_PROLOG_BEGINS*/");
 static void
 call_initialize_minimal (void)
 {
-  extern void __pthread_initialize_minimal (void)
+  extern void __pthread_initialize_minimal_internal (void)
     __attribute ((visibility ("hidden")));
 
-  __pthread_initialize_minimal ();
+  __pthread_initialize_minimal_internal ();
 }
 
 SECTION (".init");

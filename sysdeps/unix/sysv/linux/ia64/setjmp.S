@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,6 +80,7 @@ LEAF(_setjmp)
 	mov in1=0
 	br.cond.sptk.many __sigsetjmp
 END(_setjmp)
+strong_alias (_setjmp, __GI__setjmp)
 
 	/* __sigsetjmp(__jmp_buf buf, int savemask) */
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,6 +77,7 @@ ENTRY(_setjmp)
 	mov	0, a1
 	br	$sigsetjmp_local
 END(_setjmp)
+strong_alias (_setjmp, __GI__setjmp)
 
 ENTRY(setjmp)
 	ldgp	gp, 0(pv)

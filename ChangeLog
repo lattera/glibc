@@ -1,3 +1,27 @@
+2002-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/setjmp.h: Add libc_hidden_proto for _setjmp.
+	* sysdeps/alpha/setjmp.S: Add __GI__setjmp alias.
+	* sysdeps/arm/bsd-_setjmp.S: Likewise.
+	* sysdeps/generic/bsd-_setjmp.c: Likewise.
+	* sysdeps/hppa/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/m68k/bsd-_setjmp.c: Likewise.
+	* sysdeps/mips/bsd-_setjmp.S: Likewise.
+	* sysdeps/mips/mips64/bsd-_setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/bsd-_setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp.S: Likewise.
+	* sysdeps/s390/s390-32/bsd-_setjmp.S: Likewise.
+	* sysdeps/s390/s390-32/elf/setjmp.S: Likewise.
+	* sysdeps/s390/s390-64/bsd-_setjmp.S: Likewise.
+	* sysdeps/s390/s390-64/elf/setjmp.S: Likewise.
+	* sysdeps/sh/bsd-_setjmp.S: Likewise.
+	* sysdeps/sparc/sparc32/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setjmp.S: Likewise.
+	* sysdeps/vax/bsd-_setjmp.S: Likewise.
+	* sysdeps/x86_64/bsd-_setjmp.S: Likewise.
+
 2002-12-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/thread-m.h (thread_atfork): Define using __register_atfork.

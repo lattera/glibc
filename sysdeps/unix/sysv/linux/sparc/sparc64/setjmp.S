@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu).
 
@@ -34,6 +34,7 @@ ENTRY(_setjmp)
 	ba	__sigsetjmp_local
 	 set	0, %o1
 END(_setjmp)
+strong_alias (_setjmp, __GI__setjmp)
 
 /* int setjmp(jmp_buf) */
 

@@ -1,5 +1,5 @@
 /* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  PowerPC version.
-   Copyright (C) 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,3 +28,4 @@ ENTRY (BP_SYM (_setjmp))
 	li r4,0			/* Set second argument to 0.  */
 	b JUMPTARGET(BP_SYM (__sigsetjmp))
 END (BP_SYM (_setjmp))
+strong_alias (_setjmp, __GI__setjmp)

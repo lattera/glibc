@@ -1,5 +1,5 @@
 /* setjmp for 64 bit S/390, ELF version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -34,6 +34,7 @@ END (setjmp)
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
         .weak  C_SYMBOL_NAME (_setjmp)
+strong_alias (_setjmp, __GI__setjmp)
 ENTRY(__setjmp)
         slgr   %r3,%r3              /* Second argument of zero.  */
 
@@ -50,4 +51,3 @@ ENTRY(__sigsetjmp)
 	jg     __sigjmp_save
 #endif
 END (__sigsetjmp)
-
