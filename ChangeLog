@@ -1,3 +1,8 @@
+2005-04-05  Roland McGrath  <roland@redhat.com>
+
+	* scripts/config.guess: Update from master, timestamp='2005-03-24'.
+	* scripts/config.sub: Update from master, timestamp='2005-02-10'.
+
 2005-04-04  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc32/dl-trampoline.S: New file.

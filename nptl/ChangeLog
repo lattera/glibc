@@ -1,3 +1,9 @@
+2005-04-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread.h (__pthread_cleanup_routine): Use
+	__inline instead of inline.
+	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_routine): Likewise.
+
 2005-03-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: Use
@@ -73,6 +79,7 @@
 
 2005-02-07  Richard Henderson  <rth@redhat.com>
 
+	[BZ #787]
 	* sysdeps/pthread/pthread.h (__sigsetjmp): Use pointer as first
 	argument.
 
