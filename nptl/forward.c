@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 #include <shlib-compat.h>
+#include <atomic.h>
 
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
@@ -33,7 +34,7 @@ test_loaded (void)
 {
   /* While we are getting the result set the handle to (void *) -1 to
      avoid recursive calls.  */
-  libpthread_handle = (void *) -1l;
+  atomic_compare_and_exchange_acq (&libpthread_handle, (void *) -1l, NULL);
 
   void *h = __libc_dlopen_mode ("libpthread.so.0", RTLD_LAZY | RTLD_NOLOAD);
 
