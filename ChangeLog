@@ -1,3 +1,7 @@
+2001-03-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/data/sys/socket.h-data: Allow SO* symbols.
+
 2001-03-07  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/ia64/fpu/Makefile: Modify sysdep_routines instead of
