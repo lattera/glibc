@@ -1,3 +1,15 @@
+1998-09-24  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (underlying_strftime):
+	Set the buffer to a nonzero value before calling
+	strftime, and check to see whether strftime has set the buffer to zero.
+	This lets us distinguish between an empty buffer and an error.
+
+1998-09-24  Paul Eggert  <eggert@shade.twinsun.com>
+
+	* strftime.c (INT_STRLEN_BOUND): Fix typo by changing 100 to 1000.
+	This fix is propagated from tzcode1998g.tar.gz.
+
 1998-09-24  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/unix/siglist.c: Make sys_siglist a weak alias for
