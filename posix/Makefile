@@ -34,7 +34,7 @@ distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
 	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c   \
 	      spawn_int.h tst-getconf.sh regcomp.c regexec.c regex_internal.c \
-	      regex_internal.h fork.h
+	      regex_internal.h fork.h rxspencer/tests rxspencer/COPYRIGHT
 
 routines :=								      \
 	uname								      \
@@ -78,7 +78,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
-		   tst-nice tst-nanosleep transbug
+		   tst-nice tst-nanosleep transbug tst-rxspencer
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -147,6 +147,7 @@ tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = `pwd`
+tst-rxspencer-ARGS = rxspencer/tests
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata

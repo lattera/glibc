@@ -1,5 +1,12 @@
 2003-11-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile: Add rules to build and run tst-rxspencer.
+	(distribute): Add rxspencer/tests and rxspencer/COPYRIGHT.
+	* posix/tst-rxspencer.c: New file.
+	* posix/rxspencer/tests: New file.
+	* posix/rxspencer/COPYRIGHT: New file.
+	Patch mostly by Jakub Jelinek.
+
 	* posix/regcomp.c (parse_bracket_exp): Don't check for range if
 	this is no option given the first token.
 
