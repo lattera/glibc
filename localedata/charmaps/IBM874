@@ -220,6 +220,7 @@ CHARMAP
 <tilde>                /x7E     <U007E> TILDE
 <DEL>                  /x7F     <U007F> DELETE
 <DT>                   /x7F     <U007F> DELETE
+<Eu>                   /x80     <U20AC> EURO SIGN
 <.3>                   /x85     <U2026> HORIZONTAL ELLIPSIS
 <'6>                   /x91     <U2018> LEFT SINGLE QUOTATION MARK
 <'9>                   /x92     <U2019> RIGHT SINGLE QUOTATION MARK

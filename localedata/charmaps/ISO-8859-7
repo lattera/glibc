@@ -189,7 +189,7 @@ CHARMAP
 <+->                   /xB1   <U00B1> PLUS-MINUS SIGN
 <2S>                   /xB2   <U00B2> SUPERSCRIPT TWO
 <3S>                   /xB3   <U00B3> SUPERSCRIPT THREE
-<''>                   /xB4   <U00B4> ACUTE ACCENT
+<'*>                   /xB4   <U0384> GREEK TONOS
 <'%>                   /xB5   <U0385> GREEK DIALYTIKA TONOS
 <A%>                   /xB6   <U0386> GREEK CAPITAL LETTER ALPHA WITH TONOS
 <.M>                   /xB7   <U00B7> MIDDLE DOT

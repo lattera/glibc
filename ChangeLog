@@ -1,3 +1,9 @@
+1999-12-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/bits/string2.h (__memset_gc, __mempcpy_small, __strcpy_small,
+	__stpcpy_small): Cast switch expressions to int to shut up compiler
+	warnings.
+
 1999-12-07  Scott Bambrough <scottb@netwinder.org>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_rel): Fixup R_ARM_PC24

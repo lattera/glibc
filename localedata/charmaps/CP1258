@@ -325,6 +325,7 @@ CHARMAP
 <e'>                   /xE9     <U00E9> LATIN SMALL LETTER E WITH ACUTE
 <e/>>                  /xEA     <U00EA> LATIN SMALL LETTER E WITH CIRCUMFLEX
 <e:>                   /xEB     <U00EB> LATIN SMALL LETTER E WITH DIAERESIS
+<"'>                   /xEC     <U0301> COMBINING ACUTE ACCENT
 <i'>                   /xED     <U00ED> LATIN SMALL LETTER I WITH ACUTE
 <i/>>                  /xEE     <U00EE> LATIN SMALL LETTER I WITH CIRCUMFLEX
 <i:>                   /xEF     <U00EF> LATIN SMALL LETTER I WITH DIAERESIS

@@ -589,6 +589,8 @@ escape_char /
 <';>                   <U02DB> OGONEK
 <1?>                   <U02DC> SMALL TILDE
 <'">                   <U02DD> DOUBLE ACUTE ACCENT
+<"`>                   <U0300> COMBINING GRAVE ACCENT
+<"'>                   <U0301> COMBINING ACUTE ACCENT
 <'G>                   <U0374> GREEK NUMERAL SIGN
 <,G>                   <U0375> GREEK LOWER NUMERAL SIGN
 <j3>                   <U037A> GREEK YPOGEGRAMMENI
@@ -859,6 +861,7 @@ escape_char /
 <7a>                   <U0667> ARABIC-INDIC DIGIT SEVEN
 <8a>                   <U0668> ARABIC-INDIC DIGIT EIGHT
 <9a>                   <U0669> ARABIC-INDIC DIGIT NINE
+<%a>                   <U066A> ARABIC PERCENT SIGN
 <aS>                   <U0670> ARABIC LETTER SUPERSCRIPT ALEF
 <p+>                   <U067E> ARABIC LETTER PEH
 <hH>                   <U0681> ARABIC LETTER HAH WITH HAMZA ABOVE
@@ -2173,9 +2176,14 @@ escape_char /
 <St>                   <UFB05> LATIN SMALL LIGATURE LONG S T
 <st>                   <UFB06> LATIN SMALL LIGATURE ST
 <3+;>                  <UFE7D> ARABIC SHADDA MEDIAL FORM
+<H'->                  <UFE80> ARABIC LETTER HAMZA ISOLATED FORM
+<aM->                  <UFE81> ARABIC LETTER ALEF WITH MADDA ABOVE ISOLATED FORM
 <aM.>                  <UFE82> ARABIC LETTER ALEF WITH MADDA ABOVE FINAL FORM
+<aH->                  <UFE83> ARABIC LETTER ALEF WITH HAMZA ABOVE ISOLATED FORM
 <aH.>                  <UFE84> ARABIC LETTER ALEF WITH HAMZA ABOVE FINAL FORM
+<wH->                  <UFE85> ARABIC LETTER WAW WITH HAMZA ABOVE ISOLATED FORM
 <ah.>                  <UFE88> ARABIC LETTER ALEF WITH HAMZA BELOW FINAL FORM
+<yH,>                  <UFE8B> ARABIC LETTER YEH WITH HAMZA ABOVE INITIAL FORM
 <a+->                  <UFE8D> ARABIC LETTER ALEF ISOLATED FORM
 <a+.>                  <UFE8E> ARABIC LETTER ALEF FINAL FORM
 <b+->                  <UFE8F> ARABIC LETTER BEH ISOLATED FORM

@@ -80,6 +80,7 @@ CHARMAP
 <!S>                   /x24     <U0024> DOLLAR SIGN
 <DO>                   /x24     <U0024> DOLLAR SIGN
 <dollar-sign>          /x24     <U0024> DOLLAR SIGN
+<%a>                   /x25     <U066A> ARABIC PERCENT SIGN
 <&>                    /x26     <U0026> AMPERSAND
 <ampersand>            /x26     <U0026> AMPERSAND
 <'>                    /x27     <U0027> APOSTROPHE
@@ -292,7 +293,12 @@ CHARMAP
 <?+>                   /xBF     <U061F> ARABIC QUESTION MARK
 <Ct>                   /xC0     <U00A2> CENT SIGN
 <!C>                   /xC0     <U00A2> CENT SIGN
+<H'->                  /xC1     <UFE80> ARABIC LETTER HAMZA ISOLATED FORM
+<aM->                  /xC2     <UFE81> ARABIC LETTER ALEF WITH MADDA ABOVE ISOLATED FORM
+<aH->                  /xC3     <UFE83> ARABIC LETTER ALEF WITH HAMZA ABOVE ISOLATED FORM
+<wH->                  /xC4     <UFE85> ARABIC LETTER WAW WITH HAMZA ABOVE ISOLATED FORM
 <e+.>                  /xC5     <UFECA> ARABIC LETTER AIN FINAL FORM
+<yH,>                  /xC6     <UFE8D> ARABIC LETTER ALEF ISOLATED FORM
 <a+->                  /xC7     <UFE8D> ARABIC LETTER ALEF ISOLATED FORM
 <b+,>                  /xC8     <UFE91> ARABIC LETTER BEH INITIAL FORM
 <tm->                  /xC9     <UFE93> ARABIC LETTER TEH MARBUTA ISOLATED FORM
