@@ -1,4 +1,4 @@
-/* Low-level functions for atomitc operations.  Stub version.
+/* Low-level functions for atomic operations.  Stub version.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

@@ -21,12 +21,12 @@
 #include <sys/ptrace.h>
 #include <stdarg.h>
 
-extern int __syscall_ptrace (int, pid_t, void *, void *);
+extern long int __syscall_ptrace (int, pid_t, void *, void *);
 
-int
+long int
 ptrace (enum __ptrace_request request, ...)
 {
-  int res, ret;
+  long int res, ret;
   va_list ap;
   pid_t pid;
   void *addr, *data;

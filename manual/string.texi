@@ -168,6 +168,26 @@ strlen (string)
 @end smallexample
 @end deftypefun
 
+@comment string.h
+@comment GNU
+@deftypefun size_t strnlen (const char *@var{s}, size_t @var{maxlen})
+The @code{strnlen} function returns the length of the null-terminated
+string @var{s} is this length is smaller than @var{maxlen}.  Otherwise
+it returns @var{maxlen}.  Therefore this function is equivalent to
+@code{(strlen (@var{s}) < n ? strlen (@var{s}) : @var{maxlen})} but it
+is more efficent.
+
+@smallexample
+char string[32] = "hello, world";
+strnlen (string, 32)
+    @result{} 12
+strnlen (string, 5)
+    @result{} 5
+@end smallexample
+
+This function is a GNU extension.
+@end deftypefun
+
 @node Copying and Concatenation
 @section Copying and Concatenation
 
@@ -221,6 +241,33 @@ int arraysize;
 @dots{}
 memcpy (new, old, arraysize * sizeof (struct foo));
 @end smallexample
+@end deftypefun
+
+@comment string.h
+@comment GNU
+@deftypefun {void *} mempcpy (void *@var{to}, const void *@var{from}, size_t @var{size})
+The @code{mempcpy} function is nearly identical to the @code{memcpy}
+function.  It copies @var{size} byts from the object beginning at
+@code{from} into the object pointed to by @var{to}.  But instead of
+returning the value of @code{to} it returns a pointer to the byte
+following the last written byte in the object beginning at @var{to}.
+I.e., the value is @code{((void *) ((char *) @var{to} + @var{size}))}.
+
+This function is useful in situations where a number of objects shall be
+copied to consecutive memory positions.
+
+@smallexample
+void *
+combine (void *o1, size_t s1, void *o2, size_t s2)
+@{
+  void *result = malloc (s1 + s2);
+  if (result != NULL)
+    mempcpy (mempcpy (result, o1, s1), o2, s2);
+  return result;
+@}
+@end smallexample
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment string.h
@@ -565,8 +612,11 @@ is an initial substring of @var{s2}, then @var{s1} is considered to be
 @comment string.h
 @comment BSD
 @deftypefun int strcasecmp (const char *@var{s1}, const char *@var{s2})
-This function is like @code{strcmp}, except that differences in case
-are ignored.
+This function is like @code{strcmp}, except that differences in case are
+ignored.  How uppercase and lowercase character are related is
+determined by the currently selected locale.  In the standard @code{"C"}
+locale the characters @"A and @"a do not match but in a locale which
+regards this characters as parts of the alphabeth they do match.
 
 @code{strcasecmp} is derived from BSD.
 @end deftypefun
@@ -575,7 +625,8 @@ are ignored.
 @comment BSD
 @deftypefun int strncasecmp (const char *@var{s1}, const char *@var{s2}, size_t @var{n})
 This function is like @code{strncmp}, except that differences in case
-are ignored.
+are ignored.  Like for @code{strcasecmp} it is locale dependent how
+uppercase and lowercase character are related.
 
 @code{strncasecmp} is a GNU extension.
 @end deftypefun

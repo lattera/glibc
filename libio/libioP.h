@@ -28,7 +28,9 @@
 
 #include "iolibio.h"
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define _IO_seek_set 0
 #define _IO_seek_cur 1
@@ -477,7 +479,9 @@ extern int _IO_vscanf __P ((const char *, _IO_va_list));
 # define _IO_pos_0 ((_IO_fpos_t) 0)
 #endif
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #ifdef _IO_MTSAFE_IO
 /* check following! */

@@ -16,20 +16,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_SELECT_H
-# error "Never use <bits/select.h> directly; include <sys/select.h> instead."
-#endif
+/*
+ * Never include this file directly; use <sys/statfs.h> instead.
+ */
 
+#ifndef _BITS_STATFS_H
+#define _BITS_STATFS_H
 
-/* We don't use `memset' because this would require a prototype and
-   the array isn't too big.  */
-#define __FD_ZERO(set) \
-  do {									      \
-    unsigned int __i;							      \
-    __fd_set *__arr = (set);						      \
-    for (__i = 0; __i < sizeof (__fd_set) / sizeof (__fd_mask); ++__i)	      \
-      __arr->fds_bits[__i] = '\0';					      \
-  } while (0)
-#define __FD_SET(d, set)	((set)->fds_bits[__FDELT(d)] |= __FDMASK(d))
-#define __FD_CLR(d, set)	((set)->fds_bits[__FDELT(d)] &= ~__FDMASK(d))
-#define __FD_ISSET(d, set)	((set)->fds_bits[__FDELT(d)] & __FDMASK(d))
+#include <bits/types.h>  /* for __fsid_t */
+
+struct statfs
+  {
+    long int f_type;
+    long int f_bsize;
+    long int f_blocks;
+    long int f_bfree;
+    long int f_bavail;
+    long int f_files;
+    long int f_ffree;
+    __fsid_t f_fsid;
+    long int f_namelen;
+    long int f_spare[6];
+  };
+
+#endif	/* bits/statfs.h */

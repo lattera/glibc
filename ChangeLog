@@ -1,3 +1,52 @@
+1997-09-16 23:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/fileops.c: Define __set_errno if necessary.
+	* libio/libioP.h: Don't use __BEGIN_DECLS/__END_DECLS, expand macros.
+
+1997-09-16 22:03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/Makefile (headers): Instead bits/string2.h.
+	Reported by David S. Miller <davem@jenolan.rutgers.edu>.
+
+1997-09-16 13:31  David S. Miller  <davem@tanya.rutgers.edu>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/statfs.h: New file.
+
+1997-09-16 17:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bits/select.h (__FD_ZERO): Declare __arr variable
+	as of type __fdset *.
+	* sysdeps/i386/bits/select.h: Likewise.
+	Reported by David S. Miller <davem@jenolan.rutgers.edu>.
+
+1997-09-16 04:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* hesiod/hesiod.c: Don't use and define cistrcmp.  We have
+	strcasecmp.
+	(hesiod_init): Use of HES_DOMAIN need not be protected by
+	__secure_getenv.
+	(hesiod_to_bind): Avoid using strcat and extra strlen calls, use
+	stpcpy.
+
+	* string/Makefile (noinl-tester-ENV): New variable to make
+	strerror test pass.
+	(CFLAGS-noinl-tester): Make sure we test the correct functions.
+
+	* sysdeps/stub/atomicity.h: Fix typo.
+	Zack Weinberg <zack@rabi.phys.columbia.edu> told me this twice.
+
+	* manual/string.texi: Document strnlen and mempcpy.
+	Tell a bit more about the locale dependence of strcasecmp and
+	strncasecmp.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Remove ptrace.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (ptrace): Change return
+	value type to long int.
+	* sysdeps/unix/sysv/linux/ptrace.c: Likewise.  Adopt local variable
+	types.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S: Fix typo.
+	Patches by David S. Miller <davem@jenolan.rutgers.edu>.
+
 1997-09-16 02:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	Implementation of Hesiod NSS module by Mark Kettenis.

@@ -93,7 +93,7 @@ enum __ptrace_request
    appear (those that are used for the particular request) as:
      pid_t PID, void *ADDR, int DATA, void *ADDR2
    after REQUEST.  */
-extern int ptrace __P ((enum __ptrace_request __request, ...));
+extern long int ptrace __P ((enum __ptrace_request __request, ...));
 
 __END_DECLS
 

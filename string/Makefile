@@ -22,7 +22,8 @@
 subdir	:= string
 
 headers	:= string.h strings.h memory.h endian.h bits/endian.h \
-	   argz.h envz.h byteswap.h bits/byteswap.h bits/string.h
+	   argz.h envz.h byteswap.h bits/byteswap.h bits/string.h \
+	   bits/string2.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strverscmp strdup strndup				\
@@ -49,8 +50,10 @@ include ../Rules
 
 tester-ENV = LANGUAGE=C
 inl-tester-ENV = LANGUAGE=C
+noinl-tester-ENV = LANGUAGE=C
 CFLAGS-tester.c = -fno-builtin
 CFLAGS-inl-tester.c = -fno-builtin
+CFLAGS-noinl-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
 

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_SELECT_H
-#error "Never use <bits/select.h> directly; include <sys/select.h> instead."
+# error "Never use <bits/select.h> directly; include <sys/select.h> instead."
 #endif
 
 
@@ -58,7 +58,7 @@
 # define __FD_ZERO(set)  \
   do {									      \
     unsigned int __i;							      \
-    __fd_mask *__arr = (set);						      \
+    __fd_set *__arr = (set);						      \
     for (__i = 0; __i < sizeof (__fd_set) / sizeof (__fd_mask); ++__i)	      \
       __arr->fds_bits[__i] = 0;						      \
   } while (0)
