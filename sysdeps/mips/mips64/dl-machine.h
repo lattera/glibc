@@ -445,8 +445,10 @@ _RTLD_PROLOGUE (ENTRY_POINT)\
 	# doesn't say nothing about this, I emulate this here.\n\
 	dla $4, _DYNAMIC\n\
 	sd $4, -0x7ff0($28)\n\
+	dsubu $29, 16\n\
 	move $4, $29\n\
 	jal _dl_start\n\
+	daddiu $29, 16\n\
 	# Get the value of label '_dl_start_user' in t9 ($25).\n\
 	dla $25, _dl_start_user\n\
 _dl_start_user:\n\
@@ -456,6 +458,8 @@ _dl_start_user:\n\
 	move $16, $28\n\
 	# Save the user entry point address in saved register.\n\
 	move $17, $2\n\
+	# Store the highest stack address\n\
+	sd $29, __libc_stack_end\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	ld $2, _dl_skip_args\n\
@@ -469,27 +473,29 @@ _dl_start_user:\n\
 	daddu $29, $2\n\
 	# Save back the modified argument count.\n\
 	sd $4, 0($29)\n\
-	# Get _dl_default_scope[2] as argument in _dl_init_next call below.\n\
-1:	dla $2, _dl_default_scope\n\
-	ld $4, 2*8($2)\n\
-	# Call _dl_init_next to return the address of an initializer\n\
-	# function to run.\n\
-	jal _dl_init_next\n\
-	move $28, $16\n\
-	# Check for zero return,  when out of initializers.\n\
-	beq $2, $0, 2f\n\
-	# Call the shared object initializer function.\n\
-	move $25, $2\n\
-	ld $4, 0($29)\n\
-	ld $5, 1*8($29)\n\
-	ld $6, 2*8($29)\n\
-	ld $7, 3*8($29)\n\
-	jalr $25\n\
-	move $28, $16\n\
-	# Loop to call _dl_init_next for the next initializer.\n\
-	b 1b\n\
+1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
+	ld $4, _dl_loaded\n\
+	ld $5, 0($29)\n\
+	dla $6, 4($29)\n\
+	dla $7, 8($29)\n\
+	dsubu $29, 16\n\
+	# Call the function to run the initializers.\n\
+	jal _dl_init
+	daddiu $29, 16\n\
 	# Pass our finalizer function to the user in ra.\n\
-2:	dla $31, _dl_fini\n\
+	dla $31, _dl_fini\n\
+	# Jump to the user entry point.\n\
+1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
+	lw $4, _dl_loaded\n\
+	lw $5, 0($29)\n\
+	la $6, 4($29)\n\
+	la $7, 8($29)\n\
+	subu $29, 16\n\
+	# Call the function to run the initializers.\n\
+	jal _dl_init
+	addiu $29, 16\n\
+	# Pass our finalizer function to the user in ra.\n\
+	dla $31, _dl_fini\n\
 	# Jump to the user entry point.\n\
 	move $25, $17\n\
 	ld $4, 0($29)\n\
