@@ -1,3 +1,8 @@
+2000-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makeconfig (preprocess-version): Add -traditional to gcc call.
+	Cleanup sed calls.
+
 2000-12-19  Andreas Jaeger  <aj@suse.de>
 
 	* include/netinet/ether.h (DECLARE_NSS_PROTOTYPES): New.
