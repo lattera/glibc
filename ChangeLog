@@ -1,3 +1,10 @@
+2003-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (_dl_allocate_tls, _dl_deallocate_tls):
+	Add rtld_hidden_proto.
+	* sysdeps/generic/dl-tls.c (_dl_deallocate_tls): Add rtld_hidden_def.
+	(_dl_allocate_tls): Likewise.  Remove INTDEF.
+
 2002-07-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/memcpy.S: Optimize.  Based on a patch by Toshiyasu

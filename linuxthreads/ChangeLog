@@ -1,3 +1,7 @@
+2003-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile ($(objpfx)libpthread.so): Depend on ld.so.
+
 2003-01-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel-wrappers.sh: Exclude sigwait.c as well, it does not have

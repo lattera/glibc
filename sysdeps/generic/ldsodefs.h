@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -769,6 +769,7 @@ rtld_hidden_proto (_dl_tls_setup)
 
 /* Allocate memory for static TLS block (unless MEM is nonzero) and dtv.  */
 extern void *_dl_allocate_tls (void *mem) internal_function;
+rtld_hidden_proto (_dl_allocate_tls)
 
 /* Get size and alignment requirements of the static TLS block.  */
 extern void _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
@@ -783,6 +784,7 @@ rtld_hidden_proto (_dl_allocate_tls_init)
 
 /* Deallocate memory allocated with _dl_allocate_tls.  */
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
+rtld_hidden_proto (_dl_deallocate_tls)
 
 /* Return the symbol address given the map of the module it is in and
    the symbol record.  */

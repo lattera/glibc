@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "pthreadP.h"
+#include <atomic.h>
 #include <shlib-compat.h>
 
 
@@ -32,18 +33,19 @@ __pthread_cond_timedwait_2_0 (cond, mutex, abstime)
 {
   if (cond->cond == NULL)
     {
-      lll_mutex_lock (cond->lock);
+      pthread_cond_t *newcond;
 
-      /* Check whether the condvar is still not allocated.  */
-      if (cond->cond == NULL)
-	cond->cond = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
-
-      lll_mutex_unlock (cond->lock);
-
-      if (cond->cond == NULL)
+      newcond = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
+      if (newcond == NULL)
 	return ENOMEM;
 
-      *cond->cond = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
+      *newcond = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
+
+      atomic_write_barrier ();
+
+      if (atomic_compare_and_exchange_acq (&cond->cond, newcond, NULL) != 0)
+	/* Somebody else just initialized the condvar.  */
+	free (newcond);
     }
 
   return __pthread_cond_timedwait (cond->cond, mutex, abstime);

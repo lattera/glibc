@@ -1,3 +1,14 @@
+2003-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* atomic.h: Correct definitions of atomic_full_barrier,
+	atomic_read_barrier, atomic_write_barrier.
+
+	* old_pthread_cond_broadcast.c: Make memory allocate and initialization
+	race-free.
+	* old_pthread_cond_signal.c: Likewise.
+	* old_pthread_cond_timedwait.c: Likewise.
+	* old_pthread_cond_wait.c: Likewise.
+
 2003-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile ($(objpfx)libpthread.so): Depend on ld.so.

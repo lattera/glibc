@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  Generic version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -388,7 +388,7 @@ _dl_allocate_tls (void *mem)
 				? _dl_allocate_tls_storage ()
 				: allocate_dtv (mem));
 }
-INTDEF(_dl_allocate_tls)
+rtld_hidden_def (_dl_allocate_tls)
 
 
 void
@@ -409,7 +409,7 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
       free (tcb);
     }
 }
-
+rtld_hidden_def (_dl_deallocate_tls)
 
 
 # ifdef SHARED

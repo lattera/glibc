@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -93,17 +93,17 @@
 
 
 #ifndef atomic_full_barrier
-# define full_barrier() __asm ("" ::: "memory")
+# define atomic_full_barrier() __asm ("" ::: "memory")
 #endif
 
 
 #ifndef atomic_read_barrier
-# define read_barrier() full_barrier()
+# define atomic_read_barrier() atomic_full_barrier()
 #endif
 
 
 #ifndef atomic_write_barrier
-# define write_barrier() full_barrier()
+# define atomic_write_barrier() atomic_full_barrier()
 #endif
 
 #endif	/* atomic.h */
