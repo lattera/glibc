@@ -207,18 +207,24 @@ int tsd_key_next;
 
 typedef int thread_id;
 
+/* The mutex functions used to do absolutely nothing, i.e. lock,
+   trylock and unlock would always just return 0.  However, even
+   without any concurrently active threads, a mutex can be used
+   legitimately as an `in use' flag.  To make the code that is
+   protected by a mutex async-signal safe, these macros would have to
+   be based on atomic test-and-set operations, for example. */
 typedef int mutex_t;
 
 #define MUTEX_INITIALIZER          0
 #define mutex_init(m)              (*(m) = 0)
-#define mutex_lock(m)              (0)
-#define mutex_trylock(m)           (0)
-#define mutex_unlock(m)            (0)
+#define mutex_lock(m)              ((*(m) = 1), 0)
+#define mutex_trylock(m)           (*(m) ? 1 : ((*(m) = 1), 0))
+#define mutex_unlock(m)            (*(m) = 0)
 
 typedef void *tsd_key_t;
 #define tsd_key_create(key, destr) do {} while(0)
-#define tsd_setspecific(key, data) do {} while(0)
-#define tsd_getspecific(key, vptr) (vptr = NULL)
+#define tsd_setspecific(key, data) ((key) = (data))
+#define tsd_getspecific(key, vptr) (vptr = (key))
 
 #define thread_atfork(prepare, parent, child) do {} while(0)
 

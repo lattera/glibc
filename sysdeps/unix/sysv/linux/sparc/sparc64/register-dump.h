@@ -20,7 +20,6 @@
 
 #include <sys/uio.h>
 #include <stdio-common/_itoa.h>
-#include <asm/ptrace.h>
 #include <bits/sigcontext.h>
 
 /* We will print the register dump in this format:
@@ -63,25 +62,17 @@ hexvalue (unsigned long int value, char *buf, size_t len)
     *--cp = '0';
 }
 
-struct __siginfo_sparc64_fpu
-{
-  unsigned long si_float_regs[32];
-  unsigned long si_xfsr;
-  unsigned long si_gsr;
-  unsigned long si_fprs;
-};
-
 static void
 register_dump (int fd, SIGCONTEXT ctx)
 {
   char regs[36][16];
-  char fregs[35][8];
+  char fregs[68][8];
   struct iovec iov[150];
   size_t nr = 0;
   int i;
-  struct reg_window *r = (struct reg_window *)
-    ctx->sf_regs.u_regs[14];
-  struct __siginfo_sparc64_fpu *f;
+  unsigned long *r = (unsigned long *)
+    (ctx->sigc_regs.u_regs[14] + STACK_BIAS);
+  __siginfo_fpu_t *f;
 
 #define ADD_STRING(str) \
   iov[nr].iov_base = (char *) str;					      \
@@ -93,15 +84,15 @@ register_dump (int fd, SIGCONTEXT ctx)
   ++nr
 
   /* Generate strings of register contents.  */
-  hexvalue (ctx->sf_regs.tstate,	regs[0], 16);
-  hexvalue (ctx->sf_regs.tpc,		regs[1], 16);
-  hexvalue (ctx->sf_regs.tnpc,		regs[2], 16);
-  hexvalue (ctx->sf_regs.y,		regs[3], 8);
+  hexvalue (ctx->sigc_regs.tstate,	regs[0], 16);
+  hexvalue (ctx->sigc_regs.tpc,		regs[1], 16);
+  hexvalue (ctx->sigc_regs.tnpc,	regs[2], 16);
+  hexvalue (ctx->sigc_regs.y,		regs[3], 8);
   for (i = 1; i <= 15; i++)
-    hexvalue (ctx->sf_regs.u_regs[i], 	regs[3+i], 16);
+    hexvalue (ctx->sigc_regs.u_regs[i], regs[3+i], 16);
   for (i = 0; i <= 15; i++)
-    hexvalue (r->locals[i],		regs[19+i], 16);
-  hexvalue (ctx->sf_mask,		regs[35], 16);
+    hexvalue (r[i],			regs[19+i], 16);
+  hexvalue (ctx->sigc_mask,		regs[35], 16);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n TSTATE: ");
@@ -177,85 +168,85 @@ register_dump (int fd, SIGCONTEXT ctx)
   ADD_STRING ("\n\n Mask: ");
   ADD_MEM (regs[35], 16);
 
-  f = *(struct __siginfo_sparc64_fpu **)(ctx + 1);
+  f = ctx->sigc_fpu_save;
   if (f != NULL)
     {
-      for (i = 0; i < 32; i++)
-	hexvalue (f->si_float_regs[i], fregs[i], 16);
-      hexvalue (f->si_xfsr, fregs[32], 16);
-      hexvalue (f->si_gsr, fregs[33], 2);
-      hexvalue (f->si_fprs, fregs[34], 1);
-    ADD_STRING (" XFSR: ");
-    ADD_MEM (fregs[32], 16);
-    ADD_STRING (" GSR: ");
-    ADD_MEM (fregs[33], 2);
-    ADD_STRING (" FPRS: ");
-    ADD_MEM (fregs[34], 1);
-    ADD_STRING ("\n  f0: ");
-    ADD_MEM (fregs[0], 16);
-    ADD_STRING ("   f2: ");
-    ADD_MEM (fregs[1], 16);
-    ADD_STRING ("   f4: ");
-    ADD_MEM (fregs[2], 16);
-    ADD_STRING ("\n  f6: ");
-    ADD_MEM (fregs[3], 16);
-    ADD_STRING ("   f8: ");
-    ADD_MEM (fregs[4], 16);
-    ADD_STRING ("  f10: ");
-    ADD_MEM (fregs[5], 16);
-    ADD_STRING ("\n f12: ");
-    ADD_MEM (fregs[6], 16);
-    ADD_STRING ("  f14: ");
-    ADD_MEM (fregs[7], 16);
-    ADD_STRING ("  f16: ");
-    ADD_MEM (fregs[8], 16);
-    ADD_STRING ("\n f18: ");
-    ADD_MEM (fregs[9], 16);
-    ADD_STRING ("  f20: ");
-    ADD_MEM (fregs[10], 16);
-    ADD_STRING ("  f22: ");
-    ADD_MEM (fregs[11], 16);
-    ADD_STRING ("\n f24: ");
-    ADD_MEM (fregs[12], 16);
-    ADD_STRING ("  f26: ");
-    ADD_MEM (fregs[13], 16);
-    ADD_STRING ("  f28: ");
-    ADD_MEM (fregs[14], 16);
-    ADD_STRING ("\n f30: ");
-    ADD_MEM (fregs[15], 16);
-    ADD_STRING ("  f32: ");
-    ADD_MEM (fregs[16], 16);
-    ADD_STRING ("  f34: ");
-    ADD_MEM (fregs[17], 16);
-    ADD_STRING ("\n f36: ");
-    ADD_MEM (fregs[18], 16);
-    ADD_STRING ("  f38: ");
-    ADD_MEM (fregs[19], 16);
-    ADD_STRING ("  f40: ");
-    ADD_MEM (fregs[20], 16);
-    ADD_STRING ("\n f42: ");
-    ADD_MEM (fregs[21], 16);
-    ADD_STRING ("  f44: ");
-    ADD_MEM (fregs[22], 16);
-    ADD_STRING ("  f46: ");
-    ADD_MEM (fregs[23], 16);
-    ADD_STRING ("\n f48: ");
-    ADD_MEM (fregs[24], 16);
-    ADD_STRING ("  f50: ");
-    ADD_MEM (fregs[25], 16);
-    ADD_STRING ("  f52: ");
-    ADD_MEM (fregs[26], 16);
-    ADD_STRING ("\n f54: ");
-    ADD_MEM (fregs[27], 16);
-    ADD_STRING ("  f56: ");
-    ADD_MEM (fregs[28], 16);
-    ADD_STRING ("  f58: ");
-    ADD_MEM (fregs[29], 16);
-    ADD_STRING ("\n f60: ");
-    ADD_MEM (fregs[30], 16);
-    ADD_STRING ("  f62: ");
-    ADD_MEM (fregs[31], 16);
-  }
+      for (i = 0; i < 64; i++)
+	hexvalue (f->si_float_regs[i], fregs[i], 8);
+      hexvalue (f->si_fsr, fregs[64], 16);
+      hexvalue (f->si_gsr, fregs[66], 2);
+      hexvalue (f->si_fprs, fregs[67], 1);
+      ADD_STRING (" XFSR: ");
+      ADD_MEM (fregs[64], 16);
+      ADD_STRING (" GSR: ");
+      ADD_MEM (fregs[66], 2);
+      ADD_STRING (" FPRS: ");
+      ADD_MEM (fregs[67], 1);
+      ADD_STRING ("\n  f0: ");
+      ADD_MEM (fregs[0], 16);
+      ADD_STRING ("   f2: ");
+      ADD_MEM (fregs[2], 16);
+      ADD_STRING ("   f4: ");
+      ADD_MEM (fregs[4], 16);
+      ADD_STRING ("\n  f6: ");
+      ADD_MEM (fregs[6], 16);
+      ADD_STRING ("   f8: ");
+      ADD_MEM (fregs[8], 16);
+      ADD_STRING ("  f10: ");
+      ADD_MEM (fregs[10], 16);
+      ADD_STRING ("\n f12: ");
+      ADD_MEM (fregs[12], 16);
+      ADD_STRING ("  f14: ");
+      ADD_MEM (fregs[14], 16);
+      ADD_STRING ("  f16: ");
+      ADD_MEM (fregs[16], 16);
+      ADD_STRING ("\n f18: ");
+      ADD_MEM (fregs[18], 16);
+      ADD_STRING ("  f20: ");
+      ADD_MEM (fregs[20], 16);
+      ADD_STRING ("  f22: ");
+      ADD_MEM (fregs[22], 16);
+      ADD_STRING ("\n f24: ");
+      ADD_MEM (fregs[24], 16);
+      ADD_STRING ("  f26: ");
+      ADD_MEM (fregs[26], 16);
+      ADD_STRING ("  f28: ");
+      ADD_MEM (fregs[28], 16);
+      ADD_STRING ("\n f30: ");
+      ADD_MEM (fregs[30], 16);
+      ADD_STRING ("  f32: ");
+      ADD_MEM (fregs[32], 16);
+      ADD_STRING ("  f34: ");
+      ADD_MEM (fregs[34], 16);
+      ADD_STRING ("\n f36: ");
+      ADD_MEM (fregs[36], 16);
+      ADD_STRING ("  f38: ");
+      ADD_MEM (fregs[38], 16);
+      ADD_STRING ("  f40: ");
+      ADD_MEM (fregs[40], 16);
+      ADD_STRING ("\n f42: ");
+      ADD_MEM (fregs[42], 16);
+      ADD_STRING ("  f44: ");
+      ADD_MEM (fregs[44], 16);
+      ADD_STRING ("  f46: ");
+      ADD_MEM (fregs[46], 16);
+      ADD_STRING ("\n f48: ");
+      ADD_MEM (fregs[48], 16);
+      ADD_STRING ("  f50: ");
+      ADD_MEM (fregs[50], 16);
+      ADD_STRING ("  f52: ");
+      ADD_MEM (fregs[52], 16);
+      ADD_STRING ("\n f54: ");
+      ADD_MEM (fregs[54], 16);
+      ADD_STRING ("  f56: ");
+      ADD_MEM (fregs[56], 16);
+      ADD_STRING ("  f58: ");
+      ADD_MEM (fregs[58], 16);
+      ADD_STRING ("\n f60: ");
+      ADD_MEM (fregs[60], 16);
+      ADD_STRING ("  f62: ");
+      ADD_MEM (fregs[62], 16);
+    }
 
   ADD_STRING ("\n");
 

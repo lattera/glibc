@@ -17,26 +17,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-struct __rt_signal_frame {
-	siginfo_t	sf_info;
-	struct pt_regs	sf_regs;
-	__siginfo_fpu_t *fpu_save;
-	struct {
-		void	*ss_sp;
-		int	ss_flags;
-		size_t	ss_size;
-	}		sf_stack;
-	unsigned long	sf_mask;
-};
-
 #ifndef STACK_BIAS
 #define STACK_BIAS 2047
 #endif
-#define SIGCONTEXT struct __rt_signal_frame *
+#define SIGCONTEXT struct sigcontext *
 #define SIGCONTEXT_EXTRA_ARGS
-#define GET_PC(__ctx)	((void *) ((__ctx)->sf_regs.tpc))
+#define GET_PC(__ctx)	((void *) ((__ctx)->sigc_regs.tpc))
 #define ADVANCE_STACK_FRAME(__next) \
-	((void *) &((struct reg_window *) (((unsigned long int) (__next))     \
-					   + STACK_BIAS))->ins[6])
-#define GET_STACK(__ctx)	((void *) ((__ctx)->sf_regs.u_regs[14]))
+	((void *) (((unsigned long *) (((unsigned long int) (__next))     \
+					   + STACK_BIAS))+14))
+#define GET_STACK(__ctx)	((void *) ((__ctx)->sigc_regs.u_regs[14]))
 #define GET_FRAME(__ctx)	ADVANCE_STACK_FRAME (GET_STACK (__ctx))

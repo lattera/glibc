@@ -1504,7 +1504,10 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_SUCCESS &&
 	      innetgr (buf, NULL, result->pw_name, NULL))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
           continue;
         }
 
@@ -1529,7 +1532,10 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	    }
 	  else
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-              return NSS_STATUS_NOTFOUND;
+	      {
+		*errnop = ENOENT;
+		return NSS_STATUS_NOTFOUND;
+	      }
             else
               return status;
 
@@ -1548,7 +1554,10 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_SUCCESS &&
 	      innetgr (buf, NULL, result->pw_name, NULL))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
           continue;
         }
 
@@ -1573,7 +1582,10 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	    }
 	  else
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-              return NSS_STATUS_NOTFOUND;
+	      {
+		*errnop = ENOENT;
+		return NSS_STATUS_NOTFOUND;
+	      }
             else
               return status;
 
@@ -1590,7 +1602,10 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
             break;
           else
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-              return NSS_STATUS_NOTFOUND;
+	      {
+		*errnop = ENOENT;
+		return NSS_STATUS_NOTFOUND;
+	      }
             else
               return status;
         }

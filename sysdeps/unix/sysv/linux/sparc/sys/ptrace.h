@@ -150,6 +150,7 @@ enum __ptrace_request
 
 #if __WORDSIZE == 64
 
+  ,
   /* Get all floating point registers used by a processes.
      This is not supported on all machines.  */
    PTRACE_GETFPREGS = 25,
@@ -157,7 +158,7 @@ enum __ptrace_request
 
   /* Set all floating point registers used by a processes.
      This is not supported on all machines.  */
-   PTRACE_SETFPREGS = 26,
+   PTRACE_SETFPREGS = 26
 #define PT_SETFPREGS PTRACE_SETFPREGS
 
 #endif

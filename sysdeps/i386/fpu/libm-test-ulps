@@ -511,6 +511,8 @@ double: 1
 idouble: 1
 Test "erfc (1.2) == 0.089686021770364619762":
 float: 1
+double: 1
+idouble: 1
 ifloat: 1
 Test "erfc (2.0) == 0.0046777349810472658379":
 double: 1

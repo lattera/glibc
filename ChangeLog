@@ -1,3 +1,44 @@
+1999-12-09  Andreas Jaeger  <aj@suse.de>
+
+	* nis/nss_compat/compat-pwd.c (internal_getpwuid_r): Always set
+	errno to ENOENT when returning NSS_STATUS_NOTFOUND.
+	Reported by Christian Starkjohann <cs@obdev.at>.
+
+1999-12-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Added some ulps.
+
+1999-12-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/longlong.h: Update from latest egcs version.
+
+	* sysdeps/sparc/fpu/fegetenv.c: Add semicolons.
+
+	* sysdeps/unix/sysv/linux/bits/errno.h (__errno_location): __THROW
+	has to preceede __attribute__, otherwise g++ barfs.
+
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: Make things compile
+	on sparc64-*-linux.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/register-dump.h: Changed to
+	use sigcontext.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigcontextinfo.h: Likewise.
+
+1999-12-05  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (arena_get2): If generating a new arena fails,
+	try to generate a minimal one and hope for mmap_chunk() to succeed
+	later.
+
+1999-11-07  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/thread-m.h [NO_THREADS]: The mutex_* macros now let
+	mutex_t work as an `in-use' flag even without threads.
+	* malloc/malloc.c (USE_ARENAS): New feature flag, controls support
+	for multiple arenas separately from NO_THREADS.
+	(mALLOc, chunk_realloc, mEMALIGn, cALLOc) [USE_ARENAS]: try to
+	fall back to an mmap()ed arena when sbrk() has failed.
+
 1999-12-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/Versions: Add getrlimit, setrlimit,
