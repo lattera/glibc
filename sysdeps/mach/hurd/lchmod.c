@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <hurd.h>
 
 /* Change the protections of FILE to MODE.  */
