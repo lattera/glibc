@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1997,1998,2000-2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1997,1998,2000-2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,6 @@ void
 perror (const char *s)
 {
   int errnum = errno;
-#ifdef USE_IN_LIBIO
   FILE *fp;
   int fd = -1;
 
@@ -83,11 +82,6 @@ perror (const char *s)
       perror_internal (fp, s, errnum);
       /* Close the stream.  */
       fclose (fp);
-
-      ((_IO_FILE *) stderr)->_offset = _IO_pos_BAD;
     }
-#else
-  perror_internal (stderr, s, errnum);
-#endif
 }
 libc_hidden_def (perror)

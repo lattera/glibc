@@ -1,5 +1,8 @@
 2003-04-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/perror.c (perror): We don't need to set the offset
+	to _IO_pos_bad, this is how streams are initialized.
+
 	* locale/programs/ld-time.c (TESTARR_ELEM): Make i unsigned.
 	(time_output): If necessary, allocate new buffer for .name string if
 	padding is required.
