@@ -1,3 +1,23 @@
+1998-03-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/wordexp-test.c: Add more tests.
+	(testit): Fix logic.
+
+	* posix/wordexp.c (exec_comm): In the child, redirect stderr to
+	/dev/null instead of closing it, close pipe.  Always chop off all
+	trailing newlines.  Kill and reap child before returning error.
+	(w_addword, parse_glob): Fix memory leak.
+	(wordexp): Fix dangling pointer problem.
+
+1998-03-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c (_dl_close): Correct and simplify unmapping.
+
+	* posix/wordexp-test.c (main): Fix little thinkos and typos.
+
+	* catgets/Makefile (CPPFLAGS): Change NLSPATH to also examine
+	directory index by only the language.
+
 1998-03-16 13:02  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-tst.sh: Store test results in the

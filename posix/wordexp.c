@@ -63,6 +63,11 @@ static int parse_backtick (char **word, size_t *word_length,
 			   size_t *offset, int flags, wordexp_t *pwordexp,
 			   const char *ifs, const char *ifs_white)
      internal_function;
+static int parse_dquote (char **word, size_t *word_length, size_t *max_length,
+			 const char *words, size_t *offset, int flags,
+			 wordexp_t *pwordexp, const char *ifs,
+			 const char *ifs_white)
+     internal_function;
 static int eval_expr (char *expr, long int *result) internal_function;
 
 /* The w_*() functions manipulate word lists. */
@@ -145,11 +150,13 @@ w_addword (wordexp_t *pwordexp, char *word)
 {
   /* Add a word to the wordlist */
   size_t num_p;
+  char **new_wordv;
 
   num_p = 2 + pwordexp->we_wordc + pwordexp->we_offs;
-  pwordexp->we_wordv = realloc (pwordexp->we_wordv, sizeof (char *) * num_p);
-  if (pwordexp->we_wordv != NULL)
+  new_wordv = realloc (pwordexp->we_wordv, sizeof (char *) * num_p);
+  if (new_wordv != NULL)
     {
+      pwordexp->we_wordv = new_wordv;
       pwordexp->we_wordv[pwordexp->we_wordc++] = word;
       pwordexp->we_wordv[pwordexp->we_wordc] = NULL;
       return 0;
@@ -418,9 +425,13 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
     {
       /* No field splitting allowed */
       size_t length = strlen (globbuf.gl_pathv[0]);
+      char *old_word = *word;
       *word = realloc (*word, length + 1);
       if (*word == NULL)
-	goto no_space;
+	{
+	  free (old_word);
+	  goto no_space;
+	}
 
       memcpy (*word, globbuf.gl_pathv[0], length + 1);
       *word_length = length;
@@ -792,13 +803,24 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
       /* Child */
       const char *args[4] = { _PATH_BSHELL, "-c", comm, NULL };
 
-      /* Redirect input and output */
+      /* Redirect output.  */
       dup2 (fildes[1], 1);
+      close (fildes[1]);
 
-      /* Close stderr if we have to */
+      /* Redirect stderr to /dev/null if we have to.  */
       if ((flags & WRDE_SHOWERR) == 0)
-	close (2);
+	{
+	  int fd;
+	  close (2);
+	  fd = open (_PATH_DEVNULL, O_WRONLY);
+	  if (fd >= 0 && fd != 2)
+	    {
+	      dup2 (fd, 2);
+	      close (fd);
+	    }
+	}
 
+      close (fildes[0]);
       __execve (_PATH_BSHELL, (char *const *) args, __environ);
 
       /* Bad.  What now?  */
@@ -826,18 +848,12 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	  *word = w_addmem (*word, word_length, max_length, buffer, buflen);
 	  if (*word == NULL)
 	    {
+	      kill (pid, SIGKILL);
+	      __waitpid (pid, NULL, 0);
 	      close (fildes[0]);
 	      return WRDE_NOSPACE;
 	    }
 	}
-
-      close (fildes[0]);
-
-      /* bash chops off a terminating linefeed, which seems sensible */
-      if ((*word)[*word_length - 1] == '\n')
-	(*word)[--*word_length] = '\0';
-
-      return 0;
     }
   else
     /* Not quoted - split fields */
@@ -903,6 +919,8 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		      *word = w_addchar (*word, word_length, max_length, 0);
 		      if (*word == NULL)
 			{
+			  kill (pid, SIGKILL);
+			  __waitpid (pid, NULL, 0);
 			  close (fildes[0]);
 			  return WRDE_NOSPACE;
 			}
@@ -910,7 +928,8 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
 		  if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
 		    {
-		      /* Should do __waitpid? */
+		      kill (pid, SIGKILL);
+		      __waitpid (pid, NULL, 0);
 		      close (fildes[0]);
 		      return WRDE_NOSPACE;
 		    }
@@ -928,6 +947,8 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 				     buffer[i]);
 		  if (*word == NULL)
 		    {
+		      kill (pid, SIGKILL);
+		      __waitpid (pid, NULL, 0);
 		      close (fildes[0]);
 		      return WRDE_NOSPACE;
 		    }
@@ -935,6 +956,10 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	    }
 	}
     }
+
+  /* Bash chops off trailing newlines, which seems sensible.  */
+  while (*word_length > 0 && (*word)[*word_length - 1] == '\n')
+    (*word)[--*word_length] = '\0';
 
   close (fildes[0]);
   return 0;
@@ -1991,8 +2016,11 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
   size_t old_wordc = (flags & WRDE_REUSE) ? pwordexp->we_wordc : 0;
 
   if (flags & WRDE_REUSE)
-    /* Minimal implementation of WRDE_REUSE for now */
-    wordfree (pwordexp);
+    {
+      /* Minimal implementation of WRDE_REUSE for now */
+      wordfree (pwordexp);
+      old_wordv = NULL;
+    }
 
   if (flags & WRDE_DOOFFS)
     {

@@ -47,6 +47,9 @@ struct test_case_struct
     /* Simple parameter expansion */
     { 0, "foo", "${var}", 0, 1, { "foo", } },
     { 0, "foo", "$var", 0, 1, { "foo", } },
+    { 0, "foo", "\\\"$var\\\"", 0, 1, { "\"foo\"", } },
+    { 0, "foo", "%$var%", 0, 1, { "%foo%", } },
+    { 0, "foo", "-$var-", 0, 1, { "-foo-", } },
 
     /* Simple quote removal */
     { 0, NULL, "\"quoted\"", 0, 1, { "quoted", } },
@@ -58,12 +61,15 @@ struct test_case_struct
     { 0, NULL, "$( (echo hello) )", 0, 1, { "hello", } },
     { 0, NULL, "$((echo hello);(echo there))", 0, 2, { "hello", "there", } },
     { 0, NULL, "`echo one two`", 0, 2, { "one", "two", } },
+    { 0, NULL, "$(echo ')')", 0, 1, { ")" } },
+    { 0, NULL, "$(echo hello; echo)", 0, 1, { "hello", } },
 
     /* Simple arithmetic expansion */
     { 0, NULL, "$((1 + 1))", 0, 1, { "2", } },
     { 0, NULL, "$((2-3))", 0, 1, { "-1", } },
     { 0, NULL, "$((-1))", 0, 1, { "-1", } },
     { 0, NULL, "$[50+20]", 0, 1, { "70", } },
+    { 0, NULL, "$(((2+3)*(4+5)))", 0, 1, { "45", } },
 
     /* Advanced parameter expansion */
     { 0, NULL, "${var:-bar}", 0, 1, { "bar", } },
@@ -83,11 +89,14 @@ struct test_case_struct
     { 0, "foo", "${var:+bar}", 0, 1, { "bar", } },
     { 0, "", "${var+bar}", 0, 1, { "bar", } },
     { 0, "12345", "${#var}", 0, 1, { "5", } },
+    { 0, NULL, "${var:-'}'}", 0, 1, { "}", } },
+    { 0, NULL, "${var-}", 0, 0, { NULL } },
 
     { 0, "banana", "${var%na*}", 0, 1, { "bana", } },
     { 0, "banana", "${var%%na*}", 0, 1, { "ba", } },
     { 0, "borabora-island", "${var#*bora}", 0, 1, { "bora-island", } },
     { 0, "borabora-island", "${var##*bora}", 0, 1, {"-island", } },
+    { 0, "100%", "${var%0%}", 0, 1, { "10" } },
 
     /* Pathname expansion */
     { 0, NULL, "???", 0, 2, { "one", "two", } },
@@ -155,6 +164,7 @@ main (int argc, char *argv[])
   const char *globfile[] = { "one", "two", "three", NULL };
   char tmpdir[32];
   struct passwd *pw;
+  char *cwd;
   int test;
   int fail = 0;
   int i;
@@ -206,8 +216,8 @@ main (int argc, char *argv[])
   for (i = 0; globfile[i]; ++i)
     remove (globfile[i]);
 
-  if (cwd = NULL)
-    strcpy (cwd, "..");
+  if (cwd == NULL)
+    cwd = "..";
 
   chdir (cwd);
   rmdir (tmpdir);
@@ -233,7 +243,7 @@ testit (struct test_case_struct *tc)
   printf ("Test %d: ", ++test);
   retval = wordexp (tc->words, &we, tc->flags);
 
-  if (retval != tc->retval || (retval != 0 && we.we_wordc != tc->wordc))
+  if (retval != tc->retval || (retval == 0 && we.we_wordc != tc->wordc))
     bzzzt = 1;
   else
     for (i = 0; i < we.we_wordc; ++i)

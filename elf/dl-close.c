@@ -80,7 +80,8 @@ _dl_close (struct link_map *map)
 	  /* That was the last reference, and this was a dlopen-loaded
 	     object.  We can unmap it.  */
 	  const ElfW(Phdr) *ph;
-	  const ElfW(Phdr) *eph;
+	  const ElfW(Phdr) *first, *last;
+	  ElfW(Addr) mapstart, mapend;
 
 	  if (imap->l_info[DT_FINI])
 	    /* Call its termination function.  */
@@ -100,23 +101,22 @@ _dl_close (struct link_map *map)
 	      _dl_global_scope_end[1] = NULL;
 	    }
 
-	  /* Find the first entry specifying a load command.  We have
-	     to determine this now since the table itself is also loaded.  */
-	  for (eph = imap->l_phdr; eph < imap->l_phdr + imap->l_phnum; ++eph)
-	    if (eph->p_type == PT_LOAD)
-	      break;
-
-	  /* Unmap the segments.  */
-	  for (ph = imap->l_phdr + (imap->l_phnum - 1); ph >= eph; --ph)
+	  /* We can unmap all the maps at once.  We just have to determine
+	     the length and the `munmap' call does the rest.  */
+	  first = last = NULL;
+	  for (ph = imap->l_phdr; ph < imap->l_phdr + imap->l_phnum; ++ph)
 	    if (ph->p_type == PT_LOAD)
 	      {
-		ElfW(Addr) mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-		ElfW(Addr) mapend = ((ph->p_vaddr + ph->p_memsz
-				      + ph->p_align - 1)
-				     & ~(ph->p_align - 1));
-		__munmap ((caddr_t) (imap->l_addr + mapstart),
-			  mapend - mapstart);
+		if (first == NULL)
+		  first = ph;
+		last = ph;
 	      }
+
+	  /* Now we have all the information we need for the unmapping.
+	     See the method used in `_dl_map_object_from_fd'.  */
+	  mapstart = first->p_vaddr & ~(first->p_align - 1);
+	  mapend = last->p_vaddr + last->p_memsz;
+	  __munmap ((caddr_t) (imap->l_addr + mapstart), mapend - mapstart);
 
 	  /* Finally, unlink the data structure and free it.  */
 	  if (imap->l_prev)
