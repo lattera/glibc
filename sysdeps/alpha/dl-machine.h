@@ -228,7 +228,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	mov	$26, $18					\n\
 	addq	$17, $17, $17					\n\
 	/* Do the fixup */					\n\
-	bsr	$26, " ASM_ALPHA_NG_SYMBOL_PREFIX #fixup_name "..ng\n\
+	bsr	$26, " #fixup_name "	!samegp			\n\
 	/* Move the destination address into position.  */	\n\
 	mov	$0, $27						\n\
 	/* Restore program registers.  */			\n\
@@ -308,7 +308,7 @@ _start:								\n\
 	.prologue 0						\n\
 	/* Pass pointer to argument block to _dl_start.  */	\n\
 	mov	$sp, $16					\n\
-	bsr	$26, "ASM_ALPHA_NG_SYMBOL_PREFIX"_dl_start..ng	\n\
+	bsr	$26, _dl_start		!samegp			\n\
 	.end _start						\n\
 	/* FALLTHRU */						\n\
 	.globl _dl_start_user					\n\
@@ -322,7 +322,7 @@ _dl_start_user:							\n\
 	stq	$30, __libc_stack_end				\n\
 	/* See if we were run as a command with the executable	\n\
 	   file name as an extra leading argument.  */		\n\
-	ldl	$1, _dl_skip_args				\n\
+	ldl	$1, _dl_skip_args($gp)	!gprel			\n\
 	bne	$1, $fixup_stack				\n\
 $fixup_stack_ret:						\n\
 	/* The special initializer gets called with the stack	\n\
@@ -332,14 +332,16 @@ $fixup_stack_ret:						\n\
 " RTLD_START_SPECIAL_INIT "					\n\
 	/* Call _dl_init(_dl_loaded, argc, argv, envp) to run	\n\
 	   initializers.  */					\n\
-	ldq	$16, _rtld_local				\n\
+	ldah	$16, _rtld_local($gp)	!gprelhigh		\n\
+	ldq	$16, _rtld_local($16)	!gprellow		\n\
 	ldq	$17, 0($sp)					\n\
 	lda	$18, 8($sp)					\n\
 	s8addq	$17, 8, $19					\n\
 	addq	$19, $18, $19					\n\
-	jsr	$26, _dl_init_internal				\n\
+	bsr	$26, _dl_init_internal	!samegp			\n\
 	/* Pass our finalizer function to the user in $0. */	\n\
-	lda	$0, _dl_fini					\n\
+	ldah	$0, _dl_fini($gp)	!gprelhigh		\n\
+	lda	$0, _dl_fini($0)	!gprellow		\n\
 	/* Jump to the user's entry point.  */			\n\
 	mov	$9, $27						\n\
 	jmp	($9)						\n\
@@ -541,10 +543,15 @@ elf_machine_rela (struct link_map *map,
       return;
   else
     {
-      Elf64_Addr loadbase, sym_value;
+      Elf64_Addr sym_value;
 
-      loadbase = RESOLVE (&sym, version, r_type);
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      sym_value = sym ? sym_map->l_addr + sym->st_value : 0;
+#else
+      Elf64_Addr loadbase = RESOLVE (&sym, version, r_type);
       sym_value = sym ? loadbase + sym->st_value : 0;
+#endif
       sym_value += reloc->r_addend;
 
       if (r_type == R_ALPHA_GLOB_DAT)
@@ -575,6 +582,40 @@ elf_machine_rela (struct link_map *map,
 	  memcpy (reloc_addr_1, &sym_value, 8);
 	}
 #endif
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+      else if (r_type == R_ALPHA_DTPMOD64)
+	{
+#ifdef RTLD_BOOTSTRAP
+	  /* During startup the dynamic linker is always index 1.  */
+	  *reloc_addr = 1;
+#else
+	  /* Get the information from the link map returned by the
+	     resolv function.  */
+	  if (sym_map != NULL)
+	    *reloc_addr = sym_map->l_tls_modid;
+#endif
+	}
+      else if (r_type == R_ALPHA_DTPREL64)
+	{
+#ifndef RTLD_BOOTSTRAP
+	  /* During relocation all TLS symbols are defined and used.
+	     Therefore the offset is already correct.  */
+	  *reloc_addr = sym_value;
+#endif
+	}
+      else if (r_type == R_ALPHA_TPREL64)
+	{
+#ifdef RTLD_BOOTSTRAP
+	  *reloc_addr = sym_value - map->l_tls_offset;
+#else
+	  if (sym_map)
+	    {
+	      *reloc_addr = sym_value - sym_map->l_tls_offset;
+	      CHECK_STATIC_TLS (map, sym_map);
+	    }
+#endif
+	}
+#endif /* USE_TLS */
       else
 	_dl_reloc_bad_type (map, r_type, 0);
     }
