@@ -22,7 +22,7 @@
 subdir	:= debug
 
 headers	:= execinfo.h
-distribute = sigcontextinfo.h
+distribute = sigcontextinfo.h register-dump.h
 
 routines := backtrace backtracesyms backtracesymsfd
 
