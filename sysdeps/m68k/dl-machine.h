@@ -177,7 +177,7 @@ _dl_start_user:\n\
 	pea 8(%sp)\n\
 	move.l %d1, -(%sp)\n\
 	move.l ([_rtld_global@GOT.w, %a5]), -(%sp)\n\
-	jbsr _dl_init@PLTPC\n\
+	jbsr _dl_init_internal@PLTPC\n\
 	addq.l #8, %sp\n\
 	addq.l #8, %sp\n\
 	| Pass our finalizer function to the user in %a1.\n\

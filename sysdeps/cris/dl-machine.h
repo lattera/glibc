@@ -214,7 +214,7 @@ _dl_start_user:
 	;  main_map: at _dl_loaded.
 	move.d	[$r0+_rtld_global:GOT16],$r9
 	move.d	[$r9],$r10
-	move.d	_dl_init:PLTG,$r9
+	move.d	_dl_init_internal:PLTG,$r9
 	add.d	$r0,$r9
 	jsr	$r9
 	; Pass our finalizer function to the user in R10.

@@ -372,7 +372,7 @@ asm (									\
 									\
 	/* envp = argv + argc + 1 */					\
 "	sh2add	%r25,%r24,%r23\n"					\
-"	bl	_dl_init,%r2\n"						\
+"	bl	_dl_init_internal,%r2\n"				\
 "	ldo	4(%r23),%r23\n"	/* delay slot */			\
 									\
 	/* Reload argc, argv  to the registers start.S expects them in (feh) */ \
