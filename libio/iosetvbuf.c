@@ -90,7 +90,7 @@ _IO_setvbuf (fp, buf, mode, size)
       goto unlock_return;
     }
   result = _IO_SETBUF (fp, buf, size) == NULL ? EOF : 0;
-  if (result == 0 && fp->_mode > 0)
+  if (result == 0 && fp->_mode == 0)
     /* We also have to set the buffer using the wide char function.  */
     result = ((*fp->_wide_data->_wide_vtable->__setbuf) (fp, buf, size) == NULL
 	      ? EOF : 0);

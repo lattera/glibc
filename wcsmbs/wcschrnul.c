@@ -31,6 +31,6 @@ __wcschrnul (wcs, wc)
     else
       ++wcs;
 
-  return wcs;
+  return (wchar_t *) wcs;
 }
 weak_alias (__wcschrnul, wcschrnul)

@@ -72,18 +72,17 @@
 # define va_list	_IO_va_list
 
 # ifdef COMPILE_WPRINTF
-#  define ungetc(c, s)	((void) ((int) c == WEOF			      \
+#  define ungetc(c, s)	((void) (c == WEOF				      \
 				 || (--read_in,				      \
-				     _IO_sputbackwc (s, (unsigned char) c))))
-#  define inchar()	(c == EOF ? EOF					      \
+				     _IO_sputbackwc (s, c))))
+#  define inchar()	(c == WEOF ? WEOF				      \
 			 : ((c = _IO_getwc_unlocked (s)),		      \
-			    (void) (c != EOF && ++read_in), c))
+			    (void) (c != WEOF && ++read_in), c))
 
 #  define MEMCPY(d, s, n) wmemcpy (d, s, n)
 #  define ISSPACE(Ch)	  iswspace (Ch)
 #  define ISDIGIT(Ch)	  iswdigit (Ch)
 #  define ISXDIGIT(Ch)	  iswxdigit (Ch)
-#  define UNGETC(Ch, S)   ungetwc (Ch, S)
 #  define TOLOWER(Ch)	  towlower (Ch)
 #  define ORIENT	  if (_IO_fwide (s, 1) != 1) return EOF
 #  define __strtoll_internal	__wcstoll_internal
@@ -109,7 +108,6 @@
 #  define ISSPACE(Ch)	  isspace (Ch)
 #  define ISDIGIT(Ch)	  isdigit (Ch)
 #  define ISXDIGIT(Ch)	  isxdigit (Ch)
-#  define UNGETC(Ch, S)   ungetc (Ch, S)
 #  define TOLOWER(Ch)	  tolower (Ch)
 #  define ORIENT	  if (_IO_fwide (s, -1) != -1) return EOF
 
@@ -432,7 +430,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	  if (c != fc)
 	    {
-	      UNGETC (c, s);
+	      ungetc (c, s);
 	      conv_error ();
 	    }
 
@@ -578,7 +576,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      input_error ();
 	  while (ISSPACE (c));
 	  errno = save_errno;
-	  UNGETC (c, s);
+	  ungetc (c, s);
 	  skip_space = 0;
 	}
 
@@ -810,7 +808,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  if (ISSPACE (c))
 		    {
-		      UNGETC (c, s);
+		      ungetc (c, s);
 		      break;
 		    }
 
@@ -974,7 +972,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      {
 		if (ISSPACE (c))
 		  {
-		    UNGETC (c, s);
+		    ungetc (c, s);
 		    break;
 		  }
 
@@ -1214,14 +1212,14 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  /* The last read character is not part of the number
 		     anymore.  */
-		  UNGETC (c, s);
+		  ungetc (c, s);
 
 		  conv_error ();
 		}
 	    }
 	  else
 	    /* The just read character is not part of the number anymore.  */
-	    UNGETC (c, s);
+	    ungetc (c, s);
 
 	  /* Convert the number.  */
 	  ADDW (L_('\0'));
@@ -1296,7 +1294,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (! ISDIGIT (c) && c != decimal)
 		{
 		  /* This is no valid number.  */
-		  UNGETC (c, s);
+		  ungetc (c, s);
 		  input_error ();
 		}
 	      if (width > 0)
@@ -1351,7 +1349,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    }
 		  else
 		    /* Never mind.  */
-		    UNGETC (c, s);
+		    ungetc (c, s);
 		}
 	      goto scan_float;
 	    }
@@ -1402,7 +1400,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  /* The last read character is not part of the number
 		     anymore.  */
-		  UNGETC (c, s);
+		  ungetc (c, s);
 		  break;
 		}
 	      if (width > 0)
@@ -1949,7 +1947,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     {
       do
 	c = inchar ();
-      while (isspace (c));
+      while (ISSPACE (c));
       ungetc (c, s);
     }
 

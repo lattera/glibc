@@ -32,6 +32,8 @@
 /* Get FILE definition.  */
 # define __need_FILE
 # include <stdio.h>
+/* Get va_list definition.  */
+# define __need___va_list
 # include <stdarg.h>
 
 /* Get size_t, wchar_t, wint_t and NULL from <stddef.h>.  */
@@ -519,6 +521,7 @@ extern wchar_t *wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
 
 
 /* Wide character I/O functions.  */
+#ifdef __USE_ISOC9X
 
 /* Select orientation for stream.  */
 extern int fwide __P ((FILE *__fp, int __mode));
@@ -539,17 +542,17 @@ extern int swprintf __P ((wchar_t *__restrict __s, size_t __n,
 /* Write formatted output to S from argument list ARG.  */
 extern int vfwprintf __P ((FILE *__restrict __s,
 			   __const wchar_t *__restrict __format,
-			   va_list __arg))
+			   __gnuc_va_list __arg))
      /* __attribute__ ((__format__ (__wprintf__, 2, 0))) */;
 /* Write formatted output to stdout from argument list ARG.  */
 extern int vwprintf __P ((__const wchar_t *__restrict __format,
-			  va_list __arg))
+			  __gnuc_va_list __arg))
      /* __attribute__ ((__format__ (__wprintf__, 1, 0))) */;
 /* Write formatted output of at most N character to S from argument
    list ARG.  */
 extern int vswprintf __P ((wchar_t *__restrict __s, size_t __n,
 			   __const wchar_t *__restrict __format,
-			   va_list __arg))
+			   __gnuc_va_list __arg))
      /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 
 
@@ -567,14 +570,17 @@ extern int swscanf __P ((__const wchar_t *__restrict __s,
 
 /* Read formatted input from S into argument list ARG.  */
 extern int vfwscanf __P ((FILE *__restrict __s,
-			  __const wchar_t *__restrict __format, va_list __arg))
+			  __const wchar_t *__restrict __format,
+			  __gnuc_va_list __arg))
      /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 /* Read formatted input from stdin into argument list ARG.  */
-extern int vwscanf __P ((__const wchar_t *__restrict __format, va_list __arg))
+extern int vwscanf __P ((__const wchar_t *__restrict __format,
+			 __gnuc_va_list __arg))
      /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
 /* Read formatted input from S into argument list ARG.  */
 extern int vswscanf __P ((__const wchar_t *__restrict __s,
-			  __const wchar_t *__restrict __format, va_list __arg))
+			  __const wchar_t *__restrict __format,
+			  __gnuc_va_list __arg))
      /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 
 
@@ -647,7 +653,7 @@ extern wint_t ungetwc __P ((wint_t __wc, FILE *__stream));
 extern size_t wcsftime __P ((wchar_t *__restrict __s, size_t __maxsize,
 			     __const wchar_t *__restrict __format,
 			     __const struct tm *__restrict __tp));
-
+#endif /* Use ISO C9x. */
 
 /* The X/Open standard demands that most of the functions defined in
    the <wctype.h> header must also appear here.  This is probably

@@ -70,8 +70,6 @@
 #  define INT_T		int
 #  define L_(Str)	Str
 #  define ISDIGIT(Ch)	isdigit (Ch)
-#  define ISASCII(Ch)	isascii (Ch)
-#  define MBRLEN(Cp, L, St) mbrlen (Cp, L, St)
 
 #  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 #  define PAD(Padchar) \
@@ -89,8 +87,6 @@
 #  define INT_T		wint_t
 #  define L_(Str)	L##Str
 #  define ISDIGIT(Ch)	iswdigit (Ch)
-#  define ISASCII(Ch)	(((unsigned int) (Ch) & ~0x7f) == 0)
-#  define MBRLEN(Cp, L, St) wcslen ((const wchar_t *) (Cp))
 
 #  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 #  define PAD(Padchar) \
@@ -99,9 +95,8 @@
 #  define PUTC(C, F)	_IO_putwc_unlocked (C, F)
 #  define ORIENT	if (_IO_fwide (s, 1) != 1) return -1
 
-#  define _itoa(Val, Buf, Base, Case) _itowa (Val, (wchar_t *) Buf, Base, Case)
-#  define _itoa_word(Val, Buf, Base, Case) _itowa_word (Val, (wchar_t *) Buf, \
-							Base, Case)
+#  define _itoa(Val, Buf, Base, Case) _itowa (Val, Buf, Base, Case)
+#  define _itoa_word(Val, Buf, Base, Case) _itowa_word (Val, Buf, Base, Case)
 #  undef EOF
 #  define EOF WEOF
 # endif
@@ -199,8 +194,7 @@ static int printf_unknown __P ((FILE *, const struct printf_info *,
 				const void *const *));
 
 /* Group digits of number string.  */
-static UCHAR_T *group_number __P ((UCHAR_T *, UCHAR_T *, const char *,
-				   wchar_t))
+static CHAR_T *group_number __P ((CHAR_T *, CHAR_T *, const char *, wchar_t))
      internal_function;
 
 
@@ -227,8 +221,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   const UCHAR_T *end_of_spec;
 
   /* Buffer intermediate results.  */
-  UCHAR_T work_buffer[1000];
-  UCHAR_T *workend;
+  CHAR_T work_buffer[1000];
+  CHAR_T *workend;
 
   /* State for restartable multibyte character handling functions.  */
 #ifndef COMPILE_WPRINTF
@@ -275,8 +269,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     /* 'x' */ 18,            0, /* 'z' */ 13
   };
 
-#define NOT_IN_JUMP_RANGE(Ch) ((Ch) < ' ' || (Ch) > 'z')
-#define CHAR_CLASS(Ch) (jump_table[(int) (Ch) - ' '])
+#define NOT_IN_JUMP_RANGE(Ch) ((Ch) < L_(' ') || (Ch) > L_('z'))
+#define CHAR_CLASS(Ch) (jump_table[(INT_T) (Ch) - L_(' ')])
 #define JUMP(ChExpr, table)						      \
       do								      \
 	{								      \
@@ -593,8 +587,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
-	      string = (UCHAR_T *) _itoa (number.longlong, workend + 1, base, \
-					  spec == L_('X'));		      \
+	      string = _itoa (number.longlong, workend + 1, base,	      \
+			      spec == L_('X'));				      \
 	      string -= 1;						      \
 	      if (group && grouping)					      \
 		string = group_number (string, workend, grouping,	      \
@@ -647,8 +641,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
-	      string = (UCHAR_T *) _itoa_word (number.word, workend + 1,      \
-					       base, spec == L_('X'));	      \
+	      string = _itoa_word (number.word, workend + 1, base,	      \
+				   spec == L_('X'));			      \
 	      string -= 1;						      \
 	      if (group && grouping)					      \
 		string = group_number (string, workend, grouping,	      \
@@ -858,13 +852,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    is_negative = 0;						      \
 	    alt = 1;							      \
 	    group = 0;							      \
-	    spec = 'x';							      \
+	    spec = L_('x');						      \
 	    goto LABEL (number);					      \
 	  }								      \
 	else								      \
 	  {								      \
 	    /* Write "(nil)" for a nil pointer.  */			      \
-	    string = (UCHAR_T *) L_("(nil)");				      \
+	    string = (CHAR_T *) L_("(nil)");	 			      \
 	    /* Make sure the full string "(nil)" is printed.  */	      \
 	    if (prec < 5)						      \
 	      prec = 5;							      \
@@ -901,8 +895,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (form_strerror):						      \
       /* Print description of error ERRNO.  */				      \
       string =								      \
-	(UCHAR_T *) __strerror_r (save_errno, (char *) work_buffer,	      \
-				  sizeof work_buffer);			      \
+	(CHAR_T *) __strerror_r (save_errno, (char *) work_buffer,	      \
+				 sizeof work_buffer);			      \
       is_long = 0;		/* This is no wide-char string.  */	      \
       goto LABEL (print_string)
 
@@ -945,9 +939,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	/* The string argument could in fact be `char *' or `wchar_t *'.      \
 	   But this should not make a difference here.  */		      \
 	if (fspec == NULL)						      \
-	  string = (UCHAR_T *) va_arg (ap, const wchar_t *);		      \
+	  string = (CHAR_T *) va_arg (ap, const wchar_t *);		      \
 	else								      \
-	  string = (UCHAR_T *) args_value[fspec->data_arg].pa_wstring;	      \
+	  string = (CHAR_T *) args_value[fspec->data_arg].pa_wstring;	      \
 									      \
 	/* Entry point for printing other strings.  */			      \
       LABEL (print_string):						      \
@@ -958,12 +952,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    if (prec == -1						      \
 		|| prec >= (int) (sizeof (null) / sizeof (null[0])) - 1)      \
 	      {								      \
-		string = (UCHAR_T *) null;				      \
+		string = (CHAR_T *) null;				      \
 		len = (sizeof (null) / sizeof (null[0])) - 1;		      \
 	      }								      \
 	    else							      \
 	      {								      \
-		string = (UCHAR_T *) L"";				      \
+		string = (CHAR_T *) L"";				      \
 		len = 0;						      \
 	      }								      \
 	  }								      \
@@ -978,10 +972,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	    /* Allocate dynamically an array which definitely is long	      \
 	       enough for the wide character version.  */		      \
-	    string = (UCHAR_T *) alloca ((len + 1) * sizeof (wchar_t));	      \
+	    string = (CHAR_T *) alloca ((len + 1) * sizeof (wchar_t));	      \
 									      \
 	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
-	    len = __mbsrtowcs ((wchar_t *) string, &mbs, len + 1, &mbstate);  \
+	    len = __mbsrtowcs (string, &mbs, len + 1, &mbstate);	      \
 	    if (len == (size_t) -1)					      \
 	      {								      \
 		/* Illegal multibyte character.  */			      \
@@ -994,9 +988,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    if (prec != -1)						      \
 	      /* Search for the end of the string, but don't search past      \
 		 the length specified by the precision.  */		      \
-	      len = __wcsnlen ((wchar_t *) string, prec);		      \
+	      len = __wcsnlen (string, prec);				      \
 	    else							      \
-	      len = __wcslen ((wchar_t *) string);			      \
+	      len = __wcslen (string);					      \
 	  }								      \
 									      \
 	if ((width -= len) < 0)						      \
@@ -1199,7 +1193,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       } number;
       int base;
       union printf_arg the_arg;
-      UCHAR_T *string;	/* Pointer to argument string.  */
+      CHAR_T *string;	/* Pointer to argument string.  */
       int alt = 0;	/* Alternate format.  */
       int space = 0;	/* Use space prefix if no sign is needed.  */
       int left = 0;	/* Left-justify output.  */
@@ -1293,7 +1287,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	if (width + 32 >= sizeof (work_buffer) / sizeof (work_buffer[0]))
 	  /* We have to use a special buffer.  The "32" is just a safe
 	     bet for all the output which is not counted in the width.  */
-	  workend = ((UCHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
+	  workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
 		     + (width + 31));
       }
       JUMP (*f, step1_jumps);
@@ -1305,7 +1299,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       if (width + 32 >= sizeof (work_buffer) / sizeof (work_buffer[0]))
 	/* We have to use a special buffer.  The "32" is just a safe
 	   bet for all the output which is not counted in the width.  */
-	workend = ((UCHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
+	workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
 		   + (width + 31));
       if (*f == L_('$'))
 	/* Oh, oh.  The argument comes from a positional parameter.  */
@@ -1579,7 +1573,7 @@ do_positional:
 	} number;
 	int base;
 	union printf_arg the_arg;
-	UCHAR_T *string;	/* Pointer to argument string.  */
+	CHAR_T *string;		/* Pointer to argument string.  */
 
 	/* Fill variables from values in struct.  */
 	int alt = specs[nspecs_done].info.alt;
@@ -1628,9 +1622,9 @@ do_positional:
 	  }
 
 	/* Maybe the buffer is too small.  */
-	if (MAX (prec, width) + 32 > sizeof (work_buffer) / sizeof (UCHAR_T))
-	  workend = ((UCHAR_T *) alloca ((MAX (prec, width) + 32)
-					 * sizeof (UCHAR_T))
+	if (MAX (prec, width) + 32 > sizeof (work_buffer) / sizeof (CHAR_T))
+	  workend = ((CHAR_T *) alloca ((MAX (prec, width) + 32)
+					* sizeof (CHAR_T))
 		     + (MAX (prec, width) + 31));
 
 	/* Process format specifiers.  */
@@ -1707,8 +1701,8 @@ printf_unknown (FILE *s, const struct printf_info *info,
 {
   int done = 0;
   CHAR_T work_buffer[MAX (info->width, info->spec) + 32];
-  CHAR_T *const workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)
-				      - 1];
+  CHAR_T *const workend
+    = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T) - 1];
   register CHAR_T *w;
 
   outchar (L_('%'));
@@ -1723,7 +1717,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
     outchar (L_(' '));
   if (info->left)
     outchar (L_('-'));
-  if (info->pad == '0')
+  if (info->pad == L_('0'))
     outchar (L_('0'));
 
   if (info->width != 0)
@@ -1735,7 +1729,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
   if (info->prec != -1)
     {
-      outchar ('.');
+      outchar (L_('.'));
       w = _itoa_word (info->prec, workend + 1, 10, 0);
       while (w <= workend)
 	outchar (*w++);
@@ -1750,13 +1744,13 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
 /* Group the digits according to the grouping rules of the current locale.
    The interpretation of GROUPING is as in `struct lconv' from <locale.h>.  */
-static UCHAR_T *
+static CHAR_T *
 internal_function
-group_number (UCHAR_T *w, UCHAR_T *rear_ptr, const char *grouping,
+group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
 	      wchar_t thousands_sep)
 {
   int len;
-  UCHAR_T *src, *s;
+  CHAR_T *src, *s;
 
   /* We treat all negative values like CHAR_MAX.  */
 
@@ -1767,9 +1761,9 @@ group_number (UCHAR_T *w, UCHAR_T *rear_ptr, const char *grouping,
   len = *grouping;
 
   /* Copy existing string so that nothing gets overwritten.  */
-  src = (UCHAR_T *) alloca ((rear_ptr - w) * sizeof (UCHAR_T));
-  s = (UCHAR_T *) __mempcpy (src, w + 1,
-			     (rear_ptr - w) * sizeof (UCHAR_T)) - 1;
+  src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
+  s = (CHAR_T *) __mempcpy (src, w + 1,
+			    (rear_ptr - w) * sizeof (CHAR_T)) - 1;
   w = rear_ptr;
 
   /* Process all characters in the string.  */

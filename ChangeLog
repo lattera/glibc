@@ -1,3 +1,79 @@
+1999-06-18  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/alpha/atomicity.h: Correct counting of subsections.
+
+1999-06-17  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* stdlib/tst-strtoll.c: Avoid warning about huge constant.
+
+1999-06-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* stdio-common/vfprintf.c (group_member): Make parameters and
+	return types pointers to CHAR_T instead of UCHAR_T.
+	(vfprintf): Change type of work_buffer, workend and string to
+	CHAR_T pointer/array.
+	(process_arg, process_string_arg): Adjust/remove casts.  Add
+	missing use of L_ macro.
+	(printf_unknown): Add missing uses of L_ macro.
+
+1999-06-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* wcsmbs/wcschrnul.c: Explicitly cast return value to avoid
+	warning.
+
+1999-06-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* libio/wgenops.c (__wuflow): Fix use of WEOF vs. EOF.  Call
+	_IO_switch_to_wget_mode instead of _IO_switch_to_get_mode.
+	(__wunderflow): Likewise.
+	(_IO_switch_to_wget_mode): Likewise.
+	(_IO_init_wmarker): Likewise.
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Call
+	_IO_switch_to_wget_mode, not _IO_switch_to_get_mode.
+	(_IO_wfile_jumps): Fix pbackfail entry.
+
+	* libio/iosetvbuf.c (_IO_setvbuf): Only call wide char setbuf
+	function if the stream is currently unoriented.
+
+1999-06-19  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* wcsmbs/wchar.h: Define __need___va_list before including stdarg.h.
+	Wrap all wide stream functions with #ifdef __USE_ISOC9X.  Use
+	__gnuc_va_list in v*w(printf|scanf) prototypes.
+
+1999-06-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libio/oldiopopen.c (_IO_old_proc_open): Apply change from
+	1999-03-29 to iopopen also here.
+	Reported by Richard Braakman <dark@xs4all.nl>.
+
+1999-06-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* include/features.h: Use __GNUC_PREREQ.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise
+
+1999-06-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* stdio-common/vfscanf.c (ungetc, inchar) [COMPILE_WPRINTF]:
+	Change EOF to WEOF and remove cast.
+	(UNGETC): Remove macro.
+	(_IO_vfwscanf): Change isspace to ISSPACE and UNGETC to ungetc.
+	* stdio-common/printf-parse.h (find_spec) [!COMPILE_WPRINTF]:
+	Change ISASCII to isascii and MBRLEN to mbrlen.
+	(parse_one_spec): Compare info.spec always against wchar_t
+	values.
+	* stdio-common/vfprintf.c: Remove unused ISASCII and MBRLEN.
+	(_itoa, _itoa_word) [COMPILE_WRPINTF]: Don't cast second argument.
+	(NOT_IN_JUMP_RANGE, CHAR_CLASS): Change (int) to (INT_T), use L_.
+
+1999-06-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* libio/Makefile (shared-only-routines): Add oldiofgetpos,
+	oldiofgetpos64, oldiofsetpos and oldiofsetpos64.
+	(routines): Include oldiofgetpos, oldiofgetpos64, oldiofsetpos and
+	oldiofsetpos64 only if doing versioning.
+
 1999-06-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wchar.h: Declare wcstof and wcstold for ISO C9x.

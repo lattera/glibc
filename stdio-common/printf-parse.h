@@ -106,7 +106,7 @@ find_spec (const UCHAR_T *format, mbstate_t *ps)
 
       /* Remove any hints of a wrong encoding.  */
       ps->count = 0;
-      if (! ISASCII (*format) && (len = MBRLEN (format, MB_CUR_MAX, ps)) > 0)
+      if (! isascii (*format) && (len = mbrlen (format, MB_CUR_MAX, ps)) > 0)
 	format += len;
       else
 	++format;
@@ -355,12 +355,12 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 
       switch (spec->info.spec)
 	{
-	case L_('i'):
-	case L_('d'):
-	case L_('u'):
-	case L_('o'):
-	case L_('X'):
-	case L_('x'):
+	case L'i':
+	case L'd':
+	case L'u':
+	case L'o':
+	case L'X':
+	case L'x':
 #if LONG_MAX != LONG_LONG_MAX
 	  if (spec->info.is_long_double)
 	    spec->data_arg_type = PA_INT|PA_FLAG_LONG_LONG;
@@ -375,38 +375,38 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	    else
 	      spec->data_arg_type = PA_INT;
 	  break;
-	case L_('e'):
-	case L_('E'):
-	case L_('f'):
-	case L_('g'):
-	case L_('G'):
-	case L_('a'):
-	case L_('A'):
+	case L'e':
+	case L'E':
+	case L'f':
+	case L'g':
+	case L'G':
+	case L'a':
+	case L'A':
 	  if (spec->info.is_long_double)
 	    spec->data_arg_type = PA_DOUBLE|PA_FLAG_LONG_DOUBLE;
 	  else
 	    spec->data_arg_type = PA_DOUBLE;
 	  break;
-	case L_('c'):
+	case L'c':
 	  spec->data_arg_type = PA_CHAR;
 	  break;
-	case L_('C'):
+	case L'C':
 	  spec->data_arg_type = PA_WCHAR;
 	  break;
-	case L_('s'):
+	case L's':
 	  spec->data_arg_type = PA_STRING;
 	  break;
-	case L_('S'):
+	case L'S':
 	  spec->data_arg_type = PA_WSTRING;
 	  break;
-	case L_('p'):
+	case L'p':
 	  spec->data_arg_type = PA_POINTER;
 	  break;
-	case L_('n'):
+	case L'n':
 	  spec->data_arg_type = PA_INT|PA_FLAG_PTR;
 	  break;
 
-	case L_('m'):
+	case L'm':
 	default:
 	  /* An unknown spec will consume no args.  */
 	  spec->ndata_args = 0;

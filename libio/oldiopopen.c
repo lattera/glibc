@@ -140,6 +140,8 @@ _IO_old_proc_open (fp, command, mode)
   if (child_pid == 0)
     {
       int child_std_end = mode[0] == 'r' ? 1 : 0;
+      struct _IO_proc_file *p;
+      
       _IO_close (parent_end);
       if (child_end != child_std_end)
 	{
@@ -149,11 +151,8 @@ _IO_old_proc_open (fp, command, mode)
       /* POSIX.2:  "popen() shall ensure that any streams from previous
          popen() calls that remain open in the parent process are closed
 	 in the new child process." */
-      while (old_proc_file_chain)
-	{
-	  _IO_close (_IO_fileno ((_IO_FILE *) old_proc_file_chain));
-	  old_proc_file_chain = old_proc_file_chain->next;
-	}
+      for (p = old_proc_file_chain; p; p = p->next)
+	_IO_close (_IO_fileno ((_IO_FILE *) p));
 
       _IO_execl ("/bin/sh", "sh", "-c", command, (char *) 0);
       _IO__exit (127);

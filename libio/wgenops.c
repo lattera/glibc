@@ -239,12 +239,12 @@ __wuflow (fp)
      _IO_FILE *fp;
 {
   if (fp->_mode < 0 || (fp->_mode == 0 && _IO_fwide (fp, 1) != 1))
-    return EOF;
+    return WEOF;
 
   if (fp->_mode == 0)
     _IO_fwide (fp, 1);
   if (_IO_in_put_mode (fp))
-    if (_IO_switch_to_get_mode (fp) == EOF)
+    if (_IO_switch_to_wget_mode (fp) == EOF)
       return WEOF;
   if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
     return *fp->_wide_data->_IO_read_ptr++;
@@ -270,10 +270,10 @@ __wunderflow (fp)
      _IO_FILE *fp;
 {
   if (fp->_mode < 0 || (fp->_mode == 0 && _IO_fwide (fp, 1) != 1))
-    return EOF;
+    return WEOF;
 
   if (_IO_in_put_mode (fp))
-    if (_IO_switch_to_wget_mode (fp) == WEOF)
+    if (_IO_switch_to_wget_mode (fp) == EOF)
       return WEOF;
   if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
     return *fp->_wide_data->_IO_read_ptr;
@@ -286,7 +286,7 @@ __wunderflow (fp)
   if (_IO_have_markers (fp))
     {
       if (save_for_wbackup (fp, fp->_wide_data->_IO_read_end))
-	return EOF;
+	return WEOF;
     }
   else if (_IO_have_backup (fp))
     _IO_free_wbackup_area (fp);
@@ -447,7 +447,7 @@ _IO_switch_to_wget_mode (fp)
      _IO_FILE *fp;
 {
   if (fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_write_base)
-    if (_IO_OVERFLOW (fp, EOF) == EOF)
+    if (_IO_OVERFLOW (fp, WEOF) == WEOF)
       return EOF;
   if (_IO_in_backup (fp))
     fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_backup_base;
@@ -663,7 +663,7 @@ _IO_init_wmarker (marker, fp)
 {
   marker->_sbuf = fp;
   if (_IO_in_put_mode (fp))
-    _IO_switch_to_get_mode (fp);
+    _IO_switch_to_wget_mode (fp);
   if (_IO_in_backup (fp))
     marker->_pos = fp->_wide_data->_IO_read_ptr - fp->_wide_data->_IO_read_end;
   else

@@ -272,8 +272,7 @@
 #endif	/* !ASSEMBLER */
 
 /* Decide whether we can define 'extern inline' functions in headers.  */
-#if defined __GNUC__ && (__GNUC__ > 2 || __GNUC__ == 2 && __GNUC_MINOR__ >= 7)\
-    && defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
+#if __GNUC_PREREQ (2, 7) && defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
 # define __USE_EXTERN_INLINES	1
 #endif
 

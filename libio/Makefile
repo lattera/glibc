@@ -30,7 +30,6 @@ routines	:=							      \
 	ioseekoff ioseekpos iosetbuffer iosetvbuf iosprintf ioungetc	      \
 	iovsprintf iovsscanf						      \
 	iofgetpos64 iofopen64 iofsetpos64				      \
-	oldiofgetpos oldiofgetpos64 oldiofsetpos oldiofsetpos64		      \
 	fputwc fputwc_u getwc getwc_u getwchar getwchar_u iofgetws iofgetws_u \
 	iofputws iofputws_u iogetwline iowpadn ioungetwc putwc putwc_u	      \
 	putchar putchar_u swprintf vwprintf wprintf wscanf fwscanf vwscanf    \
@@ -51,7 +50,8 @@ include ../Makeconfig
 
 ifeq ($(versioning),yes)
 routines += oldiofopen oldiofdopen oldiofclose oldiopopen oldpclose \
-	    oldtmpfile
+	    oldtmpfile oldiofgetpos oldiofgetpos64 oldiofsetpos	    \
+	    oldiofsetpos64
 endif
 
 ifneq (,$(filter %REENTRANT, $(defines)))
@@ -69,7 +69,9 @@ aux	+= oldfileops oldstdfiles
 endif
 
 shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
-		       oldstdfiles oldiopopen oldpclose oldtmpfile
+		       oldstdfiles oldiopopen oldpclose oldtmpfile	\
+		       oldiofgetpos oldiofgetpos64 oldiofsetpos		\
+		       oldiofsetpos64
 
 distribute := iolibio.h libioP.h strfile.h Banner
 

@@ -421,7 +421,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 
   if (fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_write_base
       || _IO_in_put_mode (fp))
-    if (_IO_switch_to_get_mode (fp))
+    if (_IO_switch_to_wget_mode (fp))
       return WEOF;
 
   if (fp->_wide_data->_IO_buf_base == NULL)
@@ -698,7 +698,7 @@ struct _IO_jump_t _IO_wfile_jumps =
   JUMP_INIT(overflow, (_IO_overflow_t) _IO_wfile_overflow),
   JUMP_INIT(underflow, (_IO_underflow_t) _IO_wfile_underflow),
   JUMP_INIT(uflow, (_IO_underflow_t) _IO_wdefault_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
+  JUMP_INIT(pbackfail, (_IO_pbackfail_t) _IO_wdefault_pbackfail),
   JUMP_INIT(xsputn, _IO_wfile_xsputn),
   JUMP_INIT(xsgetn, _IO_file_xsgetn),
   JUMP_INIT(seekoff, _IO_wfile_seekoff),
