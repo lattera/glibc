@@ -1,3 +1,7 @@
+2002-12-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/texinfo.tex: Update from latest upstream version.
+
 2002-12-03  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Include static TLS
