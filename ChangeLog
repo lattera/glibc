@@ -1,5 +1,21 @@
 2000-04-02  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/hurd/i386/init-first.c: Replace PIC #ifdefs with SHARED.
+	(init1): Don't initialize __environ here, since init already does it.
+	(first_init): New function, broken out of _init.
+	(_hurd_stack_setup): Use it.
+	[SHARED] (_dl_init_first): New function, renamed from old _init.
+	(init1) [SHARED]: Don't call posixland_init here.
+	(posixland_init): Take ENVP arg, so signature is usual for initializer.
+	[SHARED] (_init): Define as alias for posixland_init.
+	[! SHARED] (__libc_first_init): Define as alias for posixland_init.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Insert the macro
+	RTLD_START_SPECIAL_INIT before calling initializers.
+	(RTLD_START_SPECIAL_INIT): Define to empty if undefined.
+	* sysdeps/mach/hurd/i386/dl-machine.h: New file.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_init_first): New weak function.
+	* elf/Versions ({libc,ld.so}: GLIBC_2.2): Add _dl_init_first.
+
 	* stdio-common/tmpfile.c [! USE_IN_LIBIO]: No alias needed,
 	since we define the function with the name `tmpfile'.
 

@@ -730,3 +730,9 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   *sz = 1;
   return result;
 }
+
+void weak_function
+_dl_init_first (int argc, ...)
+{
+  /* This no-op definition only gets used if libc is not linked in.  */
+}

@@ -8,6 +8,9 @@ libc {
     _dl_mcount_wrapper; _dl_mcount_wrapper_check;
   }
   GLIBC_2.2 {
+    # this is defined in ld.so and overridden by libc
+    _dl_init_first;
+
     # functions used in other libraries
     _dl_sym; _dl_vsym;
   }
@@ -50,5 +53,8 @@ ld.so {
   }
   GLIBC_2.2 {
     _dl_init;
+
+    # this is defined in ld.so and overridden by libc
+    _dl_init_first;
   }
 }

@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ unsigned int __hurd_threadvar_max;
 unsigned long int __hurd_threadvar_stack_offset;
 unsigned long int __hurd_threadvar_stack_mask;
 
-#ifndef PIC
+#ifndef SHARED
 int __libc_enable_secure;
 #endif
 int __libc_multiple_libcs = 1;
@@ -53,8 +53,8 @@ DEFINE_HOOK (_hurd_preinit_hook, (void));
 
 /* We call this once the Hurd magic is all set up and we are ready to be a
    Posixoid program.  This does the same things the generic version does.  */
-static void internal_function
-posixland_init (int argc, char **argv)
+static void
+posixland_init (int argc, char **argv, char **envp)
 {
   __libc_init (argc, argv, __environ);
 
@@ -76,7 +76,6 @@ init1 (int argc, char *arg0, ...)
 
   __libc_argc = argc;
   __libc_argv = argv;
-  __environ = envp;
 
   while (*envp)
     ++envp;
@@ -111,10 +110,8 @@ init1 (int argc, char *arg0, ...)
 		d->portarray, d->portarraysize,
 		d->intarray, d->intarraysize);
 
-#ifndef PIC
+#ifndef SHARED
   __libc_enable_secure = d->flags & EXEC_SECURE;
-#else
-  posixland_init(argc, argv);
 #endif
 }
 
@@ -247,38 +244,49 @@ asm ("
 ");
 
 
-#ifdef PIC
-/* This function is called to initialize the shared C library.
-   It is called just before the user _start code from i386/elf/start.S,
-   with the stack set up as that code gets it.  */
-
-/* NOTE!  The linker notices the magical name `_init' and sets the DT_INIT
-   pointer in the dynamic section based solely on that.  It is convention
-   for this function to be in the `.init' section, but the symbol name is
-   the only thing that really matters!!  */
-void
-_init (int argc, ...)
+/* Do the first essential initializations that must precede all else.  */
+static inline void
+first_init (void)
 {
   /* Initialize data structures so we can do RPCs.  */
   __mach_init ();
 
   RUN_HOOK (_hurd_preinit_hook, ());
+}
+
+#ifdef SHARED
+/* This function is called specially by the dynamic linker to do early
+   initialization of the shared C library before normal initializers
+   expecting a Posixoid environment can run.  It gets called with the
+   stack set up just as the user will see it, so it can switch stacks.  */
+
+void
+_dl_init_first (int argc, ...)
+{
+  first_init ();
 
   init (&argc);
 }
 #endif
 
 
+#ifdef SHARED
+/* The regular posixland initialization is what goes into libc's
+   normal initializer.  */
+/* NOTE!  The linker notices the magical name `_init' and sets the DT_INIT
+   pointer in the dynamic section based solely on that.  It is convention
+   for this function to be in the `.init' section, but the symbol name is
+   the only thing that really matters!!  */
+strong_alias (posixland_init, _init);
+
 void
 __libc_init_first (int argc, char **argv, char **envp)
-#ifdef PIC
 {
   /* Everything was done in the shared library initializer, _init.  */
 }
 #else
-{
-  posixland_init(argc, argv);
-}
+strong_alias (posixland_init, __libc_init_first);
+
 
 /* XXX This is all a crock and I am not happy with it.
    This poorly-named function is called by static-start.S,
@@ -295,9 +303,9 @@ _hurd_stack_setup (int argc __attribute__ ((unused)), ...)
 	}
 
       /* Push the user return address after the argument data, and then
-	 jump to `doinit1' (above), so it is as if __libc_init_first's
-	 caller had called `doinit1' with the argument data already on the
-      stack.  */
+         jump to `doinit1' (above), so it is as if __libc_init_first's
+         caller had called `doinit1' with the argument data already on the
+         stack.  */
       *--data = (&argc)[-1];
       asm volatile ("movl %0, %%esp\n" /* Switch to new outermost stack.  */
 		    "movl $0, %%ebp\n" /* Clear outermost frame pointer.  */
@@ -305,10 +313,7 @@ _hurd_stack_setup (int argc __attribute__ ((unused)), ...)
       /* NOTREACHED */
     }
 
-  /* Initialize data structures so we can do RPCs.  */
-  __mach_init ();
-
-  RUN_HOOK (_hurd_preinit_hook, ());
+  first_init ();
 
   _hurd_startup ((void **) &argc, &doinit);
 }

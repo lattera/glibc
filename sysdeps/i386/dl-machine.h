@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -223,25 +223,34 @@ _dl_start_user:\n\
 	popl %esi\n\
 	# Adjust the stack pointer to skip _dl_skip_args words.\n\
 	leal (%esp,%eax,4), %esp\n\
-	# Subtract _dl_skip_args from it.\n\
+	# Subtract _dl_skip_args from argc.\n\
 	subl %eax, %esi\n\
+	# Push argc back on the stack.\n\
+	push %esi\n\
+	# The special initializer gets called with the stack just\n\
+	# as the application's entry point will see it; it can\n\
+	# switch stacks if it moves these contents over.\n\
+" RTLD_START_SPECIAL_INIT "\n\
 	# Load the parameters again.\n\
-	leal 4(%esp,%esi,4), %edx\n\
-	movl %esp, %ecx\n\
+	# (eax, edx, ecx, *--esp) = (_dl_loaded, argc, argv, envp)\n\
+	leal 8(%esp,%esi,4), %edx\n\
+	leal 4(%esp), %ecx\n\
 	pushl %edx\n\
 	movl %esi, %edx\n\
 	movl _dl_loaded@GOT(%ebx), %eax\n\
 	movl (%eax), %eax\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init@PLT\n\
-	# Push argc back on the stack.\n\
-	push %esi\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
 	movl _dl_fini@GOT(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\
 	jmp *%edi\n\
 .previous\n\
 ");
+
+#ifndef RTLD_START_SPECIAL_INIT
+#define RTLD_START_SPECIAL_INIT /* nothing */
+#endif
 
 /* Nonzero iff TYPE should not be allowed to resolve to one of
    the main executable's symbols, as for a COPY reloc.  */
