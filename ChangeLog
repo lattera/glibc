@@ -1,3 +1,11 @@
+2000-07-25  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-ctype.c (wctype_table_get): New function.
+	(wcwidth_table_get): New function.
+	(wcwidth_table_add): Call it.
+	(wctrans_table_get): New function.
+	(wctrans_table_add): Call it.
+
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* rt/lio_listio.c (lio_listio): Always disable individual

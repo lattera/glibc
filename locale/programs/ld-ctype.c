@@ -3262,6 +3262,33 @@ wctype_table_init (struct wctype_table *t)
   t->level3_alloc = t->level3_size = 0;
 }
 
+/* Retrieve an entry.  */
+static inline int
+wctype_table_get (struct wctype_table *t, uint32_t wc)
+{
+  uint32_t index1 = wc >> (t->q + t->p + 5);
+  if (index1 < t->level1_size)
+    {
+      uint32_t lookup1 = t->level1[index1];
+      if (lookup1 != ~((uint32_t) 0))
+	{
+	  uint32_t index2 = ((wc >> (t->p + 5)) & ((1 << t->q) - 1))
+			    + (lookup1 << t->q);
+	  uint32_t lookup2 = t->level2[index2];
+	  if (lookup2 != ~((uint32_t) 0))
+	    {
+	      uint32_t index3 = ((wc >> 5) & ((1 << t->p) - 1))
+				+ (lookup2 << t->p);
+	      uint32_t lookup3 = t->level3[index3];
+	      uint32_t index4 = wc & 0x1f;
+
+	      return (lookup3 >> index4) & 1;
+	    }
+	}
+    }
+  return 0;
+}
+
 /* Add one entry.  */
 static void
 wctype_table_add (struct wctype_table *t, uint32_t wc)
@@ -3465,6 +3492,32 @@ wcwidth_table_init (struct wcwidth_table *t)
   t->level3_alloc = t->level3_size = 0;
 }
 
+/* Retrieve an entry.  */
+static inline uint8_t
+wcwidth_table_get (struct wcwidth_table *t, uint32_t wc)
+{
+  uint32_t index1 = wc >> (t->q + t->p);
+  if (index1 < t->level1_size)
+    {
+      uint32_t lookup1 = t->level1[index1];
+      if (lookup1 != ~((uint32_t) 0))
+	{
+	  uint32_t index2 = ((wc >> t->p) & ((1 << t->q) - 1))
+			    + (lookup1 << t->q);
+	  uint32_t lookup2 = t->level2[index2];
+	  if (lookup2 != ~((uint32_t) 0))
+	    {
+	      uint32_t index3 = (wc & ((1 << t->p) - 1))
+				+ (lookup2 << t->p);
+	      uint8_t lookup3 = t->level3[index3];
+
+	      return lookup3;
+	    }
+	}
+    }
+  return 0xff;
+}
+
 /* Add one entry.  */
 static void
 wcwidth_table_add (struct wcwidth_table *t, uint32_t wc, uint8_t width)
@@ -3474,7 +3527,7 @@ wcwidth_table_add (struct wcwidth_table *t, uint32_t wc, uint8_t width)
   uint32_t index3 = wc & ((1 << t->p) - 1);
   size_t i, i1, i2;
 
-  if (width == 0xff)
+  if (width == wcwidth_table_get (t, wc))
     return;
 
   if (index1 >= t->level1_size)
@@ -3674,6 +3727,32 @@ wctrans_table_init (struct wctrans_table *t)
   t->level3_alloc = t->level3_size = 0;
 }
 
+/* Retrieve an entry.  */
+static inline uint32_t
+wctrans_table_get (struct wctrans_table *t, uint32_t wc)
+{
+  uint32_t index1 = wc >> (t->q + t->p);
+  if (index1 < t->level1_size)
+    {
+      uint32_t lookup1 = t->level1[index1];
+      if (lookup1 != ~((uint32_t) 0))
+	{
+	  uint32_t index2 = ((wc >> t->p) & ((1 << t->q) - 1))
+			    + (lookup1 << t->q);
+	  uint32_t lookup2 = t->level2[index2];
+	  if (lookup2 != ~((uint32_t) 0))
+	    {
+	      uint32_t index3 = (wc & ((1 << t->p) - 1))
+				+ (lookup2 << t->p);
+	      int32_t lookup3 = t->level3[index3];
+
+	      return wc + lookup3;
+	    }
+	}
+    }
+  return wc;
+}
+
 /* Add one entry.  */
 static void
 wctrans_table_add (struct wctrans_table *t, uint32_t wc, uint32_t mapped_wc)
@@ -3681,11 +3760,13 @@ wctrans_table_add (struct wctrans_table *t, uint32_t wc, uint32_t mapped_wc)
   uint32_t index1 = wc >> (t->q + t->p);
   uint32_t index2 = (wc >> t->p) & ((1 << t->q) - 1);
   uint32_t index3 = wc & ((1 << t->p) - 1);
-  int32_t value = (int32_t) mapped_wc - (int32_t) wc;
+  int32_t value;
   size_t i, i1, i2;
 
-  if (value == 0)
+  if (mapped_wc == wctrans_table_get (t, wc))
     return;
+
+  value = (int32_t) mapped_wc - (int32_t) wc;
 
   if (index1 >= t->level1_size)
     {
