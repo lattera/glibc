@@ -50,15 +50,15 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
 
 /* Macros for accessing the hardware control word.  */
 #define _FPU_GETCW(cw) ( { \
-  fpu_control_t tmp[2] __attribute__ ((__aligned__(8))); \
-  __asm__ ("mffs 0; stfd 0,%0" : "=m" (*tmp) : : "fr0"); \
-  (cw)=tmp[1]; \
-  tmp[1]; } )
+  union { double d; fpu_control_t cw[2]; } tmp __attribute__ ((__aligned__(8))); \
+  __asm__ ("mffs 0; stfd 0,%0" : "=m" (tmp.d) : : "fr0"); \
+  (cw)=tmp.cw[1]; \
+  tmp.cw[1]; } )
 #define _FPU_SETCW(cw) { \
-  fpu_control_t tmp[2] __attribute__ ((__aligned__(8))); \
-  tmp[0] = 0xFFF80000; /* More-or-less arbitrary; this is a QNaN. */ \
-  tmp[1] = cw; \
-  __asm__ ("lfd 0,%0; mtfsf 255,0" : : "m" (*tmp) : "fr0"); \
+  union { double d; fpu_control_t cw[2]; } tmp __attribute__ ((__aligned__(8))); \
+  tmp.cw[0] = 0xFFF80000; /* More-or-less arbitrary; this is a QNaN. */ \
+  tmp.cw[1] = cw; \
+  __asm__ ("lfd 0,%0; mtfsf 255,0" : : "m" (tmp.d) : "fr0"); \
 }
 
 /* Default control word set at startup.  */
