@@ -32,5 +32,5 @@ CFLAGS-setjmp.c := -fno-omit-frame-pointer
 long-double-fcts = yes
 
 ifeq ($(subdir),elf)
-CFLAGS-rtld.c += -Wno-uninitialized
+CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
 endif
