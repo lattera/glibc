@@ -34,31 +34,27 @@ Cambridge, MA 02139, USA.  */
   _/**/name/**/:
 #endif
 
-/* NewsOS 4 wants a stack frame around syscalls.  */
-
-#ifdef	__STDC__
 #define	PSEUDO(name, syscall_name, args)				      \
   .even;								      \
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
   ENTRY (name)								      \
+  DO_CALL (syscall_name, args)
+
+#ifdef __STDC__
+#define DO_CALL(syscall_name, args)					      \
   linkw fp, POUND(0);							      \
   movel POUND(SYS_##syscall_name), d0;					      \
   trap POUND(0);							      \
-  bcs error;								      \
-  unlk fp
-
+  unlk fp;								      \
+  bcs error
 #else
-#define	PSEUDO(name, syscall_name, args)				      \
-  .even;								      \
-  .globl syscall_error;							      \
-  error: jmp syscall_error;						      \
-  ENTRY (name)								      \
+#define DO_CALL(syscall_name, args)					      \
   linkw fp, POUND(0);							      \
   movel POUND(SYS_/**/syscall_name), d0;				      \
   trap POUND(0);							      \
-  bcs error;								      \
-  unlk fp
+  unlk fp;								      \
+  bcs error
 #endif
 
 #define	ret	rts
