@@ -1,5 +1,10 @@
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PSEUDO): Also define
+	*_nocancel name.
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add waitpid.
+
 	* libio/Makefile (CFLAGS-oldtmpfile.c): Add -fexceptions.
 	* sysdeps/generic/tmpfile.c (tmpfile): Use __unlink instead of remove.
 	* libio/oldtmpfile.c (__old_tmpfile): Likewise.
@@ -17,6 +22,8 @@
 	* posix/unistd.h: Remove __THROW from pathconf, fpathconf,
 	sysconf.
 	* posix/Makefile (CFLAGS-sysconf.c): Add -fexceptions.
+	(CFLAGS-pathconf.c): Likewise.
+	(CFLAGS-fpathconf.c): Likewise.
 
 	* misc/Makefile (CFLAGS-fstab.c): Add -fexceptions.
 	* misc/fstab.h: Remove all __THROW.
