@@ -63,4 +63,4 @@ ENTRY(ffs)
 
 done:   ret
 
-        .end    ffs
+        END(ffs)

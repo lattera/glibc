@@ -39,6 +39,6 @@ error:	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 	jmp	zero, syscall_error
 
-	.end __ieee_set_fp_control
+	END(__ieee_set_fp_control)
 
 weak_alias (__ieee_set_fp_control, ieee_set_fp_control)

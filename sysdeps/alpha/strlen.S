@@ -67,4 +67,4 @@ found:  blbs    t1, done        # make aligned case fast
 done:   subq    v0, a0, v0
         ret
 
-        .end    strlen
+        END(strlen)

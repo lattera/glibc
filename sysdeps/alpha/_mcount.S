@@ -106,4 +106,4 @@ LEAF(_mcount, 0xb0)
 	addq	sp, 0xb0, sp
 	ret	zero,($at),1
 
-	.end _mcount
+	END(_mcount)

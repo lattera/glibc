@@ -25,7 +25,7 @@ ENTRY(__htons)
 	bis	v0, t1, v0	# v0 = bbaa
 	ret
 
-	.end	__htons
+	END(__htons)
 
 strong_alias_asm(__htons, __ntohs)
 weak_alias(__htons, htons)

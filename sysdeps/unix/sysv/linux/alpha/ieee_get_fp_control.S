@@ -41,6 +41,6 @@ error:	lda	sp, 8(sp)
 1:	ldgp	gp, 0(gp)
 	jmp	zero, syscall_error
 
-	.end __ieee_get_fp_control
+	END(__ieee_get_fp_control)
 
 weak_alias (__ieee_get_fp_control, ieee_get_fp_control)

@@ -31,7 +31,7 @@ ENTRY(__htonl)
 	or	t2, v0, v0	# v0 = ddccbbaa
 	ret
 
-	.end	__htonl
+	END(__htonl)
 
 strong_alias_asm(__htonl, __ntohl)
 weak_alias(__htonl, htonl)

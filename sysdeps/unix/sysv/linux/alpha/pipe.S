@@ -37,6 +37,6 @@ error:	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 	jmp	zero, syscall_error
 
-	.end __pipe
+	END(__pipe)
 
 weak_alias (__pipe, pipe)

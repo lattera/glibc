@@ -30,4 +30,4 @@ ENTRY (__sigsetjmp)
 	bis	$15, $15, $19		/* Pass FP as 4th arg.  */
 	jmp	$31, ($27), __sigsetjmp_aux /* Call __sigsetjmp_aux.  */
 
-	.end __sigsetjmp
+	END(__sigsetjmp)
