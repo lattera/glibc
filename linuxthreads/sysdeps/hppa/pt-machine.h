@@ -19,6 +19,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _PT_MACHINE_H
+#define _PT_MACHINE_H   1
+
 #include <bits/initspin.h>
 
 #ifndef PT_EI
@@ -55,3 +58,5 @@ testandset (int *spinlock)
 }
 #undef str
 #undef xstr
+
+#endif /* pt-machine.h */

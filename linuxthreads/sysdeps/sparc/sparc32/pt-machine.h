@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    sparc version.
-   Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -18,6 +18,9 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
+
+#ifndef _PT_MACHINE_H
+#define _PT_MACHINE_H   1
 
 #ifndef PT_EI
 # define PT_EI extern inline
@@ -72,3 +75,5 @@ register struct _pthread_descr_struct *__thread_self __asm__("%g6");
 
 /* Maximum size of the stack if the rlimit is unlimited.  */
 #define ARCH_STACK_MAX_SIZE     8*1024*1024
+
+#endif /* pt-machine.h */

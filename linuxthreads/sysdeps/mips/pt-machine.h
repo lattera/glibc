@@ -20,6 +20,9 @@
    not, write to the Free Software Foundation, Inc.,
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
+#ifndef _PT_MACHINE_H
+#define _PT_MACHINE_H   1
+
 #include <sgidefs.h>
 #include <sys/tas.h>
 
@@ -75,3 +78,5 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 }
 
 #endif /* (_MIPS_ISA >= _MIPS_ISA_MIPS2) */
+
+#endif /* pt-machine.h */

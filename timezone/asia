@@ -1,4 +1,4 @@
-# @(#)asia	7.66
+# @(#)asia	7.67
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -419,7 +419,7 @@ Zone Asia/Pontianak	7:17:20	-	LMT	1908 May
 			7:30	-	WIT	1964
 			8:00	-	CIT	1988 Jan  1
 			7:00	-	WIT
-Zone Asia/Ujung_Pandang 7:57:36 -	LMT	1920
+Zone Asia/Makassar	7:57:36 -	LMT	1920
 			7:57:36	-	MMT	1932 Nov    # Macassar MT
 			8:00	-	CIT	1942 Feb  9
 			9:00	-	JST	1945 Aug
@@ -1094,13 +1094,36 @@ Zone	Asia/Muscat	3:54:20 -	LMT	1920
 			4:00	-	GST
 
 # Pakistan
+
+# From Rives McDow (2002-03-13):
+# I have been advised that Pakistan has decided to adopt dst on a
+# TRIAL basis for one year, starting 00:01 local time on April 7, 2002
+# and ending at 00:01 local time October 6, 2002.  This is what I was
+# told, but I believe that the actual time of change may be 00:00; the
+# 00:01 was to make it clear which day it was on.
+
+# From Paul Eggert (2002-03-15):
+# Jesper Norgaard found this URL:
+# http://www.pak.gov.pk/public/news/app/app06_dec.htm
+# (dated 2001-12-06) which says that the Cabinet adopted a scheme "to
+# advance the clocks by one hour on the night between the first
+# Saturday and Sunday of April and revert to the original position on
+# 15th October each year".  This agrees with McDow's 04-07 at 00:00,
+# but disagrees about the October transition, and makes it sound like
+# it's not on a trial basis.  Also, the "between the first Saturday
+# and Sunday of April" phrase, if taken literally, means that the
+# transition takes place at 00:00 on the first Sunday on or after 04-02.
+
+# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+Rule Pakistan	2002	max	-	Apr	Sun>=2	0:00	1:00	S
+Rule Pakistan	2002	max	-	Oct	15	0:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Karachi	4:28:12 -	LMT	1907
 			5:30	-	IST	1942 Sep
 			5:30	1:00	IST	1945 Oct 15
 			5:30	-	IST	1951 Sep 30
 			5:00	-	KART	1971 Mar 26 # Karachi Time
-			5:00	-	PKT	# Pakistan Time
+			5:00 Pakistan	PK%sT	# Pakistan Time
 
 # Palestine
 

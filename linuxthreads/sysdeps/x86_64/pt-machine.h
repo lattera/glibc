@@ -18,6 +18,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _PT_MACHINE_H
+#define _PT_MACHINE_H   1
+
 #include <stddef.h>	/* For offsetof.  */
 #include <stdlib.h>	/* For abort().  */
 #include <asm/prctl.h>
@@ -211,3 +214,5 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 
 /* Maximum size of the stack if the rlimit is unlimited.  */
 #define ARCH_STACK_MAX_SIZE	32*1024*1024
+
+#endif /* pt-machine.h */

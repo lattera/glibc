@@ -21,6 +21,9 @@
 /* These routines are from Appendix G of the 'PowerPC 601 RISC Microprocessor
    User's Manual', by IBM and Motorola.  */
 
+#ifndef _PT_MACHINE_H
+#define _PT_MACHINE_H   1
+
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
@@ -86,3 +89,5 @@ __compare_and_swap_with_release_semantics (long int *p,
 	: "cr0", "memory");
   return ret == 0;
 }
+
+#endif /* pt-machine.h */

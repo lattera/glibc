@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.104";
+static char	elsieid[] = "@(#)zic.c	7.107";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -621,9 +621,11 @@ const char * const	tofile;
 
 		result = link(fromname, toname);
 #if (HAVE_SYMLINK - 0)
-		if (result != 0) {
+		if (result != 0 &&
+		    access(fromname, F_OK) == 0 &&
+		    !itsdir(fromname)) {
 		        const char *s = tofile;
-		        register char *symlinkcontents = NULL;
+		        register char * symlinkcontents = NULL;
 		        while ((s = strchr(s+1, '/')) != NULL)
 			        symlinkcontents = ecatalloc(symlinkcontents, "../");
 			symlinkcontents = ecatalloc(symlinkcontents, fromname);

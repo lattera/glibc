@@ -1,4 +1,4 @@
-# @(#)zone.tab	1.25
+# @(#)zone.tab	1.26
 #
 # TZ zone descriptions
 #
@@ -41,8 +41,7 @@ AQ	-7824+10654	Antarctica/Vostok	Vostok Station, S Magnetic Pole
 AQ	-6640+14001	Antarctica/DumontDUrville	Dumont-d'Urville Base, Terre Adelie
 AQ	-690022+0393524	Antarctica/Syowa	Syowa Station, E Ongul I
 AR	-3436-05827	America/Buenos_Aires	E Argentina (BA, DF, SC, TF)
-AR	-3257-06040	America/Rosario	NE Argentina (SF, ER, CN, MN, CC, FM, LP, CH)
-AR	-3124-06411	America/Cordoba	W Argentina (CB, SA, TM, LR, SJ, SL, NQ, RN)
+AR	-3124-06411	America/Cordoba	most locations (CB,CC,CH,CN,ER,FM,LP,LR,MN,NQ,RN,SA,SE,SF,SJ,SL,TM)
 AR	-2411-06518	America/Jujuy	Jujuy (JY)
 AR	-2828-06547	America/Catamarca	Catamarca (CT)
 AR	-3253-06849	America/Mendoza	Mendoza (MZ)
@@ -189,7 +188,7 @@ HT	+1832-07220	America/Port-au-Prince
 HU	+4730+01905	Europe/Budapest
 ID	-0610+10648	Asia/Jakarta	Java & Sumatra
 ID	-0002+10920	Asia/Pontianak	west & central Borneo
-ID	-0507+11924	Asia/Ujung_Pandang	east & south Borneo, Celebes, Bali, Nusa Tengarra, west Timor
+ID	-0507+11924	Asia/Makassar	east & south Borneo, Celebes, Bali, Nusa Tengarra, west Timor
 ID	-0232+14042	Asia/Jayapura	Irian Jaya & the Moluccas
 IE	+5320-00615	Europe/Dublin
 IL	+3146+03514	Asia/Jerusalem
