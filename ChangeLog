@@ -1,3 +1,8 @@
+2004-11-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/stdlib.h (setenv): Use nonnull only for second argument.
+	(unsetenv): Remove.
+
 2004-11-23  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c (analyze_tree): Always call calc_epsdest.

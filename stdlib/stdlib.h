@@ -669,10 +669,10 @@ extern int putenv (char *__string) __THROW __nonnull ((1));
 /* Set NAME to VALUE in the environment.
    If REPLACE is nonzero, overwrite an existing value.  */
 extern int setenv (__const char *__name, __const char *__value, int __replace)
-     __THROW __nonnull ((1, 2));
+     __THROW __nonnull ((2));
 
 /* Remove the variable NAME from the environment.  */
-extern int unsetenv (__const char *__name) __THROW __nonnull ((1));
+extern int unsetenv (__const char *__name) __THROW;
 #endif
 
 #ifdef	__USE_MISC
