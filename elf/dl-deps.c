@@ -495,7 +495,7 @@ _dl_map_object_deps (struct link_map *map,
 
   for (nlist = 0, runp = known; runp; runp = runp->unique)
     {
-      if (trace_mode && runp->map->l_opencount == 0)
+      if (trace_mode && runp->map->l_faked)
 	/* This can happen when we trace the loading.  */
 	--map->l_searchlist.r_nlist;
       else
@@ -516,7 +516,7 @@ _dl_map_object_deps (struct link_map *map,
       map->l_searchlist.r_duplist = map->l_searchlist.r_list + nlist;
 
       for (cnt = 0, runp = known; runp; runp = runp->dup)
-	if (trace_mode && runp->map->l_opencount == 0)
+	if (trace_mode && runp->map->l_faked)
 	  /* This can happen when we trace the loading.  */
 	  --map->l_searchlist.r_nduplist;
 	else

@@ -219,7 +219,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	  /* Make sure this is no stub we created because of a missing
 	     dependency.  */
 	  if (__builtin_expect (! trace_mode, 1)
-	      || __builtin_expect (needed->l_opencount, 1) != 0)
+	      || ! __builtin_expect (needed->l_faked, 0))
 	    {
 	      /* NEEDED is the map for the file we need.  Now look for the
 		 dependency symbols.  */
@@ -375,8 +375,7 @@ _dl_check_all_versions (struct link_map *map, int verbose, int trace_mode)
   int result = 0;
 
   for (l = map; l != NULL; l = l->l_next)
-    result |= (l->l_opencount != 0
-	       && _dl_check_map_versions (l, verbose, trace_mode));
+    result |= ! l->l_faked && _dl_check_map_versions (l, verbose, trace_mode);
 
   return result;
 }

@@ -1679,10 +1679,10 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	      || (l = _dl_new_object (name_copy, name, type, loader)) == NULL)
 	    _dl_signal_error (ENOMEM, name,
 			      N_("cannot create shared object descriptor"));
-	  /* We use an opencount of 0 as a sign for the faked entry.
-	     Since the descriptor is initialized with zero we do not
+	  /* Signal that this is a faked entry.  */
+	  l->l_faked = 1;
+	  /* Since the descriptor is initialized with zero we do not
 	     have do this here.
-	  l->l_opencount = 0;
 	  l->l_reserved = 0; */
 	  l->l_buckets = &dummy_bucket;
 	  l->l_nbuckets = 1;

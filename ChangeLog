@@ -1,5 +1,12 @@
 2000-10-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/link.h (struct link_map): New bit field l_faked.
+	* elf/dl-deps.c: Use l_faked field in struct link_map instead of
+	the magic l_opencount==0.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/rtld.c: Likewise.
+
 	* elf/dl-close.c (_dl_close): Add a few more __builtin_expect.
 
 2000-10-23  Jim Meyering  <meyering@ascend.com>

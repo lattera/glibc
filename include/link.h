@@ -180,6 +180,8 @@ struct link_map
 					to by `l_phdr' is allocated.  */
     unsigned int l_soname_added:1; /* Nonzero if the SONAME is for sure in
 				      the l_libname list.  */
+    unsigned int l_faked:1;	/* Nonzero if this is a faked descriptor
+				   without associated file.  */
 
     /* Array with version names.  */
     unsigned int l_nversions;
@@ -202,7 +204,7 @@ struct link_map
     ElfW(Addr) l_map_start, l_map_end;
 
     /* This is an array defining the lookup scope for this link map.
-     There are at most three different scope lists.  */
+       There are at most three different scope lists.  */
     struct r_scope_elem *l_scope[4];
 
     /* A similar array, this time only with the local scope.  This is

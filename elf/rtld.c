@@ -891,7 +891,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  struct link_map *l;
 
 	  for (l = _dl_loaded->l_next; l; l = l->l_next)
-	    if (l->l_opencount == 0)
+	    if (l->l_faked)
 	      /* The library was not found.  */
 	      _dl_sysdep_message ("\t", l->l_libname->name, " => not found\n",
 				  NULL);
@@ -948,7 +948,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		l = l->l_next;
 	      do
 		{
-		  if (l != &_dl_rtld_map && l->l_opencount > 0)
+		  if (l != &_dl_rtld_map && ! l->l_faked)
 		    {
 		      args.l = l;
 		      _dl_receive_error (print_unresolved, relocate_doit,
