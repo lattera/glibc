@@ -1,3 +1,8 @@
+2001-07-24  Igor Khavkine  <i_khavki@alcor.concordia.ca>
+
+        * hurd/hurdsig.c (_hurdsig_init): Fix incorrect initialization
+        of pending signals.
+
 2001-06-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/dl-machine.c (__elf_preferred_address): Prefer
