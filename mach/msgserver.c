@@ -1,20 +1,20 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Based on CMU's mach_msg_server.c revision 2.4 of 91/05/14, and thus
    under the following copyright.  Rewritten by Roland McGrath (FSF)
@@ -49,6 +49,12 @@ Cambridge, MA 02139, USA.  */
 /*
  * HISTORY
  * $Log$
+ * Revision 1.5  1996/12/20 01:32:35  drepper
+ * Update from main archive 961219
+ *
+ * Revision 1.5  1996/12/19 20:23:45  drepper
+ * Spelling corrections.
+ *
  * Revision 1.4  1996/01/29 15:44:23  roland
  * Declare DEMUX arg with prototype.
  *
@@ -162,7 +168,7 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
 	{
 	case MACH_RCV_TOO_LARGE:
 	  /* The request message is larger than MAX_SIZE, and has not
-	     been dequued.  The message header has the actual size of
+	     been dequeued.  The message header has the actual size of
 	     the message.  We recurse here in hopes that the compiler
 	     will optimize the tail-call and allocate some more stack
 	     space instead of way too much.  */
@@ -171,7 +177,7 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
 
 	case MACH_SEND_INVALID_DEST:
 	  /* The reply can't be delivered, so destroy it.  This error
-	     indicates only that the requestor went away, so we
+	     indicates only that the requester went away, so we
 	     continue and get the next request.  */
 	  __mach_msg_destroy (&request->Head);
 	  break;

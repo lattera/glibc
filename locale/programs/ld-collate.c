@@ -1,21 +1,21 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -119,7 +119,7 @@ struct locale_collate_t
   /* What kind of symbol is current element.  */
   enum coll_symbol kind;
 
-  /* While collecting the weigths we need some temporary space.  */
+  /* While collecting the weights we need some temporary space.  */
   unsigned int current_order;
   int *weight_cnt;
   unsigned int weight_idx;
@@ -379,8 +379,8 @@ Computing table size for collation information might take a while..."),
     = collate->nrules * sizeof (u_int32_t);
   /* Another trick here.  Describing the collation method needs only a
      few bits (3, to be exact).  But the binary file should be
-     accessible by maschines with both endianesses and so we store both
-     information in the same word.  */
+     accessible by machines with both endianesses and so we store both
+     forms in the same word.  */
   for (cnt = 0; cnt < collate->nrules; ++cnt)
     table[cnt] = collate->rules[cnt] | SWAPU32 (collate->rules[cnt]);
 
@@ -646,7 +646,7 @@ Computing table size for collation information might take a while..."),
      where N is the number of keys.
 
      If we now choose M to be the next prime bigger than 4 / 3 * N,
-     we get the values 4 and 1.85 resp.  Because unsuccesful searches
+     we get the values 4 and 1.85 resp.  Because unsuccessful searches
      are unlikely this is a good value.  Formulas: [Knuth, The Art of
      Computer Programming, Volume 3, Sorting and Searching, 1973,
      Addison Wesley]  */
@@ -880,7 +880,7 @@ Computing table size for collation information might take a while..."),
     symbols_class_ob[cnt] = SWAPU32 (symbols_class[cnt]);
 
 
-  /* Store table adresses and lengths.   */
+  /* Store table addresses and lengths.   */
 #if __BYTE_ORDER == __BIG_ENDIAN
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_TABLE_EB)].iov_base = table;
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_TABLE_EB)].iov_len
@@ -1659,7 +1659,7 @@ collate_simple_weight (struct linereader *lr, struct localedef_t *locale,
 
     case tok_string:
       /* This can become difficult.  We have to get the weights which
-	 correspind the the single wide chars in the string.  But some
+	 correspond to the single wide chars in the string.  But some
 	 of the `chars' might not be real characters, but collation
 	 elements or symbols.  And so the string decoder might have
 	 signaled errors.  The string at this point is not translated.

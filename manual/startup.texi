@@ -236,7 +236,7 @@ must compare the external variable @code{optind} against the @var{argc}
 parameter to check this.
 
 If the option has an argument, @code{getopt} returns the argument by
-storing it in the varables @var{optarg}.  You don't ordinarily need to
+storing it in the variable @var{optarg}.  You don't ordinarily need to
 copy the @code{optarg} string, since it is a pointer into the original
 @var{argv} array, not into a static area that might be overwritten.
 

@@ -1092,7 +1092,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 do_positional:
   {
     /* Array with information about the needed arguments.  This has to
-       be dynamically extendable.  */
+       be dynamically extensible.  */
     size_t nspecs = 0;
     size_t nspecs_max = 32;	/* A more or less arbitrary start value.  */
     struct printf_spec *specs
@@ -1327,7 +1327,7 @@ do_positional:
 	      /* Call the function.  */
 	      function_done = (*function) (s, &specs[nspecs_done].info, ptr);
 
-	      /* If an error occured we don't have information about #
+	      /* If an error occurred we don't have information about #
 		 of chars.  */
 	      if (function_done < 0)
 		{

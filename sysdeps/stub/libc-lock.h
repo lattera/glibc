@@ -61,7 +61,7 @@
 #define __libc_cleanup_region_end(DOIT)
 
 
-/* We need protable names for some of the functions.  */
+/* We need portable names for some of the functions.  */
 #define __libc_mutex_unlock
 
 #endif	/* libc-lock.h */

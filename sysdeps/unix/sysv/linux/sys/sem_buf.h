@@ -42,7 +42,7 @@ __BEGIN_DECLS
 /* Data structure describing a set of semaphores.  */
 struct semid_ds
 {
-  struct ipc_perm sem_perm;		/* operation permisson struct */
+  struct ipc_perm sem_perm;		/* operation permission struct */
   __time_t sem_otime;			/* last semop() time */
   __time_t sem_ctime;			/* last time changed by semctl() */
   struct sem *__sembase;		/* ptr to first semaphore in array */

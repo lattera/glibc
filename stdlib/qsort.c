@@ -1,21 +1,21 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Written by Douglas C. Schmidt (schmidt@ics.uci.edu).
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Written by Douglas C. Schmidt (schmidt@ics.uci.edu).
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <ansidecl.h>
 #include <stdlib.h>
@@ -40,7 +40,7 @@ Cambridge, MA 02139, USA.  */
 #define MAX_THRESH 4
 
 /* Stack node declarations used to store unfulfilled partition obligations. */
-typedef struct 
+typedef struct
   {
     char *lo;
     char *hi;
@@ -50,26 +50,26 @@ typedef struct
 #define STACK_SIZE	(8 * sizeof(unsigned long int))
 #define PUSH(low, high)	((void) ((top->lo = (low)), (top->hi = (high)), ++top))
 #define	POP(low, high)	((void) (--top, (low = top->lo), (high = top->hi)))
-#define	STACK_NOT_EMPTY	(stack < top)                
+#define	STACK_NOT_EMPTY	(stack < top)
 
 
 /* Order size using quicksort.  This implementation incorporates
    four optimizations discussed in Sedgewick:
 
-   1. Non-recursive, using an explicit stack of pointer that store the 
-      next array partition to sort.  To save time, this maximum amount 
-      of space required to store an array of MAX_INT is allocated on the 
-      stack.  Assuming a 32-bit integer, this needs only 32 * 
+   1. Non-recursive, using an explicit stack of pointer that store the
+      next array partition to sort.  To save time, this maximum amount
+      of space required to store an array of MAX_INT is allocated on the
+      stack.  Assuming a 32-bit integer, this needs only 32 *
       sizeof(stack_node) == 136 bits.  Pretty cheap, actually.
 
    2. Chose the pivot element using a median-of-three decision tree.
-      This reduces the probability of selecting a bad pivot value and 
+      This reduces the probability of selecting a bad pivot value and
       eliminates certain extraneous comparisons.
 
    3. Only quicksorts TOTAL_ELEMS / MAX_THRESH partitions, leaving
-      insertion sort to order the MAX_THRESH items within each partition.  
+      insertion sort to order the MAX_THRESH items within each partition.
       This is a big win, since insertion sort is faster for small, mostly
-      sorted array segements.
+      sorted array segments.
 
    4. The larger of the two sub-partitions is always pushed onto the
       stack first, with the algorithm then concentrating on the
@@ -108,8 +108,8 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
 	  char *pivot = pivot_buffer;
 
 	  /* Select median value from among LO, MID, and HI. Rearrange
-	     LO and HI so the three values are sorted. This lowers the 
-	     probability of picking a pathological pivot value and 
+	     LO and HI so the three values are sorted. This lowers the
+	     probability of picking a pathological pivot value and
 	     skips a comparison for both the LEFT_PTR and RIGHT_PTR. */
 
 	  char *mid = lo + size * ((hi - lo) / size >> 1);
@@ -118,7 +118,7 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
 	    SWAP(mid, lo, size);
 	  if ((*cmp)((PTR) hi, (PTR) mid) < 0)
 	    SWAP(mid, hi, size);
-	  else 
+	  else
 	    goto jump_over;
 	  if ((*cmp)((PTR) mid, (PTR) lo) < 0)
 	    SWAP(mid, lo, size);
@@ -127,12 +127,12 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
 	  pivot = pivot_buffer;
 
 	  left_ptr  = lo + size;
-	  right_ptr = hi - size; 
+	  right_ptr = hi - size;
 
-	  /* Here's the famous ``collapse the walls'' section of quicksort.  
-	     Gotta like those tight inner loops!  They are the main reason 
+	  /* Here's the famous ``collapse the walls'' section of quicksort.
+	     Gotta like those tight inner loops!  They are the main reason
 	     that this algorithm runs much faster than others. */
-	  do 
+	  do
 	    {
 	      while ((*cmp)((PTR) left_ptr, (PTR) pivot) < 0)
 		left_ptr += size;
@@ -140,23 +140,23 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
 	      while ((*cmp)((PTR) pivot, (PTR) right_ptr) < 0)
 		right_ptr -= size;
 
-	      if (left_ptr < right_ptr) 
+	      if (left_ptr < right_ptr)
 		{
 		  SWAP(left_ptr, right_ptr, size);
 		  left_ptr += size;
 		  right_ptr -= size;
 		}
-	      else if (left_ptr == right_ptr) 
+	      else if (left_ptr == right_ptr)
 		{
 		  left_ptr += size;
 		  right_ptr -= size;
 		  break;
 		}
-	    } 
+	    }
 	  while (left_ptr <= right_ptr);
 
           /* Set up pointers for next iteration.  First determine whether
-             left and right partitions are below the threshold size.  If so, 
+             left and right partitions are below the threshold size.  If so,
              ignore one or both.  Otherwise, push the larger partition's
              bounds on the stack and continue sorting the smaller one. */
 
@@ -164,22 +164,22 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
             {
               if ((size_t) (hi - left_ptr) <= max_thresh)
 		/* Ignore both small partitions. */
-                POP(lo, hi); 
+                POP(lo, hi);
               else
-		/* Ignore small left partition. */  
+		/* Ignore small left partition. */
                 lo = left_ptr;
             }
           else if ((size_t) (hi - left_ptr) <= max_thresh)
 	    /* Ignore small right partition. */
             hi = right_ptr;
           else if ((right_ptr - lo) > (hi - left_ptr))
-            {                   
+            {
 	      /* Push larger left partition indices. */
               PUSH(lo, right_ptr);
               lo = left_ptr;
             }
           else
-            {                   
+            {
 	      /* Push larger right partition indices. */
               PUSH(left_ptr, hi);
               hi = right_ptr;
@@ -188,8 +188,8 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
     }
 
   /* Once the BASE_PTR array is partially sorted by quicksort the rest
-     is completely sorted using insertion sort, since this is efficient 
-     for partitions below MAX_THRESH size. BASE_PTR points to the beginning 
+     is completely sorted using insertion sort, since this is efficient
+     for partitions below MAX_THRESH size. BASE_PTR points to the beginning
      of the array to sort, and END_PTR points at the very last element in
      the array (*not* one beyond it!). */
 
@@ -240,4 +240,3 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
       }
   }
 }
-

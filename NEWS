@@ -190,7 +190,7 @@ Version 2.0
   `struct sockaddr *' type, does not generate a type-clash warning.
 
 * New function `error' declared in header file <error.h> is a convenient
-  function for printing error messages and optionally exitting; this is the
+  function for printing error messages and optionally exiting; this is the
   canonical function used in GNU programs.  The new functions `err', `warn',
   and friends in header file <err.h> are the canonical 4.4 BSD interface for
   doing the same thing.
@@ -205,7 +205,7 @@ Version 2.0
 * We have incorporated the 4.4 BSD `db' library (version 1.85).  New header
   files <db.h> and <mpool.h> provide a rich set of functions for several
   types of simple databases stored in memory and in files, and <ndbm.h> is
-  an old `ndbm'-compatbile interface using the `db' functions.  Link with
+  an old `ndbm'-compatible interface using the `db' functions.  Link with
   `-ldb' to get these functions.
 
 * New macro `strdupa' copies a string like `strdup', but uses local stack

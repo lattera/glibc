@@ -5,7 +5,7 @@
 
 @cindex Name Service Switch
 @cindex NSS
-@cindex databses
+@cindex databases
 Various functions in the C Library need to be configured to work
 correctly in the local environment.  Traditionally, this was done by
 using files (e.g., @file{/etc/passwd}), but other nameservices (line the
@@ -128,7 +128,7 @@ the reaction on lookup result line @code{[NOTFOUND=return]}.
 
 @menu
 * Services in the NSS configuration::  Service names in the NSS configuration.
-* Actions in the NSS configuration::  React approprite on the lookup result.
+* Actions in the NSS configuration::  React appropriately to the lookup result.
 * Notes on NSS Configuration File::  Things to take care about while
                                      configuring NSS.
 @end menu
@@ -181,7 +181,7 @@ service.  They mean
 
 @ftable @samp
 @item success
-No error occured an the wanted entry is returned.  The default action
+No error occurred and the wanted entry is returned.  The default action
 for this is @code{return}.
 
 @item notfound

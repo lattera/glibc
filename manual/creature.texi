@@ -73,13 +73,13 @@ included as well as the @w{ISO C}, POSIX.1, POSIX.2, and X/Open material.
 @comment (none)
 @comment XOPEN
 @defvr Macro _XOPEN_SOURCE
-If you define these macro, functionality described in the X/Open
-Portability Guide is included.  This is an superset of the POSIX.1 and
+If you define this macro, functionality described in the X/Open
+Portability Guide is included.  This is a superset of the POSIX.1 and
 POSIX.2 functionality and in fact @code{_POSIX_SOURCE} and
-@code{_POSIX_C_SOURCE} get automatically be defined.
+@code{_POSIX_C_SOURCE} are automatically defined.
 
-But as the great unifiction of all Unices there is also functionality
-only available in BSD and SVID is included.
+As the unification of all Unices, functionality only available in
+BSD and SVID is also included.
 
 If the macro @code{_XOPEN_SOURCE_EXTENDED} is also defined, even more
 functionality is available.  The extra functions will make all functions

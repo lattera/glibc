@@ -1,48 +1,54 @@
-/* 
+/*
  * Mach Operating System
  * Copyright (c) 1991,1990,1989 Carnegie Mellon University
  * All Rights Reserved.
- * 
+ *
  * Permission to use, copy, modify and distribute this software and its
  * documentation is hereby granted, provided that both the copyright
  * notice and this permission notice appear in all copies of the
  * software, derivative works or modified versions, and any portions
  * thereof, and that both notices appear in supporting documentation.
- * 
- * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS 
+ *
+ * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS
  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
+ *
  * Carnegie Mellon requests users of this software to return to
- * 
+ *
  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
  *  School of Computer Science
  *  Carnegie Mellon University
  *  Pittsburgh PA 15213-3890
- * 
+ *
  * any improvements or extensions that they make and grant Carnegie the
  * rights to redistribute these changes.
  */
 /*
  * HISTORY
  * $Log$
+ * Revision 1.5  1996/12/20 01:32:34  drepper
+ * Update from main archive 961219
+ *
+ * Revision 1.5  1996/12/19 20:23:39  drepper
+ * Spelling corrections.
+ *
  * Revision 1.4  1993/12/17 06:14:52  mib
  * entered into RCS
  *
  * Revision 2.3  92/04/01  19:38:02  rpd
  * 	Added err_codes_device.
  * 	[92/03/09            rpd]
- * 
+ *
  * Revision 2.2  92/01/16  00:08:50  rpd
  * 	Moved from user collection to mk collection.
- * 
+ *
  * Revision 2.3  91/08/29  15:51:22  rpd
  * 	Updated err_codes_kern.
  * 	[91/08/15            rpd]
- * 
+ *
  * Revision 2.2  91/03/27  16:05:27  mrt
  * 	First checkin
- * 
+ *
  */
 /*
  *	File: 	err_kern.sub
@@ -130,12 +136,12 @@ static char * err_codes_unix[] = {
 	"(os/unix) result is out of range",
 	"(os/unix) operation on device would block",
 	"(os/unix) operation is now in progress",
-	"(os/unix) operation is already in progress",	
+	"(os/unix) operation is already in progress",
 	"(os/unix) socket operation attempted on non-socket object",
 	"(os/unix) destination address is required",
 	"(os/unix) message is too long",
 	"(os/unix) protocol type is incorrect for socket",
-	"(os/unix) protocol type is not availaible",
+	"(os/unix) protocol type is not available",
 	"(os/unix) protocol type is not supported",
 	"(os/unix) socket type is not supported",
 	"(os/unix) operation is not supported on sockets",

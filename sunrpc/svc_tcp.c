@@ -37,7 +37,7 @@ static char sccsid[] = "@(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";
  * Copyright (C) 1984, Sun Microsystems, Inc.
  *
  * Actually implements two flavors of transporter -
- * a tcp rendezvouser (a listner and connection establisher)
+ * a tcp rendezvouser (a listener and connection establisher)
  * and a record/tcp stream.
  */
 
@@ -215,7 +215,7 @@ makefd_xprt(fd, sendsize, recvsize)
 	xprt->xp_p1 = (caddr_t)cd;
 	xprt->xp_verf.oa_base = cd->verf_body;
 	xprt->xp_addrlen = 0;
-	xprt->xp_ops = &svctcp_op;  /* truely deals with calls */
+	xprt->xp_ops = &svctcp_op;  /* truly deals with calls */
 	xprt->xp_port = 0;  /* this is a connection, not a rendezvouser */
 	xprt->xp_sock = fd;
 	xprt_register(xprt);
@@ -283,7 +283,7 @@ svctcp_destroy(xprt)
 static struct timeval wait_per_try = { 35, 0 };
 
 /*
- * reads data from the tcp conection.
+ * reads data from the tcp connection.
  * any error is fatal and the connection is closed.
  * (And a read of zero bytes is a half closed stream => error.)
  */

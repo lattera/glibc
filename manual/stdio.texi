@@ -62,7 +62,7 @@ input/output library functions.  Don't try to create your own objects of
 type @code{FILE}; let the library do it.  Your programs should
 deal only with pointers to these objects (that is, @code{FILE *} values)
 rather than the objects themselves.
-@c !!! should say that FILE's have "No user-servicable parts inside."
+@c !!! should say that FILE's have "No user-serviceable parts inside."
 
 @node Standard Streams
 @section Standard Streams
@@ -1800,7 +1800,7 @@ a base type of @code{PA_DOUBLE} to indicate a type of @code{long double}.
 @end table
 
 @ifinfo
-For an example of using these facilitles, see @ref{Example of Parsing}.
+For an example of using these facilities, see @ref{Example of Parsing}.
 @end ifinfo
 
 @node Example of Parsing

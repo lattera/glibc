@@ -270,7 +270,7 @@ extern int __stdio_check_offset __P ((FILE *__stream));
 		or tempnam (the two are separate).
    L_ctermid	How long an array to pass to `ctermid'.
    L_cuserid	How long an array to pass to `cuserid'.
-   FOPEN_MAX	Mininum number of files that can be open at once.
+   FOPEN_MAX	Minimum number of files that can be open at once.
    FILENAME_MAX	Maximum length of a filename.  */
 #include <stdio_lim.h>
 
@@ -671,6 +671,10 @@ extern int pclose __P ((FILE *__stream));
 #ifdef	__USE_POSIX
 /* Return the name of the controlling terminal.  */
 extern char *ctermid __P ((char *__s));
+#endif
+
+
+#ifdef __USE_XOPEN
 /* Return the name of the current user.  */
 extern char *cuserid __P ((char *__s));
 #endif

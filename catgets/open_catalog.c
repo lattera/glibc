@@ -185,7 +185,7 @@ __open_catalog (__nl_catd catalog, int with_path)
 				   MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
   if (catalog->file_ptr != (struct catalog_obj *) -1)
     /* Tell the world we managed to mmap the file.  */
-    catalog->status = mmaped;
+    catalog->status = mmapped;
   else
     {
       /* mmap failed perhaps because the system call is not
@@ -229,7 +229,7 @@ __open_catalog (__nl_catd catalog, int with_path)
     {
       /* Illegal file.  Free he resources and mark catalog as not
 	 usable.  */
-      if (catalog->status == mmaped)
+      if (catalog->status == mmapped)
 	__munmap ((void *) catalog->file_ptr, catalog->file_size);
       else
 	free (catalog->file_ptr);

@@ -171,7 +171,7 @@ _nl_find_domain (dirname, locale, domainname)
 			   &sponsor, &revision);
 
   /* Create all possible locale entries which might be interested in
-     generalzation.  */
+     generalization.  */
   retval = _nl_make_l10nflist (&_nl_loaded_domains, dirname,
 			       strlen (dirname) + 1, mask, language, territory,
 			       codeset, normalized_codeset, modifier, special,

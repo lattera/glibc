@@ -1,3 +1,94 @@
+Thu Dec 19 23:28:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/resolv.h: Update from BIND 4.9.5-P1.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/Banner: Update version number.
+
+Thu Dec 19 20:58:53 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dlfcn.h: Add extern "C" wrapper.
+
+	* io/utime.h: Don't define NULL since this isn't allowed in POSIX.
+	* io/sys/stat.h: Declare `lstat' only if __USE_BSD ||
+	__USE_XOPEN_EXTENDED.
+	* locale/locale.h: Define NULL.
+	* math/math.c: Don't include <errno.h> to define math errors.
+	* stdlib/stdlib.h: Likewise.
+	* posix/unistd.h: Don't declare environ.
+	* posix/sys/utsname.h (struct utsname): Declare member domainname
+	as __domainname is !__USE_GNU.
+	* signal/signal.h: Declare size_t only if __USE_BSD ||
+	__USE_XOPEN_EXTENDED.
+	* stdio/stdio.h: Don't declare cuserid when __USE_POSIX, but
+	instead when __USE_XOPEN.
+	* string/string.h: Define strndup only if __USE_GNU.
+	* sysdeps/unix/sysv/linux/clock.c: New file.
+	* sysdeps/unix/sysv/linux/timebits.h: Define CLOCKS_PER_SEC as
+	1000000 per X/Open standard.
+	* features.h: Add code to recognize _POSIX_C_SOURCE value 199309.
+	Define __USE_POSIX199309.
+	* posix/unistd.h: Declare fdatasync only if __USE_POSIX199309.
+	* time/time.c: Declare nanosleep only if __USE_POSIX199309.
+	Patches by Rüdiger Helsch <rh@unifix.de>.
+
+	* locale/locale.h: Add declaration of newlocale and freelocale.
+
+	* new-malloc/Makefile (distibute): Add mtrace.awk.
+	(dist-routines): Add mcheck and mtrace.
+	(install-lib, non-lib.a): Define as libmcheck.a.
+	* new-malloc/malloc.h: Add declaration of __malloc_initialized.
+	* new-malloc/mcheck.c: New file.
+	* new-malloc/mcheck.h: New file.
+	* new-malloc/mtrace.c: New file.
+	* new-malloc/mtrace.awk: New file.
+
+	* posix/unistd.h: Correct prototype for usleep.
+	* sysdeps/unix/bsd/usleep.c: De-ANSI-declfy.  Correct return type.
+	* sysdeps/unix/sysv/linux/usleep.c: Real implementation based on
+	nanosleep.
+
+	* signal/signal.h: Change protoype of __sigpause to take two
+	arguments.  Remove prototype for sigpause.  Add two different
+	macros named sigpause selected when __USE_BSD or __USE_XOPEN
+	are defined.  This is necessary since the old BSD definition
+	of theis function collides with the X/Open definition.
+	* sysdeps/posix/sigpause.c: Change function definition to also
+	fit X/Open definition.
+
+	* sysdeps/libm-i387/e_exp.S: Make sure stack is empty when the
+	function is left.
+	* sysdeps/libm-i387/e_expl.S: Likewise.
+	Patch by HJ Lu.
+
+1996-12-17  Paul Eggert  <eggert@twinsun.com>
+
+	* many, many files: Spelling corrections.
+	* catgets/catgetsinfo.h (mmapped):
+	Renamed from mmaped (in struct catalog_info.status).
+	* mach/err_kern.sub (err_codes_unix), string/stratcliff.c (main):
+	Fix spelling in message.
+	* po/libc.pot: Fix spelling in message for `zic'; this anticipates
+	a fix in the tzcode distribution.
+
+Wed Dec 18 15:48:02 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c: Implement ^ flag to cause output be converted
+	to use upper case characters.
+
+	* time/zic.c: Update from ADO tzcode1996n.
+
+Wed Dec 18 14:29:24 1996  Erik Naggum  <erik@naggum.no>
+
+	* time/strftime.c (add): Don't change global `i' until all is over.
+	Define NULL is not already defined.
+
+Tue Dec 17 09:49:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/iovsprintf.c (_IO_vsprintf): Change `&sf' to `&sf._sbf._f'
+	to avoid the need for a cast.
+	* libio/iovsscanf.c (_IO_vsscanf): Likewise.
+
 Wed Dec 18 03:31:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* dirent/scandir.c: Undo change from Mon Dec  2 15:32:15 1996.
@@ -21,7 +112,7 @@ Wed Dec 18 03:31:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* new-malloc/malloc.h: Likewise.
 
 	* nis/ypclnt.c: Remove prototype for xdr_free.
-	* snrpc/rpc/xdr.h: Add prototype for xdr_free.
+	* sunrpc/rpc/xdr.h: Add prototype for xdr_free.
 
 	* manual/nss.texi: Correct description of default values and don't
 	meantion NSS as an add-on.

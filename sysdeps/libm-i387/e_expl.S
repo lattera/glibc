@@ -32,6 +32,7 @@ ENTRY(__ieee754_expl)
 	fld1
 	faddp				/* 2^(fract(x * log2(e))) */
 	fscale				/* e^x */
+	fstp	%st(1)
 	ret
 
 .LisInf:

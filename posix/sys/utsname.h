@@ -51,7 +51,11 @@ struct utsname
 
 #if _UTSNAME_DOMAIN_LENGTH - 0
     /* Name of the domain of this node on the network.  */
+#ifdef __USE_GNU
     char domainname[_UTSNAME_DOMAIN_LENGTH];
+#else
+    char __domainname[_UTSNAME_DOMAIN_LENGTH];
+#endif
 #endif
   };
 

@@ -118,7 +118,7 @@ L(Lend:)
 	rts
 
 /* We loop from least significant end of the arrays, which is only
-   permissable if the source and destination don't overlap, since the
+   permissible if the source and destination don't overlap, since the
    function is documented to work for overlapping source and destination.  */
 
 L(Lspecial:)

@@ -3,71 +3,77 @@
  * Mach Operating System
  * Copyright (c) 1991,1990,1989,1988,1987 Carnegie Mellon University
  * All Rights Reserved.
- * 
+ *
  * Permission to use, copy, modify and distribute this software and its
  * documentation is hereby granted, provided that both the copyright
  * notice and this permission notice appear in all copies of the
  * software, derivative works or modified versions, and any portions
  * thereof, and that both notices appear in supporting documentation.
- * 
+ *
  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"
  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
+ *
  * Carnegie Mellon requests users of this software to return to
- * 
+ *
  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
  *  School of Computer Science
  *  Carnegie Mellon University
  *  Pittsburgh PA 15213-3890
- * 
+ *
  * any improvements or extensions that they make and grant Carnegie Mellon
  * the rights to redistribute these changes.
  */
 /*
  * HISTORY
  * $Log$
+ * Revision 1.2  1996/12/20 01:32:36  drepper
+ * Update from main archive 961219
+ *
+ * Revision 1.2  1996/12/19 20:23:56  drepper
+ * Spelling corrections.
+ *
  * Revision 1.1  1993/12/17 21:40:28  roland
  * entered into RCS
  *
  * Revision 2.6  93/01/14  17:41:31  danner
  * 	Standardized include symbol name.
  * 	[92/06/10            pds]
- * 
+ *
  * Revision 2.5  92/03/31  15:18:11  rpd
  * 	Added err_bootstrap for bootstrap errors.
  * 	[92/03/09            rpd]
- * 
+ *
  * Revision 2.4  91/05/14  16:51:24  mrt
  * 	Correcting copyright
- * 
+ *
  * Revision 2.3  91/02/05  17:31:48  mrt
  * 	Changed to new Mach copyright
  * 	[91/02/01  17:16:50  mrt]
- * 
+ *
  * Revision 2.2  90/06/02  14:57:47  rpd
  * 	Added err_mach_ipc for new IPC.
  * 	[90/03/26  22:28:42  rpd]
- * 
+ *
  * Revision 2.1  89/08/03  16:02:07  rwd
  * Created.
- * 
+ *
  * Revision 2.4  89/02/25  18:13:18  gm0w
  * 	Changes for cleanup.
- * 
+ *
  * Revision 2.3  89/02/07  00:51:57  mwyoung
  * Relocated from sys/error.h
- * 
+ *
  * Revision 2.2  88/10/18  00:37:31  mwyoung
- * 	Added {system,sub and code}_emask 
+ * 	Added {system,sub and code}_emask
  * 	[88/10/17  17:06:58  mrt]
- * 
- *	Added {system,sub and code}_emask 
+ *
+ *	Added {system,sub and code}_emask
  *
  *  12-May-88 Mary Thompson (mrt) at Carnegie Mellon
  *	Changed mach_error_t from unsigned int to kern_return_t
  *	which is a 32 bit integer regardless of machine type.
- *      insigned int was incompatible with old usages of mach_error.
+ *      unsigned int was incompatible with old usages of mach_error.
  *
  *  10-May-88 Douglas Orr (dorr) at Carnegie-Mellon University
  *	Missing endif replaced

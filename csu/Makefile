@@ -14,9 +14,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 # This directory contains the C startup code (that which calls main).  This
 # consists of the startfile, built from start.c and installed as crt0.o
@@ -71,7 +71,7 @@ generated += $(crtstuff:=.s)
 omit-deps += $(crtstuff)
 
 # Compile initfini.c to assembly code, which contains embedded shell
-# commands that prodice crti.s-new and crtn.s-new when run.  We need to
+# commands that produce crti.s-new and crtn.s-new when run.  We need to
 # disable emission of .size directives and debugging information, since
 # they will get confused by the splitting of the output we do.
 $(objpfx)cr%i.s $(objpfx)cr%n.s: initfini.c; $(initfini)
@@ -113,4 +113,3 @@ $(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):
 	cp /dev/null $(@:.o=.c)
 	$(COMPILE.c) $(@:.o=.c) $(OUTPUT_OPTION)
 	rm -f $(@:.o=.c)
-

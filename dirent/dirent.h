@@ -117,7 +117,7 @@ extern struct dirent *__readdir __P ((DIR *__dirp));
 extern struct dirent *readdir __P ((DIR *__dirp));
 
 #ifdef __USE_REENTRANT
-/* Reentrant versio of `readdir'.  Return in RESULT a pointer to the
+/* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.  */
 extern int __readdir_r __P ((DIR *__dirp, struct dirent *entry,
 			     struct dirent **result));

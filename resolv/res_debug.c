@@ -287,7 +287,7 @@ __fp_nquery(msg, len, file)
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1)
 		return;
 
-#define TruncTest(x) if (x >= endMark) goto trunc
+#define TruncTest(x) if (x > endMark) goto trunc
 #define	ErrorTest(x) if (x == NULL) goto error
 
 	/*

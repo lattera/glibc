@@ -166,7 +166,7 @@ _nl_explode_name (name, language, modifier, territory, codeset,
 	}
     }
 
-  /* For CEN sytnax values it might be important to have the
+  /* For CEN syntax values it might be important to have the
      separator character in the file name, not for XPG syntax.  */
   if (syntax == xpg)
     {

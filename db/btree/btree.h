@@ -161,7 +161,7 @@ typedef struct _rinternal {
 #define NRINTERNAL							\
 	LALIGN(sizeof(recno_t) + sizeof(pgno_t))
 
-/* Copy a RINTERAL entry to the page. */
+/* Copy a RINTERNAL entry to the page. */
 #define	WR_RINTERNAL(p, nrecs, pgno) {					\
 	*(recno_t *)p = nrecs;						\
 	p += sizeof(recno_t);						\

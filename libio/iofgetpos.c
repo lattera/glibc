@@ -24,7 +24,7 @@ the executable file might be covered by the GNU General Public License. */
 
 #include "libioP.h"
 #include <errno.h>
-/* ANSI explicily requires setting errno to a positive value on failure. */
+/* ANSI explicitly requires setting errno to a positive value on failure. */
 
 int
 _IO_fgetpos (fp, posp)

@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Use the architecture dependend definitions from the kernel.  */
+/* Use the architecture dependent definitions from the kernel.  */
 #include <asm/termbits.h>
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \

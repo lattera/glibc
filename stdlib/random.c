@@ -35,16 +35,16 @@
    then initialized to contain information for random number generation with
    that much state information.  Good sizes for the amount of state
    information are 32, 64, 128, and 256 bytes.  The state can be switched by
-   calling the setstate() function with the same array as was initiallized
+   calling the setstate() function with the same array as was initialized
    with initstate().  By default, the package runs with 128 bytes of state
    information and generates far better random numbers than a linear
    congruential generator.  If the amount of state information is less than
    32 bytes, a simple linear congruential R.N.G. is used.  Internally, the
-   state information is treated as an array of longs; the zeroeth element of
+   state information is treated as an array of longs; the zeroth element of
    the array is the type of R.N.G. being used (small integer); the remainder
    of the array is the state information for the R.N.G.  Thus, 32 bytes of
    state information will give 7 longs worth of state information, which will
-   allow a degree seven polynomial.  (Note: The zeroeth word of state
+   allow a degree seven polynomial.  (Note: The zeroth word of state
    information also has some other information stored in it; see setstate
    for details).  The random number generation technique is a linear feedback
    shift register approach, employing trinomials (since there are fewer terms
@@ -64,7 +64,7 @@
 
 
 /* For each of the currently supported random number generators, we have a
-   break value on the amount of state information (you need at least thi
+   break value on the amount of state information (you need at least this many
    bytes of state info to support this random number generator), a degree for
    the polynomial (actually a trinomial) that the R.N.G. is based on, and
    separation between the two lower order coefficients of the trinomial.  */
@@ -110,7 +110,7 @@
 	initstate(1, randtbl, 128);
    Note that this initialization takes advantage of the fact that srandom
    advances the front and rear pointers 10*rand_deg times, and hence the
-   rear pointer which starts at 0 will also end up at zero; thus the zeroeth
+   rear pointer which starts at 0 will also end up at zero; thus the zeroth
    element of the state information, which contains info about the current
    position of the rear pointer is just
 	(MAX_TYPES * (rptr - state)) + TYPE_3 == TYPE_3.  */
@@ -148,7 +148,7 @@ static struct random_data unsafe_state =
    the type of the current generator, the degree of the current polynomial
    being used, and the separation between the two pointers.
    Note that for efficiency of random, we remember the first location of
-   the state information, not the zeroeth.  Hence it is valid to access
+   the state information, not the zeroth.  Hence it is valid to access
    state[-1], which is used to store the type of the R.N.G.
    Also, we remember the last location, since this is more efficient than
    indexing every time to find the address of the last element to see if
@@ -224,7 +224,7 @@ weak_alias (__initstate, initstate)
    Note: It is important that we also remember the locations of the pointers
    in the current state information, and restore the locations of the pointers
    from the old state information.  This is done by multiplexing the pointer
-   location into the zeroeth word of the state information. Note that due
+   location into the zeroth word of the state information. Note that due
    to the order in which things are done, it is OK to call setstate with the
    same state as the current state
    Returns a pointer to the old state information.  */
@@ -250,7 +250,7 @@ weak_alias (__setstate, setstate)
 
 /* If we are using the trivial TYPE_0 R.N.G., just do the old linear
    congruential bit.  Otherwise, we do our fancy trinomial stuff, which is the
-   same in all ther other cases due to all the global variables that have been
+   same in all the other cases due to all the global variables that have been
    set up.  The basic operation is to add the number at the rear pointer into
    the one at the front pointer.  Then both pointers are advanced to the next
    location cyclically in the table.  The value returned is the sum generated,

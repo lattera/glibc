@@ -28,9 +28,6 @@
 
 __BEGIN_DECLS
 
-#define	__need_Emath
-#include <errno.h>
-
 /* Get machine-dependent HUGE_VAL value (returned on overflow).
    On all IEEE754 machines, this is +Infinity.  */
 #include <huge_val.h>

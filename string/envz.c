@@ -123,7 +123,7 @@ envz_add (char **envz, size_t *envz_len, const char *name, const char *value)
 }
 
 /* Adds each entry in ENVZ2 to ENVZ & ENVZ_LEN, as if with envz_add().  If
-   OVERRIDE is true, then values in ENVZ2 will supercede those with the same
+   OVERRIDE is true, then values in ENVZ2 will supersede those with the same
    name in ENV, otherwise not.  */
 error_t
 envz_merge (char **envz, size_t *envz_len, const char *envz2,

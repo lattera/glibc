@@ -31,9 +31,6 @@
 #define	__need_NULL
 #include <stddef.h>
 
-#define	__need_Emath
-#include <errno.h>
-
 __BEGIN_DECLS
 
 /* Returned by `div'.  */

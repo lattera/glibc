@@ -40,13 +40,14 @@ _IO_vsprintf (string, format, args)
 #ifdef _IO_MTSAFE_IO
   sf._sbf._f._lock = &lock;
 #endif
-  _IO_init ((_IO_FILE *) &sf, 0);
-  _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_str_jumps;
+  _IO_init (&sf._sbf._f, 0);
+  _IO_JUMPS (&sf._sbf._f) = &_IO_str_jumps;
+  _IO_str_init_static (&sf._sbf._f, string, -1, string);
   _IO_str_init_static ((_IO_FILE *) &sf, string, -1, string);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, &sf);
-  _IO_flockfile ((_IO_FILE *) &sf);
-  ret = _IO_vfprintf ((_IO_FILE *) &sf, format, args);
-  _IO_putc_unlocked ('\0', (_IO_FILE *) &sf);
+  _IO_flockfile (&sf._sbf._f);
+  ret = _IO_vfprintf (&sf._sbf._f, format, args);
+  _IO_putc_unlocked ('\0', &sf._sbf._f);
   _IO_cleanup_region_end (1);
   return ret;
 }

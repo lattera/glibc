@@ -297,7 +297,7 @@ read_alias_file (fname, fname_len)
 	    }
 	}
 
-      /* Possibily not the whole line fitted into the buffer.  Ignore
+      /* Possibly not the whole line fits into the buffer.  Ignore
 	 the rest of the line.  */
       while (strchr (cp, '\n') == NULL)
 	{

@@ -157,7 +157,7 @@ __printf_fp (FILE *fp,
   /* We need to shift the contents of fp_input by this amount of bits.	*/
   int to_shift = 0;
 
-  /* The significant of the floting-point value in question  */
+  /* The fraction of the floting-point value in question  */
   MPN_VAR(frac);
   /* and the exponent.	*/
   int exponent;
@@ -256,7 +256,7 @@ __printf_fp (FILE *fp,
 	grouping = NULL;
       else
 	{
-	  /* Figure out the thousands seperator character.  */
+	  /* Figure out the thousands separator character.  */
 	  if (info->extra == 0)
 	    {
 	      if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC,
@@ -622,7 +622,7 @@ __printf_fp (FILE *fp,
 			{
 			  /* We cannot save any memory.	 Just roll the
 			     number so that the leading digit is in a
-			     seperate limb.  */
+			     separate limb.  */
 
 			  cy = __mpn_lshift (frac, tmp, tmpsize, cnt_h + 1);
 			  fracsize = tmpsize + 1;
@@ -844,7 +844,7 @@ __printf_fp (FILE *fp,
 	      /* Round up.  */
 	      (*tp)++;
 	    else
-	      /* It is more citical.  All digits were 9's.  */
+	      /* It is more critical.  All digits were 9's.  */
 	      {
 		if (type != 'f')
 		  {

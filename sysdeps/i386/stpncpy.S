@@ -1,28 +1,28 @@
 /* stpncpy -- copy no more then N bytes from SRC to DEST, returning the
 	      address of the terminating '\0' in DEST.
-For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
-Some bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
-  - original wrote n+1 chars in some cases.
-  - stpncpy() ought to behave like strncpy() ie. not null-terminate
-    if limited by n.  glibc-1.09 stpncpy() does this.
-This file is part of the GNU C Library.
+   For Intel 80x86, x>=3.
+   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+   Some bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
+     - original wrote n+1 chars in some cases.
+     - stpncpy() ought to behave like strncpy() ie. not null-terminate
+       if limited by n.  glibc-1.09 stpncpy() does this.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
 #include "asm-syntax.h"
@@ -51,7 +51,7 @@ ENTRY (__stpncpy)
 
 	/* Four times unfolded loop with two loop counters.  We get the
 	   the third value (the source address) by using the index+base
-	   adressing mode.  */
+	   addressing mode.  */
 L2:	movb (%eax,%esi), %dl	/* load current char */
 	movb %dl, (%eax)	/* and store it */
 	testb %dl, %dl		/* was it NUL? */
@@ -128,7 +128,7 @@ L7:
 	jz L9			/* counter is also 0 => exit */
 
 	/* We now have to fill the rest of the buffer with NUL.  This
-	   is done in a tricky way.  Please note that the adressing mode
+	   is done in a tricky way.  Please note that the addressing mode
 	   used below is not the same we used above.  Here we use the
 	   %ecx register.  */
 L8:

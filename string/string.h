@@ -93,7 +93,9 @@ extern char *strdup __P ((__const char *__s));
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
 extern char *__strndup __P ((__const char *__string, size_t __n));
+#if defined(__USE_GNU)
 extern char *strndup __P ((__const char *__string, size_t __n));
+#endif
 
 #if defined (__USE_GNU) && defined (__GNUC__)
 /* Duplicate S, returning an identical alloca'd string.  */
@@ -129,9 +131,9 @@ extern size_t strcspn __P ((__const char *__s, __const char *__reject));
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
 extern size_t strspn __P ((__const char *__s, __const char *__accept));
-/* Find the first occurence in S of any character in ACCEPT.  */
+/* Find the first occurrence in S of any character in ACCEPT.  */
 extern char *strpbrk __P ((__const char *__s, __const char *__accept));
-/* Find the first occurence of NEEDLE in HAYSTACK.  */
+/* Find the first occurrence of NEEDLE in HAYSTACK.  */
 extern char *strstr __P ((__const char *__haystack, __const char *__needle));
 /* Divide S into tokens separated by characters in DELIM.  */
 extern char *strtok __P ((char *__s, __const char *__delim));
@@ -142,7 +144,7 @@ extern char *strtok __P ((char *__s, __const char *__delim));
 extern char *strtok_r __P ((char *__s, __const char *__delim,
 			    char **__save_ptr));
 
-/* Find the first occurence of NEEDLE in HAYSTACK.
+/* Find the first occurrence of NEEDLE in HAYSTACK.
    NEEDLE is NEEDLELEN bytes long;
    HAYSTACK is HAYSTACKLEN bytes long.  */
 extern __ptr_t memmem __P ((__const __ptr_t __haystack, size_t __haystacklen,

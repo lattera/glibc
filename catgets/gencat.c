@@ -353,7 +353,7 @@ read_input_file (struct catalog *current, const char *fname)
 		    }
 		  else
 		    {
-		      /* We have found seomthing which looks like a
+		      /* We have found seomthing that looks like a
 			 correct identifier.  */
 		      struct set_list *runp;
 
@@ -980,7 +980,7 @@ read_old (struct catalog *catalog, const char *file_name)
   /* Try to open catalog, but don't look through the NLSPATH.  */
   __open_catalog (&old_cat_obj, 0);
 
-  if (old_cat_obj.status != mmaped && old_cat_obj.status != malloced)
+  if (old_cat_obj.status != mmapped && old_cat_obj.status != malloced)
     if (errno == ENOENT)
       /* No problem, the catalog simply does not exist.  */
       return;

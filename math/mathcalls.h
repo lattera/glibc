@@ -84,7 +84,7 @@ __MATHCALL (atanh,, (_Mdouble_ __x));
 
 /* Exponential and logarithmic functions.  */
 
-/* Exponentional function of X.  */
+/* Exponential function of X.  */
 __MATHCALL (exp,, (_Mdouble_ __x));
 
 /* Break VALUE into a normalized fraction and an integral power of 2.  */

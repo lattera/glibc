@@ -71,7 +71,7 @@ enum clnt_stat {
 	 * callrpc & clnt_create errors
 	 */
 	RPC_UNKNOWNHOST=13,		/* unknown host name */
-	RPC_UNKNOWNPROTO=17,		/* unkown protocol */
+	RPC_UNKNOWNPROTO=17,		/* unknown protocol */
 
 	/*
 	 * _ create errors
@@ -91,7 +91,7 @@ enum clnt_stat {
 struct rpc_err {
 	enum clnt_stat re_status;
 	union {
-		int RE_errno;		/* realated system error */
+		int RE_errno;		/* related system error */
 		enum auth_stat RE_why;	/* why the auth error occurred */
 		struct {
 			u_long low;	/* lowest verion supported */
@@ -210,7 +210,7 @@ typedef struct {
 
 
 /*
- * RPCTEST is a test program which is accessable on every rpc
+ * RPCTEST is a test program which is accessible on every rpc
  * transport/port.  It is used for testing, performance evaluation,
  * and network administration.
  */

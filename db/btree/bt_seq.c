@@ -92,7 +92,7 @@ __bt_seq(dbp, key, data, flags)
 	}
 
 	/*
-	 * If scan unitialized as yet, or starting at a specific record, set
+	 * If scan uninitialized as yet, or starting at a specific record, set
 	 * the scan to a specific key.  Both __bt_seqset and __bt_seqadv pin
 	 * the page the cursor references if they're successful.
 	 */
@@ -364,7 +364,7 @@ __bt_first(t, key, erval, exactp)
 			*erval = *ep;
 			return (RET_SUCCESS);
 		}
-			
+
 		/*
 		 * Walk backwards, as long as the entry matches and there are
 		 * keys left in the tree.  Save a copy of each match in case

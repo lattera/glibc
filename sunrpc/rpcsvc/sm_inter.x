@@ -8,23 +8,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -37,7 +37,7 @@
  */
 
 
-program SM_PROG { 
+program SM_PROG {
 	version SM_VERS  {
 		/* res_stat = stat_succ if status monitor agrees to monitor */
 		/* res_stat = stat_fail if status monitor cannot monitor */
@@ -67,7 +67,7 @@ struct sm_name {
 };
 
 struct my_id {
-	string	 my_name<SM_MAXSTRLEN>;		/* name of the site iniates the monitoring request*/
+	string	 my_name<SM_MAXSTRLEN>;		/* name of the site iniating the monitoring request*/
 	int	my_prog;			/* rpc program # of the requesting process */
 	int	my_vers;			/* rpc version # of the requesting process */
 	int	my_proc;			/* rpc procedure # of the requesting process */
@@ -86,7 +86,7 @@ struct mon{
 
 
 /*
- * state # of status monitor monitonically increases each time
+ * state # of status monitor monotonically increases each time
  * status of the site changes:
  * an even number (>= 0) indicates the site is down and
  * an odd number (> 0) indicates the site is up;
@@ -105,7 +105,7 @@ struct sm_stat_res {
 	int state;
 };
 
-/* 
+/*
  * structure of the status message sent back by the status monitor
  * when monitor site status changes
  */

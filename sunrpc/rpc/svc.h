@@ -74,7 +74,7 @@ typedef struct {
 	int		xp_sock;
 	u_short		xp_port;	 /* associated port number */
 	struct xp_ops {
-	    bool_t	(*xp_recv)();	 /* receive incomming requests */
+	    bool_t	(*xp_recv)();	 /* receive incoming requests */
 	    enum xprt_stat (*xp_stat)(); /* get transport status */
 	    bool_t	(*xp_getargs)(); /* get arguments */
 	    bool_t	(*xp_reply)();	 /* send reply */
@@ -236,7 +236,7 @@ extern void	svcerr_systemerr __P ((SVCXPRT *__xprt));
  * Somebody has to wait for incoming requests and then call the correct
  * service routine.  The routine svc_run does infinite waiting; i.e.,
  * svc_run never returns.
- * Since another (co-existant) package may wish to selectively wait for
+ * Since another (coexistant) package may wish to selectively wait for
  * incoming calls or other events outside of the rpc architecture, the
  * routine svc_getreq is provided.  It must be passed readfds, the
  * "in-place" results of a select system call (see select, section 2).

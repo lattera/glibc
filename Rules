@@ -77,7 +77,7 @@ $(common-objpfx)empty.c:
 	cp -f /dev/null $@
 common-generated := $(common-generated) dummy.o dummy.c empty.c empty.o
 
-# This makes all the auxilliary and test programs.
+# This makes all the auxiliary and test programs.
 
 .PHONY: others tests
 others: $(addprefix $(objpfx),$(others) $(extra-objs))

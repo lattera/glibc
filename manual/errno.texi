@@ -144,7 +144,7 @@ No process matches the specified process ID.
 @comment POSIX.1: Interrupted system call
 @deftypevr Macro int EINTR
 @comment errno 4 @c DO NOT REMOVE
-Interrupted function call; an asynchronous signal occured and prevented
+Interrupted function call; an asynchronous signal occurred and prevented
 completion of the call.  When this happens, you should try the call
 again.
 

@@ -27,15 +27,27 @@ dist-headers := malloc.h
 headers := $(dist-headers) obstack.h
 tests := mallocbug
 
-distribute = thread-m.h
+distribute = thread-m.h mtrace.awk
 
 # Things which get pasted together into gmalloc.c.
 gmalloc-routines := malloc morecore
 # Things to include in the standalone distribution.
-dist-routines = $(gmalloc-routines)
+dist-routines = $(gmalloc-routines) mcheck mtrace
 routines = $(dist-routines) obstack
+
+install-lib := libmcheck.a
+non-lib.a := libmcheck.a
+
+# These should be removed by `make clean'.
+extra-objs = mcheck-init.o libmcheck.a
 
 include ../Rules
 
+$(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
+	-rm -f $@
+	ln $< $@
+
+lib: $(objpfx)libmcheck.a
+
+
 CPPFLAGS-malloc.o += -DMALLOC_DEBUG
-CFLAGS-obstack.c = -Wno-strict-prototypes

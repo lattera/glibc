@@ -8,11 +8,11 @@ static char sccsid[] = "@(#)svc_auth.c	2.1 88/08/07 4.0 RPCSRC; from 1.19 87/08/
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
@@ -40,16 +40,16 @@ static char sccsid[] = "@(#)svc_auth.c	2.1 88/08/07 4.0 RPCSRC; from 1.19 87/08/
 #include <rpc/rpc.h>
 
 /*
- * svcauthsw is the bdevsw of server side authentication. 
- * 
+ * svcauthsw is the bdevsw of server side authentication.
+ *
  * Server side authenticators are called from authenticate by
  * using the client auth struct flavor field to index into svcauthsw.
- * The server auth flavors must implement a routine that looks  
- * like: 
- * 
+ * The server auth flavors must implement a routine that looks
+ * like:
+ *
  *	enum auth_stat
  *	flavorx_auth(rqst, msg)
- *		register struct svc_req *rqst; 
+ *		register struct svc_req *rqst;
  *		register struct rpc_msg *msg;
  *
  */
@@ -76,7 +76,7 @@ static struct {
  * set rqst->rq_xprt->verf to the appropriate response verifier;
  * sets rqst->rq_client_cred to the "cooked" form of the credentials.
  *
- * NB: rqst->rq_cxprt->verf must be pre-alloctaed;
+ * NB: rqst->rq_cxprt->verf must be pre-allocated;
  * its length is set appropriately.
  *
  * The caller still owns and is responsible for msg->u.cmb.cred and

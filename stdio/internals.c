@@ -680,7 +680,7 @@ __invalidate (stream)
   /* Save its link.  */
   register FILE *next = stream->__next;
 
-  /* Pulverize the fucker.  */
+  /* Pulverize the deceased.  */
   memset((void *) stream, 0, sizeof(FILE));
 
   /* Restore the deceased's link.  */

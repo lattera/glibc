@@ -35,7 +35,7 @@ fi
 
 # The Linux filesystem standard prescribes where to place "essential"
 # files.  I.e., when the installation prefix is "/usr" we have to place
-# shared library objects and the configuation files on the root partition
+# shared library objects and the configuration files on the root partition
 # in /lib and /etc.
 if test "$prefix" = "/usr"; then
   libc_cv_slibdir="/lib"

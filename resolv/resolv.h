@@ -83,7 +83,7 @@
 /*
  * Resolver configuration file.
  * Normally not present, but may contain the address of the
- * inital name server(s) to query and the domain search list.
+ * initial name server(s) to query and the domain search list.
  */
 
 #ifndef _PATH_RESCONF
@@ -103,7 +103,7 @@
 #define	RES_MAXNDOTS		15	/* should reflect bit field size */
 
 struct __res_state {
-	int	retrans;	 	/* retransmition time interval */
+	int	retrans;	 	/* retransmission time interval */
 	int	retry;			/* number of times to retransmit */
 	u_long	options;		/* option flags - see below. */
 	int	nscount;		/* number of name servers */
@@ -224,18 +224,22 @@ extern const struct res_sym __p_type_syms[];
 #define	p_secstodate	__p_secstodate
 #define	dn_count_labels	__dn_count_labels
 #define	dn_comp		__dn_comp
-#define	dn_expand	__dn_expand
-#define	res_init	__res_init
 #define	res_randomid	__res_randomid
-#define	res_query	__res_query
-#define	res_search	__res_search
-#define	res_querydomain	__res_querydomain
-#define	res_mkquery	__res_mkquery
 #define	res_send	__res_send
 #define	res_isourserver	__res_isourserver
 #define	res_nameinquery	__res_nameinquery
 #define	res_queriesmatch __res_queriesmatch
 #define	res_close	__res_close
+
+#ifdef BIND_RES_POSIX3
+#define	dn_expand	__dn_expand
+#define	res_init	__res_init
+#define	res_query	__res_query
+#define	res_search	__res_search
+#define	res_querydomain	__res_querydomain
+#define	res_mkquery	__res_mkquery
+#endif
+
 __BEGIN_DECLS
 int		res_hnok __P((const char *));
 int		res_ownok __P((const char *));

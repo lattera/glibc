@@ -877,7 +877,7 @@ password database file.
 
 If the function returns null @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
-occured the return value is non-null and @var{result} contains a null
+occurred the return value is non-null and @var{result} contains a null
 pointer.
 @end deftypefun
 
@@ -916,7 +916,7 @@ buffer or length @var{buflen} starting at @var{buffer}.
 
 If the function returns zero @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
-occured the return value is non-zero and @var{result} contains a null
+occurred the return value is non-zero and @var{result} contains a null
 pointer.
 @end deftypefun
 
@@ -1100,7 +1100,7 @@ group database file.
 
 If the function returns zero @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
-occured the return value is non-zero and @var{result} contains a null
+occurred the return value is non-zero and @var{result} contains a null
 pointer.
 @end deftypefun
 
@@ -1137,7 +1137,7 @@ buffer or length @var{buflen} starting at @var{buffer}.
 
 If the function returns zero @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
-occured the return value is non-zero and @var{result} contains a null
+occurred the return value is non-zero and @var{result} contains a null
 pointer.
 @end deftypefun
 
@@ -1173,7 +1173,7 @@ them individual names.  More concrete: a netgroup is a list of triples
 consisting of a host name, a user name, and a domain name, where any of
 the entries can be a wildcard entry, matching all inputs.  A last
 possibility is that names of other netgroups can also be given in the
-list specifying a netgroup.  So one can construct arbitrary hierachies
+list specifying a netgroup.  So one can construct arbitrary hierarchies
 without loops.
 
 Sun's implementation allows netgroups only for the @code{nis} or
@@ -1208,7 +1208,7 @@ in the netgroup with name @var{netgroup}.
 
 When the call is successful (i.e., when a netgroup with this name exist)
 the return value is @code{1}.  When the return value is @code{0} no
-netgroup of this name is known or some other error occured.
+netgroup of this name is known or some other error occurred.
 @end deftypefun
 
 It is important to remember that there is only one single state for
@@ -1235,7 +1235,7 @@ The returned string pointers are only valid unless no of the netgroup
 related functions are called.
 
 The return value is @code{1} if the next entry was successfully read.  A
-value of @code{0} means no further entry exist or internal errors occured.
+value of @code{0} means no further entries exist or internal errors occurred.
 @end deftypefun
 
 @comment netdb.h
@@ -1249,7 +1249,7 @@ even after other netgroup related functions are called.
 The return value is @code{1} if the next entry was successfully read and
 the buffer contains enough room to place the strings in it.  @code{0} is
 returned in case no more entries are found, the buffer is too small, or
-internal errors occured.
+internal errors occurred.
 
 This function is a GNU extension.  The original implementation in the
 SunOS libc does not provide this function.
@@ -1292,7 +1292,7 @@ otherwise.
 The return value is @code{1} if an entry matching the given triple is
 found in the netgroup.  The return value is @code{0} if the netgroup
 itself is not found, the netgroup does not contain the triple or
-internal errors occured.
+internal errors occurred.
 @end deftypefun
 
 @node Database Example,  , Netgroup Database, Users and Groups

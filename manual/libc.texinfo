@@ -616,7 +616,7 @@ Pseudo-Random Numbers
 Low-Level Arithmetic Functions
 
 * Normalization Functions::     Hacks for radix-2 representations.
-* Rounding and Remainders::     Determinining the integer and
+* Rounding and Remainders::     Determining the integer and
                                  fractional parts of a float.
 * Integer Division::            Functions for performing integer division.
 * Parsing of Numbers::          Functions for ``reading'' numbers from strings.

@@ -71,7 +71,7 @@ L(Lnormal:)
 	movel	MEM_POSTINC(s_ptr),R(d2)
 	movel	R(d2),R(d0)
 	lsll	R(d5),R(d0)		/* compute carry limb */
-   
+
 	lsrl	R(cnt),R(d2)
 	movel	R(d2),R(d1)
 	subql	#1,R(s_size)
@@ -107,7 +107,7 @@ L(Lend:)
 	rts
 
 /* We loop from most significant end of the arrays, which is only
-   permissable if the source and destination don't overlap, since the
+   permissible if the source and destination don't overlap, since the
    function is documented to work for overlapping source and destination.  */
 
 L(Lspecial:)

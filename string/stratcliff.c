@@ -47,7 +47,7 @@ main (int argc, char *argv[])
         puts ("No test, mmap not available.");
       else
         {
-          printf ("mmaping failed: %m");
+          printf ("mmap failed: %m");
           result = 1;
         }
     }

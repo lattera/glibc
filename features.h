@@ -25,7 +25,8 @@
 
    __STRICT_ANSI__	ANSI Standard C.
    _POSIX_SOURCE	IEEE Std 1003.1.
-   _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if ==2 add IEEE Std 1003.2.
+   _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
+			if >=199309L, add IEEE Std 1003.1b-1993
    _XOPEN_SOURCE	Includes POSIX and XPG things.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
    _BSD_SOURCE		ANSI, POSIX, and 4.3BSD things.
@@ -45,6 +46,7 @@
 
    __USE_POSIX		Define IEEE Std 1003.1 things.
    __USE_POSIX2		Define IEEE Std 1003.2 things.
+   __USE_POSIX199309	Define IEEE Std 1003.1b things.
    __USE_XOPEN		Define XPG things.
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_BSD		Define 4.3BSD things.
@@ -66,6 +68,7 @@
 /* Undefine everything, so we get a clean slate.  */
 #undef	__USE_POSIX
 #undef	__USE_POSIX2
+#undef	__USE_POSIX199309
 #undef	__USE_XOPEN
 #undef	__USE_XOPEN_EXTENDED
 #undef	__USE_BSD
@@ -99,7 +102,7 @@
 #undef	_POSIX_SOURCE
 #define	_POSIX_SOURCE	1
 #undef	_POSIX_C_SOURCE
-#define	_POSIX_C_SOURCE	2
+#define	_POSIX_C_SOURCE	199309L
 #undef	_XOPEN_SOURCE
 #define	_XOPEN_SOURCE	1
 #undef	_XOPEN_SOURCE_EXTENDED
@@ -120,11 +123,16 @@
 #define	_SVID_SOURCE	1
 #endif
 
-/* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2.  */
+/* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
+   (and IEEE Std 1003.1b-1993 unless _XOPEN_SOURCE is defined).  */
 #if (!defined (__STRICT_ANSI__) && !defined (_POSIX_SOURCE) && \
      !defined (_POSIX_C_SOURCE))
 #define	_POSIX_SOURCE	1
+#if defined(_XOPEN_SOURCE)
 #define	_POSIX_C_SOURCE	2
+#else
+#define	_POSIX_C_SOURCE	199309L
+#endif
 #endif
 
 #if	(defined (_POSIX_SOURCE) || _POSIX_C_SOURCE >= 1 || \
@@ -135,6 +143,10 @@
 #if	(defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 2 || \
 	 defined (_XOPEN_SOURCE))
 #define	__USE_POSIX2	1
+#endif
+
+#if	(defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 199309L)
+#define	__USE_POSIX199309	1
 #endif
 
 #ifdef	_XOPEN_SOURCE

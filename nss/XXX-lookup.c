@@ -23,7 +23,7 @@
 |* Here we assume one symbol to be defined:			   *|
 |* 								   *|
 |* DATABASE_NAME - name of the database the function accesses	   *|
-|*		   (e.g., hosts, servicess, ...)		   *|
+|*		   (e.g., hosts, services, ...)			   *|
 |* 								   *|
 |* One additional symbol may optionally be defined:		   *|
 |* 								   *|

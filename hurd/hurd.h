@@ -222,7 +222,7 @@ extern error_t _hurd_exec (task_t task,
 			   char *const envp[]);
 
 
-/* Inform the proc server we have exitted with STATUS, and kill the
+/* Inform the proc server we have exited with STATUS, and kill the
    task thoroughly.  This function never returns, no matter what.  */
 
 extern void _hurd_exit (int status) __attribute__ ((noreturn));

@@ -403,7 +403,7 @@ M4 = m4
 .NOEXPORT:
 
 # We want to echo the commands we're running without
-# umpteem zillion filenames along with it (we use `...' instead)
+# umpteen zillion filenames along with it (we use `...' instead)
 # but we don't want this echoing done when the user has said
 # he doesn't want to see commands echoed by using -s.
 ifneq	"$(findstring s,$(MAKEFLAGS))" ""	# if -s

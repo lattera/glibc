@@ -36,7 +36,7 @@ struct crypt_data
   char sb1[32768 / sizeof (char)];
   char sb2[32768 / sizeof (char)];
   char sb3[32768 / sizeof (char)];
-  /* end-of-aligment-critical-data */
+  /* end-of-alignment-critical-data */
   char crypt_3_buf[14];
   char current_salt[2];
   long current_saltbits;

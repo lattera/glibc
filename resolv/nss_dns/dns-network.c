@@ -96,7 +96,7 @@ typedef union querybuf
 } querybuf;
 
 
-/* Protortypes for local functions.  */
+/* Prototypes for local functions.  */
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    struct netent *result, char *buffer,
 				    int buflen, lookup_method net_i);

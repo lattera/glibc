@@ -56,7 +56,7 @@
 #define	SIGVTALRM	26	/* Virtual alarm clock (4.2 BSD).  */
 #define	SIGPROF		27	/* Profiling alarm clock (4.2 BSD).  */
 #define	SIGWINCH	28	/* Window size change (4.3 BSD, Sun).  */
-#define	SIGPOLL		SIGIO	/* Pollable event occured (System V).  */
+#define	SIGPOLL		SIGIO	/* Pollable event occurred (System V).  */
 #define	SIGIO		29	/* I/O now possible (4.2 BSD).  */
 #define	SIGPWR		30	/* Power failure restart (System V).  */
 #define SIGUNUSED	31

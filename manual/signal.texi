@@ -135,7 +135,7 @@ process that receives them.  These signals arrive at unpredictable times
 during execution.  External events generate signals asynchronously, and
 so do explicit requests that apply to some other process.
 
-A given type of signal is either typically synchrous or typically
+A given type of signal is either typically synchronous or typically
 asynchronous.  For example, signals for errors are typically synchronous
 because errors generate signals synchronously.  But any type of signal
 can be generated synchronously or asynchronously with an explicit
@@ -608,7 +608,7 @@ code profiling facilities, hence the name of this signal.
 
 The signals listed in this section are used in conjunction with
 asynchronous I/O facilities.  You have to take explicit action by
-calling @code{fcntl} to enable a particular file descriptior to generate
+calling @code{fcntl} to enable a particular file descriptor to generate
 these signals (@pxref{Interrupt Input}).  The default action for these
 signals is to ignore them.
 
@@ -2310,7 +2310,7 @@ signals to any random process.  These are intended to prevent antisocial
 behavior such as arbitrarily killing off processes belonging to another
 user.  In typical use, @code{kill} is used to pass signals between
 parent, child, and sibling processes, and in these situations you
-normally do have permission to send signals.  The only common execption
+normally do have permission to send signals.  The only common exception
 is when you run a setuid program in a child process; if the program
 changes its real UID as well as its effective UID, you may not have
 permission to send a signal.  The @code{su} program does this.
@@ -2692,7 +2692,7 @@ install_handler (void)
 @end smallexample
 
 This is more reliable than blocking the other signals explicitly in the
-code for the handler.  If you block signals explicity in the handler,
+code for the handler.  If you block signals explicitly in the handler,
 you can't avoid at least a short interval at the beginning of the
 handler where they are not yet blocked.
 
@@ -2837,7 +2837,7 @@ these things in the other order, like this,
 
 @noindent
 then a signal arriving in between the @code{if} statement and the decrement
-would be effetively ``lost'' for an indefinite amount of time.  The
+would be effectively ``lost'' for an indefinite amount of time.  The
 handler would merely set @code{defer_signal}, but the program having
 already tested this variable, it would not test the variable again.
 
@@ -3081,7 +3081,7 @@ For most cases, just using @code{SIGSTKSZ} for @code{ss_size} is
 sufficient.  But if you know how much stack space your program's signal
 handlers will need, you may want to use a different size.  In this case,
 you should allocate @code{MINSIGSTKSZ} additional bytes for the signal
-stack and increase @code{ss_size} accordinly.
+stack and increase @code{ss_size} accordingly.
 @end vtable
 
 @item int ss_flags

@@ -66,11 +66,11 @@ extern "C" {
  * a jump table (of pointers to functions).  The pointer is accessed
  * with the _IO_JUMPS macro.  The jump table has a eccentric format,
  * so as to be compatible with the layout of a C++ virtual function table.
- * (as implemented by g++).  When a pointer to a steambuf object is
+ * (as implemented by g++).  When a pointer to a streambuf object is
  * coerced to an (_IO_FILE*), then _IO_JUMPS on the result just
  * happens to point to the virtual function table of the streambuf.
  * Thus the _IO_JUMPS function table used for C stdio/libio does
- * double duty as the virtual functiuon table for C++ streambuf.
+ * double duty as the virtual function table for C++ streambuf.
  *
  * The entries in the _IO_JUMPS function table (and hence also the
  * virtual functions of a streambuf) are described below.
@@ -112,7 +112,7 @@ typedef int (*_IO_overflow_t) __P((_IO_FILE*, int));
 
 /* The 'underflow' hook tries to fills the get buffer.
    It returns the next character (as an unsigned char) or EOF.  The next
-   character remains in the get buffer, and the get postion is not changed.
+   character remains in the get buffer, and the get position is not changed.
    It matches the streambuf::underflow virtual function. */
 typedef int (*_IO_underflow_t) __P((_IO_FILE*));
 #define _IO_UNDERFLOW(FP) JUMP0(__underflow, FP)
@@ -178,7 +178,7 @@ typedef int (*_IO_doallocate_t) __P((_IO_FILE*));
 
 /* The following four hooks (sysread, syswrite, sysclose, sysseek, and
    sysstat) are low-level hooks specific to this implementation.
-   There is no correspondance in the ANSI/ISO C++ standard library.
+   There is no correspondence in the ANSI/ISO C++ standard library.
    The hooks basically correspond to the Unix system functions
    (read, write, close, lseek, and stat) except that a _IO_FILE*
    parameter is used instead of a integer file descriptor;  the default
@@ -190,21 +190,21 @@ typedef int (*_IO_doallocate_t) __P((_IO_FILE*));
 /* The 'sysread' hook is used to read data from the external file into
    an existing buffer.  It generalizes the Unix read(2) function.
    It matches the streambuf::sys_read virtual function, which is
-   specific to this implementaion. */
+   specific to this implementation. */
 typedef _IO_ssize_t (*_IO_read_t) __P((_IO_FILE*, void*, _IO_ssize_t));
 #define _IO_SYSREAD(FP, DATA, LEN) JUMP2(__read, FP, DATA, LEN)
 
 /* The 'syswrite' hook is used to write data from an existing buffer
    to an external file.  It generalizes the Unix write(2) function.
    It matches the streambuf::sys_write virtual function, which is
-   specific to this implementaion. */
+   specific to this implementation. */
 typedef _IO_ssize_t (*_IO_write_t) __P((_IO_FILE*,const void*,_IO_ssize_t));
 #define _IO_SYSWRITE(FP, DATA, LEN) JUMP2(__write, FP, DATA, LEN)
 
 /* The 'sysseek' hook is used to re-position an external file.
    It generalizes the Unix lseek(2) function.
    It matches the streambuf::sys_seek virtual function, which is
-   specific to this implementaion. */
+   specific to this implementation. */
 typedef _IO_fpos_t (*_IO_seek_t) __P((_IO_FILE*, _IO_off_t, int));
 #define _IO_SYSSEEK(FP, OFFSET, MODE) JUMP2(__seek, FP, OFFSET, MODE)
 
@@ -218,7 +218,7 @@ typedef int (*_IO_close_t) __P((_IO_FILE*)); /* finalize */
 /* The 'sysstat' hook is used to get information about an external file
    into a struct stat buffer.  It generalizes the Unix fstat(2) call.
    It matches the streambuf::sys_stat virtual function, which is
-   specific to this implementaion. */
+   specific to this implementation. */
 typedef int (*_IO_stat_t) __P((_IO_FILE*, void*));
 #define _IO_SYSSTAT(FP, BUF) JUMP1(__stat, FP, BUF)
 

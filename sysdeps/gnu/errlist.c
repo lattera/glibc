@@ -25,7 +25,7 @@ TRANS No process matches the specified process ID. */
 #endif
 #ifdef EINTR
 /*
-TRANS Interrupted function call; an asynchronous signal occured and prevented
+TRANS Interrupted function call; an asynchronous signal occurred and prevented
 TRANS completion of the call.  When this happens, you should try the call
 TRANS again.
 TRANS 

@@ -92,7 +92,7 @@ standards each function or symbol comes from.
 The GNU C library is compatible with the C standard adopted by the
 American National Standards Institute (ANSI):
 @cite{American National Standard X3.159-1989---``ANSI C''} and later
-by the International Standardization Organizaion (ISO):
+by the International Standardization Organization (ISO):
 @cite{ISO/IEC 9899:1990, ``Programming languages---C''}.
 We here refer to the standard as @w{ISO C} since this is the more
 general standard in respect of ratification.

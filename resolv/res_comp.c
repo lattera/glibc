@@ -160,7 +160,7 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
  * 'length' is the size of the array pointed to by 'comp_dn'.
  * 'dnptrs' is a list of pointers to previous compressed names. dnptrs[0]
  * is a pointer to the beginning of the message. The list ends with NULL.
- * 'lastdnptr' is a pointer to the end of the arrary pointed to
+ * 'lastdnptr' is a pointer to the end of the array pointed to
  * by 'dnptrs'. Side effect is to update the list of pointers for
  * labels inserted into the message as we compress the name.
  * If 'dnptr' is NULL, we don't try to compress names. If 'lastdnptr'
@@ -504,56 +504,3 @@ __putlong(l, msgp)
 {
 	PUTLONG(l, msgp);
 }
-
-#ifdef ultrix
-/* ultrix 4.0 had some icky packaging in its libc.a.  alias for it here.
- * there is more gunk of this kind over in res_debug.c.
- */
-#undef putshort
-void
-#if defined(__STDC__) || defined(__cplusplus)
-putshort(register u_short s, register u_char *msgp)
-#else
-putshort(s, msgp)
-	register u_short s;
-	register u_char *msgp;
-#endif
-{
-	__putshort(s, msgp);
-}
-#undef putlong
-void
-putlong(l, msgp)
-	register u_int32_t l;
-	register u_char *msgp;
-{
-	__putlong(l, msgp);
-}
-
-#undef dn_comp
-int
-dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr)
-	const char *exp_dn;
-	u_char *comp_dn, **dnptrs, **lastdnptr;
-	int length;
-{
-	return (__dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr));
-}
-
-#undef dn_expand
-int
-dn_expand(msg, eomorig, comp_dn, exp_dn, length)
-	const u_char *msg, *eomorig, *comp_dn;
-	char *exp_dn;
-	int length;
-{
-	return (__dn_expand(msg, eomorig, comp_dn, exp_dn, length));
-}
-
-#undef dn_skipname
-dn_skipname(comp_dn, eom)
-	const u_char *comp_dn, *eom;
-{
-	return (__dn_skipname(comp_dn, eom));
-}
-#endif /* Ultrix 4.0 hackery */

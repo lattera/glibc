@@ -38,6 +38,8 @@
    objects were loaded.  */
 #define RTLD_NEXT	((void *) -1l)
 
+__BEGIN_DECLS
+
 /* Open the shared object FILE and map it in; return a handle that can be
    passed to `dlsym' to get symbol values from it.  */
 extern void *dlopen __P ((__const char *__file, int __mode));
@@ -65,5 +67,7 @@ typedef struct
     void *dli_saddr;		/* Exact value of nearest symbol.  */
   } Dl_info;
 extern int dladdr __P ((void *__address, Dl_info *__info));
+
+__END_DECLS
 
 #endif	/* dlfcn.h */

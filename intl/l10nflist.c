@@ -318,8 +318,8 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
     }
 
   entries = 0;
-  /* If the DIRLIST is a real list the RETVAL entry correcponds not to
-     a real file.  So we have to use the DIRLIST separation machanism
+  /* If the DIRLIST is a real list the RETVAL entry corresponds not to
+     a real file.  So we have to use the DIRLIST separation mechanism
      of the inner loop.  */
   cnt = __argz_count (dirlist, dirlist_len) == 1 ? mask - 1 : mask;
   for (; cnt >= 0; --cnt)

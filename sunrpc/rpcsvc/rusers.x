@@ -5,23 +5,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -96,7 +96,7 @@ program RUSERSPROG {
 %
 %/*
 % * This is the structure used in version 2 of the rusersd RPC service.
-% * It corresponds to the utmp structure for BSD sytems.
+% * It corresponds to the utmp structure for BSD systems.
 % */
 %struct ru_utmp {
 %	char	ut_line[8];		/* tty name */
@@ -164,7 +164,7 @@ program RUSERSPROG {
 %	XDR *xdrs;
 %	struct ru_utmp **objpp;
 %{
-%	if (!xdr_reference(xdrs, (char **) objpp, sizeof (struct ru_utmp), 
+%	if (!xdr_reference(xdrs, (char **) objpp, sizeof (struct ru_utmp),
 %			   xdr_utmp)) {
 %		return (FALSE);
 %	}
@@ -202,7 +202,7 @@ program RUSERSPROG {
 %	XDR *xdrs;
 %	struct utmpidle **objpp;
 %{
-%	if (!xdr_reference(xdrs, (char **) objpp, sizeof (struct utmpidle), 
+%	if (!xdr_reference(xdrs, (char **) objpp, sizeof (struct utmpidle),
 %			   xdr_utmpidle)) {
 %		return (FALSE);
 %	}

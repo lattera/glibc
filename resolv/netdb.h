@@ -73,7 +73,7 @@ __set_h_errno (int __err)
 #define	NETDB_INTERNAL	-1	/* See errno.  */
 #define	NETDB_SUCCESS	0	/* No problem.  */
 #define	HOST_NOT_FOUND	1	/* Authoritative Answer Host not found.  */
-#define	TRY_AGAIN	2	/* Non-Authoritive Host not found,
+#define	TRY_AGAIN	2	/* Non-Authoritative Host not found,
 				   or SERVERFAIL.  */
 #define	NO_RECOVERY	3	/* Non recoverable errors, FORMERR, REFUSED,
 				   NOTIMP.  */
@@ -98,7 +98,7 @@ struct hostent
   int h_addrtype;		/* Host address type.  */
   int h_length;			/* Length of address.  */
   char **h_addr_list;		/* List of addresses from name server.  */
-#define	h_addr	h_addr_list[0]	/* Address, for backward compatiblity.  */
+#define	h_addr	h_addr_list[0]	/* Address, for backward compatibility.  */
 };
 
 /* Open host data base files and mark them as staying open even after

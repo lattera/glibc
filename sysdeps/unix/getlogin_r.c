@@ -27,7 +27,7 @@
 #include <utmp.h>
 
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
-   If it cannot be determined or some other error occured, return the error
+   If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.  */
 
 int

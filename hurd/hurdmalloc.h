@@ -1,4 +1,4 @@
-/* XXX this file is a tempoary hack.
+/* XXX this file is a temporary hack.
 
    All hurd-internal code which uses malloc et al includes this file so it
    will use the internal malloc routines _hurd_{malloc,realloc,free}

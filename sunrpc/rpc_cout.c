@@ -81,7 +81,7 @@ emit(definition *def)
 	  {
 	  /* now we need to handle declarations like
    struct typedef foo foo;
-   since we dont want this to be expanded into 2 calls to xdr_foo */
+   since we don't want this to be expanded into 2 calls to xdr_foo */
 
  	if(strcmp(def->def.ty.old_type,def->def_name)==0)
 	  return;

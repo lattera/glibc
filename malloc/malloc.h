@@ -73,6 +73,9 @@
 extern "C" {
 #endif
 
+/* Nonzero if the malloc is already initialized.  */
+extern int __malloc_initialized;
+
 /* Initialize global configuration.  Not needed with GNU libc. */
 #ifndef __GLIBC__
 extern void ptmalloc_init __MALLOC_P ((void));

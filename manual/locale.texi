@@ -505,7 +505,7 @@ precede the amount.
 
 We can only guess which of these (if either) matches the usual
 conventions for printing international currency symbols.  Our guess is
-that they should always preceed the amount.  If we find out a reliable
+that they should always precede the amount.  If we find out a reliable
 answer, we will put it here.
 
 @item char p_sep_by_space

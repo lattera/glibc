@@ -36,7 +36,7 @@
 #endif /* LIBC_SCCS and not lint */
 
 /*
- * Find the last occurence of c in the string cp.
+ * Find the last occurrence of c in the string cp.
  * Return pointer to match or null pointer.
  *
  * char *

@@ -1,4 +1,4 @@
-/* Old compatiblity names for <limits.h> and <float.h> constants.
+/* Old compatibility names for <limits.h> and <float.h> constants.
    Copyright (C) 1995, 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

@@ -37,6 +37,9 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.13  1996/12/20 01:32:01  drepper
+ * Update from main archive 961219
+ *
  * Revision 1.12  1996/11/15 19:44:13  thomas
  * Tue Nov 12 16:58:41 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
  *
@@ -58,8 +61,8 @@
  *   (union header): Only define if !MCHECK.
  *   (HEADER_SIZE, HEADER_NEXT, HEADER_FREE, HEADER_CHECK): New macros.
  *   [MCHECK] (MIN_SIZE): Add correct definition for this case.
- *   (more_memory, malloc, free, realloc): Use above macros, and add appropiate
- *     checks & frobs in MCHECK case.
+ *   (more_memory, malloc, free, realloc): Use above macros, and add
+ *     appropriate checks & frobs in MCHECK case.
  *
  * Revision 1.6  1996/03/07 21:13:08  miles
  * (realloc):
@@ -75,39 +78,39 @@
  * (HEADER_SIZE, HEADER_NEXT, HEADER_FREE, HEADER_CHECK): New macros.
  * [MCHECK] (MIN_SIZE): Add correct definition for this case.
  * (more_memory, malloc, free, realloc):
- *   Use above macros, and add appropiate checks & frobs in MCHECK case.
+ *   Use above macros, and add appropriate checks & frobs in MCHECK case.
  *
  * Revision 1.4  1994/05/05 11:21:42  roland
  * entered into RCS
  *
  * Revision 2.7  91/05/14  17:57:34  mrt
  * 	Correcting copyright
- * 
+ *
  * Revision 2.6  91/02/14  14:20:26  mrt
  * 	Added new Mach copyright
  * 	[91/02/13  12:41:21  mrt]
- * 
+ *
  * Revision 2.5  90/11/05  14:37:33  rpd
  * 	Added malloc_fork* code.
  * 	[90/11/02            rwd]
- * 
+ *
  * 	Add spin_lock_t.
  * 	[90/10/31            rwd]
- * 
+ *
  * Revision 2.4  90/08/07  14:31:28  rpd
  * 	Removed RCS keyword nonsense.
- * 
+ *
  * Revision 2.3  90/06/02  15:14:00  rpd
  * 	Converted to new IPC.
  * 	[90/03/20  20:56:57  rpd]
- * 
+ *
  * Revision 2.2  89/12/08  19:53:59  rwd
  * 	Removed conditionals.
  * 	[89/10/23            rwd]
- * 
+ *
  * Revision 2.1  89/08/03  17:09:46  rwd
  * Created.
- * 
+ *
  *
  * 13-Sep-88  Eric Cooper (ecc) at Carnegie Mellon University
  *	Changed realloc() to copy min(old size, new size) bytes.
@@ -330,7 +333,7 @@ free(base)
 
 #ifdef MCHECK
 	assert (HEADER_CHECK (h) == CHECK_BUSY);
-#endif	
+#endif
 
 	fl = HEADER_FREE (h);
 	i = fl - malloc_free_list;
@@ -352,7 +355,7 @@ free(base)
 	HEADER_NEXT (h) = fl->head;
 #ifdef MCHECK
 	HEADER_CHECK (h) = CHECK_FREE;
-#endif	
+#endif
 	fl->head = h;
 #ifdef	DEBUG
 	fl->in_use -= 1;
@@ -454,7 +457,7 @@ print_malloc_free_list()
 }
 #endif	DEBUG
 
-static void 
+static void
 malloc_fork_prepare(void)
 /*
  * Prepare the malloc module for a fork by insuring that no thread is in a
@@ -462,13 +465,13 @@ malloc_fork_prepare(void)
  */
 {
     register int i;
-    
+
     for (i = 0; i < NBUCKETS; i++) {
 	spin_lock(&malloc_free_list[i].lock);
     }
 }
 
-static void 
+static void
 malloc_fork_parent(void)
 /*
  * Called in the parent process after a fork() to resume normal operation.

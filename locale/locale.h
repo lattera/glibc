@@ -1,29 +1,32 @@
 /* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*
- *	ANSI Standard: 4.4 LOCALIZATION	<locale.h>
+ *	ISO C Standard: 4.4 LOCALIZATION	<locale.h>
  */
 
 #ifndef	_LOCALE_H
 
 #define	_LOCALE_H	1
 #include <features.h>
+
+#define __need_NULL
+#include <stddef.h>
 
 __BEGIN_DECLS
 
@@ -76,9 +79,9 @@ struct lconv
   /* Positive and negative sign positions:
      0 Parentheses surround the quantity and currency_symbol.
      1 The sign string precedes the quantity and currency_symbol.
-     2 The sign string succedes the quantity and currency_symbol.
+     2 The sign string follows the quantity and currency_symbol.
      3 The sign string immediately precedes the currency_symbol.
-     4 The sign string immediately succedes the currency_symbol.  */
+     4 The sign string immediately follows the currency_symbol.  */
   char p_sign_posn;
   char n_sign_posn;
 };
@@ -89,6 +92,37 @@ extern char *setlocale __P ((int __category, __const char *__locale));
 
 /* Return the numeric/monetary information for the current locale.  */
 extern struct lconv *localeconv __P ((void));
+
+#ifdef	__USE_GNU
+/* The concept of one static locale per category is not very well
+   thought out.  Many applications will need to process its data using
+   information from several different locales.  Another application is
+   the implementation of the internationalization handling in the
+   upcoming ISO C++ standard library.  To support this another set of
+   the functions using locale data exist which have an additional
+   argument.
+
+   Attention: all these functions are *not* standardized in any form.
+   This is a proof-of-concept implementation.  */
+
+/* Structure for reentrant locale using functions.  This is an opaque
+   type for the user level programs.  */
+typedef struct locale_data *locale_t[LC_ALL];
+
+/* Return a reference to a data structure representing a set of locale
+   datasets.  Unlike for the CATEGORY parameter for `setlocale' the
+   CATEGORY_MASK parameter here uses a single bit for each category.
+   I.e., 1 << LC_CTYPE means to load data for this category.  If
+   BASE is non-null the appropriate category information in the BASE
+   record is replaced.  */
+extern __const locale_t *__newlocale __P ((int __category_mask,
+					   __const char *__locale,
+					   __const locale_t *__base));
+
+/* Free the data associated with a locale dataset previously returned
+   by a call to `setlocale_r'.  */
+extern void __freelocale __P ((__const locale_t *__dataset));
+#endif
 
 __END_DECLS
 

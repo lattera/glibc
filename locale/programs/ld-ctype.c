@@ -1119,7 +1119,7 @@ character `%s' not defined while needed as default value"),
     }
 
   if (ctype->toupper_done == 0)
-    /* "If this keyword [toupper] is not spcified, the lowercase letters
+    /* "If this keyword [toupper] is not specified, the lowercase letters
         `a' through `z', and their corresponding uppercase letters `A' to
 	`Z', ..., shall automatically be included, with implementation-
 	defined character values."  [P1003.2, 2.5.2.1]  */
@@ -1181,16 +1181,17 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charset_t *charset)
 {
   size_t idx;
 
-  /* First we have to decide how we organize the arrays.  It is easy for
-     a one-byte character set.  But multi-byte character set cannot be
-     stored flat because they might be sparsly used.  So we determine an
-     optimal hashing function for the used characters.
+  /* First we have to decide how we organize the arrays.  It is easy
+     for a one-byte character set.  But multi-byte character set
+     cannot be stored flat because the chars might be sparsely used.
+     So we determine an optimal hashing function for the used
+     characters.
 
-     We use a very trivial hashing function to store the sparse table.
-     CH % TABSIZE is used as an index.  To solve multiple hits we have
-     N planes.  This gurantees a fixed search time for a character [N
-     / 2].  In the following code we determine the minmum value for
-     TABSIZE * N, where TABSIZE >= 256.  */
+     We use a very trivial hashing function to store the sparse
+     table.  CH % TABSIZE is used as an index.  To solve multiple hits
+     we have N planes.  This guarantees a fixed search time for a
+     character [N / 2].  In the following code we determine the minmum
+     value for TABSIZE * N, where TABSIZE >= 256.  */
   size_t min_total = UINT_MAX;
   size_t act_size = 256;
 

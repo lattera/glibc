@@ -1,20 +1,20 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Declare the few Mach system calls (except mach_msg, in <mach/message.h>).
    This does not include the kernel RPC shortcut calls (in <mach-shortcuts.h>).
@@ -52,12 +52,12 @@ extern boolean_t __swtch (void);
 
 /* Attempt to context switch the current thread off the processor.  Lower
    the thread's priority as much as possible.  The thread's priority will
-   be restored when it runs again.  PRIORITY is currently unused.  Return 
+   be restored when it runs again.  PRIORITY is currently unused.  Return
    true if there are other threads that can be run and false if not.  */
 extern boolean_t swtch_pri (int priority);
 extern boolean_t __swtch_pri (int priority);
 
-/* Attempt to context switch the current thread of the rpocessor.  Try
+/* Attempt to context switch the current thread of the processor.  Try
    to run NEW_THREAD next, ignoring normal scheduling policies.  The
    OPTION value comes from <mach/thread_switch.h>.  If OPTION is
    SWITCH_OPTION_WAIT, then block the current thread for TIME
@@ -67,7 +67,7 @@ extern boolean_t __swtch_pri (int priority);
 kern_return_t thread_switch (mach_port_t new_thread, int option, int time);
 kern_return_t __thread_switch (mach_port_t new_thread, int option, int time);
 
-/* Block the current thread until the kernel (or device) event 
+/* Block the current thread until the kernel (or device) event
    identified by EVENT occurs.  */
 kern_return_t evc_wait (unsigned int event);
 kern_return_t __evc_wait (unsigned int event);

@@ -54,7 +54,7 @@ terminate all the processes in the foreground process group.
 
 @cindex session
 A @dfn{session} is a larger group of processes.  Normally all the
-proccesses that stem from a single login belong to the same session.
+processes that stem from a single login belong to the same session.
 
 Every process belongs to a process group.  When a process is created, it
 becomes a member of the same process group and session as its parent
@@ -154,7 +154,7 @@ calls @code{setsid} to become the leader of a new session.
 @cindex controlling terminal, access to
 
 Processes in the foreground job of a controlling terminal have
-unrestricted access to that terminal; background proesses do not.  This
+unrestricted access to that terminal; background processes do not.  This
 section describes in more detail what happens when a process in a
 background job tries to access its controlling terminal.
 
@@ -213,7 +213,7 @@ involved.
 
 @iftex
 @itemize @bullet
-@item 
+@item
 @ref{Data Structures}, introduces the example and presents
 its primary data structures.
 
@@ -310,7 +310,7 @@ job *
 find_job (pid_t pgid)
 @{
   job *j;
-  
+
   for (j = first_job; j; j = j->next)
     if (j->pgid == pgid)
       return j;
@@ -324,7 +324,7 @@ int
 job_is_stopped (job *j)
 @{
   process *p;
-  
+
   for (p = j->first_process; p; p = p->next)
     if (!p->completed && !p->stopped)
       return 0;
@@ -338,7 +338,7 @@ int
 job_is_completed (job *j)
 @{
   process *p;
-  
+
   for (p = j->first_process; p; p = p->next)
     if (!p->completed)
       return 0;
@@ -355,7 +355,7 @@ job_is_completed (job *j)
 
 When a shell program that normally performs job control is started, it
 has to be careful in case it has been invoked from another shell that is
-already doing its own job control.  
+already doing its own job control.
 
 A subshell that runs interactively has to ensure that it has been placed
 in the foreground by its parent shell before it can enable job control
@@ -413,7 +413,7 @@ int shell_is_interactive;
 void
 init_shell ()
 @{
-  
+
   /* @r{See if we are running interactively.}  */
   shell_terminal = STDIN_FILENO;
   shell_is_interactive = isatty (shell_terminal);
@@ -512,7 +512,7 @@ send a @code{SIGTSTP} signal to the process group of the process, not
 just to the process itself.  @xref{Signaling Another Process}.
 
 Finally, each child process should call @code{exec} in the normal way.
-This is also the point at which redirection of the standard input and 
+This is also the point at which redirection of the standard input and
 output channels should be handled.  @xref{Duplicating Descriptors},
 for an explanation of how to do this.
 
@@ -564,9 +564,9 @@ launch_process (process *p, pid_t pgid,
     @{
       dup2 (errfile, STDERR_FILENO);
       close (errfile);
-    @}    
-  
-  /* @r{Exec the new process.  Make sure we exit.}  */ 
+    @}
+
+  /* @r{Exec the new process.  Make sure we exit.}  */
   execvp (p->argv[0], p->argv);
   perror ("execvp");
   exit (1);
@@ -590,7 +590,7 @@ launch_job (job *j, int foreground)
   process *p;
   pid_t pid;
   int mypipe[2], infile, outfile;
-  
+
   infile = j->stdin;
   for (p = j->first_process; p; p = p->next)
     @{
@@ -638,7 +638,7 @@ launch_job (job *j, int foreground)
         close (outfile);
       infile = mypipe[0];
     @}
-  
+
   format_job_info (j, "launched");
 
   if (!shell_is_interactive)
@@ -704,13 +704,13 @@ put_job_in_foreground (job *j, int cont)
         perror ("kill (SIGCONT)");
     @}
 @end group
-  
+
   /* @r{Wait for it to report.}  */
   wait_for_job (j);
-    
+
   /* @r{Put the shell back in the foreground.}  */
   tcsetpgrp (shell_terminal, shell_pgid);
-    
+
 @group
   /* @r{Restore the shell's terminal modes.}  */
   tcgetattr (shell_terminal, &j->tmodes);
@@ -722,7 +722,7 @@ put_job_in_foreground (job *j, int cont)
 @cindex background job, launching
 If the process group is launched as a background job, the shell should
 remain in the foreground itself and continue to read commands from
-the terminal.  
+the terminal.
 
 In the sample shell, there is not much that needs to be done to put
 a job into the background.  Here is the function it uses:
@@ -833,7 +833,7 @@ update_status (void)
 @{
   int status;
   pid_t pid;
-  
+
   do
     pid = waitpid (WAIT_ANY, &status, WUNTRACED|WNOHANG);
   while (!mark_process_status (pid, status));
@@ -849,11 +849,11 @@ wait_for_job (job *j)
 @{
   int status;
   pid_t pid;
-  
+
   do
     pid = waitpid (WAIT_ANY, &status, WUNTRACED);
-  while (!mark_process_status (pid, status) 
-         && !job_is_stopped (j) 
+  while (!mark_process_status (pid, status)
+         && !job_is_stopped (j)
          && !job_is_completed (j));
 @}
 @end group
@@ -880,7 +880,7 @@ do_job_notification (void)
 
   /* @r{Update status information for child processes.}  */
   update_status ();
-  
+
   jlast = NULL;
   for (j = first_job; j; j = jnext)
     @{
@@ -976,7 +976,7 @@ allocated and initialized.
 Most real shells provide a complex user interface that has support for
 a command language; variables; abbreviations, substitutions, and pattern
 matching on file names; and the like.  All of this is far too complicated
-to explain here!  Instead, we have concentrated on showing how to 
+to explain here!  Instead, we have concentrated on showing how to
 implement the core process creation and job control functions that can
 be called from such a shell.
 
@@ -1058,7 +1058,7 @@ represents the size of a string large enough to hold the file name
 returned by @code{ctermid}.
 @end deftypevr
 
-See also the @code{isatty} and @code{ttyname} functions, in 
+See also the @code{isatty} and @code{ttyname} functions, in
 @ref{Is It a Terminal}.
 
 

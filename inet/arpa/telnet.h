@@ -96,7 +96,7 @@ extern char *telcmds[];
 #define TELOPT_NAOVTS	14	/* negotiate about vertical tab stops */
 #define TELOPT_NAOVTD	15	/* negotiate about vertical tab disposition */
 #define TELOPT_NAOLFD	16	/* negotiate about output LF disposition */
-#define TELOPT_XASCII	17	/* extended ascic character set */
+#define TELOPT_XASCII	17	/* extended ascii character set */
 #define	TELOPT_LOGOUT	18	/* force logout */
 #define	TELOPT_BM	19	/* byte macro */
 #define	TELOPT_DET	20	/* data entry terminal */
@@ -200,7 +200,7 @@ char *telopts[NTELOPTS+1] = {
 #define	NSLC		18
 
 /*
- * For backwards compatability, we define SLC_NAMES to be the
+ * For backwards compatibility, we define SLC_NAMES to be the
  * list of names if SLC_NAMES is not defined.
  */
 #define	SLC_NAMELIST	"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR", \

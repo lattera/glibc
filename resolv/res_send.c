@@ -96,7 +96,7 @@ static char rcsid[] = "$Id$";
 
 static int s = -1;	/* socket used for communications */
 static int connected = 0;	/* is the socket connected */
-static int vc = 0;	/* is the socket a virtual ciruit? */
+static int vc = 0;	/* is the socket a virtual circuit? */
 
 #ifndef FD_SET
 /* XXX - should be in portability.h */

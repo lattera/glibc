@@ -81,7 +81,7 @@ typedef struct {
 typedef struct {
 	u_char	vers;		/* protocol version */
 	u_char	type;		/* type of request message, see below */
-	u_char	answer;		/* respose to request message, see below */
+	u_char	answer;		/* response to request message, see below */
 	u_char	pad;
 	u_int32_t id_num;	/* message id */
 	struct	osockaddr addr;	/* address for establishing conversation */

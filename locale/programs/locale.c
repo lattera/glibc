@@ -1,22 +1,22 @@
 /* locale - Implementation of the locale program according to POSIX 1003.2
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -145,7 +145,7 @@ main (int argc, char *argv[])
   show_keyword_name = 0;
 
   /* Set locale.  Do not set LC_ALL because the other categories must
-     not be affected (acccording to POSIX.2).  */
+     not be affected (according to POSIX.2).  */
   setlocale (LC_CTYPE, "");
   setlocale (LC_MESSAGES, "");
 
@@ -446,7 +446,7 @@ show_info (const char *name)
 	  }
     }
 
-  /* When we get to here the name is not standard ones.  For testing
-     and perhpas advanced use we allow some more symbols.  */
+  /* The name is not a standard one.
+     For testing and perhaps advanced use allow some more symbols.  */
   locale_special (name, show_category_name, show_keyword_name);
 }

@@ -1,6 +1,6 @@
-/* Pentium optimized __mpn_rshift -- 
+/* Pentium optimized __mpn_rshift --
 
-Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -129,7 +129,7 @@ Lend2:	shrl	%cl,%edx		/* compute most significant limb */
 	ret
 
 /* We loop from least significant end of the arrays, which is only
-   permissable if the source and destination don't overlap, since the
+   permissible if the source and destination don't overlap, since the
    function is documented to work for overlapping source and destination.
 */
 

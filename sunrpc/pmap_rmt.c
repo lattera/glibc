@@ -166,7 +166,7 @@ static int
 getbroadcastnets(addrs, sock, buf)
 	struct in_addr *addrs;
 	int sock;  /* any valid socket will do */
-	char *buf;  /* why allocxate more when we can use existing... */
+	char *buf;  /* why allocate more when we can use existing... */
 {
 	struct ifconf ifc;
         struct ifreq ifreq, *ifr;

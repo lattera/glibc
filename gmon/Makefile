@@ -31,7 +31,7 @@ include ../Rules
 CFLAGS-mcount.c := -fno-omit-frame-pointer
 
 # We cannot compile mcount.c with -pg because that would
-# create resursive calls.  Just copy the normal static object.
+# create recursive calls.  Just copy the normal static object.
 # On systems where `profil' is not a system call, the same
 # problem exists for the internal functions in profil.c.
 

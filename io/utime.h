@@ -27,9 +27,6 @@
 
 __BEGIN_DECLS
 
-#define	__need_NULL
-#include <stddef.h>
-
 #include <gnu/types.h>
 
 /* Structure describing file times.  */
@@ -46,4 +43,4 @@ extern int utime __P ((__const char *__file,
 
 __END_DECLS
 
-#endif /* utime.h	*/
+#endif /* utime.h */

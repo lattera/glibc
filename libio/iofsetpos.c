@@ -36,7 +36,8 @@ _IO_fsetpos (fp, posp)
   _IO_flockfile (fp);
   if (_IO_seekpos (fp, *posp, _IOS_INPUT|_IOS_OUTPUT) == _IO_pos_BAD)
     {
-      /*ANSI explicily requires setting errno to a positive value on failure.*/
+      /* ANSI explicitly requires setting errno to a positive value on
+	 failure.  */
 #ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);

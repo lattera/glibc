@@ -97,7 +97,7 @@ struct cu_data {
  *     Caller may wish to set this something more useful.
  *
  * wait is the amount of time used between retransmitting a call if
- * no response has been heard;  retransmition occurs until the actual
+ * no response has been heard; retransmission occurs until the actual
  * rpc call times out.
  *
  * sendsz and recvsz are the maximum allowable packet sizes that can be

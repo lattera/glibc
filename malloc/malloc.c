@@ -140,7 +140,7 @@
 
   Maximum overhead wastage per allocated chunk: normally 15 bytes
 
-       Alignnment demands, plus the minimum allocatable size restriction
+       Alignment demands, plus the minimum allocatable size restriction
        make the normal worst-case wastage 15 bytes (i.e., up to 15
        more bytes will be allocated than were requested in malloc), with
        two exceptions:
@@ -343,7 +343,7 @@ extern "C" {
     checking is fairly extensive, and will slow down execution
     noticeably. Calling malloc_stats or mallinfo with MALLOC_DEBUG set will
     attempt to check every non-mmapped allocated and free chunk in the
-    course of computing the summmaries. (By nature, mmapped regions
+    course of computing the summaries. (By nature, mmapped regions
     cannot be checked very much automatically.)
 
     Setting MALLOC_DEBUG may also be helpful if you are trying to modify
@@ -999,7 +999,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     the malloc code, but "mem" is the pointer that is returned to the
     user.  "Nextchunk" is the beginning of the next contiguous chunk.
 
-    Chunks always begin on even word boundries, so the mem portion
+    Chunks always begin on even word boundaries, so the mem portion
     (which is returned to the user) is also on an even word boundary, and
     thus double-word aligned.
 
@@ -1144,7 +1144,7 @@ typedef struct _arena {
 } arena;
 
 
-/* A heap is a single contiguous memory region holding (coalescable)
+/* A heap is a single contiguous memory region holding (coalesceable)
    malloc_chunks.  It is allocated with mmap() and always starts at an
    address aligned to HEAP_MAX_SIZE.  Not used unless compiling for
    multiple threads. */
@@ -1489,6 +1489,8 @@ static unsigned long max_mmapped_mem = 0;
 
 
 
+/* Already initialized?  */
+int __malloc_initialized;
 
 
 /* Initialization routine. */
@@ -1504,13 +1506,12 @@ void
 ptmalloc_init __MALLOC_P((void))
 #endif
 {
-  static int first = 1;
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
   const char* s;
 #endif
 
-  if(!first) return;
-  first = 0;
+  if(__malloc_initialized) return;
+  __malloc_initialized = 1;
 #if defined(_LIBC)
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
@@ -3589,7 +3590,7 @@ dump_heap(heap) heap_info *heap;
 
   malloc_stats:
 
-    For all arenas seperately and in total, prints on stderr the
+    For all arenas separately and in total, prints on stderr the
     amount of space obtained from the system, and the current number
     of bytes allocated via malloc (or realloc, etc) but not yet
     freed. (Note that this is the number of bytes allocated, not the
@@ -3964,10 +3965,10 @@ History:
         Wolfram Gloger (Gloger@lrz.uni-muenchen.de).
       * Use last_remainder in more cases.
       * Pack bins using idea from  colin@nyx10.cs.du.edu
-      * Use ordered bins instead of best-fit threshhold
+      * Use ordered bins instead of best-fit threshold
       * Eliminate block-local decls to simplify tracing and debugging.
       * Support another case of realloc via move into top
-      * Fix error occuring when initial sbrk_base not word-aligned.
+      * Fix error occurring when initial sbrk_base not word-aligned.
       * Rely on page size for units instead of SBRK_UNIT to
         avoid surprises about sbrk alignment conventions.
       * Add mallinfo, mallopt. Thanks to Raymond Nijssen

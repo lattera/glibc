@@ -95,7 +95,7 @@ static char rcsid[] = "$Id$";
  *   "search" property.
  * - The sortlist comprised of IP address netmask pairs are stored as
  *   values of the "sortlist" property. The IP address and optional netmask
- *   should be seperated by a slash (/) or ampersand (&) character.
+ *   should be separated by a slash (/) or ampersand (&) character.
  * - Internal resolver variables can be set from the value of the "options"
  *   property.
  */

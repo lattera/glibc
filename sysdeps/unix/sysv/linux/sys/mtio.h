@@ -24,7 +24,7 @@
 #include <sys/ioctl.h>
 #include <linux/mtio.h>
 
-/* Specifiy default tape device.  */
+/* Specify default tape device.  */
 #ifndef DEFTAPE
 # define DEFTAPE	"/dev/tape"
 #endif

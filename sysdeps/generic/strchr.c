@@ -1,30 +1,30 @@
-/* Copyright (C) 1991, 1993, 1994, 1995 Free Software Foundation, Inc.
-   Based on strlen implemention by Torbjorn Granlund (tege@sics.se),
+/* Copyright (C) 1991, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+   Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    bug fix and commentary by Jim Blandy (jimb@ai.mit.edu);
    adaptation to strchr suggested by Dick Karpinski (dick@cca.ucsf.edu),
    and implemented by Roland McGrath (roland@ai.mit.edu).
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <ansidecl.h>
 #include <string.h>
 
 
-/* Find the first ocurrence of C in S.  */
+/* Find the first occurrence of C in S.  */
 
 char *
 DEFUN(strchr, (s, c), CONST char *s AND int c)
@@ -53,9 +53,9 @@ DEFUN(strchr, (s, c), CONST char *s AND int c)
   /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
      the "holes."  Note that there is a hole just to the left of
      each byte, with an extra at the end:
-     
+
      bits:  01111110 11111110 11111110 11111111
-     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD 
+     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
@@ -118,10 +118,10 @@ DEFUN(strchr, (s, c), CONST char *s AND int c)
 
       /* Add MAGIC_BITS to LONGWORD.  */
       if ((((longword + magic_bits)
-	
+
 	    /* Set those bits that were unchanged by the addition.  */
 	    ^ ~longword)
-	       
+
 	   /* Look at only the hole bits.  If any of the hole bits
 	      are unchanged, most likely one of the bytes was a
 	      zero.  */

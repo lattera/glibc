@@ -42,7 +42,7 @@
 
 #define	RB_ASKNAME	0x01	/* ask for file name to reboot from */
 #define	RB_SINGLE	0x02	/* reboot to single user only */
-#define	RB_NOSYNC	0x04	/* dont sync before reboot */
+#define	RB_NOSYNC	0x04	/* don't sync before reboot */
 #define	RB_HALT		0x08	/* don't reboot, just halt */
 #define	RB_INITNAME	0x10	/* name given for /etc/init (unused) */
 #define	RB_DFLTROOT	0x20	/* use compiled-in rootdev */

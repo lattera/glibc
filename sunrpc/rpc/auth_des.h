@@ -21,8 +21,8 @@
 #define _RPC_AUTH_DES_H	1
 #include <sys/cdefs.h>
 
-/* This is no complete version of this header.  More defintions with
-   the real authentification stuff will come in 1997.  For now we only
+/* This is no complete version of this header.  More definitions with
+   the real authentication stuff will come in 1997.  For now we only
    need to define the function for handling public keys.  */
 
 

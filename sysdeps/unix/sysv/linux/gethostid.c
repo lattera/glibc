@@ -79,7 +79,7 @@ gethostid ()
 	return id;
     }
 
-  /* Getting from the file was not succesful.  An intelligent guess for
+  /* Getting from the file was not successful.  An intelligent guess for
      a unique number of a host is its IP address.  Return this.  */
   if (gethostname (hostname, MAXHOSTNAMELEN) < 0 || hostname[0] == '\0')
     /* This also fails.  Return and arbitrary value.  */

@@ -178,7 +178,7 @@ To return this vector, @code{glob} stores both its address and its
 length (number of elements, not counting the terminating null pointer)
 into @code{*@var{vector-ptr}}.
 
-Normally, @code{glob} sorts the file names alphabetically before 
+Normally, @code{glob} sorts the file names alphabetically before
 returning them.  You can turn this off with the flag @code{GLOB_NOSORT}
 if you want to get the information as fast as possible.  Usually it's
 a good idea to let @code{glob} sort them---if you process the files in
@@ -224,7 +224,7 @@ In the event of an error, @code{glob} stores information in
 @node Flags for Globbing
 @subsection Flags for Globbing
 
-This section describes the flags that you can specify in the 
+This section describes the flags that you can specify in the
 @var{flags} argument to @code{glob}.  Choose the flags you want,
 and combine them with the C bitwise OR operator @code{|}.
 
@@ -483,7 +483,7 @@ One of the endpoints in a range expression was invalid.
 
 These are the bit flags that you can use in the @var{cflags} operand when
 compiling a regular expression with @code{regcomp}.
- 
+
 @table @code
 @comment regex.h
 @comment POSIX.2
@@ -530,7 +530,7 @@ This function tries to match the compiled regular expression
 @code{regexec} returns @code{0} if the regular expression matches;
 otherwise, it returns a nonzero value.  See the table below for
 what nonzero values mean.  You can use @code{regerror} to produce an
-error message string describing the reason for a nonzero value; 
+error message string describing the reason for a nonzero value;
 see @ref{Regexp Cleanup}.
 
 The argument @var{eflags} is a word of bit flags that enable various
@@ -538,7 +538,7 @@ options.
 
 If you want to get information about what part of @var{string} actually
 matched the regular expression or its subexpressions, use the arguments
-@var{matchptr} and @var{nmatch}.  Otherwise, pass @code{0} for 
+@var{matchptr} and @var{nmatch}.  Otherwise, pass @code{0} for
 @var{nmatch}, and @code{NULL} for @var{matchptr}.  @xref{Regexp
 Subexpressions}.
 @end deftypefun
@@ -549,7 +549,7 @@ locales that were in effect when you compiled the regular expression.
 The function @code{regexec} accepts the following flags in the
 @var{eflags} argument:
 
-@table @code 
+@table @code
 @comment regex.h
 @comment POSIX.2
 @item REG_NOTBOL
@@ -594,7 +594,7 @@ subexpression.
 @comment POSIX.2
 @deftp {Data Type} regmatch_t
 This is the data type of the @var{matcharray} array that you pass to
-@code{regexec}.  It containes two structure fields, as follows:
+@code{regexec}.  It contains two structure fields, as follows:
 
 @table @code
 @item rm_so
@@ -661,7 +661,7 @@ appears within another, then the results reported for the inner
 subexpression reflect whatever happened on the last match of the outer
 subexpression.  For an example, consider @samp{\(ba\(na\)*s \)*} matching
 the string @samp{bananas bas }.  The last time the inner expression
-actually matches is near the end of the first word.  But it is 
+actually matches is near the end of the first word.  But it is
 @emph{considered} again in the second word, and fails to match there.
 @code{regexec} reports nonuse of the ``na'' subexpression.
 
@@ -738,7 +738,7 @@ char *get_regerror (int errcode, regex_t *compiled)
 @cindex word expansion
 @cindex expansion of shell words
 
-@dfn{Word expansion} means the process of splitting a string into 
+@dfn{Word expansion} means the process of splitting a string into
 @dfn{words} and substituting for variables, commands, and wildcards
 just as the shell does.
 
@@ -936,7 +936,7 @@ data it points to.
 @node Flags for Wordexp
 @subsection Flags for Word Expansion
 
-This section describes the flags that you can specify in the 
+This section describes the flags that you can specify in the
 @var{flags} argument to @code{wordexp}.  Choose the flags you want,
 and combine them with the C operator @code{|}.
 
@@ -1139,7 +1139,7 @@ characters in the value of @var{variable}.  @samp{$@{#foo@}} stands for
 @end table
 
 These variants of variable substitution let you remove part of the
-variable's value before substituting it.  The @var{prefix} and 
+variable's value before substituting it.  The @var{prefix} and
 @var{suffix} are not mere strings; they are wildcard patterns, just
 like the patterns that you use to match multiple file names.  But
 in this context, they match against parts of the variable value

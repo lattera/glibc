@@ -6,7 +6,7 @@
  *
  * !!! The list has to be sorted !!!
  */
-DEFINE_INT_CURR("AED ")		/* United Arab Emirats  */
+DEFINE_INT_CURR("AED ")		/* United Arab Emirates  */
 DEFINE_INT_CURR("AFA ")		/* Afghanistan  */
 DEFINE_INT_CURR("ALL ")		/* Albania  */
 DEFINE_INT_CURR("ANG ")		/* Netherlands Antilles  */
@@ -91,7 +91,7 @@ DEFINE_INT_CURR("LKR ")		/* Sri Lanka  */
 DEFINE_INT_CURR("LRD ")		/* Liberia  */
 DEFINE_INT_CURR("LSM ")		/* Lesotho  */
 DEFINE_INT_CURR("LTL ")		/* Lithuania  */
-DEFINE_INT_CURR("LUF ")		/* Luxemburg  */
+DEFINE_INT_CURR("LUF ")		/* Luxembourg  */
 DEFINE_INT_CURR("LVL ")		/* Latvia  */
 DEFINE_INT_CURR("LYD ")		/* Libyan Arab Jamahiriya  */
 DEFINE_INT_CURR("MAD ")		/* Morocco  */

@@ -55,7 +55,7 @@ __BEGIN_DECLS
    creation of locales with the localedef utility.  */
 #define _POSIX2_LOCALEDEF       1
 
-/* Library is conformant to X/Open version 4.  */
+/* Library conforms to X/Open version 4.  */
 #define _XOPEN_VERSION	4
 
 /* Commands and utilities from XPG4 are available.  */
@@ -213,7 +213,7 @@ extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
 
 
 /* Create a one-way communication channel (pipe).
-   If successul, two file descriptors are stored in PIPEDES;
+   If successful, two file descriptors are stored in PIPEDES;
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
 extern int __pipe __P ((int __pipedes[2]));
@@ -246,8 +246,8 @@ extern unsigned int ualarm __P ((unsigned int __value,
 				 unsigned int __interval));
 
 /* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
-   or ignored.  Return value is not necessarily useful.  */
-extern unsigned int usleep __P ((unsigned int __useconds));
+   or ignored.  */
+extern void usleep __P ((unsigned int __useconds));
 #endif
 
 
@@ -333,7 +333,6 @@ extern int dup2 __P ((int __fd, int __fd2));
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
-extern char **environ;
 
 
 /* Replace the current process, executing PATH with arguments ARGV and
@@ -605,7 +604,7 @@ extern int tcsetpgrp __P ((int __fd, __pid_t __pgrp_id));
 extern char *getlogin __P ((void));
 #ifdef __USE_REENTRANT
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
-   If it cannot be determined or some other error occured, return the error
+   If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.  */
 extern int getlogin_r __P ((char *__name, size_t __name_len));
 #endif
@@ -830,11 +829,11 @@ extern int __libc_enable_secure;
 
 #endif
 
-#ifdef __USE_POSIX
+#ifdef __USE_POSIX199309
 /* Synchronize at least the data part of a file with the underlying
    media.  */
 extern int fdatasync __P ((int __fildes));
-#endif /* Use POSIX */
+#endif /* Use POSIX199309 */
 
 
 /* XPG4.2 specifies that prototypes for the encryption functions must

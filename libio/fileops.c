@@ -46,7 +46,7 @@ extern int errno;
    Putback mode is a variant of get mode.
 
    In a filebuf, there is only one current position, instead of two
-   separate get and put pointers.  In get mode, the current posistion
+   separate get and put pointers.  In get mode, the current position
    is that of gptr(); in put mode that of pptr().
 
    The position in the buffer that corresponds to the position

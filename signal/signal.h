@@ -29,9 +29,6 @@
 
 __BEGIN_DECLS
 
-#define	 __need_size_t
-#include <stddef.h>
-
 #include <gnu/types.h>
 #include <sigset.h>		/* __sigset_t, __sig_atomic_t.  */
 
@@ -90,16 +87,31 @@ extern int __sigblock __P ((int __mask));
 /* Set the mask of blocked signals to MASK, returning the old mask.  */
 extern int __sigsetmask __P ((int __mask));
 
+
+/* The `sigpause' function has two different interfaces.  The original
+   BSD definition defines the argument as a mask of the signal, while
+   the more modern interface in X/Open defines it as the signal
+   number.  We go with the more modern version unless the user
+   explitcly selects the BSD version.  */
+extern int __sigpause __P ((int __sig_or_mask, int __is_sig));
+
+#if defined(__USE_BSD) && !defined(__USE_XOPEN)
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
-extern int __sigpause __P ((int __mask));
+#define sigpause(mask) __sigpause ((mask), 0)
+#else
+#ifdef __USE_XOPEN
+/* Remove a signal from the signal mask and suspend the process.  */
+#define sigpause(sig) __sigpause ((sig), 1)
+#endif
+#endif
+
 
 #ifdef	__USE_BSD
 #define	sigmask(sig)	__sigmask(sig)
 
 extern int sigblock __P ((int __mask));
 extern int sigsetmask __P ((int __mask));
-extern int sigpause __P ((int __mask));
 
 /* This function is here only for compatibility.
    Use `sigprocmask' instead.  */
@@ -147,7 +159,7 @@ extern int sigaddset __P ((sigset_t *__set, int __signo));
 extern int sigdelset __P ((sigset_t *__set, int __signo));
 
 /* Return 1 if SIGNO is in SET, 0 if not.  */
-extern int sigismember __P ((__const sigset_t *__set, int signo));
+extern int sigismember __P ((__const sigset_t *__set, int __signo));
 
 /* Get the system-specific definitions of `struct sigaction'
    and the `SA_*' and `SIG_*'. constants.  */
@@ -184,7 +196,7 @@ extern int sigwait __P ((__const sigset_t *__set, int *__sig));
 
 #if	defined(_SIGNAL_H) && defined(__USE_BSD)
 
-/* Names of the signals.  This variable exists only for compatiblity.
+/* Names of the signals.  This variable exists only for compatibility.
    Use `strsignal' instead (see <string.h>).  */
 extern __const char *__const _sys_siglist[NSIG];
 extern __const char *__const sys_siglist[NSIG];
@@ -227,6 +239,9 @@ extern int sigreturn __P ((struct sigcontext *__scp));
 
 
 #if defined(_SIGNAL_H) && (defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED))
+
+#define	 __need_size_t
+#include <stddef.h>
 
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
    (causing them to fail with EINTR); if INTERRUPT is zero, make system

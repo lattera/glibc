@@ -21,7 +21,7 @@
 
 extern char *_strerror_internal __P ((int, char *, size_t));
 
-/* Return a string descibing the errno code in ERRNUM.  At most BUFLEN
+/* Return a string describing the errno code in ERRNUM.  At most BUFLEN
    characters of the result will be placed in STRERRBUF.  */
 char *
 __strerror_r (int errnum, char *buf, size_t buflen)

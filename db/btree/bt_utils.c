@@ -76,7 +76,7 @@ __bt_ret(t, e, key, rkey, data, rdata, copy)
 	bl = GETBLEAF(e->page, e->index);
 
 	/*
-	 * We must copy big keys/data to make them contigous.  Otherwise,
+	 * We must copy big keys/data to make them contiguous.  Otherwise,
 	 * leave the page pinned and don't copy unless the user specified
 	 * concurrent access.
 	 */

@@ -154,7 +154,7 @@ catclose (nl_catd catalog_desc)
 
   catalog = (__nl_catd) catalog_desc;
 
-  if (catalog->status == mmaped)
+  if (catalog->status == mmapped)
     munmap ((void *) catalog->file_ptr, catalog->file_size);
   else if (catalog->status == malloced)
     free ((void *) catalog->file_ptr);

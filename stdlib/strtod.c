@@ -333,7 +333,7 @@ __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
    Set *ENDPTR to the character after the last used one.  If the number is
    smaller than the smallest representable number, set `errno' to ERANGE and
    return 0.0.  If the number is too big to be represented, set `errno' to
-   ERANGE and return HUGE_VAL with the approriate sign.  */
+   ERANGE and return HUGE_VAL with the appropriate sign.  */
 FLOAT
 INTERNAL (STRTOF) (nptr, endptr, group)
      const STRING_TYPE *nptr;

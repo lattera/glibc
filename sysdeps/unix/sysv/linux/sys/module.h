@@ -42,7 +42,7 @@ extern unsigned long int create_module __P ((__const char *__module_name,
 
 /* Initialize the module called MODULE_NAME with the CONTENTSSIZE
    bytes starting at address CONTENTS.  CONTENTS normally contains the
-   text and data segment of the module (the bss is implicity zeroed).
+   text and data segment of the module (the bss is implicitly zeroed).
    After copying the contents, the function pointed to by
    ROUTINES.init is executed.  When the module is no longer needed,
    ROUTINES.cleanup is executed.  SYMTAB is NULL if the module does

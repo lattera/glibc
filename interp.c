@@ -1,4 +1,4 @@
-/* interp - add information about dynamic loader to shared libray obejcts.
+/* interp - add information about dynamic loader to shared library obejcts.
    Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

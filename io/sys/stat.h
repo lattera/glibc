@@ -214,8 +214,10 @@ extern __inline__ int stat (__const char *__path, struct stat *__statbuf)
 
 extern __inline__ int __lstat(__const char *__path, struct stat *__statbuf)
 { return __lxstat (_STAT_VER, __path, __statbuf); }
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 extern __inline__ int lstat(__const char *__path, struct stat *__statbuf)
 { return __lxstat (_STAT_VER, __path, __statbuf); }
+#endif
 
 extern __inline__ int __fstat (int __fd, struct stat *__statbuf)
 { return __fxstat (_STAT_VER, __fd, __statbuf); }

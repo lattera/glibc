@@ -336,7 +336,7 @@ DCGETTEXT (domainname, msgid, category)
 	{
 	  /* The whole contents of CATEGORYVALUE has been searched but
 	     no valid entry has been found.  We solve this situation
-	     by implicitely appending a "C" entry, i.e. no translation
+	     by implicitly appending a "C" entry, i.e. no translation
 	     will take place.  */
 	  single_locale[0] = 'C';
 	  single_locale[1] = '\0';

@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.78";
+static char	elsieid[] = "@(#)zic.c	7.79";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -359,6 +359,7 @@ char * const	ptr;
 {
 	if (ptr == NULL) {
 		const char *e = strerror(errno);
+
 		(void) fprintf(stderr, _("%s: Memory exhausted: %s\n"),
 			progname, e);
 		(void) exit(EXIT_FAILURE);
@@ -608,6 +609,7 @@ const char * const	tofile;
 			(void) exit(EXIT_FAILURE);
 		if (link(fromname, toname) != 0) {
 			const char *e = strerror(errno);
+
 			(void) fprintf(stderr,
 				_("%s: Can't link from %s to %s: %s\n"),
 				progname, fromname, toname, e);
@@ -780,6 +782,7 @@ const char *	name;
 		fp = stdin;
 	} else if ((fp = fopen(name, "r")) == NULL) {
 		const char *e = strerror(errno);
+
 		(void) fprintf(stderr, _("%s: Can't open %s: %s\n"),
 			progname, name, e);
 		(void) exit(EXIT_FAILURE);
@@ -848,6 +851,7 @@ _("%s: panic: Invalid l_value %d\n"),
 	}
 	if (fp != stdin && fclose(fp)) {
 		const char *e = strerror(errno);
+
 		(void) fprintf(stderr, _("%s: Error closing %s: %s\n"),
 			progname, filename, e);
 		(void) exit(EXIT_FAILURE);
@@ -1422,11 +1426,22 @@ const char * const	name;
 	fullname = erealloc(fullname,
 		(int) (strlen(directory) + 1 + strlen(name) + 1));
 	(void) sprintf(fullname, "%s/%s", directory, name);
+	/*
+	** Remove old file, if any, to snap links.
+	*/
+	if (!itsdir(fullname) && remove(fullname) != 0 && errno != ENOENT) {
+		const char *e = strerror(errno);
+
+		(void) fprintf(stderr, _("%s: Can't remove %s: %s\n"),
+			progname, fullname, e);
+		(void) exit(EXIT_FAILURE);
+	}
 	if ((fp = fopen(fullname, "wb")) == NULL) {
 		if (mkdirs(fullname) != 0)
 			(void) exit(EXIT_FAILURE);
 		if ((fp = fopen(fullname, "wb")) == NULL) {
 			const char *e = strerror(errno);
+
 			(void) fprintf(stderr, _("%s: Can't create %s: %s\n"),
 				progname, fullname, e);
 			(void) exit(EXIT_FAILURE);
@@ -2114,6 +2129,7 @@ char * const	argname;
 			*/
 			if (mkdir(name, 0755) != 0) {
 				const char *e = strerror(errno);
+
 				(void) fprintf(stderr,
 				    _("%s: Can't create directory %s: %s\n"),
 				    progname, name, e);

@@ -38,8 +38,8 @@ static char sccsid[] = "@(#)clnt_raw.c 1.22 87/08/11 Copyr 1984 Sun Micro";
  *
  * Memory based rpc for simple testing and timing.
  * Interface to create an rpc client and server in the same process.
- * This lets us similate rpc and get round trip overhead, without
- * any interference from the kernal.
+ * This lets us simulate rpc and get round trip overhead, without
+ * any interference from the kernel.
  */
 
 #include <rpc/rpc.h>
@@ -95,7 +95,7 @@ clntraw_create(prog, vers)
 		clntraw_private = clp;
 	}
 	/*
-	 * pre-serialize the staic part of the call msg and stash it away
+	 * pre-serialize the static part of the call msg and stash it away
 	 */
 	call_msg.rm_direction = CALL;
 	call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;

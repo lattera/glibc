@@ -67,7 +67,7 @@ logwtmp (const char *line, const char *name, const char *host)
       __flock (fd, LOCK_EX | LOCK_NB);
     }
 
-  /* Remeber original size of log file: */
+  /* Remember original size of log file: */
   if (__fstat (fd, &st) < 0)
     goto done;
 

@@ -64,7 +64,7 @@ fnmatch (pattern, string, flags)
   register const char *p = pattern, *n = string;
   register char c;
 
-/* Note that this evalutes C many times.  */
+/* Note that this evaluates C many times.  */
 # define FOLD(c) ((flags & FNM_CASEFOLD) && ISUPPER (c) ? tolower (c) : (c))
 
   while ((c = *p++) != '\0')

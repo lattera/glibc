@@ -1,24 +1,24 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
-For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
-Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
-This file is part of the GNU C Library.
+   For Intel 80x86, x>=3.
+   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+   Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+  Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
 #include "asm-syntax.h"
@@ -53,7 +53,7 @@ ENTRY (strchr)
 	      we don't know the end of the string.  But accessing at
 	      4-byte alignment guarantees that we never access illegal
 	      memory if this would not also be done by the trivial
-	      implementation (this is because all processor inherant
+	      implementation (this is because all processor inherent
 	      boundaries are multiples of 4.  */
 
 	testb $3, %eax		/* correctly aligned ? */
@@ -131,7 +131,7 @@ L11:	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	   following XOR would destroy the carry flag and it would (in a
 	   representation with more than 32 bits) not alter then last
 	   overflow, we can now test this condition.  If no carry is signaled
-	   no overflow must have occured in the last byte => it was 0.	*/
+	   no overflow must have occurred in the last byte => it was 0.	*/
 	jnc L7
 
 	/* We are only interested in carry bits that change due to the

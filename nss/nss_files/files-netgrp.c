@@ -248,7 +248,7 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 
       status = NSS_STATUS_SUCCESS;
 
-      /* Rememember where we stopped reading.  */
+      /* Remember where we stopped reading.  */
       *cursor = cp;
 
       result->first = 0;

@@ -1,25 +1,25 @@
-/* strcspn (str, ss) -- Return the length of the initial segement of STR
+/* strcspn (str, ss) -- Return the length of the initial segment of STR
 			which contains only characters from SS.
-For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
-Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
-This file is part of the GNU C Library.
+   For Intel 80x86, x>=3.
+   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+   Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
 #include "asm-syntax.h"
@@ -142,7 +142,7 @@ L1:	leal -4(%edx), %eax	/* prepare loop */
 	   1. a character in the stopset was found
 	   and
 	   2. the end of the string was found
-	   But as a sign that the chracter is in the stopset we store its
+	   But as a sign that the character is in the stopset we store its
 	   value in the table.  But the value of NUL is NUL so the loop
 	   terminates for NUL in every case.  */
 

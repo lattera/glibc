@@ -11,7 +11,7 @@ fractional parts.  These functions are declared in the header file
 * Predicates on Floats::        Testing for infinity and for NaNs.
 * Absolute Value::              Absolute value functions.
 * Normalization Functions::     Hacks for radix-2 representations.
-* Rounding and Remainders::     Determinining the integer and
+* Rounding and Remainders::     Determining the integer and
 			         fractional parts of a float.
 * Integer Division::            Functions for performing integer
 				 division.
@@ -495,8 +495,8 @@ to @code{ERANGE} to indicate there was overflow.
 
 Because the value @code{0l} is a correct result for @code{strtol} the
 user who is interested in handling errors should set the global variable
-@code{errno} to @code{0} before calling this function.  So it can be
-tested whether an error occured or not.
+@code{errno} to @code{0} before calling this function, so that the program
+can later test whether an error occurred.
 
 There is an example at the end of this section.
 @end deftypefun
@@ -699,7 +699,7 @@ call since all failures set @code{errno} to a non-zero value.
 @deftypefun float strtof (const char *@var{string}, char **@var{tailptr})
 This function is similar to the @code{strtod} function but it returns a
 @code{float} value instead of a @code{double} value.  If the precision
-of a @code{float} value is sufficent this function should be used since
+of a @code{float} value is sufficient this function should be used since
 it is much faster than @code{strtod} on some architectures.  The reasons
 are obvious: @w{IEEE 754} defines @code{float} to have a mantissa of 23
 bits while @code{double} has 53 bits and every additional bit of
@@ -718,9 +718,9 @@ This function is a GNU extension.
 @deftypefun {long double} strtold (const char *@var{string}, char **@var{tailptr})
 This function is similar to the @code{strtod} function but it returns a
 @code{long double} value instead of a @code{double} value.  It should be
-used when high presision is used.  On systems which define a @code{long
+used when high precision is needed.  On systems which define a @code{long
 double} type (i.e., on which it is not the same as @code{double})
-running this function might take significently more time since more bits
+running this function might take significantly more time since more bits
 of precision are required.
 
 If the string has valid syntax for a floating-point number but the value

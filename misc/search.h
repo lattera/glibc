@@ -93,7 +93,7 @@ extern void hdestroy_r __P ((struct hsearch_data *htab));
 
 
 /* The tsearch routines are very interesting. They make many
-   assumptions about the compiler.  It assumpts that the first field
+   assumptions about the compiler.  It assumes that the first field
    in node must be the "key" field, which points to the datum.
    Everything depends on that.  */
 /* For tsearch */

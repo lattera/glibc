@@ -347,7 +347,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	}
 
-      /* Check for the assignment-suppressant and the number grouping flag.  */
+      /* Check for the assignment-suppressing and the number grouping flag.  */
       while (*f == '*' || *f == '\'')
 	switch (*f++)
 	  {

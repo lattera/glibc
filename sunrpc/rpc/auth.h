@@ -97,7 +97,7 @@ typedef struct {
 	struct auth_ops {
 		void	(*ah_nextverf)();
 		int	(*ah_marshal)();	/* nextverf & serialize */
-		int	(*ah_validate)();	/* validate varifier */
+		int	(*ah_validate)();	/* validate verifier */
 		int	(*ah_refresh)();	/* refresh credentials */
 		void	(*ah_destroy)();	/* destroy this structure */
 	} *ah_ops;

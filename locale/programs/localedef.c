@@ -112,14 +112,14 @@ main (int argc, char *argv[])
   struct localedef_t *localedef;
   struct copy_def_list_t *act_add_locdef;
 
-  /* Set initial values for global varaibles.  */
+  /* Set initial values for global variables.  */
   copy_list = NULL;
   posix_conformance = getenv ("POSIXLY_CORRECT") != NULL;
   error_print_progname = error_print;
   verbose = 0;
 
   /* Set locale.  Do not set LC_ALL because the other categories must
-     not be affected (acccording to POSIX.2).  */
+     not be affected (according to POSIX.2).  */
   setlocale (LC_MESSAGES, "");
   setlocale (LC_CTYPE, "");
 
@@ -187,7 +187,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   /* Help is requested.  */
   if (do_help)
     /* Possible violation: POSIX.2 4.35.8 defines the return value 0 as
-       "No errors occured and the locale(s) were successfully created."
+       "No errors occurred and the locale(s) were successfully created."
        But giving a other value than 0 does not make sense here.  It
        is perhaps not that important because POSIX does not specify the
        -h option for localedef.  */
@@ -424,7 +424,7 @@ error_print ()
 
 
 /* The parameter to localedef describes the output path.  If it does
-   contain a '/' character it is a relativ path.  Otherwise it names the
+   contain a '/' character it is a relative path.  Otherwise it names the
    locale this definition is for.  */
 static const char *
 construct_output_path (char *path)

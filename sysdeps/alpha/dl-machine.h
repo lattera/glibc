@@ -211,7 +211,7 @@ _dl_start_user:
 	stq	$2, 0($sp)
 	/* Load _dl_default_scope[2] into s1 to pass to _dl_init_next.  */
 0:	ldq	$10, _dl_default_scope+16
-	/* Call _dl_init_next to return the address of an initalizer
+	/* Call _dl_init_next to return the address of an initializer
 	   function to run.  */
 1:	mov	$10, $16
 	jsr	$26, _dl_init_next

@@ -130,7 +130,7 @@ $(objpfx)mach-shortcuts.h: $(objpfx)mach/mach_interface.h \
 			   $(objpfx)mach/mach_port.h
 # The first line gets us one paragraph per line, with @s separating real lines.
 # The second line selects paragraphs for the shortcutted functions.
-# The third line removes `_rpc' from the names and rerealifies the lines.
+# The third line removes `_rpc' from the names and reconstitutes the lines.
 	cat $^ | tr \\012 @ | sed s/@@/@%/g | tr % \\012 \
 	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
 	| sed 's/_rpc//g' | tr @ \\012 > $@-new

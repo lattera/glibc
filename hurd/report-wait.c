@@ -93,7 +93,7 @@ describe_port (string_t description, mach_port_t port)
 }
 
 
-/* Common defn so we don't link in the itimer code unnecssarily.  */
+/* Common defn so we don't link in the itimer code unnecessarily.  */
 thread_t _hurd_itimer_thread; /* XXX */
 
 kern_return_t

@@ -22,7 +22,7 @@ ENTRY(__ceill)
 	orl	$0x0800,%edx		/* round towards +oo */
 	andl	$0xfbff,%edx
 	movl	%edx,-8(%ebp)
-	fldcw	-8(%ebp)		/* load modfied control word */
+	fldcw	-8(%ebp)		/* load modified control word */
 
 	fldt	8(%ebp);		/* round */
 	frndint

@@ -74,26 +74,13 @@ contact <bug-glibc@prep.ai.mit.edu>
      It is planed to do a complete rewrite.
 
 
-[10] Add mmap() support to malloc().
-     Doug Lea's malloc implementation might give some ideas.  Perhaps
-     switching completly to his implementation is an option if it
-     a) can work without mmap() support (not all system GNU libc
-	is running on have mmap)
-     b) is without mmap support at least as fast as the current
-	implementation
-     c) will be extended with the current hooks and additional functions
-
-     Please contact bug-glibc@prep.ai.mit.edu before starting to avoid
-     duplicated work.
-
-
-[11] Write access function for netmasks, bootparams, and automount
+[10] Write access function for netmasks, bootparams, and automount
      databases for nss_files and nss_db module.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.
 
 
-[12] Rewrite utmp/wtmp functions to use database functions.  This is much
+[11] Rewrite utmp/wtmp functions to use database functions.  This is much
      better than the normal flat file format.
 
      Please contact bug-glibc@prep.ai.mit.edu before starting to avoid

@@ -92,9 +92,9 @@ extern size_t wcsxfrm __P ((wchar_t *__s1, __const wchar_t *__s2, size_t __n));
 /* Duplicate S, returning an identical malloc'd string.  */
 extern wchar_t *wcsdup __P ((__const wchar_t *__s));
 
-/* Find the first occurence of WC in WCS.  */
+/* Find the first occurrence of WC in WCS.  */
 extern wchar_t *wcschr __P ((__const wchar_t *__wcs, wchar_t __wc));
-/* Find the last occurence of WC in WCS.  */
+/* Find the last occurrence of WC in WCS.  */
 extern wchar_t *wcsrchr __P ((__const wchar_t *__wcs, wchar_t __wc));
 
 /* Return the length of the initial segmet of WCS which
@@ -104,10 +104,10 @@ extern size_t wcscspn __P ((__const wchar_t *__wcs,
 /* Return the length of the initial segmet of WCS which
    consists entirely of wide-characters in  ACCEPT.  */
 extern size_t wcsspn __P ((__const wchar_t *__wcs, __const wchar_t *__accept));
-/* Find the first occurence in WCS of any character in ACCEPT.  */
+/* Find the first occurrence in WCS of any character in ACCEPT.  */
 extern wchar_t *wcspbrk __P ((__const wchar_t *__wcs,
 			      __const wchar_t *__accept));
-/* Find the first occurence of NEEDLE in HAYSTACK.  */
+/* Find the first occurrence of NEEDLE in HAYSTACK.  */
 extern wchar_t *wcsstr __P ((__const wchar_t *__haystack,
 			     __const wchar_t *__needle));
 /* Divide WCS into tokens separated by characters in DELIM.  */

@@ -118,7 +118,7 @@ hdestroy_r (htab)
 }
 
 
-/* This is the search function. It uses double hashing with open adressing.
+/* This is the search function. It uses double hashing with open addressing.
    The argument item.key has to be a pointer to an zero terminated, most
    probably strings of chars. The function for generating a number of the
    strings is simple but fast. It can be replaced by a more complex function

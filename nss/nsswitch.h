@@ -107,7 +107,7 @@ int __nss_database_lookup (const char *database, const char *alternative_name,
 
 /* Put first function with name FCT_NAME for SERVICE in FCTP.  The
    position is remembered in NI.  The function returns a value < 0 if
-   an error occured or no such function exists.  */
+   an error occurred or no such function exists.  */
 int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
 
 /* Determine the next step in the lookup process according to the
@@ -115,8 +115,8 @@ int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
    `__nss_lookup' or `__nss_next'.  NI specifies the last function
    examined.  The function return a value > 0 if the process should
    stop with the last result of the last function call to be the
-   result of the entire lookup.  The returned valie is 0 if there is
-   another function to use and < 0 if an error occured.
+   result of the entire lookup.  The returned value is 0 if there is
+   another function to use and < 0 if an error occurred.
 
    If ALL_VALUES is nonzero, the return value will not be > 0 as long as
    there is a possibility the lookup process can ever use following

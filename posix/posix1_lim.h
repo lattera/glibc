@@ -74,7 +74,7 @@
 /* Maximum number of connections that can be queued on a socket.  */
 #define	_POSIX_QLIMIT		1
 
-/* Maximem number of bytes that can be buffered on a socket for send
+/* Maximum number of bytes that can be buffered on a socket for send
    or receive.  */
 #define	_POSIX_HIWAT		_POSIX_PIPE_BUF
 

@@ -43,7 +43,7 @@ __BEGIN_DECLS
 /* Data structure describing a set of semaphores.  */
 struct shmid_ds
 {
-  struct ipc_perm shm_perm;		/* operation permisson struct */
+  struct ipc_perm shm_perm;		/* operation permission struct */
   int shm_segsz;			/* size of segment in bytes */
   __time_t shm_atime;			/* time of last shmat() */
   __time_t shm_dtime;			/* time of last shmdt() */

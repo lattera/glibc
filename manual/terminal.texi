@@ -18,9 +18,9 @@ descriptor is and how to open a file descriptor for a terminal device.
 * Canonical or Not::            Two basic styles of input processing.
 * Terminal Modes::              How to examine and modify flags controlling
 			         details of terminal I/O: echoing,
-                                 signals, editing. 
+                                 signals, editing.
 * Line Control::                Sending break sequences, clearing
-                                 terminal buffers @dots{} 
+                                 terminal buffers @dots{}
 * Noncanon Example::            How to read single characters without echo.
 @end menu
 
@@ -149,9 +149,9 @@ constants are all declared in the header file @file{termios.h}.
 
 @menu
 * Mode Data Types::             The data type @code{struct termios} and
-                                 related types. 
+                                 related types.
 * Mode Functions::              Functions to read and set the terminal
-                                 attributes. 
+                                 attributes.
 * Setting Modes::               The right way to set terminal attributes
                                  reliably.
 * Input Modes::                 Flags controlling low-level input handling.
@@ -486,7 +486,7 @@ signal for the foreground process group associated with the terminal.
 
 If neither @code{BRKINT} nor @code{IGNBRK} are set, a break condition is
 passed to the application as a single @code{'\0'} character if
-@code{PARMRK} is not set, or otherwise as a three-character sequence 
+@code{PARMRK} is not set, or otherwise as a three-character sequence
 @code{'\377'}, @code{'\0'}, @code{'\0'}.
 @end deftypevr
 
@@ -906,7 +906,7 @@ attempt to write to the terminal.  @xref{Access to the Terminal}.
 
 The following bits are BSD extensions; they exist only in BSD systems
 and the GNU system.
-     
+
 @comment termios.h
 @comment BSD
 @deftypevr Macro tcflag_t ALTWERASE
@@ -1431,7 +1431,7 @@ itself.
 The LNEXT character is recognized only when @code{IEXTEN} is set, but in
 both canonical and noncanonical mode.  It disables any special
 significance of the next character the user types.  Even if the
-character would normally perform some editting function or generate a
+character would normally perform some editing function or generate a
 signal, it is read as a plain character.  This is the analogue of the
 @kbd{C-q} command in Emacs.  ``LNEXT'' stands for ``literal next.''
 
@@ -1532,7 +1532,7 @@ TIME elapses with no further input.
 TIME elapses first.  @code{read} can return more than MIN characters if
 more than MIN happen to be in the queue.
 
-@item 
+@item
 Both MIN and TIME are zero.
 
 In this case, @code{read} always returns immediately with as many

@@ -143,7 +143,7 @@ error_t file_name_path_scan (const char *file_name, const char *path,
 
 /* Lookup FILE_NAME and return the node opened with FLAGS & MODE in result
    (see hurd_file_name_lookup for details), but a simple filename (without
-   any directory prefixes) will be consectutively prefixed with the pathnames
+   any directory prefixes) will be consecutively prefixed with the pathnames
    in the `:' separated list PATH until one succeeds in a successful lookup.
    If none succeed, then the first error that wasn't ENOENT is returned, or
    ENOENT if no other errors were returned.  If PREFIXED_NAME is non-NULL,

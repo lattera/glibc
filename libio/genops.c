@@ -635,7 +635,7 @@ DEFUN_VOID(_IO_cleanup)
 
   /* We currently don't have a reliable mechanism for making sure that
      C++ static destructors are executed in the correct order.
-     So it is possible that other static destructord might want to
+     So it is possible that other static destructors might want to
      write to cout - and they're supposed to be able to do so.
 
      The following will make the standard streambufs be unbuffered,
@@ -691,7 +691,7 @@ DEFUN(_IO_marker_difference, (mark1, mark2),
   return mark1->_pos - mark2->_pos;
 }
 
-/* Return difference between MARK and current posistion of MARK's stream. */
+/* Return difference between MARK and current position of MARK's stream. */
 int
 DEFUN(_IO_marker_delta, (mark),
       struct _IO_marker *mark)

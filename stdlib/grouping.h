@@ -111,7 +111,7 @@ correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
 
 	  /* The trailing portion of the string starting at NEW_END
 	     contains a grouping error.  So we will look for a correctly
-	     gouped number in the preceding portion instead.  */
+	     grouped number in the preceding portion instead.  */
 	  end = new_end;
 	}
       else
@@ -123,7 +123,7 @@ correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
 	    /* This number does not fill the first group, but is correct.  */
 	    return end;
 	  else
-	    /* CP points to a thousands seperator character.  */
+	    /* CP points to a thousands separator character.  */
 	    end = cp;
 	}
     }

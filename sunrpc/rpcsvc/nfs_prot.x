@@ -7,23 +7,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -99,7 +99,7 @@ struct nfs_fh {
 	opaque data[NFS_FHSIZE];
 };
 
-/* 
+/*
  * Timeval
  */
 struct nfstime {
@@ -118,7 +118,7 @@ struct fattr {
 	unsigned uid;		/* owner user id */
 	unsigned gid;		/* owner group id */
 	unsigned size;		/* file size in bytes */
-	unsigned blocksize;	/* prefered block size */
+	unsigned blocksize;	/* preferred block size */
 	unsigned rdev;		/* special device # */
 	unsigned blocks;	/* Kb of disk used by file */
 	unsigned fsid;		/* device # */
@@ -141,7 +141,7 @@ struct sattr {
 };
 
 
-typedef string filename<NFS_MAXNAMLEN>; 
+typedef string filename<NFS_MAXNAMLEN>;
 typedef string nfspath<NFS_MAXPATHLEN>;
 
 /*
@@ -215,7 +215,7 @@ default:
 };
 
 /*
- * Arguments to remote write 
+ * Arguments to remote write
  */
 struct writeargs {
 	nfs_fh	file;		/* handle for file */
@@ -297,28 +297,28 @@ default:
  */
 program NFS_PROGRAM {
 	version NFS_VERSION {
-		void 
+		void
 		NFSPROC_NULL(void) = 0;
 
-		attrstat 
+		attrstat
 		NFSPROC_GETATTR(nfs_fh) =	1;
 
-		attrstat 
+		attrstat
 		NFSPROC_SETATTR(sattrargs) = 2;
 
-		void 
+		void
 		NFSPROC_ROOT(void) = 3;
 
-		diropres 
+		diropres
 		NFSPROC_LOOKUP(diropargs) = 4;
 
-		readlinkres 
+		readlinkres
 		NFSPROC_READLINK(nfs_fh) = 5;
 
-		readres 
+		readres
 		NFSPROC_READ(readargs) = 6;
 
-		void 
+		void
 		NFSPROC_WRITECACHE(void) = 7;
 
 		attrstat
@@ -352,4 +352,3 @@ program NFS_PROGRAM {
 		NFSPROC_STATFS(nfs_fh) = 17;
 	} = 2;
 } = 100003;
-

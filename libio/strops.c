@@ -28,7 +28,7 @@ the executable file might be covered by the GNU General Public License. */
 
 #if 0
 /* The following definitions are for exposition only.
-   They map the terminlogy used in the ANSI/ISO C++ draft standard
+   They map the terminology used in the ANSI/ISO C++ draft standard
    to the implementation. */
 
 /* allocated:  set  when a dynamic array object has been allocated, and

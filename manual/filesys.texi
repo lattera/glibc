@@ -338,15 +338,15 @@ value.  Use @code{readdir_r} when this is critical.
 @deftypefun int readdir_r (DIR *@var{dirstream}, struct *@var{entry}, struct **@var{result})
 This function is the reentrant version of @code{reentrant}.  Like
 @code{readdir} it returns the next entry from the directory.  But to
-prevent conflicts for simultanously running threads the result is not
+prevent conflicts for simultaneously running threads the result is not
 stored in some internal memory.  Instead the argument @var{entry} has to
 point to a place where the result is stored.
 
 The return value is @code{0} in case the next entry was read
 successfully.  In this case a pointer to the result is returned in
 *@var{result}.  It is not required that *@var{result} is the same as
-@var{entry}.  If somethings goes wrong while exeucting @code{readdir_r}
-the function return @code{-1}.  The @code{errno} variable is set like
+@var{entry}.  If something goes wrong while executing @code{readdir_r}
+the function returns @code{-1}.  The @code{errno} variable is set like
 described for @code{readdir}.
 
 @strong{Portability Note:} On some systems, @code{readdir_r} may not

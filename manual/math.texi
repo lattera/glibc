@@ -165,7 +165,7 @@ either positive or negative @code{HUGE_VAL}.
 
 @node Inverse Trig Functions
 @section Inverse Trigonometric Functions
-@cindex inverse trigonmetric functions
+@cindex inverse trigonometric functions
 
 These are the usual arc sine, arc cosine and arc tangent functions,
 which are the inverses of the sine, cosine and tangent functions,

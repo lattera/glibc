@@ -49,7 +49,7 @@ extern error_t envz_add __P ((char **__envz, size_t *__envz_len,
 			      __const char *__name, __const char *__value));
 
 /* Adds each entry in ENVZ2 to ENVZ & ENVZ_LEN, as if with envz_add().  If
-   OVERRIDE is true, then values in ENVZ2 will supercede those with the same
+   OVERRIDE is true, then values in ENVZ2 will supersede those with the same
    name in ENV, otherwise not.  */
 extern error_t envz_merge __P ((char **__envz, size_t *__envz_len,
 				__const char *__envz2, size_t __envz2_len,
