@@ -1,3 +1,9 @@
+2002-11-10  Roland McGrath  <roland@redhat.com>
+
+	* config.make.in (includedir): New variable, substituted by configure.
+	Reported missing by Jocelyn Fournier <joc@presence-pc.com>.
+	* Makeconfig (includedir): Use $(prefix), not $(exec_prefix).
+
 2002-11-10  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/ucontext.h (enum): Add
