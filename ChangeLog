@@ -1,5 +1,9 @@
 2000-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/job.texi: Fix typos.
+	* manual/process.texi: Likewise.
+	* manual/signal.texi: Likewise.
+
 	* sysdeps/powerpc/atomicity.h: Remove white space to avoid
 	compiler warning.
 

@@ -543,7 +543,7 @@ In fact, if @code{SIGKILL} fails to terminate a process, that by itself
 constitutes an operating system bug which you should report.
 
 The system will generate @code{SIGKILL} for a process itself under some
-unusual conditions where the program cannot possible continue to run
+unusual conditions where the program cannot possibly continue to run
 (even to run a signal handler).
 @end deftypevr
 @cindex kill signal
@@ -1856,7 +1856,7 @@ blocks signals around each use, then you are safe.
 
 There are a large number of library functions that return values in a
 fixed object, always reusing the same object in this fashion, and all of
-them cause the same problem.  Function descriptions in this manual 
+them cause the same problem.  Function descriptions in this manual
 always mention this behavior.
 
 @item
@@ -2031,8 +2031,8 @@ atomically.
 
 In practice, you can assume that @code{int} and other integer types no
 longer than @code{int} are atomic.  You can also assume that pointer
-types are atomic; that is very convenient.  Both of these assumptions 
-are true on all of the machines that the GNU C library supports and on 
+types are atomic; that is very convenient.  Both of these assumptions
+are true on all of the machines that the GNU C library supports and on
 all POSIX systems we know of.
 @c ??? This might fail on a 386 that uses 64-bit pointers.
 
@@ -3011,7 +3011,7 @@ to terminate the process or invoke a signal handling function.  In other
 words, the program is effectively suspended until one of the signals that
 is not a member of @var{set} arrives.
 
-If the process is woken up by deliver of a signal that invokes a handler
+If the process is woken up by delivery of a signal that invokes a handler
 function, and the handler function returns, then @code{sigsuspend} also
 returns.
 

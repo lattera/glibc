@@ -675,8 +675,8 @@ stop together.
 
 The foreground job may have left the terminal in a strange state, so the
 shell should restore its own saved terminal modes before continuing.  In
-case the job is merely been stopped, the shell should first save the
-current terminal modes so that it can restore them later if the job is
+case the job is merely stopped, the shell should first save the current
+terminal modes so that it can restore them later if the job is
 continued.  The functions for dealing with terminal modes are
 @code{tcgetattr} and @code{tcsetattr}; these are described in
 @ref{Terminal Modes}.
