@@ -1,5 +1,9 @@
 Tue Jul  2 10:44:37 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* rpm/template (%build): Use @prefix@ instead of always /usr.
+	Set up configparms only if @prefix@ is in fact /usr.
+	* rpm/Makefile ($(config)): Substitute $(prefix) for @prefix@.
+
 	* elf/Makefile: Add missing endif.
 
 	* nss/nss_files/files-ethers.c (ntohost): Fix db key.

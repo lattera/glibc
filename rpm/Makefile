@@ -64,7 +64,9 @@ instvars = include lib bin sbin data others
 # Generate the rpm spec file for this configuration.
 $(config): template $(distinfo) Makefile
 	rm -f $@.new
-	(sed -e 's%@VERSION@%$(version)%g' $<; \
+	(sed -e 's%@VERSION@%$(version)%g' \
+	     -e 's%@prefix@%$(prefix)%g' \
+	     $<; \
 	 ($(foreach var,$(instvars),\
 	  list='$(install-$(var))'; \
 	  for f in $$list; do \

@@ -10,11 +10,13 @@ Source: glibc-@VERSION@.tar.gz
 %setup
 
 %build
-configure --prefix=/usr
-cat >configparms <<EOF
+configure --prefix=@prefix@
+if test x@prefix@ = /usr; then
+  cat >configparms <<EOF
 slibdir=/lib
 sysconfdir=/etc
 EOF
+fi
 make
 
 %install
