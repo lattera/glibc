@@ -20,8 +20,20 @@
 #ifndef _LOADINFO_H
 #define _LOADINFO_H	1
 
+/* Declarations of locale dependent catalog lookup functions.
+   Implemented in
+
+     localealias.c    Possibly replace a locale name by another.
+     explodename.c    Split a locale name into its various fields.
+     l10nflist.c      Generate a list of filenames of possible message catalogs.
+     finddomain.c     Find and open the relevant message catalogs.
+
+   The main function _nl_find_domain() in finddomain.c is declared
+   in gettextP.h.
+ */
+
 #ifndef PARAMS
-# if __STDC__
+# if __STDC__ || defined __GNUC__ || defined __SUNPRO_C || defined __cplusplus || __PROTOTYPES
 #  define PARAMS(args) args
 # else
 #  define PARAMS(args) ()

@@ -47,8 +47,8 @@
 # define NGETTEXT __ngettext
 # define DCNGETTEXT __dcngettext
 #else
-# define NGETTEXT ngettext__
-# define DCNGETTEXT dcngettext__
+# define NGETTEXT libintl_ngettext
+# define DCNGETTEXT libintl_dcngettext
 #endif
 
 /* Look up MSGID in the current default message catalog for the current

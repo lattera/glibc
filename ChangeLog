@@ -1,3 +1,52 @@
+2002-12-11  Bruno Haible  <bruno@clisp.org>
+
+	* intl/gettext.h: Renamed to ...
+	* intl/gmo.h: ... here.
+	* intl/Makefile (distribute): Add gmo.h, remove gettext.h.
+	* intl/gettextP.h: Update.
+	* intl/loadmsgcat.c: Update.
+
+	* intl/gettextP.h (PARAMS): Make more portable.
+	(attribute_hidden): Define as empty macro if not already defined.
+	* intl/hash-string.h (PARAMS): Make more portable.
+	* intl/loadinfo.h (PARAMS): Likewise.
+	* intl/plural-exp.h (PARAMS): Likewise.
+	(attribute_hidden): Move definition near the definition of
+	internal_function.
+
+	* intl/gettextP.h (_nl_locale_name) [!_LIBC]: New declaration.
+	* intl/plural-exp.h (plural_eval) [!_LIBC]: New declaration.
+
+2002-07-13  Bruno Haible  <bruno@clisp.org>
+
+	* intl/dcigettext.c (freea): New macro.
+	(FREE_BLOCKS): Free also the registered blocks.
+	(DCIGETTEXT): Free the 'search' variable.
+	Reported by Andreas Fischer <a.fischer@asentics.de>.
+
+2002-04-27  Bruno Haible  <bruno@clisp.org>
+
+	* intl/gettextP.h [! _LIBC]: Use prefix libintl_ instead of suffix __.
+	* intl/dcigettext.c: Likewise.
+	* intl/dcgettext.c: Likewise.
+	* intl/dgettext.c: Likewise.
+	* intl/gettext.c: Likewise.
+	* intl/dcngettext.c: Likewise.
+	* intl/dngettext.c: Likewise.
+	* intl/ngettext.c: Likewise.
+	* intl/textdomain.c: Likewise.
+	* intl/bindtextdom.c: Likewise.
+	* intl/plural-exp.h: Likewise.
+
+2002-01-02  Bruno Haible  <bruno@clisp.org>
+
+	* intl/loadmsgcat.c (_nl_init_domain_conv): Use PARAMS in extern decl.
+
+2001-04-30  Bruno Haible  <bruno@clisp.org>
+
+	* intl/dcigettext.c (getuid, getgid, geteuid, getegid): Provide
+	default macro definitions.  Needed for mingw32.
+
 2002-12-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/bits/byteswap.h (__bswap_64): Apply

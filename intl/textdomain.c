@@ -45,8 +45,8 @@
    names than the internal variables in GNU libc, otherwise programs
    using libintl.a cannot be linked statically.  */
 #if !defined _LIBC
-# define _nl_default_default_domain _nl_default_default_domain__
-# define _nl_current_default_domain _nl_current_default_domain__
+# define _nl_default_default_domain libintl_nl_default_default_domain
+# define _nl_current_default_domain libintl_nl_current_default_domain
 #endif
 
 /* @@ end of prolog @@ */
@@ -68,7 +68,7 @@ extern const char *_nl_current_default_domain attribute_hidden;
 #  define strdup(str) __strdup (str)
 # endif
 #else
-# define TEXTDOMAIN textdomain__
+# define TEXTDOMAIN libintl_textdomain
 #endif
 
 /* Lock variable to protect the global data in the gettext implementation.  */

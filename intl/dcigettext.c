@@ -103,10 +103,10 @@ extern int errno;
    names than the internal variables in GNU libc, otherwise programs
    using libintl.a cannot be linked statically.  */
 #if !defined _LIBC
-# define _nl_default_default_domain _nl_default_default_domain__
-# define _nl_current_default_domain _nl_current_default_domain__
-# define _nl_default_dirname _nl_default_dirname__
-# define _nl_domain_bindings _nl_domain_bindings__
+# define _nl_default_default_domain libintl_nl_default_default_domain
+# define _nl_current_default_domain libintl_nl_current_default_domain
+# define _nl_default_dirname libintl_nl_default_dirname
+# define _nl_domain_bindings libintl_nl_domain_bindings
 #endif
 
 /* Some compilers, like SunOS4 cc, don't have offsetof in <stddef.h>.  */
@@ -280,6 +280,7 @@ static const char *category_to_name PARAMS ((int category)) internal_function;
    some additional code emulating it.  */
 #ifdef HAVE_ALLOCA
 /* Nothing has to be done.  */
+# define freea(p) /* nothing */
 # define ADD_BLOCK(list, address) /* nothing */
 # define FREE_BLOCKS(list) /* nothing */
 #else
@@ -304,11 +305,13 @@ struct block_list
     while (list != NULL) {						      \
       struct block_list *old = list;					      \
       list = list->next;						      \
+      free (old->address);						      \
       free (old);							      \
     }									      \
   } while (0)
 # undef alloca
 # define alloca(size) (malloc (size))
+# define freea(p) free (p)
 #endif	/* have alloca */
 
 
@@ -332,7 +335,7 @@ typedef unsigned char transmem_block_t;
 #ifdef _LIBC
 # define DCIGETTEXT __dcigettext
 #else
-# define DCIGETTEXT dcigettext__
+# define DCIGETTEXT libintl_dcigettext
 #endif
 
 /* Lock variable to protect the global data in the gettext implementation.  */
@@ -346,6 +349,18 @@ __libc_rwlock_define_initialized (, _nl_state_lock attribute_hidden)
 # define ENABLE_SECURE __libc_enable_secure
 # define DETERMINE_SECURE
 #else
+# ifndef HAVE_GETUID
+#  define getuid() 0
+# endif
+# ifndef HAVE_GETGID
+#  define getgid() 0
+# endif
+# ifndef HAVE_GETEUID
+#  define geteuid() getuid()
+# endif
+# ifndef HAVE_GETEGID
+#  define getegid() getgid()
+# endif
 static int enable_secure;
 # define ENABLE_SECURE (enable_secure == 1)
 # define DETERMINE_SECURE \
@@ -425,6 +440,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   search->category = category;
 
   foundp = (struct known_translation_t **) tfind (search, &root, transcmp);
+  freea (search);
   if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
     {
       /* Now deal with plural.  */

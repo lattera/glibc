@@ -80,7 +80,7 @@ char *alloca ();
 # include <inttypes.h>
 #endif
 
-#include "gettext.h"
+#include "gmo.h"
 #include "gettextP.h"
 #include "hash-string.h"
 #include "plural-exp.h"
@@ -808,7 +808,7 @@ _nl_init_domain_conv (domain_file, domain, domainbinding)
 		  outcharset = _NL_CURRENT (LC_CTYPE, CODESET);
 # else
 #  if HAVE_ICONV
-		  extern const char *locale_charset (void);
+		  extern const char *locale_charset PARAMS ((void));
 		  outcharset = locale_charset ();
 #  endif
 # endif

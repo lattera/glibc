@@ -33,12 +33,12 @@
 
 #include "loadinfo.h"
 
-#include "gettext.h"		/* Get nls_uint32.  */
+#include "gmo.h"		/* Get nls_uint32.  */
 
 /* @@ end of prolog @@ */
 
 #ifndef PARAMS
-# if __STDC__
+# if __STDC__ || defined __GNUC__ || defined __SUNPRO_C || defined __cplusplus || __PROTOTYPES
 #  define PARAMS(args) args
 # else
 #  define PARAMS(args) ()
@@ -47,6 +47,10 @@
 
 #ifndef internal_function
 # define internal_function
+#endif
+
+#ifndef attribute_hidden
+# define attribute_hidden
 #endif
 
 /* Tell the compiler when a conditional or integer expression is
@@ -157,6 +161,10 @@ struct binding
    This variable is part of the external ABI of the GNU libintl.  */
 extern int _nl_msg_cat_cntr;
 
+#ifndef _LIBC
+const char *_nl_locale_name PARAMS ((int category, const char *categoryname));
+#endif
+
 struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
 						 char *__locale,
 						 const char *__domainname,
@@ -203,28 +211,33 @@ extern char *__bindtextdomain PARAMS ((const char *__domainname,
 extern char *__bind_textdomain_codeset PARAMS ((const char *__domainname,
 						const char *__codeset));
 #else
-extern char *gettext__ PARAMS ((const char *__msgid));
-extern char *dgettext__ PARAMS ((const char *__domainname,
-				 const char *__msgid));
-extern char *dcgettext__ PARAMS ((const char *__domainname,
-				  const char *__msgid, int __category));
-extern char *ngettext__ PARAMS ((const char *__msgid1, const char *__msgid2,
-				 unsigned long int __n));
-extern char *dngettext__ PARAMS ((const char *__domainname,
-				  const char *__msgid1, const char *__msgid2,
-				  unsigned long int __n));
-extern char *dcngettext__ PARAMS ((const char *__domainname,
-				   const char *__msgid1, const char *__msgid2,
-				   unsigned long int __n, int __category));
-extern char *dcigettext__ PARAMS ((const char *__domainname,
-				   const char *__msgid1, const char *__msgid2,
-				   int __plural, unsigned long int __n,
-				   int __category));
-extern char *textdomain__ PARAMS ((const char *__domainname));
-extern char *bindtextdomain__ PARAMS ((const char *__domainname,
-				       const char *__dirname));
-extern char *bind_textdomain_codeset__ PARAMS ((const char *__domainname,
-						const char *__codeset));
+extern char *libintl_gettext PARAMS ((const char *__msgid));
+extern char *libintl_dgettext PARAMS ((const char *__domainname,
+				       const char *__msgid));
+extern char *libintl_dcgettext PARAMS ((const char *__domainname,
+					const char *__msgid, int __category));
+extern char *libintl_ngettext PARAMS ((const char *__msgid1,
+				       const char *__msgid2,
+				       unsigned long int __n));
+extern char *libintl_dngettext PARAMS ((const char *__domainname,
+					const char *__msgid1,
+					const char *__msgid2,
+					unsigned long int __n));
+extern char *libintl_dcngettext PARAMS ((const char *__domainname,
+					 const char *__msgid1,
+					 const char *__msgid2,
+					 unsigned long int __n,
+					 int __category));
+extern char *libintl_dcigettext PARAMS ((const char *__domainname,
+					 const char *__msgid1,
+					 const char *__msgid2,
+					 int __plural, unsigned long int __n,
+					 int __category));
+extern char *libintl_textdomain PARAMS ((const char *__domainname));
+extern char *libintl_bindtextdomain PARAMS ((const char *__domainname,
+					     const char *__dirname));
+extern char *libintl_bind_textdomain_codeset PARAMS ((const char *__domainname,
+						      const char *__codeset));
 #endif
 
 /* @@ begin of epilog @@ */

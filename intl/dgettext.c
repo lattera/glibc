@@ -40,8 +40,8 @@
 # define DGETTEXT __dgettext
 # define DCGETTEXT INTUSE(__dcgettext)
 #else
-# define DGETTEXT dgettext__
-# define DCGETTEXT dcgettext__
+# define DGETTEXT libintl_dgettext
+# define DCGETTEXT libintl_dcgettext
 #endif
 
 /* Look up MSGID in the DOMAINNAME message catalog of the current

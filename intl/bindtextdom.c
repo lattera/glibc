@@ -46,8 +46,8 @@
    names than the internal variables in GNU libc, otherwise programs
    using libintl.a cannot be linked statically.  */
 #if !defined _LIBC
-# define _nl_default_dirname _nl_default_dirname__
-# define _nl_domain_bindings _nl_domain_bindings__
+# define _nl_default_dirname libintl_nl_default_dirname
+# define _nl_domain_bindings libintl_nl_domain_bindings
 #endif
 
 /* Some compilers, like SunOS4 cc, don't have offsetof in <stddef.h>.  */
@@ -83,8 +83,8 @@ __libc_rwlock_define (extern, _nl_state_lock attribute_hidden)
 #  define strdup(str) __strdup (str)
 # endif
 #else
-# define BINDTEXTDOMAIN bindtextdomain__
-# define BIND_TEXTDOMAIN_CODESET bind_textdomain_codeset__
+# define BINDTEXTDOMAIN libintl_bindtextdomain
+# define BIND_TEXTDOMAIN_CODESET libintl_bind_textdomain_codeset
 #endif
 
 /* Prototypes for local functions.  */

@@ -38,8 +38,8 @@
 # define DCGETTEXT __dcgettext
 # define DCIGETTEXT __dcigettext
 #else
-# define DCGETTEXT dcgettext__
-# define DCIGETTEXT dcigettext__
+# define DCGETTEXT libintl_dcgettext
+# define DCIGETTEXT libintl_dcigettext
 #endif
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY

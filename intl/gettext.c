@@ -45,8 +45,8 @@
 # define GETTEXT __gettext
 # define DCGETTEXT INTUSE(__dcgettext)
 #else
-# define GETTEXT gettext__
-# define DCGETTEXT dcgettext__
+# define GETTEXT libintl_gettext
+# define DCGETTEXT libintl_dcgettext
 #endif
 
 /* Look up MSGID in the current default message catalog for the current
