@@ -2,6 +2,10 @@
 
 	* iconvdata/Makefile (tests): Fix typo in last patch.
 
+	* intl/Makefile (tests): Run mtrace-tst-gettext only when perl is
+	available.
+	Reported by Achim Gottinger <achim@gentoo.org>.
+
 2001-02-25  Andreas Jaeger  <aj@suse.de>
 
 	* intl/Makefile (plural.c): Reorder rules so that they work if

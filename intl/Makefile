@@ -53,9 +53,11 @@ include ../Rules
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-ifneq ($(strip $(MSGFMT)),:)
-tests: $(objpfx)mtrace-tst-gettext $(objpfx)tst-translit.out \
-       $(objpfx)tst-gettext2.out
+fneq ($(strip $(MSGFMT)),:)
+tests: $(objpfx)tst-translit.out $(objpfx)tst-gettext2.out
+ifneq (no,$(PERL))
+tests: $(objpfx)mtrace-tst-gettext
+endif
 $(objpfx)mtrace-tst-gettext: $(objpfx)tst-gettext.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@
 $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
