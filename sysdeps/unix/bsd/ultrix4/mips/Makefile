@@ -1,3 +1,3 @@
 ifeq ($(subdir),signal)
-sysdep_routines := $(sysdep_routines) sigtramp __handler
+sysdep_routines := $(sysdep_routines) __handler
 endif
