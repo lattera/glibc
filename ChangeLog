@@ -1,6 +1,79 @@
+Wed Dec 11 01:04:30 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Add NIS NSS implementation.
+	* shlib-versions: Add versions for NIS libraries.
+	* sysdeps/unix/inet/Subdirs: Add nis.
+	* nis/Banner: New file.
+	* nis/Makefile: New file.
+	* nis/nss-nis.h: New file.
+	* nis/yp_xdr.h: New file.
+	* nis/ypclnt.h: New file.
+	* nis/ypupdate_xdr.c: New file.
+	* nis/nss_compat/compat-grp.c: New file.
+	* nis/nss_compat/compat-pwd.c: New file.
+	* nis/nss_compat/compat-spwd.c: New file.
+	* nis/nss_nis/nis-alias.c: New file.
+	* nis/nss_nis/nis-ethers.c: New file.
+	* nis/nss_nis/nis-grp.c: New file.
+	* nis/nss_nis/nis-hosts.c: New file.
+	* nis/nss_nis/nis-netgrp.c: New file.
+	* nis/nss_nis/nis-network.c: New file.
+	* nis/nss_nis/nis-proto.c: New file.
+	* nis/nss_nis/nis-publickey.c: New file.
+	* nis/nss_nis/nis-pwd.c: New file.
+	* nis/nss_nis/nis-rpc.c: New file.
+	* nis/nss_nis/nis-service.c: New file.
+	* nis/nss_nis/nis-spwd.c: New file.
+	* nis/rpcsvc/yp.h: New file.
+	* nis/rpcsvc/yp.x: New file.
+	* nis/rpcsvc/yp_prot.h: New file.
+	* nis/rpcsvc/ypclnt.h: New file.
+	* nis/rpcsvc/ypupd.h: New file.
+
+	* libio/_G_config.h: Define _G_HAVE_SYS_WAIT and _G_HAVE_PRINTF_FP.
+
+	* locale/C-numeric.c: Update copyright.
+
+	* locale/Makefile: Add rules to build libBrokenLocale.
+	* locale/broken_cur_max.c: New file.
+	* locale/mb_cur_max.c: Update copyright.
+	(__ctype_get_mb_cur_max): Make function weak.
+
+	* new-malloc/malloc.c: Correct copyright.
+	* new-malloc/thread-m.h: Correct key handling.
+
+	* shadow/lckpwdf.c: Update copyright.
+	(PWD_LOCKFILE): Change to /etc/.pwd.lock.
+
+	* stdlib/strtod.c: Add another assertion.
+	* stdlib/tst-strtod.c: Add another test case.
+
+	* sysdeps/generic/paths.h: Add _PATH_PRESERVE.  Needed by nvi.
+	* sysdeps/unix/sysv/linux/paths.h: Likewise.
+
+	* sysdeps/gnu/utmpbits.h: Rename ut_addr field to ut_addr_v6.
+	ut_addr names a single element in ut_addr_v6.
+
+	* sysdeps/mach/hurd/xmknod.c: Remove alias from __mknod to mknod.
+	Patch by Thomas Bushnell, n/BSG.
+
+Tue Dec 10 11:35:28 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/strncmp.S: Fix aligned short truncated compare
+	corner condition.
+
+	* sysdeps/alpha/memchr.S: Don't read ahead, even if the load
+	did fit nicely into that delay slot (patch from David Mosberger-Tang).
+
+Mon Dec  9 23:53:43 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Renamed from
+	`ttyname_r'.
+	(ttyname_r): New alias.
+
 Tue Dec 10 02:17:31 1996  Ulrich Drepper  <drepper@cygnus.com>
 
-	* stdio-common/printf_fp.c (__guess_grouping): Fix of by one
+	* stdio-common/printf_fp.c (__guess_grouping): Fix off by one
 	error in computation of number of groups.
 	Patch sent by Harald Schreiber <Harald.Schreiber@post.rwth-aachen.de>.
 

@@ -40,6 +40,11 @@ install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
 		  $(lib-modules:=.o)
 
+extra-libs	= libBrokenLocale
+extra-libs-others = $(extra-libs)
+
+libBrokenLocale-routines = broken_cur_max
+
 subdir-dirs	= programs
 vpath %.c programs
 vpath %.h programs
@@ -74,3 +79,8 @@ CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 
 CFLAGS-charmap.c = -Wno-write-strings
 CFLAGS-locfile.c = -Wno-write-strings
+
+# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
+# This ensures they will load libc.so for needed symbols if loaded by
+# a statically-linked program that hasn't already loaded it.
+$(objpfx)libBrokenLocale.so: $(common-objpfx)libc.so

@@ -1,7 +1,8 @@
 /* Malloc implementation for multiple threads without lock contention.
    Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>, 1996.
+   Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>
+   and Doug Lea <dl@cs.oswego.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as

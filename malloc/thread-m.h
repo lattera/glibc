@@ -19,7 +19,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* One out of _LIBC, USE_PTHREADS, USE_THR, or USE_SPROC should be
+/* One out of _LIBC, USE_PTHREADS, USE_THR or USE_SPROC should be
    defined, otherwise the token NO_THREADS and dummy implementations
    of the macros will be defined.  */
 
@@ -42,12 +42,19 @@ typedef pthread_key_t tsd_key_t;
 
 #define MUTEX_INITIALIZER	PTHREAD_MUTEX_INITIALIZER
 
-#define tsd_key_create(key, destr)	\
-  if (__pthread_key_create != NULL) { __pthread_key_create(key, destr); }
-#define tsd_setspecific(key, data)	\
-  if (__pthread_setspecific != NULL) { __pthread_setspecific(key, data); }
-#define tsd_getspecific(key, vptr)	\
-  (vptr = (__pthread_getspecific != NULL ? __pthread_getspecific(key) : NULL))
+static Void_t *malloc_key_data;
+
+#define tsd_key_create(key, destr) \
+  if (__pthread_key_create != NULL) {					      \
+    __pthread_key_create(key, destr);					      \
+  } else { *(key) = (tsd_key_t) 0; }
+#define tsd_setspecific(key, data) \
+  if (__pthread_setspecific != NULL) {					      \
+    __pthread_setspecific(key, data);					      \
+  } else { malloc_key_data = (Void_t *) data; }
+#define tsd_getspecific(key, vptr) \
+  (vptr = (__pthread_getspecific != NULL				      \
+	   ? __pthread_getspecific(key) : malloc_key_data))
 
 #define mutex_init(m)		\
    (__pthread_mutex_init != NULL ? __pthread_mutex_init (m, NULL) : 0)

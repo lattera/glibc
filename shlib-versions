@@ -49,9 +49,17 @@ i.86-.*-linux.*		ld=ld-linux.so.2
 .*-.*-.*		libnss_files=1
 .*-.*-.*		libnss_dns=1
 .*-.*-.*		libnss_db=1
+.*-.*-.*		libnss_compat=1
+.*-.*-.*		libnss_nis=1
+
+# Version for libnsl with YP functions.
+.*-.*-.*		libnsl=1
 
 # We use libdb.so.2 for the interface in version 1.85 of the Berkeley DB code.
 .*-.*-.*		libdb=2
 
 # This defines the shared library version numbers we will install.
 .*-.*-.*		libcrypt=1
+
+# The gross patch for programs assuming broken locale implemenations.
+.*-.*-.*		libBrokenLocale=1

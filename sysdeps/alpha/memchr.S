@@ -1,22 +1,21 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
-This file is part of the GNU C Library.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
-
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Finds characters in a memory area.  Optimized for the Alpha
 architecture:
@@ -53,7 +52,6 @@ ENTRY(memchr)
         ldq_u   t0, 0(a0)       # load first quadword (a0 may be misaligned)
 	addq	a0, a2, t4
 	and	a1, 0xff, a1	# a1 = 00000000000000ch
-	ldq_u	t5, -1(t4)
 	sll	a1,  8, t1	# t1 = 000000000000ch00
 	cmpult	a2, 9, t3
 	or	t1, a1, a1	# a1 = 000000000000chch
@@ -66,6 +64,7 @@ ENTRY(memchr)
 
 	beq	t3, $first_quad
 
+	ldq_u	t5, -1(t4)
 	extqh	t5, a0, t5
 	mov	a0, v0
 	or	t6, t5, t0	# t0 = quadword starting at a0

@@ -406,7 +406,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   if (mbtowc ((wchar_t *) &decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
 	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
     decimal = (wint_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
-
+  assert (decimal != L'\0');
 
   /* Prepare number representation.  */
   exponent = 0;

@@ -90,13 +90,15 @@ struct utmp
 				   as DEAD_PROCESS.  */
   long ut_session;		/* Session ID, used for windowing.  */
   struct timeval ut_tv;		/* Time entry was made.  */
-  int32_t ut_addr[4];		/* Internet address of remote host.  */
+  int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
   enum utlogin ut_login;	/* To store information about source.  */
   short int ut_syslen;		/* Significant length of ut_host.  */
   char pad[14];			/* Reserved for future use.  */
 };
 
-#define ut_time	ut_tv.tv_sec	/* Backwards compatibility.  */
+/* Backwards compatibility hacks.  */
+#define ut_time	ut_tv.tv_sec
+#define ut_addr ut_addr_v6[0]
 
 /* Tell the user that we have a modern system with UT_HOST, UT_PID,
    UT_TYPE, UT_ID and UT_TV fields.  */

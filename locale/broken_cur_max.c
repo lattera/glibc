@@ -25,9 +25,26 @@
 #include "localeinfo.h"
 
 
+/* This is a gross hack to get borken programs running.
+
+   ISO C provides no mean to find out how many bytes the wide
+   character representation really uses.  But it defines MB_CUR_LEN to
+   return the information for the multi-byte character representation.
+   Many programmers don't know the difference between the two and
+   thing this means the same.  But assuming all characters have a size
+   of MB_CUR_LEN after they have been processed by `mbrtowc' is wrong.
+   Instead the maximal number of character used for the conversion is
+   MB_CURLEN.
+
+   It is known that some Motif applications have this problem.  To
+   cure this one has to make sure the glibc uses the function in this
+   file instead of the one in locale/mb_cur_max.c.  This can either be
+   done by linking with this file or by using the LD_PRELOAD feature
+   of the dynamic linker.  */
 int
-weak_function
 __ctype_get_mb_cur_max (void)
 {
-  return _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX);
+  int correct_value = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX);
+
+  return ((int []) { 1, 1, 1, 2, 2, 3, 4 })[correct_value];
 }

@@ -26,7 +26,7 @@
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success, -1 otherwise.  */
 int
-ttyname_r (int fd, char *buf, size_t buflen)
+__ttyname_r (int fd, char *buf, size_t buflen)
 {
   error_t err;
   char nodename[1024];	/* XXX */
@@ -47,3 +47,5 @@ ttyname_r (int fd, char *buf, size_t buflen)
   memcpy (buf, nodename, len);
   return 0;
 }
+
+weak_alias (__ttyname_r, ttyname_r)

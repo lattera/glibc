@@ -19,9 +19,12 @@
 
 /* These library features are always available in the GNU C library.  */
 #define _G_HAVE_ATEXIT 1
+#define _G_HAVE_SYS_CDEFS 1
 #define _G_HAVE_SYS_WAIT 1
 #define _G_NEED_STDARG_H 1
 #define _G_va_list __gnuc_va_list
+
+#define _G_HAVE_PRINTF_FP 1
 
 /* This is defined by <statbuf.h> if `st_blksize' exists.  */
 #define _G_HAVE_ST_BLKSIZE defined (_STATBUF_ST_BLKSIZE)
