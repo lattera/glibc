@@ -1,3 +1,10 @@
+2002-09-29  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/generic/utmp_file.c (LOCKING_FAILED): New macro.
+	(UNLOCK_FILE): Add a label.
+	(getutent_r_file, internal_getut_r, getutline_r_file, pututline_file,
+	updwtmp_file): Shut off the alarm clock when locking failed.
+
 2002-09-30  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regex_internal.h (re_match_context_t): Add a new member.

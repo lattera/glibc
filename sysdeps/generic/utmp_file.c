@@ -47,6 +47,15 @@ static struct utmp last_entry;
 /* Do-nothing handler for locking timeout.  */
 static void timeout_handler (int signum) {};
 
+/* LOCK_FILE(fd, type) failure_statement
+     attempts to get a lock on the utmp file referenced by FD.  If it fails,
+     the failure_statement is executed, otherwise it is skipped.
+   LOCKING_FAILED()
+     jumps into the UNLOCK_FILE macro and ensures cleanup of LOCK_FILE.
+   UNLOCK_FILE(fd)
+     unlocks the utmp file referenced by FD and performs the cleanup of
+     LOCK_FILE.
+ */
 #define LOCK_FILE(fd, type) \
 {                                                                       \
   struct flock fl;                                                      \
@@ -70,11 +79,15 @@ static void timeout_handler (int signum) {};
   fl.l_whence = SEEK_SET;                                               \
   if (__fcntl ((fd), F_SETLKW, &fl) < 0)
 
+#define LOCKING_FAILED() \
+  goto unalarm_return
+
 #define UNLOCK_FILE(fd) \
   /* Unlock the file.  */                                               \
   fl.l_type = F_UNLCK;                                                  \
   __fcntl ((fd), F_SETLKW, &fl);                                        \
                                                                         \
+ unalarm_return:							\
   /* Reset the signal handler and alarm.  We must reset the alarm	\
      before resetting the handler so our alarm does not generate a	\
      spurious SIGALRM seen by the user.  However, we cannot just set	\
@@ -179,8 +192,8 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
 
   LOCK_FILE (file_fd, F_RDLCK)
     {
-      *result = NULL;
-      return -1;
+      nbytes = 0;
+      LOCKING_FAILED ();
     }
 
   /* Read the next entry.  */
@@ -190,7 +203,8 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
 
   if (nbytes != sizeof (struct utmp))
     {
-      file_offset = -1l;
+      if (nbytes != 0)
+	file_offset = -1l;
       *result = NULL;
       return -1;
     }
@@ -211,7 +225,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
   int result = -1;
 
   LOCK_FILE (file_fd, F_RDLCK)
-    return result;
+    LOCKING_FAILED ();
 
 #if _HAVE_UT_TYPE - 0
   if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
@@ -312,7 +326,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
   LOCK_FILE (file_fd, F_RDLCK)
     {
       *result = NULL;
-      return -1;
+      LOCKING_FAILED ();
     }
 
   while (1)
@@ -375,7 +389,10 @@ pututline_file (const struct utmp *data)
     found = internal_getut_r (data, &buffer);
 
   LOCK_FILE (file_fd, F_WRLCK)
-    return NULL;
+    {
+      pbuf = NULL;
+      LOCKING_FAILED ();
+    }
 
   if (found < 0)
     {
@@ -445,10 +462,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
     return -1;
 
   LOCK_FILE (fd, F_WRLCK)
-    {
-      __close (fd);
-      return result;
-    }
+    LOCKING_FAILED ();
 
   /* Remember original size of log file.  */
   offset = __lseek64 (fd, 0, SEEK_END);
