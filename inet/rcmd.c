@@ -287,6 +287,49 @@ ruserok(rhost, superuser, ruser, luser)
 	return -1;
 }
 
+/* Extremely paranoid file open function. */
+static FILE *
+iruserfopen (char *file, uid_t okuser)
+{
+  struct stat st;
+  char *cp = NULL;
+  FILE *res = NULL;
+
+  /* If not a regular file, if owned by someone other than user or
+     root, if writeable by anyone but the owner, or if hardlinked
+     anywhere, quit.  */
+  cp = NULL;
+  if (__lxstat (_STAT_VER, file, &st))
+    cp = _("lstat failed");
+  else if (!S_ISREG (st.st_mode))
+    cp = _("not regular file");
+  else
+    {
+      res = fopen (file, "r");
+      if (!res)
+	cp = _("cannot open");
+      else if (__fxstat (_STAT_VER, fileno (res), &st) < 0)
+	cp = _("fstat failed");
+      else if (st.st_uid && st.st_uid != okuser)
+	cp = _("bad owner");
+      else if (st.st_mode & (S_IWGRP|S_IWOTH))
+	cp = _("writeable by other than owner");
+      else if (st.st_nlink > 1)
+	cp = _("hard linked somewhere");
+    }
+
+  /* If there were any problems, quit.  */
+  if (cp != NULL)
+    {
+      __rcmd_errstr = cp;
+      if (res)
+	fclose (res);
+      return NULL;
+    }
+
+  return res;
+}
+
 /*
  * New .rhosts strategy: We are passed an ip address. We spin through
  * hosts.equiv and .rhosts looking for a match. When the .rhosts only
@@ -297,83 +340,60 @@ ruserok(rhost, superuser, ruser, luser)
  * Returns 0 if ok, -1 if not ok.
  */
 int
-iruserok(raddr, superuser, ruser, luser)
-	u_int32_t raddr;
-	int superuser;
-	const char *ruser, *luser;
+iruserok (raddr, superuser, ruser, luser)
+     u_int32_t raddr;
+     int superuser;
+     const char *ruser, *luser;
 {
-	register char *cp;
-	struct stat sbuf;
-	struct passwd pwdbuf, *pwd;
-	FILE *hostf;
-	int first;
+  FILE *hostf;
+  int isbad;
 
-	first = 1;
-	hostf = superuser ? NULL : fopen(_PATH_HEQUIV, "r");
-again:
-	if (hostf) {
-		if (__ivaliduser(hostf, raddr, luser, ruser) == 0) {
-			(void)fclose(hostf);
-			return 0;
-		}
-		(void)fclose(hostf);
-	}
-	if (first == 1 && (__check_rhosts_file || superuser)) {
-		char *pbuf;
-		size_t dirlen;
-		size_t buflen = __sysconf (_SC_GETPW_R_SIZE_MAX);
-		char *buffer = __alloca (buflen);
+  if (!superuser)
+    hostf = iruserfopen (_PATH_HEQUIV, 0);
 
-		first = 0;
-		if (__getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd) < 0)
-			return -1;
+  if (hostf)
+    {
+      isbad = __ivaliduser (hostf, raddr, luser, ruser);
+      fclose (hostf);
 
-		dirlen = strlen (pwd->pw_dir);
-		pbuf = alloca (dirlen + sizeof "/.rhosts");
-		__mempcpy (__mempcpy (pbuf, pwd->pw_dir, dirlen),
-			   "/.rhosts", sizeof "/.rhosts");
+      if (!isbad)
+	return 0;
+    }
 
-		/*
-		 * Change effective uid while opening .rhosts.  If root and
-		 * reading an NFS mounted file system, can't read files that
-		 * are protected read/write owner only.
-		 */
-		if (__access (pbuf, R_OK) != 0)
-		  hostf = NULL;
-		else
-		  {
-		    uid_t uid = geteuid ();
-		    seteuid (pwd->pw_uid);
-		    hostf = fopen (pbuf, "r");
-		    seteuid (uid);
-		  }
+  if (__check_rhosts_file || superuser)
+    {
+      char *pbuf;
+      struct passwd pwdbuf, *pwd;
+      size_t dirlen;
+      size_t buflen = __sysconf (_SC_GETPW_R_SIZE_MAX);
+      char *buffer = __alloca (buflen);
+      uid_t uid;
 
-		if (hostf == NULL)
-			return -1;
-		/*
-		 * If not a regular file, or is owned by someone other than
-		 * user or root or if writeable by anyone but the owner, quit.
-		 */
-		cp = NULL;
-		if (lstat(pbuf, &sbuf) < 0)
-			cp = _(".rhosts lstat failed");
-		else if (!S_ISREG(sbuf.st_mode))
-			cp = _(".rhosts not regular file");
-		else if (fstat(fileno(hostf), &sbuf) < 0)
-			cp = _(".rhosts fstat failed");
-		else if (sbuf.st_uid && sbuf.st_uid != pwd->pw_uid)
-			cp = _("bad .rhosts owner");
-		else if (sbuf.st_mode & (S_IWGRP|S_IWOTH))
-			cp = _(".rhosts writeable by other than owner");
-		/* If there were any problems, quit. */
-		if (cp) {
-			__rcmd_errstr = cp;
-			(void)fclose(hostf);
-			return -1;
-		}
-		goto again;
-	}
+      if (__getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd))
 	return -1;
+
+      dirlen = strlen (pwd->pw_dir);
+      pbuf = alloca (dirlen + sizeof "/.rhosts");
+      __mempcpy (__mempcpy (pbuf, pwd->pw_dir, dirlen),
+		 "/.rhosts", sizeof "/.rhosts");
+
+       /* Change effective uid while reading .rhosts.  If root and
+	  reading an NFS mounted file system, can't read files that
+	  are protected read/write owner only.  */
+       uid = geteuid ();
+       seteuid (pwd->pw_uid);
+       hostf = iruserfopen (pbuf, pwd->pw_uid);
+
+       if (hostf != NULL)
+	 {
+           isbad = __ivaliduser (hostf, raddr, luser, ruser);
+           fclose (hostf);
+	 }
+
+       seteuid (uid);
+       return isbad;
+    }
+  return -1;
 }
 
 /*

@@ -164,23 +164,34 @@ $(inst_slibdir)/$(rtld-installed-name): \
 .PHONY: ldso_install
 ldso_install: $(inst_slibdir)/$(rtld-installed-name)
 
+
+sh-ldd-rewrite = -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
+		 -e 's%@VERSION@%$(version)%g'
+bash-ldd-rewrite = $(sh-ldd-rewrite) -e 's%@BASH@%$(BASH)%g' \
+		   -e 's%@TEXTDOMAINDIR@%$(localedir)%g'
+
 ifneq ($(have-bash2),yes)
-$(objpfx)ldd: ldd.sh.in $(common-objpfx)version.mk \
-	      $(common-objpfx)soversions.mk $(common-objpfx)config.make
-	sed -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
-	    -e 's%@VERSION@%$(version)%g' < $< > $@.new
-	chmod 555 $@.new
-	mv -f $@.new $@
+ldd-shell = bash
 else
-$(objpfx)ldd: ldd.bash.in $(common-objpfx)version.mk \
+ldd-shell = sh
+endif
+
+ifeq ($(ldd-rewrite-script),no)
+define gen-ldd
+sed $($(ldd-shell)-ldd-rewrite) < $< > $@.new
+endef
+else
+define gen-ldd
+sed $($(ldd-shell)-ldd-rewrite) < $< | sed -f $(ldd-rewrite-script) > $@.new
+endef
+endif
+
+$(objpfx)ldd: ldd.$(ldd-shell).in $(common-objpfx)version.mk \
 	      $(common-objpfx)soversions.mk $(common-objpfx)config.make
-	sed -e 's%@BASH@%$(BASH)%g' \
-	    -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
-	    -e 's%@VERSION@%$(version)%g' \
-	    -e 's%@TEXTDOMAINDIR@%$(localedir)%g' < $< > $@.new
+	$(gen-ldd)
 	chmod 555 $@.new
 	mv -f $@.new $@
-endif
+
 
 ifeq ($(build-shared),yes)
 $(objpfx)sprof: $(objpfx)libdl.so$(libdl.so-version)

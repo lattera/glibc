@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,13 +83,14 @@ main (void)
 
   if (!lose && value == 10)
     {
-      /* And again for the `__setjmp' function.  */
-      extern int __setjmp (jmp_buf);
-
+      /* And again for the `_setjmp' function.  */
+#ifndef _setjmp
+      extern int _setjmp (jmp_buf);
+#endif
       last_value = -1;
       lose = 0;
 
-      value = __setjmp (env);
+      value = _setjmp (env);
       if (value != last_value + 1)
 	{
 	  fputs("Shouldn't have ", stdout);

@@ -172,7 +172,11 @@ endef
 $(common-objpfx)dummy.d:
 	echo '# .s files cannot contain includes, so they need no deps.' > $@
 
-object-suffixes-for-rules = $(object-suffixes) .oS
+object-suffixes-for-rules := $(object-suffixes)
+
+ifeq (yes,$(build-shared))
+object-suffixes-for-rules += .oS
+endif
 
 # It matters that this set of rules, for compiling from sources in
 # the current directory (the $srcdir/$subdir) come before the
@@ -571,6 +575,15 @@ $(subdirs-stamps): subdir_lib;
 endif
 object-suffixes-left = $(object-suffixes)
 include $(o-iterator)
+ifeq (yes,$(build-shared))
+$(common-objpfx)$(patsubst %,$(libtype.oS),c)($(ar-symtab-name)): \
+	$(common-objpfx)$(patsubst %,$(libtype.oS),c)(\
+	  $(patsubst %,%.oS,$(static-only-routines))) \
+	$(wildcard $(foreach d,$(subdirs),$(common-objpfx)$d/stamp.oS))
+	$(SHELL) $(..)./autolock.sh \
+	  $(common-objpfx)$(patsubst %,$(libtype.oS),c).lck \
+	  $(RANLIB) $(common-objpfx)$(patsubst %,$(libtype.oS),c)
+endif
 
 
 # This makes all the object files.
@@ -914,7 +927,7 @@ common-mostlyclean:
 define rmobjs
 $(foreach o,$(object-suffixes),
 -rm -f $(objpfx)stamp$o $(o-objects))
--rm -f $(objpfx)stamp.oS $(patsubst %,$(static-only-routines),$(objpfx)%.oS)
+-rm -f $(objpfx)stamp.oS $(patsubst %,$(objpfx)%.oS,$(static-only-routines))
 endef
 
 # Also remove the dependencies and generated source files.

@@ -235,7 +235,7 @@ __memset_cc_by2 (void *__s, int __c, size_t __n)
      "jnz	1b\n"
      "2:\n\t"
      "movw	%w2,(%0)"
-     : "=&r" (__tmp), "=&r" (__dummy)
+     : "=&r" (__tmp), "=&r" (__d0)
      : "q" (0x01010101UL * (unsigned char) __c), "0" (__tmp), "1" (__n / 2)
      : "memory", "cc");
   return __s;
@@ -1516,6 +1516,7 @@ __strstr_g (__const char *__haystack, __const char *__needle)
 __STRING_INLINE char *
 __strstr_g (__const char *__haystack, __const char *__needle)
 {
+  register unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"

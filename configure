@@ -2512,6 +2512,9 @@ esac
 libc_link_dests=
 libc_link_sources=
 
+# They also can set these variables.
+ldd_rewrite_script=no
+
 # Iterate over all the sysdep directories we will use, running their
 # configure fragments, and looking for a uname implementation.
 uname=
@@ -2547,7 +2550,7 @@ if test "$uname" = "sysdeps/generic"; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
-echo "configure:2551: checking OS release for uname" >&5
+echo "configure:2554: checking OS release for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2569,7 +2572,7 @@ echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
-echo "configure:2573: checking OS version for uname" >&5
+echo "configure:2576: checking OS version for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2591,7 +2594,7 @@ else
 fi
 
 echo $ac_n "checking stdio selection""... $ac_c" 1>&6
-echo "configure:2595: checking stdio selection" >&5
+echo "configure:2598: checking stdio selection" >&5
 
 case $stdio in
 libio) cat >> confdefs.h <<\EOF
@@ -2603,7 +2606,7 @@ esac
 echo "$ac_t""$stdio" 1>&6
 
 echo $ac_n "checking ldap selection""... $ac_c" 1>&6
-echo "configure:2607: checking ldap selection" >&5
+echo "configure:2610: checking ldap selection" >&5
 
 case $add_ons in
 *ldap*)
@@ -2613,6 +2616,7 @@ case $add_ons in
    LDAP= ;;
 esac
 echo "$ac_t""$ldap" 1>&6
+
 
 
 
@@ -2665,7 +2669,7 @@ if test $static = no && test $shared = yes; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:2669: checking whether -fPIC is default" >&5
+echo "configure:2673: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2892,6 +2896,7 @@ s%@libc_cv_slibdir@%$libc_cv_slibdir%g
 s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
 s%@libc_cv_rootsbindir@%$libc_cv_rootsbindir%g
 s%@has_ldconfig@%$has_ldconfig%g
+s%@ldd_rewrite_script@%$ldd_rewrite_script%g
 s%@gnu_ld@%$gnu_ld%g
 s%@gnu_as@%$gnu_as%g
 s%@elf@%$elf%g

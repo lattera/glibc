@@ -571,7 +571,7 @@ endif
 # Various things use $(object-suffixes) to know what all to make.
 # The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
 # to pass different flags for each flavor.
-libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
+libtypes = $(foreach o,$(object-suffixes-for-rules),$(libtype$o))
 all-object-suffixes := .o .os .op .og .ob .oS
 object-suffixes :=
 ifeq (yes,$(build-static))
@@ -589,6 +589,13 @@ CFLAGS-.os = $(filter %frame-pointer,$(+cflags)) $(pic-ccflag)
 libtype.os := lib%_pic.a
 # This can be changed by a sysdep makefile
 pic-ccflag = -fPIC
+# Special library that contains the static-only routines for libc.
+libtype.oS = lib%_nonshared.a
+# Must build the routines as PIC, though, because they can end up in (users')
+# shared objects.  We don't want to use CFLAGS-os because users may, for
+# example, make that processor-specific.
+CFLAGS-.oS = $(CFLAGS-.o) $(pic-ccflag)
+CPPFLAGS-.oS = $(CPPFLAGS-.o) -DPIC
 endif
 ifeq (yes,$(build-profile))
 # Under --enable-profile, we will build a static library of profiled objects.
@@ -617,14 +624,6 @@ CPPFLAGS-.ob = -DBOUNDED_POINTERS $(pic-default)
 CFLAGS-.ob = -g -fbounded-pointers
 libtype.ob = lib%_b.a
 endif
-
-# Special library that contains the static-only routines for libc.
-libtype.oS = lib%_nonshared.a
-# Must build the routines as PIC, though, because they can end up in (users')
-# shared objects.  We don't want to use CFLAGS-os because users may, for
-# example, make that processor-specific.
-CFLAGS-.oS = $(CFLAGS-.o) $(pic-ccflag)
-CPPFLAGS-.oS = $(CPPFLAGS-.o)
 
 +gnu-stabs = $(shell echo>&2 '*** BARF ON ME')
 

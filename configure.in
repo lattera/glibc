@@ -1000,6 +1000,9 @@ esac
 libc_link_dests=
 libc_link_sources=
 
+# They also can set these variables.
+ldd_rewrite_script=no
+
 # Iterate over all the sysdep directories we will use, running their
 # configure fragments, and looking for a uname implementation.
 uname=
@@ -1108,6 +1111,7 @@ AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_rootsbindir)
 
 AC_SUBST(has_ldconfig)
+AC_SUBST(ldd_rewrite_script)
 
 AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf)
 if test $gnu_ld = yes; then

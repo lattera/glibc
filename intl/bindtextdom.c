@@ -1,5 +1,5 @@
 /* Implementation of the bindtextdomain(3) function
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -65,7 +65,9 @@ extern struct binding *_nl_domain_bindings;
    prefix.  So we have to make a difference here.  */
 #ifdef _LIBC
 # define BINDTEXTDOMAIN __bindtextdomain
-# define strdup(str) __strdup (str)
+# ifndef strdup
+#  define strdup(str) __strdup (str)
+# endif
 #else
 # define BINDTEXTDOMAIN bindtextdomain__
 #endif

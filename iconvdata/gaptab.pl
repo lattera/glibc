@@ -6,7 +6,7 @@ sub fmt {
   printf (" '\\x%02x',", $val);
 }
 while (<>) {
-  local($ucs,$char,%rest) = split;
+  local($ucs,$char,$rest) = split;
   local($u)=hex($ucs);
   local($c)=hex($char);
   if ($u - $last > 6) {

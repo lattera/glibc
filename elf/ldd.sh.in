@@ -83,6 +83,12 @@ Try \`ldd --help' for more information."
   esac
 done
 
+nonelf ()
+{
+  # Maybe extra code for non-ELF binaries.
+  return 1;
+}
+
 add_env="LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now"
 add_env="$add_env LD_VERBOSE=$verbose"
 case $# in
@@ -113,6 +119,7 @@ Try \`ldd --help' for more information."
 	eval $add_env exec '"$file"' || exit 1
 	;;
       1)
+        nonelf $file ||
 	echo '	not a dynamic executable'
 	exit 1
 	;;
@@ -155,6 +162,7 @@ ldd: warning: you do not have execution permission for \`$file'"
 	  eval $add_env '"$file"' || result=1
 	  ;;
 	1)
+          nonelf $file ||
 	  echo '	not a dynamic executable'
 	  result=1
 	  ;;

@@ -1,3 +1,75 @@
+1998-03-29 16:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* config.make.in (ldd-rewrite-script): New variable.
+	* configure.in: Substitute ldd-rewrite-script.
+	* elf/Makefile: Rewrite rules to generate ldd script.
+	* elf/ldd.bash.in: Allow handling of non-ELF binaries.
+	* elf/ldd.sh.in: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile: Remove rule to install lddlibc4.
+	* sysdeps/unix/sysv/linux/configure.in: Define ldd_rewrite_script to
+	point to sed script for libc4 handling insertion for ix86, m68, SPARC.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Add rule to install lddlibc4.
+
+1998-03-26 15:20  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* inet/rcmd.c (iruserok): Remain setuid to the local user
+	while .rhosts is actually read, to make .rhosts-over-NFS work
+	(PR libc/524).  Use iruserfopen() for security checks on both
+	hosts.equiv and .rhosts.  General cleanup.
+	(iruserfopen): New function, performs careful checking on
+	hosts.equiv/.rhosts files.  Disallows all the old forbidden
+	stuff plus hard links to files.
+
+1998-03-29 09:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* setjmp/tst-setjmp.c: Don't test __setjmp, test _setjmp instead.
+
+1998-03-29 02:02  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/i386/i486/bits/string.h: Fix typos.
+
+	* nss/nsswitch.c (__nss_lookup): Fix the bogus checking for
+	"adjusted for next function".
+
+1998-03-28 00:13  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/alpha/readdir.c (__readdir64): New
+	strong alias.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (socket): Added.
+
+	* libc.map (__ieee_get_fp_control, __ieee_set_fp_control):
+	Added.  Used by libm.so on alpha.
+
+1998-03-28  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* intl/bindtextdom.c [_LIBC]: Define strdup only if not yet
+	defined.
+
+1998-03-27 07:29  H.J. Lu  <hjl@gnu.org>
+
+	* Makerules (object-suffixes-for-rules): Add .oS only for
+	building shared library.
+	Add ranlib rule for nonshared library.
+	(rmobjs): Fix typo.
+
+	* Makeconfig (libtype.oS, CFLAGS-.oS, CPPFLAGS-.oS): Moved
+	into for shared library only.
+	(CPPFLAGS-.oS): Add -DPIC.
+	(libtypes): Use $(object-suffixes-for-rules) instead of
+	$(object-suffixes).
+
+1998-03-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (inhibit-stdio_lim): Compile
+	and install lddlibc4.
+
+1998-03-28 09:13  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* iconvdata/gap.pl: Gobble rest of line with a scalar, not a
+	hash.
+	* iconvdata/gaptab.pl: Likewise.
+
 1998-03-27 22:46  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Rules: Allow Makefiles to specify test-static for tests which

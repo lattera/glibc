@@ -104,6 +104,7 @@ GLIBC_2.0 {
     _dl_debug_message;
     __ffs;
     __close; __connect; __fcntl; __lseek; __open; __read; __send; __wait;
+    __ieee_get_fp_control; __ieee_set_fp_control;
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;

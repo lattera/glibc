@@ -15,6 +15,9 @@ rootsbindir = @libc_cv_rootsbindir@
 # in GNU libc.
 has-ldconfig = @has_ldconfig@
 
+# Maybe the `ldd' script must be rewritten.
+ldd-rewrite-script = @ldd_rewrite_script@
+
 # System configuration.
 config-machine = @host_cpu@
 base-machine = @base_machine@
