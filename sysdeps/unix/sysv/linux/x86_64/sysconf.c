@@ -26,7 +26,7 @@
 static long int linux_sysconf (int name);
 
 
-static struct intel_02_cache_info
+static const struct intel_02_cache_info
 {
   unsigned int idx;
   int name;
@@ -206,12 +206,81 @@ handle_intel (int name, unsigned int maxidx)
 }
 
 
+static long int
+handle_amd (int name)
+{
+  unsigned int eax;
+  unsigned int ebx;
+  unsigned int ecx;
+  unsigned int edx;
+  asm volatile ("xchgl %%ebx, %1; cpuid; xchgl %%ebx, %1"
+		: "=a" (eax), "=r" (ebx), "=c" (ecx), "=d" (edx)
+		: "0" (0x80000000));
+
+  if (name >= _SC_LEVEL3_CACHE_SIZE)
+    return 0;
+
+  unsigned int fn = 0x80000005 + (name >= _SC_LEVEL2_CACHE_SIZE);
+  if (eax < fn)
+    return 0;
+
+  asm volatile ("xchgl %%ebx, %1; cpuid; xchgl %%ebx, %1"
+		: "=a" (eax), "=r" (ebx), "=c" (ecx), "=d" (edx)
+		: "0" (fn));
+
+  if (name < _SC_LEVEL1_DCACHE_SIZE)
+    {
+      name += _SC_LEVEL1_DCACHE_SIZE - _SC_LEVEL1_ICACHE_SIZE;
+      ecx = edx;
+    }
+
+  switch (name)
+    {
+    case _SC_LEVEL1_DCACHE_SIZE:
+      return (ecx >> 14) & 0x3fc00;
+    case _SC_LEVEL1_DCACHE_ASSOC:
+      ecx >>= 16;
+      if ((ecx & 0xff) == 0xff)
+	/* Fully associative.  */
+	return (ecx << 2) & 0x3fc00;
+      return ecx & 0xff;
+    case _SC_LEVEL1_DCACHE_LINESIZE:
+      return ecx & 0xff;
+    case _SC_LEVEL2_CACHE_SIZE:
+      return (ecx & 0xf000) == 0 ? 0 : (ecx >> 6) & 0x3fffc00;
+    case _SC_LEVEL2_CACHE_ASSOC:
+      ecx >>= 12;
+      switch (ecx & 0xf)
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 4:
+	  return ecx & 0xf;
+	case 6:
+	  return 8;
+	case 8:
+	  return 16;
+	case 0xf:
+	  return (ecx << 6) & 0x3fffc00;
+	default:
+	  return 0;
+        }
+    case _SC_LEVEL2_CACHE_LINESIZE:
+      return (ecx & 0xf000) == 0 ? 0 : ecx & 0xff;
+    default:
+      assert (! "cannot happen");
+    }
+  return -1;
+}
+
+
 /* Get the value of the system variable NAME.  */
 long int
 __sysconf (int name)
 {
   /* We only handle the cache information here (for now).  */
-  if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_ASSOC)
+  if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_LINESIZE)
     return linux_sysconf (name);
 
   /* Find out what brand of processor.  */
@@ -226,6 +295,11 @@ __sysconf (int name)
   /* This spells out "GenuineIntel".  */
   if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
     return handle_intel (name, eax);
+
+  /* This spells out "AuthenticAMD".  */
+  if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
+    return handle_amd (name);
+
   // XXX Fill in more vendors.
 
   /* CPU not known, we have no information.  */
