@@ -124,6 +124,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      ARMSCII-8.irreversible TCVN5712-1.precomposed		    \
 	      JISX0213.TXT EUC-JISX0213.precomposed			    \
 	      SHIFT_JISX0213.precomposed SHIFT_JISX0213.irreversible	    \
+	      TSCII.irreversible TSCII.precomposed			    \
 	      8bit-generic.c 8bit-gap.c					    \
 	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \

@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1996,1997,1998,2000,2001,2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ CFLAGS-grantpt.c = -DLIBEXECDIR='"$(libexecdir)"'
 others = utmpdump pt_chown
 install-others = $(inst_libexecdir)/pt_chown
 
-distribute := utmp-private.h pty-private.h
+distribute := utmp-private.h utmp-equal.h pty-private.h
 
 subdir-dirs = programs
 vpath %.c programs

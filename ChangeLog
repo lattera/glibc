@@ -1,3 +1,31 @@
+2002-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bump to 2.3.
+
+	* elf/Makefile (distribute): Add tst-tlsmod1.c, tst-tlsmod2.c,
+	tst-tlsmod3.c, tst-tlsmod4.c, circlemod1.c, circlemod1a.c,
+	circlemod2.c, circlemod2a.c, circlemod3.c, circlemod3a.c,
+	and nodlopenmod2.c.
+
+	* login/Makefile (distribute): Add utmp-equal.h.
+
+	* iconvdata/Makefile (distribute): Add TSCII.precomposed and
+	TSCII.irreversible.
+
+	* Make-dist (dist): Create .bz2 file.  Add rule to create .bz2
+	files.
+	Also distribute xtests sources.
+
+2002-10-02  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* elf/elf.h: Change TLS ELF relocation numbers.
+	* elf/tls-macros.h: Fix code sequences for SH TLS_LD and TLS_GD
+	macros.
+	* sysdeps/sh/dl-machine.h (dl_machine_rela) [case R_SH_TLS_TPOFF32]:
+	Use addend.
+	* sysdeps/sh/elf/initfini.c: Move __fpscr_values to...
+	* sysdeps/sh/elf/start.S: ...here.
+
 2002-10-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h (MINSIGSTKSZ,

@@ -68,6 +68,9 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   reldep6mod0.c reldep7mod1.c reldep7mod2.c \
 		   unwind-dw2.c unwind-dw2-fde.c unwind.h unwind-pe.h \
 		   unwind-dw2-fde.h dwarf2.h dl-procinfo.c tls.h dl-tls.h \
+		   tst-tlsmod1.c tst-tlsmod2.c tst-tlsmod3.c tst-tlsmod4.c \
+		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
+		   circlemod3.c circlemod3a.c nodlopenmod2.c \
 		   tls-macros.h
 
 include ../Makeconfig

@@ -82,7 +82,8 @@ foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 sources += $(addsuffix .c,$(elided-routines) \
 		          $(foreach l,$(extra-libs),$($l-routines)))
 
-sources += $(addsuffix .c, $(filter-out $(elided-routines), $(tests)))
+sources += $(addsuffix .c, $(filter-out $(elided-routines), \
+					$(tests) $(xtests)))
 
 # Find all sysdep sources and headers.
 +maybe-sysdeps := $(sources) $(sources:.c=.s) $(sources:.c=.S) $(all-headers) \
@@ -153,7 +154,7 @@ foo:=$(shell echo subdir foo >&2)
 
 +tsrcs := Makefile $(wildcard Versions) $(wildcard Depend) $(+tsrcs) \
 	  $(addsuffix .c,$(others) $(test-srcs)) \
-	  $(wildcard $(addsuffix .input,$(tests) $(test-srcs)))
+	  $(wildcard $(addsuffix .input,$(tests) $(xtests) $(test-srcs)))
 +tardeps := $(strip $(+tsrcs))
 
 verbose = v
@@ -205,7 +206,7 @@ endif
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
-dist: $(tardir).tar.gz
+dist: $(tardir).tar.bz2
 
 subdir_dist: dist.tar
 dist.tar: README $(tardir) $(+tsrcs)
@@ -222,6 +223,9 @@ $(tardir).tar: dist.tar subdir_dist
 
 %.gz: %
 	gzip -9 -v -c $< > $@
+
+%.bz2: %
+	bzip2 -9 -v -c $< > $@
 
 foo:=$(shell echo subdirs=$(subdirs) >&2)
 dist-subdirs := $(addprefix dist-,$(subdirs)) # dist-manual
