@@ -35,8 +35,9 @@
 #define STACK	FUNC+4
 #define FLAGS	STACK+PTR_SIZE
 #define ARG	FLAGS+4
-#define TID	ARG+PTR_SIZE
-#define TLS	TID+PTR_SIZE
+#define PTID	ARG+PTR_SIZE
+#define TLS	PTID+PTR_SIZE
+#define CTID	TLS+PTR_SIZE
 
 #define __NR_clone 120
 #define SYS_clone 120
@@ -61,25 +62,29 @@ ENTRY (BP_SYM (__clone))
 #endif
 
 	/* Insert the argument onto the new stack.  */
-	subl	$12,%ecx
+	subl	$16,%ecx
 	movl	ARG(%esp),%eax		/* no negative argument counts */
-	movl	%eax,8(%ecx)
+	movl	%eax,12(%ecx)
 
 	/* Save the function pointer as the zeroth argument.
 	   It will be popped off in the child in the ebx frobbing below.  */
 	movl	FUNC(%esp),%eax
-	movl	%eax,4(%ecx)
+	movl	%eax,8(%ecx)
 	/* Don't leak any information.  */
+	movl	$0,4(%ecx)
 	movl	$0,(%ecx)
 
 	/* Do the system call */
 	pushl	%ebx
 	pushl	%esi
-	movl	TLS+8(%esp),%esi
-	movl	TID+8(%esp),%edx
-	movl	FLAGS+8(%esp),%ebx
+	pushl	%edi
+	movl	TLS+12(%esp),%esi
+	movl	PTID+12(%esp),%edx
+	movl	FLAGS+12(%esp),%ebx
+	movl	CTID+12(%esp),%edi
 	movl	$SYS_ify(clone),%eax
 	int	$0x80
+	popl	%edi
 	popl	%esi
 	popl	%ebx
 
