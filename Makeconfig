@@ -74,8 +74,6 @@ common-objdir = .
 endif
 endif
 
-libc.a = $(common-objpfx)libc.a
-
 
 # Get the values defined by options to `configure'.
 include $(common-objpfx)config.make
@@ -249,7 +247,7 @@ endif
 ifndef +link
 +link = $(CC) -nostdlib $(LDFLAGS) -o $@ \
 	$(addprefix $(csu-objpfx),start.o $(+preinit)) \
-	$(^:lib=$(libc.a)) $(gnulib) $(libc.a) \
+	$(^:lib=$(common-objpfx)libc.a) $(gnulib) $(common-objpfx)libc.a \
 	$(addprefix $(csu-objpfx),$(+postinit))
 endif
 ifndef gnulib
