@@ -1,3 +1,23 @@
+1999-10-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/string.h: Add __memrchr declaration.
+
+	* string/string.h: Moce __memrchr declaration to include/string.h.
+
+1999-10-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/Makefile (routines): Add memrchr.
+
+	* sysdeps/generic/memrchr.c: Don't undef memchr, undef memrchr.
+	Correct order of tests for matching bytes.
+
+	* string/tester.c: Add tests for memrchr.
+
+	* sysdeps/i386/i486/bits/string.h (__memrchr): Correct implementation.
+	Start from the last character and take decrement not increment
+	into account for correction in return line.  Add memrchr alias.
+	* sysdeps/i386/bits/string.h: Likewise.
+
 1999-10-04  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* stdlib/stdlib.h [__USE_BSD]: Declare getloadavg.

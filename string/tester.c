@@ -564,6 +564,52 @@ test_strrchr (void)
 }
 
 void
+test_memrchr (void)
+{
+  size_t l;
+  it = "memrchr";
+  check (memrchr ("abcd", 'z', 5) == NULL, 1);	/* Not found. */
+  (void) strcpy (one, "abcd");
+  l = strlen (one) + 1;
+  check (memrchr (one, 'c', l) == one+2, 2);	/* Basic test. */
+  check (memrchr (one, 'd', l) == one+3, 3);	/* End of string. */
+  check (memrchr (one, 'a', l) == one, 4);		/* Beginning. */
+  check (memrchr (one, '\0', l) == one+4, 5);	/* Finding NUL. */
+  (void) strcpy (one, "ababa");
+  l = strlen (one) + 1;
+  check (memrchr (one, 'b', l) == one+3, 6);	/* Finding last. */
+  (void) strcpy (one, "");
+  l = strlen (one) + 1;
+  check (memrchr (one, 'b', l) == NULL, 7);	/* Empty string. */
+  check (memrchr (one, '\0', l) == one, 8);	/* NUL in empty string. */
+
+  /* now test all possible alignment and length combinations to catch
+     bugs due to unrolled loops (assuming unrolling is limited to no
+     more than 128 byte chunks: */
+  {
+    char buf[128 + sizeof(long)];
+    long align, len, i, pos;
+
+    for (align = 0; align < (long) sizeof(long); ++align) {
+      for (len = 0; len < (long) (sizeof(buf) - align); ++len) {
+	for (i = 0; i < len; ++i)
+	  buf[align + i] = 'x';		/* don't depend on memset... */
+
+	for (pos = len - 1; pos >= 0; --pos) {
+#if 0
+	  printf("align %d, len %d, pos %d\n", align, len, pos);
+#endif
+	  check(memrchr(buf + align, 'x', len) == buf + align + pos, 9);
+	  check(memrchr(buf + align + pos + 1, 'x', len - (pos + 1)) == NULL,
+		10);
+	  buf[align + pos] = '-';
+	}
+      }
+    }
+  }
+}
+
+void
 test_rindex (void)
 {
   it = "rindex";
@@ -1182,6 +1228,9 @@ main (void)
 
   /* strrchr.  */
   test_strrchr ();
+
+  /* memrchr.  */
+  test_memrchr ();
 
   /* rindex - just like strrchr.  */
   test_rindex ();

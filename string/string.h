@@ -66,7 +66,6 @@ extern __ptr_t memchr __P ((__const __ptr_t __s, int __c, size_t __n));
 extern __ptr_t rawmemchr __P ((__const __ptr_t __s, int __c));
 
 /* Search N bytes of S for the final occurrence of C.  */
-extern __ptr_t __memrchr __P ((__const __ptr_t __s, int __c, size_t __n));
 extern __ptr_t memrchr __P ((__const __ptr_t __s, int __c, size_t __n));
 #endif
 

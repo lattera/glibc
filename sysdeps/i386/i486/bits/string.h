@@ -452,34 +452,37 @@ __STRING_INLINE void *
 __memrchr (__const void *__s, int __c, size_t __n)
 {
   register unsigned long int __d0;
-#ifdef __i686__
+# ifdef __i686__
   register unsigned long int __d1;
-#endif
+# endif
   register void *__res;
   if (__n == 0)
     return NULL;
-#ifdef __i686__
+# ifdef __i686__
   __asm__ __volatile__
     ("std\n\t"
      "repne; scasb\n\t"
      "cmovne %2,%0\n\t"
      "cld"
      : "=D" (__res), "=&c" (__d0), "=&r" (__d1)
-     : "a" (__c), "0" (__s), "1" (__n), "2" (1)
+     : "a" (__c), "0" (__s + __n - 1), "1" (__n), "2" (-1)
      : "cc");
-#else
+# else
   __asm__ __volatile__
     ("std\n\t"
      "repne; scasb\n\t"
      "je 1f\n\t"
-     "movl $1,%0\n"
+     "orl $-1,%0\n"
      "1:\tcld"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s), "1" (__n)
+     : "a" (__c), "0" (__s + __n - 1), "1" (__n)
      : "cc");
-#endif
-  return __res - 1;
+# endif
+  return __res + 1;
 }
+# ifdef __USE_GNU
+#  define memrchr(s, c, n) __memrchr (s, c, n)
+# endif
 #endif
 
 /* Return pointer to C in S.  */

@@ -319,13 +319,16 @@ __memrchr (__const void *__s, int __c, size_t __n)
     ("std\n\t"
      "repne; scasb\n\t"
      "je 1f\n\t"
-     "movl $1,%0\n"
+     "orl $-1,%0\n"
      "1:\tcld"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s), "1" (__n)
+     : "a" (__c), "0" (__s + __n - 1), "1" (__n)
      : "cc");
-  return __res - 1;
+  return __res + 1;
 }
+# ifdef __USE_GNU
+#  define memrchr(s, c, n) __memrchr (s, c, n)
+# endif
 #endif
 
 /* Return the length of S.  */

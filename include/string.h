@@ -20,4 +20,6 @@ extern __ptr_t __rawmemchr __P ((__const __ptr_t __s, int __c));
 
 extern char *__strchrnul __P ((__const char *__s, int __c));
 
+extern __ptr_t __memrchr __P ((__const __ptr_t __s, int __c, size_t __n));
+
 #endif

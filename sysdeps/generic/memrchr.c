@@ -51,6 +51,8 @@
 
 #include <sys/types.h>
 
+#undef memrchr
+
 
 /* Search no more than N bytes of S for C.  */
 __ptr_t
@@ -163,24 +165,24 @@ __memrchr (s, c_in, n)
 
 	  const unsigned char *cp = (const unsigned char *) longword_ptr;
 
-	  if (cp[0] == c)
-	    return (__ptr_t) cp;
-	  if (cp[1] == c)
-	    return (__ptr_t) &cp[1];
-	  if (cp[2] == c)
-	    return (__ptr_t) &cp[2];
-	  if (cp[3] == c)
-	    return (__ptr_t) &cp[3];
 #if LONG_MAX > 2147483647
-	  if (cp[4] == c)
-	    return (__ptr_t) &cp[4];
-	  if (cp[5] == c)
-	    return (__ptr_t) &cp[5];
-	  if (cp[6] == c)
-	    return (__ptr_t) &cp[6];
 	  if (cp[7] == c)
 	    return (__ptr_t) &cp[7];
+	  if (cp[6] == c)
+	    return (__ptr_t) &cp[6];
+	  if (cp[5] == c)
+	    return (__ptr_t) &cp[5];
+	  if (cp[4] == c)
+	    return (__ptr_t) &cp[4];
 #endif
+	  if (cp[3] == c)
+	    return (__ptr_t) &cp[3];
+	  if (cp[2] == c)
+	    return (__ptr_t) &cp[2];
+	  if (cp[1] == c)
+	    return (__ptr_t) &cp[1];
+	  if (cp[0] == c)
+	    return (__ptr_t) cp;
 	}
 
       n -= sizeof (longword);
