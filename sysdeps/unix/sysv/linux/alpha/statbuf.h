@@ -1,5 +1,5 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@zen.org).
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -19,32 +19,30 @@ Cambridge, MA 02139, USA.  */
 #ifndef	_STATBUF_H
 #define	_STATBUF_H
 
-#include <gnu/types.h>
+/* The Alpha has no additional syscall versions.  */
 
-/* Structure describing file characteristics.  */
+/* Versions of the `struct stat' data structure.  */
+#define _STAT_VER		0
+
+/* Versions of the `xmknod' interface.  */
+#define _MKNOD_VER_LINUX	0
+
 struct stat
   {
-    int st_dev;			/* Device.  */
-    unsigned int st_ino;	/* File serial number.		*/
-    unsigned int st_mode;	/* File mode.  */
-    unsigned int st_nlink;	/* Link count.  */
-    unsigned int st_uid;	/* User ID of the file's owner.	*/
-    unsigned int st_gid;	/* Group ID of the file's group.*/
-    int st_rdev;		/* Device number, if device.  */
-
-    long st_size;		/* Size of file, in bytes.  */
-
-    int st_atime;		/* Time of last access.  */
-    int st_atime_usec;
-    int st_mtime;		/* Time of last modification.  */
-    int st_mtime_usec;
-    int st_ctime;		/* Time of last status change.  */
-    int st_ctime_usec;
-
-    unsigned int st_blksize;	/* Optimal block size for I/O.  */
-#define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
-
-    int st_blocks;		/* Number of 512-byte blocks allocated.  */
+    unsigned int st_dev;		/* Device.  */
+    unsigned int st_ino;		/* File serial number.	*/
+    unsigned int st_mode;		/* File mode.  */
+    unsigned int st_nlink;		/* Link count.  */
+    unsigned int st_uid;		/* User ID of the file's owner.	*/
+    unsigned int st_gid;		/* Group ID of the file's group.*/
+    unsigned int st_rdev;		/* Device number, if device.  */
+    long int st_size;			/* Size of file, in bytes.  */
+    unsigned long int st_atime;		/* Time of last access.  */
+    unsigned long int st_mtime;		/* Time of last modification.  */
+    unsigned long int st_ctime;		/* Time of last status change.  */
+    unsigned int st_blksize;		/* Optimal block size for I/O.  */
+#define	_STATBUF_ST_BLKSIZE		/* Tell code we have this member.  */
+    int st_blocks;			/* Nr. of 512-byte blocks allocated.  */
     unsigned int st_flags;
     unsigned int st_gen;
   };
@@ -60,6 +58,7 @@ struct stat
 #define	__S_IFREG	0100000	/* Regular file.  */
 #define	__S_IFIFO	0010000	/* FIFO.  */
 
+/* These don't actually exist on System V, but having them doesn't hurt.  */
 #define	__S_IFLNK	0120000	/* Symbolic link.  */
 #define	__S_IFSOCK	0140000	/* Socket.  */
 
