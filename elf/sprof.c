@@ -752,9 +752,21 @@ load_profdata (const char *name, struct shobj *shobj)
 		 sizeof (struct gmon_hist_hdr)) != 0
       || narcsp[-1] != GMON_TAG_CG_ARC)
     {
-      free (result);
       error (0, 0, _("`%s' is no correct profile data file for `%s'"),
 	     name, shobj->name);
+      if (do_test)
+	{
+	  if (memcmp (addr, &gmon_hdr, sizeof (struct gmon_hdr)) != 0)
+	    puts ("gmon_hdr differs");
+	  if (*(uint32_t *) result->hist != GMON_TAG_TIME_HIST)
+	    puts ("result->hist differs");
+	  if (memcmp (result->hist_hdr, &hist_hdr,
+		      sizeof (struct gmon_hist_hdr)) != 0)
+	    puts ("hist_hdr differs");
+	  if (narcsp[-1] != GMON_TAG_CG_ARC)
+	    puts ("narcsp[-1] differs");
+	}
+      free (result);
       munmap (addr, st.st_size);
       return NULL;
     }

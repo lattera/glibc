@@ -260,7 +260,11 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   *(int32_t *) hist_hdr.hist_size = kcountsize / sizeof (HISTCOUNTER);
   *(int32_t *) hist_hdr.prof_rate = __profile_frequency ();
   if (sizeof (hist_hdr.dimen) >= sizeof ("seconds"))
-    memcpy (hist_hdr.dimen, "seconds", sizeof ("seconds"));
+    {
+      memcpy (hist_hdr.dimen, "seconds", sizeof ("seconds"));
+      memset (hist_hdr.dimen + sizeof ("seconds"), '\0',
+	      sizeof (hist_hdr.dimen) - sizeof ("seconds"));
+    }
   else
     strncpy (hist_hdr.dimen, "seconds", sizeof (hist_hdr.dimen));
   hist_hdr.dimen_abbrev = 's';

@@ -1,5 +1,10 @@
 2002-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/sprof.c (load_profdata): If do_test provide information as
+	to why loading failed.
+	* elf/dl-profile.c (_dl_start_profile): Initialize all of
+	hist_hdr.dimen.
+
 	* csu/set-init.c: Moved to...
 	* sysdeps/mach/hurd/set-init.c: ...here.  New file.
 	* csu/Makefile: Don't compile set-init.
