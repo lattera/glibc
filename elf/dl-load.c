@@ -567,6 +567,12 @@ _dl_init_paths (const char *llp)
 }
 
 
+/* Think twice before changing anything in this function.  It is placed
+   here and prepared using the `alloca' magic to prevent it from being
+   inlined.  The function is only called in case of an error.  But then
+   performance does not count.  The function used to be "inlinable" and
+   the compiled did so all the time.  This increased the code size for
+   absolutely no good reason.  */
 #define LOSE(code, s) lose (code, fd, name, realname, l, s)
 static void volatile
 __attribute__ ((noreturn))
@@ -1242,7 +1248,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       /* First try the DT_RPATH of the dependent object that caused NAME
 	 to be loaded.  Then that object's dependent, and on up.  */
       for (l = loader; fd == -1 && l; l = l->l_loader)
-	if (l && l->l_info[DT_RPATH])
+	if (l->l_info[DT_RPATH])
 	  {
 	    /* Make sure the cache information is available.  */
 	    if (l->l_rpath_dirs == NULL)
