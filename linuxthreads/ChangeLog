@@ -1,6 +1,6 @@
 1998-07-05 11:54  Ulrich Drepper  <drepper@cygnus.com>
 
-	* Versions: Add pthread_attr_init ti GLIBC_2.1 version in libc.
+	* Versions: Add pthread_attr_init to GLIBC_2.1 version in libc.
 
 1998-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
