@@ -56,7 +56,7 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   stack_end = (long) sc->sc_stack.ss_sp + sc->sc_stack.ss_size;
 
   stack_start = (stack_start + 7) & -8;
-  stack_end = (stack_start + 15) & -16;
+  stack_end = stack_end & -16;
 
   if (argc > 8)
     {
