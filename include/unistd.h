@@ -130,6 +130,7 @@ extern int __getpagesize (void) __attribute__ ((__const__));
 libc_hidden_proto (__getpagesize)
 extern int __ftruncate (int __fd, __off_t __length);
 extern int __ftruncate64 (int __fd, __off64_t __length);
+extern int __truncate (const char *path, __off_t __length);
 extern void *__sbrk (intptr_t __delta);
 libc_hidden_proto (__sbrk)
 

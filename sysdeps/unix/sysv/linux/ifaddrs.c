@@ -1,5 +1,5 @@
 /* getifaddrs -- get names and addresses of all network interfaces
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,11 +32,8 @@
 #include <time.h>
 #include <unistd.h>
 
-#include <asm/types.h>
-#include <linux/netlink.h>
-#include <linux/rtnetlink.h>
+#include "netlinkaccess.h"
 
-#include "kernel-features.h"
 
 /* We don't know if we have NETLINK support compiled in in our
    Kernel, so include the old implementation as fallback.  */
@@ -46,31 +43,7 @@ int __no_netlink_support attribute_hidden;
 # define getifaddrs fallback_getifaddrs
 # include "sysdeps/gnu/ifaddrs.c"
 # undef getifaddrs
-
-#else
-
-# define __no_netlink_support 0
-
 #endif
-
-
-struct netlink_res
-{
-  struct netlink_res *next;
-  struct nlmsghdr *nlh;
-  size_t size;			/* Size of response.  */
-  uint32_t seq;			/* sequential number we used.  */
-};
-
-
-struct netlink_handle
-{
-  int fd;			/* Netlink file descriptor.  */
-  pid_t pid;			/* Process ID.  */
-  uint32_t seq;			/* The sequence number we use currently.  */
-  struct netlink_res *nlm_list;	/* Pointer to list of responses.  */
-  struct netlink_res *end_ptr;	/* For faster append of new entries.  */
-};
 
 
 /* struct to hold the data for one ifaddrs entry, so we can allocate
@@ -91,8 +64,8 @@ struct ifaddrs_storage
 };
 
 
-static void
-free_netlink_handle (struct netlink_handle *h)
+void
+__netlink_free_handle (struct netlink_handle *h)
 {
   struct netlink_res *ptr;
   int saved_errno = errno;
@@ -107,12 +80,12 @@ free_netlink_handle (struct netlink_handle *h)
       ptr = tmpptr;
     }
 
-  errno = saved_errno;
+  __set_errno (saved_errno);
 }
 
 
-static int
-netlink_sendreq (struct netlink_handle *h, int type)
+int
+__netlink_sendreq (struct netlink_handle *h, int type)
 {
   struct
   {
@@ -140,8 +113,8 @@ netlink_sendreq (struct netlink_handle *h, int type)
 }
 
 
-static int
-netlink_receive (struct netlink_handle *h)
+int
+__netlink_receive (struct netlink_handle *h)
 {
   struct netlink_res *nlm_next;
   char buf[4096];
@@ -211,8 +184,8 @@ netlink_receive (struct netlink_handle *h)
 }
 
 
-static void
-netlink_close (struct netlink_handle *h)
+void
+__netlink_close (struct netlink_handle *h)
 {
   /* Don't modify errno.  */
   INTERNAL_SYSCALL_DECL (err);
@@ -221,21 +194,25 @@ netlink_close (struct netlink_handle *h)
 
 
 /* Open a NETLINK socket.  */
-static int
-netlink_open (struct netlink_handle *h)
+int
+__netlink_open (struct netlink_handle *h)
 {
   struct sockaddr_nl nladdr;
 
   h->fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
   if (h->fd < 0)
-    return -1;
+    goto out;
 
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
   if (__bind (h->fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) < 0)
     {
     close_and_out:
-      netlink_close (h);
+      __netlink_close (h);
+    out:
+#if __ASSUME_NETLINK_SUPPORT == 0
+      __no_netlink_support = 1;
+#endif
       return -1;
     }
   /* Determine the ID the kernel assigned for this netlink connection.
@@ -298,12 +275,10 @@ getifaddrs (struct ifaddrs **ifap)
   if (ifap)
     *ifap = NULL;
 
-  if (! __no_netlink_support && netlink_open (&nh) < 0)
+  if (! __no_netlink_support && __netlink_open (&nh) < 0)
     {
-#if __ASSUME_NETLINK_SUPPORT == 0
-       __no_netlink_support = 1;
-#else
-       return -1;
+#if __ASSUME_NETLINK_SUPPORT != 0
+      return -1;
 #endif
     }
 
@@ -314,13 +289,13 @@ getifaddrs (struct ifaddrs **ifap)
 
   /* Tell the kernel that we wish to get a list of all
      active interfaces.  */
-  if (netlink_sendreq (&nh, RTM_GETLINK) < 0)
+  if (__netlink_sendreq (&nh, RTM_GETLINK) < 0)
     {
       result = -1;
       goto exit_close;
     }
   /* Collect all data for every interface.  */
-  if (netlink_receive (&nh) < 0)
+  if (__netlink_receive (&nh) < 0)
     {
       result = -1;
       goto exit_free;
@@ -332,9 +307,9 @@ getifaddrs (struct ifaddrs **ifap)
      interfaces in the list, we will later always find the
      interface before the corresponding addresses.  */
   ++nh.seq;
-  if (netlink_sendreq (&nh, RTM_GETADDR) < 0
+  if (__netlink_sendreq (&nh, RTM_GETADDR) < 0
       /* Collect all data for every interface.  */
-      || netlink_receive (&nh) < 0)
+      || __netlink_receive (&nh) < 0)
     {
       result = -1;
       goto exit_free;
@@ -355,7 +330,7 @@ getifaddrs (struct ifaddrs **ifap)
          message type they contain.  */
       for (nlh = nlp->nlh; NLMSG_OK (nlh, size); nlh = NLMSG_NEXT (nlh, size))
 	{
-	  /* check if the message is what we want */
+	  /* Check if the message is what we want.  */
 	  if ((pid_t) nlh->nlmsg_pid != nh.pid || nlh->nlmsg_seq != nlp->seq)
 	    continue;
 
@@ -791,10 +766,10 @@ getifaddrs (struct ifaddrs **ifap)
     *ifap = &ifas[0].ifa;
 
  exit_free:
-  free_netlink_handle (&nh);
+  __netlink_free_handle (&nh);
 
  exit_close:
-  netlink_close (&nh);
+  __netlink_close (&nh);
 
   return result;
 }

@@ -1,3 +1,18 @@
+2004-06-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/net/if.h: Handle if_nameindex and if_freenameindex with
+	libc_proto_hidden.
+	* sysdeps/unix/sysv/linux/netlinkaccess.h: New file.
+	* sysdeps/unix/sysv/linux/ifaddrs.c: Export netlink handling functions.
+	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Implement using
+	netlink if possible.  Fall back on ioctl method if necessary.
+
+	* include/unistd.h: Declare __truncate.
+	* sysdeps/generic/truncate.c: Also define __truncate.
+	* sysdeps/mach/hurd/truncate.c: Likewise.
+	* sysdeps/unix/common/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/truncate64.c: Use __truncate, not truncate.
+
 2004-06-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/printf-parsemb.c (__parse_one_specmb): Initialize

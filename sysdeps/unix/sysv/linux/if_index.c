@@ -28,10 +28,11 @@
 #include <bits/libc-lock.h>
 #include <not-cancel.h>
 
-#include "kernel-features.h"
+#include "netlinkaccess.h"
+
 
 /* Variable to signal whether SIOCGIFCONF is not available.  */
-#if __ASSUME_SIOCGIFNAME == 0
+# if __ASSUME_SIOCGIFNAME == 0
 static int old_siocgifconf;
 #else
 # define old_siocgifconf 0
@@ -73,20 +74,18 @@ if_freenameindex (struct if_nameindex *ifn)
   struct if_nameindex *ptr = ifn;
   while (ptr->if_name || ptr->if_index)
     {
-      if (ptr->if_name)
-	free (ptr->if_name);
+      free (ptr->if_name);
       ++ptr;
     }
   free (ifn);
 }
+libc_hidden_def (if_freenameindex)
 
-struct if_nameindex *
-if_nameindex (void)
+
+#if __ASSUME_NETLINK_SUPPORT == 0
+static struct if_nameindex *
+if_nameindex_ioctl (void)
 {
-#ifndef SIOCGIFINDEX
-  __set_errno (ENOSYS);
-  return NULL;
-#else
   int fd = __opensock ();
   struct ifconf ifc;
   unsigned int nifs, i;
@@ -174,8 +173,147 @@ if_nameindex (void)
 
   close_not_cancel_no_status (fd);
   return idx;
+}
+#endif
+
+
+static struct if_nameindex *
+if_nameindex_netlink (void)
+{
+  struct netlink_handle nh = { 0, 0, 0, NULL, NULL };
+  struct if_nameindex *idx = NULL;
+
+  if (__no_netlink_support || __netlink_open (&nh) < 0)
+    return NULL;
+
+
+  /* Tell the kernel that we wish to get a list of all
+     active interfaces.  */
+  if (__netlink_sendreq (&nh, RTM_GETLINK) < 0)
+    goto exit_close;
+
+  /* Collect all data for every interface.  */
+  if (__netlink_receive (&nh) < 0)
+    goto exit_free;
+
+  /* Count the interfaces.  */
+  unsigned int nifs = 0;
+  for (struct netlink_res *nlp = nh.nlm_list; nlp; nlp = nlp->next)
+    {
+      struct nlmsghdr *nlh;
+      size_t size = nlp->size;
+
+      if (nlp->nlh == NULL)
+	continue;
+
+      /* Walk through all entries we got from the kernel and look, which
+         message type they contain.  */
+      for (nlh = nlp->nlh; NLMSG_OK (nlh, size); nlh = NLMSG_NEXT (nlh, size))
+	{
+	  /* Check if the message is what we want.  */
+	  if ((pid_t) nlh->nlmsg_pid != nh.pid || nlh->nlmsg_seq != nlp->seq)
+	    continue;
+
+	  if (nlh->nlmsg_type == NLMSG_DONE)
+	    break;		/* ok */
+
+	  if (nlh->nlmsg_type == RTM_NEWLINK)
+	    ++nifs;
+	}
+    }
+
+  idx = malloc ((nifs + 1) * sizeof (struct if_nameindex));
+  if (idx == NULL)
+    {
+    nomem:
+      __set_errno (ENOBUFS);
+      goto exit_free;
+    }
+
+  /* Add the interfaces.  */
+  nifs = 0;
+  for (struct netlink_res *nlp = nh.nlm_list; nlp; nlp = nlp->next)
+    {
+      struct nlmsghdr *nlh;
+      size_t size = nlp->size;
+
+      if (nlp->nlh == NULL)
+	continue;
+
+      /* Walk through all entries we got from the kernel and look, which
+         message type they contain.  */
+      for (nlh = nlp->nlh; NLMSG_OK (nlh, size); nlh = NLMSG_NEXT (nlh, size))
+	{
+	  /* Check if the message is what we want.  */
+	  if ((pid_t) nlh->nlmsg_pid != nh.pid || nlh->nlmsg_seq != nlp->seq)
+	    continue;
+
+	  if (nlh->nlmsg_type == NLMSG_DONE)
+	    break;		/* ok */
+
+	  if (nlh->nlmsg_type == RTM_NEWLINK)
+	    {
+	      struct ifinfomsg *ifim = (struct ifinfomsg *) NLMSG_DATA (nlh);
+	      struct rtattr *rta = IFLA_RTA (ifim);
+	      size_t rtasize = IFLA_PAYLOAD (nlh);
+
+	      idx[nifs].if_index = ifim->ifi_index;
+
+	      while (RTA_OK (rta, rtasize))
+		{
+		  char *rta_data = RTA_DATA (rta);
+		  size_t rta_payload = RTA_PAYLOAD (rta);
+
+		  if (rta->rta_type == IFLA_IFNAME)
+		    {
+		      idx[nifs].if_name = __strndup (rta_data, rta_payload);
+		      if (idx[nifs].if_name == NULL)
+			{
+			  idx[nifs].if_index = 0;
+			  if_freenameindex (idx);
+			  idx = NULL;
+			  goto nomem;
+			}
+		      break;
+		    }
+
+		  rta = RTA_NEXT (rta, rtasize);
+		}
+
+	      ++nifs;
+	    }
+	}
+    }
+
+  idx[nifs].if_index = 0;
+  idx[nifs].if_name = NULL;
+
+ exit_free:
+  __netlink_free_handle (&nh);
+ exit_close:
+  __netlink_close (&nh);
+
+  return idx;
+}
+
+
+struct if_nameindex *
+if_nameindex (void)
+{
+#ifndef SIOCGIFINDEX
+  __set_errno (ENOSYS);
+  return NULL;
+#else
+  struct if_nameindex *result = if_nameindex_netlink ();
+# if __ASSUME_NETLINK_SUPPORT == 0
+  if (__no_netlink_support)
+    result = if_nameindex_ioctl ();
+# endif
+  return result;
 #endif
 }
+libc_hidden_def (if_nameindex)
+
 
 char *
 if_indextoname (unsigned int ifindex, char *ifname)
@@ -262,6 +400,7 @@ if_indextoname (unsigned int ifindex, char *ifname)
 #endif
 }
 libc_hidden_def (if_indextoname)
+
 
 #if 0
 void

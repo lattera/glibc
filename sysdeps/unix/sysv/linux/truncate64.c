@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ truncate64 (const char *path, off64_t length)
       __set_errno (EINVAL);
       return -1;
     }
-  return truncate (path, (off_t) length);
+  return __truncate (path, (off_t) length);
 #endif
 }
 
