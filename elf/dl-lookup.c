@@ -91,11 +91,6 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   /* Make sure nobody can unload the object while we are at it.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-  /* Don't create cross-reference between modules which are
-     dynamically loaded by the same dlopen() call.  */
-  if (undef_map->l_opencount == 0 && map->l_opencount == 0)
-    goto out;
-
   /* Avoid references to objects which cannot be unloaded anyway.  */
   if (map->l_type != lt_loaded
       || (map->l_flags_1 & DF_1_NODELETE) != 0)
@@ -107,7 +102,6 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   if (undef_map->l_type != lt_loaded
       || (undef_map->l_flags_1 & DF_1_NODELETE) != 0)
     {
-      ++map->l_opencount;
       map->l_flags_1 |= DF_1_NODELETE;
       goto out;
     }
@@ -171,19 +165,6 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 	 behavior.  */
       if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
 	undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
-
-      if (map->l_searchlist.r_list != NULL)
-	/* And increment the counter in the referenced object.  */
-	++map->l_opencount;
-      else
-	/* We have to bump the counts for all dependencies since so far
-	   this object was only a normal or transitive dependency.
-	   Now it might be closed with _dl_close() directly.  */
-	for (list = map->l_initfini; *list != NULL; ++list)
-	  ++(*list)->l_opencount;
-
-      /* As if it is opened through _dl_open.  */
-      ++map->l_direct_opencount;
 
       /* Display information if we are debugging.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))

@@ -1,3 +1,46 @@
+2005-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/link.h (struct link_map): Remove l_opencount.  Add l_removed.
+	Change type of l_idx to int.
+	* elf/dl-close.c: Basically rewrite.  Do not use l_opencount to
+	determine whether a DSO has to be unloaded.  Instead compute this
+	in this function.
+	* elf/dl-deps.c: No need to manipulate l_opencount anymore.
+	* elf/dl-lookup.c: Likewise.
+	* elf/rtld.c: Likewise
+	* elf/dl-open.c: Likewise.  Use l_init_called to determine whether
+	object was just loaded.
+	* elf/dl-fini.c: Bump l_direct_opencount instead of l_opencount.
+	* elf/dl-load.c (_dl_map_object_from_fd): Do not recognize DSO which
+	is about to be unloaded as a match.
+	(_dl_map_object): Likewise.
+	* elf/do-lookup.h (do_lookup_x): Do not look into DSO which is about
+	to be unloaded.
+	* elf/circleload1.c: Don't use l_opencount anymore.
+	* elf/neededtest.c: Likewise.
+	* elf/neededtest2.c: Likewise.
+	* elf/neededtest3.c: Likewise.
+	* elf/neededtest4.c: Likewise.
+	* elf/unload.c: Likewise.
+	* elf/unload2.c: Likewise.
+	* elf/loadtest.c: Likewise.
+
+	* elf/rtld.c: Preloading errors are now never fatal.
+
+2005-03-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload5 test.
+	* elf/unload5.c: New file.
+
+2005-03-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload4 test.
+	* elf/unload4.c: New file.
+	* elf/unload4mod1.c: New file.
+	* elf/unload4mod2.c: New file.
+	* elf/unload4mod3.c: New file.
+	* elf/unload4mod4.c: New file.
+
 2005-03-17  Roland McGrath  <roland@redhat.com>
 
 	* nscd/aicache.c (addhstaiX): Tweak type to avoid warning.

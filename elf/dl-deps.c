@@ -566,8 +566,6 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	  {
 	    /* A direct or transitive dependency is also on the list
 	       of relocation dependencies.  Remove the latter.  */
-	    --map->l_reldeps[i]->l_opencount;
-
 	    for (j = i + 1; j < map->l_reldepsact; ++j)
 	      map->l_reldeps[j - 1] = map->l_reldeps[j];
 

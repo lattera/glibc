@@ -98,9 +98,9 @@ _dl_fini (void)
 
 	    maps[i++] = l;
 
-	    /* Bump l_opencount of all objects so that they are not
-	       dlclose()ed from underneath us.  */
-	    ++l->l_opencount;
+	    /* Bump l_direct_opencount of all objects so that they are
+	       not dlclose()ed from underneath us.  */
+	    ++l->l_direct_opencount;
 	  }
       assert (cnt != LM_ID_BASE || i == nloaded);
       assert (cnt == LM_ID_BASE || i == nloaded || i == nloaded - 1);
@@ -237,7 +237,7 @@ _dl_fini (void)
 	    }
 
 	  /* Correct the previous increment.  */
-	  --l->l_opencount;
+	  --l->l_direct_opencount;
 	}
     }
 

@@ -52,6 +52,10 @@ do_lookup_x (const char *undef_name, unsigned long int hash,
       if ((type_class & ELF_RTYPE_CLASS_COPY) && map->l_type == lt_executable)
 	continue;
 
+      /* Do not look into objects which are going to be removed.  */
+      if (map->l_removed)
+	continue;
+
       /* Print some debugging info if wanted.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SYMBOLS, 0))
 	_dl_debug_printf ("symbol=%s;  lookup in file=%s [%lu]\n",

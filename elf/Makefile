@@ -85,6 +85,7 @@ distribute	:= rtld-Rules \
 		   check-textrel.c dl-sysdep.h test-dlopenrpathmod.c \
 		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c \
 		   unload3mod1.c unload3mod2.c unload3mod3.c unload3mod4.c \
+		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
 		   tst-auditmod1.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
@@ -160,7 +161,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
 	 tst-align2 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
 	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
-	 unload3 tst-audit1 tst-global1
+	 unload3 unload4 unload5 tst-audit1 tst-global1
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -196,7 +197,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		$(modules-execstack-$(have-z-execstack)) \
 		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
 		tst-dlmopen1mod tst-auditmod1 \
-		unload3mod1 unload3mod2 unload3mod3 unload3mod4
+		unload3mod1 unload3mod2 unload3mod3 unload3mod4 \
+		unload4mod1 unload4mod2 unload4mod3 unload4mod4
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
@@ -431,6 +433,8 @@ $(objpfx)reldep9mod3.so: $(objpfx)reldep9mod1.so $(objpfx)reldep9mod2.so
 $(objpfx)unload3mod1.so: $(objpfx)unload3mod3.so
 $(objpfx)unload3mod2.so: $(objpfx)unload3mod3.so
 $(objpfx)unload3mod3.so: $(objpfx)unload3mod4.so
+$(objpfx)unload4mod1.so: $(objpfx)unload4mod2.so $(objpfx)unload4mod3.so
+$(objpfx)unload4mod2.so: $(objpfx)unload4mod4.so $(objpfx)unload4mod3.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
@@ -471,6 +475,7 @@ circlemod3a.so-no-z-defs = yes
 reldep8mod2.so-no-z-defs = yes
 reldep9mod1.so-no-z-defs = yes
 unload3mod4.so-no-z-defs = yes
+unload4mod1.so-no-z-defs = yes
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
@@ -689,6 +694,13 @@ $(objpfx)tst-align2: $(objpfx)tst-alignmod2.so
 
 $(objpfx)unload3: $(libdl)
 $(objpfx)unload3.out: $(objpfx)unload3mod1.so $(objpfx)unload3mod2.so \
+		      $(objpfx)unload3mod3.so $(objpfx)unload3mod4.so
+
+$(objpfx)unload4: $(libdl)
+$(objpfx)unload4.out: $(objpfx)unload4mod1.so $(objpfx)unload4mod3.so
+
+$(objpfx)unload5: $(libdl)
+$(objpfx)unload5.out: $(objpfx)unload3mod1.so $(objpfx)unload3mod2.so \
 		      $(objpfx)unload3mod3.so $(objpfx)unload3mod4.so
 
 ifdef libdl

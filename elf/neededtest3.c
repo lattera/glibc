@@ -27,7 +27,7 @@ check_loaded_objects (const char **loaded)
   for (lm = _r_debug.r_map; lm; lm = lm->l_next)
     {
       if (lm->l_name && lm->l_name[0])
-	printf(" %s, count = %d\n", lm->l_name, (int) lm->l_opencount);
+	printf(" %s, count = %d\n", lm->l_name, (int) lm->l_direct_opencount);
       if (lm->l_type == lt_loaded && lm->l_name)
 	{
 	  int match = 0;

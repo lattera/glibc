@@ -102,19 +102,9 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 void
 _dl_close (void *_map)
 {
-  struct reldep_list
-  {
-    struct link_map **rellist;
-    unsigned int nrellist;
-    unsigned int nhandled;
-    struct reldep_list *next;
-    bool handled[0];
-  } *reldeps = NULL;
-  struct link_map **list;
   struct link_map *map = _map;
   Lmid_t ns = map->l_ns;
   unsigned int i;
-  unsigned int *new_opencount;
 #ifdef USE_TLS
   bool any_tls = false;
 #endif
@@ -125,160 +115,127 @@ _dl_close (void *_map)
     /* Nope.  Do nothing.  */
     return;
 
-  if (__builtin_expect (map->l_opencount, 1) == 0)
+  if (__builtin_expect (map->l_direct_opencount, 1) == 0)
     GLRO(dl_signal_error) (0, map->l_name, NULL, N_("shared object not open"));
 
   /* Acquire the lock.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   /* One less direct use.  */
-  assert (map->l_direct_opencount > 0);
   --map->l_direct_opencount;
 
   /* Decrement the reference count.  */
-  if (map->l_opencount > 1 || map->l_type != lt_loaded)
+  if (map->l_direct_opencount > 1 || map->l_type != lt_loaded)
     {
-      /* Decrement the object's reference counter, not the dependencies'.  */
-      --map->l_opencount;
-
       /* There are still references to this object.  Do nothing more.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	_dl_debug_printf ("\nclosing file=%s; opencount=%u\n",
-			  map->l_name, map->l_opencount);
-
-      /* If the direct use counter reaches zero we have to decrement
-	 all the dependencies' usage counter.  */
-      if (map->l_direct_opencount == 0)
-	for (i = 1; i < map->l_searchlist.r_nlist; ++i)
-	  --map->l_searchlist.r_list[i]->l_opencount;
+	_dl_debug_printf ("\nclosing file=%s; direct_opencount=%u\n",
+			  map->l_name, map->l_direct_opencount);
 
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
       return;
     }
 
-  list = map->l_initfini;
+#define NWORDS(n) (((n) + 8 * sizeof (unsigned long int) - 1) \
+		   / (sizeof (unsigned long int)))
+#define SETBIT(a, n) a[(n) / sizeof (unsigned long int)] \
+		       |= 1 << ((n) % (sizeof (unsigned long int)))
+#define ISSET(a, n) (a[(n) / sizeof (unsigned long int)] \
+		     & 1 << ((n) % (sizeof (unsigned long int))))
+  const unsigned int nloaded = GL(dl_ns)[ns]._ns_nloaded;
+  unsigned long int used[NWORDS (nloaded)];
+  unsigned long int done[NWORDS (nloaded)];
+  struct link_map *maps[nloaded];
 
-  /* Compute the new l_opencount values.  */
-  i = map->l_searchlist.r_nlist;
-  if (__builtin_expect (i == 0, 0))
-    /* This can happen if we handle relocation dependencies for an
-       object which wasn't loaded directly.  */
-    for (i = 1; list[i] != NULL; ++i)
-      ;
-
-  unsigned int nopencount = i;
-  new_opencount = (unsigned int *) alloca (i * sizeof (unsigned int));
-
-  for (i = 0; list[i] != NULL; ++i)
+  /* Run over the list and assign indeces to the link maps and enter
+     them into the MAPS array.  */
+  int idx = 0;
+  for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
     {
-      list[i]->l_idx = i;
-      new_opencount[i] = list[i]->l_opencount;
+      l->l_idx = idx;
+      maps[idx] = l;
+      ++idx;
     }
-  --new_opencount[0];
-  for (i = 1; list[i] != NULL; ++i)
-    if ((list[i]->l_flags_1 & DF_1_NODELETE) == 0
-	/* Decrement counter.  */
-	&& (assert (new_opencount[i] > 0), --new_opencount[i] == 0))
-      {
-	void mark_removed (struct link_map *remmap)
-	  {
-	    /* Test whether this object was also loaded directly.  */
-	    if (remmap->l_searchlist.r_list != NULL
-		&& remmap->l_direct_opencount > 0)
-	      {
-		/* In this case we have to decrement all the dependencies of
-		   this object.  They are all in MAP's dependency list.  */
-		unsigned int j;
-		struct link_map **dep_list = remmap->l_searchlist.r_list;
+  assert (idx == nloaded);
 
-		for (j = 1; j < remmap->l_searchlist.r_nlist; ++j)
-		  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE)
-		      || ! dep_list[j]->l_init_called)
+  /* Prepare the bitmaps.  */
+  memset (used, '\0', sizeof (used));
+  memset (done, '\0', sizeof (done));
+
+  /* Keep track of the lowest index link map we have covered already.  */
+  int done_index = -1;
+  while (++done_index < nloaded)
+    {
+      struct link_map *l = maps[done_index];
+
+      if (ISSET (done, done_index))
+	/* Already handled.  */
+	continue;
+
+      /* Check whether this object is still used.  */
+      if (l->l_type == lt_loaded
+	  && l->l_direct_opencount == 0
+	  && (l->l_flags_1 & DF_1_NODELETE) == 0
+	  && !ISSET (used, done_index))
+	continue;
+
+      /* We need this object and we handle it now.  */
+      SETBIT (done, done_index);
+      SETBIT (used, done_index);
+
+      /* Mark all dependencies as used.  */
+      if (l->l_initfini != NULL)
+	{
+	  struct link_map **lp = &l->l_initfini[1];
+	  while (*lp != NULL)
+	    {
+	      assert ((*lp)->l_idx >= 0 && (*lp)->l_idx < nloaded);
+
+	      if (!ISSET (used, (*lp)->l_idx))
 		{
-		  assert (dep_list[j]->l_idx < map->l_searchlist.r_nlist);
-		  assert (new_opencount[dep_list[j]->l_idx] > 0);
-		  if (--new_opencount[dep_list[j]->l_idx] == 0)
-		    {
-		      assert (dep_list[j]->l_type == lt_loaded);
-		      mark_removed (dep_list[j]);
-		    }
+		  SETBIT (used, (*lp)->l_idx);
+		  if ((*lp)->l_idx - 1 < done_index)
+		    done_index = (*lp)->l_idx - 1;
 		}
-	      }
 
-	    if (remmap->l_reldeps != NULL)
+	      ++lp;
+	    }
+	}
+      /* And the same for relocation dependencies.  */
+      if (l->l_reldeps != NULL)
+	for (unsigned int j = 0; j < l->l_reldepsact; ++j)
+	  {
+	    struct link_map *jmap = l->l_reldeps[j];
+
+	    assert (jmap->l_idx >= 0 && jmap->l_idx < nloaded);
+
+	    if (!ISSET (used, jmap->l_idx))
 	      {
-		unsigned int j;
-		for (j = 0; j < remmap->l_reldepsact; ++j)
-		  {
-		    struct link_map *depmap = remmap->l_reldeps[j];
-
-		    /* Find out whether this object is in our list.  */
-		    if (depmap->l_idx < nopencount
-			&& list[depmap->l_idx] == depmap)
-		      {
-			/* Yes, it is.  If is has a search list, make a
-			   recursive call to handle this.  */
-			if (depmap->l_searchlist.r_list != NULL)
-			  {
-			    assert (new_opencount[depmap->l_idx] > 0);
-			    if (--new_opencount[depmap->l_idx] == 0)
-			      {
-				/* This one is now gone, too.  */
-				assert (depmap->l_type == lt_loaded);
-				mark_removed (depmap);
-			      }
-			  }
-			else
-			  {
-			    /* Otherwise we have to handle the dependency
-			       deallocation here.  */
-			    unsigned int k;
-			    for (k = 0; depmap->l_initfini[k] != NULL; ++k)
-			      {
-				struct link_map *rl = depmap->l_initfini[k];
-
-				if (rl->l_idx < nopencount
-				    && list[rl->l_idx] == rl)
-				  {
-				    assert (new_opencount[rl->l_idx] > 0);
-				    if (--new_opencount[rl->l_idx] ==  0)
-				      {
-					/* Another module to remove.  */
-					assert (rl->l_type == lt_loaded);
-					mark_removed (rl);
-				      }
-				  }
-				else
-				  {
-				    assert (rl->l_opencount > 0);
-				    if (--rl->l_opencount == 0)
-				      mark_removed (rl);
-				  }
-			      }
-			  }
-		      }
-		  }
+		SETBIT (used, jmap->l_idx);
+		if (jmap->l_idx - 1 < done_index)
+		  done_index = jmap->l_idx - 1;
 	      }
 	  }
-
-	mark_removed (list[i]);
-      }
-  assert (new_opencount[0] == 0);
+    }
 
   /* Call all termination functions at once.  */
 #ifdef SHARED
   bool do_audit = GLRO(dl_naudit) > 0 && !GL(dl_ns)[ns]._ns_loaded->l_auditing;
 #endif
-  for (i = 0; list[i] != NULL; ++i)
+  bool unload_any = false;
+  unsigned int first_loaded = ~0;
+  for (i = 0; i < nloaded; ++i)
     {
-      struct link_map *imap = list[i];
+      struct link_map *imap = maps[i];
 
       /* All elements must be in the same namespace.  */
       assert (imap->l_ns == ns);
 
-      if (new_opencount[i] == 0 && imap->l_type == lt_loaded
-	  && (imap->l_flags_1 & DF_1_NODELETE) == 0)
+      if (!ISSET (used, i))
 	{
+	  assert (imap->l_type == lt_loaded
+		  && (imap->l_flags_1 & DF_1_NODELETE) == 0);
+
 	  /* Call its termination function.  Do not do it for
 	     half-cooked objects.  */
 	  if (imap->l_init_called)
@@ -324,41 +281,58 @@ _dl_close (void *_map)
 	    }
 #endif
 
-	  /* This object must not be used anymore.  We must remove the
-	     reference from the scope.  */
-	  unsigned int j;
-	  struct link_map **searchlist = map->l_searchlist.r_list;
-	  unsigned int nsearchlist = map->l_searchlist.r_nlist;
+	  /* This object must not be used anymore.  */
+	  imap->l_removed = 1;
 
-#ifndef NDEBUG
-	  bool found = false;
-#endif
-	  for (j = 0; j < nsearchlist; ++j)
-	    if (imap == searchlist[j])
-	      {
-		/* This is the object to remove.  Copy all the
-		   following ones.  */
-		while (++j < nsearchlist)
-		  searchlist[j - 1] = searchlist[j];
+	  /* We indeed have an object to remove.  */
+	  unload_any = true;
 
-		searchlist[j - 1] = NULL;
-
-		--map->l_searchlist.r_nlist;
-
-#ifndef NDEBUG
-		found = true;
-#endif
-		break;
-	      }
-	  assert (found);
+	  /* Remember where the first dynamically loaded object is.  */
+	  if (i < first_loaded)
+	    first_loaded = i;
 	}
+      /* Else ISSET (used, i).  */
+      else if (imap->l_type == lt_loaded)
+	{
+	  if (imap->l_searchlist.r_list == NULL
+	      && imap->l_initfini != NULL)
+	    {
+	      /* The object is still used.  But the object we are
+		 unloading right now is responsible for loading it.  If
+		 the current object does not have it's own scope yet we
+		 have to create one.  This has to be done before running
+		 the finalizers.
 
-      /* Store the new l_opencount value.  */
-      imap->l_opencount = new_opencount[i];
+		 To do this count the number of dependencies.  */
+	      unsigned int cnt;
+	      for (cnt = 1; imap->l_initfini[cnt] != NULL; ++cnt)
+		;
 
-      /* Just a sanity check.  */
-      assert (imap->l_type == lt_loaded || imap->l_opencount > 0);
+	      /* We simply reuse the l_initfini list.  */
+	      imap->l_searchlist.r_list = &imap->l_initfini[cnt + 1];
+	      imap->l_searchlist.r_nlist = cnt;
+
+	      for (cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
+		if (imap->l_scope[cnt] == &map->l_searchlist)
+		  {
+		    imap->l_scope[cnt] = &imap->l_searchlist;
+		    break;
+		  }
+	    }
+
+	  /* The loader is gone, so mark the object as not having one.  */
+	  if (imap->l_loader != NULL && !ISSET (used, imap->l_loader->l_idx))
+	    imap->l_loader = NULL;
+
+	  /* Remember where the first dynamically loaded object is.  */
+	  if (i < first_loaded)
+	    first_loaded = i;
+	}
     }
+
+  /* If there are no objects to unload, do nothing further.  */
+  if (!unload_any)
+    goto out;
 
 #ifdef SHARED
   /* Auditing checkpoint: we will start deleting objects.  */
@@ -393,12 +367,12 @@ _dl_close (void *_map)
 
   /* Check each element of the search list to see if all references to
      it are gone.  */
-  for (i = 0; list[i] != NULL; ++i)
+  for (i = first_loaded; i < nloaded; ++i)
     {
-      struct link_map *imap = list[i];
-      if (imap->l_opencount == 0 && imap->l_type == lt_loaded)
+      struct link_map *imap = maps[i];
+      if (!ISSET (used, i))
 	{
-	  struct libname_list *lnp;
+	  assert (imap->l_type == lt_loaded);
 
 	  /* That was the last reference, and this was a dlopen-loaded
 	     object.  We can unmap it.  */
@@ -527,34 +501,7 @@ _dl_close (void *_map)
 	  if (imap->l_origin != (char *) -1)
 	    free ((char *) imap->l_origin);
 
-	  /* If the object has relocation dependencies save this
-             information for latter.  */
-	  if (__builtin_expect (imap->l_reldeps != NULL, 0))
-	    {
-	      struct reldep_list *newrel;
-
-	      newrel = (struct reldep_list *) alloca (sizeof (*reldeps)
-						      + (imap->l_reldepsact
-							 * sizeof (bool)));
-	      newrel->rellist = imap->l_reldeps;
-	      newrel->nrellist = imap->l_reldepsact;
-	      newrel->next = reldeps;
-
-	      newrel->nhandled = imap->l_reldepsact;
-	      unsigned int j;
-	      for (j = 0; j < imap->l_reldepsact; ++j)
-		{
-		  /* Find out whether this object is in our list.  */
-		  if (imap->l_reldeps[j]->l_idx < nopencount
-		      && list[imap->l_reldeps[j]->l_idx] == imap->l_reldeps[j])
-		    /* Yes, it is.  */
-		    newrel->handled[j] = true;
-		  else
-		    newrel->handled[j] = false;
-		}
-
-	      reldeps = newrel;
-	    }
+	  free (imap->l_reldeps);
 
 	  /* Print debugging message.  */
 	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
@@ -564,7 +511,8 @@ _dl_close (void *_map)
 	  /* This name always is allocated.  */
 	  free (imap->l_name);
 	  /* Remove the list with all the names of the shared object.  */
-	  lnp = imap->l_libname;
+
+	  struct libname_list *lnp = imap->l_libname;
 	  do
 	    {
 	      struct libname_list *this = lnp;
@@ -575,8 +523,7 @@ _dl_close (void *_map)
 	  while (lnp != NULL);
 
 	  /* Remove the searchlists.  */
-	  if (imap != map)
-	    free (imap->l_initfini);
+	  free (imap->l_initfini);
 
 	  /* Remove the scope array if we allocated it.  */
 	  if (imap->l_scope != imap->l_scope_mem)
@@ -630,26 +577,8 @@ _dl_close (void *_map)
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
 
-  /* Now we can perhaps also remove the modules for which we had
-     dependencies because of symbol lookup.  */
-  while (__builtin_expect (reldeps != NULL, 0))
-    {
-      while (reldeps->nrellist-- > 0)
-	/* Some of the relocation dependencies might be on the
-	   dependency list of the object we are closing right now.
-	   They were already handled.  Do not close them again.  */
-	if (reldeps->nrellist < reldeps->nhandled
-	    && ! reldeps->handled[reldeps->nrellist])
-	  _dl_close (reldeps->rellist[reldeps->nrellist]);
-
-      free (reldeps->rellist);
-
-      reldeps = reldeps->next;
-    }
-
-  free (list);
-
   /* Release the lock.  */
+ out:
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 }
 

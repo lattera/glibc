@@ -178,7 +178,6 @@ struct link_map
     Elf_Symndx l_nbuckets;
     const Elf_Symndx *l_buckets, *l_chain;
 
-    unsigned int l_opencount;	/* Counter for direct and indirect usage.  */
     unsigned int l_direct_opencount; /* Reference count for dlopen/dlclose.  */
     enum			/* Where this object came from.  */
       {
@@ -203,6 +202,8 @@ struct link_map
     unsigned int l_auditing:1;	/* Nonzero if the DSO is used in auditing.  */
     unsigned int l_audit_any_plt:1; /* Nonzero if at least one audit module
 				       is interested in the PLT interception.*/
+    unsigned int l_removed:1;	/* Nozero if the object cannot be used anymore
+				   since it is removed.  */
 
     /* Array with version names.  */
     unsigned int l_nversions;
@@ -267,7 +268,7 @@ struct link_map
     ElfW(Word) l_flags;
 
     /* Temporarily used in `dl_close'.  */
-    unsigned int l_idx;
+    int l_idx;
 
     struct link_map_machine l_mach;
 

@@ -849,7 +849,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)
-    if (l->l_ino == st.st_ino && l->l_dev == st.st_dev)
+    if (l->l_removed == 0 && l->l_ino == st.st_ino && l->l_dev == st.st_dev)
       {
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
@@ -1914,7 +1914,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       /* If the requested name matches the soname of a loaded object,
 	 use that object.  Elide this check for names that have not
 	 yet been opened.  */
-      if (__builtin_expect (l->l_faked, 0) != 0)
+      if (__builtin_expect (l->l_faked, 0) != 0
+	  || __builtin_expect (l->l_removed, 0) != 0)
 	continue;
       if (!_dl_name_match_p (name, l))
 	{

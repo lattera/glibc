@@ -267,7 +267,6 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_real = &GL(dl_rtld_map);
-  GL(dl_rtld_map).l_opencount = 1;
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
   GL(dl_rtld_map).l_text_end = (ElfW(Addr)) _etext;
@@ -764,14 +763,48 @@ _dl_initial_error_catch_tsd (void)
 }
 #endif
 
+
+static unsigned int
+do_preload (char *fname, struct link_map *main_map, const char *where)
+{
+  const char *objname;
+  const char *err_str = NULL;
+  struct map_args args;
+
+  args.str = fname;
+  args.loader = main_map;
+  args.is_preloaded = 1;
+  args.mode = 0;
+
+  unsigned int old_nloaded = GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
+
+  (void) _dl_catch_error (&objname, &err_str, map_doit, &args);
+  if (__builtin_expect (err_str != NULL, 0))
+    {
+      _dl_error_printf ("\
+ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
+			fname, where);
+      /* No need to call free, this is still before
+	 the libc's malloc is used.  */
+    }
+  else if (GL(dl_ns)[LM_ID_BASE]._ns_nloaded != old_nloaded)
+    /* It is no duplicate.  */
+    return 1;
+
+  /* Nothing loaded.  */
+  return 0;
+}
+
 #if defined SHARED && defined _LIBC_REENTRANT \
     && defined __rtld_lock_default_lock_recursive
-static void rtld_lock_default_lock_recursive (void *lock)
+static void
+rtld_lock_default_lock_recursive (void *lock)
 {
   __rtld_lock_default_lock_recursive (lock);
 }
 
-static void rtld_lock_default_unlock_recursive (void *lock)
+static void
+rtld_lock_default_unlock_recursive (void *lock)
 {
   __rtld_lock_default_unlock_recursive (lock);
 }
@@ -792,8 +825,6 @@ dl_main (const ElfW(Phdr) *phdr,
 {
   const ElfW(Phdr) *ph;
   enum mode mode;
-  struct link_map **preloads;
-  unsigned int npreloads;
   struct link_map *main_map;
   size_t file_size;
   char *file;
@@ -1024,8 +1055,6 @@ of this helper program; chances are you did not intend to run this program.\n\
   main_map->l_text_end = 0;
   /* Perhaps the executable has no PT_LOAD header entries at all.  */
   main_map->l_map_start = ~0;
-  /* We opened the file, account for it.  */
-  ++main_map->l_opencount;
   /* And it was opened directly.  */
   ++main_map->l_direct_opencount;
 
@@ -1449,8 +1478,9 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   /* We have two ways to specify objects to preload: via environment
      variable and via the file /etc/ld.so.preload.  The latter can also
      be used when security is enabled.  */
-  preloads = NULL;
-  npreloads = 0;
+  assert (GL(dl_rtld_map).l_next == NULL);
+  struct link_map **preloads = NULL;
+  unsigned int npreloads = 0;
 
   if (__builtin_expect (preloadlist != NULL, 0))
     {
@@ -1469,14 +1499,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	if (p[0] != '\0'
 	    && (__builtin_expect (! INTUSE(__libc_enable_secure), 1)
 		|| strchr (p, '/') == NULL))
-	  {
-	    struct link_map *new_map = _dl_map_object (main_map, p, 1,
-						       lt_library, 0, 0,
-						       LM_ID_BASE);
-	    if (++new_map->l_opencount == 1)
-	      /* It is no duplicate.  */
-	      ++npreloads;
-	  }
+	  npreloads += do_preload (p, main_map, "LD_PRELOAD");
 
       HP_TIMING_NOW (stop);
       HP_TIMING_DIFF (diff, start, stop);
@@ -1548,41 +1571,14 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      runp = file;
 	      while ((p = strsep (&runp, ": \t\n")) != NULL)
 		if (p[0] != '\0')
-		  {
-		    const char *objname;
-		    const char *err_str = NULL;
-		    struct map_args args;
-
-		    args.str = p;
-		    args.loader = main_map;
-		    args.is_preloaded = 1;
-		    args.mode = 0;
-
-		    (void) _dl_catch_error (&objname, &err_str, map_doit,
-					    &args);
-		    if (__builtin_expect (err_str != NULL, 0))
-		      {
-			_dl_error_printf ("\
-ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
-					  p, preload_file);
-			/* No need to call free, this is still before
-			   the libc's malloc is used.  */
-		      }
-		    else if (++args.map->l_opencount == 1)
-		      /* It is no duplicate.  */
-		      ++npreloads;
-		  }
+		  npreloads += do_preload (p, main_map, preload_file);
 	    }
 
 	  if (problem != NULL)
 	    {
 	      char *p = strndupa (problem, file_size - (problem - file));
-	      struct link_map *new_map = _dl_map_object (main_map, p, 1,
-							 lt_library, 0, 0,
-							 LM_ID_BASE);
-	      if (++new_map->l_opencount == 1)
-		/* It is no duplicate.  */
-		++npreloads;
+
+	      npreloads += do_preload (p, main_map, preload_file);
 	    }
 
 	  HP_TIMING_NOW (stop);
@@ -1594,7 +1590,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	}
     }
 
-  if (__builtin_expect (npreloads, 0) != 0)
+  if (__builtin_expect (GL(dl_rtld_map).l_next != NULL, 0))
     {
       /* Set up PRELOADS with a vector of the preloaded libraries.  */
       struct link_map *l;
@@ -1694,14 +1690,9 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);
 
-  /* Mark all objects as being in the global scope and set the open
-     counter.  */
+  /* Mark all objects as being in the global scope.  */
   for (i = main_map->l_searchlist.r_nlist; i > 0; )
-    {
-      --i;
-      main_map->l_searchlist.r_list[i]->l_global = 1;
-      ++main_map->l_searchlist.r_list[i]->l_opencount;
-    }
+    main_map->l_searchlist.r_list[--i]->l_global = 1;
 
 #ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */
@@ -1711,18 +1702,22 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 
   /* Remove _dl_rtld_map from the chain.  */
   GL(dl_rtld_map).l_prev->l_next = GL(dl_rtld_map).l_next;
-  if (GL(dl_rtld_map).l_next)
+  if (GL(dl_rtld_map).l_next != NULL)
     GL(dl_rtld_map).l_next->l_prev = GL(dl_rtld_map).l_prev;
 
-  if (__builtin_expect (GL(dl_rtld_map).l_opencount > 1, 1))
+  for (i = 1; i < main_map->l_searchlist.r_nlist; ++i)
+    if (main_map->l_searchlist.r_list[i] == &GL(dl_rtld_map))
+      break;
+
+  bool rtld_multiple_ref = false;
+  if (__builtin_expect (i < main_map->l_searchlist.r_nlist, 1))
     {
       /* Some DT_NEEDED entry referred to the interpreter object itself, so
 	 put it back in the list of visible objects.  We insert it into the
 	 chain in symbol search order because gdb uses the chain's order as
 	 its symbol search order.  */
-      i = 1;
-      while (main_map->l_searchlist.r_list[i] != &GL(dl_rtld_map))
-	++i;
+      rtld_multiple_ref = true;
+
       GL(dl_rtld_map).l_prev = main_map->l_searchlist.r_list[i - 1];
       if (__builtin_expect (mode, normal) == normal)
 	{
@@ -1894,7 +1889,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	  }
       else
 	{
-	  /* If LD_WARN is set warn about undefined symbols.  */
+	  /* If LD_WARN is set, warn about undefined symbols.  */
 	  if (GLRO(dl_lazy) >= 0 && GLRO(dl_verbose))
 	    {
 	      /* We have to do symbol dependency testing.  */
@@ -1904,7 +1899,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	      args.lazy = GLRO(dl_lazy);
 
 	      l = main_map;
-	      while (l->l_next)
+	      while (l->l_next != NULL)
 		l = l->l_next;
 	      do
 		{
@@ -1915,10 +1910,11 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 					 &args);
 		    }
 		  l = l->l_prev;
-		} while (l);
+		}
+	      while (l != NULL);
 
 	      if ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
-		  && GL(dl_rtld_map).l_opencount > 1)
+		  && rtld_multiple_ref)
 		{
 		  /* Mark the link map as not yet relocated again.  */
 		  GL(dl_rtld_map).l_relocated = 0;
@@ -2198,7 +2194,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	/* We must prepare the profiling.  */
 	_dl_start_profile ();
 
-      if (GL(dl_rtld_map).l_opencount > 1)
+      if (rtld_multiple_ref)
 	{
 	  /* There was an explicit ref to the dynamic linker as a shared lib.
 	     Re-relocate ourselves with user-controlled symbol definitions.  */
