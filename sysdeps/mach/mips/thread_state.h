@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 #define PC pc
 #define SP r29
+#define SYSRETURN r2
 
 struct machine_thread_all_state
   {
