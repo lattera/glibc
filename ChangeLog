@@ -1,3 +1,20 @@
+2002-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fileops.c (_IO_file_seekoff_mmap): Do use fp->_offset to
+	compute current position.
+
+	* stdio-common/tst-fseek.c (main): Improve error messages.
+
+	* libio/tst-freopen.c (main): Remove unused variable.
+
+	* libio/fileops.c (_IO_file_seekoff_mmap): Set fp->_offset after
+	succesful seek call.  Simply error checking.
+
+2002-07-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* config.h.in: Use __ASSEMBLER__ test macro not ASSEMBLER.
+	* sysdeps/ia64/fpu/libm_support.h: Likewise.
+
 2002-07-19  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdsig.c (_hurdsig_getenv): Always return null if

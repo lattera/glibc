@@ -22,7 +22,7 @@
 #ifndef _PT_MACHINE_H
 #define _PT_MACHINE_H	1
 
-#ifndef ASSEMBLER
+#ifndef __ASSEMBLER__
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
@@ -103,6 +103,6 @@ compare_and_swap_is_available (void)
      Otherwise, it's a 486 or above and it has cmpxchg.  */
   return changed != 0;
 }
-#endif /* ASSEMBLER */
+#endif /* __ASSEMBLER__ */
 
 #endif /* pt-machine.h */

@@ -23,10 +23,10 @@
 #include <string.h>
 #include <unistd.h>
 
-int main (void)
+int
+main (void)
 {
   char name[] = "/tmp/tst-freopen.XXXXXX";
-  char buf[4096];
   const char * const test = "Let's test freopen.\n";
   char temp[strlen (test) + 1];
   int fd = mkstemp (name);

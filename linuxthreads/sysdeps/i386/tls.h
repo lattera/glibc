@@ -22,7 +22,7 @@
 
 # include <pt-machine.h>
 
-#ifndef ASSEMBLER
+#ifndef __ASSEMBLER__
 # include <stddef.h>
 
 /* Type for the dtv.  */
@@ -49,7 +49,7 @@ typedef struct
 /* Signal that TLS support is available.  */
 # define USE_TLS	1
 
-# ifndef ASSEMBLER
+# ifndef __ASSEMBLER__
 /* Get system call information.  */
 #  include <sysdep.h>
 

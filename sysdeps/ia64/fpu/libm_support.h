@@ -49,7 +49,7 @@
 //         12/07/2000 Added scalbn error_types values.
 //
 
-#ifndef ASSEMBLER
+#ifndef __ASSEMBLER__
 #include <math.h>
 
 float __libm_frexp_4f( float x, int*  exp);
@@ -337,7 +337,7 @@ extern _LIB_VERSION_TYPE _LIB_VERSION;
 // This is a run-time variable and may effect
 // floating point behavior of the libm functions
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */
 
 /* Support for compatible assembler handling.  */
 #if !defined L && defined _LIBC
