@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -23,8 +23,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
-#define N 100
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 
