@@ -1,3 +1,8 @@
+2002-08-07  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/tls.h (TLS_DO_MODIFY_LDT): Add an extra argument with
+	an "m" constraint to the asm so the compiler knows LDT_ENTRY was used.
+
 2002-08-02  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/bits/libc-tsd.h (enum __libc_tsd_key_t):
