@@ -35,7 +35,11 @@ if test "${libc_cv_hurd_version+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <hurd/version.h>
 int
 main ()
@@ -64,7 +68,8 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   libc_cv_hurd_version=ok
 else
   echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
 libc_cv_hurd_version=bad
 fi
 rm -f conftest.$ac_objext conftest.$ac_ext
@@ -75,43 +80,4 @@ if test "x$libc_cv_hurd_version" != xok; then
   { { echo "$as_me:$LINENO: error: Hurd headers not installed or too old" >&5
 echo "$as_me: error: Hurd headers not installed or too old" >&2;}
    { (exit 1); exit 1; }; }
-fi
-
-
-
-# See if mig groks `retcode'.
-echo "$as_me:$LINENO: checking whether $MIG supports the retcode keyword" >&5
-echo $ECHO_N "checking whether $MIG supports the retcode keyword... $ECHO_C" >&6
-if test "${hurd_cv_mig_retcode+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat > conftest.defs <<\EOF
-#include <mach/std_types.defs>
-#include <mach/mach_types.defs>
-subsystem foobar 1000;
-type reply_port_t = polymorphic | MACH_MSG_TYPE_PORT_SEND_ONCE
-	ctype: mach_port_t;
-simpleroutine foobar_reply (
-	reply_port: reply_port_t;
-	err: kern_return_t, RetCode);
-EOF
-if { ac_try='CC="${CC}" ${MIG-false} -n conftest.defs 1>&5'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  hurd_cv_mig_retcode=yes
-else
-  hurd_cv_mig_retcode=no
-fi
-rm -f conftest*
-fi
-echo "$as_me:$LINENO: result: $hurd_cv_mig_retcode" >&5
-echo "${ECHO_T}$hurd_cv_mig_retcode" >&6
-if test $hurd_cv_mig_retcode = yes; then
-  cat >>confdefs.h <<\_ACEOF
-#define HAVE_MIG_RETCODE 1
-_ACEOF
-
 fi
