@@ -742,8 +742,9 @@ _IO_flush_all ()
   _IO_FILE *fp;
   for (fp = _IO_list_all; fp != NULL; fp = fp->_chain)
     if (((fp->_mode < 0 && fp->_IO_write_ptr > fp->_IO_write_base)
-	 || (fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
-			       > fp->_wide_data->_IO_write_base)))
+	 || (fp->_vtable_offset == 0
+	     && fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
+				  > fp->_wide_data->_IO_write_base)))
 	&& _IO_OVERFLOW (fp, EOF) == EOF)
       result = EOF;
   return result;
