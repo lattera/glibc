@@ -345,7 +345,7 @@ __inline_mathcode_ (long double, __expl, __x, __exp_code)
 
 __inline_mathcode (tan, __x, \
   register long double __value;						      \
-  register long double __value2 __attribute__ ((unused));		      \
+  register long double __value2 __attribute__ ((__unused__));		      \
   __asm __volatile__							      \
     ("fptan"								      \
      : "=t" (__value2), "=u" (__value) : "0" (__x));			      \

@@ -1,3 +1,8 @@
+1998-06-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Use ((__unused__)) instead
+	of ((unused)).  Reported by Bruno Haible.
+
 1998-05-31  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.S: Use C_SYMBOL_NAME when
