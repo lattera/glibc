@@ -76,12 +76,16 @@
 /* This is used when defining the functions themselves.  Define them with
    __ names, and with `static inline' instead of `extern inline' so the
    bodies will always be used, never an external function call.  */
-# define __m81_u(x)		__CONCAT(__,x)
-# define __m81_inline		static __inline
+#define __m81_u(x)		__CONCAT(__,x)
+#define __m81_inline		static __inline
 #else
-# define __m81_u(x)		x
-# define __m81_inline		extern __inline
-# define __M81_MATH_INLINES	1
+#define __m81_u(x)		x
+#ifdef __cplusplus
+#define __m81_inline		__inline
+#else
+#define __m81_inline		extern __inline
+#endif
+#define __M81_MATH_INLINES	1
 #endif
 
 /* Define a const math function.  */
@@ -95,12 +99,12 @@
    is the name of the fpu operation (without leading f).  */
 
 #if defined __USE_MISC || defined __USE_ISOC9X
-# define __inline_mathop(func, op)			\
+#define __inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)			\
   __inline_mathop1(float, __CONCAT(func,f), op)		\
   __inline_mathop1(long double, __CONCAT(func,l), op)
 #else
-# define __inline_mathop(func, op)			\
+#define __inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)
 #endif
 
@@ -309,11 +313,17 @@ __m81_defun (int, __CONCAT(__signbit,s), (float_type __value))		  \
 }									  \
 									  \
 __m81_defun (float_type, __CONCAT(__scalbn,s),				  \
-	     (float_type __x, long int __n))				  \
+	     (float_type __x, int __n))					  \
 {									  \
   float_type __result;							  \
   __asm ("fscale%.l %1, %0" : "=f" (__result) : "dmi" (__n), "0" (__x));  \
   return __result;							  \
+}									  \
+									  \
+__m81_defun (float_type, __CONCAT(__scalbln,s),				  \
+	     (float_type __x, long int __n))				  \
+{									  \
+  return __CONCAT(__scalbn,s) (__x, __n);				  \
 }									  \
 									  \
 __m81_defun (float_type, __CONCAT(__nearbyint,s), (float_type __x))	  \
@@ -330,12 +340,26 @@ __m81_defun (float_type, __CONCAT(__nearbyint,s), (float_type __x))	  \
   return __result;							  \
 }									  \
 									  \
+__m81_defun (long int, __CONCAT(__lrint,s), (float_type __x))		  \
+{									  \
+  long int __result;							  \
+  __asm ("fmove%.l %1, %0" : "=dm" (__result) : "f" (__x));		  \
+  return __result;							  \
+}									  \
+									  \
 __m81_inline void							  \
 __m81_u(__CONCAT(__sincos,s))(float_type __x, float_type *__sinx,	  \
 			      float_type *__cosx)			  \
 {									  \
   __asm ("fsincos%.x %2,%1:%0"						  \
 	 : "=f" (*__sinx), "=f" (*__cosx) : "f" (__x));			  \
+}									  \
+									  \
+__m81_inline float_type							  \
+__m81_u(__CONCAT(__fma,s))(float_type __x, float_type __y,		  \
+			   float_type __z)				  \
+{									  \
+  return (__x * __y) + __z;						  \
 }
 
 /* This defines the three variants of the inline functions.  */
@@ -344,17 +368,12 @@ __inline_functions (float,f)
 __inline_functions (long double,l)
 #undef __inline_functions
 
-__m81_defun (long int, __lrint, (long double __x))
-{
-  long int __result;
-  __asm ("fmove%.l %1, %0" : "=dm" (__result) : "f" (__x));
-  return __result;
-}
-
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 /* Define inline versions of the user visible functions.  */
 
+/* Note that there must be no whitespace before the argument passed for
+   NAME, to make token pasting work correctly with -traditional.  */
 #define __inline_forward_c(rettype, name, args1, args2)	\
 extern __inline rettype __attribute__((__const__))	\
 name args1						\
@@ -375,7 +394,8 @@ __inline_forward_c(double,ceil, (double __x), (__x))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinf, (double __value), (__value))
 __inline_forward_c(int,finite, (double __value), (__value))
-__inline_forward_c(double,scalbn, (double __x, long int __n), (__x, __n))
+__inline_forward_c(double,scalbn, (double __x, int __n), (__x, __n))
+__inline_forward_c(double,scalbln, (double __x, long int __n), (__x, __n))
 #endif
 #if defined __USE_MISC || defined __USE_XOPEN
 #ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
@@ -384,6 +404,9 @@ __inline_forward_c(int,isnan, (double __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(double,nearbyint, (double __value), (__value))
+__inline_forward_c(long int,lrint, (double __value), (__value))
+__inline_forward_c(double,fma, (double __x, double __y, double __z),
+		   (__x, __y, __z))
 #endif
 #ifdef __USE_GNU
 __inline_forward(void,sincos, (double __x, double *__sinx, double *__cosx),
@@ -399,11 +422,15 @@ __inline_forward_c(float,ceilf, (float __x), (__x))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinff, (float __value), (__value))
 __inline_forward_c(int,finitef, (float __value), (__value))
-__inline_forward_c(float,scalbnf, (float __x, long int __n), (__x, __n))
+__inline_forward_c(float,scalbnf, (float __x, int __n), (__x, __n))
+__inline_forward_c(float,scalblnf, (float __x, long int __n), (__x, __n))
 __inline_forward_c(int,isnanf, (float __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(float,nearbyintf, (float __value), (__value))
+__inline_forward_c(long int,lrintf, (float __value), (__value))
+__inline_forward_c(float,fmaf, (float __x, float __y, float __z),
+		   (__x, __y, __z))
 #endif
 #ifdef __USE_GNU
 __inline_forward(void,sincosf, (float __x, float *__sinx, float *__cosx),
@@ -417,13 +444,17 @@ __inline_forward_c(long double,ceill, (long double __x), (__x))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinfl, (long double __value), (__value))
 __inline_forward_c(int,finitel, (long double __value), (__value))
-__inline_forward_c(long double,scalbnl, (long double __x, long int __n),
+__inline_forward_c(long double,scalbnl, (long double __x, int __n), (__x, __n))
+__inline_forward_c(long double,scalblnl, (long double __x, long int __n),
 		   (__x, __n))
 __inline_forward_c(int,isnanl, (long double __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
-__inline_forward_c(long int,lrint, (long double __value), (__value))
+__inline_forward_c(long int,lrintl, (long double __value), (__value))
+__inline_forward_c(long double,fmal,
+		   (long double __x, long double __y, long double __z),
+		   (__x, __y, __z))
 #endif
 #ifdef __USE_GNU
 __inline_forward(void,sincosl,
