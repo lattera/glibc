@@ -46,11 +46,11 @@ feholdexcept (fenv_t *envp)
   /* Load the new environment. */
   _regs = &clear;
   __asm__ (
-	   "fldd,ma -8(%1),%%fr3\n"
-	   "fldd,ma -8(%1),%%fr2\n"
-	   "fldd,ma -8(%1),%%fr1\n"
-	   "fldd 0(%1),%%fr0\n"
-	   : "=m" (*_regs), "+r" (_regs));
+	   "fldd,ma 8(%0),%%fr0\n"
+	   "fldd,ma 8(%0),%%fr1\n"
+	   "fldd,ma 8(%0),%%fr2\n"
+	   "fldd 0(%0),%%fr3\n"
+	   : : "r" (_regs));
 
   return 0;
 }
