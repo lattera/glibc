@@ -1346,7 +1346,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* When the object has the RUNPATH information we don't use any
          RPATHs.  */
-      if (loader != NULL && loader->l_info[DT_RUNPATH] == NULL)
+      if (loader == NULL || loader->l_info[DT_RUNPATH] == NULL)
 	{
 	  /* First try the DT_RPATH of the dependent object that caused NAME
 	     to be loaded.  Then that object's dependent, and on up.  */

@@ -1,5 +1,8 @@
 2000-05-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object): Don't ignore RPATHs of loader ==
+	NULL.
+
 	* posix/tst-preadwrite.c: Allow parallel execution of
 	tst-preadwrite and tst-preadwrite64.
 
