@@ -45,7 +45,7 @@ arglist: while (@ARGV) {
 	$ARGV[0] eq "--vers" || $ARGV[0] eq "--versi" ||
 	$ARGV[0] eq "--versio" || $ARGV[0] eq "--version") {
 	print "mtrace (GNU $PACKAGE) $VERSION\n";
-	print "Copyright (C) 2004 Free Software Foundation, Inc.\n";
+	print "Copyright (C) 2005 Free Software Foundation, Inc.\n";
 	print "This is free software; see the source for copying conditions.  There is NO\n";
 	print "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n";
 	print "Written by Ulrich Drepper <drepper\@gnu.org>\n";

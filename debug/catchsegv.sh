@@ -39,7 +39,7 @@ if test $# -eq 0; then
       ;;
     --v | --ve | --ver | --vers | --versi | --versio | --version)
       echo 'catchsegv (GNU libc) @VERSION@'
-      echo 'Copyright (C) 2004 Free Software Foundation, Inc.
+      echo 'Copyright (C) 2005 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Ulrich Drepper.'
