@@ -1,4 +1,4 @@
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -19,13 +19,12 @@
 ifeq	($(subdir),math)
 ifndef	math-twiddled
 
-routines:= $(filter-out acos asin cos sin ceil rint hypot \
-			__copysign __scalb __drem __logb __finite,$(routines))\
-	   asincos sincos
-aux	:= $(aux) argred support exp__E log__L
+elided-routines := $(elided-routines) acos asin cos sin ceil rint hypot \
+		   __copysign __scalb __drem __logb __finite
+sysdep_routines := $(sysdep_routines) asincos sincos argred \
+		   support exp__E log__L
 
 math-twiddled := t
-
 endif
 
 bsdmath_dirs := $(bsdmath_dirs) vax
