@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.2.94\n"
-"POT-Creation-Date: 2002-09-23 22:43-0700\n"
+"Project-Id-Version: libc 2.3\n"
+"POT-Creation-Date: 2002-10-02 17:22-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3586,7 +3586,7 @@ msgstr ""
 msgid "Unmatched ) or \\)"
 msgstr ""
 
-#: posix/regcomp.c:670
+#: posix/regcomp.c:673
 msgid "No previous regular expression"
 msgstr ""
 

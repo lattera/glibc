@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2002-8-29
+GNU C Library NEWS -- history of user-visible changes.  2002-10-2
 Copyright (C) 1992-2001, 2002 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -40,7 +40,7 @@ Version 2.3
   Changes by Ulrich Drepper.  SH support by Kaz Kojima.
 
 * Bruno Haible contributed iconv converters for ISO-2022-JP-3, SHIFT JIS-X0213,
-  and EUC-JISX0213.
+  EUC-JISX0213, and TISCII.
 
 * New header <ifaddrs.h> with functions `getifaddrs' and `freeifaddrs':
   BSD-compatible interface for getting all network interface addresses.

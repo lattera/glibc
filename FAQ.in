@@ -66,8 +66,7 @@ a local mirror first.
 
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
-gcc (2.95 or newer) should work with the GNU C library (for powerpc see
-?powerpc; for ARM see ?arm; for MIPS see ?mips).
+gcc (3.2 or newer) should work with the GNU C library (for MIPS see ?mips).
 
 Please note that gcc 2.95 and 2.95.x cannot compile glibc on Alpha due to
 problems in the complex float support.
@@ -98,18 +97,11 @@ them.
 
 ??powerpc	Which compiler should I use for powerpc?
 
-{GK} You want to use at least gcc 2.95 (together with the right versions
-of all the other tools, of course).  See also ?excpt.
+{} Removed.  Does not apply anymore.
 
 ??arm	Which tools should I use for ARM?
 
-{PB} You should use egcs 1.1 or a later version.  For ELF systems some
-changes are needed to the compiler; a patch against egcs-1.1.x can be found
-at:
-
-<ftp://ftp.netwinder.org/users/p/philb/egcs-1.1.1pre2-diff-981126>
-
-Binutils 2.10.1 or later is also required.
+{} Removed.  Does not apply anymore.
 
 ??	Do I need some more things to compile the GNU C Library?
 
@@ -305,9 +297,7 @@ test in the sources.
 
 There are some failures which are not directly related to the GNU libc:
 - Some compilers produce buggy code.  No compiler gets single precision
-  complex numbers correct on Alpha.  Otherwise, the egcs 1.1 release should be
-  ok; gcc 2.8.1 might cause some failures; gcc 2.7.2.x is so buggy that
-  explicit checks have been used so that you can't build with it.
+  complex numbers correct on Alpha.  Otherwise, gcc-3.2 should be ok.
 - The kernel might have bugs.  For example on Linux/Alpha 2.0.34 the
   floating point handling has quite a number of bugs and therefore most of
   the test cases in the math subdirectory will fail.  Linux 2.2 has
@@ -367,8 +357,8 @@ newer.
 
 ??mips	Which tools should I use for MIPS?
 
-{AJ} You should use the current development version of gcc 3.0 or newer from
-CVS.  gcc 2.95.x does not work correctly on mips-linux.
+{AJ} You should use the current development version of gcc 3.2 or newer from
+CVS.
 
 You need also recent binutils, anything before and including 2.11 will not
 work correctly.  Either try the Linux binutils 2.11.90.0.5 from HJ Lu or the
@@ -635,7 +625,7 @@ you got with your distribution.
 	glibc 2.x?
 
 {AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3 or later.
-But you should get at least gcc 2.95.2.1 (or later versions) instead.
+But you should get at least gcc 2.95.3 (or later versions) anyway
 
 ??	The `gencat' utility cannot process the catalog sources which
 	were used on my Linux libc5 based system.  Why?
@@ -1025,14 +1015,14 @@ repository.
 {BH} You are using g++ 2.95.2? After upgrading to glibc 2.2, you need to
 apply a patch to the include files in /usr/include/g++, because the fpos_t
 type has changed in glibc 2.2.  The patch is at
-http://clisp.cons.org/~haible/gccinclude-glibc-2.2-compat.diff
+
+  http://www.haible.de/bruno/gccinclude-glibc-2.2-compat.diff
 
 ??	When recompiling GCC, I get compilation errors in libio.
 
 {BH} You are trying to recompile gcc 2.95.2?  Use gcc 2.95.3 instead.
 This version is needed because the fpos_t type and a few libio internals
 have changed in glibc 2.2, and gcc 2.95.3 contains a corresponding patch.
-
 
 ??	Why shall glibc never get installed on GNU/Linux systems in
 /usr/local?
@@ -1046,6 +1036,14 @@ break, you risk breaking your complete system.  If you want to test a glibc
 installation, use another directory as argument to --prefix.  If you like to
 install this glibc version as default version, overriding the existing one,
 use --prefix=/usr and everything will go in the right places.
+
+??	When recompiling GCC, I get compilation errors in libstdc++.
+
+{BH} You are trying to recompile gcc 3.2?  You need to patch gcc 3.2,
+because some last minute changes were made in glibc 2.3 which were not
+known when gcc 3.2 was released.  The patch is at
+
+  http://www.haible.de/bruno/gcc-3.2-glibc-2.3-compat.diff
 
 ? Source and binary incompatibilities, and what to do about them
 

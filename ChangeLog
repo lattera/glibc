@@ -1,3 +1,11 @@
+2002-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/s390/s390-32/initfini.c: Avoid unterminated string literals.
+	* sysdeps/sh/elf/initfini.c: Likewise.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+	* sysdeps/hppa/elf/initfini.c: Likewise.
+	* sysdeps/sparc/sparc32/soft-fp/sfp-machine.h: Likewise.
+
 2002-10-02  Steven Munroe  <sjmunroe@us.ibm.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 

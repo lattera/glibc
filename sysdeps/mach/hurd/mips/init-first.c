@@ -216,7 +216,7 @@ _init:\n\
 	jal preinit\n\
 	sd $28, 6*8($29)\n\
 	move $16, $29 # Save the old stack pointer to s0 ($16)\n\
-	daddu $4, $29, 4*8
+	daddu $4, $29, 4*8\n\
 	jal __init\n\
 	# Restore saved registers from the old stack.\n\
 	ld $28, 6*8($16)\n\
@@ -251,7 +251,7 @@ _init:\n\
 	jal preinit\n\
 	sw $28, 24($29)\n\
 	move $16, $29 # Save the old stack pointer to s0 ($16)\n\
-	addu $4, $29, 32
+	addu $4, $29, 32\n\
 	jal __init\n\
 	# Restore saved registers from the old stack.\n\
 	lw $28, 24($16)\n\
@@ -343,12 +343,12 @@ asm ("\
 	.globl __libc_init_first\n\
 __libc_init_first:\n\
 	dsubu $29, 8\n\
-	sd $31, 0($29)
+	sd $31, 0($29)\n\
 	jal __mach_init\n\
-	ld $4, 0($29)
-	ld $5, 1*8($29)
-	ld $6, 2*8($29)
-	ld $7, 3*8($29)
+	ld $4, 0($29)\n\
+	ld $5, 1*8($29)\n\
+	ld $6, 2*8($29)\n\
+	ld $7, 3*8($29)\n\
 	j ___libc_init_first\n\
 ");
 #else
@@ -358,12 +358,12 @@ asm ("\
 	.globl __libc_init_first\n\
 __libc_init_first:\n\
 	subu $29, 4\n\
-	sw $31, 0($29)
+	sw $31, 0($29)\n\
 	jal __mach_init\n\
-	lw $4, 0($29)
-	lw $5, 4($29)
-	lw $6, 8($29)
-	lw $7, 12($29)
+	lw $4, 0($29)\n\
+	lw $5, 4($29)\n\
+	lw $6, 8($29)\n\
+	lw $7, 12($29)\n\
 	j ___libc_init_first\n\
 ");
 #endif

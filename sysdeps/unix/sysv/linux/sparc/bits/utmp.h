@@ -38,7 +38,7 @@
 struct lastlog
   {
 #if __WORDSIZE == 64 && defined __WORDSIZE_COMPAT32
-    int32_t_t ll_time;
+    int32_t ll_time;
 #else
     __time_t ll_time;
 #endif

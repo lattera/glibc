@@ -1,6 +1,6 @@
 /* Machine-dependent software floating-point definitions.
    Sparc userland (_Q_*) version.
-   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz) and
@@ -20,7 +20,7 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
-   
+
 #include <fpu_control.h>
 
 #define _FP_W_TYPE_SIZE		32
@@ -73,8 +73,8 @@
 
 /* Some assembly to speed things up. */
 #define __FP_FRAC_ADD_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)			\
-  __asm__ ("addcc %r7,%8,%2
-	    addxcc %r5,%6,%1
+  __asm__ ("addcc %r7,%8,%2\n\
+	    addxcc %r5,%6,%1\n\
 	    addx %r3,%4,%0"						\
 	   : "=r" ((USItype)(r2)),					\
 	     "=&r" ((USItype)(r1)),					\
@@ -88,8 +88,8 @@
 	   : "cc")
 
 #define __FP_FRAC_SUB_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)			\
-  __asm__ ("subcc %r7,%8,%2
-	    subxcc %r5,%6,%1
+  __asm__ ("subcc %r7,%8,%2\n\
+	    subxcc %r5,%6,%1\n\
 	    subx %r3,%4,%0"						\
 	   : "=r" ((USItype)(r2)),					\
 	     "=&r" ((USItype)(r1)),					\
@@ -107,10 +107,10 @@
     /* We need to fool gcc,  as we need to pass more than 10		\
        input/outputs.  */						\
     register USItype _t1 __asm__ ("g1"), _t2 __asm__ ("g2");		\
-    __asm__ __volatile__ ("
-	    addcc %r8,%9,%1
-	    addxcc %r6,%7,%0
-	    addxcc %r4,%5,%%g2
+    __asm__ __volatile__ ("\
+	    addcc %r8,%9,%1\n\
+	    addxcc %r6,%7,%0\n\
+	    addxcc %r4,%5,%%g2\n\
 	    addx %r2,%3,%%g1"						\
 	   : "=&r" ((USItype)(r1)),					\
 	     "=&r" ((USItype)(r0))					\
@@ -132,10 +132,10 @@
     /* We need to fool gcc,  as we need to pass more than 10		\
        input/outputs.  */						\
     register USItype _t1 __asm__ ("g1"), _t2 __asm__ ("g2");		\
-    __asm__ __volatile__ ("
-	    subcc %r8,%9,%1
-	    subxcc %r6,%7,%0
-	    subxcc %r4,%5,%%g2
+    __asm__ __volatile__ ("\
+	    subcc %r8,%9,%1\n\
+	    subxcc %r6,%7,%0\n\
+	    subxcc %r4,%5,%%g2\n\
 	    subx %r2,%3,%%g1"						\
 	   : "=&r" ((USItype)(r1)),					\
 	     "=&r" ((USItype)(r0))					\
@@ -157,9 +157,9 @@
 #define __FP_FRAC_DEC_4(x3,x2,x1,x0,y3,y2,y1,y0) __FP_FRAC_SUB_4(x3,x2,x1,x0,x3,x2,x1,x0,y3,y2,y1,y0)
 
 #define __FP_FRAC_ADDI_4(x3,x2,x1,x0,i)					\
-  __asm__ ("addcc %3,%4,%3
-	    addxcc %2,%%g0,%2
-	    addxcc %1,%%g0,%1
+  __asm__ ("addcc %3,%4,%3\n\
+	    addxcc %2,%%g0,%2\n\
+	    addxcc %1,%%g0,%1\n\
 	    addx %0,%%g0,%0"						\
 	   : "=&r" ((USItype)(x3)),					\
 	     "=&r" ((USItype)(x2)),					\
@@ -202,18 +202,18 @@ do {								\
        * We need to clear cexc bits if any.			\
        */							\
       extern unsigned long long ___Q_numbers[];			\
-      __asm__ __volatile__("
-      	ldd [%0], %%f30
-      	faddd %%f30, %%f30, %%f30
+      __asm__ __volatile__("\
+      	ldd [%0], %%f30\n\
+      	faddd %%f30, %%f30, %%f30\
       	" : : "r" (___Q_numbers) : "f30");			\
     }								\
   else								\
     {								\
-      __asm__ __volatile__("
-        mov %0, %%o0
-        mov %%o7, %%g1
-        call ___Q_simulate_exceptions
-         mov %%g1, %%o7
+      __asm__ __volatile__("\
+        mov %0, %%o0\n\
+        mov %%o7, %%g1\n\
+        call ___Q_simulate_exceptions\n\
+         mov %%g1, %%o7\
         " : : "r" (_fex) :					\
         "g1", "g2", "g3", "g4", "g5", "o0", 			\
         "o1", "o2", "o3", "o4", "o5", "cc");			\
