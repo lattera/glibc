@@ -342,8 +342,10 @@ _dl_start_user:\n\
 	.cpload $25\n\
 	.set reorder\n\
 	move $16, $28\n\
-	# Save the user entry point address in saved register.\n\
+	# Save the user entry point address in a saved register.\n\
 	move $17, $2\n\
+	# Store the highest stack address\n\
+	sw $29, __libc_stack_end\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	lw $2, _dl_skip_args\n\
@@ -353,48 +355,19 @@ _dl_start_user:\n\
 	# Subtract _dl_skip_args from it.\n\
 	subu $4, $2\n\
 	# Adjust the stack pointer to skip _dl_skip_args words.\n\
-	sll $2,2\n\
+	sll $2, 2\n\
 	addu $29, $2\n\
 	# Save back the modified argument count.\n\
 	sw $4, 0($29)\n\
-1:	subu $29, 16\n\
-2:	# Push the searchlist of the main object as argument in\n\
-	# the _dl_preinit_next and _dl_init_next calls below.\n\
-	lw $4, _dl_main_searchlist\n\
-	# First run the pre-initializers.\n\
-	# Call _dl_preinit_next to return the address of an initializer\n\
-	# function to run.\n\
-	jal _dl_preinit_next
-	move $28, $16\n\
-	# Check for zero return, when out of initializers.\n\
-	beq $2, $0, 4f\n\
-	# Call the pre-initializer.\n\
-	move $25, $2\n\
-	jalr $25\n\
-	move $28, $16\n
-	# Loop to call _dl_preinit_next for the next initializer.\n\
-	b 2b\n
-4:	lw $4, _dl_main_searchlist\n\
-	# Call _dl_init_next to return the address of an initializer\n\
-	# function to run.\n\
-	jal _dl_init_next\n\
-	move $28, $16\n\
-	# Check for zero return,  when out of initializers.\n\
-	beq $2, $0, 2f\n\
-	# Call the shared object initializer function.\n\
-	move $25, $2\n\
-	# XXX This looks broken ###.\n\
-	lw $4, 0($29)\n\
-	lw $5, 4($29)\n\
-	lw $6, 8($29)\n\
-	lw $7, 12($29)\n\
-	jalr $25\n\
-	move $28, $16\n\
-	# Loop to call _dl_init_next for the next initializer.\n\
-	b 4b\n\
-2:	addiu $29, 16\n\
-	# Clear the startup flag.  Assumes 32 bit ints.\n\
-	sw $0, _dl_starting_up\n\
+1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
+	lw $4, _dl_loaded\n\
+	lw $5, 0($29)\n\
+	la $6, 4($29)\n\
+	la $7, 8($29)\n\
+	subu $29, 16\n\
+	# Call the function to run the initializers.\n\
+	jal _dl_init
+	addiu $29, 16\n\
 	# Pass our finalizer function to the user in ra.\n\
 	la $31, _dl_fini\n\
 	# Jump to the user entry point.\n\
