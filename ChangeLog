@@ -1,3 +1,8 @@
+2003-02-25  Roland McGrath  <roland@redhat.com>
+
+	* resolv/res_init.c (res_thread_freeres): Bail out if _res.nscount is
+	zero, inidicating _res was not initialized yet.
+
 2003-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Remove EACCES
