@@ -28,8 +28,8 @@ static inline struct ifreq *
 __if_nextreq (struct ifreq *ifr)
 {
 #ifdef _HAVE_SA_LEN
-  if (ifr->ifa_addr > sizeof ifr->ifa_addr)
-    return (struct ifreq *) ((char *) &ifr->ifa_addr + ifr->ifa_addr.sa_len);
+  if (ifr->ifr_addr.sa_len > sizeof ifr->ifr_addr)
+    return (struct ifreq *) ((char *) &ifr->ifr_addr + ifr->ifr_addr.sa_len);
 #endif
   return ifr + 1;
 }
