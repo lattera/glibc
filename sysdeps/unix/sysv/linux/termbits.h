@@ -17,6 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _TERMBITS_H
+#define _TERMBITS_H	1
+
 typedef unsigned char	cc_t;
 typedef unsigned int	speed_t;
 typedef unsigned int	tcflag_t;
@@ -177,3 +180,5 @@ struct termios
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
   _IOT (_IOTS (cflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
+
+#endif /* termbits.h */

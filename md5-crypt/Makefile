@@ -30,7 +30,8 @@ tests	:= md5test md5c-test
 extra-libs := libcrypt
 extra-libs-others := $(extra-libs)
 
-libcrypt-routines := crypt-entry md5-crypt md5
+md5-routines := crypt-entry md5-crypt md5
+libcrypt-routines := $(md5-routines)
 
 include ../Makeconfig
 
@@ -49,3 +50,17 @@ libdepend = $(common-objpfx)md5-crypt/libcrypt.a
 endif
 
 $(objpfx)md5test $(objpfx)md5c-test: $(libdepend)
+
+.PHONY: libmd5crypt
+libmd5crypt: $(foreach o,$(object-suffixes), \
+		    $(addprefix $(objpfx),$(patsubst %,$(libtype$o),md5crypt)))
+ifeq ($(build-shared),yes)
+libmd5crypt: $(objpfx)libmd5crypt.so
+endif
+
+define o-iterator-doit
+$(objpfx)$(patsubst %,$(libtype$o),md5crypt): \
+  $(md5-routines:%=$(objpfx)%$o); $$(build-extra-lib)
+endef
+object-suffixes-left = $(object-suffixes)
+include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes))

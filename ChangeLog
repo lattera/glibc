@@ -1,3 +1,70 @@
+Sun Jan 26 05:41:42 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.
+	(RELEASE): Now it's "experimental".
+
+	* Makefile (subdirs): Change $(malloc) to malloc.  We have only
+	one malloc implementation again.
+	* malloc/*: Remove from GNU libc.
+	* new-malloc/* Move to malloc/.
+	* config.make.in (defines): Remove @USE_NEW_MALLOC@.
+	* configure.in: Remove --enable-new-malloc option and check for
+	malloc implementation choice.
+	* malloc.h: We don't need to check for the implementation to use
+	anymore.  Simply include malloc/malloc.h.
+	* malloc/Makefile (subdir): Change to malloc.
+	* sysdeps/unix/sysv/linux/configure.in: Don't set malloc anymore.
+
+	* Makefile: Add special goal to call generate only-MD5 based crypt
+	library.
+	* md5-crypt/Makefile: Likewise.
+
+	* stdio-common/tstscanf.c: De-ANSI-declfy.  Update copyright.
+	(rounds): Change type to size_t to prevent warning.
+
+	* wcsmbs/btowc.c: Reformat copyright.
+	* wcsmbs/mbrlen.c: Likewise.
+	* wcsmbs/mbsinit.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcpcpy.c: Likewise.
+	* wcsmbs/wcpncpy.c: Likewise.
+	* wcsmbs/wcscat.c: Likewise.
+	* wcsmbs/wcscmp.c: Likewise.
+	* wcsmbs/wcscoll.c: Likewise.
+	* wcsmbs/wcscpy.c: Likewise.
+	* wcsmbs/wcscspn.c: Likewise.
+	* wcsmbs/wcsdup.c: Likewise.
+	* wcsmbs/wcslen.c: Likewise.
+	* wcsmbs/wcsncat.c: Likewise.
+	* wcsmbs/wcsncpy.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wcsspn.c: Likewise.
+	* wcsmbs/wcsstr.c: Likewise.
+	* wcsmbs/wcstod.c: Likewise.
+	* wcsmbs/wcstof.c: Likewise.
+	* wcsmbs/wcstok.c: Likewise.
+	* wcsmbs/wcstol.c: Likewise.
+	* wcsmbs/wcstold.c: Likewise.
+	* wcsmbs/wcstoq.c: Likewise.
+	* wcsmbs/wcstoul.c: Likewise.
+	* wcsmbs/wcstouq.c: Likewise.
+	* wcsmbs/wcswidth.c: Likewise.
+	* wcsmbs/wcsxfrm.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+	* wcsmbs/wcwidth.c: Likewise.
+	* wcsmbs/wcwidth.h: Likewise.
+	* wcsmbs/wmemchr.c: Likewise.
+	* wcsmbs/wmemcmp.c: Likewise.
+	* wcsmbs/wmemmove.c: Likewise.
+	* wcsmbs/wmemset.c: Likewise.
+
+Sat Jan 25 03:34:14 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/termbits.h: Protect against multiple
+	inclusion.  Reported by a sun <asun@zoology.washington.edu>.
+
 Sat Jan 25 02:05:19 1997  Eirik Fuller  <eirik@netcom.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Rename T2_SPARSE_BASE and
@@ -2713,7 +2780,7 @@ Wed Nov 20 22:07:58 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
 Wed Nov 20 12:50:54 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/Makefile: Add CFLAGS-scanf7.c to prevent warning.
-	Likesie for scanf4.c
+	Likewise for scanf4.c
 
 Wed Nov 20 02:04:11 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -3682,7 +3749,7 @@ Sun Nov  3 17:29:06 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* stdio-common/vfscanf.c: Likewise for scanf.
 
 	* stdlib/l64a.c: Return value for 0 must be the empty string.
-	* stdlib/stdlib.h: Declare reentrant function from rand49 family
+	* stdlib/stdlib.h: Declare reentrant function from rand48 family
 	only if __USE_REENTRANT.
 	Declare rand48 functions also if __USE_XOPEN.
 

@@ -52,7 +52,7 @@ endif
 
 # These are the subdirectories containing the library source.
 subdirs = csu assert ctype db locale intl catgets math setjmp signal stdlib \
-	  stdio-common $(stdio) $(malloc) string wcsmbs time dirent grp pwd \
+	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd \
 	  posix io termios resource misc login socket sysvipc gmon gnulib \
 	  wctype manual shadow md5-crypt nss $(sysdep-subdirs) po \
 	  $(add-ons) elf
@@ -322,3 +322,9 @@ NOTES: manual/creature.texi; $(format-me)
 
 rpm/%: subdir_distinfo
 	$(MAKE) -C $(@D) subdirs='$(subdirs)' $(@F)
+
+# This is a special goal for people making binary distributions.  Normally
+# everybody uses the DES based crypt library but for the distribution we
+# need the only-MD5 based one as well.
+md5-crypt/libmd5crypt:
+	$(MAKE) -C $(@D) $(@F)

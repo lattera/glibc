@@ -19,7 +19,7 @@
 #
 #	Makefile for malloc routines
 #
-subdir	:= new-malloc
+subdir	:= malloc
 
 all:
 
