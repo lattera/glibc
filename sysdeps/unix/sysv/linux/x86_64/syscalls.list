@@ -22,7 +22,7 @@ msgctl		-	msgctl		i:iip	__msgctl	msgctl
 msgget		-	msgget		i:ii	__msgget	msgget
 msgrcv		-	msgrcv		i:ibnii	__msgrcv	msgrcv
 msgsnd		-	msgsnd		i:ibni	__msgsnd	msgsnd
-shmat		-	shmat		i:ipii	__shmat		shmat
+shmat		-	shmat		i:ipi	__shmat		shmat
 shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
