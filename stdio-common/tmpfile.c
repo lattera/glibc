@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1996,1997,1998,1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,11 +54,10 @@ tmpfile (void)
 
 #ifdef USE_IN_LIBIO
 # undef tmpfile
-# if defined PIC && DO_VERSIONING
-default_symbol_version (__new_tmpfile, tmpfile, GLIBC_2.1);
+# include <shlib-compat.h>
+versioned_symbol (libc, __new_tmpfile, tmpfile, GLIBC_2_1);
 # else
 #  ifdef weak_alias
 weak_alias (__new_tmpfile, tmpfile)
 #  endif
-# endif
 #endif
