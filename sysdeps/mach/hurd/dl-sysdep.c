@@ -535,62 +535,6 @@ weak_symbol (open)
 weak_symbol (close)
 weak_symbol (mmap)
 
-/* Minimal `malloc' allocator for use while loading shared libraries.
-   Only small blocks are allocated, and none are ever freed.  */
-
-void *
-malloc (size_t n)
-{
-  static vm_address_t ptr, end;
-  void *block;
-
-  if (end == 0)
-    {
-      /* Consume any unused space in the last page of our data segment.  */
-      extern char _end;
-      ptr = (vm_address_t) &_end;
-      end = round_page (ptr);
-    }
-
-  /* Make sure the allocation pointer is ideally aligned.  */
-  ptr += sizeof (double) - 1;
-  ptr &= ~(sizeof (double) - 1);
-
-  if (ptr + n >= end)
-    {
-      /* Insufficient space left; allocate another page.  */
-      vm_address_t page;
-      assert (n <= __vm_page_size);
-      __vm_allocate (__mach_task_self (), &page, __vm_page_size, 1);
-      if (page != end)
-	ptr = page;
-      end = page + __vm_page_size;
-    }
-
-  block = (void *) ptr;
-  ptr += n;
-  return block;
-}
-weak_symbol (malloc)
-
-/* This should never be called.  */
-void *realloc (void *ptr, size_t n) { ptr += n; abort (); }
-weak_symbol (realloc)
-
-/* This will rarely be called.  */
-void free (void *ptr) { ptr = ptr; }
-weak_symbol (free)
-
-/* Avoid signal frobnication in setjmp/longjmp.  */
-
-int __sigjmp_save (sigjmp_buf env, int savemask)
-{ env[0].__mask_was_saved = savemask; return 0; }
-weak_symbol (__sigjmp_save)
-
-void
-longjmp (jmp_buf env, int val) { __longjmp (env[0].__jmpbuf, val); }
-weak_symbol (longjmp)
-
 
 /* This function is called by interruptible RPC stubs.  For initial
    dynamic linking, just use the normal mach_msg.  Since this defn is

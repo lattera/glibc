@@ -21,15 +21,7 @@ Cambridge, MA 02139, USA.  */
 .data
 .globl C_SYMBOL_NAME(__curbrk)
 C_LABEL(__curbrk)
-#ifdef PIC
-	.long 0
-#else
-# ifdef HAVE_GNU_LD
 	.long C_SYMBOL_NAME(_end)
-# else
-	.long C_SYMBOL_NAME(end)
-# endif
-#endif
 
 .text
 

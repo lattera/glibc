@@ -44,7 +44,7 @@ init (int *data)
        : : "a" (SYS_ify (personality)));
 
   /* Set the FPU control word to the proper default value.  */
-  __setfpucw (___fpu_control);
+  __setfpucw (__fpu_control);
 
   __environ = envp;
   __libc_init (argc, argv, envp);

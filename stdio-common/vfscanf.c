@@ -98,10 +98,7 @@ _IO_vfscanf (s, format, argptr, errp)
      int *errp;
 #else
 int
-__vfscanf (s, format, arg)
-     FILE *s;
-     const char *format;
-     va_list argptr;
+__vfscanf (FILE *s, const char *format, va_list argptr)
 #endif
 {
   va_list arg = (va_list) argptr;

@@ -617,6 +617,11 @@ vfprintf (s, format, ap)
   return done;
 }
 
+#ifdef USE_IN_LIBIO
+#undef vfprintf
+strong_alias (_IO_vfprintf, vfprintf)
+#endif
+
 
 /* Handle an unknown format specifier.  This prints out a canonicalized
    representation of the format spec itself.  */

@@ -19,4 +19,4 @@ Boston, MA 02111-1307, USA.  */
 
 #include <fpu_control.h>
 
-unsigned short ___fpu_control = _FPU_IEEE;
+unsigned short __fpu_control = _FPU_IEEE;

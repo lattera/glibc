@@ -1,3 +1,32 @@
+Wed Nov 22 12:37:39 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (_errno): Define as alias
+	for errno.
+
+	* stdio-common/vfprintf.c [USE_IN_LIBIO] (vfprintf): Define as
+	alias for _IO_vfprintf.
+
+	* sysdeps/unix/sysv/linux/sockaddrcom.h: File removed.
+
+	* sysdeps/unix/sysv/linux/i386/init-first.c (init): Use
+	__fpu_control instead of ___fpu_control.
+	* sysdeps/unix/sysv/linux/i386/ieee_fpu.c
+	(___fpu_control): Renamed to __fpu_control.
+	* sysdeps/unix/sysv/linux/i386/fpu_control.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fpu_control.c: Likewise.
+
+	* elf/dl-minimal.c: New file.
+	* elf/Makefile (rtld-routines): Add dl-minimal.
+	* elf/rtld.c (__dgettext, __assert_fail, __assert_perror_fail):
+	Functions moved to dl-minimal.c.
+	* sysdeps/mach/hurd/dl-sysdep.c (malloc, free, realloc,
+	sigjmp_save, longjmp): Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/brk.S (__curbrk): Always initialize
+	to &_end, regardless of PIC.
+
+	* stdio-common/vfscanf.c (__vfscanf): Fix arg name in defn.
+
 Tue Nov 21 14:12:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* malloc/malloc.c (align): Don't check contiguity and call abort.

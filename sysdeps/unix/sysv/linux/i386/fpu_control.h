@@ -21,7 +21,7 @@ Boston, MA 02111-1307, USA.  */
 #define _FPU_CONTROL_H
 
 /* Here is the dirty part. Settup up your 387 through the control word
- * (cw) register. 
+ * (cw) register.
  *
  *     15-13    12  11-10  9-8     7-6     5    4    3    2    1    0
  * | reserved | IC | RC  | PC | reserved | PM | UM | OM | ZM | DM | IM
@@ -32,7 +32,7 @@ Boston, MA 02111-1307, USA.  */
  * OM: Overflow mask
  * UM: Underflow mask
  * PM: Precision (inexact result) mask
- * 
+ *
  * Mask bit is 1 means no interrupt.
  *
  * PC: Precision control
@@ -55,7 +55,7 @@ Boston, MA 02111-1307, USA.  */
 #include <features.h>
 
 /* masking of interrupts */
-#define _FPU_MASK_IM  0x01  
+#define _FPU_MASK_IM  0x01
 #define _FPU_MASK_DM  0x02
 #define _FPU_MASK_ZM  0x04
 #define _FPU_MASK_OM  0x08
@@ -82,13 +82,13 @@ Boston, MA 02111-1307, USA.  */
      - extended precision
      - rounding to nearest
      - exceptions on overflow, zero divide and NaN */
-#define _FPU_DEFAULT  0x1372 
+#define _FPU_DEFAULT  0x1372
 
 /* IEEE:  same as above, but exceptions */
 #define _FPU_IEEE     0x137f
 
 /* private namespace. It should only be used in init-first.o. */
-extern unsigned short ___fpu_control;
+extern unsigned short __fpu_control;
 
 __BEGIN_DECLS
 
