@@ -232,7 +232,7 @@ endif
 # The `glibcbug' script contains the version number and it shall be rebuild
 # whenever this changes or the `glibcbug.in' file.
 $(objpfx)glibcbug: $(common-objpfx)config.status glibcbug.in
-	cd $(<D); CONFIG_FILES=$(@F) CONFIG_HEADERS= $(SHELL) $(<F)
+	cd $(<D) && CONFIG_FILES=$(@F) CONFIG_HEADERS= $(SHELL) $(<F)
 
 # This makes the Info or DVI file of the documentation from the Texinfo source.
 .PHONY: info dvi

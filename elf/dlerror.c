@@ -56,13 +56,8 @@ dlerror (void)
     }
 
   /* Get error string.  */
-  if (__libc_internal_tsd_get != NULL)
-    {
-      result = (struct dl_action_result *) __libc_getspecific (key);
-      if (result == NULL)
-	result = &last_result;
-    }
-  else
+  result = (struct dl_action_result *) __libc_getspecific (key);
+  if (result == NULL)
     result = &last_result;
 
   if (! result->errstring)

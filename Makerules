@@ -573,8 +573,8 @@ object-suffixes-left := $(object-suffixes)
 endif
 include $(o-iterator)
 define do-ar
-topdir=`cd $(..).; pwd`; \
-$(patsubst %/,cd %;,$(objpfx)) \
+topdir=`cd $(..). && pwd`; \
+$(patsubst %/,cd % &&,$(objpfx)) \
 $(SHELL) $$topdir/autolock.sh ${O%-lib}.lck $(AR) $(CREATE_ARFLAGS) ${O%-lib} \
 						  $(patsubst $(objpfx)%,%,$?)
 rm -f $@
@@ -617,7 +617,7 @@ objects objs: $(foreach o,$(object-suffixes-for-libc),$(o-objects)) \
 
 # Canned sequence for building an extra library archive.
 define build-extra-lib
-$(patsubst %/,cd %;,$(objpfx)) \
+$(patsubst %/,cd % &&,$(objpfx)) \
 $(AR) $(CREATE_ARFLAGS) $(@:$(objpfx)%=%) \
       $(patsubst $(objpfx)%,%,$^)
 $(RANLIB) $@
@@ -901,7 +901,7 @@ install: install-no-libc.a-nosubdir
 # Command to compile $< in $(objdir) using the native libraries.
 define native-compile
 $(make-target-directory)
-$(patsubst %/,cd %;,$(objpfx)) \
+$(patsubst %/,cd % &&,$(objpfx)) \
 $(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
 	    $(firstword $(filter /%,$< $(shell pwd)/$<)) -o $(@F)
 endef
@@ -909,7 +909,7 @@ endef
 # Command to compile $< in $(common-objdir) using the native libraries.
 # We must cd to $(objdir) anyway so that $(..)config.h is valid.
 define common-objdir-compile
-$(patsubst %/,cd %;,$(objpfx)) \
+$(patsubst %/,cd % &&,$(objpfx)) \
 $(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
 	    $(firstword $(filter /%,$< $(shell pwd)/$<)) -o $(..)$(@F)
 endef
@@ -978,8 +978,8 @@ stubs: $(common-objpfx)stub-$(subdir)
 s = $(sysdep_dir)/generic
 $(common-objpfx)stub-$(subdir): $(+depfiles)
 # Use /dev/null since `...` might expand to empty.
-	(s=`cd $s; /bin/pwd`; \
-	 $(patsubst %/,cd %;,$(objpfx)) \
+	(s=`cd $s && /bin/pwd`; \
+	 $(patsubst %/,cd % &&,$(objpfx)) \
 	 sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
 	  `sed -n -e '\@ $s/[^ ]*\.c@{; s@^.* $s/\([^ ]*\.c\).*$$@'"$$s"'/\1@; h; }' \
 		-e '/stub-tag\.h/{; g; p; }' \

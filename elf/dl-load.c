@@ -182,9 +182,13 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
       struct r_search_path_elem *dirp;
       size_t len = strlen (cp);
 
-      /* `strsep' can pass an empty string.  */
+      /* `strsep' can pass an empty string.  This has to be
+         interpreted as `use the current directory'. */
       if (len == 0)
-	continue;
+	{
+	  static char curwd[2];
+	  cp = strcpy (curwd, ".");
+	}
 
       /* Remove trailing slashes.  */
       while (len > 1 && cp[len - 1] == '/')
@@ -331,8 +335,11 @@ _dl_init_paths (const char *llp)
       const char *cp = llp;
       nllp = 1;
       while (*cp)
-	if (*cp++ == ':')
-	  ++nllp;
+	{
+	  if (*cp == ':' || *cp == ';')
+	    ++nllp;
+	  ++cp;
+	}
     }
   else
     nllp = 0;

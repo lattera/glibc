@@ -44,15 +44,15 @@ while read from to subset targets; do
 
   for t in $targets; do
     $ICONV -f $from -t $t testdata/$from > $temp1 ||
-      { echo "*** conversion from $from to $t failed"; failed=1; }
+      { echo "*** conversion from $from to $t failed"; failed=1; continue; }
     if test -s testdata/$from..$t; then
-      cmp $temp1 testdata/$from..$t >& /dev/null ||
-	{ echo "*** $from -> $t conversion failed"; failed=1; }
+      cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
+	{ echo "*** $from -> $t conversion failed"; failed=1; continue; }
     fi
     $ICONV -f $t -t $to -o $temp2 $temp1 ||
-      { echo "*** conversion from $t to $to failed"; failed=1; }
-    test -s $temp1 && cmp testdata/$from $temp2 >& /dev/null ||
-      { echo "*** $from -> t -> $to conversion failed"; failed=1; }
+      { echo "*** conversion from $t to $to failed"; failed=1; continue; }
+    test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
+      { echo "*** $from -> t -> $to conversion failed"; failed=1; continue; }
     rm -f $temp1 $temp2
 
     # Now test some bigger text, entirely in ASCII.  If ASCII is no subset
@@ -61,18 +61,19 @@ while read from to subset targets; do
     if test $subset = Y; then
       $ICONV -f $from -t $t testdata/suntzus |
       $ICONV -f $t -t $to > $temp1 ||
-	{ echo "*** conversion $from->$t->$to of suntzus failed"; failed=1; }
+	{ echo "*** conversion $from->$t->$to of suntzus failed"; failed=1;
+	  continue; }
       cmp testdata/suntzus $temp1 ||
 	{ echo "*** conversion $from->$t->$to of suntzus incorrect";
-	  failed=1; }
+	  failed=1; continue; }
     else
       $ICONV -f ASCII -t $to testdata/suntzus |
       $ICONV -f $to -f ASCII > $temp1 ||
         { echo "*** conversion ASCII->$to->ASCII of suntzus failed";
-	  failed=1; }
+	  failed=1; continue; }
 	cmp testdata/suntzus $temp1 ||
         { echo "*** conversion ASCII->$to->ASCII of suntzus incorrect";
-	  failed=1; }
+	  failed=1; continue; }
     fi
     rm -f $temp1
     # All tests ok.
