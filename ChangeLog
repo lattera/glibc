@@ -1,3 +1,7 @@
+1999-10-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Correct test for Cygnus gcc versions.
+
 1999-10-21  Andreas Jaeger  <aj@suse.de>
 
 	* math/libm-test.inc (cimag_test): New function, tests cimag.
