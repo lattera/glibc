@@ -1,3 +1,12 @@
+2003-03-25  Roland McGrath  <roland@redhat.com>
+
+	* config.make.in (enable-check-abi): New variable from configure.
+	* configure.in (enable_check_abi): New substituted variable,
+	controlled by --{enable,disable}-check-abi (default yes).
+	* configure: Regenerated.
+	* Makerules [$(enable-check-abi) = yes] (tests): Put this condition
+	on check-abi dependency.
+
 2003-03-26  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/m68020/bits/atomic.h: Fix typos.
