@@ -23,16 +23,16 @@ subdir := localedata
 all: # Make this the default target; it will be defined in Rules.
 
 # List with all available character set descriptions.
-charmaps := $(filter-out $(addprefix charmaps/, CVS RCS %~), \
+charmaps := $(filter-out $(addprefix charmaps/, CVS RCS SCCS %~), \
 				     $(wildcard charmaps/[A-I]*) \
 				     $(wildcard charmaps/[J-Z]*))
 
 # List with all available character set descriptions.
-locales := $(filter-out $(addprefix locales/, CVS RCS %~), \
+locales := $(filter-out $(addprefix locales/, CVS RCS SCCS %~), \
 				    $(wildcard locales/*))
 
 # List of repertoire maps.
-repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS %~), \
+repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS SCCS %~), \
 					   $(wildcard repertoiremaps/*))
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch

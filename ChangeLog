@@ -1,4 +1,13 @@
+1999-06-18  H.J. Lu  <hjl@gnu.org>
+
+	* localedata/Makefile (charmaps): Exclude SCCS.
+	(locales): Likewise.
+	(repertoiremaps): Likewise.
+
 1999-06-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bsd-_setjmp.c: Include setjmp.h.
+	* sysdeps/generic/bsd-setjmp.c: Likewise.
 
 	* sunrpc/xdr_sizeof.c (x_inline): Cleanup pointer assignments.
 
