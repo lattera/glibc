@@ -224,12 +224,6 @@ Version 2.0
   Parts of the code were heavily modified by Ulrich Drepper to fit in the
   NSS scheme used in glibc.
 
-* The new function `malloc_find_object_address' finds the starting address
-  of a malloc'd block, given any address within the block;
-  `malloc_object_allocated_size' returns the size of an allocated block;
-  and `malloc_walk' lets you walk through all allocated blocks.  These can
-  be useful for debugging; see <malloc.h> for the interfaces.
-
 * There is a new malloc debugging hook `__memalign_hook'.
 
 * There are new typedefs `ushort' for `unsigned short int' and `uint' for

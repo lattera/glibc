@@ -42,8 +42,6 @@ get_origin (void)
     }
   else
     {
-      size_t len = 0;
-
       result = (char *) -1;
       /* We use te environment variable LD_ORIGIN_PATH.  If it is set make
 	 a copy and strip out trailing slashes.  */

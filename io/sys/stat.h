@@ -148,9 +148,9 @@ __BEGIN_DECLS
 #define	S_IRWXU	(__S_IREAD|__S_IWRITE|__S_IEXEC)
 
 #if defined __USE_MISC && defined __USE_BSD
-# define S_IREAD		S_IRUSR
+# define S_IREAD	S_IRUSR
 # define S_IWRITE	S_IWUSR
-# define S_IEXEC		S_IXUSR
+# define S_IEXEC	S_IXUSR
 #endif
 
 #define	S_IRGRP	(S_IRUSR >> 3)	/* Read by group.  */
@@ -169,7 +169,7 @@ __BEGIN_DECLS
 #ifdef	__USE_BSD
 /* Macros for common mode bit masks.  */
 # define ACCESSPERMS (S_IRWXU|S_IRWXG|S_IRWXO) /* 0777 */
-# define ALLPERMS (S_ISUID|S_ISGID|S_ISTXT|S_IRWXU|S_IRWXG|S_IRWXO)/* 07777 */
+# define ALLPERMS (S_ISUID|S_ISGID|S_ISVTX|S_IRWXU|S_IRWXG|S_IRWXO)/* 07777 */
 # define DEFFILEMODE (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)/* 0666*/
 
 # define S_BLKSIZE	512	/* Block size for `st_blocks'.  */

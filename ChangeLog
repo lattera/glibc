@@ -1,3 +1,31 @@
+1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/sys/stat.h (ALLPERMS): Fix type (S_ISTXT -> S_ISVTX).
+	Reported by Rob.Hagopian@vu.union.edu [PR libc/763].
+
+	* nscd/nscd.init: Make it work in RedHat systems.
+	Patch by Christian Gafton.
+
+1998-08-29  Philip Blundell  <philb@gnu.org>
+
+	* catgets/Makefile: Don't try to run test programs when
+	cross-compiling.
+
+1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/signal.h: Include bits/sigthread.h only if __USE_POSIX.
+	Reported by Zack Weinberg.
+
+1998-08-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Dist: Add umount.S and umount2.S.
+	* elf/Makefile (distribute): Remove ldd.sh.in.
+
+1998-08-31 11:46  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/dl-origin.h (get_origin): Remove unused
+	variable.
+
 1998-08-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/register-dump.h: Move to ...

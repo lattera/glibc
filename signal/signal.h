@@ -340,9 +340,11 @@ extern int sigignore __P ((int __sig));
 extern __sighandler_t sigset __P ((int __sig, __sighandler_t __disp));
 #endif
 
+#ifdef __USE_POSIX
 /* Some of the functions for handling signals in threaded programs must
    be defined here.  */
-#include <bits/sigthread.h>
+# include <bits/sigthread.h>
+#endif
 
 /* The following functions are used internally in the C library and in
    other code which need deep insights.  */

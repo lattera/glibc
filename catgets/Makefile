@@ -43,6 +43,7 @@ CPPFLAGS := -DNLSPATH='"$(localedir)/%L/%N:$(localedir)/%L/LC_MESSAGES/%N:$(loca
 
 generated = de.msg de.cat
 
+ifneq ($(cross-compiling),yes)
 tests: $(objpfx)de.cat
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
@@ -52,3 +53,4 @@ $(objpfx)de.cat: $(objpfx)de.msg $(objpfx)gencat
 # Generate a non-simple input file.
 $(objpfx)de.msg: $(..)po/de.po
 	sed -f xopen-msg.sed $< > $@
+endif
