@@ -128,6 +128,8 @@ union user_desc_init
 # define GET_DTV(descr) \
   (((tcbhead_t *) (descr))->dtv)
 
+#define THREAD_SELF_SYSINFO	THREAD_GETMEM (THREAD_SELF, header.sysinfo)
+#define THREAD_SYSINFO(pd)	((pd)->header.sysinfo)
 
 /* Macros to load from and store into segment registers.  */
 # ifndef TLS_GET_GS

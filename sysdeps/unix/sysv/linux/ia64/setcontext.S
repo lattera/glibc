@@ -32,20 +32,21 @@
   other than the PRESERVED state.  */
 
 ENTRY(__setcontext)
-	alloc r16 = ar.pfs, 1, 0, 4, 0
+	.prologue
+	.body
+	alloc r11 = ar.pfs, 1, 0, 4, 0
 
 	// sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL):
 
-	mov r2 = SC_MASK
-	mov r15 = __NR_rt_sigprocmask
-	;;
+	mov r3 = SC_MASK
 	mov out0 = SIG_SETMASK
-	add out1 = r2, in0
+	;;
+	add out1 = r3, in0
 	mov out2 = 0
 	mov out3 = 8	// sizeof kernel sigset_t
 
 	invala
-	break __BREAK_SYSCALL
+	DO_CALL(__NR_rt_sigprocmask)
 	add r2 = SC_NAT, r32
 
 	add r3 = SC_RNAT, r32			// r3 <- &sc_ar_rnat

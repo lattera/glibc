@@ -33,7 +33,7 @@
    in l_info array.  */
 #define DT_IA_64(x) (DT_IA_64_##x - DT_LOPROC + DT_NUM)
 
-static inline void
+static inline void __attribute__ ((always_inline))
 __ia64_init_bootstrap_fdesc_table (struct link_map *map)
 {
   Elf64_Addr *boot_table;
@@ -49,7 +49,7 @@ __ia64_init_bootstrap_fdesc_table (struct link_map *map)
 	__ia64_init_bootstrap_fdesc_table (&bootstrap_map);
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
-static inline int
+static inline int __attribute__ ((unused))
 elf_machine_matches_host (const Elf64_Ehdr *ehdr)
 {
   return ehdr->e_machine == EM_IA_64;
@@ -57,7 +57,7 @@ elf_machine_matches_host (const Elf64_Ehdr *ehdr)
 
 
 /* Return the link-time address of _DYNAMIC.  */
-static inline Elf64_Addr
+static inline Elf64_Addr __attribute__ ((unused, const))
 elf_machine_dynamic (void)
 {
   Elf64_Addr *p;
@@ -77,7 +77,7 @@ elf_machine_dynamic (void)
 
 
 /* Return the run-time load address of the shared object.  */
-static inline Elf64_Addr
+static inline Elf64_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
   Elf64_Addr ip;
@@ -98,7 +98,7 @@ elf_machine_load_address (void)
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline int __attribute__ ((always_inline))
+static inline int __attribute__ ((unused, always_inline))
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   extern void _dl_runtime_resolve (void);

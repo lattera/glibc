@@ -22,6 +22,7 @@
 
 #include "math.h"
 #include "math_private.h"
+#include <float.h>
 
 #ifdef __STDC__
 	float __nexttowardf(float x, long double y)
@@ -65,7 +66,13 @@
 		hx += 1;
 	}
 	hy = hx&0x7f800000;
-	if(hy>=0x7f800000) return x+x;	/* overflow  */
+	if(hy>=0x7f800000) {
+	  x = x+x;	/* overflow  */
+	  if (FLT_EVAL_METHOD != 0)
+	    /* Force conversion to float.  */
+	    asm ("" : "=m"(x) : "m"(x));
+	  return x;
+	}
 	if(hy<0x00800000) {		/* underflow */
 	    float x2 = x*x;
 	    if(x2!=x) {		/* raise underflow flag */

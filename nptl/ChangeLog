@@ -1,3 +1,49 @@
+2003-12-02  David Mosberger  <davidm@hpl.hp.com>
+
+	* Makefile (link-libc-static): Remove -lgcc_eh---it's already mentioned
+	in $(gnulib).  Also, remove stale comment.
+
+2003-11-12  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (PSEUDO): Take
+	advantage of new syscall stub and optimize accordingly.
+
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (__NR_futex): Rename
+	from SYS_futex, to match expectations of
+	sysdep.h:DO_INLINE_SYSCALL.
+	(lll_futex_clobbers): Remove.
+	(lll_futex_timed_wait): Rewrite in terms of DO_INLINE_SYSCALL.
+	(lll_futex_wake): Likewise.
+	(lll_futex_requeue): Likewise.
+	(__lll_mutex_trylock): Rewrite to a macro, so we can include this
+	file before DO_INLINE_SYSCALL is defined (proposed by Jakub
+	Jelinek).
+	(__lll_mutex_lock): Likewise.
+	(__lll_mutex_cond_lock): Likewise.
+	(__lll_mutex_timed_lock): Likewise.
+	(__lll_mutex_unlock): Likewise.
+	(__lll_mutex_unlock_force): Likewise.
+
+	* sysdeps/ia64/tls.h: Move declaration of __thread_self up so it
+	comes before the include of <sysdep.h>.
+	(THREAD_SELF_SYSINFO): New macro.
+	(THREAD_SYSINFO): Likewise.
+	(INIT_SYSINFO): New macro.
+	(TLS_INIT_TP): Call INIT_SYSINFO.
+
+	* sysdeps/ia64/tcb-offsets.sym: Add SYSINFO_OFFSET.
+
+	* sysdeps/pthread/createthread.c (create_thread): Use
+	THREAD_SELF_SYSINFO and THREAD_SYSINFO instead of open code.
+	* allocatestack.c (allocate_stack): Use THREAD_SYSINFO and
+	THREAD_SELF_SYSINFO instead of open code.
+	* sysdeps/i386/tls.h (THREAD_SELF_SYSINFO): New macro.
+	(THREAD_SYSINFO): Likewise.
+
+	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/pt-vfork.S: Work around gas problem.
+
 2003-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Use .init_array

@@ -1,3 +1,45 @@
+2003-12-02  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/elf/initfini.c: Add unwind info.
+
+	* sysdeps/ia64/dl-machine.h (elf_machine_matches_host): Mark with
+	attribute "unused".
+	(elf_machine_dynamic): Mark with attributes "unused" and "const".
+	(elf_machine_runtime_setup): Likewise.
+
+	* sysdeps/generic/dl-fptr.c (make_fptr_table): Mark with
+	attribute "always_inline".
+	* sysdeps/ia64/dl-machine.h (__ia64_init_bootstrap_fdesc_table):
+	Likewise.
+
+	* configure.in: Check whether compiler has libunwind support.
+	* config.make.in (have-cc-with-libunwind): New variable.
+	* config.h.in (HAVE_CC_WITH_LIBUNWIND): New macro.
+	* Makeconfig (gnulib): If have-cc-withh-libunwind is "yes", also
+	mention -lunwind.
+
+003-11-12  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Define DO_CALL_VIA_BREAK.
+	Redefine DO_CALL to use vdso if supported, otherwise DO_CALL_VIA_BREAK.
+	Likewise for DO_INLINE_SYSCALL.  Make INTERNAL_SYSCALL use
+	DO_INLINE_SYSCALL.
+
+	* sysdeps/unix/sysv/linux/ia64/vfork.S: Use DO_CALL_VIA_BREAK()
+	instead of DO_CALL().
+
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Use break directly instead
+	of DO_CALL().
+
+	* sysdeps/unix/sysv/linux/ia64/brk.S (__curbrk): Restructure it
+	to take advantage of DO_CALL() macro.
+	* sysdeps/unix/sysv/linux/ia64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/getcontext.S: Likewise.
+
+	* elf/rtld.c (dl_main): Restrict dl_sysinfo_dso check to first
+	program header.  On ia64, the check failed previously because
+	there are two program headers.
+
 2003-12-10  Andreas Jaeger  <aj@suse.de>
 	    Ruediger Oertel  <ro@suse.de>
 
@@ -9,8 +51,9 @@
 	* sysdeps/i386/fpu/s_nexttoward.c: Likewise.
 	* sysdeps/ieee754/ldbl-128/s_nexttoward.c: Likewise.
 	* sysdeps/ieee754/ldbl-96/s_nexttoward.c: Likewise.
+	* sysdeps/generic/s_nexttowardf.c: Likewise.
 	* math/Makefile (tests): Add bug-nexttoward.
-	* math/bug-nexttowward.c: New file.
+	* math/bug-nexttoward.c: New file.
 
 	* sysdeps/generic/s_nextafter.c: Make sure overflow exception is set.
 	* sysdeps/ieee754/flt-32/s_nextafterf.c: Likewise.

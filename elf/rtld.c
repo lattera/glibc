@@ -1163,6 +1163,9 @@ of this helper program; chances are you did not intend to run this program.\n\
       if (__builtin_expect (l != NULL, 1))
 	{
 	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT];
+#ifndef NDEBUG
+	  uint_fast16_t pt_load_num = 0;
+#endif
 
 	  l->l_phdr = ((const void *) GL(dl_sysinfo_dso)
 		       + GL(dl_sysinfo_dso)->e_phoff);
@@ -1176,8 +1179,14 @@ of this helper program; chances are you did not intend to run this program.\n\
 		  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
 		  break;
 		}
+#ifndef NDEBUG
 	      if (ph->p_type == PT_LOAD)
-		assert ((void *) ph->p_vaddr == GL(dl_sysinfo_dso));
+		{
+		  assert (pt_load_num
+			  || (void *) ph->p_vaddr == GL(dl_sysinfo_dso));
+		  pt_load_num++;
+		}
+#endif
 	    }
 	  elf_get_dynamic_info (l, dyn_temp);
 	  _dl_setup_hash (l);

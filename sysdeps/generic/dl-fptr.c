@@ -163,7 +163,7 @@ make_fdesc (ElfW(Addr) ip, ElfW(Addr) gp)
 }
 
 
-static inline ElfW(Addr) *
+static inline ElfW(Addr) * __attribute__ ((always_inline))
 make_fptr_table (struct link_map *map)
 {
   const ElfW(Sym) *symtab

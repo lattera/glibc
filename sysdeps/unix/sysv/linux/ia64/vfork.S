@@ -34,9 +34,8 @@ ENTRY(__vfork)
 	mov out0=CLONE_VM+CLONE_VFORK+SIGCHLD
 	mov out1=0		/* Standard sp value.			*/
 	;;
-	DO_CALL (SYS_ify (clone))
+	DO_CALL_VIA_BREAK (SYS_ify (clone))
 	cmp.eq p6,p0=-1,r10
-	;;
 (p6)	br.cond.spnt.few __syscall_error
 	ret
 PSEUDO_END(__vfork)

@@ -1219,6 +1219,19 @@ EOF
     AC_DEFINE(HAVE_INITFINI_ARRAY)
   fi
 
+  AC_CACHE_CHECK(for libunwind-support in compiler,
+		 libc_cv_cc_with_libunwind, [dnl
+    AC_TRY_LINK([#include <libunwind.h>], [
+      unw_context_t uc;
+      unw_cursor_t c;
+      unw_getcontext (&uc);
+      unw_init_local (&c, &uc)],
+        libc_cv_cc_with_libunwind=yes, libc_cv_cc_with_libunwind=no)])
+  AC_SUBST(libc_cv_cc_with_libunwind)
+  if test $libc_cv_cc_with_libunwind = yes; then
+    AC_DEFINE(HAVE_CC_WITH_LIBUNWIND)
+  fi
+
   AC_CACHE_CHECK(for -z nodelete option,
 		 libc_cv_z_nodelete, [dnl
   cat > conftest.c <<EOF

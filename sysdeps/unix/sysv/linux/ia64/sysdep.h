@@ -23,6 +23,8 @@
 
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/ia64/sysdep.h>
+#include <dl-sysdep.h>
+#include <tls.h>
 
 /* As of GAS v2.4.90.0.7, including a ".align" directive inside a
    function will cause bad unwind info to be emitted (GAS doesn't know
@@ -56,6 +58,14 @@
    available.  */
 #ifndef __NR_semtimedop
 # define __NR_semtimedop 1247
+#endif
+
+#if defined USE_DL_SYSINFO \
+	&& (!defined NOT_IN_libc \
+	    || defined IS_IN_libpthread || defined IS_IN_librt)
+# define IA64_USE_NEW_STUB
+#else
+# undef IA64_USE_NEW_STUB
 #endif
 
 #ifdef __ASSEMBLER__
@@ -102,9 +112,45 @@
 	cmp.eq p6,p0=-1,r10;			\
 (p6)	br.cond.spnt.few __syscall_error;
 
-#define DO_CALL(num)				\
+#define DO_CALL_VIA_BREAK(num)			\
 	mov r15=num;				\
-	break __BREAK_SYSCALL;
+	break __BREAK_SYSCALL
+
+#ifdef IA64_USE_NEW_STUB
+# ifdef SHARED
+#  define DO_CALL(num)				\
+	.prologue;				\
+	adds r2 = SYSINFO_OFFSET, r13;;		\
+	ld8 r2 = [r2];				\
+	.save ar.pfs, r11;			\
+	mov r11 = ar.pfs;;			\
+	.body;					\
+	mov r15 = num;				\
+	mov b7 = r2;				\
+	br.call.sptk.many b6 = b7;;		\
+	.restore sp;				\
+	mov ar.pfs = r11;			\
+	.prologue;				\
+	.body
+# else /* !SHARED */
+#  define DO_CALL(num)				\
+	.prologue;				\
+	mov r15 = num;				\
+	movl r2 = _dl_sysinfo;;			\
+	ld8 r2 = [r2];				\
+	.save ar.pfs, r11;			\
+	mov r11 = ar.pfs;;			\
+	.body;					\
+	mov b7 = r2;				\
+	br.call.sptk.many b6 = b7;;		\
+	.restore sp;				\
+	mov ar.pfs = r11;			\
+	.prologue;				\
+	.body
+# endif
+#else
+# define DO_CALL(num)				DO_CALL_VIA_BREAK(num)
+#endif
 
 #undef PSEUDO_END
 #define PSEUDO_END(name)	.endp C_SYMBOL_NAME(name);
@@ -150,45 +196,64 @@
    from a syscall.  r10 is set to -1 on error, whilst r8 contains the
    (non-negative) errno on error or the return value on success.
  */
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)			\
-  ({								\
+
+#ifdef IA64_USE_NEW_STUB
+
+#define DO_INLINE_SYSCALL(name, nr, args...)					\
+    register long _r8 __asm ("r8");						\
+    register long _r10 __asm ("r10");						\
+    register long _r15 __asm ("r15") = __NR_##name;				\
+    register void *_b7 __asm ("b7") = ((tcbhead_t *) __thread_self)->private;	\
+    long _retval;								\
+    LOAD_ARGS_##nr (args);							\
+    /*										\
+     * Don't specify any unwind info here.  We mark ar.pfs as			\
+     * clobbered.  This will force the compiler to save ar.pfs			\
+     * somewhere and emit appropriate unwind info for that save.		\
+     */										\
+    __asm __volatile ("br.call.sptk.many b6=%0;;\n"				\
+		      : "=b"(_b7), "=r" (_r8), "=r" (_r10), "=r" (_r15)		\
+			ASM_OUTARGS_##nr					\
+		      : "0" (_b7), "3" (_r15) ASM_ARGS_##nr			\
+		      : "memory", "ar.pfs" ASM_CLOBBERS_##nr);			\
+    _retval = _r8;
+
+#else /* !IA64_USE_NEW_STUB */
+
+#define DO_INLINE_SYSCALL(name, nr, args...)			\
     register long _r8 asm ("r8");				\
     register long _r10 asm ("r10");				\
     register long _r15 asm ("r15") = __NR_##name;		\
     long _retval;						\
     LOAD_ARGS_##nr (args);					\
     __asm __volatile (BREAK_INSN (__BREAK_SYSCALL)		\
-                      : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
+		      : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
 			ASM_OUTARGS_##nr			\
-                      : "2" (_r15) ASM_ARGS_##nr		\
-                      : "memory" ASM_CLOBBERS_##nr);		\
-    _retval = _r8;						\
-    if (_r10 == -1)						\
-      {								\
-        __set_errno (_retval);					\
-        _retval = -1;						\
-      }								\
+		      : "2" (_r15) ASM_ARGS_##nr		\
+		      : "memory" ASM_CLOBBERS_##nr);		\
+    _retval = _r8;
+
+#endif /* !IA64_USE_NEW_STUB */
+
+#undef INLINE_SYSCALL
+#define INLINE_SYSCALL(name, nr, args...)	\
+  ({						\
+    DO_INLINE_SYSCALL(name, nr, args)		\
+    if (_r10 == -1)				\
+      {						\
+	__set_errno (_retval);			\
+	_retval = -1;				\
+      }						\
     _retval; })
 
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) long int err
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)		\
-  ({								\
-    register long _r8 asm ("r8");				\
-    register long _r10 asm ("r10");				\
-    register long _r15 asm ("r15") = __NR_##name;		\
-    long _retval;						\
-    LOAD_ARGS_##nr (args);					\
-    __asm __volatile (BREAK_INSN (__BREAK_SYSCALL)		\
-                      : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
-			ASM_OUTARGS_##nr			\
-                      : "2" (_r15) ASM_ARGS_##nr		\
-                      : "memory" ASM_CLOBBERS_##nr);		\
-    _retval = _r8;						\
-    err = _r10;							\
+#define INTERNAL_SYSCALL(name, err, nr, args...)	\
+  ({							\
+    DO_INLINE_SYSCALL(name, nr, args)			\
+    err = _r10;						\
     _retval; })
 
 #undef INTERNAL_SYSCALL_ERROR_P
@@ -225,6 +290,15 @@
 #define ASM_OUTARGS_5	ASM_OUTARGS_4, "=r" (_out4)
 #define ASM_OUTARGS_6	ASM_OUTARGS_5, "=r" (_out5)
 
+#ifdef IA64_USE_NEW_STUB
+#define ASM_ARGS_0
+#define ASM_ARGS_1	ASM_ARGS_0, "4" (_out0)
+#define ASM_ARGS_2	ASM_ARGS_1, "5" (_out1)
+#define ASM_ARGS_3	ASM_ARGS_2, "6" (_out2)
+#define ASM_ARGS_4	ASM_ARGS_3, "7" (_out3)
+#define ASM_ARGS_5	ASM_ARGS_4, "8" (_out4)
+#define ASM_ARGS_6	ASM_ARGS_5, "9" (_out5)
+#else
 #define ASM_ARGS_0
 #define ASM_ARGS_1	ASM_ARGS_0, "3" (_out0)
 #define ASM_ARGS_2	ASM_ARGS_1, "4" (_out1)
@@ -232,6 +306,7 @@
 #define ASM_ARGS_4	ASM_ARGS_3, "6" (_out3)
 #define ASM_ARGS_5	ASM_ARGS_4, "7" (_out4)
 #define ASM_ARGS_6	ASM_ARGS_5, "8" (_out5)
+#endif
 
 #define ASM_CLOBBERS_0	ASM_CLOBBERS_1, "out0"
 #define ASM_CLOBBERS_1	ASM_CLOBBERS_2, "out1"
@@ -239,7 +314,7 @@
 #define ASM_CLOBBERS_3	ASM_CLOBBERS_4, "out3"
 #define ASM_CLOBBERS_4	ASM_CLOBBERS_5, "out4"
 #define ASM_CLOBBERS_5	ASM_CLOBBERS_6, "out5"
-#define ASM_CLOBBERS_6	, "out6", "out7",				\
+#define ASM_CLOBBERS_6_COMMON	, "out6", "out7",			\
   /* Non-stacked integer registers, minus r8, r10, r15.  */		\
   "r2", "r3", "r9", "r11", "r12", "r13", "r14", "r16", "r17", "r18",	\
   "r19", "r20", "r21", "r22", "r23", "r24", "r25", "r26", "r27",	\
@@ -249,7 +324,13 @@
   /* Non-rotating fp registers.  */					\
   "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",	\
   /* Branch registers.  */						\
-  "b6", "b7"
+  "b6"
+
+#ifdef IA64_USE_NEW_STUB
+# define ASM_CLOBBERS_6	ASM_CLOBBERS_6_COMMON
+#else
+# define ASM_CLOBBERS_6	ASM_CLOBBERS_6_COMMON , "b7"
+#endif
 
 #endif /* not __ASSEMBLER__ */
 

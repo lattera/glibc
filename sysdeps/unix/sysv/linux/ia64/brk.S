@@ -35,19 +35,17 @@ __curbrk:
 weak_alias (__curbrk, ___brk_addr)
 
 LEAF(__brk)
-	mov	r15=__NR_brk
-	break.i	__BREAK_SYSCALL
+	.regstk 1, 0, 0, 0
+	DO_CALL(__NR_brk)
+	cmp.ltu	p6, p0 = ret0, in0
+	addl r9 = @ltoff(__curbrk), gp
 	;;
-	cmp.ltu	p6,p0=ret0,r32	/* r32 is the input register, even though we
-				   haven't allocated a frame */
-	addl	r9=@ltoff(__curbrk),gp
-	;;
-	ld8	r9=[r9]
-(p6) 	mov	ret0=ENOMEM
+	ld8 r9 = [r9]
+(p6) 	mov ret0 = ENOMEM
 (p6)	br.cond.spnt.few __syscall_error
 	;;
-	st8	[r9]=ret0
-	mov 	ret0=0
+	st8 [r9] = ret0
+	mov ret0 = 0
 	ret
 END(__brk)
 

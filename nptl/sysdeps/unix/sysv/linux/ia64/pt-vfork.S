@@ -30,6 +30,8 @@
 /* Implemented as __clone_syscall(CLONE_VFORK | CLONE_VM | SIGCHLD, 0)	*/
 
 ENTRY(__vfork)
+	.prologue	// work around a GAS bug which triggers if
+	.body		// first .prologue is not at the beginning of proc.
 	alloc r2=ar.pfs,0,0,2,0
 	mov out0=CLONE_VM+CLONE_VFORK+SIGCHLD
 	mov out1=0		/* Standard sp value.			*/

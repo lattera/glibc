@@ -35,26 +35,27 @@
 
 ENTRY(__getcontext)
 	.prologue
-	alloc r16 = ar.pfs, 1, 0, 4, 0
+	.body
+	alloc r11 = ar.pfs, 1, 0, 4, 0
 
 	// sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask):
 
-	mov r2 = SC_MASK
-	mov r15 = __NR_rt_sigprocmask
-	;;
+	mov r3 = SC_MASK
 	mov out0 = SIG_BLOCK
-	mov out1 = 0
-	add out2 = r2, in0
-	mov out3 = 8	// sizeof kernel sigset_t
 
-	break __BREAK_SYSCALL
 	flushrs					// save dirty partition on rbs
+	mov out1 = 0
+	add out2 = r3, in0
+
+	mov out3 = 8	// sizeof kernel sigset_t
+	DO_CALL(__NR_rt_sigprocmask)
 
 	mov.m rFPSR = ar.fpsr
 	mov.m rRSC = ar.rsc
 	add r2 = SC_GR+1*8, r32
 	;;
 	mov.m rBSP = ar.bsp
+	.prologue
 	.save ar.unat, rUNAT
 	mov.m rUNAT = ar.unat
 	.body
@@ -63,7 +64,7 @@ ENTRY(__getcontext)
 
 .mem.offset 0,0; st8.spill [r2] = r1, (5*8 - 1*8)
 .mem.offset 8,0; st8.spill [r3] = r4, 16
-	mov.i rPFS = ar.pfs
+	mov rPFS = r11
 	;;
 .mem.offset 0,0; st8.spill [r2] = r5, 16
 .mem.offset 8,0; st8.spill [r3] = r6, 48

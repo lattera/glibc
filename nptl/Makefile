@@ -319,8 +319,7 @@ CFLAGS-flockfile.c = -D_IO_MTSAFE_IO
 CFLAGS-ftrylockfile.c = -D_IO_MTSAFE_IO
 CFLAGS-funlockfile.c = -D_IO_MTSAFE_IO
 
-# Ugly, ugly.  We have to link with libgcc_eh but how?
-link-libc-static := $(common-objpfx)libc.a $(gnulib) -lgcc_eh $(common-objpfx)libc.a
+link-libc-static := $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 
 ifeq ($(build-static),yes)
 tests-static += tst-locale1 tst-locale2

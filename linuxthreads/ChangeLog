@@ -1,8 +1,11 @@
+2003-11-19  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h: New file.
+
 2003-12-10  Andreas Jaeger  <aj@suse.de>
 	    Ruediger Oertel  <ro@suse.de>
 
-	* sysdeps/alpha/elf/pt-initfini.c (__asm__): Remove extra
-	.prologue.
+	* sysdeps/alpha/elf/pt-initfini.c (__asm__): Remove extra .prologue.
 
 2003-11-30  Andreas Jaeger  <aj@suse.de>
 

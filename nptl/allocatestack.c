@@ -352,7 +352,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 #ifdef NEED_DL_SYSINFO
       /* Copy the sysinfo value from the parent.  */
-      pd->header.sysinfo = THREAD_GETMEM (THREAD_SELF, header.sysinfo);
+      THREAD_SYSINFO(pd) = THREAD_SELF_SYSINFO;
 #endif
 
       /* The process ID is also the same as that of the caller.  */
@@ -488,7 +488,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 #ifdef NEED_DL_SYSINFO
 	  /* Copy the sysinfo value from the parent.  */
-	  pd->header.sysinfo = THREAD_GETMEM (THREAD_SELF, header.sysinfo);
+	  THREAD_SYSINFO(pd) = THREAD_SELF_SYSINFO;
 #endif
 
 	  /* The process ID is also the same as that of the caller.  */

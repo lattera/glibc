@@ -42,6 +42,8 @@ typedef struct
   void *private;
 } tcbhead_t;
 
+register struct pthread *__thread_self __asm__("r13");
+
 # define TLS_MULTIPLE_THREADS_IN_TCB 1
 
 #else /* __ASSEMBLER__ */
@@ -63,8 +65,6 @@ typedef struct
 #ifndef __ASSEMBLER__
 /* Get system call information.  */
 # include <sysdep.h>
-
-register struct pthread *__thread_self __asm__("r13");
 
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
@@ -100,11 +100,20 @@ register struct pthread *__thread_self __asm__("r13");
 #  define GET_DTV(descr) \
   (((tcbhead_t *) (descr))->dtv)
 
+#define THREAD_SELF_SYSINFO	(((tcbhead_t *) __thread_self)->private)
+#define THREAD_SYSINFO(pd)	(((tcbhead_t *) ((pd) + 1))->private)
+
+#if defined NEED_DL_SYSINFO
+# define INIT_SYSINFO   THREAD_SELF_SYSINFO = (void *) GL(dl_sysinfo)
+#else
+# define INIT_SYSINFO   NULL
+#endif
+
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(thrdescr, secondcall) \
-  (__thread_self = (thrdescr), NULL)
+  (__thread_self = (thrdescr), INIT_SYSINFO, NULL)
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \

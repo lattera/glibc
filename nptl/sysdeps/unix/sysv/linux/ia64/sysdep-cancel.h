@@ -26,6 +26,9 @@
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # undef PSEUDO
+
+#ifndef USE_DL_SYSINFO
+
 # define PSEUDO(name, syscall_name, args)				      \
 .text;									      \
 ENTRY (name)								      \
@@ -87,6 +90,83 @@ __syscall_error_##args:							      \
      mov rp = loc1;							      \
      mov r8 = -1;							      \
      mov ar.pfs = loc0
+
+#else /* USE_DL_SYSINFO */
+
+# define PSEUDO(name, syscall_name, args)				      \
+.text;									      \
+ENTRY (name)								      \
+     .prologue;								      \
+     adds r2 = SYSINFO_OFFSET, r13;					      \
+     adds r14 = MULTIPLE_THREADS_OFFSET, r13;				      \
+     .save ar.pfs, r11;							      \
+     mov r11 = ar.pfs;;							      \
+     .body;								      \
+     ld4 r14 = [r14];							      \
+     ld8 r2 = [r2];							      \
+     mov r15 = SYS_ify(syscall_name);;					      \
+     cmp4.ne p6, p7 = 0, r14;						      \
+     mov b7 = r2;							      \
+(p6) br.cond.spnt .Lpseudo_cancel;					      \
+     br.call.sptk.many b6 = b7;;					      \
+     mov ar.pfs = r11;							      \
+     cmp.eq p6,p0 = -1, r10;						      \
+(p6) br.cond.spnt.few __syscall_error;					      \
+     ret;;								      \
+     .endp name;							      \
+     .proc __GC_##name;							      \
+     .globl __GC_##name;						      \
+     .hidden __GC_##name;						      \
+__GC_##name:								      \
+.Lpseudo_cancel:							      \
+     .prologue;								      \
+     .regstk args, 5, args, 0;						      \
+     .save ar.pfs, loc0;						      \
+     alloc loc0 = ar.pfs, args, 5, args, 0;				      \
+     adds loc4 = SYSINFO_OFFSET, r13;					      \
+     .save rp, loc1;							      \
+     mov loc1 = rp;;							      \
+     .body;								      \
+     ld8 loc4 = [loc4];							      \
+     CENABLE;;								      \
+     mov loc2 = r8;							      \
+     mov b7 = loc4;							      \
+     COPY_ARGS_##args							      \
+     mov r15 = SYS_ify(syscall_name);					      \
+     br.call.sptk.many b6 = b7;;					      \
+     mov loc3 = r8;							      \
+     mov loc4 = r10;							      \
+     mov out0 = loc2;							      \
+     CDISABLE;;								      \
+     cmp.eq p6,p0=-1,loc4;						      \
+(p6) br.cond.spnt.few __syscall_error_##args;				      \
+     mov r8 = loc3;							      \
+     mov rp = loc1;							      \
+     mov ar.pfs = loc0;							      \
+.Lpseudo_end:								      \
+     ret;								      \
+     .endp __GC_##name;							      \
+.section .gnu.linkonce.t.__syscall_error_##args, "ax";			      \
+     .align 32;								      \
+     .proc __syscall_error_##args;					      \
+     .global __syscall_error_##args;					      \
+     .hidden __syscall_error_##args;					      \
+     .size __syscall_error_##args, 64;					      \
+__syscall_error_##args:							      \
+     .prologue;								      \
+     .regstk args, 5, args, 0;						      \
+     .save ar.pfs, loc0;						      \
+     .save rp, loc1;							      \
+     .body;								      \
+     mov loc4 = r1;;							      \
+     br.call.sptk.many b0 = __errno_location;;				      \
+     st4 [r8] = loc3;							      \
+     mov r1 = loc4;							      \
+     mov rp = loc1;							      \
+     mov r8 = -1;							      \
+     mov ar.pfs = loc0
+
+#endif /* USE_DL_SYSINFO */
 
 #undef PSEUDO_END
 #define PSEUDO_END(name) .endp

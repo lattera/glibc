@@ -226,7 +226,7 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
     }
 
 #ifdef NEED_DL_SYSINFO
-  assert (THREAD_GETMEM (THREAD_SELF, header.sysinfo) == pd->header.sysinfo);
+  assert (THREAD_SELF_SYSINFO == THREAD_SYSINFO(pd));
 #endif
 
   /* Actually create the thread.  */

@@ -25,49 +25,56 @@
 /* 	         size_t child_stack_size, int flags, void *arg,		*/
 /*	         pid_t *parent_tid, void *tls, pid_t *child_tid)	*/
 
+#define CHILD	p8
+#define PARENT	p9
+
 ENTRY(__clone2)
-	alloc r2=ar.pfs,8,2,6,0
+	.prologue
+	alloc r2=ar.pfs,8,0,6,0
 	cmp.eq p6,p0=0,in0
 	mov r8=EINVAL
-(p6)	br.cond.spnt.few __syscall_error
-	;;
-	flushrs			/* This is necessary, since the child	*/
-				/* will be running with the same 	*/
-				/* register backing store for a few 	*/
-				/* instructions.  We need to ensure	*/
-				/* that it will not read or write the	*/
-				/* backing store.			*/
-	mov loc0=in0		/* save fn	*/
-	mov loc1=in4		/* save arg	*/
 	mov out0=in3		/* Flags are first syscall argument.	*/
 	mov out1=in1		/* Stack address.			*/
+(p6)	br.cond.spnt.many __syscall_error
+	;;
 	mov out2=in2		/* Stack size.				*/
 	mov out3=in5		/* Parent TID Pointer			*/
 	mov out4=in7		/* Child TID Pointer			*/
  	mov out5=in6		/* TLS pointer				*/
-        DO_CALL (SYS_ify (clone2))
+	/*
+	 * clone2() is special: the child cannot execute br.ret right
+	 * after the system call returns, because it starts out
+	 * executing on an empty stack.  Because of this, we can't use
+	 * the new (lightweight) syscall convention here.  Instead, we
+	 * just fall back on always using "break".
+	 *
+	 * Furthermore, since the child starts with an empty stack, we
+	 * need to avoid unwinding past invalid memory.  To that end,
+	 * we'll pretend now that __clone2() is the end of the
+	 * call-chain.  This is wrong for the parent, but only until
+	 * it returns from clone2() but it's better than the
+	 * alternative.
+	 */
+	mov r15=SYS_ify (clone2)
+	.save rp, r0
+	break __BREAK_SYSCALL
+	.body
         cmp.eq p6,p0=-1,r10
+	cmp.eq CHILD,PARENT=0,r8 /* Are we the child?   */
+(p6)	br.cond.spnt.many __syscall_error
 	;;
-(p6)	br.cond.spnt.few __syscall_error
-
-#	define CHILD p6
-#	define PARENT p7
-	cmp.eq CHILD,PARENT=0,r8 /* Are we the child?	*/
-	;;
-(CHILD)	ld8 out1=[loc0],8	/* Retrieve code pointer.	*/
-(CHILD)	mov out0=loc1		/* Pass proper argument	to fn */
+(CHILD)	ld8 out1=[in0],8	/* Retrieve code pointer.	*/
+(CHILD)	mov out0=in4		/* Pass proper argument	to fn */
 (PARENT) ret
 	;;
-	ld8 gp=[loc0]		/* Load function gp.		*/
+	ld8 gp=[in0]		/* Load function gp.		*/
 	mov b6=out1
-	;;
-	br.call.dptk.few rp=b6	/* Call fn(arg) in the child 	*/
+	br.call.dptk.many rp=b6	/* Call fn(arg) in the child 	*/
 	;;
 	mov out0=r8		/* Argument to _exit		*/
 	.globl _exit
-	br.call.dpnt.few rp=_exit /* call _exit with result from fn.	*/
+	br.call.dpnt.many rp=_exit /* call _exit with result from fn.	*/
 	ret			/* Not reached.		*/
-
 PSEUDO_END(__clone2)
 
 /* For now we leave __clone undefined.  This is unlikely to be a	*/
