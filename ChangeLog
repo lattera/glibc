@@ -1,5 +1,11 @@
 1999-11-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-time.c (time_startup): Test for lr being
+	nonzero, not time.
+
+	* locale/programs/ld-numeric.c (numeric_finish): Don't crash if
+	decimal_point is not defined.
+
 	* wctype/wctrans.c (wctrans): Use correct base index to access
 	extra mapping tables.
 

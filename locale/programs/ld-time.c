@@ -115,7 +115,7 @@ time_startup (struct linereader *lr, struct localedef_t *locale,
     locale->categories[LC_TIME].time =
       (struct locale_time_t *) xcalloc (1, sizeof (struct locale_time_t));
 
-  if (time != NULL)
+  if (lr != NULL)
     {
       lr->translate_strings = 1;
       lr->return_widestr = 1;

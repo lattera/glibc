@@ -114,7 +114,13 @@ numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
   /* The decimal point must not be empty.  This is not said explicitly
      in POSIX but ANSI C (ISO/IEC 9899) says in 4.4.2.1 it has to be
      != "".  */
-  if (numeric->decimal_point[0] == '\0' && ! be_quiet && ! nothing)
+  if (numeric->decimal_point == NULL)
+    {
+      error (0, 0, _("%s: field `%s' not defined"),
+	     "LC_NUMERIC", "decimal_point");
+      numeric->decimal_point = ".";
+    }
+  else if (numeric->decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
       error (0, 0, _("\
 %s: value for field `%s' must not be the empty string"),
