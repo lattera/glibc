@@ -1,3 +1,8 @@
+2003-01-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* internals.h (LIBC_THREAD_GETMEM, LIBC_THREAD_SETMEM): Define
+	even if NOT_IN_libc is defined.
+
 2003-01-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h: New file.

@@ -43,15 +43,13 @@
 # define THREAD_SETMEM_NC(descr, member, value) descr->member = (value)
 #endif
 
-#ifndef NOT_IN_libc
-# ifdef FLOATING_STACKS
-#  define LIBC_THREAD_GETMEM(descr, member) THREAD_GETMEM (descr, member)
-#  define LIBC_THREAD_SETMEM(descr, member, value) \
+#if !defined NOT_IN_libc && defined FLOATING_STACKS
+# define LIBC_THREAD_GETMEM(descr, member) THREAD_GETMEM (descr, member)
+# define LIBC_THREAD_SETMEM(descr, member, value) \
   THREAD_SETMEM (descr, member, value)
-# else
-#  define LIBC_THREAD_GETMEM(descr, member) descr->member
-#  define LIBC_THREAD_SETMEM(descr, member, value) descr->member = (value)
-# endif
+#else
+# define LIBC_THREAD_GETMEM(descr, member) descr->member
+# define LIBC_THREAD_SETMEM(descr, member, value) descr->member = (value)
 #endif
 
 typedef void (*destr_function)(void *);

@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999,2000,01,02 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -459,7 +459,8 @@ endif
 
 ifeq ($(elf),yes)
 define build-shlib-helper
-$(LINK.o) -shared $(static-libgcc) -Wl,-O1 $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+$(LINK.o) -shared $(static-libgcc) -Wl,-O1 $(sysdep-LDFLAGS) \
+	  $(if $($(@F)-no-z-defs),,-Wl,-z,defs) $(config-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \

@@ -1,4 +1,4 @@
-# Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -113,4 +113,5 @@ $(objpfx)bug-dlsym1-lib2.so: $(common-objpfx)libc.so \
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
-$(objpfx)libdl.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
+$(objpfx)libdl.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a \
+		   $(if $(filter yes,$(elf)), $(elfobjdir)/ld.so)

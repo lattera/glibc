@@ -1,4 +1,4 @@
-# Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -42,6 +42,9 @@ libthread_db-routines = td_init td_log td_ta_delete td_ta_get_nthreads      \
 			td_ta_clear_event td_symbol_list td_thr_tls_get_addr
 
 libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
+
+# The ps_* callback functions are not defined.
+libthread_db.so-no-z-defs = yes
 
 distribute = thread_dbP.h shlib-versions proc_service.h
 include ../Rules
