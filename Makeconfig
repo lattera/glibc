@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -226,12 +226,17 @@ gconvdir = $(libdir)/gconv
 endif
 inst_gconvdir = $(install_root)$(gconvdir)
 
-
 # Where to install programs.
 ifndef bindir
 bindir = $(exec_prefix)/bin
 endif
 inst_bindir = $(install_root)$(bindir)
+
+# Where to install internal programs.
+ifndef libexecdir
+libexecdir = $(exec_prefix)/libexec
+endif
+inst_libexecdir = $(install_root)$(libexecdir)
 
 # Where to install administrative programs.
 ifndef rootsbindir
