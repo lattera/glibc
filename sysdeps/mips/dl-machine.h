@@ -512,7 +512,7 @@ _dl_start_user:\n\
 	" STRINGXP(PTR_LA) " $2, _dl_fini\n\
 	# Jump to the user entry point.\n\
 	move $25, $17\n\
-	jr $25\n\
+	jr $25\n\t"\
 	_RTLD_EPILOGUE(ENTRY_POINT)\
 	".previous"\
 );
