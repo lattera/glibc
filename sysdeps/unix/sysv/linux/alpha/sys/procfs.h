@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 #include <signal.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <asm/user.h>
+#include <sys/user.h>
 #include <asm/elf.h>
 
 __BEGIN_DECLS
