@@ -55,8 +55,9 @@ long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l)) # not ready yet
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,
 # and we don't want to have to link every program with -lm.
-calls = s_isinf s_isnan s_frexp s_ldexp s_modf
-routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
+calls = s_isinf s_isnan
+routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts)) \
+	    s_frexp s_ldexp s_modf
 long-c-yes = $(calls:=l)
 distribute += $(long-c-yes:=.c)
 
