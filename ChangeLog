@@ -1,5 +1,9 @@
 2000-03-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/lc-time.c (_nl_init_era_entries): Correct allocation of
+	memory for eras.
+	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 	* elf/Makefile: Add rules to compile and rune constload1 test.
 	* elf/constload1.c: New file.
 	* elf/constload2.c: New file.

@@ -1,5 +1,5 @@
 /* Define current locale data for LC_TIME category.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,8 +78,9 @@ _nl_init_era_entries (void)
       else
 	{
 	  if (num_eras != new_num_eras)
-	    eras = realloc (eras,
-			    new_num_eras * sizeof (struct era_entry *));
+	    eras = (struct era_entry *) realloc (eras,
+						 new_num_eras
+						 * sizeof (struct era_entry));
 	  if (eras == NULL)
 	    {
 	      num_eras = 0;
@@ -93,8 +94,8 @@ _nl_init_era_entries (void)
 	      for (cnt = 0; cnt < num_eras; ++cnt)
 		{
 		  const char *base_ptr = ptr;
-		  memcpy((void*)(eras + cnt), (const void *) ptr,
-			 sizeof (uint32_t) * 8);
+		  memcpy ((void *) (eras + cnt), (const void *) ptr,
+			  sizeof (uint32_t) * 8);
 
 		  if (ERA_DATE_CMP(eras[cnt].start_date,
 				   eras[cnt].stop_date))
