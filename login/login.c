@@ -107,8 +107,12 @@ login (const struct utmp *ut)
 
   if (found_tty >= 0)
     {
-      /* We only want to insert the name of the tty without path.  */
-      ttyp = basename (tty);
+      /* We only want to insert the name of the tty without path.
+	 But take care of name like /dev/pts/3.  */
+      if (strncmp (tty, "/dev/", 5) == 0)
+	ttyp = tty + 5;		/* Skip the "/dev/".  */
+      else
+	ttyp = basename (tty);
 
       /* Position to record for this tty.  */
       strncpy (copy.ut_line, ttyp, UT_LINESIZE);

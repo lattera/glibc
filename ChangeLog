@@ -1,3 +1,8 @@
+1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/login.c: Determine pts/3 and terminal name if path is
+	/dev/pts/3.  This is consistent with getlogin.  [PR libc/906]
+
 1998-12-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/posix/tempname.c (__path_search): Add casts for format
