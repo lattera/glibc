@@ -1,5 +1,8 @@
 2002-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_sigaction): Fix
+	typo.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Define SHM_HUGETLB.
 	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
 	* sysdeps/unix/sysv/linux/hppa/bits/shm.h: Likewise.
