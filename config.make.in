@@ -44,6 +44,7 @@ have-z-initfirst = @libc_cv_z_initfirst@
 have-z-combreloc = @libc_cv_z_combreloc@
 have-z-execstack = @libc_cv_z_execstack@
 have-initfini = @libc_cv_have_initfini@
+have-z-relro = @libc_cv_z_relro@
 have-Bgroup = @libc_cv_Bgroup@
 need-nopic-initfini = @nopic_initfini@
 with-fp = @with_fp@

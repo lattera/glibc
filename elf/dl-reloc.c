@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -306,6 +306,24 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	}
 
       textrels = textrels->next;
+    }
+
+  /* In case we can protect the data now that the relocations are
+     done, do it.  */
+  if (l->l_relro_size != 0)
+    {
+      ElfW(Addr) start = ((l->l_addr + l->l_relro_addr)
+			  & ~(GL(dl_pagesize) - 1));
+      ElfW(Addr) end = ((l->l_addr + l->l_relro_addr + l->l_relro_size)
+			& ~(GL(dl_pagesize) - 1));
+
+      if (start != end
+	  && __mprotect ((void *) start, end - start, PROT_READ) < 0)
+	{
+	  errstring = N_("\
+cannot apply additional memory protection after relocation");
+	  goto call_error;
+	}
     }
 }
 INTDEF (_dl_relocate_object)

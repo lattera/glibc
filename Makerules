@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -488,7 +488,17 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 	      -e 's/^.*\*(\.dynbss).*$$/& \
 		 PROVIDE(__start___libc_freeres_ptrs = .); \
 		 *(__libc_freeres_ptrs) \
-		 PROVIDE(__stop___libc_freeres_ptrs = .);/'
+		 PROVIDE(__stop___libc_freeres_ptrs = .);/'\
+	      -e 's/^.*\*(\.jcr).*$$/&\n\
+		 PROVIDE(__start___libc_subfreeres = .);\n\
+		 __libc_subfreeres : { *(__libc_subfreeres) }\n\
+		 PROVIDE(__stop___libc_subfreeres = .);\n\
+		 PROVIDE(__start___libc_atexit = .);\n\
+		 __libc_atexit : { *(__libc_atexit) }\n\
+		 PROVIDE(__stop___libc_atexit = .);\n\
+		 PROVIDE(__start___libc_thread_subfreeres = .);\n\
+		 __libc_thread_subfreeres : { *(__libc_thread_subfreeres) }\n\
+		 PROVIDE(__stop___libc_thread_subfreeres = .);/'
 	mv -f $@T $@
 common-generated += shlib.lds
 

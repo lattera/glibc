@@ -1283,6 +1283,16 @@ EOF
   rm -f conftest*])
   AC_SUBST(libc_cv_z_initfirst)
 
+  AC_CACHE_CHECK(for -z relro option,
+		 libc_cv_z_relro, [dnl
+  if AC_TRY_COMMAND([${CC-cc} -v --help 2>&1|grep "z relro" 1>&AS_MESSAGE_LOG_FD])
+  then
+    libc_cv_z_relro=yes
+  else
+    libc_cv_z_relro=no
+  fi])
+  AC_SUBST(libc_cv_z_relro)
+
   AC_CACHE_CHECK(for -Bgroup option,
 		 libc_cv_Bgroup, [dnl
   cat > conftest.c <<EOF

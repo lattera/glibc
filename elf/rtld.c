@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -332,13 +332,14 @@ _dl_start (void *arg)
   bootstrap_map.l_tls_offset = NO_TLS_OFFSET;
 #endif
 
-#if USE___THREAD
   /* Get the dynamic linker's own program header.  First we need the ELF
      file header.  The `_begin' symbol created by the linker script points
      to it.  When we have something like GOTOFF relocs, we can use a plain
      reference to find the runtime address.  Without that, we have to rely
      on the `l_addr' value, which is not the value we want when prelinked.  */
+#if USE___THREAD
   dtv_t initdtv[3];
+#endif	/* USE___THREAD */
   ElfW(Ehdr) *ehdr
 # ifdef DONT_USE_BOOTSTRAP_MAP
     = (ElfW(Ehdr) *) &_begin;
@@ -348,6 +349,7 @@ _dl_start (void *arg)
   ElfW(Phdr) *phdr = (ElfW(Phdr) *) ((void *) ehdr + ehdr->e_phoff);
   size_t cnt = ehdr->e_phnum;	/* PT_TLS is usually the last phdr.  */
   while (cnt-- > 0)
+#if USE___THREAD
     if (phdr[cnt].p_type == PT_TLS)
       {
 	void *tlsblock;
@@ -442,11 +444,14 @@ _dl_start (void *arg)
 
 	/* So far this is module number one.  */
 	bootstrap_map.l_tls_modid = 1;
-
-	/* There can only be one PT_TLS entry.  */
-	break;
       }
+    else
 #endif	/* USE___THREAD */
+      if (phdr[cnt].p_type == PT_GNU_RELRO)
+	{
+	  bootstrap_map.l_relro_addr = phdr[cnt].p_vaddr;
+	  bootstrap_map.l_relro_size = phdr[cnt].p_memsz;
+	}
 
 #ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
@@ -776,6 +781,11 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  {
 	    GL(dl_stack_flags) = ph->p_flags;
 	    break;
+	  }
+	else if (ph->p_type == PT_GNU_RELRO)
+	  {
+	    GL(dl_loaded)->l_relro_addr = ph->p_vaddr;
+	    GL(dl_loaded)->l_relro_size = ph->p_memsz;
 	  }
 
       if (__builtin_expect (mode, normal) == verify)
@@ -1598,6 +1608,35 @@ cannot allocate TLS data structures for initial thread");
 	_dl_printf ("\nprelink checking: %s\n", prelinked ? "ok" : "failed");
     }
 
+
+  /* Initialize _r_debug.  */
+  struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr);
+  {
+    struct link_map *l;
+
+    l = GL(dl_loaded);
+
+#ifdef ELF_MACHINE_DEBUG_SETUP
+
+    /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
+
+    ELF_MACHINE_DEBUG_SETUP (l, r);
+    ELF_MACHINE_DEBUG_SETUP (&GL(dl_rtld_map), r);
+
+#else
+
+    if (l->l_info[DT_DEBUG] != NULL)
+      /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
+	 with the run-time address of the r_debug structure  */
+      l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+
+    /* Fill in the pointer in the dynamic linker's own dynamic section, in
+       case you run gdb on the dynamic linker directly.  */
+    if (GL(dl_rtld_map).l_info[DT_DEBUG] != NULL)
+      GL(dl_rtld_map).l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+#endif
+  }
+
   if (prelinked)
     {
       struct link_map *l;
@@ -1738,38 +1777,9 @@ cannot allocate TLS data structures for initial thread");
 #endif
     NONTLS_INIT_TP;
 
-  {
-    /* Initialize _r_debug.  */
-    struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr);
-    struct link_map *l;
-
-    l = GL(dl_loaded);
-
-#ifdef ELF_MACHINE_DEBUG_SETUP
-
-    /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
-
-    ELF_MACHINE_DEBUG_SETUP (l, r);
-    ELF_MACHINE_DEBUG_SETUP (&GL(dl_rtld_map), r);
-
-#else
-
-    if (l->l_info[DT_DEBUG] != NULL)
-      /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
-	 with the run-time address of the r_debug structure  */
-      l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
-
-    /* Fill in the pointer in the dynamic linker's own dynamic section, in
-       case you run gdb on the dynamic linker directly.  */
-    if (GL(dl_rtld_map).l_info[DT_DEBUG] != NULL)
-      GL(dl_rtld_map).l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
-
-#endif
-
-    /* Notify the debugger that all objects are now mapped in.  */
-    r->r_state = RT_ADD;
-    INTUSE(_dl_debug_state) ();
-  }
+  /* Notify the debugger that all objects are now mapped in.  */
+  r->r_state = RT_ADD;
+  INTUSE(_dl_debug_state) ();
 
 #ifndef MAP_COPY
   /* We must munmap() the cache file.  */

@@ -1,3 +1,23 @@
+2004-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makeconfig: Define relro-LDFLAGS if have-z-relro==yes.  Add it to
+	LDFLAGS.so and LDFLAGS-rtld.
+	(+link): Add relro-LDFLAGS.
+	* Makeconfig (shlib.lds): Place __libc_subfreeres, __libc_atexit, and
+	__libc_thread_subfreeres sections after .jcr section.
+	* config.make.in: Add have-z-relro.
+	* configure.in: Add check for -z relro option.
+	* include/link.h (struct link_map): Add relro_addr and relro_size
+	members.
+	* elf/dl-load.c (_dl_map_object_from_fd): Recognize PT_GNU_RELRO.
+	* elf/dl-reloc.c (_dl_relocate_object): At the end, make relro
+	part of loaded segments read-only.
+	* elf/elf.h: Define PT_GNU_RELRO.
+	* elf/rtld.c (_dl_start): Recognize PT_GNU_RELRO of ld.so.
+	(dl_main): Recognize PT_GNU_RELRO of the application.  Call
+	_dl_debug_initialize and initialize l_info[DT_DEBUG] before
+	relocations.
+
 2004-01-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/x86_64/strcspn.S: Fix typo in last patch.

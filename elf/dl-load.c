@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1064,6 +1064,11 @@ cannot allocate TLS data structures for initial thread");
 
 	case PT_GNU_STACK:
 	  stack_flags = ph->p_flags;
+	  break;
+
+	case PT_GNU_RELRO:
+	  l->l_relro_addr = ph->p_vaddr;
+	  l->l_relro_size = ph->p_memsz;
 	  break;
 	}
 
