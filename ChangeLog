@@ -1,3 +1,17 @@
+2003-04-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/i486/bits/atomic.h: Rename LOCK to LOCK_PREFIX.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+
+2003-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Change PUSHARGS_1 and
+	POPARGS_1 to emit labels for the mov instructions.
+
+2003-04-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h (ret_NOERRNO): Define.
+
 2003-04-14  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/unwind-dw2.c (_Unwind_GetCFA): Add a cast to silence

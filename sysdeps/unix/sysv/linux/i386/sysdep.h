@@ -247,9 +247,9 @@ __i686.get_pc_thunk.reg:						      \
 #define _DOARGS_0(n)	/* No arguments to frob.  */
 #define	_POPARGS_0	/* No arguments to pop.  */
 
-#define PUSHARGS_1	movl %ebx, %edx; PUSHARGS_0
+#define PUSHARGS_1	movl %ebx, %edx; L(SAVEBX1): PUSHARGS_0
 #define	DOARGS_1	_DOARGS_1 (4)
-#define	POPARGS_1	POPARGS_0; movl %edx, %ebx
+#define	POPARGS_1	POPARGS_0; movl %edx, %ebx; L(RESTBX1):
 #define	_PUSHARGS_1	pushl %ebx; L(PUSHBX1): _PUSHARGS_0
 #define _DOARGS_1(n)	movl n(%esp), %ebx; _DOARGS_0(n-4)
 #define	_POPARGS_1	_POPARGS_0; popl %ebx; L(POPBX1):

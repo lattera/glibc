@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,11 +19,12 @@
 
 #include "pthreadP.h"
 
-
-#ifdef UP
-# define LOCK
-#else
-# define LOCK "lock;"
+#ifndef LOCK_PREFIX
+# ifdef UP
+#  define LOCK_PREFIX	/* nothing */
+# else
+#  define LOCK_PREFIX	"lock;"
+# endif
 #endif
 
 
@@ -32,7 +33,7 @@ pthread_spin_lock (lock)
      pthread_spinlock_t *lock;
 {
   asm ("\n"
-       "1:\t" LOCK "decl %0\n\t"
+       "1:\t" LOCK_PREFIX "decl %0\n\t"
        "jne 2f\n\t"
        ".subsection 1\n\t"
        ".align 16\n"

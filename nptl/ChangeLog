@@ -1,5 +1,10 @@
 2003-04-14  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/i386/tls.h: Rename LOCK to LOCK_PREFIX.
+	* sysdeps/i386/pthread_spin_lock.c: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.  Define LOCK_PREFIX if not already
+	defined.
+
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Use
 	DW_CFA_advance_loc2 for .Laddl-.Lsubl.
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Use

@@ -67,6 +67,14 @@ typedef struct
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
 
+#ifndef LOCK_PREFIX
+# ifdef UP
+#  define LOCK_PREFIX	/* nothing */
+# else
+#  define LOCK_PREFIX	"lock;"
+# endif
+#endif
+
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
@@ -267,7 +275,7 @@ typedef struct
   ({ __typeof (descr->member) __ret;					      \
      __typeof (oldval) __old = (oldval);				      \
      if (sizeof (descr->member) == 4)					      \
-       asm volatile (LOCK "cmpxchgl %2, %%fs:%P3"			      \
+       asm volatile (LOCK_PREFIX "cmpxchgl %2, %%fs:%P3"		      \
 		     : "=a" (__ret)					      \
 		     : "0" (__old), "r" (newval),			      \
 		       "i" (offsetof (struct pthread, member)));	      \
@@ -280,7 +288,7 @@ typedef struct
 /* Atomic set bit.  */
 #define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
   (void) ({ if (sizeof ((descr)->member) == 4)				      \
-	      asm volatile (LOCK "orl %1, %%fs:%P0"			      \
+	      asm volatile (LOCK_PREFIX "orl %1, %%fs:%P0"		      \
 			    :: "i" (offsetof (struct pthread, member)),	      \
 			       "ir" (1 << (bit)));			      \
 	    else							      \

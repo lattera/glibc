@@ -1,3 +1,7 @@
+2003-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/mn_MN: Fix country_post and country_ab2.
+
 2003-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* localedata/en_ZA: Changed %x for LC_TIME to use dd/mm/ccyy.

@@ -169,11 +169,11 @@ union user_desc_init
 # define INIT_SYSINFO
 #endif
 
-#ifndef LOCK
+#ifndef LOCK_PREFIX
 # ifdef UP
-#  define LOCK  /* nothing */
+#  define LOCK_PREFIX  /* nothing */
 # else
-#  define LOCK "lock;"
+#  define LOCK_PREFIX "lock;"
 # endif
 #endif
 
@@ -365,7 +365,7 @@ union user_desc_init
   ({ __typeof (descr->member) __ret;					      \
      __typeof (oldval) __old = (oldval);				      \
      if (sizeof (descr->member) == 4)					      \
-       asm volatile (LOCK "cmpxchgl %2, %%gs:%P3"			      \
+       asm volatile (LOCK_PREFIX "cmpxchgl %2, %%gs:%P3"		      \
 		     : "=a" (__ret)					      \
 		     : "0" (__old), "r" (newval),			      \
 		       "i" (offsetof (struct pthread, member)));	      \
@@ -378,7 +378,7 @@ union user_desc_init
 /* Atomic set bit.  */
 #define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
   (void) ({ if (sizeof ((descr)->member) == 4)				      \
-	      asm volatile (LOCK "orl %1, %%gs:%P0"			      \
+	      asm volatile (LOCK_PREFIX "orl %1, %%gs:%P0"		      \
 			    :: "i" (offsetof (struct pthread, member)),	      \
 			       "ir" (1 << (bit)));			      \
 	    else							      \

@@ -121,7 +121,8 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	.size name,.-name
 
 /* Careful here!  This "ret" define can interfere; use jmpl if unsure.  */
-#define ret             retl; nop
+#define ret		retl; nop
+#define ret_NOERRNO	retl; nop
 #define r0              %o0
 #define r1              %o1
 #define MOVE(x,y)       mov x, y
