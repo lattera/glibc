@@ -1,3 +1,8 @@
+2001-07-29  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/recvmsg.c: New file.
+	* sysdeps/mach/hurd/sendmsg.c: New file.
+
 2001-07-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.2.4.
