@@ -134,6 +134,9 @@ struct here_cg_arc_record
 
 static struct here_cg_arc_record *data;
 
+/* Nonzero if profiling is under way.  */
+static int running;
+
 /* This is the number of entry which have been incorporated in the toset.  */
 static uint32_t narcs;
 /* This is a pointer to the object representing the number of entries
@@ -141,9 +144,6 @@ static uint32_t narcs;
    same as NARCS.  If it is equal all entries from the file are in our
    lists.  */
 static volatile uint32_t *narcsp;
-
-/* Description of the currently profiled object.  */
-static long int state = GMON_PROF_OFF;
 
 static volatile uint16_t *kcount;
 static size_t kcountsize;
@@ -208,7 +208,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 
   /* Now we can compute the size of the profiling data.  This is done
      with the same formulars as in `monstartup' (see gmon.c).  */
-  state = GMON_PROF_OFF;
+  running = 0;
   lowpc = ROUNDDOWN (mapstart + map->l_addr,
 		     HISTFRACTION * sizeof (HISTCOUNTER));
   highpc = ROUNDUP (mapend + map->l_addr,
@@ -424,7 +424,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   __profil ((void *) kcount, kcountsize, lowpc, s_scale);
 
   /* Turn on profiling.  */
-  state = GMON_PROF_ON;
+  running = 1;
 }
 
 
@@ -435,14 +435,8 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
   size_t i, fromindex;
   struct here_fromstruct *fromp;
 
-#if 0
-  /* XXX I think this is now not necessary anymore.  */
-  if (! compare_and_swap (&state, GMON_PROF_ON, GMON_PROF_BUSY))
+  if (! running)
     return;
-#else
-  if (state != GMON_PROF_ON)
-    return;
-#endif
 
   /* Compute relative addresses.  The shared object can be loaded at
      any address.  The value of frompc could be anything.  We cannot
@@ -538,10 +532,5 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
   atomic_add (&fromp->here->count, 1);
 
  done:
-#if 0
-  /* XXX See above,  Shouldn't be necessary anymore.  */
-  state = GMON_PROF_ON;
-#else
   ;
-#endif
 }

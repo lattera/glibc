@@ -1,8 +1,12 @@
 2001-11-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-profile.c: Replace state variable with simple flag named
+	running.  Remove commented-out code.
+
 	* elf/dl-load.c (decompose_rpath): Optimize error handling for size.
 	(_dl_init_paths): Likewise.
 	(_dl_map_object_from_fd): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
 
 2001-11-06  Roland McGrath  <roland@frob.com>
 
