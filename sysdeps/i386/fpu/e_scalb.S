@@ -56,7 +56,7 @@ ENTRY(__ieee754_scalb)
 	fcomp	%st(2)
 	fnstsw
 	sahf
-	jne	2f
+	jne	4f
 	fscale
 	fstp	%st(1)
 	ret
@@ -75,6 +75,7 @@ ENTRY(__ieee754_scalb)
 	fstp	%st
 	andl	$0x80000000, %edx
 	andl	$8, %eax
+	jnz	4f
 	shrl	$27, %edx
 	addl	%edx, %eax
 	fldl	MOX(zero_nan, %eax, 1)
@@ -94,5 +95,12 @@ ENTRY(__ieee754_scalb)
 
 	/* The first parameter is a NaN.  Return it.  */
 3:	fstp	%st(1)
+	ret
+
+	/* Return NaN and raise the invalid exception.  */
+4:	fstp	%st
+	fstp	%st
+	fldz
+	fdiv	%st
 	ret
 END(__ieee754_scalb)

@@ -1,3 +1,11 @@
+2001-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/libm-test.inc (scalb_test): Require invalid exception being
+	raised for invalid parameters.
+	* sysdeps/i386/fpu/e_scalb.S: Raise invalid exception if necessary.
+	* sysdeps/i386/fpu/e_scalbf.S: Likewise.
+	* sysdeps/i386/fpu/e_scalbl.S: Likewise.
+
 2001-02-18  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/getsysstats.c (__get_phys_pages): Change return
