@@ -1,5 +1,7 @@
 2001-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ftime.c: Include <time.h>.
+
 	* configure.in: Don't check for libgd if user set --without-gd.
 	Patch by Achim Gottinger <achim@gentoo.org>.
 
