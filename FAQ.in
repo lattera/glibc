@@ -61,7 +61,7 @@ a local mirror first.
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
-(for powerpc see question ?powerpc; for ARM see question ?arm).
+(for powerpc see ?powerpc; for ARM see ?arm).
 
 {ZW} You may have problems if you try to mix code compiled with
 EGCS and with GCC 2.8.1. See ?exception for details.
@@ -76,7 +76,7 @@ We recommend version GNU make version 3.75 or 3.77.  Versions before 3.75
 have bugs and/or are missing features.  Version 3.76 has bugs which
 appear when building big projects like GNU libc. 3.76.1 appears to work but
 some people have reported problems.  If you build GNU make 3.77 from source, 
-please read question ?make first.
+please read ?make first.
 
 ??	Do I need a special linker or assembler?
 
