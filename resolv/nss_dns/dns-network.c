@@ -70,10 +70,10 @@
 #define MAX_NR_ALIASES	48
 
 
-#if PACKETSZ > 1024
-#define MAXPACKET       PACKETSZ
+#if PACKETSZ > 65536
+# define MAXPACKET	PACKETSZ
 #else
-#define MAXPACKET       1024
+# define MAXPACKET	65536
 #endif
 
 
