@@ -596,8 +596,6 @@ free_dfa_content (re_dfa_t *dfa)
 {
   int i, j;
 
-  re_free (dfa->subexps);
-
   if (dfa->nodes)
     for (i = 0; i < dfa->nodes_len; ++i)
       {
@@ -884,9 +882,6 @@ init_dfa (dfa, pat_len)
   dfa->state_table = calloc (sizeof (struct re_state_table_entry), table_size);
   dfa->state_hash_mask = table_size - 1;
 
-  dfa->subexps_alloc = 1;
-  dfa->subexps = re_malloc (re_subexp_t, dfa->subexps_alloc);
-
   dfa->mb_cur_max = MB_CUR_MAX;
 #ifdef _LIBC
   if (dfa->mb_cur_max == 6
@@ -950,8 +945,7 @@ init_dfa (dfa, pat_len)
     }
 #endif
 
-  if (BE (dfa->nodes == NULL || dfa->state_table == NULL
-	  || dfa->subexps == NULL, 0))
+  if (BE (dfa->nodes == NULL || dfa->state_table == NULL, 0))
     return REG_ESPACE;
   return REG_NOERROR;
 }
@@ -1028,7 +1022,7 @@ create_initial_state (dfa)
 	    re_token_t *clexp_node;
 	    clexp_node = dfa->nodes + init_nodes.elems[clexp_idx];
 	    if (clexp_node->type == OP_CLOSE_SUBEXP
-		&& clexp_node->opr.idx + 1 == dfa->nodes[node_idx].opr.idx)
+		&& clexp_node->opr.idx == dfa->nodes[node_idx].opr.idx)
 	      break;
 	  }
 	if (clexp_idx == init_nodes.nelem)
@@ -1837,7 +1831,7 @@ peek_token (token, input, syntax)
 	  if (!(syntax & RE_NO_BK_REFS))
 	    {
 	      token->type = OP_BACK_REF;
-	      token->opr.idx = c2 - '0';
+	      token->opr.idx = c2 - '1';
 	    }
 	  break;
 	case '<':
@@ -2295,13 +2289,12 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	return NULL;
       break;
     case OP_BACK_REF:
-      if (BE (preg->re_nsub < token->opr.idx
-	      || dfa->subexps[token->opr.idx - 1].end == -1, 0))
+      if (!BE (dfa->completed_bkref_map & (1 << token->opr.idx), 1))
 	{
 	  *err = REG_ESUBREG;
 	  return NULL;
 	}
-      dfa->used_bkref_map |= 1 << (token->opr.idx - 1);
+      dfa->used_bkref_map |= 1 << token->opr.idx;
       tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
@@ -2472,21 +2465,6 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
   bin_tree_t *tree, *left_par, *right_par;
   size_t cur_nsub;
   cur_nsub = preg->re_nsub++;
-  if (BE (dfa->subexps_alloc < preg->re_nsub, 0))
-    {
-      re_subexp_t *new_array;
-      dfa->subexps_alloc *= 2;
-      new_array = re_realloc (dfa->subexps, re_subexp_t, dfa->subexps_alloc);
-      if (BE (new_array == NULL, 0))
-	{
-	  dfa->subexps_alloc /= 2;
-	  *err = REG_ESPACE;
-	  return NULL;
-	}
-      dfa->subexps = new_array;
-    }
-  dfa->subexps[cur_nsub].start = dfa->nodes_len;
-  dfa->subexps[cur_nsub].end = -1;
 
   left_par = re_dfa_add_tree_node (dfa, NULL, NULL, token);
   if (BE (left_par == NULL, 0))
@@ -2512,7 +2490,7 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
       return NULL;
     }
   right_par = re_dfa_add_tree_node (dfa, NULL, NULL, token);
-  dfa->subexps[cur_nsub].end = dfa->nodes_len;
+  dfa->completed_bkref_map |= 1 << cur_nsub;
   tree = ((tree == NULL) ? right_par
 	  : create_tree (dfa, tree, right_par, CONCAT, 0));
   tree = create_tree (dfa, left_par, tree, CONCAT, 0);
