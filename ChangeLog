@@ -1,3 +1,7 @@
+2000-09-21  Martin Buchholz  <martin@xemacs.org>
+
+	* manual/terminal.texi (Allocation): Sample code correction.
+
 2000-09-20  Andreas Jaeger  <aj@suse.de>
 
 	* iconvdata/Makefile (generated): Add tst-tables.out.

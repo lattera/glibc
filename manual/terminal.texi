@@ -2030,7 +2030,7 @@ int
 open_pty_pair (int *amaster, int *aslave)
 @{
   int master, slave;
-  char *name
+  char *name;
 
   master = getpt ();
   if (master < 0)
