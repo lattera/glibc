@@ -1,5 +1,5 @@
 /* File descriptors.
-Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -153,14 +153,18 @@ _hurd_fd_error_signal (error_t err)
 
 /* Handle an error from an RPC on a file descriptor's port.  You should
    always use this function to handle errors from RPCs made on file
-   descriptor ports.  Some errors are translated into signals.  */   
+   descriptor ports.  Some errors are translated into signals.  */
 
 _EXTERN_INLINE error_t
 _hurd_fd_error (int fd, error_t err)
 {
   int signo = _hurd_fd_error_signal (err);
   if (signo)
-    _hurd_raise_signal (NULL, signo, fd, err);
+    {
+      const struct hurd_signal_detail detail
+	= { code: fd, error: err, exc: 0 };
+      _hurd_raise_signal (NULL, signo, &detail);
+    }
   return err;
 }
 

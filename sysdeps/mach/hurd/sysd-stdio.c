@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,11 @@ fd_fail (struct hurd_fd *fd, error_t err)
 {
   int signo = _hurd_fd_error_signal (err);
   if (signo)
-    _hurd_raise_signal (NULL, signo, __stdio_fileno (fd), err);
+    {
+      const struct hurd_signal_detail detail
+	= { code: __stdio_fileno (fd), error: err, exc: 0 };
+      _hurd_raise_signal (NULL, signo, &detail);
+    }
   errno = err;
   return -1;
 }

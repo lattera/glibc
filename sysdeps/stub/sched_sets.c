@@ -18,11 +18,12 @@ Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <sched.h>
+#include <sys/types.h>
 
 
 /* Set scheduling algorithm and/or parameters for a process.  */
 int
-__sched_setscheduler (pid_t pid, int policy, const struct sched_param *param)
+__sched_setscheduler (pid_t pid, int policy, const struct sched_params *param)
 {
   errno = ENOSYS;
   return -1;

@@ -18,6 +18,7 @@ Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <sched.h>
+#include <sys/types.h>
 
 
 /* Get the SCHED_RR interval for the named process.  */

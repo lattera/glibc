@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <signal.h>		/* For sigset_t, sighandler_t, SIG_ERR.  */
 struct hurd_sigstate;		/* <hurd/signal.h> */
+struct hurd_signal_detail;	/* <hurd/signal.h> */
 
 struct hurd_signal_preempter
   {
@@ -39,7 +40,7 @@ struct hurd_signal_preempter
        is processed as if the return value were its handler setting.  */
     sighandler_t (*preempter) (struct hurd_signal_preempter *preempter,
 			       struct hurd_sigstate *ss,
-			       int *signo, long int *sigcode, int *sigerror);
+			       int *signo, struct hurd_signal_detail *detail);
     /* If PREEMPTER is null, act as if it returned HANDLER.  */
     sighandler_t handler;
 

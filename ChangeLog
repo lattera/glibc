@@ -1,3 +1,19 @@
+Tue May  7 10:51:52 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* wcsmbs/wcwidth.c, wcsmbs/wcswidth.c: Fixed typos.
+
+	* sysdeps/unix/sysv/linux/sys/mman.h: Fixed typo.
+
+	* sysdeps/stub/sched_getp.c: Add missing #include <sys/types.h>.
+	* sysdeps/stub/sched_sets.c: Likewise.
+	* sysdeps/stub/sched_setp.c: Likewise.
+	* sysdeps/stub/sched_rr_gi.c: Likewise.
+	* sysdeps/stub/sched_gets.c: Likewise.
+
+	* hurd/hurdsig.c: Use struct hurd_signal_detail.
+	* hurd/hurd/fd.h (_hurd_fd_error): Likewise.
+	* sysdeps/mach/hurd/sysd-stdio.c (fd_fail): Likewise.
+
 Mon May  6 09:51:05 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* stdio/linewrap.c: New file.

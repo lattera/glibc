@@ -428,7 +428,7 @@ sigset_t _hurdsig_preempted_set;
 /* Deliver a signal.  SS is not locked.  */
 void
 _hurd_internal_post_signal (struct hurd_sigstate *ss,
-			    int signo, long int sigcode, int sigerror,
+			    int signo, struct hurd_signal_detail *detail,
 			    mach_port_t reply_port,
 			    mach_msg_type_name_t reply_port_type,
 			    int untraced)
@@ -459,10 +459,9 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   void mark_pending (void)
     {
       __sigaddset (&ss->pending, signo);
-      /* Save the code to be given to the handler when SIGNO is
+      /* Save the details to be given to the handler when SIGNO is
 	 unblocked.  */
-      ss->pending_data[signo].code = sigcode;
-      ss->pending_data[signo].error = sigerror;
+      ss->pending_data[signo] = *detail;
     }
 
   /* Suspend the process with SIGNO.  */
@@ -540,8 +539,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
   handler = SIG_ERR;
   for (pe = ss->preempters; pe && handler == SIG_ERR; pe = pe->next)
-    if (HURD_PREEMPT_SIGNAL_P (pe, signo, sigcode))
-      handler = (*pe->preempter) (pe, ss, &signo, &sigcode, &sigerror);
+    if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->code))
+      handler = (*pe->preempter) (pe, ss, &signo, detail);
 
   if (handler == SIG_ERR && (__sigmask (signo) & _hurdsig_preempted_set))
     {
@@ -1061,14 +1060,18 @@ _S_msg_sig_post (mach_port_t me,
 		 mach_port_t refport)
 {
   error_t err;
+  struct hurd_signal_detail d;
 
   if (err = signal_allowed (signo, refport))
     return err;
 
+  d.code = sigcode;
+  d.exc = 0;
+
   /* Post the signal to the designated signal-receiving thread.  This will
      reply when the signal can be considered delivered.  */
   _hurd_internal_post_signal (_hurd_thread_sigstate (_hurd_sigthread),
-			      signo, sigcode, 0, reply_port, reply_port_type,
+			      signo, &d, reply_port, reply_port_type,
 			      0); /* Stop if traced.  */
 
   return MIG_NO_REPLY;		/* Already replied.  */
@@ -1085,14 +1088,18 @@ _S_msg_sig_post_untraced (mach_port_t me,
 			  mach_port_t refport)
 {
   error_t err;
+  struct hurd_signal_detail d;
 
   if (err = signal_allowed (signo, refport))
     return err;
 
+  d.code = sigcode;
+  d.exc = 0;
+
   /* Post the signal to the designated signal-receiving thread.  This will
      reply when the signal can be considered delivered.  */
   _hurd_internal_post_signal (_hurd_thread_sigstate (_hurd_sigthread),
-			      signo, sigcode, 0, reply_port, reply_port_type,
+			      signo, &d, reply_port, reply_port_type,
 			      1); /* Untraced flag. */
 
   return MIG_NO_REPLY;		/* Already replied.  */

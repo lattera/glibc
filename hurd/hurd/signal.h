@@ -43,6 +43,18 @@ Cambridge, MA 02139, USA.  */
 struct hurd_signal_preempter;	/* <hurd/sigpreempt.h> */
 
 
+/* Full details of a signal.  */
+struct hurd_signal_detail
+  {
+    /* Codes from origination Mach exception_raise message.  */
+    integer_t exc, exc_code, exc_subcode;
+    /* Sigcode as passed or computed from exception codes.  */
+    integer_t code;
+    /* Error code as passed or extracted from exception codes.  */
+    error_t error;
+  };
+
+
 /* Per-thread signal state.  */
 
 struct hurd_sigstate
@@ -65,13 +77,8 @@ struct hurd_sigstate
        stack frame, and each next element in an outermore frame.  */
     struct hurd_signal_preempter *preempters;
 
-    struct
-      {
-	/* For each signal that may be pending, the
-	   sigcode and error code to deliver it with.  */
-	long int code;
-	error_t error;
-      } pending_data[NSIG];
+    /* For each signal that may be pending, the details to deliver it with.  */
+    struct hurd_signal_detail pending_data[NSIG];
 
     /* If `suspended' is set when this thread gets a signal,
        the signal thread sends an empty message to it.  */
@@ -217,27 +224,27 @@ extern void _hurdsig_init (void);
 
 extern void _hurdsig_fault_init (void);
 
-/* Raise a signal as described by SIGNO, SIGCODE and SIGERROR, on the
-   thread whose sigstate SS points to.  If SS is a null pointer, this
-   instead affects the calling thread.  */
+/* Raise a signal as described by SIGNO an DETAIL, on the thread whose
+   sigstate SS points to.  If SS is a null pointer, this instead affects
+   the calling thread.  */
 
-extern void _hurd_raise_signal (struct hurd_sigstate *ss,
-				int signo, long int sigcode, int sigerror);
+extern void _hurd_raise_signal (struct hurd_sigstate *ss, int signo,
+				const struct hurd_signal_detail *detail);
 
 /* Translate a Mach exception into a signal (machine-dependent).  */
 
-extern void _hurd_exception2signal (int exception, int code, int subcode,
-				    int *signo, long int *sigcode, int *error);
+extern void _hurd_exception2signal (struct hurd_signal_detail *);
 
 
 /* Make the thread described by SS take the signal described by SIGNO and
-   SIGCODE.  If the process is traced, this will in fact stop with a SIGNO
+   DETAIL.  If the process is traced, this will in fact stop with a SIGNO
    as the stop signal unless UNTRACED is nonzero.  When the signal can be
    considered delivered, sends a sig_post reply message on REPLY_PORT
    indicating success.  SS is not locked.  */
 
 extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
-					int signo, long int sigcode, int error,
+					int signo,
+					struct hurd_signal_detail *detail,
 					mach_port_t reply_port,
 					mach_msg_type_name_t reply_port_type,
 					int untraced);
@@ -252,7 +259,7 @@ extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
 struct machine_thread_all_state;
 extern struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
-			int signo, long int sigcode,
+			int signo, const struct hurd_signal_detail *detail,
 			int rpc_wait, struct machine_thread_all_state *state);
 
 /* Function run by the signal thread to receive from the signal port.  */
