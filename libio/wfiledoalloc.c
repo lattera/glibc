@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -76,7 +76,8 @@ _IO_wfile_doallocate (fp)
   struct _G_stat64 st;
 
   /* Allocate room for the external buffer.  */
-  _IO_file_doallocate (fp);
+  if (fp->_IO_buf_base == NULL)
+    _IO_file_doallocate (fp);
 
   if (fp->_fileno < 0 || _IO_SYSSTAT (fp, &st) < 0)
     {

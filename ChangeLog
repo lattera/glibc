@@ -1,4 +1,25 @@
+2000-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/Makefile (tests): Add tst_wprintf2.
+	(tst_wprintf2-ARGS): Define.
+	* libio/tst_wprintf2.c: New file.
+	Based on a test case by Yoshito Kawada <KAWADA@jp.ibm.com>.
+
+	* libio/wfiledoalloc.c: Only allocate external buffer if this
+	hasn't happened yet.
+
+	* libio/wfileops.c (_IO_wdo_write): Overflow only if there is really
+	something in the buffer.  gconv call can write up to end of the
+	buffer, not only _IO_write_end.
+	(_IO_wfile_overflow): Allocate also external buffer.
+
 2000-07-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfprintf.c (process_string_arg): Handle multibyte
+	strings with precision in vfwprintf correctly.
+	* stdio-common/vfprintf.c: Fix completely broken handling of
+	unbuffered wide character streams.
+	Reported by Yoshito Kawada <KAWADA@jp.ibm.com>.
 
 	* resolv/Makefile (distribute): Add README.
 

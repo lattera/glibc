@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -67,7 +67,8 @@ _IO_wdo_write (fp, data, to_do)
       enum __codecvt_result result;
       const wchar_t *new_data;
 
-      if (fp->_IO_write_end == fp->_IO_write_ptr)
+      if (fp->_IO_write_end == fp->_IO_write_ptr
+	  && fp->_IO_write_end != fp->_IO_write_base)
 	{
 	  _IO_new_file_overflow (fp, EOF);
 	  assert (fp->_IO_write_end > fp->_IO_write_ptr);
@@ -77,7 +78,7 @@ _IO_wdo_write (fp, data, to_do)
       result = (*cc->__codecvt_do_out) (cc, &fp->_wide_data->_IO_state,
 					data, data + to_do, &new_data,
 					fp->_IO_write_ptr,
-					fp->_IO_write_end,
+					fp->_IO_buf_end,
 					&fp->_IO_write_ptr);
 
       /* Write out what we produced so far.  */
@@ -289,6 +290,12 @@ _IO_wfile_overflow (f, wch)
 	  _IO_wdoallocbuf (f);
 	  _IO_wsetg (f, f->_wide_data->_IO_buf_base,
 		     f->_wide_data->_IO_buf_base, f->_wide_data->_IO_buf_base);
+
+	  if (f->_IO_write_base == NULL)
+	    {
+	      _IO_doallocbuf (f);
+	      _IO_setg (f, f->_IO_buf_base, f->_IO_buf_base, f->_IO_buf_base);
+	    }
 	}
       else
 	{
@@ -313,13 +320,18 @@ _IO_wfile_overflow (f, wch)
       f->_wide_data->_IO_read_base = f->_wide_data->_IO_read_ptr =
 	f->_wide_data->_IO_read_end;
 
+      f->_IO_write_ptr = f->_IO_read_ptr;
+      f->_IO_write_base = f->_IO_write_ptr;
+      f->_IO_write_end = f->_IO_buf_end;
+      f->_IO_read_base = f->_IO_read_ptr = f->_IO_read_end;
+
       f->_flags |= _IO_CURRENTLY_PUTTING;
       if (f->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
 	f->_wide_data->_IO_write_end = f->_wide_data->_IO_write_ptr;
     }
   if (wch == WEOF)
     return _IO_do_flush (f);
-  if (f->_wide_data->_IO_write_ptr == f->_wide_data->_IO_buf_end )
+  if (f->_wide_data->_IO_write_ptr == f->_wide_data->_IO_buf_end)
     /* Buffer is really full */
     if (_IO_do_flush (f) == WEOF)
       return WEOF;

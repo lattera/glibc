@@ -1030,14 +1030,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    const char *mbs = (const char *) string;			      \
 	    mbstate_t mbstate;						      \
 									      \
-	    len = prec == -1 ? strnlen (mbs, prec) : strlen (mbs);	      \
+	    len = prec != -1 ? strnlen (mbs, prec) : strlen (mbs);	      \
 									      \
 	    /* Allocate dynamically an array which definitely is long	      \
 	       enough for the wide character version.  */		      \
-	    string = (CHAR_T *) alloca ((len + 1) * sizeof (wchar_t));	      \
+	    string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
 									      \
 	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
-	    len = __mbsrtowcs (string, &mbs, len + 1, &mbstate);	      \
+	    len = __mbsrtowcs (string, &mbs, len, &mbstate);		      \
 	    if (len == (size_t) -1)					      \
 	      {								      \
 		/* Illegal multibyte character.  */			      \
@@ -1919,6 +1919,9 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
 struct helper_file
   {
     struct _IO_FILE_plus _f;
+#ifdef COMPILE_WPRINTF
+    struct _IO_wide_data _wide_data;
+#endif
     _IO_FILE *_put_stream;
 #ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
@@ -1948,6 +1951,29 @@ _IO_helper_overflow (_IO_FILE *s, int c)
   return PUTC (c, s);
 }
 
+#ifdef COMPILE_WPRINTF
+static const struct _IO_jump_t _IO_helper_jumps =
+{
+  JUMP_INIT_DUMMY,
+  JUMP_INIT (finish, _IO_wdefault_finish),
+  JUMP_INIT (overflow, _IO_helper_overflow),
+  JUMP_INIT (underflow, _IO_default_underflow),
+  JUMP_INIT (uflow, _IO_default_uflow),
+  JUMP_INIT (pbackfail, (_IO_pbackfail_t) _IO_wdefault_pbackfail),
+  JUMP_INIT (xsputn, _IO_wdefault_xsputn),
+  JUMP_INIT (xsgetn, _IO_wdefault_xsgetn),
+  JUMP_INIT (seekoff, _IO_default_seekoff),
+  JUMP_INIT (seekpos, _IO_default_seekpos),
+  JUMP_INIT (setbuf,(_IO_setbuf_t)  _IO_wdefault_setbuf),
+  JUMP_INIT (sync, _IO_default_sync),
+  JUMP_INIT (doallocate, _IO_wdefault_doallocate),
+  JUMP_INIT (read, _IO_default_read),
+  JUMP_INIT (write, _IO_default_write),
+  JUMP_INIT (seek, _IO_default_seek),
+  JUMP_INIT (close, _IO_default_close),
+  JUMP_INIT (stat, _IO_default_stat)
+};
+#else
 static const struct _IO_jump_t _IO_helper_jumps =
 {
   JUMP_INIT_DUMMY,
@@ -1969,6 +1995,7 @@ static const struct _IO_jump_t _IO_helper_jumps =
   JUMP_INIT (close, _IO_default_close),
   JUMP_INIT (stat, _IO_default_stat)
 };
+#endif
 
 static int
 internal_function
@@ -1983,6 +2010,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   /* Initialize helper.  */
   helper._put_stream = s;
 #ifdef COMPILE_WPRINTF
+  hp->_wide_data = &helper._wide_data;
   _IO_wsetp (hp, buf, buf + sizeof buf / sizeof (CHAR_T));
   hp->_mode = 1;
 #else
