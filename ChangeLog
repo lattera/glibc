@@ -1,3 +1,7 @@
+2001-12-07  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/opensock.c: Include <string.h>.
+
 2001-12-06  Geoff Keating  <geoffk@redhat.com>
 
 	* sysdeps/powerpc/Makefile (sysdep_routines): Don't build the fpr
