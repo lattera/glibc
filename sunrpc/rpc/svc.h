@@ -166,7 +166,7 @@ typedef void (*__dispatch_fn_t) (struct svc_req*, SVCXPRT*);
  *	SVCXPRT *xprt;
  *	rpcprog_t prog;
  *	rpcvers_t vers;
- *	void (*dispatch)();
+ *	void (*dispatch)(struct svc_req*, SVCXPRT*);
  *	rpcprot_t protocol;  like TCP or UDP, zero means do not register
  */
 extern bool_t svc_register (SVCXPRT *__xprt, rpcprog_t __prog,

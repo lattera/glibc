@@ -1,3 +1,7 @@
+2000-01-22  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/rpc/svc.h: Fix description for svc_register.
+
 2000-01-23  Mark Kettenis  <kettenis@gnu.org>
 
 	* inet/rexec.c (rexec_af): Use SA_LEN instead of __libc_sa_len.
