@@ -1,5 +1,5 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,9 @@
 #define DATABASE	"hosts"
 #define NEED_H_ERRNO
 
+#define EXTRA_ARGS	 , af, flags
+#define EXTRA_ARGS_DECL	 , int af, int flags
+
 #define ENTDATA hostent_data
 struct hostent_data
   {
@@ -50,9 +53,9 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
+   if (af == AF_INET && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
      {
-       if (_res.options & RES_USE_INET6)
+       if (flags & AI_V4MAPPED)
 	 {
 	   map_v4v6_address ((char *) entdata->host_addr,
 			     (char *) entdata->host_addr);
@@ -65,7 +68,8 @@ LINE_PARSER
 	   result->h_length = INADDRSZ;
 	 }
      }
-   else if (inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+   else if (af == AF_INET6
+	    && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
      {
        result->h_addrtype = AF_INET6;
        result->h_length = IN6ADDRSZ;
@@ -82,26 +86,35 @@ LINE_PARSER
    STRING_FIELD (result->h_name, isspace, 1);
  })
 
+#define EXTRA_ARGS_VALUE \
+  , ((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET),		      \
+  ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0)
 #include "files-XXX.c"
 
 DB_LOOKUP (hostbyname, ,,
 	   {
-	     if (result->h_addrtype != ((_res.options & RES_USE_INET6)
-					? AF_INET6 : AF_INET))
-	       continue;
 	     LOOKUP_NAME_CASE (h_name, h_aliases)
 	   }, const char *name)
 
+#undef EXTRA_ARGS_VALUE
+#define EXTRA_ARGS_VALUE \
+  , af, ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0)
 DB_LOOKUP (hostbyname2, ,,
 	   {
-	     if (result->h_addrtype != af)
-	       continue;
 	     LOOKUP_NAME_CASE (h_name, h_aliases)
 	   }, const char *name, int af)
 
 DB_LOOKUP (hostbyaddr, ,,
 	   {
-	     if (result->h_addrtype == type && result->h_length == len &&
-		 ! memcmp (addr, result->h_addr_list[0], len))
+	     if (result->h_length == len
+		 && ! memcmp (addr, result->h_addr_list[0], len))
 	       break;
-	   }, const char *addr, int len, int type)
+	   }, const char *addr, int len, int af)
+
+#undef EXTRA_ARGS_VALUE
+#define EXTRA_ARGS_VALUE \
+  , af, flags
+DB_LOOKUP (ipnodebyname, ,,
+	   {
+	     LOOKUP_NAME_CASE (h_name, h_aliases)
+	   }, const char *name, int af, int flags)

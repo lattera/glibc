@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,3 +51,13 @@ if_nameindex (void)
 }
 stub_warning (if_nameindex)
 #include <stub-tag.h>
+
+
+void
+internal_function
+__protocol_avaliable (int *have_inet, have_inet6)
+{
+  /* By default we assume that IPv4 is avaialble, IPv6 not.  */
+  *have_inet = 1;
+  *have_inet6 = 0;
+}

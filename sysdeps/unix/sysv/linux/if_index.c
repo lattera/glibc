@@ -54,9 +54,9 @@ opensock (void)
 
   if (fd == -1)
     {
-      fd = __socket (sock_af = AF_INET6, SOCK_DGRAM, 0);
+      fd = __socket (sock_af = AF_INET, SOCK_DGRAM, 0);
       if (fd < 0)
-	fd = __socket (sock_af = AF_INET, SOCK_DGRAM, 0);
+	fd = __socket (sock_af = AF_INET6, SOCK_DGRAM, 0);
       if (fd < 0)
 	fd = __socket (sock_af = AF_IPX, SOCK_DGRAM, 0);
       if (fd < 0)
@@ -276,4 +276,83 @@ if_indextoname (unsigned int ifindex, char *ifname)
   return result;
 # endif
 #endif
+}
+
+
+void
+internal_function
+__protocol_avaliable (int *have_inet, int *have_inet6)
+{
+  int fd = opensock ();
+  unsigned int nifs;
+  int rq_len;
+  struct ifconf ifc;
+# if __ASSUME_SIOCGIFNAME == 0
+  static int old_siocgifconf;
+# else
+#  define old_siocgifconf 0
+# endif
+# define RQ_IFS	4
+
+  /* Wirst case assumption.  */
+  *have_inet = 0;
+  *have_inet6 = 0;
+
+  if (fd == NULL)
+    /* We cannot open the socket.  No networking at all?  */
+    return;
+
+  /* We may be able to get the needed buffer size directly, rather than
+     guessing.  */
+  if (! old_siocgifconf)
+    {
+      ifc.ifc_buf = NULL;
+      ifc.ifc_len = 0;
+      if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0 || ifc.ifc_len == 0)
+	{
+# if __ASSUME_SIOCGIFNAME == 0
+	  old_siocgifconf = 1;
+# endif
+	  rq_len = RQ_IFS * sizeof (struct ifreq);
+	}
+      else
+	rq_len = ifc.ifc_len;
+    }
+  else
+    rq_len = RQ_IFS * sizeof (struct ifreq);
+
+  /* Read all the interfaces out of the kernel.  */
+  do
+    {
+      ifc.ifc_buf = alloca (ifc.ifc_len = rq_len);
+      if (ifc.ifc_buf == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
+	{
+	  __close (fd);
+	  return;
+	}
+      rq_len *= 2;
+    }
+  while (ifc.ifc_len == rq_len && old_siocgifconf);
+
+  nifs = ifc.ifc_len / sizeof (struct ifreq);
+
+  /* Go through all the interfaces and get the address.  */
+  while (nifs-- > 0)
+    if (__ioctl (fd, SIOCGIFADDR, &ifc.ifc_req[nifs]) >= 0)
+      {
+	/* We successfully got information about this interface.  Now
+	   test whether it is an IPv4 or IPv6 address.  */
+	if (ifc.ifc_req[nifs].ifr_addr.sa_family == AF_INET)
+	  *have_inet = 1;
+	else if (ifc.ifc_req[nifs].ifr_addr.sa_family == AF_INET6)
+	  *have_inet6 = 1;
+
+	/* Note, this is & not &&.  It works since the values are always
+	   0 or 1.  */
+	if (*have_inet & *have_inet6)
+	  /* We can stop early.  */
+	  break;
+      }
+
+  __close (fd);
 }

@@ -111,7 +111,7 @@ do_pt_chown (void)
      character device.  */
   if (stat (pty, &st) < 0
 #ifdef unix98_pseudo_p
-      || ! unix98_pseudo_p (st.st_rdev)
+      || ! unix98_pseudo_p (major (st.st_rdev))
 #else
       || !S_ISCHR(st.st_mode)
 #endif

@@ -50,6 +50,12 @@
 # define H_ERRNO_SET(val) ((void) 0)
 #endif
 
+#ifndef EXTRA_ARGS
+# define EXTRA_ARGS
+# define EXTRA_ARGS_DECL
+# define EXTRA_ARGS_VALUE
+#endif
+
 /* Locks the static variables in this file.  */
 __libc_lock_define_initialized (static, lock)
 
@@ -161,7 +167,8 @@ CONCAT(_nss_files_end,ENTNAME) (void)
 
 static enum nss_status
 internal_getent (struct STRUCTURE *result,
-		 char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)
+		 char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO
+		 EXTRA_ARGS_DECL)
 {
   char *p;
   struct parser_data *data = (void *) buffer;
@@ -204,7 +211,8 @@ internal_getent (struct STRUCTURE *result,
   while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
 	 /* Parse the line.  If it is invalid, loop to get the next
 	    line of the file to parse.  */
-	 || ! (parse_result = parse_line (p, result, data, buflen, errnop)));
+	 || ! (parse_result = parse_line (p, result, data, buflen, errnop
+					  EXTRA_ARGS)));
 
   /* Filled in RESULT with the next entry from the database file.  */
   return parse_result == -1 ? NSS_STATUS_TRYAGAIN : NSS_STATUS_SUCCESS;
@@ -249,7 +257,7 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
       if (status == NSS_STATUS_SUCCESS)
 	{
 	  status = internal_getent (result, buffer, buflen, errnop
-				    H_ERRNO_ARG);
+				    H_ERRNO_ARG EXTRA_ARGS_VALUE);
 
 	  /* Remember this position if we were successful.  If the
 	     operation failed we give the user a chance to repeat the
@@ -298,7 +306,7 @@ _nss_files_get##name##_r (proto,					      \
       last_use = getby;							      \
 									      \
       while ((status = internal_getent (result, buffer, buflen, errnop	      \
-					H_ERRNO_ARG))			      \
+					H_ERRNO_ARG EXTRA_ARGS_VALUE))	      \
 	     == NSS_STATUS_SUCCESS)					      \
 	{ break_if_match }						      \
 									      \

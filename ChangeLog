@@ -1,3 +1,27 @@
+1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/Makefile (routines): Add getipnodebynm.
+	* inet/getipnodebynm.c: New file.
+	* nss/digits_dots.c: If HAVE_TYPE is define type contains the
+	interface type.
+	* nss/nss_files/files-XXX.c: Define EXTRA_ARGS, EXTRA_ARGS_DECL, and
+	EXTRA_ARGS_VALUE is not already done.
+	(internal_getent): Allow extra parameters and pass them to parse_line.
+	(_nss_files_get,ENTNAME_r): Pass extra parameters to internal_getent.
+	(_nss_files_get##name##_r): Likewise.
+	* nss/nss_files/files-hosts.c: Define EXTRA_ARGS, EXTRA_ARGS_DECL,
+	and EXTRA_ARGS_VALUE to pass flags and type to parser.
+	Add getipnodebyname function.
+	* nss/nss_files/files-parse.c: Define EXTRA_ARGS, EXTRA_ARGS_DECL, and
+	EXTRA_ARGS_VALUE is not already done.
+	(parse_line): Add EXTRA_ARGS_DECL to parameter list.
+	* nss/nss_db/db-XXX.c (lookup): Allow extra parameters and pass them
+	to parse_line.
+	(_nss_db_get##name##_r): Pass extra parameters to lookup.
+	(_nss_db_get,ENTNAME_r): Likewise.
+	* sysdeps/generic/if_index.c (__protocol_available): New function.
+	* sysdeps/unix/sysv/linux/if_index.c: Likewise.
+
 1999-08-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* login/pty-private.h: Move to...

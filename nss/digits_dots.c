@@ -31,11 +31,12 @@
       host_addr_list_t *h_addr_ptrs;
       size_t size_needed;
       int addr_size;
-#ifndef HAVE_AF
-      int af = -1;
-#endif
 #ifdef HAVE_TYPE
       int af = type;
+#else
+# ifndef HAVE_AF
+      int af = -1;
+# endif
 #endif
 
       switch (af)
@@ -153,7 +154,7 @@
 			  /* That's bad.  The user hasn't specified that she
 			     allows IPv4 numeric addresses.  */
 			  result = NULL;
-			  *herrno_p = HOST_NOT_FOUND;
+			  *h_errnop = HOST_NOT_FOUND;
 			  goto done;
 			}
 		      else
@@ -206,11 +207,12 @@
 	  host_addr_list_t *h_addr_ptrs;
 	  size_t size_needed;
 	  int addr_size;
-#ifndef HAVE_AF
-	  int af = -1;
-#endif
 #ifdef HAVE_TYPE
 	  int af = type;
+#else
+# ifndef HAVE_AF
+	  int af = -1;
+# endif
 #endif
 
 	  switch (af)

@@ -1,5 +1,5 @@
 /* Common code for DB-based databases in nss_db module.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -162,7 +162,7 @@ CONCAT(_nss_db_end,ENTNAME) (void)
 /* Do a database lookup for KEY.  */
 static enum nss_status
 lookup (DBT *key, struct STRUCTURE *result,
-	void *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)
+	void *buffer, size_t buflen, int *errnop H_ERRNO_PROTO EXTRA_ARGS_DECL)
 {
   char *p;
   enum nss_status status;
@@ -211,7 +211,7 @@ lookup (DBT *key, struct STRUCTURE *result,
       while (isspace (*p))
 	++p;
 
-      err = parse_line (p, result, buffer, buflen, errnop);
+      err = parse_line (p, result, buffer, buflen, errnop EXTRA_ARGS);
 
       if (err == 0)
 	{
@@ -274,7 +274,8 @@ _nss_db_get##name##_r (proto,						      \
   key.size = KEYPRINTF keypattern;					      \
   key.flags = 0;							      \
   __libc_lock_lock (lock);						      \
-  status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG);	      \
+  status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG	      \
+		   EXTRA_ARGS_VALUE);					      \
   __libc_lock_unlock (lock);						      \
   return status;							      \
 }
@@ -302,7 +303,8 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
     {
       key.size = snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
       key.flags = 0;
-      status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG);
+      status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG
+		       EXTRA_ARGS_VALUE);
       if (status == NSS_STATUS_TRYAGAIN
 #ifdef NEED_H_ERRNO
 	  && *herrnop == NETDB_INTERNAL

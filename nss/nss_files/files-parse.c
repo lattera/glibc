@@ -1,5 +1,5 @@
 /* Common code for file-based database parsers in nss_files module.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,17 @@
 
    NEED_H_ERRNO - defined iff an arg `int *herrnop' is used.
 
+   EXTRA_ARGS -- defined iff extra parameters must be passed to the parser
+   EXTRA_ARGS_DECL -- declaration for these extra parameters
+   EXTRA_ARGS_VALUE -- values to be passed for these parameters
+
    Also see files-XXX.c.  */
+
+#ifndef EXTRA_ARGS
+# define EXTRA_ARGS
+# define EXTRA_ARGS_DECL
+# define EXTRA_ARGS_VALUE
+#endif
 
 #define CONCAT(a,b) CONCAT1(a,b)
 #define CONCAT1(a,b) a##b
@@ -69,7 +79,8 @@ struct parser_data
 
 /* The parser is defined in a different module.  */
 extern int parse_line (char *line, struct STRUCTURE *result,
-		       struct parser_data *data, size_t datalen, int *errnop);
+		       struct parser_data *data, size_t datalen, int *errnop
+		       EXTRA_ARGS_DECL);
 
 # define LINE_PARSER(EOLSET, BODY) /* Do nothing */
 
@@ -80,7 +91,8 @@ extern int parse_line (char *line, struct STRUCTURE *result,
 # define LINE_PARSER(EOLSET, BODY)					      \
 parser_stclass int							      \
 parse_line (char *line, struct STRUCTURE *result,			      \
-	    struct parser_data *data, size_t datalen, int *errnop)	      \
+	    struct parser_data *data, size_t datalen, int *errnop	      \
+	    EXTRA_ARGS_DECL)						      \
 {									      \
   ENTDATA_DECL (data)							      \
   char *p = strpbrk (line, EOLSET "\n");				      \
