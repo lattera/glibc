@@ -1,3 +1,13 @@
+2001-07-26  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/generic/bits/termios.h (EXTA, EXTB): Make these conditional
+	on __USE_MISC rather than __USE_BSD.
+	(B57600, B115200, B230400, B460800, B500000, B576000, B921600,
+	B1000000, B1152000, B1500000, B2000000, B2500000, B3000000,
+	B3500000, B4000000): New macros.
+	* sysdeps/generic/tcsetattr.c (bad_speed): Accept those values.
+	* termios/cfsetspeed.c (speeds): Likewise.
+
 2001-07-26  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/dl-machine.h (elf_machine_load_address): Don't use
@@ -53,7 +63,7 @@
 
 2001-07-25  Ulrich Drepper  <drepper@redhat.com>
 
-	* csu/gmon-start.c: Use ENTRY_POINT_DECL is defined instead of a
+	* csu/gmon-start.c: Use ENTRY_POINT_DECL if defined instead of a
 	declaration using ENTRY_POINT.
 	* sysdeps/ia64/elf/entry.h (ENTRY_POINT_DECL): New definition.
 
