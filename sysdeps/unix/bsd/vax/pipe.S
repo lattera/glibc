@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-SYSCALL (pipe)
+SYSCALL__ (pipe)
 	movl 4(ap), r2
 	movl r0, (r2)+
 	movl r1, (r2)
