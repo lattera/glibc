@@ -1,3 +1,12 @@
+2000-07-29  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): Take into
+	acount that elf/rtld's main program might remove some varibales
+	from the environment if we're trying to be secure.  Move the Hurd
+	startup data if necessary, or, if we there is no startup data,
+	make sure the magical convention that ARGV[0] is stored just after
+	the environment list.
+
 2000-08-01  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/Makefile [subdir=resource]

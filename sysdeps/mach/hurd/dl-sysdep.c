@@ -184,16 +184,45 @@ unfmh();			/* XXX */
 		  _dl_hurd_data->phdrsz / sizeof (Elf32_Phdr),
 		  &_dl_hurd_data->user_entry);
 
-      if (_dl_skip_args && _dl_argv[-_dl_skip_args] == (char *) p)
+      /* The call above might screw a few things up.
+
+	 First of all, if _dl_skip_args is nonzero, we are ignoring
+	 the first few arguments.  However, if we have no Hurd startup
+	 data, it is the magical convention that ARGV[0] == P.  The
+	 startup code in init-first.c will get confused if this is not
+	 the case, so we must rearrange things to make it so.  We'll
+	 overwrite the origional ARGV[0] at P with ARGV[_dl_skip_args].
+
+	 Secondly, if we need to be secure, it removes some dangerous
+	 environment variables.  If we have no Hurd startup date this
+	 changes P (since that's the location after the terminating
+	 NULL in the list of environment variables).  We do the same
+	 thing as in the first case but make sure we recalculate P.
+	 If we do have Hurd startup data, we have to move the data
+	 such that it starts just after the terminating NULL in the
+	 environment list.
+
+	 We use memmove, since the locations might overlap.  */
+      if (__libc_enable_secure || _dl_skip_args)
 	{
-	  /* We are ignoring the first few arguments, but we have no Hurd
-	     startup data.  It is magical convention that ARGV[0] == P in
-	     this case.  The startup code in init-first.c will get confused
-	     if this is not the case, so we must rearrange things to make
-	     it so.  Overwrite the original ARGV[0] at P with
-	     ARGV[_dl_skip_args].  */
-	  assert ((char *) p < _dl_argv[0]);
-	  _dl_argv[0] = strcpy ((char *) p, _dl_argv[0]);
+	  char **newp;
+
+	  for (newp = _environ; *newp++;);
+
+	  if (_dl_argv[-_dl_skip_args] == (char *) p)
+	    {
+	      if ((char *) newp != _dl_argv[0])
+		{
+		  assert ((char *) newp < _dl_argv[0]);
+		  _dl_argv[0] = memmove ((char *) newp, _dl_argv[0],
+					 strlen (_dl_argv[0]) + 1);
+		}
+	    }
+	  else
+	    {
+	      if ((void *) newp != _dl_hurd_data)
+		memmove (newp, _dl_hurd_data, sizeof (*_dl_hurd_data));
+	    }
 	}
 
       {
