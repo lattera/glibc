@@ -1,3 +1,37 @@
+2004-10-27  Derek R. Price  <derek@ximbiot.com>
+
+	[BZ #487] This change is imported from gnulib.
+	* time/mktime.c (not_equal_tm) [DEBUG]: Remove redundant check.
+
+2004-10-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #473]
+	* time/tst-mktime.c (main): Don't assume that mktime fails
+	when given time stamps before 1970.  It returns negative
+	time_t values instead, for compatibility with BSD.
+
+	* time/tst-mktime2.c: New file.
+	* time/Makefile (tests): Add it.
+
+	[BZ #473] Import from gnulib.  Revamp to avoid several problems near
+	time_t extrema, and on hosts with 64-bit time_t and 32-bit int.
+	This fixes Debian bug 177940.
+	* time/mktime.c (TIME_T_MIDPOINT): New macro.
+	(ydhms_diff): Renamed from ydhms_tm_diff, with a new signature,
+	which avoids overflow problems on hosts with 64-bit time_t and
+	32-bit int.  All callers changed.  Now an inline function.
+	Verify at compile-time that long int is wide enough to avoid
+	these overflow problems.
+	(guess_time_tm): New function.
+	(__mktime_internal): Use it.  Avoid overflow when computing yday on
+	hosts with 64-bit long and 32-bit int.  Remove tests for 69;
+	no longer needed.  Use if rather than #ifdef for LEAP_SECONDS_POSSIBLE
+	so that the code is checked by more compilers.
+	Do not rely on floating point to probe: stick to integer arithmetic,
+	to avoid potential porting problems.
+	Repair potential overflow correctly in the Southern Hemisphere.
+	(localtime_offset): Add a FIXME for the case where time_t is unsigned.
+
 2004-10-30  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/dl-machine.h (elf_machine_rela)

@@ -55,9 +55,11 @@ main (void)
 
       setenv ("TZ", "CET-1", 1);
       t = mktime (&time_str);
-      if (t != (time_t) -1)
+#define EVENING69_CET (EVENING69 - (5 - -1) * 60 * 60)
+      if (t != EVENING69_CET)
         {
-	  printf ("mktime returned %ld, expected -1\n", (long) t);
+	  printf ("mktime returned %ld, expected %ld\n",
+		  (long) t, (long) EVENING69_CET);
 	  result = 1;
         }
       else
