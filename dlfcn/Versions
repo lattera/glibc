@@ -5,4 +5,7 @@ libdl {
   GLIBC_2.1 {
     dlopen; dlvsym;
   }
+  GLIBC_2.3.3 {
+    dladdr1;
+  }
 }

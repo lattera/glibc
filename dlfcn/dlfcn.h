@@ -1,5 +1,5 @@
 /* User functions for run-time dynamic loading.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,6 +83,23 @@ typedef struct
 /* Fill in *INFO with the following information about ADDRESS.
    Returns 0 iff no shared object's segments contain that address.  */
 extern int dladdr (__const void *__address, Dl_info *__info) __THROW;
+
+/* Same as `dladdr', but additionally sets *EXTRA_INFO according to FLAGS.  */
+extern int dladdr1 (__const void *__address, Dl_info *__info,
+		    void **__extra_info, int __flags) __THROW;
+
+/* These are the possible values for the FLAGS argument to `dladdr1'.
+   This indicates what extra information is stored at *EXTRA_INFO.
+   It may also be zero, in which case the EXTRA_INFO argument is not used.  */
+enum
+  {
+    /* Matching symbol table entry (const ElfNN_Sym *).  */
+    RTLD_DL_SYMENT = 1,
+
+    /* The object containing the address (struct link_map *).  */
+    RTLD_DL_LINKMAP = 2
+  };
+
 #endif
 
 __END_DECLS

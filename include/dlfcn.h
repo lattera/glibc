@@ -1,5 +1,6 @@
 #ifndef _DLFCN_H
 #include <dlfcn/dlfcn.h>
+#include <link.h>		/* For ElfW.  */
 
 /* Internally used flag.  */
 #define __RTLD_DLOPEN	0x80000000
@@ -15,9 +16,12 @@ extern void *__libc_dlsym   (void *__map, __const char *__name);
 extern int   __libc_dlclose (void *__map);
 
 /* Locate shared object containing the given address.  */
-extern int _dl_addr (const void *address, Dl_info *info)
+#ifdef ElfW
+extern int _dl_addr (const void *address, Dl_info *info,
+		     struct link_map **mapp, const ElfW(Sym) **symbolp)
      internal_function;
 libc_hidden_proto (_dl_addr)
+#endif
 
 /* Open the shared object NAME, relocate it, and run its initializer if it
    hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If

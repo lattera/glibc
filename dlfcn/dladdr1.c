@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996, 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,16 @@
 #include <dlfcn.h>
 
 int
-dladdr (const void *address, Dl_info *info)
+dladdr1 (const void *address, Dl_info *info, void **extra, int flags)
 {
-  return _dl_addr (address, info, NULL, NULL);
+  switch (flags)
+    {
+    default:			/* Make this an error?  */
+    case 0:
+      return _dl_addr (address, info, NULL, NULL);
+    case RTLD_DL_SYMENT:
+      return _dl_addr (address, info, NULL, (const ElfW(Sym) **) extra);
+    case RTLD_DL_LINKMAP:
+      return _dl_addr (address, info, (struct link_map **) extra, NULL);
+    }
 }

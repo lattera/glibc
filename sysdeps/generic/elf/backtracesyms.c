@@ -1,5 +1,5 @@
 /* Return list with names for address in backtrace.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -48,7 +48,7 @@ __backtrace_symbols (array, size)
   /* Fill in the information we can get from `dladdr'.  */
   for (cnt = 0; cnt < size; ++cnt)
     {
-      status[cnt] = _dl_addr (array[cnt], &info[cnt]);
+      status[cnt] = _dl_addr (array[cnt], &info[cnt], NULL, NULL);
       if (status[cnt] && info[cnt].dli_fname && info[cnt].dli_fname[0] != '\0')
 	/* We have some info, compute the length of the string which will be
 	   "<file-name>(<sym-name>) [+offset].  */

@@ -19,7 +19,7 @@
 subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
-libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr eval
+libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 eval
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
 		   modcxaatexit.c modstatic.c \

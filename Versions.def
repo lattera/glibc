@@ -33,6 +33,7 @@ libcrypt {
 libdl {
   GLIBC_2.0
   GLIBC_2.1
+  GLIBC_2.3.3
 }
 libm {
   GLIBC_2.0

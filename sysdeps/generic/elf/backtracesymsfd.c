@@ -1,5 +1,5 @@
 /* Write formatted list with names for addresses in backtrace to a file.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -48,7 +48,7 @@ __backtrace_symbols_fd (array, size, fd)
       Dl_info info;
       size_t last = 0;
 
-      if (_dl_addr (array[cnt], &info)
+      if (_dl_addr (array[cnt], &info, NULL, NULL)
 	  && info.dli_fname && info.dli_fname[0] != '\0')
 	{
 	  /* Name of the file.  */

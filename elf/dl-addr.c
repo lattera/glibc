@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996-2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,8 @@
 
 int
 internal_function
-_dl_addr (const void *address, Dl_info *info)
+_dl_addr (const void *address, Dl_info *info,
+	  struct link_map **mapp, const ElfW(Sym) **symbolp)
 {
   const ElfW(Addr) addr = DL_LOOKUP_ADDRESS (address);
   struct link_map *l, *match;
@@ -92,6 +93,11 @@ _dl_addr (const void *address, Dl_info *info)
 	&& (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
 	    || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK))
       matchsym = (ElfW(Sym) *) symtab;
+
+  if (mapp)
+    *mapp = match;
+  if (symbolp)
+    *symbolp = matchsym;
 
   if (matchsym)
     {
