@@ -51,6 +51,8 @@ _hurd_ports_use (int which, error_t (*operate) (mach_port_t))
 
 DEFINE_HOOK (_hurd_subinit, (void));
 
+__typeof (_hurd_proc_init) _hurd_new_proc_init;	/* below */
+
 /* Initialize the library data structures from the
    ints and ports passed to us by the exec server.
 
@@ -89,7 +91,7 @@ _hurd_init (int flags, char **argv,
 
   /* Tell the proc server we exist, if it does.  */
   if (portarray[INIT_PORT_PROC] != MACH_PORT_NULL)
-    _hurd_proc_init (argv, intarray, intarraysize);
+    _hurd_new_proc_init (argv, intarray, intarraysize);
 
   /* All done with init ints and ports.  */
   __vm_deallocate (__mach_task_self (),
