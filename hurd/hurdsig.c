@@ -62,7 +62,7 @@ _hurd_thread_sigstate (thread_t thread)
   __mutex_lock (&_hurd_siglock);
   for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
     if (ss->thread == thread)
-      break;
+       break;
   if (ss == NULL)
     {
       ss = malloc (sizeof (*ss));
@@ -185,11 +185,14 @@ post_reply (mach_port_t *reply_port, mach_msg_type_name_t reply_port_type,
 	    int untraced,
 	    error_t result)
 {
+  error_t err;
   if (reply_port == NULL || *reply_port == MACH_PORT_NULL)
     return;
-  (untraced ? __msg_sig_post_untraced_reply : __msg_sig_post_reply)
+  err = (untraced ? __msg_sig_post_untraced_reply : __msg_sig_post_reply)
     (*reply_port, reply_port_type, result);
   *reply_port = MACH_PORT_NULL;
+  if (err != MACH_SEND_INVALID_DEST) /* Ignore dead reply port.  */
+    assert_perror (err);
 }
 
 
@@ -208,7 +211,8 @@ abort_thread (struct hurd_sigstate *ss, struct machine_thread_all_state *state,
 {
   if (!(state->set & THREAD_ABORTED))
     {
-      __thread_abort (ss->thread);
+      error_t err = __thread_abort (ss->thread);
+      assert_perror (err);
       /* Clear all thread state flavor set bits, because thread_abort may
 	 have changed the state.  */
       state->set = THREAD_ABORTED;
@@ -423,6 +427,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 			    mach_msg_type_name_t reply_port_type,
 			    int untraced)
 {
+  error_t err;
   struct machine_thread_all_state thread_state;
   enum { stop, ignore, core, term, handle } act;
   sighandler_t handler;
@@ -601,8 +606,13 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		{
 		  if (threads[i] != _hurd_msgport_thread &&
 		      (act != handle || threads[i] != ss->thread))
-		    __thread_resume (threads[i]);
-		  __mach_port_deallocate (__mach_task_self (), threads[i]);
+		    {
+		      err = __thread_resume (threads[i]);
+		      assert_perror (err);
+		    }
+		  err = __mach_port_deallocate (__mach_task_self (),
+						threads[i]);
+		  assert_perror (err);
 		}
 	      __vm_deallocate (__mach_task_self (),
 			       (vm_address_t) threads,
@@ -641,10 +651,13 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     {
     case stop:
       if (_hurd_stopped)
-	/* We are already stopped, but receiving an untraced stop
-	   signal.  Instead of resuming and suspending again, just
-	   notify the proc server of the new stop signal.  */
-	__USEPORT (PROC, __proc_mark_stop (port, signo));
+	{
+	  /* We are already stopped, but receiving an untraced stop
+	     signal.  Instead of resuming and suspending again, just
+	     notify the proc server of the new stop signal.  */
+	  error_t err = __USEPORT (PROC, __proc_mark_stop (port, signo));
+	  assert_perror (err);
+	}
       else
 	/* Suspend the process.  */
 	suspend ();
@@ -658,7 +671,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     case core:			/* And leave a rotting corpse.  */
     nirvana:
       /* Have the proc server stop all other threads in our task.  */
-      __USEPORT (PROC, __proc_dostop (port, _hurd_msgport_thread));
+      err = __USEPORT (PROC, __proc_dostop (port, _hurd_msgport_thread));
+      assert_perror (err);
       /* No more user instructions will be executed.
 	 The signal can now be considered delivered.  */
       reply ();
@@ -684,7 +698,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 	/* Stop the thread and abort its pending RPC operations.  */
 	if (! ss_suspended)
-	  __thread_suspend (ss->thread);
+	  {
+	    err = __thread_suspend (ss->thread);
+	    assert_perror (err);
+	  }
 
 	/* Abort the thread's kernel context, so any pending message send
 	   or receive completes immediately or aborts.  If an interruptible
@@ -750,10 +767,12 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 	/* Start the thread running the handler (or possibly waiting for an
 	   RPC reply before running the handler).  */
-	__thread_set_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
-			    (natural_t *) &thread_state.basic,
-			    MACHINE_THREAD_STATE_COUNT);
-	__thread_resume (ss->thread);
+	err = __thread_set_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
+				  (natural_t *) &thread_state.basic,
+				  MACHINE_THREAD_STATE_COUNT);
+	assert_perror (err);
+	err = __thread_resume (ss->thread);
+	assert_perror (err);
 	thread_state.set = 0;	/* Everything we know is now wrong.  */
 	break;
       }

@@ -621,6 +621,19 @@ none)
   base_os='' ;;
 esac
 
+# Some configurations imply other options.
+case "$os" in
+gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
+  # These systems always use GNU tools.
+  gnu_ld=yes gnu_as=yes
+esac
+case "$os" in
+gnu*elf* | linux* | sysv4* | solaris2*)
+  # These systems always use the ELF format.
+  elf=yes
+esac
+
+
 # For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
 tail=$os
 ostry=$os
@@ -647,6 +660,10 @@ mach=
 tail=$machine
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
+  # If using ELF, look for an `elf' subdirectory of each machine directory.
+  if test "$elf" = yes; then
+    mach="$mach /$1/elf"
+  fi
   mach="$mach /$1"
   tail="$2"
 done
@@ -680,18 +697,6 @@ fi
 
 # We have now validated the configuration.
 
-# Some configurations imply other options.
-case "$host_os" in
-gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
-  # These systems always use GNU tools.
-  gnu_ld=yes gnu_as=yes
-esac
-case "$host_os" in
-gnu*elf* | linux* | sysv4* | solaris2*)
-  # These systems always use the ELF format.
-  elf=yes
-esac
-
 
 # Remove the leading slashes.
 sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
@@ -705,17 +710,6 @@ if test "$with_fp" = yes; then
     fi
   done
   sysnames="`echo $fpu_dirs | sed -e 's,^/,,' -e 's, /,,g'` $sysnames"
-fi
-
-# If using ELF, prepend the machine-specific ELF ABI directory.
-if test "$elf" = yes; then
-  elf_dirs=
-  for m in $mach; do
-    if test -d $sysdep_dir$m/elf; then
-      elf_dirs="elf_dirs $m/elf"
-    fi
-  done
-  sysnames="`echo elf_dirs | sed -e 's,^/,,' -e 's, /,,g'` $sysnames"
 fi
 
 
@@ -999,7 +993,7 @@ else
   # On the NeXT, cc -E runs the code through the compiler's parser,
   # not just through cpp.
   cat > conftest.$ac_ext <<EOF
-#line 1003 "configure"
+#line 997 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
@@ -1013,7 +1007,7 @@ else
   rm -rf conftest*
   CPP="${CC-cc} -E -traditional-cpp"
   cat > conftest.$ac_ext <<EOF
-#line 1017 "configure"
+#line 1011 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
@@ -1065,7 +1059,7 @@ if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1069 "configure"
+#line 1063 "configure"
 #include "confdefs.h"
 #define __need_size_t
 #define __need_wchar_t
