@@ -129,13 +129,14 @@ _IO_old_file_init (fp)
 			     - (int) sizeof (struct _IO_FILE_complete));
   fp->file._fileno = -1;
 
-#if defined SHARED && defined _LIBC \
-    && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-  if (__builtin_expect (&_IO_stdin_used != NULL, 0)
-      || (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr))
+#if defined SHARED && defined _LIBC
+  if (__builtin_expect (&_IO_stdin_used != NULL, 1)
+      || (fp != (struct _IO_FILE_plus *) _IO_stdin
+	  && fp != (struct _IO_FILE_plus *) _IO_stdout
+	  && fp != (struct _IO_FILE_plus *) _IO_stderr))
     /* The object is dynamically allocated and large enough.  Initialize
        the _mode element as well.  */
-    fp->_mode = -1;
+    ((struct _IO_FILE_complete *) fp)->_mode = -1;
 #endif
 }
 

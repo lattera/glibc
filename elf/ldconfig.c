@@ -793,7 +793,7 @@ search_dir (const struct dir_entry *entry)
 	{
 	  /* If the path the link points to isn't its soname and it is not
 	     .so symlink for ld(1) only, we treat it as a normal file.  */
-	  char *real_base_name = basename (real_name);
+	  const char *real_base_name = basename (real_file_name);
 
 	  if (strcmp (real_base_name, soname) != 0)
 	    {
