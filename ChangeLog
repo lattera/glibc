@@ -1,5 +1,7 @@
 2005-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* debug/chk_fail.c (__chk_fail): Print program name in final message.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: Found reference to
 	MSG_NOSIGNAL being in 2.2 kernels.
 
