@@ -33,7 +33,7 @@
 
 /* Thread identifiers.  The structure of the attribute type is not
    exposed on purpose.  */
-typedef unsigned long int pthread_t;
+typedef struct __opaque_pthread *pthread_t;
 
 
 typedef union

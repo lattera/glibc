@@ -2,6 +2,14 @@
 
 	* argp/Makefile (tests): Add tst-argp1.
 
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: (struct sigevent):
+	Change type of _attribute to void*.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Likewise.
+
 2002-12-04  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Move all [USE_TLS]
