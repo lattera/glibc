@@ -483,7 +483,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 static directory_obj *
 first_shoot (const_nis_name name, directory_obj *dir)
 {
-  directory_obj *obj = NUL;
+  directory_obj *obj = NULL;
   fd_result *fd_res;
   XDR xdrs;
   char domain[strlen (name) + 3];
