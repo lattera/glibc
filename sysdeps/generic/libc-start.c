@@ -145,12 +145,8 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
     }
 #ifdef HAVE_CANCELBUF
   else
-    {
-      /* XXX We should free the thread-specific data.  */
-
-      /* Not much left to do but to exit the thread, not the process.  */
-      __exit_thread (0);
-    }
+    /* Not much left to do but to exit the thread, not the process.  */
+    __exit_thread (0);
 #endif
 
   exit (result);
