@@ -356,6 +356,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  if ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0)
 		    continue;
 
+		  if (req->ai_socktype != 0
+		      && req->ai_socktype != tp->socktype)
+		    continue;
+
 		  newp = (struct gaih_servtuple *)
 		    __alloca (sizeof (struct gaih_servtuple));
 
@@ -380,6 +384,33 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  st->socktype = tp->socktype;
 	  st->protocol = tp->protocol;
 	  st->port = htons (service->num);
+	}
+    }
+  else if (req->ai_socktype || req->ai_protocol)
+    {
+      st = __alloca (sizeof (struct gaih_servtuple));
+      st->next = NULL;
+      st->socktype = req->ai_socktype;
+      st->protocol = req->ai_protocol;
+      st->port = 0;
+    }
+  else
+    {
+      /* Neither socket type nor protocol is set.  Return all socket types
+	 we know about.  */
+      struct gaih_servtuple **lastp = &st;
+      for (++tp; tp->name != NULL; ++tp)
+	{
+	  struct gaih_servtuple *newp;
+
+	  newp = __alloca (sizeof (struct gaih_servtuple));
+	  newp->next = NULL;
+	  newp->socktype = tp->socktype;
+	  newp->protocol = tp->protocol;
+	  newp->port = 0;
+
+	  *lastp = newp;
+	  lastp = &newp->next;
 	}
     }
 

@@ -1,3 +1,8 @@
+2000-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Handle req->ai_socktype
+	correctly.  Reported by Felix von Leitner <leitner@convergence.de>.
+
 2000-09-19  H.J. Lu  <hjl@gnu.org>
 
 	* malloc/malloc.h (__memalign_hook): Fix the parameter order.
