@@ -1,3 +1,14 @@
+2005-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c [!DONT_USE_BOOTSTRAP_MAP] (_dl_start_final): Initialize
+	l_relocated of rtld map.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S: New file.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Remove trampoline code here.
+	Define ARCH_LA_PLTENTER and ARCH_LA_PLTEXIT.
+	* sysdeps/generic/ldsodefs.h (struct audif_ifaces): Add ppc64 variants.
+	* elf/tst-auditmod1.c: Add ppc64 support.
+	* sysdeps/powerpc/powerpc64/bits/link.h: New file.
+
 2005-01-06  Roland McGrath  <roland@redhat.com>
 
 	[BZ #633]

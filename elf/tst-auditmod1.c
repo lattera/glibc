@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <bits/wordsize.h>
 #include <gnu/lib-names.h>
 
 
@@ -144,6 +145,29 @@ la_x86_64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 {
   printf ("x86_64_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
 	  symname, (long int) sym->st_value, ndx, outregs->lrv_rax);
+
+  return 0;
+}
+#elif defined __powerpc__ && __WORDSIZE == 64
+uintptr_t
+la_ppc64_gnu_pltenter (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+		       uintptr_t *defcook, La_ppc64_regs *regs,
+		       unsigned int *flags, const char *symname,
+		       long int *framesizep)
+{
+  printf ("ppc64_pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
+	  symname, (long int) sym->st_value, ndx, *flags);
+
+  return sym->st_value;
+}
+
+unsigned int
+la_ppc64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+		      uintptr_t *defcook, const La_ppc64_regs *inregs,
+		      La_ppc64_retval *outregs, const char *symname)
+{
+  printf ("ppc64_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
+	  symname, (long int) sym->st_value, ndx, outregs->lrv_r3);
 
   return 0;
 }

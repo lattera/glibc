@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -179,6 +179,8 @@ struct La_i86_regs;
 struct La_i86_retval;
 struct La_x86_64_regs;
 struct La_x86_64_retval;
+struct La_ppc64_regs;
+struct La_ppc64_retval;
 
 
 struct audit_ifaces
@@ -205,6 +207,11 @@ struct audit_ifaces
 				      const struct La_x86_64_regs *,
 				      unsigned int *, const char *name,
 				      long int *framesizep);
+    uintptr_t (*ppc64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
+				     uintptr_t *,
+				     const struct La_ppc64_regs *,
+				     unsigned int *, const char *name,
+				     long int *framesizep);
   };
   union
   {
@@ -216,6 +223,11 @@ struct audit_ifaces
 					const struct La_x86_64_regs *,
 					struct La_x86_64_retval *,
 					const char *);
+    unsigned int (*ppc64_gnu_pltexit) (Elf64_Sym *, unsigned int, uintptr_t *,
+				       uintptr_t *,
+				       const struct La_ppc64_regs *,
+				       struct La_ppc64_retval *,
+				       const char *);
   };
   unsigned int (*objclose) (uintptr_t *);
 

@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    PowerPC64 version.
-   Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+   Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -107,92 +107,6 @@ elf_machine_dynamic (void)
 /* The PLT uses Elf64_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
 
-/* This code gets called via a .glink stub which loads PLT0.  It is
-   used in dl-runtime.c to call the `fixup' function and then redirect
-   to the address `fixup' returns.
-
-   Enter with r0 = plt reloc index,
-   r2 = ld.so tocbase,
-   r11 = ld.so link map.  */
-
-#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name) \
-  asm (".section \".text\"\n"						\
-"	.align	2\n"							\
-"	.type	" BODY_PREFIX #tramp_name ",@function\n"		\
-"	.section \".opd\",\"aw\"\n"					\
-"	.align	3\n"							\
-"	.globl	" #tramp_name "\n"					\
-"	" ENTRY_2(tramp_name) "\n"					\
-#tramp_name ":\n"							\
-"	" OPD_ENT(tramp_name) "\n"					\
-"	.previous\n"							\
-BODY_PREFIX #tramp_name ":\n"						\
-/* We need to save the registers used to pass parameters, ie. r3 thru	\
-   r10; the registers are saved in a stack frame.  */			\
-"	stdu	1,-128(1)\n"						\
-"	std	3,48(1)\n"						\
-"	mr	3,11\n"							\
-"	std	4,56(1)\n"						\
-"	sldi	4,0,1\n"						\
-"	std	5,64(1)\n"						\
-"	add	4,4,0\n"						\
-"	std	6,72(1)\n"						\
-"	sldi	4,4,3\n"						\
-"	std	7,80(1)\n"						\
-"	mflr	0\n"							\
-"	std	8,88(1)\n"						\
-/* Store the LR in the LR Save area of the previous frame.  */    	\
-"	std	0,128+16(1)\n"						\
-"	mfcr	0\n"							\
-"	std	9,96(1)\n"						\
-"	std	10,104(1)\n"						\
-/* I'm almost certain we don't have to save cr...  be safe.  */    	\
-"	std	0,8(1)\n"						\
-"	bl	" DOT_PREFIX #fixup_name "\n"				\
-/* Put the registers back.  */						\
-"	ld	0,128+16(1)\n"						\
-"	ld	10,104(1)\n"						\
-"	ld	9,96(1)\n"						\
-"	ld	8,88(1)\n"						\
-"	ld	7,80(1)\n"						\
-"	mtlr	0\n"							\
-"	ld	0,8(1)\n"						\
-"	ld	6,72(1)\n"						\
-"	ld	5,64(1)\n"						\
-"	ld	4,56(1)\n"						\
-"	mtcrf	0xFF,0\n"						\
-/* Load the target address, toc and static chain reg from the function  \
-   descriptor returned by fixup.  */					\
-"	ld	0,0(3)\n"						\
-"	ld	2,8(3)\n"						\
-"	mtctr	0\n"							\
-"	ld	11,16(3)\n"						\
-"	ld	3,48(1)\n"						\
-/* Unwind the stack frame, and jump.  */				\
-"	addi	1,1,128\n"						\
-"	bctr\n"								\
-".LT_" #tramp_name ":\n"						\
-"	.long 0\n"							\
-"	.byte 0x00,0x0c,0x24,0x40,0x00,0x00,0x00,0x00\n"		\
-"	.long .LT_" #tramp_name "-" BODY_PREFIX #tramp_name "\n"	\
-"	.short .LT_" #tramp_name "_name_end-.LT_" #tramp_name "_name_start\n" \
-".LT_" #tramp_name "_name_start:\n"					\
-"	.ascii \"" #tramp_name "\"\n"					\
-".LT_" #tramp_name "_name_end:\n"					\
-"	.align 2\n"							\
-"	" END_2(tramp_name) "\n"					\
-"	.previous");
-
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
-  TRAMPOLINE_TEMPLATE (_dl_profile_resolve, profile_fixup);
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
-  void _dl_runtime_resolve (void);			\
-  strong_alias (_dl_runtime_resolve, _dl_profile_resolve);
-#endif
 
 #ifdef HAVE_INLINED_SYSCALLS
 /* We do not need _dl_starting_up.  */
@@ -544,6 +458,11 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 {
   return value + reloc->r_addend;
 }
+
+
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER ppc64_gnu_pltenter
+#define ARCH_LA_PLTEXIT ppc64_gnu_pltexit
 
 #endif /* dl_machine_h */
 

@@ -263,6 +263,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   memcpy (GL(dl_rtld_map).l_info, info->l.l_info,
 	  sizeof GL(dl_rtld_map).l_info);
   GL(dl_rtld_map).l_mach = info->l.l_mach;
+  GL(dl_rtld_map).l_relocated = 1;
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_real = &GL(dl_rtld_map);
