@@ -21,14 +21,14 @@
 # We copy the original message as a comment into the .msg file.  But enclose
 # them with INPUT ( ).
 #
-s/msgid[ 	]*"\(.*\)"/INPUT ("\1")/
+s/^msgid[ 	]*"\(.*\)"/INPUT ("\1")/
 # Clear flag from last substitution and jump if matching
 tb
 
 #
 # Copy the translations as well and enclose them with OUTPUT ( ).
 #
-s/msgstr[ 	]*"\(.*\)"/OUTPUT ("\1")/
+s/^msgstr[ 	]*"\(.*\)"/OUTPUT ("\1")/
 # Clear flag from last substitution and jump if matching
 tb
 
