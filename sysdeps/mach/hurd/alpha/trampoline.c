@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <hurd/signal.h>
 #include "thread_state.h"
+#include <mach/machine/alpha_instruction.h>
 
 
 struct mach_msg_trap_args
@@ -54,8 +55,10 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	{
 	  memcpy (&state->basic, &ss->context->sc_alpha_thread_state,
 		  sizeof (state->basic));
-	  state->set = (1 << ALPHA_THREAD_STATE);
-	  if (1)		/* if fpu used XXX */
+	  memcpy (&state->exc, &ss->context->sc_alpha_exc_state,
+		  sizeof (state->exc));
+	  state->set = (1 << ALPHA_THREAD_STATE) | (1 << ALPHA_EXC_STATE);
+	  if (state->exc.used_fpa)
 	    {
 	      memcpy (&state->fpu, &ss->context->sc_alpha_float_state,
 		      sizeof (state->fpu));
@@ -88,7 +91,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 per-thread variables, cthreads.  */
     }
   else
-    sigsp = (char *) state->basic.r29;
+    sigsp = (char *) state->basic.SP;
 
   /* Set up the sigcontext structure on the stack.  This is all the stack
      needs, since the args are passed in registers (below).  */
@@ -106,7 +109,14 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       memcpy (&scp->sc_alpha_thread_state,
 	      &state->basic, sizeof (state->basic));
 
-      if (1 &&			/* XXX fpu used */
+      /* struct sigcontext is laid out so that starting at sc_badvaddr
+	 mimics a struct mips_exc_state.  */
+      if (! machine_get_state (ss->thread, state, ALPHA_EXC_STATE,
+			       &state->exc, &scp->sc_alpha_exc_state,
+			       sizeof (state->exc)))
+	return NULL;
+
+      if (state->exc.used_fpa &&
 	  /* struct sigcontext is laid out so that starting at sc_fpregs
 	     mimics a struct alpha_float_state.  This state
 	     is only meaningful if the coprocessor was used.  */
@@ -181,25 +191,27 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   /* This is the entry point when we have an RPC reply message to receive
      before running the handler.  The MACH_MSG_SEND bit has already been
      cleared in the OPTION argument in our registers.  For our convenience,
-     $3 points to the sc_gpr[1] member of the sigcontext (saved v0 ($2)).  */
+     at ($28) points to the sc_regs[0] member of the sigcontext (saved v0
+     ($0)).  */
   asm volatile
     (".set noat; .set noreorder; .set nomacro\n"
      /* Retry the interrupted mach_msg system call.  */
-     "ldiq $0, -25\n"		/* mach_msg_trap */
-     "call_pal PAL_callsys\n"
+     "lda $0, -25($31)\n"	/* mach_msg_trap */
+     "call_pal %0\n"		/* Magic system call instruction.  */
      /* When the sigcontext was saved, v0 was MACH_RCV_INTERRUPTED.  But
 	now the message receive has completed and the original caller of
 	the RPC (i.e. the code running when the signal arrived) needs to
 	see the final return value of the message receive in v0.  So
 	store the new v0 value into the sc_regs[0] member of the sigcontext
 	(whose address is in at to make this code simpler).  */
-     "stq v0, 0(at)\n"
+     "stq $0, 0($28)\n"
      /* Since the argument registers needed to have the mach_msg_trap
 	arguments, we've stored the arguments to the handler function
 	in registers t8..t10 ($22..$24).  */
-     "mov t8, a0\n"
-     "mov t9, a1\n"
-     "mov t10, a2\n");
+     "mov $22, $16\n"
+     "mov $23, $17\n"
+     "mov $24, $18\n"
+     : : "i" (op_chmk));
 
  trampoline:
   /* Entry point for running the handler normally.  The arguments to the
@@ -208,15 +220,20 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
        a0	SIGNO
        a1	SIGCODE
        a2	SCP
-     */
+
+     t12 also contains SCP; this value is callee-saved (and so should not get
+     clobbered by running the handler).  We use this saved value to pass to
+     __sigreturn, so the handler can clobber the argument registers if it
+     likes.  */
   asm volatile
-    ("br at, 0f;0: ldgp gp, 0(at)\n" /* Reset GP (???).  */
-     /* Call the handler function.  */
-     "jsr ra, ra; ldgp gp, 0(ra)\n"
+    (/* Call the handler function, saving return address in ra ($26).  */
+     "jsr $26, $26\n"
+     /* Reset gp ($29) from the return address (here) in ra ($26).
+	This may be required to locate __sigreturn.  */
+     "ldgp $29, 0($26)\n"
      /* Call __sigreturn (SCP); this cannot return.  */
-     "mov t12, a0\n"
-     "jsr ra, %0; ldgp gp, 0(ra)\n"
-     : : "i" (&__sigreturn));
+     "mov $27, $16\n"		/* Move saved SCP to argument register.  */
+     "jmp $31, %0" : : "i" (&__sigreturn));
 
   /* NOTREACHED */
   asm volatile (".set reorder; .set at; .set macro");
@@ -225,7 +242,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 }
 
 /* STATE describes a thread that had intr_port set (meaning it was inside
-   HURD_EINTR_RPC), after it has been thread_abort'd.  It it looks to have
+   HURD_EINTR_RPC), after it has been thread_abort'd.  If it looks to have
    just completed a mach_msg_trap system call that returned
    MACH_RCV_INTERRUPTED, return nonzero and set *PORT to the receive right
    being waited on.  */
@@ -236,8 +253,10 @@ _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
   if (! setjmp (_hurd_sigthread_fault_env))
     {
       const unsigned int *pc = (void *) state->basic.pc;
-      if (state->basic.r2 == MACH_RCV_INTERRUPTED &&
-	  pc[-1] == 0xc)	/* XXX ???? syscall */
+      if (state->basic.r0 == MACH_RCV_INTERRUPTED &&
+	  pc[-1] == ((alpha_instruction) { pal_format:
+					     { opcode: op_pal,
+					       function: op_chmk } }).bits)
 	{
 	  /* We did just return from a mach_msg_trap system call
 	     doing a message receive that was interrupted.
