@@ -1,6 +1,6 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Motorola 68000.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -255,3 +255,4 @@ L(L9:)
 END(strchr)
 
 weak_alias (strchr, index)
+libc_hidden_builtin_def (strchr)

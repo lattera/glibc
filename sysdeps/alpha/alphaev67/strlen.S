@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
    EV67 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
    This file is part of the GNU C Library.
@@ -58,3 +58,4 @@ $found:
 	ret	$31, ($26)	# L0 :
 
 	END(strlen)
+libc_hidden_builtin_def (strlen)

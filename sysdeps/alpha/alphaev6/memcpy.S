@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    EV6 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
 
@@ -252,3 +252,4 @@ $nomoredata:
 	nop				# E :
 
 END(memcpy)
+libc_hidden_builtin_def (memcpy)

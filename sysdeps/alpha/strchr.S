@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -92,3 +92,4 @@ $retnull:
 	END(strchr)
 
 weak_alias (strchr, index)
+libc_hidden_builtin_def (strchr)
