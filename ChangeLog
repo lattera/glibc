@@ -1,12 +1,8 @@
 1998-12-05  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/gnu/bits/utmp.h: Rename struct exit_status to
-	__exit_status.
-	(struct __exit_status): Define members without leading __ only for
-	__USE_GNU.
-
-	* sysdeps/gnu/bits/utmpx.h (struct __exit_status): Define members
+	* sysdeps/gnu/bits/utmp.h (struct exit_status): Define members
 	without leading __ only for __USE_GNU.
+	* sysdeps/gnu/bits/utmpx.h (struct __exit_status): Likewise.
 
 1998-12-04  Ulrich Drepper  <drepper@cygnus.com>
 

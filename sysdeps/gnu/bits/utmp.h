@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _UTMP_H
-# error "Never include <bits/utmp.h> directly; use <utmpx.h> instead."
+# error "Never include <bits/utmp.h> directly; use <utmp.h> instead."
 #endif
 
 #include <paths.h>
@@ -42,7 +42,7 @@ struct lastlog
 
 /* The structure describing the status of a terminated process.  This
    type is used in `struct utmp' below.  */
-struct __exit_status
+struct exit_status
   {
 #ifdef __USE_GNU
     short int e_termination;	/* Process termination status.  */

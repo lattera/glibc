@@ -40,7 +40,7 @@ contact <bug-glibc@gnu.org>.
 [ 6] Write `long double' versions of the math functions.  This should be
      done in collaboration with the NetBSD and FreeBSD people.
 
-     The libm is in fact fdlibm (not the same as in Linux libc).
+     The libm is in fact fdlibm (not the same as in Linux libc 5).
 
 **** Partly done.  But we need someone with numerical experiences for
      the rest.
@@ -192,3 +192,9 @@ contact <bug-glibc@gnu.org>.
      Factors should be number of uses (of course), influenced by aging.
      Just imagine a computer used by several people.  The IDs of the current
      user should be preferred even if the last user spent more time.
+
+
+[26] Improve the AIO implementation so that threads do not immediately
+     terminate if no more requests are available.  Let them sleep for a
+     while and wake them up on demand.  If after a while no request arrived
+     they really can die.
