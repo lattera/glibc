@@ -260,8 +260,6 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 /* Now life is peachy; we can do all normal operations.
    On to the real work.  */
 
-void ENTRY_POINT (void);
-
 /* Some helper functions.  */
 
 /* Arguments to relocate_doit.  */
@@ -389,7 +387,7 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Set up a flag which tells we are just starting.  */
   _dl_starting_up = 1;
 
-  if (*user_entry == (ElfW(Addr)) &ENTRY_POINT)
+  if (*user_entry == (ElfW(Addr)) ENTRY_POINT)
     {
       /* Ho ho.  We are not the program interpreter!  We are the program
 	 itself!  This means someone ran ld.so as a command.  Well, that

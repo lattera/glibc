@@ -46,7 +46,6 @@ extern unsigned long int _dl_hwcap;
 extern size_t _dl_platformlen;
 extern fpu_control_t _dl_fpu_control;
 extern void _end;
-extern void ENTRY_POINT (void);
 
 /* Protect SUID program against misuse of file descriptors.  */
 extern void __libc_check_standard_fds (void);
@@ -101,7 +100,7 @@ _dl_sysdep_start (void **start_argptr,
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
 			  _dl_auxv);
 
-  user_entry = (ElfW(Addr)) &ENTRY_POINT;
+  user_entry = (ElfW(Addr)) ENTRY_POINT;
   _dl_platform = NULL; /* Default to nothing known about the platform.  */
 
   for (av = _dl_auxv; av->a_type != AT_NULL; set_seen (av++))

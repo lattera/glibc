@@ -47,7 +47,6 @@ extern void __mach_init (void);
 extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
-extern void ENTRY_POINT (void);
 
 int __libc_enable_secure;
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
@@ -119,7 +118,7 @@ _dl_sysdep_start (void **start_argptr,
 	{
 	  static struct hurd_startup_data nodata;
 	  _dl_hurd_data = &nodata;
-	  nodata.user_entry = (vm_address_t) &ENTRY_POINT;
+	  nodata.user_entry = (vm_address_t) ENTRY_POINT;
 	}
       else
 	_dl_hurd_data = (void *) p;
@@ -128,12 +127,12 @@ _dl_sysdep_start (void **start_argptr,
 
       if (_dl_hurd_data->flags & EXEC_STACK_ARGS &&
 	  _dl_hurd_data->user_entry == 0)
-	_dl_hurd_data->user_entry = (vm_address_t) &ENTRY_POINT;
+	_dl_hurd_data->user_entry = (vm_address_t) ENTRY_POINT;
 
 unfmh();			/* XXX */
 
 #if 0				/* XXX make this work for real someday... */
-      if (_dl_hurd_data->user_entry == (vm_address_t) &ENTRY_POINT)
+      if (_dl_hurd_data->user_entry == (vm_address_t) ENTRY_POINT)
 	/* We were invoked as a command, not as the program interpreter.
 	   The generic ld.so code supports this: it will parse the args
 	   as "ld.so PROGRAM [ARGS...]".  For booting the Hurd, we

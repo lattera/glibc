@@ -1,3 +1,23 @@
+2001-04-10  Andreas Schwab  <schwab@suse.de>
+
+	* math/libm-test.inc (csinh_test): Don't require the invalid
+	exception for csinh (x + iNaN), but make it optional.
+
+2001-04-09  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/elf/start.S (_start): Add unwind directives.
+
+	* sysdeps/generic/entry.h [!__ASSEMBLY__]: Declare _start.
+	* sysdeps/ia64/elf/entry.h: New file.
+	* sysdeps/unix/sysv/linux/mips/entry.h [!__ASSEMBLY__]: Declare
+	__start.
+	* elf/rtld.c: Don't declare ENTRY_POINT.  Use ENTRY_POINT instead
+	of &ENTRY_POINT.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+	* sysdeps/ia64/elf/start.S: Save base address of register backing
+	store in __libc_ia64_register_backing_store_base.
+
 2001-04-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: Fix return

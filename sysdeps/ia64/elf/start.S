@@ -17,6 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <sysdep.h>
+
 #include <asm/unistd.h>
 #include <asm/fpu.h>
 
@@ -31,10 +33,12 @@
  *	out6:	stack_end
  */
 
-	.global	_start
-	.proc	_start
+	.align 32
+	.global _start
 
+	.proc _start
 _start:
+	.prologue
 	{ .mlx
 	  alloc r2 = ar.pfs,0,0,7,0
 	  movl r3 = FPSR_DEFAULT
@@ -44,38 +48,46 @@ _start:
 	  movl gp = @gprel(0f)
 	  ;;
 	}
-0:	{ .mii
+0:	{ .mmi
 	  ld8 out1 = [out2], 8	/* load argc and move out2 to become argv */
+	  mov.m r10 = ar.bsp	/* fetch rbs base address */
 	  mov r9 = ip
 	  ;;
+	}
+	{ .mii
+	  mov ar.fpsr = r3
 	  sub gp = r9, gp	/* back-compute gp value */
+	  adds out6 = 16, sp	/* highest non-environment stack address */
 	  ;;
 	}
-	{ .mfi
-	  mov ar.fpsr = r3
+	{
+	  addl r11 = @ltoff(__libc_ia64_register_backing_store_base), gp
 	  addl out0 = @ltoff(@fptr(main)), gp
-	}
-	{ .mfi
-	  addl out4 = @ltoff(@fptr(_fini)), gp
 	  addl out3 = @ltoff(@fptr(_init)), gp
 	  ;;
 	}
 	{ .mmi
+	  ld8 r3 = [r11]	/* pointer to __libc_ia64_register_backing_store_base */
 	  ld8 out0 = [out0]	/* pointer to `main' function descriptor */
-	  ld8 out3 = [out3]	/* pointer to `init' function descriptor */
-	  adds out6 = 16, sp	/* highest non-environment stack address */
+	  addl out4 = @ltoff(@fptr(_fini)), gp
+	  ;;
 	}
-	{ .mib
+	{ .mmi
+	  ld8 out3 = [out3]	/* pointer to `init' function descriptor */
 	  ld8 out4 = [out4]	/* pointer to `fini' function descriptor */
+	  .save rp, r4
+	  mov r4 = r0		/* terminate unwind chain with a NULL return-pointer */
+	}
+	.body
+	{ .mib
+	  st8 [r3] = r10
 	  mov out5 = ret0	/* dynamic linker destructor */
 	  br.call.sptk.few rp = __libc_start_main
 	}
 	{ .mib
-	  mov rp = r0
-	  br.ret.sptk.few rp	/* break miserably if we ever return */
-	  ;;
+	  break 0	/* break miserably if we ever return */
 	}
-	.endp	_start
+	.endp _start
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data
@@ -84,3 +96,8 @@ __data_start:
 	.long 0
 	.weak data_start
 	data_start = __data_start
+
+	.global __libc_ia64_register_backing_store_base
+	.align 8
+__libc_ia64_register_backing_store_base:
+	.space 8
