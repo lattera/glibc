@@ -1,3 +1,13 @@
+2001-01-11  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-libc.c (do_dlopen): Move DL_STATIC_INIT to ...
+	* elf/dl-open.c (_dl_open): Here.
+	* sysdeps/unix/sysv/linux/ia64/dl-static.c (_dl_static_lock):
+	Make it static.
+	(_dl_static_init): Initialize the variables every time when possible.
+	* sysdeps/unix/sysv/linux/ia64/ldsodefs.h (DL_STATIC_INIT):
+	Undefine it first.
+
 2001-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/Makefile (routines): Add cxa_on_exit.

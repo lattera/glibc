@@ -40,7 +40,7 @@ _dl_var_init (void *array[])
 #else
 #include <bits/libc-lock.h>
 
-__libc_lock_define_initialized_recursive (, _dl_static_lock)
+__libc_lock_define_initialized_recursive (static, _dl_static_lock)
 
 static void *variables[] =
 {
@@ -54,22 +54,16 @@ _dl_static_init (struct link_map *map)
   const ElfW(Sym) *ref;
   lookup_t loadbase;
   void (*f) (void *[]);
-  static int done = 0;
 
   __libc_lock_lock (_dl_static_lock);
 
-  if (done)
-    {
-      __libc_lock_unlock (_dl_static_lock);
-      return;
-    }
-
-  done = 1;
-
   loadbase = _dl_lookup_symbol ("_dl_var_init", map, &ref,
 				map->l_local_scope, 0, 1);
-  f = (void (*) (void *[])) DL_SYMBOL_ADDRESS (loadbase, ref);
-  f (variables);
+  if (ref != NULL)
+    {
+      f = (void (*) (void *[])) DL_SYMBOL_ADDRESS (loadbase, ref);
+      f (variables);
+    }
 
   __libc_lock_unlock (_dl_static_lock);
 }

@@ -76,10 +76,6 @@ do_dlopen (void *ptr)
   struct do_dlopen_args *args = (struct do_dlopen_args *) ptr;
   /* Open and relocate the shared object.  */
   args->map = _dl_open (args->name, RTLD_LAZY, NULL);
-
-#ifndef SHARED
-  DL_STATIC_INIT (args->map);
-#endif
 }
 
 static void

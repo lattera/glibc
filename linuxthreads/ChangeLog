@@ -1,3 +1,12 @@
+2001-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c (pthread_initialize): Use __cxs_on_exit not __cxa_atexit.
+
+2001-01-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests): Add ex15.
+	* Examples/ex15.c: New test.
+
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c (pthread_exit_process): Free memory allocated for

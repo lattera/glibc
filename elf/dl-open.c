@@ -430,6 +430,10 @@ _dl_open (const char *file, int mode, const void *caller)
       _dl_signal_error (errcode, objname, local_errstring);
     }
 
+#ifndef SHARED
+  DL_STATIC_INIT (args.map);
+#endif
+
   return args.map;
 }
 
