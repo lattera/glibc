@@ -126,15 +126,22 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	int type = d[i].type;
 	d[i].reply_port = __mach_reply_port ();
 	err = __io_select (d[i].io_port, d[i].reply_port,
-			   /* Poll for each but the last.  */
-			   (i == lastfd && got == 0) ? to : 0,
+			   /* Poll only when there's a single descriptor.  */
+			   (firstfd == lastfd) ? to : 0,
 			   &type);
 	switch (err)
 	  {
 	  case MACH_RCV_TIMED_OUT:
 	    /* No immediate response.  This is normal.  */
 	    err = 0;
-	    if (got == 0)
+	    if (firstfd == lastfd)
+	      /* When there's a single descriptor, we don't need a portset,
+		 so just pretend we have one, but really use the single reply
+		 port.  */
+	      portset = d[i].reply_port;
+	    else if (got == 0)
+	      /* We've got multiple reply ports, so we need a port set to
+		 multiplex them.  */
 	      {
 		/* We will wait again for a reply later.  */
 		if (portset == MACH_PORT_NULL)
@@ -276,7 +283,10 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
   for (i = firstfd; i <= lastfd; ++i)
     if (d[i].type)
       __mach_port_destroy (__mach_task_self (), d[i].reply_port);
-  if (portset != MACH_PORT_NULL)
+  if (firstfd != lastfd && portset != MACH_PORT_NULL)
+    /* Destroy PORTSET, but only if it's not actually the reply port for a
+       single descriptor (in which case it's destroyed in the previous loop;
+       not doing it here is just a bit more efficient).  */
     __mach_port_destroy (__mach_task_self (), portset);
 
   if (err)
