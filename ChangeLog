@@ -1,3 +1,8 @@
+1999-04-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Reporting Bugs): Add section about reported 
+	bugs and correct email address of glibcbug script.
+
 1999-04-01  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sunrpc/Versions: Add new xdr functions to GLIBC_2.1.1

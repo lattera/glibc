@@ -468,6 +468,14 @@ errors and omissions in this manual.  If you report them, they will get
 fixed.  If you don't, no one will ever know about them and they will
 remain unfixed for all eternity, if not longer.
 
+It is a good idea to check first that the problem was not reported
+before.  Bugs are documented in two places: The file @file{BUGS}
+describes a number of well known bugs and the bug tracking system has a
+WWW interface at
+@url{http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl}.  The WWW
+interface gives you access to open and closed reports.  The closed
+reports normally include a patch or a hint on solving the problem.
+
 To report a bug, first you must find it.  Hopefully, this will be the
 hard part.  Once you've found a bug, make sure it's really a bug.  A
 good way to do this is to see if the GNU C library behaves the same way
@@ -492,7 +500,7 @@ if you haven't installed it, will be in your build directory.  Send your
 test case, the results you got, the results you expected, and what you
 think the problem might be (if you've thought of anything).
 @code{glibcbug} will insert the configuration information we need to
-see, and ship the report off to @email{bug-glibc@@gnu.org}.  Don't send
+see, and ship the report off to @email{bugs@@gnu.org}.  Don't send
 a message there directly; it is fed to a program that expects mail to be
 formatted in a particular way.  Use the script.
 
