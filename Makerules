@@ -569,7 +569,7 @@ ifeq (yes,$(build-shared))
 # on other shared objects.
 lib%.so: lib%_pic.a; $(build-shlib)
 
-ifeq ($(libc_cv_ld_no_whole_archive),yes)
+ifeq ($(have-no-whole-archive),yes)
 no-whole-archive = -Wl,--no-whole-archive
 else
 no-whole-archive =

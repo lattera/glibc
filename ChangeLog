@@ -1,4 +1,32 @@
+Sat Apr 20 18:13:00 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules (no-whole-archive): Test $(have-no-whole-archive), not
+	$(libc_cv_ld_no_whole_archive).
+
+Sat Apr 20 17:07:17 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* assert/assert.h, ctype/ctype.h, dirent/dirent.h, errno.h,
+	grp/grp.h, io/fcntl.h, io/sys/stat.h, io/utime.h, locale/locale.h,
+	math/math.h, misc/nlist.h, misc/sgtty.h, misc/sys/file.h,
+	misc/sys/ioctl.h, misc/sys/uio.h, posix/sys/times.h,
+	posix/sys/types.h, posix/sys/utsname.h, posix/sys/wait.h,
+	posix/tar.h, posix/wordexp.h, pwd/pwd.h, resource/sys/vlimit.h,
+	resource/sys/vtimes.h, setjmp/setjmp.h, signal/signal.h,
+	stdio-common/printf.h, stdlib/alloca.h, stdlib/stdlib.h,
+	string/string.h, sysdeps/generic/sigaction.h,
+	sysdeps/generic/sigset.h, sysdeps/generic/sys/ptrace.h,
+	sysdeps/generic/sys/ptrace.h, sysdeps/unix/bsd/osf/sigaction.h,
+	sysdeps/unix/sysv/linux/sys/ptrace.h,
+	sysdeps/unix/sysv/minix/sigaction.h,
+	sysdeps/unix/sysv/sco3.2.4/sigaction.h,
+	sysdeps/unix/sysv/sysv4/sigaction.h,
+	sysdeps/unix/sysv/sysv4/sigset.h, termios/termios.h,
+	time/sys/time.h, time/time.h: Fix copyright comment.
+
 Fri Apr 19 00:49:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): If uids and gids are
+	not given in stack aux vector, fetch them with syscalls.
 
 	* stdlib/rpmatch.c (rpmatch: try): Take new arg NOMATCH, return value
  	for nonmatching nonerror (instead of !MATCH).

@@ -40,6 +40,7 @@ _dl_sysdep_start (void **start_argptr,
   Elf32_auxv_t *av;
   uid_t uid, euid;
   gid_t gid, egid;
+  unsigned int seen;
 
   user_entry = (Elf32_Addr) &_start;
   _dl_argc = *(int *) start_argptr;
@@ -49,7 +50,12 @@ _dl_sysdep_start (void **start_argptr,
   while (*start_argptr)
     ++start_argptr;
 
-  for (av = (void *) ++start_argptr; av->a_type != AT_NULL; ++av)
+  seen = 0;
+#define M(type) (1 << (type))
+
+  for (av = (void *) ++start_argptr;
+       av->a_type != AT_NULL;
+       seen |= M ((++av)->a_type))
     switch (av->a_type)
       {
       case AT_PHDR:
@@ -74,6 +80,16 @@ _dl_sysdep_start (void **start_argptr,
 	egid = av->a_un.a_val;
 	break;
       }
+
+  /* Linux doesn't provide us with any of these values on the stack
+     when the dynamic linker is run directly as a program.  */
+
+#define SEE(UID, uid) if ((seen & M (AT_##UID)) == 0) uid = __get##uid ()
+  SEE (UID, uid);
+  SEE (GID, gid);
+  SEE (EUID, euid);
+  SEE (EGID, egid);
+
 
   _dl_secure = uid != euid || gid != egid;
 

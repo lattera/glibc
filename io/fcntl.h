@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /*
@@ -70,7 +70,7 @@ extern int creat __P ((__const char *__file, __mode_t __mode));
    The CMD argument is one of the following.  */
 
 #define F_ULOCK 0       /* Unlock a previously locked region.  */
-#define F_LOCK  1       /* Lock a region for exclusive use.  */ 
+#define F_LOCK  1       /* Lock a region for exclusive use.  */
 #define F_TLOCK 2       /* Test and lock a region for exclusive use.  */
 #define F_TEST  3       /* Test a region for other processes locks.  */
 
