@@ -28,14 +28,16 @@
 
         .text
 ENTRY(__clone)
-	.frame	sp,0,ra,0
 #ifdef PROF
+	ldgp	gp,0(pv)
 	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
 	.set at
-#endif
 	.prologue 1
+#else
+	.prologue 0
+#endif
 
 	/* Sanity check arguments.  */
 	ldiq	v0,EINVAL
