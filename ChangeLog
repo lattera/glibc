@@ -1,3 +1,8 @@
+2000-07-30  Ralf Baechle  <ralf@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mips/bits/sigstack.h:  New file.  On MIPS
+	the order of struct sigaltstack members is different.
+
 2000-07-26  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: New file.
