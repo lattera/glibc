@@ -1,3 +1,8 @@
+2001-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Correct prediction
+	of R_386_NONE.
+
 2001-08-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/do-rel.h (elf_machine_rel_relative): Define for rela if

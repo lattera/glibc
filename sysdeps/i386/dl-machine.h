@@ -320,7 +320,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	*reloc_addr += map->l_addr;
     }
 #ifndef RTLD_BOOTSTRAP
-  else if (__builtin_expect (r_type == R_386_NONE, 1))
+  else if (__builtin_expect (r_type == R_386_NONE, 0))
     return;
 #endif
   else
