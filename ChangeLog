@@ -1,3 +1,13 @@
+2002-11-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (s_exit_group): Add it.
+	From Ian Wienand <ianw@gelato.unsw.edu.au>.
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (__NR_pread): Define to
+	__NR_pread64 if not defined.
+	(__NR_pwrite): Define to __NR_pwrite64 if not defined.
+	From Ian Wienand <ianw@gelato.unsw.edu.au>.
+
 2002-11-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (tests): Don't run test-arrayX tests for now.
