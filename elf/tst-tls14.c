@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <tls.h>
+
+#if USE_TLS && HAVE___THREAD
 
 #define AL 4096
 struct foo
@@ -53,4 +56,11 @@ do_test (void)
 }
 
 #define TEST_FUNCTION do_test ()
+
+#else
+
+#define TEST_FUNCTION 0
+
+#endif
+
 #include "../test-skeleton.c"

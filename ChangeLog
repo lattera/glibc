@@ -1,3 +1,11 @@
+2003-07-28  Roland McGrath  <roland@redhat.com>
+
+	* elf/tst-tls14.c [USE_TLS && HAVE___THREAD]: Conditionalize on this.
+	* elf/tst-tlsmod14a.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/sys/sysctl.h: Include <linux/compiler.h>
+	before <linux/sysctl.h>.
+
 2003-07-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/syscalls.list: time syscall never fails.
