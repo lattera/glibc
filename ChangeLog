@@ -1,3 +1,15 @@
+1999-06-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio/fputc.c: Don't define alias if fputc is defined as a
+	macro.
+	* stdio/putc.c: Define weak alias here since it is not done
+	anymore in fputc.c.
+
+1999-06-23  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* assert/assert.h: Don't produce `defined' as part of macro
+	expansion.
+
 1999-06-23  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/read.c (__libc_read): Just call __pread with
