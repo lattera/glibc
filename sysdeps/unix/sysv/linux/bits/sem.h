@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,14 +48,22 @@ struct semid_ds
   unsigned short int sem_nsems;		/* number of semaphores in set */
 };
 
-/* Union used for argument for `semctl'.  */
-union semun
-{
-  int val;				/* value for SETVAL */
-  struct semid_ds *buf;			/* buffer for IPC_STAT & IPC_SET */
-  unsigned short int *array;		/* array for GETALL & SETALL */
-  struct seminfo *__buf;		/* buffer for IPC_INFO */
-};
+
+/* The user should define a union like the following to use it for arguments
+   for `semctl'.
+
+   union semun
+   {
+     int val;				<= value for SETVAL
+     struct semid_ds *buf;		<= buffer for IPC_STAT & IPC_SET
+     unsigned short int *array;		<= array for GETALL & SETALL
+     struct seminfo *__buf;		<= buffer for IPC_INFO
+   };
+
+   Previous versions of this file used to define this union but this is
+   incorrect.  One can test the macro _SEM_SEMUN_UNDEFINED to see whether
+   one must define the unio or not.  */
+#define _SEM_SEMUN_UNDEFINED	1
 
 #ifdef __USE_MISC
 

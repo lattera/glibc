@@ -1,3 +1,8 @@
+1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/sem.h: Don't define union semun.
+	Define macro _SEM_SEMUN_UNDEFINED instead.
+
 1998-04-28 16:32  Philip Blundell  <philb@gnu.org>
 
 	* manual/stdio.texi (Variable Arguments Output): Correct variable
