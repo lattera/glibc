@@ -21,6 +21,8 @@
 #ifndef _PT_MACHINE_H
 #define _PT_MACHINE_H   1
 
+#include <ia64intrin.h>
+
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
@@ -69,7 +71,7 @@ register struct _pthread_descr_struct *__thread_self __asm__("r13");
 
 
 /* Memory barrier */
-#define MEMORY_BARRIER() __asm__ __volatile__("mf" : : : "memory")
+#define MEMORY_BARRIER() __sync_syncronize ()
 
 
 #define HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS

@@ -1,3 +1,49 @@
+2002-05-21  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regex.c: Define `inline' as a macro into nothing for the
+	compilers which lack the keyword.
+	* posix/regex.h: (RE_SYNTAX_GNU_AWK): Remove RE_CONTEXT_INVALID_OPS
+	for the compatibility of gawk.
+	* posix/regcomp.c: Add fake implementation of isblank() for the
+	environments which lack the function.
+	Don't use free_charset() in case of non-i18n envs.
+	(build_range_exp): Don't use i18n related code in case of non-i18n
+	envs.
+	(build_collating_symbol): Likewise.
+	(build_equiv_class): Likewise.
+	(build_charclass): Likewise.
+	(re_compile_fastmap_iter): Likewise.
+	(parse_bracket_exp): Likewise.
+	(build_word_op): Likewise.
+	(regfree): Don't use free_charset() in case of non-i18n envs.
+	* posix/regex_internal.h: Remove COMPLEX_BRACKET from
+	re_token_type_t in case of non-i18n envs.
+	Don't define re_charset_t in case of non-i18n envs.
+	Change the type of wcs of re_string_t from wchar_t to wint_t,
+	since we store also WEOF.
+	* posix/regex_internal.c: (re_string_realloc_buffers): Change
+	the type of wcs of re_string_t from wchar_t to wint_t.
+	(re_string_reconstruct): Likewise.
+	(create_ci_newstate): Don't use i18n related code in case of
+	non-i18n envs.
+	(create_cd_newstate): Likewise.
+
+2002-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/loop.c: Fix typo.
+
+2002-05-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/ether_line.c (ether_line): Fix a typo causing only
+	lower 4 bits of each ethernet address byte being assigned.
+	Don't modify what line points to.
+	* inet/tst-ether_aton.c (main): Add ether_line tests.
+
+2002-05-23  Marcus Brinkmann  <marcus@gnu.org>
+
+	* manual/filesys.texi: Don't make readlink example leak memory
+	when readlink fails.
+
 2002-05-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/loop.c: Fix condition for defining unaligned loop.  Add

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ ether_line (const char *line, struct ether_addr *addr, char *hostname)
 	  if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f'))
 	    return -1;
 	  number <<= 4;
-	  number = isdigit (ch) ? (ch - '0') : (ch - 'a' + 10);
+	  number += isdigit (ch) ? (ch - '0') : (ch - 'a' + 10);
 
 	  ch = *line;
 	  if (cnt < 5 && ch != ':')
@@ -65,15 +65,15 @@ ether_line (const char *line, struct ether_addr *addr, char *hostname)
   cp = __strchrnul (line, '#');
   while (cp > line && isspace (cp[-1]))
     --cp;
-  *cp = '\0';
 
-  if (*line == '\0')
+  if (cp == line)
     /* No hostname.  */
     return -1;
 
   /* XXX This can cause trouble because the hostname might be too long
      but we have no possibility to check it here.  */
-  strcpy (hostname, line);
+  memcpy (hostname, line, cp - line);
+  hostname [cp - line] = '\0';
 
   return 0;
 }

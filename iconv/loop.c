@@ -145,8 +145,8 @@
 /* We produce at least one byte in the next round.  */
 #ifndef MIN_NEEDED_OUTPUT
 # error "MIN_NEEDED_OUTPUT definition missing"
-#elif MIN_NEEDED_INPUT < 1
-# error "MIN_NEEDED_INPUT must be >= 1"
+#elif MIN_NEEDED_OUTPUT < 1
+# error "MIN_NEEDED_OUTPUT must be >= 1"
 #endif
 
 /* Let's see how many bytes we produce.  */

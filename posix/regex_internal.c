@@ -169,7 +169,7 @@ re_string_realloc_buffers (pstr, new_buf_len)
 #ifdef RE_ENABLE_I18N
   if (MB_CUR_MAX > 1)
     {
-      pstr->wcs = re_realloc (pstr->wcs, wchar_t, new_buf_len);
+      pstr->wcs = re_realloc (pstr->wcs, wint_t, new_buf_len);
       if (BE (pstr->wcs == NULL, 0))
         return REG_ESPACE;
     }
@@ -436,7 +436,7 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 #ifdef RE_ENABLE_I18N
           if (MB_CUR_MAX > 1)
             memmove (pstr->wcs, pstr->wcs + offset,
-                     (pstr->valid_len - offset) * sizeof (wchar_t));
+                     (pstr->valid_len - offset) * sizeof (wint_t));
 #endif /* RE_ENABLE_I18N */
           if (MBS_ALLOCATED (pstr))
             memmove (pstr->mbs, pstr->mbs + offset,
@@ -1166,9 +1166,11 @@ create_ci_newstate (dfa, nodes, hash)
       /* If the state has the halt node, the state is a halt state.  */
       else if (type == END_OF_RE)
         newstate->halt = 1;
+#ifdef RE_ENABLE_I18N
       else if (type == COMPLEX_BRACKET
                || (type == OP_PERIOD && MB_CUR_MAX > 1))
         newstate->accept_mb = 1;
+#endif /* RE_ENABLE_I18N */
       else if (type == OP_BACK_REF)
         newstate->has_backref = 1;
       else if (type == ANCHOR || OP_CONTEXT_NODE)
@@ -1213,9 +1215,11 @@ create_cd_newstate (dfa, nodes, context, hash)
       /* If the state has the halt node, the state is a halt state.  */
       else if (type == END_OF_RE)
         newstate->halt = 1;
+#ifdef RE_ENABLE_I18N
       else if (type == COMPLEX_BRACKET
                || (type == OP_PERIOD && MB_CUR_MAX > 1))
         newstate->accept_mb = 1;
+#endif /* RE_ENABLE_I18N */
       else if (type == OP_BACK_REF)
         newstate->has_backref = 1;
       else if (type == ANCHOR)
@@ -1228,9 +1232,11 @@ create_cd_newstate (dfa, nodes, context, hash)
             newstate->halt = 1;
           else if (ctype == OP_BACK_REF)
             newstate->has_backref = 1;
+#ifdef RE_ENABLE_I18N
           else if (ctype == COMPLEX_BRACKET
                    || (type == OP_PERIOD && MB_CUR_MAX > 1))
             newstate->accept_mb = 1;
+#endif /* RE_ENABLE_I18N */
         }
 
       if (constraint)

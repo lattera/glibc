@@ -1141,16 +1141,19 @@ char *
 readlink_malloc (const char *filename)
 @{
   int size = 100;
+  char *buffer = NULL;
 
   while (1)
     @{
-      char *buffer = (char *) xmalloc (size);
+      buffer = (char *) xrealloc (buffer, size);
       int nchars = readlink (filename, buffer, size);
       if (nchars < 0)
-        return NULL;
+        @{
+          free (buffer);
+          return NULL;
+        @}
       if (nchars < size)
         return buffer;
-      free (buffer);
       size *= 2;
     @}
 @}

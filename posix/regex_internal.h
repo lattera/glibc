@@ -119,7 +119,9 @@ typedef enum
   ALT,
   SUBEXP,
   SIMPLE_BRACKET,
+#ifdef RE_ENABLE_I18N
   COMPLEX_BRACKET,
+#endif /* RE_ENABLE_I18N */
 
   /* Node type, These are used by token, node, tree.  */
   OP_PERIOD,
@@ -137,6 +139,7 @@ typedef enum
   END_OF_RE_TOKEN_T
 } re_token_type_t;
 
+#ifdef RE_ENABLE_I18N
 typedef struct
 {
   /* If this character set is the non-matching list.  */
@@ -147,31 +150,32 @@ typedef struct
   int nmbchars;
 
   /* Collating symbols.  */
-#ifdef _LIBC
+# ifdef _LIBC
   int32_t *coll_syms;
-#endif
+# endif
   int ncoll_syms;
 
   /* Equivalence classes. */
-#ifdef _LIBC
+# ifdef _LIBC
   int32_t *equiv_classes;
-#endif
+# endif
   int nequiv_classes;
 
   /* Range expressions. */
-#ifdef _LIBC
+# ifdef _LIBC
   uint32_t *range_starts;
   uint32_t *range_ends;
-#else /* not _LIBC */
+# else /* not _LIBC */
   wchar_t *range_starts;
   wchar_t *range_ends;
-#endif /* not _LIBC */
+# endif /* not _LIBC */
   int nranges;
 
   /* Character classes. */
   wctype_t *char_classes;
   int nchar_classes;
 } re_charset_t;
+#endif /* RE_ENABLE_I18N */
 
 typedef struct
 {
@@ -180,7 +184,9 @@ typedef struct
   {
     unsigned char c;		/* for CHARACTER */
     re_bitset_ptr_t sbcset;	/* for SIMPLE_BRACKET */
+#ifdef RE_ENABLE_I18N
     re_charset_t *mbcset;	/* for COMPLEX_BRACKET */
+#endif /* RE_ENABLE_I18N */
     int idx;			/* for BACK_REF */
     re_context_type ctx_type;	/* for ANCHOR */
     struct
@@ -221,7 +227,7 @@ struct re_string_t
   unsigned char *mbs_case;
 #ifdef RE_ENABLE_I18N
   /* Store the wide character string which is corresponding to MBS.  */
-  wchar_t *wcs;
+  wint_t *wcs;
   mbstate_t cur_state;
 #endif
   /* The length of the valid characters in the buffers.  */
