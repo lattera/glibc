@@ -1,3 +1,7 @@
+2000-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED: Add gv_GB and kw_GB.
+
 2000-03-01  Andreas Jaeger  <aj@suse.de>
 
 	* locales/gv_GB: New file.

@@ -1,3 +1,14 @@
+2000-03-03  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/xdr.c (xdr_hyper): Correctly handle lower half of llp.
+
+2000-03-03  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/xdr_intXX_t.c (xdr_uint16_t): Fix ENCODE and DECODE
+	cases.
+	(xdr_int64_t): Correctly handle lower half.
+	Fix by Sten Dahlgren <stda@enea.se>, closes PR libc/1623.
+
 2000-03-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/init-first.c: Remove trace of personality
