@@ -290,25 +290,6 @@ endif
 
 ifeq (yes,$(build-shared))
 
-# Process the shlib-versions file, which tells us what shared library
-# version numbers to use when we install shared objects on this system.
--include $(common-objpfx)soversions.mk
-$(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makerules \
-			       $(common-objpfx)config.make
-	sed 's/#.*$$//' $< | while read conf versions; do \
-	  test -n "$$versions" || continue; \
-	  case '$(config-machine)-$(config-vendor)-$(config-os)' in $$conf)\
-	    for v in $$versions; do \
-	      lib="$${v%%=*}"; if eval "test -z \"\$$vers_lib$$lib\""; then \
-		eval vers_lib$${lib}=yes; \
-		echo $$lib.so-version=.$${v##$$lib=}; fi; \
-	  done ;; esac; done > $@T
-	mv -f $@T $@
-
-# Get $(version) defined with the release version number.
--include $(common-objpfx)version.mk
-
-
 # Pattern rule to build a shared object from an archive of PIC objects.
 # This must come after the installation rules so Make doesn't try to
 # build shared libraries in place from the installed *_pic.a files.
@@ -603,9 +584,11 @@ ifndef subdir
 # the special object libc-syms.so that contains just the dynamic symbol
 # table of the shared libc object.
 install: $(libdir)/libc.so
+cryptobjdir := $(firstword $(objdir) $(patsubst ../$(subdir),.,$(..)crypt))
 $(libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 		   $(elfobjdir)/$(rtld-installed-name) \
-		   $(common-objpfx)libc.a
+		   $(common-objpfx)libc.a \
+		   $(cryptobjdir)libcrypt.so$(libcrypt.so-version)
 	(echo '/* Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.'; \
 	 echo '   The dynamic linker defines some functions used by $(<F),';\

@@ -1,3 +1,21 @@
+Wed Jul 17 17:08:48 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* version.h (VERSION): Update to 1.93.
+
+	* Makerules ($(libdir)/libc.so): Depend on
+	$(common-objpfx)libcrypt.so$(libcrypt.so-version).
+
+	* crypt/nocrypt.c: New file.
+	* Makefile (subdirs): Add crypt.
+	* crypt/Makefile: New file.
+
+	* Makerules (soversions.mk): Move this target, include of it, and
+	include of version.mk to ...
+	* Makeconfig: ... here.
+	(soversions.mk): Depend on Makeconfig instead of Makerules.
+
+	* shlib-versions (*-*-*): Set libcrypt=0.
+
 Wed Jul 17 11:29:26 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* stdio/linewrap.c (lwupdate): Fix boundary condition where a
@@ -13,12 +31,29 @@ Wed Jul 17 11:29:26 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	(line_wrap_stream): Make wmargin ssize_t.
 	(line_wrap_point): Return 0 for a negative point_col.
 
+Wed Jul 17 02:43:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* shlib-versions (*-*-gnu*): Set libc=0.0
+
+Tue Jul 16 01:52:42 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h: Follow Jul 14 change in
+	sysdeps/i386/dl-machine.h.
+
 Tue Jul 16 00:18:19 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* stdio/linewrap.c (__line_wrap_update): Add hackery from flshfp
  	to fiddle __put_limit in conjunction with __linebuf_active.
 
+Tue Jul 16 00:14:07 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/inet/syscalls.list (connect, send): Add underscores
+	to the strong name, not the file name.
+
 Tue Jul 16 16:43:58 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* csu/initfini.c: More magic.  Detect if .end is produced and put it
+	in the output iff the compiler does.
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Avoid sizeof dynamic auto array
 	because that is broken on alpha.
