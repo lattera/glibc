@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -19,6 +19,8 @@
 
 #include <string.h>
 #include <memcopy.h>
+
+#undef __bzero
 
 /* Set N bytes of S to 0.  */
 void

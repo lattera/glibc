@@ -1,5 +1,5 @@
 /* Load a shared object at run time.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* This file is for compatibility with glibc 2.0.  Compile it only if
-   versioning is used.  */
-#if defined PIC && DO_VERSIONING
-
 #include <dlfcn.h>
 #include <stddef.h>
 #include <elf/ldsodefs.h>
+
+/* This file is for compatibility with glibc 2.0.  Compile it only if
+   versioning is used.  */
+#if defined PIC && DO_VERSIONING
 
 struct dlopen_args
 {

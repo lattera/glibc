@@ -1,5 +1,5 @@
 /* Definitions for Rose packet radio address family.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,8 @@
    implementation.  For kernel AX.25 see the file ax25.h. This file
    requires ax25.h for the definition of the ax25_address structure.  */
 #define ROSE_MTU	251
+
+#define ROSE_MAX_DIGIS	6
 
 #define	ROSE_DEFER	1
 #define	ROSE_T1		2
@@ -74,7 +76,7 @@ struct sockaddr_rose
   ax25_address	srose_digi;
 };
 
-struct full_sockaddr_rose 
+struct full_sockaddr_rose
 {
   sa_family_t srose_family;
   rose_address srose_addr;
@@ -99,7 +101,7 @@ struct rose_cause_struct
   unsigned char	diagnostic;
 };
 
-struct rose_facilities_struct 
+struct rose_facilities_struct
 {
   rose_address source_addr,   dest_addr;
   ax25_address source_call,   dest_call;

@@ -1,3 +1,19 @@
+1999-05-02  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sunrpc/Makefile: Generate dependencies for all flavors of
+	librpcsvc objects.
+	(rpcgen-cmd): Pass -Y flag here and remove it from the macro
+	invocations.
+
+1999-05-02  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/dlopenold.c: Move #if down after includes to get
+	dependencies right.
+
+1999-05-01  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/generic/bzero.c: Undefine __bzero.
+
 1999-05-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/netax25/ax25.h: Update from kernel header.

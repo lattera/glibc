@@ -123,9 +123,9 @@ $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
 
-# Tell rpcgen that it should unset LD_LIBRARY_PATH before executing the
-# preprocessor.
-rpcgen-cmd = $(built-program-cmd)
+# Tell rpcgen where to find the C preprocessor.
+rpcgen-cmd = $(built-program-cmd) -Y `$(CC) -print-file-name=cpp | \
+				      sed "s|/cpp$$||"`
 
 # Install the rpc data base file.
 $(inst_sysconfdir)/rpc: etc.rpc $(+force)
@@ -139,8 +139,7 @@ $(rpcsvc:%.x=$(objpfx)rpcsvc/%.h): $(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
 $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)
 	-@rm -f ${@:stmp=T} $@
-	$(rpcgen-cmd) -Y `$(CC) -print-file-name=cpp | sed "s|/cpp$$||"` \
-		      -h $< -o ${@:stmp=T}
+	$(rpcgen-cmd) -h $< -o ${@:stmp=T}
 	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
 	touch $@
 
@@ -149,16 +148,19 @@ $(rpcsvc:%.x=$(objpfx)x%.c): $(objpfx)x%.c: $(objpfx)x%.stmp
 	@:
 $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	-@rm -f ${@:stmp=T} $@
-	$(rpcgen-cmd) -Y `$(CC) -print-file-name=cpp | sed "s|/cpp$$||"` \
-		      -c $< -o ${@:stmp=T}
+	$(rpcgen-cmd) -c $< -o ${@:stmp=T}
 	$(move-if-change) $(@:stmp=T) $(@:stmp=c)
 	touch $@
 
 # The generated source files depend on the corresponding generated headers.
 # Gratuitous dependency on generated .c file here just gets it mentioned to
 # avoid being an intermediate file and getting removed.
-$(rpcsvc:%.x=$(objpfx)x%.o): $(objpfx)x%.o: $(objpfx)x%.c $(objpfx)rpcsvc/%.h \
+define o-iterator-doit
+$(rpcsvc:%.x=$(objpfx)x%$o): $(objpfx)x%$o: $(objpfx)x%.c $(objpfx)rpcsvc/%.h \
 					    $(objpfx)rpc-proto.d
+endef
+object-suffixes-left = $(filter-out $(librpcsvc-inhibit-o),$(object-suffixes))
+include $(o-iterator)
 
 ifndef no_deps
 -include $(objpfx)rpc-proto.d
