@@ -563,7 +563,7 @@ AC_CHECK_PROG_VER(MSGFMT, gnumsgfmt gmsgfmt msgfmt, --version,
   [0.[1-9][0-9].* | [1-9].*], MSGFMT=: aux_missing=t)
 AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
   [GNU texinfo.* \([0-9][0-9.]*\)],
-  [3.1[1-9] | 3.[2-9][0-9] | 4.* | 1.6[89] | 1.7[0-9]], MAKEINFO=: aux_missing=t)
+  [4.*], MAKEINFO=: aux_missing=t)
 AC_CHECK_PROG_VER(SED, gsed sed, --version,
   [GNU sed version \([0-9]*\.[0-9.]*\)],
   [3.0[2-9]*|3.[1-9]*|[4-9]*], SED=: aux_missing=t)
