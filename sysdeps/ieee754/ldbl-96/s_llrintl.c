@@ -1,6 +1,6 @@
 /* Round argument to nearest integral value according to current rounding
    direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -58,7 +58,7 @@ __llrintl (long double x)
 	  GET_LDOUBLE_WORDS (se, i0, i1, t);
 	  j0 = (se & 0x7fff) - 0x3fff;
 
-	  if (j0 < 31)
+	  if (j0 <= 31)
 	    result = i0 >> (31 - j0);
 	  else
 	    result = ((long long int) i0 << (j0 - 31)) | (i1 >> (63 - j0));

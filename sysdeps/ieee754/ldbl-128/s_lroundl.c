@@ -1,5 +1,5 @@
 /* Round long double value to long int.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997 and
    		  Jakub Jelinek <jj@ultra.linux.cz>, 1999.
@@ -58,7 +58,10 @@ __lroundl (long double x)
 	  if (j < i1)
 	    ++i0;
 
-	  result = ((long int) i0 << (j0 - 48)) | (j >> (112 - j0));
+	  if (j0 == 48)
+	    result = (long int) i0;
+	  else
+	    result = ((long int) i0 << (j0 - 48)) | (j >> (112 - j0));
 	}
     }
   else

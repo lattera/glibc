@@ -1,3 +1,14 @@
+2004-02-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/libm-test.inc (lrint_test): Add new test.
+	(llrint_test, lround_test, llround_test): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c (__lroundl): Fix special case
+	with result taking up 48 bits.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c (__lrintl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c (__llroundl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_llrintl.c (__llrintl): Fix special case
+	with result taking up 31 bits.
+
 2004-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locale.c (show_locale_vars): Don't print a value
