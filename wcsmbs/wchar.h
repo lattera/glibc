@@ -59,8 +59,13 @@
 # define _WINT_T
 typedef unsigned int wint_t;
 #else
-# ifdef __USE_GNU
-__USING_NAMESPACE_STD(wint_t)
+/* Work around problems with the <stddef.h> file which doesn't put
+   wint_t in the std namespace.  */
+# if defined __cplusplus && defined _GLIBCPP_USE_NAMESPACES \
+     && defined __WINT_TYPE__
+__BEGIN_NAMESPACE_STD
+typedef __WINT_TYPE__ wint_t;
+__END_NAMESPACE_STD
 # endif
 #endif
 

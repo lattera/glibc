@@ -1,3 +1,7 @@
+2003-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wchar.h: Define wint_t in std namespace, too [PR libc/5034].
+
 2003-05-29  Jim Meyering  <jim@meyering.net>
 
 	* time/strftime.c (my_strftime) [!defined _NL_CURRENT
