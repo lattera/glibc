@@ -33,12 +33,12 @@ vm_address_t _hurd_data_end;
 
 /* Up to this address is actually available to the user.
    Pages beyond the one containing this address allow no access.  */
-vm_address_t _hurd_brk;
+vm_address_t _hurd_brk = 0;
 
 /* This name is used by the Linux crtbeginS.o for reasons you don't even
    want to think about it.  It's just easier to provide some definition for
    it than even to explain the braindamage involved.  */
-vm_address_t ___brk_addr = 0;
+weak_alias (_hurd_brk, ___brk_addr)
 
 struct mutex _hurd_brk_lock;
 

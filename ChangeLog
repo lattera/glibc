@@ -1,3 +1,9 @@
+Thu Jun 20 12:18:21 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/brk.c (_hurd_brk): Initialize to 0.
+
+	* hurd/getuids.c (getuids): New weak link to __getuids.
+
 Wed Jun 19 10:21:24 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry,
