@@ -1,3 +1,30 @@
+2004-04-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/shm_open.c (shm_unlink): Change EPERM into
+	EACCES.
+
+2004-04-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/vfscanf.c (_IO_vfscanf): Revert last %% whitespace
+	handling change.
+	* stdio-common/tst-sscanf.c (int_tests): Adjust.
+
+	* nis/nss-nis.c: Include stdlib.h.
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Shut up a
+	warning.
+	* sysdeps/sparc/sparc64/memcmp.S (memcmp): Remove BP_SYM () from
+	libc_hidden_builtin_def.
+
+2004-04-20  Jim Meyering  <jim@meyering.net>
+
+	* misc/error.c (error_tail): Don't leak upon realloc failure.
+
+2004-04-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/dl-execstack.c (_dl_make_stack_executable):
+	Use RETURN_ADDRESS instead of __builtin_return_address.
+
 2004-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mq_unlink.c: Rewrite to produce more

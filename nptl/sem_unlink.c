@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -60,5 +60,8 @@ sem_unlink (name)
 	     name, namelen + 1);
 
   /* Now try removing it.  */
-  return unlink (fname);
+  int ret = unlink (fname);
+  if (ret < 0 && errno == EPERM)
+    __set_errno (EACCES);
+  return ret;
 }

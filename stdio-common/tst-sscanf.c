@@ -78,7 +78,6 @@ struct int_test
   { "foo\t", "foo bar", -1 },
   { "foo\t", "foo %d", -1 },
   { "foo\t", "foo\t%d", -1 },
-  { "foo \t %bar1", "foo%%bar%d", 0 },
   { "foo", "foo", 0 },
   { "foon", "foo bar", 0 },
   { "foon", "foo %d", 0 },
@@ -89,7 +88,9 @@ struct int_test
   { "foo bar", "foo %d", 0 },
   { "foo bar", "foon%d", 0 },
   { "foo ", "foo %n", 0 },
-  { "foo%bar1", "foo%%bar%d", 1 }
+  { "foo%bar1", "foo%%bar%d", 1 },
+  /* Some OSes skip whitespace here while others don't.  */
+  { "foo \t %bar1", "foo%%bar%d", 1 }
 };
 
 int

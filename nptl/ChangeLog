@@ -1,3 +1,7 @@
+2004-04-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sem_unlink.c (sem_unlink): Change EPERM into EACCES.
+
 2004-04-19  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: Add frame info.

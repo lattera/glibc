@@ -41,10 +41,6 @@ extern int __old_sem_post (old_sem_t *__sem);
 extern int __old_sem_getvalue (old_sem_t *__sem, int *__sval);
 extern int __old_sem_destroy (old_sem_t *__sem);
 
-
-/* Maximum value the semaphore can have.  */
-#define SEM_VALUE_MAX   ((int) ((~0u) >> 1))
-
 static inline int sem_compare_and_swap(old_sem_t *sem, long oldval, long newval)
 {
     return compare_and_swap(&sem->sem_status, oldval, newval, &sem->sem_spinlock);

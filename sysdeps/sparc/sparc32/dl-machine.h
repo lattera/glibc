@@ -441,9 +441,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     {
 #if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
-#endif
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+# ifdef USE_TLS
       struct link_map *sym_map;
+# endif
 #endif
       Elf32_Addr value;
 #ifndef RESOLVE_CONFLICT_FIND_MAP

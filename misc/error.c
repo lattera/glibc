@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
@@ -192,18 +192,19 @@ error_tail (int status, int errnum, const char *message, va_list args)
 	      if (wmessage != NULL && len / 2 < ALLOCA_LIMIT)
 		wmessage = NULL;
 
-	      wmessage = (wchar_t *) realloc (wmessage,
-					      len * sizeof (wchar_t));
-
-	      if (wmessage == NULL)
+	      wchar_t *p = (wchar_t *) realloc (wmessage,
+						len * sizeof (wchar_t));
+	      if (p == NULL)
 		{
+		  free (wmessage);
 		  fputws_unlocked (L"out of memory\n", stderr);
 		  return;
 		}
+	      wmessage = p;
 	    }
 
 	  memset (&st, '\0', sizeof (st));
-	  tmp =message;
+	  tmp = message;
 	}
       while ((res = mbsrtowcs (wmessage, &tmp, len, &st)) == len);
 

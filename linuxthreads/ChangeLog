@@ -1,3 +1,7 @@
+2004-04-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* oldsemaphore.c (SEM_VALUE_MAX): Remove.
+
 2004-04-19  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (CENABLE): Define

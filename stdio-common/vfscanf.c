@@ -543,8 +543,7 @@ _IO_vfscanf (s, format, argptr, errp)
       /* Find the conversion specifier.  */
       fc = *f++;
       if (skip_space || (fc != L_('[') && fc != L_('c')
-			 && fc != L_('C') && fc != L_('n')
-			 && fc != L_('%')))
+			 && fc != L_('C') && fc != L_('n')))
 	{
 	  /* Eat whitespace.  */
 	  int save_errno = errno;
