@@ -1,5 +1,9 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): For the version to
+	relocate ld.so don't add supprt for relocations which should not
+	appear in ld.so.
+
 	* malloc/malloc.c (ptmalloc_init): Optimize a bit by not calling
 	__secure_getenv.  Instead test __libc_enable_secure once.
 

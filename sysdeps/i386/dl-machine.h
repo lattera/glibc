@@ -312,6 +312,13 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
   if (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE)
     {
 #ifndef RTLD_BOOTSTRAP
+      /* This is defined in rtld.c, but nowhere in the static libc.a;
+	 make the reference weak so static programs can still link.
+	 This declaration cannot be done when compiling rtld.c
+	 (i.e. #ifdef RTLD_BOOTSTRAP) because rtld.c contains the
+	 common defn for _dl_rtld_map, which is incompatible with a
+	 weak decl in the same file.  */
+      weak_extern (_dl_rtld_map);
       if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
 #endif
 	*reloc_addr += map->l_addr;
@@ -325,6 +332,17 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
+	case R_386_GLOB_DAT:
+	case R_386_JMP_SLOT:
+	  *reloc_addr = value;
+	  break;
+#ifndef RTLD_BOOTSTRAP
+	case R_386_32:
+	  *reloc_addr += value;
+	  break;
+	case R_386_PC32:
+	  *reloc_addr += (value - (Elf32_Addr) reloc_addr);
+	  break;
 	case R_386_COPY:
 	  if (sym == NULL)
 	    /* This can happen in trace mode if an object could not be
@@ -345,37 +363,14 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
 	  break;
-	case R_386_GLOB_DAT:
-	case R_386_JMP_SLOT:
-	  *reloc_addr = value;
-	  break;
-	case R_386_32:
-	  {
-#ifndef RTLD_BOOTSTRAP
-	   /* This is defined in rtld.c, but nowhere in the static
-	      libc.a; make the reference weak so static programs can
-	      still link.  This declaration cannot be done when
-	      compiling rtld.c (i.e. #ifdef RTLD_BOOTSTRAP) because
-	      rtld.c contains the common defn for _dl_rtld_map, which
-	      is incompatible with a weak decl in the same file.  */
-	    weak_extern (_dl_rtld_map);
-	    if (map == &_dl_rtld_map)
-	      /* Undo the relocation done here during bootstrapping.
-		 Now we will relocate it anew, possibly using a
-		 binding found in the user program or a loaded library
-		 rather than the dynamic linker's built-in definitions
-		 used while loading those libraries.  */
-	      value -= map->l_addr + refsym->st_value;
 #endif
-	    *reloc_addr += value;
-	    break;
-	  }
-	case R_386_PC32:
-	  *reloc_addr += (value - (Elf32_Addr) reloc_addr);
-	  break;
+#if !defined RTLD_BOOTSTRAP || defined _NDEBUG
 	default:
+	  /* We add these checks in the version to relocate ld.so only
+	     if we are still debugging.  */
 	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
 	  break;
+#endif
 	}
     }
 }
