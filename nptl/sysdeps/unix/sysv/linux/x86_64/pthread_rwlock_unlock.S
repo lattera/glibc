@@ -49,12 +49,12 @@ __pthread_rwlock_unlock:
 #endif
 	jnz	1f
 
-2:	cmpq	$0, WRITER(%rdi)
+2:	cmpl	$0, WRITER(%rdi)
 	jne	5f
 	decl	NR_READERS(%rdi)
 	jnz	6f
 
-5:	movq	$0, WRITER(%rdi)
+5:	movl	$0, WRITER(%rdi)
 
 	movq	$1, %rsi
 	leaq	WRITERS_WAKEUP(%rdi), %r10

@@ -1,3 +1,10 @@
+2004-02-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S
+	(__pthread_rwlock_unlock): Access WRITER as 32-bit value.
+	* Makefile (tests): Add tst-rwlock13.
+	* tst-rwlock13.c: New test.
+
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
