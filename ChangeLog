@@ -1,3 +1,28 @@
+1998-11-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.104.
+
+1998-11-25  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* libio/bits/stdio.h (fread_unlocked): Add missing parentheses
+	around parameter n.
+
+1998-11-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* time/tzfile.c (__tzfile_read): Fix comment.
+
+1998-11-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Makerules (build-shlib): Pass -O1 down to linker to get
+	optimized shared libraries.
+
+1998-11-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Makeconfig ($(common-objpfx)sysd-dirs): Cope with no Subdirs
+	file.  Strip "-" from inhibited subdir name.  Combine into a
+	single awk program.
+	($(common-objpfx)sysd-sorted): Fix sed command.
+
 1998-11-25  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/i386/init-first.c (init): Restored as inline fn.

@@ -772,14 +772,14 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 
 all-Subdirs-files = $(wildcard $(config-sysdirs:%=$(..)%/Subdirs))
 $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
-	($(AWK) 'END { printf ("sysdep-subdirs =") }' /dev/null;	\
-	 $(AWK) '/^[^#-]/ { printf (" %s", $$0) }' $(all-Subdirs-files);\
-	 echo;								\
-	 $(AWK) 'END { printf ("sysdep-inhibit-subdirs =") }' /dev/null;\
-	 $(AWK) '/^-/ { printf (" %s", $$0) }' $(all-Subdirs-files);	\
-	 echo;								\
-	 echo 'sysd-dirs-done = t';					\
-	) > $@-tmp
+	$(AWK) 'BEGIN { subdirs = ""; inhibit = "" };			\
+		/^#/ { next };						\
+		/^[^-]/ { subdirs = subdirs " " $$0 };			\
+		/^-/ { inhibit = inhibit " " substr($$0, 2) };		\
+		END { printf "sysdep-subdirs =%s\n", subdirs;		\
+		      printf "sysdep-inhibit-subdirs =%s\n", inhibit;	\
+		      print "sysd-dirs-done = t" }'			\
+	       /dev/null $(all-Subdirs-files) > $@-tmp
 	mv -f $@-tmp $@
 
 all-Depend-files = $(wildcard $(..)*/Depend)

@@ -359,7 +359,7 @@ lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(+interp)
 	$(build-shlib)
 
 define build-shlib
-$(LINK.o) -shared -O -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
+$(LINK.o) -shared -Wl,-O1 -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -B$(csu-objpfx) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \

@@ -93,6 +93,7 @@ please let me know.
 2.23.	I just upgraded my Linux system to glibc and now I get
 	errors whenever I try to link any program.
 2.24.	When I use nscd the machine freezes.
+2.25.	I need lots of open files.  What do I have to do?
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -942,6 +943,33 @@ kernel are too buggy when it comes to using threads.
 If you need nscd, you have to use a 2.1 kernel.
 
 Note that I have at this point no information about any other platform.
+
+
+2.25.	I need lots of open files.  What do I have to do?
+
+{AJ} This is at first a kernel issue.  The kernel defines limits with
+OPEN_MAX the number of simultaneous open files and with FD_SETSIZE the
+number of used file descriptors.  You need to change these values in your
+kernel and recompile the kernel so that the kernel allows to use more open
+files.  You don't necessarily need to recompile the GNU C library since the
+only place where OPEN_MAX and FD_SETSIZE is really needed in the library
+itself is the size of fd_set which is used by select.
+
+The GNU C library is now (nearly) select free.  This means it internally has
+no limits imposed by the `fd_set' type.  Instead almost all places where the
+functionality is needed the `poll' function is used.
+
+If you increase the number of file descriptors in the kernel you don't need
+to recompile the C library.  The remaining select calls are in the RPC code.
+If your RPC daemons don't need more than FD_SETSIZE file descriptors, you
+don't need to change anything at all.
+
+{UD} You can always get the maximum number of file descriptors a process is
+allowed to have open at any time using
+
+	number = sysconf (_SC_OPEN_MAX);
+
+This will work even if the kernel limits change.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

@@ -144,7 +144,7 @@ ferror_unlocked (FILE *__stream) __THROW
 		      || (__builtin_constant_p (n) && (n) == 0))	      \
 			/* Evaluate all parameters once.  */		      \
 		     ? ((void) (ptr), (void) (stream), (void) (size),	      \
-			(void) n, 0)					      \
+			(void) (n), 0)					      \
 		     : fread_unlocked (ptr, size, n, stream))))
 
 # define fwrite_unlocked(ptr, size, n, stream) \

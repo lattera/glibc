@@ -309,7 +309,7 @@ __tzfile_read (const char *file)
   compute_tzname_max (chars);
 
   if (num_transitions == 0)
-    /* Use the first rule (which should also be the only one.  */
+    /* Use the first rule (which should also be the only one).  */
     rule_stdoff = rule_dstoff = types[0].offset;
   else
     {
