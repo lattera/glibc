@@ -240,6 +240,7 @@ extern char *alloca ();
 #endif
 
 #ifdef _LIBC
+# define strdup(str) __strdup (str)
 # define sysconf(id) __sysconf (id)
 # define closedir(dir) __closedir (dir)
 # define opendir(name) __opendir (name)
@@ -494,10 +495,13 @@ glob (pattern, flags, errfunc, pglob)
 	 case is nothing but a notation for a directory.  */
       if ((flags & GLOB_TILDE) && pattern[0] == '~')
 	{
-	  dirname = pattern;
+	  dirname = (char *) pattern;
 	  dirlen = strlen (pattern);
 
-	  filename = "";
+	  /* Set FILENAME to NULL as a special flag.  This is ugly but
+	     other solutions would requiremuch more code.  We test for
+	     this special case below.  */
+	  filename = NULL;
 	}
       else
 	{
@@ -685,6 +689,59 @@ glob (pattern, flags, errfunc, pglob)
 # endif	/* Not Amiga && not WINDOWS32.  */
     }
 #endif	/* Not VMS.  */
+
+  /* Now test whether we looked for "~" or "~NAME".  In this case we
+     can give the answer now.  */
+  if (filename == NULL)
+    {
+      struct stat st;
+
+      /* Return the directory if we don't check for error or if it exists.  */
+      if ((flags & GLOB_NOCHECK)
+	  || (((flags & GLOB_ALTDIRFUNC)
+	       ? (*pglob->gl_stat) (dirname, &st)
+	       : __stat (dirname, &st)) == 0
+	      && S_ISDIR (st.st_mode)))
+	{
+	  pglob->gl_pathv
+	    = (char **) realloc (pglob->gl_pathv,
+				 (pglob->gl_pathc +
+				  ((flags & GLOB_DOOFFS) ?
+				   pglob->gl_offs : 0) +
+				  1 + 1) *
+				 sizeof (char *));
+	  if (pglob->gl_pathv == NULL)
+	    return GLOB_NOSPACE;
+
+	  if (flags & GLOB_DOOFFS)
+	    while (pglob->gl_pathc < pglob->gl_offs)
+	      pglob->gl_pathv[pglob->gl_pathc++] = NULL;
+
+#if defined HAVE_STRDUP || defined _LIBC
+	  pglob->gl_pathv[pglob->gl_pathc] = strdup (dirname);
+#else
+	  {
+	    size_t len = strlen (dirname) + 1;
+	    char *dircopy = malloc (len);
+	    if (dircopy != NULL)
+	      pglob->gl_pathv[pglob->gl_pathc] = memcpy (dircopy, dirname,
+							 len);
+	  }
+#endif
+	  if (pglob->gl_pathv[pglob->gl_pathc] == NULL)
+	    {
+	      free (pglob->gl_pathv);
+	      return GLOB_NOSPACE;
+	    }
+	  pglob->gl_pathv[++pglob->gl_pathc] = NULL;
+	  pglob->gl_flags = flags;
+
+	  return 0;
+	}
+
+      /* Not found.  */
+      return GLOB_NOMATCH;
+    }
 
   if (__glob_pattern_p (dirname, !(flags & GLOB_NOESCAPE)))
     {

@@ -1,3 +1,10 @@
+1998-07-27 22:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/glob.c: Handle ~ and ~NAME case correctly.
+
+	* posix/globtest.sh: Also add directories with NSS modules into the
+	library path.
+
 1998-07-27 17:42  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nss_files/files-parse.c (INT_FIELD): Use strtoul instead of

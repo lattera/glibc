@@ -4,6 +4,9 @@ common_objpfx=$1; shift
 elf_objpfx=$1; shift
 rtld_installed_name=$1; shift
 
+# We have to find the libc and the NSS modules.
+library_path=${common_objpfx}:${common_objpfx}nss:${common_objpfx}nis
+
 # Since we use `osrt' we must make sure to use the same locale everywhere.
 LC_ALL=C
 export LC_ALL
@@ -35,7 +38,7 @@ echo 1_2 > $testdir/dir1/file1_2
 result=0
 
 # Normal test
-${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -49,7 +52,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Don't let glob sort it
-${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -s "$testdir" "*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -63,7 +66,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Mark directories
-${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -m "$testdir" "*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -77,7 +80,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Find files starting with .
-${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -p "$testdir" "*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -94,7 +97,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Test braces
-${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -b "$testdir" "file{1,2}" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -103,7 +106,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Test NOCHECK
-${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -c "$testdir" "abc" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -111,7 +114,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Test NOMAGIC without magic characters
-${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -g "$testdir" "abc" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -119,7 +122,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Test NOMAGIC with magic characters
-${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -g "$testdir" "abc*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -127,7 +130,7 @@ GLOB_NOMATCH
 EOF
 
 # Test subdirs correctly
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -136,7 +139,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Test subdirs for invalid names
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -144,7 +147,7 @@ GLOB_NOMATCH
 EOF
 
 # Test subdirs with wildcard
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/*1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -152,7 +155,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Test subdirs with ?
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/*?_?" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -160,21 +163,21 @@ cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_2'
 EOF
 
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/file1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
 EOF
 
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*-/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
 EOF
 
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*-" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -182,7 +185,7 @@ GLOB_NOMATCH
 EOF
 
 # Test subdirs with ?
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/*?_?" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -191,28 +194,28 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Test tilde expansion
-#${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
-#${common_objpfx}posix/globtest -q -t "$testdir" "~" |
-#sort >$testout
-#echo ~ > $testout2
-#cmp $testout2 $testout || result=1
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -q -t "$testdir" "~" |
+sort >$testout
+echo ~ > $testout2
+cmp $testout2 $testout || result=1
 
 # Test tilde expansion with trailing slash
-#${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
-#${common_objpfx}posix/globtest -q -t "$testdir" "~/" |
-#sort > $testout
-#echo ~/ > $testout2
-#cmp $testout2 $testout || result=1
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -q -t "$testdir" "~/" |
+sort > $testout
+echo ~/ > $testout2
+cmp $testout2 $testout || result=1
 
 # Test tilde expansion with username
-#${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
-#${common_objpfx}posix/globtest -q -t "$testdir" "~"$USER |
-#sort > $testout
-#eval echo ~$USER > $testout2
-#cmp $testout2 $testout || result=1
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -q -t "$testdir" "~"$USER |
+sort > $testout
+eval echo ~$USER > $testout2
+cmp $testout2 $testout || result=1
 
 # Tilde expansion shouldn't match a file
-#${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+#${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 #${common_objpfx}posix/globtest -t "$testdir" "~file4" |
 #sort > $testout
 #cat <<"EOF" | cmp - $testout || result=1
@@ -220,7 +223,7 @@ EOF
 #EOF
 
 # Matching \** should only find *file6
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "\**" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -228,7 +231,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # ... unless NOESCAPE is used, in which case it shouldn't match anything.
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -e "$testdir" "\**" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -236,7 +239,7 @@ GLOB_NOMATCH
 EOF
 
 # Try a recursive failed search
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -e "$testdir" "a*/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -244,7 +247,7 @@ GLOB_NOMATCH
 EOF
 
 # Try multiple patterns (GLOB_APPEND)
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "file1" "*/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
@@ -254,7 +257,7 @@ cat <<"EOF" | cmp - $testout || result=1
 EOF
 
 # Try multiple patterns (GLOB_APPEND) with offset (GLOB_DOOFFS)
-${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -o "$testdir" "file1" "*/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
