@@ -1,3 +1,76 @@
+1998-09-06 15:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dlsym.c (dlsym_doit): Use new RTLD_DEFAULT macro to test
+	for use of global scope.
+	* elf/dlvsym.c (dlvsym_doit): Likewise.
+
+1998-09-02  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (my_strftime): When mbrlen returns (size_t) -2,
+	copy the redundant bytes at the end of the format as-is; don't
+	just copy their first byte and then rescan, as that might get
+	us an encoding error.
+	Account correctly for the length of multibyte sequences in the
+	format.
+
+1998-09-03 20:14  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: Add tests for different IFS values.
+	Change unquoted-newline test so that newline is not in IFS.
+
+	* posix/wordexp.c (wordexp): Correct null/unset mix-up when
+	determining IFS characters.  Return WRDE_BADCHAR for unquoted
+	special characters _except_ if they are separators.
+
+1998-09-06 10:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/tgmath.h: New file.
+
+	* libio/stdio.h: Correct reversed #ifs.
+	Patch by Zack Weinberg.
+
+	* manual/creature.texi: Better explain reason for feature select
+	macros.
+	Patch by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
+
+1998-09-06 10:25 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* include/alloca.h: Add multiple-inclusion guard.
+	* include/db.h: Likewise.
+	* include/db_185.h: Likewise.
+	* include/fcntl.h: Likewise.
+	* include/grp.h: Likewise.
+	* include/libintl.h: Likewise.
+	* include/mntent.h: Likewise.
+	* include/pwd.h: Likewise.
+	* include/sched.h: Likewise.
+	* include/search.h: Likewise.
+	* include/setjmp.h: Likewise.
+	* include/shadow.h: Likewise.
+	* include/signal.h: Likewise.
+	* include/stdio.h: Likewise.
+	* include/stdlib.h: Likewise.
+	* include/string.h: Likewise.
+	* include/termios.h: Likewise.
+	* include/time.h: Likewise.
+	* include/ulimit.h: Likewise.
+	* include/utmp.h: Likewise.
+	* include/wchar.h: Likewise.
+	* include/sys/file.h: Likewise.
+	* include/sys/gmon.h: Likewise.
+	* include/sys/ioctl.h: Likewise.
+	* include/sys/mman.h: Likewise.
+	* include/sys/resource.h: Likewise.
+	* include/sys/select.h: Likewise.
+	* include/sys/socket.h: Likewise.
+	* include/sys/statfs.h: Likewise.
+	* include/sys/time.h: Likewise.
+	* include/sys/times.h: Likewise.
+	* include/sys/wait.h: Likewise.
+
+	* include/dlfcn.h: Declare dladdr only for __USE_GNU.
+	Define RTLD_DEFAULT.
+
 1998-09-06 09:00  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.96.

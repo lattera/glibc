@@ -43,7 +43,7 @@ dlvsym_doit (void *a)
   struct dlvsym_args *args = (struct dlvsym_args *)a;
   args->ref = NULL;
 
-  if (args->handle == NULL)
+  if (args->handle == RTLD_DEFAULT)
     /* Search the global scope.  */
     args->loadbase = _dl_lookup_versioned_symbol (args->name, &args->ref,
 						  _dl_global_scope,

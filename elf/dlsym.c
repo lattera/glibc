@@ -41,7 +41,7 @@ dlsym_doit (void *a)
   struct dlsym_args *args = (struct dlsym_args *) a;
   args->ref = NULL;
 
-  if (args->handle == NULL)
+  if (args->handle == RTLD_DEFAULT)
     /* Search the global scope.  */
     args->loadbase = _dl_lookup_symbol (args->name, &args->ref,
 					_dl_global_scope, NULL, 0);
