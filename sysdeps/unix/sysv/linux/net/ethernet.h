@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,8 +53,8 @@ struct ether_header
 #define	ETHER_TYPE_LEN	2                        /* bytes in type field */
 #define	ETHER_CRC_LEN	4                        /* bytes in CRC field */
 #define	ETHER_HDR_LEN	ETH_HLEN                 /* total octets in header */
-#define	ETHER_MIN_LEN	(ETH_ZLEN + ETH_CRC_LEN) /* min packet length */
-#define	ETHER_MAX_LEN	(ETH_FRAME_LEN + ETH_CRC_LEN) /* max packet length */
+#define	ETHER_MIN_LEN	(ETH_ZLEN + ETHER_CRC_LEN) /* min packet length */
+#define	ETHER_MAX_LEN	(ETH_FRAME_LEN + ETHER_CRC_LEN) /* max packet length */
 
 /* make sure ethenet length is valid */
 #define	ETHER_IS_VALID_LEN(foo)	\
@@ -69,8 +69,8 @@ struct ether_header
 #define	ETHERTYPE_NTRAILER	16
 
 #define	ETHERMTU	ETH_DATA_LEN
-#define	ETHERMIN	(ETHER_MIN_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
+#define	ETHERMIN	(ETHER_MIN_LEN - ETHER_HDR_LEN - ETHER_CRC_LEN)
 
 __END_DECLS
 
-#endif /* net/ethernet.h */
+#endif	/* net/ethernet.h */
