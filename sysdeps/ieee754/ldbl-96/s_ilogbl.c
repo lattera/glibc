@@ -53,9 +53,13 @@ static char rcsid[] = "$NetBSD: $";
 	    return ix;
 	}
 	else if (es<0x7fff) return es-0x3fff;
-	else if (FP_ILOGBNAN != INT_MAX && (hx|lx) == 0)
-	    /* ISO C99 requires ilogbl(+-Inf) == INT_MAX.  */
-	    return INT_MAX;
+	else if (FP_ILOGBNAN != INT_MAX)
+	{
+	    GET_LDOUBLE_WORDS(es,hx,lx,x);
+	    if ((hx & 0x7fffffff|lx) == 0)
+	      /* ISO C99 requires ilogbl(+-Inf) == INT_MAX.  */
+	      return INT_MAX;
+	}
 	return FP_ILOGBNAN;
 }
 weak_alias (__ilogbl, ilogbl)
