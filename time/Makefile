@@ -33,7 +33,8 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    timer_create timer_delete timer_getoverr	 \
 	    timer_gettime timer_settime
 
-tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime
+tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
+	   tst-getdate
 
 include ../Rules
 
@@ -46,3 +47,5 @@ CFLAGS-tzset.c = $(tz-cflags)
 
 # Don't warn about Y2k problem in strftime format string.
 CFLAGS-test_time.c = -Wno-format
+
+tst-getdate-ENV= DATEMSK=datemsk

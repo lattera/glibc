@@ -1,3 +1,12 @@
+2000-03-01  Andreas Jaeger  <aj@suse.de>
+
+	* time/Makefile (tst-getdate-ENV): New flag to pass DATEMSK.
+	(tests): Added tst-getdate.
+
+	* time/tst-getdate.c: New file.
+
+	* time/datemsk: New file, needed for tst-getdate.
+
 2000-02-29  Cristian Gafton  <gafton@redhat.com>
 
 	* configure.in (CCVERSION): Require at least veersion 5 of perl API.

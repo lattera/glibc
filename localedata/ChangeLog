@@ -1,3 +1,9 @@
+2000-03-01  Andreas Jaeger  <aj@suse.de>
+
+	* SUPPORTED: Added bg_BG.CP1251.
+
+	* locales/bg_BG: New file.
+
 2000-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ko_KO: Update syntax for new localedef.  Use symbolic
