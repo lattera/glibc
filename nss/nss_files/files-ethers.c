@@ -30,7 +30,7 @@ struct etherent
 struct etherent_data {};
 
 #define ENTNAME		etherent
-#define DATAFILE	"/etc/ethers"
+#define DATABASE	"ethers"
 #include "files-parse.c"
 LINE_PARSER
 ("#",
@@ -56,15 +56,16 @@ LINE_PARSER
  )
 
 
-#include "files-XXX.c"
+#include GENERIC
 
-DB_LOOKUP (hostton,
+DB_LOOKUP (hostton, 1 + strlen (name), (".%s", name),
 	   {
 	     if (strcmp (result->e_name, name) == 0)
 	       break;
 	   }, const char *name)
 
-DB_LOOKUP (ntohost,
+DB_LOOKUP (ntohost, 7, ("=%c%c%c%c%c%c",
+			addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]),
 	   {
 	     if (memcmp (&result->e_addr, addr,
 			 sizeof (struct ether_addr)) == 0)

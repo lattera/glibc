@@ -21,26 +21,22 @@ Cambridge, MA 02139, USA.  */
 
 #define STRUCTURE	group
 #define ENTNAME		grent
-#define DATAFILE	"/etc/group"
+#define DATABASE	"group"
 struct grent_data {};
 
-#define TRAILING_LIST_MEMBER		gr_mem
-#define TRAILING_LIST_SEPARATOR_P(c)	((c) == ',')
-#include "files-parse.c"
 /* Our parser function is already defined in fgetgrent.c, so use that.
    to parse lines from the database file.  */
-extern int parse_line (char *line, struct STRUCTURE *result,
-		       void *buffer, int buflen);
+#define EXTERN_PARSER
+#include "files-parse.c"
+#include GENERIC
 
-#include "files-XXX.c"
-
-DB_LOOKUP (grnam,
+DB_LOOKUP (grnam, 1 + strlen (name), (".%s", name),
 	   {
 	     if (! strcmp (name, result->gr_name))
 	       break;
 	   }, const char *name)
 
-DB_LOOKUP (grgid,
+DB_LOOKUP (grgid, 20, ("=%lu", (unsigned long int) gid),
 	   {
 	     if (result->gr_gid == gid)
 	       break;

@@ -34,7 +34,7 @@ elide-routines.so = $(dl-routines) dl-support
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
-		  soinit.c sofini.c ldd.sh.in linux-compat.c
+		  soinit.c sofini.c ldd.sh.in
 
 extra-libs	= libdl
 libdl-routines	:= dlopen dlclose dlsym dlerror dladdr
@@ -49,13 +49,6 @@ extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
 generated	= librtld.so dl-allobjs.so
 install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd
-
-ifneq (,$(filter linux% linux,$(config-os)))
-extra-objs	+= linux-compat.so
-install-others	+= $(slibdir)/ld-linux.so.1
-lib-noranlib: $(objpfx)ld-linux.so.1
-endif
-endif
 
 include ../Rules
 
@@ -83,8 +76,6 @@ $(objpfx)librtld.so: $(objpfx)dl-allobjs.so \
 
 $(objpfx)ld.so: $(objpfx)librtld.so
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
-$(objpfx)ld-linux.so.1: $(objpfx)librtld.so
-	$(rtld-link) -Wl,-soname=ld-linux.so.1
 
 define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
@@ -102,19 +93,18 @@ $(objpfx)$(rtld-installed-name): $(objpfx)ld.so
 	ln -s $(<F) $@
 endif
 
-# The Linux-compatible dynamic linker shared object is just the same
-# with one object file of compatibility initialization code added.
-$(objpfx)ld-linux.so.1: $(objpfx)linux-compat.so
-
 
 # Specify the dependencies of libdl.so; its commands come from the generic
 # rule to build a shared library.
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 
 $(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
-$(slibdir)/ld-linux.so.1: $(objpfx)ld-linux.so.1; $(do-install-program)
 
 $(objpfx)ldd: ldd.sh.in Makefile
 	sed 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' < $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
+
+# muwahaha
+
+$(objpfx)libdl.so: $(objpfx)eval.so

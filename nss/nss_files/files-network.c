@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <netdb.h>
 
 #define ENTNAME		netent
-#define DATAFILE	_PATH_NETWORKS
+#define DATABASE	"networks"
 
 struct netent_data {};
 
@@ -43,11 +43,11 @@ LINE_PARSER
 
 #include "files-XXX.c"
 
-DB_LOOKUP (netbyname,
+DB_LOOKUP (netbyname, ,,
 	   LOOKUP_NAME (n_name, n_aliases),
 	   const char *name)
 
-DB_LOOKUP (netbyaddr,
+DB_LOOKUP (netbyaddr, ,,
 	   {
 	     if (result->n_addrtype == type && result->n_net == net)
 	       /* Bingo!  */

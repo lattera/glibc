@@ -52,6 +52,19 @@ struct parser_data
 #define parse_line CONCAT(_nss_files_parse_,ENTNAME)
 #endif
 
+
+#ifdef EXTERN_PARSER
+
+/* The parser is defined in a different module.  */
+extern int parse_line (char *line, struct STRUCTURE *result,
+		       struct parser_data *data, int datalen);
+
+#define LINE_PARSER(EOLSET, BODY) /* Do nothing */
+
+#else
+
+/* Define a line parsing function.  */
+
 #define LINE_PARSER(EOLSET, BODY)					      \
 parser_stclass int							      \
 parse_line (char *line, struct STRUCTURE *result,			      \
@@ -167,6 +180,9 @@ parse_list (char *line, struct parser_data *data, int datalen)
   return list;
 }
 
+#endif	/* EXTERN_PARSER */
+
+
 #define LOOKUP_NAME(nameelt, aliaselt)					      \
 {									      \
   char **ap;								      \
@@ -179,4 +195,9 @@ parse_list (char *line, struct parser_data *data, int datalen)
     break;								      \
 }
 
+#endif
+
+/* This is defined by db-*.c to include "../nss_db/db-XXX.c" instead.  */
+#ifndef GENERIC
+#define GENERIC "files-XXX.c"
 #endif

@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 
 #define ENTNAME		servent
-#define DATAFILE	_PATH_SERVICES
+#define DATABASE	"services"
 
 struct servent_data {};
 
@@ -37,13 +37,13 @@ LINE_PARSER
  STRING_FIELD (result->s_proto, isspace, 1);
  )
 
-#include "files-XXX.c"
+#include GENERIC
 
-DB_LOOKUP (servbyname,
+DB_LOOKUP (servbyname, 1 + strlen (name), (".%s", name),
 	   LOOKUP_NAME (s_name, s_aliases),
 	   const char *name)
 
-DB_LOOKUP (servbyport,
+DB_LOOKUP (servbyport, 20, ("=%d", port),
 	   {
 	     if (result->s_port == port)
 	       break;

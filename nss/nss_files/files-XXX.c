@@ -27,13 +27,15 @@ Cambridge, MA 02139, USA.  */
 
    ENTNAME -- database name of the structure and functions (hostent, pwent).
    STRUCTURE -- struct name, define only if not ENTNAME (passwd, group).
-   DATAFILE -- string of the database file's name.
+   DATABASE -- string of the database file's name ("hosts", "passwd").
 
    NEED_H_ERRNO - defined iff an arg `int *herrnop' is used.
    MIDLINE_COMMENTS - defined iff # before \n terminates a database line.
 */
 
-#define ENTNAME_r CONCAT(ENTNAME,_r)
+#define ENTNAME_r	CONCAT(ENTNAME,_r)
+
+#define DATAFILE	"/etc/" DATABASE
 
 #ifdef NEED_H_ERRNO
 #define H_ERRNO_PROTO	, int *herrnop
@@ -194,13 +196,15 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
 
    NAME is the name of the lookup; e.g. `hostbyname'.
 
+   KEYSIZE and KEYPATTERN are ignored here but used by ../nss_db/db-XXX.c.
+
    PROTO describes the arguments for the lookup key;
    e.g. `const char *hostname'.
 
    BREAK_IF_MATCH is a block of code which compares `struct STRUCTURE *result'
    to the lookup key arguments and does `break;' if they match.  */
 
-#define DB_LOOKUP(name, break_if_match, proto...)			      \
+#define DB_LOOKUP(name, keysize, keypattern, break_if_match, proto...)	      \
 enum nss_status								      \
 _nss_files_get##name##_r (proto,					      \
 			  struct STRUCTURE *result,			      \

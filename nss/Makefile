@@ -31,7 +31,7 @@ routines		= nsswitch $(addsuffix -lookup,$(databases))
 databases		= proto service hosts network grp pwd rpc ethers
 
 # Specify rules for the nss_* modules.  We have some services.
-services		:= files dns
+services		:= files dns db
 
 extra-libs		= $(services:%=libnss_%)
 
@@ -45,12 +45,26 @@ distribute		+= files-XXX.c files-parse.c
 
 libnss_dns-routines	:= dns-host dns-network
 
+libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network,\
+							$(databases)))
+distribute		+= db-XXX.c
+
 libnss_files-inhibit-o	= $(filter-out .so,$(object-suffixes))
 libnss_dns-inhibit-o	= $(filter-out .so,$(object-suffixes))
+libnss_db-inhibit-o	= $(filter-out .so,$(object-suffixes))
 
 
 include ../Rules
 
 
-resobjdir := $(firstword $(objdir) $(patsubst ../$(subdir),.,$(..)resolv))
-LDLIBS-nss_dns.so = -L$(resobjdir) -Wl,-rpath-link=$(resobjdir) -lresolv
+$(objpfx)libnss_dns.so: $(firstword $(objdir) $(..)resolv)/libresolv.so
+
+$(objpfx)libnss_db.so: $(firstword $(objdir) $(..)db)/libdb.so \
+		       $(objpfx)libnss_files.so
+
+$(libnss_db-routines:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
+	@rm -f $@.new
+	(echo '#define EXTERN_PARSER';\
+	 echo '#define GENERIC "../nss_db/db-XXX.c"';\
+	 echo '#include <$<>') > $@.new
+	mv -f $@.new $@

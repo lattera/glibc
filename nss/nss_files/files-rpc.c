@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 
 #define ENTNAME		rpcent
-#define DATAFILE	"/etc/rpc"
+#define DATABASE	"rpc"
 
 struct rpcent_data {};
 
@@ -34,13 +34,13 @@ LINE_PARSER
  INT_FIELD (result->r_number, isspace, 1, 10,);
  )
 
-#include "files-XXX.c"
+#include GENERIC
 
-DB_LOOKUP (rpcbyname,
+DB_LOOKUP (rpcbyname, 1 + strlen (name), (".%s", name),
 	   LOOKUP_NAME (r_name, r_aliases),
 	   const char *name)
 
-DB_LOOKUP (rpcbynumber,
+DB_LOOKUP (rpcbynumber, 20, ("=%d", number),
 	   {
 	     if (result->r_number == number)
 	       break;

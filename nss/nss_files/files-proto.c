@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 
 #define ENTNAME		protoent
-#define DATAFILE	_PATH_PROTOCOLS
+#define DATABASE	"protocols"
 
 struct protoent_data {};
 
@@ -34,13 +34,13 @@ LINE_PARSER
  INT_FIELD (result->p_proto, isspace, 1, 10,);
  )
 
-#include "files-XXX.c"
+#include GENERIC
 
-DB_LOOKUP (protobyname,
+DB_LOOKUP (protobyname, 1 + strlen (name), (".%s", name),
 	   LOOKUP_NAME (p_name, p_aliases),
 	   const char *name)
 
-DB_LOOKUP (protobynumber,
+DB_LOOKUP (protobynumber, 20, ("=%d", proto),
 	   {
 	     if (result->p_proto == proto)
 	       break;

@@ -21,24 +21,22 @@ Cambridge, MA 02139, USA.  */
 
 #define STRUCTURE	passwd
 #define ENTNAME		pwent
-#define DATAFILE	"/etc/passwd"
+#define DATABASE	"passwd"
 struct pwent_data {};
 
-#include "files-parse.c"
-/* Our parser function is already defined in fgetpwent.c, so use that.
+/* Our parser function is already defined in fgetpwent.c, so use that
    to parse lines from the database file.  */
-extern int parse_line (char *line, struct STRUCTURE *result,
-		       void *buffer, int buflen);
+#define EXTERN_PARSER
+#include "files-parse.c"
+#include GENERIC
 
-#include "files-XXX.c"
-
-DB_LOOKUP (pwnam,
+DB_LOOKUP (pwnam, 1 + strlen (name), (".%s", name),
 	   {
 	     if (! strcmp (name, result->pw_name))
 	       break;
 	   }, const char *name)
 
-DB_LOOKUP (pwuid,
+DB_LOOKUP (pwuid, 20, ("=%lu", (unsigned long int) uid),
 	   {
 	     if (result->pw_uid == uid)
 	       break;

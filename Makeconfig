@@ -362,7 +362,7 @@ define built-program-cmd
 LD_LIBRARY_PATH=$(rpath-link)$(patsubst -Wl$(comma)-rpath-link=%,:%,\
 					 $(filter -Wl$(comma)-rpath-link=%,\
 						  $(sysdep-LDFLAGS))) \
-$(elf-objpfx)ld.so $(built-program-file)
+$(elf-objpfx)$(rtld-installed-name) $(built-program-file)
 endef
 endif
 
@@ -488,6 +488,10 @@ endif
 
 
 +gnu-stabs = $(shell echo>&2 '*** BARF ON ME')
+
+ifndef BUILD_CC
+BUILD_CC = $(CC)
+endif
 
 ifneq ($(BUILD_CC),$(CC))
 cross-compiling := yes

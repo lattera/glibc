@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 
 
 #define ENTNAME		hostent
-#define DATAFILE	_PATH_HOSTS
+#define DATABASE	"hosts"
 
 #define ENTDATA hostent_data
 struct hostent_data
@@ -93,19 +93,11 @@ LINE_PARSER
 
 #include "files-XXX.c"
 
-DB_LOOKUP (hostbyname,
-	   {
-	     char **ap;
-	     if (! strcmp (name, result->h_name))
-	       break;
-	     for (ap = result->h_aliases; *ap; ++ap)
-	       if (! strcmp (name, *ap))
-		 break;
-	     if (*ap)
-	       break;
-	   }, const char *name)
+DB_LOOKUP (hostbyname, ,,
+	   LOOKUP_NAME (h_name, h_aliases),
+	   const char *name)
 
-DB_LOOKUP (hostbyaddr,
+DB_LOOKUP (hostbyaddr, ,,
 	   {
 	     if (result->h_addrtype == type && result->h_length == len &&
 		 ! memcmp (addr, result->h_addr_list[0], len))

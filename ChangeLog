@@ -1,5 +1,59 @@
 Tue Jul  2 10:44:37 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* nss/nss_files/files-network.c: Pass empty for new DB_LOOKUP args.
+	(DATABASE): Define this instead of DATAFILE.
+	* nss/nss_files/files-hosts.c: Likewise.
+	(hostbyname): Use LOOKUP_NAME macro.
+
+	* nss/nss_db/db-XXX.c: New file.
+	* nss/Makefile (services): Add db.
+	(libnss_db-inhibit-o): New variable.
+	(libnss_db-routines): New variable.
+	(distribute): Append db-XXX.c.
+	(libnss_db.so): Depend on libdb.so and libnss_files.so.
+	($(libnss_db-routines:%=$(objpfx)%.c)): New static pattern rule.
+
+	* nss/nss_files/files-XXX.c (DB_LOOKUP): Add KEYSIZE and KEYPATTERN
+	args, ignored.
+	(DATAFILE): New macro.
+	* nss/nss_files/files-parse.c (GENERIC): If undefined, define to
+	"files-XXX.c".
+	* nss/nss_files/files-rpc.c: Include GENERIC instead of "files-XXX.c".
+	Pass db key args to DB_LOOKUP.
+	(DATAFILE): Macro removed.
+	(DATABASE): New macro replaces it, lacks "/etc/" prefix.
+	* nss/nss_files/files-service.c: Likewise.
+	* nss/nss_files/files-pwd.c: Likewise.
+	* nss/nss_files/files-proto.c: Likewise.
+	* nss/nss_files/files-grp.c: Likewise.
+	* nss/nss_files/files-ethers.c: Likewise.
+
+	* elf/linux-compat.c: File removed.
+	* elf/Makefile (distribute): Remove linux-compat.c.
+	(ld-linux.so.1): Remove target and associated variables.
+
+	* sunrpc/xdr.c: Remove malloc decl.
+	* sunrpc/portmap.c: Likewise.
+
+	* sunrpc/svc_tcp.c (abort): Don't declare.  Instead define as macro
+	casting abort to fn returning bool_t.
+
+	* nss/nss_files/files-parse.c [EXTERN_PARSER]: Do an extern decl of
+	the parser function.
+	[EXTERN_PARSER] (LINE_PARSER): Define to empty.
+	* nss/nss_files/files-pwd.c (EXTERN_PARSER): Define it.
+	* nss/nss_files/files-grp.c: Likewise.
+
+	* Makeconfig (BUILD_CC): If undefined, define to $(CC).
+
+	* sunrpc/rpc/types.h: Include stdlib.h instead of declaring malloc.
+
+	* Makeconfig (built-program-cmd): Use $(rtld-installed-name) in place
+	of ld.so so lookups for that soname find it.
+
+	* nss/Makefile (libnss_dns.so): Depend on libresolv.so.
+	(resobjdir, LDLIBS-nss_dns.so): Variables removed.
+
 	* pwd/fgetpwent.c: Don't include ../nss/nss_files/files-parse.c to
 	define parse_line function.
 	(parse_line): #define to _nss_files_parse_pwent and

@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 #include <sys/socket.h>
 #include <errno.h>
-extern bool_t abort();
+#define abort ((bool_t (*) ()) abort)
 extern errno;
 
 /*

@@ -50,7 +50,6 @@ static	char sccsid[] = "@(#)portmap.c 1.32 87/08/06 Copyr 1984 Sun Micro";
 #include <sys/wait.h>
 #include <sys/signal.h>
 
-char *malloc();
 int reg_service();
 void reap();
 struct pmaplist *pmaplist;
