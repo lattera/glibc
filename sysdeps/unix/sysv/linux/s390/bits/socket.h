@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux/s390 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,11 +18,13 @@
    02111-1307 USA.  */
 
 #ifndef __BITS_SOCKET_H
-#define __BITS_SOCKET_H	1
+#define __BITS_SOCKET_H
 
 #if !defined _SYS_SOCKET_H && !defined _NETINET_IN_H
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
+
+#include <bits/wordsize.h>
 
 #define	__need_size_t
 #define __need_NULL
@@ -218,10 +220,18 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
+#if __WORDSIZE == 64
     size_t msg_iovlen;		/* Number of elements in the vector.  */
+#else
+    int msg_iovlen;		/* Number of elements in the vector.  */
+#endif
 
     void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
+#if __WORDSIZE == 64
     size_t msg_controllen;	/* Ancillary data buffer length.  */
+#else
+    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+#endif
 
     int msg_flags;		/* Flags on received message.  */
   };
@@ -269,7 +279,7 @@ __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg) __THROW
 
   __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
 			       + CMSG_ALIGN (__cmsg->cmsg_len));
-  if ((unsigned char *) (__cmsg + 1) >= ((unsigned char *) __mhdr->msg_control
+  if ((unsigned char *) (__cmsg + 1) > ((unsigned char *) __mhdr->msg_control
 					 + __mhdr->msg_controllen)
       || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
 	  > ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))

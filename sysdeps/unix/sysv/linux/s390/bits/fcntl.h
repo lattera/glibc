@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,8 @@
 # error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
 #endif
 
-
 #include <sys/types.h>
+#include <bits/wordsize.h>
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
@@ -47,6 +47,15 @@
 # define O_NOFOLLOW	0400000	/* Do not follow links.	 */
 #endif
 
+#ifdef __USE_LARGEFILE64
+# if __WORDSIZE == 64
+/* Not necessary, files are always with 64bit off_t.  */
+#  define O_LARGEFILE	0
+# else
+#  define O_LARGEFILE	0100000
+# endif
+#endif
+
 /* For now Linux has synchronisity options for data and read operations.
    We define the symbols here but let them do the same as O_SYNC since
    this is a superset.	*/
@@ -55,28 +64,34 @@
 # define O_RSYNC	O_SYNC	/* Synchronize read operations.	 */
 #endif
 
-#ifdef __USE_LARGEFILE64
-# define O_LARGEFILE	0100000
-#endif
-
 /* Values for the second argument to `fcntl'.  */
 #define F_DUPFD		0	/* Duplicate file descriptor.  */
 #define F_GETFD		1	/* Get file descriptor flags.  */
 #define F_SETFD		2	/* Set file descriptor flags.  */
 #define F_GETFL		3	/* Get file status flags.  */
 #define F_SETFL		4	/* Set file status flags.  */
-#ifndef __USE_FILE_OFFSET64
-#define F_GETLK		5	/* Get record locking info.  */
-#define F_SETLK		6	/* Set record locking info (non-blocking).  */
-#define F_SETLKW	7	/* Set record locking info (blocking).	*/
+#if __WORDSIZE == 64
+# define F_GETLK	5	/* Get record locking info.  */
+# define F_SETLK	6	/* Set record locking info (non-blocking).  */
+# define F_SETLKW	7	/* Set record locking info (blocking).	*/
+/* Not necessary, we always have 64-bit offsets.  */
+# define F_GETLK64	5	/* Get record locking info.  */
+# define F_SETLK64	6	/* Set record locking info (non-blocking).  */
+# define F_SETLKW64	7	/* Set record locking info (blocking).	*/
 #else
-# define F_GETLK	F_GETLK64  /* Get record locking info.	*/
-# define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
-# define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
+# ifndef __USE_FILE_OFFSET64
+#  define F_GETLK	5	/* Get record locking info.  */
+#  define F_SETLK	6	/* Set record locking info (non-blocking).  */
+#  define F_SETLKW	7	/* Set record locking info (blocking).	*/
+# else
+#  define F_GETLK	F_GETLK64  /* Get record locking info.	*/
+#  define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
+#  define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
+# endif
+# define F_GETLK64	12	/* Get record locking info.  */
+# define F_SETLK64	13	/* Set record locking info (non-blocking).  */
+# define F_SETLKW64	14	/* Set record locking info (blocking).	*/
 #endif
-#define F_GETLK64	12	/* Get record locking info.  */
-#define F_SETLK64	13	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	14	/* Set record locking info (blocking).	*/
 
 #if defined __USE_BSD || defined __USE_XOPEN2K
 # define F_SETOWN	8	/* Get owner of socket (receiver of SIGIO).  */
@@ -107,7 +122,7 @@
 #define F_SHLCK		8	/* or 4 */
 
 #ifdef __USE_BSD
-/* operations for bsd flock(), also used by the kernel implementation */
+/* Operations for bsd flock(), also used by the kernel implementation */
 # define LOCK_SH	1	/* shared lock */
 # define LOCK_EX	2	/* exclusive lock */
 # define LOCK_NB	4	/* or'd with one of the above to prevent
@@ -137,7 +152,7 @@ struct flock
   {
     short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.	*/
     short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
-#ifndef __USE_FILE_OFFSET64
+#if __WORDSIZE == 64 || !defined __USE_FILE_OFFSET64
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
 #else
@@ -174,6 +189,11 @@ struct flock64
 # define POSIX_FADV_RANDOM	1 /* Expect random page references.  */
 # define POSIX_FADV_SEQUENTIAL	2 /* Expect sequential page references.	 */
 # define POSIX_FADV_WILLNEED	3 /* Will need these pages.  */
-# define POSIX_FADV_DONTNEED	4 /* Don't need these pages.  */
-# define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
+# if __WORDSIZE == 64
+#  define POSIX_FADV_DONTNEED	6 /* Don't need these pages.  */
+#  define POSIX_FADV_NOREUSE	7 /* Data will be accessed once.  */
+# else
+#  define POSIX_FADV_DONTNEED	4 /* Don't need these pages.  */
+#  define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
+# endif
 #endif

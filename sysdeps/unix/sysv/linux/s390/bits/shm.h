@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,8 @@
 # error "Never include <bits/shm.h> directly; use <sys/shm.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
+#include <bits/wordsize.h>
 
 /* Permission flag for shmget.	*/
 #define SHM_R		0400		/* or S_IRUGO from <linux/stat.h> */
@@ -36,19 +37,31 @@
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
 
+/* Type to count number of attaches.  */
+typedef unsigned long int shmatt_t;
+
 /* Data structure describing a set of semaphores.  */
 struct shmid_ds
   {
     struct ipc_perm shm_perm;		/* operation permission struct */
     size_t shm_segsz;			/* size of segment in bytes */
     __time_t shm_atime;			/* time of last shmat() */
+#if __WORDSIZE != 64
+  unsigned long int __unused1;
+#endif
     __time_t shm_dtime;			/* time of last shmdt() */
+#if __WORDSIZE != 64
+  unsigned long int __unused2;
+#endif
     __time_t shm_ctime;			/* time of last change by shmctl() */
+#if __WORDSIZE != 64
+  unsigned long int __unused3;
+#endif
     __pid_t shm_cpid;			/* pid of creator */
     __pid_t shm_lpid;			/* pid of last shmop */
-    unsigned long int shm_nattch;	/* number of current attaches */
-    unsigned long int __unused1;
-    unsigned long int __unused2;
+    shmatt_t shm_nattch;		/* number of current attaches */
+    unsigned long int __unused4;
+    unsigned long int __unused5;
   };
 
 #ifdef __USE_MISC

@@ -1,3 +1,61 @@
+2002-07-09  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/bits/byteswap.h: Unified 31/64 bit byteswap.h.
+	* sysdeps/s390/s390-32/bits/byteswap.h: Remove.
+	* sysdeps/s390/s390-64/bits/byteswap.h: Remove.
+	* sysdeps/s390/bits/link.h: Unified 31/64 bit link.h.
+	* sysdeps/s390/s390-32/bits/link.h: Remove.
+	* sysdeps/s390/s390-64/bits/link.h: Remove.
+	* sysdeps/s390/bits/setjmp.h: Unified 31/64 bit setjmp.h.
+	* sysdeps/s390/s390-32/bits/setjmp.h: Remove.
+	* sysdeps/s390/s390-64/bits/setjmp.h: Remove.
+	* sysdeps/s390/bits/wordsize.h: New file.
+	* sysdeps/unix/sysv/linux/s390/bits/elfclass.h: Unified 31/64 bit
+	elfclass.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/elfclass.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Unified 31/64 bit fcntl.h.
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/fcntl.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/fcntl.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/ipc.h: Unified 31/64 bit ipc.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/ipc.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Unified 31/64 bit mman.h.
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/mman.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/mman.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/msq.h: Unified 31/64 bit msq.h.
+	* ysdeps/unix/sysv/linux/s390/s390-64/bits/msq.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/resource.h: Unified 31/64 bit
+	resource.h.
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/resource.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/resource.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/sem.h: Unified 31/64 bit sem.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/sem.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h: Unified 31/64 bit shm.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/shm.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/sigaction.h: Unified 31/64 bit
+	sigaction.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/sigaction.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Unified 31/64 bit
+	siginfo.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/siginfo.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/sigstack.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/socket.h: Unified 31/64 bit
+	socket.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/socket.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Unified 31/64 bit stat.h.
+	* sysdeps/unix/sysv/linux/s390/s390-32/bits/stat.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/stat.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/bits/types.h: Unified 31/64 bit types.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/types.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/net/route.h: New file.
+	* sysdeps/unix/sysv/linux/s390/sys/procfs.h: Unified 31/64 bit
+	procfs.h.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/procfs.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sys/procfs.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: Unified 31/64 bit
+	ucontext.h.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sys/ucontext.h: Remove.
+
 2002-07-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def (libc): Add GLIBC_2.3.

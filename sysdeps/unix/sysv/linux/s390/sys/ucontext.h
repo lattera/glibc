@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -44,7 +44,11 @@ typedef unsigned long greg_t;
    the register set is an array, we make gregset_t a simple array
    that has the same size as s390_regs.  This is needed for the
    elf_prstatus structure.  */
-#define NGREG 27
+#if __WORDSIZE == 64
+# define NGREG 27
+#else
+# define NGREG 36
+#endif
 /* Must match kernels psw_t alignment.  */
 typedef greg_t gregset_t[NGREG] __attribute__ ((aligned(8)));
 

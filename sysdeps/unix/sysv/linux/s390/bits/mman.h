@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/s390 version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,6 +53,7 @@
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
 # define MAP_GROWSDOWN	0x0100		/* Stack-like segment.  */
+# define MAP_GROWSUP	0x0200		/* Register stack-like segment */
 # define MAP_DENYWRITE	0x0800		/* ETXTBSY */
 # define MAP_EXECUTABLE	0x1000		/* Mark it as an executable.  */
 # define MAP_LOCKED	0x2000		/* Lock the mapping.  */

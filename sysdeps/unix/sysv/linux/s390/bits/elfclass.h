@@ -1,4 +1,5 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,37 +17,23 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  IBM s390 version.  */
+/* This file specifies the native word size of the machine, which indicates
+   the ELF file class used for executables and shared objects on this
+   machine.  */
 
-#ifndef __S390_SETJMP_H__
-#define __S390_SETJMP_H__
-
-#define __JB_GPR6	0
-#define __JB_GPR7	1
-#define __JB_GPR8	2
-#define __JB_GPR9	3
-#define __JB_GPR10	4
-#define __JB_GPR11	5
-#define __JB_GPR12	6
-#define __JB_GPR13	7
-#define __JB_GPR14	8
-#define __JB_GPR15	9
-
-#ifndef	_ASM
-
-typedef struct {
-    /* We save registers 6-15.  */
-    long int __gregs[10];
-
-    /* We save fpu registers 4 and 6.  */
-    long __fpregs[4];
-} __jmp_buf[1];
-
+#ifndef _LINK_H
+# error "Never use <bits/elfclass.h> directly; include <link.h> instead."
 #endif
 
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((void *) (address) < (void *) (jmpbuf)->__gregs[__JB_GPR15])
+#include <bits/wordsize.h>
 
-#endif /* __S390_SETJMP_H__ */
+#define __ELF_NATIVE_CLASS __WORDSIZE
+
+#if __WORDSIZE == 64
+/* 64 bit Linux for S/390 is exceptional as it has .hash section with
+   64 bit entries.  */
+typedef uint64_t Elf_Symndx;
+#else
+/* 32 bit Linux for S/390 has normal .hash section entries with 32 bits.  */
+typedef uint32_t Elf_Symndx;
+#endif

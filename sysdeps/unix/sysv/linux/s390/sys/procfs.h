@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -86,8 +86,13 @@ struct elf_prpsinfo
     char pr_zomb;			/* Zombie.  */
     char pr_nice;			/* Nice val.  */
     unsigned long int pr_flag;		/* Flags.  */
+#if __WORDSIZE == 64
+    unsigned int pr_uid;
+    unsigned int pr_gid;
+#else
     unsigned short int pr_uid;
     unsigned short int pr_gid;
+#endif
     int pr_pid, pr_ppid, pr_pgrp, pr_sid;
     /* Lots missing */
     char pr_fname[16];			/* Filename of executable.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,8 @@
 # error "Never use <bits/ipc.h> directly; include <sys/ipc.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
+#include <bits/wordsize.h>
 
 /* Mode bits for `msgget', `semget', and `shmget'.  */
 #define IPC_CREAT	01000		/* Create key if key does not exist. */
@@ -47,32 +48,14 @@ struct ipc_perm
     __gid_t gid;			/* Owner's group ID.  */
     __uid_t cuid;			/* Creator's user ID.  */
     __gid_t cgid;			/* Creator's group ID.	*/
+#if __WORDSIZE == 64
     __mode_t mode;			/* Read/write permission.  */
-    unsigned short int __seq;		/* Sequence number.  */
+#else
+    unsigned short int mode;		/* Read/write permission.  */
     unsigned short int __pad1;
+#endif
+    unsigned short int __seq;		/* Sequence number.  */
+    unsigned short int __pad2;
     unsigned long int __unused1;
     unsigned long int __unused2;
   };
-
-
-
-__BEGIN_DECLS
-
-/* The actual system call: all functions are multiplexed by this.  */
-extern int __ipc __P ((int __call, int __first, int __second, int __third,
-		       void *__ptr));
-
-__END_DECLS
-
-/* The codes for the functions to use the multiplexer `__ipc'.	*/
-#define IPCOP_semop	 1
-#define IPCOP_semget	 2
-#define IPCOP_semctl	 3
-#define IPCOP_msgsnd	11
-#define IPCOP_msgrcv	12
-#define IPCOP_msgget	13
-#define IPCOP_msgctl	14
-#define IPCOP_shmat	21
-#define IPCOP_shmdt	22
-#define IPCOP_shmget	23
-#define IPCOP_shmctl	24

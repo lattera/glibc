@@ -1,5 +1,5 @@
-/* Bit values & structures for resource limits.  64 bit S/390 version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Bit values & structures for resource limits.  Linux version.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #endif
 
 #include <bits/types.h>
+#include <bits/wordsize.h>
 
 /* Transmute defines to enumerations.  The macro re-definitions are
    necessary because some programs want to test for operating system
@@ -31,7 +32,7 @@
 /* Kinds of resource limit.  */
 enum __rlimit_resource
 {
-  /* Per-process CPU limit, in seconds.	 */
+  /* Per-process CPU limit, in seconds.  */
   RLIMIT_CPU = 0,
 #define RLIMIT_CPU RLIMIT_CPU
 
@@ -72,7 +73,7 @@ enum __rlimit_resource
   RLIMIT_MEMLOCK = 8,
 #define RLIMIT_MEMLOCK RLIMIT_MEMLOCK
 
-  /* Address space limit (?) */
+  /* Address space limit.  */
   RLIMIT_AS = 9,
 #define RLIMIT_AS RLIMIT_AS
 
@@ -87,19 +88,36 @@ enum __rlimit_resource
 };
 
 /* Value to indicate that there is no limit.  */
+#if __WORDSIZE == 64
 # define RLIM_INFINITY ~0UL
-
-#ifdef __USE_LARGEFILE64
-# define RLIM64_INFINITY ~0UL
+#else
+# ifndef __USE_FILE_OFFSET64
+#  define RLIM_INFINITY ((unsigned long int) (~0UL))
+# else
+#  define RLIM_INFINITY 0xffffffffffffffffuLL
+# endif
 #endif
 
-/* We can represent all limits.	 */
+#ifdef __USE_LARGEFILE64
+# if __WORDSIZE == 64
+#  define RLIM64_INFINITY ~0UL
+# else
+#  define RLIM64_INFINITY 0xffffffffffffffffuLL
+# endif
+#endif
+
+/* We can represent all limits.  */
 #define RLIM_SAVED_MAX	RLIM_INFINITY
 #define RLIM_SAVED_CUR	RLIM_INFINITY
 
 
 /* Type for resource quantity measurement.  */
+#if __WORDSIZE != 64 && !defined(__USE_FILE_OFFSET64)
+typedef __rlim_t rlim_t;
+#else
 typedef __rlim64_t rlim_t;
+#endif
+
 #ifdef __USE_LARGEFILE64
 typedef __rlim64_t rlim64_t;
 #endif
@@ -108,7 +126,7 @@ struct rlimit
   {
     /* The current (soft) limit.  */
     rlim_t rlim_cur;
-    /* The hard limit.	*/
+    /* The hard limit.  */
     rlim_t rlim_max;
   };
 
@@ -117,12 +135,12 @@ struct rlimit64
   {
     /* The current (soft) limit.  */
     rlim64_t rlim_cur;
-    /* The hard limit.	*/
+    /* The hard limit.  */
     rlim64_t rlim_max;
  };
 #endif
 
-/* Whose usage statistics do you want?	*/
+/* Whose usage statistics do you want?  */
 enum __rusage_who
 {
   /* The calling process.  */
@@ -144,18 +162,18 @@ enum __rusage_who
 /* Structure which says how much of each resource has been used.  */
 struct rusage
   {
-    /* Total amount of user time used.	*/
+    /* Total amount of user time used.  */
     struct timeval ru_utime;
     /* Total amount of system time used.  */
     struct timeval ru_stime;
     /* Maximum resident set size (in kilobytes).  */
     long int ru_maxrss;
     /* Amount of sharing of text segment memory
-       with other processes (kilobyte-seconds).	 */
+       with other processes (kilobyte-seconds).  */
     long int ru_ixrss;
     /* Amount of data segment memory used (kilobyte-seconds).  */
     long int ru_idrss;
-    /* Amount of stack memory used (kilobyte-seconds).	*/
+    /* Amount of stack memory used (kilobyte-seconds).  */
     long int ru_isrss;
     /* Number of soft page faults (i.e. those serviced by reclaiming
        a page from the list of pages awaiting reallocation.  */
@@ -164,14 +182,14 @@ struct rusage
     long int ru_majflt;
     /* Number of times a process was swapped out of physical memory.  */
     long int ru_nswap;
-    /* Number of input operations via the file system.	Note: This
+    /* Number of input operations via the file system.  Note: This
        and `ru_oublock' do not include operations with the cache.  */
     long int ru_inblock;
-    /* Number of output operations via the file system.	 */
+    /* Number of output operations via the file system.  */
     long int ru_oublock;
     /* Number of IPC messages sent.  */
     long int ru_msgsnd;
-    /* Number of IPC messages received.	 */
+    /* Number of IPC messages received.  */
     long int ru_msgrcv;
     /* Number of signals delivered.  */
     long int ru_nsignals;
@@ -185,14 +203,14 @@ struct rusage
   };
 
 /* Priority limits.  */
-#define PRIO_MIN	-20	/* Minimum priority a process can have.	 */
-#define PRIO_MAX	20	/* Maximum priority a process can have.	 */
+#define PRIO_MIN	-20	/* Minimum priority a process can have.  */
+#define PRIO_MAX	20	/* Maximum priority a process can have.  */
 
 /* The type of the WHICH argument to `getpriority' and `setpriority',
-   indicating what flavor of entity the WHO argument specifies.	 */
+   indicating what flavor of entity the WHO argument specifies.  */
 enum __priority_which
 {
-  PRIO_PROCESS = 0,		/* WHO is a process ID.	 */
+  PRIO_PROCESS = 0,		/* WHO is a process ID.  */
 #define PRIO_PROCESS PRIO_PROCESS
   PRIO_PGRP = 1,		/* WHO is a process group ID.  */
 #define PRIO_PGRP PRIO_PGRP

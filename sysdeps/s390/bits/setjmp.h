@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  64 bit S/390 version.  */
+/* Define the machine-dependent type `jmp_buf'.  IBM s390 version.  */
 
 #ifndef __S390_SETJMP_H__
 #define __S390_SETJMP_H__
 
-#define	__JB_GPR6	0
+#include <bits/wordsize.h>
+
+#define __JB_GPR6	0
 #define __JB_GPR7	1
 #define __JB_GPR8	2
 #define __JB_GPR9	3
@@ -38,8 +40,13 @@ typedef struct {
     /* We save registers 6-15.  */
     long int __gregs[10];
 
-    /* We save fpu registers 4 and 6.  */
+#if __WORDSIZE == 64
+   /* We save fpu registers 1, 3, 5 and 7.  */
     long __fpregs[8];
+#else
+    /* We save fpu registers 4 and 6.  */
+    long __fpregs[4];
+#endif
 } __jmp_buf[1];
 
 #endif
