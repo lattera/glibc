@@ -62,6 +62,10 @@ libc {
     task_create; task_set_special_port; task_suspend; task_terminate;
     thread_depress_abort; thread_switch;
   }
+  GLIBC_2.2.5 {
+    # internal functions used by other libraries (e.g. librt)
+    __mach_msg_destroy; __mach_reply_port;
+  }
 
 %if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
   HURD_CTHREADS_0.3 {
