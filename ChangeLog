@@ -1,5 +1,8 @@
 2002-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/errno.h: Use errno definition with __thread for now only
+	in libc and ld.so.
+
 	* test-skeleton.c (main): Improve error message for unexpected
 	signal case.
 

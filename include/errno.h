@@ -6,7 +6,7 @@
 
 # include <tls.h>		/* Defines USE_TLS.  */
 
-# if USE_TLS && HAVE___THREAD
+# if USE_TLS && HAVE___THREAD && (!defined NOT_IN_libc || defined IS_IN_rtld)
 #  undef  errno
 #  define errno errno		/* For #ifndef errno tests.  */
 extern __thread int errno;
