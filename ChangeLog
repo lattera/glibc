@@ -1,5 +1,9 @@
 1999-07-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/bug1.c: Include <stdlib.h> to get prototype for free.
+
+	* malloc/malloc.c: Add missing chunk of patch from 1999-07-04.
+
 	* sysdeps/unix/sysv/linux/bits/time.h (timeval): Use __suseconds_t
 	type for tv_usec element.
 	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise

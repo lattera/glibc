@@ -4436,13 +4436,10 @@ realloc_check(oldmem, bytes, caller)
   oldp = mem2chunk_check(oldmem);
   if(!oldp) {
     (void)mutex_unlock(&main_arena.mutex);
-    switch(check_action) {
-    case 1:
+    if (check_action & 1)
       fprintf(stderr, "realloc(): invalid pointer %p!\n", oldmem);
-      break;
-    case 2:
+    if (check_action & 2)
       abort();
-    }
     return malloc_check(bytes, NULL);
   }
   oldsize = chunksize(oldp);
