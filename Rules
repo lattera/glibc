@@ -67,6 +67,7 @@ $(objpfx)dummy.o:
 	@rm -f $(@:.o=.c)
 	echo 'void __dummy__ () { }' > $(@:.o=.c)
 	$(CC) -c $(@:.o=.c) -o $@
+generated := $(generated) dummy.o dummy.c
 
 # This makes all the auxilliary and test programs.
 

@@ -171,10 +171,10 @@ $(all-subdirs-targets):
 
 # Subroutines of all cleaning targets.
 parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
-	-rm -f $(libc.a) $(addprefix $(objpfx),$(install-lib))
+	-rm -f $(common-objpfx)libc.a $(addprefix $(objpfx),$(install-lib))
 parent-clean: parent-mostlyclean common-clean
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
-	-rm -f $(addprefix $(+sysdir_pfx),sysd-Makefile sysd-dirs sysd-rules)
+	-rm -f $(addprefix $(objpfx),sysd-Makefile sysd-dirs sysd-rules)
 
 clean: parent-clean
 # This is done this way rather than having `subdir_clean' be a

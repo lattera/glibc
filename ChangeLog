@@ -1,5 +1,8 @@
 Mon Mar 20 03:19:23 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makefile (parent-mostlyclean): Don't use $(libc.a).
+	(parent-clean): Use $(objpfx) to find sysd-*.
+	* Rules (generated): Append dummy.o dummy.c.
 	* Makerules (lib): Depend on lib-noranlib.
 	(lib-noranlib): Depend on $(install-lib) in objdir.
 	(common-mostlyclean): Remove $(install-lib) and stub-$(subdir)
