@@ -240,3 +240,12 @@
 #if __LINUX_KERNEL_VERSION >= 132402 && defined __i386__
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
+
+/* These features were surely available with 2.4.12.  */
+#if __LINUX_KERNEL_VERSION >= 132108 && defined __mc68000__
+# define __ASSUME_MMAP2_SYSCALL		1
+# define __ASSUME_TRUNCATE64_SYSCALL	1
+# define __ASSUME_STAT64_SYSCALL	1
+# define __ASSUME_FCNTL64		1
+# define __ASSUME_VFORK_SYSCALL		1
+#endif

@@ -1,3 +1,15 @@
+2003-01-10  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: Optimize for kernels which
+	are known to have the vfork syscall.
+
+	* sysdeps/m68k/sysdep.h (JUMPTARGET): Undefine before defining it.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_MMAP2_SYSCALL, __ASSUME_TRUNCATE64_SYSCALL)
+	(__ASSUME_STAT64_SYSCALL, __ASSUME_FCNTL64)
+	(__ASSUME_VFORK_SYSCALL): Define for m68k kernels >= 2.4.12.
+
 2003-01-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/test-vfork.c (noop): Add __attribute_noinline__.
