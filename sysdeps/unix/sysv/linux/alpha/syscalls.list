@@ -29,6 +29,8 @@ fstatfs		-	fstatfs		2	__fstatfs	fstatfs fstatfs64
 statfs		-	statfs		2	__statfs	statfs statfs64
 getrlimit	-	getrlimit	2	__getrlimit	getrlimit getrlimit64
 setrlimit	-	setrlimit	2	setrlimit	setrlimit64
+oldgetrlimit	EXTRA	getrlimit	2	__old_getrlimit	getrlimit@GLIBC_2.0 getrlimit64@GLIBC_2.1
+oldsetrlimit	EXTRA	setrlimit	2	__old_setrlimit	setrlimit@GLIBC_2.0 setrlimit64@GLIBC_2.1
 ftruncate	-	ftruncate	2	__ftruncate	ftruncate ftruncate64
 truncate	-	truncate	2	truncate	truncate64
 
