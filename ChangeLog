@@ -1,5 +1,8 @@
 1999-05-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* string/bits/string2.h: Only use __builtin_memset for egcs 1.1 and
+	gcc3.
+
 	* sysdeps/i386/i486/bits/string.h: Don't use and define __memset_gg.
 	Prevent warnings from multiplication with 0x01010101 by another cast.
 

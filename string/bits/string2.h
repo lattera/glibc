@@ -166,8 +166,9 @@ __STRING2_COPY_TYPE (8);
 # endif
 
 /* GCC optimizes memset(s, 0, n) but not bzero(s, n).  */
-# if defined __GNUC__ && __GNUC__ >= 2
-#  define __bzero(s, n) __builtin_memset(s, '\0', n)
+#if defined __GNUC__ \
+    && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 90))
+#  define __bzero(s, n) __builtin_memset (s, '\0', n)
 # endif
 
 #endif

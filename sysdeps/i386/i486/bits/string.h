@@ -296,7 +296,7 @@ __memset_ccn_by4 (void *__s, unsigned int __c, size_t __n)
      "addl	$4,%1\n\t"
      "decl	%2\n\t"
      "jnz	1b\n"
-     : "=&q" (__c), "=&r" (__tmp), "=&r" (__d0)
+     : "=&r" (__c), "=&r" (__tmp), "=&r" (__d0)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
      : "memory", "cc");
 #endif
