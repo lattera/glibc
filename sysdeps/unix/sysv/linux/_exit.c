@@ -33,7 +33,9 @@ _exit (status)
 #endif
       INLINE_SYSCALL (exit, 1, status);
 
+#ifdef ABORT_INSTRUCTION
       ABORT_INSTRUCTION;
+#endif
     }
 }
 libc_hidden_def (_exit)
