@@ -320,6 +320,7 @@ save_cache (const char *cache_name)
 	  file_entries_new->libs[idx_new].flags = entry->flags;
 	  file_entries_new->libs[idx_new].hwcap = entry->hwcap;
 	  file_entries_new->libs[idx_new].key = str_offset;
+	  file_entries_new->libs[idx_new].__unused = 0;
 	}
       len = strlen (entry->lib);
       str = stpcpy (str, entry->lib);

@@ -1,3 +1,8 @@
+2000-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/cache.c (save_cache): Initialize __unused field in new cache
+	as well to get reproducable results.
+
 2000-09-29  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/ia64/fpu/libm-test-ulps: Updated for long double.
