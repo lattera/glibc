@@ -73,7 +73,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir \
 		   tst-chmod bug-regex1 bug-regex2 bug-regex3 bug-regex4 \
 		   tst-gnuglob tst-regex bug-regex5 bug-regex6 bug-regex7 \
-		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12
+		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
+		   bug-regex13
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn

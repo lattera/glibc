@@ -1,3 +1,14 @@
+2002-10-21  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/Makefile: Add a test case for the bug reported by Aharon
+	Robbins <arnold@skeeve.com>.
+	* posix/bug-regex13.c: New file.
+	* posix/regcomp.c (peek_token_bracket): Skip the byte already read.
+
+2002-10-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/gmon-start.c: Pretty printing.
+
 2002-10-19  Art Haas <ahaas@neosoft.com>
 
 	* configure.in: Replace AC_CONFIG_HEADER with AC_CONFIG_HEADERS,
@@ -123,32 +134,32 @@
 
 2002-10-18  Jeff Bailey  <jbailey@gnu.org>
 
-        * configure.in: Replace obsolete AC_OUTPUT syntax with
-        AC_CONFIG_FILES, AC_CONFIG_COMMANDS, and new-type AC_OUTPUT trio.
+	* configure.in: Replace obsolete AC_OUTPUT syntax with
+	AC_CONFIG_FILES, AC_CONFIG_COMMANDS, and new-type AC_OUTPUT trio.
 
-        * aclocal.m4 (GLIBC_PROVIDES): Add AC_PROVIDEs for
+	* aclocal.m4 (GLIBC_PROVIDES): Add AC_PROVIDEs for
 	_AS_PATH_SEPARATOR_PREPARE and _AS_TEST_PREPARE.
 
-        * configure.in: Replace AC_FD_CC with AS_MESSAGE_LOG_FD.
-        * sysdeps/alpha/elf/configure.in: Likewise.
-        * sysdeps/i386/elf/configure.in: Likewise.
-        * sysdeps/mach/hurd/configure.in: Likewise.
-        * sysdeps/x86_64/elf/configure.in: Likewise.
+	* configure.in: Replace AC_FD_CC with AS_MESSAGE_LOG_FD.
+	* sysdeps/alpha/elf/configure.in: Likewise.
+	* sysdeps/i386/elf/configure.in: Likewise.
+	* sysdeps/mach/hurd/configure.in: Likewise.
+	* sysdeps/x86_64/elf/configure.in: Likewise.
 
 	* configure.in: Use AC_CONFIG_SRCDIR and new AC_INIT syntax.
 
-        * sysdeps/alpha/elf/configure.in: Remove unneeded sinclude statement.
-        * sysdeps/generic/configure.in: Likewise.
-        * sysdeps/i386/elf/configure.in: Likewise.
-        * sysdeps/ia64/elf/configure.in: Likewise.
-        * sysdeps/mach/configure.in: Likewise.
-        * sysdeps/mach/hurd/configure.in: Likewise.
-        * sysdeps/unix/configure.in: Likewise.
-        * sysdeps/unix/common/configure.in: Likewise.
-        * sysdeps/unix/sysv/aix/configure.in: Likewise.
-        * sysdeps/unix/sysv/linux/configure.in: Likewise.
-        * sysdeps/unix/sysv/linux/mips/configure.in: Likewise.
-        * sysdeps/x86_64/elf/configure.in: Likewise.
+	* sysdeps/alpha/elf/configure.in: Remove unneeded sinclude statement.
+	* sysdeps/generic/configure.in: Likewise.
+	* sysdeps/i386/elf/configure.in: Likewise.
+	* sysdeps/ia64/elf/configure.in: Likewise.
+	* sysdeps/mach/configure.in: Likewise.
+	* sysdeps/mach/hurd/configure.in: Likewise.
+	* sysdeps/unix/configure.in: Likewise.
+	* sysdeps/unix/common/configure.in: Likewise.
+	* sysdeps/unix/sysv/aix/configure.in: Likewise.
+	* sysdeps/unix/sysv/linux/configure.in: Likewise.
+	* sysdeps/unix/sysv/linux/mips/configure.in: Likewise.
+	* sysdeps/x86_64/elf/configure.in: Likewise.
 
 	* aclocal.m4: Use just the bits from AS_INIT that are needed for the
 	GLIBC_PROVIDES.  Use plain comment instead of HEADER-COMMENT so

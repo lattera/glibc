@@ -1690,7 +1690,8 @@ peek_token_bracket (token, input, syntax)
     {
       /* In this case, '\' escape a character.  */
       unsigned char c2;
-      c2 = re_string_peek_byte (input, 1);
+      re_string_skip_bytes (input, 1);
+      c2 = re_string_peek_byte (input, 0);
       token->opr.c = c2;
       token->type = CHARACTER;
       return 1;
