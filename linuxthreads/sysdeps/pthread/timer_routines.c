@@ -49,7 +49,13 @@ pthread_once_t __timer_init_once_control = PTHREAD_ONCE_INIT;
 int __timer_init_failed;
 
 /* Node for the thread used to deliver signals.  */
-struct thread_node __timer_signal_thread;
+struct thread_node __timer_signal_thread_rclk;
+#ifdef _POSIX_CPUTIME
+struct thread_node __timer_signal_thread_pclk;
+#endif
+#ifdef _POSIX_THREAD_CPUTIME
+struct thread_node __timer_signal_thread_tclk;
+#endif
 
 /* Lists to keep free and used timers and threads.  */
 struct list_links timer_free_list;
@@ -127,7 +133,7 @@ timer_links2ptr (struct list_links *list)
 
 /* Initialize a newly allocated thread structure.  */
 static void
-thread_init (struct thread_node *thread, const pthread_attr_t *attr)
+thread_init (struct thread_node *thread, const pthread_attr_t *attr, clockid_t clock_id)
 {
   if (attr != NULL)
     thread->attr = *attr;
@@ -142,6 +148,7 @@ thread_init (struct thread_node *thread, const pthread_attr_t *attr)
   pthread_cond_init (&thread->cond, 0);
   thread->current_timer = 0;
   thread->captured = pthread_self ();
+  thread->clock_id = clock_id;
 }
 
 
@@ -166,7 +173,13 @@ init_module (void)
   for (i = 0; i < THREAD_MAXNODES; ++i)
     list_append (&thread_free_list, &thread_array[i].links);
 
-  thread_init (&__timer_signal_thread, 0);
+  thread_init (&__timer_signal_thread_rclk, 0, CLOCK_REALTIME);
+#ifdef _POSIX_CPUTIME
+  thread_init (&__timer_signal_thread_pclk, 0, CLOCK_PROCESS_CPUTIME_ID);
+#endif
+#ifdef _POSIX_THREAD_CPUTIME
+  thread_init (&__timer_signal_thread_tclk, 0, CLOCK_THREAD_CPUTIME_ID);
+#endif
 }
 
 
@@ -203,9 +216,10 @@ thread_deinit (struct thread_node *thread)
 
 
 /* Allocate a thread structure from the global free list.  Global
-   mutex lock must be held by caller.  */
+   mutex lock must be held by caller.  The thread is moved to
+   the active list. */
 struct thread_node *
-__timer_thread_alloc (const pthread_attr_t *desired_attr)
+__timer_thread_alloc (const pthread_attr_t *desired_attr, clockid_t clock_id)
 {
   struct list_links *node = list_first (&thread_free_list);
 
@@ -213,7 +227,8 @@ __timer_thread_alloc (const pthread_attr_t *desired_attr)
     {
       struct thread_node *thread = thread_links2ptr (node);
       list_unlink (node);
-      thread_init (thread, desired_attr);
+      thread_init (thread, desired_attr, clock_id);
+      list_append (&thread_active_list, node);
       return thread;
     }
 
@@ -227,6 +242,7 @@ void
 __timer_thread_dealloc (struct thread_node *thread)
 {
   thread_deinit (thread);
+  list_unlink (&thread->links);
   list_append (&thread_free_list, &thread->links);
 }
 
@@ -247,7 +263,13 @@ thread_cleanup (void *val)
       struct thread_node *thread = val;
 
       /* How did the signal thread get killed?  */
-      assert (thread != &__timer_signal_thread);
+      assert (thread != &__timer_signal_thread_rclk);
+#ifdef _POSIX_CPUTIME
+      assert (thread != &__timer_signal_thread_pclk);
+#endif
+#ifdef _POSIX_THREAD_CPUTIME
+      assert (thread != &__timer_signal_thread_tclk);
+#endif
 
       pthread_mutex_lock (&__timer_mutex);
 
@@ -379,7 +401,7 @@ thread_func (void *arg)
 		{
 		  timespec_add (&timer->expirytime, &now,
 				&timer->value.it_interval);
-		  (void) __timer_thread_queue_timer (self, timer);
+		  __timer_thread_queue_timer (self, timer);
 		}
 
 	      thread_expire_timer (self, timer);
@@ -411,40 +433,23 @@ thread_func (void *arg)
 
 
 /* Enqueue a timer in wakeup order in the thread's timer queue.  */
-int
+void
 __timer_thread_queue_timer (struct thread_node *thread,
 			    struct timer_node *insert)
 {
   struct list_links *iter;
-  struct list_links *matching = NULL;
-  struct timer_node *timer = NULL;
 
   for (iter = list_first (&thread->timer_queue);
        iter != list_null (&thread->timer_queue);
         iter = list_next (iter))
     {
-      timer = timer_links2ptr (iter);
+      struct timer_node *timer = timer_links2ptr (iter);
 
-      if (insert->clock == timer->clock)
-	{
-	  matching = iter;
-	  if (timespec_compare (&insert->expirytime, &timer->expirytime) < 0)
-	    break;
-	}
-    }
-
-  if (timer != NULL && insert->clock != timer->clock)
-    {
-      if (matching == NULL)
-	/* We cannot queue this timer.  */
-	return -1;
-
-      iter = matching;
+      if (timespec_compare (&insert->expirytime, &timer->expirytime) < 0)
+	  break;
     }
 
   list_insbefore (iter, &insert->links);
-
-  return 0;
 }
 
 
@@ -495,7 +500,8 @@ thread_attr_compare (const pthread_attr_t *left, const pthread_attr_t *right)
 /* Search the list of active threads and find one which has matching
    attributes.  Global mutex lock must be held by caller.  */
 struct thread_node *
-__timer_thread_find_matching (const pthread_attr_t *desired_attr)
+__timer_thread_find_matching (const pthread_attr_t *desired_attr, 
+			      clockid_t desired_clock_id)
 {
   struct list_links *iter = list_first (&thread_active_list);
 
@@ -503,7 +509,8 @@ __timer_thread_find_matching (const pthread_attr_t *desired_attr)
     {
       struct thread_node *candidate = thread_links2ptr (iter);
 
-      if (thread_attr_compare (desired_attr, &candidate->attr))
+      if (thread_attr_compare (desired_attr, &candidate->attr)
+	  && desired_clock_id == candidate->clock_id)
 	{
 	  list_unlink (iter);
 	  return candidate;

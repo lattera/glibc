@@ -44,6 +44,7 @@ struct thread_node
   pthread_cond_t cond;
   struct timer_node *current_timer;
   pthread_t captured;
+  clockid_t clock_id;
 };
 
 
@@ -76,8 +77,16 @@ extern pthread_once_t __timer_init_once_control;
 /* Nonzero if initialization of timer implementation failed.  */
 extern int __timer_init_failed;
 
-/* Node for the thread used to deliver signals.  */
-extern struct thread_node __timer_signal_thread;
+/* Nodes for the threads used to deliver signals.  */
+/* A distinct thread is used for each clock type.  */
+
+extern struct thread_node __timer_signal_thread_rclk;
+#ifdef _POSIX_CPUTIME
+extern struct thread_node __timer_signal_thread_pclk;
+#endif
+#ifdef _POSIX_THREAD_CPUTIME
+extern struct thread_node __timer_signal_thread_tclk;
+#endif
 
 
 /* Return pointer to timer structure corresponding to ID.  */
@@ -160,10 +169,10 @@ extern void __timer_mutex_cancel_handler (void *arg);
 extern void __timer_init_once (void);
 extern struct timer_node *__timer_alloc (void);
 extern int __timer_thread_start (struct thread_node *thread);
-extern struct thread_node *__timer_thread_find_matching (const pthread_attr_t *desired_attr);
-extern struct thread_node *__timer_thread_alloc (const pthread_attr_t *desired_attr);
+extern struct thread_node *__timer_thread_find_matching (const pthread_attr_t *desired_attr, clockid_t);
+extern struct thread_node *__timer_thread_alloc (const pthread_attr_t *desired_attr, clockid_t);
 extern void __timer_dealloc (struct timer_node *timer);
 extern void __timer_thread_dealloc (struct thread_node *thread);
-extern int __timer_thread_queue_timer (struct thread_node *thread,
+extern void __timer_thread_queue_timer (struct thread_node *thread,
 				       struct timer_node *insert);
 extern void __timer_thread_wakeup (struct thread_node *thread);

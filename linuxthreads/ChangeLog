@@ -1,3 +1,18 @@
+2000-06-10  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	* sysdeps/pthread/timer_create.c: Thread matching now done on
+	clock type as well as thread attributes.
+	There are individual global signal-delivering threads for
+	different clock types.
+	* sysdeps/pthread/posix-timer.h: Likewise.
+	* sysdeps/pthread/timer_routines.c: Likewise.
+
+	* sysdeps/pthread/timer_routines.c: Thread allocation and
+	deallocation function now remembers to put thread on active
+	list and remove from active list. 
+	Thus now the feature of binding multiple timers
+	to a single thread actually works.
+
 2000-06-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c (__pthread_create_2_1): Optimize a bit.

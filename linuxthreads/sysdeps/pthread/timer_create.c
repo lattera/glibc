@@ -89,16 +89,33 @@ timer_create (clock_id, evp, timerid)
     case SIGEV_SIGNAL:
       /* We have a global thread for delivering timed signals.
 	 If it is not running, try to start it up.  */
-      if (! __timer_signal_thread.exists)
+      switch (clock_id)
 	{
-	  if (__builtin_expect (__timer_thread_start (&__timer_signal_thread),
+	case CLOCK_REALTIME:
+	default:
+	  thread = &__timer_signal_thread_rclk;
+	  break;
+#ifdef _POSIX_CPUTIME
+	case CLOCK_PROCESS_CPUTIME_ID:
+	  thread = &__timer_signal_thread_pclk;
+	  break;
+#endif
+#ifdef _POSIX_THREAD_CPUTIME
+	case CLOCK_THREAD_CPUTIME_ID:
+	  thread = &__timer_signal_thread_tclk;
+	  break;
+#endif
+	}
+      
+      if (! thread->exists)
+	{
+	  if (__builtin_expect (__timer_thread_start (thread),
 				1) < 0)
 	    {
 	      errno = EAGAIN;
 	      goto unlock_bail;
             }
         }
-      thread = &__timer_signal_thread;
       break;
 
     case SIGEV_THREAD:
@@ -112,11 +129,11 @@ timer_create (clock_id, evp, timerid)
       pthread_attr_setdetachstate (&newtimer->attr, PTHREAD_CREATE_DETACHED);
 
       /* Try to find existing thread having the right attributes.  */
-      thread = __timer_thread_find_matching (&newtimer->attr);
+      thread = __timer_thread_find_matching (&newtimer->attr, clock_id);
 
       /* If no existing thread has these attributes, try to allocate one.  */
       if (thread == NULL)
-	thread = __timer_thread_alloc (&newtimer->attr);
+	thread = __timer_thread_alloc (&newtimer->attr, clock_id);
 
       /* Out of luck; no threads are available.  */
       if (__builtin_expect (thread == NULL, 0))
