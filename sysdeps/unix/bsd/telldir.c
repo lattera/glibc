@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,18 +39,18 @@ __libc_lock_define_initialized(static, lock) /* Locks above data.  */
 
 
 /* Return the current position of DIRP.  */
-off_t
+long int
 telldir (dirp)
      DIR *dirp;
 {
   struct record *new;
   off_t pos;
 
-  __libc_lock_lock (lock);
-
   new = malloc (sizeof *new);
   if (new == NULL)
-    return (off_t) -1;
+    return -1l;
+
+  __libc_lock_lock (lock);
 
   new->pos = dirp->filepos;
   new->offset = dirp->offset;

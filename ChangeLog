@@ -1,5 +1,11 @@
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* dirent/dirent.h (telldir): Change return type to long int.
+	* sysdeps/generic/telldir.c: Likewise.
+	* sysdeps/mach/hurd/telldir.c: Likewise.
+	* sysdeps/unix/telldir.c: Likewise.
+	* sysdeps/unix/bsd/telldir.c: Likewise.  Fix locking problem.
+
 	* locale/weight.h: Set errno if an invalid character is found.
 
 1999-08-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,18 +22,18 @@
 #include <dirent.h>
 
 /* Return the current position of DIRP.  */
-off_t
+long int
 telldir (dirp)
      DIR *dirp;
 {
   if (dirp == NULL)
     {
       __set_errno (EINVAL);
-      return -1;
+      return -1l;
     }
 
   __set_errno (ENOSYS);
-  return (off_t) -1;
+  return -1l;
 }
 
 
