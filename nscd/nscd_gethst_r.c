@@ -182,7 +182,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       align2 = ((__alignof__ (char *) - ((cp + align1 + hst_resp.h_name_len)
 					 - ((char *) 0)))
 		& (__alignof__ (char *) - 1));
-      if (buflen < (align1 + hst_resp.h_name_len + align2 +
+      if (buflen < (align1 + hst_resp.h_name_len + align2
 		    + ((hst_resp.h_aliases_cnt + hst_resp.h_addr_list_cnt + 2)
 		       * sizeof (char *))
 		    + hst_resp.h_addr_list_cnt * (type == AF_INET
@@ -214,12 +214,6 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 		   + hst_resp.h_aliases_cnt * sizeof (size_t));
 
       n = 2;
-
-      /* These things must be aligned or ntohl will cause havoc.  */
-      align = ((__alignof__ (char *) - (cp - ((char *) 0)))
-	       & (__alignof__ (char *) - 1));
-      cp += align;
-
       if (type == GETHOSTBYADDR || type == GETHOSTBYNAME)
 	{
 	  vec[2].iov_base = cp;

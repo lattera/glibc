@@ -17,11 +17,6 @@
 	* pwd/Versions (getpwent_r, getpwuid_r): Likewise.
 	* shadow/Versions (getspent_r, getspnam_r): Likewise.
 
-1999-07-09  Cristian Gafton  <gafton@redhat.com>
-
-	* nscd/nscd_gethst_r.c (nscd_gethst_r): Make sure
-	resultbuf->h_addr_list addresses are correctly aligned.
-
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/bits/string.h (__memcpy_c): Help some stupid old
