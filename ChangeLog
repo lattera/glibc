@@ -1,5 +1,16 @@
 2004-03-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/powerpc/powerpc32/__longjmp.S (JB_SIZE): Undefine before
+	including __longjmp-common.S again.
+	* sysdeps/powerpc/powerpc64/__longjmp.S (JB_SIZE): Likewise.
+	* sysdeps/powerpc/powerpc32/setjmp.S (JB_SIZE): Undefine before
+	including setjmp-common.S again.
+	* sysdeps/powerpc/powerpc64/setjmp.S (JB_SIZE): Likewise.
+	* sysdeps/powerpc/novmxsetjmp.h (__novmx__longjmp): Fix type of
+	first argument in the prototype.
+	* sysdeps/powerpc/longjmp.c (__vmx__longjmp, __vmx__libc_longjmp):
+	Remove bogus semicolons.
+
 	* sysdeps/s390/dl-tls.h: Only add __tls_get_offset assembly if
 	IS_IN_rtld.
 	(__TLS_GET_ADDR): Use __tls_get_offset, not __tls_get_addr.

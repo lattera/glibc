@@ -108,7 +108,7 @@ extern void __novmxsiglongjmp (__novmx__sigjmp_buf __env, int __val)
      __attribute__ ((__noreturn__));
 
 /* Internal machine-dependent function to restore context sans signal mask.  */
-extern void __novmx__longjmp (__novmx__jmp_buf __env, int __val)
+extern void __novmx__longjmp (__jmp_buf __env, int __val)
      __attribute__ ((__noreturn__));
 
 /* Internal function to possibly save the current mask of blocked signals

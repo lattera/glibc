@@ -21,7 +21,7 @@
 #include <libc-symbols.h>
 
 #if defined NOT_IN_libc
-/* Build a none versioned object for rtld-*.  */
+/* Build a non-versioned object for rtld-*.  */
 # include "setjmp-common.S"
 
 #else /* !NOT_IN_libc */
@@ -35,6 +35,7 @@ default_symbol_version (__vmx__sigsetjmp,__sigsetjmp,GLIBC_2.3.4)
 #  define __NO_VMX__
 #  undef __sigsetjmp
 #  undef __sigjmp_save
+#  undef JB_SIZE
 symbol_version (__novmx__sigsetjmp,__sigsetjmp,GLIBC_2.0)
 #  define __sigsetjmp __novmx__sigsetjmp
 #  define __sigjmp_save __novmx__sigjmp_save

@@ -22,7 +22,7 @@
 #include <shlib-compat.h>
 
 #if defined NOT_IN_libc
-/* Build a none versioned object for rtld-*.  */
+/* Build a non-versioned object for rtld-*.  */
 # include "setjmp-common.S"
 
 #else /* !NOT_IN_libc */
@@ -35,6 +35,7 @@ default_symbol_version (__vmx__sigsetjmp,__sigsetjmp,GLIBC_2.3.4)
 # if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
 #  undef __sigsetjmp
 #  undef __sigjmp_save
+#  undef JB_SIZE
 #  define __NO_VMX__
 symbol_version (__novmx__sigsetjmp,__sigsetjmp,GLIBC_2.3)
 #  define __sigsetjmp __novmx__sigsetjmp

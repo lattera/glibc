@@ -24,9 +24,9 @@
 #include <setjmp.h>
 #include <signal.h>
 
-extern void __vmx__longjmp (__jmp_buf __env, int __val);
+extern void __vmx__longjmp (__jmp_buf __env, int __val)
      __attribute__ ((noreturn));
-extern void __vmx__libc_longjmp (sigjmp_buf env, int val);
+extern void __vmx__libc_longjmp (sigjmp_buf env, int val)
      __attribute__ ((noreturn));
 libc_hidden_proto (__vmx__libc_longjmp)
 
