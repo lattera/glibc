@@ -40,14 +40,17 @@ extern const char *__ctype32_wctrans[2] attribute_hidden;
 func (iswalnum, __ISwalnum)
 #undef iswalpha
 func (iswalpha, __ISwalpha)
+libc_hidden_def (iswalpha)
 #undef iswblank
 func (iswblank, __ISwblank)
 #undef iswcntrl
 func (iswcntrl, __ISwcntrl)
 #undef iswdigit
 func (iswdigit, __ISwdigit)
+libc_hidden_def (iswdigit)
 #undef iswlower
 func (iswlower, __ISwlower)
+libc_hidden_def (iswlower)
 #undef iswgraph
 func (iswgraph, __ISwgraph)
 #undef iswprint
@@ -56,10 +59,12 @@ func (iswprint, __ISwprint)
 func (iswpunct, __ISwpunct)
 #undef iswspace
 func (iswspace, __ISwspace)
+libc_hidden_def (iswspace)
 #undef iswupper
 func (iswupper, __ISwupper)
 #undef iswxdigit
 func (iswxdigit, __ISwxdigit)
+libc_hidden_def (iswxdigit)
 
 wint_t
 (towlower) (wc)
@@ -67,6 +72,7 @@ wint_t
 {
   return wctrans_table_lookup (__ctype32_wctrans[__TOW_tolower], wc);
 }
+libc_hidden_def (towlower)
 
 wint_t
 (towupper) (wc)
@@ -74,3 +80,4 @@ wint_t
 {
   return wctrans_table_lookup (__ctype32_wctrans[__TOW_toupper], wc);
 }
+libc_hidden_def (towupper)
