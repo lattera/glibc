@@ -60,7 +60,10 @@ _IO_vasprintf (result_ptr, format, args)
   sf._s._free_buffer = (_IO_free_type) free;
   ret = _IO_vfprintf (&sf._sbf._f, format, args);
   if (ret < 0)
-    return ret;
+    {
+      free (sf._sbf._f._IO_buf_base);
+      return ret;
+    }
   /* Only use realloc if the size we need is of the same order of
      magnitude then the memory we allocated.  */
   needed = sf._sbf._f._IO_write_ptr - sf._sbf._f._IO_write_base + 1;

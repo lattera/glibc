@@ -177,6 +177,8 @@ main (int argc, char *argv[])
   /* The parameter describes the output path of the constructed files.
      If the described files cannot be written return a NULL pointer.  */
   output_path  = construct_output_path (argv[remaining]);
+  if (output_path == NULL)
+    error (4, errno, _("cannot create directory for output files"));
   cannot_write_why = errno;
 
   /* Now that the parameters are processed we have to reset the local
@@ -374,6 +376,9 @@ construct_output_path (char *path)
 		      output_prefix ?: "", LOCALEDIR,
 		      (int) (startp - path), path, normal, endp, '\0');
 
+      if (n < 0)
+	return NULL;
+
       endp = result + n - 1;
     }
   else
@@ -392,7 +397,8 @@ construct_output_path (char *path)
     if (errno == ENOENT)
       {
 	errno = 0;
-	mkdir (result, 0777);
+	if (mkdir (result, 0777) < 0)
+	  return NULL;
       }
 
   *endp++ = '/';

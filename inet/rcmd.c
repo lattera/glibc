@@ -206,13 +206,17 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 				    NULL, 0,
 				    NI_NUMERICHOST);
 
-			__asprintf (&buf, _("connect to address %s: "), paddr);
+			if (__asprintf (&buf, _("connect to address %s: "),
+					paddr) >= 0)
+			  {
 #ifdef USE_IN_LIBIO
-			if (_IO_fwide (stderr, 0) > 0)
-				__fwprintf(stderr, L"%s", buf);
-			else
+			    if (_IO_fwide (stderr, 0) > 0)
+			      __fwprintf(stderr, L"%s", buf);
+			    else
 #endif
-				fputs (buf, stderr);
+			      fputs (buf, stderr);
+			    free (buf);
+			  }
 			__set_errno (oerrno);
 			perror(0);
 			ai = ai->ai_next;
@@ -220,14 +224,16 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 				    paddr, sizeof(paddr),
 				    NULL, 0,
 				    NI_NUMERICHOST);
-			__asprintf (&buf, _("Trying %s...\n"), paddr);
+			if (__asprintf (&buf, _("Trying %s...\n"), paddr) >= 0)
+			  {
 #ifdef USE_IN_LIBIO
-			if (_IO_fwide (stderr, 0) > 0)
-				__fwprintf (stderr, L"%s", buf);
-			else
+			    if (_IO_fwide (stderr, 0) > 0)
+			      __fwprintf (stderr, L"%s", buf);
+			    else
 #endif
-				fputs (buf, stderr);
-			free (buf);
+			      fputs (buf, stderr);
+			    free (buf);
+			  }
 			continue;
 		}
 		if (refused && timo <= 16) {
@@ -267,15 +273,17 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		if (__write(s, num, strlen(num)+1) != (ssize_t)strlen(num)+1) {
 			char *buf = NULL;
 
-			__asprintf (&buf, _("\
-rcmd: write (setting up stderr): %m\n"));
+			if (__asprintf (&buf, _("\
+rcmd: write (setting up stderr): %m\n")) >= 0)
+			  {
 #ifdef USE_IN_LIBIO
-			if (_IO_fwide (stderr, 0) > 0)
-				__fwprintf(stderr, L"%s", buf);
-			else
+			    if (_IO_fwide (stderr, 0) > 0)
+			      __fwprintf(stderr, L"%s", buf);
+			    else
 #endif
-				fputs (buf, stderr);
-			free (buf);
+			      fputs (buf, stderr);
+			    free (buf);
+			  }
 			(void)__close(s2);
 			goto bad;
 		}
@@ -285,19 +293,21 @@ rcmd: write (setting up stderr): %m\n"));
 		if (__poll (pfd, 2, -1) < 1 || (pfd[1].revents & POLLIN) == 0){
 			char *buf = NULL;
 
-			if (errno != 0)
-				__asprintf(&buf,
-				    _("rcmd: poll (setting up stderr): %m\n"));
-			else
-				__asprintf(&buf,
-			     _("poll: protocol failure in circuit setup\n"));
+			if ((errno != 0
+			     && __asprintf(&buf, _("\
+rcmd: poll (setting up stderr): %m\n")) >= 0)
+			    || (errno == 0
+				&& __asprintf(&buf, _("\
+poll: protocol failure in circuit setup\n")) >= 0))
+			  {
 #ifdef USE_IN_LIBIO
-			if (_IO_fwide (stderr, 0) > 0)
-				__fwprintf (stderr, L"%s", buf);
-			else
+			    if (_IO_fwide (stderr, 0) > 0)
+			      __fwprintf (stderr, L"%s", buf);
+			    else
 #endif
-				fputs (buf, stderr);
-			free  (buf);
+			      fputs (buf, stderr);
+			    free  (buf);
+			  }
 			(void)__close(s2);
 			goto bad;
 		}
@@ -331,15 +341,17 @@ rcmd: write (setting up stderr): %m\n"));
 		if (rport >= IPPORT_RESERVED || rport < IPPORT_RESERVED / 2){
 			char *buf = NULL;
 
-			__asprintf(&buf,
-			     _("socket: protocol failure in circuit setup\n"));
+			if (__asprintf(&buf, _("\
+socket: protocol failure in circuit setup\n")) >= 0)
+			  {
 #ifdef USE_IN_LIBIO
-			if (_IO_fwide (stderr, 0) > 0)
-				__fwprintf (stderr, L"%s", buf);
-			else
+			    if (_IO_fwide (stderr, 0) > 0)
+			      __fwprintf (stderr, L"%s", buf);
+			    else
 #endif
-				fputs (buf, stderr);
-			free (buf);
+			      fputs (buf, stderr);
+			    free (buf);
+			  }
 			goto bad2;
 		}
 	}
@@ -350,17 +362,20 @@ rcmd: write (setting up stderr): %m\n"));
 	if (n != 1) {
 		char *buf = NULL;
 
-		if (n == 0)
-			__asprintf(&buf, _("rcmd: %s: short read"), *ahost);
-		else
-			__asprintf(&buf, "rcmd: %s: %m\n", *ahost);
+		if ((n == 0
+		     && __asprintf(&buf, _("rcmd: %s: short read"),
+				   *ahost) >= 0)
+		    || (n != 0
+			&& __asprintf(&buf, "rcmd: %s: %m\n", *ahost) >= 0))
+		  {
 #ifdef USE_IN_LIBIO
-		if (_IO_fwide (stderr, 0) > 0)
-			__fwprintf (stderr, L"%s", buf);
-		else
+		    if (_IO_fwide (stderr, 0) > 0)
+		      __fwprintf (stderr, L"%s", buf);
+		    else
 #endif
-			fputs (buf, stderr);
-		free (buf);
+		      fputs (buf, stderr);
+		    free (buf);
+		  }
 		goto bad2;
 	}
 	if (c != 0) {

@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sysdep.h>
+#include <unistd.h>
 
 
 extern const char *__progname;
@@ -53,25 +54,30 @@ __assert_perror_fail (int errnum,
   FATAL_PREPARE;
 #endif
 
-  (void) __asprintf (&buf, _("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
-		     __progname, __progname[0] ? ": " : "",
-		     file, line,
-		     function ? function : "", function ? ": " : "",
-		     __strerror_r (errnum, errbuf, sizeof errbuf));
-
-  /* Print the message.  */
+  if (__asprintf (&buf, _("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
+		  __progname, __progname[0] ? ": " : "",
+		  file, line,
+		  function ? function : "", function ? ": " : "",
+		  __strerror_r (errnum, errbuf, sizeof errbuf)) >= 0)
+    {
+      /* Print the message.  */
 #ifdef USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    (void) __fwprintf (stderr, L"%s", buf);
-  else
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s", buf);
+      else
 #endif
-    (void) fputs (buf, stderr);
+	(void) fputs (buf, stderr);
 
-  (void) fflush (stderr);
+      (void) fflush (stderr);
 
-  /* We have to free the buffer since the appplication might catch the
-     SIGABRT.  */
-  free (buf);
+      /* We have to free the buffer since the appplication might catch the
+	 SIGABRT.  */
+      free (buf);
+    }
+  else
+    /* At least print a minimal message.  */
+#define STR_N_LEN(str) str, sizeof (str) - 1
+    __libc_write (STDERR_FILENO, STR_N_LEN ("Unexpected error.\n"));
 
   abort ();
 }

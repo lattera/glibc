@@ -1,3 +1,18 @@
+2001-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/vasprintf.c (_IO_vasprintf): Free buffer on failure.
+	* assert/assert.c: Check result of __asprintf call and don't use
+	string if it failed.
+	* assert/assert-perr.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* locale/programs/localedef.c (main): Check result of
+	construct_output_path and exit if it failed.
+	(construct_output_path): Check result of asprintf and mkdir calls and
+	fail if they failed.
+	* posix/getopt.c: Check result of __asprintf calls and fail if
+	they failed.
+	Patch by Dmitry V. Levin <ldv@alt-linux.org>.
+
 2001-12-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/strcasecmp.c (__strcasecmp): Little performance
