@@ -592,6 +592,7 @@ struct gaicb
 # define EAI_ADDRFAMILY	  -9	/* Address family for NAME not supported.  */
 # define EAI_MEMORY	  -10	/* Memory allocation failure.  */
 # define EAI_SYSTEM	  -11	/* System error returned in `errno'.  */
+# define EAI_OVERFLOW	  -12	/* Argument buffer overflow.  */
 # ifdef __USE_GNU
 #  define EAI_INPROGRESS  -100	/* Processing request in progress.  */
 #  define EAI_CANCELED	  -101	/* Request canceled.  */
@@ -609,6 +610,9 @@ struct gaicb
 # define NI_NOFQDN	4	/* Only return nodename portion.  */
 # define NI_NAMEREQD	8	/* Don't return numeric addresses.  */
 # define NI_DGRAM	16	/* Look up UDP service rather than TCP.  */
+# ifdef __USE_GNU
+#  define NI_IDN	32	/* Convert name from IDN format.  */
+# endif
 
 /* Translate name of a service location and/or a service name to set of
    socket addresses.
