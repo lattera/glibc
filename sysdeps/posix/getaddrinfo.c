@@ -1561,10 +1561,7 @@ getaddrinfo (const char *name, const char *service,
 	  results[i].dest_addr = q;
 	  results[i].got_source_addr = false;
 
-	  /* We overwrite the type with SOCK_DGRAM since we do not
-	     want connect() to connect to the other side.  If we
-	     cannot determine the source address remember this
-	     fact.  If we just looked up the address for a different
+	  /* If we just looked up the address for a different
 	     protocol, reuse the result.  */
 	  if (last != NULL && last->ai_addrlen == q->ai_addrlen
 	      && memcmp (last->ai_addr, q->ai_addr, q->ai_addrlen) == 0)
@@ -1576,21 +1573,28 @@ getaddrinfo (const char *name, const char *service,
 	    }
 	  else
 	    {
+	      /* We overwrite the type with SOCK_DGRAM since we do not
+		 want connect() to connect to the other side.  If we
+		 cannot determine the source address remember this
+		 fact.  */
 	      int fd = __socket (q->ai_family, SOCK_DGRAM, IPPROTO_IP);
-	      if (fd != -1)
+	      socklen_t sl = sizeof (results[i].source_addr);
+	      if (fd != -1
+		  && __connect (fd, q->ai_addr, q->ai_addrlen) == 0
+		  && __getsockname (fd,
+				    (struct sockaddr *) &results[i].source_addr,
+				    &sl) == 0)
 		{
-		  socklen_t sl = sizeof (results[i].source_addr);
-		  if (__connect (fd, q->ai_addr, q->ai_addrlen) == 0
-		      && __getsockname (fd,
-					(struct sockaddr *) &results[i].source_addr,
-					&sl) == 0)
-		    {
-		      results[i].source_addr_len = sl;
-		      results[i].got_source_addr = true;
-		    }
-
-		  close_not_cancel_no_status (fd);
+		  results[i].source_addr_len = sl;
+		  results[i].got_source_addr = true;
 		}
+	      else
+		/* Just make sure that if we have to process the same
+		   address again we do not copy any memory.  */
+		results[i].source_addr_len = 0;
+
+	      if (fd != -1)
+		close_not_cancel_no_status (fd);
 	    }
 
 	  /* Remember the canonical name.  */
