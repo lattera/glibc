@@ -105,9 +105,9 @@ foo:=$(shell echo '+tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo foobie, dammit! >&2)
 
 ifndef tardir
-rel+vers := $(shell sed -n -e 's/^.*libc_release.*\"\([^"]*\)";$$/\1/p' \
-			   -e 's/^.*libc_version.*\"\([^"]*\)";$$/\1/p' \
-		    < $(..)version.c)
+rel+vers := $(shell sed -n -e 's/^.*RELEASE.*\"\([^"]*\)";$$/\1/p' \
+			   -e 's/^.*VERSION.*\"\([^"]*\)";$$/\1/p' \
+		    < $(..)version.h)
 release := $(word 1,$(rel+vers))
 version := $(word 2,$(rel+vers))
 export tardir := glibc-$(version)

@@ -620,8 +620,9 @@ check: tests
 TAGS: distinfo $(..)MakeTAGS
 	$(MAKE) $(addprefix -f ,$^) $@
 
-$(..)po/%.pot: distinfo $(..)MakeTAGS
-	$(MAKE) $(addprefix -f ,$^) $@
+$(..)po/%.pot: distinfo $(..)MakeTAGS FORCE
+	$(MAKE) $(addprefix -f ,$(filter-out FORCE,$^)) $@
+FORCE:
 
 
 .PHONY: echo-headers

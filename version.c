@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 
-CONST char __libc_release[] = "alpha";
-CONST char __libc_version[] = "1.09.7";
+#include "version.h"
+const char __libc_release[] = RELEASE;
+const char __libc_version[] = VERSION;
 
 void
-DEFUN_VOID(__libc_print_version)
+__libc_print_version (void)
 {
   printf ("GNU C Library %s release version %s, by Roland McGrath et al.\n",
 	  __libc_release, __libc_version);
@@ -31,7 +31,7 @@ DEFUN_VOID(__libc_print_version)
   printf ("Compiled by GNU CC version %s.\n", __VERSION__);
 #endif
   puts ("\
-Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.\n\
+Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.");

@@ -133,7 +133,7 @@ static char *group_number (char *buf, char *bufend, unsigned int intdig_no,
 int
 __printf_fp (FILE *fp,
 	     const struct printf_info *info,
-	     const *const *args)
+	     const void *const *args)
 {
   /* The floating-point value to output.  */
   union

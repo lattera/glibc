@@ -58,7 +58,7 @@ struct printf_info
 
 typedef int printf_function __P ((FILE *__stream,
 				  __const struct printf_info *__info,
-				  __const void **__const __args));
+				  __const void *__const *__args));
 
 /* Type of a printf specifier-arginfo function.
    INFO gives information about the format specification.

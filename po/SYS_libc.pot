@@ -306,15 +306,15 @@ msgstr ""
 msgid "Unknown signal %d"
 msgstr ""
 
-#: getopt.c:668
+#: getopt.c:673
 msgid "%s: illegal option -- %c\n"
 msgstr ""
 
-#: getopt.c:671
+#: getopt.c:676
 msgid "%s: invalid option -- %c\n"
 msgstr ""
 
-#: getopt.c:596
+#: getopt.c:597
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
@@ -322,23 +322,23 @@ msgstr ""
 msgid "%s: option `%s' is ambiguous\n"
 msgstr ""
 
-#: getopt.c:611
+#: getopt.c:614
 msgid "%s: option `%s' requires an argument\n"
 msgstr ""
 
-#: getopt.c:591
+#: getopt.c:592
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: getopt.c:707
+#: getopt.c:712
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
 
-#: getopt.c:643
+#: getopt.c:647
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr ""
 
-#: getopt.c:639
+#: getopt.c:643
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""
 

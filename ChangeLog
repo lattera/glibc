@@ -1,3 +1,31 @@
+Wed Mar 20 11:28:49 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/printf.h, stdio-common/printf_fp.c,
+	stdio-common/vfprintf.c: Place const in parameter list at
+	correct place.
+
+Wed Mar 20 23:58.12 1996  Ulrich Drepper <drepper@gnu.ai.mit.edu>
+
+	* sysdeps/i386/ldbl2mpn.c: Copy of former version of
+	sysdeps/ieee754/ldbl2mpn.c.
+	* sysdeps/ieee754/ldbl2mpn.c: Remove i386 specific unification.
+	Reported by Andreas Schwab.
+
+Wed Mar 20 19:58:43 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* version.c: Include version.h to define RELEASE and VERSION macros.
+	(__libc_release, __libc_version): Use them.
+	* locale/SYS_libc.c (_libc_intl_domainname): Include ../version.h and
+	use VERSION to define domainname as `SYS_GNU_libc-VERSION'.
+	* Make-dist (rel+vers): Snarf the macro values from version.h.
+
+	* MakeTAGS (extract): Pass $(XGETTEXTFLAGS-$(@F)).
+	(XGETTEXTFLAGS-siglist.pot, XGETTEXTFLAGS-errlist.pot): New variables;
+	pass -a for these files.
+
+	* Makerules (po/%.pot): Depend on FORCE target so recursive make is
+	always run.
+
 Mon Mar 18 22:54:32 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/wait3.c: New file.

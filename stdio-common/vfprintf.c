@@ -655,7 +655,7 @@ static int
 printf_unknown (s, info, args)
   FILE *s;
   const struct printf_info *info;
-  const void **const args;
+  const void *const *args;
 {
   int done = 0;
   char work[BUFSIZ];
