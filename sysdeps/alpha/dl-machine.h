@@ -161,6 +161,7 @@ elf_machine_rela (struct link_map *map,
 {
   Elf64_Addr *const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
   unsigned long r_info = ELF64_R_TYPE (reloc->r_info);
+  weak_symbol (_dl_rtld_map);	/* Defined in rtld.c, but not in libc.a.  */
 
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
