@@ -44,12 +44,12 @@
    is the name of the fpu operation (without leading f).  */
 
 #if defined __USE_MISC || defined __USE_ISOC9X
-#define	__inline_mathop(func, op)			\
+# define __inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)			\
   __inline_mathop1(float, __CONCAT(func,f), op)		\
   __inline_mathop1(long double, __CONCAT(func,l), op)
 #else
-#define	__inline_mathop(func, op)			\
+# define __inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)
 #endif
 
@@ -257,17 +257,6 @@ __m81_defun (int, __CONCAT(__signbit,s), (float_type __value))		  \
   return (__fpsr >> 27) & 1;						  \
 }									  \
 									  \
-__m81_defun (int, __CONCAT(__ilogb,s), (float_type __x))		  \
-{									  \
-  float_type __result;							  \
-  if (__m81_u(__CONCAT(__isnan,s)) (__x))				  \
-    /* The stupid standard requires us to return a specific value where	  \
-       it would depend on the bitpattern of the NaN.  */		  \
-    return 0x7fffffff;							  \
-  __asm("fgetexp%.x %1, %0" : "=f" (__result) : "f" (__x));		  \
-  return (int) __result;						  \
-}									  \
-									  \
 __m81_defun (float_type, __CONCAT(__scalbn,s),				  \
 	     (float_type __x, long int __n))				  \
 {									  \
@@ -341,7 +330,6 @@ __inline_forward_c(double,scalbn, (double __x, long int __n), (__x, __n))
 #ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
 __inline_forward_c(int,isnan, (double __value), (__value))
 #endif
-__inline_forward_c(int,ilogb, (double __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(double,nearbyint, (double __value), (__value))
@@ -362,7 +350,6 @@ __inline_forward_c(int,isinff, (float __value), (__value))
 __inline_forward_c(int,finitef, (float __value), (__value))
 __inline_forward_c(float,scalbnf, (float __x, long int __n), (__x, __n))
 __inline_forward_c(int,isnanf, (float __value), (__value))
-__inline_forward_c(int,ilogbf, (float __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(float,nearbyintf, (float __value), (__value))
@@ -382,7 +369,6 @@ __inline_forward_c(int,finitel, (long double __value), (__value))
 __inline_forward_c(long double,scalbnl, (long double __x, long int __n),
 		   (__x, __n))
 __inline_forward_c(int,isnanl, (long double __value), (__value))
-__inline_forward_c(int,ilogbl, (long double __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
@@ -405,48 +391,42 @@ __inline_forward(void,sincosl,
    m68k FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
-#undef isgreater
-#define isgreater(x, y)					\
+# define isgreater(x, y)					\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsogt %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
-#undef isgreaterequal
-#define isgreaterequal(x, y)				\
+# define isgreaterequal(x, y)				\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsoge %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
-#undef isless
-#define isless(x, y)					\
+# define isless(x, y)					\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsolt %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
-#undef islessequal
-#define islessequal(x, y)				\
+# define islessequal(x, y)				\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsole %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
-#undef islessgreater
-#define islessgreater(x, y)				\
+# define islessgreater(x, y)				\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsogl %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       (int) __result; })
 
-#undef isunordered
-#define isunordered(x, y)				\
+# define isunordered(x, y)				\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsun %0"			\
