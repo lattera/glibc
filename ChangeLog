@@ -1,3 +1,8 @@
+1998-02-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bits/select.h (__FD_ISSET): Compare result with
+	0 to get always an int.
+
 1998-02-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* math/libm.map: Move all symbols that are new in glibc 2.1 to
@@ -19,7 +24,7 @@
 1998-02-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S (rt_sigreturn):
-	Make compatible with older kernels. Patch by Richard Henderson.
+	Make compatible with older kernels.  Patch by Richard Henderson.
 
 1998-02-17 15:10  Ulrich Drepper  <drepper@cygnus.com>
 
