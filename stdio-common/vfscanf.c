@@ -72,7 +72,7 @@
 # undef va_list
 # define va_list	_IO_va_list
 
-# ifdef COMPILE_WPRINTF
+# ifdef COMPILE_WSCANF
 #  define ungetc(c, s)	((void) (c == WEOF				      \
 				 || (--read_in,				      \
 				     _IO_sputbackwc (s, c))))
@@ -237,7 +237,7 @@
    FORMAT, using the argument list in ARG.
    Return the number of assignments made, or -1 for an input error.  */
 #ifdef USE_IN_LIBIO
-# ifdef COMPILE_WPRINTF
+# ifdef COMPILE_WSCANF
 int
 _IO_vfwscanf (s, format, argptr, errp)
      _IO_FILE *s;
@@ -277,9 +277,17 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   int number_signed;
 #define is_hexa number_signed
   /* Decimal point character.  */
+#ifdef COMPILE_WSCANF
   wchar_t decimal;
+#else
+  const char *decimal;
+#endif
   /* The thousands character of the current locale.  */
+#ifdef COMPILE_WSCANF
   wchar_t thousands;
+#else
+  const char *thousands;
+#endif
   /* State for the conversions.  */
   mbstate_t state;
   /* Integral holding variables.  */
@@ -334,23 +342,25 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   ARGCHECK (s, format);
 
   /* Figure out the decimal point character.  */
-  memset (&state, '\0', sizeof (state));
-  if (__mbrtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
-		 strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT)), &state)
-      <= 0)
-    decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+#ifdef COMPILE_WSCANF
+  decimal = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
+#else
+  decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+#endif
   /* Figure out the thousands separator character.  */
-  memset (&state, '\0', sizeof (state));
-  if (__mbrtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		 strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)),
-		 &state) <= 0)
-    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+#ifdef COMPILE_WSCANF
+  thousands = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_THOUSANDS_SEP_WC);
+#else
+  thousands = _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+  if (*thousands == '\0')
+    thousands = NULL;
+#endif
 
   /* Lock the stream.  */
   LOCK_STREAM (s);
 
 
-#ifndef COMPILE_WPRINTF
+#ifndef COMPILE_WSCANF
   /* From now on we use `state' to convert the format string.  */
   memset (&state, '\0', sizeof (state));
 #endif
@@ -392,7 +402,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 # endif
 #endif
 
-#ifndef COMPILE_WPRINTF
+#ifndef COMPILE_WSCANF
       if (!isascii (*f))
 	{
 	  /* Non-ASCII, may be a multibyte.  */
@@ -677,7 +687,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (width == -1)
 		width = 1;
 
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 	      /* We have to convert the wide character(s) into multibyte
 		 characters and store the result.  */
 	      memset (&state, '\0', sizeof (state));
@@ -725,7 +735,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (c == EOF)
 	    input_error ();
 
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 	  /* Just store the incoming wide characters.  */
 	  if (!(flags & SUPPRESS))
 	    {
@@ -819,7 +829,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (c == EOF)
 		input_error ();
 
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 	      memset (&state, '\0', sizeof (state));
 #endif
 
@@ -831,7 +841,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      break;
 		    }
 
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 		  /* This is quite complicated.  We have to convert the
 		     wide characters into multibyte characters and then
 		     store them.  */
@@ -925,7 +935,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	      if (!(flags & SUPPRESS))
 		{
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 		  /* We have to emit the code to get into the intial
 		     state.  */
 		  char buf[MB_LEN_MAX];
@@ -972,7 +982,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	case L_('S'):
 	  {
-#ifndef COMPILE_WPRINTF
+#ifndef COMPILE_WSCANF
 	    mbstate_t cstate;
 #endif
 
@@ -983,7 +993,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    if (c == EOF)
 	      input_error ();
 
-#ifndef COMPILE_WPRINTF
+#ifndef COMPILE_WSCANF
 	    memset (&cstate, '\0', sizeof (cstate));
 #endif
 
@@ -995,7 +1005,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    break;
 		  }
 
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 		/* This is easy.  */
 		if (!(flags & SUPPRESS))
 		  {
@@ -1203,7 +1213,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      int from_level;
 	      int to_level;
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 	      const wchar_t *wcdigits[10];
 #else
 	      const char *mbdigits[10];
@@ -1211,7 +1221,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      int n;
 
 	      from_level = 0;
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 	      to_level = _NL_CURRENT_WORD (LC_CTYPE,
 					   _NL_CTYPE_INDIGITS_WC_LEN) - 1;
 #else
@@ -1224,7 +1234,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      for (n = 0; n < 10; ++n)
 		{
 		  /* Get the string for the digits with value N.  */
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 		  wcdigits[n] = (const wchar_t *)
 		    _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
 		  if (c == *wcdigits[n])
@@ -1266,7 +1276,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      /* Search all ten digits of this level.  */
 		      for (n = 0; n < 10; ++n)
 			{
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 			  if (c == *wcdigits[n])
 			    break;
 
@@ -1317,10 +1327,59 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    /* Read the number into workspace.  */
 	    while (c != EOF && width != 0)
 	      {
-		if (base == 16 ? !ISXDIGIT (c) :
-		    ((!ISDIGIT (c) || c - L_('0') >= base) &&
-		     !((flags & GROUP) && base == 10 && c == thousands)))
-		  break;
+		if (base == 16)
+		  {
+		    if (!ISXDIGIT (c))
+		      break;
+		  }
+		else if (!ISDIGIT (c) || c - L_('0') >= base)
+		  {
+		    if (base == 10 && (flags & GROUP)
+#ifdef COMPILE_WSCANF
+			&& thousands != L'\0'
+#else
+			&& thousands != NULL
+#endif
+			)
+		      {
+			/* Try matching against the thousands separator.  */
+#ifdef COMPILE_WSCANF
+			if (c != thousands)
+			  break;
+#else
+			const char *cmpp = thousands;
+			int avail = width > 0 ? width : INT_MAX;
+
+			while (*cmpp == c && avail > 0)
+			  if (*++cmpp == '\0')
+			    break;
+			  else
+			    {
+			      if (inchar () == EOF)
+				break;
+			      --avail;
+			    }
+
+			if (*cmpp != '\0')
+			  {
+			    /* We are pushing all read character back.  */
+			    if (cmpp > thousands)
+			      {
+				ungetc (c, s);
+				while (--cmpp > thousands)
+				  ungetc (*cmpp, s);
+				c = *cmpp;
+			      }
+			    break;
+			  }
+			if (width > 0)
+			  /* +1 because we substract below.  */
+			  width = avail + 1;
+#endif
+		      }
+		    else
+		      break;
+		  }
 		ADDW (c);
 		if (width > 0)
 		  --width;
@@ -1425,11 +1484,52 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (width == 0 || inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
-	      if (! ISDIGIT (c) && c != decimal)
+	      if (! ISDIGIT (c))
 		{
-		  /* This is no valid number.  */
-		  ungetc (c, s);
-		  input_error ();
+#ifdef COMPILE_WSCANF
+		  if (c != decimal)
+		    {
+		      /* This is no valid number.  */
+		      ungetc (c, s);
+		      input_error ();
+		    }
+#else
+		  /* Match against the decimal point.  At this point
+                     we are taking advantage of the fact that we can
+                     push more than one character back.  This is
+                     (almost) never necessary since the decimal point
+                     string hopefully never contains more than one
+                     byte.  */
+		  const char *cmpp = decimal;
+		  int avail = width > 0 ? width : INT_MAX;
+
+		  while (*cmpp == c && avail > 0)
+		    if (*++cmpp == '\0')
+		      break;
+		    else
+		      {
+			if (inchar () == EOF)
+			  break;
+			--avail;
+		      }
+
+		  if (*cmpp != '\0')
+		    {
+		      /* This is no valid number.  */
+		      while (1)
+			{
+			  ungetc (c, s);
+			  if (cmpp == decimal)
+			    break;
+			  c = *--cmpp;
+			}
+
+		      input_error ();
+		    }
+		  if (width > 0)
+		    /* +1 because we substract below.  */
+		    width = avail + 1;
+#endif
 		}
 	      if (width > 0)
 		--width;
@@ -1549,19 +1649,96 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  ADDW (exp_char);
 		  got_e = got_dot = 1;
 		}
-	      else if (c == decimal && !got_dot)
-		{
-		  ADDW (c);
-		  got_dot = 1;
-		}
-	      else if ((flags & GROUP) && c == thousands && !got_dot)
-		ADDW (c);
 	      else
 		{
-		  /* The last read character is not part of the number
-		     anymore.  */
-		  ungetc (c, s);
-		  break;
+#ifdef COMPILE_WSCANF
+		  if (! got_dot && c == decimal)
+		    {
+		      ADDW (c);
+		      got_dot = 1;
+		    }
+		  else if (thousands != L'\0' && ! got_dot && c == thousands)
+		    ADDW (c);
+		  else
+		    {
+		      /* The last read character is not part of the number
+			 anymore.  */
+		      ungetc (c, s);
+		      break;
+		    }
+#else
+		  const char *cmpp = decimal;
+		  int avail = width > 0 ? width : INT_MAX;
+
+		  if (! got_dot)
+		    {
+		      while (*cmpp == c && avail > 0)
+			if (*++cmpp == '\0')
+			  break;
+			else
+			  {
+			    if (inchar () == EOF)
+			      break;
+			    --avail;
+			  }
+		    }
+
+		  if (*cmpp == '\0')
+		    {
+		      /* Add all the characters.  */
+		      for (cmpp = decimal; *cmpp != '\0'; ++cmpp)
+			ADDW (*cmpp);
+		      if (width > 0)
+			/* +1 because we substract below.  */
+			width = avail + 1;
+		      got_dot = 1;
+		    }
+		  else
+		    {
+		      /* Figure out whether it is a thousands separator.
+			 There is one problem: we possibly read more than
+			 one character.  We cannot push them back but since
+			 we know that parts of the `decimal' string matched,
+			 we can compare against it.  */
+		      const char *cmp2p = thousands;
+
+		      if (thousands != NULL && ! got_dot)
+			{
+			  while (cmp2p < cmpp
+				 && *cmp2p == decimal[cmp2p - thousands])
+			    ++cmp2p;
+			  if (cmp2p == cmpp)
+			    {
+			      while (*cmp2p == c && avail > 0)
+				if (*++cmp2p == '\0')
+				  break;
+				else
+				  {
+				    if (inchar () == EOF)
+				      break;
+				    --avail;
+				  }
+			    }
+			}
+
+		      if (cmp2p != NULL && *cmp2p == '\0')
+			{
+			  /* Add all the characters.  */
+			  for (cmpp = thousands; *cmpp != '\0'; ++cmpp)
+			    ADDW (*cmpp);
+			  if (width > 0)
+			    /* +1 because we substract below.  */
+			    width = avail + 1;
+			}
+		      else
+			{
+			  /* The last read character is not part of the number
+			     anymore.  */
+			  ungetc (c, s);
+			  break;
+			}
+		    }
+#endif
 		}
 	      if (width > 0)
 		--width;
@@ -1623,7 +1800,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	       a very high value to make the algorithm easier.  */
 	    width = INT_MAX;
 
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 	  /* Find the beginning and the end of the scanlist.  We are not
 	     creating a lookup table since it would have to be too large.
 	     Instead we search each time through the string.  This is not
@@ -1679,7 +1856,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (flags & LONG)
 	    {
 	      size_t now = read_in;
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 	      do
 		{
 		  wchar_t *runp;
@@ -1882,7 +2059,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    {
 	      size_t now = read_in;
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 
 	      memset (&state, '\0', sizeof (state));
 
@@ -2040,7 +2217,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	      if (!(flags & SUPPRESS))
 		{
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 		  /* We have to emit the code to get into the intial
 		     state.  */
 		  char buf[MB_LEN_MAX];
@@ -2117,7 +2294,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 }
 
 #ifdef USE_IN_LIBIO
-# ifdef COMPILE_WPRINTF
+# ifdef COMPILE_WSCANF
 int
 __vfwscanf (FILE *s, const wchar_t *format, va_list argptr)
 {
@@ -2132,7 +2309,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 # endif
 #endif
 
-#ifdef COMPILE_WPRINTF
+#ifdef COMPILE_WSCANF
 weak_alias (__vfwscanf, vfwscanf)
 #else
 weak_alias (__vfscanf, vfscanf)

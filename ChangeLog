@@ -1,3 +1,11 @@
+2000-06-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: Finally handle multibyte decimal point and
+	thousands separator correctly.
+
+	* stdio-common/vfscanf.c: Use COMPILE_WSCANF not COMPILE_WPRINTF.
+	* stdio-common/vfwscanf.c: Likewise.
+
 2000-06-27  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Change argument
@@ -44,7 +52,7 @@
 	object since some incomplete characters might be in there.
 
 	* iconvdata/euc-jp.c: In conversion to UCS4, handling invalid
-	sequences with first by 0x8e correctly.
+	sequences with first byte 0x8e correctly.
 
 	* iconvdata/jis0208.h: Remove redundant test.
 
