@@ -1,5 +1,9 @@
 2000-04-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/examples/subopt.c (mount_opts): Add missing terminating
+	entry.
+	Reported by Michael Deutschmann <michael@talamasca.ocis.net>.
+
 	* assert/assert-perr.c: Include <stdlib.h> for abort prototype.
 	* libio/ftello.c: Likewise.
 	* libio/ftello64.c: Likewise.

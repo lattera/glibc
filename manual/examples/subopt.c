@@ -12,7 +12,8 @@ enum
   RO_OPTION = 0,
   RW_OPTION,
   READ_SIZE_OPTION,
-  WRITE_SIZE_OPTION
+  WRITE_SIZE_OPTION,
+  THE_END
 };
 
 const char *mount_opts[] =
@@ -20,7 +21,8 @@ const char *mount_opts[] =
   [RO_OPTION] = "ro",
   [RW_OPTION] = "rw",
   [READ_SIZE_OPTION] = "rsize",
-  [WRITE_SIZE_OPTION] = "wsize"
+  [WRITE_SIZE_OPTION] = "wsize",
+  [THE_END] = NULL
 };
 
 int
