@@ -75,11 +75,11 @@ elf_machine_dynamic (void)
 
 #if 0
   /* Use this method if GOT address not yet set up.  */
-  asm ("\
-	b,l	1f,%0
-	depi	0,31,2,%0
-1:	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 8),%0
-	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 12)(%%r1),%0"
+  asm (
+"	b,l	1f,%0\n"
+"	depi	0,31,2,%0\n"
+"1:	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 8),%0\n"
+"	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 12)(%%r1),%0\n"
       : "=r" (dynamic) : : "r1");
 #else
   /* This works because we already have our GOT address available.  */
@@ -95,13 +95,13 @@ elf_machine_load_address (void)
 {
   Elf32_Addr dynamic, dynamic_linkaddress;
 
-  asm ("\
-	b,l	1f,%0
-	depi	0,31,2,%0
-1:	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 8),%0
-	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 12)(%%r1),%1
-	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 16),%0
-	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 20)(%%r1),%0"
+  asm (
+"	b,l	1f,%0\n"
+"	depi	0,31,2,%0\n"
+"1:	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 8),%0\n"
+"	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 12)(%%r1),%1\n"
+"	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 16),%0\n"
+"	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 20)(%%r1),%0\n"
    : "=r" (dynamic_linkaddress), "=r" (dynamic) : : "r1");
 
   return dynamic - dynamic_linkaddress;
@@ -250,153 +250,154 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 #define RTLD_START \
 /* Set up dp for any non-PIC lib constructors that may be called.  */	\
-static struct link_map * set_dp (struct link_map *map)		\
-{								\
-  register Elf32_Addr dp asm ("%r27");				\
-  dp = D_PTR (map, l_info[DT_PLTGOT]);				\
-  asm volatile ("" : : "r" (dp));				\
-  return map;							\
-}								\
-								\
-asm ("\
-	.text
-	.globl _start
-	.type _start,@function
-_start:
-	/* The kernel does not give us an initial stack frame. */
-	ldo	64(%sp),%sp
-	/* Save the relevant arguments (yes, those are the correct
-           registers, the kernel is weird) in their stack slots. */
-	stw	%r25,-40(%sp) /* argc */
-	stw	%r24,-44(%sp) /* argv */
-
-	/* We need the LTP, and we need it now. */
-	/* $PIC_pcrel$0 points 8 bytes past the current instruction,
-	   just like a branch reloc.  This sequence gets us the runtime
-	   address of _DYNAMIC. */
-	bl	0f,%r19
-	depi	0,31,2,%r19	/* clear priviledge bits */
-0:	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 8),%r19
-	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 12)(%r1),%r26
-
-	/* Also get the link time address from the first entry of the GOT.  */
-	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 16),%r19
-	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 20)(%r1),%r20
-
-	sub	%r26,%r20,%r20	/* Calculate load offset */
-
-	/* Rummage through the dynamic entries, looking for DT_PLTGOT.  */
-	ldw,ma	8(%r26),%r19
-1:	cmpib,=,n 3,%r19,2f	/* tag == DT_PLTGOT? */
-	cmpib,<>,n 0,%r19,1b
-	ldw,ma	8(%r26),%r19
-
-	/* Uh oh!  We didn't find one.  Abort. */
-	iitlbp	%r0,(%r0)
-
-2:	ldw	-4(%r26),%r19	/* Found it, load value. */
-	add	%r19,%r20,%r19	/* And add the load offset. */
-
-	/* Our initial stack layout is rather different from everyone
-	   else's due to the unique PA-RISC ABI.  As far as I know it
-	   looks like this:
-
-	   -----------------------------------  (this frame created above)
-	   |         32 bytes of magic       |
-	   |---------------------------------|
-	   | 32 bytes argument/sp save area  |
-	   |---------------------------------|  ((current->mm->env_end) + 63 & ~63)
-	   |         N bytes of slack        |
-	   |---------------------------------|
-	   |      envvar and arg strings     |
-	   |---------------------------------|
-	   |	    ELF auxiliary info	     |
-	   |         (up to 28 words)        |
-	   |---------------------------------|
-	   |  Environment variable pointers  |
-	   |         upwards to NULL	     |
-	   |---------------------------------|
-	   |        Argument pointers        |
-	   |         upwards to NULL	     |
-	   |---------------------------------|
-	   |          argc (1 word)          |
-	   -----------------------------------
-
-	  So, obviously, we can't just pass %sp to _dl_start.  That's
-	  okay, argv-4 will do just fine.
-
-	  The pleasant part of this is that if we need to skip
-	  arguments we can just decrement argc and move argv, because
-	  the stack pointer is utterly unrelated to the location of
-	  the environment and argument vectors. */
-
-	/* This is always within range so we'll be okay. */
-	bl	_dl_start,%rp
-	ldo	-4(%r24),%r26
-
-	.globl _dl_start_user
-	.type _dl_start_user,@function
-_dl_start_user:
-	/* Save the entry point in %r3. */
-	copy	%ret0,%r3
-
-	/* Remember the lowest stack address. */
-	addil	LT'__libc_stack_end,%r19
-	ldw	RT'__libc_stack_end(%r1),%r20
-	stw	%sp,0(%r20)
-
-	/* See if we were called as a command with the executable file
-	   name as an extra leading argument. */
-	addil	LT'_dl_skip_args,%r19
-	ldw	RT'_dl_skip_args(%r1),%r20
-	ldw	0(%r20),%r20
-
-	ldw	-40(%sp),%r25	/* argc */
-	comib,=	0,%r20,.Lnofix  /* FIXME: will be mispredicted */
-	ldw	-44(%sp),%r24   /* argv (delay slot) */
-
-	sub	%r25,%r20,%r25
-	stw	%r25,-40(%sp)
-	sh2add	%r20,%r24,%r24
-	stw	%r24,-44(%sp)
-
-.Lnofix:
-	addil	LT'_dl_loaded,%r19
-	ldw	RT'_dl_loaded(%r1),%r26
-	bl	set_dp, %r2
-	ldw	0(%r26),%r26
-
-	/* Call _dl_init(_dl_loaded, argc, argv, envp). */
-	copy	%r28,%r26
-
-	/* envp = argv + argc + 1 */
-	sh2add	%r25,%r24,%r23
-	bl	_dl_init,%r2
-	ldo	4(%r23),%r23	/* delay slot */
-
-	/* Reload argc, argv  to the registers start.S expects them in (feh) */
-	ldw	-40(%sp),%r25
-	ldw	-44(%sp),%r24
-
-	/* _dl_fini does have a PLT slot now.  I don't know how to get
-	   to it though, so this hack will remain. */
-	.section .data
-__dl_fini_plabel:
-	.word	_dl_fini
-	.word	0xdeadbeef
-	.previous
-
-	/* %r3 contains a function pointer, we need to mask out the lower
-	 * bits and load the gp and jump address. */
-	depi	0,31,2,%r3
-	ldw	0(%r3),%r2
-	addil	LT'__dl_fini_plabel,%r19
-	ldw	RT'__dl_fini_plabel(%r1),%r23
-	stw	%r19,4(%r23)
-	ldw	4(%r3),%r19	/* load the object's gp */
-	bv	%r0(%r2)
-	depi	2,31,2,%r23	/* delay slot */
-");
+static struct link_map *						\
+set_dp (struct link_map *map)						\
+{									\
+  register Elf32_Addr dp asm ("%r27");					\
+  dp = D_PTR (map, l_info[DT_PLTGOT]);					\
+  asm volatile ("" : : "r" (dp));					\
+  return map;								\
+}									\
+									\
+asm (									\
+"	.text\n"							\
+"	.globl _start\n"						\
+"	.type _start,@function\n"					\
+"_start:\n"								\
+	/* The kernel does not give us an initial stack frame. */	\
+"	ldo	64(%sp),%sp\n"						\
+	/* Save the relevant arguments (yes, those are the correct	\
+	   registers, the kernel is weird) in their stack slots. */	\
+"	stw	%r25,-40(%sp)\n" /* argc */				\
+"	stw	%r24,-44(%sp)\n" /* argv */				\
+									\
+	/* We need the LTP, and we need it now. */			\
+	/* $PIC_pcrel$0 points 8 bytes past the current instruction,	\
+	   just like a branch reloc.  This sequence gets us the runtime	\
+	   address of _DYNAMIC. */					\
+"	bl	0f,%r19\n"						\
+"	depi	0,31,2,%r19\n"	/* clear priviledge bits */		\
+"0:	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 8),%r19\n"			\
+"	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 12)(%r1),%r26\n"		\
+									\
+	/* Also get the link time address from the first entry of the GOT.  */ \
+"	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 16),%r19\n"	\
+"	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 20)(%r1),%r20\n" \
+									\
+"	sub	%r26,%r20,%r20\n"	/* Calculate load offset */	\
+									\
+	/* Rummage through the dynamic entries, looking for DT_PLTGOT.  */ \
+"	ldw,ma	8(%r26),%r19\n"						\
+"1:	cmpib,=,n 3,%r19,2f\n"	/* tag == DT_PLTGOT? */			\
+"	cmpib,<>,n 0,%r19,1b\n"						\
+"	ldw,ma	8(%r26),%r19\n"						\
+									\
+	/* Uh oh!  We didn't find one.  Abort. */			\
+"	iitlbp	%r0,(%r0)\n"						\
+									\
+"2:	ldw	-4(%r26),%r19\n"	/* Found it, load value. */	\
+"	add	%r19,%r20,%r19\n"	/* And add the load offset. */	\
+									\
+	/* Our initial stack layout is rather different from everyone	\
+	   else's due to the unique PA-RISC ABI.  As far as I know it	\
+	   looks like this:						\
+									\
+	   -----------------------------------  (this frame created above) \
+	   |         32 bytes of magic       |				\
+	   |---------------------------------|				\
+	   | 32 bytes argument/sp save area  |				\
+	   |---------------------------------|  ((current->mm->env_end) + 63 & ~63) \
+	   |         N bytes of slack        |				\
+	   |---------------------------------|				\
+	   |      envvar and arg strings     |				\
+	   |---------------------------------|				\
+	   |	    ELF auxiliary info	     |				\
+	   |         (up to 28 words)        |				\
+	   |---------------------------------|				\
+	   |  Environment variable pointers  |				\
+	   |         upwards to NULL	     |				\
+	   |---------------------------------|				\
+	   |        Argument pointers        |				\
+	   |         upwards to NULL	     |				\
+	   |---------------------------------|				\
+	   |          argc (1 word)          |				\
+	   -----------------------------------				\
+									\
+	  So, obviously, we can't just pass %sp to _dl_start.  That's	\
+	  okay, argv-4 will do just fine.				\
+									\
+	  The pleasant part of this is that if we need to skip		\
+	  arguments we can just decrement argc and move argv, because	\
+	  the stack pointer is utterly unrelated to the location of	\
+	  the environment and argument vectors. */			\
+									\
+	/* This is always within range so we'll be okay. */		\
+"	bl	_dl_start,%rp\n"					\
+"	ldo	-4(%r24),%r26\n"					\
+									\
+"	.globl _dl_start_user\n"					\
+"	.type _dl_start_user,@function\n"				\
+"_dl_start_user:\n"							\
+	/* Save the entry point in %r3. */				\
+"	copy	%ret0,%r3\n"						\
+									\
+	/* Remember the lowest stack address. */			\
+"	addil	LT'__libc_stack_end,%r19\n"				\
+"	ldw	RT'__libc_stack_end(%r1),%r20\n"			\
+"	stw	%sp,0(%r20)\n"						\
+									\
+	/* See if we were called as a command with the executable file	\
+	   name as an extra leading argument. */			\
+"	addil	LT'_dl_skip_args,%r19\n"				\
+"	ldw	RT'_dl_skip_args(%r1),%r20\n"				\
+"	ldw	0(%r20),%r20\n"						\
+									\
+"	ldw	-40(%sp),%r25\n"	/* argc */			\
+"	comib,=	0,%r20,.Lnofix\n"	/* FIXME: will be mispredicted */ \
+"	ldw	-44(%sp),%r24\n"	/* argv (delay slot) */		\
+									\
+"	sub	%r25,%r20,%r25\n"					\
+"	stw	%r25,-40(%sp)\n"					\
+"	sh2add	%r20,%r24,%r24\n"					\
+"	stw	%r24,-44(%sp)\n"					\
+									\
+".Lnofix:\n"								\
+"	addil	LT'_dl_loaded,%r19\n"					\
+"	ldw	RT'_dl_loaded(%r1),%r26\n"				\
+"	bl	set_dp, %r2\n"						\
+"	ldw	0(%r26),%r26\n"						\
+									\
+	/* Call _dl_init(_dl_loaded, argc, argv, envp). */		\
+"	copy	%r28,%r26\n"						\
+									\
+	/* envp = argv + argc + 1 */					\
+"	sh2add	%r25,%r24,%r23\n"					\
+"	bl	_dl_init,%r2\n"						\
+"	ldo	4(%r23),%r23\n"	/* delay slot */			\
+									\
+	/* Reload argc, argv  to the registers start.S expects them in (feh) */ \
+"	ldw	-40(%sp),%r25\n"					\
+"	ldw	-44(%sp),%r24\n"					\
+									\
+	/* _dl_fini does have a PLT slot now.  I don't know how to get	\
+	   to it though, so this hack will remain. */			\
+"	.section .data\n"						\
+"__dl_fini_plabel:\n"							\
+"	.word	_dl_fini\n"						\
+"	.word	0xdeadbeef\n"						\
+"	.previous\n"							\
+									\
+	/* %r3 contains a function pointer, we need to mask out the lower \
+	 * bits and load the gp and jump address. */			\
+"	depi	0,31,2,%r3\n"						\
+"	ldw	0(%r3),%r2\n"						\
+"	addil	LT'__dl_fini_plabel,%r19\n"				\
+"	ldw	RT'__dl_fini_plabel(%r1),%r23\n"			\
+"	stw	%r19,4(%r23)\n"						\
+"	ldw	4(%r3),%r19\n"	/* load the object's gp */		\
+"	bv	%r0(%r2)\n"						\
+"	depi	2,31,2,%r23\n"	/* delay slot */			\
+	);
 
 
 /* This code gets called via the .plt stub, and is used in
