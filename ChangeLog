@@ -1,5 +1,12 @@
 2002-08-31  Roland McGrath  <roland@redhat.com>
 
+	* locale/newlocale.c (__newlocale): Don't use strdup for names.
+	Instead, make the single allocation of the structure larger to hold
+	the name strings.
+	* locale/duplocale.c (__duplocale): Don't strdup names individually.
+	Instead, calculate size for a single allocation and copy into it.
+	* locale/freelocale.c (__freelocale): Don't free names individually.
+
 	* locale/newlocale.c (__newlocale): Don't leak old data or names.
 
 	* locale/xlocale.h (__locale_struct): Move __names member last,

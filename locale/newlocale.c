@@ -46,6 +46,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   size_t locale_path_len;
   const char *locpath_var;
   int cnt;
+  size_t names_len;
 
   /* We treat LC_ALL in the same way as if all bits were set.  */
   if (category_mask == 1 << LC_ALL)
@@ -143,83 +144,98 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
     }
 
   /* Now process all categories we are interested in.  */
+  names_len = 0;
   for (cnt = 0; cnt < __LC_LAST; ++cnt)
-    if ((category_mask & 1 << cnt) != 0)
-      {
-	result.__locales[cnt] = _nl_find_locale (locale_path, locale_path_len,
-						 cnt, &newnames[cnt]);
-	if (result.__locales[cnt] == NULL)
-	  {
-	  free_data_and_exit:
-	    while (cnt-- > 0)
-	      if (((category_mask & 1 << cnt) != 0)
-		  && result.__locales[cnt]->usage_count != UNDELETABLE)
-		/* We can remove the data.  */
-		_nl_remove_locale (cnt, result.__locales[cnt]);
-	    return NULL;
-	  }
-      }
+    {
+      if ((category_mask & 1 << cnt) != 0)
+	{
+	  result.__locales[cnt] = _nl_find_locale (locale_path,
+						   locale_path_len,
+						   cnt, &newnames[cnt]);
+	  if (result.__locales[cnt] == NULL)
+	    {
+	    free_cnt_data_and_exit:
+	      while (cnt-- > 0)
+		if (((category_mask & 1 << cnt) != 0)
+		    && result.__locales[cnt]->usage_count != UNDELETABLE)
+		  /* We can remove the data.  */
+		  _nl_remove_locale (cnt, result.__locales[cnt]);
+	      return NULL;
+	    }
 
-  /* We successfully loaded all required data.  */
+	  if (newnames[cnt] != _nl_C_name)
+	    names_len += strlen (newnames[cnt]) + 1;
+	}
+      else if (cnt != LC_ALL && result.__names[cnt] != _nl_C_name)
+	/* Tally up the unchanged names from BASE as well.  */
+	names_len += strlen (result.__names[cnt]) + 1;
+    }
+
+  /* We successfully loaded all required data.  Allocate a new structure.
+     We can't just reuse the BASE pointer, because the name strings are
+     changing and we need the old name string area intact so we can copy
+     out of it into the new one without overlap problems should some
+     category's name be getting longer.  */
+  result_ptr = malloc (sizeof (struct __locale_struct) + names_len);
+  if (result_ptr == NULL)
+    {
+      cnt = __LC_LAST;
+      goto free_cnt_data_and_exit;
+    }
+
   if (base == NULL)
     {
-      /* Allocate new structure.  */
-      result_ptr = (__locale_t) malloc (sizeof (struct __locale_struct));
-      if (result_ptr == NULL)
-	goto free_data_and_exit;
+      /* Fill in this new structure from scratch.  */
 
-      /* Install strdup'd names in the new structure's __names array.
+      char *namep = (char *) (result_ptr + 1);
+
+      /* Install copied new names in the new structure's __names array.
 	 If resolved to "C", that is already in RESULT.__names to start.  */
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	if ((category_mask & 1 << cnt) != 0 && newnames[cnt] != _nl_C_name)
 	  {
-	    result.__names[cnt] = __strdup (newnames[cnt]);
-	    if (result.__names[cnt] == NULL)
-	      {
-		free (result_ptr);
-		while (cnt-- > 0)
-		  if (result.__names[cnt] != _nl_C_name)
-		    free ((char *) result.__names[cnt]);
-		goto free_data_and_exit;
-	      }
+	    result.__names[cnt] = namep;
+	    namep = __stpcpy (namep, newnames[cnt]) + 1;
 	  }
 
       *result_ptr = result;
     }
   else
     {
-      /* We modify the base structure.
-         First strdup the names we were given for the new locale.  */
+      /* We modify the base structure.  */
 
-      for (cnt = 0; cnt < __LC_LAST; ++cnt)
-	if ((category_mask & 1 << cnt) != 0 && newnames[cnt] != _nl_C_name)
-	  {
-	    newnames[cnt] = __strdup (newnames[cnt]);
-	    if (newnames[cnt] == NULL)
-	      {
-		while (cnt-- > 0)
-		  if ((category_mask & 1 << cnt) != 0 &&
-		      newnames[cnt] != _nl_C_name)
-		    free ((char *) newnames[cnt]);
-		goto free_data_and_exit;
-	      }
-	  }
+      char *namep = (char *) (result_ptr + 1);
 
-      /* Now that we can't lose, install the new data.  */
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	if ((category_mask & 1 << cnt) != 0)
 	  {
 	    if (base->__locales[cnt]->usage_count != UNDELETABLE)
 	      /* We can remove the old data.  */
 	      _nl_remove_locale (cnt, base->__locales[cnt]);
-	    base->__locales[cnt] = result.__locales[cnt];
+	    result_ptr->__locales[cnt] = result.__locales[cnt];
 
-	    if (base->__names[cnt] != _nl_C_name)
-	      free ((char *) base->__names[cnt]);
-	    base->__names[cnt] = newnames[cnt];
+	    if (newnames[cnt] == _nl_C_name)
+	      result_ptr->__names[cnt] = _nl_C_name;
+	    else
+	      {
+		result_ptr->__names[cnt] = namep;
+		namep = __stpcpy (namep, newnames[cnt]) + 1;
+	      }
+	  }
+	else if (cnt != LC_ALL)
+	  {
+	    /* The RESULT members point into the old BASE structure.  */
+	    result_ptr->__locales[cnt] = result.__locales[cnt];
+	    if (result.__names[cnt] == _nl_C_name)
+	      result_ptr->__names[cnt] = _nl_C_name;
+	    else
+	      {
+		result_ptr->__names[cnt] = namep;
+		namep = __stpcpy (namep, result.__names[cnt]) + 1;
+	      }
 	  }
 
-      result_ptr = base;
+      free (base);
     }
 
   /* Update the special members.  */

@@ -34,23 +34,18 @@ __freelocale (__locale_t dataset)
 {
   int cnt;
 
-  /* We modify global data.  */
+  /* We modify global data (the usage counts).  */
   __libc_lock_lock (__libc_setlocale_lock);
 
   for (cnt = 0; cnt < __LC_LAST; ++cnt)
-    if (cnt != LC_ALL)
-      {
-	if (dataset->__locales[cnt]->usage_count != UNDELETABLE)
-	  /* We can remove the data.  */
-	  _nl_remove_locale (cnt, dataset->__locales[cnt]);
-	if (dataset->__names[cnt] != _nl_C_name)
-	  free ((char *) dataset->__names[cnt]);
-      }
-
-  /* Free the locale_t handle itself.  */
-  free (dataset);
+    if (cnt != LC_ALL && dataset->__locales[cnt]->usage_count != UNDELETABLE)
+      /* We can remove the data.  */
+      _nl_remove_locale (cnt, dataset->__locales[cnt]);
 
   /* It's done.  */
   __libc_lock_unlock (__libc_setlocale_lock);
+
+  /* Free the locale_t handle itself.  */
+  free (dataset);
 }
 weak_alias (__freelocale, freelocale)

@@ -29,12 +29,14 @@ typedef struct __locale_struct
 {
   /* Note: LC_ALL is not a valid index into this array.  */
   struct locale_data *__locales[13]; /* 13 = __LC_LAST. */
-  const char *__names[13];
 
   /* To increase the speed of this solution we add some special members.  */
   const unsigned short int *__ctype_b;
   const int *__ctype_tolower;
   const int *__ctype_toupper;
+
+  /* Note: LC_ALL is not a valid index into this array.  */
+  const char *__names[13];
 } *__locale_t;
 
 #endif /* xlocale.h */
