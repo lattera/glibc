@@ -1,3 +1,11 @@
+2000-06-09  David Mosberger-Tang  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: new file
+	* sysdeps/unix/sysv/linux/ia64/bsd-_setjmp.S: new file
+	* sysdeps/unix/sysv/linux/ia64/bsd-setjmp.S: new file
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: new file
+	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h: new file
+
 2000-06-09  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/brk.S: New file.
