@@ -1,5 +1,8 @@
 2002-11-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/ca.po: Update from translation team.
+	* po/es.po: Likewise.
+
 	* sysdeps/generic/segfault.c (catch_segfault): If HAVE_PROC_SELF
 	is defined write out memory map.
 	* sysdeps/unix/sysv/linux/segfault.c: New file.
