@@ -1,3 +1,11 @@
+Mon Apr 10 14:53:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdlib/strtod.c (STRTOF): Use extra macro to make STRTOF's #defn
+ 	a weak symbol instead of literal "STRTOF".
+
+	* locale/setlocale.c: Work around ld bug: don't weakify refs to
+ 	_nl_{current,C}_*.
+
 Sun Apr  9 01:24:33 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (+depfiles): Translate %.so to %.o in $(extra-objs).

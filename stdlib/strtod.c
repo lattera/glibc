@@ -1097,7 +1097,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
 /* External user entry point.  */
 
-weak_symbol (STRTOF)
+#define weak_this(x) weak_symbol(x)
+weak_this (STRTOF)
 
 FLOAT
 STRTOF (nptr, endptr)
