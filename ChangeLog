@@ -2,9 +2,12 @@
 
 	* include/shlib-compat.h (SHLIB_COMPAT): Take a third argument,
 	indicating the first version set to obsolete the conditionalized code.
+	(compat_symbol): New macro.
 	* scripts/abi-versions.awk: For subsumed versions, make ABI_* defn's
 	rhs be the ABI_* macro for the subsuming version.  Assign increasing
 	integer values to the ABI_* macros for supported versions.
+	* sysdeps/gnu/siglist.c: Use new SHLIB_COMPAT convention, and use
+	compat_symbol macro.
 
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 

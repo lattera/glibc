@@ -52,9 +52,14 @@
    shlib-versions if that is newer.  */
 
 # define versioned_symbol(lib, local, symbol, version) \
-  versioned_symbol2 (local, symbol, VERSION_##lib##_##version)
-# define versioned_symbol2(local, symbol, name) \
+  versioned_symbol_1 (local, symbol, VERSION_##lib##_##version)
+# define versioned_symbol_1(local, symbol, name) \
   default_symbol_version (local, symbol, name)
+
+# define compat_symbol(lib, local, symbol, version) \
+  compat_symbol_1 (local, symbol, VERSION_##lib##_##version)
+# define compat_symbol_1(local, symbol, name) \
+  symbol_version (local, symbol, name)
 
 #else
 
@@ -64,6 +69,9 @@
 /* No versions to worry about, just make this the global definition.  */
 # define versioned_symbol(lib, local, symbol, version) \
   weak_alias (local, symbol)
+
+/* This should not appear outside `#if SHLIB_COMPAT (...)'.  */
+# define compat_symbol(lib, local, symbol, version) ...
 
 #endif
 
