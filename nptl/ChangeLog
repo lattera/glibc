@@ -1,3 +1,7 @@
+2003-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-rwlock6.c: Add some more status output.
+
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/configure.in: New file.

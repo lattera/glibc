@@ -51,6 +51,8 @@ tf (void *arg)
       ++ts.tv_sec;
     }
 
+  puts ("child calling timedrdlock");
+
   int err = pthread_rwlock_timedrdlock (r, &ts);
   if (err == 0)
     {
@@ -64,6 +66,8 @@ tf (void *arg)
 	      strerror (err), err, strerror (ETIMEDOUT), ETIMEDOUT);
       pthread_exit ((void *) 1l);
     }
+
+  puts ("1st child timedrdlock done");
 
   struct timeval tv2;
   (void) gettimeofday (&tv2, NULL);
@@ -93,6 +97,8 @@ tf (void *arg)
       puts ("2nd timedrdlock did not return EINVAL");
       pthread_exit ((void *) 1l);
     }
+
+  puts ("2nd child timedrdlock done");
 
   return NULL;
 }
@@ -140,16 +146,19 @@ do_test (void)
       ++ts.tv_sec;
 
       /* Get a write lock.  */
-      if (pthread_rwlock_timedwrlock (&r, &ts) != 0)
+      int e = pthread_rwlock_timedwrlock (&r, &ts);
+      if (e != 0)
 	{
-	  printf ("round %d: rwlock_wrlock failed\n", cnt);
+	  printf ("round %d: rwlock_timedwrlock failed (%d)\n", cnt, e);
 	  exit (1);
 	}
+
+      puts ("1st timedwrlock done");
 
       (void) gettimeofday (&tv, NULL);
       TIMEVAL_TO_TIMESPEC (&tv, &ts);
       ++ts.tv_sec;
-      int e = pthread_rwlock_timedrdlock (&r, &ts);
+      e = pthread_rwlock_timedrdlock (&r, &ts);
       if (e == 0)
 	{
 	  puts ("timedrdlock succeeded");
@@ -160,6 +169,8 @@ do_test (void)
 	  puts ("timedrdlock did not return EDEADLK");
 	  exit (1);
 	}
+
+      puts ("1st timedrdlock done");
 
       (void) gettimeofday (&tv, NULL);
       TIMEVAL_TO_TIMESPEC (&tv, &ts);
@@ -176,12 +187,16 @@ do_test (void)
 	  exit (1);
 	}
 
+      puts ("2nd timedwrlock done");
+
       pthread_t th;
       if (pthread_create (&th, NULL, tf, &r) != 0)
 	{
 	  printf ("round %d: create failed\n", cnt);
 	  exit (1);
 	}
+
+      puts ("started thread");
 
       void *status;
       if (pthread_join (th, &status) != 0)
@@ -194,6 +209,8 @@ do_test (void)
 	  printf ("failure in round %d\n", cnt);
 	  exit (1);
 	}
+
+      puts ("joined thread");
 
       if (pthread_rwlock_destroy (&r) != 0)
 	{

@@ -45,6 +45,7 @@
 pthread_rwlock_timedrdlock:
 	pushq	%r12
 	pushq	%r13
+	pushq	%r14
 	subq	$16, %rsp
 
 	movq	%rdi, %r12
@@ -76,14 +77,14 @@ pthread_rwlock_timedrdlock:
 	incl	READERS_QUEUED(%r12)
 	je	4f
 
-	movl	READERS_WAKEUP(%r12), %edx
+	movl	READERS_WAKEUP(%r12), %r14d
 
 	/* Unlock.  */
 	LOCK
 #if MUTEX == 0
-	subl	$1, (%r12)
+	decl	(%r12)
 #else
-	subl	$1, MUTEX(%r12)
+	decl	MUTEX(%r12)
 #endif
 	jne	10f
 
@@ -112,7 +113,8 @@ pthread_rwlock_timedrdlock:
 	movq	%rdi, 8(%rsp)
 
 	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
-	xorq	%r10, %r10
+	movq	%rsp, %r10
+	movl	%r14d, %edx
 	leaq	READERS_WAKEUP(%r12), %rdi
 	movq	$SYS_futex, %rax
 	syscall
@@ -152,6 +154,7 @@ pthread_rwlock_timedrdlock:
 7:	movq	%rdx, %rax
 
 	addq	$16, %rsp
+	popq	%r14
 	popq	%r13
 	popq	%r12
 	retq

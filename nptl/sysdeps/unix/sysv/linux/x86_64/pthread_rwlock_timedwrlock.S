@@ -44,6 +44,7 @@
 pthread_rwlock_timedwrlock:
 	pushq	%r12
 	pushq	%r13
+	pushq	%r14
 	subq	$16, %rsp
 
 	movq	%rdi, %r12
@@ -73,7 +74,7 @@ pthread_rwlock_timedwrlock:
 	incl	WRITERS_QUEUED(%r12)
 	je	4f
 
-	movl	WRITERS_WAKEUP(%r12), %edx
+	movl	WRITERS_WAKEUP(%r12), %r14d
 
 	LOCK
 #if MUTEX == 0
@@ -109,6 +110,7 @@ pthread_rwlock_timedwrlock:
 
 	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	%rsp, %r10
+	movl	%r14d, %edx
 	leaq	WRITERS_WAKEUP(%r12), %rdi
 	movq	$SYS_futex, %rax
 	syscall
@@ -134,7 +136,7 @@ pthread_rwlock_timedwrlock:
 	jmp	9f
 
 
-5:	xorq	%rcx, %rdx
+5:	xorq	%rdx, %rdx
 	movq	%fs:SELF, %rax
 	movq	%rax, WRITER(%r12)
 9:	LOCK
@@ -148,6 +150,7 @@ pthread_rwlock_timedwrlock:
 7:	movq	%rdx, %rax
 
 	addq	$16, %rsp
+	popq	%r14
 	popq	%r13
 	popq	%r12
 	retq
