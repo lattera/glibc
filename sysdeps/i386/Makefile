@@ -21,6 +21,10 @@ CFLAGS-dl-load.c += -Wno-unused
 CFLAGS-dl-reloc.c += -Wno-unused
 endif
 
+ifeq ($(subdir),debug)
+CFLAGS-backtrace.c += -fexceptions
+endif
+
 # Most of the glibc routines don't ever call user defined callbacks
 # nor use any FPU or SSE* and as such don't need bigger %esp alignment
 # than 4 bytes.

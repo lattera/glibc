@@ -1,5 +1,21 @@
 2004-10-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* debug/execinfo.h: Remove __THROW from backtrace prototype.
+
+2004-10-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/Makefile (CFLAGS-backtrace.c): Add -fexceptions.
+	* sysdeps/i386/backtrace.c: Include <bits/libc-lock.h>, <dlfcn.h>,
+	<stdlib.h> and <unwind.h>.  Remove <bp-checks.h> include.
+	(struct trace_arg): New type.
+	(unwind_backtrace, unwind_getip, unwind_getcfa, unwind_getgr): New
+	fn pointers resp. macros.
+	(init, backtrace_helper): New functions.
+	(__backtrace): Rewritten to use _Unwind_Backtrace first and fall
+	back to frame pointer walking.
+
+2004-10-22  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/Versions: Things are still in flux, it
 	seems.  Undo last additions.
 
