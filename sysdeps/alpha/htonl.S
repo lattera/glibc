@@ -33,7 +33,7 @@ ENTRY(htonl)
 	inslh	a0, 7, t0	# t0 = 0000000000AABBCC
 	inswl	a0, 3, t1	# t1 = 000000CCDD000000
 	or	t1, t0, t1	# t1 = 000000CCDDAABBCC
-	sll	t1, 16, t2	# t2 = 0000000000CCDDAA
+	srl	t1, 16, t2	# t2 = 0000000000CCDDAA
 	zapnot	t1, 0x0A, t0	# t0 = 00000000DD00BB00
 	zapnot	t2, 0x05, t3	# t3 = 0000000000CC00AA
 	addl	t0, t3, v0	# v0 = ssssssssDDCCBBAA
