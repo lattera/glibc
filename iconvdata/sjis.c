@@ -4360,9 +4360,9 @@ static const char from_ucs4_extra[0x100][2] =
 	ch = halfkana_to_ucs4[ch - 0xa1];				      \
 	++inptr;							      \
       }									      \
-    else if (__builtin_expect (ch, 0) > 0xea				      \
+    else if (__builtin_expect (ch > 0xea, 0)				      \
 	     || __builtin_expect (ch, 0) == 0xa0			      \
-	     || __builtin_expect (ch, 0x81) <= 0x80)			      \
+	     || __builtin_expect (ch <= 0x80, 0))			      \
       {									      \
 	/* These are illegal.  */					      \
 	if (! ignore_errors_p ())					      \
@@ -4394,10 +4394,10 @@ static const char from_ucs4_extra[0x100][2] =
 	ch2 = inptr[1];							      \
 	idx = ch * 256 + ch2;						      \
 	if (__builtin_expect (ch2 < 0x40, 0)				      \
-	    || (__builtin_expect (idx, 0x8140) > 0x84be && idx < 0x889f)      \
-	    || (__builtin_expect (idx, 0x8140) > 0x88fc && idx < 0x8940)      \
-	    || (__builtin_expect (idx, 0x8140) > 0x9ffc && idx < 0xe040)      \
-	    || __builtin_expect (idx, 0x8140) > 0xeaa4)			      \
+	    || (__builtin_expect (idx > 0x84be, 0) && idx < 0x889f)      \
+	    || (__builtin_expect (idx > 0x88fc, 0) && idx < 0x8940)      \
+	    || (__builtin_expect (idx > 0x9ffc, 0) && idx < 0xe040)      \
+	    || __builtin_expect (idx > 0xeaa4, 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -4467,8 +4467,8 @@ static const char from_ucs4_extra[0x100][2] =
 	  cp = from_ucs4_greek[ch - 0x391];				      \
 	else if (ch >= 0x2010 && ch <= 0x9fa0)				      \
 	  cp = from_ucs4_cjk[ch - 0x02010];				      \
-	else if (__builtin_expect (ch, 0xff01) >= 0xff01		      \
-		 && __builtin_expect (ch, 0xff01) <= 0xffef)		      \
+	else if (__builtin_expect (ch >= 0xff01, 1)			      \
+		 && __builtin_expect (ch <= 0xffef, 1))			      \
 	  cp = from_ucs4_extra[ch - 0xff00];				      \
 	else								      \
 	  {								      \

@@ -45,8 +45,8 @@
     if (ch <= 0x7f)							      \
       ++inptr;								      \
     else								      \
-      if ((__builtin_expect (ch, 0xa1) <= 0xa0 && ch != 0x8e && ch != 0x8f)   \
-	  || __builtin_expect (ch, 0xfe) > 0xfe)			      \
+      if ((__builtin_expect (ch <= 0xa0, 0) && ch != 0x8e && ch != 0x8f)      \
+	  || __builtin_expect (ch > 0xfe, 0))				      \
 	{								      \
 	  /* This is illegal.  */					      \
 	  if (! ignore_errors_p ())					      \
@@ -76,7 +76,7 @@
 	  ch = inptr[1];						      \
 									      \
 	  /* All second bytes of a multibyte character must be >= 0xa1. */    \
-	  if (__builtin_expect (ch, 0xa1) < 0xa1)			      \
+	  if (__builtin_expect (ch < 0xa1, 0))				      \
 	    {								      \
 	      if (! ignore_errors_p ())					      \
 		{							      \

@@ -91,7 +91,7 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wctype tst_wcwidth
 
 tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
-	tst-leaks
+	tst-leaks tst-mbswcs6
 ifeq (yes,$(build-shared))
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-leaks
@@ -189,6 +189,7 @@ $(objpfx)tst-langinfo.out: tst-langinfo.sh $(objpfx)tst-langinfo \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
 $(objpfx)tst-digits.out: $(objpfx)tst-locale.out
+$(objpfx)tst-mbswcs6.out: $(addprefix $(objpfx),$(CTYPE_FILES))
 endif
 
 include SUPPORTED
@@ -269,6 +270,7 @@ tst_wctrans-ENV = $(TEST_MBWC_ENV)
 tst_wctype-ENV = $(TEST_MBWC_ENV)
 tst_wcwidth-ENV = $(TEST_MBWC_ENV)
 tst-digits-ENV = $(TEST_MBWC_ENV)
+tst-mbswcs6-ENV = $(TEST_MBWC_ENV)
 
 tst-setlocale-ENV = LOCPATH=$(common-objpfx)localedata LC_ALL=ja_JP.EUC-JP
 

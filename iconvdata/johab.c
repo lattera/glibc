@@ -178,10 +178,10 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
        0xd831-0xd87e and 0xd891-0xd8fe are user-defined area */		      \
     else								      \
       {									      \
-	if (__builtin_expect (ch, 0) > 0xf9				      \
-	    || __builtin_expect (ch, 0) == 0xdf				      \
-	    || (__builtin_expect (ch, 0) > 0x7e && ch < 0x84)		      \
-	    || (__builtin_expect (ch, 0) > 0xd3 && ch < 0xd9))		      \
+	if (__builtin_expect (ch > 0xf9, 0)				      \
+	    || __builtin_expect (ch == 0xdf, 0)				      \
+	    || (__builtin_expect (ch > 0x7e, 0) && ch < 0x84)		      \
+	    || (__builtin_expect (ch > 0xd3, 0) && ch < 0xd9))		      \
 	  {								      \
 	    /* These are illegal.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -212,7 +212,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 									      \
 	    ch2 = inptr[1];						      \
 	    idx = ch * 256 + ch2;					      \
-	    if (__builtin_expect (ch, 0) <= 0xd3)			      \
+	    if (__builtin_expect (ch <= 0xd3, 1))			      \
 	      {								      \
 		/* Hangul */						      \
 		uint_fast32_t i, m, f;					      \
@@ -244,7 +244,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		else if (i == 0 && m > 0 && f == 0)			      \
 		  ch = 0x314e + m;	/* 0x314f + m - 1 */		      \
 		else if (__builtin_expect (i | m, 0) == 0		      \
-			 && __builtin_expect (f, 1) > 0)		      \
+			 && __builtin_expect (f > 0, 1))		      \
 		  ch = final_to_ucs[f - 1];	/* round trip?? */	      \
 		else							      \
 		  {							      \
@@ -263,8 +263,8 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	    else							      \
 	      {								      \
-		if (__builtin_expect (ch2, 0x31) < 0x31			      \
-		    || (__builtin_expect (ch2, 0x7e) > 0x7e && ch2 < 0x91)    \
+		if (__builtin_expect (ch2 < 0x31, 0)			      \
+		    || (__builtin_expect (ch2 > 0x7e, 0) && ch2 < 0x91)	      \
 		    || __builtin_expect (ch2, 0) == 0xff		      \
 		    || (__builtin_expect (ch, 0) == 0xd9 && ch2 > 0xe5)	      \
 		    || (__builtin_expect (ch, 0) == 0xda		      \

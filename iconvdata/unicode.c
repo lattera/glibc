@@ -152,7 +152,7 @@ gconv_end (struct __gconv_step *data)
   {									      \
     uint32_t c = get32 (inptr);						      \
 									      \
-    if (__builtin_expect (c, 0) >= 0x10000)				      \
+    if (__builtin_expect (c >= 0x10000, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (c, 4);					      \
 	STANDARD_ERR_HANDLER (4);					      \

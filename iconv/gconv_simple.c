@@ -161,7 +161,7 @@ internal_ucs4_loop_single (struct __gconv_step *step,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (__builtin_expect (cnt, 4) < 4)
+  if (__builtin_expect (cnt < 4, 0))
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -229,7 +229,7 @@ ucs4_internal_loop (struct __gconv_step *step,
       inval = *(const uint32_t *) inptr;
 #endif
 
-      if (__builtin_expect (inval, 0) > 0x7fffffff)
+      if (__builtin_expect (inval > 0x7fffffff, 0))
 	{
 	  /* The value is too large.  We don't try transliteration here since
 	     this is not an error because of the lack of possibilities to
@@ -286,7 +286,7 @@ ucs4_internal_loop_unaligned (struct __gconv_step *step,
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
     {
-      if (__builtin_expect (inptr[0], 0) > 0x80)
+      if (__builtin_expect (inptr[0] > 0x80, 0))
 	{
 	  /* The value is too large.  We don't try transliteration here since
 	     this is not an error because of the lack of possibilities to
@@ -353,7 +353,7 @@ ucs4_internal_loop_single (struct __gconv_step *step,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (__builtin_expect (cnt, 4) < 4)
+  if (__builtin_expect (cnt < 4, 0))
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -362,8 +362,8 @@ ucs4_internal_loop_single (struct __gconv_step *step,
       return __GCONV_INCOMPLETE_INPUT;
     }
 
-  if (__builtin_expect (((unsigned char *) state->__value.__wchb)[0], 0)
-      > 0x80)
+  if (__builtin_expect (((unsigned char *) state->__value.__wchb)[0] > 0x80,
+			0))
     {
       /* The value is too large.  We don't try transliteration here since
 	 this is not an error because of the lack of possibilities to
@@ -515,7 +515,7 @@ internal_ucs4le_loop_single (struct __gconv_step *step,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (__builtin_expect (cnt, 4) < 4)
+  if (__builtin_expect (cnt < 4, 0))
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -580,7 +580,7 @@ ucs4le_internal_loop (struct __gconv_step *step,
       inval = *(const uint32_t *) inptr;
 #endif
 
-      if (__builtin_expect (inval, 0) > 0x7fffffff)
+      if (__builtin_expect (inval > 0x7fffffff, 0))
 	{
 	  /* The value is too large.  We don't try transliteration here since
 	     this is not an error because of the lack of possibilities to
@@ -635,7 +635,7 @@ ucs4le_internal_loop_unaligned (struct __gconv_step *step,
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
     {
-      if (__builtin_expect (inptr[3], 0) > 0x80)
+      if (__builtin_expect (inptr[3] > 0x80, 0))
 	{
 	  /* The value is too large.  We don't try transliteration here since
 	     this is not an error because of the lack of possibilities to
@@ -703,7 +703,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (__builtin_expect (cnt, 4) < 4)
+  if (__builtin_expect (cnt < 4, 0))
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -712,8 +712,8 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       return __GCONV_INCOMPLETE_INPUT;
     }
 
-  if (__builtin_expect (((unsigned char *) state->__value.__wchb)[3], 0)
-      > 0x80)
+  if (__builtin_expect (((unsigned char *) state->__value.__wchb)[3] > 0x80,
+			0))
     {
       /* The value is too large.  We don't try transliteration here since
 	 this is not an error because of the lack of possibilities to
@@ -764,7 +764,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (__builtin_expect (*inptr, 0) > '\x7f')				      \
+    if (__builtin_expect (*inptr > '\x7f', 0))				      \
       {									      \
 	/* The value is too large.  We don't try transliteration here since   \
 	   this is not an error because of the lack of possibilities to	      \
@@ -805,7 +805,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (__builtin_expect (*((const uint32_t *) inptr), 0) > 0x7f)	      \
+    if (__builtin_expect (*((const uint32_t *) inptr) > 0x7f, 0))	      \
       {									      \
 	UNICODE_TAG_HANDLER (*((const uint32_t *) inptr), 4);		      \
 	STANDARD_ERR_HANDLER (4);					      \
@@ -839,13 +839,10 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     uint32_t wc = *((const uint32_t *) inptr);				      \
 									      \
-    /* Since we control every character we read this cannot happen.  */	      \
-    assert (wc <= 0x7fffffff);						      \
-									      \
     if (wc < 0x80)							      \
       /* It's an one byte sequence.  */					      \
       *outptr++ = (unsigned char) wc;					      \
-    else								      \
+    else if (__builtin_expect (wc <= 0x7fffffff, 1))			      \
       {									      \
 	size_t step;							      \
 	char *start;							      \
@@ -873,9 +870,14 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	while (--step > 0);						      \
 	start[0] |= wc;							      \
       }									      \
+    else								      \
+      {									      \
+	STANDARD_ERR_HANDLER (4);					      \
+      }									      \
 									      \
     inptr += 4;								      \
   }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
@@ -921,25 +923,25 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	    cnt = 2;							      \
 	    ch &= 0x1f;							      \
 	  }								      \
-        else if (__builtin_expect (ch & 0xf0, 0xe0) == 0xe0)		      \
+        else if (__builtin_expect ((ch & 0xf0) == 0xe0, 1))		      \
 	  {								      \
 	    /* We expect three bytes.  */				      \
 	    cnt = 3;							      \
 	    ch &= 0x0f;							      \
 	  }								      \
-	else if (__builtin_expect (ch & 0xf8, 0xf0) == 0xf0)		      \
+	else if (__builtin_expect ((ch & 0xf8) == 0xf0, 1))		      \
 	  {								      \
 	    /* We expect four bytes.  */				      \
 	    cnt = 4;							      \
 	    ch &= 0x07;							      \
 	  }								      \
-	else if (__builtin_expect (ch & 0xfc, 0xf8) == 0xf8)		      \
+	else if (__builtin_expect ((ch & 0xfc) == 0xf8, 1))		      \
 	  {								      \
 	    /* We expect five bytes.  */				      \
 	    cnt = 5;							      \
 	    ch &= 0x03;							      \
 	  }								      \
-	else if (__builtin_expect (ch & 0xfe, 0xfc) == 0xfc)		      \
+	else if (__builtin_expect ((ch & 0xfe) == 0xfc, 1))		      \
 	  {								      \
 	    /* We expect six bytes.  */					      \
 	    cnt = 6;							      \
@@ -1052,19 +1054,19 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	cnt = 2;							      \
 	ch &= 0x1f;							      \
       }									      \
-    else if (__builtin_expect (ch & 0xf0, 0xe0) == 0xe0)		      \
+    else if (__builtin_expect ((ch & 0xf0) == 0xe0, 1))			      \
       {									      \
 	/* We expect three bytes.  */					      \
 	cnt = 3;							      \
 	ch &= 0x0f;							      \
       }									      \
-    else if (__builtin_expect (ch & 0xf8, 0xf0) == 0xf0)		      \
+    else if (__builtin_expect ((ch & 0xf8) == 0xf0, 1))			      \
       {									      \
 	/* We expect four bytes.  */					      \
 	cnt = 4;							      \
 	ch &= 0x07;							      \
       }									      \
-    else if (__builtin_expect (ch & 0xfc, 0xf8) == 0xf8)		      \
+    else if (__builtin_expect ((ch & 0xfc) == 0xf8, 1))			      \
       {									      \
 	/* We expect five bytes.  */					      \
 	cnt = 5;							      \
@@ -1104,17 +1106,17 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	bytebuf[0] = 0xc0;						      \
 	ntotal = 2;							      \
       }									      \
-    else if (__builtin_expect (state->__value.__wch, 0) <= 0xffff)	      \
+    else if (__builtin_expect (state->__value.__wch <= 0xffff, 1))	      \
       {									      \
 	bytebuf[0] = 0xe0;						      \
 	ntotal = 3;							      \
       }									      \
-    else if (__builtin_expect (state->__value.__wch, 0) <= 0x1fffff)	      \
+    else if (__builtin_expect (state->__value.__wch < 0x1fffff, 1))	      \
       {									      \
 	bytebuf[0] = 0xf0;						      \
 	ntotal = 4;							      \
       }									      \
-    else if (__builtin_expect (state->__value.__wch, 0) <= 0x3ffffff)	      \
+    else if (__builtin_expect (state->__value.__wch < 0x3ffffff, 1))	      \
       {									      \
 	bytebuf[0] = 0xf8;						      \
 	ntotal = 5;							      \
@@ -1198,7 +1200,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     uint32_t val = *((const uint32_t *) inptr);				      \
 									      \
-    if (__builtin_expect (val, 0) >= 0x10000)				      \
+    if (__builtin_expect (val >= 0x10000, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (val, 4);					      \
 	STANDARD_ERR_HANDLER (4);					      \
@@ -1288,7 +1290,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define BODY \
   {									      \
     uint32_t val = *((const uint32_t *) inptr);				      \
-    if (__builtin_expect (val, 0) >= 0x10000)				      \
+    if (__builtin_expect (val >= 0x10000, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (val, 4);					      \
 	STANDARD_ERR_HANDLER (4);					      \

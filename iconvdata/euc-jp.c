@@ -77,7 +77,7 @@
 	ch2 = inptr[1];							      \
 									      \
 	/* All second bytes of a multibyte character must be >= 0xa1. */      \
-	if (__builtin_expect (ch2, 0xa1) < 0xa1)			      \
+	if (__builtin_expect (ch2 < 0xa1, 0))				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \

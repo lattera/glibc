@@ -217,9 +217,9 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (swap)								      \
       {									      \
-	if (__builtin_expect (c, 0) >= 0x10000)				      \
+	if (__builtin_expect (c >= 0x10000, 0))				      \
 	  {								      \
-	    if (__builtin_expect (c, 0) >= 0x110000)			      \
+	    if (__builtin_expect (c >= 0x110000, 0))			      \
 	      {								      \
 		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
@@ -241,9 +241,9 @@ gconv_end (struct __gconv_step *data)
       }									      \
     else								      \
       {									      \
-	if (__builtin_expect (c, 0) >= 0x10000)				      \
+	if (__builtin_expect (c >= 0x10000, 0))				      \
 	  {								      \
-	    if (__builtin_expect (c, 0) >= 0x110000)			      \
+	    if (__builtin_expect (c >= 0x110000, 0))			      \
 	      {								      \
 		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
@@ -285,7 +285,7 @@ gconv_end (struct __gconv_step *data)
       {									      \
 	u1 = bswap_16 (u1);						      \
 									      \
-	if (__builtin_expect (u1, 0) < 0xd800 || u1 > 0xdfff)		      \
+	if (__builtin_expect (u1 < 0xd800, 1) || u1 > 0xdfff)		      \
 	  {								      \
 	    /* No surrogate.  */					      \
 	    put32 (outptr, u1);						      \
@@ -307,8 +307,8 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    inptr += 2;							      \
 	    u2 = bswap_16 (get16 (inptr));				      \
-	    if (__builtin_expect (u2, 0xdc00) < 0xdc00			      \
-		|| __builtin_expect (u2, 0xdc00) >= 0xdfff)		      \
+	    if (__builtin_expect (u2 < 0xdc00, 0)			      \
+		|| __builtin_expect (u2 == 0xdfff, 0))			      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
 		if (! ignore_errors_p ())				      \
@@ -328,7 +328,7 @@ gconv_end (struct __gconv_step *data)
       }									      \
     else								      \
       {									      \
-	if (__builtin_expect (u1, 0) < 0xd800 || u1 > 0xdfff)		      \
+	if (__builtin_expect (u1 < 0xd800, 1) || u1 > 0xdfff)		      \
 	  {								      \
 	    /* No surrogate.  */					      \
 	    put32 (outptr, u1);						      \
@@ -350,8 +350,8 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    inptr += 2;							      \
 	    u2 = get16 (inptr);						      \
-	    if (__builtin_expect (u2, 0xdc00) < 0xdc00			      \
-		|| __builtin_expect (u2, 0xdc00) >= 0xdfff)		      \
+	    if (__builtin_expect (u2 < 0xdc00, 0)			      \
+		|| __builtin_expect (u2 >= 0xdfff, 0))			      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
 		if (! ignore_errors_p ())				      \

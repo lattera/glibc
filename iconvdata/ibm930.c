@@ -201,7 +201,7 @@ enum
     const struct gap *rp2 = __ucs4_to_ibm930db_idx;			      \
     const char *cp;							      \
 									      \
-    if (__builtin_expect (ch, 0) >= 0xffff)				      \
+    if (__builtin_expect (ch >= 0xffff, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 									      \
@@ -243,7 +243,7 @@ enum
 	  {								      \
 	    if (curcs == sb)						      \
 	      {								      \
-		if (__builtin_expect (outptr+1 > outend, 0))		      \
+		if (__builtin_expect (outptr + 1 > outend, 0))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \

@@ -26,7 +26,7 @@
 #endif
 
 #define FROM	0
-#define TO	1 
+#define TO	1
 
 /* Definitions used in the body of the `gconv' function.  */
 #define CHARSET_NAME	"IBM943//"
@@ -53,7 +53,7 @@
     uint32_t ch = *inptr;						      \
     uint32_t res;							      \
 									      \
-    if (__builtin_expect (ch, 0) >= 0xffff)				      \
+    if (__builtin_expect (ch >= 0xffff, 0))				      \
       {									      \
 	rp1 = NULL;							      \
 	rp2 = NULL;							      \
@@ -155,7 +155,7 @@
     uint32_t high;							      \
     uint16_t pccode;							      \
 									      \
-    if (__builtin_expect (ch, 0) >= 0xffff)				      \
+    if (__builtin_expect (ch >= 0xffff, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 	rp = NULL;							      \

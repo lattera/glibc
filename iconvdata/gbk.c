@@ -13145,8 +13145,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
     if (ch <= 0x7f)							      \
       ++inptr;								      \
     else								      \
-      if (__builtin_expect (ch, 0x81) <= 0x80				      \
-	  || __builtin_expect (ch, 0x81) > 0xfe)			      \
+      if (__builtin_expect (ch <= 0x80, 0)				      \
+	  || __builtin_expect (ch > 0xfe, 0))				      \
 	{								      \
 	  /* This is illegal.  */					      \
 	  if (! ignore_errors_p ())					      \
@@ -13178,7 +13178,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 									      \
 	  /* All second bytes of a multibyte character must be >= 0x40, and   \
 	     the __gbk_to_ucs table only covers the range up to 0xfe 0xa0. */ \
-	  if (__builtin_expect (ch2, 0x41) < 0x40			      \
+	  if (__builtin_expect (ch2 < 0x40, 0)				      \
 	      || (__builtin_expect (ch, 0x81) == 0xfe && ch2 > 0xa0))	      \
 	    {								      \
 	      /* This is an illegal character.  */			      \

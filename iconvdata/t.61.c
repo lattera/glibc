@@ -385,7 +385,7 @@ static const char from_ucs4[][2] =
     uint32_t ch = *inptr;						      \
     int increment = 1;							      \
 									      \
-    if (__builtin_expect (ch, 0x20) >= 0xc1 && ch <= 0xcf)		      \
+    if (__builtin_expect (ch >= 0xc1, 0) && ch <= 0xcf)			      \
       {									      \
 	/* Composed character.  First test whether the next character	      \
 	   is also available.  */					      \
@@ -400,8 +400,8 @@ static const char from_ucs4[][2] =
 									      \
 	ch2 = inptr[1];							      \
 									      \
-	if (__builtin_expect (ch2, 0x20) < 0x20				      \
-	    || __builtin_expect (ch2, 0x20) >= 0x80)			      \
+	if (__builtin_expect (ch2 < 0x20, 0)				      \
+	    || __builtin_expect (ch2 >= 0x80, 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -457,16 +457,16 @@ static const char from_ucs4[][2] =
     uint32_t ch = get32 (inptr);					      \
     const char *cp;							      \
 									      \
-    if ((size_t) __builtin_expect (ch, 0)				      \
-	>= sizeof (from_ucs4) / sizeof (from_ucs4[0]))			      \
+    if (__builtin_expect (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]),   \
+			  0))						      \
       {									      \
 	if (__builtin_expect (ch, 0) == 0x2126)				      \
 	  cp = "\xe0";							      \
 	else if (__builtin_expect (ch, 0) == 0x2c7)			      \
 	  cp = "\xcf\x20";						      \
-	else if (__builtin_expect (ch, 0x2d8) < 0x2d8			      \
-		 || __builtin_expect (ch, 0x2d8) > 0x2dd		      \
-		 || __builtin_expect (ch, 0x2d8) == 0x02dc)		      \
+	else if (__builtin_expect (ch < 0x2d8, 0)			      \
+		 || __builtin_expect (ch > 0x2dd, 0)			      \
+		 || __builtin_expect (ch == 0x2dc, 0))			      \
 	  {								      \
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \

@@ -22068,7 +22068,7 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] =
 									      \
 	      inptr += 4;						      \
 	    }								      \
-	  else if (__builtin_expect (ch2, 0x40) >= 0x40)   		      \
+	  else if (__builtin_expect (ch2 >= 0x40, 1))   		      \
 	    {								      \
 	      /* A two-byte character */				      \
 	      idx = (ch - 0x81) * 192 + (ch2 - 0x40);			      \

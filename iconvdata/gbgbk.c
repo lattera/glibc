@@ -1,5 +1,5 @@
 /* Mapping tables from GBK to GB2312 and vice versa.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -96,16 +96,16 @@
 	  ch = 0xa1aa;							      \
 									      \
 	/* Now determine whether the character is valid.  */		      \
-	if (__builtin_expect (ch, 0xa1a1) < 0xa1a1			      \
-	    || __builtin_expect (ch, 0xa1a1) > 0xf7fe			      \
-	    || __builtin_expect (inptr[1], 0xa1) < 0xa1			      \
+	if (__builtin_expect (ch < 0xa1a1, 0)				      \
+	    || __builtin_expect (ch > 0xf7fe, 0)			      \
+	    || __builtin_expect (inptr[1] < 0xa1, 0)			      \
 	    /* Now test the exceptions.  */				      \
-	    || (__builtin_expect (ch, 0xa1a1) >= 0xa2a1			      \
-		&& __builtin_expect (ch, 0xa1a1) <= 0xa2aa)		      \
-	    || (__builtin_expect (ch, 0xa1a1) >= 0xa6e0			      \
-		&& __builtin_expect (ch, 0xa1a1) <= 0xa6f5)		      \
-	    || (__builtin_expect (ch, 0xa1a1) >= 0xa8bb			      \
-		&& __builtin_expect (ch, 0xa1a1) <= 0xa8c0))		      \
+	    || (__builtin_expect (ch >= 0xa2a1, 0)			      \
+		&& __builtin_expect (ch <= 0xa2aa, 0))		      \
+	    || (__builtin_expect (ch >= 0xa6e0, 0)			      \
+		&& __builtin_expect (ch <= 0xa6f5, 0))		      \
+	    || (__builtin_expect (ch >= 0xa8bb, 0)			      \
+		&& __builtin_expect (ch <= 0xa8c0, 0)))		      \
 	  {								      \
 	    /* One of the characters we cannot map.  */			      \
 	    STANDARD_ERR_HANDLER (2);					      \

@@ -1,5 +1,36 @@
 2001-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/8bit-gap.c: Correctly use __builtin_expect.
+	* iconvdata/ansi_x3.110.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/euc-cn.c: Likewise.
+	* iconvdata/euc-jp.c: Likewise.
+	* iconvdata/euc-kr.c: Likewise.
+	* iconvdata/gb18030.c: Likewise.
+	* iconvdata/gbbig5.c: Likewise.
+	* iconvdata/gbgbk.c: Likewise.
+	* iconvdata/gbk.c: Likewise.
+	* iconvdata/ibm930.c: Likewise.
+	* iconvdata/ibm932.c: Likewise.
+	* iconvdata/ibm933.c: Likewise.
+	* iconvdata/ibm935.c: Likewise.
+	* iconvdata/ibm939.c: Likewise.
+	* iconvdata/ibm943.c: Likewise.
+	* iconvdata/iso-2022-cn.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* iconvdata/unicode.c: Likewise.
+	* iconvdata/utf-16.c: Likewise.
+	* iconv/gconv_simple.c: Likewise.   Convert assert() in real error
+	handling.
+
 	* iconvdata/Makefile: Add rules to build KOI8-T module.
 	* iconvdata/koi8-t.c: New file.
 	* iconvdata/gconv-modules: Add entries for KOI8-T.

@@ -81,9 +81,9 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
       ++inptr;								      \
     /* 0xfe(->0x7e : row 94) and 0xc9(->0x59 : row 41) are		      \
        user-defined areas.  */						      \
-    else if (__builtin_expect (ch, 0xa1) == 0xa0			      \
-	     || __builtin_expect (ch, 0xa1) > 0xfe			      \
-	     || __builtin_expect (ch, 0xa1) == 0xc9)			      \
+    else if (__builtin_expect (ch == 0xa0, 0)				      \
+	     || __builtin_expect (ch > 0xfe, 0)				      \
+	     || __builtin_expect (ch == 0xc9, 0))			      \
       {									      \
 	/* This is illegal.  */						      \
 	if (! ignore_errors_p ())					      \

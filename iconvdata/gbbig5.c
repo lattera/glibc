@@ -1,5 +1,5 @@
 /* Mapping tables from GB2312 to BIG5 and vice versa.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -26,7 +26,7 @@
  * This module does convertions between gb2312 and big5 encodings.
  * It is necessary because gb2312 encoding use simplified chinese,
  * while big5 use traditional one. Often times both the simplified
- * version of a chinese character and its traditional counterpart 
+ * version of a chinese character and its traditional counterpart
  * are presented in unicode and have distinctive code values. So
  * an indirect method through UCS4 (GB2312 <=> UCS4 <=> BIG5) will
  * not do the work correctly.
@@ -4818,7 +4818,7 @@ const char __from_big5_to_gb2312 [13973][2] =
 	ch = inptr[1];						     	      \
 									      \
 	/* All second bytes of a multibyte character must be >= 0xa1. */      \
-	if (__builtin_expect (ch, 0xa1) < 0xa1)			  	      \
+	if (__builtin_expect (ch < 0xa1, 0))			  	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -4926,8 +4926,8 @@ const char __from_big5_to_gb2312 [13973][2] =
 	/* See if the second byte is in the correct range. */		      \
 	if (ch >= 0x40 && ch <= 0x7e)					      \
 	  idx += ch - 0x40;						      \
-	else if (__builtin_expect (ch, 0xa1) >= 0xa1		  	      \
-		 && __builtin_expect (ch, 0xa1) <= 0xfe)		      \
+	else if (__builtin_expect (ch >= 0xa1, 1)		  	      \
+		 && __builtin_expect (ch <= 0xfe, 1))			      \
 	  idx += 0x3f + (ch - 0xa1);					      \
 	else								      \
 	  {								      \

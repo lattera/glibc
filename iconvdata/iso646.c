@@ -878,7 +878,7 @@ gconv_end (struct __gconv_step *data)
 	ch = 0x5d;							      \
 	break;								      \
       default:								      \
-	if (__builtin_expect (ch, 0) > 0x7f)				      \
+	if (__builtin_expect (ch > 0x7f, 0))				      \
 	  {								      \
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 	    failure = __GCONV_ILLEGAL_INPUT;				      \

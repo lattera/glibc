@@ -402,7 +402,7 @@ static const char from_ucs4[][2] =
     uint32_t ch = *inptr;						      \
     int incr;								      \
 									      \
-    if (__builtin_expect (ch, 0x00) >= 0xc1 && ch <= 0xcf)		      \
+    if (__builtin_expect (ch >= 0xc1, 0) && ch <= 0xcf)			      \
       {									      \
 	/* Composed character.  First test whether the next character	      \
 	   is also available.  */					      \
@@ -417,8 +417,8 @@ static const char from_ucs4[][2] =
 									      \
 	ch2 = inptr[1];							      \
 									      \
-	if (__builtin_expect (ch2, 0x20) < 0x20				      \
-	    || __builtin_expect (ch2, 0x7f) >= 0x80)			      \
+	if (__builtin_expect (ch2 < 0x20, 0)				      \
+	    || __builtin_expect (ch2 >= 0x80, 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -474,8 +474,8 @@ static const char from_ucs4[][2] =
     uint32_t ch = get32 (inptr);					      \
     const char *cp;							      \
 									      \
-    if ((size_t) __builtin_expect (ch, 0)				      \
-	>= sizeof (from_ucs4) / sizeof (from_ucs4[0]))			      \
+    if (__builtin_expect (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]),   \
+	0))								      \
       {									      \
 	if (ch == 0x2c7)						      \
 	  cp = "\xcf\x20";						      \

@@ -3064,9 +3064,9 @@ static const char uhc_hangul_from_ucs[11172][2] =
 */									      \
     if (ch <= 0x7f)							      \
       ++inptr;								      \
-    else if (__builtin_expect (ch, 0x81) <= 0x80			      \
-	     || __builtin_expect (ch, 0x81) >= 0xfe			      \
-	     || __builtin_expect (ch, 0x81) == 0xc9)			      \
+    else if (__builtin_expect (ch <= 0x80, 0)				      \
+	     || __builtin_expect (ch >= 0xfe, 0)			      \
+	     || __builtin_expect (ch == 0xc9, 0))			      \
       {									      \
 	/* This is illegal.  */						      \
 	if (! ignore_errors_p ())					      \
@@ -3116,12 +3116,12 @@ static const char uhc_hangul_from_ucs[11172][2] =
 									      \
 	if (ch < 0xa1 || ch2 < 0xa1)					      \
 	  {								      \
-	    if (__builtin_expect (ch, 0xc5) > 0xc6			      \
-		|| __builtin_expect (ch2, 0x41) < 0x41			      \
-		|| __builtin_expect (ch2, 0x41) > 0xfe			      \
-		|| (__builtin_expect (ch2, 0x41) > 0x5a && ch2 < 0x61)	      \
-		|| (__builtin_expect (ch2, 0x41) > 0x7a && ch2 < 0x81)	      \
-		|| (__builtin_expect (ch, 0xc5) == 0xc6 && ch2 > 0x52))	      \
+	    if (__builtin_expect (ch > 0xc6, 0)				      \
+		|| __builtin_expect (ch2 < 0x41, 0)			      \
+		|| __builtin_expect (ch2 > 0xfe, 0)			      \
+		|| (__builtin_expect (ch2 > 0x5a, 0) && ch2 < 0x61)	      \
+		|| (__builtin_expect (ch2 > 0x7a, 0) && ch2 < 0x81)	      \
+		|| (__builtin_expect (ch == 0xc6, 0) && ch2 > 0x52))	      \
 	      {								      \
 		/* This is not legal.  */				      \
 		if (! ignore_errors_p ())				      \

@@ -117,7 +117,7 @@ enum
     uint32_t ch = *inptr;						      \
 									      \
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
-    if (__builtin_expect (ch, 0) > 0x7f)				      \
+    if (__builtin_expect (ch >= 0x7f, 0))				      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \

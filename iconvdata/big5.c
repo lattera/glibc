@@ -8414,8 +8414,8 @@ static const char from_ucs4_tab15[][2] =
 	/* See whether the second byte is in the correct range.  */	      \
 	if (ch2 >= 0x40 && ch2 <= 0x7e)					      \
 	  idx += ch2 - 0x40;						      \
-	else if (__builtin_expect (ch2, 0xa1) >= 0xa1			      \
-		 && __builtin_expect (ch2, 0xa1) <= 0xfe)		      \
+	else if (__builtin_expect (ch2 >= 0xa1, 1)			      \
+		 && __builtin_expect (ch2 <= 0xfe, 1))			      \
 	  idx += 0x3f + (ch2 - 0xa1);					      \
 	else								      \
 	  {								      \
@@ -8484,8 +8484,8 @@ static const char from_ucs4_tab15[][2] =
     uint32_t ch = get32 (inptr);					      \
     const char *cp;							      \
 									      \
-    if ((size_t) __builtin_expect (ch, 0)				      \
-	>= sizeof (from_ucs4_tab1) / sizeof (from_ucs4_tab1[0]))	      \
+    if (__builtin_expect (ch >= (sizeof (from_ucs4_tab1)		      \
+				 / sizeof (from_ucs4_tab1[0])), 0))	      \
       switch (ch)							      \
 	{								      \
         case 0x2c7 ... 0x2d9:						      \
