@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/statvfs.h>
 
 
 static int do_test (void);
@@ -21,6 +22,8 @@ do_test (void)
   int ch;
   struct stat st1;
   struct stat st2;
+  struct statvfs sv;
+  int e;
 
   buf = (char *) malloc (strlen (test_dir) + sizeof "/tst-atime.XXXXXX");
   if (buf == NULL)
@@ -35,6 +38,24 @@ do_test (void)
     {
       printf ("cannot open temporary file: %m\n");
       return 1;
+    }
+
+  /* Make sure the filesystem doesn't have the noatime option set.  If
+     statvfs is not available just continue.  */
+  e = fstatvfs (fd, &sv);
+  if (e != ENOSYS)
+    {
+      if (e != 0)
+	{
+	  printf ("cannot statvfs '%s': %m\n", buf);
+	  return 1;
+	}
+
+      if ((sv.f_flag & ST_NOATIME) != 0)
+	{
+	  puts ("Bah!  The filesystem is mounted with noatime");
+	  return 0;
+	}
     }
 
   /* Make sure it gets removed.  */
