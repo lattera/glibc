@@ -1,3 +1,8 @@
+1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/de_DE: Use . as thousands separator and 3;3 groups for
+	LC_NUMERIC.
+
 1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Fix test rules from last patch.

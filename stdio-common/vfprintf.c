@@ -887,9 +887,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	      /* Illegal wide-character string.  */			      \
 	      return -1;						      \
 									      \
+	    assert (__mbsinit (&mbstate));				      \
 	    s2 = (const wchar_t *) string;				      \
 	    string = alloca (len + 1);					      \
-	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
 	    (void) __wcsrtombs (string, &s2, prec != -1 ? prec : UINT_MAX,    \
 				&mbstate);				      \
 	  }								      \

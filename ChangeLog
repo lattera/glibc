@@ -1,3 +1,8 @@
+1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c [%S]: Don't clear mbstate twice;
+	wcsrtombs must put it into initial state.
+
 1998-04-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* iconv/gconv_simple.c: Fix endian bug.  Don't put side effects in
