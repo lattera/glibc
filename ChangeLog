@@ -1,3 +1,8 @@
+2003-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/system.c: Use the generic Linux
+	code for most parts.
+
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/system.c: Moved to ...
