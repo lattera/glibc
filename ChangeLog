@@ -1,3 +1,8 @@
+2002-05-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/loop.c: Fix condition for defining unaligned loop.  Add
+	some more security checks.
+
 2002-05-17  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/fork.S: Define _internal aliases.

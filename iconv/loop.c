@@ -1,5 +1,5 @@
 /* Conversion loop frame work.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -133,6 +133,8 @@
 /* We need at least one byte for the next round.  */
 #ifndef MIN_NEEDED_INPUT
 # error "MIN_NEEDED_INPUT definition missing"
+#elif MIN_NEEDED_INPUT < 1
+# error "MIN_NEEDED_INPUT must be >= 1"
 #endif
 
 /* Let's see how many bytes we produce.  */
@@ -143,6 +145,8 @@
 /* We produce at least one byte in the next round.  */
 #ifndef MIN_NEEDED_OUTPUT
 # error "MIN_NEEDED_OUTPUT definition missing"
+#elif MIN_NEEDED_INPUT < 1
+# error "MIN_NEEDED_INPUT must be >= 1"
 #endif
 
 /* Let's see how many bytes we produce.  */
@@ -296,8 +300,8 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
 /* Include the file a second time to define the function to handle
    unaligned access.  */
 #if !defined DEFINE_UNALIGNED && !defined _STRING_ARCH_unaligned \
-    && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
-    && MIN_NEEDED_TO != 1 && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
+    && MIN_NEEDED_INPUT != 1 && MAX_NEEDED_INPUT % MIN_NEEDED_INPUT == 0 \
+    && MIN_NEEDED_OUTPUT != 1 && MAX_NEEDED_OUTPUT % MIN_NEEDED_OUTPUT == 0
 # undef get16
 # undef get32
 # undef put16
