@@ -38,7 +38,7 @@ tst_wcstombs (FILE * fp, int debug_flg)
 
       if (debug_flg)
 	{
-	  fprintf (stdout, "wcstombs: ret  = %d\n", ret);
+	  fprintf (stdout, "wcstombs: ret  = %zu\n", ret);
 	}
 
       TST_IF_RETURN (S_WCSTOMBS)

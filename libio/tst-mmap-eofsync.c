@@ -78,7 +78,7 @@ do_test (void)
     printf ("wrote more to file\n");
   else
     {
-      printf ("wrote %d != %d (%m)\n", c, sizeof text2 - 1);
+      printf ("wrote %d != %zd (%m)\n", c, sizeof text2 - 1);
       result = 1;
     }
 

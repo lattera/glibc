@@ -54,7 +54,7 @@ tst_strxfrm (FILE * fp, int debug_flg)
 		   rec + 1);
 	  fprintf (stdout, "	  : err = %d | %s\n", errno_save,
 		   strerror (errno));
-	  fprintf (stdout, "	  : ret = %u\n", ret);
+	  fprintf (stdout, "	  : ret = %zu\n", ret);
 	  fprintf (stdout, "	  : org = %s\n", org1);
 	}
 
@@ -77,7 +77,7 @@ tst_strxfrm (FILE * fp, int debug_flg)
 	  fprintf (stderr, "	  ..............( 2nd call )\n");
 	  fprintf (stdout, "	  : err = %d | %s\n", errno,
 		   strerror (errno));
-	  fprintf (stdout, "	  : ret = %u\n", ret);
+	  fprintf (stdout, "	  : ret = %zu\n", ret);
 	  fprintf (stdout, "	  : org = %s\n", org2);
 	}
 

@@ -25,7 +25,7 @@ tst_wcsspn (FILE *fp, int debug_flg)
 
       if (debug_flg)
 	{
-	  fprintf (stderr, "wcsspn: ret = %d\n", ret);
+	  fprintf (stderr, "wcsspn: ret = %zu\n", ret);
 	}
 
       TST_IF_RETURN (S_WCSSPN)

@@ -50,7 +50,7 @@ tst_wcsrtombs (FILE * fp, int debug_flg)
 
       if (debug_flg)
 	{
-	  fprintf (stderr, "wcsrtombs: ret	= %d\n", ret);
+	  fprintf (stderr, "wcsrtombs: ret	= %zu\n", ret);
 	}
 
       TST_IF_RETURN (S_WCSRTOMBS)

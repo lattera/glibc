@@ -30,7 +30,8 @@ tst_wcstod (FILE * fp, int debug_flg)
 	{
 	  fprintf (stdout, "wcstod() [ %s : %d ] ret  = %f\n", locale,
 		   rec + 1, ret);
-	  fprintf (stdout, "			  *endp = 0x%lx\n", *endp);
+	  fprintf (stdout, "			  *endp = 0x%lx\n",
+		   (unsigned long int) *endp);
 	}
 
       TST_IF_RETURN (S_WCSTOD)

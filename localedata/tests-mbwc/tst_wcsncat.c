@@ -48,7 +48,8 @@ tst_wcsncat (FILE * fp, int debug_flg)
 	    {
 	      if (debug_flg)
 		{
-		  fprintf (stderr, "ws1[%d] = 0x%lx\n", i, ws1[i]);
+		  fprintf (stderr, "ws1[%d] = 0x%lx\n", i,
+			   (unsigned long int) ws1[i]);
 		}
 
 	      if (ws1[i] != ws_ex[i])

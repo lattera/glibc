@@ -53,7 +53,7 @@ main (void)
 
   if (stack2 != stack || stacksize != STACKSIZE)
     {
-      printf ("first pthread_attr_getstack returned different stack (%p,%x)\n"
+      printf ("first pthread_attr_getstack returned different stack (%p,%zx)\n"
 	      "than was set by setstack (%p,%x)\n",
 	      stack2, stacksize, stack, STACKSIZE);
       return 2;
@@ -89,7 +89,7 @@ main (void)
 
   if (stack2 != stack || stacksize != STACKSIZE)
     {
-      printf ("second pthread_attr_getstack returned different stack (%p,%x)\n"
+      printf ("second pthread_attr_getstack returned different stack (%p,%zx)\n"
 	      "than was set by setstack (%p,%x)\n",
 	      stack2, stacksize, stack, STACKSIZE);
       return 3;

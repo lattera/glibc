@@ -33,7 +33,7 @@ tst_wcspbrk (FILE * fp, int debug_flg)
 	  if (ret)
 	    fprintf (stderr,
 		     "			      ret[0] = 0x%lx : 0x%lx = ws2[0]\n",
-		     ret[0], ws2[0]);
+		     (unsigned long int) ret[0], (unsigned long int) ws2[0]);
 	}
 
       TST_IF_RETURN (S_WCSPBRK)
@@ -59,7 +59,7 @@ tst_wcspbrk (FILE * fp, int debug_flg)
 	if (debug_flg)
 	  fprintf (stdout,
 		   "			    *ret = 0x%lx <-> 0x%lx = wc_ex\n",
-		   *ret, wc_ex);
+		   (unsigned long int) *ret, (unsigned long int) wc_ex);
 
 	if (*ret != wc_ex)
 	  {

@@ -51,7 +51,7 @@ tst_mbstowcs (FILE * fp, int debug_flg)
 
 	if (debug_flg)
 	  {
-	    fprintf (stderr, "mbstowcs: ret = %d\n", ret);
+	    fprintf (stderr, "mbstowcs: ret = %zd\n", ret);
 	  }
 
 	TST_IF_RETURN (S_MBSTOWCS)
@@ -71,7 +71,8 @@ tst_mbstowcs (FILE * fp, int debug_flg)
 	      {
 		fprintf (stderr,
 			 "mbstowcs: ws[%d] => 0x%lx : 0x%lx <= ws_ex[%d]\n",
-			 i, ws[i], ws_ex[i], i);
+			 i, (unsigned long int) ws[i],
+			 (unsigned long int) ws_ex[i], i);
 	      }
 
 	    if (ws[i] != ws_ex[i])

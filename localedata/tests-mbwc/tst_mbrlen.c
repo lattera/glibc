@@ -66,7 +66,7 @@ tst_mbrlen (FILE * fp, int debug_flg)
 
 	if (debug_flg)
 	  {
-	    fprintf (stdout, "mbrlen() [ %s : %d : %d ] ret = %d\n",
+	    fprintf (stdout, "mbrlen() [ %s : %d : %d ] ret = %zd\n",
 		     locale, rec + 1, seq_num + 1, ret);
 	    fprintf (stdout, "			   errno = %d\n", errno_save);
 	  }

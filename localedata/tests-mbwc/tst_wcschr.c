@@ -27,7 +27,8 @@ tst_wcschr (FILE * fp, int debug_flg)
 	{
 	  if (ret)
 	    {
-	      fprintf (stderr, "wcschr: ret = 0x%lx\n", *ret);
+	      fprintf (stderr, "wcschr: ret = 0x%lx\n",
+		       (unsigned long int) *ret);
 	    }
 	  else
 	    {

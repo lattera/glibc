@@ -1,5 +1,14 @@
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/tst-freopen.c (main): Use correct formats for __LINE__.
+	* libio/tst-mmap-setvbuf.c (main): Likewise.
+	* libio/tst-widetext.c (main): Likewise.
+
+	* libio/tst-mmap-eofsync.c (do_test): Use correct format in error
+	message.
+	* libio/tst-mmap-fflushsync.c (do_test): Likewise.
+	* libio/tst-mmap2-eofsync.c (do_test): Likewise.
+
 	* sysdeps/i386/elf/configure.in: Unconditionally define
 	PI_STATIC_AND_HIDDEN.
 	* elf/rtld.c (DONT_USE_BOOTSTRAP_MAP): Define only if

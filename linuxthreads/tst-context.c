@@ -98,7 +98,7 @@ main (void)
     }
 
   for (n = 0; n < N; ++n)
-    if (pthread_create (&th[n], NULL, threadfct, (void *) n) != 0)
+    if (pthread_create (&th[n], NULL, threadfct, (void *) (long int) n) != 0)
       error (EXIT_FAILURE, errno, "cannot create all threads");
 
   for (n = 0; n < N; ++n)

@@ -1,5 +1,5 @@
 /* Tests for pthread_barrier_* functions.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ static pthread_barrier_t barrier;
 int
 main (void)
 {
-  pthread_t thread_list[NUM_THREADS]; 
+  pthread_t thread_list[NUM_THREADS];
   int i;
 
   if (pthread_barrier_init (&barrier, NULL, NUM_THREADS + 1) != 0)
@@ -69,13 +69,13 @@ thread (void *arg)
 	{
 	case 0:
 	  flockfile (stdout);
-	  printf ("%04d: non-serial thread %lu\n", ++linecount, 
+	  printf ("%04d: non-serial thread %lu\n", ++linecount,
 		  (unsigned long) self);
 	  funlockfile (stdout);
 	  break;
 	case PTHREAD_BARRIER_SERIAL_THREAD:
 	  flockfile (stdout);
-	  printf ("%04d: serial thread %lu\n", ++linecount, 
+	  printf ("%04d: serial thread %lu\n", ++linecount,
 		  (unsigned long) self);
 	  funlockfile (stdout);
 	  last_serial_thread = self;
@@ -89,10 +89,9 @@ thread (void *arg)
   if (pthread_equal (self, last_serial_thread))
   {
     flockfile (stdout);
-    printf ("%04d: last serial thread %lu terminating process\n", 
+    printf ("%04d: last serial thread %lu terminating process\n",
 	    ++linecount, (unsigned long) self);
     funlockfile (stdout);
-    return;
   }
 
   pthread_exit(NULL);

@@ -34,14 +34,14 @@ int main (void)
 
   if (fd == -1)
     {
-      printf ("%Zd: cannot open temporary file: %m\n", __LINE__);
+      printf ("%u: cannot open temporary file: %m\n", __LINE__);
       exit (1);
     }
 
   f = fdopen (fd, "w");
   if (f == NULL)
     {
-      printf ("%Zd: cannot fdopen temporary file: %m\n", __LINE__);
+      printf ("%u: cannot fdopen temporary file: %m\n", __LINE__);
       exit (1);
     }
 
@@ -51,26 +51,26 @@ int main (void)
   f = fopen (name, "r");
   if (f == NULL)
     {
-      printf ("%Zd: cannot fopen temporary file: %m\n", __LINE__);
+      printf ("%u: cannot fopen temporary file: %m\n", __LINE__);
       exit (1);
     }
 
   if (setvbuf (f, buf, _IOFBF, sizeof buf))
     {
-      printf ("%Zd: setvbuf failed: %m\n", __LINE__);
+      printf ("%u: setvbuf failed: %m\n", __LINE__);
       exit (1);
     }
 
   if (fread (temp, 1, strlen (test), f) != strlen (test))
     {
-      printf ("%Zd: couldn't read the file back: %m\n", __LINE__);
+      printf ("%u: couldn't read the file back: %m\n", __LINE__);
       exit (1);
     }
   temp [strlen (test)] = '\0';
 
   if (strcmp (test, temp))
     {
-      printf ("%Zd: read different string than was written:\n%s%s",
+      printf ("%u: read different string than was written:\n%s%s",
 	      __LINE__, test, temp);
       exit (1);
     }

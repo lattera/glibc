@@ -56,7 +56,7 @@ main (void)
   mbsize = fread (mbbuf, 1, SIZE, stdin);
   if (mbsize == 0)
     {
-      printf ("%Zd: cannot read input file from standard input: %m\n",
+      printf ("%u: cannot read input file from standard input: %m\n",
 	      __LINE__);
       exit (1);
     }
@@ -75,7 +75,7 @@ main (void)
     cd = iconv_open ("WCHAR_T", "UTF-8");
     if (cd == (iconv_t) -1)
       {
-	printf ("%Zd: cannot get iconv descriptor for conversion to UCS4\n",
+	printf ("%u: cannot get iconv descriptor for conversion to UCS4\n",
 		__LINE__);
 	exit (1);
       }
@@ -84,7 +84,7 @@ main (void)
     nonr = iconv (cd, &inbuf, &inleft, &outbuf, &outleft);
     if (nonr != 0 && nonr != (size_t) -1)
       {
-	printf ("%Zd: iconv performed %Zd nonreversible conversions\n",
+	printf ("%u: iconv performed %Zd nonreversible conversions\n",
 		__LINE__, nonr);
 	exit (1);
       }
@@ -92,14 +92,14 @@ main (void)
     if  ((size_t) nonr == -1 )
       {
 	printf ("\
-%Zd: iconv returned with %Zd and errno = %m (inleft: %Zd, outleft: %Zd)\n",
+%u: iconv returned with %Zd and errno = %m (inleft: %Zd, outleft: %Zd)\n",
 		__LINE__, nonr, inleft, outleft);
 	exit (1);
       }
 
     if (inleft != 0)
       {
-	printf ("%Zd: iconv didn't convert all input\n", __LINE__);
+	printf ("%u: iconv didn't convert all input\n", __LINE__);
 	exit (1);
       }
 
@@ -107,7 +107,7 @@ main (void)
 
     if ((sizeof (wcbuf) - outleft) % sizeof (wchar_t) != 0)
       {
-	printf ("%Zd: iconv converted not complete wchar_t\n", __LINE__);
+	printf ("%u: iconv converted not complete wchar_t\n", __LINE__);
 	exit (1);
       }
 
@@ -122,7 +122,7 @@ main (void)
   fd = mkstemp (name);
   if (fd == -1)
     {
-      printf ("%Zd: cannot open temporary file: %m\n", __LINE__);
+      printf ("%u: cannot open temporary file: %m\n", __LINE__);
       exit (1);
     }
 
@@ -131,7 +131,7 @@ main (void)
   fp = fdopen (dup (fd), "w");
   if (fp == NULL)
     {
-      printf ("%Zd: fdopen of temp file for writing failed: %m\n", __LINE__);
+      printf ("%u: fdopen of temp file for writing failed: %m\n", __LINE__);
       exit (1);
     }
 
@@ -139,7 +139,7 @@ main (void)
     {
       if (fputwc (wcbuf[n], fp) == WEOF)
 	{
-	  printf ("%Zd: fputwc failed: %m\n", __LINE__);
+	  printf ("%u: fputwc failed: %m\n", __LINE__);
 	  exit (1);
 	}
     }
@@ -147,7 +147,7 @@ main (void)
   res = fclose (fp);
   if (res != 0)
     {
-      printf ("%Zd: fclose after single-character writing failed (%d): %m\n",
+      printf ("%u: fclose after single-character writing failed (%d): %m\n",
 	      __LINE__, res);
       exit (1);
     }
@@ -156,7 +156,7 @@ main (void)
   fp = fdopen (dup (fd), "r");
   if (fp == NULL)
     {
-      printf ("%Zd: fdopen of temp file for reading failed: %m\n", __LINE__);
+      printf ("%u: fdopen of temp file for reading failed: %m\n", __LINE__);
       exit (1);
     }
 
@@ -165,7 +165,7 @@ main (void)
       wint_t wch = fgetwc (fp);
       if (wch == WEOF)
 	{
-	  printf ("%Zd: fgetwc failed (idx %Zd): %m\n", __LINE__, n);
+	  printf ("%u: fgetwc failed (idx %Zd): %m\n", __LINE__, n);
 	  exit (1);
 	}
       wc2buf[n] = wch;
@@ -174,19 +174,19 @@ main (void)
   /* There should be nothing else.  */
   if (fgetwc (fp) != WEOF)
     {
-      printf ("%Zd: too many characters available with fgetwc\n", __LINE__);
+      printf ("%u: too many characters available with fgetwc\n", __LINE__);
       status = 1;
     }
   else if (wmemcmp (wcbuf, wc2buf, wcsize) != 0)
     {
-      printf ("%Zd: buffer read with fgetwc differs\n", __LINE__);
+      printf ("%u: buffer read with fgetwc differs\n", __LINE__);
       status = 1;
     }
 
   res = fclose (fp);
   if (res != 0)
     {
-      printf ("%Zd: fclose after single-character reading failed (%d): %m\n",
+      printf ("%u: fclose after single-character reading failed (%d): %m\n",
 	      __LINE__, res);
       exit (1);
     }
@@ -198,13 +198,13 @@ main (void)
   fp = fdopen (fd, "r");
   if (fp == NULL)
     {
-      printf ("%Zd: fdopen of temp file for reading failed: %m\n", __LINE__);
+      printf ("%u: fdopen of temp file for reading failed: %m\n", __LINE__);
       exit (1);
     }
 
   if (fread (mb2buf, 1, mbsize, fp) != mbsize)
     {
-      printf ("%Zd: cannot read all of the temp file\n", __LINE__);
+      printf ("%u: cannot read all of the temp file\n", __LINE__);
       status = 1;
     }
   else
@@ -212,13 +212,13 @@ main (void)
       /* Make sure there is nothing left.  */
       if (fgetc (fp) != EOF)
 	{
-	  printf ("%Zd: more input available\n", __LINE__);
+	  printf ("%u: more input available\n", __LINE__);
 	  status = 1;
 	}
 
       if (memcmp (mb2buf, mbbuf, mbsize) != 0)
 	{
-	  printf ("%Zd: buffer written with fputwc differs\n", __LINE__);
+	  printf ("%u: buffer written with fputwc differs\n", __LINE__);
 	  status = 1;
 	}
     }
@@ -226,7 +226,7 @@ main (void)
   res = fclose (fp);
   if (res != 0)
     {
-      printf ("%Zd: fclose after single-character reading failed (%d): %m\n",
+      printf ("%u: fclose after single-character reading failed (%d): %m\n",
 	      __LINE__, res);
       exit (1);
     }
@@ -236,7 +236,7 @@ main (void)
   fd = mkstemp (strcpy (name, "/tmp/widetext.out.XXXXXX"));
   if (fd == -1)
     {
-      printf ("%Zd: cannot open temporary file: %m\n", __LINE__);
+      printf ("%u: cannot open temporary file: %m\n", __LINE__);
       exit (1);
     }
 
@@ -245,7 +245,7 @@ main (void)
   fp = fdopen (dup (fd), "w");
   if (fp == NULL)
     {
-      printf ("%Zd: fdopen of temp file for writing failed: %m\n", __LINE__);
+      printf ("%u: fdopen of temp file for writing failed: %m\n", __LINE__);
       exit (1);
     }
 
@@ -275,7 +275,7 @@ main (void)
   res = fclose (fp);
   if (res != 0)
     {
-      printf ("%Zd: fclose after line-wise writing failed (%d): %m\n",
+      printf ("%u: fclose after line-wise writing failed (%d): %m\n",
 	      __LINE__, res);
       exit (1);
     }
@@ -284,7 +284,7 @@ main (void)
   fp = fdopen (dup (fd), "r");
   if (fp == NULL)
     {
-      printf ("%Zd: fdopen of temp file for reading failed: %m\n", __LINE__);
+      printf ("%u: fdopen of temp file for reading failed: %m\n", __LINE__);
       exit (1);
     }
 
@@ -292,7 +292,7 @@ main (void)
     {
       if (fgetws (wcp, &wc2buf[wcsize] - wcp + 1, fp) == NULL)
 	{
-	  printf ("%Zd: short read using fgetws (only %Zd of %Zd)\n",
+	  printf ("%u: short read using fgetws (only %Zd of %Zd)\n",
 		  __LINE__, wcp - wc2buf, wcsize);
 	  status = 1;
 	  break;
@@ -302,26 +302,26 @@ main (void)
 
   if (wcp > &wc2buf[wcsize])
     {
-      printf ("%Zd: fgetws read too much\n", __LINE__);
+      printf ("%u: fgetws read too much\n", __LINE__);
       status = 1;
     }
   else if (fgetwc (fp) != WEOF)
     {
       /* There should be nothing else.  */
-      printf ("%Zd: too many characters available with fgetws\n", __LINE__);
+      printf ("%u: too many characters available with fgetws\n", __LINE__);
       status = 1;
     }
 
   if (wcp >= &wc2buf[wcsize] && wmemcmp (wcbuf, wc2buf, wcsize) != 0)
     {
-      printf ("%Zd: buffer read with fgetws differs\n", __LINE__);
+      printf ("%u: buffer read with fgetws differs\n", __LINE__);
       status = 1;
     }
 
   res = fclose (fp);
   if (res != 0)
     {
-      printf ("%Zd: fclose after single-character reading failed (%d): %m\n",
+      printf ("%u: fclose after single-character reading failed (%d): %m\n",
 	      __LINE__, res);
       exit (1);
     }
@@ -333,13 +333,13 @@ main (void)
   fp = fdopen (fd, "r");
   if (fp == NULL)
     {
-      printf ("%Zd: fdopen of temp file for reading failed: %m\n", __LINE__);
+      printf ("%u: fdopen of temp file for reading failed: %m\n", __LINE__);
       exit (1);
     }
 
   if (fread (mb2buf, 1, mbsize, fp) != mbsize)
     {
-      printf ("%Zd: cannot read all of the temp file\n", __LINE__);
+      printf ("%u: cannot read all of the temp file\n", __LINE__);
       status = 1;
     }
   else
@@ -347,13 +347,13 @@ main (void)
       /* Make sure there is nothing left.  */
       if (fgetc (fp) != EOF)
 	{
-	  printf ("%Zd: more input available\n", __LINE__);
+	  printf ("%u: more input available\n", __LINE__);
 	  status = 1;
 	}
 
       if (memcmp (mb2buf, mbbuf, mbsize) != 0)
 	{
-	  printf ("%Zd: buffer written with fputws differs\n", __LINE__);
+	  printf ("%u: buffer written with fputws differs\n", __LINE__);
 	  status = 1;
 	}
     }
@@ -361,7 +361,7 @@ main (void)
   res = fclose (fp);
   if (res != 0)
     {
-      printf ("%Zd: fclose after single-character reading failed (%d): %m\n",
+      printf ("%u: fclose after single-character reading failed (%d): %m\n",
 	      __LINE__, res);
       exit (1);
     }

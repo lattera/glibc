@@ -43,7 +43,7 @@ tst_strfmon (FILE * fp, int debug_flg)
 	  fprintf (stdout, "strfmon() [ %s : %d ]\n", locale, rec + 1);
 	  fprintf (stdout, "	  : err = %d | %s\n", errno_save,
 		   strerror (errno));
-	  fprintf (stdout, "	  : ret = %d; \t fmt = |%s|\n", ret, fmt);
+	  fprintf (stdout, "	  : ret = %zd; \t fmt = |%s|\n", ret, fmt);
 	  fprintf (stdout, "	  : buf = |%s|\n\n", buf);
 	}
 

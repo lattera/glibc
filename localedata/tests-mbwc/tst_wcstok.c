@@ -35,11 +35,11 @@ tst_wcstok (FILE * fp, int debug_flg)
 	if (debug_flg)
 	  {
 	    fprintf (stdout, "wcstok() [ %s : %d : %d ] *ret  = 0x%lx\n",
-		     locale, rec + 1, seq_num + 1, *ret);
+		     locale, rec + 1, seq_num + 1, (unsigned long int) *ret);
 	    if (pt && *pt)
 	      {
 		fprintf (stdout, "			 *pt   = 0x%lx\n",
-			 *pt);
+			 (unsigned long int) *pt);
 	      }
 	  }
 
@@ -63,7 +63,9 @@ tst_wcstok (FILE * fp, int debug_flg)
 		  {
 		    fprintf (stderr,
 			     "			      ret[%d] = 0x%lx <-> "
-			     "0x%lx = ws_ex[%d]\n", i, ret[i], ws_ex[i], i);
+			     "0x%lx = ws_ex[%d]\n",
+			     i, (unsigned long int) ret[i],
+			     (unsigned long int) ws_ex[i], i);
 		  }
 
 		if (ret[i] != ws_ex[i])

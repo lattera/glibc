@@ -54,7 +54,7 @@ tst_wcsncpy (FILE *fp, int debug_flg)
 	{
 	  if (debug_flg)
 	    {
-	      fprintf (stderr, "\nwcsncpy: n = %d\n\n", n);
+	      fprintf (stderr, "\nwcsncpy: n = %zu\n\n", n);
 	    }
 
 	  ws_ex = TST_EXPECT (wcsncpy).ws;
@@ -64,7 +64,8 @@ tst_wcsncpy (FILE *fp, int debug_flg)
 	      if (debug_flg)
 		fprintf (stderr,
 			 "wcsncpy: ws1[ %d ] = 0x%lx <-> wx_ex[ %d ] = 0x%lx\n",
-			 i, ws1[i], i, ws_ex[i]);
+			 i, (unsigned long int) ws1[i], i,
+			 (unsigned long int) ws_ex[i]);
 
 	      if (ws1[i] != ws_ex[i])
 		{

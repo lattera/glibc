@@ -82,7 +82,7 @@ do_test (void)
     printf ("wrote more to file\n");
   else
     {
-      printf ("wrote %d != %d (%m)\n", c, pagesize);
+      printf ("wrote %d != %zd (%m)\n", c, pagesize);
       result = 1;
     }
 
