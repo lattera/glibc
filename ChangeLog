@@ -1,3 +1,8 @@
+2000-01-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/Makefile (tests): Add test-misc.
+	* math/test-misc.c: New file.
+
 2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/ieee754/ldbl-96/s_modfl.c: Correct handling of arguments
@@ -15,8 +20,7 @@
 	end of the buffer.  Set errno correctly if floating-point number
 	would overflow buffer.
 
-	* posix/regex.h: Update comment of
-	RE_SYNTAX_POSIX_MINIMAL_EXTENDED.
+	* posix/regex.h: Update comment of RE_SYNTAX_POSIX_MINIMAL_EXTENDED.
 
 	* locale/weight.h (findidx): Little optimization.  Correctly return
 	offset in indirect table.

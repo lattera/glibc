@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -78,7 +78,8 @@ distribute += $(long-c-yes:=.c)
 include ../Makeconfig
 
 # Rules for the test suite.
-tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test
+tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
+	test-misc
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
