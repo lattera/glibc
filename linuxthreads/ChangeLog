@@ -1,7 +1,8 @@
 2004-07-20  Alexandre Oliva  <aoliva@redhat.com>
 
-	* sysdeps/mips/atomicity.h, sysdeps/mips/pt-machine.h: Use
-	standard names for ABI macros, include sgidefs.h where appropriate.
+	* sysdeps/mips/pt-machine.h: Use standard names for ABI macros,
+	include sgidefs.h.
+	* sysdeps/mips/atomicity.h: Likewise.
 
 2004-07-19  Alexandre Oliva  <aoliva@redhat.com>
 
