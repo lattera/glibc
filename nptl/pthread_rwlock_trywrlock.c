@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -32,7 +32,7 @@ __pthread_rwlock_trywrlock (rwlock)
 
   if (rwlock->__data.__writer == 0 && rwlock->__data.__nr_readers == 0)
     {
-      rwlock->__data.__writer = (pthread_t) THREAD_SELF;
+      rwlock->__data.__writer = (pthread_t) THREAD_ID;
       result = 0;
     }
 

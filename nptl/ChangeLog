@@ -1,3 +1,25 @@
+2003-05-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/tls.h: Define THREAD_ID.
+	* sysdeps/ia64/tls.h: Likewise.
+	* sysdeps/powerpc/tls.h: Likewise.
+	* sysdeps/s390/tls.h: Likewise.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+	* pthread_mutex_lock.c: Use THREAD_ID instead of THREAD_SELF to
+	record ownership.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	* pthread_rwlock_trywrlock.c: Likewise.
+	* sysdeps/pthread/pthread_rwlocklock_rdlock.c: Likewise.
+	* sysdeps/pthread/pthread_rwlock_timedrdlock.c: Likewise.
+	* sysdeps/pthread/pthread_rwlock_timedwrlock.c: Likewise.
+	* sysdeps/pthread/pthread_rwlock_wrlock.c: Likewise.
+
+	* sysdeps/pthread/createthread.c (create_thread): Use CLONE_SYSVSEM
+	flag.
+
 2003-04-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h

@@ -137,6 +137,10 @@ typedef struct
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF ((struct pthread *) __builtin_thread_pointer ())
 
+/* Identifier for the current thread.  THREAD_SELF is usable but
+   sometimes more expensive than necessary.  It is fine here.  */
+# define THREAD_ID THREAD_SELF
+
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) \
   descr->member

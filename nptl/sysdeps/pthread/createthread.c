@@ -78,8 +78,9 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	  if (ARCH_CLONE (start_thread_debug, STACK_VARIABLES_ARGS,
 			  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL |
 			  CLONE_SETTLS | CLONE_PARENT_SETTID |
-			  CLONE_CHILD_CLEARTID | CLONE_DETACHED | 0,
-			  pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
+			  CLONE_CHILD_CLEARTID | CLONE_DETACHED |
+			  CLONE_SYSVSEM | 0, pd, &pd->tid, TLS_VALUE,
+			  &pd->tid) == -1)
 	    /* Failed.  */
 	    return errno;
 
@@ -151,7 +152,8 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
   if (ARCH_CLONE (start_thread, STACK_VARIABLES_ARGS,
 		  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL |
 		  CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID |
-		  CLONE_DETACHED | 0, pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
+		  CLONE_DETACHED | CLONE_SYSVSEM | 0, pd, &pd->tid, TLS_VALUE,
+		  &pd->tid) == -1)
     /* Failed.  */
     return errno;
 

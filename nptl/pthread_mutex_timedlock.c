@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -27,7 +27,7 @@ pthread_mutex_timedlock (mutex, abstime)
      pthread_mutex_t *mutex;
      const struct timespec *abstime;
 {
-  struct pthread *pd = THREAD_SELF;
+  struct pthread *id = THREAD_ID;
   int result = 0;
 
   /* We must not check ABSTIME here.  If the thread does not block
@@ -38,7 +38,7 @@ pthread_mutex_timedlock (mutex, abstime)
       /* Recursive mutex.  */
     case PTHREAD_MUTEX_RECURSIVE_NP:
       /* Check whether we already hold the mutex.  */
-      if (mutex->__data.__owner == pd)
+      if (mutex->__data.__owner == id)
 	{
 	  /* Just bump the counter.  */
 	  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
@@ -65,7 +65,7 @@ pthread_mutex_timedlock (mutex, abstime)
       /* Error checking mutex.  */
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Check whether we already hold the mutex.  */
-      if (mutex->__data.__owner == pd)
+      if (mutex->__data.__owner == id)
 	return EDEADLK;
 
       /* FALLTHROUGH */
@@ -81,7 +81,7 @@ pthread_mutex_timedlock (mutex, abstime)
 
   if (result == 0)
     /* Record the ownership.  */
-    mutex->__data.__owner = pd;
+    mutex->__data.__owner = id;
 
  out:
   return result;

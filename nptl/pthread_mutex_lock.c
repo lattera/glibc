@@ -26,14 +26,14 @@ int
 __pthread_mutex_lock (mutex)
      pthread_mutex_t *mutex;
 {
-  struct pthread *pd = THREAD_SELF;
+  struct pthread *id = THREAD_ID;
 
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
     case PTHREAD_MUTEX_RECURSIVE_NP:
       /* Check whether we already hold the mutex.  */
-      if (mutex->__data.__owner == pd)
+      if (mutex->__data.__owner == id)
 	{
 	  /* Just bump the counter.  */
 	  if (__builtin_expect (mutex->__data.__count + 1 == 0, 0))
@@ -48,7 +48,7 @@ __pthread_mutex_lock (mutex)
 	  lll_mutex_lock (mutex->__data.__lock);
 
 	  /* Record the ownership.  */
-	  mutex->__data.__owner = pd;
+	  mutex->__data.__owner = id;
 	  mutex->__data.__count = 1;
 	}
       break;
@@ -56,7 +56,7 @@ __pthread_mutex_lock (mutex)
       /* Error checking mutex.  */
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Check whether we already hold the mutex.  */
-      if (mutex->__data.__owner == pd)
+      if (mutex->__data.__owner == id)
 	return EDEADLK;
 
       /* FALLTHROUGH */
@@ -68,7 +68,7 @@ __pthread_mutex_lock (mutex)
       /* Normal mutex.  */
       lll_mutex_lock (mutex->__data.__lock);
       /* Record the ownership.  */
-      mutex->__data.__owner = pd;
+      mutex->__data.__owner = id;
       break;
     }
 

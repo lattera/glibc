@@ -43,7 +43,7 @@ pthread_rwlock_timedwrlock (rwlock, abstime)
       if (rwlock->__data.__writer == 0 && rwlock->__data.__nr_readers == 0)
 	{
 	  /* Mark self as writer.  */
-	  rwlock->__data.__writer = (pthread_t) THREAD_SELF;
+	  rwlock->__data.__writer = (pthread_t) THREAD_ID;
 	  break;
 	}
 
@@ -51,7 +51,7 @@ pthread_rwlock_timedwrlock (rwlock, abstime)
 	 a deadlock situation we recognize and report.  */
       if (rwlock->__data.__writer != 0
 	  && __builtin_expect (rwlock->__data.__writer
-			       == (pthread_t) THREAD_SELF, 0))
+			       == (pthread_t) THREAD_ID, 0))
 	{
 	  result = EDEADLK;
 	  break;

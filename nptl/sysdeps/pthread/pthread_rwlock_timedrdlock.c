@@ -60,7 +60,7 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 	 a deadlock situation we recognize and report.  */
       if (rwlock->__data.__writer != 0
 	  && __builtin_expect (rwlock->__data.__writer
-			       == (pthread_t) THREAD_SELF, 0))
+			       == (pthread_t) THREAD_ID, 0))
 	{
 	  result = EDEADLK;
 	  break;

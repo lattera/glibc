@@ -30,23 +30,19 @@ __pthread_mutex_unlock (mutex)
     {
     case PTHREAD_MUTEX_RECURSIVE_NP:
       /* Recursive mutex.  */
-      if (mutex->__data.__owner != THREAD_SELF)
+      if (mutex->__data.__owner != THREAD_ID)
 	return EPERM;
 
       if (--mutex->__data.__count != 0)
 	/* We still hold the mutex.  */
 	return 0;
-
-      mutex->__data.__owner = NULL;
       break;
 
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Error checking mutex.  */
-      if (mutex->__data.__owner != THREAD_SELF
+      if (mutex->__data.__owner != THREAD_ID
 	  || ! lll_mutex_islocked (mutex->__data.__lock))
 	return EPERM;
-
-      mutex->__data.__owner = NULL;
       break;
 
     default:
@@ -56,6 +52,9 @@ __pthread_mutex_unlock (mutex)
       /* Normal mutex.  Nothing special to do.  */
       break;
     }
+
+  /* Always reset the owner field.  */
+  mutex->__data.__owner = NULL;
 
   /* Unlock.  */
   lll_mutex_unlock (mutex->__data.__lock);

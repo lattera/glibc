@@ -129,6 +129,10 @@ register void *__thread_register __asm__ ("r13");
     ((struct pthread *) (__thread_register \
 			 - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
 
+/* Identifier for the current thread.  THREAD_SELF is usable but
+   sometimes more expensive than necessary as in this case.  */
+# define THREAD_ID __thread_register
+
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) ((void)(descr), (THREAD_SELF)->member)
 
