@@ -1,5 +1,8 @@
 1998-12-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/netipx/ipx.h (SIOCIPXNCPCONN): New macro
+	from latest kernel.
+
 	* stdlib/fpioconst.c: If __NO_LONG_DOUBLE_MATH don't define constants
 	beyond range of double.
 	* stdlib/fpioconst.h (_fpioconst_pow10): Reduce size according to
