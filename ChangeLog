@@ -21,6 +21,8 @@
 	* sysdeps/unix/sysv/sysv4/i386/bits/stat.h: Likewise.
 	* sysdeps/unix/sysv/sysv4/solaris2/bits/stat.h: Likewise.
 	* sysdeps/unix/sysv/aix/bits/stat.h: Likewise.
+	* manual/filesys.texi: Document S_TYPEISMQ, S_TYPEISSEM, and
+	S_TYPEISSHM.
 
 2000-06-22  Andreas Jaeger  <aj@suse.de>
 

@@ -1811,6 +1811,38 @@ This is the file type constant of a socket.
 This is the file type constant of a FIFO or pipe.
 @end table
 
+The POSIX.1b standard introduced a few more objects which possibly can
+be implemented as object in the filesystem.  These are message queues,
+semaphores, and shared memory objects.  To allow differentiating these
+objects from other files the POSIX standard introduces three new test
+macros.  But unlike the other macros it does not take the value of the
+@code{st_mode} field as the parameter.  Instead they expect a pointer to
+the whole @code{struct stat} structure.
+
+@comment sys/stat.h
+@comment POSIX
+@deftypefn Macro int S_TYPEISMQ (struct stat @var{s})
+If the system implement POSIX message queues as distinct objects and the
+file is a message queue object, this macro returns a non-zero value.
+In all other cases the result is zero.
+@end deftypefn
+
+@comment sys/stat.h
+@comment POSIX
+@deftypefn Macro int S_TYPEISSEM (struct stat @var{s})
+If the system implement POSIX semaphores as distinct objects and the
+file is a semaphore object, this macro returns a non-zero value.
+In all other cases the result is zero.
+@end deftypefn
+
+@comment sys/stat.h
+@comment POSIX
+@deftypefn Macro int S_TYPEISSHM (struct stat @var{s})
+If the system implement POSIX shared memory objects as distinct objects
+and the file is an shared memory object, this macro returns a non-zero
+value.  In all other cases the result is zero.
+@end deftypefn
+
 @node File Owner
 @subsection File Owner
 @cindex file owner
@@ -2558,7 +2590,7 @@ The operation was interrupted by a signal.
 @deftypefun int truncate64 (const char *@var{name}, off64_t @var{length})
 This function is similar to the @code{truncate} function.  The
 difference is that the @var{length} argument is 64 bits wide even on 32
-bits machines, which allows the handling of files with sizes up to 
+bits machines, which allows the handling of files with sizes up to
 @math{2^63} bytes.
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
