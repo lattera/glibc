@@ -78,7 +78,8 @@ endif
 ifneq ($(cross-compiling),yes)
 # If the gd library is available we build the `memusagestat' program.
 ifneq ($(LIBGD),no)
-install-bin = memusagestat memusage
+install-bin = memusagestat
+install-bin-script += memusage
 generated += memusagestat memusage
 extra-objs += memusagestat.o
 
