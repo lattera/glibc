@@ -43,12 +43,15 @@ C_SYMBOL_NAME(__mpn_lshift:)
 	movl	28(%esp),%ebp		/* size */
 	movl	32(%esp),%ecx		/* cnt */
 
+/* We can use faster code for shift-by-1 under certain conditions.  */
 	cmp	$1,%ecx
 	jne	Lnormal
-	movl	%edi,%eax
-	subl	%esi,%eax
-	cmpl	%ebp,%eax
-	jnc	Lspecial
+	leal	4(%esi),%eax
+	cmpl	%edi,%eax
+	jnc	Lspecial		/* jump if s_ptr + 1 >= res_ptr */
+	leal	(%esi,%ebp,4),%eax
+	cmpl	%eax,%edi
+	jnc	Lspecial		/* jump if res_ptr >= s_ptr + size */
 
 Lnormal:
 	leal	-4(%edi,%ebp,4),%edi

@@ -179,24 +179,22 @@ void _mp_default_free ();
    strings in base 2..36.  */
 struct bases
 {
-  /* Number of digits in the conversion base that always fits in
-     an mp_limb.  For example, for base 10 this is 10, since
-     2**32 = 4294967296 has ten digits.  */
+  /* Number of digits in the conversion base that always fits in an mp_limb.
+     For example, for base 10 on a machine where a mp_limb has 32 bits this
+     is 9, since 10**9 is the largest number that fits into a mp_limb.  */
   int chars_per_limb;
 
   /* log(2)/log(conversion_base) */
   float chars_per_bit_exactly;
 
-  /* big_base is conversion_base**chars_per_limb, i.e. the biggest
-     number that fits a word, built by factors of conversion_base.
-     Exception: For 2, 4, 8, etc, big_base is log2(base), i.e. the
-     number of bits used to represent each digit in the base.  */
+  /* base**chars_per_limb, i.e. the biggest number that fits a word, built by
+     factors of base.  Exception: For 2, 4, 8, etc, big_base is log2(base),
+     i.e. the number of bits used to represent each digit in the base.  */
   mp_limb big_base;
 
-  /* big_base_inverted is a BITS_PER_MP_LIMB bit approximation to
-     1/big_base, represented as a fixed-point number.  Instead of
-     dividing by big_base an application can choose to multiply
-     by big_base_inverted.  */
+  /* A BITS_PER_MP_LIMB bit approximation to 1/big_base, represented as a
+     fixed-point number.  Instead of dividing by big_base an application can
+     choose to multiply by big_base_inverted.  */
   mp_limb big_base_inverted;
 };
 

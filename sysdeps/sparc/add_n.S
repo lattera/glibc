@@ -1,7 +1,7 @@
 ! sparc __mpn_add_n -- Add two limb vectors of the same length > 0 and store
 ! sum in a third limb vector.
 
-! Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+! Copyright (C) 1995 Free Software Foundation, Inc.
 
 ! This file is part of the GNU MP Library.
 
@@ -21,10 +21,10 @@
 
 
 ! INPUT PARAMETERS
-! res_ptr	%o0
-! s1_ptr	%o1
-! s2_ptr	%o2
-! size		%o3
+#define res_ptr	%o0
+#define s1_ptr	%o1
+#define s2_ptr	%o2
+#define size	%o3
 
 #include "sysdep.h"
 
@@ -32,108 +32,192 @@
 	.align	4
 	.global	C_SYMBOL_NAME(__mpn_add_n)
 C_SYMBOL_NAME(__mpn_add_n):
-	ld	[%o1+0],%o4		! read first limb from s1_ptr
-	srl	%o3,4,%g1
-	ld	[%o2+0],%o5		! read first limb from s2_ptr
+	cmp	size,8
+	mov	0,%o4			! clear cy-save register
+	blt,a	Ltriv
+	addcc	size,-2,size
+	xor	s2_ptr,res_ptr,%g1
+	andcc	%g1,4,%g0
+	bne	L1			! branch if alignment differs
+	nop
+L0:	andcc	res_ptr,4,%g0		! res_ptr unaligned? Side effect: cy=0
+	beq	L_v1			! if no, branch
+	nop
+! **  V1a  **
+/* Add least significant limb separately to align res_ptr and s2_ptr */
+	ld	[s1_ptr],%g4
+	add	s1_ptr,4,s1_ptr
+	ld	[s2_ptr],%g2
+	add	s2_ptr,4,s2_ptr
+	add	size,-1,size
+	addcc	%g4,%g2,%o4
+	st	%o4,[res_ptr]
+	add	res_ptr,4,res_ptr
 
-	sub	%g0,%o3,%o3
-	andcc	%o3,(16-1),%o3
-	be	Lzero
-	 mov	%o4,%g2			! put first s1_limb in g2 too
+L_v1:	ld	[s1_ptr+0],%g4
+	ld	[s1_ptr+4],%g1
+	ldd	[s2_ptr+0],%g2
+	addx	%g0,%g0,%o4		! save cy in register
+	addcc	size,-10,size
+	blt	Lfin1
+	subcc	%g0,%o4,%g0		! restore cy
+/* Add blocks of 8 limbs until less than 8 limbs remain */
+Loop1:	addxcc	%g4,%g2,%o4
+	ld	[s1_ptr+8],%g4
+	addxcc	%g1,%g3,%o5
+	ld	[s1_ptr+12],%g1
+	ldd	[s2_ptr+8],%g2
+	std	%o4,[res_ptr+0]
+	addxcc	%g4,%g2,%o4
+	ld	[s1_ptr+16],%g4
+	addxcc	%g1,%g3,%o5
+	ld	[s1_ptr+20],%g1
+	ldd	[s2_ptr+16],%g2
+	std	%o4,[res_ptr+8]
+	addxcc	%g4,%g2,%o4
+	ld	[s1_ptr+24],%g4
+	addxcc	%g1,%g3,%o5
+	ld	[s1_ptr+28],%g1
+	ldd	[s2_ptr+24],%g2
+	std	%o4,[res_ptr+16]
+	addxcc	%g4,%g2,%o4
+	ld	[s1_ptr+32],%g4
+	addxcc	%g1,%g3,%o5
+	ld	[s1_ptr+36],%g1
+	ldd	[s2_ptr+32],%g2
+	std	%o4,[res_ptr+24]
+	addx	%g0,%g0,%o4		! save cy in register
+	addcc	size,-8,size
+	add	s1_ptr,32,s1_ptr
+	add	s2_ptr,32,s2_ptr
+	add	res_ptr,32,res_ptr
+	bge	Loop1
+	subcc	%g0,%o4,%g0		! restore cy
 
-	sll	%o3,2,%o3		! multiply by 4
-	sub	%o0,%o3,%o0		! adjust res_ptr
-	sub	%o1,%o3,%o1		! adjust s1_ptr
-	sub	%o2,%o3,%o2		! adjust s2_ptr
+Lfin1:	addcc	size,8-2,size
+	blt	Lend1
+	subcc	%g0,%o4,%g0		! restore cy
+/* Add blocks of 2 limbs until less than 2 limbs remain */
+Loop1b:	addxcc	%g4,%g2,%o4
+	ld	[s1_ptr+8],%g4
+	addxcc	%g1,%g3,%o5
+	ld	[s1_ptr+12],%g1
+	ldd	[s2_ptr+8],%g2
+	std	%o4,[res_ptr+0]
+	addx	%g0,%g0,%o4		! save cy in register
+	addcc	size,-2,size
+	add	s1_ptr,8,s1_ptr
+	add	s2_ptr,8,s2_ptr
+	add	res_ptr,8,res_ptr
+	bge	Loop1b
+	subcc	%g0,%o4,%g0		! restore cy
+Lend1:	addxcc	%g4,%g2,%o4
+	addxcc	%g1,%g3,%o5
+	std	%o4,[res_ptr+0]
+	addx	%g0,%g0,%o4		! save cy in register
 
-#if PIC
-	mov	%o7,%g4			! Save return address register
-	call	1f
-	add	%o7,Lbase-1f,%g3
-1:	mov	%g4,%o7			! Restore return address register
-#else
-	sethi	%hi(Lbase),%g3
-	or	%g3,%lo(Lbase),%g3
-#endif
-	sll	%o3,2,%o3		! multiply by 4
-	jmp	%g3+%o3
-	 mov	%o5,%g3			! put first s2_limb in g3 too
+	andcc	size,1,%g0
+	be	Lret1
+	subcc	%g0,%o4,%g0		! restore cy
+/* Add last limb */
+	ld	[s1_ptr+8],%g4
+	ld	[s2_ptr+8],%g2
+	addxcc	%g4,%g2,%o4
+	st	%o4,[res_ptr+8]
 
-Loop:	addxcc	%g2,%g3,%o3
-	add	%o1,64,%o1
-	st	%o3,[%o0+60]
-	add	%o2,64,%o2
-	ld	[%o1+0],%o4
-	add	%o0,64,%o0
-	ld	[%o2+0],%o5
-Lzero:	sub	%g1,1,%g1	! add 0 + 16r limbs (adjust loop counter)
-Lbase:	ld	[%o1+4],%g2
-	addxcc	%o4,%o5,%o3
-	ld	[%o2+4],%g3
-	st	%o3,[%o0+0]
-	ld	[%o1+8],%o4	! add 15 + 16r limbs
-	addxcc	%g2,%g3,%o3
-	ld	[%o2+8],%o5
-	st	%o3,[%o0+4]
-	ld	[%o1+12],%g2	! add 14 + 16r limbs
-	addxcc	%o4,%o5,%o3
-	ld	[%o2+12],%g3
-	st	%o3,[%o0+8]
-	ld	[%o1+16],%o4	! add 13 + 16r limbs
-	addxcc	%g2,%g3,%o3
-	ld	[%o2+16],%o5
-	st	%o3,[%o0+12]
-	ld	[%o1+20],%g2	! add 12 + 16r limbs
-	addxcc	%o4,%o5,%o3
-	ld	[%o2+20],%g3
-	st	%o3,[%o0+16]
-	ld	[%o1+24],%o4	! add 11 + 16r limbs
-	addxcc	%g2,%g3,%o3
-	ld	[%o2+24],%o5
-	st	%o3,[%o0+20]
-	ld	[%o1+28],%g2	! add 10 + 16r limbs
-	addxcc	%o4,%o5,%o3
-	ld	[%o2+28],%g3
-	st	%o3,[%o0+24]
-	ld	[%o1+32],%o4	! add 9 + 16r limbs
-	addxcc	%g2,%g3,%o3
-	ld	[%o2+32],%o5
-	st	%o3,[%o0+28]
-	ld	[%o1+36],%g2	! add 8 + 16r limbs
-	addxcc	%o4,%o5,%o3
-	ld	[%o2+36],%g3
-	st	%o3,[%o0+32]
-	ld	[%o1+40],%o4	! add 7 + 16r limbs
-	addxcc	%g2,%g3,%o3
-	ld	[%o2+40],%o5
-	st	%o3,[%o0+36]
-	ld	[%o1+44],%g2	! add 6 + 16r limbs
-	addxcc	%o4,%o5,%o3
-	ld	[%o2+44],%g3
-	st	%o3,[%o0+40]
-	ld	[%o1+48],%o4	! add 5 + 16r limbs
-	addxcc	%g2,%g3,%o3
-	ld	[%o2+48],%o5
-	st	%o3,[%o0+44]
-	ld	[%o1+52],%g2	! add 4 + 16r limbs
-	addxcc	%o4,%o5,%o3
-	ld	[%o2+52],%g3
-	st	%o3,[%o0+48]
-	ld	[%o1+56],%o4	! add 3 + 16r limbs
-	addxcc	%g2,%g3,%o3
-	ld	[%o2+56],%o5
-	st	%o3,[%o0+52]
-	ld	[%o1+60],%g2	! add 2 + 16r limbs
-	addxcc	%o4,%o5,%o3
-	ld	[%o2+60],%g3
-	st	%o3,[%o0+56]
-	addx	%g0,%g0,%o4
-	tst	%g1
-	bne	Loop
-	 subcc	%g0,%o4,%g0	! restore cy (delay slot)
+Lret1:	retl
+	addx	%g0,%g0,%o0	! return carry-out from most sign. limb
 
-	addxcc	%g2,%g3,%o3
-	st	%o3,[%o0+60]	! store most significant limb
+L1:	xor	s1_ptr,res_ptr,%g1
+	andcc	%g1,4,%g0
+	bne	L2
+	nop
+! **  V1b  **
+	mov	s2_ptr,%g1
+	mov	s1_ptr,s2_ptr
+	b	L0
+	mov	%g1,s1_ptr
 
-	retl
-	 addx	%g0,%g0,%o0	! return carry-out from most sign. limb
+! **  V2  **
+/* If we come here, the alignment of s1_ptr and res_ptr as well as the
+   alignment of s2_ptr and res_ptr differ.  Since there are only two ways
+   things can be aligned (that we care about) we now know that the alignment
+   of s1_ptr and s2_ptr are the same.  */
+
+L2:	andcc	s1_ptr,4,%g0		! s1_ptr unaligned? Side effect: cy=0
+	beq	L_v2			! if no, branch
+	nop
+/* Add least significant limb separately to align res_ptr and s2_ptr */
+	ld	[s1_ptr],%g4
+	add	s1_ptr,4,s1_ptr
+	ld	[s2_ptr],%g2
+	add	s2_ptr,4,s2_ptr
+	add	size,-1,size
+	addcc	%g4,%g2,%o4
+	st	%o4,[res_ptr]
+	add	res_ptr,4,res_ptr
+
+L_v2:	addx	%g0,%g0,%o4		! save cy in register
+	addcc	size,-8,size
+	blt	Lfin2
+	subcc	%g0,%o4,%g0		! restore cy
+/* Add blocks of 8 limbs until less than 8 limbs remain */
+Loop2:	ldd	[s1_ptr+0],%g2
+	ldd	[s2_ptr+0],%o4
+	addxcc	%g2,%o4,%g2
+	st	%g2,[res_ptr+0]
+	addxcc	%g3,%o5,%g3
+	st	%g3,[res_ptr+4]
+	ldd	[s1_ptr+8],%g2
+	ldd	[s2_ptr+8],%o4
+	addxcc	%g2,%o4,%g2
+	st	%g2,[res_ptr+8]
+	addxcc	%g3,%o5,%g3
+	st	%g3,[res_ptr+12]
+	ldd	[s1_ptr+16],%g2
+	ldd	[s2_ptr+16],%o4
+	addxcc	%g2,%o4,%g2
+	st	%g2,[res_ptr+16]
+	addxcc	%g3,%o5,%g3
+	st	%g3,[res_ptr+20]
+	ldd	[s1_ptr+24],%g2
+	ldd	[s2_ptr+24],%o4
+	addxcc	%g2,%o4,%g2
+	st	%g2,[res_ptr+24]
+	addxcc	%g3,%o5,%g3
+	st	%g3,[res_ptr+28]
+	addx	%g0,%g0,%o4		! save cy in register
+	addcc	size,-8,size
+	add	s1_ptr,32,s1_ptr
+	add	s2_ptr,32,s2_ptr
+	add	res_ptr,32,res_ptr
+	bge	Loop2
+	subcc	%g0,%o4,%g0		! restore cy
+
+Lfin2:	addcc	size,8-2,size
+Ltriv:	blt	Lend2
+	subcc	%g0,%o4,%g0		! restore cy
+Loop2b:	ldd	[s1_ptr+0],%g2
+	ldd	[s2_ptr+0],%o4
+	addxcc	%g2,%o4,%g2
+	st	%g2,[res_ptr+0]
+	addxcc	%g3,%o5,%g3
+	st	%g3,[res_ptr+4]
+	addx	%g0,%g0,%o4		! save cy in register
+	addcc	size,-2,size
+	add	s1_ptr,8,s1_ptr
+	add	s2_ptr,8,s2_ptr
+	add	res_ptr,8,res_ptr
+	bge	Loop2b
+	subcc	%g0,%o4,%g0		! restore cy
+Lend2:	andcc	size,1,%g0
+	be	Lret2
+	subcc	%g0,%o4,%g0		! restore cy
+/* Add last limb */
+	ld	[s1_ptr],%g4
+	ld	[s2_ptr],%g2
+	addxcc	%g4,%g2,%o4
+	st	%o4,[res_ptr]
+
+Lret2:	retl
+	addx	%g0,%g0,%o0	! return carry-out from most sign. limb

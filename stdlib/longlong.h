@@ -139,6 +139,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
     __asm__ ("clz %0,%1"						\
 	     : "=r" ((USItype)(count))					\
 	     : "r" ((USItype)(x)))
+#define COUNT_LEADING_ZEROS_0 32
 #endif /* __a29k__ */
 
 #if defined (__alpha__) && W_TYPE_SIZE == 64
@@ -298,9 +299,9 @@ extern UDItype __udiv_qrnnd ();
 	   struct {USItype __h, __l;} __i;				\
 	  } __xx;							\
     __asm__ ("xmpyu %1,%2,%0"						\
-	     : "=fx" (__xx.__ll)					\
-	     : "fx" ((USItype)(u)),					\
-	       "fx" ((USItype)(v)));					\
+	     : "=*f" (__xx.__ll)					\
+	     : "*f" ((USItype)(u)),					\
+	       "*f" ((USItype)(v)));					\
     (wh) = __xx.__i.__h;						\
     (wl) = __xx.__i.__l;						\
   } while (0)
@@ -339,7 +340,7 @@ extern USItype __udiv_qrnnd ();
 	sub		%0,%1,%0		; Subtract it.
 	" : "=r" (count), "=r" (__tmp) : "1" (x));			\
   } while (0)
-#endif
+#endif /* hppa */
 
 #if (defined (__i370__) || defined (__mvs__)) && W_TYPE_SIZE == 32
 #define umul_ppmm(xh, xl, m0, m1) \
@@ -431,7 +432,29 @@ extern USItype __udiv_qrnnd ();
 #endif
 #endif /* 80x86 */
 
+#if defined (__i860__) && W_TYPE_SIZE == 32
+#define rshift_rhlc(r,h,l,c) \
+  __asm__ ("shr %3,r0,r0\;shrd %1,%2,%0"				\
+	   "=r" (r) : "r" (h), "r" (l), "rn" (c))
+#endif /* i860 */
+
 #if defined (__i960__) && W_TYPE_SIZE == 32
+#define add_ssaaaa(sh, sl, ah, al, bh, bl) \
+  __asm__ ("cmpo 1,0\;addc %5,%4,%1\;addc %3,%2,%0"			\
+	   : "=r" ((USItype)(sh)),					\
+	     "=&r" ((USItype)(sl))					\
+	   : "%dI" ((USItype)(ah)),					\
+	     "dI" ((USItype)(bh)),					\
+	     "%dI" ((USItype)(al)),					\
+	     "dI" ((USItype)(bl)))
+#define sub_ddmmss(sh, sl, ah, al, bh, bl) \
+  __asm__ ("cmpo 0,0\;subc %5,%4,%1\;subc %3,%2,%0"			\
+	   : "=r" ((USItype)(sh)),					\
+	     "=&r" ((USItype)(sl))					\
+	   : "dI" ((USItype)(ah)),					\
+	     "dI" ((USItype)(bh)),					\
+	     "dI" ((USItype)(al)),					\
+	     "dI" ((USItype)(bl)))
 #define umul_ppmm(w1, w0, u, v) \
   ({union {UDItype __ll;						\
 	   struct {USItype __l, __h;} __i;				\
@@ -448,7 +471,39 @@ extern USItype __udiv_qrnnd ();
 	     : "%dI" ((USItype)(u)),					\
 	       "dI" ((USItype)(v)));					\
     __w; })  
-#endif /* __i960__ */
+#define udiv_qrnnd(q, r, nh, nl, d) \
+  do {									\
+    union {UDItype __ll;						\
+	   struct {USItype __l, __h;} __i;				\
+	  } __nn;							\
+    __nn.__i.__h = (nh); __nn.__i.__l = (nl);				\
+    __asm__ ("ediv %d,%n,%0"						\
+	   : "=d" (__rq.__ll)						\
+	   : "dI" (__nn.__ll),						\
+	     "dI" ((USItype)(d)));					\
+    (r) = __rq.__i.__l; (q) = __rq.__i.__h;				\
+  } while (0)
+#define count_leading_zeros(count, x) \
+  do {									\
+    USItype __cbtmp;							\
+    __asm__ ("scanbit %1,%0"						\
+	     : "=r" (__cbtmp)						\
+	     : "r" ((USItype)(x)));					\
+    (count) = __cbtmp ^ 31;						\
+  } while (0)
+#define COUNT_LEADING_ZEROS_0 (-32) /* sic */
+#if defined (__i960mx)		/* what is the proper symbol to test??? */
+#define rshift_rhlc(r,h,l,c) \
+  do {									\
+    union {UDItype __ll;						\
+	   struct {USItype __l, __h;} __i;				\
+	  } __nn;							\
+    __nn.__i.__h = (h); __nn.__i.__l = (l);				\
+    __asm__ ("shre %2,%1,%0"						\
+	     : "=d" (r) : "dI" (__nn.__ll), "dI" (c));			\
+  }
+#endif /* i960mx */
+#endif /* i960 */
 
 #if (defined (__mc68000__) || defined (__mc68020__) || defined (__NeXT__) || defined(mc68020)) && W_TYPE_SIZE == 32
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
@@ -469,7 +524,7 @@ extern USItype __udiv_qrnnd ();
 	     "d" ((USItype)(bh)),					\
 	     "1" ((USItype)(al)),					\
 	     "g" ((USItype)(bl)))
-#if (defined (__mc68020__) || defined (__NeXT__) || defined(mc68020)) && W_TYPE_SIZE == 32
+#if (defined (__mc68020__) || defined (__NeXT__) || defined(mc68020))
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("mulu%.l %3,%1:%0"						\
 	   : "=d" ((USItype)(w0)),					\
@@ -496,8 +551,9 @@ extern USItype __udiv_qrnnd ();
   __asm__ ("bfffo %1{%b2:%b2},%0"					\
 	   : "=d" ((USItype)(count))					\
 	   : "od" ((USItype)(x)), "n" (0))
+#define COUNT_LEADING_ZEROS_0 32
 #else /* not mc68020 */
-#define umul_ppmmxx(xh, xl, a, b) \
+#define umul_ppmm(xh, xl, a, b) \
   do { USItype __umul_tmp1, __umul_tmp2;				\
 	__asm__ ("| Inlined umul_ppmm
 	move%.l	%5,%3
@@ -557,6 +613,7 @@ extern USItype __udiv_qrnnd ();
 	     : "r" ((USItype)(x)));					\
     (count) = __cbtmp ^ 31;						\
   } while (0)
+#define COUNT_LEADING_ZEROS_0 63 /* sic */
 #if defined (__m88110__)
 #define umul_ppmm(wh, wl, u, v) \
   do {									\
@@ -738,6 +795,7 @@ extern USItype __udiv_qrnnd ();
   __asm__ ("{cntlz|cntlzw} %0,%1"					\
 	   : "=r" ((USItype)(count))					\
 	   : "r" ((USItype)(x)))
+#define COUNT_LEADING_ZEROS_0 32
 #if defined (_ARCH_PPC)
 #define umul_ppmm(ph, pl, m0, m1) \
   do {									\
@@ -887,7 +945,7 @@ extern USItype __udiv_qrnnd ();
 	(count) += 16;							\
       }									\
   } while (0)
-#endif
+#endif /* RT/ROMP */
 
 #if defined (__sh2__) && W_TYPE_SIZE == 32
 #define umul_ppmm(w1, w0, u, v) \
@@ -1153,20 +1211,6 @@ extern USItype __udiv_qrnnd ();
     (xh) = __xx.__i.__h; (xl) = __xx.__i.__l;				\
     (xh) += ((((signed int) __m0 >> 15) & __m1)				\
 	     + (((signed int) __m1 >> 15) & __m0));			\
-  } while (0)
-#define umul_ppmm_off(xh, xl, m0, m1) \
-  do {									\
-    union {long int __ll;						\
-	   struct {unsigned int __h, __l;} __i;				\
-	  } __xx;							\
-    __asm__ ("mult	%S0,%H3"					\
-	     : "=r" (__xx.__i.__h),					\
-	       "=r" (__xx.__i.__l)					\
-	     : "%1" (m0),						\
-	       "rQR" (m1));						\
-    (xh) = __xx.__i.__h + ((((signed int) m0 >> 15) & m1)		\
-			   + (((signed int) m1 >> 15) & m0));		\
-    (xl) = __xx.__i.__l;						\
   } while (0)
 #endif /* __z8000__ */
 

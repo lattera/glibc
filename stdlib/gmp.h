@@ -23,6 +23,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #ifndef __GNU_MP__
 #define __need_size_t
 #include <stddef.h>
+#undef __need_size_t
 
 #if defined (__STDC__)
 #define __gmp_const const
@@ -40,7 +41,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 typedef unsigned int		mp_limb;
 typedef int			mp_limb_signed;
 #else
-#if _LONG_LONG_LIMB
+#ifdef _LONG_LONG_LIMB
 typedef unsigned long long int	mp_limb;
 typedef long long int		mp_limb_signed;
 #else
@@ -110,11 +111,11 @@ typedef __mpq_struct mpq_t[1];
 
 typedef struct
 {
-  mp_size_t alloc;		/* Number of *limbs* allocated and pointed
-				   to by the D field.  */
   mp_size_t prec;		/* Max precision, in number of `mp_limb's.
 				   Set by mpf_init and modified by
-				   mpf_set_prec.  */
+				   mpf_set_prec.  The area pointed to
+				   by the `d' field contains `prec' + 1
+				   limbs.  */
   mp_size_t size;		/* abs(SIZE) is the number of limbs
 				   the last field points to.  If SIZE
 				   is negative this is a negative
@@ -127,7 +128,7 @@ typedef struct
 typedef __mpf_struct mpf_t[1];
 
 /* Types for function declarations in gmp files.  */
-/* ??? Should not pollute user name space ??? */
+/* ??? Should not pollute user name space with these ??? */
 typedef __gmp_const __mpz_struct *mpz_srcptr;
 typedef __mpz_struct *mpz_ptr;
 typedef __gmp_const __mpf_struct *mpf_srcptr;

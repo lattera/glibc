@@ -216,15 +216,7 @@ ____mpn_mul_n (prodp, up, vp, size, tspace)
 
       cy += __mpn_add_n (prodp + hsize, prodp + hsize, tspace, size);
       if (cy)
-	{
-	  if (cy > 0)
-	    __mpn_add_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
-	  else
-	    {
-	      __mpn_sub_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
-	      abort ();
-	    }
-	}
+	__mpn_add_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
 
       MPN_COPY (prodp, tspace, hsize);
       cy = __mpn_add_n (prodp + hsize, prodp + hsize, tspace + hsize, hsize);
@@ -362,15 +354,7 @@ ____mpn_sqr_n (prodp, up, size, tspace)
 
       cy += __mpn_add_n (prodp + hsize, prodp + hsize, tspace, size);
       if (cy)
-	{
-	  if (cy > 0)
-	    __mpn_add_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
-	  else
-	    {
-	      __mpn_sub_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
-	      abort ();
-	    }
-	}
+	__mpn_add_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
 
       MPN_COPY (prodp, tspace, hsize);
       cy = __mpn_add_n (prodp + hsize, prodp + hsize, tspace + hsize, hsize);
