@@ -1,3 +1,7 @@
+2000-05-01  Andreas Jaeger  <aj@suse.de>
+
+	* nscd/nscd.c: Include <grp.h> for setgroups prototype.
+
 2000-04-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/sysinfo.texi: Document getdomainname, setdomainname
