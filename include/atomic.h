@@ -25,30 +25,54 @@
 
 #include <bits/atomic.h>
 
+/* Wrapper macros to call pre_NN_post (mem, ...) where NN is the
+   bit width of *MEM.  The calling macro puts parens around MEM
+   and following args.  */
+#define __atomic_val_bysize(pre, post, mem, ...)			      \
+  ({									      \
+    __typeof (*mem) __result;						      \
+    if (sizeof (*mem) == 1)						      \
+      __result = pre##_8_##post (mem, __VA_ARGS__);			      \
+    else if (sizeof (*mem) == 2)					      \
+      __result = pre##_16_##post (mem, __VA_ARGS__);			      \
+    else if (sizeof (*mem) == 4)					      \
+      __result = pre##_32_##post (mem, __VA_ARGS__);			      \
+    else if (sizeof (*mem) == 8)					      \
+      __result = pre##_64_##post (mem, __VA_ARGS__);			      \
+    else								      \
+      abort ();								      \
+    __result;								      \
+  })
+#define __atomic_bool_bysize(pre, post, mem, ...)			      \
+  ({									      \
+    int __result;							      \
+    if (sizeof (*mem) == 1)						      \
+      __result = pre##_8_##post (mem, __VA_ARGS__);			      \
+    else if (sizeof (*mem) == 2)					      \
+      __result = pre##_16_##post (mem, __VA_ARGS__);			      \
+    else if (sizeof (*mem) == 4)					      \
+      __result = pre##_32_##post (mem, __VA_ARGS__);			      \
+    else if (sizeof (*mem) == 8)					      \
+      __result = pre##_64_##post (mem, __VA_ARGS__);			      \
+    else								      \
+      abort ();								      \
+    __result;								      \
+  })
+
 
 /* Atomically store NEWVAL in *MEM if *MEM is equal to OLDVAL.
    Return the old *MEM value.  */
 #if !defined atomic_compare_and_exchange_val_acq \
     && defined __arch_compare_and_exchange_val_32_acq
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
-  ({ __typeof (*mem) __result;						      \
-     if (sizeof (*mem) == 1)						      \
-       __result = __arch_compare_and_exchange_val_8_acq (mem, newval, oldval);\
-     else if (sizeof (*mem) == 2)					      \
-       __result = __arch_compare_and_exchange_val_16_acq (mem, newval,oldval);\
-     else if (sizeof (*mem) == 4)					      \
-       __result = __arch_compare_and_exchange_val_32_acq (mem, newval,oldval);\
-     else if (sizeof (*mem) == 8)					      \
-       __result = __arch_compare_and_exchange_val_64_acq (mem, newval,oldval);\
-     else								      \
-       abort ();							      \
-     __result; })
+  __atomic_val_bysize (__arch_compare_and_exchange_val,acq, \
+		       (mem), (newval), (oldval))
 #endif
 
 
 #ifndef atomic_compare_and_exchange_val_rel
 # define atomic_compare_and_exchange_val_rel(mem, oldval, newval) \
-  atomic_compare_and_exchange_val_acq (mem, oldval, newval)
+  atomic_compare_and_exchange_val_acq ((mem), (oldval), (newval))
 #endif
 
 
@@ -56,29 +80,15 @@
    Return zero if *MEM was changed or non-zero if no exchange happened.  */
 #ifndef atomic_compare_and_exchange_bool_acq
 # ifdef __arch_compare_and_exchange_bool_32_acq
-#  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
-  ({ __typeof (__arch_compare_and_exchange_bool_32_acq (mem, 0, 0)) __result; \
-     if (sizeof (*mem) == 1)						      \
-       __result = __arch_compare_and_exchange_bool_8_acq (mem, newval,	      \
-							  oldval);	      \
-     else if (sizeof (*mem) == 2)					      \
-       __result = __arch_compare_and_exchange_bool_16_acq (mem, newval,	      \
-							   oldval);	      \
-     else if (sizeof (*mem) == 4)					      \
-       __result = __arch_compare_and_exchange_bool_32_acq (mem, newval,	      \
-							   oldval);	      \
-     else if (sizeof (*mem) == 8)					      \
-       __result = __arch_compare_and_exchange_bool_64_acq (mem, newval,	      \
-							   oldval);	      \
-     else								      \
-       abort ();							      \
-     __result; })
+# define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+  __atomic_bool_bysize (__arch_compare_and_exchange_bool,acq, \
+		        (mem), (newval), (oldval))
 # else
 #  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   ({ /* Cannot use __oldval here, because macros later in this file might     \
 	call this macro with __oldval argument.	 */			      \
      __typeof (oldval) __old = (oldval);				      \
-     atomic_compare_and_exchange_val_acq (mem, newval, __old) != __old;	      \
+     atomic_compare_and_exchange_val_acq ((mem), (newval), __old) != __old;   \
   })
 # endif
 #endif
@@ -86,16 +96,16 @@
 
 #ifndef atomic_compare_and_exchange_bool_rel
 # define atomic_compare_and_exchange_bool_rel(mem, oldval, newval) \
-  atomic_compare_and_exchange_bool_acq (mem, oldval, newval)
+  atomic_compare_and_exchange_bool_acq ((mem), (oldval), (newval))
 #endif
 
 
 /* Store NEWVALUE in *MEM and return the old value.  */
 #ifndef atomic_exchange
 # define atomic_exchange(mem, newvalue) \
-  ({ __typeof (*mem) __oldval;						      \
+  ({ __typeof (*(mem)) __oldval;					      \
      __typeof (mem) __memp = (mem);					      \
-     __typeof (*mem) __value = (newvalue);				      \
+     __typeof (*(mem)) __value = (newvalue);				      \
 									      \
      do									      \
        __oldval = (*__memp);						      \
@@ -111,9 +121,9 @@
 /* Add VALUE to *MEM and return the old value of *MEM.  */
 #ifndef atomic_exchange_and_add
 # define atomic_exchange_and_add(mem, value) \
-  ({ __typeof (*mem) __oldval;						      \
+  ({ __typeof (*(mem)) __oldval;					      \
      __typeof (mem) __memp = (mem);					      \
-     __typeof (*mem) __value = (value);					      \
+     __typeof (*(mem)) __value = (value);				      \
 									      \
      do									      \
        __oldval = (*__memp);						      \
@@ -128,38 +138,38 @@
 
 
 #ifndef atomic_add
-# define atomic_add(mem, value) (void) atomic_exchange_and_add (mem, value)
+# define atomic_add(mem, value) (void) atomic_exchange_and_add ((mem), (value))
 #endif
 
 
 #ifndef atomic_increment
-# define atomic_increment(mem) atomic_add (mem, 1)
+# define atomic_increment(mem) atomic_add ((mem), 1)
 #endif
 
 
-/* Add one to *MEM and return true iff it's now nonzero.  */
+/* Add one to *MEM and return true iff it's now zero.  */
 #ifndef atomic_increment_and_test
 # define atomic_increment_and_test(mem) \
-  (atomic_exchange_and_add (mem, 1) != 0)
+  (atomic_exchange_and_add ((mem), 1) + 1 == 0)
 #endif
 
 
 #ifndef atomic_decrement
-# define atomic_decrement(mem) atomic_add (mem, -1)
+# define atomic_decrement(mem) atomic_add ((mem), -1)
 #endif
 
 
 /* Subtract 1 from *MEM and return true iff it's now zero.  */
 #ifndef atomic_decrement_and_test
 # define atomic_decrement_and_test(mem) \
-  (atomic_exchange_and_add (mem, -1) == 0)
+  (atomic_exchange_and_add ((mem), -1) == 1)
 #endif
 
 
 /* Decrement *MEM if it is > 0, and return the old value.  */
 #ifndef atomic_decrement_if_positive
 # define atomic_decrement_if_positive(mem) \
-  ({ __typeof (*mem) __oldval;						      \
+  ({ __typeof (*(mem)) __oldval;					      \
      __typeof (mem) __memp = (mem);					      \
 									      \
      do									      \
@@ -179,27 +189,27 @@
 
 #ifndef atomic_add_negative
 # define atomic_add_negative(mem, value) \
-  (atomic_exchange_and_add (mem, value) < 0)
+  (atomic_exchange_and_add ((mem), (value)) < 0)
 #endif
 
 
 #ifndef atomic_add_zero
 # define atomic_add_zero(mem, value) \
-  (atomic_exchange_and_add (mem, value) == 0)
+  (atomic_exchange_and_add ((mem), (value)) == 0)
 #endif
 
 
 #ifndef atomic_bit_set
 # define atomic_bit_set(mem, bit) \
-  (void) atomic_bit_test_set(mem, bit)
+  (void) atomic_bit_test_set((mem), (bit))
 #endif
 
 
 #ifndef atomic_bit_test_set
 # define atomic_bit_test_set(mem, bit) \
-  ({ __typeof (*mem) __oldval;						      \
+  ({ __typeof (*(mem)) __oldval;					      \
      __typeof (mem) __memp = (mem);					      \
-     __typeof (*mem) __mask = ((__typeof (*mem)) 1 << (bit));		      \
+     __typeof (*(mem)) __mask = ((__typeof (*(mem))) 1 << (bit));	      \
 									      \
      do									      \
        __oldval = (*__memp);						      \

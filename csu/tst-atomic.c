@@ -99,7 +99,7 @@ do_test (void)
     }
 
   mem = 0;
-  if (! atomic_increment_and_test (&mem)
+  if (atomic_increment_and_test (&mem)
       || mem != 1)
     {
       puts ("atomic_increment_and_test test 1 failed");
@@ -114,6 +114,14 @@ do_test (void)
       ret = 1;
     }
 
+  mem = -1;
+  if (! atomic_increment_and_test (&mem)
+      || mem != 0)
+    {
+      puts ("atomic_increment_and_test test 3 failed");
+      ret = 1;
+    }
+
   mem = 17;
   atomic_decrement (&mem);
   if (mem != 16)
@@ -123,7 +131,7 @@ do_test (void)
     }
 
   mem = 0;
-  if (! atomic_decrement_and_test (&mem)
+  if (atomic_decrement_and_test (&mem)
       || mem != -1)
     {
       puts ("atomic_decrement_and_test test 1 failed");
@@ -135,6 +143,14 @@ do_test (void)
       || mem != 14)
     {
       puts ("atomic_decrement_and_test test 2 failed");
+      ret = 1;
+    }
+
+  mem = 1;
+  if (! atomic_decrement_and_test (&mem)
+      || mem != 0)
+    {
+      puts ("atomic_decrement_and_test test 1 failed");
       ret = 1;
     }
 

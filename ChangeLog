@@ -1,8 +1,12 @@
 2003-03-22  Roland McGrath  <roland@redhat.com>
 
-	* include/atomic.h (atomic_increment_and_test): Invert sense of test.
-	Add comment.
-	(atomic_decrement_and_test): Add comment.
+	* include/atomic.h: Put parens around all macro arguments.
+	(__atomic_val_bysize, __atomic_bool_bysize): New macros.
+	(atomic_compare_and_exchange_val_acq): Use it.
+	(atomic_compare_and_exchange_bool_acq): Likewise.
+	(atomic_increment_and_test): Invert sense of test.
+	(atomic_decrement_and_test): Likewise.
+	* csu/tst-atomic.c: Update those tests to match.
 
 2003-03-22  Jakub Jelinek  <jakub@redhat.com>
 
