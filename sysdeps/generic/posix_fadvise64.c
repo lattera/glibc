@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
    respect to the file associated with FD.  */
 
 int
-posix_fadvise64 (int fd, __off64_t offset, size_t len, int advise)
+posix_fadvise64 (int fd, __off64_t offset, __off64_t len, int advise)
 {
   __set_errno (ENOSYS);
   return -1;

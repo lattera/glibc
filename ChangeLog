@@ -1,3 +1,8 @@
+2003-08-16  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/posix_fadvise.c (posix_fadvise): Adjust prototype.
+	* sysdeps/generic/posix_fadvise64.c (posix_fadvise64): Likewise.
+
 2003-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/fcntl.h (posix_fadvise64): Change type of third parameter to
