@@ -30,7 +30,7 @@ uname (struct utsname *uname)
 
   /* Fill in the hostname, which the proc server doesn't know.  */
   err = errno;
-  if (__gethostname (uname.nodename, sizeof uname.nodename) < 0)
+  if (__gethostname (uname->nodename, sizeof uname->nodename) < 0)
     {
       if (errno == ENAMETOOLONG)
 	/* Ignore the error of the buffer being too small.
