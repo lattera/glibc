@@ -1,6 +1,6 @@
 /* Stub `HUGE_VAL' constant.
    Used by <stdlib.h> and <math.h> functions for overflow.
-   Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,5 +22,8 @@
 # error "Never use <bits/huge_val.h> directly; include <math.h> instead."
 #endif
 
-
-#define	   HUGE_VAL	1e37
+#if __GNUC_PREREQ(3,3)
+# define HUGE_VAL	(__builtin_huge_val())
+#else
+# define HUGE_VAL	1e37
+#endif

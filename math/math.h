@@ -31,14 +31,19 @@ __BEGIN_DECLS
 /* Get machine-dependent HUGE_VAL value (returned on overflow).
    On all IEEE754 machines, this is +Infinity.  */
 #include <bits/huge_val.h>
+#ifdef __USE_ISOC99
+# include <bits/huge_valf.h>
+# include <bits/huge_vall.h>
+
+/* Get machine-dependent INFINITY value.  */
+# include <bits/inf.h>
 
 /* Get machine-dependent NAN value (returned for some domain errors).  */
-#ifdef	 __USE_ISOC99
 # include <bits/nan.h>
-#endif
+#endif /* __USE_ISOC99 */
+
 /* Get general and ISO C99 specific information.  */
 #include <bits/mathdef.h>
-
 
 /* The file <bits/mathcalls.h> contains the prototypes for all the
    actual math functions.  These macros are used for those prototypes,

@@ -1,4 +1,4 @@
-/* `HUGE_VAL' constant for IEEE 754 machines (where it is infinity).
+/* `HUGE_VALL' constant for ix86 (where it is infinity).
    Used by <stdlib.h> and <math.h> functions for overflow.
    Copyright (C) 1992, 1995, 1996, 1997, 1999, 2000, 2004
    Free Software Foundation, Inc.
@@ -20,36 +20,24 @@
    02111-1307 USA.  */
 
 #ifndef _MATH_H
-# error "Never use <bits/huge_val.h> directly; include <math.h> instead."
+# error "Never use <bits/huge_vall.h> directly; include <math.h> instead."
 #endif
 
-/* IEEE positive infinity (-HUGE_VAL is negative infinity).  */
-
 #if __GNUC_PREREQ(3,3)
-# define HUGE_VAL	(__builtin_huge_val())
+# define HUGE_VALL	(__builtin_huge_vall())
 #elif __GNUC_PREREQ(2,96)
-# define HUGE_VAL	(__extension__ 0x1.0p2047)
-#elif defined __GNUC__
+# define HUGE_VALL	(__extension__ 0x1.0p32767L)
+#else
 
-# define HUGE_VAL \
-  (__extension__							      \
-   ((union { unsigned __l __attribute__((__mode__(__DI__))); double __d; })   \
-    { __l: 0x7ff0000000000000ULL }).__d)
+# define __HUGE_VALL_bytes	{ 0, 0, 0, 0, 0, 0, 0, 0x80, 0xff, 0x7f, 0, 0 }
 
-#else /* not GCC */
+# define __huge_vall_t	union { unsigned char __c[12]; long double __ld; }
+# ifdef __GNUC__
+#  define HUGE_VALL	(__extension__ \
+			 ((__huge_vall_t) { __c: __HUGE_VALL_bytes }).__ld)
+# else	/* Not GCC.  */
+static __huge_vall_t __huge_vall = { __HUGE_VALL_bytes };
+#  define HUGE_VALL	(__huge_vall.__ld)
+#  endif /* GCC.  */
 
-# include <endian.h>
-
-typedef union { unsigned char __c[8]; double __d; } __huge_val_t;
-
-# if __BYTE_ORDER == __BIG_ENDIAN
-#  define __HUGE_VAL_bytes	{ 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 }
-# endif
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define __HUGE_VAL_bytes	{ 0, 0, 0, 0, 0, 0, 0xf0, 0x7f }
-# endif
-
-static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
-# define HUGE_VAL	(__huge_val.__d)
-
-#endif	/* GCC.  */
+#endif /* GCC 2.95 */

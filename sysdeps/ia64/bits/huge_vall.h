@@ -1,5 +1,6 @@
-/* `NAN' constant for IEEE 754 machines.
-   Copyright (C) 1992, 1996, 1997, 1999, 2004 Free Software Foundation, Inc.
+/* `HUGE_VALL' constant for ia64 (where it is infinity).
+   Used by <stdlib.h> and <math.h> functions for overflow.
+   Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,35 +19,24 @@
    02111-1307 USA.  */
 
 #ifndef _MATH_H
-# error "Never use <bits/nan.h> directly; include <math.h> instead."
+# error "Never use <bits/huge_vall.h> directly; include <math.h> instead."
 #endif
 
-
-/* IEEE Not A Number.  */
-
 #if __GNUC_PREREQ(3,3)
-
-# define NAN	(__builtin_nanf(""))
-
-#elif defined__GNUC__
-
-# define NAN \
-  (__extension__                                                            \
-   ((union { unsigned __l __attribute__((__mode__(__SI__))); float __d; })  \
-    { __l: 0x7fc00000UL }).__d)
-
+# define HUGE_VALL	(__builtin_huge_vall())
+#elif __GNUC_PREREQ(2,96)
+# define HUGE_VALL	(__extension__ 0x1.0p32767L)
 #else
 
-# include <endian.h>
+# define __HUGE_VALL_bytes	{ 0,0,0,0,0,0,0, 0x80, 0xff, 0x7f, 0,0,0,0,0,0}
 
-# if __BYTE_ORDER == __BIG_ENDIAN
-#  define __nan_bytes		{ 0x7f, 0xc0, 0, 0 }
-# endif
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define __nan_bytes		{ 0, 0, 0xc0, 0x7f }
-# endif
+# define __huge_vall_t	union { unsigned char __c[16]; long double __ld; }
+# ifdef __GNUC__
+#  define HUGE_VALL	(__extension__ \
+			 ((__huge_vall_t) { __c: __HUGE_VALL_bytes }).__ld)
+# else	/* Not GCC.  */
+static __huge_vall_t __huge_vall = { __HUGE_VALL_bytes };
+#  define HUGE_VALL	(__huge_vall.__ld)
+# endif /* GCC.  */
 
-static union { unsigned char __c[4]; float __d; } __nan_union = { __nan_bytes };
-# define NAN	(__nan_union.__d)
-
-#endif	/* GCC.  */
+#endif /* GCC 2.95 */

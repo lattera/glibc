@@ -1,3 +1,43 @@
+2004-03-15  Richard Henderson  <rth@redhat.com>
+
+	* math/Makefile (headers): Add bits/huge_valf.h, bits/huge_vall.h,
+	and bits/inf.h.
+	* math/math.h: Include them.
+
+	* sysdeps/alpha/fpu/bits/mathdef.h, sysdeps/arm/fpu/bits/mathdef.h,
+	sysdeps/generic/bits/mathdef.h, sysdeps/i386/fpu/bits/mathdef.h,
+	sysdeps/ia64/fpu/bits/mathdef.h, sysdeps/m68k/fpu/bits/mathdef.h,
+	sysdeps/mips/fpu/bits/mathdef.h, sysdeps/powerpc/fpu/bits/mathdef.h,
+	sysdeps/sh/sh4/fpu/bits/mathdef.h, sysdeps/sparc/fpu/bits/mathdef.h,
+	sysdeps/x86_64/fpu/bits/mathdef.h: Remove INFINITY.
+
+	* sysdeps/arm/bits/huge_val.h (HUGE_VAL): Use __builtin_huge_val.
+	(HUGE_VALF, HUGE_VALL): Remove.
+	* sysdeps/ieee754/bits/huge_val.h: Likewise.
+	* sysdeps/sh/bits/huge_val.h: Likewise.
+
+	* sysdeps/generic/bits/huge_val.h (HUGE_VAL): Use __builtin_huge_val.
+	* sysdeps/generic/bits/huge_valf.h: New file.
+	* sysdeps/generic/bits/huge_vall.h: New file.
+	* sysdeps/generic/bits/inf.h: New file.
+	* sysdeps/ieee754/bits/huge_valf.h: New file.
+	* sysdeps/ieee754/bits/inf.h: New file.
+	* sysdeps/i386/bits/huge_val.h: Remove file.
+	* sysdeps/i386/bits/huge_vall.h: New file.
+	* sysdeps/ia64/bits/huge_val.h: Remove file.
+	* sysdeps/ia64/bits/huge_vall.h: New file.
+	* sysdeps/ieee754/ldbl-128/bits/huge_vall.h: New file.
+	* sysdeps/m68k/bits/huge_val.h: Remove file.
+	* sysdeps/m68k/bits/huge_vall.h: New file.
+	* sysdeps/s390/bits/huge_val.h: Remove file.
+	* sysdeps/sh/sh4/fpu/bits/huge_val.h: Remove file.
+	* sysdeps/sparc/bits/huge_vall.h: New file.
+	* sysdeps/sparc/sparc32/fpu/bits/huge_val.h: Remove file.
+	* sysdeps/sparc/sparc64/fpu/bits/huge_val.h: Remove file.
+
+	* sysdeps/ieee754/bits/nan.h (NAN): Use __builtin_nanf.
+	* sysdeps/mips/bits/nan.h (NAN): Likewise.
+
 2004-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfscanf.c: Simplify error handling macros.  Use

@@ -22,8 +22,9 @@ subdir		:= math
 
 # Installed header files.
 headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
-		   bits/nan.h fpu_control.h complex.h bits/cmathcalls.h \
-		   fenv.h bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h
+		   bits/huge_valf.h bits/huge_vall.h bits/inf.h bits/nan.h \
+		   fpu_control.h complex.h bits/cmathcalls.h fenv.h \
+		   bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h
 
 # Internal header files.
 distribute	:= math_ldbl.h math_private.h machine/asm.h
