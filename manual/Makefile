@@ -1,4 +1,4 @@
-# Copyright (C) 1992-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1992-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -234,7 +234,7 @@ subdir_%: ;
 # ../Rules defines them for code subdirectories; for us, they are no-ops.
 # None of these should be `subdir_TARGET'; those targets are transformed
 # by the implicit rule above into `TARGET' deps.
-glibc-targets	:= lib objects objs others tests lint.out \
+glibc-targets	:= lib objects objs others tests xtests lint.out \
 		   echo-headers echo-distinfo
 .PHONY: $(glibc-targets)
 $(glibc-targets):
