@@ -8429,6 +8429,16 @@
 	(common-mostlyclean, common-clean): Clean up rtld-* files.
 	* sysdeps/unix/make-syscalls.sh: Add rtld-*.os target name to rules.
 
+2003-05-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Add temp argument.
+	If temp != NULL, copy dynamic entries which need relocation to temp
+	array before relocating.
+	(DL_RO_DYN_TEMP_CNT): Define.
+	* elf/dl-load.c (_dl_map_object_from_fd): Adjust caller.
+	* elf/rtld.c (_dl_start): Likewise.
+	(dl_main): Likewise.  Add dyn_temp static variable.
+
 2002-10-11  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (__tls_get_addr): After freeing block in

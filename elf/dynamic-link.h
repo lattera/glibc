@@ -56,7 +56,7 @@ elf_machine_lazy_rel (struct link_map *map,
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
 static inline void __attribute__ ((unused, always_inline))
-elf_get_dynamic_info (struct link_map *l)
+elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 {
   ElfW(Dyn) *dyn = l->l_ld;
   ElfW(Dyn) **info;
@@ -88,32 +88,45 @@ elf_get_dynamic_info (struct link_map *l)
 	     + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM] = dyn;
       ++dyn;
     }
+
+#define DL_RO_DYN_TEMP_CNT	8
+
 #ifndef DL_RO_DYN_SECTION
   /* Don't adjust .dynamic unnecessarily.  */
   if (l->l_addr != 0)
     {
       ElfW(Addr) l_addr = l->l_addr;
+      int cnt = 0;
 
-      if (info[DT_HASH] != NULL)
-	info[DT_HASH]->d_un.d_ptr += l_addr;
-      if (info[DT_PLTGOT] != NULL)
-	info[DT_PLTGOT]->d_un.d_ptr += l_addr;
-      if (info[DT_STRTAB] != NULL)
-	info[DT_STRTAB]->d_un.d_ptr += l_addr;
-      if (info[DT_SYMTAB] != NULL)
-	info[DT_SYMTAB]->d_un.d_ptr += l_addr;
+# define ADJUST_DYN_INFO(tag) \
+      do								      \
+	if (info[tag] != NULL)						      \
+	  {								      \
+	    if (temp)							      \
+	      {								      \
+		temp[cnt].d_tag = info[tag]->d_tag;			      \
+		temp[cnt].d_un.d_ptr = info[tag]->d_un.d_ptr + l_addr;	      \
+		info[tag] = temp + cnt++;				      \
+	      }								      \
+	    else							      \
+	      info[tag]->d_un.d_ptr += l_addr;				      \
+	  }								      \
+      while (0)
+
+      ADJUST_DYN_INFO (DT_HASH);
+      ADJUST_DYN_INFO (DT_PLTGOT);
+      ADJUST_DYN_INFO (DT_STRTAB);
+      ADJUST_DYN_INFO (DT_SYMTAB);
 # if ! ELF_MACHINE_NO_RELA
-      if (info[DT_RELA] != NULL)
-	info[DT_RELA]->d_un.d_ptr += l_addr;
+      ADJUST_DYN_INFO (DT_RELA);
 # endif
 # if ! ELF_MACHINE_NO_REL
-      if (info[DT_REL] != NULL)
-	info[DT_REL]->d_un.d_ptr += l_addr;
+      ADJUST_DYN_INFO (DT_REL);
 # endif
-      if (info[DT_JMPREL] != NULL)
-	info[DT_JMPREL]->d_un.d_ptr += l_addr;
-      if (info[VERSYMIDX (DT_VERSYM)] != NULL)
-	info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr += l_addr;
+      ADJUST_DYN_INFO (DT_JMPREL);
+      ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
+# undef ADJUST_DYN_INFO
+      assert (cnt <= DL_RO_DYN_TEMP_CNT);
     }
 #endif
   if (info[DT_PLTREL] != NULL)

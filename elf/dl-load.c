@@ -1268,7 +1268,7 @@ cannot allocate TLS data structures for initial thread");
 			   (unsigned long int) l->l_phdr,
 			   (int) sizeof (void *) * 2, l->l_phnum);
 
-  elf_get_dynamic_info (l);
+  elf_get_dynamic_info (l, NULL);
 
   /* Make sure we are not dlopen'ing an object
      that has the DF_1_NOOPEN flag set.  */

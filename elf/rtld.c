@@ -317,7 +317,7 @@ _dl_start (void *arg)
 
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
-  elf_get_dynamic_info (&bootstrap_map);
+  elf_get_dynamic_info (&bootstrap_map, NULL);
 
 #if defined USE_TLS && NO_TLS_OFFSET != 0
   bootstrap_map.l_tls_offset = NO_TLS_OFFSET;
@@ -892,7 +892,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   if (! rtld_is_main)
     {
       /* Extract the contents of the dynamic section for easy access.  */
-      elf_get_dynamic_info (GL(dl_loaded));
+      elf_get_dynamic_info (GL(dl_loaded), NULL);
       if (GL(dl_loaded)->l_info[DT_HASH])
 	/* Set up our cache of pointers into the hash table.  */
 	_dl_setup_hash (GL(dl_loaded));
@@ -1083,6 +1083,8 @@ of this helper program; chances are you did not intend to run this program.\n\
       struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL);
       if (__builtin_expect (l != NULL, 1))
 	{
+	  static ElfW(Dyn) dyn_temp [DL_RO_DYN_TEMP_CNT];
+
 	  l->l_phdr = ((const void *) GL(dl_sysinfo_dso)
 		       + GL(dl_sysinfo_dso)->e_phoff);
 	  l->l_phnum = GL(dl_sysinfo_dso)->e_phnum;
@@ -1098,7 +1100,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      if (ph->p_type == PT_LOAD)
 		assert ((void *) ph->p_vaddr == GL(dl_sysinfo_dso));
 	    }
-	  elf_get_dynamic_info (l);
+	  elf_get_dynamic_info (l, dyn_temp);
 	  _dl_setup_hash (l);
 	  l->l_relocated = 1;
 
