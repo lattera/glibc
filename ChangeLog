@@ -1,5 +1,8 @@
 1999-07-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makeconfig (link-libc): Always define it, not only for shared
+	builds.
+
 	* sysdeps/i386/fpu/e_pow.S: Use addl %esp instead of pop.
 	* sysdeps/i386/fpu/e_powf.S: Likewise.
 	* sysdeps/i386/fpu/e_powl.S: Likewise.  [PR libc/1213].

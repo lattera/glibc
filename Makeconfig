@@ -407,13 +407,6 @@ ifeq (yes,$(build-shared))
 link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
 	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
-# Choose the default search path for the dynamic linker based on
-# where we will install libraries.
-ifneq ($(libdir),$(slibdir))
-default-rpath = $(slibdir):$(libdir)
-else
-default-rpath = $(libdir)
-endif
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis db2 rt resolv
 rpath-link = \
@@ -425,6 +418,14 @@ nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
 resolvobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)resolv)
 link-libc = $(common-objpfx)libc.a $(otherlibs) $(gnulib) $(common-objpfx)libc.a $(gnulib)
 endif
+endif
+
+# Choose the default search path for the dynamic linker based on
+# where we will install libraries.
+ifneq ($(libdir),$(slibdir))
+default-rpath = $(slibdir):$(libdir)
+else
+default-rpath = $(libdir)
 endif
 
 ifndef link-extra-libs
