@@ -17,33 +17,33 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/ioctl.h>
-#include <termios.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
+#include <termios.h>
 
-/* Given a fd on a master pseudoterminal, clear a kernel lock so that
-   the slave can be opened.  This is to avoid a race between opening the
-   master and calling grantpt() to take possession of the slave.  */
+
+/* Unlock the slave pseudo terminal associated with the master pseudo
+   terminal specified by FD.  */
 int
-unlockpt (fd)
-     int fd __attribute__ ((unused));
+unlockpt (int fd)
 {
 #ifdef TIOCSPTLCK
-  int serrno = errno;
+  int save_errno = errno;
   int unlock = 0;
 
   if (__ioctl (fd, TIOCSPTLCK, &unlock))
     {
       if (errno == EINVAL)
 	{
-	  __set_errno (serrno);
+	  __set_errno (save_errno);
 	  return 0;
 	}
       else
 	return -1;
     }
 #endif
-  /* On pre-/dev/ptmx kernels this function should be a no-op.  */
+  /* If we have no TIOCSPTLCK ioctl, all slave pseudo terminals are
+     unlocked by default.  */
   return 0;
 }

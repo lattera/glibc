@@ -1,4 +1,5 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Internal defenitions and declarations for pseudo terminal functions.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -17,19 +18,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Internal constants used by the pseudoterminal handling code. */
+#ifndef _PTY_PRIVATE_H
+#define _PTY_PRIVATE_H 1
 
-#ifndef _PTY_INTERNAL_H
-#define _PTY_INTERNAL_H	1
-
-/* Length of a buffer to hold a pty name. */
-#define PTYNAMELEN 15   /* "/dev/pts/65535$" */
-
-/* Which group should pty slaves belong to: */
+/* The group slave pseudo terminals belong to.  */
 #define TTY_GROUP "tty"
 
-/* Communication between grantpt and pt_chown. */
-#define PTY_FD 3
+/* The file descriptor connected to the master pseudo terminal.  */
+#define PTY_FILENO 3
+
+/* Path to the helper program that implements `grantpt' in user space.  */
+#define _PATH_PT_CHOWN LIBEXECDIR "/pt_chown"
+
+/* Exit codes for the helper program.  */
 enum  /* failure modes */
 {
   FAIL_EBADF = 1,
@@ -38,4 +39,4 @@ enum  /* failure modes */
   FAIL_EXEC
 };
 
-#endif
+#endif /* pty-private.h  */

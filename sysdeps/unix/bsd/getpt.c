@@ -17,43 +17,67 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/types.h>
-#include <fcntl.h>
 #include <errno.h>
-#include <stdlib.h>
+#include <fcntl.h>
+#include <string.h>
+#include <unistd.h>
 
-#include "pty-internal.h"
 
-/* Per the FreeBSD-3.0 manpages: pty masters are named
-   /dev/pty[p-sP-S][0-9a-v].  I hope EIO is the right
-   errno in the "already open" case; it doesn't say.  */
-static const char pn1[] = "pqrsPQRS";
-static const char pn2[] = "0123456789abcdefghijklmnopqrstuv";
+/* Prefix for master pseudo terminal nodes.  */
+#define _PATH_PTY "/dev/pty"
 
-/* Open the master side of a pseudoterminal and return its file
-   descriptor, or -1 on error.  BSD version.  */
+
+/* Letters indicating a series of pseudo terminals.  */
+#ifndef PTYNAME1
+#define PTYNAME1 "pqrsPQRS"
+#endif
+const char *__libc_ptyname1 = PTYNAME1;
+
+/* Letters indicating the position within a series.  */
+#ifndef PTYNAME2
+#define PTYNAME2 "0123456789abcdefghijklmnopqrstuv";
+#endif
+const char *__libc_ptyname2 = PTYNAME2;
+
+
+/* Open a master pseudo terminal and return its file descriptor.  */
 int
-__getpt ()
+__getpt (void)
 {
-  int fd;
-  const char *i, *j;
-  char namebuf[PTYNAMELEN];
+  char buf[sizeof (_PATH_PTY) + 2];
+  const char *p, *q;
+  char *s;
+  
+  s = __stpcpy (buf, _PATH_PTY);
+  s[0] = '?';
+  s[1] = '?';
+  s[2] = 0;
 
-  strcpy (namebuf, "/dev/pty");
-  namebuf[10] = '\0';
-  for (i = pn1; *i; ++i)
+  for (p = __libc_ptyname1; *p; p++)
     {
-      namebuf[8] = *i;
-      for (j = pn2; *j; ++j)
-        {
-	  namebuf[9] = *j;
-	  fd = open (namebuf, O_RDWR);
+      s[0] = *p;
+
+      for (q = __libc_ptyname2; *q; q++)
+	{
+	  int fd;
+	  
+	  s[1] = *q;
+	  
+	  fd = __open (buf, O_RDWR);
 	  if (fd != -1)
-	    return fd;
+	    {
+	      if (__isatty (fd))
+		return fd;
+	      
+	      __close (fd);
+	      continue;
+	    }
+	  
 	  if (errno != EIO)
 	    return -1;
-        }
+	}
     }
+
   __set_errno (ENFILE);
   return -1;
 }

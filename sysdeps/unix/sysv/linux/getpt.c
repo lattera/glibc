@@ -17,33 +17,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/types.h>
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "pty-internal.h"
+/* Path to the master pseudo terminal cloning device.  */
+#define _PATH_DEVPTMX "/dev/ptmx"
 
-/* Per Documentation/devices.txt: pty masters are /dev/pty[p-za-e][0-9a-f].
-   These strings are used also in ptsname.c. */
-const char __ptyname1[] = "pqrstuvwxyzabcde";
-const char __ptyname2[] = "0123456789abcdef";
+/* Prototype for function that opens BSD-style master pseudo-terminals.  */
+int __bsd_getpt (void);
 
-/* Open the master side of a pseudoterminal and return its file
-   descriptor, or -1 on error.  Linux version. */
+/* Open a master pseudo terminal and return its file descriptor.  */
 int
-__getpt ()
+__getpt (void)
 {
-  int fd;
-  const char *i, *j;
   static int have_dev_ptmx = 1;
-  char namebuf[PTYNAMELEN];
+  int fd;
 
-  /* The new way:  */
   if (have_dev_ptmx)
     {
-      fd = __open ("/dev/ptmx", O_RDWR);
+      fd = __open (_PATH_DEVPTMX, O_RDWR);
       if (fd != -1)
 	return fd;
       else
@@ -55,23 +48,11 @@ __getpt ()
 	}
     }
 
-  /* The old way: */
-  strcpy (namebuf, "/dev/pty");
-  namebuf[10] = '\0';
-  for (i = __ptyname1; *i; ++i)
-    {
-      namebuf[8] = *i;
-      for (j = __ptyname2; *j; ++j)
-        {
-	  namebuf[9] = *j;
-	  fd = __open (namebuf, O_RDWR);
-	  if (fd != -1)
-	    return fd;
-	  if (errno != EIO)
-	    return -1;
-        }
-    }
-  __set_errno (ENFILE);
-  return -1;
+  return __bsd_getpt ();
 }
-weak_alias (__getpt, getpt)
+
+#define PTYNAME1 "pqrstuvwxyzabcde";
+#define PTYNAME2 "0123456789abcdef";
+
+#define __getpt __bsd_getpt
+#include <sysdeps/unix/bsd/getpt.c>

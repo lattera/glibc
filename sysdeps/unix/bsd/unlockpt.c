@@ -17,25 +17,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <paths.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
-#include "pty-internal.h"
 
-/* Given a fd on a master pseudoterminal, clear a kernel lock so that
-   the slave can be opened.  This is to avoid a race between opening the
-   master and calling grantpt() to take possession of the slave.
-
-   BSD doesn't have this lock, but what it does have is revoke(). */
-
+/* Unlock the slave pseudo terminal associated with the master pseudo
+   terminal specified by FD.  */
 int
-unlockpt (fd)
-     int fd;
+unlockpt (int fd)
 {
-  char buf[PTYNAMELEN];
+  char buf[sizeof (_PATH_TTY) + 2];
 
-  if (__ptsname_r (fd, buf, PTYNAMELEN))
+  /* BSD doesn't have a lock, but it does have `revoke'.  */
+  if (__ptsname_r (fd, buf, sizeof (buf)))
     return -1;
-
   return revoke (buf);
 }

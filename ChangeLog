@@ -1,3 +1,37 @@
+1998-09-17 19:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/sysv4/bits/utsname.h: Fix typo.
+	Patch by John Tobey <jtobey@banta-im.com>.
+
+1998-09-17  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/pty-internal.h: Removed.  Moved constants related to the
+	`grantpt' helper program protocol to ...
+	* login/pty-private.h: ... here.  New file.
+	* sysdeps/unix/sysv/linux/ptsname.c (ptsname): Reimplementation
+	to make the function work with kernels >= 2.1.115.
+	* sysdeps/unix/sysv/linux/getpt.c (getpt): Reimplement to call BSD
+	version if using the cloning device fails.
+	* sysdeps/unix/sysv/linux/grantpt.c: New file.
+	* sysdeps/unix/sysv/linux/unlockpt.c: General cleanup.
+	* sysdeps/unix/bsd/getpt.c (__getpt): Largely rewritten to allow
+	use by Linux specific code.
+	* sysdeps/unix/bsd/unlockpt.c: General cleanup.
+	* sysdeps/unix/grantpt.c: Largely rewritten.  (pts_name): New
+	function.  (grantpt): Use pts_name, check group and permission
+	mode in addition to owner.  Try to set the owner, group and
+	permission mode first without invoking the helper program.
+	* login/programs/pt_chown.c: Largely rewritten.  Add argp and
+	internationalization support.  Use symbolic constants instead of
+	hardwired numbers for permission mode.
+	* sysdeps/unix/bsd/ptsname.c: New file.
+
+1998-09-17 22:04  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: Undo last change.
+
+	* posix/wordexp.c: Undo last change.
+
 1998-09-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/grpcache.c (save_grp): Partly undo last change.

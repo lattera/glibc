@@ -17,65 +17,158 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
+#include <grp.h>
+#include <limits.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <string.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
-#include <assert.h>
+#include "pty-private.h"
 
-#include "pty-internal.h"
 
-/* Given a fd on a master pseudoterminal, chown the file associated
-   with the slave to the calling process, and set its group and
-   mode appropriately.  Note that this is an unprivileged operation. */
-
-/* This "generic Unix" implementation works because we provide the program
-   /usr/libexec/pt_chown, and it only depends on ptsname() working. */
-static const char helper[] = LIBEXECDIR "/pt_chown";
-static const char *const argv[] = { "pt_chown", NULL };
-
-int
-grantpt (fd)
-     int fd;
+/* Return the result of ptsname_r in the buffer pointed to by PTS,
+   which should be of length BUF_LEN.  If it is too long to fit in
+   this buffer, a sufficiently long buffer is allocated using malloc,
+   and returned in PTS.  0 is returned upon success, -1 otherwise.  */
+static int
+pts_name (int fd, char **pts, size_t buf_len)
 {
+  int rv;
+  char *buf = *pts;
+
+  for (;;)
+    {
+      char *new_buf;
+
+      if (buf_len)
+	{
+	  rv = ptsname_r (fd, buf, buf_len);
+
+	  if (rv != 0 || memchr (buf, '\0', buf_len))
+	    /* We either got an error, or we succeeded and the
+	       returned name fit in the buffer.  */
+	    break;
+
+	  /* Try again with a longer buffer.  */
+	  buf_len += buf_len;	/* Double it */
+	}
+      else
+	/* No initial buffer; start out by mallocing one.  */
+	buf_len = 128;		/* First time guess.  */
+
+      if (buf != *pts)
+	/* We've already malloced another buffer at least once.  */
+	new_buf = realloc (buf, buf_len);
+      else
+	new_buf = malloc (buf_len);
+      if (! new_buf)
+	{
+	  rv = -1;
+	  __set_errno (ENOMEM);
+	  break;
+	}
+      buf = new_buf;
+    }
+
+  if (rv == 0)
+    *pts = buf;		/* Return buffer to the user.  */
+  else if (buf != *pts)
+    free (buf);		/* Free what we malloced when returning an error.  */
+
+  return rv;
+}
+
+/* Change the ownership and access permission of the slave pseudo
+   terminal associated with the master pseudo terminal specified
+   by FD.  */
+int
+grantpt (int fd)
+{
+#ifdef PATH_MAX
+  char _buf[PATH_MAX];
+#else
+  char _buf[512];
+#endif
+  char *buf = _buf;
   struct stat st;
-  int w, pid;
-  char namebuf[PTYNAMELEN];
+  char *grtmpbuf;
+  struct group grbuf;
+  size_t grbuflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
+  struct group *p;
+  uid_t uid;
+  gid_t gid;
+  pid_t pid;
 
-  /* Some systems do it for us.  */
-  if (__ptsname_r (fd, namebuf, PTYNAMELEN) != 0)
+  if (pts_name (fd, &buf, sizeof (_buf)))
     return -1;
-  if (__xstat (_STAT_VER, namebuf, &st) != 0)
+  
+  if (__stat (buf, &st) < 0)
     return -1;
 
-  if (st.st_uid == __getuid ())
-    return 0;
+  /* Make sure that we own the device.  */
+  uid = __getuid ();
+  if (st.st_uid != uid)
+    {
+      if (__chown (buf, uid, st.st_gid) < 0)
+	goto helper;
+    }
 
-  /* We have to do it in user space.  */
+  /* Get the group ID of the special `tty' group.  */
+  if (grbuflen == -1)
+    /* `sysconf' does not support _SC_GETGR_R_SIZE_MAX.
+       Try a moderate value.  */
+    grbuflen = 1024;
+  grtmpbuf = (char *) __alloca (grbuflen);
+  getgrnam_r (TTY_GROUP, &grbuf, grtmpbuf, grbuflen, &p);
+  gid = p ? p->gr_gid : __getgid ();
+
+  /* Make sure the group of the device is that special group.  */
+  if (st.st_gid != gid)
+    {
+      if (__chown (buf, uid, gid) < 0)
+	goto helper;
+    }
+
+  /* Make sure the permission mode is set to readable and writable by
+     the owner, and writable by the group.  */
+  if ((st.st_mode & ACCESSPERMS) != (S_IRUSR|S_IWUSR|S_IWGRP))
+    {
+      if (__chmod (buf, S_IRUSR|S_IWUSR|S_IWGRP) < 0)
+	goto helper;
+    }
+
+  return 0;
+
+  /* We have to use the helper program.  */
+ helper:
 
   pid = __fork ();
   if (pid == -1)
     return -1;
   else if (pid == 0)
     {
-      /* Disable core dumps in the child.  */
-      struct rlimit off = { 0, 0 };
-      setrlimit (RLIMIT_CORE, &off);
+      /* Disable core dumps.  */
+      struct rlimit rl = { 0, 0 };
+      setrlimit (RLIMIT_CORE, &rl);
 
-      /* The helper does its thing on fd PTY_FD.  */
-      if (fd != PTY_FD)
-	if (__dup2 (fd, PTY_FD) == -1)
+      /* We pase the master pseudo terminal as file descriptor PTY_FILENO.  */
+      if (fd != PTY_FILENO)
+	if (__dup2 (fd, PTY_FILENO) < 0)
 	  _exit (FAIL_EBADF);
 
-      __execve (helper, (char *const *) argv, 0);
+      execle (_PATH_PT_CHOWN, basename (_PATH_PT_CHOWN), NULL, NULL);
       _exit (FAIL_EXEC);
     }
   else
     {
+      int w;
+      
       if (__waitpid (pid, &w, 0) == -1)
 	return -1;
       if (!WIFEXITED (w))
@@ -106,6 +199,5 @@ grantpt (fd)
 	  }
     }
 
-  /* Success.  */
   return 0;
 }
