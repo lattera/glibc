@@ -1,3 +1,9 @@
+2005-02-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/bits/link.h: Removed.
+	* sysdeps/powerpc/powerpc64/bits/link.h: Moved to...
+	* sysdeps/powerpc/bits/link.h: ... here.  New file.
+
 2005-02-09  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #710]
