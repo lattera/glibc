@@ -1,3 +1,8 @@
+2002-09-19  Neal H. Walfield  <neal@cs.uml.edu>
+
+	* sysdeps/mach/hurd/fork.c (__fork): Do not free the signal
+	thread's sigstate data structure if it has been allocated.
+
 2002-09-19  Roland McGrath  <roland@redhat.com>
 
 	* include/libc-symbols.h [HAVE_ASM_SET_DIRECTIVE]

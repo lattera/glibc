@@ -609,14 +609,17 @@ __fork (void)
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_unlock (&_hurd_ports[i].lock);
 
-      /* We are the only thread in this new task, so we will
-	 take the task-global signals.  */
+      /* We are one of the (exactly) two threads in this new task, we
+	 will take the task-global signals.  */
       _hurd_sigthread = ss->thread;
 
-      /* Unchain the sigstate structures for threads that existed in the
-	 parent task but don't exist in this task (the child process).
-	 Delay freeing them until later because some of the further setup
-	 and unlocking might be required for free to work.  */
+      /* Claim our sigstate structure and unchain the rest: the
+	 threads existed in the parent task but don't exist in this
+	 task (the child process).  Delay freeing them until later
+	 because some of the further setup and unlocking might be
+	 required for free to work.  Before we finish cleaning up,
+	 we will reclaim the signal thread's sigstate structure (if
+	 it had one).  */
       oldstates = _hurd_sigstates;
       if (oldstates == ss)
 	oldstates = ss->next;
@@ -650,13 +653,26 @@ __fork (void)
       if (!err)
 	err = __thread_resume (_hurd_msgport_thread);
 
-      /* Free the old sigstate structures.  */
+      /* Reclaim the signal thread's sigstate structure and free the
+	 other old sigstate structures.  */
       while (oldstates != NULL)
 	{
 	  struct hurd_sigstate *next = oldstates->next;
-	  free (oldstates);
+
+	  if (oldstates->thread == _hurd_msgport_thread)
+	    {
+	      /* If we have a second signal state structure then we
+		 must have been through here before--not good.  */
+	      assert (_hurd_sigstates->next == 0);
+	      _hurd_sigstates->next = oldstates;
+	      oldstates->next = 0;
+	    }
+	  else
+	    free (oldstates);
+
 	  oldstates = next;
 	}
+
       /* XXX what to do if we have any errors here? */
 
       pid = 0;
