@@ -15,27 +15,27 @@
 	(libnss_nis-routines): Likewise.
 	(libnss_nisplus-routines): Add nss-nisplus.
 
-	* nss_nisplus/nisplus-alias.c: Remove unnecessary initializations.
-	* nss_nisplus/nisplus-ethers.c: Likewise.
-	* nss_nisplus/nisplus-grp.c: Likewise.
-	* nss_nisplus/nisplus-hosts.c: Likewise.
-	* nss_nisplus/nisplus-network.c: Likewise.
-	* nss_nisplus/nisplus-proto.c: Likewise.
-	* nss_nisplus/nisplus-pwd.c: Likewise.
-	* nss_nisplus/nisplus-rpc.c: Likewise.
-	* nss_nisplus/nisplus-service.c: Likewise.
-	* nss_nisplus/nisplus-spwd.c: Likewise.
-	* nss_nis/nis-alias.c: Likewise.
-	* nss_nis/nis-ethers.c: Likewise.
-	* nss_nis/nis-grp.c: Likewise.
-	* nss_nis/nis-network.c: Likewise.
-	* nss_nis/nis-proto.c: Likewise.
-	* nss_nis/nis-pwd.c: Likewise.
-	* nss_nis/nis-spwd.c: Likewise.
-	* nss_compat/compat-grp.c: Likewise.
-	* nss_compat/compat-initgroups.c: Likewise.
-	* nss_compat/compat-pwd.c: Likewise.
-	* nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-alias.c: Remove unnecessary initializations.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+	* nis/nss_compat/compat-grp.c: Likewise.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: Some more
 	optimizations.  Patch by Jakub Jelinek <jakub@redhat.com>.
