@@ -76,7 +76,16 @@ td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
 
 	    return TD_OK;
 	  }
-    }
+      }
+    else if (cnt == 0)
+      {
+	/* The initial thread always exists.  But it might not yet be
+	   initialized.  Construct a value.  */
+	th->th_ta_p = (td_thragent_t *) ta;
+	th->th_unique = NULL;
+
+	return TD_OK;
+      }
 
   return TD_NOLWP;
 }

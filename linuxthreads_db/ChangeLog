@@ -1,3 +1,11 @@
+2002-07-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_ta_map_id2thr.c: Begin fixing implementation for libpthread with
+	TLS support.
+	* td_ta_map_lwp2thr.c: Likewise.
+	* td_ta_thr_iter.c: Likewise.
+	* td_thr_get_info.c: Likewise.
+
 2002-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions [libthread_db] (GLIBC_2.3): Add td_thr_tls_get_addr.

@@ -635,6 +635,10 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 #endif
 	  if (rel_offset <= fp->_IO_read_end - fp->_IO_read_base)
 	    {
+	      enum __codecvt_result status;
+	      struct _IO_codecvt *cd = fp->_codecvt;
+	      const char *read_ptr_copy;
+
 	      fp->_IO_read_ptr = fp->_IO_read_base + rel_offset;
 	      _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
 
@@ -643,11 +647,33 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
                  pointer is somewhere in the current external buffer
                  this does not mean we can convert this whole buffer
                  at once fitting in the internal buffer.  */
+	      fp->_wide_data->_IO_state = fp->_wide_data->_IO_last_state;
+	      read_ptr_copy = fp->_IO_read_base;
+	      fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_base;
 	      do
 		{
-
+		  wchar_t buffer[1024];
+		  wchar_t *ignore;
+		  status = (*cd->__codecvt_do_in) (cd,
+						   &fp->_wide_data->_IO_state,
+						   read_ptr_copy,
+						   fp->_IO_read_ptr,
+						   &read_ptr_copy,
+						   buffer,
+						   buffer
+						   + (sizeof (buffer)
+						      / sizeof (buffer[0])),
+						   &ignore);
+		  if (status !=  __codecvt_ok && status != __codecvt_partial)
+		    {
+		      fp->_flags |= _IO_ERR_SEEN;
+		      goto dumb;
+		    }
 		}
-	      while (0);
+	      while (read_ptr_copy != fp->_IO_read_ptr);
+
+	      fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end
+		= fp->_wide_data->_IO_read_base;
 
 	      _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 	      goto resync;

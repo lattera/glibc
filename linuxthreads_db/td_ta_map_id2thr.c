@@ -45,7 +45,19 @@ td_ta_map_id2thr (const td_thragent_t *ta, pthread_t pt, td_thrhandle_t *th)
 
   /* Test whether this entry is in use.  */
   if (phc.h_descr == NULL)
-    return TD_BADTH;
+    {
+      if (pt % pthread_threads_max == 0)
+	{
+	  /* The initial thread always exists but the thread library
+	     might not yet be initialized.  */
+	  th->th_ta_p = (td_thragent_t *) ta;
+	  th->th_unique = NULL;
+
+	  return TD_OK;
+	}
+
+      return TD_BADTH;
+    }
 
   /* Next test: get the descriptor to see whether this is not an old
      thread handle.  */

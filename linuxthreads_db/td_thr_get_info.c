@@ -1,5 +1,5 @@
 /* Get thread information.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -31,10 +31,17 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
 
   LOG ("td_thr_get_info");
 
-  /* Get the thread descriptor.  */
-  if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
-		 th->th_ta_p->sizeof_descr) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  /* Handle the case when the thread library is not yet initialized.  */
+  if (th->th_unique == NULL)
+    {
+      memset (&pds, '\0', sizeof (pds));
+      pds.p_tid = PTHREAD_THREADS_MAX;
+    }
+  else
+    /* Get the thread descriptor.  */
+    if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
+		   th->th_ta_p->sizeof_descr) != PS_OK)
+      return TD_ERR;	/* XXX Other error value?  */
 
   /* Fill in information.  Clear first to provide reproducable
      results for the fields we do not fill in.  */
@@ -54,7 +61,7 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
       infop->ti_tls = (char *) pds.p_specific;
       infop->ti_pri = pds.p_priority;
       infop->ti_type = TD_THR_USER;
-      
+
       if (! pds.p_terminated)
 	/* XXX For now there is no way to get more information.  */
 	infop->ti_state = TD_THR_ACTIVE;
