@@ -128,8 +128,12 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 	}
     }
   else
-    /* No group found yet.   */
-    retval = 0;
+    {
+      /* No group found yet.   */
+      retval = 0;
+
+      assert (*size >= 1);
+    }
 
   /* Check whether GROUP is part of the mix.  If not, add it.  */
   if (retval >= 0)
