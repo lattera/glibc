@@ -144,14 +144,16 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 
   /* Now process all categories we are interested in.  */
   for (cnt = 0; cnt < __LC_LAST; ++cnt)
-    if (cnt != LC_ALL && (category_mask & 1 << cnt) != 0)
+    if ((category_mask & 1 << cnt) != 0)
       {
 	result.__locales[cnt] = _nl_find_locale (locale_path, locale_path_len,
 						 cnt, &newnames[cnt]);
 	if (result.__locales[cnt] == NULL)
 	  {
+	  free_data_and_exit:
 	    while (cnt-- > 0)
-	      if (result.__locales[cnt]->usage_count != UNDELETABLE)
+	      if (((category_mask & 1 << cnt) != 0)
+		  && result.__locales[cnt]->usage_count != UNDELETABLE)
 		/* We can remove the data.  */
 		_nl_remove_locale (cnt, result.__locales[cnt]);
 	    return NULL;
@@ -164,24 +166,25 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
       /* Allocate new structure.  */
       result_ptr = (__locale_t) malloc (sizeof (struct __locale_struct));
       if (result_ptr == NULL)
-	return NULL;
+	goto free_data_and_exit;
 
-      /* Install strdup'd names in the new structure's __names array.  */
+      /* Install strdup'd names in the new structure's __names array.
+	 If resolved to "C", that is already in RESULT.__names to start.  */
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
-	if (cnt != LC_ALL && result.__names[cnt] != _nl_C_name)
+	if ((category_mask & 1 << cnt) != 0 && newnames[cnt] != _nl_C_name)
 	  {
-	    result.__names[cnt] = __strdup (((category_mask & 1 << cnt) != 0)
-					    ? newnames[cnt]
-					    : result.__names[cnt]);
+	    result.__names[cnt] = __strdup (newnames[cnt]);
 	    if (result.__names[cnt] == NULL)
 	      {
+		free (result_ptr);
 		while (cnt-- > 0)
 		  if (result.__names[cnt] != _nl_C_name)
 		    free ((char *) result.__names[cnt]);
-		free (result_ptr);
-		return NULL;
+		goto free_data_and_exit;
 	      }
 	  }
+
+      *result_ptr = result;
     }
   else
     {
@@ -189,34 +192,35 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
          First strdup the names we were given for the new locale.  */
 
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
-	if (cnt != LC_ALL && ((category_mask & 1 << cnt) != 0)
-	    && result.__names[cnt] != _nl_C_name)
+	if ((category_mask & 1 << cnt) != 0 && newnames[cnt] != _nl_C_name)
 	  {
 	    newnames[cnt] = __strdup (newnames[cnt]);
 	    if (newnames[cnt] == NULL)
 	      {
 		while (cnt-- > 0)
-		  if (newnames[cnt] != NULL)
+		  if ((category_mask & 1 << cnt) != 0 &&
+		      newnames[cnt] != _nl_C_name)
 		    free ((char *) newnames[cnt]);
-		return NULL;
+		goto free_data_and_exit;
 	      }
 	  }
-	else
-	  newnames[cnt] = NULL;
 
-      /* Now that we can't lose, install the new names.  */
+      /* Now that we can't lose, install the new data.  */
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
-	if (newnames[cnt] != NULL)
+	if ((category_mask & 1 << cnt) != 0)
 	  {
-	    if (result.__names[cnt] != _nl_C_name)
-	      free ((char *) result.__names[cnt]);
-	    result.__names[cnt] = __strdup (newnames[cnt]);
+	    if (base->__locales[cnt]->usage_count != UNDELETABLE)
+	      /* We can remove the old data.  */
+	      _nl_remove_locale (cnt, base->__locales[cnt]);
+	    base->__locales[cnt] = result.__locales[cnt];
+
+	    if (base->__names[cnt] != _nl_C_name)
+	      free ((char *) base->__names[cnt]);
+	    base->__names[cnt] = newnames[cnt];
 	  }
 
       result_ptr = base;
     }
-
-  *result_ptr = result;
 
   /* Update the special members.  */
  update:
