@@ -1,3 +1,17 @@
+2003-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread.c (manager_thread): Remove static, add attribute_hidden.
+	(thread_self_stack): Rename to...
+	(__pthread_self_stack): ... this.  Remove static.
+	(pthread_handle_sigcancel): Use check_thread_self ().
+	(pthread_handle_sigrestart): Likewise.
+	* sighandler.c (__pthread_sighandler, __pthread_sighandler_rt):
+	Likewise.
+	* descr.h (manager_thread): Declare.
+	* internals.h (__pthread_self_stack): New prototype.
+	(__manager_thread): Define.
+	(check_thread_self): New function.
+
 2003-09-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (CFLAGS-mutex.c): Add $(uses-callbacks).

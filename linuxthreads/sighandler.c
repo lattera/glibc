@@ -22,7 +22,8 @@ void __pthread_sighandler(int signo, SIGCONTEXT ctx)
 {
   pthread_descr self;
   char * in_sighandler;
-  self = thread_self();
+  self = check_thread_self();
+
   /* If we're in a sigwait operation, just record the signal received
      and return without calling the user's handler */
   if (THREAD_GETMEM(self, p_sigwaiting)) {
@@ -46,7 +47,8 @@ void __pthread_sighandler_rt(int signo, struct siginfo *si,
 {
   pthread_descr self;
   char * in_sighandler;
-  self =  thread_self();
+  self = check_thread_self();
+
   /* If we're in a sigwait operation, just record the signal received
      and return without calling the user's handler */
   if (THREAD_GETMEM(self, p_sigwaiting)) {

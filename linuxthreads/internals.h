@@ -363,6 +363,7 @@ extern int __pthread_condattr_init (pthread_condattr_t *attr);
 extern int __pthread_condattr_destroy (pthread_condattr_t *attr);
 extern pthread_t __pthread_self (void);
 extern pthread_descr __pthread_thread_self (void);
+extern pthread_descr __pthread_self_stack (void) attribute_hidden;
 extern int __pthread_equal (pthread_t thread1, pthread_t thread2);
 extern void __pthread_exit (void *retval);
 extern int __pthread_getschedparam (pthread_t thread, int *policy,
@@ -521,5 +522,31 @@ weak_extern (__pthread_thread_self)
 #  define thread_self() __pthread_thread_self ()
 # endif
 #endif
+
+#ifndef USE_TLS
+# define __manager_thread (&__pthread_manager_thread)
+#else
+# define __manager_thread manager_thread
+#endif
+
+extern inline __attribute__((always_inline)) pthread_descr
+check_thread_self (void)
+{
+  pthread_descr self = thread_self ();
+#if defined THREAD_SELF && defined INIT_THREAD_SELF
+  if (self == __manager_thread)
+    {
+      /* A new thread might get a cancel signal before it is fully
+	 initialized, so that the thread register might still point to the
+	 manager thread.  Double check that this is really the manager
+	 thread.  */
+      self = __pthread_self_stack();
+      if (self != __manager_thread)
+	/* Oops, thread_self() isn't working yet..  */
+	INIT_THREAD_SELF(self, self->p_nr);
+    }
+#endif
+  return self;
+}
 
 #endif /* internals.h */
