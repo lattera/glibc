@@ -77,9 +77,14 @@ extern void *__dso_handle __attribute__ ((__weak__));
 
 #include <fork.h>
 
-#define thread_atfork(prepare, parent, child) \
+#ifdef SHARED
+# define thread_atfork(prepare, parent, child) \
+   __register_atfork (prepare, parent, child, __dso_handle)
+#else
+# define thread_atfork(prepare, parent, child) \
    __register_atfork (prepare, parent, child,				      \
 		      &__dso_handle == NULL ? NULL : __dso_handle)
+#endif
 
 #elif defined(MUTEX_INITIALIZER)
 /* Assume hurd, with cthreads */

@@ -1,3 +1,10 @@
+2002-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork.h: Add libc_hidden_proto for
+	__register_atfork.
+	* sysdeps/unix/sysv/linux/register-atfork.c: Add libc_hidden_def
+	for __register_atfork.
+
 2002-12-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/i686/pt-machine.h: Use __ASSEMBLER__ instead of
