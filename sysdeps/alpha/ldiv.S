@@ -1,7 +1,6 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
-   Contributed by Richard Henderson (rth@tamu.edu)
-
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Richard Henderson <rth@tamu.edu>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -14,10 +13,9 @@
    Library General Public License for more details.
 
    You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If
-   not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-   Cambridge, MA 02139, USA.  */
-
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
 
@@ -44,7 +42,6 @@ ldiv:
 	.prologue 0
 #endif
 
-#define dividend  t0
 #define divisor   t1
 #define mask      t2
 #define quotient  t3
@@ -54,11 +51,13 @@ ldiv:
 #define compare   t7
 
 	/* find correct sign for input to unsigned divide loop. */
-	mov	a1, dividend			# e0    :
+	mov	a1, modulus			# e0    :
 	mov	a2, divisor			# .. e1 :
 	negq	a1, tmp1			# e0    :
 	negq	a2, tmp2			# .. e1 :
-	cmovlt	a1, tmp1, dividend		# e0    :
+	mov	zero, quotient			# e0    :
+	mov	1, mask				# .. e1 :
+	cmovlt	a1, tmp1, modulus		# e0    :
 	cmovlt	a2, tmp2, divisor		# .. e1 :
 	beq	a2, $divbyzero			# e1    :
 	unop					#       :
