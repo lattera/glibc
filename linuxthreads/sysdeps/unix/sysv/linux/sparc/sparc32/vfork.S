@@ -23,7 +23,7 @@
 ENTRY(__vfork)
 	ld	[%g7 + MULTIPLE_THREADS_OFFSET], %o0
 	cmp	%o0, 0
-#ifdef SHARED
+#if defined SHARED && !defined BROKEN_SPARC_WDISP22
 	bne	HIDDEN_JUMPTARGET(__fork)
 #else
 	bne	1f
@@ -35,7 +35,7 @@ ENTRY(__vfork)
 	sub	%o1, 1, %o1
 	retl
 	 and	%o0, %o1, %o0
-#ifndef SHARED
+#if !defined SHARED || defined BROKEN_SPARC_WDISP22
 1:	mov	%o7, %g1
 	call	HIDDEN_JUMPTARGET(__fork)
 	 mov	%g1, %o7

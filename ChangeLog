@@ -1,3 +1,9 @@
+2003-02-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/elf/configure.in (BROKEN_SPARC_WDISP22): New
+	check.
+	* config.h.in (BROKEN_SPARC_WDISP22): Add.
+
 2003-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i686/memmove.S: New file.
