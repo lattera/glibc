@@ -54,7 +54,7 @@ endif
 subdirs = csu assert ctype db locale intl catgets math setjmp signal stdlib \
 	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd\
 	  posix io termios resource misc login socket sysvipc gmon gnulib \
-	  wctype $(wildcard crypt) manual $(sysdep-subdirs) nss elf po
+	  wctype manual $(sysdep-subdirs) nss elf po
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
 
 # The mach and hurd subdirectories have many generated header files which
@@ -232,7 +232,8 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.h.in config.make.in config-name.in Makefile.in	\
 	       munch-tmpl.c munch.awk \
-	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions
+	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
+	       rpm/Makefile rpm/template rpm/rpmrc
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h

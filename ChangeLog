@@ -1,5 +1,11 @@
 Tue Jun 25 02:59:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makefile (subdirs): Remove crypt.
+	* crypt: Directory removed.  It will be made an independent library
+	distribution.
+
+	* Makefile (distribute): Add rpm/{Makefile,teplate,rpmrc}.
+
 	* inet/getrpcent_r.c (DATABASE_NAME): New macro.
 
 	* inet/getrpcbynumber.c (BUFLEN): New macro.
