@@ -1,3 +1,7 @@
+1998-10-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.97.
+
 1998-10-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Use __P
