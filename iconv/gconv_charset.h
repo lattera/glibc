@@ -46,7 +46,7 @@ strip (char *wp, const char *s)
 }
 
 
-static char *
+static char * __attribute__ ((unused))
 upstr (char *dst, const char *str)
 {
   char *cp = dst;
