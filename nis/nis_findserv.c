@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>

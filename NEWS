@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-1-12
+GNU C Library NEWS -- history of user-visible changes.  2001-1-30
 
 Copyright (C) 1992-1999, 2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -6,6 +6,16 @@ See the end for copying conditions.
 Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.org>.  Questions and suggestions should be send to
 <bug-glibc@gnu.org>.
+
+Version 2.2.2
+
+* lots of headers were cleaned up.  Using the tool in the conform/ subdir
+  we can now check for namespace violations and missing declarations.  The
+  result is that almost all headers are now Unix-compliant (as defined in
+  the upcoming XPG6).  The negative side is that some programs might need
+  corrections, too, if they depend on the incorrect form of the headers in
+  previous versions which defined too many symbols and included too many
+  other headers.
 
 Version 2.2.1
 

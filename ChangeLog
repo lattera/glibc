@@ -1,7 +1,12 @@
+2001-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_open.c (__gconv_open): Set conv_flags if IGNORE is
+	seen, not flags.
+
+	* nis/nis_findserv.c: Include <time.h>.
+
 2001-01-30  Yong Li  <yong.li@asu.edu>
 
-	* iconv/gconv_open.c (__gconv_open): Fix the variable used to
-	set result->__data[cnt].__flags.
 	* iconv/iconv_prog.c (main): Correct error handling method name.
 
 2001-01-29  Ben Collins  <bcollins@debian.org>
