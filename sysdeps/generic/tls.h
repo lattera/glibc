@@ -20,3 +20,60 @@
 /* By default no TLS support is available.  This is signaled by the
    absence of the symbol USE_TLS.  */
 #undef USE_TLS
+
+
+/* An architecture-specific version of this file has to defined a
+   number of symbols:
+
+     TLS_TCB_AT_TP  or  TLS_DTV_AT_TP
+
+     The presence of one of these symbols signals which variant of
+     the TLS ABI is used.  There are in the moment two variants
+     available:
+
+     * the thread pointer points to a thread control block
+
+     * the thread pointer points to the dynamic thread vector
+
+
+     TLS_TCB_SIZE
+
+     This is the size of the thread control block structure.  How
+     this is actually defined depends on the ABI.  The thread control
+     block could be internal descriptor of the thread library or
+     just a data structure which allows finding the DTV.
+
+     TLS_INIT_TCB_SIZE
+
+     Similarly, but this value is only used at startup and in the
+     dynamic linker itself.  There are no threads in use at that time.
+
+
+     TLS_TCB_ALIGN
+
+     Alignment requirements for the TCB structure.
+
+     TLS_INIT_TCB_ALIGN
+
+     Similarly, but for the structure used at startup time.
+
+
+     INSTALL_DTV(tcb, init_dtv)
+
+     This macro must install the given initial DTV into the thread control
+     block TCB.  The normal runtime functionality must then be able to
+     use the value.
+
+
+     TLS_INIT_TP(tcb)
+
+     This macro must initialize the thread pointer to enable normal TLS
+     operation.  The parameter is a pointer to the thread control block.
+
+
+     THREAD_DTV()
+
+     This macro returns the address of the DTV of the current thread.
+     This normally is done using the the thread register which points
+     to the dtv or the TCB (from which the DTV can found).
+  */
