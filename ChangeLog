@@ -1,5 +1,7 @@
 1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* malloc/malloc.c (request2size): Also set errno of failing.
+
 	* malloc/malloc.c (request2size): Take care of overflow in
 	addition.
 
