@@ -1,5 +1,5 @@
 /* Return information about the filesystem on which FILE resides.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,33 @@
 #include <string.h>
 #include <sys/statfs.h>
 #include <stddef.h>
+#include <sysdep.h>
+
+int __no_statfs64 attribute_hidden;
 
 /* Return information about the filesystem on which FILE resides.  */
 int
 __statfs64 (const char *file, struct statfs64 *buf)
 {
+#ifdef __NR_statfs64
+# if __ASSUME_STATFS64 == 0
+  if (! __no_statfs64)
+# endif
+    {
+      int result = INLINE_SYSCALL (statfs64, 3, file, sizeof (*buf), buf);
+
+# if __ASSUME_STATFS64 == 0
+      if (result == 0 || errno != ENOSYS)
+# endif
+	return result;
+
+# if __ASSUME_STATFS64 == 0
+      __no_statfs64 = 1;
+# endif
+    }
+#endif
+
+#if __ASSUME_STATFS64 == 0
   struct statfs buf32;
 
   if (__statfs (file, &buf32) < 0)
@@ -40,8 +62,10 @@ __statfs64 (const char *file, struct statfs64 *buf)
   buf->f_ffree = buf32.f_ffree;
   buf->f_fsid = buf32.f_fsid;
   buf->f_namelen = buf32.f_namelen;
+  buf->f_frsize = buf32.f_frsize;
   memcpy (buf->f_spare, buf32.f_spare, sizeof (buf32.f_spare));
 
   return 0;
+#endif
 }
 weak_alias (__statfs64, statfs64)

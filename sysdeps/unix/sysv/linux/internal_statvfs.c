@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -19,8 +19,9 @@
 
   /* Now fill in the fields we have information for.  */
   buf->f_bsize = fsbuf.f_bsize;
-  /* Linux does not support f_frsize, so set it to the full block size.  */
-  buf->f_frsize = fsbuf.f_bsize;
+  /* Linux has the f_frsize size only in later version of the kernel.
+     If the value is not filled in use f_bsize.  */
+  buf->f_frsize = fsbuf.f_frsize ?: fsbuf.f_bsize;
   buf->f_blocks = fsbuf.f_blocks;
   buf->f_bfree = fsbuf.f_bfree;
   buf->f_bavail = fsbuf.f_bavail;

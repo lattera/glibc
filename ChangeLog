@@ -1,3 +1,22 @@
+2003-06-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fstatfs64.c (__fstatfs64): Add support
+	for the fstatfs64 syscall.
+	* sysdeps/unix/sysv/linux/statfs64.c (__statfs64): Add support for
+	the statfs64 syscall.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_STATFS64 appropriately.
+
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Use f_frsize field
+	from statfs structure if it has been filled in.
+
+	* sysdeps/unix/sysv/linux/bits/statfs.h (struct statfs): Add f_frsize
+	field.
+	(struct statfs64): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/statfs.h: Likewise.
+
 2003-06-24  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (pread, pwrite): Use
@@ -40,7 +59,7 @@
 
 	* sysdeps/pthread/aio_suspend.c (aio_suspend): Set errno to the result
 	of pthread_cond_wait if there was an error.  Use pthread_cleanup_*
-	instead of __lbic_cleanup_region_*.
+	instead of __libc_cleanup_region_*.
 
 2003-06-20  Richard Henderson  <rth@redhat.com>
 

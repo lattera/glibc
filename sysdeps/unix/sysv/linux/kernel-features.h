@@ -308,3 +308,8 @@
 #if __LINUX_KERNEL_VERSION >= 132422
 # define __ASSUME_FUTEX_REQUEUE	1
 #endif
+
+/* The statfs64 syscalls are available in 2.5.74.  */
+#if __LINUX_KERNEL_VERSION >= 132426
+# define __ASSUME_STATFS64	1
+#endif
