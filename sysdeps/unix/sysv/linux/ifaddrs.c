@@ -102,7 +102,6 @@ free_netlink_handle (struct netlink_handle *h)
     {
       struct netlink_res *tmpptr;
 
-      free (ptr->nlh);
       tmpptr = ptr->next;
       free (ptr);
       ptr = tmpptr;
@@ -169,17 +168,12 @@ netlink_receive (struct netlink_handle *h)
       if (msg.msg_flags & MSG_TRUNC)
 	return -1;
 
-      nlm_next = (struct netlink_res *) malloc (sizeof (struct netlink_res));
+      nlm_next = (struct netlink_res *) malloc (sizeof (struct netlink_res)
+						+ read_len);
       if (nlm_next == NULL)
 	return -1;
       nlm_next->next = NULL;
-      nlm_next->nlh = (struct nlmsghdr *) malloc (read_len);
-      if (nlm_next->nlh == NULL)
-	{
-	  free (nlm_next);
-	  return -1;
-	}
-      memcpy (nlm_next->nlh, buf, read_len);
+      nlm_next->nlh = memcpy (nlm_next + 1, buf, read_len);
       nlm_next->size = read_len;
       nlm_next->seq = h->seq;
       if (h->nlm_list == NULL)
@@ -202,7 +196,7 @@ netlink_receive (struct netlink_handle *h)
 
 	  if (nlmh->nlmsg_type == NLMSG_DONE)
 	    {
-	      /* we found the end, leave the loop.  */
+	      /* We found the end, leave the loop.  */
 	      done = true;
 	      break;
 	    }
@@ -273,7 +267,7 @@ map_newlink (int index, int *map, int max)
 	return i;
     }
   /* This should never be reached. If this will be reached, we have
-     very big problem.  */
+     a very big problem.  */
   abort ();
 }
 
@@ -292,6 +286,7 @@ getifaddrs (struct ifaddrs **ifap)
   size_t ifa_data_size = 0;  /* Size to allocate for all ifa_data.  */
   char *ifa_data_ptr;        /* Pointer to the unused part of memory for
 				ifa_data.  */
+  int result = 0;
 
   if (ifap)
     *ifap = NULL;
@@ -316,15 +311,14 @@ getifaddrs (struct ifaddrs **ifap)
      active interfaces.  */
   if (netlink_sendreq (&nh, RTM_GETLINK) < 0)
     {
-      netlink_close (&nh);
-      return -1;
+      result = -1;
+      goto exit_close;
     }
   /* Collect all data for every interface.  */
   if (netlink_receive (&nh) < 0)
     {
-      free_netlink_handle (&nh);
-      netlink_close (&nh);
-      return -1;
+      result = -1;
+      goto exit_free;
     }
 
 
@@ -333,18 +327,12 @@ getifaddrs (struct ifaddrs **ifap)
      interfaces in the list, we will later always find the
      interface before the corresponding addresses.  */
   ++nh.seq;
-  if (netlink_sendreq (&nh, RTM_GETADDR) < 0)
+  if (netlink_sendreq (&nh, RTM_GETADDR) < 0
+      /* Collect all data for every interface.  */
+      || netlink_receive (&nh) < 0)
     {
-      free_netlink_handle (&nh);
-      netlink_close (&nh);
-      return -1;
-    }
-  /* Collect all data for every inerface.  */
-  if (netlink_receive (&nh) < 0)
-    {
-      free_netlink_handle (&nh);
-      netlink_close (&nh);
-      return -1;
+      result = -1;
+      goto exit_free;
     }
 
   /* Count all RTM_NEWLINK and RTM_NEWADDR entries to allocate
@@ -399,11 +387,7 @@ getifaddrs (struct ifaddrs **ifap)
 
   /* Return if no interface is up.  */
   if ((newlink + newaddr) == 0)
-    {
-      free_netlink_handle (&nh);
-      netlink_close (&nh);
-      return 0;
-    }
+    goto exit_free;
 
   /* Table for mapping kernel index to entry in our list.  */
   map_newlink_data = alloca (newlink * sizeof (int));
@@ -416,9 +400,8 @@ getifaddrs (struct ifaddrs **ifap)
 					    + ifa_data_size);
   if (ifas == NULL)
     {
-      free_netlink_handle (&nh);
-      netlink_close (&nh);
-      return -1;
+      result = -1;
+      goto exit_free;
     }
 
   for (i = 0; i < newlink + newaddr - 1; i++)
@@ -426,7 +409,7 @@ getifaddrs (struct ifaddrs **ifap)
       ifas[i].ifa.ifa_next = &ifas[i + 1].ifa;
       map_newlink_data[i] = -1;
     }
-  ifa_data_ptr = (char *)&ifas[newlink + newaddr];
+  ifa_data_ptr = (char *) &ifas[newlink + newaddr];
   newaddr_idx = 0;		/* Counter for newaddr index.  */
 
   /* Walk through the list of data we got from the kernel.  */
@@ -446,13 +429,14 @@ getifaddrs (struct ifaddrs **ifap)
 	{
 	  int ifa_index = 0;
 
-	  /* check if the message is the one we want */
+	  /* Check if the message is the one we want */
 	  if ((pid_t) nlh->nlmsg_pid != nh.pid || nlh->nlmsg_seq != nlp->seq)
 	    continue;
 
 	  if (nlh->nlmsg_type == NLMSG_DONE)
 	    break;		/* ok */
-	  else if (nlh->nlmsg_type == RTM_NEWLINK)
+
+	  if (nlh->nlmsg_type == RTM_NEWLINK)
 	    {
 	      /* We found a new interface. Now extract everything from the
 		 interface data we got and need.  */
@@ -460,7 +444,7 @@ getifaddrs (struct ifaddrs **ifap)
 	      struct rtattr *rta = IFLA_RTA (ifim);
 	      size_t rtasize = IFLA_PAYLOAD (nlh);
 
-	      /* interfaces are stored in the first "newlink" entries
+	      /* Interfaces are stored in the first "newlink" entries
 		 of our list, starting in the order as we got from the
 		 kernel.  */
               ifa_index = map_newlink (ifim->ifi_index - 1,
@@ -537,7 +521,7 @@ getifaddrs (struct ifaddrs **ifap)
 	      size_t rtasize = IFA_PAYLOAD (nlh);
 
 	      /* New Addresses are stored in the order we got them from
-		 the kernel after interfaces. Theoretical it is possible
+		 the kernel after interfaces. Theoretically it is possible
 		 that we have holes in the interface part of the list,
 		 but we always have already the interface for this address.  */
 	      ifa_index = newlink + newaddr_idx;
@@ -662,10 +646,10 @@ getifaddrs (struct ifaddrs **ifap)
 			case AF_INET6:
 			  memcpy (&ifas[ifa_index].broadaddr.s6.sin6_addr,
 				  rta_data, rta_payload);
-			  if (IN6_IS_ADDR_LINKLOCAL (rta_data) ||
-			      IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
-			    ifas[ifa_index].broadaddr.s6.sin6_scope_id =
-			      ifam->ifa_scope;
+			  if (IN6_IS_ADDR_LINKLOCAL (rta_data)
+			      || IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
+			    ifas[ifa_index].broadaddr.s6.sin6_scope_id
+			      = ifam->ifa_scope;
 			  break;
 
 			default:
@@ -754,14 +738,16 @@ getifaddrs (struct ifaddrs **ifap)
 	}
     }
 
-  free_netlink_handle (&nh);
-
-  netlink_close (&nh);
-
   if (ifap != NULL)
     *ifap = &ifas[0].ifa;
 
-  return 0;
+ exit_free:
+  free_netlink_handle (&nh);
+
+ exit_close:
+  netlink_close (&nh);
+
+  return result;
 }
 
 
