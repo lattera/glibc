@@ -105,11 +105,13 @@ ELF_PREFERRED_ADDRESS_DATA;
 
 
 int __stack_prot attribute_hidden attribute_relro
-#if _STACK_GROWS_DOWN
-     = PROT_READ|PROT_WRITE|PROT_GROWSDOWN;
-#elif _STACK_GROWS_UP
-     = PROT_READ|PROT_WRITE|PROT_GROWSUP;
+  = (PROT_READ|PROT_WRITE
+#if _STACK_GROWS_DOWN && defined PROT_GROWSDOWN
+     |PROT_GROWSDOWN
+#elif _STACK_GROWS_UP && defined PROT_GROWSUP
+     |PROT_GROWSUP
 #endif
+     );
 
 
 /* Type for the buffer we put the ELF header and hopefully the program
