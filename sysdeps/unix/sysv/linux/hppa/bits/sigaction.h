@@ -1,4 +1,4 @@
-/* Definitions for Linux/hppa sigaction.
+/* Definitions for Linux/HPPA sigaction.
    Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

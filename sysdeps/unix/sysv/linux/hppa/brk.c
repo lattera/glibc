@@ -1,4 +1,4 @@
-/* brk system call for Linux/i386.
+/* brk system call for Linux/HPPA.
    Copyright (C) 1995, 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
