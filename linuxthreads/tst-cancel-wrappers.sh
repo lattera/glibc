@@ -1,5 +1,5 @@
 #! /bin/sh
-# Test whether all cancellable functions are cancellable.
+# Test whether all cancelable functions are cancelable.
 # Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
@@ -20,7 +20,7 @@
 # 02111-1307 USA.
 
 while [ $# -gt 0 ]; do
-  ( nm -P $1; echo 'end[end]:' ) | awk ' BEGIN {
+  ( nm -P $1; echo 'end[end]:' ) | gawk ' BEGIN {
 C["accept"]=1
 C["close"]=1
 C["connect"]=1

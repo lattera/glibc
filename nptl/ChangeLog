@@ -1,5 +1,8 @@
 2003-01-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cancel-wrappers.sh: Invoke gawk not awk since we use GNU awk
+	features.  Reported by Marijn Ros <marijn@mad.scientist.com>.
+
 	* sysdeps/unix/sysv/linux/jmp-unwind.c: Include <pthread-functions.h>.
 	Use __libc_pthread_functions array if SHARED.
 
