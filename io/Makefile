@@ -1,4 +1,4 @@
-# Copyright (C) 1992-1999,2000,01,02 Free Software Foundation, Inc.
+# Copyright (C) 1992-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -83,5 +83,6 @@ ifeq ($(cross-compiling),no)
 tests: $(objpfx)ftwtest.out
 
 $(objpfx)ftwtest.out: $(objpfx)ftwtest
-	$(SHELL) -e ftwtest-sh $(common-objpfx) $(<D)/$(<F) > $@
+	$(SHELL) -e ftwtest-sh $(shell cd $(common-objpfx). && pwd)/ \
+		 $(shell cd $(<D) && pwd)/$(<F) > $@
 endif

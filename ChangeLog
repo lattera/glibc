@@ -1,5 +1,18 @@
 2003-05-11  Andreas Schwab  <schwab@suse.de>
 
+	* io/Makefile ($(objpfx)ftwtest.out): Use absolute file names.
+
+2003-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tst-strftime.c (do_test): Add tests for - flag.
+
+2003-05-11  Jim Meyering  <jim@meyering.net>
+
+	* time/strftime.c (my_strftime): Let the `-' (no-pad) flag affect
+        the space-padded-by-default conversion specifiers, %e, %k, %l.
+
+2003-05-11  Andreas Schwab  <schwab@suse.de>
+
 	* sysdeps/generic/sched_setaffinity.c: Fix parameter name.
 
 2003-05-10  Ulrich Drepper  <drepper@redhat.com>

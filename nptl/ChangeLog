@@ -1,3 +1,7 @@
+2003-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* cond-perf.c (cons): Add missing locking around setting of alldone.
+
 2003-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S: Remove futex

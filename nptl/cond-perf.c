@@ -25,8 +25,10 @@ cons (void *arg)
     {
       if (--ntogo == 0)
 	{
+	  pthread_mutex_lock (&mut2);
 	  alldone = true;
 	  pthread_cond_signal (&cond2);
+	  pthread_mutex_unlock (&mut2);
 	}
 
       pthread_cond_wait (&cond1, &mut1);
@@ -67,7 +69,7 @@ main (int argc, char *argv[])
   pthread_t th[nthreads];
   int i;
   for (i = 0; i < nthreads; ++i)
-    if ((err = pthread_create (&th[i], NULL, cons, (void *) (long) i)) != 0)
+    if (__builtin_expect ((err = pthread_create (&th[i], NULL, cons, (void *) (long) i)) != 0, 0))
       printf ("pthread_create: %s\n", strerror (err));
 
   for (i = 0; i < nrounds; ++i)
