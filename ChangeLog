@@ -1,3 +1,77 @@
+1997-02-02 00:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* dirent/dirent.h: Add description _DIRENT_HAVE_D_TYPE.
+
+1997-02-01 17:04  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* inet/netinet/ip.h (MAX_IPOPTLEN): Add definition.
+
+1997-02-01 17:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Add definition of cmsghdr
+	structure plus related macros.
+	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=socket]
+	(sysdep_routines): Add cmsg_nxthdr.
+	* sysdeps/unix/sysv/linux/Dist: Add cmsg_nxthdr.c.
+	Suggested by Philip Blundell <pjb27@cam.ac.uk>.
+
+1997-02-01 12:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c: Define _strftime_copytm without protecting arguments
+	which breaks the definition.
+
+1997-02-01 03:31  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
+
+	* nis/rpcsvc/yp_prot.h: Move definition of yppushresp_xfr after
+	definition of type for element.
+
+1997-02-01 03:28  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sydsdeps/unix/sysv/linux/netinet/in.h: Add IPv6 related IPPROTO_*
+	constants.
+
+1997-02-01 03:09  H.J. Lu  <hjl@lucon.org>
+
+	* Makefile: Pass PARALLELMFLAGS to sub-makes.
+	* Makefile.in: Mention PARALLELMFLAGS and pass to main Makefile.
+
+1997-01-31  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (HAVE_LIMITS_H, HAVE_LOCALTIME_R, STDC_HEADERS):
+	Define if _LIBC is defined.
+	<limits.h>: Include if HAVE_LIMITS_H instead of if
+	__STDC__ || __GNU_LIBRARY__ || STDC_HEADERS.
+	<stdlib.h>: Similarly, include if STDC_HEADERS.
+	(localtime_r): Redo #ifdef to make it clear that glibc has
+	localtime_r now.
+
+1997-02-29 20:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/Makefile ($(objpfx)rpcsvc/%.h, $(objpfx)x%.c): Use stamp
+	file to avoid unnecessary recompilation.
+
+1997-01-29 19:33  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile: Set install-others, not install_others.
+	(before-compile): Use += to preserve previous value.
+	($(inst_includedir)/gnu/lib-names.h): Remove obsolete comment and
+	fix dependency name.
+	($(objpfx)lib-names.h): Remove rule.
+	* Makeconfig ($(common-objpfx)gnu/lib-names.h): Generate it here,
+	with correct name, using an intermediate stamp file.
+	(common-generated): Add gnu/lib-names.h.
+	(before-compile): Add $(common-objpfx)gnu/lib-names.h.
+
+1997-01-30 18:29  Richard Henderson  <richard@atheist.tamu.edu>
+
+	* malloc/malloc.c (MAGICBYTE): Use cast to size_t instead of unsigned
+	to prevent warnings on 64 bit systems.
+	Reported by Paul Wouters <paul@xtdnet.nl>.
+
+	* sysdeps/alpha/dl-machine.h: Revert check for broken gas.  By default
+	we assume it works.
+
 1997-01-30 03:24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/elf/start.S (_start): Align stack pointer to

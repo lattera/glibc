@@ -27,17 +27,19 @@
 /* Standard well-defined IP protocols.  */
 enum
   {
-    IPPROTO_IP = 0,	/* Dummy protocol for TCP.  */
-    IPPROTO_ICMP = 1,	/* Internet Control Message Protocol.  */
-    IPPROTO_IGMP = 2,	/* Internet Group Management Protocol. */
-    IPPROTO_IPIP = 4,	/* IPIP tunnels (older KA9Q tunnels use 94).  */
-    IPPROTO_TCP = 6,	/* Transmission Control Protocol.  */
-    IPPROTO_EGP = 8,	/* Exterior Gateway Protocol.  */
-    IPPROTO_PUP = 12,	/* PUP protocol.  */
-    IPPROTO_UDP = 17,	/* User Datagram Protocol.  */
-    IPPROTO_IDP = 22,	/* XNS IDP protocol.  */
+    IPPROTO_IP = 0,	 /* Dummy protocol for TCP.  */
+    IPPROTO_ICMP = 1,	 /* Internet Control Message Protocol.  */
+    IPPROTO_IGMP = 2,	 /* Internet Group Management Protocol. */
+    IPPROTO_IPIP = 4,	 /* IPIP tunnels (older KA9Q tunnels use 94).  */
+    IPPROTO_TCP = 6,	 /* Transmission Control Protocol.  */
+    IPPROTO_EGP = 8,	 /* Exterior Gateway Protocol.  */
+    IPPROTO_PUP = 12,	 /* PUP protocol.  */
+    IPPROTO_UDP = 17,	 /* User Datagram Protocol.  */
+    IPPROTO_IDP = 22,	 /* XNS IDP protocol.  */
+    IPPROTO_IPV6 = 41,   /* IPv6-in-IPv4 tunnelling.  */
+    IPPROTO_ICMPV6 = 58, /* ICMPv6.  */
 
-    IPPROTO_RAW = 255,	/* Raw IP packets.  */
+    IPPROTO_RAW = 255,	 /* Raw IP packets.  */
     IPPROTO_MAX
   };
 

@@ -278,11 +278,6 @@ struct ypbind_setdom {
 #define YPPUSHPROC_NULL		((u_long)0)
 #define YPPUSHPROC_XFRRESP	((u_long)1)
 
-struct yppushresp_xfr {
-  u_int transid;
-  yppush_status status;
-};
-
 /* Status values for yppushresp_xfr.status */
 
 enum yppush_status {
@@ -322,6 +317,11 @@ enum yppush_status {
 #define	YPPUSH_NOALIAS	YPPUSH_NOALIAS
 };
 typedef enum yppush_status yppush_status;
+
+struct yppushresp_xfr {
+  u_int transid;
+  yppush_status status;
+};
 
 struct ypresp_all {
   bool_t more;

@@ -25,6 +25,12 @@
 #include <config.h>
 #endif
 
+#ifdef _LIBC
+# define HAVE_LIMITS_H 1
+# define HAVE_LOCALTIME_R 1
+# define STDC_HEADERS 1
+#endif
+
 /* Assume that leap seconds are possible, unless told otherwise.
    If the host has a `zic' command with a `-L leapsecondfilename' option,
    then it supports leap seconds; otherwise it probably doesn't.  */
@@ -35,13 +41,13 @@
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
 
-#if __STDC__ || __GNU_LIBRARY__ || STDC_HEADERS
+#if HAVE_LIMITS_H
 #include <limits.h>
 #endif
 
 #if DEBUG
 #include <stdio.h>
-#if __STDC__ || __GNU_LIBRARY__ || STDC_HEADERS
+#if STDC_HEADERS
 #include <stdlib.h>
 #endif
 /* Make it work even if the system's libc has its own mktime routine.  */
@@ -100,10 +106,10 @@ time_t __mktime_internal __P ((struct tm *,
 			       time_t *));
 
 
-#if ! HAVE_LOCALTIME_R && ! defined (localtime_r)
 #ifdef _LIBC
 #define localtime_r __localtime_r
 #else
+#if ! HAVE_LOCALTIME_R && ! defined (localtime_r)
 /* Approximate localtime_r as best we can in its absence.  */
 #define localtime_r my_localtime_r
 static struct tm *localtime_r __P ((const time_t *, struct tm *));
@@ -118,8 +124,8 @@ localtime_r (t, tp)
   *tp = *l;
   return tp;
 }
-#endif /* ! _LIBC */
 #endif /* ! HAVE_LOCALTIME_R && ! defined (localtime_r) */
+#endif /* ! _LIBC */
 
 
 /* Yield the difference between (YEAR-YDAY HOUR:MIN:SEC) and (*TP),

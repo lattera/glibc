@@ -122,6 +122,8 @@ struct ip {
 #define	IPOPT_OFFSET		2		/* offset within option */
 #define	IPOPT_MINOFF		4		/* min value of above */
 
+#define	MAX_IPOPTLEN		40
+
 /*
  * Time stamp option structure.
  */

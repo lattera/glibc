@@ -2,5 +2,8 @@
 
 srcdir = @srcdir@
 
+# Uncomment the line below if you want to do parallel build.
+# PARALLELMFLAGS = -j 4
+
 all .DEFAULT:
-	$(MAKE) -C $(srcdir) objdir=`pwd` $@
+	$(MAKE) PARALLELMFLAGS="$(PARALLELMFLAGS)" -C $(srcdir) objdir=`pwd` $@

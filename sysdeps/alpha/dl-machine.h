@@ -43,7 +43,7 @@ elf_machine_matches_host (Elf64_Word e_machine)
 static inline Elf64_Addr
 elf_machine_dynamic (void)
 {
-#ifdef AXP_MULTI_GOT_LD
+#ifndef NO_AXP_MULTI_GOT_LD
   return (Elf64_Addr) &_DYNAMIC;
 #else
   register Elf64_Addr *gp __asm__ ("$29");

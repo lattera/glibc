@@ -35,6 +35,7 @@ endif
 ifeq ($(subdir),socket)
 sysdep_headers += sys/socketcall.h net/if.h net/if_ppp.h net/ppp-comp.h \
 		  net/ppp_defs.h net/if_arp.h net/route.h
+sysdep_routines += cmsg_nxthdr
 endif
 
 ifeq ($(subdir),sunrpc)

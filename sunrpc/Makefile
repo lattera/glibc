@@ -118,17 +118,29 @@ $(inst_sysconfdir)/rpc: etc.rpc
 defines := $(defines) -D_PATH_RPC='"$(sysconfdir)/rpc"'
 
 # Generate the rpcsvc headers with rpcgen.
-$(objpfx)rpcsvc/%.h: rpcsvc/%.x $(objpfx)rpcgen
+# We use a stamp file to avoid unnessary recompilation each time rpcgen is
+# relinked.
+$(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
+$(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)
-	-@rm -f $@T
-	$(rpcgen-cmd) -h $< -o $@T
-	mv -f $@T $@
+	-@rm -f ${@:stmp=T} $@
+	$(rpcgen-cmd) -h $< -o ${@:stmp=T}
+	if test -r ${@:stmp=h} && cmp -s ${@:stmp=h} ${@:stmp=T}; \
+	then rm -f ${@:stmp=T}; \
+	else mv -f ${@:stmp=T} ${@:stmp=h}; fi
+	touch $@
 
 # Generate the rpcsvc XDR functions with rpcgen.
-$(objpfx)x%.c: rpcsvc/%.x $(objpfx)rpcgen
-	-@rm -f $@T
-	$(rpcgen-cmd) -c $< -o $@T
-	mv -f $@T $@
+$(objpfx)x%.c: $(objpfx)x%.stmp
+$(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
+	-@rm -f ${@:stmp=T} $@
+	$(rpcgen-cmd) -c $< -o ${@:stmp=T}
+	if test -r ${@:stmp=c} && cmp -s ${@:stmp=c} ${@:stmp=T}; \
+	then rm -f ${@:stmp=T}; \
+	else mv -f ${@:stmp=T} ${@:stmp=c}; fi
+	touch $@
+
+generated += $(rpcsvc:%.x=rpcsvc/%.stmp) $(rpcsvc:%.x=x%.stmp)
 
 # The generated source files depend on the corresponding generated headers.
 # Gratuitous dependency on generated .c file here just gets it mentioned to

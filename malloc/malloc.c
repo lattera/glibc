@@ -3764,7 +3764,7 @@ int mALLOPt(param_number, value) int param_number; int value;
    byte per chunk; still this will catch most cases of double frees or
    overruns. */
 
-#define MAGICBYTE(p) ( ( ((unsigned)p >> 3) ^ ((unsigned)p >> 11)) & 0xFF )
+#define MAGICBYTE(p) ( ( ((size_t)p >> 3) ^ ((size_t)p >> 11)) & 0xFF )
 
 /* Convert a pointer to be free()d or realloc()ed to a valid chunk
    pointer.  If the provided pointer is not valid, return NULL.  The

@@ -39,12 +39,15 @@ __BEGIN_DECLS
 
    It defines the macro `_DIRENT_HAVE_D_OFF' iff there is a `d_off'
    member that gives the file offset of the next directory entry.
+
+   It defines the macro `_DIRENT_HAVE_D_TYPE' iff there is a `d_type'
+   member that gives the type of the file.
  */
 
 #include <direntry.h>
 
-#if (defined(__USE_BSD) || defined(__USE_MISC)) && !defined(d_fileno)
-#define	d_ino		d_fileno		 /* Backward compatibility.  */
+#if (defined __USE_BSD || defined __USE_MISC) && !defined d_fileno
+# define d_ino	d_fileno		 /* Backward compatibility.  */
 #endif
 
 /* These macros extract size information from a `struct dirent *'.
@@ -62,16 +65,16 @@ __BEGIN_DECLS
    */
 
 #ifdef _DIRENT_HAVE_D_NAMLEN
-#define _D_EXACT_NAMLEN(d) ((d)->d_namlen)
-#define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)
+# define _D_EXACT_NAMLEN(d) ((d)->d_namlen)
+# define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)
 #else
-#define _D_EXACT_NAMLEN(d) (strlen ((d)->d_name))
-#ifdef _DIRENT_HAVE_D_RECLEN
-#define _D_ALLOC_NAMLEN(d) (((char *) (d) + (d)->d_reclen) - &(d)->d_name[0])
-#else
-#define _D_ALLOC_NAMLEN(d) (sizeof (d)->d_name > 1 ? sizeof (d)->d_name : \
-			    _D_EXACT_NAMLEN (d) + 1)
-#endif
+# define _D_EXACT_NAMLEN(d) (strlen ((d)->d_name))
+# ifdef _DIRENT_HAVE_D_RECLEN
+#  define _D_ALLOC_NAMLEN(d) (((char *) (d) + (d)->d_reclen) - &(d)->d_name[0])
+# else
+#  define _D_ALLOC_NAMLEN(d) (sizeof (d)->d_name > 1 ? sizeof (d)->d_name : \
+			      _D_EXACT_NAMLEN (d) + 1)
+# endif
 #endif
 
 
@@ -90,8 +93,8 @@ enum
   };
 
 /* Convert between stat structure types and directory types.  */
-#define	IFTODT(mode)	(((mode) & 0170000) >> 12)
-#define	DTTOIF(dirtype)	((dirtype) << 12)
+# define IFTODT(mode)	(((mode) & 0170000) >> 12)
+# define DTTOIF(dirtype)	((dirtype) << 12)
 #endif
 
 
@@ -116,42 +119,42 @@ extern int closedir __P ((DIR *__dirp));
 extern struct dirent *__readdir __P ((DIR *__dirp));
 extern struct dirent *readdir __P ((DIR *__dirp));
 
-#if defined __USE_POSIX
+#if defined __USE_POSIX || defined __USE_MISC
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.  */
-extern int __readdir_r __P ((DIR *__dirp, struct dirent *entry,
-			     struct dirent **result));
-extern int readdir_r __P ((DIR *__dirp, struct dirent *entry,
-			   struct dirent **result));
-#endif	/* POSIX */
+extern int __readdir_r __P ((DIR *__dirp, struct dirent *__entry,
+			     struct dirent **__result));
+extern int readdir_r __P ((DIR *__dirp, struct dirent *__entry,
+			   struct dirent **__result));
+#endif	/* POSIX or misc */
 
 /* Rewind DIRP to the beginning of the directory.  */
 extern void rewinddir __P ((DIR *__dirp));
 
-#if defined(__USE_BSD) || defined(__USE_MISC)
+#if defined __USE_BSD || defined __USE_MISC
 
 /* Return the file descriptor used by DIRP.  */
 extern int dirfd __P ((DIR *__dirp));
 
-#if defined (__OPTIMIZE__) && defined (_DIR_dirfd)
-#define dirfd(dirp)	_DIR_dirfd (dirp)
-#endif
+# if defined __OPTIMIZE__ && defined _DIR_dirfd
+#  define dirfd(dirp)	_DIR_dirfd (dirp)
+# endif
 
-#ifndef	MAXNAMLEN
+# ifndef MAXNAMLEN
 /* Get the definitions of the POSIX.1 limits.  */
-#include <posix1_lim.h>
+#  include <posix1_lim.h>
 
 /* `MAXNAMLEN' is the BSD name for what POSIX calls `NAME_MAX'.  */
-#ifdef	NAME_MAX
-#define	MAXNAMLEN	NAME_MAX
-#else
-#define	MAXNAMLEN	255
-#endif
-#endif
+#  ifdef NAME_MAX
+#   define MAXNAMLEN	NAME_MAX
+#  else
+#   define MAXNAMLEN	255
+#  endif
+# endif
 
-#include <gnu/types.h>
-#define __need_size_t
-#include <stddef.h>
+# include <gnu/types.h>
+# define __need_size_t
+# include <stddef.h>
 
 /* Seek to position POS on DIRP.  */
 extern void seekdir __P ((DIR *__dirp, __off_t __pos));
