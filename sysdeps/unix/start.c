@@ -35,11 +35,8 @@ weak_alias (__data_start, data_start)
 #define	DECL_DUMMIES
 #endif
 
-VOLATILE int errno;
-
-#ifndef	HAVE_WEAK_SYMBOLS
-#undef	environ
-#define	__environ	environ
+#ifndef errno
+volatile int errno;
 #endif
 
 extern void EXFUN(__libc_init, (int argc, char **argv, char **envp));
@@ -66,11 +63,10 @@ DEFUN_VOID(_start)
   start1();
 }
 
-#if !defined (NO_UNDERSCORES) && defined (HAVE_GNU_LD) && !defined (__GNUC__)
+#if !defined (NO_UNDERSCORES) && defined (HAVE_WEAK_SYMBOLS)
 /* Make an alias called `start' (no leading underscore,
    so it can't conflict with C symbols) for `_start'.  */
-asm(".stabs \"start\",11,0,0,0");
-asm(".stabs \"__start\",1,0,0,0");
+asm (".weak start; start = _start");
 #endif
 
 #endif

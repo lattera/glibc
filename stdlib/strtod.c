@@ -396,7 +396,7 @@ STRTOF (nptr, endptr)
 
   /* Return 0.0 if no legal string is found.
      No character is used even if a sign was found.  */
-  if (!isdigit (c))
+  if (!isdigit (c) && (c != decimal || !isdigit (cp[1])))
     RETURN (0.0, nptr);
 
   /* Record the start of the digits, in case we will check their grouping.  */

@@ -134,12 +134,6 @@ ifndef includedir
 includedir = $(exec_prefix)/include
 endif
 
-# Define if the library should install its own <stddef.h>.
-# Do this unless you are using version 2.2 or later of GCC.
-ifndef stddef.h
-stddef.h = stddef.h
-endif
-
 # Where to install machine-independent data files.
 # These are the timezone database, and eventually the locale database.
 ifndef datadir

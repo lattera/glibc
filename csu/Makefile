@@ -39,33 +39,51 @@ all: # Make this the default target; it will be defined in Rules.
 include ../Makeconfig
 
 ifneq ($(elf),yes)
+
 # When not using ELF, there is just one startfile, called crt0.o.
 start-installed-name = crt0.o
+
 else
+
 # In the ELF universe, crt0.o is called crt1.o, and there are 
 # some additional bizarre files.
 start-installed-name = crt1.o
-install-lib += crti.o crtn.o
-extra-objs += crti.o crtn.o
-generated += crti.s crtn.s
-omit-deps += crti crtn
+
+# These are the special initializer/finalizer files.  They are always the
+# first and last file in the link.  crti.o ... crtn.o are used for normal
+# linking; they define the global "functions" _init and _fini to run the
+# .init and .fini sections.  crti_s.o ... crtn_s.o are for making shared
+# library objects; they put the prologue/epilogue code into the .init and
+# .fini sections, but define no global symbols.
+crtstuff = crti crtn crti_s crtn_s
+
+install-lib += $(crtstuff:=.o)
+extra-objs += $(crtstuff:=.o)
+generated += $(crtstuff:=.s)
+omit-deps += $(crtstuff)
 
 # Compile initfini.c to assembly code, which contains embedded shell
 # commands that prodice crti.s-new and crtn.s-new when run.  We need to
 # disable emission of .size directives and debugging information, since
 # they will get confused by the splitting of the output we do.
-$(objpfx)cr%i.s $(objpfx)cr%n.s: initfini.c
-	-rm -f $(objpfx)crtcommon.tmp
-	(echo 'cat > crtcommon.tmp <<\EOF_common'; \
-	 $(CC) $< $(CPPFLAGS) $(CFLAGS) -finhibit-size-directive -g0 -S -o -; \
-	 echo 'EOF_common') | (cd $(@D); $(SHELL))
-	cat $(objpfx)crtcommon.tmp >> $(objpfx)crti.s-new
-	cat $(objpfx)crtcommon.tmp >> $(objpfx)crtn.s-new
-	rm -f $(objpfx)crtcommon.tmp
-	mv -f $(objpfx)crti.s-new $(objpfx)crti.s
-	mv -f $(objpfx)crtn.s-new $(objpfx)crtn.s
-endif
+$(objpfx)cr%i.s $(objpfx)cr%n.s: initfini.c; $(initfini)
+$(objpfx)cr%i_s.s $(objpfx)cr%n_s.s: initfini.c; $(initfini)
 
+define initfini
+-rm -f $(objpfx)crtcommon.tmp
+(echo 'cat > crtcommon.tmp <<\EOF_common'; \
+ $(CC) $< $(CPPFLAGS) $(CFLAGS) \
+       $(patsubst %,-DGLOBAL=static,$(filter %_s.s,$@)) \
+       -finhibit-size-directive -g0 -S -o -; \
+ echo 'EOF_common') | (cd $(@D); $(SHELL))
+cat $(objpfx)crtcommon.tmp >> $(objpfx)crti.s-new
+cat $(objpfx)crtcommon.tmp >> $(objpfx)crtn.s-new
+rm -f $(objpfx)crtcommon.tmp
+mv -f $(objpfx)crti.s-new $(subst crtn,crti,$@)
+mv -f $(objpfx)crtn.s-new $(subst crti,crtn,$@)
+endef
+
+endif
 
 include ../Rules
 

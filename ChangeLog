@@ -1,3 +1,29 @@
+Tue Feb 21 00:10:50 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* csu/Makefile (crtstuff): New variable consolidates crti, crtn;
+ 	add crti_s, crtn_s.
+	(install-lib, extra-objs, generated-, omit-deps): Use that.
+	(initfini): New canned sequence, broken out of crt[in].s rule.
+	(crt[in].s rule): Use it.
+	(crt[in]_s.s): New rule.
+	* csu/initfini.c (GLOBAL): New macro; define it to empty if undefined.
+	(_init, _fini): Use GLOBAL as storage class.
+	Add self reference to avoid GCC optimizing out the functions.
+
+	* Makefile (headers): Remove $(stddef.h).
+	* Makeconfig (stddef.h): Variable removed; now require gcc version
+ 	>= 2.2.
+	* stddef.h: File removed.
+
+Mon Feb 20 19:42:31 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/bsd/ultrix4/mips/start.S: Remove `__environ'
+ 	definition.
+	* sysdeps/unix/bsd/osf1/alpha/start.S: Likewise.
+
+	* stdlib/strtod.c: Allow the string to start with a decimal point
+ 	without a leading zero.
+
 Mon Feb 20 04:04:57 1995  Roland McGrath  <roland@duality.gnu.ai.mit.edu>
 
 	* Makefile (subdirs): Put csu first.
