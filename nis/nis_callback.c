@@ -206,12 +206,12 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
       struct pollfd *my_pollfd;
       int i;
 
-      if (__builtin_expect (svc_max_pollfd, 1) == 0
-	  && __builtin_expect (svc_pollfd == NULL, 0))
+      if (svc_max_pollfd == 0 && svc_pollfd == NULL)
         return NIS_CBERROR;
 
-      my_pollfd = (struct pollfd *) alloca (sizeof (struct pollfd)
-					    * svc_max_pollfd);
+      my_pollfd = malloc (sizeof (struct pollfd) * svc_max_pollfd);
+      if (__builtin_expect (my_pollfd == NULL, 0))
+	return NIS_NOMEMORY;
 
       for (i = 0; i < svc_max_pollfd; ++i)
         {
@@ -220,13 +220,15 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
           my_pollfd[i].revents = 0;
         }
 
-      switch (i = __poll (my_pollfd, svc_max_pollfd, 25 * 1000))
+      switch (i = __poll (my_pollfd, svc_max_pollfd, 25*1000))
         {
 	case -1:
+	  free (my_pollfd);
 	  if (errno == EINTR)
 	    continue;
 	  return NIS_CBERROR;
 	case 0:
+	  free (my_pollfd);
 	  /* See if callback 'thread' in the server is still alive. */
 	  memset ((char *) &cb_is_running, 0, sizeof (cb_is_running));
 	  if (clnt_call (bptr->clnt, NIS_CALLBACK, (xdrproc_t) xdr_netobj,
@@ -242,6 +244,7 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
 	  break;
 	default:
 	  svc_getreq_poll (my_pollfd, i);
+	  free (my_pollfd);
 	  if (data->nomore)
 	    return data->result;
 	}
@@ -276,26 +279,29 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   unsigned short port;
 
   cb = (struct nis_cb *) calloc (1, sizeof (struct nis_cb));
-  if (__builtin_expect (cb == NULL, 0))
-    goto free_oom;
+  if (__builtin_expect (cb == NULL, ))
+    {
+      syslog (LOG_ERR, "NIS+: out of memory allocating callback");
+      return NULL;
+    }
 
   cb->serv = (nis_server *) calloc (1, sizeof (nis_server));
   if (__builtin_expect (cb->serv == NULL, 0))
-    goto free_cb;
-
+    {
+      free (cb);
+      syslog (LOG_ERR, "NIS+: out of memory allocating callback");
+      return NULL;
+    }
   cb->serv->name = strdup (nis_local_principal ());
   if (__builtin_expect (cb->serv->name == NULL, 0))
-    goto free_serv;
-
+    return NIS_NOMEMORY;
   cb->serv->ep.ep_val = (endpoint *) calloc (2, sizeof (endpoint));
   if (__builtin_expect (cb->serv->ep.ep_val == NULL, 0))
-    goto free_name;
-
+    return NIS_NOMEMORY;
   cb->serv->ep.ep_len = 1;
   cb->serv->ep.ep_val[0].family = strdup ("inet");
   if (__builtin_expect (cb->serv->ep.ep_val[0].family == NULL, 0))
-    goto free_ep_val;
-
+    return NIS_NOMEMORY;
   cb->callback = callback;
   cb->userdata = userdata;
 
@@ -335,20 +341,14 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
       cb->serv->ep.ep_val[0].proto = strdup ("tcp");
       cb->xprt = svctcp_create (sock, 100, 8192);
     }
-
   if (__builtin_expect (cb->serv->ep.ep_val[0].proto == NULL, 0))
-    goto free_family;
-
+    return NIS_NOMEMORY;
   cb->sock = cb->xprt->xp_sock;
   if (!svc_register (cb->xprt, CB_PROG, CB_VERS, cb_prog_1, 0))
     {
       xprt_unregister (cb->xprt);
       svc_destroy (cb->xprt);
       xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
-      free (cb->serv->ep.ep_val[0].proto);
-      free (cb->serv->ep.ep_val[0].family);
-      free (cb->serv->ep.ep_val);
-      free (cb->serv->name);
       free (cb->serv);
       free (cb);
       syslog (LOG_ERR, "NIS+: failed to register callback dispatcher");
@@ -360,10 +360,6 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
       xprt_unregister (cb->xprt);
       svc_destroy (cb->xprt);
       xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
-      free (cb->serv->ep.ep_val[0].proto);
-      free (cb->serv->ep.ep_val[0].family);
-      free (cb->serv->ep.ep_val);
-      free (cb->serv->name);
       free (cb->serv);
       free (cb);
       syslog (LOG_ERR, "NIS+: failed to read local socket info");
@@ -374,23 +370,6 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   snprintf (addr, sizeof (addr), "%s.%d.%d", inet_ntoa (sin.sin_addr),
 	    (port & 0xFF00) >> 8, port & 0x00FF);
   cb->serv->ep.ep_val[0].uaddr = strdup (addr);
-  if (__builtin_expect (cb->serv->ep.ep_val[0].uaddr == NULL, 0))
-    {
-      free (cb->serv->ep.ep_val[0].proto);
-    free_family:
-      free (cb->serv->ep.ep_val[0].family);
-    free_ep_val:
-      free (cb->serv->ep.ep_val);
-    free_name:
-      free (cb->serv->name);
-    free_serv:
-      free (cb->serv);
-    free_cb:
-      free (cb);
-    free_oom:
-      syslog (LOG_ERR, "NIS+: out of memory allocating callback");
-      return NULL;
-    }
 
   return cb;
 }
@@ -402,11 +381,6 @@ __nis_destroy_callback (struct nis_cb *cb)
   svc_destroy (cb->xprt);
   close (cb->sock);
   xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
-  free (cb->serv->ep.ep_val[0].uaddr);
-  free (cb->serv->ep.ep_val[0].proto);
-  free (cb->serv->ep.ep_val[0].family);
-  free (cb->serv->ep.ep_val);
-  free (cb->serv->name);
   free (cb->serv);
   free (cb);
 
