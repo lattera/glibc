@@ -29,6 +29,8 @@
 	* sysdeps/powerpc/fpu/bits/mathdef.h: ...here.
 	* sysdeps/powerpc/bits/mathinline.h: Moved to...
 	* sysdeps/powerpc/fpu/bits/mathinline.h: ...here.
+	* sysdeps/powerpc/bits/fenv.h: Moved to...
+	* sysdeps/powerpc/fpu/bits/fenv.h: ...here.
 
 1999-10-31  Andreas Jaeger  <aj@suse.de>
 
