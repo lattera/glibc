@@ -1,3 +1,13 @@
+2000-12-04  H.J. Lu  <hjl@gnu.org>
+
+	* configure.in: Change --with-oldest-abi=ABI to
+	--enable-oldest-abi=ABI.
+
+2000-12-02  Bruno Haible  <haible@clisp.cons.org>
+
+	* stdio-common/perror.c (perror): If stderr is wide-oriented, use
+	fwprintf instead of fprintf.
+
 2000-12-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/fpu/bits/mathdef.h: Remove FLT_EVAL_METHOD and
@@ -86,6 +96,29 @@
 2000-11-29  H.J. Lu  <hjl@gnu.org>
 
 	* stdio-common/vfscanf.c (ORIENT): Swap the COMPILE_WSCANF case.
+
+2000-12-01  H.J. Lu  <hjl@gnu.org>
+
+	* nss/getXXbyYY_r.c: Fix verioned symbol handling.
+	* nss/getXXent_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+
+2000-11-30  H.J. Lu  <hjl@gnu.org>
+
+	* scripts/abi-versions.awk (oldest_abi): New variable.
+	Handle the oldest ABI supported.
+
+	* Makerules ($(common-objpfx)abi-versions.h): Set oldest_abi
+	for scripts/abi-versions.awk.
+
+	* configure.in: Add --with-oldest-abi=ABI.
+	* configure: Rebuild.
+
+	* config.make.in (oldest-abi): New.
+
+	* config.h.in (GLIBC_OLDEST_ABI): New.
+
+	* csu/version.c (banner): Support GLIBC_OLDEST_ABI.
 
 2000-11-30  Jakub Jelinek  <jakub@redhat.com>
 

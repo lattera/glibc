@@ -82,17 +82,6 @@ AC_ARG_WITH(headers, dnl
                           [default=compiler default]],
 	    sysheaders=$withval, sysheaders='')
 
-AC_ARG_WITH(oldest-abi, dnl
-[  --with-oldest-abi=ABI   the oldest ABI supported [e.g. 2.2]
-                          [default=glibc default]],
-	    oldest_abi=$withval, oldest_abi='')
-if test ! -z "$oldest_abi"; then
-  AC_DEFINE_UNQUOTED(GLIBC_OLDEST_ABI, "$oldest_abi")
-else
-  oldest_abi=default
-fi
-AC_SUBST(oldest_abi)
-
 AC_ARG_ENABLE(libio, dnl
 [  --enable-libio          build in GNU libio instead of GNU stdio],
  	      [if test $enableval = yes; then
@@ -131,6 +120,17 @@ AC_ARG_ENABLE(versioning, dnl
 [  --disable-versioning    do not include versioning information in the
                           library objects [default=yes if supported]],
              enable_versioning=$enableval, enable_versioning=yes)
+
+AC_ARG_ENABLE(oldest-abi, dnl
+[  --enable-oldest-abi=ABI configure the oldest ABI supported [e.g. 2.2]
+                          [default=glibc default]],
+	    oldest_abi=$enableval, oldest_abi=no)
+if test "$oldest_abi" = yes || test "$oldest_abi" = no; then
+  oldest_abi=default
+else
+  AC_DEFINE_UNQUOTED(GLIBC_OLDEST_ABI, "$oldest_abi")
+fi
+AC_SUBST(oldest_abi)
 
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE(add-ons, dnl

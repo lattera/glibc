@@ -43,9 +43,6 @@ ac_help="$ac_help
                           [e.g. /usr/src/linux/include]
                           [default=compiler default]"
 ac_help="$ac_help
-  --with-oldest-abi=ABI   the oldest ABI supported [e.g. 2.2]
-                          [default=glibc default]"
-ac_help="$ac_help
   --enable-libio          build in GNU libio instead of GNU stdio"
 ac_help="$ac_help
   --disable-sanity-checks really do not use threads (should not be used
@@ -61,6 +58,9 @@ ac_help="$ac_help
 ac_help="$ac_help
   --disable-versioning    do not include versioning information in the
                           library objects [default=yes if supported]"
+ac_help="$ac_help
+  --enable-oldest-abi=ABI configure the oldest ABI supported [e.g. 2.2]
+                          [default=glibc default]"
 ac_help="$ac_help
   --enable-add-ons[=DIR1,DIR2]...
 			  configure and build add-ons in DIR1,DIR2,...
@@ -721,24 +721,6 @@ else
 fi
 
 
-# Check whether --with-oldest-abi or --without-oldest-abi was given.
-if test "${with_oldest_abi+set}" = set; then
-  withval="$with_oldest_abi"
-  oldest_abi=$withval
-else
-  oldest_abi=''
-fi
-
-if test ! -z "$oldest_abi"; then
-  cat >> confdefs.h <<EOF
-#define GLIBC_OLDEST_ABI "$oldest_abi"
-EOF
-
-else
-  oldest_abi=default
-fi
-
-
 # Check whether --enable-libio or --disable-libio was given.
 if test "${enable_libio+set}" = set; then
   enableval="$enable_libio"
@@ -800,6 +782,24 @@ if test "${enable_versioning+set}" = set; then
   enable_versioning=$enableval
 else
   enable_versioning=yes
+fi
+
+
+# Check whether --enable-oldest-abi or --disable-oldest-abi was given.
+if test "${enable_oldest_abi+set}" = set; then
+  enableval="$enable_oldest_abi"
+  oldest_abi=$enableval
+else
+  oldest_abi=no
+fi
+
+if test "$oldest_abi" = yes || test "$oldest_abi" = no; then
+  oldest_abi=default
+else
+  cat >> confdefs.h <<EOF
+#define GLIBC_OLDEST_ABI "$oldest_abi"
+EOF
+
 fi
 
 
