@@ -119,7 +119,6 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
     struct { ElfW(Addr) start, size;  int lazy; } ranges[2];		      \
     int ranges_index;							      \
     ranges[0].lazy = 0;							      \
-    ranges[1].lazy = 1;							      \
     ranges[0].size = ranges[1].size = 0;				      \
     ranges[0].start = 0;						      \
 									      \
@@ -141,6 +140,7 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 	  {								      \
 	    ranges[1].start = start;					      \
 	    ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
+	    ranges[1].lazy = lazy;					      \
 	  }								      \
 	else								      \
 	  /* Combine processing the sections.  */			      \

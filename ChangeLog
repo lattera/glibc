@@ -1,3 +1,8 @@
+1998-09-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dynamic-link.h [!ELF_MACHINE_PLTREL_OVERLAP]
+	(_ELF_DYNAMIC_DO_RELOC): Correctly set ranges[1].lazy.
+
 1998-09-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* stdio-common/Makefile: Include Makeconfig so that
