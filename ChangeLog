@@ -11,7 +11,7 @@
 2001-06-28  H.J. Lu  <hjl@gnu.org>
 
 	* locale/findlocale.c (locale_file_list): Renamed to ...
-	(_nl_locale_file_list): This. Make it extern.
+	(_nl_locale_file_list): This.  Make it extern.
 	(free_mem): Move to ...
 	* locale/setlocale.c (free_mem): Here.
 
@@ -38,7 +38,7 @@
 2001-06-20  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regex.c (FREE_WCS_BUFFERS): New macro to free buffers.
-	(re_search_2): invoke convert_mbs_to_wcs and FREE_WCS_BUFFERS.
+	(re_search_2): Invoke convert_mbs_to_wcs and FREE_WCS_BUFFERS.
 	(wcs_re_match_2_internal): Check whether the wcs buffers need
 	seting up or not, and skip seting up routin if not needed.
 
@@ -209,7 +209,7 @@
 
 	* locale/programs/locfile.c (siblings_uncached, siblings, full_read,
 	compare_files): New functions.
-	(write_locale_data): Use xmalloc. Compare the file with the locale
+	(write_locale_data): Use xmalloc.  Compare the file with the locale
 	data files for the same category in other locales, and reuse it if
 	possible and safe.
 
@@ -558,9 +558,9 @@
 	(cvlist_t): New type.
 	(CVLIST, CVLIST_FIRST, CVLIST_REST): New macros.
 	(conversion_lists): New array.
-	(BODY for TO_LOOP): Keep track of Unicode 3.1 language tag. I f "ja",
+	(BODY for TO_LOOP): Keep track of Unicode 3.1 language tag.  If "ja",
 	prefer conversion to Japanese character sets.  If "zh", prefer
-	conversion to GB2312. I f "ko", prefer conversion to KSC5601.  Small
+	conversion to GB2312.  If "ko", prefer conversion to KSC5601.  Small
 	optimizations.
 	(INIT_PARAMS): Add tag.
 	(UPDATE_PARAMS): Add tag.
@@ -594,26 +594,26 @@
 	* sysdeps/generic/w_log2f.c: New file.
 	* sysdeps/generic/w_log2l.c: New file.
 	* sysdeps/generic/s_log2l.c: Move...
-	* sysdeps/generic/e_log2l.c: ...to here. Rename to __ieee754_log2l.
+	* sysdeps/generic/e_log2l.c: ...to here.  Rename to __ieee754_log2l.
 	* sysdeps/ieee754/k_standard.c (__kernel_standard): Handle log2(0)
 	and log2(x < 0).
 	* sysdeps/i386/fpu/s_log2.S: Move...
-	* sysdeps/i386/fpu/e_log2.S: ...to here. Rename to __ieee754_log2.
+	* sysdeps/i386/fpu/e_log2.S: ...to here.  Rename to __ieee754_log2.
 	* sysdeps/i386/fpu/s_log2f.S: Move...
-	* sysdeps/i386/fpu/e_log2f.S: ...to here. Rename to __ieee754_log2f.
+	* sysdeps/i386/fpu/e_log2f.S: ...to here.  Rename to __ieee754_log2f.
 	* sysdeps/i386/fpu/s_log2l.S: Move...
-	* sysdeps/i386/fpu/e_log2l.S: ...to here. Rename to __ieee754_log2l.
+	* sysdeps/i386/fpu/e_log2l.S: ...to here.  Rename to __ieee754_log2l.
 	* sysdeps/m68k/fpu/s_log2.c: Move...
-	* sysdeps/m68k/fpu/e_log2.c: ...to here. Rename to __ieee754_log2.
+	* sysdeps/m68k/fpu/e_log2.c: ...to here.  Rename to __ieee754_log2.
 	* sysdeps/m68k/fpu/s_log2f.c: Move...
-	* sysdeps/m68k/fpu/e_log2f.c: ...to here. Rename to __ieee754_log2f.
+	* sysdeps/m68k/fpu/e_log2f.c: ...to here.  Rename to __ieee754_log2f.
 	* sysdeps/m68k/fpu/s_log2l.c: Move...
-	* sysdeps/m68k/fpu/e_log2l.c: ...to here. Rename to __ieee754_log2l.
+	* sysdeps/m68k/fpu/e_log2l.c: ...to here.  Rename to __ieee754_log2l.
 	* sysdeps/ieee754/dbl-64/s_log2.c: Move...
-	* sysdeps/ieee754/dbl-64/e_log2.c: ...to here. Rename to
+	* sysdeps/ieee754/dbl-64/e_log2.c: ...to here.  Rename to
 	__ieee754_log2.
 	* sysdeps/ieee754/flt-32/s_log2f.c: Move...
-	* sysdeps/ieee754/flt-32/e_log2f.c: ...to here. Rename to
+	* sysdeps/ieee754/flt-32/e_log2f.c: ...to here.  Rename to
 	__ieee754_log2f.
 
 2001-06-04  Jakub Jelinek  <jakub@redhat.com>
@@ -682,10 +682,10 @@
 	* iconvdata/tst-table-from.c (bmp_only): New variable.
 	(utf8_decode): If bmp_only, don't return characters outside Unicode
 	plane 0.
-	(main): When testing UTF-8 or GB18030, set bmp_only to 1. Don't print
+	(main): When testing UTF-8 or GB18030, set bmp_only to 1.  Don't print
 	a conversion line if utf8_decode returns NULL.
 	* iconvdata/tst-table-to.c (main): When testing encodings other than
-	UTF-8 and GB18030, loop upto U+30000 instead of U+10000. Use UTF-8
+	UTF-8 and GB18030, loop upto U+30000 instead of U+10000.  Use UTF-8
 	instead of UCS-2 as input.
 	* iconvdata/tst-table.sh: For GB18030, use only the part < 0x10000
 	of the charmap.
@@ -710,7 +710,7 @@
 	(__cns11643_from_ucs4_tab): Remove declaration.
 	(__cns11643_from_ucs4p0_tab, __cns11643_from_ucs4p2_tab): New
 	declarations.
-	(ucs4_to_cns11643): Update for new arrays. Treat U+3400..U+4DFF and
+	(ucs4_to_cns11643): Update for new arrays.  Treat U+3400..U+4DFF and
 	U+20000..U+2A6D6.
 	* iconvdata/cns11643l2.h (__cns11643_from_ucs4_tab): Remove
 	declaration.
@@ -898,7 +898,7 @@
 2001-05-26  H.J. Lu <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Change sigsuspend
-	to s_sigsuspend. Add s_mmap2.
+	to s_sigsuspend.  Add s_mmap2.
 
 	* sysdeps/mips/atomicity.h: New file.
 
@@ -1061,10 +1061,10 @@
 2001-05-20  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv.c (__gconv): For flush without output, pass do_flush = 2.
-	* iconv/skeleton.c: Distinguish do_flush = 1 and do_flush = 2. In the
+	* iconv/skeleton.c: Distinguish do_flush = 1 and do_flush = 2.  In the
 	first case, set outbuf, outstart, outend, and call PREPARE_LOOP before
 	EMIT_SHIFT_TO_INIT; then pass the output produced by this step down to
-	the next step. In the second case, clear the state without calling
+	the next step.  In the second case, clear the state without calling
 	EMIT_SHIFT_TO_INIT.
 	* iconvdata/ibm930.c (EMIT_SHIFT_TO_INIT): Use outbuf instead of
 	data->__outbuf, and outend instead of data->__outbufend.
@@ -1351,7 +1351,7 @@
 
 	* elf/ldconfig.c (dir_entry): Add ino and dev.
 	(add_single_dir): Compare ino and dev to check if 2 directory
-	paths are the same or not. Free entry->path for duplicates.
+	paths are the same or not.  Free entry->path for duplicates.
 	(add_dir): Initialize ino and dev for entry.
 	(search_dir): Handle symlink to directory.
 
@@ -1552,7 +1552,7 @@
 	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: ...here.  Adjust
 	struct msghdr for __WORDSIZE == 32.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/statvfs.h: Move to...
-	* sysdeps/unix/sysv/linux/sparc/bits/statvfs.h: ...here. Adjust
+	* sysdeps/unix/sysv/linux/sparc/bits/statvfs.h: ...here.  Adjust
 	for __WORDSIZE == 32.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/siginfo.h: Remove.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/get_clockfreq.c: New
@@ -1918,8 +1918,8 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc64/setcontext.S (__setcontext):
 	Copy first word of uc_sigmask into __uc_sigmask.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/getcontext.S (__getcontext):
-	Save uc_link around trap. Copy __uc_sigmask into first word of
-	uc_sigmask, clear the rest. Make sure setcontext to the created
+	Save uc_link around trap.  Copy __uc_sigmask into first word of
+	uc_sigmask, clear the rest.  Make sure setcontext to the created
 	context doesn't do this though.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/ucontext_i.h: New file.
 	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h (ucontext_t): Add
@@ -1979,7 +1979,8 @@
 2001-04-16  Stephen L Moshier  <moshier@mediaone.net>
 
 	* sysdeps/ieee754/flt-32/e_asinf.c (pio2_hi, pio2_lo, pio4_hi):
-	Correct the values. (pSx, qSx): Replace by shorter approximation.
+	Correct the values.
+	(pSx, qSx): Replace by shorter approximation.
 	Use f suffix on float constants.
 
 2001-04-16  Ulrich Drepper  <drepper@redhat.com>
@@ -2050,7 +2051,7 @@
 2001-04-11  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconvdata/utf-16.c (PREPARE_LOOP): Initialize 'swap' after possibly
-	changing it in the state. After incrementing 'inptr', store it back.
+	changing it in the state.  After incrementing 'inptr', store it back.
 	* iconvdata/unicode.c (PREPARE_LOOP): After incrementing 'inptr',
 	store it back.
 
@@ -3070,7 +3071,7 @@
 2001-03-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/gettextP.h (struct expression): Add operators lnot, less_than,
-	greater_than, less_or_equal, greater_or_equal. Replace args2/args3
+	greater_than, less_or_equal, greater_or_equal.  Replace args2/args3
 	union by a 'nargs' counter and an 'args[]' array.
 	* intl/plural.y: Don't include stdarg.h.
 	(new_exp): Take an array of arguments instead of varargs.
@@ -3081,15 +3082,15 @@
 	(ADDOP2): New token, replaces '+' and '-'.
 	(MULOP2): New token, replaces '*', '/' and '%'.
 	('!'): New token.
-	(exp): Add rules for CMPOP2 and '!'. Don't call YYABORT.
+	(exp): Add rules for CMPOP2 and '!'.  Don't call YYABORT.
 	(start): Call YYABORT here.
 	(FREE_EXPRESSION): Update.
-	(yylex): Don't skip "\\n". Recognize comparison and '!' operators.
+	(yylex): Don't skip "\\n".  Recognize comparison and '!' operators.
 	Update for new token symbols.
 	* intl/loadmsgcat.c (plvar, plone, germanic_plural,
 	init_germanic_plural): Update.
 	* intl/dcigettext.c (_nl_find_msg): Optimize for space.
-	(plural_eval): Recognize comparison and '!' operators. Optimize for
+	(plural_eval): Recognize comparison and '!' operators.  Optimize for
 	space.
 
 2001-03-10  Bruno Haible  <haible@clisp.cons.org>
@@ -3171,7 +3172,7 @@
 
 2001-03-17  Bruno Haible  <haible@clisp.cons.org>
 
-	* intl/gettextP.h: Include <stddef.h>. Include gettext.h, for
+	* intl/gettextP.h: Include <stddef.h>.  Include gettext.h, for
 	nls_uint32.
 	* intl/bindtextdom.c: Don't include gettext.h.
 	* intl/dcgettext.c: Likewise.
@@ -3671,7 +3672,7 @@
 	* sysdeps/s390/sys/ucontext.h: Remove since it is unused.
 
 	* sysdeps/unix/sysv/linux/s390/sysdep.h: Move to...
-	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: ...here. Include
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: ...here.  Include
 	sysdeps/s390/s390-32/sysdep.h instead of sysdeps/s390/sysdep.h.
 
 2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
@@ -4448,8 +4449,8 @@
 	* sysdeps/unix/sysv/aix/Dist: Remove restf.S and savef.S.
 	* sysdeps/unix/sysv/aix/Makefile [$(subdir) == misc]
 	(sysdep_routines): Remove restf.S and savef.S.
-	* sysdeps/unix/sysv/aix/restf.S. Removed.
-	* sysdeps/unix/sysv/aix/savef.S. Removed.
+	* sysdeps/unix/sysv/aix/restf.S: Removed.
+	* sysdeps/unix/sysv/aix/savef.S: Removed.
 	* sysdeps/powerpc/fprrest.S: Use C_TEXT to define label.  Also define
 	alternative names used on some platforms.
 	* sysdeps/powerpc/fprsave.S: Likewise.
@@ -6253,7 +6254,7 @@
 	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h (GET_PC): Likewise.
 	(GET_FRAME): Likewise.
 	(GET_STACK): Likewise.
-	(SIGCONTEXT): Likewise. Add 2nd arg _code.
+	(SIGCONTEXT): Likewise.  Add 2nd arg _code.
 	(SIGCONTEXT_EXTRA_ARGS): Add 2nd arg _code.
 
 2001-01-13  Ulrich Drepper  <drepper@redhat.com>
@@ -6478,7 +6479,7 @@
 
 	* elf/dl-support.c (non_dynamic_init): Move the auxiliary
 	vector checking to ...
-	(_dl_aux_init): Here. New function. Defined only if
+	(_dl_aux_init): Here.  New function.  Defined only if
 	HAVE_AUX_VECTOR is defined.
 
 	* sysdeps/generic/libc-start.c (__libc_start_main): Call
@@ -6619,13 +6620,13 @@
 
 	Finish implementation of plural form handling.
 	* intl/dcigettext.c (known_translation_t): Rename 'domain' field to
-	'domainname'.  Remove 'plindex' field. Add 'domain' and
+	'domainname'.  Remove 'plindex' field.  Add 'domain' and
 	'translation_length' fields.
 	(transcmp): Don't compare 'plindex' fields.
 	(plural_lookup): New function.
 	(DCIGETTEXT): Change cache handing in the plural case.	Don't call
 	plural_eval before the translation and its catalog file have been
-	found. Remove plindex from cache key.  Add 'translation_length' and
+	found.  Remove plindex from cache key.  Add 'translation_length' and
 	'domain' to cache result.
 	(_nl_find_msg): Remove index argument, return length of translation
 	to the caller instead.	Weaken comparison of string lengths, to account
@@ -6641,7 +6642,7 @@
 
 2000-07-31  Bruno Haible  <haible@clisp.cons.org>
 
-	* intl/plural.y: Include config.h. Needed to define 'inline' away for
+	* intl/plural.y: Include config.h.  Needed to define 'inline' away for
 	C compilers that don't support it.
 	(yylex): Don't use gcc specific case range syntax.
 	* intl/loadmsgcat.c (INIT_GERMANIC_PLURAL): New macro, for old
