@@ -1,5 +1,5 @@
 /* Set FP exception mask and rounding mode.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ wrfpcr (unsigned long fpcr)
 
 
 void
-__setfpucw (unsigned short fpu_control)
+__setfpucw (fpu_control_t fpu_control)
 {
   unsigned long fpcr = 0, fpcw = 0;
 
