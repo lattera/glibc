@@ -105,6 +105,10 @@ libc {
     #errlist-compat	126
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
+  GLIBC_2.3.2 {
+    # New kernel interfaces.
+    epoll_create; epoll_ctl; epoll_wait;
+  }
   GLIBC_PRIVATE {
     # needed by libpthread.
     __libc_sigaction;

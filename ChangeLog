@@ -1,5 +1,24 @@
 2002-12-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list: Add epoll_create,
+	epoll_ctl, and epoll_wait.
+	* sysdeps/unix/sysv/linux/Versions [libc: GLIBC_2.3.2]: Add
+	epoll_create, epoll_ctl, and epoll_wait.
+	* sysdeps/unix/sysv/linux/sys/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add sys/epoll.h.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers):
+	Add sys/epoll.h.
+
+2002-12-16  Art Haas  <ahaas@airmail.net>
+
+	* sysdeps/generic/bp-semctl.h: Convert GCC extension initializer
+	syntax to C99
+	* sysdeps/unix/sysv/aix/settimer.c: Same.
+	* sysdeps/unix/sysv/aix/sleep.c: Same.
+	* sysdeps/unix/sysv/aix/usleep.c: Same.
+
+2002-12-16  Ulrich Drepper  <drepper@redhat.com>
+
 	* stdio-common/Makefile (routines): Remove lockfile.  Add
 	flockfile, ftrylockfile, and funlockfile.
 	* sysdeps/generic/lockfile.c: Removed.  Each function has its own file.

@@ -32,3 +32,7 @@ __new_sem_destroy (sem)
   return 0;
 }
 versioned_symbol (libpthread, __new_sem_destroy, sem_destroy, GLIBC_2_1);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
+strong_alias (__new_sem_destroy, __old_sem_destroy)
+compat_symbol (libpthread, __old_sem_destroy, sem_destroy, GLIBC_2_0);
+#endif

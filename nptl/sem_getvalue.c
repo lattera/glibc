@@ -36,3 +36,7 @@ __new_sem_getvalue (sem, sval)
   return 0;
 }
 versioned_symbol (libpthread, __new_sem_getvalue, sem_getvalue, GLIBC_2_1);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
+strong_alias (__new_sem_getvalue, __old_sem_getvalue)
+compat_symbol (libpthread, __old_sem_getvalue, sem_getvalue, GLIBC_2_0);
+#endif

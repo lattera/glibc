@@ -57,6 +57,7 @@ scsi/sg.h
 scsi/scsi.h
 scsi/scsi_ioctl.h
 sys/acct.h
+sys/epoll.h
 sys/fsuid.h
 sys/kd.h
 sys/kdaemon.h

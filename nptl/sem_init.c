@@ -49,3 +49,7 @@ __new_sem_init (sem, pshared, value)
   return 0;
 }
 versioned_symbol (libpthread, __new_sem_init, sem_init, GLIBC_2_1);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
+strong_alias (__new_sem_init, __old_sem_init)
+compat_symbol (libpthread, __old_sem_init, sem_init, GLIBC_2_0);
+#endif
