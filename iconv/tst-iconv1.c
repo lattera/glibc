@@ -10,7 +10,7 @@ main (void)
   char utf8[5];
   wchar_t ucs4[5];
   iconv_t cd;
-  const char *inbuf;
+  char *inbuf;
   char *outbuf;
   size_t inbytes;
   size_t outbytes;
