@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1996,1998-2001,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1998-2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@ sethostid (id)
 {
   int fd;
   ssize_t written;
+  int32_t id32 = id;
 
   /* Test for appropriate rights to set host ID.  */
   if (__libc_enable_secure)
@@ -41,16 +42,23 @@ sethostid (id)
       return -1;
     }
 
+  /* Make sure the ID is not too large.  Needed for bi-arch support.   */
+  if (id32 != id)
+    {
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
+
   /* Open file for writing.  Everybody is allowed to read this file.  */
   fd = open_not_cancel (HOSTIDFILE, O_CREAT|O_WRONLY|O_TRUNC, 0644);
   if (fd < 0)
     return -1;
 
-  written = write_not_cancel (fd, &id, sizeof (id));
+  written = write_not_cancel (fd, &id32, sizeof (id32));
 
   close_not_cancel_no_status (fd);
 
-  return written != sizeof (id) ? -1 : 0;
+  return written != sizeof (id32) ? -1 : 0;
 }
 
 #else
@@ -66,7 +74,7 @@ gethostid ()
   size_t buflen;
   char *buffer;
   struct hostent hostbuf, *hp;
-  unsigned long int id;
+  int32_t id;
   struct in_addr in;
   int herr;
   int fd;
@@ -110,6 +118,6 @@ gethostid ()
 
   /* For the return value to be not exactly the IP address we do some
      bit fiddling.  */
-  return in.s_addr << 16 | in.s_addr >> 16;
+  return (int32_t) (in.s_addr << 16 | in.s_addr >> 16);
 }
 #endif
