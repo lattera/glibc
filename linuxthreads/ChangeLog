@@ -1,5 +1,11 @@
 2000-04-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (libpthread-routines): Add getcpuclockid.
+	* Versions [libpthread] (GLIBC_2.2): Add pthread_getcpuclockid.
+	* sysdeps/pthread/getcpuclockid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/getcpuclockid.c: New file.
+	* sysdeps/pthread/pthread.h: Add prototype for pthread_getcpuclockid.
+
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_SPIN_LOCKS):
 	Defined.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.

@@ -1,3 +1,8 @@
+2000-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/globtest.sh: Work around inconsistency with expanding ~/
+	in shell (PR libc/1690).  Reported by patsmith@pobox.com.
+
 2000-04-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c: Add support for many more POSIX options.

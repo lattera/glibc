@@ -411,19 +411,20 @@ extern int pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *__attr,
 
 /* Initialize the spinlock LOCK.  If PSHARED is nonzero the spinlock can
    be shared between different processes.  */
-extern int pthread_spin_init (pthread_spinlock_t *__lock, int __pshared);
+extern int pthread_spin_init (pthread_spinlock_t *__lock, int __pshared)
+     __THROW;
 
 /* Destroy the spinlock LOCK.  */
-extern int pthread_spin_destroy (pthread_spinlock_t *__lock);
+extern int pthread_spin_destroy (pthread_spinlock_t *__lock) __THROW;
 
 /* Wait until spinlock LOCK is retrieved.  */
-extern int pthread_spin_lock (pthread_spinlock_t *__lock);
+extern int pthread_spin_lock (pthread_spinlock_t *__lock) __THROW;
 
 /* Try to lock spinlock LOCK.  */
-extern int pthread_spin_trylock (pthread_spinlock_t *__lock);
+extern int pthread_spin_trylock (pthread_spinlock_t *__lock) __THROW;
 
 /* Release spinlock LOCK.  */
-extern int pthread_spin_unlock (pthread_spinlock_t *__lock);
+extern int pthread_spin_unlock (pthread_spinlock_t *__lock) __THROW;
 #endif
 
 
@@ -524,6 +525,14 @@ extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *__buffe
 extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *__buffer,
 					  int __execute) __THROW;
 #endif
+
+
+#ifdef __USE_XOPEN2K
+/* Get ID of CPU-time clock for thread THREAD_ID.  */
+extern int pthread_getcpuclockid (pthread_t __thread_id,
+				  clockid_t *__clock_id) __THROW;
+#endif
+
 
 /* Functions for handling signals.  */
 #include <bits/sigthread.h>

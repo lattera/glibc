@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ extra-libs-others := $(extra-libs)
 libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptlongjmp pthread signals specific errno lockfile \
 		       semaphore spinlock wrapsyscall rwlock pt-machine \
-		       oldsemaphore events
+		       oldsemaphore events getcpuclockid
 
 vpath %.c Examples
 tests = ex1 ex2 ex3 ex4 ex5 ex6

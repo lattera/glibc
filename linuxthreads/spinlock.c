@@ -82,8 +82,6 @@ void internal_function __pthread_lock(pthread_spinlock_t * lock,
   /* Put back any resumes we caught that don't belong to us. */
   while (spurious_wakeup_count--)
     restart(self);
-
-  return 0;
 }
 int __pthread_spin_lock(pthread_spinlock_t * lock)
 {
