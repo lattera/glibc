@@ -104,22 +104,22 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 /* This code is used in dl-runtime.c to call the `fixup' function
    and then redirect to the address it returns.  */
 #define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name) \
-"| Trampoline for " #fixup_name "
-	.globl " #tramp_name "
-	.type " #tramp_name ", @function
-" #tramp_name ":
-	| Save %a0 (struct return address) and %a1.
-	move.l %a0, -(%sp)
-	move.l %a1, -(%sp)
-	| Call the real address resolver.
-	jbsr " #fixup_name "
-	| Restore register %a0 and %a1.
-	move.l (%sp)+, %a1
-	move.l (%sp)+, %a0
-	| Pop parameters
-	addq.l #8, %sp
-	| Call real function.
-	jmp (%d0)
+"| Trampoline for " #fixup_name "\n\
+	.globl " #tramp_name "\n\
+	.type " #tramp_name ", @function\n\
+" #tramp_name ":\n\
+	| Save %a0 (struct return address) and %a1.\n\
+	move.l %a0, -(%sp)\n\
+	move.l %a1, -(%sp)\n\
+	| Call the real address resolver.\n\
+	jbsr " #fixup_name "\n\
+	| Restore register %a0 and %a1.\n\
+	move.l (%sp)+, %a1\n\
+	move.l (%sp)+, %a0\n\
+	| Pop parameters\n\
+	addq.l #8, %sp\n\
+	| Call real function.\n\
+	jmp (%d0)\n\
 	.size " #tramp_name ", . - " #tramp_name "\n"
 #ifndef PROF
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE \
@@ -143,50 +143,50 @@ asm (TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup) \
    its return value is the user program's entry point.  */
 
 #define RTLD_START asm ("\
-	.text
-	.globl _start
-	.type _start,@function
-_start:
-	move.l %sp, -(%sp)
-	jbsr _dl_start
-	addq.l #4, %sp
-	/* FALLTHRU */
-
-	.globl _dl_start_user
-	.type _dl_start_user,@function
-_dl_start_user:
-	| Save the user entry point address in %a4.
-	move.l %d0, %a4
-	| Point %a5 at the GOT.
-	lea _GLOBAL_OFFSET_TABLE_@GOTPC(%pc), %a5
-	| Remember the highest stack address.
-	move.l %sp, ([__libc_stack_end@GOT.w, %a5])
-	| See if we were run as a command with the executable file
-	| name as an extra leading argument.
-	move.l ([_dl_skip_args@GOT.w, %a5]), %d0
-	| Pop the original argument count
-	move.l (%sp)+, %d1
-	| Subtract _dl_skip_args from it.
-	sub.l %d0, %d1
-	| Adjust the stack pointer to skip _dl_skip_args words.
-	lea (%sp, %d0*4), %sp
-	| Push back the modified argument count.
-	move.l %d1, -(%sp)
-	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
-	pea 8(%sp, %d1*4)
-	pea 8(%sp)
-	move.l %d1, -(%sp)
-	move.l ([_rtld_global@GOT.w, %a5]), -(%sp)
-	jbsr _dl_init@PLTPC
-	addq.l #8, %sp
-	addq.l #8, %sp
-	| Pass our finalizer function to the user in %a1.
-	move.l _dl_fini@GOT.w(%a5), %a1
-	| Initialize %fp with the stack pointer.
-	move.l %sp, %fp
-	| Jump to the user's entry point.
-	jmp (%a4)
-	.size _dl_start_user, . - _dl_start_user
+	.text\n\
+	.globl _start\n\
+	.type _start,@function\n\
+_start:\n\
+	move.l %sp, -(%sp)\n\
+	jbsr _dl_start\n\
+	addq.l #4, %sp\n\
+	/* FALLTHRU */\n\
+\n\
+	.globl _dl_start_user\n\
+	.type _dl_start_user,@function\n\
+_dl_start_user:\n\
+	| Save the user entry point address in %a4.\n\
+	move.l %d0, %a4\n\
+	| Point %a5 at the GOT.\n\
+	lea _GLOBAL_OFFSET_TABLE_@GOTPC(%pc), %a5\n\
+	| Remember the highest stack address.\n\
+	move.l %sp, ([__libc_stack_end@GOT.w, %a5])\n\
+	| See if we were run as a command with the executable file\n\
+	| name as an extra leading argument.\n\
+	move.l ([_dl_skip_args@GOT.w, %a5]), %d0\n\
+	| Pop the original argument count\n\
+	move.l (%sp)+, %d1\n\
+	| Subtract _dl_skip_args from it.\n\
+	sub.l %d0, %d1\n\
+	| Adjust the stack pointer to skip _dl_skip_args words.\n\
+	lea (%sp, %d0*4), %sp\n\
+	| Push back the modified argument count.\n\
+	move.l %d1, -(%sp)\n\
+	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
+	pea 8(%sp, %d1*4)\n\
+	pea 8(%sp)\n\
+	move.l %d1, -(%sp)\n\
+	move.l ([_rtld_global@GOT.w, %a5]), -(%sp)\n\
+	jbsr _dl_init@PLTPC\n\
+	addq.l #8, %sp\n\
+	addq.l #8, %sp\n\
+	| Pass our finalizer function to the user in %a1.\n\
+	move.l _dl_fini@GOT.w(%a5), %a1\n\
+	| Initialize %fp with the stack pointer.\n\
+	move.l %sp, %fp\n\
+	| Jump to the user's entry point.\n\
+	jmp (%a4)\n\
+	.size _dl_start_user, . - _dl_start_user\n\
 	.previous");
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
