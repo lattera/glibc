@@ -47,7 +47,7 @@ ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
 tests += tststatic
 tests-static += tststatic
 modules-names += modstatic
-tststatic-ENV = LD_LIBRARY_PATH=$(objpfx)
+tststatic-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx)
 endif
 
 extra-objs += $(modules-names:=.os) eval.os

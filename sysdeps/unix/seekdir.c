@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,1999,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,9 @@ seekdir (dirp, pos)
      long int pos;
 {
   __libc_lock_lock (dirp->lock);
-  (void) __lseek(dirp->fd, pos, SEEK_SET);
+  (void) __lseek (dirp->fd, pos, SEEK_SET);
   dirp->size = 0;
   dirp->offset = 0;
+  dirp->filepos = pos;
   __libc_lock_unlock (dirp->lock);
 }

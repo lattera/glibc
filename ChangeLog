@@ -1,3 +1,15 @@
+2001-08-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/seekdir.c (seekdir): Set dirp->filepos.
+
+	* dirent/tst-seekdir.c (main): Check whether telldir right after
+	seekdir returns 2nd argument given to seekdir.
+
+2001-08-07  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* dlfcn/Makefile (tststatic-ENV): Add $(common-objpfx) to
+	LD_LIBRARY_PATH.
+
 2001-08-07  Andreas Jaeger  <aj@suse.de>
 	    Andreas Schwab  <schwab@suse.de>
 	    Bruno Haible  <haible@clisp.cons.org>
