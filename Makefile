@@ -103,8 +103,13 @@ include Makerules
 # Install from subdirectories too.
 install: subdir_install
 
-lib-noranlib $(libc.a)(__.SYMDEF): subdir_lib
+# Build subdirectory lib objects.
+lib-noranlib: subdir_lib
 
+ifeq (yes,$(build-shared))
+# Build the shared object from the PIC object library.
+lib: $(common-objpfx)libc.so
+endif
 
 $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make
 	(echo define sysdep-subdirs;					      \

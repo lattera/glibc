@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <sys/resource.h>
 #include <errno.h>
 
@@ -29,17 +28,13 @@ Cambridge, MA 02139, USA.  */
        can open.
    Returns -1 on errors.  */
 long int
-DEFUN(__ulimit, (cmd, newlimit), int cmd AND long int newlimit)
+__ulimit (cmd, newlimit)
+     int cmd;
+     long int newlimit;
 {
   errno = ENOSYS;
   return -1;
 }
+weak_alias (__ulimit, ulimit)
 
-
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(__ulimit);
-
-#endif	/* GNU stabs.  */
+stub_warning (ulimit)

@@ -1,4 +1,27 @@
+Mon Mar 13 01:48:16 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makefile ($(libc.a)(__.SYMDEF)): Target removed.
+	[$(build-shared)=yes] (lib): Depend on $(common-objpfx)libc.so.
+
 Sun Mar 12 18:21:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/stub/ulimit.c: Don't include gnu-stabs.h.
+	* sysdeps/stub/pause.c: Likewise.
+	* sysdeps/stub/time.c: Likewise.
+
+	* stdlib/mbtowc.c: #if 0 out code for non-ASCII chars until the
+ 	locale data format is implemented.
+	* stdlib/wctomb.c: Likewise.
+
+	* mach/Makefile ($(objpfx)errsystems.c): Reenable this rule; the
+ 	gcc bug is fixed.
+	* mach/errsystems.c: File removed.
+
+	* Makeconfig (libc.a): Variable removed.
+	(+link): Don't use it.
+
+	* configure.in (AC_ARG_ENABLE calls): Use $enableval instead of
+ 	assuming `yes'.
 
 	* malloc/malloc.h (_malloc_internal, _realloc_internal): Declare these.
 	* malloc/realloc.c (_realloc_internal): Renamed from realloc;

@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 
@@ -25,18 +24,10 @@ Cambridge, MA 02139, USA.  */
    This is supposed to always return -1 and set errno to EINTR,
    but rules were meant to be broken.  */
 int
-DEFUN_VOID(pause)
+pause ()
 {
   errno = ENOSYS;
-  return(-1);
+  return -1;
 }
 
-
-
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(pause);
-
-#endif	/* GNU stabs.  */
+stub_warning (pause)

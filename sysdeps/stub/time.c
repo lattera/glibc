@@ -16,14 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <time.h>
 
-
 /* Return the time now, and store it in *TIMER if not NULL.  */
 time_t
-DEFUN(time, (timer), time_t *timer)
+time (timer)
+     time_t *timer;
 {
   errno = ENOSYS;
 
@@ -32,12 +31,4 @@ DEFUN(time, (timer), time_t *timer)
   return (time_t) -1;
 }
 
-
-
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(time);
-
-#endif	/* GNU stabs.  */
+stub_warning (time)
