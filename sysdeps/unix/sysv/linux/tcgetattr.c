@@ -47,9 +47,13 @@ __tcgetattr (fd, termios_p)
   termios_p->c_line = k_termios.c_line;
 #ifdef _HAVE_C_ISPEED
   termios_p->c_ispeed = k_termios.c_ispeed;
+#else
+  termios_p->c_ispeed = k_termios.c_cflag & (CBAUD | CBAUDEX);
 #endif
 #ifdef _HAVE_C_OSPEED
   termios_p->c_ospeed = k_termios.c_ospeed;
+#else
+  termios_p->c_ospeed = k_termios.c_cflag & (CBAUD | CBAUDEX);
 #endif
   if (sizeof (cc_t) == 1 || _POSIX_VDISABLE == 0
       || (unsigned char) _POSIX_VDISABLE == (unsigned char) -1)

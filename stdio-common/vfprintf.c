@@ -1992,7 +1992,7 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
     /* No grouping should be done.  */
     return w;
 
-  len = *grouping;
+  len = *grouping++;
 
   /* Copy existing string so that nothing gets overwritten.  */
   src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
@@ -2017,11 +2017,7 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
 	  while (cnt > 0);
 #endif
 
-	  len = *grouping++;
-	  if (*grouping == '\0')
-	    /* The previous grouping repeats ad infinitum.  */
-	    --grouping;
-	  else if (*grouping == CHAR_MAX
+	  if (*grouping == CHAR_MAX
 #if CHAR_MIN < 0
 		   || *grouping < 0
 #endif
@@ -2034,6 +2030,11 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
 	      while (s > src);
 	      break;
 	    }
+	  else if (*grouping != '\0')
+	    /* The previous grouping repeats ad infinitum.  */
+	    len = *grouping++;
+	  else
+	    len = grouping[-1];
 	}
     }
   return w;

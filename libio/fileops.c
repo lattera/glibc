@@ -849,15 +849,13 @@ _IO_new_file_overflow (f, ch)
 				   f->_IO_read_base - f->_IO_buf_base);
 	  f->_IO_read_ptr = f->_IO_read_base;
 	}
-      else
-	{
-	  if (f->_IO_read_ptr == f->_IO_buf_end)
-	    f->_IO_read_end = f->_IO_read_ptr = f->_IO_buf_base;
-	  f->_IO_write_ptr = f->_IO_read_ptr;
-	  f->_IO_write_base = f->_IO_write_ptr;
-	  f->_IO_write_end = f->_IO_buf_end;
-	  f->_IO_read_base = f->_IO_read_ptr = f->_IO_read_end;
-	}
+
+      if (f->_IO_read_ptr == f->_IO_buf_end)
+	f->_IO_read_end = f->_IO_read_ptr = f->_IO_buf_base;
+      f->_IO_write_ptr = f->_IO_read_ptr;
+      f->_IO_write_base = f->_IO_write_ptr;
+      f->_IO_write_end = f->_IO_buf_end;
+      f->_IO_read_base = f->_IO_read_ptr = f->_IO_read_end;
 
       f->_flags |= _IO_CURRENTLY_PUTTING;
       if (f->_mode <= 0 && f->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))

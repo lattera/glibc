@@ -1776,7 +1776,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      ADDW (c);
 		      got_dot = 1;
 		    }
-		  else if (thousands != L'\0' && ! got_dot && c == thousands)
+		  else if ((flags & GROUP) != 0 && thousands != L'\0'
+			   && ! got_dot && c == thousands)
 		    ADDW (c);
 		  else
 		    {
@@ -1820,12 +1821,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			 we can compare against it.  */
 		      const char *cmp2p = thousands;
 
-		      if (thousands != NULL && ! got_dot)
+		      if ((flags & GROUP) != 0 && thousands != NULL
+			  && ! got_dot)
 			{
-			  while (cmp2p < cmpp
+			  while (cmp2p - thousands < cmpp - decimal
 				 && *cmp2p == decimal[cmp2p - thousands])
 			    ++cmp2p;
-			  if (cmp2p == cmpp)
+			  if (cmp2p - thousands == cmpp - decimal)
 			    {
 			      while ((unsigned char) *cmp2p == c && avail > 0)
 				if (*++cmp2p == '\0')

@@ -153,6 +153,7 @@ _IO_wfile_underflow (fp)
 				       fp->_wide_data->_IO_buf_end,
 				       &fp->_wide_data->_IO_read_end);
 
+      fp->_IO_read_base = fp->_IO_read_ptr;
       fp->_IO_read_ptr = (char *) read_stop;
 
       /* If we managed to generate some text return the next character.  */

@@ -1,5 +1,35 @@
 2003-09-05  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Fill in c_ispeed
+	and c_ospeed fields.
+	* sysdeps/unix/sysv/linux/speed.c (cfsetospeed): Set c_ospeed field.
+	(cfsetispeed): Set c_ispeed field.
+	* sysdeps/unix/sysv/linux/tcsetattr.c (IBAUD0): Define unconditionally
+	to match corresponding speed.c code.
+
+2003-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_underflow): Mark beginning of the
+	narrow character buffer.
+	* libio/Makefile: Add rules to build and run bug-ftell.
+	* libio/bug-ftell.c: New file.
+
+	* stdio-common/vfprintf.c: Don't use the first grouping number twice.
+
+	* stdio-common/vfscanf.c (vfscanf): Fix recognition of characters
+	matching the decimal point and possibly leading the thousands
+	separator.  This caused the recognition of thousands separators to
+	always fail.
+
+2003-09-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fileops.c (_IO_new_file_overflow): Handle switching to
+	write mode from read in backup buffer.
+	* libio/Makefile (tests): Add bug-ungetc2.
+	* libio/bug-ungetc2.c: New file.
+
+2003-09-05  Roland McGrath  <roland@redhat.com>
+
 	* nss/getXXbyYY.c (FUNCTION_NAME): Remove unused variable.
 
 2003-09-04  Roland McGrath  <roland@frob.com>
@@ -7,6 +37,7 @@
 	* sysdeps/mach/hurd/mmap.c (__mmap): If io_map fails with MIG_BAD_ID,
 	EOPNOTSUPP, or ENOSYS, change it to ENODEV.
 
+>>>>>>> 1.7905
 2003-09-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h (MINSIGSTKSZ):
@@ -30,7 +61,7 @@
 
 	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_filesize_max):
 	Report correct value for vxfs.
-	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Dfeine VXFS_SUPER_MAGIC.
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Define VXFS_SUPER_MAGIC.
 
 	* gmon/gmon.c: Use only not-cancelable syscalls to write profiling
 	data.

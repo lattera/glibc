@@ -37,14 +37,7 @@
    We use an unused bit in the `c_iflag' field to keep track of this
    use of `cfsetispeed'.  The value here must correspond to the one used
    in `speed.c'.  */
-#if !defined _HAVE_C_ISPEED || !defined _HAVE_C_OSPEED
-# define IBAUD0	020000000000
-#else
-/* If we have separate values for input and output speed don't bother
-   with this.  Define the value as zero so the compiler sees we don't
-   have to do the AND below.  */
-# define IBAUD0	0
-#endif
+#define IBAUD0	020000000000
 
 
 /* Set the state of FD to *TERMIOS_P.  */
