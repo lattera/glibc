@@ -36,48 +36,50 @@ typedef int greg_t;
 /* Container for all general registers.  */
 typedef greg_t gregset_t[NGREG];
 
+#ifdef __USE_GNU
 /* Number of each register is the `gregset_t' array.  */
 enum
 {
   GS = 0,
-#define GS	GS
+# define GS	GS
   FS,
-#define FS	FS
+# define FS	FS
   ES,
-#define ES	ES
+# define ES	ES
   DS,
-#define DS	DS
+# define DS	DS
   EDI,
-#define EDI	EDI
+# define EDI	EDI
   ESI,
-#define ESI	ESI
+# define ESI	ESI
   EBP,
-#define EBP	EBP
+# define EBP	EBP
   ESP,
-#define ESP	ESP
+# define ESP	ESP
   EBX,
-#define EBX	EBX
+# define EBX	EBX
   EDX,
-#define EDX	EDX
+# define EDX	EDX
   ECX,
-#define ECX	ECX
+# define ECX	ECX
   EAX,
-#define EAX	EAX
+# define EAX	EAX
   TRAPNO,
-#define TRAPNO	TRAPNO
+# define TRAPNO	TRAPNO
   ERR,
-#define ERR	ERR
+# define ERR	ERR
   EIP,
-#define EIP	EIP
+# define EIP	EIP
   CS,
-#define CS	CS
+# define CS	CS
   EFL,
-#define EFL	EFL
+# define EFL	EFL
   UESP,
-#define UESP	UESP
+# define UESP	UESP
   SS
-#define SS	SS
+# define SS	SS
 };
+#endif
 
 /* Structure to describe FPU registers.  */
 typedef struct _fpstate *fpregset_t;

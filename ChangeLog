@@ -1,5 +1,8 @@
 1999-10-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Don't define
+	register names unconditionally, only if __USE_GNU.
+
 	* debug/Makefile: Fix rules to generate pcprofiledump.
 
 	* include/ucontext.h: New file.
