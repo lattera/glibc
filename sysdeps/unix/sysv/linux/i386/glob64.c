@@ -23,6 +23,8 @@
 
 #include "shlib-compat.h"
 
+libc_hidden_def (globfree64)
+
 versioned_symbol (libc, __glob64, glob64, GLIBC_2_2);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)

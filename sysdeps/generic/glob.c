@@ -1064,7 +1064,7 @@ glob (pattern, flags, errfunc, pglob)
 
   return 0;
 }
-#ifdef _LIBC
+#if defined _LIBC && !defined glob
 libc_hidden_def (glob)
 #endif
 
@@ -1085,7 +1085,7 @@ globfree (pglob)
       free ((__ptr_t) pglob->gl_pathv);
     }
 }
-#ifdef _LIBC
+#if defined _LIBC && !defined globfree
 libc_hidden_def (globfree)
 #endif
 

@@ -9,5 +9,6 @@
 #undef strtoull
 #undef strtouq
 strong_alias (__strtoul_internal, __strtoull_internal)
+libc_hidden_ver (__strtoul_internal, __strtoull_internal)
 weak_alias (strtoul, strtoull)
 weak_alias (strtoul, strtouq)

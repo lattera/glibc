@@ -1,3 +1,28 @@
+2002-08-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/glob.c (glob, globfree): Only use libc_hidden_def
+	if glob resp. globfree are not macros.
+	* sysdeps/gnu/glob64.c (globfree64): Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/alpha/glob.c (glob, globfree, globfree64):
+	Add libc_hidden_ver.
+	* sysdeps/unix/sysv/linux/i386/glob64.c (globfree64): Add
+	libc_hidden_def.
+	* sysdeps/wordsize-64/glob.c (globfree64): Use libc_hidden_ver
+	instead of libc_hidden_weak.
+	* sysdeps/wordsize-64/strtol.c (__strtoll_internal): Use
+	libc_hidden_ver instead of libc_hidden_def.
+	* sysdeps/wordsize-64/wcstol.c (__wcstoll_internal): Use
+	libc_hidden_ver instead of libc_hidden_def.
+	(wcstoll, wcstoq): Remove libc_hidden_weak.
+	* sysdeps/wordsize-64/strtol_l.c (____strtoll_l_internal): Add
+	libc_hidden_ver.
+	* sysdeps/wordsize-64/strtoul.c (__strtoull_internal): Add
+	libc_hidden_ver.
+	* sysdeps/wordsize-64/strtoul_l.c (____strtoull_l_internal): Add
+	libc_hidden_ver.
+	* sysdeps/wordsize-64/wcstoul.c (__wcstoull_internal): Add
+	libc_hidden_ver.
+
 2002-08-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/psignal.c: Declare _sys_siglist_internal.  Use USEINT
