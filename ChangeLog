@@ -1,5 +1,8 @@
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/euc-jp.c: In conversion to UCS4, handling invalid
+	sequences with first by 0x8e correctly.
+
 	* iconvdata/jis0208.h: Remove redundant test.
 
 2000-06-27  Ulrich Drepper  <drepper@redhat.com>

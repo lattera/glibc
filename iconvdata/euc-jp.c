@@ -96,6 +96,16 @@
 	  {								      \
 	    /* This is code set 2: half-width katakana.  */		      \
 	    ch = jisx0201_to_ucs4 (ch2);				      \
+	    if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \
+	      {								      \
+		/* Illegal character.  */				      \
+		if (! ignore_errors_p ())				      \
+		  {							      \
+		    /* This is an illegal character.  */		      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
+		    break;						      \
+		  }							      \
+									      \
 	    inptr += 2;							      \
 	  }								      \
 	else								      \

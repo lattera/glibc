@@ -1,5 +1,8 @@
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/iso14651_t1: Explicitly add control character in
+	U0000-U001F and U007F-U009F range for backward compatibility.
+
 	* locales/i18n: Correct problems found by test suite.
 
 2000-06-28  Andreas Jaeger  <aj@suse.de>
