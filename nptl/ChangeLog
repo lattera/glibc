@@ -1,3 +1,9 @@
+2003-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_exit): Remove __THROW.
+	(__pthread_cleanup_class): Add missing return types of member
+	functions.
+
 2003-08-26  Steven Munroe <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h

@@ -176,9 +176,11 @@ extern int pthread_create (pthread_t *__restrict __newthread,
 			   void *(*__start_routine) (void *),
 			   void *__restrict __arg) __THROW;
 
-/* Terminate calling thread.  */
-extern void pthread_exit (void *__retval)
-     __THROW __attribute__ ((__noreturn__));
+/* Terminate calling thread.
+
+   The registered cleanup handlers are called via exception handling
+   so we cannot mark this function with __THROW.*/
+extern void pthread_exit (void *__retval) __attribute__ ((__noreturn__));
 
 /* Make calling thread wait for termination of the thread TH.  The
    exit status of the thread is stored in *THREAD_RETURN, if THREAD_RETURN
@@ -453,10 +455,10 @@ class __pthread_cleanup_class
   __pthread_cleanup_class (void (*__fct) (void *), void *__arg)
     : __cancel_routine (__fct), __cancel_arg (__arg), __do_it (1) { }
   ~__pthread_cleanup_class () { if (__do_it) __cancel_routine (__cancel_arg); }
-  __setdoit (int __newval) { __do_it = __newval; }
-  __defer () { pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,
-				      &__cancel_type); }
-  __restore () const { pthread_setcanceltype (__cancel_type, 0); }
+  void __setdoit (int __newval) { __do_it = __newval; }
+  void __defer () { pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,
+					   &__cancel_type); }
+  void __restore () const { pthread_setcanceltype (__cancel_type, 0); }
 };
 
 /* Install a cleanup handler: ROUTINE will be called with arguments ARG
