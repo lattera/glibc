@@ -1,3 +1,8 @@
+2000-08-27  H.J. Lu  <hjl@gnu.org>
+
+	* posix/Makefile (otherlibs): Add for building with static-nss
+	for "make check".
+
 2000-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h: Add fmemopen prototype.
@@ -315,7 +320,7 @@
 2000-08-24  H.J. Lu  <hjl@gnu.org>
 
 	* stdio-common/Makefile (tests): Don't do it for cross compiling.
-	* stdio-common/Makefile (tests): Likewise.
+	* malloc/Makefile (tests): Likewise.
 
 2000-08-24  Ulrich Drepper  <drepper@redhat.com>
 
