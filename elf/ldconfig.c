@@ -603,7 +603,7 @@ static void
 search_dir (const struct dir_entry *entry)
 {
   DIR *dir;
-  struct dirent *direntry;
+  struct dirent64 *direntry;
   char *file_name, *dir_name, *real_file_name, *real_name;
   int file_name_len, real_file_name_len, len;
   char *soname;
@@ -649,7 +649,7 @@ search_dir (const struct dir_entry *entry)
       return;
     }
 
-  while ((direntry = readdir (dir)) != NULL)
+  while ((direntry = readdir64 (dir)) != NULL)
     {
       int flag;
 #ifdef _DIRENT_HAVE_D_TYPE
