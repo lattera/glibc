@@ -1,3 +1,9 @@
+2000-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/argp.texi: Document index parameter of argp_parse.
+	Fix typo.
+	Reported by Andrew Schulman <SCHULMAN.ANDREW@epamail.epa.gov>.
+
 2000-04-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/shm_open.c: Include linux_fsinfo for
