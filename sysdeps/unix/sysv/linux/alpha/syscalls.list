@@ -26,7 +26,7 @@ fstatfs		-	fstatfs		2	__fstatfs	fstatfs __fstatfs64 fstatfs64
 statfs		-	statfs		2	__statfs	statfs statfs64
 getrlimit	-	getrlimit	2	__getrlimit	getrlimit getrlimit64
 setrlimit	-	setrlimit	2	__setrlimit	setrlimit64 setrlimit
-ftruncate	-	ftruncate	2	__ftruncate	ftruncate ftruncate64
+ftruncate	-	ftruncate	2	__ftruncate	ftruncate __ftruncate64 ftruncate64
 truncate	-	truncate	2	truncate	truncate64
 
 # these are actually common with the x86:
