@@ -312,6 +312,58 @@ bits machine this function is available under the name @code{freopen}
 and so transparently replaces the old interface.
 @end deftypefun
 
+In some situations it is useful to know whether a given stream is
+available for reading or writing.  This information is normally not
+available and would have to be remembered separately.  Solaris
+introduced a few functions to get this information from the stream
+descriptor and these functions are also available in the GNU C library.
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __freadable (FILE *@var{stream})
+The @code{__freadable} function determines whether the stream
+@var{stream} was opened to allow reading.  In this case the return value
+is nonzero.  For write-only streams the function returns zero.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __fwritable (FILE *@var{stream})
+The @code{__fwritable} function determines whether the stream
+@var{stream} was opened to allow writing.  In this case the return value
+is nonzero.  For read-only streams the function returns zero.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
+
+For slightly different kind of problems there are two more functions.
+They provide even finer-grained information.
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __freading (FILE *@var{stream})
+The @code{__freading} function determines whether the stream
+@var{stream} was last read from or whether it is opened read-only.  In
+this case the return value is nonzero, otherwise it is zero.
+Determining whether a stream opened for reading and writing was last
+used for writing allows to draw conclusions about the content about the
+buffer, among other things.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __fwriting (FILE *@var{stream})
+The @code{__fwriting} function determines whether the stream
+@var{stream} was last written to or whether it is opened write-only.  In
+this case the return value is nonzero, otherwise it is zero.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
+
 
 @node Closing Streams
 @section Closing Streams
@@ -369,58 +421,6 @@ Program}) or from a fatal signal (@pxref{Signal Handling}), open streams
 might not be closed properly.  Buffered output might not be flushed and
 files may be incomplete.  For more information on buffering of streams,
 see @ref{Stream Buffering}.
-
-In some situations it is useful to know whether a given stream is
-available for reading or writing.  This information is normally not
-available and would have to be remembered separately.  Solaris
-introduced a few functions to get this information from the stream
-descriptor and these functions are also available in the GNU C library.
-
-@comment stdio_ext.h
-@comment GNU
-@deftypefun int __freadable (FILE *@var{stream})
-The @code{__freadable} function determines whether the stream
-@var{stream} was opened to allow reading.  In this case the return value
-is nonzero.  For write-only streams the function returns zero.
-
-This function is declared in @file{stdio_ext.h}.
-@end deftypefun
-
-@comment stdio_ext.h
-@comment GNU
-@deftypefun int __fwritable (FILE *@var{stream})
-The @code{__fwritable} function determines whether the stream
-@var{stream} was opened to allow writing.  In this case the return value
-is nonzero.  For read-only streams the function returns zero.
-
-This function is declared in @file{stdio_ext.h}.
-@end deftypefun
-
-For slightly different kind of problems there are two more functions.
-They provide even finer-grained information.
-
-@comment stdio_ext.h
-@comment GNU
-@deftypefun int __freading (FILE *@var{stream})
-The @code{__freading} function determines whether the stream
-@var{stream} was last read from or whether it is opened read-only.  In
-this case the return value is nonzero, otherwise it is zero.
-Determining whether a stream opened for reading and writing was last
-used for writing allows to draw conclusions about the content about the
-buffer, among other things.
-
-This function is declared in @file{stdio_ext.h}.
-@end deftypefun
-
-@comment stdio_ext.h
-@comment GNU
-@deftypefun int __fwriting (FILE *@var{stream})
-The @code{__fwriting} function determines whether the stream
-@var{stream} was last written to or whether it is opened write-only.  In
-this case the return value is nonzero, otherwise it is zero.
-
-This function is declared in @file{stdio_ext.h}.
-@end deftypefun
 
 @node Streams and Threads
 @section Streams and Threads
