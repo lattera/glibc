@@ -99,7 +99,7 @@ enum __ptrace_request
 #define PT_DETACH PTRACE_DETACH
 
   /* Continue and stop at the next (return from) syscall.  */
-  PTRACE_SYSCALL = 24,
+  PTRACE_SYSCALL = 24
 #define PTRACE_SYSCALL PTRACE_SYSCALL
 };
 

@@ -21,6 +21,8 @@
    Fortunately 2.0 puts a magic number in the first word and this is not
    a legal value for `trap_no', so we can tell them apart.  */
 
+#include <asm/ptrace.h>
+
 union k_sigcontext
   {
     struct

@@ -18,7 +18,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <signal.h>
-#include <asm/ptrace.h>
 #include <bits/armsigctx.h>
 
 void

@@ -7,6 +7,7 @@ kernel_stat.h
 kernel_termios.h
 ldd-rewrite.sed
 lddlibc4.c
+linux_fsinfo.h
 llseek.c
 s_pread64.c
 s_pwrite64.c

@@ -26,31 +26,7 @@
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
 
-/* These definitions come from the kernel headers.  But we cannot
-   include the headers here because of type clashes.  If new
-   filesystem types will become available we have to add the
-   appropriate definitions here.*/
-#define ADFS_SUPER_MAGIC	0xadf5
-#define AFFS_SUPER_MAGIC	0xadff
-#define CODA_SUPER_MAGIC	0x73757245
-#define EXT2_SUPER_MAGIC	0xef53
-#define HPFS_SUPER_MAGIC	0xf995e849
-#define ISOFS_SUPER_MAGIC	0x9660
-#define MINIX_SUPER_MAGIC	0x137f
-#define MINIX_SUPER_MAGIC2	0x138F
-#define MINIX2_SUPER_MAGIC	0x2468
-#define MINIX2_SUPER_MAGIC2	0x2478
-#define MSDOS_SUPER_MAGIC	0x4d44
-#define NCP_SUPER_MAGIC		0x564c
-#define NFS_SUPER_MAGIC		0x6969
-#define PROC_SUPER_MAGIC	0x9fa0
-#define SMB_SUPER_MAGIC		0x517b
-#define XENIX_SUPER_MAGIC	0x012ff7b4
-#define SYSV4_SUPER_MAGIC	0x012ff7b5
-#define SYSV2_SUPER_MAGIC	0x012ff7b6
-#define COH_SUPER_MAGIC		0x012ff7b7
-#define UFS_MAGIC		0x00011954
-#define UFS_CIGAM		0x54190100 /* byteswapped MAGIC */
+#include "linux_fsinfo.h"
 
 
 int

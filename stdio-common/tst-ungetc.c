@@ -22,17 +22,24 @@ main (int argc, char *argv[])
   name = tmpnam (NULL);
   fp = fopen (name, "w");
   assert (fp != NULL)
-  fputs ("bl", fp);
+  fputs ("bla", fp);
   fclose (fp);
   fp = NULL;
 
   fp = fopen (name, "r");
-  assert (fp != NULL)
-  assert (getc (fp) != EOF);
-  assert ((c = getc (fp)) != EOF);
+  assert (fp != NULL);
+  assert (ungetc ('z', fp) == 'z');
+  assert (getc (fp) == 'z');
+  assert (getc (fp) == 'b');
+  assert (getc (fp) == 'l');
+  assert (ungetc ('m', fp) == 'm');
+  assert (getc (fp) == 'm');
+  assert ((c = getc (fp)) == 'a');
   assert (getc (fp) == EOF);
   assert (ungetc (c, fp) == c);
   assert (feof (fp) == 0);
+  assert (getc (fp) == c);
+  assert (getc (fp) == EOF);
 
 the_end:
   if (fp != NULL)

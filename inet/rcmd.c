@@ -553,6 +553,7 @@ __ivaliduser2(hostf, raddr, luser, ruser, rhost)
     int hcheck, ucheck;
     char *buf = NULL;
     size_t bufsize = 0;
+    int retval = -1;
 
     while (__getline (&buf, &bufsize, hostf) > 0) {
 	buf[bufsize - 1] = '\0'; /* Make sure it's terminated.  */
@@ -595,7 +596,7 @@ __ivaliduser2(hostf, raddr, luser, ruser, rhost)
 	hcheck = __icheckhost (raddr, buf, rhost);
 
 	if (hcheck < 0)
-	    return -1;
+	    break;
 
 	if (hcheck) {
 	    /* Then check user part */
@@ -605,16 +606,21 @@ __ivaliduser2(hostf, raddr, luser, ruser, rhost)
 	    ucheck = __icheckuser (user, ruser);
 
 	    /* Positive 'host user' match? */
-	    if (ucheck > 0)
-		return 0;
+	    if (ucheck > 0) {
+		retval = 0;
+		break;
+	    }
 
 	    /* Negative 'host -user' match? */
 	    if (ucheck < 0)
-		return -1;
+		break;
 
 	    /* Neither, go on looking for match */
 	}
     }
 
-    return -1;
+    if (buf != NULL)
+      free (buf);
+
+    return retval;
 }

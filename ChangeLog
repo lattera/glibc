@@ -1,5 +1,48 @@
 1998-10-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.0.99.
+
+	* posix/fnmath.h: Don't redefine __P when used in glibc.
+	* posix/glob.h: Likewise.
+
+	* inet/rcmd.c (__ivaliduser2): Fix memory leak.
+	Patch by Dick Streefland <dick_streefland@tasking.com>.
+
+	* stdio-common/tst-ungetc.c: Add more test cases.
+
+	* sysdeps/unix/sysv/linux/Dist: Add linux_fsinfo.h.
+	* sysdeps/unix/sysv/linux/fstatvfs.c: Move filesystem magic number
+	definitions to ...
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: ...here.  New file.
+	* sysdeps/unix/sysv/linux/fpathconf.c: New file.
+	* sysdeps/unix/sysv/linux/pathconf.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/fpathconf.c: Handle _PC_LINK_MAX here.
+	* sysdeps/unix/sysv/linux/alpha/pathconf.c: Likewise.
+
+1998-10-20  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/bits/armsigctx.h: Include
+	<asm/ptrace.h> to define struct pt_regs.
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h: Don't bother
+	including <asm/ptrace.h> here.
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.S: Remove spurious call to
+	C_SYMBOL_NAME macro.
+
+1998-10-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/sys/ptrace.h (__ptrace_request): Remove comma at
+	end of enumerator list.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (__ptrace_request): Likewise.
+	* posix/wordexp.h: Likewise.
+
+	* db/db.h: Use __PMT instead of __P in typedefs.
+	* db/mpool.h: Likewise.
+	* sysdeps/generic/bits/siginfo.h: Likewise.
+	* nis/rpcsvc/ypclnt.h: Likewise.
+
+1998-10-23  Ulrich Drepper  <drepper@cygnus.com>
+
 	* libio/genops.c (_IO_seekmark): When switching to backup buffer
 	make sure all characters from the read buffer are read after
 	switching back to it.

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Linux specific extensions to fpathconf.
+   Copyright (C) 1991, 1995, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,42 +17,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <stddef.h>
 #include <unistd.h>
 #include <limits.h>
-#include <fcntl.h>
 #include <sys/statfs.h>
 
-#include <linux_fsinfo.h>
+#include "linux_fsinfo.h"
 
-static long int default_pathconf (const char *path, int name);
+static long int posix_fpathconf (int fd, int name);
 
-/* Get file-specific information about PATH.  */
+
+/* Get file-specific information about descriptor FD.  */
 long int
-__pathconf (const char *path, int name)
+__fpathconf (fd, name)
+     int fd;
+     int name;
 {
-  if (name == _PC_FILESIZEBITS)
-    {
-      /* Test whether this is on a ext2 or UFS filesystem which
-	 support large files.  */
-      struct statfs fs;
-
-      if (__statfs (path, &fs) < 0
-	  || (fs.f_type != EXT2_SUPER_MAGIC
-	      && fs.f_type != UFS_MAGIC
-	      && fs.f_type != UFS_CIGAM))
-	return 32;
-
-      /* This filesystem supported files >2GB.  */
-      return 64;
-    }
   if (name == _PC_LINK_MAX)
     {
       struct statfs fsbuf;
 
       /* Determine the filesystem type.  */
-      if (__statfs (fd, &fsbuf) < 0)
+      if (__fstatfs (fd, &fsbuf) < 0)
 	/* not possible, return the default value.  */
 	return LINK_MAX;
 
@@ -87,9 +73,8 @@ __pathconf (const char *path, int name)
 	}
     }
 
-  /* Fallback to the generic version.  */
-  return default_pathconf (path, name);
+  return posix_fpathconf (fd, name);
 }
 
-#define __pathconf static default_pathconf
-#include <sysdeps/posix/pathconf.c>
+#define __fpathconf static posix_fpathconf
+#include <sysdeps/posix/fpathconf.c>

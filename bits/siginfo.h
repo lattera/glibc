@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Stub version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -185,7 +185,7 @@ typedef struct sigevent
     sigval_t sigev_value;
     int sigev_signo;
     int sigev_notify;
-    void (*sigev_notify_function) __P ((sigval_t)); /* Function to start.  */
+    void (*sigev_notify_function) __PMT ((sigval_t)); /* Function to start.  */
     void *sigev_notify_attributes;		    /* Really pthread_attr_t.*/
   } sigevent_t;
 

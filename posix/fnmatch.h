@@ -24,8 +24,10 @@ extern "C" {
 #endif
 
 #if defined __cplusplus || (defined __STDC__ && __STDC__) || defined WINDOWS32
-# undef	__P
-# define __P(protos)	protos
+# if !defined __GLIBC__ || !defined __P
+#  undef	__P
+#  define __P(protos)	protos
+# endif
 #else /* Not C++ or ANSI C.  */
 # undef	__P
 # define __P(protos)	()

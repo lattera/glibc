@@ -24,15 +24,17 @@ extern "C" {
 
 #undef	__ptr_t
 #if defined __cplusplus || (defined __STDC__ && __STDC__) || defined WINDOWS32
-# undef	__P
-# undef __PMT
-# define __P(protos)	protos
-# define __PMT(protos)	protos
-# define __ptr_t	void *
-# if !defined __GNUC__ || __GNUC__ < 2
-#  undef __const
-#  define __const const
+# if !defined __GLIBC__ || !defined __P
+#  undef __P
+#  undef __PMT
+#  define __P(protos)	protos
+#  define __PMT(protos)	protos
+#  if !defined __GNUC__ || __GNUC__ < 2
+#   undef __const
+#   define __const const
+#  endif
 # endif
+# define __ptr_t	void *
 #else /* Not C++ or ANSI C.  */
 # undef	__P
 # undef __PMT

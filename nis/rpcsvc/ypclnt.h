@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -53,7 +53,7 @@ __BEGIN_DECLS
 /* struct ypall_callback * is the arg which must be passed to yp_all */
 struct ypall_callback
   {
-    int (*foreach) __P ((int __status, char *__key, int __keylen,
+    int (*foreach) __PMT ((int __status, char *__key, int __keylen,
 			 char *__val, int __vallen, char *__data));
     char *data;
   };
