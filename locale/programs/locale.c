@@ -27,6 +27,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <error.h>
+#include <fcntl.h>
 #include <langinfo.h>
 #include <libintl.h>
 #include <limits.h>
@@ -35,11 +36,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
 
 #include "localeinfo.h"
 #include "charmap-dir.h"
 
+extern void *xmalloc (size_t __n);
 extern char *xstrdup (const char *__str);
 
 
@@ -54,6 +58,9 @@ static int do_all;
 
 /* Print names of all available character maps.  */
 static int do_charmaps = 0;
+
+/* Nonzero if verbose output is wanted.  */
+static int verbose;
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
@@ -70,6 +77,7 @@ static const struct argp_option options[] =
   { NULL, 0, NULL, 0, N_("Modify output format:") },
   { "category-name", 'c', NULL, 0, N_("Write names of selected categories") },
   { "keyword-name", 'k', NULL, 0, N_("Write names of selected keywords") },
+  { "verbose", 'v', NULL, 0, N_("Print more information") },
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -239,6 +247,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'k':
       show_keyword_name = 1;
       break;
+    case 'v':
+      verbose = 1;
+      break;
     default:
       return ARGP_ERR_UNKNOWN;
     }
@@ -292,69 +303,17 @@ print_names (const void *nodep, VISIT value, int level)
 static void
 write_locales (void)
 {
+  char linebuf[80];
   void *all_data = NULL;
   DIR *dir;
   struct dirent *dirent;
   char *alias_path;
   size_t alias_path_len;
   char *entry;
+  int first_locale = 1;
 
-#define PUT(name) tsearch ((name), &all_data, \
+#define PUT(name) tsearch (name, &all_data, \
 			   (int (*) (const void *, const void *)) strcoll)
-
-  dir = opendir (LOCALEDIR);
-  if (dir == NULL)
-    {
-      error (1, errno, gettext ("cannot read locale directory `%s'"),
-	     LOCALEDIR);
-      return;
-    }
-
-  /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
-  PUT ("POSIX");
-  /* And so is the "C" locale.  */
-  PUT ("C");
-
-  /* Now we can look for all files in the directory.  */
-  while ((dirent = readdir (dir)) != NULL)
-    if (strcmp (dirent->d_name, ".") != 0
-	&& strcmp (dirent->d_name, "..") != 0)
-      {
-	mode_t mode;
-#ifdef _DIRENT_HAVE_D_TYPE
-	if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_LNK)
-	  mode = DTTOIF (dirent->d_type);
-	else
-#endif
-	  {
-	    struct stat st;
-	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name) + 1];
-
-	    stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"), dirent->d_name);
-
-	    if (stat (buf, &st) < 0)
-	      continue;
-	    mode = st.st_mode;
-	  }
-
-	if (S_ISDIR (mode))
-	  {
-	    /* Test whether at least the LC_CTYPE data is there.  Some
-               directories only contain translations.  */
-	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name)
-		    + sizeof "/LC_CTYPE"];
-	    struct stat st;
-
-	    stpcpy (stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"),
-			    dirent->d_name),
-		    "/LC_CTYPE");
-
-	    if (stat (buf, &st) == 0 && S_ISREG (st.st_mode))
-	      PUT (xstrdup (dirent->d_name));
-	  }
-      }
-
-  closedir (dir);
 
   /* Now read the locale.alias files.  */
   if (argz_create_sep (LOCALE_ALIAS_PATH, ':', &alias_path, &alias_path_len))
@@ -385,7 +344,7 @@ write_locales (void)
 	  char *value;
 	  char *cp;
 
-	  if (fgets (buf, BUFSIZ, fp) == NULL)
+	  if (fgets_unlocked (buf, BUFSIZ, fp) == NULL)
 	    /* EOF reached.  */
 	    break;
 
@@ -427,7 +386,8 @@ write_locales (void)
 		    *cp++ = '\0';
 
 		  /* Add the alias.  */
-		  PUT (xstrdup (alias));
+		  if (! verbose)
+		    PUT (xstrdup (alias));
 		}
 	    }
 
@@ -436,7 +396,7 @@ write_locales (void)
 	  while (strchr (cp, '\n') == NULL)
 	    {
 	      cp = buf;
-	      if (fgets (buf, BUFSIZ, fp) == NULL)
+	      if (fgets_unlocked (buf, BUFSIZ, fp) == NULL)
 		/* Make sure the inner loop will be left.  The outer
 		   loop will exit at the `feof' test.  */
 		*cp = '\n';
@@ -446,7 +406,173 @@ write_locales (void)
       fclose (fp);
     }
 
-  twalk (all_data, print_names);
+  /* This is the directory with the locale files.  */
+  dir = opendir (LOCALEDIR);
+  if (dir == NULL)
+    {
+      error (1, errno, gettext ("cannot read locale directory `%s'"),
+	     LOCALEDIR);
+      return;
+    }
+
+  memset (linebuf, '-', sizeof (linebuf) - 1);
+  linebuf[sizeof (linebuf) - 1] = '\0';
+
+  /* Now we can look for all files in the directory.  */
+  while ((dirent = readdir (dir)) != NULL)
+    if (strcmp (dirent->d_name, ".") != 0
+	&& strcmp (dirent->d_name, "..") != 0)
+      {
+	mode_t mode;
+#ifdef _DIRENT_HAVE_D_TYPE
+	if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_LNK)
+	  mode = DTTOIF (dirent->d_type);
+	else
+#endif
+	  {
+	    struct stat64 st;
+	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name) + 1];
+
+	    stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"), dirent->d_name);
+
+	    if (stat64 (buf, &st) < 0)
+	      continue;
+	    mode = st.st_mode;
+	  }
+
+	if (S_ISDIR (mode))
+	  {
+	    /* Test whether at least the LC_CTYPE data is there.  Some
+               directories only contain translations.  */
+	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name)
+		    + sizeof "/LC_IDENTIFICATION"];
+	    char *enddir;
+	    struct stat64 st;
+
+	    stpcpy (enddir = stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"),
+				     dirent->d_name),
+		    "/LC_IDENTIFICATION");
+
+	    if (stat64 (buf, &st) == 0 && S_ISREG (st.st_mode))
+	      {
+		if (verbose)
+		  {
+		    /* Provide some nice output of all kinds of
+		       information.  */
+		    int fd;
+
+		    if (! first_locale)
+		      putchar_unlocked ('\n');
+		    first_locale = 0;
+
+		    printf ("locale: %-15.15s directory: %.*s\n%s\n",
+			    dirent->d_name, (int) (enddir - buf), buf,
+			    linebuf);
+
+		    fd = open64 (buf, O_RDONLY);
+		    if (fd != -1)
+		      {
+			void *mapped = mmap64 (NULL, st.st_size, PROT_READ,
+					       MAP_SHARED, fd, 0);
+			if (mapped != MAP_FAILED)
+			  {
+			    /* Read the information from the file.  */
+			    struct
+			    {
+			      unsigned int magic;
+			      unsigned int nstrings;
+			      unsigned int strindex[0];
+			    } *filedata = mapped;
+
+			    if (filedata->magic == LIMAGIC (LC_IDENTIFICATION)
+				&& (sizeof *filedata
+				    + (filedata->nstrings
+				       * sizeof (unsigned int))
+				    <= (size_t) st.st_size))
+			      {
+				const char *str;
+
+#define HANDLE(idx, name) \
+  str = ((char *) mapped						      \
+	 + filedata->strindex[_NL_ITEM_INDEX (_NL_IDENTIFICATION_##idx)]);    \
+  if (*str != '\0')							      \
+    printf ("%9s | %s\n", name, str)
+				HANDLE (TITLE, "title");
+				HANDLE (SOURCE, "source");
+				HANDLE (ADDRESS, "address");
+				HANDLE (CONTACT, "contact");
+				HANDLE (EMAIL, "email");
+				HANDLE (TEL, "telephone");
+				HANDLE (FAX, "fax");
+				HANDLE (LANGUAGE, "language");
+				HANDLE (TERRITORY, "territory");
+				HANDLE (AUDIENCE, "audience");
+				HANDLE (APPLICATION, "application");
+				HANDLE (ABBREVIATION, "abbreviation");
+				HANDLE (REVISION, "revision");
+				HANDLE (DATE, "date");
+			      }
+
+			    munmap (mapped, st.st_size);
+			  }
+
+			close (fd);
+
+			/* Now try to get the charset information.  */
+			strcpy (enddir, "/LC_CTYPE");
+			fd = open64 (buf, O_RDONLY);
+			if (fd != -1 && fstat64 (fd, &st) >= 0
+			    && ((mapped = mmap64 (NULL, st.st_size, PROT_READ,
+						  MAP_SHARED, fd, 0))
+				!= MAP_FAILED))
+			  {
+			    struct
+			    {
+			      unsigned int magic;
+			      unsigned int nstrings;
+			      unsigned int strindex[0];
+			    } *filedata = mapped;
+
+			    if (filedata->magic == LIMAGIC (LC_CTYPE)
+				&& (sizeof *filedata
+				    + (filedata->nstrings
+				       * sizeof (unsigned int))
+				    <= (size_t) st.st_size))
+			      {
+				const char *str;
+
+				str = ((char *) mapped
+				       + filedata->strindex[_NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME)]);
+				if (*str != '\0')
+				  printf ("  codeset | %s\n", str);
+			      }
+
+			    munmap (mapped, st.st_size);
+			  }
+
+			if (fd != -1)
+			  close (fd);
+		      }
+		  }
+		else
+		  /* If the verbose format is not selected we simply
+		     collect the names.  */
+		  PUT (xstrdup (dirent->d_name));
+	      }
+	  }
+      }
+
+  closedir (dir);
+
+  if (! verbose)
+    {
+      /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
+      PUT ("POSIX");
+      /* And so is the "C" locale.  */
+      PUT ("C");
+
+      twalk (all_data, print_names);
+    }
 }
 
 
