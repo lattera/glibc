@@ -110,7 +110,7 @@
 	.endp	C_SYMBOL_NAME(name)
 
 #define ret			br.ret.sptk.few b0
-#define ret_NOERRNO		br.ret.sptk.few b0
+#define ret_NOERRNO		ret
 
 #else /* not __ASSEMBLER__ */
 

@@ -1,5 +1,8 @@
 2003-03-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (ret_NOERRNO): Avoid
+	unwanted expansion by definining to ret.  Patch by Ian Wienand.
+
 	* sysdeps/unix/make-syscalls.sh: Recognize 'E' in first position of
 	the parameter description to denote no error checking.  Generate
 	appropriate pseudo asm code.
