@@ -1,3 +1,7 @@
+2004-10-28  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove setaltroot.
+
 2004-10-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-open.c (dl_open_worker): Remove reference to glibcbug script.
