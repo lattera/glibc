@@ -1,3 +1,8 @@
+2004-12-16  Andreas Jaeger  <aj@suse.de>
+
+	* math/math.h: Use #if defined to not receive warnings about
+	undefined symbols.
+
 2004-12-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone): Add support
