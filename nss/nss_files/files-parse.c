@@ -73,7 +73,13 @@ struct parser_data
 /* Export the line parser function so it can be used in nss_db.  */
 # define parser_stclass /* Global */
 # define parse_line CONCAT(_nss_files_parse_,ENTNAME)
-# define nss_files_parse_hidden_def(name) libnss_files_hidden_def (name)
+# ifdef IS_IN_libc
+/* We are defining one of the functions that actually lives in libc
+   because it is used to implement fget*ent and suchlike.  */
+#  define nss_files_parse_hidden_def(name) libc_hidden_def (name)
+# else
+#  define nss_files_parse_hidden_def(name) libnss_files_hidden_def (name)
+# endif
 #endif
 
 
