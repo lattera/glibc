@@ -1,5 +1,8 @@
 1998-09-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-object.c (_dl_new_object): Store map address in
+	_dl_loaded if _dl_loaded is NULL.
+
 	* sysdeps/generic/setrlimit64.c: Remove stub warning.
 
 1998-09-07  Ulrich Drepper  <drepper@cygnus.com>

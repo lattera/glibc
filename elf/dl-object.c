@@ -64,6 +64,8 @@ _dl_new_object (char *realname, const char *libname, int type,
       /* Add the global scope.  */
       new->l_scope[idx++] = &_dl_loaded->l_searchlist;
     }
+  else
+    _dl_loaded = new;
   /* This is our local scope.  */
   if (loader != NULL)
     {
