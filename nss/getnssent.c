@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ __nss_getent (getent_r_function func, void **resbuf, char **buffer,
 	 && (h_errnop == NULL || *h_errnop == NETDB_INTERNAL))
     {
       char *new_buf;
-      *buffer_size += buflen;
+      *buffer_size *= 2;
       new_buf = realloc (*buffer, *buffer_size);
       if (new_buf == NULL)
 	{

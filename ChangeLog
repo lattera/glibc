@@ -1,3 +1,9 @@
+2004-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getnssent.c (__nss_getent): Double buffer size each round to
+	avoid problems with delays for some people's huge entries.
+	* nss/getXXbyYY.c (FUNCTION_NAME): Likewise.
+
 2004-12-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/getconf.c (main): Prepend just $GETCONF_DIR/ instead of

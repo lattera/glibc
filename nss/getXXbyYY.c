@@ -123,7 +123,7 @@ FUNCTION_NAME (ADD_PARAMS)
 	 )
     {
       char *new_buf;
-      buffer_size += BUFLEN;
+      buffer_size *= 2;
       new_buf = (char *) realloc (buffer, buffer_size);
       if (new_buf == NULL)
 	{
