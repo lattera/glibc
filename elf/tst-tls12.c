@@ -5,7 +5,8 @@
   if (p->a != S || p->b != S + 1 || p->c != S + 2)	\
     abort ()
 
-int main()
+int
+main (void)
 {
 #ifdef USE_TLS__THREAD
   struct A *p;

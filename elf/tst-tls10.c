@@ -1,7 +1,7 @@
 #include "tst-tls10.h"
 
 #ifdef USE_TLS__THREAD
-static __thread int dummy = 12;
+__thread int dummy __attribute__((visibility ("hidden"))) = 12;
 __thread struct A local = { 1, 2, 3 };
 #endif
 

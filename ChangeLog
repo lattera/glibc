@@ -1,3 +1,21 @@
+2003-04-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/tst-tls12.c (main): Fix declaration.
+	* elf/tst-tls10.c (dummy): Make hidden instead of static.
+	* elf/tst-tlsmod7.c (dummy): Likewise.
+	* elf/tst-tlsmod8.c (dummy): Likewise.
+	* elf/tst-tlsmod9.c (dummy): Likewise.
+
+2003-04-22  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/not-cancel.h: Put parens around macro args.
+	(open_not_cancel): Make last argument non-optional.
+	* sysdeps/generic/check_fds.c (check_one_fd): Update caller.
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Likewise.
+	* iconv/gconv_cache.c (__gconv_load_cache): Likewise.
+
+	* include/tls.h: Protect against multiple inclusion.
+
 2003-04-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd-client.h: Add declaration for __nscd_open_socket.
