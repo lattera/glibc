@@ -1,5 +1,8 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/segfault.c (install_handler): Check output file
+	name with access().
+
 	* resolv/res_query.c: Use simply getenv() for HOSTALIASES.
 	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add HOSTALIASES.
 

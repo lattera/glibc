@@ -1,3 +1,8 @@
+2001-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/cs_CZ: Fix grammar of comment above abmon.
+	Reported by Stanislav Brabec <utx@penguin.cz>.
+
 2000-12-31  Andreas Jaeger  <aj@suse.de>
 
 	* tst-fmon.c (main): Use return instead of exit to avoid warning.
