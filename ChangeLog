@@ -1,3 +1,14 @@
+1998-04-24 17:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Add rules for new modules.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/cp737.c: New file.
+	* iconvdata/cp737.h: New file.
+	* iconvdata/cp775.c: New file.
+	* iconvdata/cp775.h: New file.
+	* iconvdata/cp874.c: New file.
+	* iconvdata/cp874.h: New file.
+
 1998-04-24 16:30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Create target directory before generating

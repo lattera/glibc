@@ -301,6 +301,7 @@ module	INTERNAL		ISO_6937//		ISO_6937	1
 
 #	from			  to			module		cost
 alias	SHIFT-JIS//		SJIS//
+alias	CP932//			SJIS//
 module	SJIS//			INTERNAL		SJIS		1
 module	INTERNAL		SJIS//			SJIS		1
 
@@ -734,6 +735,18 @@ module	CP1256//		INTERNAL		CP1256		1
 module	INTERNAL		CP1256//		CP1256		1
 
 #	from			  to			module		cost
-alias	WINBLATRIM//		CP1257//
+alias	WINBALTRIM//		CP1257//
 module	CP1257//		INTERNAL		CP1257		1
 module	INTERNAL		CP1257//		CP1257		1
+
+#	from			  to			module		cost
+module	CP874//			INTERNAL		CP874		1
+module	INTERNAL		CP874//			CP874		1
+
+#	from			  to			module		cost
+module	CP737//			INTERNAL		CP737		1
+module	INTERNAL		CP737//			CP737		1
+
+#	from			  to			module		cost
+module	CP775//			INTERNAL		CP775		1
+module	INTERNAL		CP775//			CP775		1

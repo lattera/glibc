@@ -30,7 +30,8 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   EBCDIC-DK-NO-A EBCDIC-ES EBCDIC-ES-A EBCDIC-ES-S EBCDIC-FI-SE \
 	   EBCDIC-FI-SE-A EBCDIC-FR EBCDIC-IS-FRISS EBCDIC-IT EBCDIC-PT	 \
 	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423 IBM424 \
-	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047
+	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047	 \
+	   CP874 CP737 CP775
 ifneq ($(PERL),no)
 modules += KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
 	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM437	 \
@@ -123,6 +124,9 @@ IBM918-routines := ibm918
 IBM1004-routines := ibm1004
 IBM1026-routines := ibm1026
 IBM1047-routines := ibm1047
+CP737-routines := cp737
+CP775-routines := cp775
+CP874-routines := cp874
 CP1250-routines := cp1250
 CP1251-routines := cp1251
 CP1252-routines := cp1252
@@ -183,7 +187,8 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      ibm869.c ibm870.c ibm871.c ibm875.c ibm880.c ibm891.c	    \
 	      ibm903.c ibm904.c ibm905.c ibm918.c ibm1004.c ibm1026.c	    \
 	      ibm1047.c cp1250.c cp1251.c cp1252.c cp1253.c cp1254.c	    \
-	      cp1255.c cp1256.c cp1257.c
+	      cp1255.c cp1256.c cp1257.c cp874.c cp874.h cp737.c cp737.h    \
+	      cp775.c cp775.h
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
