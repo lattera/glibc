@@ -1,5 +1,8 @@
 2005-01-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-fini.c (_dl_fini): Call destructors of audit DSOs after
+	those of all the regular objects.
+
 	* elf/dl-debug.c (_dl_debug_initialize): Take extra parameter and
 	use it to select the r_debug structure for that namespace.
 	* elf/dl-close.c (_dl_close): Adjust call to _dl_debug_initialize.

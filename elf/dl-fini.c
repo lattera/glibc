@@ -1,5 +1,5 @@
 /* Call the termination functions of loaded shared objects.
-   Copyright (C) 1995,96,1998-2002,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,1998-2002,2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,6 +48,10 @@ _dl_fini (void)
   /* We run the destructors of the main namespaces last.  As for the
      other namespaces, we pick run the destructors in them in reverse
      order of the namespace ID.  */
+#ifdef SHARED
+  int do_audit = 0;
+ again:
+#endif
   for (Lmid_t cnt = DL_NNS - 1; cnt >= 0; --cnt)
     {
       /* Protect against concurrent loads and unloads.  */
@@ -57,7 +61,11 @@ _dl_fini (void)
       unsigned int nloaded = GL(dl_ns)[cnt]._ns_nloaded;
       /* No need to do anything for empty namespaces or those used for
 	 auditing DSOs.  */
-      if (nloaded == 0 || GL(dl_ns)[cnt]._ns_loaded->l_auditing)
+      if (nloaded == 0
+#ifdef SHARED
+	  || GL(dl_ns)[cnt]._ns_loaded->l_auditing != do_audit
+#endif
+	  )
 	goto out;
 
       /* XXX Could it be (in static binaries) that there is no object
@@ -213,7 +221,7 @@ _dl_fini (void)
 
 #ifdef SHARED
 	      /* Auditing checkpoint: another object closed.  */
-	      if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+	      if (!do_audit && __builtin_expect (GLRO(dl_naudit) > 0, 0))
 		{
 		  struct audit_ifaces *afct = GLRO(dl_audit);
 		  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
@@ -232,6 +240,14 @@ _dl_fini (void)
 	  --l->l_opencount;
 	}
     }
+
+#ifdef SHARED
+  if (! do_audit && GLRO(dl_naudit) > 0)
+    {
+      do_audit = 1;
+      goto again;
+    }
+#endif
 
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
     _dl_debug_printf ("\nruntime linker statistics:\n"
