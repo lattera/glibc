@@ -1,3 +1,13 @@
+2000-02-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/semctl.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgctl, semctl,
+	shmctl): Make them EXTRA as __old_* and as GLIBC_2.0 symbols.
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Add oldmsgctl, oldsemctl
+	and oldshmctl to sysdep-routines.
+
 2000-02-08  Andreas Jaeger  <aj@suse.de>
 
 	* locale/programs/locale.c (write_locales): Fix handling of
