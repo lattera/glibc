@@ -57,6 +57,7 @@ ENTRY (__vfork)
 
 	movel	#SYS_ify (fork), %d0
 	trap	#0
+	tstl	%d0
 	jmi	SYSCALL_ERROR_LABEL
 	rts
 
