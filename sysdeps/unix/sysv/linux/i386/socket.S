@@ -91,13 +91,15 @@ L(pseudo_end):
         /* Do the system call trap.  */
 	int $0x80
 
+	/* Restore registers.  */
+	movl %edx, %ebx
+
 	/* Restore the cancellation.  */
 	xchgl %esi, %eax
 	CDISABLE
 
 	/* Restore registers.  */
 	movl %esi, %eax
-	movl %edx, %ebx
 	popl %esi
 
 	/* %eax is < 0 if there was an error.  */

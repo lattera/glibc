@@ -1,3 +1,8 @@
+2002-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/socket.S [NEED_CANCELLATION &&
+	CENABLE]: Don't lose content of %ebx.
+
 2002-12-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/socket.S: Use SINGLE_THREAD_P
