@@ -30,5 +30,9 @@ pthread_sigmask (how, newmask, oldmask)
      const sigset_t *newmask;
      sigset_t *oldmask;
 {
-  return INLINE_SYSCALL (sigprocmask, 3, how, newmask, oldmask);
+  int result = INTERNAL_SYSCALL (sigprocmask, 3, how, newmask, oldmask);
+
+  return (INTERNAL_SYSCALL_ERROR_P (result)
+	  ? INTERNAL_SYSCALL_ERRNO (result)
+	  : 0);
 }

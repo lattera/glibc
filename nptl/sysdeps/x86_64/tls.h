@@ -119,17 +119,6 @@ union user_desc_init
   (((tcbhead_t *) (descr))->dtv)
 
 
-/* Macros to load from and store into segment registers.  */
-# ifndef TLS_GET_GS
-#  define TLS_GET_GS() \
-  ({ int __seg; __asm ("movw %%gs, %w0" : "=q" (__seg)); __seg & 0xffff; })
-# endif
-# ifndef TLS_SET_GS
-#  define TLS_SET_GS(val) \
-  __asm ("movw %w0, %%gs" :: "q" (val))
-# endif
-
-
 # ifndef __NR_set_thread_area
 #  define __NR_set_thread_area 243
 # endif
