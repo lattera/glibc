@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,10 +34,8 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 		      ElfW(Dyn) *info[DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM
 				     + DT_EXTRANUM])
 {
-  unsigned int i;
-
-  for (i = 0; i < DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM + DT_EXTRANUM; ++i)
-    info[i] = NULL;
+  memset (info, '\0', ((DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM + DT_EXTRANUM)
+		       * sizeof (ElfW(Dyn) *)));
 
   if (! dyn)
     return;

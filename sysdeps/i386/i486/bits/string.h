@@ -190,20 +190,10 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 #define _HAVE_STRING_ARCH_memset 1
 #define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (c)				      \
-		  ? (__builtin_constant_p (n)				      \
-		     ? __memset_cc (s, c, n)				      \
-		     : __memset_cg (s, c, n))				      \
+		  ? memset (s, c, n)					      \
 		  : (__builtin_constant_p (n)				      \
 		     ? __memset_gc (s, c, n)				      \
 		     : __memset_gg (s, c, n))))
-#define __memset_cc(s, c, n) \
-  ((n) == 0								      \
-   ? (s)								      \
-   : (((n) % 4 == 0)							      \
-      ? __memset_cc_by4 (s, c, n)					      \
-      : (((n) % 2== 0)							      \
-	 ? __memset_cc_by2 (s, c, n)					      \
-	 : __memset_cg (s, c, n))))
 #define __memset_gc(s, c, n) \
   ((n) == 0								      \
    ? (s)								      \
@@ -212,48 +202,6 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
       : (((n) % 2 == 0)							      \
 	 ? __memset_gc_by2 (s, c, n)					      \
 	 : __memset_gg (s, c, n))))
-
-__STRING_INLINE void *__memset_cc_by4 (void *__s, int __c, size_t __n);
-
-__STRING_INLINE void *
-__memset_cc_by4 (void *__s, int __c, size_t __n)
-{
-  register unsigned long int __d0;
-  register char *__tmp = __s;
-  __asm__ __volatile__
-    ("1:\n\t"
-     "movl	%2,(%0)\n\t"
-     "leal	4(%0),%0\n\t"
-     "decl	%1\n\t"
-     "jnz	1b"
-     : "=&r" (__tmp), "=&r" (__d0)
-     : "q" (0x01010101UL * (unsigned char) __c), "0" (__tmp), "1" (__n / 4)
-     : "memory", "cc");
-  return __s;
-}
-
-__STRING_INLINE void *__memset_cc_by2 (void *__s, int __c, size_t __n);
-
-__STRING_INLINE void *
-__memset_cc_by2 (void *__s, int __c, size_t __n)
-{
-  register unsigned long int __d0;
-  register void *__tmp = __s;
-  __asm__ __volatile__
-    ("shrl	$1,%1\n\t"	/* may be divisible also by 4 */
-     "jz	2f\n"
-     "1:\n\t"
-     "movl	%2,(%0)\n\t"
-     "leal	4(%0),%0\n\t"
-     "decl	%1\n\t"
-     "jnz	1b\n"
-     "2:\n\t"
-     "movw	%w2,(%0)"
-     : "=&r" (__tmp), "=&r" (__d0)
-     : "q" (0x01010101UL * (unsigned char) __c), "0" (__tmp), "1" (__n / 2)
-     : "memory", "cc");
-  return __s;
-}
 
 __STRING_INLINE void *__memset_gc_by4 (void *__s, int __c, size_t __n);
 
@@ -301,25 +249,6 @@ __memset_gc_by2 (void *__s, int __c, size_t __n)
      "movw	%w0,(%1)"
      : "=&q" (__d0), "=&r" (__tmp), "=&r" (__d1)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 2)
-     : "memory", "cc");
-  return __s;
-}
-
-__STRING_INLINE void *__memset_cg (void *__s, int __c, size_t __n);
-
-__STRING_INLINE void *
-__memset_cg (void *__s, int __c, size_t __n)
-{
-  register unsigned long __d0, __d1;
-  register void *__tmp = __s;
-  __asm__ __volatile__
-    ("shrl	$1,%%ecx\n\t"
-     "rep; stosw\n\t"
-     "jnc	1f\n\t"
-     "movb	%%al,(%%edi)\n"
-     "1:"
-     : "=&c" (__d0), "=&D" (__d1)
-     : "0" (__n), "1" (__tmp), "a" (0x0101U * (unsigned char) __c)
      : "memory", "cc");
   return __s;
 }

@@ -1,3 +1,11 @@
+1999-02-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Use memset instead of
+	loop to clear `info'.
+
+	* sysdeps/i386/i486/bits/string.h: If fill byte is constant let gcc
+	do the work and don't use inline assembler.
+
 1999-02-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/ldsodefs.h (_dl_signal_error): Mark as __noreturn__.
