@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,95-99,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 1995-2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    ARM changes by Philip Blundell, <pjb27@cam.ac.uk>, May 1997.
@@ -146,8 +146,11 @@ __local_syscall_error:						\
        }								\
      (int) _sys_result; })
 
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...)			\
+#define INTERNAL_SYSCALL(name, err, nr, args...)		\
   ({ unsigned int _sys_result;					\
      {								\
        register int _a1 asm ("a1");				\
@@ -161,10 +164,11 @@ __local_syscall_error:						\
      (int) _sys_result; })
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= 0xfffff001u)
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned int) (val) >= 0xfffff001u)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0

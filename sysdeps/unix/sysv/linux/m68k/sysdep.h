@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
    December 1995.
@@ -180,20 +180,23 @@ SYSCALL_ERROR_LABEL:							      \
    call.  */
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				\
-  ({ unsigned int _sys_result = INTERNAL_SYSCALL (name, nr, args);	\
-     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result), 0))	\
+  ({ unsigned int _sys_result = INTERNAL_SYSCALL (name, , nr, args);	\
+     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result, ), 0))\
        {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result));		\
+	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result, ));		\
 	 _sys_result = (unsigned int) -1;				\
        }								\
      (int) _sys_result; })
+
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 /* Define a macro which expands inline into the wrapper code for a system
    call.  This use is for internal calls that do not need to handle errors
    normally.  It will never touch errno.  This returns just what the kernel
    gave back.  */
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...)		\
+#define INTERNAL_SYSCALL(name, err, nr, args...)	\
   ({ unsigned int _sys_result;				\
      {							\
        LOAD_ARGS_##nr (args)				\
@@ -207,10 +210,11 @@ SYSCALL_ERROR_LABEL:							      \
      (int) _sys_result; })
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= -4095U)
+#define INTERNAL_SYSCALL_ERROR_P(val, err)		\
+  ((unsigned int) (val) >= -4095U)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0
