@@ -11,9 +11,8 @@ can make changes.
 
 @menu
 * Host Identification::         Determining the name of the machine.
-* Hardware/Software Type ID::   Determining the hardware type of the
-                                 machine and what operating system it is
-                                 running.
+* Platform Type::               Determining operating system and basic
+                                  machine type
 * Filesystem Handling::         Controlling/querying mounts
 * System Parameters::           Getting and setting various system parameters
 @end menu
@@ -216,8 +215,8 @@ each machine.
 @end table
 @end deftypefun
 
-@node Hardware/Software Type ID
-@section Hardware/Software Type Identification
+@node Platform Type
+@section Platform Type Identification
 
 You can use the @code{uname} function to find out some information about
 the type of computer your program is running on.  This function and the
@@ -308,7 +307,7 @@ possibility.
 
 
 @node Filesystem Handling
-@section Controlling/querying mounts
+@section Controlling and Querying Mounts
 
 All files are in filesystems, and before you can access any file, its
 filesystem must be mounted.  Because of Unix's concept of
@@ -337,10 +336,10 @@ gets stored.
 
 @menu
 * Mount Information::           What is or could be mounted?
-* Mount/Unmount/Remount::       Controlling what is mounted and how
+* Mount-Unmount-Remount::       Controlling what is mounted and how
 @end menu
 
-@node Mount Information, Mount/Unmount/Remount, , Filesystem Handling
+@node Mount Information, Mount-Unmount-Remount, , Filesystem Handling
 
 For some programs it is desirable and necessary to access information
 about whether a certain filesystem is mounted and, if it is, where, or
@@ -756,7 +755,7 @@ without relying on facilities outside the kernel to keep @file{mtab} up
 to date.
 
 
-@node Mount/Unmount/Remount, , Mount Information, Filesystem Handling
+@node Mount-Unmount-Remount, , Mount Information, Filesystem Handling
 
 This section describes the functions for mounting, unmounting, and
 remounting filesystems.
@@ -1187,7 +1186,7 @@ parameters are:
 @item
 @code{gethostname}, @code{sethostname} (@xref{Host Identification}.)
 @item
-@code{uname} (@xref{Hardware/Software Type ID}.)
+@code{uname} (@xref{Platform Type}.)
 @item
 @code{bdflush}
 @end itemize

@@ -1,4 +1,4 @@
-@node Character Handling, String and Array Utilities, Memory Allocation, Top
+@node Character Handling, String and Array Utilities, Memory, Top
 @c %MENU% Character testing and conversion functions
 @chapter Character Handling
 

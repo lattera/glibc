@@ -572,10 +572,11 @@ debugging mechanism which allows you to put assertions in your code, and
 have diagnostic messages printed if the tests fail.
 
 @item
-@ref{Memory Allocation}, describes the GNU library's facilities for
-dynamic allocation of storage.  If you do not know in advance how much
-storage your program needs, you can allocate it dynamically instead,
-and manipulate it via pointers.
+@ref{Memory}, describes the GNU library's facilities for managing and
+using virtual and real memory, including dynamic allocation of virtual
+memory.  If you do not know in advance how much memory your program
+needs, you can allocate it dynamically instead, and manipulate it via
+pointers.
 
 @item
 @ref{Character Handling}, contains information about character

@@ -57,7 +57,7 @@ The collating sequence for the local language and character set
 Formatting of numbers and currency amounts (@pxref{General Numeric}).
 
 @item
-Formatting of dates and times (@pxref{Formatting Date and Time}).
+Formatting of dates and times (@pxref{Formatting Calendar Time}).
 
 @item
 What language to use for output, including error messages
@@ -157,7 +157,7 @@ monetary; see @ref{General Numeric}.
 @comment ISO
 @item LC_TIME
 This category applies to formatting date and time values; see
-@ref{Formatting Date and Time}.
+@ref{Formatting Calendar Time}.
 
 @comment locale.h
 @comment XOPEN
@@ -351,7 +351,7 @@ what information is provided by the currently selected locale.  This is
 how the locale model is meant to work normally.
 
 As an example take the @code{strftime} function, which is meant to nicely
-format date and time information (@pxref{Formatting Date and Time}).
+format date and time information (@pxref{Formatting Calendar Time}).
 Part of the standard information contained in the @code{LC_TIME}
 category is the names of the months.  Instead of requiring the
 programmer to take care of providing the translations the

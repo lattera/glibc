@@ -1,35 +1,167 @@
-@comment !!! describe mmap et al (here?)
-@c !!! doc brk/sbrk
-
-@node Memory Allocation, Character Handling, Error Reporting, Top
-@chapter Memory Allocation
-@c %MENU% Allocating memory dynamically and manipulating it via pointers
+@node Memory, Character Handling, Error Reporting, Top
+@chapter Virtual Memory Allocation And Paging
+@c %MENU% Allocating virtual memory and controlling paging
 @cindex memory allocation
 @cindex storage allocation
 
-The GNU system provides several methods for allocating memory space
-under explicit program control.  They vary in generality and in
-efficiency.
+This chapter describes how processes manage and use memory in a system
+that uses the GNU C library.  
 
-@iftex
-@itemize @bullet
-@item
-The @code{malloc} facility allows fully general dynamic allocation.
-@xref{Unconstrained Allocation}.
+The GNU C Library has several functions for dynamically allocating
+virtual memory in various ways.  They vary in generality and in
+efficiency.  The library also provides functions for controlling paging
+and allocation of real memory.
 
-@item
-Obstacks are another facility, less general than @code{malloc} but more
-efficient and convenient for stacklike allocation.  @xref{Obstacks}.
-
-@item
-The function @code{alloca} lets you allocate storage dynamically that
-will be freed automatically.  @xref{Variable Size Automatic}.
-@end itemize
-@end iftex
 
 @menu
 * Memory Concepts::             An introduction to concepts and terminology.
-* Dynamic Allocation and C::    How to get different kinds of allocation in C.
+* Memory Allocation::           Allocating storage for your program data
+* Locking Pages::               Preventing page faults
+* Resizing the Data Segment::   @code{brk}, @code{sbrk}
+@end menu
+
+Memory mapped I/O is not discussed in this chapter.  @xref{Memory-mapped I/O}.
+
+
+
+@node Memory Concepts
+@section Process Memory Concepts
+
+One of the most basic resources a process has available to it is memory.
+There are a lot of different ways systems organize memory, but in a
+typical one, each process has one linear virtual address space, with
+addresses running from zero to some huge maximum.  It need not be
+contiguous; i.e.  not all of these addresses actually can be used to
+store data.
+
+The virtual memory is divided into pages (4 kilobytes is typical).
+Backing each page of virtual memory is a page of real memory (called a
+@dfn{frame}) or some secondary storage, usually disk space.  The disk
+space might be swap space or just some ordinary disk file.  Actually, a
+page of all zeroes sometimes has nothing at all backing it -- there's
+just a flag saying it is all zeroes.
+@cindex page frame
+@cindex frame, real memory
+@cindex swap space
+@cindex page, virtual memory
+
+The same frame of real memory or backing store can back multiple virtual
+pages belonging to multiple processes.  This is normally the case, for
+example, with virtual memory occupied by GNU C library code.  The same
+real memory frame containing the @code{printf} function backs a virtual
+memory page in each of the existing processes that has a @code{printf}
+call in its program.
+
+In order for a program to access any part of a virtual page, the page
+must at that moment be backed by (``connected to'') a real frame.  But
+because there is usually a lot more virtual memory than real memory, the
+pages must move back and forth between real memory and backing store
+regularly, coming into real memory when a process needs to access them
+and then retreating to backing store when not needed anymore.  This
+movement is called @dfn{paging}.
+
+When a program attempts to access a page which is not at that moment
+backed by real memory, this is known as a @dfn{page fault}.  When a page
+fault occurs, the kernel suspends the process, places the page into a
+real page frame (this is called ``paging in'' or ``faulting in''), then
+resumes the process so that from the process' point of view, the page
+was in real memory all along.  In fact, to the process, all pages always
+seem to be in real memory.  Except for one thing: the elapsed execution
+time of an instruction that would normally be a few nanoseconds is
+suddenly much, much, longer (because the kernel normally has to do I/O
+to complete the page-in).  For programs sensitive to that, the functions
+described in @ref{Locking Pages} can control it.
+@cindex page fault
+@cindex paging
+
+Within each virtual address space, a process has to keep track of what
+is at which addresses, and that process is called memory allocation.
+Allocation usually brings to mind meting out scarce resources, but in
+the case of virtual memory, that's not a major goal, because there is
+generally much more of it than anyone needs.  Memory allocation within a
+process is mainly just a matter of making sure that the same byte of 
+memory isn't used to store two different things.
+
+Processes allocate memory in two major ways: by exec and
+programmatically.  Actually, forking is a third way, but it's not very
+interesting.  @xref{Creating a Process}.
+
+Exec is the operation of creating a virtual address space for a process,
+loading its basic program into it, and executing the program.  It is
+done by the ``exec'' family of functions (e.g. @code{execl}).  The
+operation takes a program file (an executable), it allocates space to
+load all the data in the executable, loads it, and transfers control to
+it.  That data is most notably the instructions of the program (the
+@dfn{text}), but also literals and constants in the program and even
+some variables: C variables with the static storage class (@pxref{Memory
+Allocation and C}).
+@cindex executable
+@cindex literals
+@cindex constants
+
+Once that program begins to execute, it uses programmatic allocation to
+gain additional memory.  In a C program with the GNU C library, there
+are two kinds of programmatic allocation: automatic and dynamic.
+@xref{Memory Allocation and C}.
+
+Memory-mapped I/O is another form of dynamic virtual memory allocation.
+Mapping memory to a file means declaring that the contents of certain
+range of a process' addresses shall be identical to the contents of a
+specified regular file.  The system makes the virtual memory initially
+contain the contents of the file, and if you modify the memory, the
+system writes the same modification to the file.  Note that due to the
+magic of virtual memory and page faults, there is no reason for the
+system to do I/O to read the file, or allocate real memory for its
+contents, until the program accesses the virtual memory.
+@xref{Memory-mapped I/O}.
+@cindex memory mapped I/O
+@cindex memory mapped file
+@cindex files, accessing
+
+Just as it programmatically allocates memory, the program can
+programmatically deallocate (@dfn{free}) it.  You can't free the memory
+that was allocated by exec.  When the program exits or execs, you might
+say that all its memory gets freed, but since in both cases the address
+space ceases to exist, the point is really moot.  @xref{Program
+Termination}.
+@cindex execing a program
+@cindex freeing memory
+@cindex exiting a program
+
+A process' virtual address space is divided into segments.  A segment is
+a contiguous range of virtual addresses.  Three important segments are:
+
+@itemize @bullet
+
+@item 
+
+The @dfn{text segment} contains a program's instructions and literals and
+static constants.  It is allocated by exec and stays the same size for
+the life of the virtual address space.  
+
+@item
+The @dfn{data segment} is working storage for the program.  It can be
+preallocated and preloaded by exec and the process can extend or shrink
+it by calling functions as described in @xref{Resizing the Data
+Segment}.  Its lower end is fixed.
+
+@item 
+The @dfn{stack segment} contains a program stack.  It grows as the stack
+grows, but doesn't shrink when the stack shrinks.
+
+@end itemize
+
+
+
+@node Memory Allocation
+@section Allocating Storage For a Program's Data
+
+This section covers how ordinary programs manage storage for their data,
+including the famous @code{malloc} function and some fancier facilities
+special the GNU C library and GNU Compiler.
+
+@menu
+* Memory Allocation and C::     How to get different kinds of allocation in C.
 * Unconstrained Allocation::    The @code{malloc} facility allows fully general
 		 		 dynamic allocation.
 * Allocation Debugging::        Finding memory leaks and not freed memory.
@@ -40,44 +172,21 @@ will be freed automatically.  @xref{Variable Size Automatic}.
 				 calling function returns.
 @end menu
 
-@node Memory Concepts
-@section Dynamic Memory Allocation Concepts
-@cindex dynamic allocation
-@cindex static allocation
-@cindex automatic allocation
 
-@dfn{Dynamic memory allocation} is a technique in which programs
-determine as they are running where to store some information.  You need
-dynamic allocation when the number of memory blocks you need, or how
-long you continue to need them, depends on the data you are working on.
+@node Memory Allocation and C
+@subsection Memory Allocation in C Programs
 
-For example, you may need a block to store a line read from an input file;
-since there is no limit to how long a line can be, you must allocate the
-storage dynamically and make it dynamically larger as you read more of the
-line.
-
-Or, you may need a block for each record or each definition in the input
-data; since you can't know in advance how many there will be, you must
-allocate a new block for each record or definition as you read it.
-
-When you use dynamic allocation, the allocation of a block of memory is an
-action that the program requests explicitly.  You call a function or macro
-when you want to allocate space, and specify the size with an argument.  If
-you want to free the space, you do so by calling another function or macro.
-You can do these things whenever you want, as often as you want.
-
-@node Dynamic Allocation and C
-@section Dynamic Allocation and C
-
-The C language supports two kinds of memory allocation through the variables
-in C programs:
+The C language supports two kinds of memory allocation through the
+variables in C programs:
 
 @itemize @bullet
 @item
 @dfn{Static allocation} is what happens when you declare a static or
 global variable.  Each static or global variable defines one block of
 space, of a fixed size.  The space is allocated once, when your program
-is started, and is never freed.
+is started (part of the exec operation), and is never freed.
+@cindex static memory allocation
+@cindex static storage class
 
 @item
 @dfn{Automatic allocation} happens when you declare an automatic
@@ -85,18 +194,52 @@ variable, such as a function argument or a local variable.  The space
 for an automatic variable is allocated when the compound statement
 containing the declaration is entered, and is freed when that
 compound statement is exited.
+@cindex automatic memory allocation
+@cindex automatic storage class
 
-In GNU C, the length of the automatic storage can be an expression
+In GNU C, the size of the automatic storage can be an expression
 that varies.  In other C implementations, it must be a constant.
 @end itemize
 
+A third important kind of memory allocation, @dfn{dynamic allocation},
+is not supported by C variables but is available via GNU C library
+functions.
+@cindex dynamic memory allocation
+
+@subsubsection Dynamic Memory Allocation
+@cindex dynamic memory allocation
+
+@dfn{Dynamic memory allocation} is a technique in which programs
+determine as they are running where to store some information.  You need
+dynamic allocation when the amount of memory you need, or how long you
+continue to need it, depends on factors that are not known before the
+program runs.
+
+For example, you may need a block to store a line read from an input
+file; since there is no limit to how long a line can be, you must
+allocate the memory dynamically and make it dynamically larger as you
+read more of the line.
+
+Or, you may need a block for each record or each definition in the input
+data; since you can't know in advance how many there will be, you must
+allocate a new block for each record or definition as you read it.
+
+When you use dynamic allocation, the allocation of a block of memory is
+an action that the program requests explicitly.  You call a function or
+macro when you want to allocate space, and specify the size with an
+argument.  If you want to free the space, you do so by calling another
+function or macro.  You can do these things whenever you want, as often
+as you want.
+
 Dynamic allocation is not supported by C variables; there is no storage
 class ``dynamic'', and there can never be a C variable whose value is
-stored in dynamically allocated space.  The only way to refer to
-dynamically allocated space is through a pointer.  Because it is less
-convenient, and because the actual process of dynamic allocation
-requires more computation time, programmers generally use dynamic
-allocation only when neither static nor automatic allocation will serve.
+stored in dynamically allocated space.  The only way to get dynamically
+allocated memory is via a system call (which is generally via a GNU C
+library function call), and the only way to refer to dynamically
+allocated space is through a pointer.  Because it is less convenient,
+and because the actual process of dynamic allocation requires more
+computation time, programmers generally use dynamic allocation only when
+neither static nor automatic allocation will serve.
 
 For example, if you want to allocate dynamically some space to hold a
 @code{struct foobar}, you cannot declare a variable of type @code{struct
@@ -116,8 +259,8 @@ address of the space.  Then you can use the operators @samp{*} and
 @end smallexample
 
 @node Unconstrained Allocation
-@section Unconstrained Allocation
-@cindex unconstrained storage allocation
+@subsection Unconstrained Allocation
+@cindex unconstrained memory allocation
 @cindex @code{malloc} function
 @cindex heap, dynamic allocation from
 
@@ -150,7 +293,7 @@ any time (or never).
 @end menu
 
 @node Basic Allocation
-@subsection Basic Storage Allocation
+@subsubsection Basic Memory Allocation
 @cindex allocation of memory with @code{malloc}
 
 To allocate a block of memory, call @code{malloc}.  The prototype for
@@ -200,7 +343,7 @@ ptr = (char *) malloc (length + 1);
 @xref{Representation of Strings}, for more information about this.
 
 @node Malloc Examples
-@subsection Examples of @code{malloc}
+@subsubsection Examples of @code{malloc}
 
 If no more space is available, @code{malloc} returns a null pointer.
 You should check the value of @emph{every} call to @code{malloc}.  It is
@@ -253,7 +396,7 @@ discover you want it to be bigger, use @code{realloc} (@pxref{Changing
 Block Size}).
 
 @node Freeing after Malloc
-@subsection Freeing Memory Allocated with @code{malloc}
+@subsubsection Freeing Memory Allocated with @code{malloc}
 @cindex freeing memory allocated with @code{malloc}
 @cindex heap, freeing memory from
 
@@ -265,7 +408,7 @@ The prototype for this function is in @file{stdlib.h}.
 @comment malloc.h stdlib.h
 @comment ISO
 @deftypefun void free (void *@var{ptr})
-The @code{free} function deallocates the block of storage pointed at
+The @code{free} function deallocates the block of memory pointed at
 by @var{ptr}.
 @end deftypefun
 
@@ -313,7 +456,7 @@ of the program's space is given back to the system when the process
 terminates.
 
 @node Changing Block Size
-@subsection Changing the Size of a Block
+@subsubsection Changing the Size of a Block
 @cindex changing the size of a block (@code{malloc})
 
 Often you do not know for certain how big a block you will ultimately need
@@ -379,7 +522,7 @@ If the new size you specify is the same as the old size, @code{realloc}
 is guaranteed to change nothing and return the same address that you gave.
 
 @node Allocating Cleared Space
-@subsection Allocating Cleared Space
+@subsubsection Allocating Cleared Space
 
 The function @code{calloc} allocates memory and clears it to zero.  It
 is declared in @file{stdlib.h}.
@@ -413,8 +556,11 @@ But in general, it is not guaranteed that @code{calloc} calls
 should always define @code{calloc}, too.
 
 @node Efficiency and Malloc
-@subsection Efficiency Considerations for @code{malloc}
+@subsubsection Efficiency Considerations for @code{malloc}
 @cindex efficiency and @code{malloc}
+
+
+
 
 @ignore
 
@@ -446,12 +592,12 @@ more time to minimize the wasted space.
 
 @end ignore
 
-As opposed to other versions, the @code{malloc} in GNU libc does not
-round up block sizes to powers of two, neither for large nor for small
-sizes.  Neighboring chunks can be coalesced on a @code{free} no matter
-what their size is.  This makes the implementation suitable for all
-kinds of allocation patterns without generally incurring high memory
-waste through fragmentation.
+As opposed to other versions, the @code{malloc} in the GNU C Library
+does not round up block sizes to powers of two, neither for large nor
+for small sizes.  Neighboring chunks can be coalesced on a @code{free}
+no matter what their size is.  This makes the implementation suitable
+for all kinds of allocation patterns without generally incurring high
+memory waste through fragmentation.
 
 Very large blocks (much larger than a page) are allocated with
 @code{mmap} (anonymous or via @code{/dev/zero}) by this implementation.
@@ -463,7 +609,7 @@ after calling @code{free} wastes memory.  The size threshold for
 @code{mmap} can also be disabled completely.
 
 @node Aligned Memory Blocks
-@subsection Allocating Aligned Memory Blocks
+@subsubsection Allocating Aligned Memory Blocks
 
 @cindex page boundary
 @cindex alignment (with @code{malloc})
@@ -505,7 +651,7 @@ valloc (size_t size)
 @end deftypefun
 
 @node Malloc Tunable Parameters
-@subsection Malloc Tunable Parameters
+@subsubsection Malloc Tunable Parameters
 
 You can adjust some parameters for dynamic memory allocation with the
 @code{mallopt} function.  This function is the general SVID/XPG
@@ -541,12 +687,12 @@ to zero disables all use of @code{mmap}.
 @end deftypefun
 
 @node Heap Consistency Checking
-@subsection Heap Consistency Checking
+@subsubsection Heap Consistency Checking
 
 @cindex heap consistency checking
 @cindex consistency checking, of heap
 
-You can ask @code{malloc} to check the consistency of dynamic storage by
+You can ask @code{malloc} to check the consistency of dynamic memory by
 using the @code{mcheck} function.  This function is a GNU extension,
 declared in @file{mcheck.h}.
 @pindex mcheck.h
@@ -652,13 +798,13 @@ uncover the same bugs - but using @code{MALLOC_CHECK_} you don't need to
 recompile your application.
 
 @node Hooks for Malloc
-@subsection Storage Allocation Hooks
+@subsubsection Memory Allocation Hooks
 @cindex allocation hooks, for @code{malloc}
 
 The GNU C library lets you modify the behavior of @code{malloc},
 @code{realloc}, and @code{free} by specifying appropriate hook
 functions.  You can use these hooks to help you debug programs that use
-dynamic storage allocation, for example.
+dynamic memory allocation, for example.
 
 The hook variables are declared in @file{malloc.h}.
 @pindex malloc.h
@@ -838,10 +984,10 @@ installing such hooks.
 @c It's not clear whether to document them.
 
 @node Statistics of Malloc
-@subsection Statistics for Storage Allocation with @code{malloc}
+@subsubsection Statistics for Memory Allocation with @code{malloc}
 
 @cindex allocation statistics
-You can get information about dynamic storage allocation by calling the
+You can get information about dynamic memory allocation by calling the
 @code{mallinfo} function.  This function and its associated data type
 are declared in @file{malloc.h}; they are an extension of the standard
 SVID/XPG version.
@@ -851,7 +997,7 @@ SVID/XPG version.
 @comment GNU
 @deftp {Data Type} {struct mallinfo}
 This structure type is used to return information about the dynamic
-storage allocator.  It contains the following members:
+memory allocator.  It contains the following members:
 
 @table @code
 @item int arena
@@ -859,7 +1005,7 @@ This is the total size of memory allocated with @code{sbrk} by
 @code{malloc}, in bytes.
 
 @item int ordblks
-This is the number of chunks not in use.  (The storage allocator
+This is the number of chunks not in use.  (The memory allocator
 internally gets chunks of memory from the operating system, and then
 carves them up to satisfy individual @code{malloc} requests; see
 @ref{Efficiency and Malloc}.)
@@ -888,7 +1034,8 @@ This is the total size of memory occupied by free (not in use) chunks.
 
 @item int keepcost
 This is the size of the top-most releasable chunk that normally
-borders the end of the heap (i.e. the ``brk'' of the process).
+borders the end of the heap (i.e. the high end of the virtual address 
+space's data segment).
 
 @end table
 @end deftp
@@ -901,7 +1048,7 @@ in a structure of type @code{struct mallinfo}.
 @end deftypefun
 
 @node Summary of Malloc
-@subsection Summary of @code{malloc}-Related Functions
+@subsubsection Summary of @code{malloc}-Related Functions
 
 Here is a summary of the functions that work with @code{malloc}:
 
@@ -956,7 +1103,7 @@ Return information about the current dynamic memory usage.
 @end table
 
 @node Allocation Debugging
-@section Allocation Debugging
+@subsection Allocation Debugging
 @cindex allocation debugging
 @cindex malloc debugger
 
@@ -980,7 +1127,7 @@ penalties for the program if the debugging mode is not enabled.
 @end menu
 
 @node Tracing malloc
-@subsection How to install the tracing functionality
+@subsubsection How to install the tracing functionality
 
 @comment mcheck.h
 @comment GNU
@@ -1021,7 +1168,7 @@ systems.  The prototype can be found in @file{mcheck.h}.
 @end deftypefun
 
 @node Using the Memory Debugger
-@subsection Example program excerpts
+@subsubsection Example program excerpts
 
 Even though the tracing functionality does not influence the runtime
 behaviour of the program it is not a good idea to call @code{mtrace} in
@@ -1066,7 +1213,7 @@ calls which are executed by constructors of the program or used
 libraries).
 
 @node Tips for the Memory Debugger
-@subsection Some more or less clever ideas
+@subsubsection Some more or less clever ideas
 
 You know the situation.  The program is prepared for debugging and in
 all debugging sessions it runs well.  But once it is started without
@@ -1112,7 +1259,7 @@ the first signal but if there is a memory leak this will show up
 nevertheless.
 
 @node Interpreting the traces
-@subsection Interpreting the traces
+@subsubsection Interpreting the traces
 
 If you take a look at the output it will look similar to this:
 
@@ -1204,7 +1351,7 @@ times without freeing this memory before the program terminates.
 Whether this is a real problem remains to be investigated.
 
 @node Obstacks
-@section Obstacks
+@subsection Obstacks
 @cindex obstacks
 
 An @dfn{obstack} is a pool of memory containing a stack of objects.  You
@@ -1238,7 +1385,7 @@ the padding needed to start each object on a suitable boundary.
 @end menu
 
 @node Creating Obstacks
-@subsection Creating Obstacks
+@subsubsection Creating Obstacks
 
 The utilities for manipulating obstacks are declared in the header
 file @file{obstack.h}.
@@ -1279,7 +1426,7 @@ directly or indirectly.  You must also supply a function to free a chunk.
 These matters are described in the following section.
 
 @node Preparing for Obstacks
-@subsection Preparing for Using Obstacks
+@subsubsection Preparing for Using Obstacks
 
 Each source file in which you plan to use the obstack functions
 must include the header file @file{obstack.h}, like this:
@@ -1308,7 +1455,7 @@ the following pair of macro definitions:
 @end smallexample
 
 @noindent
-Though the storage you get using obstacks really comes from @code{malloc},
+Though the memory you get using obstacks really comes from @code{malloc},
 using obstacks is faster because @code{malloc} is called less often, for
 larger blocks of memory.  @xref{Obstack Chunks}, for full details.
 
@@ -1365,7 +1512,7 @@ obstack_alloc_failed_handler = &my_obstack_alloc_failed;
 @end defvar
 
 @node Allocation in an Obstack
-@subsection Allocation in an Obstack
+@subsubsection Allocation in an Obstack
 @cindex allocation (obstacks)
 
 The most direct way to allocate an object in an obstack is with
@@ -1438,7 +1585,7 @@ Contrast this with the previous example of @code{savestring} using
 @code{malloc} (@pxref{Basic Allocation}).
 
 @node Freeing Obstack Objects
-@subsection Freeing Objects in an Obstack
+@subsubsection Freeing Objects in an Obstack
 @cindex freeing (obstacks)
 
 To free an object allocated in an obstack, use the function
@@ -1456,7 +1603,7 @@ everything allocated in @var{obstack} since @var{object}.
 @end deftypefun
 
 Note that if @var{object} is a null pointer, the result is an
-uninitialized obstack.  To free all storage in an obstack but leave it
+uninitialized obstack.  To free all memory in an obstack but leave it
 valid for further allocation, call @code{obstack_free} with the address
 of the first object allocated on the obstack:
 
@@ -1470,7 +1617,7 @@ frees the chunk (@pxref{Preparing for Obstacks}).  Then other
 obstacks, or non-obstack allocation, can reuse the space of the chunk.
 
 @node Obstack Functions
-@subsection Obstack Functions and Macros
+@subsubsection Obstack Functions and Macros
 @cindex macros
 
 The interfaces for using obstacks may be defined either as functions or
@@ -1526,11 +1673,11 @@ various language extensions in GNU C permit defining the macros so as to
 compute each argument only once.
 
 @node Growing Objects
-@subsection Growing Objects
+@subsubsection Growing Objects
 @cindex growing objects (in obstacks)
 @cindex changing the size of a block (obstacks)
 
-Because storage in obstack chunks is used sequentially, it is possible to
+Because memory in obstack chunks is used sequentially, it is possible to
 build up an object step by step, adding one or more bytes at a time to the
 end of the object.  With this technique, you do not need to know how much
 data you will put in the object until you come to the end of it.  We call
@@ -1640,7 +1787,7 @@ the current object smaller.  Just don't try to shrink it beyond zero
 length---there's no telling what will happen if you do that.
 
 @node Extra Fast Growing
-@subsection Extra Fast Growing Objects
+@subsubsection Extra Fast Growing Objects
 @cindex efficiency and obstacks
 
 The usual functions for growing objects incur overhead for checking
@@ -1743,7 +1890,7 @@ add_string (struct obstack *obstack, const char *ptr, int len)
 @end smallexample
 
 @node Status of an Obstack
-@subsection Status of an Obstack
+@subsubsection Status of an Obstack
 @cindex obstack status
 @cindex status of obstack
 
@@ -1785,7 +1932,7 @@ obstack_next_free (@var{obstack-ptr}) - obstack_base (@var{obstack-ptr})
 @end deftypefun
 
 @node Obstacks Data Alignment
-@subsection Alignment of Data in Obstacks
+@subsubsection Alignment of Data in Obstacks
 @cindex alignment (in obstacks)
 
 Each obstack has an @dfn{alignment boundary}; each object allocated in
@@ -1825,7 +1972,7 @@ This will finish a zero-length object and then do proper alignment for
 the next object.
 
 @node Obstack Chunks
-@subsection Obstack Chunks
+@subsubsection Obstack Chunks
 @cindex efficiency of chunks
 @cindex chunks
 
@@ -1881,7 +2028,7 @@ if (obstack_chunk_size (obstack_ptr) < @var{new-chunk-size})
 @end smallexample
 
 @node Summary of Obstacks
-@subsection Summary of Obstack Functions
+@subsubsection Summary of Obstack Functions
 
 Here is a summary of all the functions associated with obstacks.  Each
 takes the address of an obstack (@code{struct obstack *}) as its first
@@ -1962,7 +2109,7 @@ Address just after the end of the currently growing object.
 @end table
 
 @node Variable Size Automatic
-@section Automatic Storage with Variable Size
+@subsection Automatic Storage with Variable Size
 @cindex automatic freeing
 @cindex @code{alloca} function
 @cindex automatic storage with variable size
@@ -1984,7 +2131,7 @@ a BSD extension.
 @comment GNU, BSD
 @deftypefun {void *} alloca (size_t @var{size});
 The return value of @code{alloca} is the address of a block of @var{size}
-bytes of storage, allocated in the stack frame of the calling function.
+bytes of memory, allocated in the stack frame of the calling function.
 @end deftypefun
 
 Do not use @code{alloca} inside the arguments of a function call---you
@@ -2005,7 +2152,7 @@ alloca (4), y)}.
 @end menu
 
 @node Alloca Example
-@subsection @code{alloca} Example
+@subsubsection @code{alloca} Example
 
 As an example of the use of @code{alloca}, here is a function that opens
 a file name made from concatenating two argument strings, and returns a
@@ -2044,7 +2191,7 @@ As you can see, it is simpler with @code{alloca}.  But @code{alloca} has
 other, more important advantages, and some disadvantages.
 
 @node Advantages of Alloca
-@subsection Advantages of @code{alloca}
+@subsubsection Advantages of @code{alloca}
 
 Here are the reasons why @code{alloca} may be preferable to @code{malloc}:
 
@@ -2056,7 +2203,7 @@ open-coded by the GNU C compiler.)
 @item
 Since @code{alloca} does not have separate pools for different sizes of
 block, space used for any size block can be reused for any other size.
-@code{alloca} does not cause storage fragmentation.
+@code{alloca} does not cause memory fragmentation.
 
 @item
 @cindex longjmp
@@ -2084,17 +2231,17 @@ open2 (char *str1, char *str2, int flags, int mode)
 @end smallexample
 
 @noindent
-Because of the way @code{alloca} works, the storage it allocates is
+Because of the way @code{alloca} works, the memory it allocates is
 freed even when an error occurs, with no special effort required.
 
 By contrast, the previous definition of @code{open2} (which uses
-@code{malloc} and @code{free}) would develop a storage leak if it were
+@code{malloc} and @code{free}) would develop a memory leak if it were
 changed in this way.  Even if you are willing to make more changes to
 fix it, there is no easy way to do so.
 @end itemize
 
 @node Disadvantages of Alloca
-@subsection Disadvantages of @code{alloca}
+@subsubsection Disadvantages of @code{alloca}
 
 @cindex @code{alloca} disadvantages
 @cindex disadvantages of @code{alloca}
@@ -2103,7 +2250,7 @@ These are the disadvantages of @code{alloca} in comparison with
 
 @itemize @bullet
 @item
-If you try to allocate more storage than the machine can provide, you
+If you try to allocate more memory than the machine can provide, you
 don't get a clean error message.  Instead you get a fatal signal like
 the one you would get from an infinite recursion; probably a
 segmentation violation (@pxref{Program Error Signals}).
@@ -2115,7 +2262,7 @@ is available for use on systems with this deficiency.
 @end itemize
 
 @node GNU C Variable-Size Arrays
-@subsection GNU C Variable-Size Arrays
+@subsubsection GNU C Variable-Size Arrays
 @cindex variable-sized arrays
 
 In GNU C, you can replace most uses of @code{alloca} with an array of
@@ -2149,6 +2296,357 @@ variable-sized arrays.
 within one function, exiting a scope in which a variable-sized array was
 declared frees all blocks allocated with @code{alloca} during the
 execution of that scope.
+
+
+@node Resizing the Data Segment
+@section Resizing the Data Segment
+
+The symbols in this section are declared in @file{unistd.h}.
+
+You will not normally use the functions in this section, because the
+functions described in @ref{Memory Allocation} are easier to use.  Those
+are interfaces to a GNU C Library memory allocator that uses the
+functions below itself.  The functions below are simple interfaces to
+system calls.
+
+@comment unistd.h
+@comment BSD
+@deftypefun int brk (void *@var{addr})
+
+@code{brk} sets the high end of the calling process' data segment to
+@var{addr}.
+
+The address of the end of a segment is defined to be the address of the
+last byte in the segment plus 1.
+
+The function has no effect if @var{addr} is lower than the low end of
+the data segment.  (This is considered success, by the way).
+
+The function fails if it would cause the data segment to overlap another
+segment or exceed the process' data storage limit (@pxref{Limits on 
+Resources}).
+
+The function is named for a common historical case where data storage
+and the stack are in the same segment.  Data storage allocation grows
+upward from the bottom of the segment while the stack grows downward
+toward it from the top of the segment and the curtain between them is
+called the @dfn{break}.
+
+The return value is zero on success.  On failure, the return value is
+@code{-1} and @code{errno} is set accordingly.  The following @code{errno} 
+values are specific to this function:
+
+@table @code
+@item ENOMEM
+The request would cause the data segment to overlap another segment or
+exceed the process' data storage limit.
+@end table
+
+@c The Brk system call in Linux (as opposed to the GNU C Library function)
+@c is considerably different.  It always returns the new end of the data
+@c segment, whether it succeeds or fails.  The GNU C library Brk determines
+@c it's a failure if and only if if the system call returns an address less
+@c than the address requested.
+
+@end deftypefun
+
+
+@comment unistd.h
+@comment BSD
+@deftypefun int sbrk (ptrdiff_t @var{delta})
+This function is the same as @code{brk} except that you specify the new
+end of the data segment as an offset @var{delta} from the current end
+and on success the return value is the address of the resulting end of
+the data segment instead of zero.
+
+This means you can use @samp{sbrk(0)} to find out what the current end
+of the data segment is.
+
+@end deftypefun
+
+
+
+@node Locking Pages
+@section Locking Pages
+@cindex locking pages
+@cindex memory lock
+@cindex paging
+
+You can tell the system to associate a particular virtual memory page
+with a real page frame and keep it that way --- i.e. cause the page to
+be paged in if it isn't already and mark it so it will never be paged
+out and consequently will never cause a page fault.  This is called
+@dfn{locking} a page.
+
+The functions in this chapter lock and unlock the calling process'
+pages.
+
+@menu
+* Why Lock Pages::                Reasons to read this section.
+* Locked Memory Details::         Everything you need to know locked
+                                    memory
+* Page Lock Functions::           Here's how to do it.
+@end menu
+
+@node Why Lock Pages
+@subsection Why Lock Pages
+
+Because page faults cause paged out pages to be paged in transparently,
+a process rarely needs to be concerned about locking pages.  However, 
+there are two reasons people sometimes are:
+
+@itemize @bullet
+
+@item
+Speed.  A page fault is transparent only insofar as the process is not
+sensitive to how long it takes to do a simple memory access.  Time-critical
+processes, especially realtime processes, may not be able to wait or
+may not be able to tolerate variance in execution speed.
+@cindex realtime processing
+@cindex speed of execution
+
+A process that needs to lock pages for this reason probably also needs
+priority among other processes for use of the CPU.  @xref{Priority}.
+
+In some cases, the programmer knows better than the system's demand
+paging allocator which pages should remain in real memory to optimize
+system performance.  In this case, locking pages can help.
+
+@item
+Privacy.  If you keep secrets in virtual memory and that virtual memory
+gets paged out, that increases the chance that the secrets will get out.
+If a password gets written out to disk swap space, for example, it might
+still be there long after virtual and real memory have been wiped clean.
+
+@end itemize
+
+Be aware that when you lock a page, that's one fewer page frame that can
+be used to back other virtual memory (by the same or other processes),
+which can mean more page faults, which means the system runs more
+slowly.  In fact, if you lock enough memory, some programs may not be
+able to run at all for lack of real memory.
+
+@node Locked Memory Details
+@subsection Locked Memory Details
+
+A memory lock is associated with a virtual page, not a real frame.  The
+paging rule is: If a frame backs at least one locked page, don't page it
+out.
+
+Memory locks do not stack.  I.e. you can't lock a particular page twice
+so that it has to be unlocked twice before it is truly unlocked.  It is
+either locked or it isn't.
+
+A memory lock persists until the process that owns the memory explicitly
+unlocks it.  (But process termination and exec cause the virtual memory
+to cease to exist, which you might say means it isn't locked any more).
+
+Memory locks are not inherited by child processes.  (But note that on a
+modern Unix system, immediately after a fork, the parent's and the
+child's virtual address space are backed by the same real page frames,
+so the child enjoys the parent's locks).  @xref{Creating a Process}.
+
+Because of its ability to impact other processes, only the superuser can
+lock a page.  Any process can unlock its own page.
+
+The system sets limits on the amount of memory a process can have locked
+and the amount of real memory it can have dedicated to it.  @xref{Limits
+on Resources}.
+
+In Linux, locked pages aren't as locked as you might think.
+Two virtual pages that are not shared memory can nonetheless be backed
+by the same real frame.  The kernel does this in the name of efficiency
+when it knows both virtual pages contain identical data, and does it
+even if one or both of the virtual pages are locked.  
+
+But when a process modifies one of those pages, the kernel must get it a
+separate frame and fill it with the page's data.  This is known as a
+@dfn{copy-on-write page fault}.  It takes a small amount of time and in
+a pathological case, getting that frame may require I/O.
+@cindex copy-on-write page fault
+@cindex page fault, copy-on-write
+
+To make sure this doesn't happen to your program, don't just lock the
+pages.  Write to them as well, unless you know you won't write to them
+ever.  And to make sure you have pre-allocated frames for your stack,
+enter a scope that declares a C automatic variable larger than the
+maximum stack size you will need, set it to something, then return from
+its scope.
+
+@node Page Lock Functions
+@subsection Functions To Lock And Unlock Pages
+
+The symbols in this section are declared in @file{sys/mman.h}.  These
+functions are defined by POSIX.1b, but their availability depends on
+your kernel.  If your kernel doesn't allow these functions, they exist
+but always fail.  They @emph{are} available with a Linux kernel.
+
+@strong{Portability Note:} POSIX.1b requires that when the @code{mlock}
+and @code{munlock} functions are available, the file @file{unistd.h}
+define the macro @code{_POSIX_MEMLOCK_RANGE} and the file
+@code{limits.h} define the macro @code{PAGESIZE} to be the size of a
+memory page in bytes.  It requires that when the @code{mlockall} and
+@code{munlockall} functions are available, the @file{unistd.h} file
+define the macro @code{_POSIX_MEMLOCK}.  The GNU C library conforms to
+this requirement.
+
+@comment sys/mman.h
+@comment POSIX.1b
+@deftypefun int mlock (const void *@var{addr}, size_t @var{len})
+
+@code{mlock} locks a range of the calling process' virtual pages.
+
+The range of memory starts at address @var{addr} and is @var{len} bytes
+long.  Actually, since you must lock whole pages, it is the range of
+pages that include any part of the specified range.
+
+When the function returns successfully, each of those pages is backed by
+(connected to) a real frame (is resident) and is marked to stay that
+way.  This means the function may cause page-ins and have to wait for
+them.
+
+When the function fails, it does not affect the lock status of any
+pages.
+
+The return value is zero if the function succeeds.  Otherwise, it is
+@code{-1} and @code{errno} is set accordingly.  @code{errno} values
+specific to this function are:
+
+@table @code
+@item ENOMEM
+@itemize @bullet
+@item
+At least some of the specified address range does not exist in the
+calling process' virtual address space.
+@item
+The locking would cause the process to exceed its locked page limit.
+@end itemize
+
+@item EPERM
+The calling process is not superuser.
+
+@item EINVAL
+@var{len} is not positive.
+
+@item ENOSYS
+The kernel does not provide @code{mlock} capability.
+
+@end table
+
+You can lock @emph{all} a process' memory with @code{mlockall}.  You
+unlock memory with @code{munlock} or @code{munlockall}.
+
+To avoid all page faults in a C program, you have to use
+@code{mlockall}, because some of the memory a program uses is hidden
+from the C code, e.g. the stack and automatic variables, and you
+wouldn't know what address to tell @code{mlock}.
+
+@end deftypefun
+
+@comment sys/mman.h
+@comment POSIX.1b
+@deftypefun int munlock (const void *@var{addr}, size_t @var{len})
+
+@code{mlock} unlocks a range of the calling process' virtual pages.
+
+@code{munlock} is the inverse of @code{mlock} and functions completely
+analogously to @code{mlock}, except that there is no @code{EPERM}
+failure.
+
+@end deftypefun
+
+@comment sys/mman.h
+@comment POSIX.1b
+@deftypefun int mlockall (int @var{flags})
+
+@code{mlockall} locks all the pages in a process' virtual memory address
+space, and/or any that are added to it in the future.  This includes the
+pages of the code, data and stack segment, as well as shared libraries,
+user space kernel data, shared memory, and memory mapped files.
+
+@var{flags} is a string of single bit flags represented by the following
+macros.  They tell @code{mlockall} which of its functions you want.  All
+other bits must be zero.
+
+@table @code
+
+@item MCL_CURRENT
+Lock all pages which currently exist in the calling process' virtual
+address space.
+
+@item MCL_FUTURE
+Set a mode such that any pages added to the process' virtual address
+space in the future will be locked from birth.  This mode does not
+affect future address spaces owned by the same process so exec, which
+replaces a process' address space, wipes out @code{MCL_FUTURE}.
+@xref{Executing a File}.
+
+@end table
+
+When the function returns successfully, and you specified
+@code{MCL_CURRENT}, all of the process' pages are backed by (connected
+to) real frames (they are resident) and are marked to stay that way.
+This means the function may cause page-ins and have to wait for them.
+
+When the process is in @code{MCL_FUTURE} mode because it successfully
+executed this function and specified @code{MCL_CURRENT}, any system call
+by the process that requires space be added to its virtual address space
+fails with @code{errno} = @code{ENOMEM} if locking the additional space
+would cause the process to exceed its locked page limit.  In the case
+that the address space addition that can't be accomodated is stack
+expansion, the stack expansion fails and the kernel sends a
+@code{SIGSEGV} signal to the process.
+
+When the function fails, it does not affect the lock status of any pages
+or the future locking mode.
+
+The return value is zero if the function succeeds.  Otherwise, it is
+@code{-1} and @code{errno} is set accordingly.  @code{errno} values
+specific to this function are:
+
+@table @code
+@item ENOMEM
+@itemize @bullet
+@item
+At least some of the specified address range does not exist in the
+calling process' virtual address space.
+@item
+The locking would cause the process to exceed its locked page limit.
+@end itemize
+
+@item EPERM
+The calling process is not superuser.
+
+@item EINVAL
+Undefined bits in @var{flags} are not zero.
+
+@item ENOSYS
+The kernel does not provide @code{mlockall} capability.
+
+@end table
+
+You can lock just specific pages with @code{mlock}.  You unlock pages
+with @code{munlockall} and @code{munlock}.
+
+@end deftypefun
+
+
+@comment sys/mman.h
+@comment POSIX.1b
+@deftypefun int munlockall (void)
+
+@code{munlockall} unlocks every page in the calling process' virtual
+address space and turn off @code{MCL_FUTURE} future locking mode.
+
+The return value is zero if the function succeeds.  Otherwise, it is
+@code{-1} and @code{errno} is set accordingly.  The only way this 
+function can fail is for generic reasons that all functions and system
+calls can fail, so there are no specific @code{errno} values.
+
+@end deftypefun
+
+
+
 
 @ignore
 @c This was never actually implemented.  -zw
@@ -2236,6 +2734,9 @@ If enough memory is not available, this function returns a null pointer
 and does not modify @code{*@var{handleptr}}.
 @end deftypefun
 @end ignore
+
+
+
 
 @ignore
 @comment No longer available...

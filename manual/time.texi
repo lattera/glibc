@@ -3,106 +3,263 @@
 @chapter Date and Time
 
 This chapter describes functions for manipulating dates and times,
-including functions for determining what the current time is and
-conversion between different time representations.
-
-The time functions fall into three main categories:
-
-@itemize @bullet
-@item
-Functions for measuring elapsed CPU time are discussed in @ref{Processor
-Time}.
-
-@item
-Functions for measuring absolute clock or calendar time are discussed in
-@ref{Calendar Time}.
-
-@item
-Functions for setting alarms and timers are discussed in @ref{Setting
-an Alarm}.
-@end itemize
+including functions for determining what time it is and conversion
+between different time representations.
 
 @menu
-* Processor Time::              Measures processor time used by a program.
+* Time Basics::                 Concepts and definitions.
+* Elapsed Time::                Data types to represent elapsed times
+* Processor And CPU Time::      Time a program has spent executing.
 * Calendar Time::               Manipulation of ``real'' dates and times.
 * Setting an Alarm::            Sending a signal after a specified time.
 * Sleeping::                    Waiting for a period of time.
 @end menu
 
-For functions to examine and control a process' CPU time, see
-@xref{Resource Usage And Limitation}.
 
+@node Time Basics
+@section Time Basics
+@cindex time
 
-@node Processor Time
-@section Processor Time
+Discussing time in a technical manual can be difficult because the word
+``time'' in English refers to lots of different things.  In this manual,
+we use a rigorous terminology to avoid confusion, and the only thing we
+use the simple word ``time'' for is to talk about the abstract concept.
 
-If you're trying to optimize your program or measure its efficiency, it's
-very useful to be able to know how much @dfn{processor time} or @dfn{CPU
-time} it has used at any given point.  Processor time is different from
-actual wall clock time because it doesn't include any time spent waiting
-for I/O or when some other process is running.  Processor time is
-represented by the data type @code{clock_t}, and is given as a number of
-@dfn{clock ticks} relative to an arbitrary base time marking the beginning
-of a single program invocation.
+A @dfn{calendar time} is a point in the time continuum, for example
+November 4, 1990 at 18:02.5 UTC.  Sometimes this is called ``absolute
+time''.
+@cindex calendar time
+
+We don't speak of a ``date'', because that is inherent in a calendar
+time.
+@cindex date
+
+An @dfn{interval} is a contiguous part of the time continuum between two
+calendar times, for example the hour between 9:00 and 10:00 on July 4,
+1980.
+@cindex interval
+
+An @dfn{elapsed time} is the length of an interval, for example, 35
+minutes.  People sometimes sloppily use the word ``interval'' to refer
+to the elapsed time of some interval.
+@cindex elapsed time
+@cindex time, elapsed
+
+An @dfn{amount of time} is a sum of elapsed times, which need not be of
+any specific intervals.  For example, the amount of time it takes to
+read a book might be 9 hours, independently of when and in how many
+sittings it is read.
+
+A @dfn{period} is the elapsed time of an interval between two events,
+especially when they are part of a sequence of regularly repeating
+events.
+@cindex period of time
+
+@dfn{CPU time} is like calendar time, except that it is based on the
+subset of the time continuum when a particular process is actively
+using a CPU.  CPU time is, therefore, relative to a process.
 @cindex CPU time
+
+@dfn{Processor time} is an amount of time that a CPU is in use.  In
+fact, it's a basic system resource, since there's a limit to how much
+can exist in any given interval (that limit is the elapsed time of the
+interval times the number of CPUs in the processor).  People often call
+this CPU time, but we reserve the latter term in this manual for the
+definition above.
 @cindex processor time
+
+@node Elapsed Time
+@section Elapsed Time
+@cindex elapsed time
+
+One way to represent an elapsed time is with a simple arithmetic data
+type, as with the following function to compute the elapsed time between
+two calendar times.  This function is declared in @file{time.h}.
+
+@comment time.h
+@comment ISO
+@deftypefun double difftime (time_t @var{time1}, time_t @var{time0})
+The @code{difftime} function returns the number of seconds of elapsed
+time between calendar time @var{time1} and calendar time @var{time0}, as
+a value of type @code{double}.  The difference ignores leap seconds
+unless leap second support is enabled.
+
+In the GNU system, you can simply subtract @code{time_t} values.  But on
+other systems, the @code{time_t} data type might use some other encoding
+where subtraction doesn't work directly.
+@end deftypefun
+
+The GNU C library provides two data types specifically for representing
+an elapsed time.  They are used by various GNU C library functions, and
+you can use them for your own purposes too.  They're exactly the same
+except that one has a resolution in microseconds, and the other, newer
+one, is in nanoseconds.
+
+@comment sys/time.h
+@comment BSD
+@deftp {Data Type} {struct timeval}
+@cindex timeval
+The @code{struct timeval} structure represents an elapsed time.  It is
+declared in @file{sys/time.h} and has the following members:
+
+@table @code
+@item long int tv_sec
+This represents the number of whole seconds of elapsed time.
+
+@item long int tv_usec
+This is the rest of the elapsed time (a fraction of a second),
+represented as the number of microseconds.  It is always less than one
+million.
+
+@end table
+@end deftp
+
+@comment sys/time.h
+@comment POSIX.1
+@deftp {Data Type} {struct timespec}
+@cindex timespec
+The @code{struct timespec} structure represents an elapsed time.  It is
+declared in @file{time.h} and has the following members:
+
+@table @code
+@item long int tv_sec
+This represents the number of whole seconds of elapsed time.
+
+@item long int tv_nsec
+This is the rest of the elapsed time (a fraction of a second),
+represented as the number of nanoseconds.  It is always less than one
+billion.
+
+@end table
+@end deftp
+
+It is often necessary to subtract two values of type @w{@code{struct
+timeval}} or @w{@code{struct timespec}}.  Here is the best way to do
+this.  It works even on some peculiar operating systems where the
+@code{tv_sec} member has an unsigned type.
+
+@smallexample
+/* @r{Subtract the `struct timeval' values X and Y,}
+   @r{storing the result in RESULT.}
+   @r{Return 1 if the difference is negative, otherwise 0.}  */
+
+int
+timeval_subtract (result, x, y)
+     struct timeval *result, *x, *y;
+@{
+  /* @r{Perform the carry for the later subtraction by updating @var{y}.} */
+  if (x->tv_usec < y->tv_usec) @{
+    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
+    y->tv_usec -= 1000000 * nsec;
+    y->tv_sec += nsec;
+  @}
+  if (x->tv_usec - y->tv_usec > 1000000) @{
+    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
+    y->tv_usec += 1000000 * nsec;
+    y->tv_sec -= nsec;
+  @}
+
+  /* @r{Compute the time remaining to wait.}
+     @r{@code{tv_usec} is certainly positive.} */
+  result->tv_sec = x->tv_sec - y->tv_sec;
+  result->tv_usec = x->tv_usec - y->tv_usec;
+
+  /* @r{Return 1 if result is negative.} */
+  return x->tv_sec < y->tv_sec;
+@}
+@end smallexample
+
+Common functions that use @code{struct timeval} are @code{gettimeofday} 
+and @code{settimeofday}.
+
+
+There are no GNU C library functions specifically oriented toward
+dealing with elapsed times, but the calendar time, processor time, and
+alarm and sleeping functions have a lot to do with them.
+
+
+@node Processor And CPU Time
+@section Processor And CPU Time
+
+If you're trying to optimize your program or measure its efficiency,
+it's very useful to know how much processor time it uses.  For that,
+calendar time and elapsed times are useless because a process may spend
+time waiting for I/O or for other processes to use the CPU.  However,
+you can get the information with the functions in this section.
+
+CPU time (@pxref{Time Basics}) is represented by the data type
+@code{clock_t}, which is a number of @dfn{clock ticks}.  It gives the
+total amount of time a process has actively used a CPU since some
+arbitrary event.  On the GNU system, that event is the creation of the
+process.  While arbitrary in general, the event is always the same event
+for any particular process, so you can always measure how much time on
+the CPU a particular computation takes by examinining the process' CPU
+time before and after the computation.
+@cindex CPU time
 @cindex clock ticks
 @cindex ticks, clock
-@cindex time, elapsed CPU
+
+In the GNU system, @code{clock_t} is equivalent to @code{long int} and
+@code{CLOCKS_PER_SEC} is an integer value.  But in other systems, both
+@code{clock_t} and the macro @code{CLOCKS_PER_SEC} can be either integer
+or floating-point types.  Casting CPU time values to @code{double}, as
+in the example above, makes sure that operations such as arithmetic and
+printing work properly and consistently no matter what the underlying
+representation is.
+
+Note that the clock can wrap around.  On a 32bit system with
+@code{CLOCKS_PER_SEC} set to one million this function will return the
+same value approximately every 72 minutes.
+
+For additional functions to examine a process' use of processor time,
+and to control it, @xref{Resource Usage And Limitation}.
+
 
 @menu
-* Basic CPU Time::              The @code{clock} function.
-* Detailed CPU Time::           The @code{times} function.
+* CPU Time::                    The @code{clock} function.
+* Processor Time::              The @code{times} function.
 @end menu
 
-@node Basic CPU Time
-@subsection Basic CPU Time Inquiry
+@node CPU Time
+@subsection CPU Time Inquiry
 
-To get the elapsed CPU time used by a process, you can use the
-@code{clock} function.  This facility is declared in the header file
-@file{time.h}.
+To get a process' CPU time, you can use the @code{clock} function.  This
+facility is declared in the header file @file{time.h}.
 @pindex time.h
 
-In typical usage, you call the @code{clock} function at the beginning and
-end of the interval you want to time, subtract the values, and then divide
-by @code{CLOCKS_PER_SEC} (the number of clock ticks per second), like this:
+In typical usage, you call the @code{clock} function at the beginning
+and end of the interval you want to time, subtract the values, and then
+divide by @code{CLOCKS_PER_SEC} (the number of clock ticks per second)
+to get processor time, like this:
 
 @smallexample
 @group
 #include <time.h>
 
 clock_t start, end;
-double elapsed;
+double cpu_time_used;
 
 start = clock();
 @dots{} /* @r{Do the work.} */
 end = clock();
-elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 @end group
 @end smallexample
 
+Do not use a single CPU time as an amount of time; it doesn't work that
+way.  Either do a subtraction as shown above or query processor time
+directly.  @xref{Processor Time}.
+
 Different computers and operating systems vary wildly in how they keep
-track of processor time.  It's common for the internal processor clock
-to have a resolution somewhere between hundredth and millionth of a
+track of CPU time.  It's common for the internal processor clock
+to have a resolution somewhere between a hundredth and millionth of a
 second.
-
-In the GNU system, @code{clock_t} is equivalent to @code{long int} and
-@code{CLOCKS_PER_SEC} is an integer value.  But in other systems, both
-@code{clock_t} and the type of the macro @code{CLOCKS_PER_SEC} can be
-either integer or floating-point types.  Casting processor time values
-to @code{double}, as in the example above, makes sure that operations
-such as arithmetic and printing work properly and consistently no matter
-what the underlying representation is.
-
-Note that the clock can wrap around.  On a 32bit system with
-@code{CLOCKS_PER_SEC} set to one million this function will return the
-same value approximately every 72 minutes.
 
 @comment time.h
 @comment ISO
 @deftypevr Macro int CLOCKS_PER_SEC
 The value of this macro is the number of clock ticks per second measured
-by the @code{clock} function.  POSIX requires that this value is one
+by the @code{clock} function.  POSIX requires that this value be one
 million independent of the actual resolution.
 @end deftypevr
 
@@ -116,25 +273,27 @@ This is an obsolete name for @code{CLOCKS_PER_SEC}.
 @comment ISO
 @deftp {Data Type} clock_t
 This is the type of the value returned by the @code{clock} function.
-Values of type @code{clock_t} are in units of clock ticks.
+Values of type @code{clock_t} are numbers of clock ticks.
 @end deftp
 
 @comment time.h
 @comment ISO
 @deftypefun clock_t clock (void)
-This function returns the elapsed processor time.  The base time is
-arbitrary but doesn't change within a single process.  If the processor
+This function returns the calling process' current CPU time.  If the CPU
 time is not available or cannot be represented, @code{clock} returns the
 value @code{(clock_t)(-1)}.
 @end deftypefun
 
 
-@node Detailed CPU Time
-@subsection Detailed Elapsed CPU Time Inquiry
+@node Processor Time
+@subsection Processor Time Inquiry
 
-The @code{times} function returns more detailed information about
-elapsed processor time in a @w{@code{struct tms}} object.  You should
+The @code{times} function returns information about a process'
+consumption of processor time in a @w{@code{struct tms}} object, in
+addition to the process' CPU time.  @xref{Time Basics}.  You should
 include the header file @file{sys/times.h} to use this facility.
+@cindex processor time
+@cindex CPU time
 @pindex sys/times.h
 
 @comment sys/times.h
@@ -145,30 +304,33 @@ times.  It contains at least the following members:
 
 @table @code
 @item clock_t tms_utime
-This is the CPU time used in executing the instructions of the calling
-process.
+This is the total processor time the calling process has used in
+executing the instructions of its program.
 
 @item clock_t tms_stime
-This is the CPU time used by the system on behalf of the calling process.
+This is the processor time the system has used on behalf of the calling
+process.
 
 @item clock_t tms_cutime
 This is the sum of the @code{tms_utime} values and the @code{tms_cutime}
 values of all terminated child processes of the calling process, whose
 status has been reported to the parent process by @code{wait} or
 @code{waitpid}; see @ref{Process Completion}.  In other words, it
-represents the total CPU time used in executing the instructions of all
-the terminated child processes of the calling process, excluding child
-processes which have not yet been reported by @code{wait} or
+represents the total processor time used in executing the instructions
+of all the terminated child processes of the calling process, excluding
+child processes which have not yet been reported by @code{wait} or
 @code{waitpid}.
+@cindex child process
 
 @item clock_t tms_cstime
-This is similar to @code{tms_cutime}, but represents the total CPU time
-used by the system on behalf of all the terminated child processes of the
-calling process.
+This is similar to @code{tms_cutime}, but represents the total processor
+time system has used on behalf of all the terminated child processes
+of the calling process.
 @end table
 
-All of the times are given in clock ticks.  These are absolute values; in a
-newly created process, they are all zero.  @xref{Creating a Process}.
+All of the times are given in numbers of clock ticks.  Unlike CPU time,
+these are the actual amounts of time; not relative to any event.
+@xref{Creating a Process}.
 @end deftp
 
 @comment sys/times.h
@@ -177,50 +339,46 @@ newly created process, they are all zero.  @xref{Creating a Process}.
 The @code{times} function stores the processor time information for
 the calling process in @var{buffer}.
 
-The return value is the same as the value of @code{clock()}: the elapsed
-real time relative to an arbitrary base.  The base is a constant within a
-particular process, and typically represents the time since system
-start-up.  A value of @code{(clock_t)(-1)} is returned to indicate failure.
+The return value is the calling process' CPU time (the same value you
+get from @code{clock()}.  @code{times} returns @code{(clock_t)(-1)} to
+indicate failure.
 @end deftypefun
 
 @strong{Portability Note:} The @code{clock} function described in
-@ref{Basic CPU Time}, is specified by the @w{ISO C} standard.  The
+@ref{CPU Time} is specified by the @w{ISO C} standard.  The
 @code{times} function is a feature of POSIX.1.  In the GNU system, the
-value returned by the @code{clock} function is equivalent to the sum of
-the @code{tms_utime} and @code{tms_stime} fields returned by
-@code{times}.
+CPU time is defined to be equivalent to the sum of the @code{tms_utime}
+and @code{tms_stime} fields returned by @code{times}.
 
 @node Calendar Time
 @section Calendar Time
 
-This section describes facilities for keeping track of points in time.
-This is called calendar time and sometimes absolute time.
-@cindex time, absolute
-@cindex time, calendar
-@cindex date and time
+This section describes facilities for keeping track of calendar time.
+@xref{Time Basics}.
 
 The GNU C library represents calendar time three ways:
 
 @itemize @bullet
 @item
 @dfn{Simple time} (the @code{time_t} data type) is a compact
-representation, typically giving the number of seconds elapsed since
-some implementation-specific base time.
+representation, typically giving the number of seconds of elapsed time
+since some implementation-specific base time.
 @cindex simple time
 
 @item
-There is also a @dfn{high-resolution time} representation (the @code{struct
-timeval} data type) that includes fractions of a second.  Use this time
-representation instead of simple time when you need greater
-precision.
+There is also a "high-resolution time" representation.  Like simple
+time, this represents a calendar time as an elapsed time since a base
+time, but instead of measuring in whole seconds, it uses a @code{struct
+timeval} data type, which includes fractions of a second.  Use this time
+representation instead of simple time when you need greater precision.
 @cindex high-resolution time
 
 @item
 @dfn{Local time} or @dfn{broken-down time} (the @code{struct tm} data
-type) represents the date and time as a set of components specifying the
+type) represents a calendar time as a set of components specifying the
 year, month, and so on in the Gregorian calendar, for a specific time
-zone.  This time representation is usually used only to communicate with
-people.
+zone.  This calendar time representation is usually used only to
+communicate with people.
 @cindex local time
 @cindex broken-down time
 @cindex Gregorian calendar
@@ -232,7 +390,7 @@ people.
 * High-Resolution Calendar::    A time representation with greater precision.
 * Broken-down Time::            Facilities for manipulating local time.
 * High Accuracy Clock::         Maintaining a high accuracy system clock.
-* Formatting Date and Time::    Converting times to strings.
+* Formatting Calendar Time::    Converting times to strings.
 * Parsing Date and Time::       Convert textual time and date information back
                                  into broken-down time values.
 * TZ Variable::                 How users specify the time zone.
@@ -254,43 +412,34 @@ These facilities are declared in the header file @file{time.h}.
 @comment ISO
 @deftp {Data Type} time_t
 This is the data type used to represent simple time.  Sometimes, it also
-represents an elapsed time.
-When interpreted as an absolute time
-value, it represents the number of seconds elapsed since 00:00:00 on
-January 1, 1970, Coordinated Universal Time.  (This time is sometimes
-referred to as the @dfn{epoch}.)  POSIX requires that this count
-not include leap seconds, but on some hosts this count includes leap seconds
+represents an elapsed time.  When interpreted as a calendar time value,
+it represents the number of seconds elapsed since 00:00:00 on January 1,
+1970, Coordinated Universal Time.  (This calendar time is sometimes
+referred to as the @dfn{epoch}.)  POSIX requires that this count not
+include leap seconds, but on some systems this count includes leap seconds
 if you set @code{TZ} to certain values (@pxref{TZ Variable}).
 
-Note that a simple time has no concept of local time zone.  Time @var{N}
-is the same instant in time regardless of where on the globe the
-computer is.
+Note that a simple time has no concept of local time zone.  Calendar
+Time @var{T} is the same instant in time regardless of where on the
+globe the computer is.
 
 In the GNU C library, @code{time_t} is equivalent to @code{long int}.
 In other systems, @code{time_t} might be either an integer or
 floating-point type.
 @end deftp
 
-@comment time.h
-@comment ISO
-@deftypefun double difftime (time_t @var{time1}, time_t @var{time0})
-The @code{difftime} function returns the number of seconds elapsed
-between time @var{time1} and time @var{time0}, as a value of type
-@code{double}.  The difference ignores leap seconds unless leap
-second support is enabled.
-
-In the GNU system, you can simply subtract @code{time_t} values.  But on
-other systems, the @code{time_t} data type might use some other encoding
-where subtraction doesn't work directly.
-@end deftypefun
+The function @code{difftime} tells you the elapsed time between two
+simple calendar times, which is not always as easy to compute as just
+subtracting.  @xref{Elapsed Time}.
 
 @comment time.h
 @comment ISO
 @deftypefun time_t time (time_t *@var{result})
-The @code{time} function returns the current time as a value of type
-@code{time_t}.  If the argument @var{result} is not a null pointer, the
-time value is also stored in @code{*@var{result}}.  If the calendar
-time is not available, the value @w{@code{(time_t)(-1)}} is returned.
+The @code{time} function returns the current calendar time as a value of
+type @code{time_t}.  If the argument @var{result} is not a null pointer,
+the calendar time value is also stored in @code{*@var{result}}.  If the
+current calendar time is not available, the value
+@w{@code{(time_t)(-1)}} is returned.
 @end deftypefun
 
 @c The GNU C library implements stime() with a call to settimeofday() on
@@ -299,7 +448,7 @@ time is not available, the value @w{@code{(time_t)(-1)}} is returned.
 @comment SVID, XPG
 @deftypefun int stime (time_t *@var{newtime})
 @code{stime} sets the system clock, i.e.  it tells the system that the
-present absolute time is @var{newtime}, where @code{newtime} is
+current calendar time is @var{newtime}, where @code{newtime} is
 interpreted as described in the above definition of @code{time_t}.
 
 @code{settimeofday} is a newer function which sets the system clock to
@@ -333,27 +482,6 @@ declared in @file{sys/time.h}.
 
 @comment sys/time.h
 @comment BSD
-@deftp {Data Type} {struct timeval}
-The @code{struct timeval} structure represents a calendar time.  It
-has the following members:
-
-@table @code
-@item long int tv_sec
-This represents the number of seconds since the epoch.  It is equivalent
-to a normal @code{time_t} value.
-
-@item long int tv_usec
-This is the fractional second value, represented as the number of
-microseconds.
-
-Some times struct timeval values are used for time intervals.  Then the
-@code{tv_sec} member is the number of seconds in the interval, and
-@code{tv_usec} is the number of additional microseconds.
-@end table
-@end deftp
-
-@comment sys/time.h
-@comment BSD
 @deftp {Data Type} {struct timezone}
 The @code{struct timezone} structure is used to hold minimal information
 about the local time zone.  It has the following members:
@@ -370,49 +498,15 @@ The @code{struct timezone} type is obsolete and should never be used.
 Instead, use the facilities described in @ref{Time Zone Functions}.
 @end deftp
 
-It is often necessary to subtract two values of type @w{@code{struct
-timeval}}.  Here is the best way to do this.  It works even on some
-peculiar operating systems where the @code{tv_sec} member has an
-unsigned type.
-
-@smallexample
-/* @r{Subtract the `struct timeval' values X and Y,}
-   @r{storing the result in RESULT.}
-   @r{Return 1 if the difference is negative, otherwise 0.}  */
-
-int
-timeval_subtract (result, x, y)
-     struct timeval *result, *x, *y;
-@{
-  /* @r{Perform the carry for the later subtraction by updating @var{y}.} */
-  if (x->tv_usec < y->tv_usec) @{
-    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
-    y->tv_usec -= 1000000 * nsec;
-    y->tv_sec += nsec;
-  @}
-  if (x->tv_usec - y->tv_usec > 1000000) @{
-    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
-    y->tv_usec += 1000000 * nsec;
-    y->tv_sec -= nsec;
-  @}
-
-  /* @r{Compute the time remaining to wait.}
-     @r{@code{tv_usec} is certainly positive.} */
-  result->tv_sec = x->tv_sec - y->tv_sec;
-  result->tv_usec = x->tv_usec - y->tv_usec;
-
-  /* @r{Return 1 if result is negative.} */
-  return x->tv_sec < y->tv_sec;
-@}
-@end smallexample
-
 @comment sys/time.h
 @comment BSD
 @deftypefun int gettimeofday (struct timeval *@var{tp}, struct timezone *@var{tzp})
-The @code{gettimeofday} function returns the current date and time in the
-@code{struct timeval} structure indicated by @var{tp}.  Information about the
-time zone is returned in the structure pointed at @var{tzp}.  If the @var{tzp}
-argument is a null pointer, time zone information is ignored.
+The @code{gettimeofday} function returns the current calendar time as
+the elapsed time since the epoch in the @code{struct timeval} structure
+indicated by @var{tp}.  (@pxref{Elapsed Time} for a description of
+@code{struct timespec}).  Information about the time zone is returned in
+the structure pointed at @var{tzp}.  If the @var{tzp} argument is a null
+pointer, time zone information is ignored.
 
 The return value is @code{0} on success and @code{-1} on failure.  The
 following @code{errno} error condition is defined for this function:
@@ -430,15 +524,17 @@ Instead, use the facilities described in @ref{Time Zone Functions}.
 @comment sys/time.h
 @comment BSD
 @deftypefun int settimeofday (const struct timeval *@var{tp}, const struct timezone *@var{tzp})
-The @code{settimeofday} function sets the current date and time
-according to the arguments.  As for @code{gettimeofday}, time zone
-information is ignored if @var{tzp} is a null pointer.
+The @code{settimeofday} function sets the current calendar time in the
+system clock according to the arguments.  As for @code{gettimeofday},
+the calendar time is represented as the elapsed time since the epoch.
+As for @code{gettimeofday}, time zone information is ignored if
+@var{tzp} is a null pointer.
 
 You must be a privileged user in order to use @code{settimeofday}.
 
 Some kernels automatically set the system clock from some source such as
 a hardware clock when they start up.  Others, including Linux, place the
-system clock in an ``invalid'' state (in which attempts to read the time
+system clock in an ``invalid'' state (in which attempts to read the clock
 fail).  A call of @code{stime} removes the system clock from an invalid
 state, and system startup scripts typically run a program that calls
 @code{stime}.
@@ -457,7 +553,7 @@ following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EPERM
-This process cannot set the time because it is not privileged.
+This process cannot set the clock because it is not privileged.
 
 @item ENOSYS
 The operating system does not support setting time zone information, and
@@ -470,14 +566,14 @@ The operating system does not support setting time zone information, and
 @comment BSD
 @deftypefun int adjtime (const struct timeval *@var{delta}, struct timeval *@var{olddelta})
 This function speeds up or slows down the system clock in order to make
-gradual adjustments in the current time.  This ensures that the time
-reported by the system clock is always monotonically increasing, which
-might not happen if you simply set the current time.
+a gradual adjustment.  This ensures that the calendar time reported by
+the system clock is always monotonically increasing, which might not
+happen if you simply set the clock.
 
 The @var{delta} argument specifies a relative adjustment to be made to
-the current time.  If negative, the system clock is slowed down for a
-while until it has lost this much time.  If positive, the system clock
-is speeded up for a while.
+the clock time.  If negative, the system clock is slowed down for a
+while until it has lost this much elapsed time.  If positive, the system
+clock is speeded up for a while.
 
 If the @var{olddelta} argument is not a null pointer, the @code{adjtime}
 function returns information about any previous time adjustment that
@@ -520,15 +616,16 @@ This function is present only with a Linux kernel.
 @cindex broken-down time
 @cindex calendar time and broken-down time
 
-Calendar time is represented as an amount of time since a fixed base
-time.  This is convenient for calculation, but has no relation to the
-way people normally think of dates and times.  By contrast,
-@dfn{broken-down time} is a binary representation separated into year,
-month, day, and so on.  Broken-down time values are not useful for
-calculations, but they are useful for printing human readable time.
+Calendar time is represented by the usual GNU C library functions as an
+elapsed time since a fixed base calendar time.  This is convenient for
+computation, but has no relation to the way people normally think of
+calendar time.  By contrast, @dfn{broken-down time} is a binary
+representation of calendar time separated into year, month, day, and so
+on.  Broken-down time values are not useful for calculations, but they
+are useful for printing human readable time information.
 
 A broken-down time value is always relative to a choice of time
-zone, and it also indicates which time zone was used.
+zone, and it also indicates which time zone that is.
 
 The symbols in this section are declared in the header file @file{time.h}.
 
@@ -536,40 +633,44 @@ The symbols in this section are declared in the header file @file{time.h}.
 @comment ISO
 @deftp {Data Type} {struct tm}
 This is the data type used to represent a broken-down time.  The structure
-contains at least the following members, which can appear in any order:
+contains at least the following members, which can appear in any order.
 
 @table @code
 @item int tm_sec
-This is the number of seconds after the minute, normally in the range
-@code{0} through @code{59}.  (The actual upper limit is @code{60}, to allow
-for leap seconds if leap second support is available.)
+This is the number of full seconds since the top of the minute (normally
+in the range @code{0} through @code{59}, but the actual upper limit is
+@code{60}, to allow for leap seconds if leap second support is
+available).
 @cindex leap second
 
 @item int tm_min
-This is the number of minutes after the hour, in the range @code{0} through
-@code{59}.
+This is the number of full minutes since the top of the hour (in the
+range @code{0} through @code{59}).
 
 @item int tm_hour
-This is the number of hours past midnight, in the range @code{0} through
-@code{23}.
+This is the number of full hours past midnight (in the range @code{0} through
+@code{23}).
 
 @item int tm_mday
-This is the day of the month, in the range @code{1} through @code{31}.
+This is the ordinal day of the month (in the range @code{1} through @code{31}).
+Watch out for this one!  As the only ordinal number in the structure, it is
+inconsistent with the rest of the structure.
 
 @item int tm_mon
-This is the number of months since January, in the range @code{0} through
-@code{11}.
+This is the number of full calendar months since the beginning of the
+year (in the range @code{0} through @code{11}).  Watch out for this one!
+People usually use ordinal numbers for month-of-year (where January = 1).
 
 @item int tm_year
-This is the number of years since @code{1900}.
+This is the number of full calendar years since 1900.
 
 @item int tm_wday
-This is the number of days since Sunday, in the range @code{0} through
-@code{6}.
+This is the number of full days since Sunday (in the range @code{0} through
+@code{6}).
 
 @item int tm_yday
-This is the number of days since January 1, in the range @code{0} through
-@code{365}.
+This is the number of full days since the beginning of the year (in the
+range @code{0} through @code{365}).
 
 @item int tm_isdst
 @cindex Daylight Saving Time
@@ -594,6 +695,7 @@ broken-down time value.  Like @code{tm_gmtoff}, this field is a BSD and
 GNU extension, and is not visible in a strict @w{ISO C} environment.
 @end table
 @end deftp
+
 
 @comment time.h
 @comment ISO
@@ -738,12 +840,13 @@ These functions are declared in @file{sys/timex.h}.
 
 @tindex struct ntptimeval
 @deftp {Data Type} {struct ntptimeval}
-This structure is used to monitor kernel time.  It contains the
-following members:
+This structure is used for information about the system clock.  It
+contains the following members:
 @table @code
 @item struct timeval time
-This is the current time.  The @code{struct timeval} data type is
-described in @ref{High-Resolution Calendar}.
+This is the current calendar time, expressed as the elapsed time since
+the epoch.  The @code{struct timeval} data type is described in
+@ref{Elapsed Time}.
 
 @item long int maxerror
 This is the maximum error, measured in microseconds.  Unless updated
@@ -753,7 +856,7 @@ platform-specific maximum value.
 @item long int esterror
 This is the estimated error, measured in microseconds.  This value can
 be set by @code{ntp_adjtime} to indicate the estimated offset of the
-local clock against the true time.
+system clock from the true calendar time.
 @end table
 @end deftp
 
@@ -788,18 +891,19 @@ symbolic constants have to be combined with @emph{binary or} to specify
 the effective mode.  These constants start with @code{MOD_}.
 
 @item long int offset
-This value indicates the current offset of the local clock from the true
-time.  The value is given in microseconds.  If bit @code{MOD_OFFSET} is
-set in @code{modes}, the offset (and possibly other dependent values) can
-be set.  The offset's absolute value must not exceed @code{MAXPHASE}.
+This value indicates the current offset of the system clock from the true
+calendar time.  The value is given in microseconds.  If bit
+@code{MOD_OFFSET} is set in @code{modes}, the offset (and possibly other
+dependent values) can be set.  The offset's absolute value must not
+exceed @code{MAXPHASE}.
 
 
 @item long int frequency
-This value indicates the difference in frequency between the true time
-and the local clock.  The value is expressed as scaled PPM (parts per
-million, 0.0001%).  The scaling is @code{1 << SHIFT_USEC}.  The value
-can be set with bit @code{MOD_FREQUENCY}, but the absolute value must
-not exceed @code{MAXFREQ}.
+This value indicates the difference in frequency between the true
+calendar time and the system clock.  The value is expressed as scaled
+PPM (parts per million, 0.0001%).  The scaling is @code{1 <<
+SHIFT_USEC}.  The value can be set with bit @code{MOD_FREQUENCY}, but
+the absolute value must not exceed @code{MAXFREQ}.
 
 @item long int maxerror
 This is the maximum error, measured in microseconds.  A new value can be
@@ -832,17 +936,17 @@ scaled PPM.  This value is used to increase the @code{maxerror} every
 second.
 
 @item struct timeval time
-The current time.
+The current calendar time.
 
 @item long int tick
-The time between clock ticks in microseconds.  A clock tick is a
+The elapsed time between clock ticks in microseconds.  A clock tick is a
 periodic timer interrupt on which the system clock is based.
 
 @item long int ppsfreq
 This is the first of a few optional variables that are present only if
 the system clock can use a PPS (pulse per second) signal to discipline
-the local clock.  The value is expressed in scaled PPM and it denotes
-the difference in frequency between the local clock and the PPS signal.
+the system clock.  The value is expressed in scaled PPM and it denotes
+the difference in frequency between the system clock and the PPS signal.
 
 @item long int jitter
 This value expresses a median filtered average of the PPS signal's
@@ -920,11 +1024,11 @@ have this function but did have the synonymous @code{adjtimex}.
 @end deftypefun
 
 
-@node Formatting Date and Time
-@subsection Formatting Date and Time
+@node Formatting Calendar Time
+@subsection Formatting Calendar Time
 
-The functions described in this section format time values as strings.
-These functions are declared in the header file @file{time.h}.
+The functions described in this section format calendar time values as
+strings.  These functions are declared in the header file @file{time.h}.
 @pindex time.h
 
 @comment time.h
@@ -967,9 +1071,9 @@ return @code{NULL}.
 @comment time.h
 @comment ISO
 @deftypefun {char *} ctime (const time_t *@var{time})
-The @code{ctime} function is similar to @code{asctime}, except that the
-time value is specified as a @code{time_t} simple time value rather
-than in broken-down local time format.  It is equivalent to
+The @code{ctime} function is similar to @code{asctime}, except that you
+specify the calendar time argument as a @code{time_t} simple time value
+rather than in broken-down local time format.  It is equivalent to
 
 @smallexample
 asctime (localtime (@var{time}))
@@ -982,9 +1086,9 @@ does so.  @xref{Time Zone Functions}.
 @comment time.h
 @comment POSIX.1c
 @deftypefun {char *} ctime_r (const time_t *@var{time}, char *@var{buffer})
-This function is similar to @code{ctime}, only that it places the result
-in the string pointed to by @var{buffer}.  It is equivalent to (written
-using gcc extensions, @pxref{Statement Exprs,,,gcc,Porting and Using gcc}):
+This function is similar to @code{ctime}, but places the result in the
+string pointed to by @var{buffer}.  It is equivalent to (written using
+gcc extensions, @pxref{Statement Exprs,,,gcc,Porting and Using gcc}):
 
 @smallexample
 (@{ struct tm tm; asctime_r (localtime_r (time, &tm), buf); @})
@@ -1075,7 +1179,7 @@ The abbreviated month name according to the current locale.
 The full month name according to the current locale.
 
 @item %c
-The preferred date and time representation for the current locale.
+The preferred calendar time representation for the current locale.
 
 @item %C
 The century of the year.  This is equivalent to the greatest integer not
@@ -1178,7 +1282,7 @@ This format was introduced in @w{ISO C99} but was previously available
 as a GNU extension.
 
 @item %r
-The complete time using the AM/PM format of the current locale.
+The complete calendar time using the AM/PM format of the current locale.
 
 This format is a POSIX.2 extension and also appears in @w{ISO C99}.
 
@@ -1203,7 +1307,7 @@ A single @samp{\t} (tabulator) character.
 This format is a POSIX.2 extension and also appears in @w{ISO C99}.
 
 @item %T
-The time using decimal numbers using the format @code{%H:%M:%S}.
+The time of day using decimal numbers using the format @code{%H:%M:%S}.
 
 This format is a POSIX.2 extension.
 
@@ -1243,11 +1347,10 @@ the first week.  All days preceding the first Monday in the year are
 considered to be in week @code{00}.
 
 @item %x
-The preferred date representation for the current locale, but without the
-time.
+The preferred date representation for the current locale.
 
 @item %X
-The preferred time representation for the current locale, but with no date.
+The preferred time of day representation for the current locale.
 
 @item %y
 The year without a century as a decimal number (range @code{00} through
@@ -1532,13 +1635,14 @@ Leap seconds are not counted unless leap second support is available.
 @code{%s} is a GNU extension following a GNU extension to @code{strftime}.
 
 @item %S
-The seconds as a decimal number (range @code{0} through @code{61}).
+The seconds as a decimal number (range @code{0} through @code{60}).
 
 Leading zeroes are permitted but not required.
 
-Note the nonsense with @code{61}, as given in the Unix specification.
-This is a result of a decision to allow double leap seconds.  These do
-not in fact exist but the myth persists.
+@strong{Note:} The Unix specification says the upper bound on this value
+is @code{61}, a result of a decision to allow double leap seconds.  You
+will not see the value @code{61} because no minute has more than one
+leap second, but the myth persists.
 
 @item %OS
 Same as @code{%S} but using the locale's alternative numeric symbols.
@@ -2135,7 +2239,7 @@ The time is 01:02 PM.
 @section Setting an Alarm
 
 The @code{alarm} and @code{setitimer} functions provide a mechanism for a
-process to interrupt itself at some future time.  They do this by setting a
+process to interrupt itself in the future.  They do this by setting a
 timer; when the timer expires, the process receives a signal.
 
 @cindex setting an alarm
@@ -2146,21 +2250,21 @@ Each process has three independent interval timers available:
 
 @itemize @bullet
 @item
-A real-time timer that counts clock time.  This timer sends a
+A real-time timer that counts elapsed time.  This timer sends a
 @code{SIGALRM} signal to the process when it expires.
 @cindex real-time timer
 @cindex timer, real-time
 
 @item
-A virtual timer that counts CPU time used by the process.  This timer
+A virtual timer that counts processor time used by the process.  This timer
 sends a @code{SIGVTALRM} signal to the process when it expires.
 @cindex virtual timer
 @cindex timer, virtual
 
 @item
-A profiling timer that counts both CPU time used by the process, and CPU
-time spent in system calls on behalf of the process.  This timer sends a
-@code{SIGPROF} signal to the process when it expires.
+A profiling timer that counts both processor time used by the process,
+and processor time spent in system calls on behalf of the process.  This
+timer sends a @code{SIGPROF} signal to the process when it expires.
 @cindex profiling timer
 @cindex timer, profiling
 
@@ -2195,16 +2299,15 @@ This structure is used to specify when a timer should expire.  It contains
 the following members:
 @table @code
 @item struct timeval it_interval
-This is the interval between successive timer interrupts.  If zero, the
+This is the period between successive timer interrupts.  If zero, the
 alarm will only be sent once.
 
 @item struct timeval it_value
-This is the interval to the first timer interrupt.  If zero, the alarm is
-disabled.
+This is the period between now and the first timer interrupt.  If zero,
+the alarm is disabled.
 @end table
 
-The @code{struct timeval} data type is described in @ref{High-Resolution
-Calendar}.
+The @code{struct timeval} data type is described in @ref{Elapsed Time}.
 @end deftp
 
 @comment sys/time.h
@@ -2223,7 +2326,7 @@ following @code{errno} error conditions are defined for this function:
 
 @table @code
 @item EINVAL
-The timer interval was too large.
+The timer period is too large.
 @end table
 @end deftypefun
 
@@ -2313,12 +2416,12 @@ specified by the POSIX.1 standard.  @code{setitimer} is more powerful than
 @section Sleeping
 
 The function @code{sleep} gives a simple way to make the program wait
-for short periods of time.  If your program doesn't use signals (except
-to terminate), then you can expect @code{sleep} to wait reliably for
-the specified amount of time.  Otherwise, @code{sleep} can return sooner
-if a signal arrives; if you want to wait for a given period regardless
-of signals, use @code{select} (@pxref{Waiting for I/O}) and don't
-specify any descriptors to wait for.
+for a short interval.  If your program doesn't use signals (except to
+terminate), then you can expect @code{sleep} to wait reliably throughout
+the specified interval.  Otherwise, @code{sleep} can return sooner if a
+signal arrives; if you want to wait for a given interval regardless of
+signals, use @code{select} (@pxref{Waiting for I/O}) and don't specify
+any descriptors to wait for.
 @c !!! select can get EINTR; using SA_RESTART makes sleep win too.
 
 @comment unistd.h
@@ -2327,9 +2430,9 @@ specify any descriptors to wait for.
 The @code{sleep} function waits for @var{seconds} or until a signal
 is delivered, whichever happens first.
 
-If @code{sleep} function returns because the requested time has
-elapsed, it returns a value of zero.  If it returns because of delivery
-of a signal, its return value is the remaining time in the sleep period.
+If @code{sleep} function returns because the requested interval is over,
+it returns a value of zero.  If it returns because of delivery of a
+signal, its return value is the remaining time in the sleep interval.
 
 The @code{sleep} function is declared in @file{unistd.h}.
 @end deftypefun
@@ -2342,12 +2445,13 @@ eventual wakeup time to be off by an additional second or so.  Suppose a
 few signals happen to arrive in rapid succession by bad luck---there is
 no limit on how much this could shorten or lengthen the wait.
 
-Instead, compute the time at which the program should stop waiting, and
-keep trying to wait until that time.  This won't be off by more than a
-second.  With just a little more work, you can use @code{select} and
-make the waiting period quite accurate.  (Of course, heavy system load
-can cause additional unavoidable delays---unless the machine is
-dedicated to one application, there is no way you can avoid this.)
+Instead, compute the calendar time at which the program should stop
+waiting, and keep trying to wait until that calendar time.  This won't
+be off by more than a second.  With just a little more work, you can use
+@code{select} and make the waiting period quite accurate.  (Of course,
+heavy system load can cause additional unavoidable delays---unless the
+machine is dedicated to one application, there is no way you can avoid
+this.)
 
 On some systems, @code{sleep} can do strange things if your program uses
 @code{SIGALRM} explicitly.  Even if @code{SIGALRM} signals are being
@@ -2367,13 +2471,22 @@ the same program, because @code{sleep} does not work by means of
 @comment time.h
 @comment POSIX.1
 @deftypefun int nanosleep (const struct timespec *@var{requested_time}, struct timespec *@var{remaining})
-If resolution to seconds is not enough the @code{nanosleep} function
-can be used.  As the name suggests the sleeping period can be specified
-in nanoseconds.  The actual period of waiting time might be longer since
-the requested time in the @var{requested_time} parameter is rounded up
-to the next integer multiple of the actual resolution of the system.
+If resolution to seconds is not enough the @code{nanosleep} function can
+be used.  As the name suggests the sleep interval can be specified in
+nanoseconds.  The actual elapsed time of the sleep interval might be
+longer since the system rounds the elapsed time you request up to the
+next integer multiple of the actual resolution the system can deliver.
 
-If the function returns because the time has elapsed the return value is
+*@code{requested_time} is the elapsed time of the interval you want to
+sleep.
+
+The function returns as *@code{remaining} the elapsed time left in the
+interval for which you requested to sleep.  If the interval completed
+without getting interrupted by a signal, this is zero.
+
+@code{struct timespec} is described in @xref{Elapsed Time}.    
+
+If the function returns because the interval is over the return value is
 zero.  If the function returns @math{-1} the global variable @var{errno}
 is set to the following values:
 
@@ -2381,7 +2494,8 @@ is set to the following values:
 @item EINTR
 The call was interrupted because a signal was delivered to the thread.
 If the @var{remaining} parameter is not the null pointer the structure
-pointed to by @var{remaining} is updated to contain the remaining time.
+pointed to by @var{remaining} is updated to contain the remaining
+elapsed time.
 
 @item EINVAL
 The nanosecond value in the @var{requested_time} parameter contains an
@@ -2399,3 +2513,5 @@ be protected using cancellation handlers.
 
 The @code{nanosleep} function is declared in @file{time.h}.
 @end deftypefun
+
+
