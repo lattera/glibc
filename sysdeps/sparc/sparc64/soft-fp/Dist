@@ -1,3 +1,4 @@
+qp_add.c
 qp_cmp.c
 qp_cmpe.c
 qp_div.c

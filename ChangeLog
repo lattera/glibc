@@ -3,7 +3,8 @@
 	* version.h (VERSION): Bump to 2.1.94.
 
 	* sysdeps/mips/Dist: Add fpu/fenv_libc.h.
-	* sysdeps/sparc/sparc32/soft-fp/Dist: Add q_add.c and qp_add.c.
+	* sysdeps/sparc/sparc32/soft-fp/Dist: Add q_add.c.
+	* sysdeps/sparc/sparc64/soft-fp/Dist: Add qp_add.c.
 	* sysdeps/unix/sysv/linux/ia64/Dist: Add net/route.h.
 
 	* malloc/mtrace.c (mtrace): Mark stream as close on exec.
