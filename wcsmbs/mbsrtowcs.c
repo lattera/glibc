@@ -59,18 +59,24 @@ __mbsrtowcs (dst, src, len, ps)
       const char *srcend = *src + strlen (*src) + 1;
       const char *inbuf = *src;
 
-      data.outbuf = (char *) buf;
       data.outbufend = data.outbuf + sizeof (buf);
       do
-	status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-						   &data, &inbuf, srcend,
-						   &result, 0);
+	{
+	  data.outbuf = (char *) buf;
+
+	  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
+						     &data, &inbuf, srcend,
+						     &result, 0);
+	}
       while (status == GCONV_FULL_OUTPUT);
 
-      if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)
-	  && ((wchar_t *) data.outbuf)[-1] == L'\0')
-	/* Don't count the NUL character in.  */
-	--result;
+      if (status == GCONV_OK || status == GCONV_EMPTY_INPUT)
+	{
+	  /* There better should be a NUL wide char at the end.  */
+	  assert (((wchar_t *) data.outbuf)[-1] == L'\0');
+	  /* Don't count the NUL character in.  */
+	  --result;
+	}
     }
   else
     {

@@ -65,15 +65,18 @@ __wcsnrtombs (dst, src, nwc, len, ps)
       char buf[256];		/* Just an arbitrary value.  */
       const wchar_t *inbuf = *src;
 
-      data.outbuf = buf;
       data.outbufend = buf + sizeof (buf);
 
       do
-	status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
-						   &data,
-						   (const char **) &inbuf,
-						   (const char *) srcend,
-						   &result, 0);
+	{
+	  data.outbuf = buf;
+
+	  status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
+						     &data,
+						     (const char **) &inbuf,
+						     (const char *) srcend,
+						     &result, 0);
+	}
       while (status == GCONV_FULL_OUTPUT);
 
       if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)

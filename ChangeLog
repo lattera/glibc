@@ -10,6 +10,9 @@
 	it is not used.
 	* wcsmbs/wctoc.c: Likewise.
 
+	* wcsmbs/mbsrtowcs.c: Optimize a bit more.
+	* wcsmbs/wcsrtombs.c: Likewise.
+
 1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/skeleton.c: Correct counting of actually converted
