@@ -37,7 +37,7 @@ static ssize_t __emulate_pwrite64 (int fd, const void *buf, size_t count,
 
 
 ssize_t
-__pwrite64 (fd, buf, count, offset)
+__libc_pwrite64 (fd, buf, count, offset)
      int fd;
      const void *buf;
      size_t count;
@@ -57,9 +57,10 @@ __pwrite64 (fd, buf, count, offset)
   return result;
 }
 
-weak_alias (__pwrite64, pwrite64)
+strong_alias (__libc_pwrite64, __pwrite64)
+weak_alias (__libc_pwrite64, pwrite64)
 
-# define __pwrite64(fd, buf, count, offset) \
+# define __libc_pwrite64(fd, buf, count, offset) \
      static internal_function __emulate_pwrite64 (fd, buf, count, offset)
 #endif
 

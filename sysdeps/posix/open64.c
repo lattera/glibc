@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,11 +22,9 @@
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
 int
-__open64 (file, oflag)
-     const char *file;
-     int oflag;
+__libc_open64 (const char *file, int oflag, ...)
 {
-  int mode;
+  int mode = 0;
 
   if (oflag & O_CREAT)
     {
@@ -35,9 +33,8 @@ __open64 (file, oflag)
       mode = va_arg (arg, int);
       va_end (arg);
     }
-  else
-    mode = 0;
 
-  return __open (file, oflag | O_LARGEFILE, mode);
+  return __libc_open (file, oflag | O_LARGEFILE, mode);
 }
-weak_alias (__open64, open64)
+strong_alias (__libc_open64, __open64)
+weak_alias (__libc_open64, open64)

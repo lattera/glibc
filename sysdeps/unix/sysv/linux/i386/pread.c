@@ -34,7 +34,7 @@ static ssize_t __emulate_pread (int fd, void *buf, size_t count,
 
 
 ssize_t
-__pread (fd, buf, count, offset)
+__libc_pread (fd, buf, count, offset)
      int fd;
      void *buf;
      size_t count;
@@ -53,9 +53,10 @@ __pread (fd, buf, count, offset)
   return result;
 }
 
-weak_alias (__pread, pread)
+strong_alias (__libc_pread, __pread)
+weak_alias (__libc_pread, pread)
 
-# define __pread(fd, buf, count, offset) \
+# define __libc_pread(fd, buf, count, offset) \
      static internal_function __emulate_pread (fd, buf, count, offset)
 #endif
 

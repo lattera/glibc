@@ -9,6 +9,7 @@ release = @RELEASE@
 install_root =
 prefix = @prefix@
 exec_prefix = @exec_prefix@
+datadir = @datadir@
 libdir = @libdir@
 slibdir = @libc_cv_slibdir@
 sysconfdir = @libc_cv_sysconfdir@

@@ -34,7 +34,7 @@ static ssize_t __emulate_pread64 (int fd, void *buf, size_t count,
 
 
 ssize_t
-__pread64 (fd, buf, count, offset)
+__libc_pread64 (fd, buf, count, offset)
      int fd;
      void *buf;
      size_t count;
@@ -55,9 +55,10 @@ __pread64 (fd, buf, count, offset)
   return result;
 }
 
-weak_alias (__pread64, pread64)
+strong_alias (__libc_pread64, __pread64)
+weak_alias (__libc_pread64, pread64)
 
-# define __pread64(fd, buf, count, offset) \
+# define __libc_pread64(fd, buf, count, offset) \
      static internal_function __emulate_pread64 (fd, buf, count, offset)
 #endif
 

@@ -1,5 +1,5 @@
 /* Wrapper arpund system calls to provide cancelation points.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -89,6 +89,11 @@ CANCELABLE_SYSCALL (off_t, lseek, (int fd, off_t offset, int whence),
 strong_alias (lseek, __lseek)
 
 
+/* lseek64(2).  */
+CANCELABLE_SYSCALL (off64_t, lseek64, (int fd, off64_t offset, int whence),
+		    (fd, offset, whence))
+
+
 /* msync(2).  */
 CANCELABLE_SYSCALL (int, msync, (__ptr_t addr, size_t length, int flags),
 		    (addr, length, flags))
@@ -106,8 +111,40 @@ CANCELABLE_SYSCALL_VA (int, open, (const char *pathname, int flags, ...),
 strong_alias (open, __open)
 
 
+/* open64(3).  */
+CANCELABLE_SYSCALL_VA (int, open64, (const char *pathname, int flags, ...),
+		       (pathname, flags, va_arg (ap, mode_t)), flags)
+strong_alias (open64, __open64)
+
+
 /* pause(2).  */
 CANCELABLE_SYSCALL (int, pause, (void), ())
+
+
+/* pread(3).  */
+CANCELABLE_SYSCALL (ssize_t, pread, (int fd, void *buf, size_t count,
+				     off_t offset),
+		    (fd, buf, count, offset))
+
+
+/* pread64(3).  */
+CANCELABLE_SYSCALL (ssize_t, pread64, (int fd, void *buf, size_t count,
+				       off64_t offset),
+		    (fd, buf, count, offset))
+strong_alias (pread64, __pread64)
+
+
+/* pwrite(3).  */
+CANCELABLE_SYSCALL (ssize_t, pwrite, (int fd, const void *buf, size_t n,
+				      off_t offset),
+		    (fd, buf, n, offset))
+
+
+/* pwrite64(3).  */
+CANCELABLE_SYSCALL (ssize_t, pwrite64, (int fd, const void *buf, size_t n,
+					off64_t offset),
+		    (fd, buf, n, offset))
+strong_alias (pwrite64, __pwrite64)
 
 
 /* read(2).  */

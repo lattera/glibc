@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 /* Read NBYTES into BUF from FD at the given position OFFSET without
    changing the file pointer.  Return the number read or -1.  */
 ssize_t
-__pread (int fd, void *buf, size_t nbytes, off_t offset)
+__libc_pread (int fd, void *buf, size_t nbytes, off_t offset)
 {
   if (nbytes == 0)
     return 0;
@@ -40,6 +40,7 @@ __pread (int fd, void *buf, size_t nbytes, off_t offset)
   __set_errno (ENOSYS);
   return -1;
 }
-weak_alias (__pread, pread)
+strong_alias (__libc_pread, __pread)
+weak_alias (__libc_pread, pread)
 stub_warning (pread)
 #include <stub-tag.h>

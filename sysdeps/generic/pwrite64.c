@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 /* Write NBYTES of BUF to FD at given position OFFSET without changing
    the file position.  Return the number written, or -1.  */
 ssize_t
-__pwrite64 (int fd, const void *buf, size_t nbytes, off64_t offset)
+__libc_pwrite64 (int fd, const void *buf, size_t nbytes, off64_t offset)
 {
   if (nbytes == 0)
     return 0;
@@ -40,6 +40,7 @@ __pwrite64 (int fd, const void *buf, size_t nbytes, off64_t offset)
   __set_errno (ENOSYS);
   return -1;
 }
-weak_alias (__pwrite64, pwrite64)
+strong_alias (__libc_pwrite64, __pwrite64)
+weak_alias (__libc_pwrite64, pwrite64)
 stub_warning (pwrite64)
 #include <stub-tag.h>

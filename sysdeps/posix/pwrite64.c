@@ -1,6 +1,6 @@
 /* Write block to given position in file without changing file pointer.
    POSIX version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,28 +23,28 @@
 #include <unistd.h>
 
 ssize_t
-__pwrite64 (int fd, const void *buf, size_t nbyte, off64_t offset)
+__libc_pwrite64 (int fd, const void *buf, size_t nbyte, off64_t offset)
 {
   /* Since we must not change the file pointer preserve the value so that
      we can restore it later.  */
   int save_errno;
   ssize_t result;
-  off64_t old_offset = __lseek64 (fd, 0, SEEK_CUR);
+  off64_t old_offset = __libc_lseek64 (fd, 0, SEEK_CUR);
   if (old_offset == (off64_t) -1)
     return -1;
 
   /* Set to wanted position.  */
-  if (__lseek64 (fd, offset, SEEK_SET) == (off64_t) -1)
+  if (__libc_lseek64 (fd, offset, SEEK_SET) == (off64_t) -1)
     return -1;
 
   /* Write out the data.  */
-  result = __write (fd, buf, nbyte);
+  result = __libc_write (fd, buf, nbyte);
 
   /* Now we have to restore the position.  If this fails we have to
      return this as an error.  But if the writing also failed we
      return this error.  */
   save_errno = errno;
-  if (__lseek64 (fd, old_offset, SEEK_SET) == (off64_t) -1)
+  if (__libc_lseek64 (fd, old_offset, SEEK_SET) == (off64_t) -1)
     {
       if (result == -1)
 	__set_errno (save_errno);
@@ -54,6 +54,7 @@ __pwrite64 (int fd, const void *buf, size_t nbyte, off64_t offset)
 
   return result;
 }
-#ifndef __pwrite64
-weak_alias (__pwrite64, pwrite64)
+#ifndef __libc_pwrite64
+strong_alias (__libc_pwrite64, __pwrite64)
+weak_alias (__libc_pwrite64, pwrite64)
 #endif

@@ -1,5 +1,10 @@
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Versions: Export pread, __pread64, pread64, pwrite, __pwrite64,
+	pwrite64, lseek64, open64, and __open64.
+	* wrapsyscall.c: Define pread, __pread64, pread64, pwrite, __pwrite64,
+	pwrite64, lseek64, open64, and __open64.
+
 	* manager.c (pthread_allocate_stack): Correct computation of
 	new_thread_bottom.  Correct handling of stack size and when the
 	rlimit method to guard for stack growth is used.

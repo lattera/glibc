@@ -26,6 +26,7 @@
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 extern int __libc_fcntl (int fd, int cmd, ...);
+extern int __libc_open  (const char *pathname, int flags, ...);
 
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
@@ -102,7 +103,7 @@ check_one_fd (int fd, int mode)
       /* Something is wrong with this descriptor, it's probably not
 	 opened.  Open /dev/null so that the SUID program we are
 	 about to start does not accidently use this descriptor.  */
-      int nullfd = __open (_PATH_DEVNULL, mode);
+      int nullfd = __libc_open (_PATH_DEVNULL, mode);
       if (nullfd == -1)
 	/* We cannot even given an error message here since it would
 	   run into the same problems.  */
