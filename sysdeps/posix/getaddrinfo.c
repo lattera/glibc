@@ -79,7 +79,7 @@ struct gaih_servtuple
     int port;
   };
 
-static struct gaih_servtuple nullserv = { NULL, 0, 0, 0 };
+static const struct gaih_servtuple nullserv;
 
 struct gaih_addrtuple
   {
@@ -93,7 +93,7 @@ struct gaih_typeproto
   {
     int socktype;
     int protocol;
-    char *name;
+    char name[4];
     int protoflag;
   };
 
@@ -101,13 +101,13 @@ struct gaih_typeproto
 #define GAI_PROTO_NOSERVICE	1
 #define GAI_PROTO_PROTOANY	2
 
-static struct gaih_typeproto gaih_inet_typeproto[] =
+static const struct gaih_typeproto gaih_inet_typeproto[] =
 {
-  { 0, 0, NULL, 0 },
-  { SOCK_STREAM, IPPROTO_TCP, (char *) "tcp", 0 },
-  { SOCK_DGRAM, IPPROTO_UDP, (char *) "udp", 0 },
-  { SOCK_RAW, 0, (char *) "raw", GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE },
-  { 0, 0, NULL, 0 }
+  { 0, 0, "", 0 },
+  { SOCK_STREAM, IPPROTO_TCP, "tcp", 0 },
+  { SOCK_DGRAM, IPPROTO_UDP, "udp", 0 },
+  { SOCK_RAW, 0, "raw", GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE },
+  { 0, 0, "", 0 }
 };
 
 struct gaih
@@ -117,8 +117,12 @@ struct gaih
 		const struct addrinfo *req, struct addrinfo **pai);
   };
 
-static struct addrinfo default_hints =
+#if PF_UNSPEC == 0
+static const struct addrinfo default_hints;
+#else
+static const struct addrinfo default_hints =
 	{ 0, PF_UNSPEC, 0, 0, 0, NULL, NULL, NULL };
+#endif
 
 
 static int
@@ -145,7 +149,7 @@ gaih_local (const char *name, const struct gaih_service *service,
 
   if (req->ai_protocol || req->ai_socktype)
     {
-      struct gaih_typeproto *tp = gaih_inet_typeproto + 1;
+      const struct gaih_typeproto *tp = gaih_inet_typeproto + 1;
 
       while (tp->name != NULL
 	     && ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0
@@ -230,7 +234,7 @@ gaih_local (const char *name, const struct gaih_service *service,
 }
 
 static int
-gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
+gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
 	       const struct addrinfo *req, struct gaih_servtuple *st)
 {
   struct servent *s;
@@ -311,8 +315,8 @@ static int
 gaih_inet (const char *name, const struct gaih_service *service,
 	   const struct addrinfo *req, struct addrinfo **pai)
 {
-  struct gaih_typeproto *tp = gaih_inet_typeproto;
-  struct gaih_servtuple *st = &nullserv;
+  const struct gaih_typeproto *tp = gaih_inet_typeproto;
+  struct gaih_servtuple *st = (struct gaih_servtuple *) &nullserv;
   struct gaih_addrtuple *at = NULL;
   int rc;
 
@@ -382,7 +386,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  *pst = newp;
 		  pst = &(newp->next);
 		}
-	      if (st == &nullserv)
+	      if (st == (struct gaih_servtuple *) &nullserv)
 		return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
 	    }
 	}
