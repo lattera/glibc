@@ -124,6 +124,9 @@ deallocate_tsd (struct pthread *pd)
 	  size_t cnt;
 	  size_t idx;
 
+	  /* So far no new nonzero data entry.  */
+	  found_nonzero = false;
+
 	  for (cnt = idx = 0; cnt < PTHREAD_KEY_1STLEVEL_SIZE; ++cnt)
 	    if (pd->specific[cnt] != NULL)
 	      {

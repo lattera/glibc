@@ -1,7 +1,7 @@
 2003-02-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* pthread_create.c (deallocate_tsd): Clear the entire first block
-	of TSD.
+	* pthread_create.c (deallocate_tsd): Reset found_nonzero at the
+	beginning of the loop.  Clear the entire first block of TSD.
 	* Makefile (tests): Add tst-key4.
 	* tst-key4.c: New file.
 
