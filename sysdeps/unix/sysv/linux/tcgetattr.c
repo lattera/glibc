@@ -36,7 +36,7 @@ __tcgetattr (fd, termios_p)
   struct __kernel_termios k_termios;
   int retval;
 
-  retval = __ioctl (fd, TCGETS, &k_termios);
+  retval = INLINE_SYSCALL (ioctl, 3, fd, TCGETS, &k_termios);
 
   termios_p->c_iflag = k_termios.c_iflag;
   termios_p->c_oflag = k_termios.c_oflag;

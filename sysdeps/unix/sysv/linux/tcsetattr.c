@@ -87,14 +87,14 @@ tcsetattr (fd, optional_actions, termios_p)
   memcpy (&k_termios.c_cc[0], &termios_p->c_cc[0],
 	  __KERNEL_NCCS * sizeof (cc_t));
 
-  retval = __ioctl (fd, cmd, &k_termios);
+  retval = INLINE_SYSCALL (ioctl, 3, fd, cmd, &k_termios);
 
   if (retval == 0 && cmd == TCSETS)
     {
       /* The Linux kernel has a bug which silently ignore the invalid
 	 c_cflag on pty. We have to check it here. */
       int save = errno;
-      retval = __ioctl (fd, TCGETS, &k_termios);
+      retval = INLINE_SYSCALL (ioctl, 3, fd, TCGETS, &k_termios);
       if (retval)
 	{
 	  /* We cannot verify if the setting is ok. We don't return

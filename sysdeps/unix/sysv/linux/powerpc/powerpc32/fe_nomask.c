@@ -36,7 +36,7 @@ fe_nomask_handler (int signum, struct sigcontext *sc)
 }
 
 const fenv_t *
-__fe_nomask_env(void)
+__fe_nomask_env (void)
 {
   struct sigaction act;
 

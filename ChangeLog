@@ -1,3 +1,22 @@
+2003-02-17  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/ftruncate64.c: Delete.
+	* sysdeps/unix/sysv/linux/powerpc/truncate64.c: Delete.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: Delete.
+	* sysdeps/unix/sysv/linux/powerpc/pread.c: Delete.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Delete.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Delete.
+
+	* sysdeps/unix/sysv/linux/powerpc/fe_nomask.c: Move file...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fe_nomask.c: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/glob64.c: Move file...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/glob64.c: ...here.
+
+	* sysdeps/unix/sysv/linux/tcgetattr.c: Use INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/tcsetattr.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/tcgetattr.c: Delete.
+	* sysdeps/unix/sysv/linux/powerpc/tcsetattr.c: Delete.
+
 2003-02-14  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nss/getent.c (print_hosts): Print all IP addresses of one host.
