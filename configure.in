@@ -1325,11 +1325,13 @@ EOF
 
   AC_CACHE_CHECK(for -z relro option,
 		 libc_cv_z_relro, [dnl
+  libc_cv_z_relro=no
   if AC_TRY_COMMAND([${CC-cc} -v --help 2>&1|grep "z relro" 1>&AS_MESSAGE_LOG_FD])
   then
-    libc_cv_z_relro=yes
-  else
-    libc_cv_z_relro=no
+    if AC_TRY_COMMAND([${CC-cc} -Wl,--verbose 2>&1|grep DATA_SEGMENT_RELRO_END 1>&AS_MESSAGE_LOG_FD])
+    then
+      libc_cv_z_relro=yes
+    fi
   fi])
   AC_SUBST(libc_cv_z_relro)
   if test $libc_cv_z_relro = yes; then

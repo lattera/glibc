@@ -5549,16 +5549,23 @@ echo $ECHO_N "checking for -z relro option... $ECHO_C" >&6
 if test "${libc_cv_z_relro+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-    if { ac_try='${CC-cc} -v --help 2>&1|grep "z relro" 1>&5'
+    libc_cv_z_relro=no
+  if { ac_try='${CC-cc} -v --help 2>&1|grep "z relro" 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }
   then
-    libc_cv_z_relro=yes
-  else
-    libc_cv_z_relro=no
+    if { ac_try='${CC-cc} -Wl,--verbose 2>&1|grep DATA_SEGMENT_RELRO_END 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }
+    then
+      libc_cv_z_relro=yes
+    fi
   fi
 fi
 echo "$as_me:$LINENO: result: $libc_cv_z_relro" >&5
