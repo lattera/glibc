@@ -1,7 +1,11 @@
+2004-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/genops.c (_IO_cleanup): Do not use locking when flushing
+	the buffers.  Some thread might be using a stream.
+
 2004-02-09  Andreas Jaeger  <aj@suse.de>
 
-	PR 7
-	* sysdeps/x86_64/memcpy.S: Fix alignment.
+	* sysdeps/x86_64/memcpy.S: Fix alignment [BZ #7].
 	Patch by Jan Beulich <jbeulich@novell.com>.
 
 2004-02-09  Andreas Schwab  <schwab@suse.de>
