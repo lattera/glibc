@@ -1,3 +1,7 @@
+2002-06-07  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/environments.h: File removed.
+
 2002-06-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/sendfile64.c: New.
