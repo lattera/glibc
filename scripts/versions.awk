@@ -26,7 +26,10 @@ BEGIN {
   close(defsfile);
 
   tmpfile = buildroot "Versions.tmp";
-  sort = "sort -n > " tmpfile;
+  # Note this sorting presumes only single digits between dots for proper
+  # numeric ordering.  sort -n doesn't do quite the right thing either,
+  # and in some non-GNU sort implementations does not sort at all.
+  sort = "sort > " tmpfile;
 }
 
 # Remove comment lines.

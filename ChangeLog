@@ -1,5 +1,7 @@
 2002-12-01  Roland McGrath  <roland@redhat.com>
 
+	* scripts/versions.awk: Don't pass -n flag to sort command.
+
 	* posix/bug-regex13.c: Include <string.h>.
 
 	* sysdeps/generic/libc-start.c (__libc_start_main): Do
