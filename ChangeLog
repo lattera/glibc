@@ -1,5 +1,15 @@
 1998-06-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/gconv_builtin.h: Add aliases for CORBA.
+	* iconvdata/gconv-modules: Likewise.
+
+1998-06-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (main): Call exp10_test.
+	(exp10_test): New function which tests exp10.
+
+1998-06-10  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add sigaltstack and
 	sigstack.
 
