@@ -113,7 +113,7 @@ function; see @ref{Running a Command}.  It executes the shell command
 command to complete, it creates a pipe to the subprocess and returns a
 stream that corresponds to that pipe.
 
-If you specify a @var{mode} argument of @code{"r"}, you can read from the 
+If you specify a @var{mode} argument of @code{"r"}, you can read from the
 stream to retrieve data from the standard output channel of the subprocess.
 The subprocess inherits its standard input channel from the parent process.
 
@@ -193,11 +193,11 @@ system.
 @section Atomicity of Pipe I/O
 
 Reading or writing pipe data is @dfn{atomic} if the size of data written
-is less than @code{PIPE_BUF}.  This means that the data transfer seems
-to be an instantaneous unit, in that nothing else in the system can
-observe a state in which it is partially complete.  Atomic I/O may not
-begin right away (it may need to wait for buffer space or for data), but
-once it does begin, it finishes immediately.
+is not greater than @code{PIPE_BUF}.  This means that the data transfer
+seems to be an instantaneous unit, in that nothing else in the system
+can observe a state in which it is partially complete.  Atomic I/O may
+not begin right away (it may need to wait for buffer space or for data),
+but once it does begin, it finishes immediately.
 
 Reading or writing a larger amount of data may not be atomic; for
 example, output data from other processes sharing the descriptor may be

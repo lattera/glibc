@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <getopt.h>
 
 /* Flag set by @samp{--verbose}.  */
 static int verbose_flag;

@@ -1,3 +1,7 @@
+Wed May 15 18:59:38 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* manual/examples/longopt.c: Include stdlib.h and getopt.h.
+
 Tue May 14 03:36:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/Makefile [$subdir == misc] (headers):
