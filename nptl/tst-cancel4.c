@@ -64,6 +64,16 @@ static int fds[2];
 static pthread_barrier_t b2;
 
 
+/* Cleanup handling test.  */
+static int cl_called;
+
+static void
+cl (void *arg)
+{
+  ++cl_called;
+}
+
+
 static void *
 tf_read  (void *arg)
 {
@@ -74,10 +84,14 @@ tf_read  (void *arg)
       exit (1);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   char buf[100];
   ssize_t s = read (fds[0], buf, sizeof (buf));
 
   printf ("%s: read returns with %zd\n", __FUNCTION__, s);
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -93,11 +107,15 @@ tf_readv  (void *arg)
       exit (1);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   char buf[100];
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
   ssize_t s = readv (fds[0], iov, 1);
 
   printf ("%s: readv returns with %zd\n", __FUNCTION__, s);
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -113,11 +131,15 @@ tf_write  (void *arg)
       exit (1);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   char buf[100000];
   memset (buf, '\0', sizeof (buf));
   ssize_t s = write (fds[1], buf, sizeof (buf));
 
   printf ("%s: write returns with %zd\n", __FUNCTION__, s);
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -133,12 +155,16 @@ tf_writev  (void *arg)
       exit (1);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   char buf[100000];
   memset (buf, '\0', sizeof (buf));
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
   ssize_t s = writev (fds[1], iov, 1);
 
   printf ("%s: writev returns with %zd\n", __FUNCTION__, s);
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -154,7 +180,11 @@ tf_sleep (void *arg)
       exit (1);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   sleep (1000000);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: sleep returns\n", __FUNCTION__);
 
@@ -172,7 +202,11 @@ tf_usleep (void *arg)
       exit (1);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   usleep ((useconds_t) ULONG_MAX);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: usleep returns\n", __FUNCTION__);
 
@@ -190,9 +224,13 @@ tf_nanosleep (void *arg)
       exit (1);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   struct timespec ts = { .tv_sec = 10000000, .tv_nsec = 0 };
   while (nanosleep (&ts, &ts) != 0)
     continue;
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: nanosleep returns\n", __FUNCTION__);
 
@@ -214,10 +252,14 @@ tf_select (void *arg)
   FD_ZERO (&rfs);
   FD_SET (fds[0], &rfs);
 
+  pthread_cleanup_push (cl, NULL);
+
   int s = select (fds[0] + 1, &rfs, NULL, NULL, NULL);
 
   printf ("%s: select returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -237,10 +279,14 @@ tf_pselect (void *arg)
   FD_ZERO (&rfs);
   FD_SET (fds[0], &rfs);
 
+  pthread_cleanup_push (cl, NULL);
+
   int s = pselect (fds[0] + 1, &rfs, NULL, NULL, NULL, NULL);
 
   printf ("%s: pselect returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -258,10 +304,14 @@ tf_poll (void *arg)
 
   struct pollfd rfs[1] = { [0] = { .fd = fds[0], .events = POLLIN } };
 
+  pthread_cleanup_push (cl, NULL);
+
   int s = poll (rfs, 1, -1);
 
   printf ("%s: poll returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -291,10 +341,14 @@ tf_wait (void *arg)
       exit (0);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   int s = wait (NULL);
 
   printf ("%s: wait returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -324,10 +378,14 @@ tf_waitpid (void *arg)
       exit (0);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   int s = waitpid (-1, NULL, 0);
 
   printf ("%s: waitpid returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -357,11 +415,15 @@ tf_waitid (void *arg)
       exit (0);
     }
 
+  pthread_cleanup_push (cl, NULL);
+
   siginfo_t si;
   int s = waitid (P_PID, pid, &si, 0);
 
   printf ("%s: waitid returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
+
+  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -369,23 +431,25 @@ tf_waitid (void *arg)
 
 static struct
 {
+  const char *name;
   void *(*tf) (void *);
   int nb;
 } tests[] =
 {
-  { tf_read, 2 },
-  { tf_readv, 2 },
-  { tf_select, 2 },
-  { tf_pselect, 2 },
-  { tf_poll, 2 },
-  { tf_write, 2 },
-  { tf_writev, 2},
-  { tf_sleep, 2 },
-  { tf_usleep, 2 },
-  { tf_nanosleep, 2 },
-  { tf_wait, 2 },
-  { tf_waitid, 2 },
-  { tf_waitpid, 2 },
+#define ADD_TEST(name, nbar) { #name, tf_##name, nbar }
+  ADD_TEST (read, 2),
+  ADD_TEST (readv, 2),
+  ADD_TEST (select, 2),
+  ADD_TEST (pselect, 2),
+  ADD_TEST (poll, 2),
+  ADD_TEST (write, 2),
+  ADD_TEST (writev, 2),
+  ADD_TEST (sleep, 2),
+  ADD_TEST (usleep, 2),
+  ADD_TEST (nanosleep, 2),
+  ADD_TEST (wait, 2),
+  ADD_TEST (waitid, 2),
+  ADD_TEST (waitpid, 2),
 };
 #define ntest_tf (sizeof (tests) / sizeof (tests[0]))
 
@@ -399,6 +463,7 @@ do_test (void)
       exit (1);
     }
 
+  int result = 0;
   size_t cnt;
   for (cnt = 0; cnt < ntest_tf; ++cnt)
     {
@@ -408,19 +473,23 @@ do_test (void)
 	  exit (1);
 	}
 
-      /* read(2) test.  */
+      /* Reset the counter for the cleanup handler.  */
+      cl_called = 0;
+
       pthread_t th;
       if (pthread_create (&th, NULL, tests[cnt].tf, NULL) != 0)
 	{
-	  printf ("create for round %zd test failed\n", cnt);
-	  exit (1);
+	  printf ("create for '%s' test failed\n", tests[cnt].name);
+	  result = 1;
+	  continue;
 	}
 
       int r = pthread_barrier_wait (&b2);
       if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
 	{
 	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
-	  exit (1);
+	  result = 1;
+	  continue;
 	}
 
       struct timespec  ts = { .tv_sec = 0, .tv_nsec = 100000000 };
@@ -429,31 +498,50 @@ do_test (void)
 
       if (pthread_cancel (th) != 0)
 	{
-	  printf ("cancel in round %zd failed\n", cnt);
-	  exit (1);
+	  printf ("cancel for '%s' failed\n", tests[cnt].name);
+	  result = 1;
+	  continue;
 	}
 
       void *status;
       if (pthread_join (th, &status) != 0)
 	{
-	  printf ("join in round %zd failed\n", cnt);
-	  exit (1);
+	  printf ("join for '%s' failed\n", tests[cnt].name);
+	  result = 1;
+	  continue;
 	}
       if (status != PTHREAD_CANCELED)
 	{
-	  printf ("thread in round %zd not canceled\n", cnt);
-	  exit (1);
+	  printf ("thread for '%s' not canceled\n", tests[cnt].name);
+	  result = 1;
+	  continue;
 	}
-      printf ("test %zd successful\n", cnt);
 
       if (pthread_barrier_destroy (&b2) != 0)
 	{
 	  puts ("barrier_destroy failed");
-	  exit (1);
+	  result = 1;
+	  continue;
 	}
+
+      if (cl_called == 0)
+	{
+	  printf ("cleanup handler not called for '%s'\n", tests[cnt].name);
+	  result = 1;
+	  continue;
+	}
+      if (cl_called > 1)
+	{
+	  printf ("cleanup handler called more than once for '%s'\n",
+		  tests[cnt].name);
+	  result = 1;
+	  continue;
+	}
+
+      printf ("test of '%s' successful\n", tests[cnt].name);
     }
 
-  return 0;
+  return result;
 }
 
 #define TIMEOUT 60

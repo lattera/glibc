@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 
 /* Wait for a child to die.  When one does, put its status in *STAT_LOC
    and return its process ID.  For errors, return (pid_t) -1.  */
-__pid_t
+pid_t
 __libc_wait (__WAIT_STATUS_DEFN stat_loc)
 {
   if (SINGLE_THREAD_P)
@@ -33,8 +33,8 @@ __libc_wait (__WAIT_STATUS_DEFN stat_loc)
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  int result = INLINE_SYSCALL (wait4, 4, WAIT_ANY, stat_loc, 0,
-			       (struct rusage *) NULL);
+  pid_t result = INLINE_SYSCALL (wait4, 4, WAIT_ANY, stat_loc, 0,
+				 (struct rusage *) NULL);
 
   LIBC_CANCEL_RESET (oldtype);
 

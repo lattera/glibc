@@ -1,5 +1,9 @@
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile: Add CFLAGS definition to compile function wrappers
+	duplicated from libc with exceptions.
+	* tst-cancel4.c: Also check cancellation handlers.
+
 	* Makefile: Add rules to build and run tst-cancel16 and
 	tst-cancelx16.  Add missing CFLAGS definitions.
 	* tst-cancel16.c: New file.

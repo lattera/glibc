@@ -161,6 +161,22 @@ CFLAGS-pthread_cond_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 
+# These are the function wrappers we have to duplicate here.
+CFLAGS-fcntl.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-lockf.c = -fexceptions
+CFLAGS-pread.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread64.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwrite.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwrite64.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-wait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigwait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-msgrcv.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-msgsnd.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-tcdrain.c = -fexceptions -fasynchronous-unwind-tables
+
+CFLAGS-pt-system.c = -fexceptions
+
 # Don't generate deps for calls with no sources.  See sysdeps/unix/Makefile.
 omit-deps = $(unix-syscalls:%=ptw-%)
 
