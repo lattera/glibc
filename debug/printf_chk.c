@@ -31,14 +31,14 @@ __printf_chk (int flag, const char *format, ...)
 
   _IO_acquire_lock (stdout);
   if (flag > 0)
-    stdout->_flags2 |= _IO_FLAGS2_CHECK_PERCENT_N;
+    stdout->_flags2 |= _IO_FLAGS2_FORTIFY;
 
   va_start (ap, format);
   done = vfprintf (stdout, format, ap);
   va_end (ap);
 
   if (flag > 0)
-    stdout->_flags2 &= ~_IO_FLAGS2_CHECK_PERCENT_N;
+    stdout->_flags2 &= ~_IO_FLAGS2_FORTIFY;
   _IO_release_lock (stdout);
 
   return done;

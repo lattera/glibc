@@ -882,18 +882,18 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       /* NOTREACHED */							      \
 									      \
     LABEL (form_number):						      \
-      if (s->_flags2 & _IO_FLAGS2_CHECK_PERCENT_N)			      \
+      if (s->_flags2 & _IO_FLAGS2_FORTIFY)				      \
 	{								      \
 	  if (! readonly_format)					      \
 	    {								      \
 	      extern int __readonly_area (const void *, size_t)		      \
 		attribute_hidden;					      \
 	      readonly_format						      \
-		= __readonly_area (format, (STR_LEN (format) + 1)	      \
-					   * sizeof (CHAR_T));		      \
+		= __readonly_area (format, ((STR_LEN (format) + 1)	      \
+					    * sizeof (CHAR_T)));	      \
 	    }								      \
 	  if (readonly_format < 0)					      \
-	    __chk_fail ();						      \
+	    __libc_fatal ("*** %n is writable segment detected ***\n");	      \
 	}								      \
       /* Answer the count of characters written.  */			      \
       if (fspec == NULL)						      \
@@ -1649,7 +1649,8 @@ do_positional:
 
     /* Allocate memory for the argument descriptions.  */
     args_type = alloca (nargs * sizeof (int));
-    memset (args_type, 0, nargs * sizeof (int));
+    memset (args_type, s->_flags2 & _IO_FLAGS2_FORTIFY ? '\xff' : '\0',
+	    nargs * sizeof (int));
     args_value = alloca (nargs * sizeof (union printf_arg));
 
     /* XXX Could do sanity check here: If any element in ARGS_TYPE is
@@ -1714,6 +1715,11 @@ do_positional:
 	  else
 	    args_value[cnt].pa_long_double = 0.0;
 	  break;
+	case -1:
+	  /* Error case.  Not all parameters appear in N$ format
+	     strings.  We have no way to determine their type.  */
+	  assert (s->_flags2 & _IO_FLAGS2_FORTIFY);
+	  __libc_fatal ("*** invalid %N$ use detected ***\n");
 	}
 
     /* Now walk through all format specifiers and process them.  */

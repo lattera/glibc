@@ -58,7 +58,7 @@ __vsnprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
   /* For flags > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
      can only come from read-only format strings.  */
   if (flags > 0)
-    sf.f._sbf._f._flags2 |= _IO_FLAGS2_CHECK_PERCENT_N;
+    sf.f._sbf._f._flags2 |= _IO_FLAGS2_FORTIFY;
 
   _IO_str_init_static_internal (&sf.f, s, maxlen - 1, s);
   ret = INTUSE(_IO_vfprintf) ((_IO_FILE *) &sf.f._sbf, format, args);

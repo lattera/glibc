@@ -474,5 +474,22 @@ do_test (void)
   CHK_FAIL_END
 #endif
 
+  /* Check whether missing N$ formats are detected.  */
+  CHK_FAIL2_START
+  printf ("%3$d\n", 1, 2, 3, 4);
+  CHK_FAIL2_END
+
+  CHK_FAIL2_START
+  fprintf (stdout, "%3$d\n", 1, 2, 3, 4);
+  CHK_FAIL2_END
+
+  CHK_FAIL2_START
+  sprintf (buf, "%3$d\n", 1, 2, 3, 4);
+  CHK_FAIL2_END
+
+  CHK_FAIL2_START
+  snprintf (buf, sizeof (buf), "%3$d\n", 1, 2, 3, 4);
+  CHK_FAIL2_END
+
   return ret;
 }

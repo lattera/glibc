@@ -30,12 +30,12 @@ __vprintf_chk (int flag, const char *format, va_list ap)
 
   _IO_acquire_lock (stdout);
   if (flag > 0)
-    stdout->_flags2 |= _IO_FLAGS2_CHECK_PERCENT_N;
+    stdout->_flags2 |= _IO_FLAGS2_FORTIFY;
 
   done = vfprintf (stdout, format, ap);
 
   if (flag > 0)
-    stdout->_flags2 &= ~_IO_FLAGS2_CHECK_PERCENT_N;
+    stdout->_flags2 &= ~_IO_FLAGS2_FORTIFY;
   _IO_release_lock (stdout);
 
   return done;
