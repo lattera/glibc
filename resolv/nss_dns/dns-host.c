@@ -127,6 +127,14 @@ static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    size_t buflen, int *errnop, int *h_errnop,
 				    int map, int32_t *ttlp, char **canonp);
 
+extern enum nss_status _nss_dns_gethostbyname3_r (const char *name, int af,
+						  struct hostent *result,
+						  char *buffer, size_t buflen,
+						  int *errnop, int *h_errnop,
+						  int32_t *ttlp,
+						  char **canonp);
+hidden_proto (_nss_dns_gethostbyname3_r)
+
 enum nss_status
 _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
 			   char *buffer, size_t buflen, int *errnop,
@@ -216,6 +224,7 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
     free (host_buffer.buf);
   return status;
 }
+hidden_def (_nss_dns_gethostbyname3_r)
 
 
 enum nss_status
@@ -236,11 +245,11 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
   enum nss_status status = NSS_STATUS_NOTFOUND;
 
   if (_res.options & RES_USE_INET6)
-    status = _nss_dns_gethostbyname2_r (name, AF_INET6, result, buffer,
-					buflen, errnop, h_errnop);
+    status = _nss_dns_gethostbyname3_r (name, AF_INET6, result, buffer,
+					buflen, errnop, h_errnop, NULL, NULL);
   if (status == NSS_STATUS_NOTFOUND)
-    status = _nss_dns_gethostbyname2_r (name, AF_INET, result, buffer,
-					buflen, errnop, h_errnop);
+    status = _nss_dns_gethostbyname3_r (name, AF_INET, result, buffer,
+					buflen, errnop, h_errnop, NULL, NULL);
 
   return status;
 }

@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <sys/sysctl.h>
+#include <not-cancel.h>
 
 /* Test whether the machine has more than one processor.  This is not the
    best test but good enough.  More complicated tests would require `malloc'
@@ -37,13 +38,13 @@ is_smp_system (void)
 		buf, &reslen, NULL, 0) < 0)
     {
       /* This was not successful.  Now try reading the /proc filesystem.  */
-      int fd = __open ("/proc/sys/kernel/version", O_RDONLY);
+      int fd = open_not_cancel_2 ("/proc/sys/kernel/version", O_RDONLY);
       if (__builtin_expect (fd, 0) == -1
-	  || (reslen = __read (fd, buf, sizeof (buf))) <= 0)
+	  || (reslen = read_not_cancel (fd, buf, sizeof (buf))) <= 0)
 	/* This also didn't work.  We give up and say it's a UP machine.  */
 	buf[0] = '\0';
 
-      __close (fd);
+      close_not_cancel_no_status (fd);
     }
 
   return strstr (buf, "SMP") != NULL;

@@ -1,5 +1,6 @@
 2004-10-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/nss_dns/dns-host.c: Avoid using PLTs.
 	* include/libc-symbols.h: Define hidden attribute macros for
 	libnss_nisplus and libutil.
 	* include/utmp.h: Add libutil_hidden_proto for login_tty.
@@ -10,7 +11,6 @@
 	* include/rpcsvc/yp.h: New file.
 	* include/rpcsvc/ypclnt.h: New file.
 	* include/rpcsvc/ypupd.h: New file.
-
 	* include/libc-symbols.h: Define hidden attribute macros for libnsl.
 	* include/rpcsvc/nislib.h: Use libnsl_hidden_proto for various
 	functions.
