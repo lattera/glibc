@@ -274,6 +274,7 @@ enum __error_t_codes
    symbolic values.  */
 #ifdef __USE_GNU
 typedef enum __error_t_codes error_t;
+#define __error_t_defined	1
 #endif
 
 /* errno is a per-thread variable.  */
