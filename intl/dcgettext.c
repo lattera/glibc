@@ -162,6 +162,10 @@ static const char *guess_category_value PARAMS ((int category,
 						 const char *categoryname));
 
 
+#ifdef _LIBC
+#define HAVE_ALLOCA 1
+#endif
+
 /* For those loosing systems which don't have `alloca' we have to add
    some additional code emulating it.  */
 #ifdef HAVE_ALLOCA

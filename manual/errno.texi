@@ -250,7 +250,7 @@ system in Unix gives this error.
 @end deftypevr
 
 @comment errno.h
-@comment POSIX.1: Device busy
+@comment POSIX.1: Device or resource busy
 @deftypevr Macro int EBUSY
 @comment errno 16 @c DO NOT REMOVE
 Resource busy; a system resource that can't be shared is already in use.
@@ -546,7 +546,7 @@ The socket communications protocol family you requested is not supported.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Address family not supported by protocol family
+@comment BSD: Address family not supported by protocol
 @deftypevr Macro int EAFNOSUPPORT
 @comment errno 47 @c DO NOT REMOVE
 The address family specified for a socket is not supported; it is
@@ -561,7 +561,7 @@ The requested socket address is already in use.  @xref{Socket Addresses}.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Can't assign requested address
+@comment BSD: Cannot assign requested address
 @deftypevr Macro int EADDRNOTAVAIL
 @comment errno 49 @c DO NOT REMOVE
 The requested socket address is not available; for example, you tried
@@ -617,7 +617,7 @@ other from network operations.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Socket is already connected
+@comment BSD: Transport endpoint is already connected
 @deftypevr Macro int EISCONN
 @comment errno 56 @c DO NOT REMOVE
 You tried to connect a socket that is already connected.
@@ -625,7 +625,7 @@ You tried to connect a socket that is already connected.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Socket is not connected
+@comment BSD: Transport endpoint is not connected
 @deftypevr Macro int ENOTCONN
 @comment errno 57 @c DO NOT REMOVE
 The socket is not connected to anything.  You get this error when you
@@ -644,14 +644,14 @@ without first specifying a destination for the data with @code{connect}.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Can't send after socket shutdown
+@comment BSD: Cannot send after transport endpoint shutdown
 @deftypevr Macro int ESHUTDOWN
 @comment errno 58 @c DO NOT REMOVE
 The socket has already been shut down.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Too many references: can't splice
+@comment BSD: Too many references: cannot splice
 @deftypevr Macro int ETOOMANYREFS
 @comment errno 59 @c DO NOT REMOVE
 ???
@@ -747,7 +747,7 @@ the NFS file system on the local host.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Too many levels of remote in path
+@comment BSD: Object is remote
 @deftypevr Macro int EREMOTE
 @comment errno 71 @c DO NOT REMOVE
 An attempt was made to NFS-mount a remote file system with a file name that
@@ -892,6 +892,296 @@ Go home and have a glass of warm, dairy-fresh milk.
 This error code has no purpose.
 @end deftypevr
 
+@emph{The following error codes are defined by the Linux/i386 kernel.
+They are not yet documented.}
+
+@comment errno.h
+@comment Linux???: Interrupted system call should be restarted
+@deftypevr Macro int ERESTART
+@comment errno ???/85
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: No message of desired type
+@deftypevr Macro int ENOMSG
+@comment errno ???/42
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Identifier removed
+@deftypevr Macro int EIDRM
+@comment errno ???/43
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Channel number out of range
+@deftypevr Macro int ECHRNG
+@comment errno ???/44
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Level 2 not synchronized
+@deftypevr Macro int EL2NSYNC
+@comment errno ???/45
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Level 3 halted
+@deftypevr Macro int EL3HLT
+@comment errno ???/46
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Level 3 reset
+@deftypevr Macro int EL3RST
+@comment errno ???/47
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Link number out of range
+@deftypevr Macro int ELNRNG
+@comment errno ???/48
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Protocol driver not attached
+@deftypevr Macro int EUNATCH
+@comment errno ???/49
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: No CSI structure available
+@deftypevr Macro int ENOCSI
+@comment errno ???/50
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Level 2 halted
+@deftypevr Macro int EL2HLT
+@comment errno ???/51
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Invalid exchange
+@deftypevr Macro int EBADE
+@comment errno ???/52
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Invalid request descriptor
+@deftypevr Macro int EBADR
+@comment errno ???/53
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Exchange full
+@deftypevr Macro int EXFULL
+@comment errno ???/54
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: No anode
+@deftypevr Macro int ENOANO
+@comment errno ???/55
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Invalid request code
+@deftypevr Macro int EBADRQC
+@comment errno ???/56
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Invalid slot
+@deftypevr Macro int EBADSLT
+@comment errno ???/57
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: File locking deadlock error
+@deftypevr Macro int EDEADLOCK
+@comment errno ???/58
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Bad font file format
+@deftypevr Macro int EBFONT
+@comment errno ???/59
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Device not a stream
+@deftypevr Macro int ENOSTR
+@comment errno ???/60
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: No data available
+@deftypevr Macro int ENODATA
+@comment errno ???/61
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Timer expired
+@deftypevr Macro int ETIME
+@comment errno ???/62
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Out of streams resources
+@deftypevr Macro int ENOSR
+@comment errno ???/63
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Machine is not on the network
+@deftypevr Macro int ENONET
+@comment errno ???/64
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Package not installed
+@deftypevr Macro int ENOPKG
+@comment errno ???/65
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Link has been severed
+@deftypevr Macro int ENOLINK
+@comment errno ???/67
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Advertise error
+@deftypevr Macro int EADV
+@comment errno ???/68
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Srmount error
+@deftypevr Macro int ESRMNT
+@comment errno ???/69
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Communication error on send
+@deftypevr Macro int ECOMM
+@comment errno ???/70
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Protocol error
+@deftypevr Macro int EPROTO
+@comment errno ???/71
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Multihop attempted
+@deftypevr Macro int EMULTIHOP
+@comment errno ???/72
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: RFS specific error
+@deftypevr Macro int EDOTDOT
+@comment errno ???/73
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Not a data message
+@deftypevr Macro int EBADMSG
+@comment errno ???/74
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Value too large for defined data type
+@deftypevr Macro int EOVERFLOW
+@comment errno ???/75
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Name not unique on network
+@deftypevr Macro int ENOTUNIQ
+@comment errno ???/76
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: File descriptor in bad state
+@deftypevr Macro int EBADFD
+@comment errno ???/77
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Remote address changed
+@deftypevr Macro int EREMCHG
+@comment errno ???/78
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Can not access a needed shared library
+@deftypevr Macro int ELIBACC
+@comment errno ???/79
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Accessing a corrupted shared library
+@deftypevr Macro int ELIBBAD
+@comment errno ???/80
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: .lib section in a.out corrupted
+@deftypevr Macro int ELIBSCN
+@comment errno ???/81
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Attempting to link in too many shared libraries
+@deftypevr Macro int ELIBMAX
+@comment errno ???/82
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Cannot exec a shared library directly
+@deftypevr Macro int ELIBEXEC
+@comment errno ???/83
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Streams pipe error
+@deftypevr Macro int ESTRPIPE
+@comment errno ???/86
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Structure needs cleaning
+@deftypevr Macro int EUCLEAN
+@comment errno ???/117
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Not a XENIX named type file
+@deftypevr Macro int ENOTNAM
+@comment errno ???/118
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: No XENIX semaphores available
+@deftypevr Macro int ENAVAIL
+@comment errno ???/119
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Is a named type file
+@deftypevr Macro int EISNAM
+@comment errno ???/120
+@end deftypevr
+
+@comment errno.h
+@comment Linux???: Remote I/O error
+@deftypevr Macro int EREMOTEIO
+@comment errno ???/121
+@end deftypevr
 
 @node Error Messages,  , Error Codes, Error Reporting
 @section Error Messages

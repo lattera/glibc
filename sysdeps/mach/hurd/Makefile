@@ -53,8 +53,8 @@ $(patsubst %,$(hurd-objpfx)hurd/%.%,io fs process):
 	$(MAKE) -C $(..)hurd generated no_deps=t
 endif
 
-# Generate errnos.h and sys_errlist.c from the section of the manual that
-# lists all the errno codes.
+# Generate errnos.h from the section of the manual that lists all the errno
+# codes.
 
 errno.texinfo = $(..)manual/errno.texi
 
@@ -90,13 +90,6 @@ $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 #	  (cd $(hurd); cvs commit -m'Regenerated from $^' errnos.h)
 	touch $@
 generated += errnos.d stamp-errnos
-
-$(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
-	gawk -f $^ > $@-tmp
-# Make it unwritable so noone will edit it by mistake.
-	-chmod a-w $@-tmp
-	mv -f $@-tmp $@
-	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
 
 # We install the real libc.a as libcrt.a and as libc.a we install a linker
 # script which does -( -lcrt -lmachuser -lhurduser -).

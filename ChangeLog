@@ -1,4 +1,25 @@
+Tue Jun  4 00:16:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/gnu/errlist.awk: Produce N_("..."), not _N("...").
+
+	* intl: Updated from gettext-0.10.13.
+	* intl/localealias.c intl/dcgettext.c [_LIBC]: Define HAVE_ALLOCA.
+
+	* signal/siggetmask.c: New file.  Wrapper around sigblock with
+	link_warning about obsolescence.
+	* signal/Makefile (routines): Add siggetmask.
+
+	* sysdeps/gnu/errlist.awk: New file, adapted from ...
+	* sysdeps/mach/hurd/errlist.awk: File removed, above file replaces it.
+	* sysdeps/mach/hurd/Makefile (errlist.c): Target removed.
+	* sysdeps/gnu/Makefile: New file.
+	(sysdeps/gnu/errlist.c): Make the errlist.c generation rule into this.
+
 Mon Jun  3 21:03:54 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* manual/errno.texi (Error Codes): Add placeholder items for missing
+	Linux/i386 errno codes, with perror text but no documentation.
+	Some existing perror texts changed.
 
 	* malloc/mcheck.c (freehook, reallochook): Handle null pointer args.
 

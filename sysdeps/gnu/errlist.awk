@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,15 +25,11 @@
 BEGIN {
     print "/* This file is generated from errno.texi by errlist.awk.  */"
     print "";
-    print "#ifndef HAVE_GNU_LD"
-    print "#define _sys_nerr sys_nerr"
-    print "#define _sys_errlist sys_errlist"
-    print "#endif"
-    print ""
+    print "#include <errno.h>";
+    print "";
     print "const char *_sys_errlist[] =";
     print "  {";
-    maxerrno = 0;
-    print "    \"Success\","
+    print "    [0] = N_(\"Success\"),"
   }
 $1 == "@comment" && $2 == "errno.h" { errnoh=1; next }
 errnoh == 1 && $1 == "@comment" \
@@ -51,27 +47,19 @@ errnoh == 2 && $1 == "@deftypevr" && $2 == "Macro" && $3 == "int" \
 errnoh == 3 && $1 == "@comment" && $2 == "errno" \
   {
     errno = $3 + 0;
-    msgs[errno] = etext;
-    names[errno] = e;
-    if (errno > maxerrno) maxerrno = errno;
+    if (e == "EWOULDBLOCK")
+      print "#if defined (EWOULDBLOCK) && EWOULDBLOCK != EAGAIN";
+    else
+      printf "#ifdef %s\n", e;
+    printf "    [%s] = N_(\"%s\"),\n", e, etext;
+    print "#endif";
     next;
   }
 { errnoh=0 }
 END {
-  for (i = 1; i <= maxerrno; ++i)
-    {
-      if (names[i] == "")
-	print "    \"Reserved error " i "\",";
-      else
-	printf "%-40s/* %d = %s */\n", "    \"" msgs[i] "\",", i, names[i];
-    }
   print "  };";
   print "";
-  print "#include <errno.h>";
-  printf "#if _HURD_ERRNOS != %d\n", maxerrno+1;
-  print "#error errlist/errnos generation bug";
-  print "#endif"
-  printf "const int _sys_nerr = %d;\n", maxerrno+1;
-  print "weak_alias (_sys_errlist, sys_errlist)"
-  print "weak_alias (_sys_nerr, sys_nerr)"
+  print "const int _sys_nerr = sizeof _sys_errlist / sizeof _sys_errlist[0];";
+  print "weak_alias (_sys_errlist, sys_errlist)";
+  print "weak_alias (_sys_nerr, sys_nerr)";
   }
