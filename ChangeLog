@@ -1,3 +1,7 @@
+2002-09-02  Jack Howarth  <howarth@bromo.msbb.uc.edu>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.
+
 2002-09-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/localeinfo.h (struct locale_data): Add private.ctype.
