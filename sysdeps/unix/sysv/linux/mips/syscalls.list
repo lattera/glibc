@@ -37,7 +37,7 @@ socketpair	-	socketpair	4	__socketpair	socketpair
 #
 # There are defined locally because the caller is also defined in this dir.
 #
-s_llseek	llseek	_llseek		5	__syscall_llseek
+s_llseek	llseek	_llseek		5	__syscall__llseek
 s_sigaction	sigaction sigaction	3	__syscall_sigaction
 s_ustat		ustat	ustat		2	__syscall_ustat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
