@@ -88,6 +88,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected))
 modules-vis-yes = vismod1 vismod2 vismod3
+modules-names := $(strip $(module-names))
 extra-objs += $(modules-names:=.os)
 
 include ../Rules
