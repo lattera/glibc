@@ -754,16 +754,16 @@ __ieee754_j0l (long double x)
      = 1/sqrt(2) * (sin(x) - cos(x))
      sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
      cf. Fdlibm.  */
-  c = cosl (x);
-  s = sinl (x);
+  c = cosl (xx);
+  s = sinl (xx);
   ss = s - c;
   cc = s + c;
-  z = -cosl (x + x);
+  z = -cosl (xx + xx);
   if ((s * c) < 0)
     cc = z / ss;
   else
     ss = z / cc;
-  z = ONEOSQPI * (p * cc - q * ss) / sqrtl (x);
+  z = ONEOSQPI * (p * cc - q * ss) / sqrtl (xx);
   return z;
 }
 

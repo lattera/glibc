@@ -681,6 +681,21 @@ ifloat: 1
 Test "j0 (10.0) == -0.24593576445134833520":
 double: 2
 idouble: 2
+Test "j0 (4.0) == -3.9714980986384737228659076845169804197562E-1":
+double: 1
+float:  1
+idouble: 1
+ifloat:  1
+ildouble: 1
+ldouble: 1
+Test "j0 (-4.0) == -3.9714980986384737228659076845169804197562E-1":
+double: 1
+float:  1
+idouble: 1
+ifloat:  1
+ildouble: 1
+ldouble: 1
+
 
 # j1
 Test "j1 (10.0) == 0.043472746168861436670":
@@ -1500,6 +1515,8 @@ float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 1
+ildouble: 1
 
 Function: "j1":
 double: 2
