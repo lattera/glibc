@@ -25,10 +25,10 @@ distribute		:= nsswitch.h XXX-lookup.c getXXbyYY.c getXXbyYY_r.c \
 			   getXXent.c getXXent_r.c
 
 # This is the trivial part which goes into libc itself.
-routines		:= nsswitch \
-			   $(addsuffix -lookup,proto service host network \
-					       grp pwd rpc)
+routines		= nsswitch $(addsuffix -lookup,$(databases))
 
+# These are the databases that go through nss dispatch.
+databases		= proto service host network grp pwd rpc ethers
 
 # Specify rules for the nss_* modules.  We have some services.
 services		:= files dns
@@ -36,12 +36,11 @@ services		:= files dns
 extra-libs		= $(services:%=libnss_%)
 
 # The sources are found in the appropriate subdir.
-subdir-dirs = nss_files nss_dns
+subdir-dirs = $(services:%=nss_%)
 vpath %.c $(subdir-dirs)
 
 
-libnss_files-routines	:= files-proto files-service files-network \
-			   files-hosts files-grp files-pwd files-rpc
+libnss_files-routines	:= $(addprefix files-,$(databases))
 distribute		+= files-XXX.c files-parse.c
 
 libnss_dns-routines	:= dns-host dns-network

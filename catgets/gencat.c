@@ -310,7 +310,7 @@ read_input_file (struct catalog *current, const char *fname)
 	  else if (strncmp (&this_line[1], "set", 3) == 0)
 	    {
 	      int cnt = sizeof ("cnt");
-	      size_t set_number;
+	      int set_number;
 	      const char *symbol = NULL;
 	      while (isspace (this_line[cnt]))
 		++cnt;
@@ -987,7 +987,7 @@ read_old (struct catalog *catalog, const char *file_name)
 	/* No message in this slot.  */
 	continue;
 
-      if (old_cat_obj.name_ptr[cnt * 3 + 0] - 1 != last_set)
+      if (old_cat_obj.name_ptr[cnt * 3 + 0] - 1 != (u_int32_t) last_set)
 	{
 	  last_set = old_cat_obj.name_ptr[cnt * 3 + 0] - 1;
 	  set = find_set (catalog, old_cat_obj.name_ptr[cnt * 3 + 0] - 1);
@@ -997,14 +997,14 @@ read_old (struct catalog *catalog, const char *file_name)
       message = set->messages;
       while (message != NULL)
 	{
-	  if (message->number >= old_cat_obj.name_ptr[cnt * 3 + 1])
+	  if ((u_int32_t) message->number >= old_cat_obj.name_ptr[cnt * 3 + 1])
 	    break;
 	  last = message;
 	  message = message->next;
 	}
 
       if (message == NULL
-	  || message->number > old_cat_obj.name_ptr[cnt * 3 + 1])
+	  || (u_int32_t) message->number > old_cat_obj.name_ptr[cnt * 3 + 1])
 	{
 	  /* We have found a message which is not yet in the catalog.
 	     Insert it at the right position.  */

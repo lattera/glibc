@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,63 +16,30 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include "../locale/localeinfo.h"
-#include <stddef.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include <wchar.h>
 
 
-extern long int _mb_shift;	/* Defined in mbtowc.c.  */
+extern mbstate_t __no_r_state;	/* Defined in mbtowc.c.  */
 
 /* Convert WCHAR into its multibyte character representation,
-   putting this in S and returning its length.  */
+   putting this in S and returning its length.
+
+   Attention: this function should NEVER be intentionally used.
+   The interface is completely stupid.  The state is shared between
+   all conversion functions.  You should use instead the restartable
+   version `wcrtomb'.  */
 int
-DEFUN(wctomb, (s, wchar), register char *s AND wchar_t wchar)
+wctomb (char *s, wchar_t wchar)
 {
-#if 0
-  register CONST mb_char *mb;
-
-  if (_ctype_info->mbchar == NULL)
-    mb = NULL;
-  else
-    mb = _ctype_info->mbchar->mb_chars;
-#endif
-
-  /* If S is NULL, just say if we're shifted or not.  */
+  /* If S is NULL the function has to return null or not null
+     depending on the encoding having a state depending encoding or
+     not.  This is nonsense because any multibyte encoding has a
+     state.  The ISO C amendment 1 corrects this while introducing the
+     restartable functions.  We simply say here all encodings have a
+     state.  */
   if (s == NULL)
-    return _mb_shift != 0;
+    return 1;
 
-  if (wchar == (wchar_t) '\0')
-    {
-      _mb_shift = 0;
-      /* See ANSI 4.4.1.1, line 21.  */
-      if (s != NULL)
-	*s = '\0';
-      return 1;
-    }
-  else /* if (mb == NULL) */
-    {
-      if ((wchar_t) (char) wchar == wchar && isascii ((char) wchar))
-	{
-	  /* A normal ASCII character translates to itself.  */
-	  if (s != NULL)
-	    *s = (char) wchar;
-	  return 1;
-	}
-      return -1;
-    }
-
-#if 1
-  return -1;
-#else
-  mb += wchar + _mb_shift;
-  if (mb->string == NULL || mb->len == 0)
-    return -1;
-  memcpy((PTR) s, (CONST PTR) mb->string, mb->len + 1);
-  _mb_shift += mb->shift;
-  return mb->len;
-#endif
+  return wcrtomb (s, wchar, &__no_r_state);
 }

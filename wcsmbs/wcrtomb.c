@@ -24,18 +24,24 @@ Boston, MA 02111-1307, USA.  */
 #define EILSEQ EINVAL
 #endif
 
+
+static mbstate_t internal;
+
 size_t
 wcrtomb (s, wc, ps)
      char *s;
      wchar_t wc;
      mbstate_t *ps;
 {
+  char fake[1];
+
+  if (ps == NULL)
+    ps = internal;
+
   /*************************************************************\
   |* This is no complete implementation.  While the multi-byte *|
   |* character handling is not finished this will do.	       *|
   \*************************************************************/
-
-  char fake[1];
 
   if (s == NULL)
     {

@@ -101,7 +101,7 @@ extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
 
 
 void
-APPEND_R (SETFUNC_NAME) (STAYOPEN)
+SETFUNC_NAME (STAYOPEN)
 {
   set_function fct;
   int no_more;
@@ -138,7 +138,7 @@ APPEND_R (SETFUNC_NAME) (STAYOPEN)
 
 
 void
-APPEND_R (ENDFUNC_NAME) (void)
+ENDFUNC_NAME (void)
 {
   end_function fct;
   int no_more;

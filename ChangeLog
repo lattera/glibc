@@ -1,3 +1,85 @@
+Fri Jun 28 02:41:08 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* nss/Makefile (databases): New variable.
+	(routines, libnss_files-routines): Use it.
+	(subdir-dirs): Compute from $(services).
+
+	* sysdeps/unix/sysv/linux/syscalls.list (create_module, delete_module,
+	init_module, klogctl): Use EXTRA in the "caller" column so these get
+	added to unix-extra-syscalls and thus compiled in misc.
+
+	* string/Makefile (routines): Add strndup.
+	* string/strndup.c: New file.
+	* string/string.h: Declare strndup.
+	(strndupa): New macro.
+
+	* string/string.h: Declare __strdup.
+	* string/strdup.c: Deansideclized.  Define __ name and weak alias.
+
+	* string/string.h: Don't define memccpy as macro for [__OPTIMIZE__].
+
+Thu Jun 27 23:43:22 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela):  The Alpha's
+	address-of operation and plt format conspire to require all
+	dynamic relocs to be resolved to actual symbols not plt entries.
+
+Thu Jun 27 02:49:28 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c: Add casts to avoid signed<->unsigned warnings.
+
+	* grp/initgroups.c (initgroups): De-ansi-fy.
+	Move declaration of NGROUPS and GROUPS outside #if so that
+	the code compiles for NGROUPS_MAX != 0.
+
+	* inet/Makefile (headers): Add netinet/ether.h and netinet/if_ether.h.
+	(routines): Add ether_aton, ether_aton_r, ether_hton, ether_line,
+	ether_ntoa, ether_ntoa_r, and ether_ntoh.
+	* inet/ether_aton.c, inet/ether_aton_r.c, inet/ether_hton.c,
+	inet/ether_line.c, inet/ether_ntoa.c, inet/ether_ntoa_r.c,
+	inet/ether_ntoh.c: New files.  Implementation of functions to
+	handle Ethernet address to host mapping.
+	* inet/netinet/ether.h: New file.  Declare ether_* functions.
+	* netinet/ether.h: Wrapper around inet/netinet/ether.h for glibc
+	compilation.
+	* nss/ethers-lookup.c: New file.  Lookup function for ethers database.
+	* nss/Makefile (routines): Add ethers-lookup.
+	(libnss_files-routines): Add files-ethers.
+
+	* nss/getXXent_r.c: Don't define set*ent and end*ent function
+	with _r suffix.
+
+	* nss/nss_files/files-XXX.c (internal_endent): Don't reset
+	KEEP_STREAM every time called.
+	(_nss_files_end): Reset KEEP_STREAM here instead.
+	(internal_getent): If STREAM == NULL try to open instead of
+	signalling error.
+	Use cast to prevent warning.
+	Terminate read line in case the buffer is too small.
+
+	* nss/nss_files/files-ethers.c: New file.  Implementation of
+	Ethernet adress<->hostname lookup through files interface.
+
+	* stdlib/mbstowcs.c: Define based on mbsrtowcs().
+	* stdlib/mbtowc.c: Define based on mbrtowc().
+	* stdlib/wcstombs.c: Define based on wcsrtombs().
+	* stdlib/wctomb.c: Define based on wcrtomb().
+
+	* sunrpc/xdr.c (xdr_u_int): Avoid bogus call to
+	unexpected_sizes_in_xdr_u_int.
+
+	* sysdeps/generic/netinet/if_ether.h: New file.  Generic declaration
+	of `struct ether_addr'.
+	* sysdeps/unix/sysv/linux/netinet/if_ether.h: New file.  Linux specific
+	declaration of `struct ether_addr'.
+
+	* wcsmbs/mbrtowc.c: Handle case where argument PS is NULL.
+	* wcsmbs/mbsrtowcs.c: Ditto.
+	* wcsmbs/wcrtomb.c: Ditto.
+	* wcsmbs/wcsrtombs.c: Ditto.
+
+	* wcsmbs/mbsinit.c: Prepare for PS being NULL.
+
 Wed Jun 26 13:19:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/get-host.c <fcntl.h>: New include.

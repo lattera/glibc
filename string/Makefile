@@ -24,7 +24,8 @@ subdir	:= string
 headers	:= string.h strings.h memory.h endian.h bytesex.h \
 	   argz.h envz.h
 
-routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
+routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
+		   strdup strndup	\
 		   strerror _strerror strerror_r strlen strnlen		\
 		   strncat strncmp strncpy				\
 		   strrchr strpbrk strsignal strspn strstr strtok	\

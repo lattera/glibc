@@ -1,5 +1,6 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -13,26 +14,9 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
+#define DATABASE_NAME ethers
 
-
-/* Duplicate S, returning an identical malloc'd string.  */
-char *
-__strdup (const char *s)
-{
-  size_t len = strlen (s) + 1;
-  void *new = malloc (len);
-
-  if (new == NULL)
-    return NULL;
-
-  memcpy (new, s, len);
-
-  return (char *) new;
-}
-weak_alias (__strdup, strdup)
+#include "XXX-lookup.c"

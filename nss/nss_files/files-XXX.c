@@ -102,9 +102,6 @@ internal_endent (void)
       fclose (stream);
       stream = NULL;
     }
-
-  /* Reset STAYOPEN flag.  */
-  keep_stream = 0;
 }
 
 
@@ -115,6 +112,9 @@ CONCAT(_nss_files_end,ENTNAME) (void)
   __libc_lock_lock (lock);
 
   internal_endent ();
+
+  /* Reset STAYOPEN flag.  */
+  keep_stream = 0;
 
   __libc_lock_unlock (lock);
 
@@ -131,15 +131,17 @@ internal_getent (struct STRUCTURE *result,
   struct parser_data *data = (void *) buffer;
   int linebuflen = buffer + buflen - data->linebuffer;
 
-  /* Someone called internal_setent before calling us, so if the
-     stream is not open now the file could not be opened.  */
+  /* Be prepared that the set*ent function was not called before.  */
   if (stream == NULL)
     {
-      H_ERRNO_SET (NETDB_INTERNAL);
-      return NSS_STATUS_UNAVAIL;
+      enum nss_status status;
+
+      status = internal_setent (0);
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
     }
 
-  if (buflen < sizeof *data + 1)
+  if (buflen < (int) sizeof *data + 1)
     {
       errno = ERANGE;
       return NSS_STATUS_NOTFOUND;
@@ -154,6 +156,9 @@ internal_getent (struct STRUCTURE *result,
 	  H_ERRNO_SET (HOST_NOT_FOUND);
 	  return NSS_STATUS_NOTFOUND;
 	}
+
+      /* Terminate the line for any case.  */
+      data->linebuffer[linebuflen - 1] = '\0';
 
       /* Skip leading blanks.  */
       while (isspace (*p))

@@ -162,10 +162,13 @@ xdr_u_int(xdrs, up)
 	} else if (sizeof (u_int) == sizeof (u_short)) {
 		return (xdr_short(xdrs, (short *)up));
 	} else {
+	  abort ();		/* drepper@gnu */
+#if 0
 		/* force unresolved reference (link-time error): */
 		extern unexpected_sizes_in_xdr_u_int ();
 
 		unexpected_sizes_in_xdr_u_int();
+#endif
 	}
 #endif
 }

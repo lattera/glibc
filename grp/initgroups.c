@@ -16,7 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
+#include <alloca.h>
 #include <unistd.h>
 #include <string.h>
 #include <grp.h>
@@ -28,8 +28,9 @@ Cambridge, MA 02139, USA.  */
    by reading the group database and using all groups
    of which USER is a member.  Also include GROUP.  */
 int
-DEFUN(initgroups, (user, group),
-      CONST char *user AND gid_t group)
+initgroups (user, group)
+     const char *user;
+     gid_t group;
 {
 #if defined (NGROUPS_MAX) && NGROUPS_MAX == 0
 
@@ -40,21 +41,23 @@ DEFUN(initgroups, (user, group),
 
   struct group *g;
   register size_t n;
+  size_t ngroups;
+  gid_t *groups;
 #ifdef NGROUPS_MAX
-  gid_t groups[NGROUPS_MAX];
+# define limit NGROUPS_MAX
+
+  ngroups = limit;
 #else
   long int limit = sysconf (_SC_NGROUPS_MAX);
-  gid_t *groups;
-  size_t ngroups;
 
   if (limit > 0)
     ngroups = limit;
   else
     /* No fixed limit on groups.  Pick a starting buffer size.  */
     ngroups = 16;
+#endif
 
   groups = __alloca (ngroups * sizeof *groups);
-#endif
 
   setgrent ();
 

@@ -179,8 +179,8 @@ elf_machine_rela (struct link_map *map,
 
       if (resolve)
 	{
-          loadbase = (*resolve)(&sym, (Elf64_Addr)reloc_addr,
-			        r_info == R_ALPHA_JMP_SLOT);
+	  loadbase = (*resolve)(&sym, (Elf64_Addr)reloc_addr, 
+				r_info == R_ALPHA_JMP_SLOT);
 	}
       else
 	loadbase = map->l_addr;

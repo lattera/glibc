@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,69 +16,31 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include "../locale/localeinfo.h"
-#include <ctype.h>
-#include <stddef.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <wchar.h>
 
+
+extern mbstate_t __no_r_state;	/* Defined in mbtowc.c.  */
 
 /* Convert the `wchar_t' string in PWCS to a multibyte character string
    in S, writing no more than N characters.  Return the number of bytes
-   written, or (size_t) -1 if an invalid `wchar_t' was found.  */
+   written, or (size_t) -1 if an invalid `wchar_t' was found.
+
+   Attention: this function should NEVER be intentionally used.
+   The interface is completely stupid.  The state is shared between
+   all conversion functions.  You should use instead the restartable
+   version `wcsrtombs'.  */
 size_t
-DEFUN(wcstombs, (s, pwcs, n),
-      register char *s AND register CONST wchar_t *pwcs AND register size_t n)
+wcstombs (char *s, const wchar_t *pwcs, size_t n)
 {
-#if 0
-  register CONST mb_char *mb;
-  register int shift = 0;
-#endif
+  mbstate_t save_shift = __no_r_state;
+  size_t written;
 
-  register size_t written = 0;
-  register wchar_t w;
+  written = mbsrtowcs (pwcs, s, n, &__no_r_state);
 
-  while ((w = *pwcs++) != (wchar_t) '\0')
-    {
-      if (isascii (w))
-	{
-	  /* A normal character.  */
-	  *s++ = (unsigned char) w;
-	  --n;
-	  ++written;
-	}
-      else
-	{
-#if 1
-	  written = (size_t) -1;
-	  break;
-#else
-	  mb = &_ctype_info->mbchar->mb_chars[w + shift];
-	  if (mb->string == NULL || mb->len == 0)
-	    {
-	      written = (size_t) -1;
-	      break;
-	    }
-	  else if (mb->len > n)
-	    break;
-	  else
-	    {
-	      memcpy ((PTR) s, (CONST PTR) mb->string, mb->len);
-	      s += mb->len;
-	      n -= mb->len;
-	      written += mb->len;
-	      shift += mb->shift;
-	    }
-#endif
-	}
-    }
+  /* Restore the old shift state.  */
+  __no_r_state = save_shift;
 
-  /* Terminate the string if it has space.  */
-  if (n > 0)
-    *s = '\0';
-
-  /* Return the number of characters written (or maybe an error).  */
+  /* Return how many we wrote (or maybe an error).  */
   return written;
 }

@@ -20,6 +20,8 @@ Boston, MA 02111-1307, USA.  */
 #include <wchar.h>
 
 
+static mbstate_t internal;
+
 size_t
 mbsrtowcs (dst, src, len, ps)
      wchar_t *dst;
@@ -28,6 +30,10 @@ mbsrtowcs (dst, src, len, ps)
      mbstate_t *ps;
 {
   size_t result = 0;
+
+  if (ps == NULL)
+    ps = &internal;
+
   /*************************************************************\
   |* This is no complete implementation.  While the multi-byte *|
   |* character handling is not finished this will do.	       *|

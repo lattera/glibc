@@ -20,6 +20,8 @@ Boston, MA 02111-1307, USA.  */
 #include <wchar.h>
 
 
+static mbstate_t internal;
+
 size_t
 mbrtowc (pwc, s, n, ps)
      wchar_t *pwc;
@@ -28,6 +30,9 @@ mbrtowc (pwc, s, n, ps)
      mbstate_t *ps;
 {
   wchar_t to_wide;
+
+  if (ps == NULL)
+    ps = &internal;
 
   /*************************************************************\
   |* This is no complete implementation.  While the multi-byte *|

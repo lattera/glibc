@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,73 +16,41 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include "../locale/localeinfo.h"
-#include <ctype.h>
-#include <stddef.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <wchar.h>
 
 
-long int _mb_shift = 0;
+/* Common state for all non-restartable conversion functions.  */
+mbstate_t __no_r_state;
 
 /* Convert the multibyte character at S, which is no longer
    than N characters, to its `wchar_t' representation, placing
-   this n *PWC and returning its length.  */
+   this n *PWC and returning its length.
+
+   Attention: this function should NEVER be intentionally used.
+   The interface is completely stupid.  The state is shared between
+   all conversion functions.  You should use instead the restartable
+   version `mbrtowc'.  */
 int
-DEFUN(mbtowc, (pwc, s, n), wchar_t *pwc AND CONST char *s AND size_t n)
+mbtowc (wchar_t *pwc, const char *s, size_t n)
 {
-#if 0
-  register CONST mb_char *mb;
-  register wchar_t i;
-#endif
+  int result;
 
+  /* If S is NULL the function has to return null or not null
+     depending on the encoding having a state depending encoding or
+     not.  This is nonsense because any multibyte encoding has a
+     state.  The ISO C amendment 1 corrects this while introducing the
+     restartable functions.  We simply say here all encodings have a
+     state.  */
   if (s == NULL)
-    return _mb_shift != 0;
+    return 1;
 
-  if (*s == '\0')
-    /* ANSI 4.10.7.2, line 19.  */
-    return 0;
+  result = mbrtowc (pwc, s, n, &__no_r_state);
 
-  if (isascii (*s))
-    {
-      /* A normal ASCII character translates to itself.  */
-      if (pwc != NULL)
-	*pwc = (wchar_t) *s;
-      return 1;
-    }
+  /* The `mbrtowc' functions tell us more than we need.  Fold the -1
+     and -2 result into -1.  */
+  if (result < 0)
+    result = -1;
 
-#if 0
-  if (_ctype_info->mbchar == NULL ||
-      _ctype_info->mbchar->mb_chars == NULL)
-    return -1;
-
-  if (n > MB_CUR_MAX)
-    n = MB_CUR_MAX;
-
-  for (i = 0; i < WCHAR_MAX; ++i)
-    {
-      mb = &_ctype_info->mbchar->mb_chars[i];
-      /* EOF and NUL aren't MB chars.  */
-      if (i == (wchar_t) EOF || i == (wchar_t) '\0')
-	continue;
-      /* Normal ASCII values can't start MB chars.  */
-      else if (isascii(i))
-	continue;
-      else if (mb->string == NULL || mb->len == 0)
-	continue;
-      else if (mb->len > n)
-	continue;
-      else if (!strncmp(mb->string, s, mb->len))
-	{
-	  _mb_shift += mb->shift;
-	  if (pwc != NULL)
-	    *pwc = i;
-	  return mb->len;
-	}
-    }
-#endif
-
-  return -1;
+  return result;
 }

@@ -25,6 +25,8 @@ Boston, MA 02111-1307, USA.  */
 #endif
 
 
+static mbstate_t internal;
+
 size_t
 wcsrtombs (dst, src, len, ps)
      char *dst;
@@ -33,6 +35,9 @@ wcsrtombs (dst, src, len, ps)
      mbstate_t *ps;
 {
   size_t result = 0;
+
+  if (ps == NULL)
+    ps = &internal;
 
   /*************************************************************\
   |* This is no complete implementation.  While the multi-byte *|

@@ -49,9 +49,6 @@ extern __ptr_t __memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
 #if defined (__USE_SVID) || defined (__USE_BSD)
 extern __ptr_t memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
 			     int __c, size_t __n));
-#ifdef	__OPTIMIZE__
-#define	memccpy(dest, src, c, n) __memccpy((dest), (src), (c), (n))
-#endif /* Optimizing.  */
 #endif /* SVID.  */
 
 
@@ -88,6 +85,7 @@ extern size_t strxfrm __P ((char *__dest, __const char *__src, size_t __n));
 
 #if defined (__USE_SVID) || defined (__USE_BSD)
 /* Duplicate S, returning an identical malloc'd string.  */
+extern char *__strdup __P ((__const char *__s));
 extern char *strdup __P ((__const char *__s));
 #endif
 
@@ -95,9 +93,22 @@ extern char *strdup __P ((__const char *__s));
 /* Duplicate S, returning an identical alloca'd string.  */
 #define strdupa(s)							      \
 ({									      \
-    const char *__old = (s);						      \
-    size_t __len = strlen (__old) + 1;					      \
-    memcpy (__builtin_alloca (__len), __old, __len);			      \
+  __const char *__old = (s);						      \
+  size_t __len = strlen (__old) + 1;					      \
+  memcpy (__builtin_alloca (__len), __old, __len);			      \
+})
+
+/* Return a malloc'd copy of at most N bytes of STRING.  The
+   resultant string is terminated even if no null terminator
+   appears before STRING[N].  */
+extern char *strndup __P ((__const char *__string, size_t __n));
+
+/* Return an alloca'd copy of at most N bytes of string.  */
+#define strndupa(s, n)							      \
+({									      \
+  __const char *__old = (s);						      \
+  size_t __len = strnlen (__old) + 1;					      \
+  memcpy (__builtin_alloca (__len), __old, __len);			      \
 })
 #endif
 

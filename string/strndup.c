@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,18 +21,17 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 
 
-/* Duplicate S, returning an identical malloc'd string.  */
 char *
-__strdup (const char *s)
+strndup (const char *s, size_t n)
 {
-  size_t len = strlen (s) + 1;
-  void *new = malloc (len);
+  size_t len = strnlen (s) + 1;
+  char *new = malloc (len);
 
   if (new == NULL)
     return NULL;
 
   memcpy (new, s, len);
 
-  return (char *) new;
+  return new;
 }
-weak_alias (__strdup, strdup)
+
