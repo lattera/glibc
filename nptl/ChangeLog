@@ -1,3 +1,8 @@
+2004-01-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/createthread.c (create_thread): Don't add
+	CLONE_DETACHED bit if it is not necessary.
+
 2004-01-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_getattr_np.c: Include ldsodefs.h.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -174,7 +174,10 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
      is sent.  */
   int clone_flags = (CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL
 		     | CLONE_SETTLS | CLONE_PARENT_SETTID
-		     | CLONE_CHILD_CLEARTID | CLONE_DETACHED | CLONE_SYSVSEM
+		     | CLONE_CHILD_CLEARTID | CLONE_SYSVSEM
+#if __ASSUME_NO_CLONE_DETACHED == 0
+		     | CLONE_DETACHED
+#endif
 		     | 0);
 
   /* If the newly created threads has to be started stopped since we
