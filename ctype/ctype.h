@@ -39,7 +39,7 @@ __BEGIN_DECLS
 #if __BYTE_ORDER == __BIG_ENDIAN
 #define _ISbit(bit)	(1 << bit)
 #else /* __BYTE_ORDER == __LITTLE_ENDIAN */
-#define _ISbit(bit)	((1 << bit) << (bit < 8 ? 8 : -8))
+#define _ISbit(bit)	(bit < 8 ? ((1 << bit) << 8) : ((1 << bit) >> 8))
 #endif
 
 enum

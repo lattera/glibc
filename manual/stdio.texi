@@ -1958,8 +1958,8 @@ written by other people could break if you do this.
 @node Conversion Specifier Options
 @subsection Conversion Specifier Options
 
-If you define a meaning for @samp{%q}, what if the template contains
-@samp{%+23q} or @samp{%-#q}?  To implement a sensible meaning for these,
+If you define a meaning for @samp{%A}, what if the template contains
+@samp{%+23A} or @samp{%-#A}?  To implement a sensible meaning for these,
 the handler when called needs to be able to get the options specified in
 the template.
 

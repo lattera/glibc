@@ -45,6 +45,7 @@ extern const struct locale_data *_nl_current_##category;
 #undef	DEFINE_CATEGORY
 
 extern const char *const _nl_category_names[LC_ALL];
+extern const struct locale_data * *const _nl_current[LC_ALL];
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
@@ -53,7 +54,7 @@ extern const char *const _nl_category_names[LC_ALL];
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
 #define _NL_CURRENT_DEFINE(category) \
   extern const struct locale_data _nl_C_##category; \
-  const struct locale_data *nl_current_##category = &_nl_C_##category
+  const struct locale_data *_nl_current_##category = &_nl_C_##category
 
 /* Load the locale data for CATEGORY from the file specified by *NAME.
    If *NAME is "", use environment variables as specified by POSIX,

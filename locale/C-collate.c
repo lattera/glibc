@@ -6,13 +6,8 @@ PARTICULAR PURPOSE.  */
 
 #include "localeinfo.h"
 
-const struct locale_data _nl_C_LC_NUMERIC =
+const struct locale_data _nl_C_LC_COLLATE =
 {
   NULL, 0, /* no file mapped */
-  3,
-  {
-    ".",
-    "",
-    "\377"
-  }
+  0,
 };

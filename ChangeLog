@@ -1,5 +1,15 @@
 Thu Mar  9 22:29:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* locale/categories.def (LC_CTYPE): Merge CLASS_EB and CLASS_EL
+ 	into just CLASS.  Add standard/optional flag to all items.
+
+	* locale/localeinfo.h (_NL_CURRENT_DEFINE): Fix typo.
+
+	* ctype/ctype.h [__BYTE_ORDER == __LITTLE_ENDIAN] (_ISbit):
+ 	Rearrange defn to satisfy compiler.
+
+	* locale/localeinfo.h: Declare _nl_current.
+
 	* configure.in: Use AC_CHECK_TOOL for CC, AR, RANLIB.  Accept args
  	--enable-shared, --enable-profile, --enable-omitfp; pass settings
  	through to config.make.

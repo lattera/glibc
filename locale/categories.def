@@ -26,13 +26,13 @@ Cambridge, MA 02139, USA.  */
 
    where items itself is an array of entries in the form
 
-     { ID, name, value-type, min, max }
+     { ID, name, standard, value-type, min, max }
 
    The usage of the load, check, output functions depends on the individual
    program code which loads this file.
 
    The various value types for the items are `string', `stringarray', `byte'
-   and `bytearray'.  These cover all possiblee values in the current locale
+   and `bytearray'.  These cover all possible values in the current locale
    definitions.  `min' and `max' can be individually used again.  */
 
 #ifndef NO_POSTLOAD
@@ -50,67 +50,66 @@ DEFINE_CATEGORY (LC_COLLATE, "LC_COLLATE",
    the functions are important.  */
 DEFINE_CATEGORY (LC_CTYPE, "LC_CTYPE",
 		   (
-		     { _NL_CTYPE_CLASS_EB, "ctype-class-eb", string },
-		     { _NL_CTYPE_TOUPPER_EB, "ctype-toupper-eb", string },
-		     { _NL_CTYPE_TOLOWER_EB, "ctype-tolower-eb", string },
-		     { _NL_CTYPE_CLASS_EL, "ctype-class-el", string },
-		     { _NL_CTYPE_TOUPPER_EL, "ctype-toupper-el", string },
-		     { _NL_CTYPE_TOLOWER_EL, "ctype-tolower-el", string },
+		     { _NL_CTYPE_CLASS, "ctype-class", std, string },
+		     { _NL_CTYPE_TOUPPER_EB, "ctype-toupper-eb", std, string },
+		     { _NL_CTYPE_TOLOWER_EB, "ctype-tolower-eb", std, string },
+		     { _NL_CTYPE_TOUPPER_EL, "ctype-toupper-el", std, string },
+		     { _NL_CTYPE_TOLOWER_EL, "ctype-tolower-el", std, string },
 		     { 0 }
 		   ), _nl_postload_ctype,
 		 ctype_input, ctype_check, ctype_output )
 
 
 DEFINE_CATEGORY (LC_MONETARY, "LC_MONETARY",
-		   (
-		     { INT_CURR_SYMBOL,   "int_curr_symbol",   string },
-		     { CURRENCY_SYMBOL,   "currency_symbol",   string },
-		     { MON_DECIMAL_POINT, "mon_decimal_point", string },
-		     { MON_THOUSANDS_SEP, "mon_thousands_sep", string },
-		     { MON_GROUPING,      "mon_grouping",      bytearray },
-		     { POSITIVE_SIGN,     "positive_sign",     string },
-		     { NEGATIVE_SIGN,     "negative_sign",     string },
-		     { INT_FRAC_DIGITS,   "int_frac_digits",   byte },
-		     { FRAC_DIGITS,       "frac_digits",       byte },
-		     { P_CS_PRECEDES,     "p_cs_precedes",     byte, 0, 1 },
-		     { P_SEP_BY_SPACE,    "p_sep_by_space",    byte, 0, 2 },
-		     { N_CS_PRECEDES,     "n_cs_precedes",     byte, 0, 1 },
-		     { N_SEP_BY_SPACE,    "n_sep_by_space",    byte, 0, 2 },
-		     { P_SIGN_POSN,       "p_sign_posn",       byte, 0, 4 },
-		     { N_SIGN_POSN,       "n_sign_posn",       byte, 0, 4 },
-		     { 0 }
-		   ), NO_POSTLOAD, NULL, monetary_check, NULL )
+		 (
+		  { INT_CURR_SYMBOL,   "int_curr_symbol",   std, string },
+		  { CURRENCY_SYMBOL,   "currency_symbol",   std, string },
+		  { MON_DECIMAL_POINT, "mon_decimal_point", std, string },
+		  { MON_THOUSANDS_SEP, "mon_thousands_sep", std, string },
+		  { MON_GROUPING,      "mon_grouping",      std, bytearray },
+		  { POSITIVE_SIGN,     "positive_sign",     std, string },
+		  { NEGATIVE_SIGN,     "negative_sign",     std, string },
+		  { INT_FRAC_DIGITS,   "int_frac_digits",   std, byte },
+		  { FRAC_DIGITS,       "frac_digits",       std, byte },
+		  { P_CS_PRECEDES,     "p_cs_precedes",     std, byte, 0, 1 },
+		  { P_SEP_BY_SPACE,    "p_sep_by_space",    std, byte, 0, 2 },
+		  { N_CS_PRECEDES,     "n_cs_precedes",     std, byte, 0, 1 },
+		  { N_SEP_BY_SPACE,    "n_sep_by_space",    std, byte, 0, 2 },
+		  { P_SIGN_POSN,       "p_sign_posn",       std, byte, 0, 4 },
+		  { N_SIGN_POSN,       "n_sign_posn",       std, byte, 0, 4 },
+		  { 0 }
+		  ), NO_POSTLOAD, NULL, monetary_check, NULL )
 
 
 DEFINE_CATEGORY (LC_NUMERIC, "LC_NUMERIC",
-		   (
-		     { DECIMAL_POINT, "decimal_point", string },
-		     { THOUSANDS_SEP, "thousands_sep", string },
-		     { GROUPING,      "grouping",      bytearray },
-		     { 0 }
-		   ), NO_POSTLOAD, NULL, numeric_check, NULL)
+		 (
+		  { DECIMAL_POINT, "decimal_point", std, string },
+		  { THOUSANDS_SEP, "thousands_sep", std, string },
+		  { GROUPING,      "grouping",      std, bytearray },
+		  { 0 }
+		  ), NO_POSTLOAD, NULL, numeric_check, NULL)
 
 
 DEFINE_CATEGORY (LC_TIME, "LC_TIME",
-		   (
-		     { ABDAY_1,    "abday",      stringarray,  7,  7 },
-		     { DAY_1,      "day",        stringarray,  7,  7 },
-		     { ABMON_1,    "abmon",      stringarray, 12, 12 },
-		     { MON_1,      "mon",        stringarray, 12, 12 },
-		     { AM_STR,     "am_pm",      stringarray,  2,  2 },
-		     { D_T_FMT,    "d_t_fmt",    string },
-		     { D_FMT,      "d_fmt",      string },
-		     { T_FMT,      "t_fmt",      string },
-		     { T_FMT_AMPM, "t_fmt_ampm", string },
-		     { 0 }
-		   ), NO_POSTLOAD, NULL, NULL, NULL )
+		 (
+		  { ABDAY_1,    "abday",      std, stringarray,  7,  7 },
+		  { DAY_1,      "day",        std, stringarray,  7,  7 },
+		  { ABMON_1,    "abmon",      std, stringarray, 12, 12 },
+		  { MON_1,      "mon",        std, stringarray, 12, 12 },
+		  { AM_STR,     "am_pm",      std, stringarray,  2,  2 },
+		  { D_T_FMT,    "d_t_fmt",    std, string },
+		  { D_FMT,      "d_fmt",      std, string },
+		  { T_FMT,      "t_fmt",      std, string },
+		  { T_FMT_AMPM, "t_fmt_ampm", std, string },
+		  { 0 }
+		  ), NO_POSTLOAD, NULL, NULL, NULL )
 
 
 DEFINE_CATEGORY (LC_MESSAGES, "LC_MESSAGES",
-		   (
-		     { YESEXPR, "yesexpr", string },
-		     { NOEXPR,  "noexpr",  string },
-		     { YESSTR,  "yesstr",  string },
-		     { NOSTR,   "nostr",   string },
-		     { 0 }
-		   ), NO_POSTLOAD, NULL, messages_check, NULL )
+		 (
+		  { YESEXPR, "yesexpr", std, string },
+		  { NOEXPR,  "noexpr",  std, string },
+		  { YESSTR,  "yesstr",  opt, string },
+		  { NOSTR,   "nostr",   opt, string },
+		  { 0 }
+		  ), NO_POSTLOAD, NULL, messages_check, NULL )
