@@ -83,7 +83,7 @@ sub poorfnmatch {
 
 sub compiletest
 {
-  my($fnamebase, $msg, $errmsg, $skip) = @_;
+  my($fnamebase, $msg, $errmsg, $skip, $optional) = @_;
   my($result) = $skip;
   my($printlog) = 0;
 
@@ -96,13 +96,18 @@ sub compiletest
   } else {
     $ret = system "$CC $CFLAGS -c $fnamebase.c -o $fnamebase.o > $fnamebase.out 2>&1";
     if ($ret != 0) {
-      printf (" FAIL\n");
-      if ($verbose != 0) {
-	printf ("    $errmsg  Compiler message:\n");
-	$printlog = 1;
+      if ($optional != 0) {
+	printf (" $errmsg\n");
+	$result = 1;
+      } else {
+	printf (" FAIL\n");
+	if ($verbose != 0) {
+	  printf ("    $errmsg  Compiler message:\n");
+	  $printlog = 1;
+	}
+	++$errors;
+	$result = 1;
       }
-      ++$errors;
-      $result = 1;
     } else {
       printf (" OK\n");
       if ($verbose > 1 && -s "$fnamebase.out") {
@@ -274,7 +279,7 @@ while ($#headers >= 0) {
   close (TESTFILE);
 
   $missing = compiletest ($fnamebase, "Checking whether <$h> is available",
-			  "Header <$h> not available", 0);
+			  "Header <$h> not available", 0, 0);
 
   printf ("\n");
 
@@ -307,7 +312,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Testing for member $member",
-			  "Member \"$member\" not available.", $res);
+			  "Member \"$member\" not available.", $res, 0);
 
 
       # Test the types of the members.
@@ -321,6 +326,37 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Testing for type of member $member",
 		   "Member \"$member\" does not have the correct type.", $res);
+    } elsif (/^optional-constant *([a-zA-Z0-9_]*) ([>=<]+) ([A-Za-z0-9_]*)/) {
+      my($const) = $1;
+      my($op) = $2;
+      my($value) = $3;
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $const;
+
+      # Generate a program to test for the availability of this constant.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "__typeof__ ($const) a = $const;\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Testing for constant $const",
+			  "NOT PRESENT", $res, 1);
+
+      if ($value ne "") {
+	# Generate a program to test for the value of this constant.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	# Negate the value since 0 means ok
+	print TESTFILE "int main (void) { return !($const $op $value); }\n";
+	close (TESTFILE);
+
+	$res = runtest ($fnamebase, "Testing for value of constant $const",
+			"Constant \"$const\" has not the right value.", $res);
+      }
     } elsif (/^constant *([a-zA-Z0-9_]*) ([>=<]+) ([A-Za-z0-9_]*)/) {
       my($const) = $1;
       my($op) = $2;
@@ -338,7 +374,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "Constant \"$const\" not available.", $res);
+			  "Constant \"$const\" not available.", $res, 0);
 
       if ($value ne "") {
 	# Generate a program to test for the value of this constant.
@@ -369,7 +405,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "Constant \"$const\" not available.", $res);
+			  "Constant \"$const\" not available.", $res, 0);
 
       # Test the types of the members.
       open (TESTFILE, ">$fnamebase.c");
@@ -381,7 +417,36 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Testing for type of constant $const",
 		   "Constant \"$const\" does not have the correct type.",
-		   $res);
+		   $res, 0);
+
+      if ($value ne "") {
+	# Generate a program to test for the value of this constant.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	print TESTFILE "int main (void) { return $const != $value; }\n";
+	close (TESTFILE);
+
+	$res = runtest ($fnamebase, "Testing for value of constant $const",
+			"Constant \"$const\" has not the right value.", $res);
+      }
+    } elsif (/^optional-constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)?/) {
+      my($const) = $1;
+      my($value) = $2;
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $const;
+
+      # Generate a program to test for the availability of this constant.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "__typeof__ ($const) a = $const;\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Testing for constant $const",
+			  "NOT PRESENT", $res, 1);
 
       if ($value ne "") {
 	# Generate a program to test for the value of this constant.
@@ -410,7 +475,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "Constant \"$const\" not available.", $res);
+			  "Constant \"$const\" not available.", $res, 0);
 
       if ($value ne "") {
 	# Generate a program to test for the value of this constant.
@@ -440,7 +505,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Testing for constant $const",
-			  "Constant \"$const\" not available.", $res);
+			  "Constant \"$const\" not available.", $res, 0);
 
       # Test the types of the members.
       open (TESTFILE, ">$fnamebase.c");
@@ -452,7 +517,7 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Testing for type of constant $const",
 		   "Constant \"$const\" does not have the correct type.",
-		   $res);
+		   $res, 0);
 
       if ($value ne "") {
 	# Generate a program to test for the value of this constant.
@@ -488,7 +553,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Testing for type $type",
-		   "Type \"$type\" not available.", $missing);
+		   "Type \"$type\" not available.", $missing, 0);
     } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";
@@ -507,7 +572,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of function $fname",
-			  "Function \"$fname\" is not available.", $res);
+			  "Function \"$fname\" is not available.", $res, 0);
 
       # Generate a program to test for the type of this function.
       open (TESTFILE, ">$fnamebase.c");
@@ -519,7 +584,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Test for type of function $fname",
-		   "Function \"$fname\" has incorrect type.", $res);
+		   "Function \"$fname\" has incorrect type.", $res, 0);
     } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";
@@ -538,7 +603,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of function $fname",
-			  "Function \"$fname\" is not available.", $res);
+			  "Function \"$fname\" is not available.", $res, 0);
 
       # Generate a program to test for the type of this function.
       open (TESTFILE, ">$fnamebase.c");
@@ -550,7 +615,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Test for type of function $fname",
-		   "Function \"$fname\" has incorrect type.", $res);
+		   "Function \"$fname\" has incorrect type.", $res, 0);
     } elsif (/^variable *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*)/) {
       my($type) = "$2$3";
       my($vname) = "$4";
@@ -568,7 +633,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of variable $vname",
-			  "Variable \"$vname\" is not available.", $res);
+			  "Variable \"$vname\" is not available.", $res, 0);
 
       # Generate a program to test for the type of this function.
       open (TESTFILE, ">$fnamebase.c");
@@ -579,7 +644,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Test for type of variable $fname",
-		   "Variable \"$vname\" has incorrect type.", $res);
+		   "Variable \"$vname\" has incorrect type.", $res, 0);
     } elsif (/^macro-function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";
@@ -599,7 +664,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of function $fname",
-			  "Function \"$fname\" is not available.", $res);
+			  "Function \"$fname\" is not available.", $res, 0);
 
       # Generate a program to test for the type of this function.
       open (TESTFILE, ">$fnamebase.c");
@@ -612,7 +677,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Test for type of function $fname",
-		   "Function \"$fname\" has incorrect type.", $res);
+		   "Function \"$fname\" has incorrect type.", $res, 0);
     } elsif (/^macro-str *([^	]*)\s*(\".*\")/) {
       # The above regex doesn't handle a \" in a string.
       my($macro) = "$1";
@@ -632,7 +697,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Test availability of macro $macro",
-		   "Macro \"$macro\" is not available.", $missing);
+		   "Macro \"$macro\" is not available.", $missing, 0);
 
       # Generate a program to test for the value of this macro.
       open (TESTFILE, ">$fnamebase.c");
@@ -661,7 +726,7 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Test availability of macro $macro",
-		   "Macro \"$macro\" is not available.", $missing);
+		   "Macro \"$macro\" is not available.", $missing, 0);
     } elsif (/^allow-header *(.*)/) {
       my($pattern) = $1;
       push @allowheader, $pattern;
