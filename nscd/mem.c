@@ -410,7 +410,7 @@ gc (struct database_dyn *db)
 		      dbg_log ("entry %zu in hash bucket %zu out of bounds: "
 			       "%" PRIu32 "+%zu > %zu\n",
 			       cnt, idx, run, sizeof (struct hashentry),
-			       db->head->first_free);
+			       (size_t) db->head->first_free);
 		      break;
 		    }
 
@@ -419,14 +419,15 @@ gc (struct database_dyn *db)
 		  if (he->key + he->len > db->head->first_free)
 		    dbg_log ("key of entry %zu in hash bucket %zu out of "
 			     "bounds: %" PRIu32 "+%zu > %zu\n",
-			     cnt, idx, he->key, he->len, db->head->first_free);
+			     cnt, idx, he->key, (size_t) he->len,
+			     (size_t) db->head->first_free);
 
 		  if (he->packet + sizeof (struct datahead)
 		      > db->head->first_free)
 		    dbg_log ("packet of entry %zu in hash bucket %zu out of "
 			     "bounds: %" PRIu32 "+%zu > %zu\n",
 			     cnt, idx, he->packet, sizeof (struct datahead),
-			     db->head->first_free);
+			     (size_t) db->head->first_free);
 		  else
 		    {
 		      struct datahead *dh = (struct datahead *) (db->data
@@ -435,8 +436,8 @@ gc (struct database_dyn *db)
 			  > db->head->first_free)
 			dbg_log ("full key of entry %zu in hash bucket %zu "
 				 "out of bounds: %" PRIu32 "+%zu > %zu",
-				 cnt, idx, he->packet, dh->allocsize,
-				 db->head->first_free);
+				 cnt, idx, he->packet, (size_t) dh->allocsize,
+				 (size_t) db->head->first_free);
 		    }
 
 		  run = he->next;
