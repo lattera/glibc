@@ -1,3 +1,7 @@
+2000-04-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* math/Makefile (headers): Add bits/fenvinline.h.
+
 2000-05-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/aix/linux/linux-dirent.h: New file.
