@@ -1,5 +1,9 @@
 1998-04-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/regex.c: Define regerror really as __regerror.
+	* posix/regex.h: Add __ protected prototypes for regcomp, regexec,
+	regerror and regfree.
+
 	* stdlib/strtof_l.c: Declare ____strtoull_l_internal.
 	* stdlib/strtod_l.c: Likewise.
 	* stdlib/strtold_l.c: Likewise.

@@ -5761,7 +5761,7 @@ weak_alias (__regexec, regexec)
    from either regcomp or regexec.   We don't use PREG here.  */
 
 size_t
-regerror (errcode, preg, errbuf, errbuf_size)
+__regerror (errcode, preg, errbuf, errbuf_size)
     int errcode;
     const regex_t *preg;
     char *errbuf;
