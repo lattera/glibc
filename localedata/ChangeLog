@@ -1,5 +1,8 @@
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/es_MX: Correct int_curr_symbol.
+	* locales/es_PE: Likewise.
+
 	* SUPPORTED: Add missing supported locales.
 
 	* locales/fa_IR: Correct a few of the contained bugs.

@@ -46,6 +46,8 @@ category  "es_DO:2000";LC_ADDRESS
 category  "es_DO:2000";LC_TELEPHONE
 
 END LC_IDENTIFICATION
+
+LC_COLLATE
 copy "es_ES"
 END LC_COLLATE
 
