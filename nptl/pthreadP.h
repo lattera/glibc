@@ -88,8 +88,6 @@ extern int __pthread_debug attribute_hidden;
 /* Function performing the cancellation.  */
 extern void __do_cancel (char *currentframe)
      __attribute ((visibility ("hidden"), noreturn, regparm (1)));
-extern void __cleanup_thread (struct pthread *self, char *currentframe)
-     __attribute ((visibility ("hidden"), regparm (2)));
 
 
 /* Test whether stackframe is still active.  */

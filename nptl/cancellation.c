@@ -42,9 +42,6 @@ __do_cancel (char *currentframe)
 {
   struct pthread *self = THREAD_SELF;
 
-  /* Cleanup the thread-local storage.  */
-  __cleanup_thread (self, currentframe);
-
   /* Throw an exception.  */
   // XXX TBI
 
@@ -52,44 +49,6 @@ __do_cancel (char *currentframe)
   __libc_longjmp (self->cancelbuf, 1);
 
   /* NOTREACHED */
-}
-
-
-void
-__cleanup_thread (struct pthread *self, char *currentframe)
-{
-  struct _pthread_cleanup_buffer *cleanups;
-
-  /* Call all registered cleanup handlers.  */
-  cleanups = THREAD_GETMEM (self, cleanup);
-  if (__builtin_expect (cleanups != NULL, 0))
-    {
-      struct _pthread_cleanup_buffer *last;
-
-      while (FRAME_LEFT (currentframe, cleanups))
-	{
-	  last = cleanups;
-	  cleanups = cleanups->__prev;
-
-	  if (cleanups == NULL || FRAME_LEFT (last, cleanups))
-	    {
-	      cleanups = NULL;
-	      break;
-	    }
-	}
-
-      while (cleanups != NULL)
-	{
-	  /* Call the registered cleanup function.  */
-	  cleanups->__routine (cleanups->__arg);
-
-	  last = cleanups;
-	  cleanups = cleanups->__prev;
-
-	  if (FRAME_LEFT (last, cleanups))
-	    break;
-	}
-    }
 }
 
 

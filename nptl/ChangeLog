@@ -1,5 +1,11 @@
 2002-12-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-cleanup1.
+	* tst-cleanup1.c: New file.
+	* cancellation.c (__cleanup_thread): Removed.
+	(__do_cancel): Remove call to __cleanup_thread.
+	* pthreadP.h: Remove __cleanup_thread prorotype.
+
 	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_region_start):
 	Remember function and argument even if cancellation handler
 	function is not available.
