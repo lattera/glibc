@@ -52,7 +52,7 @@
 		    "	bne-	1b\n"					      \
 		    "2:	"						      \
 		    : "=&r" (__tmp), "=r" (__tmp2)			      \
-		    : "b" (mem), "r" (oldval), "r" (newval)		      \
+		    : "b" (mem), "1" (oldval), "r" (newval)		      \
 		    : "cr0", "memory");					      \
   __tmp != 0;								      \
 })

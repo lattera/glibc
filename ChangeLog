@@ -6,6 +6,11 @@
 
 2004-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/powerpc64/bits/atomic.h
+	(__arch_compare_and_exchange_bool_32_acq): Fix case where oldval
+	is negative.
+	(__arch_compare_and_exchange_bool_32_rel): Likewise.
+
 	* nscd/connections.c: Make socket nonblocking so that threads
 	don't get stuck on accept.  Fix locking.
 
