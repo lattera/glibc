@@ -41,8 +41,6 @@ static void init (int, char **, char **) __attribute__ ((unused));
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
 
-extern int _dl_fpu_control_set;
-
 /* Set nonzero if we have to be prepared for more then one libc being
    used in the process.  Safe assumption if initializer never runs.  */
 int __libc_multiple_libcs = 1;

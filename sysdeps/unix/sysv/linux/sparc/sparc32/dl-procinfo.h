@@ -1,5 +1,5 @@
 /* Linux/sparc32 version of processor capability information handling macros.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
@@ -23,12 +23,6 @@
 
 #include <ldsodefs.h>
 
-/* If anything should be added here check whether the size of each string
-   is still ok with the given array size.  */
-static const char sparc32_cap_flags[][7] =
-  {
-    "flush", "stbar", "swap", "muldiv", "v9", "ultra3"
-  };
 #define _DL_HWCAP_COUNT 6
 
 static inline int
@@ -41,7 +35,7 @@ _dl_procinfo (int word)
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_printf (" %s", sparc32_cap_flags[i]);
+      _dl_printf (" %s", GL(dl_sparc32_cap_flags)[i]);
 
   _dl_printf ("\n");
 
@@ -52,7 +46,7 @@ static inline const char *
 __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
-  return sparc32_cap_flags[idx];
+  return GL(dl_sparc32_cap_flags)[idx];
 };
 
 static inline int
@@ -62,7 +56,7 @@ _dl_string_hwcap (const char *str)
   int i;
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, sparc32_cap_flags [i]) == 0)
+      if (strcmp (str, GL(dl_sparc32_cap_flags) [i]) == 0)
 	return i;
     }
   return -1;

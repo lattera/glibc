@@ -1,3 +1,23 @@
+2002-02-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (_dl_load_lock): Remove duplicate
+	definition.
+	* sysdeps/ia64/hp-timing.h: Move _dl_hp_timing_overhead in
+	_rtld_global struct.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h: Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.c: Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.h: Likewise.
+	* sysdeps/sparc/sparc64/Makefile: Make hp-timing static only.
+	* sysdeps/unix/sysv/aix/init-first.c (_dl_fpu_control,
+	_dl_fpu_control_set): Remove unused externs.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h: Move procinfo
+	related variables in _rtld_global struct.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c (_dl_fpu_control_set): Remove
+	unused extern.
+
 2002-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-procinfo.c: New file.

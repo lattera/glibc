@@ -347,16 +347,6 @@ extern const char _dl_out_of_memory[];
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 
 
-/* During the program run we must not modify the global data of
-   loaded shared object simultanously in two threads.  Therefore we
-   protect `_dl_open' and `_dl_close' in dl-close.c.
-
-   This must be a recursive lock since the initializer function of
-   the loaded object might as well require a call to this function.
-   At this time it is not anymore a problem to modify the tables.  */
-__libc_lock_define_recursive (extern, _dl_load_lock)
-
-
 /* Write message on the debug file descriptor.  The parameters are
    interpreted as for a `printf' call.  All the lines start with a
    tag showing the PID.  */

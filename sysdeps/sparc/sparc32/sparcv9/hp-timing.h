@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  sparcv9 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@redhat.com>, 2001.
 
@@ -30,8 +30,6 @@
 
 typedef unsigned long long int hp_timing_t;
 
-extern hp_timing_t __libc_hp_timing_overhead;
-
 #define HP_TIMING_ZERO(Var)	(Var) = (0)
 
 #define HP_TIMING_NOW(Var) \
@@ -42,14 +40,14 @@ extern hp_timing_t __libc_hp_timing_overhead;
 #define HP_TIMING_DIFF_INIT() \
   do {									      \
     int __cnt = 5;							      \
-    __libc_hp_timing_overhead = ~0ull;					      \
+    GL(dl_hp_timing_overhead) = ~0ull;					      \
     do									      \
       {									      \
 	hp_timing_t __t1, __t2;						      \
 	HP_TIMING_NOW (__t1);						      \
 	HP_TIMING_NOW (__t2);						      \
-	if (__t2 - __t1 < __libc_hp_timing_overhead)			      \
-	  __libc_hp_timing_overhead = __t2 - __t1;			      \
+	if (__t2 - __t1 < GL(dl_hp_timing_overhead))			      \
+	  GL(dl_hp_timing_overhead) = __t2 - __t1;			      \
       }									      \
     while (--__cnt > 0);						      \
   } while (0)
@@ -58,7 +56,7 @@ extern hp_timing_t __libc_hp_timing_overhead;
 
 #define HP_TIMING_ACCUM(Sum, Diff)				\
 do {								\
-  hp_timing_t __diff = (Diff) - __libc_hp_timing_overhead;	\
+  hp_timing_t __diff = (Diff) - GL(dl_hp_timing_overhead);	\
   __asm__ __volatile__("srl	%L0, 0, %%g1\n\t"		\
 		       "sllx	%H0, 32, %%g7\n\t"		\
 		       "or	%%g1, %%g7, %%g1\n\t"		\
