@@ -227,10 +227,15 @@ Locales
 * Setting the Locale::          How a program specifies the locale
                                  with library functions.
 * Standard Locales::            Locale names available on all systems.
-* Numeric Formatting::          How to format numbers according to the
-                                 chosen locale.
+* Locale Information::          How to access the information for the locale.
+* Formatting Numbers::          A dedicated functions to format numbers.
 
-Numeric Formatting
+Locale Information
+
+* The Lame Way to Locale Data::   ISO C's @code{localeconv}.
+* The Elegant and Fast Way::      X/Open's @code{nl_langinfo}.
+
+The Lame Way to Locale Data
 
 * General Numeric::             Parameters for formatting numbers and
                                  currency amounts.

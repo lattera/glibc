@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1998-04-08T09:29:12-0700 drepper>
+Time-stamp: <1998-09-01T10:40:39-0700 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -44,9 +44,6 @@ Severity: [  *] to [***]
        which are not used for the output there are characters referenced
        which are not defined in the charmap.
        [PR libc/229]
-
-[  *]  The rcmd() functions (more concrete: the handling of .rhosts) does
-       not support netgroups and wildcards (+).
 
 [  *]  When assembling a locale definition, that uses the "copy"
        directive, with localedef, not only the copied category is

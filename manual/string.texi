@@ -633,6 +633,7 @@ determined by the currently selected locale.  In the standard @code{"C"}
 locale the characters @"A and @"a do not match but in a locale which
 regards these characters as parts of the alphabet they do match.
 
+@noindent
 @code{strcasecmp} is derived from BSD.
 @end deftypefun
 
@@ -643,6 +644,7 @@ This function is like @code{strncmp}, except that differences in case
 are ignored.  Like @code{strcasecmp}, it is locale dependent how
 uppercase and lowercase characters are related.
 
+@noindent
 @code{strncasecmp} is a GNU extension.
 @end deftypefun
 

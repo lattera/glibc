@@ -55,8 +55,10 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #include <string.h>
 
 
-int	__ivaliduser __P((FILE *, u_int32_t, const char *, const char *));
-static int __icheckhost __P((u_int32_t, char *)) internal_function;
+int __ivaliduser __P ((FILE *, u_int32_t, const char *, const char *));
+static int __ivaliduser2 __P ((FILE *, u_int32_t, const char *, const char *,
+			       const char *));
+
 
 int
 rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
@@ -283,7 +285,7 @@ ruserok(rhost, superuser, ruser, luser)
 
 	for (ap = hp->h_addr_list; *ap; ++ap) {
 		bcopy(*ap, &addr, sizeof(addr));
-		if (iruserok(addr, superuser, ruser, luser) == 0)
+		if (iruserok(addr, superuser, ruser, luser, rhost) == 0)
 			return 0;
 	}
 	return -1;
@@ -341,11 +343,11 @@ iruserfopen (char *file, uid_t okuser)
  *
  * Returns 0 if ok, -1 if not ok.
  */
-int
-iruserok (raddr, superuser, ruser, luser)
+static int
+iruserok2 (raddr, superuser, ruser, luser, rhost)
      u_int32_t raddr;
      int superuser;
-     const char *ruser, *luser;
+     const char *ruser, *luser, *rhost;
 {
   FILE *hostf = NULL;
   int isbad;
@@ -355,7 +357,7 @@ iruserok (raddr, superuser, ruser, luser)
 
   if (hostf)
     {
-      isbad = __ivaliduser (hostf, raddr, luser, ruser);
+      isbad = __ivaliduser2 (hostf, raddr, luser, ruser, rhost);
       fclose (hostf);
 
       if (!isbad)
@@ -388,7 +390,7 @@ iruserok (raddr, superuser, ruser, luser)
 
        if (hostf != NULL)
 	 {
-           isbad = __ivaliduser (hostf, raddr, luser, ruser);
+           isbad = __ivaliduser2 (hostf, raddr, luser, ruser, rhost);
            fclose (hostf);
 	 }
 
@@ -398,10 +400,25 @@ iruserok (raddr, superuser, ruser, luser)
   return -1;
 }
 
+/* This is the exported version.  */
+int
+iruserok (raddr, superuser, ruser, luser)
+     u_int32_t raddr;
+     int superuser;
+     const char *ruser, *luser;
+{
+  return iruserok2 (raddr, superuser, ruser, luser, "-");
+}
+
 /*
  * XXX
  * Don't make static, used by lpd(8).
  *
+ * This function is not used anymore. It is only present because lpd(8)
+ * calls it (!?!). We simply call __invaliduser2() with an illegal rhost
+ * argument. This means that netgroups won't work in .rhost/hosts.equiv
+ * files. If you want lpd to work with netgroups, fix lpd to use ruserok()
+ * or PAM.
  * Returns 0 if ok, -1 if not ok.
  */
 int
@@ -410,87 +427,194 @@ __ivaliduser(hostf, raddr, luser, ruser)
 	u_int32_t raddr;
 	const char *luser, *ruser;
 {
-	register char *user, *p;
-	int ch;
-	char *buf = NULL;
-	char *cp;
-	size_t bufsize = 0;
-	ssize_t nread;
-
-	while ((nread = __getline (&buf, &bufsize, hostf)) > 0) {
-		buf[bufsize - 1] = '\0'; /* Make sure it's terminated.  */
-		/* Because the file format does not know any form of quoting we
-		   can search forward for the next '#' character and if found
-		   make it terminating the line.  */
-		cp = strchr (buf, '#');
-		if (cp != NULL)
-		  *cp = '\0';
-		p = buf;
-		while (*p != '\n' && *p != ' ' && *p != '\t' && *p != '\0') {
-			*p = isupper(*p) ? tolower(*p) : *p;
-			p++;
-		}
-		if (*p == ' ' || *p == '\t') {
-			*p++ = '\0';
-			while (*p == ' ' || *p == '\t')
-				p++;
-			user = p;
-			while (*p != '\n' && *p != ' ' &&
-			    *p != '\t' && *p != '\0')
-				p++;
-		} else
-			user = p;
-		*p = '\0';
-		if (__icheckhost(raddr, buf) &&
-		    strcmp(ruser, *user ? user : luser) == 0) {
-			free (buf);
-			return 0;
-		}
-	}
-	if (buf != NULL)
-		free (buf);
-	return -1;
+	return __ivaliduser2(hostf, raddr, luser, ruser, "-");
 }
 
-/*
- * Returns "true" if match, 0 if no match.
- */
+
+/* Returns 1 on positive match, 0 on no match, -1 on negative match.  */
 static int
 internal_function
-__icheckhost(raddr, lhost)
+__icheckhost (raddr, lhost, rhost)
 	u_int32_t raddr;
-	register char *lhost;
+	char *lhost;
+	const char *rhost;
 {
 	struct hostent hostbuf, *hp;
 	size_t buflen;
 	char *buffer;
-	register u_int32_t laddr;
-	register char **pp;
 	int herr;
+	int save_errno;
+	u_int32_t laddr;
+	int negate=1;    /* Multiply return with this to get -1 instead of 1 */
+	char **pp, *user;
+
+	/* Check nis netgroup.  */
+	if (strncmp ("+@", lhost, 2) == 0)
+		return innetgr (&lhost[2], rhost, NULL, NULL);
+
+	if (strncmp ("-@", lhost, 2) == 0)
+		return -innetgr (&lhost[2], rhost, NULL, NULL);
+
+	/* -host */
+	if (strncmp ("-", lhost,1) == 0) {
+		negate = -1;
+		lhost++;
+	} else if (strcmp ("+",lhost) == 0) {
+		return 1;                    /* asking for trouble, but ok.. */
+	}
 
 	/* Try for raw ip address first. */
-	if (isdigit(*lhost) && (int32_t)(laddr = inet_addr(lhost)) != -1)
-		return raddr == laddr;
+	if (isdigit (*lhost) && (long) (laddr = inet_addr (lhost)) != -1)
+		return negate * (! (raddr ^ laddr));
 
 	/* Better be a hostname. */
 	buflen = 1024;
 	buffer = __alloca (buflen);
+	save_errno = errno;
 	while (__gethostbyname_r (lhost, &hostbuf, buffer, buflen, &hp, &herr)
 	       < 0)
-	  if (herr != NETDB_INTERNAL || errno != ERANGE)
-	    return 0;
-	  else
-	    {
-	      /* Enlarge the buffer.  */
-	      buflen *= 2;
-	      buffer = __alloca (buflen);
-	    }
+		if (herr != NETDB_INTERNAL || errno != ERANGE)
+			return (0);
+		else {
+			/* Enlarge the buffer.  */
+			buflen *= 2;
+			buffer = __alloca (buflen);
+			__set_errno (0);
+		}
+	__set_errno (save_errno);
+	if (hp == NULL)
+		return 0;
 
 	/* Spin through ip addresses. */
 	for (pp = hp->h_addr_list; *pp; ++pp)
-		if (!memcmp(&raddr, *pp, sizeof(u_int32_t)))
-			return 1;
+		if (!memcmp (&raddr, *pp, sizeof (u_int32_t)))
+			return negate;
 
 	/* No match. */
-	return 0;
+	return (0);
+}
+
+/* Returns 1 on positive match, 0 on no match, -1 on negative match.  */
+static int
+internal_function
+__icheckuser (luser, ruser)
+	const char *luser, *ruser;
+{
+    /*
+      luser is user entry from .rhosts/hosts.equiv file
+      ruser is user id on remote host
+      */
+    char *user;
+
+    /* [-+]@netgroup */
+    if (strncmp ("+@", luser, 2) == 0)
+	return innetgr (&luser[2], NULL, ruser, NULL);
+
+    if (strncmp ("-@", luser,2) == 0)
+	return -innetgr (&luser[2], NULL, ruser, NULL);
+
+    /* -user */
+    if (strncmp ("-", luser, 1) == 0)
+	return -(strcmp (&luser[1], ruser) == 0);
+
+    /* + */
+    if (strcmp ("+", luser) == 0)
+	return 1;
+
+    /* simple string match */
+    return strcmp (ruser, luser) == 0;
+}
+
+/*
+ * Returns 1 for blank lines (or only comment lines) and 0 otherwise
+ */
+static int
+__isempty(p)
+	char *p;
+{
+    while (*p && isspace (*p)) {
+	++p;
+    }
+
+    return (*p == '\0' || *p == '#') ? 1 : 0 ;
+}
+
+/*
+ * Returns 0 if positive match, -1 if _not_ ok.
+ */
+static int
+__ivaliduser2(hostf, raddr, luser, ruser, rhost)
+	FILE *hostf;
+	u_int32_t raddr;
+	const char *luser, *ruser, *rhost;
+{
+    register const char *user;
+    register char *p;
+    int hcheck, ucheck;
+    char *buf = NULL;
+    size_t bufsize = 0;
+
+    while (__getline (&buf, &bufsize, hostf) > 0) {
+	buf[bufsize - 1] = '\0'; /* Make sure it's terminated.  */
+        p = buf;
+
+	/* Skip empty or comment lines */
+	if (__isempty (p)) {
+	    continue;
+	}
+
+	/* Skip lines that are too long. */
+	if (strchr (p, '\n') == NULL) {
+	    int ch = getc (hostf);
+
+	    while (ch != '\n' && ch != EOF)
+		ch = getc (hostf);
+	    continue;
+	}
+
+	for (;*p && !isspace(*p); ++p) {
+	    *p = tolower (*p);
+	}
+
+	/* Next we want to find the permitted name for the remote user.  */
+	if (*p == ' ' || *p == '\t') {
+	    /* <nul> terminate hostname and skip spaces */
+	    for (*p++='\0'; *p && isspace (*p); ++p);
+
+	    user = p;                   /* this is the user's name */
+	    while (*p && !isspace (*p))
+		++p;                    /* find end of user's name */
+	} else
+	    user = p;
+
+	*p = '\0';              /* <nul> terminate username (+host?) */
+
+	/* buf -> host(?) ; user -> username(?) */
+
+	/* First check host part */
+	hcheck = __icheckhost (raddr, buf, rhost);
+
+	if (hcheck < 0)
+	    return -1;
+
+	if (hcheck) {
+	    /* Then check user part */
+	    if (! (*user))
+		user = luser;
+
+	    ucheck = __icheckuser (user, ruser);
+
+	    /* Positive 'host user' match? */
+	    if (ucheck > 0)
+		return 0;
+
+	    /* Negative 'host -user' match? */
+	    if (ucheck < 0)
+		return -1;
+
+	    /* Neither, go on looking for match */
+	}
+    }
+
+    return -1;
 }

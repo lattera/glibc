@@ -1,3 +1,22 @@
+1998-09-01 10:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/locale.texi: Almost compelte rewrite.  Document more functions
+	and functionality.
+	* manual/arith.texi: Correct reference.
+	* manual/string.texi: Pretty printing.
+
+	* manual/texinfo.tex: Update from last available version.
+
+1998-08-31 22:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nis/nis-pwd.c (_nss_nis_getpwnam_r): Correct test for
+	invalid password.
+	(_nss_nis_getpwuid_r): Likewise.
+	Patch by Matthew Arnison <matthewa@physics.usyd.edu.au>.
+
+	* inet/rcmd.c: Implement netgroup support.
+	Patch by Dick Streefland <dick_streefland@tasking.com>.
+
 1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-close.c (_dl_close): Update _dl_loaded if the first

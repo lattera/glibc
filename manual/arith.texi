@@ -1908,7 +1908,7 @@ An optional plus or minus sign (@samp{+} or @samp{-}).
 @item
 A nonempty sequence of digits optionally containing a decimal-point
 character---normally @samp{.}, but it depends on the locale
-(@pxref{Numeric Formatting}).
+(@pxref{General Numeric}).
 
 @item
 An optional exponent part, consisting of a character @samp{e} or
