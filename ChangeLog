@@ -1,3 +1,10 @@
+2002-09-28  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld.c (_dl_start): Fix conditional for declaring CNT.
+
+	* aclocal.m4 (LIBC_PROG_BINUTILS): Don't clobber $RANLIB with ranlib
+	before we check it.
+
 2002-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add __syscall_exit

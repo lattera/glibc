@@ -276,7 +276,7 @@ _dl_start (void *arg)
   struct dl_start_final_info info;
 # define bootstrap_map info.l
 #endif
-#if !defined HAVE_BUILTIN_MEMSET || defined USE_TLS
+#if USE_TLS || (!DONT_USE_BOOTSTRAP_MAP && !HAVE_BUILTIN_MEMSET)
   size_t cnt;
 #endif
 #ifdef USE_TLS
