@@ -1,7 +1,7 @@
 		Frequently Asked Question on GNU C Library
 
 As every FAQ this one also tries to answer questions the user might have
-when using the pacakge.  Please make sure you read this before sending
+when using the package.  Please make sure you read this before sending
 questions or bug reports to the maintainers.
 
 The GNU C Library is very complex.  The building process exploits the
@@ -38,6 +38,9 @@ please let me know.
 	  the old Linux based GNU libc.  Why isn't it like this?''
 
 [Q9]	``Why does getlogin() always return NULL on my Linux box?''
+
+[Q10]	``Where are the DST_* constants found in <sys/time.h> on many
+	  systems?''
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -259,6 +262,18 @@ means to support the new techniques later.
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
+[Q10]	``Where are the DST_* constants found in <sys/time.h> on many
+	  systems?''
+
+[A10] {UD} These constants come from the old BSD days and are not used
+today anymore (even the Linux based glibc does not implement the handling
+although the cosntants are defined).
+
+Instead GNU libc contains the zone database handling and compatibility
+code for POSIX TZ environment variable handling.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
