@@ -40,7 +40,7 @@
 
 /* We use embedded asm for .section unconditionally, as this makes it
    easier to insert the necessary directives into crtn.S. */
-#define SECTION(x) asm (".section " x );
+#define SECTION(x) asm (".section " x )
 
 /* Embed an #include to pull in the alignment and .end directives. */
 asm ("\n#include \"defs.h\"");
@@ -61,7 +61,7 @@ asm ("\n/*@TESTS_END*/");
 /* The beginning of _init:  */
 asm ("\n/*@_init_PROLOG_BEGINS*/");
 
-SECTION (".init")
+SECTION (".init");
 void
 _init (void)
 {
@@ -107,7 +107,7 @@ __gmon_start__ (void)
 asm ("\n/*@_init_EPILOG_ENDS*/");
 asm ("\n/*@_fini_PROLOG_BEGINS*/");
 
-SECTION (".fini")
+SECTION (".fini");
 void
 _fini (void)
 {
