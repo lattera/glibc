@@ -18,51 +18,33 @@
    02111-1307 USA.  */
 
 #include <dlfcn.h>
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 
 #include <shlib-compat.h>
 #include <atomic.h>
 
 
+/* Pointers to the libc functions.  */
+struct pthread_functions __libc_pthread_functions attribute_hidden;
+
+
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
-static void *libpthread_handle;
-
-
-static void
-test_loaded (void)
-{
-  /* While we are getting the result set the handle to (void *) -1 to
-     avoid recursive calls.  */
-  atomic_compare_and_exchange_acq (&libpthread_handle, (void *) -1l, NULL);
-
-  void *h = __libc_dlopen_mode ("libpthread.so.0", RTLD_LAZY | RTLD_NOLOAD);
-
-  libpthread_handle = h ?: (void *) -1l;
-}
-
-
-#define FORWARD3(name, rettype, decl, params, defaction, version) \
+# define FORWARD3(name, rettype, decl, params, defaction, version) \
 rettype									      \
 __noexport_##name decl							      \
 {									      \
-  if (libpthread_handle == NULL)					      \
-    test_loaded ();							      \
-									      \
-  if (libpthread_handle == (void *) -1l)				      \
+  if (__libc_pthread_functions.ptr_##name == NULL)			      \
     defaction;								      \
 									      \
-  static __typeof (name) *p;						      \
-  p = __libc_dlsym (libpthread_handle, #name);				      \
-									      \
-  return p params;							      \
+  return __libc_pthread_functions.ptr_##name params;			      \
 }									      \
 compat_symbol (libc, __noexport_##name, name, version)
 
-#define FORWARD2(name, decl, params, defretval, version) \
+# define FORWARD2(name, decl, params, defretval, version) \
   FORWARD3 (name, int, decl, params, return defretval, version)
 
-#define FORWARD(name, decl, params, defretval) \
+# define FORWARD(name, decl, params, defretval) \
   FORWARD2 (name, decl, params, defretval, GLIBC_2_0)
 
 

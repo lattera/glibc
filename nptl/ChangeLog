@@ -1,5 +1,47 @@
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* init.c (pthread_functions): New variable.
+	(__pthread_initialize_minimal): Pass pointer to pthread_functions
+	(or NULL) to __libc_pthread_init.
+	* forward.c: Rewrite to use __libc:pthread_functions array to get
+	function addresses.
+	* sysdeps/unix/sysv/linux/fork.h: Remove __libc_pthread_init
+	prototype.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (__libc_pthread_init):
+	Take new parameter.  Copy content of variable pointed to by it
+	to __libc_pthread_init.
+
+	* pthreadP.h (struct pthread_functions): New type.
+	(__libc_pthread_init): Declare.
+
+	* pthread_attr_destroy.c: Add namespace protected alias.
+	* pthread_attr_getdetachstate.c: Likewise.
+	* pthread_attr_getinheritsched.c: Likewise.
+	* pthread_attr_getschedparam.c: Likewise.
+	* pthread_attr_getschedpolicy.c: Likewise.
+	* pthread_attr_getscope.c: Likewise.
+	* pthread_attr_setdetachstate.c: Likewise.
+	* pthread_attr_setinheritsched.c: Likewise.
+	* pthread_attr_setschedparam.c: Likewise.
+	* pthread_attr_setschedpolicy.c: Likewise.
+	* pthread_attr_setscope.c: Likewise.
+	* pthread_cond_broadcast.c: Likewise.
+	* pthread_cond_destroy.c: Likewise.
+	* pthread_cond_init.c: Likewise.
+	* pthread_cond_signal.c: Likewise.
+	* pthread_cond_wait.c: Likewise.
+	* pthread_condattr_destroy.c: Likewise.
+	* pthread_condattr_init.c: Likewise.
+	* pthread_equal.c: Likewise.
+	* pthread_exit.c: Likewise.
+	* pthread_getschedparam.c: Likewise.
+	* pthread_self.c: Likewise.
+	* pthread_setcancelstate.c: Likewise.
+	* pthread_setschedparam.c: Likewise.
+	* pthread_mutex_destroy.c: Likewise.
+	* pthread_mutex_init.c: Likewise.
+	* pthreadP.h: Add prototypes for the aliases.
+
 	* sysdeps/unix/sysv/linux/i386/createthread.c (create_thread): Set
 	multiple_threads member in correct TCB to 1.
 

@@ -52,6 +52,46 @@ extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 #endif
 
 
+#ifdef SHARED
+static struct pthread_functions pthread_functions =
+  {
+    .ptr_pthread_attr_destroy = __pthread_attr_destroy,
+    .ptr_pthread_attr_init = __pthread_attr_init_2_1,
+    .ptr_pthread_attr_getdetachstate = __pthread_attr_getdetachstate,
+    .ptr_pthread_attr_setdetachstate = __pthread_attr_setdetachstate,
+    .ptr_pthread_attr_getinheritsched = __pthread_attr_getinheritsched,
+    .ptr_pthread_attr_setinheritsched = __pthread_attr_setinheritsched,
+    .ptr_pthread_attr_getschedparam = __pthread_attr_getschedparam,
+    .ptr_pthread_attr_setschedparam = __pthread_attr_setschedparam,
+    .ptr_pthread_attr_getschedpolicy = __pthread_attr_getschedpolicy,
+    .ptr_pthread_attr_setschedpolicy = __pthread_attr_setschedpolicy,
+    .ptr_pthread_attr_getscope = __pthread_attr_getscope,
+    .ptr_pthread_attr_setscope = __pthread_attr_setscope,
+    .ptr_pthread_condattr_destroy = __pthread_condattr_destroy,
+    .ptr_pthread_condattr_init = __pthread_condattr_init,
+    .ptr_pthread_cond_broadcast = __pthread_cond_broadcast,
+    .ptr_pthread_cond_destroy = __pthread_cond_destroy,
+    .ptr_pthread_cond_init = __pthread_cond_init,
+    .ptr_pthread_cond_signal = __pthread_cond_signal,
+    .ptr_pthread_cond_wait = __pthread_cond_wait,
+    .ptr_pthread_equal = __pthread_equal,
+    .ptr_pthread_exit = __pthread_exit,
+    .ptr_pthread_getschedparam = __pthread_getschedparam,
+    .ptr_pthread_setschedparam = __pthread_setschedparam,
+    .ptr_pthread_mutex_destroy = INTUSE(__pthread_mutex_destroy),
+    .ptr_pthread_mutex_init = INTUSE(__pthread_mutex_init),
+    .ptr_pthread_mutex_lock = INTUSE(__pthread_mutex_lock),
+    .ptr_pthread_mutex_unlock = INTUSE(__pthread_mutex_unlock),
+    .ptr_pthread_self = __pthread_self,
+    .ptr_pthread_setcancelstate = __pthread_setcancelstate,
+    .ptr_pthread_setcanceltype = __pthread_setcanceltype
+  };
+# define ptr_pthread_functions &pthread_functions
+#else
+# define ptr_pthread_functions NULL
+#endif
+
+
 /* For asynchronous cancellation we use a signal.  This is the handler.  */
 static void
 sigcancel_handler (int sig __attribute ((unused)))
@@ -167,5 +207,6 @@ __pthread_initialize_minimal (void)
   __static_tls_size = roundup (__static_tls_size, __static_tls_align);
 
   /* Register the fork generation counter with the libc.  */
-  __libc_pthread_init (&__fork_generation, __reclaim_stacks);
+  __libc_pthread_init (&__fork_generation, __reclaim_stacks,
+		       ptr_pthread_functions);
 }
