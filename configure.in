@@ -1435,9 +1435,6 @@ RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
-echo '*** Do NOT install this release on any production system!'
-echo '*** We are in early testing stages.'
-
 AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, [
 case $CONFIG_FILES in *config.make*)
 echo "$config_vars" >> config.make;;

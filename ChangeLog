@@ -1,3 +1,9 @@
+2000-10-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bump to 2.1.95.
+
+	* configure.in: Remove warning message.
+
 2000-10-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Add a few section-related symbols.
