@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -71,7 +71,7 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 	 to the front is no option.  Replicating all the code is
 	 costly while this test is not.  */
       if (__builtin_expect (abstime->tv_nsec >= 1000000000
-                            || abstime->tv_sec < 0, 0))
+                            || abstime->tv_nsec < 0, 0))
 	{
 	  result = EINVAL;
 	  break;

@@ -1,3 +1,11 @@
+2004-06-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread_rwlock_timedwrlock.c
+	(pthread_rwlock_timedwrlock): Return EINVAL if tv_nsec is negative,
+	instead of tv_sec.
+	* sysdeps/pthread/pthread_rwlock_timedrdlock.c
+	(pthread_rwlock_timedrdlock): Likewise.
+
 2004-06-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (lll_futex_requeue):
