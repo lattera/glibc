@@ -1,3 +1,9 @@
+2004-03-02  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/xstat.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/lxstat.c: New file.
+
 2004-03-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_getgr_r.c (nscd_getgr_r): Add missing initialization
