@@ -46,7 +46,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 {
   struct _pthread_cleanup_buffer buffer;
   struct _condvar_cleanup_buffer cbuffer;
-  int result = 0;
+  int result = 0, err;
 
   /* Catch invalid parameters.  */
   if (abstime->tv_nsec >= 1000000000)
@@ -56,7 +56,12 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   lll_mutex_lock (cond->__data.__lock);
 
   /* Now we can release the mutex.  */
-  __pthread_mutex_unlock_internal (mutex);
+  err = __pthread_mutex_unlock_internal (mutex);
+  if (err)
+    {
+      lll_mutex_unlock (cond->__data.__lock);
+      return err;
+    }
 
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;

@@ -338,7 +338,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 
   /* Determine the total size of all strings together.  */
   if (cnt == 1)
-    total = temp[0].len;
+    total = temp[0].len + 1;
   else
     {
       total = (1UL << (cnt - 2)) * (temp[0].len + temp[cnt - 1].len + 2);

@@ -1,5 +1,6 @@
 /* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -8,7 +9,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -16,29 +17,15 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Default stack size.  */
-#define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)
-
-/* Required stack pointer alignment at beginning.  SSE requires 16
-   bytes.  */
-#define STACK_ALIGN		16
-
-/* Minimal stack size after allocating thread descriptor and guard size.  */
-#define MINIMAL_REST_STACK	2048
-
-/* Alignment requirement for TCB.  */
-#define TCB_ALIGNMENT		16
-
-/* The signal used for asynchronous cancelation.  */
-#define SIGCANCEL		__SIGRTMIN
+#include <sched.h>
+#include <signal.h>
+#include <sysdep.h>
+#include <tls.h>
 
 
-/* Location of current stack frame.  */
-#define CURRENT_STACK_FRAME	__builtin_frame_address (0)
+#define ARCH_FORK() \
+  INLINE_SYSCALL (clone2, 6,						      \
+		  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD,	      \
+		  NULL, 0, &THREAD_SELF->tid, NULL, NULL)
 
-
-/* XXX Until we have a better place keep the definitions here.  */
-
-/* While there is no such syscall.  */
-#define __exit_thread_inline(val) \
-  INLINE_SYSCALL (exit, 1, (val))
+#include "../fork.c"

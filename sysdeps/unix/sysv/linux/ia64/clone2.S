@@ -23,7 +23,7 @@
 
 /* int  __clone2(int (*fn) (void *arg), void *child_stack_base, 	*/
 /* 	         size_t child_stack_size, int flags, void *arg,		*/
-/*	         pid_t *child_tid, pid_t *parent_tid, void *tls) */
+/*	         pid_t *parent_tid, void *tls, pid_t *child_tid)	*/
 
 ENTRY(__clone2)
 	alloc r2=ar.pfs,8,2,6,0
@@ -42,9 +42,9 @@ ENTRY(__clone2)
 	mov out0=in3		/* Flags are first syscall argument.	*/
 	mov out1=in1		/* Stack address.			*/
 	mov out2=in2		/* Stack size.				*/
-	mov out3=in5		/* Child TID Pointer			*/
-	mov out4=in6		/* Parent TID Pointer			*/
- 	mov out5=in7		/* TLS pointer				*/
+	mov out3=in7		/* Child TID Pointer			*/
+	mov out4=in5		/* Parent TID Pointer			*/
+ 	mov out5=in6		/* TLS pointer				*/
         DO_CALL (SYS_ify (clone2))
         cmp.eq p6,p0=-1,r10
 	;;

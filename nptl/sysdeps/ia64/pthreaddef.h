@@ -17,14 +17,16 @@
    02111-1307 USA.  */
 
 /* Default stack size.  */
-#define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)
+#define ARCH_STACK_DEFAULT_SIZE	(32 * 1024 * 1024)
 
-/* Required stack pointer alignment at beginning.  SSE requires 16
-   bytes.  */
+/* IA-64 uses a normal stack and a register stack.  */
+#define NEED_SEPARATE_REGISTER_STACK
+
+/* Required stack pointer alignment at beginning.  */
 #define STACK_ALIGN		16
 
 /* Minimal stack size after allocating thread descriptor and guard size.  */
-#define MINIMAL_REST_STACK	2048
+#define MINIMAL_REST_STACK	16384
 
 /* Alignment requirement for TCB.  */
 #define TCB_ALIGNMENT		16
@@ -34,8 +36,8 @@
 
 
 /* Location of current stack frame.  */
-#define CURRENT_STACK_FRAME	__builtin_frame_address (0)
-
+#define CURRENT_STACK_FRAME	__stack_pointer
+register char *__stack_pointer __asm__ ("sp");
 
 /* XXX Until we have a better place keep the definitions here.  */
 

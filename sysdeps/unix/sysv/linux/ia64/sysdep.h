@@ -176,6 +176,9 @@
 #define LOAD_ARGS_5(out0, out1, out2, out3, out4)	\
   register long _out4 asm ("out4") = (long) (out4);	\
   LOAD_ARGS_4 (out0, out1, out2, out3)
+#define LOAD_ARGS_6(out0, out1, out2, out3, out4, out5)	\
+  register long _out5 asm ("out5") = (long) (out5);	\
+  LOAD_ARGS_5 (out0, out1, out2, out3, out4)
 
 #define ASM_ARGS_0
 #define ASM_ARGS_1      ASM_ARGS_0, "r" (_out0)
@@ -183,13 +186,15 @@
 #define ASM_ARGS_3      ASM_ARGS_2, "r" (_out2)
 #define ASM_ARGS_4      ASM_ARGS_3, "r" (_out3)
 #define ASM_ARGS_5      ASM_ARGS_4, "r" (_out4)
+#define ASM_ARGS_6	ASM_ARGS_5, "r" (_out5)
 
 #define ASM_CLOBBERS_0	ASM_CLOBBERS_1, "out0"
 #define ASM_CLOBBERS_1	ASM_CLOBBERS_2, "out1"
 #define ASM_CLOBBERS_2	ASM_CLOBBERS_3, "out2"
 #define ASM_CLOBBERS_3	ASM_CLOBBERS_4, "out3"
 #define ASM_CLOBBERS_4	ASM_CLOBBERS_5, "out4"
-#define ASM_CLOBBERS_5	, "out5", "out6", "out7",			\
+#define ASM_CLOBBERS_5	ASM_CLOBBERS_6, "out5"
+#define ASM_CLOBBERS_6	, "out6", "out7",				\
   /* Non-stacked integer registers, minus r8, r10, r15.  */		\
   "r2", "r3", "r9", "r11", "r12", "r13", "r14", "r16", "r17", "r18",	\
   "r19", "r20", "r21", "r22", "r23", "r24", "r25", "r26", "r27",	\

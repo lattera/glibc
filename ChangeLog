@@ -1,3 +1,16 @@
+2003-03-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): If CNT == 1,
+	allocate space even for the trailing '/'.
+	Reported by John Reiser <jreiser@BitWagon.com>.
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (LOAD_ARGS_6, ASM_ARGS_6,
+	ASM_CLOBBERS_6): Define.
+	(ASM_CLOBBERS_5): Use ASM_CLOBBERS_6.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone2): Reorder arguments
+	to match IA-32 order.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Fix comment.
+
 2003-03-10  Steven Munroe  <sjmunroe@us.ibm.com>
 
         * sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Don't clobber R7.

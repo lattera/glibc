@@ -1,3 +1,55 @@
+2003-03-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_timedwait.c
+	(__pthread_cond_timedwait): Unlock and fail if
+	__pthread_mutex_unlock_internal failed.
+
+	* sysdeps/pthread/createthread.c (ARCH_CLONE): Define if not defined.
+	(create_thread): Only assert PD->tcb != NULL under [TLS_TCB_AT_TP].
+	Use ARCH_CLONE.
+	* allocatestack.c (ALLOCATE_STACK_PARMS): New macro.
+	[NEED_SEPARATE_REGISTER_STACK] (STACK_VARIABLES,
+	STACK_VARIABLES_ARGS, STACK_VARIABLES_PARMS, ALLOCATE_STACK_PARMS,
+	ALLOCATE_STACK): New macros.
+	(TLS_TPADJ): New macro.
+	(get_cached_stack, queue_stack, __deallocate_stack): Use TLS_TPADJ.
+	(allocate_stack): Handle TLS_DTV_AT_TP and
+	NEED_SEPARATE_REGISTER_STACK.  Use TLS_TPADJ.
+	* pthread_create.c (__pthread_create_2_1) [! TLS_TCB_AT_TP]:
+	Don't set PD->self.
+	* init.c [__ia64__] (__NR_set_tid_address): Define.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/bits/semaphore.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/fork.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/createthread.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/libc-lowlevellock.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/libc-lowlevelmutex.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/lowlevelmutex.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/pthread_once.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/sem_post.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/sem_timedwait.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/sem_trywait.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/sem_wait.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h: New file.
+	* sysdeps/ia64/bits/atomic.h: New file.
+	* sysdeps/ia64/Makefile: New file.
+	* sysdeps/ia64/pthread_spin_init.c: New file.
+	* sysdeps/ia64/pthread_spin_lock.c: New file.
+	* sysdeps/ia64/pthread_spin_trylock.c: New file.
+	* sysdeps/ia64/pthread_spin_unlock.c: New file.
+	* sysdeps/ia64/pthreaddef.h: New file.
+	* sysdeps/ia64/tcb-offsets.sym: New file.
+	* sysdeps/ia64/td_ta_map_lwp2thr.c: New file.
+	* sysdeps/ia64/tls.h: New file.
+
+	* sysdeps/s390/pthreaddef.h (__exit_thread_inline): Pass 1 argument
+	to syscall instead of no arguments.
+
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: New file.

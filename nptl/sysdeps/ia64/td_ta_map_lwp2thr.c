@@ -1,4 +1,5 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Which thread is running on an LWP?  IA-64 version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,29 +17,28 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Default stack size.  */
-#define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)
-
-/* Required stack pointer alignment at beginning.  SSE requires 16
-   bytes.  */
-#define STACK_ALIGN		16
-
-/* Minimal stack size after allocating thread descriptor and guard size.  */
-#define MINIMAL_REST_STACK	2048
-
-/* Alignment requirement for TCB.  */
-#define TCB_ALIGNMENT		16
-
-/* The signal used for asynchronous cancelation.  */
-#define SIGCANCEL		__SIGRTMIN
+#include "thread_dbP.h"
+#include <tls.h>
 
 
-/* Location of current stack frame.  */
-#define CURRENT_STACK_FRAME	__builtin_frame_address (0)
+td_err_e
+td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
+{
+  LOG ("td_ta_map_lwp2thr");
 
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
 
-/* XXX Until we have a better place keep the definitions here.  */
+  prgregset_t regs;
+  if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
+    return TD_ERR;
 
-/* While there is no such syscall.  */
-#define __exit_thread_inline(val) \
-  INLINE_SYSCALL (exit, 1, (val))
+  /* IA-64 thread register is r13.  */
+  th->th_unique = regs[13];
+
+  /* Found it.  Now complete the `td_thrhandle_t' object.  */
+  th->th_ta_p = (td_thragent_t *) ta;
+
+  return TD_OK;
+}

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997,98,99,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,98,99,2000,02,03 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -28,7 +28,7 @@
 #include <bp-asm.h>
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
-	     pid_t *tid, struct user_desc *tls); */
+	     pid_t *ptid, struct user_desc *tls, pid_t *ctid); */
 
 #define PARMS	LINKAGE		/* no space for saved regs */
 #define FUNC	PARMS
