@@ -1764,7 +1764,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 	  now = lr_token (ldfile, charmap, NULL);
 	  if (now->tok == tok_ident || now->tok == tok_string)
 	    {
-	      /* Must be one of the predefined class names.  */
+	      /* Must can be one of the predefined class names.  */
 	      for (cnt = 0; cnt < ctype->nr_charclass; ++cnt)
 		if (strcmp (ctype->classnames[cnt], now->val.str.startmb) == 0)
 		  break;
@@ -1783,13 +1783,10 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 		  else
 #endif
 		    {
-		      lr_error (ldfile, _("\
-unknown character class `%s' in category `LC_CTYPE'"),
-				now->val.str.startmb);
-		      free (now->val.str.startmb);
+		      /* OK, it's a new class.  */
+		      ctype_class_new (ldfile, ctype, now->val.str.startmb);
 
-		      lr_ignore_rest (ldfile, 0);
-		      continue;
+		      class_bit = _ISwbit (ctype->nr_charclass - 1);
 		    }
 		}
 	      else
@@ -2073,15 +2070,11 @@ with character code range values one must use the absolute ellipsis `...'"));
 		if (strcmp (now->val.str.startmb, ctype->mapnames[cnt]) == 0)
 		  break;
 
-	      if (cnt < ctype->map_collection_nr)
-		mapidx = cnt;
-	      else
-		{
-		  lr_error (ldfile, _("unknown map `%s'"),
-			    now->val.str.startmb);
-		  lr_ignore_rest (ldfile, 0);
-		  break;
-		}
+	      if (cnt >= ctype->map_collection_nr)
+		/* OK, it's a new map.  */
+		ctype_map_new (ldfile, ctype, now->val.str.startmb, charmap);
+
+	      mapidx = cnt;
 	    }
 	  else if (now->tok < tok_toupper || now->tok > tok_tolower)
 	    goto err_label;

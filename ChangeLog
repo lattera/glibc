@@ -1,3 +1,8 @@
+1999-11-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-ctype.c (ctype_read): Correctly implement
+	14652-style definition of new maps and classes.
+
 1999-11-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-monetary.c (monetary_finish): Don't print
