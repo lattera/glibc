@@ -1,3 +1,8 @@
+2003-12-16  Petter Reinholdtsen  <pere@hungry.com>
+
+	* posix/regex_internal.h: Make sure the regex code compile
+	with non-GCC compilers by hiding attributes.
+
 2002-12-16  Jakub Jelinek  <jakub@redhat.com>
             Paolo Bonzini  <bonzini@gnu.org>
 

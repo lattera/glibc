@@ -107,9 +107,9 @@
 #endif /* not _LIBC */
 
 #ifdef __GNUC__
-# define __attribute __attribute__
+# define __attribute(arg) __attribute__ (arg)
 #else
-# define __attribute
+# define __attribute(arg)
 #endif
 
 extern const char __re_error_msgid[] attribute_hidden;
