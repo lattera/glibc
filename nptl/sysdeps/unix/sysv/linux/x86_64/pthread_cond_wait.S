@@ -65,14 +65,6 @@ __condvar_cleanup:
 
 	incq	woken_seq(%rdi)
 
-	/* Wake up all waiters to make sure no signal gets lost.  */
-	addq	$wakeup_seq, %rdi
-	movq	$FUTEX_WAKE, %rsi
-	movl	$0x7fffffff, %edx
-	movq	$SYS_futex, %rax
-	syscall
-	subq	$wakeup_seq, %rdi
-
 	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
@@ -85,8 +77,15 @@ __condvar_cleanup:
 #endif
 	callq	__lll_mutex_unlock_wake
 
+	/* Wake up all waiters to make sure no signal gets lost.  */
+2:	addq	$wakeup_seq, %rdi
+	movq	$FUTEX_WAKE, %rsi
+	movl	$0x7fffffff, %edx
+	movq	$SYS_futex, %rax
+	syscall
+
 	/* Lock the mutex unless asynchronous cancellation is in effect.  */
-2:	testq	$2, (%r8)
+	testq	$2, (%r8)
 	jne	3f
 
 	movq	16(%r8), %rdi

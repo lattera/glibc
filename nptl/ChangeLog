@@ -1,5 +1,13 @@
 2003-03-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h
+	(pthrad_cond_t): Replace __unused field with __clock.
+
+	* sysdeps/pthread/pthread_cond_wait.c: Release condvar lock before
+	waken all waiters in cleanup handler.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+
 	* pthread_condattr_getclock.c: New file.
 	* pthread_condattr_setclock.c: New file.
 	* sysdeps/pthread/pthread.h: Declare these new functions.

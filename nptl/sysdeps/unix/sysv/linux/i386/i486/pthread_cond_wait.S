@@ -70,12 +70,6 @@ __condvar_cleanup:
 	addl	$1, woken_seq-wakeup_seq(%ebx)
 	adcl	$0, woken_seq-wakeup_seq+4(%ebx)
 
-	/* Wake up all waiters to make sure no signal gets lost.  */
-	movl	$FUTEX_WAKE, %ecx
-	movl	$SYS_futex, %eax
-	movl	$0x7fffffff, %edx
-	ENTER_KERNEL
-
 	LOCK
 	subl	$1, cond_lock-wakeup_seq(%ebx)
 	je	2f
@@ -83,8 +77,14 @@ __condvar_cleanup:
 	leal	cond_lock-wakeup_seq(%ebx), %eax
 	call	__lll_mutex_unlock_wake
 
+	/* Wake up all waiters to make sure no signal gets lost.  */
+2:	movl	$FUTEX_WAKE, %ecx
+	movl	$SYS_futex, %eax
+	movl	$0x7fffffff, %edx
+	ENTER_KERNEL
+
 	/* Lock the mutex unless asynchronous cancellation is in effect.  */
-2:	testl	$2, (%esi)
+	testl	$2, (%esi)
 	jne	3f
 
 	pushl	8(%esi)

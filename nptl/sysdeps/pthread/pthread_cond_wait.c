@@ -50,6 +50,9 @@ __condvar_cleanup (void *arg)
   ++cbuffer->cond->__data.__wakeup_seq;
   ++cbuffer->cond->__data.__woken_seq;
 
+  /* We are done.  */
+  lll_mutex_unlock (cbuffer->cond->__data.__lock);
+
   /* Wake everybody to make sure no condvar signal gets lost.  */
 #if BYTE_ORDER == LITTLE_ENDIAN
   int *futex = ((int *) (&cbuffer->cond->__data.__wakeup_seq));
@@ -59,9 +62,6 @@ __condvar_cleanup (void *arg)
 # error "No valid byte order"
 #endif
   lll_futex_wake (futex, INT_MAX);
-
-  /* We are done.  */
-  lll_mutex_unlock (cbuffer->cond->__data.__lock);
 
   /* Get the mutex before returning unless asynchronous cancellation
      is in effect.  */
