@@ -1,6 +1,11 @@
 
 # Begin of automatic generation
 
+# acos
+Test "acos (0.7) == 0.79539883018414355549096833892476432":
+ldouble:  1
+ildouble:  1
+
 # asin
 Test "asin (-0.5) == -pi/6":
 float: 2
@@ -35,17 +40,14 @@ Test "atan2 (-0.7, 1.0) == -0.61072596438920861654375887649023613":
 ildouble: 1
 ldouble: 1
 Test "atan2 (0.7, -1.0) == 2.530866689200584621918884506789267":
-float:  3.0000
-ifloat:  3.0000
+float:  3
+ifloat:  3
 Test "atan2 (-0.7, -1.0) == -2.530866689200584621918884506789267":
-float:  3.0000
-ifloat:  3.0000
+float:  3
+ifloat:  3
 Test "atan2 (1.4, -0.93) == 2.1571487668237843754887415992772736":
-float:  4.0000
-ifloat:  4.0000
-Function: "atan2":
-float:  4.0000
-ifloat:  4.0000
+float:  4
+ifloat:  4
 
 # cabs
 Test "cabs (-0.7 + 12.4 i) == 12.419742348374220601176836866763271":
@@ -488,6 +490,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble:  1
+ldouble:  1
+
 
 # fmod
 Test "fmod (-6.5, -2.3) == -1.9":
@@ -665,6 +670,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble:  1
+ldouble:  1
 
 # log2
 Test "log2 (0.7) == -0.51457317282975824043":
@@ -743,6 +750,13 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tanh (1.0) == 0.7615941559557648881194582826047935904":
+ldouble:  1
+ildouble:  1
+Test "tanh (-1.0) == -0.7615941559557648881194582826047935904":
+ldouble:  1
+ildouble:  1
+Function: "tanh":
 
 # tgamma
 Test "tgamma (-0.5) == -2 sqrt (pi)":
@@ -901,6 +915,10 @@ double: 1
 idouble: 1
 
 # Maximal error of functions:
+Function: "acos":
+ldouble:  1
+ildouble:  1
+
 Function: "asin":
 double: 1
 float: 2
@@ -914,6 +932,8 @@ ldouble: 1
 Function: "atan2":
 ildouble: 1
 ldouble: 1
+float:  4
+ifloat:  4
 
 Function: "atanh":
 double: 1
@@ -1218,6 +1238,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble:  1
+ldouble:  1
 
 Function: "log2":
 double: 1
