@@ -31,8 +31,8 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 
-static struct timeval RPCTIMEOUT = {10, 0};
-static struct timeval UDPTIMEOUT = {5, 0};
+static const struct timeval RPCTIMEOUT = {10, 0};
+static const struct timeval UDPTIMEOUT = {5, 0};
 
 extern u_short __pmap_getnisport (struct sockaddr_in *address, u_long program,
 				  u_long version, u_int protocol);
@@ -152,7 +152,7 @@ __nisbind_connect (dir_binding *dbp)
   if (dbp->clnt == NULL)
     return NIS_RPCERROR;
 
-  clnt_control (dbp->clnt, CLSET_TIMEOUT, (caddr_t)&RPCTIMEOUT);
+  clnt_control (dbp->clnt, CLSET_TIMEOUT, (caddr_t) &RPCTIMEOUT);
   /* If the program exists, close the socket */
   if (fcntl (dbp->socket, F_SETFD, 1) == -1)
     perror ("fcntl: F_SETFD");
@@ -161,12 +161,15 @@ __nisbind_connect (dir_binding *dbp)
     {
       if (serv->key_type == NIS_PK_DH)
 	{
-	  char netname[MAXNETNAMELEN+1];
+	  char netname[MAXNETNAMELEN + 1];
 	  char *p;
 
 	  p = stpcpy (netname, "unix.");
-	  strncpy (p, serv->name,MAXNETNAMELEN-5);
+	  strncpy (p, serv->name, MAXNETNAMELEN - 5);
 	  netname[MAXNETNAMELEN] = '\0';
+	  // XXX What is this supposed to do?  If we really want to replace
+	  // XXX the first dot, then we might as well use unix@ as the
+	  // XXX prefix string.  --drepper
 	  p = strchr (netname, '.');
 	  *p = '@';
 	  dbp->clnt->cl_auth =
@@ -248,7 +251,7 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 	      if ((((nis_result *)resp)->status == NIS_CBRESULTS) &&
 		  (cb != NULL))
 		{
-		  __nis_do_callback(dbp, &((nis_result *)resp)->cookie, cb);
+		  __nis_do_callback (dbp, &((nis_result *) resp)->cookie, cb);
 		  break;
 		}
 	      /* Yes, the missing break is correct. If we doesn't have to
@@ -262,9 +265,9 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 	    case NIS_IBREMOVE:
 	    case NIS_IBFIRST:
 	    case NIS_IBNEXT:
-	      if ((((nis_result *)resp)->status == NIS_SYSTEMERROR) ||
-		  (((nis_result *)resp)->status == NIS_NOSUCHNAME) ||
-		  (((nis_result *)resp)->status == NIS_NOT_ME))
+	      if (((nis_result *)resp)->status == NIS_SYSTEMERROR
+		  || ((nis_result *)resp)->status == NIS_NOSUCHNAME
+		  || ((nis_result *)resp)->status == NIS_NOT_ME)
 		{
 		  if (__nisbind_next (dbp) == NIS_SUCCESS)
 		    {
@@ -280,9 +283,9 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 		}
 	      break;
 	    case NIS_FINDDIRECTORY:
-	      if ((((fd_result *)resp)->status == NIS_SYSTEMERROR) ||
-		  (((fd_result *)resp)->status == NIS_NOSUCHNAME) ||
-		  (((fd_result *)resp)->status == NIS_NOT_ME))
+	      if (((fd_result *)resp)->status == NIS_SYSTEMERROR
+		  || ((fd_result *)resp)->status == NIS_NOSUCHNAME
+		  || ((fd_result *)resp)->status == NIS_NOT_ME)
 		{
 		  if (__nisbind_next (dbp) == NIS_SUCCESS)
 		    {
@@ -299,9 +302,9 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 	      break;
 	    case NIS_DUMPLOG: /* log_result */
 	    case NIS_DUMP:
-	      if ((((log_result *)resp)->lr_status == NIS_SYSTEMERROR) ||
-		  (((log_result *)resp)->lr_status == NIS_NOSUCHNAME) ||
-		  (((log_result *)resp)->lr_status == NIS_NOT_ME))
+	      if (((log_result *)resp)->lr_status == NIS_SYSTEMERROR
+		  || ((log_result *)resp)->lr_status == NIS_NOSUCHNAME
+		  || ((log_result *)resp)->lr_status == NIS_NOT_ME)
 		{
 		  if (__nisbind_next (dbp) == NIS_SUCCESS)
 		    {
@@ -343,10 +346,8 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
     return status;
 
   while (__nisbind_connect (&dbp) != NIS_SUCCESS)
-    {
-      if (__nisbind_next (&dbp) != NIS_SUCCESS)
-	return NIS_NAMEUNREACHABLE;
-    }
+    if (__nisbind_next (&dbp) != NIS_SUCCESS)
+      return NIS_NAMEUNREACHABLE;
 
   status = __do_niscall3 (&dbp, prog, xargs, req, xres, resp, flags, cb);
 
@@ -387,11 +388,11 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    __free_fdresult (fd_res);
 	    return dir;
 	  }
-	obj = calloc(1, sizeof(directory_obj));
-	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
-		      fd_res->dir_data.dir_data_len, XDR_DECODE);
-	_xdr_directory_obj(&xdrs, obj);
-	xdr_destroy(&xdrs);
+	obj = calloc (1, sizeof (directory_obj));
+	xdrmem_create (&xdrs, fd_res->dir_data.dir_data_val,
+		       fd_res->dir_data.dir_data_len, XDR_DECODE);
+	_xdr_directory_obj (&xdrs, obj);
+	xdr_destroy (&xdrs);
 	__free_fdresult (fd_res);
 	if (obj != NULL)
 	  {
@@ -412,9 +413,9 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
       {
 	directory_obj *obj;
 	size_t namelen = strlen (name);
-	char leaf [namelen + 3];
-	char domain [namelen + 3];
-	char ndomain [namelen + 3];
+	char leaf[namelen + 3];
+	char domain[namelen + 3];
+	char ndomain[namelen + 3];
 	char *cp;
 	u_int run = 0;
 
@@ -482,10 +483,10 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 static directory_obj *
 first_shoot (const_nis_name name, directory_obj *dir)
 {
-  directory_obj *obj;
+  directory_obj *obj = NUL;
   fd_result *fd_res;
   XDR xdrs;
-  char domain [strlen (name) + 3];
+  char domain[strlen (name) + 3];
 
   if (nis_dir_cmp (name, dir->do_name) == SAME_NAME)
     return dir;
@@ -496,25 +497,21 @@ first_shoot (const_nis_name name, directory_obj *dir)
     return dir;
 
   fd_res = __nis_finddirectory (dir, domain);
-  if (fd_res->status != NIS_SUCCESS)
+  if (fd_res->status == NIS_SUCCESS
+      && (obj = calloc (1, sizeof (directory_obj))) != NULL)
     {
-      __free_fdresult (fd_res);
-      return NULL;
+      xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
+		    fd_res->dir_data.dir_data_len, XDR_DECODE);
+      _xdr_directory_obj (&xdrs, obj);
+      xdr_destroy (&xdrs);
     }
-  obj = calloc(1, sizeof(directory_obj));
-  if (obj == NULL)
-    return NULL;
-  xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
-		fd_res->dir_data.dir_data_len, XDR_DECODE);
-  _xdr_directory_obj (&xdrs, obj);
-  xdr_destroy (&xdrs);
+
   __free_fdresult (fd_res);
+
   if (obj != NULL)
-    {
-      nis_free_directory (dir);
-      return obj;
-    }
-  return NULL;
+    nis_free_directory (dir);
+
+  return obj;
 }
 
 nis_error
