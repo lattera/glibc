@@ -1,3 +1,8 @@
+2003-03-19  Amos Waterland  <apw@us.ibm.com>
+
+	* posix/tst-nice.c: New file.
+	* posix/Makefile (tests): Add tst-nice.
+
 2003-03-18  Roland McGrath  <roland@redhat.com>
 
 	* abilist: New directory of libfoo.abilist files maintained using
