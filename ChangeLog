@@ -1,3 +1,8 @@
+1998-10-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c: Do a better job in initializing dynamic
+	memory [PR libc/844].
+
 1998-10-30 18:11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_conf.c (__gconv_read_conf): Don't define as
