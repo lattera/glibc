@@ -19,6 +19,9 @@ License along with the GNU C Library; see the file COPYING.LIB.	 If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+/* The gmp headers need some configuration frobs.  */
+#define HAVE_ALLOCA 1
+
 #ifdef USE_IN_LIBIO
 #  include <libioP.h>
 #else
