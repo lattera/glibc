@@ -1,3 +1,8 @@
+2003-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Reset CPU clocks
+	in child.
+
 2003-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-detach1.

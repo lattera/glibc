@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -24,8 +25,9 @@
 #include <libio/libioP.h>
 #include <tls.h>
 #include "fork.h"
+#include <hp-timing.h>
+#include <ldsodefs.h>
 #include <bits/stdio-lock.h>
-#include <assert.h>
 
 
 unsigned long int *__fork_generation_pointer;
@@ -83,10 +85,20 @@ __libc_fork (void)
 
   if (pid == 0)
     {
-      assert (THREAD_GETMEM (THREAD_SELF, tid) != ppid);
+      struct pthread *self = THREAD_SELF;
+
+      assert (THREAD_GETMEM (self, tid) != ppid);
 
       if (__fork_generation_pointer != NULL)
 	*__fork_generation_pointer += 4;
+
+#if HP_TIMING_AVAIL
+      /* The CPU clock of the thread and process have to be set to zero.  */
+      hp_timing_t now;
+      HP_TIMING_NOW (now);
+      THREAD_SETMEM (self, cpuclock_offset, now);
+      GL(dl_cpuclock_offset) = now;
+#endif
 
       /* Reset the file list.  These are recursive mutexes.  */
       fresetlockfiles ();
