@@ -1,3 +1,7 @@
+2001-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* attr.c (pthread_getattr_np): Fix __stacksize computation for IA-64.
+
 2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* shlib-versions: Add rule for Linux on 64 bit S/390.

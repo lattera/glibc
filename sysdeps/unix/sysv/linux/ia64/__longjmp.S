@@ -62,9 +62,7 @@ __longjmp:
 	sub r8=r8,in0		// r8 <- &orig_jmpbuf - &jmpbuf
 	;;
 	ld8 r25=[r2]		// r25 <- jmpbuf.ar_unat
-	shr r8=r8,3		// r8 <- (&orig_jmpbuf - &jmpbuf)/8
-	;;
-	and r8=0x3f,r8
+	extr.u r8=r8,3,6	// r8 <- (&orig_jmpbuf - &jmpbuf)/8 & 0x3f
 	;;
 	cmp.lt pNeg,pPos=r8,r0
 	mov r2=in0

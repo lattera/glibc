@@ -1,3 +1,32 @@
+2001-03-16  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (struct sigcontext):
+	Drop hack that was needed for 2.1.1 kernel headers.
+
+	* sysdeps/unix/sysv/linux/ia64/ucontext_i.h: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h: Rewrite to make it
+	overlay with kernel's "struct sigcontext".
+
+	* sysdeps/unix/sysv/linux/ia64/Makefile (sysdep_headers): Add
+	sys/rse.h for "misc" subdir.
+	(sysdep_routines): Add __start_context for "stdlib" subdir.
+
+	* sysdeps/unix/sysv/linux/ia64/sys/rse.h: New file (based on
+	kernel file of the same name).
+
+	* stdlib/Makefile (tests): Add tst-setcontext.
+	* stdlib/tst-setcontext.c: New file (based on a sample program by
+	Uli Drepper).
+
+	* sysdeps/unix/sysv/linux/ia64/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/__start_context.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/makecontext.c: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S (__longjmp): Use extr.u
+	instead of shift & and.
+
 2001-03-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/s390-64/bits/huge_val.h: Move to...

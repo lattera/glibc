@@ -1,3 +1,11 @@
+ifeq ($(subdir),misc)
+sysdep_headers += sys/rse.h
+endif
+
+ifeq ($(subdir),stdlib)
+sysdep_routines += __start_context
+endif
+
 ifeq ($(subdir),csu)
 CFLAGS-initfini.s += -DWEAK_GMON_START
 endif

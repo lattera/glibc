@@ -59,7 +59,7 @@ test-srcs	:= tst-fmtmsg
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \
 		   test-canon test-canon2 tst-strtoll tst-environ	  \
 		   tst-xpg-basename tst-random tst-bsearch tst-limits	  \
-		   tst-rand48 bug-strtod
+		   tst-rand48 bug-strtod tst-setcontext
 
 
 # Several mpn functions from GNU MP are used by the strtod function.

@@ -21,12 +21,6 @@
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
 
-#ifndef sigcontext_struct
-/* Kernel headers before 2.1.1 define a struct sigcontext_struct, but
-   we need sigcontext.  */
-# define sigcontext_struct sigcontext
-#endif
-
 #include <asm/fpu.h>
 #include <bits/sigstack.h>
 

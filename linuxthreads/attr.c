@@ -303,7 +303,7 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
   /* XXX This is awkward.  The guard pages are in the middle of the
      two stacks.  We must count the guard size in the stack size since
      otherwise the range of the stack area cannot be computed.  */
-  attr->__stacksize += attr->guardsize;
+  attr->__stacksize += attr->__guardsize;
 #endif
   attr->__stackaddr = guardaddr;
 
