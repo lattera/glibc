@@ -103,143 +103,64 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 }
 
 #ifdef __i386__
-Elf32_Addr
-la_i86_gnu_pltenter (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		     uintptr_t *defcook, La_i86_regs *regs,
-		     unsigned int *flags, const char *symname,
-		     long int *framesizep)
-{
-  printf ("i86_pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
-	  symname, (long int) sym->st_value, ndx, *flags);
-
-  return sym->st_value;
-}
-
-unsigned int
-la_i86_gnu_pltexit (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		    uintptr_t *defcook, const La_i86_regs *inregs,
-		    La_i86_retval *outregs, const char *symname)
-{
-  printf ("i86_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
-	  symname, (long int) sym->st_value, ndx, outregs->lrv_eax);
-
-  return 0;
-}
+# define pltenter la_i86_gnu_pltenter
+# define pltexit la_i86_gnu_pltexit
+# define La_regs La_i86_regs
+# define La_retval La_i86_retval
+# define int_retval lrv_eax
 #elif defined __x86_64__
-Elf64_Addr
-la_x86_64_gnu_pltenter (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-			uintptr_t *defcook, La_x86_64_regs *regs,
-			unsigned int *flags, const char *symname,
-			long int *framesizep)
-{
-  printf ("x86_64_pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
-	  symname, (long int) sym->st_value, ndx, *flags);
-
-  return sym->st_value;
-}
-
-unsigned int
-la_x86_64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		       uintptr_t *defcook, const La_x86_64_regs *inregs,
-		       La_x86_64_retval *outregs, const char *symname)
-{
-  printf ("x86_64_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
-	  symname, (long int) sym->st_value, ndx, outregs->lrv_rax);
-
-  return 0;
-}
+# define pltenter la_x86_64_gnu_pltenter
+# define pltexit la_x86_64_gnu_pltexit
+# define La_regs La_x86_64_regs
+# define La_retval La_x86_64_retval
+# define int_retval lrv_rax
 #elif defined __powerpc__ && __WORDSIZE == 32
-Elf32_Addr
-la_ppc32_gnu_pltenter (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		       uintptr_t *defcook, La_ppc32_regs *regs,
-		       unsigned int *flags, const char *symname,
-		       long int *framesizep)
-{
-  printf ("ppc32_pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
-	  symname, (long int) sym->st_value, ndx, *flags);
-
-  return sym->st_value;
-}
-
-unsigned int
-la_ppc32_gnu_pltexit (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		      uintptr_t *defcook, const La_ppc32_regs *inregs,
-		      La_ppc32_retval *outregs, const char *symname)
-{
-  printf ("ppc32_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
-	  symname, (long int) sym->st_value, ndx, outregs->lrv_r3);
-
-  return 0;
-}
+# define pltenter la_ppc32_gnu_pltenter
+# define pltexit la_ppc32_gnu_pltexit
+# define La_regs La_ppc32_regs
+# define La_retval La_ppc32_retval
+# define int_retval lrv_r3
 #elif defined __powerpc__ && __WORDSIZE == 64
-Elf64_Addr
-la_ppc64_gnu_pltenter (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		       uintptr_t *defcook, La_ppc64_regs *regs,
-		       unsigned int *flags, const char *symname,
-		       long int *framesizep)
-{
-  printf ("ppc64_pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
-	  symname, (long int) sym->st_value, ndx, *flags);
-
-  return sym->st_value;
-}
-
-unsigned int
-la_ppc64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		      uintptr_t *defcook, const La_ppc64_regs *inregs,
-		      La_ppc64_retval *outregs, const char *symname)
-{
-  printf ("ppc64_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
-	  symname, (long int) sym->st_value, ndx, outregs->lrv_r3);
-
-  return 0;
-}
+# define pltenter la_ppc64_gnu_pltenter
+# define pltexit la_ppc64_gnu_pltexit
+# define La_regs La_ppc64_regs
+# define La_retval La_ppc64_retval
+# define int_retval lrv_r3
 #elif defined __sh__
-uintptr_t
-la_sh_gnu_pltenter (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		    uintptr_t *defcook, La_sh_regs *regs,
-		    unsigned int *flags, const char *symname,
-		    long int *framesizep)
-{
-  printf ("sh_pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
-	  symname, (long int) sym->st_value, ndx, *flags);
-
-  return sym->st_value;
-}
-
-unsigned int
-la_sh_gnu_pltexit (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		   uintptr_t *defcook, const La_sh_regs *inregs,
-		   La_sh_retval *outregs, const char *symname)
-{
-  printf ("sh_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
-	  symname, (long int) sym->st_value, ndx, outregs->lrv_r0);
-
-  return 0;
-}
+# define pltenter la_sh_gnu_pltenter
+# define pltexit la_sh_gnu_pltexit
+# define La_regs La_sh_regs
+# define La_retval La_sh_retval
+# define int_retval lrv_r0
 #elif defined __mc68000__
-Elf32_Addr
-la_m68k_gnu_pltenter (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		      uintptr_t *defcook, La_m68k_regs *regs,
-		      unsigned int *flags, const char *symname,
-		      long int *framesizep)
-{
-  printf ("m68k_pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
-	  symname, (long int) sym->st_value, ndx, *flags);
-
-  return sym->st_value;
-}
-
-unsigned int
-la_m68k_gnu_pltexit (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-		     uintptr_t *defcook, const La_m68k_regs *inregs,
-		     La_m68k_retval *outregs, const char *symname)
-{
-  printf ("m68k_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
-	  symname, (long int) sym->st_value, ndx, outregs->lrv_d0);
-
-  return 0;
-}
+# define pltenter la_m68k_gnu_pltenter
+# define pltexit la_m68k_gnu_pltexit
+# define La_regs La_m68k_regs
+# define La_retval La_m68k_retval
+# define int_retval lrv_d0
 #else
 # error "architecture specific code needed"
 #endif
+
+
+ElfW(Addr)
+pltenter (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+	  uintptr_t *defcook, La_regs *regs, unsigned int *flags,
+	  const char *symname, long int *framesizep)
+{
+  printf ("pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
+	  symname, (long int) sym->st_value, ndx, *flags);
+
+  return sym->st_value;
+}
+
+unsigned int
+pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+	 uintptr_t *defcook, const La_regs *inregs, La_retval *outregs,
+	 const char *symname)
+{
+  printf ("pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
+	  symname, (long int) sym->st_value, ndx, outregs->int_retval);
+
+  return 0;
+}
