@@ -91,7 +91,7 @@
 # else
 #   define SINGLE_THREAD_P						\
   lwz   10,MULTIPLE_THREADS_OFFSET(13);				\
-  cmpdi 10,0
+  cmpwi 10,0
 # endif
 
 #elif !defined __ASSEMBLER__

@@ -1,7 +1,27 @@
 2003-03-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (__lll_mutex_lock):
+	Use atomic_exchange_and_add instead of __lll_add.
+	(__lll_mutex_timedlock): Likewise.
+	Patch by Ian Wienand.
+
+2003-03-24  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	(SINGLE_THREAD_P): Fix typo.
+	* tst-cancel-wrappers.sh: Handle '.'ed symbols.
+
+2003-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-align.
+	* tst-align.c: New file.
+	* sysdeps/i386/Makefile: Define CFLAGS-tst-align.
+	* sysdeps/x86_64/Makefile: Likewise.
+
 	* sysdeps/i386/tls.h (CALL_THREAD_FCT): Align stack of called
 	function correctly.
+
+	* tst-tsd2.c: Add casts to avoid warnings.
 
 2003-03-30  Ulrich Drepper  <drepper@redhat.com>
 

@@ -1,5 +1,5 @@
 #! /bin/sh
-# Test whether all cancellable functions are cancellable.
+# Test whether all cancelable functions are cancelable.
 # Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
@@ -82,9 +82,9 @@ C["__xpg_sigpause"]=1
 {
   if (C[$1] && $2 ~ /^[TW]$/)
     seen=$1
-  else if ($1 ~ /^__(libc|pthread)_enable_asynccancel$/ && $2 == "U")
+  else if ($1 ~ /^([.]|)__(libc|pthread)_enable_asynccancel$/ && $2 == "U")
     seen_enable=1
-  else if ($1 ~ /^__(libc|pthread)_disable_asynccancel$/ && $2 == "U")
+  else if ($1 ~ /^([.]|)__(libc|pthread)_disable_asynccancel$/ && $2 == "U")
     seen_disable=1
 }
 END {

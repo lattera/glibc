@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -38,7 +38,7 @@ destr (void *arg)
 static void *
 tf (void *arg)
 {
-  pthread_key_t key = (pthread_key_t) arg;
+  pthread_key_t key = (pthread_key_t) (long int) arg;
   int err;
 
   err = pthread_setspecific (key, (void *) -2l);
@@ -65,7 +65,7 @@ do_test (void)
 
   result = 1;
 
-  err = pthread_create (&th, NULL, tf, (void *) key);
+  err = pthread_create (&th, NULL, tf, (void *) (long int) key);
   if (err != 0)
     {
       printf ("create failed: %s\n", strerror (err));

@@ -19,3 +19,7 @@
 ifeq ($(subdir),csu)
 gen-as-const-headers += tcb-offsets.sym
 endif
+
+ifeq ($(subdir),nptl)
+CFLAGS-tst-align.c += -malign-double
+endif

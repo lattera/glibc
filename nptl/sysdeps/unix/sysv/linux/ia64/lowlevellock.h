@@ -103,7 +103,7 @@ static inline void
 __attribute__ ((always_inline))
 __lll_mutex_lock (int *futex)
 {
-  int val = __lll_add (futex, 1);
+  int val = atomic_exchange_and_add (futex, 1);
 
   if (__builtin_expect (val != 0, 0))
     __lll_lock_wait (futex, val);
@@ -119,7 +119,7 @@ static inline int
 __attribute__ ((always_inline))
 __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 {
-  int val = __lll_add (futex, 1);
+  int val = atomic_exchange_and_add (futex, 1);
   int result = 0;
 
   if (__builtin_expect (val != 0, 0))
