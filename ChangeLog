@@ -1,3 +1,8 @@
+2004-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (match_prefix): Correctly match
+	partial bytes.
+
 2004-02-13  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/__longjmp-common.S: New file.
