@@ -253,6 +253,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Buffer intermediate results.  */
   CHAR_T work_buffer[1000];
+  CHAR_T *workstart = NULL;
   CHAR_T *workend;
 
   /* State for restartable multibyte character handling functions.  */
@@ -1040,10 +1041,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	    /* Allocate dynamically an array which definitely is long	      \
 	       enough for the wide character version.  */		      \
-	    if (len < 8192						      \
-		|| ((string = (CHAR_T *) malloc (len * sizeof (wchar_t)))     \
-		    == NULL))						      \
+	    if (len < 8192)						      \
 	      string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
+	    else if ((string = (CHAR_T *) malloc (len * sizeof (wchar_t)))    \
+		     == NULL)						      \
+	      {								      \
+		done = -1;						      \
+		goto all_done;						      \
+	      }								      \
 	    else							      \
 	      string_malloced = 1;					      \
 									      \
@@ -1198,9 +1203,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    if (prec >= 0)						      \
 	      {								      \
 		/* The string `s2' might not be NUL terminated.  */	      \
-		if (prec < 32768					      \
-		    || (string = (char *) malloc (prec)) == NULL)	      \
+		if (prec < 32768)					      \
 		  string = (char *) alloca (prec);			      \
+		else if ((string = (char *) malloc (prec)) == NULL)	      \
+		  {							      \
+		    done = -1;						      \
+		    goto all_done;					      \
+		  }							      \
 		else							      \
 		  string_malloced = 1;					      \
 		len = __wcsrtombs (string, &s2, prec, &mbstate);	      \
@@ -1212,9 +1221,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		  {							      \
 		    assert (__mbsinit (&mbstate));			      \
 		    s2 = (const wchar_t *) string;			      \
-		    if (len + 1 < 32768					      \
-			|| (string = (char *) malloc (len + 1)) == NULL)      \
+		    if (len + 1 < 32768)				      \
 		      string = (char *) alloca (len + 1);		      \
+		    else if ((string = (char *) malloc (len + 1)) == NULL)    \
+		      {							      \
+			done = -1;					      \
+			goto all_done;					      \
+		      }							      \
 		    else						      \
 		      string_malloced = 1;				      \
 		    (void) __wcsrtombs (string, &s2, len + 1, &mbstate);      \
@@ -1350,6 +1363,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       UCHAR_T pad = L_(' ');/* Padding character.  */
       CHAR_T spec;
 
+      workstart = NULL;
       workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
 
       /* Get current character in format string.  */
@@ -1431,11 +1445,25 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    left = 1;
 	  }
 
-	if (width + 32 >= (int) (sizeof (work_buffer) / sizeof (work_buffer[0])))
-	  /* We have to use a special buffer.  The "32" is just a safe
-	     bet for all the output which is not counted in the width.  */
-	  workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
-		     + (width + 32));
+	if (width + 32 >= (int) (sizeof (work_buffer)
+				 / sizeof (work_buffer[0])))
+	  {
+	    /* We have to use a special buffer.  The "32" is just a safe
+	       bet for all the output which is not counted in the width.  */
+	    if (width < 32768 / sizeof (CHAR_T))
+	      workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
+			 + (width + 32));
+	    else
+	      {
+		workstart = (CHAR_T *) malloc ((width + 32) * sizeof (CHAR_T));
+		if (workstart == NULL)
+		  {
+		    done = -1;
+		    goto all_done;
+		  }
+		workend = workstart + (width + 32);
+	      }
+	  }
       }
       JUMP (*f, step1_jumps);
 
@@ -1444,10 +1472,23 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       width = read_int (&f);
 
       if (width + 32 >= (int) (sizeof (work_buffer) / sizeof (work_buffer[0])))
-	/* We have to use a special buffer.  The "32" is just a safe
-	   bet for all the output which is not counted in the width.  */
-	workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
-		   + (width + 32));
+	{
+	  /* We have to use a special buffer.  The "32" is just a safe
+	     bet for all the output which is not counted in the width.  */
+	  if (width < 32768 / sizeof (CHAR_T))
+	    workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
+		       + (width + 32));
+	  else
+	    {
+	      workstart = (CHAR_T *) malloc ((width + 32) * sizeof (CHAR_T));
+	      if (workstart == NULL)
+		{
+		  done = -1;
+		  goto all_done;
+		}
+	      workend = workstart + (width + 32);
+	    }
+	}
       if (*f == L_('$'))
 	/* Oh, oh.  The argument comes from a positional parameter.  */
 	goto do_positional;
@@ -1476,7 +1517,20 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	prec = 0;
       if (prec > width
 	  && prec + 32 > (int)(sizeof (work_buffer) / sizeof (work_buffer[0])))
-	workend = alloca (spec + 32) + (spec + 32);
+	{
+	  if (spec < 32768 / sizeof (CHAR_T))
+	    workend = alloca (spec + 32) + (spec + 32);
+	  else
+	    {
+	      workstart = (CHAR_T *) malloc ((spec + 32) * sizeof (CHAR_T));
+	      if (workstart == NULL)
+		{
+		  done = -1;
+		  goto all_done;
+		}
+	      workend = workstart + (spec + 32);
+	    }
+	}
       JUMP (*f, step2_jumps);
 
       /* Process 'h' modifier.  There might another 'h' following.  */
@@ -1538,6 +1592,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
       /* The format is correctly handled.  */
       ++nspecs_done;
+
+      free (workstart);
+      workstart = NULL;
 
       /* Look for next format specifier.  */
 #ifdef COMPILE_WPRINTF
@@ -1739,6 +1796,7 @@ do_positional:
 	int use_outdigits = specs[nspecs_done].info.i18n;
 	char pad = specs[nspecs_done].info.pad;
 	CHAR_T spec = specs[nspecs_done].info.spec;
+	CHAR_T *workstart = NULL;
 
 	/* Fill in last information.  */
 	if (specs[nspecs_done].width_arg != -1)
@@ -1772,10 +1830,20 @@ do_positional:
 	  }
 
 	/* Maybe the buffer is too small.  */
-	if (MAX (prec, width) + 32 > (int) (sizeof (work_buffer) / sizeof (CHAR_T)))
-	  workend = ((CHAR_T *) alloca ((MAX (prec, width) + 32)
-					* sizeof (CHAR_T))
-		     + (MAX (prec, width) + 32));
+	if (MAX (prec, width) + 32 > (int) (sizeof (work_buffer)
+					    / sizeof (CHAR_T)))
+	  {
+	    if (MAX (prec, width) < 32768 / sizeof (CHAR_T))
+	      workend = ((CHAR_T *) alloca ((MAX (prec, width) + 32)
+					    * sizeof (CHAR_T))
+			 + (MAX (prec, width) + 32));
+	    else
+	      {
+		workstart = (CHAR_T *) malloc ((MAX (prec, width) + 32)
+					       * sizeof (CHAR_T));
+		workend = workstart + (MAX (prec, width) + 32);
+	      }
+	  }
 
 	/* Process format specifiers.  */
 	while (1)
@@ -1823,6 +1891,9 @@ do_positional:
 	    break;
 	  }
 
+	free (workstart);
+	workstart = NULL;
+
 	/* Write the following constant string.  */
 	outstring (specs[nspecs_done].end_of_fmt,
 		   specs[nspecs_done].next_fmt
@@ -1831,6 +1902,7 @@ do_positional:
   }
 
 all_done:
+  free (workstart);
   /* Unlock the stream.  */
 #ifdef USE_IN_LIBIO
   _IO_funlockfile (s);
