@@ -1,3 +1,12 @@
+2004-11-15  Maciej W. Rozycki  <macro@mips.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (__SI_MAX_SIZE): 
+	Define appropriately based on __WORDSIZE.
+	[struct siginfo] (__pad0): Add for explicit padding.
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Formatting fixes
+	throughout.
+
 2004-11-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* dirent/dirent.h: Add __nonnull attributes.
