@@ -69,6 +69,11 @@ test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
 	$(build-module)
 
+ifeq ($(build-shared),yes)
+# Build all the modules even when not actually running test programs.
+tests: $(test-modules)
+endif
+
 $(objpfx)glrefmain: $(libdl)
 $(objpfx)glrefmain.out: $(objpfx)glrefmain \
 			$(objpfx)glreflib1.so $(objpfx)glreflib2.so

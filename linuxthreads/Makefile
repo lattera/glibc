@@ -21,6 +21,8 @@
 #
 subdir	:= linuxthreads
 
+all: # Make this the default target; it will be defined in Rules.
+
 linuxthreads-version := $(shell sed -n 's/^.*$(subdir)-\([0-9.]*\).*$$/\1/p' \
 				    Banner)
 
@@ -130,7 +132,10 @@ test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
 	$(build-module)
 
-all: # Make this the default target; it will be defined in Rules.
+ifeq ($(build-shared),yes)
+# Build all the modules even when not actually running test programs.
+tests: $(test-modules)
+endif
 
 # What we install as libpthread.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
