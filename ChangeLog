@@ -1,5 +1,8 @@
 2003-06-25  Andreas Jaeger  <aj@suse.de>
 
+	* stdlib/tst-strtod.c (main): Declare constant long double as
+	suggested by Jakub Jelinek and Andreas Schwab.
+
 	* posix/tst-nanosleep.c: Include <time.h> for nanosleep
 	declaration.
 	

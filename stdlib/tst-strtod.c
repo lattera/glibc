@@ -150,7 +150,7 @@ main (int argc, char ** argv)
     }
 
   const char input2[] = "+1.000000000116415321826934814453125";
-  if (strtold (input2, NULL) != +1.000000000116415321826934814453125)
+  if (strtold (input2, NULL) != +1.000000000116415321826934814453125L)
     {
       printf ("input2: %La != %La\n", strtold (input2, NULL),
 	      +1.000000000116415321826934814453125L);
