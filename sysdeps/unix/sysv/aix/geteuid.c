@@ -18,6 +18,9 @@
 
 #include <unistd.h>
 
+#define ID_EFFECTIVE	0x01
+
+
 uid_t
 __geteuid (void)
 {
