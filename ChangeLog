@@ -1,3 +1,10 @@
+2002-09-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/truncate64.c (truncate64): Fix
+	number of args to syscall.
+	* sysdeps/unix/sysv/linux/mips/ftruncate64.c (__ftruncate64): Likewise.
+	Patch by Guido Guenther <agx@sigxcpu.org>.
+
 2002-09-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
