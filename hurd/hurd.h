@@ -43,7 +43,11 @@
 
 #include <errno.h>
 
-_EXTERN_INLINE int
+#ifndef _HURD_H_EXTERN_INLINE
+#define _HURD_H_EXTERN_INLINE extern __inline
+#endif
+
+_HURD_H_EXTERN_INLINE int
 __hurd_fail (error_t err)
 {
   switch (err)

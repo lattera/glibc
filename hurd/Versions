@@ -135,6 +135,10 @@ libc {
     # h*
     hurd_directory_name_split;
   }
+  GLIBC_2.2.5 {
+    # This always existed as an inline but the real function never exported.
+    __hurd_fail;
+  }
 
 %if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
   HURD_CTHREADS_0.3 {
