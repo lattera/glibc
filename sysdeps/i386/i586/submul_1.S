@@ -31,7 +31,7 @@
 #define res_ptr edi
 #define s1_ptr esi
 #define size ecx
-#define s2_limb ebp
+#define s2_limb ebx
 
 	.text
 ENTRY(__mpn_submul_1)
@@ -39,8 +39,8 @@ ENTRY(__mpn_submul_1)
 
 	pushl	%edi
 	pushl	%esi
-	pushl	%ebx
 	pushl	%ebp
+	pushl	%ebx
 
 	movl	RES(%esp), %res_ptr
 	movl	S1(%esp), %s1_ptr
@@ -50,30 +50,30 @@ ENTRY(__mpn_submul_1)
 	leal	(%res_ptr,%size,4), %res_ptr
 	leal	(%s1_ptr,%size,4), %s1_ptr
 	negl	%size
-	xorl	%ebx, %ebx
+	xorl	%ebp, %ebp
 	ALIGN (3)
 
-L(oop):	adcl	$0, %ebx
+L(oop):	adcl	$0, %ebp
 	movl	(%s1_ptr,%size,4), %eax
 
 	mull	%s2_limb
 
-	addl	%ebx, %eax
-	movl	(%res_ptr,%size,4), %ebx
+	addl	%ebp, %eax
+	movl	(%res_ptr,%size,4), %ebp
 
 	adcl	$0, %edx
-	subl	%eax, %ebx
+	subl	%eax, %ebp
 
-	movl	%ebx, (%res_ptr,%size,4)
+	movl	%ebp, (%res_ptr,%size,4)
 	incl	%size
 
-	movl	%edx, %ebx
+	movl	%edx, %ebp
 	jnz	L(oop)
 
-	adcl	$0, %ebx
-	movl	%ebx, %eax
-	popl	%ebp
+	adcl	$0, %ebp
+	movl	%ebp, %eax
 	popl	%ebx
+	popl	%ebp
 	popl	%esi
 	popl	%edi
 

@@ -34,15 +34,15 @@ ENTRY(__mpn_sub_n)
 
 	pushl	%edi
 	pushl	%esi
-	pushl	%ebx
 	pushl	%ebp
+	pushl	%ebx
 
 	movl	RES(%esp),%edi
 	movl	S1(%esp),%esi
-	movl	S2(%esp),%ebp
+	movl	S2(%esp),%ebx
 	movl	SIZE(%esp),%ecx
 
-	movl	(%ebp),%ebx
+	movl	(%ebx),%ebp
 
 	decl	%ecx
 	movl	%ecx,%edx
@@ -58,42 +58,42 @@ L(oop):	movl	28(%edi),%eax		/* fetch destination cache line */
 
 L(1):	movl	(%esi),%eax
 	movl	4(%esi),%edx
-	sbbl	%ebx,%eax
-	movl	4(%ebp),%ebx
-	sbbl	%ebx,%edx
-	movl	8(%ebp),%ebx
+	sbbl	%ebp,%eax
+	movl	4(%ebx),%ebp
+	sbbl	%ebp,%edx
+	movl	8(%ebx),%ebp
 	movl	%eax,-32(%edi)
 	movl	%edx,-28(%edi)
 
 L(2):	movl	8(%esi),%eax
 	movl	12(%esi),%edx
-	sbbl	%ebx,%eax
-	movl	12(%ebp),%ebx
-	sbbl	%ebx,%edx
-	movl	16(%ebp),%ebx
+	sbbl	%ebp,%eax
+	movl	12(%ebx),%ebp
+	sbbl	%ebp,%edx
+	movl	16(%ebx),%ebp
 	movl	%eax,-24(%edi)
 	movl	%edx,-20(%edi)
 
 L(3):	movl	16(%esi),%eax
 	movl	20(%esi),%edx
-	sbbl	%ebx,%eax
-	movl	20(%ebp),%ebx
-	sbbl	%ebx,%edx
-	movl	24(%ebp),%ebx
+	sbbl	%ebp,%eax
+	movl	20(%ebx),%ebp
+	sbbl	%ebp,%edx
+	movl	24(%ebx),%ebp
 	movl	%eax,-16(%edi)
 	movl	%edx,-12(%edi)
 
 L(4):	movl	24(%esi),%eax
 	movl	28(%esi),%edx
-	sbbl	%ebx,%eax
-	movl	28(%ebp),%ebx
-	sbbl	%ebx,%edx
-	movl	32(%ebp),%ebx
+	sbbl	%ebp,%eax
+	movl	28(%ebx),%ebp
+	sbbl	%ebp,%edx
+	movl	32(%ebx),%ebp
 	movl	%eax,-8(%edi)
 	movl	%edx,-4(%edi)
 
 	leal	32(%esi),%esi
-	leal	32(%ebp),%ebp
+	leal	32(%ebx),%ebx
 	decl	%ecx
 	jnz	L(oop)
 
@@ -105,23 +105,23 @@ L(end):
 L(oop2):
 	leal	4(%edi),%edi
 	movl	(%esi),%eax
-	sbbl	%ebx,%eax
-	movl	4(%ebp),%ebx
+	sbbl	%ebp,%eax
+	movl	4(%ebx),%ebp
 	movl	%eax,-4(%edi)
 	leal	4(%esi),%esi
-	leal	4(%ebp),%ebp
+	leal	4(%ebx),%ebx
 	decl	%edx
 	jnz	L(oop2)
 L(end2):
 	movl	(%esi),%eax
-	sbbl	%ebx,%eax
+	sbbl	%ebp,%eax
 	movl	%eax,(%edi)
 
 	sbbl	%eax,%eax
 	negl	%eax
 
-	popl	%ebp
 	popl	%ebx
+	popl	%ebp
 	popl	%esi
 	popl	%edi
 

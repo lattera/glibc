@@ -1,3 +1,16 @@
+2000-06-26  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/i386/addmul_1.S: Exchange roles of %ebp and %ebx.
+	* sysdeps/i386/mul_1.S: Likewise.
+	* sysdeps/i386/submul_1.S: Likewise.
+	* sysdeps/i386/i586/add_n.S: Likewise.
+	* sysdeps/i386/i586/addmul_1.S: Likewise.
+	* sysdeps/i386/i586/lshift.S: Likewise.
+	* sysdeps/i386/i586/mul_1.S: Likewise.
+	* sysdeps/i386/i586/rshift.S: Likewise.
+	* sysdeps/i386/i586/sub_n.S: Likewise.
+	* sysdeps/i386/i586/submul_1.S: Likewise.
+
 2000-06-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* rt/Makefile (librt-routines): Add clock_nanosleep.

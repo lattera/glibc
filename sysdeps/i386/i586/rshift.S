@@ -33,12 +33,12 @@ ENTRY(__mpn_rshift)
 
 	pushl	%edi
 	pushl	%esi
-	pushl	%ebx
 	pushl	%ebp
+	pushl	%ebx
 
 	movl	RES(%esp),%edi
 	movl	S(%esp),%esi
-	movl	SIZE(%esp),%ebp
+	movl	SIZE(%esp),%ebx
 	movl	CNT(%esp),%ecx
 
 /* We can use faster code for shift-by-1 under certain conditions.  */
@@ -47,7 +47,7 @@ ENTRY(__mpn_rshift)
 	leal	4(%edi),%eax
 	cmpl	%esi,%eax
 	jnc	L(special)		/* jump if res_ptr + 1 >= s_ptr */
-	leal	(%edi,%ebp,4),%eax
+	leal	(%edi,%ebx,4),%eax
 	cmpl	%eax,%esi
 	jnc	L(special)		/* jump if s_ptr >= res_ptr + size */
 
@@ -58,52 +58,52 @@ L(normal):
 	shrdl	%cl,%edx,%eax		/* compute carry limb */
 	pushl	%eax			/* push carry limb onto stack */
 
-	decl	%ebp
-	pushl	%ebp
-	shrl	$3,%ebp
+	decl	%ebx
+	pushl	%ebx
+	shrl	$3,%ebx
 	jz	L(end)
 
 	movl	(%edi),%eax		/* fetch destination cache line */
 
 	ALIGN	(2)
 L(oop):	movl	28(%edi),%eax		/* fetch destination cache line */
-	movl	%edx,%ebx
+	movl	%edx,%ebp
 
 	movl	(%esi),%eax
 	movl	4(%esi),%edx
-	shrdl	%cl,%eax,%ebx
+	shrdl	%cl,%eax,%ebp
 	shrdl	%cl,%edx,%eax
-	movl	%ebx,(%edi)
+	movl	%ebp,(%edi)
 	movl	%eax,4(%edi)
 
-	movl	8(%esi),%ebx
+	movl	8(%esi),%ebp
 	movl	12(%esi),%eax
-	shrdl	%cl,%ebx,%edx
-	shrdl	%cl,%eax,%ebx
+	shrdl	%cl,%ebp,%edx
+	shrdl	%cl,%eax,%ebp
 	movl	%edx,8(%edi)
-	movl	%ebx,12(%edi)
+	movl	%ebp,12(%edi)
 
 	movl	16(%esi),%edx
-	movl	20(%esi),%ebx
+	movl	20(%esi),%ebp
 	shrdl	%cl,%edx,%eax
-	shrdl	%cl,%ebx,%edx
+	shrdl	%cl,%ebp,%edx
 	movl	%eax,16(%edi)
 	movl	%edx,20(%edi)
 
 	movl	24(%esi),%eax
 	movl	28(%esi),%edx
-	shrdl	%cl,%eax,%ebx
+	shrdl	%cl,%eax,%ebp
 	shrdl	%cl,%edx,%eax
-	movl	%ebx,24(%edi)
+	movl	%ebp,24(%edi)
 	movl	%eax,28(%edi)
 
 	addl	$32,%esi
 	addl	$32,%edi
-	decl	%ebp
+	decl	%ebx
 	jnz	L(oop)
 
-L(end):	popl	%ebp
-	andl	$7,%ebp
+L(end):	popl	%ebx
+	andl	$7,%ebx
 	jz	L(end2)
 L(oop2):
 	movl	(%esi),%eax
@@ -112,7 +112,7 @@ L(oop2):
 	movl	%eax,%edx
 	addl	$4,%esi
 	addl	$4,%edi
-	decl	%ebp
+	decl	%ebx
 	jnz	L(oop2)
 
 L(end2):
@@ -121,8 +121,8 @@ L(end2):
 
 	popl	%eax			/* pop carry limb */
 
-	popl	%ebp
 	popl	%ebx
+	popl	%ebp
 	popl	%esi
 	popl	%edi
 
@@ -135,19 +135,19 @@ L(end2):
 */
 
 L(special):
-	leal	-4(%edi,%ebp,4),%edi
-	leal	-4(%esi,%ebp,4),%esi
+	leal	-4(%edi,%ebx,4),%edi
+	leal	-4(%esi,%ebx,4),%esi
 
 	movl	(%esi),%edx
 	subl	$4,%esi
 
-	decl	%ebp
-	pushl	%ebp
-	shrl	$3,%ebp
+	decl	%ebx
+	pushl	%ebx
+	shrl	$3,%ebx
 
 	shrl	$1,%edx
-	incl	%ebp
-	decl	%ebp
+	incl	%ebx
+	decl	%ebx
 	jz	L(Lend)
 
 	movl	(%edi),%eax		/* fetch destination cache line */
@@ -155,56 +155,56 @@ L(special):
 	ALIGN	(2)
 L(Loop):
 	movl	-28(%edi),%eax		/* fetch destination cache line */
-	movl	%edx,%ebx
+	movl	%edx,%ebp
 
 	movl	(%esi),%eax
 	movl	-4(%esi),%edx
 	rcrl	$1,%eax
-	movl	%ebx,(%edi)
+	movl	%ebp,(%edi)
 	rcrl	$1,%edx
 	movl	%eax,-4(%edi)
 
-	movl	-8(%esi),%ebx
+	movl	-8(%esi),%ebp
 	movl	-12(%esi),%eax
-	rcrl	$1,%ebx
+	rcrl	$1,%ebp
 	movl	%edx,-8(%edi)
 	rcrl	$1,%eax
-	movl	%ebx,-12(%edi)
+	movl	%ebp,-12(%edi)
 
 	movl	-16(%esi),%edx
-	movl	-20(%esi),%ebx
+	movl	-20(%esi),%ebp
 	rcrl	$1,%edx
 	movl	%eax,-16(%edi)
-	rcrl	$1,%ebx
+	rcrl	$1,%ebp
 	movl	%edx,-20(%edi)
 
 	movl	-24(%esi),%eax
 	movl	-28(%esi),%edx
 	rcrl	$1,%eax
-	movl	%ebx,-24(%edi)
+	movl	%ebp,-24(%edi)
 	rcrl	$1,%edx
 	movl	%eax,-28(%edi)
 
 	leal	-32(%esi),%esi		/* use leal not to clobber carry */
 	leal	-32(%edi),%edi
-	decl	%ebp
+	decl	%ebx
 	jnz	L(Loop)
 
 L(Lend):
-	popl	%ebp
+	popl	%ebx
 	sbbl	%eax,%eax		/* save carry in %eax */
-	andl	$7,%ebp
+	andl	$7,%ebx
 	jz	L(Lend2)
 	addl	%eax,%eax		/* restore carry from eax */
 L(Loop2):
-	movl	%edx,%ebx
+	movl	%edx,%ebp
 	movl	(%esi),%edx
 	rcrl	$1,%edx
-	movl	%ebx,(%edi)
+	movl	%ebp,(%edi)
 
 	leal	-4(%esi),%esi		/* use leal not to clobber carry */
 	leal	-4(%edi),%edi
-	decl	%ebp
+	decl	%ebx
 	jnz	L(Loop2)
 
 	jmp	L(L1)
@@ -215,8 +215,8 @@ L(L1):	movl	%edx,(%edi)		/* store last limb */
 	movl	$0,%eax
 	rcrl	$1,%eax
 
-	popl	%ebp
 	popl	%ebx
+	popl	%ebp
 	popl	%esi
 	popl	%edi
 
