@@ -1,3 +1,8 @@
+1998-05-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/chown.c: Fix comment.
+	Reported by Matt McLean <keys@brio.yikes.com>.
+
 1998-05-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* catgets/Makefile ($(objpfx)de.cat): Renamed from

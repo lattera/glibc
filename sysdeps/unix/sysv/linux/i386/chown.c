@@ -33,7 +33,7 @@
 extern int __syscall_chown (const char *__file,
 			    uid_t __owner, gid_t __group);
 #ifdef __NR_lchown
-/* running under Linux 2.0 or < 2.1.8x */
+/* Running under Linux > 2.1.80.  */
 static int __libc_old_chown;
 
 
