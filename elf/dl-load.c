@@ -555,6 +555,33 @@ _dl_init_paths (const char *llp)
 }
 
 
+#define LOSE(code, s) lose (code, fd, name, realname, l, s)
+static void volatile
+__attribute__ ((noreturn))
+lose (int code, int fd, const char *name, char *realname, struct link_map *l,
+      const char *msg)
+{
+  /* The use of `alloca' here looks ridiculous but it helps.  The goal
+     is to avoid the function from being inlined.  There is no official
+     way to do this so we use this trick.  gcc never inlines functions
+     which use `alloca'.  */
+  int *a = alloca (sizeof (int));
+  a[0] = fd;
+  (void) __close (a[0]);
+  if (l != NULL)
+    {
+      /* Remove the stillborn object from the list and free it.  */
+      if (l->l_prev)
+	l->l_prev->l_next = l->l_next;
+      if (l->l_next)
+	l->l_next->l_prev = l->l_prev;
+      free (l);
+    }
+  free (realname);
+  _dl_signal_error (code, name, msg);
+}
+
+
 /* Map in the shared object NAME, actually located in REALNAME, and already
    opened on FD.  */
 
@@ -565,24 +592,22 @@ struct link_map *
 _dl_map_object_from_fd (const char *name, int fd, char *realname,
 			struct link_map *loader, int l_type)
 {
+  /* This is the expected ELF header.  */
+#define ELF32_CLASS ELFCLASS32
+#define ELF64_CLASS ELFCLASS64
+  static const unsigned char expected[EI_PAD] =
+  {
+    [EI_MAG0] = ELFMAG0,
+    [EI_MAG1] = ELFMAG1,
+    [EI_MAG2] = ELFMAG2,
+    [EI_MAG3] = ELFMAG3,
+    [EI_CLASS] = ELFW(CLASS),
+    [EI_DATA] = byteorder,
+    [EI_VERSION] = EV_CURRENT,
+    [EI_OSABI] = ELFOSABI_SYSV,
+    [EI_ABIVERSION] = 0
+  };
   struct link_map *l = NULL;
-
-#define LOSE(s) lose (0, (s))
-  void lose (int code, const char *msg)
-    {
-      (void) __close (fd);
-      if (l)
-	{
-	  /* Remove the stillborn object from the list and free it.  */
-	  if (l->l_prev)
-	    l->l_prev->l_next = l->l_next;
-	  if (l->l_next)
-	    l->l_next->l_prev = l->l_prev;
-	  free (l);
-	}
-      free (realname);
-      _dl_signal_error (code, name, msg);
-    }
 
   inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
 			      int prot, int fixed, off_t offset)
@@ -591,7 +616,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 			      fixed|MAP_COPY|MAP_FILE,
 			      fd, offset);
       if (mapat == MAP_FAILED)
-	lose (errno, "failed to map segment from shared object");
+	LOSE (errno, "failed to map segment from shared object");
       return mapat;
     }
 
@@ -605,8 +630,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   struct stat st;
 
   /* Get file information.  */
-  if (__fstat (fd, &st) < 0)
-    lose (errno, "cannot stat shared object");
+  if (__fxstat (_STAT_VER, fd, &st) < 0)
+    LOSE (errno, "cannot stat shared object");
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -631,48 +656,52 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   /* Read the header directly.  */
   readbuf = alloca (_dl_pagesize);
   readlength = __libc_read (fd, readbuf, _dl_pagesize);
-  if (readlength < (ssize_t) sizeof(*header))
-    lose (errno, "cannot read file data");
+  if (readlength < (ssize_t) sizeof (*header))
+    LOSE (errno, "cannot read file data");
   header = (void *) readbuf;
 
   /* Check the header for basic validity.  */
-  if (*(Elf32_Word *) &header->e_ident !=
+  if (memcmp (header->e_ident, expected, EI_PAD) != 0)
+    {
+      /* Something is wrong.  */
+      if (*(Elf32_Word *) &header->e_ident !=
 #if BYTE_ORDER == LITTLE_ENDIAN
-      ((ELFMAG0 << (EI_MAG0 * 8)) |
-       (ELFMAG1 << (EI_MAG1 * 8)) |
-       (ELFMAG2 << (EI_MAG2 * 8)) |
-       (ELFMAG3 << (EI_MAG3 * 8)))
+	  ((ELFMAG0 << (EI_MAG0 * 8)) |
+	   (ELFMAG1 << (EI_MAG1 * 8)) |
+	   (ELFMAG2 << (EI_MAG2 * 8)) |
+	   (ELFMAG3 << (EI_MAG3 * 8)))
 #else
-      ((ELFMAG0 << (EI_MAG3 * 8)) |
-       (ELFMAG1 << (EI_MAG2 * 8)) |
-       (ELFMAG2 << (EI_MAG1 * 8)) |
-       (ELFMAG3 << (EI_MAG0 * 8)))
+	  ((ELFMAG0 << (EI_MAG3 * 8)) |
+	   (ELFMAG1 << (EI_MAG2 * 8)) |
+	   (ELFMAG2 << (EI_MAG1 * 8)) |
+	   (ELFMAG3 << (EI_MAG0 * 8)))
 #endif
-      )
-    LOSE ("invalid ELF header");
-#define ELF32_CLASS ELFCLASS32
-#define ELF64_CLASS ELFCLASS64
-  if (header->e_ident[EI_CLASS] != ELFW(CLASS))
-    LOSE ("ELF file class not " STRING(__ELF_NATIVE_CLASS) "-bit");
-  if (header->e_ident[EI_DATA] != byteorder)
-    LOSE ("ELF file data encoding not " byteorder_name);
-  if (header->e_ident[EI_VERSION] != EV_CURRENT)
-    LOSE ("ELF file version ident not " STRING(EV_CURRENT));
-  /* XXX We should be able so set system specific versions which are
-     allowed here.  */
-  if (header->e_ident[EI_OSABI] != ELFOSABI_SYSV)
-    LOSE ("ELF file OS ABI not " STRING(ELFOSABI_SYSV));
-  if (header->e_ident[EI_ABIVERSION] != 0)
-    LOSE ("ELF file ABI version not 0");
+	  )
+	LOSE (0, "invalid ELF header");
+      if (header->e_ident[EI_CLASS] != ELFW(CLASS))
+	LOSE (0, "ELF file class not " STRING(__ELF_NATIVE_CLASS) "-bit");
+      if (header->e_ident[EI_DATA] != byteorder)
+	LOSE (0, "ELF file data encoding not " byteorder_name);
+      if (header->e_ident[EI_VERSION] != EV_CURRENT)
+	LOSE (0, "ELF file version ident not " STRING(EV_CURRENT));
+      /* XXX We should be able so set system specific versions which are
+	 allowed here.  */
+      if (header->e_ident[EI_OSABI] != ELFOSABI_SYSV)
+	LOSE (0, "ELF file OS ABI not " STRING(ELFOSABI_SYSV));
+      if (header->e_ident[EI_ABIVERSION] != 0)
+	LOSE (0, "ELF file ABI version not 0");
+      LOSE (0, "internal error");
+    }
+
   if (header->e_version != EV_CURRENT)
-    LOSE ("ELF file version not " STRING(EV_CURRENT));
+    LOSE (0, "ELF file version not " STRING(EV_CURRENT));
   if (! elf_machine_matches_host (header->e_machine))
-    LOSE ("ELF file machine architecture not " ELF_MACHINE_NAME);
+    LOSE (0, "ELF file machine architecture not " ELF_MACHINE_NAME);
   if (header->e_phentsize != sizeof (ElfW(Phdr)))
-    LOSE ("ELF file's phentsize not the expected size");
+    LOSE (0, "ELF file's phentsize not the expected size");
 
 #ifndef MAP_ANON
-#define MAP_ANON 0
+# define MAP_ANON 0
   if (_dl_zerofd == -1)
     {
       _dl_zerofd = _dl_sysdep_open_zero_fill ();
@@ -687,7 +716,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   /* Enter the new object in the list of loaded objects.  */
   l = _dl_new_object (realname, name, l_type, loader);
   if (! l)
-    lose (ENOMEM, "cannot create shared object descriptor");
+    LOSE (ENOMEM, "cannot create shared object descriptor");
   l->l_opencount = 1;
 
   /* Extract the remaining details we need from the ELF header
@@ -704,7 +733,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       phdr = alloca (maplength);
       __lseek (fd, SEEK_SET, header->e_phoff);
       if (__libc_read (fd, (void *) phdr, maplength) != maplength)
-        lose (errno, "cannot read file data");
+        LOSE (errno, "cannot read file data");
     }
 
   {
@@ -717,9 +746,10 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       } loadcmds[l->l_phnum], *c;
     size_t nloadcmds = 0;
 
+    /* The struct is initialized to zero so this is not necessary:
     l->l_ld = 0;
     l->l_phdr = 0;
-    l->l_addr = 0;
+    l->l_addr = 0; */
     for (ph = phdr; ph < &phdr[l->l_phnum]; ++ph)
       switch (ph->p_type)
 	{
@@ -737,9 +767,9 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	  /* A load command tells us to map in part of the file.
 	     We record the load commands and process them all later.  */
 	  if (ph->p_align % _dl_pagesize != 0)
-	    LOSE ("ELF load command alignment not page-aligned");
+	    LOSE (0, "ELF load command alignment not page-aligned");
 	  if ((ph->p_vaddr - ph->p_offset) % ph->p_align)
-	    LOSE ("ELF load command address/offset not properly aligned");
+	    LOSE (0, "ELF load command address/offset not properly aligned");
 	  {
 	    struct loadcmd *c = &loadcmds[nloadcmds++];
 	    c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
@@ -748,13 +778,34 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	    c->dataend = ph->p_vaddr + ph->p_filesz;
 	    c->allocend = ph->p_vaddr + ph->p_memsz;
 	    c->mapoff = ph->p_offset & ~(ph->p_align - 1);
-	    c->prot = 0;
-	    if (ph->p_flags & PF_R)
-	      c->prot |= PROT_READ;
-	    if (ph->p_flags & PF_W)
-	      c->prot |= PROT_WRITE;
-	    if (ph->p_flags & PF_X)
-	      c->prot |= PROT_EXEC;
+
+	    /* Optimize a common case.  */
+	    if ((PF_R | PF_W | PF_X) == 7
+		&& (PROT_READ | PROT_WRITE | PROT_EXEC) == 7)
+	      {
+		static const unsigned char pf_to_prot[8] =
+		{
+		  [0] = PROT_NONE,
+		  [PF_R] = PROT_READ,
+		  [PF_W] = PROT_WRITE,
+		  [PF_R | PF_W] = PROT_READ | PROT_WRITE,
+		  [PF_X] = PROT_EXEC,
+		  [PF_R | PF_X] = PROT_READ | PROT_EXEC,
+		  [PF_W | PF_X] = PROT_WRITE | PROT_EXEC,
+		  [PF_R | PF_W | PF_X] = PROT_READ | PROT_WRITE | PROT_EXEC
+		};
+		c->prot = pf_to_prot[ph->p_flags & (PF_R | PF_W | PF_X)];
+	      }
+	    else
+	      {
+		c->prot = 0;
+		if (ph->p_flags & PF_R)
+		  c->prot |= PROT_READ;
+		if (ph->p_flags & PF_W)
+		  c->prot |= PROT_WRITE;
+		if (ph->p_flags & PF_X)
+		  c->prot |= PROT_EXEC;
+	      }
 	    break;
 	  }
 	}
@@ -842,7 +893,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 		    /* Dag nab it.  */
 		    if (__mprotect ((caddr_t) (zero & ~(_dl_pagesize - 1)),
 				    _dl_pagesize, c->prot|PROT_WRITE) < 0)
-		      lose (errno, "cannot change memory protections");
+		      LOSE (errno, "cannot change memory protections");
 		  }
 		memset ((void *) zero, 0, zeropage - zero);
 		if ((c->prot & PROT_WRITE) == 0)
@@ -858,7 +909,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
 				ANONFD, 0);
 		if (mapat == MAP_FAILED)
-		  lose (errno, "cannot map zero-fill pages");
+		  LOSE (errno, "cannot map zero-fill pages");
 	      }
 	  }
 
@@ -880,7 +931,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	      break;
 	    }
 	if (l->l_phdr == 0)
-	  LOSE ("program headers not contained in any loaded segment");
+	  LOSE (0, "program headers not contained in any loaded segment");
       }
     else
       /* Adjust the PT_PHDR value by the runtime load address.  */
@@ -896,7 +947,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   if (l->l_ld == 0)
     {
       if (type == ET_DYN)
-	LOSE ("object file has no dynamic section");
+	LOSE (0, "object file has no dynamic section");
     }
   else
     (ElfW(Addr)) l->l_ld += l->l_addr;
@@ -951,7 +1002,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	(struct link_map **) malloc (sizeof (struct link_map *));
 
       if (l->l_symbolic_searchlist.r_list == NULL)
-	lose (ENOMEM, "cannot create searchlist");
+	LOSE (ENOMEM, "cannot create searchlist");
 
       l->l_symbolic_searchlist.r_list[0] = l;
       l->l_symbolic_searchlist.r_nlist = 1;
@@ -1280,9 +1331,11 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	      || (l = _dl_new_object (name_copy, name, type, loader)) == NULL)
 	    _dl_signal_error (ENOMEM, name,
 			      "cannot create shared object descriptor");
-	  /* We use an opencount of 0 as a sign for the faked entry.  */
+	  /* We use an opencount of 0 as a sign for the faked entry.
+	     Since the descriptor is initialized with zero we do not
+	     have do this here.
 	  l->l_opencount = 0;
-	  l->l_reserved = 0;
+	  l->l_reserved = 0; */
 	  l->l_buckets = &dummy_bucket;
 	  l->l_nbuckets = 1;
 	  l->l_relocated = 1;

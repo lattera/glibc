@@ -1,3 +1,12 @@
+1999-02-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/ldsodefs.h (_dl_signal_error): Mark as __noreturn__.
+	* elf/dl-load.c (lose): Make it a function at the toplevel, mark as
+	noreturn, and prevent it from being inlined.
+	Define LOSE appropriately.
+	(_dl_map_object_from_fd): Compare all bytes in e_ident at once.
+	Optimize decoding of p_flags for certain platforms.
+
 1999-02-19  Philip Blundell  <pb@nexus.co.uk>
 
 	* Makeconfig (link-libc): When doing a static link, make sure that

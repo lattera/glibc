@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -205,7 +205,8 @@ extern int _dl_secure;
 extern void _dl_signal_error (int errcode,
 			      const char *object,
 			      const char *errstring)
-     internal_function;
+     internal_function
+     __attribute__ ((__noreturn__));
 
 /* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
    error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING is
