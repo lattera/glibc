@@ -1,5 +1,7 @@
 2000-07-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/tst-fnmatch.input: Add more test cases.
+
 	* crypt/md5-crypt.c (__md5_crypt_r): If buffers for key and salt
 	are not aligned to alignof(md5_uint32) do it before calling
 	__md5_process_bytes.

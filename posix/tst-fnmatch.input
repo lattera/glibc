@@ -43,7 +43,6 @@ C		 "a/b"			"?/b"		       0
 # B.6 007(C)
 C		 "a/b"			"a?b"		       0
 C		 "a/b"			"a/?"		       0
-C		 "a/b"			"a?b"		       NOMATCH PATHNAME
 C		 "aa/b"			"?/b"		       NOMATCH
 C		 "aa/b"			"a?b"		       NOMATCH
 C		 "a/bb"			"a/?"		       NOMATCH
@@ -284,3 +283,51 @@ C		"."			"?"		       0
 C		"/."			"??"		       0
 C		"/"			"[!a-c]"	       0
 C		"."			"[!a-c]"	       0
+
+# B.6 029(C)
+C		"/"			"/"		       0       PATHNAME
+C		"//"			"//"		       0       PATHNAME
+C		"/.a"			"/*"		       0       PATHNAME
+C		"/.a"			"/?a"		       0       PATHNAME
+C		"/.a"			"/[!a-z]a"	       0       PATHNAME
+C		"/.a/.b"		"/*/?b"		       0       PATHNAME
+
+# B.6 030(C)
+C		"/"			"?"		       NOMATCH PATHNAME
+C		"/"			"*"		       NOMATCH PATHNAME
+C		 "a/b"			"a?b"		       NOMATCH PATHNAME
+C		"/.a/.b"		"/*b"		       NOMATCH PATHNAME
+
+# B.6 031(C)
+C		"/$"			"\\/\\$"	       0
+C		"/["			"\\/\\["	       0
+C		"/["			"\\/["		       NOMATCH
+
+# B.6 032(C)
+C		"/$"			"\\/\\$"	       NOMATCH NOESCAPE
+C		"/\\$"			"\\/\\$"	       NOMATCH NOESCAPE
+C		"\\/\\$"		"\\/\\$"	       0       NOESCAPE
+
+# B.6 033(C)
+C		".asd"			".*"		       0       PERIOD
+C		"/.asd"			"*"		       0       PERIOD
+C		"/as/.df"		"*/?*f"		       0       PERIOD
+C		"..asd"			".[!a-z]*"	       0       PERIOD
+
+# B.6 034(C)
+C		".asd"			"*"		       NOMATCH PERIOD
+C		".asd"			"?asd"		       NOMATCH PERIOD
+C		".asd"			"[!a-z]*"	       NOMATCH PERIOD
+
+# B.6 035(C)
+C		"/."			"/."		       0       PATHNAME|PERIOD
+C		"/.a./.b."		"/.*/.*"	       0       PATHNAME|PERIOD
+C		"/.a./.b."		"/.??/.??"	       0       PATHNAME|PERIOD
+
+# B.6 036(C)
+C		"/."			"*"		       NOMATCH PATHNAME|PERIOD
+C		"/."			"/*"		       NOMATCH PATHNAME|PERIOD
+C		"/."			"/?"		       NOMATCH PATHNAME|PERIOD
+C		"/."			"/[!a-z]"	       NOMATCH PATHNAME|PERIOD
+C		"/a./.b."		"/*/*"		       NOMATCH PATHNAME|PERIOD
+C		"/a./.b."		"/??/???"	       NOMATCH PATHNAME|PERIOD
