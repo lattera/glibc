@@ -68,7 +68,7 @@ static struct stat64 archive_stat; /* stat of archive when header mapped.  */
 struct locale_in_archive
 {
   struct locale_in_archive *next;
-  const char *name;
+  char *name;
   struct locale_data *data[__LC_LAST];
 };
 static struct locale_in_archive *archloaded;
@@ -428,7 +428,13 @@ _nl_load_locale_from_archive (int category, const char **namep)
   if (__builtin_expect (lia == NULL, 0))
     return NULL;
 
-  lia->name = headmap.ptr + namehashtab[idx].name_offset;
+  lia->name = strdup (*namep);
+  if (__builtin_expect (lia->name == NULL, 0))
+    {
+      free (lia);
+      return NULL;
+    }
+
   lia->next = archloaded;
   archloaded = lia;
 
@@ -464,6 +470,7 @@ _nl_archive_subfreeres (void)
       struct locale_in_archive *dead = lia;
       lia = lia->next;
 
+      free (dead->name);
       for (category = 0; category < __LC_LAST; ++category)
 	if (category != LC_ALL)
 	  /* _nl_unload_locale just does this free for the archive case.  */
