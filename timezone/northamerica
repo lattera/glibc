@@ -1,4 +1,4 @@
-# @(#)northamerica	7.50
+# @(#)northamerica	7.51
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -509,7 +509,7 @@ Link	Pacific/Honolulu	HST
 # Thomas G. Shanks, The International Atlas (5th edition),
 # San Diego: ACS Publications, Inc. (1999).
 #
-# Gwillim Law <LAW@encmail.encompass.com> writes that a good source
+# Gwillim Law <Gwil_Law@bridge-point.com> writes that a good source
 # for recent time zone data is the International Air Transport
 # Association's Standard Schedules Information Manual (IATA SSIM),
 # published semiannually.  Law sent in several helpful summaries

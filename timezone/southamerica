@@ -1,4 +1,4 @@
-# @(#)southamerica	7.34
+# @(#)southamerica	7.35
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -9,7 +9,7 @@
 # Thomas G. Shanks, The International Atlas (5th edition),
 # San Diego: ACS Publications, Inc. (1999).
 #
-# Gwillim Law <LAW@encmail.encompass.com> writes that a good source
+# Gwillim Law <Gwil_Law@bridge-point.com> writes that a good source
 # for recent time zone data is the International Air Transport
 # Association's Standard Schedules Information Manual (IATA SSIM),
 # published semiannually.  Law sent in several helpful summaries
@@ -114,8 +114,11 @@ Rule	Arg	1989	1992	-	Oct	Sun>=15	0:00	1:00	S
 # from the International Date Line.  On March 5, 2000, at 0:00 local time,
 # Argentina will come off daylight savings time, which will bring them to 8
 # hours from the International Date Line.
-Rule	Arg	1999	max	-	Oct	Sun>=1	0:00	1:00	S
-Rule	Arg	2000	max	-	Mar	Sun>=1	0:00	0	-
+#
+# From Peter Gradelski via Steffen Thorsen (2000-03-01):
+# We just checked with our San Paulo office and they say the government of
+# Argentina decided not to become one of the countries that go on or off DST.
+# So Buenos Aires should be -3 hours from GMT at all times.
 #
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 #
@@ -125,8 +128,7 @@ Zone America/Buenos_Aires -3:53:48 -	LMT	1894 Nov
 			-4:16:44 -	CMT	1920 May    # Cordoba Mean Time
 			-4:00	-	ART	1930 Dec
 			-4:00	Arg	AR%sT	1969 Oct  5
-			-3:00	Arg	AR%sT	1999 Oct  3 0:00
-			-4:00	Arg	AR%sT
+			-3:00	Arg	AR%sT
 #
 # Santa Fe (SF), Entre Rios (ER), Corrientes (CN), Misiones (MN), Chaco (CC),
 # Formosa (FM), La Pampa (LP), Chubut (CH)
@@ -135,8 +137,7 @@ Zone America/Rosario	-4:02:40 -	LMT	1894 Nov
 			-4:00	-	ART	1930 Dec
 			-4:00	Arg	AR%sT	1969 Oct  5
 			-3:00	Arg	AR%sT	1991 Jul
-			-3:00	-	ART	1999 Oct  3 0:00
-			-4:00	Arg	AR%sT
+			-3:00	-	ART
 #
 # Cordoba (CB), Santiago del Estero (SE), Salta (SA), Tucuman (TM), La Rioja (LR), San Juan (SJ), San Luis (SL),
 # Neuquen (NQ), Rio Negro (RN)
@@ -145,8 +146,7 @@ Zone America/Cordoba	-4:16:44 -	LMT	1894 Nov
 			-4:00	-	ART	1930 Dec
 			-4:00	Arg	AR%sT	1969 Oct  5
 			-3:00	Arg	AR%sT	1990 Jul
-			-3:00	-	ART	1999 Oct  3 0:00
-			-4:00	Arg	AR%sT
+			-3:00	-	ART
 #
 # Jujuy (JY)
 Zone America/Jujuy	-4:21:12 -	LMT	1894 Nov
@@ -157,8 +157,7 @@ Zone America/Jujuy	-4:21:12 -	LMT	1894 Nov
 			-4:00	-	WART	1991 Oct  6
 			-4:00	1:00	WARST	1992 Mar 15
 			-4:00	-	WART	1992 Oct 18
-			-3:00	-	ART	1999 Oct  3 0:00
-			-4:00	Arg	AR%sT
+			-3:00	-	ART
 #
 # Catamarca (CT)
 Zone America/Catamarca	-4:23:08 -	LMT	1894 Nov
@@ -168,8 +167,7 @@ Zone America/Catamarca	-4:23:08 -	LMT	1894 Nov
 			-3:00	Arg	AR%sT	1990 Jul
 			-3:00	-	ART	1991 Jul
 			-3:00	Arg	AR%sT	1992 Jul
-			-3:00	-	ART	1999 Oct  3 0:00
-			-4:00	Arg	AR%sT
+			-3:00	-	ART
 #
 # Mendoza (MZ)
 Zone America/Mendoza	-4:35:16 -	LMT	1894 Nov
@@ -180,8 +178,7 @@ Zone America/Mendoza	-4:35:16 -	LMT	1894 Nov
 			-4:00	-	WART	1991 Oct 15
 			-4:00	1:00	WARST	1992 Mar  1
 			-4:00	-	WART	1992 Oct 18
-			-3:00	-	ART	1999 Oct  3 0:00
-			-4:00	Arg	AR%sT
+			-3:00	-	ART
 
 # Aruba
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -559,10 +556,12 @@ Rule	Para	1996	only	-	Mar	 1	0:00	0	-
 # IATA SSIM (1997-09) says Mar 1; go with Shanks.
 Rule	Para	1997	only	-	Feb	lastSun	0:00	0	-
 Rule	Para	1998	only	-	Mar	 1	0:00	0	-
-Rule	Para	1996	max	-	Oct	Sun>=1	0:00	1:00	S
+Rule	Para	1996	1998	-	Oct	Sun>=1	0:00	1:00	S
 # IATA SSIM (1999-02) says lastSat, not lastSun; (1999-09) reports no date;
 # go with Shanks.
 Rule	Para	1999	max	-	Feb	lastSun	0:00	0	-
+# IATA SSIM (2000-02) says 1999-10-10.
+Rule	Para	1999	max	-	Oct	Sun>=8	0:00	1:00	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone America/Asuncion	-3:50:40 -	LMT	1890
 			-3:50:40 -	AMT	1931 Oct 10 # Asuncion Mean Time

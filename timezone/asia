@@ -1,4 +1,4 @@
-# @(#)asia	7.54
+# @(#)asia	7.55
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -10,7 +10,7 @@
 # Thomas G. Shanks, The International Atlas (5th edition),
 # San Diego: ACS Publications, Inc. (1999).
 #
-# Gwillim Law <LAW@encmail.encompass.com> writes that a good source
+# Gwillim Law <Gwil_Law@bridge-point.com> writes that a good source
 # for recent time zone data is the International Air Transport
 # Association's Standard Schedules Information Manual (IATA SSIM),
 # published semiannually.  Law sent in several helpful summaries
@@ -597,7 +597,7 @@ Rule	Zion	1999	only	-	Sep	 3	2:00	0	S
 # that the end date of 2000 and both dates of 2001-2002 should be regarded
 # as tentative pending final approval.
 #
-# The official announcement for the years 2000-2001 can be viewed at:
+# The official announcement for the years 2000-2002 can be viewed at:
 #
 #	ftp://ftp.huji.ac.il/pub/tz/announcements/2000-2002.ps.gz
 
@@ -687,9 +687,6 @@ Zone	Asia/Tokyo	9:18:59	-	LMT	1887 Dec 31 15:00u
 # The decision was taken because of the increase in working hours in
 # government's departments from six to seven hours.
 #
-# From Paul Eggert (1999-11-09):
-# No word on Jordan's future rules; assume 04-01 to 10-01 for now.
-#
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule    Jordan	1973	only	-	Jun	6	0:00	1:00	S
 Rule    Jordan	1973	1975	-	Oct	1	0:00	0	-
@@ -711,9 +708,9 @@ Rule    Jordan	1992	1993	-	Oct	Fri>=1	0:00	0	-
 Rule    Jordan	1993	1998	-	Apr	Fri>=1	0:00	1:00	S
 Rule    Jordan	1994	only	-	Sep	Fri>=15	0:00	0	-
 Rule    Jordan	1995	1998	-	Sep	Fri>=15	0:00s	0	-
-Rule	Jordan	1999	only	-	Jul	 1	0:00	1:00	S
-Rule	Jordan	1999	max	-	Oct	 1	0:00	0	-
-Rule	Jordan	2000	max	-	Apr	 1	0:00	1:00	-
+Rule	Jordan	1999	only	-	Jul	 1	0:00s	1:00	S
+Rule	Jordan	1999	max	-	Sep	lastThu	0:00s	0	-
+Rule	Jordan	2000	max	-	Mar	lastThu	0:00s	1:00	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Amman	2:23:44 -	LMT	1931
 			2:00	Jordan	EE%sT

@@ -173,11 +173,31 @@ static pthread_cond_t once_finished = PTHREAD_COND_INITIALIZER;
 
 enum { NEVER = 0, IN_PROGRESS = 1, DONE = 2 };
 
+/* If a thread is canceled while calling the init_routine out of
+   pthread once, this handler will reset the once_control variable
+   to the NEVER state. */
+
+static void pthread_once_cancelhandler(void *arg)
+{
+    pthread_once_t *once_control = arg;
+
+    pthread_mutex_lock(&once_masterlock);
+    *once_control = NEVER;
+    pthread_mutex_unlock(&once_masterlock);
+    pthread_cond_broadcast(&once_finished);
+}
+
 int __pthread_once(pthread_once_t * once_control, void (*init_routine)(void))
 {
+  /* flag for doing the condition broadcast outside of mutex */
+  int state_changed;
+
   /* Test without locking first for speed */
   if (*once_control == DONE) return 0;
   /* Lock and test again */
+
+  state_changed = 0;
+
   pthread_mutex_lock(&once_masterlock);
   /* If init_routine is being called from another routine, wait until
      it completes. */
@@ -188,12 +208,18 @@ int __pthread_once(pthread_once_t * once_control, void (*init_routine)(void))
   if (*once_control == NEVER) {
     *once_control = IN_PROGRESS;
     pthread_mutex_unlock(&once_masterlock);
+    pthread_cleanup_push(pthread_once_cancelhandler, once_control);
     init_routine();
+    pthread_cleanup_pop(0);
     pthread_mutex_lock(&once_masterlock);
     *once_control = DONE;
-    pthread_cond_broadcast(&once_finished);
+    state_changed = 1;
   }
   pthread_mutex_unlock(&once_masterlock);
+
+  if (state_changed)
+    pthread_cond_broadcast(&once_finished);
+
   return 0;
 }
 strong_alias (__pthread_once, pthread_once)

@@ -1,4 +1,4 @@
-# @(#)australasia	7.55
+# @(#)australasia	7.56
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -464,7 +464,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Thomas G. Shanks, The International Atlas (5th edition),
 # San Diego: ACS Publications, Inc. (1999).
 #
-# Gwillim Law <LAW@encmail.encompass.com> writes that a good source
+# Gwillim Law <Gwil_Law@bridge-point.com> writes that a good source
 # for recent time zone data is the International Air Transport
 # Association's Standard Schedules Information Manual (IATA SSIM),
 # published semiannually.  Law sent in several helpful summaries

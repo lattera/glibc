@@ -1,4 +1,4 @@
-# @(#)europe	7.69
+# @(#)europe	7.71
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -9,7 +9,7 @@
 # Thomas G. Shanks, The International Atlas (5th edition),
 # San Diego: ACS Publications, Inc. (1999).
 #
-# Gwillim Law <LAW@encmail.encompass.com> writes that a good source
+# Gwillim Law <Gwil_Law@bridge-point.com> writes that a good source
 # for recent time zone data is the International Air Transport
 # Association's Standard Schedules Information Manual (IATA SSIM),
 # published semiannually.  Law sent in several helpful summaries
@@ -1135,6 +1135,12 @@ Link	Europe/Rome	Europe/San_Marino
 # 1997-01-21 on transition to Summer time ... established the same order of
 # daylight savings time settings as in the States of the European Union.
 
+# From Andrei Ivanov (2000-03-06):
+# This year Latvia will not switch to Daylight Savings Time (as specified in
+# <a href="http://www.lv-laiks.lv/wwwraksti/2000/071072/vd4.htm">
+# The Regulations of the Cabinet of Ministers of the Rep. of Latvia of
+# 29-Feb-2000 (#79)</a>, in Latvian for subscribers only).
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Latvia	1989	1996	-	Mar	lastSun	 2:00s	1:00	S
 Rule	Latvia	1989	1996	-	Sep	lastSun	 2:00s	0	-
@@ -1151,7 +1157,8 @@ Zone	Europe/Riga	1:36:24	-	LMT	1880
 			3:00	Russia	MSK/MSD	1989 Mar lastSun 2:00s
 			2:00	1:00	EEST	1989 Sep lastSun 2:00s
 			2:00	Latvia	EE%sT	1997 Jan 21
-			2:00	EU	EE%sT
+			2:00	EU	EE%sT	2000 Feb 29
+			2:00	-	EET
 
 # Liechtenstein
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]

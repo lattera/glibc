@@ -1,3 +1,9 @@
+2000-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* mutex.c (__pthread_once): Handle cancelled init function correctly.
+	(pthread_once_cancelhandler): New function.
+	Patch by Kaz Kylheku <kaz@ashi.footprints.net>.
+
 2000-03-14  Andreas Jaeger  <aj@suse.de>
 
 	* pthread.c (pthread_handle_sigcancel_rt): GS has been renamed to
