@@ -1,3 +1,7 @@
+2004-05-29  Roland McGrath  <roland@redhat.com>
+
+	* elf/Makefile (shared-only-routines): Add dl-caller.
+
 2004-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/configure.in: New file.
