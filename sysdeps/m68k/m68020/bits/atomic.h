@@ -115,7 +115,7 @@ typedef uintmax_t uatomic_max_t;
 			 "   jbne 1b"					      \
 			 : "=d" (__result), "=m" (*(mem)),		      \
 			   "=&d" (__temp)				      \
-			 : "d" (value), "1" (*(mem)), "0" (__result));	      \
+			 : "d" (value), "m" (*(mem)), "0" (__result));	      \
      else if (sizeof (*(mem)) == 2)					      \
        __asm __volatile ("1: move%.w %0,%2;"				      \
 			 "   add%.w %3,%2;"				      \
@@ -123,7 +123,7 @@ typedef uintmax_t uatomic_max_t;
 			 "   jbne 1b"					      \
 			 : "=d" (__result), "=m" (*(mem)),		      \
 			   "=&d" (__temp)				      \
-			 : "d" (value), "1" (*(mem)), "0" (__result));	      \
+			 : "d" (value), "m" (*(mem)), "0" (__result));	      \
      else if (sizeof (*(mem)) == 4)					      \
        __asm __volatile ("1: move%.l %0,%2;"				      \
 			 "   add%.l %3,%2;"				      \
@@ -131,7 +131,7 @@ typedef uintmax_t uatomic_max_t;
 			 "   jbne 1b"					      \
 			 : "=d" (__result), "=m" (*(mem)),		      \
 			   "=&d" (__temp)				      \
-			 : "d" (value), "1" (*(mem)), "0" (__result));	      \
+			 : "d" (value), "m" (*(mem)), "0" (__result));	      \
      else								      \
        {								      \
 	 __typeof (mem) __memp = (mem);					      \
@@ -152,15 +152,15 @@ typedef uintmax_t uatomic_max_t;
   (void) ({ if (sizeof (*(mem)) == 1)					      \
 	      __asm __volatile ("add%.b %1,%0"				      \
 				: "=m" (*(mem))				      \
-				: "id" (value), "0" (*(mem)));		      \
+				: "id" (value), "m" (*(mem)));		      \
 	    else if (sizeof (*(mem)) == 2)				      \
 	      __asm __volatile ("add%.w %1,%0"				      \
 				: "=m" (*(mem))				      \
-				: "id" (value), "0" (*(mem)));		      \
+				: "id" (value), "m" (*(mem)));		      \
 	    else if (sizeof (*(mem)) == 4)				      \
 	      __asm __volatile ("add%.l %1,%0"				      \
 				: "=m" (*(mem))				      \
-				: "id" (value), "0" (*(mem)));		      \
+				: "id" (value), "m" (*(mem)));		      \
 	    else							      \
 	      {								      \
 		__typeof (mem) __memp = (mem);				      \
@@ -184,15 +184,15 @@ typedef uintmax_t uatomic_max_t;
      if (sizeof (*(mem)) == 1)						      \
        __asm __volatile ("addq%.b %#1,%1; seq %0"			      \
 			 : "=dm" (__result), "=m" (*(mem))		      \
-			 : "1" (*(mem)));				      \
+			 : "m" (*(mem)));				      \
      else if (sizeof (*(mem)) == 2)					      \
        __asm __volatile ("addq%.w %#1,%1; seq %0"			      \
 			 : "=dm" (__result), "=m" (*(mem))		      \
-			 : "1" (*(mem)));				      \
+			 : "m" (*(mem)));				      \
      else if (sizeof (*(mem)) == 4)					      \
        __asm __volatile ("addq%.l %#1,%1; seq %0"			      \
 			 : "=dm" (__result), "=m" (*(mem))		      \
-			 : "1" (*(mem)));				      \
+			 : "m" (*(mem)));				      \
      else								      \
        {								      \
 	 __typeof (mem) __memp = (mem);					      \
@@ -218,15 +218,15 @@ typedef uintmax_t uatomic_max_t;
      if (sizeof (*(mem)) == 1)						      \
        __asm __volatile ("subq%.b %#1,%1; seq %0"			      \
 			 : "=dm" (__result), "=m" (*(mem))		      \
-			 : "1" (*(mem)));				      \
+			 : "m" (*(mem)));				      \
      else if (sizeof (*(mem)) == 2)					      \
        __asm __volatile ("subq%.w %#1,%1; seq %0"			      \
 			 : "=dm" (__result), "=m" (*(mem))		      \
-			 : "1" (*(mem)));				      \
+			 : "m" (*(mem)));				      \
      else if (sizeof (*(mem)) == 4)					      \
        __asm __volatile ("subq%.l %#1,%1; seq %0"			      \
 			 : "=dm" (__result), "=m" (*(mem))		      \
-			 : "1" (*(mem)));				      \
+			 : "m" (*(mem)));				      \
      else								      \
        {								      \
 	 __typeof (mem) __memp = (mem);					      \
