@@ -1,4 +1,13 @@
+Sun May 12 22:52:22 1996  Bruce Elliott  <belliott@accessone.com>
+
+	* stdio-common/vfprintf.c: Correct handling of unsigned short
+	values.
+
 Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* extra-lib.mk (alltype-$(lib)): Put libs in $(objpfx) instead of
+	$(common-objpfx).
+	* Makerules [install-lib.a]: Find them there.
 
 	* sysdeps/unix/sysv/linux/i386/profil-counter.h: New file.
 

@@ -495,8 +495,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	{								      \
 	  if (is_long)							      \
 	    number.word = va_arg (ap, unsigned long int);		      \
+	  else if (!is_short)						      \
+	    number.word = va_arg (ap, unsigned int);			      \
 	  else								      \
-	    number.word = va_arg (ap, unsigned int); /* Promoted.  */	      \
+	    number.word = (unsigned short int) va_arg (ap, unsigned int);     \
 									      \
 	LABEL (number):							      \
 	  if (prec < 0)							      \
