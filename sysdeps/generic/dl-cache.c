@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <elf/ldsodefs.h>
 #include <sys/mman.h>
+#include <dl-cache.h>
 
 /* System-dependent function to read a file's whole contents
    in the most convenient manner available.  */
@@ -48,9 +49,12 @@ struct cache_file
 static struct cache_file *cache;
 static size_t cachesize;
 
+/* 1 if cache_data + PTR points into the cache.  */
+#define _dl_cache_verify_ptr(ptr) (ptr < cachesize - sizeof *cache)
+
 /* This is the cache ID we expect.  Normally it is 3 for glibc linked
    binaries.  */
-int _dl_correct_cache_id = 3;
+int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
 /* Helper function which must match the one in ldconfig, so that
    we rely on the same sort order.  */
@@ -146,7 +150,7 @@ _dl_load_cache_lookup (const char *name)
   while (left <= right)
     {
       /* Make sure string table indices are not bogus before using them.  */
-      if (cache->libs[middle].key >= cachesize - sizeof *cache)
+      if (! _dl_cache_verify_ptr (cache->libs[middle].key))
 	{
 	  cmpres = 1;
 	  break;
@@ -177,7 +181,7 @@ _dl_load_cache_lookup (const char *name)
       while (middle > 0
 	     /* Make sure string table indices are not bogus before
                 using them.  */
-	     && cache->libs[middle - 1].key < cachesize - sizeof *cache
+	     && _dl_cache_verify_ptr (cache->libs[middle - 1].key)
 	     /* Actually compare the entry.  */
 	     && (_dl_cache_libcmp (name,
 				   cache_data + cache->libs[middle - 1].key)
@@ -193,15 +197,15 @@ _dl_load_cache_lookup (const char *name)
 	      /* We haven't seen this string so far.  Test whether the
 		 index is ok and whether the name matches.  Otherwise
 		 we are done.  */
-	      && (cache->libs[middle].key >= cachesize - sizeof *cache
+	      && (! _dl_cache_verify_ptr (cache->libs[middle].key)
 		  || (_dl_cache_libcmp (name,
 					cache_data + cache->libs[middle].key)
 		      != 0)))
 	    break;
 
 	  flags = cache->libs[middle].flags;
-	  if ((flags == 1 || flags == 3)
-	      && cache->libs[middle].value < cachesize - sizeof *cache)
+	  if (_dl_cache_check_flags (flags)
+	      && _dl_cache_verify_ptr (cache->libs[middle].value))
 	    {
 	      if (best == NULL || flags == _dl_correct_cache_id)
 		{

@@ -1220,7 +1220,7 @@ extern USItype __udiv_qrnnd __P ((USItype *, USItype, USItype, USItype));
 		    srlx %7,32,%5
 		    mulx %3,%5,%3
 		    mulx %2,%5,%5
-		    sethi 0x80000000,%2
+		    sethi %%hi(0x80000000),%2
 		    addcc %4,%3,%4
 		    srlx %4,32,%4
 		    add %2,%2,%2

@@ -1,3 +1,12 @@
+1999-06-09  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* stdlib/longlong.h: gas changed sethi handling when without
+	%hi(). Fix assembly.
+	* sysdeps/generic/dl-cache.c (_dl_cache_lookup): Allow
+	port specific cache id checks.
+	* sysdeps/generic/dl-cache.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-cache.h: New file.
+
 1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* gmon/gmon.c: Remove advertising clause of copyright.
