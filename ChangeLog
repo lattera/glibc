@@ -1,3 +1,13 @@
+2005-01-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run tst-align2.
+	* elf/tst-align2.c: New test.
+	* elf/tst-alignmod2.c: New file.
+	* sysdeps/powerpc/tst-stack-align.h: New file.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Align stack and clear frame
+	pointer before calling _dl_init.
+	* sysdeps/x86_64/dl-machine.h (RTLD_START): Likewise.
+
 2005-01-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/execl.c: Do not allocate potentially large buffers on the

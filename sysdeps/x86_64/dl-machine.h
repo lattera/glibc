@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  x86-64 version.
-   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -159,16 +159,24 @@ _dl_start_user:\n\
 	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
 	# argc -> rsi\n\
 	movq %rdx, %rsi\n\
+	# Save %rsp value in %r13.\n\
+	movq %rsp, %r13\n\
+	# And align stack for the _dl_init_internal call. \n\
+	andq $-16, %rsp\n\
 	# _dl_loaded -> rdi\n\
 	movq _rtld_local(%rip), %rdi\n\
 	# env -> rcx\n\
-	leaq 16(%rsp,%rdx,8), %rcx\n\
+	leaq 16(%r13,%rdx,8), %rcx\n\
 	# argv -> rdx\n\
-	leaq 8(%rsp), %rdx\n\
+	leaq 8(%r13), %rdx\n\
+	# Clear %rbp to mark outermost frame obviously even for constructors.\n\
+	xorq %rbp, %rbp\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %rdx, as per ELF ABI.\n\
 	leaq _dl_fini(%rip), %rdx\n\
+	# And make sure %rsp points to argc stored on the stack.\n\
+	movq %r13, %rsp\n\
 	# Jump to the user's entry point.\n\
 	jmp *%r12\n\
 .previous\n\

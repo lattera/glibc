@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -215,11 +215,21 @@ _dl_start_user:\n\
 	movl _rtld_local@GOTOFF(%ebx), %eax\n\
 	leal 8(%esp,%edx,4), %esi\n\
 	leal 4(%esp), %ecx\n\
+	movl %esp, %ebp\n\
+	# Make sure _dl_init is run with 16 byte aligned stack.\n\
+	andl $-16, %esp\n\
+	pushl %eax\n\
+	pushl %eax\n\
+	pushl %ebp\n\
 	pushl %esi\n\
+	# Clear %ebp, so that even constructors have terminated backchain.\n\
+	xorl %ebp, %ebp\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
 	leal _dl_fini@GOTOFF(%ebx), %edx\n\
+	# Restore %esp _start expects.\n\
+	movl (%esp), %esp\n\
 	# Jump to the user's entry point.\n\
 	jmp *%edi\n\
 	.previous\n\

@@ -72,7 +72,7 @@ distribute	:= rtld-Rules \
 		   tst-tlsmod1.c tst-tlsmod2.c tst-tlsmod3.c tst-tlsmod4.c \
 		   tst-tlsmod5.c tst-tlsmod6.c tst-tlsmod7.c tst-tlsmod8.c \
 		   tst-tlsmod9.c tst-tlsmod10.c tst-tlsmod11.c \
-		   tst-tlsmod12.c tst-tls10.h tst-alignmod.c \
+		   tst-tlsmod12.c tst-tls10.h tst-alignmod.c tst-alignmod2.c \
 		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
 		   circlemod3.c circlemod3a.c nodlopenmod2.c \
 		   tls-macros.h \
@@ -154,7 +154,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
-	 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
+	 tst-align2 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
 	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
 	 tst-audit1
 #	 reldep9
@@ -188,7 +188,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
 		reldep9mod1 reldep9mod2 reldep9mod3 \
-		tst-alignmod $(modules-execstack-$(have-z-execstack)) \
+		tst-alignmod tst-alignmod2 \
+		$(modules-execstack-$(have-z-execstack)) \
 		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
 		tst-dlmopen1mod tst-auditmod1
 ifeq (yes,$(have-initfini-array))
@@ -670,9 +671,12 @@ $(objpfx)tst-tls14:  $(objpfx)tst-tlsmod14a.so $(libdl)
 $(objpfx)tst-tls14.out:$(objpfx)tst-tlsmod14b.so
 
 CFLAGS-tst-align.c = $(stack-align-test-flags)
+CFLAGS-tst-align2.c = $(stack-align-test-flags)
 CFLAGS-tst-alignmod.c = $(stack-align-test-flags)
+CFLAGS-tst-alignmod2.c = $(stack-align-test-flags)
 $(objpfx)tst-align: $(libdl)
 $(objpfx)tst-align.out: $(objpfx)tst-alignmod.so
+$(objpfx)tst-align2: $(objpfx)tst-alignmod2.so
 
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
