@@ -1,3 +1,8 @@
+2002-04-22  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/ioperm.c (ioperm): Translate MIG_BAD_ID
+	failure from i386_io_perm_* RPCs to ENOSYS.
+
 2002-04-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/ldconfig.h: New.
