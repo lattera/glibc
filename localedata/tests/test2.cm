@@ -69,5 +69,14 @@ CHARMAP
 <7>                    /x37
 <8>                    /x38
 <9>                    /x39
+
+<period>               /x2e
+<colon>                /x3a
+<percent-sign>         /x25
+<slash>                /x2f
+<circumflex>           /x5e
+<left-square-bracket>  /x5b
+<right-square-bracket> /x5d
+
 <b01>...<b03>	/xa1/x40
 END CHARMAP

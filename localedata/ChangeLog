@@ -1,3 +1,12 @@
+1998-10-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* tests/test1.cm: Add missing character definitions to read POSIX
+	locale definition.
+	* tests/test2.cm: Likewise.
+	* tests/test3.cm: Likewise.
+	* tests/test4.cm: Likewise.
+	* tests/test5.cm: Likewise.
+
 1998-10-19 13:31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/POSIX: Correct typo.  Add UNDEFINED symbol.
