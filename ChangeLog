@@ -1,4 +1,20 @@
-Sun Feb 14 01:49:29 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+1999-02-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio-common/Makefile (tests): tllformat added.
+
+	* stdio-common/tllformat.c: New program, based on tiformat.c with
+	examples from Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
+1999-02-14  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* posix/test-vfork.c: Fix exit status test.
+
+1999-02-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sa_len.c (__libc_sa_len): Add some
+	missing cases.  Reported by Craig Metz <cmetz@inner.net> [PR libc/964].
+
+1999-02-14  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/s_modf.c: Optimized by using __m81_test instead
 	of separare explicit comparisons.
