@@ -1095,6 +1095,29 @@ already another process group around that has the same process group ID.
 @end table
 @end deftypefun
 
+@comment unistd.h
+@comment SVID
+@deftypefun pid_t getsid (pid_t @var{pid})
+
+The @code{getsid} function returns the process group ID of the session
+leader of the specified process.  If a @var{pid} is @code{0}, the
+process group ID of the session leader of the current process is
+returned.
+
+In case of error @code{-1} is returned and @code{errno} is set.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item ESRCH
+There is no process with the given process ID @var{pid}.
+@item EPERM
+The calling process and the process specified by @var{pid} are in
+different sessions, and the implementation doesn't allow to access the
+process group ID of the session leader of the process with ID @var{pid}
+from the calling process.
+@end table
+@end deftypefun
+
 The @code{getpgrp} function has two definitions: one derived from BSD
 Unix, and one from the POSIX.1 standard.  The feature test macros you
 have selected (@pxref{Feature Test Macros}) determine which definition
@@ -1122,6 +1145,28 @@ The BSD definition of @code{getpgrp} returns the process group ID of the
 process @var{pid}.  You can supply a value of @code{0} for the @var{pid}
 argument to get information about the calling process.
 @end deftypefn
+
+@comment unistd.h
+@comment SVID
+@deftypefn {System V Function} int getpgid (pid_t @var{pid})
+
+@code{getpgid} is the same as the BSD function @code{getpgrp}.  It
+returns the process group ID of the process @var{pid}.  You can supply a
+value of @code{0} for the @var{pid} argument to get information about
+the calling process.
+
+In case of error @code{-1} is returned and @code{errno} is set.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item ESRCH
+There is no process with the given process ID @var{pid}.
+The calling process and the process specified by @var{pid} are in
+different sessions, and the implementation doesn't allow to access the
+process group ID of the process with ID @var{pid} from the calling
+process.
+@end table
+@end deftypefun
 
 @comment unistd.h
 @comment POSIX.1
