@@ -1,5 +1,5 @@
 /* Constants from kernel header for various FSes.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,8 @@
 #define ADFS_SUPER_MAGIC	0xadf5
 #define AFFS_SUPER_MAGIC	0xadff
 #define CODA_SUPER_MAGIC	0x73757245
+#define DEVPTS_SUPER_MAGIC	0x1cd1
+#define EFS_SUPER_MAGIC		0x414A53
 #define EXT2_SUPER_MAGIC	0xef53
 #define HPFS_SUPER_MAGIC	0xf995e849
 #define ISOFS_SUPER_MAGIC	0x9660
@@ -38,6 +40,8 @@
 #define NCP_SUPER_MAGIC		0x564c
 #define NFS_SUPER_MAGIC		0x6969
 #define PROC_SUPER_MAGIC	0x9fa0
+#define QNX4_SUPER_MAGIC	0x002f
+#define REISERFS_SUPER_MAGIC	0x52654973
 #define SMB_SUPER_MAGIC		0x517b
 #define XENIX_SUPER_MAGIC	0x012ff7b4
 #define SYSV4_SUPER_MAGIC	0x012ff7b5
@@ -51,6 +55,7 @@
 #define MINIX_LINK_MAX		250
 #define MINIX2_LINK_MAX		65530
 #define XENIX_LINK_MAX		126     /* ?? */
+#define REISERFS_LINK_MAX	64535
 #define SYSV_LINK_MAX		126     /* 127? 251? */
 #define COH_LINK_MAX		10000
 #define UFS_LINK_MAX		EXT2_LINK_MAX

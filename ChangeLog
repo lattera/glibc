@@ -1,3 +1,42 @@
+1999-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* math/gen-libm-test.pl: New file to generate a table of
+	libm-test-ulps values.
+
+1999-10-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/profil-counter.h: Expect
+	struct sigcontext* object as second parameter for profil_counter.
+	Patches by Jakub Jelinek <jakub@redhat.com>.
+
+1999-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Handle reiserfs.
+	* sysdeps/unix/sysv/linux/pathconf.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Add values for devpts,
+	efs, qnx4 and reiser file systems.
+
+1999-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* locale/Makefile (others): Set to localedef and locale for make
+	clean.
+
+	* debug/Makefile (generated): Add xtrace for make clean to work.
+
+1999-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/tst-strtod.c: Add two testcases for hexadecimal input.
+
+1999-10-25  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc: Added code to ignore the given max ulps.
+	(print_max_error): Check for ignore_max_ulp.
+	(check_float_internal): Likewise.
+	(parse_opt): Parse --ignore-max-ulp.
+	(main): Initialize ignore_max_ulp.
+
 1999-10-26  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/msort.c: Include <alloca.h> for prototype.

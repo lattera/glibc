@@ -158,6 +158,7 @@ static int noXPasses;	/* number of unexpected passes.  */
 static int verbose;
 static int output_max_error;	/* Should the maximal errors printed?  */
 static int output_points;	/* Should the single function results printed?  */
+static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 
 static FLOAT minus_zero, plus_zero;
 static FLOAT plus_infty, minus_infty, nan_value;
@@ -315,7 +316,7 @@ print_max_error (const char *func_name, FLOAT allowed, int xfail)
 {
   int ok = 0;
 
-  if (max_error <= allowed)
+  if (max_error == 0.0 || (max_error <= allowed && !ignore_max_ulp))
     {
       ok = 1;
     }
@@ -477,7 +478,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 	  && (computed == 0.0 && expected == 0.0
 	      && signbit(computed) != signbit (expected)))
 	ok = 0;
-      else if (ulp <= max_ulp)
+      else if (ulp == 0.0 || (ulp <= max_ulp && !ignore_max_ulp))
 	ok = 1;
       else
 	{
@@ -3875,6 +3876,8 @@ static const struct argp_option options[] =
     "Don't output maximal errors of functions"},
   { "no-points", 'p', NULL, 0,
     "Don't output results of functions invocations"},
+  { "ignore-max-ulp", 'i', "yes/no", 0,
+    "Ignore given maximal errors"},
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -3899,6 +3902,12 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case 'f':
       output_max_error = 0;
+      break;
+    case 'i':
+      if (strcmp (arg, "yes") == 0)
+	ignore_max_ulp = 1;
+      else if (strcmp (arg, "no") == 0)
+	ignore_max_ulp = 0;
       break;
     case 'p':
       output_points = 0;
@@ -3954,7 +3963,9 @@ main (int argc, char **argv)
   output_ulps = 0;
   output_max_error = 1;
   output_points = 1;
-
+  /* XXX set to 0 for releases.  */
+  ignore_max_ulp = 0;
+  
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 

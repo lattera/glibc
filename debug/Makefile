@@ -50,7 +50,7 @@ ifeq ($(build-shared),yes)
 install-bin += catchsegv
 endif
 endif
-generated = catchsegv
+generated = catchsegv xtrace
 
 include ../Rules
 
