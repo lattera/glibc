@@ -1,4 +1,4 @@
-# Copyright (C) 1994 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ extra-libs := librpcsvc
 librpcsvc-routines = $(rpcsvc:%.x=x%)
 librpcsvc-inhibit-o = .so # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
-
+librpcsvc-no-lib-dep = t # Don't depend on this in `make lib' pass.
 
 # Sun's code is not too clean.
 override +gccwarn := -w

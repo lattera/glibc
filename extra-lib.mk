@@ -11,7 +11,7 @@ extra-libs-left := $(filter-out $(lib),$(extra-libs-left))
 object-suffixes-$(lib) := $(filter-out $($(lib)-inhibit-o),$(object-suffixes))
 
 # Make sure these are simply-expanded variables before we append to them,
-# since we want the expressions we we append to be expanded right now.
+# since we want the expressions we append to be expanded right now.
 install-lib := $(install-lib)
 extra-objs := $(extra-objs)
 
@@ -25,7 +25,13 @@ ifneq (,$(filter .so,$(object-suffixes-$(lib))))
 alltypes-$(lib) += $(objpfx)$(lib).so
 endif
 
+ifneq (0,$(MAKELEVEL))
+ifndef $(lib)-no-lib-dep
 lib-noranlib: $(alltypes-$(lib))
+else
+others: $(alltypes-$(lib))
+endif
+endif
 
 # Use o-iterator.mk to generate a rule for each flavor of library.
 define o-iterator-doit
