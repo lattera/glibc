@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #include <stdarg.h>
 #include <unistd.h>
 
+#undef __libc_open
+#undef __open
+
 int
 __open (const char *file, int oflag, ...)
 {
@@ -36,3 +39,4 @@ __open (const char *file, int oflag, ...)
   return open (file, oflag, mode);
 }
 strong_alias (__open, __libc_open)
+INTDEF(__open)
