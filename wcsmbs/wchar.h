@@ -324,7 +324,7 @@ extern size_t wcsnrtombs (char *__restrict __dst,
 /* The following functions are extensions found in X/Open CAE.  */
 #ifdef __USE_XOPEN
 /* Determine number of column positions required for C.  */
-extern int wcwidth (wint_t __c) __THROW;
+extern int wcwidth (wchar_t __c) __THROW;
 
 /* Determine number of column positions required for first N wide
    characters (or fewer if S ends before this) in S.  */

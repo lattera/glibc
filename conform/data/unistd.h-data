@@ -174,7 +174,6 @@ constant _SC_MESSAGE_PASSING
 constant _SC_MONOTONIC_CLOCK
 constant _SC_MQ_OPEN_MAX
 constant _SC_MQ_PRIO_MAX
-constant _SC_MULTIPLE_PROCESS
 constant _SC_NETWORKING
 constant _SC_NGROUPS_MAX
 constant _SC_OPEN_MAX

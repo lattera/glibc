@@ -1,5 +1,13 @@
 2001-08-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/wchar.h (wcwdith): Change parameter type to wchar_t.
+	* wcsmbs/wcwidth.c (wcwdith): Likewise.
+	* wcsmbs/wcwidth.h (internal_wcwdith): Likewise.
+
+	* conform/data/unistd.h-data: Remove _SC_MULTIPLE_PROCESS.
+
+	* conform/data/ucontext.h-data: Fix typos in ucontext_t element tests.
+
 	* time/time.h (struct timespec): Use __time_t for tv_sec element.
 
 	* sysdeps/generic/inttypes.h: Define __wchar_t.  Use it instead of
