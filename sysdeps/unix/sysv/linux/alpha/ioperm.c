@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by David Mosberger.
 
@@ -92,6 +92,7 @@ static struct platform {
   {"EB66",	IOSYS_APECS,	APECS_DENSE_MEM},	/* LCA same as APECS */
   {"EB66P",	IOSYS_APECS,	APECS_DENSE_MEM},	/* LCA same as APECS */
   {"Jensen",	IOSYS_JENSEN,	JENSEN_MEM},
+  {"Mikasa",	IOSYS_APECS,	APECS_DENSE_MEM},
   {"Mustang",	IOSYS_APECS,	APECS_DENSE_MEM},
   {"Noname",	IOSYS_APECS,	APECS_DENSE_MEM},	/* LCA same as APECS */
 };

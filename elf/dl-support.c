@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 
 /* This file defines some things that for the dynamic linker are defined in
    rtld.c and dl-sysdep.c in ways appropriate to bootstrap dynamic linking.  */
@@ -45,4 +47,39 @@ void
 _dl_sysdep_fatal (void)
 {
   assert (! "_dl_sysdep_fatal called");
+}
+
+/* Read the whole contents of FILE into new mmap'd space with given
+   protections.  *SIZEP gets the size of the file.  */
+
+void *
+_dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
+{
+  void *result;
+  struct stat st;
+  int fd = __open (file, O_RDONLY);
+  if (fd < 0)
+    return NULL;
+  if (__fstat (fd, &st) < 0)
+    result = NULL;
+  else
+    {
+      /* Map a copy of the file contents.  */
+      result = __mmap (0, st.st_size, prot,
+#ifdef MAP_COPY
+                       MAP_COPY
+#else
+                       MAP_PRIVATE
+#endif
+#ifdef MAP_FILE
+                       | MAP_FILE
+#endif
+                       , fd, 0);
+      if (result == (void *) -1)
+        result = NULL;
+      else
+        *sizep = st.st_size;
+    }
+  __close (fd);
+  return result;
 }

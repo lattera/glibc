@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -49,8 +49,6 @@ static char sccsid[] = "@(#)rpc_prot.c 1.36 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 
 /* * * * * * * * * * * * * * XDR Authentication * * * * * * * * * * * */
-
-struct opaque_auth _null_auth;
 
 /*
  * XDR an opaque authentication struct
@@ -84,9 +82,9 @@ xdr_des_block(xdrs, blkp)
 /*
  * XDR the MSG_ACCEPTED part of a reply message union
  */
-bool_t 
+bool_t
 xdr_accepted_reply(xdrs, ar)
-	register XDR *xdrs;   
+	register XDR *xdrs;
 	register struct accepted_reply *ar;
 {
 
@@ -111,7 +109,7 @@ xdr_accepted_reply(xdrs, ar)
 /*
  * XDR the MSG_DENIED part of a reply message union
  */
-bool_t 
+bool_t
 xdr_rejected_reply(xdrs, rr)
 	register XDR *xdrs;
 	register struct rejected_reply *rr;
@@ -147,7 +145,7 @@ xdr_replymsg(xdrs, rmsg)
 	register struct rpc_msg *rmsg;
 {
 	if (
-	    xdr_u_long(xdrs, &(rmsg->rm_xid)) && 
+	    xdr_u_long(xdrs, &(rmsg->rm_xid)) &&
 	    xdr_enum(xdrs, (enum_t *)&(rmsg->rm_direction)) &&
 	    (rmsg->rm_direction == REPLY) )
 		return (xdr_union(xdrs, (enum_t *)&(rmsg->rm_reply.rp_stat),
@@ -219,7 +217,7 @@ accepted(acpt_stat, error)
 	error->re_lb.s2 = (long)acpt_stat;
 }
 
-static void 
+static void
 rejected(rjct_stat, error)
 	register enum reject_stat rjct_stat;
 	register struct rpc_err *error;

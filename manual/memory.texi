@@ -756,7 +756,7 @@ the padding needed to start each object on a suitable boundary.
 * Obstacks Data Alignment::     Controlling alignment of objects in obstacks.
 * Obstack Chunks::              How obstacks obtain and release chunks;
 				 efficiency considerations.
-* Summary of Obstacks::         
+* Summary of Obstacks::
 @end menu
 
 @node Creating Obstacks
@@ -1182,7 +1182,7 @@ When you check for space using @code{obstack_room} and there is not
 enough room for what you want to add, the fast growth functions
 are not safe.  In this case, simply use the corresponding ordinary
 growth function instead.  Very soon this will copy the object to a
-new chunk; then there will be lots of room available again. 
+new chunk; then there will be lots of room available again.
 
 So, each time you use an ordinary growth function, check afterward for
 sufficient space using @code{obstack_room}.  Once the object is copied
@@ -1206,7 +1206,7 @@ add_string (struct obstack *obstack, const char *ptr, int len)
           obstack_1grow (obstack, *ptr++);
           len--;
         @}
-      else 
+      else
         @{
           if (room > len)
             room = len;
@@ -1494,8 +1494,7 @@ int
 open2 (char *str1, char *str2, int flags, int mode)
 @{
   char *name = (char *) alloca (strlen (str1) + strlen (str2) + 1);
-  strcpy (name, str1);
-  strcat (name, str2);
+  stpcpy (stpcpy (name, str1), str2);
   return open (name, flags, mode);
 @}
 @end smallexample
@@ -1512,8 +1511,7 @@ open2 (char *str1, char *str2, int flags, int mode)
   int desc;
   if (name == 0)
     fatal ("virtual memory exceeded");
-  strcpy (name, str1);
-  strcat (name, str2);
+  stpcpy (stpcpy (name, str1), str2);
   desc = open (name, flags, mode);
   free (name);
   return desc;
@@ -1558,8 +1556,7 @@ int
 open2 (char *str1, char *str2, int flags, int mode)
 @{
   char *name = (char *) alloca (strlen (str1) + strlen (str2) + 1);
-  strcpy (name, str1);
-  strcat (name, str2);
+  stpcpy (stpcpy (name, str1), str2);
   return open_or_report_error (name, flags, mode);
 @}
 @end smallexample
@@ -1606,8 +1603,7 @@ variable size.  Here is how @code{open2} would look then:
 int open2 (char *str1, char *str2, int flags, int mode)
 @{
   char name[strlen (str1) + strlen (str2) + 1];
-  strcpy (name, str1);
-  strcat (name, str2);
+  stpcpy (stpcpy (name, str1), str2);
   return open (name, flags, mode);
 @}
 @end smallexample
@@ -1748,4 +1744,3 @@ Normally it ought to display the string for the user to read.
 The warnings come when memory becomes 75% full, when it becomes 85%
 full, and when it becomes 95% full.  Above 95% you get another warning
 each time memory usage increases.
-

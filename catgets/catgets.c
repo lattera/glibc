@@ -41,7 +41,7 @@ catopen (const char *cat_name, int flag)
 
   result->status = closed;
 
-  result->cat_name = strdup (cat_name);
+  result->cat_name = __strdup (cat_name);
   if (result->cat_name == NULL)
     {
       free (result);
@@ -71,7 +71,7 @@ catopen (const char *cat_name, int flag)
 	    env_var = "C";
 	}
 
-      result->env_var = strdup (env_var);
+      result->env_var = __strdup (env_var);
       if (result->env_var == NULL)
 	{
 	  free ((void *) result->cat_name);
@@ -80,9 +80,9 @@ catopen (const char *cat_name, int flag)
 	}
 
       if (getenv ("NLSPATH") != NULL)
-	result->nlspath = strdup (getenv ("NLSPATH"));
+	result->nlspath = __strdup (getenv ("NLSPATH"));
       else
-	result->nlspath = strdup (NLSPATH);
+	result->nlspath = __strdup (NLSPATH);
 
       if (result->nlspath == NULL)
 	{

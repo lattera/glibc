@@ -19,6 +19,7 @@ Boston, MA 02111-1307, USA.  */
 #include <alloca.h>
 #include <argz.h>
 #include <errno.h>
+#include <libc-lock.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -93,7 +94,7 @@ extern void postload (void);
 
 /* Define an array indexed by category of postload functions to call after
    loading and installing that category's data.  */
-void (*const _nl_category_postload[]) (void) =
+static void (*const _nl_category_postload[]) (void) =
   {
 #define DEFINE_CATEGORY(category, category_name, items, postload, b, c, d) \
     [category] = postload,
@@ -113,6 +114,9 @@ static const char *_nl_current_names[] =
     [LC_ALL] = _nl_C_name		/* For LC_ALL.  */
   };
 
+
+/* Lock for protecting global data.  */
+__libc_lock_define_initialized (static, lock)
 
 
 /* Use this when we come along an error.  */
@@ -238,8 +242,8 @@ setlocale (int category, const char *locale)
     return (char *) _nl_current_names[category];
 
   /* We perhaps really have to load some data.  So we determine the
-     path in which to look for the data now.  But this environment
-     variable must only be used when the binary has no SUID or SGID
+     path in which to look for the data now.  The environment variable
+     `LOCPATH' must only be used when the binary has no SUID or SGID
      bit set.  */
   locale_path = NULL;
   locale_path_len = 0;
@@ -309,6 +313,9 @@ setlocale (int category, const char *locale)
 	      ERROR_RETURN;
 	}
 
+      /* Protect global data.  */
+      __libc_lock_lock (lock);
+
       /* Load the new data for each category.  */
       while (category-- > 0)
 	/* Only actually load the data if anything will use it.  */
@@ -319,25 +326,7 @@ setlocale (int category, const char *locale)
 						 &newnames[category]);
 
 	    if (newdata[category] == NULL)
-	      {
-		/* Loading this part of the locale failed.  Abort the
-		   composite load.  */
-		int save_errno;
-	      abort_composite:
-		save_errno = errno;
-
-		while (++category < LC_ALL)
-		  if (_nl_current[category] != NULL
-		      && newdata[category] != _nl_C[category])
-		    _nl_free_locale (newdata[category]);
-		  else
-		    if (_nl_current[category] == NULL
-			&& newnames[category] != _nl_C_name)
-		      free (newnames[category]);
-
-		errno = save_errno;
-		return NULL;
-	      }
+	      goto abort_composite;
 	  }
 	else
 	  {
@@ -351,17 +340,39 @@ setlocale (int category, const char *locale)
       composite = new_composite_name (LC_ALL, newnames);
       if (composite == NULL)
 	{
+	  /* Loading this part of the locale failed.  Abort the
+	     composite load.  */
+	  int save_errno;
+
 	  category = -1;
-	  goto abort_composite;
+	abort_composite:
+	  save_errno = errno;
+
+	  while (++category < LC_ALL)
+	    if (_nl_current[category] != NULL
+		&& newdata[category] != _nl_C[category])
+	      _nl_free_locale (newdata[category]);
+	    else
+	      if (_nl_current[category] == NULL
+		  && newnames[category] != _nl_C_name)
+		free (newnames[category]);
+
+	  errno = save_errno;
+	  composite = NULL;
+	}
+      else
+	{
+	  /* Now we have loaded all the new data.  Put it in place.  */
+	  for (category = 0; category < LC_ALL; ++category)
+	    {
+	      setdata (category, newdata[category]);
+	      setname (category, newnames[category]);
+	    }
+	  setname (LC_ALL, composite);
 	}
 
-      /* Now we have loaded all the new data.  Put it in place.  */
-      for (category = 0; category < LC_ALL; ++category)
-	{
-	  setdata (category, newdata[category]);
-	  setname (category, newnames[category]);
-	}
-      setname (LC_ALL, composite);
+      /* Critical section left.  */
+      __libc_lock_unlock (lock);
 
       return composite;
     }
@@ -370,6 +381,9 @@ setlocale (int category, const char *locale)
       const struct locale_data *newdata = NULL;
       char *newname = NULL;
 
+      /* Protect global data.  */
+      __libc_lock_lock (lock);
+
       if (_nl_current[category] != NULL)
 	{
 	  /* Only actually load the data if anything will use it.  */
@@ -377,7 +391,7 @@ setlocale (int category, const char *locale)
 	  newdata = _nl_find_locale (locale_path, locale_path_len, category,
 				     (char **) &newname);
 	  if (newdata == NULL)
-	    return NULL;
+	    goto abort_single;
 	}
 
       /* Create new composite name.  */
@@ -392,14 +406,20 @@ setlocale (int category, const char *locale)
 	    _nl_free_locale (newdata);
 
 	  errno = save_errno;
-	  return NULL;
+	abort_single:
+	  newname = NULL;
+	}
+      else
+	{
+	  if (_nl_current[category] != NULL)
+	    setdata (category, newdata);
+
+	  setname (category, newname);
+	  setname (LC_ALL, composite);
 	}
 
-      if (_nl_current[category] != NULL)
-	setdata (category, newdata);
-
-      setname (category, newname);
-      setname (LC_ALL, composite);
+      /* Critical section left.  */
+      __libc_lock_unlock (lock);
 
       return newname;
     }

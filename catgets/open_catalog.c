@@ -79,12 +79,12 @@ __open_catalog (__nl_catd catalog, int with_path)
 		  case 'N':
 		    /* Use the catalog name.  */
 		    ENOUGH (strlen (catalog->cat_name));
-		    bufact = stpcpy (&buf[bufact], catalog->cat_name) - buf;
+		    bufact = __stpcpy (&buf[bufact], catalog->cat_name) - buf;
 		    break;
 		  case 'L':
 		    /* Use the current locale category value.  */
 		    ENOUGH (strlen (catalog->env_var));
-		    bufact = stpcpy (&buf[bufact], catalog->env_var) - buf;
+		    bufact = __stpcpy (&buf[bufact], catalog->env_var) - buf;
 		    break;
 		  case 'l':
 		    /* Use language element of locale category value.  */
@@ -152,7 +152,7 @@ __open_catalog (__nl_catd catalog, int with_path)
 
 	  if (bufact != 0)
 	    {
-	      fd = open (buf, O_RDONLY);
+	      fd = __open (buf, O_RDONLY);
 	      if (fd >= 0)
 		break;
 	    }
@@ -161,7 +161,7 @@ __open_catalog (__nl_catd catalog, int with_path)
 	}
     }
 
-  if (fd < 0 || fstat (fd, &st) < 0)
+  if (fd < 0 || __fstat (fd, &st) < 0)
     {
       catalog->status = nonexisting;
       return;
@@ -181,8 +181,8 @@ __open_catalog (__nl_catd catalog, int with_path)
 #endif
   catalog->file_size = st.st_size;
   catalog->file_ptr =
-    (struct catalog_obj *) mmap (NULL, st.st_size, PROT_READ,
-				 MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
+    (struct catalog_obj *) __mmap (NULL, st.st_size, PROT_READ,
+				   MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
   if (catalog->file_ptr != (struct catalog_obj *) -1)
     /* Tell the world we managed to mmap the file.  */
     catalog->status = mmaped;
@@ -201,8 +201,8 @@ __open_catalog (__nl_catd catalog, int with_path)
       /* Save read, handle partial reads.  */
       do
 	{
-	  size_t now = read (fd, (((char *) &catalog->file_ptr)
-				  + (st.st_size - todo)), todo);
+	  size_t now = __read (fd, (((char *) &catalog->file_ptr)
+				    + (st.st_size - todo)), todo);
 	  if (now == 0)
 	    {
 	      free ((void *) catalog->file_ptr);
@@ -216,7 +216,7 @@ __open_catalog (__nl_catd catalog, int with_path)
     }
 
   /* We don't need the file anymore.  */
-  close (fd);
+  __close (fd);
 
   /* Determine whether the file is a catalog file and if yes whether
      it is written using the correct byte order.  Else we have to swap
@@ -230,7 +230,7 @@ __open_catalog (__nl_catd catalog, int with_path)
       /* Illegal file.  Free he resources and mark catalog as not
 	 usable.  */
       if (catalog->status == mmaped)
-	munmap ((void *) catalog->file_ptr, catalog->file_size);
+	__munmap ((void *) catalog->file_ptr, catalog->file_size);
       else
 	free (catalog->file_ptr);
       catalog->status = nonexisting;

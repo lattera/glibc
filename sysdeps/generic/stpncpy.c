@@ -57,8 +57,6 @@ DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
 	    goto last_chars;
 	}
       n -= dest - s;
-      if (n == 0)
-	return dest - 1;
       goto zero_fill;
     }
 
@@ -70,16 +68,16 @@ DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
   for (;;)
     {
       c = *src++;
+      --n;
       *dest++ = c;
       if (c == '\0')
 	break;
-      if (--n == 0)
+      if (n == 0)
 	return dest;
     }
-  --n;
 
  zero_fill:
-  while (--n > 0)
+  while (n-- > 0)
     dest[n] = '\0';
 
   return dest - 1;

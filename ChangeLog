@@ -1,3 +1,64 @@
+Thu Aug  8 16:17:38 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* pwd/getpwent.c: Define BUFLEN from NSS_BUFLEN_PASSWD.
+	* pwd/getpwent_r.c: Likewise.
+	* pwd/getpwnam.c: Likewise.
+	* pwd/getpwnam_r.c: Likewise.
+	* pwd/getpwuid.c: Likewise.
+	* pwd/getpwuid_r.c: Likewise.
+
+	* grp/getgrent.c: Define BUFLEN from NSS_BUFLEN_GROUP.
+	* grp/getgrent_r.c: Likewise.
+	* grp/getgrgid.c: Likewise.
+	* grp/getgrgid_r.c: Likewise.
+	* grp/getgrnam.c: Likewise.
+
+	* pwd/fgetpwent_r.c: New file.  Reentrant version of fgetpwent.
+	* pwd/fgetpwent.c: Rewrite to use fgetpwent_r.
+	* pwd/Makefile (routines): Add fgetpwent_r.
+	* pwd/pwd.h: Add prototypes for __fgetpwent_r and fgetpwent_r.
+
+	* grp/fgetgrent_r.c: New file.  Reentrant version of fgetgrent.
+	* grp/fgetgrent.c: Rewrite to use fgetgrent_r.
+	* grp/Makefile (routines): Add fgetgrent_r.
+	* grp/grp.h: Add prototypes for __fgetgrent_r and fgetgrent_r.
+
+	Implement shadow password lookup functions.  This is no complete
+	shadow password suite.
+	* shadow/Makefile: New file.
+	* shadow/fgetspent.c: New file.
+	* shadow/fgetspent_r.c: New file.
+	* shadow/getspent.c: New file.
+	* shadow/getspent_r.c: New file.
+	* shadow/getspnam.c: New file.
+	* shadow/getspnam_r.c: New file.
+	* shadow/putspent.c: New file.
+	* shadow/sgetspent.c: New file.
+	* shadow/sgetspent_r.c: New file.
+	* shadow/shadow.h: New file.
+	* shadow/spwd-lookup.c: New file.
+	* shadow/nss_files/files-spwd.c: New file.
+
+Thu Aug  8 13:33:45 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/ftime.c: New file.  Available system
+ 	call is only a stub.
+	Reported by Matthias Urlichs.
+
+	* Makeconfig [!default_cflags]: Change default value from `-g'
+	to `-g -O'.
+
+	* configure.in: Recognize i686.
+	* sysdeps/i386/i686/Implies: Default on i586 optimized code.
+
+Thu Aug  8 12:40:20 1996  Matthias Urlichs  <smurf@smurf.noris.de>
+
+	* Makeconfig [$(build-omitfp) == yes]: Add to CFLAGS-.so
+	value of CFLAGS-.o, not CFLAGS-o.
+
+	* sysdeps/unix/sysv/linux/init-first.c (init): Add volatile
+	pointer to ourself.  Otherwise `gcc -O3' optimized init away.
+
 Thu Aug  8 01:41:43 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile: Undo change of Tue Aug  6 14:27:11 1996.
@@ -479,7 +540,7 @@ Mon Jul 29 02:46:23 1996  Ulrich Drepper  <drepper@cygnus.com>
 	warning.
 
 	* locale/programs/ld-ctype.c (ctype_output): Add code to make
-	sure that all tables in binary file are words aligned.
+	sure that all tables in binary file are word-aligned.
 
 	* locale/programs/locfile.c (write_locale_data): Correct handling
 	of LC_MESSAGES locale.  Create directory if necessary.

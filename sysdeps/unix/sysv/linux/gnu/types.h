@@ -65,4 +65,8 @@ typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 typedef __kernel_fd_set __fd_set;
 typedef __kernel_clock_t __clock_t;
 
+/* Linus doesn't want __kernel_fd_mask in <linux/posix_types.h> since
+   XPG4 seems to require `unsigned long'.  */
+typedef unsigned long __fd_mask;
+
 #endif /* gnu/types.h */

@@ -42,10 +42,6 @@ static service_library *nss_new_service (name_database *database,
 __libc_lock_define_initialized (static, lock)
 
 
-/* Global variable.  */
-struct __res_state _res;
-
-
 /* Nonzero if the sevices are already initialized.  */
 static int nss_initialized;
 

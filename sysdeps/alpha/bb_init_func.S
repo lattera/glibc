@@ -40,10 +40,10 @@ ENTRY(__bb_init_func)
 	ldq	t0, ZERO_WORD(a0)	/* t0 <- blocks->zero_word */
 	beq	t0, init		/* not initialized yet -> */
 	ret
-	
+
 END(__bb_init_func)
 
-.ent init
+	.ent init
 init:
 	.frame	sp, 0x38, ra, 0
 	subq	sp, 0x38, sp
@@ -61,8 +61,8 @@ init:
 	stq	t0, ZERO_WORD(a0)	/* blocks->zero_word = 1 */
 	stq	t2, NEXT(a0)		/* blocks->next = __bb_head */
 	stq	a0, 0(t1)
-	bne	t2, leave
-	beq	t3, leave		/* t3 == GMON_PROF_ON? yes -> */
+	bne	t2, $leave
+	beq	t3, $leave		/* t3 == GMON_PROF_ON? yes -> */
 
 	/* also need to initialize destructor: */
 	stq	ra, 0x00(sp)
@@ -81,8 +81,8 @@ init:
 	ldq	a4, 0x20(sp)
 	ldq	a5, 0x28(sp)
 
-leave:	ldq	pv, 0x30(sp)
+$leave:	ldq	pv, 0x30(sp)
 	addq	sp, 0x38, sp
 	ret
 
-.end init
+	.end init

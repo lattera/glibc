@@ -20,15 +20,17 @@ Cambridge, MA 02139, USA.  */
 /* This interface is obsolete.  Use <sys/statfs.h> instead.  */
 
 #ifndef _SYS_USTAT_H
-#define _SYS_USTAT_H 1
+
+#define	_SYS_USTAT_H	1
+#include <features.h>
 
 #include <sys/types.h>
 #include <ustatbits.h>
 
 __BEGIN_DECLS
 
-extern int __ustat __P ((dev_t, struct ustat *));
-extern int ustat __P ((dev_t, struct ustat *));
+extern int __ustat __P ((__dev_t __dev, struct ustat *__ubuf));
+extern int ustat __P ((__dev_t __dev, struct ustat *__ubuf));
 
 __END_DECLS
 

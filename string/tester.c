@@ -71,6 +71,19 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   (void) strcpy(one, "");
   equal(one, "", 7);			/* Boundary condition. */
 
+  /* stpncpy.  */
+  it = "stpncpy";
+
+  memset(one, 'x', sizeof(one));
+  check(stpncpy(one, "abc", 2) == one + 2, 1);
+  check(stpncpy(one, "abc", 3) == one + 3, 2);
+  check(stpncpy(one, "abc", 4) == one + 3, 3);
+  check(one[3] == '\0' && one[4] == 'x', 4);
+  check(stpncpy(one, "abcd", 5) == one + 4, 5);
+  check(one[4] == '\0' && one[5] == 'x', 6);
+  check(stpncpy(one, "abcd", 6) == one + 4, 7);
+  check(one[4] == '\0' && one[5] == '\0' && one[6] == 'x', 8);
+
   /* strcat.  */
   it = "strcat";
   (void) strcpy(one, "ijk");

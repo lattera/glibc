@@ -42,7 +42,7 @@ For correctness consider that:
 ENTRY(memchr)
 	.prologue 0
 
-	beq	a2, not_found
+	beq	a2, $not_found
         ldq_u   t0, 0(a0)       # load first quadword (a0 may be misaligned)
 	addq	a0, a2, t4
 	and	a1, 0xff, a1	# a1 = 00000000000000ch
@@ -57,7 +57,7 @@ ENTRY(memchr)
 	extql	t0, a0, t6
 	or	t1, a1, a1	# a1 = chchchchchchchch
 
-	beq	t3, first_quad
+	beq	t3, $first_quad
 
 	extqh	t5, a0, t5
 	mov	a0, v0
@@ -68,15 +68,15 @@ ENTRY(memchr)
 	# in t0.  E.g.:
 	#	a2 = 6
 	#	t0 = ????c6c5c4c3c2c1
-last_quad:
+$last_quad:
 	negq	a2, t5
 	srl	t2, t5, t5	# t5 = mask of a2 bits set
         xor	a1, t0, t0
         cmpbge  zero, t0, t1
 	and	t1, t5, t1
-        beq     t1, not_found
+        beq     t1, $not_found
 
-found_it:
+$found_it:
 	# now, determine which byte matched:
         negq    t1, t2
         and     t1, t2, t1
@@ -93,20 +93,20 @@ found_it:
         addq    v0, 1, t2
         cmoveq  t0, t2, v0
 
-done:	ret
+$done:	ret
 
 
 	#
 	# Deal with the case where a2 > 8 bytes remain to be
 	# searched.  a0 may not be aligned.
 	#
-first_quad:
+$first_quad:
 	andnot	a0, 0x7, v0
         insqh   t2, a0, t1	# t1 = 0000ffffffffffff (a0<0:2> ff bytes)
         xor	t0, a1, t0
 	or	t0, t1, t0	# t0 = ====ffffffffffff
         cmpbge  zero, t0, t1
-        bne     t1, found_it
+        bne     t1, $found_it
 
 	/* at least one byte left to process */
 
@@ -119,41 +119,41 @@ first_quad:
 	subq	t4, 1, a2
 	andnot	a2, 0x7, a2
 	cmpult	v0, a2, t1
-	beq	t1, final
+	beq	t1, $final
 
 	/* at least two quads remain to be accessed */
 
 	subq	a2, v0, t3	# t3 <- number of quads to be processed in loop
 	and	t3, 8, t3	# odd number of quads?
-	bne	t3, odd_quad_count
+	bne	t3, $odd_quad_count
 
 	/* at least three quads remain to be accessed */
 
 	mov	t0, t3		# move prefetched value into correct register
 
 	.align	3
-unrolled_loop:
+$unrolled_loop:
 	ldq	t0, 8(v0)	# prefetch t0
 	xor	a1, t3, t1
 	cmpbge	zero, t1, t1
-	bne	t1, found_it
+	bne	t1, $found_it
 
 	addq	v0, 8, v0
-odd_quad_count:
+$odd_quad_count:
 	xor	a1, t0, t1
 	ldq	t3, 8(v0)	# prefetch t3
 	cmpbge	zero, t1, t1
-	bne	t1, found_it
+	bne	t1, $found_it
 
 	addq	v0, 8, v0
 	cmpult	v0, a2, t5
-	bne	t5, unrolled_loop
+	bne	t5, $unrolled_loop
 
 	mov	t3, t0		# move prefetched value into t0
-final:	subq	t4, v0, a2	# a2 <- number of bytes left to do
-	bne	a2, last_quad
+$final:	subq	t4, v0, a2	# a2 <- number of bytes left to do
+	bne	a2, $last_quad
 
-not_found:
+$not_found:
 	mov	zero, v0
 	ret
 

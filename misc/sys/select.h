@@ -39,6 +39,8 @@ __BEGIN_DECLS
    of `struct timeval'.  */
 struct timeval;
 
+typedef __fd_mask fd_mask;
+
 /* Representation of a set of file descriptors.  */
 #define	fd_set			__fd_set
 

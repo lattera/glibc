@@ -19,7 +19,7 @@ not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
 #ifndef _FPU_CONTROL_H
-#define _FPU_CONTROL_H
+#define _FPU_CONTROL_H	1
 
 /* Here is the dirty part. Settup up your 387 through the control word
  * (cw) register.
@@ -80,10 +80,10 @@ Boston, MA 02111-1307, USA.  */
 /* The fdlibm code requires strict IEEE double precision arithmetic,
    and no interrupts for exceptions, rounding to nearest.  */
 
-#define _FPU_DEFAULT  0x127f
+#define _FPU_DEFAULT  0x137f
 
 /* IEEE:  same as above, but exceptions */
-#define _FPU_IEEE     0x127f
+#define _FPU_IEEE     0x137f
 
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));

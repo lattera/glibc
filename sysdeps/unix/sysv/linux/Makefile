@@ -1,5 +1,5 @@
 ifeq ($(subdir), misc)
-sysdep_routines += sysctl
+sysdep_routines += sysctl clone
 
 sysdep_headers += sys/mount.h sys/sysinfo.h sys/acct.h sys/sysctl.h \
 		  sys/module.h sys/io.h sys/klog.h sys/kdaemon.h \

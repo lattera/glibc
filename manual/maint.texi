@@ -223,8 +223,8 @@ following patterns:
 
 @smallexample
 alpha-dec-osf1
-alpha-gnu-linux
-alpha-gnu-linuxecoff
+alpha-@var{anything}-linux
+alpha-@var{anything}-linuxecoff
 i@var{x}86-@var{anything}-bsd4.3
 i@var{x}86-@var{anything}-gnu
 i@var{x}86-@var{anything}-isc2.2

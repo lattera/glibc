@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,16 @@ break value (instead of the new, requested one).  */
 #include <sysdep.h>
 #include <errnos.h>
 
+#ifdef PIC
+.section .bss
+	.align 3
+	.globl __curbrk
+__curbrk: .skip 8
+	.type __curbrk,@object
+	.size __curbrk,8
+#else
 .comm __curbrk, 8
+#endif
 
 	.text
 LEAF(__brk, 0)

@@ -6,7 +6,7 @@ many programs.  The GNU C library provides an extensive set of string
 utility functions, including functions for copying, concatenating,
 comparing, and searching strings.  Many of these functions can also
 operate on arbitrary regions of storage; for example, the @code{memcpy}
-function can be used to copy the contents of any kind of array.  
+function can be used to copy the contents of any kind of array.
 
 It's fairly common for beginning C programmers to ``reinvent the wheel''
 by duplicating this functionality in their own code, but it pays to
@@ -158,7 +158,7 @@ get the allocation size of the character array that holds a string using
 the @code{sizeof} operator:
 
 @smallexample
-char string[32] = "hello, world"; 
+char string[32] = "hello, world";
 sizeof (string)
     @result{} 32
 strlen (string)
@@ -411,7 +411,7 @@ return a nonzero value if the strings are @emph{not} equivalent rather
 than if they are.  The sign of the value indicates the relative ordering
 of the first characters in the strings that are not equivalent:  a
 negative value indicates that the first string is ``less'' than the
-second, while a positive value indicates that the first string is 
+second, while a positive value indicates that the first string is
 ``greater''.
 
 The most common use of these functions is to check only for equality.
@@ -623,10 +623,10 @@ overlap; see @ref{Copying and Concatenation}.
 
 The return value is the length of the entire transformed string.  This
 value is not affected by the value of @var{size}, but if it is greater
-than @var{size}, it means that the transformed string did not entirely
-fit in the array @var{to}.  In this case, only as much of the string as
-actually fits was stored.  To get the whole transformed string, call
-@code{strxfrm} again with a bigger output array.
+or equal than @var{size}, it means that the transformed string did not
+entirely fit in the array @var{to}.  In this case, only as much of the
+string as actually fits was stored.  To get the whole transformed
+string, call @code{strxfrm} again with a bigger output array.
 
 The transformed string may be longer than the original string, and it
 may also be shorter.
@@ -671,23 +671,32 @@ sort_strings_fast (char **array, int nstrings)
   for (i = 0; i < nstrings; i++)
     @{
       size_t length = strlen (array[i]) * 2;
+      char *transformed;
+      size_t transformed_lenght;
 
       temp_array[i].input = array[i];
 
-      /* @r{Transform @code{array[i]}.}
-         @r{First try a buffer probably big enough.} */
-      while (1)
+      /* @r{First try a buffer perhaps big enough.}  */
+      transformed = (char *) xmalloc (length);
+
+      /* @r{Transform @code{array[i]}.}  */
+      transformed_length = strxfrm (transformed, array[i], length);
+
+      /* @r{If the buffer was not large enough, resize it}
+         @r{and try again.}  */
+      if (transformed_length >= length)
         @{
-          char *transformed = (char *) xmalloc (length);
-          if (strxfrm (transformed, array[i], length) < length)
-            @{
-              temp_array[i].transformed = transformed;
-              break;
-            @}
-          /* @r{Try again with a bigger buffer.} */
-          free (transformed);
-          length *= 2;
+          /* @r{Allocate the needed space. +1 for terminating}
+             @r{@code{NUL} character.}  */
+          transformed = (char *) xrealloc (transformed,
+                                           transformed_length + 1);
+
+          /* @r{The return value is not interesting because we know}
+             @r{how long the transformed string is.}  */
+          (void) strxfrm (transformed, array[i], transformed_length + 1);
         @}
+
+      temp_array[i].transformed = transformed;
     @}
 
   /* @r{Sort @code{temp_array} by comparing transformed strings.} */
@@ -741,7 +750,7 @@ strchr ("hello, world", 'l')
     @result{} "llo, world"
 strchr ("hello, world", '?')
     @result{} NULL
-@end smallexample    
+@end smallexample
 
 The terminating null character is considered to be part of the string,
 so you can use this function get a pointer to the end of a string by
@@ -857,8 +866,6 @@ strpbrk ("hello, world", " \t\n,.;!?")
 @node Finding Tokens in a String,  , Search Functions, String and Array Utilities
 @section Finding Tokens in a String
 
-@c !!! Document strsep, which is a better thing to use than strtok.
-
 @cindex tokenizing strings
 @cindex breaking a string into tokens
 @cindex parsing tokens from a string
@@ -944,4 +951,62 @@ token = strtok (NULL, delimiters);    /* token => "spaces" */
 token = strtok (NULL, delimiters);    /* token => "and" */
 token = strtok (NULL, delimiters);    /* token => "punctuation" */
 token = strtok (NULL, delimiters);    /* token => NULL */
+@end smallexample
+
+The GNU C library contains two more functions for tokenizing a string
+which overcome the limitation of non-reentrancy.
+
+@comment string.h
+@comment POSIX
+@deftypefun {char *} strtok_r (char *@var{newstring}, const char *@var{delimiters}, char **@var{save_ptr})
+Just like @code{strtok} this function splits the string into several
+tokens which can be accessed be successive calls to @code{strtok_r}.
+The difference is that the information about the next token is not set
+up in some internal state information.  Instead the caller has to
+provide another argument @var{save_ptr} which is a pointer to a string
+pointer.  Calling @code{strtok_r} with a null pointer for
+@var{newstring} and leaving @var{save_ptr} between the calls unchanged
+does the job without limiting reentrancy.
+
+This function was proposed for POSIX.1b and can be found on many systems
+which support multi-threading.
+@end deftypefun
+
+@comment string.h
+@comment BSD
+@deftypefun {char *} strsep (char **@var{string_ptr}, const char *@var{delimiter})
+A second reentrant approach is to avoid the additional first argument.
+The initialization of the moving pointer has to be done by the user.
+Successive calls of @code{strsep} move the pointer along the tokens
+separated by @var{delimiter}, returning the address of the next token
+and updating @var{string_ptr} to point to the beginning of the next
+token.
+
+This function was introduced in 4.3BSD and therefore is widely available.
+@end deftypefun
+
+Here is how the above example looks like when @code{strsep} is used.
+
+@comment Yes, this example has been tested.
+@smallexample
+#include <string.h>
+#include <stddef.h>
+
+@dots{}
+
+char string[] = "words separated by spaces -- and, punctuation!";
+const char delimiters[] = " .,;:!-";
+char *running;
+char *token;
+
+@dots{}
+
+running = string;
+token = strsep (&running, delimiters);    /* token => "words" */
+token = strsep (&running, delimiters);    /* token => "separated" */
+token = strsep (&running, delimiters);    /* token => "by" */
+token = strsep (&running, delimiters);    /* token => "spaces" */
+token = strsep (&running, delimiters);    /* token => "and" */
+token = strsep (&running, delimiters);    /* token => "punctuation" */
+token = strsep (&running, delimiters);    /* token => NULL */
 @end smallexample

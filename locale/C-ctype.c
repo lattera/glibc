@@ -42,7 +42,7 @@ const char _nl_C_LC_CTYPE_class[768] =
   /* 0xec */ "\002\000" "\002\000" "\002\000" "\002\000" "\002\000" "\002\000"
   /* 0xf2 */ "\002\000" "\002\000" "\002\000" "\002\000" "\002\000" "\002\000"
   /* 0xf8 */ "\002\000" "\002\000" "\002\000" "\002\000" "\002\000" "\002\000"
-  /* 0xfe */ "\002\000" "\002\000" "\002\000" "\002\000" "\002\000" "\002\000"
+  /* 0xfe */ "\002\000" "\000\000" "\002\000" "\002\000" "\002\000" "\002\000"
   /* 0x04 */ "\002\000" "\002\000" "\002\000" "\002\000" "\002\000" "\003\040"
   /* 0x0a */ "\002\040" "\002\040" "\002\040" "\002\040" "\002\000" "\002\000"
   /* 0x10 */ "\002\000" "\002\000" "\002\000" "\002\000" "\002\000" "\002\000"
@@ -342,11 +342,13 @@ const struct locale_data _nl_C_LC_CTYPE =
 #endif
     { string: (const char *) _nl_C_LC_CTYPE_toupper },
     { string: (const char *) _nl_C_LC_CTYPE_tolower },
-    { string: NULL },
 #if BYTE_ORDER == BIG_ENDIAN
-    { string: NULL },
+    { string: NULL }, { string: NULL },
 #endif
     { string: _nl_C_LC_CTYPE_class32 },
+#if BYTE_ORDER == LITTLE_ENDIAN
+    { string: NULL },
+#endif
     { string: (const char *) _nl_C_LC_CTYPE_names },
 #if BYTE_ORDER == BIG_ENDIAN
     { string: NULL },

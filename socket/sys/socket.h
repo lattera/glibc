@@ -115,8 +115,10 @@ extern int getpeername __P ((int __fd, __SOCKADDR_ARG __addr,
 
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
-extern int __send __P ((int __fd, __ptr_t __buf, size_t __n, int __flags));
-extern int send __P ((int __fd, __ptr_t __buf, size_t __n, int __flags));
+extern int __send __P ((int __fd, __const __ptr_t __buf, size_t __n,
+			int __flags));
+extern int send __P ((int __fd, __const __ptr_t __buf, size_t __n,
+		      int __flags));
 
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
@@ -124,8 +126,9 @@ extern int recv __P ((int __fd, __ptr_t __buf, size_t __n, int __flags));
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
-extern int sendto __P ((int __fd, __ptr_t __buf, size_t __n, int __flags,
-			__CONST_SOCKADDR_ARG __addr, size_t __addr_len));
+extern int sendto __P ((int __fd, __const __ptr_t __buf, size_t __n,
+			int __flags, __CONST_SOCKADDR_ARG __addr,
+			size_t __addr_len));
 
 /* Read N bytes into BUF through socket FD.
    If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of

@@ -1,5 +1,5 @@
 /* Generic declaration of ustat structure.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+__BEGIN_DECLS
+
 struct ustat
 {
-  daddr_t f_tfree;	/* total free */
-  ino_t f_tinode;	/* total inodes free */
+  __daddr_t f_tfree;	/* total free */
+  __ino_t f_tinode;	/* total inodes free */
   char f_fname[6];	/* filesystem name */
   char f_fpack[6];	/* filesystem pack name */
 };
+
+__END_DECLS

@@ -34,7 +34,7 @@ ENTRY(ffs)
         negq    a0, t0		# due to the srl instruction
         and     a0, t0, t0
 	clr	v0
-	beq	a0, done
+	beq	a0, $done
 
 	# now do binary search for first non-zero bit
 
@@ -61,6 +61,6 @@ ENTRY(ffs)
         addq    v0, 1, t3
         cmoveq  t2, t3, v0
 
-done:   ret
+$done:	ret
 
         END(ffs)

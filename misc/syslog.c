@@ -56,6 +56,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <varargs.h>
 #endif
 
+static int	LogType = SOCK_DGRAM;	/* type of socket connection */
 static int	LogFile = -1;		/* fd for log */
 static int	connected;		/* have done connect */
 static int	LogStat = 0;		/* status bits, set by openlog() */
@@ -163,8 +164,15 @@ vsyslog(pri, fmt, ap)
 	/* Get connected, output the message to the local logger. */
 	if (!connected)
 		openlog(LogTag, LogStat | LOG_NDELAY, 0);
+
+	/* If we have a SOCK_STREAM connection, also send ASCII NUL as
+	   a record terminator.  */
+	if (LogType == SOCK_STREAM)
+	  ++bufsize;
+
 	if (__send(LogFile, buf, bufsize, 0) < 0)
 	  {
+	    closelog ();	/* attempt re-open next time */
 	    /*
 	     * Output the message to the console; don't worry about blocking,
 	     * if console blocks everything will.  Make sure the error reported
@@ -194,23 +202,36 @@ openlog(ident, logstat, logfac)
 	if (logfac != 0 && (logfac &~ LOG_FACMASK) == 0)
 		LogFacility = logfac;
 
-	if (LogFile == -1) {
-		SyslogAddr.sa_family = AF_UNIX;
-		(void)strncpy(SyslogAddr.sa_data, _PATH_LOG,
-		    sizeof(SyslogAddr.sa_data));
-		if (LogStat & LOG_NDELAY) {
-			if ((LogFile = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
-				return;
-			(void)fcntl(LogFile, F_SETFD, 1);
+	while (1) {
+		if (LogFile == -1) {
+			SyslogAddr.sa_family = AF_UNIX;
+			(void)strncpy(SyslogAddr.sa_data, _PATH_LOG,
+				      sizeof(SyslogAddr.sa_data));
+			if (LogStat & LOG_NDELAY) {
+				if ((LogFile = socket(AF_UNIX, LogType, 0))
+				    == -1)
+					return;
+				(void)fcntl(LogFile, F_SETFD, 1);
+			}
 		}
+		if (LogFile != -1 && !connected)
+			if (__connect(LogFile, &SyslogAddr, sizeof(SyslogAddr))
+			    == -1)
+			{
+				int saved_errno = errno;
+				(void)close(LogFile);
+				LogFile = -1;
+				if (LogType == SOCK_DGRAM
+				    && saved_errno == EPROTOTYPE)
+				{
+					/* retry with next SOCK_STREAM: */
+					LogType = SOCK_STREAM;
+					continue;
+				}
+			} else
+				connected = 1;
+		break;
 	}
-	if (LogFile != -1 && !connected)
-		if (__connect(LogFile, &SyslogAddr, sizeof(SyslogAddr)) == -1)
-		{
-			(void)close(LogFile);
-			LogFile = -1;
-		} else
-		  connected = 1;
 }
 
 void

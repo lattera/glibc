@@ -97,7 +97,7 @@ _dl_open (const char *file, int mode)
       else
 	{
 	  if (_dl_global_scope_alloc <
-	      _dl_global_scope_end - _dl_global_scope + 2)
+	      (size_t) (_dl_global_scope_end - _dl_global_scope + 2))
 	    {
 	      /* Must extend the list.  */
 	      struct link_map **new = realloc (_dl_global_scope,
