@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
    This file is part of the GNU C Library.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <features.h>
 
 #if !defined(_IEEE_FP_INEXACT)
 
@@ -53,110 +54,110 @@ const static struct sqrt_data_struct {
 };
 
 asm ("\
-  /* Define offsets into the structure defined in C above.  */
-	$DN = 0*8
-	$UP = 1*8
-	$HALF = 2*8
-	$ALMOST_THREE_HALF = 3*8
-	$NAN = 7*8
-	$T2 = 8*8
-
-  /* Stack variables.  */
-	$K = 0
-	$Y = 8
-
-	.text
-	.align	5
-	.globl	__ieee754_sqrt
-	.ent	__ieee754_sqrt
-__ieee754_sqrt:
-	ldgp	$29, 0($27)
-	subq	$sp, 16, $sp
+  /* Define offsets into the structure defined in C above.  */		\n\
+	$DN = 0*8							\n\
+	$UP = 1*8							\n\
+	$HALF = 2*8							\n\
+	$ALMOST_THREE_HALF = 3*8					\n\
+	$NAN = 7*8							\n\
+	$T2 = 8*8							\n\
+									\n\
+  /* Stack variables.  */						\n\
+	$K = 0								\n\
+	$Y = 8								\n\
+									\n\
+	.text								\n\
+	.align	5							\n\
+	.globl	__ieee754_sqrt						\n\
+	.ent	__ieee754_sqrt						\n\
+__ieee754_sqrt:								\n\
+	ldgp	$29, 0($27)						\n\
+	subq	$sp, 16, $sp						\n\
 	.frame	$sp, 16, $26, 0\n"
 #ifdef PROF
-"	lda	$28, _mcount
+"	lda	$28, _mcount						\n\
 	jsr	$28, ($28), _mcount\n"
 #endif
-"	.prologue 1
-
-	.align 4
-	stt	$f16, $K($sp)		# e0    :
-	mult	$f31, $f31, $f31	# .. fm :
-	lda	$4, sqrt_data		# e0    :
-	fblt	$f16, $fixup		# .. fa :
-
-	ldah	$2, 0x5fe8		# e0    :
-	ldq	$3, $K($sp)		# .. e1 :
-	ldt	$f12, $HALF($4)		# e0    :
-	ldt	$f18, $ALMOST_THREE_HALF($4)	# .. e1 :
-
-	sll	$3, 52, $5		# e0    :
-	lda	$6, 0x7fd		# .. e1 :
-	fnop				# .. fa :
-	fnop				# .. fm :
-
-	subq	$5, 1, $5		# e1    :
-	srl	$3, 33, $1		# .. e0 :
-	cmpule	$5, $6, $5		# e0    :
-	beq	$5, $fixup		# .. e1 :
-
-	mult	$f16, $f12, $f11	# fm    : $f11 = x * 0.5
-	subl	$2, $1, $2		# .. e0 :
-	addt	$f12, $f12, $f17	# .. fa : $f17 = 1.0
-	srl	$2, 12, $1		# e0    :
-
-	and	$1, 0xfc, $1		# e0    :
-	addq	$1, $4, $1		# e1    :
-	ldl	$1, $T2($1)		# e0    :
-	addt	$f12, $f17, $f15	# .. fa : $f15 = 1.5
-
-	subl	$2, $1, $2		# e0    :
-	ldt	$f14, $DN($4)		# .. e1 :
-	sll	$2, 32, $2		# e0    :
-	stq	$2, $Y($sp)		# e0    :
-
-	ldt	$f13, $Y($sp)		# e0    :
-	mult/su	$f11, $f13, $f10	# fm   2: $f10 = (x * 0.5) * y
-	mult	$f10, $f13, $f10	# fm   4: $f10 = ((x * 0.5) * y) * y
-	subt	$f15, $f10, $f1		# fa   4: $f1 = (1.5 - 0.5*x*y*y)
-
-	mult	$f13, $f1, $f13         # fm   4: yp = y*(1.5 - 0.5*x*y*y)
- 	mult/su	$f11, $f13, $f1		# fm   4: $f11 = x * 0.5 * yp
-	mult	$f1, $f13, $f11		# fm   4: $f11 = (x * 0.5 * yp) * yp
-	subt	$f18, $f11, $f1		# fa   4: $f1= (1.5-2^-30) - 0.5*x*yp*yp
-
-	mult	$f13, $f1, $f13		# fm   4: ypp = $f13 = yp*$f1
-	subt	$f15, $f12, $f1		# .. fa : $f1 = (1.5 - 0.5)
-	ldt	$f15, $UP($4)		# .. e0 :
-	mult/su	$f16, $f13, $f10	# fm   4: z = $f10 = x * ypp
-
-	mult	$f10, $f13, $f11	# fm   4: $f11 = z*ypp
-	mult	$f10, $f12, $f12	# fm    : $f12 = z*0.5
-	subt	$f1, $f11, $f1		# fa   4: $f1 = 1 - z*ypp
-	mult	$f12, $f1, $f12		# fm   4: $f12 = z*0.5*(1 - z*ypp)
-
-	addt	$f10, $f12, $f0		# fa   4: zp=res= z + z*0.5*(1 - z*ypp)
-	mult/c	$f0, $f14, $f12		# fm   4: zmi = zp * DN
-	mult/c	$f0, $f15, $f11		# fm    : zpl = zp * UP
-	mult/c	$f0, $f12, $f1		# fm    : $f1 = zp * zmi
-
-	mult/c	$f0, $f11, $f15		# fm    : $f15 = zp * zpl
-	subt/su	$f1, $f16, $f13		# .. fa : y1 = zp*zmi - x
-	subt/su	$f15, $f16, $f14	# fa   4: y2 = zp*zpl - x
-	fcmovge	$f13, $f12, $f0		# fa   3: res = (y1 >= 0) ? zmi : res
-
-	fcmovlt	$f14, $f11, $f0		# fa   4: res = (y2 <  0) ? zpl : res
-	addq	$sp, 16, $sp		# .. e0 :
-	ret				# .. e1 :
-
-	.align 4
-$fixup:
-	addq	$sp, 16, $sp
-	br	"ASM_ALPHA_NG_SYMBOL_PREFIX"__full_ieee754_sqrt..ng
-
+"	.prologue 1							\n\
+									\n\
+	.align 4							\n\
+	stt	$f16, $K($sp)		# e0    :			\n\
+	mult	$f31, $f31, $f31	# .. fm :			\n\
+	lda	$4, sqrt_data		# e0    :			\n\
+	fblt	$f16, $fixup		# .. fa :			\n\
+									\n\
+	ldah	$2, 0x5fe8		# e0    :			\n\
+	ldq	$3, $K($sp)		# .. e1 :			\n\
+	ldt	$f12, $HALF($4)		# e0    :			\n\
+	ldt	$f18, $ALMOST_THREE_HALF($4)	# .. e1 :		\n\
+									\n\
+	sll	$3, 52, $5		# e0    :			\n\
+	lda	$6, 0x7fd		# .. e1 :			\n\
+	fnop				# .. fa :			\n\
+	fnop				# .. fm :			\n\
+									\n\
+	subq	$5, 1, $5		# e1    :			\n\
+	srl	$3, 33, $1		# .. e0 :			\n\
+	cmpule	$5, $6, $5		# e0    :			\n\
+	beq	$5, $fixup		# .. e1 :			\n\
+									\n\
+	mult	$f16, $f12, $f11	# fm    : $f11 = x * 0.5	\n\
+	subl	$2, $1, $2		# .. e0 :			\n\
+	addt	$f12, $f12, $f17	# .. fa : $f17 = 1.0		\n\
+	srl	$2, 12, $1		# e0    :			\n\
+									\n\
+	and	$1, 0xfc, $1		# e0    :			\n\
+	addq	$1, $4, $1		# e1    :			\n\
+	ldl	$1, $T2($1)		# e0    :			\n\
+	addt	$f12, $f17, $f15	# .. fa : $f15 = 1.5		\n\
+									\n\
+	subl	$2, $1, $2		# e0    :			\n\
+	ldt	$f14, $DN($4)		# .. e1 :			\n\
+	sll	$2, 32, $2		# e0    :			\n\
+	stq	$2, $Y($sp)		# e0    :			\n\
+									\n\
+	ldt	$f13, $Y($sp)		# e0    :			\n\
+	mult/su	$f11, $f13, $f10	# fm   2: $f10 = (x * 0.5) * y	\n\
+	mult	$f10, $f13, $f10	# fm   4: $f10 = ((x*0.5)*y)*y	\n\
+	subt	$f15, $f10, $f1		# fa   4: $f1 = (1.5-0.5*x*y*y)	\n\
+									\n\
+	mult	$f13, $f1, $f13         # fm   4: yp = y*(1.5-0.5*x*y^2)\n\
+ 	mult/su	$f11, $f13, $f1		# fm   4: $f11 = x * 0.5 * yp	\n\
+	mult	$f1, $f13, $f11		# fm   4: $f11 = (x*0.5*yp)*yp	\n\
+	subt	$f18, $f11, $f1		# fa   4: $f1=(1.5-2^-30)-x/2*yp^2\n\
+									\n\
+	mult	$f13, $f1, $f13		# fm   4: ypp = $f13 = yp*$f1	\n\
+	subt	$f15, $f12, $f1		# .. fa : $f1 = (1.5 - 0.5)	\n\
+	ldt	$f15, $UP($4)		# .. e0 :			\n\
+	mult/su	$f16, $f13, $f10	# fm   4: z = $f10 = x * ypp	\n\
+									\n\
+	mult	$f10, $f13, $f11	# fm   4: $f11 = z*ypp		\n\
+	mult	$f10, $f12, $f12	# fm    : $f12 = z*0.5		\n\
+	subt	$f1, $f11, $f1		# fa   4: $f1 = 1 - z*ypp	\n\
+	mult	$f12, $f1, $f12		# fm   4: $f12 = z/2*(1 - z*ypp)\n\
+									\n\
+	addt	$f10, $f12, $f0		# fa   4: zp=res= z+z/2*(1-z*ypp)\n\
+	mult/c	$f0, $f14, $f12		# fm   4: zmi = zp * DN		\n\
+	mult/c	$f0, $f15, $f11		# fm    : zpl = zp * UP		\n\
+	mult/c	$f0, $f12, $f1		# fm    : $f1 = zp * zmi	\n\
+									\n\
+	mult/c	$f0, $f11, $f15		# fm    : $f15 = zp * zpl	\n\
+	subt/su	$f1, $f16, $f13		# .. fa : y1 = zp*zmi - x	\n\
+	subt/su	$f15, $f16, $f14	# fa   4: y2 = zp*zpl - x	\n\
+	fcmovge	$f13, $f12, $f0		# fa   3: res = (y1>=0)?zmi:res	\n\
+									\n\
+	fcmovlt	$f14, $f11, $f0		# fa   4: res = (y2<0)?zpl:res	\n\
+	addq	$sp, 16, $sp		# .. e0 :			\n\
+	ret				# .. e1 :			\n\
+									\n\
+	.align 4							\n\
+$fixup:									\n\
+	addq	$sp, 16, $sp						\n\
+	br	"ASM_ALPHA_NG_SYMBOL_PREFIX"__full_ieee754_sqrt..ng	\n\
+									\n\
 	.end	__ieee754_sqrt");
 
-static double __full_ieee754_sqrt(double) __attribute__((unused));
+static double __full_ieee754_sqrt(double) __attribute_used__;
 #define __ieee754_sqrt __full_ieee754_sqrt
 
 #endif /* _IEEE_FP_INEXACT */

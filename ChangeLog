@@ -1,3 +1,18 @@
+2002-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/elf.h (SHN_UNDEF): Remove duplicate definition.
+
+2002-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/e_sqrt.c (__ieee754_sqrt): Don't use multi-line
+	string literals.
+	(__full_ieee754_sqrt): Add __attribute_used__.
+
+2002-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/group_member.c (__group_member): Also check
+	groups[0] [PR libc/2781].
+
 2002-01-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (distribute): Add scripts/cpp.

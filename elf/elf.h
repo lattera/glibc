@@ -415,10 +415,6 @@ typedef struct
 #define SYMINFO_NUM		2
 
 
-/* Special section index.  */
-
-#define SHN_UNDEF	0		/* No section, undefined symbol.  */
-
 /* How to extract and insert information held in the st_info field.  */
 
 #define ELF32_ST_BIND(val)		(((unsigned char) (val)) >> 4)
