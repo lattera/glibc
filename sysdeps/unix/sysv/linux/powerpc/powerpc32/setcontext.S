@@ -54,20 +54,20 @@ ENTRY(__setcontext)
 	bl	JUMPTARGET(sigprocmask)
 	cmpwi	r3,0
 	bne	L(error_exit)
-	
+
 #ifdef PIC
 	mflr    r8
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r7
-#ifdef SHARED	
-	lwz     r7,_rtld_global@got(r7)
+# ifdef SHARED
+	lwz     r7,_rtld_global_ro@got(r7)
 	mtlr    r8
-	lwz     r7,RTLD_GLOBAL_DL_HWCAP_OFFSET(r7)
-#else	
+	lwz     r7,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r7)
+# else
 	lwz     r7,_dl_hwcap@got(r7)
 	mtlr    r8
 	lwz     r7,0(r7)
-#endif
+# endif
 #else
 	lis	r7,_dl_hwcap@ha
 	lwz     r7,_dl_hwcap@l(r7)
@@ -75,100 +75,100 @@ ENTRY(__setcontext)
 	andis.	r7,r7,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	la	r10,(_UC_VREGS)(r31)
 	beq	L(has_no_vec)
-	
+
 	lwz   r0,(32*16)(r10)
 	li    r9,(32*16)
 	cmpwi r0,0
 	mtspr VRSAVE,r0
-	beq   L(has_no_vec)  
+	beq   L(has_no_vec)
 
 	lvx   v19,r9,r10
 	la    r9,(16)(r10)
 
-	lvx   v0,0,r10  
+	lvx   v0,0,r10
 	lvx   v1,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
 	mtvscr  v19
-	lvx   v2,0,r10  
+	lvx   v2,0,r10
 	lvx   v3,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v4,0,r10  
+	lvx   v4,0,r10
 	lvx   v5,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v6,0,r10  
+	lvx   v6,0,r10
 	lvx   v7,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v8,0,r10  
+	lvx   v8,0,r10
 	lvx   v9,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v10,0,r10  
+	lvx   v10,0,r10
 	lvx   v11,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v12,0,r10  
+	lvx   v12,0,r10
 	lvx   v13,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v14,0,r10  
+	lvx   v14,0,r10
 	lvx   v15,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v16,0,r10  
+	lvx   v16,0,r10
 	lvx   v17,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v18,0,r10  
+	lvx   v18,0,r10
 	lvx   v11,0,r9
 	addi  r19,r10,32
 	addi  r9,r9,32
 
-	lvx   v20,0,r10  
+	lvx   v20,0,r10
 	lvx   v21,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v22,0,r10  
+	lvx   v22,0,r10
 	lvx   v23,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v24,0,r10  
+	lvx   v24,0,r10
 	lvx   v25,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v26,0,r10  
+	lvx   v26,0,r10
 	lvx   v27,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v28,0,r10  
+	lvx   v28,0,r10
 	lvx   v29,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v30,0,r10  
+	lvx   v30,0,r10
 	lvx   v31,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 
-	lvx   v10,0,r10  
+	lvx   v10,0,r10
 	lvx   v11,0,r9
-	
+
 L(has_no_vec):
 	/* Restore the floating-point registers */
 	lfd	fp31,_UC_FREGS+(32*8)(r31)
@@ -254,7 +254,7 @@ L(error_exit):
 	addi	r1,r1,16
 	mtlr	r0
 	blr
-	
+
 L(do_sigret):
 	addi	r1,r3,-0xd0
 	li	r0,SYS_ify(rt_sigreturn)
@@ -381,7 +381,7 @@ L(novec_error_exit):
 	addi	r1,r1,16
 	mtlr	r0
 	blr
-	
+
 L(novec_do_sigret):
 	addi	r1,r3,-0xd0
 	li	r0,SYS_ify(rt_sigreturn)

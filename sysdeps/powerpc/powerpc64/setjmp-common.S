@@ -31,11 +31,11 @@
 #ifndef __NO_VMX__
 	.section	".toc","aw"
 .LC__dl_hwcap:
-#ifdef SHARED
-	.tc _rtld_global[TC],_rtld_global
-#else
+# ifdef SHARED
+	.tc _rtld_global_ro[TC],_rtld_global_ro
+# else
 	.tc _dl_hwcap[TC],_dl_hwcap
-#endif
+# endif
 	.section ".text"
 #endif
 
@@ -85,12 +85,12 @@ ENTRY (BP_SYM (__sigsetjmp))
 	stfd fp31,((JB_FPRS+17)*8)(3)
 #ifndef __NO_VMX__
 	ld    r5,.LC__dl_hwcap@toc(r2)
-#ifdef SHARED
+# ifdef SHARED
 	/* Load _rtld-global._dl_hwcap.  */
-	ld    r5,RTLD_GLOBAL_DL_HWCAP_OFFSET(r5)
-#else
+	ld    r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
+# else
 	ld    r5,0(r5) /* Load extern _dl_hwcap.  */
-#endif
+# endif
 	andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	no_vmx
 	la	r5,((JB_VRS)*8)(3)
@@ -114,7 +114,7 @@ ENTRY (BP_SYM (__sigsetjmp))
 	vsel    v20,v20,v2,v3
 	stvx    v5,0,r5
 
-#define save_2vmx_partial(savevr,prev_savevr,hivr,shiftvr,maskvr,savegpr,addgpr) \
+# define save_2vmx_partial(savevr,prev_savevr,hivr,shiftvr,maskvr,savegpr,addgpr) \
 	addi    addgpr,addgpr,32; \
 	vperm   savevr,savevr,savevr,shiftvr; \
 	vsel    hivr,prev_savevr,savevr,maskvr; \

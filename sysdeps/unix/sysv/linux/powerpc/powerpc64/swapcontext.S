@@ -393,7 +393,7 @@ ENTRY(__swapcontext)
   li    r10,0
 #ifdef SHARED
 /* Load _rtld-global._dl_hwcap.  */
-  ld    r8,RTLD_GLOBAL_DL_HWCAP_OFFSET(r8)
+  ld    r8,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r8)
 #else
   ld    r8,0(r8) /* Load extern _dl_hwcap.  */
 #endif
@@ -527,12 +527,12 @@ L(has_no_vec):
 
   ld    r8,.LC__dl_hwcap@toc(r2)
   ld    r10,(SIGCONTEXT_V_REGS_PTR)(r31)
-#ifdef SHARED
+# ifdef SHARED
 /* Load _rtld-global._dl_hwcap.  */
-  ld    r8,RTLD_GLOBAL_DL_HWCAP_OFFSET(r8)
-#else
+  ld    r8,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r8)
+# else
   ld    r8,0(r8) /* Load extern _dl_hwcap.  */
-#endif
+# endif
   andis.  r8,r8,(PPC_FEATURE_HAS_ALTIVEC >> 16)
   beq   L(has_no_vec2)
 

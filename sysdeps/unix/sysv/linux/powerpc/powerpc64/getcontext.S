@@ -268,12 +268,12 @@ ENTRY(__getcontext)
 
   ld    r5,.LC__dl_hwcap@toc(r2)
   li    r10,0
-#ifdef SHARED
+# ifdef SHARED
 /* Load _rtld-global._dl_hwcap.  */
-  ld    r5,RTLD_GLOBAL_DL_HWCAP_OFFSET(r5)
-#else
+  ld    r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
+# else
   ld    r5,0(r5) /* Load extern _dl_hwcap.  */
-#endif
+# endif
   andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
   beq   L(has_no_vec)
 

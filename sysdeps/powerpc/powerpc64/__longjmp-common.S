@@ -32,11 +32,11 @@
 #ifndef __NO_VMX__
 	.section	".toc","aw"
 .LC__dl_hwcap:
-#ifdef SHARED
-	.tc _rtld_global[TC],_rtld_global
-#else
+# ifdef SHARED
+	.tc _rtld_global_ro[TC],_rtld_global_ro
+# else
 	.tc _dl_hwcap[TC],_dl_hwcap
-#endif
+# endif
 	.section ".text"
 #endif
 
@@ -44,12 +44,12 @@ ENTRY (BP_SYM (__longjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 #ifndef __NO_VMX__
 	ld    r5,.LC__dl_hwcap@toc(r2)
-#ifdef SHARED
+# ifdef SHARED
 	/* Load _rtld-global._dl_hwcap.  */
-	ld    r5,RTLD_GLOBAL_DL_HWCAP_OFFSET(r5)
-#else
+	ld    r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
+# else
 	ld    r5,0(r5) /* Load extern _dl_hwcap.  */
-#endif
+# endif
 	andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	no_vmx
 	la	r5,((JB_VRS)*8)(3)
@@ -63,7 +63,7 @@ ENTRY (BP_SYM (__longjmp))
 	addi    r5,r5,32
 	lvx	v21,0,r6
 	vperm   v20,v1,v21,v0
-#define load_misaligned_vmx_lo_loaded(loadvr,lovr,shiftvr,loadgpr,addgpr) \
+# define load_misaligned_vmx_lo_loaded(loadvr,lovr,shiftvr,loadgpr,addgpr) \
 	addi    addgpr,addgpr,32; \
 	lvx	lovr,0,loadgpr; \
 	vperm   loadvr,loadvr,lovr,shiftvr;

@@ -121,15 +121,15 @@ ENTRY(__getcontext)
 	mflr    r8
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r7
-#ifdef SHARED
+# ifdef SHARED
 	lwz     r7,_rtld_global_ro@got(r7)
 	mtlr    r8
-	lwz     r7,RTLD_GLOBAL_DL_HWCAP_OFFSET(r7)
-#else
+	lwz     r7,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r7)
+# else
 	lwz     r7,_dl_hwcap@got(r7)
 	mtlr    r8
 	lwz     r7,0(r7)
-#endif
+# endif
 #else
 	lis	r7,_dl_hwcap@ha
 	lwz     r7,_dl_hwcap@l(r7)
