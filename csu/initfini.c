@@ -34,11 +34,21 @@ Cambridge, MA 02139, USA.  */
 
 #include <stdlib.h>
 
+
+#ifdef HAVE_ELF
 /* These declarations make the functions go in the right sections when
    we define them below.  GCC syntax does not allow the attribute
    specifications to be in the function definitions themselves.  */
 void _init (void) __attribute__ ((section (".init")));
 void _fini (void) __attribute__ ((section (".fini")));
+
+#define SECTION(x)		/* Put nothing extra before the defn.  */
+
+#else
+/* Some non-ELF systems support .init and .fini sections,
+   but the __attribute__ syntax only works for ELF.  */
+#define SECTION(x) asm (".section " x);
+#endif
 
 /* End the here document containing the initial common code.
    Then move the output file crtcommon.tmp to crti.s-new and crtn.s-new.  */
@@ -48,10 +58,10 @@ cp -f crti.s-new crtn.s-new");
 
 /* Append the .init prologue to crti.s-new.  */
 asm ("cat >> crti.s-new <<\\EOF.crti.init");
+SECTION (".init")
 void
 _init (void)
 {
-  (void) &_init;		/* Don't optimize out the function! */
   /* End the here document containing the .init prologue code.
      Then fetch the .section directive just written and append that
      to crtn.s-new, followed by the function epilogue.  */
@@ -67,10 +77,10 @@ asm ("\nEOF.crtn.init\
 \n\
 cat >> crti.s-new <<\\EOF.crti.fini");
 
+SECTION (".fini")
 void
 _fini (void)
 {
-  (void) &_fini;		/* Don't optimize out the function! */
   /* End the here document containing the .fini prologue code.
      Then fetch the .section directive just written and append that
      to crtn.s-new, followed by the function epilogue.  */

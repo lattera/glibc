@@ -1,3 +1,8 @@
+Mon Aug  7 14:04:36 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/generic/sysd-stdio.c (__stdio_reopen): Return failure
+ 	when __stdio_open fails with a code other than ENFILE or EMFILE.
+
 Fri Aug  4 16:01:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makefile (headers): Added gnu-versions.h.
@@ -30,6 +35,9 @@ Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	[$(have-initfini)=yes]: Test this rather than $(elf) for crtstuff.
 	[start-installed-name-rule]: If this is defined, elide rule for
 	$(objpfx)$(start-installed-name).
+	* csu/initfini.c (SECTION): New macro, different definitions for
+ 	#ifdef HAVE_ELF and not.
+	(_init, _fini): Use that macro.
 	* sysdeps/unix/sysv/sco3.2.4/Makefile [$(subdir)=csu]
  	(start-installed-rule, start-installed-name-rule): New variables;
  	specify crt1.o, created by our own rule.
@@ -42,6 +50,7 @@ Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* munch-tmpl.c [HAVE_INITFINI]: Call _init and atexit (_fini) in
  	this case rather than #ifdef HAVE_ELF.
 	* config.h.in (HAVE_INITFINI): New macro.
+	* config.make.in (have-initfini): New variable, set by configure.
 
 	* stdio/vfscanf.c (conv_error): Simplify expression to avoid
  	"value computed is not used" warning.
@@ -78,6 +87,7 @@ Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* inet/netdb.h: Incorporated from BIND 4.9.3-BETA24 release.
 	[__GNU_LIBRARY__]: Include <rpc/netdb.h> instead of repeating
 	its declarations (and doing so only #ifdef sun!).
+	* conf/portability.h (NEED_INETADDR, NEED_INETATON): New macros.
 
 	* posix/sys/types.h [__USE_BSD] (__BIT_TYPES_DEFINED__): New macro.
 	[__USE_BSD] [__GNUC__] (int64_t, u_int64_t, register_t): New typedefs.

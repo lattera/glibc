@@ -18,3 +18,9 @@
    #ifdef sun.  */
 
 #undef sun
+
+/* The source code copied from BIND for inet_addr/inet_aton
+   doesn't actually define the functions without these macros.  */
+
+#define NEED_INETADDR
+#define NEED_INETATON

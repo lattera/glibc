@@ -14,11 +14,13 @@ config-sysdirs = @sysnames@
 
 config-defines = @DEFS@
 
+elf = @elf@
+weak-symbols = @weak@
+have-initfini = @libc_cv_have_initfini@
+
 # Configuration options.
 gnu-as = @gnu_as@
 gnu-ld = @gnu_ld@
-elf = @elf@
-weak-symbols = @weak@
 build-shared = @shared@
 build-profile = @profile@
 build-omitfp = @omitfp@
