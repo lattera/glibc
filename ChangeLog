@@ -1,3 +1,8 @@
+1999-05-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* iconvdata/gconv-modules: Fix alias for CP1255.  Reported by
+	Elad Tsur <eladts@post.tau.ac.il>.
+
 1999-05-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Versions (ld.so) [GLIBC_2.1.1]: Add _dl_lazy.
