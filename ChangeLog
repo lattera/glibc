@@ -1,3 +1,8 @@
+2001-11-22  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nss/nss_files/files-hosts.c (_nss_files_get##name##_r): Set
+	herrnop to NETDB_INTERNAL if we run out of buffer space.
+
 2001-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/nss_files/files-XXX.c (internal_getent): Correct input

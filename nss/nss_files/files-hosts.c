@@ -1,5 +1,5 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -173,6 +173,7 @@ _nss_files_get##name##_r (proto,					      \
 		      >= buffer + buflen)				      \
 		    {							      \
 		      *errnop = ERANGE;					      \
+		      *herrnop = NETDB_INTERNAL;			      \
 		      status = NSS_STATUS_TRYAGAIN;			      \
 		      break;						      \
 		    }							      \
