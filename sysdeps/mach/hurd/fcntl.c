@@ -155,7 +155,12 @@ __libc_fcntl (int fd, int cmd, ...)
 	switch (fl->l_whence)
 	  {
 	  case SEEK_SET:
-	    if (fl->l_start == 0 && fl->l_len == 0)
+	    if (fl->l_start == 0 && fl->l_len == 0) /* Whole file request.  */
+	      break;
+	    /* It seems to be common for applications to lock the first
+	       byte of the file when they are really doing whole-file locking.
+	       So, since it's so wrong already, might as well do that too.  */
+	    if (fl->l_start == 0 && fl->l_len == 1)
 	      break;
 	    /* FALLTHROUGH */
 	  case SEEK_CUR:

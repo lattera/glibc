@@ -1,3 +1,8 @@
+2002-11-10  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl): Treat a struct flock with
+	l_start == 0 and l_len == 1 as we do l_len == 0.
+
 2002-11-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/da.po: Update from translation team.
