@@ -26,6 +26,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <bits/wordsize.h>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>
@@ -109,6 +110,11 @@ ELF_PREFERRED_ADDRESS_DATA;
 struct filebuf
 {
   ssize_t len;
+#ifdef __WORDSIZE == 32
+# define FILEBUF_SIZE 512
+#else
+# define FILEBUF_SIZE 640
+#endif
   char buf[512] __attribute__ ((aligned (__alignof (ElfW(Ehdr)))));
 };
 

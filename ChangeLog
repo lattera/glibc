@@ -1,5 +1,8 @@
 2003-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (struct filebuf): For 64-bit platforms use 640
+	byte filebuf size.
+
 	* libio/fileops.c (_IO_new_file_fopen): Close stillborn descriptor
 	if ccs parameter isn't valid.  Reported by Andreas Schwab.
 
