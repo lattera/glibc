@@ -43,7 +43,6 @@ AC_ARG_WITH(weak-symbols, dnl
 AC_ARG_ENABLE(libio, dnl
 [  --enable-libio          build in GNU libio instead of GNU stdio],
  	      stdio=libio, stdio=stdio)
-AC_SUBST(stdio)
 
 dnl Arguments to enable or disable building the shared, profiled, and
 dnl -fomit-frame-pointer libraries.
@@ -56,6 +55,13 @@ AC_ARG_ENABLE(profile, dnl
 AC_ARG_ENABLE(omitfp, dnl
 [  --enable-omitfp       build undebuggable optimized library [default=no]],
 	    omitfp=$enableval, omitfp=no)
+
+AC_MSG_CHECKING(stdio selection)
+AC_SUBST(stdio)
+if test $stdio = libio; then
+  AC_DEFINE(USE_IN_LIBIO)
+fi
+AC_MSG_RESULT($stdio)
 
 AC_CANONICAL_HOST
 # We keep the original values in `$config_*' and never modify them, so we
@@ -489,10 +495,6 @@ if test $shared = default; then
 fi
 AC_SUBST(profile)
 AC_SUBST(omitfp)
-
-if test $stdio = libio; then
-  AC_DEFINE(USE_IN_LIBIO)
-fi
 
 if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
   config_makefile=

@@ -1,5 +1,10 @@
 Mon Oct 16 03:22:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* elf/Makefile (install-others): Add missing slash.
+
+	* elf/ldd.sh.in: Prepend `./' to relative file names so ld.so
+	won't search LD_LIBRARY_PATH.
+
 	* Makefile (subdirs): Replace stdio with stdio-common and $(stdio).
 	* configure.in: Grok arg --enable-libio.
 	($stdio = libio): Define USE_IN_LIBIO.

@@ -13,12 +13,20 @@ case $# in
   exit 1 ;;
 1)
   # We don't list the file name when there is only one.
-  exec ${RTLD} --list "$1" && exit 1
+  case "$1" in
+  /*) file="$1" ;;
+  *) file="./$1" ;;
+  esac
+  exec ${RTLD} --list "$file" && exit 1
   exit ;;
 *)
   set -e	# Bail out immediately if ${RTLD} loses on any argument.
   for file; do
     echo "${file}:"
+    case "$file" in
+    /*) file="$file" ;;
+    *) file="./$file" ;;
+    esac
     ${RTLD} --list "$file"
   done
 esac
