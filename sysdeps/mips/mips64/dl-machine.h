@@ -1,5 +1,5 @@
-/* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Machine-dependent ELF dynamic relocation inline functions.  MIPS64 version.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -530,10 +530,11 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 		 const ElfW(Sym) *sym, const struct r_found_version *version,
 		 ElfW(Addr) *const reloc_addr)
 {
+  const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
   ElfW(Addr) loadbase;
   ElfW(Addr) undo __attribute__ ((unused));
 
-  switch (ELFW(R_TYPE) (reloc->r_info))
+  switch (r_type)
     {
     case R_MIPS_REL32:
       {
@@ -565,12 +566,21 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 	  *reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
 	}
       break;
+#ifndef RTLD_BOOTSTRAP
     case R_MIPS_NONE:		/* Alright, Wilbur.  */
       break;
+#endif
     default:
-      _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
+      _dl_reloc_bad_type (map, r_type, 0);
       break;
     }
+}
+
+static inline void
+elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
+			  ElfW(Addr) *const reloc_addr)
+{
+  /* XXX Nothing to do.  There is no relative relocation, right?  */
 }
 
 static inline void
