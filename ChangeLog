@@ -1,3 +1,10 @@
+2000-10-02  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Synch with Linux
+	2.4.0-test9-pre8.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Add RLIMIT_LOCKS.
+
 2000-10-01  Ralf Baechle  <ralf@gnu.org>
 
 	* sysdeps/mips/dl-machine.h (RTLD_START): Fix computation of envp
