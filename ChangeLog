@@ -1,3 +1,7 @@
+2002-04-19  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/tmpfile.c: Create a file descriptor and use fdopen.
+
 2002-04-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add handling of xtests and xcheck targets.
