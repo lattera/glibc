@@ -1,3 +1,8 @@
+2000-10-14  Geoffrey Keating  <geoffk@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add fcntl()
+	syscall.
+
 2000-10-13  Michael Fedrowitz  <michael@fedrowitz.de>
 
 	* sysdeps/unix/sysv/linux/m68k/alphasort64.c: New file.
