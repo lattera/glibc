@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -83,99 +83,84 @@ builtin_aliases[] =
 #endif
 
 
-/* Function for searching module.  */
+/* Test whether there is already a matching module known.  */
 static int
-module_compare (const void *p1, const void *p2)
+internal_function
+detect_conflict (const char *alias, size_t alias_len)
 {
-  const struct gconv_module *s1 = (const struct gconv_module *) p1;
-  const struct gconv_module *s2 = (const struct gconv_module *) p2;
-  int result;
+  struct gconv_module *node = __gconv_modules_db;
 
-  if (s1->from_pattern == NULL)
+  while (node != NULL)
     {
-      if (s2->from_pattern == NULL)
-	result = strcmp (s1->from_constpfx, s2->from_constpfx);
-      else
-	result = -1;
-    }
-  else if (s2->from_pattern == NULL)
-    result = 1;
-  else
-    result = strcmp (s1->from_pattern, s2->from_pattern);
+      int cmpres = strncmp (alias, node->from_constpfx,
+			    MIN (alias_len, node->from_constpfx_len));
 
-  if (result == 0)
-    result = strcmp (s1->to_string, s2->to_string);
-
-  return result;
-}
-
-
-/* This function is used to test for a conflict which could be introduced
-   if adding a new alias.
-
-   This function is a *very* ugly hack.  The action-function is not
-   supposed to alter the parameter.  But we have to do this.   We will if
-   necessary compile the regular expression  so that we can see whether it
-   matches the alias name.  This is safe in this environment and for the
-   sake of performance we do it this way.  The alternative would be to
-   compile all regular expressions right from the start or to forget about
-   the compilation though we might need it later.
-
-   The second ugliness is that we have no possibility to pass parameters
-   to the function.  Therefore we use a global variable.  This is no problem
-   since we are for sure alone even in multi-threaded applications.  */
-
-/* This is alias we want to check.  */
-static const char *alias_to_test;
-
-/* This variable is set to a nonzero value once we have found a matching
-   entry.  */
-static int abort_conflict_search;
-
-static void
-detect_conflict (const void *p, VISIT value, int level)
-{
-  struct gconv_module *s = *(struct gconv_module **) p;
-
-  if ((value != endorder && value != leaf) || s->from_constpfx == NULL
-      || abort_conflict_search)
-    return;
-
-  /* Before we test the whole expression (if this is a regular expression)
-     make sure the constant prefix matches.  In case this is no regular
-     expression this is the whole string.  */
-  if (strcmp (alias_to_test, s->from_constpfx) == 0)
-    {
-      if (s->from_pattern == NULL)
-	/* This is a simple string and therefore we have a conflict.  */
-	abort_conflict_search = 1;
-      else
+      if (cmpres == 0)
 	{
-	  /* Make sure the regular expression is compiled (if possible).  */
-	  if (s->from_regex == NULL)
+	  struct gconv_module *runp;
+
+	  if (alias_len < node->from_constpfx_len)
+	    /* Cannot possibly match.  */
+	    return 0;
+
+	  /* This means the prefix and the alias are identical.  If
+	     there is now a simple extry or a regular expression
+	     matching this name we have found a conflict.  If there is
+	     no conflict with the elements in the `same' list there
+	     cannot be a conflict.  */
+	  runp = node;
+	  do
 	    {
-	      /* Beware, this is what I warned you about in the comment
-		 above.  We are modifying the object.  */
-	      if (__regcomp (&s->from_regex_mem, s->from_pattern,
-			     REG_EXTENDED | REG_ICASE) != 0)
-		/* Something is wrong.  Remember this.  */
-		s->from_regex = (regex_t *) -1L;
+	      if (runp->from_pattern == NULL)
+		{
+		  /* This is a simple entry and therefore we have a
+		     conflict if the strings are really the same.  */
+		  if (alias_len == node->from_constpfx_len)
+		    return 1;
+		}
 	      else
-		s->from_regex = &s->from_regex_mem;
-	    }
+		{
+		  /* Compile the regular expression if necessary.  */
+		  if (runp->from_regex == NULL)
+		    {
+		      if (__regcomp (&runp->from_regex_mem,
+				     runp->from_pattern,
+				     REG_EXTENDED | REG_ICASE) != 0)
+			/* Something is wrong.  Remember this.  */
+			runp->from_regex = (regex_t *) -1L;
+		      else
+			runp->from_regex = &runp->from_regex_mem;
+		    }
 
-	  if (s->from_regex != (regex_t *) -1L)
-	    {
-	      regmatch_t match[1];
+		  if (runp->from_regex != (regex_t *) -1L)
+		    {
+		      regmatch_t match[1];
 
-	      if (__regexec (s->from_regex, alias_to_test, 1, match, 0) == 0
-		  && match[0].rm_so == 0
-		  && alias_to_test[match[0].rm_eo] == '\0')
-		/* The whole string matched.  This is also a conflict.  */
-		abort_conflict_search = 1;
+		      /* Try to match the regular expression.  */
+		      if (__regexec (runp->from_regex, alias, 1, match, 0) == 0
+			  && match[0].rm_so == 0
+			  && alias[match[0].rm_eo] == '\0')
+			/* They match, therefore it is a conflict.  */
+			return 1;
+		    }
+		}
+
+	      runp = runp->same;
 	    }
+	  while (runp != NULL);
+
+	  if (alias_len == node->from_constpfx_len)
+	      return 0;
+
+	  node = node->matching;
 	}
+      else if (cmpres < 0)
+	node = node->left;
+      else
+	node = node->right;
     }
+
+  return node != NULL;
 }
 
 
@@ -207,13 +192,8 @@ add_alias (char *rp, void *modules)
     return;
   *wp++ = '\0';
 
-  /* Test whether this alias conflicts with any available module.  See
-     the comment before the function `detect_conflict' for a description
-     of this ugly hack.  */
-  alias_to_test = from;
-  abort_conflict_search = 0;
-  __twalk (modules, detect_conflict);
-  if (abort_conflict_search)
+  /* Test whether this alias conflicts with any available module.  */
+  if (detect_conflict (from, to - from - 1))
     /* It does conflict, don't add the alias.  */
     return;
 
@@ -234,8 +214,74 @@ add_alias (char *rp, void *modules)
 }
 
 
+/* Insert a data structure for a new module in the search tree.  */
+static inline void
+internal_function
+insert_module (struct gconv_module *newp)
+{
+  struct gconv_module **rootp = &__gconv_modules_db;
+
+  while (*rootp != NULL)
+    {
+      struct gconv_module *root = *rootp;
+      size_t minlen = MIN (newp->from_constpfx_len, root->from_constpfx_len);
+      int cmpres;
+
+      cmpres = strncmp (newp->from_constpfx, root->from_constpfx, minlen);
+      if (cmpres == 0)
+	{
+	  /* This can mean two things: the prefix is entirely the same or
+	     it matches only for the minimum length of both strings.  */
+	  if (newp->from_constpfx_len == root->from_constpfx_len)
+	    {
+	      /* Both prefixes are identical.  Insert the string at the
+		 end of the `same' list if it is not already there.  */
+	      const char *from_pattern = (newp->from_pattern
+					  ?: newp->from_constpfx);
+
+	      while (strcmp (from_pattern,
+			     root->from_pattern ?: root->from_constpfx) != 0
+		     || strcmp (newp->to_string, root->to_string) != 0)
+		{
+		  rootp = &root->same;
+		  root = *rootp;
+		  if (root == NULL)
+		    break;
+		}
+
+	      if (root != NULL)
+		/* This is a no new conversion.  */
+		return;
+
+	      break;
+	    }
+
+	  /* The new element either has a prefix which is itself a
+	     prefix for the prefix of the current node or vice verse.
+	     In the first case we insert the node right here.  Otherwise
+	     we have to descent further.  */
+	  if (newp->from_constpfx_len < root->from_constpfx_len)
+	    {
+	      newp->matching = root;
+	      break;
+	    }
+
+	  rootp = &root->matching;
+	}
+      else if (cmpres < 0)
+	rootp = &root->left;
+      else
+	rootp = &root->right;
+    }
+
+  /* Plug in the new node here.  */
+  *rootp = newp;
+}
+
+
 /* Add new module.  */
 static inline void
+internal_function
 add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 	    size_t *nmodules, int modcounter)
 {
@@ -259,7 +305,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
   while (*rp != '\0' && !isspace (*rp))
     {
       if (!isalnum (*rp) && *rp != '-' && *rp != '/' && *rp != '.'
-	  && *rp != '_')
+	  && *rp != '_' && *rp != '(' && *rp != ')')
 	from_is_regex = 1;
       ++rp;
     }
@@ -293,7 +339,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 
       *wp++ = '\0';
       cost_hi = strtol (rp, &endp, 10);
-      if (rp == endp)
+      if (rp == endp || cost_hi < 1)
 	/* No useful information.  */
 	cost_hi = 1;
     }
@@ -328,7 +374,8 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
   else
     const_len = to - from - 1;
 
-  new_module = (struct gconv_module *) malloc (sizeof (struct gconv_module)
+  new_module = (struct gconv_module *) calloc (1,
+					       sizeof (struct gconv_module)
 					       + (wp - from)
 					       + dir_len + need_ext);
   if (new_module != NULL)
@@ -340,12 +387,8 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 					  from, to - from);
       if (from_is_regex)
 	new_module->from_pattern = new_module->from_constpfx;
-      else
-	new_module->from_pattern = NULL;
 
       new_module->from_constpfx_len = const_len;
-
-      new_module->from_regex = NULL;
 
       new_module->to_string = memcpy ((char *) new_module->from_constpfx
 				      + (to - from), to, module - to);
@@ -388,28 +431,9 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 	    }
 	}
 
-      if (__tfind (new_module, modules, module_compare) == NULL)
-	{
-	  if (__tsearch (new_module, modules, module_compare) == NULL)
-	    /* Something went wrong while inserting the new module.  */
-	    free (new_module);
-	  else
-	    ++*nmodules;
-	}
+      /* Now insert the new module data structure in our search tree.  */
+      insert_module (new_module);
     }
-}
-
-
-static void
-insert_module (const void *nodep, VISIT value, int level)
-{
-  if (value == preorder || value == leaf)
-    __gconv_modules_db[__gconv_nmodules++] = *(struct gconv_module **) nodep;
-}
-
-static void
-nothing (void *unused __attribute__ ((unused)))
-{
 }
 
 
@@ -495,15 +519,14 @@ __gconv_read_conf (void)
     {
       /* Append the default path to the user-defined path.  */
       size_t user_len = strlen (user_path);
-      char *tmp;
 
       gconv_path = alloca (user_len + 1 + sizeof (default_gconv_path));
-      tmp = __mempcpy (gconv_path, user_path, user_len);
-      *tmp++ = ':';
-      __mempcpy (tmp, default_gconv_path, sizeof (default_gconv_path));
+      __mempcpy (__mempcpy (__mempcpy (gconv_path, user_path, user_len),
+			    ":", 1),
+		 default_gconv_path, sizeof (default_gconv_path));
     }
 
-  elem = strtok_r (gconv_path, ":", &gconv_path);
+  elem = __strtok_r (gconv_path, ":", &gconv_path);
   while (elem != NULL)
     {
 #ifndef MAXPATHLEN
@@ -515,43 +538,38 @@ __gconv_read_conf (void)
       if (__realpath (elem, real_elem) != NULL)
 	{
 	  size_t elem_len = strlen (real_elem);
-	  char *filename, *tmp;
+	  char *filename;
 
 	  filename = alloca (elem_len + 1 + sizeof (gconv_conf_filename));
-	  tmp = __mempcpy (filename, real_elem, elem_len);
-	  *tmp++ = '/';
-	  __mempcpy (tmp, gconv_conf_filename, sizeof (gconv_conf_filename));
+	  __mempcpy (__mempcpy (__mempcpy (filename, real_elem, elem_len),
+				"/", 1),
+		     gconv_conf_filename, sizeof (gconv_conf_filename));
 
 	  /* Read the next configuration file.  */
 	  read_conf_file (filename, real_elem, elem_len, &modules, &nmodules);
 	}
 
       /* Get next element in the path.  */
-      elem = strtok_r (NULL, ":", &gconv_path);
+      elem = __strtok_r (NULL, ":", &gconv_path);
     }
 
-  /* If the configuration files do not contain any valid module specification
-     remember this by setting the pointer to the module array to NULL.  */
-  nmodules += sizeof (builtin_modules) / sizeof (builtin_modules[0]);
-  if (nmodules == 0)
-    __gconv_modules_db = NULL;
-  else
+  /* Add the internal modules.  */
+  for (cnt = 0; cnt < sizeof (builtin_modules) / sizeof (builtin_modules[0]);
+       ++cnt)
     {
-      __gconv_modules_db =
-	(struct gconv_module **) malloc (nmodules
-					 * sizeof (struct gconv_module));
-      if (__gconv_modules_db != NULL)
+      if (builtin_modules[cnt].from_pattern == NULL)
 	{
-	  size_t cnt;
+	  struct gconv_alias fake_alias;
 
-	  /* Insert all module entries into the array.  */
-	  __twalk (modules, insert_module);
+	  fake_alias.fromname = builtin_modules[cnt].from_constpfx;
 
-	  /* Finally insert the builtin transformations.  */
-	  for (cnt = 0; cnt < (sizeof (builtin_modules)
-			       / sizeof (struct gconv_module)); ++cnt)
-	    __gconv_modules_db[__gconv_nmodules++] = &builtin_modules[cnt];
+	  if (__tfind (&fake_alias, &__gconv_alias_db, __gconv_alias_compare)
+	      != NULL)
+	    /* It'll conflict so don't add it.  */
+	    continue;
 	}
+
+      insert_module (&builtin_modules[cnt]);
     }
 
   /* Add aliases for builtin conversions.  */
@@ -561,10 +579,6 @@ __gconv_read_conf (void)
       char *copy = strdupa (builtin_aliases[--cnt]);
       add_alias (copy, modules);
     }
-  
-  if (nmodules != 0)
-    /* Now remove the tree data structure.  */
-    __tdestroy (modules, nothing);
 
   /* Restore the error number.  */
   __set_errno (save_errno);

@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.1 {
     # global variables
-    __gconv_alias_db; __gconv_nmodules; __gconv_modules_db;
+    __gconv_alias_db; __gconv_modules_db;
 
     # i*
     iconv_open; iconv; iconv_close;

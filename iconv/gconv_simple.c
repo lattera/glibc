@@ -46,38 +46,6 @@ static const unsigned char encoding_byte[] =
 };
 
 
-
-int
-__gconv_transform_dummy (struct gconv_step *step, struct gconv_step_data *data,
-			 const char **inbuf, const char *inbufend,
-			 size_t *written, int do_flush)
-{
-  size_t do_write;
-
-  /* We have no stateful encoding.  So we don't have to do anything
-     special.  */
-  if (do_flush)
-    do_write = 0;
-  else
-    {
-      do_write = MIN (inbufend - *inbuf, data->outbufend - data->outbuf);
-
-      memcpy (data->outbuf, inbuf, do_write);
-
-      *inbuf -= do_write;
-      *data->outbuf += do_write;
-    }
-
-  /* ### TODO Actually, this number must be devided according to the
-     size of the input charset.  I.e., if the input is in UCS4 the
-     number of copied bytes must be divided by 4.  */
-  if (written != NULL)
-    *written = do_write;
-
-  return GCONV_OK;
-}
-
-
 /* Transform from the internal, UCS4-like format, to UCS4.  The
    difference between the internal ucs4 format and the real UCS4
    format is, if any, the endianess.  The Unicode/ISO 10646 says that

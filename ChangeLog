@@ -1,3 +1,24 @@
+1999-01-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_conf.c (add_module): Complete rewrite.  Use cleverer
+	data structures and avoid creating intermediate representations
+	first.  Rewrite also all helper functions.
+	* iconv/gconv_db.c (find_derivation): Use new data structure for
+	module database.
+	* iconv/Versions: Remove __gconv_nmodules.
+	* iconv/iconv_prog.c: Rewrite generation of charset name list to
+	use new data structure.
+	* iconv/gconv_int.h (struct gconv_module): Add new elements for
+	database data structure.
+	(__gconv_modules_db): Update type.
+	(__gconv_transform_dummy): Removed.
+	* iconv/gconv_builtin.h: Remove dummy transformation.
+	* iconv/gconv_simple.c: Remove __gconv_transform_dummy.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Remove
+	__syscall_vfork, add vfork.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+
 1999-01-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* posix/test-vfork.c: Include <sys/wait.h> for wait declaration.
@@ -9,7 +30,7 @@
 
 1999-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
-	* Rules: Add dummp.y and dummy.o to common-generated.
+	* Rules: Add dummp.c and dummy.o to common-generated.
 	Patch by Andreas Schwab.
 
 1999-01-18 10:07 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>

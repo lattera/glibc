@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -75,6 +75,11 @@ struct gconv_module
   int cost_lo;
 
   const char *module_name;
+
+  struct gconv_module *left;	/* Prefix smaller.  */
+  struct gconv_module *same;	/* List of entries with identical prefix.  */
+  struct gconv_module *matching;/* Next node with more specific prefix.  */
+  struct gconv_module *right;	/* Prefix larger.  */
 };
 
 
@@ -85,7 +90,7 @@ extern void *__gconv_alias_db;
 
 /* Array with available modules.  */
 extern size_t __gconv_nmodules;
-extern struct gconv_module **__gconv_modules_db;
+extern struct gconv_module *__gconv_modules_db;
 
 
 /* Return in *HANDLE decriptor for transformation from FROMSET to TOSET.  */
@@ -102,7 +107,7 @@ extern int __gconv_close (gconv_t cd)
    bytes in buffer starting at *OUTBUF.  Return number of written
    characters in *CONVERTED if this pointer is not null.  */
 extern int __gconv (gconv_t __cd, const char **__inbuf, const char *inbufend,
-		    char **__outbuf, char *outbufend, size_t *__converted)
+		    char **__outbuf, char *outbufend, size_t *converted)
      internal_function;
 
 /* Return in *HANDLE a pointer to an array with *NSTEPS elements describing
@@ -152,7 +157,6 @@ extern void __gconv_get_builtin_trans (const char *__name,
 		   const char **__inbuf, const char *__inbufend,	      \
 		   size_t *__written, int __do_flush)
 
-__BUILTIN_TRANS (__gconv_transform_dummy);
 __BUILTIN_TRANS (__gconv_transform_ascii_internal);
 __BUILTIN_TRANS (__gconv_transform_internal_ascii);
 __BUILTIN_TRANS (__gconv_transform_utf8_internal);

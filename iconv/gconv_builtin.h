@@ -79,8 +79,3 @@ BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8, "UNICODELITTLE//",
 			1, "=INTERNAL->ucs2little",
 			__gconv_transform_internal_ucs2little, NULL, NULL,
 			4, 4, 2, 2)
-
-
-BUILTIN_TRANSFORMATION ("(.*)", NULL, 0, "\\1", 1, "=dummy",
-			__gconv_transform_dummy, NULL, NULL,
-			1, 1, 1, 1)

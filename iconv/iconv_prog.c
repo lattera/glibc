@@ -99,7 +99,7 @@ static int process_block (iconv_t cd, const char *addr, size_t len,
 			  FILE *output);
 static int process_fd (iconv_t cd, int fd, FILE *output);
 static int process_file (iconv_t cd, FILE *input, FILE *output);
-static void print_known_names (void);
+static void print_known_names (void) internal_function;
 
 
 int
@@ -503,9 +503,38 @@ do_print  (const void *nodep, VISIT value, int level)
 }
 
 static void
+internal_function
+add_known_names (struct gconv_module *node)
+{
+  if (node->left != NULL)
+    add_known_names (node->left);
+  if (node->right != NULL)
+    add_known_names (node->right);
+  if (node->same != NULL)
+    add_known_names (node->same);
+  do
+    {
+      if (node->from_pattern == NULL)
+	{
+	  if (strcmp (node->from_constpfx, "INTERNAL"))
+	    tsearch (node->from_constpfx, &printlist,
+		     (__compar_fn_t) strverscmp);
+	  if (strcmp (node->to_string, "INTERNAL"))
+	    tsearch (node->to_string, &printlist, (__compar_fn_t) strverscmp);
+	}
+      else
+	if (strcmp (node->from_pattern, "INTERNAL"))
+	  tsearch (node->from_pattern, &printlist, (__compar_fn_t) strverscmp);
+
+      node = node->matching;
+    }
+  while (node != NULL);
+}
+
+static void
+internal_function
 print_known_names (void)
 {
-  size_t cnt;
   iconv_t h;
 
   /* We must initialize the internal databases first.  */
@@ -516,22 +545,7 @@ print_known_names (void)
   twalk (__gconv_alias_db, insert_print_list);
 
   /* Add the from- and to-names from the known modules.  */
-  for (cnt = 0; cnt < __gconv_nmodules; ++cnt)
-    {
-      if (__gconv_modules_db[cnt]->from_pattern == NULL)
-	{
-	  if (strcmp (__gconv_modules_db[cnt]->from_constpfx, "INTERNAL"))
-	    tsearch (__gconv_modules_db[cnt]->from_constpfx, &printlist,
-		     (__compar_fn_t) strverscmp);
-	  if (strcmp (__gconv_modules_db[cnt]->to_string, "INTERNAL"))
-	    tsearch (__gconv_modules_db[cnt]->to_string, &printlist,
-		     (__compar_fn_t) strverscmp);
-	}
-      else
-	if (strcmp (__gconv_modules_db[cnt]->from_pattern, "INTERNAL"))
-	  tsearch (__gconv_modules_db[cnt]->from_pattern, &printlist,
-		   (__compar_fn_t) strverscmp);
-    }
+  add_known_names (__gconv_modules_db);
 
   fputs (_("\
 The following list contain all the coded character sets known.  This does\n\
