@@ -1,5 +1,8 @@
 1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/regex.c: Undefine ISASCII and ISPRINT before defining for
+	Solaris' sake.
+
 	* posix/regex.c (regex_compile): Don't allow non-alphabet
 	characters in character set name.
 

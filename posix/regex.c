@@ -189,8 +189,10 @@ init_syntax_once ()
    STDC_HEADERS is defined, then autoconf has verified that the ctype
    macros don't need to be guarded with references to isascii. ...
    Defining isascii to 1 should let any compiler worth its salt
-   eliminate the && through constant folding."  */
+   eliminate the && through constant folding."
+   Solaris defines some of these symbols so we must undefine them first.  */
 
+#undef ISASCII
 #if defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
 # define ISASCII(c) 1
 #else
@@ -208,6 +210,7 @@ init_syntax_once ()
 # define ISGRAPH(c) (ISASCII (c) && isprint (c) && !isspace (c))
 #endif
 
+#undef ISPRINT
 #define ISPRINT(c) (ISASCII (c) && isprint (c))
 #define ISDIGIT(c) (ISASCII (c) && isdigit (c))
 #define ISALNUM(c) (ISASCII (c) && isalnum (c))
