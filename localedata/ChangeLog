@@ -1,5 +1,7 @@
 2000-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ja_JP (era_d_t_fmt): Fix typo.
+
 	* Makefile: Add rules to build, run, and distribute tst-wctype.
 	* tst-wctype.c: New file.
 	* tst-wctype.input: New file.
