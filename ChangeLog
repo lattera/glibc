@@ -1,3 +1,7 @@
+2001-01-10  Joseph S. Myers  <jsm28@cam.ac.uk>
+
+	* CONFORMANCE: Update.
+
 2001-01-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/elf/backtracesyms.c (__backtrace_symbols):
