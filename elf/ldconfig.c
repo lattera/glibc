@@ -66,6 +66,8 @@ struct dir_entry
 {
   char *path;
   int flag;
+  ino64_t ino;
+  dev_t dev;
   struct dir_entry *next;
 };
 
@@ -270,12 +272,13 @@ add_single_dir (struct dir_entry *entry, int verbose)
   while (ptr != NULL)
     {
       /* Check for duplicates.  */
-      if (strcmp (ptr->path, entry->path) == 0)
+      if (ptr->ino == entry->ino && ptr->dev == entry->dev)
 	{
 	  if (opt_verbose && verbose)
 	    error (0, 0, _("Path `%s' given more than once"), entry->path);
 	  /* Use the newer information.  */
 	  ptr->flag = entry->flag;
+	  free (entry->path);
 	  free (entry);
 	  break;
 	}
@@ -296,6 +299,7 @@ add_dir (const char *line)
   char *equal_sign;
   struct dir_entry *entry;
   unsigned int i;
+  struct stat64 stat_buf;
 
   entry = xmalloc (sizeof (struct dir_entry));
   entry->next = NULL;
@@ -330,7 +334,18 @@ add_dir (const char *line)
       --i;
     }
 
-  add_single_dir (entry, 1);
+  if (stat64 (entry->path, &stat_buf))
+    {
+      error (0, errno, _("Can't stat %s"), entry->path);
+      free (entry->path);
+      free (entry);
+      return;
+    }
+
+  entry->ino = stat_buf.st_ino;
+  entry->dev = stat_buf.st_dev;
+
+ add_single_dir (entry, 1);
 }
 
 
@@ -577,8 +592,8 @@ search_dir (const struct dir_entry *entry)
   char *soname;
   struct dlib_entry *dlibs;
   struct dlib_entry *dlib_ptr;
-  struct stat64 stat_buf;
-  int is_link;
+  struct stat64 lstat_buf, stat_buf;
+  int is_link, is_dir;
   uint64_t hwcap = path_hwcap (entry->path);
   unsigned int osversion;
 
@@ -657,16 +672,31 @@ search_dir (const struct dir_entry *entry)
 	}
 #ifdef _DIRENT_HAVE_D_TYPE
       if (direntry->d_type != DT_UNKNOWN)
-	stat_buf.st_mode = DTTOIF (direntry->d_type);
+	lstat_buf.st_mode = DTTOIF (direntry->d_type);
       else
 #endif
-	if (lstat64 (real_file_name, &stat_buf))
+	if (lstat64 (real_file_name, &lstat_buf))
 	  {
 	    error (0, errno, _("Can't lstat %s"), file_name);
 	    continue;
 	  }
 
-      if (S_ISDIR (stat_buf.st_mode) && is_hwcap_platform (direntry->d_name))
+      is_link = S_ISLNK (lstat_buf.st_mode);
+      if (is_link)
+        {
+	  /* In case of symlink, we check if the symlink refers to
+	     a directory. */
+	  if (stat64 (real_file_name, &stat_buf))
+	    {
+	      error (0, errno, _("Can't stat %s"), file_name);
+	      continue;
+	    }
+	  is_dir = S_ISDIR (stat_buf.st_mode);
+	}
+      else
+	is_dir = S_ISDIR (lstat_buf.st_mode);
+
+      if (is_dir && is_hwcap_platform (direntry->d_name))
 	{
 	  /* Handle subdirectory later.  */
 	  struct dir_entry *new_entry;
@@ -675,13 +705,22 @@ search_dir (const struct dir_entry *entry)
 	  new_entry->path = xstrdup (file_name);
 	  new_entry->flag = entry->flag;
 	  new_entry->next = NULL;
+	  if (is_link)
+	    {
+	      new_entry->ino = stat_buf.st_ino;
+	      new_entry->dev = stat_buf.st_dev;
+	    }
+	  else
+	    {
+	      new_entry->ino = lstat_buf.st_ino;
+	      new_entry->dev = lstat_buf.st_dev;
+	    }
 	  add_single_dir (new_entry, 0);
 	  continue;
 	}
-      else if (!S_ISREG (stat_buf.st_mode) && !S_ISLNK (stat_buf.st_mode))
+      else if (!S_ISREG (stat_buf.st_mode) && !is_link)
 	continue;
 
-      is_link = S_ISLNK (stat_buf.st_mode);
       if (opt_chroot && is_link)
 	{
 	  real_name = chroot_canon (opt_chroot, file_name);
