@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations.  Stub version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,10 +22,11 @@
 
 #include <inttypes.h>
 
+#warning stub atomicity functions are not atomic
 
 static inline int
 __attribute__ ((unused))
-exchange_and_add (uint32_t *mem, int val)
+exchange_and_add (volatile uint32_t *mem, int val)
 {
   int result = *mem;
   *mem += val;
@@ -34,14 +35,14 @@ exchange_and_add (uint32_t *mem, int val)
 
 static inline void
 __attribute__ ((unused))
-atomic_add (uint32_t *mem, int val)
+atomic_add (volatile uint32_t *mem, int val)
 {
   *mem += val;
 }
 
 static inline int
 __attribute__ ((unused))
-compare_and_swap (long int *p, long int oldval, long int newval)
+compare_and_swap (volatile long int *p, long int oldval, long int newval)
 {
   if (*p != oldval)
     return 0;
