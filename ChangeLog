@@ -1,5 +1,7 @@
 2000-08-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h (VERSION): Bump to 2.1.92.
+
 	* posix/regex.c (compile_range): Transliate range start and end
 	characters to avoid empty range in case of REG_ICASE [PR libc/1842].
 
