@@ -1,22 +1,22 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <setjmp.h>
 #include <stdlib.h>
 
@@ -27,7 +27,9 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 void
-DEFUN(__longjmp, (env, val_arg), __jmp_buf env AND int val_arg)
+__longjmp (env, val_arg)
+     __jmp_buf env;
+     int val_arg;
 {
   /* gcc 1.39.19 miscompiled the longjmp routine (as it did setjmp before
      the hack around it); force it to use $a1 for the longjmp value.
@@ -42,7 +44,7 @@ DEFUN(__longjmp, (env, val_arg), __jmp_buf env AND int val_arg)
   asm volatile ("l.d $f26, %0" : : "m" (env[0].__fpregs[3]));
   asm volatile ("l.d $f28, %0" : : "m" (env[0].__fpregs[4]));
   asm volatile ("l.d $f30, %0" : : "m" (env[0].__fpregs[5]));
-  
+
   /* Restore the stack pointer.  */
   asm volatile ("lw $29, %0" : : "m" (env[0].__sp));
 
@@ -68,7 +70,7 @@ DEFUN(__longjmp, (env, val_arg), __jmp_buf env AND int val_arg)
 
   /* Get the PC.  */
   asm volatile ("lw $31, %0" : : "m" (env[0].__pc));
-  
+
   /* Give setjmp 1 if given a 0, or what they gave us if non-zero.  */
   if (val == 0)
     asm volatile ("li $2, 1");
