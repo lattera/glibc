@@ -939,21 +939,42 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 #define UNPACK_BYTES \
   {									      \
     wint_t wch = state->__value.__wch;					      \
+    size_t ntotal;							      \
     inlen = state->__count;						      \
 									      \
     if (state->__value.__wch <= 0x7ff)					      \
-      bytebuf[0] = 0xc0;						      \
+      {									      \
+	bytebuf[0] = 0xc0;						      \
+	ntotal = 2;							      \
+      }									      \
     else if (state->__value.__wch <= 0xffff)				      \
-      bytebuf[0] = 0xe0;						      \
+      {									      \
+	bytebuf[0] = 0xe0;						      \
+	ntotal = 3;							      \
+      }									      \
     else if (state->__value.__wch <= 0x1fffff)				      \
-      bytebuf[0] = 0xf0;						      \
+      {									      \
+	bytebuf[0] = 0xf0;						      \
+	ntotal = 4;							      \
+      }									      \
     else if (state->__value.__wch <= 0x3ffffff)				      \
-      bytebuf[0] = 0xf8;						      \
+      {									      \
+	bytebuf[0] = 0xf8;						      \
+	ntotal = 5;							      \
+      }									      \
     else								      \
-      bytebuf[0] = 0xfc;						      \
+      {									      \
+	bytebuf[0] = 0xfc;						      \
+	ntotal = 6;							      \
+      }									      \
 									      \
-    while (inlen-- > 1)							      \
-      bytebuf[inlen] = 0x80 | (wch & 0x3f);				      \
+    do									      \
+      {									      \
+	if (--ntotal < inlen)						      \
+	  bytebuf[ntotal] = 0x80 | (wch & 0x3f);			      \
+	wch >>= 6;							      \
+      }									      \
+    while (ntotal > 1);							      \
 									      \
     bytebuf[0] |= wch;							      \
   }
