@@ -1,3 +1,10 @@
+2000-03-31  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/semctl.c (struct __old_semid_ds): Remove
+	SHLIB_COMPAT - the struct is always needed.
+
 2000-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/dl-machine.h (RTLD_START): Optimize for i686.
