@@ -1,3 +1,8 @@
+2003-06-21  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/no_NO [LC_COLLATE]: Add missing eth letter, sorted as
+	latin letter d.
+
 2003-06-16  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/ISO-8859-15: Add aliases ISO_8859-15, LATIN-9.

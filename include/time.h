@@ -86,6 +86,8 @@ extern int __getclktck (void);
 
 /* Use in the clock_* functions.  Size of the field representing the
    actual clock ID.  */
-#define CLOCK_IDFIELD_SIZE	3
+#ifndef _ISOMAC
+# define CLOCK_IDFIELD_SIZE	3
+#endif
 #endif
 #endif
