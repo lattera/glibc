@@ -1,6 +1,8 @@
 #include <dlfcn.h>
 #include <stdio.h>
 
+extern int test (void);
+
 int
 test (void)
 {

@@ -1,3 +1,11 @@
+2001-04-06  Andreas Jaeger  <aj@suse.de>
+
+	* include/sys/profil.h: New file.
+
+	* dlfcn/modatexit.c: Add prototypes to silence GCC.
+	* dlfcn/modcxaatexit.c: Likewise.
+	* elf/globalmod1.c: Likewise.
+
 2001-04-05  David S. Miller  <davem@redhat.com>
 
 	* elf/elf.h (HWCAP_SPARC_ULTRA3): Define it.

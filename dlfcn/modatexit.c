@@ -22,6 +22,9 @@
 int global;
 int *ip;
 
+extern void dummy (void);
+extern void foo (void *p);
+
 void
 dummy (void)
 {

@@ -19,8 +19,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int global;
+extern void fluffy (void *p);
+extern void bar (void *p);
 
+int global;
 
 void
 fluffy (void *p)
