@@ -467,6 +467,14 @@ _dl_map_object_deps (struct link_map *map,
 	while (runp != NULL && runp->done);
     }
 
+  if (map->l_initfini != NULL && map->l_type == lt_loaded)
+    {
+      /* This object was previously loaded as a dependency and we have
+	 a separate l_initfini list.  We don't need it anymore.  */
+      assert (map->l_searchlist.r_list == NULL);
+      free (map->l_initfini);
+    }
+
   /* Store the search list we built in the object.  It will be used for
      searches in the scope of this object.  */
   map->l_searchlist.r_list = malloc ((2 * nlist + 1

@@ -322,6 +322,7 @@ add_name_to_object (struct link_map *l, const char *name)
 
   newname->name = memcpy (newname + 1, name, name_len);
   newname->next = NULL;
+  newname->dont_free = 0;
   lastp->next = newname;
 }
 

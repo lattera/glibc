@@ -590,7 +590,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	   the shared object is already loaded.  */
 	_dl_rtld_libname.name = ((const char *) _dl_loaded->l_addr
 				 + ph->p_vaddr);
-	_dl_rtld_libname.next = NULL;
+	/* _dl_rtld_libname.next = NULL;	Already zero.  */
 	_dl_rtld_map.l_libname = &_dl_rtld_libname;
 
 	/* Ordinarilly, we would get additional names for the loader from
@@ -604,7 +604,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    if (p)
 	      {
 		_dl_rtld_libname2.name = p+1;
-		_dl_rtld_libname2.next = NULL;
+		/* _dl_rtld_libname2.next = NULL;  Already zero.  */
 		_dl_rtld_libname.next = &_dl_rtld_libname2;
 	      }
 	  }
@@ -626,7 +626,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* We were invoked directly, so the program might not have a
 	 PT_INTERP.  */
       _dl_rtld_libname.name = _dl_rtld_map.l_name;
-      _dl_rtld_libname.next = NULL;
+      /* _dl_rtld_libname.next = NULL; 	Alread zero.  */
       _dl_rtld_map.l_libname =  &_dl_rtld_libname;
     }
   else
@@ -1059,6 +1059,17 @@ of this helper program; chances are you did not intend to run this program.\n\
     HP_TIMING_NOW (start);
     do
       {
+	/* While we are at it, help the memory handling a bit.  We have to
+	   mark some data structures as allocated with the fake malloc()
+	   implementation in ld.so.  */
+	struct libname_list *lnp = l->l_libname->next;
+
+	while (__builtin_expect (lnp != NULL, 0))
+	  {
+	    lnp->dont_free = 1;
+	    lnp = lnp->next;
+	  }
+
 	if (l != &_dl_rtld_map)
 	  _dl_relocate_object (l, l->l_scope, _dl_lazy, consider_profiling);
 

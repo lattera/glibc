@@ -120,3 +120,27 @@ __libc_dlclose (void *__map)
 {
   return dlerror_run (do_dlclose, __map);
 }
+
+
+static void
+free_mem (void)
+{
+  struct link_map *l;
+
+  /* Remove all additional names added to the objects.  */
+  for (l = _dl_loaded; l != NULL; l = l->l_next)
+    {
+      struct libname_list *lnp = l->l_libname->next;
+
+      l->l_libname->next = NULL;
+
+      while (lnp != NULL)
+	{
+	  struct libname_list *old = lnp;
+	  lnp = lnp->next;
+	  if (! old->dont_free)
+	    free (old);
+	}
+    }
+}
+text_set_element (__libc_subfreeres, free_mem);

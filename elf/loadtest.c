@@ -2,6 +2,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <error.h>
+#include <mcheck.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -66,10 +67,16 @@ static const struct
 #define NTESTS	(sizeof (tests) / sizeof (tests[0]))
 
 
+#include <include/link.h>
+
+
 int
 main (void)
 {
   int count = TEST_ROUNDS;
+  int result = 0;
+
+  mtrace ();
 
   /* Just a seed.  */
   srandom (TEST_ROUNDS);
@@ -102,23 +109,38 @@ main (void)
 
 	  fct (10);
 
-	  printf ("successfully loaded `%s'\n", testobjs[index].name);
+	  printf ("successfully loaded `%s', handle %p\n",
+		  testobjs[index].name, testobjs[index].handle);
 	}
       else
 	{
-	  dlclose (testobjs[index].handle);
-	  testobjs[index].handle = NULL;
+	  if (dlclose (testobjs[index].handle) != 0)
+	    {
+	      printf ("failed to close %s\n", testobjs[index].name);
+	      result = 1;
+	    }
+	  else
+	    printf ("successfully unloaded `%s', handle %p\n",
+		    testobjs[index].name, testobjs[index].handle);
 
-	  printf ("successfully unloaded `%s'\n", testobjs[index].name);
+	  testobjs[index].handle = NULL;
 	}
     }
 
   /* Unload all loaded modules.  */
   for (count = 0; count < NOBJS; ++count)
     if (testobjs[count].handle != NULL)
-      dlclose (testobjs[count].handle);
+{	  printf ("\nclose: %s: l_initfini = %p, l_versions = %p\n",
+		  testobjs[count].name,
+		  ((struct link_map*)testobjs[count].handle)->l_initfini,
+		  ((struct link_map*)testobjs[count].handle)->l_versions);
+      if (dlclose (testobjs[count].handle) != 0)
+	{
+	  printf ("failed to close %s\n", testobjs[count].name);
+	  result = 1;
+}	}
 
-  return 0;
+  return result;
 }
 
 

@@ -1,5 +1,6 @@
 #include <dlfcn.h>
 #include <error.h>
+#include <mcheck.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,6 +13,8 @@ main (void)
   int (*fp2) (int);
   int res1;
   int res2;
+
+  mtrace ();
 
   h1 = dlopen ("testobj1.so", RTLD_LAZY);
   if (h1 == NULL)
@@ -36,6 +39,11 @@ main (void)
   res1 = fp1 (10);
   res2 = fp2 (10);
   printf ("fp1(10) = %d\nfp2(10) = %d\n", res1, res2);
+
+  if (dlclose (h1) != 0)
+    error (EXIT_FAILURE, 0, "cannot close testobj1.so: %s\n", dlerror ());
+  if (dlclose (h2) != 0)
+    error (EXIT_FAILURE, 0, "cannot close testobj1_1.so: %s\n", dlerror ());
 
   return res1 != 42 || res2 != 72;
 }

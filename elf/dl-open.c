@@ -88,6 +88,7 @@ dl_open_worker (void *a)
   struct link_map *new, *l;
   const char *dst;
   int lazy;
+  unsigned int i;
 
   /* Maybe we have to expand a DST.  */
   dst = strchr (file, '$');
@@ -163,7 +164,9 @@ dl_open_worker (void *a)
   _dl_map_object_deps (new, NULL, 0, 0);
 
   /* So far, so good.  Now check the versions.  */
-  (void) _dl_check_all_versions (new, 0, 0);
+  for (i = 0; i < new->l_searchlist.r_nlist; ++i)
+    if (new->l_searchlist.r_list[i]->l_versions == NULL)
+      (void) _dl_check_map_versions (new->l_searchlist.r_list[i], 0, 0);
 
 #ifdef SCOPE_DEBUG
   show_scope (new);

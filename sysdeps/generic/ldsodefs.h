@@ -115,6 +115,8 @@ struct libname_list
   {
     const char *name;		/* Name requested (before search).  */
     struct libname_list *next;	/* Link to next name for this object.  */
+    int dont_free;		/* Flag whether this element should be freed
+				   if the object is not entirely unloaded.  */
   };
 
 
