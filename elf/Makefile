@@ -88,8 +88,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected))
 modules-vis-yes = vismod1 vismod2 vismod3
-modules-names := $(strip $(module-names))
-extra-objs += $(modules-names:=.os)
+extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 
 include ../Rules
 
@@ -213,8 +212,8 @@ $(objpfx)sprof: $(libdl)
 
 $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
 
-test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
-generated += $(addsuffix .so,$(modules-names))
+test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
+generated += $(addsuffix .so,$(strip $(modules-names)))
 
 $(objpfx)testobj1.so: $(libdl)
 $(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(libdl)

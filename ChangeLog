@@ -1,5 +1,8 @@
 2000-05-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/Versions [libc] (GLIBC_2.2): Add localeconv.
+	* locale/localeconv.c: Make function versioned (with same definition).
+
 	* elf/Makefile (modules-names): Strip before using it.
 
 2000-05-30  Andreas Jaeger  <aj@suse.de>

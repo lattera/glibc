@@ -27,4 +27,8 @@ libc {
     # functions from the experimental locale implementation
     __*_l; __newlocale; __duplocale; __freelocale;
   }
+  GLIBC_2.2 {
+    # The data structure changed.
+    localeconv;
+  }
 }

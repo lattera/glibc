@@ -18,10 +18,11 @@
 
 #include <locale.h>
 #include "localeinfo.h"
+#include <shlib-compat.h>
 
 /* Return monetary and numeric information about the current locale.  */
 struct lconv *
-localeconv (void)
+__localeconv (void)
 {
   static struct lconv result;
 
@@ -56,3 +57,9 @@ localeconv (void)
 
   return &result;
 }
+
+versioned_symbol (libc, __localeconv, localeconv, GLIBC_2_2);
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
+strong_alias (__localeconv, __localeconv20)
+compat_symbol (libc, __localeconv20, localeconv, GLIBC_2_0);
+#endif
