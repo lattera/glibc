@@ -1,3 +1,8 @@
+2004-05-27  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_validate.c: When we find no threads and the inferior appears
+	uninitialized, validate the main thread as a special case.
+
 2004-05-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* thread_dbP.h (LOG): Use write instead of __libc_write.
