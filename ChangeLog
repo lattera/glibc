@@ -1,3 +1,9 @@
+2002-01-18  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* locale/program/ld-collate.c (collate_finish): Assign a wide
+	char collation sequence value to multi character collating
+	elements, and avoid over writing by non-character elements.
+
 2002-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (distribute): Add dl-procinfo.c.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -1672,6 +1672,9 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 
 	  runp->wcseqorder = wcseqact++;
 	}
+      else if (runp->mbs != NULL && runp->weights != NULL)
+	/* This is for collation elements.  */
+	runp->wcseqorder = wcseqact++;
 
       /* Up to the next entry.  */
       runp = runp->next;
@@ -1706,8 +1709,9 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  struct element_t *lastp;
 
 	  /* Insert the collation sequence value.  */
-	  collseq_table_add (&collate->wcseqorder, runp->wcs[0],
-			     runp->wcseqorder);
+	  if (runp->is_character)
+	    collseq_table_add (&collate->wcseqorder, runp->wcs[0],
+			       runp->wcseqorder);
 
 	  /* Find the point where to insert in the list.  */
 	  e = wchead_table_get (&collate->wcheads, runp->wcs[0]);

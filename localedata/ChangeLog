@@ -1,3 +1,7 @@
+2002-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* da_DK.in: Add a few more character sequences, no real words.
+
 2002-01-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/MACINTOSH: Update to Apple's latest definition.
