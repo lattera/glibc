@@ -1,5 +1,5 @@
 /* FPU control word bits.  Mips version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe and Ralf Baechle.
 
@@ -52,7 +52,7 @@
  * Rounding Control:
  * 00 - rounding to nearest (RN)
  * 01 - rounding toward zero (RZ)
- * 01 - rounding (up) toward plus infinity (RP)
+ * 10 - rounding (up) toward plus infinity (RP)
  * 11 - rounding (down)toward minus infinity (RM)
  */
 
@@ -94,13 +94,5 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
-
-__BEGIN_DECLS
-
-/* Called at startup.  It can be used to manipulate the fpu control
-   register.  */
-extern void __setfpucw __P ((fpu_control_t));
-
-__END_DECLS
 
 #endif	/* fpu_control.h */
