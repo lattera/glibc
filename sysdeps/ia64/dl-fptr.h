@@ -23,14 +23,14 @@
 #include <ia64intrin.h>
 #include <sysdeps/generic/dl-fptr.h>
 
-#define COMPARE_AND_SWAP(ptr,old,new)	\
-  __sync_bool_compare_and_swap ((ptr), (old), (new))
+#define COMPARE_AND_SWAP(ptr, old, new)	\
+  __sync_bool_compare_and_swap (ptr, old, new)
 
 /* There are currently 123 dynamic symbols in ld.so.
    ELF_MACHINE_BOOT_FPTR_TABLE_LEN needs to be at least that big.  */
 #define ELF_MACHINE_BOOT_FPTR_TABLE_LEN	200
 
-#define ELF_MACHINE_LOAD_ADDRESS(var,symbol)	\
-  asm ("addl %0 = @gprel (" #symbol "), gp" : "=r" (var));
+#define ELF_MACHINE_LOAD_ADDRESS(var, symbol)	\
+  asm ("movl %0 = @gprel (" #symbol ");; add %0 = %0, gp" : "=&r" (var));
 
 #endif /* !dl_ia64_fptr_h */
