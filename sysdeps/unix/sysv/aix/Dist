@@ -1,7 +1,10 @@
 dl-sym.c
 dl-open.c
 dl-close.c
+dl-libc.c
+dlldr.h
 kernel_proto.h
 bits/utmpx.h
 gnu/lib-names.h
 uitrunc.c
+utmpx.h
