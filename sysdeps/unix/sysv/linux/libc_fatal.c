@@ -1,4 +1,4 @@
-/* Copyright (C) 1993-1995,1997,2000,2002-2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993-1995,1997,2000,2002-2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -141,8 +141,32 @@ __libc_message (int do_abort, const char *fmt, ...)
   va_end (ap_copy);
 
   if (do_abort)
-    /* Terminate the process.  */
-    abort ();
+    {
+      if (do_abort > 1 && written)
+	{
+	  void *addrs[64];
+#define naddrs (sizeof (addrs) / sizeof (addrs[0]))
+	  int n = __backtrace (addrs, naddrs);
+	  if (n > 2)
+	    {
+#define strnsize(str) str, strlen (str)
+	      write (fd, strnsize ("======= Backtrace: =========\n"));
+	      __backtrace_symbols_fd (addrs + 1, n - 1, fd);
+
+	      write (fd, strnsize ("======= Memory map: ========\n"));
+	      int fd2 = open ("/proc/self/maps", O_RDONLY);
+	      char buf[1024];
+	      ssize_t n2;
+	      while ((n2 = read (fd2, buf, sizeof (buf))) > 0)
+		if (write (fd, buf, n2) != n2)
+		  break;
+	      close (fd2);
+	    }
+	}
+
+      /* Terminate the process.  */
+      abort ();
+    }
 }
 
 

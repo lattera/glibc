@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Highly optimized version for ix86, x>=6.
-   Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -101,3 +101,9 @@ ENTRY (BP_SYM (memset))
 #endif
 END (BP_SYM (memset))
 libc_hidden_builtin_def (memset)
+
+#if defined PIC && !defined NOT_IN_libc && !BZERO_P
+strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
+	.section .gnu.warning.__memset_zero_constant_len_parameter
+	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
+#endif

@@ -38,6 +38,8 @@ extern int __printf_chk (int, const char *, ...);
 extern int __fprintf_chk (FILE *, int, const char *, ...);
 extern int __vprintf_chk (int, const char *, _G_va_list);
 extern int __vfprintf_chk (FILE *, int, const char *, _G_va_list);
+extern char *__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp);
+extern char *__fgets_chk (char *buf, size_t size, int n, FILE *fp);
 
 /* Prototypes for compatibility functions.  */
 extern FILE *__new_tmpfile (void);

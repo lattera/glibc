@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,10 +80,19 @@ __mempcpy_ichk (void *__restrict __dest, const void *__restrict __src,
 #endif
 
 
+/* The first two tests here help to catch a somewhat common problem
+   where the second and third parameter are transposed.  This is
+   especially problematic if the intended fill value is zero.  In this
+   case no work is done at all.  We detect these problems by referring
+   non-existing functions.  */
+extern char *__memset_zero_constant_len_parameter (void *, int, size_t,
+						   size_t);
 #define memset(dest, ch, len) \
-  ((__bos0 (dest) != (size_t) -1)					\
-   ? __builtin___memset_chk (dest, ch, len, __bos0 (dest))		\
-   : __memset_ichk (dest, ch, len))
+  (__builtin_constant_p (len) && (len) == 0				      \
+   ? __memset_zero_constant_len_parameter (dest, ch, len, 0)		      \
+   : ((__bos0 (dest) != (size_t) -1)					      \
+      ? __builtin___memset_chk (dest, ch, len, __bos0 (dest))		      \
+      : __memset_ichk (dest, ch, len)))
 static __inline__ void *
 __attribute__ ((__always_inline__))
 __memset_ichk (void *__dest, int __ch, size_t __len)

@@ -1,5 +1,5 @@
-/* Checking memset for x86-64.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+/* Checking memset for i686.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,4 +32,8 @@ ENTRY (__memset_chk)
 	jb	__chk_fail
 	jmp	memset
 END (__memset_chk)
+
+strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
+	.section .gnu.warning.__memset_zero_constant_len_parameter
+	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
 #endif

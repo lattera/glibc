@@ -1,5 +1,5 @@
 /* Checking macros for stdio functions.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ extern int __vsnprintf_chk (char *__restrict __s, size_t __n, int __flag,
   __builtin___vsnprintf_chk (str, len, __USE_FORTIFY_LEVEL - 1, __bos (str), \
 			     fmt, ap)
 
-#endif			     
+#endif
 
 #if __USE_FORTIFY_LEVEL > 1
 
@@ -74,5 +74,16 @@ extern int __vprintf_chk (int __flag, __const char *__restrict __format,
 
 extern char *__gets_chk (char *__str, size_t);
 #define gets(__str) \
-  ((__bos (__str) == (size_t) -1)				\
-   ? (gets) (__str) : __gets_chk (__str, __bos (__str)))
+  ((__bos (__str) == (size_t) -1)					      \
+   ? gets (__str) : __gets_chk (__str, __bos (__str)))
+
+extern char *__fgets_chk (char *s, size_t size, int n, FILE *stream);
+#define fgets(__str, __n, __fp) \
+  ((__bos (__str) == (size_t) -1)					      \
+   ? fgets (__str, __n, __fp) : __fgets_chk (__str, __bos (__str), __n, __fp))
+
+extern char *__fgets_unlocked_chk (char *s, size_t size, int n, FILE *stream);
+#define fgets_unlocked(__str, __n, __fp) \
+  ((__bos (__str) == (size_t) -1)					      \
+   ? fgets_unlocked (__str, __n, __fp)					      \
+   : __fgets_unlocked_chk (__str, __bos (__str), __n, __fp))

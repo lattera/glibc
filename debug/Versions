@@ -18,4 +18,11 @@ libc {
     __printf_chk; __fprintf_chk; __vprintf_chk; __vfprintf_chk;
     __gets_chk;
   }
+  GLIBC_2.4 {
+    __fgets_chk; __fgets_unlocked_chk;
+    __read_chk; __pread_chk; __pread64_chk;
+    __readlink_chk; __getcwd_chk; __getwd_chk;
+    __memset_zero_constant_len_parameter;
+    __recv_chk; __recvfrom_chk;
+  }
 }

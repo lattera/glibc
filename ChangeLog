@@ -1,5 +1,51 @@
 2005-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Print backtrace and memory
+	map if requested.
+	* debug/chk_fail.c: Request backtrace and memory map dump.
+
+	* Versions.def: Add GLIBC_2.4 for libc.
+	* debug/fgets_chk.c: New file.
+	* debug/fgets_u_chk.c: New file.
+	* debug/getcwd_chk.c: New file.
+	* debug/getwd_chk.c: New file.
+	* debug/readlink_chk.c: New file.
+	* debug/read_chk.c: New file.
+	* debug/pread_chk.c: New file.
+	* debug/pread64_chk.c: New file.
+	* debug/recv_chk.c: New file.
+	* debug/recvfrom_chk.c: New file.
+	* debug/Versions: Add all new functions with version GLIBC_2.4.
+	* debug/Makefile (routines): Add fgets_chk, fgets_u_chk, read_chk,
+	pread_chk, pread64_chk, recv_chk, recvfrom_chk, readlink_chk,
+	getwd_chk, and getcwd_chk.  Plus appropriate CFLAGS definitions.
+	* debug/tst-chk1.c: Add more tests.
+	* libio/bits/stdio2.h: Add macros for fgets and fgets_unlocked.
+	* include/stdio.h: Declare __fgets_chk and __fgets_unlocked_chk.
+	* posix/unistd.h: Include <bits/unistd.h> for fortification.
+	* posix/bits/unistd.h: New file.
+	* posix/Makefile (headers): Add bits/unistd.h.
+	* socket/sys/socket.h: Include <bits/socket2.h> for fortification.
+	* socket/bits/socket2.h: New file.
+	* socket/Makefile (headers): Add bits/socket2.h.
+
+	* string/bits/string3.h: Extend memset macro to check for zero 3rd
+	parameter and use __memset_zero_constant_len_parameter in that case.
+	* sysdeps/generic/memset_chk.c: Add
+	__memset_zero_constant_len_parameter alias and linker warning.
+	* debug/Versions: Add __memset_zero_constant_len_parameter to libc
+	with version GLIBC_2.4.
+
+	* sysdeps/generic/bits/types.h: Don't unnecessarily use __extension__
+	in __STD_TYPE definition.
+
+2005-02-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (malloc_printerr): If MALLOC_CHECK_={5,7}, print
+	the error message rather than program name.
+
+2005-02-21  Ulrich Drepper  <drepper@redhat.com>
+
 	* posix/unistd.h: symlink and readlink are unconditionally
 	available in the 2001 spec.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,3 +90,7 @@ __memset_chk (dstpp, c, len, dstlen)
 
   return dstpp;
 }
+strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
+
+link_warning (__memset_zero_constant_len_parameter,
+	      "memset used with constant zero length parameter; this could be due to transposed parameters")

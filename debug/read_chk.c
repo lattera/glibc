@@ -1,5 +1,4 @@
-/* Checking memset for x86-64.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,22 +16,26 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
-#include "asm-syntax.h"
-
-#ifndef PIC
-	/* For libc.so this is defined in memset.S.
-	   For libc.a, this is a separate source to avoid
-	   memset bringing in __chk_fail and all routines
-	   it calls.  */
-        .text
-ENTRY (__memset_chk)
-	cmpq	%rdx, %rcx
-	jb	__chk_fail
-	jmp	memset
-END (__memset_chk)
-
-strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
-	.section .gnu.warning.__memset_zero_constant_len_parameter
-	.string "memset used with constant zero length parameter; this could be due to transposed parameters"
+#include <unistd.h>
+#include <sys/param.h>
+#ifdef HAVE_INLINED_SYSCALLS
+# include <errno.h>
+# include <sysdep.h>
 #endif
+
+
+ssize_t
+__read_chk (int fd, void *buf, size_t nbytes, size_t buflen)
+{
+  /* In case NBYTES is greater than BUFLEN, we read BUFLEN+1 bytes.
+     This might overflow the buffer but the damage is reduced to just
+     one byte.  And the program will terminate right away.  */
+#ifdef HAVE_INLINED_SYSCALLS
+  ssize_t n = INLINE_SYSCALL (read, 3, fd, buf, MIN (nbytes, buflen + 1));
+#else
+  ssize_t n = __read (fd, buf, MIN (nbytes, buflen + 1));
+#endif
+  if (n > 0 && (size_t) n > buflen)
+    __chk_fail ();
+  return n;
+}

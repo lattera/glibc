@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -451,6 +451,85 @@ do_test (void)
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   if (gets (buf) != buf)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  rewind (stdin);
+
+  if (fgets (buf, sizeof (buf), stdin) != buf
+      || memcmp (buf, "abcdefgh\n", 10))
+    FAIL ();
+  if (fgets (buf, sizeof (buf), stdin) != buf || memcmp (buf, "ABCDEFGHI", 10))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (fgets (buf, sizeof (buf) + 1, stdin) != buf)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  rewind (stdin);
+
+  if (fgets_unlocked (buf, sizeof (buf), stdin) != buf
+      || memcmp (buf, "abcdefgh\n", 10))
+    FAIL ();
+  if (fgets_unlocked (buf, sizeof (buf), stdin) != buf
+      || memcmp (buf, "ABCDEFGHI", 10))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (fgets_unlocked (buf, sizeof (buf) + 1, stdin) != buf)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  lseek (fileno (stdin), 0, SEEK_SET);
+
+  if (read (fileno (stdin), buf, sizeof (buf) - 1) != sizeof (buf) - 1
+      || memcmp (buf, "abcdefgh\n", 9))
+    FAIL ();
+  if (read (fileno (stdin), buf, sizeof (buf) - 1) != sizeof (buf) - 1
+      || memcmp (buf, "ABCDEFGHI", 9))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (read (fileno (stdin), buf, sizeof (buf) + 1) != sizeof (buf) + 1)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  if (pread (fileno (stdin), buf, sizeof (buf) - 1, 0) != sizeof (buf) - 1
+      || memcmp (buf, "abcdefgh\n", 9))
+    FAIL ();
+  if (pread (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 1)
+      != sizeof (buf) - 1
+      || memcmp (buf, "ABCDEFGHI", 9))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (pread (fileno (stdin), buf, sizeof (buf) + 1, 2 * sizeof (buf))
+      != sizeof (buf) + 1)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, 0) != sizeof (buf) - 1
+      || memcmp (buf, "abcdefgh\n", 9))
+    FAIL ();
+  if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 1)
+      != sizeof (buf) - 1
+      || memcmp (buf, "ABCDEFGHI", 9))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (pread64 (fileno (stdin), buf, sizeof (buf) + 1, 2 * (sizeof (buf) - 1))
+      != sizeof (buf) + 1)
     FAIL ();
   CHK_FAIL_END
 #endif

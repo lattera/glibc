@@ -1,5 +1,5 @@
 /* bits/types.h -- definitions of __*_t types underlying *_t types.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -114,6 +114,9 @@ typedef struct
 # define __ULONG32_TYPE		unsigned long int
 # define __S64_TYPE		__quad_t
 # define __U64_TYPE		__u_quad_t
+/* We want __extension__ before typedef's that use nonstandard base types
+   such as `long long' in C89 mode.  */
+# define __STD_TYPE		__extension__ typedef
 #elif __WORDSIZE == 64
 # define __SQUAD_TYPE		long int
 # define __UQUAD_TYPE		unsigned long int
@@ -123,14 +126,12 @@ typedef struct
 # define __ULONG32_TYPE		unsigned int
 # define __S64_TYPE		long int
 # define __U64_TYPE		unsigned long int
+/* No need to mark the typedef with __extension__.   */
+# define __STD_TYPE		typedef
 #else
 # error
 #endif
 #include <bits/typesizes.h>	/* Defines __*_T_TYPE macros.  */
-
-/* We want __extension__ before typedef's that use nonstandard base types
-   such as `long long' in C89 mode.  */
-#define __STD_TYPE __extension__ typedef
 
 
 __STD_TYPE __DEV_T_TYPE __dev_t;	/* Type of device numbers.  */

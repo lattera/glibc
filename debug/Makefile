@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1998,1999,2000,2001,2004,2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,9 @@ routines := backtrace backtracesyms backtracesymsfd noophooks \
 	    strcat_chk strcpy_chk strncat_chk strncpy_chk \
 	    sprintf_chk vsprintf_chk snprintf_chk vsnprintf_chk \
 	    printf_chk fprintf_chk vprintf_chk vfprintf_chk \
-	    gets_chk chk_fail readonly-area
+	    gets_chk chk_fail readonly-area fgets_chk fgets_u_chk \
+	    read_chk pread_chk pread64_chk recv_chk recvfrom_chk \
+	    readlink_chk getwd_chk getcwd_chk
 
 CFLAGS-backtrace.c = -fno-omit-frame-pointer
 CFLAGS-sprintf_chk.c = -D_IO_MTSAFE_IO
@@ -41,6 +43,13 @@ CFLAGS-fprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-vprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-vfprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-gets_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-fgets_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-fgets_u_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-read_chk.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread_chk.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread64_chk.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recv_chk.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
 
 tests = backtrace-tst tst-chk1 tst-chk2 tst-chk3 \
 	test-strcpy_chk test-stpcpy_chk
