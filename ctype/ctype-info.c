@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,8 +24,6 @@ extern const char _nl_C_LC_CTYPE_class[];
 extern const char _nl_C_LC_CTYPE_class32[];
 extern const char _nl_C_LC_CTYPE_toupper[];
 extern const char _nl_C_LC_CTYPE_tolower[];
-extern const char _nl_C_LC_CTYPE_toupper32[];
-extern const char _nl_C_LC_CTYPE_tolower32[];
 extern const char _nl_C_LC_CTYPE_names[];
 extern const char _nl_C_LC_CTYPE_width[];
 
@@ -35,7 +33,7 @@ const unsigned short int *__ctype_b = b (unsigned short int, class, 128);
 const __uint32_t *__ctype32_b = b (__uint32_t, class32, 0);
 const __int32_t *__ctype_tolower = b (__int32_t, tolower, 128);
 const __int32_t *__ctype_toupper = b (__int32_t, toupper, 128);
-const __uint32_t *__ctype32_tolower = b (__int32_t, tolower32, 0);
-const __uint32_t *__ctype32_toupper = b (__int32_t, toupper32, 0);
+const __uint32_t *__ctype32_tolower = b (__uint32_t, tolower, 128);
+const __uint32_t *__ctype32_toupper = b (__uint32_t, toupper, 128);
 const __uint32_t *__ctype_names = b (__uint32_t, names, 0);
 const unsigned char *__ctype_width = b (unsigned char, width, 0);

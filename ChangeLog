@@ -1,5 +1,14 @@
 2000-01-04  Ulrich Drepper  <drepper@cygnus.com>
 
+	* ctype/ctype-info.c (__ctype32_tolower): Use _nl_C_CTYPE_tolower.
+	(__ctype32_toupper): Use _nl_C_CTYPE_toupper.
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE_tolower32): Removed.  We can
+	reuse the _nl_C_LC_CTYPE_tolower table.
+	(_nl_C_LC_CTYPE_toupper32): Likewise.
+	(_nl_C_LC_CTYPE): Use normal table to initialize tolower32 and
+	toupper32 entries.
+
 	* locale/C-ctype.c (_nl_C_LC_CTYPE_class): Clear ISNCTRL bit for
 	characters >= 0x80.
 	(_nl_C_LC_CTYPE_class32): Likewise.
