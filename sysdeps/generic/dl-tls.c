@@ -196,18 +196,12 @@ _dl_determine_tlsoffset (void)
 }
 
 
-void *
+static void *
 internal_function
-_dl_allocate_tls_storage (void)
+allocate_dtv (void *result)
 {
-  void *result;
   dtv_t *dtv;
   size_t dtv_length;
-
-  /* Allocate a correctly aligned chunk of memory.  */
-  result = __libc_memalign (GL(dl_tls_static_align), GL(dl_tls_static_size));
-  if (__builtin_expect (result == NULL, 0))
-    return result;
 
   /* We allocate a few more elements in the dtv than are needed for the
      initial set of modules.  This should avoid in most cases expansions
@@ -216,11 +210,6 @@ _dl_allocate_tls_storage (void)
   dtv = (dtv_t *) malloc ((dtv_length + 2) * sizeof (dtv_t));
   if (dtv != NULL)
     {
-# if TLS_TCB_AT_TP
-      /* The TCB follows the TLS blocks.  */
-      result = (char *) result + GL(dl_tls_static_size) - TLS_TCB_SIZE;
-# endif
-
       /* This is the initial length of the dtv.  */
       dtv[0].counter = dtv_length;
       /* Fill in the generation number.  */
@@ -233,9 +222,43 @@ _dl_allocate_tls_storage (void)
       INSTALL_DTV (result, dtv);
     }
   else
+    result = NULL;
+
+  return result;
+}
+
+
+/* Get size and alignment requirements of the static TLS block.  */
+void
+internal_function
+_dl_get_tls_static_info (size_t *sizep, size_t *alignp)
+{
+  *sizep = GL(dl_tls_static_size);
+  *alignp = GL(dl_tls_static_align);
+}
+
+
+void *
+internal_function
+_dl_allocate_tls_storage (void)
+{
+  void *result;
+
+  /* Allocate a correctly aligned chunk of memory.  */
+  result = __libc_memalign (GL(dl_tls_static_align), GL(dl_tls_static_size));
+  if (__builtin_expect (result != NULL, 0))
     {
-      free (result);
-      result = NULL;
+      /* Allocate the DTV.  */
+      void *allocated = result;
+
+# if TLS_TCB_AT_TP
+      /* The TCB follows the TLS blocks.  */
+      result = (char *) result + GL(dl_tls_static_size) - TLS_TCB_SIZE;
+# endif
+
+      result = allocate_dtv (result);
+      if (result == NULL)
+	free (allocated);
     }
 
   return result;
@@ -315,23 +338,26 @@ _dl_allocate_tls_init (void *result)
 
 void *
 internal_function
-_dl_allocate_tls (void)
+_dl_allocate_tls (void *mem)
 {
-  return _dl_allocate_tls_init (_dl_allocate_tls_storage ());
+  return _dl_allocate_tls_init (mem == NULL
+				? _dl_allocate_tls_storage ()
+				: allocate_dtv (mem));
 }
 INTDEF(_dl_allocate_tls)
 
 
 void
 internal_function
-_dl_deallocate_tls (void *tcb)
+_dl_deallocate_tls (void *tcb, bool dealloc_tcb)
 {
   dtv_t *dtv = GET_DTV (tcb);
 
   /* The array starts with dtv[-1].  */
   free (dtv - 1);
 
-  free (tcb);
+  if (dealloc_tcb)
+    free (tcb);
 }
 
 

@@ -724,8 +724,12 @@ extern size_t _dl_next_tls_modid (void) internal_function;
 /* Calculate offset of the TLS blocks in the static TLS block.  */
 extern void _dl_determine_tlsoffset (void) internal_function;
 
-/* Allocate memory for static TLS block and dtv.  */
-extern void *_dl_allocate_tls (void) internal_function;
+/* Allocate memory for static TLS block (unless MEM is nonzero) and dtv.  */
+extern void *_dl_allocate_tls (void *mem) internal_function;
+
+/* Get size and alignment requirements of the static TLS block.  */
+extern void _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
+     internal_function;
 
 /* These are internal entry points to the two halves of _dl_allocate_tls,
    only used within rtld.c itself at startup time.  */
@@ -735,7 +739,7 @@ extern void *_dl_allocate_tls_init (void *)
   internal_function attribute_hidden;
 
 /* Deallocate memory allocated with _dl_allocate_tls.  */
-extern void _dl_deallocate_tls (void *tcb) internal_function;
+extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
 
 /* Return the symbol address given the map of the module it is in and
    the symbol record.  */
