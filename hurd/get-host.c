@@ -1,5 +1,5 @@
 /* Get a host configuration item kept as the whole contents of a file.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,9 +27,26 @@ _hurd_get_host_config (const char *item, char *buf, size_t buflen)
   error_t err;
   char *data;
   mach_msg_type_number_t nread, more;
-  file_t config = __file_name_lookup (item, O_RDONLY, 0);
-  if (config == MACH_PORT_NULL)
-    return -1;
+  file_t config;
+
+  err = __hurd_file_name_lookup (&_hurd_ports_use, &__getdport, 0,
+				 item, O_RDONLY, 0, &config);
+  switch (err)
+    {
+    case 0:			/* Success; read file contents below.  */
+      break;
+
+    case ENOENT:		/* ? Others?  All errors? */
+      /* The file does not exist, so no value has been set.  Rather than
+	 causing gethostname et al to fail with ENOENT, give an empty value
+	 as other systems do before sethostname has been called.  */
+      if (buflen != 0)
+	*buf = '\0';
+      return 0;
+
+    default:
+      return __hurd_fail (err);
+    }
 
   data = buf;
   err = __io_read (config, &data, &nread, -1, buflen);
