@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,12 @@
 #include <dirent.h>
 
 
-void
+int
 test (const char *name)
 {
   DIR *dirp;
   struct dirent *entp;
+  int retval = 0;
 
   puts (name);
 
@@ -35,7 +36,7 @@ test (const char *name)
   if (dirp == NULL)
     {
       perror ("opendir");
-      return;
+      return 1;
     }
 
   errno = 0;
@@ -44,24 +45,32 @@ test (const char *name)
 	    entp->d_name, (unsigned long int) entp->d_fileno);
 
   if (errno)
-    perror ("readdir");
+    {
+      perror ("readdir");
+      retval = 1;
+    }
 
   if (closedir (dirp) < 0)
-    perror ("closedir");
+    {
+      perror ("closedir");
+      retval = 1;
+    }
+
+  return retval;
 }
 
 int
 main (int argc, char **argv)
 {
+  int retval = 0;
   --argc;
   ++argv;
 
   if (argc == 0)
-    test (".");
+    retval = test (".");
   else
     while (argc-- > 0)
-      test (*argv++);
+      retval |= test (*argv++);
 
-  exit (0);
-  return 0;
+  return retval;
 }

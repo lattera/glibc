@@ -1,7 +1,19 @@
 1998-03-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* dirent/list.c (test): Return error value.
+	(main): Exit with error value.
+
+	* sysdeps/unix/opendir.c (__opendir): Add missing initialization.
+
+	* Makefile (distribute): Add test-skeleton.c.
+	* test-skeleton.c: New file.
+	* dirent/Makefile (tests): Add opendir-tst1.
+	* dirent/opendir-tst1.c: New file.
+
+1998-03-18  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/opendir.c (__opendir): Don't block on FIFOs etc.
-	Optimize memmory handling.
+	Optimize memory handling.
 	* sysdeps/unix/closedir.c: Optmize memory handling.
 
 1998-03-17  Ulrich Drepper  <drepper@cygnus.com>

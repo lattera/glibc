@@ -323,7 +323,7 @@ distribute  := README README.libm INSTALL FAQ NOTES NEWS PROJECTS BUGS	\
 	       autolock.sh rellns-sh munch-tmpl.c munch.awk interp.c	\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
 	       rpm/Makefile rpm/template rpm/rpmrc glibcbug.in abi-tags	\
-	       stub-tag.h test-installation.pl
+	       stub-tag.h test-installation.pl test-skeleton.c
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h version-info.h

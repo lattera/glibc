@@ -83,6 +83,7 @@ __opendir (const char *name)
       return NULL;
     }
   dirp->data = (char *) (dirp + 1);
+  dirp->allocation = allocation;
   dirp->fd = fd;
 
   __libc_lock_init (dirp->lock);
