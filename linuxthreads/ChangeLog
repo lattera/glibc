@@ -1,3 +1,11 @@
+2002-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* spinlock.c (wait_node_alloc): We cannot use compare-and-exchange.
+	Unconditionally use the code using spinlock.  Use __pthread_release
+	to free a spinlock.
+	(wait_node_free): Likewise.
+	(__pthread_acquire, __pthread_release): Unconditionally define.
+
 2002-06-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/pt-machine.h (MEMORY_BARRIER): Fix typo.

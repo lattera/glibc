@@ -24,7 +24,6 @@
 #include "spinlock.h"
 #include "restart.h"
 
-#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
 static void __pthread_acquire(int * spinlock);
 
 static inline void __pthread_release(int * spinlock)
@@ -33,7 +32,6 @@ static inline void __pthread_release(int * spinlock)
   *spinlock = __LT_SPINLOCK_INIT;
   __asm __volatile ("" : "=m" (*spinlock) : "0" (*spinlock));
 }
-#endif
 
 
 /* The status field of a spinlock is a pointer whose least significant
@@ -275,9 +273,7 @@ struct wait_node {
 };
 
 static long wait_node_free_list;
-#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
 static int wait_node_free_list_spinlock;
-#endif
 
 /* Allocate a new node from the head of the free list using an atomic
    operation, or else using malloc if that list is empty.  A fundamental
@@ -287,15 +283,6 @@ static int wait_node_free_list_spinlock;
 
 static struct wait_node *wait_node_alloc(void)
 {
-#if defined HAS_COMPARE_AND_SWAP
-  long oldvalue, newvalue;
-#endif
-
-#if defined TEST_FOR_COMPARE_AND_SWAP
-  if (!__pthread_has_cas)
-#endif
-#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
-  {
     struct wait_node *new_node = 0;
 
     __pthread_acquire(&wait_node_free_list_spinlock);
@@ -304,29 +291,12 @@ static struct wait_node *wait_node_alloc(void)
       wait_node_free_list = (long) new_node->next;
     }
     WRITE_MEMORY_BARRIER();
-    wait_node_free_list_spinlock = 0;
+    __pthread_release(&wait_node_free_list_spinlock);
 
     if (new_node == 0)
       return malloc(sizeof *wait_node_alloc());
 
     return new_node;
-  }
-#endif
-
-#if defined HAS_COMPARE_AND_SWAP
-  do {
-    oldvalue = wait_node_free_list;
-
-    if (oldvalue == 0)
-      return malloc(sizeof *wait_node_alloc());
-
-    /* Ensure we don't read stale next link through oldvalue pointer. */
-    READ_MEMORY_BARRIER();
-    newvalue = (long) ((struct wait_node *) oldvalue)->next;
-  } while (! __compare_and_swap(&wait_node_free_list, oldvalue, newvalue));
-
-  return (struct wait_node *) oldvalue;
-#endif
 }
 
 /* Return a node to the head of the free list using an atomic
@@ -334,33 +304,12 @@ static struct wait_node *wait_node_alloc(void)
 
 static void wait_node_free(struct wait_node *wn)
 {
-#if defined HAS_COMPARE_AND_SWAP
-  long oldvalue, newvalue;
-#endif
-
-#if defined TEST_FOR_COMPARE_AND_SWAP
-  if (!__pthread_has_cas)
-#endif
-#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
-  {
     __pthread_acquire(&wait_node_free_list_spinlock);
     wn->next = (struct wait_node *) wait_node_free_list;
     wait_node_free_list = (long) wn;
     WRITE_MEMORY_BARRIER();
-    wait_node_free_list_spinlock = 0;
+    __pthread_release(&wait_node_free_list_spinlock);
     return;
-  }
-#endif
-
-#if defined HAS_COMPARE_AND_SWAP
-  do {
-    oldvalue = wait_node_free_list;
-    wn->next = (struct wait_node *) oldvalue;
-    newvalue = (long) wn;
-    /* Ensure node contents are written before we swap it into the list. */
-    WRITE_MEMORY_BARRIER();
-  } while (! __compare_and_swap(&wait_node_free_list, oldvalue, newvalue));
-#endif
 }
 
 #if defined HAS_COMPARE_AND_SWAP
@@ -730,8 +679,7 @@ int __pthread_compare_and_swap(long * ptr, long oldval, long newval,
   return res;
 }
 
-/* This function is called if the inlined test-and-set
-   in __pthread_compare_and_swap() failed */
+#endif
 
 /* The retry strategy is as follows:
    - We test and set the spinlock MAX_SPIN_COUNT times, calling
@@ -770,5 +718,3 @@ static void __pthread_acquire(int * spinlock)
     }
   }
 }
-
-#endif
