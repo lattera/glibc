@@ -696,6 +696,10 @@ gethostbyaddr(addr, len, af)
 		abort();
 	}
 	n = res_nquery(&_res, qbuf, C_IN, T_PTR, (u_char *)buf.buf, sizeof buf.buf);
+	if (n < 0 && af == AF_INET6) {
+		strcpy(qp, "ip6.int");
+		n = res_nquery(&_res, qbuf, C_IN, T_PTR, (u_char *)buf.buf, sizeof buf.buf);
+	}
 	if (n < 0) {
 		dprintf("res_nquery failed (%d)\n", n);
 		if (errno == ECONNREFUSED)

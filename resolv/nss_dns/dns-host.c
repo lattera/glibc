@@ -291,6 +291,12 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 
   n = res_nquery (&_res, qbuf, C_IN, T_PTR, (u_char *)host_buffer.buf,
 		  sizeof host_buffer);
+  if (n < 0 && af == AF_INET6)
+    {
+      strcpy (qp, "ip6.int");
+      n = res_nquery (&_res, qbuf, C_IN, T_PTR, (u_char *)host_buffer.buf,
+		      sizeof host_buffer);
+    }
   if (n < 0)
     {
       *h_errnop = h_errno;

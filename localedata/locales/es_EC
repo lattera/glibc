@@ -1,7 +1,7 @@
 comment_char %
 escape_char  /
 %
-% Spanish Language Locale for Equador
+% Spanish Language Locale for Ecuador
 % Source: RAP
 % Address: Sankt Jo//rgens Alle 8
 %    DK-1615 Ko//benhavn V, Danmark
@@ -21,7 +21,7 @@ escape_char  /
 % for commercial purposes.
 
 LC_IDENTIFICATION
-title      "Spanish locale for Equador"
+title      "Spanish locale for Ecuador"
 source     "RAP"
 address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
 contact    ""
@@ -29,7 +29,7 @@ email      "bug-glibc@gnu.org"
 tel        ""
 fax        ""
 language   "Spanish"
-territory  "Equador"
+territory  "Ecuador"
 revision   "1.0"
 date       "2000-06-29"
 %

@@ -7,12 +7,12 @@ escape_char  /
 %    Azadi Ave, Tehran, Iran
 % Contact: Roozbeh Pournader
 % Email: roozbeh@sharif.edu
-% Tel: +98 21 6022378
+% Tel: +98 21 6022372
 % Fax: +98 21 6019568
 % Language: fa
 % Territory: IR
-% Revision: 2.1
-% Date: 2001-03-18
+% Revision: 2.2
+% Date: 2002-07-29
 % Users: general
 % Repertoiremap:
 % Charset: UTF-8
@@ -25,24 +25,24 @@ source     "The FarsiWeb Project"
 address    "Computing Center, Sharif University of Technology, Azadi Ave, Tehran, Iran"
 contact    "Roozbeh Pournader"
 email      "roozbeh@sharif.edu"
-tel        "+98 21 6022378"
+tel        "+98 21 6022372"
 fax        "+98 21 6019568"
 language   "Persian"
 territory  "Iran"
-revision   "2.1"
-date       "2001-03-18"
+revision   "2.2"
+date       "2002-07-29"
 %
-category  "fa_IR:2001";LC_IDENTIFICATION
-category  "fa_IR:2001";LC_CTYPE
-category  "fa_IR:2001";LC_COLLATE
-category  "fa_IR:2001";LC_TIME
-category  "fa_IR:2001";LC_NUMERIC
-category  "fa_IR:2001";LC_MONETARY
-category  "fa_IR:2001";LC_MESSAGES
-category  "fa_IR:2001";LC_PAPER
-category  "fa_IR:2001";LC_NAME
-category  "fa_IR:2001";LC_ADDRESS
-category  "fa_IR:2001";LC_TELEPHONE
+category  "fa_IR:2002";LC_IDENTIFICATION
+category  "fa_IR:2002";LC_CTYPE
+category  "fa_IR:2002";LC_COLLATE
+category  "fa_IR:2002";LC_TIME
+category  "fa_IR:2002";LC_NUMERIC
+category  "fa_IR:2002";LC_MONETARY
+category  "fa_IR:2002";LC_MESSAGES
+category  "fa_IR:2002";LC_PAPER
+category  "fa_IR:2002";LC_NAME
+category  "fa_IR:2002";LC_ADDRESS
+category  "fa_IR:2002";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
@@ -61,32 +61,43 @@ copy "iso14651_t1"
 % MEEM, NOON, WAW, HEH, YEH.
 % The various kind of HAMZA are sorted as ALEF WITH HAMZA ABOVE, ALEF WITH
 % HAMZA BELOW, WAW WITH HAMZA ABOVE, YEH WITH HAMZA ABOVE.
-%
-% TODO: add "Waw + Hamza Above -> Waw With Hamza Above" suport and things
-% like that.
-%
-% TODO: add Arabic contextual forms support.
 
 collating-symbol <AHY> % accent hamza over yeh
 collating-symbol <ADL> % dotless
 collating-symbol <ADO> % with dots over
 collating-symbol <AWO> % with wasla over
-collating-symbol <alef_madda>
+
+collating-symbol <alefmadda>
 collating-symbol <yeh>
+
+% Alternate representations displayed the same
+collating-symbol <ALT1> 
+collating-symbol <ALT2>
+
+collating-element <Alef-Madda> from "<U0627><U0653>"
+collating-element <Alef-HamzaBelow> from "<U0627><U0655>"
+collating-element <Waw-Hamza> from "<U0648><U0654>"
+collating-element <AlefMaksura-Hamza> from "<U0649><U0654>"
+collating-element <Yeh-Hamza> from "<U064A><U0654>"
+collating-element <FarsiYeh-Hamza> from "<U06CC><U0654>"
 
 reorder-after <BAS>
 <AHA>
-
 <AHS>
 <AWO>
+<AHW>
 <AHY>
 <ADL>
 <ADO>
 <AYE>
 <YBA>
 
+reorder-after <LIG>
+<ALT1>
+<ALT2>
+
 reorder-after <th>
-<alef_madda>
+<alefmadda>
 <alef>
 <hamza>
 
@@ -121,7 +132,7 @@ reorder-after <UFE7F>
 <U0670> IGNORE;IGNORE;IGNORE;<U0670> %<supalef_no>
 
 % Persian digits are sorted before Arabic ones: they are the basic forms.
-reorder-after <U0621>
+reorder-after <U0660>
 <U06F0> <0>;<BAS>;<MIN>;IGNORE
 <U0660> <0>;<PCL>;<MIN>;IGNORE
 <U06F1> <1>;<BAS>;<MIN>;IGNORE
@@ -144,22 +155,87 @@ reorder-after <U0621>
 <U0669> <9>;<PCL>;<MIN>;IGNORE
 
 % And then the letters:
-
-<U0622> <alef_madda>;<BAS>;<MIN>;IGNORE
-<U0623> <hamza>;<AHA>;<MIN>;IGNORE
-<U0624> <hamza>;<AHW>;<MIN>;IGNORE
-<U0625> <hamza>;<AHS>;<MIN>;IGNORE
-<U0626> <hamza>;<AHY>;<MIN>;IGNORE
-reorder-after <U0648>
-<U0629> <heh>;<ADO>;<MIN>;IGNORE
-<U06C0> <heh>;<AHA>;<MIN>;IGNORE
+<U0622> <alefmadda>;<BAS>;<MIN>;IGNORE % Alef With Madda Above
+<Alef-Madda> <alefmadda>;<BAS>;<MIN>;IGNORE
+<U0627> <alef>;<BAS>;<MIN>;IGNORE       % Alef
+<U0671> <alef>;<AWO>;<MIN>;IGNORE       % Alef Wasla
+<U0621> <hamza>;<BAS>;<MIN>;IGNORE      % Hamza
+<U0623> <hamza>;<AHA>;<MIN>;IGNORE      % Alef With Hamza Above
+<Alef-Hamza> <hamza>;<AHA>;<MIN>;IGNORE
+<U0625> <hamza>;<AHS>;<MIN>;IGNORE      % Alef With Hamza Below
+<Alef-HamzaBelow> <hamza>;<AHS>;<MIN>;IGNORE
+<U0624> <hamza>;<AHW>;<MIN>;IGNORE      % Waw With Hamza Above
+<Waw-Hamza> <hamza>;<AHW>;<MIN>;IGNORE
+<U0626> <hamza>;<AHY>;<MIN>;IGNORE      % Yeh With Hamza Above
+<FarsiYeh-Hamza> <hamza>;<AHY>;<ALT1>;IGNORE
+<AlefMaksura-Hamza> <hamza>;<AHY>;<ALT2>;IGNORE
+<Yeh-Hamza> <hamza>;<AHY>;<MIN>;IGNORE
 reorder-after <U0642>
-<U06A9> <kaf>;<BAS>;<MIN>;IGNORE
-<U0643> <kaf>;<PCL>;<MIN>;IGNORE
+<U06A9> <kaf>;<BAS>;<MIN>;IGNORE        % Keheh
+<U0643> <kaf>;<PCL>;<MIN>;IGNORE        % Kaf
 reorder-after <U0648>
-<U06CC> <yeh>;<BAS>;<MIN>;IGNORE
-<U0649> <yeh>;<ADL>;<MIN>;IGNORE
-<U064A> <yeh>;<AYE>;<MIN>;IGNORE
+<U0647> <heh>;<BAS>;<MIN>;IGNORE        % Heh
+<U0629> <heh>;<ADO>;<MIN>;IGNORE        % Teh Marbuta
+<U06C0> <heh>;<AHA>;<MIN>;IGNORE        % Heh With Yeh Above
+<U06CC> <yeh>;<BAS>;<MIN>;IGNORE        % Farsi Yeh
+<U0649> <yeh>;<ADL>;<MIN>;IGNORE        % Alef Maksura
+<U064A> <yeh>;<AYE>;<MIN>;IGNORE        % Yeh
+
+% Finally the letters in Presentation Form:
+reorder-after <UFE80>
+<UFE81> <alefmadda>;<BAS>;<AIS>;IGNORE
+<UFE82> <alefmadda>;<BAS>;<AFI>;IGNORE
+<UFE8D> <alef>;<BAS>;<AIS>;IGNORE
+<UFE8E> <alef>;<BAS>;<AFI>;IGNORE
+<UFB50> <alef>;<AWO>;<AIS>;IGNORE
+<UFB51> <alef>;<AWO>;<AFI>;IGNORE
+<UFE80> <hamza>;<BAS>;<AIS>;IGNORE
+<UFE83> <hamza>;<AHA>;<AIS>;IGNORE
+<UFE84> <hamza>;<AHA>;<AFI>;IGNORE
+<UFE87> <hamza>;<AHS>;<AIS>;IGNORE
+<UFE88> <hamza>;<AHS>;<AFI>;IGNORE
+<UFE85> <hamza>;<AHW>;<AIS>;IGNORE
+<UFE86> <hamza>;<AHW>;<AFI>;IGNORE
+<U0689> <hamza>;<AHY>;<AIS>;IGNORE
+<U068A> <hamza>;<AHY>;<AFI>;IGNORE
+reorder-after <UFEAE>
+<UFDFC> "<reh><yeh><alef><lam>";"<LIG><LIG><LIG><LIG>";"<AII><AME><AFI><AIS>";IGNORE % Rial Sign
+reorder-after <UFED8>
+<UFB8E> <kaf>;<BAS>;<AIS>;IGNORE
+<UFB8F> <kaf>;<BAS>;<AFI>;IGNORE
+<UFB90> <kaf>;<BAS>;<AII>;IGNORE
+<UFB91> <kaf>;<BAS>;<AME>;IGNORE
+<UFED9> <kaf>;<PCL>;<AIS>;IGNORE
+<UFEDA> <kaf>;<PCL>;<AFI>;IGNORE
+<UFEDB> <kaf>;<PCL>;<AII>;IGNORE
+<UFEDC> <kaf>;<PCL>;<AME>;IGNORE
+reorder-after <UFEEE>
+<UFEE9> <heh>;<BAS>;<AIS>;IGNORE
+<UFEEA> <heh>;<BAS>;<AFI>;IGNORE
+<UFEEB> <heh>;<BAS>;<AII>;IGNORE
+<UFEEC> <heh>;<BAS>;<AME>;IGNORE
+<UFE93> <heh>;<ADO>;<AIS>;IGNORE
+<UFE94> <heh>;<ADO>;<AFI>;IGNORE
+<UFBA4> <heh>;<AHA>;<AIS>;IGNORE
+<UFBA5> <heh>;<AHA>;<AFI>;IGNORE
+<UFBFC> <yeh>;<BAS>;<AIS>;IGNORE
+<UFBFD> <yeh>;<BAS>;<AFI>;IGNORE
+<UFBFE> <yeh>;<BAS>;<AII>;IGNORE
+<UFBFF> <yeh>;<BAS>;<AME>;IGNORE
+<UFEEF> <yeh>;<ADL>;<AIS>;IGNORE
+<UFEF0> <yeh>;<ADL>;<AFI>;IGNORE
+<UFEF1> <yeh>;<AYE>;<AIS>;IGNORE
+<UFEF2> <yeh>;<AYE>;<AFI>;IGNORE
+<UFEF3> <yeh>;<AYE>;<AII>;IGNORE
+<UFEF4> <yeh>;<AYE>;<AME>;IGNORE
+<UFEF5> "<lam><alefmadda>";"<BAS><BAS>";"<AIS><AFI>";IGNORE
+<UFEF6> "<lam><alefmadda>";"<BAS><BAS>";"<AFI><AFI>";IGNORE
+<UFEF7> "<lam><hamza>";"<BAS><AHA>";"<AIS><AFI>";IGNORE
+<UFEF8> "<lam><hamza>";"<BAS><AHA>";"<AFI><AFI>";IGNORE
+<UFEF9> "<lam><hamza>";"<BAS><AHS>";"<AIS><AFI>";IGNORE
+<UFEFA> "<lam><hamza>";"<BAS><AHS>";"<AFI><AFI>";IGNORE
+<UFEFB> "<lam><alef>";"<BAS><BAS>";"<AIS><AFI>";IGNORE
+<UFEFC> "<lam><alef>";"<BAS><BAS>";"<AFI><AFI>";IGNORE
 reorder-end
 
 END LC_COLLATE
