@@ -1148,6 +1148,8 @@ checkfiles (const char *infile, const char *outfile)
       else
 	{
 	  fprintf (stderr,
+		   /* TRANS: the file will not be removed; this is an
+		      TRANS: informative message.  */
 		   _("file `%s' already exists and may be overwritten\n"),
 		   outfile);
 	  crash ();
