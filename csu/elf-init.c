@@ -1,5 +1,5 @@
 /* Startup support for ELF initializers/finalizers in the main executable.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,12 @@
 
 #ifdef HAVE_INITFINI_ARRAY
 /* These magic symbols are provided by the linker.  */
-extern void (*__preinit_array_start []) (void);
-extern void (*__preinit_array_end []) (void);
-extern void (*__init_array_start []) (void);
-extern void (*__init_array_end []) (void);
-extern void (*__fini_array_start []) (void);
-extern void (*__fini_array_end []) (void);
+extern void (*__preinit_array_start []) (void) attribute_hidden;
+extern void (*__preinit_array_end []) (void) attribute_hidden;
+extern void (*__init_array_start []) (void) attribute_hidden;
+extern void (*__init_array_end []) (void) attribute_hidden;
+extern void (*__fini_array_start []) (void) attribute_hidden;
+extern void (*__fini_array_end []) (void) attribute_hidden;
 #endif
 
 /* These function symbols are provided for the .init/.fini section entry
