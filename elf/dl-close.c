@@ -116,8 +116,8 @@ _dl_close (struct link_map *map)
 	    }
 
 	  /* We can unmap all the maps at once.  We determined the
-	     length when we loaded the object and `munmap' call does
-	     the rest.  */
+	     start address and length when we loaded the object and
+	     the `munmap' call does the rest.  */
 	  __munmap ((void *) imap->l_map_start,
 		    imap->l_map_end - imap->l_map_start);
 
@@ -143,8 +143,9 @@ _dl_close (struct link_map *map)
 	  if (imap->l_origin != NULL)
 	    free ((char *) imap->l_origin);
 
-	  /* These names always is allocated.  */
+	  /* This name always is allocated.  */
 	  free (imap->l_name);
+	  /* Remove the list with all the names of the shared object.  */
 	  lnp = imap->l_libname;
 	  do
 	    {
@@ -153,6 +154,17 @@ _dl_close (struct link_map *map)
 	      free (this);
 	    }
 	  while (lnp != NULL);
+
+	  /* Remove the searchlists.  */
+	  if (imap->l_dupsearchlist != imap->l_searchlist)
+	    {
+	      /* If a l_searchlist object exists there always also is
+		 a l_dupsearchlist object.  */
+	      assert (imap->l_dupsearchlist != NULL);
+	      free (imap->l_dupsearchlist);
+	    }
+	  if (imap != map && imap->l_searchlist != NULL)
+	    free (imap->l_searchlist);
 
 	  free (imap);
 	}
