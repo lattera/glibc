@@ -579,6 +579,9 @@ _exit (int status)
   while (__task_terminate (__mach_task_self ()))
     __mach_task_self_ = (__mach_task_self) ();
 }
+/* We need this alias to satisfy references from libc_pic.a objects
+   that were affected by the libc_hidden_proto declaration for _exit.  */
+strong_alias (_exit, __GI__exit)
 
 /* Try to get a machine dependent instruction which will make the
    program crash.  This is used in case everything else fails.  */

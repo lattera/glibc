@@ -1,3 +1,7 @@
+2002-09-22  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_exit): Add alias __GI__exit.
+
 2002-09-22  Andreas Schwab  <schwab@suse.de>
 
 	* cppflags-iterator.mk (CPPFLAGS-$(cpp-src)): Append, not overwrite.
