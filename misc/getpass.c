@@ -58,7 +58,7 @@ getpass (prompt)
   else
     {
       /* We do the locking ourselves.  */
-      __fsetlocking (tf, FSETLOCKING_BYCALLER);
+      __fsetlocking (in, FSETLOCKING_BYCALLER);
 
       out = in;
     }

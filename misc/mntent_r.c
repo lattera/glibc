@@ -38,7 +38,7 @@ __setmntent (const char *file, const char *mode)
 
   if (result != NULL)
     /* We do the locking ourselves.  */
-    __fsetlocking (fp, FSETLOCKING_BYCALLER);
+    __fsetlocking (result, FSETLOCKING_BYCALLER);
 
   return result;
 }
