@@ -25,7 +25,8 @@ subdir	:= iconvdata
 modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		\
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		\
 	   T.61 ISO_6937 SJIS KOI-8 KOI8-R LATIN-GREEK LATIN-GREEK-1	\
-	   HP-ROMAN8 EBCDIC-AT-DE EBCDIC-AT-DE-A EBCDIC-CA-FR
+	   HP-ROMAN8 EBCDIC-AT-DE EBCDIC-AT-DE-A EBCDIC-CA-FR		\
+	   libJIS
 modules.so := $(addsuffix .so, $(modules))
 
 
@@ -52,12 +53,7 @@ HP-ROMAN8-routines := hp-roman8
 EBCDIC-AT-DE-routines := ebcdic-at-de
 EBCDIC-AT-DE-A-routines := ebcdic-at-de-a
 EBCDIC-CA-FR-routines := ebcdic-ca-fr
-
-extra-libs = libJIS
-extra-libs-others = $(extra-libs)
-
 libJIS-routines := jis0201 jis0208 jis0212
-libJIS-inhibit-o := $(filter-out .os,$(object-suffixes))
 
 distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c \

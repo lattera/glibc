@@ -20,7 +20,7 @@
 #include <signal.h>
 
 int
-__syscall_rt_sigprocmask (int how, const sigset *set, sigset_t *oset,
+__syscall_rt_sigprocmask (int how, const sigset_t *set, sigset_t *oset,
 			  size_t setsize)
 {
   __set_errno (ENOSYS);

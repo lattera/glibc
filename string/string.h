@@ -298,18 +298,18 @@ extern char *basename __P ((__const char *__filename));
 /* When using GNU CC we provide some optimized versions of selected
    functions from this header.  There are two kinds of optimizations:
 
-   - machine-dependent optmizations, most probably using inline
-     assembler code; these could be quite expensive since the code
-     size could increase significantly.
+   - machine-dependent optimizations, most probably using inline
+     assembler code; these might be quite expensive since the code
+     size can increase significantly.
      These optimizations are not used unless the symbol
 	__USE_STRING_INLINES
-     is defined before including this header
+     is defined before including this header.
 
    - machine-independent optimizations which do not increase the
      code size significantly and which optimize mainly situations
      where one or more arguments are compile-time constants.
      These optimizations are used always when the compiler is
-     taught to optimized.
+     taught to optimize.
 
    One can inhibit all optimizations by defining __NO_STRING_INLINES.  */
 

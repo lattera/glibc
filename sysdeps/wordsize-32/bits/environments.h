@@ -16,8 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _BITS_ENVIRONMENTS_H
-#define _BITS_ENVIRONMENTS_H	1
+#ifndef _UNISTD_H
+# error "Never include this file directly.  Use <unistd.h> instead"
+#endif
 
 /* By default we have 32-bit wide `int', `long int', pointers and `off_t'.  */
 #define _XBS5_ILP32_OFF32	1
@@ -28,5 +29,3 @@
 /* We can never provide environments with 64-bit wide pointers.  */
 #define _XBS5_LP64_OFF64	-1
 #define _XBS5_LPBIG_OFFBIG	-1
-
-#endif /* bits/environments.h */

@@ -18,7 +18,6 @@
 
 #include <errno.h>
 #include <signal.h>
-#include <sigcontext.h>
 #include <unistd.h>
 
 extern int __syscall_sigreturn (struct sigcontext *);

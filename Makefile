@@ -329,6 +329,8 @@ INSTALL: manual/maint.texi; $(format-me)
 NOTES: manual/creature.texi; $(format-me)
 manual/dir-add.texi manual/dir-add.info: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+FAQ: gen-FAQ.pl FAQ.in
+	$(PERL) $^ > $@.new && rm -f $@ && mv $@.new $@ && chmod a-w $@
 FORCE:
 
 rpm/%: subdir_distinfo

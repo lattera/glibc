@@ -25,11 +25,11 @@
 #ifndef __NO_STRING_INLINES
 
 /* Unlike the definitions in the header <bits/string.h> the
-   definitions contained here are not optimizing down to assembler
-   level.  These optimizations are not always a good idea since this
+   definitions contained here are not optimized down to assembler
+   level.  Those optimizations are not always a good idea since this
    means the code size increases a lot.  Instead the definitions here
-   optimize some functions in a way which does not dramatically
-   increase the code size and which does not use assembler.  The main
+   optimize some functions in a way which do not dramatically
+   increase the code size and which do not use assembler.  The main
    trick is to use GNU CC's `__builtin_constant_p' function.
 
    Every function XXX which has a defined version in

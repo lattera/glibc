@@ -688,7 +688,7 @@ ifndef rtld-version-installed-name
 rtld-version-installed-name = ld-$(version).so
 endif
 
-# The librt must contain be linked with the thread library.  It least
+# The librt must be linked with the thread library, at least
 # for now.
 ifneq (,$(findstring linuxthreads,$(add-ons)))
 shared-thread-library = $(common-objpfx)linuxthreads/libpthread.so

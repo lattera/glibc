@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <sys/types.h>
 
 int
 __syscall_rt_sigqueueinfo (pid_t pid, int sig, siginfo_t *uinfo)

@@ -82,8 +82,13 @@ AC_ARG_ENABLE(versioning, dnl
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE(add-ons, dnl
 [  --enable-add-ons=DIR1,DIR2... configure and build named extra directories],
-   	      [add_ons=`echo "$enableval" | sed 's/,/ /g'`],
-	      [add_ons=])
+  [case "$enableval" in
+    yes) add_ons=`echo $srcdir/*/configure | \
+		  sed -e "s!$srcdir/!!g" -e 's!/configure!!g'`;;
+    *) add_ons=`echo "$enableval" | sed 's/,/ /g'`;;
+   esac],
+  [add_ons=])
+
 AC_CONFIG_SUBDIRS($add_ons)
 add_ons_pfx=
 if test x"$add_ons" != x; then

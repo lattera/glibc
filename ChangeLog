@@ -1,3 +1,73 @@
+1997-12-05 00:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	The kernel expects the arguments in a different order.
+	* sysdeps/unix/sysv/linux/i386/s_pread64.S: New file.
+	* sysdeps/unix/sysv/linux/i386/s_pwrite64.S: New file.
+
+	* FAQ.in: New file.
+	* gen-FAQ.pl: New file.
+	* Makefile (FAQ): Add rule to generate from FAQ.in.
+
+	* iconvdata/Makefile: Treat libJIS like the other modules.
+
+	* rt/librt.map: New file.
+
+	* sysdeps/wordsize-32/bits/environments.h: Add test for direct
+	inclusion.
+	* sysdeps/wordsize-64/bits/environments.h: Likewise.  Correct
+	comment.
+
+1997-12-04 22:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/rt_sigprocmask.c: Fix prototype.
+	* sysdeps/unix/sysv/linux/rt_sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/rt_sigqueueinfo.c: Include <sys/types.h>.
+	Patches by Thorsten Kukuk <kukuk@weber.uni-paderborn.de>.
+
+1997-11-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* string/bits/string2.h: Fix spellings.
+
+	* string/string.h: Fix spellings.
+
+1997-12-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Rename extern
+	declaration to __syscall_rt_sigaction.
+
+	* sysdeps/unix/sysv/linux/sigreturn.c: Remove inclusion of
+	non-existant <sigcontext.h>.
+
+1997-12-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/enbl-secure.c (__libc_init_secure): Correct
+	typo.
+
+1997-12-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/wordsize-64/bits/environments.h: Correct spelling.
+
+	* Makeconfig (shared-thread-library): Correct spelling.
+
+	* sysdeps/unix/sysv/linux/sys/pci.h: Include <linux/pci.h> and not
+	<asm/pci.h>.
+
+1997-12-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Add AF_* and PF_
+	constants from Linux headers. Pointed out by
+	csmall@scooter.o.i.net. [PR libc/369]
+
+1997-12-04 10:21  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/xcrypt.c: Fix lower/upper characters in optimized hexval.
+
+1997-12-04 00:06  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: If --enable-add-ons is given without an
+	argument, set the addons list to all subdirs with a configure
+	script.
+
 1997-12-03 23:50  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig: Add shared-thread-library variable.

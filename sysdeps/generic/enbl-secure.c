@@ -32,7 +32,7 @@ uid_t __libc_uid;
 void
 __libc_init_secure (void)
 {
-  __libc_uid == __getuid ();
+  __libc_uid = __getuid ();
   __libc_enable_secure = (__geteuid () != __libc_uid
 			  || __getegid () != __getgid ());
 }

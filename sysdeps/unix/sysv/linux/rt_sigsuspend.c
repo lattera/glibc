@@ -20,7 +20,7 @@
 #include <signal.h>
 
 int
-__syscall_rt_sigsuspend (const sigset *set, size_t setsize)
+__syscall_rt_sigsuspend (const sigset_t *set, size_t setsize)
 {
   if (set == NULL)
     {

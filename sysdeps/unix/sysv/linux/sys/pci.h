@@ -20,6 +20,6 @@
 #define _SYS_PCI_H	1
 
 /* We use the constants from the kernel.  */
-#include <asm/pci.h>
+#include <linux/pci.h>
 
 #endif /* sys/pci.h */

@@ -15,96 +15,9 @@ please let me know.
 
 						  --drepper@cygnus.com
 
-~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+? Compiling glibc
 
-1. Compiling glibc
-
-1.1.	What systems does the GNU C Library run on?
-1.2.	What compiler do I need to build GNU libc?
-1.3.	When I try to compile glibc I get only error messages.
-	What's wrong?
-1.4.	Do I need a special linker or archiver?
-1.5.	Do I need some more things to compile GNU C Library?
-1.6.	When I run `nm -u libc.so' on the produced library I still
-	find unresolved symbols.  Can this be ok?
-1.7.	What are these `add-ons'?
-1.8.	My XXX kernel emulates a floating-point coprocessor for me.
-	Should I enable --with-fp?
-1.9.	When compiling GNU libc I get lots of errors saying functions
-	in glibc are duplicated in libgcc.
-1.10.	What's the problem with configure --enable-omitfp?
-
-2. Installation and configuration issues
-
-2.1.	Can I replace the libc on my Linux system with GNU libc?
-2.2.	How do I configure GNU libc so that the essential libraries
-	like libc.so go into /lib and the other into /usr/lib?
-2.3.	How should I avoid damaging my system when I install GNU libc?
-2.4.	Do I need to use GNU CC to compile programs that will use the
-	GNU C Library?
-2.5.	When linking with the new libc I get unresolved symbols
-	`crypt' and `setkey'.  Why aren't these functions in the
-	libc anymore?
-2.6.	When I use GNU libc on my Linux system by linking against
-	the libc.so which comes with glibc all I get is a core dump.
-2.7.	Looking through the shared libc file I haven't found the
-	functions `stat', `lstat', `fstat', and `mknod' and while
-	linking on my Linux system I get error messages.  How is
-	this supposed to work?
-2.8.	How can I compile gcc 2.7.2.1 from the gcc source code using
-	glibc 2.x?
-2.9.	The `gencat' utility cannot process the catalog sources which
-	were used on my Linux libc5 based system.  Why?
-2.10.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
-	works great.  But the glibc NIS+ doesn't seem to work.
-2.11.	After installing glibc name resolving doesn't work properly.
-2.12.	I have /usr/include/net and /usr/include/scsi as symlinks
-	into my Linux source tree.  Is that wrong?
-2.13.	Programs like `logname', `top', `uptime' `users', `w' and
-	`who', show incorrect information about the (number of)
-	users on my system.  Why?
-2.14.	After upgrading to glibc 2.1 with symbol versioning I get
-	errors about undefined symbols.  What went wrong?
-2.15.	When I start the program XXX after upgrading the library
-	I get
-	  XXX: Symbol `_sys_errlist' has different size in shared
-	  object, consider re-linking
-	Why?  What should I do?
-
-3. Source and binary incompatibilities, and what to do about them
-
-3.1.	I expect GNU libc to be 100% source code compatible with
-	the old Linux based GNU libc.  Why isn't it like this?
-3.2.	Why does getlogin() always return NULL on my Linux box?
-3.3.	Where are the DST_* constants found in <sys/time.h> on many
-	systems?
-3.4.	The prototypes for `connect', `accept', `getsockopt',
-	`setsockopt', `getsockname', `getpeername', `send',
-	`sendto', and `recvfrom' are different in GNU libc from
-	any other system I saw.  This is a bug, isn't it?
-3.5.	On Linux I've got problems with the declarations in Linux
-	kernel headers.
-3.6.	I don't include any kernel headers myself but the compiler
-	still complains about redeclarations of types in the kernel
-	headers.
-3.7.	Why don't signals interrupt system calls anymore?
-3.8.	I've got errors compiling code that uses certain string
-	functions.  Why?
-
-4. Miscellaneous
-
-4.1.	After I changed configure.in I get `Autoconf version X.Y.
-	or higher is required for this script'.  What can I do?
-4.2.	When I try to compile code which uses IPv6 headers and
-	definitions on my Linux 2.x.y system I am in trouble.
-	Nothing seems to work.
-
-
-~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-1. Compiling glibc
-
-1.1.	What systems does the GNU C Library run on?
+??	What systems does the GNU C Library run on?
 
 {UD} This is difficult to answer.  The file `README' lists the
 architectures GNU libc was known to run on *at some time*.  This does
@@ -131,8 +44,7 @@ you are really interested in porting it, contact
 
 	<bug-glibc@prep.ai.mit.edu>
 
-
-1.2.	What compiler do I need to build GNU libc?
+??	What compiler do I need to build GNU libc?
 
 {UD} You must use GNU CC to compile GNU libc.  A lot of extensions of
 GNU CC are used to increase portability and speed.
@@ -146,8 +58,7 @@ You always should try to use the latest official release.  Older
 versions may not have all the features GNU libc requires.  On most
 supported platforms, 2.7.2.3 is the earliest version that works at all.
 
-
-1.3.	When I try to compile glibc I get only error messages.
+??	When I try to compile glibc I get only error messages.
 	What's wrong?
 
 {UD} You definitely need GNU make to translate GNU libc.  No
@@ -157,8 +68,7 @@ We recommend version GNU make version 3.75.  Versions 3.76 and 3.76.1
 have bugs which appear when building big projects like GNU libc.
 Versions before 3.74 have bugs and/or are missing features.
 
-
-1.4.	Do I need a special linker or archiver?
+??	Do I need a special linker or archiver?
 
 {UD} You may be able to use your system linker, but GNU libc works
 best with GNU binutils.
@@ -176,8 +86,7 @@ required.  For Linux, get binutils-2.8.1.0.17 or later.  Other systems
 may have native linker support, but it's moot right now, because glibc
 has not been ported to them.
 
-
-1.5.	Do I need some more things to compile GNU C Library?
+??	Do I need some more things to compile GNU C Library?
 
 {UD} Yes, there are some more :-).
 
@@ -214,8 +123,7 @@ has not been ported to them.
 
   If you have some more measurements let me know.
 
-
-1.6.	When I run `nm -u libc.so' on the produced library I still
+??	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
 
 {UD} Yes, this is ok.  There can be several kinds of unresolved
@@ -234,12 +142,11 @@ symbols:
 Generally, you should make sure you find a real program which produces
 errors while linking before deciding there is a problem.
 
-
-1.7.	What are these `add-ons'?
+??addon	What are these `add-ons'?
 
 {UD} To avoid complications with export rules or external source
 code some optional parts of the libc are distributed as separate
-packages (e.g., the crypt package, see question 2.5).
+packages (e.g., the crypt package, see ?crypt).
 
 To use these packages as part of GNU libc, just unpack the tarfiles in
 the libc source directory and tell the configuration script about them
@@ -258,8 +165,7 @@ override files, provide support for additional architectures, and
 just about anything else.  The existing makefiles do most of the work;
 only some few stub rules must be written to get everything running.
 
-
-1.8.	My XXX kernel emulates a floating-point coprocessor for me.
+??	My XXX kernel emulates a floating-point coprocessor for me.
 	Should I enable --with-fp?
 
 {ZW} An emulated FPU is just as good as a real one, as far as the C
@@ -272,8 +178,7 @@ far more trouble than it's worth: you then have to compile
 *everything* this way, including the compiler's internal libraries
 (libgcc.a for GNU C), because the calling conventions change.
 
-
-1.9.	When compiling GNU libc I get lots of errors saying functions
+??	When compiling GNU libc I get lots of errors saying functions
 	in glibc are duplicated in libgcc.
 
 {EY} This is *exactly* the same problem that I was having.  The
@@ -290,8 +195,7 @@ you first delete config.cache.
 some problems of this kind.  The setting of CFLAGS is checked at the
 very beginning and if it is not usable `configure' will bark.
 
-
-1.10.	What's the problem with configure --enable-omitfp?
+??	What's the problem with configure --enable-omitfp?
 
 {AJ} When --enable-omitfp is set the libraries are built without frame
 pointers. Some compilers produce buggy code for this model and
@@ -309,12 +213,9 @@ appending "_g" to the library names.
 The compilation of these extra libraries and the compiler optimizations
 slow down the build process and need more disk space.
 
-
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+? Installation and configuration issues
 
-2. Installation and configuration issues
-
-2.1.	Can I replace the libc on my Linux system with GNU libc?
+??	Can I replace the libc on my Linux system with GNU libc?
 
 {UD} You cannot replace any existing libc for Linux with GNU
 libc.  It is binary incompatible and therefore has a different major
@@ -330,8 +231,7 @@ information consult documentation for shared library handling.  The
 Makefiles of GNU libc will automatically generate the needed symbolic
 links which the linker will use.
 
-
-2.2.	How do I configure GNU libc so that the essential libraries
+??	How do I configure GNU libc so that the essential libraries
 	like libc.so go into /lib and the other into /usr/lib?
 
 {UD,AJ} Like all other GNU packages GNU libc is designed to use a base
@@ -340,7 +240,7 @@ directory and install all files relative to this.  The default is
 installed there).  If you wish to install GNU libc as the primary C
 library on your system, set the base directory to /usr (i.e. run
 configure --prefix=/usr <other_options>).  Note that this can damage
-your system; see question 2.3 for details.
+your system; see ?safety for details.
 
 Some systems like Linux have a filesystem standard which makes a
 difference between essential libraries and others.  Essential
@@ -360,8 +260,7 @@ sysconfdir=/etc
 The first line specifies the directory for the essential libraries,
 the second line the directory for system configuration files.
 
-
-2.3.	How should I avoid damaging my system when I install GNU libc?
+??safety	How should I avoid damaging my system when I install GNU libc?
 
 {ZW} If you wish to be cautious, do not configure with --prefix=/usr.
 If you don't specify a prefix, glibc will be installed in /usr/local,
@@ -387,8 +286,7 @@ The dangers when installing glibc in /usr are twofold:
 The situation is rather similar to the move from a.out to ELF which
 long-time Linux users will remember.
 
-
-2.4.	Do I need to use GNU CC to compile programs that will use the
+??	Do I need to use GNU CC to compile programs that will use the
 	GNU C Library?
 
 {ZW} In theory, no; the linker does not care, and the headers are
@@ -403,10 +301,9 @@ difficulties.  If you do, please report them as bugs.
 Also, in several places GNU extensions provide large benefits in code
 quality.  For example, the library has hand-optimized, inline assembly
 versions of some string functions.  These can only be used with GCC.
-See question 3.8 for details.
+See ?string for details.
 
-
-2.5.	When linking with the new libc I get unresolved symbols
+??crypt	When linking with the new libc I get unresolved symbols
 	`crypt' and `setkey'.  Why aren't these functions in the
 	libc anymore?
 
@@ -414,7 +311,7 @@ See question 3.8 for details.
 and source code.  Until this law gets abolished we cannot ship the
 cryptographic functions together with glibc.
 
-The functions are available, as an add-on (see question 1.7).  People in the
+The functions are available, as an add-on (see ?addon).  People in the
 US may get it from the same place they got GNU libc from.  People
 outside the US should get the code from ftp://ftp.ifi.uio.no/pub/gnu,
 or another archive site outside the USA.  The README explains how to
@@ -425,8 +322,7 @@ failure is probably that you did not link with -lcrypt.  The crypto
 functions are in a separate library to make it possible to export GNU
 libc binaries from the US.
 
-
-2.6.	When I use GNU libc on my Linux system by linking against
+??	When I use GNU libc on my Linux system by linking against
 	the libc.so which comes with glibc all I get is a core dump.
 
 {UD} On Linux, gcc sets the dynamic linker to /lib/ld-linux.so.1
@@ -512,8 +408,7 @@ compiler and linker exactly what to use.
 Version 2.7.2.3 does and future versions of GCC will automatically
 provide the correct specs.
 
-
-2.7.	Looking through the shared libc file I haven't found the
+??	Looking through the shared libc file I haven't found the
 	functions `stat', `lstat', `fstat', and `mknod' and while
 	linking on my Linux system I get error messages.  How is
 	this supposed to work?
@@ -530,16 +425,14 @@ or in ix86/Linux and alpha/Linux:
 
 GROUP ( libc.so.6 ld-linux.so.2 libc.a )
 
-
-2.8.	How can I compile gcc 2.7.2.1 from the gcc source code using
+??	How can I compile gcc 2.7.2.1 from the gcc source code using
 	glibc 2.x?
 
 {AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3
 or later.  You should get at least gcc 2.7.2.3.  All previous versions
 had problems with glibc support.
 
-
-2.9.	The `gencat' utility cannot process the catalog sources which
+??	The `gencat' utility cannot process the catalog sources which
 	were used on my Linux libc5 based system.  Why?
 
 {UD} The `gencat' utility provided with glibc complies to the XPG
@@ -573,8 +466,7 @@ catalog files to the XPG4 form:
 }
 -----------------------------------------------------------------------
 
-
-2.10.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
+??	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
 
 {??} The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
@@ -585,33 +477,29 @@ client (the NIS_COLD_START file is byte order independent) or generate
 it with nisinit from the nis-tools package (available at
 http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
 
-
-2.11.	After installing glibc name resolving doesn't work properly.
+??	After installing glibc name resolving doesn't work properly.
 
 {AJ} You probably should read the manual section describing
 nsswitch.conf (just type `info libc "NSS Configuration File"').
 The NSS configuration file is usually the culprit.
 
-
-2.12.	I have /usr/include/net and /usr/include/scsi as symlinks
+??	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
 
 {PB} This was necessary for libc5, but is not correct when using
 glibc.  Including the kernel header files directly in user programs
-usually does not work (see question 3.5).  glibc provides its own <net/*>
+usually does not work (see ?kerhdr).  glibc provides its own <net/*>
 and <scsi/*> header files to replace them, and you may have to remove
 any symlink that you have in place before you install glibc.  However,
 /usr/include/asm and /usr/include/linux should remain as they were.
 
-
-2.13.	Programs like `logname', `top', `uptime' `users', `w' and
+??	Programs like `logname', `top', `uptime' `users', `w' and
 	`who', show incorrect information about the (number of)
 	users on my system.  Why?
 
-{MK} See question 3.2.
+{MK} See ?getlog.
 
-
-2.14.	After upgrading to glibc 2.1 with symbol versioning I get
+??	After upgrading to glibc 2.1 with symbol versioning I get
 	errors about undefined symbols.  What went wrong?
 
 {AJ} The problem is caused either by wrong program code or tools.  In
@@ -624,8 +512,7 @@ The only way to fix this is to recompile your program. Sorry, that's
 the price you might have to pay once for quite a number of advantages
 with symbol versioning.
 
-
-2.15.	When I start the program XXX after upgrading the library
+??	When I start the program XXX after upgrading the library
 	I get
 	  XXX: Symbol `_sys_errlist' has different size in shared
 	  object, consider re-linking
@@ -647,12 +534,9 @@ might be possible that a symbol changed size when that should not have
 happened.  So in case of doubt report such a warning message as a
 problem.
 
-
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+? Source and binary incompatibilities, and what to do about them
 
-3. Source and binary incompatibilities, and what to do about them
-
-3.1.	I expect GNU libc to be 100% source code compatible with
+??	I expect GNU libc to be 100% source code compatible with
 	the old Linux based GNU libc.  Why isn't it like this?
 
 {DMT,UD} Not every extension in Linux libc's history was well
@@ -726,10 +610,9 @@ incompatibilities:
   not the SysV semantic as it was in libc-5.  The interface on all GNU
   systems shall be the same and BSD is the semantic of choice.  To use
   the SysV behavior simply use `sysv_signal', or define _XOPEN_SOURCE.
-  See question 3.7 for details.
+  See ?signal for details.
 
-
-3.2.	Why does getlogin() always return NULL on my Linux box?
+??getlog	Why does getlogin() always return NULL on my Linux box?
 
 {UD} The GNU C library has a format for the UTMP and WTMP file which
 differs from what your system currently has.  It was extended to
@@ -743,8 +626,7 @@ support the new techniques later.
 {MK} There is however a (partial) solution for this problem.  Please
 take a look at the file `README.utmpd'.
 
-
-3.3.	Where are the DST_* constants found in <sys/time.h> on many
+??	Where are the DST_* constants found in <sys/time.h> on many
 	systems?
 
 {UD} These constants come from the old BSD days and are not used
@@ -754,8 +636,7 @@ constants are defined).
 Instead GNU libc contains zone database support and compatibility code
 for POSIX TZ environment variable handling.
 
-
-3.4.	The prototypes for `connect', `accept', `getsockopt',
+??	The prototypes for `connect', `accept', `getsockopt',
 	`setsockopt', `getsockname', `getpeername', `send',
 	`sendto', and `recvfrom' are different in GNU libc from
 	any other system I saw.  This is a bug, isn't it?
@@ -765,8 +646,7 @@ new Single Unix specifications (and I think the POSIX.1g draft which
 adopted the solution).  The type for a parameter describing a size is
 now `socklen_t', a new type.
 
-
-3.5.	On Linux I've got problems with the declarations in Linux
+??kerhdr	On Linux I've got problems with the declarations in Linux
 	kernel headers.
 
 {UD,AJ} On Linux, the use of kernel headers is reduced to the minimum.
@@ -784,8 +664,7 @@ Therefore you shouldn't include Linux kernel header files directly if
 glibc has defined a replacement. Otherwise you might get undefined
 results because of type conflicts.
 
-
-3.6.	I don't include any kernel headers myself but the compiler
+??	I don't include any kernel headers myself but the compiler
 	still complains about redeclarations of types in the kernel
 	headers.
 
@@ -797,8 +676,7 @@ problems.  One prominent example is `struct fd_set'.
 There might be some problems left but 2.1.61 fixes most of the known
 ones.  See the BUGS file for other known problems.
 
-
-3.7.	Why don't signals interrupt system calls anymore?
+??signal	Why don't signals interrupt system calls anymore?
 
 {ZW} By default GNU libc uses the BSD semantics for signal(),
 unlike Linux libc 5 which used System V semantics.  This is partially
@@ -837,7 +715,7 @@ and return EINTR (for example, to implement a timeout) you can do this with
 siginterrupt().
 
 
-3.8.	I've got errors compiling code that uses certain string
+??string	I've got errors compiling code that uses certain string
 	functions.  Why?
 
 {AJ} glibc 2.1 has special string functions that are faster
@@ -872,19 +750,15 @@ one can write
 
 This disables the optimization for that specific call.
 
-
-. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+? Miscellaneous
 
-4. Miscellaneous
-
-4.1.	After I changed configure.in I get `Autoconf version X.Y.
+??	After I changed configure.in I get `Autoconf version X.Y.
 	or higher is required for this script'.  What can I do?
 
 {UD} You have to get the specified autoconf version (or a later one)
 from your favorite mirror of prep.ai.mit.edu.
 
-
-4.2.	When I try to compile code which uses IPv6 headers and
+??	When I try to compile code which uses IPv6 headers and
 	definitions on my Linux 2.x.y system I am in trouble.
 	Nothing seems to work.
 
@@ -897,8 +771,6 @@ snapshot, according to Philip Blundell <philb@gnu.ai.mit.edu>, the
 required kernel version is 2.1.30.
 
 
-~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
