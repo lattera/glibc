@@ -49,6 +49,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
      size_t len;
 {
   int n, i;
+  int left;
 
   if (buf == NULL)
     {
@@ -56,6 +57,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
       return -1;
     }
 
+  left = 0;
   if (isfinite (value))
     {
       *sign = signbit (value) != 0;
@@ -65,10 +67,20 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
       if (ndigit < 0)
 	{
 	  /* Rounding to the left of the decimal point.  */
-	  for (i = ndigit; i < 0; i++)
-	    value *= 0.1;
+	  while (ndigit < 0)
+	    {
+	      FLOAT_TYPE new_value = value * 0.1;
 
-	  ndigit = 0;
+	      if (new_value < 1.0)
+		{
+		  ndigit = 0;
+		  break;
+		}
+
+	      value = new_value;
+	      ++left;
+	      ++ndigit;
+	    }
 	}
     }
   else
@@ -108,6 +120,17 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
 
       memmove (&buf[MAX (*decpt, 0)], &buf[i], n - i);
       buf[n - (i - MAX (*decpt, 0))] = '\0';
+    }
+
+  if (left)
+    {
+      *decpt += left;
+      if (--len > n)
+	{
+	  while (left-- > 0 && n < len)
+	    buf[n++] = '0';
+	  buf[n] = '\0';
+	}
     }
 
   return 0;

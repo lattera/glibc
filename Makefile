@@ -310,24 +310,12 @@ parent_echo-distinfo:
 	      $(addprefix +nodist+,$(generated))
 
 
-.PHONY: parent-tests
-tests: parent-tests
-
-# Run a test on the header files we use.
-parent-tests: $(objpfx)isomac
-	$(dir $<)$(notdir $<) '$(CC)' '-Iinclude $(+sysdep-includes)' > $<.out
-
-$(objpfx)isomac: isomac.c
-	$(native-compile)
-
-generated += isomac isomac.out
-
 # Make the distribution tarfile.
 
 distribute  := README INSTALL FAQ NOTES NEWS PROJECTS BUGS		\
 	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
-	       extra-lib.mk o-iterator.mk isomac.c			\
+	       extra-lib.mk o-iterator.mk				\
 	       libc.map mkinstalldirs move-if-change install-sh		\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.h.in config.make.in config-name.in Makefile.in	\

@@ -49,7 +49,7 @@ routines	:=							      \
 	strtoimax strtoumax wcstoimax wcstoumax				      \
 	getcontext setcontext makecontext swapcontext
 
-distribute	:= exit.h grouping.h abort-instr.h
+distribute	:= exit.h grouping.h abort-instr.h isomac.c
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \
 		   test-canon
 
@@ -65,6 +65,7 @@ routines := $(strip $(routines) $(mpn-routines))	\
 aux := mp_clz_tab fpioconst
 distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h
 
+generated += isomac isomac.out
 
 include ../Rules
 
@@ -117,3 +118,10 @@ clean-mpn:
 	rm -f $(mpn-stuff)
 
 endif
+
+# Run a test on the header files we use.
+tests: $(objpfx)isomac
+	$(dir $<)$(notdir $<) '$(CC)' '-I../include -I.. $(+sysdep-includes)' > $<.out
+
+$(objpfx)isomac: isomac.c
+	$(native-compile)

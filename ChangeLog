@@ -1,8 +1,17 @@
+1998-02-11 19:16  Richard Henderson  <rth@cygnus.com>
+
+	* stdlib/strtod.c (STRTOF): Don't call lshift with zero count.
+
 1998-02-11 16:56  Ulrich Drepper  <drepper@happy.cygnus.com>
 
 	* misc/tst-efgcvt.c: Add yet more tests.
 	* misc/efgcvt_r.c: And correct for these tests again.
 	Reported by HJ Lu.
+
+	* isomac.c: Move to...
+	* stdlib/isomac.c: ...here.
+	* Makefile: Move rules for handling isomac...
+	* stdlib/Makefile: ...to here.
 
 1998-02-10 23:57  Ulrich Drepper  <drepper@happy.cygnus.com>
 
