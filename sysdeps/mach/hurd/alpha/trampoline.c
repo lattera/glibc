@@ -20,7 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/signal.h>
 #include "thread_state.h"
 #include <mach/machine/alpha_instruction.h>
-
+#include "hurdfault.h"
+#include <assert.h>
 
 struct mach_msg_trap_args
   {
@@ -37,7 +38,7 @@ struct mach_msg_trap_args
 
 struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
-			int signo, int sigcode,
+			int signo, long int sigcode,
 			int rpc_wait,
 			struct machine_thread_all_state *state)
 {
@@ -50,7 +51,10 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       /* We have a previous sigcontext that sigreturn was about
 	 to restore when another signal arrived.  We will just base
 	 our setup on that.  */
-      if (! setjmp (_hurd_sigthread_fault_env))
+      if (_hurdsig_catch_fault (SIGSEGV))
+	assert (_hurdsig_fault_sigcode >= (long int) ss->context &&
+		_hurdsig_fault_sigcode < (long int) (ss->context + 1));
+      else
 	{
 	  memcpy (&state->basic, &ss->context->sc_alpha_thread_state,
 		  sizeof (state->basic));
@@ -97,7 +101,16 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   sigsp -= sizeof (*scp);
   scp = sigsp;
 
-  if (! setjmp (_hurd_sigthread_fault_env))
+  if (_hurdsig_catch_fault (SIGSEGV))
+    {
+      assert (_hurdsig_fault_sigcode >= (long int) scp &&
+	      _hurdsig_fault_sigcode < (long int) (scp + 1));
+      /* We got a fault trying to write the stack frame.
+	 We cannot set up the signal handler.
+	 Returning NULL tells our caller, who will nuke us with a SIGILL.  */
+      return NULL;
+    }
+  else
     {
       /* Set up the sigcontext from the current state of the thread.  */
 
@@ -125,11 +138,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 			       sizeof (state->fpu)))
 	return NULL;
     }
-  else
-    /* We got a fault trying to write the stack frame.
-       We cannot set up the signal handler.
-       Returning NULL tells our caller, who will nuke us with a SIGILL.  */
-    return NULL;
 
   /* Modify the thread state to call the trampoline code on the new stack.  */
   if (rpc_wait)
@@ -177,9 +185,12 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
   /* We pass the handler function to the trampoline code in ra ($26).  */
   state->basic.r26 = (long int) handler;
-  /* In the callee-saved register t12 ($27), we save the SCP value to pass
+  /* In the callee-saved register t12/pv ($27), we store the
+     address of __sigreturn itself, for the trampoline code to use.  */
+  state->basic.r27 = (long int) &__sigreturn;
+  /* In the callee-saved register t11/ai ($25), we save the SCP value to pass
      to __sigreturn after the handler returns.  */
-  state->basic.r27 = (long int) scp;
+  state->basic.r25 = (long int) scp;
 
   return scp;
 
@@ -223,15 +234,14 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      clobbered by running the handler).  We use this saved value to pass to
      __sigreturn, so the handler can clobber the argument registers if it
      likes.  */
-  asm volatile
-    (/* Call the handler function, saving return address in ra ($26).  */
-     "jsr $26, $26\n"
-     /* Reset gp ($29) from the return address (here) in ra ($26).
-	This may be required to locate __sigreturn.  */
-     "ldgp $29, 0($26)\n"
-     /* Call __sigreturn (SCP); this cannot return.  */
-     "mov $27, $16\n"		/* Move saved SCP to argument register.  */
-     "jmp $31, %0" : : "i" (&__sigreturn));
+#define A(line) asm volatile (#line)
+  /* Call the handler function, saving return address in ra ($26).  */
+  A (jsr $26, $26);
+  /* Reset gp ($29) from the return address (here) in ra ($26).  */
+  A (ldgp $29, 0($26));
+  A (mov $25, $16);		/* Move saved SCP to argument register.  */
+  /* Call __sigreturn (SCP); this cannot return.  */
+  A (jmp $31, $27);
 
   /* NOTREACHED */
   return NULL;
@@ -246,21 +256,30 @@ int
 _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
 			    mach_port_t *port)
 {
-  if (! setjmp (_hurd_sigthread_fault_env))
+  if (state->basic.r0 == MACH_RCV_INTERRUPTED)
     {
       const unsigned int *pc = (void *) state->basic.pc;
-      if (state->basic.r0 == MACH_RCV_INTERRUPTED &&
-	  pc[-1] == ((alpha_instruction) { pal_format:
-					     { opcode: op_pal,
-					       function: op_chmk } }).bits)
-	{
-	  /* We did just return from a mach_msg_trap system call
-	     doing a message receive that was interrupted.
-	     Examine the parameters to find the receive right.  */
-	  struct mach_msg_trap_args *args = (void *) &state->basic.r16;
+      struct mach_msg_trap_args *args = (void *) &state->basic.r16;
 
-	  *port = args->rcv_name;
-	  return 1;
+      if (_hurdsig_catch_fault (SIGSEGV))
+	{
+	  assert (_hurdsig_fault_sigcode == (long int) (pc - 1) ||
+		  _hurdsig_fault_sigcode == (long int) &args->rcv_name);
+	  /* We got a fault trying to read the PC or stack.  */
+	  return 0;
+	}
+      else
+	{
+	  if (pc[-1] == ((alpha_instruction) { pal_format:
+						 { opcode: op_pal,
+						   function: op_chmk } }).bits)
+	    {
+	      /* We did just return from a mach_msg_trap system call
+		 doing a message receive that was interrupted.
+		 Examine the parameters to find the receive right.  */
+	      *port = args->rcv_name;
+	      return 1;
+	    }
 	}
     }
 
