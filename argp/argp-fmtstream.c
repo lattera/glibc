@@ -1,5 +1,5 @@
 /* Word-wrapping and line-truncating streams
-   Copyright (C) 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -267,9 +267,10 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	     at the end of the buffer, and NEXTLINE is in fact empty (and so
 	     we need not be careful to maintain its contents).  */
 
-	  if (nextline == buf + len + 1
-	      ? fs->end - nl < fs->wmargin + 1
-	      : nextline - (nl + 1) < fs->wmargin)
+	  if ((nextline == buf + len + 1
+	       ? fs->end - nl < fs->wmargin + 1
+	       : nextline - (nl + 1) < fs->wmargin)
+	      && fs->p > nextline)
 	    {
 	      /* The margin needs more blanks than we removed.  */
 	      if (fs->end - fs->p > fs->wmargin + 1)
