@@ -1,3 +1,8 @@
+2003-06-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/localealias.c (read_alias_file): Determine whether line is
+	read incompletely early, before we modify the line.
+
 2003-06-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela)
