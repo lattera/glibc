@@ -432,7 +432,6 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     Therefore the offset is already correct.  */
 	  if (sym != NULL)
 	    *reloc_addr = sym->st_value;
-	  CHECK_STATIC_TLS (map, sym_map);
 # endif
 	  break;
 	case R_386_TLS_TPOFF32:
@@ -445,8 +444,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     thread pointer.  To get the variable position in the TLS
 	     block we subtract the offset from that of the TLS block.  */
 	  if (sym != NULL)
-	    *reloc_addr += sym_map->l_tls_offset - sym->st_value;
-	  CHECK_STATIC_TLS (map, sym_map);
+	    {
+	      *reloc_addr += sym_map->l_tls_offset - sym->st_value;
+	      CHECK_STATIC_TLS (map, sym_map);
+	    }
 # endif
 	  break;
 	case R_386_TLS_TPOFF:
@@ -458,8 +459,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     It is a negative value which will be added to the
 	     thread pointer.  */
 	  if (sym != NULL)
-	    *reloc_addr += sym->st_value - sym_map->l_tls_offset;
-	  CHECK_STATIC_TLS (map, sym_map);
+	    {
+	      *reloc_addr += sym->st_value - sym_map->l_tls_offset;
+	      CHECK_STATIC_TLS (map, sym_map);
+	    }
 # endif
 	  break;
 #endif	/* use TLS */

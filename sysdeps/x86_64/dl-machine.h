@@ -429,14 +429,14 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  if (sym != NULL)
 # endif
 	    {
+# ifndef RTLD_BOOTSTRAP
+	      CHECK_STATIC_TLS (map, sym_map);
+# endif
 	      /* We know the offset of the object the symbol is contained in.
 		 It is a negative value which will be added to the
 		 thread pointer.  */
 	      *reloc_addr = (sym->st_value + reloc->r_addend
 			     - sym_map->l_tls_offset);
-# ifndef RTLD_BOOTSTRAP
-	      CHECK_STATIC_TLS (map, sym_map);
-# endif
 	    }
 	  break;
 #endif	/* use TLS */
