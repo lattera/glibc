@@ -13,9 +13,9 @@ struct {
   { "a/b", "a[/]b", 0, 0 },
   { "a/b", "a[/]b", FNM_PATHNAME, FNM_NOMATCH },
   { "a/b", "[a-z]/[a-z]", 0, 0 },
-  { "a/b", "*", FNM_FILE_NAME, FNM_NOMATCH },
-  { "a/b", "*[/]b", FNM_FILE_NAME, FNM_NOMATCH },
-  { "a/b", "*[b]", FNM_FILE_NAME, FNM_NOMATCH },
+  { "a/b", "*", FNM_PATHNAME, FNM_NOMATCH },
+  { "a/b", "*[/]b", FNM_PATHNAME, FNM_NOMATCH },
+  { "a/b", "*[b]", FNM_PATHNAME, FNM_NOMATCH },
   { "a/b", "[*]/b", 0, FNM_NOMATCH },
   { "*/b", "[*]/b", 0, 0 },
   { "a/b", "[?]/b", 0, FNM_NOMATCH },
@@ -51,6 +51,9 @@ struct {
   { "a.b", "a?b", FNM_PATHNAME|FNM_PERIOD, 0 },
   { "a.b", "a*b", FNM_PATHNAME|FNM_PERIOD, 0 },
   { "a.b", "a[.]b", FNM_PATHNAME|FNM_PERIOD, 0 },
+  { "a/b", "*a*", FNM_PATHNAME|FNM_LEADING_DIR, 0 },
+  { "ab/c", "*a?", FNM_PATHNAME|FNM_LEADING_DIR, 0 },
+  { "ab/c", "a?", FNM_PATHNAME|FNM_LEADING_DIR, 0 },
 };
 
 int
@@ -64,13 +67,14 @@ main (void)
       int match;
 
       match = fnmatch (tests[i].pattern, tests[i].name, tests[i].flags);
+
+      printf ("[%2zd]  %s %s %s  -> %s\n", i, tests[i].pattern,
+	      match == 0 ? "matches" : "does not match",
+	      tests[i].name,
+	      match != tests[i].expected ? "FAIL" : "OK");
+
       if (match != tests[i].expected)
-	{
-	  printf ("%s %s %s\n", tests[i].pattern,
-		  match == 0 ? "matches" : "does not match",
-		  tests[i].name);
-	  errors++;
-	}
+	++errors ;
     }
 
   exit (errors != 0);
