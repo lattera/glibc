@@ -1,5 +1,9 @@
 2000-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/check_fds.c: New file.
+	* sysdeps/generic/check_fds.c: Check that file opened is really
+	/dev/null.
+
 	* elf/rtld.c (process_envvars): Open debug output file with O_NOFOLLOW.
 
 	* locale/Makefile (routines): Add nl_langinfo_l.
