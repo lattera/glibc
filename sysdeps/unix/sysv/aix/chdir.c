@@ -16,17 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <assert.h>
-#include <sys/stat.h>
-
-#define STX_LINK        0x01
-#define STX_64          0x08
-
-extern int statx (const char *pathname, struct stat64 *st, int len, int cmd);
+#include <unistd.h>
 
 int
-__lxstat64 (int ver, const char *pathname, struct stat64 *st)
+__chdir (const char *path)
 {
-  assert (ver == 0);
-  return statx (pathname, st, sizeof (*st), STX_LINK | STX_64);
+  return chdir (path);
 }

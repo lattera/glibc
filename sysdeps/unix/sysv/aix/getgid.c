@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <unistd.h>
-/* is there a reason *NOT* to include <sys/id.h>?  If so #define ID_REAL */
-#include <sys/id.h>
+
+#define ID_REAL	2
 
 extern gid_t getgidx (int which);
 

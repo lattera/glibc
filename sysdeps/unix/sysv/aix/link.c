@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <assert.h>
-#include <sys/stat.h>
-
-#define STX_LINK        0x01
-#define STX_64          0x08
-
-extern int statx (const char *pathname, struct stat64 *st, int len, int cmd);
+#include <unistd.h>
 
 int
-__lxstat64 (int ver, const char *pathname, struct stat64 *st)
+__link (from, to)
+     const char *from;
+     const char *to;
 {
-  assert (ver == 0);
-  return statx (pathname, st, sizeof (*st), STX_LINK | STX_64);
+  return link (from, to);
 }
