@@ -1,3 +1,8 @@
+2003-04-04  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (struct flock): Adjust
+	for n64 abi.
+
 2003-04-03  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Fix up use of compilation flags to match the build:

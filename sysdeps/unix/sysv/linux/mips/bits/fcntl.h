@@ -1,5 +1,6 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2002, 2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -142,14 +143,20 @@ typedef struct flock
 #ifndef __USE_FILE_OFFSET64
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
-    long int l_sysid;	/* XXX */
+#if ! (defined _ABI64 && _MIPS_SIM == _ABI64)
+    /* The 64-bit flock structure, used by the n64 ABI, and for 64-bit
+       fcntls in o32 and n32, never has this field.  */
+    long int l_sysid;
+#endif
 #else
     __off64_t l_start;	/* Offset where the lock begins.  */
     __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
 #endif
     __pid_t l_pid;	/* Process holding the lock.  */
-#ifndef __USE_FILE_OFFSET64
-    long int pad[4];	/* XXX */
+#if ! defined __USE_FILE_OFFSET64 && ! (defined _ABI64 && _MIPS_SIM == _ABI64)
+    /* The 64-bit flock structure, used by the n64 ABI, and for 64-bit
+       flock in o32 and n32, never has this field.  */
+    long int pad[4];
 #endif
 } flock_t;
 
