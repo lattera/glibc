@@ -1,3 +1,8 @@
+1998-03-23 13:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/nss.texi: The database is not called network but networks.
+	Reported by Herbert Xu <herbert@gondor.apana.org.au>.
+
 1998-03-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* configure.in: Correct test for compiler version.

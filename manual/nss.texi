@@ -61,7 +61,7 @@ The databases available in the NSS are
 @cindex group
 @cindex hosts
 @cindex netgroup
-@cindex network
+@cindex networks
 @cindex protocols
 @cindex passwd
 @cindex rpc
@@ -80,7 +80,7 @@ Groups of users, @pxref{Group Database}.
 Host names and numbers, @pxref{Host Names}.
 @item netgroup
 Network wide list of host and users, @pxref{Netgroup Database}.
-@item network
+@item networks
 Network names and numbers, @pxref{Networks Database}.
 @item protocols
 Network protocols, @pxref{Protocols Database}.
@@ -265,7 +265,7 @@ be possible to get the system running even if the file is corrupted or
 missing.
 
 @cindex default value, and NSS
-For the @code{hosts} and @code{network} databases the default value is
+For the @code{hosts} and @code{networks} databases the default value is
 @code{dns [!UNAVAIL=return] files}.  I.e., the system is prepared for
 the DNS service not to be available but if it is available the answer it
 returns is ultimative.
@@ -601,7 +601,7 @@ information from one call to another.
 
 As explained above this function could also have an additional last
 argument.  This depends on the database used; it happens only for
-@code{host} and @code{network}.
+@code{host} and @code{networks}.
 
 The function shall return @code{NSS_STATUS_SUCCESS} as long as their are
 more entries.  When the last entry was read it should return
@@ -628,7 +628,7 @@ The implementation of this function should honour the @var{stayopen}
 flag set by the @code{set@var{DB}ent} function whenever this makes sense.
 
 Again, this function takes an additional last argument for the
-@code{host} and @code{network} database.
+@code{host} and @code{networks} database.
 
 The return value should as always follow the rules given above
 (@pxref{NSS Modules Interface}).

@@ -485,7 +485,7 @@ if test "$cc_is_recent" != "ok"; then
 *** You need at least egcs 1.0.2 or GNU CC 2.8.1 to compile glibc.
 ])
 fi
-+
+
 # Test if LD_LIBRARY_PATH contains the notation for the current directory
 # since this would lead to problems installing/building glibc.
 # LD_LIBRARY_PATH contains the current directory if one of the following
@@ -497,7 +497,7 @@ AC_MSG_CHECKING(LD_LIBRARY_PATH variable)
 changequote(,)dnl
 case ${LD_LIBRARY_PATH} in
   [:\;]* | *[:\;] | *[:\;][:\;]* |  *[:\;]. | .[:\;]*| . | *[:\;].[:\;]* )
-    ld_library_path_setting="contains current path"
+    ld_library_path_setting="contains current directory"
     ;;
   *)
     ld_library_path_setting="ok"
