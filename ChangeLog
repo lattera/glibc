@@ -1,3 +1,9 @@
+2000-05-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/Makefile (tests): Add tst-iconv1.
+	* iconv/tst-iconv1.c: New file.
+	Reported by yaoz@nih.gov.
+
 2000-05-06  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv_open.c (__gconv_open): If __gconv_find_transform
