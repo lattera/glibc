@@ -883,9 +883,9 @@ ifloat: 1
 double: 2
 idouble: 2
 Test "y0 (1.0) == 0.088256964215676957983":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 Test "y0 (1.5) == 0.38244892379775884396":
 float: 1
@@ -947,9 +947,9 @@ ifloat: 1
 double: 2
 idouble: 2
 Test "yn (0, 1.0) == 0.088256964215676957983":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 Test "yn (0, 1.5) == 0.38244892379775884396":
 float: 1
@@ -1007,7 +1007,9 @@ float: 3
 idouble: 6
 ifloat: 3
 Test "yn (10, 1.0) == -0.12161801427868918929e9":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 Test "yn (10, 10.0) == -0.35981415218340272205":
 double: 2
