@@ -1,5 +1,5 @@
 # awk script to create summary.texinfo from the library texinfo files.
-# Copyright (C) 1992, 1993, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1997, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -127,8 +127,8 @@ header != 0 && $1 ~ /@def|@item|@vindex/ \
 	      }
 	    }
 	  }
-	  printf "@comment %s%c", name, 012 # FF
-	  printf "@item%s%c%c", defn, 012, 012
+	  printf "@comment %s%c", name, 12 # FF
+	  printf "@item%s%c%c", defn, 12, 12
 	  if (header != -1) printf "%s ", header;
-	  printf "(%s):  @ref{%s}.%c\n", std, node, 012;
+	  printf "(%s):  @ref{%s}.%c\n", std, node, 12;
 	  header = 0 }
