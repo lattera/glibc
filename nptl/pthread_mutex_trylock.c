@@ -26,7 +26,7 @@ int
 __pthread_mutex_trylock (mutex)
      pthread_mutex_t *mutex;
 {
-  pid_t *id;
+  pid_t id;
 
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {

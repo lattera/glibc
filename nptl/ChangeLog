@@ -1,3 +1,7 @@
+2003-06-24  Roland McGrath  <roland@redhat.com>
+
+	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Typo fix.
+
 2003-06-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthreadP.h: Declare __find_thread_by_id.

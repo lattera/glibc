@@ -23,7 +23,7 @@
 # include <linuxthreads/internals.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # define _IMM12 #-12
 # define _IMM16 #-16
@@ -92,10 +92,13 @@
 #  define __local_enable_asynccancel	__pthread_enable_asynccancel
 #  define __local_disable_asynccancel	__pthread_disable_asynccancel
 #  define __local_multiple_threads	__pthread_multiple_threads
-# else
+# elif !defined NOT_IN_libc
 #  define __local_enable_asynccancel	__libc_enable_asynccancel
 #  define __local_disable_asynccancel	__libc_disable_asynccancel
 #  define __local_multiple_threads	__libc_multiple_threads
+# else
+#  define __local_enable_asynccancel	__librt_enable_asynccancel
+#  define __local_disable_asynccancel	__librt_disable_asynccancel
 # endif
 
 # define CENABLE \

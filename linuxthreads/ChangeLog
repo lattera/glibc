@@ -1,3 +1,8 @@
+2003-06-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: Support cancellation
+	in librt.
+
 2003-06-21  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h: Support cancellation
@@ -5,7 +10,7 @@
 
 2003-06-20  Richard Henderson  <rth@redhat.com>
 
-	* sysdeps/unix/sysv/linux/alpha/Makefile (libpthread-routines): 
+	* sysdeps/unix/sysv/linux/alpha/Makefile (libpthread-routines):
 	Remove ptw-osf_sigprocmask.
 
 2003-06-18  Jakub Jelinek  <jakub@redhat.com>
