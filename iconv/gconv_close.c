@@ -38,23 +38,10 @@ __gconv_close (gconv_t cd)
   drunp = cd->data;
   do
     {
-      /* Call destructor.  */
-      if (srunp->end_fct != NULL)
-	(*srunp->end_fct) (drunp);
-      else
-	if (drunp->data != NULL)
-	  free (drunp->data);
-
       if (!drunp->is_last && drunp->outbuf != NULL)
 	free (drunp->outbuf);
-
-      /* Next step.  */
-      ++srunp;
     }
   while (!(drunp++)->is_last);
-
-  /* Save the pointer, we need it below.  */
-  srunp = cd->steps;
 
   /* Free the data allocated for the descriptor.  */
   free (cd->data);

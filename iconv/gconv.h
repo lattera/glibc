@@ -24,6 +24,7 @@
 #define _GCONV_H	1
 
 #include <features.h>
+#include <wchar.h>
 #define __need_size_t
 #include <stddef.h>
 
@@ -51,6 +52,7 @@ enum
 /* Forward declarations.  */
 struct gconv_step;
 struct gconv_step_data;
+struct gconv_loaded_object;
 
 
 /* Type of a conversion function.  */
@@ -59,15 +61,17 @@ typedef int (*gconv_fct) __P ((struct gconv_step *,
 			       __const char *, size_t *, size_t *, int));
 
 /* Constructor and destructor for local data for conversion step.  */
-typedef int (*gconv_init_fct) __P ((struct gconv_step *,
-				    struct gconv_step_data *));
-typedef void (*gconv_end_fct) __P ((struct gconv_step_data *));
+typedef int (*gconv_init_fct) __P ((struct gconv_step *));
+typedef void (*gconv_end_fct) __P ((struct gconv_step *));
 
 
 /* Description of a conversion step.  */
 struct gconv_step
 {
-  void *shlib_handle;
+  struct gconv_loaded_object *shlib_handle;
+  const char *modname;
+
+  int counter;
 
   __const char *from_name;
   __const char *to_name;
@@ -75,6 +79,8 @@ struct gconv_step
   gconv_fct fct;
   gconv_init_fct init_fct;
   gconv_end_fct end_fct;
+
+  void *data;		/* Pointer to step-local data.  */
 };
 
 /* Additional data for steps in use of conversion descriptor.  This is
@@ -87,7 +93,9 @@ struct gconv_step_data
 
   int is_last;
 
-  void *data;		/* Pointer to step-local data.  */
+  mbstate_t *statep;
+  mbstate_t __state;	/* This element should not be used directly by
+			   any module; always use STATEP!  */
 };
 
 

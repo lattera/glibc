@@ -59,26 +59,6 @@ __gconv_transform_dummy (struct gconv_step *step, struct gconv_step_data *data,
 
 
 int
-__gconv_transform_init_rstate (struct gconv_step *step,
-			       struct gconv_step_data *data)
-{
-  /* We have to provide the transformation function an correctly initialized
-     object of type `mbstate_t'.  This must be dynamically allocated.  */
-  data->data = calloc (1, sizeof (mbstate_t));
-
-  return data->data == NULL ? GCONV_NOMEM : GCONV_OK;
-}
-
-
-void
-__gconv_transform_end_rstate (struct gconv_step_data *data)
-{
-  if (data->data != NULL)
-    free (data->data);
-}
-
-
-int
 __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 			     struct gconv_step_data *data, const char *inbuf,
 			     size_t *inlen, size_t *written, int do_flush)
@@ -95,7 +75,7 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
   if (do_flush)
     {
       /* Clear the state.  */
-      memset (data->data, '\0', sizeof (mbstate_t));
+      memset (data->statep, '\0', sizeof (mbstate_t));
       do_write = 0;
 
       /* Call the steps down the chain if there are any.  */
@@ -127,7 +107,7 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 				   (const wchar_t **) &newinbuf,
 				   *inlen / sizeof (wchar_t),
 				   data->outbufsize - data->outbufavail,
-				   (mbstate_t *) data->data);
+				   data->statep);
 
 	  /* Remember how much we converted.  */
 	  do_write += newinbuf - inbuf;
@@ -200,7 +180,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
   if (do_flush)
     {
       /* Clear the state.  */
-      memset (data->data, '\0', sizeof (mbstate_t));
+      memset (data->statep, '\0', sizeof (mbstate_t));
       do_write = 0;
 
       /* Call the steps down the chain if there are any.  */
@@ -229,7 +209,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 				   &newinbuf, *inlen,
 				   ((data->outbufsize
 				     - data->outbufavail) / sizeof (wchar_t)),
-				   (mbstate_t *) data->data);
+				   data->statep);
 
 	  /* Remember how much we converted.  */
 	  do_write += actually;
@@ -244,7 +224,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 	      break;
 	    }
 
-	  if (*inlen == 0 && !mbsinit ((mbstate_t *) data->data))
+	  if (*inlen == 0 && !mbsinit (data->statep))
 	    {
 	      /* We have an incomplete character at the end.  */
 	      result = GCONV_INCOMPLETE_INPUT;
@@ -309,7 +289,7 @@ __gconv_transform_ucs2_ucs4 (struct gconv_step *step,
   if (do_flush)
     {
       /* Clear the state.  */
-      memset (data->data, '\0', sizeof (mbstate_t));
+      memset (data->statep, '\0', sizeof (mbstate_t));
       do_write = 0;
 
       /* Call the steps down the chain if there are any.  */
@@ -347,7 +327,7 @@ __gconv_transform_ucs2_ucs4 (struct gconv_step *step,
 	  if (*inlen != 1)
 	    {
 	      /* We have an incomplete input character.  */
-	      mbstate_t *state = (mbstate_t *) data->data;
+	      mbstate_t *state = data->statep;
 	      state->count = 1;
 	      state->value = *(uint8_t *) newinbuf;
 	      --*inlen;
@@ -363,7 +343,7 @@ __gconv_transform_ucs2_ucs4 (struct gconv_step *step,
 	      break;
 	    }
 
-	  if (*inlen == 0 && !mbsinit ((mbstate_t *) data->data))
+	  if (*inlen == 0 && !mbsinit (data->statep))
 	    {
 	      /* We have an incomplete character at the end.  */
 	      result = GCONV_INCOMPLETE_INPUT;
@@ -428,7 +408,7 @@ __gconv_transform_ucs4_ucs2 (struct gconv_step *step,
   if (do_flush)
     {
       /* Clear the state.  */
-      memset (data->data, '\0', sizeof (mbstate_t));
+      memset (data->statep, '\0', sizeof (mbstate_t));
       do_write = 0;
 
       /* Call the steps down the chain if there are any.  */
@@ -474,7 +454,7 @@ __gconv_transform_ucs4_ucs2 (struct gconv_step *step,
 	  if (*inlen < 4)
 	    {
 	      /* We have an incomplete input character.  */
-	      mbstate_t *state = (mbstate_t *) data->data;
+	      mbstate_t *state = data->statep;
 	      state->count = *inlen;
 	      state->value = 0;
 	      while (*inlen > 0)
@@ -495,7 +475,7 @@ __gconv_transform_ucs4_ucs2 (struct gconv_step *step,
 	      break;
 	    }
 
-	  if (*inlen == 0 && !mbsinit ((mbstate_t *) data->data))
+	  if (*inlen == 0 && !mbsinit (data->statep))
 	    {
 	      /* We have an incomplete character at the end.  */
 	      result = GCONV_INCOMPLETE_INPUT;

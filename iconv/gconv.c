@@ -23,6 +23,7 @@
 
 
 int
+internal_function
 __gconv (gconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
 	 size_t *outbytesleft, size_t *converted)
 {

@@ -1,3 +1,25 @@
+1998-04-03 23:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.c: Rewrite of the low-level of gconv.
+	* iconv/gconv.h: Likewise.
+	* iconv/gconv_builtin.h: Likewise.
+	* iconv/gconv_close.c: Likewise.
+	* iconv/gconv_db.: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_open.c: Likewise.
+	* iconv/gconv_simple.c: Likewise.
+	* iconvdata/8bit-gap.c: Adapt for rewrite.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/euckr.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso6937.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+
 1998-04-03 15:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_int.h: New file.  Internal header.

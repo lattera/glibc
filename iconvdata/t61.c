@@ -378,7 +378,7 @@ struct t61_data
 
 
 int
-gconv_init (struct gconv_step *step, struct gconv_step_data *data)
+gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
   struct t61_data *new_data;
@@ -399,7 +399,7 @@ gconv_init (struct gconv_step *step, struct gconv_step_data *data)
 	  != NULL))
     {
       new_data->dir = dir;
-      data->data = new_data;
+      step->data = new_data;
       result = GCONV_OK;
     }
 
@@ -408,7 +408,7 @@ gconv_init (struct gconv_step *step, struct gconv_step_data *data)
 
 
 void
-gconv_end (struct gconv_step_data *data)
+gconv_end (struct gconv_step *data)
 {
   free (data->data);
 }
@@ -447,7 +447,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct t61_data *) data->data)->dir;
+      enum direction dir = ((struct t61_data *) step->data)->dir;
 
       do_write = 0;
 

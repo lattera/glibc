@@ -34,6 +34,9 @@ void *__gconv_alias_db;
 size_t __gconv_nmodules;
 struct gconv_module **__gconv_modules_db;
 
+/* We modify global data.   */
+__libc_lock_define_initialized (static, lock)
+
 
 /* Function for searching alias.  */
 int
@@ -128,9 +131,7 @@ add_derivation (const char *fromset, const char *toset,
     malloc (sizeof (struct known_derivation) + fromset_len + toset_len);
   if (new_deriv != NULL)
     {
-      new_deriv->from = memcpy ((char *) new_deriv
-				+ sizeof (struct known_derivation),
-				fromset, fromset_len);
+      new_deriv->from = memcpy (new_deriv + 1, fromset, fromset_len);
       new_deriv->to = memcpy ((char *) new_deriv->from + fromset_len,
 			      toset, toset_len);
 
@@ -149,6 +150,11 @@ internal_function
 free_derivation (void *p)
 {
   struct known_derivation *deriv = (struct known_derivation *) p;
+  size_t cnt;
+
+  for (cnt = 0; cnt < deriv->nsteps; ++cnt)
+    if (deriv->steps[cnt].end_fct)
+      (*deriv->steps[cnt].end_fct) (&deriv->steps[cnt]);
 
   free ((struct gconv_step *) deriv->steps);
   free (deriv);
@@ -189,7 +195,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  if (current->code->module_name[0] == '/')
 	    {
 	      /* Load the module, return handle for it.  */
-	      void *shlib_handle =
+	      struct gconv_loaded_object *shlib_handle =
 		__gconv_find_shlib (current->code->module_name);
 
 	      if (shlib_handle == NULL)
@@ -199,26 +205,20 @@ gen_steps (struct derivation_step *best, const char *toset,
 		}
 
 	      result[step_cnt].shlib_handle = shlib_handle;
-
-	      result[step_cnt].fct = __gconv_find_func (shlib_handle, "gconv");
-	      if (result[step_cnt].fct == NULL)
-		{
-		  /* Argh, no conversion function.  There is something
-		     wrong here.  */
-		  __gconv_release_shlib (result[step_cnt].shlib_handle);
-		  failed = 1;
-		  break;
-		}
-
-	      result[step_cnt].init_fct = __gconv_find_func (shlib_handle,
-							     "gconv_init");
-	      result[step_cnt].end_fct = __gconv_find_func (shlib_handle,
-							    "gconv_end");
+	      result[step_cnt].modname = shlib_handle->name;
+	      result[step_cnt].counter = 0;
+	      result[step_cnt].fct = shlib_handle->fct;
+	      result[step_cnt].init_fct = shlib_handle->init_fct;
+	      result[step_cnt].end_fct = shlib_handle->end_fct;
 	    }
 	  else
 	    /* It's a builtin transformation.  */
 	    __gconv_get_builtin_trans (current->code->module_name,
 				       &result[step_cnt]);
+
+	  /* Call the init function.  */
+	  if (result[step_cnt].init_fct != NULL)
+	    (*result[step_cnt].init_fct) (&result[step_cnt]);
 
 	  current = current->last;
 	}
@@ -227,7 +227,11 @@ gen_steps (struct derivation_step *best, const char *toset,
 	{
 	  /* Something went wrong while initializing the modules.  */
 	  while (++step_cnt < *nsteps)
-	    __gconv_release_shlib (result[step_cnt].shlib_handle);
+	    {
+	      if (result[step_cnt].end_fct != NULL)
+		(*result[step_cnt].end_fct) (&result[step_cnt]);
+	      __gconv_release_shlib (result[step_cnt].shlib_handle);
+	    }
 	  free (result);
 	  *nsteps = 0;
 	  status = GCONV_NOCONV;
@@ -273,7 +277,8 @@ find_derivation (const char *toset, const char *toset_expand,
 
   /* ### TODO
      For now we use a simple algorithm with quadratic runtime behaviour.
-     The task is to match the `toset' with any of the available.  */
+     The task is to match the `toset' with any of the available rules,
+     starting from FROMSET.  */
   if (fromset_expand != NULL)
     {
       first = NEW_STEP (fromset_expand, NULL, NULL);
@@ -495,6 +500,9 @@ __gconv_find_transform (const char *toset, const char *fromset,
   /* Ensure that the configuration data is read.  */
   __libc_once (once, __gconv_read_conf);
 
+  /* Acquire the lock.  */
+  __libc_lock_lock (lock);
+
   /* If we don't have a module database return with an error.  */
   if (__gconv_modules_db == NULL)
     return GCONV_NOCONV;
@@ -517,6 +525,33 @@ __gconv_find_transform (const char *toset, const char *fromset,
   result = find_derivation (toset, toset_expand, fromset, fromset_expand,
 			    handle, nsteps);
 
+  /* Increment the user counter.  */
+  if (result == GCONV_OK)
+    {
+      size_t cnt = *nsteps;
+      struct gconv_step *steps = *handle;
+
+      do
+	if (steps[--cnt].counter++ == 0)
+	  {
+	    steps[--cnt].shlib_handle =
+	      __gconv_find_shlib (steps[--cnt].modname);
+	    if (steps[--cnt].shlib_handle == NULL)
+	      {
+		/* Oops, this is the second time we use this module (after
+		   unloading) and this time loading failed!?  */
+		while (++cnt < *nsteps)
+		  __gconv_release_shlib (steps[cnt].shlib_handle);
+		result = GCONV_NOCONV;
+		break;
+	      }
+	  }
+      while (cnt > 0);
+    }
+
+  /* Release the lock.  */
+  __libc_lock_unlock (lock);
+
   /* The following code is necessary since `find_derivation' will return
      GCONV_OK even when no derivation was found but the same request
      was processed before.  I.e., negative results will also be cached.  */
@@ -533,13 +568,21 @@ __gconv_close_transform (struct gconv_step *steps, size_t nsteps)
 {
   int result = GCONV_OK;
 
+  /* Acquire the lock.  */
+  __libc_lock_lock (lock);
+
   while (nsteps-- > 0)
-    if (steps[nsteps].shlib_handle != NULL)
+    if (steps[nsteps].shlib_handle != NULL
+	&& --steps[nsteps].counter == 0)
       {
 	result = __gconv_release_shlib (steps[nsteps].shlib_handle);
 	if (result != GCONV_OK)
 	  break;
+	steps[nsteps].shlib_handle = NULL;
       }
+
+  /* Release the lock.  */
+  __libc_lock_unlock (lock);
 
   return result;
 }

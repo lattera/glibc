@@ -65,25 +65,18 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 		     buffer.  Signal this to the initializer.  */
 		  data[cnt].is_last = cnt == nsteps - 1;
 
-		  if (steps[cnt].init_fct != NULL)
-		    {
-		      res = (steps[cnt].init_fct) (&steps[cnt], &data[cnt]);
-		      if (res != GCONV_OK)
-			break;
-		    }
+		  /* We use the `mbstate_t' member in DATA.  */
+		  data[cnt].statep = &data[cnt].__state;
 
-		  if (!data[cnt].is_last && data[cnt].outbuf == NULL)
+		  /* Allocate the buffer.  */
+		  data[cnt].outbufsize = GCONV_DEFAULT_BUFSIZE;
+		  data[cnt].outbuf = (char *) malloc (data[cnt].outbufsize);
+		  if (data[cnt].outbuf == NULL)
 		    {
-		      data[cnt].outbufsize = GCONV_DEFAULT_BUFSIZE;
-		      data[cnt].outbuf =
-			(char *) malloc (data[cnt].outbufsize);
-		      if (data[cnt].outbuf == NULL)
-			{
-			  res = GCONV_NOMEM;
-			  break;
-			}
-		      data[cnt].outbufavail = 0;
+		      res = GCONV_NOMEM;
+		      break;
 		    }
+		  data[cnt].outbufavail = 0;
 		}
 	    }
 	}
@@ -99,14 +92,7 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 	  if (result->data != NULL)
 	    {
 	      while (cnt-- > 0)
-		if (steps[cnt].end_fct != NULL)
-		  (*steps[cnt].end_fct) (&result->data[cnt]);
-		else
-		  {
-		    free (result->data[cnt].outbuf);
-		    if (result->data[cnt].data != NULL)
-		      free (result->data[cnt].data);
-		  }
+		free (result->data[cnt].outbuf);
 
 	      free (result->data);
 	    }

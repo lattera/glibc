@@ -40,27 +40,9 @@
 #define TRIES_BEFORE_UNLOAD	2
 
 
-/* Structure describing one loaded shared object.  This normally are
-   objects to perform conversation but as a special case the db shared
-   object is also handled.  */
-struct loaded_object
-{
-  /* Name of the object.  */
-  const char *name;
-
-  /* Reference counter for the db functionality.  If no conversion is
-     needed we unload the db library.  */
-  int counter;
-
-  /* The handle for the shared object.  */
-  void *handle;
-};
-
-
 /* Array of loaded objects.  This is shared by all threads so we have
    to use semaphores to access it.  */
 static void *loaded;
-__libc_lock_define_initialized (static, lock)
 
 
 
@@ -68,8 +50,10 @@ __libc_lock_define_initialized (static, lock)
 static int
 known_compare (const void *p1, const void *p2)
 {
-  const struct loaded_object *s1 = (const struct loaded_object *) p1;
-  const struct loaded_object *s2 = (const struct loaded_object *) p2;
+  const struct gconv_loaded_object *s1 =
+    (const struct gconv_loaded_object *) p1;
+  const struct gconv_loaded_object *s2 =
+    (const struct gconv_loaded_object *) p2;
 
   return (intptr_t) s1->handle - (intptr_t) s2->handle;
 }
@@ -78,7 +62,7 @@ known_compare (const void *p1, const void *p2)
 static void
 do_open (void *a)
 {
-  struct loaded_object *args = (struct loaded_object *) a;
+  struct gconv_loaded_object *args = (struct gconv_loaded_object *) a;
   /* Open and relocate the shared object.  */
   args->handle = _dl_open (args->name, RTLD_LAZY);
 }
@@ -124,9 +108,9 @@ get_sym (void *a)
 }
 
 
-void *
+static void *
 internal_function
-__gconv_find_func (void *handle, const char *name)
+find_func (void *handle, const char *name)
 {
   struct get_sym_args args;
 
@@ -141,15 +125,11 @@ __gconv_find_func (void *handle, const char *name)
 
 /* Open the gconv database if necessary.  A non-negative return value
    means success.  */
-void *
+struct gconv_loaded_object *
 internal_function
 __gconv_find_shlib (const char *name)
 {
-  void *result = NULL;
-  struct loaded_object *found;
-
-  /* Acquire the lock.  */
-  __libc_lock_lock (lock);
+  struct gconv_loaded_object *found;
 
   /* Search the tree of shared objects previously requested.  Data in
      the tree are `loaded_object' structures, whose first member is a
@@ -164,7 +144,7 @@ __gconv_find_shlib (const char *name)
   if (found == NULL)
     {
       /* This name was not known before.  */
-      found = malloc (sizeof (struct loaded_object));
+      found = malloc (sizeof (struct gconv_loaded_object));
       if (found != NULL)
 	{
 	  /* Point the tree node at this new structure.  */
@@ -189,35 +169,50 @@ __gconv_find_shlib (const char *name)
       if (found->counter < -TRIES_BEFORE_UNLOAD)
 	{
 	  if (dlerror_run (do_open, found) == 0)
-	    found->counter = 1;
+	    {
+	      found->fct = find_func (found->handle, "gconv");
+	      if (found->fct == NULL)
+		{
+		  /* Argh, no conversion function.  There is something
+                     wrong here.  */
+		  __gconv_release_shlib (found);
+		  found = NULL;
+		}
+	      else
+		{
+		  found->init_fct = find_func (found->handle, "gconv_init");
+		  found->end_fct = find_func (found->handle, "gconv_end");
+
+		  /* We have succeeded in loading the shared object.  */
+		  found->counter = 1;
+		}
+	    }
+	  else
+	    /* Error while loading the shared object.  */
+	    found = NULL;
 	}
       else if (found->handle != NULL)
 	found->counter = MAX (found->counter + 1, 1);
-
-      result = found->handle;
     }
 
-  /* Release the lock.  */
-  __libc_lock_unlock (lock);
-
-  return result;
+  return found;
 }
 
 
 /* This is very ugly but the tsearch functions provide no way to pass
    information to the walker function.  So we use a global variable.
    It is MT safe since we use a lock.  */
-static void *release_handle;
+static struct gconv_loaded_object *release_handle;
 
 static void
 do_release_shlib (const void *nodep, VISIT value, int level)
 {
-  struct loaded_object *obj = *(struct loaded_object **) nodep;
+  struct gconv_loaded_object *obj = *(struct gconv_loaded_object **) nodep;
 
   if (value != preorder && value != leaf)
     return;
 
-  if (obj->handle == release_handle)
+  if (obj == release_handle)
     /* This is the object we want to unload.  Now set the release
        counter to zero.  */
     obj->counter = 0;
@@ -228,7 +223,7 @@ do_release_shlib (const void *nodep, VISIT value, int level)
 	  /* Unload the shared object.  We don't use the trick to
 	     catch errors since in the case an error is signalled
 	     something is really wrong.  */
-	  _dl_close ((struct link_map *) obj->handle);
+	  _dl_close (obj->handle);
 
 	  obj->handle = NULL;
 	}
@@ -239,11 +234,8 @@ do_release_shlib (const void *nodep, VISIT value, int level)
 /* Notify system that a shared object is not longer needed.  */
 int
 internal_function
-__gconv_release_shlib (void *handle)
+__gconv_release_shlib (struct gconv_loaded_object *handle)
 {
-  /* Acquire the lock.  */
-  __libc_lock_lock (lock);
-
   /* Urgh, this is ugly but we have no other possibility.  */
   release_handle = handle;
 
@@ -251,9 +243,6 @@ __gconv_release_shlib (void *handle)
      with release counts <= 0.  This way we can finally unload them
      if necessary.  */
   __twalk (loaded, do_release_shlib);
-
-  /* Release the lock.  */
-  __libc_lock_unlock (lock);
 
   return GCONV_OK;
 }

@@ -58,7 +58,7 @@ struct iso646_data
 
 
 int
-gconv_init (struct gconv_step *step, struct gconv_step_data *data)
+gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
   struct iso646_data *new_data;
@@ -100,7 +100,7 @@ gconv_init (struct gconv_step *step, struct gconv_step_data *data)
     {
       new_data->dir = dir;
       new_data->var = var;
-      data->data = new_data;
+      step->data = new_data;
       result = GCONV_OK;
     }
 
@@ -109,7 +109,7 @@ gconv_init (struct gconv_step *step, struct gconv_step_data *data)
 
 
 void
-gconv_end (struct gconv_step_data *data)
+gconv_end (struct gconv_step *data)
 {
   free (data->data);
 }
@@ -148,8 +148,8 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct iso646_data *) data->data)->dir;
-      enum variant var = ((struct iso646_data *) data->data)->var;
+      enum direction dir = ((struct iso646_data *) step->data)->dir;
+      enum variant var = ((struct iso646_data *) step->data)->var;
 
       do_write = 0;
 
