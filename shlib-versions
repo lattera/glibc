@@ -29,6 +29,7 @@ mips.*-.*-.*		libm=6
 arm.*-.*-.*		libm=6
 ia64-.*-.*		libm=6.1		GLIBC_2.2
 sh.*-.*-.*		libm=6			GLIBC_2.2
+s390.*-.*-linux.*       libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 alpha.*-.*-linux.*	libc=6.1
