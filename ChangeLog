@@ -1,3 +1,9 @@
+2001-12-02  Roland McGrath  <roland@frob.com>
+
+	* mach/Makefile ($(objpfx)mach-syscalls.mk): Pass $(CFLAGS) to $(CC).
+	* mach/Machrules ($(objpfx)%.udeps static pattern rule): Likewise.
+	Reported by Jeff Bailey <jbailey@nisa.net>.
+
 2001-12-01  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/configure.in (libc_cv_gcc_unwind_find_fde): Add

@@ -135,7 +135,8 @@ $(patsubst %,$(objpfx)%.udeps,$(user-interfaces)):
   $(objpfx)%.udeps: $(..)mach/Machrules
 	$(make-target-directory)
 	$(include-%.defs) | \
-	$(CC) $(CPPFLAGS) -M -x c - | \
+# We must use $(CFLAGS) to get -O flags that affect #if's in header files.
+	$(CC) $(CFLAGS) $(CPPFLAGS) -M -x c - | \
 	sed -e 's,- *:,$@ $(@:.udeps=.ustamp) $(@:.udeps=.uh) $(@:.udeps=.__h)\
 			  $(@:.udeps=_server.c) $(@:.udeps=_server.h):,' \
 	    $(sed-remove-objpfx) > $@.new
