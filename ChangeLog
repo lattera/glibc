@@ -1,5 +1,11 @@
 2001-04-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* timezone/antarctica: Update from tzdata2001b.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+
 	* iconv/iconv_open.c: Move strip and upstr definitions...
 	* iconv/gconv_charset.h: ...here.  New file.
 	* iconv/gconv_db.c (once): Move to file level.

@@ -1,4 +1,4 @@
-# @(#)europe	7.77
+# @(#)europe	7.78
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -405,6 +405,11 @@ Rule	EU	1978	only	-	Oct	 1	 1:00u	0	-
 Rule	EU	1979	1995	-	Sep	lastSun	 1:00u	0	-
 Rule	EU	1981	max	-	Mar	lastSun	 1:00u	1:00	S
 Rule	EU	1996	max	-	Oct	lastSun	 1:00u	0	-
+# The most recent directive covers the years starting in 2002.  See:
+# <a href="http://europa.eu.int/eur-lex/en/lif/dat/2000/en_300L0084.html"
+# Directive 2000/84/EC of the European Parliament and of the Council
+# of 19 January 2001 on summer-time arrangements.
+# </a>
 
 # W-Eur differs from EU only in that W-Eur uses standard time.
 Rule	W-Eur	1977	1980	-	Apr	Sun>=1	 1:00s	1:00	S
@@ -1368,37 +1373,33 @@ Zone	Europe/Monaco	0:29:32 -	LMT	1891 Mar 15
 # Netherlands
 # Howse writes that the Netherlands' railways used GMT between 1892 and 1940,
 # but for other purposes the Netherlands used Amsterdam mean time.
+# The data before 1945 is taken from
+# <http://www.phys.uu.nl/~vgent/wettijd/wettijd.htm>.
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-# Shanks gives 1916 Apr 30 24:00 and 1916 Oct 1 00:00; go with Whitman.
-Rule	Neth	1916	only	-	May	 1	2:00s	1:00	NST	# Netherlands Summer Time
-Rule	Neth	1916	only	-	Oct	 2	2:00s	0	AMT	# Amsterdam Mean Time
+Rule	Neth	1916	only	-	May	 1	0:00	1:00	NST	# Netherlands Summer Time
+Rule	Neth	1916	only	-	Oct	 1	0:00	0	AMT	# Amsterdam Mean Time
 Rule	Neth	1917	only	-	Apr	16	2:00s	1:00	NST
 Rule	Neth	1917	only	-	Sep	17	2:00s	0	AMT
-# Whitman gives 1918 Apr 14, 1918 Oct 31, and 1921 Sep 28; go with Shanks.
 Rule	Neth	1918	1921	-	Apr	Mon>=1	2:00s	1:00	NST
-Rule	Neth	1918	1921	-	Sep	Mon>=24	2:00s	0	AMT
-Rule	Neth	1922	only	-	Mar	26	2:00s	1:00	NST
-# Whitman gives 1939 Oct 1; go with Shanks.
+Rule	Neth	1918	1921	-	Sep	lastSun	2:00s	0	AMT
+Rule	Neth	1922	only	-	Mar	lastSun	2:00s	1:00	NST
 Rule	Neth	1922	1936	-	Oct	Sun>=2	2:00s	0	AMT
-Rule	Neth	1923	only	-	Jun	 1	2:00s	1:00	NST
-Rule	Neth	1924	only	-	Mar	30	2:00s	1:00	NST
-# Whitman gives 1925 Apr 5; go with Shanks.
-Rule	Neth	1925	only	-	Jun	 5	2:00s	1:00	NST
-# For 1926 through 1930 Whitman gives Apr 15; go with Shanks.
+Rule	Neth	1923	only	-	Jun	Fri>=1	2:00s	1:00	NST
+Rule	Neth	1924	only	-	Mar	lastSun	2:00s	1:00	NST
+Rule	Neth	1925	only	-	Jun	Fri>=1	2:00s	1:00	NST
 Rule	Neth	1926	1931	-	May	15	2:00s	1:00	NST
 Rule	Neth	1932	only	-	May	22	2:00s	1:00	NST
 Rule	Neth	1933	1936	-	May	15	2:00s	1:00	NST
 Rule	Neth	1937	only	-	May	22	2:00s	1:00	NST
 Rule	Neth	1937	only	-	Jul	 1	0:00	1:00	S
 Rule	Neth	1937	1939	-	Oct	Sun>=2	2:00s	0	-
-# Whitman gives 1939 Apr 15 and 1940 Apr 19; go with Shanks.
 Rule	Neth	1938	1939	-	May	15	2:00s	1:00	S
 Rule	Neth	1945	only	-	Apr	 2	2:00s	1:00	S
-Rule	Neth	1945	only	-	May	20	2:00s	0	-
+Rule	Neth	1945	only	-	Sep	16	2:00s	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Europe/Amsterdam	0:19:28 -	LMT	1892 May
 			0:19:28	Neth	%s	1937 Jul
-			0:20	Neth	NE%sT	1940 May 16 0:40
+			0:20	Neth	NE%sT	1940 May 17 0:00
 			1:00	C-Eur	CE%sT	1945 Apr  2 2:00
 			1:00	Neth	CE%sT	1977
 			1:00	EU	CE%sT

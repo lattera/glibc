@@ -1,4 +1,4 @@
-# @(#)australasia	7.63
+# @(#)australasia	7.64
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -222,7 +222,8 @@ Zone	Pacific/Tahiti	 -9:58:16 -	LMT	1912 Oct	# Papeete
 
 # Guam
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Pacific/Guam	 9:39:00 -	LMT	1901		# Agana
+Zone	Pacific/Guam	-14:21:00 -	LMT	1844 Dec 31
+			 9:39:00 -	LMT	1901		# Agana
 			10:00	-	GST	2000 Dec 23	# Guam
 			10:00	-	ChST	# Chamorro Standard Time
 
@@ -241,7 +242,8 @@ Zone Pacific/Kiritimati	-10:29:20 -	LMT	1901
 
 # N Mariana Is
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone Pacific/Saipan	 9:43:00 -	LMT	1901
+Zone Pacific/Saipan	-14:17:00 -	LMT	1844 Dec 31
+			 9:43:00 -	LMT	1901
 			 9:00	-	MPT	1969 Oct # N Mariana Is Time
 			10:00	-	MPT	2000 Dec 23
 			10:00	-	ChST	# Chamorro Standard Time
@@ -977,7 +979,8 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Howse writes (p 153) ``The Spaniards, on the other hand, reached the
 # Philippines and the Ladrones from America,'' and implies that the Ladrones
 # (now called the Marianas) kept American date for quite some time.
-# Ignore this for now, as we have no hard data.  See also Asia/Manila.
+# For now, we assume the Ladrones switched at the same time as the Philippines;
+# see Asia/Manila.
 
 # US Public Law 106-564 (2000-12-23) made UTC+10 the official standard time,
 # under the name "Chamorro Standard Time".  There is no official abbreviation,

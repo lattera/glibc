@@ -1,4 +1,4 @@
-# @(#)northamerica	7.56
+# @(#)northamerica	7.58
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -280,40 +280,47 @@ Zone America/Los_Angeles -7:52:58 -	LMT	1883 Nov 18 12:00
 # Alaska
 # AK%sT is the modern abbreviation for -9:00 per USNO.
 #
-# From Paul Eggert (1995-12-19):
+# From Paul Eggert (2001-04-01):
 # Howse writes that Alaska switched from the Julian to the Gregorian calendar,
 # and from east-of-GMT to west-of-GMT days, when the US bought it from Russia.
-# This was on 1867-10-18.  We omit this transition, since we can't represent
-# changes from Julian to Gregorian.
+# This was on 1867-10-18, a Friday; the previous day was 1867-10-06 Julian,
+# also a Friday.  Include only the time zone part of this transition,
+# ignoring the switch from Julian to Gregorian, since we can't represent
+# the Julian calendar.
 #
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone America/Juneau	 -8:57:41 -	LMT	1900 Aug 20 12:00
+Zone America/Juneau	 15:02:19 -	LMT	1867 Oct 18
+			 -8:57:41 -	LMT	1900 Aug 20 12:00
 			 -8:00	-	PST	1942
 			 -8:00	US	P%sT	1946
 			 -8:00	-	PST	1969
 			 -8:00	US	P%sT	1983 Oct 30 2:00
 			 -9:00	US	AK%sT
-Zone America/Yakutat	 -9:18:55 -	LMT	1900 Aug 20 12:00
+Zone America/Yakutat	 14:41:05 -	LMT	1867 Oct 18
+			 -9:18:55 -	LMT	1900 Aug 20 12:00
 			 -9:00	-	YST	1942
 			 -9:00	US	Y%sT	1946
 			 -9:00	-	YST	1969
 			 -9:00	US	Y%sT	1983 Oct 30 2:00
 			 -9:00	US	AK%sT
-Zone America/Anchorage	 -9:59:36 -	LMT	1900 Aug 20 12:00
+Zone America/Anchorage	 14:00:24 -	LMT	1867 Oct 18
+			 -9:59:36 -	LMT	1900 Aug 20 12:00
 			-10:00	-	CAT	1942
 			-10:00	US	CAT/CAWT 1946
 			-10:00	-	CAT	1967 Apr
 			-10:00	-	AHST	1969
 			-10:00	US	AH%sT	1983 Oct 30 2:00
 			 -9:00	US	AK%sT
-Zone America/Nome	-11:01:38 -	LMT	1900 Aug 20 12:00
+Zone America/Nome	 12:58:21 -	LMT	1867 Oct 18
+			-11:01:38 -	LMT	1900 Aug 20 12:00
 			-11:00	-	NST	1942
 			-11:00	US	N%sT	1946
 			-11:00	-	NST	1967 Apr
 			-11:00	-	BST	1969
 			-11:00	US	B%sT	1983 Oct 30 2:00
 			 -9:00	US	AK%sT
-Zone America/Adak	-11:46:38 -	LMT	1900 Aug 20 12:00
+Zone America/Adak	 12:13:21 -	LMT	1867 Oct 18
+			-11:46:38 -	LMT	1900 Aug 20 12:00
 			-11:00	-	NST	1942
 			-11:00	US	N%sT	1946
 			-11:00	-	NST	1967 Apr
@@ -1138,6 +1145,16 @@ Zone America/Dawson_Creek -8:00:56 -	LMT	1884
 # From Paul Eggert (2000-12-04):
 # Let's just keep track of the official times for now.
 
+# From Rives McDow (2001-03-07):
+# The premier of Nunavut has issued a ministerial statement advising
+# that effective 2001-04-01, the territory of Nunavut will revert
+# back to three time zones (mountain, central, and eastern).  Of the
+# cities in Nunavut, Coral Harbor is the only one that I know of that
+# has said it will not observe dst, staying on EST year round.  I'm
+# checking for more info, and will get back to you if I come up with
+# more.
+# [Also see <http://www.nunatsiaq.com/nunavut/nvt10309_06.html> (2001-03-09).]
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	NT_YK	1918	only	-	Apr	14	2:00	1:00	D
 Rule	NT_YK	1918	only	-	Oct	27	2:00	0	S
@@ -1155,19 +1172,21 @@ Zone America/Pangnirtung -4:22:56 -	LMT	1884
 			-4:00	NT_YK	A%sT	1995 Apr Sun>=1 2:00
 			-5:00	Canada	E%sT	1999 Oct 31 2:00
 			-6:00	Canada	C%sT	2000 Oct 29 2:00
-			-5:00	-	EST
+			-5:00	Canada	E%sT
 Zone America/Iqaluit	-4:33:52 -	LMT	1884 # Frobisher Bay before 1987
 			-5:00	NT_YK	E%sT	1999 Oct 31 2:00
 			-6:00	Canada	C%sT	2000 Oct 29 2:00
-			-5:00	-	EST
+			-5:00	Canada	E%sT
 Zone America/Rankin_Inlet -6:08:40 -	LMT	1884
 			-6:00	NT_YK	C%sT	2000 Oct 29 2:00
-			-5:00	-	EST
+			-5:00	-	EST	2001 Apr  1 3:00
+			-6:00	Canada	C%sT
 Zone America/Cambridge_Bay -7:00:20 -	LMT	1884
 			-7:00	NT_YK	M%sT	1999 Oct 31 2:00
 			-6:00	Canada	C%sT	2000 Oct 29 2:00
 			-5:00	-	EST	2000 Nov  5 0:00
-			-6:00	Canada	C%sT
+			-6:00	-	CST	2001 Apr  1 3:00
+			-7:00	Canada	M%sT
 Zone America/Yellowknife -7:37:24 -	LMT	1884
 			-7:00	NT_YK	M%sT
 Zone America/Inuvik	-8:54:00 -	LMT	1884
@@ -1294,16 +1313,25 @@ Zone America/Dawson	-9:17:40 -	LMT	1900 Aug 20
 # James F. Smith writes in today's LA Times
 # </a>
 # * Sonora will continue to observe standard time.
-# * Border states including Baja California, Chihuahua, and Nuevo Leon
-#   will use US rules,
 # * Last week Mexico City's mayor Andres Manuel Lopez Obrador decreed that
 #   the Federal District will not adopt DST.
 # * 4 of 16 district leaders announced they'll ignore the decree.
 # * The decree does not affect federal-controlled facilities including
 #   the airport, banks, hospitals, and schools.
 #
-# For now we'll assume that the Federal District will bow to federal rules
-# and that border states and Durango will stick with US rules.
+# For now we'll assume that the Federal District will bow to federal rules.
+
+# From Jesper Norgaard (2001-04-01):
+# I found some references to the Mexican application of daylight
+# saving, which modifies what I had already sent you, stating earlier
+# that a number of northern Mexican states would go on daylight
+# saving. The modification reverts this to only cover Baja California
+# (Norte), while all other states (except Sonora, who has no daylight
+# saving all year) will follow the original decree of president
+# Vicente Fox, starting daylight saving May 6, 2001 and ending
+# September 30, 2001.
+# References: "Diario de Monterrey" <www.diariodemonterrey.com/index.asp>
+# Palabra <http://palabra.infosel.com/010331/primera/ppri3101.pdf> (2001-03-31)
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Mexico	1939	only	-	Feb	5	0:00	1:00	D
@@ -1333,8 +1361,7 @@ Zone America/Merida	-5:58:28 -	LMT	1922 Jan  1  0:01:32
 Zone America/Monterrey	-6:41:16 -	LMT	1921 Dec 31 23:18:44
 			-6:00	-	CST	1988
 			-6:00	US	C%sT	1989
-			-6:00	Mexico	C%sT	2001
-			-6:00	US	C%sT
+			-6:00	Mexico	C%sT
 # Central Mexico
 Zone America/Mexico_City -6:36:36 -	LMT	1922 Jan  1  0:23:24
 			-7:00	-	MST	1927 Jun 10 23:00
@@ -1353,8 +1380,7 @@ Zone America/Chihuahua	-7:04:20 -	LMT	1921 Dec 31 23:55:40
 			-6:00	-	CST	1996
 			-6:00	Mexico	C%sT	1998
 			-6:00	-	CST	1998 Apr Sun>=1 3:00
-			-7:00	Mexico	M%sT	2001
-			-7:00	US	M%sT
+			-7:00	Mexico	M%sT
 # Sonora
 Zone America/Hermosillo	-7:23:52 -	LMT	1921 Dec 31 23:36:08
 			-7:00	-	MST	1927 Jun 10 23:00
