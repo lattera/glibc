@@ -80,6 +80,20 @@
 #define	PSEUDO_END_NOERRNO(name)					      \
   END (name)
 
+/* The function has to return the error code.  */
+#undef	PSEUDO_ERRVAL
+#define	PSEUDO_ERRVAL(name, syscall_name, args) \
+  .text;								      \
+  ENTRY (name)								      \
+    DO_CALL (syscall_name, args);					      \
+    rsb r0, r0, #0
+
+#undef	PSEUDO_END_ERRVAL
+#define	PSEUDO_END_ERRVAL(name) \
+  END (name)
+
+#define ret_ERRVAL PSEUDO_RET_NOERRNO
+
 #if NOT_IN_libc
 # define SYSCALL_ERROR __local_syscall_error
 # define SYSCALL_ERROR_HANDLER					\

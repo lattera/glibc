@@ -1,3 +1,8 @@
+2003-08-25  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO_ERRVAL): Define.
+	(PSEUDO_END_ERRVAL, ret_ERRVAL): Likewise.
+
 2003-08-18  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/generic/bits/libc-lock.h (__libc_cleanup_pop): Redefine
