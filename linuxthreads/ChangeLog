@@ -1,5 +1,9 @@
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h
+	(DL_SYSINFO_IMPLEMENTATION): Add CFI and make sure the code ends
+	up in .text.
+
 	* barrier.c (pthread_barrierattr_setpshared): We don't handle
 	inter-process barriers.
 
