@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -69,11 +69,16 @@ address-width=18
 endif
 endif
 
+# Unless we get a test for the availability of libgd which also works
+# for cross-compiling we disable the memusagestat generation in this
+# situation.
+ifneq ($(cross-compiling),yes)
 # If the gd library is available we build the `memusagestat' program.
 ifneq ($(LIBGD),no)
 install-bin += memusagestat memusage
 generated += memusagestat memusage
 extra-objs += memusagestat.o
+endif
 endif
 
 # Another goal which can be used to override the configure decision.

@@ -1,5 +1,7 @@
 2001-01-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/Makefile: Don't build memusagestat if cross-compiling.
+
 	* sysdeps/generic/dl-sysdep.c (set_seen): Fix typo.
 
 	* math/libm-test.inc (rint_test): Add a few more tests for round
