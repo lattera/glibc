@@ -495,8 +495,12 @@ sysdep-library-path = \
 $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
 				       $(filter -Wl$(comma)-rpath-link=%,\
 						$(sysdep-LDFLAGS)))))
+ifeq (,$(findstring $(notdir $(built-program-file)), $(tests-static)))
 run-program-prefix = $(elf-objpfx)$(rtld-installed-name) \
 		     --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path))
+else
+run-program-prefix =
+endif
 else
 run-program-prefix =
 endif
