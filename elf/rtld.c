@@ -24,20 +24,9 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
 #include "../stdio-common/_itoa.h"
-
-
-/* This #define produces dynamic linking inline functions for
-   bootstrap relocation instead of general-purpose relocation.  */
-#define RTLD_BOOTSTRAP
-#define RESOLVE(sym, reloc_addr, noplt) 0
+#include <assert.h>
 #include "dynamic-link.h"
 
-
-#ifdef RTLD_START
-RTLD_START
-#else
-#error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
-#endif
 
 /* System-specific function to do initial startup for the dynamic linker.
    After this, file access calls and getenv must work.  This is responsible
@@ -60,10 +49,22 @@ static void dl_main (const ElfW(Phdr) *phdr,
 
 struct link_map _dl_rtld_map;
 
+#ifdef RTLD_START
+RTLD_START
+#else
+#error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
+#endif
+
 ElfW(Addr)
 _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
+
+  /* This #define produces dynamic linking inline functions for
+     bootstrap relocation instead of general-purpose relocation.  */
+#define RTLD_BOOTSTRAP
+#define RESOLVE(sym, reloc_addr, noplt) bootstrap_map.l_addr
+#include "dynamic-link.h"
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
   bootstrap_map.l_addr = elf_machine_load_address ();

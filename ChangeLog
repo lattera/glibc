@@ -1,5 +1,10 @@
 Sun Jul 14 01:51:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/rtld.c (RESOLVE): Use the dl's load address, not a constant zero!
+	(_dl_start): Move RESOLVE defn inside this function and #include
+	"dynamic-link.h" a second time there.
+	[RTLD_START]: Move use of this after _dl_start function.
+
 	* elf/dl-reloc.c: Include "dynamic-link.h" at file scope.
 
 	* elf/rtld.c: Include <string.h>.
