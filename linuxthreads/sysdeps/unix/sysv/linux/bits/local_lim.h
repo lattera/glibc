@@ -1,5 +1,5 @@
 /* Minimum guaranteed maximum values for system limits.  Linux version.
-   Copyright (C) 1993,94,95,96,97,98,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1993-1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,3 +78,9 @@
 
 /* Maximum number of timer expiration overruns.  */
 #define DELAYTIMER_MAX	2147483647
+
+/* Maximum tty name length.  */
+#define TTY_NAME_MAX		32
+
+/* Maximum login name length.  This is arbitrary.  */
+#define LOGIN_NAME_MAX		256

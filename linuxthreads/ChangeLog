@@ -1,3 +1,8 @@
+2003-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Define TTY_NAME_MAX
+	and LOGIN_NAME_MAX.
+
 2003-02-17  Kevin B. Hendricks  <kevin.hendricks@sympatico.ca>
 	    Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
