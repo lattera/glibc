@@ -60,13 +60,14 @@ $(inst_i18ndir)/locales/%: locales/%; $(do-install)
 
 
 ifeq (no,$(cross-compiling))
-.PHONY: do-collate-test do-xfrm-test do-tst-fmon do-tst-rpmatch
-tests: do-collate-test do-xfrm-test do-tst-fmon do-tst-rpmatch
-do-collate-test: sort-test.sh $(objpfx)collate-test $(test-input)
+.PHONY: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch
+tests: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch
+do-collate-test: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
+		 $(test-input:.ISO-8859-1=.in)
 	$(SHELL) -e $< $(common-objpfx) $(test-input)
-do-xfrm-test: tst-fmon.sh $(objpfx)xfrm-test tst-fmon.data
-	$(SHELL) -e $< $(common-objpfx) tst-fmon.data
 do-tst-fmon: tst-locale.sh $(objpfx)tst-fmon $(ld-test-srcs)
+	$(SHELL) -e $< $(common-objpfx)
+do-tst-locale: tst-locale.sh
 	$(SHELL) -e $< $(common-objpfx)
 do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch
 	$(SHELL) -e $< $(common-objpfx)
