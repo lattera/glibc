@@ -207,6 +207,7 @@ L(8):	/* Remove the stopset table.  */
 	leal 1(%edx), %ecx
 	cmovne %ecx, %edx
 
+L(return):
 	/* Store the pointer to the next character.  */
 #ifdef USE_AS_STRTOK_R
 	movl 12(%esp), %ecx
@@ -223,18 +224,5 @@ L(8):	/* Remove the stopset table.  */
 
 L(returnNULL):
 	xorl %eax, %eax
-
-	/* Store current pointer for next round.  */
-#ifdef USE_AS_STRTOK_R
-	movl 12(%esp), %ecx
-	movl %edx, (%ecx)
-#else
-# ifndef PIC
-	movl %edx, save_ptr
-# else
-	movl %edx, save_ptr@GOTOFF(%ebx)
-	popl %ebx
-# endif
-#endif
-	ret
+	jmp L(return)
 END (FUNCTION)

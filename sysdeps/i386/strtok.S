@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -254,6 +254,7 @@ L(8):	/* Remove the stopset table.  */
 	incl %edx
 L(11):
 
+L(return):
 	/* Store the pointer to the next character.  */
 #ifdef USE_AS_STRTOK_R
 	movl 12(%esp), %ecx
@@ -270,18 +271,5 @@ L(11):
 
 L(returnNULL):
 	xorl %eax, %eax
-
-	/* Store current pointer for next round.  */
-#ifdef USE_AS_STRTOK_R
-	movl 12(%esp), %ecx
-	movl %edx, (%ecx)
-#else
-# ifndef PIC
-	movl %edx, save_ptr
-# else
-	movl %edx, save_ptr@GOTOFF(%ebx)
-	popl %ebx
-# endif
-#endif
-	ret
+	jmp L(return)
 END (FUNCTION)
