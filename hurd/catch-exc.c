@@ -31,7 +31,8 @@ _S_catch_exception_raise (mach_port_t port,
 			  exception_data_t code,
 			  mach_msg_type_number_t codeCnt
 #else				/* Vanilla Mach 3.0 interface.  */
-			  int exception, int code, int subcode
+			  integer_t exception,
+			  integer_t code, integer_t subcode
 #endif
 			  )
 {
