@@ -1,3 +1,8 @@
+2001-05-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-profile.c (_dl_mcount): Check whether state is
+	GMON_PROF_ON before doing anything.
+
 2001-05-17  H.J. Lu  <hjl@gnu.org>
 
 	* elf/sprof.c (read_symbols): Move "++symtab" into the while loop.

@@ -439,6 +439,9 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
   /* XXX I think this is now not necessary anymore.  */
   if (! compare_and_swap (&state, GMON_PROF_ON, GMON_PROF_BUSY))
     return;
+#else
+  if (state != GMON_PROF_ON)
+    return;
 #endif
 
   /* Compute relative addresses.  The shared object can be loaded at
