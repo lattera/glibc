@@ -1,3 +1,8 @@
+2004-09-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.c (parse_opt): Use writev instead of two write for
+	invalidate command.
+
 2004-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (nscd_run): Check early for invalid request types.

@@ -39,6 +39,7 @@
 #include <sys/mman.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 #include <sys/un.h>
 
 #include "dbg_log.h"
@@ -304,11 +305,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
       else
 	{
 	  int sock = nscd_open_socket ();
-	  request_header req;
-	  ssize_t nbytes;
 
 	  if (sock == -1)
 	    exit (EXIT_FAILURE);
+
+	  request_header req;
+	  ssize_t nbytes;
+	  struct iovec iov[2];
 
 	  if (strcmp (arg, "passwd") == 0)
 	    req.key_len = sizeof "passwd";
@@ -321,19 +324,18 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
 	  req.version = NSCD_VERSION;
 	  req.type = INVALIDATE;
-	  nbytes = TEMP_FAILURE_RETRY (write (sock, &req,
-					      sizeof (request_header)));
-	  if (nbytes != sizeof (request_header))
-	    {
-	      close (sock);
-	      exit (EXIT_FAILURE);
-	    }
 
-	  nbytes = TEMP_FAILURE_RETRY (write (sock, (void *)arg, req.key_len));
+	  iov[0].iov_base = &req;
+	  iov[0].iov_len = sizeof (req);
+	  iov[1].iov_base = (void *) key;
+	  iov[1].iov_len = req.key_len;
+
+	  nbytes = TEMP_FAILURE_RETRY (writev (sock, iov, 2));
 
 	  close (sock);
 
-	  exit (nbytes != req.key_len ? EXIT_FAILURE : EXIT_SUCCESS);
+	  exit (nbytes != iov[0].iov_len + iov[1].iov_len
+		? EXIT_FAILURE : EXIT_SUCCESS);
 	}
 
     case 't':
