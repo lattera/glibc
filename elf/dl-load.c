@@ -278,7 +278,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	   unallocated.  Then jump into the normal segment-mapping loop to
 	   handle the portion of the segment past the end of the file
 	   mapping.  */
-	__mprotect (mapat + c->mapend,
+	__mprotect ((caddr_t) (l->l_addr + c->mapend),
 		    loadcmds[nloadcmds - 1].allocend - c->mapend,
 		    0);
 	goto postmap;
@@ -337,6 +337,20 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 
 	++c;
       }
+
+    if (l->l_phdr == 0)
+      {
+	/* There was no PT_PHDR specified.  We need to find the phdr in the
+           load image ourselves.  We assume it is in fact in the load image
+           somewhere, and that the first load command starts at the
+           beginning of the file and thus contains the ELF file header.  */
+	ElfW(Addr) bof = l->l_addr + loadcmds[0].mapstart;
+	assert (loadcmds[0].mapoff == 0);
+	l->l_phdr = (void *) (bof + ((const ElfW(Ehdr) *) bof)->e_phoff);
+      }
+    else
+      /* Adjust the PT_PHDR value by the runtime load address.  */
+      (ElfW(Addr)) l->l_phdr += l->l_addr;
   }
 
   /* We are done mapping in the file.  We no longer need the descriptor.  */
@@ -352,10 +366,6 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
     }
   else
     (ElfW(Addr)) l->l_ld += l->l_addr;
-
-  if (l->l_phdr == 0)
-    l->l_phdr = (void *) ((const ElfW(Ehdr) *) l->l_addr)->e_phoff;
-  (ElfW(Addr)) l->l_phdr += l->l_addr;
 
   l->l_entry += l->l_addr;
 

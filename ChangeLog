@@ -1,5 +1,8 @@
 Fri Jun 21 00:27:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Fix mapping and l_phdr
+ 	guessing to not assume p_vaddr of first load cmd is zero.
+
 	* sysdeps/sparc/elf/start.S: New file.
 	* sysdeps/sparc/dl-machine.h: New file.
 
