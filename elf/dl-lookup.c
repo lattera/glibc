@@ -96,7 +96,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	/* We could find no value for a strong reference.  */
-	_dl_signal_cerror (0, (reference_name  && reference_name[0]
+	_dl_signal_cerror (0, (reference_name && reference_name[0]
 			       ? reference_name
 			       : (_dl_argv[0] ?: "<main program>")),
 			   make_string (undefined_msg, undef_name));
