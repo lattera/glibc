@@ -239,6 +239,10 @@ set_int (int which, int value)
 	  }
 	__spin_unlock (&ss->lock);
 	return 0;
+
+      case INIT_TRACEMASK:
+	_hurdsig_traced = value;
+	return 0;
       }
     default:
       return EINVAL;

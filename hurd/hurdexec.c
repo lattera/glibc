@@ -85,6 +85,10 @@ _hurd_exec (task_t task, file_t file,
 	/* We will set these all below.  */
 	break;
 
+      case INIT_TRACEMASK:
+	ints[i] = _hurdsig_traced;
+	break;
+
       default:
 	ints[i] = 0;
       }
