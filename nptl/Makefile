@@ -99,7 +99,7 @@ libpthread-routines = init events version \
 		      sem_wait sem_trywait sem_timedwait sem_post \
 		      cleanup cleanup_defer cleanup_compat \
 		      cleanup_defer_compat unwind \
-		      pt-longjmp \
+		      pt-longjmp pt-cleanup\
 		      cancellation \
 		      lowlevellock \
 		      pt-vfork \

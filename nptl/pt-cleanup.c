@@ -62,10 +62,3 @@ __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
 }
 hidden_def (__pthread_cleanup_upto)
 
-
-void
-longjmp (jmp_buf env, int val)
-{
-  __libc_longjmp (env, val);
-}
-weak_alias (longjmp, siglongjmp)

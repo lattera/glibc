@@ -1,3 +1,13 @@
+2004-01-29  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* Makefile (libpthread-routines): Add pt-cleanup.
+	* pt-longjmp.c: Removed.
+	* pt-cleanup.c: Copied __pthread_cleanup_upto to here. New file.
+	* sysdeps/generic/pt-longjmp.c: Copied longjmp to here. New file.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: New file.
+	Version longjmp, siglongjmp for GLIBC_2.3.4.
+	* sysdeps/unix/sysv/linux/powerpc/pt-longjmp.c: New File.
+
 2004-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread_cond_timedwait.c
