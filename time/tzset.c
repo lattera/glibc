@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -625,3 +625,19 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 
   return tp;
 }
+
+
+static void
+free_mem (void)
+{
+  while (tzstring_list != NULL)
+    {
+      struct tzstring_l *old = tzstring_list;
+
+      tzstring_list = tzstring_list->next;
+      free (old);
+    }
+  free (old_tz);
+  old_tz = NULL;
+}
+text_set_element (__libc_subfreeres, free_mem);
