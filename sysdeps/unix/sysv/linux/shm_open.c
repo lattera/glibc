@@ -78,7 +78,10 @@ where_is_shmfs (void)
 
   /* Now read the entries.  */
   while ((mp = __getmntent_r (fp, &resmem, buf, sizeof buf)) != NULL)
-    if (strcmp (mp->mnt_type, "shm") == 0)
+    /* The original name is "shm" but this got changed in early Linux
+       2.4.x to "tmpfs".  */
+    if ((strcmp (mp->mnt_type, "tmpfs") == 0)
+	|| (strcmp (mp->mnt_type, "shm")))
       {
 	/* Found it.  There might be more than one place where the
            filesystem is mounted but one is enough for us.  */
