@@ -156,9 +156,11 @@
 
 2005-03-01  Alfred M. Szmidt  <ams@gnu.org>
 
+	[BZ #777]
 	* elf/dl-load.c (__stack_prot) [!PROT_GROWSUP && !PROT_GROWSDOWN]:
 	Add missing initializer.
 
+	[BZ #777]
 	* malloc/arena.c: #include <stdbool.h> outside of [SHARED &&
 	USE_TLS && !USE___THREAD].
 
