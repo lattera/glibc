@@ -103,6 +103,12 @@
    local labels.  */
 #undef	HAVE_SUBTRACT_LOCAL_LABELS
 
+/* bash 2.0 introduced the _XXX_GNU_nonoption_argv_flags_ variable to help
+   getopt determine whether a parameter is a flag or not.  This features
+   was disabled later since it caused trouble.  We are by default therefore
+   disabling the support as well.  */
+#undef USE_NONOPTION_FLAGS
+
 /*
  */
 
