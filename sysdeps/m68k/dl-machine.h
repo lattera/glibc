@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  m68k version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,7 +85,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */
@@ -101,36 +102,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   return lazy;
 }
 
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  */
-#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name) \
-"| Trampoline for " #fixup_name "\n\
-	.globl " #tramp_name "\n\
-	.type " #tramp_name ", @function\n\
-" #tramp_name ":\n\
-	| Save %a0 (struct return address) and %a1.\n\
-	move.l %a0, -(%sp)\n\
-	move.l %a1, -(%sp)\n\
-	| Call the real address resolver.\n\
-	jbsr " #fixup_name "\n\
-	| Restore register %a0 and %a1.\n\
-	move.l (%sp)+, %a1\n\
-	move.l (%sp)+, %a0\n\
-	| Pop parameters\n\
-	addq.l #8, %sp\n\
-	| Call real function.\n\
-	jmp (%d0)\n\
-	.size " #tramp_name ", . - " #tramp_name "\n"
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
-asm (TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup) \
-     TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup));
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
-asm (TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup) \
-     ".globl _dl_runtime_profile\n" \
-     ".set _dl_runtime_profile, _dl_runtime_resolve");
-#endif
 #define ELF_MACHINE_RUNTIME_FIXUP_ARGS long int save_a0, long int save_a1
 
 
@@ -216,9 +187,13 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
   return value;
 }
 
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER m68k_gnu_pltenter
+#define ARCH_LA_PLTEXIT m68k_gnu_pltexit
+
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
@@ -236,9 +211,15 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   else
     {
       const Elf32_Sym *const refsym = sym;
+#ifndef RTLD_BOOTSTRAP
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+#else
       Elf32_Addr value = RESOLVE (&sym, version, r_type);
+
       if (sym)
 	value += sym->st_value;
+#endif /* !RTLD_BOOTSTRAP */
 
       switch (r_type)
 	{
@@ -313,4 +294,4 @@ elf_machine_lazy_rel (struct link_map *map,
     _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 1);
 }
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */
