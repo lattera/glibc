@@ -1,3 +1,15 @@
+Mon Mar 18 13:20:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* elf/Makefile (rtld-link): New canned sequence.
+	(ld.so, ld-linux.so.1): Use it.  Pass -soname option.
+
+	* sysdeps/i386/setjmp.S (__setjmp): Define compatibility entry point.
+
+Sun Mar 17 23:15:32 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/tcgetpgrp.c,
+	sysdeps/unix/sysv/linux/tcsetpgrp.c: New files.
+
 Sun Mar 17 07:19:33 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* db/Makefile (CFLAGS-hash_func.c): New variable; pass -Wno-unused.

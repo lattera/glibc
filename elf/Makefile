@@ -61,9 +61,15 @@ $(objpfx)librtld.so: $(rtld-routines:%=$(objpfx)%.so) \
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
 		  '-Wl,-(' $^ -lgcc '-Wl,-)'
 
-$(objpfx)ld.so $(objpfx)ld-linux.so.1: $(objpfx)librtld.so
-	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
-		  -Wl,-rpath=$(default-rpath) $^
+$(objpfx)ld.so: $(objpfx)librtld.so
+	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
+$(objpfx)ld-linux.so.1: $(objpfx)librtld.so
+	$(rtld-link) -Wl,-soname=ld-linux.so.1
+
+define rtld-link
+$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
+	  -Wl,-rpath=$(default-rpath) $^
+endef
 
 # The Linux-compatible dynamic linker shared object is just the same
 # with one object file of compatibility initialization code added.

@@ -1,5 +1,5 @@
 /* setjmp for i386.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,12 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #define _ASM
 #include <jmp_buf.h>
+
+	/* Binary compatibility entry point.  */
+ENTRY (__setjmp)
+	popl %eax		/* Pop return address.  */
+	pushl $0		/* Push zero argument.  */
+	pushl %eax		/* Push back return address.  */
 
 ENTRY (__sigsetjmp)
 	movl 4(%esp), %eax	/* User's jmp_buf in %eax.  */
