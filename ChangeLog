@@ -10,7 +10,8 @@
 	of toupper.
 	* posix/Makefile (tests): Add bug-regex17 and bug-regex18.
 	(bug-regex17-ENV, bug-regex18-ENV): Add LOCPATH.
-	* posix/bug-regex18.c: New test.
+	* posix/bug-regex17.c: New file
+	* posix/bug-regex18.c: New file.
 
 2003-10-08  Thorsten Kukuk  <kukuk@suse.de>
 
