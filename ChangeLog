@@ -1,3 +1,11 @@
+2003-04-04  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/strchr.S: 64-bit optimizations.
+	* sysdeps/powerpc/powerpc64/strlen.S: 64-bit optimizations.
+
+	* sysdeps/powerpc/fpu/bits/mathdef.h (FLT_EVAL_METHOD): Undef before
+	defining.
+
 2003-04-04  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (struct flock): Adjust

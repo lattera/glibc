@@ -1,5 +1,5 @@
 /* Optimized strchr implementation for PowerPC64.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,11 @@ ENTRY (BP_SYM (strchr))
 
 #define rTMP1	r0
 #define rRTN	r3	/* outgoing result */
+/* Note:  The Bounded pointer support in this code is broken.  This code
+   was inherited from PPC32 and and that support was never completed.  
+   Currently PPC gcc does not support -fbounds-check or -fbounded-pointers.
+   These artifacts are left in the code as a reminder in case we need
+   bounded pointer support in the future.  */
 #if __BOUNDED_POINTERS__
 # define rSTR	r4
 # define rCHR	r5	/* byte we're looking for, spread over the whole word */
@@ -39,8 +44,8 @@ ENTRY (BP_SYM (strchr))
 # define rWORD	r5	/* the current word */
 #endif
 #define rCLZB	rCHR	/* leading zero byte count */
-#define rFEFE	r6	/* constant 0xfefefeff (-0x01010101) */
-#define r7F7F	r7	/* constant 0x7f7f7f7f */
+#define rFEFE	r6	/* constant 0xfefefefefefefeff (-0x0101010101010101) */
+#define r7F7F	r7	/* constant 0x7f7f7f7f7f7f7f7f */
 #define rTMP2	r9
 #define rIGN	r10	/* number of bits we should ignore in the first word */
 #define rMASK	r11	/* mask with the bits to ignore set to 0 */
@@ -49,18 +54,23 @@ ENTRY (BP_SYM (strchr))
 	CHECK_BOUNDS_LOW (rSTR, rTMP1, rTMP2)
 	STORE_RETURN_BOUNDS (rTMP1, rTMP2)
 
+	dcbt	0,rRTN
 	rlwimi	rCHR, rCHR, 8, 16, 23
 	li	rMASK, -1
 	rlwimi	rCHR, rCHR, 16, 0, 15
-	rlwinm	rIGN, rRTN, 3, 27, 28
+	rlwinm	rIGN, rRTN, 3, 26, 28
+	insrdi	rCHR, rCHR, 32, 0
 	lis	rFEFE, -0x101
 	lis	r7F7F, 0x7f7f
-	clrrdi	rSTR, rRTN, 2
+	clrrdi	rSTR, rRTN, 3
 	addi	rFEFE, rFEFE, -0x101
 	addi	r7F7F, r7F7F, 0x7f7f
+	sldi	rTMP1, rFEFE, 32
+	insrdi	r7F7F, r7F7F, 32, 0
+	add	rFEFE, rFEFE, rTMP1
 /* Test the first (partial?) word.  */
-	lwz	rWORD, 0(rSTR)
-	srw	rMASK, rMASK, rIGN
+	ld	rWORD, 0(rSTR)
+	srd	rMASK, rMASK, rIGN
 	orc	rWORD, rWORD, rMASK
 	add	rTMP1, rFEFE, rWORD
 	nor	rTMP2, r7F7F, rWORD
@@ -71,7 +81,7 @@ ENTRY (BP_SYM (strchr))
 
 /* The loop.  */
 
-L(loop):lwzu rWORD, 4(rSTR)
+L(loop):ldu rWORD, 8(rSTR)
 	and.	rTMP1, rTMP1, rTMP2
 /* Test for 0.	*/
 	add	rTMP1, rFEFE, rWORD
@@ -104,12 +114,12 @@ L(missed):
 	add	rTMP1, rTMP1, r7F7F
 	nor	rWORD, rMASK, rFEFE
 	nor	rTMP2, rIGN, rTMP1
-	cmplw	rWORD, rTMP2
+	cmpld	rWORD, rTMP2
 	bgtlr
-	cntlzw	rCLZB, rTMP2
-	srwi	rCLZB, rCLZB, 3
+	cntlzd	rCLZB, rTMP2
+	srdi	rCLZB, rCLZB, 3
 	add	rRTN, rSTR, rCLZB
-	CHECK_BOUNDS_HIGH_RTN (rSTR, rTMP2, twlge)
+	CHECK_BOUNDS_HIGH_RTN (rSTR, rTMP2, tdlge)
 	STORE_RETURN_VALUE (rSTR)
 	blr
 
@@ -118,11 +128,11 @@ L(foundit):
 	or	rIGN, r7F7F, rTMP3
 	add	rTMP1, rTMP1, r7F7F
 	nor	rTMP2, rIGN, rTMP1
-	cntlzw	rCLZB, rTMP2
-	subi	rSTR, rSTR, 4
-	srwi	rCLZB, rCLZB, 3
+	cntlzd	rCLZB, rTMP2
+	subi	rSTR, rSTR, 8
+	srdi	rCLZB, rCLZB, 3
 	add	rRTN, rSTR, rCLZB
-	CHECK_BOUNDS_HIGH_RTN (rSTR, rTMP2, twlge)
+	CHECK_BOUNDS_HIGH_RTN (rSTR, rTMP2, tdlge)
 	STORE_RETURN_VALUE (rSTR)
 	blr
 END (BP_SYM (strchr))

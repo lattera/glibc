@@ -1,5 +1,5 @@
 /* Optimized strlen implementation for PowerPC64.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,12 @@
    2) How popular are bytes with the high bit set? If they are very rare,
    on some processors it might be useful to use the simpler expression
    ~((x - 0x01010101) | 0x7f7f7f7f) (that is, on processors with only one
-   ALU), but this fails when any character has its high bit set.  */
+   ALU), but this fails when any character has its high bit set.  
+   
+   Answer:
+   1) Added a Data Cache Block Touch early to prefetch the first 128 
+   byte cache line. Adding dcbt instructions to the loop would not be 
+   effective since most strings will be shorter than the cache line.*/
 
 /* Some notes on register usage: Under the SVR4 ABI, we can use registers
    0 and 3 through 12 (so long as we don't call any procedures) without
@@ -80,63 +85,68 @@ ENTRY (BP_SYM (strlen))
 #define rSTR	r4	/* current string position */
 #define rPADN	r5	/* number of padding bits we prepend to the
 			   string to make it start at a word boundary */
-#define rFEFE	r6	/* constant 0xfefefeff (-0x01010101) */
-#define r7F7F	r7	/* constant 0x7f7f7f7f */
-#define rWORD1	r8	/* current string word */
-#define rWORD2	r9	/* next string word */
-#define rMASK	r9	/* mask for first string word */
+#define rFEFE	r6	/* constant 0xfefefefefefefeff (-0x0101010101010101) */
+#define r7F7F	r7	/* constant 0x7f7f7f7f7f7f7f7f */
+#define rWORD1	r8	/* current string doubleword */
+#define rWORD2	r9	/* next string doubleword */
+#define rMASK	r9	/* mask for first string doubleword */
 #define rTMP2	r10
 #define rTMP3	r11
 #define rTMP4	r12
 
+/* Note:  The Bounded pointer support in this code is broken.  This code
+   was inherited from PPC32 and and that support was never completed.  
+   Current PPC gcc does not support -fbounds-check or -fbounded-pointers.
+   These artifacts are left in the code as a reminder in case we need
+   bounded pointer support in the future.  */
 	CHECK_BOUNDS_LOW (rRTN, rTMP1, rTMP2)
 
-	clrrdi	rSTR, rRTN, 2
+	dcbt	0,rRTN
+	clrrdi	rSTR, rRTN, 3
 	lis	r7F7F, 0x7f7f
-	rlwinm	rPADN, rRTN, 3, 27, 28
-	lwz	rWORD1, 0(rSTR)
-	li	rMASK, -1
+	rlwinm	rPADN, rRTN, 3, 26, 28
+	ld	rWORD1, 0(rSTR)
 	addi	r7F7F, r7F7F, 0x7f7f
-/* That's the setup done, now do the first pair of words.
-   We make an exception and use method (2) on the first two words, to reduce
-   overhead.  */
-	srw	rMASK, rMASK, rPADN
+	li	rMASK, -1
+	insrdi	r7F7F, r7F7F, 32, 0
+/* That's the setup done, now do the first pair of doublewords.
+   We make an exception and use method (2) on the first two doublewords, 
+   to reduce overhead.  */
+	srd	rMASK, rMASK, rPADN
 	and	rTMP1, r7F7F, rWORD1
 	or	rTMP2, r7F7F, rWORD1
+	lis	rFEFE, -0x101
 	add	rTMP1, rTMP1, r7F7F
+	addi	rFEFE, rFEFE, -0x101
 	nor	rTMP1, rTMP2, rTMP1
 	and.	rWORD1, rTMP1, rMASK
 	mtcrf	0x01, rRTN
 	bne	L(done0)
-	lis	rFEFE, -0x101
-	addi	rFEFE, rFEFE, -0x101
-	clrldi	rFEFE,rFEFE,32 /* clear upper 32 */
+	sldi  rTMP1, rFEFE, 32
+	add  rFEFE, rFEFE, rTMP1
 /* Are we now aligned to a doubleword boundary?  */
-	bt	29, L(loop)
+	bt	28, L(loop)
 
-/* Handle second word of pair.  */
-	lwzu	rWORD1, 4(rSTR)
+/* Handle second doubleword of pair.  */
+	ldu	rWORD1, 8(rSTR)
 	and	rTMP1, r7F7F, rWORD1
 	or	rTMP2, r7F7F, rWORD1
 	add	rTMP1, rTMP1, r7F7F
 	nor.	rWORD1, rTMP2, rTMP1
-	clrldi.	rWORD1,rWORD1,32 /* clear upper 32 */
 	bne	L(done0)
 
 /* The loop.  */
 
 L(loop):
-	lwz	rWORD1, 4(rSTR)
-	lwzu	rWORD2, 8(rSTR)
+	ld	rWORD1, 8(rSTR)
+	ldu	rWORD2, 16(rSTR)
 	add	rTMP1, rFEFE, rWORD1
 	nor	rTMP2, r7F7F, rWORD1
 	and.	rTMP1, rTMP1, rTMP2
-	clrldi.	rTMP1,rTMP1,32 /* clear upper 32 */
 	add	rTMP3, rFEFE, rWORD2
 	nor	rTMP4, r7F7F, rWORD2
 	bne	L(done1)
 	and.	rTMP1, rTMP3, rTMP4
-	clrldi.	rTMP1,rTMP1,32 /* clear upper 32 */
 	beq	L(loop)
 
 	and	rTMP1, r7F7F, rWORD2
@@ -146,17 +156,17 @@ L(loop):
 
 L(done1):
 	and	rTMP1, r7F7F, rWORD1
-	subi	rSTR, rSTR, 4
+	subi	rSTR, rSTR, 8
 	add	rTMP1, rTMP1, r7F7F
 	andc	rWORD1, rTMP2, rTMP1
 
-/* When we get to here, rSTR points to the first word in the string that
+/* When we get to here, rSTR points to the first doubleword in the string that
    contains a zero byte, and the most significant set bit in rWORD1 is in that
    byte.  */
 L(done0):
-	cntlzw	rTMP3, rWORD1
+	cntlzd	rTMP3, rWORD1
 	subf	rTMP1, rRTN, rSTR
-	srwi	rTMP3, rTMP3, 3
+	srdi	rTMP3, rTMP3, 3
 	add	rRTN, rTMP1, rTMP3
 	/* GKM FIXME: check high bound.  */
 	blr
