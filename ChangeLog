@@ -1,3 +1,9 @@
+1999-07-12  Andreas Schwab  <schwab@suse.de>
+
+	* elf/rtld.c (dl_main): When putting back the interpreter object
+	handle the case where a missing object might occur in the list of
+	objects but not in the search list when in trace mode.
+
 1999-07-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions.def (libnss_hesiod): Add GLIBC_2.2.

@@ -798,9 +798,18 @@ of this helper program; chances are you did not intend to run this program.\n\
       while (_dl_loaded->l_searchlist.r_list[i] != &_dl_rtld_map)
 	++i;
       _dl_rtld_map.l_prev = _dl_loaded->l_searchlist.r_list[i - 1];
-      _dl_rtld_map.l_next = (i + 1 < _dl_loaded->l_searchlist.r_nlist
-			     ? _dl_loaded->l_searchlist.r_list[i + 1]
-			     : NULL);
+      if (__builtin_expect (mode, normal) == normal)
+	_dl_rtld_map.l_next = (i + 1 < _dl_loaded->l_searchlist.r_nlist
+			       ? _dl_loaded->l_searchlist.r_list[i + 1]
+			       : NULL);
+      else
+	/* In trace mode there might be an invisible object (which we
+	   could not find) after the previous one in the search list.
+	   In this case it doesn't matter much where we put the
+	   interpreter object, so we just initialize the list pointer so
+	   that the assertion below holds.  */
+	_dl_rtld_map.l_next = _dl_rtld_map.l_prev->l_next;
+
       assert (_dl_rtld_map.l_prev->l_next == _dl_rtld_map.l_next);
       _dl_rtld_map.l_prev->l_next = &_dl_rtld_map;
       if (_dl_rtld_map.l_next)
