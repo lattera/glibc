@@ -1,3 +1,13 @@
+1998-01-31 21:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_show_aux): Print newline after
+	AT_PLATFORM string.  Pretty print AT_BASE info.
+
+	* sysdeps/generic/dl-sysdep.c: Include <dl-procinfo.h>.
+	(_dl_show_aux): Call _dl_procinfo to print AT_HWCAP info.
+	* sysdeps/generic/dl-procinfo.h: New file.
+	* sysdeps/unix/sysv/linux/dl-procinfo.h: New file.
+
 1998-01-31 20:52  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/grpcache.c (cache_grpinit): Let calloc do the multiplication.

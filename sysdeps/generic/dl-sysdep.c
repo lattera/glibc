@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #include <stdio-common/_itoa.h>
 
 #include <dl-machine.h>
+#include <dl-procinfo.h>
 
 extern int _dl_argc;
 extern char **_dl_argv;
@@ -201,7 +202,7 @@ _dl_show_auxv (void)
 			    "\n", NULL);
 	break;
       case AT_BASE:
-	_dl_sysdep_message ("AT_BASE:    0x",
+	_dl_sysdep_message ("AT_BASE:     0x",
 			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
 					16, 0),
 			    "\n", NULL);
@@ -231,13 +232,14 @@ _dl_show_auxv (void)
 			    "\n", NULL);
 	break;
       case AT_PLATFORM:
-	_dl_sysdep_message ("AT_PLATFORM: ", av->a_un.a_ptr, NULL);
+	_dl_sysdep_message ("AT_PLATFORM: ", av->a_un.a_ptr, "\n", NULL);
 	break;
       case AT_HWCAP:
-	_dl_sysdep_message ("AT_HWCAP:    ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					16, 0),
-			    "\n", NULL);
+	if (_dl_procinfo (av->a_un.a_val) < 0)
+	  _dl_sysdep_message ("AT_HWCAP:    ",
+			      _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					  16, 0),
+			      "\n", NULL);
 	break;
       }
 }
