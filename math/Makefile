@@ -87,7 +87,7 @@ distribute += $(filter-out $(generated),$(long-m-yes:=.c) $(long-c-yes:=.c))
 
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
-	test-misc test-fpucw tst-definitions test-tgmath
+	test-misc test-fpucw tst-definitions test-tgmath test-tgmath-ret
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
@@ -126,6 +126,7 @@ CFLAGS-test-float.c = -fno-inline -ffloat-store
 CFLAGS-test-double.c = -fno-inline -ffloat-store
 CFLAGS-test-ldouble.c = -fno-inline -ffloat-store
 CFLAGS-test-tgmath.c = -fno-builtin
+CFLAGS-test-tgmath-ret.c = -fno-builtin
 CPPFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \
 			 -DTEST_FAST_MATH
 CPPFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__ \

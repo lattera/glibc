@@ -46,7 +46,7 @@ fedisableexcept (int excepts)
       /* Get the current control word.  */
       __asm__ ("stmxcsr %0" : "=m" (*&xnew_exc));
 
-      xnew_exc |= excepts;
+      xnew_exc |= excepts << 7;
 
       __asm__ ("ldmxcsr %0" : : "m" (*&xnew_exc));
     }

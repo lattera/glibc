@@ -44,7 +44,7 @@ feholdexcept (fenv_t *envp)
       __asm__ ("stmxcsr %0" : "=m" (*&xwork));
 
       /* Set all exceptions to non-stop.  */
-      work |= 0x1f80;
+      xwork |= 0x1f80;
 
       __asm__ ("ldmxcsr %0" : : "m" (*&xwork));
     }

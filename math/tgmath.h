@@ -177,19 +177,6 @@
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
-# define __TGMATH_UNARY_IMAG_ONLY(Val, Fct) \
-     (__extension__ ({ __tgmath_real_type (Val) __tgmres;		      \
-		       if (sizeof (Val) == sizeof (__complex__ double)	      \
-			   || __builtin_classify_type (__real__ (Val)) != 8)  \
-			 __tgmres = Fct (Val);				      \
-		       else if (sizeof (Val) == sizeof (__complex__ float))   \
-			 __tgmres = Fct##f (Val);			      \
-		       else						      \
-			 __tgmres = __tgml(Fct) (Val);			      \
-		       __tgmres; }))
-
-/* XXX This definition has to be changed as soon as the compiler understands
-   the imaginary keyword.  */
 # define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct) \
      (__extension__ ({ __tgmath_real_type ((Val1) + (Val2)) __tgmres;	      \
 		       if ((sizeof (__real__ (Val1)) > sizeof (double)	      \
@@ -400,7 +387,7 @@
      __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, scalbln)
 
 /* Return the binary exponent of X, which must be nonzero.  */
-#define ilogb(Val) __TGMATH_UNARY_REAL_ONLY (Val, ilogb)
+#define ilogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, int, ilogb)
 
 
 /* Return positive difference between X and Y.  */
@@ -421,21 +408,21 @@
 /* Absolute value, conjugates, and projection.  */
 
 /* Argument value of Z.  */
-#define carg(Val) __TGMATH_UNARY_IMAG_ONLY (Val, carg)
+#define carg(Val) __TGMATH_UNARY_REAL_IMAG (Val, carg, carg)
 
 /* Complex conjugate of Z.  */
-#define conj(Val) __TGMATH_UNARY_IMAG_ONLY (Val, conj)
+#define conj(Val) __TGMATH_UNARY_REAL_IMAG (Val, conj, conj)
 
 /* Projection of Z onto the Riemann sphere.  */
-#define cproj(Val) __TGMATH_UNARY_IMAG_ONLY (Val, cproj)
+#define cproj(Val) __TGMATH_UNARY_REAL_IMAG (Val, cproj, cproj)
 
 
 /* Decomposing complex values.  */
 
 /* Imaginary part of Z.  */
-#define cimag(Val) __TGMATH_UNARY_IMAG_ONLY (Val, cimag)
+#define cimag(Val) __TGMATH_UNARY_REAL_IMAG (Val, cimag, cimag)
 
 /* Real part of Z.  */
-#define creal(Val) __TGMATH_UNARY_IMAG_ONLY (Val, creal)
+#define creal(Val) __TGMATH_UNARY_REAL_IMAG (Val, creal, creal)
 
 #endif /* tgmath.h */

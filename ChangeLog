@@ -1,7 +1,32 @@
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/tgmath.h (__TGMATH_UNARY_IMAG_ONLY): Removed.
+
+2003-06-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/feenablxcpt.c (feenableexcept): Correct setting
+	of MXCSR.
+	* sysdeps/i386/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	Reported by Arnaud Desitter
+	<arnaud.desitter@geography.oxford.ac.uk>.
+
+	* math/tgmath.h (carg): Handle real arguments.
+	(conj): Likewise.
+	(cproj): Likewise.
+	(cimag): Likewise.
+	(creal): Likewise.
+
+	* math/Makefile (CFLAGS-test-tgmath-ret.c): New.
+	(tests): Add test-tgmath-ret.
+	* math/test-tgmath-ret.c: New file.
+
+	* math/tgmath.h (ilogb): Return always an int.
+
+2003-06-16  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/rtld.c (dl_main): Use l_map_start not l_addr in Phdr
-	computation so that prelinking wroks.
+	computation so that prelinking works.
 
 2003-06-15  Ulrich Drepper  <drepper@redhat.com>
 

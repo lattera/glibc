@@ -1,3 +1,10 @@
+2003-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add rules to build and run tst-cancel16 and
+	tst-cancelx16.  Add missing CFLAGS definitions.
+	* tst-cancel16.c: New file.
+	* tst-cancelx16.c: New file.
+
 2003-06-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h

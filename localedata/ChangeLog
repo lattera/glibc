@@ -1,3 +1,20 @@
+2003-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/an_ES: New file.  Contributed by Jordi Mallach Péez.
+
+2003-06-15  Petter Reinholdtsen  <pere@hungry.com>
+
+	* tst-fmon.c (main): Remove unused variable 'monval'.
+
+	* tst-fmon.sh: Make sure all tests are executed before an error
+	code is reported to make.
+	* tst-numeric.sh: Likewise.
+
+2003-06-15  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/is_IS [LC_TIME]: Use lower case letters in month and
+	week day names.  Patch from Bjarni Ingi Gislason.
+
 2003-05-31  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/fi_FI: Add URL to a reference documenting Finish in
