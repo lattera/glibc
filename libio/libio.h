@@ -140,7 +140,7 @@
 #define _IO_FLAGS2_MMAP 1
 #define _IO_FLAGS2_NOTCANCEL 2
 #ifdef _LIBC
-# define _IO_FLAGS2_CHECK_PERCENT_N 4
+# define _IO_FLAGS2_FORTIFY 4
 #endif
 
 /* These are "formatting flags" matching the iostream fmtflags enum values. */
