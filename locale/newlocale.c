@@ -1,5 +1,6 @@
 /* Return a reference to locale information record.
-   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -19,12 +20,17 @@
    02111-1307 USA.  */
 
 #include <argz.h>
+#include <bits/libc-lock.h>
 #include <errno.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "localeinfo.h"
+
+
+/* Lock for protecting global data.  */
+__libc_lock_define (extern , __libc_setlocale_lock attribute_hidden)
 
 
 /* Use this when we come along an error.  */
@@ -154,6 +160,9 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 	ERROR_RETURN;
     }
 
+  /* Protect global data.  */
+  __libc_lock_lock (__libc_setlocale_lock);
+
   /* Now process all categories we are interested in.  */
   names_len = 0;
   for (cnt = 0; cnt < __LC_LAST; ++cnt)
@@ -171,6 +180,9 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 		    && result.__locales[cnt]->usage_count != UNDELETABLE)
 		  /* We can remove the data.  */
 		  _nl_remove_locale (cnt, result.__locales[cnt]);
+
+              /* Critical section left.  */
+              __libc_lock_unlock (__libc_setlocale_lock);
 	      return NULL;
 	    }
 
@@ -248,6 +260,9 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 
       free (base);
     }
+
+  /* Critical section left.  */
+  __libc_lock_unlock (__libc_setlocale_lock);
 
   /* Update the special members.  */
  update:

@@ -1,3 +1,10 @@
+2004-07-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/newlocale.c: Include bits/libc-lock.h.
+	(__libc_setlocale_lock): Extern decl.
+	(__newlocale): Use it.
+	Reported by Ulrich Weigand <Ulrich.Weigand@de.ibm.com>.
+
 2004-07-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fcntl.c (__fcntl_nocancel): Remove
