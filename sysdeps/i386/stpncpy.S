@@ -143,8 +143,8 @@ L(3):	decl %ecx		/* all bytes written? */
 L(9):
 #if __BOUNDED_POINTERS__
 	addl %eax, %esi		/* undo magic: %esi now points beyond end of SRC */
-	CHECK_BOUNDS_HIGH (%esi, SRC(%esp), jb)
-	CHECK_BOUNDS_HIGH (%eax, DEST(%esp), jb)
+	CHECK_BOUNDS_HIGH (%esi, SRC(%esp), jbe)
+	CHECK_BOUNDS_HIGH (%eax, DEST(%esp), jbe)
 	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 	popl %esi		/* restore saved register content */

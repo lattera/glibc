@@ -53,7 +53,7 @@ ENTRY (BP_SYM (__memchr))
 	movl STR(%esp), %eax	/* str: pointer to memory block.  */
 	movl CHR(%esp), %edx	/* c: byte we are looking for.  */
 	movl LEN(%esp), %esi	/* len: length of memory block.  */
-	CHECK_BOUNDS_BOTH_WIDE (%eax, STR(%esp), %esi)
+	CHECK_BOUNDS_LOW (%eax, STR(%esp))
 
 	/* If my must not test more than three characters test
 	   them one by one.  This is especially true for 0.  */
@@ -314,6 +314,7 @@ L(8):	testb %cl, %cl		/* test first byte in dword */
 	/* No further test needed we we know it is one of the four bytes.  */
 L(9):
 #if __BOUNDED_POINTERS__
+	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
 	/* If RTN pointer is phony, don't copy return value into it.  */
 	movl RTN(%esp), %ecx
 	testl %ecx, %ecx
