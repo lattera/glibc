@@ -236,3 +236,8 @@ module	ISO-10646/UCS4/		EUC-JP//		EUC-JP		1
 alias	EUCCN//			EUC-CN//
 module	EUC-CN//		ISO-10646/UCS4/		EUC-CN		1
 module	ISO-10646/UCS4/		EUC-CN//		EUC-CN		1
+
+#	from			  to			module		cost
+alias	EUCTW//			EUC-TW//
+module	EUC-TW//		ISO-10646/UCS4/		EUC-TW		1
+module	ISO-10646/UCS4/		EUC-TW//		EUC-TW		1

@@ -1,3 +1,19 @@
+1998-04-13 14:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/cns11643.c: New file.
+	* iconvdata/cns11643.h: New file.
+	* iconvdata/cns11643l1.c: New file.
+	* iconvdata/cns11643l1.h: New file.
+	* iconvdata/euctw.c: New file.
+	* iconvdata/Makefile: Add rules for EUC-TW and CNS.
+	* iconvdata/gconv-modules: Likewise.
+
+	* iconvdata/eucjp.c: Several bug fixes and improvements.
+	* iconvdata/gb2312.h: Likewise.
+	* iconvdata/jis0201.h: Likewise.
+	* iconvdata/jis0208.h: Likewise.
+	* iconvdata/jis0212.h: Likewise.
+
 1998-04-13 09:11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/eucjp.c: New file.

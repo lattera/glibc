@@ -1,5 +1,5 @@
 /* Access functions for JISX0208 conversion.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -43,23 +43,23 @@ struct jisx0208_ucs_idx
 
 
 static inline wchar_t
-jisx0208_to_ucs4 (char **s, size_t avail)
+jisx0208_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = *(*s);
   unsigned char ch2;
   int idx;
 
-  if (ch <= 0x20 || ch > 0xea)
+  if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) > 0xea)
     return UNKNOWN_10646_CHAR;
 
   if (avail < 2)
     return 0;
 
   ch2 = (*s)[1];
-  if (ch2 <= 0x20 || ch2 >= 0x7f)
+  if (ch2 < offset || (ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
     return UNKNOWN_10646_CHAR;
 
-  idx = (ch - 0x21) * 94 + (ch2 - 0x21);
+  idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
   if (idx >= 0x1e80)
     return UNKNOWN_10646_CHAR;
 
@@ -70,7 +70,7 @@ jisx0208_to_ucs4 (char **s, size_t avail)
 
 
 static inline size_t
-ucs4_to_jisx0208 (wchar_t wch, char **s, size_t avail)
+ucs4_to_jisx0208 (wchar_t wch, char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
   const char *cp = NULL;
@@ -95,8 +95,8 @@ ucs4_to_jisx0208 (wchar_t wch, char **s, size_t avail)
   if (cp == NULL || cp[0] == '\0')
     return UNKNOWN_10646_CHAR;
 
-  *(*s)++ = cp[0];
-  *(*s)++ = cp[1];
+  s[0] = cp[0];
+  s[1] = cp[1];
 
   return 2;
 }

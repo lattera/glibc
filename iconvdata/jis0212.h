@@ -1,5 +1,5 @@
 /* Access functions for JISX0212 conversion.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -42,7 +42,7 @@ extern const char jisx0212_from_ucs[][2];
 
 
 static inline wchar_t
-jisx0212_to_ucs4 (char **s, size_t avail)
+jisx0212_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 {
   const struct jisx0212_idx *rp = jisx0212_to_ucs_idx;
   unsigned char ch = *(*s);
@@ -50,17 +50,17 @@ jisx0212_to_ucs4 (char **s, size_t avail)
   wchar_t wch = L'\0';
   int idx;
 
-  if (ch <= 0x6d || ch > 0xea)
+  if (ch < offset || (ch - offset) <= 0x6d || (ch - offset) > 0xea)
     return UNKNOWN_10646_CHAR;
 
   if (avail < 2)
     return 0;
 
   ch2 = (*s)[1];
-  if (ch2 <= 0x20 || ch2 >= 0x7f)
+  if (ch2 < offset || (ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
     return UNKNOWN_10646_CHAR;
 
-  idx = (ch - 0x21) * 94 + (ch2 - 0x21);
+  idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
 
   while (idx < rp->start)
     ++rp;
@@ -77,7 +77,7 @@ jisx0212_to_ucs4 (char **s, size_t avail)
 
 
 static inline size_t
-ucs4_to_jisx0212 (wchar_t wch, char **s, size_t avail)
+ucs4_to_jisx0212 (wchar_t wch, char *s, size_t avail)
 {
   const struct jisx0212_idx *rp = jisx0212_from_ucs_idx;
   unsigned int ch = (unsigned int) wch;
@@ -91,15 +91,14 @@ ucs4_to_jisx0212 (wchar_t wch, char **s, size_t avail)
   if (cp == NULL || cp[0] == '\0')
     return UNKNOWN_10646_CHAR;
 
-  **s = cp[0];
+  s[0] = cp[0];
   if (cp[1] != '\0')
     {
       if (avail < 2)
 	return 0;
 
-      *++(*s) = cp[1];
+      s[1] = cp[1];
     }
-  ++(*s);
 
   return 2;
 }

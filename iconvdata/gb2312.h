@@ -46,7 +46,7 @@ gb2312_to_ucs4 (const char **s, size_t avail, unsigned char offset)
     return UNKNOWN_10646_CHAR;
 
   idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
-  if (idx >= 0x1ff1)
+  if (idx > 0x1ff1)
     return UNKNOWN_10646_CHAR;
 
   (*s) += 2;
@@ -73,7 +73,7 @@ ucs4_to_gb2312 (wchar_t wch, char *s, size_t avail)
   const char *cp = NULL;
 
   if (ch < 0xa4)
-    cp = NULL;
+    return UNKNOWN_10646_CHAR;
   else if (ch < 0x101)
     cp = gb2312_from_ucs4_tab1[ch - 0xa4];
   else if (ch == 0x113)
