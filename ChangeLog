@@ -1,3 +1,8 @@
+2000-08-24  Andreas Jaeger  <aj@suse.de>
+
+	* malloc/Makefile (extra-objs): Fix last patch, build memusagestat
+	only if LIBGD is available.
+
 2000-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_send.c (res_ourserver_p): Cleanup the type mess to avoid

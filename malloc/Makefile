@@ -48,7 +48,7 @@ libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 # These should be removed by `make clean'.
-extra-objs = mcheck-init.o libmcheck.a memusagestat.o
+extra-objs = mcheck-init.o libmcheck.a
 
 # Include the cleanup handler.
 aux := set-freeres
@@ -73,6 +73,7 @@ endif
 ifneq ($(LIBGD),no)
 install-bin += memusagestat memusage
 generated += memusagestat memusage
+extra-objs += memusagestat.o
 endif
 
 # Another goal which can be used to override the configure decision.
