@@ -285,6 +285,8 @@ extern "C" {
 
 /* For writev and struct iovec.  */
 #include <sys/uio.h>
+  /* For syslog.  */
+#include <sys/syslog.h>
 
 /*
   Debugging:
@@ -5467,7 +5469,12 @@ malloc_printerr(int action, const char *str, void *ptr)
       iov[n].iov_base = cp;
       iov[n].iov_len = &buf[sizeof (buf) - 1] - cp;
       ++n;
-      TEMP_FAILURE_RETRY (__writev (STDERR_FILENO, iov, n));
+      if (TEMP_FAILURE_RETRY (__writev (STDERR_FILENO, iov, n)) == -1
+	  && errno == EBADF)
+	/* Standard error is not opened.  Try using syslog.  */
+	syslog (LOG_ERR, "%s%s%s", (char *) iov[0].iov_base,
+		(char *) iov[1].iov_base,
+		n == 3 ? (const char *) iov[2].iov_base : "");
     }
   if (action & 2)
     abort ();

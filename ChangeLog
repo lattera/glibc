@@ -1,5 +1,7 @@
 2004-09-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (malloc_printerr): Use syslog if writev failed.
+
 	* string/string.h: Add __nonnull annotations.
 	* stdlib/stdlib.h: Likewise.
 
