@@ -127,7 +127,7 @@ libc_freeres_fn (free_mem)
   /* We can free the memory after releasing the lock.  */
   while (runp != NULL)
     {
-      struct fork_handler_pool *oldp;
+      struct fork_handler_pool *oldp = runp;
       runp = runp->next;
       free (oldp);
     }
