@@ -1,3 +1,8 @@
+1997-03-30 03:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c: Add definition of ctanh_test, clog_test, and
+	csqrt_test.
+
 1997-03-29 17:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/Makefile (routines): Add carg, s_ccosh and s_csinh.
