@@ -25,6 +25,15 @@
 	* localedata/locales/it_CH: New file.
 	Contributed by Giacomo Amabile Catenazzi <gcatenaz@g26.ethz.ch>.
 
+1999-01-31  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Configuring and compiling): Building in the
+	source directory works, change paragraph stating the opposite.
+
+1999-01-29  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* locale/programs/locale-spec.c: Fix last change.
+
 1999-01-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/libm-test.c (fdim_test): Fix typo in message.
