@@ -1,3 +1,8 @@
+2001-06-01  Roland McGrath  <roland@frob.com>
+
+	* iconvdata/cp1258.c: Include <stdlib.h> for abort decl.
+	* iconvdata/iso-2022-cn-ext.c: Likewise.
+
 2001-06-01  Andreas Jaeger  <aj@suse.de>
 
 	* Versions.def: Add version 2.2.4.
