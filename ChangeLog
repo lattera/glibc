@@ -1,3 +1,15 @@
+2005-03-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wctob.c (wctob): Make buf array of unsigned char.
+	* sysdeps/generic/strchrnul.c: Add cast to avoid warning.
+	* libio/iofwide.c: Add casts to avoid warnings.
+	* stdio-common/printf-prs.c (parse_printf_format): Introduce new
+	variable f to avoid warnings.
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c (__makecontext):
+	Fix a few casts to avoid warnings.
+	* iconv/gconv_simple.c (internal_utf8_loop): Make start unsigned
+	to avoid warning.
+
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/bits/unistd.h: New file.

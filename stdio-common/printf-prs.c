@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1999, 2000, 2002, 2003, 2004
+/* Copyright (C) 1991, 1992, 1995, 1996, 1999, 2000, 2002, 2003, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -67,15 +67,16 @@ parse_printf_format (fmt, n, argtypes)
   size_t max_ref_arg;		/* Highest index used in a positional arg.  */
   struct printf_spec spec;
   mbstate_t mbstate;
+  const unsigned char *f = (const unsigned char *) fmt;
 
   nargs = 0;
   max_ref_arg = 0;
 
   /* Search for format specifications.  */
-  for (fmt = __find_specmb (fmt, &mbstate); *fmt != '\0'; fmt = spec.next_fmt)
+  for (f = __find_specmb (f, &mbstate); *f != '\0'; f = spec.next_fmt)
     {
       /* Parse this spec.  */
-      nargs += __parse_one_specmb (fmt, nargs, &spec, &max_ref_arg, &mbstate);
+      nargs += __parse_one_specmb (f, nargs, &spec, &max_ref_arg, &mbstate);
 
       /* If the width is determined by an argument this is an int.  */
       if (spec.width_arg != -1 && (size_t) spec.width_arg < n)

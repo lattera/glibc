@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -886,7 +886,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     else if (__builtin_expect (wc <= 0x7fffffff, 1))			      \
       {									      \
 	size_t step;							      \
-	char *start;							      \
+	unsigned char *start;						      \
 									      \
 	for (step = 2; step < 6; ++step)				      \
 	  if ((wc & (~(uint32_t)0 << (5 * step + 1))) == 0)		      \
