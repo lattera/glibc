@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i386 version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +38,7 @@
 
 
 /* Copy N bytes of SRC to DEST.  */
+#define _HAVE_STRING_ARCH_memcpy 1
 #define memcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (n)				      \
 		  ? __memcpy_c (dest, src, n)				      \
@@ -132,6 +133,7 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
 
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
+#define _HAVE_STRING_ARCH_memmove 1
 __STRING_INLINE void *
 memmove (void *__dest, __const void *__src, size_t __n)
 {
@@ -158,6 +160,7 @@ memmove (void *__dest, __const void *__src, size_t __n)
 
 
 /* Set N bytes of S to C.  */
+#define _HAVE_STRING_ARCH_memset 1
 #define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? (__builtin_constant_p (n)				      \
@@ -249,27 +252,7 @@ __memset_gg (void *__s, char __c, size_t __n)
 
 
 /* Search N bytes of S for C.  */
-__STRING_INLINE void *
-memchr (__const void *__s, int __c, size_t __n)
-{
-  register void *__res;
-  if (count == 0)
-    return NULL;
-  __asm__ __volatile__
-    ("cld\n\t"
-     "repne; scasb\n\t"
-     "je	1f\n\t"
-     "movl	$1,%0\n"
-     "1:\n\t"
-     "decl	%0"
-     : "=D" (__res)
-     : "a" (__c), "D" (__s), "c" (__n)
-     : "cx", "cc");
-  return __res;
-}
-
-
-/* Search N bytes of S for C.  */
+#define _HAVE_STRING_ARCH_memchr 1
 __STRING_INLINE void *
 memchr (__const void *__s, int __c, size_t __n)
 {
@@ -291,6 +274,7 @@ memchr (__const void *__s, int __c, size_t __n)
 
 
 /* Return the length of S.  */
+#define _HAVE_STRING_ARCH_strlen 1
 __STRING_INLINE size_t
 strlen (__const char *__str)
 {
@@ -307,6 +291,7 @@ strlen (__const char *__str)
 
 
 /* Copy SRC to DEST.  */
+#define _HAVE_STRING_ARCH_strcpy 1
 __STRING_INLINE char *
 strcpy (char *__dest, __const char *__src)
 {
@@ -325,6 +310,7 @@ strcpy (char *__dest, __const char *__src)
 
 
 /* Copy no more than N characters of SRC to DEST.  */
+#define _HAVE_STRING_ARCH_strncpy 1
 __STRING_INLINE char *
 strncpy (char *__dest, __const char *__src, size_t __n)
 {
@@ -347,6 +333,7 @@ strncpy (char *__dest, __const char *__src, size_t __n)
 
 
 /* Append SRC onto DEST.  */
+#define _HAVE_STRING_ARCH_strcat 1
 __STRING_INLINE char *
 strcat (char *__dest, __const char *__src)
 {
@@ -367,6 +354,7 @@ strcat (char *__dest, __const char *__src)
 
 
 /* Append no more than N characters from SRC onto DEST.  */
+#define _HAVE_STRING_ARCH_strncat 1
 __STRING_INLINE char *
 strncat (char *__dest, __const char *__src, size_t __n)
 {
@@ -393,6 +381,7 @@ strncat (char *__dest, __const char *__src, size_t __n)
 
 
 /* Compare S1 and S2.  */
+#define _HAVE_STRING_ARCH_strcmp 1
 __STRING_INLINE int
 strcmp (__const char *__s1, __const char *__s2)
 {
@@ -419,6 +408,7 @@ strcmp (__const char *__s1, __const char *__s2)
 
 
 /* Compare N characters of S1 and S2.  */
+#define _HAVE_STRING_ARCH_strncmp 1
 __STRING_INLINE int
 strncmp (__const char *__s1, __const char *__s2, size_t __n)
 {
@@ -448,6 +438,7 @@ strncmp (__const char *__s1, __const char *__s2, size_t __n)
 
 
 /* Find the first occurrence of C in S.  */
+#define _HAVE_STRING_ARCH_strchr 1
 #define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? __strchr_c (s, ((c) & 0xff) << 8)			      \
@@ -499,6 +490,7 @@ __strchr_c (__const char *__s, int __c)
 
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
+#define _HAVE_STRING_ARCH_strcspn 1
 #ifdef __PIC__
 __STRING_INLINE size_t
 strcspn (__const char *__s, __const char *__reject)
@@ -558,6 +550,7 @@ strcspn (__const char *__s, __const char *__reject)
 
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
+#define _HAVE_STRING_ARCH_strspn 1
 #ifdef __PIC__
 __STRING_INLINE size_t
 strspn (__const char *__s, __const char *__accept)
@@ -616,6 +609,7 @@ strspn (__const char *__s, __const char *__accept)
 
 
 /* Find the first occurrence in S of any character in ACCEPT.  */
+#define _HAVE_STRING_ARCH_strpbrk 1
 #ifdef __PIC__
 __STRING_INLINE char *
 strpbrk (__const char *__s, __const char *__accept)
@@ -682,6 +676,7 @@ strpbrk (__const char *__s, __const char *__accept)
 
 
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
+#define _HAVE_STRING_ARCH_strstr 1
 #ifdef __PIC__
 __STRING_INLINE char *
 strstr (__const char *__haystack, __const char *__needle)

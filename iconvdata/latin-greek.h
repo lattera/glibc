@@ -127,7 +127,7 @@ static const wchar_t to_ucs4[256] = {
   [0x7F] = 0x007F,
 };
 static struct gap from_idx[] = {
-  { start: 000000, end: 0x0060, idx:     0 },
+  { start: 0x0000, end: 0x0060, idx:     0 },
   { start: 0x007b, end: 0x007f, idx:   -26 },
   { start: 0x00a3, end: 0x00a8, idx:   -61 },
   { start: 0x00b7, end: 0x00b7, idx:   -75 },

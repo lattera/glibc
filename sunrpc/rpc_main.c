@@ -1016,8 +1016,7 @@ parseargs(int argc, const char *argv[], struct commandline *cmd)
 						size_t len = strlen (argv[i]);
 						pathbuf = malloc (len + 5);
 						if (pathbuf == NULL) {
-							f_print(stderr, "%s\n",
-								strerror (errno));
+							perror(cmdname);
 							crash();
 						}
 						stpcpy (stpcpy (pathbuf,

@@ -421,10 +421,10 @@ handle_fildes_io (void *arg)
 					     aiocbp->aiocb64.aio_offset));
 	  else
 	    aiocbp->aiocb.__return_value =
-	      TEMP_FAILURE_RETRY (__pread (fildes,
-					   (void *) aiocbp->aiocb.aio_buf,
-					   aiocbp->aiocb.aio_nbytes,
-					   aiocbp->aiocb.aio_offset));
+	      TEMP_FAILURE_RETRY (pread (fildes,
+					 (void *) aiocbp->aiocb.aio_buf,
+					 aiocbp->aiocb.aio_nbytes,
+					 aiocbp->aiocb.aio_offset));
 	}
       else if ((aiocbp->aiocb.aio_lio_opcode & 127) == LIO_WRITE)
 	{
@@ -436,10 +436,10 @@ handle_fildes_io (void *arg)
 					      aiocbp->aiocb64.aio_offset));
 	  else
 	    aiocbp->aiocb.__return_value =
-	      TEMP_FAILURE_RETRY (__pwrite (fildes,
-					    (const void *) aiocbp->aiocb.aio_buf,
-					    aiocbp->aiocb.aio_nbytes,
-					    aiocbp->aiocb.aio_offset));
+	      TEMP_FAILURE_RETRY (pwrite (fildes,
+					  (const void *) aiocbp->aiocb.aio_buf,
+					  aiocbp->aiocb.aio_nbytes,
+					  aiocbp->aiocb.aio_offset));
 	}
       else if (aiocbp->aiocb.aio_lio_opcode == LIO_DSYNC)
 	aiocbp->aiocb.__return_value = TEMP_FAILURE_RETRY (fdatasync (fildes));

@@ -121,6 +121,9 @@ $(common-objpfx)config.status: $(..)version.h $(..)configure \
 	 echo Try \`configure --help\' for more details. >&2; \
 	 exit 1; fi
 
+# We don't want CPPFLAGS to be exported to the command running configure.
+unexport CPPFLAGS
+
 # Get the user's configuration parameters.
 ifneq ($(wildcard $(..)configparms),)
 include $(..)configparms

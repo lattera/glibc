@@ -42,7 +42,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strcoll_l strxfrm_l
 
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
-		   tst-strlen stratcliff tst-svc
+		   tst-strlen stratcliff tst-svc tst-inlcall
 distribute	:= memcopy.h pagecopy.h tst-svc.expect
 
 

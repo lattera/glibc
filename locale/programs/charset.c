@@ -125,10 +125,11 @@ insert_char (struct linereader *lr, struct charset_t *cs, int bytes,
 
   for (cnt = from_nr; cnt <= to_nr; ++cnt)
     {
-      sprintf (&buf[prefix_len], "%0d", cnt);
+      sprintf (&buf[prefix_len], "%0*d", len1 - prefix_len, cnt);
 
       if (insert_entry (&cs->char_table, buf, len1,
-			(void *) (unsigned long int) cnt) < 0)
+			(void *) (unsigned long int) (value + (cnt - from_nr)))
+	  < 0)
 	lr_error (lr, _("duplicate character name `%s'"), buf);
     }
 }

@@ -70,6 +70,8 @@ dep-dummy-lib = $(common-objpfx)dummy.o
 define make-dummy-lib
 $(AR) cr$(verbose) $@ $<
 endef
+
+$(common-objpfx)dummy.o: $(common-objpfx)dummy.c; $(compile-command.c)
 $(common-objpfx)dummy.c:
 	rm -f $@
 	echo 'void __dummy__ (void) { }' > $@

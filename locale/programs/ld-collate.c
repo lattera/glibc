@@ -190,7 +190,7 @@ collate_startup (struct linereader *lr, struct localedef_t *locale,
   collate->all_patches = NULL;
 
   /* This tells us no UNDEFINED entry was found until now.  */
-  collate->undefined.this_weight = 0;
+  memset (&collate->undefined, '\0', sizeof (collate->undefined));
 
   lr->translate_strings = 0;
 }
@@ -457,12 +457,10 @@ Computing table size for collation information might take a while..."),
 	       information.  While reading them they get inserted in the      \
 	       table and later not removed when something goes wrong with     \
 	       reading its weights.  */					      \
-	    {								      \
-	      value += 1 + runp->ordering[cnt];				      \
+	    value += 1 + runp->ordering[cnt];				      \
 									      \
-	      if (runp->name[1] == L'\0')				      \
-		has_simple = runp;					      \
-	    }								      \
+	  if (runp->name[1] == L'\0')					      \
+	    has_simple = runp;						      \
 									      \
 	  ADD_ELEMENT (runp, value);					      \
 	}								      \
@@ -1891,7 +1889,7 @@ collate_end_weight (struct linereader *lr, struct localedef_t *locale)
 	  || collate->kind == undefined);
 
   /* Fill in the missing weights.  */
-  while (++collate->weight_idx < collate->nrules)
+  while (collate->weight_idx++ < collate->nrules)
     {
       collate->weight[collate->nweight++] = pelem->this_weight;
       ++collate->weight_cnt[collate->weight_idx];

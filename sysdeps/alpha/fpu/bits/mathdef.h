@@ -63,5 +63,9 @@ typedef double double_t;
 
 #endif
 
+/* The values returned by `ilogb' for 0 and NaN respectively.  */
+#define FP_ILOGB0     0x80000001
+#define FP_ILOGBNAN   0x7fffffff
+
 /* Number of decimal digits for the `double' type.  */
 #define DECIMAL_DIG	15

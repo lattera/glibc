@@ -36,6 +36,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/resource.h>
 
 /*
   Since not all architectures might define all exceptions, we define
@@ -249,6 +250,14 @@ feenv_nomask_test (const char *flag_name, int fe_exc)
   pid = fork  ();
   if (pid == 0)
     {
+#ifdef RLIMIT_CORE
+      /* Try to avoid dumping core.  */
+      struct rlimit core_limit;
+      core_limit.rlim_cur = 0;
+      core_limit.rlim_max = 0;
+      setrlimit (RLIMIT_CORE, &core_limit);
+#endif
+
       fesetenv (FE_NOMASK_ENV);
       feraiseexcept (fe_exc);
       exit (2);
@@ -293,6 +302,14 @@ feenv_mask_test (const char *flag_name, int fe_exc)
   pid = fork ();
   if (pid == 0)
     {
+#ifdef RLIMIT_CORE
+      /* Try to avoid dumping core.  */
+      struct rlimit core_limit;
+      core_limit.rlim_cur = 0;
+      core_limit.rlim_max = 0;
+      setrlimit (RLIMIT_CORE, &core_limit);
+#endif
+
       fesetenv (FE_DFL_ENV);
       feraiseexcept (fe_exc);
       exit (2);

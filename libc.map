@@ -15,6 +15,8 @@ GLIBC_2.0 {
 
     _IO_list_all; _IO_stderr_; _IO_stdin_; _IO_stdout_;
 
+    __libc_pid; __libc_uid;
+
     # This is for ix86 only.
     _fp_hw;
 
@@ -94,7 +96,7 @@ GLIBC_2.0 {
     _IO_fopen; _IO_fclose; _IO_file_open;
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
-    __res_randomid;
+    __res_randomid; __syscall_rt_sigqueueinfo; __getpid; __pread64; __pwrite64;
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;

@@ -1812,7 +1812,7 @@ The smallest valid priority value.
 @comment BSD
 @item PRIO_MAX
 @vindex PRIO_MAX
-The smallest valid priority value.
+The largest valid priority value.
 @end table
 
 @comment sys/resource.h

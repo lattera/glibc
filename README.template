@@ -5,10 +5,13 @@ Some bugs surely remain.
 As of this release, the GNU C library is known to run on the following
 configurations:
 
-		i[3456]86-*-gnu		GNU Hurd
-		i[3456]86-*-linux-gnu	Linux-2.0 on Intel
-		m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
-		alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
+		*-*-gnu			GNU Hurd
+		i[3456]86-*-linux-gnu	Linux-2.x on Intel
+		m68k-*-linux-gnu	Linux-2.x on Motorola 680x0
+		alpha-*-linux-gnu	Linux-2.x on DEC Alpha
+		powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
+		sparc-*-linux-gnu	Linux-2.x on SPARC
+		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 
 
 Former releases of this library (version 1.09.1 and perhaps earlier
@@ -82,7 +85,7 @@ facilities you want it to make available.
 We prefer to get bug reports sent using the `glibcbug' shell script which
 is installed together with the rest of the GNU libc to <bugs@gnu.org>.
 Simply run this shell script and fill in the information.  Nevertheless
-you can still send bug reports to <bug-glibc@gnu.irg> as normal electronic
+you can still send bug reports to <bug-glibc@gnu.org> as normal electronic
 mails.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying

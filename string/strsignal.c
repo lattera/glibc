@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,9 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <bits/libc-lock.h>
 
 
 #ifndef	HAVE_GNU_LD
@@ -27,23 +29,100 @@
 
 /* Defined in siglist.c.  */
 extern const char *const _sys_siglist[];
+static __libc_key_t key;
+
+/* If nonzero the key allocation failed and we should better use a
+   static buffer than fail.  */
+#define BUFFERSIZ	100
+static char local_buf[BUFFERSIZ];
+static char *static_buf;
+
+/* Destructor for the thread-specific data.  */
+static void init (void);
+static void free_key_mem (void *mem);
+static char *getbuffer (void);
 
 
 /* Return a string describing the meaning of the signal number SIGNUM.  */
 char *
 strsignal (int signum)
 {
+  __libc_once_define (static, once);
   const char *desc;
 
-  if (signum < 0 || signum > NSIG || (desc = _sys_siglist[signum]) == NULL)
+  /* If we have not yet initialized the buffer do it now.  */
+  __libc_once (once, init);
+
+  if (
+#ifdef SIGRTMIN
+      (signum >= SIGRTMIN && signum <= SIGRTMAX) ||
+#endif
+      signum < 0 || signum > NSIG || (desc = _sys_siglist[signum]) == NULL)
     {
-      static char buf[512];
-      int len = __snprintf (buf, sizeof buf, _("Unknown signal %d"), signum);
+      char *buffer = getbuffer ();
+      int len = __snprintf (buffer, BUFFERSIZ - 1,
+#ifdef SIGRTMIN
+			    signum >= SIGRTMIN && signum <= SIGRTMAX
+			    ? _("Real-time signal %d") :
+#endif
+			    _("Unknown signal %d"), signum);
       if (len < 0)
-	return NULL;
-      buf[len - 1] = '\0';
-      return buf;
+	buffer = NULL;
+      else
+	buffer[len] = '\0';
+
+      return buffer;
     }
 
   return (char *) _(desc);
+}
+
+
+/* Initialize buffer.  */
+static void
+init (void)
+{
+  if (__libc_key_create (&key, free_key_mem))
+    /* Creating the key failed.  This means something really went
+       wrong.  In any case use a static buffer which is better than
+       nothing.  */
+    static_buf = local_buf;
+}
+
+
+/* Free the thread specific data, this is done if a thread terminates.  */
+static void
+free_key_mem (void *mem)
+{
+  free (mem);
+  __libc_setspecific (key, NULL);
+}
+
+
+/* Return the buffer to be used.  */
+static char *
+getbuffer (void)
+{
+  char *result;
+
+  if (static_buf != NULL)
+    result = static_buf;
+  else
+    {
+      /* We don't use the static buffer and so we have a key.  Use it
+	 to get the thread-specific buffer.  */
+      result = __libc_getspecific (key);
+      if (result == NULL)
+	{
+	  /* No buffer allocated so far.  */
+	  result = malloc (BUFFERSIZ);
+	  if (result == NULL)
+	    /* No more memory available.  We use the static buffer.  */
+	    result = local_buf;
+	  else
+	    __libc_setspecific (key, result);
+	}
+    }
+
+  return result;
 }

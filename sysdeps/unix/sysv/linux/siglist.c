@@ -1,14 +1,14 @@
 #include <stddef.h>
 #include <signal.h>
 
-const char * const __new_sys_siglist[NSIG] =
+const char * const __new_sys_siglist[NSIG + 1] =
 {
 #define init_sig(sig, abbrev, desc)   [sig] desc,
 #include "siglist.h"
 #undef init_sig
 };
 
-const char * const __new_sys_sigabbrev[NSIG] =
+const char * const __new_sys_sigabbrev[NSIG + 1] =
 {
 #define init_sig(sig, abbrev, desc)   [sig] abbrev,
 #include "siglist.h"

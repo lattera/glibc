@@ -14,19 +14,19 @@ mmap		-	mmap		6	__mmap		mmap __mmap64 mmap64
 
 # Override select.S in parent directory:
 select		-	select		5	__select	select
-accept		-	accept		3	__accept	accept
+accept		-	accept		3	__libc_accept	__accept accept
 bind		-	bind		3	__bind		bind
-connect		-	connect		3	__connect	connect
+connect		-	connect		3	__libc_connect	__connect connect
 getpeername	-	getpeername	3	__getpeername	getpeername
 getsockname	-	getsockname	3	__getsockname	getsockname
 getsockopt	-	getsockopt	5	__getsockopt	getsockopt
 listen		-	listen		2	__listen	listen
-recv		-	recv		4	__recv		recv
-recvfrom	-	recvfrom	6	__recvfrom	recvfrom
-recvmsg		-	recvmsg		3	__recvmsg	recvmsg
-send		-	send		4	__send		send
-sendmsg		-	sendmsg		3	__sendmsg	sendmsg
-sendto		-	sendto		6	__sendto	sendto
+recv		-	recv		4	__libc_recv	__recv recv
+recvfrom	-	recvfrom	6	__libc_recvfrom	__recvfrom recvfrom
+recvmsg		-	recvmsg		3	__libc_recvmsg	__recvmsg recvmsg
+send		-	send		4	__libc_send	__send send
+sendmsg		-	sendmsg		3	__libc_sendmsg	__sendmsg sendmsg
+sendto		-	sendto		6	__libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	5	__setsockopt	setsockopt
 shutdown	-	shutdown	2	__shutdown	shutdown
 socketpair	-	socketpair	4	__socketpair	socketpair

@@ -1,5 +1,5 @@
 /* Linear search functions.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -33,7 +33,7 @@ lsearch (const void *key, void *base, size_t *nmemb, size_t size,
   if (result == NULL)
     {
       /* Not available.  Insert at the end.  */
-      memcpy (base + (*nmemb) * size, key, size);
+      result = memcpy (base + (*nmemb) * size, key, size);
       ++(*nmemb);
     }
 

@@ -1,4 +1,4 @@
-# @(#)australasia	7.37
+# @(#)australasia	7.39
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -303,7 +303,7 @@ Rule	NZ	1928	only	-	Nov	 4	2:00	0:30	HD
 Rule	NZ	1929	only	-	Oct	30	2:00	0:30	HD
 Rule	NZ	1930	1933	-	Mar	Sun>=15	2:00	0	S
 Rule	NZ	1930	1933	-	Oct	Sun>=8	2:00	0:30	HD
-# Whitman says DST went on and off during war years, and the base GMT offset
+# Whitman says DST went on and off during war years, and the base UT offset
 # didn't change until 1945 Apr 30; go with Shanks.
 Rule	NZ	1934	1940	-	Apr	lastSun	2:00	0	S
 Rule	NZ	1934	1939	-	Sep	lastSun	2:00	0:30	HD
@@ -508,6 +508,26 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # but Robert Elz says it's been 3:00 in Victoria since 1970
 # and perhaps the newspaper's `2:00' is referring to standard time.
 # For now we'll continue to assume 2:00s for changes since 1960.
+
+# From Eric Ulevik <eau@zip.com.au> (1998-01-05):
+# 
+# Here are some URLs to Australian time legislation. These URLs are stable,
+# and should probably be included in the data file. There are probably more
+# relevant entries in this database.
+# 
+# NSW (including LHI and Broken Hill):
+# <a href="http://www.austlii.edu.au/au/legis/nsw/consol_act/sta1987137/index.html">
+# http://www.austlii.edu.au/au/legis/nsw/consol_act/sta1987137/index.html
+# </a>
+# ACT
+# <a href="http://www.austlii.edu.au/au/legis/act/consol_act/consol_act/stasta1972279/i">
+# http://www.austlii.edu.au/au/legis/act/consol_act/consol_act/stasta1972279/i
+# </a>
+# ndex.html
+# SA
+# <a href="http://www.austlii.edu.au/au/legis/sa/consol_act/sta1898137/index.html">
+# http://www.austlii.edu.au/au/legis/sa/consol_act/sta1898137/index.html
+# </a>
 
 # Northern Territory
 

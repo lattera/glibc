@@ -1,5 +1,5 @@
 /* Mail alias file parser in nss_files module.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -200,7 +200,8 @@ get_next_alias (const char *match, struct aliasent *result,
 	     looking for.  If it does not match we simply ignore all
 	     lines until the next line containing the start of a new
 	     alias is found.  */
-	  ignore = match != NULL && strcmp (result->alias_name, match) != 0;
+	  ignore = (match != NULL
+		    && strcasecmp (result->alias_name, match) != 0);
 
 	  while (! ignore)
 	    {

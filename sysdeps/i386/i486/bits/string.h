@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -373,7 +373,7 @@ __strlen_g (__const char *__str)
 		     : (char *) memcpy (dest, src, strlen (src) + 1))	      \
 		  : __strcpy_g (dest, src)))
 
-# define __strcpy_small(dest, src, srclen) \
+#define __strcpy_small(dest, src, srclen) \
   (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
 		    switch (srclen)					      \
 		      {							      \
@@ -1006,11 +1006,11 @@ __strrchr_c (__const char *__s, int __c)
      "1:\n\t"
      "lodsb\n\t"
      "cmpb	%%ah,%%al\n\t"
-     "cmovne	%%esi,%0\n\t"
+     "cmove	%%esi,%0\n\t"
      "testb	%%al,%%al\n\t"
      "jne 1b"
      : "=d" (__res)
-     : "0" (1), "S" (__s),"a" (__c)
+     : "0" (1), "S" (__s), "a" (__c)
      : "ax", "si", "cc");
   return __res - 1;
 }
@@ -1025,11 +1025,11 @@ __strrchr_g (__const char *__s, int __c)
      "1:\n\t"
      "lodsb\n\t"
      "cmpb	%%ah,%%al\n\t"
-     "cmovne	%%esi,%0\n\t"
+     "cmove	%%esi,%0\n\t"
      "testb	%%al,%%al\n\t"
      "jne 1b"
      : "=r" (__res)
-     : "0" (1), "S" (__s),"a" (__c)
+     : "0" (1), "S" (__s), "a" (__c)
      : "ax", "si", "cc");
   return __res - 1;
 }

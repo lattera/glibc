@@ -149,6 +149,7 @@ static enum nss_status
 lookup (const DBT *key, struct STRUCTURE *result,
 	void *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)
 {
+  char *p;
   enum nss_status status;
   int err;
   DBT value;
@@ -156,15 +157,59 @@ lookup (const DBT *key, struct STRUCTURE *result,
   /* Open the database.  */
   status = internal_setent (keep_db);
   if (status != NSS_STATUS_SUCCESS)
-    return status;
+    {
+      *errnop = errno;
+      H_ERRNO_SET (NETDB_INTERNAL);
+      return status;
+    }
 
   /* Succeed iff it matches a value that parses correctly.  */
-  err = ((*db->get) (db, key, &value, 0) == 0 &&
-	 parse_line (value.data, result, buffer, buflen, errnop));
-  if (err == 0)
-    status = NSS_STATUS_SUCCESS;
+  err = (*db->get) (db, key, &value, 0);
+  if (err < 0)
+    {
+      *errnop = errno;
+      H_ERRNO_SET (NETDB_INTERNAL);
+      status = NSS_STATUS_UNAVAIL;
+    }
+  else if (err != 0)
+    {
+      H_ERRNO_SET (HOST_NOT_FOUND);
+      status = NSS_STATUS_NOTFOUND;
+    }
   else
-    status = err < 0 ? NSS_STATUS_TRYAGAIN : NSS_STATUS_NOTFOUND;
+    {
+      /* Skip leading blanks.  */
+      p = (char *) value.data;
+      while (isspace (*p))
+	++p;
+
+      err = parse_line (p, result, buffer, buflen, errnop);
+
+      if (err == 0)
+	{
+	  /* If the key begins with '0' we are trying to get the next
+	     entry.  We want to ignore unparsable lines in this case.  */
+	  if (((char *) key->data)[0] == '0')
+	    {
+	      /* Super magical return value.  We need to tell our caller
+		 that it should continue looping.  This value cannot
+		 happen in other cases.  */
+	      status = NSS_STATUS_RETURN;
+	    }
+	  else
+	    {
+	      H_ERRNO_SET (HOST_NOT_FOUND);
+	      status = NSS_STATUS_NOTFOUND;
+	    }
+	}
+      else if (err < 0)
+	{
+	  H_ERRNO_SET (NETDB_INTERNAL);
+	  status = NSS_STATUS_TRYAGAIN;
+	}
+      else
+	status = NSS_STATUS_SUCCESS;
+    }
 
   if (! keep_db)
     internal_endent ();
@@ -196,7 +241,7 @@ _nss_db_get##name##_r (proto,						      \
 {									      \
   DBT key;								      \
   enum nss_status status;						      \
-  const size_t size = (keysize);					      \
+  const size_t size = (keysize) + 1;					      \
   key.data = __alloca (size);						      \
   key.size = KEYPRINTF keypattern;					      \
   __libc_lock_lock (lock);						      \
@@ -221,8 +266,16 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
   DBT key;
 
   __libc_lock_lock (lock);
-  key.size = 1 + snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
-  status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG);
+
+  /* Loop until we find a valid entry or hit EOF.  See above for the
+     special meaning of the status value.  */
+  do
+    {
+      key.size = snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
+      status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG);
+    }
+  while (status == NSS_STATUS_RETURN);
+
   __libc_lock_unlock (lock);
 
   return status;

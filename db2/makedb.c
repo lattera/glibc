@@ -1,5 +1,5 @@
 /* Create simple DB database from textual input.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -316,11 +316,12 @@ process_input (input, inname, output, to_lowercase, be_quiet)
 			       gettext ("duplicate key"));
 	      /* This is no real error.  Just give a warning.  */
 	      status = 0;
+	      continue;
 	    }
 	  else
 	    error (0, errno, gettext ("while writing database file"));
 
-	  status = status ? EXIT_FAILURE : EXIT_SUCCESS;
+	  status = EXIT_FAILURE;
 
 	  clearerr (input);
 	  break;

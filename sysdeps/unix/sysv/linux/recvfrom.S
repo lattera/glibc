@@ -1,4 +1,5 @@
 #define	socket	recvfrom
+#define	__socket __libc_recvfrom
 #define	NARGS	6
 #include <socket.S>
-strong_alias (__recvfrom, __libc_recvfrom)
+weak_alias (__libc_recvfrom, __recvfrom)

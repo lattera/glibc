@@ -63,6 +63,8 @@ main(int argc, char *argv[])
   if (!freopen (filename, "r", stdin))
     fprintf(stderr, "cannot open file\n");
 
+  unsetenv ("LD_LIBRARY_PATH");
+
   if (!(input = popen("/bin/cat", "r")))
     fprintf(stderr, "cannot run \n");
 

@@ -399,7 +399,7 @@ mbstowcs_alloc (const char *string)
 
 @comment stdlib.h
 @comment ISO
-@deftypefun size_t wcstombs (char *@var{string}, const wchar_t @var{wstring}, size_t @var{size})
+@deftypefun size_t wcstombs (char *@var{string}, const wchar_t *@var{wstring}, size_t @var{size})
 The @code{wcstombs} (``wide character string to multibyte string'')
 function converts the null-terminated wide character array @var{wstring}
 into a string containing multibyte characters, storing not more than

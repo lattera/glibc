@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -471,7 +471,7 @@ argument to <%s> must be a single character"),
 					    cmfile->token.val.str.start,
 					    cmfile->token.val.str.len);
 
-	  state = 3;
+	  state = 5;
 	  continue;
 
 	case 90:

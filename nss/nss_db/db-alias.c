@@ -1,5 +1,5 @@
 /* Mail alias file parser in nss_db module.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -221,13 +221,13 @@ enum nss_status
 _nss_db_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
 		       int *errnop)
 {
-  /* Return next entry in host file.  */
+  /* Return next entry in alias file.  */
   enum nss_status status;
   char buf[20];
   DBT key;
 
   __libc_lock_lock (lock);
-  key.size = 1 + snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
+  key.size = snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
   status = lookup (&key, result, buffer, buflen, errnop);
   __libc_lock_unlock (lock);
 

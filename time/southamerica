@@ -1,4 +1,4 @@
-# @(#)southamerica	7.21
+# @(#)southamerica	7.22
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -189,7 +189,7 @@ Zone	America/La_Paz	-4:32:36 -	LMT	1890
 # ending dates, giving them as "estimated date(s) based on previous year".  We
 # infer a rule here from one example, always a dangerous practice....  Yes,
 # they really do switch on Saturday, according to the OAG.
-# "[America/Porto_Acre]" is for the Territory of Acre;
+# "[America/Porto_Acre]" is for the [State] of Acre;
 # "[America/Noronha]" is for Fernando De Noronha.
 
 # From Paul Eggert <eggert@twinsun.com> (1993-11-18):
@@ -241,6 +241,11 @@ Zone	America/La_Paz	-4:32:36 -	LMT	1890
 # Maceio (UTC-3) stopped observing DST in mid-1990, but started again mid-1995.
 # Sao Paulo (UTC-3) and Cuiaba (UTC-4) always observed DST.
 # Porto Acre (UTC-5) stopped observing DST in mid-1988.
+
+# From Rodrigo Feher <feher@pobox.com> (1998-01-17):
+# Reading "southamerica" file in timezone 7.55 I've found an
+# error. Line 193 say "Territory of Acre". It is not a territory anymore
+# but a state.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Brazil	1931	only	-	Oct	 3	11:00	1:00	D

@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.91";
+static char	elsieid[] = "@(#)zic.c	7.93";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -601,10 +601,23 @@ const char * const	tofile;
 	if (!itsdir(toname))
 		(void) remove(toname);
 	if (link(fromname, toname) != 0) {
-		if (mkdirs(toname) != 0)
-			(void) exit(EXIT_FAILURE);
-		if (link(fromname, toname) != 0) {
-			const char *e = strerror(errno);
+		int failure = errno;
+		if (failure == ENOENT)
+			if (mkdirs(toname) != 0)
+				failure = errno;
+			else if (link(fromname, toname) == 0)
+				failure = 0;
+			else
+				failure = errno;
+#ifndef MISSING_SYMLINK
+		if (failure == EXDEV)
+			if (symlink(fromname, toname) != 0)
+				failure = errno;
+			else
+				failure = 0;
+#endif
+		if (failure) {
+			const char *e = strerror(failure);
 
 			(void) fprintf(stderr,
 				_("%s: Can't link from %s to %s: %s\n"),
@@ -1020,7 +1033,7 @@ const int		iscont;
 	}
 	z.z_filename = filename;
 	z.z_linenum = linenum;
-	z.z_gmtoff = gethms(fields[i_gmtoff], _("invalid GMT offset"), TRUE);
+	z.z_gmtoff = gethms(fields[i_gmtoff], _("invalid UTC offset"), TRUE);
 	if ((cp = strchr(fields[i_format], '%')) != 0) {
 		if (*++cp != 's' || strchr(cp, '%') != 0) {
 			error(_("invalid abbreviation format"));
@@ -1254,11 +1267,12 @@ const char * const		timep;
 	} else if (sscanf(cp, scheck(cp, "%d"), &rp->r_loyear) != 1) {
 		error(_("invalid starting year"));
 		return;
-	} else if (noise)
+	} else if (noise) {
 		if (rp->r_loyear < min_year_representable)
 			warning(_("starting year too low to be represented"));
 		else if (rp->r_loyear > max_year_representable)
 			warning(_("starting year too high to be represented"));
+	}
 	cp = hiyearp;
 	if ((lp = byword(cp, end_years)) != NULL) switch ((int) lp->l_value) {
 		case YR_MINIMUM:
@@ -1278,11 +1292,12 @@ const char * const		timep;
 	} else if (sscanf(cp, scheck(cp, "%d"), &rp->r_hiyear) != 1) {
 		error(_("invalid ending year"));
 		return;
-	} else if (noise)
+	} else if (noise) {
 		if (rp->r_loyear < min_year_representable)
 			warning(_("starting year too low to be represented"));
 		else if (rp->r_loyear > max_year_representable)
 			warning(_("starting year too high to be represented"));
+	}
 	if (rp->r_loyear > rp->r_hiyear) {
 		error(_("starting year greater than ending year"));
 		return;
@@ -1630,7 +1645,7 @@ const int			zonecount;
 				INITIALIZE(ktime);
 				if (useuntil) {
 					/*
-					** Turn untiltime into GMT
+					** Turn untiltime into UTC
 					** assuming the current gmtoff and
 					** stdoff values.
 					*/
@@ -1946,10 +1961,11 @@ register const struct lookup * const	table;
 	*/
 	foundlp = NULL;
 	for (lp = table; lp->l_word != NULL; ++lp)
-		if (itsabbr(word, lp->l_word))
+		if (itsabbr(word, lp->l_word)) {
 			if (foundlp == NULL)
 				foundlp = lp;
 			else	return NULL;	/* multiple inexact matches */
+		}
 	return foundlp;
 }
 

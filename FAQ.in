@@ -200,6 +200,22 @@ you first delete config.cache.
 some problems of this kind.  The setting of CFLAGS is checked at the
 very beginning and if it is not usable `configure' will bark.
 
+??	Why do I get messages about missing thread functions when I use
+	the librt?  I don't even use threads.
+
+{UD} In this case you probably mixed up your installation of the libc.
+The librt internally uses threads and it has implicit references to
+the thread library.  Normally these references are satisfied
+automatically but if the thread library belonging to the librt is not
+in the expected place one has to specify this place.  When using GNU
+ld it works like this:
+
+	gcc -o foo foo.c -Wl,-rpath-link=/some/other/dir -lrt
+
+The `/some/other/dir' should contain the matching thread library and
+`ld' will use the given path to find the implicitly referenced library
+while not disturbing any other link path order.
+
 ??	What's the problem with configure --enable-omitfp?
 
 {AJ} When --enable-omitfp is set the libraries are built without frame

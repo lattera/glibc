@@ -1,4 +1,4 @@
-# @(#)northamerica	7.35
+# @(#)northamerica	7.39
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -651,6 +651,20 @@ Zone America/Glace_Bay	-3:59:48 -	LMT	1902 Jun 15
 # Nipigon (EST) and Rainy River (CST) are the largest that we know of.
 # Far west Ontario is like Winnipeg; far east Quebec is like Halifax.
 
+# From Paul Eggert (1997-10-17):
+# msb@sq.com writes that an article in the 1997-10-14 Toronto Star
+# says that Atikokan, Ontario currently does not observe DST,
+# but will vote on 11-10 whether to use EST/EDT.
+# He also writes that the
+# <a href="http://www.gov.on.ca/MBS/english/publications/statregs/conttext.html">
+# Ontario Time Act (1990, Chapter T.9)
+# </a>
+# says that Ontario east of 90W uses EST/EDT, and west of 90W uses CST/CDT.
+# Officially Atikokan is therefore on CST/CDT, and most likely this report
+# concerns a non-official time observed as a matter of local practice.
+# For what it's worth, Shanks (1995) says that Atikokan has agreed with
+# Rainy River ever since standard time was introduced.
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Mont	1917	only	-	Mar	25	2:00	1:00	D
 Rule	Mont	1917	only	-	Apr	24	0:00	0	S
@@ -893,7 +907,7 @@ Zone America/Dawson	-9:17:40 -	LMT	1900 Aug 20
 
 # From Guy Harris:
 # Rules are from the Official Airline Guide, Worldwide Edition, for 1987.
-# Rules prior to 1987 are unknown.
+# Rules [before] 1987 are unknown.
 # The comments in the OAG say "Only Ensenada, Mexicale, San Felipe and Tijuana
 # observe DST."  This is presumably Baja California Norte, above 28th parallel,
 # as listed there; [there is also] "Baja California Sur and N. Pacific
@@ -971,9 +985,10 @@ Zone America/Dawson	-9:17:40 -	LMT	1900 Aug 20
 # 
 # -------------- End Forwarded Message --------------
 # From Paul Eggert (1996-06-12):
-# For an English translation of the decree,
-# see ``Diario Oficial: Time Zone Changeover'',
-# <URL:http://mexico-travel.com/extra/timezone_eng.html> (1996-01-04).
+# For an English translation of the decree, see
+# <a href="http://mexico-travel.com/extra/timezone_eng.html">
+# ``Diario Oficial: Time Zone Changeover'' (1996-01-04).
+# </a>
 
 # From Shanks (1991):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S

@@ -39,7 +39,8 @@ LINE_PARSER
 
 #include GENERIC
 
-DB_LOOKUP (servbyname, 1 + strlen (name), (".%s/%s", name, proto),
+DB_LOOKUP (servbyname, 2 + strlen (name) + strlen (proto),
+	   (".%s/%s", name, proto),
 	   {
 	     /* Must match both protocol (if specified) and name.  */
 	     if (proto != NULL && strcmp (result->s_proto, proto))
@@ -48,7 +49,7 @@ DB_LOOKUP (servbyname, 1 + strlen (name), (".%s/%s", name, proto),
 	   },
 	   const char *name, const char *proto)
 
-DB_LOOKUP (servbyport, 20, ("=%d/%s", port, proto),
+DB_LOOKUP (servbyport, 21 + strlen (proto), ("=%d/%s", port, proto),
 	   {
 	     /* Must match both port and protocol.  */
 	     if (result->s_port == port

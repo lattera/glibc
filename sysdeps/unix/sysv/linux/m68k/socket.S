@@ -31,8 +31,12 @@
 
    The .S files for the other calls just #define socket and #include this.  */
 
-.globl P(__,socket)
-ENTRY (P(__,socket))
+#ifndef __socket
+#define __socket P(__,socket)
+#endif
+
+.globl __socket
+ENTRY (__socket)
 
 	/* Save registers.  */
 	move.l %d2, %a0
@@ -56,6 +60,6 @@ ENTRY (P(__,socket))
 
 	/* Successful; return the syscall's value.  */
 	rts
-PSEUDO_END (P(__,socket))
+PSEUDO_END (__socket)
 
-weak_alias (P(__,socket), socket)
+weak_alias (__socket, socket)

@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.26";
+static char	elsieid[] = "@(#)zdump.c	7.27";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -344,7 +344,7 @@ int	v;
 
 	(void) printf("%-*s  ", (int) longest, zone);
 	if (v)
-		(void) printf("%.24s GMT = ", asctime(gmtime(&t)));
+		(void) printf("%.24s UTC = ", asctime(gmtime(&t)));
 	tmp = localtime(&t);
 	(void) printf("%.24s", asctime(tmp));
 	if (*abbr(tmp) != '\0')

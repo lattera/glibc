@@ -1,5 +1,5 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -89,14 +89,14 @@ DB_LOOKUP (hostbyname, ,,
 	     if (result->h_addrtype != ((_res.options & RES_USE_INET6)
 					? AF_INET6 : AF_INET))
 	       continue;
-	     LOOKUP_NAME (h_name, h_aliases)
+	     LOOKUP_NAME_CASE (h_name, h_aliases)
 	   }, const char *name)
 
 DB_LOOKUP (hostbyname2, ,,
 	   {
 	     if (result->h_addrtype != af)
 	       continue;
-	     LOOKUP_NAME (h_name, h_aliases)
+	     LOOKUP_NAME_CASE (h_name, h_aliases)
 	   }, const char *name, int af)
 
 DB_LOOKUP (hostbyaddr, ,,

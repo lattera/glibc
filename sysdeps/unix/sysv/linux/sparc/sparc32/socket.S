@@ -39,8 +39,12 @@
 
    The .S files for the other calls just #define socket and #include this.  */
 
-.globl P(__,socket)
-ENTRY (P(__,socket))
+#ifndef __socket
+#define __socket P(__,socket)
+#endif
+
+.globl __socket
+ENTRY (__socket)
 
 	/* Drop up to 6 arguments (recvfrom) into the memory allocated by
 	   the caller for varargs, since that's really what we have.  */
@@ -71,6 +75,6 @@ ENTRY (P(__,socket))
 
 1:	SYSCALL_ERROR_HANDLER
 
-END (P(__,socket))
+END (__socket)
 
-weak_alias (P(__,socket), socket)
+weak_alias (__socket, socket)

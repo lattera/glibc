@@ -1,4 +1,5 @@
 #define	socket	sendmsg
+#define	__socket __libc_sendmsg
 #define	NARGS	3
 #include <socket.S>
-strong_alias (__sendmsg, __libc_sendmsg)
+weak_alias (__libc_sendmsg, __sendmsg)

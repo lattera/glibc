@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,24 +28,40 @@
 enum
   {
     IFF_UP = 0x1,		/* Interface is up.  */
+#define IFF_UP	IFF_UP
     IFF_BROADCAST = 0x2,	/* Broadcast address valid.  */
+#define IFF_BROADCAST	IFF_BROADCAST
     IFF_DEBUG = 0x4,		/* Turn on debugging.  */
+#define IFF_DEBUG	IFF_DEBUG
     IFF_LOOPBACK = 0x8,		/* Is a loopback net.  */
+#define IFF_LOOPBACK	IFF_LOOPBACK
     IFF_POINTOPOINT = 0x10,	/* Interface is point-to-point link.  */
+#define IFF_POINTOPOINT	IFF_POINTOPOINT
     IFF_NOTRAILERS = 0x20,	/* Avoid use of trailers.  */
+#define IFF_NOTRAILERS	IFF_NOTRAILERS
     IFF_RUNNING = 0x40,		/* Resources allocated.  */
+#define IFF_RUNNING	IFF_RUNNING
     IFF_NOARP = 0x80,		/* No address resolution protocol.  */
+#define IFF_NOARP	IFF_NOARP
     IFF_PROMISC = 0x100,	/* Receive all packets.  */
+#define IFF_PROMISC	IFF_PROMISC
+
     /* Not supported */
     IFF_ALLMULTI = 0x200,	/* Receive all multicast packets.  */
+#define IFF_ALLMULTI	IFF_ALLMULTI
 
     IFF_MASTER = 0x400,		/* Master of a load balancer.  */
+#define IFF_MASTER	IFF_MASTER
     IFF_SLAVE = 0x800,		/* Slave of a load balancer.  */
+#define IFF_SLAVE	IFF_SLAVE
 
     IFF_MULTICAST = 0x1000,	/* Supports multicast.  */
+#define IFF_MULTICAST	IFF_MULTICAST
 
     IFF_PORTSEL = 0x2000,	/* Can set media type.  */
+#define IFF_PORTSEL	IFF_PORTSEL
     IFF_AUTOMEDIA = 0x4000	/* Auto media select active.  */
+#define IFF_AUTOMEDIA	IFF_AUTOMEDIA
   };
 
 /* The ifaddr structure contains information about one address of an

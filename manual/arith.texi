@@ -1056,16 +1056,13 @@ There is an example at the end of this section.
 @deftypefun {unsigned long int} strtoul (const char *@var{string}, char **@var{tailptr}, int @var{base})
 The @code{strtoul} (``string-to-unsigned-long'') function is like
 @code{strtol} except it deals with unsigned numbers, and returns its
-value with type @code{unsigned long int}.  No @samp{+} or @samp{-} sign
-may appear before the number, but the syntax is otherwise the same as
+value with type @code{unsigned long int}.  If the number has a leading
+@samp{-} sign the negated value is returned.  The syntax is the same as
 described above for @code{strtol}.  The value returned in case of
 overflow is @code{ULONG_MAX} (@pxref{Range of Type}).
 
 Like @code{strtol} this function sets @code{errno} and returns the value
 @code{0ul} in case the value for @var{base} is not in the legal range.
-For @code{strtoul} this can happen in another situation.  In case the
-number to be converted is negative @code{strtoul} also sets @code{errno}
-to @code{EINVAL} and returns @code{0ul}.
 @end deftypefun
 
 @comment stdlib.h

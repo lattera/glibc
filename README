@@ -40,7 +40,7 @@ Since no one has volunteered to test and fix the above configurations,
 these are not supported at the moment.  It's expected that these don't
 work anymore.  Porting the library is not hard.  If you are interested
 in doing a port, please contact the glibc maintainers by sending
-electronic mail to <bug-glibc@prep.ai.mit.edu>.
+electronic mail to <bug-glibc@gnu.org>.
 
 The GNU C library now includes Michael Glad's Ultra Fast Crypt, which
 provides the Unix `crypt' function, plus some other entry points.
@@ -82,8 +82,8 @@ facilities you want it to make available.
 We prefer to get bug reports sent using the `glibcbug' shell script which
 is installed together with the rest of the GNU libc to <bugs@gnu.org>.
 Simply run this shell script and fill in the information.  Nevertheless
-you can still send bug reports to <bug-glibc@prep.ai.mit.edu> as normal
-electronic mails.
+you can still send bug reports to <bug-glibc@gnu.irg> as normal electronic
+mails.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying
 conditions.

@@ -698,7 +698,7 @@ if test "${enable_add_ons+set}" = set; then
 	   add_ons=`echo */configure | sed -e 's!/configure!!g'`
 	 else
 	   add_ons=`echo $srcdir/*/configure | \
-		    sed -e "s!^$srcdir/!!g" -e 's!/configure!!g'`
+		    sed -e "s!$srcdir/!!g" -e 's!/configure!!g'`
 	 fi;;
     *) add_ons=`echo "$enableval" | sed 's/,/ /g'`;;
    esac
