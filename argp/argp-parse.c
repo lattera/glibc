@@ -142,7 +142,7 @@ argp_default_parser (int key, char *arg, struct argp_state *state)
 }
 
 static const struct argp argp_default_argp =
-  {argp_default_options, &argp_default_parser};
+  {argp_default_options, &argp_default_parser, NULL, NULL, NULL, NULL, "libc"};
 
 
 static const struct argp_option argp_version_options[] =
@@ -174,7 +174,7 @@ argp_version_parser (int key, char *arg, struct argp_state *state)
 }
 
 static const struct argp argp_version_argp =
-  {argp_version_options, &argp_version_parser};
+  {argp_version_options, &argp_version_parser, NULL, NULL, NULL, NULL, "libc"};
 
 /* Returns the offset into the getopt long options array LONG_OPTIONS of a
    long option with called NAME, or -1 if none is found.  Passing NULL as
