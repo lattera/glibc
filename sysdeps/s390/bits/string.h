@@ -132,7 +132,7 @@ strncat (char *__dest, __const char *__src, size_t __n)
 			  "   la   %1,1(%1)\n"
 			  "   brct %2,1b\n"
 			  "   la   %0,0(%0,%1)\n"
-			  "   xc   0(1,%0),0(%0\n)"
+			  "   xc   0(1,%0),0(%0)\n"
 			  "2:"
 			  : "+&a" (__dest), "+&a" (__src), "+&d" (__n) :
 			  : "cc", "memory", "0" );
