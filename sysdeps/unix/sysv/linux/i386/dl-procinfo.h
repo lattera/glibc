@@ -30,7 +30,8 @@
 /* Start at 48 to reserve some space.  */
 #define _DL_FIRST_PLATFORM	48
 /* Mask to filter out platforms.  */
-#define _DL_HWCAP_PLATFORM	(7ULL << _DL_FIRST_PLATFORM)
+#define _DL_HWCAP_PLATFORM	(((1ULL << _DL_PLATFORMS_COUNT) - 1) \
+				 << _DL_FIRST_PLATFORM)
 
 
 static inline int
