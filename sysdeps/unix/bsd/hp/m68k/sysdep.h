@@ -16,7 +16,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+/* This code wants to be run through m4.  */
+
 #include <sysdeps/unix/sysdep.h>
+
+#define	POUND(foo)	(@@@Hash-Here@@@)foo
 
 #ifdef	__STDC__
 #define	ENTRY(name)							      \
@@ -32,25 +36,21 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	__STDC__
 #define	PSEUDO(name, syscall_name)					      \
-  .set sysno, SYS_##syscall_name;					      \
-  .set zero, 0;								      \
-  .even;								      \
-  .globl syscall_error;							      \
-  error: jmp syscall_error;						      \
-  ENTRY (name):								      \
-  movel sysno, d0;							      \
-  trap zero;								      \
-  bcs error
-#else
-#define	PSEUDO(name, syscall_name)					      \
-  .set sysno, SYS_/**/syscall_name;					      \
-  .set zero, 0;								      \
   .even;								      \
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
   ENTRY (name)								      \
-  movel sysno, d0;							      \
-  trap zero;								      \
+  movel POUND(SYS_##syscall_name), d0;					      \
+  trap POUND(0);							      \
+  bcs error
+#else
+#define	PSEUDO(name, syscall_name)					      \
+  .even;								      \
+  .globl syscall_error;							      \
+  error: jmp syscall_error;						      \
+  ENTRY (name)								      \
+  movel POUND(SYS_/**/syscall_name), d0;				      \
+  trap POUND(0);							      \
   bcs error
 #endif
 
