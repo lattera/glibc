@@ -163,7 +163,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.proc " #tramp_name "#
 " #tramp_name ":
 	{ .mmi
-	  alloc loc0 = ar.pfs, 8, 2, 3, 0
+	  alloc loc0 = ar.pfs, 8, 3, 3, 0
 	  adds r2 = -144, r12
 	  adds r3 = -128, r12
 	}
@@ -172,6 +172,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  mov loc1 = b0
 	  mov out2 = b0		/* needed by fixup_profile */
 	  ;;
+	}
+	{ .mfb
+	  mov loc2 = r8		/* preserve struct value register */
+	  nop.f 0
+	  nop.b 0
 	}
 	{ .mmi
 	  stf.spill [r2] = f8, 32
@@ -226,11 +231,15 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  adds r12 = 160, r12
 	  ;;
 	}
+	{ .mii
+	  ld8 gp = [ret0]
+	  mov r8 = loc2		/* restore struct value register */
+	  ;;
+	}
 	/* An alloc is needed for the break system call to work.
 	   We don't care about the old value of the pfs register.  */
 	{ .mmb
 	  alloc r2 = ar.pfs, 0, 0, 8, 0
-	  ld8 gp = [ret0]
 	  br.sptk.many b6
 	  ;;
 	}

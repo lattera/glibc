@@ -134,11 +134,11 @@
 #define IGNORE_ZERO_INF_SIGN		0x10
 
 /* Various constants (we must supply them precalculated for accuracy).  */
-#define M_PI_6l			.52359877559829887308L
-#define M_E2l			7.389056098930650227230L
-#define M_E3l			20.08553692318766774093L
-#define M_2_SQRT_PIl		3.5449077018110320545963L	/* 2 sqrt (M_PIl)  */
-#define M_SQRT_PIl		1.77245385090551602729817L	/* sqrt (M_PIl)  */
+#define M_PI_6l			.52359877559829887307710723054658383L
+#define M_E2l			7.389056098930650227230427460575008L
+#define M_E3l			20.085536923187667740928529654581719L
+#define M_2_SQRT_PIl		3.5449077018110320545963349666822903L	/* 2 sqrt (M_PIl)  */
+#define M_SQRT_PIl		1.7724538509055160272981674833411451L	/* sqrt (M_PIl)  */
 #define M_LOG_SQRT_PIl		0.572364942924700087072L	/* log(sqrt(M_PIl))  */
 #define M_LOG_2_SQRT_PIl	1.265512123484645396489L	/* log(2*sqrt(M_PIl))  */
 #define M_PI_34l		(M_PIl - M_PI_4l)		/* 3*pi/4 */
@@ -1429,6 +1429,12 @@ catanh_test (void)
 static void
 cbrt_test (void)
 {
+  errno = 0;
+  FUNC(cbrt) (8);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (cbrt);
 
   TEST_f_f (cbrt, 0.0, 0.0);
@@ -1438,10 +1444,10 @@ cbrt_test (void)
   TEST_f_f (cbrt, minus_infty, minus_infty);
   TEST_f_f (cbrt, nan_value, nan_value);
 
-  TEST_f_f (cbrt, -0.001, -0.1);
+  TEST_f_f (cbrt, -0.001, -0.1L);
   TEST_f_f (cbrt, 8, 2);
   TEST_f_f (cbrt, -27.0, -3.0);
-  TEST_f_f (cbrt, 0.970299, 0.99);
+  TEST_f_f (cbrt, 0.970299, 0.99L);
   TEST_f_f (cbrt, 0.7, 0.8879040017426007084L);
 
   END (cbrt);
@@ -2385,7 +2391,7 @@ exp10_test (void)
   TEST_f_f (exp10, minus_infty, 0);
   TEST_f_f (exp10, nan_value, nan_value);
   TEST_f_f (exp10, 3, 1000);
-  TEST_f_f (exp10, -1, 0.1);
+  TEST_f_f (exp10, -1, 0.1L);
   TEST_f_f (exp10, 1e6, plus_infty);
   TEST_f_f (exp10, -1e6, 0);
   TEST_f_f (exp10, 0.7, 5.0118723362727228500L);
@@ -2649,10 +2655,10 @@ fmod_test (void)
 
   TEST_ff_f (fmod, nan_value, nan_value, nan_value);
 
-  TEST_ff_f (fmod, 6.5, 2.3, 1.9);
-  TEST_ff_f (fmod, -6.5, 2.3, -1.9);
-  TEST_ff_f (fmod, 6.5, -2.3, 1.9);
-  TEST_ff_f (fmod, -6.5, -2.3, -1.9);
+  TEST_ff_f (fmod, 6.5, 2.3, 1.9L);
+  TEST_ff_f (fmod, -6.5, 2.3, -1.9L);
+  TEST_ff_f (fmod, 6.5, -2.3, 1.9L);
+  TEST_ff_f (fmod, -6.5, -2.3, -1.9L);
 
   END (fmod);
 }
@@ -2687,8 +2693,8 @@ frexp_test (void)
   TEST_fI_f1 (frexp, 0.0, 0.0, 0.0);
   TEST_fI_f1 (frexp, minus_zero, minus_zero, 0.0);
 
-  TEST_fI_f1 (frexp, 12.8, 0.8, 4);
-  TEST_fI_f1 (frexp, -27.34, -0.854375, 5);
+  TEST_fI_f1 (frexp, 12.8, 0.8L, 4);
+  TEST_fI_f1 (frexp, -27.34, -0.854375L, 5);
 
   END (frexp);
 }
@@ -2756,9 +2762,9 @@ hypot_test (void)
   TEST_ff_f (hypot, -12.4, -0.7, 12.41974234837422060118L);
 
   /*  hypot (x,0) == fabs (x)  */
-  TEST_ff_f (hypot, 0.7, 0, 0.7);
-  TEST_ff_f (hypot, -0.7, 0, 0.7);
-  TEST_ff_f (hypot, -5.7e7, 0, 5.7e7);
+  TEST_ff_f (hypot, 0.7, 0, 0.7L);
+  TEST_ff_f (hypot, -0.7, 0, 0.7L);
+  TEST_ff_f (hypot, -5.7e7, 0, 5.7e7L);
 
   TEST_ff_f (hypot, 0.7, 1.2, 1.3892443989449804508L);
 
@@ -3869,7 +3875,7 @@ sqrt_test (void)
   TEST_f_f (sqrt, 2, M_SQRT2l);
   TEST_f_f (sqrt, 0.25, 0.5);
   TEST_f_f (sqrt, 6642.25, 81.5);
-  TEST_f_f (sqrt, 15239.9025, 123.45);
+  TEST_f_f (sqrt, 15239.9025, 123.45L);
   TEST_f_f (sqrt, 0.7, 0.83666002653407554798L);
 
   END (sqrt);

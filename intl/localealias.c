@@ -351,6 +351,18 @@ read_alias_file (fname, fname_len)
 		      FREE_BLOCKS (block_list);
 		      return added;
 		    }
+
+		  if (__builtin_expect (string_space != new_pool, 0))
+		    {
+		      size_t i;
+
+		      for (i = 0; i < nmap; i++)
+			{
+			  map[i].alias += new_pool - string_space;
+			  map[i].value += new_pool - string_space;
+			}
+		    }
+
 		  string_space = new_pool;
 		  string_space_max = new_size;
 		}

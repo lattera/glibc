@@ -65,7 +65,7 @@ rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 	int gai;
 	char servbuff[NI_MAXSERV];
 
-	snprintf(servbuff, sizeof(servbuff), "%d", rport);
+	snprintf(servbuff, sizeof(servbuff), "%d", ntohs(rport));
 	servbuff[sizeof(servbuff) - 1] = '\0';
 
 	memset(&hints, 0, sizeof(hints));

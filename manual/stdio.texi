@@ -2098,11 +2098,13 @@ The function to register a new output conversion is
 @comment GNU
 @deftypefun int register_printf_function (int @var{spec}, printf_function @var{handler-function}, printf_arginfo_function @var{arginfo-function})
 This function defines the conversion specifier character @var{spec}.
-Thus, if @var{spec} is @code{'z'}, it defines the conversion @samp{%z}.
+Thus, if @var{spec} is @code{'Y'}, it defines the conversion @samp{%Y}.
 You can redefine the built-in conversions like @samp{%s}, but flag
 characters like @samp{#} and type modifiers like @samp{l} can never be
 used as conversions; calling @code{register_printf_function} for those
-characters has no effect.
+characters has no effect.  It is advisable not to use lowercase letters,
+since the ISO C standard warns that additional lowercase letters may be
+standardized in future editions of the standard.
 
 The @var{handler-function} is the function called by @code{printf} and
 friends when this conversion appears in a template string.

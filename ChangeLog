@@ -1,3 +1,54 @@
+2000-10-28  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/Versions: Export ioperm, iopl, inb,
+	inw, inl, _inb, _inw, _inl, outb, outw, outl, _outb, _outw,
+	_outl.  Reported by Bill Nottingham.
+
+2000-04-06  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/ia64/dl-machine.h (TRAMPOLINE_TEMPLATE): Save and
+	restore register r8 for functions that return a structure.
+
+2000-10-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/libm-test.inc (M_PI_6l, M_E2l, M_E3l, M_2_SQRT_PIl,
+	M_SQRT_PIl): Increase precision.
+	(cbrt_test): If cbrt is not implemented, don't test it.
+	Add L suffix to double constants in results which differ from their
+	L suffixed counterparts.
+	(exp10_test, fmod_test, frexp_test, hypot_test, sqrt_test): Likewise.
+
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+
+2000-10-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/rexec.c (rexec_af): Convert rport to host order before
+	passing it to snprintf.
+
+2000-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/gnu/netinet/tcp.h: Use u_intXX_t types instead of
+	uintXX_t since this is what <sys/types.h> defines and we include
+	this header.  Reported by Bernhard Rosenkraenzer <bero@redhat.de>.
+
+	* intl/localealias.c (read_alias_file): Update string pointers
+	in map[] if realloc() changed the values.
+	Patch by Jakub Jelinek <jakub@redhat.com>.
+
+	* manual/stdio.texi: Update printf extension documentation after
+	z became a valid modifier.
+	Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
+
+	* timezone/africa: Update from tzcode2000g and tzdata2000g.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
 2000-10-14  Geoffrey Keating  <geoffk@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add fcntl()

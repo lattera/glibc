@@ -6,6 +6,12 @@ ld {
 }
 libc {
   GLIBC_2.2 {
+    ioperm; iopl;
+    inb; inw; inl;
+    _inb; _inw; _inl;
+    outb; outw; _outl;
+    _outb; _outw; _outl;
+
     # linuxthreads
     __clone2;
   }

@@ -279,18 +279,22 @@ double: 1
 float: 0.5
 idouble: 1
 ifloat: 0.5
+ildouble: 1
+ldouble: 1
 Test "cos (M_PI_6l * 4.0) == -0.5":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "cos (pi/2) == 0":
 double: 0.2758
 float: 0.3667
 idouble: 0.2758
 ifloat: 0.3667
-ildouble: 0.2251
-ldouble: 0.2251
+ildouble: 0.2252
+ldouble: 0.2252
 
 # cpow
 Test "Real part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
@@ -607,6 +611,8 @@ double: 1
 float: 0.5
 idouble: 1
 ifloat: 0.5
+ildouble: 1
+ldouble: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.866025403784438646764 in sin_res":
 double: 1
 float: 1
@@ -617,8 +623,8 @@ double: 0.2758
 float: 0.3667
 idouble: 0.2758
 ifloat: 0.3667
-ildouble: 0.2251
-ldouble: 0.2251
+ildouble: 0.2252
+ldouble: 0.2252
 Test "sincos (pi/6, &sin_res, &cos_res) puts 0.866025403784438646764 in cos_res":
 float: 1
 ifloat: 1
