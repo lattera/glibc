@@ -1,0 +1,9 @@
+libc {
+  GLIBC_2.0 {
+    # c*
+    cachectl; cacheflush;
+
+    # s*
+    sysmips;
+  }
+}
