@@ -88,6 +88,7 @@ _start:
 	.globl _fp_hw
 _fp_hw:	.long 3
 	.size _fp_hw, 4
+	.type _fp_hw,@object
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data
