@@ -604,8 +604,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
 	  int no_inet6_data = 0;
-	  int old_res_options = _res.options;
-
 	  /* If we are looking for both IPv4 and IPv6 address we don't
 	     want the lookup functions to automatically promote IPv4
 	     addresses to IPv6 addresses.  Currently this is decided
@@ -616,6 +614,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      enum nss_status inet6_status, status = NSS_STATUS_UNAVAIL;
 	      int no_more;
 	      nss_gethostbyname2_r fct;
+	      int old_res_options;
 
 	      if (__nss_hosts_database != NULL)
 		{
@@ -626,6 +625,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		no_more = __nss_database_lookup ("hosts", NULL,
 						 "dns [!UNAVAIL=return] files", &nip);
 
+	      if ((_res.options & RES_INIT) == 0 && __res_ninit(&_res) == -1)
+		no_more = 1;
+	      old_res_options = _res.options;
 	      _res.options &= ~RES_USE_INET6;
 
 	      while (!no_more)

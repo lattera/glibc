@@ -82,6 +82,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex21 bug-regex22 bug-regex23 tst-nice tst-nanosleep \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1
+xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -98,7 +99,8 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     bug-regex2.mtrace bug-regex14-mem bug-regex14.mtrace \
 	     bug-regex21-mem bug-regex21.mtrace \
 	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out \
-	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace
+	     tst-pcre-mem tst-pcre.mtrace tst-boost-mem tst-boost.mtrace \
+	     bug-ga2.mtrace bug-ga2-mem
 
 include ../Rules
 
@@ -191,6 +193,7 @@ ifeq (no,$(cross-compiling))
 tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
   $(objpfx)bug-regex21-mem $(objpfx)tst-rxspencer-mem \
   $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out
+xtests: $(objpfx)bug-ga2-mem
 endif
 
 $(objpfx)annexc.out: $(objpfx)annexc
@@ -241,3 +244,8 @@ $(objpfx)tst-regex: $(common-objpfx)rt/librt.so
 else
 $(objpfx)tst-regex: $(common-objpfx)rt/librt.a
 endif
+
+$(objpfx)bug-ga2-mem: $(objpfx)bug-ga2.out
+	$(common-objpfx)malloc/mtrace $(objpfx)bug-ga2.mtrace > $@
+
+bug-ga2-ENV = MALLOC_TRACE=$(objpfx)bug-ga2.mtrace

@@ -1,3 +1,13 @@
+2004-02-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): If _res has not been
+	inited yet, try to init it before saving old _res.options.
+	* posix/Makefile (xtests): Add bug-ga2.
+	(generated): Add bug-ga2.mtrace and bug-ga2-mem.
+	(xtests): Depend on bug-ga2-mem.
+	($(objpfx)bug-ga2-mem, bug-ga2-ENV): New.
+	* posix/bug-ga2.c: New test.
+
 2004-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Pop register
