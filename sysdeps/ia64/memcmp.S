@@ -1,6 +1,6 @@
 /* Optimized version of the standard memcmp() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,6 @@
 #define OPSIZ 		8
 #define MEMLAT		2
 
-#define saved_pfs	r14
 #define start		r15
 #define saved_pr	r17
 #define saved_lc	r18
@@ -56,14 +55,18 @@
 #define loopcnt		r30
 
 ENTRY(memcmp)
-	alloc 	saved_pfs = ar.pfs, 3, 37, 0, 40
+	.prologue
+	alloc 	r2 = ar.pfs, 3, 37, 0, 40
 
 	.rotr	r[MEMLAT + 2], q[MEMLAT + 5], tmp1[4], tmp2[4], val[2]
 	.rotp	p[MEMLAT + 4 + 1]
 
 	mov	ret0 = r0		// by default return value = 0
+	.save pr, saved_pr
 	mov	saved_pr = pr		// save the predicate registers
+	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc	// save the loop counter
+	.body
 	mov 	dest = in0		// dest
 	mov 	src = in1		// src
 	mov	len = in2		// len
@@ -126,7 +129,6 @@ ENTRY(memcmp)
 	cmp.ltu	p6, p7 = value2, value1 ;;
 (p6)	mov	ret0 = -1
 (p7)	mov	ret0 = 1
-	mov 	ar.pfs = saved_pfs	// restore the PFS
 	mov     pr = saved_pr, -1    	// restore the predicate registers
 	mov 	ar.lc = saved_lc	// restore the loop counter
 	br.ret.sptk.many b0
@@ -154,7 +156,6 @@ ENTRY(memcmp)
 .done:
 (p6)	sub	ret0 = value2, value1	// don't execute it if falling thru
 .restore_and_exit:
-	mov 	ar.pfs = saved_pfs	// restore the PFS
 	mov     pr = saved_pr, -1    	// restore the predicate registers
 	mov 	ar.lc = saved_lc	// restore the loop counter
 	br.ret.sptk.many b0

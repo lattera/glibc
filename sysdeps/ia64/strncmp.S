@@ -1,6 +1,6 @@
 /* Optimized version of the standard strncmp() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,13 +35,12 @@
 #define s2		in1
 #define n		in2
 
-#define saved_pfs	r14
 #define val1		r15
 #define val2		r16
 
 
 ENTRY(strncmp)
-	alloc	saved_pfs = ar.pfs, 3, 0, 0, 0
+	alloc	r2 = ar.pfs, 3, 0, 0, 0
 	mov	ret0 = r0
 	cmp.eq  p6, p0 = r0, r0		// set p6
 	cmp.eq	p7, p0 = n, r0		// return immediately if n == 0
@@ -58,6 +57,5 @@ ENTRY(strncmp)
 (p6)	br.cond.sptk .loop
 	sub	ret0 = val1, val2
 .restore_and_exit:
-	mov	ar.pfs = saved_pfs
 	br.ret.sptk.many b0
 END(strncmp)	

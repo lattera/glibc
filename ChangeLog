@@ -1,3 +1,24 @@
+2001-04-11  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/htonl.S: Drop superfluous "alloc".
+	* sysdeps/ia64/htons.S: Likewise.
+
+	* sysdeps/ia64/memset.S: Add unwind directives.
+	* sysdeps/ia64/strncpy.S: Likewise.
+	* sysdeps/ia64/strcat.S: Likewise.
+
+	* sysdeps/ia64/memccpy.S: Add unwind directives.  Drop superfluous
+	restore of ar.pfs.
+	* sysdeps/ia64/strchr.S: Likewise.
+	* sysdeps/ia64/memmove.S: Likewise.
+	* sysdeps/ia64/memcpy.S: Likewise.
+	* sysdeps/ia64/memcmp.S: Likewise.
+	* sysdeps/ia64/memchr.S: Likewise.
+	* sysdeps/ia64/strcmp.S: Likewise.
+	* sysdeps/ia64/strlen.S: Likewise.
+	* sysdeps/ia64/strcpy.S: Likewise.
+	* sysdeps/ia64/strncmp.S: Likewise.
+
 2001-04-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* wcsmbs/wchar.h (fgetwc, getwc, getwchar, fputwc, putwc, putwchar,

@@ -1,6 +1,6 @@
 /* Optimized version of the standard memchr() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,6 @@
 #include <sysdep.h>
 #undef ret
 
-#define	saved_pfs	r14
 #define saved_pr	r15
 #define saved_lc	r16
 #define	chr		r17
@@ -57,12 +56,16 @@
 #define str		in0
 
 ENTRY(__memchr)
-	alloc saved_pfs = ar.pfs, 3, 0, 29, 32
+	.prologue
+	alloc r2 = ar.pfs, 3, 0, 29, 32
 #include "softpipe.h"
 	.rotr	value[MEMLAT+1], addr[MEMLAT+3], aux[2], poschr[2]
 	.rotp	p[MEMLAT+3]
+	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc 	// save the loop counter
+	.save pr, saved_pr
 	mov	saved_pr = pr		// save the predicates
+	.body
 	mov 	ret0 = str
 	and 	tmp = 7, str		// tmp = str % 8
 	cmp.ne	p7, p0 = r0, r0		// clear p7
@@ -118,7 +121,6 @@ ENTRY(__memchr)
 (p6)	adds	ret0 = -1, ret0 		   // if we got here from l1 or l3
 (p7)	add	ret0 = addr[MEMLAT+2], poschr[1]   // if we got here from l2
 	mov	pr = saved_pr, -1
-	mov	ar.pfs = saved_pfs
 	mov	ar.lc = saved_lc
 	br.ret.sptk.many b0
 

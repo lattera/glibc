@@ -1,6 +1,6 @@
 /* Optimized version of the standard strcpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,6 @@
 #include <sysdep.h>
 #undef ret
 
-#define saved_pfs	r14
 #define saved_lc	r15
 #define saved_pr	r16
 #define thresh		r17
@@ -53,15 +52,19 @@
 #define	value		r31
 
 ENTRY(strcpy)
-	alloc 	saved_pfs = ar.pfs, 2, 0, 30, 32
+	.prologue
+	alloc 	r2 = ar.pfs, 2, 0, 30, 32
 
 #define MEMLAT 2
 	.rotr	r[MEMLAT + 2]
 	.rotp	p[MEMLAT + 1]
 
 	mov	ret0 = in0		// return value = dest
+	.save pr, saved_pr
 	mov	saved_pr = pr           // save the predicate registers
+	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc	// save the loop counter
+	.body
 	sub	tmp = r0, in0 ;;	// tmp = -dest
 	mov 	dest = in0		// dest
 	mov 	src = in1		// src
@@ -127,7 +130,6 @@ ENTRY(strcpy)
 	st1	[dest] = c, 1
 	br.cloop.dptk	.l4 ;;
 .restore_and_exit:
-	mov 	ar.pfs = saved_pfs	// restore the PFS
 	mov 	ar.lc = saved_lc	// restore the loop counter
 	mov	pr = saved_pr, -1	// restore the predicate registers
 	br.ret.sptk.many b0

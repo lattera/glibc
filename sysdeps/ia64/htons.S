@@ -1,5 +1,5 @@
 /* Change byte order in 16-bit value.  ia64 version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Dan Pop <Dan.Pop@cern.ch>
 
@@ -20,14 +20,12 @@
 
 
 #include <sysdep.h>
-#undef ret
 
 ENTRY(htons)
-	alloc	ret0 = ar.pfs, 1, 0, 0, 0
-	shl	in0 = in0, 48
+	shl	ret0 = r32, 48
 	;;
-	mux1	ret0 = in0, @rev
-	br.ret.sptk.many b0
+	mux1	ret0 = ret0, @rev
+	ret
 END(htons)
 
 weak_alias (htons, ntohs)

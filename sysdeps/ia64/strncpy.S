@@ -1,6 +1,6 @@
 /* Optimized version of the standard strncpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,8 +33,8 @@
 #include <sysdep.h>
 #undef ret
 
-#define saved_pfs	loc0
-#define saved_b0	loc1
+#define saved_b0	loc0
+#define saved_pfs	loc1
 #define saved_pr	loc2
 #define saved_lc	loc3
 #define tmp		loc4
@@ -47,10 +47,14 @@
 #define rc		ret0
 
 ENTRY(strncpy)
+	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(3)
 	alloc 	saved_pfs = ar.pfs, 3, 6, 3, 0
 	mov	saved_b0 = b0
+	.save pr, saved_pr
 	mov	saved_pr = pr
+	.save ar.lc, saved_lc
 	mov	saved_lc = ar.lc
+	.body
 	cmp.gtu	p6, p0 = 24, n
 (p6)	br.cond.spnt .cpyfew
 	mov	out0 = src

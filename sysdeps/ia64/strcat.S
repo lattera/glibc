@@ -1,6 +1,6 @@
 /* IA-64 assembly version of the standard strcat() function.  
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,14 +37,16 @@
 
 #define src	in1
 #define dest	in0
-#define save_pfs loc0
-#define save_b0	loc1
+#define save_b0	loc0
+#define save_pfs loc1
 #define tmp	loc2
 #define rc	ret0
 
 ENTRY(strcat)
+	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(2)
 	alloc 	save_pfs = ar.pfs, 2, 3, 2, 0
 	mov	save_b0 = b0
+	.body
 	mov	out0 = dest
 	mov	tmp = gp ;;
 	br.call.sptk.many b0 = strlen# ;; // rc = strlen(dest);

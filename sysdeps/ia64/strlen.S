@@ -1,6 +1,6 @@
 /* Optimized version of the standard strlen() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,6 @@
 #include <sysdep.h>
 #undef ret
 
-#define	saved_pfs	r14
 #define saved_lc	r18
 #define str		r19
 #define pos0		r20
@@ -48,8 +47,11 @@
 #define len		ret0
 
 ENTRY(strlen)
-	alloc saved_pfs = ar.pfs, 1, 0, 0, 0
+	.prologue
+	alloc r2 = ar.pfs, 1, 0, 0, 0
+	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc 	// save the loop counter
+	.body
 	mov 	str = in0	
 	mov 	len = r0		// len = 0
 	and 	tmp = 7, in0		// tmp = str % 8
@@ -86,7 +88,6 @@ l2:	ld8.s	val2 = [str], 8		// don't bomb out here
 	add	len = len, tmp;;
 	adds	len = -16, len
 .restore_and_exit:
-	mov ar.pfs = saved_pfs		// restore the PFS
 	mov ar.lc = saved_lc		// restore the loop counter
 	br.ret.sptk.many b0
 .recovery:

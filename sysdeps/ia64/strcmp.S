@@ -1,6 +1,6 @@
 /* Optimized version of the standard strcmp() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,13 +33,12 @@
 #define s1		in0
 #define s2		in1
 
-#define saved_pfs	r14
 #define val1		r15
 #define val2		r16
 
 
 ENTRY(strcmp)
-	alloc	saved_pfs = ar.pfs, 2, 0, 0, 0
+	alloc	r2 = ar.pfs, 2, 0, 0, 0
 .loop:
 	ld1	val1 = [s1], 1
 	ld1	val2 = [s2], 1
@@ -50,6 +49,5 @@ ENTRY(strcmp)
 	cmp.eq.and p6, p0 = val1, val2
 (p6)	br.cond.sptk .loop
 	sub	ret0 = val1, val2
-	mov	ar.pfs = saved_pfs
 	br.ret.sptk.many b0
 END(strcmp)

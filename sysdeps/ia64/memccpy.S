@@ -1,6 +1,6 @@
 /* Optimized version of the memccpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,6 @@
 #define OP_T_THRES 	16
 #define OPSIZ 		8
 
-#define saved_pfs	r14
 #define saved_pr	r17
 #define saved_lc	r18
 #define dest		r19
@@ -53,15 +52,19 @@
 #define	value		r31
 
 ENTRY(memccpy)
-	alloc 	saved_pfs = ar.pfs, 4, 40 - 4, 0, 40
+	.prologue
+	alloc 	r2 = ar.pfs, 4, 40 - 4, 0, 40
 
 #include "softpipe.h"
 	.rotr	r[MEMLAT + 3], tmp1[4], tmp2[4], val[4], tmp3[2], pos0[2]
 	.rotp	p[MEMLAT + 6 + 1]
 
 	mov	ret0 = r0		// return NULL if no match
+	.save pr, saved_pr
 	mov	saved_pr = pr		// save the predicate registers
+	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc	// save the loop counter
+	.body
 	mov 	dest = in0		// dest
 	mov 	src = in1		// src
 	extr.u	char = in2, 0, 8	// char
@@ -143,7 +146,6 @@ ENTRY(memccpy)
 .foundit:
 (p6)	mov	ret0 = dest
 .restore_and_exit:
-	mov 	ar.pfs = saved_pfs	// restore the PFS
 	mov     pr = saved_pr, -1    	// restore the predicate registers
 	mov 	ar.lc = saved_lc	// restore the loop counter
 	br.ret.sptk.many b0
@@ -158,7 +160,6 @@ ENTRY(memccpy)
 	shr.u	value = value, 8
 	br.cloop.sptk .l5 ;;
 	mov 	ret0 = dest
-	mov	ar.pfs = saved_pfs
 	mov	pr = saved_pr, -1
 	mov	ar.lc = saved_lc
 	br.ret.sptk.many b0

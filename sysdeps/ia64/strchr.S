@@ -1,6 +1,6 @@
 /* Optimized version of the standard strchr() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,6 @@
 #include <sysdep.h>
 #undef ret
 
-#define	saved_pfs	r14
 #define saved_lc	r18
 #define poschr		r19
 #define pos0		r20
@@ -47,8 +46,11 @@
 #define chr		in1
 
 ENTRY(strchr)
-	alloc saved_pfs = ar.pfs, 2, 0, 0, 0
+	.prologue
+	alloc r2 = ar.pfs, 2, 0, 0, 0
+	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc 	// save the loop counter
+	.body
 	mov 	ret0 = str	
 	and 	tmp = 7, str		// tmp = str % 8
 	mux1	chrx8 = chr, @brcst
@@ -94,12 +96,10 @@ ENTRY(strchr)
 	adds	ret0 = -15, ret0 ;;	// should be -16, but we decrement
 .restore_and_exit:			// ret0 in the next instruction
 	adds	ret0 = -1, ret0		// ret0 was pointing 1 char too far
-	mov 	ar.pfs = saved_pfs	// restore the PFS
 	mov 	ar.lc = saved_lc	// restore the loop counter
 	br.ret.sptk.many b0
 .notfound:
 	mov	ret0 = r0		// return NULL if null was found
-	mov 	ar.pfs = saved_pfs	// first
 	mov 	ar.lc = saved_lc
 	br.ret.sptk.many b0
 .recovery:

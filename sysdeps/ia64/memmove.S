@@ -1,6 +1,6 @@
 /* Optimized version of the standard memmove() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,6 @@
 #define OP_T_THRES 	16
 #define OPSIZ 		 8
 
-#define saved_pfs	r14
 #define adest		r15
 #define saved_pr	r17
 #define saved_lc	r18
@@ -69,13 +68,17 @@
 		br.cond.sptk .cpyfew ; /* deal with the remaining bytes */
 
 ENTRY(memmove)
-	alloc 	saved_pfs = ar.pfs, 3, 29, 0, 32
+	.prologue
+	alloc 	r2 = ar.pfs, 3, 29, 0, 32
 #include "softpipe.h"
 	.rotr	r[MEMLAT + 2], q[MEMLAT + 1]
 	.rotp	p[MEMLAT + 2]
 	mov	ret0 = in0		// return value = dest
+	.save pr, saved_pr
 	mov	saved_pr = pr		// save the predicate registers
+	.save ar.lc, saved_lc
         mov 	saved_lc = ar.lc	// save the loop counter
+	.body
 	or	tmp3 = in0, in1 ;;	// tmp3 = dest | src
 	or	tmp3 = tmp3, in2	// tmp3 = dest | src | len
 	mov 	dest = in0		// dest
@@ -119,7 +122,6 @@ ENTRY(memmove)
 (p[MEMLAT])	st8	[adest] = q[MEMLAT], 16
 		br.ctop.dptk .l0 ;;
 
-	mov	ar.pfs = saved_pfs	// restore the PFS
 	mov	pr = saved_pr, -1	// restore the predicate registers
 	mov	ar.lc = saved_lc	// restore the loop counter
 	br.ret.sptk.many b0
@@ -189,7 +191,6 @@ ENTRY(memmove)
 	st1	[dest] = value, 1
 	br.cloop.dptk	.l4 ;;
 .restore_and_exit:
-	mov 	ar.pfs = saved_pfs	// restore the PFS
 	mov     pr = saved_pr, -1    	// restore the predicate registers
 	mov 	ar.lc = saved_lc	// restore the loop counter
 	br.ret.sptk.many b0
