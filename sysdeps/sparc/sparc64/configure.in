@@ -1,0 +1,26 @@
+sinclude(./aclocal.m4)dnl Autoconf lossage
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local configure fragment for sysdeps/sparc/sparc64.
+
+# Check whether .got section comes before or after .dynamic
+AC_CACHE_CHECK(where sparc64 .dynamic section comes before .got,
+	       libc_cv_sparc64_dynamic_before_got, [dnl
+changequote(,)
+${CC-cc} $CFLAGS -shared -Wl,--verbose 2>&1 \
+  | grep '^[ 	]*\.\(got\|dynamic\)[^A-Za-z0-9_]' > conftest.order
+changequote([,])
+if test `cat conftest.order | wc -l` != 2; then
+  AC_ERROR(Couldn't figure .got/.dynamic relative placement)
+else
+  changequote(,)
+  if head -n 1 conftest.order | grep '^[ 	]*\.got'; then
+    libc_cv_sparc64_dynamic_before_got=no
+  else
+    libc_cv_sparc64_dynamic_before_got=yes
+  fi
+  changequote([,])
+fi
+rm -f conftest*])
+if test $libc_cv_sparc64_dynamic_before_got = yes; then
+  AC_DEFINE(SPARC64_DYNAMIC_BEFORE_GOT)
+fi

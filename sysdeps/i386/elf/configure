@@ -1,4 +1,4 @@
- # Local configure fragment for sysdeps/unix/sysv/linux.
+ # Local configure fragment for sysdeps/i386/elf.
 
 if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and

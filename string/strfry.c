@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 char *
 strfry (char *string)
@@ -31,7 +32,8 @@ strfry (char *string)
     {
       static char state[32];
       rdata.state = NULL;
-      __initstate_r (time ((time_t *) NULL), state, sizeof (state), &rdata);
+      __initstate_r (time ((time_t *) NULL) ^ getpid (),
+		     state, sizeof (state), &rdata);
       init = 1;
     }
 

@@ -1,4 +1,19 @@
+2002-03-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/elf/configure.in: Fix comment.
+
+	* sysdeps/sparc/sparc64/configure.in: New.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_load_address): Fix
+	if .dynamic comes before .got.
+	* config.h.in (SPARC64_DYNAMIC_BEFORE_GOT): Add.
+
+	* sysdeps/sparc/sparc64/hp-timing.h (HP_TIMING_DIFF,
+	HP_TIMING_ACCUM): Fix typos.
+
 2002-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/strfry.c: Add some more randomness to the seed.
+	Patch by James A Morrison <ja2morri@student.math.uwaterloo.ca>.
 
 	* po/es.po: Update from translation team.
 	* po/fr.po: Likewise.
@@ -7,7 +22,7 @@
 
 	* stdio-common/printf_fp.c (__printf_fp): Correct check for %F format
 	when determining type of format.
-	Patch by James Antill <james@and.org> [PR libc/2787].
+	Patch by James Antill <james@anqd.org> [PR libc/2787].
 
 2002-03-04  Jakub Jelinek  <jakub@redhat.com>
 

@@ -37,14 +37,14 @@ typedef unsigned long int hp_timing_t;
 #define HP_TIMING_DIFF_INIT() \
   do {									      \
     int __cnt = 5;							      \
-    GL(hp_timing_overhead) = ~0ull;					      \
+    GL(dl_hp_timing_overhead) = ~0ull;					      \
     do									      \
       {									      \
 	hp_timing_t __t1, __t2;						      \
 	HP_TIMING_NOW (__t1);						      \
 	HP_TIMING_NOW (__t2);						      \
-	if (__t2 - __t1 < GL(hp_timing_overhead))			      \
-	  GL(hp_timing_overhead) = __t2 - __t1;				      \
+	if (__t2 - __t1 < GL(dl_hp_timing_overhead))			      \
+	  GL(dl_hp_timing_overhead) = __t2 - __t1;			      \
       }									      \
     while (--__cnt > 0);						      \
   } while (0)
@@ -53,7 +53,7 @@ typedef unsigned long int hp_timing_t;
 
 #define HP_TIMING_ACCUM(Sum, Diff)				\
 do {								\
-  hp_timing_t __diff = (Diff) - GL(hp_timing_overhead);		\
+  hp_timing_t __diff = (Diff) - GL(dl_hp_timing_overhead);	\
   hp_timing_t tmp1, tmp2;					\
   __asm__ __volatile__("1: ldx	[%3], %0\n\t"			\
 		       "add	%0, %2, %1\n\t"			\

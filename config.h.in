@@ -140,6 +140,10 @@
 /* Mach specific: define if the `host_page_size' RPC is available.  */
 #undef	HAVE_HOST_PAGE_SIZE
 
+/* Sparc64 specific: define if .dynamic section comes before .got for
+   shared libs.  */
+#undef  SPARC64_DYNAMIC_BEFORE_GOT
+
 /*
  */
 

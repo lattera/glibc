@@ -77,14 +77,19 @@ elf_machine_load_address (void)
 
      The following method relies on the fact that sparcv9 ABI maximal
      page length is 1MB and all ELF segments on sparc64 are aligned
-     to 1MB.  Also, it relies on _DYNAMIC coming after _GLOBAL_OFFSET_TABLE_
-     and assumes that they both fit into the first 1MB of the RW segment.
-     This should be true for some time unless ld.so grows too much, at the
-     moment the whole stripped ld.so is 128KB and only smaller part of that
-     is in the RW segment.  */
+     to 1MB.  Also assumes that they both fit into the first 1MB of
+     the RW segment.  This should be true for some time unless ld.so
+     grows too much, at the moment the whole stripped ld.so is 128KB
+     and only smaller part of that is in the RW segment.  */
 
+#ifdef SPARC64_DYNAMIC_BEFORE_GOT
+  /* If _DYNAMIC comes before _GLOBAL_OFFSET_TABLE_...  */
+  return ((Elf64_Addr)elf_pic_register - *elf_pic_register) & ~0xfffffUL;
+#else
+  /* ... and if _DYNAMIC comes after _GLOBAL_OFFSET_TABLE_.  */
   return ((Elf64_Addr)elf_pic_register - *elf_pic_register + 0xfffff)
 	 & ~0xfffffUL;
+#endif
 }
 
 /* We have 4 cases to handle.  And we code different code sequences
