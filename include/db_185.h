@@ -2,5 +2,5 @@
 #include <db2/db_185.h>
 
 /* Now define the internal interfaces.  */
-DB *__dbopen __P((const char *, int, int, DBTYPE, const void *));
+DB *__dbopen (const char *, int, int, DBTYPE, const void *);
 #endif

@@ -2,12 +2,12 @@
 #include <dlfcn/dlfcn.h>
 
 /* Now define the internal interfaces.  */
-extern void *__dlvsym __P ((void *__handle, __const char *__name,
-			    __const char *__version));
+extern void *__dlvsym (void *__handle, __const char *__name,
+		       __const char *__version);
 
-extern void *__libc_dlopen  __P ((__const char *__name));
-extern void *__libc_dlsym   __P ((void *__map, __const char *__name));
-extern int   __libc_dlclose __P ((void *__map));
+extern void *__libc_dlopen  (__const char *__name);
+extern void *__libc_dlsym   (void *__map, __const char *__name);
+extern int   __libc_dlclose (void *__map);
 
 /* Locate shared object containing the given address.  */
 extern int _dl_addr (const void *address, Dl_info *info)

@@ -1,3 +1,21 @@
+1999-11-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* iconv/skeleton.c: Don't access next_step->fct if datat->is_last
+	is true.
+
+1999-11-23  Andreas Jaeger  <aj@suse.de>
+
+	* include/sys/select.h: Remove K&R compatibility.
+	* include/sys/statfs.h: Likewise.
+	* include/gnu/libc-version.h: Likewise.
+	* include/db_185.h: Likewise.
+	* include/dlfcn.h: Likewise.
+	* include/search.h: Likewise.
+	* include/setjmp.h: Likewise.
+	* include/signal.h: Likewise.
+	* include/stdio.h: Likewise.
+	* include/unistd.h: Likewise.
+
 1999-11-23  Andreas Jaeger  <aj@suse.de>
 
 	* include/aio.h: Remove __THROW from internal interfaces.  __THROW
