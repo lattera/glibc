@@ -61,12 +61,11 @@ ENTRY(__getcontext)
 	mov.i rPFS = ar.pfs
 	;;
 .mem.offset 0,0; st8.spill [r2] = r5, 16
-.mem.offset 8,0; st8.spill [r3] = r6
-	add r3 = (SC_FR+3*16-(SC_GR+6*8)), r3
+.mem.offset 8,0; st8.spill [r3] = r6, 48
+	and rTMP = ~0x3, rRSC
 	;;
 	st8.spill [r2] = r7, (SC_FR+2*16-(SC_GR+7*8))
-	nop 0
-	and rTMP = ~0x3, rRSC
+	st8.spill [r3] = sp, (SC_FR+3*16-(SC_GR+12*8))
 	;;
 	mov.m ar.rsc = rTMP 		// put RSE into enforced lazy mode
 	mov.m rNAT = ar.unat

@@ -1,3 +1,11 @@
+2001-04-06  David Mosberger  <davidm@hpl.hp.com>
+
+	* stdlib/tst-setcontext.c: Move st2[] to global scope.
+	(f2): Verify that stack pointer is inside st2[].
+
+	* sysdeps/unix/sysv/linux/ia64/getcontext.S: It helps to save r12.
+	* sysdeps/unix/sysv/linux/ia64/setcontext.S: It helps to restore r12.
+
 2001-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/antarctica: Update from tzdata2001b.

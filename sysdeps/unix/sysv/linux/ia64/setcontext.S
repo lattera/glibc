@@ -87,9 +87,12 @@ ENTRY(__setcontext)
 	ld8.fill r5 = [r3], 16
 	mov b0 = rB0
 	;;
-	ld8.fill r6 = [r2]
+	ld8.fill r6 = [r2], 48
 	ld8.fill r7 = [r3], (SC_FR+2*16-(SC_GR+7*8))
-	adds r2 = (SC_FR+3*16-(SC_GR+6*8)), r2
+	;;
+	ld8.fill sp = [r2], (SC_FR+3*16-(SC_GR+12*8))
+	mov.m ar.fpsr = rFPSR
+	mov.i ar.pfs = rPFS
 	;;
 	ldf.fill f3 = [r2], 16
 	ldf.fill f2 = [r3], 48
@@ -132,10 +135,8 @@ ENTRY(__setcontext)
 	mov pr = rPR, -1
 	;;
 	mov.m ar.rsc = rTMP		// put RSE into enforced lazy mode
-	mov.m ar.fpsr = rFPSR
-	mov.i ar.pfs = rPFS
 	;;
-	loadrs				// drop dirty partition is empty
+	loadrs				// drop dirty partition
 	;;
 	mov.m ar.bspstore = rBSP
 	mov.m ar.unat = rUNAT

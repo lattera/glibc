@@ -26,6 +26,8 @@ static ucontext_t ctx[3];
 static int was_in_f1;
 static int was_in_f2;
 
+static char st2[8192];
+
 static void
 f1 (long a0, long a1, long a2, long a3)
 {
@@ -49,7 +51,17 @@ f1 (long a0, long a1, long a2, long a3)
 static void
 f2 (void)
 {
+  char on_stack[1];
+
   puts ("start f2");
+
+  printf ("&on_stack=%p\n", on_stack);
+  if (on_stack < st2 || on_stack >= st2 + sizeof (st2))
+    {
+      printf ("%s: memory stack is not where it belongs!", __FUNCTION__);
+      exit (1);
+    }
+
   if (swapcontext (&ctx[2], &ctx[1]) != 0)
     {
       printf ("%s: swapcontext: %m\n", __FUNCTION__);
@@ -63,7 +75,6 @@ int
 main (void)
 {
   char st1[8192];
-  char st2[8192];
 
   puts ("making contexts");
   if (getcontext (&ctx[1]) != 0)
