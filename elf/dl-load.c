@@ -359,7 +359,7 @@ add_name_to_object (struct link_map *l, const char *name)
 /* Standard search directories.  */
 static struct r_search_path_struct rtld_search_dirs attribute_relro;
 
-static size_t max_dirnamelen attribute_relro;
+static size_t max_dirnamelen;
 
 static struct r_search_path_elem **
 fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,

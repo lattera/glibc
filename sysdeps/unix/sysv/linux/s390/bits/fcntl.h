@@ -197,3 +197,11 @@ struct flock64
 #  define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
 # endif
 #endif
+
+__BEGIN_DECLS
+
+/* Provide kernel hint to read ahead.  */
+extern ssize_t readahead (int __fd, __off64_t __offset, size_t __count)
+    __THROW;
+
+__END_DECLS

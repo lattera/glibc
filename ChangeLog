@@ -1,3 +1,24 @@
+2004-01-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/readahead.c (__readahead): Use off64_t
+	instead of loff_t.  Include <fcntl.h>.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Add readahead prototype.
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/cris/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+
+	* elf/dl-load.c: Don't add attribute_relro to max_dirnamelen.
+
+	* sysdeps/generic/inttypes.h: Fix PRI*FAST{16,32} macros.
+
 2003-12-31  Bruno Haible  <bruno@clisp.org>
 
 	* iconvdata/iso_6937-2.c (to_ucs4): Map 0x7E to U+007E, not U+203E.
@@ -36,14 +57,14 @@
 
 2004-01-16  Richard Henderson  <rth@redhat.com>
 
-        * include/unistd.h (__libc_enable_secure): Mark attribute_relro.
-        (__libc_enable_secure_internal): Likewise.
+	* include/unistd.h (__libc_enable_secure): Mark attribute_relro.
+	(__libc_enable_secure_internal): Likewise.
 
-        * elf/dl-load.c: Don't declare __libc_stack_end.
-        * sysdeps/generic/libc-start.c: Likewise.
-        * sysdeps/unix/sysv/linux/dl-execstack.c: Likewise.
-        * sysdeps/generic/segfault.c: Likewise.  Include ldsodefs.h.
-        * sysdeps/generic/backtrace.c: Likewise.
+	* elf/dl-load.c: Don't declare __libc_stack_end.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-execstack.c: Likewise.
+	* sysdeps/generic/segfault.c: Likewise.  Include ldsodefs.h.
+	* sysdeps/generic/backtrace.c: Likewise.
 
 2004-01-15  Ulrich Drepper  <drepper@redhat.com>
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,8 +68,8 @@ typedef wchar_t __gwchar_t;
 # define PRIdLEAST64	__PRI64_PREFIX "d"
 
 # define PRIdFAST8	"d"
-# define PRIdFAST16	"d"
-# define PRIdFAST32	"d"
+# define PRIdFAST16	__PRIPTR_PREFIX "d"
+# define PRIdFAST32	__PRIPTR_PREFIX "d"
 # define PRIdFAST64	__PRI64_PREFIX "d"
 
 
@@ -84,8 +84,8 @@ typedef wchar_t __gwchar_t;
 # define PRIiLEAST64	__PRI64_PREFIX "i"
 
 # define PRIiFAST8	"i"
-# define PRIiFAST16	"i"
-# define PRIiFAST32	"i"
+# define PRIiFAST16	__PRIPTR_PREFIX "i"
+# define PRIiFAST32	__PRIPTR_PREFIX "i"
 # define PRIiFAST64	__PRI64_PREFIX "i"
 
 /* Octal notation.  */
@@ -100,8 +100,8 @@ typedef wchar_t __gwchar_t;
 # define PRIoLEAST64	__PRI64_PREFIX "o"
 
 # define PRIoFAST8	"o"
-# define PRIoFAST16	"o"
-# define PRIoFAST32	"o"
+# define PRIoFAST16	__PRIPTR_PREFIX "o"
+# define PRIoFAST32	__PRIPTR_PREFIX "o"
 # define PRIoFAST64	__PRI64_PREFIX "o"
 
 /* Unsigned integers.  */
@@ -116,8 +116,8 @@ typedef wchar_t __gwchar_t;
 # define PRIuLEAST64	__PRI64_PREFIX "u"
 
 # define PRIuFAST8	"u"
-# define PRIuFAST16	"u"
-# define PRIuFAST32	"u"
+# define PRIuFAST16	__PRIPTR_PREFIX "u"
+# define PRIuFAST32	__PRIPTR_PREFIX "u"
 # define PRIuFAST64	__PRI64_PREFIX "u"
 
 /* lowercase hexadecimal notation.  */
@@ -132,8 +132,8 @@ typedef wchar_t __gwchar_t;
 # define PRIxLEAST64	__PRI64_PREFIX "x"
 
 # define PRIxFAST8	"x"
-# define PRIxFAST16	"x"
-# define PRIxFAST32	"x"
+# define PRIxFAST16	__PRIPTR_PREFIX "x"
+# define PRIxFAST32	__PRIPTR_PREFIX "x"
 # define PRIxFAST64	__PRI64_PREFIX "x"
 
 /* UPPERCASE hexadecimal notation.  */
@@ -148,8 +148,8 @@ typedef wchar_t __gwchar_t;
 # define PRIXLEAST64	__PRI64_PREFIX "X"
 
 # define PRIXFAST8	"X"
-# define PRIXFAST16	"X"
-# define PRIXFAST32	"X"
+# define PRIXFAST16	__PRIPTR_PREFIX "X"
+# define PRIXFAST32	__PRIPTR_PREFIX "X"
 # define PRIXFAST64	__PRI64_PREFIX "X"
 
 
