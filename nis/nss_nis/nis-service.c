@@ -279,60 +279,56 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
     return NSS_STATUS_UNAVAIL;
 
   /* If the protocol is given, we could try if our NIS server knows
-     about services.byservicename map. If yes, we only need one query.
-     If the protocol is not given, try first name/tcp, then name/udp
-     and then fallback to sequential scanning of services.byname map.  */
-  const char *proto = protocol != NULL ? protocol : "tcp";
-  do
+     about services.byservicename map. If yes, we only need one query.  */
+  char key[strlen (name) + (protocol ? strlen (protocol) : 0) + 2];
+  char *cp, *result;
+  size_t keylen, len;
+  int int_len;
+
+  /* key is: "name/proto" */
+  cp = stpcpy (key, name);
+  if (protocol)
     {
-      char key[strlen (name) + strlen (proto) + 2];
-      char *cp, *result;
-      size_t keylen, len;
-      int int_len;
-
-      /* key is: "name/proto" */
-      cp = stpcpy (key, name);
       *cp++ = '/';
-      stpcpy (cp, proto);
-      keylen = strlen (key);
-      status = yperr2nss (yp_match (domain, "services.byservicename", key,
-				    keylen, &result, &int_len));
-      len = int_len;
-
-      /* If we found the key, it's ok and parse the result. If not,
-	 fall through and parse the complete table. */
-      if (status == NSS_STATUS_SUCCESS)
-	{
-	  struct parser_data *pdata = (void *) buffer;
-	  int parse_res;
-	  char *p;
-
-	  if ((size_t) (len + 1) > buflen)
-	    {
-	      free (result);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
-
-	  p = strncpy (buffer, result, len);
-	  buffer[len] = '\0';
-	  while (isspace (*p))
-	    ++p;
-	  free (result);
-	  parse_res = _nss_files_parse_servent (p, serv, pdata,
-						buflen, errnop);
-	  if (parse_res < 0)
-	    {
-	      if (parse_res == -1)
-		return NSS_STATUS_TRYAGAIN;
-	      else
-		return NSS_STATUS_NOTFOUND;
-	    }
-	  else
-	    return NSS_STATUS_SUCCESS;
-	}
+      strcpy (cp, protocol);
     }
-  while (protocol == NULL && (proto[0] == 't' ? (proto = "udp") : NULL));
+  keylen = strlen (key);
+  status = yperr2nss (yp_match (domain, "services.byservicename", key,
+				keylen, &result, &int_len));
+  len = int_len;
+
+  /* If we found the key, it's ok and parse the result. If not,
+     fall through and parse the complete table. */
+  if (status == NSS_STATUS_SUCCESS)
+    {
+      struct parser_data *pdata = (void *) buffer;
+      int parse_res;
+      char *p;
+
+      if ((size_t) (len + 1) > buflen)
+	{
+	  free (result);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      p = strncpy (buffer, result, len);
+      buffer[len] = '\0';
+      while (isspace (*p))
+	++p;
+      free (result);
+      parse_res = _nss_files_parse_servent (p, serv, pdata,
+					    buflen, errnop);
+      if (parse_res < 0)
+	{
+	  if (parse_res == -1)
+	    return NSS_STATUS_TRYAGAIN;
+	  else
+	    return NSS_STATUS_NOTFOUND;
+	}
+      else
+	return NSS_STATUS_SUCCESS;
+    }
 
   struct ypall_callback ypcb;
   struct search_t req;

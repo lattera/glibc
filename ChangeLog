@@ -1,3 +1,14 @@
+2004-04-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): If protocol
+	is NULL, instead of trying yp_match (name/tcp), yp_match (name/udp),
+	yp_all, try yp_match (name), yp_all.
+
+2004-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Add handling for
+	ignored entries.  Ignore AT_IGNOREPPC.
+
 2004-03-31  Andreas Jaeger  <aj@suse.de>
 
         * libio/fileops.c (new_do_write): Return _IO_size_t to make 64-bit
