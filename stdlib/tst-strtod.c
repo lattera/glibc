@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,96,97,98,99,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -122,6 +122,29 @@ main (int argc, char ** argv)
   if (strcmp (buf, "-0.000000") != 0)
     {
       printf ("  strtod (\"-0.0\", NULL) returns \"%s\"\n", buf);
+      status = 1;
+    }
+
+  const char input[] = "3752432815e-39";
+
+  float f1 = strtold (input, NULL);
+  float f2;
+  float f3 = strtof (input, NULL);
+  sscanf (input, "%g", &f2);
+
+  if (f1 != f2)
+    {
+      printf ("f1 = %a != f2 = %a\n", f1, f2);
+      status = 1;
+    }
+  if (f1 != f3)
+    {
+      printf ("f1 = %a != f3 = %a\n", f1, f3);
+      status = 1;
+    }
+  if (f2 != f3)
+    {
+      printf ("f2 = %a != f3 = %a\n", f2, f3);
       status = 1;
     }
 
