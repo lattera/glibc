@@ -1,3 +1,10 @@
+2004-11-05  Maciej W. Rozycki  <macro@mips.com>
+
+	* sysdeps/mips/pspinlock.c: Include <sgidefs.h>.  Use _ABIO32,
+	_ABIN32 and _ABI64 for ABI selection throughout.
+	* sysdeps/mips/pt-machine.h: Use _ABIO32, _ABIN32 and _ABI64 for
+	ABI selection throughout.
+
 2004-10-18  Roland McGrath  <roland@redhat.com>
 
 	[BZ #406]

@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF Mips ABI.
-   Copyright (C) 1995, 1997, 2000, 2001, 2002, 2003
+   Copyright (C) 1995, 1997, 2000, 2001, 2002, 2003, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -37,6 +37,7 @@
 
 #define __ASSEMBLY__ 1
 #include <entry.h>
+#include <sgidefs.h>
 #include <sys/asm.h>
 
 #ifndef ENTRY_POINT
@@ -93,12 +94,12 @@ ENTRY_POINT:
 	   on o32 and quad words (16 bytes) on n32 and n64.  */
 	
 	and $29, -2 * SZREG
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 	PTR_SUBIU $29, 32
 #endif
 	PTR_LA $7, __libc_csu_init		/* init */
 	PTR_LA $8, __libc_csu_fini
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 	PTR_S $8, 16($29)		/* fini */
 	PTR_S $2, 20($29)		/* rtld_fini */
 	PTR_S $29, 24($29)		/* stack_end */

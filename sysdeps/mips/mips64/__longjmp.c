@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <setjmp.h>
+#include <sgidefs.h>
 #include <stdlib.h>
 
 #undef __longjmp
@@ -39,7 +40,7 @@ __longjmp (env, val_arg)
   register int val asm ("a1");
 
   /* Pull back the floating point callee-saved registers.  */
-#if _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABI64
   asm volatile ("l.d $f24, %0" : : "m" (env[0].__fpregs[0]));
   asm volatile ("l.d $f25, %0" : : "m" (env[0].__fpregs[1]));
   asm volatile ("l.d $f26, %0" : : "m" (env[0].__fpregs[2]));

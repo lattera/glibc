@@ -36,7 +36,7 @@
 #define _MKNOD_VER		_MKNOD_VER_LINUX /* The bits defined below.  */
 
 
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 /* Structure describing file characteristics.  */
 struct stat
   {

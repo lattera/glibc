@@ -26,7 +26,7 @@
 
 typedef struct
   {
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
     /* Program counter.  */
     __ptr_t __pc;
 
@@ -62,7 +62,7 @@ typedef struct
     int __fpc_csr;
 
     /* Callee-saved floating point registers.  */
-#if _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABI64
     double __fpregs[8];
 #else
     double __fpregs[6];

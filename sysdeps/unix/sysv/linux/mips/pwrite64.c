@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <sgidefs.h>
 #include <unistd.h>
 #include <endian.h>
 
@@ -54,7 +55,7 @@ __libc_pwrite64 (fd, buf, count, offset)
   if (SINGLE_THREAD_P)
     {
      /* First try the syscall.  */
-#if _MIPS_SIM == _MIPS_SIM_NABI32 || _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64
       result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count,
 			       offset);
 #else
@@ -74,7 +75,7 @@ __libc_pwrite64 (fd, buf, count, offset)
   int oldtype = LIBC_CANCEL_ASYNC ();
 
   /* First try the syscall.  */
-#if _MIPS_SIM == _MIPS_SIM_NABI32 || _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64
   result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count, offset);
 #else
   result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,

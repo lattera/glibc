@@ -21,6 +21,10 @@
 /* This file must not contain any C code.  At least it must be protected
    to allow using the file also in assembler files.  */
 
+#if defined __mips__
+# include <sgidefs.h>
+#endif
+
 #ifndef __LINUX_KERNEL_VERSION
 /* We assume the worst; all kernels should be supported.  */
 # define __LINUX_KERNEL_VERSION	0
@@ -277,7 +281,7 @@
 # define __ASSUME_TIMEVAL64		1
 #endif
 
-#if defined __mips__ && defined _ABIN32 && _MIPS_SIM == _ABIN32
+#if defined __mips__ && _MIPS_SIM == _ABIN32
 # define __ASSUME_FCNTL64		1
 #endif
 

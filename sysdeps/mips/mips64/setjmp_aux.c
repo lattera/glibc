@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <setjmp.h>
+#include <sgidefs.h>
 
 /* This function is only called via the assembly language routine
    __sigsetjmp, which arranges to pass in the stack pointer and the frame
@@ -29,7 +30,7 @@ __sigsetjmp_aux (jmp_buf env, int savemask, long long sp, long long fp,
 		 long long gp)
 {
   /* Store the floating point callee-saved registers...  */
-#if _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABI64
   asm volatile ("s.d $f24, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[0]));
   asm volatile ("s.d $f25, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[1]));
   asm volatile ("s.d $f26, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[2]));

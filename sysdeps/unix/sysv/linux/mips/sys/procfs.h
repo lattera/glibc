@@ -25,6 +25,7 @@
    used on Linux.  */
 
 #include <features.h>
+#include <sgidefs.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/user.h>
@@ -34,7 +35,7 @@
 #define ELF_NGREG	45
 #define ELF_NFPREG	33
 
-#if _MIPS_SIM == _MIPS_SIM_NABI32
+#if _MIPS_SIM == _ABIN32
 __extension__ typedef unsigned long long elf_greg_t;
 #else
 typedef unsigned long elf_greg_t;
@@ -65,7 +66,7 @@ struct elf_prstatus
   {
     struct elf_siginfo pr_info;		/* Info associated with signal.  */
     short int pr_cursig;		/* Current signal.  */
-#if _MIPS_SIM == _MIPS_SIM_NABI32
+#if _MIPS_SIM == _ABIN32
     __extension__ unsigned long long int pr_sigpend;
     __extension__ unsigned long long int pr_sighold;
 #else
@@ -93,7 +94,7 @@ struct elf_prpsinfo
     char pr_sname;			/* Char for pr_state.  */
     char pr_zomb;			/* Zombie.  */
     char pr_nice;			/* Nice val.  */
-#if _MIPS_SIM == _MIPS_SIM_NABI32
+#if _MIPS_SIM == _ABIN32
     __extension__ unsigned long long int pr_flag;
 #else
     unsigned long int pr_flag;		/* Flags.  */

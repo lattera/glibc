@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,10 +22,11 @@
 #define _SYS_UCONTEXT_H	1
 
 #include <features.h>
+#include <sgidefs.h>
 #include <signal.h>
 
 /* Type for general register.  */
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 typedef __uint32_t greg_t;
 #else
 typedef __uint64_t greg_t;
@@ -119,7 +120,7 @@ typedef struct fpregset
 {
   union
   {
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
     double fp_dregs[16];
     float fp_fregs[32];
     unsigned int fp_regs[32];
@@ -143,7 +144,7 @@ typedef struct
 /* Userlevel context.  */
 typedef struct ucontext
 {
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
   unsigned long int uc_flags;
 #else
   __uint64_t uc_flags;

@@ -21,7 +21,6 @@
 #define _SYS_TAS_H 1
 
 #include <features.h>
-
 #include <sgidefs.h>
 
 __BEGIN_DECLS
@@ -43,7 +42,7 @@ _test_and_set (int *p, int v) __THROW
     ("/* Inline test and set */\n"
      "1:\n\t"
      ".set	push\n\t"
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
      ".set	mips2\n\t"
 #endif
      "ll	%0,%3\n\t"

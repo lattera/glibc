@@ -1,3 +1,55 @@
+2004-11-05  Maciej W. Rozycki  <macro@mips.com>
+
+	* sysdeps/mips/dl-machine.h: Include <sgidefs.h>.  Use _ABIO32,
+	_ABIN32 and _ABI64 for ABI selection throughout.
+	* sysdeps/mips/elf/start.S: Likewise.
+	* sysdeps/mips/mips64/__longjmp.c: Likewise.
+	* sysdeps/mips/mips64/bsd-_setjmp.S: Likewise.
+	* sysdeps/mips/mips64/bsd-setjmp.S: Likewise.
+	* sysdeps/mips/mips64/setjmp.S: Likewise.
+	* sysdeps/mips/mips64/setjmp_aux.c: Likewise.
+	* sysdeps/mips/sys/regdef.h: Likewise.
+	* sysdeps/mips/sys/ucontext.h: Likewise.
+	* sysdeps/unix/mips/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ptrace.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: Likewise.
+
+	* sysdeps/mips/atomicity.h: Use _ABIO32, _ABIN32 and _ABI64 for
+	ABI selection throughout.
+	* sysdeps/mips/bits/setjmp.h: Likewise.
+	* sysdeps/mips/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/mips/machine-gmon.h: Likewise.
+	* sysdeps/mips/sys/asm.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigcontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel_stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/user.h: Likewise.
+
+	* sysdeps/mips/sgidefs.h: Prevent <asm/sgidefs.h> from being 
+	included by kernel headers and undo its settings if already 
+	included.  Define _ABIO32, _ABIN32 and _ABI64 if missing and use 
+	them to define _MIPS_SIM_ABI32, _MIPS_SIM_NABI32 and 
+	_MIPS_SIM_ABI64 for compatibility.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Use _ABIO32, _ABIN32 and
+	_ABI64 for ABI selection in generated syscall-list.h
+	* sysdeps/unix/sysv/linux/mips/configure.in: Use _ABIO32, _ABIN32
+	and _ABI64 for ABI selection in generated asm-unistd.h.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+
+	* sysdeps/unix/sysv/linux/mips/pwrite.c (__libc_pwrite): Correct
+	an inverted _MIPS_SIM conditional.
+
 2004-11-23  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Use free

@@ -3,7 +3,7 @@
    userland data structures are not identical, because of different
    padding.  */
 /* Definition of `struct stat' used in the kernel.  */
-#if _MIPS_SIM != _MIPS_SIM_ABI32
+#if _MIPS_SIM != _ABIO32
 struct kernel_stat
   {
     unsigned int st_dev;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>.
 
@@ -21,6 +21,27 @@
 #define _SGIDEFS_H	1
 
 /*
+ * A crude hack to stop <asm/sgidefs.h>
+ */
+#undef __ASM_SGIDEFS_H
+#define __ASM_SGIDEFS_H
+
+/*
+ * And remove any damage it might have already done
+ */
+#undef _MIPS_ISA_MIPS1
+#undef _MIPS_ISA_MIPS2
+#undef _MIPS_ISA_MIPS3
+#undef _MIPS_ISA_MIPS4
+#undef _MIPS_ISA_MIPS5
+#undef _MIPS_ISA_MIPS32
+#undef _MIPS_ISA_MIPS64
+
+#undef _MIPS_SIM_ABI32
+#undef _MIPS_SIM_NABI32
+#undef _MIPS_SIM_ABI64
+
+/*
  * Definitions for the ISA level
  */
 #define _MIPS_ISA_MIPS1 1
@@ -33,14 +54,20 @@
 
 /*
  * Subprogram calling convention
- *
- * At the moment only _MIPS_SIM_ABI32 is in use.  This will change rsn.
- * Until GCC 2.8.0 is released don't rely on this definitions because the
- * 64bit code is essentially using the 32bit interface model just with
- * 64bit registers.
  */
-#define _MIPS_SIM_ABI32		1
-#define _MIPS_SIM_NABI32	2
-#define _MIPS_SIM_ABI64		3
+#ifndef _ABIO32
+# define _ABIO32		1
+#endif
+#define _MIPS_SIM_ABI32		_ABIO32
+
+#ifndef _ABIN32
+# define _ABIN32		2
+#endif
+#define _MIPS_SIM_NABI32	_ABIN32
+
+#ifndef _ABI64
+# define _ABI64			3
+#endif
+#define _MIPS_SIM_ABI64		_ABI64
 
 #endif /* sgidefs.h */

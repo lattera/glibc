@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <sgidefs.h>
 #include <signal.h>
 #include <string.h>
 
@@ -40,7 +41,7 @@ int __libc_missing_rt_sigs;
 
 #endif
 
-#if _MIPS_SIM != _MIPS_SIM_ABI32
+#if _MIPS_SIM != _ABIO32
 
 # ifdef __NR_rt_sigreturn
 static void restore_rt (void) asm ("__restore_rt");
@@ -82,7 +83,7 @@ __libc_sigaction (sig, act, oact)
 	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (kernel_sigset_t));
 	  kact.sa_flags = act->sa_flags;
 # ifdef HAVE_SA_RESTORER
-#  if _MIPS_SIM == _MIPS_SIM_ABI32
+#  if _MIPS_SIM == _ABIO32
 	  kact.sa_restorer = act->sa_restorer;
 #  else
 	  kact.sa_restorer = &restore_rt;
@@ -140,7 +141,7 @@ __libc_sigaction (sig, act, oact)
       oact->sa_mask.__val[0] = k_osigact.sa_mask;
       oact->sa_flags = k_osigact.sa_flags;
 # ifdef HAVE_SA_RESTORER
-#  if _MIPS_SIM == _MIPS_SIM_ABI32
+#  if _MIPS_SIM == _ABIO32
       oact->sa_restorer = k_osigact.sa_restorer;
 #  else
       oact->sa_restorer = &restore;
@@ -177,7 +178,7 @@ asm						\
    );
 
 /* The return code for realtime-signals.  */
-#if _MIPS_SIM != _MIPS_SIM_ABI32
+#if _MIPS_SIM != _ABIO32
 # ifdef __NR_rt_sigreturn
 RESTORE (restore_rt, __NR_rt_sigreturn)
 # endif

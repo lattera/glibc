@@ -1,5 +1,5 @@
 /* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  MIPS64 version.
-   Copyright (C) 1996, 1997, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
    We cannot do it in C because it must be a tail-call, so frame-unwinding
    in setjmp doesn't clobber the state restored by longjmp.  */
 
+#include <sgidefs.h>
 #include <sysdep.h>
 #include <sys/asm.h>
 
@@ -33,7 +34,7 @@ ENTRY (setjmp)
 #endif
 	SETUP_GP64 (v0, C_SYMBOL_NAME (setjmp))
 	PTR_LA t9, C_SYMBOL_NAME (__sigsetjmp)
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 	nop
 #endif	
 	RESTORE_GP64

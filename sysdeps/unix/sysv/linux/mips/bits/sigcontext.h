@@ -34,7 +34,7 @@
    licenses, the fact that the file is pasted, instead of included,
    doesn't really make any difference for the program that includes
    this header.  */
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 /*
  * This file is subject to the terms and conditions of the GNU General Public
  * License.  See the file "COPYING" in the main directory of this archive
@@ -70,7 +70,7 @@ struct sigcontext {
 };
 
 #endif /* _ASM_SIGCONTEXT_H */
-#else /* _MIPS_SIM != _MIPS_SIM_ABI32 */
+#else /* _MIPS_SIM != _ABIO32 */
 /*
  * This file is subject to the terms and conditions of the GNU General Public
  * License.  See the file "COPYING" in the main directory of this archive
@@ -101,5 +101,5 @@ struct sigcontext {
 };
 
 #endif /* _ASM_SIGCONTEXT_H */
-#endif /* _MIPS_SIM != _MIPS_SIM_ABI32 */
+#endif /* _MIPS_SIM != _ABIO32 */
 #endif

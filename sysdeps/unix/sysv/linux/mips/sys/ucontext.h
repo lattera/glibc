@@ -22,13 +22,12 @@
 #define _SYS_UCONTEXT_H	1
 
 #include <features.h>
+#include <sgidefs.h>
 #include <signal.h>
 
 /* We need the signal context definitions even if they are not used
    included in <signal.h>.  */
 #include <bits/sigcontext.h>
-
-#include <sgidefs.h>
 
 /* Type for general register.  Even in o32 we assume 64-bit registers,
    like the kernel.  */
@@ -54,7 +53,7 @@ typedef struct fpregset {
 
 
 /* Context to describe whole processor state.  */
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 /* Earlier versions of glibc for mips had an entirely different
    definition of mcontext_t, that didn't even resemble the
    corresponding kernel data structure.  Since all legitimate uses of
