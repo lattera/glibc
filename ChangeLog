@@ -1,3 +1,7 @@
+2004-01-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Fix typo.
+
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-execstack.c: Change interface.  Add
