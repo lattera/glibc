@@ -45,6 +45,8 @@ Cambridge, MA 02139, USA.  */
 # define GROUP		0x080	/* ': group numbers */
 # define MALLOC		0x100	/* a: malloc strings */
 
+# define TYPEMOD	(LONG|LONGDBL|SHORT)
+
 
 #ifdef USE_IN_LIBIO
 # include <libioP.h>
@@ -114,7 +116,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   register int flags;		/* Modifiers for current format element.  */
 
   /* Status for reading F-P nums.  */
-  char got_dot, got_e;
+  char got_dot, got_e, negative;
   /* If a [...] is a [^...].  */
   char not_in;
   /* Base for integral numbers.  */
@@ -307,7 +309,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  {
 	  case 'h':
 	    /* int's are short int's.  */
-	    if (flags & (LONG|LONGDBL))
+	    if (flags & TYPEMOD)
 	      /* Signal illegal format element.  */
 	      conv_error ();
 	    flags |= SHORT;
@@ -328,12 +330,15 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  case 'q':
 	  case 'L':
 	    /* double's are long double's, and int's are long long int's.  */
-	    if (flags & (LONG|SHORT))
+	    if (flags & TYPEMOD)
 	      /* Signal illegal format element.  */
 	      conv_error ();
 	    flags |= LONGDBL;
 	    break;
 	  case 'a':
+	    if (flags & TYPEMOD)
+	      /* Signal illegal format element.  */
+	      conv_error ();
 	    /* String conversions (%s, %[) take a `char **'
 	       arg and fill it in with a malloc'd pointer.  */
 	    flags |= MALLOC;
@@ -363,8 +368,18 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  break;
 
 	case 'n':	/* Answer number of assignments done.  */
+	  /* Corrigendum 1 to ISO C 1990 describes the allowed flags
+	     with the 'n' conversion specifier.  */
 	  if (!(flags & SUPPRESS))
-	    *ARG (int *) = read_in - 1;	/* Don't count the read-ahead.  */
+	    /* Don't count the read-ahead.  */
+	    if (flags & LONGDBL)
+	      *ARG (long long int *) = read_in - 1;
+	    else if (flags & LONG)
+	      *ARG (long int *) = read_in - 1;
+	    else if (flags & SHORT)
+	      *ARG (short int *) = read_in - 1;
+	    else
+	      *ARG (int *) = read_in - 1;
 	  break;
 
 	case 'c':	/* Match characters.  */
@@ -439,7 +454,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			    {						      \
 			      /* We lose.  Oh well.			      \
 				 Terminate the string and stop converting,    \
-				 so at least we don't skip any input.  */  \
+				 so at least we don't skip any input.  */     \
 			      (*strptr)[strsize] = '\0';		      \
 			      ++done;					      \
 			      conv_error ();				      \
@@ -512,7 +527,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      if (width > 0)
 		--width;
-	      ADDW ('0');
 
 	      (void) inchar ();
 
@@ -612,13 +626,15 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  /* Check for a sign.  */
 	  if (c == '-' || c == '+')
 	    {
-	      ADDW (c);
+	      negative = c == '-';
 	      if (inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
 	      if (width > 0)
 		--width;
 	    }
+	  else
+	    negative = 0;
 
 	  got_dot = got_e = 0;
 	  do
@@ -628,7 +644,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      else if (got_e && wp[wpsize - 1] == 'e'
 		       && (c == '-' || c == '+'))
 		ADDW (c);
-	      else if (!got_e && tolower (c) == 'e')
+	      else if (wpsize > 0 && !got_e && tolower (c) == 'e')
 		{
 		  ADDW ('e');
 		  got_e = got_dot = 1;
@@ -644,12 +660,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		break;
 	      if (width > 0)
 		--width;
-	    } while (inchar () != EOF && width != 0);
+	    }
+	  while (inchar () != EOF && width != 0);
 
 	  if (wpsize == 0)
-	    conv_error();
-	  if (wp[wpsize - 1] == '-' || wp[wpsize - 1] == '+'
-	      || wp[wpsize - 1] == 'e')
 	    conv_error ();
 
 	  /* Convert the number.  */
@@ -658,19 +672,19 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      long double d = __strtold_internal (wp, &tw, flags & GROUP);
 	      if (!(flags & SUPPRESS) && tw != wp)
-		*ARG (long double *) = d;
+		*ARG (long double *) = negative ? -d : d;
 	    }
 	  else if (flags & LONG)
 	    {
 	      double d = __strtod_internal (wp, &tw, flags & GROUP);
 	      if (!(flags & SUPPRESS) && tw != wp)
-		*ARG (double *) = d;
+		*ARG (double *) = negative ? -d : d;
 	    }
 	  else
 	    {
 	      float d = __strtof_internal (wp, &tw, flags & GROUP);
 	      if (!(flags & SUPPRESS) && tw != wp)
-		*ARG (float *) = d;
+		*ARG (float *) = negative ? -d : d;
 	    }
 
 	  if (tw == wp)
@@ -738,7 +752,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      STRING_ADD_CHAR (c);
 	      if (width > 0)
 		--width;
-	    } while (inchar () != EOF && width != 0);
+	    }
+	  while (inchar () != EOF && width != 0);
 	  if (read_in == num.ul)
 	    conv_error ();
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <dirent.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 
 int
@@ -44,6 +45,8 @@ DEFUN(scandir, (dir, namelist, select, cmp),
   while ((d = readdir (dp)) != NULL)
     if (select == NULL || (*select) (d))
       {
+	size_t dsize;
+
 	if (i == vsize)
 	  {
 	    struct dirent **new;
@@ -61,11 +64,12 @@ DEFUN(scandir, (dir, namelist, select, cmp),
 	    v = new;
 	  }
 
-	v[i] = (struct dirent *) malloc (sizeof (**v));
+	dsize = &d->d_name[d->d_namlen + 1] - (char *) d;
+	v[i] = (struct dirent *) malloc (dsize);
 	if (v[i] == NULL)
 	  goto lose;
 
-	*v[i++] = *d;
+	memcpy (v[i++], d, dsize);
       }
 
   if (errno != 0)

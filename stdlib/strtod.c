@@ -1,5 +1,5 @@
 /* Read decimal floating point numbers.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper.
 
 This file is part of the GNU C Library.
@@ -545,12 +545,12 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	      c = *++cp;
 	    }
 	  while (isdigit (c));
+
+	  if (exp_negative)
+	    exponent = -exponent;
 	}
       else
 	cp = expp;
-
-      if (exp_negative)
-	exponent = -exponent;
     }
 
   /* We don't want to have to work with trailing zeroes after the radix.  */

@@ -1,3 +1,23 @@
+Tue Jan 30 13:32:05 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* dirent/scandir.c: Allocate dirents with correct size for name, and
+	copy with correct size.
+
+	* hurd/hurdinit.c [! PIC] (map0): New function, on _hurd_preinit_hook.
+
+	* stdio-common/vfscanf.c (TYPEMOD): New macro of all type modifier
+	flag bits.
+	(__vfscanf): Fix checking of extra type modifiers.
+
+	* time/asia, time/australasia, time/backward: Updated from ADO 96b.
+
+Tue Jan 30 12:17:26 1996  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* stdlib/strtod.c: Only negate exponent when there really is one.
+
+	* stdio-common/vfscanf.c: Accept type modifiers on %n.
+	Fix FP number parsing.
+
 Mon Jan 29 21:53:40 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/stub/msync.c (msync): Declare third arg FLAGS.

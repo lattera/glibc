@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -197,3 +197,27 @@ _hurd_setproc (process_t procserver)
 
   return 0;
 }
+
+#ifndef	PIC
+
+/* Map the page at address zero with no access allowed, so
+   dereferencing NULL will fault and no "anywhere" allocations
+   (e.g. the out of line memory containing the argument strings)
+   can be assigned address zero, which C says is not a valid pointer.
+
+   When dynamically linked, this will be done by the dynamic linker
+   before we run.  */
+
+static void map0 (void) __attribute__ ((unused));
+text_set_element (_hurd_preinit_hook, map0);
+
+static void
+map0 (void)
+{
+  vm_address_t addr = 0;
+  __vm_map (__mach_task_self (),
+	    &addr, __vm_page_size, 0, 0, MACH_PORT_NULL, 0, 1,
+	    VM_PROT_NONE, VM_PROT_NONE, VM_INHERIT_COPY);
+}
+
+#endif

@@ -8,7 +8,7 @@ conversion between different time representations.
 The time functions fall into three main categories:
 
 @itemize @bullet
-@item 
+@item
 Functions for measuring elapsed CPU time are discussed in @ref{Processor
 Time}.
 
@@ -102,7 +102,7 @@ by the @code{clock} function.
 @comment time.h
 @comment POSIX.1
 @deftypevr Macro int CLK_TCK
-This is an obsolete name for @code{CLOCKS_PER_SEC}.  
+This is an obsolete name for @code{CLOCKS_PER_SEC}.
 @end deftypevr
 
 @comment time.h
@@ -195,8 +195,8 @@ according to the Gregorian calendar.
 There are three representations for date and time information:
 
 @itemize @bullet
-@item 
-@dfn{Calendar time} (the @code{time_t} data type) is a compact 
+@item
+@dfn{Calendar time} (the @code{time_t} data type) is a compact
 representation, typically giving the number of seconds elapsed since
 some implementation-specific base time.
 @cindex calendar time
@@ -224,7 +224,7 @@ date and time values.
 * Broken-down Time::            Facilities for manipulating local time.
 * Formatting Date and Time::    Converting times to strings.
 * TZ Variable::                 How users specify the time zone.
-* Time Zone Functions::         Functions to examine or specify the time zone. 
+* Time Zone Functions::         Functions to examine or specify the time zone.
 * Time Functions Example::      An example program showing use of some of
 				 the time functions.
 @end menu
@@ -272,7 +272,7 @@ where subtraction doesn't work directly.
 @deftypefun time_t time (time_t *@var{result})
 The @code{time} function returns the current time as a value of type
 @code{time_t}.  If the argument @var{result} is not a null pointer, the
-time value is also stored in @code{*@var{result}}.  If the calendar 
+time value is also stored in @code{*@var{result}}.  If the calendar
 time is not available, the value @w{@code{(time_t)(-1)}} is returned.
 @end deftypefun
 
@@ -280,7 +280,7 @@ time is not available, the value @w{@code{(time_t)(-1)}} is returned.
 @node High-Resolution Calendar
 @subsection High-Resolution Calendar
 
-The @code{time_t} data type used to represent calendar times has a 
+The @code{time_t} data type used to represent calendar times has a
 resolution of only one second.  Some applications need more precision.
 
 So, the GNU C library also contains functions which are capable of
@@ -436,7 +436,7 @@ You do not have privilege to set the time.
 @end deftypefun
 
 @strong{Portability Note:}  The @code{gettimeofday}, @code{settimeofday},
-and @code{adjtime} functions are derived from BSD.  
+and @code{adjtime} functions are derived from BSD.
 
 
 @node Broken-down Time
@@ -762,7 +762,7 @@ to get a Coordinated Universal Time value.  It has syntax like
 [@code{+}|@code{-}]@var{hh}[@code{:}@var{mm}[@code{:}@var{ss}]].  This
 is positive if the local time zone is west of the Prime Meridian and
 negative if it is east.  The hour must be between @code{0} and
-@code{24}, and the minute and seconds between @code{0} and @code{59}.
+@code{23}, and the minute and seconds between @code{0} and @code{59}.
 
 For example, here is how we would specify Eastern Standard Time, but
 without any daylight savings time alternative:
@@ -948,19 +948,19 @@ timer; when the timer expires, the process receives a signal.
 Each process has three independent interval timers available:
 
 @itemize @bullet
-@item 
+@item
 A real-time timer that counts clock time.  This timer sends a
 @code{SIGALRM} signal to the process when it expires.
 @cindex real-time timer
 @cindex timer, real-time
 
-@item 
+@item
 A virtual timer that counts CPU time used by the process.  This timer
 sends a @code{SIGVTALRM} signal to the process when it expires.
 @cindex virtual timer
 @cindex timer, virtual
 
-@item 
+@item
 A profiling timer that counts both CPU time used by the process, and CPU
 time spent in system calls on behalf of the process.  This timer sends a
 @code{SIGPROF} signal to the process when it expires.
@@ -1013,7 +1013,7 @@ Calendar}.
 @comment sys/time.h
 @comment BSD
 @deftypefun int setitimer (int @var{which}, struct itimerval *@var{new}, struct itimerval *@var{old})
-The @code{setitimer} function sets the timer specified by @var{which} 
+The @code{setitimer} function sets the timer specified by @var{which}
 according to @var{new}.  The @var{which} argument can have a value of
 @code{ITIMER_REAL}, @code{ITIMER_VIRTUAL}, or @code{ITIMER_PROF}.
 
@@ -1128,7 +1128,7 @@ specify any descriptors to wait for.
 @comment POSIX.1
 @deftypefun {unsigned int} sleep (unsigned int @var{seconds})
 The @code{sleep} function waits for @var{seconds} or until a signal
-is delivered, whichever happens first.  
+is delivered, whichever happens first.
 
 If @code{sleep} function returns because the requested time has
 elapsed, it returns a value of zero.  If it returns because of delivery
@@ -1149,7 +1149,7 @@ Instead, compute the time at which the program should stop waiting, and
 keep trying to wait until that time.  This won't be off by more than a
 second.  With just a little more work, you can use @code{select} and
 make the waiting period quite accurate.  (Of course, heavy system load
-can cause unavoidable additional delays---unless the machine is 
+can cause unavoidable additional delays---unless the machine is
 dedicated to one application, there is no way you can avoid this.)
 
 On some systems, @code{sleep} can do strange things if your program uses
