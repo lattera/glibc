@@ -1,3 +1,16 @@
+2001-03-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/stat.h (__S_TYPEISMQ, __S_TYPEISSEM,
+	__S_TYPEISSHM): Rewrite to enforce correct use the macros.  They still
+	always return zero.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+
 2001-03-04  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/longlong.h: Don't use multi-line strings.
