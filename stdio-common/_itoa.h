@@ -55,6 +55,7 @@ _itoa_word (unsigned long value, char *buflim,
     }
   return buflim;
 }
+#undef SPECIAL
 
 static inline char * __attribute__ ((unused))
 _fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
