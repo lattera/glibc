@@ -49,7 +49,7 @@ ENTRY (__syscall_pread64)
 	cmpl	$-4095, %eax	/* Check %eax for error.  */
 	jae	syscall_error	/* Jump to error handler if error.  */
 #endif
-	ret			/* Return to caller.  */
 L(pseudo_end):
+	ret			/* Return to caller.  */
 
 PSEUDO_END (__syscall_pread64)

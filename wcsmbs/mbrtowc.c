@@ -36,14 +36,15 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
   wchar_t buf[1];
   struct gconv_step_data data;
-  size_t inbytes;
   int status;
   size_t result;
+  size_t dummy;
+  const char *inbuf;
+  char *outbuf = (char *) (pwc ?: buf);
 
   /* Tell where we want the result.  */
-  data.outbuf = (char *) (pwc ?: buf);
-  data.outbufavail = 0;
-  data.outbufsize = sizeof (wchar_t);
+  data.outbuf = outbuf;
+  data.outbufend = outbuf + sizeof (wchar_t);
   data.is_last = 1;
   data.statep = ps ?: &state;
 
@@ -60,9 +61,10 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   update_conversion_ptrs ();
 
   /* Do a normal conversion.  */
-  inbytes = n;
+  inbuf = s;
   status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-					     &data, s, &inbytes, NULL, 0);
+					     &data, &inbuf, inbuf + n,
+					     &dummy, 0);
 
   /* There must not be any problems with the conversion but illegal input
      characters.  The output buffer must be large enough, otherwise the
@@ -76,14 +78,14 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
       || status == GCONV_FULL_OUTPUT)
     {
-      if (data.outbufavail > 0 && *(wchar_t *)data.outbuf == L'\0')
+      if (data.outbuf != outbuf && *(wchar_t *)data.outbuf == L'\0')
 	{
 	  /* The converted character is the NUL character.  */
 	  assert (__mbsinit (data.statep));
 	  result = 0;
 	}
       else
-	result = n - inbytes;
+	result = inbuf - s;
     }
   else
     {

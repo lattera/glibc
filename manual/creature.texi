@@ -151,7 +151,7 @@ not generally used (see @code{_FILE_OFFSET_BITS}.
 
 @comment (NONE)
 @comment X/Open
-@defvr _FILE_OFFSET_BITS
+@defvr Macro _FILE_OFFSET_BITS
 This macro lets decide which file system interface shall be used, one
 replacing the other.  While @code{_LARGEFILE64_SOURCE} makes the @w{64
 bit} interface available as an additional interface

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,14 +43,22 @@ mbtowc (wchar_t *pwc, const char *s, size_t n)
      restartable functions.  We simply say here all encodings have a
      state.  */
   if (s == NULL)
-    return 1;
+    result = 1;
+  else if (*s == '\0')
+    {
+      if (pwc != NULL)
+	*pwc = L'\0';
+      result = 0;
+    }
+  else
+    {
+      result = __mbrtowc (pwc, s, n, &__no_r_state);
 
-  result = __mbrtowc (pwc, s, n, &__no_r_state);
-
-  /* The `mbrtowc' functions tell us more than we need.  Fold the -1
-     and -2 result into -1.  */
-  if (result < 0)
-    result = -1;
+      /* The `mbrtowc' functions tell us more than we need.  Fold the -1
+	 and -2 result into -1.  */
+      if (result < 0)
+	result = -1;
+    }
 
   return result;
 }

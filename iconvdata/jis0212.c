@@ -19,7 +19,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdint.h>
-#include <wchar.h>
 
 #include <jis0212.h>
 
@@ -54,7 +53,7 @@
 	   $first, $last, $idx);
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-const struct jisx0212_idx jisx0212_to_ucs_idx[] =
+const struct jisx0212_idx __jisx0212_to_ucs_idx[] =
 {
  { start: 0x006c, end: 0x0076, idx:     0 },
  { start: 0x007f, end: 0x0081, idx:    11 },
@@ -67,7 +66,7 @@ const struct jisx0212_idx jisx0212_to_ucs_idx[] =
  { start: 0x034e, end: 0x03a4, idx:   107 },
  { start: 0x03ac, end: 0x0402, idx:   194 },
  { start: 0x0582, end: 0x1c2a, idx:   281 },
- { start: 0 },
+ { start: 0xffff, end: 0xffff, idx:     0 },
 };
 
 
@@ -109,7 +108,7 @@ const struct jisx0212_idx jisx0212_to_ucs_idx[] =
    }
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-const uint16_t jisx0212_to_ucs[] =
+const uint16_t __jisx0212_to_ucs[] =
 {
   0x02d8, 0x02c7, 0x00b8, 0x02d9, 0x02dd, 0x00af, 0x02db, 0x02da,
   0x007e, 0x0384, 0x0385, 0x00a1, 0x00a6, 0x00bf, 0x00ba, 0x00aa,
@@ -905,7 +904,7 @@ const uint16_t jisx0212_to_ucs[] =
 	   $first, $last, $idx);
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-const struct jisx0212_idx jisx0212_from_ucs_idx[] =
+const struct jisx0212_idx __jisx0212_from_ucs_idx[] =
 {
   { start: 0x007e, end: 0x007e, idx:     0 },
   { start: 0x00a1, end: 0x00af, idx:     1 },
@@ -1654,7 +1653,7 @@ const struct jisx0212_idx jisx0212_from_ucs_idx[] =
   { start: 0x9f68, end: 0x9f7d, idx: 13393 },
   { start: 0x9f8f, end: 0x9f97, idx: 13415 },
   { start: 0x9f9e, end: 0x9fa5, idx: 13424 },
-  { start: 0 }
+  { start: 0xffff, end: 0xffff, idx:     0 }
 };
 
 
@@ -1697,7 +1696,7 @@ const struct jisx0212_idx jisx0212_from_ucs_idx[] =
    }
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-const char jisx0212_from_ucs[][2] =
+const char __jisx0212_from_ucs[][2] =
 {
   "\x7e\x00", "\xa1\x00", "\x00\x00", "\x00\x00", "\xa4\x00", "\x00\x00",
   "\xa6\x00", "\x00\x00", "\x00\x00", "\xa9\x00", "\xaa\x00", "\x00\x00",

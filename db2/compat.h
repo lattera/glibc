@@ -1,6 +1,7 @@
 /* Compatibility gunk for the db library.  */
 
 #include <sys/types.h>
+#include <errno.h>
 
 #ifndef EFTYPE
 # define EFTYPE EINVAL

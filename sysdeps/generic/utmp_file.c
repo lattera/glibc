@@ -61,19 +61,18 @@ struct utfuncs __libc_utmp_file_functions =
 };
 
 
+#ifndef TRANSFORM_UTMP_FILE_NAME
+# define TRANSFORM_UTMP_FILE_NAME(file_name) (file_name)
+#endif
+
 static int
 setutent_file (void)
 {
   if (file_fd < 0)
     {
-      const char *file_name = __libc_utmp_file_name;
+      const char *file_name;
 
-      if (strcmp (__libc_utmp_file_name, _PATH_UTMP) == 0
-	  && __access (_PATH_UTMP "x", F_OK) == 0)
-	file_name = _PATH_UTMP "x";
-      else if (strcmp (__libc_utmp_file_name, _PATH_WTMP) == 0
-	       && __access (_PATH_WTMP "x", F_OK) == 0)
-	file_name = _PATH_WTMP "x";
+      file_name = TRANSFORM_UTMP_FILE_NAME (__libc_utmp_file_name);
 
       file_fd = open (file_name, O_RDWR);
       if (file_fd == -1)
@@ -81,10 +80,7 @@ setutent_file (void)
 	  /* Hhm, read-write access did not work.  Try read-only.  */
 	  file_fd = open (file_name, O_RDONLY);
 	  if (file_fd == -1)
-	    {
-	      perror (_("while opening UTMP file"));
-	      return 0;
-	    }
+	    return 0;
 	}
     }
 

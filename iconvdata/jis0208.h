@@ -25,12 +25,12 @@
 #include <stdint.h>
 
 /* Conversion table.  */
-extern const uint16_t jis0208_to_ucs[];
+extern const uint16_t __jis0208_to_ucs[];
 
-extern const char jisx0208_from_ucs4_lat1[256][2];
-extern const char jisx0208_from_ucs4_greek[0xc1][2];
-extern const struct jisx0208_ucs_idx jisx0208_from_ucs_idx[];
-extern const char jisx0208_from_ucs_tab[][2];
+extern const char __jisx0208_from_ucs4_lat1[256][2];
+extern const char __jisx0208_from_ucs4_greek[0xc1][2];
+extern const struct jisx0208_ucs_idx __jisx0208_from_ucs_idx[];
+extern const char __jisx0208_from_ucs_tab[][2];
 
 
 /* Struct for table with indeces in UCS mapping table.  */
@@ -42,8 +42,8 @@ struct jisx0208_ucs_idx
 };
 
 
-static inline wchar_t
-jisx0208_to_ucs4 (const char **s, size_t avail, unsigned char offset)
+static inline uint32_t
+jisx0208_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = *(*s);
   unsigned char ch2;
@@ -65,34 +65,38 @@ jisx0208_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 
   (*s) += 2;
 
-  return jis0208_to_ucs[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
+  return __jis0208_to_ucs[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
 }
 
 
 static inline size_t
-ucs4_to_jisx0208 (wchar_t wch, char *s, size_t avail)
+ucs4_to_jisx0208 (uint32_t wch, char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
-  const char *cp = NULL;
+  const char *cp;
 
   if (avail < 2)
     return 0;
 
   if (ch < 0x100)
-    cp = jisx0208_from_ucs4_lat1[ch];
+    cp = __jisx0208_from_ucs4_lat1[ch];
   else if (ch >= 0x391 && ch <= 0x451)
-    cp = jisx0208_from_ucs4_greek[ch];
+    cp = __jisx0208_from_ucs4_greek[ch];
   else
     {
-      const struct jisx0208_ucs_idx *rp = jisx0208_from_ucs_idx;
+      const struct jisx0208_ucs_idx *rp = __jisx0208_from_ucs_idx;
 
+      if (ch >= 0xffff)
+	return UNKNOWN_10646_CHAR;
       while (ch > rp->end)
 	++rp;
       if (ch >= rp->start)
-	cp = jisx0208_from_ucs_tab[rp->idx + ch - rp->start];
+	cp = __jisx0208_from_ucs_tab[rp->idx + ch - rp->start];
+      else
+	return UNKNOWN_10646_CHAR;
     }
 
-  if (cp == NULL || cp[0] == '\0')
+  if (cp[0] == '\0')
     return UNKNOWN_10646_CHAR;
 
   s[0] = cp[0];

@@ -30,7 +30,7 @@
     for (_tmp = (envp); *_tmp; ++_tmp)				\
       continue;							\
     /* The following '++' is important!  */			\
-    (auxp) = ++_tmp;						\
+    ++_tmp;							\
     if (*_tmp == 0)						\
       {								\
 	size_t _test = (size_t)_tmp;				\
@@ -42,8 +42,9 @@
 	   vector will have to be laid out to allow for this	\
 	   test :-(.  */					\
 	if (((ElfW(auxv_t) *)_test)->a_type <= AT_PHDR)		\
-	  (auxp) = (ElfW(auxv_t) *) _tmp;			\
+	  _tmp = (char **)_test;				\
       }								\
+    (auxp) = (ElfW(auxv_t) *) _tmp;				\
   } while (0)
 
 

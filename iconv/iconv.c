@@ -32,10 +32,27 @@ iconv (iconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
        size_t *outbytesleft)
 {
   gconv_t gcd = (gconv_t) cd;
+  char *outstart = outbuf ? *outbuf : NULL;
   size_t converted;
   int result;
 
-  result = __gconv (gcd, inbuf, inbytesleft, outbuf, outbytesleft, &converted);
+  if (inbuf == NULL || *inbuf == NULL)
+    {
+      result = __gconv (gcd, NULL, NULL, outbuf, outstart + *outbytesleft,
+			&converted);
+    }
+  else
+    {
+      const char *instart = *inbuf;
+
+      result = __gconv (gcd, inbuf, *inbuf + *inbytesleft, outbuf,
+			*outbuf + *outbytesleft, &converted);
+
+      *inbytesleft -= *inbuf - instart;
+    }
+  if (outstart != NULL)
+    *outbytesleft -= *outbuf - outstart;
+
   switch (result)
     {
     case GCONV_ILLEGAL_DESCRIPTOR:

@@ -28,18 +28,18 @@
 #include <stdint.h>
 
 /* Conversion table.  */
-extern const uint16_t ksc5601_hangul_to_ucs[KSC5601_HANGUL];
-extern const uint16_t ksc5601_sym_to_ucs[];
-extern const uint16_t ksc5601_sym_from_ucs[KSC5601_SYMBOL][2];
-extern const uint16_t ksc5601_hanja_to_ucs[KSC5601_HANJA];
-extern const uint16_t ksc5601_hanja_from_ucs[KSC5601_HANJA][2];
+extern const uint16_t __ksc5601_hangul_to_ucs[KSC5601_HANGUL];
+extern const uint16_t __ksc5601_sym_to_ucs[];
+extern const uint16_t __ksc5601_sym_from_ucs[KSC5601_SYMBOL][2];
+extern const uint16_t __ksc5601_hanja_to_ucs[KSC5601_HANJA];
+extern const uint16_t __ksc5601_hanja_from_ucs[KSC5601_HANJA][2];
 
 
 /*
 static inline wchar_t
 ksc5601_to_ucs4 (char **s, size_t avail)
 */
-static inline wchar_t
+static inline uint32_t
 ksc5601_to_ucs4 (uint16_t s)
 {
   unsigned char ch = s / 256;
@@ -61,23 +61,25 @@ ksc5601_to_ucs4 (uint16_t s)
      Hangul in KS C 5601 : row 16 - row 40 */
 
   if (idx >= 1410 && idx < 3760)
-    return ksc5601_hangul_to_ucs[idx-1410];
+    return __ksc5601_hangul_to_ucs[idx-1410];
   else if (idx > 3854)
     /* Hanja : row 42 - row 93 : 3854 = 94 * (42-1) */
-   return ksc5601_hanja_to_ucs[idx-3854];
+   return __ksc5601_hanja_to_ucs[idx-3854];
   else
-    return ksc5601_sym_to_ucs[idx] ?: UNKNOWN_10646_CHAR;
+    return __ksc5601_sym_to_ucs[idx] ?: UNKNOWN_10646_CHAR;
 }
 
 static inline size_t
-ucs4_to_ksc5601_hangul (wchar_t wch, uint16_t *s)
+ucs4_to_ksc5601_hangul (uint32_t wch, uint16_t *s)
 {
-  int l=0,m,u=KSC5601_HANGUL-1;
-  wchar_t try;
+  int l = 0;
+  int m;
+  int u = KSC5601_HANGUL - 1;
+  uint32_t try;
 
   while (l <= u)
     {
-      try = (wchar_t) ksc5601_hangul_to_ucs[m=(l+u)/2];
+      try = (uint32_t) __ksc5601_hangul_to_ucs[m=(l+u)/2];
       if (try > wch)
 	u = m - 1;
       else if (try < wch)
@@ -93,21 +95,24 @@ ucs4_to_ksc5601_hangul (wchar_t wch, uint16_t *s)
 
 
 static inline size_t
-ucs4_to_ksc5601_hanja (wchar_t wch, uint16_t *s)
+ucs4_to_ksc5601_hanja (uint32_t wch, uint16_t *s)
 {
-  int l=0,m,u=KSC5601_HANJA-1;
-  wchar_t try;
+  int l = 0;
+  int m;
+  int u = KSC5601_HANJA - 1;
+  uint32_t try;
 
   while (l <= u)
     {
-      try = (wchar_t) ksc5601_hanja_from_ucs[m=(l+u)/2][0];
+      m = (l + u) / 2;
+      try = (uint32_t) __ksc5601_hanja_from_ucs[m][0];
       if (try > wch)
 	u=m-1;
       else if (try < wch)
 	l = m + 1;
       else
 	{
-	  *s = ksc5601_hanja_from_ucs[m][1];
+	  *s = __ksc5601_hanja_from_ucs[m][1];
 	  return 2;
 	}
     }
@@ -115,24 +120,24 @@ ucs4_to_ksc5601_hanja (wchar_t wch, uint16_t *s)
 }
 
 static inline  size_t
-ucs4_to_ksc5601_sym (wchar_t wch, uint16_t *s)
+ucs4_to_ksc5601_sym (uint32_t wch, uint16_t *s)
 {
   int l = 0;
   int m;
   int u = KSC5601_SYMBOL - 1;
-  wchar_t try;
+  uint32_t try;
 
   while (l <= u)
     {
       m = (l + u) / 2;
-      try = ksc5601_sym_from_ucs[m][0];
+      try = __ksc5601_sym_from_ucs[m][0];
       if (try > wch)
 	u = m - 1;
       else if (try < wch)
 	l = m + 1;
       else
 	{
-	  *s = ksc5601_sym_from_ucs[m][1];
+	  *s = __ksc5601_sym_from_ucs[m][1];
 	  return 2;
 	}
     }
@@ -146,13 +151,13 @@ ucs4_to_ksc5601 (wchar_t wch, char **s, size_t avail)
 */
 
 static inline size_t
-ucs4_to_ksc5601 (wchar_t ch, uint16_t *s)
+ucs4_to_ksc5601 (uint32_t ch, uint16_t *s)
 {
   *s = (uint16_t) UNKNOWN_10646_CHAR;  /* FIXIT */
 
   if (ch >= 0xac00 && ch <= 0xd7a3)
     return ucs4_to_ksc5601_hangul (ch, s);
-  else if (ch >= 0x4e00 && ch <= 0x9fff ||  ch >= 0xf900 && ch <= 0xfa0b)
+  else if (ch >= 0x4e00 && ch <= 0x9fff || ch >= 0xf900 && ch <= 0xfa0b)
     return ucs4_to_ksc5601_hanja (ch, s);
   else
     return ucs4_to_ksc5601_sym (ch, s);

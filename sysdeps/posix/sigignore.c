@@ -19,6 +19,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#define __need_NULL
+#include <stddef.h>
 #include <signal.h>
 
 int

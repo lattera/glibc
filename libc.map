@@ -100,11 +100,12 @@ GLIBC_2.0 {
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;  __getpid;
-    __strcasecmp; __write; _strerror_internal; _dl_sysdep_output;
+    __strcasecmp; __strerror_r; __write; _dl_sysdep_output;
     _dl_debug_message;
     __ffs;
     __close; __connect; __fcntl; __lseek; __open; __read; __send; __wait;
     __ieee_get_fp_control; __ieee_set_fp_control;
+    __dgettext;
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;
@@ -440,13 +441,14 @@ GLIBC_2.1 {
     __signbit; __signbitf; __signbitl; __libc_sa_len;
 
     # functions used in other libraries
-    _IO_fclose; _IO_fopen; _IO_fdopen; __asprintf;
+    _IO_fclose; _IO_fopen; _IO_fdopen; __asprintf; __strcasestr;
     __syscall_rt_sigqueueinfo;
     __xstat64; __fxstat64; __lxstat64;
     __pread64; __pwrite64;
 
     # helper functions
     __libc_current_sigrtmin; __libc_current_sigrtmax; __libc_allocate_rtsig;
+    __libc_longjmp; __libc_siglongjmp;
 
     # Since we have new signals this structure changed.
     _sys_siglist; sys_siglist; sys_sigabbrev;

@@ -8411,289 +8411,180 @@ static const char from_ucs4_tab13[][2] =
 };
 
 
-/* Direction of the transformation.  */
-static int to_big5_object;
-static int from_big5_object;
+/* Definitions used in the body of the `gconv' function.  */
+#define CHARSET_NAME		"BIG5"
+#define FROM_LOOP		from_big5
+#define TO_LOOP			to_big5
+#define DEFINE_INIT		1
+#define DEFINE_FINI		1
+#define MIN_NEEDED_FROM		1
+#define MAX_NEEDED_FROM		2
+#define MIN_NEEDED_TO		4
 
 
-int
-gconv_init (struct gconv_step *step)
-{
-  /* Determine which direction.  */
-  if (strcasestr (step->from_name, "BIG5") != NULL)
-    step->data = &from_big5_object;
-  else if (strcasestr (step->to_name, "BIG5") != NULL)
-    step->data = &to_big5_object;
-  else
-    return GCONV_NOCONV;
+/* First define the conversion function from Big5 to UCS4.  */
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    uint32_t ch = *inptr;						      \
+									      \
+    if (ch >= '\xa1' && ch <= '\xff')					      \
+      {									      \
+	/* Two-byte character.  First test whether the next character	      \
+	   is also available.  */					      \
+	uint32_t ch2;							      \
+	int idx;							      \
+									      \
+	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	  {								      \
+	    /* The second character is not available.  */		      \
+	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	idx = (ch - 0xa1) * 157;					      \
+	ch2 = inptr[1];							      \
+	/* See whether the second byte is in the correct range.  */	      \
+	if (ch2 >= '\x40' && ch2 <= '\x7e')				      \
+	  idx += ch2 - 0x40;						      \
+	else if (ch2 >= '\xa1' && ch2 <= '\xfe')			      \
+	  idx += 0x3f + (ch2 - 0xa1);					      \
+	else								      \
+	  {								      \
+	    /* This is illegal.  */					      \
+	    result = GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	/* Get the value from the table.  */				      \
+	ch = big5_to_ucs[idx];						      \
+									      \
+	/* Is this character defined?  */				      \
+	if (ch == L'\0' && *inptr != '\0')				      \
+	  {								      \
+	    /* This is an illegal character.  */			      \
+	    result = GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	inptr += 2;							      \
+      }									      \
+    else								      \
+      ++inptr;								      \
+									      \
+    *((uint32_t *) outptr)++ = ch;					      \
+  }
+#include <iconv/loop.c>
 
-  return GCONV_OK;
-}
+
+/* Next, define the other direction.  */
+#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+#define LOOPFCT			TO_LOOP
+#define BODY \
+  {									      \
+    uint32_t ch = *((uint32_t *) inptr);				      \
+    char buf[2];							      \
+    const char *cp;							      \
+									      \
+    if (ch >= sizeof (from_ucs4_tab1) / sizeof (from_ucs4_tab1[0]))	      \
+      switch (ch)							      \
+	{								      \
+        case 0x2c7 ... 0x2d9:						      \
+	  cp = from_ucs4_tab2[ch - 0x2c7];				      \
+	  break;							      \
+	case 0x391 ... 0x451:						      \
+	  cp = from_ucs4_tab3[ch - 0x391];				      \
+	  break;							      \
+	case 0x2013 ... 0x203e:						      \
+	  cp = from_ucs4_tab4[ch - 0x2013];				      \
+	  break;							      \
+	case 0x2103:							      \
+	  cp = "\xa2\x4a";						      \
+	  break;							      \
+	case 0x2105:							      \
+	  cp = "\xa1\xc1";						      \
+	  break;							      \
+	case 0x2109:							      \
+	  cp = "\xa2\x4b";						      \
+	  break;							      \
+	case 0x2160 ... 0x2169:						      \
+	  {								      \
+	    buf[0] = '\xa2';						      \
+	    buf[1] = '\xb9' + (ch - 0x2160);				      \
+	    cp = buf;							      \
+	  }								      \
+	  break;							      \
+	case 0x2190 ... 0x2199:						      \
+	  cp = from_ucs4_tab5[ch - 0x2190];				      \
+	  break;							      \
+	case 0x221a ...	0x22bf:						      \
+	  cp = from_ucs4_tab6[ch - 0x221a];				      \
+	  break;							      \
+	case 0x2460 ... 0x247d:						      \
+	  cp = from_ucs4_tab7[ch - 0x2460];				      \
+	  break;							      \
+	case 0x2500 ... 0x2642:						      \
+	  cp = from_ucs4_tab8[ch - 0x2500];				      \
+	  break;							      \
+	case 0x3000 ... 0x3129:						      \
+	  cp = from_ucs4_tab9[ch - 0x3000];				      \
+	  break;							      \
+	case 0x32a3:							      \
+	  cp = "\xa1\xc0";						      \
+	  break;							      \
+	case 0x338e ... 0x33d5:						      \
+	  cp = from_ucs4_tab10[ch - 0x338e];				      \
+	  break;							      \
+	case 0x4e00 ... 0x9fa4:						      \
+	  cp = from_ucs4_tab11[ch - 0x4e00];				      \
+	  break;							      \
+	case 0xfa0c:							      \
+	  cp = "\xc9\x4a";						      \
+	  break;							      \
+	case 0xfa0d:							      \
+	  cp = "\xdd\xfc";						      \
+	  break;							      \
+	case 0xfe30 ... 0xfe6b:						      \
+	  cp = from_ucs4_tab12[ch - 0xfe30];				      \
+	  break;							      \
+	case 0xff01 ... 0xff64:						      \
+	  cp = from_ucs4_tab13[ch - 0xff01];				      \
+	  break;							      \
+	default:							      \
+	  /* Illegal character.  */					      \
+	  cp = "";							      \
+	  break;							      \
+	}								      \
+    else								      \
+      cp = from_ucs4_tab1[ch];						      \
+									      \
+    if (cp[0] == '\0' && ch != 0)					      \
+      {									      \
+	/* Illegal character.  */					      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+									      \
+    /* See whether there is enough room for the second byte we write.  */     \
+    if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)	      \
+      {									      \
+	/* We have not enough room.  */					      \
+	result = GCONV_FULL_OUTPUT;					      \
+	break;								      \
+      }									      \
+									      \
+    *outptr++ = cp[0];							      \
+    if (cp[1] != '\0')							      \
+      *outptr++ = cp[1];						      \
+    inptr += 4;								      \
+  }
+#include <iconv/loop.c>
 
 
-void
-gconv_end (struct gconv_step *data)
-{
-  /* Nothing to do.  */
-}
-
-
-int
-gconv (struct gconv_step *step, struct gconv_step_data *data,
-       const char *inbuf, size_t *inbufsize, size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write;
-  int result;
-
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      do_write = 0;
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-
-	  /* Clear output buffer.  */
-	  data->outbufavail = 0;
-	}
-    }
-  else
-    {
-      do_write = 0;
-
-      do
-	{
-	  result = GCONV_OK;
-
-	  if (step->data == &from_big5_object)
-	    {
-	      size_t inchars = *inbufsize;
-	      size_t outwchars = data->outbufavail;
-	      char *outbuf = data->outbuf;
-	      size_t cnt = 0;
-
-	      while (cnt < inchars
-		     && (outwchars + sizeof (wchar_t) <= data->outbufsize))
-		{
-		  int inchar = inbuf[cnt];
-		  wchar_t ch;
-
-		  if (inchar < '\xa1' || inchar > '\xfe')
-		    ch = (wchar_t) inchar;
-		  else
-		    {
-		      /* Two-byte character.  First test whether the next
-			 character is also available.  */
-		      int inchar2;
-		      int idx;
-
-		      if (cnt + 1 >= inchars)
-			{
-			  /* The second character is not available.  Store
-			     the intermediate result.  */
-			  result = GCONV_INCOMPLETE_INPUT;
-			  break;
-			}
-
-		      idx = (inchar - 0xa1) * 157;
-		      inchar2 = inbuf[++cnt];
-		      /* See whether the second byte is in the correct
-			 range.  */
-		      if (inchar2 >= '\x40' && inchar2 <= '\x7e')
-			idx += inchar2 - 0x40;
-		      else if (inchar2 >= '\xa1' && inchar2 <= '\xfe')
-			idx += 0x3f + (inchar2 - 0xa1);
-		      else
-			{
-			  /* This is illegal.  */
-			  --cnt;
-			  result  = GCONV_ILLEGAL_INPUT;
-			  break;
-			}
-
-		      /* Get the value from the table.  */
-		      ch = big5_to_ucs[idx];
-
-		      if (ch == L'\0')
-			--cnt;
-		    }
-
-		  if (ch == L'\0' && inbuf[cnt] != '\0')
-		    {
-		      /* This is an illegal character.  */
-		      result = GCONV_ILLEGAL_INPUT;
-		      break;
-		    }
-
-		  *((wchar_t *) (outbuf + outwchars)) = ch;
-		  ++do_write;
-		  outwchars += sizeof (wchar_t);
-		  ++cnt;
-		}
-	      *inbufsize -= cnt;
-	      inbuf += cnt;
-	      data->outbufavail = outwchars;
-	    }
-	  else
-	    {
-	      size_t inwchars = *inbufsize;
-	      size_t outchars = data->outbufavail;
-	      char *outbuf = data->outbuf;
-	      size_t cnt = 0;
-	      int extra = 0;
-
-	      while (inwchars >= cnt + sizeof (wchar_t)
-		     && outchars < data->outbufsize)
-		{
-		  int ch = *((wchar_t *) (inbuf + cnt));
-		  char buf[2];
-		  const char *cp;
-
-		  if (ch >= (sizeof (from_ucs4_tab1)
-			     / sizeof (from_ucs4_tab1[0])))
-		    {
-		      if (ch >= 0x2c7 && ch <= 0x2d9)
-			cp = from_ucs4_tab2[ch - 0x2c7];
-		      else if (ch >= 0x391 && ch <= 0x451)
-			cp = from_ucs4_tab3[ch - 0x391];
-		      else if (ch >= 0x2013 && ch <= 0x203e)
-			cp = from_ucs4_tab4[ch - 0x2013];
-		      else if (ch == 0x2103)
-			cp = "\xa2\x4a";
-		      else if (ch == 0x2105)
-			cp = "\xa1\xc1";
-		      else if (ch == 0x2109)
-			cp = "\xa2\x4b";
-		      else if (ch >= 0x2160 && ch <= 0x2169)
-			{
-			  buf[0] = '\xa2';
-			  buf[1] = '\xb9' + (ch - 0x2160);
-			  cp = buf;
-			}
-		      else if (ch >= 0x2190 && ch <= 0x2199)
-			cp = from_ucs4_tab5[ch - 0x2190];
-		      else if (ch >= 0x221a && ch <= 0x22bf)
-			cp = from_ucs4_tab6[ch - 0x221a];
-		      else if (ch >= 0x2460 && ch <= 0x247d)
-			cp = from_ucs4_tab7[ch - 0x2460];
-		      else if (ch >= 0x2500 && ch <= 0x2642)
-			cp = from_ucs4_tab8[ch - 0x2500];
-		      else if (ch >= 0x3000 && ch <= 0x3129)
-			cp = from_ucs4_tab9[ch - 0x3000];
-		      else if (ch == 0x32a3)
-			cp = "\xa1\xc0";
-		      else if (ch >= 0x338e && ch <= 0x33d5)
-			cp = from_ucs4_tab10[ch - 0x338e];
-		      else if (ch >= 0x4e00 && ch <= 0x9fa4)
-			cp = from_ucs4_tab11[ch - 0x4e00];
-		      else if (ch == 0xfa0c)
-			cp = "\xc9\x4a";
-		      else if (ch == 0xfa0d)
-			cp = "\xdd\xfc";
-		      else if (ch >= 0xfe30 && ch <= 0xfe6b)
-			cp = from_ucs4_tab12[ch - 0xfe30];
-		      else if (ch >= 0xff01 && ch <= 0xff64)
-			cp = from_ucs4_tab13[ch - 0xff01];
-		      else
-			/* Illegal character.  */
-			break;
-		    }
-		  else
-		    cp = from_ucs4_tab1[ch];
-
-		  if (cp[0] == '\0' && ch != 0)
-		    /* Illegal character.  */
-		    break;
-
-		  outbuf[outchars] = cp[0];
-		  /* Now test for a possible second byte and write this
-		     if possible.  */
-		  if (cp[1] != '\0')
-		    {
-		      if (outchars + 1 >= data->outbufsize)
-			{
-			  /* The result does not fit into the buffer.  */
-			  extra = 1;
-			  break;
-			}
-		      outbuf[++outchars] = cp[1];
-		    }
-
-		  ++do_write;
-		  ++outchars;
-		  cnt += sizeof (wchar_t);
-		}
-	      *inbufsize -= cnt;
-	      inbuf += cnt;
-	      data->outbufavail = outchars;
-
-	      if (outchars + extra < data->outbufsize)
-		{
-		  /* If there is still room in the output buffer something
-		     is wrong with the input.  */
-		  if (inwchars >= cnt + sizeof (wchar_t))
-		    {
-		      /* An error occurred.  */
-		      result = GCONV_ILLEGAL_INPUT;
-		      break;
-		    }
-		  if (inwchars != cnt)
-		    {
-		      /* There are some unprocessed bytes at the end of the
-			 input buffer.  */
-		      result = GCONV_INCOMPLETE_INPUT;
-		      break;
-		    }
-		}
-	    }
-
-	  if (result != GCONV_OK)
-	    break;
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = (*inbufsize > (step->data == &from_big5_object
-				      ? 0 : sizeof (wchar_t) - 1)
-			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inbufsize > 0 && result == GCONV_EMPTY_INPUT);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write;
-
-  return result;
-}
+/* Now define the toplevel functions.  */
+#include <iconv/skeleton.c>

@@ -250,6 +250,23 @@ static inline pthread_descr thread_self (void)
 #endif
 }
 
+/* Max number of times we must spin on a spinlock calling sched_yield().
+   After MAX_SPIN_COUNT iterations, we put the calling thread to sleep. */
+
+#ifndef MAX_SPIN_COUNT
+#define MAX_SPIN_COUNT 50
+#endif
+
+/* Duration of sleep (in nanoseconds) when we can't acquire a spinlock
+   after MAX_SPIN_COUNT iterations of sched_yield().
+   With the 2.0 and 2.1 kernels, this MUST BE > 2ms.
+   (Otherwise the kernel does busy-waiting for realtime threads,
+    giving other threads no chance to run.) */
+
+#ifndef SPIN_SLEEP_DURATION
+#define SPIN_SLEEP_DURATION 2000001
+#endif
+
 /* Debugging */
 
 #ifdef DEBUG

@@ -299,12 +299,15 @@ process_block (iconv_t cd, const char *addr, size_t len, FILE *output)
 {
 #define OUTBUF_SIZE	32768
   char outbuf[OUTBUF_SIZE];
-  char *outptr = outbuf;
-  size_t outlen = OUTBUF_SIZE;
+  char *outptr;
+  size_t outlen;
+  size_t n;
 
   while (len > 0)
     {
-      size_t n = iconv (cd, &addr, &len, &outptr, &outlen);
+      outptr = outbuf;
+      outlen = OUTBUF_SIZE;
+      n = iconv (cd, &addr, &len, &outptr, &outlen);
 
       if (outptr != outbuf)
 	{

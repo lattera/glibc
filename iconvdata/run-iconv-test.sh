@@ -52,10 +52,18 @@ while read from to targets; do
       { echo "*** conversion from $t to $to failed"; exit 1; }
     test -s $temp1 && cmp testdata/$from $temp2 >& /dev/null ||
       { echo "*** $from -> t -> $to conversion failed"; exit 1; }
+    rm -f $temp1 $temp2
+
+    # Now test some bigger text, entirely in ASCII.
+    $ICONV -f $from -t $t testdata/suntzus |
+    $ICONV -f $t -t $to > $temp1 ||
+      { echo "*** conversion $from->$t->$to of suntzus failed"; exit 1; }
+    cmp testdata/suntzus.txt $temp1 ||
+      { echo "*** conversion $from->$t->$to of suntzus incorrect"; exit 1; }
+    rm -f $temp1
 
     # All tests ok.
     echo "$from -> $t -> $to ok"
-    rm -f $temp1 $temp2
   done
 done < TESTS
 

@@ -16,7 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#if !defined _HURD_IOCTL_H && !defined _SYS_IOCTLS_H
+#ifndef __BITS_IOCTLS_H
+#define __BITS_IOCTLS_H	1
+
+#if !defined _HURD_IOCTL_H && !defined _SYS_IOCTL_H
 # error "Never use <bits/ioctls.h> directly; include <hurd/ioctl.h> instead."
 #endif
 
@@ -345,3 +348,5 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 # define EXTA	14
 # define EXTB	15
 #endif /* USE_OLD_TTY */
+
+#endif /* bits/ioctls.h */

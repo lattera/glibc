@@ -22,13 +22,13 @@
 #define _JIS0201_H	1
 
 /* Conversion table.  */
-extern const wchar_t jis0201_to_ucs4[];
+extern const uint32_t __jis0201_to_ucs4[];
 
 
-static inline wchar_t
+static inline uint32_t
 jisx0201_to_ucs4 (char ch)
 {
-  wchar_t val = jis0201_to_ucs4[(unsigned char) ch];
+  uint32_t val = __jis0201_to_ucs4[(unsigned char) ch];
 
   if (val == 0 && ch != '\0')
     val = UNKNOWN_10646_CHAR;
@@ -38,7 +38,7 @@ jisx0201_to_ucs4 (char ch)
 
 
 static inline size_t
-ucs4_to_jisx0201 (wchar_t wch, char *s)
+ucs4_to_jisx0201 (uint32_t wch, char *s)
 {
   char ch;
 

@@ -31,7 +31,7 @@ __btowc (c)
   char buf[sizeof (wchar_t)];
   struct gconv_step_data data;
   char inbuf[1];
-  size_t inbytes;
+  char *inptr = inbuf;
   size_t converted;
   int status;
 
@@ -42,8 +42,7 @@ __btowc (c)
 
   /* Tell where we want the result.  */
   data.outbuf = (char *) buf;
-  data.outbufavail = 0;
-  data.outbufsize = sizeof (wchar_t);
+  data.outbufend = data.outbuf + sizeof (wchar_t);
   data.is_last = 1;
   data.statep = &data.__state;
 
@@ -55,10 +54,9 @@ __btowc (c)
 
   /* Create the input string.  */
   inbuf[0] = c;
-  inbytes = 1;
 
   status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-					     &data, inbuf, &inbytes,
+					     &data, &inptr, inptr + 1,
 					     &converted, 0);
   /* The conversion failed.  */
   if (status != GCONV_OK && status != GCONV_FULL_OUTPUT

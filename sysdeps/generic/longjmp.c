@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ extern void _longjmp_unwind (jmp_buf env, int val);
    to the position specified in ENV, causing the setjmp
    call there to return VAL, or 1 if VAL is 0.  */
 void
-longjmp (sigjmp_buf env, int val)
+__libc_siglongjmp (sigjmp_buf env, int val)
 {
   /* Perform any cleanups needed by the frames being unwound.  */
   _longjmp_unwind (env, val);
@@ -41,5 +41,7 @@ longjmp (sigjmp_buf env, int val)
   __longjmp (env[0].__jmpbuf, val ?: 1);
 }
 
-weak_alias (longjmp, _longjmp)
-weak_alias (longjmp, siglongjmp)
+strong_alias (__libc_siglongjmp, __libc_longjmp)
+weak_alias (__libc_siglongjmp, _longjmp)
+weak_alias (__libc_siglongjmp, longjmp)
+weak_alias (__libc_siglongjmp, siglongjmp)

@@ -1,5 +1,5 @@
 /* Conversion from and to ISO 8859-4.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,7 +18,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <wchar.h>
+/* Get the conversion table.  */
+#include <stdint.h>
 #include <iso8859-4.h>
-#define NAME "ISO-8859-4"
+
+#define CHARSET_NAME	"ISO-8859-4"
+#define HAS_HOLES	0	/* All 256 character are defined.  */
+
 #include <8bit-generic.c>

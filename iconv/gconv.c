@@ -19,39 +19,58 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <gconv.h>
+#include <sys/param.h>
 
 
 int
 internal_function
-__gconv (gconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
-	 size_t *outbytesleft, size_t *converted)
+__gconv (gconv_t cd, const char **inbuf, const char *inbufend, char **outbuf,
+	 char *outbufend, size_t *converted)
 {
   size_t last_step = cd->nsteps - 1;
-  size_t oldinbytes = *inbytesleft;
   int result;
 
   if (cd == (gconv_t) -1L)
     return GCONV_ILLEGAL_DESCRIPTOR;
 
-  cd->data[last_step].outbuf = outbuf ? *outbuf : NULL;
-  cd->data[last_step].outbufavail = 0;
-  cd->data[last_step].outbufsize = *outbytesleft;
+  assert (converted != NULL);
+  *converted = 0;
 
-  if (converted != NULL)
-    *converted = 0;
-
-  result = (*cd->steps->fct) (cd->steps, cd->data,
-			      inbuf ? *inbuf : NULL, inbytesleft,
-			      converted, inbuf == NULL || *inbuf == NULL);
-
-  if (inbuf != NULL && *inbuf != NULL)
-    *inbuf += oldinbytes - *inbytesleft;
-  if (outbuf != NULL && *outbuf != NULL)
+  if (inbuf == NULL || *inbuf == NULL)
+    /* We just flush.  */
+    result = (*cd->steps->fct) (cd->steps, cd->data, NULL, NULL, converted, 1);
+  else
     {
-      *outbuf += cd->data[last_step].outbufavail;
-      *outbytesleft -= cd->data[last_step].outbufavail;
+      const char *last_start;
+
+      assert (outbuf != NULL && *outbuf != NULL);
+      cd->data[last_step].outbuf = *outbuf;
+      cd->data[last_step].outbufend = outbufend;
+
+      do
+	{
+	  /* See whether the input size is reasoable for the output
+	     size.  If not adjust it.  */
+	  size_t inlen = ((inbufend - *inbuf) / cd->steps->max_needed_from
+			  * cd->steps->max_needed_from);
+
+	  if (cd->nsteps > 1)
+	    inlen = MIN (inlen, (((outbufend - cd->data[last_step].outbuf)
+				  / cd->steps[last_step].max_needed_to)
+				 * cd->steps[last_step].max_needed_to));
+
+	  last_start = *inbuf;
+	  result = (*cd->steps->fct) (cd->steps, cd->data, inbuf,
+				      *inbuf + inlen, converted, 0);
+	}
+      while (result == GCONV_EMPTY_INPUT && last_start != *inbuf
+	     && *inbuf + cd->steps->min_needed_from <= inbufend);
     }
+
+  if (outbuf != NULL && *outbuf != NULL)
+    *outbuf = cd->data[last_step].outbuf;
 
   return result;
 }

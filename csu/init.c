@@ -1,5 +1,5 @@
 /* Special startup support.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -26,7 +26,7 @@
    write to the Free Software Foundation, 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#if defined __GNUC__ && __GNUC__ >= 2
+#if defined USE_IN_LIBIO && defined __GNUC__ && __GNUC__ >= 2
 
 #undef _LIBC
 #include <libio.h>

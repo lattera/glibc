@@ -292,19 +292,17 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 
 	      /* Correct the output buffer.  */
 	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
+		memmove (data->outbuf,
+			 &data->outbuf[data->outbufavail - newavail],
+			 newavail);
+	      data->outbufavail = newavail;
 	    }
 	}
       while (*inbufsize > 0 && result == GCONV_EMPTY_INPUT);
     }
 
   if (written != NULL && data->is_last)
-    *written = do_write;
+    *written += do_write;
 
   return result;
 }

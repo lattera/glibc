@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -143,7 +143,6 @@ __setutent (void)
   __libc_lock_unlock (__libc_utmp_lock);
 }
 weak_alias (__setutent, setutent)
-weak_alias (__setutent, setutxent)
 
 
 int
@@ -176,7 +175,6 @@ __pututline (const struct utmp *data)
   return buffer;
 }
 weak_alias (__pututline, pututline)
-weak_alias (__pututline, pututxline)
 
 
 void
@@ -190,4 +188,3 @@ __endutent (void)
   __libc_lock_unlock (__libc_utmp_lock);
 }
 weak_alias (__endutent, endutent)
-weak_alias (__endutent, endutxent)

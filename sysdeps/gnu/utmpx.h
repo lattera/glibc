@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -27,8 +27,16 @@ __BEGIN_DECLS
 /* Get system dependent values and data structures.  */
 #include <bits/utmpx.h>
 
+#ifdef __USE_GNU
+/* Compatibility names for the strings of the canonical file names.  */
+# define UTMPX_FILE	_PATH_UTMPX
+# define UTMPX_FILENAME	_PATH_UTMPX
+# define WTMPX_FILE	_PATH_WTMPX
+# define WTMPX_FILENAME	_PATH_WTMPX
+#endif
+
 /* Open user accounting database.  */
-extern void *setutxent __P ((void));
+extern void setutxent __P ((void));
 
 /* Close user accounting database.  */
 extern void endutxent __P ((void));
@@ -44,6 +52,15 @@ extern struct utmpx *getutxline __P ((const struct utmpx *__line));
 
 /* Write the entry UTMPX into the user accounting database.  */
 extern struct utmpx *pututxline __P ((const struct utmpx *__utmpx));
+
+#ifdef __USE_GNU
+/* Change name of the utmpx file to be examined.  */
+extern int utmpxname __P ((__const char *__file));
+
+/* Append entry UTMP to the wtmpx-like file WTMPX_FILE.  */
+extern void updwtmpx __P ((__const char *__wtmpx_file,
+			   __const struct utmpx *__utmpx));
+#endif
 
 __END_DECLS
 

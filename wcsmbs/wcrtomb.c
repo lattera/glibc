@@ -40,11 +40,11 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
   struct gconv_step_data data;
   int status;
   size_t result;
+  size_t dummy;
 
   /* Tell where we want the result.  */
   data.outbuf = s;
-  data.outbufavail = 0;
-  data.outbufsize = MB_CUR_MAX;
+  data.outbufend = s + MB_CUR_MAX;
   data.is_last = 1;
   data.statep = ps ?: &state;
 
@@ -64,23 +64,21 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
      by a NUL byte.  */
   if (wc == L'\0')
     {
-      size_t inbytes = 0;
-
       status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
-						 &data, NULL, &inbytes,
-						 NULL, 1);
+						 &data, NULL, NULL, &dummy, 1);
 
       if (status == GCONV_OK || status == GCONV_EMPTY_INPUT)
-	data.outbuf[data.outbufavail++] = '\0';
+	*data.outbuf++ = '\0';
     }
   else
     {
       /* Do a normal conversion.  */
-      size_t inbytes = sizeof (wchar_t);
+      const char *inbuf = (const char *) &wc;
 
       status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
-						 &data, (char *) &wc, &inbytes,
-						 NULL, 0);
+						 &data, &inbuf,
+						 inbuf + sizeof (wchar_t),
+						 &dummy, 0);
     }
 
   /* There must not be any problems with the conversion but illegal input
@@ -94,7 +92,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 
   if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
       || status == GCONV_FULL_OUTPUT)
-    result = data.outbufavail;
+    result = data.outbuf - s;
   else
     {
       result = (size_t) -1;

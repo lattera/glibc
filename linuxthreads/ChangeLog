@@ -1,3 +1,14 @@
+1998-04-20 14:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (libpthread-routines): Add ptlongjmp and spinlock.
+	* internals.h: Add definitions for new spinlock implementation.
+	* ptlongjmp.c: New file.
+	* spinlock.c: New file.
+	* spinlock.h (acquire): Don't reschedule using __sched_yield, use
+	new function __pthread_acquire to prevent deadlocks with thread
+	with different priorities.
+	Patches by Xavier Leroy <Xavier.Leroy@inria.fr>.
+
 1998-03-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* manager.c (__pthread_manager): Reduce first argument to select

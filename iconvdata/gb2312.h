@@ -25,7 +25,7 @@
 #include <stdint.h>
 
 /* Conversion table.  */
-extern const uint16_t gb2312_to_ucs[];
+extern const uint16_t __gb2312_to_ucs[];
 
 
 static inline wchar_t
@@ -51,127 +51,166 @@ gb2312_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 
   (*s) += 2;
 
-  return gb2312_to_ucs[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
+  return __gb2312_to_ucs[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
 }
 
 
-extern const char gb2312_from_ucs4_tab1[][2];
-extern const char gb2312_from_ucs4_tab2[][2];
-extern const char gb2312_from_ucs4_tab3[][2];
-extern const char gb2312_from_ucs4_tab4[][2];
-extern const char gb2312_from_ucs4_tab5[][2];
-extern const char gb2312_from_ucs4_tab6[][2];
-extern const char gb2312_from_ucs4_tab7[][2];
-extern const char gb2312_from_ucs4_tab8[][2];
-extern const char gb2312_from_ucs4_tab9[][2];
+extern const char __gb2312_from_ucs4_tab1[][2];
+extern const char __gb2312_from_ucs4_tab2[][2];
+extern const char __gb2312_from_ucs4_tab3[][2];
+extern const char __gb2312_from_ucs4_tab4[][2];
+extern const char __gb2312_from_ucs4_tab5[][2];
+extern const char __gb2312_from_ucs4_tab6[][2];
+extern const char __gb2312_from_ucs4_tab7[][2];
+extern const char __gb2312_from_ucs4_tab8[][2];
+extern const char __gb2312_from_ucs4_tab9[][2];
 
 static inline size_t
 ucs4_to_gb2312 (wchar_t wch, char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
   char buf[2];
-  const char *cp = NULL;
+  const char *cp = buf;
 
-  if (ch < 0xa4)
-    return UNKNOWN_10646_CHAR;
-  else if (ch < 0x101)
-    cp = gb2312_from_ucs4_tab1[ch - 0xa4];
-  else if (ch == 0x113)
-    cp = "\x28\x25";
-  else if (ch == 0x11b)
-    cp = "\x28\x27";
-  else if (ch == 0x12b)
-    cp = "\x28\x29";
-  else if (ch == 0x14d)
-    cp = "\x28\x2d";
-  else if (ch == 0x16b)
-    cp = "\x28\x31";
-  else if (ch == 0x1ce)
-    cp = "\x28\x23";
-  else if (ch == 0x1d0)
-    cp = "\x28\x2b";
-  else if (ch == 0x1d2)
-    cp = "\x28\x2f";
-  else if (ch == 0x1d4)
-    cp = "\x28\x33";
-  else if (ch == 0x1d6)
-    cp = "\x28\x35";
-  else if (ch == 0x1d8)
-    cp = "\x28\x36";
-  else if (ch == 0x1da)
-    cp = "\x28\x37";
-  else if (ch == 0x1dc)
-    cp = "\x28\x38";
-  else if (ch == 0x2c7)
-    cp = "\x21\x26";
-  else if (ch == 0x2c9)
-    cp = "\x21\x25";
-  else if (ch >= 0x391 && ch <= 0x3c9)
-    cp = gb2312_from_ucs4_tab2[ch - 0x391];
-  else if (ch >= 0x401 && ch <= 0x451)
-    cp = gb2312_from_ucs4_tab3[ch - 0x401];
-  else if (ch >= 0x2015 && ch <= 0x203b)
-    cp = gb2312_from_ucs4_tab4[ch - 0x2015];
-  else if (ch >= 0x2103 && ch <= 0x22a5)
-    cp = gb2312_from_ucs4_tab5[ch - 0x2103];
-  else if (ch == 0x2313)
-    cp = "\x21\x50";
-  else if (ch >= 0x2460 && ch <= 0x249b)
-    cp = gb2312_from_ucs4_tab6[ch - 0x2460];
-  else if (ch >= 0x2500 && ch <= 0x254b)
+  switch (ch)
     {
+    case 0xa4 ... 0x100:
+      cp = __gb2312_from_ucs4_tab1[ch - 0xa4];
+      break;
+    case 0x113:
+      cp = "\x28\x25";
+      break;
+    case 0x11b:
+      cp = "\x28\x27";
+      break;
+    case 0x12b:
+      cp = "\x28\x29";
+      break;
+    case 0x14d:
+      cp = "\x28\x2d";
+      break;
+    case 0x16b:
+      cp = "\x28\x31";
+      break;
+    case 0x1ce:
+      cp = "\x28\x23";
+      break;
+    case 0x1d0:
+      cp = "\x28\x2b";
+      break;
+    case 0x1d2:
+      cp = "\x28\x2f";
+      break;
+    case 0x1d4:
+      cp = "\x28\x33";
+      break;
+    case 0x1d6:
+      cp = "\x28\x35";
+      break;
+    case 0x1d8:
+      cp = "\x28\x36";
+      break;
+    case 0x1da:
+      cp = "\x28\x37";
+      break;
+    case 0x1dc:
+      cp = "\x28\x38";
+      break;
+    case 0x2c7:
+      cp = "\x21\x26";
+      break;
+    case 0x2c9:
+      cp = "\x21\x25";
+      break;
+    case 0x391 ... 0x3c9:
+      cp = __gb2312_from_ucs4_tab2[ch - 0x391];
+      break;
+    case 0x401 ... 0x451:
+      cp = __gb2312_from_ucs4_tab3[ch - 0x401];
+      break;
+    case 0x2015 ... 0x203b:
+      cp = __gb2312_from_ucs4_tab4[ch - 0x2015];
+      break;
+    case 0x2103 ... 0x22a5:
+      cp = __gb2312_from_ucs4_tab5[ch - 0x2103];
+      break;
+    case 0x2313:
+      cp = "\x21\x50";
+      break;
+    case 0x2460 ... 0x249b:
+      cp = __gb2312_from_ucs4_tab6[ch - 0x2460];
+      break;
+    case 0x2500 ... 0x254b:
       buf[0] = '\x29';
       buf[1] = '\x24' + (ch & 256);
-      cp = buf;
-    }
-  else if (ch == 0x25a0)
-    cp = "\x21\x76";
-  else if (ch == 0x25a1)
-    cp = "\x21\x75";
-  else if (ch == 0x25b2)
-    cp = "\x21\x78";
-  else if (ch == 0x25b3)
-    cp = "\x21\x77";
-  else if (ch == 0x25c6)
-    cp = "\x21\x74";
-  else if (ch == 0x25c7)
-    cp = "\x21\x73";
-  else if (ch == 0x25cb)
-    cp = "\x21\x70";
-  else if (ch == 0x25ce)
-    cp = "\x21\x72";
-  else if (ch == 0x25cf)
-    cp = "\x21\x71";
-  else if (ch == 0x2605)
-    cp = "\x21\x6f";
-  else if (ch == 0x2606)
-    cp = "\x21\x6e";
-  else if (ch == 0x2640)
-    cp = "\x21\x62";
-  else if (ch == 0x2642)
-    cp = "\x21\x61";
-  else if (ch >= 0x3000 && ch <= 0x3129)
-    cp = gb2312_from_ucs4_tab7[ch - 0x3000];
-  else if (ch >= 0x3220 && ch <= 0x3229)
-    {
+      break;
+    case 0x25a0:
+      cp = "\x21\x76";
+      break;
+    case 0x25a1:
+      cp = "\x21\x75";
+      break;
+    case 0x25b2:
+      cp = "\x21\x78";
+      break;
+    case 0x25b3:
+      cp = "\x21\x77";
+      break;
+    case 0x25c6:
+      cp = "\x21\x74";
+      break;
+    case 0x25c7:
+      cp = "\x21\x73";
+      break;
+    case 0x25cb:
+      cp = "\x21\x70";
+      break;
+    case 0x25ce:
+      cp = "\x21\x72";
+      break;
+    case 0x25cf:
+      cp = "\x21\x71";
+      break;
+    case 0x2605:
+      cp = "\x21\x6f";
+      break;
+    case 0x2606:
+      cp = "\x21\x6e";
+      break;
+    case 0x2640:
+      cp = "\x21\x62";
+      break;
+    case 0x2642:
+      cp = "\x21\x61";
+      break;
+    case 0x3000 ... 0x3129:
+      cp = __gb2312_from_ucs4_tab7[ch - 0x3000];
+      break;
+    case 0x3220 ... 0x3229:
       buf[0] = '\x22';
       buf[1] = '\x65' + (ch - 0x3220);
-      cp = buf;
+      break;
+    case 0x4e00 ... 0x9fa0:
+      cp = __gb2312_from_ucs4_tab8[ch - 0x4e00];
+      break;
+    case 0xff01 ... 0xff5e:
+      cp = __gb2312_from_ucs4_tab9[ch - 0xff01];
+      break;
+    case 0xffe0:
+      cp = "\x21\x69";
+      break;
+    case 0xffe1:
+      cp = "\x21\x6a";
+      break;
+    case 0xffe3:
+      cp = "\x23\x7e";
+      break;
+    case 0xffe5:
+      cp = "\x23\x24";
+      break;
+    default:
+      return UNKNOWN_10646_CHAR;
     }
-  else if (ch >= 0x4e00 && ch <= 0x9fa0)
-    cp = gb2312_from_ucs4_tab8[ch - 0x4e00];
-  else if (ch >= 0xff01 && ch <= 0xff5e)
-    cp = gb2312_from_ucs4_tab9[ch - 0xff01];
-  else if (ch == 0xffe0)
-    cp = "\x21\x69";
-  else if (ch == 0xffe1)
-    cp = "\x21\x6a";
-  else if (ch == 0xffe3)
-    cp = "\x23\x7e";
-  else if (ch == 0xffe5)
-    cp = "\x23\x24";
-  else
-    return UNKNOWN_10646_CHAR;
 
   if (cp[1] != '\0' && avail < 2)
     return 0;

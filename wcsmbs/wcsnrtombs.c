@@ -44,7 +44,7 @@ __wcsnrtombs (dst, src, nwc, len, ps)
      mbstate_t *ps;
 {
   struct gconv_step_data data;
-  size_t inbytes_in;
+  const wchar_t *srcend;
   int status;
   size_t result;
 
@@ -54,7 +54,7 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 
   if (nwc == 0)
     return 0;
-  inbytes_in = (__wcsnlen (*src, nwc - 1) + 1) * sizeof (wchar_t);
+  srcend = *src + __wcsnlen (*src, nwc - 1) + 1;
 
   /* Make sure we use the correct function.  */
   update_conversion_ptrs ();
@@ -63,30 +63,25 @@ __wcsnrtombs (dst, src, nwc, len, ps)
   if (dst == NULL)
     {
       char buf[256];		/* Just an arbitrary value.  */
-      size_t inbytes = inbytes_in;
       const wchar_t *inbuf = *src;
       size_t written;
 
       data.outbuf = buf;
-      data.outbufsize = sizeof (buf);
+      data.outbufend = buf + sizeof (buf);
 
       do
 	{
-	  inbuf += (inbytes_in - inbytes) / sizeof (wchar_t);
-	  inbytes_in = inbytes;
-	  data.outbufavail = 0;
-	  written = 0;
-
 	  status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
 						     &data,
-						     (const char *) inbuf,
-						     &inbytes, &written, 0);
+						     (const char **) &inbuf,
+						     (const char *) srcend,
+						     &written, 0);
 	  result += written;
 	}
       while (status == GCONV_FULL_OUTPUT);
 
       if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)
-	  && buf[data.outbufavail - 1] == '\0')
+	  && data.outbuf[-1] == '\0')
 	/* Don't count the NUL character in.  */
 	--result;
     }
@@ -95,28 +90,24 @@ __wcsnrtombs (dst, src, nwc, len, ps)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
-      size_t inbytes = inbytes_in;
-
       data.outbuf = dst;
-      data.outbufavail = 0;
-      data.outbufsize = len;
+      data.outbufend = dst + len;
 
       status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
-						 &data, (const char *) *src,
-						 &inbytes, &result, 0);
+						 &data, (const char **) src,
+						 (const char *) srcend,
+						 &result, 0);
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
       if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)
-	  && dst[data.outbufavail - 1] == '\0')
+	  && data.outbuf[-1] == '\0')
 	{
-	  assert (data.outbufavail > 0);
+	  assert (data.outbuf != dst);
 	  assert (__mbsinit (data.statep));
 	  *src = NULL;
 	  --result;
 	}
-      else
-	*src += result;
     }
 
   /* There must not be any problems with the conversion but illegal input

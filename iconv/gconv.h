@@ -57,8 +57,8 @@ struct gconv_loaded_object;
 
 /* Type of a conversion function.  */
 typedef int (*gconv_fct) __P ((struct gconv_step *,
-			       struct gconv_step_data *,
-			       __const char *, size_t *, size_t *, int));
+			       struct gconv_step_data *, __const char **,
+			       __const char *, size_t *, int));
 
 /* Constructor and destructor for local data for conversion step.  */
 typedef int (*gconv_init_fct) __P ((struct gconv_step *));
@@ -80,6 +80,13 @@ struct gconv_step
   gconv_init_fct init_fct;
   gconv_end_fct end_fct;
 
+  /* Information about the number of bytes needed or produced in this
+     step.  This helps optimizing the buffer sizes.  */
+  int min_needed_from;
+  int max_needed_from;
+  int min_needed_to;
+  int max_needed_to;
+
   void *data;		/* Pointer to step-local data.  */
 };
 
@@ -88,8 +95,7 @@ struct gconv_step
 struct gconv_step_data
 {
   char *outbuf;		/* Output buffer for this step.  */
-  size_t outbufavail;	/* Bytes already available in output buffer.  */
-  size_t outbufsize;	/* Size of output buffer.  */
+  char *outbufend;	/* Address of first byte after the output buffer.  */
 
   int is_last;
 

@@ -26,10 +26,12 @@ BUILTIN_ALIAS ("10646-1:1993/UCS4/", "ISO-10646/UCS4/")
 
 BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8,
 			"ISO-10646/UCS4/", 1, "=INTERNAL->ucs4",
-			__gconv_transform_internal_ucs4, NULL, NULL)
+			__gconv_transform_internal_ucs4, NULL, NULL,
+			4, 4, 4, 4)
 BUILTIN_TRANSFORMATION (NULL, "ISO-10646/UCS4/", 15,
 			"INTERNAL", 1, "=ucs4->INTERNAL",
-			__gconv_transform_internal_ucs4, NULL, NULL)
+			__gconv_transform_internal_ucs4, NULL, NULL,
+			4, 4, 4, 4)
 /* Please note that we need only one function for both direction.  */
 
 BUILTIN_ALIAS ("UTF8//", "ISO-10646/UTF8/")
@@ -37,22 +39,27 @@ BUILTIN_ALIAS ("UTF-8//", "ISO-10646/UTF8/")
 
 BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8,
 			"ISO-10646/UTF8/", 1, "=INTERNAL->utf8",
-			__gconv_transform_internal_utf8, NULL, NULL)
+			__gconv_transform_internal_utf8, NULL, NULL,
+			4, 4, 1, 6)
 
 BUILTIN_TRANSFORMATION ("ISO-10646/UTF-?8/", "ISO-10646/UTF", 13,
 			"INTERNAL", 1, "=utf8->INTERNAL",
-			__gconv_transform_utf8_internal, NULL, NULL)
+			__gconv_transform_utf8_internal, NULL, NULL,
+			1, 6, 4, 4)
 
 BUILTIN_ALIAS ("UCS2//", "ISO-10646/UCS2/")
 BUILTIN_ALIAS ("UCS-2//", "ISO-10646/UCS2/")
 
 BUILTIN_TRANSFORMATION (NULL, "ISO-10646/UCS2/", 15, "INTERNAL",
 			1, "=ucs2->INTERNAL",
-			__gconv_transform_ucs2_internal, NULL, NULL)
+			__gconv_transform_ucs2_internal, NULL, NULL,
+			2, 2, 4, 4)
 
 BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8, "ISO-10646/UCS2/",
 			1, "=INTERNAL->ucs2",
-			__gconv_transform_internal_ucs2, NULL, NULL)
+			__gconv_transform_internal_ucs2, NULL, NULL,
+			4, 4, 2, 2)
 
 BUILTIN_TRANSFORMATION ("(.*)", NULL, 0, "\\1", 1, "=dummy",
-			__gconv_transform_dummy, NULL, NULL)
+			__gconv_transform_dummy, NULL, NULL,
+			1, 1, 1, 1)

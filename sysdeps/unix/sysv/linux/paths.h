@@ -64,7 +64,6 @@
 #define	_PATH_TTY	"/dev/tty"
 #define	_PATH_UNIX	"/vmlinux"
 #define _PATH_UTMP	"/var/run/utmp"
-#define _PATH_UTMP_DB	"/var/run/utmp.db"
 #define	_PATH_VI	"/usr/bin/vi"
 #define _PATH_WTMP	"/var/log/wtmp"
 

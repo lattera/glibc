@@ -24,7 +24,7 @@ please let me know.
 1.3.	When I try to compile glibc I get only error messages.
 	What's wrong?
 1.4.	Do I need a special linker or archiver?
-1.5.	What tools do I need for powerpc?
+1.5.	Which compiler should I use for powerpc?
 1.6.	Do I need some more things to compile GNU C Library?
 1.7.	What version of the Linux kernel headers should be used?
 1.8.	When I run `nm -u libc.so' on the produced library I still
@@ -203,25 +203,19 @@ may have native linker support, but it's moot right now, because glibc
 has not been ported to them.
 
 
-1.5.	What tools do I need for powerpc?
+1.5.	Which compiler should I use for powerpc?
 
-{GK} For a successful installation you definitely need the most recent
-tools. You can safely assume that anything earlier than binutils
-2.8.1.0.17 and egcs-1.0 will have problems. We'd advise at the moment
-binutils 2.8.1.0.18 and egcs-1.0.1.
+{GK} You want to use egcs 1.0.1 or later (together with the right
+versions of all the other tools, of course).
 
-In fact, egcs 1.0.1 currently has two serious bugs that prevent a
-clean make; one relates to switch statement folding, for which there
-is a temporary patch at
+In fact, egcs 1.0.1 has a serious bug that prevents a clean make,
+relating to switch statement folding.  It also causes the resulting
+shared libraries to use more memory than they should.  There is a
+patch at:
 
-<http://discus.anu.edu.au/~geoffk/egcs-1.0-geoffk.diff.gz>
+<http://discus.anu.edu.au/~geoffk/egcs-1.0.1-geoffk.diff>
 
-and the other relates to 'forbidden register spilled', for which the
-workaround is to put
-
-CFLAGS-condvar.c += -fno-inline
-
-in configparms.  Later versions of egcs may fix these problems.
+Later versions of egcs may fix these problems.
 
 
 1.6.	Do I need some more things to compile GNU C Library?
@@ -247,7 +241,8 @@ in configparms.  Later versions of egcs may fix these problems.
 * When compiling for Linux, the header files of the Linux kernel must
   be available to the compiler as <linux/*.h> and <asm/*.h>.
 
-* lots of disk space (~170MB for i?86-linux; more for RISC platforms).
+* lots of disk space (~170MB for i?86-linux; more for RISC platforms,
+  as much as 400MB).
 
 * plenty of time.  Compiling just the shared and static libraries for
   i?86-linux takes approximately 1h on an i586@133, or 2.5h on
@@ -289,9 +284,6 @@ symbols:
   like __start_* and __stop_*
 
 * symbols starting with _dl_* come from the dynamic linker
-
-* symbols resolved by using libgcc.a
-  (__udivdi3, __umoddi3, or similar)
 
 * weak symbols, which need not be resolved at all (fabs for example)
 
@@ -1141,7 +1133,7 @@ Answers were given by:
 {MK} Mark Kettenis, <kettenis@phys.uva.nl>
 {ZW} Zack Weinberg, <zack@rabi.phys.columbia.edu>
 {TK} Thorsten Kukuk, <kukuk@vt.uni-paderborn.de>
-{GK} Geoffrey Keating, <Geoff.Keating@anu.edu.au>
+{GK} Geoffrey Keating, <geoffk@ozemail.com.au>
 {HJ} H.J. Lu, <hjl@gnu.org>
 
 Local Variables:

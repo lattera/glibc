@@ -47,7 +47,7 @@ static const char gconv_module_ext[] = MODULE_EXT;
 static struct gconv_module builtin_modules[] =
 {
 #define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
-			       Fct, Init, End) \
+			       Fct, Init, End, MinF, MaxF, MinT, MaxT) \
   {									      \
     from_pattern: From,							      \
     from_constpfx: ConstPfx,						      \
@@ -69,7 +69,7 @@ static const char *
 builtin_aliases[] =
 {
 #define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
-			       Fct, Init, End)
+			       Fct, Init, End, MinF, MaxF, MinT, MaxT)
 #define BUILTIN_ALIAS(From, To) From " " To,
 
 #include "gconv_builtin.h"

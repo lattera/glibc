@@ -48,7 +48,6 @@ extern int errno;
 # define lseek(FD, Offset, Whence) __lseek (FD, Offset, Whence)
 # define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
 # define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)
-# define fstat(FD, Buf) __fxstat (_STAT_VER, FD, Buf)
 #endif
 
 /* An fstream can be in at most one of put mode, get mode, or putback mode.

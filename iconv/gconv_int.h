@@ -34,8 +34,8 @@ struct gconv_alias
 };
 
 
-/* Default size of intermediate buffers.  */
-#define GCONV_DEFAULT_BUFSIZE	8160
+/* How many character should be conveted in one call?  */
+#define GCONV_NCHAR_GOAL	8160
 
 
 /* Structure describing one loaded shared object.  This normally are
@@ -99,9 +99,8 @@ extern int __gconv_close (gconv_t cd)
    according to rules described by CD and place up to *OUTBYTESLEFT
    bytes in buffer starting at *OUTBUF.  Return number of written
    characters in *CONVERTED if this pointer is not null.  */
-extern int __gconv (gconv_t __cd, const char **__inbuf, size_t *__inbytesleft,
-		    char **__outbuf, size_t *__outbytesleft,
-		    size_t *__converted)
+extern int __gconv (gconv_t __cd, const char **__inbuf, const char *inbufend,
+		    char **__outbuf, char *outbufend, size_t *__converted)
      internal_function;
 
 /* Return in *HANDLE a pointer to an array with *NSTEPS elements describing
@@ -149,8 +148,8 @@ extern void __gconv_get_builtin_trans (const char *__name,
 #ifdef _LIBC
 # define __BUILTIN_TRANS(Name) \
   extern int Name (struct gconv_step *__step, struct gconv_step_data *__data, \
-		   const char *__inbuf, size_t *__inlen, size_t *__written,   \
-		   int __do_flush)
+		   const char **__inbuf, const char *__inbufend,	      \
+		   size_t *__written, int __do_flush)
 
 __BUILTIN_TRANS (__gconv_transform_dummy);
 __BUILTIN_TRANS (__gconv_transform_ascii_internal);

@@ -18,15 +18,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <gconv.h>
 #include <stdint.h>
-#include <string.h>
-#include <wchar.h>
 #include <ksc5601.h>
-
-/* Direction of the transformation.  */
-static int to_uhc_object;
-static int from_uhc_object;
 
 
 /*
@@ -2576,20 +2569,20 @@ static const uint16_t uhc_hangul_from_ucs[11172]=
   0xc64f, 0xc650, 0xc651, 0xc652
 };
 
+
 static inline void
-uhc_from_ucs4(wchar_t ch, unsigned char *cp)
+uhc_from_ucs4 (uint32_t ch, unsigned char *cp)
 {
   if (ch >= 0x7f)
     {
       uint16_t idx=0;
 
       if (ch >= 0xac00 && ch <= 0xd7a3)
-	idx = uhc_hangul_from_ucs[(int) ch - 0xac00];
-      else if (ch >= 0x4e00 && ch <= 0x9fa5
-	       || ch >= 0xf900 && ch <= 0xfa0b)
+	idx = uhc_hangul_from_ucs[ch - 0xac00];
+      else if (ch >= 0x4e00 && ch <= 0x9fa5 || ch >= 0xf900 && ch <= 0xfa0b)
 	{
 	  ucs4_to_ksc5601_hanja (ch,&idx);
-	  idx |= (idx ?  0x8080 : 0);
+	  idx |= (idx ? 0x8080 : 0);
 	}
 /* Half-width Korean Currency Won Sign
       else if (ch == 0x20a9)
@@ -2598,286 +2591,169 @@ uhc_from_ucs4(wchar_t ch, unsigned char *cp)
       else
 	{
 	  ucs4_to_ksc5601_sym (ch, &idx);
-	  idx |= (idx ?  0x8080 : 0);
+	  idx |= (idx ? 0x8080 : 0);
 	}
 
-      *cp = (char) (idx / 256);
-      *(cp + 1) = (char) (idx & 0xff) ;
+      cp[0] = (unsigned char) (idx / 256);
+      cp[1] = (unsigned char) (idx & 0xff);
     }
-  /* think about 0x5c ; '\' */
+  /* XXX Think about 0x5c ; '\'.  */
   else
     {
-      *cp = (char) (0x7f & ch) ;
-      *(cp + 1) = (char) 0;
+      cp[0] = (unsigned char) ch;
+      cp[1] = (unsigned char) 0;
     }
 }
 
 
-int
-gconv_init (struct gconv_step *step)
-{
-  /* Determine which direction.  */
-  if (strcasestr (step->from_name, "UHC") != NULL)
-    step->data = &from_uhc_object;
-  else if (strcasestr (step->to_name, "UHC") != NULL)
-    step->data = &to_uhc_object;
-  else
-    return GCONV_NOCONV;
+/* Definitions used in the body of the `gconv' function.  */
+#define CHARSET_NAME		"UHC"
+#define FROM_LOOP		from_uhc
+#define TO_LOOP			to_uhc
+#define DEFINE_INIT		1
+#define DEFINE_FINI		1
+#define MIN_NEEDED_FROM		1
+#define MAX_NEEDED_FROM		2
+#define MIN_NEEDED_TO		4
 
-  return GCONV_OK;
-}
-
-
-void
-gconv_end (struct gconv_step *data)
-{
-  /* Nothing to do.  */
-}
-
-
-int
-gconv (struct gconv_step *step, struct gconv_step_data *data,
-       const char *inbuf, size_t *inbufsize, size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write;
-  int result;
-
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      do_write = 0;
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-
-	  /* Clear output buffer.  */
-	  data->outbufavail = 0;
-	}
-    }
-  else
-    {
-      do_write = 0;
-
-      do
-	{
-	  result = GCONV_OK;
-
-	  if (step->data == &from_uhc_object)
-	    {
-	      size_t inchars = *inbufsize;
-	      size_t outwchars = data->outbufavail;
-	      char *outbuf = data->outbuf;
-	      size_t cnt = 0;
-
-	      while (cnt < inchars
-		     && (outwchars + sizeof (wchar_t) <= data->outbufsize))
-		{
-		  int inchar = (unsigned char) inbuf[cnt];
-		  wchar_t ch;
-/* half-width Korean Currency WON sign
-
-		  if (inchar == 0x5c)
-		    ch =  0x20a9;
-		  else if (inchar <= 0x7f)
-		    ch = (wchar_t) inchar;
-*/
-		  if (inchar <= 0x7f)
-		    ch = (wchar_t) inchar;
-
-
-                  else if ( inchar <= 0x80 || inchar >= 0xfe || inchar == 0xc9)
-                      /* This is illegal.  */
-                      ch = L'\0';
-		  else
-		    {
-		      /* Two-byte character.  First test whether the next
-			 character is also available.  */
-		      int inchar2;
-
-		      if (cnt + 1 >= inchars)
-			{
-			  /* The second character is not available.  Store
-			     the intermediate result.  */
-			  result = GCONV_INCOMPLETE_INPUT;
-			  break;
-			}
-
-		      inchar2 = (unsigned char) inbuf[++cnt];
-
-/*
-  Additional code points not present in EUC-KR
-
-         1st byte             2nd byte
-     0x81-0xa0            0x41-0x5a, 0x61-0x7a, 0x81-0xfe         total
-      (32)                 (26)   +    (26)   +    (126) = 178     5696
-
-     0xa1-0xc5            0x41-0x5a  0x61-0x7a  0x81-0xa0
-      (37)                  (26)  +   (26)    +    (32) =  84      3108
-
-     0xc6                 0x41-0x52
-      (1)                    (18)                                   18
-
-                                                                    8822
+/* First define the conversion function from UHC to UCS4.  */
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    uint32_t ch = (uint32_t) *inptr;					      \
+									      \
+/* half-width Korean Currency WON sign					      \
+									      \
+    if (ch == 0x5c)							      \
+      ch =  0x20a9;							      \
+    else if (ch <= 0x7f)						      \
+      ch = (wchar_t) ch;						      \
+*/									      \
+    if (ch <= 0x7f)							      \
+      ++inptr;								      \
+    else if (ch <= 0x80 || ch >= 0xfe || ch == 0xc9)			      \
+      {									      \
+	/* This is illegal.  */						      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+    else								      \
+      {									      \
+	/* Two-byte character.  First test whether the next character	      \
+	   is also available.  */					      \
+	uint32_t ch2;							      \
+									      \
+	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	  {								      \
+	    /* The second character is not available.  Store		      \
+	       the intermediate result.  */				      \
+	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	ch2 = inptr[1];							      \
+									      \
+/*									      \
+  Additional code points not present in EUC-KR				      \
+									      \
+         1st byte             2nd byte					      \
+     0x81-0xa0            0x41-0x5a, 0x61-0x7a, 0x81-0xfe         total	      \
+      (32)                 (26)   +    (26)   +    (126) = 178     5696	      \
+									      \
+     0xa1-0xc5            0x41-0x5a  0x61-0x7a  0x81-0xa0		      \
+      (37)                  (26)  +   (26)    +    (32) =  84      3108	      \
+									      \
+     0xc6                 0x41-0x52					      \
+      (1)                    (18)                                   18	      \
+									      \
+                                                                    8822      \
+									      \
+  8822(only in UHC) + 2350(both in EUC-KR and UHC) =  11,172		      \
+*/									      \
+									      \
+	if (ch < 0xa1 || ch2 < 0xa1)					      \
+	  {								      \
+	    if (ch > 0xc6 || ch2 <0x41 || (ch2 > 0x5a && ch2 < 0x61)	      \
+		|| (ch2 > 0x7a && ch2 < 0x81) || (ch == 0xc6 && ch2 > 0x52))  \
+	      {								      \
+		/* This is not legal.  */				      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ch = uhc_extra_to_ucs[ch2 - 0x41				      \
+				 - (ch2 > 0x80 ? 12 : (ch2 > 0x60 ? 6 : 0))   \
+				 +  (ch < 0xa1				      \
+				     ? (ch - 0x81) * 178		      \
+				     : 5696 + (ch - 0xa1) * 84)];	      \
+	  }								      \
+	else								      \
+	  {								      \
+	    ch = ksc5601_to_ucs4 ((ch * 256 + ch2) & 0x7f7f);		      \
+									      \
+	    if (ch == UNKNOWN_10646_CHAR)				      \
+	      {								      \
+		/* Illegal.  */						      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+	  }								      \
+									      \
+	if (ch == 0)							      \
+	  {								      \
+	    /* This is an illegal character.  */			      \
+	    result = GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	inptr += 2;							      \
+      }									      \
+									      \
+    *((uint32_t *) outptr)++ = ch;					      \
+  }
+#include <iconv/loop.c>
 
 
-  8822(only in UHC) + 2350(both in EUC-KR and UHC) =  11,172
-*/
+/* Next, define the other direction.  */
+#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
+#define LOOPFCT			TO_LOOP
+#define BODY \
+  {									      \
+    uint32_t ch = *((uint32_t *) inptr);				      \
+    unsigned char cp[2];						      \
+									      \
+    uhc_from_ucs4 (ch, cp);						      \
+									      \
+    if (cp[0] == '\0' && ch != 0)					      \
+      {									      \
+	/* Illegal character.  */					      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+									      \
+    *outptr++ = cp[0];							      \
+    /* Now test for a possible second byte and write this if possible.  */    \
+    if (cp[1] != '\0')							      \
+      {									      \
+	if (NEED_LENGTH_TEST && outptr >= outend)			      \
+	  {								      \
+	    /* The result does not fit into the buffer.  */		      \
+	    result = GCONV_FULL_OUTPUT;					      \
+	    break;							      \
+	  }								      \
+									      \
+	*outptr++ = cp[1];						      \
+      }									      \
+									      \
+    inptr += 4;								      \
+  }
+#include <iconv/loop.c>
 
-                      if ( inchar < 0xa1 || inchar2 < 0xa1)
-                           if ( inchar > 0xc6 || inchar2 <0x41 ||
-                                inchar2 > 0x5a && inchar2 < 0x61 ||
-                                inchar2 > 0x7a && inchar2 < 0x81 ||
-                                inchar == 0xc6 && inchar2 >  0x52 )
-                              ch = L'0';
-                           else
-                             {
-                               ch = uhc_extra_to_ucs[ inchar2 - 0x41
-                                    -  ( inchar2 > 0x80 ? 12 :
-                                       ( inchar2 > 0x60 ?  6 :  0 ) )
-                                    +  ( inchar < 0xa1  ?
-                                         (inchar - 0x81) * 178  :
-                                         5696 + (inchar - 0xa1) * 84 ) ] ;
-                             }
 
-                      else
-		         if ( ( ch = ksc5601_to_ucs4(
-                              (uint16_t) (inchar * 256 + inchar2) & 0x7f7f) )
-                             == UNKNOWN_10646_CHAR )
-
-                               ch = L'\0';
-
-		      if (ch == L'\0')
-			--cnt;
-		    }
-
-		  if (ch == L'\0' && inbuf[cnt] != '\0')
-		    {
-		      /* This is an illegal character.  */
-		      result = GCONV_ILLEGAL_INPUT;
-		      break;
-		    }
-
-		  *((wchar_t *) (outbuf + outwchars)) = ch;
-		  ++do_write;
-		  outwchars += sizeof (wchar_t);
-		  ++cnt;
-		}
-	      *inbufsize -= cnt;
-	      inbuf += cnt;
-	      data->outbufavail = outwchars;
-	    }
-	  else
-	    {
-	      size_t inwchars = *inbufsize;
-	      size_t outchars = data->outbufavail;
-	      char *outbuf = data->outbuf;
-	      size_t cnt = 0;
-	      int extra = 0;
-
-	      while (inwchars >= cnt + sizeof (wchar_t)
-		     && outchars < data->outbufsize)
-		{
-		  wchar_t ch = *((wchar_t *) (inbuf + cnt));
-		  unsigned char cp[2];
-
-                  uhc_from_ucs4(ch,cp) ;
-
-		  if (cp[0] == '\0' && ch != 0)
-		    /* Illegal character.  */
-		    break;
-
-		  outbuf[outchars] = cp[0];
-		  /* Now test for a possible second byte and write this
-		     if possible.  */
-		  if (cp[1] != '\0')
-		    {
-		      if (outchars + 1 >= data->outbufsize)
-			{
-			  /* The result does not fit into the buffer.  */
-			  extra = 1;
-			  break;
-			}
-		      outbuf[++outchars] = cp[1];
-		    }
-
-		  ++do_write;
-		  ++outchars;
-		  cnt += sizeof (wchar_t);
-		}
-	      *inbufsize -= cnt;
-	      inbuf += cnt;
-	      data->outbufavail = outchars;
-
-	      if (outchars + extra < data->outbufsize)
-		{
-		  /* If there is still room in the output buffer something
-		     is wrong with the input.  */
-		  if (inwchars >= cnt + sizeof (wchar_t))
-		    {
-		      /* An error occurred.  */
-		      result = GCONV_ILLEGAL_INPUT;
-		      break;
-		    }
-		  if (inwchars != cnt)
-		    {
-		      /* There are some unprocessed bytes at the end of the
-			 input buffer.  */
-		      result = GCONV_INCOMPLETE_INPUT;
-		      break;
-		    }
-		}
-	    }
-
-	  if (result != GCONV_OK)
-	    break;
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = (*inbufsize > (step->data == &from_uhc_object
-				      ? 0 : sizeof (wchar_t) - 1)
-			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inbufsize > 0 && result == GCONV_EMPTY_INPUT);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write;
-
-  return result;
-}
+/* Now define the toplevel functions.  */
+#include <iconv/skeleton.c>

@@ -31,14 +31,13 @@ wctob (c)
   char buf[MB_LEN_MAX];
   struct gconv_step_data data;
   wchar_t inbuf[1];
-  size_t inbytes;
+  wchar_t *inptr = inbuf;
   size_t converted;
   int status;
 
   /* Tell where we want the result.  */
-  data.outbuf = (char *) buf;
-  data.outbufavail = 0;
-  data.outbufsize = MB_LEN_MAX;
+  data.outbuf = buf;
+  data.outbufend = buf + MB_LEN_MAX;
   data.is_last = 1;
   data.statep = &data.__state;
 
@@ -50,15 +49,15 @@ wctob (c)
 
   /* Create the input string.  */
   inbuf[0] = c;
-  inbytes = sizeof (wchar_t);
 
   status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb, &data,
-					     (const char *) inbuf, &inbytes,
+					     (const char **) &inptr,
+					     (const char *) &inbuf[1],
 					     &converted, 0);
   /* The conversion failed or the output is too long.  */
   if ((status != GCONV_OK && status != GCONV_FULL_OUTPUT
        && status != GCONV_EMPTY_INPUT)
-      || data.outbufavail != 1)
+      || data.outbuf != buf + 1)
     return EOF;
 
   return buf[0];

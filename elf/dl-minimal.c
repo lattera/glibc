@@ -193,12 +193,15 @@ __assert_perror_fail (int errnum,
 		      const char *file, unsigned int line,
 		      const char *function)
 {
+  char errbuf[64];
   char buf[64];
   buf[sizeof buf - 1] = '\0';
   _dl_sysdep_fatal ("BUG IN DYNAMIC LINKER ld.so: ",
 		    file, ": ", _itoa_word (line, buf + sizeof buf - 1, 10, 0),
 		    ": ", function ?: "", function ? ": " : "",
-		    "Unexpected error: ", strerror (errnum), "\n", NULL);
+		    "Unexpected error: ",
+		    __strerror_r (errnum, errbuf, sizeof (errbuf)), "\n",
+		    NULL);
 
 }
 

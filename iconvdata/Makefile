@@ -26,8 +26,8 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		\
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		\
 	   T.61 ISO_6937 SJIS KOI-8 KOI8-R LATIN-GREEK LATIN-GREEK-1	\
 	   HP-ROMAN8 EBCDIC-AT-DE EBCDIC-AT-DE-A EBCDIC-CA-FR		\
-	   EUC-KR UHC JOHAB libJIS libKSC ISO646 BIG5 EUC-JP libGB	\
-	   EUC-CN libCNS EUC-TW
+	   EUC-KR UHC JOHAB libJIS libKSC BIG5 EUC-JP libGB		\
+	   EUC-CN libCNS EUC-TW # ISO646
 modules.so := $(addsuffix .so, $(modules))
 
 
@@ -211,7 +211,7 @@ endif
 include ../Rules
 
 .PHONY: do-iconv-test
-tests: do-iconv-test
+#tests: do-iconv-test
 
 do-iconv-test: run-iconv-test.sh $(objpfx)gconv-modules \
 	       $(addprefix $(objpfx),$(modules.so)) \

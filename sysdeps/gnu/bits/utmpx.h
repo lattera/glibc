@@ -1,5 +1,5 @@
 /* Structures and defenitions for the user accounting database.  GNU version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -22,6 +22,13 @@
 
 #include <bits/types.h>
 #include <sys/time.h>
+
+
+#ifdef __USE_GNU
+# include <paths.h>
+# define _PATH_UTMPX	_PATH_UTMP
+# define _PATH_WTMPX	_PATH_WTMP
+#endif
 
 
 #define __UT_LINESIZE	32
@@ -56,10 +63,12 @@ struct utmpx
 };
 
 
-/* Values for the `ut_type' field of a `struct utmp'.  */
+/* Values for the `ut_type' field of a `struct utmpx'.  */
 #define EMPTY		0	/* No valid user accounting information.  */
 
-#define RUN_LVL		1	/* The system's runlevel.  */
+#ifdef __USE_GNU
+# define RUN_LVL	1	/* The system's runlevel.  */
+#endif
 #define BOOT_TIME	2	/* Time of system boot.  */
 #define NEW_TIME	3	/* Time after system clock changed.  */
 #define OLD_TIME	4	/* Time when system clock changed.  */
@@ -68,3 +77,7 @@ struct utmpx
 #define LOGIN_PROCESS	6	/* Session leader of a logged in user.  */
 #define USER_PROCESS	7	/* Normal process.  */
 #define DEAD_PROCESS	8	/* Terminated process.  */
+
+#ifdef __USE_GNU
+# define ACCOUNTING	9	/* System accounting.  */
+#endif

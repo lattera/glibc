@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 /* Save the current program position in ENV and return 0.  */
 int
-__sigsetjmp (jmp_buf env, int savemask)
+__libc_sigsetjmp (jmp_buf env, int savemask)
 {
   /* Save the signal mask if requested.  */
   __sigjmp_save (env, savemask);
@@ -32,6 +32,6 @@ __sigsetjmp (jmp_buf env, int savemask)
   return 0;
 }
 
-
+weak_alias (__libc_sigsetjmp, __sigsetjmp)
 stub_warning (__sigsetjmp)
 #include <stub-tag.h>

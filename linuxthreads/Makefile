@@ -32,8 +32,8 @@ extra-libs := libpthread
 extra-libs-others := $(extra-libs)
 
 libpthread-routines := attr cancel condvar join manager mutex ptfork \
-		       pthread signals specific errno lockfile \
-		       semaphore wrapsyscall rwlock
+		       ptlongjmp pthread signals specific errno lockfile \
+		       semaphore spinlock wrapsyscall rwlock
 libpthread-map	:= libpthread.map
 
 include ../Rules

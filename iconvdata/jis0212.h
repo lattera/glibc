@@ -34,20 +34,20 @@ struct jisx0212_idx
 };
 
 /* Conversion table.  */
-extern const struct jisx0212_idx jisx0212_to_ucs_idx[];
-extern const uint16_t jisx0212_to_ucs[];
+extern const struct jisx0212_idx __jisx0212_to_ucs_idx[];
+extern const uint16_t __jisx0212_to_ucs[];
 
-extern const struct jisx0212_idx jisx0212_from_ucs_idx[];
-extern const char jisx0212_from_ucs[][2];
+extern const struct jisx0212_idx __jisx0212_from_ucs_idx[];
+extern const char __jisx0212_from_ucs[][2];
 
 
 static inline wchar_t
-jisx0212_to_ucs4 (const char **s, size_t avail, unsigned char offset)
+jisx0212_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
-  const struct jisx0212_idx *rp = jisx0212_to_ucs_idx;
+  const struct jisx0212_idx *rp = __jisx0212_to_ucs_idx;
   unsigned char ch = *(*s);
   unsigned char ch2;
-  wchar_t wch = L'\0';
+  uint32_t wch = 0;
   int idx;
 
   if (ch < offset || (ch - offset) <= 0x6d || (ch - offset) > 0xea)
@@ -62,10 +62,10 @@ jisx0212_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 
   idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
 
-  while (idx < rp->start)
+  while (idx > rp->end)
     ++rp;
-  if (idx <= rp->end)
-    wch = jisx0212_to_ucs[rp->idx + idx - rp->start];
+  if (idx >= rp->start)
+    wch = __jisx0212_to_ucs[rp->idx + idx - rp->start];
 
   if (wch != L'\0')
     (*s) += 2;
@@ -79,16 +79,20 @@ jisx0212_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 static inline size_t
 ucs4_to_jisx0212 (wchar_t wch, char *s, size_t avail)
 {
-  const struct jisx0212_idx *rp = jisx0212_from_ucs_idx;
+  const struct jisx0212_idx *rp = __jisx0212_from_ucs_idx;
   unsigned int ch = (unsigned int) wch;
-  const char *cp = NULL;
+  const char *cp;
 
+  if (ch >= 0xffff)
+    return UNKNOWN_10646_CHAR;
   while (ch > rp->end)
     ++rp;
   if (ch >= rp->start)
-    cp = jisx0212_from_ucs[rp->idx + ch - rp->start];
+    cp = __jisx0212_from_ucs[rp->idx + ch - rp->start];
+  else
+    return UNKNOWN_10646_CHAR;
 
-  if (cp == NULL || cp[0] == '\0')
+  if (cp[0] == '\0')
     return UNKNOWN_10646_CHAR;
 
   s[0] = cp[0];

@@ -1,5 +1,5 @@
 /* Conversion from and to LATIN-GREEK.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,7 +18,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <wchar.h>
+/* Specify the conversion table.  */
 #define TABLES <latin-greek.h>
-#define NAME "LATIN-GREEK"
+
+#define CHARSET_NAME	"LATIN-GREEK"
+#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+
 #include <8bit-gap.c>

@@ -35,7 +35,7 @@
 
 /* These are definitions used by some of the functions for handling
    UTF-8 encoding below.  */
-static const wchar_t encoding_mask[] =
+static const uint32_t encoding_mask[] =
 {
   ~0x7ff, ~0xffff, ~0x1fffff, ~0x3ffffff
 };
@@ -49,8 +49,8 @@ static const unsigned char encoding_byte[] =
 
 int
 __gconv_transform_dummy (struct gconv_step *step, struct gconv_step_data *data,
-			 const char *inbuf, size_t *inlen, size_t *written,
-			 int do_flush)
+			 const char **inbuf, const char *inbufend,
+			 size_t *written, int do_flush)
 {
   size_t do_write;
 
@@ -60,12 +60,12 @@ __gconv_transform_dummy (struct gconv_step *step, struct gconv_step_data *data,
     do_write = 0;
   else
     {
-      do_write = MIN (*inlen, data->outbufsize - data->outbufavail);
+      do_write = MIN (inbufend - *inbuf, data->outbufend - data->outbuf);
 
       memcpy (data->outbuf, inbuf, do_write);
 
-      *inlen -= do_write;
-      data->outbufavail += do_write;
+      *inbuf -= do_write;
+      *data->outbuf += do_write;
     }
 
   /* ### TODO Actually, this number must be devided according to the
@@ -83,934 +83,330 @@ __gconv_transform_dummy (struct gconv_step *step, struct gconv_step_data *data,
    format is, if any, the endianess.  The Unicode/ISO 10646 says that
    unless some higher protocol specifies it differently, the byte
    order is big endian.*/
-int
-__gconv_transform_internal_ucs4 (struct gconv_step *step,
-				  struct gconv_step_data *data,
-				  const char *inbuf, size_t *inlen,
-				  size_t *written, int do_flush)
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		4
+#define MIN_NEEDED_TO		4
+#define FROM_DIRECTION		1
+#define FROM_LOOP		internal_ucs4_loop
+#define TO_LOOP			internal_ucs4_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_internal_ucs4
+
+
+static inline int
+internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
+		    unsigned char **outptrp, unsigned char *outend,
+		    mbstate_t *state, void *data, size_t *converted)
 {
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write = 0;
+  const unsigned char *inptr = *inptrp;
+  unsigned char *outptr = *outptrp;
+  size_t n_convert = MIN (inend - inptr, outend - outptr) / 4;
   int result;
 
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      /* Clear the state.  */
-      memset (data->statep, '\0', sizeof (mbstate_t));
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-
-	  /* Clear output buffer.  */
-	  data->outbufavail = 0;
-	}
-    }
-  else
-    {
-      int save_errno = errno;
-
-      result = GCONV_OK;
-      do
-	{
-	  size_t n_convert = (MIN (*inlen,
-				   (data->outbufsize - data->outbufavail))
-			      / sizeof (wchar_t));
-
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	  /* Sigh, we have to do some real work.  */
-	  wchar_t *outbuf = (wchar_t *) &data->outbuf[data->outbufavail];
-	  size_t cnt;
+  /* Sigh, we have to do some real work.  */
+  size_t cnt;
 
-	  for (cnt = 0; cnt < n_convert; ++cnt)
-	    outbuf[cnt] = bswap_32 (((wchar_t *) inbuf)[cnt]);
+  for (cnt = 0; cnt < n_convert; ++cnt)
+    *((uint32_t *) outptr)++ = bswap_32 (*((uint32_t *) inptr)++);
 
+  *inptrp = inptr;
+  *outptrp = outptr;
 #elif __BYTE_ORDER == __BIG_ENDIAN
-	  /* Simply copy the data.  */
-	  memcpy (&data->outbuf[data->outbufsize], inbuf,
-		  n_convert * sizeof (wchar_t));
+  /* Simply copy the data.  */
+  *inptrp = inptr + n_convert * 4;
+  *outptrp = __mempcpy (outptr, inptr, n_convert * 4);
 #else
 # error "This endianess is not supported."
 #endif
 
-	  *inlen -= n_convert * sizeof (wchar_t);
-	  inbuf += n_convert * sizeof (wchar_t);
-	  data->outbufavail += n_convert * sizeof (wchar_t);
-	  do_write += n_convert;
+  /* Determine the status.  */
+  if (*outptrp == outend)
+    result = GCONV_FULL_OUTPUT;
+  else if (*inptrp == inend)
+    result = GCONV_EMPTY_INPUT;
+  else
+    result = GCONV_INCOMPLETE_INPUT;
 
-	  if (*inlen > 0 && *inlen < sizeof (wchar_t))
-	    {
-	      /* We have an incomplete character at the end.  */
-	      result = GCONV_INCOMPLETE_INPUT;
-	      break;
-	    }
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = (*inlen < sizeof (wchar_t)
-			? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT);
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inlen >= sizeof (wchar_t) && result == GCONV_EMPTY_INPUT);
-
-      __set_errno (save_errno);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write;
+  if (converted != NULL)
+    converted += n_convert;
 
   return result;
 }
+
+#include <iconv/skeleton.c>
 
 
 /* Convert from ISO 646-IRV to the internal (UCS4-like) format.  */
-int
-__gconv_transform_ascii_internal (struct gconv_step *step,
-				  struct gconv_step_data *data,
-				  const char *inbuf, size_t *inlen,
-				  size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write = 0;
-  int result;
-
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      /* Clear the state.  */
-      memset (data->statep, '\0', sizeof (mbstate_t));
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-
-	  /* Clear output buffer.  */
-	  data->outbufavail = 0;
-	}
-    }
-  else
-    {
-      const unsigned char *newinbuf = inbuf;
-      int save_errno = errno;
-
-      result = GCONV_OK;
-      do
-	{
-	  size_t actually = 0;
-	  size_t cnt = 0;
-
-	  while (data->outbufavail + sizeof (wchar_t) <= data->outbufsize
-		 && cnt < *inlen)
-	    {
-	      if (*newinbuf > '\x7f')
-		{
-		  /* This is no correct ANSI_X3.4-1968 character.  */
-		  result = GCONV_ILLEGAL_INPUT;
-		  break;
-		}
-
-	      /* It's an one byte sequence.  */
-	      *(wchar_t *) &data->outbuf[data->outbufavail]
-		= (wchar_t) *newinbuf;
-	      data->outbufavail += sizeof (wchar_t);
-	      ++actually;
-
-	      ++newinbuf;
-	      ++cnt;
-	    }
-
-	  /* Remember how much we converted.  */
-	  do_write += cnt * sizeof (wchar_t);
-	  *inlen -= cnt;
-
-	  /* Check whether an illegal character appeared.  */
-	  if (result != GCONV_OK)
-	    break;
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = (*inlen == 0 ? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT);
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
-
-      __set_errno (save_errno);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write / sizeof (wchar_t);
-
-  return result;
-}
-
-
-/* Convert from ISO 10646/UCS to ISO 646-IRV.  */
-int
-__gconv_transform_internal_ascii (struct gconv_step *step,
-				  struct gconv_step_data *data,
-				  const char *inbuf, size_t *inlen,
-				  size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write;
-  int result;
-
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      /* Clear the state.  */
-      memset (data->statep, '\0', sizeof (mbstate_t));
-      do_write = 0;
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-
-	  /* Clear output buffer.  */
-	  data->outbufavail = 0;
-	}
-    }
-  else
-    {
-      const wchar_t *newinbuf = (const wchar_t *) inbuf;
-      int save_errno = errno;
-      do_write = 0;
-
-      result = GCONV_OK;
-      do
-	{
-	  size_t actually = 0;
-	  size_t cnt = 0;
-
-	  while (data->outbufavail < data->outbufsize
-		 && cnt + 3 < *inlen)
-	    {
-	      if (*newinbuf < L'\0' || *newinbuf > L'\x7f')
-		{
-		  /* This is no correct ANSI_X3.4-1968 character.  */
-		  result = GCONV_ILLEGAL_INPUT;
-		  break;
-		}
-
-	      /* It's an one byte sequence.  */
-	      data->outbuf[data->outbufavail++] = (char) *newinbuf;
-	      ++actually;
-
-	      ++newinbuf;
-	      cnt += sizeof (wchar_t);
-	    }
-
-	  /* Remember how much we converted.  */
-	  do_write += cnt / sizeof (wchar_t);
-	  *inlen -= cnt;
-
-	  /* Check whether an illegal character appeared.  */
-	  if (result != GCONV_OK)
-	    break;
-
-	  /* Check for incomplete input.  */
-	  if (*inlen > 0 && *inlen < sizeof (wchar_t))
-	    {
-	      /* We have an incomplete character at the end.  */
-	      result = GCONV_INCOMPLETE_INPUT;
-	      break;
-	    }
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = *inlen == 0 ? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT;
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
-
-      __set_errno (save_errno);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write;
-
-  return result;
-}
-
-
-int
-__gconv_transform_internal_utf8 (struct gconv_step *step,
-				 struct gconv_step_data *data,
-				 const char *inbuf, size_t *inlen,
-				 size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write;
-  int result;
-
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      /* Clear the state.  */
-      memset (data->statep, '\0', sizeof (mbstate_t));
-      do_write = 0;
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-
-	  /* Clear output buffer.  */
-	  data->outbufavail = 0;
-	}
-    }
-  else
-    {
-      const wchar_t *newinbuf = (const wchar_t *) inbuf;
-      int save_errno = errno;
-      do_write = 0;
-
-      result = GCONV_OK;
-      do
-	{
-	  size_t cnt = 0;
-
-	  while (data->outbufavail < data->outbufsize
-		 && cnt * sizeof (wchar_t) + 3 < *inlen)
-	    {
-	      wchar_t wc = newinbuf[cnt];
-
-	      if (wc < 0 && wc > 0x7fffffff)
-		{
-		  /* This is no correct ISO 10646 character.  */
-		  result = GCONV_ILLEGAL_INPUT;
-		  break;
-		}
-
-	      if (wc < 0x80)
-		/* It's an one byte sequence.  */
-		data->outbuf[data->outbufavail++] = (char) wc;
-	      else
-		{
-		  size_t step;
-		  size_t start;
-
-		  for (step = 2; step < 6; ++step)
-		    if ((wc & encoding_mask[step - 2]) == 0)
-		      break;
-
-		  if (data->outbufavail + step >= data->outbufsize)
-		    /* Too long.  */
-		    break;
-
-		  start = data->outbufavail;
-		  data->outbufavail += step;
-		  data->outbuf[start] = encoding_byte[step - 2];
-		  --step;
-		  do
-		    {
-		      data->outbuf[start + step] = 0x80 | (wc & 0x3f);
-		      wc >>= 6;
-		    }
-		  while (--step > 0);
-		  data->outbuf[start] |= wc;
-		}
-
-	      ++cnt;
-	    }
-
-	  /* Remember how much we converted.  */
-	  do_write += cnt;
-	  *inlen -= cnt * sizeof (wchar_t);
-	  newinbuf += cnt;
-
-	  /* Check whether an illegal character appeared.  */
-	  if (result != GCONV_OK)
-	    break;
-
-	  /* Check for incomplete input.  */
-	  if (*inlen > 0 && *inlen < sizeof (wchar_t))
-	    {
-	      /* We have an incomplete character at the end.  */
-	      result = GCONV_INCOMPLETE_INPUT;
-	      break;
-	    }
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = *inlen == 0 ? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT;
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
-
-      __set_errno (save_errno);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write;
-
-  return result;
-}
-
-
-int
-__gconv_transform_utf8_internal (struct gconv_step *step,
-				 struct gconv_step_data *data,
-				 const char *inbuf, size_t *inlen,
-				 size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write;
-  int result;
-
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      /* Clear the state.  */
-      memset (data->statep, '\0', sizeof (mbstate_t));
-      do_write = 0;
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-	}
-    }
-  else
-    {
-      int save_errno = errno;
-      int extra = 0;
-      do_write = 0;
-
-      result = GCONV_OK;
-      do
-	{
-	  wchar_t *outbuf = (wchar_t *) &data->outbuf[data->outbufavail];
-	  size_t cnt = 0;
-	  size_t actually = 0;
-
-	  while (data->outbufavail + sizeof (wchar_t) <= data->outbufsize
-		 && cnt < *inlen)
-	    {
-	      size_t start = cnt;
-	      wchar_t value;
-	      unsigned char byte;
-	      int count;
-
-	      /* Next input byte.  */
-	      byte = inbuf[cnt++];
-
-	      if (byte < 0x80)
-		{
-		  /* One byte sequence.  */
-		  count = 0;
-		  value = byte;
-		}
-	      else if ((byte & 0xe0) == 0xc0)
-		{
-		  count = 1;
-		  value = byte & 0x1f;
-		}
-	      else if ((byte & 0xf0) == 0xe0)
-		{
-		  /* We expect three bytes.  */
-		  count = 2;
-		  value = byte & 0x0f;
-		}
-	      else if ((byte & 0xf8) == 0xf0)
-		{
-		  /* We expect four bytes.  */
-		  count = 3;
-		  value = byte & 0x07;
-		}
-	      else if ((byte & 0xfc) == 0xf8)
-		{
-		  /* We expect five bytes.  */
-		  count = 4;
-		  value = byte & 0x03;
-		}
-	      else if ((byte & 0xfe) == 0xfc)
-		{
-		  /* We expect six bytes.  */
-		  count = 5;
-		  value = byte & 0x01;
-		}
-	      else
-		{
-		  /* This is an illegal encoding.  */
-		  result = GCONV_ILLEGAL_INPUT;
-		  break;
-		}
-
-	      if (cnt + count > *inlen)
-		{
-		  /* We don't have enough input.  */
-		  --cnt;
-		  extra = count;
-		  break;
-		}
-
-	      /* Read the possible remaining bytes.  */
-	      while (count > 0)
-		{
-		  byte = inbuf[cnt++];
-		  --count;
-
-		  if ((byte & 0xc0) != 0x80)
-		    {
-		      /* This is an illegal encoding.  */
-		      result = GCONV_ILLEGAL_INPUT;
-		      break;
-		    }
-
-		  value <<= 6;
-		  value |= byte & 0x3f;
-		}
-
-	      if (result != GCONV_OK)
-		{
-		  cnt = start;
-		  break;
-		}
-
-	      *outbuf++ = value;
-	      ++actually;
-	    }
-
-	  /* Remember how much we converted.  */
-	  do_write += actually;
-	  *inlen -= cnt;
-	  inbuf += cnt;
-
-	  data->outbufavail += actually * sizeof (wchar_t);
-
-	  /* Check whether an illegal character appeared.  */
-	  if (result != GCONV_OK)
-	    {
-	      result = GCONV_ILLEGAL_INPUT;
-	      break;
-	    }
-
-	  if (*inlen > 0 && *inlen < extra)
-	    {
-	      /* We have an incomplete character at the end.  */
-	      result = GCONV_INCOMPLETE_INPUT;
-	      break;
-	    }
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = (data->outbufavail + sizeof (wchar_t) > data->outbufsize
-			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
-
-      __set_errno (save_errno);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write;
-
-  return result;
-}
-
-
-int
-__gconv_transform_ucs2_internal (struct gconv_step *step,
-				 struct gconv_step_data *data,
-				 const char *inbuf, size_t *inlen,
-				 size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write;
-  int result;
-
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      /* Clear the state.  */
-      memset (data->statep, '\0', sizeof (mbstate_t));
-      do_write = 0;
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-	}
-    }
-  else
-    {
-      const uint16_t *newinbuf = (const uint16_t *) inbuf;
-      int save_errno = errno;
-      do_write = 0;
-
-      do
-	{
-	  wchar_t *outbuf = (wchar_t *) &data->outbuf[data->outbufavail];
-	  size_t actually = 0;
-
-	  errno = 0;
-
-	  while (data->outbufavail + 4 <= data->outbufsize
-		 && *inlen >= 2)
-	    {
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		1
+#define MIN_NEEDED_TO		4
+#define FROM_DIRECTION		1
+#define FROM_LOOP		ascii_internal_loop
+#define TO_LOOP			ascii_internal_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_ascii_internal
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    if (*inptr > '\x7f')						      \
+      {									      \
+	/* This is no correct ANSI_X3.4-1968 character.  */		      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+									      \
+    /* It's an one byte sequence.  */					      \
+    *((uint32_t *) outptr)++ = *inptr++;				      \
+  }
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>
+
+
+/* Convert from the internal (UCS4-like) format to ISO 646-IRV.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		4
+#define MIN_NEEDED_TO		1
+#define FROM_DIRECTION		1
+#define FROM_LOOP		internal_ascii_loop
+#define TO_LOOP			internal_ascii_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_internal_ascii
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    if (*((uint32_t *) inptr) > '\x7f')					      \
+      {									      \
+	/* This is no correct ANSI_X3.4-1968 character.  */		      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+									      \
+    /* It's an one byte sequence.  */					      \
+    *outptr++ = *((uint32_t *) inptr)++;				      \
+  }
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>
+
+
+/* Convert from the internal (UCS4-like) format to UTF-8.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		4
+#define MIN_NEEDED_TO		1
+#define MAX_NEEDED_TO		6
+#define FROM_DIRECTION		1
+#define FROM_LOOP		internal_utf8_loop
+#define TO_LOOP			internal_utf8_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_internal_utf8
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    uint32_t wc = *((uint32_t *) inptr);				      \
+									      \
+    /* Since we control every character we read this cannot happen.  */	      \
+    assert (wc <= 0x7fffffff);						      \
+									      \
+    if (wc < 0x80)							      \
+      /* It's an one byte sequence.  */					      \
+      *outptr++ = (unsigned char) wc;					      \
+    else								      \
+      {									      \
+	size_t step;							      \
+	char *start;							      \
+									      \
+	for (step = 2; step < 6; ++step)				      \
+	  if ((wc & encoding_mask[step - 2]) == 0)			      \
+	    break;							      \
+									      \
+	if (outptr + step >= outend)					      \
+	  {								      \
+	    /* Too long.  */						      \
+	    result = GCONV_FULL_OUTPUT;					      \
+	    break;							      \
+	  }								      \
+									      \
+	start = outptr;							      \
+	*outptr = encoding_byte[step - 2];				      \
+	outptr += step;							      \
+	--step;								      \
+	do								      \
+	  {								      \
+	    start[step] = 0x80 | (wc & 0x3f);				      \
+	    wc >>= 6;							      \
+	  }								      \
+	while (--step > 0);						      \
+	start[0] |= wc;							      \
+      }									      \
+									      \
+    inptr += 4;								      \
+  }
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>
+
+
+/* Convert from UTF-8 to the internal (UCS4-like) format.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		1
+#define MAX_NEEDED_FROM		6
+#define MIN_NEEDED_TO		4
+#define FROM_DIRECTION		1
+#define FROM_LOOP		utf8_internal_loop
+#define TO_LOOP			utf8_internal_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_utf8_internal
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    uint32_t ch;							      \
+    uint_fast32_t cnt;							      \
+    uint_fast32_t i;							      \
+									      \
+    /* Next input byte.  */						      \
+    ch = *inptr;							      \
+									      \
+    if (ch < 0x80)							      \
+      /* One byte sequence.  */						      \
+      cnt = 1;								      \
+    else if ((ch & 0xe0) == 0xc0)					      \
+      {									      \
+	cnt = 2;							      \
+	ch &= 0x1f;							      \
+      }									      \
+    else if ((ch & 0xf0) == 0xe0)					      \
+      {									      \
+	/* We expect three bytes.  */					      \
+	cnt = 3;							      \
+	ch &= 0x0f;							      \
+      }									      \
+    else if ((ch & 0xf8) == 0xf0)					      \
+      {									      \
+	/* We expect four bytes.  */					      \
+	cnt = 4;							      \
+	ch &= 0x07;							      \
+      }									      \
+    else if ((ch & 0xfc) == 0xf8)					      \
+      {									      \
+	/* We expect five bytes.  */					      \
+	cnt = 5;							      \
+	ch &= 0x03;							      \
+      }									      \
+    else if ((ch & 0xfe) == 0xfc)					      \
+      {									      \
+	/* We expect six bytes.  */					      \
+	cnt = 6;							      \
+	ch &= 0x01;							      \
+      }									      \
+    else								      \
+      {									      \
+	/* This is an illegal encoding.  */				      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+									      \
+    if (NEED_LENGTH_TEST && inptr + cnt >= inend)			      \
+      {									      \
+	/* We don't have enough input.  */				      \
+	result = GCONV_INCOMPLETE_INPUT;				      \
+	break;								      \
+      }									      \
+									      \
+    /* Read the possible remaining bytes.  */				      \
+    for (i = 1; i < cnt; ++i)						      \
+      {									      \
+	uint32_t byte = inptr[i];					      \
+									      \
+	if ((byte & 0xc0) != 0x80)					      \
+	  {								      \
+	    /* This is an illegal encoding.  */				      \
+	    result = GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	ch <<= 6;							      \
+	ch |= byte & 0x3f;						      \
+      }									      \
+									      \
+    /* Now adjust the pointers and store the result.  */		      \
+    inptr += cnt;							      \
+    *((uint32_t *) outptr)++ = ch;					      \
+  }
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>
+
+
+/* Convert from UCS2 to the internal (UCS4-like) format.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		2
+#define MIN_NEEDED_TO		4
+#define FROM_DIRECTION		1
+#define FROM_LOOP		ucs2_internal_loop
+#define TO_LOOP			ucs2_internal_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_ucs2_internal
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	      outbuf[actually++] = (wchar_t) bswap_16 (*newinbuf++);
+# define BODY \
+  *((uint32_t *) outptr)++ = bswap_16 (*((uint16_t *) inptr)++);
 #else
-	      outbuf[actually++] = (wchar_t) *newinbuf++;
+# define BODY \
+  *((uint32_t *) outptr)++ = *((uint16_t *) inptr)++;
 #endif
-	      data->outbufavail += 4;
-	      *inlen -= 2;
-	    }
-
-	  /* Remember how much we converted.  */
-	  do_write += actually * sizeof (wchar_t);
-
-	  if (*inlen == 1)
-	    {
-	      /* We have an incomplete character at the end.  */
-	      result = GCONV_INCOMPLETE_INPUT;
-	      break;
-	    }
-
-	  /* Check whether an illegal character appeared.  */
-	  if (errno != 0)
-	    {
-	      result = GCONV_ILLEGAL_INPUT;
-	      break;
-	    }
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = (data->outbufavail + sizeof (wchar_t) > data->outbufsize
-			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
-
-      __set_errno (save_errno);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write;
-
-  return result;
-}
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>
 
 
-int
-__gconv_transform_internal_ucs2 (struct gconv_step *step,
-				 struct gconv_step_data *data,
-				 const char *inbuf, size_t *inlen,
-				 size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write;
-  int result;
+/* Convert from the internal (UCS4-like) format to UCS2.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		4
+#define MIN_NEEDED_TO		2
+#define FROM_DIRECTION		1
+#define FROM_LOOP		internal_ucs2_loop
+#define TO_LOOP			internal_ucs2_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_internal_ucs2
 
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      /* Clear the state.  */
-      memset (data->statep, '\0', sizeof (mbstate_t));
-      do_write = 0;
-
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
-
-	  /* Clear output buffer.  */
-	  data->outbufavail = 0;
-	}
-    }
-  else
-    {
-      const wchar_t *newinbuf = (const wchar_t *) inbuf;
-      int save_errno = errno;
-      do_write = 0;
-
-      do
-	{
-	  uint16_t *outbuf = (uint16_t *) &data->outbuf[data->outbufavail];
-	  size_t actually = 0;
-
-	  errno = 0;
-
-	  while (data->outbufavail + 2 <= data->outbufsize
-		 && *inlen >= 4)
-	    {
-	      if (*newinbuf >= 0x10000)
-		{
-		  __set_errno (EILSEQ);
-		    break;
-		}
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	      /* Please note that we use the `uint32_t' pointer as a
-		 `uint16_t' pointer which works since we are on a
-		 little endian machine.  */
-	      outbuf[actually++] = bswap_16 (*((uint16_t *) newinbuf));
-	      ++newinbuf;
+# define BODY \
+  {									      \
+    if (*((uint32_t *) inptr) >= 0x10000)				      \
+      {									      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+    /* Please note that we use the `uint32_t' from-pointer as an `uint16_t'   \
+       pointer which works since we are on a little endian machine.  */	      \
+    *((uint16_t *) outptr)++ = bswap_16 (*((uint16_t *) inptr));	      \
+    inptr += 4;								      \
+  }
 #else
-	      outbuf[actually++] = *newinbuf++;
+# define BODY \
+  {									      \
+    if (*((uint32_t *) inptr) >= 0x10000)				      \
+      {									      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+    *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;			      \
+  }
 #endif
-	      *inlen -= 4;
-	      data->outbufavail += 2;
-	    }
-
-	  /* Remember how much we converted.  */
-	  do_write += (const char *) newinbuf - inbuf;
-
-	  if (*inlen > 0 && *inlen < 4)
-	    {
-	      /* We have an incomplete input character.  */
-	      result = GCONV_INCOMPLETE_INPUT;
-	      break;
-	    }
-
-	  /* Check whether an illegal character appeared.  */
-	  if (errno != 0)
-	    {
-	      result = GCONV_ILLEGAL_INPUT;
-	      break;
-	    }
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = *inlen == 0 ? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT;
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		{
-		  memmove (data->outbuf,
-			   &data->outbuf[data->outbufavail - newavail],
-			   newavail);
-		  data->outbufavail = newavail;
-		}
-	    }
-	}
-      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
-
-      __set_errno (save_errno);
-    }
-
-  if (written != NULL && data->is_last)
-    *written = do_write / sizeof (wchar_t);
-
-  return result;
-}
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>

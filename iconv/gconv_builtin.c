@@ -33,15 +33,25 @@ static struct builtin_map
   gconv_init_fct init;
   gconv_end_fct end;
 
+  int min_needed_from;
+  int max_needed_from;
+  int min_needed_to;
+  int max_needed_to;
+
 } map[] =
 {
 #define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
-			       Fct, Init, End) \
+			       Fct, Init, End, MinF, MaxF, MinT, MaxT) \
   {									      \
     name: Name,								      \
     fct: Fct,								      \
     init: Init,								      \
     end: End,								      \
+									      \
+    min_needed_from: MinF,						      \
+    max_needed_from: MaxF,						      \
+    min_needed_to: MinT,						      \
+    max_needed_to: MaxT							      \
   },
 #define BUILTIN_ALIAS(From, To)
 
@@ -66,4 +76,9 @@ __gconv_get_builtin_trans (const char *name, struct gconv_step *step)
   step->end_fct = map[cnt].end;
   step->counter = INT_MAX;
   step->shlib_handle = NULL;
+
+  step->min_needed_from = map[cnt].min_needed_from;
+  step->max_needed_from = map[cnt].max_needed_from;
+  step->min_needed_to = map[cnt].min_needed_to;
+  step->max_needed_to = map[cnt].max_needed_to;
 }

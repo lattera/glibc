@@ -17,6 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef __BITS_SOCKET_H
+#define __BITS_SOCKET_H	1
+
 #if !defined _SYS_SOCKET_H && !defined _NETINET_IN_H
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
@@ -196,3 +199,5 @@ struct linger
     int l_onoff;		/* Nonzero to linger on close.  */
     int l_linger;		/* Time to linger.  */
   };
+
+#endif	/* bits/socket.h */

@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <wchar.h>
+#include <stdint.h>
 #include "ksc5601.h"
 
 /*
@@ -50,7 +50,7 @@ perl tab21.pl > ksc_hangul1.tb
 */
 
 
-const uint16_t ksc5601_hangul_to_ucs[KSC5601_HANGUL]=
+const uint16_t __ksc5601_hangul_to_ucs[KSC5601_HANGUL]=
 {
   0xac00, 0xac01, 0xac04, 0xac07, 0xac08, 0xac09, 0xac0a, 0xac10,
   0xac11, 0xac12, 0xac13, 0xac14, 0xac15, 0xac16, 0xac17, 0xac19,
@@ -369,7 +369,7 @@ grep -v '# HANGUL SYLLABLE' | perl tab11.pl  > ksc_sym1.tb
 
 */
 
-const uint16_t ksc5601_sym_to_ucs[] =
+const uint16_t __ksc5601_sym_to_ucs[] =
 {
   [0x0000] = 0x3000, [0x0001] = 0x3001, [0x0002] = 0x3002, [0x0003] = 0x00b7,
   [0x0004] = 0x2025, [0x0005] = 0x2026, [0x0006] = 0x00a8, [0x0007] = 0x3003,
@@ -646,7 +646,7 @@ perl tab12.pl > ksc_sym2.tb
 
 */
 
-const uint16_t ksc5601_sym_from_ucs[KSC5601_SYMBOL][2] =
+const uint16_t __ksc5601_sym_from_ucs[KSC5601_SYMBOL][2] =
 {
   {0x00a1, 0x222e}, {0x00a4, 0x2234}, {0x00a7, 0x2157}, {0x00a8, 0x2127},
   {0x00aa, 0x2823}, {0x00ad, 0x2129}, {0x00b0, 0x2146}, {0x00b1, 0x213e},
@@ -914,7 +914,7 @@ perl tab21.pl > ksc_hanja1.tb
    printf ("\n");
 */
 
-const uint16_t ksc5601_hanja_to_ucs[KSC5601_HANJA]=
+const uint16_t __ksc5601_hanja_to_ucs[KSC5601_HANJA]=
 {
   0x4f3d, 0x4f73, 0x5047, 0x50f9, 0x52a0, 0x53ef, 0x5475, 0x54e5,
   0x5609, 0x5ac1, 0x5bb6, 0x6687, 0x67b6, 0x67b7, 0x67ef, 0x6b4c,
@@ -1550,7 +1550,7 @@ awk '{print $2,$1}' | sort -u | perl tab12.pl > ksc_hanja2.tb
 
 */
 
-const uint16_t ksc5601_hanja_from_ucs[KSC5601_HANJA][2]=
+const uint16_t __ksc5601_hanja_from_ucs[KSC5601_HANJA][2]=
 {
   {0x4e00, 0x6c69}, {0x4e01, 0x6f4b}, {0x4e03, 0x7652}, {0x4e07, 0x5832},
   {0x4e08, 0x6d5b}, {0x4e09, 0x5f32}, {0x4e0a, 0x5f3e}, {0x4e0b, 0x793b},

@@ -192,6 +192,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 				      ? __strdup (current->result_set)
 				      : result[step_cnt + 1].from_name);
 
+#ifndef STATIC_GCONV
 	  if (current->code->module_name[0] == '/')
 	    {
 	      /* Load the module, return handle for it.  */
@@ -212,6 +213,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	      result[step_cnt].end_fct = shlib_handle->end_fct;
 	    }
 	  else
+#endif
 	    /* It's a builtin transformation.  */
 	    __gconv_get_builtin_trans (current->code->module_name,
 				       &result[step_cnt]);
@@ -230,7 +232,9 @@ gen_steps (struct derivation_step *best, const char *toset,
 	    {
 	      if (result[step_cnt].end_fct != NULL)
 		(*result[step_cnt].end_fct) (&result[step_cnt]);
+#ifndef STATIC_GCONV
 	      __gconv_release_shlib (result[step_cnt].shlib_handle);
+#endif
 	    }
 	  free (result);
 	  *nsteps = 0;
@@ -525,6 +529,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
   result = find_derivation (toset, toset_expand, fromset, fromset_expand,
 			    handle, nsteps);
 
+#ifndef STATIC_GCONV
   /* Increment the user counter.  */
   if (result == GCONV_OK)
     {
@@ -548,6 +553,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
 	  }
       while (cnt > 0);
     }
+#endif
 
   /* Release the lock.  */
   __libc_lock_unlock (lock);
@@ -568,6 +574,7 @@ __gconv_close_transform (struct gconv_step *steps, size_t nsteps)
 {
   int result = GCONV_OK;
 
+#ifndef STATIC_GCONV
   /* Acquire the lock.  */
   __libc_lock_lock (lock);
 
@@ -583,6 +590,7 @@ __gconv_close_transform (struct gconv_step *steps, size_t nsteps)
 
   /* Release the lock.  */
   __libc_lock_unlock (lock);
+#endif
 
   return result;
 }

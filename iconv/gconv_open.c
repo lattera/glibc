@@ -62,21 +62,24 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 	      for (cnt = 0; cnt < nsteps; ++cnt)
 		{
 		  /* If this is the last step we must not allocate an output
-		     buffer.  Signal this to the initializer.  */
+		     buffer.  */
 		  data[cnt].is_last = cnt == nsteps - 1;
 
 		  /* We use the `mbstate_t' member in DATA.  */
 		  data[cnt].statep = &data[cnt].__state;
 
 		  /* Allocate the buffer.  */
-		  data[cnt].outbufsize = GCONV_DEFAULT_BUFSIZE;
-		  data[cnt].outbuf = (char *) malloc (data[cnt].outbufsize);
-		  if (data[cnt].outbuf == NULL)
+		  if (!data[cnt].is_last)
 		    {
-		      res = GCONV_NOMEM;
-		      break;
+		      data[cnt].outbuf =
+			(char *) malloc (GCONV_NCHAR_GOAL
+					 * steps[cnt].max_needed_to);
+		      if (data[cnt].outbuf == NULL)
+			{
+			  res = GCONV_NOMEM;
+			  break;
+			}
 		    }
-		  data[cnt].outbufavail = 0;
 		}
 	    }
 	}

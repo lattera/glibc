@@ -28,3 +28,10 @@ $(..)sysdeps/gnu/errlist.c: $(..)sysdeps/gnu/errlist.awk \
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
 endif
+
+ifeq ($(subdir),login)
+sysdep_routines += setutxent getutxent endutxent getutxid getutxline \
+                   pututxline utmpxname updwtmpx
+
+sysdep_headers += utmpx.h bits/utmpx.h
+endif

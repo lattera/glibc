@@ -44,7 +44,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
      size_t len;
      mbstate_t *ps;
 {
-  size_t inbytes_in;
+  const char *srcend;
   struct gconv_step_data data;
   size_t result = 0;
   int status;
@@ -55,7 +55,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
   if (nmc == 0)
     return 0;
-  inbytes_in = __strnlen (*src, nmc - 1) + 1;
+  srcend = *src + __strnlen (*src, nmc - 1) + 1;
 
   /* Make sure we use the correct function.  */
   update_conversion_ptrs ();
@@ -64,21 +64,15 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
   if (dst == NULL)
     {
       wchar_t buf[64];		/* Just an arbitrary size.  */
-      size_t inbytes = inbytes_in;
       const char *inbuf = *src;
       size_t written;
 
       data.outbuf = (char *) buf;
-      data.outbufsize = sizeof (buf);
+      data.outbufend = data.outbuf + sizeof (buf);
       do
 	{
-	  inbuf += inbytes_in - inbytes;
-	  inbytes_in = inbytes;
-	  data.outbufavail = 0;
-	  written = 0;
-
 	  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-						     &data, inbuf, &inbytes,
+						     &data, &inbuf, srcend,
 						     &written, 0);
 	  result += written;
 	}
@@ -94,14 +88,11 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
-      size_t inbytes = inbytes_in;
-
       data.outbuf = (char *) dst;
-      data.outbufsize = len * sizeof (wchar_t);
-      data.outbufavail = 0;
+      data.outbufend = data.outbuf + len * sizeof (wchar_t);
 
       status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-						 &data, *src, &inbytes,
+						 &data, src, srcend,
 						 &result, 0);
 
       /* We have to determine whether the last character converted
@@ -114,8 +105,6 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 	  *src = NULL;
 	  --result;
 	}
-      else
-	*src += inbytes_in - inbytes;
     }
 
   /* There must not be any problems with the conversion but illegal input

@@ -1083,17 +1083,9 @@ static const char *re_error_msgid[] =
 # if defined MATCH_MAY_ALLOCATE
 /* 4400 was enough to cause a crash on Alpha OSF/1,
    whose default stack limit is 2mb.  */
-#  ifdef _LIBC
-long int __re_max_failures = 4000;
-#  else
 long int re_max_failures = 4000;
-#  endif
 # else
-#  ifdef _LIBC
-long int __re_max_failures = 2000;
-#  else
 long int re_max_failures = 2000;
-#  endif
 # endif
 
 union fail_stack_elt
@@ -1116,23 +1108,10 @@ typedef struct
 # if defined MATCH_MAY_ALLOCATE
 /* 4400 was enough to cause a crash on Alpha OSF/1,
    whose default stack limit is 2mb.  */
-#  ifdef _LIBC
-int __re_max_failures = 20000;
-#  else
 int re_max_failures = 20000;
-#  endif
 # else
-#  ifdef _LIBC
-int __re_max_failures = 2000;
-#  else
 int re_max_failures = 2000;
-#  endif
 # endif
-
-#ifdef _LIBC
-weak_alias (__re_max_failures, re_max_failures)
-# define re_max_failures __re_max_failures
-#endif
 
 union fail_stack_elt
 {

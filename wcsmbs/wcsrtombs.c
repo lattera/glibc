@@ -55,31 +55,26 @@ __wcsrtombs (dst, src, len, ps)
   if (dst == NULL)
     {
       char buf[256];		/* Just an arbitrary value.  */
-      size_t inbytes_in = (__wcslen (*src) + 1) * sizeof (wchar_t);
-      size_t inbytes = inbytes_in;
+      const wchar_t *srcend = *src + __wcslen (*src) + 1;
       const wchar_t *inbuf = *src;
       size_t written;
 
       data.outbuf = buf;
-      data.outbufsize = sizeof (buf);
+      data.outbufend = buf + sizeof (buf);
 
       do
 	{
-	  inbuf += (inbytes_in - inbytes) / sizeof (wchar_t);
-	  inbytes_in = inbytes;
-	  data.outbufavail = 0;
-	  written = 0;
-
 	  status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
 						     &data,
-						     (const char *) inbuf,
-						     &inbytes, &written, 0);
+						     (const char **) &inbuf,
+						     (const char *) srcend,
+						     &written, 0);
 	  result += written;
 	}
       while (status == GCONV_FULL_OUTPUT);
 
       if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)
-	  && buf[data.outbufavail - 1] == '\0')
+	  && data.outbuf[-1] == '\0')
 	/* Don't count the NUL character in.  */
 	--result;
     }
@@ -88,31 +83,27 @@ __wcsrtombs (dst, src, len, ps)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
-      size_t inbytes_in = ((__wcsnlen (*src, len * MB_CUR_MAX) + 1)
-			   * sizeof (wchar_t));
-      size_t inbytes = inbytes_in;
+      const wchar_t *srcend = *src + __wcsnlen (*src, len * MB_CUR_MAX) + 1;
 
       data.outbuf = dst;
-      data.outbufavail = 0;
-      data.outbufsize = len;
+      data.outbufend = dst + len;
 
       status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
-						 &data, (const char *) *src,
-						 &inbytes, &result, 0);
+						 &data, (const char **) src,
+						 (const char *) srcend,
+						 &result, 0);
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
       if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT
 	   || status == GCONV_FULL_OUTPUT)
-	  && dst[data.outbufavail - 1] == '\0')
+	  && data.outbuf[-1] == '\0')
 	{
-	  assert (data.outbufavail > 0);
+	  assert (data.outbuf != dst);
 	  assert (__mbsinit (data.statep));
 	  *src = NULL;
 	  --result;
 	}
-      else
-	*src += result;
     }
 
   /* There must not be any problems with the conversion but illegal input

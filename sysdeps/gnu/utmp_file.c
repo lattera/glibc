@@ -1,5 +1,6 @@
-/* Structures and definitions for the user accounting database.  Generic/BSDish
-   Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,19 +17,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _UTMPX_H
-# error "Never include <bits/utmpx.h> directly; use <utmpx.h> instead."
-#endif
+#include <string.h>
+#include <unistd.>
 
+#define TRANSFORM_UTMP_FILE_NAME(file_name) \
+    ((strcmp (file_name, _PATH_UTMP "x") == 0 \
+      && __access (_PATH_UTMP "x", F_OK) != 0) ? _PATH_UTMP : \
+     ((strcmp (file_name, _PATH_WTMP "x") == 0 \
+       && __access (_PATH_WTMP "x", F_OK) != 0) ? _PATH_WTMP : \
+      file_name))
 
-#define	__UT_NAMESIZE	8
-#define	__UT_LINESIZE	8
-#define	__UT_HOSTSIZE	16
-
-struct utmpx
-  {
-    char ut_line[__UT_LINESIZE];
-    char ut_name[__UT_NAMESIZE];
-    char ut_host[__UT_HOSTSIZE];
-    long int ut_time;
-  };
+#include <sysdeps/generic/utmp_file.c>

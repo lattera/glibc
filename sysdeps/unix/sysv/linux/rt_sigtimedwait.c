@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 #include <errno.h>
 #include <signal.h>
+#define __need_NULL
+#include <stddef.h>
 
 int
 __syscall_rt_sigtimedwait (const sigset_t *set, siginfo_t *info,

@@ -1,3 +1,241 @@
+1998-04-20 18:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add __dgettext to GLIBC_2.0 and __libc_longjmp, and
+	__libc_siglongjmp to GLIBC_2.1.
+
+	* elf/dl-minimal.c (__assert_perror_fail): Don't use strerror, use
+	__strerror_r.
+
+	* iconv/Makefile: Don't run tests now.
+
+	* iconv/iconv_prog.c (process_block): If loop is repeated, call iconv
+	with correct output buffer.
+
+	Major rewrite of the low-level gconv functionality.
+	* iconv/gconv.c: Rewritten.
+	* iconv/gconv.h: Likewise.
+	* iconv/gconv_builtin.c: Likewise.
+	* iconv/gconv_builtin.h: Likewise.
+	* iconv/gconv_conf.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_open.c: Likewise.
+	* iconv/gconv_simple.c: Likewise.
+	* iconv/iconv.c: Likewise.
+	* iconvdata/8bit-gap.c: Likewise.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/Makefile: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/cns11643.c: Likewise.
+	* iconvdata/cns11643.h: Likewise.
+	* iconvdata/cns11643l1.c: Likewise.
+	* iconvdata/cns11643l1.h: Likewise.
+	* iconvdata/ebcdic-at-de-a.c: Likewise.
+	* iconvdata/ebcdic-at-de.c: Likewise.
+	* iconvdata/ebcdic-ca-fr.c: Likewise.
+	* iconvdata/euccn.c: Likewise.
+	* iconvdata/eucjp.c: Likewise.
+	* iconvdata/euckr.c: Likewise.
+	* iconvdata/euctw.c: Likewise.
+	* iconvdata/gb2312.c: Likewise.
+	* iconvdata/gb2312.h: Likewise.
+	* iconvdata/hp-roman8.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso6937.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso8859-10.c: Likewise.
+	* iconvdata/iso8859-2.c: Likewise.
+	* iconvdata/iso8859-3.c: Likewise.
+	* iconvdata/iso8859-4.c: Likewise.
+	* iconvdata/iso8859-5.c: Likewise.
+	* iconvdata/iso8859-6.c: Likewise.
+	* iconvdata/iso8859-7.c: Likewise.
+	* iconvdata/iso8859-8.c: Likewise.
+	* iconvdata/iso8859-9.c: Likewise.
+	* iconvdata/jis0201.c: Likewise.
+	* iconvdata/jis0201.h: Likewise.
+	* iconvdata/jis0208.c: Likewise.
+	* iconvdata/jis0208.h: Likewise.
+	* iconvdata/jis0212.c: Likewise.
+	* iconvdata/jis0212.h: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/koi-8.c: Likewise.
+	* iconvdata/koi8-r.c: Likewise.
+	* iconvdata/ksc5601.c: Likewise.
+	* iconvdata/ksc5601.h: Likewise.
+	* iconvdata/latin-greek-1.c: Likewise.
+	* iconvdata/latin-greek.c: Likewise.
+	* iconvdata/run-iconv-test.sh: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsmbsload.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+	* iconv/loop.c: New file.
+	* iconv/skeleton.c: New file.
+
+	* stdlib/mblen.c: Handle empty input string correctly.
+	* stdlib/mbtowc.c: Likewise.
+
+	* posix/getopt.c: Various cleanups.
+
+	* sysdeps/arm/bits/setjmp.h: Add copyright text.
+	* sysdeps/i386/bits/setjmp.h: Likewise.
+	* sysdeps/m68k/bits/setjmp.h: Likewise.
+	* sysdeps/powerpc/bits/setjmp.h: Likewise.
+	* sysdeps/sparc/sparc32/bits/setjmp.h: Likewise.
+
+	* sysdeps/generic/longjmp.c: Rename function to __libc_siglongjmp
+	and make longjmp weak alias.
+
+1998-04-18 20:29  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* iconv/Makefile (routines): Only include gconv_dl if building for
+	an ELF system - dynamic linking is not available on a.out.
+	(CFLAGS-gconv_conf.c): Define STATIC_GCONV if omitting gconv_dl
+	due to above check.
+	* iconv/gconv_db.c: If STATIC_GCONV defined, don't try to call
+	routines from gconv_dl.
+
+1998-04-17  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* csu/init.c (_IO_stdin_used): Protect with USE_IN_LIBIO so that
+	we can compile without libio.
+
+1998-04-20 16:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/hurd/Subdirs: Remove login.
+
+1998-04-11  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* db2/compat.h: Include <errno.h>, to make sure we get the
+	definition of EFTYPE before we define it ourselves.
+
+1998-04-10  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* sysdeps/generic/bits/socket.h: Protect against multiple inclusion.
+	* sysdeps/mach/hurd/bits/ioctls.h: Likewise.
+	Fix typo to allow inclusion from sys/ioctl.h again.
+
+1998-04-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/*.[ch]: Clean up namespace.  Optimize character lookup.
+
+1998-04-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Export __strerror_r.  Remove _strerror_internal.
+
+1998-04-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/strcasestr.c: Undefine strcasestr, not strstr.
+	Also undefine __strcasestr.
+
+1998-04-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/regex.c: Rename __re_max_failures back to re_max_failures,
+	aliases do not work with global variables due to copy relocations.
+
+1998-04-20 15:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/creature.texi: Fix type.  Patch by Andreas Schwab.
+
+1998-04-20 13:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/sighold.c: Include stddef.h for NULL definition.
+	* signal/sigrelse.c: Likewise.
+	* sysdeps/posix/sigignore.c: Likewise.
+	* sysdeps/posix/sigset.c: Likewise.
+	* sysdeps/posix/waitid.c: Likewise.
+	* sysdeps/unix/sysv/linux/rt_sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/rt_sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Include stdlib.h for MB_CUR_MAX.
+	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
+1998-04-13  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/Makefile (headers): Remove utmpx.h and bits/utmpx.h.
+	* login/getutent.c (getutxent): Remove alias.
+	* login/getutent_r.c (setutxent, pututxline, endutxent):
+	Remove aliases.
+	* login/getutid.c (getutxid): Remove alias.
+	* login/getutline.c (getutxline): Remove alias.
+	* login/utmp.h: Add prototypes for __updwtmp, __getutent,
+	__getutid, __getutline and __pututline.
+	* login/utmpx.h: Moved to ...
+	* sysdeps/gnu/utmpx.h: ... here.  [__USE_GNU]: Define UTMPX_FILE,
+	UTMPX_FILENAME, WTMPX_FILE and WTMPX_FILENAME, declare utmpxname
+	and updwtmpx.
+	* login/updwtmp.c: Moved to ...
+	* sysdeps/generic/updwtmp.c: ... here.  (updwtmp): Generalized by
+	allowing file name transformation.
+	* sysdeps/gnu/updwtmp.c: New file.  Use generic implementation with
+	additional file name transformation.
+	* sysdeps/unix/sysv/linux/updwtmp.c: Likewise.
+	* login/utmp_file.c: Moved to ...
+	* sysdeps/generic/utmp_file.c: ... here.  (setutent_file):
+	Generalized by allowing file name transformation.  Do not
+	print error message.  Library functions should not print them.
+	Reported by Jim Meyering.
+	* sysdeps/gnu/utmp_file.c: New file.  Use generic implementation
+	with additional file name transformation.
+	* sysdeps/unix/sysv/linux/utmp_file.c: Likewise.
+	* sysdeps/gnu/Makefile [$(subdir)=login] (sysdep_routines): Add
+	setutxent, getutxent, endutxent, getutxid, getutxid, getutxline,
+	pututxline, utmpxname and updwtmpx.  (sysdep_headers): Add utmpx.h
+	and bits/utmpx.h.
+	* sysdeps/gnu/bits/utmpx.h [__USE_GNU] Include paths.h.
+	(_PATH_UTMPX): Define to _PATH_UTMP.  (_PATH_WTMPX): Define to
+	_PATH_WTMPX.  (RUN_LVL): Define only if __USE_GNU.  (ACCOUNTING):
+	Define if __USE_GNU.
+	* sysdeps/gnu/setutxent.c: New file.
+	* sysdeps/gnu/getutxent.c: New file.
+	* sysdeps/gnu/endutxent.c: New file.
+	* sysdeps/gnu/getutxid.c: New file.
+	* sysdeps/gnu/getutxline.c: New file.
+	* sysdeps/gnu/pututxline.c: New file.
+	* sysdeps/gnu/utmpxname.c: New file.
+	* sysdeps/gnu/updwtmpx.c: New file.
+	* sysdeps/unix/sysv/linux/paths.h (_PATH_UTMP_DB): Remove.
+	* sysdeps/generic/bits/utmpx.h: Remove.
+
+1998-04-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/wordexp-test.c (main): Initialize ifs element of ts for
+	~root test.
+
+1998-04-17 07:53  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/s_pread64.S: Fix a typo.
+
+1998-04-17 11:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/oldfileops.c (_IO_old_file_seekoff): Define temporary st
+	variable using _G_stat64.
+	* libio/fileops.c: Remove macro definition of fstat, it is in the
+	global header.
+	Reported by Thorsten Kukuk <kukuk@weber.uni-paderborn.de>.
+
+1998-04-17  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/strlen.S: New file, based on code by Matthew Wilcox
+	<willy@odie.barnet.ac.uk>.
+
+1998-04-16  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* inet/netinet/in.h (IN6_IS_ADDR_MC_NODELOCAL): New macro,
+	required by IPv6 Basic API.
+	(IN6_IS_ADDR_MC_LINKLOCAL): Likewise.
+	(IN6_IS_ADDR_MC_SITELOCAL): Likewise.
+	(IN6_IS_ADDR_MC_ORGLOCAL): Likewise.
+	(IN6_IS_ADDR_MC_GLOBAL): Likewise.
+
 1998-04-15 16:41  Ulrich Drepper  <drepper@cygnus.com>
 
 	Don't name internal representation since it might be different from

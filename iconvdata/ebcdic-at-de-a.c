@@ -1,5 +1,5 @@
 /* Conversion from and to EBCDIC-AT-DE-A.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,7 +18,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <wchar.h>
+#include <stdint.h>
+
+/* Get the conversion table.  */
 #include <ebcdic-at-de-a.h>
-#define NAME "EBCDIC-AT-DE-A"
+
+#define CHARSET_NAME	"EBCDIC-AT-DE-A"
+#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+
 #include <8bit-generic.c>

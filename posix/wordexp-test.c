@@ -150,6 +150,7 @@ struct test_case_struct
   };
 
 static int testit (struct test_case_struct *tc);
+static int tests;
 
 void
 command_line_test (const char *words)
@@ -204,16 +205,27 @@ main (int argc, char *argv[])
     {
       struct test_case_struct ts;
 
+      printf ("Test %d (~root): ", ++tests);
+      fflush (stdout);
+
       ts.retval = 0;
       ts.env = NULL;
       ts.words = "~root";
       ts.flags = 0;
       ts.wordc = 1;
       ts.wordv[0] = pw->pw_dir;
+      ts.ifs = IFS;
 
       if (testit (&ts))
-	++fail;
+	{
+	  printf ("FAILED\n");
+	  ++fail;
+	}
+      else
+	printf ("OK\n");
     }
+
+  puts ("tests completed, now cleaning up");
 
   /* Clean up */
   for (i = 0; globfile[i]; ++i)
@@ -225,6 +237,8 @@ main (int argc, char *argv[])
   chdir (cwd);
   rmdir (tmpdir);
 
+  printf ("tests failed: %d\n", fail);
+
   return fail != 0;
 }
 
@@ -232,7 +246,6 @@ main (int argc, char *argv[])
 static int
 testit (struct test_case_struct *tc)
 {
-  static int test;
   int retval;
   wordexp_t we;
   int bzzzt = 0;
@@ -248,7 +261,7 @@ testit (struct test_case_struct *tc)
   else
     unsetenv ("IFS");
 
-  printf ("Test %d: ", ++test);
+  printf ("Test %d (%s): ", ++tests, tc->words);
   retval = wordexp (tc->words, &we, tc->flags);
 
   if (retval != tc->retval || (retval == 0 && we.we_wordc != tc->wordc))

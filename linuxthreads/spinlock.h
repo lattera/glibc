@@ -15,9 +15,11 @@
 
 /* Spin locks */
 
+extern void __pthread_acquire(int * spinlock);
+
 static inline void acquire(int * spinlock)
 {
-  while (testandset(spinlock)) __sched_yield();
+  if (testandset(spinlock)) __pthread_acquire(spinlock);
 }
 
 static inline void release(int * spinlock)

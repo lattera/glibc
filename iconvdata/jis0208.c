@@ -1,5 +1,5 @@
 /* Mapping tables for JIS0208 handling.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <wchar.h>
+#include <stdint.h>
 
 #include "jis0208.h"
 
@@ -58,7 +58,7 @@
    printf ("\n");
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-const uint16_t jis0208_to_ucs[0x1e80] =
+const uint16_t __jis0208_to_ucs[0x1e80] =
 {
   [0x0000] = 0x3000, [0x0001] = 0x3001, [0x0002] = 0x3002, [0x0003] = 0xff0c,
   [0x0004] = 0xff0e, [0x0005] = 0x30fb, [0x0006] = 0xff1a, [0x0007] = 0xff1b,
@@ -1783,7 +1783,7 @@ const uint16_t jis0208_to_ucs[0x1e80] =
 };
 
 
-const char jisx0208_from_ucs4_lat1[256][2] =
+const char __jisx0208_from_ucs4_lat1[256][2] =
 {
   [0x005C] = "\x21\x40", [0x00A2] = "\x21\x71", [0x00A3] = "\x21\x72",
   [0x00A7] = "\x21\x78", [0x00A8] = "\x21\x2f", [0x00AC] = "\x22\x4c",
@@ -1814,7 +1814,7 @@ const char jisx0208_from_ucs4_lat1[256][2] =
    printf ("\n");
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-const char jisx0208_from_ucs4_greek[0xc1][2] =
+const char __jisx0208_from_ucs4_greek[0xc1][2] =
 {
   [0x00] = "\x26\x21", [0x01] = "\x26\x22", [0x02] = "\x26\x23",
   [0x03] = "\x26\x24", [0x04] = "\x26\x25", [0x05] = "\x26\x26",
@@ -1887,7 +1887,7 @@ const char jisx0208_from_ucs4_greek[0xc1][2] =
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-const struct jisx0208_ucs_idx jisx0208_from_ucs_idx[] =
+const struct jisx0208_ucs_idx __jisx0208_from_ucs_idx[] =
 {
   { start: 0x2010, end: 0x2026, idx:     0 },
   { start: 0x2030, end: 0x2033, idx:    23 },
@@ -2596,7 +2596,7 @@ const struct jisx0208_ucs_idx jisx0208_from_ucs_idx[] =
   { start: 0x9f9c, end: 0x9fa0, idx: 14109 },
   { start: 0xff01, end: 0xff5d, idx: 14114 },
   { start: 0xffe3, end: 0xffe5, idx: 14207 },
-  { start: 0 }
+  { start: 0xffff, end: 0xffff, idx:     0 }
 };
 
 
@@ -2637,7 +2637,7 @@ const struct jisx0208_ucs_idx jisx0208_from_ucs_idx[] =
    }
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-const char jisx0208_from_ucs_tab[14210][2] =
+const char __jisx0208_from_ucs_tab[14210][2] =
 {
   "\x20\x10", "\x00\x00", "\x00\x00", "\x00\x00", "\x00\x00", "\x20\x15",
   "\x20\x16", "\x00\x00", "\x20\x18", "\x20\x19", "\x00\x00", "\x00\x00",

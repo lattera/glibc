@@ -277,6 +277,22 @@ extern uint16_t htons __P ((uint16_t __hostshort));
 extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sock_in));
 
 
+
+#define IN6_IS_ADDR_MC_NODELOCAL(a) \
+	(IN6_IS_ADDR_MULTICAST(a) && ((((u_int8_t *) (a))[1] & 0xf) == 0x1))
+
+#define IN6_IS_ADDR_MC_LINKLOCAL(a) \
+	(IN6_IS_ADDR_MULTICAST(a) && ((((u_int8_t *) (a))[1] & 0xf) == 0x2))
+
+#define IN6_IS_ADDR_MC_SITELOCAL(a) \
+	(IN6_IS_ADDR_MULTICAST(a) && ((((u_int8_t *) (a))[1] & 0xf) == 0x5))
+
+#define IN6_IS_ADDR_MC_ORGLOCAL(a) \
+	(IN6_IS_ADDR_MULTICAST(a) && ((((u_int8_t *) (a))[1] & 0xf) == 0x8))
+
+#define IN6_IS_ADDR_MC_GLOBAL(a) \
+	(IN6_IS_ADDR_MULTICAST(a) && ((((u_int8_t *) (a))[1] & 0xf) == 0xe))
+
 /* IPv6 packet information.  */
 struct in6_pktinfo
   {

@@ -22,7 +22,7 @@
 
 subdir	:= login
 
-headers	:= utmp.h bits/utmp.h utmpx.h bits/utmpx.h lastlog.h pty.h
+headers	:= utmp.h bits/utmp.h lastlog.h pty.h
 
 routines := getutent getutent_r getutid getutline getutid_r getutline_r \
 	    utmp_file utmp_daemon utmpname updwtmp \
