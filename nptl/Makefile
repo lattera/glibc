@@ -150,6 +150,10 @@ CFLAGS-libc-cancellation.c = -fasynchronous-unwind-tables
 # function.
 CFLAGS-pthread_exit.c = -fexceptions
 
+# Among others, __pthread_unwind is forwarded.  This function must handle
+# exceptions.
+CFLAGS-forward.c = -fexceptions
+
 # The following are cancellation points.  Some of the functions can
 # block and therefore temporarily enable asynchronous cancellation.
 # Those must be compiled asynchronous unwind tables.

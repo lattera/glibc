@@ -1,3 +1,13 @@
+2003-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel4.c: Add tests for the socket and signal functions, pause.
+	Also test early cancellation before the thread reaches the cancellation
+	point.
+
+	* Makefile: Compile forward.c with exceptions.
+
+	* sysdeps/unix/sysv/linux/sleep.c: New file.
+
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add CFLAGS definition to compile function wrappers

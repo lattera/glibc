@@ -23,42 +23,57 @@
 #include <errno.h>
 #include <limits.h>
 #include <pthread.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/poll.h>
 #include <sys/select.h>
+#include <sys/socket.h>
 #include <sys/uio.h>
+#include <sys/un.h>
 #include <sys/wait.h>
+
+#include "pthreadP.h"
+
 
 /* The following interfaces are defined to be cancellation points but
    tests are not yet implemented:
 
-     accept()              aio_suspend()      clock_nanosleep()
-     close()               connect()          creat()
-     fcntl()               fsync()            getmsg()
-     getpmsg()             lockf()            mq_receive()
-     mq_send()             mq_timedreceive()  mq_timedsend()
+     aio_suspend()         clock_nanosleep()  close()
+     connect()             creat()            fsync()
      msgrcv()              msgsnd()           msync()
-                           open()             pause()
-                           pread()
-			   pthread_join()     pthread_testcancel()
-     putmsg()              putpmsg()          pwrite()
-                                              recv()
-     recvfrom()            recvmsg()
-     sem_timedwait()       sem_wait()         send()
-     sendmsg()             sendto()           sigpause()
-     sigsuspend()          sigtimedwait()     sigwait()
-     sigwaitinfo()
+     open()                pread()            pwrite()
+     sendmsg()             sendto()
      tcdrain()
 
    Since STREAMS are not supported in the standard Linux kernel there
-   is no need to test the STREAMS related functions.
+   is no need to test the STREAMS related functions.  This affects
+     getmsg()              getpmsg()          putmsg()
+     putpmsg()
+
+   lockf() and fcntl() are tested in tst-cancel16.
+
+   pthread_join() is tested in tst-join5.
+
+   pthread_testcancel()'s only purpose is to allow cancellation.  This
+   is tested in several places.
+
+   sem_wait() and sem_timedwait() are checked in tst-cancel1[2345] tests.
+
+   POSIX message queues aren't implemented yet.  This affects
+     mq_receive()    mq_send()   mq_timedreceive()  mq_timedsend()
 */
 
 /* Pipe descriptors.  */
 static int fds[2];
+
+/* Temporary file descriptor, to be closed after each round.  */
+static int tempfd = -1;
+static int tempfd2 = -1;
+/* Name of temporary file to be removed after each round.  */
+static char *tempfname;
 
 /* Often used barrier for two threads.  */
 static pthread_barrier_t b2;
@@ -77,7 +92,28 @@ cl (void *arg)
 static void *
 tf_read  (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[0];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
       printf ("%s: barrier_wait failed\n", __FUNCTION__);
@@ -87,7 +123,7 @@ tf_read  (void *arg)
   pthread_cleanup_push (cl, NULL);
 
   char buf[100];
-  ssize_t s = read (fds[0], buf, sizeof (buf));
+  ssize_t s = read (fd, buf, sizeof (buf));
 
   printf ("%s: read returns with %zd\n", __FUNCTION__, s);
 
@@ -100,7 +136,28 @@ tf_read  (void *arg)
 static void *
 tf_readv  (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[0];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
       printf ("%s: barrier_wait failed\n", __FUNCTION__);
@@ -111,7 +168,7 @@ tf_readv  (void *arg)
 
   char buf[100];
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
-  ssize_t s = readv (fds[0], iov, 1);
+  ssize_t s = readv (fd, iov, 1);
 
   printf ("%s: readv returns with %zd\n", __FUNCTION__, s);
 
@@ -124,7 +181,28 @@ tf_readv  (void *arg)
 static void *
 tf_write  (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[1];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
       printf ("%s: barrier_wait failed\n", __FUNCTION__);
@@ -135,7 +213,7 @@ tf_write  (void *arg)
 
   char buf[100000];
   memset (buf, '\0', sizeof (buf));
-  ssize_t s = write (fds[1], buf, sizeof (buf));
+  ssize_t s = write (fd, buf, sizeof (buf));
 
   printf ("%s: write returns with %zd\n", __FUNCTION__, s);
 
@@ -148,7 +226,28 @@ tf_write  (void *arg)
 static void *
 tf_writev  (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[1];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
       printf ("%s: barrier_wait failed\n", __FUNCTION__);
@@ -160,7 +259,7 @@ tf_writev  (void *arg)
   char buf[100000];
   memset (buf, '\0', sizeof (buf));
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
-  ssize_t s = writev (fds[1], iov, 1);
+  ssize_t s = writev (fd, iov, 1);
 
   printf ("%s: writev returns with %zd\n", __FUNCTION__, s);
 
@@ -180,9 +279,19 @@ tf_sleep (void *arg)
       exit (1);
     }
 
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
   pthread_cleanup_push (cl, NULL);
 
-  sleep (1000000);
+  sleep (arg == NULL ? 1000000 : 0);
 
   pthread_cleanup_pop (0);
 
@@ -202,9 +311,19 @@ tf_usleep (void *arg)
       exit (1);
     }
 
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
   pthread_cleanup_push (cl, NULL);
 
-  usleep ((useconds_t) ULONG_MAX);
+  usleep (arg == NULL ? (useconds_t) ULONG_MAX : 0);
 
   pthread_cleanup_pop (0);
 
@@ -224,9 +343,19 @@ tf_nanosleep (void *arg)
       exit (1);
     }
 
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
   pthread_cleanup_push (cl, NULL);
 
-  struct timespec ts = { .tv_sec = 10000000, .tv_nsec = 0 };
+  struct timespec ts = { .tv_sec = arg == NULL ? 10000000 : 0, .tv_nsec = 0 };
   while (nanosleep (&ts, &ts) != 0)
     continue;
 
@@ -241,7 +370,28 @@ tf_nanosleep (void *arg)
 static void *
 tf_select (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[0];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
       printf ("%s: barrier_wait failed\n", __FUNCTION__);
@@ -250,11 +400,11 @@ tf_select (void *arg)
 
   fd_set rfs;
   FD_ZERO (&rfs);
-  FD_SET (fds[0], &rfs);
+  FD_SET (fd, &rfs);
 
   pthread_cleanup_push (cl, NULL);
 
-  int s = select (fds[0] + 1, &rfs, NULL, NULL, NULL);
+  int s = select (fd + 1, &rfs, NULL, NULL, NULL);
 
   printf ("%s: select returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
@@ -268,7 +418,28 @@ tf_select (void *arg)
 static void *
 tf_pselect (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[0];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
       printf ("%s: barrier_wait failed\n", __FUNCTION__);
@@ -277,11 +448,11 @@ tf_pselect (void *arg)
 
   fd_set rfs;
   FD_ZERO (&rfs);
-  FD_SET (fds[0], &rfs);
+  FD_SET (fd, &rfs);
 
   pthread_cleanup_push (cl, NULL);
 
-  int s = pselect (fds[0] + 1, &rfs, NULL, NULL, NULL, NULL);
+  int s = pselect (fd + 1, &rfs, NULL, NULL, NULL, NULL);
 
   printf ("%s: pselect returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
@@ -295,14 +466,35 @@ tf_pselect (void *arg)
 static void *
 tf_poll (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
+  int fd;
+  int r;
+
+  if (arg == NULL)
+    fd = fds[0];
+  else
+    {
+      char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+      tempfd = fd = mkstemp (fname);
+      if (fd == -1)
+	printf ("%s: mkstemp failed\n", __FUNCTION__);
+      unlink (fname);
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
       printf ("%s: barrier_wait failed\n", __FUNCTION__);
       exit (1);
     }
 
-  struct pollfd rfs[1] = { [0] = { .fd = fds[0], .events = POLLIN } };
+  struct pollfd rfs[1] = { [0] = { .fd = fd, .events = POLLIN } };
 
   pthread_cleanup_push (cl, NULL);
 
@@ -320,13 +512,6 @@ tf_poll (void *arg)
 static void *
 tf_wait (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: barrier_wait failed\n", __FUNCTION__);
-      exit (1);
-    }
-
   pid_t pid = fork ();
   if (pid == -1)
     {
@@ -337,8 +522,31 @@ tf_wait (void *arg)
   if (pid == 0)
     {
       /* Make the program disappear after a while.  */
-      sleep (10);
+      if (arg == NULL)
+	sleep (10);
       exit (0);
+    }
+
+  int r;
+  if (arg != NULL)
+    {
+      struct timespec  ts = { .tv_sec = 0, .tv_nsec = 100000000 };
+      while (nanosleep (&ts, &ts) != 0)
+	continue;
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
     }
 
   pthread_cleanup_push (cl, NULL);
@@ -357,12 +565,6 @@ tf_wait (void *arg)
 static void *
 tf_waitpid (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: barrier_wait failed\n", __FUNCTION__);
-      exit (1);
-    }
 
   pid_t pid = fork ();
   if (pid == -1)
@@ -374,11 +576,34 @@ tf_waitpid (void *arg)
   if (pid == 0)
     {
       /* Make the program disappear after a while.  */
-      sleep (10);
+      if (arg == NULL)
+	sleep (10);
       exit (0);
     }
 
-  pthread_cleanup_push (cl, NULL);
+  int r;
+  if (arg != NULL)
+    {
+      struct timespec  ts = { .tv_sec = 0, .tv_nsec = 100000000 };
+      while (nanosleep (&ts, &ts) != 0)
+	continue;
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+ pthread_cleanup_push (cl, NULL);
 
   int s = waitpid (-1, NULL, 0);
 
@@ -394,13 +619,6 @@ tf_waitpid (void *arg)
 static void *
 tf_waitid (void *arg)
 {
-  int r = pthread_barrier_wait (&b2);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: barrier_wait failed\n", __FUNCTION__);
-      exit (1);
-    }
-
   pid_t pid = fork ();
   if (pid == -1)
     {
@@ -411,8 +629,31 @@ tf_waitid (void *arg)
   if (pid == 0)
     {
       /* Make the program disappear after a while.  */
-      sleep (10);
+      if (arg == NULL)
+	sleep (10);
       exit (0);
+    }
+
+  int r;
+  if (arg != NULL)
+    {
+      struct timespec  ts = { .tv_sec = 0, .tv_nsec = 100000000 };
+      while (nanosleep (&ts, &ts) != 0)
+	continue;
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
     }
 
   pthread_cleanup_push (cl, NULL);
@@ -429,27 +670,665 @@ tf_waitid (void *arg)
 }
 
 
+static void *
+tf_sigpause (void *arg)
+{
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  /* Just for fun block the cancellation signal.  We need to use
+     __xpg_sigpause since otherwise we will get the BSD version.  */
+  __xpg_sigpause (SIGCANCEL);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: sigpause returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_sigsuspend (void *arg)
+{
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  /* Just for fun block all signals.  */
+  sigset_t mask;
+  sigfillset (&mask);
+  sigsuspend (&mask);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: sigsuspend returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_sigwait (void *arg)
+{
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  /* Block SIGUSR1.  */
+  sigset_t mask;
+  sigaddset (&mask, SIGUSR1);
+  if (pthread_sigmask (SIG_BLOCK, &mask, NULL) != 0)
+    {
+      printf ("%s: pthread_sigmask failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  /* Wait for SIGUSR1.  */
+  int sig;
+  sigwait (&mask, &sig);
+
+  printf ("%s: sigwait returned with signal %d\n", __FUNCTION__, sig);
+
+  pthread_cleanup_pop (0);
+
+  exit (1);
+}
+
+
+static void *
+tf_sigwaitinfo (void *arg)
+{
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  /* Block SIGUSR1.  */
+  sigset_t mask;
+  sigaddset (&mask, SIGUSR1);
+  if (pthread_sigmask (SIG_BLOCK, &mask, NULL) != 0)
+    {
+      printf ("%s: pthread_sigmask failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  /* Wait for SIGUSR1.  */
+  siginfo_t info;
+  sigwaitinfo (&mask, &info);
+
+  printf ("%s: sigwaitinfo returned with signal %d\n", __FUNCTION__,
+	  info.si_signo);
+
+  pthread_cleanup_pop (0);
+
+  exit (1);
+}
+
+
+static void *
+tf_sigtimedwait (void *arg)
+{
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  /* Block SIGUSR1.  */
+  sigset_t mask;
+  sigaddset (&mask, SIGUSR1);
+  if (pthread_sigmask (SIG_BLOCK, &mask, NULL) != 0)
+    {
+      printf ("%s: pthread_sigmask failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  /* Wait for SIGUSR1.  */
+  siginfo_t info;
+  struct timespec ts = { .tv_sec = 60, .tv_nsec = 0 };
+  sigtimedwait (&mask, &info, &ts);
+
+  printf ("%s: sigtimedwait returned with signal %d\n", __FUNCTION__,
+	  info.si_signo);
+
+  pthread_cleanup_pop (0);
+
+  exit (1);
+}
+
+
+static void *
+tf_pause (void *arg)
+{
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  pause ();
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: pause returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_accept (void *arg)
+{
+  struct sockaddr_un sun;
+  /* To test a non-blocking accept call we make the call file by using
+     a datagrame socket.  */
+  int pf = arg == NULL ? SOCK_STREAM : SOCK_DGRAM;
+
+  tempfd = socket (AF_UNIX, pf, 0);
+  if (tempfd == -1)
+    {
+      printf ("%s: socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int tries = 0;
+  do
+    {
+      if (++tries > 10)
+	{
+	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	}
+
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      if (mktemp (sun.sun_path) == NULL)
+	{
+	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
+	  exit (1);
+	}
+
+      sun.sun_family = AF_UNIX;
+    }
+  while (bind (tempfd, (struct sockaddr *) &sun,
+	       offsetof (struct sockaddr_un, sun_path)
+	       + strlen (sun.sun_path) + 1) != 0);
+
+  unlink (sun.sun_path);
+
+  listen (tempfd, 5);
+
+  socklen_t len = sizeof (sun);
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  accept (tempfd, (struct sockaddr *) &sun, &len);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: accept returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_send (void *arg)
+{
+  struct sockaddr_un sun;
+
+  tempfd = socket (AF_UNIX, SOCK_STREAM, 0);
+  if (tempfd == -1)
+    {
+      printf ("%s: first socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int tries = 0;
+  do
+    {
+      if (++tries > 10)
+	{
+	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	}
+
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      if (mktemp (sun.sun_path) == NULL)
+	{
+	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
+	  exit (1);
+	}
+
+      sun.sun_family = AF_UNIX;
+    }
+  while (bind (tempfd, (struct sockaddr *) &sun,
+	       offsetof (struct sockaddr_un, sun_path)
+	       + strlen (sun.sun_path) + 1) != 0);
+
+  listen (tempfd, 5);
+
+  tempfd2 = socket (AF_UNIX, SOCK_STREAM, 0);
+  if (tempfd2 == -1)
+    {
+      printf ("%s: second socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (connect (tempfd2, (struct sockaddr *) &sun, sizeof (sun)) != 0)
+    {
+      printf ("%s: connect failed\n", __FUNCTION__);
+      exit(1);
+    }
+
+  unlink (sun.sun_path);
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  /* Very large block, so that the send call blocks.  */
+  char mem[700000];
+
+  send (tempfd2, mem, arg == NULL ? sizeof (mem) : 1, 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: send returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_recv (void *arg)
+{
+  struct sockaddr_un sun;
+
+  tempfd = socket (AF_UNIX, SOCK_STREAM, 0);
+  if (tempfd == -1)
+    {
+      printf ("%s: first socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int tries = 0;
+  do
+    {
+      if (++tries > 10)
+	{
+	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	}
+
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      if (mktemp (sun.sun_path) == NULL)
+	{
+	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
+	  exit (1);
+	}
+
+      sun.sun_family = AF_UNIX;
+    }
+  while (bind (tempfd, (struct sockaddr *) &sun,
+	       offsetof (struct sockaddr_un, sun_path)
+	       + strlen (sun.sun_path) + 1) != 0);
+
+  listen (tempfd, 5);
+
+  tempfd2 = socket (AF_UNIX, SOCK_STREAM, 0);
+  if (tempfd2 == -1)
+    {
+      printf ("%s: second socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (connect (tempfd2, (struct sockaddr *) &sun, sizeof (sun)) != 0)
+    {
+      printf ("%s: connect failed\n", __FUNCTION__);
+      exit(1);
+    }
+
+  unlink (sun.sun_path);
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  char mem[70];
+
+  recv (tempfd2, mem, arg == NULL ? sizeof (mem) : 0, 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: recv returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_recvfrom (void *arg)
+{
+  struct sockaddr_un sun;
+
+  tempfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+  if (tempfd == -1)
+    {
+      printf ("%s: first socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int tries = 0;
+  do
+    {
+      if (++tries > 10)
+	{
+	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	}
+
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      if (mktemp (sun.sun_path) == NULL)
+	{
+	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
+	  exit (1);
+	}
+
+      sun.sun_family = AF_UNIX;
+    }
+  while (bind (tempfd, (struct sockaddr *) &sun,
+	       offsetof (struct sockaddr_un, sun_path)
+	       + strlen (sun.sun_path) + 1) != 0);
+
+  tempfname = strdup (sun.sun_path);
+
+  tempfd2 = socket (AF_UNIX, SOCK_DGRAM, 0);
+  if (tempfd2 == -1)
+    {
+      printf ("%s: second socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  char mem[70];
+  socklen_t len = sizeof (sun);
+
+  recvfrom (tempfd2, mem, arg == NULL ? sizeof (mem) : 0, 0,
+	    (struct sockaddr *) &sun, &len);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: recvfrom returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_recvmsg (void *arg)
+{
+  struct sockaddr_un sun;
+
+  tempfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+  if (tempfd == -1)
+    {
+      printf ("%s: first socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int tries = 0;
+  do
+    {
+      if (++tries > 10)
+	{
+	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	}
+
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      if (mktemp (sun.sun_path) == NULL)
+	{
+	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
+	  exit (1);
+	}
+
+      sun.sun_family = AF_UNIX;
+    }
+  while (bind (tempfd, (struct sockaddr *) &sun,
+	       offsetof (struct sockaddr_un, sun_path)
+	       + strlen (sun.sun_path) + 1) != 0);
+
+  tempfname = strdup (sun.sun_path);
+
+  tempfd2 = socket (AF_UNIX, SOCK_DGRAM, 0);
+  if (tempfd2 == -1)
+    {
+      printf ("%s: second socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  char mem[70];
+  struct iovec iov[1];
+  iov[0].iov_base = mem;
+  iov[0].iov_len = arg == NULL ? sizeof (mem) : 0;
+
+  struct msghdr m;
+  m.msg_name = &sun;
+  m.msg_namelen = sizeof (sun);
+  m.msg_iov = iov;
+  m.msg_iovlen = 1;
+  m.msg_control = NULL;
+  m.msg_controllen = 0;
+
+  recvmsg (tempfd2, &m, 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: recvmsg returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
 static struct
 {
   const char *name;
   void *(*tf) (void *);
   int nb;
+  int only_early;
 } tests[] =
 {
-#define ADD_TEST(name, nbar) { #name, tf_##name, nbar }
-  ADD_TEST (read, 2),
-  ADD_TEST (readv, 2),
-  ADD_TEST (select, 2),
-  ADD_TEST (pselect, 2),
-  ADD_TEST (poll, 2),
-  ADD_TEST (write, 2),
-  ADD_TEST (writev, 2),
-  ADD_TEST (sleep, 2),
-  ADD_TEST (usleep, 2),
-  ADD_TEST (nanosleep, 2),
-  ADD_TEST (wait, 2),
-  ADD_TEST (waitid, 2),
-  ADD_TEST (waitpid, 2),
+#define ADD_TEST(name, nbar, early) { #name, tf_##name, nbar, early }
+  ADD_TEST (read, 2, 0),
+  ADD_TEST (readv, 2, 0),
+  ADD_TEST (select, 2, 0),
+  ADD_TEST (pselect, 2, 0),
+  ADD_TEST (poll, 2, 0),
+  ADD_TEST (write, 2, 0),
+  ADD_TEST (writev, 2, 0),
+  ADD_TEST (sleep, 2, 0),
+  ADD_TEST (usleep, 2, 0),
+  ADD_TEST (nanosleep, 2, 0),
+  ADD_TEST (wait, 2, 0),
+  ADD_TEST (waitid, 2, 0),
+  ADD_TEST (waitpid, 2, 0),
+  ADD_TEST (sigpause, 2, 0),
+  ADD_TEST (sigsuspend, 2, 0),
+  ADD_TEST (sigwait, 2, 0),
+  ADD_TEST (sigwaitinfo, 2, 0),
+  ADD_TEST (sigtimedwait, 2, 0),
+  ADD_TEST (pause, 2, 0),
+  ADD_TEST (accept, 2, 0),
+  ADD_TEST (send, 2, 0),
+  ADD_TEST (recv, 2, 0),
+  ADD_TEST (recvfrom, 2, 0),
+  ADD_TEST (recvmsg, 2, 0),
 };
 #define ntest_tf (sizeof (tests) / sizeof (tests[0]))
 
@@ -467,6 +1346,9 @@ do_test (void)
   size_t cnt;
   for (cnt = 0; cnt < ntest_tf; ++cnt)
     {
+      if (tests[cnt].only_early)
+	continue;
+
       if (pthread_barrier_init (&b2, NULL, tests[cnt].nb) != 0)
 	{
 	  puts ("b2 init failed");
@@ -538,7 +1420,113 @@ do_test (void)
 	  continue;
 	}
 
-      printf ("test of '%s' successful\n", tests[cnt].name);
+      printf ("in-time cancel test of '%s' successful\n", tests[cnt].name);
+
+      if (tempfd != -1)
+	{
+	  close (tempfd);
+	  tempfd = -1;
+	}
+      if (tempfd2 != -1)
+	{
+	  close (tempfd2);
+	  tempfd2 = -1;
+	}
+      free (tempfname);
+      tempfname = NULL;
+    }
+
+  for (cnt = 0; cnt < ntest_tf; ++cnt)
+    {
+      if (pthread_barrier_init (&b2, NULL, tests[cnt].nb) != 0)
+	{
+	  puts ("b2 init failed");
+	  exit (1);
+	}
+
+      /* Reset the counter for the cleanup handler.  */
+      cl_called = 0;
+
+      pthread_t th;
+      if (pthread_create (&th, NULL, tests[cnt].tf, (void *) 1l) != 0)
+	{
+	  printf ("create for '%s' test failed\n", tests[cnt].name);
+	  result = 1;
+	  continue;
+	}
+
+      int r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  result = 1;
+	  continue;
+	}
+
+      if (pthread_cancel (th) != 0)
+	{
+	  printf ("cancel for '%s' failed\n", tests[cnt].name);
+	  result = 1;
+	  continue;
+	}
+
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  result = 1;
+	  continue;
+	}
+
+      void *status;
+      if (pthread_join (th, &status) != 0)
+	{
+	  printf ("join for '%s' failed\n", tests[cnt].name);
+	  result = 1;
+	  continue;
+	}
+      if (status != PTHREAD_CANCELED)
+	{
+	  printf ("thread for '%s' not canceled\n", tests[cnt].name);
+	  result = 1;
+	  continue;
+	}
+
+      if (pthread_barrier_destroy (&b2) != 0)
+	{
+	  puts ("barrier_destroy failed");
+	  result = 1;
+	  continue;
+	}
+
+      if (cl_called == 0)
+	{
+	  printf ("cleanup handler not called for '%s'\n", tests[cnt].name);
+	  result = 1;
+	  continue;
+	}
+      if (cl_called > 1)
+	{
+	  printf ("cleanup handler called more than once for '%s'\n",
+		  tests[cnt].name);
+	  result = 1;
+	  continue;
+	}
+
+      printf ("early cancel test of '%s' successful\n", tests[cnt].name);
+
+      if (tempfd != -1)
+	{
+	  close (tempfd);
+	  tempfd = -1;
+	}
+      if (tempfd2 != -1)
+	{
+	  close (tempfd2);
+	  tempfd2 = -1;
+	}
+      free (tempfname);
+      tempfname = NULL;
     }
 
   return result;
