@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1991-2000, 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,9 @@ routines	:= opendir closedir readdir readdir_r rewinddir \
 distribute := dirstream.h
 
 tests	   := list tst-seekdir opendir-tst1 bug-readdir1
+
+CFLAGS-scandir.c = $(uses-callbacks)
+CFLAGS-scandir64.c = $(uses-callbacks)
 
 include ../Rules
 

@@ -75,8 +75,8 @@ gpl2lgpl := error.c error.h
 
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch
 
-CFLAGS-tsearch.c = $(exceptions)
-CFLAGS-lsearch.c = $(exceptions)
+CFLAGS-tsearch.c = $(uses-callbacks)
+CFLAGS-lsearch.c = $(uses-callbacks)
 CFLAGS-pselect.c = -fexceptions
 CFLAGS-readv.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-writev.c = -fexceptions -fasynchronous-unwind-tables

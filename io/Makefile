@@ -63,7 +63,6 @@ distribute	:= ftwtest-sh
 
 include ../Rules
 
-CFLAGS-fts.c = -Wno-uninitialized
 CFLAGS-fcntl.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-poll.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-lockf.c = -fexceptions
@@ -71,9 +70,9 @@ CFLAGS-statfs.c = -fexceptions
 CFLAGS-fstatfs.c = -fexceptions
 CFLAGS-statvfs.c = -fexceptions
 CFLAGS-fstatvfs.c = -fexceptions
-CFLAGS-fts.c = -fexceptions
-CFLAGS-ftw.c = -fexceptions
-CFLAGS-ftw64.c = -fexceptions
+CFLAGS-fts.c = -Wno-uninitialized $(uses-callbacks) -fexceptions
+CFLAGS-ftw.c = $(uses-callbacks) -fexceptions
+CFLAGS-ftw64.c = $(uses-callbacks) -fexceptions
 CFLAGS-lockf.c = -fexceptions
 CFLAGS-posix_fallocate.c = -fexceptions
 CFLAGS-posix_fallocate64.c = -fexceptions

@@ -136,8 +136,8 @@ CFLAGS-spawn.c = -fexceptions
 CFLAGS-spawnp.c = -fexceptions
 CFLAGS-spawni.c = -fexceptions
 CFLAGS-pause.c = -fexceptions
-CFLAGS-glob.c = -fexceptions
-CFLAGS-glob64.c = -fexceptions
+CFLAGS-glob.c = $(uses-callbacks) -fexceptions
+CFLAGS-glob64.c = $(uses-callbacks) -fexceptions
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour

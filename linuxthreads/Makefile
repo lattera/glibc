@@ -184,7 +184,8 @@ CFLAGS-pthread.c += -D__NO_WEAK_PTHREAD_ALIASES $(znodelete-$(have-z-nodelete))
 CFLAGS-ptfork.c += -D__NO_WEAK_PTHREAD_ALIASES
 CFLAGS-cancel.c += -D__NO_WEAK_PTHREAD_ALIASES -D_RPC_THREAD_SAFE_
 CFLAGS-unload.c += -DPREFIX=\"$(objpfx)\"
-CFLAGS-sighandler.c += $(exceptions)
+CFLAGS-mutex.c += $(uses-callbacks)
+CFLAGS-sighandler.c += $(uses-callbacks)
 
 ifeq (yes,$(versioning))
 -include $(common-objpfx)tls.make

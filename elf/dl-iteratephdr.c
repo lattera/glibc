@@ -23,6 +23,12 @@
 #include <stddef.h>
 #include <bits/libc-lock.h>
 
+static void
+cancel_handler (void *arg __attribute__((unused)))
+{
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+}
+
 int
 __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 				    size_t size, void *data), void *data)
@@ -33,6 +39,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 
   /* Make sure we are alone.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
+  __libc_cleanup_push (cancel_handler, 0);
 
   for (l = GL(dl_loaded); l != NULL; l = l->l_next)
     {
@@ -46,6 +53,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
     }
 
   /* Release the lock.  */
+  __libc_cleanup_pop (0);
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   return ret;

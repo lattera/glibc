@@ -79,9 +79,9 @@ distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h
 
 generated += isomac isomac.out
 
-CFLAGS-bsearch.c = $(exceptions)
-CFLAGS-msort.c = $(exceptions)
-CFLAGS-qsort.c = $(exceptions)
+CFLAGS-bsearch.c = $(uses-callbacks)
+CFLAGS-msort.c = $(uses-callbacks)
+CFLAGS-qsort.c = $(uses-callbacks)
 CFLAGS-system.c = -fexceptions
 CFLAGS-fmtmsg.c = -fexceptions
 

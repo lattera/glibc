@@ -84,6 +84,8 @@ distribute	:= rtld-Rules \
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-dl-iterate-phdr.c = $(uses-callbacks)
+CFLAGS-dl-iterate-phdr-static.c = $(uses-callbacks)
 
 include ../Makeconfig
 

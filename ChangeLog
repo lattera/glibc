@@ -1,3 +1,25 @@
+2003-09-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* argp/argp.h (argp_parse, __argp_parse): Remove __THROW.
+	* argp/Makefile (CFLAGS-argp-help.c, CFLAGS-argp-parse.c): Add
+	$(uses-callbacks).
+	* dirent/Makefile (CFLAGS-scandir.c, CFLAGS-scandir64.c): Likewise.
+	* elf/Makefile (CFLAGS-dl-iterate-phdr.c,
+	CFLAGS-dl-iterate-phdr-static.c): Add $(uses-callbacks).
+	* elf/dl-iteratephdr.c (cancel_handler): New function.
+	(__dl_iterate_phdr): Add __libc_cleanup_{push,pop}.
+	* elf/link.h (dl_iterate_phdr): Remove __THROW.
+	* io/Makefile (CFLAGS-fts.c): Merge into one assignment.
+	Add $(uses-callbacks).
+	(CFLAGS-ftw.c, CFLAGS-ftw64.c): Add $(uses-callbacks).
+	* misc/Makefile (CFLAGS-tsearch.c, CFLAGS-lsearch.c): Change
+	$(exceptions) to $(uses-callbacks).
+	* Makeconfig (uses-callbacks): Set to $(exceptions).
+	* posix/Makefile (CFLAGS-glob.c, CFLAGS-glob64.c): Add
+	$(uses-callbacks).
+	* stdlib/Makefile (CFLAGS-bsearch.c, CFLAGS-msort.c, CFLAGS-qsort.c):
+	Likewise.
+
 2003-09-15  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/setjmp.c: Add hidden_def.

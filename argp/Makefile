@@ -28,7 +28,8 @@ routines	= $(addprefix argp-, ba fmtstream fs-xinl help parse pv \
 
 tests		= argp-test tst-argp1
 
-CFLAGS-argp-help.c = -fexceptions
+CFLAGS-argp-help.c = $(uses-callbacks) -fexceptions
+CFLAGS-argp-parse.c = $(uses-callbacks)
 CFLAGS-argp-fmtstream.c = -fexceptions
 
 include ../Rules

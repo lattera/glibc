@@ -106,7 +106,7 @@ __BEGIN_DECLS
 
 extern int dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 					     size_t size, void *data),
-			    void *data) __THROW;
+			    void *data);
 
 __END_DECLS
 

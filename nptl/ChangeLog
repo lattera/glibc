@@ -1,3 +1,7 @@
+2003-09-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (CFLAGS-pthread_once.c): Add $(uses-callbacks).
+
 2003-09-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_mutex_lock.c: Minor code rearrangements.

@@ -83,6 +83,9 @@ export sysdep_dir := $(sysdep_dir)
 # Get the values defined by options to `configure'.
 include $(common-objpfx)config.make
 
+# What flags to give to sources which call user provided callbacks
+uses-callbacks = $(exceptions)
+
 # We have a special subdir for each binary format.
 # For now, only ELF is fully supported.
 ifeq ($(elf),yes)
