@@ -106,6 +106,7 @@ __register_atfork (prepare, parent, child, dso_handle)
 
   return newp == NULL ? ENOMEM : 0;
 }
+libc_hidden_def (__register_atfork)
 
 
 libc_freeres_fn (free_mem)

@@ -115,7 +115,7 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6)
     }
   while (! done);
 
-  close (fd);
+  __close (fd);
 
   return 0;
 }
@@ -153,7 +153,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6)
 	return;
 
       if (fd >= 0)
-	close (fd);
+	__close (fd);
 
 #if __ASSUME_NETLINK_SUPPORT == 0
       /* Remember that there is no netlink support.  */

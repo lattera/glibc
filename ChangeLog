@@ -1,5 +1,12 @@
 2003-06-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/check_pf.c (__check_pf): Use __close,
+	not close.
+
+	* inet/inet6_option.c (inet6_option_alloc): Add libc_hidden_def.
+	* include/netinet/in.h (inet6_option_alloc): Add libc_hidden_proto
+	definition.
+
 	* inet/netinet/ip6.h (IP6OPT_PAD1, IP6OPT_PADn): Define.
 	* inet/netinet/in.h: Add prototypes for inet6_option_* functions.
 	* inet/Makefile (routines): Add inet6_option.

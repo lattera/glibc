@@ -54,3 +54,4 @@ extern int __register_atfork (void (*__prepare) (void),
 			      void (*__parent) (void),
 			      void (*__child) (void),
 			      void *dso_handle);
+libc_hidden_proto (__register_atfork)

@@ -214,6 +214,7 @@ inet6_option_alloc (cmsg, datalen, multx, plusy)
 
   return result;
 }
+libc_hidden_def (inet6_option_alloc)
 
 
 /* RFC 2292, 6.3.5
