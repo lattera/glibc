@@ -1,3 +1,15 @@
+2001-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile: Add rules to build ISO-IR-209 and MAC-SAMI.
+	* iconvdata/iso-ir-209.c: New file.
+	* iconvdata/mac-sami.c: New file.
+	* iconvdata/gconv-modules: Add entries for ISO-IR-209 and MAC-SAMI.
+	* iconvdata/tst-tables.sh: Likewise.
+
+	* posix/getopt.c: Remove store_args_and_env which is not needed since
+	USE_NONOPTION_FLAGS is undefined anyhow.  Use __libc_argc and
+	__libc_argv variables.
+
 2001-08-12  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/clock.c: New file.
@@ -54,7 +66,7 @@
 	only if consider_profiling is != 0, not if _dl_profile != NULL.
 
 	* sysdeps/generic/dl-environ.c (_dl_next_ld_env_entry): Optimize a bit.
-	Now returns pointer to first character set "LD_".
+	Now returns pointer to first character after "LD_".
 	* elf/rtld.c (process_envvars): Adjust for change above.
 	* sysdeps/unix/sysv/linux/dl-librecon.h (EXTRA_LD_ENVVARS): Likewise.
 	* sysdeps/unix/sysv/linux/i386/dl-librecon.h (EXTRA_LD_ENVVARS):

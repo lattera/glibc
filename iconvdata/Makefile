@@ -48,7 +48,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK ISIRI-3342 GBGBK	 \
 	   ISO-2022-CN libISOIR165 UTF-16 UNICODE UTF-32 UTF-7 BIG5HKSCS \
 	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5 CP10007 KOI8-T		 \
-	   GEORGIAN-PS GEORGIAN-ACADEMY
+	   GEORGIAN-PS GEORGIAN-ACADEMY ISO-IR-209 MAC-SAMI
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -139,7 +139,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      iso8859-16.c utf-16.c unicode.c utf-32.c utf-7.c big5hkscs.c  \
 	      iso-ir-165.c iso-ir-165.h gb18030.c iso-2022-cn-ext.c	    \
 	      ibm932.c ibm932.h ibm943.c ibm943.h gbbig5.c cp10007.c	    \
-	      koi8-t.c georgian-ps.c georgian-academy.c
+	      koi8-t.c georgian-ps.c georgian-academy.c iso-ir-209.c	    \
+	      mac-sami.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -179,7 +180,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso_5428 iso_10367-box mac-is nats-dano nats-sefi  \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
-			georgian-ps georgian-academy
+			georgian-ps georgian-academy iso-ir-209 mac-sami
 
 gen-special-modules := iso8859-7jp
 

@@ -1442,3 +1442,11 @@ module	INTERNAL		GEORGIAN-PS//		GEORGIAN-PS	1
 #	from			to			module		cost
 module	GEORGIAN-ACADEMY//	INTERNAL		GEORGIAN-ACADEMY 1
 module	INTERNAL		GEORGIAN-ACADEMY//	GEORGIAN-ACADEMY 1
+
+#	from			to			module		cost
+module	ISO-IR-209//		INTERNAL		ISO-IR-209	1
+module	INTERNAL		ISO-IR-209//		ISO-IR-209	1
+
+#	from			to			module		cost
+module	MAC-SAMI//		INTERNAL		MAC-SAMI	1
+module	INTERNAL		MAC-SAMI//		MAC-SAMI	1
