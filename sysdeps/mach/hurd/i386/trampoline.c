@@ -44,7 +44,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 			volatile int rpc_wait,
 			struct machine_thread_all_state *state)
 {
-  __label__ trampoline, rpc_wait_trampoline;
+  __label__ trampoline, rpc_wait_trampoline, firewall;
   void *volatile sigsp;
   struct sigcontext *scp;
   struct 
@@ -143,6 +143,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       stackframe->sigcode = sigcode;
       stackframe->scp = stackframe->return_scp = scp = &stackframe->ctx;
       stackframe->sigreturn_addr = &__sigreturn;
+      stackframe->sigreturn_returns_here = &&firewall; /* Crash on return.  */
 
       /* Set up the sigcontext from the current state of the thread.  */
 
@@ -254,6 +255,9 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	and a copy of SCP for __sigreturn's argument.  "Return" to calling
 	__sigreturn (SCP); this call never returns.  */
      "ret");
+
+ firewall:
+  asm volatile ("hlt");
 
   /* NOTREACHED */
   return NULL;
