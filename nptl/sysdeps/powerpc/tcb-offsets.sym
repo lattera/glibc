@@ -1,0 +1,13 @@
+#include <sysdep.h>
+#include <tls.h>
+
+--
+
+-- Abuse tls.h macros to derive offsets relative to the thread register.
+# undef __thread_register
+# define __thread_register	((void *) 0)
+# define thread_offsetof(mem)	((void *) &THREAD_SELF->mem - (void *) 0)
+
+#if TLS_MULTIPLE_THREADS_IN_TCB
+MULTIPLE_THREADS_OFFSET		thread_offsetof (header.multiple_threads)
+#endif
