@@ -1,3 +1,9 @@
+2000-06-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_dl.c (do_release_shlib): Don't reset reference
+	counter for the object we are releasing, just decrement it.
+	Patch by Akira Higuchi <a-higuti@math.sci.hokudai.ac.jp>.
+
 2000-06-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h: Only inline sinh, cosh and tanh

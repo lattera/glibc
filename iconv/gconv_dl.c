@@ -1,5 +1,5 @@
 /* Handle loading/unloading of shared object for transformation.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <inttypes.h>
 #include <search.h>
@@ -154,9 +155,12 @@ do_release_shlib (const void *nodep, VISIT value, int level)
     return;
 
   if (obj == release_handle)
-    /* This is the object we want to unload.  Now set the release
-       counter to zero.  */
-    obj->counter = 0;
+    {
+      /* This is the object we want to unload.  Now decrement the
+	 reference counter.  */
+      assert (obj->counter > 0);
+      --obj->counter;
+    }
   else if (obj->counter <= 0)
     {
       if (--obj->counter < -TRIES_BEFORE_UNLOAD && obj->handle != NULL)
