@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995,96,97,98,99,2000,2001,02 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,01,02,03 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,6 @@
 #include <fpu_control.h>
 
 extern void __mach_init (void);
-extern void __libc_init (int, char **, char **);
 extern void __init_misc (int, char **, char **);
 #ifdef USE_NONOPTION_FLAGS
 extern void __getopt_clean_environment (char **);
@@ -86,7 +85,6 @@ posixland_init (int argc, char **argv, char **envp)
   _dl_non_dynamic_init ();
 #endif
   __init_misc (argc, argv, envp);
-  __libc_init (argc, argv, envp);
 
 #ifdef USE_NONOPTION_FLAGS
   /* This is a hack to make the special getopt in GNU libc working.  */
