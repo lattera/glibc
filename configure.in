@@ -1530,6 +1530,7 @@ cat > conftest.s <<EOF
 func:
         .cfi_startproc
 	.cfi_remember_state
+	.cfi_rel_offset 1, 0
         .cfi_endproc
 EOF
 if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then

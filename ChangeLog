@@ -1,3 +1,7 @@
+2003-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Also check for .cfi_rel_offset pseudo-op.
+
 2003-07-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/prof-freq.c (__profile_frequency): Fix a

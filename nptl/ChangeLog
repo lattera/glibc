@@ -1,5 +1,7 @@
 2003-07-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/configure.in: Require CFI directives.
+
 	* sysdeps/pthread/librt-cancellation.c (__pthread_unwind): Remove
 	definition.
 	* pthreadP.h (__pthread_unwind): Add hidden_proto if used in
