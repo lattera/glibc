@@ -1,5 +1,8 @@
 Fri Apr  5 17:43:41 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/fork.c (__fork): Don't leak send-rights to the
+	child's proc port in the parent.
+
 	* sysdeps/mach/hurd/i386/sigreturn.c (__sigreturn): Store
 	MACH_PORT_DEAD in the thread reply-port variable before destroying
 	the signal handler's reply port to avoid infinite recursion.
