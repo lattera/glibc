@@ -1,3 +1,10 @@
+2001-04-19  Andreas Jaeger  <aj@suse.de>
+
+	* po/el.po: Add comment explaining what's broken.
+
+	* po/Makefile (BROKEN_LINGUAS): New.
+	(ALL_LINGUAS): Don't add broken languages.
+
 2001-04-19  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/mlock.c: New file.
