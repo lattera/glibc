@@ -1,3 +1,80 @@
+1997-06-15 00:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Define libc-map here.
+	* Makefile: And remove definition here.
+	* Makerules (load-map-file): Handle case where map file is in
+	other directory.
+	(build-shlib): Likewise.
+
+	* libc.map: Add more symbols.
+	* resolv/libresolv.map: Likewise.
+
+	* db/libdb.map: Add __dbopen.  Patch by HJ Lu.
+
+	* libio/stdio.h: Remove "optmizations" for vfscanf and vsscanf.
+
+	* locale/programs/localedef.c: Add normalize_codeset function.  We
+	don't want to use the _nl_normalize_codeset functions from libc.
+
+	* sysdeps/libm-i387/s_asinh.S: Handle +-Inf and NaN correctly.
+	* sysdeps/libm-i387/s_asinhf.S: Likewise.
+	* sysdeps/libm-i387/s_asinhl.S: Likewise.
+	* sysdeps/libm-i387/s_nearbyint.S: Correctly leave function.
+	* sysdeps/libm-i387/s_nearbyintf.S: Likewise.
+	* sysdeps/libm-i387/s_nearbyintl.S: Likewise.
+
+1997-06-14 12:45  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nis/nis-ethers.c: Add static to internal_nis_setetherent.
+
+	* nis/nss_nis/nis-proto.c: Add static to internal_nis_setprotoent.
+
+	* nis/nss_nisplus/nisplus-hosts.c: Rewrite parser and fix
+	_nss_nisplus_gethostbyaddr_r interface.
+
+	* nis/libnsl.map: Add all GLOBAL functions.
+
+1997-06-13 18:32  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libm-test.c 	(main): Call new tests, reorder tests.
+	(fmod_test): Test function fmod.
+	(nearbyint_test): Test function nearbyint.
+	(acos_test): Add more test cases.
+	(signbit_test): Test macro signbit.
+	(output_result_bool): Output result if test fails.
+	(asin_test): Add another test case.
+	(atan2_test): Add more tests.
+	(asinh_test): Add more tests.
+	(atanh_test): Add more tests.
+	(hypot_test): Add more tests.
+	(isfinite_test): Test macro isfinite.
+	(isnormal_test): Test macro isnormal.
+	(sincos_test): Tests for sincos.
+	(main): Enable remquo_test since the tests are
+	correct (according to ANSI/IEEE 754-1985).
+	(remquo_test): Corrected tests cases and added more tests.
+	(remainder_test): Tests for remainder.
+	(check_int): New Function to compare int values.
+	(check_isnan_exc_ext): New function.
+	(sqrt_test): Add some extra tests for sqrt.
+	(erf_test): Tests for erf.
+	(erfc_test): Tests for erfc.
+	(gamma_test): Tests for gamma.
+	(lgamma_test): Tests for lgamma.
+
+1997-06-08 10:54  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/configure.in: Try to generate
+	stdio_lim.h using the target C preprocessor and mk-stdiolim.c.
+	* sysdeps/unix/sysv/linux/stdio_lim.h.in: New, template for
+	stdio_lim.h.
+	* sysdeps/unix/sysv/linux/mk-stdiolim.c: New, used by the
+	target C preprocessor to extract OPEN_MAX and PATH_MAX.
+
+1997-06-14 17:32  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm.map: Add inline functions, global variables.
+
 1997-06-14 00:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add more libio functions which are used in libio.h.

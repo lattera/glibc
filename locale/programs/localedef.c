@@ -36,7 +36,6 @@
 #include "error.h"
 #include "charset.h"
 #include "locfile.h"
-#include "../intl/loadinfo.h"
 
 /* Undefine the following line in the production version.  */
 /* #define NDEBUG 1 */
@@ -138,6 +137,7 @@ void *xmalloc (size_t __n);
 /* Prototypes for local functions.  */
 static void error_print (void);
 static const char *construct_output_path (char *path);
+static const char *normalize_codeset (const char *codeset, size_t name_len);
 
 
 int
@@ -475,7 +475,7 @@ construct_output_path (char *path)
 	    ++endp;
 
 	  if (endp > startp)
-	    normal = _nl_normalize_codeset (startp, endp - startp);
+	    normal = normalize_codeset (startp, endp - startp);
 	}
       else
 	/* This is to keep gcc quiet.  */
@@ -511,4 +511,48 @@ construct_output_path (char *path)
   strcat (result, "/");
 
   return result;
+}
+
+/* Normalize codeset name.  There is no standard for the codeset
+   names.  Normalization allows the user to use any of the common
+   names.  */
+static const char *
+normalize_codeset (codeset, name_len)
+     const char *codeset;
+     size_t name_len;
+{
+  int len = 0;
+  int only_digit = 1;
+  char *retval;
+  char *wp;
+  size_t cnt;
+
+  for (cnt = 0; cnt < name_len; ++cnt)
+    if (isalnum (codeset[cnt]))
+      {
+	++len;
+
+	if (isalpha (codeset[cnt]))
+	  only_digit = 0;
+      }
+
+  retval = (char *) malloc ((only_digit ? 3 : 0) + len + 1);
+
+  if (retval != NULL)
+    {
+      if (only_digit)
+	wp = stpcpy (retval, "iso");
+      else
+	wp = retval;
+
+      for (cnt = 0; cnt < name_len; ++cnt)
+	if (isalpha (codeset[cnt]))
+	  *wp++ = tolower (codeset[cnt]);
+	else if (isdigit (codeset[cnt]))
+	  *wp++ = codeset[cnt];
+
+      *wp = '\0';
+    }
+
+  return (const char *) retval;
 }

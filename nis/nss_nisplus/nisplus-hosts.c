@@ -44,72 +44,14 @@ static nis_name *names = NULL;
 /* Get implementation for some internal functions. */
 #include "../../resolv/mapv4v6addr.h"
 
-#define ENTNAME         hostent
-#define DATABASE        "hosts"
-#define NEED_H_ERRNO
-
-#define ENTDATA hostent_data
-struct hostent_data
-  {
-    unsigned char host_addr[16];        /* IPv4 or IPv6 address.  */
-    char *h_addr_ptrs[2];       /* Points to that and null terminator.  */
-  };
-
-#define TRAILING_LIST_MEMBER            h_aliases
-#define TRAILING_LIST_SEPARATOR_P       isspace
-#include "../../nss/nss_files/files-parse.c"
-LINE_PARSER
-("#",
- {
-   char *addr;
-
-   STRING_FIELD (addr, isspace, 1);
-
-   /* Parse address.  */
-   if (inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
-     {
-       result->h_addrtype = AF_INET6;
-       result->h_length = IN6ADDRSZ;
-     }
-   else
-     if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
-       {
-         if (_res.options & RES_USE_INET6)
-           {
-             map_v4v6_address ((char *) entdata->host_addr,
-                               (char *) entdata->host_addr);
-             result->h_addrtype = AF_INET6;
-             result->h_length = IN6ADDRSZ;
-           }
-         else
-           {
-             result->h_addrtype = AF_INET;
-             result->h_length = INADDRSZ;
-           }
-       }
-     else
-       /* Illegal address: ignore line.  */
-       return 0;
-
-   /* Store a pointer to the address in the expected form.  */
-   entdata->h_addr_ptrs[0] = entdata->host_addr;
-   entdata->h_addr_ptrs[1] = NULL;
-   result->h_addr_list = entdata->h_addr_ptrs;
-
-   STRING_FIELD (result->h_name, isspace, 1);
- }
-)
-
-
 static int
-_nss_nisplus_parse_hostent (nis_result *result, struct hostent *host,
+_nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 			    char *buffer, size_t buflen)
 {
-  char *p = buffer;
-  size_t room_left = buflen;
-  int parse_res;
   unsigned int i;
-  struct parser_data *data = (void *) buffer;
+  char *first_unused = buffer;
+  size_t room_left = buflen;
+  char *data, *p, *line;
 
   if (result == NULL)
     return 0;
@@ -121,43 +63,117 @@ _nss_nisplus_parse_hostent (nis_result *result, struct hostent *host,
       result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 4)
     return 0;
 
-  memset (p, '\0', room_left);
-
-  /* Generate the hosts entry format and use the normal parser */
-  if (NISENTRYLEN (0, 2, result) + 1 > room_left)
+  if (room_left < NISENTRYLEN (0, 2, result) + 1)
     {
       __set_errno (ERANGE);
       return 0;
     }
-  strncpy (p, NISENTRYVAL (0, 2, result),
-	   NISENTRYLEN (0, 2, result));
-  room_left -= (NISENTRYLEN (0, 2, result) + 1);
+
+  data = first_unused;
+  if (inet_pton (af, NISENTRYVAL (0, 2, result), data) < 1)
+    /* Illegal address: ignore line.  */
+    return 0;
+
+  host->h_addrtype = af;
+  if (af == AF_INET6)
+    host->h_length = IN6ADDRSZ;
+  else
+    {
+      if (_res.options & RES_USE_INET6)
+	{
+	  map_v4v6_address (data, data);
+	  host->h_addrtype = AF_INET6;
+	  host->h_length = IN6ADDRSZ;
+	}
+      else
+	{
+	  host->h_addrtype = AF_INET;
+	  host->h_length = INADDRSZ;
+	}
+    }
+  first_unused+=host->h_length;
+  room_left-=host->h_length;
 
   if (NISENTRYLEN (0, 0, result) + 1 > room_left)
     {
       __set_errno (ERANGE);
       return 0;
     }
-  strcat (p, "\t");
-  strncat (p, NISENTRYVAL (0, 0, result), NISENTRYLEN (0, 0, result));
+  p = stpncpy (first_unused, NISENTRYVAL (0, 0, result),
+	       NISENTRYLEN (0, 0, result));
+  *p = '\0';
   room_left -= (NISENTRYLEN (0, 0, result) + 1);
-                                       /* + 1: We overwrite the last \0 */
+  host->h_name = first_unused;
+  first_unused += NISENTRYLEN (0, 0, result) +1;
+  p = first_unused;
 
-  for (i = 1; i < result->objects.objects_len; i++)
+  line = p;
+  for (i = 0; i < result->objects.objects_len; i++)
     {
-      if (NISENTRYLEN (i, 1, result) + 1 > room_left)
+      if (strcmp (NISENTRYVAL (i, 1, result), host->h_name) != 0)
+	{
+	  if (NISENTRYLEN (i, 1, result) + 2 > room_left)
+	    {
+	      __set_errno (ERANGE);
+	      return 0;
+	    }
+	  p = stpcpy(p, " ");
+	  p = stpncpy (p, NISENTRYVAL (i, 1, result),
+		       NISENTRYLEN (i, 1, result));
+	  *p = '\0';
+	  room_left -= (NISENTRYLEN (i, 1, result) + 1);
+	}
+    }
+  ++p;
+  first_unused = p;
+  /* Adjust the pointer so it is aligned for
+     storing pointers.  */
+  first_unused += __alignof__ (char *) - 1;
+  first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
+  host->h_addr_list = (char **) first_unused;
+  if (room_left < 2 * sizeof (char *))
+    {
+      __set_errno (ERANGE);
+      return 0;
+    }
+  room_left -= (2 * sizeof (char *));
+  host->h_addr_list[0] = data;
+  host->h_addr_list[1] = NULL;
+  host->h_aliases = &host->h_addr_list[2];
+  host->h_aliases[0] = NULL;
+
+  i = 0;
+  while (*line != '\0')
+    {
+      /* Skip leading blanks.  */
+      while (isspace (*line))
+	line++;
+
+      if (*line == '\0')
+	break;
+
+      if (room_left < sizeof (char *))
 	{
 	  __set_errno (ERANGE);
 	  return 0;
 	}
-      strcat (p, " ");
-      strcat (p, NISENTRYVAL (i, 1, result));
-      room_left -= (NISENTRYLEN (i, 1, result) + 1);
+
+      room_left -= sizeof (char *);
+      host->h_aliases[i] = line;
+
+      while (*line != '\0' && *line != ' ')
+	line++;
+
+      if (line != host->h_aliases[i])
+            {
+              *line = '\0';
+              line++;
+              i++;
+            }
     }
 
-  parse_res = parse_line (p, host, data, buflen);
+  return 1;
 
-  return parse_res;
 }
 
 enum nss_status
@@ -249,7 +265,11 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
             }
 	}
 
-      parse_res = _nss_nisplus_parse_hostent (result, host, buffer, buflen);
+      parse_res = _nss_nisplus_parse_hostent (result, AF_INET6,
+					      host, buffer, buflen);
+      if (!parse_res && errno != ERANGE)
+	parse_res = _nss_nisplus_parse_hostent (result, AF_INET, host,
+						buffer, buflen);
       if (!parse_res && errno == ERANGE)
         {
           *herrnop = NETDB_INTERNAL;
@@ -326,7 +346,8 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
           return retval;
         }
 
-      parse_res = _nss_nisplus_parse_hostent (result, host, buffer, buflen);
+      parse_res =
+	_nss_nisplus_parse_hostent (result, af, host, buffer, buflen);
 
       nis_freeresult (result);
 
@@ -360,19 +381,20 @@ _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
 }
 
 enum nss_status
-_nss_nisplus_gethostbyaddr_r (const char *addr, struct hostent *host,
-			      char *buffer, size_t buflen, int *herrnop)
+_nss_nisplus_gethostbyaddr_r (const char *addr, int addrlen, int type,
+			      struct hostent *host, char *buffer,
+			      size_t buflen, int *herrnop)
 {
   if (addr == NULL)
     return NSS_STATUS_NOTFOUND;
   else
     {
       nis_result *result;
-      char buf[24 + strlen (addr)];
+      char buf[1025];
       int retval, parse_res;
 
-      sprintf(buf, "[addr=%s],hosts.org_dir", addr);
-
+      snprintf(buf, sizeof (buf) -1, "[addr=%s],hosts.org_dir",
+	       inet_ntoa (*(struct in_addr *)addr));
       result = nis_list(buf, EXPAND_NAME, NULL, NULL);
 
       retval = niserr2nss (result->status);
@@ -387,7 +409,8 @@ _nss_nisplus_gethostbyaddr_r (const char *addr, struct hostent *host,
           return retval;
         }
 
-      parse_res = _nss_nisplus_parse_hostent (result, host, buffer, buflen);
+      parse_res = _nss_nisplus_parse_hostent (result, type, host,
+					      buffer, buflen);
 
       nis_freeresult (result);
 

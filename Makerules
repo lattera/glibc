@@ -345,7 +345,11 @@ no-whole-archive =
 endif
 
 ifeq ($(versioning),yes)
-load-map-file = $($(@F:%.so=%)-map:%=-Wl,--version-script=%)
+ifneq ($(..),)
+load-map-file = $(wildcard $($(@F:%.so=%)-map) $(..)$($(@F:%.so=%)-map))
+else
+load-map-file = $($(@F:%.so=%)-map)
+endif
 else
 load-map-file =
 endif
@@ -361,11 +365,11 @@ $(patsubst %,$(objpfx)%.so,$(extra-libs)): $(interp-obj)
 
 define build-shlib
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-	  -B$(csu-objpfx) $(load-map-file) \
+	  -B$(csu-objpfx) $(load-map-file:%=-Wl,--version-script=%) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -Wl,--whole-archive $(filter-out $($(@F:%.so=%-map)),$^) \
+	  -Wl,--whole-archive $(filter-out $(load-map-file),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 	  test -z "$($(@F)-version)" || \
 	    (rm -f $@$($(@F)-version); $(LN_S) $(@F) $@$($(@F)-version))
@@ -383,7 +387,7 @@ LDFLAGS-c.so += -e __libc_main
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so \
-			 $(libc-map)
+			 $(libc-map:%=$(..)%)
 	$(build-shlib)
 endif
 

@@ -291,25 +291,6 @@ extern int __vsscanf __P ((__const char *__s, __const char *__format,
 			   _G_va_list __arg));
 extern int vsscanf __P ((__const char *__s, __const char *__format,
 			 _G_va_list __arg));
-
-
-#ifdef	__OPTIMIZE__
-extern __inline int
-vfscanf (FILE *__s, const char *__fmt, _G_va_list __arg)
-{
-  return __vfscanf (__s, __fmt, __arg);
-}
-extern __inline int
-vscanf (const char *__fmt, _G_va_list __arg)
-{
-  return __vfscanf (stdin, __fmt, __arg);
-}
-extern __inline int
-vsscanf (const char *__s, const char *__fmt, _G_va_list __arg)
-{
-  return __vsscanf (__s, __fmt, __arg);
-}
-#endif /* Optimizing.  */
 #endif /* Use GNU.  */
 
 

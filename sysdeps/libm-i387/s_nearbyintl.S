@@ -18,6 +18,8 @@ ENTRY(__nearbyintl)
 	frndint
 	fclex
 	fldcw	(%esp)
+	popl	%ecx
+	popl	%eax
 	ret
 END (__nearbyintl)
 weak_alias (__nearbyintl, nearbyintl)

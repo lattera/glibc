@@ -4,10 +4,11 @@ GLIBC_2.0 {
     _errno; _itoa_lower_digits; _itoa_upper_digits;
     __ctype_b; __ctype_tolower; __ctype_toupper;
     _IO_stderr_; _IO_stdin_; _IO_stdout_;
-    _nl_msg_cat_cntr; __environ; _environ;
+    _nl_msg_cat_cntr; __environ; _environ; _res;
+    ___brk_addr; __curbrk; _nl_current_LC_CTYPE; _libc_intl_domainname;
 
     # helper functions
-    __errno_location; __libc_init_first;
+    __errno_location; __libc_init_first; __h_errno_location;
 
     # functions with special/multiple interfaces
     __sigsetjmp; _setjmp; __sigaddset; __sigdelset; __sigismember;
@@ -34,6 +35,7 @@ GLIBC_2.0 {
     # functions used in inline functions or macros
     __strto*_internal; __wcsto*_internal; __getdelim;
     __isnan; __isnanf; __isnanl; __finite; __finitef; __finitel;
+    __isinf; __isinff; __isinfl;
     __signbit; __signbitf; __signbitl; __cmsg_nxthdr;
     _obstack_allocated_p; _obstack_begin; _obstack_begin_1;
     _obstack_free; _obstack_memory_used; _obstack_newchunk;
@@ -41,7 +43,13 @@ GLIBC_2.0 {
     _IO_getc; _IO_peekc_unlocked; _IO_putc; _IO_feof; _IO_ferror;
 
     # functions used in other libraries
-    __printf_fp;
+    __printf_fp; __stpncpy; _dcgettext;
+    _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
+    __nss_database_lookup; __internal_endnetgrent; __internal_getnetgrent_r;
+    __internal_setnetgrent; __gmtime_r; __secure_getenv;
+    __select; __sched_get_priority_max; __sched_get_priority_min;
+    __sched_getparam; __sched_getscheduler; __sched_setscheduler;
+    __sched_yield; __on_exit; __gettimeofday; __fork; __clone;
 
     # all functions and variables in the normal name space
     a*; b*; c*; d*; e*; f*; g*; h*; i*; j*; k*; l*; m*;

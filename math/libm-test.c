@@ -41,12 +41,15 @@
 /* This program isn't finished yet.
    It has tests for:
    acos, acosh, asin, asinh, atan, atan2, atanh,
-   cbrt, ceil, copysign, cos, cosh, exp, exp2, expm1,
-   fabs, fdim, floor, fmin, fmax, fpclassify,
-   frexp, hypot, ilogb, ldexp,
-   log, log10, log1p, log2, logb, modf, nextafter,
-   pow, rint, rinttol, rinttoll, round, roundtol, roundtoll,
-   scalb, scalbn, sin, sinh, sqrt, tan, tanh, trunc
+   cbrt, ceil, copysign, cos, cosh, erf, erfc, exp, exp2, expm1,
+   fabs, fdim, floor, fmin, fmax, fmod, fpclassify, 
+   frexp, gamma, hypot,
+   ilogb, isfinite, isinf, isnan, isnormal,
+   ldexp, lgamma, log, log10, log1p, log2, logb,
+   modf, nearbyint, nextafter,
+   pow, remainder, remquo, rint, rinttol, rinttoll,
+   round, roundtol, roundtoll,
+   scalb, scalbn, signbit, sin, sincos, sinh, sqrt, tan, tanh, trunc
 
    and for the following complex math functions:
    cacos, cacosh, casin, casinh, catan, catanh,
@@ -54,9 +57,9 @@
 
    At the moment the following functions aren't tested:
    cabs, carg, conj, cproj, cimag, creal, drem,
-   erf, erfc, gamma, lgamma,
    j0, j1, jn, y0, y1, yn,
-   nearbyint, remainder, remquo, signbit, significant, sincos.
+   significand,
+   nan, comparison macros (isless,isgreater,...).
 
    The routines using random variables are still under construction. I don't
    like it the way it's working now and will change it.
@@ -81,6 +84,14 @@
    checked against. These implemented tests should check all cases
    that are specified in ISO C 9X.
 
+   Exception testing: At the moment only divide-by-zero and invalid
+   exceptions are tested. Overflow/underflow and inexact exceptions
+   aren't checked at the moment.
+
+   NaN values: There exist signalling and quiet NaNs. This implementation
+   only uses signalling NaN as parameter but does not differenciate
+   between the two kinds of NaNs as result.
+   
    Inline functions: Inlining functions should give an improvement in
    speed - but not in precission. The inlined functions return
    reasonable values for a reasonable range of input values. The
@@ -98,6 +109,7 @@
    - Compiler has errors
 
    With e.g. gcc 2.7.2.2 the test for cexp fails because of a compiler error.
+
 */
 
 #ifndef _GNU_SOURCE
@@ -201,13 +213,11 @@ random_greater (MATHTYPE min_value)
 }
 
 /* Get a random value x with x < max_value.  */
-#ifndef TEST_INLINE
 static MATHTYPE
 random_less (MATHTYPE max_value)
 {
   return random_value (-1e6, max_value);
 }
-#endif
 
 
 static void
@@ -359,6 +369,8 @@ output_result_bool (const char *test_name, int result)
   else
     {
       output_fail_value (test_name);
+      if (verbose > 1)
+        printf (" Value: %d\n", result);
       ++noErrors;
     }
 
@@ -548,6 +560,40 @@ check_bool (const char *test_name, int computed)
   output_result_bool (test_name, computed);
 }
 
+
+
+/*
+  check that computed and expected values are equal (int values)
+ */
+static void
+check_int (const char *test_name, int computed, int expected)
+{
+  int diff = computed - expected;
+  int result = diff == 0;
+
+  output_new_test (test_name);
+  test_exceptions (test_name, NO_EXCEPTION);
+
+  if (result)
+    {
+      output_pass_value ();
+    }
+  else
+    {
+      output_fail_value (test_name);
+      if (verbose > 1)
+	{
+	  printf ("Result:\n");
+	  printf (" is:         %d\n", computed);
+	  printf (" should be:  %d\n", expected);
+	}
+      noErrors++;
+    }
+
+  fpstack_test (test_name);
+}
+
+
 /*
   check that computed and expected values are equal (long int values)
  */
@@ -648,7 +694,6 @@ check_isnan_maybe_exc (const char *test_name, MATHTYPE computed,
   output_isvalue (test_name, isnan (computed), computed);
 }
 
-
 /*
   check that computed value is not-a-number and supply parameter
  */
@@ -662,6 +707,19 @@ check_isnan_ext (const char *test_name, MATHTYPE computed,
   output_isvalue_ext (test_name, isnan (computed), computed, parameter);
 }
 #endif
+
+/*
+  check that computed value is not-a-number, test for exceptions
+  and supply parameter
+ */
+static void
+check_isnan_exc_ext (const char *test_name, MATHTYPE computed,
+                     short exception, MATHTYPE parameter)
+{
+  output_new_test (test_name);
+  test_exceptions (test_name,exception);
+  output_isvalue_ext (test_name, isnan (computed), computed, parameter);
+}
 
 
 /* Tests if computed is +Inf */
@@ -741,10 +799,17 @@ acos_test (void)
   check_isnan_exc ("acos (x) == NaN plus invalid exception for |x| > 1",
 		   FUNC(acos) (x),
 		   INVALID_EXCEPTION);
+
+  x = random_less (1);
+  check_isnan_exc ("acos (x) == NaN plus invalid exception for |x| > 1",
+		   FUNC(acos) (x),
+		   INVALID_EXCEPTION);
 #endif
 
   check ("acos (1) == 0", FUNC(acos) (1), 0);
+  check ("acos (-1) == pi", FUNC(acos) (-1), M_PI);
 }
+
 
 static void
 acosh_test (void)
@@ -773,6 +838,11 @@ asin_test (void)
   check_isnan_exc ("asin x == NaN plus invalid exception for |x| > 1",
 		   FUNC(asin) (x),
 		   INVALID_EXCEPTION);
+
+  x = random_less (1);
+  check_isnan_exc ("asin x == NaN plus invalid exception for |x| > 1",
+		   FUNC(asin) (x),
+		   INVALID_EXCEPTION);
 #endif
 
   check ("asin (0) == 0", FUNC(asin) (0), 0);
@@ -786,7 +856,10 @@ asinh_test (void)
   check ("asinh(+0) == +0", FUNC(asinh) (0), 0);
 #ifndef TEST_INLINE
   check ("asinh(-0) == -0", FUNC(asinh) (minus_zero), minus_zero);
+  check_isinfp ("asinh(+inf) == +inf", FUNC(asinh) (plus_infty));
+  check_isinfn ("asinh(-inf) == -inf", FUNC(asinh) (minus_infty));
 #endif
+  
 }
 
 
@@ -799,6 +872,7 @@ atan_test (void)
   check ("atan (+inf) == pi/2", FUNC(atan) (plus_infty), M_PI_2);
   check ("atan (-inf) == -pi/2", FUNC(atan) (minus_infty), -M_PI_2);
 }
+
 
 static void
 atan2_test (void)
@@ -830,6 +904,28 @@ atan2_test (void)
   x = random_greater (0);
   check ("atan2 (y,-0) == pi/2 for y > 0", FUNC(atan2) (x, minus_zero), M_PI_2);
 
+  x = random_less (0);
+  check ("atan2 (y,+0) == -pi/2 for y < 0", FUNC(atan2) (x, 0), -M_PI_2);
+
+  x = random_less (0);
+  check ("atan2 (y,-0) == -pi/2 for y < 0", FUNC(atan2) (x, minus_zero), -M_PI_2);
+
+  x = random_greater (0);
+  check ("atan2 (y,inf) == +0 for finite y > 0",
+	 FUNC(atan2) (x, plus_infty), 0);
+
+  x = -random_greater (0);
+  check ("atan2 (y,inf) == -0 for finite y < 0",
+	 FUNC(atan2) (x, plus_infty), minus_zero);
+
+  x = random_value (-1e4, 1e4);
+  check ("atan2(+inf, x) == pi/2 for finite x",
+         FUNC(atan2) (plus_infty, x), M_PI_2);
+
+  x = random_value (-1e4, 1e4);
+  check ("atan2(-inf, x) == -pi/2 for finite x",
+         FUNC(atan2) (minus_infty, x), -M_PI_2);
+
   x = random_greater (0);
   check ("atan2 (y,-inf) == +pi for finite y > 0",
 	 FUNC(atan2) (x, minus_infty), M_PI);
@@ -849,12 +945,15 @@ atan2_test (void)
 
   check ("atan2 (-inf,-inf) == -3*pi/4",
 	 FUNC(atan2) (minus_infty, minus_infty), -3 * M_PI_4);
+
+  /* FIXME: Add some specific tests */
 }
 
 
 static void
 atanh_test (void)
 {
+  MATHTYPE x;
 
   check ("atanh(+0) == +0", FUNC(atanh) (0), 0);
 #ifndef TEST_INLINE
@@ -864,6 +963,15 @@ atanh_test (void)
 		    FUNC(atanh) (1), DIVIDE_BY_ZERO_EXCEPTION);
   check_isinfn_exc ("atanh(-1) == -inf plus divide-by-zero exception",
 		    FUNC(atanh) (-1), DIVIDE_BY_ZERO_EXCEPTION);
+
+  x = random_greater (1.0);
+  check_isnan_exc_ext ("atanh (x) == NaN plus invalid exception if |x| > 1",
+                       FUNC(atanh) (x), INVALID_EXCEPTION, x);
+
+  x = random_less (1.0);
+  check_isnan_exc_ext ("atanh (x) == NaN plus invalid exception if |x| > 1",
+                       FUNC(atanh) (x), INVALID_EXCEPTION, x);
+  
 #endif
 }
 
@@ -928,6 +1036,38 @@ cosh_test (void)
   check_isinfp ("cosh (+inf) == +inf", FUNC(cosh) (plus_infty));
   check_isinfp ("cosh (-inf) == +inf", FUNC(cosh) (minus_infty));
 #endif
+}
+
+
+static void
+erf_test (void)
+{
+  errno = 0;
+  FUNC(erf) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  check ("erf (+0) == +0", FUNC(erf) (0), 0);
+  check ("erf (-0) == -0", FUNC(erf) (minus_zero), minus_zero);
+  check ("erf (+inf) == +1", FUNC(erf) (plus_infty), 1);
+  check ("erf (-inf) == -1", FUNC(erf) (minus_infty), -1);
+}
+
+
+static void
+erfc_test (void)
+{
+  errno = 0;
+  FUNC(erfc) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  check ("erfc (+inf) == 0", FUNC(erfc) (plus_infty), 0.0);
+  check ("erfc (-inf) == 2", FUNC(erfc) (minus_infty), 2.0);
+  check ("erfc (+0) == 1", FUNC(erfc) (0.0), 1.0);
+  check ("erfc (-0) == 1", FUNC(erfc) (minus_zero), 1.0);
 }
 
 
@@ -1080,6 +1220,110 @@ fpclassify_test (void)
   x = 1000.0;
   check_bool ("fpclassify (1000) == FP_NORMAL",
 	      fpclassify (x) == FP_NORMAL);
+}
+
+
+static void
+isfinite_test (void)
+{
+  check_bool ("isfinite (0) != 0", isfinite (0));
+  check_bool ("isfinite (-0) != 0", isfinite (minus_zero));
+  check_bool ("isfinite (10) != 0", isfinite (10));
+  check_bool ("isfinite (+inf) == 0", isfinite (plus_infty) == 0);
+  check_bool ("isfinite (-inf) == 0", isfinite (minus_infty) == 0);
+  check_bool ("isfinite (NaN) == 0", isfinite (nan_value) == 0);
+}
+
+
+static void
+isnormal_test (void)
+{
+  check_bool ("isnormal (0) == 0", isnormal (0) == 0);
+  check_bool ("isnormal (-0) == 0", isnormal (minus_zero) == 0);
+  check_bool ("isnormal (10) != 0", isnormal (10));
+  check_bool ("isnormal (+inf) == 0", isnormal (plus_infty) == 0);
+  check_bool ("isnormal (-inf) == 0", isnormal (minus_infty) == 0);
+  check_bool ("isnormal (NaN) == 0", isnormal (nan_value) == 0);
+
+}
+
+
+static void
+signbit_test (void)
+{
+  MATHTYPE x;
+  
+  check_bool ("signbit (+0) == 0", signbit (0) == 0);
+  check_bool ("signbit (-0) != 0", signbit (minus_zero));
+  check_bool ("signbit (+inf) == 0", signbit (plus_infty) == 0);
+  check_bool ("signbit (-inf) != 0", signbit (minus_infty));
+  check_bool ("signbit (NaN) == 0", signbit (nan_value));
+
+  x = random_less (0);
+  check_bool ("signbit (x) != 0 for x < 0", signbit (x));
+
+  x = random_greater (0);
+  check_bool ("signbit (x) == 0 for x > 0", signbit (x) == 0);
+  
+}
+
+
+
+static void
+gamma_test (void)
+{
+  MATHTYPE x;
+
+  check_isinfp ("gamma (+inf) == +inf", FUNC(gamma) (plus_infty));
+  check_isnan_exc ("gamma (0) == NaN plus invalid exception",
+                    FUNC(gamma) (0), INVALID_EXCEPTION);
+
+  x = random_less (0.0);
+  check_isnan_exc_ext ("gamma (x) == NaN plus invalid exception for x <= 0",
+                        FUNC(gamma) (x), INVALID_EXCEPTION, x);
+  check_isnan_exc ("gamma (-inf) == NaN plus invalid exception",
+                   FUNC(gamma) (minus_infty), INVALID_EXCEPTION);
+
+  check ("gamma (0.5) == sqrt(pi)", FUNC(gamma) (0.5), FUNC(sqrt) (M_PI));
+  check ("gamma (-0.5) == -2*sqrt(pi)", FUNC(gamma) (-0.5),
+         -2*FUNC(sqrt) (M_PI));
+
+  check ("gamma (1) == 1", FUNC(gamma) (1), 1);
+  check ("gamma (4) == 6", FUNC(gamma) (4), 6);
+   
+}
+
+
+static void
+lgamma_test (void)
+{
+  MATHTYPE x;
+  
+  check_isinfp ("lgamma (+inf) == +inf", FUNC(lgamma) (plus_infty));
+  check_isnan_exc ("lgamma (0) == +inf plus divide by zero exception",
+                   FUNC(lgamma) (0), DIVIDE_BY_ZERO_EXCEPTION);
+
+  x = random_less (0.0);
+  check_isnan_exc_ext ("lgamma (x) == +inf plus divide by zero exception for x <= 0",
+                       FUNC(lgamma) (x), DIVIDE_BY_ZERO_EXCEPTION, x);
+  check_isnan_exc ("lgamma (-inf) == NaN plus invalid exception",
+                   FUNC(lgamma) (minus_infty), INVALID_EXCEPTION);
+
+  check ("lgamma (1) == 0", FUNC(lgamma) (1), 0);
+  check_int ("lgamma (0) sets signgam to 1", signgam, 1);
+
+  check ("lgamma (3) == M_LN2", FUNC(lgamma) (3), M_LN2);
+  check_int ("lgamma (3) sets signgam to 1", signgam, 1);
+
+  check_eps ("lgamma (0.5) == log(sqrt(pi))", FUNC(lgamma) (0.5),
+             FUNC(log) (FUNC(sqrt) (M_PI)), CHOOSE (0, 1e-15, 1e-7));
+  check_int ("lgamma (0.5) sets signgam to 1", signgam, 1);
+
+  check_eps ("lgamma (-0.5) == log(2*sqrt(pi))", FUNC(lgamma) (-0.5),
+             FUNC(log) (2*FUNC(sqrt) (M_PI)), CHOOSE (0, 1e-15, 0));
+
+  check_int ("lgamma (-0.5) sets signgam to -1", signgam, -1);
+
 }
 
 
@@ -1348,6 +1592,58 @@ sinh_test (void)
 
 
 static void
+sincos_test (void)
+{
+  MATHTYPE sin_res, cos_res;
+  fenv_t fenv;
+  
+  FUNC(sincos) (0, &sin_res, &cos_res);
+  fegetenv (&fenv);
+  check ("sincos (+0, &sin, &cos) puts +0 in sin", sin_res, 0);
+  fesetenv (&fenv);
+  check ("sincos (+0, &sin, &cos) puts 1 in cos", cos_res, 1);
+
+  FUNC(sincos) (minus_zero, &sin_res, &cos_res); 
+  fegetenv (&fenv);
+  check ("sincos (-0, &sin, &cos) puts -0 in sin", sin_res, minus_zero);
+  fesetenv (&fenv);
+  check ("sincos (-0, &sin, &cos) puts 1 in cos", cos_res, 1);
+
+  FUNC(sincos) (plus_infty, &sin_res, &cos_res);
+  fegetenv (&fenv);
+  check_isnan_exc ("sincos (+inf, &sin, &cos) puts NaN in sin plus invalid exception",
+                   sin_res, INVALID_EXCEPTION);
+  fesetenv (&fenv);
+  check_isnan_exc ("sincos (+inf, &sin, &cos) puts NaN in cos plus invalid exception",
+                   cos_res, INVALID_EXCEPTION);
+
+  FUNC(sincos) (minus_infty, &sin_res, &cos_res);
+  fegetenv (&fenv);
+  check_isnan_exc ("sincos (-inf,&sin, &cos) puts NaN in sin plus invalid exception",
+		   sin_res, INVALID_EXCEPTION);
+  fesetenv (&fenv);
+  check_isnan_exc ("sincos (-inf,&sin, &cos) puts NaN in cos plus invalid exception",
+		   cos_res, INVALID_EXCEPTION);
+
+  FUNC(sincos) (M_PI_2, &sin_res, &cos_res);
+  fegetenv (&fenv);
+  check ("sincos (pi/2, &sin, &cos) puts 1 in sin", sin_res, 1);
+  fesetenv (&fenv);
+  check_eps ("sincos (pi/2, &sin, &cos) puts 0 in cos", cos_res, 0,
+             CHOOSE(0, 1e-16, 1e-7));
+
+  FUNC(sincos) (M_PI / 6.0, &sin_res, &cos_res);
+  check ("sincos (pi/6, &sin, &cos) puts 0.5 in sin", sin_res, 0.5);
+
+  FUNC(sincos) (M_PI / 3.0, &sin_res, &cos_res);
+  check_eps ("sincos (pi/3, &sin, &cos) puts 0.5 in cos", cos_res, 0.5,
+             CHOOSE(0, 1e-15, 1e-7));
+
+
+}
+
+
+static void
 tan_test (void)
 {
   check ("tan (+0) == +0", FUNC(tan) (0), 0);
@@ -1411,6 +1707,11 @@ hypot_test (void)
   check_isinfp_ext ("hypot (+inf, x) == +inf", FUNC(hypot) (plus_infty, a), a);
   check_isinfp_ext ("hypot (-inf, x) == +inf", FUNC(hypot) (minus_infty, a), a);
 
+#ifndef TEST_INLINE
+  check_isinfp ("hypot (+inf, NaN) == +inf", FUNC(hypot) (minus_infty, nan_value));
+  check_isinfp ("hypot (-inf, NaN) == +inf", FUNC(hypot) (minus_infty, nan_value));
+#endif
+  
   check_isnan ("hypot (NaN, NaN) == NaN", FUNC(hypot) (nan_value, nan_value));
 
   a = FUNC(hypot) (12.4L, 0.7L);
@@ -1716,6 +2017,47 @@ fmax_test (void)
 
 
 static void
+fmod_test (void)
+{
+  MATHTYPE x;
+  
+  x = random_greater (0);
+  check_ext ("fmod (+0, y) == +0 for y != 0", FUNC(fmod) (0, x), 0, x);
+
+  x = random_greater (0);
+  check_ext ("fmod (-0, y) == -0 for y != 0", FUNC(fmod) (minus_zero, x),
+             minus_zero, x);
+
+  check_isnan_exc_ext ("fmod (+inf, y) == NaN plus invalid exception",
+                       FUNC(fmod) (plus_infty, x), INVALID_EXCEPTION, x);
+  check_isnan_exc_ext ("fmod (-inf, y) == NaN plus invalid exception",
+                       FUNC(fmod) (minus_infty, x), INVALID_EXCEPTION, x);
+  check_isnan_exc_ext ("fmod (x, +0) == NaN plus invalid exception",
+                       FUNC(fmod) (x, 0), INVALID_EXCEPTION, x);
+  check_isnan_exc_ext ("fmod (x, -0) == NaN plus invalid exception",
+                       FUNC(fmod) (x, minus_zero), INVALID_EXCEPTION, x);
+
+  x = random_greater (0);
+  check_ext ("fmod (x, +inf) == x for x not infinite",
+             FUNC(fmod) (x, plus_infty), x, x);
+  x = random_greater (0);
+  check_ext ("fmod (x, -inf) == x for x not infinite",
+             FUNC(fmod) (x, minus_infty), x, x);
+
+  check_eps ("fmod (6.5, 2.3) == 1.9", FUNC(fmod) (6.5, 2.3), 1.9,
+             CHOOSE(0, 1e-15, 0));
+  check_eps ("fmod (-6.5, 2.3) == 1.9", FUNC(fmod) (-6.5, 2.3), -1.9,
+             CHOOSE(0, 1e-15, 0));
+  check_eps ("fmod (6.5, -2.3) == 1.9", FUNC(fmod) (6.5, -2.3), 1.9,
+             CHOOSE(0, 1e-15, 0));
+  check_eps ("fmod (-6.5, -2.3) == 1.9", FUNC(fmod) (-6.5, -2.3), -1.9,
+             CHOOSE(0, 1e-15, 0));
+
+  
+}
+
+
+static void
 nextafter_test (void)
 {
   MATHTYPE x;
@@ -1823,10 +2165,56 @@ sqrt_test (void)
   check_isnan ("sqrt (NaN) == NaN", FUNC(sqrt) (nan_value));
   check_isinfp ("sqrt (+inf) == +inf", FUNC(sqrt) (plus_infty));
 
+  check ("sqrt (-0) == -0", FUNC(sqrt) (0), 0);
+
+  x = random_less (0.0);
+  check_isnan_exc_ext ("sqrt (x) == NaN plus invalid exception for x < 0",
+                       FUNC(sqrt) (x), INVALID_EXCEPTION, x);
+
   x = random_value (0, 10000);
   check_ext ("sqrt (x*x) == x", FUNC(sqrt) (x*x), x, x);
   check ("sqrt (4) == 2", FUNC(sqrt) (4), 2);
 
+}
+
+static void
+remainder_test (void)
+{
+  MATHTYPE result;
+  
+  result = FUNC(remainder) (1, 0);
+  check_isnan_exc ("remainder(1, +0) == NaN plus invalid exception",
+                   result, INVALID_EXCEPTION);
+  
+  result = FUNC(remainder) (1, minus_zero);
+  check_isnan_exc ("remainder(1, -0) == NaN plus invalid exception",
+                   result, INVALID_EXCEPTION);
+  
+  result = FUNC(remainder) (plus_infty, 1);
+  check_isnan_exc ("remainder(+inf, 1) == NaN plus invalid exception",
+                   result, INVALID_EXCEPTION);
+  
+  result = FUNC(remainder) (minus_infty, 1);
+  check_isnan_exc ("remainder(-inf, 1) == NaN plus invalid exception",
+                   result, INVALID_EXCEPTION);
+  
+  result = FUNC(remainder) (1.625, 1.0);
+  check ("remainder(1.625, 1.0) == -0.375", result, -0.375);
+  
+  result = FUNC(remainder) (-1.625, 1.0);
+  check ("remainder(-1.625, 1.0) == 0.375", result, 0.375);
+  
+  result = FUNC(remainder) (1.625, -1.0);
+  check ("remainder(1.625, -1.0) == -0.375", result, -0.375);
+  
+  result = FUNC(remainder) (-1.625, -1.0);
+  check ("remainder(-1.625, -1.0) == 0.375", result, 0.375);
+  
+  result = FUNC(remainder) (5.0, 2.0);
+  check ("remainder(5.0, 2.0) == 1.0", result, 1.0);
+  
+  result = FUNC(remainder) (3.0, 2.0);
+  check ("remainder(3.0, 2.0) == -1.0", result, -1.0);
 }
 
 
@@ -1836,21 +2224,45 @@ remquo_test (void)
   int quo;
   MATHTYPE result;
 
+  result = FUNC(remquo) (1, 0, &quo);
+  check_isnan_exc ("remquo(1, +0, &x) == NaN plus invalid exception",
+                   result, INVALID_EXCEPTION);
+
+  result = FUNC(remquo) (1, minus_zero, &quo);
+  check_isnan_exc ("remquo(1, -0, &x) == NaN plus invalid exception",
+                   result, INVALID_EXCEPTION);
+
+  result = FUNC(remquo) (plus_infty, 1, &quo);
+  check_isnan_exc ("remquo(+inf, 1, &x) == NaN plus invalid exception",
+                   result, INVALID_EXCEPTION);
+
+  result = FUNC(remquo) (minus_infty, 1, &quo);
+  check_isnan_exc ("remquo(-inf, 1, &x) == NaN plus invalid exception",
+                   result, INVALID_EXCEPTION);
+
   result = FUNC(remquo) (1.625, 1.0, &quo);
   check ("remquo(1.625, 1.0, &x) == -0.375", result, -0.375);
-  check_long ("remquo(1.625, 1.0, &x) puts 1 in x", quo, 1);
-
+  check_long ("remquo(1.625, 1.0, &x) puts 2 in x", quo, 2);
+  
   result = FUNC(remquo) (-1.625, 1.0, &quo);
   check ("remquo(-1.625, 1.0, &x) == 0.375", result, 0.375);
-  check_long ("remquo(-1.625, 1.0, &x) puts -1 in x", quo, -1);
-
+  check_long ("remquo(-1.625, 1.0, &x) puts -2 in x", quo, -2);
+ 
   result = FUNC(remquo) (1.625, -1.0, &quo);
   check ("remquo(1.625, -1.0, &x) == -0.375", result, -0.375);
-  check_long ("remquo(1.625, -1.0, &x) puts -1 in x", quo, -1);
-
+  check_long ("remquo(1.625, -1.0, &x) puts -2 in x", quo, -2);
+ 
   result = FUNC(remquo) (-1.625, -1.0, &quo);
   check ("remquo(-1.625, -1.0, &x) == 0.375", result, 0.375);
-  check_long ("remquo(-1.625, -1.0, &x) puts 1 in x", quo, 1);
+  check_long ("remquo(-1.625, -1.0, &x) puts 2 in x", quo, 2);
+
+  result = FUNC(remquo) (5.0, 2.0, &quo);
+  check ("remquo(5.0, 2.0, &x) == 1.0", result, 1.0);
+  check_long ("remquo (5.0, 2.0, &x) puts 2 in x", quo, 2);
+
+  result = FUNC(remquo) (3.0, 2.0, &quo);
+  check ("remquo(3.0, 2.0, &x) == -1.0", result, -1.0);
+  check_long ("remquo (3.0, 2.0, &x) puts 2 in x", quo, 2);
 }
 
 
@@ -3923,6 +4335,16 @@ cpow_test (void)
 
 
 static void
+nearbyint_test (void)
+{
+  check ("nearbyint(+0) = 0", FUNC(nearbyint) (0.0), 0.0);
+  check ("nearbyint(-0) = -0", FUNC(nearbyint) (minus_zero), minus_zero);
+  check_isinfp ("nearbyint(+Inf) = +Inf", FUNC(nearbyint) (plus_infty));
+  check_isinfn ("nearbyint(-Inf) = -Inf", FUNC(nearbyint) (minus_infty));
+}
+
+
+static void
 rint_test (void)
 {
   check ("rint(0) = 0", FUNC(rint) (0.0), 0.0);
@@ -4330,22 +4752,36 @@ main (int argc, char *argv[])
 
   basic_tests ();
 
+  /* keep the tests a wee bit ordered (according to ISO 9X) */
+  /* classification functions */
+  fpclassify_test ();
+  isfinite_test ();
+  isnormal_test ();
+  signbit_test ();
+  
+  /* trigonometric functions */
   acos_test ();
-  acosh_test ();
   asin_test ();
-  asinh_test ();
   atan_test ();
-  atanh_test ();
   atan2_test ();
-  cbrt_test ();
-  ceil_test ();
   cos_test ();
+  sin_test ();
+  sincos_test ();
+  tan_test ();
+
+  /* hyperbolic functions */
+  acosh_test ();
+  asinh_test ();
+  atanh_test ();
   cosh_test ();
+  sinh_test ();
+  tanh_test ();
+
+  /* exponential and logarithmic functions */
   exp_test ();
   exp2_test ();
   expm1_test ();
   frexp_test ();
-  ilogb_test ();
   ldexp_test ();
   log_test ();
   log10_test ();
@@ -4353,28 +4789,50 @@ main (int argc, char *argv[])
   log2_test ();
   logb_test ();
   modf_test ();
+  ilogb_test ();
   scalb_test ();
   scalbn_test ();
-  sin_test ();
-  sinh_test ();
-  tan_test ();
-  tanh_test ();
+
+  /* power and absolute value functions */
+  cbrt_test ();
   fabs_test ();
-  floor_test ();
-  fpclassify_test ();
   hypot_test ();
   pow_test ();
+  sqrt_test ();
+
+  /* error and gamma functions */
+  erf_test ();
+  erfc_test ();
+  gamma_test ();
+  lgamma_test ();
+
+  /* nearest integer functions */
+  ceil_test ();
+  floor_test ();
+  nearbyint_test ();
+  rint_test ();
+  rinttol_test ();
+  rinttoll_test ();
+  round_test ();
+  roundtol_test ();
+  roundtoll_test ();
+  trunc_test ();
+
+  /* remainder functions */
+  fmod_test ();
+  remainder_test ();
+  remquo_test ();
+
+  /* manipulation functions */
+  copysign_test ();
+  nextafter_test ();
+
+  /* maximum, minimum and positive difference functions */
   fdim_test ();
   fmin_test ();
   fmax_test ();
-  nextafter_test ();
-  copysign_test ();
-  sqrt_test ();
-  trunc_test ();
-#if 0
-  /* XXX I'm not sure what is the correct result.  */
-  remquo_test ();
-#endif
+
+  /* complex functions */
   cexp_test ();
   csin_test ();
   csinh_test ();
@@ -4391,13 +4849,7 @@ main (int argc, char *argv[])
   csqrt_test ();
   cpow_test ();
 
-  rint_test ();
-  rinttol_test ();
-  rinttoll_test ();
-  round_test ();
-  roundtol_test ();
-  roundtoll_test ();
-
+  /* special tests */
   identities ();
   inverse_functions ();
 

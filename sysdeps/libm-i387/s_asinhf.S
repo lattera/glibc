@@ -1,5 +1,5 @@
 /* ix87 specific implementation of arcsinh.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -51,8 +51,12 @@ ENTRY(__asinhf)
 	andl	$0x80000000, %ecx
 	xorl	%ecx, 8(%esp)
 	flds	4(%esp)			// |x|
+	movl	%eax, %edx
 	cmpl	$0x38000000, %eax
 	jb	2f			// |x| < 2^-14
+	orl	$0x807fffff, %edx
+	incl	%edx
+	jz	4f			// x in ±Inf or NaN
 	fldln2				// log(2) : |x|
 	cmpl	$0x47000000, %eax
 	fxch				// |x| : log(2)

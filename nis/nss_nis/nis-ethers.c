@@ -80,7 +80,7 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
   return 0;
 }
 
-enum nss_status
+static enum nss_status
 internal_nis_setetherent (void)
 {
   char *domainname;

@@ -1,0 +1,8 @@
+#define L_tmpnam 19
+#define TMP_MAX 238328
+#ifdef __USE_POSIX
+#define L_ctermid 9
+#define L_cuserid 9
+#endif
+#define FOPEN_MAX DEFAULT_FOPEN_MAX
+#define FILENAME_MAX DEFAULT_FILENAME_MAX

@@ -4,6 +4,16 @@ GLIBC_2.0 {
     a*; b*; c*; d*; e*; f*; g*; h*; i*; j*; k*; l*; m*;
     n*; o*; p*; q*; r*; s*; t*; u*; v*; w*; x*; y*; z*;
 
+    # global variables
+    _LIB_VERSION;
+
+    # functions used in inline functions or macros
+    __fpclassify; __fpclassifyf; __fpclassifyl;
+    __signbit; __signbitf; __signbitl;
+    __finite; __finitef; __fintitel;
+
+    __log1p;
+
   local:
     *;
 };

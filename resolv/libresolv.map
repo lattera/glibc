@@ -5,6 +5,8 @@ GLIBC_2.0 {
     inet_net_ntop; inet_net_pton; inet_neta; res_gethostbyaddr;
     res_gethostbyname; res_gethostbyname2; res_mkquery; res_query;
     res_querydomain; res_search; res_send_setqhook; res_send_setrhook;
+    __res_dnok; __res_hnok; __p_class; __hostalias; __dn_skipname;
+    __p_type;
 
   local:
     *;

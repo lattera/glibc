@@ -107,9 +107,6 @@ $(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
 generated := $(generated) munch-init.c
 endif
 
-# We have a versioning file for libc.so.
-libc-map = libc.map
-
 
 include Makerules
 
