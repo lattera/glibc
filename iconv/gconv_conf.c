@@ -177,7 +177,7 @@ add_alias (char *rp, void *modules)
     ++rp;
   from = wp = rp;
   while (*rp != '\0' && !isspace (*rp))
-    ++rp;
+    *wp = toupper (*rp++);
   if (*rp == '\0')
     /* There is no `to' string on the line.  Ignore it.  */
     return;
@@ -186,7 +186,7 @@ add_alias (char *rp, void *modules)
   while (isspace (*rp))
     ++rp;
   while (*rp != '\0' && !isspace (*rp))
-    *wp++ = *rp++;
+    *wp++ = toupper (*rp++);
   if (to == wp)
     /* No `to' string, ignore the line.  */
     return;
@@ -307,6 +307,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
       if (!isalnum (*rp) && *rp != '-' && *rp != '/' && *rp != '.'
 	  && *rp != '_' && *rp != '(' && *rp != ')')
 	from_is_regex = 1;
+      *rp = toupper (*rp);
       ++rp;
     }
   if (*rp == '\0')
@@ -316,7 +317,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
   while (isspace (*rp))
     ++rp;
   while (*rp != '\0' && !isspace (*rp))
-    *wp++ = *rp++;
+    *wp++ = toupper (*rp++);
   if (*rp == '\0')
     return;
   *wp++ = '\0';

@@ -143,7 +143,7 @@ int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  if (__strcasecmp (step->from_name, CHARSET_NAME) == 0)
+  if (strcmp (step->from_name, CHARSET_NAME) == 0)
     {
       step->data = &from_object;
 
@@ -152,7 +152,7 @@ gconv_init (struct gconv_step *step)
       step->min_needed_to = MIN_NEEDED_TO;
       step->max_needed_to = MAX_NEEDED_TO;
     }
-  else if (__strcasecmp (step->to_name, CHARSET_NAME) == 0)
+  else if (strcmp (step->to_name, CHARSET_NAME) == 0)
     {
       step->data = &to_object;
 

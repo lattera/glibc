@@ -46,7 +46,7 @@ __gconv_alias_compare (const void *p1, const void *p2)
 {
   struct gconv_alias *s1 = (struct gconv_alias *) p1;
   struct gconv_alias *s2 = (struct gconv_alias *) p2;
-  return __strcasecmp (s1->fromname, s2->fromname);
+  return strcmp (s1->fromname, s2->fromname);
 }
 
 
@@ -473,9 +473,9 @@ find_derivation (const char *toset, const char *toset_expand,
 
 		      /* We managed to find a derivation.  First see whether
 			 this is what we are looking for.  */
-		      if (__strcasecmp (result_set, toset) == 0
+		      if (strcmp (result_set, toset) == 0
 			  || (toset_expand != NULL
-			      && __strcasecmp (result_set, toset_expand) == 0))
+			      && strcmp (result_set, toset_expand) == 0))
 			{
 			  if (solution == NULL || cost_hi < best_cost_hi
 			      || (cost_hi == best_cost_hi
@@ -505,8 +505,7 @@ find_derivation (const char *toset, const char *toset_expand,
 			  /* Append at the end if there is no entry with
 			     this name.  */
 			  for (step = first; step != NULL; step = step->next)
-			    if (__strcasecmp (result_set, step->result_set)
-				== 0)
+			    if (strcmp (result_set, step->result_set) == 0)
 			      break;
 
 			  if (step == NULL)

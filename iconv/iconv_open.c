@@ -1,5 +1,5 @@
 /* Get descriptor for character set conversion.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -35,7 +35,7 @@ strip (char *wp, const char *s)
   while (*s != '\0')
     {
       if (isalnum (*s) || *s == '_' || *s == '-' || *s == '.')
-	*wp++ = *s;
+	*wp++ = toupper (*s);
       else if (*s == '/')
 	{
 	  if (++slash_count == 3)
@@ -49,6 +49,16 @@ strip (char *wp, const char *s)
     *wp++ = '/';
 
   *wp = '\0';
+}
+
+
+static char *
+upstr (char *str)
+{
+  char *cp = str;
+  while ((*cp = toupper (*cp)) != '\0')
+    ++cp;
+  return str;
 }
 
 
@@ -67,14 +77,14 @@ iconv_open (const char *tocode, const char *fromcode)
   tocode_len = strlen (tocode);
   tocode_conv = alloca (tocode_len + 3);
   strip (tocode_conv, tocode);
+  tocode = tocode_conv[2] == '\0' ? upstr (tocode) : tocode_conv;
 
   fromcode_len = strlen (fromcode);
   fromcode_conv = alloca (fromcode_len + 3);
   strip (fromcode_conv, fromcode);
+  fromcode = romcode_conv[2] == '\0' ? upstr (fromcode) : fromcode_conv;
 
-  res = __gconv_open (tocode_conv[2] == '\0' ? tocode : tocode_conv,
-		      fromcode_conv[2] == '\0' ? fromcode : fromcode_conv,
-		      &cd);
+  res = __gconv_open (tocode, fromcode, &cd);
 
   if (res != GCONV_OK)
     {

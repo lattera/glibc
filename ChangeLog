@@ -1,3 +1,12 @@
+1999-01-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_conf.c (add_alias): Convert names to uppercase before
+	adding into search tree.
+	(add_module): Likewise.
+	* iconv/iconv_open.c: Likewise.
+	* iconv/gconv_db.c: Change all __strcasecmp to strcmp.
+	* iconv/skeleton.c (gconv_init): Likewise.
+
 1999-01-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* elf/Makefile: Make dependencies between test modules explicit.
