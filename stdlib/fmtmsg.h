@@ -1,5 +1,5 @@
 /* Message display handling.
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,7 +94,7 @@ enum
    and TAG to console or standard error.  */
 extern int fmtmsg (long int __classification, __const char *__label,
 		   int __severity, __const char *__text,
-		   __const char *__action, __const char *__tag) __THROW;
+		   __const char *__action, __const char *__tag);
 
 #ifdef __USE_SVID
 /* Add or remove severity level.  */

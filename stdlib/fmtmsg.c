@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -108,7 +108,7 @@ fmtmsg (long int classification, const char *label, int severity,
   int result = MM_OK;
   struct severity_info *severity_rec;
 
-  /* make sure everything is initialized.  */
+  /* Make sure everything is initialized.  */
   __libc_once (once, init);
 
   /* Start the real work.  First check whether the input is ok.  */
@@ -136,6 +136,14 @@ fmtmsg (long int classification, const char *label, int severity,
   if (severity_rec == NULL)
     return MM_NOTOK;
 
+
+#ifdef __libc_ptf_call
+  /* We do not want this call to be cut short by a thread
+     cancellation.  Therefore disable cancellation for now.  */
+  int state = PTHREAD_CANCEL_ENABLE;
+  __libc_ptf_call (pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE, &state),
+		   0);
+#endif
 
   /* Now we can print.  */
   if (classification & MM_PRINT)
@@ -205,6 +213,10 @@ fmtmsg (long int classification, const char *label, int severity,
 	      do_action && do_tag ? "  " : "",
 	      do_tag ? tag : "");
     }
+
+#ifdef __libc_ptf_call
+  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+#endif
 
   return result;
 }

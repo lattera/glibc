@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996-2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ __old_tmpfile (void)
 
   /* Note that this relies on the Unix semantics that
      a file is not really removed until it is closed.  */
-  (void) remove (buf);
+  (void) __unlink (buf);
 
   if ((f = _IO_old_fdopen (fd, "w+b")) == NULL)
     __close (fd);

@@ -879,7 +879,7 @@ extern void setkey (__const char *__key) __THROW;
 
 #ifdef __USE_XOPEN2K
 /* Return a master pseudo-terminal handle.  */
-extern int posix_openpt (int __oflag) __THROW;
+extern int posix_openpt (int __oflag);
 #endif
 
 #ifdef __USE_XOPEN
@@ -906,7 +906,7 @@ extern char *ptsname (int __fd) __THROW;
 extern int ptsname_r (int __fd, char *__buf, size_t __buflen) __THROW;
 
 /* Open a master pseudo terminal and return its file descriptor.  */
-extern int getpt (void) __THROW;
+extern int getpt (void);
 #endif
 
 #ifdef __USE_BSD

@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -42,6 +43,7 @@
 #endif
 #include <wordexp.h>
 
+#include <bits/libc-lock.h>
 #include <stdio-common/_itoa.h>
 
 /* Undefine the following line for the production version.  */
@@ -327,10 +329,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 
 	  while ((result = __getpwuid_r (uid, &pwd, buffer, buflen, &tpwd)) != 0
 		 && errno == ERANGE)
-	    {
-	      buflen += 1000;
-	      buffer = __alloca (buflen);
-	    }
+	    extend_alloca (buffer, buflen, buflen + 1000);
 
 	  if (result == 0 && tpwd != NULL && pwd.pw_dir != NULL)
 	    {
@@ -357,10 +356,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 
       while ((result = __getpwnam_r (user, &pwd, buffer, buflen, &tpwd)) != 0
 	     && errno == ERANGE)
-	{
-	  buflen += 1000;
-	  buffer = __alloca (buflen);
-	}
+	extend_alloca (buffer, buflen, buflen + 1000);
 
       if (result == 0 && tpwd != NULL && pwd.pw_dir)
 	*word = w_addstr (*word, word_length, max_length, pwd.pw_dir);
@@ -840,7 +836,7 @@ exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
     args[1] = "-nc";
 
   /* Redirect output.  */
-  __dup2 (fildes[1], 1);
+  __dup2 (fildes[1], STDOUT_FILENO);
   __close (fildes[1]);
 
   /* Redirect stderr to /dev/null if we have to.  */
@@ -852,12 +848,12 @@ exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
       fd = __open (_PATH_DEVNULL, O_WRONLY);
       if (fd >= 0 && fd != 2)
 	{
-	  __dup2 (fd, 2);
+	  __dup2 (fd, STDERR_FILENO);
 	  __close (fd);
 	}
       /* Be paranoid.  Check that we actually opened the /dev/null
          device.  */
-      if (__builtin_expect (__fxstat64 (_STAT_VER, 2, &st), 0) != 0
+      if (__builtin_expect (__fxstat64 (_STAT_VER, STDERR_FILENO, &st), 0) != 0
 	  || __builtin_expect (S_ISCHR (st.st_mode), 1) == 0
 #if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
 	  || st.st_rdev != makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR)
@@ -913,7 +909,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
     }
 
   if (pid == 0)
-    exec_comm_child(comm, fildes, (flags & WRDE_SHOWERR), 0);
+    exec_comm_child (comm, fildes, flags & WRDE_SHOWERR, 0);
 
   /* Parent */
 
@@ -1086,7 +1082,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
       if (pid == 0)
 	{
           fildes[0] = fildes[1] = -1;
-	  exec_comm_child(comm, fildes, 0, 1);
+	  exec_comm_child (comm, fildes, 0, 1);
 	}
 
       if (__waitpid (pid, &status, 0) == pid && status != 0)
@@ -1142,8 +1138,25 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
 	      /* Go -- give script to the shell */
 	      if (comm)
 		{
+#ifdef __libc_ptf_call
+		  /* We do not want the exec_comm call to be cut short
+		     by a thread cancellation since cleanup is very
+		     ugly.  Therefore disable cancellation for
+		     now.  */
+		  // XXX Ideally we do want the thread being cancelable.
+		  // XXX If demand is there we'll change it.
+		  int state = PTHREAD_CANCEL_ENABLE;
+		  __libc_ptf_call (pthread_setcancelstate,
+				   (PTHREAD_CANCEL_DISABLE, &state), 0);
+#endif
+
 		  error = exec_comm (comm, word, word_length, max_length,
 				     flags, pwordexp, ifs, ifs_white);
+
+#ifdef __libc_ptf_call
+		  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+#endif
+
 		  free (comm);
 		}
 

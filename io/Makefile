@@ -67,6 +67,10 @@ CFLAGS-fts.c = -Wno-uninitialized
 CFLAGS-fcntl.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-poll.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-lockf.c = -fexceptions
+CFLAGS-statfs.c = -fexceptions
+CFLAGS-fstatfs.c = -fexceptions
+CFLAGS-statvfs.c = -fexceptions
+CFLAGS-fstatvfs.c = -fexceptions
 
 CFLAGS-test-stat.c = -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 CFLAGS-test-lfs.c = -D_LARGEFILE64_SOURCE

@@ -1,4 +1,4 @@
-# Copyright (C) 1995,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -129,6 +129,10 @@ CFLAGS-putwchar.c = $(exceptions)
 CFLAGS-rewind.c = $(exceptions)
 CFLAGS-wfileops.c = $(exceptions)
 CFLAGS-wgenops.c = $(exceptions)
+CFLAGS-oldiofopen.c = $(exceptions)
+CFLAGS-iofopen.c = $(exceptions)
+CFLAGS-iofopen64.c = $(exceptions)
+CFLAGS-oldtmpfile.c = $(exceptions)
 # XXX Do we need filedoalloc and wfiledoalloc?  Others?
 
 CFLAGS-tst_putwc.c = -DOBJPFX=\"$(objpfx)\"

@@ -128,6 +128,8 @@ CFLAGS-wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-waitid.c = -fexceptions
 CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-getopt.c = -fexceptions
+CFLAGS-wordexp.c = -fexceptions
+CFLAGS-sysconf.c = -fexceptions
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
