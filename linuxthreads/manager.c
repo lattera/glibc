@@ -388,7 +388,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       map_addr = (caddr_t)new_thread_bottom;
       res_addr = mmap(map_addr, stacksize/2,
 		      PROT_READ | PROT_WRITE | PROT_EXEC,
-		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXES, -1, 0);
+		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
       if (res_addr != map_addr)
 	{
 	  if (res_addr != MAP_FAILED)
