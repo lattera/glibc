@@ -36,8 +36,12 @@ ENTRY(__log1pf)
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
 #endif
 
+	fxam
+	fnstsw
 	fld	%st
-	fabs
+	sahf
+	jc	3f		// in case x is NaN or ±Inf
+4:	fabs
 #ifdef PIC
 	fcomps	limit@GOTOFF(%edx)
 #else
@@ -56,6 +60,11 @@ ENTRY(__log1pf)
 	ret
 
 2:	fyl2xp1
+	ret
+
+3:	jp	4b		// in case x is ±Inf
+	fstp	%st(1)
+	fstp	%st(1)
 	ret
 
 END (__log1pf)

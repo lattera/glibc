@@ -1,3 +1,67 @@
+1999-10-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.inc: Disable some boundary case tests for inline
+	function testing.
+
+	* math/math.h: Pretty printing.
+
+	* sysdeps/i386/fpu/e_atanh.S: Correct handling of NaN.
+	* sysdeps/i386/fpu/e_atanhf.S: Likewise.
+	* sysdeps/i386/fpu/e_atanhl.S: Likewise.
+	* sysdeps/i386/fpu/e_log10.S: Likewise.
+	* sysdeps/i386/fpu/e_log10f.S: Likewise.
+	* sysdeps/i386/fpu/e_log10l.S: Likewise.
+	* sysdeps/i386/fpu/s_log1p.S: Likewise.
+	* sysdeps/i386/fpu/s_log1pf.S: Likewise.
+	* sysdeps/i386/fpu/s_log1pl.S: Likewise.
+	* sysdeps/i386/fpu/s_log2.S: Likewise.
+	* sysdeps/i386/fpu/s_log2f.S: Likewise.
+	* sysdeps/i386/fpu/s_log2l.S: Likewise.
+
+	* sysdeps/i386/fpu/libm-test-ulps: New file.
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__expm1_code): Correct return
+	value for x == 0.
+	(pow): Correct case x == 0.
+	(__sgn1l): Correct handling of -0.0.
+
+1999-10-22  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc (asinh_test): Add test for NaN as input parameter.
+	(atan_test): Likewise.
+	(atanh_test): Likewise.
+	(atan2_test): Likewise.
+	(carg_test): Likewise.
+	(ceil_test): Likewise.
+	(cos_test): Likewise.
+	(cosh_test): Likewise.
+	(cpow_test): Likewise.
+	(erf_test): Likewise.
+	(erfc_test): Likewise.
+	(exp_test): Likewise.
+	(exp10_test): Likewise.
+	(exp2_test): Likewise.
+	(expm1_test): Likewise.
+	(fabs_test): Likewise.
+	(floor_test): Likewise.
+	(fmod_test): Likewise.
+	(gamma_test): Likewise.
+	(lgamma_test): Likewise.
+	(log10_test): Likewise.
+	(log1p_test): Likewise.
+	(log2_test): Likewise.
+	(logb_test): Likewise.
+	(nearbyint_test): Likewise.
+	(remainder_test): Likewise.
+	(remquo_test): Likewise.
+	(sin_test): Likewise.
+	(sincos_test): Likewise.
+	(sinh_test): Likewise.
+	(sqrt_test): Likewise.
+	(tan_test): Likewise.
+	(tanh_test): Likewise.
+	(tgamma_test): Likewise.
+
 1999-10-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/ieee754/ldbl-96/s_nexttoward.c: If x == y, return y.

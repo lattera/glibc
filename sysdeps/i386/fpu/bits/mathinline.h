@@ -324,7 +324,7 @@ __sincosl (long double __x, long double *__sinx, long double *__cosx)
     ("fscale			# 2^int(x * log2(e))\n\t"		      \
      : "=t" (__temp) : "0" (1.0), "u" (__exponent));			      \
   __temp -= 1.0;							      \
-  return __temp + __value
+  return __temp + __value ?: __x
 __inline_mathcode_ (long double, __expm1l, __x, __expm1_code)
 
 
@@ -383,8 +383,14 @@ __inline_mathcode2 (pow, __x, __y, \
   register long double __value;						      \
   register long double __exponent;					      \
   __extension__ long long int __p = (long long int) __y;		      \
-  if (__x == 0.0 && __y > 0.0)						      \
-    return 0.0;								      \
+  if (__x == 0.0)							      \
+    {									      \
+       if (__y > 0.0)							      \
+	 return __y == (double) __p && (__p & 1) != 0 ? __x : 0.0;	      \
+       else if (__y < 0.0)						      \
+	 return (__y == (double) __p && (-__p & 1) != 0			      \
+		 ? 1.0 / __x : 1.0 / fabs (__x));			      \
+    }									      \
   if (__y == (double) __p)						      \
     {									      \
       long double __r = 1.0;						      \
@@ -448,7 +454,12 @@ __inline_mathop_decl (log10, "fldlg2; fxch; fyl2x", "0" (__x) : "st(1)")
 __inline_mathcode (asin, __x, return __atan2l (__x, __sqrtl (1.0 - __x * __x)))
 __inline_mathcode (acos, __x, return __atan2l (__sqrtl (1.0 - __x * __x), __x))
 
-__inline_mathcode_ (long double, __sgn1l, __x, return __x >= 0.0 ? 1.0 : -1.0)
+__inline_mathcode_ (long double, __sgn1l, __x, \
+  union { long double __xld; unsigned int __xi[3]; } __n = { .__xld = __x };  \
+  __n.__xi[2] = (__n.__xi[2] & 0x8000) | 0x3fff;			      \
+  __n.__xi[1] = 0x80000000;						      \
+  __n.__xi[0] = 0;							      \
+  return __n.__xld)
 
 
 /* The argument range of the inline version of sinhl is slightly reduced.  */

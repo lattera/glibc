@@ -1,5 +1,5 @@
 /* ix87 specific implementation of arctanh function.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -57,6 +57,12 @@ ln2_2:	.tfloat 0.3465735902799726547086160
 ENTRY(__ieee754_atanhl)
 	movl	12(%esp), %ecx
 
+	movl	%ecx, %eax
+	andl	$0x7fff, %eax
+	cmpl	$0x7fff, %eax
+	je	5f
+7:
+
 #ifdef PIC
 	call	1f
 1:	popl	%edx
@@ -105,4 +111,12 @@ ENTRY(__ieee754_atanhl)
 	jecxz	3f
 	fchs			// 0.5*ln2*ld((1+x)/(1-x))
 3:	ret
+
+	// x == NaN or ±Inf
+5:	cmpl	$0x80000000, 8(%esp)
+	ja	6f
+	cmpl	$0, 4(%esp)
+	je	7b
+6:	fldt	4(%esp)
+	ret
 END(__ieee754_atanhl)

@@ -171,10 +171,10 @@ enum
      (sizeof (x) == sizeof (float) ? __fpclassifyf (x) : __fpclassify (x))
 # else
 #  define fpclassify(x) \
-     (sizeof (x) == sizeof (float) ?					      \
-        __fpclassifyf (x)						      \
-      : sizeof (x) == sizeof (double) ?					      \
-        __fpclassify (x) : __fpclassifyl (x))
+     (sizeof (x) == sizeof (float)					      \
+      ? __fpclassifyf (x)						      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __fpclassify (x) : __fpclassifyl (x))
 # endif
 
 /* Return nonzero value if sign of X is negative.  */
@@ -183,10 +183,10 @@ enum
      (sizeof (x) == sizeof (float) ? __signbitf (x) : __signbit (x))
 # else
 #  define signbit(x) \
-     (sizeof (x) == sizeof (float) ?					      \
-        __signbitf (x)							      \
-      : sizeof (x) == sizeof (double) ?					      \
-        __signbit (x) : __signbitl (x))
+     (sizeof (x) == sizeof (float)					      \
+      ? __signbitf (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __signbit (x) : __signbitl (x))
 # endif
 
 /* Return nonzero value if X is not +-Inf or NaN.  */
@@ -195,10 +195,10 @@ enum
      (sizeof (x) == sizeof (float) ? __finitef (x) : __finite (x))
 # else
 #  define isfinite(x) \
-     (sizeof (x) == sizeof (float) ?					      \
-        __finitef (x)							      \
-      : sizeof (x) == sizeof (double) ?					      \
-        __finite (x) : __finitel (x))
+     (sizeof (x) == sizeof (float)					      \
+      ? __finitef (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __finite (x) : __finitel (x))
 # endif
 
 /* Return nonzero value if X is neither zero, subnormal, Inf, nor NaN.  */
@@ -211,10 +211,10 @@ enum
      (sizeof (x) == sizeof (float) ? __isnanf (x) : __isnan (x))
 # else
 #  define isnan(x) \
-     (sizeof (x) == sizeof (float) ?					      \
-        __isnanf (x)							      \
-      : sizeof (x) == sizeof (double) ?					      \
-        __isnan (x) : __isnanl (x))
+     (sizeof (x) == sizeof (float)					      \
+      ? __isnanf (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __isnan (x) : __isnanl (x))
 # endif
 
 /* Return nonzero value is X is positive or negative infinity.  */
@@ -223,10 +223,10 @@ enum
      (sizeof (x) == sizeof (float) ? __isinff (x) : __isinf (x))
 # else
 #  define isinf(x) \
-     (sizeof (x) == sizeof (float) ?					      \
-        __isinff (x)							      \
-      : sizeof (x) == sizeof (double) ?					      \
-        __isinf (x) : __isinfl (x))
+     (sizeof (x) == sizeof (float)					      \
+      ? __isinff (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __isinf (x) : __isinfl (x))
 # endif
 
 #endif /* Use ISO C 9X.  */

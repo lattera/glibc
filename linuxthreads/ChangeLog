@@ -1,3 +1,14 @@
+1999-10-21  Xavier Leroy  <Xavier.Leroy@inria.fr>
+
+	* linuxthreads/pthread.c: For i386, wrap pthread_handle_sigrestart
+	and pthread_handle_sigcancel with functions that restore
+	%gs from the signal context.  For each signal handling function,
+	two wrappers are required, one for a non-RT signal and one for
+	a RT signal.
+	* linuxthreads/signal.c: For i386, add code to restore %gs
+	from the signal context in pthread_sighandler and
+	pthread_sighandler_rt.
+
 1999-10-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* internals.h (PTHREAD_START_ARGS_INITIALIZER): Add cast.

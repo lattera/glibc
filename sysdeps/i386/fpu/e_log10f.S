@@ -42,8 +42,12 @@ ENTRY(__ieee754_log10f)
 1:	popl	%edx
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
 #endif
+	fxam
+	fnstsw
 	fld	%st		// x : x : log10(2)
-	fsubl	MO(one)		// x-1 : x : log10(2)
+	sahf
+	jc	3f		// in case x is NaN or ±Inf
+4:	fsubl	MO(one)		// x-1 : x : log10(2)
 	fld	%st		// x-1 : x-1 : x : log10(2)
 	fabs			// |x-1| : x-1 : x : log10(2)
 	fcompl	MO(limit)	// x-1 : x : log10(2)
@@ -56,5 +60,10 @@ ENTRY(__ieee754_log10f)
 
 2:	fstp	%st(0)		// x : log10(2)
 	fyl2x			// log10(x)
+	ret
+
+3:	jp	4b		// in case x is ±Inf
+	fstp	%st(1)
+	fstp	%st(1)
 	ret
 END (__ieee754_log10f)

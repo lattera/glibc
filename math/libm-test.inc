@@ -204,7 +204,7 @@ print_screen (int ok, int xfail)
 {
   if (output_points
       && (verbose > 1
-	  || ((verbose == 1) && (ok == xfail))))
+	  || (verbose == 1 && ok == xfail)))
     return 1;
   return 0;
 }
@@ -280,8 +280,8 @@ print_complex_function_ulps (const char *function_name, FLOAT real_ulp,
 		   CHOOSE("ldouble", "double", "float",
 			  "ildouble", "idouble", "ifloat"), imag_ulp);
 	}
-      
-	  
+
+
     }
 }
 
@@ -537,7 +537,7 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
   part_exp = __real__ expected;
   part_max_ulp = __real__ max_ulp;
   part_xfail = __real__ xfail;
-  
+
   check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
 			exception, &real_max_error);
 
@@ -546,7 +546,7 @@ check_complex (const char *test_name, __complex__ FLOAT computed,
   part_exp = __imag__ expected;
   part_max_ulp = __imag__ max_ulp;
   part_xfail = __imag__ xfail;
-  
+
   /* Don't check again for exceptions, just pass through the
      zero/inf sign test.  */
   check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
@@ -764,8 +764,11 @@ asinh_test (void)
 
   TEST_f_f (asinh, 0, 0);
   TEST_f_f (asinh, minus_zero, minus_zero);
+#ifndef TEST_INLINE
   TEST_f_f (asinh, plus_infty, plus_infty);
   TEST_f_f (asinh, minus_infty, minus_infty);
+#endif
+  TEST_f_f (asinh, nan_value, nan_value);
   TEST_f_f (asinh, 0.7, 0.652666566082355786L);
 
   END (asinh);
@@ -782,6 +785,7 @@ atan_test (void)
 
   TEST_f_f (atan, plus_infty, M_PI_2l);
   TEST_f_f (atan, minus_infty, -M_PI_2l);
+  TEST_f_f (atan, nan_value, nan_value);
 
   TEST_f_f (atan, 1, M_PI_4l);
   TEST_f_f (atan, -1, -M_PI_4l);
@@ -805,6 +809,7 @@ atanh_test (void)
 
   TEST_f_f (atanh, 1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (atanh, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f (atanh, nan_value, nan_value);
 
   /* atanh (x) == NaN plus invalid exception if |x| > 1.  */
   TEST_f_f (atanh, 1.1, nan_value, INVALID_EXCEPTION);
@@ -872,6 +877,7 @@ atan2_test (void)
   TEST_ff_f (atan2, minus_infty, plus_infty, -M_PI_4l);
   TEST_ff_f (atan2, plus_infty, minus_infty, M_PI_34l);
   TEST_ff_f (atan2, minus_infty, minus_infty, -M_PI_34l);
+  TEST_ff_f (atan2, nan_value, nan_value, nan_value);
 
   TEST_ff_f (atan2, 0.7, 1, 0.6107259643892086165L);
   TEST_ff_f (atan2, 0.4, 0.0003, 1.5700463269355215718L);
@@ -1095,6 +1101,8 @@ carg_test (void)
   TEST_c_f (carg, minus_infty, plus_infty, 3 * M_PI_4l);
 
   TEST_c_f (carg, minus_infty, minus_infty, -3 * M_PI_4l);
+
+  TEST_c_f (carg, nan_value, nan_value, nan_value);
 
   END (carg);
 }
@@ -1495,6 +1503,7 @@ ceil_test (void)
   TEST_f_f (ceil, minus_zero, minus_zero);
   TEST_f_f (ceil, plus_infty, plus_infty);
   TEST_f_f (ceil, minus_infty, minus_infty);
+  TEST_f_f (ceil, nan_value, nan_value);
 
   TEST_f_f (ceil, M_PIl, 4.0);
   TEST_f_f (ceil, -M_PIl, -3.0);
@@ -1747,6 +1756,7 @@ cos_test (void)
   TEST_f_f (cos, minus_zero, 1);
   TEST_f_f (cos, plus_infty, nan_value, INVALID_EXCEPTION);
   TEST_f_f (cos, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (cos, nan_value, nan_value);
 
   TEST_f_f (cos, M_PI_6l * 2.0, 0.5);
   TEST_f_f (cos, M_PI_6l * 4.0, -0.5);
@@ -1764,8 +1774,11 @@ cosh_test (void)
   TEST_f_f (cosh, 0, 1);
   TEST_f_f (cosh, minus_zero, 1);
 
+#ifndef TEST_INLINE
   TEST_f_f (cosh, plus_infty, plus_infty);
   TEST_f_f (cosh, minus_infty, plus_infty);
+#endif
+  TEST_f_f (cosh, nan_value, nan_value);
 
   TEST_f_f (cosh, 0.7, 1.255169005630943018L);
   END (cosh);
@@ -1782,6 +1795,8 @@ cpow_test (void)
 
   TEST_cc_c (cpow, M_El, 0, 0, 2 * M_PIl, 1.0, 0.0);
   TEST_cc_c (cpow, 2, 3, 4, 0, -119.0, -120.0);
+
+  TEST_cc_c (cpow, nan_value, nan_value, nan_value, nan_value, nan_value, nan_value);
 
   END (cpow, complex);
 }
@@ -2128,6 +2143,7 @@ erf_test (void)
   TEST_f_f (erf, minus_zero, minus_zero);
   TEST_f_f (erf, plus_infty, 1);
   TEST_f_f (erf, minus_infty, -1);
+  TEST_f_f (erf, nan_value, nan_value);
 
   TEST_f_f (erf, 0.7, 0.67780119383741847297L);
 
@@ -2155,6 +2171,7 @@ erfc_test (void)
   TEST_f_f (erfc, minus_infty, 2.0);
   TEST_f_f (erfc, 0.0, 1.0);
   TEST_f_f (erfc, minus_zero, 1.0);
+  TEST_f_f (erfc, nan_value, nan_value);
 
   TEST_f_f (erfc, 0.7, 0.32219880616258152702L);
 
@@ -2174,8 +2191,11 @@ exp_test (void)
   TEST_f_f (exp, 0, 1);
   TEST_f_f (exp, minus_zero, 1);
 
+#ifndef TEST_INLINE
   TEST_f_f (exp, plus_infty, plus_infty);
   TEST_f_f (exp, minus_infty, 0);
+#endif
+  TEST_f_f (exp, nan_value, nan_value);
   TEST_f_f (exp, 1, M_El);
 
   TEST_f_f (exp, 2, M_E2l);
@@ -2202,6 +2222,7 @@ exp10_test (void)
 
   TEST_f_f (exp10, plus_infty, plus_infty);
   TEST_f_f (exp10, minus_infty, 0);
+  TEST_f_f (exp10, nan_value, nan_value);
   TEST_f_f (exp10, 3, 1000);
   TEST_f_f (exp10, -1, 0.1);
   TEST_f_f (exp10, 1e6, plus_infty);
@@ -2226,6 +2247,8 @@ exp2_test (void)
   TEST_f_f (exp2, minus_zero, 1);
   TEST_f_f (exp2, plus_infty, plus_infty);
   TEST_f_f (exp2, minus_infty, 0);
+  TEST_f_f (exp2, nan_value, nan_value);
+
   TEST_f_f (exp2, 10, 1024);
   TEST_f_f (exp2, -1, 0.5);
   TEST_f_f (exp2, 1e6, plus_infty);
@@ -2243,8 +2266,11 @@ expm1_test (void)
   TEST_f_f (expm1, 0, 0);
   TEST_f_f (expm1, minus_zero, minus_zero);
 
+#ifndef TEST_INLINE
   TEST_f_f (expm1, plus_infty, plus_infty);
   TEST_f_f (expm1, minus_infty, -1);
+#endif
+  TEST_f_f (expm1, nan_value, nan_value);
 
   TEST_f_f (expm1, 1, M_El - 1.0);
   TEST_f_f (expm1, 0.7, 1.0137527074704765216L);
@@ -2262,6 +2288,7 @@ fabs_test (void)
 
   TEST_f_f (fabs, plus_infty, plus_infty);
   TEST_f_f (fabs, minus_infty, plus_infty);
+  TEST_f_f (fabs, nan_value, nan_value);
 
   TEST_f_f (fabs, 38.0, 38.0);
   TEST_f_f (fabs, -M_El, M_El);
@@ -2312,6 +2339,7 @@ floor_test (void)
   TEST_f_f (floor, minus_zero, minus_zero);
   TEST_f_f (floor, plus_infty, plus_infty);
   TEST_f_f (floor, minus_infty, minus_infty);
+  TEST_f_f (floor, nan_value, nan_value);
 
   TEST_f_f (floor, M_PIl, 3.0);
   TEST_f_f (floor, -M_PIl, -4.0);
@@ -2447,6 +2475,8 @@ fmod_test (void)
   /* fmod (x, -inf) == x for x not infinite.  */
   TEST_ff_f (fmod, 3.0, minus_infty, 3.0);
 
+  TEST_ff_f (fmod, nan_value, nan_value, nan_value);
+
   TEST_ff_f (fmod, 6.5, 2.3, 1.9);
   TEST_ff_f (fmod, -6.5, 2.3, -1.9);
   TEST_ff_f (fmod, 6.5, -2.3, 1.9);
@@ -2509,6 +2539,7 @@ gamma_test (void)
   TEST_f_f (gamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (gamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_f_f (gamma, minus_infty, plus_infty);
+  TEST_f_f (gamma, nan_value, nan_value);
 
   TEST_f_f1 (gamma, 1, 0, 1);
   TEST_f_f1 (gamma, 3, M_LN2l, 1);
@@ -2527,10 +2558,12 @@ hypot_test (void)
   TEST_ff_f (hypot, plus_infty, 1, plus_infty, IGNORE_ZERO_INF_SIGN);
   TEST_ff_f (hypot, minus_infty, 1, plus_infty, IGNORE_ZERO_INF_SIGN);
 
+#ifndef TEST_INLINE
   TEST_ff_f (hypot, plus_infty, nan_value, plus_infty);
   TEST_ff_f (hypot, minus_infty, nan_value, plus_infty);
   TEST_ff_f (hypot, nan_value, plus_infty, plus_infty);
   TEST_ff_f (hypot, nan_value, minus_infty, plus_infty);
+#endif
 
   TEST_ff_f (hypot, nan_value, nan_value, nan_value);
 
@@ -2759,6 +2792,7 @@ lgamma_test (void)
 
   TEST_f_f (lgamma, plus_infty, plus_infty);
   TEST_f_f (lgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f (lgamma, nan_value, nan_value);
 
   /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
   TEST_f_f (lgamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -2881,6 +2915,7 @@ log10_test (void)
   TEST_f_f (log10, -1, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log10, plus_infty, plus_infty);
+  TEST_f_f (log10, nan_value, nan_value);
 
   TEST_f_f (log10, 0.1L, -1);
   TEST_f_f (log10, 10.0, 1);
@@ -2905,6 +2940,7 @@ log1p_test (void)
   TEST_f_f (log1p, -2, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log1p, plus_infty, plus_infty);
+  TEST_f_f (log1p, nan_value, nan_value);
 
   TEST_f_f (log1p, M_El - 1.0, 1);
 
@@ -2927,6 +2963,7 @@ log2_test (void)
   TEST_f_f (log2, -1, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (log2, plus_infty, plus_infty);
+  TEST_f_f (log2, nan_value, nan_value);
 
   TEST_f_f (log2, M_El, M_LOG2El);
   TEST_f_f (log2, 2.0, 1);
@@ -2949,6 +2986,7 @@ logb_test (void)
   TEST_f_f (logb, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
 
   TEST_f_f (logb, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f (logb, nan_value, nan_value);
 
   TEST_f_f (logb, 1, 0);
   TEST_f_f (logb, M_El, 1);
@@ -3063,6 +3101,7 @@ nearbyint_test (void)
   TEST_f_f (nearbyint, minus_zero, minus_zero);
   TEST_f_f (nearbyint, plus_infty, plus_infty);
   TEST_f_f (nearbyint, minus_infty, minus_infty);
+  TEST_f_f (nearbyint, nan_value, nan_value);
 
   END (nearbyint);
 }
@@ -3139,6 +3178,7 @@ pow_test (void)
   TEST_ff_f (pow, nan_value, minus_zero, 1);
 
 
+#ifndef TEST_INLINE
   TEST_ff_f (pow, 1.1, plus_infty, plus_infty);
   TEST_ff_f (pow, plus_infty, plus_infty, plus_infty);
   TEST_ff_f (pow, -1.1, plus_infty, plus_infty);
@@ -3190,6 +3230,7 @@ pow_test (void)
   TEST_ff_f (pow, minus_infty, -1.1, 0);
   TEST_ff_f (pow, minus_infty, -11.1, 0);
   TEST_ff_f (pow, minus_infty, -1001.1, 0);
+#endif
 
   TEST_ff_f (pow, nan_value, nan_value, nan_value);
   TEST_ff_f (pow, 0, nan_value, nan_value);
@@ -3236,6 +3277,7 @@ pow_test (void)
   TEST_ff_f (pow, minus_zero, 2, 0);
   TEST_ff_f (pow, minus_zero, 11.1, 0);
 
+#ifndef TEST_INLINE
   /* pow (x, +inf) == +inf for |x| > 1.  */
   TEST_ff_f (pow, 1.5, plus_infty, plus_infty);
 
@@ -3247,6 +3289,7 @@ pow_test (void)
 
   /* pow (x, -inf) == +inf for |x| < 1.  */
   TEST_ff_f (pow, 0.5, minus_infty, plus_infty);
+#endif
 
   /* pow (+inf, y) == +inf for y > 0.  */
   TEST_ff_f (pow, plus_infty, 2, plus_infty);
@@ -3296,6 +3339,7 @@ remainder_test (void)
   TEST_ff_f (remainder, 1, minus_zero, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (remainder, plus_infty, 1, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (remainder, minus_infty, 1, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (remainder, nan_value, nan_value, nan_value);
 
   TEST_ff_f (remainder, 1.625, 1.0, -0.375);
   TEST_ff_f (remainder, -1.625, 1.0, 0.375);
@@ -3319,6 +3363,7 @@ remquo_test (void)
   TEST_ffI_f1 (remquo, 1, minus_zero, nan_value, IGNORE, INVALID_EXCEPTION);
   TEST_ffI_f1 (remquo, plus_infty, 1, nan_value, IGNORE, INVALID_EXCEPTION);
   TEST_ffI_f1 (remquo, minus_infty, 1, nan_value, IGNORE, INVALID_EXCEPTION);
+  TEST_ffI_f1 (remquo, nan_value, nan_value, nan_value, IGNORE);
 
   TEST_ffI_f1 (remquo, 1.625, 1.0, -0.375, 2);
   TEST_ffI_f1 (remquo, -1.625, 1.0, 0.375, -2);
@@ -3496,6 +3541,7 @@ sin_test (void)
   TEST_f_f (sin, minus_zero, minus_zero);
   TEST_f_f (sin, plus_infty, nan_value, INVALID_EXCEPTION);
   TEST_f_f (sin, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (sin, nan_value, nan_value);
 
   TEST_f_f (sin, M_PI_6l, 0.5);
   TEST_f_f (sin, -M_PI_6l, -0.5);
@@ -3520,6 +3566,7 @@ sincos_test (void)
   TEST_extra (sincos, minus_zero, minus_zero, 1);
   TEST_extra (sincos, plus_infty, nan_value, nan_value, INVALID_EXCEPTION);
   TEST_extra (sincos, minus_infty, nan_value, nan_value, INVALID_EXCEPTION);
+  TEST_extra (sincos, nan_value, nan_value, nan_value);
 
   TEST_extra (sincos, M_PI_2l, 1, 0);
   TEST_extra (sincos, M_PI_6l, 0.5, 0.866025403784438646764L);
@@ -3536,8 +3583,11 @@ sinh_test (void)
   TEST_f_f (sinh, 0, 0);
   TEST_f_f (sinh, minus_zero, minus_zero);
 
+#ifndef TEST_INLINE
   TEST_f_f (sinh, plus_infty, plus_infty);
   TEST_f_f (sinh, minus_infty, minus_infty);
+#endif
+  TEST_f_f (sinh, nan_value, nan_value);
 
   TEST_f_f (sinh, 0.7, 0.75858370183953350346L);
 
@@ -3558,6 +3608,7 @@ sqrt_test (void)
   /* sqrt (x) == NaN plus invalid exception for x < 0.  */
   TEST_f_f (sqrt, -1, nan_value, INVALID_EXCEPTION);
   TEST_f_f (sqrt, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (sqrt, nan_value, nan_value);
 
   TEST_f_f (sqrt, 2209, 47);
   TEST_f_f (sqrt, 4, 2);
@@ -3579,6 +3630,7 @@ tan_test (void)
   TEST_f_f (tan, minus_zero, minus_zero);
   TEST_f_f (tan, plus_infty, nan_value, INVALID_EXCEPTION);
   TEST_f_f (tan, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (tan, nan_value, nan_value);
 
   TEST_f_f (tan, M_PI_4l, 1);
   TEST_f_f (tan, 0.7, 0.84228838046307944813L);
@@ -3594,8 +3646,11 @@ tanh_test (void)
   TEST_f_f (tanh, 0, 0);
   TEST_f_f (tanh, minus_zero, minus_zero);
 
+#ifndef TEST_INLINE
   TEST_f_f (tanh, plus_infty, 1);
   TEST_f_f (tanh, minus_infty, -1);
+#endif
+  TEST_f_f (tanh, nan_value, nan_value);
 
   TEST_f_f (tanh, 0.7, 0.60436777711716349631L);
 
@@ -3620,6 +3675,7 @@ tgamma_test (void)
   /* tgamma (x) == NaN plus invalid exception for integer x <= 0.  */
   TEST_f_f (tgamma, -2, nan_value, INVALID_EXCEPTION);
   TEST_f_f (tgamma, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (tgamma, nan_value, nan_value);
 
   TEST_f_f (tgamma, 0.5, M_SQRT_PIl);
   TEST_f_f (tgamma, -0.5, -M_2_SQRT_PIl);

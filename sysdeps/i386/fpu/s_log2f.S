@@ -40,8 +40,12 @@ ENTRY(__log2f)
 #endif
 	fldl	MO(one)
 	flds	4(%esp)		// x : 1
+	fxam
+	fnstsw
 	fld	%st		// x : x : 1
-	fsub	%st(2), %st	// x-1 : x : 1
+	sahf
+	jc	3f		// in case x is NaN or ±Inf
+4:	fsub	%st(2), %st	// x-1 : x : 1
 	fld	%st		// x-1 : x-1 : x : 1
 	fabs			// |x-1| : x-1 : x : 1
 	fcompl	MO(limit)	// x-1 : x : 1
@@ -54,6 +58,11 @@ ENTRY(__log2f)
 
 2:	fstp	%st(0)		// x : 1
 	fyl2x			// log(x)
+	ret
+
+3:	jp	4b		// in case x is ±Inf
+	fstp	%st(1)
+	fstp	%st(1)
 	ret
 END (__log2f)
 weak_alias (__log2f, log2f)

@@ -79,8 +79,12 @@ static union
 /* The wrapper around user-provided signal handlers */
 static void pthread_sighandler(int signo, SIGCONTEXT ctx)
 {
-  pthread_descr self = thread_self();
+  pthread_descr self;
   char * in_sighandler;
+#ifdef __i386__
+  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
+#endif
+  self = thread_self();
   /* If we're in a sigwait operation, just record the signal received
      and return without calling the user's handler */
   if (THREAD_GETMEM(self, p_sigwaiting)) {
@@ -102,8 +106,12 @@ static void pthread_sighandler(int signo, SIGCONTEXT ctx)
 static void pthread_sighandler_rt(int signo, struct siginfo *si,
 				  struct ucontext *uc)
 {
-  pthread_descr self = thread_self();
+  pthread_descr self;
   char * in_sighandler;
+#ifdef __i386__
+  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[GS]));
+#endif
+  self =  thread_self();
   /* If we're in a sigwait operation, just record the signal received
      and return without calling the user's handler */
   if (THREAD_GETMEM(self, p_sigwaiting)) {

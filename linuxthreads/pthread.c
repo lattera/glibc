@@ -162,13 +162,14 @@ extern int _h_errno;
 /* Forward declarations */
 
 static void pthread_exit_process(int retcode, void *arg);
-#ifndef __i386__
 static void pthread_handle_sigcancel(int sig);
 static void pthread_handle_sigrestart(int sig);
-#else
-static void pthread_handle_sigcancel(int sig, struct sigcontext ctx);
-static void pthread_handle_sigrestart(int sig, struct sigcontext ctx);
+#ifdef __i386__
+static void pthread_handle_sigrestart_nonrt(int sig, struct sigcontext ctx);
 static void pthread_handle_sigrestart_rt(int sig, struct siginfo *si,
+					 struct ucontext *uc);
+static void pthread_handle_sigcancel_nonrt(int sig, struct sigcontext ctx);
+static void pthread_handle_sigcancel_rt(int sig, struct siginfo *si,
 					 struct ucontext *uc);
 #endif
 static void pthread_handle_sigdebug(int sig);
@@ -330,7 +331,7 @@ static void pthread_initialize(void)
   if (__pthread_sig_restart >= SIGRTMIN)
     sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart_rt;
   else
-    sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart;
+    sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart_nonrt;
 #endif
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
@@ -338,7 +339,10 @@ static void pthread_initialize(void)
 #ifndef __i386__
   sa.sa_handler = pthread_handle_sigcancel;
 #else
-  sa.sa_handler = (__sighandler_t) pthread_handle_sigcancel;
+  if (__pthread_sig_restart >= SIGRTMIN)
+    sa.sa_handler = (__sighandler_t) pthread_handle_sigcancel_rt;
+  else
+    sa.sa_handler = (__sighandler_t) pthread_handle_sigcancel_nonrt;
 #endif
   sa.sa_flags = 0;
   __sigaction(__pthread_sig_cancel, &sa, NULL);
@@ -564,54 +568,38 @@ static void pthread_exit_process(int retcode, void *arg)
    in the thread descriptor, and optionally performs a siglongjmp
    (for pthread_cond_timedwait). */
 
-#ifndef __i386__
 static void pthread_handle_sigrestart(int sig)
 {
   pthread_descr self = thread_self();
-#else
-static void pthread_handle_sigrestart(int sig, struct sigcontext ctx)
-{
-  pthread_descr self;
-  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
-  self = thread_self();
-#endif
   THREAD_SETMEM(self, p_signal, sig);
   if (THREAD_GETMEM(self, p_signal_jmp) != NULL)
     siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
 }
 
 #ifdef __i386__
+static void pthread_handle_sigrestart_nonrt(int sig, struct sigcontext ctx)
+{
+  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
+  pthread_handle_sigrestart(sig);
+}
+
 static void pthread_handle_sigrestart_rt(int sig, struct siginfo *si,
 					 struct ucontext *uc)
 {
-  pthread_descr self;
   asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[GS]));
-  self = thread_self();
-  THREAD_SETMEM(self, p_signal, sig);
-  if (THREAD_GETMEM(self, p_signal_jmp) != NULL)
-    siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
+  pthread_handle_sigrestart(sig);
 }
 #endif
-
 
 /* The handler for the CANCEL signal checks for cancellation
    (in asynchronous mode), for process-wide exit and exec requests.
    For the thread manager thread, redirect the signal to
    __pthread_manager_sighandler. */
 
-#ifndef __i386__
 static void pthread_handle_sigcancel(int sig)
 {
   pthread_descr self = thread_self();
   sigjmp_buf * jmpbuf;
-#else
-static void pthread_handle_sigcancel(int sig, struct sigcontext ctx)
-{
-  pthread_descr self;
-  sigjmp_buf * jmpbuf;
-  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
-  self = thread_self();
-#endif
 
   if (self == &__pthread_manager_thread)
     {
@@ -636,6 +624,21 @@ static void pthread_handle_sigcancel(int sig, struct sigcontext ctx)
     }
   }
 }
+
+#ifdef __i386__
+static void pthread_handle_sigcancel_nonrt(int sig, struct sigcontext ctx)
+{
+  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
+  pthread_handle_sigcancel(sig);
+}
+
+static void pthread_handle_sigcancel_rt(int sig, struct siginfo *si,
+					 struct ucontext *uc)
+{
+  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[GS]));
+  pthread_handle_sigcancel(sig);
+}
+#endif
 
 /* Handler for the DEBUG signal.
    The debugging strategy is as follows:
