@@ -1,3 +1,9 @@
+2000-02-07  Thorsten Kukuk  <kukuk@suse.de>
+
+	* config.make.in: Add infodir.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Sync with kernel
+	header files.
+
 2000-02-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getopt.c: Suppress messages if first character of
