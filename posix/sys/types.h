@@ -121,6 +121,8 @@ typedef __key_t key_t;
 # define __need_clock_t
 #endif
 #define	__need_time_t
+#define __need_timer_t
+#define __need_clockid_t
 #include <time.h>
 
 #ifdef __USE_XOPEN

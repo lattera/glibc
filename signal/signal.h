@@ -348,7 +348,9 @@ extern int sigignore (int __sig) __THROW;
 
 /* Set the disposition of SIG.  */
 extern __sighandler_t sigset (int __sig, __sighandler_t __disp) __THROW;
+#endif
 
+#if defined __USE_POSIX199506 || defined __USE_UNIX98
 /* Some of the functions for handling signals in threaded programs must
    be defined here.  */
 # include <bits/sigthread.h>

@@ -129,7 +129,7 @@ typedef long int __intptr_t;
 typedef unsigned int __socklen_t;
 
 /* Now add the thread types.  */
-#ifdef __USE_UNIX98
+#if defined __USE_POSIX199506 || defined __USE_UNIX98
 # include <bits/pthreadtypes.h>
 #endif
 

@@ -196,7 +196,7 @@ extern wchar_t *wcspbrk (__const wchar_t *__wcs, __const wchar_t *__accept)
 extern wchar_t *wcsstr (__const wchar_t *__haystack, __const wchar_t *__needle)
      __THROW;
 
-#if defined __USE_XOPEN && !defined __USE_UNIX98
+#ifdef __USE_XOPEN
 /* Another name for `wcsstr' from XPG4.  */
 extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
      __THROW;
@@ -334,7 +334,7 @@ extern float wcstof (__const wchar_t *__restrict __nptr,
 		     wchar_t **__restrict __endptr) __THROW;
 extern long double wcstold (__const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr) __THROW;
-#endif /* C9x */
+#endif /* C99 */
 
 
 /* Convert initial portion of wide string NPTR to `long int'
@@ -526,7 +526,7 @@ extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 
 
 /* Wide character I/O functions.  */
-#ifdef __USE_ISOC99
+#if defined __USE_ISOC99 || defined __USE_UNIX98
 
 /* Select orientation for stream.  */
 extern int fwide (FILE *__fp, int __mode) __THROW;
@@ -572,7 +572,9 @@ extern int wscanf (__const wchar_t *__restrict __format, ...)
 extern int swscanf (__const wchar_t *__restrict __s,
 		    __const wchar_t *__restrict __format, ...)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+#endif /* Use ISO C99 and Unix98. */
 
+#ifdef __USE_ISOC99
 /* Read formatted input from S into argument list ARG.  */
 extern int vfwscanf (FILE *__restrict __s,
 		     __const wchar_t *__restrict __format,
@@ -587,6 +589,7 @@ extern int vswscanf (__const wchar_t *__restrict __s,
 		     __const wchar_t *__restrict __format,
 		     __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+#endif /* Use ISO C99. */
 
 
 /* Read a character from STREAM.  */
@@ -596,16 +599,6 @@ extern wint_t getwc (FILE *__stream);
 /* Read a character from stdin.  */
 extern wint_t getwchar (void);
 
-#ifdef __USE_GNU
-/* These are defined to be equivalent to the `char' functions defined
-   in POSIX.1:1996.  */
-extern wint_t getwc_unlocked (FILE *__stream);
-extern wint_t getwchar_unlocked (void);
-
-/* This is the wide character version of a GNU extension.  */
-extern wint_t fgetwc_unlocked (FILE *__stream);
-#endif /* Use POSIX or MISC.  */
-
 
 /* Write a character to STREAM.  */
 extern wint_t fputwc (wchar_t __wc, FILE *__stream);
@@ -614,7 +607,30 @@ extern wint_t putwc (wchar_t __wc, FILE *__stream);
 /* Write a character to stdout.  */
 extern wint_t putwchar (wchar_t __wc);
 
+
+/* Get a newline-terminated wide character string of finite length
+   from STREAM.  */
+extern wchar_t *fgetws (wchar_t *__restrict __ws, int __n,
+			FILE *__restrict __stream);
+
+/* Write a string to STREAM.  */
+extern int fputws (__const wchar_t *__restrict __ws,
+		   FILE *__restrict __stream);
+
+
+/* Push a character back onto the input buffer of STREAM.  */
+extern wint_t ungetwc (wint_t __wc, FILE *__stream);
+
+
 #ifdef __USE_GNU
+/* These are defined to be equivalent to the `char' functions defined
+   in POSIX.1:1996.  */
+extern wint_t getwc_unlocked (FILE *__stream);
+extern wint_t getwchar_unlocked (void);
+
+/* This is the wide character version of a GNU extension.  */
+extern wint_t fgetwc_unlocked (FILE *__stream);
+
 /* Faster version when locking is not necessary.  */
 extern wint_t fputwc_unlocked (wchar_t __wc, FILE *__stream);
 
@@ -622,34 +638,16 @@ extern wint_t fputwc_unlocked (wchar_t __wc, FILE *__stream);
    in POSIX.1:1996.  */
 extern wint_t putwc_unlocked (wchar_t __wc, FILE *__stream);
 extern wint_t putwchar_unlocked (wchar_t __wc);
-#endif
 
 
-/* Get a newline-terminated wide character string of finite length
-   from STREAM.  */
-extern wchar_t *fgetws (wchar_t *__restrict __ws, int __n,
-			FILE *__restrict __stream);
-
-#ifdef __USE_GNU
 /* This function does the same as `fgetws' but does not lock the stream.  */
 extern wchar_t *fgetws_unlocked (wchar_t *__restrict __ws, int __n,
 				 FILE *__restrict __stream);
-#endif
 
-
-/* Write a string to STREAM.  */
-extern int fputws (__const wchar_t *__restrict __ws,
-		   FILE *__restrict __stream);
-
-#ifdef __USE_GNU
 /* This function does the same as `fputws' but does not lock the stream.  */
 extern int fputws_unlocked (__const wchar_t *__restrict __ws,
 			    FILE *__restrict __stream);
 #endif
-
-
-/* Push a character back onto the input buffer of STREAM.  */
-extern wint_t ungetwc (wint_t __wc, FILE *__stream);
 
 
 /* Format TP into S according to FORMAT.
@@ -658,7 +656,6 @@ extern wint_t ungetwc (wint_t __wc, FILE *__stream);
 extern size_t wcsftime (wchar_t *__restrict __s, size_t __maxsize,
 			__const wchar_t *__restrict __format,
 			__const struct tm *__restrict __tp);
-#endif /* Use ISO C9x. */
 
 /* The X/Open standard demands that most of the functions defined in
    the <wctype.h> header must also appear here.  This is probably

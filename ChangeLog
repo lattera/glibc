@@ -1,7 +1,37 @@
+2000-08-12  Andreas Jaeger  <aj@suse.de>
+
+	* include/features.h (__STDC_ISO_10646__): Define.
+	Reported by Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>.
+
 2000-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h (__USE_ISOC99): Define for _XOPEN_SOURCE >= 600.
+
+	* locale/langinfo.h: Define YESSTR and NOSTR also for XPG4 (but not
+	for revision 6 and up).
+
+	* posix/sys/types.h: Define __need_timer_t and __need_clockid_t before
+	including <time.h>.
+	* time/time.h: Allow __need_timer_t and __need_clockid_t to be defined
+	to get definitions of just these types.
+
+	* signal/signal.h: Define thread signal handling functions also for
+	POSIX95.
+
+	* sysdeps/unix/sysv/linux/bits/types.h: Define thread types also for
+	POSIX95.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+
+	* sysvipc/sys/shm.h: Define pid_t for XPG.
 
 	* posix/unistd.h: Remove setkey, rename, and cuserid prototypes as
 	they are not anymore required here.
+
+	* wcsmbs/wchar.h: Make the various wide char string and stream
+	functions available for the respective XPG versions.
 
 	* nss/Makefile: Remove rules to build and distribute nss_db.
 

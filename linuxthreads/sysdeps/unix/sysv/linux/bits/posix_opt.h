@@ -89,7 +89,7 @@
 #define _POSIX_THREAD_ATTR_STACKADDR	1
 
 /* We support POSIX.1b semaphores, but only the non-shared form for now.  */
-/*#define _POSIX_SEMAPHORES	1	XXX We are not quite there now.  */
+#define _POSIX_SEMAPHORES	1
 
 /* Real-time signals are supported.  */
 #define _POSIX_REALTIME_SIGNALS	1
@@ -133,5 +133,8 @@
 
 /* The barrier functions are available.  */
 #define _POSIX_BARRIERS	200912L
+
+/* POSIX message queues are not yet supported.  */
+#define	_POSIX_MESSAGE_PASSING	(-1)
 
 #endif /* posix_opt.h */
