@@ -33,6 +33,15 @@ weak_extern (__cache_line_size)
 extern int __libc_multiple_libcs;
 extern void *__libc_stack_end;
 
+#ifndef SHARED
+# include <tls.h>
+extern void __pthread_initialize_minimal (void)
+# if !(USE_TLS - 0)
+     __attribute__ ((weak))
+# endif
+     ;
+#endif
+
 struct startup_info
 {
   void *__unbounded sda_base;
@@ -43,7 +52,7 @@ struct startup_info
 
 /* Scan the Aux Vector for the "Data Cache Block Size" entry.  If found
    verify that the static extern __cache_line_size is defined by checking
-   for not NULL.  If it is defined then assign the cache block size 
+   for not NULL.  If it is defined then assign the cache block size
    value to __cache_line_size.  */
 static inline void
 __aux_init_cache (ElfW(auxv_t) *av)
@@ -103,7 +112,7 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
       while (*temp != NULL)
         ++temp;
       auxvec = (ElfW(auxv_t) *)++temp;
-      
+
 
 # ifndef SHARED
       _dl_aux_init ((ElfW(auxv_t) *) auxvec);
@@ -113,13 +122,32 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
     }
 
   INIT_ARGV_and_ENVIRON;
-    
+
   /* Initialize the __cache_line_size variable from the aux vector.  */
   __aux_init_cache((ElfW(auxv_t) *) auxvec);
 
   /* Store something that has some relationship to the end of the
      stack, for backtraces.  This variable should be thread-specific.  */
   __libc_stack_end = stack_on_entry + 4;
+
+#ifndef SHARED
+  /* Initialize the thread library at least a bit since the libgcc
+     functions are using thread functions if these are available and
+     we need to setup errno.  If there is no thread library and we
+     handle TLS the function is defined in the libc to initialized the
+     TLS handling.  */
+# if !(USE_TLS - 0)
+  if (__pthread_initialize_minimal)
+# endif
+    __pthread_initialize_minimal ();
+
+  /* Some security at this point.  Prevent starting a SUID binary where
+     the standard file descriptors are not opened.  We have to do this
+     only for statically linked applications since otherwise the dynamic
+     loader did the work already.  */
+  if (__builtin_expect (__libc_enable_secure, 0))
+    __libc_check_standard_fds ();
+#endif
 
   /* Register the destructor of the dynamic linker if there is any.  */
   if (rtld_fini != NULL)

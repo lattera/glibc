@@ -48,9 +48,10 @@ shmat (shmid, shmaddr, shmflg)
     length = shmds.shm_segsz;
 #endif
 
-  result = (void *__unbounded) INLINE_SYSCALL (ipc, 5, IPCOP_shmat, shmid, shmflg,
+  result = (void *__unbounded) INLINE_SYSCALL (ipc, 5, IPCOP_shmat,
+					       shmid, shmflg,
 					       (long int) __ptrvalue (&raddr),
-					       __ptrvalue (shmaddr));
+					       __ptrvalue ((void *) shmaddr));
   if ((unsigned long) result <= -(unsigned long) SHMLBA)
     result = raddr;
 
