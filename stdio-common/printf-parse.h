@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <limits.h>
 #include <printf.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -265,7 +266,6 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
     }
 
   /* Check for type modifiers.  */
-#define is_longlong is_long_double
   spec->info.is_long_double = 0;
   spec->info.is_short = 0;
   spec->info.is_long = 0;
@@ -300,18 +300,24 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
     case L_('Z'):
       /* ints are size_ts.  */
       assert (sizeof (size_t) <= sizeof (unsigned long long int));
-      spec->info.is_longlong = sizeof (size_t) > sizeof (unsigned long int);
+#if LONG_MAX != LONG_LONG_MAX
+      spec->info.is_long_double = sizeof (size_t) > sizeof (unsigned long int);
+#endif
       spec->info.is_long = sizeof (size_t) > sizeof (unsigned int);
       break;
     case L_('t'):
       assert (sizeof (ptrdiff_t) <= sizeof (long long int));
-      spec->info.is_longlong = (sizeof (ptrdiff_t) > sizeof (long int));
+#if LONG_MAX != LONG_LONG_MAX
+      spec->info.is_long_double = (sizeof (ptrdiff_t) > sizeof (long int));
+#endif
       spec->info.is_long = sizeof (ptrdiff_t) > sizeof (int);
       break;
     case L_('j'):
       assert (sizeof (uintmax_t) <= sizeof (unsigned long long int));
-      spec->info.is_longlong = (sizeof (uintmax_t)
-				> sizeof (unsigned long int));
+#if LONG_MAX != LONG_LONG_MAX
+      spec->info.is_long_double = (sizeof (uintmax_t)
+				   > sizeof (unsigned long int));
+#endif
       spec->info.is_long = sizeof (uintmax_t) > sizeof (unsigned int);
       break;
     default:
@@ -342,16 +348,19 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	case L'o':
 	case L'X':
 	case L'x':
-	  if (spec->info.is_longlong)
+#if LONG_MAX != LONG_LONG_MAX
+	  if (spec->info.is_long_double)
 	    spec->data_arg_type = PA_INT|PA_FLAG_LONG_LONG;
-	  else if (spec->info.is_long)
-	    spec->data_arg_type = PA_INT|PA_FLAG_LONG;
-	  else if (spec->info.is_short)
-	    spec->data_arg_type = PA_INT|PA_FLAG_SHORT;
-	  else if (spec->info.is_char)
-	    spec->data_arg_type = PA_CHAR;
 	  else
-	    spec->data_arg_type = PA_INT;
+#endif
+	    if (spec->info.is_long)
+	      spec->data_arg_type = PA_INT|PA_FLAG_LONG;
+	    else if (spec->info.is_short)
+	      spec->data_arg_type = PA_INT|PA_FLAG_SHORT;
+	    else if (spec->info.is_char)
+	      spec->data_arg_type = PA_CHAR;
+	    else
+	      spec->data_arg_type = PA_INT;
 	  break;
 	case L'e':
 	case L'E':
