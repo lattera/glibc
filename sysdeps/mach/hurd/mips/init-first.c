@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For Mips/Hurd.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -109,7 +109,7 @@ init1 (int argc, char *arg0, ...)
   /* This is a hack to make the special getopt in GNU libc working.  */
   __getopt_clean_environment (envp);
 
-#ifdef PIC
+#ifdef SHARED
   __libc_global_ctors ();
 #endif
 
@@ -175,7 +175,7 @@ __init (int *data)
   (void) &__init;
 }
 
-#ifdef PIC
+#ifdef SHARED
 /* This function is called to initialize the shared C library.
    It is called just before the user _start code from mips/elf/start.S,
    with the stack set up as that code gets it.  */
@@ -274,7 +274,7 @@ void __libc_init_first (int argc, ...)
 }
 #endif
 
-#ifndef PIC
+#ifndef SHARED
 /* An assembler code wrapping c function __init.  */
 #ifdef __mips64
 asm ("\

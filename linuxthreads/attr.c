@@ -51,7 +51,8 @@ int __pthread_attr_init_2_0(pthread_attr_t *attr)
   attr->__scope = PTHREAD_SCOPE_SYSTEM;
   return 0;
 }
-symbol_version (__pthread_attr_init_2_0, pthread_attr_init, GLIBC_2.0);
+compat_symbol (libpthread, __pthread_attr_init_2_0, pthread_attr_init,
+	       GLIBC_2_0);
 #endif
 
 int pthread_attr_destroy(pthread_attr_t *attr)

@@ -24,7 +24,7 @@
 
 #include <kernel-features.h>
 #include <linux/posix_types.h>
-
+#include <shlib-compat.h>
 
 
 /*
@@ -132,7 +132,7 @@ __chown_is_lchown (const char *file, uid_t owner, gid_t group)
 {
   return INLINE_SYSCALL (chown, 3, file, owner, group);
 }
-#elif defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
+#elif SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 /* Compiling for compatibiity.  */
 int
 __chown_is_lchown (const char *file, uid_t owner, gid_t group)
@@ -141,20 +141,20 @@ __chown_is_lchown (const char *file, uid_t owner, gid_t group)
 }
 #endif
 
-#if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 strong_alias (__chown_is_lchown, _chown_is_lchown)
-symbol_version (__chown_is_lchown, __chown, GLIBC_2.0);
-symbol_version (_chown_is_lchown, chown, GLIBC_2.0);
+compat_symbol (libc, __chown_is_lchown, __chown, GLIBC_2_0);
+compat_symbol (libc, _chown_is_lchown, chown, GLIBC_2_0);
 
 # ifdef __NR_lchown
 strong_alias (__real_chown, _real_chown)
-default_symbol_version (__real_chown, __chown, GLIBC_2.1);
-default_symbol_version (_real_chown, chown, GLIBC_2.1);
+versioned_symbol (libc, __real_chown, __chown, GLIBC_2_1);
+versioned_symbol (libc, _real_chown, chown, GLIBC_2_1);
 # else
 strong_alias (__chown_is_lchown, __chown_is_lchown21)
 strong_alias (__chown_is_lchown, _chown_is_lchown21)
-default_symbol_version (__chown_is_lchown21, __chown, GLIBC_2.1);
-default_symbol_version (_chown_is_lchown21, chown, GLIBC_2.1);
+versioned_symbol (libc, __chown_is_lchown21, __chown, GLIBC_2_1);
+versioned_symbol (libc, _chown_is_lchown21, chown, GLIBC_2_1);
 # endif
 #else
 # ifdef __NR_lchown

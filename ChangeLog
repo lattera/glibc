@@ -1,3 +1,25 @@
+2000-04-01  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mach/hurd/mips/init-first.c: Use SHARED instead of PIC.
+
+	* sysdeps/unix/mips/sysdep.h: Use __PIC__ instead of PIC.
+	* sysdeps/mach/mips/thread_state.h: Likewise.
+
+	* sysdeps/generic/fclrexcpt.c: Use shlib-compat macros.
+	* sysdeps/generic/fegetenv.c: Likewise.
+	* sysdeps/generic/fesetenv.c: Likewise.
+	* sysdeps/generic/feupdateenv.c: Likewise.
+	* sysdeps/generic/fraiseexcpt.c: Likewise.
+	* sysdeps/generic/fsetexcptflg.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/glob.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/errlist.c: Likewise.
+	* sysdeps/unix/sysv/linux/errlist.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+
+2000-04-02  H.J. Lu  <hjl@gnu.org>
+
+	* elf/ldconfig.h (FLAG_IA64_LIB64): New. Defined.
+
 2000-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_dst_substitute): Pretty print comment.

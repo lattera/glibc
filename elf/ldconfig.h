@@ -28,6 +28,7 @@
 #define FLAG_ELF_LIBC6		0x0003
 #define FLAG_REQUIRED_MASK	0xff00
 #define FLAG_SPARC_LIB64	0x0100
+#define FLAG_IA64_LIB64		0x0200
 
 /* Declared in cache.c.  */
 extern void print_cache (const char *cache_name);

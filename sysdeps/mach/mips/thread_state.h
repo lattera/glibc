@@ -1,5 +1,5 @@
 /* Mach thread state definitions for machine-independent code.  MIPS version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #define MACHINE_THREAD_STATE_FLAVOR	MIPS_THREAD_STATE
 #define MACHINE_THREAD_STATE_COUNT	MIPS_THREAD_STATE_COUNT
 
-#ifdef PIC
+#ifdef __PIC__
 #define MACHINE_THREAD_STATE_SET_PC(ts, pc) \
   ((ts)->PC = (ts)->r25 = (unsigned long int) (pc))
 #endif

@@ -226,11 +226,11 @@ static void sem_restart_list(pthread_descr waiting)
   }
 }
 
-symbol_version (__old_sem_init, sem_init, GLIBC_2.0);
-symbol_version (__old_sem_wait, sem_wait, GLIBC_2.0);
-symbol_version (__old_sem_trywait, sem_trywait, GLIBC_2.0);
-symbol_version (__old_sem_post, sem_post, GLIBC_2.0);
-symbol_version (__old_sem_getvalue, sem_getvalue, GLIBC_2.0);
-symbol_version (__old_sem_destroy, sem_destroy, GLIBC_2.0);
+compat_symbol (libpthread, __old_sem_init, sem_init, GLIBC_2_0);
+compat_symbol (libpthread, __old_sem_wait, sem_wait, GLIBC_2_0);
+compat_symbol (libpthread, __old_sem_trywait, sem_trywait, GLIBC_2_0);
+compat_symbol (libpthread, __old_sem_post, sem_post, GLIBC_2_0);
+compat_symbol (libpthread, __old_sem_getvalue, sem_getvalue, GLIBC_2_0);
+compat_symbol (libpthread, __old_sem_destroy, sem_destroy, GLIBC_2_0);
 
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -20,6 +20,7 @@
 
 #include <sys/types.h>
 #include <glob.h>
+#include <shlib-compat.h>
 
 /* For Linux/Alpha we have to make the glob symbols versioned.  */
 #define glob(pattern, flags, errfunc, pglob) \
@@ -40,8 +41,8 @@ extern void __new_globfree (glob_t *__pglob);
 #undef glob64
 #undef globfree64
 
-default_symbol_version(__new_glob, glob, GLIBC_2.1);
-default_symbol_version(__new_globfree, globfree, GLIBC_2.1);
+versioned_symbol (libc, __new_glob, glob, GLIBC_2_1);
+versioned_symbol (libc, __new_globfree, globfree, GLIBC_2_1);
 
 weak_alias (__new_glob, glob64)
 weak_alias (__new_globfree, globfree64)

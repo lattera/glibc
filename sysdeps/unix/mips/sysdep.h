@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1992,95,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -32,7 +32,7 @@
 /* Note that while it's better structurally, going back to call __syscall_error
    can make things confusing if you're debugging---it looks like it's jumping
    backwards into the previous fn.  */
-#ifdef PIC
+#ifdef __PIC__
  #define PSEUDO(name, syscall_name, args) \
   .align 2;								      \
   99: la t9,__syscall_error;						      \

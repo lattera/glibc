@@ -541,7 +541,7 @@ int __pthread_create_2_0(pthread_t *thread, const pthread_attr_t *attr,
     }
   return __pthread_create_2_1 (thread, attr, start_routine, arg);
 }
-symbol_version (__pthread_create_2_0, pthread_create, GLIBC_2.0);
+compat_symbol (libpthread, __pthread_create_2_0, pthread_create, GLIBC_2_0);
 #endif
 
 /* Simple operations on thread identifiers */
