@@ -109,25 +109,25 @@ do_test (void)
 
       if (pthread_rwlockattr_init (&a) != 0)
 	{
-	  printf ("round %d: rwlockattr_t failed\n", cnt);
+	  printf ("round %Zu: rwlockattr_t failed\n", cnt);
 	  exit (1);
 	}
 
       if (pthread_rwlockattr_setkind_np (&a, kind[cnt]) != 0)
 	{
-	  printf ("round %d: rwlockattr_setkind failed\n", cnt);
+	  printf ("round %Zu: rwlockattr_setkind failed\n", cnt);
 	  exit (1);
 	}
 
       if (pthread_rwlock_init (&r, &a) != 0)
 	{
-	  printf ("round %d: rwlock_init failed\n", cnt);
+	  printf ("round %Zu: rwlock_init failed\n", cnt);
 	  exit (1);
 	}
 
       if (pthread_rwlockattr_destroy (&a) != 0)
 	{
-	  printf ("round %d: rwlockattr_destroy failed\n", cnt);
+	  printf ("round %Zu: rwlockattr_destroy failed\n", cnt);
 	  exit (1);
 	}
 
@@ -142,21 +142,21 @@ do_test (void)
       /* Get a read lock.  */
       if (pthread_rwlock_timedrdlock (&r, &ts) != 0)
 	{
-	  printf ("round %d: rwlock_timedrdlock failed\n", cnt);
+	  printf ("round %Zu: rwlock_timedrdlock failed\n", cnt);
 	  exit (1);
 	}
 
       pthread_t th;
       if (pthread_create (&th, NULL, tf, &r) != 0)
 	{
-	  printf ("round %d: create failed\n", cnt);
+	  printf ("round %Zu: create failed\n", cnt);
 	  exit (1);
 	}
 
       void *status;
       if (pthread_join (th, &status) != 0)
 	{
-	  printf ("round %d: join failed\n", cnt);
+	  printf ("round %Zu: join failed\n", cnt);
 	  exit (1);
 	}
       if (status != NULL)
@@ -167,7 +167,7 @@ do_test (void)
 
       if (pthread_rwlock_destroy (&r) != 0)
 	{
-	  printf ("round %d: rwlock_destroy failed\n", cnt);
+	  printf ("round %Zu: rwlock_destroy failed\n", cnt);
 	  exit (1);
 	}
     }
