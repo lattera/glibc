@@ -1,3 +1,18 @@
+1999-12-19  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/libc-start.c: Remove declaration of
+	__libc_open.  Move declaration of __libc_fcntl to ...
+	* include/fcntl.h: ...here.
+
+	* include/unistd.h: Move __libc_open and __libc_open64 to ...
+	* include/fcntl.h: ...here.
+
+	* malloc/malloc.h (__attribute_malloc__): Only define if hasn't
+	happened yet.
+
+	* malloc/Versions: __libc_freeres was exported with glibc 2.1.3,
+	rename label.
+
 1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/bits/resource.h: Remove <asm/resource.h>

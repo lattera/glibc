@@ -25,8 +25,6 @@
 #include <elf/ldsodefs.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
-extern int __libc_fcntl (int fd, int cmd, ...);
-extern int __libc_open  (const char *pathname, int flags, ...);
 
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)

@@ -55,7 +55,7 @@
 /* Used by GNU libc internals. */
 # define __malloc_size_t size_t
 # define __malloc_ptrdiff_t ptrdiff_t
-#else
+#elif !defined __attribute_malloc__
 # define __attribute_malloc__
 #endif
 
