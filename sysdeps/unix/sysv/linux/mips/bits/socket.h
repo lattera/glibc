@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_STAT_H
+#if !defined _SYS_STAT_H && !defined _NETINET_IN_H
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
 
