@@ -1,5 +1,5 @@
 /* Lightweight user references for ports.
-Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -70,6 +70,9 @@ _hurd_port_init (struct hurd_port *port, mach_port_t init)
 }
 
 
+/* Cleanup function for non-local exits.  */
+extern void _hurd_port_cleanup (void *, jmp_buf, int);
+
 /* Get a reference to *PORT, which is locked.
    Pass return value and LINK to _hurd_port_free when done.  */
 
@@ -80,7 +83,11 @@ _hurd_port_locked_get (struct hurd_port *port,
   mach_port_t result;
   result = port->port;
   if (result != MACH_PORT_NULL)
-    _hurd_userlink_link (&port->users, link);
+    {
+      link->cleanup = &_hurd_port_cleanup;
+      link->cleanup_data = (void *) result;
+      _hurd_userlink_link (&port->users, link);
+    }
   __spin_unlock (&port->lock);
   return result;
 }

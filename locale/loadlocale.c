@@ -83,7 +83,8 @@ _nl_load_locale (int category, char **name)
       goto puntfd;
     if (S_ISDIR (st.st_mode))
       {
-	/* LOCALE/LC_* is a directory; open LOCALE/LC_*/SYS_LC_* instead.  */
+	/* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
+           instead.  */
 	__close (fd);
 	memcpy (stpcpy (strchr (file, '\0'), "SYS_"), catname, catlen);
 	fd = __open (file, O_RDONLY);

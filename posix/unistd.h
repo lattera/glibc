@@ -125,6 +125,14 @@ extern int euidaccess __P ((__const char *__name, int __type));
 #define	SEEK_END	2	/* Seek from end of file.  */
 #endif
 
+#if defined (__USE_BSD) && !defined (L_SET)
+/* Old BSD names for the same constants; just for compatibility.  */
+#define	L_SET		SEEK_SET
+#define	L_INCR		SEEK_CUR
+#define	L_XTND		SEEK_END
+#endif
+
+
 /* Move FD's file position to OFFSET bytes from the
    beginning of the file (if WHENCE is SEEK_SET),
    the current position (if WHENCE is SEEK_CUR),
@@ -416,6 +424,12 @@ extern char *ttyname __P ((int __fd));
    with a terminal, zero if not.  */
 extern int __isatty __P ((int __fd));
 extern int isatty __P ((int __fd));
+
+#ifdef __USE_BSD
+/* Return the index into the active-logins file (utmp) for
+   the terminal FD is open on.  */
+extern int ttyslot ((int __fd));
+#endif
 
 
 /* Make a link to FROM named TO.  */

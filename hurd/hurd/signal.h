@@ -79,6 +79,11 @@ struct hurd_sigstate
        will be passed to sigreturn after running the handler for a pending
        signal, instead of examining the thread state.  */
     struct sigcontext *context;
+
+    /* This is the head of the thread's list of active resources; see
+       <hurd/userlink.h> for details.  This member is only used by the
+       thread itself, and always inside a critical section.  */
+    struct hurd_userlink *active_resources;
   };
 
 /* Linked list of states of all threads whose state has been asked for.  */

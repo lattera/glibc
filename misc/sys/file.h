@@ -30,9 +30,11 @@ __BEGIN_DECLS
 
 /* Alternate names for values for the WHENCE argument to `lseek'.
    These are the same as SEEK_SET, SEEK_CUR, and SEEK_END, respectively.  */
+#ifndef L_SET
 #define	L_SET	0	/* Seek from beginning of file.  */
 #define	L_INCR	1	/* Seek from current position.  */
 #define	L_XTND	2	/* Seek from end of file.  */
+#endif
 
 
 /* Operations for the `flock' call.  */

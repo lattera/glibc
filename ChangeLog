@@ -1,3 +1,45 @@
+Mon Mar 27 02:23:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/unistd.h [__USE_BSD] (ttyslot): Declare it.
+
+	* posix/unistd.h [__USE_BSD] (L_SET, L_INCR, L_XTND): Define
+ 	unless L_SET already defined.
+	* misc/sys/file.h (L_SET, L_INCR, L_XTND): Don't define if L_SET
+ 	already defined.
+
+	Incorporated -lutil library from 4.4-Lite.
+	* misc/Makefile (extra-libs, libutil-routines): New variables.
+	* misc/login.c, misc/login_tty.c, misc/logout.c, misc/logwtmp.c,
+	sysdeps/generic/pty.c: New files for -lutil incorporated from 4.4-Lite.
+
+	Support simple, light-weight unwind-protect mechanism for longjmp.
+	* setjmp/longjmp.c: Call _longjmp_unwind first thing.
+	* sysdeps/mach/hurd/jmp-unwind.c: New file.
+	* sysdeps/stub/jmp-unwind.c: New file.
+	* sysdeps/i386/jmp_buf.h (_JMPBUF_UNWINDS): New macro.
+	* sysdeps/mips/jmp_buf.h (_JMPBUF_UNWINDS): New macro.
+	* setjmp/Makefile (routines): Add jmp-unwind.
+	* hurd/hurd/userlink.h (struct hurd_userlink): Move `next' and
+ 	`prevp' members into new substructure `resource'; add another such
+ 	substructure `thread' and members `cleanup' (function ptr) and
+ 	`cleanup_data' (generic ptr).
+	(_hurd_userlink_link, _hurd_userlink_unlink): Insert/remove LINK
+	into the `_hurd_self_sigstate ()->active_resources' list via the
+	`thread' substructure.
+	* hurd/hurd/port.h (_hurd_port_cleanup): Declare it.
+	(_hurd_port_locked_get): Set LINK->cleanup to _hurd_port_cleanup and
+	LINK->cleanup_data' to the port extracted.
+	* hurd/hurd/signal.h (struct hurd_sigstate): New member
+	`active_resources'.
+	* hurd/port-cleanup.c: New file.
+	* hurd/Makefile (routines): Add port-cleanup.
+
+	* malloc/malloc.c: Include errno.h.
+
+Sat Mar 25 18:24:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/loadlocale.c (_nl_load_locale): Avoid */ inside comment.
+
 Fri Mar 24 02:35:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* misc/Makefile (headers): Add utmp.h.
