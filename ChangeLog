@@ -1,4 +1,21 @@
+1998-12-06  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	Reverse the change of 1998-04-22.  Providing a struct dirent with
+	different members when __USE_FILE_OFFSET64 is defined is asking
+	for trouble.  Instead add the necessary LFS magic to the 4.4BSD
+	header.
+	* sysdeps/unix/bsd/bsd4.4/bits/dirent.h: Add LFS definitions.
+	* sysdeps/mach/hurd/bits/dirent.h: Removed.
+	* sysdeps/mach/hurd/readdir64.c: Removed.
+	* sysdeps/mach/hurd/readdir64_r.c: Removed.
+
 1998-12-20  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/bits/mman.h [__USE_MISC] (MAP_ANONYMOUS): Define as
+	alias for MAP_ANON.
+
+	* stdio/stdio.h (sys_errlist, sys_nerr, _sys_errlist, _sys_nerr):
+	Remove decls.  They don't exist at all on the Hurd.
 
 	* sunrpc/svc_unix.c, sunrpc/clnt_unix.c: Avoid using `struct cmsghdr'
 	and `struct ucred' #ifndef SCM_CREDENTIALS.

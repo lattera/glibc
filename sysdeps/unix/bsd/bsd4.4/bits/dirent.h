@@ -1,5 +1,5 @@
 /* Directory entry structure `struct dirent'.  4.4BSD version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,11 @@
 
 struct dirent
   {
+#ifndef __USE_FILE_OFFSET64
     __ino_t d_fileno;		/* File serial number.  */
+#else
+    __ino64_t d_fileno;
+#endif
     unsigned short int d_reclen; /* Length of the whole `struct dirent'.  */
     unsigned char d_type;	/* File type, possibly unknown.  */
     unsigned char d_namlen;	/* Length of the file name.  */
@@ -31,6 +35,18 @@ struct dirent
     /* Only this member is in the POSIX standard.  */
     char d_name[1];		/* File name (actually longer).  */
   };
+
+#ifdef __USE_LARGEFILE64
+struct dirent64
+  {
+    __ino64_t d_fileno;
+    unsigned short int d_reclen;
+    unsigned char d_type;
+    unsigned char d_namlen;
+
+    char d_name[1];
+  };
+#endif
 
 #define _DIRENT_HAVE_D_RECLEN 1
 #define _DIRENT_HAVE_D_NAMLEN 1

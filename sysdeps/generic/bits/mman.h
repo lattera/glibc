@@ -41,6 +41,9 @@
 # define MAP_FILE	 0x0001	/* Mapped from a file or device.  */
 # define MAP_ANON	 0x0002	/* Allocated from anonymous virtual memory.  */
 # define MAP_TYPE	 0x000f	/* Mask for type field.  */
+# ifdef __USE_MISC
+#  define MAP_ANONYMOUS  MAP_ANON /* Linux name. */
+# endif
 #endif
 
 /* Sharing types (must choose one and only one of these).  */
