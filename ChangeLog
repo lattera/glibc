@@ -1,6 +1,15 @@
+2002-12-27  Roland McGrath  <roland@redhat.com>
+
+	* scripts/gen-as-const.awk: New file.
+	* Makefile (distribute): Add it.
+	* Makerules ($(common-objpfx)%.h %.h.d: %.sym): New pattern rule.
+	(before-compile): Add $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
+	to the list.
+	(+depfiles): Add $(addprefix $(common-objpfx),$(gen-as-const-headers)).
+
 2002-12-27  Andreas Schwab  <schwab@suse.de>
 
-	* sysdeps/unix/sysv/linux/m68k/socket.S: Add cancellation support. 
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Add cancellation support.
 
 2002-12-27  Jakub Jelinek  <jakub@redhat.com>
 
