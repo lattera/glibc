@@ -178,8 +178,9 @@ free_derivation (void *p)
 
 
 /* Decrement the reference count for a single step in a steps array.  */
-static inline void
-release_step (struct __gconv_step *step)
+void
+internal_function
+__gconv_release_step (struct __gconv_step *step)
 {
   if (--step->__counter == 0)
     {
@@ -231,6 +232,9 @@ gen_steps (struct derivation_step *best, const char *toset,
 					? __strdup (current->result_set)
 					: result[step_cnt + 1].__from_name);
 
+	  result[step_cnt].__counter = 1;
+	  result[step_cnt].__data = NULL;
+
 #ifndef STATIC_GCONV
 	  if (current->code->module_name[0] == '/')
 	    {
@@ -249,31 +253,28 @@ gen_steps (struct derivation_step *best, const char *toset,
 	      result[step_cnt].__fct = shlib_handle->fct;
 	      result[step_cnt].__init_fct = shlib_handle->init_fct;
 	      result[step_cnt].__end_fct = shlib_handle->end_fct;
+
+	      /* Call the init function.  */
+	      if (result[step_cnt].__init_fct != NULL)
+		{
+		  status = DL_CALL_FCT (result[step_cnt].__init_fct,
+					(&result[step_cnt]));
+
+		  if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
+		    {
+		      failed = 1;
+		      /* Make sure we unload this modules.  */
+		      --step_cnt;
+		      result[step_cnt].__end_fct = NULL;
+		      break;
+		    }
+		}
 	    }
 	  else
 #endif
 	    /* It's a builtin transformation.  */
 	    __gconv_get_builtin_trans (current->code->module_name,
 				       &result[step_cnt]);
-
-	  result[step_cnt].__counter = 1;
-
-	  /* Call the init function.  */
-	  result[step_cnt].__data = NULL;
-	  if (result[step_cnt].__init_fct != NULL)
-	     {
-	       status = DL_CALL_FCT (result[step_cnt].__init_fct,
-				      (&result[step_cnt]));
-
-	       if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
-		 {
-		   failed = 1;
-		   /* Make sure we unload this modules.  */
-		   --step_cnt;
-		   result[step_cnt].__end_fct = NULL;
-		   break;
-		 }
-	     }
 
 	  current = current->last;
 	}
@@ -282,7 +283,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	{
 	  /* Something went wrong while initializing the modules.  */
 	  while (++step_cnt < *nsteps)
-	    release_step (&result[step_cnt]);
+	    __gconv_release_step (&result[step_cnt]);
 	  free (result);
 	  *nsteps = 0;
 	  *handle = NULL;
@@ -328,7 +329,7 @@ increment_counter (struct __gconv_step *steps, size_t nsteps)
 		     (after unloading) and this time loading failed!?  */
 		  --step->__counter;
 		  while (++cnt < nsteps)
-		    release_step (&steps[cnt]);
+		    __gconv_release_step (&steps[cnt]);
 		  result = __GCONV_NOCONV;
 		  break;
 		}
@@ -647,8 +648,8 @@ __gconv_find_transform (const char *toset, const char *fromset,
 			struct __gconv_step **handle, size_t *nsteps,
 			int flags)
 {
-  const char *fromset_expand = NULL;
-  const char *toset_expand = NULL;
+  const char *fromset_expand;
+  const char *toset_expand;
   int result;
 
   /* Ensure that the configuration data is read.  */
@@ -656,6 +657,14 @@ __gconv_find_transform (const char *toset, const char *fromset,
 
   /* Acquire the lock.  */
   __libc_lock_lock (lock);
+
+  result = __gconv_lookup_cache (toset, fromset, handle, nsteps, flags);
+  if (result != __GCONV_NODB)
+    {
+      /* We have a cache and could resolve the request, successful or not.  */
+      __libc_lock_unlock (lock);
+      return result;
+    }
 
   /* If we don't have a module database return with an error.  */
   if (__gconv_modules_db == NULL)
@@ -665,11 +674,8 @@ __gconv_find_transform (const char *toset, const char *fromset,
     }
 
   /* See whether the names are aliases.  */
-  if (__gconv_alias_db != NULL)
-    {
-      fromset_expand = do_lookup_alias (fromset);
-      toset_expand = do_lookup_alias (toset);
-    }
+  fromset_expand = do_lookup_alias (fromset);
+  toset_expand = do_lookup_alias (toset);
 
   if (__builtin_expect (flags & GCONV_AVOID_NOCONV, 0)
       /* We are not supposed to create a pseudo transformation (means
@@ -713,7 +719,7 @@ __gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
   __libc_lock_lock (lock);
 
   while (nsteps-- > 0)
-    release_step (&steps[nsteps]);
+    __gconv_release_step (&steps[nsteps]);
 
   /* Release the lock.  */
   __libc_lock_unlock (lock);

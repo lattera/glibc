@@ -156,24 +156,7 @@ contact <bug-glibc@gnu.org>.
        the currently implemented methods.
 
 
-[22] It should be possible to have the information gconv-modules in
-     a simple cache which is faster to access.  Using libdb is probably
-     overkill and loading it would probably be slower than reading the
-     plain text file.  But a file format with a simple hash table and
-     some data it points to should be fine.  Probably it should be
-     two tables, one for the aliases, one for the mappings.  The code
-     should start similar to this:
-
-	if (stat ("gconv-modules", &stp) == 0
-	    && stat ("gconv-modules.db", &std) == 0
-	    && stp.st_mtime < std.st_mtime)
-	  {
-	    ... use the cache ...
-	  {
-	else
-	  {
-	    ... use the plain file if it exists, otherwise the db ...
-	  }
+[22] Done.
 
 
 [23] The `strptime' function needs to be completed.  This includes among

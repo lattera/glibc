@@ -26,11 +26,12 @@ include ../Makeconfig
 headers		= iconv.h gconv.h
 routines	= iconv_open iconv iconv_close \
 		  gconv_open gconv gconv_close gconv_db gconv_conf \
-		  gconv_builtin gconv_simple gconv_trans
+		  gconv_builtin gconv_simple gconv_trans gconv_cache
 ifeq ($(elf),yes)
 routines	+= gconv_dl
 else
 CFLAGS-gconv_db.c = -DSTATIC_GCONV
+CFLAGS-gconv_cache.c = -DSTATIC_GCONV
 CFLAGS-gconv_simple.c = -DSTATIC_GCONV
 endif
 
@@ -38,6 +39,7 @@ vpath %.c ../locale/programs
 
 iconv_prog-modules = iconv_charmap charmap charmap-dir linereader \
 		     dummy-repertoire simple-hash xstrdup xmalloc
+iconvconfig-modules = strtab xmalloc
 extra-objs	   = $(iconv_prog-modules:=.o)
 CFLAGS-iconv_prog.c = -I../locale/programs
 CFLAGS-iconv_charmap.c = -I../locale/programs
@@ -50,10 +52,12 @@ tests	= tst-iconv1 tst-iconv2 tst-iconv3
 distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c iconv_prog.h \
 		  iconv_charmap.c dummy-repertoire.c gconv_charset.h
 
-others		= iconv_prog
+others		= iconv_prog iconvconfig
 install-others	= $(inst_bindir)/iconv
 
+CFLAGS-gconv_cache.c = -DGCONV_DIR='"$(gconvdir)"'
 CFLAGS-gconv_conf.c = -DGCONV_PATH='"$(gconvdir)"'
+CFLAGS-iconvconfig.c = -DGCONV_PATH='"$(gconvdir)"' -DGCONV_DIR='"$(gconvdir)"'
 
 include ../Rules
 
@@ -61,3 +65,4 @@ $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 	$(do-install-program)
 
 $(objpfx)iconv_prog: $(iconv_prog-modules:%=$(objpfx)%.o)
+$(objpfx)iconvconfig: $(iconvconfig-modules:%=$(objpfx)%.o)

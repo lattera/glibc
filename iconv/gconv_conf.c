@@ -60,8 +60,8 @@ static const char gconv_module_ext[] = MODULE_EXT;
 /* We have a few builtin transformations.  */
 static struct gconv_module builtin_modules[] =
 {
-#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, Init, End, MinF, \
-			       MaxF, MinT, MaxT) \
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, MinF, MaxF, \
+			       MinT, MaxT) \
   {									      \
     from_string: From,							      \
     to_string: To,							      \
@@ -79,8 +79,8 @@ static struct gconv_module builtin_modules[] =
 
 static const char *builtin_aliases[] =
 {
-#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, Init, End, MinF, \
-			       MaxF, MinT, MaxT)
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, MinF, MaxF, \
+			       MinT, MaxT)
 #define BUILTIN_ALIAS(From, To) From " " To,
 
 #include "gconv_builtin.h"
@@ -90,6 +90,10 @@ static const char *builtin_aliases[] =
 # include <libio/libioP.h>
 # define __getdelim(line, len, c, fp) _IO_getdelim (line, len, c, fp)
 #endif
+
+
+/* Value of the GCONV_PATH environment variable.  */
+const char *__gconv_path_envvar;
 
 
 /* Test whether there is already a matching module known.  */
@@ -423,7 +427,6 @@ __gconv_get_path (void)
   if (result == NULL)
     {
       /* Determine the complete path first.  */
-      const char *user_path;
       char *gconv_path;
       size_t gconv_path_len;
       char *elem;
@@ -433,8 +436,7 @@ __gconv_get_path (void)
       char *cwd;
       size_t cwdlen;
 
-      user_path = getenv ("GCONV_PATH");
-      if (user_path == NULL)
+      if (__gconv_path_envvar == NULL)
 	{
 	  /* No user-defined path.  Make a modifiable copy of the
 	     default path.  */
@@ -446,11 +448,12 @@ __gconv_get_path (void)
       else
 	{
 	  /* Append the default path to the user-defined path.  */
-	  size_t user_len = strlen (user_path);
+	  size_t user_len = strlen (__gconv_path_envvar);
 
 	  gconv_path_len = user_len + 1 + sizeof (default_gconv_path);
 	  gconv_path = alloca (gconv_path_len);
-	  __mempcpy (__mempcpy (__mempcpy (gconv_path, user_path, user_len),
+	  __mempcpy (__mempcpy (__mempcpy (gconv_path, __gconv_path_envvar,
+					   user_len),
 				":", 1),
 		     default_gconv_path, sizeof (default_gconv_path));
 	  cwd = __getcwd (NULL, 0);
@@ -530,6 +533,15 @@ __gconv_read_conf (void)
   int save_errno = errno;
   size_t cnt;
 
+  /* First see whether we should use the cache.  */
+  if (__gconv_load_cache () == 0)
+    {
+      /* Yes, we are done.  */
+      __set_errno (save_errno);
+      return;
+    }
+
+#ifndef STATIC_GCONV
   /* Find out where we have to look.  */
   if (__gconv_path_elem == NULL)
     __gconv_get_path ();
@@ -549,6 +561,7 @@ __gconv_read_conf (void)
       /* Read the next configuration file.  */
       read_conf_file (filename, elem, elem_len, &modules, &nmodules);
     }
+#endif
 
   /* Add the internal modules.  */
   for (cnt = 0; cnt < sizeof (builtin_modules) / sizeof (builtin_modules[0]);

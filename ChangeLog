@@ -1,3 +1,38 @@
+2001-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_builtin.c (struct builtin_map): Remove init and end
+	elements.
+	(BUILTIN_TRANSFORMATION): Remove Init and End parameters.
+	(__gconv_get_builtin_trans): Initialize __init_fct and __end_fct to
+	NULL.
+	* iconv/gconv_builtin.h: Remove NULL parameters for Init and End in
+	all BUILTIN_TRANSFORMATION calls.
+	* iconv/gconv_conf.c (BUILTIN_TRANSFORMATION): Remove Init and End
+	parameters.
+	* iconv/gconv_simple.c: Likewise.
+	* iconv/gconv_db.c (gen_steps): Internal converters don't have
+	initializers, move the code accordingly.
+
+	* iconv/gconv_conf.c (__gconv_read_conf): Don't read configuration
+	file if STATIC_GCONV is defined.
+
+	* iconv/gconv_conf.c (__gconv_path_envvar): New global variable.
+	(__gconv_get_path): Use it instead of call getenv.
+	(__gconv_read_conf): First see whether cache can be used.  If yes,
+	don't do any work here.
+	* iconv/gconv_db.c (__gconv_release_step): Renamed from release_step
+	and exported.  Change callers.
+	(__gconv_find_transform): First call __gconv_lookup_cache and only
+	continue if it signals no cache available.  Remove some unnecessary
+	tests.
+	* iconv/gconv_int.h: Declare __gconv_path_envvar, __gconv_lookup_cache,
+	__gconv_release_step, and __gconv_loaded_cache.
+	* iconv/gconv_cache.c: New file.
+	* iconv/iconvconfig.c: New file.
+	* iconv/iconvconfig.h: New file.
+	* iconv/strtab.c: New file.
+	* iconv/Makefile: Add rules to build new files and programs.
+
 2001-07-20  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/device-nrs.h (DEV_TTY_P): Change argument type

@@ -30,8 +30,8 @@
 #include <sys/param.h>
 
 #define BUILTIN_ALIAS(s1, s2) /* nothing */
-#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, Init, End, MinF, \
-			       MaxF, MinT, MaxT) \
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, MinF, MaxF, \
+			       MinT, MaxT) \
   extern int Fct (struct __gconv_step *, struct __gconv_step_data *,	      \
 		  __const unsigned char **, __const unsigned char *,	      \
 		  unsigned char **, size_t *, int, int);

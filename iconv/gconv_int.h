@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -120,6 +120,9 @@ extern void *__gconv_alias_db;
 extern size_t __gconv_nmodules;
 extern struct gconv_module *__gconv_modules_db;
 
+/* Value of the GCONV_PATH environment variable.  */
+extern const char *__gconv_path_envvar;
+
 
 /* The gconv functions expects the name to be in upper case and complete,
    including the trailing slashes if necessary.  */
@@ -179,8 +182,21 @@ extern int __gconv_find_transform (const char *toset, const char *fromset,
 				   size_t *nsteps, int flags)
      internal_function;
 
+/* Search for transformation in cache data.  */
+extern int __gconv_lookup_cache (const char *toset, const char *fromset,
+				 struct __gconv_step **handle, size_t *nsteps,
+				 int flags)
+     internal_function;
+
+/* Free data associated with a step's structure.  */
+extern void __gconv_release_step (struct __gconv_step *step)
+     internal_function;
+
 /* Read all the configuration data and cache it.  */
 extern void __gconv_read_conf (void);
+
+/* Try to read module cache file.  */
+extern int __gconv_load_cache (void) internal_function;
 
 /* Determine the directories we are looking in.  */
 extern void __gconv_get_path (void);

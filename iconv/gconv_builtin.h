@@ -1,5 +1,5 @@
 /* Builtin transformations.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -30,18 +30,14 @@ BUILTIN_ALIAS ("OSF00010105//", "ISO-10646/UCS4/") /* level 2 */
 BUILTIN_ALIAS ("OSF00010106//", "ISO-10646/UCS4/") /* level 3 */
 
 BUILTIN_TRANSFORMATION ("INTERNAL", "ISO-10646/UCS4/", 1, "=INTERNAL->ucs4",
-			__gconv_transform_internal_ucs4, NULL, NULL,
-			4, 4, 4, 4)
+			__gconv_transform_internal_ucs4, 4, 4, 4, 4)
 BUILTIN_TRANSFORMATION ("ISO-10646/UCS4/", "INTERNAL", 1, "=ucs4->INTERNAL",
-			__gconv_transform_ucs4_internal, NULL, NULL,
-			4, 4, 4, 4)
+			__gconv_transform_ucs4_internal, 4, 4, 4, 4)
 
 BUILTIN_TRANSFORMATION ("INTERNAL", "UCS-4LE//", 1, "=INTERNAL->ucs4le",
-			__gconv_transform_internal_ucs4le, NULL, NULL,
-			4, 4, 4, 4)
+			__gconv_transform_internal_ucs4le, 4, 4, 4, 4)
 BUILTIN_TRANSFORMATION ("UCS-4LE//", "INTERNAL", 1, "=ucs4le->INTERNAL",
-			__gconv_transform_ucs4le_internal, NULL, NULL,
-			4, 4, 4, 4)
+			__gconv_transform_ucs4le_internal, 4, 4, 4, 4)
 
 BUILTIN_ALIAS ("WCHAR_T//", "INTERNAL")
 
@@ -51,15 +47,12 @@ BUILTIN_ALIAS ("ISO-IR-193//", "ISO-10646/UTF8/")
 BUILTIN_ALIAS ("OSF05010001//", "ISO-10646/UTF8/")
 
 BUILTIN_TRANSFORMATION ("INTERNAL", "ISO-10646/UTF8/", 1, "=INTERNAL->utf8",
-			__gconv_transform_internal_utf8, NULL, NULL,
-			4, 4, 1, 6)
+			__gconv_transform_internal_utf8, 4, 4, 1, 6)
 
 BUILTIN_TRANSFORMATION ("ISO-10646/UTF-8/", "INTERNAL", 1, "=utf8->INTERNAL",
-			__gconv_transform_utf8_internal, NULL, NULL,
-			1, 6, 4, 4)
+			__gconv_transform_utf8_internal, 1, 6, 4, 4)
 BUILTIN_TRANSFORMATION ("ISO-10646/UTF8/", "INTERNAL", 1, "=utf8->INTERNAL",
-			__gconv_transform_utf8_internal, NULL, NULL,
-			1, 6, 4, 4)
+			__gconv_transform_utf8_internal, 1, 6, 4, 4)
 
 BUILTIN_ALIAS ("UCS2//", "ISO-10646/UCS2/")
 BUILTIN_ALIAS ("UCS-2//", "ISO-10646/UCS2/")
@@ -68,12 +61,10 @@ BUILTIN_ALIAS ("OSF00010101//", "ISO-10646/UCS2/") /* level 2 */
 BUILTIN_ALIAS ("OSF00010102//", "ISO-10646/UCS2/") /* level 3 */
 
 BUILTIN_TRANSFORMATION ("ISO-10646/UCS2/", "INTERNAL", 1, "=ucs2->INTERNAL",
-			__gconv_transform_ucs2_internal, NULL, NULL,
-			2, 2, 4, 4)
+			__gconv_transform_ucs2_internal, 2, 2, 4, 4)
 
 BUILTIN_TRANSFORMATION ("INTERNAL", "ISO-10646/UCS2/", 1, "=INTERNAL->ucs2",
-			__gconv_transform_internal_ucs2, NULL, NULL,
-			4, 4, 2, 2)
+			__gconv_transform_internal_ucs2, 4, 4, 2, 2)
 
 
 BUILTIN_ALIAS ("ANSI_X3.4//", "ANSI_X3.4-1968//")
@@ -90,12 +81,10 @@ BUILTIN_ALIAS ("CSASCII//", "ANSI_X3.4-1968//")
 BUILTIN_ALIAS ("OSF00010020//", "ANSI_X3.4-1968//")
 
 BUILTIN_TRANSFORMATION ("ANSI_X3.4-1968//", "INTERNAL", 1, "=ascii->INTERNAL",
-			__gconv_transform_ascii_internal, NULL, NULL,
-			4, 4, 1, 1)
+			__gconv_transform_ascii_internal, 4, 4, 1, 1)
 
 BUILTIN_TRANSFORMATION ("INTERNAL", "ANSI_X3.4-1968//", 1, "=INTERNAL->ascii",
-			__gconv_transform_internal_ascii, NULL, NULL,
-			4, 4, 1, 1)
+			__gconv_transform_internal_ascii, 4, 4, 1, 1)
 
 
 #if BYTE_ORDER == BIG_ENDIAN
@@ -106,13 +95,11 @@ BUILTIN_ALIAS ("UCS-2LE//", "UNICODELITTLE//")
 
 BUILTIN_TRANSFORMATION ("UNICODELITTLE//", "INTERNAL", 1,
 			"=ucs2reverse->INTERNAL",
-			__gconv_transform_ucs2reverse_internal, NULL, NULL,
-			2, 2, 4, 4)
+			__gconv_transform_ucs2reverse_internal, 2, 2, 4, 4)
 
 BUILTIN_TRANSFORMATION ("INTERNAL", "UNICODELITTLE//", 1,
 			"=INTERNAL->ucs2reverse",
-			__gconv_transform_internal_ucs2reverse, NULL, NULL,
-			4, 4, 2, 2)
+			__gconv_transform_internal_ucs2reverse, 4, 4, 2, 2)
 #else
 BUILTIN_ALIAS ("UNICODELITTLE//", "ISO-10646/UCS2/")
 BUILTIN_ALIAS ("UCS-2LE//", "ISO-10646/UCS2/")
@@ -121,11 +108,9 @@ BUILTIN_ALIAS ("UCS-2BE//", "UNICODEBIG//")
 
 BUILTIN_TRANSFORMATION ("UNICODEBIG//", "INTERNAL", 1,
 			"=ucs2reverse->INTERNAL",
-			__gconv_transform_ucs2reverse_internal, NULL, NULL,
-			2, 2, 4, 4)
+			__gconv_transform_ucs2reverse_internal, 2, 2, 4, 4)
 
 BUILTIN_TRANSFORMATION ("INTERNAL", "UNICODEBIG//", 1,
 			"=INTERNAL->ucs2reverse",
-			__gconv_transform_internal_ucs2reverse, NULL, NULL,
-			4, 4, 2, 2)
+			__gconv_transform_internal_ucs2reverse, 4, 4, 2, 2)
 #endif
