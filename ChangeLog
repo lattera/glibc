@@ -1,5 +1,13 @@
 2000-05-10  Jakub Jelinek  <jakub@redhat.com>
 
+ 	* elf/dl-reloc.c (_dl_reloc_bad_type): Sync messages with plt
+ 	argument.
+ 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handle
+ 	R_SPARC_UA64.
+ 	* sysdeps/unix/sysv/linux/sparc/sparc64/time.c: New file.
+
+2000-05-10  Jakub Jelinek  <jakub@redhat.com>
+
 	* elf/dl-reloc.c (_dl_reloc_bad_type): Write type into the message
 	at proper place.  Compute the high nibble correctly.
 

@@ -316,6 +316,24 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  elf_machine_fixup_plt(map, NULL, reloc, reloc_addr, value);
 	  break;
 
+	case R_SPARC_UA64:
+	  if (! ((long) reloc_addr & 3))
+	    {
+	      /* Common in .eh_frame */
+	      ((unsigned int *) reloc_addr) [0] = value >> 32;
+	      ((unsigned int *) reloc_addr) [1] = value;
+	      break;
+	    }
+	  ((unsigned char *) reloc_addr) [0] = value >> 56;
+	  ((unsigned char *) reloc_addr) [1] = value >> 48;
+	  ((unsigned char *) reloc_addr) [2] = value >> 40;
+	  ((unsigned char *) reloc_addr) [3] = value >> 32;
+	  ((unsigned char *) reloc_addr) [4] = value >> 24;
+	  ((unsigned char *) reloc_addr) [5] = value >> 16;
+	  ((unsigned char *) reloc_addr) [6] = value >> 8;
+	  ((unsigned char *) reloc_addr) [7] = value;
+	  break;
+
 	default:
 	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
 	  break;
