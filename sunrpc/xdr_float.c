@@ -52,7 +52,7 @@ static char sccsid[] = "@(#)xdr_float.c 1.12 87/08/11 Copyr 1984 Sun Micro";
  * This routine works on Suns (Sky / 68000's) and Vaxen.
  */
 
-#define LSW	(__BYTE_ORDER == __BIG_ENDIAN)
+#define LSW	(__FLOAT_WORD_ORDER == __BIG_ENDIAN)
 
 #ifdef vax
 

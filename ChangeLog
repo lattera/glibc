@@ -1,3 +1,8 @@
+1999-10-10  Philip Blundell  <philb@gnu.org>
+
+	* sunrpc/xdr_float.c (LSW): Depend on __FLOAT_WORD_ORDER not
+	__BYTE_ORDER.
+
 1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/socket.S: Adjust asm syntax.
