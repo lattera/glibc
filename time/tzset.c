@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -177,7 +177,7 @@ DEFUN_VOID(__tzset)
       break;
     }
   tz_rules[0].offset *= (min(ss, 59) + (min(mm, 59) * 60) +
-			 (min(hh, 12) * 60 * 60));
+			 (min(hh, 23) * 60 * 60));
 
   for (l = 0; l < 3; ++l)
     {
@@ -228,7 +228,7 @@ DEFUN_VOID(__tzset)
       ss = 0;
     case 3:
       tz_rules[1].offset *= (min(ss, 59) + (min(mm, 59) * 60) +
-			     (min(hh, 12) * (60 * 60)));
+			     (min(hh, 23) * (60 * 60)));
       break;
     }
   for (l = 0; l < 3; ++l)
@@ -257,14 +257,14 @@ DEFUN_VOID(__tzset)
   for (whichrule = 0; whichrule < 2; ++whichrule)
     {
       register tz_rule *tzr = &tz_rules[whichrule];
-      
+
       if (*tz == ',')
 	{
 	  ++tz;
 	  if (*tz == '\0')
 	    return;
 	}
-      
+
       /* Get the date of the change.  */
       if (*tz == 'J' || isdigit (*tz))
 	{
@@ -309,7 +309,7 @@ DEFUN_VOID(__tzset)
 	}
       else
 	return;
-      
+
       if (*tz != '\0' && *tz != '/' && *tz != ',')
 	return;
       else if (*tz == '/')
@@ -375,7 +375,7 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
   if (year != -1 && rule->computed_for == year)
     /* Operations on times in 1969 will be slower.  Oh well.  */
     return 1;
-     
+
   /* First set T to January 1st, 0:00:00 GMT in YEAR.  */
   t = 0;
   for (y = 1970; y < year; ++y)

@@ -1,3 +1,7 @@
+Fri Feb 16 11:01:59 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* time/tzset.c: Limit hours to 23, not 12.  From jaffer.
+
 Fri Feb 16 10:14:05 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* Makeconfig (CFLAGS-.po): Use -pg instead of -p.
