@@ -1,5 +1,12 @@
 2001-04-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/aix/dl-libc.c: Don't use the ELF version,
+	define simple replacements here.  Patch by Michael Keezer.
+
+	* sysdeps/ieee754/ldbl-128/e_logl.c: New file.
+	* sysdeps/ieee754/ldbl-96/e_asinl.c: New file.
+	Contributed by Stephen L Moshier <moshier@mediaone.net>.
+
 	* posix/fnmatch_loop.c: Undefine NEW_PATTERN when it is not used
 	anymore.
 
