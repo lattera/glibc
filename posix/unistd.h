@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,34 +30,30 @@ __BEGIN_DECLS
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from `sysconf'.  */
 
-/* POSIX Standard approved as ISO/IEC 9945-1 as of August, 1988 and
-   extended by POSIX-1b (aka POSIX-4) and POSIX-1c (aka POSIX threads).  */
-#define	_POSIX_VERSION	199506L
+/* POSIX Standard approved as ISO/IEC 9945-1 as of December 2001.  */
+#define	_POSIX_VERSION	200112L
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
 
-/* POSIX Standard approved as ISO/IEC 9945-2 as of December, 1993.  */
-#define	_POSIX2_C_VERSION	199209L
-
 /* The utilities on GNU systems also correspond to this version.  */
-#define _POSIX2_VERSION	199209L
+#define _POSIX2_VERSION	200112L
 
 /* If defined, the implementation supports the
    C Language Bindings Option.  */
-#define	_POSIX2_C_BIND	1
+#define	_POSIX2_C_BIND	200112L
 
 /* If defined, the implementation supports the
    C Language Development Utilities Option.  */
-#define	_POSIX2_C_DEV	1
+#define	_POSIX2_C_DEV	200112L
 
 /* If defined, the implementation supports the
    Software Development Utilities Option.  */
-#define	_POSIX2_SW_DEV	1
+#define	_POSIX2_SW_DEV	200112L
 
 /* If defined, the implementation supports the
    creation of locales with the localedef utility.  */
-#define _POSIX2_LOCALEDEF       1
+#define _POSIX2_LOCALEDEF       200112L
 
 /* X/Open version number to which the library conforms.  It is selectable.  */
 #ifdef __USE_UNIX98
@@ -982,25 +978,6 @@ extern void swab (__const void *__restrict __from, void *__restrict __to,
 #ifdef __USE_XOPEN
 /* Return the name of the controlling terminal.  */
 extern char *ctermid (char *__s) __THROW;
-#endif
-
-
-#ifdef __USE_POSIX199309
-/* This function is only available if the system has POSIX threads.  */
-
-/* Install handlers to be called when a new process is created with FORK.
-   The PREPARE handler is called in the parent process just before performing
-   FORK. The PARENT handler is called in the parent process just after FORK.
-   The CHILD handler is called in the child process.  Each of the three
-   handlers can be NULL, meaning that no handler needs to be called at that
-   point.
-   PTHREAD_ATFORK can be called several times, in which case the PREPARE
-   handlers are called in LIFO order (last added with PTHREAD_ATFORK,
-   first called before FORK), and the PARENT and CHILD handlers are called
-   in FIFO (first added, first called). */
-extern int pthread_atfork (void (*__prepare) (void),
-			   void (*__parent) (void),
-			   void (*__child) (void)) __THROW;
 #endif
 
 __END_DECLS

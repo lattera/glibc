@@ -1,3 +1,10 @@
+2003-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/unistd.h: Define _POSIX_VERSION, _POSIX2_VERSION,
+	_POSIX2_C_BIND, _POSIX2_C_DEV, _POSIX2_SW_DEV, and
+	_POSXI2_LOCALEDEF to 200112L.  Remove _POSIX2_C_VERSION.
+	Remove declaration of pthread_atfork.
+
 2003-04-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/iso-639.def: Add many more languages from the current ISO 639.
