@@ -1,3 +1,9 @@
+2002-05-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/errlist.c: Remove extra weak alias
+	definiton of _old_sys_nerr.  Define _old_sys_errlist as strong
+	alias.
+
 2002-05-19  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/configure.in: Warn against an
