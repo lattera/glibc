@@ -162,4 +162,4 @@ static double __full_ieee754_sqrt(double) __attribute__((unused));
 
 #endif /* _IEEE_FP_INEXACT */
 
-#include <sysdeps/libm-ieee754/e_sqrt.c>
+#include <sysdeps/ieee754/dbl-64/e_sqrt.c>
