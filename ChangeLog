@@ -1,3 +1,8 @@
+2002-07-23  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/s_copysign.S: Use optimized version.
+	* sysdeps/x86_64/fpu/s_copysignf.S: Likewise.
+
 2002-07-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/tst-eof.c: Rewrite to let test-skeleton.c deal with
