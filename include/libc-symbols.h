@@ -440,18 +440,15 @@
    versioned_symbol (libc, __real_foo, foo, GLIBC_2_1);
    libc_hidden_ver (__real_foo, foo)  */
 
-#if defined SHARED && defined DO_VERSIONING
+#if defined SHARED && defined DO_VERSIONING \
+    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
 # ifndef __ASSEMBLER__
 #  ifdef HAVE_BROKEN_VISIBILITY_ATTRIBUTE
 #   define __hidden_proto_hiddenattr
 #  else
 #   define __hidden_proto_hiddenattr attribute_hidden
 #  endif
-#  ifndef HAVE_BROKEN_ALIAS_ATTRIBUTE
-#   define hidden_proto(name) __hidden_proto (name, __GI_##name)
-#  else
-#   define hidden_proto(name)
-#  endif
+#  define hidden_proto(name) __hidden_proto (name, __GI_##name)
 #  define __hidden_proto(name, internal) \
   __typeof (name) internal; \
   __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
