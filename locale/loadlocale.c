@@ -38,7 +38,6 @@ const size_t _nl_category_num_items[] =
 struct locale_data *
 _nl_load_locale (int category, char **name)
 {
-  char *file;
   int fd;
   struct
     {
@@ -69,18 +68,31 @@ _nl_load_locale (int category, char **name)
 	*name = (char *) "local";
     }
 
-/* XXX can't use asprintf here */
-  if (asprintf (&file, "%s%s/%s",
-		strchr (*name, '/') != NULL ? "" : "/share/locale/", /* XXX */
-		*name, _nl_category_names[category]) == -1)
-    return NULL;
-
-  fd = __open (file, O_RDONLY);
-  free (file);
-  if (fd < 0)
-    return NULL;
-  if (__fstat (fd, &st) < 0)
-    goto puntfd;
+  {
+    const char localedir[] = "/share/locale/"; /* XXX */
+    const char *catname = _nl_category_names[category];
+    size_t namelen = strlen (*name);
+    size_t catlen = strlen (catname);
+    char file[sizeof localedir + namelen + catlen * 2 + 4];
+    sprintf (file, "%s%s/%s",
+	     strchr (*name, '/') != NULL ? "" : localedir, *name, catname);
+    fd = __open (file, O_RDONLY);
+    if (fd < 0)
+      return NULL;
+    if (__fstat (fd, &st) < 0)
+      goto puntfd;
+    if (S_ISDIR (st.st_mode))
+      {
+	/* LOCALE/LC_* is a directory; open LOCALE/LC_*/SYS_LC_* instead.  */
+	__close (fd);
+	memcpy (stpcpy (strchr (file, '\0'), "SYS_"), catname, catlen);
+	fd = __open (file, O_RDONLY);
+	if (fd < 0)
+	  return NULL;
+	if (__fstat (fd, &st) < 0)
+	  goto puntfd;
+      }
+  }
 
   {
     /* Map in the file's data.  */

@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  24 February 1995
+GNU C Library NEWS -- history of user-visible changes.  21 March 1995
 
 Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -16,6 +16,50 @@ Version 1.10
   of many files which contained only symbol aliases, reducing the size of
   the source and the compiled library; many other files were renamed to
   less cryptic names previously occupied by the symbol alias files.
+  There is a new header file <elf.h> and new library `-lelf' for
+  programs which operate on files in the ELF format.
+
+* Converted to Autoconf version 2, so `configure' has more options.
+  Run `configure --help' to see the details.
+
+* The library can now be configured to build profiling, highly-optimized
+  (but undebuggable), and/or shared libraries (ELF with GNU ld only).
+  The `--enable-profile', `--enable-omitfp', and `--enable-shared'
+  options to `configure' enable building these extra libraries.
+  The shared library is built by default when using both ELF and GNU ld.
+
+* The new functions `strtoq' and `strtouq' parse integer values from
+  strings, like `strtol' and `strtoul', but they return `long long int' and
+  `unsigned long long int' values, respectively (64-bit quantities).
+
+* The new functions `strtof' and `strtold' parse floating-point values from
+  strings, like `strtod', but they return `float' and `long double' values,
+  respectively (on some machines `double' and `long double' are the same).
+
+* Ulrich Drepper has contributed new implementations of the floating-point
+  printing and reading code used in the `printf' family of functions and
+  `strtod', `strtof', and `strtold'.  These new functions are perfectly
+  accurate, and much faster than the old ones.
+
+* The new header <langinfo.h> defines an interface for accessing
+  various locale-dependent data (using the locale chosen with `setlocale').
+
+* You can now use positional parameter specifications in format strings 
+  for the `printf' and `scanf' families of functions.  For example,
+  `printf ("Number %2$d, Mr %1$s\n", "Jones", 6);'' prints
+  ``Number 6, Mr Jones''.  This is mainly useful when providing different
+  format strings for different languages, whose grammar may dictate
+  a different ordering of the values being printed.  To support this
+  feature, the interface for `register_printf_handler' has changed; see
+  the header file <printf.h>.
+
+* The `printf' and `scanf' families of functions now understand a new
+  formatting flag for numeric conversions: the ' flag (e.g. %'d or %'f) says
+  to group numbers as indicated by the locale; for `scanf' and friends, this
+  says to accept as valid only a number with all the proper grouping
+  separators in the right places.  In the default "C" locale, numbers are
+  not grouped; but locales for specific countries will define the usual
+  conventions (i.e. separate thousands with `,' in the US locale).
 
 * The pgrp functions have been regularized, slightly incompatibly but much
   less confusingly.  The core functions are now `getpgid' and `setpgid',
@@ -27,22 +71,11 @@ Version 1.10
 * The new header file <fts.h> and suite of functions simplify programs that
   operate on directory trees.  This code comes from 4.4 BSD.
 
-* Converted to Autoconf version 2, so `configure' has more options.
-  Run `configure --help' to see the details.
-
 * The resolver code has been updated from the BIND-4.9.3-BETA14 release.
 
 * The new function `malloc_find_object_address' finds the starting address
   of a malloc'd block, given any address within the block.  This can be
   useful for debugging.
-
-* The new functions `strtoq' and `strtouq' parse integer values from
-  strings, like `strtol' and `strtoul', but they return `long long int' and
-  `unsigned long long int' values, respectively (64-bit quantities).
-
-* The new functions `strtof' and `strtold' parse floating-point values from
-  strings, like `strtod', but they return `float' and `long double' values,
-  respectively (on some machines `double' and `long double' are the same).
 
 * There is a new malloc debugging hook `__memalign_hook'.
 
@@ -53,19 +86,18 @@ Version 1.10
 * The `-lmcheck' library to enable standard malloc debugging hooks is now
   done differently, so that it works even without GNU ld.
 
-* Ulrich Drepper has contributed new implementations of the floating-point
-  printing and reading code used in the `printf' family of functions and
-  `strtod', `strtof', and `strtold'.  These new functions are perfectly
-  accurate, and much faster than the old ones.
-
-* The `printf' family of functions now understand a new formatting flag
-  for numeric conversions: the ' flag (e.g. %'d or %'f) says to group
-  numbers as indicated by the locale.  In the default "C" locale, numbers
-  are not grouped; but locales for specific countries will define the
-  usual conventions (i.e. separate thousands with `,' in the US locale).
-
 * New function `euidaccess' checks allowed access to a file like `access',
   but using the effective IDs instead of the real IDs.
+
+* The time zone data files have been updated for the latest and greatest
+  local time conventions of the countries of the world.
+
+* The new function `dirfd' extracts the file descriptor used by a DIR stream;
+  see <dirent.h>.
+
+* The new functions `ecvt', `fcvt', and `gcvt' provide an obsolete interface
+  for formatting floating-point numbers.  They are provided only for
+  compatibility; new programs should use `sprintf' instead.
 
 Version 1.09
 

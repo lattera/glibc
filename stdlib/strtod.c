@@ -36,11 +36,11 @@ Cambridge, MA 02139, USA.  */
 #include "../locale/localeinfo.h"
 #include <math.h>
 #include <stdlib.h>
-#include "../stdio/gmp.h"
-#include "../stdio/gmp-impl.h"
+#include "gmp.h"
+#include "gmp-impl.h"
 #include <gmp-mparam.h>
-#include "../stdio/longlong.h"
-#include "../stdio/fpioconst.h"
+#include "longlong.h"
+#include "fpioconst.h"
 
 #define NDEBUG 1
 #include <assert.h>

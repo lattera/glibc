@@ -1,4 +1,18 @@
+Tue Mar 21 00:14:27 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/loadlocale.c (_nl_load_locale): If LOCALE/LC_* is a
+ 	directory, open LOCALE/LC_*/SYS_LC_* instead.
+
 Mon Mar 20 03:19:23 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/fpioconst.c, stdio/fpioconst.h, stdio/gmp-impl.h,
+	stdio/gmp.h, stdio/longlong.h, stdio/mp_clz_tab.c,
+	stdio/gen-mpn-copy: Files moved to stdlib.
+	* stdio/Makefile: All mpn stuff moved to stdlib/Makefile.
+	* stdio/printf_fp.c: Use ../stdlib to find fpioconst.h and gmp
+ 	headers.
+	* stdlib/strtod.c: Don't use ../stdio to find fpioconst.h and gmp
+ 	headers.
 
 	* Makefile (parent-mostlyclean): Don't use $(libc.a).
 	(parent-clean): Use $(objpfx) to find sysd-*.
