@@ -206,16 +206,13 @@ group_keys (int number, char *key[])
 
   for (i = 0; i < number; ++i)
     {
-      if (isdigit (key[i][0]))
-	{
-           char *ep;
-           gid_t arg_gid = strtoul (key[i], &ep, 10);
+      errno = 0;
+      char *ep;
+      gid_t arg_gid = strtoul(key[i], &ep, 10);
 
-           if (*key[i] != '\0' && *ep == '\0')  /* valid numeric uid */
-             grp = getgrgid (arg_gid);
-           else
-             grp = NULL;
-	}
+      if (errno != EINVAL && *key[i] != '\0' && *ep == '\0')
+	/* Valid numeric gid.  */
+	grp = getgrgid (arg_gid);
       else
 	grp = getgrnam (key[i]);
 
@@ -481,16 +478,13 @@ passwd_keys (int number, char *key[])
 
   for (i = 0; i < number; ++i)
     {
-      if (isdigit (key[i][0]))
-        {
-	   char *ep;
-	   uid_t arg_uid = strtoul (key[i], &ep, 10);
+      errno = 0;
+      char *ep;
+      uid_t arg_uid = strtoul(key[i], &ep, 10);
 
-           if (*key[i] != '\0' && *ep == '\0')  /* valid numeric uid */
-	     pwd = getpwuid (arg_uid);
-           else
-             pwd = NULL;
-        }
+      if (errno != EINVAL && *key[i] != '\0' && *ep == '\0')
+	/* Valid numeric uid.  */
+	pwd = getpwuid (arg_uid);
       else
 	pwd = getpwnam (key[i]);
 

@@ -26,6 +26,10 @@
 #include <sys/socket.h>
 
 
+/* Defined in getsourcefilter.c.  */
+extern int __get_sol (int af, socklen_t len);
+
+
 int
 setsourcefilter (int s, uint32_t interface, struct sockaddr *group,
 		 socklen_t grouplen, uint32_t fmode, uint32_t numsrc,
@@ -34,17 +38,17 @@ setsourcefilter (int s, uint32_t interface, struct sockaddr *group,
   /* We have to create an struct ip_msfilter object which we can pass
      to the kernel.  */
   size_t needed = GROUP_FILTER_SIZE (numsrc);
-  int use_malloc = __libc_use_alloca (needed);
+  int use_alloca = __libc_use_alloca (needed);
 
   struct group_filter *gf;
-  if (use_malloc)
+  if (use_alloca)
+    gf = (struct group_filter *) alloca (needed);
+  else
     {
       gf = (struct group_filter *) malloc (needed);
       if (gf == NULL)
 	return -1;
     }
-  else
-    gf = (struct group_filter *) alloca (needed);
 
   gf->gf_interface = interface;
   memcpy (&gf->gf_group, group, grouplen);
@@ -52,9 +56,17 @@ setsourcefilter (int s, uint32_t interface, struct sockaddr *group,
   gf->gf_numsrc = numsrc;
   memcpy (gf->gf_slist, slist, numsrc * sizeof (struct sockaddr_storage));
 
-  int result = __setsockopt (s, SOL_IP, MCAST_MSFILTER, gf, needed);
+  /* We need to provide the appropriate socket level value.  */
+  int sol = __get_sol (group->sa_family, grouplen);
+  if (sol == -1)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-  if (use_malloc)
+  int result = __setsockopt (s, sol, MCAST_MSFILTER, gf, needed);
+
+  if (! use_alloca)
     {
       int save_errno = errno;
       free (gf);
