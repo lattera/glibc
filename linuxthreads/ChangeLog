@@ -1,3 +1,9 @@
+2003-06-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h: New sequences for
+	5+ arg syscalls only needed for PIC.
+	Patch by Ralph Siemsen <ralphs@netwinder.org>.
+
 2003-06-05  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (PSEUDO): Use
