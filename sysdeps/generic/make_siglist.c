@@ -19,6 +19,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <signal.h>
 
 /* Get this configuration's defns of the signal numbers.  */
+#undef	_SIGNAL_H
 #define _SIGNAL_H 1
 #include SIGNUM_H
 
