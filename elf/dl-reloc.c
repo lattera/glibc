@@ -225,12 +225,27 @@ _dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
 #define DIGIT(b)	INTUSE(_itoa_lower_digits)[(b) & 0xf];
 
   /* XXX We cannot translate these messages.  */
-  static const char msg[2][32] = { "unexpected reloc type 0x",
-				   "unexpected PLT reloc type 0x" };
+  static const char msg[2][32
+#if __ELF_NATIVE_CLASS == 64
+			   + 6
+#endif
+  ] = { "unexpected reloc type 0x",
+	"unexpected PLT reloc type 0x" };
   char msgbuf[sizeof (msg[0])];
   char *cp;
 
   cp = __stpcpy (msgbuf, msg[plt]);
+#if __ELF_NATIVE_CLASS == 64
+  if (__builtin_expect(type > 0xff, 0))
+    {
+      *cp++ = DIGIT (type >> 28);
+      *cp++ = DIGIT (type >> 24);
+      *cp++ = DIGIT (type >> 20);
+      *cp++ = DIGIT (type >> 16);
+      *cp++ = DIGIT (type >> 12);
+      *cp++ = DIGIT (type >> 8);
+    }
+#endif
   *cp++ = DIGIT (type >> 4);
   *cp++ = DIGIT (type);
   *cp = '\0';
