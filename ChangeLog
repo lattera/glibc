@@ -1,9 +1,13 @@
+1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/weight.h: Set errno if an invalid character is found.
+
 1999-08-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* math/libm-test.c (erfc_test): Add test for example from PR
 	libc/1259.
 	(erf_test): Likewise.
-			
+
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/ieee754/dbl-64/s_erf.c: Correct type in performance increase

@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Written by Ulrich Drepper, <drepper@cygnus.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -107,6 +107,9 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 		  result->data[cnt].value = &__collate_extra[idx];
 		  idx += result->data[cnt].number;
 		}
+	      /* The Unix standard requires that a character outside
+		 the domain is signalled by setting `errno'.  */
+	      __set_errno (EINVAL);
 	      return;
 	    }
 	  slot += level_size;
