@@ -37,7 +37,10 @@
   register unsigned long _beg __asm ("a1") = (unsigned long)(BEG);	\
   register unsigned long _end __asm ("a2") = (unsigned long)(END);	\
   register unsigned long _flg __asm ("a3") = 0;				\
-  __asm __volatile ("swi 0x9f0002");					\
+  __asm __volatile ("swi 0x9f0002		@ sys_cacheflush"	\
+		    : /* no outputs */					\
+		    : /* no inputs */					\
+		    : "a1");						\
 }
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
@@ -350,10 +353,9 @@ extern const char *_dl_platform;
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (_dl_platform == NULL)
-    /* We default to ARM
-    This is where processors could be distinguished arm2, arm6, sa110, etc */
-    _dl_platform = "ARM";
+  if (_dl_platform != NULL && *_dl_platform == '\0')
+    /* Avoid an empty string which would disturb us.  */
+    _dl_platform = NULL;
 }
 
 static inline void
