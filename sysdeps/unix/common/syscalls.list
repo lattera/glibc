@@ -1,17 +1,17 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-adjtime		-	adjtime		2	__adjtime	adjtime
-fchmod		-	fchmod		2	__fchmod	fchmod
-fchown		-	fchown		3	__fchown	fchown
-ftruncate	-	ftruncate	2	__ftruncate	ftruncate
-getpgid		-	getpgrp		1	__getpgid	getpgid
-getrusage	-	getrusage	2	__getrusage	getrusage
-gettimeofday	-	gettimeofday	2	__gettimeofday	gettimeofday
-settimeofday	-	settimeofday	2	__settimeofday	settimeofday
-setpgid		-	setpgrp		2	__setpgid	setpgid
-setregid	-	setregid	2	__setregid	setregid
-setreuid	-	setreuid	2	__setreuid	setreuid
-sigaction	-	sigaction	3	__sigaction	sigaction
-sys_lstat	lxstat	lstat		2	__syscall_lstat
-truncate	-	truncate	2	truncate
-vhangup		-	vhangup		1	vhangup
+adjtime		-	adjtime		i:pp	__adjtime	adjtime
+fchmod		-	fchmod		i:ii	__fchmod	fchmod
+fchown		-	fchown		i:iii	__fchown	fchown
+ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate
+getpgid		-	getpgrp		i:i	__getpgid	getpgid
+getrusage	-	getrusage	i:ip	__getrusage	getrusage
+gettimeofday	-	gettimeofday	i:pp	__gettimeofday	gettimeofday
+settimeofday	-	settimeofday	i:pp	__settimeofday	settimeofday
+setpgid		-	setpgrp		i:ii	__setpgid	setpgid
+setregid	-	setregid	i:ii	__setregid	setregid
+setreuid	-	setreuid	i:ii	__setreuid	setreuid
+sigaction	-	sigaction	i:ipp	__sigaction	sigaction
+sys_lstat	lxstat	lstat		i:sp	__syscall_lstat
+truncate	-	truncate	i:si	truncate
+vhangup		-	vhangup		i:i	vhangup

@@ -1,23 +1,23 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-accept		-	accept		3	__libc_accept	accept
-bind		-	bind		3	bind
-connect		-	connect		3	__libc_connect	__connect connect
-gethostid	-	gethostid	0	gethostid
-gethostname	-	gethostname	2	__gethostname	gethostname
-getpeername	-	getpeername	3	getpeername
-getsockname	-	getsockname	3	getsockname
-getsockopt	-	getsockopt	5	getsockopt
-listen		-	listen		2	listen
-recv		-	recv		4	__libc_recv	recv
-recvfrom	-	recvfrom	6	__libc_recvfrom	recvfrom
-recvmsg		-	recvmsg		3	__libc_recvmsg	recvmsg
-send		-	send		4	__libc_send	__send send
-sendmsg		-	sendmsg		3	__libc_sendmsg	sendmsg
-sendto		-	sendto		6	__libc_sendto	sendto
-sethostid	-	sethostid	1	sethostid
-sethostname	-	sethostname	2	sethostname
-setsockopt	-	setsockopt	5	setsockopt
-shutdown	-	shutdown	2	shutdown
-socket		-	socket		3	socket
-socketpair	-	socketpair	4	socketpair
+accept		-	accept		i:ipi	__libc_accept	accept
+bind		-	bind		i:ipi	bind
+connect		-	connect		i:ipi	__libc_connect	__connect connect
+gethostid	-	gethostid	i:	gethostid
+gethostname	-	gethostname	i:si	__gethostname	gethostname
+getpeername	-	getpeername	i:ipi	getpeername
+getsockname	-	getsockname	i:ipi	getsockname
+getsockopt	-	getsockopt	i:iiipp	getsockopt
+listen		-	listen		i:ii	listen
+recv		-	recv		i:ipii	__libc_recv	recv
+recvfrom	-	recvfrom	i:ipiipp	__libc_recvfrom	recvfrom
+recvmsg		-	recvmsg		i:ipi	__libc_recvmsg	recvmsg
+send		-	send		i:ipii	__libc_send	__send send
+sendmsg		-	sendmsg		i:ipi	__libc_sendmsg	sendmsg
+sendto		-	sendto		i:ipiipi	__libc_sendto	sendto
+sethostid	-	sethostid	i:i	sethostid
+sethostname	-	sethostname	i:pi	sethostname
+setsockopt	-	setsockopt	i:iiipi	setsockopt
+shutdown	-	shutdown	i:ii	shutdown
+socket		-	socket		i:iii	socket
+socketpair	-	socketpair	i:iiip	socketpair

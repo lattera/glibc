@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF i386 ABI.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@
 					NULL
 */
 
+#include "bp-sym.h"
+
 	.text
 	.globl _start
 _start:
@@ -70,11 +72,11 @@ _start:
 	pushl %ecx		/* Push second argument: argv.  */
 	pushl %esi		/* Push first argument: argc.  */
 
-	pushl $main
+	pushl $BP_SYM (main)
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.    */
-	call __libc_start_main
+	call BP_SYM (__libc_start_main)
 
 	hlt			/* Crash if somehow `exit' does return.  */
 

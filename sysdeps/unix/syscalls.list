@@ -1,65 +1,65 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
+# File name	Caller	Syscall name	Args	Strong name	Weak names
 
-access		-	access		2	__access	access
-acct		-	acct		1	acct
-chdir		-	chdir		1	__chdir		chdir
-chmod		-	chmod		2	__chmod		chmod
-chown		-	chown		3	__chown		chown
-chroot		-	chroot		1	chroot
-close		-	close		1	__libc_close	__close close
-dup		-	dup		1	__dup		dup
-dup2		-	dup2		2	__dup2		dup2
-fchdir		-	fchdir		1	__fchdir	fchdir
-fcntl		-	fcntl		3	__libc_fcntl	__fcntl fcntl
-fstatfs		-	fstatfs		2	__fstatfs	fstatfs
-fsync		-	fsync		1	__libc_fsync	fsync
-getdomain	-	getdomainname	2	getdomainname
-getgid		-	getgid		0	__getgid	getgid
-getgroups	-	getgroups	2	__getgroups	getgroups
-getitimer	-	getitimer	2	__getitimer	getitimer
-getpid		-	getpid		0	__getpid	getpid
-getpriority	-	getpriority	2	getpriority
-getrlimit	-	getrlimit	2	__getrlimit	getrlimit
-getuid		-	getuid		0	__getuid	getuid
-ioctl		-	ioctl		3	__ioctl		ioctl
-kill		-	kill		2	__kill		kill
-link		-	link		2	__link		link
-lseek		-	lseek		3	__libc_lseek	__lseek lseek
-mkdir		-	mkdir		2	__mkdir		mkdir
-open		-	open		3	__libc_open	__open open
-profil		-	profil		4	profil
-ptrace		-	ptrace		4	ptrace
-read		-	read		3	__libc_read	__read read
-readlink	-	readlink	3	__readlink	readlink
-readv		-	readv		3	__readv		readv
-reboot		-	reboot		1	reboot
-rename		-	rename		2	rename
-rmdir		-	rmdir		1	__rmdir		rmdir
-select		-	select		5	__select	select
-setdomain	-	setdomainname	2	setdomainname
-setegid		-	setegid		1	__setegid	setegid
-seteuid		-	seteuid		1	__seteuid	seteuid
-setgid		-	setgid		1	__setgid	setgid
-setgroups	-	setgroups	2	setgroups
-setitimer	-	setitimer	3	__setitimer	setitimer
-setpriority	-	setpriority	3	setpriority
-setrlimit	-	setrlimit	2	setrlimit
-setsid		-	setsid		0	__setsid	setsid
-settimeofday	-	settimeofday	2	__settimeofday	settimeofday
-setuid		-	setuid		1	__setuid	setuid
-sigsuspend	-	sigsuspend	1	sigsuspend
-sstk		-	sstk		1	sstk
-statfs		-	statfs		2	__statfs	statfs
-swapoff		-	swapoff		1	swapoff
-swapon		-	swapon		1	swapon
-symlink		-	symlink		2	__symlink	symlink
-sync		-	sync		0	sync
-sys_fstat	fxstat	fstat		2	__syscall_fstat
-sys_mknod	xmknod	mknod		3	__syscall_mknod
-sys_stat	xstat	stat		2	__syscall_stat
-umask		-	umask		1	__umask		umask
-uname		-	uname		1	uname
-unlink		-	unlink		1	__unlink	unlink
-utimes		-	utimes		2	__utimes	utimes
-write		-	write		3	__libc_write	__write write
-writev		-	writev		3	__writev	writev
+access		-	access		i:si	__access	access
+acct		-	acct		i:s	acct
+chdir		-	chdir		i:s	__chdir		chdir
+chmod		-	chmod		i:si	__chmod		chmod
+chown		-	chown		i:sii	__chown		chown
+chroot		-	chroot		i:s	chroot
+close		-	close		i:i	__libc_close	__close close
+dup		-	dup		i:i	__dup		dup
+dup2		-	dup2		i:ii	__dup2		dup2
+fchdir		-	fchdir		i:i	__fchdir	fchdir
+fcntl		-	fcntl		i:iip	__libc_fcntl	__fcntl fcntl
+fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
+fsync		-	fsync		i:i	__libc_fsync	fsync
+getdomain	-	getdomainname	i:si	getdomainname
+getgid		-	getgid		i:	__getgid	getgid
+getgroups	-	getgroups	i:ip	__getgroups	getgroups
+getitimer	-	getitimer	i:ip	__getitimer	getitimer
+getpid		-	getpid		i:	__getpid	getpid
+getpriority	-	getpriority	i:ii	getpriority
+getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
+getuid		-	getuid		i:	__getuid	getuid
+ioctl		-	ioctl		i:iip	__ioctl		ioctl
+kill		-	kill		i:ii	__kill		kill
+link		-	link		i:ss	__link		link
+lseek		-	lseek		i:iii	__libc_lseek	__lseek lseek
+mkdir		-	mkdir		i:si	__mkdir		mkdir
+open		-	open		i:sii	__libc_open	__open open
+profil		-	profil		i:piii	profil
+ptrace		-	ptrace		i:iiii	ptrace
+read		-	read		i:ipi	__libc_read	__read read
+readlink	-	readlink	i:spi	__readlink	readlink
+readv		-	readv		i:ipi	__readv		readv
+reboot		-	reboot		i:i	reboot
+rename		-	rename		i:ss	rename
+rmdir		-	rmdir		i:s	__rmdir		rmdir
+select		-	select		i:ipppp	__select	select
+setdomain	-	setdomainname	i:si	setdomainname
+setegid		-	setegid		i:i	__setegid	setegid
+seteuid		-	seteuid		i:i	__seteuid	seteuid
+setgid		-	setgid		i:i	__setgid	setgid
+setgroups	-	setgroups	i:ip	setgroups
+setitimer	-	setitimer	i:ipp	__setitimer	setitimer
+setpriority	-	setpriority	i:iii	setpriority
+setrlimit	-	setrlimit	i:ip	setrlimit
+setsid		-	setsid		i:	__setsid	setsid
+settimeofday	-	settimeofday	i:pp	__settimeofday	settimeofday
+setuid		-	setuid		i:i	__setuid	setuid
+sigsuspend	-	sigsuspend	i:p	sigsuspend
+sstk		-	sstk		p:i	sstk
+statfs		-	statfs		i:sp	__statfs	statfs
+swapoff		-	swapoff		i:s	swapoff
+swapon		-	swapon		i:s	swapon
+symlink		-	symlink		i:ss	__symlink	symlink
+sync		-	sync		i:	sync
+sys_fstat	fxstat	fstat		i:ip	__syscall_fstat
+sys_mknod	xmknod	mknod		i:pii	__syscall_mknod
+sys_stat	xstat	stat		i:sp	__syscall_stat
+umask		-	umask		i:i	__umask		umask
+uname		-	uname		i:p	uname
+unlink		-	unlink		i:s	__unlink	unlink
+utimes		-	utimes		i:sp	__utimes	utimes
+write		-	write		i:ipi	__libc_write	__write write
+writev		-	writev		i:ipi	__writev	writev

@@ -619,7 +619,7 @@ CFLAGS-.op = -pg
 libtype.op = lib%_p.a
 endif
 ifeq (yes,$(build-omitfp))
-# Under --enable-omitfp, we build an the library optimized without
+# Under --enable-omitfp, we build the library optimized without
 # debugging information using -fomit-frame-pointer, and build an extra
 # library with debugging information.  The debuggable objects are named foo.og.
 object-suffixes += .og
@@ -629,12 +629,14 @@ CFLAGS-.o = $(filter %frame-pointer,$(+cflags)) -g0 -O99 -fomit-frame-pointer -D
 CFLAGS-.os += -g0 -O99 -fomit-frame-pointer -D__USE_STRING_INLINES
 libtype.og = lib%_g.a
 endif
+
+bppfx = BP-
 ifeq (yes,$(build-bounded))
 # Under --enable-bounded, we build the library with `-fbounded-pointers -g'
 # to runtime bounds checking.  The bounded-pointer objects are named foo.ob.
 object-suffixes += .ob
-CPPFLAGS-.ob = -DBOUNDED_POINTERS $(pic-default)
-CFLAGS-.ob = -g -fbounded-pointers
+CPPFLAGS-.ob = -fbounded-pointers $(pic-default)
+CFLAGS-.ob = -g -O2 -fno-optimize-sibling-calls
 libtype.ob = lib%_b.a
 endif
 

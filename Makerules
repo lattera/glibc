@@ -418,15 +418,19 @@ ifndef libc.so-version
 static-only-routines =
 endif
 
+# Bounded pointer thunks are only built for *.ob
+elide-bp-thunks = $(addprefix $(bppfx),$(bp-thunks))
+
 elide-routines.oS += $(filter-out $(static-only-routines),\
-				  $(routines) $(aux) $(sysdep_routines))
-elide-routines.os += $(static-only-routines)
+				  $(routines) $(aux) $(sysdep_routines)) \
+		     $(elide-bp-thunks)
+elide-routines.os += $(static-only-routines) $(elide-bp-thunks)
 
 # If we have versioned code we don't need the old versions in any of the
 # static libraries.
-elide-routines.o  += $(shared-only-routines)
-elide-routines.op += $(shared-only-routines)
-elide-routines.og += $(shared-only-routines)
+elide-routines.o  += $(shared-only-routines) $(elide-bp-thunks)
+elide-routines.op += $(shared-only-routines) $(elide-bp-thunks)
+elide-routines.og += $(shared-only-routines) $(elide-bp-thunks)
 elide-routines.ob += $(shared-only-routines)
 
 # Don't try to use -lc when making libc.so itself.
@@ -466,9 +470,13 @@ endif
 
 # Figure out the source filenames in this directory.
 
-override sources	:= $(addsuffix .c,$(filter-out $(elided-routines),\
-						       $(routines) $(aux) \
-						       $(sysdep_routines)))
+override sources := $(addsuffix .c,\
+			$(filter-out $(elided-routines),\
+			    $(routines) $(aux) \
+			    $(sysdep_routines)) \
+			    $(addprefix $(bppfx),\
+				$(filter $(routines) $(sysdep_routines),\
+				    $(bp-thunks))))
 sysdep_routines := $(sysdep_routines)
 
 headers := $(headers) $(sysdep_headers)

@@ -83,6 +83,14 @@
 # define __END_DECLS
 #endif
 
+
+/* Support for bounded pointers.  */
+#ifndef __BOUNDED_POINTERS__
+# define __bounded	/* nothing */
+# define __unbounded	/* nothing */
+#endif
+
+
 /* __asm__ ("xyz") is used throughout the headers to rename functions
    at the assembly language level.  This is wrapped by the __REDIRECT
    macro, in order to support compilers that can do this some other

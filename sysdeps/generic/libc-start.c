@@ -19,22 +19,34 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <bp-start.h>
+#include <bp-sym.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
 extern int __libc_multiple_libcs;
-extern void *__libc_stack_end;
+extern void *__unbounded __libc_stack_end;
 
 /* Prototype for local function.  */
 extern void __libc_check_standard_fds (void);
 
 int
-__libc_start_main (int (*main) (int, char **, char **), int argc,
-		   char **argv, void (*init) (void), void (*fini) (void),
-		   void (*rtld_fini) (void), void *stack_end)
+/* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the
+   BPs in the arglist of startup_info.main and startup_info.init. */
+BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
+		   int argc, char *__unbounded *__unbounded ubp_av,
+		   void (*init) (void), void (*fini) (void),
+		   void (*rtld_fini) (void), void *__unbounded stack_end)
 {
+  char *__unbounded *__unbounded ubp_ev = &ubp_av[argc + 1];
+#if __BOUNDED_POINTERS__
+  char **argv;
+#else
+# define argv ubp_av
+#endif
+
 #ifndef SHARED
   /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
      If the address would be taken inside the expression the optimizer
@@ -44,11 +56,10 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
   __libc_multiple_libcs = dummy_addr && !_dl_starting_up;
 #endif
 
+  INIT_ARGV_and_ENVIRON;
+
   /* Store the lowest stack address.  */
   __libc_stack_end = stack_end;
-
-  /* Set the global _environ variable correctly.  */
-  __environ = &argv[argc + 1];
 
 #ifndef SHARED
   /* Some security at this point.  Prevent starting a SUID binary where

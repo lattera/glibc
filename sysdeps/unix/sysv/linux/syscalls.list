@@ -1,7 +1,7 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
+# File name	Caller	Syscall name	Args	Strong name	Weak names
 
-adjtimex	adjtime	adjtimex	1	__adjtimex	adjtimex ntp_adjtime
-bdflush		EXTRA	bdflush		2	bdflush
+adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime
+bdflush		EXTRA	bdflush		i:ii	bdflush
 capget		EXTRA	capget		2	capget
 capset		EXTRA	capset		2	capset
 clock_getres	-	clock_getres	2	clock_getres
@@ -9,61 +9,61 @@ clock_gettime	-	clock_gettime	2	clock_gettime
 clock_settime	-	clock_settime	2	clock_settime
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
-fdatasync	-	fdatasync	1	fdatasync
-flock		-	flock		2	__flock		flock
-fork		-	fork		0	__libc_fork	__fork fork
-get_kernel_syms	EXTRA	get_kernel_syms	1	get_kernel_syms
-getegid		-	getegid		0	__getegid	getegid
-geteuid		-	geteuid		0	__geteuid	geteuid
-getpgid		-	getpgid		1	__getpgid	getpgid
-getpgrp		-	getpgrp		0	getpgrp
-getppid		-	getppid		0	__getppid	getppid
-getsid		-	getsid		1	getsid
+fdatasync	-	fdatasync	i:i	fdatasync
+flock		-	flock		i:ii	__flock		flock
+fork		-	fork		i:	__libc_fork	__fork fork
+get_kernel_syms	EXTRA	get_kernel_syms	i:p	get_kernel_syms
+getegid		-	getegid		i:	__getegid	getegid
+geteuid		-	geteuid		i:	__geteuid	geteuid
+getpgid		-	getpgid		i:i	__getpgid	getpgid
+getpgrp		-	getpgrp		i:	getpgrp
+getppid		-	getppid		i:	__getppid	getppid
+getsid		-	getsid		i:i	getsid
 init_module	EXTRA	init_module	5	init_module
-ioperm		-	ioperm		3	ioperm
-iopl		-	iopl		1	iopl
-klogctl		EXTRA	syslog		3	klogctl
-lchown		-	lchown		3	__lchown	lchown
-madvise		-	madvise		3	posix_madvise	madvise
+ioperm		-	ioperm		i:iii	ioperm
+iopl		-	iopl		i:i	iopl
+klogctl		EXTRA	syslog		i:isi	klogctl
+lchown		-	lchown		i:sii	__lchown	lchown
+madvise		-	madvise		i:pii	posix_madvise	madvise
 mincore		-	mincore		3	mincore
-mlock		EXTRA	mlock		2	__mlock	mlock
-mlockall	EXTRA	mlockall	1	__mlockall	mlockall
-mmap		-	mmap		6	__mmap		mmap
-mount		EXTRA	mount		5	__mount	mount
-mremap		EXTRA	mremap		4	__mremap	mremap
-munlock		EXTRA	munlock		2	__munlock	munlock
-munlockall	EXTRA	munlockall	0	__munlockall	munlockall
-nanosleep	-	nanosleep	2	__libc_nanosleep	__nanosleep nanosleep
-nfsservctl	EXTRA	nfsservctl	3	nfsservctl
-pause		-	pause		0	__libc_pause	pause
-personality	init-first personality	1	__personality	personality
-pipe		-	pipe		1	__pipe		pipe
-prctl		EXTRA	prctl		5	prctl
-query_module	EXTRA	query_module	5	query_module
-quotactl	EXTRA	quotactl	4	quotactl
-sched_getp	-	sched_getparam	2	__sched_getparam	sched_getparam
-sched_gets	-	sched_getscheduler	1	__sched_getscheduler	sched_getscheduler
-sched_primax	-	sched_get_priority_max	1	__sched_get_priority_max	sched_get_priority_max
-sched_primin	-	sched_get_priority_min	1	__sched_get_priority_min	sched_get_priority_min
-sched_rr_gi	-	sched_rr_get_interval	2	__sched_rr_get_interval	sched_rr_get_interval
-sched_setp	-	sched_setparam	2	__sched_setparam	sched_setparam
-sched_sets	-	sched_setscheduler	3	__sched_setscheduler	sched_setscheduler
-sched_yield	-	sched_yield	0	__sched_yield	sched_yield
-select		-	_newselect	5	__select	select
-sendfile	EXTRA	sendfile	4	sendfile
-setfsgid	EXTRA	setfsgid	1	setfsgid
-setfsuid	EXTRA	setfsuid	1	setfsuid
-setpgid		-	setpgid		2	__setpgid	setpgid
-setresuid	EXTRA	setresuid	3	__setresuid	setresuid
-setresgid	EXTRA	setresgid	3	__setresgid	setresgid
-sigaltstack	-	sigaltstack	2	__sigaltstack	sigaltstack
-sysinfo		EXTRA	sysinfo		1	sysinfo
-swapon		-	swapon		2	__swapon	swapon
-swapoff		-	swapoff		1	__swapoff	swapoff
+mlock		EXTRA	mlock		i:pi	__mlock	mlock
+mlockall	EXTRA	mlockall	i:i	__mlockall	mlockall
+mmap		-	mmap		p:piiiii	__mmap		mmap
+mount		EXTRA	mount		i:sssip	__mount	mount
+mremap		EXTRA	mremap		p:piii	__mremap	mremap
+munlock		EXTRA	munlock		i:pi	__munlock	munlock
+munlockall	EXTRA	munlockall	i:	__munlockall	munlockall
+nanosleep	-	nanosleep	i:pp	__libc_nanosleep	__nanosleep nanosleep
+nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
+pause		-	pause		i:	__libc_pause	pause
+personality	init-first personality	i:i	__personality	personality
+pipe		-	pipe		i:p	__pipe		pipe
+prctl		EXTRA	prctl		i:iiiii	prctl
+query_module	EXTRA	query_module	i:sipip	query_module
+quotactl	EXTRA	quotactl	i:isip	quotactl
+sched_getp	-	sched_getparam	i:ip	__sched_getparam	sched_getparam
+sched_gets	-	sched_getscheduler	i:i	__sched_getscheduler	sched_getscheduler
+sched_primax	-	sched_get_priority_max	i:i	__sched_get_priority_max	sched_get_priority_max
+sched_primin	-	sched_get_priority_min	i:i	__sched_get_priority_min	sched_get_priority_min
+sched_rr_gi	-	sched_rr_get_interval	i:ip	__sched_rr_get_interval	sched_rr_get_interval
+sched_setp	-	sched_setparam	i:ip	__sched_setparam	sched_setparam
+sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler
+sched_yield	-	sched_yield	i:	__sched_yield	sched_yield
+select		-	_newselect	i:ipppp	__select	select
+sendfile	EXTRA	sendfile	i:iipi	sendfile
+setfsgid	EXTRA	setfsgid	i:i	setfsgid
+setfsuid	EXTRA	setfsuid	i:i	setfsuid
+setpgid		-	setpgid		i:ii	__setpgid	setpgid
+setresuid	EXTRA	setresuid	i:iii	__setresuid	setresuid
+setresgid	EXTRA	setresgid	i:iii	__setresgid	setresgid
+sigaltstack	-	sigaltstack	i:pp	__sigaltstack	sigaltstack
+sysinfo		EXTRA	sysinfo		i:p	sysinfo
+swapon		-	swapon		i:si	__swapon	swapon
+swapoff		-	swapoff		i:s	__swapoff	swapoff
 timer_create	-	timer_create	3	timer_create
 timer_delete	-	timer_delete	1	timer_delete
 timer_getoverr	-	timer_getoverrun	1	timer_getoverrun
 timer_gettime	-	timer_gettime	2	timer_gettime
 timer_settime	-	timer_settime	4	timer_settime
-uselib		EXTRA	uselib		1	uselib
-wait4		-	wait4		4	__wait4		wait4
+uselib		EXTRA	uselib		i:s	uselib
+wait4		-	wait4		i:ipip	__wait4		wait4

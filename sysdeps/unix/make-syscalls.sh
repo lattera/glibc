@@ -5,47 +5,68 @@
 
 thisdir=$1; shift
 
+echo ''
+echo \#### DIRECTORY = $thisdir
+# Check each sysdep dir with higher priority than this one,
+# and remove from $calls all the functions found in other dirs.
+# Punt when we reach the directory defining these syscalls.
+sysdirs=`for dir in $sysdirs; do
+	 test $dir = $thisdir && break; echo $dir; done`
+echo \#### SYSDIRS = $sysdirs
+
 # Get the list of system calls for this directory.
 calls=`sed 's/#.*$//
 /^[ 	]*$/d' $thisdir/syscalls.list`
 
-# Check each sysdep dir with higher priority than this one,
-# and remove from $calls all the functions found in other dirs.
-for dir in $sysdirs; do
-
-  # Punt when we reach the directory defining these syscalls.
-  test $dir = $thisdir && break
-
+calls=`echo "$calls" |
+while read file caller rest; do
   # Remove each syscall that is implemented by a file in $dir.
   # If a syscall specified a "caller", then only compile that syscall
   # if the caller function is also implemented in this directory.
-  calls=`echo "$calls" | while read file caller rest; do
-	   test -f $dir/$file.c && continue
-	   test -f $dir/$file.S && continue
-	   test -f $dir/$file.s && continue
-	   if test x$caller != x-; then
-	     test -f $dir/$caller.c && continue
-	     test -f $dir/$caller.S && continue
-	     test -f $dir/$caller.s && continue
-	   fi
-	   echo $file $caller $rest
-         done`
-
-done
+  srcfile=-;
+  for dir in $sysdirs; do
+     { test -f $dir/$file.c && srcfile=$dir/$file.c; } ||
+     { test -f $dir/$file.S && srcfile=$dir/$file.S; } ||
+     { test -f $dir/$file.s && srcfile=$dir/$file.s; } ||
+     { test x$caller != x- &&
+	{ { test -f $dir/$caller.c && srcfile=$dir/$caller.c; } ||
+	  { test -f $dir/$caller.S && srcfile=$dir/$caller.S; } ||
+	  { test -f $dir/$caller.s && srcfile=$dir/$caller.s; }; }; } && break;
+  done;
+  echo $file $srcfile $caller $rest;
+done`
 
 # Any calls left?
 test -n "$calls" || exit 0
 
-files=
-
 # Emit rules to compile the syscalls remaining in $calls.
-echo "$calls" | while read file caller syscall nargs strong weak; do
+echo "$calls" | while read file srcfile caller syscall args strong weak; do
 
-  # Figure out if $syscall is defined with a number in syscall.h.
-  $asm_CPP - << EOF | grep "^@@@ .*$syscall" >/dev/null && continue
-#include <sysdep.h>
-@@@ SYS_ify ($syscall)
-EOF
+# Figure out if $syscall is defined with a number in syscall.h.
+callnum=-
+eval `{ echo "#include <sysdep.h>";
+	echo "callnum=SYS_ify ($syscall)"; } |
+	  $asm_CPP - |grep "^callnum=" |grep -v $syscall`
+
+  # Derive the number of arguments from the argument signature
+  case $args in
+  [0-9]) nargs=$args;;
+  ?:) nargs=0;;
+  ?:?) nargs=1;;
+  ?:??) nargs=2;;
+  ?:???) nargs=3;;
+  ?:????) nargs=4;;
+  ?:?????) nargs=5;;
+  ?:??????) nargs=6;;
+  esac
+
+  # Make sure only the first syscall rule is used, if multiple dirs
+  # define the same syscall.
+ echo "#### CALL=$file NUMBER=$callnum ARGS=$args SOURCE=$srcfile"
+ case x$srcfile$callnum in
+ x*-) ;; ### Do nothing for undefined callnum
+ x-*)
+  echo "ifeq (,\$(filter $file,\$(unix-syscalls)))"
 
   case $weak in
   *@*)
@@ -53,11 +74,6 @@ EOF
     echo "ifneq (,\$(filter .os,\$(object-suffixes)))"
     ;;
   esac
-
-  # Make sure only the first syscall rule is used, if multiple dirs
-  # define the same syscall.
-  echo "ifeq (,\$(filter $file,\$(unix-syscalls)))"
-
   # Accumulate the list of syscall files for this directory.
   echo "unix-syscalls += $file"
   test x$caller = x- || echo "unix-extra-syscalls += $file"
@@ -75,7 +91,7 @@ shared-only-routines += $file
 \$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \\"
     ;;
   esac
-  echo "\$(common-objpfx)s-proto.d
+  echo "		\$(common-objpfx)s-proto.d
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\
@@ -124,11 +140,34 @@ shared-only-routines += $file
   # And finally, pipe this all into the compiler.
   echo '	) | $(COMPILE.S) -x assembler-with-cpp -o $@ -'
 
-  echo endif
-
   case $weak in
   *@*)
     # The versioned symbols are only in the shared library.
+    echo endif
+    ;;
+  esac
+
+  echo endif
+ ;;
+ esac
+
+  case x$callnum,$srcfile,$args in
+  x[0-9]*,-,*[sp]* | x*,*.[sS],*[sp]*)
+    echo "ifeq (,\$(filter $file,\$(bp-thunks)))"
+    echo "bp-thunks += $file";
+    echo "\
+\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto.d
+	(echo '#include <bp-thunks.h>'; \\
+	 echo 'BP_THUNK_`echo $args |tr : _` ($strong)'; \\"
+
+    for name in $weak; do
+      case $name in
+	*@*) ;;
+	*) echo "	 echo 'BP_ALIAS ($strong, $name)'; \\" ;;
+      esac
+    done
+
+    echo '	) | $(COMPILE.c) -x c -o $@ -'
     echo endif
     ;;
   esac

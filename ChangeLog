@@ -1,4 +1,47 @@
+2000-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/sys/cdefs.h: Define __bounded and __unbounded if
+	__BOUNDED_POINTERS__ is not defined.
+
+2000-06-07  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/generic/bp-sym.h: New file.
+	* sysdeps/generic/bp-start.h: New file.
+	* sysdeps/i386/elf/start.S: Designate BP symbols.
+	* sysdeps/generic/libc-start.c: Wrap bounds around
+	argv & envp and each of their string members.
+
+2000-06-07  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/unix/make-syscalls.sh: Add comments to
+	output that aid debugging & comprehension.
+	Map simple syscall signatures to number of args.
+	Generate BP syscall thunk definitions.
+	* sysdeps/generic/bp-thunks.h: New file.
+	* sysdeps/unix/syscalls.list: Replace arg-count with
+	simple return+arg signature.
+	* sysdeps/unix/common/syscalls.list: Likewise.
+	* sysdeps/unix/inet/syscalls.list: Likewise.
+	* sysdeps/unix/mman/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Likewise.
+
+2000-06-07  Greg McGary  <greg@mcgary.org>
+
+	* Makeconfig (CPPFLAGS-.ob): pass -fbounded-pointers for all files
+	*.[cS].
+	(CFLAGS-.ob): Don't optimize sibling calls.
+	(bppfx): New variable.
+	* Makerules (elide-bp-thunks): New variable.
+	(elide-routines.*): Elide BP-* files for all but *.ob.
+	(sources): Include bp-thunks.
+
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_simple.c: Remove unnecessary prototype.
+
+	* iconv/gconv_trans.c: Pretty print.
 
 	* elf/elf.h (R_SH_NUM): Got accidently dropped.
 

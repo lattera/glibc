@@ -789,13 +789,6 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define FUNCTION_NAME		__gconv_transform_internal_ascii
 #define ONE_DIRECTION		1
 
-extern int FUNCTION_NAME (struct __gconv_step *step,
-			  struct __gconv_step_data *data,
-			  const unsigned char **inptrp,
-			  const unsigned char *inend,
-			  unsigned char *outbufstart, size_t *irreversible,
-			  int do_flush, int consume_incomplete);
-
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP

@@ -1,16 +1,16 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-alarm		-	alarm		1	alarm
-ftime		-	ftime		1	ftime
-nice		-	nice		1	nice
-pause		-	pause		0	pause
-poll		-	poll		3	poll
-s_getdents	getdents getdents	3	__getdents
-setrlimit	-	setrlimit	2	setrlimit
-settimeofday	-	settimeofday	2	__settimeofday	settimeofday
-signal		-	signal		2	signal
-stime		-	stime		1	stime
-time		-	time		1	time
-times		-	times		1	__times	times
-ulimit		-	ulimit		2	ulimit
-utime		-	utime		2	utime
+alarm		-	alarm		i:i	alarm
+ftime		-	ftime		i:p	ftime
+nice		-	nice		i:i	nice
+pause		-	pause		i:	pause
+poll		-	poll		i:pii	poll
+s_getdents	getdents getdents	i:ipi	__getdents
+setrlimit	-	setrlimit	i:ip	setrlimit
+settimeofday	-	settimeofday	i:pp	__settimeofday	settimeofday
+signal		-	signal		i:ii	signal
+stime		-	stime		i:p	stime
+time		-	time		i:p	time
+times		-	times		i:p	__times	times
+ulimit		-	ulimit		i:ii	ulimit
+utime		-	utime		i:pp	utime

@@ -4,8 +4,8 @@
 
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-madvise		-	madvise		3	madvise
-mmap		-	mmap		6	__mmap		mmap
-mprotect	-	mprotect	3	__mprotect	mprotect
-msync		-	msync		3	__libc_msync	msync
-munmap		-	munmap		2	__munmap	munmap
+madvise		-	madvise		i:pii	madvise
+mmap		-	mmap		p:piiiii	__mmap		mmap
+mprotect	-	mprotect	i:pii	__mprotect	mprotect
+msync		-	msync		i:pii	__libc_msync	msync
+munmap		-	munmap		i:pi	__munmap	munmap
