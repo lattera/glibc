@@ -21,6 +21,8 @@ Cambridge, MA 02139, USA.  */
 #define	_SYS_IO_H	1
 #include <features.h>
 
+__BEGIN_DECLS
+
 /* Get constants from kernel header files. */
 #include <asm/io.h>
 
@@ -38,5 +40,7 @@ extern int ioperm __P ((unsigned long int __from, unsigned long int __num,
    access any I/O port is granted.  This call requires root
    privileges. */
 extern int iopl __P ((int __level));
+
+__END_DECLS
 
 #endif /* _SYS_IO_H */

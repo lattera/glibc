@@ -64,7 +64,8 @@ __pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
      match: */
   if (id->ut_id[0]
       && (utmp_data->loc_utmp < (off_t) sizeof (struct utmp)
-	  || strncmp(utmp_data->ubuf.ut_id, id->ut_id, sizeof (id->ut_id)) != 0))
+	  || strncmp (utmp_data->ubuf.ut_id, id->ut_id,
+		      sizeof (id->ut_id)) != 0))
     {
       /* We must not overwrite the data in UTMP_DATA since ID may be
 	 aliasing it.  */
@@ -74,16 +75,8 @@ __pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
       *data_tmp = *utmp_data;
       utmp_data = data_tmp;
 
-      if (getutid_r (id, &dummy, utmp_data) < 0)
-	{
-	  if (errno != ESRCH)
-	    /* Some error occured.  If no entry was found, the position
-	       pointer now is at the end of the file.  */
-	    return -1;
-
-	  /* Set position pointer to position behind the record.  */
-	  utmp_data->loc_utmp += sizeof (struct utmp);
-	}
+      if (getutid_r (id, &dummy, utmp_data) < 0 && errno != ESRCH)
+	return -1;
     }
 #endif
 
@@ -102,7 +95,8 @@ __pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 
   if (result >= 0)
     /* Position file correctly.  */
-    if (utmp_data->loc_utmp < (off_t) sizeof (struct utmp))
+    if (utmp_data->loc_utmp < (off_t) sizeof (struct utmp)
+	|| utmp_data->loc_utmp - sizeof (struct utmp) > st.st_size)
       /* Not located at any valid entry.  Add at the end.  */
       {
 	result = lseek (utmp_data->ut_fd, 0L, SEEK_END);
@@ -110,7 +104,7 @@ __pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 	  /* Where we'll be if the write succeeds.  */
 	  utmp_data->loc_utmp = st.st_size + sizeof (struct utmp);
       }
-    else if (utmp_data->loc_utmp <= st.st_size)
+    else
       result =
 	lseek (utmp_data->ut_fd, utmp_data->loc_utmp - sizeof (struct utmp),
 	       SEEK_SET);

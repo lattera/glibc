@@ -111,11 +111,6 @@ asm ("\nEOF.crtn.init\
 \n\
 cat >> crti.s-new <<\\EOF.crti.fini");
 
-/* Global variable which says whether we have a statically or dynamically
-   linked program.  If > 0, static, for < 0 dynamic, == 0 means yet to
-   be determined (see init-first.c).  */
-int __libc_is_static = 0;
-
 SECTION (".fini")
 void
 _fini (void)

@@ -22,10 +22,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 extern void *__curbrk;
 extern int __brk (void *addr);
 
-#ifdef PIC
-extern int __libc_is_static;
-weak_extern (__libc_is_static)
-#endif
+extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
 /* Extend the process's data space by INCREMENT.
    If INCREMENT is negative, shrink data space by - INCREMENT.
@@ -40,9 +37,7 @@ __sbrk (ptrdiff_t increment)
      __curbrk from the kernel's brk value.  That way two separate
      instances of __brk and __sbrk can share the heap, returning
      interleaved pieces of it.  */
-#ifdef PIC
-  if (__curbrk == NULL || &__libc_is_static == NULL)
-#endif
+  if (__curbrk == NULL || __libc_multiple_libcs)
     if (__brk (0) < 0)
       return (void *) -1;
 

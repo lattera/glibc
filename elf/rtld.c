@@ -42,6 +42,15 @@ int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
 
+/* Set nonzero during loading and initialization of executable and
+   libraries, cleared before the executable's entry point runs.  This
+   must not be initialized to nonzero, because the unused dynamic
+   linker loaded in for libc.so's "ld.so.1" dep will provide the
+   definition seen by libc.so's initializer; that value must be zero,
+   and will be since that dynamic linker's _dl_start and dl_main will
+   never be called.  */
+int _dl_starting_up;
+
 static void dl_main (const ElfW(Phdr) *phdr,
 		     ElfW(Half) phent,
 		     ElfW(Addr) *user_entry);
@@ -485,6 +494,9 @@ of this helper program; chances are you did not intend to run this program.\n",
       /* Clear the field so a future dlopen won't run it again.  */
       _dl_rtld_map.l_info[DT_INIT] = NULL;
     }
+
+  /* We finished the intialization and will start up.  */
+  _dl_starting_up = 1;
 
   /* Once we return, _dl_sysdep_start will invoke
      the DT_INIT functions and then *USER_ENTRY.  */

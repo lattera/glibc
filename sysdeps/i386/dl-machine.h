@@ -163,7 +163,9 @@ _dl_start_user:\n\
 	call *%eax\n\
 	# Loop to call _dl_init_next for the next initializer.\n\
 	jmp 0b\n\
-1:	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
+1:	# Clear the startup flag.\n\
+	movl $0, _dl_starting_up@GOT(%ebx)\n\
+	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
 	movl _dl_fini@GOT(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\
 	jmp *%edi\n\

@@ -29,10 +29,12 @@ extern void __libc_global_ctors (void);
 /* The function is called from assembly stubs the compiler can't see.  */
 static void init (void *) __attribute__ ((unused));
 
-extern int __libc_is_static;
-#ifdef PIC
-weak_extern (__libc_is_static)
-#endif
+extern int _dl_starting_up;
+weak_extern (_dl_starting_up)
+
+/* Set nonzero if we have to be prepared for more then one libc being
+   used in the process.  Safe assumption if initializer never runs.  */
+int __libc_multiple_libcs = 1;
 
 static void
 init (void *data)
@@ -43,39 +45,21 @@ init (void *data)
   char **argv = (char **)data + 1;
   char **envp = &argv[argc + 1];
 
-  /* XXX Another gcc bug.  We marked the function as `unused' but it
-     is still optimized away.  */
-  volatile void *foo __attribute__ ((unused)) = &init;
 
-#ifdef PIC
-  if (&__libc_is_static != NULL)
-#endif
+  __libc_multiple_libcs = &_dl_starting_up && ! _dl_starting_up;
+
+  /* We must not call `personality' twice.  */
+  if (!__libc_multiple_libcs)
     {
-#ifdef PIC
-      /* We must not call `personality' twice.  */
-      if (__libc_is_static == 0)
-#endif
-	{
-	  /* The `personality' system call takes one argument that
-	     chooses the "personality", i.e. the set of system calls
-	     and such.  We must make this call first thing to disable
-	     emulation of some other system that might have been
-	     enabled by default based on the executable format.  */
-	  __personality (PER_LINUX);
+      /* The `personality' system call takes one argument that chooses
+	 the "personality", i.e. the set of system calls and such.  We
+	 must make this call first thing to disable emulation of some
+	 other system that might have been enabled by default based on
+	 the executable format.  */
+      __personality (PER_LINUX);
 
-	  /* Set the FPU control word to the proper default value.  */
-	  __setfpucw (__fpu_control);
-	}
-
-      /* We set LIBC_IS_STATIC to a value > 0 for the static library
-	 and < 0 for the shared library.  This information might be
-	 useful for the running program but it is mainly necessary for
-	 the above `if' statement.  */
-#ifdef PIC
-      __libc_is_static = -1;
-#else
-      __libc_is_static = 1;
-#endif
+      /* Set the FPU control word to the proper default value.  */
+      __setfpucw (__fpu_control);
     }
 
   __environ = envp;

@@ -1,3 +1,7 @@
+ifeq ($(subdir), csu)
+CFLAGS-init-first.c = -fkeep-inline-functions
+endif
+
 ifeq ($(subdir), misc)
 sysdep_routines += sysctl clone
 
