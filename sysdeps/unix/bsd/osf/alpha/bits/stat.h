@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ struct stat
     int st_ctime;		/* Time of last status change.  */
     int st_ctime_usec;
 
-    unsigned int st_blksize;	/* Optimal block size for I/O.  */
+    __blksize_t st_blksize;	/* Optimal block size for I/O.  */
 #define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
 
     __blkcnt_t st_blocks;	/* Number of 512-byte blocks allocated.  */
