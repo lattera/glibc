@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -21,6 +21,22 @@
 
 #define __NIS_INTERN_H
 #include <features.h>
+
+/* Configurable parameters for pinging NIS servers:  */
+
+/* Number of retries.  */
+#ifndef __NIS_PING_RETRY
+# define __NIS_PING_RETRY 2
+#endif
+/* Initial timeout in seconds.  */
+#ifndef __NIS_PING_TIMEOUT_START
+# define __NIS_PING_TIMEOUT_START 3
+#endif
+/* Timeout increment for retries in seconds.  */
+#ifndef __NIS_PING_TIMEOUT_INCREMENT
+# define __NIS_PING_TIMEOUT_INCREMENT 3
+#endif
+
 
 __BEGIN_DECLS
 

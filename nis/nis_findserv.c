@@ -110,28 +110,12 @@ struct findserv_req
   u_int server_ep;
 };
 
-long
-__nis_findfastest (dir_binding *bind)
+
+static long int
+__nis_findfastest_with_timeout (dir_binding *bind,
+				const struct timeval *timeout)
 {
-#if 0
-  unsigned long i, j;
-
-  for (i = 0; i < bind->server_len; i++)
-    for (j = 0; j < bind->server_val[i].ep.ep_len; ++j)
-      if (strcmp (bind->server_val[i].ep.ep_val[j].family, "inet") == 0)
-	if ((bind->server_val[i].ep.ep_val[j].proto == NULL) ||
-	    (bind->server_val[i].ep.ep_val[j].proto[0] ==  '-') ||
-	    (bind->server_val[i].ep.ep_val[j].proto[0] == '\0'))
-	  {
-	    bind->server_used = i;
-	    bind->current_ep = j;
-	    return 1;
-	  }
-
-  return 0;
-#else
-  const struct timeval TIMEOUT50 = {5, 0};
-  const struct timeval TIMEOUT00 = {0, 0};
+  static const struct timeval TIMEOUT00 = { 0, 0 };
   struct findserv_req *pings;
   struct sockaddr_in sin, saved_sin;
   int found = -1;
@@ -201,7 +185,7 @@ __nis_findfastest (dir_binding *bind)
 
   /* Create RPC handle */
   sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  clnt = clntudp_create (&saved_sin, NIS_PROG, NIS_VERSION, TIMEOUT50, &sock);
+  clnt = clntudp_create (&saved_sin, NIS_PROG, NIS_VERSION, *timeout, &sock);
   if (clnt == NULL)
     {
       close (sock);
@@ -211,9 +195,7 @@ __nis_findfastest (dir_binding *bind)
   auth_destroy (clnt->cl_auth);
   clnt->cl_auth = authunix_create_default ();
   cu = (struct cu_data *) clnt->cl_private;
-  clnt_control (clnt, CLSET_TIMEOUT, (char *) &TIMEOUT00);
   ioctl (sock, FIONBIO, &dontblock);
-
   /* Send to all servers the NULLPROC */
   for (i = 0; i < pings_count; ++i)
     {
@@ -222,30 +204,31 @@ __nis_findfastest (dir_binding *bind)
       memcpy ((char *) &cu->cu_raddr, (char *) &pings[i].sin,
 	      sizeof (struct sockaddr_in));
       /* Transmit to NULLPROC, return immediately. */
-      clnt_call (clnt, NULLPROC, 
+      clnt_call (clnt, NULLPROC,
 		 (xdrproc_t) xdr_void, (caddr_t) 0,
 		 (xdrproc_t) xdr_void, (caddr_t) 0, TIMEOUT00);
     }
-  
-  /* Receive reply from NULLPROC asynchronously */
-  while (RPC_SUCCESS == clnt_call (clnt, NULLPROC,
-				   (xdrproc_t) NULL, (caddr_t) 0,
-				   (xdrproc_t) xdr_void, (caddr_t) 0,
-				   TIMEOUT00))
-    {
+
+  while (found == -1) {
+    /* Receive reply from NULLPROC asynchronously. Note null inproc. */
+    int rc = clnt_call (clnt, NULLPROC,
+			(xdrproc_t) NULL, (caddr_t) 0,
+			(xdrproc_t) xdr_void, (caddr_t) 0,
+			*timeout);
+    if (RPC_SUCCESS == rc) {
       fastest = *((u_int32_t *) (cu->cu_inbuf)) - xid_seed;
       if (fastest < pings_count) {
-	break;
+	bind->server_used = pings[fastest].server_nr;
+	bind->current_ep = pings[fastest].server_ep;
+	found = 1;
       }
+    } else {
+      /*      clnt_perror(clnt, "__nis_findfastest"); */
+      break;
     }
-  
-  if (fastest < pings_count)
-    {
-      bind->server_used = pings[fastest].server_nr;
-      bind->current_ep = pings[fastest].server_ep;
-      found = 1;
-    }
-  
+  }
+
+
   auth_destroy (clnt->cl_auth);
   clnt_destroy (clnt);
   close (sock);
@@ -253,5 +236,23 @@ __nis_findfastest (dir_binding *bind)
   free (pings);
 
   return found;
-#endif
+}
+
+
+long int
+__nis_findfastest (dir_binding *bind)
+{
+  struct timeval timeout = { __NIS_PING_TIMEOUT_START, 0 };
+  long int found = -1;
+  long int retry = __NIS_PING_RETRY + 1;
+
+  while (retry--)
+    {
+      found = __nis_findfastest_with_timeout (bind, &timeout);
+      if (found != -1)
+	break;
+      timeout.tv_sec += __NIS_PING_TIMEOUT_INCREMENT;
+    }
+
+  return found;
 }

@@ -1,10 +1,17 @@
+2001-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_findserv.c (__nis_findfastest_with_timeout): Mostly the code
+	from __nis_findfastest.  Take timeout value from parameter.
+	(__nis_findfastest): Call __nis_findfastest_with_timeout repeatedly.
+	* nis/nis_intern.h: Define parameters controlling __nis_findfastest.
+	Patch by Alexander Belopolsky <alexb@rentec.com>.
+
 2001-12-12  Andreas Jaeger  <aj@suse.de>
 
 	* configure.in: Use -nostartfiles -nostdlib for linker tests, fix
 	combreloc test so that it works in this case.
 
-	* sysdeps/arm/dl-machine.h (elf_machine_rela): Fix typo in last
-	patch.
+	* sysdeps/arm/dl-machine.h (elf_machine_rela): Fix typo in last patch.
 
 2001-12-12  NIIBE Yutaka  <gniibe@m17n.org>
 
