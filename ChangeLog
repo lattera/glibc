@@ -1,3 +1,8 @@
+1999-07-28  Andeas Schwab  <schwab@suse.de>
+
+	* iconvdata/Makefile: Don't try to run iconv tests when cross
+	compiling.
+
 1999-07-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only return information

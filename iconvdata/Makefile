@@ -232,8 +232,10 @@ endif # build-shared = yes
 
 include ../Rules
 
+ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 tests: $(objpfx)iconv-test.out
+endif
 endif
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
