@@ -1,5 +1,5 @@
 /* Bit values for resource limits.  SunOS 4 version.
-   Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,8 +49,8 @@ enum __rlimit_resource
     /* Number of open files.  */
     RLIMIT_NOFILE,
     RLIMIT_OFILE = RLIMIT_NOFILE, /* BSD name for same.  */
-#defin	RLIMIT_NOFILE	RLIMIT_NOFILE
-#defin	RLIMIT_OFILE	RLIMIT_OFILE
+#define	RLIMIT_NOFILE	RLIMIT_NOFILE
+#define	RLIMIT_OFILE	RLIMIT_OFILE
 
     RLIM_NLIMITS,
 

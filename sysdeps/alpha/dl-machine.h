@@ -325,7 +325,7 @@ static inline void
 elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
-		  const hash_name_pair *version)
+		  const struct r_found_version *version)
 {
   Elf64_Addr * const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
   unsigned long const r_info = ELF64_R_TYPE (reloc->r_info);

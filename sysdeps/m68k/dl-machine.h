@@ -200,7 +200,7 @@ _dl_start_user:
 
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
-		  const Elf32_Sym *sym, const hash_name_pair *version)
+		  const Elf32_Sym *sym, const struct r_found_version *version)
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf32_Addr loadbase;
