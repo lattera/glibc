@@ -1,3 +1,8 @@
+Mon Nov 16 11:17:31 1998  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INLINE_SYSCALL): Undo
+	last change.
+
 1998-11-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfscanf.c: Don't return -1 in case of an invalid
