@@ -262,14 +262,14 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 	      {								      \
 		value = _dl_lookup_versioned_symbol(strtab + sym->st_name, l, \
 						    &sym, l->l_scope, version,\
-						    R_MIPS_REL32);	      \
+						    R_MIPS_REL32, 0);	      \
 		break;							      \
 	      }								      \
 	    /* Fall through.  */					      \
 	  }								      \
 	case 0:								      \
 	  value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,	      \
-				     l->l_scope, R_MIPS_REL32);		      \
+				     l->l_scope, R_MIPS_REL32, 0);	      \
 	}								      \
 									      \
       /* Currently value contains the base load address of the object	      \
@@ -495,14 +495,14 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,\
 						    map,		  \
 						    &ref, scope, version, \
-						    R_MIPS_REL32);	  \
+						    R_MIPS_REL32, 0);	  \
 		break;							  \
 	      }								  \
 	    /* Fall through.  */					  \
 	  }								  \
 	case 0:								  \
 	  value = _dl_lookup_symbol (strtab + sym->st_name, map, &ref,	  \
-				     scope, R_MIPS_REL32);		  \
+				     scope, R_MIPS_REL32, 0);		  \
 	}								  \
 									  \
       (ref)? value + ref->st_value: 0;					  \
