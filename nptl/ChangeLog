@@ -1,3 +1,7 @@
+2002-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/raise.c: Use libc_hidden_def for raise.
+
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-stdio1 and tst-stdio2.
