@@ -257,6 +257,17 @@ extern int __libc_locking_needed attribute_hidden;
 # define LLL_TID_EBX_LOAD
 # define LLL_TID_EBX_REG	"b"
 #endif
+
+#ifdef I386_USE_SYSENTER
+# ifdef SHARED
+# define LLL_TID_ENTER_KERNEL	"call *%%gs:%P6\n\t"
+# else
+# define LLL_TID_ENTER_KERNEL	"call *_dl_sysinfo\n\t"
+# endif
+#else
+# define LLL_TID_ENTER_KERNEL	"int $0x80\n\t"
+#endif
+
 #define lll_wait_tid(tid) \
   do {									      \
     int __ignore;							      \
@@ -264,13 +275,14 @@ extern int __libc_locking_needed attribute_hidden;
     if (_tid != 0)							      \
       __asm __volatile (LLL_TID_EBX_LOAD				      \
 			"1:\tmovl %1, %%eax\n\t"			      \
-			"int $0x80\n\t"					      \
+			LLL_TID_ENTER_KERNEL				      \
 			"cmpl $0, (%%ebx)\n\t"				      \
 			"jne,pn 1b\n\t"					      \
 			LLL_TID_EBX_LOAD				      \
 			: "=&a" (__ignore)				      \
 			: "i" (SYS_futex), LLL_TID_EBX_REG (&tid), "S" (0),   \
-			  "c" (FUTEX_WAIT), "d" (_tid));		      \
+			  "c" (FUTEX_WAIT), "d" (_tid),			      \
+			  "i" (offsetof (tcbhead_t, sysinfo)));		      \
   } while (0)
 
 extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
@@ -293,11 +305,12 @@ extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
     int __ignore;							      \
     (tid) = 0;								      \
     __asm __volatile (LLL_TID_EBX_LOAD					      \
-		      "\tint $0x80\n\t"					      \
+		      LLL_TID_ENTER_KERNEL				      \
 		      LLL_TID_EBX_LOAD					      \
 		      : "=a" (__ignore)					      \
 		      : "0" (SYS_futex), LLL_TID_EBX_REG (&(tid)), "S" (0),   \
-			"c" (FUTEX_WAKE), "d" (0x7fffffff));		      \
+			"c" (FUTEX_WAKE), "d" (0x7fffffff)		      \
+			"i" (offsetof (tcbhead_t, sysinfo)));		      \
   } while (0)
 
 

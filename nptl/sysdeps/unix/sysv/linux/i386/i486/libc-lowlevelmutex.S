@@ -46,7 +46,7 @@ __lll_mutex_lock_wait:
 1:
 	leal	1(%eax), %edx	/* account for the preceeded xadd.  */
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	movl	$1, %eax
 #ifndef UP
@@ -94,7 +94,7 @@ __lll_mutex_timedlock_wait:
 	movl	%esp, %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	/* Compute relative timeout.  */
 	movl	4(%esp), %eax
@@ -118,7 +118,7 @@ __lll_mutex_timedlock_wait:
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%ebp, %ebx
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	movl	$1, %esi
 #ifndef UP
@@ -170,7 +170,7 @@ __lll_mutex_unlock_wake:
 	movl	$0, (%ebx)
 	movl	$1, %edx	/* Wake one thread.  */
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	popl	%edx
 	popl	%ecx

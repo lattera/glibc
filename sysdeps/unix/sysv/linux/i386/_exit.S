@@ -27,11 +27,13 @@ _exit:
 	/* Try the new syscall first.  */
 #ifdef __NR_exit_group
 	movl	$__NR_exit_group, %eax
-	int	$0x80
+	ENTER_KERNEL
 #endif
 
 	/* Not available.  Now the old one.  */
 	movl	$__NR_exit, %eax
+	/* Don't bother using ENTER_KERNEL here.  If the exit_group
+	   syscall is not available AT_SYSINFO isn't either.  */
 	int	$0x80
 
 	/* This must not fail.  Be sure we don't return.  */

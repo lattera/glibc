@@ -86,7 +86,7 @@ __pthread_once:
 	/* Somebody else got here first.  Wait.  */
 	movl	%esi, %ecx		/* movl $FUTEX_WAIT, %ecx */
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 	jmp	6b
 
 3:	/* Call the initializer function after setting up the
@@ -125,7 +125,7 @@ __pthread_once:
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 4:	popl	%esi
 	popl	%ebx
@@ -154,7 +154,7 @@ clear_once_control:
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	popl	%ebx
 	popl	%esi

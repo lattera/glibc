@@ -70,7 +70,7 @@ pthread_barrier_wait:
 	   if the CURR_EVENT memory has meanwhile been changed.  */
 7:	movl	%esi, %ecx		/* movl $FUTEX_WAIT, %ecx */
 8:	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	/* Don't return on spurious wakeups.  The syscall does not change
 	   any register except %eax so there is no need to reload any of
@@ -95,7 +95,7 @@ pthread_barrier_wait:
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	/* Release the mutex.  */
 	LOCK

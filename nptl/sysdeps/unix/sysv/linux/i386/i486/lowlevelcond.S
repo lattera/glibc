@@ -63,7 +63,7 @@ __lll_cond_wait:
 
 3:	xorl	%ecx, %ecx
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	movl	$1, %eax
 	LOCK
@@ -121,7 +121,7 @@ __lll_cond_timedwait:
 7:	movl	%esp, %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	/* Compute relative timeout.  */
 	movl	4(%esp), %eax
@@ -144,7 +144,7 @@ __lll_cond_timedwait:
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%ebp, %ebx
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	movl	%eax, %edx
 
@@ -212,7 +212,7 @@ __lll_cond_wake:
 	xorl	%esi, %esi
 	movl	%ecx, %edx	/* movl $1, %edx */
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 3:	LOCK
 	decl	cond_lock-cond_nr_wakers(%ebx)
@@ -260,7 +260,7 @@ __lll_cond_broadcast:
 6:	movl	$FUTEX_WAKE, %ecx
 	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 3:	LOCK
 	decl	cond_lock-cond_nr_wakers(%ebx)

@@ -83,7 +83,7 @@ __pthread_rwlock_rdlock:
 11:	addl	$READERS_WAKEUP-MUTEX, %ebx
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	subl	$READERS_WAKEUP-MUTEX, %ebx
 
@@ -188,7 +188,7 @@ pthread_rwlock_timedrdlock:
 	movl	%esp, %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	/* Compute relative timeout.  */
 	movl	4(%esp), %eax
@@ -212,7 +212,7 @@ pthread_rwlock_timedrdlock:
 	movl	%ecx, %edx
 	leal	READERS_WAKEUP(%ebp), %ebx
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 	movl	%eax, %edx
 17:
 
@@ -320,7 +320,7 @@ __pthread_rwlock_wrlock:
 11:	addl	$WRITERS_WAKEUP-MUTEX, %ebx
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	subl	$WRITERS_WAKEUP-MUTEX, %ebx
 
@@ -415,7 +415,7 @@ pthread_rwlock_timedwrlock:
 	movl	%esp, %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	/* Compute relative timeout.  */
 	movl	4(%esp), %eax
@@ -439,7 +439,7 @@ pthread_rwlock_timedwrlock:
 	movl	%ecx, %edx
 	leal	WRITERS_WAKEUP(%ebp), %ebx
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 	movl	%eax, %edx
 17:
 
@@ -547,7 +547,7 @@ __pthread_rwlock_unlock:
 0:
 #endif
 	movl	$SYS_futex, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 6:	LOCK
 	decl	MUTEX(%edi)

@@ -1,5 +1,22 @@
 2002-12-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Use ENTER_KERNEL instead
+	of int $0x80.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevelmutex.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelcond.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrwlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelsem.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Add support for using
+	sysenter.
+	* sysdeps/unix/sysv/linux/i386/lowlevelsem.h: Likewise.
+
+	* sysdeps/i386/tls.h: Unconditionally include <dl-sysdep.h>.
+
 	* allocatestack.c (allocate_stack) [NEED_DL_SYSINFO]: Set sysinfo
 	in new TCB.
 	* sysdeps/unix/sysv/linux/i386/createthread.c (create_thread): Check

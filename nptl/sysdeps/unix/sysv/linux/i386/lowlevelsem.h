@@ -20,6 +20,9 @@
 #ifndef _LOWLEVELSEM_H
 #define _LOWLEVELSEM_H	1
 
+#include <dl-sysdep.h>
+#include <tls.h>
+
 #ifndef LOCK
 # ifdef UP
 #  define LOCK	/* nothing */
@@ -30,6 +33,16 @@
 
 #define SYS_futex		240
 
+
+#ifdef I386_USE_SYSENTER
+# ifdef SHARED
+# define LLL_SEM_ENTER_KERNEL(arg)	"call *%%gs:%P" #arg "\n\t"
+# else
+# define LLL_SEM_ENTER_KERNEL(arg)	"call *_dl_sysinfo\n\t"
+# endif
+#else
+# define LLL_SEM_ENTER_KERNEL(arg)	"int $0x80\n\t"
+#endif
 
 #define lll_sem_wait(sem) \
   ({ int result, ignore1, ignore2;					      \
@@ -46,7 +59,7 @@
 		       "movl %%esi, %%edx\n\t"				      \
 		       "leal 4(%4), %%ebx\n\t"				      \
 		       "movl %5, %%eax\n\t"				      \
-		       "int $0x80\n\t"					      \
+		       LLL_SEM_ENTER_KERNEL (9)				      \
 		       "movl %%eax, %%edx\n\t"				      \
 		       "popl %%ebx\n\t"					      \
 		       "orl $-1, %%eax\n\t"				      \
@@ -68,7 +81,8 @@
 		       : "=a" (result), "=c" (ignore1), "=d" (ignore2),	      \
 			 "=m" (*sem)					      \
 		       : "D" (sem), "i" (SYS_futex), "S" (0),		      \
-			 "i" (-EINTR), "i" (EINTR));			      \
+			 "i" (-EINTR), "i" (EINTR),			      \
+			 "i" (offsetof (tcbhead_t, sysinfo)));		      \
      result; })
 
 
@@ -91,11 +105,12 @@ extern int __lll_sem_timedwait (struct sem *sem, const struct timespec *ts)
 			      "movl %5, %%eax\n\t"			      \
 			      /* movl $FUTEX_WAKE, %ecx */		      \
 			      "movl $1, %%ecx\n\t"			      \
-			      "int $0x80\n\t"				      \
+			      LLL_SEM_ENTER_KERNEL (6)			      \
 			      "popl %%ebx\n\t"				      \
 			      "popl %%esi"				      \
 			      : "=&a" (ignore1), "=c" (ignore2),	      \
 				"=m" (*sem), "=d" (ignore3)		      \
-			      : "r" (sem), "i" (SYS_futex)); })
+			      : "r" (sem), "i" (SYS_futex),		      \
+				"i" (offsetof (tcbhead_t, sysinfo))); })
 
 #endif	/* lowlevelsem.h */

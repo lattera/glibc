@@ -1,5 +1,5 @@
 /* Save current context and install the given one.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -65,7 +65,7 @@ ENTRY(__swapcontext)
 	leal	oSIGMASK(%ecx), %ecx
 	movl	$SIG_SETMASK, %ebx
 	movl	$__NR_sigprocmask, %eax
-	int	$0x80
+	ENTER_KERNEL
 	popl	%ebx
 	cmpl	$-4095, %eax		/* Check %eax for error.  */
 	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */

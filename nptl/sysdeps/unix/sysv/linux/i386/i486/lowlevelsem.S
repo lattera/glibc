@@ -66,7 +66,7 @@ __new_sem_wait:
 	movl	$SYS_futex, %eax
 	movl	%esi, %ecx
 	movl	%esi, %edx
-	int	$0x80
+	ENTER_KERNEL
 
 	testl	%eax, %eax
 	je	3b
@@ -171,7 +171,7 @@ sem_timedwait:
 	movl	%esp, %ebx
 	movl	%ecx, %edx
 	movl	$SYS_gettimeofday, %eax
-	int	$0x80
+	ENTER_KERNEL
 
 	/* Compute relative timeout.  */
 	movl	4(%esp), %eax
@@ -194,7 +194,7 @@ sem_timedwait:
 	xorl	%ecx, %ecx
 	movl	$SYS_futex, %eax
 	xorl	%edx, %edx
-	int	$0x80
+	ENTER_KERNEL
 
 	testl	%eax, %eax
 	je,pt	9f
@@ -255,7 +255,7 @@ __new_sem_post:
 	movl	$SYS_futex, %eax
 	movl	$FUTEX_WAKE, %ecx
 	incl	%edx
-	int	$0x80
+	ENTER_KERNEL
 
 	testl	%eax, %eax
 	js	1f
