@@ -85,6 +85,8 @@ weak_alias (__nextafter, nextafter)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__nextafter, __nextafterl)
 weak_alias (__nextafter, nextafterl)
+strong_alias (__nextafter, __nexttowardl)
+weak_alias (__nexttowardl, nexttowardl)
 #undef __nexttoward
 strong_alias (__nextafter, __nexttoward)
 #undef nexttoward
