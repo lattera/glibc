@@ -1,9 +1,29 @@
+2004-05-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/tgmath.h (fabs): Use __TGMATH_UNARY_REAL_IMAG_RET_REAL.
+	(carg): Likewise.
+	Patch by Lev S Bishop <lev.bishop@yale.edu>.
+
+	* math/bug-tgmath1.c (main): Test fabs and carg as well.
+
+2004-05-06  Richard Henderson  <rth@redhat.com>
+
+	* elf/elf.h (AT_L1I_CACHESHAPE, AT_L1D_CACHESHAPE,
+	AT_L2_CACHESHAPE, AT_L3_CACHESHAPE): New.
+	* sysdeps/unix/sysv/linux/alpha/Versions: Export
+	__libc_alpha_cache_shape as a private symbol.
+	* sysdeps/unix/sysv/linux/alpha/dl-sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/sysconf.c: New file.
+
 2004-05-06  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/div_libc.h (_ITOFS, _ITOFT, _FTOIT, _ITOFT2): New.
-	* sysdeps/alpha/divl.S, sysdeps/alpha/divq.S, sysdeps/alpha/divqu.S,
-	sysdeps/alpha/reml.S, sysdeps/alpha/remq.S, sysdeps/alpha/remqu.S:
-	Use them.
+	* sysdeps/alpha/divl.S: Use them.
+	* sysdeps/alpha/divq.S: Likewise.
+	* sysdeps/alpha/divqu.S: Likewise.
+	* sysdeps/alpha/reml.S: Likewise.
+	* sysdeps/alpha/remq.S: Likewise.
+	* sysdeps/alpha/remqu.S: Likewise.
 
 2004-05-06  Ulrich Drepper  <drepper@redhat.com>
 

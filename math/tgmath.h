@@ -346,7 +346,7 @@
 #define ceil(Val) __TGMATH_UNARY_REAL_ONLY (Val, ceil)
 
 /* Absolute value of X.  */
-#define fabs(Val) __TGMATH_UNARY_REAL_IMAG (Val, fabs, cabs)
+#define fabs(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL (Val, fabs, cabs)
 
 /* Largest integer not greater than X.  */
 #define floor(Val) __TGMATH_UNARY_REAL_ONLY (Val, floor)
@@ -439,7 +439,7 @@
 /* Absolute value, conjugates, and projection.  */
 
 /* Argument value of Z.  */
-#define carg(Val) __TGMATH_UNARY_REAL_IMAG (Val, carg, carg)
+#define carg(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL (Val, carg, carg)
 
 /* Complex conjugate of Z.  */
 #define conj(Val) __TGMATH_UNARY_REAL_IMAG (Val, conj, conj)
