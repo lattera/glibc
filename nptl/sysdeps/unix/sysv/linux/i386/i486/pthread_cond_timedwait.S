@@ -379,7 +379,9 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.long	.LSTARTCODE		# Start address of the code.
 #endif
 	.long	.LENDCODE-.LSTARTCODE	# Length of the code.
+#ifdef SHARED
 	.uleb128 0			# No augmentation data.
+#endif
 	.byte	4			# DW_CFA_advance_loc4
 	.long	.Lpush_ebp-.LSTARTCODE
 	.byte	14			# DW_CFA_def_cfa_offset
