@@ -1,3 +1,7 @@
+2001-01-02  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/dl-machine.c (__process_machine_rela): Fix typo.
+
 2001-01-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/Makefile (TEXI2PDF): Change to texi2dvi --pdf.

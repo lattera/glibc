@@ -452,7 +452,7 @@ __process_machine_rela (struct link_map *map,
       {
 	Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
 	if (delta << 6 >> 6 != delta)
-	  dl_reloc_overflow (map,  "R_PPC_REL14", reloc_addr, sym, refsym);
+	  dl_reloc_overflow (map,  "R_PPC_REL24", reloc_addr, sym, refsym);
 	*reloc_addr = (*reloc_addr & 0xfc000003) | (delta & 0x3fffffc);
       }
       break;
