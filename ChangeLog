@@ -1,3 +1,10 @@
+2003-04-14  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/unwind-dw2.c (_Unwind_GetCFA): Add a cast to silence
+	compiler warning.
+
+	* sysdeps/generic/unwind-pe.h: Fix decl hacks broken in merge.
+
 2003-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/strxfrm.c (STRXFRM): Terminate rulearr at correct
