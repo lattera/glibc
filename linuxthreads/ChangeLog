@@ -1,5 +1,13 @@
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/posix-timer.h (struct timer_node): Add creator_pid.
+	* sysdeps/pthread/timer_create.c: Fill in creator_pid.
+	* sysdeps/pthread/timer_routines.c (thread_expire_timer): Send signal
+	with sigqueueinfo is this system call is available.
+
+	* sysdeps/pthread/timer_create.c (timer_create): Allow
+	CLOCK_CPUTIME if _POSIX_CPUTIME is defined.
+
 	* sysdeps/pthread/Makefile: New file.  Add rules to build timer
 	functionality.
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Add TIMER_MAX.

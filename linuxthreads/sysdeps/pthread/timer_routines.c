@@ -19,9 +19,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <assert.h>
+#include <errno.h>
 #include <pthread.h>
 #include <stddef.h>
+#include <sysdep.h>
 #include <time.h>
+#include <unistd.h>
+#include <sys/syscall.h>
 
 #include "posix-timer.h"
 
@@ -51,6 +55,11 @@ struct thread_node __timer_signal_thread;
 struct list_links timer_free_list;
 struct list_links thread_free_list;
 struct list_links thread_active_list;
+
+
+#ifdef __NR_rt_sigqueueinfo
+extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
+#endif
 
 
 /* List handling functions.  */
@@ -222,14 +231,13 @@ __timer_thread_dealloc (struct thread_node *thread)
 }
 
 
-/*
- * Each of our threads which terminates executes this cleanup handler. We never
- * terminate threads ourselves; if a thread gets here it means that the evil
- * application has killed it.  If the thread has timers, these require
- * servicing and so we must hire a replacement thread right away.
- * We must also unblock another thread that may have been waiting for
- * this thread to finish servicing a timer (see timer_delete()).
- */
+/* Each of our threads which terminates executes this cleanup
+   handler. We never terminate threads ourselves; if a thread gets here
+   it means that the evil application has killed it.  If the thread has
+   timers, these require servicing and so we must hire a replacement
+   thread right away.  We must also unblock another thread that may
+   have been waiting for this thread to finish servicing a timer (see
+   timer_delete()).  */
 
 static void
 thread_cleanup (void *val)
@@ -272,18 +280,37 @@ thread_expire_timer (struct thread_node *self, struct timer_node *timer)
 
   pthread_mutex_unlock (&__timer_mutex);
 
-  switch (timer->event.sigev_notify)
+  switch (__builtin_expect (timer->event.sigev_notify, SIGEV_SIGNAL))
     {
     case SIGEV_NONE:
       assert (! "timer_create should never have created such a timer");
       break;
 
     case SIGEV_SIGNAL:
+#ifdef __NR_rt_sigqueueinfo
+      {
+	siginfo_t info;
+
+	/* First, clear the siginfo_t structure, so that we don't pass our
+	   stack content to other tasks.  */
+	memset (&info, 0, sizeof (siginfo_t));
+	/* We must pass the information about the data in a siginfo_t
+           value.  */
+	info.si_signo = timer->event.sigev_signo;
+	info.si_code = SI_TIMER;
+	info.si_pid = timer->creator_pid;
+	info.si_uid = getuid ();
+	info.si_value = timer->event.sigev_value;
+
+	INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid, info.si_signo, &info);
+      }
+#else
       if (pthread_kill (self->captured, timer->event.sigev_signo) != 0)
 	{
 	  if (pthread_kill (self->id, timer->event.sigev_signo) != 0)
 	    abort ();
         }
+#endif
       break;
 
     case SIGEV_THREAD:

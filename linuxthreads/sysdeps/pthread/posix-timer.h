@@ -50,6 +50,7 @@ struct thread_node
 /* Internal representation of a timer.  */
 struct timer_node
 {
+  pid_t creator_pid;
   struct list_links links;
   struct sigevent event;
   clockid_t clock;

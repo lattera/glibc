@@ -36,7 +36,11 @@ timer_create (clock_id, evp, timerid)
   struct timer_node *newtimer = NULL;
   struct thread_node *thread = NULL;
 
-  if (clock_id != CLOCK_REALTIME)
+  if (clock_id != CLOCK_REALTIME
+#ifdef _POSIX_CPUTIME
+      && clock_id != CLOCK_CPUTIME
+#endif
+      )
     {
       errno = EINVAL;
       return -1;
@@ -70,6 +74,7 @@ timer_create (clock_id, evp, timerid)
     }
 
   newtimer->event.sigev_notify_attributes = &newtimer->attr;
+  newtimer->creator_pid = getpid ();
 
   switch (__builtin_expect (newtimer->event.sigev_notify, SIGEV_SIGNAL))
     {
