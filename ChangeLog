@@ -1,3 +1,7 @@
+1998-03-10 07:54  H.J. Lu  <hjl@gnu.org>
+
+	* elf/rtld.c (dl_main): Load the preloaded objects dependencies.
+
 1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-lookup.c (_dl_lookup_versioned_symbol): Print version
@@ -16,8 +20,8 @@
 
 1998-03-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* sysdeps/posix/mkstemp.c (mkstemp): Open temporary file mode
-	0600.  Reported by Greg Alexander <galexand@sietch.bloomington.in.us>.
+	* sysdeps/posix/mkstemp.c (mkstemp): Open temporary file mode 0600.
+	Reported by Greg Alexander <galexand@sietch.bloomington.in.us>.
 
 1998-03-10 00:10  Ulrich Drepper  <drepper@cygnus.com>
 

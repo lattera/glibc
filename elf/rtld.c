@@ -283,6 +283,7 @@ dl_main (const ElfW(Phdr) *phdr,
   size_t file_size;
   char *file;
   int has_interp = 0;
+  unsigned int i;
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode, &lazy);
@@ -595,7 +596,6 @@ of this helper program; chances are you did not intend to run this program.\n",
     {
       /* Set up PRELOADS with a vector of the preloaded libraries.  */
       struct link_map *l;
-      unsigned int i;
       preloads = __alloca (npreloads * sizeof preloads[0]);
       l = _dl_rtld_map.l_next; /* End of the chain before preloads.  */
       i = 0;
@@ -611,6 +611,11 @@ of this helper program; chances are you did not intend to run this program.\n",
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
   _dl_map_object_deps (main_map, preloads, npreloads, mode == trace);
+
+  /* We should also load the preloaded objects dependencies. They
+     may call dlsym (RTLD_NEXT, ...).  */
+  for (i = 0; i < npreloads; i++)
+    _dl_map_object_deps (preloads[i], NULL, 0, 0);
 
 #ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */
@@ -629,7 +634,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 put it back in the list of visible objects.  We insert it into the
 	 chain in symbol search order because gdb uses the chain's order as
 	 its symbol search order.  */
-      unsigned int i = 1;
+      i = 1;
       while (main_map->l_searchlist[i] != &_dl_rtld_map)
 	++i;
       _dl_rtld_map.l_prev = main_map->l_searchlist[i - 1];
@@ -659,9 +664,6 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 important that we do this before real relocation, because the
 	 functions we call below for output may no longer work properly
 	 after relocation.  */
-
-      int i;
-
       if (! _dl_loaded->l_info[DT_NEEDED])
 	_dl_sysdep_message ("\t", "statically linked\n", NULL);
       else
@@ -971,10 +973,20 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 	      dl_debug += 7;
 	    }
 	  else
-	    /* Skip everything until next separator.  */
-	    do
-	      ++dl_debug;
-	    while (*dl_debug != '\0' && !issep (*dl_debug));
+	    {
+	      /* Display a warning and skip everything until next
+                 separator.  */
+	      char *startp = dl_debug;
+
+	      do
+		++dl_debug;
+	      while (*dl_debug != '\0' && !issep (*dl_debug));
+
+	      startp = strndupa (startp, dl_debug - startp);
+	      _dl_sysdep_error ("warning: debug option `", startp,
+				"' unknown; try LD_DEBUG=help\n", NULL);
+
+	    }
 	}
     }
   while (*dl_debug != '\0');
