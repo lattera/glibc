@@ -774,6 +774,13 @@ extern int ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int getpt __P ((void));
 #endif
 
+#ifdef __USE_BSD
+/* Put the 1 minute, 5 minute and 15 minute load averages into the first
+   NELEM elements of LOADAVG.  Return the number written (never more than
+   three, but may be less than NELEM), or -1 if an error occurred.  */
+extern int getloadavg __P ((double __loadavg[], int __nelem));
+#endif
+
 #endif /* don't just need malloc and calloc */
 #undef __need_malloc_and_calloc
 
