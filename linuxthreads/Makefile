@@ -46,11 +46,13 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptw-lseek64 ptw-llseek ptw-msync ptw-nanosleep \
 		       ptw-open ptw-open64 ptw-pause ptw-pread ptw-pread64 \
 		       ptw-pwrite ptw-pwrite64 ptw-tcdrain ptw-wait \
-		       ptw-waitpid pt-system
+		       ptw-waitpid pt-system old_pthread_atfork
 # Don't generate deps for calls with no sources.  See sysdeps/unix/Makefile.
 omit-deps = $(unix-syscalls:%=ptw-%)
 
 libpthread-shared-only-routines = pt-allocrtsig
+
+libpthread-nonshared = pthread_atfork
 
 nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete
 initfirst-yes = -Wl,--enable-new-dtags,-z,initfirst
@@ -65,6 +67,14 @@ CFLAGS-tst-cancel.c = -fno-inline -fno-inline-functions
 include ../Makeconfig
 
 ifeq ($(build-shared),yes)
+others: $(objpfx)libpthread_nonshared.a
+endif
+
+$(objpfx)libpthread_nonshared.a: $(addprefix $(objpfx),$(addsuffix .os,$(libpthread-nonshared)))
+	$(AR) $(ARFLAGS) $@ $^
+
+ifeq ($(build-shared),yes)
+
 extra-objs += crti.o crtn.o
 omit-deps += crti crtn
 
@@ -91,6 +101,31 @@ tests-nodelete-yes = unload
 endif
 
 include ../Rules
+
+# What we install as libpthread.so for programs to link against is in fact a
+# link script.  It contains references for the various libraries we need.
+# The libpthread.so object is not complete since some functions are only defined
+# in libpthread_nonshared.a.
+# We need to use absolute paths since otherwise local copies (if they exist)
+# of the files are taken by the linker.
+install: $(inst_libdir)/libpthread.so
+$(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
+			      $(objpfx)libpthread.so$(libpthread.so-version) \
+			      $(inst_libdir)/$(patsubst %,$(libtype.oS),\
+							$(libprefix)pthread) \
+			      $(+force)
+	(echo '/* GNU ld script';\
+	 echo '   Use the shared library, but some functions are only in';\
+	 echo '   the static library, so try that secondarily.  */';\
+	 cat $<; \
+	 echo 'GROUP ( $(slibdir)/libpthread.so$(libpthread.so-version)' \
+	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)pthread)'\
+	      ')' \
+	) > $@.new
+	mv -f $@.new $@
+$(inst_libdir)/libpthread_nonshared.a: $(objpfx)libpthread_nonshared.a
+	$(do-install)
+
 
 extra-B-pthread.so = -B$(common-objpfx)linuxthreads/
 $(objpfx)libpthread.so: $(objpfx)crti.o $(objpfx)crtn.o
@@ -154,14 +189,16 @@ $(objpfx)libpthread.so: $(libc-link.so) $(common-objpfx)libc_nonshared.a
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \
   $(filter-out $(tests-static) $(tests-reverse) unload, \
-    $(tests) $(test-srcs))): $(objpfx)libpthread.so
+    $(tests) $(test-srcs))): $(objpfx)libpthread.so \
+			     $(objpfx)libpthread_nonshared.a
 # $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
 # since otherwise libpthread.so comes before libc.so when linking.
 $(addprefix $(objpfx), $(tests-reverse)): \
-  $(objpfx)../libc.so $(objpfx)libpthread.so
+  $(objpfx)../libc.so $(objpfx)libpthread.so \
+  $(objpfx)libpthread_nonshared.a
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
 $(objpfx)unload: $(common-objpfx)dlfcn/libdl.so
-$(objpfx)unload.out: $(objpfx)libpthread.so
+$(objpfx)unload.out: $(objpfx)libpthread.so $(objpfx)libpthread_nonshared.a
 else
 $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.a

@@ -238,6 +238,7 @@ static struct pthread_functions pthread_functions =
     .ptr_pthread_internal_tsd_get = __pthread_internal_tsd_get,
     .ptr_pthread_internal_tsd_address = __pthread_internal_tsd_address,
 #endif
+    .ptr_pthread_fork = __pthread_fork,
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
     .ptr___pthread_attr_init_2_0 = __pthread_attr_init_2_0,
@@ -273,7 +274,8 @@ static struct pthread_functions pthread_functions =
     .ptr_pthread_setcancelstate = __pthread_setcancelstate,
     .ptr_pthread_setcanceltype = __pthread_setcanceltype,
     .ptr_pthread_do_exit = __pthread_do_exit,
-    .ptr_pthread_thread_self = __pthread_thread_self
+    .ptr_pthread_thread_self = __pthread_thread_self,
+    .ptr_pthread_cleanup_upto = __pthread_cleanup_upto
   };
 # define ptr_pthread_functions &pthread_functions
 #else

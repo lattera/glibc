@@ -3,7 +3,8 @@
 
 have-thread-library = yes
 
-shared-thread-library = $(common-objpfx)linuxthreads/libpthread.so
+shared-thread-library = $(common-objpfx)linuxthreads/libpthread.so \
+			$(common-objpfx)linuxthreads/libpthread_nonshared.a
 static-thread-library = $(common-objpfx)linuxthreads/libpthread.a
 bounded-thread-library = $(common-objpfx)linuxthreads/libpthread_b.a
 

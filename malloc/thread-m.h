@@ -72,8 +72,14 @@ __libc_lock_define (typedef, mutex_t)
 
 #endif
 
+/* This is defined by newer gcc version unique for each module.  */
+extern void *__dso_handle __attribute__ ((__weak__));
+
+#include <fork.h>
+
 #define thread_atfork(prepare, parent, child) \
-   (__pthread_atfork != NULL ? __pthread_atfork(prepare, parent, child) : 0)
+   __register_atfork (prepare, parent, child,				      \
+		      &__dso_handle == NULL ? NULL : __dso_handle)
 
 #elif defined(MUTEX_INITIALIZER)
 /* Assume hurd, with cthreads */

@@ -1,5 +1,8 @@
 2002-12-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/pt-initfini.c (call_initialize_minimal): Mark
+	__pthread_initialize_minimal as hidden.
+
 	* init.c (__pthread_initialize_minimal_internal): Don't mark as
 	constructor.
 

@@ -27,24 +27,23 @@ extern void __libc_longjmp (sigjmp_buf env, int val)
      __attribute__ ((noreturn));
 
 
-static void pthread_cleanup_upto(__jmp_buf target)
+void __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
 {
   pthread_descr self = thread_self();
   struct _pthread_cleanup_buffer * c;
-  char *currentframe = CURRENT_STACK_FRAME;
 
   for (c = THREAD_GETMEM(self, p_cleanup);
        c != NULL && _JMPBUF_UNWINDS(target, c);
        c = c->__prev)
     {
 #if _STACK_GROWS_DOWN
-      if ((char *) c <= currentframe)
+      if ((char *) c <= targetframe)
 	{
 	  c = NULL;
 	  break;
 	}
 #elif _STACK_GROWS_UP
-      if ((char *) c >= currentframe)
+      if ((char *) c >= targetframe)
 	{
 	  c = NULL;
 	  break;
@@ -60,14 +59,12 @@ static void pthread_cleanup_upto(__jmp_buf target)
     THREAD_SETMEM(self, p_in_sighandler, NULL);
 }
 
-void siglongjmp(sigjmp_buf env, int val)
+void siglongjmp (sigjmp_buf env, int val)
 {
-  pthread_cleanup_upto(env->__jmpbuf);
-  __libc_siglongjmp(env, val);
+  __libc_siglongjmp (env, val);
 }
 
-void longjmp(jmp_buf env, int val)
+void longjmp (jmp_buf env, int val)
 {
-  pthread_cleanup_upto(env->__jmpbuf);
-  __libc_longjmp(env, val);
+  __libc_longjmp (env, val);
 }

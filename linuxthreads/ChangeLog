@@ -1,3 +1,44 @@
+2002-12-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/list.h: New file.
+	* sysdeps/unix/sysv/linux/jmp-unwind.c: New file.
+	* sysdeps/unix/sysv/linux/fork.c: New file.
+	* sysdeps/unix/sysv/linux/fork.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/fork.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/fork.h: New file.
+	* sysdeps/unix/sysv/linux/register-atfork.c: New file.
+	* sysdeps/unix/sysv/linux/unregister-atfork.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile: New file.
+	* sysdeps/unix/sysv/linux/Versions: New file.
+	* ptlongjmp.c (pthread_cleanup_upto): Rename to...
+	(__pthread_cleanup_upto): ...this. Add targetframe argument,
+	use it instead of currentframe.  No longer static.
+	(siglongjmp, longjmp): Remove pthread_cleanup_upto calls.
+	* internals.h (__pthread_cleanup_upto, __pthread_fork): New prototypes.
+	(struct pthread_functions): Add ptr_pthread_fork,
+	ptr_pthread_cleanup_upto.
+	* pthread.c (pthread_functions): Initialize ptr_pthread_fork and
+	ptr_pthread_cleanup_upto.
+	* ptfork.c: Include fork.h.
+	(struct handler_list, struct handler_list_block): Remove.
+	(pthread_atfork_lock, pthread_atfork_prepare, pthread_atfork_parent,
+	pthread_atfork_child): Remove.
+	(pthread_insert_list, __pthread_atfork, pthread_call_handlers): Remove.
+	(__pthread_fork): New function.
+	(__fork, __vfork): Call __libc_fork.
+	* Makefile (libpthread-routines): Add old_pthread_atfork.
+	(libpthread-nonshared): Add pthread_atfork.
+	(others): Depend on $(objpfx)libpthread_nonshared.a.
+	($(objpfx)libpthread_nonshared.a): New rule.
+	(install): Depend on $(inst_libdir)/libpthread.so.
+	($(inst_libdir)/libpthread.so, $(inst_libdir)/libpthread_nonshared.a):
+	New rules.
+	(tests): Depend on libpthread_nonshared.a too.
+	* old_pthread_atfork.c: New file.
+	* pthread_atfork.c: New file.
+	* Makeconfig (shared-thread-library): Include libpthread_nonshared.a
+	too.
+
 2002-12-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* forward.c: Make all functions available by default again.  It

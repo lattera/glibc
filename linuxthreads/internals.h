@@ -463,6 +463,11 @@ extern int __libc_enable_asynccancel (void) attribute_hidden;
 extern void __libc_disable_asynccancel (int oldtype)
   internal_function attribute_hidden;
 
+extern void __pthread_cleanup_upto (__jmp_buf target,
+				    char *targetframe) attribute_hidden;
+struct fork_block;
+extern pid_t __pthread_fork (struct fork_block *b) attribute_hidden;
+
 #if !defined NOT_IN_libc
 # define LIBC_CANCEL_ASYNC() \
   __libc_enable_asynccancel ()
@@ -482,6 +487,7 @@ extern void __libc_disable_asynccancel (int oldtype)
    the thread functions.  */
 struct pthread_functions
 {
+  pid_t (*ptr_pthread_fork) (struct fork_block *);
   int (*ptr_pthread_attr_destroy) (pthread_attr_t *);
   int (*ptr___pthread_attr_init_2_0) (pthread_attr_t *);
   int (*ptr___pthread_attr_init_2_1) (pthread_attr_t *);
@@ -519,6 +525,8 @@ struct pthread_functions
   int (*ptr_pthread_setcancelstate) (int, int *);
   int (*ptr_pthread_setcanceltype) (int, int *);
   void (*ptr_pthread_do_exit) (void *retval, char *currentframe);
+  void (*ptr_pthread_cleanup_upto) (__jmp_buf target,
+				    char *targetframe);
   pthread_descr (*ptr_pthread_thread_self) (void);
   int (*ptr_pthread_internal_tsd_set) (int key, const void * pointer);
   void * (*ptr_pthread_internal_tsd_get) (int key);
