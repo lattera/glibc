@@ -57,7 +57,7 @@ __geteuid (void)
 # endif /* __NR_geteuid32 */
 
   /* No error checking.  */
-  return INTERNAL_SYSCALL (getugid, err, 0);
+  return INTERNAL_SYSCALL (geteuid, err, 0);
 #endif
 }
 

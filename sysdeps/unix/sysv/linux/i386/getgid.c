@@ -48,7 +48,7 @@ __getgid (void)
     {
       int result;
 
-      result = INTERNAL_SYSCALL (getdid32, err, 0);
+      result = INTERNAL_SYSCALL (getgid32, err, 0);
       if (! INTERNAL_SYSCALL_ERROR_P (result, err)
 	  || INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
 	return result;
