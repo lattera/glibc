@@ -1,5 +1,16 @@
 1999-07-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/Makefile (routines): Add getipnodebyad and freehostent.
+	* inet/Versions [GLIBC_2.2] (libc): Add getipnodebyad and freehostent.
+	* inet/freehostent.c: New file.
+	* inet/getipnodebyad.c: New file.
+	* nss/digits_dots.c: Fail if IPv6 is found and IPv4 is requested.
+	Add support for getipnode* functions.
+
+	* nss/digits_dots.c: Don't use __set_h_errno, assign to *h_errnop.
+	Set h_aliases to NULL and not to a pointer to an array with a NULL
+	pointer following XNS 5.2.
+
 	* posix/sched.h: Remove internal interfaces.
 	* include/sched.h: Add internal interfaces.
 

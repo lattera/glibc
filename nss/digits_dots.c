@@ -28,12 +28,14 @@
       typedef unsigned char host_addr_t [16];
       host_addr_t *host_addr;
       typedef char *host_addr_list_t [2];
-      host_addr_list_t *host_aliases;
       host_addr_list_t *h_addr_ptrs;
       size_t size_needed;
       int addr_size;
 #ifndef HAVE_AF
       int af = -1;
+#endif
+#ifdef HAVE_TYPE
+      int af = type;
 #endif
 
       switch (af)
@@ -47,18 +49,26 @@
 	  break;
 
 	default:
+#ifdef HAVE_TYPE
+	  /* This must not happen.  */
+	  *h_errnop = HOST_NOT_FOUND;
+	  goto done;
+#else
 	  af = (_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET;
 	  addr_size = af == AF_INET6 ? IN6ADDRSZ : INADDRSZ;
 	  break;
+#endif
 	}
 
       size_needed = (sizeof (*host_addr)
-		     + sizeof (*host_aliases) + sizeof (*h_addr_ptrs)
-		     + strlen (name) + 1);
+		     + sizeof (*h_addr_ptrs) + strlen (name) + 1);
 
 #ifdef HAVE_LOOKUP_BUFFER
       if (buflen < size_needed)
 	{
+# ifdef NEED_H_ERRNO
+	  *h_errnop = TRY_AGAIN;
+# endif
 	  __set_errno (ERANGE);
 	  goto done;
 	}
@@ -89,10 +99,8 @@
       memset (buffer, 0, size_needed);
 
       host_addr = (host_addr_t *) buffer;
-      host_aliases = (host_addr_list_t *)
-	((char *) host_addr + sizeof (*host_addr));
       h_addr_ptrs = (host_addr_list_t *)
-	((char *) host_aliases + sizeof (*host_aliases));
+	((char *) host_addr + sizeof (*host_addr));
       hostname = (char *) h_addr_ptrs + sizeof (*h_addr_ptrs);
 
       if (isdigit (name[0]))
@@ -119,7 +127,7 @@
 		    }
 		  if (! ok)
 		    {
-		      __set_h_errno (HOST_NOT_FOUND);
+		      *h_errnop = HOST_NOT_FOUND;
 #ifndef HAVE_LOOKUP_BUFFER
 		      result = (struct hostent *) NULL;
 #endif
@@ -127,36 +135,54 @@
 		    }
 
 		  resbuf.h_name = strcpy (hostname, name);
-		  resbuf.h_aliases = *host_aliases;
-		  (*host_aliases)[0] = NULL;
+		  resbuf.h_aliases = NULL;
 		  (*h_addr_ptrs)[0] = (char *)host_addr;
 		  (*h_addr_ptrs)[1] = (char *)0;
 		  resbuf.h_addr_list = *h_addr_ptrs;
-		  if (_res.options & RES_USE_INET6 && af == AF_INET)
+		  if (
+#ifdef HAVE_TYPE
+		      type == AF_INET6
+#else
+		      af == AF_INET && (_res.options & RES_USE_INET6)
+#endif
+		      )
 		    {
-		      /* We need to change the IP v4 address into the
-			 IP v6 address.  */
-		      char tmp[INADDRSZ], *p = (char *) host_addr;
-		      int i;
+#ifdef HAVE_TYPE
+		      if ((flags & AI_V4MAPPED) == 0)
+			{
+			  /* That's bad.  The user hasn't specified that she
+			     allows IPv4 numeric addresses.  */
+			  result = NULL;
+			  *herrno_p = HOST_NOT_FOUND;
+			  goto done;
+			}
+		      else
+#endif
+			{
+			  /* We need to change the IP v4 address into the
+			     IP v6 address.  */
+			  char tmp[INADDRSZ], *p = (char *) host_addr;
+			  int i;
 
-		      /* Save a copy of the IP v4 address. */
-		      memcpy (tmp, host_addr, INADDRSZ);
-		      /* Mark this ipv6 addr as a mapped ipv4. */
-		      for (i = 0; i < 10; i++)
-			*p++ = 0x00;
-		      *p++ = 0xff;
-		      *p++ = 0xff;
-		      /* Copy the IP v4 address. */
-		      memcpy (p, tmp, INADDRSZ);
-		      resbuf.h_addrtype = AF_INET6;
-		      resbuf.h_length = IN6ADDRSZ;
+			  /* Save a copy of the IP v4 address. */
+			  memcpy (tmp, host_addr, INADDRSZ);
+			  /* Mark this ipv6 addr as a mapped ipv4. */
+			  for (i = 0; i < 10; i++)
+			    *p++ = 0x00;
+			  *p++ = 0xff;
+			  *p++ = 0xff;
+			  /* Copy the IP v4 address. */
+			  memcpy (p, tmp, INADDRSZ);
+			  resbuf.h_addrtype = AF_INET6;
+			  resbuf.h_length = IN6ADDRSZ;
+			}
 		    }
 		  else
 		    {
 		      resbuf.h_addrtype = af;
 		      resbuf.h_length = addr_size;
 		    }
-		  __set_h_errno (NETDB_SUCCESS);
+		  *h_errnop = NETDB_SUCCESS;
 #ifdef HAVE_LOOKUP_BUFFER
 		  status = NSS_STATUS_SUCCESS;
 #else
@@ -177,37 +203,48 @@
 	  typedef unsigned char host_addr_t [16];
 	  host_addr_t *host_addr;
 	  typedef char *host_addr_list_t [2];
-	  host_addr_list_t *host_aliases;
 	  host_addr_list_t *h_addr_ptrs;
 	  size_t size_needed;
 	  int addr_size;
 #ifndef HAVE_AF
 	  int af = -1;
 #endif
+#ifdef HAVE_TYPE
+	  int af = type;
+#endif
 
 	  switch (af)
 	    {
+	    default:
+	      af = (_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET;
+	      if (af == AF_INET6)
+		{
+		  addr_size = IN6ADDRSZ;
+		  break;
+		}
+	      /* FALLTHROUGH */
+
 	    case AF_INET:
-	      addr_size = INADDRSZ;
-	      break;
+	      /* This is not possible.  We cannot represent an IPv6 address
+		 in an `struct in_addr' variable.  */
+	      *h_errnop = HOST_NOT_FOUND;
+	      result = NULL;
+	      goto done;
 
 	    case AF_INET6:
 	      addr_size = IN6ADDRSZ;
 	      break;
-
-	    default:
-	      af = (_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET;
-	      addr_size = (af == AF_INET6 ) ? IN6ADDRSZ : INADDRSZ;
-	      break;
 	    }
 
 	  size_needed = (sizeof (*host_addr)
-			 + sizeof (*host_aliases) + sizeof (*h_addr_ptrs)
-			 + strlen (name) + 1);
+			 + sizeof (*h_addr_ptrs) + strlen (name) + 1);
 
 #ifdef HAVE_LOOKUP_BUFFER
 	  if (buflen < size_needed)
 	    {
+# ifdef NEED_H_ERRNO
+	      *h_errnop = TRY_AGAIN;
+# endif
 	      __set_errno (ERANGE);
 	      goto done;
 	    }
@@ -235,10 +272,8 @@
 	  memset (buffer, 0, size_needed);
 
 	  host_addr = (host_addr_t *) buffer;
-	  host_aliases = (host_addr_list_t *)
-	    ((char *) host_addr + sizeof (*host_addr));
 	  h_addr_ptrs = (host_addr_list_t *)
-	    ((char *) host_aliases + sizeof (*host_aliases));
+	    ((char *) host_addr + sizeof (*host_addr));
 	  hostname = (char *) h_addr_ptrs + sizeof (*h_addr_ptrs);
 
 	  for (cp = name;; ++cp)
@@ -250,9 +285,9 @@
 
 		  /* All-IPv6-legal, no dot at the end. Fake up a
 		     hostent as if we'd actually done a lookup.  */
-		  if (inet_pton (af, name, host_addr) <= 0)
+		  if (inet_pton (AF_INET6, name, host_addr) <= 0)
 		    {
-		      __set_h_errno (HOST_NOT_FOUND);
+		      *h_errnop = HOST_NOT_FOUND;
 #ifndef HAVE_LOOKUP_BUFFER
 		      result = (struct hostent *) NULL;
 #endif
@@ -260,14 +295,13 @@
 		    }
 
 		  resbuf.h_name = strcpy (hostname, name);
-		  resbuf.h_aliases = *host_aliases;
-		  (*host_aliases)[0] = NULL;
+		  resbuf.h_aliases = NULL;
 		  (*h_addr_ptrs)[0] = (char *) host_addr;
 		  (*h_addr_ptrs)[1] = (char *) 0;
 		  resbuf.h_addr_list = *h_addr_ptrs;
-		  resbuf.h_addrtype = af;
+		  resbuf.h_addrtype = AF_INET6;
 		  resbuf.h_length = addr_size;
-		  __set_h_errno (NETDB_SUCCESS);
+		  *h_errnop = NETDB_SUCCESS;
 #ifdef HAVE_LOOKUP_BUFFER
 		  status = NSS_STATUS_SUCCESS;
 #else

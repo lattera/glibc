@@ -62,4 +62,10 @@ libc {
     getprotoent_r; getrpcbyname_r; getrpcbynumber_r; getrpcent_r;
     getservbyname_r;
   }
+  GLIBC_2.2 {
+    # f*
+    freehostent;
+    # g*
+    getipnodebyaddr;
+  }
 }
