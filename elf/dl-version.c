@@ -59,7 +59,8 @@ find_needed (const char *name, struct link_map *map)
   struct link_map *tmap;
   unsigned int n;
 
-  for (tmap = GL(dl_loaded); tmap != NULL; tmap = tmap->l_next)
+  for (tmap = GL(dl_ns)[map->l_ns]._ns_loaded; tmap != NULL;
+       tmap = tmap->l_next)
     if (_dl_name_match_p (name, tmap))
       return tmap;
 
@@ -243,7 +244,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 					   ? map->l_name : rtld_progname),
 					  aux->vna_hash,
 					  strtab + aux->vna_name,
-					  needed, verbose,
+					  needed->l_real, verbose,
 					  aux->vna_flags & VER_FLG_WEAK);
 
 		  /* Compare the version index.  */

@@ -699,7 +699,7 @@ _dl_init_paths (const char *llp)
 
 #ifdef SHARED
   /* This points to the map of the main object.  */
-  l = GL(dl_loaded);
+  l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
   if (l != NULL)
     {
       assert (l->l_type != lt_loaded);
@@ -795,10 +795,10 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
       if (l->l_prev == NULL)
 	/* No other module loaded. This happens only in the static library,
 	   or in rtld under --verify.  */
-	GL(dl_loaded) = NULL;
+	GL(dl_ns)[l->l_ns]._ns_loaded = NULL;
       else
 	l->l_prev->l_next = NULL;
-      --GL(dl_nloaded);
+      --GL(dl_ns)[l->l_ns]._ns_nloaded;
       free (l);
     }
   free (realname);
@@ -815,7 +815,7 @@ static
 struct link_map *
 _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 			char *realname, struct link_map *loader, int l_type,
-			int mode, void **stack_endp)
+			int mode, void **stack_endp, Lmid_t nsid)
 {
   struct link_map *l = NULL;
   const ElfW(Ehdr) *header;
@@ -839,7 +839,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     }
 
   /* Look again to see if the real name matched another already loaded.  */
-  for (l = GL(dl_loaded); l; l = l->l_next)
+  for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)
     if (l->l_ino == st.st_ino && l->l_dev == st.st_dev)
       {
 	/* The object is already loaded.
@@ -854,6 +854,31 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	return l;
       }
 
+#ifdef SHARED
+  /* When loading into a namespace other than the base one we must
+     avoid loading ld.so since there can only be one copy.  Ever.  */
+  if (__builtin_expect (nsid != LM_ID_BASE, 0)
+      && ((st.st_ino == GL(dl_rtld_map).l_ino
+	   && st.st_dev == GL(dl_rtld_map).l_dev)
+	  || _dl_name_match_p (name, &GL(dl_rtld_map))))
+    {
+      /* This is indeed ld.so.  Create a new link_map which refers to
+	 the real one for almost everything.  */
+      l = _dl_new_object (realname, name, l_type, loader, mode, nsid);
+      if (l == NULL)
+	goto fail_new;
+
+      /* Refer to the real descriptor.  */
+      l->l_real = &GL(dl_rtld_map);
+
+      /* No need to bump the refcount of the real object, ld.so will
+	 never be unloaded.  */
+      __close (fd);
+
+      return l;
+    }
+#endif
+
   if (mode & RTLD_NOLOAD)
     /* We are not supposed to load the object unless it is already
        loaded.  So return now.  */
@@ -861,7 +886,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* Print debugging message.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-    _dl_debug_printf ("file=%s;  generating link map\n", name);
+    _dl_debug_printf ("file=%s [%lu];  generating link map\n", name, nsid);
 
   /* This is the ELF header.  We read it in `open_verify'.  */
   header = (void *) fbp->buf;
@@ -881,9 +906,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 #endif
 
   /* Enter the new object in the list of loaded objects.  */
-  l = _dl_new_object (realname, name, l_type, loader, mode);
-  if (__builtin_expect (! l, 0))
+  l = _dl_new_object (realname, name, l_type, loader, mode, nsid);
+  if (__builtin_expect (l == NULL, 0))
     {
+    fail_new:
       errstring = N_("cannot create shared object descriptor");
       goto call_lose_errno;
     }
@@ -1771,7 +1797,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 struct link_map *
 internal_function
 _dl_map_object (struct link_map *loader, const char *name, int preloaded,
-		int type, int trace_mode, int mode)
+		int type, int trace_mode, int mode, Lmid_t nsid)
 {
   int fd;
   char *realname;
@@ -1779,8 +1805,11 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   struct link_map *l;
   struct filebuf fb;
 
+  assert (nsid >= 0);
+  assert (nsid < DL_NNS);
+
   /* Look for this name among those already loaded.  */
-  for (l = GL(dl_loaded); l; l = l->l_next)
+  for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)
     {
       /* If the requested name matches the soname of a loaded object,
 	 use that object.  Elide this check for names that have not
@@ -1812,9 +1841,9 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   /* Display information if we are debugging.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
       && loader != NULL)
-    _dl_debug_printf ("\nfile=%s;  needed by %s\n", name,
+    _dl_debug_printf ("\nfile=%s [%lu];  needed by %s [%lu]\n", name, nsid,
 			      loader->l_name[0]
-			      ? loader->l_name : rtld_progname);
+			      ? loader->l_name : rtld_progname, loader->l_ns);
 
   if (strchr (name, '/') == NULL)
     {
@@ -1823,7 +1852,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       size_t namelen = strlen (name) + 1;
 
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
-	_dl_debug_printf ("find library=%s; searching\n", name);
+	_dl_debug_printf ("find library=%s [%lu]; searching\n", name, nsid);
 
       fd = -1;
 
@@ -1839,12 +1868,15 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 			      &realname, &fb);
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
-             itself.  */
-	  l = GL(dl_loaded);
-	  if (fd == -1 && l && l->l_type != lt_loaded && l != loader
-	      && l->l_rpath_dirs.dirs != (void *) -1)
-	    fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-			    &realname, &fb);
+             itself.  NB: we do this for lookups in any namespace.  */
+	  if (fd == -1)
+	    {
+	      l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+	      if (l && l->l_type != lt_loaded && l != loader
+		  && l->l_rpath_dirs.dirs != (void *) -1)
+		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
+				&realname, &fb);
+	    }
 	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
@@ -1870,7 +1902,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if (cached != NULL)
 	    {
 #ifdef SHARED
-	      l = loader ?: GL(dl_loaded);
+	      // XXX Correct to unconditionally default to namespace 0?
+	      l = loader ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 #else
 	      l = loader;
 #endif
@@ -1920,7 +1953,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Finally, try the default path.  */
       if (fd == -1
-	  && ((l = loader ?: GL(dl_loaded)) == NULL
+	  && ((l = loader ?: GL(dl_ns)[nsid]._ns_loaded) == NULL
 	      || __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
 	  && rtld_search_dirs.dirs != (void *) -1)
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
@@ -1966,7 +1999,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL
 	      || (l = _dl_new_object (name_copy, name, type, loader,
-				      mode)) == NULL)
+				      mode, nsid)) == NULL)
 	    _dl_signal_error (ENOMEM, name, NULL,
 			      N_("cannot create shared object descriptor"));
 	  /* Signal that this is a faked entry.  */
@@ -1987,7 +2020,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
   void *stack_end = __libc_stack_end;
   return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode,
-				 &stack_end);
+				 &stack_end, nsid);
 }
 
 
@@ -2047,10 +2080,13 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
       while (l != NULL);
 
       /* If dynamically linked, try the DT_RPATH of the executable itself.  */
-      l = GL(dl_loaded);
-      if (l != NULL && l->l_type != lt_loaded && l != loader)
-	if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
-	  add_path (&l->l_rpath_dirs, XXX_RPATH);
+      if (loader->l_ns == LM_ID_BASE)
+	{
+	  l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+	  if (l != NULL && l->l_type != lt_loaded && l != loader)
+	    if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
+	      add_path (&l->l_rpath_dirs, XXX_RPATH);
+	}
     }
 
   /* Try the LD_LIBRARY_PATH environment variable.  */

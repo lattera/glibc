@@ -55,10 +55,13 @@ RTLD_SELF used in code not dynamically loaded"));
 
   switch (args->request)
     {
-    case RTLD_DI_LMID:
     case RTLD_DI_CONFIGADDR:
     default:
       GLRO(dl_signal_error) (0, NULL, NULL, N_("unsupported dlinfo request"));
+      break;
+
+    case RTLD_DI_LMID:
+      *(Lmid_t *) args->arg = l->l_ns;
       break;
 
     case RTLD_DI_LINKMAP:

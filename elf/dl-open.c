@@ -72,6 +72,8 @@ struct dl_open_args
   /* This is the caller if _dl_open().  */
   const void *caller_dl_open;
   struct link_map *map;
+  /* Namespace ID.  */
+  Lmid_t nsid;
 };
 
 
@@ -101,15 +103,17 @@ add_to_global (struct link_map *new)
      in an realloc() call.  Therefore we allocate a completely new
      array the first time we have to add something to the locale scope.  */
 
-  if (GL(dl_global_scope_alloc) == 0)
+  if (GL(dl_ns)[new->l_ns]._ns_global_scope_alloc == 0)
     {
       /* This is the first dynamic object given global scope.  */
-      GL(dl_global_scope_alloc) = GL(dl_main_searchlist)->r_nlist + to_add + 8;
+      GL(dl_ns)[new->l_ns]._ns_global_scope_alloc
+	= GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist + to_add + 8;
       new_global = (struct link_map **)
-	malloc (GL(dl_global_scope_alloc) * sizeof (struct link_map *));
+	malloc (GL(dl_ns)[new->l_ns]._ns_global_scope_alloc
+		* sizeof (struct link_map *));
       if (new_global == NULL)
 	{
-	  GL(dl_global_scope_alloc) = 0;
+	  GL(dl_ns)[new->l_ns]._ns_global_scope_alloc = 0;
 	nomem:
 	  GLRO(dl_signal_error) (ENOMEM, new->l_libname->name, NULL,
 				 N_("cannot extend global scope"));
@@ -117,25 +121,26 @@ add_to_global (struct link_map *new)
 	}
 
       /* Copy over the old entries.  */
-      memcpy (new_global, GL(dl_main_searchlist)->r_list,
-	      (GL(dl_main_searchlist)->r_nlist * sizeof (struct link_map *)));
-
-      GL(dl_main_searchlist)->r_list = new_global;
+      GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list
+	= memcpy (new_global,
+		  GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list,
+		  (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist
+		   * sizeof (struct link_map *)));
     }
-  else if (GL(dl_main_searchlist)->r_nlist + to_add
-	   > GL(dl_global_scope_alloc))
+  else if (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist + to_add
+	   > GL(dl_ns)[new->l_ns]._ns_global_scope_alloc)
     {
       /* We have to extend the existing array of link maps in the
 	 main map.  */
       new_global = (struct link_map **)
-	realloc (GL(dl_main_searchlist)->r_list,
-		 ((GL(dl_global_scope_alloc) + to_add + 8)
+	realloc (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list,
+		 ((GL(dl_ns)[new->l_ns]._ns_global_scope_alloc + to_add + 8)
 		  * sizeof (struct link_map *)));
       if (new_global == NULL)
 	goto nomem;
 
-      GL(dl_global_scope_alloc) += to_add + 8;
-      GL(dl_main_searchlist)->r_list = new_global;
+      GL(dl_ns)[new->l_ns]._ns_global_scope_alloc += to_add + 8;
+      GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list = new_global;
     }
 
   /* Now add the new entries.  */
@@ -146,9 +151,9 @@ add_to_global (struct link_map *new)
       if (map->l_global == 0)
 	{
 	  map->l_global = 1;
-	  GL(dl_main_searchlist)->r_list[GL(dl_main_searchlist)->r_nlist]
+	  GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list[GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist]
 	    = map;
-	  ++GL(dl_main_searchlist)->r_nlist;
+	  ++GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist;
 	}
     }
 
@@ -175,28 +180,34 @@ dl_open_worker (void *a)
     GLRO(dl_signal_error) (0, "dlopen", NULL, N_("invalid caller"));
 
   /* Determine the caller's map if necessary.  This is needed in case
-     we have a DST or when the file name has no path in which case we
-     need to look along the RUNPATH/RPATH of the caller.  */
+     we have a DST, when we don't know the namespace ID we have to put
+     the new object in, or when the file name has no path in which
+     case we need to look along the RUNPATH/RPATH of the caller.  */
   const char *dst = strchr (file, '$');
-  if (dst != NULL || strchr (file, '/') == NULL)
+  if (dst != NULL || args->nsid == __LM_ID_CALLER
+      || strchr (file, '/') == NULL)
     {
       const void *caller_dlopen = args->caller_dlopen;
 
-      /* We have to find out from which object the caller is calling.  */
-      call_map = NULL;
-      for (l = GL(dl_loaded); l; l = l->l_next)
-	if (caller_dlopen >= (const void *) l->l_map_start
-	    && caller_dlopen < (const void *) l->l_map_end)
-	  {
-	    /* There must be exactly one DSO for the range of the virtual
-	       memory.  Otherwise something is really broken.  */
-	    call_map = l;
-	    break;
-	  }
+      /* We have to find out from which object the caller is calling.
+	 By default we assume this is the main application.  */
+      call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
-      if (call_map == NULL)
-	/* In this case we assume this is the main application.  */
-	call_map = GL(dl_loaded);
+      for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+	for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
+	  if (caller_dlopen >= (const void *) l->l_map_start
+	      && caller_dlopen < (const void *) l->l_map_end)
+	    {
+	      /* There must be exactly one DSO for the range of the virtual
+		 memory.  Otherwise something is really broken.  */
+	      assert (ns == l->l_ns);
+	      call_map = l;
+	      goto found_caller;
+	    }
+
+    found_caller:
+      if (args->nsid == __LM_ID_CALLER)
+	args->nsid = call_map->l_ns;
     }
 
   /* Maybe we have to expand a DST.  */
@@ -238,7 +249,7 @@ dl_open_worker (void *a)
 
   /* Load the named object.  */
   args->map = new = GLRO(dl_map_object) (call_map, file, 0, lt_loaded, 0,
-					 mode | __RTLD_CALLMAP);
+					 mode | __RTLD_CALLMAP, args->nsid);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
      set and the object is not already loaded.  */
@@ -252,21 +263,30 @@ dl_open_worker (void *a)
     /* This happens only if we load a DSO for 'sprof'.  */
     return;
 
+  /* This object is directly loaded.  */
+  ++new->l_direct_opencount;
+
   /* It was already open.  */
   if (__builtin_expect (new->l_searchlist.r_list != NULL, 0))
     {
       /* Let the user know about the opencount.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	GLRO(dl_debug_printf) ("opening file=%s; opencount == %u\n\n",
-			       new->l_name, new->l_opencount);
+	GLRO(dl_debug_printf) ("opening file=%s [%lu]; opencount=%u\n\n",
+			       new->l_name, new->l_ns, new->l_opencount);
 
       /* If the user requested the object to be in the global namespace
 	 but it is not so far, add it now.  */
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
 	(void) add_to_global (new);
 
-      /* Increment just the reference counter of the object.  */
-      ++new->l_opencount;
+      if (new->l_direct_opencount == 1)
+	/* This is the only direct reference.  Increment all the
+	   dependencies' reference counter.  */
+	for (i = 0; i < new->l_searchlist.r_nlist; ++i)
+	  ++new->l_searchlist.r_list[i]->l_opencount;
+      else
+	/* Increment just the reference counter of the object.  */
+	++new->l_opencount;
 
       return;
     }
@@ -277,8 +297,9 @@ dl_open_worker (void *a)
 
   /* So far, so good.  Now check the versions.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)
-    if (new->l_searchlist.r_list[i]->l_versions == NULL)
-      (void) GLRO(dl_check_map_versions) (new->l_searchlist.r_list[i], 0, 0);
+    if (new->l_searchlist.r_list[i]->l_real->l_versions == NULL)
+      (void) GLRO(dl_check_map_versions) (new->l_searchlist.r_list[i]->l_real,
+					  0, 0);
 
 #ifdef SCOPE_DEBUG
   show_scope (new);
@@ -295,7 +316,7 @@ dl_open_worker (void *a)
     l = l->l_next;
   while (1)
     {
-      if (! l->l_relocated)
+      if (! l->l_real->l_relocated)
 	{
 #ifdef SHARED
 	  if (GLRO(dl_profile) != NULL)
@@ -349,7 +370,7 @@ dl_open_worker (void *a)
      loaded object to the scope.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)
     if (++new->l_searchlist.r_list[i]->l_opencount > 1
-	&& new->l_searchlist.r_list[i]->l_type == lt_loaded)
+	&& new->l_real->l_searchlist.r_list[i]->l_type == lt_loaded)
       {
 	struct link_map *imap = new->l_searchlist.r_list[i];
 	struct r_scope_elem **runp = imap->l_scope;
@@ -503,14 +524,14 @@ cannot create TLS data structures"));
 
   /* Let the user know about the opencount.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-    GLRO(dl_debug_printf) ("opening file=%s; opencount == %u\n\n",
-			   new->l_name, new->l_opencount);
+    GLRO(dl_debug_printf) ("opening file=%s [%lu]; opencount=%u\n\n",
+			   new->l_name, new->l_ns, new->l_opencount);
 }
 
 
 void *
 internal_function
-_dl_open (const char *file, int mode, const void *caller_dlopen)
+_dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid)
 {
   struct dl_open_args args;
   const char *objname;
@@ -525,11 +546,29 @@ _dl_open (const char *file, int mode, const void *caller_dlopen)
   /* Make sure we are alone.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
+  if (nsid == LM_ID_NEWLM)
+    {
+      /* Find a new namespace.  */
+      for (nsid = 1; nsid < DL_NNS; ++nsid)
+	if (GL(dl_ns)[nsid]._ns_loaded == NULL)
+	  break;
+
+      if (nsid == DL_NNS)
+	{
+	  /* No more namespace available.  */
+	  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+
+	  GLRO(dl_signal_error) (EINVAL, file, NULL, N_("\
+no more namespaces available for dlmopen()"));
+	}
+    }
+
   args.file = file;
   args.mode = mode;
   args.caller_dlopen = caller_dlopen;
   args.caller_dl_open = RETURN_ADDRESS (0);
   args.map = NULL;
+  args.nsid = nsid;
   errcode = GLRO(dl_catch_error) (&objname, &errstring, dl_open_worker, &args);
 
 #ifndef MAP_COPY

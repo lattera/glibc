@@ -35,44 +35,46 @@ _dl_check_caller (const void *caller, enum allowmask mask)
 #endif
   static const char expected4[] = LD_SO;
 
-  for (struct link_map *l = GL(dl_loaded); l != NULL; l = l->l_next)
-    if (caller >= (const void *) l->l_map_start
-	&& caller < (const void *) l->l_text_end)
-      {
-	/* The address falls into this DSO's address range.  Check the
-	   name.  */
-	if ((mask & allow_libc) && strcmp (expected1, l->l_name) == 0)
-	  return 0;
-	if ((mask & allow_libdl) && strcmp (expected2, l->l_name) == 0)
-	  return 0;
+  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+    for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL;
+	 l = l->l_next)
+      if (caller >= (const void *) l->l_map_start
+	  && caller < (const void *) l->l_text_end)
+	{
+	  /* The address falls into this DSO's address range.  Check the
+	     name.  */
+	  if ((mask & allow_libc) && strcmp (expected1, l->l_name) == 0)
+	    return 0;
+	  if ((mask & allow_libdl) && strcmp (expected2, l->l_name) == 0)
+	    return 0;
 #ifdef LIBPTHREAD_SO
-	if ((mask & allow_libpthread) && strcmp (expected3, l->l_name) == 0)
-	  return 0;
+	  if ((mask & allow_libpthread) && strcmp (expected3, l->l_name) == 0)
+	    return 0;
 #endif
-	if ((mask & allow_ldso) && strcmp (expected4, l->l_name) == 0)
-	  return 0;
+	  if ((mask & allow_ldso) && strcmp (expected4, l->l_name) == 0)
+	    return 0;
 
-	struct libname_list *runp = l->l_libname;
+	  struct libname_list *runp = l->l_libname;
 
-	while (runp != NULL)
-	  {
-	    if ((mask & allow_libc) && strcmp (expected1, runp->name) == 0)
-		  return 0;
-	    if ((mask & allow_libdl) && strcmp (expected2, runp->name) == 0)
-	      return 0;
+	  while (runp != NULL)
+	    {
+	      if ((mask & allow_libc) && strcmp (expected1, runp->name) == 0)
+		return 0;
+	      if ((mask & allow_libdl) && strcmp (expected2, runp->name) == 0)
+		return 0;
 #ifdef LIBPTHREAD_SO
-	    if ((mask & allow_libpthread)
-		&& strcmp (expected3, runp->name) == 0)
-	      return 0;
+	      if ((mask & allow_libpthread)
+		  && strcmp (expected3, runp->name) == 0)
+		return 0;
 #endif
-	    if ((mask & allow_ldso) && strcmp (expected4, runp->name) == 0)
-	      return 0;
+	      if ((mask & allow_ldso) && strcmp (expected4, runp->name) == 0)
+		return 0;
 
-	    runp = runp->next;
-	  }
+	      runp = runp->next;
+	    }
 
-	break;
-      }
+	  break;
+	}
 
   /* Maybe the dynamic linker is not yet on the list.  */
   if ((mask & allow_ldso) != 0

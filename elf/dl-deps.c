@@ -63,7 +63,8 @@ openaux (void *a)
   args->aux = _dl_map_object (args->map, args->name, 0,
 			      (args->map->l_type == lt_executable
 			       ? lt_library : args->map->l_type),
-			      args->trace_mode, args->open_mode);
+			      args->trace_mode, args->open_mode,
+			      args->map->l_ns);
 }
 
 static ptrdiff_t
@@ -510,7 +511,7 @@ _dl_map_object_deps (struct link_map *map,
     }
 
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK, 0) != 0
-      && map == GL(dl_loaded))
+      && map == GL(dl_ns)[LM_ID_BASE]._ns_loaded)
     {
       /* If we are to compute conflicts, we have to build local scope
 	 for each library, not just the ultimate loader.  */

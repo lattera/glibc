@@ -1,5 +1,72 @@
 2004-10-13  Ulrich Drepper  <drepper@redhat.com>
 
+	Add support for namespaces in the dynamic linker.
+	* dlfcn/Makefile (libdl-routines): Add dlmopen.
+	* dlfcn/Versions [libdl, GLIBC_2.3.4]: Add dlmopen.
+	* dlfcn/dlfcn.h: Define Lmid_t, LM_ID_BASE, and LM_ID_NEWLM.
+	Declare dlmopen.  Document RTLD_DI_LMID.
+	* dlfcn/dlinfo.c: Handle RTLD_DI_LMID.
+	* dlfcn/dlmopen.c: New file.
+	* dlfcn/dlopen.c: Pass new parameter to _dl_open.
+	* dlfcn/dlopenold.c: Likewise.
+	* elf/dl-addr.c: Adjust for removal of GL(dl_loaded).
+	* elf/dl-caller.c: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-conflict.c: Likewise.
+	* elf/dl-debug.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/do-lookup.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Likewise.
+	* elf/dl-depsc: Likewise.  Add new parameter to _dl_map_object.
+	* elf/dl-fini.c: Call destructors in all namespaces.
+	* elf/dl-iteratephdr.c: Compute total nloaded.  Adjust for removal of
+	GL(dl_loaded).
+	* elf/dl-libc.c: Pass new parameter to _dl_open.  Adjust for removal
+	of GL(dl_loaded).
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't load ld.so a second
+	time.  Reuse the one from the main namespace in all others.
+	Pass new parameter to _dl_new_object.
+	Adjust for removal of GL(dl_loaded).
+	* elf/dl-object.c: Take new parameter.  Use it to initialize l_ns.
+	Adjust for removal of GL(dl_loaded).
+	* elf/dl-open.c (_dl_open): Take new parameter.
+	Adjust for removal of GL(dl_loaded).
+	* elf/dl-support.c: Replace global _dl_loaded etc variables with
+	_dl_ns variable.
+	* include/dlfcn.h: Adjust prototype of _dl_open.
+	Define __LM_ID_CALLER.
+	* include/link.h: Add l_real, l_ns, and l_direct_opencount elements.
+	* sysdeps/generic/dl-tls.c: Bump TLS_STATIC_SURPLUS.  Since libc is
+	using TLS we need memory appropriate to the number of namespaces.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Replace _dl_loaded,
+	_dl_nloaded, _dl_global_scope, _dl_main_searchlist, and
+	_dl_global_scope_alloc with _dl_ns element.  Define DL_NNS.
+	Adjust prototypes of _dl_map_object and member in rtld_global_ro.
+	* malloc/malloc.c: Include <dlfcn.h>.
+	* malloc/arena.c (ptmalloc_init): If libc is not in primary namespace,
+	never use brk.
+	* elf/Makefile: Add rules to build and run tst-dlmopen1 and
+	tst-dlmopen2.
+	* elf/tst-dlmopen1.c: New file.
+	* elf/tst-dlmopen1mod.c: New file.
+	* elf/tst-dlmopen2.c: New file.
+
+	* elf/dl-close.c: Improve reference counting by tracking direct loads.
+	* elf/dl-lookup.c (add_dependency): Likewise.
+	* elf/dl-open.c (dl_open_worker): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+
+2004-09-09  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #77]
+	* elf/dl-close.c: Count down l_opencount to check not only for
+	l_reldeps, but also l_initfini.
+
+2004-10-13  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/dl-close.c (_dl_close): Update bug reporting instructions.
 
 2004-10-11  Ulrich Drepper  <drepper@redhat.com>

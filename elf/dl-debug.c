@@ -39,7 +39,9 @@ _dl_debug_initialize (ElfW(Addr) ldbase)
       /* Tell the debugger where to find the map of loaded objects.  */
       _r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
       _r_debug.r_ldbase = ldbase;
-      _r_debug.r_map = GL(dl_loaded);
+      // XXX This is problematic.  It means we cannot tell the debugger
+      // XXX about namespaces other than the main one.
+      _r_debug.r_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
       _r_debug.r_brk = (ElfW(Addr)) &_dl_debug_state;
     }
 

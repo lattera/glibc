@@ -8,4 +8,7 @@ libdl {
   GLIBC_2.3.3 {
     dladdr1; dlinfo;
   }
+  GLIBC_2.3.4 {
+    dlmopen;
+  }
 }

@@ -42,14 +42,32 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
   __rtld_lock_lock_recursive (GL(dl_load_lock));
   __libc_cleanup_push (cancel_handler, 0);
 
-  for (l = GL(dl_loaded); l != NULL; l = l->l_next)
+  /* We have to determine the namespace of the caller since this determines
+     which namespace is reported.  */
+  const void *caller = RETURN_ADDRESS (0);
+  size_t nloaded = GL(dl_ns)[0]._ns_nloaded;
+  Lmid_t ns = 0;
+  for (Lmid_t cnt = DL_NNS - 1; cnt > 0; --cnt)
+    for (struct link_map *l = GL(dl_ns)[cnt]._ns_loaded; l; l = l->l_next)
+      {
+	/* We have to count the total number of loaded objects.  */
+	nloaded += GL(dl_ns)[cnt]._ns_nloaded;
+
+	if (caller >= (const void *) l->l_map_start
+	    && caller < (const void *) l->l_map_end)
+	  /* There must be exactly one DSO for the range of the virtual
+	     memory.  Otherwise something is really broken.  */
+	  ns = cnt;
+      }
+
+  for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
     {
       info.dlpi_addr = l->l_addr;
       info.dlpi_name = l->l_name;
       info.dlpi_phdr = l->l_phdr;
       info.dlpi_phnum = l->l_phnum;
       info.dlpi_adds = GL(dl_load_adds);
-      info.dlpi_subs = GL(dl_load_adds) - GL(dl_nloaded);
+      info.dlpi_subs = GL(dl_load_adds) - nloaded;
       ret = callback (&info, sizeof (struct dl_phdr_info), data);
       if (ret)
 	break;
@@ -87,7 +105,7 @@ dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
       info.dlpi_phdr = _dl_phdr;
       info.dlpi_phnum = _dl_phnum;
       info.dlpi_adds = GL(dl_load_adds);
-      info.dlpi_subs = GL(dl_load_adds) - GL(dl_nloaded);
+      info.dlpi_subs = GL(dl_load_adds) - GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
       ret = (*callback) (&info, sizeof (struct dl_phdr_info), data);
       if (ret)
 	return ret;

@@ -32,7 +32,7 @@
 struct link_map *
 internal_function
 _dl_new_object (char *realname, const char *libname, int type,
-		struct link_map *loader, int mode)
+		struct link_map *loader, int mode, Lmid_t nsid)
 {
   struct link_map *l;
   int idx;
@@ -45,6 +45,7 @@ _dl_new_object (char *realname, const char *libname, int type,
   if (new == NULL)
     return NULL;
 
+  new->l_real = new;
   new->l_libname = newname = (struct libname_list *) (new + 1);
   newname->name = (char *) memcpy (newname + 1, libname, libname_len);
   /* newname->next = NULL;	We use calloc therefore not necessary.  */
@@ -56,6 +57,7 @@ _dl_new_object (char *realname, const char *libname, int type,
 #if defined USE_TLS && NO_TLS_OFFSET != 0
   new->l_tls_offset = NO_TLS_OFFSET;
 #endif
+  new->l_ns = nsid;
 
   /* new->l_global = 0;	We use calloc therefore not necessary.  */
 
@@ -68,9 +70,9 @@ _dl_new_object (char *realname, const char *libname, int type,
   /* Counter for the scopes we have to handle.  */
   idx = 0;
 
-  if (GL(dl_loaded) != NULL)
+  if (GL(dl_ns)[nsid]._ns_loaded != NULL)
     {
-      l = GL(dl_loaded);
+      l = GL(dl_ns)[nsid]._ns_loaded;
       while (l->l_next != NULL)
 	l = l->l_next;
       new->l_prev = l;
@@ -78,11 +80,11 @@ _dl_new_object (char *realname, const char *libname, int type,
       l->l_next = new;
 
       /* Add the global scope.  */
-      new->l_scope[idx++] = &GL(dl_loaded)->l_searchlist;
+      new->l_scope[idx++] = &GL(dl_ns)[nsid]._ns_loaded->l_searchlist;
     }
   else
-    GL(dl_loaded) = new;
-  ++GL(dl_nloaded);
+    GL(dl_ns)[nsid]._ns_loaded = new;
+  ++GL(dl_ns)[nsid]._ns_nloaded;
   ++GL(dl_load_adds);
 
   /* If we have no loader the new object acts as it.  */

@@ -289,8 +289,12 @@ extern "C" {
 
 /* For writev and struct iovec.  */
 #include <sys/uio.h>
-  /* For syslog.  */
+/* For syslog.  */
 #include <sys/syslog.h>
+
+/* For various dynamic linking things.  */
+#include <dlfcn.h>
+
 
 /*
   Debugging:

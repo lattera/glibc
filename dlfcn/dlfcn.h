@@ -1,5 +1,5 @@
 /* User functions for run-time dynamic loading.
-   Copyright (C) 1995-1999,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999,2000,2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,6 +39,14 @@
    the run-time address of the symbol called NAME in the global scope
    is returned.  */
 # define RTLD_DEFAULT	((void *) 0)
+
+
+/* Type for namespace indeces.  */
+typedef long int Lmid_t;
+
+/* Special namespace ID values.  */
+# define LM_ID_BASE	0	/* Initial namespace.  */
+# define LM_ID_NEWLM	-1	/* For dlmopen: request new namespace.  */
 #endif
 
 
@@ -58,6 +66,9 @@ extern void *dlsym (void *__restrict __handle,
 		    __const char *__restrict __name) __THROW;
 
 #ifdef __USE_GNU
+/* Like `dlopen', but request object to be allocated in a new namespace.  */
+extern void *dlmopen (Lmid_t __nsid, __const char *__file, int __mode) __THROW;
+
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME with VERSION.  */
 extern void *dlvsym (void *__restrict __handle,
@@ -114,6 +125,9 @@ extern int dlinfo (void *__restrict __handle,
 /* These are the possible values for the REQUEST argument to `dlinfo'.  */
 enum
   {
+    /* Treat ARG as `lmid_t *'; store namespace ID for HANDLE there.  */
+    RTLD_DI_LMID = 1,
+
     /* Treat ARG as `struct link_map **';
        store the `struct link_map *' for HANDLE there.  */
     RTLD_DI_LINKMAP = 2,
@@ -130,7 +144,6 @@ enum
        expand $ORIGIN in this shared object's dependency file names.  */
     RTLD_DI_ORIGIN = 6,
 
-    RTLD_DI_LMID = 1,		/* Unsupported, defined by Solaris.  */
     RTLD_DI_CONFIGADDR = 3	/* Unsupported, defined by Solaris.  */
   };
 

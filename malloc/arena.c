@@ -339,7 +339,16 @@ ptmalloc_init_minimal (void)
   mp_.pagesize       = malloc_getpagesize;
 }
 
+
 #ifdef _LIBC
+# ifdef SHARED
+static void *
+__failing_morecore (ptrdiff_t d)
+{
+  return (void *) MORECORE_FAILURE;
+}
+# endif
+
 # if defined SHARED && defined USE_TLS && !USE___THREAD
 # include <stdbool.h>
 
@@ -418,6 +427,14 @@ ptmalloc_init (void)
 #endif /* !defined NO_THREADS */
   mutex_init(&main_arena.mutex);
   main_arena.next = &main_arena;
+
+#if defined _LIBC && defined SHARED
+  /* In case this libc copy is in a non-default namespace, never use brk.  */
+  Dl_info di;
+  struct link_map *l;
+  if (_dl_addr (ptmalloc_init, &di, &l, NULL) != 0 && l->l_ns != LM_ID_BASE)
+    __morecore = __failing_morecore;
+#endif
 
   mutex_init(&list_lock);
   tsd_key_create(&arena_key, NULL);

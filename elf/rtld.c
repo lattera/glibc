@@ -269,6 +269,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   GL(dl_rtld_map).l_mach = info->l.l_mach;
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
+  GL(dl_rtld_map).l_real = &GL(dl_rtld_map);
   GL(dl_rtld_map).l_opencount = 1;
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
@@ -585,14 +586,16 @@ map_doit (void *a)
 {
   struct map_args *args = (struct map_args *) a;
   args->map = _dl_map_object (args->loader, args->str,
-			      args->is_preloaded, lt_library, 0, args->mode);
+			      args->is_preloaded, lt_library, 0, args->mode,
+			      LM_ID_BASE);
 }
 
 static void
 version_check_doit (void *a)
 {
   struct version_check_args *args = (struct version_check_args *) a;
-  if (_dl_check_all_versions (GL(dl_loaded), 1, args->dotrace) && args->doexit)
+  if (_dl_check_all_versions (GL(dl_ns)[LM_ID_BASE]._ns_loaded, 1,
+			      args->dotrace) && args->doexit)
     /* We cannot start the application.  Abort now.  */
     _exit (1);
 }
@@ -601,11 +604,12 @@ version_check_doit (void *a)
 static inline struct link_map *
 find_needed (const char *name)
 {
-  unsigned int n = GL(dl_loaded)->l_searchlist.r_nlist;
+  struct r_scope_elem *scope = &GL(dl_ns)[LM_ID_BASE]._ns_loaded->l_searchlist;
+  unsigned int n = scope->r_nlist;
 
   while (n-- > 0)
-    if (_dl_name_match_p (name, GL(dl_loaded)->l_searchlist.r_list[n]))
-      return GL(dl_loaded)->l_searchlist.r_list[n];
+    if (_dl_name_match_p (name, scope->r_list[n]))
+      return scope->r_list[n];
 
   /* Should never happen.  */
   return NULL;
@@ -685,6 +689,7 @@ dl_main (const ElfW(Phdr) *phdr,
   enum mode mode;
   struct link_map **preloads;
   unsigned int npreloads;
+  struct link_map *main_map;
   size_t file_size;
   char *file;
   bool has_interp = false;
@@ -860,31 +865,35 @@ of this helper program; chances are you did not intend to run this program.\n\
 	{
 	  HP_TIMING_NOW (start);
 	  _dl_map_object (NULL, rtld_progname, 0, lt_library, 0,
-			  __RTLD_OPENEXEC);
+			  __RTLD_OPENEXEC, LM_ID_BASE);
 	  HP_TIMING_NOW (stop);
 
 	  HP_TIMING_DIFF (load_time, start, stop);
 	}
 
-      phdr = GL(dl_loaded)->l_phdr;
-      phnum = GL(dl_loaded)->l_phnum;
+      /* Now the map for the main executable is available.  */
+      main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+
+      phdr = main_map->l_phdr;
+      phnum = main_map->l_phnum;
       /* We overwrite here a pointer to a malloc()ed string.  But since
 	 the malloc() implementation used at this point is the dummy
 	 implementations which has no real free() function it does not
 	 makes sense to free the old string first.  */
-      GL(dl_loaded)->l_name = (char *) "";
-      *user_entry = GL(dl_loaded)->l_entry;
+      main_map->l_name = (char *) "";
+      *user_entry = main_map->l_entry;
     }
   else
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      _dl_new_object ((char *) "", "", lt_executable, NULL, 0);
-      if (GL(dl_loaded) == NULL)
+      _dl_new_object ((char *) "", "", lt_executable, NULL, 0, LM_ID_BASE);
+      main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+      if (main_map == NULL)
 	_dl_fatal_printf ("cannot allocate memory for link map\n");
-      GL(dl_loaded)->l_phdr = phdr;
-      GL(dl_loaded)->l_phnum = phnum;
-      GL(dl_loaded)->l_entry = *user_entry;
+      main_map->l_phdr = phdr;
+      main_map->l_phnum = phnum;
+      main_map->l_entry = *user_entry;
 
       /* At this point we are in a bit of trouble.  We would have to
 	 fill in the values for l_dev and l_ino.  But in general we
@@ -905,12 +914,14 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 information for the program.  */
     }
 
-  GL(dl_loaded)->l_map_end = 0;
-  GL(dl_loaded)->l_text_end = 0;
+  main_map->l_map_end = 0;
+  main_map->l_text_end = 0;
   /* Perhaps the executable has no PT_LOAD header entries at all.  */
-  GL(dl_loaded)->l_map_start = ~0;
+  main_map->l_map_start = ~0;
   /* We opened the file, account for it.  */
-  ++GL(dl_loaded)->l_opencount;
+  ++main_map->l_opencount;
+  /* And it was opened directly.  */
+  ++main_map->l_direct_opencount;
 
   /* Scan the program header table for the dynamic section.  */
   for (ph = phdr; ph < &phdr[phnum]; ++ph)
@@ -918,12 +929,12 @@ of this helper program; chances are you did not intend to run this program.\n\
       {
       case PT_PHDR:
 	/* Find out the load address.  */
-	GL(dl_loaded)->l_addr = (ElfW(Addr)) phdr - ph->p_vaddr;
+	main_map->l_addr = (ElfW(Addr)) phdr - ph->p_vaddr;
 	break;
       case PT_DYNAMIC:
 	/* This tells us where to find the dynamic section,
 	   which tells us everything we need to do.  */
-	GL(dl_loaded)->l_ld = (void *) GL(dl_loaded)->l_addr + ph->p_vaddr;
+	main_map->l_ld = (void *) main_map->l_addr + ph->p_vaddr;
 	break;
       case PT_INTERP:
 	/* This "interpreter segment" was used by the program loader to
@@ -932,7 +943,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	   dlopen call or DT_NEEDED entry, for something that wants to link
 	   against the dynamic linker as a shared library, will know that
 	   the shared object is already loaded.  */
-	_dl_rtld_libname.name = ((const char *) GL(dl_loaded)->l_addr
+	_dl_rtld_libname.name = ((const char *) main_map->l_addr
 				 + ph->p_vaddr);
 	/* _dl_rtld_libname.next = NULL;	Already zero.  */
 	GL(dl_rtld_map).l_libname = &_dl_rtld_libname;
@@ -968,17 +979,16 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  ElfW(Addr) allocend;
 
 	  /* Remember where the main program starts in memory.  */
-	  mapstart = (GL(dl_loaded)->l_addr
-		      + (ph->p_vaddr & ~(ph->p_align - 1)));
-	  if (GL(dl_loaded)->l_map_start > mapstart)
-	    GL(dl_loaded)->l_map_start = mapstart;
+	  mapstart = (main_map->l_addr + (ph->p_vaddr & ~(ph->p_align - 1)));
+	  if (main_map->l_map_start > mapstart)
+	    main_map->l_map_start = mapstart;
 
 	  /* Also where it ends.  */
-	  allocend = GL(dl_loaded)->l_addr + ph->p_vaddr + ph->p_memsz;
-	  if (GL(dl_loaded)->l_map_end < allocend)
-	    GL(dl_loaded)->l_map_end = allocend;
-	  if ((ph->p_flags & PF_X) && allocend > GL(dl_loaded)->l_text_end)
-	    GL(dl_loaded)->l_text_end = allocend;
+	  allocend = main_map->l_addr + ph->p_vaddr + ph->p_memsz;
+	  if (main_map->l_map_end < allocend)
+	    main_map->l_map_end = allocend;
+	  if ((ph->p_flags & PF_X) && allocend > main_map->l_text_end)
+	    main_map->l_text_end = allocend;
 	}
 	break;
 #ifdef USE_TLS
@@ -989,18 +999,18 @@ of this helper program; chances are you did not intend to run this program.\n\
 	       here since we read the PT_TLS entry already in
 	       _dl_start_final.  But the result is repeatable so do not
 	       check for this special but unimportant case.  */
-	    GL(dl_loaded)->l_tls_blocksize = ph->p_memsz;
-	    GL(dl_loaded)->l_tls_align = ph->p_align;
+	    main_map->l_tls_blocksize = ph->p_memsz;
+	    main_map->l_tls_align = ph->p_align;
 	    if (ph->p_align == 0)
-	      GL(dl_loaded)->l_tls_firstbyte_offset = 0;
+	      main_map->l_tls_firstbyte_offset = 0;
 	    else
-	      GL(dl_loaded)->l_tls_firstbyte_offset = (ph->p_vaddr
-						       & (ph->p_align - 1));
-	    GL(dl_loaded)->l_tls_initimage_size = ph->p_filesz;
-	    GL(dl_loaded)->l_tls_initimage = (void *) ph->p_vaddr;
+	      main_map->l_tls_firstbyte_offset = (ph->p_vaddr
+						  & (ph->p_align - 1));
+	    main_map->l_tls_initimage_size = ph->p_filesz;
+	    main_map->l_tls_initimage = (void *) ph->p_vaddr;
 
 	    /* This image gets the ID one.  */
-	    GL(dl_tls_max_dtv_idx) = GL(dl_loaded)->l_tls_modid = 1;
+	    GL(dl_tls_max_dtv_idx) = main_map->l_tls_modid = 1;
 	  }
 	break;
 #endif
@@ -1009,21 +1019,21 @@ of this helper program; chances are you did not intend to run this program.\n\
 	break;
 
       case PT_GNU_RELRO:
-	GL(dl_loaded)->l_relro_addr = ph->p_vaddr;
-	GL(dl_loaded)->l_relro_size = ph->p_memsz;
+	main_map->l_relro_addr = ph->p_vaddr;
+	main_map->l_relro_size = ph->p_memsz;
 	break;
       }
 #ifdef USE_TLS
     /* Adjust the address of the TLS initialization image in case
        the executable is actually an ET_DYN object.  */
-    if (GL(dl_loaded)->l_tls_initimage != NULL)
-      GL(dl_loaded)->l_tls_initimage
-	= (char *) GL(dl_loaded)->l_tls_initimage + GL(dl_loaded)->l_addr;
+    if (main_map->l_tls_initimage != NULL)
+      main_map->l_tls_initimage
+	= (char *) main_map->l_tls_initimage + main_map->l_addr;
 #endif
-  if (! GL(dl_loaded)->l_map_end)
-    GL(dl_loaded)->l_map_end = ~0;
-  if (! GL(dl_loaded)->l_text_end)
-    GL(dl_loaded)->l_text_end = ~0;
+  if (! main_map->l_map_end)
+    main_map->l_map_end = ~0;
+  if (! main_map->l_text_end)
+    main_map->l_text_end = ~0;
   if (! GL(dl_rtld_map).l_libname && GL(dl_rtld_map).l_name)
     {
       /* We were invoked directly, so the program might not have a
@@ -1038,9 +1048,9 @@ of this helper program; chances are you did not intend to run this program.\n\
   if (! rtld_is_main)
     {
       /* Extract the contents of the dynamic section for easy access.  */
-      elf_get_dynamic_info (GL(dl_loaded), NULL);
+      elf_get_dynamic_info (main_map, NULL);
       /* Set up our cache of pointers into the hash table.  */
-      _dl_setup_hash (GL(dl_loaded));
+      _dl_setup_hash (main_map);
     }
 
   if (__builtin_expect (mode, normal) == verify)
@@ -1049,7 +1059,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 executable using us as the program interpreter.  Exit with an
 	 error if we were not able to load the binary or no interpreter
 	 is specified (i.e., this is no dynamically linked binary.  */
-      if (GL(dl_loaded)->l_ld == NULL)
+      if (main_map->l_ld == NULL)
 	_exit (1);
 
       /* We allow here some platform specific code.  */
@@ -1072,16 +1082,16 @@ of this helper program; chances are you did not intend to run this program.\n\
        found by the PT_INTERP name.  */
     GL(dl_rtld_map).l_name = (char *) GL(dl_rtld_map).l_libname->name;
   GL(dl_rtld_map).l_type = lt_library;
-  GL(dl_loaded)->l_next = &GL(dl_rtld_map);
-  GL(dl_rtld_map).l_prev = GL(dl_loaded);
-  ++GL(dl_nloaded);
+  main_map->l_next = &GL(dl_rtld_map);
+  GL(dl_rtld_map).l_prev = main_map;
+  ++GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
   ++GL(dl_load_adds);
 
   /* If LD_USE_LOAD_BIAS env variable has not been seen, default
      to not using bias for non-prelinked PIEs and libraries
      and using it for executables or prelinked PIEs or libraries.  */
   if (GLRO(dl_use_load_bias) == (ElfW(Addr)) -2)
-    GLRO(dl_use_load_bias) = (GL(dl_loaded)->l_addr == 0) ? -1 : 0;
+    GLRO(dl_use_load_bias) = main_map->l_addr == 0 ? -1 : 0;
 
   /* Set up the program header information for the dynamic linker
      itself.  It is needed in the dl_iterate_phdr() callbacks.  */
@@ -1125,8 +1135,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    && (__builtin_expect (! INTUSE(__libc_enable_secure), 1)
 		|| strchr (p, '/') == NULL))
 	  {
-	    struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
-						       lt_library, 0, 0);
+	    struct link_map *new_map = _dl_map_object (main_map, p, 1,
+						       lt_library, 0, 0,
+						       LM_ID_BASE);
 	    if (++new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
 	      ++npreloads;
@@ -1208,7 +1219,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		    struct map_args args;
 
 		    args.str = p;
-		    args.loader = GL(dl_loaded);
+		    args.loader = main_map;
 		    args.is_preloaded = 1;
 		    args.mode = 0;
 
@@ -1231,8 +1242,9 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	  if (problem != NULL)
 	    {
 	      char *p = strndupa (problem, file_size - (problem - file));
-	      struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
-							 lt_library, 0, 0);
+	      struct link_map *new_map = _dl_map_object (main_map, p, 1,
+							 lt_library, 0, 0,
+							 LM_ID_BASE);
 	      if (++new_map->l_opencount == 1)
 		/* It is no duplicate.  */
 		++npreloads;
@@ -1272,7 +1284,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	 We just want our data structures to describe it as if we had just
 	 mapped and relocated it normally.  */
       struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL,
-					   0);
+					   0, LM_ID_BASE);
       if (__builtin_expect (l != NULL, 1))
 	{
 	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT] attribute_relro;
@@ -1337,18 +1349,18 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
   HP_TIMING_NOW (start);
-  _dl_map_object_deps (GL(dl_loaded), preloads, npreloads, mode == trace, 0);
+  _dl_map_object_deps (main_map, preloads, npreloads, mode == trace, 0);
   HP_TIMING_NOW (stop);
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);
 
   /* Mark all objects as being in the global scope and set the open
      counter.  */
-  for (i = GL(dl_loaded)->l_searchlist.r_nlist; i > 0; )
+  for (i = main_map->l_searchlist.r_nlist; i > 0; )
     {
       --i;
-      GL(dl_loaded)->l_searchlist.r_list[i]->l_global = 1;
-      ++GL(dl_loaded)->l_searchlist.r_list[i]->l_opencount;
+      main_map->l_searchlist.r_list[i]->l_global = 1;
+      ++main_map->l_searchlist.r_list[i]->l_opencount;
     }
 
 #ifndef MAP_ANON
@@ -1369,13 +1381,13 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	 chain in symbol search order because gdb uses the chain's order as
 	 its symbol search order.  */
       i = 1;
-      while (GL(dl_loaded)->l_searchlist.r_list[i] != &GL(dl_rtld_map))
+      while (main_map->l_searchlist.r_list[i] != &GL(dl_rtld_map))
 	++i;
-      GL(dl_rtld_map).l_prev = GL(dl_loaded)->l_searchlist.r_list[i - 1];
+      GL(dl_rtld_map).l_prev = main_map->l_searchlist.r_list[i - 1];
       if (__builtin_expect (mode, normal) == normal)
 	{
-	  GL(dl_rtld_map).l_next = (i + 1 < GL(dl_loaded)->l_searchlist.r_nlist
-				    ? GL(dl_loaded)->l_searchlist.r_list[i + 1]
+	  GL(dl_rtld_map).l_next = (i + 1 < main_map->l_searchlist.r_nlist
+				    ? main_map->l_searchlist.r_list[i + 1]
 				    : NULL);
 #ifdef NEED_DL_SYSINFO
 	  if (sysinfo_map != NULL
@@ -1459,7 +1471,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
       GL(dl_tls_dtv_slotinfo_list)->next = NULL;
 
       /* Fill in the information from the loaded modules.  */
-      for (l = GL(dl_loaded), i = 0; l != NULL; l = l->l_next)
+      for (l = main_map, i = 0; l != NULL; l = l->l_next)
 	if (l->l_tls_blocksize != 0)
 	  /* This is a module with TLS data.  Store the map reference.
 	     The generation counter is zero.  */
@@ -1495,7 +1507,7 @@ cannot allocate TLS data structures for initial thread");
 
       if (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
 	{
-	  struct r_scope_elem *scope = &GL(dl_loaded)->l_searchlist;
+	  struct r_scope_elem *scope = &main_map->l_searchlist;
 
 	  for (i = 0; i < scope->r_nlist; i++)
 	    {
@@ -1531,7 +1543,7 @@ cannot allocate TLS data structures for initial thread");
 	  /* Look through the dependencies of the main executable
 	     and determine which of them is not actually
 	     required.  */
-	  struct link_map *l = GL(dl_loaded);
+	  struct link_map *l = main_map;
 
 	  /* Relocate the main executable.  */
 	  struct relocate_args args = { .l = l, .lazy = GLRO(dl_lazy) };
@@ -1539,7 +1551,7 @@ cannot allocate TLS data structures for initial thread");
 
 	  /* This loop depends on the dependencies of the executable to
 	     correspond in number and order to the DT_NEEDED entries.  */
-	  ElfW(Dyn) *dyn = GL(dl_loaded)->l_ld;
+	  ElfW(Dyn) *dyn = main_map->l_ld;
 	  bool first = true;
 	  while (dyn->d_tag != DT_NULL)
 	    {
@@ -1564,11 +1576,11 @@ cannot allocate TLS data structures for initial thread");
 
 	  _exit (first != true);
 	}
-      else if (! GL(dl_loaded)->l_info[DT_NEEDED])
+      else if (! main_map->l_info[DT_NEEDED])
 	_dl_printf ("\tstatically linked\n");
       else
 	{
-	  for (l = GL(dl_loaded)->l_next; l; l = l->l_next)
+	  for (l = main_map->l_next; l; l = l->l_next)
 	    if (l->l_faked)
 	      /* The library was not found.  */
 	      _dl_printf ("\t%s => not found\n", l->l_libname->name);
@@ -1589,8 +1601,8 @@ cannot allocate TLS data structures for initial thread");
 	    ElfW(Addr) loadbase;
 	    lookup_t result;
 
-	    result = _dl_lookup_symbol_x (INTUSE(_dl_argv)[i], GL(dl_loaded),
-					  &ref, GL(dl_loaded)->l_scope, NULL,
+	    result = _dl_lookup_symbol_x (INTUSE(_dl_argv)[i], main_map,
+					  &ref, main_map->l_scope, NULL,
 					  ELF_RTYPE_CLASS_PLT,
 					  DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
@@ -1613,7 +1625,7 @@ cannot allocate TLS data structures for initial thread");
 
 	      args.lazy = GLRO(dl_lazy);
 
-	      l = GL(dl_loaded);
+	      l = main_map;
 	      while (l->l_next)
 		l = l->l_next;
 	      do
@@ -1629,7 +1641,7 @@ cannot allocate TLS data structures for initial thread");
 
 	      if ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
 		  && GL(dl_rtld_map).l_opencount > 1)
-		_dl_relocate_object (&GL(dl_rtld_map), GL(dl_loaded)->l_scope,
+		_dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope,
 				     0, 0);
 	    }
 
@@ -1639,9 +1651,9 @@ cannot allocate TLS data structures for initial thread");
 	      /* Print more information.  This means here, print information
 		 about the versions needed.  */
 	      int first = 1;
-	      struct link_map *map = GL(dl_loaded);
+	      struct link_map *map;
 
-	      for (map = GL(dl_loaded); map != NULL; map = map->l_next)
+	      for (map = main_map; map != NULL; map = map->l_next)
 		{
 		  const char *strtab;
 		  ElfW(Dyn) *dyn = map->l_info[VERNEEDTAG];
@@ -1709,28 +1721,27 @@ cannot allocate TLS data structures for initial thread");
       _exit (0);
     }
 
-  if (GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_LIBLIST)]
+  if (main_map->l_info[ADDRIDX (DT_GNU_LIBLIST)]
       && ! __builtin_expect (GLRO(dl_profile) != NULL, 0))
     {
       ElfW(Lib) *liblist, *liblistend;
       struct link_map **r_list, **r_listend, *l;
-      const char *strtab = (const void *) D_PTR (GL(dl_loaded),
-						 l_info[DT_STRTAB]);
+      const char *strtab = (const void *) D_PTR (main_map, l_info[DT_STRTAB]);
 
-      assert (GL(dl_loaded)->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL);
+      assert (main_map->l_info[VALIDX (DT_GNU_LIBLISTSZ)] != NULL);
       liblist = (ElfW(Lib) *)
-		GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_LIBLIST)]->d_un.d_ptr;
+		main_map->l_info[ADDRIDX (DT_GNU_LIBLIST)]->d_un.d_ptr;
       liblistend = (ElfW(Lib) *)
-		   ((char *) liblist
-		    + GL(dl_loaded)->l_info [VALIDX (DT_GNU_LIBLISTSZ)]->d_un.d_val);
-      r_list = GL(dl_loaded)->l_searchlist.r_list;
-      r_listend = r_list + GL(dl_loaded)->l_searchlist.r_nlist;
+		   ((char *) liblist +
+		    main_map->l_info[VALIDX (DT_GNU_LIBLISTSZ)]->d_un.d_val);
+      r_list = main_map->l_searchlist.r_list;
+      r_listend = r_list + main_map->l_searchlist.r_nlist;
 
       for (; r_list < r_listend && liblist < liblistend; r_list++)
 	{
 	  l = *r_list;
 
-	  if (l == GL(dl_loaded))
+	  if (l == main_map)
 	    continue;
 
 	  /* If the library is not mapped where it should, fail.  */
@@ -1767,9 +1778,7 @@ cannot allocate TLS data structures for initial thread");
   /* Initialize _r_debug.  */
   struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr);
   {
-    struct link_map *l;
-
-    l = GL(dl_loaded);
+    struct link_map *l = main_map;
 
 #ifdef ELF_MACHINE_DEBUG_SETUP
 
@@ -1793,18 +1802,18 @@ cannot allocate TLS data structures for initial thread");
   }
 
   /* Now set up the variable which helps the assembler startup code.  */
-  GL(dl_main_searchlist) = &GL(dl_loaded)->l_searchlist;
-  GL(dl_global_scope)[0] = &GL(dl_loaded)->l_searchlist;
+  GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist = &main_map->l_searchlist;
+  GL(dl_ns)[LM_ID_BASE]._ns_global_scope[0] = &main_map->l_searchlist;
 
   /* Save the information about the original global scope list since
      we need it in the memory handling later.  */
-  GLRO(dl_initial_searchlist) = *GL(dl_main_searchlist);
+  GLRO(dl_initial_searchlist) = *GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist;
 
   if (prelinked)
     {
       struct link_map *l;
 
-      if (GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
+      if (main_map->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
 	{
 	  ElfW(Rela) *conflict, *conflictend;
 #ifndef HP_TIMING_NONAVAIL
@@ -1813,20 +1822,20 @@ cannot allocate TLS data structures for initial thread");
 #endif
 
 	  HP_TIMING_NOW (start);
-	  assert (GL(dl_loaded)->l_info [VALIDX (DT_GNU_CONFLICTSZ)] != NULL);
+	  assert (main_map->l_info [VALIDX (DT_GNU_CONFLICTSZ)] != NULL);
 	  conflict = (ElfW(Rela) *)
-	    GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_CONFLICT)]->d_un.d_ptr;
+	    main_map->l_info [ADDRIDX (DT_GNU_CONFLICT)]->d_un.d_ptr;
 	  conflictend = (ElfW(Rela) *)
 	    ((char *) conflict
-	     + GL(dl_loaded)->l_info [VALIDX (DT_GNU_CONFLICTSZ)]->d_un.d_val);
-	  _dl_resolve_conflicts (GL(dl_loaded), conflict, conflictend);
+	     + main_map->l_info [VALIDX (DT_GNU_CONFLICTSZ)]->d_un.d_val);
+	  _dl_resolve_conflicts (main_map, conflict, conflictend);
 	  HP_TIMING_NOW (stop);
 	  HP_TIMING_DIFF (relocate_time, start, stop);
 	}
 
 
       /* Mark all the objects so we know they have been already relocated.  */
-      for (l = GL(dl_loaded); l != NULL; l = l->l_next)
+      for (l = main_map; l != NULL; l = l->l_next)
 	{
 	  l->l_relocated = 1;
 	  if (l->l_relro_size)
@@ -1857,7 +1866,7 @@ cannot allocate TLS data structures for initial thread");
       /* If we are profiling we also must do lazy reloaction.  */
       GLRO(dl_lazy) |= consider_profiling;
 
-      l = GL(dl_loaded);
+      l = main_map;
       while (l->l_next)
 	l = l->l_next;
 
@@ -1906,7 +1915,7 @@ cannot allocate TLS data structures for initial thread");
 	  /* There was an explicit ref to the dynamic linker as a shared lib.
 	     Re-relocate ourselves with user-controlled symbol definitions.  */
 	  HP_TIMING_NOW (start);
-	  _dl_relocate_object (&GL(dl_rtld_map), GL(dl_loaded)->l_scope, 0, 0);
+	  _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
 	  HP_TIMING_NOW (stop);
 	  HP_TIMING_DIFF (add, start, stop);
 	  HP_TIMING_ACCUM_NT (relocate_time, add);
@@ -2323,20 +2332,24 @@ print_statistics (hp_timing_t *rtld_total_timep)
 #endif
 
   unsigned long int num_relative_relocations = 0;
-  struct r_scope_elem *scope = &GL(dl_loaded)->l_searchlist;
-  unsigned int i;
-
-  for (i = 0; i < scope->r_nlist; i++)
+  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
     {
-      struct link_map *l = scope->r_list [i];
+      struct r_scope_elem *scope = &GL(dl_ns)[ns]._ns_loaded->l_searchlist;
 
-      if (!l->l_addr)
-	continue;
+      for (unsigned int i = 0; i < scope->r_nlist; i++)
+	{
+	  struct link_map *l = scope->r_list [i];
 
-      if (l->l_info[VERSYMIDX (DT_RELCOUNT)])
-	num_relative_relocations += l->l_info[VERSYMIDX (DT_RELCOUNT)]->d_un.d_val;
-      if (l->l_info[VERSYMIDX (DT_RELACOUNT)])
-	num_relative_relocations += l->l_info[VERSYMIDX (DT_RELACOUNT)]->d_un.d_val;
+	  if (!l->l_addr)
+	    continue;
+
+	  if (l->l_info[VERSYMIDX (DT_RELCOUNT)])
+	    num_relative_relocations
+	      += l->l_info[VERSYMIDX (DT_RELCOUNT)]->d_un.d_val;
+	  if (l->l_info[VERSYMIDX (DT_RELACOUNT)])
+	    num_relative_relocations
+	      += l->l_info[VERSYMIDX (DT_RELACOUNT)]->d_un.d_val;
+	}
     }
 
   _dl_debug_printf ("                 number of relocations: %lu\n"

@@ -1,5 +1,5 @@
 /* Load a shared object at run time.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,13 +37,21 @@ struct dlopen_args
 };
 
 
+/* Non-shared code has no support for multiple namespaces.  */
+#ifdef SHARED
+# define NS __LM_ID_CALLER
+#else
+# define NS LM_ID_BASE
+#endif
+
+
 static void
 dlopen_doit (void *a)
 {
   struct dlopen_args *args = (struct dlopen_args *) a;
 
   args->new = _dl_open (args->file ?: "", args->mode | __RTLD_DLOPEN,
-			args->caller);
+			args->caller, args->file == NULL ? LM_ID_BASE : NS);
 }
 
 extern void *__dlopen_nocheck (const char *file, int mode);

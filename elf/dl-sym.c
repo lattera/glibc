@@ -69,17 +69,19 @@ do_sym (void *handle, const char *name, void *who,
 
   /* If the address is not recognized the call comes from the main
      program (we hope).  */
-  struct link_map *match = GL(dl_loaded);
+  struct link_map *match = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
   /* Find the highest-addressed object that CALLER is not below.  */
-  for (struct link_map *l = GL(dl_loaded); l != NULL; l = l->l_next)
-    if (caller >= l->l_map_start && caller < l->l_map_end)
-      {
-	/* There must be exactly one DSO for the range of the virtual
-	   memory.  Otherwise something is really broken.  */
-	match = l;
-	break;
-      }
+  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+    for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL;
+	 l = l->l_next)
+      if (caller >= l->l_map_start && caller < l->l_map_end)
+	{
+	  /* There must be exactly one DSO for the range of the virtual
+	     memory.  Otherwise something is really broken.  */
+	  match = l;
+	  break;
+	}
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
@@ -88,7 +90,7 @@ do_sym (void *handle, const char *name, void *who,
 				       NULL);
   else if (handle == RTLD_NEXT)
     {
-      if (__builtin_expect (match == GL(dl_loaded), 0))
+      if (__builtin_expect (match == GL(dl_ns)[LM_ID_BASE]._ns_loaded, 0))
 	{
 	  if (match == NULL
 	      || caller < match->l_map_start

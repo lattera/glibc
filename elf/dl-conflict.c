@@ -54,8 +54,10 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
     (map) = resolve_conflict_map;					      \
   } while (0)
 
+    /* Prelinking makes no sense for anything but the main namespace.  */
+    assert (l->l_ns == LM_ID_BASE);
     struct link_map *resolve_conflict_map __attribute__ ((__unused__))
-      = GL(dl_loaded);
+      = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
 #include "dynamic-link.h"
 

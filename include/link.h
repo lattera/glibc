@@ -129,6 +129,14 @@ struct link_map
     /* All following members are internal to the dynamic linker.
        They may change without notice.  */
 
+    /* This is an element which is only ever different from a pointer to
+       the very same copy of this type for ld.so when it is used in more
+       than one namespace.  */
+    struct link_map *l_real;
+
+    /* Number of the namespace this link map belongs to.  */
+    Lmid_t l_ns;
+
     struct libname_list *l_libname;
     /* Indexed pointers to dynamic section.
        [0,DT_NUM) are indexed by the processor-independent tags.
@@ -169,7 +177,8 @@ struct link_map
     Elf_Symndx l_nbuckets;
     const Elf_Symndx *l_buckets, *l_chain;
 
-    unsigned int l_opencount;	/* Reference count for dlopen/dlclose.  */
+    unsigned int l_opencount;	/* Counter for direct and indirect usage.  */
+    unsigned int l_direct_opencount; /* Reference count for dlopen/dlclose.  */
     enum			/* Where this object came from.  */
       {
 	lt_executable,		/* The main executable program.  */

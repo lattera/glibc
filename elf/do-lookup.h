@@ -42,7 +42,7 @@ do_lookup_x (const char *undef_name, unsigned long int hash,
       int num_versions = 0;
       const ElfW(Sym) *versioned_sym = NULL;
 
-      map = list[i];
+      map = list[i]->l_real;
 
       /* Here come the extra test needed for `_dl_lookup_symbol_skip'.  */
       if (skip != NULL && map == skip)

@@ -77,7 +77,7 @@ do_dlopen (void *ptr)
 {
   struct do_dlopen_args *args = (struct do_dlopen_args *) ptr;
   /* Open and relocate the shared object.  */
-  args->map = _dl_open (args->name, args->mode, NULL);
+  args->map = _dl_open (args->name, args->mode, NULL, __LM_ID_CALLER);
 }
 
 static void
@@ -217,18 +217,19 @@ libc_freeres_fn (free_mem)
     }
 
   /* Remove all additional names added to the objects.  */
-  for (l = GL(dl_loaded); l != NULL; l = l->l_next)
-    {
-      struct libname_list *lnp = l->l_libname->next;
+  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+    for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
+      {
+	struct libname_list *lnp = l->l_libname->next;
 
-      l->l_libname->next = NULL;
+	l->l_libname->next = NULL;
 
-      while (lnp != NULL)
-	{
-	  struct libname_list *old = lnp;
-	  lnp = lnp->next;
-	  if (! old->dont_free)
+	while (lnp != NULL)
+	  {
+	    struct libname_list *old = lnp;
+	    lnp = lnp->next;
+	    if (! old->dont_free)
 	    free (old);
-	}
-    }
+	  }
+      }
 }

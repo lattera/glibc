@@ -154,7 +154,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
 	 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
-	 tst-dlopenrpath tst-deep1
+	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -187,7 +187,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
 		reldep9mod1 reldep9mod2 reldep9mod3 \
 		tst-alignmod $(modules-execstack-$(have-z-execstack)) \
-		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3
+		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
+		tst-dlmopen1mod
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
@@ -762,3 +763,10 @@ $(objpfx)tst-deep1: $(libdl) $(objpfx)tst-deep1mod1.so
 $(objpfx)tst-deep1.out: $(objpfx)tst-deep1mod2.so
 LDFLAGS-tst-deep1 += -rdynamic
 tst-deep1mod3.so-no-z-defs = yes
+
+$(objpfx)tst-dlmopen1mod.so: $(libdl)
+$(objpfx)tst-dlmopen1: $(libdl)
+$(objpfx)tst-dlmopen1.out: $(objpfx)tst-dlmopen1mod.so
+
+$(objpfx)tst-dlmopen2: $(libdl)
+$(objpfx)tst-dlmopen2.out: $(objpfx)tst-dlmopen1mod.so

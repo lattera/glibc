@@ -18,10 +18,15 @@
    02111-1307 USA.  */
 
 #include <dlfcn.h>
+#include <errno.h>
+#include <libintl.h>
 #include <stddef.h>
+#include <ldsodefs.h>
 
-struct dlopen_args
+struct dlmopen_args
 {
+  /* Namespace ID.  */
+  Lmid_t nsid;
   /* The arguments for dlopen_doit.  */
   const char *file;
   int mode;
@@ -31,36 +36,34 @@ struct dlopen_args
   const void *caller;
 };
 
-
-/* Non-shared code has no support for multiple namespaces.  */
-#ifdef SHARED
-# define NS __LM_ID_CALLER
-#else
-# define NS LM_ID_BASE
-#endif
-
-
 static void
-dlopen_doit (void *a)
+dlmopen_doit (void *a)
 {
-  struct dlopen_args *args = (struct dlopen_args *) a;
+  struct dlmopen_args *args = (struct dlmopen_args *) a;
+
+  /* Non-shared code has no support for multiple namespaces.  */
+  if (args->nsid != LM_ID_BASE)
+#ifdef SHARED
+    /* If trying to open the link map for the main executable the namespace
+       must be the main one.  */
+    if (args->file == NULL)
+#endif
+      GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid namespace"));
 
   args->new = _dl_open (args->file ?: "", args->mode | __RTLD_DLOPEN,
-			args->caller, args->file == NULL ? LM_ID_BASE : NS);
+			args->caller, args->nsid);
 }
 
 
-extern void *__dlopen_check (const char *file, int mode);
 void *
-__dlopen_check (const char *file, int mode)
+dlmopen (Lmid_t nsid, const char *file, int mode)
 {
-  struct dlopen_args args;
+  struct dlmopen_args args;
+  args.nsid = nsid;
   args.file = file;
   args.mode = mode;
   args.caller = RETURN_ADDRESS (0);
 
-  return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
+  return _dlerror_run (dlmopen_doit, &args) ? NULL : args.new;
 }
-#include <shlib-compat.h>
-versioned_symbol (libdl, __dlopen_check, dlopen, GLIBC_2_1);
-static_link_warning (dlopen)
+static_link_warning (dlmopen)

@@ -137,7 +137,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
      reference is still available.  There is a brief period in
      which the object could have been removed since we found the
      definition.  */
-  runp = GL(dl_loaded);
+  runp = GL(dl_ns)[undef_map->l_ns]._ns_loaded;
   while (runp != NULL && runp != map)
     runp = runp->l_next;
 
@@ -182,13 +182,18 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 	for (list = map->l_initfini; *list != NULL; ++list)
 	  ++(*list)->l_opencount;
 
+      /* As if it is opened through _dl_open.  */
+      ++map->l_direct_opencount;
+
       /* Display information if we are debugging.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("\
-\nfile=%s;  needed by %s (relocation dependency)\n\n",
+\nfile=%s [%lu];  needed by %s [%lu] (relocation dependency)\n\n",
 			  map->l_name[0] ? map->l_name : rtld_progname,
+			  map->l_ns,
 			  undef_map->l_name[0]
-			  ? undef_map->l_name : rtld_progname);
+			  ? undef_map->l_name : rtld_progname,
+			  undef_map->l_ns);
     }
   else
     /* Whoa, that was bad luck.  We have to search again.  */
@@ -408,8 +413,8 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
       struct sym_val val = { NULL, NULL };
 
       if ((GLRO(dl_trace_prelink_map) == NULL
-	   || GLRO(dl_trace_prelink_map) == GL(dl_loaded))
-	  && undef_map != GL(dl_loaded))
+	   || GLRO(dl_trace_prelink_map) == GL(dl_ns)[LM_ID_BASE]._ns_loaded)
+	  && undef_map != GL(dl_ns)[LM_ID_BASE]._ns_loaded)
 	{
 	  const unsigned long int hash = _dl_elf_hash (undef_name);
 
@@ -421,12 +426,12 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	    conflict = 1;
 	}
 
-#ifdef USE_TLS
+# ifdef USE_TLS
       if (value->s
 	  && (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
 				== STT_TLS, 0)))
 	type_class = 4;
-#endif
+# endif
 
       if (conflict
 	  || GLRO(dl_trace_prelink_map) == undef_map

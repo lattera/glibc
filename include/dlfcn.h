@@ -8,6 +8,8 @@
 #define __RTLD_OPENEXEC	0x20000000
 #define __RTLD_CALLMAP	0x10000000
 
+#define __LM_ID_CALLER	-2
+
 /* Now define the internal interfaces.  */
 extern void *__dlvsym (void *__handle, __const char *__name,
 		       __const char *__version);
@@ -31,7 +33,8 @@ libc_hidden_proto (_dl_addr)
 /* Open the shared object NAME, relocate it, and run its initializer if it
    hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If
    the object is already opened, returns its existing map.  */
-extern void *_dl_open (const char *name, int mode, const void *caller)
+extern void *_dl_open (const char *name, int mode, const void *caller,
+		       Lmid_t nsid)
      internal_function;
 libc_hidden_proto (_dl_open)
 

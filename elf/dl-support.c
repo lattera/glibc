@@ -67,10 +67,8 @@ const char *_dl_origin_path;
 /* Nonzero if runtime lookup should not update the .got/.plt.  */
 int _dl_bind_not;
 
-/* Initially empty list of loaded objects.  */
-struct link_map *_dl_loaded;
-/* Number of object in the _dl_loaded list.  */
-unsigned int _dl_nloaded;
+/* Namespace information.  */
+struct link_namespaces _dl_ns[DL_NNS];
 
 /* Incremented whenever something may have been added to dl_loaded. */
 unsigned long long _dl_load_adds;
@@ -79,12 +77,6 @@ unsigned long long _dl_load_adds;
    main application but here we don't have something like this.  So
    create a fake scope containing nothing.  */
 struct r_scope_elem _dl_initial_searchlist;
-/* Variable which can be used in lookup to process the global scope.  */
-struct r_scope_elem *_dl_global_scope[2] = { &_dl_initial_searchlist, NULL };
-/* This is a global pointer to this structure which is public.  It is
-   used by dlopen/dlclose to add and remove objects from what is regarded
-   to be the global scope.  */
-struct r_scope_elem *_dl_main_searchlist = &_dl_initial_searchlist;
 
 #ifndef HAVE_INLINED_SYSCALLS
 /* Nonzero during startup.  */
@@ -108,11 +100,6 @@ hp_timing_t _dl_cpuclock_offset;
 #ifdef USE_TLS
 void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 #endif
-
-/* This is zero at program start to signal that the global scope map is
-   allocated by rtld.  Later it keeps the size of the map.  It might be
-   reset if in _dl_close if the last global object is removed.  */
-size_t _dl_global_scope_alloc;
 
 size_t _dl_pagesize;
 

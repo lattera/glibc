@@ -216,18 +216,27 @@ struct rtld_global
   /* Don't change the order of the following elements.  'dl_loaded'
      must remain the first element.  Forever.  */
 
-  /* And a pointer to the map for the main map.  */
-  EXTERN struct link_map *_dl_loaded;
-  /* Number of object in the _dl_loaded list.  */
-  EXTERN unsigned int _dl_nloaded;
-  /* Array representing global scope.  */
-  EXTERN struct r_scope_elem *_dl_global_scope[2];
-  /* Direct pointer to the searchlist of the main object.  */
-  EXTERN struct r_scope_elem *_dl_main_searchlist;
-  /* This is zero at program start to signal that the global scope map is
-     allocated by rtld.  Later it keeps the size of the map.  It might be
-     reset if in _dl_close if the last global object is removed.  */
-  EXTERN size_t _dl_global_scope_alloc;
+/* Non-shared code has no support for multiple namespaces.  */
+#ifdef SHARED
+# define DL_NNS 16
+#else
+# define DL_NNS 1
+#endif
+  EXTERN struct link_namespaces
+  {
+    /* And a pointer to the map for the main map.  */
+    struct link_map *_ns_loaded;
+    /* Number of object in the _dl_loaded list.  */
+    unsigned int _ns_nloaded;
+    /* Array representing global scope.  */
+    struct r_scope_elem *_ns_global_scope[2];
+    /* Direct pointer to the searchlist of the main object.  */
+    struct r_scope_elem *_ns_main_searchlist;
+    /* This is zero at program start to signal that the global scope map is
+       allocated by rtld.  Later it keeps the size of the map.  It might be
+       reset if in _dl_close if the last global object is removed.  */
+    size_t _ns_global_scope_alloc;
+  } _dl_ns[DL_NNS];
 
   /* During the program run we must not modify the global data of
      loaded shared object simultanously in two threads.  Therefore we
@@ -477,7 +486,7 @@ struct rtld_global_ro
   char *(*_dl_dst_substitute) (struct link_map *, const char *, char *, int);
   struct link_map *(internal_function *_dl_map_object) (struct link_map *,
 							const char *, int,
-							int, int, int);
+							int, int, int, Lmid_t);
   void (internal_function *_dl_map_object_deps) (struct link_map *,
 						 struct link_map **,
 						 unsigned int, int, int);
@@ -658,7 +667,8 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
    value to allow additional security checks.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
 					const char *name, int preloaded,
-					int type, int trace_mode, int mode)
+					int type, int trace_mode, int mode,
+					Lmid_t nsid)
      internal_function attribute_hidden;
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
@@ -723,7 +733,7 @@ extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name)
    and enter it into the _dl_main_map list.  */
 extern struct link_map *_dl_new_object (char *realname, const char *libname,
 					int type, struct link_map *loader,
-					int mode)
+					int mode, Lmid_t nsid)
      internal_function attribute_hidden;
 
 /* Relocate the given object (if it hasn't already been).
