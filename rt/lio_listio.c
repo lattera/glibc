@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <aio.h>
+#include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -108,16 +109,20 @@ lio_listio (mode, list, nent, sig)
 
       total = 0;
       for (cnt = 0; cnt < nent; ++cnt)
-	if (requests[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
-	  {
-	    waitlist[cnt].cond = &cond;
-	    waitlist[cnt].next = requests[cnt]->waiting;
-	    waitlist[cnt].counterp = &total;
-	    waitlist[cnt].sigevp = NULL;
-	    waitlist[cnt].caller_pid = 0;	/* Not needed.  */
-	    requests[cnt]->waiting = &waitlist[cnt];
-	    ++total;
-	  }
+	{
+	  assert (requests[cnt] == NULL || list[cnt] != NULL);
+
+	  if (requests[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
+	    {
+	      waitlist[cnt].cond = &cond;
+	      waitlist[cnt].next = requests[cnt]->waiting;
+	      waitlist[cnt].counterp = &total;
+	      waitlist[cnt].sigevp = NULL;
+	      waitlist[cnt].caller_pid = 0;	/* Not needed.  */
+	      requests[cnt]->waiting = &waitlist[cnt];
+	      ++total;
+	    }
+	}
 
       /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancelation
 	 points we must be careful.  We added entries to the waiting lists
@@ -154,16 +159,21 @@ lio_listio (mode, list, nent, sig)
 	  total = 0;
 
 	  for (cnt = 0; cnt < nent; ++cnt)
-	    if (requests[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
-	      {
-		waitlist->list[cnt].cond = NULL;
-		waitlist->list[cnt].next = requests[cnt]->waiting;
-		waitlist->list[cnt].counterp = &waitlist->counter;
-		waitlist->list[cnt].sigevp = &waitlist->sigev;
-		waitlist->list[cnt].caller_pid = caller_pid;
-		requests[cnt]->waiting = &waitlist->list[cnt];
-		++total;
-	      }
+	    {
+	      assert (requests[cnt] == NULL || list[cnt] != NULL);
+
+	      if (requests[cnt] != NULL
+		  && list[cnt]->aio_lio_opcode != LIO_NOP)
+		{
+		  waitlist->list[cnt].cond = NULL;
+		  waitlist->list[cnt].next = requests[cnt]->waiting;
+		  waitlist->list[cnt].counterp = &waitlist->counter;
+		  waitlist->list[cnt].sigevp = &waitlist->sigev;
+		  waitlist->list[cnt].caller_pid = caller_pid;
+		  requests[cnt]->waiting = &waitlist->list[cnt];
+		  ++total;
+		}
+	    }
 
 	  waitlist->counter = total;
 	  waitlist->sigev = *sig;
