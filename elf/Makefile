@@ -568,3 +568,17 @@ $(objpfx)tst-array3.out: $(objpfx)tst-array3
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
 	  $(objpfx)tst-array3 > $@
 	cmp $@ tst-array1.exp > /dev/null
+
+
+check-textrel-CFLAGS = -O
+$(objpfx)check-textrel: check-textrel.c
+	$(native-compile)
+
+ifeq (yes,$(build-shared))
+tests: $(objpfx)check-textrel.out
+
+$(objpfx)check-textrel.out: $(objpfx)check-textrel
+	$(dir $<)$(notdir $<) $(common-objpfx)libc.so \
+			      $(wildcard $(common-objpfx)/*/lib*.so) > $@
+generated += check-textrel check-textrel.out
+endif

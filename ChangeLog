@@ -1,5 +1,8 @@
 2002-12-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (tests): Add rules to build and run check-textrel.
+	* elf/check-textrel.c: New file.
+
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (SETUP_PIC_REG): Add .size
 	directive.
 

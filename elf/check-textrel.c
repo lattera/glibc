@@ -1,0 +1,159 @@
+#include <byteswap.h>
+#include <elf.h>
+#include <endian.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+
+#ifdef BITS
+
+# define AB(name) _AB (name, BITS)
+# define _AB(name, bits) __AB (name, bits)
+# define __AB(name, bits) name##bits
+# define E(name) _E (name, BITS)
+# define _E(name, bits) __E (name, bits)
+# define __E(name, bits) Elf##bits##_##name
+# define SWAP(val) \
+  ({ __typeof (val) __res;						      \
+     if ((ehdr.e_ident[EI_DATA] == ELFDATA2MSB && BYTE_ORDER == LITTLE_ENDIAN \
+	  || ehdr.e_ident[EI_DATA] == ELFDATA2LSB && BYTE_ORDER == BIG_ENDIAN)\
+	 && sizeof (val) != 1)						      \
+       {								      \
+	 if (sizeof (val) == 2)						      \
+	   __res = bswap_16 (val);					      \
+	 else if (sizeof (val) == 4)					      \
+	   __res = bswap_32 (val);					      \
+	 else								      \
+	   __res = bswap_64 (val);					      \
+       }								      \
+     else								      \
+       __res = (val);							      \
+     __res; })
+
+
+static int
+AB(handle_file) (const char *fname, int fd)
+{
+  E(Ehdr) ehdr;
+
+  if (pread (fd, &ehdr, sizeof (ehdr), 0) != sizeof (ehdr))
+    {
+    read_error:
+      printf ("%s: read error: %m\n", fname);
+      return 1;
+    }
+
+  const size_t phnum = SWAP (ehdr.e_phnum);
+  const size_t phentsize = SWAP (ehdr.e_phentsize);
+
+  /* Read the program header.  */
+  E(Phdr) *phdr = alloca (phentsize * phnum);
+  if (pread (fd, phdr, phentsize * phnum, SWAP (ehdr.e_phoff))
+      != phentsize * phnum)
+    goto read_error;
+
+  /* Search for the PT_DYNAMIC entry.  */
+  size_t cnt;
+  for (cnt = 0; cnt < phnum; ++cnt)
+    if (phdr[cnt].p_type == PT_DYNAMIC)
+      break;
+
+  if (cnt == phnum)
+    {
+      printf ("%s: no DYNAMIC segment found\n", fname);
+      return 1;
+    }
+
+  /* Read the dynamic segment.  */
+  size_t pmemsz = SWAP(phdr[cnt].p_memsz);
+  E(Dyn) *dyn = alloca (pmemsz);
+  if (pread (fd, dyn, pmemsz, SWAP(phdr[cnt].p_offset)) != pmemsz)
+    goto read_error;
+
+  /* Search for an DT_TEXTREL entry of DT_FLAGS with the DF_TEXTREL
+     bit set.  */
+  for (cnt = 0; (cnt + 1) * sizeof (E(Dyn)) - 1 < pmemsz; ++cnt)
+    {
+      if (dyn[cnt].d_tag == DT_NULL)
+	/* We reached the end.  */
+	break;
+
+      if (dyn[cnt].d_tag == DT_TEXTREL
+	  || (dyn[cnt].d_tag == DT_FLAGS
+	      && (dyn[cnt].d_un.d_val & DF_TEXTREL) != 0))
+	{
+	  /* Urgh!  The DSO has text relocations.  */
+	  printf ("%s: text relocations used\n", fname);
+	  return 1;
+	}
+    }
+
+  printf ("%s: OK\n", fname);
+
+  return 0;
+}
+
+# undef BITS
+#else
+
+# define BITS 32
+# include "check-textrel.c"
+
+# define BITS 64
+# include "check-textrel.c"
+
+
+static int
+handle_file (const char *fname)
+{
+  int fd = open (fname, O_RDONLY);
+  if (fd == -1)
+    {
+      printf ("cannot open %s: %m\n", fname);
+      return 1;
+    }
+
+  /* Read was is supposed to be the ELF header.  Read the initial
+     bytes to determine whether this is a 32 or 64 bit file.  */
+  char ident[EI_NIDENT];
+  if (read (fd, ident, EI_NIDENT) != EI_NIDENT)
+    {
+      printf ("%s: read error: %m\n", fname);
+      close (fd);
+      return 1;
+    }
+
+  if (memcmp (&ident[EI_MAG0], ELFMAG, SELFMAG) != 0)
+    {
+      printf ("%s: not an ELF file\n", fname);
+      close (fd);
+      return 1;
+    }
+
+  int result;
+  if (ident[EI_CLASS] == ELFCLASS64)
+    result = handle_file64 (fname, fd);
+  else
+    result = handle_file32 (fname, fd);
+
+  close (fd);
+
+  return result;
+}
+
+
+int
+main (int argc, char *argv[])
+{
+  int cnt;
+  int result = 0;
+
+  for (cnt = 1; cnt < argc; ++cnt)
+    result |= handle_file (argv[cnt]);
+
+  return result;
+}
+#endif
