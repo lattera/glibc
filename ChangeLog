@@ -1,3 +1,9 @@
+Sun May 21 02:01:29 1995  Jim Meyering  (meyering@comco.com)
+
+	* sysdeps/generic/memchr.c: Don't include <string.h> at all.
+	HPUX-9.01 and IRIX-4.0.5 vendor C compilers get conflicting dcls for
+	memchr unless one manually arranges for them to define __STDC__.
+
 Fri May 19 17:16:46 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/i386/init-first.c: In cthreads case, handle
