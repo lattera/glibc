@@ -1,5 +1,9 @@
 2003-03-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: New file.
+
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S
 	(__pthread_rwlock_timedwrlock): Add missing opcode suffix.
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S
