@@ -1,5 +1,8 @@
 1999-02-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locales/it_CH: New file.
+	* SUPPORTED: Add it_CH.
+
 	* locales/in_ID: New file.
 	* SUPPORTED: Add in_ID.
 

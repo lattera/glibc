@@ -1,7 +1,3 @@
-1999-02-11  Ulrich Drepper  <drepper@cygnus.com>
-
-	* localedata/locale/in_ID: New file.
-
 1999-02-11  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/wordsize-64/inttypes.h: Always define ldiv_t if not yet
