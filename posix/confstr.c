@@ -47,7 +47,7 @@ confstr (name, buf, len)
     case _CS_LFS_CFLAGS:
       /* Signal that we want the new ABI.  */
       {
-	static const char file_offset[] = "-D_FILE_OFFSET_SIZE=64";
+	static const char file_offset[] = "-D_FILE_OFFSET_BITS=64";
 	string = file_offset;
 	string_len = sizeof (file_offset);
       }
@@ -60,6 +60,23 @@ confstr (name, buf, len)
     case _CS_LFS64_LINTFLAGS:
     case _CS_LFS64_LDFLAGS:
     case _CS_LFS64_LIBS:
+
+    case _CS_XBS5_ILP32_OFF32_CFLAGS:
+    case _CS_XBS5_ILP32_OFF32_LDFLAGS:
+    case _CS_XBS5_ILP32_OFF32_LIBS:
+    case _CS_XBS5_ILP32_OFF32_LINTFLAGS:
+    case _CS_XBS5_ILP32_OFFBIG_CFLAGS:
+    case _CS_XBS5_ILP32_OFFBIG_LDFLAGS:
+    case _CS_XBS5_ILP32_OFFBIG_LIBS:
+    case _CS_XBS5_ILP32_OFFBIG_LINTFLAGS:
+    case _CS_XBS5_LP64_OFF64_CFLAGS:
+    case _CS_XBS5_LP64_OFF64_LDFLAGS:
+    case _CS_XBS5_LP64_OFF64_LIBS:
+    case _CS_XBS5_LP64_OFF64_LINTFLAGS:
+    case _CS_XBS5_LPBIG_OFFBIG_CFLAGS:
+    case _CS_XBS5_LPBIG_OFFBIG_LDFLAGS:
+    case _CS_XBS5_LPBIG_OFFBIG_LIBS:
+    case _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS:
       /* GNU libc does not require special actions to use LFS functions.  */
       string = "";
       string_len = 1;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,10 +71,9 @@ ttyname (fd)
 		(void) closedir (dirstream);
 		return NULL;
 	      }
-	    (void) memcpy (name, dev, sizeof (dev) - 1);
-	    name[sizeof (dev) - 1] = '/';
+	    *((char *) __mempcpy (name, dev, sizeof (dev) - 1)) = '/';
 	  }
-	(void) memcpy (&name[sizeof (dev)], d->d_name, dlen);
+	(void) __mempcpy (&name[sizeof (dev)], d->d_name, dlen);
 	if (stat (name, &st) == 0 && st.st_dev == mydev)
 	  {
 	    (void) closedir (dirstream);

@@ -134,7 +134,7 @@ __tzfile_read (const char *file)
     {
       const char *tzdir;
       unsigned int len, tzdir_len;
-      char *new;
+      char *new, *tmp;
 
       tzdir = __secure_getenv ("TZDIR");
       if (tzdir == NULL || *tzdir == '\0')
@@ -146,9 +146,9 @@ __tzfile_read (const char *file)
 	tzdir_len = strlen (tzdir);
       len = strlen (file) + 1;
       new = (char *) __alloca (tzdir_len + 1 + len);
-      memcpy (new, tzdir, tzdir_len);
-      new[tzdir_len] = '/';
-      memcpy (&new[tzdir_len + 1], file, len);
+      tmp = __mempcpy (new, tzdir, tzdir_len);
+      *tmp++ = '/';
+      __mempcpy (tmp, file, len);
       file = new;
     }
 
@@ -316,8 +316,7 @@ __tzfile_default (const char *std, const char *dst,
       __use_tzfile = 0;
       return;
     }
-  memcpy (zone_names, std, stdlen);
-  memcpy (&zone_names[stdlen], dst, dstlen);
+  __mempcpy (__mempcpy (zone_names, std, stdlen), dst, dstlen);
 
   /* Find the standard and daylight time offsets used by the rule file.
      We choose the offsets in the types of each flavor that are

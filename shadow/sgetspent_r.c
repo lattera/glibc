@@ -32,7 +32,7 @@ struct spent_data {};
 #define FALSE(arg) 0
 
 
-#include "../nss/nss_files/files-parse.c"
+#include <nss/nss_files/files-parse.c>
 LINE_PARSER
 (,
  STRING_FIELD (result->sp_namp, ISCOLON, 0);

@@ -509,10 +509,11 @@ if test $ac_cv_prog_gcc = yes; then
   # We must check this even if -pipe is not given here, because the user
   # might do `make CFLAGS=-pipe'.
   AC_CACHE_CHECK(for gcc 2.7.x -pipe bug, libc_cv_gcc_pipe_bug, [dnl
-   cat >conftest.s <<EOF
-foo:
+   cp /dev/null conftest.s
+   cat >conftest1.s <<EOF
+.nosuchdirective
 EOF
-   if ${CC-cc} -pipe -c conftest.s <conftest.s 2>/dev/null; then
+   if ${CC-cc} -pipe -c conftest.s <conftest1.s 2>/dev/null; then
     libc_cv_gcc_pipe_bug=no
    else
     libc_cv_gcc_pipe_bug=yes

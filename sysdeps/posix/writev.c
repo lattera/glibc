@@ -53,11 +53,10 @@ __writev (fd, vector, count)
 #define	min(a, b)	((a) > (b) ? (b) : (a))
       size_t copy = min (vector[i].iov_len, to_copy);
 
-      (void) memcpy ((void *) bp, (void *) vector[i].iov_base, copy);
+      bp = __mempcpy ((void *) bp, (void *) vector[i].iov_base, copy);
 
-      bp += copy;
       to_copy -= copy;
-      if (bytes == 0)
+      if (to_copy == 0)
 	break;
     }
 

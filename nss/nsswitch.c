@@ -587,8 +587,7 @@ nss_parse_service_list (const char *line)
 	      free (new_service);
 	      return result;
 	    }
-	  memcpy (source, name, line - name);
-	  source[line - name] = '\0';
+	  *((char *) __mempcpy (source, name, line - name)) = '\0';
 
 	  new_service->name = source;
 	}

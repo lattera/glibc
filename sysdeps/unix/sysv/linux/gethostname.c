@@ -30,6 +30,7 @@ __gethostname (name, len)
      size_t len;
 {
   struct utsname buf;
+  size_t node_len;
 
   if (name == NULL)
     {
@@ -40,13 +41,14 @@ __gethostname (name, len)
   if (uname (&buf))
     return -1;
 
-  if (strlen (buf.nodename) + 1 > len)
+  node_len = strlen (buf.nodename) + 1;
+  if (node_len > len)
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  strcpy (name, buf.nodename);
+  memcpy (name, buf.nodename, node_len);
   return 0;
 }
 

@@ -262,7 +262,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   fd = __open (filename, O_RDWR | O_CREAT, 0666);
   if (fd == -1)
     {
-      /* We cannot write the profiling data so don't do anthing.  */
+      /* We cannot write the profiling data so don't do anything.  */
       char buf[400];
       _dl_sysdep_message (filename, ": cannot open file: ",
 			  _strerror_internal (errno, buf, sizeof buf),

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,11 +55,15 @@ putenv (string)
 {
   const char *const name_end = strchr (string, '=');
 
-  if (name_end)
+  if (name_end != NULL)
     {
       char *name = alloca (name_end - string + 1);
+#ifdef _LIBC
+      *((char *) __mempcpy (name, string, name_end - string)) = '\0';
+#else
       memcpy (name, string, name_end - string);
       name[name_end - string] = '\0';
+#endif
       return setenv (name, name_end + 1, 1);
     }
 

@@ -210,12 +210,20 @@ save_for_backup (fp)
 	return EOF;		/* FIXME */
       if (least_mark < 0)
 	{
+#ifdef _LIBC
+	  __mempcpy (__mempcpy (new_buffer + avail,
+				fp->_IO_save_end + least_mark,
+				-least_mark),
+		     fp->_IO_read_base,
+		     fp->_IO_read_end - fp->_IO_read_base);
+#else
 	  memcpy (new_buffer + avail,
 		  fp->_IO_save_end + least_mark,
 		  -least_mark);
 	  memcpy (new_buffer + avail - least_mark,
 		  fp->_IO_read_base,
 		  fp->_IO_read_end - fp->_IO_read_base);
+#endif
 	}
       else
 	memcpy (new_buffer + avail,
@@ -368,9 +376,13 @@ _IO_default_xsputn (f, data, n)
 	    count = more;
 	  if (count > 20)
 	    {
+#ifdef _LIBC
+	      f->_IO_write_ptr = __mempcpy (f->_IO_write_ptr, s, count);
+#else
 	      memcpy (f->_IO_write_ptr, s, count);
-	      s += count;
 	      f->_IO_write_ptr += count;
+#endif
+	      s += count;
             }
 	  else if (count <= 0)
 	    count = 0;
@@ -419,8 +431,12 @@ _IO_default_xsgetn (fp, data, n)
 	    count = more;
 	  if (count > 20)
 	    {
+#ifdef _LIBC
+	      s = __mempcpy (s, fp->_IO_read_ptr, count);
+#else
 	      memcpy (s, fp->_IO_read_ptr, count);
 	      s += count;
+#endif
 	      fp->_IO_read_ptr += count;
 	    }
 	  else if (count <= 0)

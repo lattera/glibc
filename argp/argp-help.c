@@ -778,7 +778,7 @@ hol_append (struct hol *hol, struct hol *more)
 	more->num_entries = 0;	/* Mark MORE's fields as invalid.  */
       }
     else
-      /* append the entries in MORE to those in HOL, taking care to only add
+      /* Append the entries in MORE to those in HOL, taking care to only add
 	 non-shadowed SHORT_OPTIONS values.  */
       {
 	unsigned left;
@@ -791,12 +791,12 @@ hol_append (struct hol *hol, struct hol *more)
 	char *short_options =
 	  malloc (hol_so_len + strlen (more->short_options) + 1);
 
-	memcpy (entries, hol->entries,
-		hol->num_entries * sizeof (struct hol_entry));
-	memcpy (entries + hol->num_entries, more->entries,
-		more->num_entries * sizeof (struct hol_entry));
+	__mempcpy (__mempcpy (entries, hol->entries,
+			      hol->num_entries * sizeof (struct hol_entry)),
+		   more->entries,
+		   more->num_entries * sizeof (struct hol_entry));
 
-	memcpy (short_options, hol->short_options, hol_so_len);
+	__mempcpy (short_options, hol->short_options, hol_so_len);
 
 	/* Fix up the short options pointers from HOL.  */
 	for (e = entries, left = hol->num_entries; left > 0; e++, left--)

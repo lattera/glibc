@@ -71,17 +71,16 @@ msort_with_tmp (b, n, s, cmp, t)
       {
 	if ((*cmp) (b1, b2) <= 0)
 	  {
-	    memcpy (tmp, b1, s);
+	    tmp = (char *) __mempcpy (tmp, b1, s);
 	    b1 += s;
 	    --n1;
 	  }
 	else
 	  {
-	    memcpy (tmp, b2, s);
+	    tmp = (char *) __mempcpy (tmp, b2, s);
 	    b2 += s;
 	    --n2;
 	  }
-	tmp += s;
       }
   if (n1 > 0)
     memcpy (tmp, b1, n1 * s);

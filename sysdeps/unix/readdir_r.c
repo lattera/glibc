@@ -96,10 +96,7 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
     } while (dp->d_ino == 0);
 
   if (dp != NULL)
-    {
-      memcpy (entry, dp, reclen);
-      *result = entry;
-    }
+    *result = memcpy (entry, dp, reclen);
 
   __libc_lock_unlock (dirp->lock);
 

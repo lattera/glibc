@@ -186,9 +186,9 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 		  buf = newp;
 		}
 
-	      memcpy (buf + actsize, d->d_name, this_len);
-	      actsize += this_len;
-	      buf[actsize++] = '\0';
+	      *((char *) __mempcpy (buf + actsize, d->d_name, this_len))
+		= '\0';
+	      actsize += this_len + 1;
 	    }
 
 	  /* Terminate the list with an additional NUL byte.  */
@@ -259,8 +259,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
       data->dirbuf = newp;
     }
 
-  memcpy (data->dirbuf + data->ftw.base, name, namlen);
-  data->dirbuf[data->ftw.base + namlen] = '\0';
+  *((char *) __mempcpy (data->dirbuf + data->ftw.base, name, namlen)) = '\0';
 
   if (((data->flags & FTW_PHYS)
        ? LXSTAT (_STAT_VER, data->dirbuf, &st)

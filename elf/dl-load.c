@@ -238,12 +238,12 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	      if (tmp == NULL)
 		_dl_signal_error (ENOMEM, NULL,
 				  "cannot create cache for search path");
-	      memcpy (tmp, cp, len);
-	      memcpy (tmp + len, _dl_platform, _dl_platformlen);
-	      tmp[len + _dl_platformlen] = '/';
-	      tmp[len + _dl_platformlen + 1] = '\0';
-
 	      dirp->dirname = tmp;
+	      tmp = __mempcpy (tmp, cp, len);
+	      tmp = __mempcpy (tmp, _dl_platform, _dl_platformlen);
+	      *tmp++ = '/';
+	      *tmp = '\0';
+
 	      dirp->machdirstatus = dirp->dirstatus;
 
 	      if (max_dirnamelen < dirp->machdirnamelen)
@@ -260,13 +260,11 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	      if (tmp == NULL)
 		_dl_signal_error (ENOMEM, NULL,
 				  "cannot create cache for search path");
-	      memcpy (tmp, cp, len);
-	      tmp[len] = '\0';
+	      dirp->dirname = tmp;
+	      *((char *) __mempcpy (tmp, cp, len)) = '\0';
 
 	      if (max_dirnamelen < dirp->dirnamelen)
 		max_dirnamelen = dirp->dirnamelen;
-
-	      dirp->dirname = tmp;
 	    }
 
 	  dirp->next = all_dirs;
@@ -430,12 +428,11 @@ _dl_init_paths (void)
 	    _dl_signal_error (ENOMEM, NULL,
 			      "cannot create cache for search path");
 
-	  memcpy (tmp, relem->dirname, relem->dirnamelen);
-	  memcpy (tmp + relem->dirnamelen, _dl_platform, _dl_platformlen);
-	  tmp[relem->dirnamelen + _dl_platformlen] = '/';
-	  tmp[relem->dirnamelen + _dl_platformlen + 1] = '\0';
-
 	  relem->dirname = tmp;
+	  tmp = __mempcpy (tmp, relem->dirname, relem->dirnamelen);
+	  tmp = __mempcpy (tmp, _dl_platform, _dl_platformlen);
+	  *tmp++ = '/';
+	  *tmp = '\0';
 
 	  relem->machdirstatus = unknown;
 
@@ -812,9 +809,10 @@ open_path (const char *name, size_t namelen,
       if (this_dir->machdirstatus != nonexisting)
 	{
 	  /* Construct the pathname to try.  */
-	  (void) memcpy (buf, this_dir->dirname, this_dir->machdirnamelen);
-	  (void) memcpy (buf + this_dir->machdirnamelen, name, namelen);
-	  buflen = this_dir->machdirnamelen + namelen;
+	  buflen = ((char *) __mempcpy (__mempcpy (buf, this_dir->dirname,
+						   this_dir->machdirnamelen),
+					name, namelen)
+		    - buf);
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->machdirstatus == unknown)
@@ -839,9 +837,10 @@ open_path (const char *name, size_t namelen,
       if (fd == -1 && this_dir->dirstatus != nonexisting)
 	{
 	  /* Construct the pathname to try.  */
-	  (void) memcpy (buf, this_dir->dirname, this_dir->dirnamelen);
-	  (void) memcpy (buf + this_dir->dirnamelen, name, namelen);
-	  buflen = this_dir->dirnamelen + namelen;
+	  buflen = ((char *) __mempcpy (__mempcpy (buf, this_dir->dirname,
+						   this_dir->dirnamelen),
+					name, namelen)
+		    - buf);
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->dirstatus == unknown)

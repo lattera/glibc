@@ -104,9 +104,9 @@ execvp (file, argv)
 	  else
 	    {
 	      /* Construct the pathname to try.  */
-	      (void) memcpy (name, path, p - path);
-	      name[p - path] = '/';
-	      (void) memcpy (&name[(p - path) + 1], file, len);
+	      char *tmp = __mempcpy (name, path, p - path);
+	      *tmp++ = '/';
+	      (void) __mempcpy (tmp, file, len);
 	    }
 
 	  /* Try to execute this name.  If it works, execv will not return.  */

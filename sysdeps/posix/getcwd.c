@@ -26,12 +26,12 @@
  */
 
 /* AIX requires this to be the first thing in the file.  */
-#if defined (_AIX) && !defined (__GNUC__)
+#if defined _AIX && !defined __GNUC__
  #pragma alloca
 #endif
 
 #ifdef	HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
 #endif
 
 #include <errno.h>
@@ -39,92 +39,91 @@
 #include <sys/stat.h>
 
 #ifdef	STDC_HEADERS
-#include <stddef.h>
+# include <stddef.h>
 #endif
 
-#if !defined(__GNU_LIBRARY__) && !defined(STDC_HEADERS)
+#if !defined __GNU_LIBRARY__ && !defined STDC_HEADERS
 extern int errno;
 #endif
 #ifndef __set_errno
-#define __set_errno(val) errno = (val)
+# define __set_errno(val) errno = (val)
 #endif
 
 #ifndef	NULL
-#define	NULL	0
+# define NULL	0
 #endif
 
-#if defined (USGr3) && !defined (DIRENT)
-#define DIRENT
+#if defined USGr3 && !defined DIRENT
+# define DIRENT
 #endif /* USGr3 */
-#if defined (Xenix) && !defined (SYSNDIR)
-#define SYSNDIR
+#if defined Xenix && !defined SYSNDIR
+# define SYSNDIR
 #endif /* Xenix */
 
-#if defined (POSIX) || defined (DIRENT) || defined (__GNU_LIBRARY__)
-#include <dirent.h>
-#ifndef	__GNU_LIBRARY__
-#define D_NAMLEN(d) strlen((d)->d_name)
-#else
-#define	HAVE_D_NAMLEN
-#define D_NAMLEN(d) ((d)->d_namlen)
-#endif
+#if defined POSIX || defined DIRENT || defined __GNU_LIBRARY__
+# include <dirent.h>
+# ifndef __GNU_LIBRARY__
+#  define D_NAMLEN(d) strlen((d)->d_name)
+# else
+#  define HAVE_D_NAMLEN
+#  define D_NAMLEN(d) ((d)->d_namlen)
+# endif
 #else /* not POSIX or DIRENT */
-#define	dirent		direct
-#define D_NAMLEN(d)	((d)->d_namlen)
-#define	HAVE_D_NAMLEN
-#if defined (USG) && !defined (sgi)
-#if defined (SYSNDIR)
-#include <sys/ndir.h>
-#else /* Not SYSNDIR */
-#include "ndir.h"
-#endif /* SYSNDIR */
-#else /* not USG */
-#include <sys/dir.h>
-#endif /* USG */
+# define dirent		direct
+# define D_NAMLEN(d)	((d)->d_namlen)
+# define HAVE_D_NAMLEN
+# if defined USG && !defined sgi
+#  if defined SYSNDIR
+#   include <sys/ndir.h>
+#  else /* Not SYSNDIR */
+#   include "ndir.h"
+#  endif /* SYSNDIR */
+# else /* not USG */
+#  include <sys/dir.h>
+# endif /* USG */
 #endif /* POSIX or DIRENT or __GNU_LIBRARY__ */
 
-#if	defined (HAVE_UNISTD_H) || defined (__GNU_LIBRARY__)
-#include <unistd.h>
+#if defined HAVE_UNISTD_H || defined __GNU_LIBRARY__
+# include <unistd.h>
 #endif
 
-#if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__) \
-	 || defined (POSIX))
-#include <stdlib.h>
-#include <string.h>
-#define	ANSI_STRING
+#if defined STDC_HEADERS || defined __GNU_LIBRARY__ || defined POSIX
+# include <stdlib.h>
+# include <string.h>
+# define ANSI_STRING
 #else	/* No standard headers.  */
 
-#ifdef	USG
+# ifdef	USG
 
-#include <string.h>
-#ifdef	NEED_MEMORY_H
-#include <memory.h>
-#endif
-#define	ANSI_STRING
+#  include <string.h>
+#  ifdef NEED_MEMORY_H
+#   include <memory.h>
+#  endif
+#  define	ANSI_STRING
 
-#else	/* Not USG.  */
+# else	/* Not USG.  */
 
-#ifdef	NeXT
+#  ifdef NeXT
 
-#include <string.h>
+#   include <string.h>
 
-#else	/* Not NeXT.  */
+#  else	/* Not NeXT.  */
 
-#include <strings.h>
+#   include <strings.h>
 
-#ifndef	bcmp
+#   ifndef bcmp
 extern int bcmp ();
-#endif
-#ifndef	bzero
+#   endif
+#   ifndef bzero
 extern void bzero ();
-#endif
-#ifndef	bcopy
+#   endif
+#   ifndef bcopy
 extern void bcopy ();
-#endif
+#   endif
 
-#endif	/* NeXT. */
+#  endif /* NeXT. */
 
-#endif	/* USG.  */
+# endif	/* USG.  */
 
 extern char *malloc (), *realloc ();
 extern void free ();
@@ -132,59 +131,58 @@ extern void free ();
 #endif /* Standard headers.  */
 
 #ifndef	ANSI_STRING
-#define	memcpy(d, s, n)	bcopy((s), (d), (n))
-#define	memmove memcpy
+# define memcpy(d, s, n)	bcopy((s), (d), (n))
+# define memmove memcpy
 #endif	/* Not ANSI_STRING.  */
 
-#if	!defined(__alloca) && !defined(__GNU_LIBRARY__)
+#if !defined __alloca && !defined __GNU_LIBRARY__
 
-#ifdef	__GNUC__
-#undef	alloca
-#define	alloca(n)	__builtin_alloca (n)
-#else	/* Not GCC.  */
-#if	defined (sparc) || defined (HAVE_ALLOCA_H)
-#include <alloca.h>
-#else	/* Not sparc or HAVE_ALLOCA_H.  */
-#ifndef	_AIX
+# ifdef	__GNUC__
+#  undef alloca
+#  define alloca(n)	__builtin_alloca (n)
+# else	/* Not GCC.  */
+#  if	defined sparc || defined HAVE_ALLOCA_H
+#   include <alloca.h>
+#  else	/* Not sparc or HAVE_ALLOCA_H.  */
+#   ifndef _AIX
 extern char *alloca ();
-#endif	/* Not _AIX.  */
-#endif	/* sparc or HAVE_ALLOCA_H.  */
-#endif	/* GCC.  */
+#   endif /* Not _AIX.  */
+#  endif /* sparc or HAVE_ALLOCA_H.  */
+# endif	/* GCC.  */
 
-#define	__alloca	alloca
+# define __alloca	alloca
 
 #endif
 
-#if (defined (HAVE_LIMITS_H) || defined (STDC_HEADERS) || \
-     defined (__GNU_LIBRARY__))
-#include <limits.h>
+#if defined HAVE_LIMITS_H || defined STDC_HEADERS || defined __GNU_LIBRARY__
+# include <limits.h>
 #else
-#include <sys/param.h>
+# include <sys/param.h>
 #endif
 
 #ifndef PATH_MAX
-#ifdef	MAXPATHLEN
-#define	PATH_MAX MAXPATHLEN
-#else
-#define	PATH_MAX 1024
-#endif
-#endif
-
-#if !defined (STDC_HEADERS) && !defined (__GNU_LIBRARY__)
-#undef	size_t
-#define	size_t	unsigned int
+# ifdef	MAXPATHLEN
+#  define PATH_MAX MAXPATHLEN
+# else
+#  define PATH_MAX 1024
+# endif
 #endif
 
-#if !__STDC__ && !defined (const)
-#define const
+#if !defined STDC_HEADERS && !defined __GNU_LIBRARY__
+# undef	size_t
+# define size_t	unsigned int
+#endif
+
+#if !__STDC__ && !defined const
+# define const
 #endif
 
 #ifndef __GNU_LIBRARY__
-#define	__lstat	stat
+# define __lstat	stat
 #endif
 
 #ifndef _LIBC
-#define __getcwd getcwd
+# define __getcwd getcwd
 #endif
 
 /* Get the pathname of the current working directory, and put it in SIZE
@@ -264,18 +262,28 @@ __getcwd (buf, size)
 	      new = malloc (dotsize * 2 + 1);
 	      if (new == NULL)
 		return NULL;
+#ifdef HAVE_MEMPCPY
+	      dotp = mempcpy (new, dots, dotsize);
+#else
 	      memcpy (new, dots, dotsize);
+	      dotp = &new[dotsize];
+#endif
 	    }
 	  else
 	    {
 	      new = realloc ((__ptr_t) dotlist, dotsize * 2 + 1);
 	      if (new == NULL)
 		goto lose;
+	      dotp = &new[dotsize];
 	    }
-	  memcpy (&new[dotsize], new, dotsize);
-	  dotp = &new[dotsize];
+#ifdef HAVE_MEMPCPY
+	  *((char *) mempcpy (dotp, new, dotsize)) = '\0';
+	  dotsize *= 2;
+#else
+	  memcpy (dotp, new, dotsize);
 	  dotsize *= 2;
 	  new[dotsize] = '\0';
+#endif
 	  dotlist = new;
 	}
 
@@ -301,9 +309,15 @@ __getcwd (buf, size)
 	  if (mount_point || (ino_t) d->d_ino == thisino)
 	    {
 	      char name[dotlist + dotsize - dotp + 1 + _D_ALLOC_NAMLEN (d)];
+#ifdef HAVE_MEMPCPY
+	      char *tmp = mempcpy (name, dotp, dotlist + dotsize - dotp);
+	      *tmp++ = '/';
+	      strcpy (tmp, d->d_name);
+#else
 	      memcpy (name, dotp, dotlist + dotsize - dotp);
 	      name[dotlist + dotsize - dotp] = '/';
 	      strcpy (&name[dotlist + dotsize - dotp + 1], d->d_name);
+#endif
 	      if (__lstat (name, &st) < 0)
 		{
 		  int save = errno;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,7 +21,7 @@
 #include <netinet/if_ether.h>
 #include <string.h>
 
-#include "../nss/nsswitch.h"
+#include <nss/nsswitch.h>
 
 /* Because the `ethers' lookup does not fit so well in the scheme so
    we define a dummy struct here which helps us to use the available

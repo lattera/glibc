@@ -38,6 +38,8 @@
 #include <stdio.h>
 #include <fnmatch.h>
 
+#include <stdio-common/_itoa.h>
+
 /* Undefine the following line for the production version.  */
 /* #define NDEBUG 1 */
 #include <assert.h>
@@ -112,9 +114,8 @@ w_addstr (char *buffer, size_t *actlen, size_t *maxlen, const char *str)
 
   if (buffer != NULL)
     {
-      memcpy (&buffer[*actlen], str, len);
+      *((char *) __mempcpy (&buffer[*actlen], str, len)) = '\0';
       *actlen += len;
-      buffer[*actlen] = '\0';
     }
 
   return buffer;
@@ -156,7 +157,7 @@ parse_backslash (char **word, size_t *word_length, size_t *max_length,
       return WRDE_SYNTAX;
 
     case '\n':
-      (*offset)++;
+      ++(*offset);
       break;
 
     default:
@@ -164,7 +165,7 @@ parse_backslash (char **word, size_t *word_length, size_t *max_length,
       if (*word == NULL)
 	return WRDE_NOSPACE;
 
-      (*offset)++;
+      ++(*offset);
       break;
     }
 
@@ -363,12 +364,13 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
   if (ifs && !*ifs)
     {
       /* No field splitting allowed */
-      *word_length = strlen (globbuf.gl_pathv[0]);
-      *word = realloc (*word, 1 + *word_length);
+      size_t length = strlen (globbuf.gl_pathv[0]);
+      *word = realloc (*word, length + 1);
       if (*word == NULL)
 	goto no_space;
 
-      strcpy (*word, globbuf.gl_pathv[0]);
+      memcpy (*word, globbuf.gl_pathv[0], length + 1);
+      *word_length = length;
 
       for (match = 1; match < globbuf.gl_pathc && *word != NULL; ++match)
 	{
@@ -389,11 +391,10 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
   *word = NULL;
   *word_length = 0;
 
-  matching_word = malloc (1 + strlen (globbuf.gl_pathv[0]));
+  matching_word = __strdup (globbuf.gl_pathv[0]);
   if (matching_word == NULL)
     goto no_space;
 
-  strcpy (matching_word, globbuf.gl_pathv[0]);
   if (w_addword (pwordexp, matching_word) == WRDE_NOSPACE)
     goto no_space;
 
@@ -624,7 +625,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	case ')':
 	  if (--paren_depth == 0)
 	    {
-	      char *result;
+	      char result[21];	/* 21 = ceil(log10(2^64)) + 1 */
 	      int numresult = 0;
 
 	      if (bracket || words[1 + *offset] != ')')
@@ -637,9 +638,9 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 		  eval_expr (expr, &numresult) != 0)
 		return WRDE_SYNTAX;
 
-	      result = __alloca (100);
-	      __snprintf (result, 100, "%d", numresult);
-	      *word = w_addstr (*word, word_length, max_length, result);
+	      result[20] = '\0';
+	      *word = w_addstr (*word, word_length, max_length,
+				_itoa_word (numresult, &result[20], 10, 0));
 	      free (expr);
 	      return *word ? 0 : WRDE_NOSPACE;
 	    }
@@ -652,16 +653,16 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	case ']':
 	  if (bracket && paren_depth == 1)
 	    {
-	      char *result;
+	      char result[21];	/* 21 = ceil(log10(2^64)) + 1 */
 	      int numresult = 0;
 
 	      /* Go - evaluate. */
 	      if (*expr && eval_expr (expr, &numresult) != 0)
 		return WRDE_SYNTAX;
 
-	      result = __alloca (100);
-	      __snprintf (result, 100, "%d", numresult);
-	      *word = w_addstr (*word, word_length, max_length, result);
+	      result[20] = '\0';
+	      *word = w_addstr (*word, word_length, max_length,
+				_itoa_word (numresult, &result[20], 10, 0));
 	      free (expr);
 	      return *word ? 0 : WRDE_NOSPACE;
 	    }
@@ -727,6 +728,8 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   if (pid == 0)
     {
       /* Child */
+      const char *args[4] = { _PATH_BSHELL, "-c", comm, NULL };
+
       /* Redirect input and output */
       dup2 (fildes[1], 1);
 
@@ -734,10 +737,10 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
       if ((flags & WRDE_SHOWERR) == 0)
 	close (2);
 
-      execl (_PATH_BSHELL, _PATH_BSHELL, "-c", comm, NULL);
+      __execve (_PATH_BSHELL, (char *const *) args, __environ);
 
-      /* Bad. What now? */
-      exit (1);
+      /* Bad.  What now?  */
+      abort ();
     }
 
   /* Parent */
@@ -752,7 +755,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	{
 	  if ((buflen = read (fildes[0], buffer, bufsize)) < 1)
 	    {
-	      if (waitpid (pid, NULL, WNOHANG) == 0)
+	      if (__waitpid (pid, NULL, WNOHANG) == 0)
 		continue;
 	      if ((buflen = read (fildes[0], buffer, bufsize)) < 1)
 		break;
@@ -780,7 +783,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
     {
       if ((buflen = read (fildes[0], buffer, bufsize)) < 1)
 	{
-	  if (waitpid (pid, NULL, WNOHANG) == 0)
+	  if (__waitpid (pid, NULL, WNOHANG) == 0)
 	    continue;
 	  if ((read (fildes[0], buffer, bufsize)) < 1)
 	    break;
@@ -856,7 +859,7 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
 	  break;
 
 	case '(':
-	  paren_depth++;
+	  ++paren_depth;
 	default:
 	  comm = w_addchar (comm, &comm_length, &comm_maxlen, words[*offset]);
 	  if (comm == NULL)

@@ -706,7 +706,12 @@ _IO_file_xsputn (f, data, n)
 	count = to_do;
       if (count > 20)
 	{
+#ifdef _LIBC
+	  f->_IO_write_ptr = __mempcpy (f->_IO_write_ptr, s, count);
+#else
 	  memcpy (f->_IO_write_ptr, s, count);
+	  f->_IO_write_ptr += count;
+#endif
 	  s += count;
 	}
       else
@@ -715,8 +720,8 @@ _IO_file_xsputn (f, data, n)
 	  register int i = (int) count;
 	  while (--i >= 0)
 	    *p++ = *s++;
+	  f->_IO_write_ptr = p;
 	}
-      f->_IO_write_ptr += count;
       to_do -= count;
     }
   if (to_do + must_flush > 0)
@@ -765,8 +770,12 @@ _IO_file_xsgetn (fp, data, n)
 	    count = more;
 	  if (count > 20)
 	    {
+#ifdef _LIBC
+	      s = __mempcpy (s, fp->_IO_read_ptr, count);
+#else
 	      memcpy (s, fp->_IO_read_ptr, count);
 	      s += count;
+#endif
 	      fp->_IO_read_ptr += count;
 	    }
 	  else if (count <= 0)

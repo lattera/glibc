@@ -117,6 +117,30 @@ main (int argc, char ** argv)
   getcwd (cwd, sizeof(buf));
   cwd_len = strlen (cwd);
 
+  errno = 0;
+  if (realpath (NULL, buf) != NULL || errno != EINVAL)
+    {
+      printf ("%s: expected return value NULL and errno set to EINVAL"
+	      " for realpath(NULL,...)\n", argv[0]);
+      ++errors;
+    }
+
+  errno = 0;
+  if (realpath ("/", NULL) != NULL || errno != EINVAL)
+    {
+      printf ("%s: expected return value NULL and errno set to EINVAL"
+	      " for realpath(...,NULL)\n", argv[0]);
+      ++errors;
+    }
+
+  errno = 0;
+  if (realpath ("", buf) != NULL || errno != ENOENT)
+    {
+      printf ("%s: expected return value NULL and set errno to ENOENT",
+	      " for realpath(\"\",...)\n", argv[0]);
+      ++errors;
+    }
+
   for (i = 0; i < (int) (sizeof (symlinks) / sizeof (symlinks[0])); ++i)
     symlink (symlinks[i].value, symlinks[i].name);
 

@@ -328,17 +328,19 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
   cache_ref (sid);
   if (cred->adc_namekind == ADN_FULLNAME)
     {
+      size_t full_len;
+
       cred->adc_fullname.window = window;
       cred->adc_nickname = (u_long) sid;	/* save nickname */
       if (entry->rname != NULL)
 	{
 	  mem_free (entry->rname, strlen (entry->rname) + 1);
 	}
-      entry->rname = mem_alloc ((u_int) strlen (cred->adc_fullname.name)
-				+ 1);
+      full_len = strlen (cred->adc_fullname.name) + 1;
+      entry->rname = mem_alloc ((u_int) full_len);
       if (entry->rname != NULL)
 	{
-	  strcpy (entry->rname, cred->adc_fullname.name);
+	  memcpy (entry->rname, cred->adc_fullname.name, full_len);
 	}
       else
 	{

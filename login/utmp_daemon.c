@@ -208,8 +208,10 @@ do_setutent (int sock)
   setutent_request *request;
   setutent_reply reply;
   size_t size;
+  size_t name_len;
 
-  size = sizeof (setutent_request) + strlen (__libc_utmp_file_name) + 1;
+  name_len = strlen (__libc_utmp_file_name) + 1;
+  size = sizeof (setutent_request) + name_len;
 
   request = malloc (size);
   if (request == NULL)
@@ -218,7 +220,7 @@ do_setutent (int sock)
   request->header.version = UTMPD_VERSION;
   request->header.size = size;
   request->header.type = UTMPD_REQ_SETUTENT;
-  strcpy (request->file, __libc_utmp_file_name);
+  memcpy (request->file, __libc_utmp_file_name, name_len);
 
   reply.header.version = UTMPD_VERSION;
   reply.header.size = sizeof (setutent_reply);
@@ -367,8 +369,10 @@ do_updwtmp (int sock, const char *file, const struct utmp *utmp)
   updwtmp_request *request;
   updwtmp_reply reply;
   size_t size;
+  size_t file_len;
 
-  size = sizeof (updwtmp_request) + strlen (file) + 1;
+  file_len = strlen (file) + 1;
+  size = sizeof (updwtmp_request) + file_len;
 
   request = malloc (size);
   if (request == NULL)
@@ -378,7 +382,7 @@ do_updwtmp (int sock, const char *file, const struct utmp *utmp)
   request->header.size = size;
   request->header.type = UTMPD_REQ_UPDWTMP;
   memcpy (&request->utmp, utmp, sizeof (struct utmp));
-  strcpy (request->file, file);
+  memcpy (request->file, file, file_len);
 
   reply.header.version = UTMPD_VERSION;
   reply.header.size = sizeof (updwtmp_reply);

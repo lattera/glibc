@@ -45,6 +45,22 @@ canonicalize (const char *name, char *resolved)
   long int path_max;
   int num_links = 0;
 
+  if (name == NULL || resolved == NULL)
+    {
+      /* As per Single Unix Specification V2 we must return an error if
+	 either parameter is a null pointer.  */
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
+  if (name[0] == '\0')
+    {
+      /* As per Single Unix Specification V2 we must return an error if
+	 the name argument points to an empty string.  */
+      __set_errno (ENOENT);
+      return NULL;
+    }
+
 #ifdef PATH_MAX
   path_max = PATH_MAX;
 #else
@@ -73,21 +89,23 @@ canonicalize (const char *name, char *resolved)
       struct stat st;
       int n;
 
-      /* skip sequence of multiple path-separators: */
+      /* Skip sequence of multiple path-separators.  */
       while (*start == '/') ++start;
 
-      /* find end of path component: */
+      /* Find end of path component.  */
       for (end = start; *end && *end != '/'; ++end);
 
       if (end - start == 0)
 	break;
       else if (strncmp (start, ".", end - start) == 0)
 	/* nothing */;
-      else if (strncmp (start, "..", end - start) == 0) {
-	/* back up to previous component, ignore if at root already: */
-	if (dest > rpath + 1)
-	  while ((--dest)[-1] != '/');
-      } else
+      else if (strncmp (start, "..", end - start) == 0)
+	{
+	  /* Back up to previous component, ignore if at root already.  */
+	  if (dest > rpath + 1)
+	    while ((--dest)[-1] != '/');
+	}
+      else
 	{
 	  size_t new_size;
 
@@ -112,8 +130,7 @@ canonicalize (const char *name, char *resolved)
 		return NULL;
 	    }
 
-	  memcpy (dest, start, end - start);
-	  dest += end - start;
+	  dest = __mempcpy (dest, start, end - start);
 	  *dest = '\0';
 
 	  if (__lstat (rpath, &st) < 0)
@@ -146,8 +163,8 @@ canonicalize (const char *name, char *resolved)
 		}
 
 	      /* Careful here, end may be a pointer into extra_buf... */
-	      memcpy (&buf[n], end, len + 1);
-	      strcpy (extra_buf, buf);
+	      memmove (&extra_buf[n], end, len + 1);
+	      memcpy (extra_buf, buf, n);
 	      name = end = extra_buf;
 
 	      if (buf[0] == '/')

@@ -117,6 +117,7 @@ FUNCTION_NAME (ADD_PARAMS)
 	     process gets a chance for a normal termination.  */
 	  save = errno;
 	  free (buffer);
+	  buffer = NULL;
 	  __set_errno (save);
 	}
       buffer = new_buf;

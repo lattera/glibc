@@ -374,8 +374,12 @@ glob (pattern, flags, errfunc, pglob)
 #endif
 
 	  /* We know the prefix for all sub-patterns.  */
+#ifdef HAVE_MEMPCPY
+	  alt_start = mempcpy (onealt, pattern, begin - pattern);
+#else
 	  memcpy (onealt, pattern, begin - pattern);
 	  alt_start = &onealt[begin - pattern];
+#endif
 
 	  /* Find the first sub-pattern and at the same time find the
 	     rest after the closing brace.  */
@@ -951,138 +955,94 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       char *name;
     };
   struct globlink *names = NULL;
-  size_t nfound = 0;
+  size_t nfound;
+  int meta;
+  int save;
 
-  if (!__glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE)))
+  stream = ((flags & GLOB_ALTDIRFUNC) ?
+ 	    (*pglob->gl_opendir) (directory) :
+	    (__ptr_t) opendir (directory));
+  if (stream == NULL)
     {
-      /* We must check whether the file in this directory exists.  */
-      stream = ((flags & GLOB_ALTDIRFUNC) ?
-		(*pglob->gl_opendir) (directory) :
-		(__ptr_t) opendir (directory));
-      if (stream == NULL)
-	{
-	  if ((errfunc != NULL && (*errfunc) (directory, errno)) ||
-	      (flags & GLOB_ERR))
-	    return GLOB_ABORTED;
-	}
-      else if (pattern[0] == '\0')
-	{
-	  /* This is a special case for matching directories like in
-	     "*a/".  */
-	  names = (struct globlink *) __alloca (sizeof (struct globlink));
-	  names->name = (char *) malloc (1);
-	  if (names->name == NULL)
-	    goto memory_error;
-	  names->name[0] = '\0';
-	  names->next = NULL;
-	  nfound = 1;
-	}
-      else
-	while (1)
-	  {
-	    struct dirent *d = ((flags & GLOB_ALTDIRFUNC) ?
-				(*pglob->gl_readdir) (stream) :
-				readdir ((DIR *) stream));
-	    if (d == NULL)
-	      break;
-	    if (! REAL_DIR_ENTRY (d))
-	      continue;
-
-#ifdef HAVE_D_TYPE
-	      /* If we shall match only directories use the information
-		 provided by the dirent if possible.  */
-	    if ((flags & GLOB_ONLYDIR)
-		&& d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
-	      continue;
-#endif
-
-	    if (strcmp (pattern, d->d_name) == 0)
-	      {
-		size_t len = NAMLEN (d);
-		names =
-		  (struct globlink *) __alloca (sizeof (struct globlink));
-		names->name = (char *) malloc (len + 1);
-		if (names->name == NULL)
-		  goto memory_error;
-#ifdef HAVE_MEMPCPY
-		*((char *) mempcpy ((__ptr_t) names->name, pattern, len))
-		  = '\0';
-#else
-		memcpy ((__ptr_t) names->name, pattern, len);
-		names->name[len] = '\0';
-#endif
-		names->next = NULL;
-		nfound = 1;
-		break;
-	      }
-	  }
+      if ((errfunc != NULL && (*errfunc) (directory, errno)) ||
+	  (flags & GLOB_ERR))
+	return GLOB_ABORTED;
+      nfound = 0;
+      meta = 0;
+    }
+  else if (pattern[0] == '\0')
+    {
+      /* This is a special case for matching directories like in
+	 "*a/".  */
+      names = (struct globlink *) __alloca (sizeof (struct globlink));
+      names->name = (char *) malloc (1);
+      if (names->name == NULL)
+	goto memory_error;
+      names->name[0] = '\0';
+      names->next = NULL;
+      nfound = 1;
+      meta = 0;
     }
   else
     {
-      flags |= GLOB_MAGCHAR;
+      nfound = 0;
+      meta = __glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE));
+      if(meta)
+	flags |= GLOB_MAGCHAR;
 
-      stream = ((flags & GLOB_ALTDIRFUNC) ?
-		(*pglob->gl_opendir) (directory) :
-		(__ptr_t) opendir (directory));
-      if (stream == NULL)
+      while (1)
 	{
-	  if ((errfunc != NULL && (*errfunc) (directory, errno)) ||
-	      (flags & GLOB_ERR))
-	    return GLOB_ABORTED;
-	}
-      else
-	while (1)
-	  {
-	    const char *name;
-	    size_t len;
-	    struct dirent *d = ((flags & GLOB_ALTDIRFUNC) ?
-				(*pglob->gl_readdir) (stream) :
-				readdir ((DIR *) stream));
-	    if (d == NULL)
-	      break;
-	    if (! REAL_DIR_ENTRY (d))
-	      continue;
-
-	    name = d->d_name;
+	  const char *name;
+	  size_t len;
+	  struct dirent *d = ((flags & GLOB_ALTDIRFUNC) ?
+			      (*pglob->gl_readdir) (stream) :
+			      readdir ((DIR *) stream));
+	  if (d == NULL)
+	    break;
+	  if (! REAL_DIR_ENTRY (d))
+	    continue;
 
 #ifdef HAVE_D_TYPE
-	      /* If we shall match only directories use the information
-		 provided by the dirent if possible.  */
-	    if ((flags & GLOB_ONLYDIR)
-		&& d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
-	      continue;
+	  /* If we shall match only directories use the information
+	     provided by the dirent call if possible.  */
+	  if ((flags & GLOB_ONLYDIR)
+	      && d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
+	    continue;
 #endif
 
-	    if (fnmatch (pattern, name,
-			 (!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0) |
-			 ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
+	  name = d->d_name;
+
+	  if ((!meta && strcmp (pattern, name) == 0)
+	      || fnmatch (pattern, name,
+			  (!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0) |
+			  ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
 #ifdef _AMIGA
-			 | FNM_CASEFOLD
+			  | FNM_CASEFOLD
 #endif
 			 ) == 0)
-	      {
-		struct globlink *new
-		  = (struct globlink *) __alloca (sizeof (struct globlink));
-		len = NAMLEN (d);
-		new->name
-		  = (char *) malloc (len + 1);
-		if (new->name == NULL)
-		  goto memory_error;
+	    {
+	      struct globlink *new
+		= (struct globlink *) __alloca (sizeof (struct globlink));
+	      len = NAMLEN (d);
+	      new->name = (char *) malloc (len + 1);
+	      if (new->name == NULL)
+		goto memory_error;
 #ifdef HAVE_MEMPCPY
-		*((char *) mempcpy ((__ptr_t) new->name, name, len)) = '\0';
+	      *((char *) mempcpy ((__ptr_t) new->name, name, len)) = '\0';
 #else
-		memcpy ((__ptr_t) new->name, name, len);
-		new->name[len] = '\0';
+	      memcpy ((__ptr_t) new->name, name, len);
+	      new->name[len] = '\0';
 #endif
-		new->next = names;
-		names = new;
-		++nfound;
-	      }
-	  }
+	      new->next = names;
+	      names = new;
+	      ++nfound;
+	      if (!meta)
+		break;
+	    }
+	}
     }
 
-  if (nfound == 0 && (flags & GLOB_NOMAGIC) &&
-      ! __glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE)))
+  if (nfound == 0 && (flags & GLOB_NOMAGIC) && !meta)
     flags |= GLOB_NOCHECK;
 
   if (nfound == 0 && (flags & GLOB_NOCHECK))
@@ -1124,15 +1084,13 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       pglob->gl_flags = flags;
     }
 
-  if (stream != NULL)
-    {
-      int save = errno;
-      if (flags & GLOB_ALTDIRFUNC)
-	(*pglob->gl_closedir) (stream);
-      else
-	closedir ((DIR *) stream);
-      __set_errno (save);
-    }
+  save = errno;
+  if (flags & GLOB_ALTDIRFUNC)
+    (*pglob->gl_closedir) (stream);
+  else
+    closedir ((DIR *) stream);
+  __set_errno (save);
+
   return nfound == 0 ? GLOB_NOMATCH : 0;
 
  memory_error:

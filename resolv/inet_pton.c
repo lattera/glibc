@@ -26,7 +26,7 @@ static char rcsid[] = "$Id$";
 #include <arpa/nameser.h>
 #include <string.h>
 #include <errno.h>
-#include "../conf/portability.h"
+#include <conf/portability.h>
 
 /*
  * WARNING: Don't even consider trying to compile this on a system where

@@ -330,8 +330,8 @@ again:
 
 		dirlen = strlen (pwd->pw_dir);
 		pbuf = alloca (dirlen + sizeof "/.rhosts");
-		memcpy (pbuf, pwd->pw_dir, dirlen);
-		memcpy (pbuf + dirlen, "/.rhosts", sizeof "/.rhosts");
+		__mempcpy (__mempcpy (pbuf, pwd->pw_dir, dirlen),
+			   "/.rhosts", sizeof "/.rhosts");
 
 		/*
 		 * Change effective uid while opening .rhosts.  If root and

@@ -124,6 +124,17 @@ __BEGIN_DECLS
 
    _XOPEN_SHM			Shared memory interface according to XPG4.2.
 
+   _XBS5_ILP32_OFF32		Implementation provides environment with 32-bit
+				int, long, pointer, and off_t types.
+   _XBS5_ILP32_OFFBIG		Implementation provides environment with 32-bit
+				int, long, and pointer and off_t with at least
+				64 bits.
+   _XBS5_LP64_OFF64		Implementation provides environment with 32-bit
+				int, and 64-bit long, pointer, and off_t types.
+   _XBS5_LPBIG_OFFBIG		Implementation provides environment with at
+				least 32 bits int and long, pointer, and off_t
+				with at least 64 bits.
+
    If any of these symbols is defined as -1, the corresponding option is not
    true for any file.  If any is defined as other than -1, the corresponding
    option is true for all files.  If a symbol is not defined at all, the value

@@ -707,10 +707,10 @@ struct _IO_jump_t _IO_old_file_jumps =
   JUMP_INIT(seekoff, _IO_old_file_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_old_file_setbuf),
-  JUMP_INIT(sync, _IO_file_sync),
+  JUMP_INIT(sync, _IO_old_file_sync),
   JUMP_INIT(doallocate, _IO_file_doallocate),
   JUMP_INIT(read, _IO_file_read),
-  JUMP_INIT(write, _IO_file_write),
+  JUMP_INIT(write, _IO_old_file_write),
   JUMP_INIT(seek, _IO_file_seek),
   JUMP_INIT(close, _IO_file_close),
   JUMP_INIT(stat, _IO_file_stat)

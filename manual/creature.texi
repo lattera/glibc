@@ -32,6 +32,7 @@ macro @code{_POSIX_C_SOURCE} to a positive integer.
 
 @comment (none)
 @comment POSIX.2
+@defvr Macro _POSIX_C_SOURCE
 Define this macro to a positive integer to control which POSIX
 functionality is made available.  The greater the value of this macro,
 the more functionality is made available.

@@ -91,6 +91,8 @@ setenv (name, value, replace)
   if (__environ == NULL || *ep == NULL)
     {
       char **new_environ;
+      char *tmp;
+
       if (__environ == last_environ && __environ != NULL)
 	/* We allocated this space; we can extend it.  */
 	new_environ = (char **) realloc (last_environ,
@@ -117,9 +119,15 @@ setenv (name, value, replace)
 	memcpy ((char *) new_environ, (char *) __environ,
 		size * sizeof (char *));
 
+#ifdef _LIBC
+      tmp = __mempcpy (new_environ[size], name, namelen);
+      *tmp++ = '=';
+      __mempcpy (tmp, value, vallen);
+#else
       memcpy (new_environ[size], name, namelen);
       new_environ[size][namelen] = '=';
       memcpy (&new_environ[size][namelen + 1], value, vallen);
+#endif
 
       new_environ[size + 1] = NULL;
 
@@ -138,8 +146,12 @@ setenv (name, value, replace)
 	      return -1;
 	    }
 	  *ep = new;
+#ifdef _LIBC
+	  *((char *) __mempcpy (*ep, name, namelen)) = '=';
+#else
 	  memcpy (*ep, name, namelen);
 	  (*ep)[namelen] = '=';
+#endif
 	}
       memcpy (&(*ep)[namelen + 1], value, vallen);
     }

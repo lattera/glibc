@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <argz.h>
 
 /* Append BUF, of length BUF_LEN to *TO, of length *TO_LEN, reallocating and
@@ -31,8 +32,7 @@ str_append (char **to, size_t *to_len, const char *buf, const size_t buf_len)
 
   if (new_to)
     {
-      memcpy (new_to + *to_len, buf, buf_len);
-      new_to[new_len] = '\0';
+      *((char *) __mempcpy (new_to + *to_len, buf, buf_len)) = '\0';
       *to = new_to;
       *to_len = new_len;
     }

@@ -246,8 +246,7 @@
 		      goto done;
 		    }
 
-		  strcpy (hostname, name);
-		  resbuf.h_name = hostname;
+		  resbuf.h_name = strcpy (hostname, name);
 		  resbuf.h_aliases = *host_aliases;
 		  (*host_aliases)[0] = NULL;
 		  (*h_addr_ptrs)[0] = (char *) host_addr;

@@ -33,7 +33,5 @@ wcsdup (s)
   if (new == NULL)
     return NULL;
 
-  memcpy (new, (void *) s, len);
-
-  return (wchar_t *) new;
+  return (wchar_t *) memcpy (new, (void *) s, len);
 }

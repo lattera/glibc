@@ -80,10 +80,7 @@ _IO_obstack_xsputn (_IO_FILE *fp, const void *data, _IO_size_t n)
       obstack_blank_fast (obstack, fp->_IO_write_end - fp->_IO_write_ptr);
     }
   else
-    {
-      memcpy (fp->_IO_write_ptr, data, n);
-      fp->_IO_write_ptr += n;
-    }
+    fp->_IO_write_ptr = __mempcpy (fp->_IO_write_ptr, data, n);
 
   return n;
 }

@@ -359,8 +359,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
 	  node **newstack;
 	  stacksize += 20;
 	  newstack = alloca (sizeof (node *) * stacksize);
-	  memcpy (newstack, nodestack, sp * sizeof (node *));
-	  nodestack = newstack;
+	  nodestack = memcpy (newstack, nodestack, sp * sizeof (node *));
 	}
 
       nodestack[sp++] = rootp;
@@ -398,8 +397,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
 	      node **newstack;
 	      stacksize += 20;
 	      newstack = alloca (sizeof (node *) * stacksize);
-	      memcpy (newstack, nodestack, sp * sizeof (node *));
-	      nodestack = newstack;
+	      nodestack = memcpy (newstack, nodestack, sp * sizeof (node *));
 	    }
 	  nodestack[sp++] = parent;
 	  parent = up;

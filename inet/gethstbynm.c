@@ -35,4 +35,4 @@
 
 #define HANDLE_DIGITS_DOTS	1
 
-#include "../nss/getXXbyYY.c"
+#include <nss/getXXbyYY.c>

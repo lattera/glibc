@@ -1499,8 +1499,7 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const CHAR_T *grouping,
 
   /* Copy existing string so that nothing gets overwritten.  */
   src = (char *) alloca (rear_ptr - w);
-  memcpy (src, w + 1, rear_ptr - w);
-  s = &src[rear_ptr - w - 1];
+  s = (char *) __mempcpy (src, w + 1, rear_ptr - w) - 1;
   w = rear_ptr;
 
   /* Process all characters in the string.  */

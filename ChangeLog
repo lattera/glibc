@@ -1,3 +1,87 @@
+1997-11-06 00:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp-help.c: Optimize a bit by using mempcpy.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* io/ftw.c: Likewise.
+	* libio/fileops.c: Likewise.
+	* libio/genops.c: Likewise.
+	* libio/obprintf.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* posix/execvp.c: Likewise.
+	* posix/getopt.c: Likewise.
+	* posix/glob.c: Likewise.
+	* posix/wordexp.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdlib/canonicalize.c: Likewise.
+	* stdlib/msort.c: Likewise.
+	* string/argz-replace.c: Likewise.
+	* sysdeps/generic/putenv.c: Likewise.
+	* sysdeps/generic/setenv.c: Likewise.
+	* sysdeps/posix/getcwd.c: Likewise.
+	* sysdeps/posix/ttyname.c: Likewise.
+	* sysdeps/posix/writev.c: Likewise.
+	* time/strftime.c: Likewise.
+	* time/tzfile.c: Likewise.
+
+	* login/utmp_daemon.c: Use memcpy instead of strcpy where possible.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sysdeps/unix/sysv/linux/gethostname.c: Likewise.
+
+	* misc/tsearch.c: Use memcpy return value if possible.
+	* posix/regex.c: Likewise.
+	* sysdeps/unix/readdir_r.c: Likewise.
+	* wcsmbc/wcsdup.c: Likewise.
+
+	* nss/digits_dots.c: Little optimization.
+
+	* inet/ruserpass.c (ruserpass): Optimize by using stpcpy.
+	(struct toktab): Make tokstr field a const char *.
+
+	* elf/dl-profile.c: Fix typo.
+
+	* inet/ether_ntoh.c: Don't use relative #include path.
+	* inet/gethstbynm.c: Likewise.
+	* resolv/inet_pton.c: Likewise.
+	* shadow/sgetspent_r.c: Likewise.
+
+	* libio/oldfileops.c (_IO_old_file_jumps): Use correct sync and write
+	callbacks.  Patch by NIIBE Yutaka <gniibe@mri.co.jp>.
+
+	* posix/confstr.c: Correct string for _CS_LFS_CFLAGS.
+	Handle _CS_XBS5_* constants.
+	* posix/unistd.h: Add comment describing _XBS5_* constants.
+	* sysdeps/generic/bits/confname.h: Add _CS_XBS5_* constants.
+
+	* posix/regex.c: Indent preprocessor code.
+
+	* posix/wordexp.c: Using _itoa_word instead of sprintf.
+
+	* stdlib/canonicalize.c: Avoid unnecessary copying.  Handle NULL
+	and "" arguments correctly according to SUS.
+	* stdlib/test-canon.c: Test "" and NULL argument handling.
+
+	* sysdeps/posix/writev.c: Correct condition to leave the loop.
+
+1997-11-05 18:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXbyYY.c: Set buffer to NULL if realloc fails so that possible
+	next call starts with malloc again.
+	Proposed by Joe Keane <jgk@jgk.org>.
+
+1997-11-04 23:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Correct gcc -pipe test.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+	* posix/glob.c: Cleanups.  Patch by H.J. Lu <hjl@lucon.org>.
+
+1997-11-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/creature.texi (Feature Test Macros): Add _POSIX_C_SOURCE
+	definition.
+
 1997-11-04  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/filesys.texi: Correct description of return value for

@@ -63,7 +63,7 @@ static	FILE *cfile;
 static char tokval[100];
 
 static struct toktab {
-	char *tokstr;
+	const char *tokstr;
 	int tval;
 } toktab[]= {
 	{ "default",	DEFAULT },
@@ -98,7 +98,7 @@ ruserpass(host, aname, apass)
 
 	buf = alloca (strlen (hdir) + 8);
 
-	(void) sprintf(buf, "%s/.netrc", hdir);
+	__stpcpy (__stpcpy (buf, hdir), "/.netrc");
 	cfile = fopen(buf, "r");
 	if (cfile == NULL) {
 		if (errno != ENOENT)
