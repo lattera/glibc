@@ -29,6 +29,7 @@
 
 
 
+#ifndef NEED_SEPARATE_REGISTER_STACK
 
 /* Most architectures have exactly one stack pointer.  Some have more.  */
 #define STACK_VARIABLES void *stackaddr
@@ -38,6 +39,24 @@
 
 /* How to declare function which gets there parameters.  */
 #define STACK_VARIABLES_PARMS void *stackaddr
+
+/* How to declare allocate_stack.  */
+#define ALLOCATE_STACK_PARMS void **stack
+
+/* This is how the function is called.  We do it this way to allow
+   other variants of the function to have more parameters.  */
+#define ALLOCATE_STACK(attr, pd) allocate_stack (attr, pd, &stackaddr)
+
+#else
+
+#define STACK_VARIABLES void *stackaddr; size_t stacksize
+#define STACK_VARIABLES_ARGS stackaddr, stacksize
+#define STACK_VARIABLES_PARMS void *stackaddr, size_t stacksize
+#define ALLOCATE_STACK_PARMS void **stack, size_t *stacksize
+#define ALLOCATE_STACK(attr, pd) \
+  allocate_stack (attr, pd, &stackaddr, &stacksize)
+
+#endif
 
 
 /* Default alignment of stack.  */
@@ -58,6 +77,12 @@
 # define ARCH_MAP_FLAGS 0
 #endif
 
+/* This yields the pointer that TLS support code calls the thread pointer.  */
+#if TLS_TCB_AT_TP
+# define TLS_TPADJ(pd) (pd)
+#elif TLS_DTV_AT_TP
+# define TLS_TPADJ(pd) ((pd) + 1)
+#endif
 
 /* Cache handling for not-yet free stacks.  */
 
@@ -162,11 +187,13 @@ get_cached_stack (size_t *sizep, void **memp)
   result->nextevent = NULL;
 
   /* Clear the DTV.  */
-  dtv_t *dtv = GET_DTV (result);
+  dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
   memset (dtv, '\0', (dtv[-1].counter + 1) * sizeof (dtv_t));
 
   /* Re-initialize the TLS.  */
-  return _dl_allocate_tls_init (result);
+  _dl_allocate_tls_init (TLS_TPADJ (result));
+
+  return result;
 }
 
 
@@ -203,7 +230,7 @@ queue_stack (struct pthread *stack)
 	      stack_cache_actsize -= curr->stackblock_size;
 
 	      /* Free the memory associated with the ELF TLS.  */
-	      _dl_deallocate_tls (curr, false);
+	      _dl_deallocate_tls (TLS_TPADJ (curr), false);
 
 	      /* Remove this block.  This should never fail.  If it
 		 does something is really wrong.  */
@@ -222,11 +249,12 @@ queue_stack (struct pthread *stack)
 
 static int
 allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
-		void **stack)
+		ALLOCATE_STACK_PARMS)
 {
   struct pthread *pd;
   size_t size;
   size_t pagesize_m1 = __getpagesize () - 1;
+  void *stacktop;
 
   assert (attr != NULL);
   assert (powerof2 (pagesize_m1 + 1));
@@ -248,15 +276,27 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	return EINVAL;
 
       /* Adjust stack size for alignment of the TLS block.  */
-      adj = ((uintptr_t) attr->stackaddr) & __static_tls_align_m1;
+#if TLS_TCB_AT_TP
+      adj = ((uintptr_t) attr->stackaddr - TLS_TCB_SIZE)
+	    & __static_tls_align_m1;
+      assert (size > adj + TLS_TCB_SIZE);
+#elif TLS_DTV_AT_TP
+      adj = ((uintptr_t) attr->stackaddr - __static_tls_size)
+	    & __static_tls_align_m1;
       assert (size > adj);
+#endif
 
       /* The user provided some memory.  Let's hope it matches the
 	 size...  We do not allocate guard pages if the user provided
 	 the stack.  It is the user's responsibility to do this if it
 	 is wanted.  */
-      pd = (struct pthread *) (((uintptr_t) attr->stackaddr - adj)
-			       & ~(__alignof (struct pthread) - 1)) - 1;
+#if TLS_TCB_AT_TP
+      pd = (struct pthread *) ((uintptr_t) attr->stackaddr
+			       - TLS_TCB_SIZE - adj);
+#elif TLS_DTV_AT_TP
+      pd = (struct pthread *) ((uintptr_t) attr->stackaddr
+			       - __static_tls_size - adj) - 1;
+#endif
 
       /* The user provided stack memory needs to be cleared.  */
       memset (pd, '\0', sizeof (struct pthread));
@@ -290,7 +330,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #endif
 
       /* Allocate the DTV for this thread.  */
-      if (_dl_allocate_tls (pd) == NULL)
+      if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
 	/* Something went wrong.  */
 	return errno;
 
@@ -371,7 +411,13 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #endif
 
 	  /* Place the thread descriptor at the end of the stack.  */
+#if TLS_TCB_AT_TP
 	  pd = (struct pthread *) ((char *) mem + size - coloring) - 1;
+#elif TLS_DTV_AT_TP
+	  pd = (struct pthread *) (((uintptr_t) mem + size - coloring
+				    - __static_tls_size)
+				   & ~__static_tls_align_m1) - 1;
+#endif
 
 	  /* Remember the stack-related values.  */
 	  pd->stackblock = mem;
@@ -400,7 +446,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #endif
 
 	  /* Allocate the DTV for this thread.  */
-	  if (_dl_allocate_tls (pd) == NULL)
+	  if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
 	    {
 	      /* Something went wrong.  */
 	      int err = errno;
@@ -432,7 +478,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* Create or resize the guard area if necessary.  */
       if (__builtin_expect (guardsize > pd->guardsize, 0))
 	{
-	  if (mprotect (mem, guardsize, PROT_NONE) != 0)
+#ifdef NEED_SEPARATE_REGISTER_STACK
+	  char *guard = mem + (((size - guardsize) / 2) & ~pagesize_m1);
+#else
+	  char *guard = mem;
+#endif
+	  if (mprotect (guard, guardsize, PROT_NONE) != 0)
 	    {
 	      int err;
 	    mprot_error:
@@ -446,7 +497,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      lll_unlock (stack_cache_lock);
 
 	      /* Get rid of the TLS block we allocated.  */
-	      _dl_deallocate_tls (pd, false);
+	      _dl_deallocate_tls (TLS_TPADJ (pd), false);
 
 	      /* Free the stack memory regardless of whether the size
 		 of the cache is over the limit or not.  If this piece
@@ -464,9 +515,25 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 				 0))
 	{
 	  /* The old guard area is too large.  */
+
+#ifdef NEED_SEPARATE_REGISTER_STACK
+	  char *guard = mem + (((size - guardsize) / 2) & ~pagesize_m1);
+	  char *oldguard = mem + (((size - pd->guardsize) / 2) & ~pagesize_m1);
+
+	  if (oldguard < guard
+	      && mprotect (oldguard, guard - oldguard,
+			   PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+	    goto mprot_error;
+
+	  if (mprotect (guard + guardsize,
+			oldguard + pd->guardsize - guard - guardsize,
+			PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+	    goto mprot_error;
+#else
 	  if (mprotect ((char *) mem + guardsize, pd->guardsize - guardsize,
 			PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
 	    goto mprot_error;
+#endif
 
 	  pd->guardsize = guardsize;
 	}
@@ -477,17 +544,20 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 #if TLS_TCB_AT_TP
   /* The stack begins before the TCB and the static TLS block.  */
-  *stack = ((char *) (pd + 1) - __static_tls_size);
+  stacktop = ((char *) (pd + 1) - __static_tls_size);
+#elif TLS_DTV_AT_TP
+  stacktop = (char *) (pd - 1);
+#endif
+
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  *stack = pd->stackblock;
+  *stacksize = stacktop - *stack;
 #else
-# error "Implement me"
+  *stack = stacktop;
 #endif
 
   return 0;
 }
-
-/* This is how the function is called.  We do it this way to allow
-   other variants of the function to have more parameters.  */
-#define ALLOCATE_STACK(attr, pd) allocate_stack (attr, pd, &stackaddr)
 
 
 void
@@ -508,7 +578,7 @@ __deallocate_stack (struct pthread *pd)
     (void) queue_stack (pd);
   else
     /* Free the memory associated with the ELF TLS.  */
-    _dl_deallocate_tls (pd, false);
+    _dl_deallocate_tls (TLS_TPADJ (pd), false);
 
   lll_unlock (stack_cache_lock);
 }

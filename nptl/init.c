@@ -37,6 +37,8 @@
    having the definition remove these lines.  */
 #if defined __s390__
 # define __NR_set_tid_address	252
+#elif defined __ia64__
+# define __NR_set_tid_address	1233
 #else
 # define __NR_set_tid_address	258
 #endif

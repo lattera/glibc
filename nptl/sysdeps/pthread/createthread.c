@@ -34,6 +34,10 @@
 # define TLS_VALUE pd
 #endif
 
+#ifndef ARCH_CLONE
+# define ARCH_CLONE __clone
+#endif
+
 
 static int
 create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
@@ -42,8 +46,9 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
   PREPARE_CREATE;
 #endif
 
+#ifdef TLS_TCB_AT_TP
   assert (pd->tcb != NULL);
-
+#endif
 
   if (__builtin_expect (THREAD_GETMEM (THREAD_SELF, report_events), 0))
     {
@@ -62,11 +67,11 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	  lll_lock (pd->lock);
 
 	  /* Create the thread.  */
-	  if (__clone (start_thread_debug, STACK_VARIABLES_ARGS,
-		       CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL |
-		       CLONE_SETTLS | CLONE_PARENT_SETTID |
-		       CLONE_CHILD_CLEARTID | CLONE_DETACHED | 0,
-		       pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
+	  if (ARCH_CLONE (start_thread_debug, STACK_VARIABLES_ARGS,
+			  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL |
+			  CLONE_SETTLS | CLONE_PARENT_SETTID |
+			  CLONE_CHILD_CLEARTID | CLONE_DETACHED | 0,
+			  pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
 	    /* Failed.  */
 	    return errno;
 
@@ -135,10 +140,10 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 
      The termination signal is chosen to be zero which means no signal
      is sent.  */
-  if (__clone (start_thread, STACK_VARIABLES_ARGS,
-	       CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL |
-	       CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID |
-	       CLONE_DETACHED | 0, pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
+  if (ARCH_CLONE (start_thread, STACK_VARIABLES_ARGS,
+		  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL |
+		  CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID |
+		  CLONE_DETACHED | 0, pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
     /* Failed.  */
     return errno;
 
