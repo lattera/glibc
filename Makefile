@@ -81,7 +81,8 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 					      no-libc.a bin lib		\
 					      data headers others)
 
-headers := features.h errno.h sys/errno.h errnos.h limits.h values.h
+headers := errno.h sys/errno.h errnos.h limits.h values.h	\
+	   features.h gnu-versions.h
 aux	 = sysdep $(libc-init) version
 
 echo-headers: subdir_echo-headers
