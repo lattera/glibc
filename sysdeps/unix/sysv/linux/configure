@@ -44,7 +44,11 @@ if test "${libc_cv_linux2010+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <linux/version.h>
 #if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (2 *65536+ 0 *256+ 10) /* 2.0.10 */
 eat flaming death
@@ -165,7 +169,11 @@ echo $ECHO_N "checking for kernel header at least $minimum_kernel... $ECHO_C" >&
   abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
 eat flaming death

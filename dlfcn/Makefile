@@ -37,7 +37,7 @@ libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
-	bug-dlopen1 bug-dlsym1
+	bug-dlopen1 bug-dlsym1 bug-dlopen-leak
 ifeq (yes,$(have-protected))
 tests += tstatexit
 endif
@@ -98,6 +98,14 @@ $(objpfx)tststatic.out: $(objpfx)tststatic $(objpfx)modstatic.so
 $(objpfx)modstatic.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
 
 $(objpfx)bug-dlopen1: $(libdl)
+
+$(objpfx)bug-dlopen-leak: $(libdl)
+bug-dlopen-leak-ENV = MALLOC_TRACE=$(objpfx)bug-dlopen-leak.mtrace
+$(objpfx)mtrace-bug-dlopen-leak: $(objpfx)bug-dlopen-leak.out
+	$(common-objpfx)malloc/mtrace $(objpfx)bug-dlopen-leak.mtrace > $@
+ifneq (no,$(PERL))
+tests: $(objpfx)mtrace-bug-dlopen-leak
+endif
 
 $(objpfx)bug-dlsym1: $(libdl) $(objpfx)bug-dlsym1-lib2.so
 $(objpfx)bug-dlsym1.out: $(objpfx)bug-dlsym1-lib1.so \

@@ -25,17 +25,19 @@
    The calling process is suspended until the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
-   
+
+#ifdef SHARED
 	.section	".toc","aw"
 .LC0:
 	.tc __libc_pthread_functions[TC],__libc_pthread_functions
 	.section	".text"
 	.align 2
+#endif
 
 ENTRY (__vfork)
 
 #ifdef __NR_vfork
-	
+
 # ifdef SHARED
   ld  10,.LC0@toc(2)
   ld  10,0(10)
@@ -53,7 +55,7 @@ ENTRY (__vfork)
 # endif
 
 	DO_CALL (SYS_ify (vfork));
-	
+
 # ifdef __ASSUME_VFORK_SYSCALL
   PSEUDO_RET
 # else

@@ -33,7 +33,8 @@ extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  __builtin_frame_address (0)
+#define CURRENT_STACK_FRAME  __stack_pointer_register__
+register char *__stack_pointer_register__ __asm__ ("%esp");
 
 
 /* Spinlock implementation; required.  */

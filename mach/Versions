@@ -70,6 +70,9 @@ libc {
     # This was always there, but not exported as it should have been.
     mig_strncpy;
   }
+  GLIBC_2.3 {
+    NDR_record;
+  }
 
 %if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
   HURD_CTHREADS_0.3 {

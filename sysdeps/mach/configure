@@ -102,7 +102,7 @@ _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
   (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
   ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
+  egrep -v '^ *\+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
@@ -148,7 +148,7 @@ _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
   (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
   ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
+  egrep -v '^ *\+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
@@ -193,6 +193,12 @@ else
 #line $LINENO "configure"
 #include "confdefs.h"
 #include <mach/mach_types.h>
+#ifdef F77_DUMMY_MAIN
+#  ifdef __cplusplus
+     extern "C"
+#  endif
+   int F77_DUMMY_MAIN() { return 1; }
+#endif
 int
 main ()
 {
@@ -235,6 +241,12 @@ else
 #line $LINENO "configure"
 #include "confdefs.h"
 #include <mach/mach_types.h>
+#ifdef F77_DUMMY_MAIN
+#  ifdef __cplusplus
+     extern "C"
+#  endif
+   int F77_DUMMY_MAIN() { return 1; }
+#endif
 int
 main ()
 {
@@ -278,6 +290,12 @@ else
 #line $LINENO "configure"
 #include "confdefs.h"
 #include <mach/task_info.h>
+#ifdef F77_DUMMY_MAIN
+#  ifdef __cplusplus
+     extern "C"
+#  endif
+   int F77_DUMMY_MAIN() { return 1; }
+#endif
 int
 main ()
 {
@@ -336,7 +354,7 @@ _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
   (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
   ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
+  egrep -v '^ *\+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
@@ -372,21 +390,6 @@ echo "$as_me: error: what manner of Mach is this?" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
-echo "$as_me:$LINENO: checking for egrep" >&5
-echo $ECHO_N "checking for egrep... $ECHO_C" >&6
-if test "${ac_cv_prog_egrep+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if echo a | (grep -E '(a|b)') >/dev/null 2>&1
-    then ac_cv_prog_egrep='grep -E'
-    else ac_cv_prog_egrep='egrep'
-    fi
-fi
-echo "$as_me:$LINENO: result: $ac_cv_prog_egrep" >&5
-echo "${ECHO_T}$ac_cv_prog_egrep" >&6
- EGREP=$ac_cv_prog_egrep
-
-
 echo "$as_me:$LINENO: checking for host_page_size in mach_host.defs" >&5
 echo $ECHO_N "checking for host_page_size in mach_host.defs... $ECHO_C" >&6
 if test "${libc_cv_mach_host_page_size+set}" = set; then
@@ -399,7 +402,7 @@ else
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "host_page_size" >/dev/null 2>&1; then
+  egrep "host_page_size" >/dev/null 2>&1; then
   libc_cv_mach_host_page_size=yes
 else
   libc_cv_mach_host_page_size=no
@@ -429,7 +432,7 @@ _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
   (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
   ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
+  egrep -v '^ *\+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
@@ -469,7 +472,7 @@ _ACEOF
 if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
   (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
   ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
+  egrep -v '^ *\+' conftest.er1 >conftest.err
   rm -f conftest.er1
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
@@ -514,7 +517,7 @@ else
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "i386_io_perm_modify" >/dev/null 2>&1; then
+  egrep "i386_io_perm_modify" >/dev/null 2>&1; then
   libc_cv_mach_i386_ioports=yes
 else
   libc_cv_mach_i386_ioports=no
@@ -543,7 +546,7 @@ else
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "i386_set_gdt" >/dev/null 2>&1; then
+  egrep "i386_set_gdt" >/dev/null 2>&1; then
   libc_cv_mach_i386_gdt=yes
 else
   libc_cv_mach_i386_gdt=no
