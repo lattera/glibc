@@ -1,5 +1,10 @@
 Tue Feb 21 00:10:50 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/start.c (errno): Only define if it's not #define'd
+ 	as a macro.
+	[! NO_UNDERSCORES]: Define `start' as a weak alias, not a symbol
+	indirection.
+
 	* csu/Makefile (crtstuff): New variable consolidates crti, crtn;
  	add crti_s, crtn_s.
 	(install-lib, extra-objs, generated-, omit-deps): Use that.
