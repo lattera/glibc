@@ -9,7 +9,7 @@ s_setgid	setgid	setgid		1	__syscall_setgid
 s_setgroups	setgroups setgroups	2	__syscall_setgroups
 s_setregid	setregid setregid	2	__syscall_setregid
 s_setreuid	setreuid setreuid	2	__syscall_setreuid
-setrlimit	-	setrlimit	3	setrlimit
+setrlimit	-	setrlimit	2	__setrlimit	setrlimit
 getrlimit	-	getrlimit	2	__getrlimit	getrlimit
 s_ipc		msgget	ipc		5	__syscall_ipc
 s_setuid	setuid	setuid		1	__syscall_setuid
