@@ -2152,12 +2152,13 @@ register const int			wantedy;
 	}
 	if (dayoff < 0 && !TYPE_SIGNED(time_t))
 		return min_time;
+	if (dayoff < min_time / SECSPERDAY)
+		return min_time;
+	if (dayoff > max_time / SECSPERDAY)
+		return max_time;
 	t = (time_t) dayoff * SECSPERDAY;
-	/*
-	** Cheap overflow check.
-	*/
-	if (t / SECSPERDAY != dayoff)
-		return (dayoff > 0) ? max_time : min_time;
+	if (t > 0 && max_time - t < rp->r_tod)
+		return max_time;
 	return tadd(t, rp->r_tod);
 }
 
