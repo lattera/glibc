@@ -1,3 +1,9 @@
+1999-10-12  Andreas Jaeger  <aj@suse.de>
+
+	* thread_dbP.h: Include <string.h> for strlen declaration.  Remove
+	__libc_write prototype since this is already declared in
+	linuxthreads/internals.h.
+
 1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* thread_db.h: Fix comment for ti_type.

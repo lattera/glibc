@@ -327,12 +327,9 @@ setlocale (int category, const char *locale)
 	}
 
       /* Create new composite name.  */
-      if (category >= 0
-	  || (composite = new_composite_name (LC_ALL, newnames)) == NULL)
-	/* Loading this part of the locale failed.  Abort the
-	   composite load.  */
-	composite = NULL;
-      else
+      composite = (category >= 0
+		   ? NULL : new_composite_name (LC_ALL, newnames));
+      if (composite != NULL)
 	{
 	  /* Now we have loaded all the new data.  Put it in place.  */
 	  for (category = 0; category < __LC_LAST; ++category)
