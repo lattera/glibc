@@ -1,3 +1,8 @@
+2000-04-05  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Readd _dl_start_user
+	entry point, used on Hurd.
+
 2000-04-04  Andreas Jaeger  <aj@suse.de>
 
 	* intl/Makefile: Only run the gettext test with shared libraries.
