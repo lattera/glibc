@@ -1,3 +1,8 @@
+1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Remove inclusion
+	of <asm/resource.h>.
+
 1999-12-26  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/syscalls.list: Remove vm86.  Set
