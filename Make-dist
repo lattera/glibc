@@ -85,6 +85,8 @@ foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 sources += $(addsuffix .c,$(elided-routines) \
 		          $(foreach l,$(extra-libs),$($l-routines)))
 
+sources += $(addsuffix .c, $(filter-out $(elided-routines), $(tests)))
+
 # Find all sysdep sources and headers.
 +maybe-sysdeps := $(sources) $(sources:.c=.s) $(sources:.c=.S) $(all-headers) \
 		  $(filter %.c %.S %.s %.h %.sub,$(distribute))
@@ -153,7 +155,7 @@ ifdef	   subdir
 foo:=$(shell echo subdir foo >&2)
 
 +tsrcs := Makefile $(wildcard Versions) $(wildcard Depend) $(+tsrcs) \
-	  $(addsuffix .c,$(others) $(tests) $(test-srcs)) \
+	  $(addsuffix .c,$(others) $(test-srcs)) \
 	  $(wildcard $(addsuffix .input,$(tests) $(test-srcs)))
 +tardeps := $(strip $(+tsrcs))
 

@@ -1,3 +1,7 @@
+2000-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (distribute): Add ChangeLog, Banner, and configure.
+
 2000-03-03  Geoff Keating  <geoffk@cygnus.com>
 
 	* soft-fp.h (_FP_ROUND_ZERO): Cast 0 to void before using it

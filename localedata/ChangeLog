@@ -1,3 +1,7 @@
+2000-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (ld-test-srcs): Distribute all test6 input files.
+
 2000-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/be_BY: New file.

@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1999  Free Software Foundation, Inc.
+# Copyright (C) 1997, 1999, 2000  Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,6 @@ gcc-quad-routines := negtf2 addtf3 subtf3 multf3 divtf3 eqtf2 \
 	trunctfdf2 sqrttf2
 
 distribute := double.h op-1.h op-2.h op-4.h op-common.h quad.h \
-	single.h soft-fp.h extended.h
+	single.h soft-fp.h extended.h ChangeLog Banner configure
 
 include ../Rules
