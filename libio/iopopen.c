@@ -135,6 +135,8 @@ _IO_new_proc_open (fp, command, mode)
     }
   else
     {
+      _IO_close (pipe_fds[0]);
+      _IO_close (pipe_fds[1]);
       __set_errno (EINVAL);
       return NULL;
     }
