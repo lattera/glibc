@@ -701,11 +701,11 @@ ifeq (yes, $(build-shared))
 # Commands to put in a pipeline to preprocess a file with # comments
 # %ifdef et al based on config.h settings or other %include'd files.
 define preprocess-versions
-sed 's/#.*$$//;s/^[ 	]*%/#/' \
-| $(CC) -E -undef -I$(common-objdir) -I$(..)include \
+sed '/^[ 	]*#/d;s/^[ 	]*%/#/' \
+| $(CC) -traditional -E -undef -I$(common-objdir) -I$(..)include \
 		  -include $(common-objpfx)config.h \
 		  -x c - \
-| sed 's/#.*$$//;/^[ 	]*$$/d'
+| sed '/^[ 	]*#/d;/^[ 	]*$$/d'
 endef
 
 # Process the shlib-versions file, which tells us what shared library
