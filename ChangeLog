@@ -1,3 +1,8 @@
+2002-01-28  Stephen L Moshier  <moshier@mediaone.net>
+
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c (__ieee754_lgammal_r):
+	Remove test for negative integer arg; sin_pi does it correctly.
+
 2002-01-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/Makefile (distribute): Filter out xmalloc.c.
