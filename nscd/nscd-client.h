@@ -276,20 +276,24 @@ extern int __nscd_open_socket (const char *key, size_t keylen,
 extern struct mapped_database *__nscd_get_map_ref (request_type type,
 						   const char *name,
 						   struct locked_map_ptr *mapptr,
-						   volatile int *gc_cyclep);
+						   int *gc_cyclep);
 
 /* Unmap database.  */
 extern void __nscd_unmap (struct mapped_database *mapped);
 
 /* Drop reference of mapping.  */
 static inline int __nscd_drop_map_ref (struct mapped_database *map,
-				       int gc_cycle)
+				       int *gc_cycle)
 {
   if (map != NO_MAPPING)
     {
-      if (__builtin_expect (map->head->gc_cycle != gc_cycle, 0))
-	/* We might have read inconsistent data.  */
-	return -1;
+      int now_cycle = map->head->gc_cycle;
+      if (__builtin_expect (now_cycle != *gc_cycle, 0))
+	{
+	  /* We might have read inconsistent data.  */
+	  *gc_cycle = now_cycle;
+	  return -1;
+	}
 
       if (atomic_decrement_val (&map->counter) == 0)
 	__nscd_unmap (map);
