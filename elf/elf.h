@@ -271,6 +271,7 @@ typedef struct
 #define SHN_HIOS	0xff3f		/* End of OS-specific */
 #define SHN_ABS		0xfff1		/* Associated symbol is absolute */
 #define SHN_COMMON	0xfff2		/* Associated symbol is common */
+#define SHN_XINDEX	0xffff		/* Index is in extra table.  */
 #define SHN_HIRESERVE	0xffff		/* End of reserved indices */
 
 /* Legal values for sh_type (section type).  */
