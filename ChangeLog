@@ -1,3 +1,18 @@
+1999-12-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/langinfo.h: Add constants for wide character collation
+	symbol table.
+	* locale/categories.def: Add appropriate entries for collate symbol
+	table entries.
+	* locale/C-collate.c: Add initializers for new entries.
+	Remove commented out code.
+	* locale/elem-hash.h: New file.
+	* locale/Makefile (distribute): Add elem-hash.h.
+	* locale/programs/ld-collate.c: Implement output of collate symbol
+	table.
+
+	* posix/regex.c: Implement collation class handling.
+
 1999-12-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/regex.c (regex_compile): Implement equivalence class handling.

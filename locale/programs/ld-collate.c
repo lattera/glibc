@@ -25,12 +25,14 @@
 #include <error.h>
 #include <stdlib.h>
 #include <wchar.h>
+#include <sys/param.h>
 
 #include "charmap.h"
 #include "localeinfo.h"
 #include "linereader.h"
 #include "locfile.h"
 #include "localedef.h"
+#include "elem-hash.h"
 
 /* Uncomment the following line in the production version.  */
 /* #define NDEBUG 1 */
@@ -88,10 +90,12 @@ struct element_t
      we changed if necessary but I doubt this is necessary.  */
   unsigned int used_in_level;
 
+  struct element_list_t *weights;
+  /* Index in the `weight' table in the output file for the character.  */
+  int32_t weights_idx;
+
   /* Nonzero if this is a real character definition.  */
   int is_character;
-
-  struct element_list_t *weights;
 
   /* Where does the definition come from.  */
   const char *file;
@@ -297,6 +301,7 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
 
   /* Will be allocated later.  */
   newp->weights = NULL;
+  newp->weights_idx = 0;
 
   newp->file = NULL;
   newp->line = 0;
@@ -1804,6 +1809,9 @@ output_weight (struct obstack *pool, struct locale_collate_t *collate,
       obstack_grow (pool, buf, len);
     }
 
+  /* Remember the index.  */
+  elem->weights_idx = retval;
+
   return retval | ((elem->section->ruleidx & 0x7f) << 24);
 }
 
@@ -1866,7 +1874,10 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   uint32_t *names;
   uint32_t *tablewc;
   size_t table_size;
+  uint32_t elem_size;
+  uint32_t *elem_table;
   int i;
+  struct element_t *runp;
 
   data.magic = LIMAGIC (LC_COLLATE);
   data.n = nelems;
@@ -2377,6 +2388,110 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_INDIRECTWC));
   iov[2 + cnt].iov_len = obstack_object_size (&indirectpool);
   iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+
+  /* Finally write the table with collation element names out.  It is
+     a hash table with a simple function which gets the name of the
+     character as the input.  One character might have many names.  The
+     value associated with the name is an index into the weight table
+     where we are then interested in the first-level weight value.
+
+     To determine how large the table should be we are counting the
+     elements have to put in.  Since we are using internal chaining
+     using a secondary hash function we have to make the table a bit
+     larger to avoid extremely long search times.  We can achieve
+     good results with a 40% larger table than there are entries.  */
+  elem_size = 0;
+  runp = collate->start;
+  while (runp != NULL)
+    {
+      if (runp->mbs != NULL && runp->weights != NULL)
+	/* Yep, the element really counts.  */
+	++elem_size;
+
+      runp = runp->next;
+    }
+  /* Add 40% and find the next prime number.  */
+  elem_size = MIN (next_prime (elem_size * 1.4), 257);
+
+  /* Allocate the table.  Each entry consists of two words: the hash
+     value and an index in a secondary table which provides the index
+     into the weight table and the string itself (so that a match can
+     be determined).  */
+  elem_table = (uint32_t *) obstack_alloc (&extrapool,
+					   elem_size * 2 * sizeof (uint32_t));
+  memset (elem_table, '\0', elem_size * 2 * sizeof (uint32_t));
+
+  /* Now add the elements.  */
+  runp = collate->start;
+  while (runp != NULL)
+    {
+      if (runp->mbs != NULL && runp->weights != NULL)
+	{
+	  /* Compute the hash value of the name.  */
+	  uint32_t namelen = strlen (runp->name);
+	  uint32_t hash = elem_hash (runp->name, namelen);
+	  size_t idx = hash % elem_size;
+
+	  if (elem_table[idx * 2] != 0)
+	    {
+	      /* The spot is already take.  Try iterating using the value
+		 from the secondary hashing function.  */
+	      size_t iter = hash % (elem_size - 2);
+
+	      do
+		{
+		  idx += iter;
+		  if (idx >= elem_size)
+		    idx -= elem_size;
+		}
+	      while (elem_table[idx * 2] != 0);
+
+	      /* This is the spot where we will insert the value.  */
+	      elem_table[idx * 2] = hash;
+	      elem_table[idx * 2 + 1] = obstack_object_size (&extrapool);
+
+	      /* Now add the index into the weights table.  We know the
+		 address is always 32bit aligned.  */
+	      if (sizeof (int) == sizeof (int32_t))
+		obstack_int_grow (&extrapool, runp->weights_idx);
+	      else
+		obstack_grow (&extrapool, &runp->weights_idx,
+			      sizeof (int32_t));
+
+	      /* The the string itself including length.  */
+	      obstack_1grow (&extrapool, namelen);
+	      obstack_grow (&extrapool, runp->name, namelen);
+
+	      /* And align again to 32 bits.  */
+	      if ((1 + namelen) % sizeof (int32_t) != 0)
+		obstack_grow (&extrapool, "\0\0",
+			      (sizeof (int32_t)
+			       - (1 + namelen) % sizeof (int32_t)));
+	    }
+	}
+
+      runp = runp->next;
+    }
+
+  /* Prepare to write out this data.  */
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB));
+  iov[2 + cnt].iov_base = &elem_size;
+  iov[2 + cnt].iov_len = sizeof (int32_t);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_TABLEMB));
+  iov[2 + cnt].iov_base = elem_table;
+  iov[2 + cnt].iov_len = elem_size * 2 * sizeof (int32_t);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_EXTRAMB));
+  iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
+  iov[2 + cnt].iov_base = obstack_finish (&extrapool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   ++cnt;
 

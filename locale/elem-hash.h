@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
+   Written by Ulrich Drepper, <drepper@cygnus.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,31 +17,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <endian.h>
-#include "localeinfo.h"
 
-const struct locale_data _nl_C_LC_COLLATE =
+/* The hashing function used for the table with collation symbols.  */
+static inline int32_t
+elem_hash (const char *str, int_fast32_t n)
 {
-  _nl_C_name,
-  NULL, 0, 0, /* no file mapped */
-  UNDELETABLE,
-  16,
-  {
-    { word: 0 },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { word: 0 },
-    { word: 0 },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { word: 0 },
-    { string: NULL },
-    { string: NULL }
-  }
-};
+  int32_t result = n;
+
+  while (n > 0)
+    {
+      n <<= 3;
+      n += *str++;
+    }
+
+  return result;
+}

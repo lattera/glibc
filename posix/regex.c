@@ -82,6 +82,7 @@
 
 /* We are also using some library internals.  */
 # include <locale/localeinfo.h>
+# include <locale/elem-hash.h>
 # include <langinfo.h>
 #endif
 
@@ -2378,12 +2379,13 @@ regex_compile (pattern, size, syntax, bufp)
                         had_char_class = false;
                       }
                   }
-#ifdef _LIBC
                 else if (syntax & RE_CHAR_CLASSES && c == '[' && *p == '=')
 		  {
 		    unsigned char str[MB_LEN_MAX + 1];
+#ifdef _LIBC
 		    uint32_t nrules =
 		      _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
+#endif
 
 		    PATFETCH (c);
 		    c1 = 0;
@@ -2412,7 +2414,9 @@ regex_compile (pattern, size, syntax, bufp)
 			   character set and therefore we cannot have character
 			   with more than one byte in the multibyte
 			   representation.  */
+#ifdef _LIBC
 			if (nrules == 0)
+#endif
 			  {
 			    if (c1 != 1)
 			      FREE_STACK_RETURN (REG_ECOLLATE);
@@ -2424,6 +2428,7 @@ regex_compile (pattern, size, syntax, bufp)
 			    /* Set the bit for the character.  */
 			    SET_LIST_BIT (str[0]);
 			  }
+#ifdef _LIBC
 			else
 			  {
 			    /* Try to match the byte sequence in `str' against
@@ -2495,7 +2500,167 @@ regex_compile (pattern, size, syntax, bufp)
 				    }
 				}
 			  }
+#endif
 			had_char_class = true;
+		      }
+		  }
+                else if (syntax & RE_CHAR_CLASSES && c == '[' && *p == '.')
+		  {
+		    unsigned char str[128];	/* Should be large enough.  */
+#ifdef _LIBC
+		    uint32_t nrules =
+		      _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
+#endif
+
+		    PATFETCH (c);
+		    c1 = 0;
+
+		    /* If pattern is `[[='.  */
+		    if (p == pend) FREE_STACK_RETURN (REG_EBRACK);
+
+		    for (;;)
+		      {
+			PATFETCH (c);
+			if ((c == '.' && *p == ']') || p == pend)
+			  break;
+			if (c1 < sizeof (str))
+			  str[c1++] = c;
+			else
+			  /* This is in any case an invalid class name.  */
+			  str[0] = '\0';
+                      }
+		    str[c1] = '\0';
+
+		    if (c == '.' && *p == ']' && str[0] != '\0')
+		      {
+			/* If we have no collation data we use the default
+			   collation in which each character is the name
+			   for its own class which contains only the one
+			   character.  It also means that ASCII is the
+			   character set and therefore we cannot have character
+			   with more than one byte in the multibyte
+			   representation.  */
+#ifdef _LIBC
+			if (nrules == 0)
+#endif
+			  {
+			    if (c1 != 1)
+			      FREE_STACK_RETURN (REG_ECOLLATE);
+
+			    /* Throw away the ] at the end of the equivalence
+			       class.  */
+			    PATFETCH (c);
+
+			    /* Set the bit for the character.  */
+			    SET_LIST_BIT (str[0]);
+			  }
+#ifdef _LIBC
+			else
+			  {
+			    /* Try to match the byte sequence in `str' against
+			       those known to the collate implementation.
+			       First find out whether the bytes in `str' are
+			       actually from exactly one character.  */
+			    const unsigned char *weights;
+			    int32_t table_size;
+			    const int32_t *table;
+			    const int32_t *symb_table;
+			    const unsigned char *extra;
+			    int32_t idx;
+			    int32_t elem;
+			    const unsigned char *cp = str;
+			    int32_t weight;
+			    int32_t second;
+			    int32_t hash;
+			    int ch;
+
+			    table = (const int32_t *)
+			      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
+			    weights = (const unsigned char *)
+			      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
+			    table_size =
+			      _NL_CURRENT_WORD (LC_COLLATE,
+						_NL_COLLATE_SYMB_HASH_SIZEMB);
+			    symb_table = (const int32_t *)
+			      _NL_CURRENT (LC_COLLATE,
+					   _NL_COLLATE_SYMB_TABLEMB);
+			    extra = (const unsigned char *)
+			      _NL_CURRENT (LC_COLLATE,
+					   _NL_COLLATE_SYMB_EXTRAMB);
+
+			    /* Locate the character in the hashing table.  */
+			    hash = elem_hash (str, c1);
+
+			    idx = 0;
+			    elem = hash % table_size;
+			    second = hash % (table_size - 2);
+			    while (symb_table[2 * elem] != 0)
+			      {
+				/* First compare the hashing value.  */
+				if (symb_table[2 * elem] == hash
+				    && (c1 == extra[symb_table[2 * elem + 1]
+						   + sizeof (int32_t)])
+				    && memcmp (str,
+					       &extra[symb_table[2 * elem + 1]
+						     + sizeof (int32_t) + 1],
+					       c1) == 0)
+				  {
+				    /* Yep, this is the entry.  */
+				    idx = *((int32_t *)
+					    (extra
+					     + symb_table[2 * elem + 1]));
+				    break;
+				  }
+
+				/* Next entry.  */
+				elem += second;
+			      }
+
+			    if (symb_table[2 * elem] == 0)
+			      /* This is no valid character.  */
+			      FREE_STACK_RETURN (REG_ECOLLATE);
+
+			    /* Throw away the ] at the end of the equivalence
+			       class.  */
+			    PATFETCH (c);
+
+			    /* Now we have to go throught the whole table
+			       and find all characters which have the same
+			       first level weight.
+
+			       XXX Note that this is not entirely correct.
+			       we would have to match multibyte sequences
+			       but this is not possible with the current
+			       implementation.  */
+			    for (ch = 1; ch < 256; ++ch)
+			      /* XXX This test would have to be changed if we
+				 would allow matching multibyte sequences.  */
+			      if (table[ch] > 0)
+				{
+				  int32_t idx2 = table[ch];
+				  size_t len = weights[idx2];
+
+				  /* Test whether the lenghts match.  */
+				  if (weights[idx] == len)
+				    {
+				      /* They do.  New compare the bytes of
+					 the weight.  */
+				      size_t cnt = 0;
+
+				      while (cnt < len
+					     && (weights[idx + 1 + cnt]
+						 == weights[idx2 + 1 + cnt]))
+					++len;
+
+				      if (cnt == len)
+					/* They match.  Mark the character as
+					   acceptable.  */
+					SET_LIST_BIT (ch);
+				    }
+				}
+			  }
+#endif
+			had_char_class = false;
 		      }
                     else
                       {
@@ -2507,7 +2672,6 @@ regex_compile (pattern, size, syntax, bufp)
                         had_char_class = false;
                       }
 		  }
-#endif
                 else
                   {
                     had_char_class = false;
