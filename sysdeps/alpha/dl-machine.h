@@ -482,7 +482,19 @@ elf_machine_rela (struct link_map *map,
       /* Already done in dynamic linker.  */
       if (map != &_dl_rtld_map)
 #endif
-	*reloc_addr += map->l_addr;
+	{
+	  /* XXX Make some timings.  Maybe it's preverable to test for
+	     unaligned access and only do it the complex way if necessary.  */
+	  void *reloc_addr_1 = reloc_addr;
+	  Elf64_Addr reloc_addr_val;
+
+	  /* Load value without causing unaligned trap. */
+	  memcpy (&reloc_addr_val, reloc_addr_1, 8);
+	  reloc_addr_val += map->l_addr;
+
+	  /* Store value without causing unaligned trap. */
+	  memcpy (reloc_addr_1, &reloc_addr_val, 8);
+	}
     }
   else if (r_type == R_ALPHA_NONE)
     return;

@@ -1,3 +1,9 @@
+2000-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Handle unaligned
+	relocation also for R_ALPHA_RELATIVE.
+	Reported by Ivan Kokshaysky <ink@jurassic.park.msu.ru>.
+
 2000-09-18  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/dcigettext.c: Outside libc, use local variable names that don't
