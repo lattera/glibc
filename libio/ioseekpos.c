@@ -28,19 +28,14 @@
 #include <libioP.h>
 
 _IO_off64_t
-_IO_seekpos (fp, pos, mode)
+_IO_seekpos_unlocked (fp, pos, mode)
      _IO_FILE *fp;
      _IO_off64_t pos;
      int mode;
 {
-  _IO_off64_t retval;
-
   /* If we have a backup buffer, get rid of it, since the __seekoff
      callback may not know to do the right thing about it.
      This may be over-kill, but it'll do for now. TODO */
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
-
   if (_IO_fwide (fp, 0) <= 0)
     {
       if (_IO_have_backup (fp))
@@ -52,10 +47,24 @@ _IO_seekpos (fp, pos, mode)
 	INTUSE(_IO_free_wbackup_area) (fp);
     }
 
-  retval = _IO_SEEKPOS (fp, pos, mode);
+  return _IO_SEEKPOS (fp, pos, mode);
+}
+
+
+_IO_off64_t
+_IO_seekpos (fp, pos, mode)
+     _IO_FILE *fp;
+     _IO_off64_t pos;
+     int mode;
+{
+  _IO_off64_t retval;
+
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_flockfile (fp);
+
+  retval = _IO_seekpos_unlocked (fp, pos, mode);
 
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   return retval;
 }
-INTDEF(_IO_seekpos)

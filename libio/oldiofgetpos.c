@@ -40,7 +40,7 @@ _IO_old_fgetpos (fp, posp)
   CHECK_FILE (fp, EOF);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  pos = INTUSE(_IO_seekoff) (fp, 0, _IO_seek_cur, 0);
+  pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
   if (_IO_in_backup (fp))
     pos -= fp->_IO_save_end - fp->_IO_save_base;
   _IO_funlockfile (fp);

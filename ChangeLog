@@ -1,3 +1,28 @@
+2002-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/ioseekoff.c: Remove INTDEF.  Define _IO_seekoff_unlocked.  Same
+	as old code without locking.  _IO_seekoff calls this function after
+	locking the stream.
+	* libio/ioseekpos.c: Likewise for _IO_seekpos.
+	* libio/libioP.h: Replace _IO_seekoff_internal and _IO_seekpos_internal
+	prototypes with _IO_seekoff_unlocked and _IO_seekpos_unlocked
+	prototypes.
+	* libio/iolibio.h (_IO_fseek): Call _IO_seekoff_unlocked instead
+	of _IO_seekoff_internal.
+	(_IO_rewind): Likewise.
+	* libio/ioftell.c: Likewise.
+	* libio/ftello.c: Likewise.
+	* libio/ftello64.c: Likewise.
+	* libio/iofgetpos.c: Likewise.
+	* libio/iofgetpos64.c: Likewise.
+	* libio/oldiofgetpos.c: Likewise.
+	* libio/oldiofgetpos64.c: Likewise.
+	* libio/iofsetpos.c: Call _IO_seekpos_unlocked instead of
+	_IO_seekpos_internal.
+	* libio/iofsetpos64.c: Likewise.
+	* libio/oldiofsetpos.c: Likewise.
+	* libio/oldiofsetpos64.c: Likewise.
+
 2002-11-04  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/chown.c: Use INLINE_SYSCALL macro.
@@ -54,6 +79,10 @@
 	* charmaps/ISO_5428: Use Greek characters introduced in Unicode 3.0.
 
 2002-11-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Don't modify _offset and
+	_wide_data->_IO_read_end if adjustment can be made in the current
+	buffer.
 
 	* sysdeps/unix/sysv/linux/fexecve.c: New file.
 

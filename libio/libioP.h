@@ -730,8 +730,10 @@ extern int _IO_vfprintf_internal (_IO_FILE *__restrict, const char *__restrict,
 				  _IO_va_list);
 extern void _IO_doallocbuf_internal __P ((_IO_FILE *));
 extern void _IO_wsetb_internal __P ((_IO_FILE *, wchar_t *, wchar_t *, int));
-extern _IO_off64_t _IO_seekoff_internal (_IO_FILE *, _IO_off64_t, int, int);
-extern _IO_off64_t _IO_seekpos_internal (_IO_FILE *, _IO_off64_t, int);
+extern _IO_off64_t _IO_seekoff_unlocked (_IO_FILE *, _IO_off64_t, int, int)
+     attribute_hidden;
+extern _IO_off64_t _IO_seekpos_unlocked (_IO_FILE *, _IO_off64_t, int)
+     attribute_hidden;
 extern int _IO_putc_internal (int __c, _IO_FILE *__fp);
 extern void _IO_init_internal __P ((_IO_FILE *, int));
 extern void _IO_un_link_internal __P ((struct _IO_FILE_plus *));

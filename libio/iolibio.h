@@ -56,10 +56,10 @@ extern int _IO_obstack_printf __P ((struct obstack *, const char *, ...));
 #endif
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \
-  (INTUSE(_IO_seekoff)(__fp, __offset, __whence, _IOS_INPUT|_IOS_OUTPUT) \
+  (_IO_seekoff_unlocked (__fp, __offset, __whence, _IOS_INPUT|_IOS_OUTPUT) \
    == _IO_pos_BAD ? EOF : 0)
 #define _IO_rewind(FILE) \
-  (void)INTUSE(_IO_seekoff)(FILE, 0, 0, _IOS_INPUT|_IOS_OUTPUT)
+  (void) _IO_seekoff_unlocked (FILE, 0, 0, _IOS_INPUT|_IOS_OUTPUT)
 #define _IO_vprintf(FORMAT, ARGS) \
   INTUSE(_IO_vfprintf) (_IO_stdout, FORMAT, ARGS)
 #define _IO_freopen(FILENAME, MODE, FP) \

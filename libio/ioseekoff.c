@@ -36,14 +36,12 @@ extern int errno;
 #endif
 
 _IO_off64_t
-_IO_seekoff (fp, offset, dir, mode)
+_IO_seekoff_unlocked (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
      int dir;
      int mode;
 {
-  _IO_off64_t retval;
-
   if (dir != _IO_seek_cur && dir != _IO_seek_set && dir != _IO_seek_end)
     {
       __set_errno (EINVAL);
@@ -53,9 +51,6 @@ _IO_seekoff (fp, offset, dir, mode)
   /* If we have a backup buffer, get rid of it, since the __seekoff
      callback may not know to do the right thing about it.
      This may be over-kill, but it'll do for now. TODO */
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
-
   if (mode != 0 && ((_IO_fwide (fp, 0) < 0 && _IO_have_backup (fp))
 		    || (_IO_fwide (fp, 0) > 0 && _IO_have_wbackup (fp))))
     {
@@ -72,10 +67,25 @@ _IO_seekoff (fp, offset, dir, mode)
 	INTUSE(_IO_free_wbackup_area) (fp);
     }
 
-  retval = _IO_SEEKOFF (fp, offset, dir, mode);
+  return _IO_SEEKOFF (fp, offset, dir, mode);
+}
+
+
+_IO_off64_t
+_IO_seekoff (fp, offset, dir, mode)
+     _IO_FILE *fp;
+     _IO_off64_t offset;
+     int dir;
+     int mode;
+{
+  _IO_off64_t retval;
+
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_flockfile (fp);
+
+  retval = _IO_seekoff_unlocked (fp, offset, dir, mode);
 
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   return retval;
 }
-INTDEF(_IO_seekoff)

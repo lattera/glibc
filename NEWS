@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2002-10-13
+GNU C Library NEWS -- history of user-visible changes.  2002-11-5
 Copyright (C) 1992-2001, 2002 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -15,6 +15,8 @@ Version 2.3.2
 
 * The new dynamic string token $LIB is expanded in shared library names.
   This normally expands to lib, but on some 64-bit platforms to lib64 instead.
+
+* fexecve is implemented on Linux.
 
 Version 2.3
 

@@ -39,7 +39,7 @@ _IO_new_fsetpos64 (fp, posp)
   CHECK_FILE (fp, EOF);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  if (INTUSE(_IO_seekpos) (fp, posp->__pos, _IOS_INPUT|_IOS_OUTPUT)
+  if (_IO_seekpos_unlocked (fp, posp->__pos, _IOS_INPUT|_IOS_OUTPUT)
       == _IO_pos_BAD)
     {
       /* ANSI explicitly requires setting errno to a positive value on
