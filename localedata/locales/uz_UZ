@@ -1,0 +1,200 @@
+escape_char  /
+comment_char  %
+
+% Uzbek language locale for Uzbekistan
+% Source: Bobir Ismailov
+% Contact: Bobir Ismailov, Pablo Saratxaga
+% Email: bobir_is@yahoo.com, pablo@mandrakesoft.com
+% Tel:
+% Fax:
+% Language: uz
+% Territory: UZ
+% Revision: 0.1
+% Date: 2001-01-27
+% Users: general
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_IDENTIFICATION
+title      "Uzbek locale for Uzbekistan"
+source     "Bobir Ismailov"
+address    ""
+contact    "Bobir Ismailov, Pablo Saratxaga"
+email      "bobir_is@yahoo.com, pablo@mandrakesoft.com"
+tel        ""
+fax        ""
+language   "Uzbek"
+territory  "Uzbekistan"
+revision   "0.1"
+date       "2001-01-27"
+%
+category  "uz_UZ:2000";LC_IDENTIFICATION
+category  "uz_UZ:2000";LC_CTYPE
+category  "uz_UZ:2000";LC_COLLATE
+category  "uz_UZ:2000";LC_TIME
+category  "uz_UZ:2000";LC_NUMERIC
+category  "uz_UZ:2000";LC_MONETARY
+category  "uz_UZ:2000";LC_MESSAGES
+category  "uz_UZ:2000";LC_PAPER
+category  "uz_UZ:2000";LC_NAME
+category  "uz_UZ:2000";LC_ADDRESS
+category  "uz_UZ:2000";LC_TELEPHONE
+category  "uz_UZ:2000";LC_MEASUREMENT
+
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "i18n"
+END LC_CTYPE
+
+LC_COLLATE
+copy "iso14651_t1"
+
+%% a b c d e f g g' h i j k l m n o o' p q r s t u v x y z
+collating-symbol  <g-'-uz>
+collating-element <g-'> from "<U0067><U0027>"
+collating-element <G-'> from "<U0047><U0027>"
+collating-symbol  <o-'-uz>
+collating-element <o-'> from "<U006F><U0027>"
+collating-element <O-'> from "<U004F><U0027>"
+
+reorder-after <g>
+<g-'-uz>
+
+reorder-after <o>
+<o-'-uz>
+
+reorder-after <U0067>
+<g-'>	<g-'-uz>;<PCL>;<MIN>;IGNORE
+reorder-after <U0047>
+<G-'>	<g-'-uz>;<PCL>;<CAP>;IGNORE
+
+reorder-after <U006F>
+<o-'>	<o-'-uz>;<PCL>;<MIN>;IGNORE
+reorder-after <U004F>
+<O-'>	<o-'-uz>;<PCL>;<CAP>;IGNORE
+
+reorder-end
+
+END LC_COLLATE
+
+LC_MONETARY
+int_curr_symbol         "<U0055><U005A><U0053><U0020>"
+currency_symbol         "<U0073><U006F><U0027><U006D>"
+mon_decimal_point       "<U002E>"
+mon_thousands_sep       "<U002C>"
+mon_grouping            3;3
+positive_sign           ""
+negative_sign           "<U002D>"
+int_frac_digits         2
+frac_digits             2
+p_cs_precedes           1
+p_sep_by_space          0
+n_cs_precedes           1
+n_sep_by_space          0
+p_sign_posn             1
+n_sign_posn             1
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point           "<U002E>"
+thousands_sep           "<U002C>"
+grouping                3;3
+END LC_NUMERIC
+
+LC_TIME
+abday       "<U0059><U0061><U006B>";"<U0044><U0075>";/
+            "<U0053><U0065>";"<U0043><U0068><U006F>";/
+            "<U0050><U0061><U0079>";"<U004A><U0075>";/
+            "<U0053><U0068><U0061>"
+day         "<U0079><U0061><U006B><U0073><U0068><U0061><U006E><U0062><U0061>";/
+            "<U0064><U0075><U0073><U0068><U0061><U006E><U0062><U0061>";/
+            "<U0073><U0065><U0073><U0068><U0061><U006E><U0062><U0061>";/
+            "<U0063><U0068><U006F><U0072><U0073><U0068><U0061><U006E><U0062><U0061>";/
+            "<U0070><U0061><U0079><U0073><U0068><U0061><U006E><U0062><U0061>";/
+            "<U006A><U0075><U006D><U0061>";/
+            "<U0073><U0068><U0061><U006E><U0062><U0061>"
+abmon       "<U0059><U0061><U0076>";"<U0046><U0065><U0076>";/
+            "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
+            "<U004D><U0061><U0079>";"<U0049><U0079><U006E>";/
+            "<U0049><U0079><U006C>";"<U0041><U0076><U0067>";/
+            "<U0053><U0065><U006E>";"<U004F><U006B><U0074>";/
+            "<U004E><U006F><U0079>";"<U0044><U0065><U006B>"
+mon         "<U0079><U0061><U006E><U0076><U0061><U0072>";/
+            "<U0066><U0065><U0076><U0072><U0061><U006C>";/
+            "<U006D><U0061><U0072><U0074>";/
+            "<U0061><U0070><U0072><U0065><U006C>";/
+            "<U006D><U0061><U0079>";/
+            "<U0069><U0079><U0075><U006E>";/
+            "<U0069><U0079><U0075><U006C>";/
+            "<U0061><U0076><U0067><U0075><U0073><U0074>";/
+            "<U0073><U0065><U006E><U0079><U0061><U0062><U0072>";/
+            "<U006F><U006B><U0074><U0079><U0061><U0062><U0072>";/
+            "<U006E><U006F><U0079><U0061><U0062><U0072>";/
+            "<U0064><U0065><U006B><U0061><U0062><U0072>"
+d_t_fmt  "<U0025><U0054><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0079><U0069><U006C><U002C><U0020><U0025><U0041>"
+d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
+t_fmt       "<U0025><U0054>"
+am_pm       "";""
+t_fmt_ampm  ""
+date_fmt    "<U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0079><U0069><U006C><U002C><U0020><U0025><U0041>"
+END LC_TIME
+
+LC_MESSAGES
+% NOTE: No is "yo'q"; that conflicts with English "yes"... so "jo'q" is used.
+yesstr  "<U0048><U0061>"
+nostr   "<U0059><U006F><U0027><U0071>"
+yesexpr "<U005E><U005B><U0059><U0079><U0048><U0068><U005D><U002E><U002A>"
+noexpr  "<U005E><U005B><U004A><U006A><U004E><U006E><U005D><U002E><U002A>"
+END LC_MESSAGES
+
+LC_PAPER
+height   297
+width    210
+END LC_PAPER
+
+LC_TELEPHONE
+% FIXME: todo
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+int_prefix     "<U0032><U0037>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+measurement    1
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0066><U0025><U0074>/
+<U0025><U0067><U0025><U0074><U0025><U006D>"
+name_gen    "Hurmatli"
+name_mr     "Janob"
+name_mrs    "Aziz"
+name_miss   "Xonim"
+% FIXME: what is ms ?
+name_ms     ""
+END LC_NAME
+
+LC_ADDRESS
+% format: %C%N%S%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z
+% but %S seems not recognized yet ? so %C%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z
+% is used.
+postal_fmt    "<U0025><U0043><U0025><U004E>/
+<U0025><U0054><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0025>/
+<U004E><U0025><U0066><U0025><U004E><U0025><U0062><U0025><U004E><U0025>/
+<U0064><U0025><U004E><U0025><U0065><U0020><U0025><U0072><U0025><U004E>/
+<U0025><U0061><U0025><U004E><U0025><U007A>"
+country_name "<U004F><U0027><U007A><U0062><U0065><U006B><U0069><U0073><U0074><U0061><U006E>"
+country_post "UZ" % ??
+country_ab2  "UZ"
+country_ab3  "UZB"
+country_num  860
+% FIXME: ISBN number?
+%country_isbn ""
+country_car "UZ"
+lang_name   "<U004F><U0027><U007A><U0062><U0065><U006B>"
+lang_ab     "uz"
+lang_term   "uzb"
+lang_lib    "uzb"
+END LC_ADDRESS

@@ -1,3 +1,7 @@
+2001-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-639.def: Add Tigrinya.
+
 2001-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (collate_read): Handle collating-element
