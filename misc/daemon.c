@@ -61,12 +61,12 @@ daemon(nochdir, noclose)
 	if (!nochdir)
 		(void)__chdir("/");
 
-	if (!noclose
-	    && (fd = open_not_cancel(_PATH_DEVNULL, O_RDWR, 0)) != -1) {
+	if (!noclose) {
 		struct stat64 st;
 
-		if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) == 0)
-		{
+		if ((fd = open_not_cancel(_PATH_DEVNULL, O_RDWR, 0)) != -1
+		    && (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0)
+			== 0)) {
 			if (__builtin_expect (S_ISCHR (st.st_mode), 1) != 0
 #if defined DEV_NULL_MAJOR && defined DEV_NULL_MINOR
 			    && (st.st_rdev
