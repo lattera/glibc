@@ -1,5 +1,9 @@
 2004-02-27  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/rtld.c (dl_main): Adjust l->l_ld of the vDSO by l->l_addr.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Only set
+	GL(dl_sysinfo) if non-zero.
+
 	* sysdeps/unix/sysv/linux/sysconf.c: Include stdlib.h.
 
 2004-02-26  Ulrich Drepper  <drepper@redhat.com>

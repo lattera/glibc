@@ -201,7 +201,7 @@ _dl_sysdep_start (void **start_argptr,
 
 #if defined NEED_DL_SYSINFO
   /* Only set the sysinfo value if we also have the vsyscall DSO.  */
-  if (GL(dl_sysinfo_dso) != 0)
+  if (GL(dl_sysinfo_dso) != 0 && new_sysinfo)
     GL(dl_sysinfo) = new_sysinfo;
 #endif
 

@@ -1246,6 +1246,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	  l->l_map_start = (ElfW(Addr)) GL(dl_sysinfo_dso);
 	  l->l_addr = l->l_map_start - l->l_addr;
 	  l->l_map_end += l->l_addr;
+	  l->l_ld = (void *) ((ElfW(Addr)) l->l_ld + l->l_addr);
 	  elf_get_dynamic_info (l, dyn_temp);
 	  _dl_setup_hash (l);
 	  l->l_relocated = 1;
