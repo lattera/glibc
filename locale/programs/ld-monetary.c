@@ -84,6 +84,7 @@ struct locale_monetary_t
   uint32_t duo_valid_from;
   uint32_t duo_valid_to;
   uint32_t conversion_rate[2];
+  char *crncystr;
 };
 
 
@@ -345,6 +346,12 @@ not correspond to a valid name in ISO 4217"),
       monetary->conversion_rate[0] = 1;
       monetary->conversion_rate[1] = 1;
     }
+
+  /* Create the crncystr entry.  */
+  monetary->crncystr = (char *) xmalloc (strlen (monetary->currency_symbol)
+					 + 2);
+  monetary->crncystr[0] = monetary->p_cs_precedes ? '-' : '+';
+  strcpy (&monetary->crncystr[1], monetary->currency_symbol);
 }
 
 
@@ -442,6 +449,11 @@ monetary_output (struct localedef_t *locale, struct charmap_t *charmap,
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &monetary->n_sign_posn;
   iov[cnt].iov_len = 1;
+  ++cnt;
+
+  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  iov[cnt].iov_base = (void *) &monetary->crncystr;
+  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;

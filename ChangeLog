@@ -1,3 +1,10 @@
+2000-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/langinfo.h: Make CRNCYSTR a separate entry instead of an
+	alias for CURRENCY_SYMBOL.
+	* locale/programs/ld-monetary.c: Add support to write out CRNCYSTR
+	information.  [PR libc/1583].
+
 2000-02-08  Shinya Hanataka  <hanataka@abyss.rim.or.jp>
 
 	* locale/weightwc.h: Fix problem with collating-element.
