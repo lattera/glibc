@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* 64 bit Linux for S/390 only has rt signals, thus we do not even want to try 
+/* 64 bit Linux for S/390 only has rt signals, thus we do not even want to try
    falling back to the old style signals as the default Linux handler does. */
 
 #include <errno.h>
@@ -45,7 +45,7 @@ __libc_sigaction (sig, act, oact)
      real size of the user-level sigset_t.  */
   return INLINE_SYSCALL (rt_sigaction, 4, sig, act, oact, _NSIG / 8);
 }
-
+libc_hidden_def (__libc_sigaction)
 weak_alias (__libc_sigaction, __sigaction)
 libc_hidden_weak (__sigaction)
 weak_alias (__libc_sigaction, sigaction)

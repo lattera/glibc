@@ -156,6 +156,7 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   return 0;
 #endif
 }
+libc_hidden_def (__libc_sigaction)
 
 #ifndef SIGCANCEL
 weak_alias (__libc_sigaction, __sigaction)

@@ -49,7 +49,7 @@ __libc_sigaction (sig, act, oact)
   return INLINE_SYSCALL (rt_sigaction, 4, sig,
 			 CHECK_1_NULL_OK (act), CHECK_1_NULL_OK (oact), _NSIG / 8);
 }
-
+libc_hidden_def (__libc_sigaction)
 weak_alias (__libc_sigaction, __sigaction)
 libc_hidden_def (__sigaction)
 weak_alias (__libc_sigaction, sigaction)

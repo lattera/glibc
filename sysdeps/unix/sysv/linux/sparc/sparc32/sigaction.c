@@ -134,7 +134,7 @@ __libc_sigaction (int sig, __const struct sigaction *act,
   __set_errno (-ret);
   return -1;
 }
-
+libc_hidden_def (__libc_sigaction)
 weak_alias (__libc_sigaction, __sigaction);
 libc_hidden_weak (__sigaction)
 weak_alias (__libc_sigaction, sigaction);
