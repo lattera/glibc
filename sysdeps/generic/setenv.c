@@ -113,7 +113,7 @@ __add_to_environ (name, value, combined, replace)
      const char *combined;
      int replace;
 {
-  register char **ep;
+  register char **ep = __environ;
   register size_t size;
   const size_t namelen = strlen (name);
   const size_t vallen = value != NULL ? strlen (value) + 1 : 0;
@@ -121,16 +121,16 @@ __add_to_environ (name, value, combined, replace)
   LOCK;
 
   size = 0;
-  if (__environ != NULL)
+  if (ep != NULL)
     {
-      for (ep = __environ; *ep != NULL; ++ep)
+      for (; *ep != NULL; ++ep)
 	if (!strncmp (*ep, name, namelen) && (*ep)[namelen] == '=')
 	  break;
 	else
 	  ++size;
     }
 
-  if (__environ == NULL || *ep == NULL)
+  if (ep == NULL || *ep == NULL)
     {
       char **new_environ;
 #ifdef USE_TSEARCH

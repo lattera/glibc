@@ -1,5 +1,7 @@
 1999-08-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/setenv.c: Avoid warning about uninitialized variable.
+
 	* libio/fileops.c (_IO_file_xsgetn): Allocate buffer if none is
 	allocated so far.  [PR libc/1261].
 
