@@ -1,5 +1,8 @@
 2003-11-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regcomp.c (parse_bracket_exp): If end of expression is
+	seen, return EBRACK error, not BADPAT.
+
 	* posix/regcomp.c (parse_expression): If token is OP_OPEN_DUP_NUM
 	and RE_CONTEXT_INVALID_DUP syntax flag is set, fail.
 	* posix/regex.h (RE_CONTEXT_INVALUD_OPS): New macro.

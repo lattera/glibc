@@ -2993,7 +2993,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       token_len = peek_token_bracket (token, regexp, syntax);
       if (BE (token->type == END_OF_RE, 0))
 	{
-	  *err = REG_BADPAT;
+	  *err = REG_EBRACK;
 	  goto parse_bracket_exp_free_return;
 	}
       if (token->type == OP_CHARSET_RANGE)
