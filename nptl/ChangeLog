@@ -1,5 +1,8 @@
 2004-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/pthread_cond_wait.c (__pthread_cond_wait): Add a
+	__builtin_expect.
+
 	* sysdeps/generic/pt-longjmp.c: Moved to...
 	* sysdeps/pthread/pt-longjmp.c: ...here.  New file.
 

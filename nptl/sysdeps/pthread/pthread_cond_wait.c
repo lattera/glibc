@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -83,7 +83,7 @@ __pthread_cond_wait (cond, mutex)
 
   /* Now we can release the mutex.  */
   err = __pthread_mutex_unlock_usercnt (mutex, 0);
-  if (err)
+  if (__builtin_expect (err, 0))
     {
       lll_mutex_unlock (cond->__data.__lock);
       return err;
