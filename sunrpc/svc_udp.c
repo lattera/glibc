@@ -245,8 +245,8 @@ again:
       mesgp->msg_namelen = len;
       mesgp->msg_control = &xprt->xp_pad [sizeof (struct iovec)
 					  + sizeof (struct msghdr)];
-      mesgp->msg_controllen = sizeof(struct cmsghdr)
-			      + sizeof (struct in_pktinfo);
+      mesgp->msg_controllen = sizeof(xprt->xp_pad)
+			      - sizeof (struct iovec) - sizeof (struct msghdr);
       rlen = recvmsg (xprt->xp_sock, mesgp, 0);
       if (rlen >= 0)
 	len = mesgp->msg_namelen;

@@ -95,7 +95,7 @@ _dl_close (void *_map)
       struct link_map *imap = map->l_initfini[i];
       if (imap->l_opencount == 1 && imap->l_type == lt_loaded
 	  && (imap->l_info[DT_FINI] || imap->l_info[DT_FINI_ARRAY])
-	  && ! (list[i]->l_flags_1 & DF_1_NODELETE)
+	  && ! (imap->l_flags_1 & DF_1_NODELETE)
 	  /* Skip any half-cooked objects that were never initialized.  */
 	  && imap->l_init_called)
 	{

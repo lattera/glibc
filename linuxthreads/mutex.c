@@ -38,8 +38,20 @@ strong_alias (__pthread_mutex_init, pthread_mutex_init)
 
 int __pthread_mutex_destroy(pthread_mutex_t * mutex)
 {
-  if ((mutex->__m_lock.__status & 1) != 0) return EBUSY;
-  return 0;
+  switch (mutex->__m_kind) {
+  case PTHREAD_MUTEX_ADAPTIVE_NP:
+  case PTHREAD_MUTEX_RECURSIVE_NP:
+    if ((mutex->__m_lock.__status & 1) != 0)
+      return EBUSY;
+    return 0;
+  case PTHREAD_MUTEX_ERRORCHECK_NP:
+  case PTHREAD_MUTEX_TIMED_NP:
+    if (mutex->__m_lock.__status != 0)
+      return EBUSY;
+    return 0;
+  default:
+    return EINVAL;
+  }
 }
 strong_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
 

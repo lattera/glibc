@@ -1,3 +1,17 @@
+2000-10-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: New file.
+
+2000-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/svc_udp.c (svcudp_recv): Set msg_controllen to all
+	remaining xp_pad space.
+
+2000-10-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-close.c (_dl_close): Check imap's l_flags_1 for
+	DF_1_NODELETE, not list[i]'s.
+
 2000-10-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/euc-kr.c (euckr_from_ucs4): Handle U20a9.

@@ -1,3 +1,9 @@
+2000-10-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* mutex.c (__pthread_mutex_destroy): Correct test of
+	busy mutex for mutexes using alternate fastlocks.
+	Patch by dtc@cmucl.cons.org.
+
 2000-09-28  Martin Schwidefsksy    <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/pt-machine.h: Make %a0 the thread register.
