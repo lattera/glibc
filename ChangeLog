@@ -1,5 +1,8 @@
 Wed May 29 00:52:20 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/i386/fpu/__math.h (logb): Correct contraint from =u to =t.
+	Must operate on top of fp reg stack, not second from top.
+
 	* extra-lib.mk (alltypes-$(lib)): Don't append $(objpfx)$(lib).so.
 	(others): Instead, make this depend on it.
 

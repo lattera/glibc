@@ -438,7 +438,7 @@ logb (double __x)
   register double __value;
   __asm __volatile__
     ("fxtract\n\t"
-     : "=u" (__value) : "0" (__x));
+     : "=t" (__value) : "0" (__x));
 
   return __value;
 }
