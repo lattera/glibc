@@ -1,5 +1,7 @@
 1998-02-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libc.map: Add __strcasecmp.
+
 	* nss/nsswitch.c (__nss_lookup): Return 1 if this was the last
 	module.
 
