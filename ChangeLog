@@ -1,5 +1,9 @@
 Tue Jun  4 02:25:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/gnu/types.h (__KERNEL_STRICT_NAMES): Define
+	this macro too; current Linux kernels test that instead of
+	_LINUX_TYPES_DONT_EXPORT.
+
 	* elf/linux-compat.c (_init): Pass reloc_addr arg to _dl_lookup_symbol.
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Use l_searchlist.

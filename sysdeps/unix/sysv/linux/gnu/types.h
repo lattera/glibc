@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Get actual type definitions for architecture from kernel headers.
    This #define tells <linux/types.h> not to define `dev_t' et al itself.  */
+#define __KERNEL_STRICT_NAMES
 #define _LINUX_TYPES_DONT_EXPORT
 #include <linux/types.h>
 
@@ -53,6 +54,7 @@ typedef __kernel_nlink_t __nlink_t; 	/* Type of file link counts.  */
 typedef __kernel_off_t __off_t;		/* Type of file sizes and offsets.  */
 typedef __kernel_pid_t __pid_t;		/* Type of process identifications.  */
 typedef __kernel_ssize_t __ssize_t;	/* Type of a byte count, or error.  */
+#define __kernel_fsid_t long long /* XXX */
 typedef __kernel_fsid_t __fsid_t;	/* Type of file system IDs.  */
 
 /* Everythin' else.  */
