@@ -83,7 +83,7 @@ endif
 ifneq ($(install_root),)
 LOCALEDEF=chroot $(install_root) $(bindir)/localedef
 else
-LOCALEDEF=$(common-objpfx)locale/localedef
+LOCALEDEF=$(common-objpfx)elf/ld.so --library-path $(rpath-link) $(common-objpfx)locale/localedef
 endif
 install-locales:
 	while read locale charset; do \
