@@ -1,3 +1,11 @@
+2001-07-11  Igor Khavkine  <i_khavki@alcor.concordia.ca>
+
+        * hurd/hurdsig.c (_hurdsig_init): Remove a useless line of code.
+
+2001-07-07  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdsig.c (_hurd_thread_sigstate): Use MACH_PORT_NULL, not 0.
+
 2001-07-10  Stephen L Moshier  <moshier@mediaone.net>
 
 	* sysdeps/ieee754/ldbl-128/e_acosl.c (__ieee754_acosl):  Fix
