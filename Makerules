@@ -125,6 +125,25 @@ $(common-objpfx)%.latest: $(common-objpfx)abi-versions.h
 endif # avoid-generated
 endif # $(versioning) = yes
 
+
+# Generating headers for assembly constants.
+# We need this defined early to get into before-compile before
+# it's used in sysd-rules, below.
+$(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
+					   %.sym $(before-compile)
+	$(AWK) -f $< $(filter %.sym,$^) \
+	| $(CC) -S -o - $(CFLAGS) $(CPPFLAGS) -x c - \
+		-MD -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)' \
+	| sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' > $(@:.h.d=.h)T
+	sed $(sed-remove-objpfx) $(sed-remove-dotdot) \
+	    $(@:.h=.h.d)T > $(@:.h=.h.d)T2
+	rm -f $(@:.h=.h.d)T
+	mv -f $(@:.h=.h.d)T2 $(@:.h=.h.d)
+	mv -f $(@:.h.d=.h)T $(@:.h.d=.h)
+vpath %.sym $(sysdirs)
+before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
+
+
 # When we have no deps pass doing it, then make sure the subdirectory
 # for object files gets created.
 ifdef no_deps
@@ -162,8 +181,11 @@ $(common-objpfx)%.make: $(..)%.make.c $(..)Makerules $(before-compile)
 	 rm -f $@.dT) > $@T
 	mv -f $@T $@
 
-sed-remove-dotdot := -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g' \
-		     -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g'
+ifdef subdir
+sed-remove-dotdot := -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g'
+else
+sed-remove-dotdot := -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g'
+endif
 
 # Generate an ordered list of implicit rules which find the source files in
 # each sysdep directory.  The old method was to use vpath to search all the
@@ -1160,7 +1182,7 @@ define check-abi
 endef
 
 ifeq ($(sysd-sorted-done),t)
-include $(common-objpfx)tls.make
+-include $(common-objpfx)tls.make
 config-tls-yes := tls
 config-tls-no := notls
 check-abi-config := \
@@ -1211,25 +1233,6 @@ common-generated += libc.symlist
 endif
 
 endif
-
-# Generating headers for assembly constants.
-$(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
-					   %.sym $(before-compile)
-	$(AWK) -f $< $(filter %.sym,$^) \
-	| $(CC) -S -o - $(CFLAGS) $(CPPFLAGS) -x c - \
-		-MD -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)' \
-	| sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' > $(@:.h.d=.h)T
-	sed $(sed-remove-objpfx) $(sed-remove-dotdot) \
-	    $(@:.h=.h.d)T > $(@:.h=.h.d)T2
-	rm -f $(@:.h=.h.d)T
-	mv -f $(@:.h=.h.d)T2 $(@:.h=.h.d)
-	mv -f $(@:.h.d=.h)T $(@:.h.d=.h)
-vpath %.sym $(sysdirs)
-
-ifeq (,$(wildcard $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)))
-before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
-endif
-
 
 # There's no good place to put this - here will do.
 # The dependencies are wrong if it's run from the top level.
