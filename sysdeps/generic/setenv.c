@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -313,6 +313,19 @@ clearenv ()
   return 0;
 }
 #ifdef _LIBC
+static void
+free_mem (void)
+{
+  /* Remove all traces.  */
+  clearenv ();
+
+  /* Now remove the search tree.  */
+  __tdestroy (known_values, free);
+  known_values = NULL;
+}
+text_set_element (__libc_subfreeres, free_mem);
+
+
 # undef setenv
 # undef unsetenv
 # undef clearenv
