@@ -60,9 +60,6 @@
 /* X/Open realtime support is available.  */
 #define _XOPEN_REALTIME	1
 
-/* X/Open realtime thread support is available.  */
-#define _XOPEN_REALTIME_THREADS	1
-
 /* XPG4.2 shared memory is supported.  */
 #define	_XOPEN_SHM	1
 

@@ -1,5 +1,14 @@
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Remnove
+	_POSIX_THREAD_PRIORITY_SCHEDULING.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Remove
+	_XOPEN_REALTIME_THREADS.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill): The
+	kernel returns EINVAL for PID <= 0, work around it.
+
 	* Makefile (tests): Add tst-signal5.
 	* tst-signal5.c: New file.
 
