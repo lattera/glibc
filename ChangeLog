@@ -1,3 +1,8 @@
+2003-02-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/strtod.c (INTERNAL): Up the safety margin for cutting of
+	decimal input digits.
+
 2003-02-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Recognize

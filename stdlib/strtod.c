@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1191,10 +1191,10 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
                         ceil(BITS / 3) =: N
        digits we should have enough bits for the result.  The remaining
        decimal digits give us the information that more bits are following.
-       This can be used while rounding.  (One added as a safety margin.)  */
-    if (dig_no - int_no > (MANT_DIG - bits + 2) / 3 + 1)
+       This can be used while rounding.  (Two added as a safety margin.)  */
+    if (dig_no - int_no > (MANT_DIG - bits + 2) / 3 + 2)
       {
-        dig_no = int_no + (MANT_DIG - bits + 2) / 3 + 1;
+        dig_no = int_no + (MANT_DIG - bits + 2) / 3 + 2;
         more_bits = 1;
       }
     else
