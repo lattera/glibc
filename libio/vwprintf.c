@@ -17,8 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdarg.h>
-#undef	__OPTIMIZE__	/* Avoid inline `vwprintf' function.  */
-#include <stdio.h>
+#include <wchar.h>
 
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */

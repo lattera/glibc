@@ -1,5 +1,14 @@
 1999-06-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* math/libm-test.c (jn_test): Adjust delta.
+
+1999-06-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libio/vwprintf.c: Include <wchar.h> for prototypes.
+	* libio/wprintf.c: Likewise.
+
+1999-06-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* elf/dl-load.c (_dl_init_paths): Add one more element to aelem
 	to not write beyond allocated memory.
 	Reported by John Reiser <jreiser@BitWagon.com>, closes PR libc/1167.
