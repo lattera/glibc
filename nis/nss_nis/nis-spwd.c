@@ -28,6 +28,12 @@
 
 #include "nss-nis.h"
 
+/* Get the declaration of the parser function.  */
+#define ENTNAME spent
+#define STRUCTURE spwd
+#define EXTERN_PARSER
+#include "../nss/nss_files/files-parse.c"
+
 /* Protect global state against multiple changers */
 __libc_lock_define_initialized (static, lock)
 
@@ -74,6 +80,7 @@ _nss_nis_endspent (void)
 static enum nss_status
 internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   char *domain, *result, *outkey;
   int len, keylen, parse_res;
 
@@ -114,7 +121,7 @@ internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen)
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_spent (p, sp, buffer, buflen);
+      parse_res = _nss_files_parse_spent (p, sp, data, buflen);
       if (!parse_res && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
 
@@ -146,6 +153,7 @@ enum nss_status
 _nss_nis_getspnam_r (const char *name, struct spwd *sp,
 		     char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   enum nss_status retval;
   char *domain, *result, *p;
   int len, parse_res;
@@ -182,7 +190,7 @@ _nss_nis_getspnam_r (const char *name, struct spwd *sp,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_spent (p, sp, buffer, buflen);
+  parse_res = _nss_files_parse_spent (p, sp, data, buflen);
 
   if (!parse_res)
     {

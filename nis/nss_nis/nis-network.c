@@ -30,6 +30,11 @@
 
 #include "nss-nis.h"
 
+/* Get the declaration of the parser function.  */
+#define ENTNAME netent
+#define EXTERN_PARSER
+#include "../nss/nss_files/files-parse.c"
+
 __libc_lock_define_initialized (static, lock)
 
 static bool_t new_start = 1;
@@ -76,6 +81,7 @@ static enum nss_status
 internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
 			  int *herrnop)
 {
+  struct parser_data *data = (void *) buffer;
   char *domain, *result, *outkey;
   int len, keylen, parse_res;
 
@@ -120,7 +126,7 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_netent (p, net, buffer, buflen);
+      parse_res = _nss_files_parse_netent (p, net, data, buflen);
       if (!parse_res && errno == ERANGE)
 	{
 	  *herrnop = NETDB_INTERNAL;
@@ -157,6 +163,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net,
 			 char *buffer, size_t buflen, int *herrnop)
 {
   enum nss_status retval;
+  struct parser_data *data = (void *) buffer;
   char *domain, *result, *p;
   int len, parse_res;
 
@@ -197,7 +204,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_netent (p, net, buffer, buflen);
+  parse_res = _nss_files_parse_netent (p, net, data, buflen);
 
   if (!parse_res)
     {
@@ -215,6 +222,7 @@ enum nss_status
 _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
 			 char *buffer, size_t buflen, int *herrnop)
 {
+  struct parser_data *data = (void *) buffer;
   char *domain;
   char *result;
   int len;
@@ -275,7 +283,7 @@ _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
 	  ++p;
 	free (result);
 
-	parse_res = _nss_files_parse_netent (p, net, buffer, buflen);
+	parse_res = _nss_files_parse_netent (p, net, data, buflen);
 
 
 	if (!parse_res)

@@ -640,8 +640,12 @@ The number is padded with spaces.
 The number is not padded at all.
 
 @item 0
-The number is padded with zeros even if the format spefies padding
+The number is padded with zeros even if the format specifies padding
 with spaces.
+
+@item ^
+The output uses uppercase characters, but only if this is possible
+(@pxref{Case Conversion}).
 @end table
 
 The default action is to pad the number with zeros to keep it a constant
@@ -773,6 +777,17 @@ This format is a POSIX.2 extension.
 Either @samp{AM} or @samp{PM}, according to the given time value; or the
 corresponding strings for the current locale.  Noon is treated as
 @samp{PM} and midnight as @samp{AM}.
+
+@ignore
+We currently have a problem with makeinfo.  Write @samp{AM} and @samp{am}
+both results in `am'.  I.e., the difference in case is not visible anymore.
+@end ignore
+@item %P
+Either @samp{am} or @samp{pm}, according to the given time value; or the
+corresponding strings for the current locale, printed in lowercase
+characters.  Noon is treated as @samp{pm} and midnight as @samp{am}.
+
+This format is a GNU extension.
 
 @item %r
 The complete time using the AM/PM format of the current locale.

@@ -44,7 +44,7 @@ routines	:=							      \
 	a64l l64a							      \
 	rpmatch strfmon getsubopt
 
-distribute	:= exit.h grouping.h
+distribute	:= exit.h grouping.h abort-instr.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \
 		   test-canon
 

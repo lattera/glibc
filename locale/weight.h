@@ -118,7 +118,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
       /* This is a comparison between a u_int32_t array (aka wchar_t) and
 	 an 8-bit string.  */
       for (idx = 0; __collate_extra[slot + 2 + idx] != 0; ++idx)
-	if (__collate_extra[slot + 2 + idx] != (u_int32_t) str[idx])
+	if (__collate_extra[slot + 2 + idx] != (u_int32_t) (*str)[idx])
 	  break;
 
       /* When the loop finished with all character of the collation
@@ -127,6 +127,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
 	{
 	  size_t cnt;
 
+	  *str += idx;
 	  idx += slot + 3;
 	  for (cnt = 0; cnt < collate_nrules; ++cnt)
 	    {

@@ -27,6 +27,12 @@
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 
+/* Get the declaration of the parser function.  */
+#define ENTNAME spent
+#define STRUCTURE spwd
+#define EXTERN_PARSER
+#include "../../nss/nss_files/files-parse.c"
+
 /* Structure for remembering -@netgroup and -user members ... */
 #define BLACKLIST_INITIAL_SIZE 512
 #define BLACKLIST_INCREMENT 256
@@ -212,6 +218,7 @@ static enum nss_status
 getspent_next_netgr (struct spwd *result, ent_t *ent, char *group,
 		     char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   char *ypdomain, *host, *user, *domain, *outval, *p, *p2;
   int status, outvallen;
   size_t p2len;
@@ -263,7 +270,7 @@ getspent_next_netgr (struct spwd *result, ent_t *ent, char *group,
       while (isspace (*p))
 	p++;
       free (outval);
-      if (_nss_files_parse_spent (p, result, buffer, buflen))
+      if (_nss_files_parse_spent (p, result, data, buflen))
 	{
 	  copy_spwd_changes (result, &ent->pwd, p2, p2len);
 	  break;
@@ -277,6 +284,7 @@ static enum nss_status
 getspent_next_nis (struct spwd *result, ent_t *ent,
 		   char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   char *domain, *outkey, *outval, *p, *p2;
   int outkeylen, outvallen;
   size_t p2len;
@@ -337,7 +345,7 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
       while (isspace (*p))
 	++p;
     }
-  while (!_nss_files_parse_spent (p, result, buffer, buflen));
+  while (!_nss_files_parse_spent (p, result, data, buflen));
 
   copy_spwd_changes (result, &ent->pwd, p2, p2len);
 
@@ -352,6 +360,7 @@ static enum nss_status
 getspent_next_file (struct spwd *result, ent_t *ent,
 		    char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   while (1)
     {
       char *p, *p2;
@@ -373,7 +382,7 @@ getspent_next_file (struct spwd *result, ent_t *ent,
       while (*p == '\0' || *p == '#' ||		/* Ignore empty and comment lines.  */
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
-	     !_nss_files_parse_spent (p, result, buffer, buflen));
+	     !_nss_files_parse_spent (p, result, data, buflen));
 
       if (result->sp_namp[0] != '+' && result->sp_namp[0] != '-')
 	/* This is a real entry.  */
@@ -456,7 +465,7 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	  while (isspace (*p))
 	    p++;
 	  free (outval);
-	  if (_nss_files_parse_spent (p, result, buffer, buflen))
+	  if (_nss_files_parse_spent (p, result, data, buflen))
 	    {
 	      copy_spwd_changes (result, &pwd, p2, p2len);
 	      give_spwd_free (&pwd);

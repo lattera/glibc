@@ -28,6 +28,12 @@
 
 #include "nss-nis.h"
 
+/* Get the declaration of the parser function.  */
+#define ENTNAME grent
+#define STRUCTURE group
+#define EXTERN_PARSER
+#include "../nss/nss_files/files-parse.c"
+
 /* Protect global state against multiple changers */
 __libc_lock_define_initialized (static, lock)
 
@@ -74,6 +80,7 @@ _nss_nis_endgrent (void)
 static enum nss_status
 internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   char *domain, *result, *outkey;
   int len, keylen, parse_res;
 
@@ -114,7 +121,7 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_grent (p, grp, buffer, buflen);
+      parse_res = _nss_files_parse_grent (p, grp, data, buflen);
       if (!parse_res && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
 
@@ -146,6 +153,7 @@ enum nss_status
 _nss_nis_getgrnam_r (const char *name, struct group *grp,
 		     char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   enum nss_status retval;
   char *domain, *result, *p;
   int len, parse_res;
@@ -182,7 +190,7 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_grent (p, grp, buffer, buflen);
+  parse_res = _nss_files_parse_grent (p, grp, data, buflen);
 
   if (!parse_res)
     {
@@ -199,6 +207,7 @@ enum nss_status
 _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
 		     char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   enum nss_status retval;
   char *domain, *result, *p;
   int len, nlen, parse_res;
@@ -232,7 +241,7 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_grent (p, grp, buffer, buflen);
+  parse_res = _nss_files_parse_grent (p, grp, data, buflen);
 
   if (!parse_res)
     {

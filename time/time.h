@@ -48,7 +48,9 @@ __BEGIN_DECLS
 
 /* This is the obsolete POSIX.1-1988 name for the same constant.  */
 #ifdef	__USE_POSIX
+#ifndef CLK_TCK
 #define	CLK_TCK		CLOCKS_PER_SEC
+#endif
 #endif
 
 #endif /* <time.h> included.  */

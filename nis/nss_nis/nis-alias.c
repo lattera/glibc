@@ -35,7 +35,7 @@ static char *oldkey = NULL;
 static int oldkeylen = 0;
 
 static int
-_nss_nis_parse_aliasent (char *key, char *alias, struct aliasent *result,
+_nss_nis_parse_aliasent (const char *key, char *alias, struct aliasent *result,
 			 char *buffer, size_t buflen)
 {
   char *first_unused = buffer + strlen (alias) + 1;

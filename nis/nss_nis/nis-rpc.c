@@ -28,6 +28,11 @@
 
 #include "nss-nis.h"
 
+/* Get the declaration of the parser function.  */
+#define ENTNAME rpcent
+#define EXTERN_PARSER
+#include "../nss/nss_files/files-parse.c"
+
 __libc_lock_define_initialized (static, lock)
 
 struct intern_t
@@ -98,6 +103,7 @@ static enum nss_status
 internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
 			  intern_t *data)
 {
+  struct parser_data *pdata = (void *) buffer;
   char *domain;
   char *result;
   int len, parse_res;
@@ -141,7 +147,7 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_rpcent (p, rpc, buffer, buflen);
+      parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen);
       if (!parse_res && errno == ERANGE)
 	return NSS_STATUS_TRYAGAIN;
 
@@ -223,6 +229,7 @@ enum nss_status
 _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
 			   char *buffer, size_t buflen)
 {
+  struct parser_data *data = (void *) buffer;
   enum nss_status retval;
   char *domain, *result, *p;
   int len, nlen, parse_res;
@@ -256,7 +263,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_rpcent (p, rpc, buffer, buflen);
+  parse_res = _nss_files_parse_rpcent (p, rpc, data, buflen);
 
   if (!parse_res)
     {

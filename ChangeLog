@@ -1,3 +1,91 @@
+Sat Dec 21 04:14:16 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/common/pause.c: Add missing second argument in
+	call to __sigpause.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+	* locale/weight.h: Correct handling of collation elements.
+	Reported by Keld Simonsen <keld@dkuug.dk>.
+
+	* manual/time.texi: Document ^ flag and %P format.
+
+	* new-malloc/malloc.c: Update from Wolfram Gloger.
+
+	* nss/nss.h: Reformat copyright.
+	* posix/sched.h: Likewise.
+	* sysdeps/i386/fpu_control.h: Likewise.
+	* sysdeps/unix/sysv/linux/fcntlbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/ioctls.h: Likewise.
+	* sysdeps/unix/sysv/linux/sigcontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/utsnamelen.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/acct.h: Likewise.
+	* sysvips/sys/msg.h: Likewise.
+
+	* stdio-common/Makefile (routines): Remove fcloseall.
+	* stdio-common/fcloseall.c: Removed.
+
+	* stdlib/Makefile (distribute): Add abort-instr.h.
+	* sysdeps/generic/abort-instr.h: New file.
+	* sysdeps/i386/abort-instr.h: New file.
+	* sysdeps/generic/abort.c: Use lock and stage counter to prevent
+	any form of loop.
+
+	* sysdeps/unix/sysv/linux/timebits.h: Define CLK_TCK as 100.
+	* sysdeps/unix/sysv/linux/alpha/timebits.h: Define CLOCKS_PER_SEC
+	as 1000000.  Define CLK_TCK as 1024.
+	* time/time.c (CLK_TCK): Define only if not already set.
+
+	* time/strftime.c: Don't use `isdigit' when computing field width
+	from string since the locale might have more than one digit
+	block.
+
+Fri Dec 20 12:38:14 1996  Darrel Hankerson  <hankedr@mail.auburn.edu>
+
+	* posix/getopt.c (in -W option handling): Return when optind == argc.
+
+Thu Dec 19 14:24:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nis/nss_nis/nis-alias.c (_nss_nis_parse_aliasent): Add const to
+	type of KEY.
+
+	* nis/nss_compat/compat-grp.c: Include the declaration of the file
+	parser.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+
+	* nis/nss_compat/compat-grp.c (getgrent_next_nis,
+ 	getgrent_next_file): Pass the correct type for the buffer to the
+ 	parser function.
+	* nis/nss_compat/compat-pwd.c (getpwent_next_netgr,
+	getpwent_next_nis, getpwent_next_file): Likewise.
+	* nis/nss_compat/compat-spwd.c (getspent_next_netgr,
+	getspent_next_nis, getspent_next_file): Likewise.
+	* nis/nss_nis/nis-ethers.c (internal_nis_getetherent_r,
+	_nss_nis_getethernam_r, _nss_nis_getetherbyaddr_r): Likewise.
+	* nis/nss_nis/nis-grp.c (internal_nis_getgrent_r,
+	_nss_nis_getgrnam_r, _nss_nis_getgrgid_r): Likewise.
+	* nis/nss_nis/nis-network.c (internal_nis_getnetent_r,
+	_nss_nis_getnetbyname_r, _nss_nis_getnetbyaddr_r): Likewise.
+	* nis/nss_nis/nis-proto.c (internal_nis_getprotoent_r,
+	_nss_nis_getprotobyname_r, _nss_nis_getprotobynumber_r): Likewise.
+	* nis/nss_nis/nis-pwd.c (internal_nis_getpwent_r,
+	_nss_nis_getpwnam_r, _nss_nis_getpwuid_r): Likewise.
+	* nis/nss_nis/nis-rpc.c (internal_nis_getrpcent_r,
+	_nss_nis_getrpcbynumber_r): Likewise.
+	* nis/nss_nis/nis-spwd.c (internal_nis_getspent_r,
+	_nss_nis_getspnam_r): Likewise.
+
+Thu Dec 19 13:37:16 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/setjmp.c: New file.
+
 Thu Dec 19 23:28:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/resolv.h: Update from BIND 4.9.5-P1.

@@ -33,9 +33,18 @@ struct timeval
 
 
 #ifndef _TIMEBITS_H
-#define	_TIMEBITS_H	1
+# define _TIMEBITS_H	1
 
-#include <asm/param.h>
-#define CLOCKS_PER_SEC HZ	/* XXX names not kosher */
+/* ISO/IEC 9899:1990 7.12.1: <time.h>
+   The macro `CLOCKS_PER_SEC' is the number per second of the value
+   returned by the `clock' function. */
+/* CAE XSH, Issue 4, Version 2: <time.h>
+   The value of CLOCKS_PER_SEC is required to be 1 million on all
+   XSI-conformant systems. */
+# define CLOCKS_PER_SEC  1000000
+
+/* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
+   presents the real value for clock ticks per second for the system.  */
+# define CLK_TCK 1024
 
 #endif	/* timebits.h */

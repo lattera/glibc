@@ -43,4 +43,8 @@ struct timeval
    XSI-conformant systems. */
 # define CLOCKS_PER_SEC  1000000
 
+/* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
+   presents the real value for clock ticks per second for the system.  */
+# define CLK_TCK 100
+
 #endif	/* timebits.h */

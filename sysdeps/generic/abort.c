@@ -16,16 +16,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <libc-lock.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <signal.h>
 
+/* Try to get a machine dependent instruction which will make the
+   program crash.  This is used in case everything else fails.  */
+#include "abort-instr.h"
+#ifndef ABORT_INSTRUCTION
+/* No such instruction is available.  */
+# define ABORT_INSTRUCTION
+#endif
 
-/* Function to close all streams and also make sure we don't loop by
-   calling abort while closing the streams.  */
-extern void __close_all_streams (void);
+/* We must avoid to run in circles.  Therefore we remember how far we
+   already got.  */
+static int stage;
+
+/* We should be prepared for multiple threads trying to run abort.  */
+__libc_lock_define_initialized_recursive (static, lock);
 
 
 /* Cause an abnormal program termination with core-dump.  */
@@ -35,41 +45,78 @@ abort (void)
   struct sigaction act;
   sigset_t sigs;
 
-  if (__sigemptyset (&sigs) == 0 &&
-      __sigaddset (&sigs, SIGABRT) == 0)
-    __sigprocmask (SIG_UNBLOCK, &sigs, (sigset_t *) NULL);
+  /* First acquire the lock.  */
+  __libc_lock_lock (lock);
 
-  /* If there is a user handler installed use it.  We don't close or
-     flush streams.  */
-  if (__sigaction (SIGABRT, NULL, &act) >= 0
-      && act.sa_handler != SIG_DFL)
+  /* Now it's for sure we are alone.  But recursive calls are possible.  */
+
+  /* Unlock SIGABRT.  */
+  if (stage == 0)
     {
-      /* Send signal to call user handler.  */
+      ++stage;
+      if (__sigemptyset (&sigs) == 0 &&
+	  __sigaddset (&sigs, SIGABRT) == 0)
+	__sigprocmask (SIG_UNBLOCK, &sigs, (sigset_t *) NULL);
+    }
+
+  /* Flush all streams.  We cannot close them now because the user
+     might have registered a handler for SIGABRT.  */
+  if (stage == 1)
+    {
+      ++stage;
+      fflush (NULL);
+    }
+
+  /* Send signal which possibly calls a user handler.  */
+  if (stage == 2)
+    {
+      ++stage;
       raise (SIGABRT);
+    }
 
-      /* It returns, so we are responsible for closing the streams.  */
-      __close_all_streams ();
-
-      /* There was a handler installed.  Now remove it.  */
+  /* There was a handler installed.  Now remove it.  */
+  if (stage == 3)
+    {
+      ++stage;
       memset (&act, '\0', sizeof (struct sigaction));
       act.sa_handler = SIG_DFL;
       __sigfillset (&act.sa_mask);
       act.sa_flags = 0;
       __sigaction (SIGABRT, &act, NULL);
     }
-  else
-    /* No handler installed so the next `raise' will hopefully
-       terminate the process.  Therefore we must close the streams.  */
-    __close_all_streams ();
+
+  /* Now close the streams which also flushes the output the user
+     defined handler might has produced.  */
+  if (stage == 4)
+    {
+      ++stage;
+      fclose (NULL);
+    }
 
   /* Try again.  */
-  raise (SIGABRT);
+  if (stage == 5)
+    {
+      ++stage;
+      raise (SIGABRT);
+    }
 
-  /* If we can't signal ourselves, exit.  */
-  _exit (127);
+  /* Now try to abort using the system specific command.  */
+  if (stage == 6)
+    {
+      ++stage;
+      ABORT_INSTRUCTION;
+    }
 
-  /* If even this fails make sure we never return.  */
+  /* If we can't signal ourselves and the abort instruction failed, exit.  */
+  if (stage == 7)
+    {
+      ++stage;
+      _exit (127);
+    }
+
+  /* If even this fails try to use the provided instruction to crash
+     or otherwise make sure we never return.  */
   while (1)
-    /* For ever and ever.  */
-    ;
+    /* Try for ever and ever.  */
+    ABORT_INSTRUCTION;
 }
