@@ -24,11 +24,14 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #define	NOID
 #include <timezone/tzfile.h>
 
 int __use_tzfile;
+static dev_t tzfile_dev;
+static ino64_t tzfile_ino;
 
 struct ttinfo
   {
@@ -97,6 +100,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   size_t total_size;
   size_t types_idx;
   size_t leaps_idx;
+  int was_using_tzfile = __use_tzfile;
 
   __use_tzfile = 0;
 
@@ -153,6 +157,25 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   f = fopen (file, "rc");
   if (f == NULL)
     return;
+
+  /* Get information about the file.  */
+  struct stat64 st;
+  if (fstat64 (fileno (f), &st) != 0)
+    {
+      fclose (f);
+      return;
+    }
+  if (was_using_tzfile && tzfile_ino == st.st_ino && tzfile_dev == st.st_dev)
+    {
+      /* It's the same file.  No further work needed.  */
+      fclose (f);
+      __use_tzfile = 1;
+      return;
+    }
+
+  /* Remember the inode and device number.  */
+  tzfile_dev = st.st_dev;
+  tzfile_ino = st.st_ino;
 
   /* No threads reading this stream.  */
   __fsetlocking (f, FSETLOCKING_BYCALLER);

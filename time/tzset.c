@@ -159,10 +159,7 @@ tzset_internal (always)
 
   /* Examine the TZ environment variable.  */
   tz = getenv ("TZ");
-  if (tz == NULL)
-    /* No user specification; use the site-wide default.  */
-    tz = TZDEFAULT;
-  else if (*tz == '\0')
+  if (tz && *tz == '\0')
     /* User specified the empty string; use UTC explicitly.  */
     tz = "Universal";
 
@@ -176,6 +173,10 @@ tzset_internal (always)
   if (old_tz != NULL && tz != NULL && strcmp (tz, old_tz) == 0)
     /* No change, simply return.  */
     return;
+
+  if (tz == NULL)
+    /* No user specification; use the site-wide default.  */
+    tz = TZDEFAULT;
 
   tz_rules[0].name = NULL;
   tz_rules[1].name = NULL;

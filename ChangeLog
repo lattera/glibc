@@ -1,3 +1,14 @@
+2004-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzset.c (tzset_internal): If TZ is not set do not compare
+	old and new tz value since it might be /etc/localtime in both
+	cases although the file changed.  [BZ #154]
+	Patch by Christian Franke <franke@computer.org>.
+
+	* time/tzfile.c (__tzfile_read): Determine dev/ino of file.
+	Compare with values of previously opened file.  Don't do anything
+	is they match.
+
 2004-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object): If __RTLD_CALLMAP flag is set,
