@@ -1,3 +1,9 @@
+2004-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Fix computation of
+	mapping start.  It must take the actual pagesize into account, not
+	the alignment in the file.
+
 2004-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (_int_realloc): Add checks for corrupted memory.

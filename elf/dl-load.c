@@ -987,12 +987,12 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	    }
 
 	  c = &loadcmds[nloadcmds++];
-	  c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
+	  c->mapstart = ph->p_vaddr & ~(GLRO(dl_pagesize) - 1);
 	  c->mapend = ((ph->p_vaddr + ph->p_filesz + GLRO(dl_pagesize) - 1)
 		       & ~(GLRO(dl_pagesize) - 1));
 	  c->dataend = ph->p_vaddr + ph->p_filesz;
 	  c->allocend = ph->p_vaddr + ph->p_memsz;
-	  c->mapoff = ph->p_offset & ~(ph->p_align - 1);
+	  c->mapoff = ph->p_offset & ~(GLRO(dl_pagesize) - 1);
 
 	  /* Determine whether there is a gap between the last segment
 	     and this one.  */

@@ -1,3 +1,7 @@
+2004-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h: Include <stdbool.h> to match includes used in nptl.
+
 2004-12-01  Jakub Jelinek  <jakub@redhat.coM.
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_CPUTIME,

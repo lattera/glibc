@@ -21,6 +21,7 @@
 
 #include <limits.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <stackinfo.h>
 #include <sigcontextinfo.h>
