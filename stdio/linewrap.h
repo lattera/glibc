@@ -34,13 +34,13 @@ __BEGIN_DECLS
 struct line_wrap_data
   {
     size_t lmargin, rmargin;	/* Left and right margins.  */
-    size_t wmargin;		/* Margin to wrap to, or -1 to truncate.  */
+    ssize_t wmargin;		/* Margin to wrap to, or -1 to truncate.  */
 
     /* Point in stdio buffer to which we've processed for wrapping, but
        not output.  */
     size_t point_offs;
-    /* Output column at POINT_OFFS.  */
-    size_t point_col;
+    /* Output column at POINT_OFFS, or -1 meaning 0 but don't add lmargin.  */
+    ssize_t point_col;
 
     /* Original cookie and hooks from the stream.  */
     void *cookie;
@@ -57,7 +57,7 @@ struct line_wrap_data
    simply dropped until a newline.  Returns STREAM after modifying it, or
    NULL if there was an error.  */
 FILE *line_wrap_stream (FILE *stream,
-			size_t lmargin, size_t rmargin, size_t wmargin);
+			size_t lmargin, size_t rmargin, ssize_t wmargin);
 
 /* Remove the hooks placed in STREAM by `line_wrap_stream'.  */
 void line_unwrap_stream (FILE *stream);
@@ -190,7 +190,7 @@ extern inline size_t
 line_wrap_point (FILE *stream)
 {
   struct line_wrap_data *d = __line_wrap_update (stream);
-  return d ? d->point_col : -1;
+  return d ? (d->point_col >= 0 ? d->point_col : 0) : -1;
 }
 
 #endif /* Optimizing.  */

@@ -327,7 +327,7 @@ __line_wrap_output (FILE *stream, int c)
    simply dropped until a newline.  Returns STREAM after modifying it, or
    NULL if there was an error.  */
 FILE *
-line_wrap_stream (FILE *stream, size_t lmargin, size_t rmargin, size_t wmargin)
+line_wrap_stream (FILE *stream, size_t lmargin, size_t rmargin, ssize_t wmargin)
 {
   struct line_wrap_data *d = malloc (sizeof *d);
 

@@ -1,3 +1,23 @@
+Wed Jul 17 11:29:26 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* stdio/linewrap.c (lwupdate): Fix boundary condition where a
+ 	word extends right up to rmargin.
+
+	* stdio/linewrap.c (lwupdate): When we've done a word wrap and
+	output the wrap margin, set point_col to wmargin.
+	Use negative point_col to deal with a wmargin of 0.
+	(line_wrap_point): Return 0 for a negative point_col.
+	(line_wrap_stream): Make wmargin ssize_t.
+	* stdio/linewrap.h (struct line_wrap_data): Make wmargin &
+ 	point_col ssize_t.
+	(line_wrap_stream): Make wmargin ssize_t.
+	(line_wrap_point): Return 0 for a negative point_col.
+
+Tue Jul 16 00:18:19 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* stdio/linewrap.c (__line_wrap_update): Add hackery from flshfp
+ 	to fiddle __put_limit in conjunction with __linebuf_active.
+
 Tue Jul 16 16:43:58 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Avoid sizeof dynamic auto array
