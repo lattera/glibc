@@ -1282,7 +1282,7 @@ bytes in a file name component.  The value of this constant is
 @comment POSIX.1
 @item _POSIX_PATH_MAX
 The most restrictive limit permitted by POSIX for the maximum number of
-bytes in a file name.  The value of this constant is @code{255}.
+bytes in a file name.  The value of this constant is @code{256}.
 
 @comment limits.h
 @comment POSIX.1

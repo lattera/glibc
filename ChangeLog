@@ -1,5 +1,8 @@
 2001-01-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/conf.texi (File Minimums): Fix _POSIX_PATH_MAX value.
+	Reported by Ben Collins <bcollins@debian.org>.
+
 	* time/strftime.c (my_strftime): Mark previous GNU extensions
 	which are now in C99 as such.
 
