@@ -396,7 +396,17 @@ _dl_open (const char *file, int mode, const void *caller)
       /* Remove the object from memory.  It may be in an inconsistent
 	 state if relocation failed, for example.  */
       if (args.map)
-	_dl_close (args.map);
+	{
+	  int i;
+
+	  /* Increment open counters for all objects which did not get
+	     correctly loaded.  */
+	  for (i = 0; i < args.map->l_searchlist.r_nlist; ++i)
+	    if (args.map->l_searchlist.r_list[i]->l_opencount == 0)
+	      args.map->l_searchlist.r_list[i]->l_opencount = 1;
+
+	  _dl_close (args.map);
+	}
 
       /* Make a local copy of the error string so that we can release the
 	 memory allocated for it.  */

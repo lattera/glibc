@@ -1,3 +1,27 @@
+2000-12-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): We can ignore the NODELETE flag if the
+	object was not yet initialized.
+
+2000-12-28  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Make sure the DSO state
+	is always consistent even if its dependency is failed.
+
+	* elf/dl-open.c (_dl_open): Increment the open count before
+	calling _dl_close () in case of failure.
+
+	* elf/neededtest4.c: New file.
+	* elf/neededobj5.c: New file.
+	* elf/neededobj6.c: New file.
+
+	* elf/Makefile (distribute): Add neededobj5.c and neededobj6.c.
+	(tests): Add neededtest4.
+	(modules-names): Add neededobj5 and neededobj6.
+	($(objpfx)neededobj6.so): New target.
+	($(objpfx)neededtest4): New target.
+	($(objpfx)neededtest4.out): New target.
+
 2000-12-28  Joseph S. Myers  <jsm28@cam.ac.uk>
 
 	* misc/sys/cdefs.h (__attribute_format_strfmon__): Define.

@@ -55,7 +55,7 @@ _dl_close (void *_map)
   unsigned int *new_opencount;
 
   /* First see whether we can remove the object at all.  */
-  if (map->l_flags_1 & DF_1_NODELETE)
+  if ((map->l_flags_1 & DF_1_NODELETE) && map->l_init_called)
     /* Nope.  Do nothing.  */
     return;
 
@@ -101,7 +101,7 @@ _dl_close (void *_map)
     }
   --new_opencount[0];
   for (i = 1; list[i] != NULL; ++i)
-    if (! (list[i]->l_flags_1 & DF_1_NODELETE)
+    if ((! (list[i]->l_flags_1 & DF_1_NODELETE) || ! list[i]->l_init_called)
 	/* Decrement counter.  */
 	&& --new_opencount[i] == 0
 	/* Test whether this object was also loaded directly.  */
@@ -113,7 +113,8 @@ _dl_close (void *_map)
 	struct link_map **dep_list = list[i]->l_searchlist.r_list;
 
 	for (j = 1; j < list[i]->l_searchlist.r_nlist; ++j)
-	  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE))
+	  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE)
+	      || ! dep_list[j]->l_init_called)
 	    {
 	      assert (dep_list[j]->l_idx < map->l_searchlist.r_nlist);
 	      --new_opencount[dep_list[j]->l_idx];
@@ -127,7 +128,7 @@ _dl_close (void *_map)
       struct link_map *imap = list[i];
       if (new_opencount[i] == 0 && imap->l_type == lt_loaded
 	  && (imap->l_info[DT_FINI] || imap->l_info[DT_FINI_ARRAY])
-	  && ! (imap->l_flags_1 & DF_1_NODELETE)
+	  && (! (imap->l_flags_1 & DF_1_NODELETE) || ! imap->l_init_called)
 	  /* Skip any half-cooked objects that were never initialized.  */
 	  && imap->l_init_called)
 	{

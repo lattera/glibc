@@ -141,6 +141,10 @@ _dl_map_object_deps (struct link_map *map,
   struct list known[1 + npreloads + 1];
   struct list *runp, *utail, *dtail;
   unsigned int nlist, nduplist, i;
+  /* Object name.  */
+  const char *name;
+  int errno_saved;
+  int errno_reason;
 
   auto inline void preload (struct link_map *map);
 
@@ -192,6 +196,10 @@ _dl_map_object_deps (struct link_map *map,
      The whole process is complicated by the fact that we better
      should use alloca for the temporary list elements.  But using
      alloca means we cannot use recursive function calls.  */
+  errno_saved = errno;
+  errno_reason = 0;
+  errno = 0;
+  name = NULL;
   for (runp = known; runp; )
     {
       struct link_map *l = runp->map;
@@ -227,15 +235,24 @@ _dl_map_object_deps (struct link_map *map,
 		struct link_map *dep;
 		/* Allocate new entry.  */
 		struct list *newp;
-		/* Object name.  */
-		const char *name;
+		const char *objname;
+		const char *errstring;
 
 		/* Recognize DSTs.  */
 		name = expand_dst (l, strtab + d->d_un.d_val, 0);
+		/* Store the tag in the argument structure.  */
+		args.name = name;
 
-		dep = _dl_map_object (l, name, 0,
-				      l->l_type == lt_executable ? lt_library :
-				      l->l_type, trace_mode, 0);
+		if (_dl_catch_error (&objname, &errstring, openaux, &args))
+		  {
+		    if (errno)
+		      errno_reason = errno;
+		    else
+		      errno_reason = -1;
+		    goto out;
+		  }
+		else
+		  dep = args.aux;
 
 		/* Add it in any case to the duplicate list.  */
 		newp = alloca (sizeof (struct list));
@@ -266,18 +283,15 @@ _dl_map_object_deps (struct link_map *map,
 		const char *objname;
 		const char *errstring;
 		struct list *newp;
-		/* Object name.  */
-		const char *name;
 
 		/* Recognize DSTs.  */
 		name = expand_dst (l, strtab + d->d_un.d_val,
 				   d->d_tag == DT_AUXILIARY);
+		/* Store the tag in the argument structure.  */
+		args.name = name;
 
 		if (d->d_tag == DT_AUXILIARY)
 		  {
-		    /* Store the tag in the argument structure.  */
-		    args.name = name;
-
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (_dl_debug_libs, 0))
 		      _dl_debug_message (1, "load auxiliary object=",
@@ -310,10 +324,14 @@ _dl_map_object_deps (struct link_map *map,
 					 "\n", NULL);
 
 		    /* For filter objects the dependency must be available.  */
-		    args.aux = _dl_map_object (l, name, 0,
-					       (l->l_type == lt_executable
-						? lt_library : l->l_type),
-					       trace_mode, 0);
+		    if (_dl_catch_error (&objname, &errstring, openaux, &args))
+		      {
+			if (errno)
+			  errno_reason = errno;
+			else
+			  errno_reason = -1;
+			goto out;
+		      }
 		  }
 
 		/* The auxiliary object is actually available.
@@ -460,6 +478,10 @@ _dl_map_object_deps (struct link_map *map,
 	while (runp != NULL && runp->done);
     }
 
+out:
+  if (errno == 0 && errno_saved != 0)
+    __set_errno (errno_saved);
+
   if (map->l_initfini != NULL && map->l_type == lt_loaded)
     {
       /* This object was previously loaded as a dependency and we have
@@ -558,4 +580,8 @@ _dl_map_object_deps (struct link_map *map,
     }
   /* Terminate the list of dependencies.  */
   map->l_initfini[nlist] = NULL;
+
+  if (errno_reason)
+    _dl_signal_error (errno_reason == -1 ? 0 : errno_reason,
+		      name ?: "", N_("cannot load shared object file"));
 }
