@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -30,7 +30,11 @@ __sbrk (ptrdiff_t increment)
 {
   void *oldbrk;
 
-  if (__curbrk == 0 && __brk (0) < 0)
+  /* Always update __curbrk from the kernel's brk value.  That way two
+     separate instances of __brk and __sbrk can share the heap, returning
+     interleaved pieces of it.  This happens when libc.so is loaded by
+     dlopen in a statically-linked program that already uses __brk.  */
+  if (__brk (0) < 0)
     return (void *) -1;
 
   if (increment == 0)

@@ -321,6 +321,10 @@ extern int accept __P ((int __fd, __SOCKADDR_ARG __addr,
 extern int shutdown __P ((int __fd, int __how));
 
 
+/* Determine whether FILDES if the property identified by the value if
+   FDTYPE.  */
+extern int isfdtype __P ((int __fildes, int __fdtype));
+
 __END_DECLS
 
 #endif /* sys/socket.h */

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,6 @@ headers	:= sys/socket.h sys/un.h sockaddrcom.h
 
 routines := accept bind connect getpeername getsockname getsockopt	\
 	    listen recv recvfrom recvmsg send sendmsg sendto		\
-	    setsockopt shutdown socket socketpair
+	    setsockopt shutdown socket socketpair isfdtype
 
 include ../Rules

@@ -47,6 +47,12 @@ Boston, MA 02111-1307, USA.  */
 /* Setting of memory protections is supported.  */
 #define	_POSIX_MEMORY_PROTECTION	1
 
+/* Implementation supports `poll' function.  */
+#define	_POSIX_POLL	1
+
+/* Implementation supports `select' and `pselect' functions.  */
+#define	_POSIX_SELECT	1
+
 /* Only root can change owner of file.  */
 #define	_POSIX_CHOWN_RESTRICTED	1
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +49,10 @@ Cambridge, MA 02139, USA.  */
 /* Number of files one process can have open at once.  */
 #define	_POSIX_OPEN_MAX		16
 
+/* Number of descriptors that a process may examine with `pselect' or
+   `select'.  */
+#define	_POSIX_FD_SETSIZE	_POSIX_OPEN_MAX
+
 /* Number of bytes in a filename.  */
 #define	_POSIX_NAME_MAX		14
 
@@ -66,6 +70,16 @@ Cambridge, MA 02139, USA.  */
 
 /* Maximum length of a timezone name (element of `tzname').  */
 #define	_POSIX_TZNAME_MAX	3
+
+/* Maximum number of connections that can be queued on a socket.  */
+#define	_POSIX_QLIMIT		1
+
+/* Maximem number of bytes that can be buffered on a socket for send
+   or receive.  */
+#define	_POSIX_HIWAT		_POSIX_PIPE_BUF
+
+/* Maximum number of elements in an `iovec' array.  */
+#define	_POSIX_UIO_MAXIOV	16
 
 
 /* Get the implementation-specific values for the above.  */

@@ -248,8 +248,9 @@ INTERNAL (strtol) (nptr, endptr, base, group)
       /* Find the end of the digit string and check its grouping.  */
       end = s;
       for (c = *end; c != L_('\0'); c = *++end)
-	if (c != thousands && (c < L_('0') || c > L_('9'))
-	    && (!ISALPHA (c) || TOUPPER (c) - L_('A') + 10 >= base))
+	if ((wchar_t) c != thousands
+	    && ((wchar_t) c < L_('0') || (wchar_t) c > L_('9'))
+	    && (!ISALPHA (c) || (int) (TOUPPER (c) - L_('A') + 10) >= base))
 	  break;
       if (*s == thousands)
 	end = s;
@@ -275,7 +276,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 	c = TOUPPER (c) - L_('A') + 10;
       else
 	break;
-      if (c >= base)
+      if ((int) c >= base)
 	break;
       /* Check for overflow.  */
       if (i > cutoff || (i == cutoff && c > cutlim))

@@ -336,6 +336,104 @@ DEFUN(__sysconf, (name), int name)
       return -1;
 #endif
 
+    case _SC_PII:
+#ifdef	_POSIX_PII
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_XTI:
+#ifdef	_POSIX_PII_XTI
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_SOCKET:
+#ifdef	_POSIX_PII_SOCKET
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_INTERNET:
+#ifdef	_POSIX_PII_INTERNET
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_OSI:
+#ifdef	_POSIX_PII_OSI
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_POLL:
+#ifdef	_POSIX_POLL
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_SELECT:
+#ifdef	_POSIX_SELECT
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_UIO_MAXIOV:
+#ifdef	UIO_MAXIOV
+      return UIO_MAXIOV;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_INTERNET_STREAM:
+#ifdef	_POSIX_PII_INTERNET_STREAM
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_INTERNET_DGRAM:
+#ifdef	_POSIX_PII_INTERNET_DGRAM
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_OSI_COTS:
+#ifdef	_POSIX_PII_OSI_COTS
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_OSI_CLTS:
+#ifdef	_POSIX_PII_OSI_CLTS
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PII_OSI_M:
+#ifdef	_POSIX_PII_OSI_M
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_T_IOV_MAX:
+#ifdef	_T_IOV_MAX
+      return _T_IOV_MAX;
+#else
+      return -1;
+#endif
+
     case _SC_2_VERSION:
       /* This is actually supposed to return the version
 	 of the 1003.2 utilities on the system {POSIX2_VERSION}.  */

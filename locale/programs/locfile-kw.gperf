@@ -42,7 +42,7 @@ print,             tok_print,             0
 xdigit,            tok_xdigit,            0
 blank,             tok_blank,             0
 charclass,         tok_charclass,         0
-charmap,           tok_charmap,           0
+charconv,          tok_charconv,          0
 toupper,           tok_toupper,           0
 tolower,           tok_tolower,           0
 LC_COLLATE,        tok_lc_collate,        0

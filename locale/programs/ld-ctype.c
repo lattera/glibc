@@ -665,8 +665,8 @@ ctype_map_new (struct linereader *lr, struct localedef_t *locale,
 
 
 int
-ctype_is_charmap (struct linereader *lr, struct localedef_t *locale,
-		  const char *name)
+ctype_is_charconv (struct linereader *lr, struct localedef_t *locale,
+		   const char *name)
 {
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   size_t cnt;

@@ -1,3 +1,4 @@
+
 /* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
@@ -42,6 +43,7 @@ enum token_t
 
   tok_escape_char,
   tok_comment_char,
+  tok_charmap,
   tok_end,
   tok_g0esc,
   tok_g1esc,
@@ -51,7 +53,7 @@ enum token_t
   tok_code_set_name,
   tok_mb_cur_max,
   tok_mb_cur_min,
-  tok_charmap,
+  tok_charconv,
   tok_width,
   tok_width_variable,
   tok_width_default,

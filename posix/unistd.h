@@ -79,6 +79,17 @@ __BEGIN_DECLS
    _POSIX_MESSAGE_PASSING	POSIX.4 message queues are supported.
    _POSIX_SEMAPHORES		POSIX.4 counting semaphores are supported.
    _POSIX_SHARED_MEMORY_OBJECTS	POSIX.4 shared memory objects are supported.
+   _POSIX_PII			Protocol-independent interfaces are supported.
+   _POSIX_PII_XTI		XTI protocol-indep. interfaces are supported.
+   _POSIX_PII_SOCKET		Socket protocol-indep. interfaces are supported.
+   _POSIX_PII_INTERNET		Internet family of protocols supported.
+   _POSIX_PII_INTERNET_STREAM	Connection-mode Internet protocol supported.
+   _POSIX_PII_INTERNET_DGRAM	Connectionless Internet protocol supported.
+   _POSIX_PII_OSI		ISO/OSI family of protocols supported.
+   _POSIX_PII_OSI_COTS		Connection-mode ISO/OSI service supported.
+   _POSIX_PII_OSI_CLTS		Connectionless ISO/OSI service supported.
+   _POSIX_POLL			Implementation supports `poll' function.
+   _POSIX_SELECT		Implementation supports `select' and `pselect'.
 
    If any of these symbols is defined as -1, the corresponding option is not
    true for any file.  If any is defined as other than -1, the corresponding

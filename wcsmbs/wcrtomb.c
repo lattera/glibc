@@ -36,7 +36,7 @@ wcrtomb (s, wc, ps)
   char fake[1];
 
   if (ps == NULL)
-    ps = internal;
+    ps = &internal;
 
   /*************************************************************\
   |* This is no complete implementation.  While the multi-byte *|

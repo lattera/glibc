@@ -122,7 +122,8 @@ REENTRANT_NAME (ADD_PARAMS, LOOKUP_TYPE *result, char *buffer, int buflen
     {
       status = (*fct) (ADD_VARIABLES, result, buffer, buflen H_ERRNO_VAR);
 
-      no_more = __nss_next (&nip, REENTRANT_NAME_STRING, &fct, status, 0);
+      no_more = __nss_next (&nip, REENTRANT_NAME_STRING,
+			    (void **) &fct, status, 0);
     }
 
   return status == NSS_STATUS_SUCCESS ? result : NULL;

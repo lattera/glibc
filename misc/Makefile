@@ -27,7 +27,8 @@ headers	:= sys/uio.h iovec.h sys/ioctl.h ioctls.h ioctl-types.h \
 	   ar.h a.out.h nlist.h stab.h stab.def sgtty.h \
 	   ttyent.h syslog.h sys/syslog.h paths.h sys/reboot.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h err.h error.h\
-	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h
+	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h \
+	   sys/select.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \
@@ -36,7 +37,7 @@ routines := brk sbrk sstk ioctl \
 	    getpagesize \
 	    getdtsz \
 	    gethostname sethostname getdomain setdomain \
-	    select \
+	    select pselect \
 	    acct chroot fsync sync fdatasync reboot \
 	    gethostid sethostid \
 	    revoke vhangup \

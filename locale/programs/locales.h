@@ -99,8 +99,8 @@ void ctype_class_to (struct linereader *lr, struct localedef_t *locale,
 		     struct token *code, struct charset_t *charset);
 void ctype_class_end (struct linereader *lr, struct localedef_t *locale);
 
-int ctype_is_charmap (struct linereader *lr, struct localedef_t *locale,
-		      const char *name);
+int ctype_is_charconv (struct linereader *lr, struct localedef_t *locale,
+		       const char *name);
 void ctype_map_new (struct linereader *lr, struct localedef_t *locale,
 		    enum token_t tok, struct token *code,
 		    struct charset_t *charset);

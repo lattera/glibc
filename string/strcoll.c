@@ -75,7 +75,8 @@ STRCOLL (s1, s2)
 
 	  /* Here we have to check for IGNORE entries.  If these are
 	     found we count them and go on witht he next value.  */
-	  while ((w1 = s1run->data[pass].value[s1idx]) == IGNORE_CHAR)
+	  while ((w1 = s1run->data[pass].value[s1idx])
+		 == (u_int32_t) IGNORE_CHAR)
 	    {
 	      ++s1ignore;
 	      if ((forward && ++s1idx >= s1run->data[pass].number)
@@ -92,7 +93,8 @@ STRCOLL (s1, s2)
 		}
 	    }
 
-	  while ((w2 = s2run->data[pass].value[s2idx]) == IGNORE_CHAR)
+	  while ((w2 = s2run->data[pass].value[s2idx])
+		 == (u_int32_t) IGNORE_CHAR)
 	    {
 	      ++s2ignore;
 	      if ((forward && ++s2idx >= s2run->data[pass].number)

@@ -1,3 +1,70 @@
+Wed Jul  3 16:29:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Cast FCT in __nss_next call.
+
+	* sysdeps/generic/sbrk.c: Always call __brk (0) to update __curbrk.
+
+	* malloc/malloc-size.c (malloc_usable_size): Renamed from
+	malloc_object_allocation_size.
+	* malloc/malloc.h: Fix decl.
+
+	* sys/select.h: New file, wrapper header.
+
+	* posix/sys/types.h [__USE_BSD]: Include <sys/select.h>; remove
+	fd_set, associated macros, and select decl.
+
+	* sysdeps/posix/isfdtype.c: New file.
+
+Tue Jul  2 23:45:14 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	The latest Japanese proposal for POSIX locales renames the
+	CHARMAP keyword in locale definition files to CHARCONV.
+	* locale/programs/ld-ctype.c, locale/programs/locales.h: Rename
+        function ctype_is_charmap to ctype_is_charconv.
+	* locale/programs/locfile-kw.gperf: Replace charmap keyword with
+        charconv.
+	* locale/programs/locfile-token.h: Add definition of token
+        charconv.
+	* locale/programs/locfile.c: Recognize charconv keyword.  Rename
+        lables according to this.
+
+	* locale/weight.h (get_weight): Cast constants to prevent
+        warnings.
+
+	* stdlib/strtod.c, stdlib/strtol.c, string/strcoll.c,
+	string/strxfrm.c: Add some more casts to prevent signed<->unsigned
+	warnings.
+
+	New stuff described in P1003.1g.
+	* misc/Makefile (headers): Add sys/select.h.
+	(routines): Add pselect.
+	* misc/sys/select.h: New file.  Declare select functions and
+	needed data types and macros.
+	* sysdeps/generic/pselect.c: New file.  Add generic implementation
+	of pselect() function which uses select().
+
+	* posix/getconf.c: Recognize new variables from P1003.1g.
+	* posix/posix1_lim.h: Define _POSIX_FD_SETSIZE, _POSIX_QLIMIT,
+	_POSIX_HIWAT, and _POSIX_UIO_MAXIOV.
+	* posix/unistd.h: Add description of the P1003.1g variables.
+	* sysdeps/generic/confname.h: Define _SC_* values for new
+	variables.
+	* sysdeps/posix/fpathconf.c (fpathconf): Add handling of
+	_PC_SOCK_MAXBUF.
+	* sysdeps/stub/fpathconf.c (fpathconf): Ditto.
+	* sysdeps/posix/sysconf.c (sysconf): Add handling of new
+	P1003.1g variables.
+	* sysdeps/stub/sysconf.c (sysconf): Ditto.
+	* sysdeps/unix/sysv/linux/posix_opt.h: Define _POSIX_POLL and
+	_POSIX_SELECT since Linux has this.
+
+	* socket/Makefile (routines): Add isfdtype.
+	* sysdeps/generic/sys/socket.h: Add prototype for isfdtype.
+	* sysdeps/stub/isfdtype.c: New file.  Stub implementation of
+	isfdtype.
+
+	* wcsmbs/wcrtomb.c (wcrtomb): Fix typo.
+
 Wed Jul  3 11:26:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* elf/Makefile (LDFLAGS-dl.so): New variable.

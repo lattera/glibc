@@ -179,7 +179,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
 
 	  /* Here we have to check for IGNORE entries.  If these are
 	     found we count them and go on witht he next value.  */
-	  while ((w = run->data[pass].value[idx]) == IGNORE_CHAR)
+	  while ((w = run->data[pass].value[idx]) == (u_int32_t) IGNORE_CHAR)
 	    {
 	      ++ignore;
 	      if ((forward && ++idx >= run->data[pass].number)

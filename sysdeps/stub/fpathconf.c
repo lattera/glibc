@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,7 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
     case _PC_NAME_MAX:
     case _PC_PATH_MAX:
     case _PC_PIPE_BUF:
+    case _PC_SOCK_MAXBUF:
     case _PC_CHOWN_RESTRICTED:
     case _PC_NO_TRUNC:
     case _PC_VDISABLE:

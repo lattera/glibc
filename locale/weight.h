@@ -92,7 +92,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
 	}
     }
 
-  if (__collate_table[slot + 1] != FORWARD_CHAR)
+  if (__collate_table[slot + 1] != (u_int32_t) FORWARD_CHAR)
     {
       /* We have a simple form.  One one value for each weight.  */
       size_t cnt;

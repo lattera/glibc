@@ -122,35 +122,9 @@ typedef long int key_t;
 #ifdef	__USE_BSD
 /* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
 #include <endian.h>
-#endif
 
-
-#ifdef	__USE_BSD
-
-#define	FD_SETSIZE	__FD_SETSIZE
-#define	NFDBITS		__NFDBITS
-#define	fd_set		__fd_set
-#define	FD_ZERO(set)	__FD_ZERO(set)
-#define	FD_SET(d, set)	__FD_SET((d), (set))
-#define	FD_CLR(d, set)	__FD_CLR((d), (set))
-#define	FD_ISSET(d, set)__FD_ISSET((d), (set))
-
-/* This being here makes the `select' prototype valid whether or not
-   we have already included <sys/time.h> to define `struct timeval'.  */
-struct timeval;
-
-/* Check the first NFDS descriptors each in READFDS (if not NULL) for read
-   readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
-   (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
-   after waiting the interval specified therein.  Returns the number of ready
-   descriptors, or -1 for errors.  */
-extern int __select __P ((int __nfds, __fd_set *__readfds,
-			  __fd_set *__writefds, __fd_set *__exceptfds,
-			  struct timeval *__timeout));
-extern int select __P ((int __nfds, __fd_set *__readfds,
-			__fd_set *__writefds, __fd_set *__exceptfds,
-			struct timeval *__timeout));
-
+/* It also defines `fd_set' and the FD_* macros for `select'.  */
+#include <sys/select.h>
 #endif /* Use BSD.  */
 
 

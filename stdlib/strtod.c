@@ -431,19 +431,19 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* Return 0.0 if no legal string is found.
      No character is used even if a sign was found.  */
   if ((c < L_('0') || c > L_('9'))
-      && (c != decimal || cp[1] < L_('0') || cp[1] > L_('9')))
+      && ((wint_t) c != decimal || cp[1] < L_('0') || cp[1] > L_('9')))
     RETURN (0.0, nptr);
 
   /* Record the start of the digits, in case we will check their grouping.  */
   start_of_digits = startp = cp;
 
   /* Ignore leading zeroes.  This helps us to avoid useless computations.  */
-  while (c == L_('0') || (thousands != L'\0' && c == thousands))
+  while (c == L_('0') || (thousands != L'\0' && (wint_t) c == thousands))
     c = *++cp;
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
-  if ((c < L_('0') || c > L_('9')) && c != decimal)
+  if ((c < L_('0') || c > L_('9')) && (wint_t) c != decimal)
     {
       tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
       /* If TP is at the start of the digits, there was no correctly
@@ -462,7 +462,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
     {
       if (c >= L_('0') && c <= L_('9'))
 	++dig_no;
-      else if (thousands == L'\0' || c != thousands)
+      else if (thousands == L'\0' || (wint_t) c != thousands)
 	/* Not a digit or separator: end of the integer part.  */
 	break;
       c = *++cp;
@@ -512,7 +512,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
   /* Read the fractional digits.  A special case are the 'american style'
      numbers like `16.' i.e. with decimal but without trailing digits.  */
-  if (c == decimal)
+  if ((wint_t) c == decimal)
     {
       c = *++cp;
       while (c >= L_('0') && c <= L_('9'))
@@ -609,7 +609,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   if (lead_zero)
     {
       /* Find the decimal point */
-      while (*startp != decimal)
+      while ((wint_t) *startp != decimal)
 	++startp;
       startp += lead_zero + 1;
       exponent -= lead_zero;

@@ -59,6 +59,20 @@ DEFUN(__sysconf, (name), int name)
     case _SC_SHARED_MEMORY_OBJECTS:
     case _SC_VERSION:
 
+    case _SC_PII:
+    case _SC_PII_XTI:
+    case _SC_PII_SOCKET:
+    case _SC_PII_OSI:
+    case _SC_POLL:
+    case _SC_SELECT:
+    case _SC_UIO_MAXIOV:
+    case _SC_PII_INTERNET_STREAM:
+    case _SC_PII_INTERNET_DGRAM:
+    case _SC_PII_OSI_COTS:
+    case _SC_PII_OSI_CLTS:
+    case _SC_PII_OSI_M:
+    case _SC_T_IOV_MAX:
+
     case _SC_BC_BASE_MAX:
     case _SC_BC_DIM_MAX:
     case _SC_BC_SCALE_MAX:

@@ -41,8 +41,10 @@ enum
 #define	_PC_SYNC_IO		_PC_SYNC_IO
     _PC_ASYNC_IO,
 #define	_PC_ASYNC_IO		_PC_ASYNC_IO
-    _PC_PRIO_IO
+    _PC_PRIO_IO,
 #define	_PC_PRIO_IO		_PC_PRIO_IO
+    _PC_SOCK_MAXBUF
+#define	_PC_SOCK_MAXBUF		_PC_SOCK_MAXBUF
   };
 
 /* Values for the argument to `sysconf'.  */
@@ -156,7 +158,37 @@ enum
 #define	_SC_2_FORT_RUN		_SC_2_FORT_RUN
     _SC_2_SW_DEV,
 #define	_SC_2_SW_DEV		_SC_2_SW_DEV
-    _SC_2_LOCALEDEF
+    _SC_2_LOCALEDEF,
+#define	_SC_2_LOCALEDEF		_SC_2_LOCALEDEF
+
+    _SC_PII,
+#define	_SC_PII			_SC_PII
+    _SC_PII_XTI,
+#define	_SC_PII_XTI		_SC_PII_XTI
+    _SC_PII_SOCKET,
+#define	_SC_PII_SOCKET		_SC_PII_SOCKET
+    _SC_PII_INTERNET,
+#define	_SC_PII_INTERNET	_SC_PII_INTERNET
+    _SC_PII_OSI,
+#define	_SC_PII_OSI		_SC_PII_OSI
+    _SC_POLL,
+#define	_SC_POLL		_SC_POLL
+    _SC_SELECT,
+#define	_SC_SELECT		_SC_SELECT
+    _SC_UIO_MAXIOV,
+#define	_SC_UIO_MAXIOV		_SC_UIO_MAXIOV
+    _SC_PII_INTERNET_STREAM,
+#define	_SC_PII_INTERNET_STREAM	_SC_PII_INTERNET_STREAM
+    _SC_PII_INTERNET_DGRAM,
+#define	_SC_PII_INTERNET_DGRAM	_SC_PII_INTERNET_DGRAM
+    _SC_PII_OSI_COTS,
+#define	_SC_PII_OSI_COTS	_SC_PII_OSI_COTS
+    _SC_PII_OSI_CLTS,
+#define	_SC_PII_OSI_CLTS	_SC_PII_OSI_CLTS
+    _SC_PII_OSI_M,
+#define	_SC_PII_OSI_M		_SC_PII_OSI_M
+    _SC_T_IOV_MAX
+#define	_SC_T_IOV_MAX		_SC_T_IOV_MAX
   };
 
 #ifdef __USE_POSIX2

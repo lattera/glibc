@@ -136,6 +136,14 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 #else
       return -1;
 #endif
+
+    case _PC_SOCK_MAXBUF:
+#ifdef	SOCK_MAXBUF
+      return SOCK_MAXBUF;
+#else
+      errno = ENOSYS;
+      return -1;
+#endif
     }
 
   errno = ENOSYS;

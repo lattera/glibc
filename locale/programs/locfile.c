@@ -280,11 +280,11 @@ syntax error in definition of new character class"));
 	      continue;
 	    }
 
-	  if (nowtok == tok_charmap)
+	  if (nowtok == tok_charconv)
 	    {
-	      READ_STRING_LIST (ctype_map_new, bad_new_charmap);
+	      READ_STRING_LIST (ctype_map_new, bad_new_charconv);
 	      continue;
-	    bad_new_charmap:
+	    bad_new_charconv:
 	      SYNTAX_ERROR (_("\
 syntax error in definition of new character map"));
 	      continue;
@@ -324,7 +324,7 @@ syntax error in definition of new character map"));
 	    }
 
 	  /* ...or a self-defined character map.  */
-	  if (ctype_is_charmap (ldfile, result, now->val.str.start))
+	  if (ctype_is_charconv (ldfile, result, now->val.str.start))
 	    {
 	      ctype_tok_sym = nowtok;
 	      ctype_tok_str = now->val.str.start;
@@ -411,14 +411,14 @@ syntax error in character class definition"));
 	    {
 	      /* Match ( bsymbol , bsymbol )  */
 	      if (now->tok != tok_open_brace)
-		goto bad_charmap;
+		goto bad_charconv;
 
 	      now = lr_token (ldfile, charset);
 	      if (now->tok != tok_bsymbol)
 		{
-		bad_charmap:
+		bad_charconv:
 		  SYNTAX_ERROR (_("\
-syntax error in character mapping definition"));
+syntax error in character conversion definition"));
 		  state = 3;
 		  break;
 		}
@@ -428,18 +428,18 @@ syntax error in character mapping definition"));
 
 	      now = lr_token (ldfile, charset);
 	      if (now->tok != tok_comma)
-		goto bad_charmap;
+		goto bad_charconv;
 
 	      now = lr_token (ldfile, charset);
 	      if (now->tok != tok_bsymbol)
-		goto bad_charmap;
+		goto bad_charconv;
 
 	      /* Lookup arg and assign to TO.  */
 	      ctype_map_to (ldfile, result, now, charset);
 
 	      now = lr_token (ldfile, charset);
 	      if (now->tok != tok_close_brace)
-		goto bad_charmap;
+		goto bad_charconv;
 
 	      now = lr_token (ldfile, charset);
 	      if (now->tok == tok_eol)
@@ -448,7 +448,7 @@ syntax error in character mapping definition"));
 		  break;
 		}
 	      if (now->tok != tok_semicolon)
-		goto bad_charmap;
+		goto bad_charconv;
 
 	      now = lr_token (ldfile, charset);
 	    }
