@@ -1,5 +1,5 @@
 /* Internal per-thread variables for the Hurd.
-   Copyright (C) 1994, 95, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1994, 95, 97, 98, 99, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,9 +59,10 @@ enum __hurd_threadvar_index
     _HURD_THREADVAR_MIG_REPLY,	/* Reply port for MiG user stub functions.  */
     _HURD_THREADVAR_ERRNO,	/* `errno' value for this thread.  */
     _HURD_THREADVAR_SIGSTATE,	/* This thread's `struct hurd_sigstate'.  */
-    _HURD_THREADVAR_DYNAMIC_USER, /* Dynamically-assigned user variables. */
-    _HURD_THREADVAR_MALLOC,	/* For use of malloc. */
-    _HURD_THREADVAR_DL_ERROR,	/* For use of -ldl and dynamic linker. */
+    _HURD_THREADVAR_DYNAMIC_USER, /* Dynamically-assigned user variables.  */
+    _HURD_THREADVAR_MALLOC,	/* For use of malloc.  */
+    _HURD_THREADVAR_DL_ERROR,	/* For use of -ldl and dynamic linker.  */
+    _HURD_THREADVAR_RPC_VARS,	/* For state of RPC functions.  */
     _HURD_THREADVAR_MAX		/* Default value for __hurd_threadvar_max.  */
   };
 

@@ -1,5 +1,5 @@
 /* libc-internal interface for thread-specific data.  LinuxThreads version.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 /* Fast thread-specific data internal to libc.  */
 enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
 			_LIBC_TSD_KEY_DL_ERROR,
+			_LIBC_TSD_KEY_RPC_VARS,
 			_LIBC_TSD_KEY_N };
 
 extern void *(*__libc_internal_tsd_get) (enum __libc_tsd_key_t) __THROW;

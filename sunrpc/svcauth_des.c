@@ -46,7 +46,7 @@
 #include <string.h>
 #include <sys/param.h>
 #include <netinet/in.h>
-#include <rpc/types.h>
+#include <rpc/rpc.h>
 #include <rpc/xdr.h>
 #include <rpc/auth.h>
 #include <rpc/auth_des.h>
@@ -71,8 +71,13 @@ struct cache_entry
     struct rpc_timeval laststamp;	/* detect replays of creds */
     char *localcred;		/* generic local credential */
   };
-static struct cache_entry *authdes_cache /* [AUTHDES_CACHESZ] */ ;
-static int *authdes_lru /* [AUTHDES_CACHESZ] */ ;
+#ifdef _RPC_THREAD_SAFE_
+#define authdes_cache ((struct cache_entry *)RPC_THREAD_VARIABLE(authdes_cache_s))
+#define authdes_lru ((int *)RPC_THREAD_VARIABLE(authdes_lru_s))
+#else
+static struct cache_entry *authdes_cache;
+static int *authdes_lru;
+#endif
 
 static void cache_init (void) internal_function; /* initialize the cache */
 static short cache_spot (des_block *, char *, struct rpc_timeval *)

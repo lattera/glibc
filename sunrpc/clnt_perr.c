@@ -40,9 +40,7 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 #include <stdio.h>
 #include <string.h>
 #include <libintl.h>
-#include <rpc/types.h>
-#include <rpc/auth.h>
-#include <rpc/clnt.h>
+#include <rpc/rpc.h>
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
@@ -51,7 +49,16 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 
 static char *auth_errmsg (enum auth_stat stat) internal_function;
 
+#ifdef _RPC_THREAD_SAFE_
+/*
+ * Making buf a preprocessor macro requires renaming the local
+ * buf variable in a few functions.  Overriding a global variable
+ * with a local variable of the same name is a bad idea, anyway.
+ */
+#define buf ((char *)RPC_THREAD_VARIABLE(clnt_perr_buf_s))
+#else
 static char *buf;
+#endif
 
 static char *
 _buf (void)
@@ -67,7 +74,7 @@ _buf (void)
 char *
 clnt_sperror (CLIENT * rpch, const char *msg)
 {
-  char buf[1024];
+  char chrbuf[1024];
   struct rpc_err e;
   char *err;
   char *str = _buf ();
@@ -103,7 +110,7 @@ clnt_sperror (CLIENT * rpch, const char *msg)
     case RPC_CANTSEND:
     case RPC_CANTRECV:
       len = sprintf (str, "; errno = %s", __strerror_r (e.re_errno,
-							buf, sizeof buf));
+							chrbuf, sizeof chrbuf));
       str += len;
       break;
 
@@ -281,7 +288,7 @@ clnt_perrno (enum clnt_stat num)
 char *
 clnt_spcreateerror (const char *msg)
 {
-  char buf[1024];
+  char chrbuf[1024];
   char *str = _buf ();
   char *cp;
   int len;
@@ -301,7 +308,7 @@ clnt_spcreateerror (const char *msg)
     case RPC_SYSTEMERROR:
       cp = stpcpy (stpcpy (cp, " - "),
 		   __strerror_r (rpc_createerr.cf_error.re_errno,
-				 buf, sizeof buf));
+				 chrbuf, sizeof chrbuf));
       break;
     default:
       break;

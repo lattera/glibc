@@ -1,5 +1,5 @@
 /* libc-internal interface for thread-specific data.  Stub version.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@
    and contains (at least):
 		_LIBC_TSD_KEY_MALLOC
 		_LIBC_TSD_KEY_DL_ERROR
+		_LIBC_TSD_KEY_RPC_VARS
    All uses must be the literal _LIBC_TSD_* name in the __libc_tsd_* macros.
    Some implementations may not provide any enum at all and instead
    using string pasting in the macros.  */

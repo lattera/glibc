@@ -47,20 +47,24 @@ static char sccsid[] = "@(#)clnt_simple.c 1.35 87/08/11 Copyr 1984 Sun Micro";
 #include <netdb.h>
 #include <string.h>
 
-static struct callrpc_private
+struct callrpc_private_s
   {
     CLIENT *client;
     int socket;
     u_long oldprognum, oldversnum, valid;
     char *oldhost;
-  }
- *callrpc_private;
+  };
+#ifdef _RPC_THREAD_SAFE_
+#define callrpc_private ((struct callrpc_private_s *)RPC_THREAD_VARIABLE(callrpc_private_s))
+#else
+static struct callrpc_private_s *callrpc_private;
+#endif
 
 int
 callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
 	 xdrproc_t inproc, const char *in, xdrproc_t outproc, char *out)
 {
-  struct callrpc_private *crp = callrpc_private;
+  struct callrpc_private_s *crp = callrpc_private;
   struct sockaddr_in server_addr;
   enum clnt_stat clnt_stat;
   struct hostent hostbuf, *hp;
@@ -68,7 +72,7 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
 
   if (crp == 0)
     {
-      crp = (struct callrpc_private *) calloc (1, sizeof (*crp));
+      crp = (struct callrpc_private_s *) calloc (1, sizeof (*crp));
       if (crp == 0)
 	return 0;
       callrpc_private = crp;
@@ -141,3 +145,17 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
     crp->valid = 0;
   return (int) clnt_stat;
 }
+
+#ifdef _RPC_THREAD_SAFE_
+void
+__rpc_thread_clnt_cleanup (void)
+{
+	struct callrpc_private_s *rcp = RPC_THREAD_VARIABLE(callrpc_private_s);
+
+	if (rcp) {
+		if (rcp->client)
+			CLNT_DESTROY (rcp->client);
+		free (rcp);
+	}
+}
+#endif /* _RPC_THREAD_SAFE_ */

@@ -46,14 +46,18 @@ static char sccsid[] = "@(#)svc_raw.c 1.15 87/08/11 Copyr 1984 Sun Micro";
 /*
  * This is the "network" that we will be moving data over
  */
-static struct svcraw_private
+struct svcraw_private_s
   {
     char _raw_buf[UDPMSGSIZE];
     SVCXPRT server;
     XDR xdr_stream;
     char verf_body[MAX_AUTH_BYTES];
-  }
- *svcraw_private;
+  };
+#ifdef _RPC_THREAD_SAFE_
+#define svcraw_private ((struct svcraw_private_s *)RPC_THREAD_VARIABLE(svcraw_private_s))
+#else
+static struct svcraw_private_s *svcraw_private;
+#endif
 
 static bool_t svcraw_recv (SVCXPRT *, struct rpc_msg *);
 static enum xprt_stat svcraw_stat (SVCXPRT *);
@@ -75,11 +79,11 @@ static struct xp_ops server_ops =
 SVCXPRT *
 svcraw_create (void)
 {
-  struct svcraw_private *srp = svcraw_private;
+  struct svcraw_private_s *srp = svcraw_private;
 
   if (srp == 0)
     {
-      srp = (struct svcraw_private *) calloc (1, sizeof (*srp));
+      srp = (struct svcraw_private_s *) calloc (1, sizeof (*srp));
       if (srp == 0)
 	return NULL;
     }
@@ -102,7 +106,7 @@ svcraw_recv (xprt, msg)
      SVCXPRT *xprt;
      struct rpc_msg *msg;
 {
-  struct svcraw_private *srp = svcraw_private;
+  struct svcraw_private_s *srp = svcraw_private;
   XDR *xdrs;
 
   if (srp == 0)
@@ -118,7 +122,7 @@ svcraw_recv (xprt, msg)
 static bool_t
 svcraw_reply (SVCXPRT *xprt, struct rpc_msg *msg)
 {
-  struct svcraw_private *srp = svcraw_private;
+  struct svcraw_private_s *srp = svcraw_private;
   XDR *xdrs;
 
   if (srp == 0)
@@ -135,7 +139,7 @@ svcraw_reply (SVCXPRT *xprt, struct rpc_msg *msg)
 static bool_t
 svcraw_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
-  struct svcraw_private *srp = svcraw_private;
+  struct svcraw_private_s *srp = svcraw_private;
 
   if (srp == 0)
     return FALSE;
@@ -145,7 +149,7 @@ svcraw_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 static bool_t
 svcraw_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
-  struct svcraw_private *srp = svcraw_private;
+  struct svcraw_private_s *srp = svcraw_private;
   XDR *xdrs;
 
   if (srp == 0)

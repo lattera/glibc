@@ -35,8 +35,7 @@
  * credentials and verifiers to remote systems.
  */
 
-#include <rpc/types.h>
-#include <rpc/auth.h>
+#include <rpc/rpc.h>
 
 #define MAX_MARSHEL_SIZE 20
 
@@ -57,24 +56,29 @@ static struct auth_ops ops = {
   authnone_destroy
 };
 
-static struct authnone_private
-{
+struct authnone_private_s {
   AUTH no_client;
   char marshalled_client[MAX_MARSHEL_SIZE];
   u_int mcnt;
-} *authnone_private;
+};
+#ifdef _RPC_THREAD_SAFE_
+#define authnone_private ((struct authnone_private_ *)RPC_THREAD_VARIABLE(authnone_private_s))
+#else
+static struct authnone_private_s *authnone_private;
+#endif
 
 AUTH *
 authnone_create (void)
 {
-  struct authnone_private *ap = authnone_private;
+  struct authnone_private_s *ap;
   XDR xdr_stream;
   XDR *xdrs;
 
-  if (ap == 0)
+  ap = (struct authnone_private_s *) authnone_private;
+  if (ap == NULL)
     {
-      ap = (struct authnone_private *) calloc (1, sizeof (*ap));
-      if (ap == 0)
+      ap = (struct authnone_private_s *) calloc (1, sizeof (*ap));
+      if (ap == NULL)
 	return NULL;
       authnone_private = ap;
     }
@@ -97,10 +101,11 @@ authnone_create (void)
 static bool_t
 authnone_marshal (AUTH *client, XDR *xdrs)
 {
-  struct authnone_private *ap = authnone_private;
+  struct authnone_private_s *ap;
 
-  if (ap == 0)
-    return 0;
+  ap = (struct authnone_private_s *) authnone_private;
+  if (ap == NULL)
+    return FALSE;
   return (*xdrs->x_ops->x_putbytes) (xdrs, ap->marshalled_client, ap->mcnt);
 }
 

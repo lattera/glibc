@@ -359,7 +359,11 @@ struct  key_call_private {
   pid_t   pid;            /* process-id at moment of creation */
   uid_t   uid;            /* user-id at last authorization */
 };
+#ifdef _RPC_THREAD_SAFE_
+#define key_call_private_main ((struct  key_call_private *)RPC_THREAD_VARIABLE(key_call_private_s))
+#else
 static struct key_call_private *key_call_private_main;
+#endif
 __libc_lock_define_initialized (static, keycall_lock)
 
 /*
@@ -610,3 +614,17 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
   return key_call_keyenvoy (proc, xdr_arg, arg, xdr_rslt, rslt);
 #endif
 }
+
+#ifdef _RPC_THREAD_SAFE_
+void
+__rpc_thread_key_cleanup (void)
+{
+	struct key_call_private *kcp = RPC_THREAD_VARIABLE(key_call_private_s);
+
+	if (kcp) {
+		if (kcp->client)
+			clnt_destroy(kcp->client);
+		free (kcp);
+	}
+}
+#endif /* _RPC_THREAD_SAFE_ */

@@ -60,7 +60,7 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \
 	    clnt_udp rpc_dtable get_myaddr getrpcport \
 	    pmap_clnt pm_getmaps pm_getport pmap_prot \
-	    pmap_prot2 pmap_rmt rpc_prot rpc_common rpc_cmsg \
+	    pmap_prot2 pmap_rmt rpc_prot rpc_common rpc_cmsg rpc_thread \
 	    svc svc_auth svc_authux svc_raw svc_run svc_simple \
 	    svc_tcp svc_udp xdr xdr_array xdr_float xdr_mem \
 	    xdr_rec xdr_ref xdr_stdio publickey xdr_sizeof \
@@ -116,6 +116,7 @@ CFLAGS-xkey_prot.c = -Wno-unused
 ifeq (yes,$(have_doors))
 CPPFLAGS-key_call.c += -DHAVE_DOORS=1
 endif
+CPPFLAGS += -D_RPC_THREAD_SAFE_
 
 include ../Rules
 

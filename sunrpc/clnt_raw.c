@@ -52,15 +52,19 @@ static char sccsid[] = "@(#)clnt_raw.c 1.22 87/08/11 Copyr 1984 Sun Micro";
 /*
  * This is the "network" we will be moving stuff over.
  */
-static struct clntraw_private
+struct clntraw_private_s
   {
     CLIENT client_object;
     XDR xdr_stream;
     char _raw_buf[UDPMSGSIZE];
     char mashl_callmsg[MCALL_MSG_SIZE];
     u_int mcnt;
-  }
- *clntraw_private;
+  };
+#ifdef _RPC_THREAD_SAFE_
+#define clntraw_private ((struct clntraw_private_s *)RPC_THREAD_VARIABLE(clntraw_private_s))
+#else
+static struct clntraw_private_s *clntraw_private;
+#endif
 
 static enum clnt_stat clntraw_call (CLIENT *, u_long, xdrproc_t, caddr_t,
 				    xdrproc_t, caddr_t, struct timeval);
@@ -86,14 +90,14 @@ static struct clnt_ops client_ops =
 CLIENT *
 clntraw_create (u_long prog, u_long vers)
 {
-  struct clntraw_private *clp = clntraw_private;
+  struct clntraw_private_s *clp = clntraw_private;
   struct rpc_msg call_msg;
   XDR *xdrs = &clp->xdr_stream;
   CLIENT *client = &clp->client_object;
 
   if (clp == 0)
     {
-      clp = (struct clntraw_private *) calloc (1, sizeof (*clp));
+      clp = (struct clntraw_private_s *) calloc (1, sizeof (*clp));
       if (clp == 0)
 	return (0);
       clntraw_private = clp;
@@ -136,7 +140,7 @@ clntraw_call (h, proc, xargs, argsp, xresults, resultsp, timeout)
      caddr_t resultsp;
      struct timeval timeout;
 {
-  struct clntraw_private *clp = clntraw_private;
+  struct clntraw_private_s *clp = clntraw_private;
   XDR *xdrs = &clp->xdr_stream;
   struct rpc_msg msg;
   enum clnt_stat status;
@@ -220,7 +224,7 @@ clntraw_freeres (cl, xdr_res, res_ptr)
      xdrproc_t xdr_res;
      caddr_t res_ptr;
 {
-  struct clntraw_private *clp = clntraw_private;
+  struct clntraw_private_s *clp = clntraw_private;
   XDR *xdrs = &clp->xdr_stream;
   bool_t rval;
 

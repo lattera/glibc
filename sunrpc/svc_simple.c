@@ -51,24 +51,33 @@ static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 # define fputs(s, f) _IO_fputs (s, f)
 #endif
 
-static struct proglst
+struct proglst_
   {
     char *(*p_progname) (char *);
     int p_prognum;
     int p_procnum;
     xdrproc_t p_inproc, p_outproc;
-    struct proglst *p_nxt;
-  }
- *proglst;
+    struct proglst_ *p_nxt;
+  };
+#ifdef _RPC_THREAD_SAFE_
+#define proglst ((struct proglst_ *)RPC_THREAD_VARIABLE(svcsimple_proglst_s))
+#else
+static struct proglst_ *proglst;
+#endif
 
-static void universal (struct svc_req *rqstp, SVCXPRT *transp);
+
+static void universal (struct svc_req *rqstp, SVCXPRT *transp_s);
+#ifdef _RPC_THREAD_SAFE_
+#define transp ((SVCXPRT *)RPC_THREAD_VARIABLE(svcsimple_transp_s))
+#else
 static SVCXPRT *transp;
+#endif
 
 int
 registerrpc (u_long prognum, u_long versnum, u_long procnum,
 	     char *(*progname) (char *), xdrproc_t inproc, xdrproc_t outproc)
 {
-  struct proglst *pl;
+  struct proglst_ *pl;
 
   if (procnum == NULLPROC)
     {
@@ -93,7 +102,7 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
 		      prognum, versnum);
       return -1;
     }
-  pl = (struct proglst *) malloc (sizeof (struct proglst));
+  pl = (struct proglst_ *) malloc (sizeof (struct proglst_));
   if (pl == NULL)
     {
       (void) fprintf (stderr, _("registerrpc: out of memory\n"));
@@ -110,19 +119,19 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
 }
 
 static void
-universal (struct svc_req *rqstp, SVCXPRT *transp)
+universal (struct svc_req *rqstp, SVCXPRT *transp_l)
 {
   int prog, proc;
   char *outdata;
   char xdrbuf[UDPMSGSIZE];
-  struct proglst *pl;
+  struct proglst_ *pl;
 
   /*
    * enforce "procnum 0 is echo" convention
    */
   if (rqstp->rq_proc == NULLPROC)
     {
-      if (svc_sendreply (transp, (xdrproc_t)xdr_void, (char *) NULL) == FALSE)
+      if (svc_sendreply (transp_l, (xdrproc_t)xdr_void, (char *) NULL) == FALSE)
 	{
 	  (void) fprintf (stderr, "xxx\n");
 	  exit (1);
@@ -136,16 +145,16 @@ universal (struct svc_req *rqstp, SVCXPRT *transp)
       {
 	/* decode arguments into a CLEAN buffer */
 	__bzero (xdrbuf, sizeof (xdrbuf));	/* required ! */
-	if (!svc_getargs (transp, pl->p_inproc, xdrbuf))
+	if (!svc_getargs (transp_l, pl->p_inproc, xdrbuf))
 	  {
-	    svcerr_decode (transp);
+	    svcerr_decode (transp_l);
 	    return;
 	  }
 	outdata = (*(pl->p_progname)) (xdrbuf);
 	if (outdata == NULL && pl->p_outproc != (xdrproc_t)xdr_void)
 	  /* there was an error */
 	  return;
-	if (!svc_sendreply (transp, pl->p_outproc, outdata))
+	if (!svc_sendreply (transp_l, pl->p_outproc, outdata))
 	  {
 	    (void) fprintf (stderr,
 			    _ ("trouble replying to prog %d\n"),
@@ -153,7 +162,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp)
 	    exit (1);
 	  }
 	/* free the decoded arguments */
-	(void) svc_freeargs (transp, pl->p_inproc, xdrbuf);
+	(void) svc_freeargs (transp_l, pl->p_inproc, xdrbuf);
 	return;
       }
   (void) fprintf (stderr, _ ("never registered prog %d\n"), prog);

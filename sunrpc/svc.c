@@ -43,7 +43,11 @@
 #include <rpc/pmap_clnt.h>
 #include <sys/poll.h>
 
+#ifdef _RPC_THREAD_SAFE_
+#define xports ((SVCXPRT **)RPC_THREAD_VARIABLE(svc_xports_s))
+#else
 static SVCXPRT **xports;
+#endif
 
 #define NULL_SVC ((struct svc_callout *)0)
 #define	RQCRED_SIZE	400	/* this size is excessive */
@@ -52,12 +56,17 @@ static SVCXPRT **xports;
    Each entry represents a set of procedures (an rpc program).
    The dispatch routine takes request structs and runs the
    appropriate procedure. */
-static struct svc_callout {
+struct svc_callout {
   struct svc_callout *sc_next;
   rpcprog_t sc_prog;
   rpcvers_t sc_vers;
   void (*sc_dispatch) (struct svc_req *, SVCXPRT *);
-} *svc_head;
+};
+#ifdef _RPC_THREAD_SAFE_
+#define svc_head ((struct svc_callout *)RPC_THREAD_VARIABLE(svc_head_s))
+#else
+static struct svc_callout *svc_head;
+#endif
 
 /* ***************  SVCXPRT related stuff **************** */
 
@@ -464,3 +473,16 @@ svc_getreq_common (const int fd)
     }
   while (stat == XPRT_MOREREQS);
 }
+
+#ifdef _RPC_THREAD_SAFE_
+
+void
+__rpc_thread_svc_cleanup (void)
+{
+  struct svc_callout *svcp;
+
+  while ((svcp = svc_head) != NULL)
+    svc_unregister (svcp->sc_prog, svcp->sc_vers);
+}
+
+#endif /* _RPC_THREAD_SAFE_ */

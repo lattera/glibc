@@ -1,5 +1,27 @@
 2001-03-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/Makefile (routines): Add rpc_thread.
+	(CPPFLAGS): Add -D_RPC_THREAD_SAFE.
+	* sunrpc/rpc_thread.c: New file.
+	* sunrpc/Versions [libc] (GLIBC_2.2.3): Export __rpc_thread_destroy.
+	* sunrpc/auth_none.c: Don't use global variables.  Access state in
+	thread-local storage.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/rpc_common.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* hurd/hurd/threadvar.h (enum __hurd_threadvar_index): Add
+	_HURD_THREADVAR_RPC_VARS.
+	* sysdeps/generic/bits/libc-tsd.h: Mention _LIBC_TSD_KEY_RPC_VARS.
+	* include/rpc/rpc.h: Define data structures for internal thread-local
+	"global" variables.
+	Based on patches by Eric Norum <eric.norum@usask.ca>.
+
 	* elf/dl-load.c: Various little optimizations.
 
 	* sysdeps/unix/sysv/linux/pathconf.c (__pathconf): Return
