@@ -1,3 +1,8 @@
+Mon Jul 15 12:24:54 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/logout.c (logout): Initialize DATA to a state that will
+	make setutent_r happy.
+
 Sun Jul 14 01:51:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makeconfig (rtld-installed-name): Set to ld.so.1.
