@@ -1,13 +1,14 @@
 # Slovak translation of the GNU-libc-messages.
-# Copyright (C) 1998 Free Software Foundation, Inc.
+# Copyright (C) 1998-2001, 2002 Free Software Foundation, Inc.
+# Marcel Telka <marcel@telka.sk>, 2002.
 # Stanislav Meduna <stano@meduna.org>, 1998-2001.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.2.4\n"
-"POT-Creation-Date: 2001-08-13 15:08-0700\n"
-"PO-Revision-Date: 2001-10-21 18:00+02:00\n"
-"Last-Translator: Stanislav Meduna <stano@meduna.org>\n"
+"Project-Id-Version: libc 2.2.5\n"
+"POT-Creation-Date: 2001-08-17 13:03-0700\n"
+"PO-Revision-Date: 2002-02-08 10:17+0100\n"
+"Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
@@ -306,17 +307,17 @@ msgstr "%s nie je symbolický odkaz\n"
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s nie je ELF súbor - na zaèiatku obsahujé chybné magické bajty.\n"
 
-#: assert/assert.c:52
+#: assert/assert.c:54
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sPredpoklad `%s' nesplnený.\n"
 
-#: assert/assert-perr.c:54
+#: assert/assert-perr.c:56
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sNeoèakávaná chyba: %s.\n"
 
-#: stdio-common/psignal.c:48
+#: stdio-common/psignal.c:62
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sNeznámy signál %d\n"
@@ -624,7 +625,7 @@ msgstr "%s: smetie za koncom poèiatoèného dátumu v re»azci %Zd poµa `era' "
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: smetie za koncom koncového dátumu v re»azci %Zd poµa `era'"
 
-#: posix/getopt.c:788
+#: posix/getopt.c:887 posix/getopt.c:890
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: neprípustná voµba -- %c\n"
@@ -660,7 +661,7 @@ msgstr "%s: neprípustné èíslo pre posunutie v re»azci %Zd poµa `era'"
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: chybný poèet pravidiel triedenia"
 
-#: posix/getopt.c:791
+#: posix/getopt.c:896 posix/getopt.c:899
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: chybná voµba -- %c\n"
@@ -673,7 +674,7 @@ msgstr "%s: neprípustný poèiatoèný dátum v re»azci %Zd poµa `era'"
 #: locale/programs/ld-time.c:407
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
-msgstr "%s: neprípustný koncový dátum v re»azci %d poµa `era'"
+msgstr "%s: neprípustný koncový dátum v re»azci %Zd poµa `era'"
 
 #: locale/programs/ld-measurement.c:112
 #, c-format
@@ -684,6 +685,46 @@ msgstr "%s: neprípustná hodnota poµa `%s'"
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
 msgstr "%s: skratka jazyka `%s' nie je definovaná"
+
+#: resolv/res_hconf.c:366
+#, c-format
+msgid "%s: line %d: bad command `%s'\n"
+msgstr "%s: riadok %d: zlý príkaz `%s'\n"
+
+#: resolv/res_hconf.c:165
+#, c-format
+msgid "%s: line %d: cannot specify more than %d services"
+msgstr "%s: riadok %d: nie je mo¾né zada» viac ako %d slu¾ieb"
+
+#: resolv/res_hconf.c:231
+#, c-format
+msgid "%s: line %d: cannot specify more than %d trim domains"
+msgstr "%s: riadok %d: nie je mo¾né zada» viac ako %d skrátených domén"
+
+#: resolv/res_hconf.c:319
+#, c-format
+msgid "%s: line %d: expected `on' or `off', found `%s'\n"
+msgstr "%s: riadok %d: oèakávané `on' alebo `off', nájdené `%s'\n"
+
+#: resolv/res_hconf.c:147
+#, c-format
+msgid "%s: line %d: expected service, found `%s'\n"
+msgstr "%s: riadok %d: oèakávaná slu¾ba, nájdené `%s'\n"
+
+#: resolv/res_hconf.c:395
+#, c-format
+msgid "%s: line %d: ignoring trailing garbage `%s'\n"
+msgstr "%s: riadok %d: ignorujem koncové smetie `%s'\n"
+
+#: resolv/res_hconf.c:256
+#, c-format
+msgid "%s: line %d: list delimiter not followed by domain"
+msgstr "%s: riadok %d: za oddeµovaèom zoznamu nenasleduje doména"
+
+#: resolv/res_hconf.c:191
+#, c-format
+msgid "%s: line %d: list delimiter not followed by keyword"
+msgstr "%s: line %d: za oddeµovaèom zoznamu nenasleduje kµúèové slovo"
 
 #: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365
 #: locale/programs/ld-collate.c:3716
@@ -746,37 +787,39 @@ msgstr "%s: nedostatoèný poèet pravidiel triedenia"
 msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: èíselný kód krajiny `%d' nie je platný"
 
-#: posix/getopt.c:711
+#: posix/getopt.c:743 posix/getopt.c:748
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: voµba `%c%s' nedovoµuje pou¾i» argument\n"
 
-#: posix/getopt.c:681
+#: posix/getopt.c:688 posix/getopt.c:698
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: voµba `%s' nie je jednoznaèná\n"
 
-#: posix/getopt.c:729 posix/getopt.c:902
+#: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070
+#: posix/getopt.c:1082
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: voµba `%s' vy¾aduje argument\n"
 
-#: posix/getopt.c:706
+#: posix/getopt.c:730 posix/getopt.c:734
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: voµba `--%s' nedovoµuje pou¾i» argument\n"
 
-#: posix/getopt.c:886
+#: posix/getopt.c:1038 posix/getopt.c:1049
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: voµba `-W %s' nedovoµuje pou»i» argument\n"
 
-#: posix/getopt.c:868
+#: posix/getopt.c:1004 posix/getopt.c:1014
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: voµba `-W %s' nie je jednoznaèná\n"
 
-#: posix/getopt.c:821 posix/getopt.c:951
+#: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136
+#: posix/getopt.c:1147
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: voµba vy¾aduje argument -- %c\n"
@@ -832,7 +875,7 @@ msgstr "%s: neprípustný poèiatoèný dátum v re»azci %Zd v poli `era'"
 #: locale/programs/ld-time.c:435
 #, c-format
 msgid "%s: stopping date is invalid in string %Zd in `era' field"
-msgstr "%s: neprípustný koncový dátum v re»azci %d v poli `era'"
+msgstr "%s: neprípustný koncový dátum v re»azci %Zd v poli `era'"
 
 #: locale/programs/ld-collate.c:1261
 #, c-format
@@ -963,12 +1006,12 @@ msgstr "%s: neznámy názov sekcie `%s'"
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: neznámy symbol `%s' v ekvivalentnej definícii"
 
-#: posix/getopt.c:762
+#: posix/getopt.c:841 posix/getopt.c:844
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: nerozpoznaná voµba `%c%s'\n"
 
-#: posix/getopt.c:758
+#: posix/getopt.c:830 posix/getopt.c:833
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: nerozpoznaná voµba `--%s'\n"
@@ -1054,7 +1097,7 @@ msgstr "(CHYBA PROGRAMU) Voµba by mala by» rozpoznaná!?"
 msgid "(Unknown object)\n"
 msgstr "(Neznámy objekt)\n"
 
-#: sunrpc/clnt_perr.c:132
+#: sunrpc/clnt_perr.c:133
 #, c-format
 msgid "(unknown authentication error - %d)"
 msgstr "(neznáma chyba pri overovaní toto¾nosti - %d)"
@@ -1090,12 +1133,12 @@ msgstr ""
 msgid ".lib section in a.out corrupted"
 msgstr "Po¹kodená sekcia .lib v a.out"
 
-#: sunrpc/clnt_perr.c:118 sunrpc/clnt_perr.c:139
+#: sunrpc/clnt_perr.c:119 sunrpc/clnt_perr.c:140
 #, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr "; ni¾¹ia verzia = %lu, vy¹¹ia verzia = %lu"
 
-#: sunrpc/clnt_perr.c:125
+#: sunrpc/clnt_perr.c:126
 msgid "; why = "
 msgstr "; dôvod = "
 
@@ -1212,7 +1255,7 @@ msgstr "Pokus o pou¾itie viac zdieµaných kni¾níc, ako je systémový limit"
 msgid "Attempting to link in too many shared libraries"
 msgstr "Pokus o pou¾itie priveµa zdieµaných kni¾níc"
 
-#: sunrpc/clnt_perr.c:338
+#: sunrpc/clnt_perr.c:354
 msgid "Authentication OK"
 msgstr "Overenie práv úspe¹né"
 
@@ -1515,7 +1558,7 @@ msgstr "Oddeµovaè znakov       : %c\n"
 msgid "Child exited"
 msgstr "Detský proces skonèil"
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:373
 msgid "Client credential too weak"
 msgstr "Oprávnenia klienta sú nepostaèujúce"
 
@@ -1943,7 +1986,7 @@ msgstr "FATÁLNA CHYBA: systém nedefinuje `_POSIX2_LOCALEDEF'"
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "SÚBOR obsahuje mapovanie symbolických názvov na UCS4 hodnoty"
 
-#: sunrpc/clnt_perr.c:365
+#: sunrpc/clnt_perr.c:381
 msgid "Failed (unspecified error)"
 msgstr "Zlyhalo (ne¹pecifikovaná chyba)"
 
@@ -2271,27 +2314,27 @@ msgstr "Preru¹ené volanie systému by malo by» znovu spustené"
 msgid "Invalid argument"
 msgstr "Neprípustný argument"
 
-#: posix/regex.c:1380
+#: posix/regex.c:1384
 msgid "Invalid back reference"
 msgstr "Neprípustný spätný odkaz"
 
-#: posix/regex.c:1374
+#: posix/regex.c:1378
 msgid "Invalid character class name"
 msgstr "Neprípustný názov triedy znakov"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:357
 msgid "Invalid client credential"
 msgstr "Neplatné oprávnenie klienta"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:365
 msgid "Invalid client verifier"
 msgstr "Neplatné overenie klienta"
 
-#: posix/regex.c:1371
+#: posix/regex.c:1375
 msgid "Invalid collation character"
 msgstr "Neprípustný znak triedenia"
 
-#: posix/regex.c:1392
+#: posix/regex.c:1396
 msgid "Invalid content of \\{\\}"
 msgstr "Neprípustný obsah \\{\\}"
 
@@ -2316,15 +2359,15 @@ msgstr "Neplatný objekt pre operáciu"
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Neprípustný alebo nekompletný viacbajtový alebo ¹iroký znak"
 
-#: posix/regex.c:1401
+#: posix/regex.c:1405
 msgid "Invalid preceding regular expression"
 msgstr "Neprípustný predchádzajúci regulérny výraz"
 
-#: posix/regex.c:1395
+#: posix/regex.c:1399
 msgid "Invalid range end"
 msgstr "Neprípustný koniec rozsahu"
 
-#: posix/regex.c:1368
+#: posix/regex.c:1372
 msgid "Invalid regular expression"
 msgstr "Neprípustný regulérny výraz"
 
@@ -2336,7 +2379,7 @@ msgstr "Neprípustný kód ¾iadosti"
 msgid "Invalid request descriptor"
 msgstr "Neprípustný deskriptor ¾iadosti"
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:377
 msgid "Invalid server verifier"
 msgstr "Neplatné overenie servera"
 
@@ -2461,7 +2504,7 @@ msgstr "Hlavný server zaneprázdnený, úplný prenos preplánovaný."
 msgid "Memory allocation failure"
 msgstr "Pridelenie pamäti zlyhalo"
 
-#: posix/regex.c:1398
+#: posix/regex.c:1402
 msgid "Memory exhausted"
 msgstr "Pamä» vyèerpaná"
 
@@ -2681,7 +2724,7 @@ msgstr "Odkaz nebol vytvorený, keï¾e pre %s nebolo mo¾né nájs» soname"
 msgid "No locks available"
 msgstr "Zámky nie sú k dispozícii"
 
-#: posix/regex.c:1365
+#: posix/regex.c:1369
 msgid "No match"
 msgstr "®iadna zhoda"
 
@@ -2698,7 +2741,7 @@ msgstr "®iadna správa ¾elaného typu"
 msgid "No more records in map database"
 msgstr "®iadne ïal¹ie záznamy v databáze"
 
-#: posix/regex.c:7919
+#: posix/regex.c:7956
 msgid "No previous regular expression"
 msgstr "®iadny predchádzajúci regulérny výraz"
 
@@ -3027,7 +3070,7 @@ msgstr "Prístup odmietnutý"
 msgid "Power failure"
 msgstr "Výpadok napájania"
 
-#: posix/regex.c:1404
+#: posix/regex.c:1408
 msgid "Premature end of regular expression"
 msgstr "Predèasný koniec regulérneho výrazu"
 
@@ -3144,79 +3187,79 @@ msgstr "RPC ¹truktúra je chybná"
 msgid "RPC version wrong"
 msgstr "Chybná verzia RPC"
 
-#: sunrpc/clnt_perr.c:278
+#: sunrpc/clnt_perr.c:284
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (neznámny chybový kód)"
 
-#: sunrpc/clnt_perr.c:197
+#: sunrpc/clnt_perr.c:203
 msgid "RPC: Authentication error"
 msgstr "RPC: Chyba pri overení práv"
 
-#: sunrpc/clnt_perr.c:177
+#: sunrpc/clnt_perr.c:183
 msgid "RPC: Can't decode result"
 msgstr "RPC: Nie je mo¾né dekódova» výsledok"
 
-#: sunrpc/clnt_perr.c:173
+#: sunrpc/clnt_perr.c:179
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: Nie je mo¾né zakódova» argumenty"
 
-#: sunrpc/clnt_perr.c:237
+#: sunrpc/clnt_perr.c:243
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: Zlyhalo (ne¹pecifikovaná chyba)"
 
-#: sunrpc/clnt_perr.c:193
+#: sunrpc/clnt_perr.c:199
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: Nekompatibilné verzie RPC"
 
-#: sunrpc/clnt_perr.c:229
+#: sunrpc/clnt_perr.c:235
 msgid "RPC: Port mapper failure"
 msgstr "RPC: Chyba portmappera"
 
-#: sunrpc/clnt_perr.c:209
+#: sunrpc/clnt_perr.c:215
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: Procedúra nie je k dispozícii"
 
-#: sunrpc/clnt_perr.c:233
+#: sunrpc/clnt_perr.c:239
 msgid "RPC: Program not registered"
 msgstr "RPC: Program nie je registrovaný"
 
-#: sunrpc/clnt_perr.c:201
+#: sunrpc/clnt_perr.c:207
 msgid "RPC: Program unavailable"
 msgstr "RPC: Program nie je k dispozícii"
 
-#: sunrpc/clnt_perr.c:205
+#: sunrpc/clnt_perr.c:211
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: Nesúhlasí program alebo verzia"
 
-#: sunrpc/clnt_perr.c:217
+#: sunrpc/clnt_perr.c:223
 msgid "RPC: Remote system error"
 msgstr "RPC: Chyba vzdialeného systému"
 
-#: sunrpc/clnt_perr.c:213
+#: sunrpc/clnt_perr.c:219
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: Server nemô¾e dekódova» argumenty"
 
-#: sunrpc/clnt_perr.c:170
+#: sunrpc/clnt_perr.c:176
 msgid "RPC: Success"
 msgstr "RPC: Úspech"
 
-#: sunrpc/clnt_perr.c:189
+#: sunrpc/clnt_perr.c:195
 msgid "RPC: Timed out"
 msgstr "RPC: Èasovaè vypr¹al"
 
-#: sunrpc/clnt_perr.c:185
+#: sunrpc/clnt_perr.c:191
 msgid "RPC: Unable to receive"
 msgstr "RPC: Nie je mo¾né prijíma»"
 
-#: sunrpc/clnt_perr.c:181
+#: sunrpc/clnt_perr.c:187
 msgid "RPC: Unable to send"
 msgstr "RPC: Nie je mo¾né vysiela»"
 
-#: sunrpc/clnt_perr.c:221
+#: sunrpc/clnt_perr.c:227
 msgid "RPC: Unknown host"
 msgstr "RPC: Neznámy poèítaè"
 
-#: sunrpc/clnt_perr.c:225
+#: sunrpc/clnt_perr.c:231
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Neznámy protokol"
 
@@ -3248,7 +3291,7 @@ msgstr "Súborový systém dovoµuje len èítanie"
 msgid "Real-time signal %d"
 msgstr "Signál reálneho èasu %d"
 
-#: posix/regex.c:1407
+#: posix/regex.c:1411
 msgid "Regular expression too big"
 msgstr "Regulérny výraz príli¹ veµký"
 
@@ -3390,11 +3433,11 @@ msgstr "Server zaneprázdnený, skúste znovu"
 msgid "Server out of memory"
 msgstr "Vyèerpaná pamä» servera"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:361
 msgid "Server rejected credential"
 msgstr "Server odmietol oprávnenie"
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:369
 msgid "Server rejected verifier"
 msgstr "Server odmietol overenie"
 
@@ -3492,7 +3535,7 @@ msgstr "Chyba rúry prúdov"
 msgid "Structure needs cleaning"
 msgstr "©truktúra potrebuje opravu"
 
-#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1362
+#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1366
 #: stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr "Úspech"
@@ -3662,7 +3705,7 @@ msgstr "Priveµa pou¾ívateµov"
 msgid "Trace/breakpoint trap"
 msgstr "Trasovacie/ladiace preru¹enie"
 
-#: posix/regex.c:1377
+#: posix/regex.c:1381
 msgid "Trailing backslash"
 msgstr "Koncové spätné lomítko"
 
@@ -3693,6 +3736,11 @@ msgstr "Koncový komunikaèný bod nie je spojený"
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Pou¾ite `%s --help' alebo `%s --usage' pre viac informácií.\n"
+
+#: inet/rcmd.c:223
+#, c-format
+msgid "Trying %s...\n"
+msgstr "Skú¹am %s...\n"
 
 #: nis/nis_print.c:167
 #, c-format
@@ -3783,7 +3831,7 @@ msgstr "Neznáma chyba servera"
 msgid "Unknown signal %d"
 msgstr "Neznámy signál %d"
 
-#: misc/error.c:113 timezone/zic.c:390
+#: misc/error.c:117 timezone/zic.c:390
 msgid "Unknown system error"
 msgstr "Neznáma chyba systému"
 
@@ -3791,19 +3839,19 @@ msgstr "Neznáma chyba systému"
 msgid "Unknown ypbind error"
 msgstr "Neznáma chyba ypbind"
 
-#: posix/regex.c:1386
+#: posix/regex.c:1390
 msgid "Unmatched ( or \\("
 msgstr "Nepárová ( or \\("
 
-#: posix/regex.c:1410
+#: posix/regex.c:1414
 msgid "Unmatched ) or \\)"
 msgstr "Nepárová ) or \\)"
 
-#: posix/regex.c:1383
+#: posix/regex.c:1387
 msgid "Unmatched [ or [^"
 msgstr "Nepárová [ or [^"
 
-#: posix/regex.c:1389
+#: posix/regex.c:1393
 msgid "Unmatched \\{"
 msgstr "Nepárová \\{"
 
@@ -4002,11 +4050,12 @@ msgstr "argument pre <%s> musí by» jeden znak"
 msgid "argument to `%s' must be a single character"
 msgstr "argument pre `%s' musí by» jeden znak"
 
-#: sunrpc/auth_unix.c:311
+#: sunrpc/auth_unix.c:322
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr "auth_none.c - Fatálna chyba marshallingu"
 
-#: sunrpc/auth_unix.c:106 sunrpc/auth_unix.c:112 sunrpc/auth_unix.c:142
+#: sunrpc/auth_unix.c:114 sunrpc/auth_unix.c:117 sunrpc/auth_unix.c:150
+#: sunrpc/auth_unix.c:153
 msgid "authunix_create: out of memory\n"
 msgstr "authunix_create: nedostatok pamäti\n"
 
@@ -4015,7 +4064,7 @@ msgstr "authunix_create: nedostatok pamäti\n"
 msgid "bad argument"
 msgstr "chybný argument"
 
-#: inet/rcmd.c:425
+#: inet/rcmd.c:514
 msgid "bad owner"
 msgstr "chybný vlastník"
 
@@ -4043,15 +4092,15 @@ msgstr "broadcast: ioctl (získanie konfigurácie rozhrania)"
 msgid "broadcast: ioctl (get interface flags)"
 msgstr "broadcast: ioctl (získanie nastavení rozhrania)"
 
-#: sunrpc/svc_udp.c:528
+#: sunrpc/svc_udp.c:541
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr "cache_set: nebolo mo¾né prideli» rpc vyrovnávaciu pamä»"
 
-#: sunrpc/svc_udp.c:522
+#: sunrpc/svc_udp.c:535
 msgid "cache_set: victim alloc failed"
 msgstr "cache_set: obe» nenájdená"
 
-#: sunrpc/svc_udp.c:511
+#: sunrpc/svc_udp.c:524
 msgid "cache_set: victim not found"
 msgstr "cache_set: obe» nenájdená"
 
@@ -4059,7 +4108,7 @@ msgstr "cache_set: obe» nenájdená"
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "nie je mo¾né nájs» skratku èasovej zóny pre pou¾itie hneï po koncovom èase"
 
-#: sunrpc/svc_simple.c:85
+#: sunrpc/svc_simple.c:88
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr "nie je mo¾né znovu prideli» èíslo procedúry %ld\n"
@@ -4182,7 +4231,7 @@ msgstr "nie je mo¾né zmeni» segment na zapisovateµný pre relokáciu"
 msgid "cannot map zero-fill pages"
 msgstr "nie je mo¾né namapova» stránky vyplnené nulami"
 
-#: inet/rcmd.c:421
+#: inet/rcmd.c:510
 msgid "cannot open"
 msgstr "nie je mo¾né otvori»"
 
@@ -4352,17 +4401,22 @@ msgstr "kruhová závislos» medzi definíciami prostredí"
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr "clnt_raw.c - Fatálna chyba pri serializácii hlavièky."
 
-#: sunrpc/clnt_tcp.c:127 sunrpc/clnt_tcp.c:136
+#: sunrpc/clnt_tcp.c:134 sunrpc/clnt_tcp.c:137
 msgid "clnttcp_create: out of memory\n"
 msgstr "clnttcp_create: nedostatok pamäti\n"
 
-#: sunrpc/clnt_udp.c:132 sunrpc/clnt_udp.c:143
+#: sunrpc/clnt_udp.c:141 sunrpc/clnt_udp.c:144
 msgid "clntudp_create: out of memory\n"
 msgstr "clntudp_create: nedostatok pamäti\n"
 
-#: sunrpc/clnt_unix.c:125 sunrpc/clnt_unix.c:134
+#: sunrpc/clnt_unix.c:131 sunrpc/clnt_unix.c:134
 msgid "clntunix_create: out of memory\n"
 msgstr "clntunix_create: nedostatok pamäti\n"
+
+#: inet/rcmd.c:209
+#, c-format
+msgid "connect to address %s: "
+msgstr "spoji» sa s adresou %s: "
 
 #: sunrpc/rpc_scan.c:116
 msgid "constant or identifier expected"
@@ -4385,11 +4439,11 @@ msgstr "konverzný pomer nemô¾e by» nula"
 msgid "conversion stopped due to problem in writing the output"
 msgstr "konverzia zastavená kvôli problému pri zápise výstupu"
 
-#: sunrpc/svc_simple.c:93
+#: sunrpc/svc_simple.c:97
 msgid "couldn't create an rpc server\n"
 msgstr "nebolo mo¾né vytvori» rpc server\n"
 
-#: sunrpc/svc_simple.c:101
+#: sunrpc/svc_simple.c:105
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
 msgstr "nebolo mo¾né zaregistrova» program %ld verzie %ld\n"
@@ -4451,19 +4505,19 @@ msgstr "prázdna substitúcia tokenu dynamického re»azca"
 msgid "empty dynamics string token substitution"
 msgstr "prázdna substitúcia tokenu re»azca dynamiky"
 
-#: sunrpc/svc_udp.c:454
+#: sunrpc/svc_udp.c:467
 msgid "enablecache: cache already enabled"
 msgstr "enablecache: vyrovnávacia pamä» je u¾ povolená"
 
-#: sunrpc/svc_udp.c:460
+#: sunrpc/svc_udp.c:473
 msgid "enablecache: could not allocate cache"
 msgstr "enablecache: nebolo mo¾né prideli» vyrovnáciu pamä»"
 
-#: sunrpc/svc_udp.c:468
+#: sunrpc/svc_udp.c:481
 msgid "enablecache: could not allocate cache data"
 msgstr "enablecache: nebolo mo¾né prideli» dáta pre vyrovnávaciu pamä»"
 
-#: sunrpc/svc_udp.c:475
+#: sunrpc/svc_udp.c:488
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: nebolo mo¾né prideli» frontu pre vyrovnávaciu pamä»"
 
@@ -4556,7 +4610,7 @@ msgstr "súbor `%s' u¾ existuje a mô¾e by» prepísaný\n"
 msgid "file too short"
 msgstr "súbor je príli¹ krátky"
 
-#: inet/rcmd.c:423
+#: inet/rcmd.c:512
 msgid "fstat failed"
 msgstr "fstat sa nepodaril"
 
@@ -4593,7 +4647,7 @@ msgstr "handle_request: ¾iados» prijatá (verzia = %d)"
 msgid "hard link failed, symbolic link used"
 msgstr "pevný odkaz zlyhal, pou¾itý symbolický"
 
-#: inet/rcmd.c:429
+#: inet/rcmd.c:518
 msgid "hard linked somewhere"
 msgstr "niekde existuje pevný odkaz"
 
@@ -4797,7 +4851,7 @@ msgstr "vypí¹ v¹etky známe znakové sady"
 msgid "locale name should consist only of portable characters"
 msgstr "názov prostredia by malo obsahova» iba prenositeµné znaky"
 
-#: inet/rcmd.c:414
+#: inet/rcmd.c:503
 msgid "lstat failed"
 msgstr "lstat zlyhal"
 
@@ -4833,7 +4887,8 @@ msgstr "pamä» pred prideleným blokom prepísaná\n"
 msgid "memory clobbered past end of allocated block\n"
 msgstr "pamä» za koncom prideleného bloku prepísaná\n"
 
-#: locale/programs/xmalloc.c:70 malloc/obstack.c:484 posix/getconf.c:996
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493
+#: posix/getconf.c:996
 msgid "memory exhausted"
 msgstr "nedostatok pamäti"
 
@@ -4885,7 +4940,7 @@ msgstr "netname2user: názov principála `%s' príli¹ dlhý"
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: nemal by ma» uid 0"
 
-#: sunrpc/svc_simple.c:168
+#: sunrpc/svc_simple.c:183
 #, c-format
 msgid "never registered prog %d\n"
 msgstr "program %d nebol nikdy registrovaný\n"
@@ -4945,7 +5000,7 @@ msgstr "nie v¹etky znaky pou¾ité v `outdigit' sú dostupné v znakovej mape"
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr "nie v¹etky znaky pou¾ité v `outdigit' sú dostupné v repertoári"
 
-#: inet/rcmd.c:416
+#: inet/rcmd.c:505
 msgid "not regular file"
 msgstr "nie je regulérny súbor"
 
@@ -4993,11 +5048,15 @@ msgstr "nedostatok pamäti"
 msgid "output file"
 msgstr "výstupný súbor"
 
+#: posix/../sysdeps/generic/wordexp.c:1801
+msgid "parameter null or not set"
+msgstr "prázdny alebo nenastavený parameter"
+
 #: sunrpc/pm_getmaps.c:74
 msgid "pmap_getmaps rpc problem"
 msgstr "pmap_getmaps rpc problém"
 
-#: inet/rcmd.c:234
+#: inet/rcmd.c:293
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: chyba protokolu poèas prípravy okruhu\n"
 
@@ -5043,26 +5102,26 @@ msgstr "program %lu verzie %lu nie je dostupný\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "program %lu verzie %lu pripravený a èakajúci\n"
 
-#: inet/rcmd.c:271
+#: inet/rcmd.c:354
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: krátke èítanie"
 
-#: inet/rcmd.c:231
+#: inet/rcmd.c:290
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (nastavenie stderr): %m\n"
 
-#: inet/rcmd.c:159
+#: inet/rcmd.c:172 inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: V¹etky porty sú pou¾ité\n"
 
-#: inet/rcmd.c:221
+#: inet/rcmd.c:270
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (nastavenie stderr): %m\n"
 
-#: sunrpc/svc_simple.c:108
+#: sunrpc/svc_simple.c:112
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: nedostatok pamäti\n"
 
@@ -5138,7 +5197,7 @@ msgstr "neúplné èítanie ¾iadosti: `%s'"
 msgid "short write in %s: %s"
 msgstr "neúplný zápis v %s: %s"
 
-#: inet/rcmd.c:261
+#: inet/rcmd.c:335
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: chyba protokolu pri príprave okruhu\n"
 
@@ -5170,31 +5229,31 @@ msgstr "potlaèi» varovania"
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - poll zlyhal"
 
-#: sunrpc/svc_tcp.c:170
+#: sunrpc/svc_tcp.c:171
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr "svc_tcp.c - nie je mo¾né vykona» getsockname alebo listen"
 
-#: sunrpc/svc_tcp.c:155
+#: sunrpc/svc_tcp.c:156
 msgid "svc_tcp.c - tcp socket creation problem"
 msgstr "svc_tcp.c - problém pri vytváraní tcp socketu"
 
-#: sunrpc/svc_tcp.c:219 sunrpc/svc_tcp.c:225
+#: sunrpc/svc_tcp.c:224 sunrpc/svc_tcp.c:227
 msgid "svc_tcp: makefd_xprt: out of memory\n"
 msgstr "svc_tcp: makefd_xprt: nedostatok pamäti\n"
 
-#: sunrpc/svc_unix.c:146
+#: sunrpc/svc_unix.c:150
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr "svc_unix.c - problém pri vytváraní AF_UNIX socketu"
 
-#: sunrpc/svc_unix.c:162
+#: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - nemô¾em vykona» getsockname alebo listen"
 
-#: sunrpc/svc_unix.c:212 sunrpc/svc_unix.c:218
+#: sunrpc/svc_unix.c:220 sunrpc/svc_unix.c:223
 msgid "svc_unix: makefd_xprt: out of memory\n"
 msgstr "svc_unix: makefd_xprt: nedostatok pamäti\n"
 
-#: sunrpc/svc_tcp.c:178 sunrpc/svc_tcp.c:186
+#: sunrpc/svc_tcp.c:182 sunrpc/svc_tcp.c:185
 msgid "svctcp_create: out of memory\n"
 msgstr "svctcp_create: nedostatok pamäti\n"
 
@@ -5204,23 +5263,23 @@ msgstr "svctcp_create: nedostatok pamäti\n"
 # #: sunrpc/svc_tcp.c:168 sunrpc/svc_tcp.c:176
 # msgid "svctcp_create: out of memory\n"
 # msgstr "svctcp_create: nedostatok pamäti\n"
-#: sunrpc/svc_udp.c:141
+#: sunrpc/svc_udp.c:143
 msgid "svcudp_create - cannot getsockname"
 msgstr "svcudp_create - nemô¾em vykona» getsockname"
 
-#: sunrpc/svc_udp.c:149 sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:161
+#: sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:158
 msgid "svcudp_create: out of memory\n"
 msgstr "svcudp_create: nedostatok pamäti\n"
 
-#: sunrpc/svc_udp.c:127
+#: sunrpc/svc_udp.c:129
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: problém pri vytváraní socketu"
 
-#: sunrpc/svc_udp.c:177
+#: sunrpc/svc_udp.c:179 sunrpc/svc_udp.c:182
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr "svcudp_create: xp_pad je príli¹ malý pre IP_PKTINFO\n"
 
-#: sunrpc/svc_unix.c:171 sunrpc/svc_unix.c:179
+#: sunrpc/svc_unix.c:178 sunrpc/svc_unix.c:181
 msgid "svcunix_create: out of memory\n"
 msgstr "svcunix_create: nedostatok pamäti\n"
 
@@ -5327,7 +5386,7 @@ msgstr "príli¹ veµa alebo príli¹ dlhé skratku èasovej zóny"
 msgid "trailing garbage at end of line"
 msgstr "smetie na konci riadku"
 
-#: sunrpc/svc_simple.c:160
+#: sunrpc/svc_simple.c:175
 #, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "problémy pri odpovedi programu %d\n"
@@ -5482,7 +5541,7 @@ msgstr "v symbolickom rozsahu hodnôt nesmie by» pou¾ité absolútne pokraèovanie `
 msgid "write incomplete"
 msgstr "neúplný zápis"
 
-#: inet/rcmd.c:427
+#: inet/rcmd.c:516
 msgid "writeable by other than owner"
 msgstr "zapisovateµný nielen pre vlastníka"
 
@@ -5510,11 +5569,23 @@ msgstr "chybný poèet polí v pokraèovacom riadku Zone"
 msgid "wrong number of fields on Zone line"
 msgstr "chybný poèet polí v riadku Zone"
 
-#: sunrpc/xdr_ref.c:85
+#: sunrpc/xdr_array.c:106 sunrpc/xdr_array.c:109
+msgid "xdr_array: out of memory\n"
+msgstr "xdr_array: nedostatok pamäti\n"
+
+#: sunrpc/xdr.c:558 sunrpc/xdr.c:561
+msgid "xdr_bytes: out of memory\n"
+msgstr "xdr_bytes: nedostatok pamäti\n"
+
+#: sunrpc/xdr_ref.c:89 sunrpc/xdr_ref.c:92
 msgid "xdr_reference: out of memory\n"
 msgstr "xdr_reference: nedostatok pamäti\n"
 
-#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+#: sunrpc/xdr.c:710 sunrpc/xdr.c:713
+msgid "xdr_string: out of memory\n"
+msgstr "xdr_string: nedostatok pamäti\n"
+
+#: sunrpc/xdr_rec.c:155 sunrpc/xdr_rec.c:158
 msgid "xdrrec_create: out of memory\n"
 msgstr "xdrrec_create: nedostatok pamäti\n"
 
@@ -5525,51 +5596,3 @@ msgstr "yp_update: nie je mo¾né konvertova» meno poèítaèa na meno siete\n"
 #: nis/ypclnt.c:921
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: nie je mo¾né zísti» adresu servera\n"
-
-#~ msgid "%s: Error writing "
-#~ msgstr "%s: Chyba pri zápise "
-
-#~ msgid "CDS"
-#~ msgstr "CDS"
-
-#~ msgid "DNANS"
-#~ msgstr "DNANS"
-
-#~ msgid "DNS"
-#~ msgstr "DNS"
-
-#~ msgid "IVY"
-#~ msgstr "IVY"
-
-#~ msgid "NIS"
-#~ msgstr "NIS"
-
-#~ msgid "SUNYP"
-#~ msgstr "SUNYP"
-
-#~ msgid "X500"
-#~ msgstr "X500"
-
-#~ msgid "XCHS"
-#~ msgstr "XCHS"
-
-#~ msgid "cannot create capability list"
-#~ msgstr "nie je mo¾né vytvori» zoznam schopností"
-
-#~ msgid "cannot load shared object file"
-#~ msgstr "nepodarilo sa naèíta» súbor zdieµaného objektu"
-
-#~ msgid "cannot read locale directory `%s'"
-#~ msgstr "nie je mo¾né naèíta» adresár národných prostredí `%s'"
-
-#~ msgid "fcntl: F_SETFD"
-#~ msgstr "fcntl: F_SETFD"
-
-#~ msgid "neither original nor target encoding specified"
-#~ msgstr "nie je ¹pecifikované pôvodné ani cieµové kódovanie"
-
-#~ msgid "original encoding not specified using `-f'"
-#~ msgstr "pôvodné kódovanie nebolo zadané pomocou `-f'"
-
-#~ msgid "target encoding not specified using `-t'"
-#~ msgstr "kódovanie cieµa nebolo zadané pomocou `-t'"

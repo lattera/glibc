@@ -58,7 +58,7 @@ unsetenv (const char *name)
   ep = __environ;
   while (*ep != NULL)
     {
-      size_t cnt;
+      size_t cnt = 0;
 
       while ((*ep)[cnt] == name[cnt] && name[cnt] != '\0')
 	++cnt;

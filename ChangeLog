@@ -1,4 +1,16 @@
+2002-02-09  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Also include
+	_dl_cpuclock_offset if HP_SMALL_TIMING_AVAIL.
+
+2002-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/dl-environ.c (unsetenv): Clear cnt before use.
+
 2002-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ca.po: Update from translation team.
+	* po/sk.po: Likewise.
 
 	* elf/rtld.c (_dl_start_final): Install DTV explicitly.
 	(dl_main): Move dtv/static TLS handling before relocation.
