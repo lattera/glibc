@@ -1,5 +1,7 @@
 1999-01-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/gnu/errlist.awk: Mark ENOTSUP as alias for EOPNOTSUPP.
+
 	* iconv/gconv_conf.c (add_alias): Convert names to uppercase before
 	adding into search tree.
 	(add_module): Likewise.

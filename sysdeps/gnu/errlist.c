@@ -574,7 +574,7 @@ TRANS particular function will always fail with @code{ENOSYS} unless you
 TRANS install a new version of the C library or the operating system. */
     [ERR_REMAP (ENOSYS)] = N_("Function not implemented"),
 #endif
-#ifdef ENOTSUP
+#if defined (ENOTSUP) && ENOTSUP != EOPNOTSUPP
 /*
 TRANS Not supported.  A function returns this error when certain parameter
 TRANS values are valid, but the functionality they request is not available.
