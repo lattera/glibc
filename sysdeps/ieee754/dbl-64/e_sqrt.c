@@ -82,7 +82,7 @@ double __ieee754_sqrt(double x) {
       if (k<0x00100000) {        /* x -> -infinity */
       if (x==0) return x;
       if (k<0) return (big1-big1)/(big-big);
-      else return tm256.x*usqrt(x*t512.x);
+      else return tm256.x*__ieee754_sqrt(x*t512.x);
     }
     else return (a.i[LOW_HALF]==0)?x:(big1-big1)/(big-big);
   }
