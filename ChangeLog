@@ -1,3 +1,11 @@
+2003-03-20  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/pread.c: Don't break up offset
+	into high and low halves on n64.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+
 2003-03-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/atomic.h (atomic_decrement_if_positive): Adjust for the
