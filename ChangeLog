@@ -1,3 +1,8 @@
+2001-01-16  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h (SIGCONTEXT): Fix
+	misapplied last patch.
+
 2001-01-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/random.c (__initstate): Clean up a cast.
