@@ -2761,20 +2761,17 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 #endif
       set_head(old_top, (((char *)old_heap + old_heap->size) - (char *)old_top)
 	       | PREV_INUSE);
-    } else {
-      /* A new heap must be created. */
-      heap = new_heap(nb + (MINSIZE + sizeof(*heap)), mp_.top_pad);
-      if(heap) {
-	heap->ar_ptr = av;
-	heap->prev = old_heap;
-	av->system_mem += heap->size;
-	arena_mem += heap->size;
+    }
+    else if ((heap = new_heap(nb + (MINSIZE + sizeof(*heap)), mp_.top_pad))) {
+      /* Use a newly allocated heap.  */
+      heap->ar_ptr = av;
+      heap->prev = old_heap;
+      av->system_mem += heap->size;
+      arena_mem += heap->size;
 #if 0
-	if((unsigned long)(mmapped_mem + arena_mem + sbrked_mem) > max_total_mem)
-	  max_total_mem = mmapped_mem + arena_mem + sbrked_mem;
+      if((unsigned long)(mmapped_mem + arena_mem + sbrked_mem) > max_total_mem)
+	max_total_mem = mmapped_mem + arena_mem + sbrked_mem;
 #endif
-      }
-
       /* Set up the new top.  */
       top(av) = chunk_at_offset(heap, sizeof(*heap));
       set_head(top(av), (heap->size - sizeof(*heap)) | PREV_INUSE);

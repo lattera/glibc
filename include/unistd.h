@@ -95,7 +95,6 @@ extern ssize_t __write (int __fd, __const void *__buf, size_t __n);
 extern ssize_t __write_internal (int __fd, __const void *__buf, size_t __n)
      attribute_hidden;
 extern __pid_t __fork (void);
-extern __pid_t __fork_internal (void) attribute_hidden;
 extern int __getpagesize (void) __attribute__ ((__const__));
 extern int __getpagesize_internal (void)
      __attribute__ ((__const__)) attribute_hidden;
@@ -123,7 +122,6 @@ extern void __libc_check_standard_fds (void);
 #ifndef NOT_IN_libc
 # define __close(fd) INTUSE(__close) (fd)
 # define __dup2(fd, fd2) INTUSE(__dup2) (fd, fd2)
-# define __fork() INTUSE(__fork) ()
 # define __getpagesize() INTUSE(__getpagesize) ()
 # define __getpgid(pid) INTUSE(__getpgid) (pid)
 # define __getpid() INTUSE(__getpid) ()

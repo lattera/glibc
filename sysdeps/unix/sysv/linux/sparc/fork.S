@@ -25,6 +25,5 @@ PSEUDO (__libc_fork, fork, 0)
 	 and	%o0, %o1, %o0
 PSEUDO_END (__libc_fork)
 
-strong_alias (__libc_fork, __fork_internal)
 weak_alias (__libc_fork, __fork)
 weak_alias (__libc_fork, fork)

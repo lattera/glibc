@@ -1,0 +1,5381 @@
+# This is translation of libc to Croatian
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# Denis Lackovic <delacko@fly.srk.fer.hr>, 2002.
+# This file is distributed under the same license as the libc package.
+# Denis Lackovic <delacko@fly.srk.fer.hr>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libc 2.2.5\n"
+"POT-Creation-Date: 2001-08-17 13:03-0700\n"
+"PO-Revision-Date: 2002-06-10 13:44-01\n"
+"Last-Translator: Denis Lackovic <delacko@fly.srk.fer.hr>\n"
+"Language-Team: Croatian <lokalizacija@linux.hr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1?0:1);\n"
+"X-Generator: TransDict server\n"
+
+#: locale/programs/ld-monetary.c:278
+#, c-format
+msgid "\t\t\t\t\t\t\t      %s: value for field `%s' must be in range %d...%d"
+msgstr "\t\t\t\t\t\t\t      %s: vrijednost za polje `%s' mora biti unutar granica %d...%d"
+
+#: nis/nis_print.c:277
+msgid "\t\tAccess Rights : "
+msgstr "\t\tDozvole pristupa : "
+
+#: nis/nis_print.c:275
+msgid "\t\tAttributes    : "
+msgstr "\t\tAtributi    : "
+
+#: sunrpc/rpc_main.c:1427
+#, c-format
+msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
+msgstr "\t%s [-abkCLNTM][-Dime[=vrijednost]] [-i veličina] [-I [-K sekundi]] [-Y put] ulaznispis\n"
+
+#: sunrpc/rpc_main.c:1429
+#, c-format
+msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
+msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o izlaznispis] [ulaznispis]\n"
+
+#: sunrpc/rpc_main.c:1432
+#, c-format
+msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
+msgstr "\t%s [-n netid]* [-o izlaznispis] [ulaznispis]\n"
+
+#: sunrpc/rpc_main.c:1431
+#, c-format
+msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
+msgstr "\t%s [-s nettype]* [-o izlaznispis] [ulaznispis]\n"
+
+#: nis/nis_print.c:239
+msgid "\tAccess rights: "
+msgstr "\tDozvole pristupa: "
+
+#: nis/nis_print.c:297
+#, c-format
+msgid "\tEntry data of type %s\n"
+msgstr "\tUlazni podaci tipa %s\n"
+
+#: nis/nis_print.c:175
+#, c-format
+msgid "\tName       : %s\n"
+msgstr "\tIme       : %s\n"
+
+#: nis/nis_print.c:176
+msgid "\tPublic Key : "
+msgstr "\tJavni ključ : "
+
+#: nis/nis_print.c:238
+#, c-format
+msgid "\tType         : %s\n"
+msgstr "\tTip         : %s\n"
+
+#: nis/nis_print.c:205
+#, c-format
+msgid "\tUniversal addresses (%u)\n"
+msgstr "\tUniverzalne adrese (%u)\n"
+
+#: nis/nis_print.c:273
+#, c-format
+msgid "\t[%d]\tName          : %s\n"
+msgstr "\t[%d]\tIme          : %s\n"
+
+#: nis/nis_print.c:300
+#, c-format
+msgid "\t[%u] - [%u bytes] "
+msgstr "\t[%u] - [%u bajtova] "
+
+#: nscd/nscd_stat.c:154
+#, c-format
+msgid ""
+"\n"
+"%s cache:\n"
+"\n"
+"%15s  cache is enabled\n"
+"%15Zd  suggested size\n"
+"%15ld  seconds time to live for positive entries\n"
+"%15ld  seconds time to live for negative entries\n"
+"%15ld  cache hits on positive entries\n"
+"%15ld  cache hits on negative entries\n"
+"%15ld  cache misses on positive entries\n"
+"%15ld  cache misses on negative entries\n"
+"%15ld%% cache hit rate\n"
+"%15s  check /etc/%s for changes\n"
+msgstr ""
+"\n"
+"%s međumemorija:\n"
+"\n"
+"%15s  međumemorija je omogućeno\n"
+"%15Zd  predložena veličina\n"
+"%15ld  sekundi do isteka za pozitivne unose\n"
+"%15ld  sekundi do isteka za negativne unose\n"
+"%15ld  međumemorijskih pogodaka za pozitivne unose\n"
+"%15ld  međumemorijskih pogodaka za negativne unose\n"
+"%15ld  međumemorijskih promašaja za pozitivne unose\n"
+"%15ld  međumemorijskih promašaja za negativne unose\n"
+"%15ld%% količina međumemorijskih pogodaka\n"
+"%15s  provjeri promjene u /etc/%s\n"
+
+#: nis/nis_print.c:255
+msgid ""
+"\n"
+"Group Members :\n"
+msgstr ""
+"\n"
+"Članovi grupe :\n"
+
+#: nis/nis_print.c:326
+msgid ""
+"\n"
+"Time to Live  : "
+msgstr ""
+"\n"
+"Vrijeme do isteka  : "
+
+#: sunrpc/rpcinfo.c:679
+msgid "       rpcinfo -b prognum versnum\n"
+msgstr "       rpcinfo -b brojprog brojinacice\n"
+
+#: sunrpc/rpcinfo.c:680
+msgid "       rpcinfo -d prognum versnum\n"
+msgstr "       rpcinfo -d brojprog brojinacice\n"
+
+#: sunrpc/rpcinfo.c:678
+msgid "       rpcinfo -p [ host ]\n"
+msgstr "       rpcinfo -p [ računalo ]\n"
+
+#: sunrpc/rpcinfo.c:676
+msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
+msgstr "       rpcinfo [ -n brojporta ] -t host brojprog [ brojinacice ]\n"
+
+#: nscd/nscd_stat.c:146 nscd/nscd_stat.c:148
+msgid "      no"
+msgstr "      ne"
+
+#: nscd/nscd_stat.c:146 nscd/nscd_stat.c:148
+msgid "     yes"
+msgstr "     da"
+
+#: nis/nis_print.c:352
+#, c-format
+msgid "    Data Length = %u\n"
+msgstr "    Duljina podataka = %u\n"
+
+#: nis/nis_print_group_entry.c:123
+msgid "    Explicit members:\n"
+msgstr "    Eksplicitni članovi:\n"
+
+#: nis/nis_print_group_entry.c:147 nis/nis_print_group_entry.c:163
+msgid "    Explicit nonmembers:\n"
+msgstr "    Explicitni nečlanovi:\n"
+
+#: nis/nis_print_group_entry.c:131
+msgid "    Implicit members:\n"
+msgstr "    Implicitni članovi:\n"
+
+#: nis/nis_print_group_entry.c:155
+msgid "    Implicit nonmembers:\n"
+msgstr "    Implicitni nečlanovi:\n"
+
+#: nis/nis_print_group_entry.c:128
+msgid "    No explicit members\n"
+msgstr "    Nema eksplicitnih članova\n"
+
+#: nis/nis_print_group_entry.c:152
+msgid "    No explicit nonmembers\n"
+msgstr "    Nema eksplicitnih nečlanova\n"
+
+#: nis/nis_print_group_entry.c:136
+msgid "    No implicit members\n"
+msgstr "    Nema implicitnih članova\n"
+
+#: nis/nis_print_group_entry.c:160
+msgid "    No implicit nonmembers\n"
+msgstr "    Nema implicitnih nečlanova\n"
+
+#: nis/nis_print_group_entry.c:144
+msgid "    No recursive members\n"
+msgstr "    Nema rekurzivnih članova\n"
+
+#: nis/nis_print_group_entry.c:168
+msgid "    No recursive nonmembers\n"
+msgstr "    Nema rekurzivnih nečlanova\n"
+
+#: nis/nis_print_group_entry.c:139
+msgid "    Recursive members:\n"
+msgstr "    Rekurzivni članovi:\n"
+
+#: sunrpc/rpcinfo.c:574
+msgid "   program vers proto   port\n"
+msgstr "   program inacica protokol   port\n"
+
+#: argp/argp-help.c:1572
+msgid "  or: "
+msgstr "  ili: "
+
+#: elf/ldconfig.c:457
+msgid " (SKIPPED)\n"
+msgstr " (PRESKOČENO)\n"
+
+#: elf/ldconfig.c:455
+msgid " (changed)\n"
+msgstr " (promijenjeno)\n"
+
+#: timezone/zic.c:427
+#, c-format
+msgid " (rule from \"%s\", line %d)"
+msgstr " (pravilo od \"%s\", redak %d)"
+
+#: argp/argp-help.c:1584
+msgid " [OPTION...]"
+msgstr " [OPCIJA...]"
+
+#: timezone/zic.c:424
+#, c-format
+msgid "\"%s\", line %d: %s"
+msgstr "\"%s\", redak %d: %s"
+
+#: timezone/zic.c:989
+#, c-format
+msgid "\"Zone %s\" line and -l option are mutually exclusive"
+msgstr "\"Zone %s\" redak i odrednica -l su međusobno isključivi"
+
+#: timezone/zic.c:997
+#, c-format
+msgid "\"Zone %s\" line and -p option are mutually exclusive"
+msgstr "\"Zone %s\" redak i odrednica -p su međusobno isključivi"
+
+#: sunrpc/rpc_main.c:1412
+msgid "\"infile\" is required for template generation flags.\n"
+msgstr "\"ulaznispis\" je potreban za odrednice navedene u predlošku.\n"
+
+#: argp/argp-help.c:209
+#, c-format
+msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
+msgstr "%.*s: ARGP_HELP_FMT parametar zahtijeva vrijednost"
+
+#: argp/argp-help.c:218
+#, c-format
+msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
+msgstr "%.*s: Nepoznati ARGP_HELP_FMT parametar"
+
+#: locale/programs/ld-address.c:581 locale/programs/ld-collate.c:2612 locale/programs/ld-collate.c:3740 locale/programs/ld-ctype.c:2112 locale/programs/ld-ctype.c:2849 locale/programs/ld-identification.c:448 locale/programs/ld-measurement.c:237 locale/programs/ld-messages.c:331 locale/programs/ld-monetary.c:936 locale/programs/ld-name.c:305 locale/programs/ld-numeric.c:375 locale/programs/ld-paper.c:238 locale/programs/ld-telephone.c:313 locale/programs/ld-time.c:1199
+#, c-format
+msgid "%1$s: definition does not end with `END %1$s'"
+msgstr "%1$s: definicija ne završava sa `END %1$s'"
+
+#: elf/cache.c:190 elf/cache.c:200
+#, c-format
+msgid "%d libs found in cache `%s'\n"
+msgstr "%d biblioteka nađeno  u međumemoriji `%s'\n"
+
+#: timezone/zic.c:799
+#, c-format
+msgid "%s in ruleless zone"
+msgstr "%s u zoni bez pravila"
+
+#: elf/../sysdeps/generic/readelflib.c:67
+#, c-format
+msgid "%s is a 32 bit ELF file.\n"
+msgstr "%s je  32 bitni ELF spis.\n"
+
+#: elf/../sysdeps/generic/readelflib.c:69
+#, c-format
+msgid "%s is a 64 bit ELF file.\n"
+msgstr "%s je 64 bitni ELF spis.\n"
+
+#: elf/../sysdeps/unix/sysv/linux/i386/readelflib.c:49
+#, c-format
+msgid "%s is for unknown machine %d.\n"
+msgstr "%s je za nepoznati stroj %d.\n"
+
+#: elf/ldconfig.c:326
+#, c-format
+msgid "%s is not a known library type"
+msgstr "%s nije poznati tip biblioteke"
+
+#: elf/../sysdeps/generic/readelflib.c:78
+#, c-format
+msgid "%s is not a shared object file (Type: %d).\n"
+msgstr "%s nije spis tipa dijeljenog objekta (Tip: %d).\n"
+
+#: elf/ldconfig.c:424
+#, c-format
+msgid "%s is not a symbolic link\n"
+msgstr "%s nije simbolički link\n"
+
+#: elf/readlib.c:155
+#, c-format
+msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
+msgstr "%s nije ELF spis - ima neispravne bajtove na početku.\n"
+
+#: assert/assert.c:54
+#, c-format
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sUbacivanje `%s' nije uspjelo.\n"
+
+#: assert/assert-perr.c:56
+#, c-format
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%sNeočekivana greška: %s.\n"
+
+#: stdio-common/psignal.c:62
+#, c-format
+msgid "%s%sUnknown signal %d\n"
+msgstr "%s%sNepoznati signal %d\n"
+
+#: timezone/zic.c:2234
+#, c-format
+msgid "%s: %d did not sign extend correctly\n"
+msgstr ""
+
+#: locale/programs/charmap.c:331
+#, c-format
+msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
+msgstr "%s: <mb_cur_max> mora biti veći od <mb_cur_min>\n"
+
+#: sunrpc/rpc_main.c:423
+#, c-format
+msgid "%s: C preprocessor failed with exit code %d\n"
+msgstr "%s: C pretprocesor nije zakazalo sa izlaznim rezultatom %d\n"
+
+#: sunrpc/rpc_main.c:420
+#, c-format
+msgid "%s: C preprocessor failed with signal %d\n"
+msgstr "%s: C pretprocesor zakazao sa signalom %d\n"
+
+#: timezone/zic.c:1500
+#, c-format
+msgid "%s: Can't create %s: %s\n"
+msgstr "%s: Ne mogu napraviti %s: %s\n"
+
+#: timezone/zic.c:2212
+#, c-format
+msgid "%s: Can't create directory %s: %s\n"
+msgstr "%s: Ne mogu napraviti mapu %s: %s\n"
+
+#: timezone/zic.c:651
+#, c-format
+msgid "%s: Can't link from %s to %s: %s\n"
+msgstr "%s: Ne mogu napraviti link sa %s na %s: %s\n"
+
+#: timezone/zic.c:825
+#, c-format
+msgid "%s: Can't open %s: %s\n"
+msgstr "%s: Ne mogu otvoriti %s: %s\n"
+
+#: timezone/zic.c:1490
+#, c-format
+msgid "%s: Can't remove %s: %s\n"
+msgstr "%s: Ne mogu ukloniti %s: %s\n"
+
+#: timezone/zic.c:636
+#, c-format
+msgid "%s: Can't unlink  %s: %s\n"
+msgstr "%s: Ne mogu napraviti unlink  %s: %s\n"
+
+#: timezone/zic.c:894
+#, c-format
+msgid "%s: Error closing %s: %s\n"
+msgstr "%s: Greška pri zatvaranju %s: %s\n"
+
+#: timezone/zic.c:887
+#, c-format
+msgid "%s: Error reading %s\n"
+msgstr "%s: Greška pri čitanju %s\n"
+
+#: timezone/zic.c:1566
+#, c-format
+msgid "%s: Error writing %s\n"
+msgstr "%s: Greška pri pisanju %s\n"
+
+#: timezone/zic.c:872
+#, c-format
+msgid "%s: Leap line in non leap seconds file %s\n"
+msgstr ""
+
+#: timezone/zic.c:365
+#, c-format
+msgid "%s: Memory exhausted: %s\n"
+msgstr "%s: Memorija iscrpljena: %s\n"
+
+#: timezone/zic.c:531
+#, c-format
+msgid "%s: More than one -L option specified\n"
+msgstr "%s: Navedeno je više od jedne -L odrednice\n"
+
+#: timezone/zic.c:491
+#, c-format
+msgid "%s: More than one -d option specified\n"
+msgstr "%s: Navedeno je više od jedne -d odrednice\n"
+
+#: timezone/zic.c:501
+#, c-format
+msgid "%s: More than one -l option specified\n"
+msgstr "%s: Navedeno je više od jedne -l odrednice\n"
+
+#: timezone/zic.c:511
+#, c-format
+msgid "%s: More than one -p option specified\n"
+msgstr "%s: Navedeno je više od jedne -p odrednice\n"
+
+#: timezone/zic.c:521
+#, c-format
+msgid "%s: More than one -y option specified\n"
+msgstr "%s: Navedeno je više od jedne -y odrednice\n"
+
+#: argp/argp-parse.c:646
+#, c-format
+msgid "%s: Too many arguments\n"
+msgstr "%s: Previše argumenata\n"
+
+#: locale/programs/ld-collate.c:457 locale/programs/ld-collate.c:483 locale/programs/ld-collate.c:499
+#, c-format
+msgid "%s: `%s' mentioned more than once in definition of weight %d"
+msgstr "%s: `%s' spomenuto više od jednom u definiciji težine %d"
+
+#: locale/programs/ld-collate.c:1336
+#, c-format
+msgid "%s: `%s' must be a character"
+msgstr "%s: `%s' mora biti znak"
+
+#: locale/programs/ld-address.c:248 locale/programs/ld-address.c:276 locale/programs/ld-address.c:309 locale/programs/ld-address.c:321
+#, c-format
+msgid "%s: `%s' value does not match `%s' value"
+msgstr "%s: `%s' vrijednost ne odgovara vrijednosti `%s'"
+
+#: locale/programs/ld-monetary.c:837 locale/programs/ld-numeric.c:318
+#, c-format
+msgid "%s: `-1' must be last entry in `%s' field"
+msgstr "%s: `-1' mora biti u zasnjem unosu u polju `%s'"
+
+#: locale/programs/ld-collate.c:447 locale/programs/ld-collate.c:473
+#, c-format
+msgid "%s: `forward' and `backward' are mutually excluding each other"
+msgstr "%s: `forward' and `backward'  su međusobno isključivi"
+
+#: locale/programs/ld-collate.c:1528
+#, c-format
+msgid "%s: `position' must be used for a specific level in all sections or none"
+msgstr "%s: `position' mora biti korišteno za određenu razinu u svim dijelovima ili niti u jednom"
+
+#: locale/programs/ld-ctype.c:2637 locale/programs/ld-ctype.c:2777
+#, c-format
+msgid "%s: `translit_start' section does not end with `translit_end'"
+msgstr "%s: `translit_start' dio ne zavšava sa `translit_end'"
+
+#: locale/programs/ld-collate.c:1136
+#, c-format
+msgid "%s: byte sequence of first character of sequence is not lower than that of the last character"
+msgstr "%s: niz bajtova prvog znaka u nizi nije niži od od niza zadnjeg znaka"
+
+#: locale/programs/ld-collate.c:1094
+#, c-format
+msgid "%s: byte sequences of first and last character must have the same length"
+msgstr "%s: niz bajtova prvog i zadnjeg znaka moraju biti iste duljine"
+
+#: locale/programs/ld-collate.c:3663
+#, c-format
+msgid "%s: cannot have `%s' as end of ellipsis range"
+msgstr ""
+
+#: locale/programs/ld-collate.c:3327
+#, c-format
+msgid "%s: cannot reorder after %.*s: symbol not known"
+msgstr "%s: ne mogu promijeniti raspored poslije %.*s: simbol nije poznat"
+
+#: locale/programs/ld-ctype.c:2912 locale/programs/ld-ctype.c:2996 locale/programs/ld-ctype.c:3016 locale/programs/ld-ctype.c:3037 locale/programs/ld-ctype.c:3058 locale/programs/ld-ctype.c:3079 locale/programs/ld-ctype.c:3100 locale/programs/ld-ctype.c:3140 locale/programs/ld-ctype.c:3161 locale/programs/ld-ctype.c:3228
+#, c-format
+msgid "%s: character `%s' in charmap not representable with one byte"
+msgstr "%s: znak `%s' u znakovnom skupu ne može biti predstavljen jednim bajtom"
+
+#: locale/programs/ld-ctype.c:3272 locale/programs/ld-ctype.c:3297
+#, c-format
+msgid "%s: character `%s' needed as default value not representable with one byte"
+msgstr "%s: character `%s' needed as default value not representable with one byte"
+
+#: locale/programs/ld-ctype.c:2907
+#, c-format
+msgid "%s: character `%s' not defined in charmap while needed as default value"
+msgstr "%s: character `%s' not defined in charmap while needed as default value"
+
+#: locale/programs/ld-ctype.c:2991 locale/programs/ld-ctype.c:3011 locale/programs/ld-ctype.c:3053 locale/programs/ld-ctype.c:3074 locale/programs/ld-ctype.c:3095 locale/programs/ld-ctype.c:3135 locale/programs/ld-ctype.c:3156 locale/programs/ld-ctype.c:3223 locale/programs/ld-ctype.c:3265 locale/programs/ld-ctype.c:3290
+#, c-format
+msgid "%s: character `%s' not defined while needed as default value"
+msgstr "%s: character `%s' not defined while needed as default value"
+
+#: timezone/zic.c:1933
+#, c-format
+msgid "%s: command was '%s', result was %d\n"
+msgstr "%s: naredba je bila '%s', rezultat je bio %d\n"
+
+#: locale/programs/ld-time.c:246
+#, c-format
+msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
+msgstr ""
+
+#: locale/programs/ld-time.c:258
+#, c-format
+msgid "%s: direction flag in string %Zd in `era' field is not a single character"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:2729
+#, c-format
+msgid "%s: duplicate `default_missing' definition"
+msgstr "%s: dvostruka `default_missing' definicija"
+
+#: locale/programs/ld-identification.c:431
+#, c-format
+msgid "%s: duplicate category version definition"
+msgstr "%s: dvostruka definicija verzije kategorije"
+
+#: locale/programs/ld-collate.c:2730
+#, c-format
+msgid "%s: duplicate declaration of section `%s'"
+msgstr "%s: dvostruka deklaracija dijela `%s'"
+
+#: locale/programs/ld-collate.c:2694
+#, c-format
+msgid "%s: duplicate definition of `%s'"
+msgstr "%s: dvostruka definicija `%s'"
+
+#: locale/programs/ld-collate.c:3712
+#, c-format
+msgid "%s: empty category description not allowed"
+msgstr "%s: prazan opis kategorije nije dozvoljen"
+
+#: locale/programs/ld-collate.c:755
+#, c-format
+msgid "%s: empty weight string not allowed"
+msgstr "%s: prazni niz znakova nije dozvoljen"
+
+#: locale/programs/charmap.c:836
+#, c-format
+msgid "%s: error in state machine"
+msgstr "%s: greška u automatu"
+
+#: locale/programs/ld-address.c:489 locale/programs/ld-address.c:526 locale/programs/ld-address.c:564 locale/programs/ld-ctype.c:2485 locale/programs/ld-identification.c:360 locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:300 locale/programs/ld-monetary.c:694 locale/programs/ld-monetary.c:729 locale/programs/ld-monetary.c:770 locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:263 locale/programs/ld-paper.c:221 locale/programs/ld-telephone.c:288 locale/programs/ld-time.c:1104 locale/programs/ld-time.c:1146
+#, c-format
+msgid "%s: field `%s' declared more than once"
+msgstr "%s: polje `%s' je deklarirano više puta"
+
+#: locale/programs/ld-ctype.c:1526 locale/programs/ld-ctype.c:1651 locale/programs/ld-ctype.c:1757 locale/programs/ld-ctype.c:2348 locale/programs/ld-ctype.c:3331
+#, c-format
+msgid "%s: field `%s' does not contain exactly ten entries"
+msgstr "%s: polje `%s' ne sadrži točno deset unosa"
+
+#: locale/programs/ld-address.c:154 locale/programs/ld-address.c:205 locale/programs/ld-address.c:230 locale/programs/ld-address.c:259 locale/programs/ld-name.c:115 locale/programs/ld-telephone.c:117
+#, c-format
+msgid "%s: field `%s' must not be empty"
+msgstr "%s: polje `%s' ne smije biti prazno"
+
+#: locale/programs/ld-address.c:142 locale/programs/ld-address.c:180 locale/programs/ld-address.c:197 locale/programs/ld-address.c:224 locale/programs/ld-address.c:284 locale/programs/ld-address.c:303 locale/programs/ld-address.c:315 locale/programs/ld-identification.c:145 locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:206 locale/programs/ld-monetary.c:244 locale/programs/ld-monetary.c:260 locale/programs/ld-monetary.c:272 locale/programs/ld-name.c:104 locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:113 locale/programs/ld-numeric.c:127 locale/programs/ld-paper.c:101 locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:105 locale/programs/ld-telephone.c:163 locale/programs/ld-time.c:175 locale/programs/ld-time.c:195
+#, c-format
+msgid "%s: field `%s' not defined"
+msgstr "%s: polje `%s' nije definirano"
+
+#: locale/programs/ld-messages.c:115 locale/programs/ld-messages.c:148
+#, c-format
+msgid "%s: field `%s' undefined"
+msgstr "%s: nije  `%s' nedefinirano"
+
+#: locale/programs/ld-time.c:279
+#, c-format
+msgid "%s: garbage at end of offset value in string %Zd in `era' field"
+msgstr "%s: smeće pri kraju vrijednosti pomaka znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-time.c:339
+#, c-format
+msgid "%s: garbage at end of starting date in string %Zd in `era' field "
+msgstr "%s: smeće pri kraju početnog datuma u znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-time.c:416
+#, c-format
+msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
+msgstr "%s: smeće pri kraju završnog datuma u znakovnom nizu %Zd u `era' polju"
+
+#: posix/getopt.c:887 posix/getopt.c:890
+#, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr "%s: nedozvoljena opcija -- %c\n"
+
+#: locale/programs/ld-address.c:578 locale/programs/ld-collate.c:3738 locale/programs/ld-ctype.c:2846 locale/programs/ld-identification.c:445 locale/programs/ld-measurement.c:234 locale/programs/ld-messages.c:329 locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:303 locale/programs/ld-numeric.c:373 locale/programs/ld-paper.c:236 locale/programs/ld-telephone.c:311 locale/programs/ld-time.c:1197
+#, c-format
+msgid "%s: incomplete `END' line"
+msgstr "%s: nepotpuni `END' redak"
+
+#: locale/programs/ld-address.c:166
+#, c-format
+msgid "%s: invalid escape `%%%c' sequence in field `%s'"
+msgstr "%s: neispravana escape sekvenca `%%%c' u polju `%s'"
+
+#: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:126 locale/programs/ld-telephone.c:150
+#, c-format
+msgid "%s: invalid escape sequence in field `%s'"
+msgstr "%s: neispravna escape sekvenca u polju `%s'"
+
+#: locale/programs/ld-time.c:271
+#, c-format
+msgid "%s: invalid number for offset in string %Zd in `era' field"
+msgstr "%s: neispravan broj za pomak u znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-collate.c:3162
+#, c-format
+msgid "%s: invalid number of sorting rules"
+msgstr "%s: neispravan broj pravila za sortiranje"
+
+#: posix/getopt.c:896 posix/getopt.c:899
+#, c-format
+msgid "%s: invalid option -- %c\n"
+msgstr "%s: nedozvoljena opcija -- %c\n"
+
+#: locale/programs/ld-time.c:330
+#, c-format
+msgid "%s: invalid starting date in string %Zd in `era' field"
+msgstr "%s: neispravan početni datum u znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-time.c:407
+#, c-format
+msgid "%s: invalid stopping date in string %Zd in `era' field"
+msgstr "%s: neispravan datum zaustavljanja u znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-measurement.c:112
+#, c-format
+msgid "%s: invalid value for field `%s'"
+msgstr "%s: neispravna vrijednost za polje `%s'"
+
+#: locale/programs/ld-address.c:242 locale/programs/ld-address.c:270
+#, c-format
+msgid "%s: language abbreviation `%s' not defined"
+msgstr "%s: kratica jezika `%s' nije definirana"
+
+#: resolv/res_hconf.c:366
+#, c-format
+msgid "%s: line %d: bad command `%s'\n"
+msgstr "%s: redak %d: loša naredba `%s'\n"
+
+#: resolv/res_hconf.c:165
+#, c-format
+msgid "%s: line %d: cannot specify more than %d services"
+msgstr "%s: redak %d: ne može se izvršiti više od %d usluga"
+
+#: resolv/res_hconf.c:231
+#, c-format
+msgid "%s: line %d: cannot specify more than %d trim domains"
+msgstr "%s: redak %d: ne mogu odrediti više od %d trim domene"
+
+#: resolv/res_hconf.c:319
+#, c-format
+msgid "%s: line %d: expected `on' or `off', found `%s'\n"
+msgstr "%s: redak %d: očekujem `on' ili `off', našao `%s'\n"
+
+#: resolv/res_hconf.c:147
+#, c-format
+msgid "%s: line %d: expected service, found `%s'\n"
+msgstr "%s: redak %d: očekujem servis, našao `%s'\n"
+
+#: resolv/res_hconf.c:395
+#, c-format
+msgid "%s: line %d: ignoring trailing garbage `%s'\n"
+msgstr ""
+
+#: resolv/res_hconf.c:256
+#, c-format
+msgid "%s: line %d: list delimiter not followed by domain"
+msgstr "%s: redak %d: znak za odvajanje liste ne slijedi domena"
+
+#: resolv/res_hconf.c:191
+#, c-format
+msgid "%s: line %d: list delimiter not followed by keyword"
+msgstr "%s: redak %d: znak za odvajanje liste ne slijedi ključna riječ"
+
+#: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365 locale/programs/ld-collate.c:3716
+#, c-format
+msgid "%s: missing `order_end' keyword"
+msgstr "%s: nedostaje ključna riječ  `order_end'"
+
+#: locale/programs/ld-collate.c:3379 locale/programs/ld-collate.c:3728
+#, c-format
+msgid "%s: missing `reorder-end' keyword"
+msgstr "%s: nedostaje ključna riječ `reorder-end'"
+
+#: locale/programs/ld-collate.c:3731
+#, c-format
+msgid "%s: missing `reorder-sections-end' keyword"
+msgstr "%s: nedostaje ključna riječ `reorder-sections-end'"
+
+#: locale/programs/ld-time.c:456
+#, c-format
+msgid "%s: missing era format in string %Zd in `era' field"
+msgstr "%s: nedostaje era format u znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-time.c:444
+#, c-format
+msgid "%s: missing era name in string %Zd in `era' field"
+msgstr "%s: nedostaje era ime u znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-collate.c:3138
+#, c-format
+msgid "%s: multiple order definitions for section `%s'"
+msgstr "%s: višestruke definicije poretka za dio `%s'"
+
+#: locale/programs/ld-collate.c:3188
+#, c-format
+msgid "%s: multiple order definitions for unnamed section"
+msgstr "%s: višestruke definicije poretka za neimenovani odjeljak"
+
+#: locale/programs/ld-messages.c:137 locale/programs/ld-messages.c:170
+#, c-format
+msgid "%s: no correct regular expression for field `%s': %s"
+msgstr "%s: nema ispravnog regularnog izraza za polje `%s': %s"
+
+#: locale/programs/ld-identification.c:169
+#, c-format
+msgid "%s: no identification for category `%s'"
+msgstr "%s: nema identifikacije za kategoriju `%s'"
+
+#: locale/programs/ld-ctype.c:2755
+#, c-format
+msgid "%s: no representable `default_missing' definition found"
+msgstr "%s: nema reprezentativne definicije  `default_missing'"
+
+#: locale/programs/ld-collate.c:591
+#, c-format
+msgid "%s: not enough sorting rules"
+msgstr "%s: nema dovoljno pravila za sortiranje"
+
+#: locale/programs/ld-address.c:295
+#, c-format
+msgid "%s: numeric country code `%d' not valid"
+msgstr "%s: brojčani kod zemlje `%d' nije ispravan"
+
+#: posix/getopt.c:743 posix/getopt.c:748
+#, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr "%s: opcija `%c%s' ne dopušta argument\n"
+
+#: posix/getopt.c:688 posix/getopt.c:698
+#, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr "%s: opcija `%s' je nejednoznačna\n"
+
+#: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070 posix/getopt.c:1082
+#, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr "%s: opcija `%s' zahtijeva argument\n"
+
+#: posix/getopt.c:730 posix/getopt.c:734
+#, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr "%s: opcija `--%s' ne dopušta argument\n"
+
+#: posix/getopt.c:1038 posix/getopt.c:1049
+#, c-format
+msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgstr "%s: opcija `-W %s' ne dopušta argument\n"
+
+#: posix/getopt.c:1004 posix/getopt.c:1014
+#, c-format
+msgid "%s: option `-W %s' is ambiguous\n"
+msgstr "%s: opcija `-W %s' je nejednoznačna\n"
+
+#: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136 posix/getopt.c:1147
+#, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr "%s: opcija zahtijeva argument -- %c\n"
+
+#: locale/programs/ld-collate.c:1327 locale/programs/ld-collate.c:3675
+#, c-format
+msgid "%s: order for `%.*s' already defined at %s:%Zu"
+msgstr "%s: poredak za `%.*s' je već definiran kod %s:%Zu"
+
+#: locale/programs/ld-collate.c:3316
+#, c-format
+msgid "%s: order for collating element %.*s not yet defined"
+msgstr "%s: order for collating element %.*s not yet defined"
+
+#: locale/programs/ld-collate.c:3300
+#, c-format
+msgid "%s: order for collating symbol %.*s not yet defined"
+msgstr "%s: order for collating symbol %.*s not yet defined"
+
+#: sunrpc/rpc_main.c:289
+#, c-format
+msgid "%s: output would overwrite %s\n"
+msgstr "%s: izlaz bi prebrisao %s\n"
+
+#: timezone/zic.c:879 timezone/zic.c:1293 timezone/zic.c:1318
+#, c-format
+msgid "%s: panic: Invalid l_value %d\n"
+msgstr "%s: panic: Neispravna l_value %d\n"
+
+#: locale/programs/charmap.c:843 locale/programs/ld-address.c:597 locale/programs/ld-collate.c:2609 locale/programs/ld-collate.c:3756 locale/programs/ld-ctype.c:2109 locale/programs/ld-ctype.c:2866 locale/programs/ld-identification.c:464 locale/programs/ld-measurement.c:253 locale/programs/ld-messages.c:347 locale/programs/ld-monetary.c:952 locale/programs/ld-name.c:321 locale/programs/ld-numeric.c:391 locale/programs/ld-paper.c:254 locale/programs/ld-telephone.c:329 locale/programs/ld-time.c:1215 locale/programs/locfile.h:103 locale/programs/repertoire.c:325
+#, c-format
+msgid "%s: premature end of file"
+msgstr "%s: preran kraj spisa"
+
+#: locale/programs/ld-collate.c:3413 locale/programs/ld-collate.c:3601
+#, c-format
+msgid "%s: section `%.*s' not known"
+msgstr "%s: odijeljak `%.*s' nije poznat"
+
+#: locale/programs/ld-time.c:358
+#, c-format
+msgid "%s: starting date is invalid in string %Zd in `era' field"
+msgstr "%s: početni datum u neispravnom znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-time.c:435
+#, c-format
+msgid "%s: stopping date is invalid in string %Zd in `era' field"
+msgstr "%s: završni datum u neispravnom znakovnom nizu %Zd u `era' polju"
+
+#: locale/programs/ld-collate.c:1261
+#, c-format
+msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
+msgstr ""
+
+#: locale/programs/ld-collate.c:1257
+#, c-format
+msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
+msgstr ""
+
+#: locale/programs/ld-address.c:588 locale/programs/ld-collate.c:518 locale/programs/ld-collate.c:570 locale/programs/ld-collate.c:865 locale/programs/ld-collate.c:878 locale/programs/ld-collate.c:2599 locale/programs/ld-collate.c:3747 locale/programs/ld-ctype.c:1841 locale/programs/ld-ctype.c:2099 locale/programs/ld-ctype.c:2675 locale/programs/ld-ctype.c:2857 locale/programs/ld-identification.c:455 locale/programs/ld-measurement.c:244 locale/programs/ld-messages.c:338 locale/programs/ld-monetary.c:943 locale/programs/ld-name.c:312 locale/programs/ld-numeric.c:382 locale/programs/ld-paper.c:245 locale/programs/ld-telephone.c:320 locale/programs/ld-time.c:1206
+#, c-format
+msgid "%s: syntax error"
+msgstr "%s: greška u sintaksi"
+
+#: locale/programs/ld-ctype.c:2180
+#, c-format
+msgid "%s: syntax error in definition of new character class"
+msgstr "%s: sintayksna greška u definiciji nove klase znakova"
+
+#: locale/programs/ld-ctype.c:2195
+#, c-format
+msgid "%s: syntax error in definition of new character map"
+msgstr "%s: sintaksna greška u definiciji novog skupa znakova"
+
+#: locale/programs/ld-ctype.c:3737
+#, c-format
+msgid "%s: table for class \"%s\": %lu bytes\n"
+msgstr "%s: tablica za klasu  \"%s\": %lu bajtova\n"
+
+#: locale/programs/ld-ctype.c:3805
+#, c-format
+msgid "%s: table for map \"%s\": %lu bytes\n"
+msgstr "%s: tablica za skup \"%s\": %lu bajtova\n"
+
+#: locale/programs/ld-ctype.c:3937
+#, c-format
+msgid "%s: table for width: %lu bytes\n"
+msgstr "%s: tablica za širinu: %lu bajtova\n"
+
+#: locale/programs/ld-address.c:216
+#, c-format
+msgid "%s: terminology language code `%s' not defined"
+msgstr ""
+
+#: locale/programs/ld-collate.c:1067
+#, c-format
+msgid "%s: the start and the end symbol of a range must stand for characters"
+msgstr ""
+
+#: locale/programs/ld-time.c:485
+#, c-format
+msgid "%s: third operand for value of field `%s' must not be larger than %d"
+msgstr ""
+
+#: locale/programs/ld-time.c:983
+#, c-format
+msgid "%s: too few values for field `%s'"
+msgstr ""
+
+#: locale/programs/ld-collate.c:555
+#, c-format
+msgid "%s: too many rules; first entry only had %d"
+msgstr ""
+
+#: locale/programs/ld-collate.c:906
+#, c-format
+msgid "%s: too many values"
+msgstr ""
+
+#: locale/programs/ld-time.c:1030
+#, c-format
+msgid "%s: too many values for field `%s'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:3641
+#, c-format
+msgid "%s: transliteration data from locale `%s' not available"
+msgstr ""
+
+#: sunrpc/rpc_main.c:296
+#, c-format
+msgid "%s: unable to open %s: %m\n"
+msgstr ""
+
+#: locale/programs/ld-collate.c:2868
+#, c-format
+msgid "%s: unknown character in collating symbol name"
+msgstr ""
+
+#: locale/programs/ld-collate.c:3000
+#, c-format
+msgid "%s: unknown character in equivalent definition name"
+msgstr ""
+
+#: locale/programs/ld-collate.c:3013
+#, c-format
+msgid "%s: unknown character in equivalent definition value"
+msgstr ""
+
+#: locale/programs/ld-address.c:493 locale/programs/ld-address.c:531 locale/programs/ld-identification.c:364 locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:698 locale/programs/ld-monetary.c:733 locale/programs/ld-name.c:282 locale/programs/ld-numeric.c:267 locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:999 locale/programs/ld-time.c:1067 locale/programs/ld-time.c:1109
+#, c-format
+msgid "%s: unknown character in field `%s'"
+msgstr ""
+
+#: locale/programs/ld-collate.c:3110
+#, c-format
+msgid "%s: unknown section name `%s'"
+msgstr ""
+
+#: locale/programs/ld-collate.c:3023
+#, c-format
+msgid "%s: unknown symbol `%s' in equivalent definition"
+msgstr ""
+
+#: posix/getopt.c:841 posix/getopt.c:844
+#, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr "%s: neprepoznata opcija `%c%s'\n"
+
+#: posix/getopt.c:830 posix/getopt.c:833
+#, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr "%s: neprepoznata opcija `--%s'\n"
+
+#: timezone/zic.c:449
+#, c-format
+msgid ""
+"%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
+"\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+msgstr ""
+
+#: timezone/zdump.c:175
+#, c-format
+msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
+msgstr ""
+
+#: locale/programs/ld-monetary.c:740 locale/programs/ld-numeric.c:274
+#, c-format
+msgid "%s: value for field `%s' must be a single character"
+msgstr ""
+
+#: locale/programs/ld-monetary.c:308
+#, c-format
+msgid "%s: value for field `%s' must be in range %d...%d"
+msgstr ""
+
+#: locale/programs/ld-messages.c:121 locale/programs/ld-messages.c:154
+#, c-format
+msgid "%s: value for field `%s' must not be an empty string"
+msgstr ""
+
+#: locale/programs/ld-monetary.c:250 locale/programs/ld-numeric.c:119
+#, c-format
+msgid "%s: value for field `%s' must not be the empty string"
+msgstr ""
+
+#: locale/programs/ld-monetary.c:232
+#, c-format
+msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217"
+msgstr ""
+
+#: locale/programs/ld-monetary.c:224
+#, c-format
+msgid "%s: value of field `int_curr_symbol' has wrong length"
+msgstr ""
+
+#: locale/programs/ld-monetary.c:859 locale/programs/ld-numeric.c:339
+#, c-format
+msgid "%s: values for field `%s' must be smaller than 127"
+msgstr ""
+
+#: locale/programs/ld-time.c:509
+#, c-format
+msgid "%s: values for field `%s' must not be larger than %d"
+msgstr ""
+
+#: locale/programs/ld-time.c:493 locale/programs/ld-time.c:501
+#, c-format
+msgid "%s: values of field `%s' must not be larger than %d"
+msgstr ""
+
+#: locale/programs/ld-collate.c:850
+#, c-format
+msgid "%s: weights must use the same ellipsis symbol as the name"
+msgstr ""
+
+#: sunrpc/rpc_main.c:308
+#, c-format
+msgid "%s: while writing output %s: %m"
+msgstr ""
+
+#: argp/argp-parse.c:170
+msgid "(PROGRAM ERROR) No version known!?"
+msgstr ""
+
+#: argp/argp-parse.c:787
+msgid "(PROGRAM ERROR) Option should have been recognized!?"
+msgstr ""
+
+#: nis/nis_print.c:133
+msgid "(Unknown object)\n"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:133
+#, c-format
+msgid "(unknown authentication error - %d)"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:613
+msgid "(unknown)"
+msgstr "(nepoznat)"
+
+#: elf/sprof.c:570
+#, c-format
+msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
+msgstr ""
+
+#: catgets/gencat.c:282
+msgid "*standard input*"
+msgstr ""
+
+#: elf/cache.c:105
+#, c-format
+msgid ", OS ABI: %s %d.%d.%d"
+msgstr ""
+
+#: catgets/gencat.c:125
+msgid ""
+"-o OUTPUT-FILE [INPUT-FILE]...\n"
+"[OUTPUT-FILE [INPUT-FILE]...]"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:797 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:115
+msgid ".lib section in a.out corrupted"
+msgstr ".lib dio u a.out je neispravan"
+
+#: sunrpc/clnt_perr.c:119 sunrpc/clnt_perr.c:140
+#, c-format
+msgid "; low version = %lu, high version = %lu"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:126
+msgid "; why = "
+msgstr ""
+
+#: locale/programs/charmap.c:1004
+#, c-format
+msgid "<%s> and <%s> are illegal names for range"
+msgstr ""
+
+#: locale/programs/repertoire.c:448
+#, c-format
+msgid "<%s> and <%s> are invalid names for range"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:573 locale/programs/ld-ctype.c:608
+#, c-format
+msgid "<SP> character must not be in class `%s'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:561 locale/programs/ld-ctype.c:597
+#, c-format
+msgid "<SP> character not in class `%s'"
+msgstr ""
+
+#. TRANS The experienced user will know what is wrong.
+#. TRANS @c This error code is a joke.  Its perror text is part of the joke.
+#. TRANS @c Don't change it.
+#: stdio-common/../sysdeps/gnu/errlist.c:622
+msgid "?"
+msgstr "?"
+
+#: sysdeps/generic/siglist.h:34
+msgid "Aborted"
+msgstr "Otkazan"
+
+#: nis/nis_print.c:324
+msgid "Access Rights : "
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:793 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:114
+msgid "Accessing a corrupted shared library"
+msgstr ""
+
+#. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
+#: stdio-common/../sysdeps/gnu/errlist.c:367 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:155
+msgid "Address already in use"
+msgstr ""
+
+#: posix/../sysdeps/posix/gai_strerror.c:31
+msgid "Address family for hostname not supported"
+msgstr ""
+
+#. TRANS The address family specified for a socket is not supported; it is
+#. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
+#: stdio-common/../sysdeps/gnu/errlist.c:362
+msgid "Address family not supported by protocol"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:154
+msgid "Address family not supported by protocol family"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:761 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:98
+msgid "Advertise error"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:40 sysdeps/generic/siglist.h:40
+msgid "Alarm clock"
+msgstr "Budilica"
+
+#: posix/../sysdeps/posix/gai_strerror.c:45
+msgid "All requests done"
+msgstr ""
+
+#: malloc/memusagestat.c:57
+msgid "Also draw graph for total memory consumption"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:83
+msgid "Anode table overflow"
+msgstr "Preljev u Anode tablici"
+
+#: intl/tst-gettext2.c:38
+msgid "Another string for testing."
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:37
+msgid "Arg list too long"
+msgstr ""
+
+#. TRANS Argument list too long; used when the arguments passed to a new program
+#. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
+#. TRANS File}) occupy too much memory space.  This condition never arises in the
+#. TRANS GNU system.
+#: stdio-common/../sysdeps/gnu/errlist.c:70
+msgid "Argument list too long"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:63
+msgid "Argument out of domain"
+msgstr ""
+
+#: nis/nis_error.c:66
+msgid "Attempt to remove a non-empty table"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:116
+msgid "Attempting to link in more shared libraries than system limit"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:801
+msgid "Attempting to link in too many shared libraries"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:354
+msgid "Authentication OK"
+msgstr "Autentifikacija OK"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:562
+msgid "Authentication error"
+msgstr "Greška pri autentifikaciji"
+
+#: nis/nis_print.c:109
+msgid "BOGUS OBJECT\n"
+msgstr ""
+
+#. TRANS Bad address; an invalid pointer was detected.
+#. TRANS In the GNU system, this error never happens; you get a signal instead.
+#: stdio-common/../sysdeps/gnu/errlist.c:115 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:44
+msgid "Bad address"
+msgstr "Loša adresa"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:80
+msgid "Bad exchange descriptor"
+msgstr ""
+
+#. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
+#. TRANS closed or reading from a descriptor open only for writing (or vice
+#. TRANS versa).
+#: stdio-common/../sysdeps/gnu/errlist.c:83
+msgid "Bad file descriptor"
+msgstr "Loš opisnik datoteke"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:39
+msgid "Bad file number"
+msgstr "Loš broj datoteke"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:749 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:87
+msgid "Bad font file format"
+msgstr "Loš format datoteke pisma"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:641
+msgid "Bad message"
+msgstr "Loša poruka"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:84
+msgid "Bad request code"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:81
+msgid "Bad request descriptor"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:38 sysdeps/generic/siglist.h:63
+msgid "Bad system call"
+msgstr "Loš sistemski poziv"
+
+#: posix/../sysdeps/posix/gai_strerror.c:33
+msgid "Bad value for ai_flags"
+msgstr ""
+
+#: locale/programs/localedef.c:104
+msgid "Be strictly POSIX conform"
+msgstr "Budi strogo POSIX kompatibilan"
+
+#: nis/nis_print.c:305
+msgid "Binary data\n"
+msgstr "Binarni podaci\n"
+
+#. TRANS A file that isn't a block special file was given in a situation that
+#. TRANS requires one.  For example, trying to mount an ordinary file as a file
+#. TRANS system in Unix gives this error.
+#: stdio-common/../sysdeps/gnu/errlist.c:122 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:45
+msgid "Block device required"
+msgstr ""
+
+#: sunrpc/pmap_rmt.c:348
+msgid "Broadcast poll problem"
+msgstr ""
+
+#. TRANS Broken pipe; there is no process reading from the other end of a pipe.
+#. TRANS Every library function that returns this error code also generates a
+#. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
+#. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
+#. TRANS unless it has handled or blocked @code{SIGPIPE}.
+#: stdio-common/../sysdeps/gnu/errlist.c:235 stdio-common/../sysdeps/unix/siglist.c:39 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:62 sysdeps/generic/siglist.h:39
+msgid "Broken pipe"
+msgstr "Prekinut kanal"
+
+#: stdio-common/../sysdeps/unix/siglist.c:36 sysdeps/generic/siglist.h:37
+msgid "Bus error"
+msgstr "Bus error"
+
+#: stdio-common/../sysdeps/unix/siglist.c:50 sysdeps/generic/siglist.h:50
+msgid "CPU time limit exceeded"
+msgstr "prekoračeno ograničenje CPU vremena"
+
+#: nis/nis_error.c:33
+msgid "Cache expired"
+msgstr "Cache istekao"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:789 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:113
+msgid "Can not access a needed shared library"
+msgstr "Ne mogu pristupiti potrebnoj dijeljenoj biblioteci"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:117
+msgid "Can not exec a shared library directly"
+msgstr "Ne mogu izravno izvršiti dijeljenu biblioteku"
+
+#: nis/ypclnt.c:794
+msgid "Can't bind to server which serves this domain"
+msgstr "Ne mogu napraviti bind na server koji poslužuje ovu domenu"
+
+#: elf/ldconfig.c:1008
+msgid "Can't chdir to /"
+msgstr "Ne mogu promijeniti direktorij u /"
+
+#: nis/ypclnt.c:806
+msgid "Can't communicate with portmapper"
+msgstr "Ne mogu komunicirati sa  portmapperom"
+
+#: nis/ypclnt.c:808
+msgid "Can't communicate with ypbind"
+msgstr "Ne mogu komunicirati sa ypbindom"
+
+#: nis/ypclnt.c:810
+msgid "Can't communicate with ypserv"
+msgstr "Ne mogu komunicirati sa ypservom"
+
+#: elf/cache.c:394
+#, c-format
+msgid "Can't create temporary cache file %s"
+msgstr "Ne mogu stvoriti privremenu cache datoteku %s"
+
+#: elf/ldconfig.c:512
+#, c-format
+msgid "Can't find %s"
+msgstr "Ne mogu naći %s"
+
+#: elf/ldconfig.c:449
+#, c-format
+msgid "Can't link %s to %s"
+msgstr "Ne mogu napraviti %s na %s"
+
+#: elf/ldconfig.c:528
+#, c-format
+msgid "Can't lstat %s"
+msgstr "Ne mogu napraviti lstat %s"
+
+#: elf/cache.c:131 elf/ldconfig.c:1029
+#, c-format
+msgid "Can't open cache file %s\n"
+msgstr "Ne mogu otvoriti cache datoteku %s\n"
+
+#: elf/ldconfig.c:1050
+#, c-format
+msgid "Can't open cache file directory %s\n"
+msgstr "Ne mogu otvoriti direktorij sa cache datotekom %s\n"
+
+#: elf/ldconfig.c:924
+#, c-format
+msgid "Can't open configuration file %s"
+msgstr "Ne mogu otvoriti konfiguracijsku datoteku %s"
+
+#: elf/ldconfig.c:634
+#, c-format
+msgid "Can't open directory %s"
+msgstr "Ne mogu otvoriit direktorij %s"
+
+#: elf/cache.c:387
+#, c-format
+msgid "Can't remove old temporary cache file %s"
+msgstr "Ne mogu ukloniti stare privremene cache datoteke %s"
+
+#: elf/ldconfig.c:344
+#, c-format
+msgid "Can't stat %s"
+msgstr "Ne mogu napraviti stat %s"
+
+#: elf/ldconfig.c:414
+#, c-format
+msgid "Can't stat %s\n"
+msgstr "Ne mogu napraviti stat %s\n"
+
+#: elf/ldconfig.c:443
+#, c-format
+msgid "Can't unlink %s"
+msgstr "Ne mogu ukloniti %s"
+
+#. TRANS No memory available.  The system cannot allocate more virtual memory
+#. TRANS because its capacity is full.
+#: stdio-common/../sysdeps/gnu/errlist.c:104
+msgid "Cannot allocate memory"
+msgstr "Ne mogu alocirati memoriju"
+
+#. TRANS The requested socket address is not available; for example, you tried
+#. TRANS to give a socket a name that doesn't match the local host name.
+#. TRANS @xref{Socket Addresses}.
+#: stdio-common/../sysdeps/gnu/errlist.c:374 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:156
+msgid "Cannot assign requested address"
+msgstr "Ne mogu pridijeliti zatraženu adresu"
+
+#: sunrpc/pmap_rmt.c:265
+msgid "Cannot create socket for broadcast rpc"
+msgstr "Ne mogu stvori socket za broadcast rpc"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:805
+msgid "Cannot exec a shared library directly"
+msgstr "Ne mogu izravno izvoditi dijeljenu biblioteku"
+
+#: elf/readlib.c:99
+#, c-format
+msgid "Cannot fstat file %s.\n"
+msgstr "Nemogu napraviti fstat na spisu %s.\n"
+
+#: sunrpc/rpc_main.c:1417
+msgid "Cannot have more than one file generation flag!\n"
+msgstr ""
+
+#: elf/ldconfig.c:689 elf/ldconfig.c:732
+#, c-format
+msgid "Cannot lstat %s"
+msgstr "Ne mogu izvršiti lstat %s"
+
+#: elf/readlib.c:118
+#, c-format
+msgid "Cannot mmap file %s.\n"
+msgstr "Ne mogu izvršiti mmap na datoteci %s.\n"
+
+#: sunrpc/pmap_rmt.c:361
+msgid "Cannot receive reply to broadcast"
+msgstr "Ne mogu primiti odgovor na broadcast"
+
+#: sunrpc/pmap_clnt.c:136
+msgid "Cannot register service"
+msgstr "Ne mogu registrirati uslugu"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:173
+msgid "Cannot send after socket shutdown"
+msgstr ""
+
+#. TRANS The socket has already been shut down.
+#: stdio-common/../sysdeps/gnu/errlist.c:435
+msgid "Cannot send after transport endpoint shutdown"
+msgstr ""
+
+#: sunrpc/pmap_rmt.c:323
+msgid "Cannot send broadcast packet"
+msgstr "Ne mogu poslati broadcast paket"
+
+#: sunrpc/pmap_rmt.c:272
+msgid "Cannot set socket option SO_BROADCAST"
+msgstr ""
+
+#: sunrpc/rpc_main.c:1195
+msgid "Cannot specify more than one input file!\n"
+msgstr ""
+
+#: elf/ldconfig.c:701
+#, c-format
+msgid "Cannot stat %s"
+msgstr "Ne mogu izvršiti stat %s"
+
+#: sunrpc/rpc_main.c:1374
+msgid "Cannot use netid flag with inetd flag!\n"
+msgstr ""
+
+#: sunrpc/rpc_main.c:1386
+msgid "Cannot use netid flag without TIRPC!\n"
+msgstr ""
+
+#: sunrpc/rpc_main.c:1393
+msgid "Cannot use table flags with newstyle!\n"
+msgstr ""
+
+#: elf/ldconfig.c:126
+msgid "Change to and use ROOT as root directory"
+msgstr ""
+
+#: elf/cache.c:426
+#, c-format
+msgid "Changing access rights of %s to %#o failed"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:689 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:67
+msgid "Channel number out of range"
+msgstr "Broj kanala izan dosega"
+
+#: nis/nis_print.c:268
+#, c-format
+msgid "Character Separator : %c\n"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:46 sysdeps/generic/siglist.h:46
+msgid "Child exited"
+msgstr "Dijete je završilo"
+
+#: sunrpc/clnt_perr.c:373
+msgid "Client credential too weak"
+msgstr "Vjerodajnica klijenta je preslaba"
+
+#: nis/nis_print.c:270
+msgid "Columns             :\n"
+msgstr "Stupaca             :\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:769 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:100
+msgid "Communication error on send"
+msgstr "Greška u komunikaciji pri slanju"
+
+#: locale/programs/localedef.c:112
+msgid "Compile locale specification"
+msgstr ""
+
+#. TRANS Go home and have a glass of warm, dairy-fresh milk.
+#: stdio-common/../sysdeps/gnu/errlist.c:632
+msgid "Computer bought the farm"
+msgstr "Računalo je odapelo"
+
+#: elf/ldconfig.c:136
+msgid "Configure Dynamic Linker Run Time Bindings."
+msgstr ""
+
+#. TRANS A remote host refused to allow the network connection (typically because
+#. TRANS it is not running the requested service).
+#: stdio-common/../sysdeps/gnu/errlist.c:452 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:176
+msgid "Connection refused"
+msgstr "Veza odbijena"
+
+#. TRANS A network connection was closed for reasons outside the control of the
+#. TRANS local host, such as by the remote machine rebooting or an unrecoverable
+#. TRANS protocol violation.
+#: stdio-common/../sysdeps/gnu/errlist.c:402 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:161
+msgid "Connection reset by peer"
+msgstr ""
+
+#. TRANS A socket operation with a specified timeout received no response during
+#. TRANS the timeout period.
+#: stdio-common/../sysdeps/gnu/errlist.c:446 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:175
+msgid "Connection timed out"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:45 sysdeps/generic/siglist.h:45
+msgid "Continued"
+msgstr "Nastavljeno"
+
+#: iconv/iconv_prog.c:73
+msgid "Convert encoding of given files from one encoding to another."
+msgstr ""
+
+#: catgets/gencat.c:246 elf/ldconfig.c:259 elf/sprof.c:355 iconv/iconv_prog.c:393 iconv/iconvconfig.c:335 locale/programs/locale.c:281 locale/programs/localedef.c:311 nscd/nscd.c:287 nscd/nscd_nischeck.c:90 nss/getent.c:63 posix/getconf.c:904
+#, c-format
+msgid ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"This is free software; see the source for copying conditions.  There is NO\n"
+"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+msgstr ""
+
+#: nscd/nscd_conf.c:166
+#, c-format
+msgid "Could not create log file \"%s\""
+msgstr ""
+
+#: catgets/gencat.c:112
+msgid "Create C header file NAME containing symbol definitions"
+msgstr ""
+
+#: iconv/iconvconfig.c:110
+msgid "Create fastloading iconv module configuration file."
+msgstr ""
+
+#: locale/programs/localedef.c:102
+msgid "Create old-style tables"
+msgstr ""
+
+#: locale/programs/localedef.c:101
+msgid "Create output even if warning messages were issued"
+msgstr ""
+
+#: nis/nis_print.c:329
+#, c-format
+msgid "Creation Time : %s"
+msgstr "Vrijeme stvaranja : %s"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:48
+msgid "Cross-device link"
+msgstr ""
+
+#: malloc/memusagestat.c:67
+msgid "DATAFILE [OUTFILE]"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:96 nis/nss_nisplus/nisplus-publickey.c:172
+#, c-format
+msgid "DES entry for netname %s not unique\n"
+msgstr ""
+
+#: nis/nis_print.c:115
+msgid "DIRECTORY\n"
+msgstr "DIREKTORIJ\n"
+
+#: elf/dl-deps.c:101 elf/dl-open.c:188
+msgid "DST not allowed in SUID/SGID programs"
+msgstr ""
+
+#: elf/dl-error.c:71
+msgid "DYNAMIC LINKER BUG!!!"
+msgstr ""
+
+#: nis/nis_error.c:52
+msgid "Database for table does not exist"
+msgstr ""
+
+#: nis/ypclnt.c:820
+msgid "Database is busy"
+msgstr "Baza podataka je zauzeta"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:75
+msgid "Deadlock situation detected/avoided"
+msgstr ""
+
+#: nis/nis_print.c:229
+msgid "Default Access rights :\n"
+msgstr ""
+
+#. TRANS No default destination address was set for the socket.  You get this
+#. TRANS error when you try to transmit data over a connectionless socket,
+#. TRANS without first specifying a destination for the data with @code{connect}.
+#: stdio-common/../sysdeps/gnu/errlist.c:430 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:126
+msgid "Destination address required"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:46
+msgid "Device busy"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:669
+msgid "Device not a stream"
+msgstr ""
+
+#. TRANS Resource busy; a system resource that can't be shared is already in use.
+#. TRANS For example, if you try to delete a file that is the root of a currently
+#. TRANS mounted filesystem, you get this error.
+#: stdio-common/../sysdeps/gnu/errlist.c:129
+msgid "Device or resource busy"
+msgstr ""
+
+#: nis/nis_print.c:183
+#, c-format
+msgid "Diffie-Hellmann (%d bits)\n"
+msgstr ""
+
+#: nis/nis_print.c:321
+#, c-format
+msgid "Directory     : %s\n"
+msgstr ""
+
+#. TRANS Directory not empty, where an empty directory was expected.  Typically,
+#. TRANS this error occurs when you are trying to delete a directory.
+#: stdio-common/../sysdeps/gnu/errlist.c:481 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:123
+msgid "Directory not empty"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:79
+msgid "Disc quota exceeded"
+msgstr ""
+
+#. TRANS The user's disk quota was exceeded.
+#: stdio-common/../sysdeps/gnu/errlist.c:499
+msgid "Disk quota exceeded"
+msgstr ""
+
+#: nscd/nscd.c:86
+msgid "Do not fork and display messages on the current tty"
+msgstr ""
+
+#: catgets/gencat.c:114
+msgid "Do not use existing catalog, force new output file"
+msgstr ""
+
+#: nis/ypclnt.c:866
+msgid "Domain not bound"
+msgstr ""
+
+#: elf/ldconfig.c:124
+msgid "Don't build cache"
+msgstr ""
+
+#: elf/ldconfig.c:125
+msgid "Don't generate links"
+msgstr ""
+
+#: debug/pcprofiledump.c:56
+msgid "Dump information generated by PC profiling."
+msgstr ""
+
+#: elf/dl-load.c:1293
+msgid "ELF file ABI version invalid"
+msgstr ""
+
+#: elf/dl-load.c:1290
+msgid "ELF file OS ABI invalid"
+msgstr ""
+
+#: elf/dl-load.c:1299
+msgid "ELF file version does not match current one"
+msgstr ""
+
+#: elf/dl-load.c:1286
+msgid "ELF file version ident does not match current one"
+msgstr ""
+
+#: elf/dl-load.c:1305
+msgid "ELF file's phentsize not the expected size"
+msgstr ""
+
+#: elf/dl-load.c:884
+msgid "ELF load command address/offset not properly aligned"
+msgstr ""
+
+#: elf/dl-load.c:881
+msgid "ELF load command alignment not page-aligned"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:33 sysdeps/generic/siglist.h:60
+msgid "EMT trap"
+msgstr "EMT zamja"
+
+#: nis/nis_print.c:124
+msgid "ENTRY\n"
+msgstr ""
+
+#: nis/nis_print.c:303
+msgid "Encrypted data\n"
+msgstr ""
+
+#: nis/nis_error.c:53
+msgid "Entry/table type mismatch"
+msgstr ""
+
+#: nss/getent.c:127 nss/getent.c:292
+#, c-format
+msgid "Enumeration not supported on %s\n"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:30
+msgid "Error 0"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:130
+msgid "Error 100"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:131
+msgid "Error 101"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:132
+msgid "Error 102"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:133
+msgid "Error 103"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:134
+msgid "Error 104"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:135
+msgid "Error 105"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:136
+msgid "Error 106"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:137
+msgid "Error 107"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:138
+msgid "Error 108"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:139
+msgid "Error 109"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:140
+msgid "Error 110"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:141
+msgid "Error 111"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:142
+msgid "Error 112"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:143
+msgid "Error 113"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:144
+msgid "Error 114"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:145
+msgid "Error 115"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:146
+msgid "Error 116"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:147
+msgid "Error 117"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:148
+msgid "Error 118"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:149
+msgid "Error 119"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:166
+msgid "Error 136"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:172
+msgid "Error 142"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:88
+msgid "Error 58"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:89
+msgid "Error 59"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:102
+msgid "Error 72"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:103
+msgid "Error 73"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:105
+msgid "Error 75"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:106
+msgid "Error 76"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:121
+msgid "Error 91"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:122
+msgid "Error 92"
+msgstr ""
+
+#: nis/nis_error.c:57
+msgid "Error in RPC subsystem"
+msgstr ""
+
+#: nis/nis_error.c:67
+msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
+msgstr ""
+
+#: string/../sysdeps/mach/_strerror.c:58 sysdeps/mach/hurd/mips/dl-machine.c:68
+msgid "Error in unknown error system: "
+msgstr ""
+
+#: nis/nis_error.c:60
+msgid "Error while talking to callback proc"
+msgstr ""
+
+#: timezone/zdump.c:268
+msgid "Error writing standard output"
+msgstr ""
+
+#: inet/ruserpass.c:184
+msgid "Error: .netrc file is readable by others."
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:729
+msgid "Exchange full"
+msgstr ""
+
+#. TRANS Invalid executable file format.  This condition is detected by the
+#. TRANS @code{exec} functions; see @ref{Executing a File}.
+#: stdio-common/../sysdeps/gnu/errlist.c:76 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:38
+msgid "Exec format error"
+msgstr ""
+
+#: locale/programs/localedef.c:190
+msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
+msgstr ""
+
+#: locale/programs/localedef.c:97
+msgid "FILE contains mapping from symbolic names to UCS4 values"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:381
+msgid "Failed (unspecified error)"
+msgstr ""
+
+#: nscd/nscd.c:400
+#, c-format
+msgid "Failed to look up user '%s' to run server as"
+msgstr ""
+
+#: elf/readlib.c:109
+#, c-format
+msgid "File %s is too small, not checked."
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:781 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
+msgid "File descriptor in bad state"
+msgstr ""
+
+#. TRANS File exists; an existing file was specified in a context where it only
+#. TRANS makes sense to specify a new file.
+#: stdio-common/../sysdeps/gnu/errlist.c:135 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:47
+msgid "File exists"
+msgstr ""
+
+#: elf/cache.c:147 elf/cache.c:157
+msgid "File is not a cache file.\n"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:86
+msgid "File locking deadlock"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:745
+msgid "File locking deadlock error"
+msgstr ""
+
+#. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
+#. TRANS Files}) or host name too long (in @code{gethostname} or
+#. TRANS @code{sethostname}; @pxref{Host Identification}).
+#: stdio-common/../sysdeps/gnu/errlist.c:465 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:108
+msgid "File name too long"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:51 sysdeps/generic/siglist.h:51
+msgid "File size limit exceeded"
+msgstr "Prekoračeno ograničenje veličine spisa"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:53
+msgid "File table overflow"
+msgstr ""
+
+#. TRANS File too big; the size of a file would be larger than allowed by the system.
+#: stdio-common/../sysdeps/gnu/errlist.c:203 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:57
+msgid "File too large"
+msgstr ""
+
+#: intl/tst-gettext2.c:37
+msgid "First string for testing."
+msgstr ""
+
+#: nis/nis_error.c:38
+msgid "First/next chain broken"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:34 sysdeps/generic/siglist.h:35
+msgid "Floating point exception"
+msgstr "Iznimka floating pointa"
+
+#: elf/ldconfig.c:131
+msgid "Format to use: new, old or compat (default)"
+msgstr ""
+
+#: nis/nis_error.c:68
+msgid "Full resync required for directory"
+msgstr ""
+
+#. TRANS Function not implemented.  This indicates that the function called is
+#. TRANS not implemented at all, either in the C library itself or in the
+#. TRANS operating system.  When you get this error, you can be sure that this
+#. TRANS particular function will always fail with @code{ENOSYS} unless you
+#. TRANS install a new version of the C library or the operating system.
+#: stdio-common/../sysdeps/gnu/errlist.c:576
+msgid "Function not implemented"
+msgstr ""
+
+#: nis/nis_print.c:118
+msgid "GROUP\n"
+msgstr ""
+
+#: argp/argp-help.c:230
+#, c-format
+msgid "Garbage in ARGP_HELP_FMT: %s"
+msgstr ""
+
+#: malloc/memusagestat.c:64
+msgid "Generate graphic from memory profiling data"
+msgstr ""
+
+#: catgets/gencat.c:120
+msgid ""
+"Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"is -, output is written to standard output.\n"
+msgstr ""
+
+#: malloc/memusagestat.c:55
+msgid "Generate output linear to time (default is linear to number of function calls)"
+msgstr ""
+
+#: elf/ldconfig.c:123
+msgid "Generate verbose messages"
+msgstr ""
+
+#: nis/nis_error.c:37
+msgid "Generic system error"
+msgstr ""
+
+#: locale/programs/locale.c:86
+msgid "Get locale-specific information."
+msgstr ""
+
+#: argp/argp-parse.c:94
+msgid "Give a short usage message"
+msgstr ""
+
+#: argp/argp-parse.c:93
+msgid "Give this help list"
+msgstr ""
+
+#. TRANS This error code has no purpose.
+#: stdio-common/../sysdeps/gnu/errlist.c:637
+msgid "Gratuitous error"
+msgstr ""
+
+#: nis/nis_print.c:323
+#, c-format
+msgid "Group         : %s\n"
+msgstr ""
+
+#: nis/nis_print.c:252
+msgid "Group Flags :"
+msgstr ""
+
+#: nis/nis_print_group_entry.c:115
+#, c-format
+msgid "Group entry for \"%s.%s\" group:\n"
+msgstr ""
+
+#: argp/argp-parse.c:97
+msgid "Hang for SECS seconds (default 3600)"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:27 sysdeps/generic/siglist.h:29
+msgid "Hangup"
+msgstr "Završetak"
+
+#: nscd/grpcache.c:253
+#, c-format
+msgid "Haven't found \"%d\" in group cache!"
+msgstr ""
+
+#: nscd/pwdcache.c:249
+#, c-format
+msgid "Haven't found \"%d\" in password cache!"
+msgstr ""
+
+#: nscd/grpcache.c:214
+#, c-format
+msgid "Haven't found \"%s\" in group cache!"
+msgstr ""
+
+#: nscd/hstcache.c:299 nscd/hstcache.c:341 nscd/hstcache.c:386 nscd/hstcache.c:430
+#, c-format
+msgid "Haven't found \"%s\" in hosts cache!"
+msgstr ""
+
+#: nscd/pwdcache.c:210
+#, c-format
+msgid "Haven't found \"%s\" in password cache!"
+msgstr ""
+
+#. TRANS The remote host for a requested network connection is down.
+#: stdio-common/../sysdeps/gnu/errlist.c:470 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:177
+msgid "Host is down"
+msgstr "Računalo nije uključeno"
+
+#: resolv/herror.c:69
+msgid "Host name lookup failure"
+msgstr "Nije nađeno ime računala"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:35
+msgid "I/O error"
+msgstr "U/I greška"
+
+#: stdio-common/../sysdeps/unix/siglist.c:49 sysdeps/generic/siglist.h:49
+msgid "I/O possible"
+msgstr "U/I moguć"
+
+#: stdio-common/../sysdeps/unix/siglist.c:32
+msgid "IOT trap"
+msgstr "IOT trap"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:645 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:66
+msgid "Identifier removed"
+msgstr ""
+
+#: elf/ldconfig.c:535
+#, c-format
+msgid "Ignored file %s since it is not a regular file."
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:118
+msgid "Illegal byte sequence"
+msgstr "Nedopušten niz  bajtova"
+
+#: stdio-common/../sysdeps/unix/siglist.c:30 sysdeps/generic/siglist.h:32
+msgid "Illegal instruction"
+msgstr ""
+
+#: nis/nis_error.c:62
+msgid "Illegal object type for operation"
+msgstr ""
+
+#. TRANS Invalid seek operation (such as on a pipe).
+#: stdio-common/../sysdeps/gnu/errlist.c:214 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:59
+msgid "Illegal seek"
+msgstr ""
+
+#. TRANS Inappropriate file type or format.  The file was the wrong type for the
+#. TRANS operation, or a data file had the wrong format.
+#. TRANS
+#. TRANS On some systems @code{chmod} returns this error if you try to set the
+#. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
+#: stdio-common/../sysdeps/gnu/errlist.c:557
+msgid "Inappropriate file type or format"
+msgstr ""
+
+#. TRANS Inappropriate I/O control operation, such as trying to set terminal
+#. TRANS modes on an ordinary file.
+#: stdio-common/../sysdeps/gnu/errlist.c:189 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:55
+msgid "Inappropriate ioctl for device"
+msgstr ""
+
+#. TRANS In the GNU system, servers supporting the @code{term} protocol return
+#. TRANS this error for certain operations when the caller is not in the
+#. TRANS foreground process group of the terminal.  Users do not usually see this
+#. TRANS error because functions such as @code{read} and @code{write} translate
+#. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
+#. TRANS for information on process groups and these signals.
+#: stdio-common/../sysdeps/gnu/errlist.c:608
+msgid "Inappropriate operation for background process"
+msgstr ""
+
+#: sysdeps/generic/siglist.h:69
+msgid "Information request"
+msgstr "Zahtjev za informacijom"
+
+#: iconv/iconv_prog.c:62
+msgid "Information:"
+msgstr ""
+
+#: locale/programs/localedef.c:92
+msgid "Input Files:"
+msgstr "Ulazne datoteke:"
+
+#: elf/ldconfig.c:754 elf/readlib.c:93
+#, c-format
+msgid "Input file %s not found.\n"
+msgstr "Ulazni spis %s nije pronađen.\n"
+
+#: iconv/iconv_prog.c:59
+msgid "Input/Output format specification:"
+msgstr ""
+
+#. TRANS Input/output error; usually used for physical read or write errors.
+#: stdio-common/../sysdeps/gnu/errlist.c:53
+msgid "Input/output error"
+msgstr "Ulazno/izlazna greška"
+
+#: nis/ypclnt.c:800
+msgid "Internal NIS error"
+msgstr "Interna NIS greška"
+
+#: nis/ypclnt.c:864
+msgid "Internal ypbind error"
+msgstr "Interna ypbind greška"
+
+#: stdio-common/../sysdeps/unix/siglist.c:28 sysdeps/generic/siglist.h:30
+msgid "Interrupt"
+msgstr "Interrupt"
+
+#: posix/../sysdeps/posix/gai_strerror.c:46
+msgid "Interrupted by a signal"
+msgstr "Prekid od signala"
+
+#. TRANS Interrupted function call; an asynchronous signal occurred and prevented
+#. TRANS completion of the call.  When this happens, you should try the call
+#. TRANS again.
+#. TRANS
+#. TRANS You can choose to have functions resume after a signal that is handled,
+#. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
+#. TRANS Primitives}.
+#: stdio-common/../sysdeps/gnu/errlist.c:48 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:34
+msgid "Interrupted system call"
+msgstr "Prekinut sistemski poziv"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:685
+msgid "Interrupted system call should be restarted"
+msgstr ""
+
+#. TRANS Invalid argument.  This is used to indicate various kinds of problems
+#. TRANS with passing the wrong argument to a library function.
+#: stdio-common/../sysdeps/gnu/errlist.c:165 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:52
+msgid "Invalid argument"
+msgstr "Nedozvoljeni argument"
+
+#: posix/regex.c:1384
+msgid "Invalid back reference"
+msgstr "Neispravna povratna referenca"
+
+#: posix/regex.c:1378
+msgid "Invalid character class name"
+msgstr "Neispravan naziv znakovne klase"
+
+#: sunrpc/clnt_perr.c:357
+msgid "Invalid client credential"
+msgstr "Neispravna vjerodajnica klijenta"
+
+#: sunrpc/clnt_perr.c:365
+msgid "Invalid client verifier"
+msgstr ""
+
+#: posix/regex.c:1375
+msgid "Invalid collation character"
+msgstr "Neispravan kolacijski znak"
+
+#: posix/regex.c:1396
+msgid "Invalid content of \\{\\}"
+msgstr "Neispravan sadržaj \\{\\}"
+
+#. TRANS An attempt to make an improper link across file systems was detected.
+#. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
+#. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
+#: stdio-common/../sysdeps/gnu/errlist.c:142
+msgid "Invalid cross-device link"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:721
+msgid "Invalid exchange"
+msgstr ""
+
+#: nis/nis_error.c:45
+msgid "Invalid object for operation"
+msgstr ""
+
+#. TRANS While decoding a multibyte character the function came along an invalid
+#. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
+#: stdio-common/../sysdeps/gnu/errlist.c:598
+msgid "Invalid or incomplete multibyte or wide character"
+msgstr ""
+
+#: posix/regex.c:1405
+msgid "Invalid preceding regular expression"
+msgstr "Neispravan prethodni regularni izraz"
+
+#: posix/regex.c:1399
+msgid "Invalid range end"
+msgstr "Neispravan kraj raspona"
+
+#: posix/regex.c:1372
+msgid "Invalid regular expression"
+msgstr "Neispravan regularni izraz"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:737
+msgid "Invalid request code"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:725
+msgid "Invalid request descriptor"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:377
+msgid "Invalid server verifier"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:741 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:85
+msgid "Invalid slot"
+msgstr ""
+
+#: nscd/nscd.c:91
+msgid "Invalidate the specified cache"
+msgstr ""
+
+#. TRANS File is a directory; you cannot open a directory for writing,
+#. TRANS or create or remove hard links to it.
+#: stdio-common/../sysdeps/gnu/errlist.c:159 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:51
+msgid "Is a directory"
+msgstr "Je direktorij"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:169
+msgid "Is a name file"
+msgstr "Je ime datoteke"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:825
+msgid "Is a named type file"
+msgstr ""
+
+#: nis/nis_print.c:191
+msgid "Kerberos.\n"
+msgstr "Kerberos.\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:35 sysdeps/generic/siglist.h:36
+msgid "Killed"
+msgstr "Ubijeno"
+
+#: nis/nis_print.c:127
+msgid "LINK\n"
+msgstr "LINK\n"
+
+#: nis/nis_local_names.c:126
+#, c-format
+msgid "LOCAL entry for UID %d in directory %s not unique\n"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:717 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:74
+msgid "Level 2 halted"
+msgstr "Razina 2 haltana"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:693 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:68
+msgid "Level 2 not synchronized"
+msgstr "Razina 2 nije sinkronizirana"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:697 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:69
+msgid "Level 3 halted"
+msgstr "Razina 3 haltana"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:701 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:70
+msgid "Level 3 reset"
+msgstr "Reset 3. razine"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:657 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:97
+msgid "Link has been severed"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:705 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:71
+msgid "Link number out of range"
+msgstr ""
+
+#: nis/nis_error.c:54
+msgid "Link points to illegal name"
+msgstr "Link pokazuje na nedozvoljeno ime"
+
+#: nis/nis_print.c:286
+msgid "Linked Object Type : "
+msgstr ""
+
+#: nis/nis_print.c:288
+#, c-format
+msgid "Linked to : %s\n"
+msgstr "Linkano na : %s\n"
+
+#: nis/ypclnt.c:812
+msgid "Local domain name not set"
+msgstr "Lokalna domena nije podešena"
+
+#: nis/ypclnt.c:802
+msgid "Local resource allocation failure"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:753 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:94
+msgid "Machine is not on the network"
+msgstr "Računalo nije na mreži"
+
+#: nis/nis_error.c:46
+msgid "Malformed name, or illegal name"
+msgstr ""
+
+#: argp/argp-help.c:1185
+msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
+msgstr ""
+
+#: elf/ldconfig.c:130
+msgid "Manually link individual libraries."
+msgstr ""
+
+#: nis/nis_print.c:172
+msgid "Master Server :\n"
+msgstr ""
+
+#: nis/nis_error.c:76
+msgid "Master server busy, full dump rescheduled."
+msgstr ""
+
+#: posix/../sysdeps/posix/gai_strerror.c:36
+msgid "Memory allocation failure"
+msgstr ""
+
+#: posix/regex.c:1402
+msgid "Memory exhausted"
+msgstr "Memorija iscrpljena"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:82
+msgid "Message tables full"
+msgstr ""
+
+#. TRANS The size of a message sent on a socket was larger than the supported
+#. TRANS maximum size.
+#: stdio-common/../sysdeps/gnu/errlist.c:318 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:127
+msgid "Message too long"
+msgstr ""
+
+#: nis/nis_error.c:58
+msgid "Missing or malformed attribute"
+msgstr ""
+
+#: nis/nis_print.c:331
+#, c-format
+msgid "Mod. Time     : %s"
+msgstr ""
+
+#: nis/nis_error.c:51
+msgid "Modification failed"
+msgstr ""
+
+#: nis/nis_error.c:64
+msgid "Modify operation failed"
+msgstr ""
+
+#: locale/programs/locale.c:78
+msgid "Modify output format:"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:649 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:104
+msgid "Multihop attempted"
+msgstr ""
+
+#: nscd/nscd_conf.c:182
+msgid "Must specify user name for server-user option"
+msgstr ""
+
+#: catgets/gencat.c:111 catgets/gencat.c:115 locale/programs/localedef.c:115 nscd/nscd.c:83
+msgid "NAME"
+msgstr ""
+
+#: locale/programs/locale.c:89
+msgid ""
+"NAME\n"
+"[-a|-m]"
+msgstr ""
+
+#: nis/ypclnt.c:816
+msgid "NIS client/server version mismatch - can't supply service"
+msgstr ""
+
+#: nis/ypclnt.c:814
+msgid "NIS map database is bad"
+msgstr ""
+
+#: nis/nis_error.c:69
+msgid "NIS+ operation failed"
+msgstr ""
+
+#: nis/nis_error.c:34
+msgid "NIS+ servers unreachable"
+msgstr ""
+
+#: nis/nis_error.c:70
+msgid "NIS+ service is unavailable or not installed"
+msgstr ""
+
+#: nis/nis_print.c:112
+msgid "NO OBJECT\n"
+msgstr ""
+
+#: nscd/nscd.c:87
+msgid "NUMBER"
+msgstr ""
+
+#: nis/nis_print.c:166
+#, c-format
+msgid "Name : `%s'\n"
+msgstr ""
+
+#: nscd/nscd.c:97
+msgid "Name Service Cache Daemon."
+msgstr ""
+
+#: nis/nis_error.c:41
+msgid "Name not served by this server"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:777 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:110
+msgid "Name not unique on network"
+msgstr ""
+
+#: posix/../sysdeps/posix/gai_strerror.c:38
+msgid "Name or service not known"
+msgstr ""
+
+#: malloc/memusagestat.c:53
+msgid "Name output file"
+msgstr ""
+
+#: nis/nis_error.c:50
+msgid "Name/entry isn't unique"
+msgstr ""
+
+#: nis/nis_error.c:59
+msgid "Named object is not searchable"
+msgstr ""
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:567
+msgid "Need authenticator"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:159
+msgid "Network dropped connection because of reset"
+msgstr ""
+
+#. TRANS A network connection was reset because the remote host crashed.
+#: stdio-common/../sysdeps/gnu/errlist.c:390
+msgid "Network dropped connection on reset"
+msgstr ""
+
+#. TRANS A socket operation failed because the network was down.
+#: stdio-common/../sysdeps/gnu/errlist.c:379 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:157
+msgid "Network is down"
+msgstr ""
+
+#. TRANS A socket operation failed because the subnet containing the remote host
+#. TRANS was unreachable.
+#: stdio-common/../sysdeps/gnu/errlist.c:385 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:158
+msgid "Network is unreachable"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:713 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:73
+msgid "No CSI structure available"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:821
+msgid "No XENIX semaphores available"
+msgstr ""
+
+#: posix/../sysdeps/posix/gai_strerror.c:37
+msgid "No address associated with hostname"
+msgstr ""
+
+#: resolv/herror.c:71
+msgid "No address associated with name"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:733
+msgid "No anode"
+msgstr ""
+
+#. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
+#. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
+#. TRANS other from network operations.
+#: stdio-common/../sysdeps/gnu/errlist.c:409 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:162
+msgid "No buffer space available"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:433
+msgid "No character set name specified in charmap"
+msgstr ""
+
+#. TRANS There are no child processes.  This error happens on operations that are
+#. TRANS supposed to manipulate child processes, when there aren't any processes
+#. TRANS to manipulate.
+#: stdio-common/../sysdeps/gnu/errlist.c:90 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:40
+msgid "No child processes"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:653 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:91
+msgid "No data available"
+msgstr ""
+
+#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1513 locale/programs/ld-ctype.c:415 locale/programs/ld-identification.c:132 locale/programs/ld-measurement.c:93 locale/programs/ld-messages.c:98 locale/programs/ld-monetary.c:194 locale/programs/ld-name.c:94 locale/programs/ld-numeric.c:99 locale/programs/ld-paper.c:91 locale/programs/ld-telephone.c:94 locale/programs/ld-time.c:160
+#, c-format
+msgid "No definition for %s category found"
+msgstr ""
+
+#: nis/nis_error.c:74
+msgid "No file space on server"
+msgstr ""
+
+#: elf/ldconfig.c:543
+#, c-format
+msgid "No link created since soname could not be found for %s"
+msgstr ""
+
+#. TRANS No locks available.  This is used by the file locking facilities; see
+#. TRANS @ref{File Locks}.  This error is never generated by the GNU system, but
+#. TRANS it can result from an operation to an NFS server running another
+#. TRANS operating system.
+#: stdio-common/../sysdeps/gnu/errlist.c:548
+msgid "No locks available"
+msgstr ""
+
+#: posix/regex.c:1369
+msgid "No match"
+msgstr "Nema poklapanja"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:833
+msgid "No medium found"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:661 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:65
+msgid "No message of desired type"
+msgstr ""
+
+#: nis/ypclnt.c:804
+msgid "No more records in map database"
+msgstr ""
+
+#: posix/regex.c:7956
+msgid "No previous regular expression"
+msgstr "Nedostaje prethodni regularni izraz"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:76
+msgid "No record locks available"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:570
+msgid "No remote programs registered.\n"
+msgstr ""
+
+#. TRANS The remote host for a requested network connection is not reachable.
+#: stdio-common/../sysdeps/gnu/errlist.c:475 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:178
+msgid "No route to host"
+msgstr ""
+
+#. TRANS No space left on device; write operation on a file failed because the
+#. TRANS disk is full.
+#: stdio-common/../sysdeps/gnu/errlist.c:209 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:58
+msgid "No space left on device"
+msgstr ""
+
+#. TRANS The wrong type of device was given to a function that expects a
+#. TRANS particular sort of device.
+#: stdio-common/../sysdeps/gnu/errlist.c:148 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:49
+msgid "No such device"
+msgstr ""
+
+#. TRANS No such device or address.  The system tried to use the device
+#. TRANS represented by a file you specified, and it couldn't find the device.
+#. TRANS This can mean that the device file was installed incorrectly, or that
+#. TRANS the physical device is missing or not correctly attached to the
+#. TRANS computer.
+#: stdio-common/../sysdeps/gnu/errlist.c:62 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:36
+msgid "No such device or address"
+msgstr ""
+
+#. TRANS No such file or directory.  This is a ``file doesn't exist'' error
+#. TRANS for ordinary files that are referenced in contexts where they are
+#. TRANS expected to already exist.
+#: stdio-common/../sysdeps/gnu/errlist.c:32 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:32
+msgid "No such file or directory"
+msgstr ""
+
+#: nis/ypclnt.c:798
+msgid "No such key in map"
+msgstr ""
+
+#: nis/ypclnt.c:796
+msgid "No such map in server's domain"
+msgstr ""
+
+#. TRANS No process matches the specified process ID.
+#: stdio-common/../sysdeps/gnu/errlist.c:37 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:33
+msgid "No such process"
+msgstr ""
+
+#: nis/nis_error.c:61
+msgid "Non NIS+ namespace encountered"
+msgstr ""
+
+#: posix/../sysdeps/posix/gai_strerror.c:34
+msgid "Non-recoverable failure in name resolution"
+msgstr ""
+
+#: nis/nis_print.c:180
+msgid "None.\n"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:817
+msgid "Not a XENIX named type file"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:107
+msgid "Not a data message"
+msgstr ""
+
+#. TRANS A file that isn't a directory was specified when a directory is required.
+#: stdio-common/../sysdeps/gnu/errlist.c:153 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:50
+msgid "Not a directory"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:167
+msgid "Not a name file"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:90
+msgid "Not a stream device"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:168
+msgid "Not available"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:42
+msgid "Not enough space"
+msgstr ""
+
+#: nis/nis_error.c:31
+msgid "Not found"
+msgstr "Nije nađeno"
+
+#: nis/nis_error.c:49
+msgid "Not found, no such name"
+msgstr ""
+
+#: nis/nis_error.c:44
+msgid "Not master server for this domain"
+msgstr ""
+
+#: nis/nis_error.c:40 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:31
+msgid "Not owner"
+msgstr "Nije vlasnik"
+
+#. TRANS Not supported.  A function returns this error when certain parameter
+#. TRANS values are valid, but the functionality they request is not available.
+#. TRANS This can mean that the function does not implement a particular command
+#. TRANS or option value or flag bit at all.  For functions that operate on some
+#. TRANS object given in a parameter, such as a file descriptor or a port, it
+#. TRANS might instead mean that only @emph{that specific object} (file
+#. TRANS descriptor, port, etc.) is unable to support the other parameters given;
+#. TRANS different file descriptors might support different ranges of parameter
+#. TRANS values.
+#. TRANS
+#. TRANS If the entire function is not available at all in the implementation,
+#. TRANS it returns @code{ENOSYS} instead.
+#: stdio-common/../sysdeps/gnu/errlist.c:592
+msgid "Not supported"
+msgstr ""
+
+#: nis/nis_print.c:267
+#, c-format
+msgid "Number of Columns   : %d\n"
+msgstr ""
+
+#: nis/nis_print.c:366
+#, c-format
+msgid "Number of objects : %u\n"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:120
+msgid "Number of symbolic links encountered during path name traversal exceeds MAXSYMLINKS"
+msgstr ""
+
+#. TRANS Domain error; used by mathematical functions when an argument value does
+#. TRANS not fall into the domain over which the function is defined.
+#: stdio-common/../sysdeps/gnu/errlist.c:241
+msgid "Numerical argument out of domain"
+msgstr ""
+
+#. TRANS Range error; used by mathematical functions when the result value is
+#. TRANS not representable because of overflow or underflow.
+#: stdio-common/../sysdeps/gnu/errlist.c:247
+msgid "Numerical result out of range"
+msgstr ""
+
+#: nis/nis_print.c:370
+#, c-format
+msgid "Object #%d:\n"
+msgstr ""
+
+#: nis/nis_print.c:320
+#, c-format
+msgid "Object Name   : %s\n"
+msgstr ""
+
+#: nis/nis_print.c:332
+msgid "Object Type   : "
+msgstr ""
+
+#. TRANS An attempt was made to NFS-mount a remote file system with a file name that
+#. TRANS already specifies an NFS-mounted file.
+#. TRANS (This is an error on some operating systems, but we expect it to work
+#. TRANS properly on the GNU system, making this error code impossible.)
+#: stdio-common/../sysdeps/gnu/errlist.c:515 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:96
+msgid "Object is remote"
+msgstr ""
+
+#: nis/nis_error.c:43
+msgid "Object with same name exists"
+msgstr ""
+
+#: timezone/zic.c:2028
+msgid "Odd number of quotation marks"
+msgstr ""
+
+#: elf/ldconfig.c:129
+msgid "Only process directories specified on the command line.  Don't build cache."
+msgstr ""
+
+#: nscd/nscd.c:200 nscd/nscd.c:220 nscd/nscd.c:226
+msgid "Only root is allowed to use this option!"
+msgstr ""
+
+#. TRANS An operation is already in progress on an object that has non-blocking
+#. TRANS mode selected.
+#: stdio-common/../sysdeps/gnu/errlist.c:307 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:179
+msgid "Operation already in progress"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:77
+msgid "Operation canceled"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:119
+msgid "Operation not applicable"
+msgstr ""
+
+#. TRANS Operation not permitted; only the owner of the file (or other resource)
+#. TRANS or processes with special privileges can perform the operation.
+#: stdio-common/../sysdeps/gnu/errlist.c:25
+msgid "Operation not permitted"
+msgstr ""
+
+#. TRANS The operation you requested is not supported.  Some socket functions
+#. TRANS don't make sense for all types of sockets, and others may not be
+#. TRANS implemented for all communications protocols.  In the GNU system, this
+#. TRANS error can happen for many calls when the object does not support the
+#. TRANS particular operation; it is a generic indication that the server knows
+#. TRANS nothing to do for that call.
+#: stdio-common/../sysdeps/gnu/errlist.c:351 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:78
+msgid "Operation not supported"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:152
+msgid "Operation not supported on transport endpoint"
+msgstr ""
+
+#. TRANS An operation that cannot complete immediately was initiated on an object
+#. TRANS that has non-blocking mode selected.  Some functions that must always
+#. TRANS block (such as @code{connect}; @pxref{Connecting}) never return
+#. TRANS @code{EAGAIN}.  Instead, they return @code{EINPROGRESS} to indicate that
+#. TRANS the operation has begun and will take some time.  Attempts to manipulate
+#. TRANS the object before the call completes return @code{EALREADY}.  You can
+#. TRANS use the @code{select} function to find out when the pending operation
+#. TRANS has completed; @pxref{Waiting for I/O}.
+#: stdio-common/../sysdeps/gnu/errlist.c:301 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:180
+msgid "Operation now in progress"
+msgstr ""
+
+#. TRANS In the GNU C library, this is another name for @code{EAGAIN} (above).
+#. TRANS The values are always the same, on every operating system.
+#. TRANS
+#. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
+#. TRANS separate error code.
+#: stdio-common/../sysdeps/gnu/errlist.c:289
+msgid "Operation would block"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:129
+msgid "Option not supported by protocol"
+msgstr ""
+
+#: locale/programs/localedef.c:103
+msgid "Optional output file prefix"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:93
+msgid "Out of stream resources"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:665
+msgid "Out of streams resources"
+msgstr ""
+
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:99
+msgid "Output control:"
+msgstr ""
+
+#: elf/sprof.c:72
+msgid "Output selection:"
+msgstr ""
+
+#: nis/nis_print.c:322
+#, c-format
+msgid "Owner         : %s\n"
+msgstr ""
+
+#: nis/nis_print.c:130
+msgid "PRIVATE\n"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:757 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:95
+msgid "Package not installed"
+msgstr ""
+
+#: nscd/nscd_conf.c:83
+#, c-format
+msgid "Parse error: %s"
+msgstr ""
+
+#: nis/nis_error.c:55
+msgid "Partial success"
+msgstr ""
+
+#: nis/nis_error.c:63
+msgid "Passed object is not the same object on server"
+msgstr ""
+
+#: elf/ldconfig.c:282
+#, c-format
+msgid "Path `%s' given more than once"
+msgstr ""
+
+#. TRANS Permission denied; the file permissions do not allow the attempted operation.
+#: nis/nis_error.c:39 nis/ypclnt.c:818 stdio-common/../sysdeps/gnu/errlist.c:109 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:43
+msgid "Permission denied"
+msgstr "Pristup odbijen"
+
+#: sysdeps/generic/siglist.h:71
+msgid "Power failure"
+msgstr "Nestalo struje"
+
+#: posix/regex.c:1408
+msgid "Premature end of regular expression"
+msgstr "Prerani kraj regularnog izraza"
+
+#: elf/ldconfig.c:122
+msgid "Print cache"
+msgstr ""
+
+#: nscd/nscd.c:89
+msgid "Print current configuration statistic"
+msgstr ""
+
+#: locale/programs/locale.c:81
+msgid "Print more information"
+msgstr ""
+
+#: locale/programs/localedef.c:107
+msgid "Print more messages"
+msgstr ""
+
+#: argp/argp-parse.c:154
+msgid "Print program version"
+msgstr ""
+
+#: nis/nis_error.c:30
+msgid "Probable success"
+msgstr ""
+
+#: nis/nis_error.c:32
+msgid "Probably not found"
+msgstr ""
+
+#: posix/../sysdeps/posix/gai_strerror.c:42
+msgid "Processing request in progress"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:53 sysdeps/generic/siglist.h:53
+msgid "Profiling timer expired"
+msgstr "Profajlerska štoperica istekla"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:709 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:72
+msgid "Protocol driver not attached"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:677 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:101
+msgid "Protocol error"
+msgstr ""
+
+#. TRANS The socket communications protocol family you requested is not supported.
+#: stdio-common/../sysdeps/gnu/errlist.c:356 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:153
+msgid "Protocol family not supported"
+msgstr ""
+
+#. TRANS You specified a socket option that doesn't make sense for the
+#. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
+#: stdio-common/../sysdeps/gnu/errlist.c:329
+msgid "Protocol not available"
+msgstr ""
+
+#. TRANS The socket domain does not support the requested communications protocol
+#. TRANS (perhaps because the requested protocol is completely invalid).
+#. TRANS @xref{Creating a Socket}.
+#: stdio-common/../sysdeps/gnu/errlist.c:336 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:150
+msgid "Protocol not supported"
+msgstr ""
+
+#. TRANS The socket type does not support the requested communications protocol.
+#: stdio-common/../sysdeps/gnu/errlist.c:323 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:128
+msgid "Protocol wrong type for socket"
+msgstr ""
+
+#: nis/nis_error.c:65
+msgid "Query illegal for named table"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:29 sysdeps/generic/siglist.h:31
+msgid "Quit"
+msgstr "Završi"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:773
+msgid "RFS specific error"
+msgstr ""
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:540
+msgid "RPC bad procedure for program"
+msgstr ""
+
+#: nis/ypclnt.c:792
+msgid "RPC failure on NIS operation"
+msgstr ""
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:530
+msgid "RPC program not available"
+msgstr ""
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:535
+msgid "RPC program version wrong"
+msgstr ""
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:520
+msgid "RPC struct is bad"
+msgstr ""
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:525
+msgid "RPC version wrong"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:284
+msgid "RPC: (unknown error code)"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:203
+msgid "RPC: Authentication error"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:183
+msgid "RPC: Can't decode result"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:179
+msgid "RPC: Can't encode arguments"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:243
+msgid "RPC: Failed (unspecified error)"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:199
+msgid "RPC: Incompatible versions of RPC"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:235
+msgid "RPC: Port mapper failure"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:215
+msgid "RPC: Procedure unavailable"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:239
+msgid "RPC: Program not registered"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:207
+msgid "RPC: Program unavailable"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:211
+msgid "RPC: Program/version mismatch"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:223
+msgid "RPC: Remote system error"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:219
+msgid "RPC: Server can't decode arguments"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:176
+msgid "RPC: Success"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:195
+msgid "RPC: Timed out"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:191
+msgid "RPC: Unable to receive"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:187
+msgid "RPC: Unable to send"
+msgstr "RPC: Ne mogu poslati"
+
+#: sunrpc/clnt_perr.c:227
+msgid "RPC: Unknown host"
+msgstr "RPC: Nepoznato računalo"
+
+#: sunrpc/clnt_perr.c:231
+msgid "RPC: Unknown protocol"
+msgstr "RPC: Nepoznati protokol"
+
+#: nis/nis_print.c:188
+#, c-format
+msgid "RSA (%d bits)\n"
+msgstr "RSA (%d bitova)\n"
+
+#: elf/dl-sym.c:72 elf/dl-sym.c:134
+msgid "RTLD_NEXT used in code not dynamically loaded"
+msgstr "RTLD_NEXT se koristi u kodu koji se ne učitava dinamički"
+
+#: elf/sprof.c:84
+msgid "Read and display shared object profiling data"
+msgstr "Čitaj i prikazuj profilirajuće podatke dijeljenog objekta"
+
+#: nscd/nscd.c:84
+msgid "Read configuration data from NAME"
+msgstr "Čitaj konfiguracijske podatke iz NAME"
+
+#. TRANS An attempt was made to modify something on a read-only file system.
+#: stdio-common/../sysdeps/gnu/errlist.c:219 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:60
+msgid "Read-only file system"
+msgstr "Datotečni sustav je samo za čitanje"
+
+#: string/strsignal.c:67
+#, c-format
+msgid "Real-time signal %d"
+msgstr "Real-time signal %d"
+
+#: posix/regex.c:1411
+msgid "Regular expression too big"
+msgstr "Regularni izraz prevelik"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:829 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:170
+msgid "Remote I/O error"
+msgstr "Udaljena U/I greška"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:785 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:112
+msgid "Remote address changed"
+msgstr "Udaljena adresa promijenjena"
+
+#: inet/ruserpass.c:185
+msgid "Remove password or make file unreadable by others."
+msgstr ""
+
+#: elf/cache.c:431
+#, c-format
+msgid "Renaming of %s to %s failed"
+msgstr "Preimenovanje  %s u %s nije uspjelo"
+
+#: elf/sprof.c:532
+#, c-format
+msgid "Reopening shared object `%s' failed"
+msgstr "Ponovo otvaranje dijeljenog objekta `%s' nije uspjelo"
+
+#: nis/nis_print.c:174
+msgid "Replicate :\n"
+msgstr "Repliciraj :\n"
+
+#: argp/argp-help.c:1639
+#, c-format
+msgid "Report bugs to %s.\n"
+msgstr "Prijavi bugove na %s.\n"
+
+#: catgets/gencat.c:233 debug/pcprofiledump.c:181 iconv/iconv_prog.c:379 iconv/iconvconfig.c:321 locale/programs/locale.c:268 locale/programs/localedef.c:297 malloc/memusagestat.c:602
+msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
+msgstr ""
+
+#: nis/ypclnt.c:790
+msgid "Request arguments bad"
+msgstr "Loši argumenti zahtijeva"
+
+#: posix/../sysdeps/posix/gai_strerror.c:43
+msgid "Request canceled"
+msgstr "Zahtjev otkazan"
+
+#: posix/../sysdeps/posix/gai_strerror.c:44
+msgid "Request not canceled"
+msgstr "Zahtjev nije otkazan"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:171
+msgid "Reserved for future use"
+msgstr "Rezerviraj za buduće korištenje"
+
+#: resolv/herror.c:67
+msgid "Resolver Error 0 (no error)"
+msgstr "Greška 0 u resolveru (nema greške)"
+
+#: resolv/herror.c:107
+msgid "Resolver internal error"
+msgstr "Interna greška resolvera"
+
+#. TRANS Deadlock avoided; allocating a system resource would have resulted in a
+#. TRANS deadlock situation.  The system does not guarantee that it will notice
+#. TRANS all such situations.  This error means you got lucky and the system
+#. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
+#: stdio-common/../sysdeps/gnu/errlist.c:98
+msgid "Resource deadlock avoided"
+msgstr "Izbjegnut potpuni zastoj resursa"
+
+#: stdio-common/../sysdeps/unix/siglist.c:55 sysdeps/generic/siglist.h:74
+msgid "Resource lost"
+msgstr "Izgubljen resurs"
+
+#. TRANS Resource temporarily unavailable; the call might work if you try again
+#. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
+#. TRANS they are always the same in the GNU C library.
+#. TRANS
+#. TRANS This error can happen in a few different situations:
+#. TRANS
+#. TRANS @itemize @bullet
+#. TRANS @item
+#. TRANS An operation that would block was attempted on an object that has
+#. TRANS non-blocking mode selected.  Trying the same operation again will block
+#. TRANS until some external condition makes it possible to read, write, or
+#. TRANS connect (whatever the operation).  You can use @code{select} to find out
+#. TRANS when the operation will be possible; @pxref{Waiting for I/O}.
+#. TRANS
+#. TRANS @strong{Portability Note:} In many older Unix systems, this condition
+#. TRANS was indicated by @code{EWOULDBLOCK}, which was a distinct error code
+#. TRANS different from @code{EAGAIN}.  To make your program portable, you should
+#. TRANS check for both codes and treat them the same.
+#. TRANS
+#. TRANS @item
+#. TRANS A temporary resource shortage made an operation impossible.  @code{fork}
+#. TRANS can return this error.  It indicates that the shortage is expected to
+#. TRANS pass, so your program can try the call again later and it may succeed.
+#. TRANS It is probably a good idea to delay for a few seconds before trying it
+#. TRANS again, to allow time for other processes to release scarce resources.
+#. TRANS Such shortages are usually fairly serious and affect the whole system,
+#. TRANS so usually an interactive program should report the error to the user
+#. TRANS and return to its command loop.
+#. TRANS @end itemize
+#: stdio-common/../sysdeps/gnu/errlist.c:280 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:41
+msgid "Resource temporarily unavailable"
+msgstr "Resur privremeno nedostupan"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:64
+msgid "Result too large"
+msgstr "Rezultat prevelik"
+
+#: nis/nis_error.c:48
+msgid "Results sent to callback proc"
+msgstr "Rezultati poslani povratnom procesu"
+
+#: elf/sprof.c:87
+msgid "SHOBJ [PROFDATA]"
+msgstr "SHOBJ [PROFDATA]"
+
+#: nis/nis_print.c:269
+#, c-format
+msgid "Search Path         : %s\n"
+msgstr "Traži putanju        : %s\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:37 sysdeps/generic/siglist.h:38
+msgid "Segmentation fault"
+msgstr "Segmentacijska greška"
+
+#: nis/nis_error.c:36
+msgid "Server busy, try again"
+msgstr "Poslužitelj zauzet, pokušajte ponovo"
+
+#: nis/nis_error.c:42
+msgid "Server out of memory"
+msgstr "Poslužitelj je ostao bez memorije"
+
+#: sunrpc/clnt_perr.c:361
+msgid "Server rejected credential"
+msgstr "Odbijena "
+
+#: sunrpc/clnt_perr.c:369
+msgid "Server rejected verifier"
+msgstr "Poslužitelj je odbio verifikatora"
+
+#: posix/../sysdeps/posix/gai_strerror.c:39
+msgid "Servname not supported for ai_socktype"
+msgstr "Servname nije podržano za ai_socktype"
+
+#: argp/argp-parse.c:95
+msgid "Set the program name"
+msgstr "Postavi ime programa"
+
+#: nscd/nscd.c:88
+msgid "Shut the server down"
+msgstr "Ugasi poslužitelj"
+
+#: stdio-common/../sysdeps/unix/siglist.c:26
+msgid "Signal 0"
+msgstr "Signal 0"
+
+#. TRANS A file that isn't a socket was specified when a socket is required.
+#: stdio-common/../sysdeps/gnu/errlist.c:312 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:125
+msgid "Socket operation on non-socket"
+msgstr "Socket operacija na ne-socketu"
+
+#. TRANS The socket type is not supported.
+#: stdio-common/../sysdeps/gnu/errlist.c:341 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:151
+msgid "Socket type not supported"
+msgstr "Tip socketa nije podržan"
+
+#. TRANS A network connection was aborted locally.
+#: stdio-common/../sysdeps/gnu/errlist.c:395 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:160
+msgid "Software caused connection abort"
+msgstr "Softver je uzrokovao prekid veze"
+
+#: sunrpc/rpcinfo.c:658
+msgid "Sorry. You are not root\n"
+msgstr "Žalim. Niste root\n"
+
+#: locale/programs/localedef.c:95
+msgid "Source definitions are found in FILE"
+msgstr "Definicije se nalaze u spisu FILE"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:765 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:99
+msgid "Srmount error"
+msgstr "Srmount greška"
+
+#: sysdeps/generic/siglist.h:66
+msgid "Stack fault"
+msgstr "Greška sa stogom"
+
+#. TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
+#. TRANS system which is due to file system rearrangements on the server host.
+#. TRANS Repairing this condition usually requires unmounting and remounting
+#. TRANS the NFS file system on the local host.
+#: stdio-common/../sysdeps/gnu/errlist.c:507 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:181
+msgid "Stale NFS file handle"
+msgstr "Greška sa NFSom"
+
+#: nscd/nscd.c:87
+msgid "Start NUMBER threads"
+msgstr "Pokreni BROJ dretvi"
+
+#: nis/nis_print.c:365
+#, c-format
+msgid "Status            : %s\n"
+msgstr "Status            : %s\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:44 sysdeps/generic/siglist.h:44
+msgid "Stopped"
+msgstr "Zaustavljen"
+
+#: stdio-common/../sysdeps/unix/siglist.c:43 sysdeps/generic/siglist.h:43
+msgid "Stopped (signal)"
+msgstr "Zaustavljen (signalom)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:47 sysdeps/generic/siglist.h:47
+msgid "Stopped (tty input)"
+msgstr "Zaustavljen (unosom s TTY-ja)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:48 sysdeps/generic/siglist.h:48
+msgid "Stopped (tty output)"
+msgstr "Zaustavljen (outputom s TTY-ja)"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:809
+msgid "Streams pipe error"
+msgstr "Greška sa cjevovodom"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:813 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:165
+msgid "Structure needs cleaning"
+msgstr "Struktura treba čiščenje"
+
+#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1366 stdio-common/../sysdeps/gnu/errlist.c:20
+msgid "Success"
+msgstr "Uspjeh"
+
+#: nss/getent.c:703
+msgid "Supported databases:"
+msgstr "Podržane baze podataka:"
+
+#: locale/programs/localedef.c:106
+msgid "Suppress warnings and information messages"
+msgstr "Suzbij upozorenja i poruke sa informacijama"
+
+#: locale/programs/localedef.c:94
+msgid "Symbolic character names defined in FILE"
+msgstr "Simbolička znakovna imena definirana u FILE"
+
+#: posix/../sysdeps/posix/gai_strerror.c:41
+msgid "System error"
+msgstr "Sistemska greška"
+
+#: locale/programs/locale.c:73
+msgid "System information:"
+msgstr "Sistemske informacije:"
+
+#: nis/ypclnt.c:868
+msgid "System resource allocation failure"
+msgstr "Greška prilikom alokacije sistemskog resursa"
+
+#: locale/programs/localedef.c:292
+#, c-format
+msgid ""
+"System's directory for character maps : %s\n"
+"                       repertoire maps: %s\n"
+"                       locale path    : %s\n"
+"%s"
+msgstr ""
+
+#: nscd/nscd.c:90
+msgid "TABLE"
+msgstr "TABLICA"
+
+#: nis/nis_print.c:121
+msgid "TABLE\n"
+msgstr "TABLICA\n"
+
+#: nscd/nscd.c:92
+msgid "TABLE,yes"
+msgstr "TABLICA,da"
+
+#: nis/nis_print.c:266
+#, c-format
+msgid "Table Type          : %s\n"
+msgstr "Tip Tablice          : %s\n"
+
+#: posix/../sysdeps/posix/gai_strerror.c:32
+msgid "Temporary failure in name resolution"
+msgstr "Privremena greška u rezoluciji imena"
+
+#: stdio-common/../sysdeps/unix/siglist.c:41 sysdeps/generic/siglist.h:41
+msgid "Terminated"
+msgstr "Terminiran"
+
+#. TRANS An attempt to execute a file that is currently open for writing, or
+#. TRANS write to a file that is currently being executed.  Often using a
+#. TRANS debugger to run a program is considered having it open for writing and
+#. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
+#. TRANS is not an error in the GNU system; the text is copied as necessary.
+#: stdio-common/../sysdeps/gnu/errlist.c:198 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:56
+msgid "Text file busy"
+msgstr ""
+
+#: iconv/iconv_prog.c:680
+msgid ""
+"The following list contain all the coded character sets known.  This does\n"
+"not necessarily mean that all combinations of these names can be used for\n"
+"the FROM and TO command line parameters.  One coded character set can be\n"
+"listed with several different names (aliases).\n"
+"\n"
+"  "
+msgstr ""
+
+#: sunrpc/rpc_main.c:1365
+msgid "This implementation doesn't support newstyle or MT-safe code!\n"
+msgstr ""
+
+#: nis/nis_print.c:227
+msgid "Time to live : "
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:681 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:92
+msgid "Timer expired"
+msgstr ""
+
+#: malloc/memusagestat.c:54
+msgid "Title string used in output graphic"
+msgstr ""
+
+#: nis/nis_error.c:56
+msgid "Too many attributes"
+msgstr ""
+
+#. TRANS Too many levels of symbolic links were encountered in looking up a file name.
+#. TRANS This often indicates a cycle of symbolic links.
+#: stdio-common/../sysdeps/gnu/errlist.c:458
+msgid "Too many levels of symbolic links"
+msgstr "Previše razina simboličkih linkova"
+
+#. TRANS Too many links; the link count of a single file would become too large.
+#. TRANS @code{rename} can cause this error if the file being renamed already has
+#. TRANS as many links as it can take (@pxref{Renaming Files}).
+#: stdio-common/../sysdeps/gnu/errlist.c:226 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:61
+msgid "Too many links"
+msgstr ""
+
+#. TRANS The current process has too many files open and can't open any more.
+#. TRANS Duplicate descriptors do count toward this limit.
+#. TRANS
+#. TRANS In BSD and GNU, the number of open files is controlled by a resource
+#. TRANS limit that can usually be increased.  If you get this error, you might
+#. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
+#. TRANS @pxref{Limits on Resources}.
+#: stdio-common/../sysdeps/gnu/errlist.c:176 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:54
+msgid "Too many open files"
+msgstr ""
+
+#. TRANS There are too many distinct file openings in the entire system.  Note
+#. TRANS that any number of linked channels count as just one file opening; see
+#. TRANS @ref{Linked Channels}.  This error never occurs in the GNU system.
+#: stdio-common/../sysdeps/gnu/errlist.c:183
+msgid "Too many open files in system"
+msgstr "Previše otvorenih spisa u sustavu"
+
+#. TRANS This means that the per-user limit on new process would be exceeded by
+#. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
+#. TRANS the @code{RLIMIT_NPROC} limit.
+#: stdio-common/../sysdeps/gnu/errlist.c:488
+msgid "Too many processes"
+msgstr ""
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:440 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:174
+msgid "Too many references: cannot splice"
+msgstr "Previše referenca: ne mogu načiniti splice"
+
+#. TRANS The file quota system is confused because there are too many users.
+#. TRANS @c This can probably happen in a GNU system when using NFS.
+#: stdio-common/../sysdeps/gnu/errlist.c:494 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:124
+msgid "Too many users"
+msgstr ""
+
+#: stdio-common/../sysdeps/unix/siglist.c:31 sysdeps/generic/siglist.h:33
+msgid "Trace/breakpoint trap"
+msgstr "Zamka za slijed/prekidnu točku"
+
+#: posix/regex.c:1381
+msgid "Trailing backslash"
+msgstr "Obrnuta kosa crta na kraju"
+
+#. TRANS In the GNU system, opening a file returns this error when the file is
+#. TRANS translated by a program and the translator program dies while starting
+#. TRANS up, before it has connected to the file.
+#: stdio-common/../sysdeps/gnu/errlist.c:615
+msgid "Translator died"
+msgstr ""
+
+#. TRANS You tried to connect a socket that is already connected.
+#. TRANS @xref{Connecting}.
+#: stdio-common/../sysdeps/gnu/errlist.c:415 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:163
+msgid "Transport endpoint is already connected"
+msgstr "Krajnja točka u transportu je već spojena"
+
+#. TRANS The socket is not connected to anything.  You get this error when you
+#. TRANS try to transmit data over a socket, without first specifying a
+#. TRANS destination for the data.  For a connectionless socket (for datagram
+#. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
+#: stdio-common/../sysdeps/gnu/errlist.c:423 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:164
+msgid "Transport endpoint is not connected"
+msgstr "Krajnja točka u transportu nije spojena"
+
+#: argp/argp-help.c:1611
+#, c-format
+msgid "Try `%s --help' or `%s --usage' for more information.\n"
+msgstr ""
+
+#: inet/rcmd.c:223
+#, c-format
+msgid "Trying %s...\n"
+msgstr ""
+
+#: nis/nis_print.c:167
+#, c-format
+msgid "Type : %s\n"
+msgstr "Tip : %s\n"
+
+#: nis/nis_print.c:51
+msgid "UNKNOWN"
+msgstr "NEPOZNATO"
+
+#: nis/nis_error.c:73
+msgid "Unable to authenticate NIS+ client"
+msgstr "Ne mogu autentificirati NIS+ klijent"
+
+#: nis/nis_error.c:72
+msgid "Unable to authenticate NIS+ server"
+msgstr "Ne mogu autentificirati NIS+ klijenta"
+
+#: nis/nis_error.c:47
+msgid "Unable to create callback"
+msgstr "Ne mogu stvoriti povratnu vezu"
+
+#: nis/nis_error.c:75
+msgid "Unable to create process on server"
+msgstr "Ne mogu stvoriti proces na poslužitelju"
+
+#: nis/nis_print.c:194
+#, c-format
+msgid "Unknown (type = %d, bits = %d)\n"
+msgstr "Nepoznato (tip = %d, bitova = %d)\n"
+
+#: inet/ruserpass.c:277
+#, c-format
+msgid "Unknown .netrc keyword %s"
+msgstr "Nepoznata .netrc ključna riječ %s"
+
+#: elf/../sysdeps/generic/readelflib.c:71
+#, c-format
+msgid "Unknown ELFCLASS in file %s.\n"
+msgstr "Nepoznata ELFCLASS u spisu %s.\n"
+
+#: nis/ypclnt.c:822
+msgid "Unknown NIS error code"
+msgstr "Nepoznata NIS greška"
+
+#: elf/cache.c:101
+msgid "Unknown OS"
+msgstr "Nepoznati OS"
+
+#: nss/getent.c:771
+#, c-format
+msgid "Unknown database: %s\n"
+msgstr "Nepoznata baza podataka: %s\n"
+
+#: posix/../sysdeps/posix/gai_strerror.c:57
+msgid "Unknown error"
+msgstr "Nepoznata greška"
+
+#: string/../sysdeps/generic/_strerror.c:48 string/../sysdeps/mach/_strerror.c:88 sysdeps/mach/hurd/mips/dl-machine.c:83
+msgid "Unknown error "
+msgstr "Nepoznata greška"
+
+#: resolv/herror.c:68
+msgid "Unknown host"
+msgstr "Nepoznato računalo"
+
+#: nis/nis_error.c:35
+msgid "Unknown object"
+msgstr "Nepoznati objekt"
+
+#: nscd/nscd_conf.c:187
+#, c-format
+msgid "Unknown option: %s %s %s"
+msgstr "Nepoznata opcija: %s %s %s"
+
+#: resolv/herror.c:110
+msgid "Unknown resolver error"
+msgstr "Nepoznata greška u resolveru"
+
+#: resolv/herror.c:70
+msgid "Unknown server error"
+msgstr "Nepoznata greška na poslužitelju"
+
+#: string/strsignal.c:71
+#, c-format
+msgid "Unknown signal %d"
+msgstr "Nepoznati signal %d"
+
+#: misc/error.c:117 timezone/zic.c:390
+msgid "Unknown system error"
+msgstr "Nepoznata sistemska greška"
+
+#: nis/ypclnt.c:870
+msgid "Unknown ypbind error"
+msgstr "Nepoznata ypbind greška"
+
+#: posix/regex.c:1390
+msgid "Unmatched ( or \\("
+msgstr "Nesparena ( ili \\("
+
+#: posix/regex.c:1414
+msgid "Unmatched ) or \\)"
+msgstr "Nesparena ) ili \\)"
+
+#: posix/regex.c:1387
+msgid "Unmatched [ or [^"
+msgstr "Nesparen [ ili [^"
+
+#: posix/regex.c:1393
+msgid "Unmatched \\{"
+msgstr "Nesparena \\{"
+
+#: posix/getconf.c:1006
+#, c-format
+msgid "Unrecognized variable `%s'"
+msgstr "Neprepoznata varijabla `%s'"
+
+#: stdio-common/../sysdeps/unix/siglist.c:42 sysdeps/generic/siglist.h:42
+msgid "Urgent I/O condition"
+msgstr "Hitno stanje I/O-a"
+
+#: argp/argp-help.c:1568
+msgid "Usage:"
+msgstr "Uporaba:"
+
+#: posix/getconf.c:883
+#, c-format
+msgid "Usage: %s [-v specification] variable_name [pathname]\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:674
+msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
+msgstr ""
+
+#: elf/ldconfig.c:127
+msgid "Use CACHE as cache file"
+msgstr "Koristi CACHE kao spis međumemorije"
+
+#: elf/ldconfig.c:128
+msgid "Use CONF as configuration file"
+msgstr "Koristi CONF kao konfiguracijski spis"
+
+#: nscd/nscd.c:92
+msgid "Use separate cache for each user"
+msgstr "Koristi odvojenu međumemoriju za svakog korisnika"
+
+#: stdio-common/../sysdeps/unix/siglist.c:56 sysdeps/generic/siglist.h:55
+msgid "User defined signal 1"
+msgstr "Korisnički definiran signal 1"
+
+#: stdio-common/../sysdeps/unix/siglist.c:57 sysdeps/generic/siglist.h:56
+msgid "User defined signal 2"
+msgstr "Korisnički definiran signal 2"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:673 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:109
+msgid "Value too large for defined data type"
+msgstr "Vrijednost je prevelika za definirani tip podataka"
+
+#: stdio-common/../sysdeps/unix/siglist.c:52 sysdeps/generic/siglist.h:52
+msgid "Virtual timer expired"
+msgstr "Virtualna štoperica istekla"
+
+#: timezone/zic.c:1932
+msgid "Wild result from command execution"
+msgstr "Čudni rezultati od izvršene naredbe"
+
+#: stdio-common/../sysdeps/unix/siglist.c:54 sysdeps/generic/siglist.h:54
+msgid "Window changed"
+msgstr "Promijenjen prozor"
+
+#: locale/programs/locale.c:77
+msgid "Write names of available charmaps"
+msgstr "Ispiši imena dostupnih znakovnih skupova"
+
+#: locale/programs/locale.c:75
+msgid "Write names of available locales"
+msgstr "Ispiši imena dostupnih lokala"
+
+#: locale/programs/locale.c:79
+msgid "Write names of selected categories"
+msgstr "Ispiši imena odabranih kategorija"
+
+#: locale/programs/locale.c:80
+msgid "Write names of selected keywords"
+msgstr "Ispiši imena odabranih ključnih riječi"
+
+#: catgets/gencat.c:115
+msgid "Write output to file NAME"
+msgstr "Napiši izlaz u spis NAME"
+
+#: elf/cache.c:402 elf/cache.c:411 elf/cache.c:415
+msgid "Writing of cache data failed"
+msgstr "Zapisivanje međumemorije nije uspjelo"
+
+#: elf/cache.c:419
+msgid "Writing of cache data failed."
+msgstr "Zapisivanje međumemorije nije uspjelo."
+
+#: catgets/gencat.c:251 elf/ldconfig.c:264 elf/sprof.c:361 iconv/iconv_prog.c:398 iconv/iconvconfig.c:340 locale/programs/locale.c:286 locale/programs/localedef.c:316 nscd/nscd.c:292 nscd/nscd_nischeck.c:95 nss/getent.c:68 posix/getconf.c:909
+#, c-format
+msgid "Written by %s.\n"
+msgstr "Napisano od %s.\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:837
+msgid "Wrong medium type"
+msgstr "Krivi tip medija"
+
+#: nis/ypclnt.c:174
+#, c-format
+msgid "YPBINDPROC_DOMAIN: %s\n"
+msgstr "YPBINDPROC_DOMAIN: %s\n"
+
+#: nis/nis_error.c:71
+msgid "Yes, 42 is the meaning of life"
+msgstr "Da, 42 je smisao života."
+
+#. TRANS You did @strong{what}?
+#: stdio-common/../sysdeps/gnu/errlist.c:627
+msgid "You really blew it this time"
+msgstr "Ovaj put si zbilja za*****"
+
+#: timezone/zic.c:1094
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr ""
+
+#: iconv/iconvconfig.c:114
+msgid "[DIR...]"
+msgstr "[MAPA...]"
+
+#: iconv/iconv_prog.c:77
+msgid "[FILE...]"
+msgstr "[SPIS...]"
+
+#: debug/pcprofiledump.c:59
+msgid "[FILE]"
+msgstr "[SPIS]"
+
+#: sunrpc/pmap_clnt.c:72
+msgid "__get_myaddress: ioctl (get interface configuration)"
+msgstr ""
+
+#: locale/programs/ld-collate.c:417
+#, c-format
+msgid "`%.*s' already defined as collating element"
+msgstr "`%.*s' je već definiran kao collating element"
+
+#: locale/programs/ld-collate.c:410
+#, c-format
+msgid "`%.*s' already defined as collating symbol"
+msgstr "`%.*s' je već definiran kao collating simbol"
+
+#: locale/programs/ld-collate.c:394
+#, c-format
+msgid "`%.*s' already defined in charmap"
+msgstr "`%.*s' je već definiran u skupu znakova"
+
+#: locale/programs/ld-collate.c:403
+#, c-format
+msgid "`%.*s' already defined in repertoire"
+msgstr "`%.*s' je već definiran u repertoire"
+
+#: locale/programs/charmap.c:604 locale/programs/locfile.h:96 locale/programs/repertoire.c:314
+#, c-format
+msgid "`%1$s' definition does not end with `END %1$s'"
+msgstr "`%1$s' definicija ne završava sa `END %1$s'"
+
+#: locale/programs/ld-collate.c:1281 locale/programs/ld-ctype.c:1455
+#, c-format
+msgid "`%s' and `%.*s' are no valid names for symbolic range"
+msgstr ""
+
+#: elf/sprof.c:762
+#, c-format
+msgid "`%s' is no correct profile data file for `%s'"
+msgstr "`%s' nije ispravan podatak profila za spis `%s'"
+
+#: locale/programs/ld-ctype.c:699
+msgid "`digit' category has not entries in groups of ten"
+msgstr "`digit' kategorija nema unose u grupama od po deset"
+
+#: posix/../sysdeps/posix/gai_strerror.c:35
+msgid "ai_family not supported"
+msgstr "ai_family nije podržano"
+
+#: posix/../sysdeps/posix/gai_strerror.c:40
+msgid "ai_socktype not supported"
+msgstr "ai_socktype nije podržano"
+
+#: nscd/nscd.c:130
+msgid "already running"
+msgstr "već radi"
+
+#: locale/programs/charmap.c:439 locale/programs/repertoire.c:184
+#, c-format
+msgid "argument to <%s> must be a single character"
+msgstr "argument za <%s> mora biti jedan znak"
+
+#: locale/programs/locfile.c:126
+#, c-format
+msgid "argument to `%s' must be a single character"
+msgstr "argument za `%s' mora biti jedan znak"
+
+#: sunrpc/auth_unix.c:322
+msgid "auth_none.c - Fatal marshalling problem"
+msgstr ""
+
+#: sunrpc/auth_unix.c:114 sunrpc/auth_unix.c:117 sunrpc/auth_unix.c:150 sunrpc/auth_unix.c:153
+msgid "authunix_create: out of memory\n"
+msgstr "authunix_create: ostao bez memorije\n"
+
+#: locale/programs/charmap.c:369 locale/programs/locfile.c:120 locale/programs/locfile.c:147 locale/programs/repertoire.c:176
+msgid "bad argument"
+msgstr "krivi argument"
+
+#: inet/rcmd.c:514
+msgid "bad owner"
+msgstr "nepostojeći vlasnik"
+
+#: timezone/zic.c:1216
+msgid "blank FROM field on Link line"
+msgstr "prazno FROM polje na link retku"
+
+#: timezone/zic.c:1220
+msgid "blank TO field on Link line"
+msgstr "prazno TO polje na Link retku"
+
+#: malloc/mcheck.c:302
+msgid "block freed twice\n"
+msgstr "blok je dvaput otpušten\n"
+
+#: malloc/mcheck.c:305
+msgid "bogus mcheck_status, library is buggy\n"
+msgstr "Nedozvoljen mcheck_status, biblioteka je bugovita\n"
+
+#: sunrpc/pmap_rmt.c:186
+msgid "broadcast: ioctl (get interface configuration)"
+msgstr "broadcast: ioctl (dohvati konfiguraciju sučelja)"
+
+#: sunrpc/pmap_rmt.c:195
+msgid "broadcast: ioctl (get interface flags)"
+msgstr "broadcast: ioctl (dohvati zastavice sučelja)"
+
+#: sunrpc/svc_udp.c:541
+msgid "cache_set: could not allocate new rpc_buffer"
+msgstr "cache_set: ne mogu alocirati novi rpc_buffer"
+
+#: sunrpc/svc_udp.c:535
+msgid "cache_set: victim alloc failed"
+msgstr "cache_set: alokacija žrtve nije uspjela"
+
+#: sunrpc/svc_udp.c:524
+msgid "cache_set: victim not found"
+msgstr "cache_set: žrtva nije nađena"
+
+#: timezone/zic.c:1757
+msgid "can't determine time zone abbreviation to use just after until time"
+msgstr ""
+
+#: sunrpc/svc_simple.c:88
+#, c-format
+msgid "can't reassign procedure number %ld\n"
+msgstr "ne mogu ponovno dati isti broj procedure %ld\n"
+
+#: elf/dl-reloc.c:152
+msgid "can't restore segment prot after reloc"
+msgstr "ne mogu vratiti segmet prot poslije realokacije"
+
+#: locale/programs/localedef.c:487
+#, c-format
+msgid "cannot add already read locale `%s' a second time"
+msgstr "ne mogu još jednom dodati već pročitani lokal `%s' "
+
+#: elf/dl-deps.c:454
+msgid "cannot allocate dependency list"
+msgstr "ne mogu alocirati popis ovisnosti"
+
+#: elf/dl-load.c:1039
+msgid "cannot allocate memory for program header"
+msgstr "ne mogu alocirati memoriju za zaglavlje programa"
+
+#: elf/dl-load.c:348
+msgid "cannot allocate name record"
+msgstr "ne mogu alocirati zapis imena"
+
+#: elf/sprof.c:930 elf/sprof.c:982
+msgid "cannot allocate symbol data"
+msgstr "ne mogu alocirati podatke simbola"
+
+#: elf/dl-deps.c:484
+msgid "cannot allocate symbol search list"
+msgstr "ne mogu alocirati popis za traženje simbola"
+
+#: elf/dl-version.c:292
+msgid "cannot allocate version reference table"
+msgstr "ne mogu alocirati tablicu referencijskih inačica"
+
+#: elf/dl-load.c:1008
+msgid "cannot change memory protections"
+msgstr "ne mogu promijeniti zaštite memorije"
+
+#: elf/dl-load.c:540
+msgid "cannot create RUNPATH/RPATH copy"
+msgstr "ne mogu stvoriti  RUNPATH/RPATH kopiju"
+
+#: elf/dl-load.c:456 elf/dl-load.c:525 elf/dl-load.c:553 elf/dl-load.c:600 elf/dl-load.c:693
+msgid "cannot create cache for search path"
+msgstr "ne mogu stvoriti međumemoriju za traženje putanje"
+
+#: elf/sprof.c:715 elf/sprof.c:773
+msgid "cannot create internal descriptor"
+msgstr "ne mogu stvoriti interni opisnik"
+
+#: elf/sprof.c:413
+msgid "cannot create internal descriptors"
+msgstr "ne mogu stvoriti interne opisnike"
+
+#: locale/programs/locfile.c:693
+#, c-format
+msgid "cannot create output file `%s' for category `%s'"
+msgstr ""
+
+#: elf/dl-load.c:590
+msgid "cannot create search path array"
+msgstr ""
+
+#: elf/dl-load.c:1125
+msgid "cannot create searchlist"
+msgstr "ne mogu stvoriti listu za traženje"
+
+#: elf/dl-load.c:830 elf/dl-load.c:1724
+msgid "cannot create shared object descriptor"
+msgstr ""
+
+#: catgets/gencat.c:1315
+msgid "cannot determine escape character"
+msgstr ""
+
+#: elf/dl-load.c:958
+msgid "cannot dynamically load executable"
+msgstr ""
+
+#: nscd/connections.c:183
+#, c-format
+msgid "cannot enable socket to accept connections: %s"
+msgstr ""
+
+#: elf/dl-open.c:121
+msgid "cannot extend global scope"
+msgstr "ne mogu proširiti globalni doseg"
+
+#: sunrpc/rpc_main.c:343
+#, c-format
+msgid "cannot find C preprocessor: %s \n"
+msgstr ""
+
+#: sunrpc/rpc_main.c:351
+msgid "cannot find any C preprocessor (cpp)\n"
+msgstr ""
+
+#: iconv/iconvconfig.c:1159
+msgid "cannot generate output file"
+msgstr "ne mogu stvoriti izlazni spis"
+
+#: nscd/connections.c:227
+#, c-format
+msgid "cannot handle old request version %d; current version is %d"
+msgstr ""
+
+#: elf/sprof.c:670
+msgid "cannot load profiling data"
+msgstr "ne mogu učitati podatke za profiliranje"
+
+#: elf/dl-reloc.c:62
+msgid "cannot make segment writable for relocation"
+msgstr ""
+
+#: elf/dl-load.c:1024
+msgid "cannot map zero-fill pages"
+msgstr "ne mogu mapirati neispunjene stranice"
+
+#: inet/rcmd.c:510
+msgid "cannot open"
+msgstr "ne mogu otvoriti"
+
+#: sysdeps/unix/sysv/linux/lddlibc4.c:64
+#, c-format
+msgid "cannot open `%s'"
+msgstr "ne mogu otvoriti `%s'"
+
+#: debug/pcprofiledump.c:96
+msgid "cannot open input file"
+msgstr "ne mogu otvoriti ulazni spis"
+
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:159 iconv/iconv_prog.c:265
+#, c-format
+msgid "cannot open input file `%s'"
+msgstr "ne mogu otvoriti ulaznu datoteku `%s'"
+
+#: locale/programs/localedef.c:203 locale/programs/localedef.c:218 locale/programs/localedef.c:513 locale/programs/localedef.c:533
+#, c-format
+msgid "cannot open locale definition file `%s'"
+msgstr ""
+
+#: iconv/iconv_prog.c:209
+msgid "cannot open output file"
+msgstr "ne mogu otvoriti izlazni spis"
+
+#: catgets/gencat.c:949 catgets/gencat.c:990
+#, c-format
+msgid "cannot open output file `%s'"
+msgstr "ne mogu otvoriti izlazni spis `%s'"
+
+#: locale/programs/locfile.c:571
+#, c-format
+msgid "cannot open output file `%s' for category `%s'"
+msgstr ""
+
+#: elf/dl-load.c:1737
+msgid "cannot open shared object file"
+msgstr ""
+
+#: nscd/connections.c:165
+#, c-format
+msgid "cannot open socket: %s"
+msgstr "ne mogu otvoriti socket: %s"
+
+#: elf/dl-load.c:822
+msgid "cannot open zero fill device"
+msgstr "ne mogu otvoriti zero fill uređaj"
+
+#: locale/programs/charmap-dir.c:61
+#, c-format
+msgid "cannot read character map directory `%s'"
+msgstr ""
+
+#: nscd/connections.c:125
+msgid "cannot read configuration file; this is fatal"
+msgstr ""
+
+#: elf/dl-load.c:846 elf/dl-load.c:1247 elf/dl-load.c:1319 elf/dl-load.c:1333
+msgid "cannot read file data"
+msgstr "ne mogu pročitati spis"
+
+#: debug/pcprofiledump.c:102
+msgid "cannot read header"
+msgstr "ne mogu pročitati zaglavlje"
+
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
+#, c-format
+msgid "cannot read header from `%s'"
+msgstr "ne mogu pročitati zaglavlje od `%s'"
+
+#: nscd/nscd_stat.c:128
+msgid "cannot read statistics data"
+msgstr "ne moogu pročitati statistike"
+
+#: locale/programs/repertoire.c:331
+msgid "cannot safe new repertoire map"
+msgstr ""
+
+#: elf/dl-load.c:784
+msgid "cannot stat shared object"
+msgstr "ne mogu napraviti stat na dijeljenim objektom"
+
+#: nscd/cache.c:150 nscd/connections.c:151
+#, c-format
+msgid "cannot stat() file `%s': %s"
+msgstr "ne mogu napraviti stat() nad spisom `%s': %s"
+
+#: locale/programs/localedef.c:230
+#, c-format
+msgid "cannot write output files to `%s'"
+msgstr ""
+
+#: nscd/connections.c:265 nscd/connections.c:287
+#, c-format
+msgid "cannot write result: %s"
+msgstr "ne mogu zapisati rezultat: %s"
+
+#: nscd/nscd_stat.c:87
+#, c-format
+msgid "cannot write statistics: %s"
+msgstr "ne mogu pisati statistiku: %s"
+
+#: locale/programs/ld-ctype.c:517
+#, c-format
+msgid "character '%s' in class `%s' must be in class `%s'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:532
+#, c-format
+msgid "character '%s' in class `%s' must not be in class `%s'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:587
+msgid "character <SP> not defined in character map"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:461
+#, c-format
+msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:475
+#, c-format
+msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:3032
+#, c-format
+msgid "character `%s' not defined while needed as default value"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:1223
+#, c-format
+msgid "character class `%s' already defined"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:1255
+#, c-format
+msgid "character map `%s' already defined"
+msgstr ""
+
+#: locale/programs/charmap.c:254
+#, c-format
+msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
+msgstr ""
+
+#: locale/programs/charmap.c:140
+#, c-format
+msgid "character map file `%s' not found"
+msgstr ""
+
+#: locale/programs/charmap.c:465
+msgid "character sets with locking states are not supported"
+msgstr ""
+
+#: intl/tst-codeset.c:40 intl/tst-codeset.c:50
+msgid "cheese"
+msgstr "iznenađenje"
+
+#: locale/programs/localedef.c:482
+msgid "circular dependencies between locale definitions"
+msgstr ""
+
+#: sunrpc/clnt_raw.c:115
+msgid "clnt_raw.c - Fatal header serialization error."
+msgstr ""
+
+#: sunrpc/clnt_tcp.c:134 sunrpc/clnt_tcp.c:137
+msgid "clnttcp_create: out of memory\n"
+msgstr ""
+
+#: sunrpc/clnt_udp.c:141 sunrpc/clnt_udp.c:144
+msgid "clntudp_create: out of memory\n"
+msgstr ""
+
+#: sunrpc/clnt_unix.c:131 sunrpc/clnt_unix.c:134
+msgid "clntunix_create: out of memory\n"
+msgstr ""
+
+#: inet/rcmd.c:209
+#, c-format
+msgid "connect to address %s: "
+msgstr "spajanje na adresu %s:"
+
+#: sunrpc/rpc_scan.c:116
+msgid "constant or identifier expected"
+msgstr ""
+
+#: iconv/iconv_prog.c:231
+#, c-format
+msgid "conversion from `%s' to `%s' not supported"
+msgstr ""
+
+#: catgets/gencat.c:1289
+msgid "conversion modules not available"
+msgstr ""
+
+#: locale/programs/ld-monetary.c:902
+msgid "conversion rate value cannot be zero"
+msgstr ""
+
+#: iconv/iconv_prog.c:427 iconv/iconv_prog.c:452
+msgid "conversion stopped due to problem in writing the output"
+msgstr ""
+
+#: sunrpc/svc_simple.c:97
+msgid "couldn't create an rpc server\n"
+msgstr ""
+
+#: sunrpc/svc_simple.c:105
+#, c-format
+msgid "couldn't register prog %ld vers %ld\n"
+msgstr ""
+
+#: nss/getent.c:51
+msgid "database [key ...]"
+msgstr "baza podataka [ključ...]"
+
+#: locale/programs/charmap.c:197
+#, c-format
+msgid "default character map file `%s' not found"
+msgstr ""
+
+#: locale/programs/charmap.c:397
+#, c-format
+msgid "duplicate definition of <%s>"
+msgstr "dvostruka definicija <%s>"
+
+#: locale/programs/ld-collate.c:3062
+#, c-format
+msgid "duplicate definition of script `%s'"
+msgstr ""
+
+#: catgets/gencat.c:430
+msgid "duplicate set definition"
+msgstr "dvostuka set definicija"
+
+#: timezone/zic.c:1009
+#, c-format
+msgid "duplicate zone name %s (file \"%s\", line %d)"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:2559
+#, c-format
+msgid "duplicated definition for mapping `%s'"
+msgstr ""
+
+#: catgets/gencat.c:631
+msgid "duplicated message identifier"
+msgstr "dvostruki identifikator poruke"
+
+#: catgets/gencat.c:603
+msgid "duplicated message number"
+msgstr "dvostruki broj poruka"
+
+#: locale/programs/ld-ctype.c:2370
+msgid "ellipsis range must be marked by two operands of same type"
+msgstr ""
+
+#: sunrpc/rpc_scan.c:383
+msgid "empty char string"
+msgstr "prazni niz znakova"
+
+#: elf/dl-open.c:219
+msgid "empty dynamic string token substitution"
+msgstr ""
+
+#: elf/dl-deps.c:113
+msgid "empty dynamics string token substitution"
+msgstr ""
+
+#: sunrpc/svc_udp.c:467
+msgid "enablecache: cache already enabled"
+msgstr ""
+
+#: sunrpc/svc_udp.c:473
+msgid "enablecache: could not allocate cache"
+msgstr ""
+
+#: sunrpc/svc_udp.c:481
+msgid "enablecache: could not allocate cache data"
+msgstr ""
+
+#: sunrpc/svc_udp.c:488
+msgid "enablecache: could not allocate cache fifo"
+msgstr ""
+
+#: iconv/iconv_prog.c:61
+msgid "encoding for output"
+msgstr "enkoding za izlaz"
+
+#: iconv/iconv_prog.c:60
+msgid "encoding of original text"
+msgstr "enkoding izvornog teksta"
+
+#: nscd/connections.c:366 nscd/connections.c:460
+#, c-format
+msgid "error getting callers id: %s"
+msgstr "greška pri dohvatu broja pozivatelja: %s"
+
+#: locale/programs/ld-collate.c:3032
+msgid "error while adding equivalent collating symbol"
+msgstr ""
+
+#: iconv/iconv_charmap.c:177 iconv/iconv_prog.c:283
+#, c-format
+msgid "error while closing input `%s'"
+msgstr ""
+
+#: iconv/iconv_prog.c:330
+msgid "error while closing output file"
+msgstr ""
+
+#: elf/sprof.c:706
+msgid "error while closing the profiling data file"
+msgstr ""
+
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:538 iconv/iconv_prog.c:516 iconv/iconv_prog.c:547
+msgid "error while reading the input"
+msgstr "greška pri čitanju ulaza"
+
+#: locale/programs/locfile.h:59
+msgid "expect string argument for `copy'"
+msgstr ""
+
+#: timezone/zic.c:899
+msgid "expected continuation line not found"
+msgstr ""
+
+#: locale/programs/ld-time.c:1027
+msgid "extra trailing semicolon"
+msgstr "višak točka-zareza"
+
+#: elf/sprof.c:404
+#, c-format
+msgid "failed to load shared object `%s'"
+msgstr ""
+
+#: elf/sprof.c:600
+msgid "failed to load symbol data"
+msgstr "nisam uspio učitati podatke simbola"
+
+#: elf/dl-load.c:771
+msgid "failed to map segment from shared object"
+msgstr ""
+
+#: elf/sprof.c:698
+msgid "failed to mmap the profiling data file"
+msgstr ""
+
+#: iconv/iconv_prog.c:235
+msgid "failed to start conversion processing"
+msgstr ""
+
+#: locale/programs/locfile.c:596
+#, c-format
+msgid "failure while writing data for category `%s'"
+msgstr ""
+
+#: elf/../sysdeps/generic/readelflib.c:35
+#, c-format
+msgid "file %s is truncated\n"
+msgstr "spis %s je uništen\n"
+
+#. TRANS: the file will not be removed; this is an
+#. TRANS: informative message.
+#: sunrpc/rpc_main.c:1150
+#, c-format
+msgid "file `%s' already exists and may be overwritten\n"
+msgstr ""
+
+#: elf/dl-load.c:1247
+msgid "file too short"
+msgstr "spis je prekratak"
+
+#: inet/rcmd.c:512
+msgid "fstat failed"
+msgstr "fstat nije uspio"
+
+#: locale/programs/linereader.c:388
+msgid "garbage at end of character code specification"
+msgstr ""
+
+#: locale/programs/linereader.c:276
+msgid "garbage at end of number"
+msgstr "smeće pri kraju broja"
+
+#: elf/sprof.c:77
+msgid "generate call graph"
+msgstr "stvori graf poziva"
+
+#: elf/sprof.c:76
+msgid "generate flat profile with counts and ticks"
+msgstr ""
+
+#: sunrpc/get_myaddr.c:78
+msgid "get_myaddress: ioctl (get interface configuration)"
+msgstr ""
+
+#: nss/getent.c:702
+msgid "getent - get entries from administrative database."
+msgstr ""
+
+#: nscd/connections.c:221
+#, c-format
+msgid "handle_request: request received (Version = %d)"
+msgstr ""
+
+#: timezone/zic.c:643
+msgid "hard link failed, symbolic link used"
+msgstr ""
+
+#: inet/rcmd.c:518
+msgid "hard linked somewhere"
+msgstr "negdje je hard linkan"
+
+#: locale/programs/charmap.c:986 locale/programs/repertoire.c:430
+msgid "hexadecimal range format should use only capital characters"
+msgstr ""
+
+#: timezone/zic.c:1193
+msgid "illegal CORRECTION field on Leap line"
+msgstr ""
+
+#: timezone/zic.c:1197
+msgid "illegal Rolling/Stationary field on Leap line"
+msgstr ""
+
+#: sunrpc/rpc_scan.c:312
+msgid "illegal character in file: "
+msgstr "nedozvoljeni znak u spisu:"
+
+#: locale/programs/linereader.c:600
+msgid "illegal escape sequence at end of string"
+msgstr ""
+
+#: iconv/iconv_charmap.c:443
+#, c-format
+msgid "illegal input sequence at position %Zd"
+msgstr ""
+
+#: iconv/iconv_prog.c:469
+#, c-format
+msgid "illegal input sequence at position %ld"
+msgstr ""
+
+#: sunrpc/rpc_main.c:463
+#, c-format
+msgid "illegal nettype :`%s'\n"
+msgstr "nedozvoljeni nettype :`%s'\n"
+
+#: catgets/gencat.c:403 catgets/gencat.c:480
+msgid "illegal set number"
+msgstr "nedozvoljeni broj seta"
+
+#: locale/programs/ld-ctype.c:1229
+#, c-format
+msgid "implementation limit: no more than %Zd character classes allowed"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:1261
+#, c-format
+msgid "implementation limit: no more than %d character maps allowed"
+msgstr ""
+
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:473
+msgid "incomplete character or shift sequence at end of buffer"
+msgstr ""
+
+#: timezone/zic.c:856
+msgid "input line of unknown type"
+msgstr "ulazni redak nepoznatog tipa"
+
+#: elf/dl-load.c:1294
+msgid "internal error"
+msgstr "interna greška"
+
+#: iconv/iconv_prog.c:477
+msgid "internal error (illegal descriptor)"
+msgstr ""
+
+#: timezone/zic.c:1819
+msgid "internal error - addtype called with bad isdst"
+msgstr ""
+
+#: timezone/zic.c:1827
+msgid "internal error - addtype called with bad ttisgmt"
+msgstr ""
+
+#: timezone/zic.c:1823
+msgid "internal error - addtype called with bad ttisstd"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:488 locale/programs/ld-ctype.c:544
+#, c-format
+msgid "internal error in %s, line %u"
+msgstr "interna greška u %s, redak %u"
+
+#: elf/dl-load.c:1267
+msgid "invalid ELF header"
+msgstr "neispravno ELF zaglavlje"
+
+#: timezone/zic.c:1065
+msgid "invalid UTC offset"
+msgstr "neispravan UTC pomak"
+
+#: timezone/zic.c:1068
+msgid "invalid abbreviation format"
+msgstr "neispravan format kratice"
+
+#: catgets/gencat.c:688
+msgid "invalid character: message ignored"
+msgstr ""
+
+#: timezone/zic.c:1158 timezone/zic.c:1370 timezone/zic.c:1384
+msgid "invalid day of month"
+msgstr "neispravan dan u mjesecu"
+
+#: locale/programs/charmap.c:352
+msgid "invalid definition"
+msgstr "neispravna definicija"
+
+#: locale/programs/charmap.c:547
+msgid "invalid encoding given"
+msgstr "dat je neispravan enkoding"
+
+#: timezone/zic.c:1322
+msgid "invalid ending year"
+msgstr "neispravna godina završetka"
+
+#: catgets/gencat.c:1152 locale/programs/linereader.c:538
+msgid "invalid escape sequence"
+msgstr "neispravna escape sekvenca"
+
+#: timezone/zic.c:1130
+msgid "invalid leaping year"
+msgstr "neispravna prijestupna godina"
+
+#: catgets/gencat.c:731
+msgid "invalid line"
+msgstr "neispravan redak"
+
+#: elf/dl-open.c:349
+msgid "invalid mode for dlopen()"
+msgstr "neispravan mod za dlopen()"
+
+#: timezone/zic.c:1145 timezone/zic.c:1248
+msgid "invalid month name"
+msgstr "neispravno ime mjeseca"
+
+#: locale/programs/charmap.c:974 locale/programs/ld-collate.c:2888 locale/programs/repertoire.c:418
+msgid "invalid names for character range"
+msgstr ""
+
+#: debug/pcprofiledump.c:166
+msgid "invalid pointer size"
+msgstr "neispravna veličina pokazivača"
+
+#: catgets/gencat.c:549
+msgid "invalid quote character"
+msgstr "neispravan znak za navodnik"
+
+#: timezone/zic.c:964
+msgid "invalid saved time"
+msgstr "neispravno sačuvano vrijeme"
+
+#: timezone/zic.c:1297
+msgid "invalid starting year"
+msgstr "neispravna početna godina"
+
+#: timezone/zic.c:1174 timezone/zic.c:1277
+msgid "invalid time of day"
+msgstr "neispravno vrijeme dana"
+
+#: timezone/zic.c:1375
+msgid "invalid weekday name"
+msgstr "neispravan dan u tjednu"
+
+#: nscd/connections.c:479
+#, c-format
+msgid "key length in request too long: %d"
+msgstr ""
+
+#: elf/ldconfig.c:794
+#, c-format
+msgid "libc4 library %s in wrong directory"
+msgstr ""
+
+#: elf/ldconfig.c:788
+#, c-format
+msgid "libc5 library %s in wrong directory"
+msgstr ""
+
+#: elf/ldconfig.c:791
+#, c-format
+msgid "libc6 library %s in wrong directory"
+msgstr ""
+
+#: elf/ldconfig.c:821
+#, c-format
+msgid "libraries %s and %s in directory %s have same soname but different type."
+msgstr ""
+
+#: timezone/zic.c:836
+msgid "line too long"
+msgstr "redak predugačak"
+
+#: iconv/iconv_prog.c:63
+msgid "list all known coded character sets"
+msgstr ""
+
+#: locale/programs/locfile.h:63
+msgid "locale name should consist only of portable characters"
+msgstr ""
+
+#: inet/rcmd.c:503
+msgid "lstat failed"
+msgstr "lstat nije uspio"
+
+#: malloc/memusagestat.c:59
+msgid "make output graphic VALUE pixel high"
+msgstr ""
+
+#: malloc/memusagestat.c:58
+msgid "make output graphic VALUE pixel wide"
+msgstr ""
+
+#: stdlib/../sysdeps/unix/sysv/linux/ia64/makecontext.c:63
+msgid "makecontext: does not know how to handle more than 8 arguments\n"
+msgstr ""
+
+#: catgets/gencat.c:785
+msgid "malformed line ignored"
+msgstr "izobličeni redak zanemaren"
+
+#: elf/sprof.c:550
+msgid "mapping of section header string table failed"
+msgstr ""
+
+#: elf/sprof.c:540
+msgid "mapping of section headers failed"
+msgstr ""
+
+#: malloc/mcheck.c:296
+msgid "memory clobbered before allocated block\n"
+msgstr ""
+
+#: malloc/mcheck.c:299
+msgid "memory clobbered past end of allocated block\n"
+msgstr ""
+
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493 posix/getconf.c:996
+msgid "memory exhausted"
+msgstr "iscrpljeni memorijski resursi"
+
+#: malloc/mcheck.c:293
+msgid "memory is consistent, library is buggy\n"
+msgstr ""
+
+#: elf/cache.c:143
+msgid "mmap of cache file failed.\n"
+msgstr "mmap međumemoriske datoteke nije uspio.\n"
+
+#: elf/../sysdeps/generic/readelflib.c:110
+msgid "more than one dynamic segment\n"
+msgstr ""
+
+#: timezone/zic.c:959
+msgid "nameless rule"
+msgstr "pravilo bez imena"
+
+#: nis/nss_nisplus/nisplus-publickey.c:281 nis/nss_nisplus/nisplus-publickey.c:287 nis/nss_nisplus/nisplus-publickey.c:346 nis/nss_nisplus/nisplus-publickey.c:355
+#, c-format
+msgid "netname2user: (nis+ lookup): %s\n"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:300
+#, c-format
+msgid "netname2user: DES entry for %s in directory %s not unique"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:368
+#, c-format
+msgid "netname2user: LOCAL entry for %s in directory %s not unique"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:207
+#, c-format
+msgid "netname2user: missing group id list in `%s'."
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:318
+#, c-format
+msgid "netname2user: principal name `%s' too long"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:375
+msgid "netname2user: should not have uid 0"
+msgstr ""
+
+#: sunrpc/svc_simple.c:183
+#, c-format
+msgid "never registered prog %d\n"
+msgstr "nikad registriran program %d\n"
+
+#: locale/programs/repertoire.c:272
+msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
+msgstr ""
+
+#: timezone/zic.c:2148
+msgid "no day in month matches rule"
+msgstr "nijedan dan u mjesecu se ne poklapa sa pravilom"
+
+#: locale/programs/ld-collate.c:1770
+msgid "no definition of `UNDEFINED'"
+msgstr "nema definicije od `UNDEFINED'"
+
+#: elf/sprof.c:272
+#, c-format
+msgid "no filename for profiling data given and shared object `%s' has no soname"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:747
+msgid "no input digits defined and none of the standard names in the charmap"
+msgstr ""
+
+#: locale/programs/locfile.h:82
+msgid "no other keyword shall be specified when `copy' is used"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:3351
+msgid "no output digits defined and none of the standard names in the charmap"
+msgstr ""
+
+#: iconv/iconvconfig.c:308 locale/programs/localedef.c:236
+msgid "no output file produced because warning were issued"
+msgstr ""
+
+#: locale/programs/charmap.c:493 locale/programs/charmap.c:673 locale/programs/charmap.c:769 locale/programs/repertoire.c:231
+msgid "no symbolic name given"
+msgstr "nije dato simboličko ime"
+
+#: locale/programs/charmap.c:580 locale/programs/charmap.c:728 locale/programs/charmap.c:811 locale/programs/repertoire.c:297
+msgid "no symbolic name given for end of range"
+msgstr ""
+
+#: locale/programs/linereader.c:646
+msgid "non-symbolic character value should not be used"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:812
+msgid "not all characters used in `outdigit' are available in the charmap"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:829
+msgid "not all characters used in `outdigit' are available in the repertoire"
+msgstr ""
+
+#: inet/rcmd.c:505
+msgid "not regular file"
+msgstr "nema obične datoteke"
+
+#: nscd/nscd_stat.c:131
+#, c-format
+msgid ""
+"nscd configuration:\n"
+"\n"
+"%15d  server debug level\n"
+msgstr ""
+
+#: nscd/nscd_stat.c:105
+msgid "nscd not running!\n"
+msgstr "nscd nije pokrenut!\n"
+
+#: elf/dl-load.c:1059
+msgid "object file has no dynamic section"
+msgstr ""
+
+#: iconv/iconv_prog.c:65
+msgid "omit invalid characters from output"
+msgstr ""
+
+#: elf/dl-load.c:1309
+msgid "only ET_DYN and ET_EXEC can be loaded"
+msgstr ""
+
+#: locale/programs/charmap.c:637
+msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
+msgstr ""
+
+#: locale/programs/ld-collate.c:1018 locale/programs/ld-collate.c:1188
+#, c-format
+msgid "order for `%.*s' already defined at %s:%Zu"
+msgstr ""
+
+#: inet/ruserpass.c:170 inet/ruserpass.c:193
+msgid "out of memory"
+msgstr "nestalo je memorije"
+
+#: iconv/iconv_prog.c:66
+msgid "output file"
+msgstr "izlazni spis"
+
+#: posix/../sysdeps/generic/wordexp.c:1801
+msgid "parameter null or not set"
+msgstr "parametar null ili nije postavljen"
+
+#: sunrpc/pm_getmaps.c:74
+msgid "pmap_getmaps rpc problem"
+msgstr "pmap_getmaps rpc problem"
+
+#: inet/rcmd.c:293
+msgid "poll: protocol failure in circuit setup\n"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:1950 locale/programs/ld-ctype.c:2001
+msgid "premature end of `translit_ignore' definition"
+msgstr ""
+
+#: sunrpc/rpc_scan.c:525 sunrpc/rpc_scan.c:535
+msgid "preprocessor error"
+msgstr "pretprocesorska greška"
+
+#: locale/programs/ld-ctype.c:2733
+msgid "previous definition was here"
+msgstr "postoji prethodna definicija"
+
+#: elf/sprof.c:74
+msgid "print list of count paths and their number of use"
+msgstr ""
+
+#: iconv/iconv_prog.c:68
+msgid "print progress information"
+msgstr "ispisuj podatke o napredovanju"
+
+#: elf/sprof.c:687
+#, c-format
+msgid "profiling data file `%s' does not match shared object `%s'"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:237 sunrpc/rpcinfo.c:383
+#, c-format
+msgid "program %lu is not available\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333 sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453 sunrpc/rpcinfo.c:476 sunrpc/rpcinfo.c:510
+#, c-format
+msgid "program %lu version %lu is not available\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:515
+#, c-format
+msgid "program %lu version %lu ready and waiting\n"
+msgstr ""
+
+#: inet/rcmd.c:354
+#, c-format
+msgid "rcmd: %s: short read"
+msgstr "rcmd: %s: kratko čitanje"
+
+#: inet/rcmd.c:290
+#, c-format
+msgid "rcmd: poll (setting up stderr): %m\n"
+msgstr ""
+
+#: inet/rcmd.c:172 inet/rcmd.c:175
+msgid "rcmd: socket: All ports in use\n"
+msgstr ""
+
+#: inet/rcmd.c:270
+#, c-format
+msgid "rcmd: write (setting up stderr): %m\n"
+msgstr ""
+
+#: sunrpc/svc_simple.c:112
+msgid "registerrpc: out of memory\n"
+msgstr "registerrpc: ostao bez memorije\n"
+
+#: timezone/zic.c:1880
+msgid "repeated leap second moment"
+msgstr "ponovljeni trenutak preskakanja sekunde"
+
+#: locale/programs/repertoire.c:342
+#, c-format
+msgid "repertoire map file `%s' not found"
+msgstr ""
+
+#: locale/programs/charmap.c:1068
+msgid "resulting bytes for range not representable."
+msgstr ""
+
+#: sunrpc/rpc_main.c:1117
+msgid "rpcgen: arglist coding error\n"
+msgstr ""
+
+#: sunrpc/rpc_main.c:1105
+msgid "rpcgen: too many defines\n"
+msgstr "rpcgen: previše definicija\n"
+
+#: sunrpc/rpcinfo.c:732
+#, c-format
+msgid "rpcinfo: %s is unknown host\n"
+msgstr "rpcinfo: %s je nepoznato računalo\n"
+
+#: sunrpc/rpcinfo.c:695
+#, c-format
+msgid "rpcinfo: %s is unknown service\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:665
+#, c-format
+msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:637
+#, c-format
+msgid "rpcinfo: broadcast failed: %s\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:556 sunrpc/rpcinfo.c:563
+msgid "rpcinfo: can't contact portmapper"
+msgstr ""
+
+#: timezone/zic.c:749 timezone/zic.c:751
+msgid "same rule name in multiple files"
+msgstr ""
+
+#: elf/dl-load.c:1104
+msgid "shared object cannot be dlopen()ed"
+msgstr ""
+
+#: elf/dl-close.c:61
+msgid "shared object not open"
+msgstr "dijeljeni objekt nije otvoren"
+
+#: nscd/connections.c:493
+#, c-format
+msgid "short read while reading request key: %s"
+msgstr ""
+
+#: nscd/connections.c:443
+#, c-format
+msgid "short read while reading request: %s"
+msgstr ""
+
+#: nscd/grpcache.c:193 nscd/hstcache.c:278 nscd/pwdcache.c:189
+#, c-format
+msgid "short write in %s: %s"
+msgstr "kratko pisanje u %s: %s"
+
+#: inet/rcmd.c:335
+msgid "socket: protocol failure in circuit setup\n"
+msgstr ""
+
+#: timezone/zic.c:820
+msgid "standard input"
+msgstr "standardni ulaz"
+
+#: locale/programs/ld-ctype.c:1681
+msgid "start and end character sequence of range must have the same length"
+msgstr ""
+
+#: timezone/zic.c:1331
+msgid "starting year greater than ending year"
+msgstr ""
+
+#: timezone/zic.c:1303 timezone/zic.c:1328
+msgid "starting year too high to be represented"
+msgstr ""
+
+#: timezone/zic.c:1301 timezone/zic.c:1326
+msgid "starting year too low to be represented"
+msgstr ""
+
+#: iconv/iconv_prog.c:67
+msgid "suppress warnings"
+msgstr "suzbij upozorenja"
+
+#: sunrpc/svc_run.c:76
+msgid "svc_run: - poll failed"
+msgstr "svc_run: - polling nije uspio"
+
+#: sunrpc/svc_tcp.c:171
+msgid "svc_tcp.c - cannot getsockname or listen"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:156
+msgid "svc_tcp.c - tcp socket creation problem"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:224 sunrpc/svc_tcp.c:227
+msgid "svc_tcp: makefd_xprt: out of memory\n"
+msgstr ""
+
+#: sunrpc/svc_unix.c:150
+msgid "svc_unix.c - AF_UNIX socket creation problem"
+msgstr ""
+
+#: sunrpc/svc_unix.c:166
+msgid "svc_unix.c - cannot getsockname or listen"
+msgstr ""
+
+#: sunrpc/svc_unix.c:220 sunrpc/svc_unix.c:223
+msgid "svc_unix: makefd_xprt: out of memory\n"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:182 sunrpc/svc_tcp.c:185
+msgid "svctcp_create: out of memory\n"
+msgstr ""
+
+#: sunrpc/svc_udp.c:143
+msgid "svcudp_create - cannot getsockname"
+msgstr ""
+
+#: sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:158
+msgid "svcudp_create: out of memory\n"
+msgstr ""
+
+#: sunrpc/svc_udp.c:129
+msgid "svcudp_create: socket creation problem"
+msgstr ""
+
+#: sunrpc/svc_udp.c:179 sunrpc/svc_udp.c:182
+msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
+msgstr ""
+
+#: sunrpc/svc_unix.c:178 sunrpc/svc_unix.c:181
+msgid "svcunix_create: out of memory\n"
+msgstr ""
+
+#: locale/programs/linereader.c:750
+#, c-format
+msgid "symbol `%.*s' not in charmap"
+msgstr "simbol `%.*s' nije u znakovnom skupu"
+
+#: locale/programs/linereader.c:771
+#, c-format
+msgid "symbol `%.*s' not in repertoire map"
+msgstr ""
+
+#: locale/programs/ld-collate.c:1630 locale/programs/ld-collate.c:1729
+#, c-format
+msgid "symbol `%s'"
+msgstr "simbol `%s'"
+
+#: locale/programs/ld-collate.c:1627 locale/programs/ld-collate.c:1726
+#, c-format
+msgid "symbol `%s' has the same encoding as"
+msgstr ""
+
+#: locale/programs/ld-collate.c:1552
+#, c-format
+msgid "symbol `%s' not defined"
+msgstr "simbol `%s' nije definiran"
+
+#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007 locale/programs/ld-ctype.c:2049
+msgid "syntax error"
+msgstr "sintaksna greška"
+
+#: locale/programs/charmap.c:492 locale/programs/charmap.c:546 locale/programs/charmap.c:578 locale/programs/charmap.c:672 locale/programs/charmap.c:727 locale/programs/charmap.c:768 locale/programs/charmap.c:809
+#, c-format
+msgid "syntax error in %s definition: %s"
+msgstr ""
+
+#: locale/programs/charmap.c:351 locale/programs/charmap.c:368 locale/programs/repertoire.c:175
+#, c-format
+msgid "syntax error in prolog: %s"
+msgstr "sintaksna greška u prologu: %s"
+
+#: locale/programs/repertoire.c:230 locale/programs/repertoire.c:271 locale/programs/repertoire.c:296
+#, c-format
+msgid "syntax error in repertoire map definition: %s"
+msgstr ""
+
+#: locale/programs/locfile.c:245
+msgid "syntax error: not inside a locale definition section"
+msgstr ""
+
+#: catgets/gencat.c:432 catgets/gencat.c:605 catgets/gencat.c:634
+msgid "this is the first definition"
+msgstr "ovo je prva definicija"
+
+#: timezone/zic.c:1163
+msgid "time before zero"
+msgstr "vrijeme prije nule"
+
+#: timezone/zic.c:1171 timezone/zic.c:2048 timezone/zic.c:2067
+msgid "time overflow"
+msgstr "prevljev vremena"
+
+#: locale/programs/ld-ctype.c:1554 locale/programs/ld-ctype.c:2030
+#, c-format
+msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:1688
+msgid "to-value character sequence is smaller than from-value sequence"
+msgstr ""
+
+#: locale/programs/charmap.c:556
+msgid "too few bytes in character encoding"
+msgstr ""
+
+#: locale/programs/charmap.c:558
+msgid "too many bytes in character encoding"
+msgstr ""
+
+#: timezone/zic.c:1874
+msgid "too many leap seconds"
+msgstr "previše sekundi se preskače"
+
+#: timezone/zic.c:1846
+msgid "too many local time types"
+msgstr "previpe tipova lokalnog vremena"
+
+#: timezone/zic.c:1800
+msgid "too many transitions?!"
+msgstr "previše prijelaza_!"
+
+#: timezone/zic.c:2171
+msgid "too many, or too long, time zone abbreviations"
+msgstr ""
+
+#: locale/programs/linereader.h:160
+msgid "trailing garbage at end of line"
+msgstr ""
+
+#: sunrpc/svc_simple.c:175
+#, c-format
+msgid "trouble replying to prog %d\n"
+msgstr "problemi sa odgovaranjem programu %d\n"
+
+#: timezone/zic.c:1338
+msgid "typed single year"
+msgstr "napisana samo jedna godina"
+
+#: iconv/iconv_charmap.c:524 iconv/iconv_prog.c:533
+msgid "unable to allocate buffer for input"
+msgstr ""
+
+#: nis/nis_callback.c:189
+msgid "unable to free arguments"
+msgstr "ne mogu osloboditi argumente"
+
+#: posix/getconf.c:968 posix/getconf.c:984
+msgid "undefined"
+msgstr "nedefinirano"
+
+#: elf/cache.c:69
+msgid "unknown"
+msgstr "nepoznato"
+
+#: locale/programs/charmap.c:861 locale/programs/charmap.c:872
+#, c-format
+msgid "unknown character `%s'"
+msgstr "nepoznati znak `%s'"
+
+#: catgets/gencat.c:562
+#, c-format
+msgid "unknown directive `%s': line ignored"
+msgstr ""
+
+#: iconv/iconv_prog.c:480
+#, c-format
+msgid "unknown iconv() error %d"
+msgstr "nepoznata iconv() greška %d"
+
+#: catgets/gencat.c:508
+#, c-format
+msgid "unknown set `%s'"
+msgstr "nepoznato `%s'"
+
+#: posix/getconf.c:941
+#, c-format
+msgid "unknown specification \"%s\""
+msgstr "nepoznata specifikacija \"%s\""
+
+#: timezone/zic.c:792
+msgid "unruly zone"
+msgstr "zona bez pravila"
+
+#: catgets/gencat.c:1174
+msgid "unterminated message"
+msgstr "nezavršena poruka"
+
+#: locale/programs/linereader.c:604 locale/programs/linereader.c:789
+msgid "unterminated string"
+msgstr "nezavršeni znakovni niz"
+
+#: sunrpc/rpc_scan.c:351 sunrpc/rpc_scan.c:377
+msgid "unterminated string constant"
+msgstr "nezavšen niz znakova"
+
+#: locale/programs/linereader.c:474
+msgid "unterminated symbolic name"
+msgstr "nezavršeno simboličko ime"
+
+#: locale/programs/charmap.c:1010
+msgid "upper limit in range is not higher then lower limit"
+msgstr ""
+
+#: locale/programs/repertoire.c:455
+msgid "upper limit in range is not smaller then lower limit"
+msgstr ""
+
+#: sunrpc/rpc_main.c:1426
+#, c-format
+msgid "usage: %s infile\n"
+msgstr "uporaba: %s ulaznispis\n"
+
+#: timezone/zic.c:2114
+msgid "use of 2/29 in non leap-year"
+msgstr "korištenje 2/29 u neprestupnoj godini"
+
+#: locale/programs/charmap.c:645 locale/programs/charmap.c:708
+#, c-format
+msgid "value for %s must be an integer"
+msgstr ""
+
+#: locale/programs/charmap.c:404
+#, c-format
+msgid "value for <%s> must be 1 or greater"
+msgstr ""
+
+#: locale/programs/charmap.c:416
+#, c-format
+msgid "value of <%s> must be greater or equal than the value of <%s>"
+msgstr ""
+
+#: timezone/zic.c:439
+msgid "warning: "
+msgstr "upozorenje:"
+
+#: nscd/connections.c:432
+#, c-format
+msgid "while accepting connection: %s"
+msgstr ""
+
+#: nscd/grpcache.c:150 nscd/hstcache.c:165 nscd/pwdcache.c:143
+msgid "while allocating cache entry"
+msgstr "prilikom alociranja međumemorijskog unosa"
+
+#: nscd/cache.c:88
+msgid "while allocating hash table entry"
+msgstr ""
+
+#: nscd/grpcache.c:100 nscd/hstcache.c:108 nscd/pwdcache.c:106
+msgid "while allocating key copy"
+msgstr "prilikom alociranja kopije ključa"
+
+#: iconv/iconvconfig.c:369
+msgid "while inserting in search tree"
+msgstr ""
+
+#: catgets/gencat.c:1198
+msgid "while opening old catalog file"
+msgstr ""
+
+#: locale/programs/locale.c:353
+msgid "while preparing output"
+msgstr "prilikom pripreme izlaza"
+
+#: elf/sprof.c:679
+msgid "while stat'ing profiling data file"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:2394
+msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:2408
+msgid "with character code range values one must use the absolute ellipsis `...'"
+msgstr ""
+
+#: locale/programs/ld-ctype.c:2379
+msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
+msgstr ""
+
+#: nscd/nscd_stat.c:116
+msgid "write incomplete"
+msgstr "pisanje nedovršeno"
+
+#: inet/rcmd.c:516
+msgid "writeable by other than owner"
+msgstr "može se pisati i od nevlasnika"
+
+#: nscd/nscd.c:123 nscd/nscd_nischeck.c:64 nss/getent.c:761
+msgid "wrong number of arguments"
+msgstr "pogrešan broj argumenata"
+
+#: timezone/zic.c:1121
+msgid "wrong number of fields on Leap line"
+msgstr ""
+
+#: timezone/zic.c:1212
+msgid "wrong number of fields on Link line"
+msgstr ""
+
+#: timezone/zic.c:955
+msgid "wrong number of fields on Rule line"
+msgstr ""
+
+#: timezone/zic.c:1025
+msgid "wrong number of fields on Zone continuation line"
+msgstr ""
+
+#: timezone/zic.c:983
+msgid "wrong number of fields on Zone line"
+msgstr ""
+
+#: sunrpc/xdr_array.c:106 sunrpc/xdr_array.c:109
+msgid "xdr_array: out of memory\n"
+msgstr "xdr_array: ostao bez memorije\n"
+
+#: sunrpc/xdr.c:558 sunrpc/xdr.c:561
+msgid "xdr_bytes: out of memory\n"
+msgstr "xdr_bytes: ostao bez memorije\n"
+
+#: sunrpc/xdr_ref.c:89 sunrpc/xdr_ref.c:92
+msgid "xdr_reference: out of memory\n"
+msgstr ""
+
+#: sunrpc/xdr.c:710 sunrpc/xdr.c:713
+msgid "xdr_string: out of memory\n"
+msgstr "xdr_string: ostao bez memorije\n"
+
+#: sunrpc/xdr_rec.c:155 sunrpc/xdr_rec.c:158
+msgid "xdrrec_create: out of memory\n"
+msgstr ""
+
+#: nis/ypclnt.c:909
+msgid "yp_update: cannot convert host to netname\n"
+msgstr ""
+
+#: nis/ypclnt.c:921
+msgid "yp_update: cannot get server address\n"
+msgstr "yp_update: ne mogu odrediti adresu servera\n"

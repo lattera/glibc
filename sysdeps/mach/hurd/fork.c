@@ -677,5 +677,4 @@ __fork (void)
   return err ? __hurd_fail (err) : pid;
 }
 
-INTDEF(__fork)
 weak_alias (__fork, fork)

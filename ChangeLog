@@ -1,3 +1,27 @@
+2002-06-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/unistd.h (__fork_internal): Remove.
+	(__fork): Don't define to __fork_internal.
+	* sysdeps/mach/hurd/fork.c (__fork): Remove INTDEF.
+	* sysdeps/unix/sysv/aix/fork.c (__fork): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/fork.S (__fork_internal): Remove alias.
+	* sysdeps/unix/sysv/linux/sparc/fork.S (__fork_internal): Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list (__fork_internal): Likewise.
+
+2002-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/hr.po: New file.
+
+2002-06-11  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c: Fix error path when new_heap() returns NULL.
+	Reported by Michael Meissner <meissner@redhat.com>.
+
+2002-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/getcontext.S: Fix typo.
+	Patch by Hans Boehm <hans_boehm@hp.com>.
+
 2002-06-20  Andreas Jaeger  <aj@suse.de>
 
 	* math/libm-test.inc: Use exact values as input parameters,

@@ -25,5 +25,4 @@ __fork (void)
 {
   return kfork ();
 }
-INTDEF(__fork)
 strong_alias (__fork, fork)
