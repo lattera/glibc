@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <math.h>
+
+#ifdef	__GNUC__
 
 static CONST double 
 PIo4   =  7.8539816339744827900E-1    , /*Hex  2^ -1   *  1.921FB54442D18 */
@@ -66,3 +68,7 @@ DEFUN(atan2, (y, x), double y AND double x)
 
   return __copysign(atan(y / x), signy);
 }
+
+#else
+#include <sysdeps/ieee754/atan2.c>
+#endif
