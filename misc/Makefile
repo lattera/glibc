@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999,2000,01 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@ install-lib := libbsd-compat.a libg.a
 endif
 gpl2lgpl := error.c error.h
 
-tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent
+tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch
 
 CFLAGS-tsearch.c = $(exceptions)
 CFLAGS-lsearch.c = $(exceptions)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1993.
 
@@ -168,9 +168,6 @@ hsearch_r (item, action, retval, htab)
       if (htab->table[idx].used == hval
 	  && strcmp (item.key, htab->table[idx].entry.key) == 0)
 	{
-          if (action == ENTER)
-	    htab->table[idx].entry.data = item.data;
-
 	  *retval = &htab->table[idx].entry;
 	  return 1;
 	}
@@ -195,9 +192,6 @@ hsearch_r (item, action, retval, htab)
           if (htab->table[idx].used == hval
 	      && strcmp (item.key, htab->table[idx].entry.key) == 0)
 	    {
-              if (action == ENTER)
-	        htab->table[idx].entry.data = item.data;
-
 	      *retval = &htab->table[idx].entry;
 	      return 1;
 	    }

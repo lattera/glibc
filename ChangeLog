@@ -1,3 +1,10 @@
+2002-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/hsearch_r.c (hsearch_r): Don't insert anything if entry is
+	found.
+	* misc/Makefile (tests): Add tst-hsearch.
+	* misc/tst-hsearch.c: New file.
+
 2002-01-18  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/malloc.c: Rewrite, adapted from Doug Lea's malloc-2.7.0.c.
