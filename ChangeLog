@@ -1,5 +1,8 @@
 Mon May 13 19:52:33 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules (stub-$(subdir)): Put cmds including cd inside (...) with
+	output redirect outside it.
+
 	* elf/Makefile (subdir_lib): Depend on ld.so.
 
 Sun May 12 22:52:22 1996  Bruce Elliott  <belliott@accessone.com>
