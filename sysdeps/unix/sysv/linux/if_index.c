@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -133,6 +133,7 @@ if_nameindex (void)
   if (idx == NULL)
     {
       __close (fd);
+      __set_errno (ENOBUFS);
       return NULL;
     }
 
@@ -151,7 +152,10 @@ if_nameindex (void)
 	  free (idx);
 	  __close (fd);
 	  if (saved_errno == EINVAL)
-	    __set_errno (ENOSYS);
+	    saved_errno = ENOSYS;
+	  else if (saved_errno == ENOMEM)
+	    saved_errno = ENOBUFS;
+	  __set_errno (saved_errno);
 	  return NULL;
 	}
       idx[i].if_index = ifr->ifr_ifindex;

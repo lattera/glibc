@@ -1,5 +1,8 @@
 2000-04-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Set errno to
+	ENOBUFS if we are out of memory.
+
 	* sysdeps/generic/bits/fcntl.h (F_SETOWN, F_GETOWN): Make
 	available if __USE_XOPEN2K.
 	* sysdeps/mach/hurd/bits/fcntl.h: Likewise.
