@@ -9,6 +9,8 @@ Tue Jun 11 23:23:30 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 Tue Jun 11 19:13:04 1996  Richard Henderson  <rth@tamu.edu>
 
+	* sysdeps/alpha/dl-machine.h: New file.
+
 	* elf/dl-close.c: Include <string.h> for memcpy.
 	* elf/dl-lookup.c: Same.
 
