@@ -1,5 +1,8 @@
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/fpu/fraiseexcpt.c: Include <float.h>.  Removed
+	unused variable.
+
 	* sunrpc/xdr_rec.c (xdrrec_getpos): Add cast to long to avoid warning.
 	* sunrpc/xdr_sizeof.c (x_inline): Likewise.
 
