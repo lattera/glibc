@@ -1,3 +1,7 @@
+1998-04-03  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_table.c (nis_list): Fix FOLLOW_PATH and ALL_RESULTS flags.
+
 1998-04-03 16:29  Philip Blundell  <pb@nexus.co.uk>
 
 	Based on patch from Pat Beirne:

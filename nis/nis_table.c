@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -202,10 +202,10 @@ nis_list (const_nis_name name, u_long flags,
 
   cb = NULL;
 
-  if (flags & FOLLOW_PATH)
+  if (flags & FOLLOW_PATH || flags & ALL_RESULTS)
     {
       nis_result *lres;
-      u_long newflags = flags & ~FOLLOW_PATH;
+      u_long newflags = flags & ~FOLLOW_PATH & ~ALL_RESULTS;
       char table_path[NIS_MAXPATH + 1];
       char *ntable, *p;
       u_long done = 0, failures = 0;
@@ -237,13 +237,30 @@ nis_list (const_nis_name name, u_long flags,
 		    NIS_RES_OBJECT (lres)->TA_data.ta_path);
 	  nis_freeresult (lres);
 	  free (res);
+	  res = NULL;
 
 	  p = table_path;
 
 	  while (((ntable = strsep (&p, ":")) != NULL) && !done)
 	    {
+	      char *c;
+
+	      if (res != NULL)
+		nis_freeresult (res);
+
 	      /* Do the job recursive here!  */
-	      res = nis_list (name, newflags, callback, userdata);
+	      if ((c = strchr(name, ']')) != NULL)
+		{
+		  /* Have indexed name ! */
+		  int index_len = c - name + 2;
+		  char buf[index_len + strlen (ntable) + 1];
+
+		  c = __stpncpy (buf, name, index_len);
+		  strcpy (c, ntable);
+		  res = nis_list (buf, newflags, callback,userdata);
+		}
+	      else
+		res = nis_list (ntable, newflags, callback, userdata);
 	      if (res == NULL)
 		return NULL;
 	      switch (res->status)
@@ -253,13 +270,16 @@ nis_list (const_nis_name name, u_long flags,
 		  if (!(flags & ALL_RESULTS))
 		    done = 1;
 		  break;
+		case NIS_PARTIAL: /* The table is correct, we doesn't found
+				     the entry */
+		  break;
 		default:
 		  if (flags & ALL_RESULTS)
-		    failures++;
+		    ++failures;
 		  else
 		    done = 1;
 		  break;
-		  }
+		}
 	    }
 	  if (res->status == NIS_SUCCESS && failures)
 	    res->status = NIS_S_SUCCESS;
