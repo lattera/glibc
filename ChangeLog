@@ -1,3 +1,10 @@
+1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE_class): Clear ISCNTRL bit for
+	character >= 0x80.
+	(_nl_C_LC_CTYPE_class32): Likewise.
+	Reported by HJ Lu.
+
 1998-10-19  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurd/threadvar.h (enum __hurd_threadvar_index): Add
@@ -49,7 +56,7 @@
 	NSS functions.
 	* resolv/nss_dns/dns-network.c: Likewise.
 
-	* grp/Makefile: Don't search for linuxhtreads in add-ons, use
+	* grp/Makefile: Don't search for linuxthreads in add-ons, use
 	have-thread-library to determine whether threads are available.
 	* pwd/Makefile: Remove wrong comment.
 
