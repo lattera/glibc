@@ -1,3 +1,18 @@
+2003-03-25  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/sgidefs.h (_MIPS_ISA_MIPS32, _MIPS_ISA_MIPS64):
+	Define.
+	* sysdeps/mips/sys/asm.h: Test _MIPS_ISA against them on all
+	ISA tests.
+	(ALSZ, ALMASK, SZREG, REG_S, REG_L): Define based on ABI, not ISA.
+	(PTR_ADD, etc): Test _MIPS_SZPTR instead of _MIPS_SZLONG.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Use _MIPS_SZPTR
+	to decide whether to add padding.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Use _MIPS_SZPTR
+	to decide whether to add padding.
+	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h (struct
+	old_kernel_sigaction): Likewise.
+
 2003-03-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/tst-atomic.c: Adjust tests to what atomic_add_negative and
