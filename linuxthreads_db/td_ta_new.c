@@ -94,7 +94,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
 			 "__linuxthreads_pthread_sizeof_descr", &addr)
       != PS_OK)
-    (*ta)->sizeof_descr = offsetof (struct _pthread_descr_struct, p_startfct);
+    (*ta)->sizeof_descr = sizeof (struct _pthread_descr_struct);
   else
     {
       if (ps_pdread (ps, addr, &(*ta)->sizeof_descr, sizeof (int)) != PS_OK)

@@ -1,5 +1,12 @@
 1999-10-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* pthread.c (__pthread_initial_thread): Pass argument to
+	PTHREAD_START_ARGS_INITIALIZER.
+	(__pthread_manager_thread): Likewise.
+
+	* internals.h (PTHREAD_START_ARGS_INITIALIZER): Add parameter to
+	initialize function.
+
 	* manager.c (pthread_handle_create): Remove p_startfct initialization.
 
 	* internals.h (_pthread_descr_struct): We don't need p_startfct field.
