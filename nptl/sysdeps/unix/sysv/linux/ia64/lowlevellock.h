@@ -142,7 +142,10 @@ __lll_mutex_cond_lock (int *futex)
   int val = atomic_exchange_and_add (futex, 2);
 
   if (__builtin_expect (val != 0, 0))
-    __lll_lock_wait (futex, val);
+    /* Note, the val + 1 is kind of ugly here.  __lll_lock_wait will add
+       1 again.  But we added 2 to the futex value so this is the right
+       value which will be passed to the kernel.  */
+    __lll_lock_wait (futex, val + 1);
 }
 #define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 

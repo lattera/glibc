@@ -1,3 +1,11 @@
+2003-05-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h
+	(__lll_mutex_cond_lock): Add one to value parameter of
+	__lll_lock_wait to reflect reality in the futex syscall.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(lll_mutex_cond_lock): Likewise.
+
 2003-05-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (__lll_mutex_cond_lock):
