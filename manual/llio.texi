@@ -739,7 +739,8 @@ the file.  A negative count specifies a position within the current
 extent of the file; a positive count specifies a position past the
 current end.  If you set the position past the current end, and
 actually write data, you will extend the file with zeros up to that
-position.@end table
+position.
+@end table
 
 The return value from @code{lseek} is normally the resulting file
 position, measured in bytes from the beginning of the file.

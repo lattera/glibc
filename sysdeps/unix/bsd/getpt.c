@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -64,20 +64,14 @@ __getpt (void)
 
 	  fd = __open (buf, O_RDWR);
 	  if (fd != -1)
-	    {
-	      if (__isatty (fd))
-		return fd;
+	    return fd;
 
-	      __close (fd);
-	      continue;
-	    }
-
-	  if (errno != EIO)
+	  if (errno == ENOENT)
 	    return -1;
 	}
     }
 
-  __set_errno (ENFILE);
+  __set_errno (ENOENT);
   return -1;
 }
 weak_alias (__getpt, getpt)

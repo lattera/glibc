@@ -207,6 +207,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       if (__read (sock, resultbuf->gr_mem[0], total_len) != total_len)
 	{
 	  __close (sock);
+	  /* The `errno' to some value != ERANGE.  */
+	  __set_errno (ENOENT);
 	  return -1;
 	}
 
@@ -216,6 +218,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   else
     {
       __close (sock);
+      /* The `errno' to some value != ERANGE.  */
+      __set_errno (ENOENT);
       return -1;
     }
 }

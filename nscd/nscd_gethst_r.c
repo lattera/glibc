@@ -299,6 +299,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       *h_errnop = hst_resp.error;
 
       __close (sock);
+      /* The `errno' to some value != ERANGE.  */
+      __set_errno (ENOENT);
       return -1;
     }
 }

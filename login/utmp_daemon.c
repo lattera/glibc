@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -83,6 +84,8 @@ setutent_daemon (void)
 
   if (daemon_sock < 0)
     {
+      int result;
+
       daemon_sock = open_socket (_PATH_UTMPD_RW);
       if (daemon_sock < 0)
 	{
@@ -90,6 +93,16 @@ setutent_daemon (void)
 	  daemon_sock = open_socket (_PATH_UTMPD_RO);
 	  if (daemon_sock < 0)
 	    return 0;
+	}
+
+      /* We have to make sure the socket is `closed on exec'.  */
+      result = __fcntl (daemon_sock, F_GETFD, 0);
+      if (result >= 0)
+	result = __fcntl (daemon_sock, F_SETFD, flags | FD_CLOEXEC);
+      if (result == -1)
+	{
+	  close (daemon_sock);
+	  return 0;
 	}
     }
 

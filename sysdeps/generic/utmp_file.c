@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -114,6 +114,7 @@ setutent_file (void)
   if (file_fd < 0)
     {
       const char *file_name;
+      int result;
 
       file_name = TRANSFORM_UTMP_FILE_NAME (__libc_utmp_file_name);
 
@@ -124,6 +125,16 @@ setutent_file (void)
 	  file_fd = __open (file_name, O_RDONLY);
 	  if (file_fd == -1)
 	    return 0;
+	}
+
+      /* We have to make sure the file is `closed on exec'.  */
+      result = __fcntl (file_fd, F_GETFD, 0);
+      if (result >= 0)
+	result = __fcntl (file_fd, F_SETFD, result | FD_CLOEXEC);
+      if (result == -1)
+	{
+	  close (file_fd);
+	  return 0;
 	}
     }
 

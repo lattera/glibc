@@ -1,4 +1,28 @@
+1999-03-13  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/bsd/getpt.c (__getpt): Do not use `isatty' to check
+	if the opened master pty really is a pty.  `isatty' checks for
+	tty-ness and a pty is not a tty.  Return ENOENT instead of ENFILE
+	if we are out of pty's.
+
+1999-03-13  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/generic/utmp_file.c (setutent_file): Make sure the just
+	opened file is closed on exec.
+	* login/utmp_daemon.c (setutent_daemon): Likewise for the just
+	opened socket.
+
+1999-03-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/llio.texi (File Position Primitive): Reformat @end
+	command.  Patch by Bruno Haible <haible@ilog.fr> [PR libc/1020].
+
 1999-03-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Set `errno' correctly if no
+	entry is found.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Likewise.
 
 	* locale/programs/localedef.c (main): Initialize `cat' to please
 	the compiler.
