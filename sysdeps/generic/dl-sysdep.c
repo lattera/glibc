@@ -251,7 +251,7 @@ _dl_show_auxv (void)
 	  [AT_DCACHEBSIZE - 2] =	{ "AT_DCACHEBSIZE:  0x", hex },
 	  [AT_ICACHEBSIZE - 2] =	{ "AT_ICACHEBSIZE:  0x", hex },
 	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE:  0x", hex },
-#ifdef DL_NEED_SYSINFO
+#ifdef NEED_DL_SYSINFO
 	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:      0x", hex },
 	  [AT_SYSINFO_EHDR - 2] =	{ "AT_SYSINFO_EHDR: 0x", hex }
 #endif
@@ -274,8 +274,19 @@ _dl_show_auxv (void)
 			     buf + sizeof buf - 1, 16, 0);
 
 	      _dl_printf ("%s%s\n", auxvars[idx].label, val);
+
+	      continue;
 	    }
 	}
+
+      /* Unknown value: print a generic line.  */
+      char buf2[17];
+      buf[sizeof (buf2) - 1] = '\0';
+      const char *val2 = _itoa ((unsigned long int) av->a_un.a_val,
+				buf2 + sizeof buf2 - 1, 16, 0);
+      const char *val =  _itoa ((unsigned long int) av->a_type,
+				buf + sizeof buf - 1, 16, 0);
+      _dl_printf ("AT_??? (0x%s): 0x%s\n", val, val2);
     }
 }
 

@@ -1,3 +1,9 @@
+2003-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Fix typo
+	(DL_NEED_SYSINFO -> NEED_DL_SYSINFO).  If aux value is not known
+	print numeric values.
+
 2003-05-12  Thorsten Kukuk  <kukuk@suse.de>
 
 	* inet/netinet/igmp.h: Sync with Linux Kernel 2.5.69 and *BSD.
