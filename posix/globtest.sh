@@ -559,9 +559,7 @@ ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -c "$testdir" "*/blahblah" |
 sort > $testout
 cat <<"EOF" | cmp - $testout >> $logfile || failed=1
-`dir1/blahblah'
-`dir2/blahblah'
-`noread/blahblah'
+`*/blahblah'
 EOF
 if test $failed -ne 0; then
   echo "No check2 test failed" >> $logfile

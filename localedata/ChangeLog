@@ -1,5 +1,8 @@
 2001-12-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ms_MY: Various bug fixes and additions.
+	Patch by Hasbullah Bin Pit (sebol) <sebol@ikhlas.com>.
+
 	* locales/ca_ES: Fix typos (desembre -> decembre).
 	Patch by Xavi Drudis Ferran <xdrudis@tinet.org>.
 

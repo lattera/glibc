@@ -953,18 +953,11 @@ glob (pattern, flags, errfunc, pglob)
 	  /* No matches.  */
 	  if (flags & GLOB_NOCHECK)
 	    {
-	      size_t filename_len = strlen (filename) + 1;
-	      char **new_pathv;
 	      int newcount = pglob->gl_pathc + pglob->gl_offs;
-	      struct stat st;
-#ifdef HAVE_STAT64
-	      struct stat64 st64;
-#endif
 
-	      /* This is an pessimistic guess about the size.  */
 	      pglob->gl_pathv
 		= (char **) realloc (pglob->gl_pathv,
-				     (newcount + dirs.gl_pathc + 1)
+				     (newcount + 2)
 				     * sizeof (char *));
 	      if (pglob->gl_pathv == NULL)
 		{
@@ -972,53 +965,19 @@ glob (pattern, flags, errfunc, pglob)
 		  return GLOB_NOSPACE;
 		}
 
-	      for (i = 0; i < dirs.gl_pathc; ++i)
+	      pglob->gl_pathv[newcount] = __strdup (pattern);
+	      if (pglob->gl_pathv[newcount] == NULL)
 		{
-		  const char *dir = dirs.gl_pathv[i];
-		  size_t dir_len = strlen (dir);
-
-		  /* First check whether this really is a directory.  */
-		  if (((flags & GLOB_ALTDIRFUNC)
-		       ? ((*pglob->gl_stat) (dir, &st) != 0
-			  || !S_ISDIR (st.st_mode))
-		       : (__stat64 (dir, &st64) != 0
-			  || !S_ISDIR (st64.st_mode))))
-		    /* No directory, ignore this entry.  */
-		    continue;
-
-		  pglob->gl_pathv[newcount] = malloc (dir_len + 1
-						      + filename_len);
-		  if (pglob->gl_pathv[newcount] == NULL)
-		    {
-		      globfree (&dirs);
-		      globfree (pglob);
-		      return GLOB_NOSPACE;
-		    }
-
-#ifdef HAVE_MEMPCPY
-		  mempcpy (mempcpy (mempcpy (pglob->gl_pathv[newcount],
-					     dir, dir_len),
-				    "/", 1),
-			   filename, filename_len);
-#else
-		  memcpy (pglob->gl_pathv[newcount], dir, dir_len);
-		  pglob->gl_pathv[newcount][dir_len] = '/';
-		  memcpy (&pglob->gl_pathv[newcount][dir_len + 1],
-			  filename, filename_len);
-#endif
-		  ++pglob->gl_pathc;
-		  ++newcount;
+		  globfree (&dirs);
+		  globfree (pglob);
+		  return GLOB_NOSPACE;
 		}
+
+	      ++pglob->gl_pathc;
+	      ++newcount;
 
 	      pglob->gl_pathv[newcount] = NULL;
 	      pglob->gl_flags = flags;
-
-	      /* Now we know how large the gl_pathv vector must be.  */
-	      new_pathv = (char **) realloc (pglob->gl_pathv,
-					     ((newcount + 1)
-					      * sizeof (char *)));
-	      if (new_pathv != NULL)
-		pglob->gl_pathv = new_pathv;
 	    }
 	  else
 	    {

@@ -6,11 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.4\n"
 "POT-Creation-Date: 2001-08-13 15:08-0700\n"
-"PO-Revision-Date: 2001-11-11 01:31+01:00\n"
+"PO-Revision-Date: 2001-12-02 20:32+01:00\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=iso-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: locale/programs/ld-monetary.c:278
@@ -430,7 +430,7 @@ msgstr "%s: S'ha especificat l'opció -y més d'una volta\n"
 #: argp/argp-parse.c:646
 #, c-format
 msgid "%s: Too many arguments\n"
-msgstr "%s: Massa arguments\n"
+msgstr "%s: Sobren arguments\n"
 
 #: locale/programs/ld-collate.c:457 locale/programs/ld-collate.c:483
 #: locale/programs/ld-collate.c:499
@@ -633,7 +633,7 @@ msgstr "%s: fem al final de la data d'acabament de la cadena %Zd del camp «era»"
 #: posix/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
-msgstr "%s: l'opció no és permesa -- %c\n"
+msgstr "%s: no es permet l'opció «%c»\n"
 
 #: locale/programs/ld-address.c:578 locale/programs/ld-collate.c:3738
 #: locale/programs/ld-ctype.c:2846 locale/programs/ld-identification.c:445
@@ -669,7 +669,7 @@ msgstr "%s: el nombre de regles d'ordenació no és vàlid"
 #: posix/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr "%s: l'opció no és vàlida -- %c\n"
+msgstr "%s: l'opció «%c» no és vàlida\n"
 
 #: locale/programs/ld-time.c:330
 #, c-format
@@ -785,7 +785,7 @@ msgstr "%s: l'opció «-W %s» és ambígua\n"
 #: posix/getopt.c:821 posix/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: l'opció necessita un argument -- %c\n"
+msgstr "%s: l'opció «%c» necessita un argument\n"
 
 #: locale/programs/ld-collate.c:1327 locale/programs/ld-collate.c:3675
 #, c-format
@@ -911,22 +911,22 @@ msgstr "%s: el tercer operand del valor del camp «%s» no ha de ser major que %d"
 #: locale/programs/ld-time.c:983
 #, c-format
 msgid "%s: too few values for field `%s'"
-msgstr "%s: el camp «%s» té massa pocs valors"
+msgstr "%s: manquen valors en el camp «%s»"
 
 #: locale/programs/ld-collate.c:555
 #, c-format
 msgid "%s: too many rules; first entry only had %d"
-msgstr "%s: hi ha massa regles; la primera entrada només en tenia %d"
+msgstr "%s: sobren regles; la primera entrada només en tenia %d"
 
 #: locale/programs/ld-collate.c:906
 #, c-format
 msgid "%s: too many values"
-msgstr "%s: hi ha massa valors"
+msgstr "%s: sobren valors"
 
 #: locale/programs/ld-time.c:1030
 #, c-format
 msgid "%s: too many values for field `%s'"
-msgstr "%s: el camp «%s» té massa valors"
+msgstr "%s: sobren valors en el camp «%s»"
 
 #: locale/programs/ld-ctype.c:3641
 #, c-format
@@ -1604,7 +1604,7 @@ msgstr "La màquina remota ha reiniciat la connexió"
 #: stdio-common/../sysdeps/gnu/errlist.c:446
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:175
 msgid "Connection timed out"
-msgstr "El temps de connexió ha expirat"
+msgstr "La connexió ha expirat"
 
 #: stdio-common/../sysdeps/unix/siglist.c:45 sysdeps/generic/siglist.h:45
 msgid "Continued"
@@ -1836,7 +1836,7 @@ msgstr "Els tipus d'entrada i taula no concorden"
 #: nss/getent.c:127 nss/getent.c:292
 #, c-format
 msgid "Enumeration not supported on %s\n"
-msgstr "L'enumeració sobre «%s» no és suportada\n"
+msgstr "No es suporta l'enumeració sobre «%s»\n"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:30
 msgid "Error 0"
@@ -3051,11 +3051,11 @@ msgstr "Prefix opcional dels fitxers d'eixida"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:93
 msgid "Out of stream resources"
-msgstr "No queden recursos del tipus flux"
+msgstr "No resten recursos del tipus flux"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:665
 msgid "Out of streams resources"
-msgstr "No queden recursos del tipus flux"
+msgstr "No resten recursos del tipus flux"
 
 #: iconv/iconv_prog.c:64 locale/programs/localedef.c:99
 msgid "Output control:"
@@ -3620,7 +3620,7 @@ msgid ""
 msgstr ""
 "Directori del sistema de mapes de caràcters: %s\n"
 "                         mapes de repertori: %s\n"
-"                         camí dels locales : %s\n"
+"                         camí als locales  : %s\n"
 "%s"
 
 #: nscd/nscd.c:90
@@ -3693,7 +3693,7 @@ msgstr "Cadena amb el títol a usar en el gràfic d'eixida"
 
 #: nis/nis_error.c:56
 msgid "Too many attributes"
-msgstr "Hi ha massa atributs"
+msgstr "Sobren atributs"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
@@ -5405,7 +5405,7 @@ msgstr "desbordament de l'hora"
 #: locale/programs/ld-ctype.c:1554 locale/programs/ld-ctype.c:2030
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
-msgstr "el valor final <U%0*X> del rang és menor que el d'inici <U%0*X>"
+msgstr "el valor final <U%0*X> del rang és menor que l'inicial <U%0*X>"
 
 #: locale/programs/ld-ctype.c:1688
 msgid "to-value character sequence is smaller than from-value sequence"
@@ -5413,11 +5413,11 @@ msgstr "la seqüència de caràcters final és menor que la seqüència inicial"
 
 #: locale/programs/charmap.c:556
 msgid "too few bytes in character encoding"
-msgstr "hi ha massa pocs octets en la codificació del caràcter"
+msgstr "manquen octets en la codificació del caràcter"
 
 #: locale/programs/charmap.c:558
 msgid "too many bytes in character encoding"
-msgstr "hi ha massa octets en la codificació del caràcter"
+msgstr "sobren octets en la codificació del caràcter"
 
 #: timezone/zic.c:1874
 msgid "too many leap seconds"

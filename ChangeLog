@@ -1,3 +1,11 @@
+2001-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c (glob): Return only pattern if nothing
+	matches and GLOB_NOCHECK is set.
+	* posix/globtest.sh: Correct expected result for NOCHECK test.
+
+	* po/ca.po: Update from translation team.
+
 2001-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	Implement transliteration of characters in strings of the locale
