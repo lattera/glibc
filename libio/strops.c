@@ -124,7 +124,7 @@ DEFUN(_IO_str_overflow, (fp, c),
       fp->_IO_read_ptr = fp->_IO_read_end;
     }
   pos =  fp->_IO_write_ptr - fp->_IO_write_base;
-  if (pos >= _IO_blen(fp) + flush_only)
+  if (pos >= (_IO_size_t) (_IO_blen(fp) + flush_only))
     {
       if (fp->_flags & _IO_USER_BUF) /* not allowed to enlarge */
 	return EOF;

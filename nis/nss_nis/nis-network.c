@@ -106,7 +106,7 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
           return retval;
         }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
         {
           free (result);
           __set_errno (ERANGE);
@@ -183,7 +183,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);
@@ -261,7 +261,7 @@ _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
 	      }
 	  }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
 	{
 	  free (result);
 	  __set_errno (ERANGE);

@@ -107,7 +107,7 @@ internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen)
           return retval;
         }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
         {
           free (result);
           __set_errno (ERANGE);
@@ -175,7 +175,7 @@ _nss_nis_getethernam_r (const char *name, struct ether *eth,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);
@@ -237,7 +237,7 @@ _nss_nis_getetherbyaddr_r (struct ether_addr *addr, struct ether *eth,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);

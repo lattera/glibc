@@ -101,7 +101,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen)
           return retval;
         }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
         {
           free (result);
           __set_errno (ERANGE);
@@ -169,7 +169,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);
@@ -219,7 +219,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);

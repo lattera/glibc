@@ -36,12 +36,8 @@ extra-libs		= libnsl $(services:%=libnss_%)
 # the `lib' pass, because they depend on libc.so being built already.
 extra-libs-others	= $(extra-libs)
 
-others = ypcat ypmatch yppoll ypset ypwhich
-install-bin = ypcat ypmatch ypwhich
-install-sbin = ypset yppoll
-
 # The sources are found in the appropriate subdir.
-subdir-dirs = bsd-tools $(services:%=nss_%)
+subdir-dirs = $(services:%=nss_%)
 vpath %.c $(subdir-dirs)
 
 libnsl-routines = yp_xdr ypclnt ypupdate_xdr
@@ -69,15 +65,9 @@ CFLAGS-nis-pwd.c = -Wno-strict-prototypes
 CFLAGS-nis-rpc.c = -Wno-strict-prototypes
 CFLAGS-nis-service.c = -Wno-strict-prototypes
 CFLAGS-nis-spwd.c = -Wno-strict-prototypes
-CFLAGS-ypclnt.c = -Wno-strict-prototypes -Wno-write-strings
-CFLAGS-yp_xdr.c = -Wno-strict-prototypes
-CFLAGS-ypupdate_xdr.c = -Wno-strict-prototypes
-CFLAGS-ypcat.c = -Wno-strict-prototypes
-CFLAGS-ypmatch.c = -Wno-strict-prototypes
-CFLAGS-ypwhich.c = -Wno-strict-prototypes
-CFLAGS-ypset.c = -Wno-strict-prototypes
-CFLAGS-yppoll.c = -Wno-strict-prototypes
-
+CFLAGS-ypclnt.c = -Wno-strict-prototypes -Wno-write-strings -Irpcsvc
+CFLAGS-yp_xdr.c = -Wno-strict-prototypes -Irpcsvc
+CFLAGS-ypupdate_xdr.c = -Wno-strict-prototypes -Irpcsvc
 
 include ../Rules
 

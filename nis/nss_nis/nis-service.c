@@ -28,6 +28,13 @@
 
 #include "nss-nis.h"
 
+
+/* The parser is defined in a different module.  */
+extern int _nss_files_parse_servent (char *line, struct servent *result,
+				     char *data, size_t datalen);
+
+
+
 __libc_lock_define_initialized (static, lock)
 
 struct intern_t
@@ -127,7 +134,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
           return retval;
         }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
         {
           free (result);
           __set_errno (ERANGE);

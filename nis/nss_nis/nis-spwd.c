@@ -101,7 +101,7 @@ internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen)
           return retval;
         }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
         {
           free (result);
           __set_errno (ERANGE);
@@ -169,7 +169,7 @@ _nss_nis_getspnam_r (const char *name, struct spwd *sp,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);

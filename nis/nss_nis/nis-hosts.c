@@ -195,7 +195,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	  return retval;
 	}
 
-      if (len + 1 > linebuflen)
+      if ((size_t) (len + 1) > linebuflen)
         {
           free (result);
 	  *h_errnop = NETDB_INTERNAL;
@@ -281,7 +281,7 @@ _nss_nis_gethostbyname_r (const char *name, struct hostent *host,
       return retval;
     }
 
-  if (len + 1 > linebuflen)
+  if ((size_t) (len + 1) > linebuflen)
     {
       free (result);
       *h_errnop = NETDB_INTERNAL;
@@ -354,7 +354,7 @@ _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
       return retval;
     }
 
-  if (len + 1 > linebuflen)
+  if ((size_t) (len + 1) > linebuflen)
     {
       free (result);
       __set_errno (ERANGE);

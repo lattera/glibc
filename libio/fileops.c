@@ -547,7 +547,7 @@ DEFUN(_IO_file_read, (fp, buf, size),
   for (;;)
     {
       _IO_ssize_t count = _IO_read(fp->_fileno, buf, size);
-#ifdef EINTR
+#if 0 && defined EINTR
       if (count == -1 && errno == EINTR)
 	continue;
 #endif
@@ -586,7 +586,7 @@ DEFUN(_IO_file_write, (f, data, n),
       _IO_ssize_t count = _IO_write(f->_fileno, data, to_do);
       if (count == EOF)
 	{
-#ifdef EINTR
+#if 0 && defined EINTR
 	  if (errno == EINTR)
 	    continue;
 	  else

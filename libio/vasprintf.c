@@ -42,7 +42,7 @@ _IO_vasprintf (result_ptr, format, args)
   _IO_lock_t lock;
 #endif
   int ret;
-  string = ALLOC_BUF(init_string_size);
+  string = malloc (init_string_size);
   if (string == NULL)
     return -1;
 #ifdef _IO_MTSAFE_IO
@@ -52,13 +52,14 @@ _IO_vasprintf (result_ptr, format, args)
   _IO_JUMPS((_IO_FILE*)&sf) = &_IO_str_jumps;
   _IO_str_init_static ((_IO_FILE*)&sf, string, init_string_size, string);
   sf._sbf._f._flags &= ~_IO_USER_BUF;
-  sf._s._allocate_buffer = (_IO_alloc_type)malloc;
-  sf._s._free_buffer = (_IO_free_type)free;
+  sf._s._allocate_buffer = (_IO_alloc_type) malloc;
+  sf._s._free_buffer = (_IO_free_type) free;
   ret = _IO_vfprintf((_IO_FILE*)&sf, format, args);
   if (ret < 0)
     return ret;
-  *result_ptr = (char*)realloc(sf._sbf._f._IO_buf_base,
-			       (sf._sbf._f._IO_write_ptr - sf._sbf._f._IO_write_base) +1);
+  *result_ptr = (char *) realloc (sf._sbf._f._IO_buf_base,
+				  (sf._sbf._f._IO_write_ptr
+				   - sf._sbf._f._IO_write_base) +1);
   if (*result_ptr == NULL)
     *result_ptr = sf._sbf._f._IO_buf_base;
   (*result_ptr)[sf._sbf._f._IO_write_ptr-sf._sbf._f._IO_write_base] = '\0';

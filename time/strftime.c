@@ -33,6 +33,7 @@
 # include "../locale/localeinfo.h"
 #endif
 
+#include <ctype.h>
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 
 #ifdef TIME_WITH_SYS_TIME
@@ -161,20 +162,59 @@ localtime_r (t, tp)
 #endif /* ! defined (_LIBC) */
 
 
-#define	add(n, f)							      \
+static const char spaces[16] = "                ";
+#define	add(n, f) \
   do									      \
     {									      \
-      i += (n);								      \
+      int _n = (n);							      \
+      int _delta = width - _n;						      \
+      i += _n + (_delta > 0 ? _delta : 0);				      \
       if (i >= maxsize)							      \
 	return 0;							      \
       else								      \
 	if (p)								      \
 	  {								      \
+	    while (_delta > 0)						      \
+	      {								      \
+		int _this = _delta > 16 ? 16 : _delta;			      \
+		memcpy (p, spaces, _this);				      \
+		p += _this;						      \
+		_delta -= _this;					      \
+	      }								      \
 	    f;								      \
-	    p += (n);							      \
+	    p += _n;							      \
 	  }								      \
     } while (0)
-#define	cpy(n, s)	add ((n), memcpy((PTR) p, (PTR) (s), (n)))
+
+#define	cpy(n, s) \
+    add ((n),								      \
+	 if (to_lowcase)						      \
+	   memcpy_lowcase (p, (s), _n);					      \
+	 else								      \
+	   memcpy ((PTR) p, (PTR) (s), _n))
+
+
+
+#ifdef _LIBC
+# define TOUPPER(Ch) toupper (Ch)
+# define TOLOWER(Ch) tolower (Ch)
+#else
+# define TOUPPER(Ch) (islower (Ch) ? toupper (Ch) : (Ch))
+# define TOLOWER(Ch) (isupper (Ch) ? tolower (Ch) : (Ch))
+#endif
+
+static char *memcpy_lowcase __P ((char *dest, const char *src, size_t len));
+
+static char *
+memcpy_lowcase (dest, src, len)
+     char *dest;
+     const char *src;
+     size_t len;
+{
+  while (len-- > 0)
+    dest[len] = TOLOWER (src[len]);
+  return dest;
+}
 
 #if ! HAVE_TM_GMTOFF
 /* Yield the difference between *A and *B,
@@ -254,7 +294,7 @@ strftime (s, maxsize, format, tp)
       char *s;
       size_t maxsize;
       const char *format;
-      register const struct tm *tp;
+      const struct tm *tp;
 {
   int hour12 = tp->tm_hour;
 #ifdef _NL_CURRENT
@@ -281,9 +321,9 @@ strftime (s, maxsize, format, tp)
   size_t month_len = strlen (f_month);
   const char *zone;
   size_t zonelen;
-  register size_t i = 0;
-  register char *p = s;
-  register const char *f;
+  size_t i = 0;
+  char *p = s;
+  const char *f;
 
   zone = 0;
 #if HAVE_TM_ZONE
@@ -315,6 +355,8 @@ strftime (s, maxsize, format, tp)
       char buf[1 + (sizeof (int) < sizeof (time_t)
 		    ? INT_STRLEN_BOUND (time_t)
 		    : INT_STRLEN_BOUND (int))];
+      int width = -1;
+      int to_lowcase = 0;
 
 #if DO_MULTIBYTE
 
@@ -391,16 +433,33 @@ strftime (s, maxsize, format, tp)
 
       /* Check for flags that can modify a number format.  */
       ++f;
-      switch (*f)
+      while (1)
 	{
-	case '_':
-	case '-':
-	  pad = *f++;
-	  break;
+	  switch (*f)
+	    {
+	    case '_':
+	    case '-':
+	    case '0':
+	      pad = *f++;
+	      break;
 
-	default:
-	  pad = 0;
+	    default:
+	      pad = 0;
+	      break;
+	    }
 	  break;
+	}
+
+      /* As a GNU extension we allow to specify the field width.  */
+      if (isdigit (*f))
+	{
+	  width = 0;
+	  do
+	    {
+	      width *= 10;
+	      width += *f - '0';
+	    }
+	  while (isdigit (*++f));
 	}
 
       /* Check for modifiers.  */
@@ -468,10 +527,10 @@ strftime (s, maxsize, format, tp)
 
 	subformat:
 	  {
-	    size_t len = strftime (p, maxsize - i, subfmt, tp);
+	    size_t len = strftime (NULL, maxsize - i, subfmt, tp);
 	    if (len == 0 && *subfmt)
 	      return 0;
-	    add (len, ;);
+	    add (len, strftime (p, maxsize - i, subfmt, tp));
 	  }
 	  break;
 
@@ -527,8 +586,9 @@ strftime (s, maxsize, format, tp)
 	     jump to one of these two labels.  */
 
 	do_number_spacepad:
-	  /* Force `_' flag.  */
-	  pad = '_';
+	  /* Force `_' flag unless overwritten by `0' flag.  */
+	  if (pad != '0')
+	    pad = '_';
 
 	do_number:
 	  /* Format the number according to the MODIFIER flag.  */
@@ -637,6 +697,10 @@ strftime (s, maxsize, format, tp)
 	case 'n':		/* POSIX.2 extension.  */
 	  add (1, *p = '\n');
 	  break;
+
+	case 'P':
+	  to_lowcase = 1;
+	  /* FALLTHROUGH */
 
 	case 'p':
 	  cpy (ap_len, ampm);

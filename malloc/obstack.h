@@ -183,6 +183,9 @@ struct obstack		/* control current object in current chunk */
 				   chunk contains a zero-length object.  This
 				   prevents freeing the chunk if we allocate
 				   a bigger chunk to replace it. */
+  unsigned alloc_failed:1;	/* No longer used, as we now call the failed
+				   handler on error, but retained for binary
+				   compatibility.  */
 };
 
 /* Declare the external functions we use; they are in obstack.c.  */

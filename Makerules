@@ -601,19 +601,15 @@ $(slibdir)/%.so: $(objpfx)%.so; $(do-install-program)
 
 ifneq ($(findstring -s,$(LN_S)),)
 define make-link
-rm -f $@.new; \
-if test '$(@D)' = '$(<D)'; then \
-  (cd $(@D); $(LN_S) $(<F) $(@F).new); \
-else \
-  $(SHELL) $(..)rellns-sh $< $@.new; \
-fi; \
+rm -f $@.new
+$(SHELL) $(..)rellns-sh $< $@.new
 mv -f $@.new $@
 endef
 else
 # If we have no symbolic links don't bother with rellns-sh.
 define make-link
-rm -f $@.new; \
-$(LN_S) $< $@.new; \
+rm -f $@.new
+$(LN_S) $< $@.new
 mv -f $@.new $@
 endef
 endif

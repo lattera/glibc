@@ -396,7 +396,8 @@ extern void (*_IO_cleanup_registration_needed) __P ((void));
 #define EOF (-1)
 #endif
 #ifndef NULL
-#ifdef __GNUG__
+#if defined __GNUG__ && \
+    (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8))
 #define NULL (__null)
 #else
 #if !defined(__cplusplus)
@@ -407,8 +408,52 @@ extern void (*_IO_cleanup_registration_needed) __P ((void));
 #endif
 #endif
 
-#define FREE_BUF(_B) free(_B)
-#define ALLOC_BUF(_S) (char*)malloc(_S)
+#if _G_HAVE_MMAP
+
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/param.h>
+
+#if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
+#define MAP_ANONYMOUS MAP_ANON
+#endif
+
+#if !defined(MAP_ANONYMOUS) || !defined(EXEC_PAGESIZE)
+#undef _G_HAVE_MMAP
+#define _G_HAVE_MMAP 0
+#endif
+
+#endif /* _G_HAVE_MMAP */
+
+#if _G_HAVE_MMAP
+
+#define ROUND_TO_PAGE(_S) \
+       (((_S) + EXEC_PAGESIZE - 1) & ~(EXEC_PAGESIZE - 1))
+
+#define FREE_BUF(_B, _S) \
+       munmap ((_B), ROUND_TO_PAGE (_S))
+#define ALLOC_BUF(_B, _S, _R) \
+       do {								      \
+	  (_B) = (char *) mmap (0, ROUND_TO_PAGE (_S),			      \
+				PROT_READ | PROT_WRITE,			      \
+				MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);	      \
+	  if ((_B) == (char *) -1)					      \
+	    return (_R);						      \
+       } while (0)
+
+#else /* _G_HAVE_MMAP */
+
+#define FREE_BUF(_B, _S) \
+       free(_B)
+#define ALLOC_BUF(_B, _S, _R) \
+       do {								      \
+	  (_B) = (char*)malloc(_S);					      \
+	  if ((_B) == NULL)						      \
+	    return (_R);						      \
+       } while (0)
+
+#endif /* _G_HAVE_MMAP */
 
 #ifndef OS_FSTAT
 #define OS_FSTAT fstat

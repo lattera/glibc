@@ -1,7 +1,7 @@
 /*
  * This file contains symbols and structures defining the rpc protocol
  * between the NIS clients and the NIS servers.  The servers
- * are the NIS database servers, and the NIS binders.  
+ * are the NIS database servers, and the NIS binders.
  */
 
 #ifndef _RPCSVC_YP_PROT_H
@@ -14,24 +14,24 @@
 
 /*
  * The following procedures are supported by the protocol:
- * 
+ *
  * YPPROC_NULL() returns () takes nothing, returns nothing.  This indicates
  * that the NIS server is alive.
- * 
+ *
  * YPPROC_DOMAIN (char *) returns (bool_t) TRUE.  Indicates that the
  * responding NIS server does serve the named domain; FALSE indicates no
  * support.
- * 
+ *
  * YPPROC_DOMAIN_NONACK (char *) returns (TRUE) if the NIS server does serve
  * the named domain, otherwise does not return.  Used in the broadcast case.
- * 
+ *
  * YPPROC_MATCH (struct ypreq_key) returns (struct ypresp_val).  Returns the
  * right-hand value for a passed left-hand key, within a named map and
  * domain.
- * 
+ *
  * YPPROC_FIRST (struct ypreq_nokey) returns (struct ypresp_key_val).
  * Returns the first key-value pair from a named domain and map.
- * 
+ *
  * YPPROC_NEXT (struct ypreq_key) returns (struct ypresp_key_val).  Returns
  * the key-value pair following a passed key-value pair within a named
  * domain and map.
@@ -42,7 +42,7 @@
  * YPPROC_CLEAR	takes nothing, returns nothing.  Instructs a NIS server to
  * close the current map, so that old versions of the disk file don't get
  * held open.
- * 
+ *
  * YPPROC_ALL (struct ypreq_nokey), returns
  * 	union switch (bool_t more) {
  *		TRUE:	(struct ypresp_key_val);
@@ -89,8 +89,8 @@ struct ypmap_parms {
  */
 
 struct ypreq_key {
-  char *domain;
-  char *map;
+  const char *domain;
+  const char *map;
   datum keydat;
 };
 
@@ -144,8 +144,10 @@ struct ypresp_order {
 };
 
 struct ypmaplist {
-  char ypml_name[YPMAXMAP + 1];
-  struct ypmaplist *ypml_next;
+  char map[YPMAXMAP + 1];
+#define ypml_name map
+  struct ypmaplist *next;
+#define ypml_next next
 };
 
 struct ypresp_maplist {
@@ -201,7 +203,7 @@ struct ypresp_maplist {
  *
  * YPBINDPROC_SETDOM takes (struct ypbind_setdom) returns nothing
  */
- 
+
 /* Program and version symbols, magic numbers */
 
 #define YPBINDPROG		((u_long)100007)

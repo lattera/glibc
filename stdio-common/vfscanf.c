@@ -82,11 +82,16 @@
     {									      \
       /* Check file argument for consistence.  */			      \
       CHECK_FILE (s, EOF);						      \
-      if (s->_flags & _IO_NO_READS || format == NULL)			      \
-       {								      \
-         MAYBE_SET_EINVAL;						      \
-         return EOF;							      \
-       }								      \
+      if (s->_flags & _IO_NO_READS)					      \
+	{								      \
+	  __set_errno (EBADF);						      \
+	  return EOF;							      \
+	}								      \
+      else if (format == NULL)						      \
+	{								      \
+	  MAYBE_SET_EINVAL;						      \
+	  return EOF;							      \
+	}								      \
     } while (0)
 # define LOCK_STREAM(S)							      \
   __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, (S));    \
@@ -117,7 +122,12 @@
   do									      \
     {									      \
       /* Check file argument for consistence.  */			      \
-      if (!__validfp (s) || !s->__mode.__read || format == NULL)	      \
+      if (!__validfp (s) || !s->__mode.__read)				      \
+	{								      \
+	  __set_errno (EBADF);						      \
+	  return EOF;							      \
+	}								      \
+      else if (format == NULL)						      \
 	{								      \
 	  __set_errno (EINVAL);						      \
 	  return EOF;							      \
@@ -159,7 +169,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   register unsigned char fc;	/* Current character of the format.  */
   register size_t done = 0;	/* Assignments done.  */
   register size_t read_in = 0;	/* Chars read in.  */
-  register int c;		/* Last char read.  */
+  register int c = 0;		/* Last char read.  */
   register int width;		/* Maximum field width.  */
   register int flags;		/* Modifiers for current format element.  */
 
@@ -296,7 +306,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (skip_space)
 	    {
 	      while (isspace (c))
-		(void) inchar ();
+		if (inchar () == EOF && errno == EINTR)
+		  conv_error ();
 	      skip_space = 0;
 	    }
 
@@ -409,13 +420,18 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       if (*f == '\0')
 	conv_error ();
 
+      /* We must take care for EINTR errors.  */
+      if (c == EOF && errno == EINTR)
+	input_error ();
+
       /* Find the conversion specifier.  */
       fc = *f++;
-      if (skip_space || (fc != '[' && fc != 'c' && fc != 'n'))
+      if (skip_space || (fc != '[' && fc != 'c' && fc != 'C' && fc != 'n'))
 	{
 	  /* Eat whitespace.  */
 	  do
-	    (void) inchar ();
+	    if (inchar () == EOF && errno == EINTR)
+	      input_error ();
 	  while (isspace (c));
 	  ungetc (c, s);
 	  skip_space = 0;

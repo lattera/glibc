@@ -278,7 +278,7 @@ DEFUN(_IO_setb, (f, b, eb, a),
       _IO_FILE *f AND char *b AND char *eb AND int a)
 {
   if (f->_IO_buf_base && !(f->_flags & _IO_USER_BUF))
-    FREE_BUF(f->_IO_buf_base);
+    FREE_BUF(f->_IO_buf_base, _IO_blen (f));
   f->_IO_buf_base = b;
   f->_IO_buf_end = eb;
   if (a)
@@ -438,9 +438,9 @@ int
 DEFUN(_IO_default_doallocate, (fp),
       _IO_FILE *fp)
 {
-  char *buf = ALLOC_BUF(_IO_BUFSIZ);
-  if (buf == NULL)
-    return EOF;
+  char *buf;
+
+  ALLOC_BUF(buf, _IO_BUFSIZ, EOF);
   _IO_setb(fp, buf, buf+_IO_BUFSIZ, 1);
   return 1;
 }
@@ -487,7 +487,7 @@ DEFUN(_IO_default_finish, (fp),
   struct _IO_marker *mark;
   if (fp->_IO_buf_base && !(fp->_flags & _IO_USER_BUF))
     {
-      FREE_BUF(fp->_IO_buf_base);
+      FREE_BUF(fp->_IO_buf_base, _IO_blen (fp));
       fp->_IO_buf_base = fp->_IO_buf_end = NULL;
     }
 

@@ -254,6 +254,22 @@ __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
 	      (*streamptr)->__mode.__binary = 1;
 #endif
 	    }
+#if defined EMFILE || defined ENFILE || defined EINTR
+	  else if (0
+# ifdef EMFILE
+		   || errno == EMFILE
+# endif
+# ifdef ENFILE
+		   || errno == ENFILE
+# endif
+# ifdef EINTR
+		   || errno == EINTR
+# endif
+		   )
+	    /* We cannot open anymore files since all descriptors are
+	       used or because we got a signal.  */
+	    return NULL;
+#endif
 	  else
 	    continue;
 	}

@@ -128,7 +128,7 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
           return retval;
         }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
         {
           free (result);
           __set_errno (ERANGE);
@@ -243,7 +243,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);

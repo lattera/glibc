@@ -86,6 +86,7 @@ __lckpwdf ()
   struct sigaction saved_act;		/* Saved signal action.  */
   sigset_t new_set;			/* New set of caught signals.  */
   struct sigaction new_act;		/* New signal action.  */
+  struct flock fl;			/* Information struct for locking.  */
   int result;
 
   if (lock_fd != -1)
@@ -139,7 +140,10 @@ __lckpwdf ()
   alarm (TIMEOUT);
 
   /* Try to get the lock.  */
-  result = flock (lock_fd, LOCK_EX);
+  memset (&fl, '\0', sizeof (struct flock));
+  fl.l_type = F_WRLCK;
+  fl.l_whence = SEEK_SET;
+  result = fcntl (lock_fd, F_SETLKW, &fl);
 
   RETURN_CLEAR_ALARM (result);
 }
@@ -177,5 +181,5 @@ static void
 noop_handler (sig)
      int sig;
 {
-  /* We simply return which makes the `flock' call return with an error.  */
+  /* We simply return which makes the `fcntl' call return with an error.  */
 }

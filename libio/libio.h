@@ -83,7 +83,8 @@ the executable file might be covered by the GNU General Public License. */
 #define EOF (-1)
 #endif
 #ifndef NULL
-#ifdef __GNUG__
+#if defined __GNUG__ && \
+    (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8))
 #define NULL (__null)
 #else
 #if !defined(__cplusplus)

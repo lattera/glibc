@@ -101,7 +101,7 @@ internal_nis_getprotoent_r (struct protoent *proto,
           return retval;
         }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
         {
           free (result);
           __set_errno (ERANGE);
@@ -169,7 +169,7 @@ _nss_nis_getprotobyname_r (const char *name, struct protoent *proto,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);
@@ -219,7 +219,7 @@ _nss_nis_getprotobynumber_r (int number, struct protoent *proto,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);

@@ -42,8 +42,10 @@ static char __ypdomainname[MAXHOSTNAMELEN + 1] = "\0";
 __libc_lock_define_initialized (static, ypbindlist_lock)
 static dom_binding *__ypbindlist = NULL;
 
+extern void xdr_free (xdrproc_t proc, char *objp);
+
 static int
-__yp_bind (char *domain, dom_binding ** ypdb)
+__yp_bind (const char *domain, dom_binding ** ypdb)
 {
   struct sockaddr_in clnt_saddr;
   struct ypbind_resp ypbr;

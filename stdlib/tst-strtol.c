@@ -65,7 +65,7 @@ static const struct ltest tests[] =
     { "0xffffffffg",	0xffffffff,	0,	'g',	0 },
     { "0xffffffffffffffffg",	0xffffffffffffffff,	0,	'g',	0 },
     { "0xf1f2f3f4f5f6f7f8f9",	0xffffffffffffffff,	0,	0,	ERANGE },
-    { "-0x123456789abcdef01",	0,			0,	0,	EINVA{ },
+    { "-0x123456789abcdef01",	0,			0,	0,	EINVAL },
     { "-0xfedcba987654321",	0,			0,	0,	EINVAL },
     { NULL,		0,		0,	0,	0 },
 #endif

@@ -3232,7 +3232,7 @@ heap_trim(heap, pad) heap_info *heap; size_t pad;
     assert(p->size == (0|PREV_INUSE)); /* must be fencepost */
     p = prev_chunk(p);
     new_size = chunksize(p) + (MINSIZE-2*SIZE_SZ);
-    assert(new_size>0 && new_size<(long)2*MINSIZE);
+    assert(new_size>0 && new_size<(long int)(2*MINSIZE));
     if(!prev_inuse(p))
       new_size += p->prev_size;
     assert(new_size>0 && new_size<HEAP_MAX_SIZE);

@@ -98,9 +98,7 @@ DEFUN(_IO_file_doallocate, (fp),
       size = _IO_BUFSIZ;
 #endif
     }
-  p = ALLOC_BUF(size);
-  if (p == NULL)
-    return EOF;
+  ALLOC_BUF(p, size, EOF);
   _IO_setb(fp, p, p+size, 1);
   if (couldbetty && __isatty (fp->_fileno))
     fp->_flags |= _IO_LINE_BUF;

@@ -22,7 +22,10 @@
 #include <features.h>
 
 #include <sys/socket.h>
+
+__BEGIN_DECLS
 #include <linux/in.h>
+__END_DECLS
 
 /* Standard well-known ports.  The use of these constants is
    deprecated.  Instead use the contents of the file `/etc/services'

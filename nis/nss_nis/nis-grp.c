@@ -101,7 +101,7 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
           return retval;
         }
 
-      if (len + 1 > buflen)
+      if ((size_t) (len + 1) > buflen)
         {
           free (result);
           __set_errno (ERANGE);
@@ -169,7 +169,7 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);
@@ -219,7 +219,7 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
       return retval;
     }
 
-  if (len + 1 > buflen)
+  if ((size_t) (len + 1) > buflen)
     {
       free (result);
       __set_errno (ERANGE);

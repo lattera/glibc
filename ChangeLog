@@ -1,3 +1,112 @@
+Thu Dec 12 03:32:21 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/_G_config.h: Add definition of _G_int16_t, _G_int32_t,
+	_G_uint16_t, _G_uin32_t, _G_HAVE_BOOL, _G_HAVE_MMAP, and
+	_G_ARGS.
+
+	Change libio buffer handling to allocate internal buffers using
+	mmap if possible.
+	* libio/filedoalloc.c (_IO_file_doallocate): Change call to
+	ALLOC_BUF.
+	* libio/genops.c (_IO_setb, _IO_default_finish): Change call
+	to FREE_BUF.
+	(_IO_default_doallocate): Change call to ALLOC_BUF.
+	* libio/libioP.h: Change definition of ALLOC_BUF and FREE_BUF
+	to use mmap/munmap when possible.
+	* libio/memstream.c: Don't use ALLOC_BUF, but directly malloc.
+	* libio/vasprintf.c: Likewise.
+	Patch by HJ Lu.
+
+	* libio/libio.h: Define NULL as __null only for gcc-2.8 and up.
+	* libio/libioP.h: Likewise.
+
+	* libio/fileops.c (_IO_file_read, _IO_file_write): Don't
+	restart syscall when EINTR was returned.  Necessary for POSIX.1.
+
+	* libio/strops.c (_IO_str_overflow): Add cast to prevent warning.
+
+	* new-malloc/malloc.c (heap_trim): Correctly place parentheses to
+	prevent warnings.
+
+	* nis/Makefile: Remove rules for bsd-tools which are not part
+	of glibc.
+	Patch by Thorsten Kukuk.
+
+	* nis/ypclnt.c: Add prototype for xdr_free.
+	Add const to first parameter for __yp_bind.
+	* nis/nss_compat/compat-pwd.c (getpwent_next_netgr, getpwent_next_nis,
+	getpwent_next_file): Variable `p2len' must have type size_t.
+	* nis/nss_nis/nis-alias.c: Add casts to prevent warnings.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+
+	* nis/rpcsvc/yp_prot.h (ypreq_key): Change type of members to
+	`const char *'.
+	(ypmaplist): Change member names to `map' and `next' and provide
+	#defines for old names.
+	Patch by Thorsten Kukuk.
+
+	* nss/nss_files/files-parse.c (parse_line, parse_list): Change
+	type for `datalen' parameter to size_t.
+
+	* shsdow/lckpwdf.c: Use fcntl forlocking, not flock.
+
+	* stdio-common/printf.c [USE_IN_LIBIO]: Provide alias _IO_printf
+	for printf.
+	* stdio-common/sscanf.c [USE_IN_LIBIO]: Provide alias _IO_sscanf
+	for sscanf.
+	Patch by HJ Lu.
+
+	* stdio-common/tmpfile.c: Update copyright.
+
+	* stdio-common/vfscanf.c: Correctly handle EINTR error from fgetc
+	function.
+	Don't eat white space for `C' format.
+
+	* stdlib/tst-strtol.c [~0UL != 0xffffffff]: Fix typo in test data.
+
+	* sysdeps/generic/abort.c: Update copyright.  De-ANSI-declfy.
+	* sysdeps/i386/abort.c: Removed.  This version does not use
+	signal SIGABRT.
+
+	* sysdeps/i386/fpu/__math.h: Define __NO_MATH_INLINES if not using
+	gcc-2.8 or up.
+	Patch by HJ Lu.
+
+	* sysdeps/posix/tempname.c: Test for error but EEXIST after open
+	call.  If EMFILE, ENFILE, or EINTR return with error.
+
+Wed Dec 11 14:43:52 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* gnu-versions.h: Set _GNU_OBSTACK_INTERFACE_VERSION back to 1.
+	We are compatible again.
+	* new-malloc/obstack.h (struct obstack): Add back alloc_failed bit
+	even though it is not used.
+	* malloc/obstack.h: Likewise.
+	* new-malloc/obstack.c (_obstack_begin, _obstack_begin_1): Initialize
+	alloc_failed bit to 0.
+
+	* time/strftime.c: Extend for Emacs' needs.  Recognize field width,
+	%P format and `0' modifier.
+
+Tue Dec 10 21:20:44 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (make-link): Don't discard exit codes of intermediate
+	commands.  Always use rellns-sh if symbolic links are available.
+
+Tue Dec 10 20:09:51 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: Enclose #include
+	<linux/in.h> in __BEGIN_DECLS/__END_DECLS to avoid linkage
+	conflict of ntohs etc. in <asm/byteorder.h>.
+
 Wed Dec 11 01:04:30 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	Add NIS NSS implementation.

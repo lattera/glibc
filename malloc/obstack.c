@@ -24,7 +24,7 @@
 /* NOTE BEFORE MODIFYING THIS FILE: This version number must be
    incremented whenever callers compiled using an old obstack.h can no
    longer properly call the functions in this obstack.c.  */
-#define OBSTACK_INTERFACE_VERSION 2
+#define OBSTACK_INTERFACE_VERSION 1
 
 /* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself, and the installed library
@@ -171,6 +171,7 @@ _obstack_begin (h, size, alignment, chunkfun, freefun)
   chunk->prev = 0;
   /* The initial chunk now contains no empty object.  */
   h->maybe_empty_object = 0;
+  h->alloc_failed = 0;
   return 1;
 }
 
@@ -220,6 +221,7 @@ _obstack_begin_1 (h, size, alignment, chunkfun, freefun, arg)
   chunk->prev = 0;
   /* The initial chunk now contains no empty object.  */
   h->maybe_empty_object = 0;
+  h->alloc_failed = 0;
   return 1;
 }
 

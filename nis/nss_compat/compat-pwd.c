@@ -270,7 +270,8 @@ getpwent_next_netgr (struct passwd *result, ent_t *ent, char *group,
 		     char *buffer, size_t buflen)
 {
   char *ypdomain, *host, *user, *domain, *outval, *p, *p2;
-  int status, outvallen, p2len;
+  int status, outvallen;
+  size_t p2len;
 
   if (yp_get_default_domain (&ypdomain) != YPERR_SUCCESS)
     {
@@ -337,7 +338,8 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 		   size_t buflen)
 {
   char *domain, *outkey, *outval, *p, *p2;
-  int outkeylen, outvallen, p2len;
+  int outkeylen, outvallen;
+  size_t p2len;
 
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
     {
@@ -413,7 +415,7 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
   while (1)
     {
       char *p, *p2;
-      int p2len;
+      size_t p2len;
 
       do
 	{
