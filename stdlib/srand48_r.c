@@ -44,7 +44,7 @@ srand48_r (seedval, buffer)
   else
     {
       buffer->X[2] = seedval;
-      buffer->X[1] = 0x330e0000;
+      buffer->X[1] = 0x330e0000UL;
       buffer->X[0] = 0;
     }
 

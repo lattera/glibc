@@ -45,6 +45,7 @@ Cambridge, MA 02139, USA.  */
    __USE_SVID		Define SVID things.
    __USE_MISC		Define things common to BSD and System V Unix.
    __USE_GNU		Define GNU extensions.
+   __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
    __FAVOR_BSD		Favor 4.3BSD things in cases of conflict.
 
    The macro `__GNU_LIBRARY__' is defined by this file unconditionally.
@@ -64,6 +65,7 @@ Cambridge, MA 02139, USA.  */
 #undef	__USE_SVID
 #undef	__USE_MISC
 #undef	__USE_GNU
+#undef	__USE_REENTRANT
 #undef	__FAVOR_BSD
 
 
@@ -123,6 +125,10 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	_GNU_SOURCE
 #define	__USE_GNU	1
+#endif
+
+#if defined (__USE_GNU) || defined (__USE_MISC)
+#define __USE_REENTRANT	1
 #endif
 
 

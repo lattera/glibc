@@ -48,8 +48,8 @@ __drand48_iterate (xsubi, buffer)
 	}
       else
 	{
-	  buffer->a[2] = 0x5deec;
-	  buffer->a[1] = 0xe66d0000;
+	  buffer->a[2] = 0x5deecUL;
+	  buffer->a[1] = 0xe66d0000UL;
 	  buffer->a[0] = 0;
 	}
       buffer->c = 0xb;

@@ -53,7 +53,7 @@ endif
 # These are the subdirectories containing the library source.
 subdirs := csu assert ctype locale math setjmp signal stdio stdlib	\
 	   malloc string time dirent grp pwd posix io termios resource	\
-	   socket misc gnulib $(wildcard crypt) manual			\
+	   misc socket sysvipc gnulib $(wildcard crypt) manual		\
 	   $(sysdep-subdirs) elf
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
 

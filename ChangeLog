@@ -1,4 +1,16 @@
+Mon Sep 18 01:58:40 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makefile (subdirs): Add sysvipc.
+
+	* stdlib/srand48_r.c (srand48_r): Use UL suffix for huge constant.
+	* stdlib/drand48-iter.c (__drand48_iterate): Likewise.
+
 Sun Sep 17 18:29:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): Call
+	 __file_set_size instead of __file_truncate.
+
+	* features.h (__USE_REENTRANT): New macro.
 
 	* sysdeps/mach/hurd/truncate.c: Call __file_set_size instead of
 	__file_truncate.

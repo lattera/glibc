@@ -126,7 +126,7 @@ __hurd_file_name_lookup_retry (file_t crdir,
 	      if (!err && (flags & O_SHLOCK))
 		;		/* XXX */
 	      if (!err && (flags & O_TRUNC))
-		err = __file_truncate (*result, 0);
+		err = __file_set_size (*result, 0);
 
 	      if (err)
 		__mach_port_deallocate (__mach_task_self (), *result);
