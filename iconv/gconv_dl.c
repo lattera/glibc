@@ -1,5 +1,6 @@
 /* Handle loading/unloading of shared object for transformation.
-   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -191,7 +192,7 @@ __gconv_release_shlib (struct __gconv_loaded_object *handle)
 
 
 /* We run this if we debug the memory allocation.  */
-static void
+static void __libc_freeres_fn_section
 do_release_all (void *nodep)
 {
   struct __gconv_loaded_object *obj = (struct __gconv_loaded_object *) nodep;

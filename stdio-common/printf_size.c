@@ -201,18 +201,9 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
 
   /* Prepare to print the number.  We want to use `__printf_fp' so we
      have to prepare a `printf_info' structure.  */
+  fp_info = *info;
   fp_info.spec = 'f';
   fp_info.prec = info->prec < 0 ? 3 : info->prec;
-  fp_info.is_long_double = info->is_long_double;
-  fp_info.is_short = info->is_short;
-  fp_info.is_long = info->is_long;
-  fp_info.alt = info->alt;
-  fp_info.space = info->space;
-  fp_info.left = info->left;
-  fp_info.showsign = info->showsign;
-  fp_info.group = info->group;
-  fp_info.extra = info->extra;
-  fp_info.pad = info->pad;
   fp_info.wide = wide;
 
   if (fp_info.left && fp_info.pad == L' ')

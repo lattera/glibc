@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 92, 1995-2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -444,7 +445,7 @@ setlocale (int category, const char *locale)
 }
 libc_hidden_def (setlocale)
 
-static void
+static void __libc_freeres_fn_section
 free_category (int category,
 	       struct locale_data *here, struct locale_data *c_data)
 {
@@ -472,7 +473,10 @@ free_category (int category,
     }
 }
 
-libc_freeres_fn (free_mem)
+/* This is called from iconv/gconv_db.c's free_mem, as locales must
+   be freed before freeing gconv steps arrays.  */
+void __libc_freeres_fn_section
+_nl_locale_subfreeres (void)
 {
 #ifdef NL_CURRENT_INDIRECT
   /* We don't use the loop because we want to have individual weak

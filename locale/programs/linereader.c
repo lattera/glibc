@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -80,6 +80,7 @@ lr_create (FILE *fp, const char *fname, kw_hash_fct_t hf)
   result->comment_char = '#';
   result->escape_char = '\\';
   result->translate_strings = 1;
+  result->return_widestr = 0;
 
   n = getdelim (&result->buf, &result->bufsize, '\n', result->fp);
   if (n < 0)

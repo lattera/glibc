@@ -62,7 +62,7 @@ main (void)
     exit (4);
 
   if ((mmap_data = (char *) mmap (NULL, fs.st_size, PROT_READ,
-				  MAP_SHARED, fd, 0)) == NULL)
+				  MAP_SHARED, fd, 0)) == MAP_FAILED)
     {
       if (errno == ENOSYS)
 	exit (0);

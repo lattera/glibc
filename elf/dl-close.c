@@ -565,7 +565,7 @@ libc_hidden_def (_dl_close)
 
 
 #ifdef USE_TLS
-static bool
+static bool __libc_freeres_fn_section
 free_slotinfo (struct dtv_slotinfo_list **elemp)
 {
   size_t cnt;
@@ -623,11 +623,12 @@ libc_freeres_fn (free_mem)
 	/* There was no initial TLS setup, it was set up later when
 	   it used the normal malloc.  */
 	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list));
+      else
 # endif
-      /* The first element of the list does not have to be deallocated.
-	 It was allocated in the dynamic linker (i.e., with a different
-	 malloc), and in the static library it's in .bss space.  */
-      free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);
+        /* The first element of the list does not have to be deallocated.
+	   It was allocated in the dynamic linker (i.e., with a different
+	   malloc), and in the static library it's in .bss space.  */
+	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);
     }
 #endif
 }

@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sys/param.h>
 #include <bits/libc-lock.h>
+#include <locale/localeinfo.h>
 
 #include <dlfcn.h>
 #include <gconv_int.h>
@@ -170,7 +171,7 @@ add_derivation (const char *fromset, const char *toset,
      not all memory will be freed.  */
 }
 
-static void
+static void __libc_freeres_fn_section
 free_derivation (void *p)
 {
   struct known_derivation *deriv = (struct known_derivation *) p;
@@ -765,7 +766,7 @@ __gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
 
 /* Free the modules mentioned.  */
 static void
-internal_function
+internal_function __libc_freeres_fn_section
 free_modules_db (struct gconv_module *node)
 {
   if (node->left != NULL)
@@ -786,6 +787,10 @@ free_modules_db (struct gconv_module *node)
 /* Free all resources if necessary.  */
 libc_freeres_fn (free_mem)
 {
+  /* First free locale memory.  This needs to be done before freeing derivations,
+     as ctype cleanup functions dereference steps arrays which we free below.  */
+  _nl_locale_subfreeres ();
+
   if (__gconv_alias_db != NULL)
     __tdestroy (__gconv_alias_db, free);
 

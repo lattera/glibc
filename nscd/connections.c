@@ -342,7 +342,7 @@ cannot handle old request version %d; current version is %d"),
     {
       if (req->type == INVALIDATE)
 	dbg_log ("\t%s (%s)", serv2str[req->type], (char *)key);
-      else if (req > LASTDBREQ && req < LASTREQ)
+      else if (req->type > LASTDBREQ && req->type < LASTREQ)
 	dbg_log ("\t%s", serv2str[req->type]);
       else
 	dbg_log (_("\tinvalid request type %d"), req->type);
