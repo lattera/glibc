@@ -172,27 +172,54 @@ static int pthread_start_thread(void *arg)
 }
 
 static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
-                                 void * (*start_routine)(void *), void *arg,
-                                 sigset_t * mask, int father_pid)
+				 void * (*start_routine)(void *), void *arg,
+				 sigset_t * mask, int father_pid)
 {
   size_t sseg;
   int pid;
   pthread_descr new_thread;
   pthread_t new_thread_id;
   int i;
+  void *guardaddr = NULL;
 
   /* Find a free stack segment for the current stack */
-  for (sseg = 1; ; sseg++) {
-    if (sseg >= PTHREAD_THREADS_MAX) return EAGAIN;
-    if (__pthread_handles[sseg].h_descr != NULL) continue;
-    new_thread = thread_segment(sseg);
-    /* Allocate space for stack and thread descriptor. */
-    if (mmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
-	     INITIAL_STACK_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
-	     MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED | MAP_GROWSDOWN, -1, 0)
-        != MAP_FAILED) break;
-    /* It seems part of this segment is already mapped. Try the next. */
-  }
+  for (sseg = 1; ; sseg++)
+    {
+      if (sseg >= PTHREAD_THREADS_MAX)
+	return EAGAIN;
+      if (__pthread_handles[sseg].h_descr != NULL)
+	continue;
+
+      if (attr == NULL || !attr->stackaddr_set)
+	{
+	  new_thread = thread_segment(sseg);
+	  /* Allocate space for stack and thread descriptor. */
+	  if (mmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
+		   INITIAL_STACK_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
+		   MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED | MAP_GROWSDOWN,
+		   -1, 0) != MAP_FAILED)
+	    {
+	      /* We manage to get a stack.  Now see whether we need a guard
+		 and allocate it if necessary.  */
+	      if (attr->guardsize != 0)
+		{
+		  guardaddr = mmap ((caddr_t)((char *)(new_thread+1)
+					      - 2*1024*1024),
+				    attr->guardsize, 0, MAP_FIXED, -1, 0);
+		  if (guardaddr == MAP_FAILED)
+		    /* We don't make this an error.  */
+		    guardaddr = NULL;
+		}
+	      break;
+	    }
+	  /* It seems part of this segment is already mapped. Try the next. */
+	}
+      else
+	{
+	  new_thread = (pthread_descr) attr->stackaddr - 1;
+	  break;
+	}
+    }
   /* Allocate new thread identifier */
   pthread_threads_counter += PTHREAD_THREADS_MAX;
   new_thread_id = sseg + pthread_threads_counter;
@@ -217,6 +244,10 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_errno = 0;
   new_thread->p_h_errnop = &new_thread->p_h_errno;
   new_thread->p_h_errno = 0;
+  new_thread->p_guardaddr = guardaddr;
+  new_thread->p_guardsize = (attr == NULL || !attr->stackaddr_set
+			     ? attr->guardsize : 0);
+  new_thread->p_userstack = attr != NULL && attr->stackaddr_set;
   for (i = 0; i < PTHREAD_KEY_1STLEVEL_SIZE; i++)
     new_thread->p_specific[i] = NULL;
   /* Initialize the thread handle */
@@ -249,9 +280,14 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
                 new_thread);
   /* Check if cloning succeeded */
   if (pid == -1) {
-    /* Free the stack */
-    munmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
-           INITIAL_STACK_SIZE);
+    /* Free the stack if we allocated it */
+    if (attr == NULL || !attr->stackaddr_set)
+      {
+	munmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
+	       INITIAL_STACK_SIZE);
+	if (attr->guardsize != 0)
+	  munmap(new_thread->p_guardaddr, new_thread->p_guardsize);
+      }
     __pthread_handles[sseg].h_descr = NULL;
     return errno;
   }
@@ -268,6 +304,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   return 0;
 }
 
+
 /* Free the resources of a thread. */
 
 static void pthread_free(pthread_descr th)
@@ -281,8 +318,13 @@ static void pthread_free(pthread_descr th)
   release(&handle->h_spinlock);
   /* If initial thread, nothing to free */
   if (th == &__pthread_initial_thread) return;
-  /* Free the stack and thread descriptor area */
-  munmap((caddr_t) ((char *)(th+1) - STACK_SIZE), STACK_SIZE);
+  if (!th->p_userstack)
+    {
+      /* Free the stack and thread descriptor area */
+      munmap((caddr_t) ((char *)(th+1) - STACK_SIZE), STACK_SIZE);
+      if (th->p_guardsize != 0)
+	munmap(th->p_guardaddr, th->p_guardsize);
+    }
 }
 
 /* Handle threads that have exited */

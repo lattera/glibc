@@ -84,6 +84,9 @@ struct _pthread_descr_struct {
   struct pthread_start_args p_start_args; /* arguments for thread creation */
   void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE]; /* thread-specific data */
   void * p_libc_specific[_LIBC_TSD_KEY_N]; /* thread-specific data for libc */
+  int p_userstack;		/* nonzero if the user provided the thread */
+  void *p_guardaddr;		/* address of guard area or NULL */
+  size_t p_guardsize;		/* size of guard area */
 };
 
 /* The type of thread handles. */

@@ -1,5 +1,5 @@
 /* Minimum guaranteed maximum values for system limits.  Linux version.
-   Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,3 +38,6 @@
 /* Maximum amount by which a process can descrease its asynchronous I/O
    priority level.  */
 #define AIO_PRIO_DELTA_MAX	20
+
+/* Minimum size for a thread.  We are free to choose a reasonable value.  */
+#define PTHREAD_STACK_MIN	16384

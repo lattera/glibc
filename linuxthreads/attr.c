@@ -15,10 +15,30 @@
 /* Handling of thread attributes */
 
 #include <unistd.h>
+#include <sys/param.h>
 #include "pthread.h"
 #include "internals.h"
 
-int pthread_attr_init(pthread_attr_t *attr)
+
+int __pthread_attr_init_2_1(pthread_attr_t *attr)
+{
+  size_t ps = __getpagesize ();
+
+  attr->detachstate = PTHREAD_CREATE_JOINABLE;
+  attr->schedpolicy = SCHED_OTHER;
+  attr->schedparam.sched_priority = 0;
+  attr->inheritsched = PTHREAD_EXPLICIT_SCHED;
+  attr->scope = PTHREAD_SCOPE_SYSTEM;
+  attr->guardsize = ps;
+  attr->stackaddr = NULL;
+  attr->stackaddr_set = 0;
+  attr->stacksize = STACK_SIZE - ps;
+  return 0;
+}
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+default_symbol_version (__pthread_attr_init_2_1, pthread_attr_init, GLIBC_2.1);
+
+int __pthread_attr_init_2_0(pthread_attr_t *attr)
 {
   attr->detachstate = PTHREAD_CREATE_JOINABLE;
   attr->schedpolicy = SCHED_OTHER;
@@ -27,6 +47,10 @@ int pthread_attr_init(pthread_attr_t *attr)
   attr->scope = PTHREAD_SCOPE_SYSTEM;
   return 0;
 }
+symbol_version (__pthread_attr_init_2_0, pthread_attr_init, GLIBC_2.0);
+#else
+strong_alias (__pthread_attr_init_2_1, pthread_attr_init)
+#endif
 
 int pthread_attr_destroy(pthread_attr_t *attr)
 {
@@ -115,3 +139,67 @@ int pthread_attr_getscope(const pthread_attr_t *attr, int *scope)
   *scope = attr->scope;
   return 0;
 }
+
+int __pthread_attr_setguardsize(pthread_attr_t *attr, size_t guardsize)
+{
+  size_t ps = __getpagesize ();
+
+  /* First round up the guard size.  */
+  guardsize = roundup (guardsize, ps);
+
+  /* The current implementation of LinuxThreads allocates 2MB stack space
+     for each thread.  So the maximum guardsize is 2MB - pagesize.  */
+  if (guardsize >= STACK_SIZE - ps)
+    return EINVAL;
+
+  attr->guardsize = guardsize;
+
+  return 0;
+}
+weak_alias (__pthread_attr_setguardsize, pthread_attr_setguardsize)
+
+int __pthread_attr_getguardsize(const pthread_attr_t *attr, size_t *guardsize)
+{
+  *guardsize = attr->guardsize;
+  return 0;
+}
+weak_alias (__pthread_attr_getguardsize, pthread_attr_getguardsize)
+
+int __pthread_attr_setstackaddr(pthread_attr_t *attr, void *stackaddr)
+{
+  attr->stackaddr = stackaddr;
+  attr->stackaddr_set = 1;
+  return 0;
+}
+weak_alias (__pthread_attr_setstackaddr, pthread_attr_setstackaddr)
+
+int __pthread_attr_getstackaddr(const pthread_attr_t *attr, void **stackaddr)
+{
+  /* XXX This function has a stupid definition.  The standard specifies
+     no error value but what is if no stack address was set?  We simply
+     return the value we have in the member.  */
+  *stackaddr = attr->stackaddr;
+  return 0;
+}
+weak_alias (__pthread_attr_getstackaddr, pthread_attr_etstackaddr)
+
+int __pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
+{
+  size_t ps = __getpagesize ();
+
+  /* We don't accept value smaller than PTHREAD_STACK_MIN or bigger than
+     2MB - pagesize.  */
+  if (stacksize < PTHREAD_STACK_MIN || stacksize > STACK_SIZE - ps)
+    return EINVAL;
+
+  attr->stacksize = stacksize;
+  return 0;
+}
+weak_alias (__pthread_attr_setstacksize, pthread_attr_setstacksize)
+
+int __pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize)
+{
+  *stacksize = attr->stacksize;
+  return 0;
+}
+weak_alias (__pthread_attr_getstacksize, pthread_attr_getstacksize)

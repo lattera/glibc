@@ -234,8 +234,8 @@ static int pthread_initialize_manager(void)
 
 /* Thread creation */
 
-int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
-                   void * (*start_routine)(void *), void *arg)
+int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
+			 void * (*start_routine)(void *), void *arg)
 {
   pthread_descr self = thread_self();
   struct pthread_request request;
@@ -254,6 +254,35 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
   if (self->p_retcode == 0) *thread = (pthread_t) self->p_retval;
   return self->p_retcode;
 }
+
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+default_symbol_version (__pthread_create_2_1, pthread_create, GLIBC_2.1);
+
+int __pthread_create_2_0(pthread_t *thread, const pthread_attr_t *attr,
+			 void * (*start_routine)(void *), void *arg)
+{
+  /* The ATTR attribute is not really of type `pthread_attr_t *'.  It has
+     the old size and access to the new members might crash the program.
+     We convert the struct now.  */
+  pthread_attr_t new_attr;
+
+  if (attr != NULL)
+    {
+      size_t ps = __getpagesize ();
+
+      memcpy (&new_attr, attr, (size_t) &(((pthread_attr_t*)NULL)->guardsize));
+      new_attr.guardsize = ps;
+      new_attr.stackaddr_set = 0;
+      new_attr.stackaddr = NULL;
+      new_attr.stacksize = STACK_SIZE - ps;
+      attr = &new_attr;
+    }
+  return __pthread_create_2_1 (thread, attr, start_routine, arg);
+}
+symbol_version (__pthread_create_2_0, pthread_create, GLIBC_2.0);
+#else
+strong_alias (__pthread_create_2_1, pthread_create)
+#endif
 
 /* Simple operations on thread identifiers */
 
@@ -416,6 +445,23 @@ void __pthread_kill_other_threads_np(void)
   __pthread_reset_main_thread();
 }
 weak_alias (__pthread_kill_other_threads_np, pthread_kill_other_threads_np)
+
+/* Concurrency symbol level.  */
+static int current_level;
+
+int __pthread_setconcurrency(int level)
+{
+  /* We don't do anything unless we have found a useful interpretation.  */
+  current_level = level;
+  return 0;
+}
+weak_alias (__pthread_setconcurrency, pthread_setconcurrency)
+
+int __pthread_getconcurrency(void)
+{
+  return current_level;
+}
+weak_alias (__pthread_getconcurrency, pthread_getconcurrency)
 
 /* Debugging aid */
 

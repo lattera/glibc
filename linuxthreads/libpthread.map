@@ -53,10 +53,19 @@ GLIBC_2.0 {
 
 GLIBC_2.1 {
   global:
+    # Functions with changed interface.
+    pthread_attr_init; pthread_create;
+
     # Unix98 extensions.
     pthread_rwlock_init; pthread_rwlock_destroy; pthread_rwlock_rdlock;
     pthread_rwlock_tryrdlock; pthread_rwlock_wrlock; pthread_rwlock_trywrlock;
     pthread_rwlock_unlock; pthread_rwlockattr_init; pthread_rwlockattr_destroy;
     pthread_rwlockattr_getpshared; pthread_rwlockattr_setpshared;
     pthread_rwlockattr_getkind_np; pthread_rwlockattr_setkind_np;
+
+    pthread_attr_getguardsize; pthread_attr_setguardsize;
+    pthread_attr_getstackaddr; pthread_attr_setstackaddr;
+    pthread_attr_getstacksize; pthread_attr_setstacksize;
+
+    pthread_getconcurrency; pthread_setconcurrency;
 } GLIBC_2.0;

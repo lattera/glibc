@@ -71,7 +71,7 @@ STATUS:
 - libc 6 (glibc 2) provides much better thread support than libc 5,
   and comes with a specially-adapted version of LinuxThreads.
   For serious multithreaded programming, you should consider switching
-  to glibc 2. It is available from prep.ai.mit.edu:/pub/gnu and its mirrors.
+  to glibc 2. It is available from ftp.gnu.org:/pub/gnu and its mirrors.
 
 
 WARNING:
@@ -106,6 +106,9 @@ KNOWN BUGS AND LIMITATIONS:
   signals reserved for this library. One signal is used for restarting
   threads blocked on mutexes or conditions; the other is for thread
   cancellation.
+
+  *** This is not anymore true when the application runs on a kernel
+      newer than approximately 2.1.60.
 
 - The stacks for the threads are allocated high in the memory space,
   below the stack of the initial process, and spaced 2M apart.

@@ -1,8 +1,24 @@
+1998-03-13 00:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* attr.c: Implement pthread_attr_[gs]etguardsize,
+	pthread_attr_[gs]setstackaddr, pthread_attr_[gs]etstacksize.
+	Change pthread_attr_init to have two interfaces.
+	* internals.h (struct _pthread_descr_struct): Add new fields for
+	above functions.
+	* libpthread.map: Add names in GLIBC_2.1 section.
+	* manager.c (pthread_handle_create): Implement guardsize and
+	user stack.
+	(pthread_free): Likewise.
+	* pthread.c (pthread_create): Add new interface for changed
+	pthread_attr_t.
+	* sysdeps/pthread/pthread.h: Add prototypes for new functions.
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Add definition of
+	PTHREAD_STACK_MIN.
+
 1998-03-11 00:42  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
 
-	* linuxthreads/manager.c: Enable resetting of the thread
-	scheduling policy to SCHED_OTHER when the parent thread
-	has a different one.
+	* manager.c: Enable resetting of the thread scheduling policy
+	to SCHED_OTHER when the parent thread has a different one.
 
 1998-02-01 13:51  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -119,6 +119,10 @@ typedef struct
   struct sched_param schedparam;
   int inheritsched;
   int scope;
+  size_t guardsize;
+  int stackaddr_set;
+  void *stackaddr;
+  size_t stacksize;
 } pthread_attr_t;
 
 enum
@@ -272,6 +276,49 @@ extern int pthread_attr_setscope __P ((pthread_attr_t *__attr, int __scope));
 extern int pthread_attr_getscope __P ((__const pthread_attr_t *__attr,
 				       int *__scope));
 
+#ifdef __USE_UNIX98
+/* Set the size of the guard area at the bottom of the thread.  */
+extern int __pthread_attr_setguardsize __P ((pthread_attr_t *__attr,
+					     size_t __guardsize));
+extern int pthread_attr_setguardsize __P ((pthread_attr_t *__attr,
+					   size_t __guardsize));
+
+/* Get the size of the guard area at the bottom of the thread.  */
+extern int __pthread_attr_getguardsize __P ((__const pthread_attr_t *__attr,
+					     size_t *__guardsize));
+extern int pthread_attr_getguardsize __P ((__const pthread_attr_t *__attr,
+					   size_t *__guardsize));
+
+/* Set the starting address of the stack of the thread to be created.
+   Depending on whether the stack grows up or doen the value must either
+   be higher or lower than all the address in the memory block.  The
+   minimal size of the block must be PTHREAD_STACK_SIZE.  */
+extern int __pthread_attr_setstackaddr __P ((pthread_attr_t *__attr,
+					     void *__stackaddr));
+extern int pthread_attr_setstackaddr __P ((pthread_attr_t *__attr,
+					   void *__stackaddr));
+
+/* Return the previously set address for the stack.  */
+extern int __pthread_attr_getstackaddr __P ((__const pthread_attr_t *__attr,
+					     void **__stackaddr));
+extern int pthread_attr_getstackaddr __P ((__const pthread_attr_t *__attr,
+					   void **__stackaddr));
+
+/* Add information about the minimum stack size needed for the thread
+   to be started.  This size must never be less than PTHREAD_STACK_SIZE
+   and must also not exceed the system limits.  */
+extern int __pthread_attr_setstacksize __P ((pthread_attr_t *__attr,
+					     size_t __stacksize));
+extern int pthread_attr_setstacksize __P ((pthread_attr_t *__attr,
+					   size_t __stacksize));
+
+/* Return the currently used minimal stack size.  */
+extern int __pthread_attr_getstacksize __P ((__const pthread_attr_t *__attr,
+					     size_t *__stacksize));
+extern int pthread_attr_getstacksize __P ((__const pthread_attr_t *__attr,
+					   size_t *__stacksize));
+#endif
+
 /* Functions for scheduling control. */
 
 /* Set the scheduling parameters for TARGET_THREAD according to POLICY
@@ -284,6 +331,15 @@ extern int pthread_getschedparam __P ((pthread_t __target_thread,
 				       int *__policy,
 				       struct sched_param *__param));
 
+#ifdef __USE_UNIX98
+/* Determine  level of concurrency.  */
+extern int __pthread_getconcurrency __P ((void));
+extern int pthread_getconcurrency __P ((void));
+
+/* Set new concurrency level to LEVEL.  */
+extern int __pthread_setconcurrency __P ((int __level));
+extern int pthread_setconcurrency __P ((int __level));
+#endif
 
 /* Functions for mutex handling. */
 
