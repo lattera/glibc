@@ -1,5 +1,7 @@
 1999-01-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-close.c (_dl_close): Fix last patch (cnt is unsigned).
+
 	* elf/dl-close.c: Handle failed loads which would have gone in the
 	global scope correctly.
 

@@ -106,7 +106,7 @@ _dl_close (struct link_map *map)
 	      unsigned int cnt = _dl_main_searchlist->r_nlist;
 
 	      do
-		if (--cnt < 0)
+		if (cnt-- == 0)
 		  break;
 	      while (_dl_main_searchlist->r_list[cnt] != imap);
 
