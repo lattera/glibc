@@ -1,3 +1,22 @@
+1998-01-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add change to
+	support sigaction on kernels > 2.1.7x.
+
+1998-01-01 13:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Don't map the file
+	if it is empty.
+
+	* elf/rtld.c (dl_main): Correct parsing of ld.so.preload file.
+	Patch by David Engel <david@sw.ods.com>.
+
+	* configure.in: Fix another typo in --enable-add-ons code.
+
+1998-01-26 03:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/siglist.c: Add copyright text.
+
 1998-01-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* nss/nss_files/files-network.c: Correct order of parameters for
