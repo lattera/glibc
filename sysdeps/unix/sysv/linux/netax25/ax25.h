@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@
 #define AX25_N2		3
 #define AX25_BACKOFF	6
 #define AX25_EXTSEQ	7
+#define AX25_PIDINCL	8
 #define AX25_IDLE	9
 #define	AX25_PACLEN	10
 #define AX25_IPMAXQUEUE 11
@@ -109,7 +110,7 @@ struct ax25_ctl_struct
     ax25_address digi_addr[AX25_MAX_DIGIS];
   };
 
-struct ax25_info_struct 
+struct ax25_info_struct
   {
     unsigned int  n2, n2count;
     unsigned int t1, t1timer;
@@ -120,7 +121,7 @@ struct ax25_info_struct
     unsigned int rcv_q, snd_q;
   };
 
-struct ax25_fwd_struct 
+struct ax25_fwd_struct
   {
     ax25_address port_from;
     ax25_address port_to;
