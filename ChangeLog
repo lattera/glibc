@@ -1,3 +1,8 @@
+1998-05-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/strops.c (_IO_str_underflow): Read newly available
+	character from buffer as unsigned.
+
 1998-05-22 10:56  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/Makefile (distribute): Add xopen-msg.h.
