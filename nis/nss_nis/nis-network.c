@@ -104,7 +104,9 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
 
       if (retval != NSS_STATUS_SUCCESS)
         {
-          if (retval == NSS_STATUS_TRYAGAIN)
+	  if (retval == NSS_STATUS_NOTFOUND)
+	    *errnop = ENOENT;
+          else if (retval == NSS_STATUS_TRYAGAIN)
 	    {
 	      *herrnop = NETDB_INTERNAL;
 	      *errnop = errno;
@@ -203,7 +205,9 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_NOTFOUND)
+	*errnop = ENOENT;
+      else if (retval == NSS_STATUS_TRYAGAIN)
 	{
 	  *errnop = errno;
 	  *herrnop = NETDB_INTERNAL;
@@ -233,7 +237,10 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
-        return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
     }
   else
     return NSS_STATUS_SUCCESS;
@@ -281,7 +288,10 @@ _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
 		    continue;
 		  }
 		else
-		  return NSS_STATUS_NOTFOUND;
+		  {
+		    *errnop = ENOENT;
+		    return NSS_STATUS_NOTFOUND;
+		  }
 	      }
 	    else
 	      {
@@ -313,7 +323,10 @@ _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
 	    if (parse_res == -1)
 	      return NSS_STATUS_TRYAGAIN;
 	    else
-	      return NSS_STATUS_NOTFOUND;
+	      {
+		*errnop = ENOENT;
+		return NSS_STATUS_NOTFOUND;
+	      }
 	  }
 	else
 	  return NSS_STATUS_SUCCESS;

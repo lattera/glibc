@@ -167,7 +167,9 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 				      &result, &len));
       if (retval != NSS_STATUS_SUCCESS)
 	{
-	  if (retval == NSS_STATUS_TRYAGAIN)
+	  if (retval == NSS_STATUS_NOTFOUND)
+	    *errnop = ENOENT;
+	  else if (retval == NSS_STATUS_TRYAGAIN)
             *errnop = errno;
           return retval;
         }

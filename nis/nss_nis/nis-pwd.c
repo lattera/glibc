@@ -106,7 +106,9 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 
       if (retval != NSS_STATUS_SUCCESS)
         {
-          if (retval == NSS_STATUS_TRYAGAIN)
+	  if (retval == NSS_STATUS_NOTFOUND)
+	    *errnop = ENOENT;
+          else if (retval == NSS_STATUS_TRYAGAIN)
             *errnop = errno;
           return retval;
         }
@@ -231,7 +233,9 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_NOTFOUND)
+	*errnop = ENOENT;
+      else if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
@@ -302,7 +306,10 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
       if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
       else
-        return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
     }
   else
     return NSS_STATUS_SUCCESS;
@@ -329,7 +336,9 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_NOTFOUND)
+	*errnop = ENOENT;
+      else if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
@@ -400,8 +409,11 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
     {
       if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
+     else
+       {
+	 *errnop = ENOENT;
+	 return NSS_STATUS_NOTFOUND;
+       }
     }
   else
     return NSS_STATUS_SUCCESS;

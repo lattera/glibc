@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -30,7 +30,9 @@ extern int xdecrypt (char *, char *);
 
 #include "nss-nis.h"
 
-/* If we haven't found the entry, we give a SUCCESS and an empty key back. */
+/* If we haven't found the entry, we give a SUCCESS and an empty key back.
+   Solaris docu says: sizeof (pkey) == HEXKEYBYTES + 1.
+*/
 enum nss_status
 _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
 {
@@ -56,7 +58,9 @@ _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_NOTFOUND)
+	*errnop = ENOENT;
+      else if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
@@ -66,7 +70,8 @@ _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
       char *p = strchr (result, ':');
       if (p != NULL)
 	*p = 0;
-      strcpy (pkey, result);
+      strncpy (pkey, result, HEXKEYBYTES + 1);
+      pkey[HEXKEYBYTES] = '\0';
     }
   return NSS_STATUS_SUCCESS;
 }
@@ -76,7 +81,7 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
 		       int *errnop)
 {
   enum nss_status retval;
-  char buf[1024];
+  char buf[2 * (HEXKEYBYTES + 1)];
   char *domain, *result;
   int len;
 
@@ -98,7 +103,9 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_NOTFOUND)
+	*errnop = ENOENT;
+      else if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
@@ -109,15 +116,16 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
       if (p == NULL)
 	return NSS_STATUS_SUCCESS;
 
-      p++;
-      strcpy (buf, p);
+      ++p;
+      strncpy (buf, p, 2 * (HEXKEYBYTES + 1));
+      buf[2 * (HEXKEYBYTES + 1)] = '\0';
       if (!xdecrypt (buf, passwd))
 	return NSS_STATUS_SUCCESS;
 
       if (memcmp (buf, &(buf[HEXKEYBYTES]), KEYCHECKSUMSIZE) != 0)
 	return NSS_STATUS_SUCCESS;
 
-      buf[HEXKEYBYTES] = 0;
+      buf[HEXKEYBYTES] = '\0';
       strcpy (skey, buf);
     }
   return NSS_STATUS_SUCCESS;

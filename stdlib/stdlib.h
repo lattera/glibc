@@ -219,7 +219,8 @@ extern unsigned long long int __strtoull_internal __P ((__const char *
 # endif
 #endif /* GCC */
 
-#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ && __GNUC__ >= 2
+#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
+    && defined __USE_EXTERN_INLINES
 /* Define inline functions which call the internal entry points.  */
 
 extern __inline double
@@ -306,7 +307,7 @@ atoll (__const char *__nptr)
   return strtoll (__nptr, (char **) NULL, 10);
 }
 # endif
-#endif /* Optimizing GCC >=2.  */
+#endif /* Optimizing and Inlining.  */
 
 
 #if defined __USE_SVID || defined __USE_XOPEN_EXTENDED

@@ -681,6 +681,7 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	    {
 	      ent->nis = 0;
 	      give_pwd_free (&ent->pwd);
+	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
@@ -790,7 +791,10 @@ getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
 
       if (yp_match (domain, "passwd.byname", name, strlen (name),
 		    &outval, &outvallen) != YPERR_SUCCESS)
-	return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
 
       if (buflen < ((size_t) outvallen + 1))
 	{
@@ -840,7 +844,10 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -915,7 +922,11 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  if (status == NSS_STATUS_RETURN)
 	    continue;
 	  else
-	    return status;
+	    {
+	      if (status == NSS_STATUS_NOTFOUND)
+		*errnop = ENOENT;
+	      return status;
+	    }
 	}
 
       /* -user */
@@ -1051,7 +1062,10 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -1146,7 +1160,10 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	  && result->pw_name[1] != '@')
 	{
 	  if (strcmp (&result->pw_name[1], name) == 0)
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  else
 	    continue;
 	}
@@ -1196,7 +1213,10 @@ _nss_compat_getpwnam_r (const char *name, struct passwd *pwd,
   enum nss_status status;
 
   if (name[0] == '-' || name[0] == '+')
-    return NSS_STATUS_NOTFOUND;
+    {
+      *errnop = ENOENT;
+      return NSS_STATUS_NOTFOUND;
+    }
 
   __libc_lock_lock (lock);
 

@@ -253,6 +253,7 @@ extern char *alloca ();
 # define readdir(str) __readdir (str)
 # define getpwnam_r(name, bufp, buf, len, res) \
    __getpwnam_r (name, bufp, buf, len, res)
+# define __stat(fname, buf) __xstat (_STAT_VER, fname, buf)
 #endif
 
 #if !(defined STDC_HEADERS || defined __GNU_LIBRARY__)

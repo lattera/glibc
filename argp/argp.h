@@ -521,7 +521,7 @@ extern void *_argp_input __P ((__const struct argp *argp,
 extern void *__argp_input __P ((__const struct argp *argp,
 				__const struct argp_state *state));
 
-#ifdef __OPTIMIZE__
+#ifdef __USE_EXTERN_INLINES
 
 # if !_LIBC
 #  define __argp_usage argp_usage
@@ -564,7 +564,7 @@ __option_is_end (__const struct argp_option *__opt)
 #  undef __option_is_short
 #  undef __option_is_end
 # endif
-#endif /* __OPTIMIZE__ */
+#endif /* Use extern inlines.  */
 
 #ifdef  __cplusplus
 }

@@ -104,7 +104,8 @@ extern int __sigismember (__const __sigset_t *, int);
 extern int __sigaddset (__sigset_t *, int);
 extern int __sigdelset (__sigset_t *, int);
 
-# define __SIGSETFN(NAME, BODY, CONST)					      \
+# ifdef __USE_EXTERN_INLINES
+#  define __SIGSETFN(NAME, BODY, CONST)					      \
   _EXTERN_INLINE int							      \
   NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \
@@ -117,7 +118,8 @@ __SIGSETFN (__sigismember, (__set->__val[__word] & __mask) ? 1 : 0, __const)
 __SIGSETFN (__sigaddset, ((__set->__val[__word] |= __mask), 0), )
 __SIGSETFN (__sigdelset, ((__set->__val[__word] &= ~__mask), 0), )
 
-#undef __SIGSETFN
+#  undef __SIGSETFN
+# endif
 
 
 #endif /* ! _SIGSET_H_fns.  */

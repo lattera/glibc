@@ -90,7 +90,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 
   do
     {
-      try++;
+      ++try;
       if (try > MAXTRIES)
         {
           if (is_new)
@@ -99,7 +99,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
         }
 
 #if USE_BINDINGDIR
-      if (ysd->dom_vers < 1 && try < 3)
+      if (ysd->dom_vers < 1 && try == 1) /* Try binding dir only first time */
 	{
 	  char path[sizeof (BINDINGDIR) - 1 + strlen (domain) + 10];
 	  struct iovec vec[2];

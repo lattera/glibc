@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -166,7 +166,10 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
   do
     {
       if (data->next == NULL)
-	return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
       p = strncpy (buffer, data->next->val, buflen);
            while (isspace (*p))
         ++p;
@@ -236,7 +239,10 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
   internal_nis_endservent (&data);
 
   if (!found && status == NSS_STATUS_SUCCESS)
-    return NSS_STATUS_NOTFOUND;
+    {
+      *errnop = ENOENT;
+      return NSS_STATUS_NOTFOUND;
+    }
   else
     return status;
 }
@@ -270,7 +276,10 @@ _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
   internal_nis_endservent (&data);
 
   if (!found && status == NSS_STATUS_SUCCESS)
-    return NSS_STATUS_NOTFOUND;
+    {
+      *errnop = ENOENT;
+      return NSS_STATUS_NOTFOUND;
+    }
   else
     return status;
 }

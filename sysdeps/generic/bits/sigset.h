@@ -38,7 +38,7 @@ typedef unsigned long int __sigset_t;
 #define _SIGSET_H_fns 1
 
 #ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
+# define _EXTERN_INLINE extern __inline
 #endif
 
 /* Return a mask that includes SIG only.  The cast to `sigset_t' avoids
@@ -63,7 +63,8 @@ extern int __sigismember (__const __sigset_t *, int);
 extern int __sigaddset (__sigset_t *, int);
 extern int __sigdelset (__sigset_t *, int);
 
-#define __SIGSETFN(NAME, BODY, CONST)					      \
+#ifdef __USE_EXTERN_INLINES
+# define __SIGSETFN(NAME, BODY, CONST)					      \
   _EXTERN_INLINE int							      \
   NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \
@@ -75,7 +76,8 @@ __SIGSETFN (__sigismember, (*__set & __mask) ? 1 : 0, __const)
 __SIGSETFN (__sigaddset, ((*__set |= __mask), 0), )
 __SIGSETFN (__sigdelset, ((*__set &= ~__mask), 0), )
 
-#undef __SIGSETFN
+# undef __SIGSETFN
+#endif
 
 
 #endif /* ! _SIGSET_H_fns.  */

@@ -133,7 +133,7 @@ extern char *__argz_next __P ((char *argz, size_t __argz_len,
 extern char *argz_next __P ((char *argz, size_t __argz_len,
 			     __const char *entry));
 
-#if defined __OPTIMIZE__ && __GNUC__ >= 2
+#ifdef __USE_EXTERN_INLINES
 extern inline char *
 __argz_next (char *__argz, size_t __argz_len, __const char *__entry)
 {
@@ -152,7 +152,7 @@ argz_next (char *__argz, size_t __argz_len, __const char *__entry)
 {
   return __argz_next (__argz, __argz_len, __entry);
 }
-#endif /* optimizing GCC2 */
+#endif /* Use extern inlines.  */
 
 __END_DECLS
 

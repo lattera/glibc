@@ -1,3 +1,52 @@
+1998-08-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/features.h: Define __USE_EXTERN_INLINES for recent
+	enough gcc.
+	* argp/argp.h: Define extern inline functions only if
+	__USE_EXTERN_INLINES is defined.
+	* libio/stdio.h: Likewise.
+	* math/math.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/argz.h: Likewise.
+	* sysdeps/generic/bits/sigset.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigset.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/bits/sigset.h: Likewise.
+	* sysdeps/wordsize-32/inttypes.h: Likewise.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+
+	* sysdeps/generic/bits/glob.c [_LIBC]: Define __stat using __xstat
+	to allow compilation without optimization.
+
+1998-08-14  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
+ 
+	* nis/nss_compat/compat-grp.c: Set errno to ENOENT if we have no 
+	more entries. 
+	* nis/nss_compat/compat-initgroups.c: Likewise. 
+	* nis/nss_compat/compat-pwd.c: Likewise. 
+	* nis/nss_compat/compat-spwd.c: Likewise. 
+	* nis/nss_nis/nis-alias.c: Likewise. 
+	* nis/nss_nis/nis-ethers.c: Likewise. 
+	* nis/nss_nis/nis-grp.c: Likewise. 
+	* nis/nss_nis/nis-hosts.c: Likewise. 
+	* nis/nss_nis/nis-initgroups.c: Likewise. 
+	* nis/nss_nis/nis-network.c: Likewise. 
+	* nis/nss_nis/nis-proto.c: Likewise. 
+	* nis/nss_nis/nis-pwd.c: Likewise. 
+	* nis/nss_nis/nis-rpc.c: Likewise. 
+	* nis/nss_nis/nis-service.c: Likewise. 
+	* nis/nss_nis/nis-spwd.c: Likewise. 
+ 
+	* nis/rpcsvc/yp.h: Generate new without 1024 byte limits. 
+ 
+	* nis/ypclnt.c: Try binding dir only first time, could be to old. 
+ 
+	* nis/yp_xdr.c: Remove 1024 byte limit. 
+	* nis/ypupdate_xdr.c: Likewise. 
+ 
+	* nis/nss_nis/nis-publickey.c: Make sure, nobody could send 
+	wrong data. 
+ 
 1998-08-18  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* Rules (binaries-static, binaries-shared static pattern rules):

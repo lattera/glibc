@@ -306,7 +306,7 @@ extern int matherr __P ((struct exception *__exc));
 
 
 /* Get machine-dependent inline versions (if there are any).  */
-#ifdef __OPTIMIZE__
+#ifdef __USE_EXTERN_INLINES
 # include <bits/mathinline.h>
 #endif
 

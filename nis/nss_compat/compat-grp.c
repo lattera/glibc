@@ -246,6 +246,7 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
     {
       ent->nis = 0;
+      *errnop = ENOENT;
       return NSS_STATUS_NOTFOUND;
     }
 
@@ -285,6 +286,7 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	      != YPERR_SUCCESS)
 	    {
 	      ent->nis = 0;
+	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
@@ -440,7 +442,10 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
 
       if (yp_match (domain, "group.byname", name, strlen (name),
 		    &outval, &outvallen) != YPERR_SUCCESS)
-	return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
 
       if (buflen < ((size_t) outvallen + 1))
 	{
@@ -485,7 +490,10 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -625,7 +633,10 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -667,7 +678,10 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
       if (result->gr_name[0] == '-' && result->gr_name[1] != '\0')
 	{
 	  if (strcmp (&result->gr_name[1], name) == 0)
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  else
 	    continue;
 	}
@@ -828,7 +842,10 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);

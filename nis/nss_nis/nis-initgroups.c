@@ -112,7 +112,10 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
   do
     {
       if (intern->next == NULL)
-        return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
       p = strncpy (buffer, intern->next->val, buflen);
       while (isspace (*p))
         ++p;

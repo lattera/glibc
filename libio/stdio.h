@@ -279,13 +279,13 @@ extern int vsprintf __P ((char *__restrict __s,
 			  __const char *__restrict __format,
 			  _G_va_list __arg));
 
-#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
+#ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
 vprintf (__const char *__restrict __fmt, _G_va_list __arg)
 {
   return vfprintf (stdout, __fmt, __arg);
 }
-#endif /* Optimizing.  */
+#endif /* Use extern inlines.  */
 
 #if defined __USE_BSD || defined __USE_ISOC9X || defined __USE_UNIX98
 /* Maximum chars of output to write in MAXLEN.  */
@@ -368,20 +368,20 @@ extern int getchar __P ((void));
    optimization for it.  */
 #define getc(_fp) _IO_getc (_fp)
 
-#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
+#ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
 getchar (void)
 {
   return _IO_getc (stdin);
 }
-#endif /* Optimizing.  */
+#endif /* Use extern inlines.  */
 
 #if defined __USE_POSIX || defined __USE_MISC
 /* These are defined in POSIX.1:1996.  */
 extern int getc_unlocked __P ((FILE *__stream));
 extern int getchar_unlocked __P ((void));
 
-# ifdef __OPTIMIZE__
+# ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
 getc_unlocked (FILE *__fp)
 {
@@ -393,7 +393,7 @@ getchar_unlocked (void)
 {
   return _IO_getc_unlocked (stdin);
 }
-# endif /* Optimizing.  */
+# endif /* Use extern inlines.  */
 #endif /* Use POSIX or MISC.  */
 
 
@@ -408,25 +408,25 @@ extern int putchar __P ((int __c));
    so we always do the optimization for it.  */
 #define putc(_ch, _fp) _IO_putc (_ch, _fp)
 
-#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
+#ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
 putchar (int __c)
 {
   return _IO_putc (__c, stdout);
 }
-#endif
+#endif	/* Use extern inlines.  */
 
 #ifdef __USE_MISC
 /* Faster version when locking is not necessary.  */
 extern int fputc_unlocked __P ((int __c, FILE *__stream));
 
-# ifdef __OPTIMIZE__
+# ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
 fputc_unlocked (int __c, FILE *__stream)
 {
   return _IO_putc_unlocked (__c, __stream);
 }
-# endif /* Optimizing.  */
+# endif /* Use extern inlines.  */
 #endif /* Use MISC.  */
 
 #if defined __USE_POSIX || defined __USE_MISC
@@ -434,7 +434,7 @@ fputc_unlocked (int __c, FILE *__stream)
 extern int putc_unlocked __P ((int __c, FILE *__stream));
 extern int putchar_unlocked __P ((int __c));
 
-# ifdef __OPTIMIZE__
+# ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
 putc_unlocked (int __c, FILE *__stream)
 {
@@ -446,7 +446,7 @@ putchar_unlocked (int __c)
 {
   return _IO_putc_unlocked (__c, stdout);
 }
-# endif /* Optimizing.  */
+# endif /* Use extern inlines.  */
 #endif /* Use POSIX or MISC.  */
 
 
@@ -489,13 +489,13 @@ extern _IO_ssize_t getdelim __P ((char **__lineptr, size_t *__n,
 extern _IO_ssize_t getline __P ((char **__lineptr, size_t *__n,
 				 FILE *__stream));
 
-# if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
+# ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE _IO_ssize_t
 getline (char **__lineptr, size_t *__n, FILE *__stream)
 {
   return __getdelim (__lineptr, __n, '\n', __stream);
 }
-# endif /* Optimizing.  */
+# endif /* Use extern inlines.  */
 #endif
 
 
@@ -614,7 +614,7 @@ extern void clearerr_unlocked __P ((FILE *__stream));
 extern int feof_unlocked __P ((FILE *__stream));
 extern int ferror_unlocked __P ((FILE *__stream));
 
-# ifdef __OPTIMIZE__
+# ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
 feof_unlocked (FILE *__stream)
 {
@@ -626,7 +626,7 @@ ferror_unlocked (FILE *__stream)
 {
   return _IO_ferror_unlocked (__stream);
 }
-# endif /* Optimizing.  */
+# endif /* Use extern inlines.  */
 #endif
 
 

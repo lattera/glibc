@@ -210,7 +210,7 @@ extern intmax_t wcstoimax __P ((__const wchar_t * __restrict __nptr,
 extern uintmax_t wcstoumax __P ((__const wchar_t * __restrict __nptr,
 				 wchar_t ** __restrict __endptr, int __base));
 
-#if defined __GNUC__ && __GNUC__ >= 2 && defined __OPTIMIZE__
+#ifdef __USE_EXTERN_INLINES
 
 /* Like `strtol' but convert to `intmax_t'.  */
 # ifndef __strtol_internal_defined
@@ -269,7 +269,7 @@ wcstoumax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
 {
   return __wcstoul_internal (nptr, endptr, base, 0);
 }
-#endif	/* GCC and Optimization.  */
+#endif	/* Use extern inlines.  */
 
 __END_DECLS
 

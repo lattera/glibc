@@ -176,6 +176,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	      *h_errnop = TRY_AGAIN;
 	      break;
 	    case NSS_STATUS_NOTFOUND:
+	      *errnop = ENOENT;
 	      *h_errnop = HOST_NOT_FOUND;
 	      break;
 	    default:

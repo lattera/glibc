@@ -631,6 +631,7 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
 	    {
 	      ent->nis = 0;
 	      give_spwd_free (&ent->pwd);
+	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
@@ -736,12 +737,16 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	return NSS_STATUS_NOTFOUND;
-
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
       if (yp_match (domain, "shadow.byname", name, strlen (name),
 		    &outval, &outvallen)  != YPERR_SUCCESS)
-	return NSS_STATUS_NOTFOUND;
-
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
       if (buflen < ((size_t) outvallen + 1))
 	{
 	  free (outval);
@@ -791,7 +796,10 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -999,7 +1007,10 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -1050,7 +1061,10 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	    {
 	      if (user != NULL && user[0] != '-')
 		if (strcmp (user, name) == 0)
-		  return NSS_STATUS_NOTFOUND;
+		  {
+		    *errnop = ENOENT;
+		    return NSS_STATUS_NOTFOUND;
+		  }
 	    }
 	  __internal_endnetgrent (&netgrdata);
 	  continue;

@@ -48,9 +48,10 @@ typedef struct
 #define	__SSELT(s)	((s) / __NSSBITS)
 #define	__SSMASK(s)	(1 << ((s) % __NSSBITS))
 
-#ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE	extern __inline
-#endif
+#ifdef __USE_EXTERN_INLINES
+# ifndef _EXTERN_INLINE
+#  define _EXTERN_INLINE	extern __inline
+# endif
 
 _EXTERN_INLINE int
 __sigemptyset (__sigset_t *__set)
@@ -92,5 +93,6 @@ __sigismember (__const __sigset_t *__set, int __sig)
     return 1;
   return 0;
 }
+#endif	/* use extern inlines.  */
 
 #endif /* ! _SIGSET_H_fns */
