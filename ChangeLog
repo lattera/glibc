@@ -1,8 +1,6 @@
 2000-11-07  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
 
-	* sysdeps/sh/bits/setjmp.h: Move to...
-	* sysdeps/sh/sh4/bits/setjmp.h: ...here.
-	* sysdeps/sh/sh3/bits/setjmp.h: New file.
+	* sysdeps/sh/sh3/setjmp.S (__sigsetjmp): Skip FPU fields.
 
 2000-11-06  Ulrich Drepper  <drepper@redhat.com>
 

@@ -1,4 +1,4 @@
-/* setjmp for SH4.
+/* setjmp for SH3.
    Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,7 +27,7 @@ ENTRY (__setjmp)
 	mov	#0, r5
 ENTRY (__sigsetjmp)
 	/* Save registers */
-	add	#JB_SIZE, r4
+	add	#(JB_SIZE - 4 * 5), r4
 	stc.l	gbr, @-r4
 	sts.l	pr, @-r4
 	mov.l	r15, @-r4
