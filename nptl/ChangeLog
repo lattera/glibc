@@ -1,3 +1,48 @@
+2003-03-12  Roland McGrath  <roland@redhat.com>
+
+	* pthread-errnos.sym: New file.
+	* Makefile (gen-as-const-headers): New variable, list that file.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Include generated
+	header <pthread-errnos.h> instead of defining errno values here.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelmutex.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevelmutex.S: Likewise.
+	* sysdeps/i386/i486/pthread_spin_trylock.S: Likewise.
+	* sysdeps/x86_64/pthread_spin_trylock.S: Likewise.
+	* sysdeps/sh/pthread_spin_trylock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/fork.c: Add an assert to check that
+	CLONE_CHILD_SETTID worked.
+
 2003-03-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: New file.

@@ -25,6 +25,7 @@
 #include <tls.h>
 #include "fork.h"
 #include <bits/stdio-lock.h>
+#include <assert.h>
 
 
 unsigned long int *__fork_generation_pointer;
@@ -68,6 +69,8 @@ __libc_fork (void)
 
   _IO_list_lock ();
 
+  pid_t ppid = THREAD_GETMEM (THREAD_SELF, tid);
+
 #ifdef ARCH_FORK
   pid = ARCH_FORK ();
 #else
@@ -75,8 +78,11 @@ __libc_fork (void)
   pid = INLINE_SYSCALL (fork, 0);
 #endif
 
+
   if (pid == 0)
     {
+      assert (THREAD_GETMEM (THREAD_SELF, tid) != ppid);
+
       if (__fork_generation_pointer != NULL)
 	*__fork_generation_pointer += 4;
 
@@ -101,6 +107,8 @@ __libc_fork (void)
     }
   else
     {
+      assert (THREAD_GETMEM (THREAD_SELF, tid) == ppid);
+
       /* We execute this even if the 'fork' call failed.  */
       _IO_list_unlock ();
 

@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <pthread-errnos.h>
 #include "lowlevel-atomic.h"
 
 	.text
@@ -25,10 +26,6 @@
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
-
-#define EWOULDBLOCK		11
-#define EINVAL			22
-#define ETIMEDOUT		110
 
 
 	.globl	__lll_mutex_lock_wait
