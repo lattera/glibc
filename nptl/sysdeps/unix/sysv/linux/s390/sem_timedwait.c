@@ -92,8 +92,8 @@ sem_timedwait (sem, abstime)
 	  return -1;
 	}
     }
-  while (err == 0 || err == -EWOULDBLOCK)
+  while (err == 0 || err == -EWOULDBLOCK);
 
-    __set_errno (-err);
+  __set_errno (-err);
   return -1;
 }
