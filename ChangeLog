@@ -1,3 +1,25 @@
+2000-09-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/alpha/soft-fp/Dist: New file.
+	* sysdeps/i386/soft-fp/Dist: New file.
+	* sysdeps/mips/mips64/soft-fp/Dist: New file.
+	* sysdeps/mips/soft-fp/Dist: New file.
+	* sysdeps/powerpc/soft-fp/Dist: New file.
+	* sysdeps/sparc/sparc32/soft-fp/Dist: New file.
+	* sysdeps/sparc/sparc64/soft-fp/Dist: New file.
+
+	* sysdeps/sparc/sparc64/soft-fp/Makefile [$(subdir) = soft-fp]:
+	Use sysdep_routines instead of routines to fix make dist failure.
+	* sysdeps/sparc/sparc32/soft-fp/Makefile: Likewise (in commented
+	out code).
+	* sysdeps/powerpc/soft-fp/Makefile [$(subdir) = soft-fp]: Likewise.
+
+	* sysdeps/mips/Makefile [$(subdir) = misc]:  Use
+	sysdep_headers instead of headers for make dist.
+
+	* sysdeps/unix/sysv/linux/mips/Makefile [$(subdir) = misc]:
+	Likewise.
+
 2000-09-06  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: New file.

@@ -26,7 +26,7 @@ powerpc-quad-routines := q_add q_cmp q_cmpe q_div q_dtoq q_feq q_fge	\
 	q_fgt q_fle q_flt q_fne q_itoq q_mul q_neg q_qtod q_qtoi	\
 	q_qtos q_qtou q_qtoull q_qtoll q_sqrt q_stoq q_sub q_utoq	\
 	q_ulltoq q_lltoq q_util
-routines += $(powerpc-quad-routines)
+sysdep_routines += $(powerpc-quad-routines)
 endif
 endif
 

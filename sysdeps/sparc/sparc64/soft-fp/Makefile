@@ -1,7 +1,7 @@
 #  Software floating-point emulation.
 #  Makefile for SPARC v9 ABI mandated long double utility
 #  functions (_Qp_*).
-#  Copyright (C) 1999 Free Software Foundation, Inc.
+#  Copyright (C) 1999, 2000 Free Software Foundation, Inc.
 #  This file is part of the GNU C Library.
 #  Contributed by Jakub Jelinek (jj@ultra.linux.cz).
 #
@@ -25,7 +25,7 @@ sparc64-quad-routines := qp_add qp_cmp qp_cmpe qp_div qp_dtoq qp_feq qp_fge \
 	qp_fgt qp_fle qp_flt qp_fne qp_itoq qp_mul qp_neg qp_qtod qp_qtoi   \
 	qp_qtos qp_qtoui qp_qtoux qp_qtox qp_sqrt qp_stoq qp_sub qp_uitoq   \
 	qp_uxtoq qp_xtoq qp_util
-routines += $(sparc64-quad-routines)
+sysdep_routines += $(sparc64-quad-routines)
 endif
 
 ifeq ($(subdir),math)
