@@ -1,5 +1,7 @@
 2001-08-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/it.po: Update from translation team.
+
 	* misc/err.c: Handle wide oriented stderr.
 
 2001-08-14  Tom Rix  <trix@redhat.com>
