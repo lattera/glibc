@@ -103,12 +103,12 @@ typedef struct
   __builtin_expect (result, 0) != 0 ? -1 : nr * 8 + 7;			      \
 })
 
-#  define TLS_DO_SET_THREAD_AREA(descr) \
- INLINE_SYSCALL (set_thread_area, 2, descr, 1);
-  if (__builtin_expect (__seg, 0) == -1)
-    /* Nothing else we can do.  */
-    asm ("hlt");
-  __seg;
+#  define TLS_DO_SET_THREAD_AREA(descr)					      \
+ INLINE_SYSCALL (set_thread_area, 2, descr, 1);				      \
+  if (__builtin_expect (__seg, 0) == -1)				      \
+    /* Nothing else we can do.  */					      \
+    asm ("hlt");							      \
+  __seg;								      \
 })
 
 #  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
