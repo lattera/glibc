@@ -1,3 +1,7 @@
+1999-07-26  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Call pre-init funtions.
+
 1999-07-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/iofclose.c (_IO_new_fclose): Only fall back on
