@@ -1,3 +1,9 @@
+Fri Mar 13 10:25:26 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/mathinline.h (isgreater, isgreaterequal,
+	isless, islessequal, islessgreater, isunordered): Return zero or
+	one.
+
 1998-03-12 13:11  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-test.c: More tests.
