@@ -1,6 +1,6 @@
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,6 +41,21 @@
 # define CLONE_PTRACE  0x00002000 /* Set if tracing continues on the child.  */
 # define CLONE_VFORK   0x00004000 /* Set if the parent wants the child to
 				     wake it up on mm_release.  */
+# define CLONE_PARENT  0x00008000 /* Set if we want to have the same
+				     parent as the cloner.  */
+# define CLONE_THREAD  0x00010000 /* Set to add to same thread group.  */
+# define CLONE_NEWNS   0x00020000 /* Set to create new namespace.  */
+# define CLONE_SYSVSEM 0x00040000 /* Set to shared SVID SEM_UNDO semantics.  */
+# define CLONE_SETTLS  0x00080000 /* Set TLS info.  */
+# define CLONE_PARENT_SETTID 0x00100000 /* Store TID in userlevel buffer
+					   before MM copy.  */
+# define CLONE_CHILD_CLEARTID 0x00200000 /* Register exit futex and memory
+					    location to clear.  */
+# define CLONE_DETACHED 0x00400000 /* Create clone detached.  */
+# define CLONE_UNTRACED 0x00800000 /* Set if the tracing process can't
+				      force CLONE_PTRACE on this clone.  */
+# define CLONE_CHILD_SETTID 0x01000000 /* Store TID in userlevel buffer in
+					  the child.  */
 #endif
 
 /* The official definition.  */
