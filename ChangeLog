@@ -1,3 +1,12 @@
+2003-05-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* malloc/arena.c (arena_get2): Add atomic_write_barrier.
+	* malloc/thread-m.h: Include <atomic.h>.
+	(atomic_full_barrier): Provide default.
+	(atomic_read_barrier): Likewise.
+	(atomic_write_barrier): Likewise.
+	* sysdeps/ia64/bits/atomic.h (atomic_full_barrier): New #define.
+
 2003-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/sysdep.h: Define cfi_rel_offset and CFI_REL_OFFSET.

@@ -122,3 +122,5 @@ typedef uintmax_t uatomic_max_t;
        }								      \
      while (__builtin_expect (__val != __oldval, 0));			      \
      __oldval & __mask; })
+
+#define atomic_full_barrier() __sync_synchronize ()

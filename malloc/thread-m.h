@@ -31,6 +31,7 @@
 
 #if defined(_LIBC) /* The GNU C library, a special case of Posix threads */
 
+#include <atomic.h>
 #include <bits/libc-lock.h>
 
 #ifdef PTHREAD_MUTEX_INITIALIZER
@@ -305,5 +306,17 @@ typedef void *tsd_key_t;
 #define thread_atfork(prepare, parent, child) do {} while(0)
 
 #endif /* defined(NO_THREADS) */
+
+#ifndef atomic_full_barrier
+# define atomic_full_barrier() __asm ("" ::: "memory")
+#endif
+
+#ifndef atomic_read_barrier
+# define atomic_read_barrier() atomic_full_barrier ()
+#endif
+
+#ifndef atomic_write_barrier
+# define atomic_write_barrier() atomic_full_barrier ()
+#endif
 
 #endif /* !defined(_THREAD_M_H) */
