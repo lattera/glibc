@@ -514,7 +514,7 @@ sub parse_ulps {
       next;
     }
     if (/^Function: /) {
-      if (/\Real part of/) {
+      if (/Real part of/) {
 	s/Real part of //;
 	$type = 'real';
       } elsif (/Imaginary part of/) {
