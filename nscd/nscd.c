@@ -84,6 +84,8 @@ static const struct argp_option options[] =
   { "nthreads", 't', N_("NUMBER"), 0, N_("Start NUMBER threads") },
   { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
   { "statistic", 'g', NULL, 0, N_("Print current configuration statistic") },
+  { "invalidate", 'i', N_("TABLE"), 0,
+    N_("Invalidate the specified cache") },
   { "secure", 'S', N_("TABLE,yes"), 0, N_("Use separate cache for each user")},
   { NULL, 0, NULL, 0, NULL }
 };
@@ -209,6 +211,44 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
       receive_print_stats ();
       /* Does not return.  */
+
+    case 'i':
+      if (getuid () != 0)
+	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
+      else
+	{
+	  int sock = nscd_open_socket ();
+	  request_header req;
+	  ssize_t nbytes;
+
+	  if (sock == -1)
+	    exit (EXIT_FAILURE);
+
+	  if (strcmp (arg, "passwd") == 0)
+	    req.key_len = sizeof "passwd";
+	  else if (strcmp (arg, "group") == 0)
+	    req.key_len = sizeof "group";
+	  else if (strcmp (arg, "hosts") == 0)
+	    req.key_len = sizeof "hosts";
+	  else
+	    return ARGP_ERR_UNKNOWN;
+
+	  req.version = NSCD_VERSION;
+	  req.type = INVALIDATE;
+	  nbytes = TEMP_FAILURE_RETRY (write (sock, &req,
+					      sizeof (request_header)));
+	  if (nbytes != sizeof (request_header))
+	    {
+	      close (sock);
+	      exit (EXIT_FAILURE);
+	    }
+
+	  nbytes = TEMP_FAILURE_RETRY (write (sock, (void *)arg, req.key_len));
+
+	  close (sock);
+
+	  exit (nbytes != req.key_len ? EXIT_FAILURE : EXIT_SUCCESS);
+	}
 
     case 't':
       nthreads = atol (arg);

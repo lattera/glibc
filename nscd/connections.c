@@ -61,7 +61,8 @@ const char *serv2str[LASTREQ] =
   [GETHOSTBYADDR] = "GETHOSTBYADDR",
   [GETHOSTBYADDRv6] = "GETHOSTBYADDRv6",
   [SHUTDOWN] = "SHUTDOWN",
-  [GETSTAT] = "GETSTAT"
+  [GETSTAT] = "GETSTAT",
+  [INVALIDATE] = "INVALIDATE"
 };
 
 /* The control data structures for the services.  */
@@ -193,6 +194,22 @@ close_sockets (void)
   close (sock);
 }
 
+static void
+invalidate_cache (void *key)
+{
+  dbtype number;
+
+  if (strcmp (key, "passwd") == 0)
+    number = pwddb;
+  else if (strcmp (key, "group") == 0)
+    number = grpdb;
+  else if (strcmp (key, "hosts") == 0)
+    number = hstdb;
+  else return;
+
+  prune_cache (&dbs[number], LONG_MAX);
+}
+
 
 /* Handle new request.  */
 static void
@@ -272,9 +289,13 @@ cannot handle old request version %d; current version is %d"),
 
       pthread_rwlock_unlock (&db->lock);
     }
-  else
-    if (debug_level > 0)
-      dbg_log ("\t%s", serv2str[req->type]);
+  else if (debug_level > 0)
+    {
+      if (req->type == INVALIDATE)
+	dbg_log ("\t%s (%s)", serv2str[req->type], key);
+      else
+	dbg_log ("\t%s", serv2str[req->type]);
+    }
 
   /* Handle the request.  */
   switch (req->type)
@@ -313,11 +334,14 @@ cannot handle old request version %d; current version is %d"),
 
     case GETSTAT:
     case SHUTDOWN:
-      /* Accept shutdown and getstat only from root */
+    case INVALIDATE:
+      /* Accept shutdown, getstat and invalidate only from root */
       if (secure_in_use && uid == 0)
 	{
 	  if (req->type == GETSTAT)
 	    send_stats (fd, dbs);
+	  else if (req->type == INVALIDATE)
+	    invalidate_cache (key);
 	  else
 	    termination_handler (0);
 	}
@@ -338,6 +362,8 @@ cannot handle old request version %d; current version is %d"),
 	      {
 		if (req->type == GETSTAT)
 		  send_stats (fd, dbs);
+		else if (req->type == INVALIDATE)
+		  invalidate_cache (key);
 		else
 		  termination_handler (0);
 	      }
