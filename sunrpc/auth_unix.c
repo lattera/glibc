@@ -108,6 +108,7 @@ authunix_create (char *machname, uid_t uid, gid_t gid, int len,
   au = (struct audata *) mem_alloc (sizeof (*au));
   if (auth == NULL || au == NULL)
     {
+no_memory:
 #ifdef USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
 	(void) __fwprintf (stderr, L"%s",
@@ -115,6 +116,8 @@ authunix_create (char *machname, uid_t uid, gid_t gid, int len,
       else
 #endif
 	(void) fputs (_("authunix_create: out of memory\n"), stderr);
+      mem_free (auth, sizeof (*auth));
+      mem_free (au, sizeof (*au));
       return NULL;
     }
   auth->ah_ops = &auth_unix_ops;
@@ -143,16 +146,7 @@ authunix_create (char *machname, uid_t uid, gid_t gid, int len,
   au->au_origcred.oa_flavor = AUTH_UNIX;
   au->au_origcred.oa_base = mem_alloc ((u_int) len);
   if (au->au_origcred.oa_base == NULL)
-    {
-#ifdef USE_IN_LIBIO
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s",
-			   _("authunix_create: out of memory\n"));
-      else
-#endif
-	(void) fputs (_("authunix_create: out of memory\n"), stderr);
-      return NULL;
-    }
+    goto no_memory;
   memcpy(au->au_origcred.oa_base, mymem, (u_int) len);
 
   /*

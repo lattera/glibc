@@ -146,7 +146,11 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
 {
   RECSTREAM *rstrm = (RECSTREAM *) mem_alloc (sizeof (RECSTREAM));
   caddr_t tmp;
-  char *buf = mem_alloc (sendsize + recvsize + BYTES_PER_XDR_UNIT);
+  char *buf;
+
+  sendsize = fix_buf_size (sendsize);
+  recvsize = fix_buf_size (recvsize);
+  buf = mem_alloc (sendsize + recvsize + BYTES_PER_XDR_UNIT);
 
   if (rstrm == NULL || buf == NULL)
     {
@@ -156,6 +160,8 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
       else
 #endif
 	(void) fputs (_("xdrrec_create: out of memory\n"), stderr);
+      mem_free (rstrm, sizeof (RECSTREAM));
+      mem_free (buf, sendsize + recvsize + BYTES_PER_XDR_UNIT);
       /*
        *  This is bad.  Should rework xdrrec_create to
        *  return a handle, and in this case return NULL
@@ -165,8 +171,8 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
   /*
    * adjust sizes and allocate buffer quad byte aligned
    */
-  rstrm->sendsize = sendsize = fix_buf_size (sendsize);
-  rstrm->recvsize = recvsize = fix_buf_size (recvsize);
+  rstrm->sendsize = sendsize;
+  rstrm->recvsize = recvsize;
   rstrm->the_buffer = buf;
   tmp = rstrm->the_buffer;
   if ((size_t)tmp % BYTES_PER_XDR_UNIT)

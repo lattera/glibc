@@ -156,6 +156,9 @@ svcudp_bufcreate (sock, sendsz, recvsz)
       else
 #endif
 	(void) fputs (_("svcudp_create: out of memory\n"), stderr);
+      mem_free (xprt, sizeof (SVCXPRT));
+      mem_free (su, sizeof (*su));
+      mem_free (buf, ((MAX (sendsz, recvsz) + 3) / 4) * 4);
       return NULL;
     }
   su->su_iosz = ((MAX (sendsz, recvsz) + 3) / 4) * 4;

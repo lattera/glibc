@@ -183,6 +183,8 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
       else
 #endif
 	(void) fputs (_("svctcp_create: out of memory\n"), stderr);
+      mem_free (r, sizeof (*r));
+      mem_free (xprt, sizeof (SVCXPRT));
       return NULL;
     }
   r->sendsize = sendsize;
@@ -225,6 +227,8 @@ makefd_xprt (int fd, u_int sendsize, u_int recvsize)
       else
 #endif
 	(void) fputs (_("svc_tcp: makefd_xprt: out of memory\n"), stderr);
+      mem_free (xprt, sizeof (SVCXPRT));
+      mem_free (cd, sizeof (struct tcp_conn));
       return NULL;
     }
   cd->strm_stat = XPRT_IDLE;

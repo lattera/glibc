@@ -1,3 +1,19 @@
+2001-08-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/xdr_rec.c (xdrrec_create): Fix buf sizes before allocating
+	buf.  Free resources on failure.
+	* sunrpc/svc_unix.c (svcunix_create): Free resources on failure.
+	(makefd_xprt): Likewise.
+	* sunrpc/svc_udp.c (svcudp_bufcreate): Likewise.
+	* sunrpc/svc_tcp.c (svctcp_create, makefd_xprt): Likewise.
+	* sunrpc/auth_unix.c (authunix_create): Likewise.
+
+2001-08-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/strnlen.c: Remove.
+	* sysdeps/generic/strnlen.c: New.
+	* sysdeps/i386/i486/bits/string.h (strnlen): Remove.
+
 2001-08-21  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/i386/machine-sp.h (__thread_stack_pointer): Define this
