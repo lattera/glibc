@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,21 +26,18 @@
 
 	.text
 	.align	4
-	.globl	__libc_clone
-	.type	__libc_clone,@function
-	.weak	clone
-	__clone = __libc_clone
-	clone   = __libc_clone
+	.globl	__clone
+	.type	__clone,@function
 
-__libc_clone:
+__clone:
 	save	%sp,-96,%sp
 
 	/* sanity check arguments */
 	tst	%i0
-	be	__clone_syscall_error
-	tst	%i1
-	be	__clone_syscall_error
-	nop
+	be	.Lerror
+	 tst	%i1
+	be	.Lerror
+	 nop
 
 	/* Do the system call */
 	mov	%i1,%o1
@@ -48,23 +45,31 @@ __libc_clone:
 	set	__NR_clone,%g1
 	ta	0x10
 	bcs	__clone_syscall_error
-	tst	%o1
+	 tst	%o1
 	bne	__thread_start
-	nop
+	 nop
 	mov	%o0,%i0
 	ret
-	restore
+	 restore
 
-__clone_syscall_error:
+.Lerror:
 	call	__errno_location
-	set	EINVAL,%i0
+	 set	EINVAL,%i0
 	st	%i0,[%o0]
 	mov	-1,%i0
 	ret
-	restore
+	 restore
+
+	.size	__clone, .-__clone
+
+	.type	__thread_start,@function
 
 __thread_start:
 	call	%i0
-	mov	%i3,%o0
+	 mov	%i3,%o0
 	call	_exit,0
-	nop
+	 nop
+
+	.size	__thread_start, .-__thread_start
+
+weak_alias(__clone, clone)

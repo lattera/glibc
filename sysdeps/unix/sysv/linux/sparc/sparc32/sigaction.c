@@ -21,120 +21,65 @@
 #include <syscall.h>
 #include <sys/signal.h>
 #include <errno.h>
+#include <kernel_sigaction.h>
 
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  */
 int __libc_missing_rt_sigs;
 
-/* Commented out while I figure out what the fuck goes on */
-long ____sig_table [NSIG];
-#if 0
-
-/* The kernel will deliver signals in the old way if the signal
-   number is a positive number.  The kernel will deliver a signal
-   with the new stack layout if the signal number is a negative number.
-
-   Our sigaction code takes care of selecting the type of kernel we are
-   using at runtime.  */
-
-extern void ____sparc_signal_trampoline (int);
-
 int
-__trampoline_sigaction (int sig, struct sigaction *new, struct sigaction *old)
+__sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
 {
   int ret;
-  int need_to_hide_trick = 0;
-  __sighandler_t old_sh;
+  struct kernel_sigaction k_sigact, k_osigact;
 
-  if (new)
-    {
-      if (new->sa_handler != SIG_DFL && new->sa_handler != SIG_IGN)
-	{
-	  old_sh = ____sig_table[sig];
-	  ____sig_table[sig] = (long int) new->sa_handler;
-	  new->sa_handler = ____sparc_signal_trampoline;
-	  need_to_hide_trick = 1;
-	}
-    }
-  __asm__("or %%g0,%0,%%g1\n\t"
-	  "or %%g0,%1,%%o0\n\t"
-	  "or %%g0,%2,%%o1\n\t"
-	  "or %%g0,%3,%%o2\n\t"
-	  "t  0x10\n\t"
-	  "bcc 1f\n\t"
-	  "or %%o0, %%g0, %0\n\t"
-	  "sub %%g0, %%o0, %0\n\t"
-	  "1:"
-	  : "=r" (ret), "=r" ((long int) sig), "=r" ((long int) new),
-	    "=r" ((long int) old)
-	  : "0" (__NR_sigaction), "1" (sig), "2" (new), "3" (old)
-	  : "g1", "o0", "o1", "o2");
-
-  if (ret >= 0)
-    {
-      if (old && old->sa_handler == ____sparc_signal_trampoline)
-	{
-	  if (need_to_hide_trick)
-	    old->sa_handler = old_sh;
-	  else
-	    old->sa_handler = ____sig_table[sig];
-	}
-      if (need_to_hide_trick)
-	new->sa_handler = ____sig_table[sig];
-      return 0;
-    }
-  __set_errno (-ret);
-  return -1;
-}
-#else
-#    define __new_sigaction __sigaction
-#endif
-
-int
-__new_sigaction (int sig, __const struct sigaction *new, struct sigaction *old)
-{
-  int ret;
-
+  /* Magic to tell the kernel we are using "new-style" signals, in that
+     the signal table is not kept in userspace.  Not the same as the 
+     really-new-style rt signals.  */
   sig = -sig;
 
-  __asm__("or %%g0,%0,%%g1\n\t"
-	  "or %%g0,%1,%%o0\n\t"
-	  "or %%g0,%2,%%o1\n\t"
-	  "or %%g0,%3,%%o2\n\t"
-	  "t  0x10\n\t"
-	  "bcc 1f\n\t"
-	  "or %%o0, %%g0, %0\n\t"
-	  "sub %%g0,%%o0,%0\n\t"
-	  "1:"
-	  : "=r" (ret), "=r" ((long int) sig), "=r" ((long int) new),
-	    "=r" ((long int) old)
-	  : "0" (__NR_sigaction), "1" (sig), "2" (new), "3" (old)
-	  : "g1", "o0", "o1", "o2");
+  if (act)
+    {
+      k_sigact.sa_handler = act->sa_handler;
+      k_sigact.sa_mask = act->sa_mask.__val[0];
+      k_sigact.sa_flags = act->sa_flags;
+    }
+
+  {
+    register int r_syscallnr __asm__("%g1") = __NR_sigaction;
+    register int r_sig __asm__("%o0") = sig;
+    register struct kernel_sigaction *r_act __asm__("%o1");
+    register struct kernel_sigaction *r_oact __asm__("%o2");
+
+    r_act = act ? &k_sigact : NULL;
+    r_oact = oact ? &k_osigact : NULL;
+
+    __asm__ __volatile__("t 0x10\n\t"
+			 "bcc 1f\n\t"
+			 " nop\n\t"
+			 " sub %%g0,%%o0,%%o0\n"
+			 "1:"
+			 : "=r"(r_sig)
+			 : "r"(r_syscallnr), "r"(r_act), "r"(r_oact),
+			   "0"(r_sig));
+
+    ret = r_sig;
+  }
+
   if (ret >= 0)
-    return 0;
+    {
+      if (oact)
+	{
+	  oact->sa_handler = k_osigact.sa_handler;
+	  oact->sa_mask.__val[0] = k_osigact.sa_mask;
+	  oact->sa_flags = k_osigact.sa_flags;
+	  oact->sa_restorer = NULL;
+	}
+      return 0;
+    }
+
   __set_errno (-ret);
   return -1;
 }
-
-#if 0
-int
-__sigaction (int sig, __const struct sigaction *new, struct sigaction *old)
-{
-  static (*sigact_routine) (int, __const struct sigaction *, struct sigaction *);
-  int ret;
-  struct sigaction sa;
-
-  if (sigact_routine)
-    return (*sigact_routine) (sig, new, old);
-
-  ret = __new_sigaction (1, NULL, &sa);
-  if (ret == -1)
-    sigact_routine = __trampoline_sigaction;
-  else
-    sigact_routine = __new_sigaction;
-
-  return __sigaction (sig, new, old);
-}
-#endif
 
 weak_alias (__sigaction, sigaction);

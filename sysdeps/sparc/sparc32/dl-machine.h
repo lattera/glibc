@@ -21,8 +21,8 @@
 
 #include <assert.h>
 #include <string.h>
-#include <link.h>
 #include <sys/param.h>
+#include <elf/ldsodefs.h>
 
 
 /* Some SPARC opcodes we need to use for self-modifying code.  */
@@ -33,11 +33,36 @@
 #define OPCODE_SAVE_SP	0x9de3bfa8 /* save %sp, -(16+6)*4, %sp */
 
 
+/* To allow static progies to link properly, define these as weak.  */
+weak_extern(_dl_hwcap);
+weak_extern(_dl_hwcap_mask);
+
+
+/* Protect some broken versions of gcc from misinterpreting weak addresses.  */
+#define WEAKADDR(x)	({ __typeof(x) *_px = &x;			\
+			   __asm ("" : "=r" (_px) : "0" (_px));		\
+			   _px })
+
+
+/* Use a different preload file when running in 32-bit emulation mode
+   on a 64-bit host.  */
+#define LD_SO_PRELOAD ((_dl_hwcap & HWCAP_SPARC_V9) ? "/etc/ld.so.preload32" \
+		       : "/etc/ld.so.preload")
+
+
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (Elf32_Half e_machine)
 {
-  return e_machine == EM_SPARC;
+  if (e_machine == EM_SPARC)
+    return 1;
+  else if (e_machine == EM_SPARC32PLUS)
+    {
+      unsigned long *hwcap = WEAKADDR(_dl_hwcap);
+      return hwcap && (*hwcap & _dl_hwcap_mask & HWCAP_SPARC_V9);
+    }
+  else
+    return 0;
 }
 
 
@@ -240,7 +265,14 @@ static inline void
 elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
-  extern unsigned long _dl_hwcap;
+#ifndef RTLD_BOOTSTRAP
+  /* Note that we don't mask the hwcap here, as the flush is essential to
+     functionality on those cpu's that implement it.  */
+  unsigned long *hwcap = WEAKADDR(_dl_hwcap);
+  int do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
+#else
+  int do_flush = 0;
+#endif
 
   /* For thread safety, write the instructions from the bottom and
      flush before we overwrite the critical "b,a".  This of course
@@ -248,16 +280,12 @@ elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
      But we also can't tell if we _can_ use flush, so don't. */
 
   reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
-#ifndef RTLD_BOOTSTRAP
-  if (_dl_hwcap & HWCAP_SPARC_FLUSH)
+  if (do_flush)
     __asm __volatile ("flush %0+8" : : "r"(reloc_addr));
-#endif
 
   reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
-#ifndef RTLD_BOOTSTRAP
-  if (_dl_hwcap & HWCAP_SPARC_FLUSH)
+  if (do_flush)
     __asm __volatile ("flush %0+4" : : "r"(reloc_addr));
-#endif
 }
 
 /* Return the final value of a plt relocation.  */
@@ -278,6 +306,15 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  Elf32_Addr *const reloc_addr)
 {
+#ifndef RTLD_BOOTSTRAP
+  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
+     reference weak so static programs can still link.  This declaration
+     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
+     because rtld.c contains the common defn for _dl_rtld_map, which is
+     incompatible with a weak decl in the same file.  */
+  weak_extern (_dl_rtld_map);
+#endif
+
   if (ELF32_R_TYPE (reloc->r_info) == R_SPARC_RELATIVE)
     {
 #ifndef RTLD_BOOTSTRAP

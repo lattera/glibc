@@ -1,4 +1,31 @@
+1998-04-06  Jakub Jelinek <jj@sunsite.ms.mff.cuni.cz>
+
+	* elf/dl-runtime.c (fixup, profile_fixup): The final arg to
+	_dl_lookup_*symbol is DL_LOOKUP_NOPLT not ELF_MACHINE_JMP_SLOT.
+
+	* elf/elf.h (EM_SPARC64): Remove.
+	(EM_SPARC32PLUS, EM_SPARCV9): Add.
+	(HWCAP_SPARC_V9): Add.
+
+	* elf/ldsodefs.h (_dl_hwcap): Declare.
+	* sysdeps/sparc/sparc32/dl-machine.h (_dl_hwcap, _dl_hwcap_mask):
+	Weaken so dlopen from static progies works.
+	(WEAKADDR): New macro.
+	(elf_machine_matches_host): Accept EM_SPARC32PLUS on a v9 cpu.
+	(LD_SO_PRELOAD): New macro.
+	(elf_machine_fixup_plt): Cope with weak _dl_hwcap.
+	(elf_machine_rela): Weaken _dl_rtld_map.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Rename __libc_clone
+	to __clone, and remove the later's alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Copy to/from
+	the kernel's structure.
+
 1998-04-06  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/generic/libc-start.c: Allow init and fini to be null.
 
 	* sysdeps/sparc/sparc32/elf.S: Rewrite for __libc_start_main.
 	* sysdeps/sparc/sparc64/elf.S: Likewise.

@@ -40,12 +40,12 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
   __libc_multiple_libcs = dummy_addr && !_dl_starting_up;
 #endif
 
+  /* Set the global _environ variable correctly.  */
+  __environ = &argv[argc + 1];
+
   /* Register the destructor of the dynamic linker if there is any.  */
   if (rtld_fini != NULL)
     atexit (rtld_fini);
-
-  /* Set the global _environ variable correctly.  */
-  __environ = &argv[argc + 1];
 
   /* Call the initializer of the libc.  */
 #ifdef PIC
@@ -54,15 +54,17 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
 #endif
   __libc_init_first (argc, argv, __environ);
 
-  /* Call the initializer of the program.  */
+  /* Register the destructor of the program, if any.  */
+  if (fini)
+    atexit (fini);
+
+  /* Call the initializer of the program, if any.  */
 #ifdef PIC
   if (_dl_debug_impcalls)
     _dl_debug_message (1, "\ninitialize program: ", argv[0], "\n\n", NULL);
 #endif
-  (*init) ();
-
-  /* Register the destructor of the program.  */
-  atexit (fini);
+  if (init)
+    (*init) ();
 
 #ifdef PIC
   if (_dl_debug_impcalls)

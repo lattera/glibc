@@ -26,13 +26,10 @@
 
 	.text
 	.align	4
-	.globl	__libc_clone
-	.type	__libc_clone,@function
-	.weak	clone
-	__clone = __libc_clone
-	clone   = __libc_clone
+	.globl	__clone
+	.type	__clone,@function
 
-__libc_clone:
+__clone:
 	save	%sp,-160,%sp
 
 	/* sanity check arguments */
@@ -77,7 +74,7 @@ __libc_clone:
 	mov	-1,%i0
 	ret
 	 restore
-	.size __libc_clone, .-__libc_clone
+	.size __clone, .-__clone
 
 	.type __thread_start,@function
 __thread_start:
@@ -88,3 +85,5 @@ __thread_start:
 	call	_exit,0
 	 nop
 	.size __thread_start, .-__thread_start
+
+weak_alias(__clone, clone)

@@ -140,6 +140,9 @@ extern int _dl_debug_files;
 /* Expect cache ID.  */
 extern int _dl_correct_cache_id;
 
+/* Mask for hardware capabilities that are available.  */
+extern unsigned long int _dl_hwcap;
+
 /* Mask for important hardware capabilities we honour. */
 extern unsigned long int _dl_hwcap_mask;
 
