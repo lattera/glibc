@@ -654,7 +654,11 @@ search_dir (const struct dir_entry *entry)
       if (((strncmp (direntry->d_name, "lib", 3) != 0
 	    && strncmp (direntry->d_name, "ld-", 3) != 0)
 	   || strstr (direntry->d_name, ".so") == NULL)
-	  && !is_hwcap_platform (direntry->d_name))
+	  && (
+#ifdef _DIRENT_HAVE_D_TYPE
+	      direntry->d_type == DT_REG ||
+#endif
+	      !is_hwcap_platform (direntry->d_name)))
 	continue;
       len = strlen (entry->path) + strlen (direntry->d_name);
       if (len > file_name_len)
@@ -680,9 +684,9 @@ search_dir (const struct dir_entry *entry)
 	lstat_buf.st_mode = DTTOIF (direntry->d_type);
       else
 #endif
-	if (lstat64 (real_file_name, &lstat_buf))
+	if (__builtin_expect (lstat64 (real_file_name, &lstat_buf), 0))
 	  {
-	    error (0, errno, _("Can't lstat %s"), file_name);
+	    error (0, errno, _("Cannot lstat %s"), file_name);
 	    continue;
 	  }
 
@@ -691,10 +695,10 @@ search_dir (const struct dir_entry *entry)
         {
 	  /* In case of symlink, we check if the symlink refers to
 	     a directory. */
-	  if (stat64 (real_file_name, &stat_buf))
+	  if (__builtin_expect (stat64 (real_file_name, &stat_buf), 0))
 	    {
 	      if (opt_verbose)
-		error (0, errno, _("Can't stat %s"), file_name);
+		error (0, errno, _("Cannot stat %s"), file_name);
 	      continue;
 	    }
 	  is_dir = S_ISDIR (stat_buf.st_mode);
@@ -718,6 +722,20 @@ search_dir (const struct dir_entry *entry)
 	    }
 	  else
 	    {
+#ifdef _DIRENT_HAVE_D_TYPE
+	      /* We have filled in lstat only #ifndef
+		 _DIRENT_HAVE_D_TYPE.  Fill it in if needed.  */
+	      if (direntry->d_type != DT_UNKNOWN
+		  && __builtin_expect (lstat64 (real_file_name, &lstat_buf),
+				       0))
+		{
+		  error (0, errno, _("Cannot lstat %s"), file_name);
+		  free (new_entry->path);
+		  free (new_entry);
+		  continue;
+		}
+#endif
+
 	      new_entry->ino = lstat_buf.st_ino;
 	      new_entry->dev = lstat_buf.st_dev;
 	    }
