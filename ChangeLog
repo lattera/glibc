@@ -1,3 +1,11 @@
+2000-06-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/htonl.S: New file.
+	* sysdeps/ia64/htons.S: New file.
+	* sysdeps/ia64/memcpy.S: Replace with version which does not use
+	floating point registers.
+	Patches by Dan Pop <Dan.Pop@cern.ch>.
+
 2000-06-30  Andreas Jaeger  <aj@suse.de>
 
 	* posix/Makefile (tests): tst-exec and tst-spawn only work with
