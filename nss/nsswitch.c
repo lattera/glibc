@@ -135,7 +135,7 @@ __nss_database_lookup (const char *database, const char *alternate_name,
 
 
 /* -1 == not found
-    0 == adjusted for next function
+    0 == function found
     1 == finished */
 int
 __nss_lookup (service_user **ni, const char *fct_name, void **fctp)

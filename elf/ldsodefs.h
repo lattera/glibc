@@ -53,20 +53,22 @@ enum r_dir_status { unknown, nonexisting, existing };
 
 struct r_search_path_elem
   {
-    const char *dirname;
-
-    size_t dirnamelen;
-    enum r_dir_status dirstatus;
-
-    size_t machdirnamelen;
-    enum r_dir_status machdirstatus;
+    /* This link is only used in the `all_dirs' member of `r_search_path'.  */
+    struct r_search_path_elem *next;
 
     /* Strings saying where the definition came from.  */
     const char *what;
     const char *where;
 
-    /* This link is only used in the `all_dirs' member of `r_search_path'.  */
-    struct r_search_path_elem *next;
+    const char *dirname;
+
+    enum r_dir_status exists[0];
+  };
+
+struct r_strlenpair
+  {
+    const char *str;
+    size_t len;
   };
 
 
@@ -382,6 +384,9 @@ extern void _dl_show_auxv (void);
 /* Return all environment variables starting with `LD_', one after the
    other.  */
 extern char *_dl_next_ld_env_entry (char ***position);
+
+/* Return an array with the names of the important hardware capabilities.  */
+extern char **_dl_important_hwcap (size_t *sz);
 
 __END_DECLS
 

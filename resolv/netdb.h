@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -49,13 +49,11 @@ extern int h_errno;
 extern int *__h_errno_location __P ((void)) __attribute__ ((__const__));
 
 #ifdef _LIBC
-/* Retain some binary compatibility with old libraries by having both the
-   global variable and the per-thread variable set on error.  */
 # ifdef _LIBC_REENTRANT
 static inline int
 __set_h_errno (int __err)
 {
-  return *__h_errno_location () = h_errno = __err;
+  return *__h_errno_location () = __err;
 }
 # else
 #  define __set_h_errno(x) (h_errno = (x))

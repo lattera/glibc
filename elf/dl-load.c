@@ -331,6 +331,10 @@ _dl_init_paths (const char *llp)
      variable.  */
   struct link_map *l;
 
+  /* Names of important hardware capabilities.  */
+  char **hwcap_names;
+  size_t nhwcap_names;
+
   /* Number of elements in the library path.  */
   size_t nllp;
 
@@ -346,6 +350,10 @@ _dl_init_paths (const char *llp)
     }
   else
     nllp = 0;
+
+  /* Get the capabilities.  */
+  hwcap_names = _dl_important_hwcaps (&nhwcap_names,
+				      _dl_platform, _dl_platformlen);
 
   l = _dl_loaded;
   if (l != NULL)

@@ -1,5 +1,7 @@
 1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nss/nsswitch.c (__nss_lookup): Adjust comment.
+
 	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): New
 	function.
 
