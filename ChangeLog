@@ -1,3 +1,8 @@
+2003-05-07  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/syscall.S: Add DWARF2 unwind
+	information.
+
 2003-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/oldiofdopen.c (_IO_old_fdopen): Use _IO_old_init not _IO_init.
