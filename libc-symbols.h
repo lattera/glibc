@@ -143,8 +143,9 @@ extern const char _libc_intl_domainname[];
 #define weak_alias(original, alias)	\
   .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
 
-/* Declare SYMBOL to be weak.  */
-#define weak_symbol(symbol)	.weakext C_SYMBOL_NAME (symbol)
+/* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
+#define weak_extern(symbol)	\
+  .weakext C_SYMBOL_NAME (symbol)
 
 #else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
@@ -154,49 +155,65 @@ extern const char _libc_intl_domainname[];
   .weak C_SYMBOL_NAME (alias);	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 
-/* Declare SYMBOL to be weak.  */
-#define weak_symbol(symbol)	.weak C_SYMBOL_NAME (symbol)
+
+/* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
+#define weak_extern(symbol)	\
+  .weak C_SYMBOL_NAME (symbol)
 
 #endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
 #else /* ! ASSEMBLER */
 
 #ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#define weak_symbol(symbol)	asm (".weakext " __SYMBOL_PREFIX #symbol);
-#define weak_alias(original, alias) \
+#define weak_extern_asm(symbol)	asm (".weakext " __SYMBOL_PREFIX #symbol);
+#define weak_alias_asm(original, alias) \
   asm (".weakext " __SYMBOL_PREFIX #alias ", " __SYMBOL_PREFIX #original);
 #else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
-#define weak_symbol(symbol)	asm (".weak " __SYMBOL_PREFIX #symbol);
-#define weak_alias(original, alias) \
+#define weak_extern_asm(symbol)	asm (".weak " __SYMBOL_PREFIX #symbol);
+#define weak_alias_asm(original, alias) \
   asm (".weak " __SYMBOL_PREFIX #alias "\n" \
        __SYMBOL_PREFIX #alias " = " __SYMBOL_PREFIX #original);
 #endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
+
+#define weak_alias(o, a) weak_alias_asm (o, a)
+#define weak_extern(symbol) weak_extern_asm (symbol)
+
 #endif /* ! ASSEMBLER */
 #else
 #define	weak_alias(original, alias) strong_alias(original, alias)
-#define weak_symbol(symbol)	/* Do nothing.  */
+#define weak_extern(symbol)	/* Do nothing; the ref will be strong.  */
 #endif
 
 
 #if (!defined (ASSEMBLER) && \
-     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8)))
-/* GCC 2.8 and later has special syntax for weak symbols and aliases.
+     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)))
+/* GCC 2.7 and later has special syntax for weak symbols and aliases.
    Using that is better when possible, because the compiler and assembler
    are better clued in to what we are doing.  */
 #undef	strong_alias
 #define strong_alias(name, aliasname) \
-  __typeof (name) aliasname __attribute__ ((alias (#name)));
+  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
 
 #ifdef HAVE_WEAK_SYMBOLS
-#undef	weak_symbol
-#define weak_symbol(name) \
-  extern __typeof (name) name __attribute__ ((weak));
 #undef	weak_alias
 #define weak_alias(name, aliasname) \
-  __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
-#endif	/* HAVE_WEAK_SYMBOLS.  */
-#endif	/* Not ASSEMBLER, and GCC 2.8 or later.  */
+  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
+/* This comes between the return type and function name in
+   a function definition to make that definition weak.  */
+#define weak_function __attribute__ ((weak))
+
+#endif	/* HAVE_WEAK_SYMBOLS.  */
+#endif	/* Not ASSEMBLER, and GCC 2.7 or later.  */
+
+
+#ifndef weak_function
+/* If we do not have the __attribute__ ((weak)) syntax, there is no way we
+   can define functions as weak symbols.  The compiler will emit a `.globl'
+   directive for the function symbol, and a `.weak' directive in addition
+   will produce an error from the assembler.  */
+#define weak_function /* empty */
+#endif
 
 
 /* When a reference to SYMBOL is encountered, the linker will emit a
@@ -260,8 +277,7 @@ extern const char _libc_intl_domainname[];
 #define symbol_set_declare(set)	\
   extern void *const __start_##set __attribute__ ((__weak__));		\
   extern void *const __stop_##set __attribute__ ((__weak__));		\
-  /* Gratuitously repeat weak decl, in case using broken GCC (<2.8).  */\
-  weak_symbol (__start_##set) weak_symbol (__stop_##set)
+  weak_extern (__start_##set) weak_extern (__stop_##set)
 
 /* Return a pointer (void *const *) to the first element of SET.  */
 #define symbol_set_first_element(set)	(&__start_##set)

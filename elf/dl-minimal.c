@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 
 static void *alloc_ptr, *alloc_end, *alloc_last_block;
 
-void *
+void * weak_function
 malloc (size_t n)
 {
   extern int _dl_zerofd;
@@ -71,20 +71,18 @@ malloc (size_t n)
   alloc_ptr += n;
   return alloc_last_block;
 }
-weak_symbol (malloc)
 
 /* This will rarely be called.  */
-void
+void weak_function
 free (void *ptr)
 {
   /* We can free only the last block allocated.  */
   if (ptr == alloc_last_block)
     alloc_ptr = alloc_last_block;
 }
-weak_symbol (free)
 
 /* This is only called with the most recent block returned by malloc.  */
-void *
+void * weak_function
 realloc (void *ptr, size_t n)
 {
   void *new;
@@ -94,31 +92,27 @@ realloc (void *ptr, size_t n)
   assert (new == ptr);
   return new;
 }
-weak_symbol (realloc)
 
 /* Avoid signal frobnication in setjmp/longjmp.  Keeps things smaller.  */
 
 #include <setjmp.h>
 
-int __sigjmp_save (sigjmp_buf env, int savemask)
+int weak_function
+__sigjmp_save (sigjmp_buf env, int savemask)
 { env[0].__mask_was_saved = savemask; return 0; }
-weak_symbol (__sigjmp_save)
 
-void
+void weak_function
 longjmp (jmp_buf env, int val) { __longjmp (env[0].__jmpbuf, val); }
-weak_symbol (longjmp)
-
 
 /* Define our own stub for the localization function used by strerror.
    English-only in the dynamic linker keeps it smaller.  */
 
-char *
+char * weak_function
 __dgettext (const char *domainname, const char *msgid)
 {
   assert (domainname == _libc_intl_domainname);
   return (char *) msgid;
 }
-weak_symbol (__dgettext)
 weak_alias (__dgettext, dgettext)
 
 #ifndef NDEBUG
@@ -127,7 +121,7 @@ weak_alias (__dgettext, dgettext)
    If we are linked into the user program (-ldl), the normal __assert_fail
    defn can override this one.  */
 
-void
+void weak_function
 __assert_fail (const char *assertion,
 	       const char *file, unsigned int line, const char *function)
 {
@@ -140,9 +134,8 @@ __assert_fail (const char *assertion,
 		    NULL);
 
 }
-weak_symbol (__assert_fail)
 
-void
+void weak_function
 __assert_perror_fail (int errnum,
 		      const char *file, unsigned int line,
 		      const char *function)
@@ -155,6 +148,5 @@ __assert_perror_fail (int errnum,
 		    "Unexpected error: ", strerror (errnum), "\n", NULL);
 
 }
-weak_symbol (__assert_perror_fail)
 
 #endif

@@ -338,6 +338,9 @@ noconv:
 
 /* External user entry point.  */
 INT
+#ifdef weak_function
+weak_function
+#endif
 strtol (nptr, endptr, base)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
@@ -345,10 +348,3 @@ strtol (nptr, endptr, base)
 {
   return INTERNAL (strtol) (nptr, endptr, base, 0);
 }
-#ifdef weak_symbol
-/* We need to weaken this symbol because some the the defined
-   functions do not come from ANSI.  The indirection is necessary
-   because `strtol' might be a macro.  */
-#define weak_this(x) weak_symbol (x)
-weak_this (strtol)
-#endif

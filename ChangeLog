@@ -1,9 +1,50 @@
+Mon Jul  8 02:14:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* libc-symbols.h [GCC >= 2.7] (strong_alias, weak_alias): Use extern
+	storage class.  GCC gives an error for non-extern data defns with the
+	alias attribute.
+
 Mon Jul  8 01:37:34 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 
 	* string/argz-insert.c (__argz_insert): (__argz_insert): Use
 	memmove instead of memcpy for possible overlapping strings.
 
+Mon Jul  8 00:11:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* libc-symbols.h (weak_function): New macro.
+	For GCC 2.7+ define as __attribute__ ((weak)).
+	* elf/dl-minimal.c: Use weak_function as keyword in function defns
+ 	instead of weak_symbol (NAME) after the defn.
+	* stdlib/strtol.c: Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela) [RTLD_BOOTSTRAP]:
+	If this is defined, don't declare _dl_rtld_map as weak, and
+	don't check for MAP pointing to it.  RESOLVE is always null in this
+	case, so test with #ifdef instead of if.
+
+	* libc-symbols.h (symbol_set_declare): Use weak_extern instead of
+	weak_symbol.
+	* csu/initfini.c (_init): Likewise.
+	* locale/setlocale.c (DEFINE_CATEGORY): Likewise.
+	* misc/efgcvt_r.c: Likewise.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+
+	* libc-symbols.h [ASSEMBLER] (weak_symbol): Macro removed.
+	It was not used in any assembler code.
+	(weak_symbol_asm): Renamed to weak_extern_asm.
+	(weak_extern): New macro replaces weak_symbol for weak extern refs;
+	define to weak_extern_asm for [!ASSEMBLER].
+
 Sun Jul  7 18:42:06 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* libc-symbols.h [! ASSEMBLER] [HAVE_WEAK_SYMBOLS] (weak_symbol_asm,
+	weak_alias_asm): New macros, renamed from weak_symbol/weak_alias;
+	define those now as aliases.
+	Change conditional to use __attribute__ syntax for GCC 2.7+, not 2.8+
+	[GCC >= 2.7] [HAVE_WEAK_SYMBOLS] (weak_symbol): Do weak_symbol_asm
+	after GCC weak attribute decl.
 
 	* sysdeps/gnu/errlist.awk (BEGIN): Initialize associative array ALIAS,
 	map EWOULDBLOCK->EAGAIN, EDEADLOCK->EDEADLK.
@@ -33,7 +74,6 @@ Fri May 31 11:48:46 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	(ensure_unwrapped, ensure_wrapped): New functions.
 	(line_wrap_set_lmargin, line_wrap_set_rmargin,
 	line_wrap_set_wmargin, line_wrap_point): Use __line_wrap_update.
-
 
 	* stdio/linewrap.h (struct line_wrap_data): Rename POINT field to
 	POINT_COL. Add POINT_OFFS field.

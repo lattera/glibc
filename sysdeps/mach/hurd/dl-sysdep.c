@@ -271,7 +271,7 @@ _dl_sysdep_message (const char *msg, ...)
    dynamic linker re-relocates itself to be user-visible (for -ldl),
    it will get the user's definition (i.e. usually libc's).  */
 
-int
+int weak_function
 __open (const char *file_name, int mode, ...)
 {
   enum retry_type doretry;
@@ -496,7 +496,7 @@ __open (const char *file_name, int mode, ...)
     }
 }
 
-int
+int weak_function
 __close (int fd)
 {
   if (fd != (int) MACH_PORT_NULL)
@@ -504,7 +504,7 @@ __close (int fd)
   return 0;
 }
 
-caddr_t
+caddr_t weak_function
 __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
@@ -546,7 +546,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   return err ? (caddr_t) __hurd_fail (err) : (caddr_t) mapaddr;
 }
 
-void
+void weak_function
 _exit (int status)
 {
   __proc_mark_exit (_dl_hurd_data->portarray[INIT_PORT_PROC],
@@ -554,11 +554,6 @@ _exit (int status)
   while (__task_terminate (__mach_task_self ()))
     __mach_task_self_ = (__mach_task_self) ();
 }
-
-weak_symbol (_exit)
-weak_symbol (__open)
-weak_symbol (__close)
-weak_symbol (__mmap)
 
 
 /* This function is called by interruptible RPC stubs.  For initial
@@ -566,7 +561,7 @@ weak_symbol (__mmap)
    weak, the real defn in libc.so will override it if we are linked into
    the user program (-ldl).  */
 
-error_t
+error_t weak_function
 _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 			 mach_msg_option_t option,
 			 mach_msg_size_t send_size,
@@ -578,4 +573,3 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
   return __mach_msg (msg, option, send_size, rcv_size, rcv_name,
 		     timeout, notify);
 }
-weak_symbol (_hurd_intr_rpc_mach_msg)
