@@ -1,3 +1,8 @@
+2004-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (get_mapping): No need to check timestamp if
+	nscd_certainly_running is nonzero.
+
 2004-10-02  Simon Josefsson  <jas@extundo.com>
 
 	[BZ #420]

@@ -160,7 +160,8 @@ get_mapping (request_type type, const char *key,
   if (head.version != DB_VERSION || head.header_size != sizeof (head)
       /* This really should not happen but who knows, maybe the update
 	 thread got stuck.  */
-      || head.timestamp + MAPPING_TIMEOUT < time (NULL))
+      || (! head.nscd_certainly_running
+	  && head.timestamp + MAPPING_TIMEOUT < time (NULL)))
     goto out_close;
 
   size_t size = (sizeof (head) + roundup (head.module * sizeof (ref_t), ALIGN)
