@@ -26,14 +26,17 @@ Cambridge, MA 02139, USA.  */
 #ifdef MOTOROLA_SYNTAX
 #define d0 %d0
 #define d1 %d1
-#define popl pop.l
-#define pushl push.l
+#define PUSH(reg)	move.l reg, -(%esp)
+#define POP(reg)	move.l (%esp)+, reg
+#else
+#define PUSH(reg)	movel reg, sp@-
+#define POP(reg)	movel sp@+, reg
 #endif
 
 ENTRY (_setjmp)
-	popl d0			/* Pop return PC.  */
-	popl d1			/* Pop jmp_buf argument.  */
-	pushl #0		/* Push second argument of zero.  */
-	pushl d1		/* Push back first argument.  */
-	pushl d0		/* Push back return PC.  */
+	POP (d0)		/* Pop return PC.  */
+	POP (d1)		/* Pop jmp_buf argument.  */
+	PUSH (#0)		/* Push second argument of zero.  */
+	PUSH (d1)		/* Push back first argument.  */
+	PUSH (d0)		/* Push back return PC.  */
 	jmp C_SYMBOL_NAME (__sigsetjmp)
