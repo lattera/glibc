@@ -21,10 +21,14 @@
 #define	_SYS_KLOG_H	1
 #include <features.h>
 
+__BEGIN_DECLS
+
 /* Control the kernel's logging facility.  This corresponds exactly to
    the kernel's syslog system call, but that name is easily confused
    with the user-level syslog facility, which is something completely
    different.  */
 extern int klogctl __P ((int __type, char *__bufp, int __len));
+
+__END_DECLS
 
 #endif /* _SYS_KLOG_H */

@@ -134,7 +134,7 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
   nbytes = read (file_fd, &last_entry, sizeof (struct utmp));
   flock (file_fd, LOCK_UN);
 
-  if (nbytes!= sizeof (struct utmp))
+  if (nbytes != sizeof (struct utmp))
     {
       file_offset = -1l;
       *result = NULL;
@@ -174,6 +174,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
 	  *result = NULL;
 	  return -1;
 	}
+      file_offset += sizeof (struct utmp);
 
       /* Stop if we found a user or login entry.  */
       if (
@@ -184,8 +185,6 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
 #endif
 	  !strncmp (line->ut_line, last_entry.ut_line, sizeof line->ut_line))
 	break;
-
-      file_offset += sizeof (struct utmp);
     }
 
   memcpy (buffer, &last_entry, sizeof (struct utmp));
@@ -214,11 +213,10 @@ internal_getutid_r (const struct utmp *id, struct utmp *buffer)
 	      file_offset = -1l;
 	      return -1;
 	    }
+	  file_offset += sizeof (struct utmp);
 
 	  if (id->ut_type == buffer->ut_type)
 	    break;
-
-	  file_offset += sizeof (struct utmp);
 	}
     }
   else
@@ -236,14 +234,14 @@ internal_getutid_r (const struct utmp *id, struct utmp *buffer)
 	      file_offset = -1l;
 	      return -1;
 	    }
+	  file_offset += sizeof (struct utmp);
+
 	  if ((   buffer->ut_type == INIT_PROCESS
 	       || buffer->ut_type == LOGIN_PROCESS
 	       || buffer->ut_type == USER_PROCESS
 	       || buffer->ut_type == DEAD_PROCESS)
 	      && strncmp (buffer->ut_id, id->ut_id, sizeof id->ut_id) == 0)
 	    break;
-
-	  file_offset += sizeof (struct utmp);
 	}
     }
 
@@ -347,7 +345,10 @@ pututline_file (const struct utmp *data)
       pbuf = NULL;
     }
   else
-    pbuf = (struct utmp *) data;
+    {
+      file_offset += sizeof (struct utmp);
+      pbuf = (struct utmp *) data;
+    }
 
    /* And unlock the file.  */
   (void) flock (file_fd, LOCK_UN);

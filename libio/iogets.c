@@ -31,13 +31,17 @@ _IO_gets (buf)
 {
   _IO_size_t count;
   int ch;
+  char *retval;
 
   __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
 			       _IO_stdin);
   _IO_flockfile (_IO_stdin);
   ch = _IO_getc_unlocked (_IO_stdin);
   if (ch == EOF)
-    return NULL;
+    {
+      retval = NULL;
+      goto unlock_return;
+    }
   if (ch == '\n')
     count = 0;
   else
@@ -45,11 +49,16 @@ _IO_gets (buf)
       buf[0] = (char)ch;
       count = _IO_getline (_IO_stdin, buf + 1, INT_MAX, '\n', 0) + 1;
       if (_IO_stdin->_IO_file_flags & _IO_ERR_SEEN)
-	return NULL;
+	{
+	  retval = NULL;
+	  goto unlock_return;
+	}
     }
-  __libc_cleanup_region_end (1);
   buf[count] = 0;
-  return buf;
+  retval = buf;
+unlock_return:
+  __libc_cleanup_region_end (1);
+  return retval;
 }
 
 weak_alias (_IO_gets, gets)

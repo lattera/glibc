@@ -100,4 +100,4 @@ extern __caddr_t mremap __P ((__caddr_t __addr, size_t __old_len,
 __END_DECLS
 
 
-#endif	/* sys/mman.h */
+#endif	/* _SYS_MMAN_H */

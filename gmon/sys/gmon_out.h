@@ -25,11 +25,15 @@
    a sequence of records.  Each record starts with a one-byte tag
    identifying the type of records, followed by records specific data. */
 
-#ifndef _SYS_GMON_OUT_H_
-#define _SYS_GMON_OUT_H_
+#ifndef _SYS_GMON_OUT_H
+
+#define _SYS_GMON_OUT_H	1
+#include <features.h>
 
 #define	GMON_MAGIC	"gmon"	/* magic cookie */
 #define GMON_VERSION	1	/* version number */
+
+__BEGIN_DECLS
 
 /*
  * Raw header as it appears on file (without padding).  This header
@@ -62,4 +66,6 @@ struct gmon_cg_arc_record {
   int count;				/* number of arc traversals */
 };
 
-#endif /* !_SYS_GMON_OUT_H_ */
+__END_DECLS
+
+#endif /* _SYS_GMON_OUT_H */

@@ -47,6 +47,9 @@ subdirs := $(filter-out $(add-ons),$(subdirs))
 # Make sure both stdio and libio get in, whichever is in use.
 subdirs += stdio libio
 
+# The same must be true for the malloc directories.
+subdirs += malloc new-malloc
+
 sysdep-Subdir-files := $(wildcard $(addsuffix /Subdirs,$(sysdep_dirs)))
 ifdef sysdep-Subdir-files
 subdirs := $(sort $(subdirs) \

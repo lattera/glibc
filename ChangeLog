@@ -1,3 +1,76 @@
+Tue Dec 10 02:17:31 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf_fp.c (__guess_grouping): Fix of by one
+	error in computation of number of groups.
+	Patch sent by Harald Schreiber <Harald.Schreiber@post.rwth-aachen.de>.
+
+Tue Dec 10 01:50:07 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h: Set version to 1.99.
+
+	* Make-dist (routines): Add malloc and new-malloc.
+
+	* Makeconfig: Allow Makefiles to set $(CPPFLAGS-$(<F)) and
+	$(CPPFLAGS-$(@F)) to be added to CPPFLAGS.
+	Same for $(CFLAGS-$(@F)) and CFLAGS.
+
+	* gmon/sys/gmon_out.h: Add __BEGIN_DECLS/__END_DECLS.  Unify
+	layout.
+	* io/sys/poll.h: Likewise.
+	* sysdeps/stub/sys/ipb_buf.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/perm.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/vm86.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/ipc_buf.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/kdaemon.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/klog.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/module.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mount.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/msq_buf.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/param.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/reboot.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sem_buf.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/shm_buf.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/socketcall.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/swap.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysctl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/timex.h: Likewise.
+	* sysvipc/sys/sem.h: Likewise.
+	* sysvipc/sys/shm.h: Likewise.
+
+	* new-malloc/Makefile: Set CPPFLAGS-malloc.o.
+	* new-malloc/malloc.c: Remove problem with 64 bits pointers.
+	Add statistics for threads.
+	* new-malloc/malloc.h: Likewise.
+	* new-malloc/thread-m.h: Likewise.
+
+	* time/strftime.c: Declare tzname if if HAVE_TZNAME is defined.
+
+	* time/strptime.c: Update copyright.
+
+Mon Dec  9 14:51:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Make-dist: Make sure both malloc directories get distributed.
+
+Sun Dec  8 23:14:10 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/iogets.c (_IO_gets): Fix early returns to not leave the
+	stream locked.
+
+Sat Dec  7 22:08:09 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/module.h: Enclose declarations in
+	__BEGIN_DECLS/__END_DECLS.
+
+Sat Dec  7 14:23:12 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* login/utmp_file.c: Consistently set file_offset to the position
+	after the entry just read.
+
 Mon Dec  9 03:39:30 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* config.make.in (defines): Add @USE_NEW_MALLOC@.

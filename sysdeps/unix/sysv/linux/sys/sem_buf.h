@@ -1,26 +1,27 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_SEM_BUF_H
-#define _SYS_SEM_BUF_H
 
+#define _SYS_SEM_BUF_H	1
 #include <features.h>
+
 #include <sys/types.h>
 
 /* Flags for `semop'.  */
@@ -66,21 +67,22 @@ union semun
 #define SEM_STAT 18
 #define SEM_INFO 19
 
-struct  seminfo {
-    int semmap;
-    int semmni;
-    int semmns;
-    int semmnu;
-    int semmsl;
-    int semopm;
-    int semume;
-    int semusz;
-    int semvmx;
-    int semaem;
+struct  seminfo
+{
+  int semmap;
+  int semmni;
+  int semmns;
+  int semmnu;
+  int semmsl;
+  int semopm;
+  int semume;
+  int semusz;
+  int semvmx;
+  int semaem;
 };
 
 #endif /* __USE_MISC */
 
 __END_DECLS
 
-#endif /* sys/sem_buf.h */
+#endif /* _SYS_SEM_BUF_H */

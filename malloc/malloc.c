@@ -266,12 +266,6 @@
 
 
 
-/* Macros for handling mutexes and thread-specific data.  This is
-   included first, because some thread-related header files (such as
-   pthread.h) should be included before any others. */
-#include "thread-m.h"
-
-
 /* Preliminaries */
 
 #ifndef __STD_C
@@ -299,6 +293,11 @@
 #else
 #include <sys/types.h>
 #endif
+
+/* Macros for handling mutexes and thread-specific data.  This is
+   included early, because some thread-related header files (such as
+   pthread.h) should be included before any others. */
+#include "thread-m.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -597,9 +596,13 @@ do {                                                                          \
 /* #define HAVE_USR_INCLUDE_MALLOC_H */
 
 #if HAVE_USR_INCLUDE_MALLOC_H
-#include "/usr/include/malloc.h"
+# include "/usr/include/malloc.h"
 #else
-#include "malloc.h"
+# ifdef _LIBC
+#  include "malloc.h"
+# else
+#  include "ptmalloc.h"
+# endif
 #endif
 
 
@@ -1106,6 +1109,10 @@ typedef struct malloc_chunk* mbinptr;
 typedef struct _arena {
   mbinptr av[2*NAV + 2];
   struct _arena *next;
+  size_t size;
+#if THREAD_STATS
+  long stat_lock_direct, stat_lock_loop, stat_lock_wait;
+#endif
   mutex_t mutex;
 } arena;
 
@@ -1116,8 +1123,10 @@ typedef struct _arena {
    multiple threads. */
 
 typedef struct _heap_info {
-  arena *ar_ptr;
-  size_t size;
+  arena *ar_ptr; /* Arena for this heap. */
+  struct _heap_info *prev; /* Previous heap. */
+  size_t size;   /* Current size in bytes. */
+  size_t pad;    /* Make sure the following data is properly aligned. */
 } heap_info;
 
 
@@ -1128,11 +1137,17 @@ typedef struct _heap_info {
 #if __STD_C
 static void      chunk_free(arena *ar_ptr, mchunkptr p);
 static mchunkptr chunk_alloc(arena *ar_ptr, INTERNAL_SIZE_T size);
-static int       arena_trim(arena *ar_ptr, size_t pad);
+static int       main_trim(size_t pad);
+#ifndef NO_THREADS
+static int       heap_trim(heap_info *heap, size_t pad);
+#endif
 #else
 static void      chunk_free();
 static mchunkptr chunk_alloc();
-static int       arena_trim();
+static int       main_trim();
+#ifndef NO_THREADS
+static int       heap_trim();
+#endif
 #endif
 
 
@@ -1371,6 +1386,10 @@ static arena main_arena = {
  IAV(120), IAV(121), IAV(122), IAV(123), IAV(124), IAV(125), IAV(126), IAV(127)
     },
     NULL, /* next */
+    0, /* size */
+#if THREAD_STATS
+    0, 0, 0, /* stat_lock_direct, stat_lock_loop, stat_lock_wait */
+#endif
     MUTEX_INITIALIZER /* mutex */
 };
 
@@ -1378,14 +1397,13 @@ static arena main_arena = {
 
 /* Thread specific data */
 
+#ifndef NO_THREADS
 static tsd_key_t arena_key;
 static mutex_t list_lock = MUTEX_INITIALIZER;
+#endif
 
 #if THREAD_STATS
-static int stat_n_arenas = 0;
 static int stat_n_heaps = 0;
-static long stat_lock_direct = 0;
-static long stat_lock_loop = 0;
 #define THREAD_STAT(x) x
 #else
 #define THREAD_STAT(x) do ; while(0)
@@ -1404,14 +1422,13 @@ static char* sbrk_base = (char*)(-1);
 /* The maximum memory obtained from system via sbrk */
 static unsigned long max_sbrked_mem = 0;
 
-/* The maximum via either sbrk or mmap */
+/* The maximum via either sbrk or mmap (too difficult to track with threads) */
+#ifdef NO_THREADS
 static unsigned long max_total_mem = 0;
-
-/* internal working copy of mallinfo */
-static struct mallinfo current_mallinfo = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+#endif
 
 /* The total memory obtained from system via sbrk */
-#define sbrked_mem  (current_mallinfo.arena)
+#define sbrked_mem (main_arena.size)
 
 /* Tracking mmaps */
 
@@ -1438,17 +1455,19 @@ ptmalloc_init __MALLOC_P((void))
   static int first = 1;
 
 #if defined(_LIBC)
-  /* Initialize the pthread. */
+  /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
-    __pthread_initialize ();
+    __pthread_initialize();
 #endif
 
   if(first) {
     first = 0;
+#ifndef NO_THREADS
     mutex_init(&main_arena.mutex);
     mutex_init(&list_lock);
     tsd_key_create(&arena_key, NULL);
     tsd_setspecific(arena_key, (Void_t *)&main_arena);
+#endif
   }
 }
 
@@ -1511,8 +1530,10 @@ static mchunkptr mmap_chunk(size) size_t size;
   mmapped_mem += size;
   if ((unsigned long)mmapped_mem > (unsigned long)max_mmapped_mem)
     max_mmapped_mem = mmapped_mem;
+#ifdef NO_THREADS
   if ((unsigned long)(mmapped_mem + sbrked_mem) > (unsigned long)max_total_mem)
     max_total_mem = mmapped_mem + sbrked_mem;
+#endif
   return p;
 }
 
@@ -1576,8 +1597,10 @@ static mchunkptr mremap_chunk(p, new_size) mchunkptr p; size_t new_size;
   mmapped_mem += new_size;
   if ((unsigned long)mmapped_mem > (unsigned long)max_mmapped_mem)
     max_mmapped_mem = mmapped_mem;
+#ifdef NO_THREADS
   if ((unsigned long)(mmapped_mem + sbrked_mem) > (unsigned long)max_total_mem)
     max_total_mem = mmapped_mem + sbrked_mem;
+#endif
   return p;
 }
 
@@ -1629,7 +1652,7 @@ new_heap(size) size_t size;
 }
 
 /* Grow or shrink a heap.  size is automatically rounded up to a
-   multiple of the page size. */
+   multiple of the page size if it is positive. */
 
 static int
 #if __STD_C
@@ -1650,7 +1673,7 @@ grow_heap(h, diff) heap_info *h; long diff;
       return -2;
   } else {
     new_size = (long)h->size + diff;
-    if(new_size < 0)
+    if(new_size < (long)sizeof(*h))
       return -1;
     if(mprotect((char *)h + new_size, -diff, PROT_NONE) != 0)
       return -2;
@@ -1658,6 +1681,10 @@ grow_heap(h, diff) heap_info *h; long diff;
   h->size = new_size;
   return 0;
 }
+
+/* Delete a heap. */
+
+#define delete_heap(heap) munmap((char*)(heap), HEAP_MAX_SIZE)
 
 /* arena_get() acquires an arena and locks the corresponding mutex.
    First, try the one last locked successfully by this thread.  (This
@@ -1669,7 +1696,7 @@ grow_heap(h, diff) heap_info *h; long diff;
   Void_t *vptr = NULL; \
   ptr = (arena *)tsd_getspecific(arena_key, vptr); \
   if(ptr && !mutex_trylock(&ptr->mutex)) { \
-    THREAD_STAT(stat_lock_direct++); \
+    THREAD_STAT(++(ptr->stat_lock_direct)); \
   } else { \
     ptr = arena_get2(ptr, (size)); \
   } \
@@ -1688,21 +1715,16 @@ arena_get2(a_tsd, size) arena *a_tsd; size_t size;
   int i;
   unsigned long misalign;
 
-  /* Check the list for unlocked arenas. */
+  /* Check the singly-linked list for unlocked arenas. */
   if(a_tsd) {
     for(a = a_tsd->next; a; a = a->next) {
       if(!mutex_trylock(&a->mutex))
         goto done;
     }
-    for(a = &main_arena; a != a_tsd; a = a->next) {
-      if(!mutex_trylock(&a->mutex))
-        goto done;
-    }
-  } else {
-    for(a = &main_arena; a; a = a->next) {
-      if(!mutex_trylock(&a->mutex))
-        goto done;
-    }
+  }
+  for(a = &main_arena; a != a_tsd; a = a->next) {
+    if(!mutex_trylock(&a->mutex))
+      goto done;
   }
 
   /* Nothing immediately available, so generate a new arena. */
@@ -1712,6 +1734,7 @@ arena_get2(a_tsd, size) arena *a_tsd; size_t size;
   a = h->ar_ptr = (arena *)(h+1);
   for(i=0; i<NAV; i++)
     init_bin(a, i);
+  a->size = h->size;
   mutex_init(&a->mutex);
   i = mutex_lock(&a->mutex); /* remember result */
 
@@ -1721,20 +1744,19 @@ arena_get2(a_tsd, size) arena *a_tsd; size_t size;
   if (misalign > 0)
     ptr += MALLOC_ALIGNMENT - misalign;
   top(a) = (mchunkptr)ptr;
-  set_head(top(a), (h->size - (ptr-(char*)h)) | PREV_INUSE);
+  set_head(top(a), (((char*)h + h->size) - ptr) | PREV_INUSE);
 
   /* Add the new arena to the list. */
   (void)mutex_lock(&list_lock);
   a->next = main_arena.next;
   main_arena.next = a;
-  THREAD_STAT(stat_n_arenas++);
   (void)mutex_unlock(&list_lock);
 
   if(i) /* locking failed; keep arena for further attempts later */
     return 0;
 
 done:
-  THREAD_STAT(stat_lock_loop++);
+  THREAD_STAT(++(a->stat_lock_loop));
   tsd_setspecific(arena_key, (Void_t *)a);
   return a;
 }
@@ -1817,23 +1839,19 @@ static void do_check_free_chunk(ar_ptr, p) arena *ar_ptr; mchunkptr p;
   /* Check whether it claims to be free ... */
   assert(!inuse(p));
 
-  /* Unless a special marker, must have OK fields */
-  if ((long)sz >= (long)MINSIZE)
-  {
-    assert((sz & MALLOC_ALIGN_MASK) == 0);
-    assert(aligned_OK(chunk2mem(p)));
-    /* ... matching footer field */
-    assert(next->prev_size == sz);
-    /* ... and is fully consolidated */
-    assert(prev_inuse(p));
-    assert (next == top(ar_ptr) || inuse(next));
+  /* Must have OK size and fields */
+  assert((long)sz >= (long)MINSIZE);
+  assert((sz & MALLOC_ALIGN_MASK) == 0);
+  assert(aligned_OK(chunk2mem(p)));
+  /* ... matching footer field */
+  assert(next->prev_size == sz);
+  /* ... and is fully consolidated */
+  assert(prev_inuse(p));
+  assert (next == top(ar_ptr) || inuse(next));
 
-    /* ... and has minimally sane links */
-    assert(p->fd->bk == p);
-    assert(p->bk->fd == p);
-  }
-  else /* markers are always of size SIZE_SZ */
-    assert(sz == SIZE_SZ);
+  /* ... and has minimally sane links */
+  assert(p->fd->bk == p);
+  assert(p->bk->fd == p);
 }
 
 #if __STD_C
@@ -1847,6 +1865,9 @@ static void do_check_inuse_chunk(ar_ptr, p) arena *ar_ptr; mchunkptr p;
 
   /* Check whether it claims to be in use ... */
   assert(inuse(p));
+
+  /* ... whether its size is OK (it might be a fencepost) ... */
+  assert(chunksize(p) >= MINSIZE || next->size == (0|PREV_INUSE));
 
   /* ... and is surrounded by OK chunks.
     Since more things can be checked with free chunks than inuse ones,
@@ -2066,14 +2087,16 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
 
     if ((unsigned long)sbrked_mem > (unsigned long)max_sbrked_mem)
       max_sbrked_mem = sbrked_mem;
+#ifdef NO_THREADS
     if ((unsigned long)(mmapped_mem + sbrked_mem) >
         (unsigned long)max_total_mem)
       max_total_mem = mmapped_mem + sbrked_mem;
+#endif
 
 #ifndef NO_THREADS
   } else { /* ar_ptr != &main_arena */
-
-    heap_info *heap;
+    heap_info *old_heap, *heap;
+    size_t old_heap_size;
 
     if(old_top_size < MINSIZE) /* this should never happen */
       return;
@@ -2081,9 +2104,11 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
     /* First try to extend the current heap. */
     if(MINSIZE + nb <= old_top_size)
       return;
-    heap = heap_for_ptr(old_top);
-    if(grow_heap(heap, MINSIZE + nb - old_top_size) == 0) {
-      top_size = heap->size - ((char *)old_top - (char *)heap);
+    old_heap = heap_for_ptr(old_top);
+    old_heap_size = old_heap->size;
+    if(grow_heap(old_heap, MINSIZE + nb - old_top_size) == 0) {
+      ar_ptr->size += old_heap->size - old_heap_size;
+      top_size = ((char *)old_heap + old_heap->size) - (char *)old_top;
       set_head(old_top, top_size | PREV_INUSE);
       return;
     }
@@ -2093,6 +2118,8 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
     if(!heap)
       return;
     heap->ar_ptr = ar_ptr;
+    heap->prev = old_heap;
+    ar_ptr->size += heap->size;
 
     /* Set up the new top, so we can safely use chunk_free() below. */
     top(ar_ptr) = chunk_at_offset(heap, sizeof(*heap));
@@ -2106,19 +2133,19 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
 
   /* Setup fencepost and free the old top chunk. */
   if(old_top) {
-    /* Keep size a multiple of MALLOC_ALIGNMENT. */
-    old_top_size = (old_top_size - 3*SIZE_SZ) & ~MALLOC_ALIGN_MASK;
-    /* If possible, release the rest. */
-    if (old_top_size >= MINSIZE) {
-      set_head(chunk_at_offset(old_top, old_top_size        ),
-               SIZE_SZ|PREV_INUSE);
-      set_head(chunk_at_offset(old_top, old_top_size+SIZE_SZ),
-               SIZE_SZ|PREV_INUSE);
+    /* The fencepost takes at least MINSIZE bytes, because it might
+       become the top chunk again later.  Note that a footer is set
+       up, too, although the chunk is marked in use. */
+    old_top_size -= MINSIZE;
+    set_head(chunk_at_offset(old_top, old_top_size + 2*SIZE_SZ), 0|PREV_INUSE);
+    if(old_top_size >= MINSIZE) {
+      set_head(chunk_at_offset(old_top, old_top_size), (2*SIZE_SZ)|PREV_INUSE);
+      set_foot(chunk_at_offset(old_top, old_top_size), (2*SIZE_SZ));
       set_head_size(old_top, old_top_size);
       chunk_free(ar_ptr, old_top);
     } else {
-      set_head(old_top, SIZE_SZ|PREV_INUSE);
-      set_head(chunk_at_offset(old_top, SIZE_SZ), SIZE_SZ|PREV_INUSE);
+      set_head(old_top, (old_top_size + 2*SIZE_SZ)|PREV_INUSE);
+      set_foot(old_top, (old_top_size + 2*SIZE_SZ));
     }
   }
 }
@@ -2130,13 +2157,14 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
 
 
 /*
-  Malloc Algorthim:
+  Malloc Algorithm:
 
     The requested size is first converted into a usable form, `nb'.
     This currently means to add 4 bytes overhead plus possibly more to
     obtain 8-byte alignment and/or to obtain a size of at least
-    MINSIZE (currently 16 bytes), the smallest allocatable size.
-    (All fits are considered `exact' if they are within MINSIZE bytes.)
+    MINSIZE (currently 16, 24, or 32 bytes), the smallest allocatable
+    size.  (All fits are considered `exact' if they are within MINSIZE
+    bytes.)
 
     From there, the first successful of the following steps is taken:
 
@@ -2486,7 +2514,16 @@ void fREe(mem) Void_t* mem;
 #endif
 
   ar_ptr = arena_for_ptr(p);
+#if THREAD_STATS
+  if(!mutex_trylock(&ar_ptr->mutex))
+    ++(ar_ptr->stat_lock_direct);
+  else {
+    (void)mutex_lock(&ar_ptr->mutex);
+    ++(ar_ptr->stat_lock_wait);
+  }
+#else
   (void)mutex_lock(&ar_ptr->mutex);
+#endif
   chunk_free(ar_ptr, p);
   (void)mutex_unlock(&ar_ptr->mutex);
 }
@@ -2528,8 +2565,24 @@ chunk_free(ar_ptr, p) arena *ar_ptr; mchunkptr p;
 
     set_head(p, sz | PREV_INUSE);
     top(ar_ptr) = p;
-    if ((unsigned long)(sz) >= (unsigned long)trim_threshold)
-      arena_trim(ar_ptr, top_pad);
+
+#ifndef NO_THREADS
+    if(ar_ptr == &main_arena) {
+#endif
+      if ((unsigned long)(sz) >= (unsigned long)trim_threshold)
+        main_trim(top_pad);
+#ifndef NO_THREADS
+    } else {
+      heap_info *heap = heap_for_ptr(p);
+
+      assert(heap->ar_ptr == ar_ptr);
+
+      /* Try to get rid of completely empty heaps, if possible. */
+      if((unsigned long)(sz) >= (unsigned long)trim_threshold ||
+         p == chunk_at_offset(heap, sizeof(*heap)))
+        heap_trim(heap, top_pad);
+    }
+#endif
     return;
   }
 
@@ -2670,7 +2723,17 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
 #endif
 
   ar_ptr = arena_for_ptr(oldp);
+#if THREAD_STATS
+  if(!mutex_trylock(&ar_ptr->mutex))
+    ++(ar_ptr->stat_lock_direct);
+  else {
+    (void)mutex_lock(&ar_ptr->mutex);
+    ++(ar_ptr->stat_lock_wait);
+  }
+#else
   (void)mutex_lock(&ar_ptr->mutex);
+#endif
+
   /* As in malloc(), remember this arena for the next allocation. */
   tsd_setspecific(arena_key, (Void_t *)ar_ptr);
 
@@ -2899,7 +2962,7 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
     */
 
     brk = (char*)mem2chunk(((unsigned long)(m + alignment - 1)) & -alignment);
-    if ((long)(brk - (char*)(p)) < (long) MINSIZE) brk = brk + alignment;
+    if ((long)(brk - (char*)(p)) < (long)MINSIZE) brk = brk + alignment;
 
     newp = (mchunkptr)brk;
     leadsize = brk - (char*)(p);
@@ -3090,16 +3153,18 @@ int malloc_trim(pad) size_t pad;
   int res;
 
   (void)mutex_lock(&main_arena.mutex);
-  res = arena_trim(&main_arena, pad);
+  res = main_trim(pad);
   (void)mutex_unlock(&main_arena.mutex);
   return res;
 }
 
+/* Trim the main arena. */
+
 static int
 #if __STD_C
-arena_trim(arena *ar_ptr, size_t pad)
+main_trim(size_t pad)
 #else
-arena_trim(ar_ptr, pad) arena *ar_ptr; size_t pad;
+main_trim(pad) size_t pad;
 #endif
 {
   mchunkptr top_chunk;   /* The current top chunk */
@@ -3110,50 +3175,97 @@ arena_trim(ar_ptr, pad) arena *ar_ptr; size_t pad;
 
   unsigned long pagesz = malloc_getpagesize;
 
-  top_chunk = top(ar_ptr);
+  top_chunk = top(&main_arena);
   top_size = chunksize(top_chunk);
   extra = ((top_size - pad - MINSIZE + (pagesz-1)) / pagesz - 1) * pagesz;
 
   if (extra < (long)pagesz) /* Not enough memory to release */
     return 0;
 
-#ifndef NO_THREADS
-  if(ar_ptr == &main_arena) {
-#endif
+  /* Test to make sure no one else called sbrk */
+  current_brk = (char*)(MORECORE (0));
+  if (current_brk != (char*)(top_chunk) + top_size)
+    return 0;     /* Apparently we don't own memory; must fail */
 
-    /* Test to make sure no one else called sbrk */
+  new_brk = (char*)(MORECORE (-extra));
+
+  if (new_brk == (char*)(MORECORE_FAILURE)) { /* sbrk failed? */
+    /* Try to figure out what we have */
     current_brk = (char*)(MORECORE (0));
-    if (current_brk != (char*)(top_chunk) + top_size)
-      return 0;     /* Apparently we don't own memory; must fail */
-
-    new_brk = (char*)(MORECORE (-extra));
-
-    if (new_brk == (char*)(MORECORE_FAILURE)) { /* sbrk failed? */
-      /* Try to figure out what we have */
-      current_brk = (char*)(MORECORE (0));
-      top_size = current_brk - (char*)top_chunk;
-      if (top_size >= (long)MINSIZE) /* if not, we are very very dead! */
-      {
-        sbrked_mem = current_brk - sbrk_base;
-        set_head(top_chunk, top_size | PREV_INUSE);
-      }
-      check_chunk(ar_ptr, top_chunk);
-      return 0;
+    top_size = current_brk - (char*)top_chunk;
+    if (top_size >= (long)MINSIZE) /* if not, we are very very dead! */
+    {
+      sbrked_mem = current_brk - sbrk_base;
+      set_head(top_chunk, top_size | PREV_INUSE);
     }
-    sbrked_mem -= extra;
+    check_chunk(&main_arena, top_chunk);
+    return 0;
+  }
+  sbrked_mem -= extra;
+
+  /* Success. Adjust top accordingly. */
+  set_head(top_chunk, (top_size - extra) | PREV_INUSE);
+  check_chunk(&main_arena, top_chunk);
+  return 1;
+}
 
 #ifndef NO_THREADS
-  } else {
-    if(grow_heap(heap_for_ptr(top_chunk), -extra) != 0)
-      return 0;
-  }
+
+static int
+#if __STD_C
+heap_trim(heap_info *heap, size_t pad)
+#else
+heap_trim(heap, pad) heap_info *heap; size_t pad;
 #endif
+{
+  unsigned long pagesz = malloc_getpagesize;
+  arena *ar_ptr = heap->ar_ptr;
+  mchunkptr top_chunk = top(ar_ptr), p, bck, fwd;
+  heap_info *prev_heap;
+  long new_size, top_size, extra;
+
+  /* Can this heap go away completely ? */
+  while(top_chunk == chunk_at_offset(heap, sizeof(*heap))) {
+    prev_heap = heap->prev;
+    p = chunk_at_offset(prev_heap, prev_heap->size - (MINSIZE-2*SIZE_SZ));
+    assert(p->size == (0|PREV_INUSE)); /* must be fencepost */
+    p = prev_chunk(p);
+    new_size = chunksize(p) + (MINSIZE-2*SIZE_SZ);
+    assert(new_size>0 && new_size<(long)2*MINSIZE);
+    if(!prev_inuse(p))
+      new_size += p->prev_size;
+    assert(new_size>0 && new_size<HEAP_MAX_SIZE);
+    if(new_size + (HEAP_MAX_SIZE - prev_heap->size) < pad + MINSIZE + pagesz)
+      break;
+    ar_ptr->size -= heap->size;
+    delete_heap(heap);
+    heap = prev_heap;
+    if(!prev_inuse(p)) { /* consolidate backward */
+      p = prev_chunk(p);
+      unlink(p, bck, fwd);
+    }
+    assert(((unsigned long)((char*)p + new_size) & (pagesz-1)) == 0);
+    assert( ((char*)p + new_size) == ((char*)heap + heap->size) );
+    top(ar_ptr) = top_chunk = p;
+    set_head(top_chunk, new_size | PREV_INUSE);
+    check_chunk(ar_ptr, top_chunk);
+  }
+  top_size = chunksize(top_chunk);
+  extra = ((top_size - pad - MINSIZE + (pagesz-1))/pagesz - 1) * pagesz;
+  if(extra < (long)pagesz)
+    return 0;
+  /* Try to shrink. */
+  if(grow_heap(heap, -extra) != 0)
+    return 0;
+  ar_ptr->size -= extra;
 
   /* Success. Adjust top accordingly. */
   set_head(top_chunk, (top_size - extra) | PREV_INUSE);
   check_chunk(ar_ptr, top_chunk);
   return 1;
 }
+
+#endif
 
 
 
@@ -3194,11 +3306,15 @@ size_t malloc_usable_size(mem) Void_t* mem;
 
 
 
-/* Utility to update current_mallinfo for malloc_stats and mallinfo() */
+/* Utility to update mallinfo for malloc_stats() and mallinfo() */
 
-static void malloc_update_mallinfo __MALLOC_P ((void))
+static void
+#if __STD_C
+malloc_update_mallinfo(arena *ar_ptr, struct mallinfo *mi)
+#else
+malloc_update_mallinfo(ar_ptr, mi) arena *ar_ptr; struct mallinfo *mi;
+#endif
 {
-  arena *ar_ptr = &main_arena;
   int i, navail;
   mbinptr b;
   mchunkptr p;
@@ -3219,7 +3335,7 @@ static void malloc_update_mallinfo __MALLOC_P ((void))
 #if MALLOC_DEBUG
       check_free_chunk(ar_ptr, p);
       for (q = next_chunk(p);
-           q < top(ar_ptr) && inuse(q) && (long)chunksize(q) >= (long)MINSIZE;
+           q != top(ar_ptr) && inuse(q) && (long)chunksize(q) > 0;
            q = next_chunk(q))
         check_inuse_chunk(ar_ptr, q);
 #endif
@@ -3228,15 +3344,51 @@ static void malloc_update_mallinfo __MALLOC_P ((void))
     }
   }
 
-  current_mallinfo.ordblks = navail;
-  current_mallinfo.uordblks = sbrked_mem - avail;
-  current_mallinfo.fordblks = avail;
-  current_mallinfo.hblks = n_mmaps;
-  current_mallinfo.hblkhd = mmapped_mem;
-  current_mallinfo.keepcost = chunksize(top(ar_ptr));
+  mi->arena = ar_ptr->size;
+  mi->ordblks = navail;
+  mi->uordblks = ar_ptr->size - avail;
+  mi->fordblks = avail;
+  mi->hblks = n_mmaps;
+  mi->hblkhd = mmapped_mem;
+  mi->keepcost = chunksize(top(ar_ptr));
 
   (void)mutex_unlock(&ar_ptr->mutex);
 }
+
+#if !defined(NO_THREADS) && MALLOC_DEBUG > 1
+
+/* Print the complete contents of a single heap to stderr. */
+
+static void
+#if __STD_C
+dump_heap(heap_info *heap)
+#else
+dump_heap(heap) heap_info *heap;
+#endif
+{
+  char *ptr;
+  mchunkptr p;
+
+  fprintf(stderr, "Heap %p, size %10lx:\n", heap, (long)heap->size);
+  ptr = (heap->ar_ptr != (arena*)(heap+1)) ?
+    (char*)(heap + 1) : (char*)(heap + 1) + sizeof(arena);
+  p = (mchunkptr)(((unsigned long)ptr + MALLOC_ALIGN_MASK) &
+                  ~MALLOC_ALIGN_MASK);
+  for(;;) {
+    fprintf(stderr, "chunk %p size %10lx", p, (long)p->size);
+    if(p == top(heap->ar_ptr)) {
+      fprintf(stderr, " (top)\n");
+      break;
+    } else if(p->size == (0|PREV_INUSE)) {
+      fprintf(stderr, " (fence)\n");
+      break;
+    }
+    fprintf(stderr, "\n");
+    p = next_chunk(p);
+  }
+}
+
+#endif
 
 
 
@@ -3244,46 +3396,80 @@ static void malloc_update_mallinfo __MALLOC_P ((void))
 
   malloc_stats:
 
-    Prints on stderr the amount of space obtain from the system (both
-    via sbrk and mmap), the maximum amount (which may be more than
-    current if malloc_trim and/or munmap got called), the maximum
-    number of simultaneous mmap regions used, and the current number
+    For all arenas seperately and in total, prints on stderr the
+    amount of space obtained from the system, and the current number
     of bytes allocated via malloc (or realloc, etc) but not yet
     freed. (Note that this is the number of bytes allocated, not the
     number requested. It will be larger than the number requested
-    because of alignment and bookkeeping overhead.)
+    because of alignment and bookkeeping overhead.)  When not compiled
+    for multiple threads, the maximum amount of allocated memory
+    (which may be more than current if malloc_trim and/or munmap got
+    called) is also reported.  When using mmap(), prints the maximum
+    number of simultaneous mmap regions used, too.
 
 */
 
 void malloc_stats()
 {
-  malloc_update_mallinfo();
-  fprintf(stderr, "max system bytes = %10u\n",
-          (unsigned int)(max_total_mem));
-  fprintf(stderr, "system bytes     = %10u\n",
-          (unsigned int)(sbrked_mem + mmapped_mem));
-  fprintf(stderr, "in use bytes     = %10u\n",
-          (unsigned int)(current_mallinfo.uordblks + mmapped_mem));
+  int i;
+  arena *ar_ptr;
+  struct mallinfo mi;
+  unsigned int in_use_b = mmapped_mem, system_b = in_use_b;
+#if THREAD_STATS
+  long stat_lock_direct = 0, stat_lock_loop = 0, stat_lock_wait = 0;
+#endif
+
+  for(i=0, ar_ptr = &main_arena; ar_ptr; ar_ptr = ar_ptr->next, i++) {
+    malloc_update_mallinfo(ar_ptr, &mi);
+    fprintf(stderr, "Arena %d:\n", i);
+    fprintf(stderr, "system bytes     = %10u\n", (unsigned int)mi.arena);
+    fprintf(stderr, "in use bytes     = %10u\n", (unsigned int)mi.uordblks);
+    system_b += mi.arena;
+    in_use_b += mi.uordblks;
+#if THREAD_STATS
+    stat_lock_direct += ar_ptr->stat_lock_direct;
+    stat_lock_loop += ar_ptr->stat_lock_loop;
+    stat_lock_wait += ar_ptr->stat_lock_wait;
+#endif
+#if !defined(NO_THREADS) && MALLOC_DEBUG > 1
+    if(ar_ptr != &main_arena) {
+      heap_info *heap = heap_for_ptr(top(ar_ptr));
+      while(heap) { dump_heap(heap); heap = heap->prev; }
+    }
+#endif
+  }
+  fprintf(stderr, "Total (incl. mmap):\n");
+  fprintf(stderr, "system bytes     = %10u\n", system_b);
+  fprintf(stderr, "in use bytes     = %10u\n", in_use_b);
+#ifdef NO_THREADS
+  fprintf(stderr, "max system bytes = %10u\n", (unsigned int)max_total_mem);
+#endif
 #if HAVE_MMAP
-  fprintf(stderr, "max mmap regions = %10u\n",
-          (unsigned int)max_n_mmaps);
+  fprintf(stderr, "max mmap regions = %10u\n", (unsigned int)max_n_mmaps);
 #endif
 #if THREAD_STATS
-  fprintf(stderr, "arenas created   = %10d\n", stat_n_arenas);
-  fprintf(stderr, "heaps created    = %10d\n", stat_n_heaps);
+  fprintf(stderr, "heaps created    = %10d\n",  stat_n_heaps);
   fprintf(stderr, "locked directly  = %10ld\n", stat_lock_direct);
   fprintf(stderr, "locked in loop   = %10ld\n", stat_lock_loop);
+  fprintf(stderr, "locked waiting   = %10ld\n", stat_lock_wait);
+  fprintf(stderr, "locked total     = %10ld\n",
+          stat_lock_direct + stat_lock_loop + stat_lock_wait);
 #endif
 }
 
 /*
   mallinfo returns a copy of updated current mallinfo.
+  The information reported is for the arena last used by the thread.
 */
 
 struct mallinfo mALLINFo()
 {
-  malloc_update_mallinfo();
-  return current_mallinfo;
+  struct mallinfo mi;
+  Void_t *vptr = NULL;
+
+  tsd_getspecific(arena_key, vptr);
+  malloc_update_mallinfo((vptr ? (arena*)vptr : &main_arena), &mi);
+  return mi;
 }
 
 

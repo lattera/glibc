@@ -1,26 +1,27 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_SHM_BUF_H
-#define _SYS_SHM_BUF_H
 
+#define _SYS_SHM_BUF_H	1
 #include <features.h>
+
 #include <sys/types.h>
 
 /* Permission flag for shmget.  */
@@ -65,25 +66,27 @@ struct shmid_ds
 #define	SHM_DEST	01000	/* segment will be destroyed on last detach */
 #define SHM_LOCKED      02000   /* segment will not be swapped */
 
-struct	shminfo {
-    int shmmax;
-    int shmmin;
-    int shmmni;
-    int shmseg;
-    int shmall;
+struct	shminfo
+{
+  int shmmax;
+  int shmmin;
+  int shmmni;
+  int shmseg;
+  int shmall;
 };
 
-struct shm_info {
-	int   used_ids;
-	ulong shm_tot; /* total allocated shm */
-	ulong shm_rss; /* total resident shm */
-	ulong shm_swp; /* total swapped shm */
-	ulong swap_attempts;
-	ulong swap_successes;
+struct shm_info
+{
+  int   used_ids;
+  ulong shm_tot;	/* total allocated shm */
+  ulong shm_rss;	/* total resident shm */
+  ulong shm_swp;	/* total swapped shm */
+  ulong swap_attempts;
+  ulong swap_successes;
 };
 
 #endif /* __USE_MISC */
 
 __END_DECLS
 
-#endif /* sys/shm_buf.h */
+#endif /* _SYS_SHM_BUF_H */

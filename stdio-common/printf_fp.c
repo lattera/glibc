@@ -988,7 +988,7 @@ __guess_grouping (unsigned int intdig_max, const char *grouping,
       else if (*grouping == 0)
 	{
 	  /* Same grouping repeats.  */
-	  groups += intdig_max / grouping[-1];
+	  groups += (intdig_max - 1) / grouping[-1];
 	  break;
 	}
     }

@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _MALLOC_H
-#define _MALLOC_H	1
+#define _MALLOC_H 1
 
 /*
   `ptmalloc', a malloc implementation for multiple threads without
@@ -50,9 +50,9 @@
 #endif
 
 #ifdef _LIBC
-/* Used by libc internals. */
-#define __malloc_size_t		size_t
-#define __malloc_ptrdiff_t	ptrdiff_t
+/* Used by GNU libc internals. */
+#define __malloc_size_t size_t
+#define __malloc_ptrdiff_t ptrdiff_t
 #endif
 
 #if defined (__STDC__) || defined (__cplusplus) || defined (__GNUC__)
@@ -166,4 +166,4 @@ extern void malloc_stats __MALLOC_P ((void));
 }; /* end of extern "C" */
 #endif
 
-#endif /* !defined(_PTMALLOC_H_) */
+#endif /* !defined(_MALLOC_H) */

@@ -18,9 +18,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_POLL_H
-#define	_SYS_POLL_H
 
-#include <sys/cdefs.h>
+#define	_SYS_POLL_H	1
+#include <features.h>
+
+__BEGIN_DECLS
 
 /* Data structure describing a polling request.  */
 struct pollfd
@@ -51,8 +53,6 @@ struct pollfd
 #define NPOLLFILE	30
 
 
-__BEGIN_DECLS
-
 /* Poll the file descriptors described by the NFDS structures starting at
    FDS.  If TIMEOUT is nonzero and not -1, allow TIMEOUT milliseconds for
    an event to occur; if TIMEOUT is -1, block until an event occurs.
@@ -64,4 +64,4 @@ extern int poll __P ((struct pollfd *__fds, unsigned long int __nfds,
 
 __END_DECLS
 
-#endif	/* sys/poll.h */
+#endif	/* _SYS_POLL_H */

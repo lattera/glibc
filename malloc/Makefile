@@ -37,4 +37,5 @@ routines = $(dist-routines) obstack
 
 include ../Rules
 
+CPPFLAGS-malloc.o += -DMALLOC_DEBUG
 CFLAGS-obstack.c = -Wno-strict-prototypes
