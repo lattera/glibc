@@ -1,7 +1,11 @@
+1999-04-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/Makefile (CFLAGS-multiload.c): Change to allow building in
+	the source directory.  Fixes PR libc/1059.
+
 1999-04-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Terminate the
-	string.
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Terminate the string.
 	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
 
 1999-04-01  Ulrich Drepper  <drepper@cygnus.com>

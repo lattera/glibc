@@ -252,7 +252,7 @@ $(objpfx)loadfail.out: $(objpfx)failobj.so
 
 $(objpfx)multiload: $(libdl)
 LDFLAGS-multiload = -rdynamic
-CFLAGS-multiload.c = -DOBJDIR=\"$(objdir)/$(subdir)\"
+CFLAGS-multiload.c = -DOBJDIR=\"$(elf-objpfx)\"
 
 $(objpfx)multiload.out: $(objpfx)testobj1.so
 
