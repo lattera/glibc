@@ -1,3 +1,12 @@
+2002-08-02  Roland McGrath  <roland@redhat.com>
+
+	* locale/localeinfo.h (_NL_CURRENT_DATA): New macro.
+	* wcsmbs/wcsmbsload.h (update_conversion_ptrs): Use it.
+	* locale/lc-ctype.c (_nl_postload_ctype): Likewise.
+	* wctype/wctrans.c (wctrans): Likewise.
+	* wctype/wctype.c (__wctype): Likewise.
+	* intl/loadmsgcat.c (_nl_init_domain_conv): Use _NL_CURRENT.
+
 2002-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/iso-639.def: Add entries for Venda and Nothern Sotho.
