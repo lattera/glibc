@@ -1,3 +1,8 @@
+2003-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/libc-start.c [!SHARED &&
+	!LIBC_START_MAIN_AUXVEC_ARG]: Compute beginning of auxvec correctly.
+
 2003-03-17  Roland McGrath  <roland@redhat.com>
 
 	* include/ctype.h: Revert last change.
