@@ -185,6 +185,7 @@ _dl_start (void *arg)
       {
 	void *tlsblock;
 	size_t max_align = MAX (TLS_INIT_TCB_ALIGN, phdr[cnt].p_align);
+	char *p;
 
 	bootstrap_map.l_tls_blocksize = phdr[cnt].p_memsz;
 	bootstrap_map.l_tls_align = phdr[cnt].p_align;
@@ -231,10 +232,19 @@ _dl_start (void *arg)
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
-	memset (__mempcpy (initdtv[2].pointer, bootstrap_map.l_tls_initimage,
-			   bootstrap_map.l_tls_initimage_size),
-		'\0', (bootstrap_map.l_tls_blocksize
-		       - bootstrap_map.l_tls_initimage_size));
+	p = __mempcpy (initdtv[2].pointer, bootstrap_map.l_tls_initimage,
+		       bootstrap_map.l_tls_initimage_size);
+# ifdef HAVE_BUILTIN_MEMSET
+	__builtin_memset (p, '\0', (bootstrap_map.l_tls_blocksize
+				    - bootstrap_map.l_tls_initimage_size));
+# else
+	{
+	  size_t remaining = (bootstrap_map.l_tls_blocksize
+			      - bootstrap_map.l_tls_initimage_size);
+	  while (remaining-- > 0)
+	    *p++ = '\0';
+	}
+#endif
 
 	/* Install the pointer to the dtv.  */
 
