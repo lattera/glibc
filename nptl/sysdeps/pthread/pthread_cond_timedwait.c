@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -98,6 +98,9 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
   while (1)
     {
+      /* Prepare to wait.  Release the condvar futex.  */
+      lll_mutex_unlock (cond->__data.__lock);
+
       struct timespec rt;
       {
 #ifdef __NR_clock_gettime
@@ -138,18 +141,13 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	  --rt.tv_sec;
 	}
       /* Did we already time out?  */
-      if (rt.tv_sec < 0)
+      if (__builtin_expect (rt.tv_sec < 0, 0))
 	{
-	  /* Yep.  Adjust the sequence counter.  */
-	  ++cond->__data.__wakeup_seq;
+	  /* We are going to look at shared data again, so get the lock.  */
+	  lll_mutex_lock(cond->__data.__lock);
 
-	  /* The error value.  */
-	  result = ETIMEDOUT;
-	  break;
+	  goto timeout;
 	}
-
-      /* Prepare to wait.  Release the condvar futex.  */
-      lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       cbuffer.oldtype = __pthread_enable_asynccancel ();
@@ -170,8 +168,9 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	break;
 
       /* Not woken yet.  Maybe the time expired?  */
-      if (err == -ETIMEDOUT)
+      if (__builtin_expect (err == -ETIMEDOUT, 0))
 	{
+	timeout:
 	  /* Yep.  Adjust the counters.  */
 	  ++cond->__data.__wakeup_seq;
 

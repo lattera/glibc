@@ -1,5 +1,9 @@
 2004-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/pthread_cond_timedwait.c
+	(__pthread_cond_timedwait): Optimize.  Drop internal lock earlier.
+	Reuse code.  Add __builtin_expects.
+
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
 	(__pthread_cond_timedwait): Get internal lock in case timeout has
 	passed before the futex syscall.
@@ -35,7 +39,7 @@
 
 2004-01-14  Ulrich Drepper  <drepper@redhat.com>
 
-	* init.c (pthread_funtions): Make array const.
+	* init.c (pthread_functions): Make array const.
 
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
 
