@@ -1,3 +1,7 @@
+1998-05-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/tst-ether_aton.c: Include <stdio.h>.
+
 1998-04-30 16:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/ether_aton.c: Including netinet/if_ether.h is not necessary.
