@@ -17,7 +17,7 @@
  *			     x
  *		      2      |\
  *     erf(x)  =  ---------  | exp(-t*t)dt
- *	 	   sqrt(pi) \|
+ *		   sqrt(pi) \|
  *			     0
  *
  *     erfc(x) =  1-erf(x)
@@ -37,12 +37,12 @@
  *	   is close to one. The interval is chosen because the fix
  *	   point of erf(x) is near 0.6174 (i.e., erf(x)=x when x is
  *	   near 0.6174), and by some experiment, 0.84375 is chosen to
- * 	   guarantee the error is less than one ulp for erf.
+ *	   guarantee the error is less than one ulp for erf.
  *
  *      2. For |x| in [0.84375,1.25], let s = |x| - 1, and
  *         c = 0.84506291151 rounded to single (24 bits)
- *         	erf(x)  = sign(x) * (c  + P1(s)/Q1(s))
- *         	erfc(x) = (1-c)  - P1(s)/Q1(s) if x > 0
+ *	erf(x)  = sign(x) * (c  + P1(s)/Q1(s))
+ *	erfc(x) = (1-c)  - P1(s)/Q1(s) if x > 0
  *			  1+(c+P1(s)/Q1(s))    if x < 0
  *	   Remark: here we use the taylor series expansion at x=1.
  *		erf(1+s) = erf(1) + s*Poly(s)
@@ -50,18 +50,18 @@
  *	   Note that |P1/Q1|< 0.078 for x in [0.84375,1.25]
  *
  *      3. For x in [1.25,1/0.35(~2.857143)],
- *         	erfc(x) = (1/x)*exp(-x*x-0.5625+R1(z)/S1(z))
+ *	erfc(x) = (1/x)*exp(-x*x-0.5625+R1(z)/S1(z))
  *              z=1/x^2
- *         	erf(x)  = 1 - erfc(x)
+ *	erf(x)  = 1 - erfc(x)
  *
  *      4. For x in [1/0.35,107]
- *         	erfc(x) = (1/x)*exp(-x*x-0.5625+R2/S2) if x > 0
+ *	erfc(x) = (1/x)*exp(-x*x-0.5625+R2/S2) if x > 0
  *			= 2.0 - (1/x)*exp(-x*x-0.5625+R2(z)/S2(z))
  *                             if -6.666<x<0
  *			= 2.0 - tiny		(if x <= -6.666)
  *              z=1/x^2
- *         	erf(x)  = sign(x)*(1.0 - erfc(x)) if x < 6.666, else
- *         	erf(x)  = sign(x)*(1.0 - tiny)
+ *	erf(x)  = sign(x)*(1.0 - erfc(x)) if x < 6.666, else
+ *	erf(x)  = sign(x)*(1.0 - tiny)
  *      Note1:
  *	   To compute exp(-x*x-0.5625+R/S), let s be a single
  *	   precision number and s := x; then
@@ -75,14 +75,14 @@
  *			  x*sqrt(pi)
  *
  *      5. For inf > x >= 107
- *         	erf(x)  = sign(x) *(1 - tiny)  (raise inexact)
- *         	erfc(x) = tiny*tiny (raise underflow) if x > 0
+ *	erf(x)  = sign(x) *(1 - tiny)  (raise inexact)
+ *	erfc(x) = tiny*tiny (raise underflow) if x > 0
  *			= 2 - tiny if x<0
  *
  *      7. Special case:
- *         	erf(0)  = 0, erf(inf)  = 1, erf(-inf) = -1,
- *         	erfc(0) = 1, erfc(inf) = 0, erfc(-inf) = 2,
- *	   	erfc/erf(NaN) is NaN
+ *	erf(0)  = 0, erf(inf)  = 1, erf(-inf) = -1,
+ *	erfc(0) = 1, erfc(inf) = 0, erfc(-inf) = 2,
+ *		erfc/erf(NaN) is NaN
  */
 
 
@@ -333,7 +333,7 @@ weak_alias (__erf, erfl)
 #else
      long double
      __erfcl (x)
-     double
+     long double
        x;
 #endif
 {
@@ -394,7 +394,7 @@ weak_alias (__erf, erfl)
       x = fabsl (x);
       s = one / (x * x);
       if (ix < 0x4000b6db) /* 2.85711669921875 */
-  	{			/* |x| < 1/.35 ~ 2.857143 */
+	{			/* |x| < 1/.35 ~ 2.857143 */
 	  R = ra[0] + s * (ra[1] + s * (ra[2] + s * (ra[3] + s * (ra[4] +
               s * (ra[5] + s * (ra[6] + s * (ra[7] + s * ra[8])))))));
 	  S = sa[0] + s * (sa[1] + s * (sa[2] + s * (sa[3] + s * (sa[4] +
