@@ -33,7 +33,8 @@ extern int __have_no_truncate64;
 #endif
 
 /* The order of hight, low depends on endianness.  */
-extern int __syscall_ftruncate64 (int fd, int high_length, int low_length);
+extern int __syscall_ftruncate64 (int fd, int dummy, int high_length,
+				  int low_length);
 
 
 /* Truncate the file FD refers to to LENGTH bytes.  */
