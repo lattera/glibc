@@ -1,0 +1,44 @@
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#include <sysdep.h>
+
+	.text
+	SYSCALL_ERROR_HANDLER
+
+ENTRY (__mmap)
+
+	move.l #SYS_ify (mmap), %d0	/* System call number in %d0.  */
+
+	lea 4(%sp), %a0			/* Address of args is 1st arg.  */
+	move.l %a0, %d1
+
+        /* Do the system call trap.  */
+	trap #0
+
+	/* Kludge: negative numbers are among the legal return values.
+	   If %d0 is between -4096 and 0 then there was an error.  */
+	cmp.l #-4096, %d0
+	jhi syscall_error
+
+	/* Successful; return the syscall's value.  Copy it to %a0 because
+	   mmap is declared to return a pointer.  */
+	move.l %d0, %a0
+	rts
+
+weak_alias (__mmap, mmap)
