@@ -20,6 +20,8 @@ Fri May 10 09:41:54 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 	
 Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* aclocal.m4 (AC_FD_MSG, AC_FD_CC): Fix these for autoconf weirdness.
+
 	Cleanups in sunrpc code from NIIBE Yutaka <gniibe@mri.co.jp>.
 	* sunrpc/clnt_tcp.c (clnttcp_create): Don't close *SOCKP if it's -1.
 	* sunrpc/clnt_simp.c (callrpc): Don't close CRP->socket if it's
