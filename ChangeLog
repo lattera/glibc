@@ -1,3 +1,9 @@
+1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/cache.c (prune_cache): Only disable file checking for
+	future if the file does not exist.
+	Update file_mtime if cache was flushed.
+
 1999-04-15  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/sparc/sparc32/strcat.S: Avoid using register g6.

@@ -142,10 +142,12 @@ prune_cache (struct database *table, time_t now)
       if (stat (table->filename, &st) < 0)
 	{
 	  char buf[128];
-	  /* We cannot stat() the file, disable file checking.  */
+	  /* We cannot stat() the file, disable file checking if the
+             file does not exist.  */
 	  dbg_log (_("cannot stat() file `%s': %s"),
 		   table->filename, strerror_r (errno, buf, sizeof (buf)));
-	  table->check_file = 0;
+	  if (errno == ENOENT)
+	    table->check_file = 0;
 	}
       else
 	{
@@ -153,7 +155,7 @@ prune_cache (struct database *table, time_t now)
 	    {
 	      /* The file changed.  Invalidate all entries.  */
 	      now = LONG_MAX;
-	      st.st_mtime = table->file_mtime;
+	      table->file_mtime = st.st_mtime;
 	    }
 	}
     }
