@@ -87,6 +87,7 @@ struct r_found_version
     const char *name;
     ElfW(Word) hash;
 
+    int hidden;
     const char *filename;
   };
 

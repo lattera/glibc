@@ -29,9 +29,7 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 distribute	:= math_private.h machine/asm.h machine/endian.h
 
 # FPU support code.
-aux		:= fpu_control setfpucw s_matherr
-
-static-only-routines := s_matherr
+aux		:= fpu_control setfpucw
 
 # Build the -lm library.
 
@@ -40,7 +38,7 @@ extra-libs-others = $(extra-libs)
 
 libm-map	:= libm.map
 
-libm-support = k_standard s_lib_version s_signgam			\
+libm-support = k_standard s_lib_version s_matherr s_signgam		\
 	       s_lrint s_llrint s_lround s_llround			\
 	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\
 	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\
@@ -79,7 +77,7 @@ distribute += $(long-c-yes:=.c)
 
 # Rules for the test suite.
 tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
-	test-ifloat test-idouble
+	test-ifloat test-idouble test-matherr
 # We do the `long double' tests only if this data type is available and
 # distrinct from `double'.
 #
@@ -95,6 +93,7 @@ LDLIBS-test-ildoubl = libm
 LDLIBS-test-float = libm
 LDLIBS-test-double = libm
 LDLIBS-test-ldouble = libm
+LDLIBS-test-matherr = libm
 
 distribute += libm-test.c
 

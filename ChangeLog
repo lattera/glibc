@@ -1,3 +1,32 @@
+1997-06-26 02:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules ($(common-objpfx)libc.so): Use $(load-map-file) in
+	dependency, not $(libc-map).
+
+	* sysdeps/posix/mk-stdiolim.c: Pretty print.
+
+1997-06-25 15:54  Fila Kolodny  <fila@ibi.com>
+
+	* sysdeps/posix/Makefile ($(common-objpfx)bits/stdio_lim.h): Don't
+	conditionalize this on whether we are cross-compiling.
+
+1997-06-21 15:47  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* elf/dl-lookup.c (do_lookup): Use default definition
+	for a default versioned symbol.
+
+	* elf/dl-version.c (_dl_check_map_versions): Set the hidden field.
+
+	* elf/dlvsym.c (__dlvsym): Set the hidden field to 1.
+
+	* elf/link.h (r_found_version): Add the hidden field.
+
+	* math/test-matherr.c: New file.
+
+	* math/Makefile (tests): Add test-matherr.
+	(libm-support): Put back s_matherr.
+	(static-only-routines, aux): Remove s_matherr.
+
 1997-06-23 23:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/Makefile (headers): Change bytesex.h to bits/endian.h.

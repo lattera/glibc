@@ -383,7 +383,7 @@ libc-map = $(..)libc.map
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so \
-			 $(libc-map)
+			 $(load-map-file)
 	$(build-shlib)
 ifdef libc.so-version
 $(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so

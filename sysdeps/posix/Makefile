@@ -19,17 +19,9 @@
 ifneq (yes,$(inhibit-stdio_lim))
 # Disable these rules if we generate stdio_lim.h by other means.
 
-ifeq (yes,$(cross-compiling))
-$(common-objpfx)bits/stdio_lim.h:
-	@echo
-	@echo "You must build <bits/stdio_lim.h> by hand.  Stop."
-	@echo
-	@exit 1
-else
 $(common-objpfx)bits/stdio_lim.h: $(common-objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
-endif
 
 # Turn into a version that works when cd'd into $(objdir).
 mk-stdiolim-CFLAGS = $(patsubst -I$(shell pwd)//%,-I/%,\

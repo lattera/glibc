@@ -95,6 +95,7 @@ __dlvsym (void *handle, const char *name, const char *version_str)
 
   /* Compute hash value to the version string.  */
   args.version.name = version_str;
+  args.version.hidden = 1;
   args.version.hash = _dl_elf_hash (version_str);
   /* We don't have a specific file where the symbol can be found.  */
   args.version.filename = NULL;
