@@ -876,7 +876,8 @@ insert_value (struct linereader *ldfile, struct token *arg,
 
 	  /* We have to allocate an entry.  */
 	  elem = new_element (collate, seq != NULL ? seq->bytes : NULL,
-			      seq != NULL ? seq->nbytes : 0, wcs,
+			      seq != NULL ? seq->nbytes : 0,
+			      wc == ILLEGAL_CHAR_VALUE ? NULL : wcs,
 			      arg->val.str.startmb, arg->val.str.lenmb, 1);
 
 	  /* And add it to the table.  */
@@ -1061,7 +1062,9 @@ sequence is not lower than that of the last character"), "LC_COLLATE");
 		      uint32_t wcs[2] = { seq->ucs4, 0 };
 
 		      /* We have to allocate an entry.  */
-		      elem = new_element (collate, mbcnt, len, wcs, seq->name,
+		      elem = new_element (collate, mbcnt, len,
+					  seq->ucs4 == ILLEGAL_CHAR_VALUE
+					  ? NULL : wcs, seq->name,
 					  namelen, 1);
 
 		      /* And add it to the table.  */
@@ -1257,8 +1260,7 @@ order for `%.*s' already defined at %s:%zu"),
 					  seq != NULL ? seq->bytes : NULL,
 					  seq != NULL ? seq->nbytes : 0,
 					  wc == ILLEGAL_CHAR_VALUE
-					  ? NULL : wcs,
-					  buf, lenfrom, 1);
+					  ? NULL : wcs, buf, lenfrom, 1);
 		    }
 		  else
 		    {
@@ -2561,45 +2563,22 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (arg->tok != tok_string)
 		goto err_label;
 
-	      if (!ignore_content)
+	      if (!ignore_content && symbol != NULL)
 		{
-		  if (symbol == NULL)
-		    lr_error (ldfile, _("\
-%s: unknown character in collating element name"),
-			      "LC_COLLATE");
-		  if (arg->val.str.startmb == NULL)
-		    lr_error (ldfile, _("\
-%s: unknown character in collating element definition"),
-			      "LC_COLLATE");
-		  if (arg->val.str.startwc == NULL)
-		    lr_error (ldfile, _("\
-%s: unknown wide character in collating element definition"),
-			      "LC_COLLATE");
-		  else if (arg->val.str.lenwc < 2)
-		    lr_error (ldfile, _("\
-%s: substitution string in collating element definition must have at least two characters"),
-			      "LC_COLLATE");
-
-		  if (symbol != NULL)
-		    {
-		      /* The name is already defined.  */
-		      if (check_duplicate (ldfile, collate, charmap,
-					   repertoire, symbol, symbol_len))
-			goto col_elem_free;
-
-		      if (insert_entry (&collate->elem_table,
-					symbol, symbol_len,
-					new_element (collate,
-						     arg->val.str.startmb,
-						     arg->val.str.lenmb - 1,
-						     arg->val.str.startwc,
-						     symbol, symbol_len, 0))
-			  < 0)
-			lr_error (ldfile, _("\
-error while adding collating element"));
-		    }
-		  else
+		  /* The name is already defined.  */
+		  if (check_duplicate (ldfile, collate, charmap,
+				       repertoire, symbol, symbol_len))
 		    goto col_elem_free;
+
+		  if (insert_entry (&collate->elem_table,
+				    symbol, symbol_len,
+				    new_element (collate,
+						 arg->val.str.startmb,
+						 arg->val.str.lenmb - 1,
+						 arg->val.str.startwc,
+						 symbol, symbol_len, 0)) < 0)
+		    lr_error (ldfile, _("\
+error while adding collating element"));
 		}
 	      else
 		{

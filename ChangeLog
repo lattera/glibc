@@ -1,3 +1,11 @@
+1999-12-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-collate.c (insert_value): Don't pass wide string
+	to new_element if the wide char is not valid.
+	(handle_ellipsis): Likewise.
+	(collate_read): It's no problem if the string in the collating element
+	definition cannot be represented as multibyte or wide char string.
+
 1999-12-13  Andreas Jaeger  <aj@suse.de>
 
 	* resolv/resolv.h: Remove K&R compatibility.
