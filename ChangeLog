@@ -1,3 +1,16 @@
+2004-05-07  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* argp/argp-help.c (__argp_error, __argp_failure): Check result
+	of __asprintf call and don't use string if it failed.
+	* stdio-common/psignal.c (psignal): Likewise.
+	* locale/programs/localedef.c (more_help): Likewise.
+	* resolv/res_hconf.c (arg_service_list, arg_trimdomain_list,
+	arg_bool, parse_line): Check result of __asprintf calls and
+	don't use string if they failed.
+	* sunrpc/svc_simple.c (registerrpc, universal): Likewise.
+	* elf/ldconfig.c (parse_conf_include): Check result of __asprintf
+	call and exit if it failed.
+
 2004-05-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/posix/sysconf.c (__sysconf) <cases _SC_REALTIME_SIGNALS,

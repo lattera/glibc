@@ -57,7 +57,13 @@ psignal (int sig, const char *s)
     {
       char *buf;
 
-      (void) __asprintf (&buf, _("%s%sUnknown signal %d\n"), s, colon, sig);
+      if (__asprintf (&buf, _("%s%sUnknown signal %d\n"), s, colon, sig) < 0)
+	{
+	  if (_IO_fwide (stderr, 0) > 0)
+	    (void) __fwprintf (stderr, L"%s%s%s\n", s, colon, _("Unknown signal"));
+	  else
+	    (void) fprintf (stderr, "%s%s%s\n", s, colon, _("Unknown signal"));
+	}
 
       if (_IO_fwide (stderr, 0) > 0)
 	(void) __fwprintf (stderr, L"%s",  buf);

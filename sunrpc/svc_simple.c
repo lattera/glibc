@@ -84,8 +84,9 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
   if (procnum == NULLPROC)
     {
 
-      (void) __asprintf (&buf, _("can't reassign procedure number %ld\n"),
-			 NULLPROC);
+      if (__asprintf (&buf, _("can't reassign procedure number %ld\n"),
+		      NULLPROC) < 0)
+	buf = NULL;
       goto err_out;
     }
   if (transp == 0)
@@ -101,8 +102,9 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
   if (!svc_register (transp, (u_long) prognum, (u_long) versnum,
 		     universal, IPPROTO_UDP))
     {
-      (void) __asprintf (&buf, _("couldn't register prog %ld vers %ld\n"),
-			 prognum, versnum);
+      if (__asprintf (&buf, _("couldn't register prog %ld vers %ld\n"),
+		      prognum, versnum) < 0)
+	buf = NULL;
       goto err_out;
     }
   pl = (struct proglst_ *) malloc (sizeof (struct proglst_));
@@ -121,6 +123,8 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
   return 0;
 
  err_out:
+  if (buf == NULL)
+    return -1;
 #ifdef USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
     (void) __fwprintf (stderr, L"%s", buf);
@@ -171,16 +175,20 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
 	  return;
 	if (!INTUSE(svc_sendreply) (transp_l, pl->p_outproc, outdata))
 	  {
-	    (void) __asprintf (&buf,
-			       _("trouble replying to prog %d\n"),
-			       pl->p_prognum);
-	    exit (1);
+	    if (__asprintf (&buf, _("trouble replying to prog %d\n"),
+			    pl->p_prognum) < 0)
+	      buf = NULL;
+	    goto err_out2;
 	  }
 	/* free the decoded arguments */
 	(void) svc_freeargs (transp_l, pl->p_inproc, xdrbuf);
 	return;
       }
-  (void) __asprintf (&buf, _("never registered prog %d\n"), prog);
+  if (__asprintf (&buf, _("never registered prog %d\n"), prog) < 0)
+    buf = NULL;
+ err_out2:
+  if (buf == NULL)
+    exit (1);
 #ifdef USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
     __fwprintf (stderr, L"%s", buf);

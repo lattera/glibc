@@ -145,8 +145,10 @@ arg_service_list (const char *fname, int line_num, const char *args,
 	{
 	  char *buf;
 
-	  __asprintf (&buf, _("%s: line %d: expected service, found `%s'\n"),
-		      fname, line_num, start);
+	  if (__asprintf (&buf,
+			  _("%s: line %d: expected service, found `%s'\n"),
+			  fname, line_num, start) < 0)
+	    return 0;
 
 #ifdef USE_IN_LIBIO
 	  if (_IO_fwide (stderr, 0) > 0)
@@ -162,9 +164,10 @@ arg_service_list (const char *fname, int line_num, const char *args,
 	{
 	  char *buf;
 
-	  __asprintf (&buf,
-		      _("%s: line %d: cannot specify more than %d services"),
-		      fname, line_num, SERVICE_MAX);
+	  if (__asprintf (&buf, _("\
+%s: line %d: cannot specify more than %d services"),
+			  fname, line_num, SERVICE_MAX) < 0)
+	    return 0;
 
 #ifdef USE_IN_LIBIO
 	  if (_IO_fwide (stderr, 0) > 0)
@@ -189,9 +192,10 @@ arg_service_list (const char *fname, int line_num, const char *args,
 	    {
 	      char *buf;
 
-	      __asprintf (&buf, _("\
+	      if (__asprintf (&buf, _("\
 %s: line %d: list delimiter not followed by keyword"),
-			  fname, line_num);
+			      fname, line_num) < 0)
+		return 0;
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stderr, 0) > 0)
@@ -229,9 +233,10 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 	{
 	  char *buf;
 
-	  __asprintf (&buf, _("\
+	  if (__asprintf (&buf, _("\
 %s: line %d: cannot specify more than %d trim domains"),
-		      fname, line_num, TRIMDOMAINS_MAX);
+			  fname, line_num, TRIMDOMAINS_MAX) < 0)
+	    return 0;
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stderr, 0) > 0)
@@ -254,9 +259,10 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 	    {
 	      char *buf;
 
-	      __asprintf (&buf, _("\
+	      if (__asprintf (&buf, _("\
 %s: line %d: list delimiter not followed by domain"),
-			  fname, line_num);
+			      fname, line_num) < 0)
+		return 0;
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stderr, 0) > 0)
@@ -316,9 +322,10 @@ arg_bool (const char *fname, int line_num, const char *args, unsigned flag)
     {
       char *buf;
 
-      __asprintf (&buf,
-		  _("%s: line %d: expected `on' or `off', found `%s'\n"),
-		  fname, line_num, args);
+      if (__asprintf (&buf,
+		      _("%s: line %d: expected `on' or `off', found `%s'\n"),
+		      fname, line_num, args) < 0)
+	return 0;
 
 #ifdef USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
@@ -364,8 +371,9 @@ parse_line (const char *fname, int line_num, const char *str)
     {
       char *buf;
 
-      __asprintf (&buf, _("%s: line %d: bad command `%s'\n"),
-		  fname, line_num, start);
+      if (__asprintf (&buf, _("%s: line %d: bad command `%s'\n"),
+		      fname, line_num, start) < 0)
+	return;
 
 #ifdef USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
@@ -392,9 +400,10 @@ parse_line (const char *fname, int line_num, const char *str)
 	  {
 	    char *buf;
 
-	    __asprintf (&buf,
-			_("%s: line %d: ignoring trailing garbage `%s'\n"),
-			fname, line_num, str);
+	    if (__asprintf (&buf,
+			    _("%s: line %d: ignoring trailing garbage `%s'\n"),
+			    fname, line_num, str) < 0)
+	      break;
 
 #ifdef USE_IN_LIBIO
 	    if (_IO_fwide (stderr, 0) > 0)

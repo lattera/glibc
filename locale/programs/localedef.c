@@ -364,14 +364,15 @@ more_help (int key, const char *text, void *input)
     {
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
-      asprintf (&cp, gettext ("\
+      if (asprintf (&cp, gettext ("\
 System's directory for character maps : %s\n\
                        repertoire maps: %s\n\
                        locale path    : %s\n\
 %s"),
-		CHARMAP_PATH, REPERTOIREMAP_PATH, LOCALE_PATH, gettext ("\
+		    CHARMAP_PATH, REPERTOIREMAP_PATH, LOCALE_PATH, gettext ("\
 For bug reporting instructions, please see:\n\
-<http://www.gnu.org/software/libc/bugs.html>.\n"));
+<http://www.gnu.org/software/libc/bugs.html>.\n")) < 0)
+	return NULL;
       return cp;
     default:
       break;

@@ -1034,7 +1034,9 @@ parse_conf_include (const char *config_file, unsigned int lineno,
   char *copy = NULL;
   if (pattern[0] != '/' && strchr (config_file, '/') != NULL)
     {
-      asprintf (&copy, "%s/%s", dirname (strdupa (config_file)), pattern);
+      if (asprintf (&copy, "%s/%s", dirname (strdupa (config_file)),
+		    pattern) < 0)
+	error (EXIT_FAILURE, 0, _("memory exhausted"));
       pattern = copy;
     }
 
