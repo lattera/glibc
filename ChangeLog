@@ -1,5 +1,9 @@
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
+	* locale/findlocale.c [NL_CURRENT_INDIRECT] (_nl_C): New variable.
+	* locale/setlocale.c (setlocale) [NL_CURRENT_INDIRECT]: Null return
+	from _nl_find_locale ok if for _nl_C_name.
+
 	* locale/nl_langinfo.c [NL_CURRENT_INDIRECT]: Use a categories.def
 	iterator to refer to each category's _nl_current_LC_FOO symbol, so
 	we know they are all linked in.

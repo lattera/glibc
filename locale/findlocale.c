@@ -30,9 +30,22 @@
 #include "../iconv/gconv_charset.h"
 
 
-#ifndef SHARED
-/* Constant data defined in setlocale.c.  */
-extern struct locale_data *const _nl_C[] attribute_hidden;
+#ifdef NL_CURRENT_INDIRECT
+# define DEFINE_CATEGORY(category, category_name, items, a) \
+extern struct locale_data _nl_C_##category; \
+weak_extern (_nl_C_##category)
+# include "categories.def"
+# undef	DEFINE_CATEGORY
+
+/* Array indexed by category of pointers to _nl_C_CATEGORY slots.
+   Elements are zero for categories whose data is never used.  */
+struct locale_data *const _nl_C[] attribute_hidden =
+  {
+# define DEFINE_CATEGORY(category, category_name, items, a) \
+    [category] = &_nl_C_##category,
+# include "categories.def"
+# undef	DEFINE_CATEGORY
+  };
 #else
 # define _nl_C		(_nl_C_locobj.__locales)
 #endif

@@ -307,7 +307,14 @@ setlocale (int category, const char *locale)
 						 &newnames[category]);
 
 	    if (newdata[category] == NULL)
-	      break;
+	      {
+#ifdef NL_CURRENT_INDIRECT
+		if (newnames[category] == _nl_C_name)
+		  /* Null because it's the weak value of _nl_C_LC_FOO.  */
+		  continue;
+#endif
+		break;
+	      }
 
 	    /* We must not simply free a global locale since we have no
 	       control over the usage.  So we mark it as un-deletable.  */
