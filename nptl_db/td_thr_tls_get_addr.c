@@ -41,7 +41,7 @@ td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
 
   psaddr_t dtvpp = th->th_unique;
 #if TLS_TCB_AT_TP
-  dtvpp += offsetof (struct pthread, dtv);
+  dtvpp += offsetof (struct pthread, header.dtv);
 #elif TLS_DTV_AT_TP
   dtvpp += TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv);
 #else

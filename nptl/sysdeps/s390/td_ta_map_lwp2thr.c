@@ -35,10 +35,8 @@ td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
   if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
     return TD_ERR;
 
-  /* Get the thread area for the addressed thread.  */
-  if (ps_get_thread_area (ta->ph, lwpid, regs[18] >> 3, &th->th_unique)
-      != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  /* S390 thread register is ACR0, aka register 18.  */
+  th->th_unique = (void *) regs[18];
 
   /* Found it.  Now complete the `td_thrhandle_t' object.  */
   th->th_ta_p = (td_thragent_t *) ta;

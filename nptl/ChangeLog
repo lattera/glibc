@@ -1,3 +1,28 @@
+2003-03-14  Roland McGrath  <roland@redhat.com>
+
+	* descr.h (struct pthread): Move the union out of [!TLS_DTV_AT_TP], so
+	we always define the padding space.
+	[!TLS_DTV_AT_TP]: Give tcbhead_t field a name, `header', since GCC
+	stopped supporting its own extensions fully.
+	[TLS_MULTIPLE_THREADS_IN_TCB]: Put `multiple_threads' inside a wrapper
+	struct also called `header', so `header.multiple_threads' is the field
+	name to use on all machines.
+	* allocatestack.c (allocate_stack): Use `header.' prefix.
+	* sysdeps/pthread/createthread.c (create_thread): Likewise.
+	* pthread_create.c (__pthread_create_2_1): Likewise.
+	* sysdeps/i386/tls.h (INSTALL_NEW_DTV, THREAD_DTV): Likewise.
+	(THREAD_SELF): Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+
+	* sysdeps/s390/td_ta_map_lwp2thr.c (td_ta_map_lwp2thr): Use REGS[18]
+	value directly.
+
 2003-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_create.c (start_thread): setjmp is expected to return 0.
