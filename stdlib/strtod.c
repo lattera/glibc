@@ -102,10 +102,11 @@ static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 #define	RETURN_LIMB_SIZE		howmany (MANT_DIG, BITS_PER_MP_LIMB)
 
 #define RETURN(val,end) \
-	do { if (endptr != 0) *endptr = (char *) end; return val; } while (0)
+  do { if (endptr != 0) *endptr = (char *) (end); return (val); } while (0)
 
 /* Maximum size necessary for mpn integers to hold floating point numbers.  */ 
-#define	MPNSIZE		(howmany (MAX_EXP + 2 * MANT_DIG, BITS_PER_MP_LIMB) + 2)
+#define	MPNSIZE		(howmany (MAX_EXP + 2 * MANT_DIG, BITS_PER_MP_LIMB) \
+			 + 2)
 /* Declare an mpn integer variable that big.  */
 #define	MPN_VAR(name)	mp_limb name[MPNSIZE]; mp_size_t name##size
 /* Copy an mpn integer value.  */
@@ -276,15 +277,23 @@ __mpn_lshift_1 (mp_limb *ptr, mp_size_t size, unsigned int count, mp_limb limb)
 }
 
 
+#define INTERNAL(x) INTERNAL1(x)
+#define INTERNAL1(x) __##x##_internal
+
+/* This file defines a function to check for correct grouping.  */
+#include "grouping.h"
+
+
 /* Return a floating point number with the value of the given string NPTR.
    Set *ENDPTR to the character after the last used one.  If the number is
    smaller than the smallest representable number, set `errno' to ERANGE and
    return 0.0.  If the number is too big to be represented, set `errno' to
    ERANGE and return HUGE_VAL with the approriate sign.  */
 FLOAT
-STRTOF (nptr, endptr)
-    const char *nptr;
-    char **endptr;
+INTERNAL (STRTOF) (nptr, endptr, group)
+     const char *nptr;
+     char **endptr;
+     int group;
 {
   int negative;			/* The sign of the number.  */
   MPN_VAR (num);		/* MP representation of the number.  */
@@ -301,9 +310,9 @@ STRTOF (nptr, endptr)
   int bits;
 
   /* Running pointer after the last character processed in the string.  */
-  const char *cp;
+  const char *cp, *tp;
   /* Start of significant part of the number.  */
-  const char *startp;
+  const char *startp, *start_of_digits;
   /* Points at the character following the integer and fractional digits.  */
   const char *expp;
   /* Total number of digit and number of digits in integer part.  */
@@ -313,60 +322,29 @@ STRTOF (nptr, endptr)
 
   /* The radix character of the current locale.  */
   wchar_t decimal;
-#ifdef	USE_GROUPING
   /* The thousands character of the current locale.  */
   wchar_t thousands;
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
 
-  /* Check the grouping of the integer part at [BEGIN,END).
-     Return zero iff a separator is found out of place.  */
-  int grouping_ok (const char *begin, const char *end)
+  if (group)
     {
-      if (grouping)
-	while (end > begin)
-	  {
-	    const char *p = end;
-	    do
-	      --p;
-	    while (*p != thousands && p > begin);
-	    if (end - 1 - p != *grouping++)
-	      return 0;		/* Wrong number of digits in this group.  */
-	    end = p;		/* Correct group; trim it off the end.  */
-
-	    if (*grouping == 0)
-	      --grouping;	/* Same grouping repeats in next iteration.  */
-	    else if (*grouping == CHAR_MAX || *grouping < 0)
-	      {
-		/* No further grouping allowed.  */
-		while (end > begin)
-		  if (*--end == thousands)
-		    return 0;
-	      }
-	  }
-      return 1;
-    }
-  /* Return with no conversion if the grouping of [STARTP,CP) is bad.  */
-#define	CHECK_GROUPING if (! grouping_ok (startp, cp)) RETURN (0.0, nptr); else
-
-  grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
-  if (*grouping <= 0 || *grouping == CHAR_MAX)
-    grouping = NULL;
-  else
-    {
-      /* Figure out the thousands seperator character.  */
-      if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		  strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
-	thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
-      if (thousands == L'\0')
+      grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
+      if (*grouping <= 0 || *grouping == CHAR_MAX)
 	grouping = NULL;
+      else
+	{
+	  /* Figure out the thousands separator character.  */
+	  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+	    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+	  if (thousands == L'\0')
+	    grouping = NULL;
+	}
     }
-#else
-#define	grouping	NULL
-#define	thousands	L'\0'
-#define	CHECK_GROUPING	((void) 0)
-#endif
+  else
+    grouping = NULL;
 
   /* Find the locale's decimal point character.  */
   if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
@@ -402,18 +380,21 @@ STRTOF (nptr, endptr)
     RETURN (0.0, nptr);
 
   /* Record the start of the digits, in case we will check their grouping.  */
-  startp = cp;
+  start_of_digits = startp = cp;
 
   /* Ignore leading zeroes.  This helps us to avoid useless computations.  */
   while (c == '0' || (thousands != L'\0' && c == thousands))
     c = *++cp;
 
-  CHECK_GROUPING;
-
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
   if (!isdigit (c) && c != decimal)
-    RETURN (0.0, cp);
+    {
+      tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
+      /* If TP is at the start of the digits, there was no correctly
+	 grouped prefix of the string; so no number found.  */
+      RETURN (0.0, tp == start_of_digits ? nptr : tp);
+    }
 
   /* Remember first significant digit and read following characters until the
      decimal point, exponent character or any non-FP number character.  */
@@ -432,7 +413,37 @@ STRTOF (nptr, endptr)
       c = *++cp;
     }
 
-  CHECK_GROUPING;
+  if (grouping && dig_no > 0)
+    {
+      /* Check the grouping of the digits.  */
+      tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
+      if (cp != tp)
+       {
+	  /* Less than the entire string was correctly grouped.  */
+
+	  if (tp == start_of_digits)
+	    /* No valid group of numbers at all: no valid number.  */
+	    RETURN (0.0, nptr);
+
+	  if (tp < startp)
+	    /* The number is validly grouped, but consists
+	       only of zeroes.  The whole value is zero.  */
+	    RETURN (0.0, tp);
+
+	  /* Recompute DIG_NO so we won't read more digits than
+	     are properly grouped.  */
+	  cp = tp;
+	  dig_no = 0;
+	  for (tp = startp; tp < cp; ++tp)
+	    if (isdigit (*tp))
+	      ++dig_no;
+
+	  int_no = dig_no;
+	  lead_zero = 0;
+
+	  goto number_parsed;
+	}
+    }
 
   if (dig_no >= NDIG)
     /* Too many digits to be representable.  Assigning this to EXPONENT
@@ -528,6 +539,8 @@ STRTOF (nptr, endptr)
       assert (dig_no >= int_no);
     }
 
+ number_parsed:
+
   /* The whole string is parsed.  Store the address of the next character.  */
   if (endptr)
     *endptr = (char *) cp;
@@ -546,7 +559,7 @@ STRTOF (nptr, endptr)
     exponent -= incr;
   }
 
-  if (int_no + exponent > MAX_10_EXP)
+  if (int_no + exponent > MAX_10_EXP + 1)
     {
       errno = ERANGE;
       return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
@@ -606,6 +619,14 @@ STRTOF (nptr, endptr)
       /* Determine how many bits of the result we already have.  */
       count_leading_zeros (bits, num[numsize - 1]);
       bits = numsize * BITS_PER_MP_LIMB - bits;
+
+      /* Now we know the exponent of the number in base two.
+	 Check it against the maximum possible exponent.  */
+      if (bits > MAX_EXP)
+	{
+	  errno = ERANGE;
+	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
+	}
 
       /* We have already the first BITS bits of the result.  Together with
 	 the information whether more non-zero bits follow this is enough
@@ -1058,4 +1079,16 @@ STRTOF (nptr, endptr)
   }
 
   /* NOTREACHED */
+}
+
+/* External user entry point.  */
+
+weak_symbol (STRTOF)
+
+FLOAT
+STRTOF (nptr, endptr)
+     const char *nptr;
+     char **endptr;
+{
+  return INTERNAL (STRTOF) (nptr, endptr, 0);
 }

@@ -28,6 +28,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <stdio.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 
 /* Open a directory stream on NAME.  */
@@ -35,8 +36,8 @@ DIR *
 DEFUN(opendir, (name), CONST char *name)
 {
   DIR *dirp;
-  file_t port;
   int fd;
+  struct hurd_fd *d;
 
   fd = __open (name, O_RDONLY);
   if (fd < 0)
@@ -51,13 +52,13 @@ DEFUN(opendir, (name), CONST char *name)
 
   /* Extract the pointer to the descriptor structure.  */
   __mutex_lock (&_hurd_dtable_lock);
-  dirp->__fd = _hurd_dtable[fd];
+  d = dirp->__fd = _hurd_dtable[fd];
   __mutex_unlock (&_hurd_dtable_lock);
 
   /* Set the descriptor to close on exec. */
-  __spin_lock (&dirp->__fd->port.lock);
-  dirp->__fd->flags |= FD_CLOEXEC;
-  __spin_unlock (&dirp->__fd->port.lock);
+  __spin_lock (&d->port.lock);
+  d->flags |= FD_CLOEXEC;
+  __spin_unlock (&d->port.lock);
 
   dirp->__data = dirp->__ptr = NULL;
   dirp->__entry_data = dirp->__entry_ptr = 0;

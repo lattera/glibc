@@ -31,7 +31,7 @@ headers = hurd.h $(interface-headers) \
 distribute := hurdfault.h intr-rpc.awk intr-rpc.defs STATUS
 
 # The RPC interfaces go in a separate library.
-interface-library := libhurduser.a
+interface-library := libhurduser
 user-interfaces		:= $(addprefix hurd/,\
 				       auth process startup \
 				       msg msg_reply msg_request \

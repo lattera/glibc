@@ -22,11 +22,17 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <stdlib.h>
 #include <errno.h>
+#include "../locale/localeinfo.h"
 
-/* Nonzero if we are defining `strtoul' or `strtouq', operating on unsigned
-   integers.  */
-#ifndef	UNSIGNED
+
+/* Nonzero if we are defining `strtoul' or `strtouq', operating on
+   unsigned integers.  */
+#ifndef UNSIGNED
 #define	UNSIGNED	0
+#define INT		LONG int
+#else
+#define	strtol		strtoul
+#define INT		unsigned LONG int
 #endif
 
 /* If QUAD is defined, we are defining `strtoq' or `strtouq',
@@ -54,22 +60,27 @@ static const unsigned long long int maxquad = ULONG_LONG_MAX;
 #define	LONG	long
 #endif
 
+
+#define INTERNAL(x) INTERNAL1(x)
+#define INTERNAL1(x) __##x##_internal
+
+/* This file defines a function to check for correct grouping.  */
+#include "grouping.h"
+
+
 /* Convert NPTR to an `unsigned long int' or `long int' in base BASE.
    If BASE is 0 the base is determined by the presence of a leading
    zero, indicating octal or a leading "0x" or "0X", indicating hexadecimal.
    If BASE is < 2 or > 36, it is reset to 10.
    If ENDPTR is not NULL, a pointer to the character after the last
    one converted is stored in *ENDPTR.  */
-#if	UNSIGNED
-unsigned LONG int
-#define	strtol	strtoul
-#else
-LONG int
-#endif
-strtol (nptr, endptr, base)
+
+INT
+INTERNAL (strtol) (nptr, endptr, base, group)
      const char *nptr;
      char **endptr;
      int base;
+     int group;
 {
   int negative;
   register unsigned LONG int cutoff;
@@ -77,8 +88,33 @@ strtol (nptr, endptr, base)
   register unsigned LONG int i;
   register const char *s;
   register unsigned char c;
-  const char *save;
+  const char *save, *end;
   int overflow;
+
+  /* The thousands character of the current locale.  */
+  wchar_t thousands;
+  /* The numeric grouping specification of the current locale,
+     in the format described in <locale.h>.  */
+  const char *grouping;
+
+  if (group)
+    {
+      grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
+      if (*grouping <= 0 || *grouping == CHAR_MAX)
+	grouping = NULL;
+      else
+	{
+	  /* Figure out the thousands separator character.  */
+	  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+	    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+	  if (thousands == L'\0')
+	    grouping = NULL;
+	}
+    }
+  else
+    grouping = NULL;
+
 
   if (base < 0 || base == 1 || base > 36)
     base = 10;
@@ -126,6 +162,20 @@ strtol (nptr, endptr, base)
   /* Save the pointer so we can check later if anything happened.  */
   save = s;
 
+  if (group)
+    {
+      /* Find the end of the digit string and check its grouping.  */
+      end = s;
+      for (c = *end; c != '\0'; c = *++end)
+	if (c != thousands && !isdigit (c) &&
+	    (!isalpha (c) || toupper (c) - 'A' + 10 >= base))
+	  break;
+      if (*s == thousands)
+	end = s;
+      else
+	end = correctly_grouped_prefix (s, end, thousands, grouping);
+    }
+
   cutoff = ULONG_MAX / (unsigned LONG int) base;
   cutlim = ULONG_MAX % (unsigned LONG int) base;
 
@@ -133,6 +183,8 @@ strtol (nptr, endptr, base)
   i = 0;
   for (c = *s; c != '\0'; c = *++s)
     {
+      if (group && s == end)
+	break;
       if (isdigit (c))
 	c -= '0';
       else if (isalpha (c))
@@ -186,4 +238,17 @@ noconv:
   if (endptr != NULL)
     *endptr = (char *) nptr;
   return 0L;
+}
+
+/* External user entry point.  */
+
+weak_symbol (strtol)
+
+INT
+strtol (nptr, endptr, base)
+     const char *nptr;
+     char **endptr;
+     int base;
+{
+  return INTERNAL (strtol) (nptr, endptr, base, 0);
 }

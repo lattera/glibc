@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <stddef.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <hurd.h>
 
 int
@@ -27,6 +28,7 @@ euidaccess (file, type)
      const char *file;
      int type;
 {
+  error_t err;
   file_t port;
   int allowed, flags;
 
@@ -35,8 +37,8 @@ euidaccess (file, type)
     return -1;
 
   /* Find out what types of access we are allowed to this file.  */
-  err = __file_check_access (file, &allowed);
-  __mach_port_deallocate (__mach_task_self (), file);
+  err = __file_check_access (port, &allowed);
+  __mach_port_deallocate (__mach_task_self (), port);
   if (err)
     return __hurd_fail (err);
 
@@ -54,5 +56,3 @@ euidaccess (file, type)
 
   return 0;
 }
-
-weak_alias (__access, access)

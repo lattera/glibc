@@ -53,7 +53,7 @@ DEFUN(wctomb, (s, wchar), register char *s AND wchar_t wchar)
 	*s = '\0';
       return 1;
     }
-  else if (mb == NULL)
+  else /* if (mb == NULL) */
     {
       if ((wchar_t) (char) wchar == wchar && isascii ((char) wchar))
 	{

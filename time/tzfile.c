@@ -269,7 +269,7 @@ DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
   /* Find the standard and daylight time offsets used by the rule file.
      We choose the offsets in the types of each flavor that are
      transitioned to earliest in time.  */
-  rule_dstoff = 0;
+  rule_stdoff = rule_dstoff = 0;
   for (i = 0; i < num_transitions; ++i)
     {
       if (!rule_stdoff && !types[type_idxs[i]].isdst)

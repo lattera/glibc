@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 #include <ctype.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -32,8 +32,10 @@ size_t
 DEFUN(wcstombs, (s, pwcs, n),
       register char *s AND register CONST wchar_t *pwcs AND register size_t n)
 {
+#if 0
   register CONST mb_char *mb;
   register int shift = 0;
+#endif
 
   register size_t written = 0;
   register wchar_t w;
@@ -49,6 +51,10 @@ DEFUN(wcstombs, (s, pwcs, n),
 	}
       else
 	{
+#if 1
+	  written = (size_t) -1;
+	  break;
+#else
 	  mb = &_ctype_info->mbchar->mb_chars[w + shift];
 	  if (mb->string == NULL || mb->len == 0)
 	    {
@@ -65,6 +71,7 @@ DEFUN(wcstombs, (s, pwcs, n),
 	      written += mb->len;
 	      shift += mb->shift;
 	    }
+#endif
 	}
     }
 

@@ -35,8 +35,8 @@ Cambridge, MA 02139, USA.  */
 # include <string.h>
 #endif
 
-#if defined (HAVE_LIMIT_H) || defined (_LIBC)
-# include <limit.h>
+#if defined (HAVE_LIMITS_H) || defined (_LIBC)
+# include <limits.h>
 #endif
 
 #define LONG_MAX_32_BITS 2147483647

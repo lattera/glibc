@@ -37,7 +37,7 @@ routines	:=							      \
 	strtof strtod strtold						      \
 	system
 
-distribute	:= exit.h
+distribute	:= exit.h grouping.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv
 
 include ../Rules

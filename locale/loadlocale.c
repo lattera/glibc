@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 const size_t _nl_category_num_items[] =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
-    [category] = _NL_NUM_##category,
+    [category] = _NL_ITEM_INDEX (_NL_NUM_##category),
 #include "categories.def"
 #undef	DEFINE_CATEGORY
   };
@@ -60,10 +60,12 @@ _nl_load_locale (int category, char **name)
 
   if ((*name)[0] == '\0')
     {
-      *name = getenv (_nl_category_names[category]);
-      if (! *name || (*name) == '\0')
+      *name = getenv ("LC_ALL");
+      if (! *name || (*name)[0] == '\0')
+	*name = getenv (_nl_category_names[category]);
+      if (! *name || (*name)[0] == '\0')
 	*name = getenv ("LANG");
-      if (! *name || (*name) == '\0')
+      if (! *name || (*name)[0] == '\0')
 	*name = (char *) "local";
     }
 
@@ -172,6 +174,7 @@ _nl_load_locale (int category, char **name)
       newdata->strings[i] = newdata->filedata + idx;
     }
 
+  __close (fd);
   return newdata;
 }
 

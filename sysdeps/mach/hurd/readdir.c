@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <sys/types.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 
 /* Read a directory entry from DIRP.  */
@@ -50,7 +51,7 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	  error_t err;
 
 	  if (err = HURD_FD_PORT_USE (dirp->__fd,
-				      __dir_readdir (dirp->__port,
+				      __dir_readdir (port,
 						     &data, &dirp->__size,
 						     dirp->__entry_ptr,
 						     -1, 0, &nentries)))

@@ -65,41 +65,6 @@ endif
 # Add -I switches to get the right sysdep directories.
 # `+includes' in Makeconfig references $(+sysdep-includes).
 +sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
-
-# Enable object files for different versions of the library.
-# Various things use $(object-suffixes) to know what all to make.
-# The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
-# to pass different flags for each flavor.
-libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
-object-suffixes := .o
-libtype.o := lib%.a
-override CFLAGS += $(CFLAGS-$(suffix $@))
-override CPPFLAGS += $(CPPFLAGS-$(suffix $@))
-ifeq (yes,$(build-shared))
-# Under --enable-shared, we will build a shared library of PIC objects.
-# The PIC object files are named foo.so.
-object-suffixes += .so
-CPPFLAGS-.so = -DPIC
-CFLAGS-.so = -fPIC
-libtype.so := lib%_pic.a
-endif
-ifeq (yes,$(build-profile))
-# Under --enable-profile, we will build a static library of profiled objects.
-# The profiled object files are named foo.po.
-object-suffixes += .po
-CFLAGS-.po = -p
-libtype.po = lib%_p.a
-endif
-ifeq (yes,$(build-omitfp))
-# Under --enable-omitfp, we build an the library optimized without
-# debugging information using -fomit-frame-pointer, and build an extra
-# library with debugging information.  The debuggable objects are named foo.go.
-object-suffixes += .go
-CFLAGS-.go = -g
-CFLAGS-.o = -g0 -O99 -fomit-frame-pointer
-CFLAGS-.so += $(CFLAGS.o)
-libtype.go = lib%_g.a
-endif
 
 # Include any system-specific makefiles.
 
@@ -416,6 +381,14 @@ symdef.%: $(foreach o,$(object-suffixes),\
 .PHONY: objects objs
 objects objs: $(foreach o,$(object-suffixes),$(objects:.o=$o)) \
 	      $(addprefix $(objpfx),$(extra-objs))
+
+# Canned sequence for building an extra library archive.
+define build-extra-lib
+$(patsubst %,cd %;,$(objdir)) \
+$(AR) cru$(verbose) $(@:$(objpfx)%=%) \
+      $(patsubst $(objpfx)%,%,$^)
+$(RANLIB) $@
+endef
 
 # Installation.
 

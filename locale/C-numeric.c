@@ -13,6 +13,6 @@ const struct locale_data _nl_C_LC_NUMERIC =
   {
     ".",
     "",
-    "\377"
+    "\177"
   }
 };

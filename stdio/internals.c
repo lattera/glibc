@@ -265,7 +265,7 @@ DEFUN(flushbuf, (fp, c),
 	    }
 	}
 
-      if (fp->__bufp - fp->__buffer <= buffer_offset)
+      if (fp->__bufp - fp->__buffer <= buffer_offset && flush_only)
 	{
 	  /* There is nothing new in the buffer, only data that
 	     was read back aligned from the file.  */

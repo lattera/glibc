@@ -36,12 +36,11 @@ Cambridge, MA 02139, USA.  */
 #include <limits.h>
 #include <math.h>
 #include <printf.h>
-#include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
 
-/* #define NDEBUG 1 */
+#define NDEBUG			/* Undefine this for debugging assertions.  */
 #include <assert.h>
 
 /* This defines make it possible to use the same code for GNU C library and
@@ -133,7 +132,7 @@ int
 __printf_fp (fp, info, args)
      FILE *fp;
      const struct printf_info *info;
-     va_list *args;
+     const **const args;
 {
   /* The floating-point value to output.  */
   union
@@ -254,7 +253,7 @@ __printf_fp (fp, info, args)
   /* Fetch the argument value.	*/
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     {
-      fpnum.ldbl = va_arg (*args, LONG_DOUBLE);
+      fpnum.ldbl = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
       if (__isnanl (fpnum.ldbl))
@@ -279,7 +278,7 @@ __printf_fp (fp, info, args)
     }
   else
     {
-      fpnum.dbl = va_arg (*args, double);
+      fpnum.dbl = *(const double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
       if (__isnan (fpnum.dbl))

@@ -340,14 +340,49 @@ endif	# gcc
 
 # These are the variables that the implicit compilation rules use.
 CPPFLAGS = $(+includes) $(defines) -include $(..)libc-symbols.h \
-	   $(sysdep-CPPFLAGS)
-override CFLAGS	= $(+cflags) $(sysdep-CFLAGS)
+	   $(sysdep-CPPFLAGS) $(CFLAGS-$(suffix $@))
+override CFLAGS	= $(+cflags) $(sysdep-CFLAGS) $(CPPFLAGS-$(suffix $@))
 
 
 # This is the macro that the implicit linking rules use.
 ifneq "$(filter -g,$(+cflags))" "" # -g is in $(+cflags)
 LDFLAGS	:= -g
 endif
+
+
+# Enable object files for different versions of the library.
+# Various things use $(object-suffixes) to know what all to make.
+# The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
+# to pass different flags for each flavor.
+libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
+object-suffixes := .o
+libtype.o := lib%.a
+ifeq (yes,$(build-shared))
+# Under --enable-shared, we will build a shared library of PIC objects.
+# The PIC object files are named foo.so.
+object-suffixes += .so
+CPPFLAGS-.so = -DPIC
+CFLAGS-.so = -fPIC
+libtype.so := lib%_pic.a
+endif
+ifeq (yes,$(build-profile))
+# Under --enable-profile, we will build a static library of profiled objects.
+# The profiled object files are named foo.po.
+object-suffixes += .po
+CFLAGS-.po = -p
+libtype.po = lib%_p.a
+endif
+ifeq (yes,$(build-omitfp))
+# Under --enable-omitfp, we build an the library optimized without
+# debugging information using -fomit-frame-pointer, and build an extra
+# library with debugging information.  The debuggable objects are named foo.go.
+object-suffixes += .go
+CFLAGS-.go = -g
+CFLAGS-.o = -g0 -O99 -fomit-frame-pointer
+CFLAGS-.so += $(CFLAGS.o)
+libtype.go = lib%_g.a
+endif
+
 
 +gnu-stabs = $(shell echo>&2 '*** BARF ON ME')
 

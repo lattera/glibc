@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <dirent.h>
 #include <dirstream.h>
+#include <hurd/fd.h>
+#include <errno.h>
 
 int
 dirfd (DIR *dirp)
@@ -30,7 +32,7 @@ dirfd (DIR *dirp)
       break;
   if (fd == _hurd_dtablesize)
     {
-      errno = EINVAL
+      errno = EINVAL;
       fd = -1;
     }
   __mutex_unlock (&_hurd_dtable_lock);

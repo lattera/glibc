@@ -255,7 +255,7 @@ setlocale (int category, const char *name)
 	  char *n = alloca (len);
 	  memcpy (n, name, len);
 
-	  while (p = strchr (n, '='))
+	  while ((p = strchr (n, '=')) != NULL)
 	    {
 	      for (i = 0; i < LC_ALL; ++i)
 		if (_nl_category_name_sizes[i] == p - n &&
@@ -353,7 +353,7 @@ setlocale (int category, const char *name)
 	}
 
       /* Now we have loaded all the new data.  Put it in place.  */
-      for (; category < LC_ALL; ++category)
+      for (category = 0; category < LC_ALL; ++category)
 	{
 	  setdata (category, newdata[category]);
 	  setname (category, newnames[category]);

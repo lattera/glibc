@@ -57,6 +57,7 @@ DEFUN(__vfscanf, (s, format, arg),
   register int c;		/* Last char read.  */
   register int do_assign;	/* Whether to do an assignment.  */
   register int width;		/* Maximum field width.  */
+  int group_flag;		/* %' modifier flag.  */
 
   /* Type modifiers.  */
   char is_short, is_long, is_long_double;
@@ -76,8 +77,13 @@ DEFUN(__vfscanf, (s, format, arg),
   /* Signedness for integral numbers.  */
   int number_signed;
   /* Integral holding variables.  */
-  long int num;
-  unsigned long int unum;
+  union
+    {
+      long long int q;
+      unsigned long long int uq;
+      long int l;
+      unsigned long int ul;
+    } num;
   /* Character-buffer pointer.  */
   register char *str, **strptr;
   size_t strsize;
@@ -93,8 +99,8 @@ DEFUN(__vfscanf, (s, format, arg),
     }
 
   /* Figure out the decimal point character.  */
-  if (mbtowc(&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
-	     strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
+  if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
     decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
 
   c = inchar();
@@ -102,10 +108,10 @@ DEFUN(__vfscanf, (s, format, arg),
   /* Run through the format string.  */
   while (*f != '\0')
     {
-      if (!isascii(*f))
+      if (!isascii (*f))
 	{
 	  /* Non-ASCII, may be a multibyte.  */
-	  int len = mblen(f, strlen(f));
+	  int len = mblen (f, strlen(f));
 	  if (len > 0)
 	    {
 	      while (len-- > 0)
@@ -139,15 +145,20 @@ DEFUN(__vfscanf, (s, format, arg),
 	  continue;
 	}
 
-      /* Check for the assignment-suppressant.  */
-      if (*f == '*')
-	{
-	  do_assign = 0;
-	  ++f;
-	}
-      else
-	do_assign = 1;
-		
+      /* Check for the assignment-suppressant and the number grouping flag.  */
+      do_assign = 1;
+      group_flag = 0;
+      while (*f == '*' || *f == '\'')
+	switch (*f++)
+	  {
+	  case '*':
+	    do_assign = 0;
+	    break;
+	  case '\'':
+	    group_flag = 1;
+	    break;
+	  }
+
       /* Find the maximum field width.  */
       width = 0;
       while (isdigit(*f))
@@ -396,9 +407,19 @@ DEFUN(__vfscanf, (s, format, arg),
 	  /* Convert the number.  */
 	  *w = '\0';
 	  if (number_signed)
-	    num = strtol (work, &w, base);
+	    {
+	      if (is_longlong)
+		num.q = __strtoq_internal (work, &w, base, group_flag);
+	      else
+		num.uq = __strtouq_internal (work, &w, base, group_flag);
+	    }
 	  else
-	    unum = strtoul (work, &w, base);
+	    {
+	      if (is_long_double)
+		num.l = __strtol_internal (work, &w, base, group_flag);
+	      else
+		num.ul = __strtoul_internal (work, &w, base, group_flag);
+	    }
 	  if (w == work)
 	    conv_error ();
 
@@ -407,25 +428,25 @@ DEFUN(__vfscanf, (s, format, arg),
 	      if (! number_signed)
 		{
 		  if (is_longlong)
-		    *va_arg (arg, unsigned LONGLONG int *) = unum;
+		    *va_arg (arg, unsigned LONGLONG int *) = num.uq;
 		  else if (is_long)
-		    *va_arg (arg, unsigned long int *) = unum;
+		    *va_arg (arg, unsigned long int *) = num.ul;
 		  else if (is_short)
 		    *va_arg (arg, unsigned short int *)
-		      = (unsigned short int) unum;
+		      = (unsigned short int) num.ul;
 		  else
-		    *va_arg(arg, unsigned int *) = (unsigned int) unum;
+		    *va_arg (arg, unsigned int *) = (unsigned int) num.ul;
 		}
 	      else
 		{
 		  if (is_longlong)
-		    *va_arg(arg, LONGLONG int *) = num;
+		    *va_arg (arg, LONGLONG int *) = num.q;
 		  else if (is_long)
-		    *va_arg(arg, long int *) = num;
+		    *va_arg (arg, long int *) = num.l;
 		  else if (is_short)
-		    *va_arg(arg, short int *) = (short int) num;
+		    *va_arg (arg, short int *) = (short int) num.l;
 		  else
-		    *va_arg(arg, int *) = (int) num;
+		    *va_arg (arg, int *) = (int) num.l;
 		}
 	      ++done;
 	    }
@@ -482,19 +503,19 @@ DEFUN(__vfscanf, (s, format, arg),
 	  *w = '\0';
 	  if (is_long_double)
 	    {
-	      long double d = __strtold (work, &w);
+	      long double d = __strtold_internal (work, &w, group_flag);
 	      if (do_assign && w != work)
 		*va_arg (arg, long double *) = d;
 	    }
 	  else if (is_long)
 	    {
-	      double d = strtod (work, &w);
+	      double d = __strtod_internal (work, &w, group_flag);
 	      if (do_assign && w != work)
 		*va_arg (arg, double *) = d;
 	    }
 	  else
 	    {
-	      float d = __strtof (work, &w);
+	      float d = __strtof_internal (work, &w, group_flag);
 	      if (do_assign && w != work)
 		*va_arg (arg, float *) = d;
 	    }
@@ -536,7 +557,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	    conv_error();
 
 	  *w = '\0';
-	  unum = read_in;
+	  num.ul = read_in;
 	  do
 	    {
 	      if ((strchr (work, c) == NULL) != not_in)
@@ -545,7 +566,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      if (width > 0)
 		--width;
 	    } while (inchar () != EOF && width != 0);
-	  if (read_in == unum)
+	  if (read_in == num.ul)
 	    conv_error ();
 
 	  if (do_assign)

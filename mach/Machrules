@@ -175,38 +175,24 @@ interface-headers: $(interface-headers)
 omit-deps += $(interface-routines)
 
 # Specify the static dependencies of the generated files.
-$(foreach if,$(user-interfaces),$($(if)-calls:%=$(objpfx)RPC_%.o))): \
+$(foreach o,$(object-suffixes),\
+$(foreach if,$(user-interfaces),$($(if)-calls:%=$(objpfx)RPC_%$o))): \
     mach/boolean.h mach/kern_return.h mach/message.h mach/notify.h \
     mach/mach_types.h mach/mig_errors.h mach/mig_support.h mach/msg_type.h \
     $(..)libc-symbols.h $(objpfx)config.h
-$(server-interfaces:%=$(objpfx)%.o): \
+$(foreach o,$(object-suffixes),\
+$(server-interfaces:%=$(objpfx)%$o)): \
     mach/boolean.h mach/kern_return.h mach/message.h mach/mig_errors.h \
     mach/mig_support.h mach/std_types.h
 # The MiG-generated sources also depend on the imports in their .defs files.
 # These dependencies are generated into the .ir files above.
 
-# If defined, $(interface-library) is `libNAME.a'.  It is to be a library
+# If defined, $(interface-library) is `libNAME'.  It is to be a library
 # containing all the MiG-generated functions for the specified interfaces.
 
 ifdef interface-library
 
-$(interface-library)-objs := $(interface-routines:%=%.o)
-
-install-lib += $(interface-library)
-extra-objs += $($(interface-library)-objs)
-
-$(objpfx)$(interface-library): $(addprefix $(objpfx),\
-					   $($(interface-library)-objs))
-ifdef objdir
-	cd $(objdir); $(AR) cru$(verbose) $(@:$(objpfx)%=%) $(^:$(objpfx)%=%)
-else
-	$(AR) cru$(verbose) $@ $^
-endif
-	$(RANLIB) $@
-
-lib-noranlib: $(objpfx)$(interface-library)
-
-mostlyclean:
-	-rm -f $(objpfx)$(interface-library)
+$(interface-library)-routines = $(interface-routines)
+extra-libs += $(interface-library)
 
 endif

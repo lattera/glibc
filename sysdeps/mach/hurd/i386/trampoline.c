@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  i386 version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -51,6 +51,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       int signo;
       long int sigcode;
       struct sigcontext *scp;	/* Points to ctx, below.  */
+      void *sigreturn_addr;
+      void *sigreturn_returns_here;
       struct sigcontext *return_scp; /* Same; arg to sigreturn.  */
       struct sigcontext ctx;
     } *stackframe;
@@ -120,6 +122,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       stackframe->signo = signo;
       stackframe->sigcode = sigcode;
       stackframe->scp = stackframe->return_scp = scp = &stackframe->ctx;
+      stackframe->sigreturn_addr = &__sigreturn;
 
       /* Set up the sigcontext from the current state of the thread.  */
 
@@ -224,11 +227,13 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
        8(%esp)	SCP
      */
   asm volatile
-    ("call %*%%edx\n"		/* Call the handler function.  */
-     "addl $12, %%esp\n"	/* Pop its args.  */
-     "call %P0\n"		/* Call __sigreturn (SCP); never returns.  */
-     "hlt"			/* Just in case.  */
-     : : "i" (&__sigreturn));
+    ("call *%edx\n"		/* Call the handler function.  */
+     "addl $12, %esp\n"		/* Pop its args.  */
+     /* The word at the top of stack is &__sigreturn; following are a dummy
+	word to fill the slot for the address for __sigreturn to return to,
+	and a copy of SCP for __sigreturn's argument.  "Return" to calling
+	__sigreturn (SCP); this call never returns.  */
+     "ret");
 
   /* NOTREACHED */
   return NULL;

@@ -78,9 +78,7 @@ extern double strtod __P ((__const char *__nptr, char **__endptr));
 
 #ifdef	__USE_GNU
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
-extern float __strtof __P ((__const char *__nptr, char **__endptr));
 extern float strtof __P ((__const char *__nptr, char **__endptr));
-extern __long_double_t __strtold __P ((__const char *__nptr, char **__endptr));
 extern __long_double_t strtold __P ((__const char *__nptr, char **__endptr));
 #endif
 
@@ -100,9 +98,57 @@ extern unsigned long long int strtouq __P ((__const char *__nptr,
 					    char **__endptr, int __base));
 #endif /* GCC and use BSD.  */
 
+
+/* The internal entry points for `strtoX' take an extra flag argument
+   saying whether or not to parse locale-dependent number grouping.  */
+
+extern double __strtod_internal (__const char *__nptr,
+				 char **__endptr, int __group);
+extern float __strtof_internal (__const char *__nptr, char **__endptr,
+				int __group);
+extern __long_double_t __strtold_internal (__const char *__nptr,
+					   char **__endptr, int __group);
+extern long int __strtol_internal (__const char *__nptr, char **__endptr,
+				   int __base, int __group);
+extern unsigned long int __strtoul_internal (__const char *__nptr,
+					     char **__endptr, int __base,
+					     int __group);
+extern long long int __strtoq_internal (__const char *__nptr, char **__endptr,
+					int __base, int __group);
+extern unsigned long long int __strtouq_internal (__const char *__nptr,
+						  char **__endptr, int __base,
+						  int __group);
+
 #if defined (__OPTIMIZE__) && __GNUC__ >= 2
+/* Define inline functions which call the internal entry points.  */
+
+extern __inline double strtod (__const char *__nptr, char **__endptr)
+{ return __strtod_internal (__nptr, __endptr, 0); }
+extern __inline long int strtol (__const char *__nptr,
+				 char **__endptr, int __base)
+{ return __strtol_internal (__nptr, __endptr, __base, 0); }
+extern __inline unsigned long int strtoul (__const char *__nptr,
+					   char **__endptr, int __base)
+{ return __strtoul_internal (__nptr, __endptr, __base, 0); }
+
+#ifdef __USE_GNU
+extern __inline float strtof (__const char *__nptr, char **__endptr)
+{ return __strtof_internal (__nptr, __endptr, 0); }
+extern __inline __long_double_t strtold (__const char *__nptr, char **__endptr)
+{ return __strtold_internal (__nptr, __endptr, 0); }
+#endif
+
+#ifdef __USE_BSD
+extern __inline long long int strtoq (__const char *__nptr, char **__endptr,
+				      int __base)
+{ return __strtoq_internal (__nptr, __endptr, __base, 0); }
+extern __inline unsigned long long int strtouq (__const char *__nptr,
+					    char **__endptr, int __base)
+{ return __strtouq_internal (__nptr, __endptr, __base, 0); }
+#endif
+
 extern __inline double atof (__const char *__nptr)
-{ return strtod(__nptr, (char **) NULL); }
+{ return strtod (__nptr, (char **) NULL); }
 extern __inline int atoi (__const char *__nptr)
 { return (int) strtol (__nptr, (char **) NULL, 10); }
 extern __inline long int atol (__const char *__nptr)

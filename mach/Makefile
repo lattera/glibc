@@ -37,7 +37,7 @@ routines = $(mach-syscalls) $(mach-shortcuts) \
 	   mach_error errstring error_compat errsystems \
 	   devstream bootprivport setup-thread $(lock)
 # The RPC interfaces go in a separate library.
-interface-library := libmachuser.a
+interface-library := libmachuser
 user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
 				     memory_object_default		\
