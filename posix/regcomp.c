@@ -25,8 +25,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>
-#include <wctype.h>
+
+#if defined HAVE_WCHAR_H || defined _LIBC
+# include <wchar.h>
+#endif /* HAVE_WCHAR_H || _LIBC */
+#if defined HAVE_WCTYPE_H || defined _LIBC
+# include <wctype.h>
+#endif /* HAVE_WCTYPE_H || _LIBC */
 
 /* In case that the system doesn't have isblank().  */
 #if !defined _LIBC && !defined HAVE_ISBLANK && !defined isblank
@@ -130,30 +135,30 @@ static reg_errcode_t build_range_exp (re_bitset_ptr_t sbcset,
 static reg_errcode_t build_collating_symbol (re_bitset_ptr_t sbcset,
                                              re_charset_t *mbcset,
                                              int *coll_sym_alloc,
-                                             char *name);
+                                             const unsigned char *name);
 # else /* not RE_ENABLE_I18N */
 static reg_errcode_t build_range_exp (re_bitset_ptr_t sbcset,
                                       bracket_elem_t *start_elem,
                                       bracket_elem_t *end_elem);
 static reg_errcode_t build_collating_symbol (re_bitset_ptr_t sbcset,
-                                             char *name);
+                                             const unsigned char *name);
 # endif /* not RE_ENABLE_I18N */
 #endif /* not _LIBC */
 #ifdef RE_ENABLE_I18N
 static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
                                         re_charset_t *mbcset,
                                         int *equiv_class_alloc,
-                                        const char *name);
+                                        const unsigned char *name);
 static reg_errcode_t build_charclass (re_bitset_ptr_t sbcset,
                                       re_charset_t *mbcset,
                                       int *char_class_alloc,
-                                      const char *class_name,
+                                      const unsigned char *class_name,
                                       reg_syntax_t syntax);
 #else  /* not RE_ENABLE_I18N */
 static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
-                                        const char *name);
+                                        const unsigned char *name);
 static reg_errcode_t build_charclass (re_bitset_ptr_t sbcset,
-                                      const char *class_name,
+                                      const unsigned char *class_name,
                                       reg_syntax_t syntax);
 #endif /* not RE_ENABLE_I18N */
 static bin_tree_t *build_word_op (re_dfa_t *dfa, int not, reg_errcode_t *err);
@@ -2290,9 +2295,10 @@ build_range_exp (sbcset, start_elem, end_elem)
 
   /* We can handle no multi character collating elements without libc
      support.  */
-  if (BE ((start_elem->type == COLL_SYM && strlen (start_elem->opr.name) > 1)
-          || (end_elem->type == COLL_SYM && strlen (end_elem->opr.name) > 1),
-          0))
+  if (BE ((start_elem->type == COLL_SYM
+           && strlen ((char *) start_elem->opr.name) > 1)
+          || (end_elem->type == COLL_SYM
+              && strlen ((char *) end_elem->opr.name) > 1), 0))
     return REG_ECOLLATE;
 
 # ifdef RE_ENABLE_I18N
@@ -2388,13 +2394,14 @@ build_collating_symbol (sbcset, mbcset, coll_sym_alloc, name)
 build_collating_symbol (sbcset, name)
 # endif /* not RE_ENABLE_I18N */
      re_bitset_ptr_t sbcset;
-     char *name;
+     const unsigned char *name;
 {
-  if (BE (strlen (name) != 1, 0))
+  size_t name_len = strlen ((const char *) name);
+  if (BE (name_len != 1, 0))
     return REG_ECOLLATE;
   else
     {
-      bitset_set (sbcset, *(unsigned char *) name);
+      bitset_set (sbcset, name[0]);
       return REG_NOERROR;
     }
 }
@@ -2412,7 +2419,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
      reg_errcode_t *err;
 {
 #ifdef _LIBC
-  const char *collseqmb, *collseqwc;
+  const unsigned char *collseqmb;
+  const char *collseqwc;
   uint32_t nrules;
   int32_t table_size;
   const int32_t *symb_table;
@@ -2424,10 +2432,10 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 
   static inline int32_t
   seek_collating_symbol_entry (name, name_len)
-         char *name;
+         const unsigned char *name;
          size_t name_len;
     {
-      int32_t hash = elem_hash (name, name_len);
+      int32_t hash = elem_hash ((const char *) name, name_len);
       int32_t elem = hash % table_size;
       int32_t second = hash % (table_size - 2);
       while (symb_table[2 * elem] != 0)
@@ -2477,11 +2485,12 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
         }
       else if (br_elem->type == COLL_SYM)
         {
+          size_t sym_name_len = strlen ((char *) br_elem->opr.name);
           if (nrules != 0)
             {
               int32_t elem, idx;
               elem = seek_collating_symbol_entry (br_elem->opr.name,
-                                                  strlen (br_elem->opr.name));
+                                                  sym_name_len);
               if (symb_table[2 * elem] != 0)
                 {
                   /* We found the entry.  */
@@ -2500,16 +2509,15 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
                   /* Return the collation sequence value.  */
                   return *(unsigned int *) (extra + idx);
                 }
-              else if (symb_table[2 * elem] == 0 &&
-                       strlen (br_elem->opr.name) == 1)
+              else if (symb_table[2 * elem] == 0 && sym_name_len == 1)
                 {
                   /* No valid character.  Match it as a single byte
                      character.  */
-                  return collseqmb[*(unsigned char *) br_elem->opr.name];
+                  return collseqmb[br_elem->opr.name[0]];
                 }
             }
-          else if (strlen (br_elem->opr.name) == 1)
-            return collseqmb[*(unsigned char *) br_elem->opr.name];
+          else if (sym_name_len == 1)
+            return collseqmb[br_elem->opr.name[0]];
         }
       return UINT_MAX;
     }
@@ -2616,12 +2624,13 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   build_collating_symbol (sbcset, name)
 # endif /* not RE_ENABLE_I18N */
          re_bitset_ptr_t sbcset;
-         char *name;
+         const unsigned char *name;
     {
       int32_t elem, idx;
+      size_t name_len = strlen ((const char *) name);
       if (nrules != 0)
         {
-          elem = seek_collating_symbol_entry (name, strlen (name));
+          elem = seek_collating_symbol_entry (name, name_len);
           if (symb_table[2 * elem] != 0)
             {
               /* We found the entry.  */
@@ -2629,11 +2638,11 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
               /* Skip the name of collating element name.  */
               idx += 1 + extra[idx];
             }
-          else if (symb_table[2 * elem] == 0 && strlen (name) == 1)
+          else if (symb_table[2 * elem] == 0 && name_len == 1)
             {
               /* No valid character, treat it as a normal
                  character.  */
-              bitset_set (sbcset, *(unsigned char *) name);
+              bitset_set (sbcset, name[0]);
               return REG_NOERROR;
             }
           else
@@ -2660,11 +2669,11 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
         }
       else
         {
-          if (BE (strlen (name) != 1, 0))
+          if (BE (name_len != 1, 0))
             return REG_ECOLLATE;
           else
             {
-              bitset_set (sbcset, *(unsigned char *) name);
+              bitset_set (sbcset, name[0]);
               return REG_NOERROR;
             }
         }
@@ -2683,7 +2692,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   bin_tree_t *work_tree;
   int token_len, new_idx;
 #ifdef _LIBC
-  collseqmb = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQMB);
+  collseqmb = (const unsigned char *)
+    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQMB);
   nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
   if (nrules)
     {
@@ -2750,8 +2760,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   while (1)
     {
       bracket_elem_t start_elem, end_elem;
-      char start_name_buf[BRACKET_NAME_BUF_SIZE];
-      char end_name_buf[BRACKET_NAME_BUF_SIZE];
+      unsigned char start_name_buf[BRACKET_NAME_BUF_SIZE];
+      unsigned char end_name_buf[BRACKET_NAME_BUF_SIZE];
       reg_errcode_t ret;
       int token_len2 = 0, is_range_exp = 0;
       re_token_t token2;
@@ -3023,7 +3033,7 @@ build_equiv_class (sbcset, mbcset, equiv_class_alloc, name)
 build_equiv_class (sbcset, name)
 #endif /* not RE_ENABLE_I18N */
      re_bitset_ptr_t sbcset;
-     const char *name;
+     const unsigned char *name;
 {
 #if defined _LIBC && defined RE_ENABLE_I18N
   uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
@@ -3031,14 +3041,14 @@ build_equiv_class (sbcset, name)
     {
       const int32_t *table, *indirect;
       const unsigned char *weights, *extra, *cp;
-      char char_buf[2];
+      unsigned char char_buf[2];
       int32_t idx1, idx2;
       unsigned int ch;
       size_t len;
       /* This #include defines a local function!  */
 # include <locale/weight.h>
       /* Calculate the index for equivalence class.  */
-      cp = (const unsigned char *) name;
+      cp = name;
       table = (const int32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
       weights = (const unsigned char *) _NL_CURRENT (LC_COLLATE,
 					       _NL_COLLATE_WEIGHTMB);
@@ -3047,17 +3057,17 @@ build_equiv_class (sbcset, name)
       indirect = (const int32_t *) _NL_CURRENT (LC_COLLATE,
                                                 _NL_COLLATE_INDIRECTMB);
       idx1 = findidx (&cp);
-      if (BE (idx1 == 0 || (const char *) cp < name + strlen (name), 0))
+      if (BE (idx1 == 0 || cp < name + strlen ((const char *) name), 0))
         /* This isn't a valid character.  */
         return REG_ECOLLATE;
 
       /* Build single byte matcing table for this equivalence class.  */
-      char_buf[1] = '\0';
+      char_buf[1] = (unsigned char) '\0';
       len = weights[idx1];
       for (ch = 0; ch < SBC_MAX; ++ch)
         {
           char_buf[0] = ch;
-          cp = (unsigned char *) char_buf;
+          cp = char_buf;
           idx2 = findidx (&cp);
 /*
           idx2 = table[ch];
@@ -3093,9 +3103,9 @@ build_equiv_class (sbcset, name)
   else
 #endif /* _LIBC && RE_ENABLE_I18N */
     {
-      if (BE (strlen (name) != 1, 0))
+      if (BE (strlen ((const char *) name) != 1, 0))
         return REG_ECOLLATE;
-      bitset_set (sbcset, *(unsigned char *) name);
+      bitset_set (sbcset, *name);
     }
   return REG_NOERROR;
 }
@@ -3115,11 +3125,11 @@ build_charclass (sbcset, mbcset, char_class_alloc, class_name, syntax)
 build_charclass (sbcset, class_name, syntax)
 #endif /* not RE_ENABLE_I18N */
      re_bitset_ptr_t sbcset;
-     const char *class_name;
+     const unsigned char *class_name;
      reg_syntax_t syntax;
 {
   int i;
-  const char *name = class_name;
+  const char *name = (const char *) class_name;
 
   /* In case of REG_ICASE "upper" and "lower" match the both of
      upper and lower cases.  */
@@ -3236,7 +3246,7 @@ build_word_op (dfa, not, err)
 #ifdef RE_ENABLE_I18N
                          mbcset, &alloc,
 #endif /* RE_ENABLE_I18N */
-                         "alpha", 0);
+                         (const unsigned char *) "alpha", 0);
 
   if (BE (ret != REG_NOERROR, 0))
     {
