@@ -190,7 +190,7 @@ pargdef (definition * def)
 	    }
 	  f_print (fout, "};\n");
 	  f_print (fout, "typedef struct %s %s;\n", name, name);
-	  storexdrfuncdecl (name, 0);
+	  storexdrfuncdecl (name, 1);
 	  f_print (fout, "\n");
 	}
     }
