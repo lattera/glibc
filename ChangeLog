@@ -1,3 +1,9 @@
+2004-10-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add entries for setaltroot,
+	key_add, key_request, and keyctl syscalls.
+	* sysdeps/unix/sysv/linux/Versions: Export them.
+
 2004-10-19  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/readonly-area.c: New file.

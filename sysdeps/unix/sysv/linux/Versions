@@ -114,6 +114,9 @@ libc {
   }
   GLIBC_2.3.4 {
     sched_getaffinity; sched_setaffinity;
+
+    # new syscalls
+    setaltroot; add_key; request_key; keyctl;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries
