@@ -1,3 +1,7 @@
+2002-02-03  Andreas Schwab  <schwab@suse.de>
+
+	* stdio-common/tst-rndseek.c: Increase timeout.
+
 2002-02-02  Ulrich Drepper  <drepper@redhat.com>
 
 	Change ld.so to not use functions which are exported.  One cannot
