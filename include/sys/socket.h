@@ -15,4 +15,8 @@ extern int __socketpair (int __domain, int __type, int __protocol,
    ioctl calls to talk to the kernel.  */
 extern int __opensock (void) internal_function;
 
+/* Put the address of the peer connected to socket FD into *ADDR
+   (which is *LEN bytes long), and its actual length into *LEN.  */
+extern int __getpeername (int __fd, __SOCKADDR_ARG __addr, socklen_t *__len);
+
 #endif
