@@ -397,7 +397,7 @@ $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(elfobjdir)/sofini.os $(elfobjdir)/ld.so \
 			 $(libc-map)
 	$(build-shlib)
-common-generated += libc.so
+common-generated += libc.so libc_pic.os
 ifdef libc.so-version
 $(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
 	$(make-link)
