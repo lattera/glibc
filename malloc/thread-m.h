@@ -102,7 +102,7 @@ typedef pthread_mutex_t	mutex_t;
 
 #include <bits/libc-tsd.h>
 
-typedef int tsd_key_t[0];	/* no key data structure, libc magic does it */
+typedef int tsd_key_t[1];	/* no key data structure, libc magic does it */
 __libc_tsd_define (, MALLOC)	/* declaration/common definition */
 #define tsd_key_create(key, destr)	((void) (key))
 #define tsd_setspecific(key, data)	__libc_tsd_set (MALLOC, (data))

@@ -1,5 +1,7 @@
 2000-11-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/thread-m.h: gcc doesn't tolerate zero-sized types anymore.
+
 	* csu/gmon-start.c: Always have prototype for __gmon_start.
 	* csu/version.c: Add prototypes for __libc_print_version and
 	__libc_main.
