@@ -1324,9 +1324,15 @@ process_envvars (enum mode *modep, int *lazyp)
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
-      size_t len = strcspn (envline, "=") - 3;
+      size_t len = strcspn (envline, "=");
 
-      switch (len)
+      if (envline[len] != '=')
+	/* This is a "LD_" variable at the end of the string without
+	   a '=' character.  Ignore it since otherwise we will access
+	   invalid memory below.  */
+	break;
+
+      switch (len - 3)
 	{
 	case 4:
 	  /* Warning level, verbose or not.  */

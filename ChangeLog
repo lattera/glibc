@@ -1,3 +1,7 @@
+2000-06-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (process_envvars): Test for = after variable name.
+
 2000-06-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/initfini.c (_init): One less relocation.  Don't
