@@ -221,8 +221,18 @@ bool_t xdr_ypresp_val();
 
 struct ypresp_key_val {
 	ypstat stat;
+#ifdef STUPID_SUN_BUG
+	/* This is the form as distributed by Sun.  But even the Sun NIS
+	   servers expect the values in the other order.  So their
+	   implementation somehow must change the order internally.  We
+	   don't want to follow this bad example since the user should be
+	   able to use rpcgen on this file.  */
 	keydat key;
 	valdat val;
+#else
+	valdat val;
+	keydat key;
+#endif
 };
 typedef struct ypresp_key_val ypresp_key_val;
 #ifdef __cplusplus

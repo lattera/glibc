@@ -70,7 +70,7 @@ cannot match @samp{.} as the first character of @var{string}.
 If you set both @code{FNM_PERIOD} and @code{FNM_FILE_NAME}, then the
 special treatment applies to @samp{.} following @samp{/} as well as to
 @samp{.} at the beginning of @var{string}.  (The shell uses the
-@code{FNM_PERIOD} and @code{FNM_FILE_NAME} falgs together for matching
+@code{FNM_PERIOD} and @code{FNM_FILE_NAME} flags together for matching
 file names.)
 
 @comment fnmatch.h

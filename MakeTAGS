@@ -84,17 +84,22 @@ sources += $(foreach lib,$(extra-libs),$($(lib)-routines:=.c))
 
 # All different versions of $(sources), preserving the configured sysdep
 # directory order.
+# Files that are found in the current directory cannot occur in
+# sysdep directories, so don't bother searching them.
+sysdep-sources := $(filter-out $(wildcard $(sources)), $(sources))
 all-sources = $(wildcard $(sort $(sources) $(sources:.c=.S) $(sources:.c=.s) \
 				$(others:=.c) $(tests:=.c))) \
 	      $(foreach dir,$(all-dirs),\
 			$(wildcard \
 			   $(addprefix $(dir)/,\
-				       $(sort $(sources) $(sources:.c=.S) \
-					      $(sources:.c=.s)))))
+				       $(sort $(sysdep-sources) \
+					      $(sysdep-sources:.c=.S) \
+					      $(sysdep-sources:.c=.s)))))
 
+sysdep-headers := $(filter-out $(wildcard $(headers)), $(headers))
 all-headers = $(wildcard $(headers)) \
 	      $(foreach dir,$(all-dirs),\
-			$(wildcard $(addprefix $(dir)/,$(headers))))
+			$(wildcard $(addprefix $(dir)/,$(sysdep-headers))))
 
 tags_sources := $(strip $(tags_sources))
 

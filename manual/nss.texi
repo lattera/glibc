@@ -8,7 +8,7 @@
 @cindex databases
 Various functions in the C Library need to be configured to work
 correctly in the local environment.  Traditionally, this was done by
-using files (e.g., @file{/etc/passwd}), but other nameservices (line the
+using files (e.g., @file{/etc/passwd}), but other nameservices (like the
 Network Information Service (NIS) and the Domain Name Service (DNS))
 became popular, and were hacked into the C library, usually with a fixed
 search order (@pxref{frobnicate, , ,jargon, The Jargon File}).
@@ -20,7 +20,7 @@ scheme @dfn{Name Service Switch} (NSS).
 
 Though the interface might be similar to Sun's version there is no
 common code.  We never saw any source code of Sun's implementation and
-so the internal interface is incompatible.  This is also manifests in the
+so the internal interface is incompatible.  This also manifests in the
 file names we use as we will see later.
 
 

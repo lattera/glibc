@@ -1,3 +1,69 @@
+1997-02-04 02:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Version 2.0.1 net release.
+
+1997-02-03 23:34  Stephen L Moshier  <moshier@world.std.com>
+
+	* sysdeps/libm-ieee754/s_tanhl.c: Fix backwards result sign.
+
+1997-02-03 19:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/getsubopt.c: Don't return `=' for suboption which has
+	a parameter.  Reported by Gary L. Hennigan <glhenni@cs.sandia.gov>.
+
+1997-02-03 18:20  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
+
+	* nis/rpcsvc/yp_proh.h (ypresp_key_val): Also change order of
+	values as in yp.x and yp.h.
+
+1997-02-03 16:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/rpcsvc/yp.x (struct ypresp_key_val): Revert patch from
+	1997-02-03 02:17.  Sun's implementation internally corrects
+	this bug but we don't want to hide this from the user.
+	* nis/rpcsvc/yp.h: Likewise.
+
+1997-02-01 18:28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/net/ppp_defs.h: Protect against multiple
+	inclusion.
+
+1997-02-02 14:56  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/nss.texi, manual/pattern.texi, manual/string.texi: Doc
+	fixes.
+
+1997-02-02 11:51  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* MakeTAGS (sysdep-sources, sysdep-headers): New variables.
+	(all-sources, all-headers): Use them instead of $(sources) and
+	$(headers) when searching in sysdep directories.
+
+1997-02-02 11:49  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (REAL_MAKE_VERSION): Use internal make function
+	instead of shelling out.
+
+1997-02-02 11:47  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/Makefile (install-test-data): Remove mkdir command, zic can
+	handle that gracefully.
+
+1997-02-03 14:07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/asm-syntax.h: Add back file which got lost sometime
+	somehow.
+
+1997-02-02 07:46  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/Makefile: Check $(cross-compiling) only after including
+	../Makeconfig.
+	($(objpfx)rpcsvc/%.h, $(objpfx)x%.c): Add empty command to force
+	being considered as a rule.
+	(generated): Add stamp files before the inclusion of Makerules to
+	magically mark them as not being intermediate via the `generated'
+	target.
+
 1997-02-03 02:33  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-deps.c (_dl_map_object_deps): Handle multiple AUXILIARY

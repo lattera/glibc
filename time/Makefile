@@ -169,7 +169,6 @@ CFLAGS-tzset.c = $(tz-cflags)
 .PHONY: install-test-data
 install-test-data: northamerica $(objpfx)zic $(leapseconds) yearistype \
 		   etcetera simplebackw
-	-mkdir $(objpfx)testdata
 	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
 	  -y yearistype northamerica
 	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \

@@ -54,11 +54,8 @@ headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 			   svc_auth.h types.h xdr.h auth_des.h) \
 	  $(rpcsvc:%=rpcsvc/%)
 install-others = $(inst_sysconfdir)/rpc
-ifeq (no,$(cross-compiling))
-headers += $(rpcsvc:%.x=rpcsvc/%.h)
-install-others += $(inst_includedir)/rpcsvc/bootparam_prot.h
-endif
-generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c)
+generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) \
+	    $(rpcsvc:%.x=rpcsvc/%.stmp) $(rpcsvc:%.x=x%.stmp)
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \
@@ -89,6 +86,8 @@ include ../Makeconfig
 
 ifeq (no,$(cross-compiling))
 # We can only build this library if we can run the rpcgen we build.
+headers += $(rpcsvc:%.x=rpcsvc/%.h)
+install-others += $(inst_includedir)/rpcsvc/bootparam_prot.h
 extra-libs := librpcsvc
 extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
 librpcsvc-routines = $(rpcsvc:%.x=x%)
@@ -120,8 +119,7 @@ defines := $(defines) -D_PATH_RPC='"$(sysconfdir)/rpc"'
 # Generate the rpcsvc headers with rpcgen.
 # We use a stamp file to avoid unnessary recompilation each time rpcgen is
 # relinked.
-$(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
-	@:
+$(rpcsvc:%.x=$(objpfx)rpcsvc/%.h): $(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp;
 $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)
 	-@rm -f ${@:stmp=T} $@
@@ -132,8 +130,7 @@ $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	touch $@
 
 # Generate the rpcsvc XDR functions with rpcgen.
-$(objpfx)x%.c: $(objpfx)x%.stmp
-	@:
+$(rpcsvc:%.x=$(objpfx)x%.c): $(objpfx)x%.c: $(objpfx)x%.stmp;
 $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	-@rm -f ${@:stmp=T} $@
 	$(rpcgen-cmd) -c $< -o ${@:stmp=T}
@@ -141,8 +138,6 @@ $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	then rm -f ${@:stmp=T}; \
 	else mv -f ${@:stmp=T} ${@:stmp=c}; fi
 	touch $@
-
-generated += $(rpcsvc:%.x=rpcsvc/%.stmp) $(rpcsvc:%.x=x%.stmp)
 
 # The generated source files depend on the corresponding generated headers.
 # Gratuitous dependency on generated .c file here just gets it mentioned to

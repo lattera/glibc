@@ -87,6 +87,6 @@ static long double one=1.0, two=2.0, tiny = 1.0e-4900L;
 	} else {
 	    z = one - tiny;		/* raised inexact flag */
 	}
-	return (se>0x7fff)? z: -z;
+	return (se>0x7fff)? -z: z;
 }
 weak_alias (__tanhl, tanhl)

@@ -1,5 +1,5 @@
 /* Parse comma separate list into words.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -57,7 +57,7 @@ getsubopt (optionp, tokens, valuep)
 	&& tokens[cnt][vstart - *optionp] == '\0')
       {
 	/* We found the current option in TOKENS.  */
-	*valuep = vstart != endp ? vstart : NULL;
+	*valuep = vstart != endp ? vstart + 1 : NULL;
 
 	if (*endp != '\0')
 	  *endp++ = '\0';

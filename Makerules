@@ -26,7 +26,7 @@ This makefile requires GNU Make.
 endif
 
 REQUIRED_MAKE_VERSION = 3.74
-REAL_MAKE_VERSION = $(shell echo "$(MAKE_VERSION)" | sed 's/ .*//')
+REAL_MAKE_VERSION = $(firstword $(MAKE_VERSION))
 
 ifneq ($(REQUIRED_MAKE_VERSION), \
        $(firstword $(sort $(REAL_MAKE_VERSION) $(REQUIRED_MAKE_VERSION))))

@@ -601,7 +601,7 @@ strcmp ("hello", "world")
     @result{} -15  /* @r{The character @code{'h'} comes before @code{'w'}.} */
 strcmp ("hello", "hello, world")
     @result{} -44  /* @r{Comparing a null character against a comma.} */
-strncmp ("hello", "hello, world"", 5)
+strncmp ("hello", "hello, world", 5)
     @result{} 0    /* @r{The initial 5 characters are the same.} */
 strncmp ("hello, world", "hello, stupid world!!!", 5)
     @result{} 0    /* @r{The initial 5 characters are the same.} */
