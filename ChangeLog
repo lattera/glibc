@@ -1,5 +1,22 @@
 2003-03-27  Roland McGrath  <roland@redhat.com>
 
+	* scripts/abilist.awk: If variable `parse_names' is set, grok the file
+	header lines and write out foo.symlist files for each foo.so.NN listed.
+
+	* libio/libioP.h (_IO_wfile_jumps): Remove attribute_hidden.
+	This symbol is exported, and we don't want to hide it.
+	Add libc_hidden_proto instead.
+	(_IO_file_jumps): Add libc_hidden_proto.
+	* libio/wfileops.c (_IO_wfile_jumps): Add libc_hidden_data_def.
+	Remove INTVARDEF.
+	* libio/fileops.c (_IO_file_jumps): Likewise.
+	* libio/stdfiles.c: Don't use INTUSE on them.
+	* libio/iofdopen.c (_IO_new_fdopen): Likewise.
+	* libio/iofopen.c (__fopen_internal): Likewise.
+	* libio/freopen.c (freopen): Likewise.
+	* libio/freopen64.c (freopen64): Likewise.
+	* libio/iovdprintf.c (_IO_vdprintf): Likewise.
+
 	* Makerules (check-abi) [$(enable-check-abi) = warn]:
 	Ignore exit status from diff.
 	* configure.in (enable_check_abi): Document possible value "warn".

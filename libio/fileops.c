@@ -457,7 +457,7 @@ _IO_file_setbuf_mmap (fp, p, len)
   _IO_FILE *result;
 
   /* Change the function table.  */
-  _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &INTUSE(_IO_file_jumps);
+  _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
   fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
 
   /* And perform the normal operation.  */
@@ -709,7 +709,7 @@ mmap_remap_check (_IO_FILE *fp)
       fp->_IO_buf_base = fp->_IO_buf_end = NULL;
       _IO_setg (fp, NULL, NULL, NULL);
       if (fp->_mode <= 0)
-	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &INTUSE(_IO_file_jumps);
+	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
       else
 	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps;
       fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
@@ -802,7 +802,7 @@ decide_maybe_mmap (_IO_FILE *fp)
   /* We couldn't use mmap, so revert to the vanilla file operations.  */
 
   if (fp->_mode <= 0)
-    _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &INTUSE(_IO_file_jumps);
+    _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
   else
     _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps;
   fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
@@ -1587,7 +1587,7 @@ struct _IO_jump_t _IO_file_jumps =
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };
-INTVARDEF(_IO_file_jumps)
+libc_hidden_data_def (_IO_file_jumps)
 
 struct _IO_jump_t _IO_file_jumps_mmap =
 {

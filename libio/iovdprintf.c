@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997-2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997-2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,8 +41,8 @@ _IO_vdprintf (d, format, arg)
 #ifdef _IO_MTSAFE_IO
   tmpfil.file._lock = NULL;
 #endif
-  _IO_no_init (&tmpfil.file, _IO_USER_LOCK, 0, &wd, &INTUSE(_IO_wfile_jumps));
-  _IO_JUMPS (&tmpfil) = &INTUSE(_IO_file_jumps);
+  _IO_no_init (&tmpfil.file, _IO_USER_LOCK, 0, &wd, &_IO_wfile_jumps);
+  _IO_JUMPS (&tmpfil) = &_IO_file_jumps;
   INTUSE(_IO_file_init) (&tmpfil);
 #if  !_IO_UNIFIED_JUMPTABLES
   tmpfil.vtable = NULL;

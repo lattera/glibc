@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,1994,1997-1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1994,1997,1998,1999,2000,2002,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -152,12 +153,12 @@ _IO_new_fdopen (fd, mode)
 	       (use_mmap && (read_write & _IO_NO_WRITES))
 	       ? &_IO_wfile_jumps_maybe_mmap :
 #endif
-	       &INTUSE(_IO_wfile_jumps));
+	       &_IO_wfile_jumps);
   _IO_JUMPS (&new_f->fp) =
 #ifdef _G_HAVE_MMAP
     (use_mmap && (read_write & _IO_NO_WRITES)) ? &_IO_file_jumps_maybe_mmap :
 #endif
-      &INTUSE(_IO_file_jumps);
+      &_IO_file_jumps;
   INTUSE(_IO_file_init) (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;

@@ -1,6 +1,27 @@
 # This awk script processes the output of objdump --dynamic-syms
 # into a simple format that should not change when the ABI is not changing.
 
+BEGIN {
+  if (parse_names)
+    out = "/dev/stderr";
+  else
+    out = "/dev/stdout";
+}
+
+# Per-file header.
+/[^ :]+\.so\.[0-9]+:[ 	]+.file format .*$/ {
+  if (parse_names && soname != "")
+    emit(1);
+
+  sofullname = $1;
+  sub(/:$/, "", sofullname);
+  soname = sofullname;
+  sub(/^.*\//, "", soname);
+  sub(/\.so\.[0-9]+$/, "", soname);
+
+  next
+}
+
 # Normalize columns.
 /^[0-9a-fA-F]+      / { sub(/      /, "  -   ") }
 
@@ -41,11 +62,11 @@ $2 == "g" || $2 == "w" && NF == 7 {
     size = "";
   }
   else {
-    print symbol, version, weak, "?", type, $4, $5;
+    print symbol, version, weak, "?", type, $4, $5 >> out;
     next;
   }
   if (size == " 0x") {
-    print symbol, version, weak, "?", type, $4, $5;
+    print symbol, version, weak, "?", type, $4, $5 >> out;
     next;
   }
 
@@ -66,10 +87,20 @@ $2 == "g" || $2 == "w" && NF == 7 {
 NF == 0 || /DYNAMIC SYMBOL TABLE/ || /file format/ { next }
 
 {
-  print "Don't grok this line:", $0
+  print "Don't grok this line:", $0 >> out
 }
 
-END {
+function emit(tofile) {
+  if (tofile) {
+    out = prefix soname ".symlist";
+    if (soname in outfiles)
+      out = out "." ++outfiles[soname];
+    else
+      outfiles[soname] = 1;
+  }
+  else
+    out = "/dev/stdout";
+
   nverlist = 0;
   for (version in versions) {
     if (nverslist == 0) {
@@ -102,9 +133,22 @@ END {
   for (i = 1; i <= nverslist; ++i) {
     version = order[i];
 
-    print version;
-    outpipe = "sort";
+    print version >> out;
+    outpipe = "sort >> " out;
     print versions[version] | outpipe;
     close(outpipe);
+
+    delete versions[version];
+  }
+
+  if (tofile)
+    print "wrote", out, "for", sofullname;
+}
+
+END {
+  if (! parse_names)
+    emit(0);
+  else if (soname != "") {
+    emit(1);
   }
 }

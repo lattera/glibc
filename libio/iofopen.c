@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997,1998,1999,2000,2002,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,11 +81,11 @@ __fopen_internal (filename, mode, is32)
   new_f->fp.file._lock = &new_f->lock;
 #endif
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &INTUSE(_IO_wfile_jumps));
+  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
 #else
   _IO_no_init (&new_f->fp.file, 1, 0, NULL, NULL);
 #endif
-  _IO_JUMPS (&new_f->fp) = &INTUSE(_IO_file_jumps);
+  _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
   INTUSE(_IO_file_init) (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;

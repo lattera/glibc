@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,95,96,97,98,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,98,2000,2001,2002,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,9 +68,9 @@ freopen (filename, mode, fp)
 #endif
     {
       INTUSE(_IO_file_close_it) (fp);
-      _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &INTUSE(_IO_file_jumps);
+      _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
       if (fp->_vtable_offset == 0 && fp->_wide_data != NULL)
-	fp->_wide_data->_wide_vtable = &INTUSE(_IO_wfile_jumps);
+	fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
       result = INTUSE(_IO_file_fopen) (fp, filename, mode, 1);
       if (result != NULL)
 	result = __fopen_maybe_mmap (result);

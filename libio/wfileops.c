@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,98,99,2000,2001,2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -879,7 +879,7 @@ struct _IO_jump_t _IO_wfile_jumps =
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };
-INTVARDEF(_IO_wfile_jumps)
+libc_hidden_data_def (_IO_wfile_jumps)
 
 
 struct _IO_jump_t _IO_wfile_jumps_mmap =

@@ -450,9 +450,11 @@ extern int _IO_default_showmanyc __P ((_IO_FILE *));
 extern void _IO_default_imbue __P ((_IO_FILE *, void *));
 
 extern struct _IO_jump_t _IO_file_jumps;
+libc_hidden_proto (_IO_file_jumps)
 extern struct _IO_jump_t _IO_file_jumps_mmap attribute_hidden;
 extern struct _IO_jump_t _IO_file_jumps_maybe_mmap attribute_hidden;
-extern struct _IO_jump_t _IO_wfile_jumps attribute_hidden;
+extern struct _IO_jump_t _IO_wfile_jumps;
+libc_hidden_proto (_IO_wfile_jumps)
 extern struct _IO_jump_t _IO_wfile_jumps_mmap attribute_hidden;
 extern struct _IO_jump_t _IO_wfile_jumps_maybe_mmap attribute_hidden;
 extern struct _IO_jump_t _IO_old_file_jumps attribute_hidden;
