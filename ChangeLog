@@ -1,3 +1,7 @@
+2001-09-22  Andreas Jaeger  <aj@suse.de>
+
+	* math/math_private.h: Add prototypes.
+
 2001-09-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/Dist: New.

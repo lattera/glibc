@@ -293,6 +293,8 @@ extern long double __scalbnl (long double, int);
 extern long double __sqrtl (long double x);
 extern long double fabsl (long double x);
 extern void __sincosl (long double, long double *, long double *);
+extern long double __logbl (long double x);
+extern long double __significandl (long double x);
 #endif
 
 /* Prototypes for functions of the IBM Accurate Mathematical Library.  */
