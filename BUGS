@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <00/07/14 11:39:22 aj>
+Time-stamp: <2000-11-08T09:14:07 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -76,6 +76,11 @@ Severity: [  *] to [***]
        is not correct) can be seen in the sv_SE file.  Quite a few changes
        on top of the generic specification can be made without duplication
        of the whole LC_COLLATE description.
+
+[  *]  Some of the functions which also handled IPv6 are currently broken.
+       This includes getaddrinfo() and getnameinfo().  IPv4 handling of
+       these functions is OK though and there are patches available to fix
+       the IPv6 code as well.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper

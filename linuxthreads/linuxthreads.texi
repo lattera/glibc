@@ -181,10 +181,15 @@ left in an undefined state, and you must not use it again in a call to
 any pthreads function until it has been reinitialized.
 @end deftypefun
 
+@findex pthread_attr_setdetachstate
+@findex pthread_attr_setguardsize
 @findex pthread_attr_setinheritsched
 @findex pthread_attr_setschedparam
 @findex pthread_attr_setschedpolicy
 @findex pthread_attr_setscope
+@findex pthread_attr_setstack
+@findex pthread_attr_setstackaddr
+@findex pthread_attr_setstacksize
 @comment pthread.h
 @comment POSIX
 @deftypefun int pthread_attr_setattr (pthread_attr_t *@var{obj}, int @var{value})
@@ -198,10 +203,15 @@ for the @var{attr} being modified, they will return the error code
 below.
 @end deftypefun
 
+@findex pthread_attr_getdetachstate
+@findex pthread_attr_getguardsize
 @findex pthread_attr_getinheritsched
 @findex pthread_attr_getschedparam
 @findex pthread_attr_getschedpolicy
 @findex pthread_attr_getscope
+@findex pthread_attr_getstack
+@findex pthread_attr_getstackaddr
+@findex pthread_attr_getstacksize
 @comment pthread.h
 @comment POSIX
 @deftypefun int pthread_attr_getattr (const pthread_attr_t *@var{obj}, int *@var{value})
@@ -279,8 +289,45 @@ interpreted relative to the priorities of the other threads of the
 process, regardless of the priorities of other processes.
 
 @code{PTHREAD_SCOPE_PROCESS} is not supported in LinuxThreads.  If you
-try to set the scope to this value @code{pthread_attr_setscope} will
+try to set the scope to this value, @code{pthread_attr_setscope} will
 fail and return @code{ENOTSUP}.
+
+@item stackaddr
+Provide an address for an application managed stack.  The size of the
+stack must be at least @code{PTHREAD_STACK_MIN}.
+
+@item stacksize
+Change the size of the stack created for the thread.  The value defines
+the minimum stack size, in bytes.
+
+If the value exceeds the system's maximum stack size, or is smaller
+than @code{PTHREAD_STACK_MIN}, @code{pthread_attr_setstacksize} will
+fail and return @code{EINVAL}.
+
+@item stack
+Provide both the address and size of an application managed stack to
+use for the new thread.  The base of the memory area is @var{stackaddr}
+with the size of the memory area, @var{stacksize}, measured in bytes.
+
+If the value of @var{stacksize} is less than @code{PTHREAD_STACK_MIN},
+or greater than the system's maximum stack size, or if the value of
+@var{stackaddr} lacks the proper alignment, @code{pthread_attr_setstack}
+will fail and return @code{EINVAL}.
+
+@item guardsize
+Change the minimum size in bytes of the guard area for the thread's
+stack.  The default size is a single page.  If this value is set, it
+will be rounded up to the nearest page size.  If the value is set to 0,
+a guard area will not be created for this thread.  The space allocated
+for the guard area is used to catch stack overflow.  Therefore, when
+allocating large structures on the stack, a larger guard area may be
+required to catch a stack overflow.
+
+If the caller is managing their own stacks (if the @code{stackaddr}
+attribute has been set), then the @code{guardsize} attribute is ignored.
+
+If the value exceeds the @code{stacksize}, @code{pthread_atrr_setguardsize}
+will fail and return @code{EINVAL}.
 @end table
 
 @node Cancellation
@@ -722,9 +769,9 @@ The default mutex type is ``timed'', that is, @code{PTHREAD_MUTEX_TIMED_NP}.
 @c This doesn't describe how a ``timed'' mutex behaves. FIXME
 
 @comment pthread.h
-@comment GNU
+@comment POSIX
 @deftypefun int pthread_mutexattr_settype (pthread_mutexattr_t *@var{attr}, int @var{type})
-@code{pthread_mutexattr_settyp3} sets the mutex type attribute in
+@code{pthread_mutexattr_settype} sets the mutex type attribute in
 @var{attr} to the value specified by @var{type}.
 
 If @var{type} is not @code{PTHREAD_MUTEX_ADAPTIVE_NP},
@@ -739,7 +786,7 @@ and @code{PTHREAD_MUTEX_ERRORCHECK} are also permitted.
 @end deftypefun
 
 @comment pthread.h
-@comment GNU
+@comment POSIX
 @deftypefun int pthread_mutexattr_gettype (const pthread_mutexattr_t *@var{attr}, int *@var{type})
 @code{pthread_mutexattr_gettype} retrieves the current value of the
 mutex type attribute in @var{attr} and stores it in the location pointed
@@ -1561,3 +1608,23 @@ The @var{target_thread} is invalid or has already terminated.
 
 @end table
 @end deftypefun
+
+@comment pthread.h
+@comment POSIX
+@deftypefun int pthread_setconcurrency (int @var{level})
+@code{pthread_setconcurrency} is unused in LinuxThreads due to the lack
+of a mapping of user threads to kernel threads.  It exists for source
+compatibility.  It does store the value @var{level} so that it can be
+returned by a subsequent call to @code{pthread_getconcurrency}.  It takes
+no other action however.
+@end deftypefun
+
+@comment pthread.h
+@comment POSIX
+@deftypefun int pthread_getconcurrency ()
+@code{pthread_getconcurrency} is unused in LinuxThreads due to the lack
+of a mapping of user threads to kernel threads.  It exists for source
+compatibility.  However, it will return the value that was set by the
+last call to @code{pthread_setconcurrency}.
+@end deftypefun
+

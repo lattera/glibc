@@ -72,7 +72,7 @@
 "\x2011"	"-"	/* <U2011> NON-BREAKING HYPHEN */
 "\x2012"	"-"	/* <U2012> FIGURE DASH */
 "\x2013"	"-"	/* <U2013> EN DASH */
-"\x2014"	"-"	/* <U2014> EM DASH */
+"\x2014"	"--"	/* <U2014> EM DASH */
 "\x2015"	"-"	/* <U2015> HORIZONTAL BAR */
 "\x2018"	"'"	/* <U2018> LEFT SINGLE QUOTATION MARK */
 "\x2019"	"'"	/* <U2019> RIGHT SINGLE QUOTATION MARK */

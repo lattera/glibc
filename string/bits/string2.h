@@ -698,7 +698,7 @@ __stpcpy_small (char *__dest,
 
 /* Copy no more than N characters of SRC to DEST.  */
 #ifndef _HAVE_STRING_ARCH_strncpy
-# if defined _HAVE_STRING_ARCH_memset && defined _HAVE_STRING_ARCH_mempcpy
+# if defined _USE_STRING_ARCH_memset && defined _USE_STRING_ARCH_mempcpy
 #  define strncpy(dest, src, n) \
   (__extension__ ({ char *__dest = (dest);				      \
 		    __builtin_constant_p (src) && __builtin_constant_p (n)    \
@@ -721,7 +721,7 @@ __stpcpy_small (char *__dest,
 
 /* Append no more than N characters from SRC onto DEST.  */
 #ifndef _HAVE_STRING_ARCH_strncat
-# ifdef _HAVE_STRING_ARCH_strchr
+# ifdef _USE_STRING_ARCH_strchr
 #  define strncat(dest, src, n) \
   (__extension__ ({ char *__dest = (dest);				      \
 		    __builtin_constant_p (src) && __builtin_constant_p (n)    \

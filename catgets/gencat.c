@@ -188,7 +188,7 @@ main (int argc, char *argv[])
   if (result != NULL)
     write_out (result, output_name, header_name);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }
 
 

@@ -1,3 +1,10 @@
+2000-11-08  Bruce Mitchener  <bruce@cubik.org>
+
+	* linuxthreads.texi:  Add documentation for pthreads attributes
+	guardsize, stackaddr, stacksize, and stack.  Fix typo in previous
+	patch.  Document pthread_[sg]etconcurrency().  Mark
+	pthread_mutexattr_[sg]ettype() as POSIX rather than GNU.
+
 2000-11-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_MESSAGE_PASSING):
@@ -19,7 +26,7 @@
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* attr.c (__pthread_attr_setguardsize): Don't round guardsize
-	here.  Reported by Bruce <bruce@puremagic.com>.
+	here.  Reported by Bruce Mitchener <bruce@cubik.org>.
 
 	* linuxthreads.texi: Changes terminology to 'type' from 'kind' when
 	discussing mutexes. (As per the Unix98 name for the API.)
@@ -30,7 +37,7 @@
 	PTHREAD_MUTEXATTR_ADAPTIVE_NP.
 	Begins to introduce discussion of the ``timed'' mutex type.  This
 	discussion is currently incomplete.
-	Patch by Bruce <bruce@puremagic.com>.
+	Patch by Bruce Mitchener <bruce@cubik.org>.
 
 2000-10-26  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
 	    Yutaka Niibe  <gniibe@chroot.org>

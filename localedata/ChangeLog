@@ -1,3 +1,8 @@
+2000-11-08  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/translit_neutral: Tweak <U2014>, <U2212>, <U2219>.
+	Reported by Markus Kuhn.
+
 2000-11-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/EUC-KR: Revert last change.  Backslash maps to backslash.

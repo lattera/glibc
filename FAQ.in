@@ -150,19 +150,19 @@ Binutils 2.9.1.0.16 or later is also required.
 * lots of disk space (~400MB for i?86-linux; more for RISC platforms).
 
 * plenty of time.  Compiling just the shared and static libraries for
-  i?86-linux takes approximately 1h on an AMD-K6@225MHz w/ 96MB of RAM,
-  45mins on a Celeron@400MHz w/ 128MB, and 55mins on a Alpha@533MHz w/ 256MB.
-  Multiply this by 1.5 or 2.0 if you build profiling and/or the highly
-  optimized version as well.  For Hurd systems times are much higher.
+  35mins on a 2xPIII@550Mhz w/ 512MB RAM.  On a 2xUltraSPARC-II@360Mhz
+  w/ 1GB RAM it takes about 14 minutes.  Multiply this by 1.5 or 2.0
+  if you build profiling and/or the highly optimized version as well.
+  For Hurd systems times are much higher.
 
   You should avoid compiling in a NFS mounted filesystem.  This is
   very slow.
 
-  James Troup <J.J.Troup@comp.brad.ac.uk> reports a compile time of
-  45h34m for a full build (shared, static, and profiled) on Atari
-  Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) and Jan Barte
-  <yann@plato.uni-paderborn.de> reports 22h48m on Atari TT030
-  (Motorola 68030 @ 32 Mhz, 34 Mb memory)
+  James Troup <J.J.Troup@comp.brad.ac.uk> reports a compile time for
+  an earlier (and smaller!) version of glibc of 45h34m for a full build
+  (shared, static, and profiled) on Atari Falcon (Motorola 68030 @ 16 Mhz,
+  14 Mb memory) and Jan Barte <yann@plato.uni-paderborn.de> reports
+  22h48m on Atari TT030 (Motorola 68030 @ 32 Mhz, 34 Mb memory)
 
   A full build of the PowerPC library took 1h on a PowerPC 750@400Mhz w/
   64MB of RAM, and about 9h on a 601@60Mhz w/ 72Mb.

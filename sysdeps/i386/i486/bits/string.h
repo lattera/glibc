@@ -192,6 +192,7 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 
 /* Set N bytes of S to C.  */
 #define _HAVE_STRING_ARCH_memset 1
+#define _USE_STRING_ARCH_memset 1
 #define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
 		  ? ((n) == 1						      \
@@ -1188,6 +1189,7 @@ __strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
 
 /* Find the first occurrence of C in S.  */
 #define _HAVE_STRING_ARCH_strchr 1
+#define _USE_STRING_ARCH_strchr 1
 #define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? ((c) == '\0'					      \

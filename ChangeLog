@@ -1,5 +1,34 @@
 2000-11-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* catgets/gencat.c (main): Don't use exit() to avoid warnings with
+	broken compilers.
+
+	* include/features.h (__STDC_ISO_10646__): Correct value to be
+	200009L.  Patch by Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>.
+
+2000-11-08  H.J. Lu  <hjl@gnu.org>
+
+	* pwd/Versions (GLIBC_2.1.2): Add getpwnam_r.
+
+2000-11-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/bits/string2.h: Check if _USE_STRING_ARCH_ macros are
+	defined, not _HAVE_STRING_ARCH_.
+	* sysdeps/i386/bits/string.h (_USE_STRING_ARCH_memset,
+	_USE_STRING_ARCH_strchr): Define.
+	* sysdeps/i386/i486/bits/string.h (_USE_STRING_ARCH_memset,
+	_USE_STRING_ARCH_strchr): Define.
+	* sysdeps/sparc/bits/string.h: New file.
+
+2000-11-08  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/C-translit.h.in: Tweak <U2014> result.
+	* locale/C-translit.h: Regenerated.
+
+2000-11-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/unistd.h: Add attribute((const)) to sysconf prototype.
+
 	* iconvdata/euc-kr.c (euckr_from_ucs4): Map 0x20a9 to \xa3dc.
 	(BODY from direction): Remove special handling of \x5c.
 	* iconvdata/EUC-KR.irreversible: Adjust for this change.

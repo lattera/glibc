@@ -14,6 +14,6 @@ libc {
   }
   GLIBC_2.1.2 {
     # g*
-    getpwent_r; getpwuid_r;
+    getpwent_r; getpwuid_r; getpwnam_r;
   }
 }
