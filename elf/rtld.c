@@ -132,7 +132,8 @@ _dl_start (void *arg)
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */
 #define RTLD_BOOTSTRAP
-#define RESOLVE(sym, version, flags) bootstrap_map.l_addr
+#define RESOLVE(sym, version, flags) \
+  ((*(sym))->st_shndx == SHN_UNDEF ? 0 : bootstrap_map.l_addr)
 #include "dynamic-link.h"
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
