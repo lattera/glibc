@@ -1,3 +1,8 @@
+2004-02-09  Roland McGrath  <roland@redhat.com>
+
+	* time/tzset.c (tzset_internal): Cap hour in POSIX $TZ rule format to
+	24, not 23.
+
 2004-01-29  Roland McGrath  <roland@redhat.com>
 
 	* io/ftwtest-sh: Use $tmp consistently, not literal /tmp.
