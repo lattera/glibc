@@ -213,12 +213,13 @@
 #   define link_warning(symbol, msg) \
   __make_section_unallocated (".gnu.warning." #symbol) \
   static const char __evoke_link_warning_##symbol[]	\
-    __attribute__ ((section (".gnu.warning." #symbol "\"\n\t#\""))) = msg;
+    __attribute__ ((unused, section (".gnu.warning." #symbol "\"\n\t#\""))) \
+    = msg;
 #  else
 #   define link_warning(symbol, msg) \
   __make_section_unallocated (".gnu.warning." #symbol) \
   static const char __evoke_link_warning_##symbol[]	\
-    __attribute__ ((section (".gnu.warning." #symbol "\n\t#"))) = msg;
+    __attribute__ ((unused, section (".gnu.warning." #symbol "\n\t#"))) = msg;
 #  endif
 # else /* Not ELF: a.out */
 #  ifdef HAVE_XCOFF
