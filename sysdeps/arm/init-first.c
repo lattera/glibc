@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For ARM.
-   Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ extern void __getopt_clean_environment (char **);
 #endif
 extern void __libc_global_ctors (void);
 
-int __libc_multiple_libcs = 1;
+int __libc_multiple_libcs attribute_hidden = 1;
 
 static void
 init (int *data)

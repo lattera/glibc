@@ -42,7 +42,7 @@ weak_extern (_dl_starting_up)
 
 /* Set nonzero if we have to be prepared for more then one libc being
    used in the process.  Safe assumption if initializer never runs.  */
-int __libc_multiple_libcs = 1;
+int __libc_multiple_libcs attribute_hidden = 1;
 
 /* Remember the command line argument and enviroment contents for
    later calls of initializers for dynamic libraries.  */

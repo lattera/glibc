@@ -40,7 +40,7 @@ unsigned int __hurd_threadvar_max;
 unsigned long int __hurd_threadvar_stack_offset;
 unsigned long int __hurd_threadvar_stack_mask;
 
-int __libc_multiple_libcs = 1;
+int __libc_multiple_libcs attribute_hidden = 1;
 
 int __libc_argc attribute_hidden;
 char **__libc_argv attribute_hidden;
