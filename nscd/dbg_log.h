@@ -1,4 +1,4 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -23,7 +23,7 @@
 extern int debug_level;
 
 extern void dbg_log (const char *str, ...)
-     __attribute__ ((__format__ (__printf__, 1, 0)));;
+     __attribute__ ((__format__ (__printf__, 1, 2)));;
 
 extern int set_logfile (const char *logfile);
 
