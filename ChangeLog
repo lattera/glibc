@@ -1,7 +1,9 @@
-2002-02-09  Richard Henderson  <rth@twiddle.net>
+2002-02-08  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Also include
 	_dl_cpuclock_offset if HP_SMALL_TIMING_AVAIL.
+
+	* sysdeps/alpha/elf/initfini.c: Use \n\ for multiline string.
 
 2002-02-09  Jakub Jelinek  <jakub@redhat.com>
 

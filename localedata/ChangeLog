@@ -1,3 +1,8 @@
+2002-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/el_GR: Bug fixes for spelling.
+	Patch by Alexandros Diamantidis <adia@hellug.gr>.
+
 2002-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* da_DK.in: Add a few more character sequences, no real words.
