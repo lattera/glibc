@@ -1,5 +1,13 @@
 libc {
+  # The comment lines with "#errlist-compat" are magic; see errlist-compat.awk.
+  # When you get an error from errlist-compat.awk, you need to add a new
+  # version here.  Don't do this blindly, since this means changing the ABI
+  # for all GNU/Linux configurations.
+
   GLIBC_2.0 {
+    #errlist-compat	1134
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;
     __frame_state_for; __register_frame_info_table;
@@ -13,8 +21,16 @@ libc {
     # s*
     sysmips;
   }
+  GLIBC_2.1 {
+    #errlist-compat	1134
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+  }
   GLIBC_2.2 {
     # _*
     _test_and_set;
+  }
+  GLIBC_2.3 {
+    #errlist-compat	1134
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
 }
