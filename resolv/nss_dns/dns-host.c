@@ -319,6 +319,15 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   int (*name_ok) __P ((const char *));
   u_char packtmp[NS_MAXCDNAME];
 
+  if (linebuflen < 0)
+    {
+      /* The buffer is too small.  */
+    too_small:
+      *errnop = ERANGE;
+      *h_errnop = NETDB_INTERNAL;
+      return NSS_STATUS_TRYAGAIN;
+    }
+
   tname = qname;
   result->h_name = NULL;
   end_of_message = answer->buf + anslen;
@@ -354,11 +363,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
     {
       if (errno == EMSGSIZE)
-	{
-	  *errnop = ERANGE;
-	  *h_errnop = NETDB_INTERNAL;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+	goto too_small;
 
       n = -1;
     }
@@ -389,6 +394,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       result->h_name = bp;
       bp += n;
       linebuflen -= n;
+      if (linebuflen < 0)
+	goto too_small;
       /* The qname can be abbreviated, but h_name is now absolute. */
       qname = result->h_name;
     }
@@ -602,6 +609,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      linebuflen -= nn;
 	    }
 
+	  linebuflen -= sizeof (align) - ((u_long) bp % sizeof (align));
 	  bp += sizeof (align) - ((u_long) bp % sizeof (align));
 
 	  if (n >= linebuflen)
