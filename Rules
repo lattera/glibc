@@ -89,7 +89,8 @@ endif
 
 ifneq "$(strip $(others) $(tests))" ""
 $(addprefix $(objpfx),$(others) $(tests)): %: %.o \
-  $(sort $(filter $(common-objpfx)libc%,$(link-libc)))
+  $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
 endif
 

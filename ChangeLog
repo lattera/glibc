@@ -1,3 +1,12 @@
+Sat Sep  7 18:41:17 1996  Richard Henderson  <rth@tamu.edu>
+
+	* Makeconfig (+link): Filter out start, pre & postinit from the
+	generic depenancies as well.
+	* Rules: Add start, pre & postinit to the dependancies of
+	$(others) and $(tests).
+
+	* configure.in: elf_dirs missing "sysdeps" component.
+
 Sun Sep  8 02:36:02 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/SYS_libc.c (_libc_intl_domainname): Change value to "libc".
@@ -20,6 +29,8 @@ Sun Sep  8 02:36:02 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* locale/programs/localedef.c (main): Likewise.
 
 	* version.h (VERSION): Bump to 1.94.
+
+	* locale/Makefile (distribute): Add locale.c and localedef.c.
 
 Sat Sep  7 14:00:33 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 

@@ -878,7 +878,7 @@ if test "$elf" = yes; then
     esac
     for m in $mach; do
       if test -d $xsrcdir${d}sysdeps$m/elf; then
-	elf_dirs="$elf_dirs $d$m/elf"
+	elf_dirs="$elf_dirs ${d}sysdeps$m/elf"
       fi
     done
   done

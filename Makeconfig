@@ -303,7 +303,8 @@ ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS)  \
 	      $(addprefix $(csu-objpfx),start.o) $(+preinit) \
-	      $(filter-out $(common-objpfx)libc%,$^) \
+	      $(filter-out $(addprefix $(csu-objpfx),start.o) $(+preinit) \
+		$(link-extra-libs) $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs) $(link-libc) $(+postinit)
 endif
 ifndef config-LDFLAGS
