@@ -445,7 +445,6 @@ __msgread (int sock, void *buf, size_t cnt)
   struct iovec iov[1];
   struct msghdr msg;
   struct cmessage cm;
-  int on = 1;
 
   iov[0].iov_base = buf;
   iov[0].iov_len = cnt;
@@ -459,8 +458,11 @@ __msgread (int sock, void *buf, size_t cnt)
   msg.msg_flags = 0;
 
 #ifdef SO_PASSCRED
-  if (setsockopt (sock, SOL_SOCKET, SO_PASSCRED, &on, sizeof (on)))
-    return -1;
+  {
+    int on = 1;
+    if (setsockopt (sock, SOL_SOCKET, SO_PASSCRED, &on, sizeof (on)))
+      return -1;
+  }
 #endif
 
   return recvmsg (sock, &msg, 0);
