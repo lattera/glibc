@@ -36,8 +36,8 @@ over a domain that is only a subset of real numbers.  For example, the
 @code{1}.  If you pass an argument to one of these functions that is
 outside the domain over which it is defined, the function sets
 @code{errno} to @code{EDOM} to indicate a @dfn{domain error}.  On
-machines that support IEEE floating point, functions reporting error
-@code{EDOM} also return a NaN.
+machines that support @w{IEEE 754} floating point, functions reporting
+error @code{EDOM} also return a NaN.
 
 Some of these functions are defined mathematically to result in a
 complex value over parts of their domains.  The most familiar example of
@@ -59,8 +59,8 @@ instead.  In this case, @code{errno} might or might not be
 set to @code{ERANGE}.
 
 The only completely reliable way to check for domain and range errors is
-to set @code{errno} to @code{0} before you call the mathematical function 
-and test @code{errno} afterward.  As a consequence of this use of 
+to set @code{errno} to @code{0} before you call the mathematical function
+and test @code{errno} afterward.  As a consequence of this use of
 @code{errno}, use of the mathematical functions is not reentrant if you
 check for errors.
 
@@ -74,13 +74,36 @@ Handling}, for more information about signals.)
 @comment ANSI
 @deftypevr Macro double HUGE_VAL
 An expression representing a particular very large number.  On machines
-that use IEEE floating point format, the value is ``infinity''.  On
-other machines, it's typically the largest positive number that can be
-represented.
+that use @w{IEEE 754} floating point format, the value is ``infinity''.
+On other machines, it's typically the largest positive number that can
+be represented.
 
-The value of this macro is used as the return value from various 
-mathematical functions in overflow situations.
+The value of this macro is used as the return value from various
+mathematical @code{double} returning functions in overflow situations.
 @end deftypevr
+
+@comment math.h
+@comment GNU
+@deftypevr Macro float HUGE_VALf
+This macro is similar to the @code{HUGE_VAL} macro except that it is
+used by functions returning @code{float} values.
+
+This macro is a GNU extension.
+@end deftypevr
+
+@comment math.h
+@comment GNU
+@deftypevr Macro {long double} HUGE_VALl
+This macro is similar to the @code{HUGE_VAL} macro except that it is
+used by functions returning @code{long double} values.  The value is
+only different from @code{HUGE_VAL} if the architecture really supports
+@code{long double} values.
+
+This macro is a GNU extension.
+@end deftypevr
+
+
+@comment
 
 For more information about floating-point representations and limits,
 see @ref{Floating Point Parameters}.  In particular, the macro
@@ -343,7 +366,7 @@ of @var{x} is too large; that is, if overflow occurs.
 @comment math.h
 @comment ANSI
 @deftypefun double tanh (double @var{x})
-This function returns the hyperbolic tangent of @var{x}, whose 
+This function returns the hyperbolic tangent of @var{x}, whose
 mathematical definition is @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
 @end deftypefun
 
@@ -497,7 +520,7 @@ restore that state.
 @deftypefun {void *} setstate (void *@var{state})
 The @code{setstate} function restores the random number state
 information @var{state}.  The argument must have been the result of
-a previous call to @var{initstate} or @var{setstate}.  
+a previous call to @var{initstate} or @var{setstate}.
 
 The return value is the previous value of the state information array.
 You can use thise value later as an argument to @code{setstate} to

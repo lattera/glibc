@@ -1,21 +1,21 @@
 /* search.h -- declarations for System V style searching functions.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef _SEARCH_H
 #define	_SEARCH_H 1
@@ -28,6 +28,7 @@ Boston, MA 02111-1307, USA.  */
 
 __BEGIN_DECLS
 
+#if defined(__USE_SVID) || defined(__USE_XOPEN_EXTENDED)
 /* Prototype structure for a linked-list data structure.
    This is the type used by the `insque' and `remque' functions.  */
 
@@ -40,10 +41,11 @@ struct qelem
 
 
 /* Insert ELEM into a doubly-linked list, after PREV.  */
-extern void insque __P ((struct qelem *__elem, struct qelem *__prev));
+extern void insque __P ((void *__elem, void *__prev));
 
 /* Unlink ELEM from the doubly-linked list that it is in.  */
-extern void remque __P ((struct qelem *__elem));
+extern void remque __P ((void *__elem));
+#endif
 
 
 /* For use with hsearch(3).  */
@@ -81,7 +83,7 @@ struct hsearch_data
 /* Family of hash table handling functions.  The functions also have
    reentrant counterparts ending with _r.  */
 extern ENTRY *hsearch __P ((ENTRY __item, ACTION __action));
-extern int hcreate __P ((unsigned int __nel));
+extern int hcreate __P ((size_t __nel));
 extern void hdestroy __P ((void));
 
 extern int hsearch_r __P ((ENTRY __item, ACTION __action, ENTRY **__retval,

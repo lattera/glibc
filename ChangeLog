@@ -1,3 +1,314 @@
+Wed Nov  6 04:30:26 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add weak alias llseek for
+	_llseek syscall.  Reported by Andy Sewell <puck@pookhill.demon.co.uk>.
+
+	* string/argz.h: Don't protect by __USE_GNU.
+
+Tue Nov  5 23:38:28 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Lots of files: Update and reformat copyright.
+
+	* Makefile (headers): Add xopen_lim.h.
+
+	* catgets/nl_types.h: Move __BEGIN_DECLS before definition of nl_catd.
+
+	* grp/grp.h: Define setgrent, getgrent, endgrent, and getgrent_r
+	if __USE_XOPEN_EXTENDED is defined.
+	* pwd/pwd.h: Define setpwent, getpwent, endpwent, and getpwent_r
+	if __USE_XOPEN_EXTENDED is defined.
+
+	* io/Makefile (routines): Add lchown.
+
+	* io/sys/poll.h: Add definition of POLLWRNORM.
+
+	* io/sys/stat.h: Declare lstat, fchmod, mknod when
+	__USE_XOPEN_EXTENDED is defined.
+
+	* libio/Makefile (routines): Add obprintf.
+	* libio/obprintf.c: New file.
+	* libio/iolibio.h: Add prototypes for _IO_obstack_vprintf and
+	_IO_obstack_printf.
+	* libio/libio.h: Fix typo.
+	* libio/stdio.h: Declare tempnam if __USE_XOPEN_EXTENDED is defined.
+	Add prototypes for obstack_vprintf and obstack_printf.
+
+	* manual/creature.texi: Describe _XOPEN_SOURCE macro.
+	* manual/intro.texi: Add reference to NSS chapter.
+	* manual/libc.texinfo: Update UPDATED.
+	Comment out `@printindex cp'.  It works again.
+	* manual/memory.texi: Add description for obstack_ptr_grow,
+	obstack_int_grow, obstack_ptr_grow_fast, and obstack_int_grow_fast.
+	* manual/nss.texi: Add a few @cindex entries and change NSS_STATUS_*
+	index entries to @vindex.
+	* manual/users.texi: Correct @cindex entry for Netgroup.
+
+	* math/mathcalls.h: Use __USE_XOPEN and __USE_XOPEN_EXTENDED to
+	make declarations visible for X/Open sources.
+
+	* misc/search.h: Declare insque/remque only is __USE_SVID or
+	__USE_XOPEN_EXTENDED is defined.
+
+	* misc/sys/uio.h (readv, writev): Change return value from int to
+	ssize_t.
+
+	* posix/Makefile (headers): Add re_comp.h.
+	* posix/re_comp.h: New file.  XPG interface to regex functions.
+
+	* posix/getconf.c: Add all names from XPG4.2.
+	* posix/posix1_lim.h: Increase minimum values for _POSIX_CHILD_MAX
+	and _POSIX_OPEN_MAX to minimums from XPG4.2.
+	* sysdeps/generic/confname.h: Add all _SC_* names from XPG4.2.
+	* sysdeps/posix/sysconf.c: Handle new _SC_* values.
+	* sysdeps/stub/sysconf.c: Likewise.
+
+	* posix/unistd.h: Add declaration of ualarm and lchown.  Declare
+	usleep, fchown, fchdir, nice, getpgid, setsid, getsid, setreuid,
+	setregid, vfork, ttyslot, symlink, readlink, gethostid, truncate,
+	ftruncate, getdtablesize, brk, sbrk, lockf when
+	__USE_XOPEN_EXTENDED is defined.
+
+	* posix/sys/wait.h: Declare wait3 if __USE_XOPEN_EXTENDED is defined.
+
+	* shadow/shadow.h: Define SHADOW using _PATH_SHADOW.
+	* sysdeps/generic/paths.h: Define _PATH_SHADOW.
+	* sysdeps/unix/sysv/linux/paths.h: Likewise.
+
+	* signal/signal.h: Declare killpg, sigstack and sigaltstack when
+	__USE_XOPEN_EXTENDED is defined.
+
+	* stdio/stdio.h: Declare tempnam when __USE_XOPEN is defined.
+
+	* stdlib/stdlib.h: Make rand48 functions available when __USE_XOPEN
+	is defined.
+	Likewise for valloc, putenv, realpath, [efg]cvt*, and getsubopt
+	functions.
+
+	* string/string.h: Make memccpy, strdup, bcmp, bcopy, bzero, index,
+	and rindex available when __USE_XOPEN_EXTENDED is defined.
+
+	* sysdeps/mach/getpagesize.c: De-ANSI-fy.  Change return type to int.
+	* sysdeps/posix/getpagesize.c: Likewise.
+	* sysdeps/stub/getpagesize.c: Likewise.
+	* sysdeps/unix/getpagesize.c: Likewise.
+
+	* time/africa: Update from tzdata1996l.
+	* time/asia: Likewise.
+	* time/australia: Likewise.
+	* time/europe: Likewise.
+	* time/northamerica: Likewise.
+	* time/pacificnew: Likewise.
+	* time/southamerica: Likewise.
+	* time/tzfile.h: Update from tzcode1996m.
+
+	* time/time.h: Declare strptime if __USE_XOPEN.
+	Declare daylight and timezone also if __USE_XOPEN.
+
+	* time/sys/time.h: Remove declaration of ualarm.
+
+	* wctype/wctype.h: Just reference ISO C standard.
+
+Tue Nov  5 01:26:32 1996  Richard Henderson  <rth@tamu.edu>
+
+	* crypt/Makefile: Add crypt routines to libc as well iff
+	$(crypt-in-libc) is set.  Do this for temporary binary compatibility
+	on existing Linux/Alpha installations.
+
+	* stdlib/div.c, sysdeps/generic/div.c: Move file to .../generic/.
+	* stdlib/ldiv.c, sysdeps/generic/ldiv.c: Likewise.
+	* stdlib/lldiv.c, sysdeps/generic/lldiv.c: Likewise.
+	* sysdeps/alpha/Makefile (divrem): Add divlu, dviqu, remlu, and
+	remqu.
+	* sysdeps/alpha/div.S: New file.
+	* sysdeps/alpha/ldiv.S: New file.
+	* sysdeps/alpha/lldiv.S: New file.
+	* sysdeps/alpha/divrem.h: Merge signed and unsigned division.
+	Take pointers from Linus and tighten the inner loops a bit.
+	* sysdeps/alpha/divl.S: Change defines for merged routines.
+	* sysdeps/alpha/divq.S: Likewise.
+	* sysdeps/alpha/reml.S: Likewise.
+	* sysdeps/alpha/remq.S: Likewise.
+	* sysdeps/alpha/divlu.S: Remove file.
+	* sysdeps/alpha/divqu.S: Likewise.
+	* sysdeps/alpha/remlu.S: Likewise.
+	* sysdeps/alpha/remqu.S: Likewise.
+
+	* sysdeps/alpha/bsd-_setjmp.S: If PROF, call _mcount.
+	* sysdeps/alpha/bsd-setjmp.S: Likewise.
+	* sysdeps/alpha/bzero.S: Likewise.
+	* sysdeps/alpha/ffs.S: Likewise.
+	* sysdeps/alpha/htonl.S: Likewise.
+	* sysdeps/alpha/htons.S: Likewise.
+	* sysdeps/alpha/memchr.S: Likewise.
+	* sysdeps/alpha/memset.S: Likewise.
+	* sysdeps/alpha/s_copysign.S: Likewise.
+	* sysdeps/alpha/s_fabs.S: Likewise.
+	* sysdeps/alpha/setjmp.S: Likewise.
+	* sysdeps/alpha/stpcpy.S: Likewise.
+	* sysdeps/alpha/stpncpy.S: Likewise.
+	* sysdeps/alpha/strcat.S: Likewise.
+	* sysdeps/alpha/strchr.S: Likewise.
+	* sysdeps/alpha/strcpy.S: Likewise.
+	* sysdeps/alpha/strlen.S: Likewise.
+	* sysdeps/alpha/strncat.S: Likewise.
+	* sysdeps/alpha/strncpy.S: Likewise.
+	* sysdeps/alpha/strrchr.S: Likewise.
+	* sysdeps/alpha/udiv_qrnnd.S: Likewise.  Fix private labels.
+	Convert two small jumps to use conditional moves.
+	* sysdeps/unix/alpha/sysdep.h: Compress all __STDC__ nastiness.
+	(PSEUDO): If PROF, call _mcount.
+	* sysdeps/unix/sysv/linux/alpha/brk.S: If PROF, call _mcount.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/llseek.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Likewise.
+
+	* sysdeps/alpha/memcpy.S: New file.  Odd layout because it should
+	eventually contain memmove as well.
+	* sysdeps/alpha/strcmp.S: New file.
+	* sysdeps/alpha/strncmp.S: New file.
+	* sysdeps/alpha/w_sqrt.S: New file.
+
+Tue Nov  5 18:06:06 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/hurd/ttyname_r.c: Use `size_t' for len variable.
+
+Tue Nov  5 12:09:29 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdep/generic/sysdep.h: Define END only if not yet defined.
+	* sysdep/unix/sysdep.h: Define PSEUDO_END only if not yet defined.
+	Reported by Thomas Bushnell, n/BSG.
+
+Mon Nov  4 22:46:53 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/users.texi (Netgroup Data): Remove { } around @cindex.
+
+Mon Nov  4 19:07:05 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/calloc.c: Check for overflow before trying to allocate
+	memory.  Proposed by Neil Matthews <nm@adv.sbc.sony.co.jp>.
+
+Fri Nov  1 18:18:32 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/llio.texi (Operating Modes): Add missing arguments to
+	@deftypevr in O_NONBLOCK description.
+
+	* manual/time.texi (Time Zone Functions): Enclose type name in
+	braces in description of tzname.  FIXME: this does not yet work
+	correctly in info.
+
+Sun Nov  3 17:29:06 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* features.h: Add X/Open macros.
+	* posix/unistd.h: Define X/Open macros.
+	* sysdeps/generic/confname.h: Add _SC_XOPEN_XCU_VERSION,
+	_SC_XOPEN_UNIX, _SC_XOPEN_CRYPT, _SC_XOPEN_ENH_I18N,
+	_SC_XOPEN_SHM, _SC_2_CHAR_TERM, _SC_2_C_VERSION, and _SC_2_UPE.
+	* sysdeps/posix/sysconf.c: Handle new constants.
+	* sysdeps/stub/sysconf.c: Likewise.
+	* sysdeps/unix/sysv/linux/posix_opt.h: Add definition of _XOPEN_SHM.
+
+	* catgets/catgets.c (catopen): Set errno to ENOMEM when
+	we run out of memory.
+	(catgets): Set errno to EBADF when catalog handle is invalid.
+	Set errno to ENOMSG when translation is not available.
+	(catclose): Set errno to EBADF when catalog handle is invalid.
+
+	* ctype/ctype.h: Declare isascii and toascii when __USE_XOPEN.
+	Likewise for _toupper and _tolower.
+
+	* manual/arith.texi: Document strtoq, strtoll, strtouq, strtoull,
+	strtof, and strtold.
+	* manual/math.texi: Document HUGE_VALf and HUGE_VALl.
+	* manual/stdio.h: Document ' flag for numeric formats of scanf.
+	* manual/users.texi: Document that cuserid shouldn't be used.
+
+	* misc/Makefile (routines): Add dirname.
+	(headers): Add libgen.h.
+	(tests): Add tst-dirname.
+	* misc/dirname.c: New file.
+	* misc/libgen.h: New file.
+	* misc/tst-dirname.c: New file.
+
+	* misc/search.h: Parameter of hcreate must be of type size_t.
+	* misc/hsearch.c: Likewise.
+	* misc/hsearch_r.c: Likewise for hcreate_r.
+	* misc/search.h: Parameters of insque and remque must be `void *'.
+	* misc/insremque.c: Likewise.
+
+	* posix/unistd.h: Move declarations of mktemp and mkstemp to...
+	* stdlib/stdlib.h: ...here.
+	* posix/unistd.h [__USE_XOPEN]: Add prototypes for crypt, setkey,
+	encrypt, and swab.
+
+	* stdio-common/printf-parse.h (struct printf_spec): Add pa_wchar
+	and pa_wstring.
+	(parse_one_spec): Remove Linux compatibility code.
+	Recognize %C and %S formats.
+	* stdio-common/printf.h: Add PA_WCHAR and PA_WSTRING.
+	* stdio-common/vfprintf.c: Add implementation of %C and %S format.
+	* stdio-common/vfscanf.c: Likewise for scanf.
+
+	* stdlib/l64a.c: Return value for 0 must be the empty string.
+	* stdlib/stdlib.h: Declare reentrant function from rand49 family
+	only if __USE_REENTRANT.
+	Declare rand48 functions also if __USE_XOPEN.
+
+	* stdlib/strtol.c: Return 0 and set errno to EINVAL when BASE is
+	not a legal value.
+	Return 0 and set errno to EINVAL when strou* sees negativ number.
+	* stdlib/tst-strtol.c: De-ANSI-fy.
+	Change expected results for test of unsigned function and negative
+	input.
+
+	* string/stratcliff.c: Prevent warnings.
+	* string.h: Move declaration of swab to <unistd.h>.
+	* string/swab.c: De-ANSI-fy.
+
+	* sysdeps/posix/cuserid.c: Implement using getpwuid_r.
+	* sysdeps/posix/mkstemp.c: Include <stdlib.h> for prototype.
+	* sysdeps/posix/mktemp.c: Likewise.
+	* sysdeps/stub/mkstemp.c: Likewise.
+	* sysdeps/stub/mktemp.c: Likewise.
+
+	* sysvipc/sys/ipc.h: Prototypes of ftok have to be of types `const
+ 	char *' and `int'.
+	* sysvipc/ftok.c: Likewise.  Make sure only lower 8 bits of
+ 	PROJ_ID are used.
+
+Sun Nov  3 03:21:28 1996  Heiko Schroeder  <Heiko.Schroeder@post.rwth-aachen.de>
+
+	* locale/programs/ld-numeric.c (numeric_output): Compute idx[0]
+	correctly.
+
+Sat Nov  2 17:44:32 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/cuserid.c: Use reentrant functions.
+	* manual/users.texi: Tell that cuserid is marked to be withdrawn in
+	XPG4.2.
+
+Sat Nov  2 14:26:37 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Linus said he will make sure no system call will return a value
+	in -1 ... -4095 as a valid result.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Correct test for error.
+	* sysdeps/unix/sysv/linux/i386/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscall.S: Likewise.
+
+Sat Nov  2 16:54:49 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* sysdeps/stub/lockfile.c [!USE_IN_LIBIO]: Define weak alias for
+	__funlockfile, not a circular alias.
+	Define __IO_ftrylockfile if USE_IN_LIBIO and __ftrylockfile if not,
+	not vice versa.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (__errno_location): Make
+	it a weak symbol.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S (__errno_location): Likewise.
+
 Tue Nov  5 00:04:48 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* stdio-common/vfprintf.c: Include <libc-lock.h>.
@@ -10,7 +321,7 @@ Mon Nov  4 16:57:42 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	* sysdeps/stub/lockfile.c [! USE_IN_LIBIO]: Second definition of
 	__internal_funlockfile (in terms of itself) should actually be a
 	definition of __funlockfile.
-	
+
 	* pwd/pwd.h: Get `size_t' from <stddef.h>.
 	* grp/grp.h: Likewise.
 	* shadow/shadow.h: Likewise.
@@ -18,12 +329,12 @@ Mon Nov  4 16:57:42 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	* stdlib/atexit.c (__new_exitfn): Add missing semicolons after
 	calls to __libc_lock_lock and __libc_lock_unlock.
 	* stdlib/random.c (__srandom, __initstate, __setstate, __random):
-	Likewise. 
+	Likewise.
 
 	* hurd/hurdsig.c (write_corefile): Fix typo.
 
 	* sysdeps/mach/hurd/sigwait.c: New file.
-	
+
 Sat Nov  2 01:48:47 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/errnos.h: Move declaration of errno
@@ -624,7 +935,7 @@ Tue Oct 15 22:41:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 Tue Oct 15 08:06:02 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
 
-	* crypt/Makefiel (rpath-link): Extend search path to current directory.
+	* crypt/Makefile (rpath-link): Extend search path to current directory.
 
 Fri Oct 11 09:18:06 1996  Sven Verdoolaege  <skimo@breughel.ufsia.ac.be>
 

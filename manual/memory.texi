@@ -1093,6 +1093,22 @@ It adds a single byte containing @var{c} to the growing object.
 
 @comment obstack.h
 @comment GNU
+@deftypefun void obstack_ptr_grow (struct obstack *@var{obstack-ptr}, void *@var{data})
+Adding the value of a pointer one can use the function
+@code{obstack_ptr_grow}.  It adds @code{sizeof (void *)} bytes
+containing the value of @var{data}.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_int_grow (struct obstack *@var{obstack-ptr}, int @var{data})
+A single value of type @code{int} can be added by using the
+@code{obstack_int_grow} function.  It adds @code{sizeof (int)} bytes to
+the growing object and initializes them with the value of @var{data}.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
 @deftypefun {void *} obstack_finish (struct obstack *@var{obstack-ptr})
 When you are finished growing the object, use the function
 @code{obstack_finish} to close it off and return its final address.
@@ -1169,6 +1185,22 @@ for adding data to a growing object:
 @deftypefun void obstack_1grow_fast (struct obstack *@var{obstack-ptr}, char @var{c})
 The function @code{obstack_1grow_fast} adds one byte containing the
 character @var{c} to the growing object in obstack @var{obstack-ptr}.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_ptr_grow_fast (struct obstack *@var{obstack-ptr}, void *@var{data})
+The function @code{obstack_ptr_grow_fast} adds @code{sizeof (void *)}
+bytes containing the value of @var{data} to the growing object in
+obstack @var{obstack-ptr}.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_int_grow_fast (struct obstack *@var{obstack-ptr}, int @var{data})
+The function @code{obstack_int_grow_fast} adds @code{sizeof (int)} bytes
+containing the value of @var{data} to the growing object in obstack
+@var{obstack-ptr}.
 @end deftypefun
 
 @comment obstack.h

@@ -27,8 +27,6 @@
 
 __BEGIN_DECLS
 
-#ifdef __USE_GNU
-
 /* Make a '\0' separated arg vector from a unix argv vector, returning it in
    ARGZ, and the total length in LEN.  If a memory allocation error occurs,
    ENOMEM is returned, otherwise 0.  The result can be destroyed using free. */
@@ -129,6 +127,4 @@ argz_next (char *__argz, size_t __argz_len, __const char *__entry)
 }
 #endif /* optimizing GCC2 */
 
-#endif /* use GNU */
-
-#endif /* __ARGZ_H__ */
+#endif /* argz.h */

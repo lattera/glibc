@@ -78,11 +78,11 @@ standards each function or symbol comes from.
 
 @menu
 * ANSI C::                      The American National Standard for the
-				 C programming language.  
+				 C programming language.
 * POSIX::                       The IEEE 1003 standards for operating
-                                 systems. 
+                                 systems.
 * Berkeley Unix::               BSD and SunOS.
-* SVID::                        The System V Interface Description.  
+* SVID::                        The System V Interface Description.
 @end menu
 
 @node ANSI C, POSIX,  , Standards and Portability
@@ -152,7 +152,7 @@ pattern matching facilities (@pxref{Pattern Matching}).
 @comment Roland sez:
 @comment The GNU C library as it stands conforms to 1003.2 draft 11, which
 @comment specifies:
-@comment 
+@comment
 @comment Several new macros in <limits.h>.
 @comment popen, pclose
 @comment <regex.h> (which is not yet fully implemented--wait on this)
@@ -210,7 +210,7 @@ the GNU C library.
 
 @menu
 * Header Files::                How to include the header files in your
-                                 programs. 
+                                 programs.
 * Macro Definitions::           Some functions in the library may really
                                  be implemented as macros.
 * Reserved Names::              The C standard reserves some names for
@@ -332,7 +332,7 @@ function---perhaps to make your program easier to debug.  There are
 two ways you can do this:
 
 @itemize @bullet
-@item 
+@item
 You can avoid a macro definition in a specific use by enclosing the name
 of the function in parentheses.  This works because the name of the
 function doesn't appear in a syntactic context where it is recognizable
@@ -429,7 +429,7 @@ raise the possibility of conflict with future versions of the C
 or POSIX standards, so you should avoid these names.
 
 @itemize @bullet
-@item 
+@item
 Names beginning with a capital @samp{E} followed a digit or uppercase
 letter may be used for additional error code names.  @xref{Error
 Reporting}.
@@ -526,11 +526,11 @@ Here is an overview of the contents of the remaining chapters of
 this manual.
 
 @itemize @bullet
-@item 
+@item
 @ref{Error Reporting}, describes how errors detected by the library
 are reported.
 
-@item 
+@item
 @ref{Language Features}, contains information about library support for
 standard parts of the C language, including things like the @code{sizeof}
 operator and the symbolic constant @code{NULL}, how to write functions
@@ -539,18 +539,18 @@ ranges and other properties of the numerical types.  There is also a simple
 debugging mechanism which allows you to put assertions in your code, and
 have diagnostic messages printed if the tests fail.
 
-@item 
+@item
 @ref{Memory Allocation}, describes the GNU library's facilities for
 dynamic allocation of storage.  If you do not know in advance how much
 storage your program needs, you can allocate it dynamically instead,
 and manipulate it via pointers.
 
-@item 
+@item
 @ref{Character Handling}, contains information about character
 classification functions (such as @code{isspace}) and functions for
 performing case conversion.
 
-@item 
+@item
 @ref{String and Array Utilities}, has descriptions of functions for
 manipulating strings (null-terminated character arrays) and general
 byte arrays, including operations such as copying and comparison.
@@ -595,7 +595,7 @@ Internet host addressing and how to use the system network databases.
 attributes of a terminal device.  If you want to disable echo of
 characters typed by the user, for example, read this chapter.
 
-@item 
+@item
 @ref{Mathematics}, contains information about the math library
 functions.  These include things like random-number generators and
 remainder functions on integers as well as the usual trigonometric and
@@ -606,7 +606,7 @@ exponential functions on floating-point numbers.
 for simple arithmetic, analysis of floating-point values, and reading
 numbers from strings.
 
-@item 
+@item
 @ref{Searching and Sorting}, contains information about functions
 for searching and sorting arrays.  You can use these functions on any
 kind of array by providing an appropriate comparison function.
@@ -619,13 +619,13 @@ and shell file name patterns, and for expanding words as the shell does.
 @ref{Date and Time}, describes functions for measuring both calendar time
 and CPU time, as well as functions for setting alarms and timers.
 
-@item 
+@item
 @ref{Extended Characters}, contains information about manipulating
 characters and strings using character sets larger than will fit in
-the usual @code{char} data type.  
+the usual @code{char} data type.
 
-@item 
-@ref{Locales}, describes how selecting a particular country 
+@item
+@ref{Locales}, describes how selecting a particular country
 or language affects the behavior of the library.  For example, the locale
 affects collation sequences for strings and how monetary values are
 formatted.
@@ -645,7 +645,7 @@ critical sections of your program.
 @ref{Process Startup}, tells how your programs can access their
 command-line arguments and environment variables.
 
-@item 
+@item
 @ref{Processes}, contains information about how to start new processes
 and run programs.
 
@@ -656,6 +656,12 @@ interest if you are writing a shell or other program which handles job
 control specially.
 
 @item
+@ref{Name Service Switch}, describes the services which are available
+for looking up names in the system databases, how to determine which
+service is used for which database, and how these services are
+implemented so that contributors can design their own services.
+
+@item
 @ref{User Database}, and @ref{Group Database}, tell you how to access
 the system user and group databases.
 
@@ -664,7 +670,7 @@ the system user and group databases.
 about the hardware and software configuration your program is executing
 under.
 
-@item 
+@item
 @ref{System Configuration}, tells you how you can get information about
 various operating system limits.  Most of these parameters are provided for
 compatibility with POSIX.

@@ -1,21 +1,21 @@
 /* Internal header for parsing printf format strings.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of th GNU C Library.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   This file is part of th GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
 #include <printf.h>
@@ -54,6 +54,7 @@ struct printf_spec
 union printf_arg
   {
     unsigned char pa_char;
+    wchar_t pa_wchar;
     short int pa_short_int;
     int pa_int;
     long int pa_long_int;
@@ -66,6 +67,7 @@ union printf_arg
     double pa_double;
     long double pa_long_double;
     const char *pa_string;
+    const wchar_t *pa_wstring;
     void *pa_pointer;
   };
 
@@ -300,11 +302,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
       }
 
   /* Get the format specification.  */
-#ifdef THIS_IS_INCOMPATIBLE_WITH_LINUX_LIBC
   spec->info.spec = (wchar_t) *format++;
-#else
-  spec->info.spec = (char) *format++;
-#endif
   if (__printf_arginfo_table != NULL &&
       __printf_arginfo_table[spec->info.spec] != NULL)
     /* We don't try to get the types for all arguments if the format
@@ -346,8 +344,14 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	case L'c':
 	  spec->data_arg_type = PA_CHAR;
 	  break;
+	case L'C':
+	  spec->data_arg_type = PA_WCHAR;
+	  break;
 	case L's':
 	  spec->data_arg_type = PA_STRING;
+	  break;
+	case L'S':
+	  spec->data_arg_type = PA_WSTRING;
 	  break;
 	case L'p':
 	  spec->data_arg_type = PA_POINTER;

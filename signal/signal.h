@@ -1,23 +1,23 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*
- *	ANSI Standard: 4.7 SIGNAL HANDLING <signal.h>
+ *	ISO C Standard: 4.7 SIGNAL HANDLING <signal.h>
  */
 
 #ifndef	_SIGNAL_H
@@ -62,12 +62,12 @@ extern int __kill __P ((__pid_t __pid, int __sig));
 extern int kill __P ((__pid_t __pid, int __sig));
 #endif /* Use POSIX.  */
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Send SIG to all processes in process group PGRP.
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
 extern int killpg __P ((__pid_t __pgrp, int __sig));
-#endif /* Use BSD.  */
+#endif /* Use BSD || X/Open Unix.  */
 
 /* Raise signal SIG, i.e., send SIG to yourself.  */
 extern int raise __P ((int __sig));
@@ -220,6 +220,18 @@ extern int sigvec __P ((int __sig, __const struct sigvec *__vec,
 			struct sigvec *__ovec));
 
 
+/* Get machine-dependent `struct sigcontext' and signal subcodes.  */
+#include <sigcontext.h>
+
+/* Restore the state saved in SCP.  */
+extern int __sigreturn __P ((struct sigcontext *__scp));
+extern int sigreturn __P ((struct sigcontext *__scp));
+
+#endif /* signal.h included and use BSD.  */
+
+
+#if defined(_SIGNAL_H) && (defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED))
+
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
    (causing them to fail with EINTR); if INTERRUPT is zero, make system
    calls be restarted after signal SIG.  */
@@ -249,14 +261,7 @@ struct sigaltstack
 extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 			     struct sigaltstack *__oss));
 
-/* Get machine-dependent `struct sigcontext' and signal subcodes.  */
-#include <sigcontext.h>
-
-/* Restore the state saved in SCP.  */
-extern int __sigreturn __P ((struct sigcontext *__scp));
-extern int sigreturn __P ((struct sigcontext *__scp));
-
-#endif /* signal.h included and use BSD.  */
+#endif /* signal.h included and use BSD or X/Open Unix.  */
 
 __END_DECLS
 

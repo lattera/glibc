@@ -1,20 +1,20 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef _NL_TYPES_H
 #define _NL_TYPES_H 1
@@ -26,11 +26,11 @@ Boston, MA 02111-1307, USA.  */
 /* Value for FLAG parameter of `catgets' to say we want XPG4 compliance.  */
 #define NL_CAT_LOCALE 1
 
-/* Message catalog descriptor type.  */
-typedef void *nl_catd;
-
 
 __BEGIN_DECLS
+
+/* Message catalog descriptor type.  */
+typedef void *nl_catd;
 
 /* Open message catalog for later use, returning descriptor.  */
 extern nl_catd catopen __P ((__const char *__cat_name, int __flag));

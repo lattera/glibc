@@ -23,6 +23,10 @@ Cambridge, MA 02139, USA.  */
    extra arguments.  */
 ENTRY (__sigsetjmp)
 	ldgp	$29, 0($27)
+#ifdef PROF
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+#endif
 	.prologue 1
 
 	bis	$30, $30, $18		/* Pass SP as 3rd arg.  */

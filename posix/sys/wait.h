@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*
  *	POSIX Standard: 3.2.1 Wait for Process Termination	<sys/wait.h>
@@ -123,7 +123,8 @@ extern __pid_t __waitpid __P ((__pid_t __pid, int *__stat_loc,
 			       int __options));
 extern __pid_t waitpid __P ((__pid_t __pid, int *__stat_loc,
 			     int __options));
-#ifdef	__USE_BSD
+
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* This being here makes the prototypes valid whether or not
    we have already included <sys/resource.h> to define `struct rusage'.  */
 struct rusage;
@@ -137,6 +138,12 @@ extern __pid_t __wait3 __P ((__WAIT_STATUS __stat_loc,
 			     int __options, struct rusage * __usage));
 extern __pid_t wait3 __P ((__WAIT_STATUS __stat_loc,
 			   int __options, struct rusage * __usage));
+#endif
+
+#ifdef __USE_BSD
+/* This being here makes the prototypes valid whether or not
+   we have already included <sys/resource.h> to define `struct rusage'.  */
+struct rusage;
 
 /* PID is like waitpid.  Other args are like wait3.  */
 extern __pid_t __wait4 __P ((__pid_t __pid, __WAIT_STATUS __stat_loc,

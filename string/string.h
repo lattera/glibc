@@ -46,7 +46,7 @@ extern __ptr_t memmove __P ((__ptr_t __dest, __const __ptr_t __src,
    or NULL if C was not found in the first N bytes of SRC.  */
 extern __ptr_t __memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
 			       int __c, size_t __n));
-#if defined (__USE_SVID) || defined (__USE_BSD)
+#if defined (__USE_SVID) || defined (__USE_BSD) || defined (__USE_XOPEN)
 extern __ptr_t memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
 			     int __c, size_t __n));
 #endif /* SVID.  */
@@ -83,7 +83,7 @@ extern int strcoll __P ((__const char *__s1, __const char *__s2));
 /* Put a transformation of SRC into no more than N bytes of DEST.  */
 extern size_t strxfrm __P ((char *__dest, __const char *__src, size_t __n));
 
-#if defined (__USE_SVID) || defined (__USE_BSD)
+#if defined(__USE_SVID) || defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *__strdup __P ((__const char *__s));
 extern char *strdup __P ((__const char *__s));
@@ -177,13 +177,7 @@ extern char *strerror __P ((int __errnum));
 extern char *strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
 #endif
 
-#ifdef	__USE_BSD
-/* Find the first occurrence of C in S (same as strchr).  */
-extern char *index __P ((__const char *__s, int __c));
-
-/* Find the last occurrence of C in S (same as strrchr).  */
-extern char *rindex __P ((__const char *__s, int __c));
-
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
 extern void bcopy __P ((__const __ptr_t __src, __ptr_t __dest, size_t __n));
 
@@ -192,6 +186,12 @@ extern void bzero __P ((__ptr_t __s, size_t __n));
 
 /* Compare N bytes of S1 and S2 (same as memcmp).  */
 extern int bcmp __P ((__const __ptr_t __s1, __const __ptr_t __s2, size_t __n));
+
+/* Find the first occurrence of C in S (same as strchr).  */
+extern char *index __P ((__const char *__s, int __c));
+
+/* Find the last occurrence of C in S (same as strrchr).  */
+extern char *rindex __P ((__const char *__s, int __c));
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
@@ -206,7 +206,9 @@ extern int __strncasecmp __P ((__const char *__s1, __const char *__s2,
 			       size_t __n));
 extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
 			     size_t __n));
+#endif /* Use BSD or X/Open Unix.  */
 
+#ifdef	__USE_BSD
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */
 extern char *__strsep __P ((char **__stringp, __const char *__delim));
@@ -236,14 +238,6 @@ extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
 #ifdef	__USE_MISC
 /* Return the file name within directory of FILENAME.  */
 extern char *basename __P ((__const char *__filename));
-#endif
-
-#ifdef __USE_SVID
-/* Swab pairs bytes in the first N bytes of the area pointed to by
-   FROM and copy the result to TO.  The value of TO must not be in the
-   range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
-   is without partner.  */
-extern void swab __P ((__const char *__from, __const char *__to, size_t __n));
 #endif
 
 __END_DECLS

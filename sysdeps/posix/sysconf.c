@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <limits.h>
@@ -26,8 +26,6 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <sys/sysinfo.h>
 
-extern int __getdtablesize __P ((void));
-extern size_t __getpagesize __P ((void));
 
 /* Get the value of the system variable NAME.  */
 long int
@@ -463,6 +461,13 @@ __sysconf (name)
       return -1;
 #endif
 
+    case _SC_2_C_VERSION:
+#ifdef	_POSIX2_C_VERSION
+      return _POSIX2_C_VERSION;
+#else
+      return -1;
+#endif
+
     case _SC_2_FORT_DEV:
 #ifdef	_POSIX2_FORT_DEV
       return _POSIX2_FORT_DEV;
@@ -480,6 +485,20 @@ __sysconf (name)
     case _SC_2_SW_DEV:
 #ifdef	_POSIX2_SW_DEV
       return _POSIX2_SW_DEV;
+#else
+      return -1;
+#endif
+
+    case _SC_2_CHAR_TERM:
+#ifdef	_POSIX2_CHAR_TERM
+      return _POSIX2_CHAR_TERM;
+#else
+      return -1;
+#endif
+
+    case _SC_2_UPE:
+#ifdef	_POSIX2_UPE
+      return _POSIX2_UPE;
 #else
       return -1;
 #endif
@@ -620,6 +639,150 @@ __sysconf (name)
 
     case _SC_XOPEN_VERSION:
       return _XOPEN_VERSION;
+
+    case _SC_XOPEN_XCU_VERSION:
+      return _XOPEN_XCU_VERSION;
+
+    case _SC_XOPEN_UNIX:
+      return _XOPEN_UNIX;
+
+    case _SC_XOPEN_CRYPT:
+#ifdef	_XOPEN_CRYPT
+      return _XOPEN_CRYPT;
+#else
+      return -1;
+#endif
+
+    case _SC_XOPEN_ENH_I18N:
+#ifdef	_XOPEN_ENH_I18N
+      return _XOPEN_ENH_I18N;
+#else
+      return -1;
+#endif
+
+    case _SC_XOPEN_SHM:
+#ifdef	_XOPEN_SHM
+      return _XOPEN_SHM;
+#else
+      return -1;
+#endif
+
+    case _SC_XOPEN_XPG2:
+#ifdef	_XOPEN_XPG2
+      return _XOPEN_XPG2;
+#else
+      return -1;
+#endif
+
+    case _SC_XOPEN_XPG3:
+#ifdef	_XOPEN_XPG3
+      return _XOPEN_XPG3;
+#else
+      return -1;
+#endif
+
+    case _SC_XOPEN_XPG4:
+#ifdef	_XOPEN_XPG4
+      return _XOPEN_XPG4;
+#else
+      return -1;
+#endif
+
+    case _SC_CHAR_BIT:
+      return CHAR_BIT;
+
+    case _SC_CHAR_MAX:
+      return CHAR_MAX;
+
+    case _SC_CHAR_MIN:
+      return CHAR_MIN;
+
+    case _SC_INT_MAX:
+      return INT_MAX;
+
+    case _SC_INT_MIN:
+      return INT_MIN;
+
+    case _SC_LONG_BIT:
+      return sizeof (long int) * CHAR_BIT;
+
+    case _SC_WORD_BIT:
+      return sizeof (int) * CHAR_BIT;
+
+    case _SC_MB_LEN_MAX:
+      return MB_LEN_MAX;
+
+    case _SC_NZERO:
+      return NZERO;
+
+    case _SC_SSIZE_MAX:
+      return _POSIX_SSIZE_MAX;
+
+    case _SC_SCHAR_MAX:
+      return SCHAR_MAX;
+
+    case _SC_SCHAR_MIN:
+      return SCHAR_MIN;
+
+    case _SC_SHRT_MAX:
+      return SHRT_MAX;
+
+    case _SC_SHRT_MIN:
+      return SHRT_MIN;
+
+    case _SC_UCHAR_MAX:
+      return UCHAR_MAX;
+
+    case _SC_UINT_MAX:
+      return UINT_MAX;
+
+    case _SC_ULONG_MAX:
+      return ULONG_MAX;
+
+    case _SC_USHRT_MAX:
+      return USHRT_MAX;
+
+    case _SC_NL_ARGMAX:
+#ifdef	NL_ARGMAX
+      return NL_ARGMAX;
+#else
+      return -1;
+#endif
+
+    case _SC_NL_LANGMAX:
+#ifdef	NL_LANGMAX
+      return NL_LANGMAX;
+#else
+      return -1;
+#endif
+
+    case _SC_NL_MSGMAX:
+#ifdef	NL_MSGMAX
+      return NL_MSGMAX;
+#else
+      return -1;
+#endif
+
+    case _SC_NL_NMAX:
+#ifdef	NL_NMAX
+      return NL_NMAX;
+#else
+      return -1;
+#endif
+
+    case _SC_NL_SETMAX:
+#ifdef	NL_SETMAX
+      return NL_SETMAX;
+#else
+      return -1;
+#endif
+
+    case _SC_NL_TEXTMAX:
+#ifdef	NL_TEXTMAX
+      return NL_TEXTMAX;
+#else
+      return -1;
+#endif
     }
 }
 

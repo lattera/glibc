@@ -1,23 +1,24 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
+#include <errno.h>
 #include <nl_types.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,6 +46,7 @@ catopen (const char *cat_name, int flag)
   if (result->cat_name == NULL)
     {
       free (result);
+      __set_errno (ENOMEM);
       return (nl_catd) -1;
     }
 
@@ -76,6 +78,7 @@ catopen (const char *cat_name, int flag)
 	{
 	  free ((void *) result->cat_name);
 	  free ((void *) result);
+	  __set_errno (ENOMEM);
 	  return (nl_catd) -1;
 	}
 
@@ -89,6 +92,7 @@ catopen (const char *cat_name, int flag)
 	  free ((void *) result->cat_name);
 	  free ((void *) result->env_var);
 	  free ((void *) result);
+	  __set_errno (ENOMEM);
 	  return (nl_catd) -1;
 	}
     }
@@ -120,7 +124,10 @@ catgets (nl_catd catalog_desc, int set, int message, const char *string)
     __open_catalog (catalog, 1);
 
   if (catalog->status == nonexisting)
-    return (char *) string;
+    {
+      __set_errno (EBADF);
+      return (char *) string;
+    }
 
   idx = ((set * message) % catalog->plane_size) * 3;
   cnt = 0;
@@ -134,6 +141,7 @@ catgets (nl_catd catalog_desc, int set, int message, const char *string)
     }
   while (++cnt < catalog->plane_depth);
 
+  __set_errno (ENOMSG);
   return (char *) string;
 }
 
@@ -151,7 +159,10 @@ catclose (nl_catd catalog_desc)
   else if (catalog->status == malloced)
     free ((void *) catalog->file_ptr);
   else if (catalog->status != closed && catalog->status != nonexisting)
-    return -1;
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
 
   if (catalog->nlspath)
     free ((void *) catalog->nlspath);

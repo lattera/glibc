@@ -114,7 +114,7 @@ extern int tolower __P ((int __c));
 extern int toupper __P ((int __c));
 
 
-#if defined(__USE_SVID) || defined(__USE_MISC)
+#if defined(__USE_SVID) || defined(__USE_MISC) || defined(__USE_XOPEN)
 
 /* Return nonzero iff C is in the ASCII set
    (i.e., is no more than 7 bits wide).  */
@@ -126,7 +126,7 @@ extern int toascii __P ((int __c));
 
 #endif /* Use SVID or use misc.  */
 
-#ifdef	__USE_SVID
+#if defined(__USE_SVID) || defined(__USE_XOPEN)
 /* These are the same as `toupper' and `tolower'.  */
 __exctype (_toupper);
 __exctype (_tolower);

@@ -685,6 +685,9 @@ at least @code{L_cuserid} characters; the string is returned in this
 array.  Otherwise, a pointer to a string in a static area is returned.
 This string is statically allocated and might be overwritten on
 subsequent calls to this function or to @code{getlogin}.
+
+The use of this function is deprecated since it is marked to be
+withdrawn in XPG4.2 and it is already removed in POSIX.1.
 @end deftypefun
 
 @comment stdio.h
@@ -1158,7 +1161,7 @@ This function closes the internal stream used by @code{getgrent} or
 @node Netgroup Data, Lookup Netgroup, Netgroup Database, Netgroup Database
 @subsection Netgroup Data
 
-@cindex{Netgroup}
+@cindex Netgroup
 Sometimes it is useful group users according to other criterias like the
 ones used in the @xref{Group Database}.  E.g., it is useful to associate
 a certain group of users with a certain machine.  On the other hand

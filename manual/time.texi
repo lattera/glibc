@@ -1024,7 +1024,7 @@ community of volunteers and put in the public domain.
 
 @comment time.h
 @comment POSIX.1
-@deftypevar char * tzname [2]
+@deftypevar {char *} tzname [2]
 The array @code{tzname} contains two strings, which are the standard
 names of the pair of time zones (standard and daylight
 saving) that the user has selected.  @code{tzname[0]} is the name of

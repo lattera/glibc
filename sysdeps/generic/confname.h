@@ -1,21 +1,21 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Values for the NAME argument to `pathconf' and `fpathconf'.  */
 enum
@@ -237,8 +237,83 @@ enum
 #define _SC_ATEXIT_MAX			_SC_ATEXIT_MAX
     _SC_PASS_MAX,
 #define _SC_PASS_MAX			_SC_PASS_MAX
-    _SC_XOPEN_VERSION
+
+    _SC_XOPEN_VERSION,
 #define _SC_XOPEN_VERSION		_SC_XOPEN_VERSION
+    _SC_XOPEN_XCU_VERSION,
+#define _SC_XOPEN_XCU_VERSION		_SC_XOPEN_XCU_VERSION
+    _SC_XOPEN_UNIX,
+#define _SC_XOPEN_UNIX			_SC_XOPEN_UNIX
+    _SC_XOPEN_CRYPT,
+#define _SC_XOPEN_CRYPT			_SC_XOPEN_CRYPT
+    _SC_XOPEN_ENH_I18N,
+#define _SC_XOPEN_ENH_I18N		_SC_XOPEN_ENH_I18N
+    _SC_XOPEN_SHM,
+#define _SC_XOPEN_SHM			_SC_XOPEN_SHM
+
+    _SC_2_CHAR_TERM,
+#define _SC_2_CHAR_TERM			_SC_2_CHAR_TERM
+    _SC_2_C_VERSION,
+#define _SC_2_C_VERSION			_SC_2_C_VERSION
+    _SC_2_UPE,
+#define _SC_2_UPE			_SC_2_UPE
+
+    _SC_XOPEN_XPG2,
+#define _SC_XOPEN_XPG2			_SC_XOPEN_XPG2
+    _SC_XOPEN_XPG3,
+#define _SC_XOPEN_XPG3			_SC_XOPEN_XPG3
+    _SC_XOPEN_XPG4,
+#define _SC_XOPEN_XPG4			_SC_XOPEN_XPG4
+
+    _SC_CHAR_BIT,
+#define	_SC_CHAR_BIT			_SC_CHAR_BIT
+    _SC_CHAR_MAX,
+#define	_SC_CHAR_MAX			_SC_CHAR_MAX
+    _SC_CHAR_MIN,
+#define	_SC_CHAR_MIN			_SC_CHAR_MIN
+    _SC_INT_MAX,
+#define	_SC_INT_MAX			_SC_INT_MAX
+    _SC_INT_MIN,
+#define	_SC_INT_MIN			_SC_INT_MIN
+    _SC_LONG_BIT,
+#define	_SC_LONG_BIT			_SC_LONG_BIT
+    _SC_WORD_BIT,
+#define	_SC_WORD_BIT			_SC_WORD_BIT
+    _SC_MB_LEN_MAX,
+#define	_SC_MB_LEN_MAX			_SC_MB_LEN_MAX
+    _SC_NZERO,
+#define	_SC_NZERO			_SC_NZERO
+    _SC_SSIZE_MAX,
+#define	_SC_SSIZE_MAX			_SC_SSIZE_MAX
+    _SC_SCHAR_MAX,
+#define	_SC_SCHAR_MAX			_SC_SCHAR_MAX
+    _SC_SCHAR_MIN,
+#define	_SC_SCHAR_MIN			_SC_SCHAR_MIN
+    _SC_SHRT_MAX,
+#define	_SC_SHRT_MAX			_SC_SHRT_MAX
+    _SC_SHRT_MIN,
+#define	_SC_SHRT_MIN			_SC_SHRT_MIN
+    _SC_UCHAR_MAX,
+#define	_SC_UCHAR_MAX			_SC_UCHAR_MAX
+    _SC_UINT_MAX,
+#define	_SC_UINT_MAX			_SC_UINT_MAX
+    _SC_ULONG_MAX,
+#define	_SC_ULONG_MAX			_SC_ULONG_MAX
+    _SC_USHRT_MAX,
+#define	_SC_USHRT_MAX			_SC_USHRT_MAX
+
+    _SC_NL_ARGMAX,
+#define	_SC_NL_ARGMAX			_SC_NL_ARGMAX
+    _SC_NL_LANGMAX,
+#define	_SC_NL_LANGMAX			_SC_NL_LANGMAX
+    _SC_NL_MSGMAX,
+#define	_SC_NL_MSGMAX			_SC_NL_MSGMAX
+    _SC_NL_NMAX,
+#define	_SC_NL_NMAX			_SC_NL_NMAX
+    _SC_NL_SETMAX,
+#define	_SC_NL_SETMAX			_SC_NL_SETMAX
+    _SC_NL_TEXTMAX
+#define	_SC_NL_TEXTMAX			_SC_NL_TEXTMAX
   };
 
 #ifdef __USE_POSIX2

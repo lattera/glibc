@@ -1,21 +1,21 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* NOTE: Because of the special way this file is used by <math.h>, this
    file must NOT be protected from multiple inclusion as header files
@@ -73,7 +73,7 @@ __MATHCALL (sinh,, (_Mdouble_ __x));
 /* Hyperbolic tangent of X.  */
 __MATHCALL (tanh,, (_Mdouble_ __x));
 
-#ifdef	__USE_MISC
+#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
 /* Hyperbolic arc cosine of X.  */
 __MATHCALL (acosh,, (_Mdouble_ __x));
 /* Hyperbolic arc sine of X.  */
@@ -99,12 +99,15 @@ __MATHCALL (log,, (_Mdouble_ __x));
 /* Base-ten logarithm of X.  */
 __MATHCALL (log10,, (_Mdouble_ __x));
 
-#ifdef	__USE_MISC
+#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
 /* Return exp(X) - 1.  */
 __MATHCALL (expm1,, (_Mdouble_ __x));
 
 /* Return log(1 + X).  */
 __MATHCALL (log1p,, (_Mdouble_ __x));
+
+/* Return the base 2 signed integral exponent of X.  */
+__MATHCALL (logb,, (_Mdouble_ __x));
 #endif
 
 /* Break VALUE into integral and fractional parts.  */
@@ -119,7 +122,7 @@ __MATHCALL (pow,, (_Mdouble_ __x, _Mdouble_ __y));
 /* Return the square root of X.  */
 __MATHCALL (sqrt,, (_Mdouble_ __x));
 
-#ifdef	__USE_MISC
+#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
 /* Return the cube root of X.  */
 __MATHCALL (cbrt,, (_Mdouble_ __x));
 #endif
@@ -146,9 +149,6 @@ __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
    is +Infinity, -1 if it is -Infinity.  */
 __MATHDECL (int, isinf,, (_Mdouble_ __value));
 
-/* Return nonzero if VALUE is not a number.  */
-__MATHDECL (int, isnan,, (_Mdouble_ __value));
-
 /* Return nonzero if VALUE is finite and not NaN.  */
 __MATHDECL (int, finite,, (_Mdouble_ __value));
 
@@ -164,23 +164,10 @@ __MATHCALL (infnan,, (int __error));
 __MATHCALL (copysign,, (_Mdouble_ __x, _Mdouble_ __y));
 
 /* Return X times (2 to the Nth power).  */
-__MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
-
-/* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 
 /* Return the remainder of X/Y.  */
 __MATHCALL (drem,, (_Mdouble_ __x, _Mdouble_ __y));
-
-/* Return the base 2 signed integral exponent of X.  */
-__MATHCALL (logb,, (_Mdouble_ __x));
-
-/* Return the integer nearest X in the direction of the
-   prevailing rounding mode.  */
-__MATHCALL (rint,, (_Mdouble_ __x));
-
-/* Return `sqrt(X*X + Y*Y)'.  */
-__MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
 
 struct __MATH_PRECNAME(__cabs_complex,)
 {
@@ -191,18 +178,21 @@ struct __MATH_PRECNAME(__cabs_complex,)
 __MATHCALL (cabs,, (struct __MATH_PRECNAME(__cabs_complex,)));
 
 
-/* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
-__MATHCALL (nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
+/* Return the fractional part of X after dividing out `ilogb (X)'.  */
+__MATHCALL (significand,, (_Mdouble_ __x));
+#endif /* Use misc.  */
 
-/* Return the remainder of integer divison X / Y with infinite precision.  */
-__MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
+
+#if defined(__USE_MISC) || defined(__USE_XOPEN)
+
+/* Return nonzero if VALUE is not a number.  */
+__MATHDECL (int, isnan,, (_Mdouble_ __value));
 
 /* Return the binary exponent of X, which must be nonzero.  */
 __MATHDECL (int, ilogb,, (_Mdouble_ __x));
 
-/* Return the fractional part of X after dividing out `ilogb (X)'.  */
-__MATHCALL (significand,, (_Mdouble_ __x));
-
+/* Return `sqrt(X*X + Y*Y)'.  */
+__MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
 
 
 /* Error, gamma, and Bessel functions.  */
@@ -227,6 +217,23 @@ extern int signgam;
    store the value through it.  */
 __MATHCALL (gamma,_r, (_Mdouble_, int *));
 __MATHCALL (lgamma,_r, (_Mdouble_, int *));
+#endif
+
+
+#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+
+/* Return the integer nearest X in the direction of the
+   prevailing rounding mode.  */
+__MATHCALL (rint,, (_Mdouble_ __x));
+
+/* Return X times (2 to the Nth power).  */
+__MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
+
+/* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
+__MATHCALL (nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
+
+/* Return the remainder of integer divison X / Y with infinite precision.  */
+__MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 #endif
 
 #endif /* Use misc.  */

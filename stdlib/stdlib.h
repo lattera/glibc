@@ -188,7 +188,7 @@ extern __inline long int atol (__const char *__nptr)
 #endif /* Optimizing GCC >=2.  */
 
 
-#ifdef __USE_SVID
+#if defined(__USE_SVID) || defined(__USE_XOPEN_EXTENDED)
 /* Convert N to base 64 using the digits "./0-9A-Za-z", least-significant
    digit first.  Returns a pointer to static storage overwritten by the
    next call.  */
@@ -196,15 +196,7 @@ extern char *l64a __P ((long int __n));
 
 /* Read a number from a string S in base 64 as above.  */
 extern long int a64l __P ((__const char *__s));
-#endif
 
-
-/* Return a random integer between 0 and RAND_MAX inclusive.  */
-extern int rand __P ((void));
-/* Seed the random number generator with the given number.  */
-extern void srand __P ((unsigned int __seed));
-
-#ifdef	__USE_BSD
 
 #include <sys/types.h>	/* we need int32_t... */
 
@@ -262,12 +254,35 @@ extern int srandom_r __P ((unsigned int __seed, struct random_data *__buf));
 extern int initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
 			     size_t __statelen, struct random_data *__buf));
 extern int setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
-#endif	/* __USE_REENTRANT.  */
+#endif	/* Use reentrant.  */
 #endif	/* Use BSD.  */
 
 
-#ifdef	__USE_SVID
+/* Return a random integer between 0 and RAND_MAX inclusive.  */
+extern int rand __P ((void));
+/* Seed the random number generator with the given number.  */
+extern void srand __P ((unsigned int __seed));
+
+
+#if defined(__USE_SVID) || defined(__USE_XOPEN)
 /* System V style 48-bit random number generator functions.  */
+
+/* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
+extern double drand48 __P ((void));
+extern double erand48 __P ((unsigned short int __xsubi[3]));
+
+/* Return non-negative, long integer in [0,2^31).  */
+extern long lrand48 __P ((void));
+extern long nrand48 __P ((unsigned short int __xsubi[3]));
+
+/* Return signed, long integers in [-2^31,2^31).  */
+extern long mrand48 __P ((void));
+extern long jrand48 __P ((unsigned short int __xsubi[3]));
+
+/* Seed random number generator.  */
+extern void srand48 __P ((long __seedval));
+extern unsigned short int *seed48 __P ((unsigned short int __seed16v[3]));
+extern void lcong48 __P ((unsigned short int __param[7]));
 
 /* Data structure for communication with thread safe versions.  */
 struct drand48_data
@@ -279,38 +294,34 @@ struct drand48_data
     int init;			/* Flag for initializing.  */
   };
 
+#ifdef __USE_REENTRANT
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
-extern double drand48 __P ((void));
 extern int drand48_r __P ((struct drand48_data *__buffer, double *__result));
-extern double erand48 __P ((unsigned short int __xsubi[3]));
 extern int erand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, double *__result));
+
 /* Return non-negative, long integer in [0,2^31).  */
-extern long lrand48 __P ((void));
 extern int lrand48_r __P ((struct drand48_data *__buffer, long *__result));
-extern long nrand48 __P ((unsigned short int __xsubi[3]));
 extern int nrand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, long *__result));
+
 /* Return signed, long integers in [-2^31,2^31).  */
-extern long mrand48 __P ((void));
 extern int mrand48_r __P ((struct drand48_data *__buffer, long *__result));
-extern long jrand48 __P ((unsigned short int __xsubi[3]));
 extern int jrand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, long *__result));
+
 /* Seed random number generator.  */
-extern void srand48 __P ((long __seedval));
 extern int srand48_r __P ((long __seedval, struct drand48_data *__buffer));
-extern unsigned short int *seed48 __P ((unsigned short int __seed16v[3]));
 extern int seed48_r __P ((unsigned short int __seed16v[3],
 			  struct drand48_data *__buffer));
-extern void lcong48 __P ((unsigned short int __param[7]));
 extern int lcong48_r __P ((unsigned short int __param[7],
 			   struct drand48_data *__buffer));
+#endif	/* Use reentrant.  */
 
 /* Internal function to compute next state of the generator.  */
 extern int __drand48_iterate __P ((unsigned short int __xsubi[3],
 				   struct drand48_data *__buffer));
-#endif	/* __USE_SVID.  */
+#endif	/* Use SVID or X/Open.  */
 
 
 /* Allocate SIZE bytes of memory.  */
@@ -332,7 +343,7 @@ extern void cfree __P ((__ptr_t __ptr));
 #include <alloca.h>
 #endif /* Use GNU, BSD, or misc.  */
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Allocate SIZE bytes on a page boundary.  The storage cannot be freed.  */
 extern __ptr_t valloc __P ((size_t __size));
 #endif
@@ -365,7 +376,7 @@ extern char *getenv __P ((__const char *__name));
    programs is running with SUID or SGID enabled.  */
 extern char *__secure_getenv __P ((__const char *__name));
 
-#ifdef	__USE_SVID
+#if defined(__USE_SVID) || defined(__USE_XOPEN)
 /* The SVID says this is in <stdio.h>, but this seems a better place.	*/
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.
    If there is no `=', remove NAME from the environment.  */
@@ -389,6 +400,23 @@ extern void unsetenv __P ((__const char *__name));
 extern int clearenv __P ((void));
 #endif
 
+
+#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+/* Generate a unique temporary file name from TEMPLATE.
+   The last six characters of TEMPLATE must be "XXXXXX";
+   they are replaced with a string that makes the file name unique.
+   Returns TEMPLATE, or a null pointer if it cannot get a unique file name.  */
+extern char *mktemp __P ((char *__template));
+
+/* Generate a unique temporary file name from TEMPLATE.
+   The last six characters of TEMPLATE must be "XXXXXX";
+   they are replaced with a string that makes the filename unique.
+   Returns a file descriptor open on the file for reading and writing,
+   or -1 if it cannot create a uniquely-named file.  */
+extern int mkstemp __P ((char *__template));
+#endif
+
+
 /* Execute the given line as a shell command.  */
 extern int system __P ((__const char *__command));
 
@@ -400,7 +428,7 @@ extern int system __P ((__const char *__command));
 extern char *canonicalize_file_name __P ((__const char *__name));
 #endif
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Return the canonical absolute name of file NAME.  The last file name
    component need not exist, and may be a symlink to a nonexistent file.
    If RESOLVED is null, the result is malloc'd; otherwise, if the canonical
@@ -451,47 +479,49 @@ extern lldiv_t lldiv __P ((long long int __numer, long long int __denom)) __attr
 #endif
 
 
-#ifdef __USE_SVID
+#if defined(__USE_SVID) || defined(__USE_XOPEN_EXTENDED)
 /* Convert floating point numbers to strings.  The returned values are
    valid only until another call to the same function.  */
 
 /* Convert VALUE to a string with NDIGIT digits and return a pointer to
    this.  Set *DECPT with the position of the decimal character and *SIGN
    with the sign of the number.  */
-char *ecvt __P ((double __value, int __ndigit, int *__decpt, int *__sign));
+extern char *ecvt __P ((double __value, int __ndigit, int *__decpt,
+			int *__sign));
 
 /* Convert VALUE to a string rounded to NDIGIT decimal digits.  Set *DECPT
    with the position of the decimal character and *SIGN with the sign of
    the number.  */
-char *fcvt __P ((double __value, int __ndigit, int *__decpt, int *__sign));
+extern char *fcvt __P ((double __value, int __ndigit, int *__decpt,
+			int *__sign));
 
 /* If possible convert VALUE to a string with NDIGIT significant digits.
    Otherwise use exponential representation.  The resulting string will
    be written to BUF.  */
-char *gcvt __P ((double __value, int __ndigit, char *__buf));
+extern char *gcvt __P ((double __value, int __ndigit, char *__buf));
 
 /* Long double versions of above functions.  */
-char *qecvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
-		  int *__sign));
-char *qfcvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
-		  int *__sign));
-char *qgcvt __P ((__long_double_t __value, int __ndigit, char *__buf));
+extern char *qecvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
+			 int *__sign));
+extern char *qfcvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
+			 int *__sign));
+extern char *qgcvt __P ((__long_double_t __value, int __ndigit, char *__buf));
 
 
 #ifdef __USE_REENTRANT
 /* Reentrant version of the functions above which provide their own
    buffers.  */
-int ecvt_r __P ((double __value, int __ndigit, int *__decpt, int *__sign,
-		 char *__buf, size_t __len));
-int fcvt_r __P ((double __value, int __ndigit, int *__decpt, int *__sign,
-		 char *__buf, size_t __len));
+extern int ecvt_r __P ((double __value, int __ndigit, int *__decpt,
+			int *__sign, char *__buf, size_t __len));
+extern int fcvt_r __P ((double __value, int __ndigit, int *__decpt,
+			int *__sign, char *__buf, size_t __len));
 
-int qecvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
-		  int *__sign, char *__buf, size_t __len));
-int qfcvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
-		  int *__sign, char *__buf, size_t __len));
-#endif
-#endif
+extern int qecvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
+			 int *__sign, char *__buf, size_t __len));
+extern int qfcvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
+			 int *__sign, char *__buf, size_t __len));
+#endif	/* reentrant */
+#endif	/* use MISC || use X/Open Unix */
 
 
 /* Return the length of the multibyte character
@@ -525,7 +555,7 @@ extern int rpmatch __P ((__const char *__response));
 #endif
 
 
-#ifdef __USE_MISC
+#ifdef __USE_XOPEN_EXTENDED
 /* Parse comma separated suboption from *OPTIONP and match against
    strings in TOKENS.  If found return index and set *VALUEP to
    optional value introduced by an equal sign.  If the suboption is
@@ -534,6 +564,13 @@ extern int rpmatch __P ((__const char *__response));
    otken or at the terminating NUL character.  */
 extern int getsubopt __P ((char **__optionp, __const char *__const *__tokens,
 			   char **__valuep));
+#endif
+
+
+#ifdef __USE_XOPEN
+
+/* Setup DES tables according KEY.  */
+extern void setkey __P ((__const char *__key));
 #endif
 
 

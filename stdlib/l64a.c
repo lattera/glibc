@@ -1,21 +1,21 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
 
@@ -34,18 +34,24 @@ static const char conv_table[64] =
 
 char *
 l64a (n)
-     long n;
+     long int n;
 {
   static char result[7];
   int cnt;
 
+  if (n <= 0l)
+    /* The value for N == 0 is defined to be the empty string.  When a
+       negative value is given the result is undefined.  We will
+       return the empty string.  */
+    return (char *) "";
+
   result[6] = '\0';
 
-  for (cnt = 5; cnt >= 0; --cnt)
+  for (cnt = 5; n > 0; --cnt)
     {
       result[cnt] = conv_table[n & 0x3f];
       n >>= 6;
     }
 
-  return result;
+  return &result[n + 1];
 }

@@ -469,7 +469,8 @@ syntax used for integer constants in C.
 
 Otherwise @var{base} must have a value between @code{2} and @code{35}.
 If @var{base} is @code{16}, the digits may optionally be preceded by
-@samp{0x} or @samp{0X}.
+@samp{0x} or @samp{0X}.  If base has no legal value the value returned
+is @code{0l} and the global variable @code{errno} is set to @code{EINVAL}.
 
 @item
 Any remaining characters in the string.  If @var{tailptr} is not a null
@@ -492,6 +493,11 @@ representable because of overflow, @code{strtol} returns either
 appropriate for the sign of the value.  It also sets @code{errno}
 to @code{ERANGE} to indicate there was overflow.
 
+Because the value @code{0l} is a correct result for @code{strtol} the
+user who is interested in handling errors should set the global variable
+@code{errno} to @code{0} before calling this function.  So it can be
+tested whether an error occured or not.
+
 There is an example at the end of this section.
 @end deftypefun
 
@@ -504,6 +510,51 @@ value with type @code{unsigned long int}.  No @samp{+} or @samp{-} sign
 may appear before the number, but the syntax is otherwise the same as
 described above for @code{strtol}.  The value returned in case of
 overflow is @code{ULONG_MAX} (@pxref{Range of Type}).
+
+Like @code{strtol} this function sets @code{errno} and returns the value
+@code{0ul} in case the value for @var{base} is not in the legal range.
+For @code{strtoul} this can happen in another situation.  In case the
+number to be converted is negative @code{strtoul} also sets @code{errno}
+to @code{EINVAL} and returns @code{0ul}.
+@end deftypefun
+
+@comment stdlib.h
+@comment BSD
+@deftypefun {long long int} strtoq (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtoq} (``string-to-quad-word'') function is like
+@code{strtol} except that is deals with extra long numbers and it
+returns its value with type @code{long long int}.
+
+If the string has valid syntax for an integer but the value is not
+representable because of overflow, @code{strtoq} returns either
+@code{LONG_LONG_MAX} or @code{LONG_LONG_MIN} (@pxref{Range of Type}), as
+appropriate for the sign of the value.  It also sets @code{errno} to
+@code{ERANGE} to indicate there was overflow.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {long long int} strtoll (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@code{strtoll} is only an commonly used other name for the @code{strtoq}
+function.  Everything said for @code{strtoq} applies to @code{strtoll}
+as well.
+@end deftypefun
+
+@comment stdlib.h
+@comment BSD
+@deftypefun {unsigned long long int} strtouq (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtouq} (``string-to-unsigned-quad-word'') function is like
+@code{strtoul} except that is deals with extra long numbers and it
+returns its value with type @code{unsigned long long int}.  The value
+returned in case of overflow is @code{ULONG_LONG_MAX} (@pxref{Range of Type}).
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {unsigned long long int} strtoull (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@code{strtoull} is only an commonly used other name for the @code{strtouq}
+function.  Everything said for @code{strtouq} applies to @code{strtoull}
+as well.
 @end deftypefun
 
 @comment stdlib.h
@@ -522,6 +573,29 @@ This function is like @code{atol}, except that it returns an @code{int}
 value rather than @code{long int}.  The @code{atoi} function is also
 considered obsolete; use @code{strtol} instead.
 @end deftypefun
+
+The POSIX locales contain some information about how to format numbers
+(@pxref{General Numeric}).  This mainly deals with representing numbers
+for better readability for humans.  The functions present so far in this
+section cannot handle numbers in this form.
+
+If this functionality is needed in a program one can use the functions
+from the @code{scanf} family which know about the flag @samp{'} for
+parsing numeric input (@pxref{Numeric Input Conversions}).  Sometimes it
+is more desirable to have finer control.
+
+In these situation one could use the function
+@code{__strto@var{XXX}_internal}.  @var{XXX} here stands for any of the
+above forms.  All numeric conversion functions (including the functions
+to process floating-point numbers) have such a counterpart.  The
+difference to the normal for is the extra argument at the end of the
+parameter list.  If this value has an non-zero value the handling of
+number grouping is enabled.  The advantage from using these functions is
+that the @var{tailptr} parameters allow to determine which part of the
+input is processed.  The @code{scanf} functions don't provide this
+information.  The drawback of using these functions is that they are not
+portable.  They only exist in the GNU C library.
+
 
 Here is a function which parses a string as a sequence of integers and
 returns the sum of them:
@@ -604,8 +678,8 @@ number, no conversion is performed.  In this case, @code{strtod} returns
 a value of zero and the value returned in @code{*@var{tailptr}} is the
 value of @var{string}.
 
-In a locale other than the standard @code{"C"} locale, this function may
-recognize additional locale-dependent syntax.
+In a locale other than the standard @code{"C"} or @code{"POSIX"} locale,
+this function may recognize additional locale-dependent syntax.
 
 If the string has valid syntax for a floating-point number but the value
 is not representable because of overflow, @code{strtod} returns either
@@ -613,7 +687,53 @@ positive or negative @code{HUGE_VAL} (@pxref{Mathematics}), depending on
 the sign of the value.  Similarly, if the value is not representable
 because of underflow, @code{strtod} returns zero.  It also sets @code{errno}
 to @code{ERANGE} if there was overflow or underflow.
+
+Since the value zero which is returned in the error case is also a valid
+result the user should set the global variable @code{errno} to null
+before calling this function.  So one can test for failures after the
+call since all failures set @code{errno} to a non-zero value.
 @end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun float strtof (const char *@var{string}, char **@var{tailptr})
+This function is similar to the @code{strtod} function but it returns a
+@code{float} value instead of a @code{double} value.  If the precision
+of a @code{float} value is sufficent this function should be used since
+it is much faster than @code{strtod} on some architectures.  The reasons
+are obvious: @w{IEEE 754} defines @code{float} to have a mantissa of 23
+bits while @code{double} has 53 bits and every additional bit of
+precision can require additional computation.
+
+If the string has valid syntax for a floating-point number but the value
+is not representable because of overflow, @code{strtof} returns either
+positive or negative @code{HUGE_VALf} (@pxref{Mathematics}), depending on
+the sign of the value.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {long double} strtold (const char *@var{string}, char **@var{tailptr})
+This function is similar to the @code{strtod} function but it returns a
+@code{long double} value instead of a @code{double} value.  It should be
+used when high presision is used.  On systems which define a @code{long
+double} type (i.e., on which it is not the same as @code{double})
+running this function might take significently more time since more bits
+of precision are required.
+
+If the string has valid syntax for a floating-point number but the value
+is not representable because of overflow, @code{strtold} returns either
+positive or negative @code{HUGE_VALl} (@pxref{Mathematics}), depending on
+the sign of the value.
+
+This function is a GNU extension.
+@end deftypefun
+
+As for the integer parsing functions there are additional functions
+which will handle numbers represented using the grouping scheme of the
+current locale (@pxref{Parsing of Integers}).
 
 @comment stdlib.h
 @comment ANSI

@@ -31,10 +31,10 @@ directly.)
 
 @menu
 * Opening and Closing Files::           How to open and close file
-                                         descriptors. 
+                                         descriptors.
 * I/O Primitives::                      Reading and writing data.
 * File Position Primitive::             Setting a descriptor's file
-                                         position. 
+                                         position.
 * Descriptors and Streams::             Converting descriptor to stream
                                          or vice-versa.
 * Stream/Descriptor Precautions::       Precautions needed if you use both
@@ -47,7 +47,7 @@ directly.)
                                          file descriptors.
 * Descriptor Flags::                    Fcntl commands for manipulating
                                          flags associated with file
-                                         descriptors. 
+                                         descriptors.
 * File Status Flags::                   Fcntl commands for manipulating
                                          flags associated with open files.
 * File Locks::                          Fcntl commands for implementing
@@ -164,7 +164,7 @@ The function @code{close} closes the file descriptor @var{filedes}.
 Closing a file has the following consequences:
 
 @itemize @bullet
-@item 
+@item
 The file descriptor is deallocated.
 
 @item
@@ -195,7 +195,7 @@ TEMP_FAILURE_RETRY (close (desc));
 @item ENOSPC
 @itemx EIO
 @itemx EDQUOT
-When the file is accessed by NFS, these errors from @code{write} can sometimes 
+When the file is accessed by NFS, these errors from @code{write} can sometimes
 not be detected until @code{close}.  @xref{I/O Primitives}, for details
 on their meaning.
 @end table
@@ -322,7 +322,7 @@ efficient for the system to batch up consecutive writes and do them all
 at once when convenient.  Normally they will always be written to disk
 within a minute or less.)
 @c !!! xref fsync
-You can use the @code{O_FSYNC} open mode to make @code{write} always 
+You can use the @code{O_FSYNC} open mode to make @code{write} always
 store the data to disk before returning; @pxref{Operating Modes}.
 
 In the case of an error, @code{write} returns @code{-1}.  The following
@@ -431,7 +431,7 @@ file position.  This count may be positive or negative.
 Specifies that @var{whence} is a count of characters from the end of
 the file.  A negative count specifies a position within the current
 extent of the file; a positive count specifies a position past the
-current end.  If you set the position past the current end, and 
+current end.  If you set the position past the current end, and
 actually write data, you will extend the file with zeros up to that
 position.@end table
 
@@ -482,10 +482,10 @@ streams instead of file descriptors.
 @end deftypefun
 
 You can have multiple descriptors for the same file if you open the file
-more than once, or if you duplicate a descriptor with @code{dup}.  
+more than once, or if you duplicate a descriptor with @code{dup}.
 Descriptors that come from separate calls to @code{open} have independent
 file positions; using @code{lseek} on one descriptor has no effect on the
-other.  For example, 
+other.  For example,
 
 @smallexample
 @group
@@ -656,7 +656,7 @@ the stream.
 @menu
 * Linked Channels::	   Dealing with channels sharing a file position.
 * Independent Channels::   Dealing with separately opened, unlinked channels.
-* Cleaning Streams::	   Cleaning a stream makes it safe to use 
+* Cleaning Streams::	   Cleaning a stream makes it safe to use
                             another channel.
 @end menu
 
@@ -914,7 +914,7 @@ the @code{select} with a newly calculated timeout based on the current
 time.  See the example below.  See also @ref{Interrupted Primitives}.
 
 If an error occurs, @code{select} returns @code{-1} and does not modify
-the argument file descriptor sets.  The following @code{errno} error 
+the argument file descriptor sets.  The following @code{errno} error
 conditions are defined for this function:
 
 @table @code
@@ -1164,7 +1164,7 @@ The symbols in this section are defined in the header file
 @deftypevr Macro int F_GETFD
 This macro is used as the @var{command} argument to @code{fcntl}, to
 specify that it should return the file descriptor flags associated
-with the @var{filedes} argument.  
+with the @var{filedes} argument.
 
 The normal return value from @code{fcntl} with this command is a
 nonnegative number which can be interpreted as the bitwise OR of the
@@ -1223,7 +1223,7 @@ without altering any other flags:
 @smallexample
 /* @r{Set the @code{FD_CLOEXEC} flag of @var{desc} if @var{value} is nonzero,}
    @r{or clear the flag if @var{value} is 0.}
-   @r{Return 0 on success, or -1 on error with @code{errno} set.} */ 
+   @r{Return 0 on success, or -1 on error with @code{errno} set.} */
 
 int
 set_cloexec_flag (int desc, int value)
@@ -1523,7 +1523,7 @@ resulting in your data appearing someplace before the real end of file.
 
 @comment fcntl.h
 @comment POSIX.1
-@deftypevr O_NONBLOCK
+@deftypevr Macro int O_NONBLOCK
 The bit that enables nonblocking mode for the file.  If this bit is set,
 @code{read} requests on the file can return immediately with a failure
 status if there is no input immediately available, instead of blocking.
@@ -1638,7 +1638,7 @@ altering any other flags:
 @group
 /* @r{Set the @code{O_NONBLOCK} flag of @var{desc} if @var{value} is nonzero,}
    @r{or clear the flag if @var{value} is 0.}
-   @r{Return 0 on success, or -1 on error with @code{errno} set.} */ 
+   @r{Return 0 on success, or -1 on error with @code{errno} set.} */
 
 int
 set_nonblock_flag (int desc, int value)
@@ -1891,7 +1891,7 @@ for billing purposes.
 Having multiple copies of the program simultaneously writing to the
 file could cause the contents of the file to become mixed up.  But
 you can prevent this kind of problem by setting a write lock on the
-file before actually writing to the file.  
+file before actually writing to the file.
 
 If the program also needs to read the file and wants to make sure that
 the contents of the file are in a consistent state, then it can also use
@@ -1920,7 +1920,7 @@ where @code{select} would report the socket as having an ``exceptional
 condition''.  @xref{Waiting for I/O}.)
 
 If the file descriptor corresponds to a terminal device, then @code{SIGIO}
-signals are sent to the foreground process group of the terminal.  
+signals are sent to the foreground process group of the terminal.
 @xref{Job Control}.
 
 @pindex fcntl.h

@@ -67,15 +67,31 @@ the normal C library.
 @comment GNU
 @defvr Macro _SVID_SOURCE
 If you define this macro, functionality derived from SVID is
-included as well as the ANSI C, POSIX.1, and POSIX.2 material.
+included as well as the ANSI C, POSIX.1, POSIX.2, and X/Open material.
+@end defvr
+
+@comment (none)
+@comment XOPEN
+@defvr Macro _XOPEN_SOURCE
+If you define these macro, functionality described in the X/Open
+Portability Guide is included.  This is an superset of the POSIX.1 and
+POSIX.2 functionality and in fact @code{_POSIX_SOURCE} and
+@code{_POSIX_C_SOURCE} get automatically be defined.
+
+But as the great unifaction of all Unices there is also functionality
+only available in BSD and SVID is included.
+
+If the macro @code{_XOPEN_SOURCE_EXTENDED} is also defined, even more
+functionality is available.  The extra functions will make all functions
+available which are necessary for the X/Open Unix brand.
 @end defvr
 
 @comment (none)
 @comment GNU
 @defvr Macro _GNU_SOURCE
 If you define this macro, everything is included: ANSI C, POSIX.1,
-POSIX.2, BSD, SVID, and GNU extensions.  In the cases where POSIX.1
-conflicts with BSD, the POSIX definitions take precedence.
+POSIX.2, BSD, SVID, X/Open, and GNU extensions.  In the cases where
+POSIX.1 conflicts with BSD, the POSIX definitions take precedence.
 
 If you want to get the full effect of @code{_GNU_SOURCE} but make the
 BSD definitions take precedence over the POSIX definitions, use this
@@ -96,8 +112,8 @@ get very strange errors at run time.
 @comment (none)
 @comment GNU
 @defvr Macro _REENTRANT,_THREAD_SAFE
-If you define this macro, reentrant versions of several functions get
-declared.  Some of the functions is specified in POSIX.1c but many others
+If you define one this macro, reentrant versions of several functions get
+declared.  Some of the functions are specified in POSIX.1c but many others
 are only available on a few other systems or are unique to GNU libc.
 The problem is that the standardization of the thread safe C library
 interface still is behind.

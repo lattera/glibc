@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 #
 #	Master Makefile for the GNU C library
@@ -82,7 +82,7 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 		   $(addprefix install-, no-libc.a bin lib data headers others)
 
 headers := errno.h sys/errno.h errnos.h limits.h values.h	\
-	   features.h gnu-versions.h libc-lock.h
+	   features.h gnu-versions.h libc-lock.h xopen_lim.h
 aux	 = sysdep $(libc-init) version
 before-compile = $(objpfx)version-info.h
 

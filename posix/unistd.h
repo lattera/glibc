@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*
  *	POSIX Standard: 2.10 Symbolic Constants		<unistd.h>
@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 __BEGIN_DECLS
 
 /* These may be used to determine what facilities are present at compile time.
-   Their values can be obtained at run time from sysconf.  */
+   Their values can be obtained at run time from `sysconf'.  */
 
 /* POSIX Standard approved as IEEE Std 1003.1 as of August, 1988 and
    extended by P1003.1b (aka POSIX.4).  */
@@ -57,6 +57,24 @@ __BEGIN_DECLS
 
 /* Library is conformant to X/Open version 4.  */
 #define _XOPEN_VERSION	4
+
+/* Commands and utilities from XPG4 are available.  */
+#define _XOPEN_XCU_VERSION	4
+
+/* We are compatible with the old published standards as well.  */
+#define _XOPEN_XPG2	1
+#define _XOPEN_XPG3	1
+#define _XOPEN_XPG4	1
+
+/* The X/Open Unix extensions are available.  */
+#define _XOPEN_UNIX	1
+
+/* Encryption is present.  */
+#define	_XOPEN_CRYPT	1
+
+/* The enchanced internationalization capabilities accoring to XPG4.2
+   are present.  */
+#define	_XOPEN_ENH_I18N	1
 
 
 /* Get values of POSIX options:
@@ -93,6 +111,8 @@ __BEGIN_DECLS
    _POSIX_PII_OSI_CLTS		Connectionless ISO/OSI service supported.
    _POSIX_POLL			Implementation supports `poll' function.
    _POSIX_SELECT		Implementation supports `select' and `pselect'.
+
+   _XOPEN_SHM			Shared memory interface according to XPG4.2.
 
    If any of these symbols is defined as -1, the corresponding option is not
    true for any file.  If any is defined as other than -1, the corresponding
@@ -217,7 +237,14 @@ extern unsigned int alarm __P ((unsigned int __seconds));
    error, but if `sleep' returns SECONDS, it probably didn't work.  */
 extern unsigned int sleep __P ((unsigned int __seconds));
 
-#ifdef __USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+/* Set an alarm to go off (generating a SIGALRM signal) in VALUE
+   microseconds.  If INTERVAL is nonzero, when the alarm goes off, the
+   timer is reset to go off every INTERVAL microseconds thereafter.
+   Returns the number of microseconds remaining before the alarm.  */
+extern unsigned int ualarm __P ((unsigned int __value,
+				 unsigned int __interval));
+
 /* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
    or ignored.  Return value is not necessarily useful.  */
 extern unsigned int usleep __P ((unsigned int __useconds));
@@ -235,19 +262,28 @@ extern int __chown __P ((__const char *__file,
 extern int chown __P ((__const char *__file,
 		       __uid_t __owner, __gid_t __group));
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Change the owner and group of the file that FD is open on.  */
 extern int __fchown __P ((int __fd,
 			  __uid_t __owner, __gid_t __group));
 extern int fchown __P ((int __fd,
 			__uid_t __owner, __gid_t __group));
-#endif /* Use BSD.  */
+
+
+/* Change owner and group of FILE, if it is a symbolic
+   link the ownership of the symbolic link is changed.  */
+extern int __lchown __P ((__const char *__file, __uid_t __owner,
+			  __gid_t __group));
+extern int lchown __P ((__const char *__file, __uid_t __owner,
+			__gid_t __group));
+
+#endif /* Use BSD || X/Open Unix.  */
 
 /* Change the process's working directory to PATH.  */
 extern int __chdir __P ((__const char *__path));
 extern int chdir __P ((__const char *__path));
 
-#ifdef __USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Change the process's working directory to the one FD is open on.  */
 extern int fchdir __P ((int __fd));
 #endif
@@ -279,7 +315,7 @@ char *__canonicalize_directory_name_internal __P ((__const char *__thisdir,
 						   size_t __size));
 #endif
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Put the absolute pathname of the current working directory in BUF.
    If successful, return BUF.  If not, put an error message in
    BUF and return NULL.  BUF should be at least PATH_MAX bytes long.  */
@@ -337,7 +373,7 @@ extern int execvp __P ((__const char *__file, char *__const __argv[]));
 extern int execlp __P ((__const char *__file, __const char *__arg, ...));
 
 
-#ifdef __USE_MISC
+#if defined(__USE_MISC) || defined(__USE_XOPEN)
 /* Add INC to priority of the current process.  */
 extern int nice __P ((int __inc));
 #endif
@@ -388,11 +424,11 @@ extern int setpgid __P ((__pid_t __pid, __pid_t __pgid));
 
 /* Get the process group ID of process PID.  */
 extern __pid_t __getpgid __P ((__pid_t __pid));
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN_EXTENDED
 extern __pid_t getpgid __P ((__pid_t __pid));
 #endif
 
-#if defined (__USE_SVID) || defined (__USE_BSD)
+#if defined(__USE_SVID) || defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Both System V and BSD have `setpgrp' functions, but with different
    calling conventions.  The BSD function is the same as POSIX.1 `setpgid'
    (above).  The System V function takes no arguments and puts the calling
@@ -423,7 +459,7 @@ extern int setpgrp __P ((__pid_t __pid, __pid_t __pgrp));
 extern __pid_t __setsid __P ((void));
 extern __pid_t setsid __P ((void));
 
-#ifdef __USE_GNU
+#ifdef __USE_XOPEN_EXTENDED
 /* Return the session ID of the given process.  */
 extern __pid_t getsid __P ((__pid_t __pid));
 #endif
@@ -463,12 +499,14 @@ extern int group_member __P ((__gid_t __gid));
 extern int __setuid __P ((__uid_t __uid));
 extern int setuid __P ((__uid_t __uid));
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
 extern int __setreuid __P ((__uid_t __ruid, __uid_t __euid));
 extern int setreuid __P ((__uid_t __ruid, __uid_t __euid));
+#endif
 
+#ifdef	__USE_BSD
 /* Set the effective user ID of the calling process to UID.  */
 extern int seteuid __P ((__uid_t __uid));
 #endif /* Use BSD.  */
@@ -480,12 +518,14 @@ extern int seteuid __P ((__uid_t __uid));
 extern int __setgid __P ((__gid_t __gid));
 extern int setgid __P ((__gid_t __gid));
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
 extern int __setregid __P ((__gid_t __rgid, __gid_t __egid));
 extern int setregid __P ((__gid_t __rgid, __gid_t __egid));
+#endif
 
+#ifdef __USE_BSD
 /* Set the effective group ID of the calling process to GID.  */
 extern int setegid __P ((__gid_t __gid));
 #endif /* Use BSD.  */
@@ -497,7 +537,7 @@ extern int setegid __P ((__gid_t __gid));
 extern __pid_t __fork __P ((void));
 extern __pid_t fork __P ((void));
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Clone the calling process, but without copying the whole address space.
    The the calling process is suspended until the the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
@@ -522,7 +562,7 @@ extern int ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int __isatty __P ((int __fd));
 extern int isatty __P ((int __fd));
 
-#ifdef __USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Return the index into the active-logins file (utmp) for
    the controlling terminal.  */
 extern int ttyslot __P ((void));
@@ -533,7 +573,7 @@ extern int ttyslot __P ((void));
 extern int __link __P ((__const char *__from, __const char *__to));
 extern int link __P ((__const char *__from, __const char *__to));
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Make a symbolic link to FROM named TO.  */
 extern int __symlink __P ((__const char *__from, __const char *__to));
 extern int symlink __P ((__const char *__from, __const char *__to));
@@ -611,7 +651,7 @@ extern char *optarg;
 #endif
 
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined (__USE_XOPEN)
 
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
@@ -622,9 +662,6 @@ extern int gethostname __P ((char *__name, size_t __len));
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 extern int sethostname __P ((__const char *__name, size_t __len));
-
-/* Return the current machine's Internet number.  */
-extern long int gethostid __P ((void));
 
 /* Set the current machine's Internet number to ID.
    This call is restricted to the super-user.  */
@@ -638,30 +675,8 @@ extern int getdomainname __P ((char *__name, size_t __len));
 extern int setdomainname __P ((__const char *__name, size_t __len));
 
 
-/* Return the number of bytes in a page.  This is the system's page size,
-   which is not necessarily the same as the hardware page size.  */
-extern size_t __getpagesize __P ((void));
-extern size_t getpagesize __P ((void));
-
-
-/* Return the maximum number of file descriptors
-   the current process could possibly have.  */
-extern int __getdtablesize __P ((void));
-extern int getdtablesize __P ((void));
-
-
-/* Truncate FILE to LENGTH bytes.  */
-extern int truncate __P ((__const char *__file, __off_t __length));
-
-/* Truncate the file FD is open on to LENGTH bytes.  */
-extern int ftruncate __P ((int __fd, __off_t __length));
-
-
 /* Make all changes done to FD actually appear on disk.  */
 extern int fsync __P ((int __fd));
-
-/* Make all changes done to all files actually appear on disk.  */
-extern int sync __P ((void));
 
 
 /* Revoke access permissions to all processes currently communicating
@@ -707,24 +722,40 @@ extern char *getpass __P ((__const char *__prompt));
    redirects stdin, stdout, and stderr to /dev/null.  */
 extern int daemon __P ((int __nochdir, int __noclose));
 
-#endif /* Use BSD.  */
+#endif /* Use BSD || X/Open.  */
 
 
-#ifdef __USE_MISC
+#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 
-/* Generate a unique temporary file name from TEMPLATE.
-   The last six characters of TEMPLATE must be "XXXXXX";
-   they are replaced with a string that makes the file name unique.
-   Returns TEMPLATE, or a null pointer if it cannot get a unique file name.  */
-extern char *mktemp __P ((char *__template));
+/* Return the current machine's Internet number.  */
+extern long int gethostid __P ((void));
 
-/* Generate a unique temporary file name from TEMPLATE.
-   The last six characters of TEMPLATE must be "XXXXXX";
-   they are replaced with a string that makes the filename unique.
-   Returns a file descriptor open on the file for reading and writing,
-   or -1 if it cannot create a uniquely-named file.  */
-extern int mkstemp __P ((char *__template));
+/* Make all changes done to all files actually appear on disk.  */
+extern int sync __P ((void));
 
+
+/* Return the number of bytes in a page.  This is the system's page size,
+   which is not necessarily the same as the hardware page size.  */
+extern int __getpagesize __P ((void));
+extern int getpagesize __P ((void));
+
+
+/* Truncate FILE to LENGTH bytes.  */
+extern int truncate __P ((__const char *__file, __off_t __length));
+
+/* Truncate the file FD is open on to LENGTH bytes.  */
+extern int ftruncate __P ((int __fd, __off_t __length));
+
+
+/* Return the maximum number of file descriptors
+   the current process could possibly have.  */
+extern int __getdtablesize __P ((void));
+extern int getdtablesize __P ((void));
+
+#endif /* Use BSD || X/Open Unix.  */
+
+
+#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
 
 /* Set the end of accessible data space (aka "the break") to ADDR.
    Returns zero on success and -1 for errors (with errno set).  */
@@ -740,8 +771,10 @@ extern int brk __P ((__ptr_t __addr));
    returns (void *) -1 for errors (with errno set).  */
 extern __ptr_t __sbrk __P ((ptrdiff_t __delta));
 extern __ptr_t sbrk __P ((ptrdiff_t __delta));
+#endif
 
 
+#ifdef __USE_MISC
 /* Invoke `system call' number SYSNO, passing it the remaining arguments.
    This is completely system-dependent, and not often useful.
 
@@ -757,7 +790,8 @@ extern long int syscall __P ((long int __sysno, ...));
 #endif	/* Use misc.  */
 
 
-#if defined (__USE_MISC) && !defined (F_LOCK)
+#if (defined (__USE_MISC) || defined (__USE_XOPEN_EXTENDED)) \
+    && !defined (F_LOCK)
 /* NOTE: These declarations also appear in <fcntl.h>; be sure to keep both
    files consistent.  Some systems have them there and some here, and some
    software depends on the macros being defined without including both.  */
@@ -792,7 +826,6 @@ extern int lockf __P ((int __fd, int __cmd, __off_t __len));
    differ from its real IDs, or it is otherwise indicated that extra
    security should be used.  When this is set the dynamic linker ignores
    the various environment variables that normally affect it.  */
-
 extern int __libc_enable_secure;
 
 #endif
@@ -802,6 +835,28 @@ extern int __libc_enable_secure;
    media.  */
 extern int fdatasync __P ((int __fildes));
 #endif /* Use POSIX */
+
+
+/* XPG4.2 specifies that prototypes for the encryption functions must
+   be defined here.  */
+#ifdef	__USE_XOPEN
+/* Encrypt at most 8 characters from KEY using salt to perturb DES.  */
+extern char *crypt __P ((__const char *__key, __const char *__salt));
+
+/* Setup DES tables according KEY.  */
+extern void setkey __P ((__const char *__key));
+
+/* Encrypt data in BLOCK in place if EDFLAG is zero; otherwise decrypt
+   block in place.  */
+extern void encrypt __P ((char *__block, int __edflag));
+
+
+/* Swab pairs bytes in the first N bytes of the area pointed to by
+   FROM and copy the result to TO.  The value of TO must not be in the
+   range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
+   is without partner.  */
+extern void swab __P ((__const char *__from, char *__to, ssize_t __n));
+#endif
 
 __END_DECLS
 

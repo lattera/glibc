@@ -97,7 +97,7 @@ the executable file might be covered by the GNU General Public License. */
 
 /* Magic numbers and bits for the _flags field.
    The magic numbers use the high-order bits of _flags;
-   the remaining bits are abailable for variable flags.
+   the remaining bits are available for variable flags.
    Note: The magic numbers must all be negative if stdio
    emulation is desired. */
 

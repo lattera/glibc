@@ -27,7 +27,14 @@ architecture.  */
         .set noat
 
 ENTRY(ffs)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
 	.prologue 0
+#endif
 
 	ldq_u	zero, 0(sp)	# on the 21064, this helps dual-issuing
 	addl	a0, zero, a0	# the last insn and reduces the stall

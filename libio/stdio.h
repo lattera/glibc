@@ -138,7 +138,7 @@ extern char* tmpnam __P ((char*));
 #ifdef	__USE_REENTRANT
 extern char* tmpnam_r __P ((char*));
 #endif
-#ifdef	__USE_SVID
+#if defined(__USE_SVID) || defined(__USE_XOPEN)
 extern char *tempnam __P ((__const char *__dir, __const char *__pfx));
 #endif
 extern char *__stdio_gen_tempname __P ((char *__buf, size_t bufsize,
@@ -160,6 +160,14 @@ extern int __vfscanf __P ((FILE*, __const char *, _G_va_list));
 extern int vscanf __P ((__const char *, _G_va_list));
 extern int vsscanf __P ((__const char *, __const char *, _G_va_list));
 extern int __vsscanf __P ((__const char *, __const char *, _G_va_list));
+#endif
+
+#ifdef __USE_GNU
+struct obstack;
+extern int obstack_vprintf __P ((struct obstack *__obstack,
+				 __const char *__fmt, _G_va_list));
+extern int obstack_printf __P ((struct obstack *__obstack, __const char *__fmt,
+				...));
 #endif
 
 #if !defined(__STRICT_ANSI__) || defined(_POSIX_SOURCE)

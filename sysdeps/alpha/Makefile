@@ -42,4 +42,4 @@ ifeq ($(subdir),elf)
 sysdep-CFLAGS += -mno-fp-regs
 endif
 
-divrem := divl divlu divq divqu reml remlu remq remqu
+divrem := divl divq reml remq

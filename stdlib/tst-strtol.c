@@ -1,7 +1,6 @@
 /* My bet is this was written by Chris Torek.
    I reformatted and ansidecl-ized it, and tweaked it a little.  */
 
-#include <ansidecl.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <errno.h>
@@ -10,13 +9,13 @@
 
 struct ltest
   {
-    CONST char *str;		/* Convert this.  */
+    const char *str;		/* Convert this.  */
     unsigned long int expect;	/* To get this.  */
     int base;			/* Use this base.  */
     char left;			/* With this left over.  */
     int err;			/* And this in errno.  */
   };
-static CONST struct ltest tests[] =
+static const struct ltest tests[] =
   {
 #if ~0UL == 0xffffffff
     /* First, signed numbers.  */
@@ -38,8 +37,8 @@ static CONST struct ltest tests[] =
     { "  0",		0,		0,	0,	0 },
     { "0xffffffffg",	0xffffffff,	0,	'g',	0 },
     { "0xf1f2f3f4f5",	0xffffffff,	0,	0,	ERANGE },
-    { "-0x123456789",	0xffffffff,	0,	0,	ERANGE },
-    { "-0xfedcba98",	-0xfedcba98,	0,	0,	0 },
+    { "-0x123456789",	0,		0,	0,	EINVAL },
+    { "-0xfedcba98",	0,		0,	0,	EINVAL },
     { NULL,		0,		0,	0,	0 },
 #else
     /* assume 64 bit long... */
@@ -66,18 +65,18 @@ static CONST struct ltest tests[] =
     { "0xffffffffg",	0xffffffff,	0,	'g',	0 },
     { "0xffffffffffffffffg",	0xffffffffffffffff,	0,	'g',	0 },
     { "0xf1f2f3f4f5f6f7f8f9",	0xffffffffffffffff,	0,	0,	ERANGE },
-    { "-0x123456789abcdef01",	0xffffffffffffffff,	0,	0,	ERANGE },
-    { "-0xfedcba987654321",	-0xfedcba987654321,	0,	0,	0 },
+    { "-0x123456789abcdef01",	0,			0,	0,	EINVA{ },
+    { "-0xfedcba987654321",	0,			0,	0,	EINVAL },
     { NULL,		0,		0,	0,	0 },
 #endif
   };
 
-static void EXFUN(expand, (char *dst, int c));
+static void expand __P ((char *dst, int c));
 
 int
-DEFUN_VOID(main)
+main ()
 {
-  register CONST struct ltest *lt;
+  register const struct ltest *lt;
   char *ep;
   int status = 0;
 
@@ -145,7 +144,9 @@ DEFUN_VOID(main)
 }
 
 static void
-DEFUN(expand, (dst, c), register char *dst AND register int c)
+expand (dst, c)
+     char *dst;
+     int c;
 {
   if (isprint(c))
     {

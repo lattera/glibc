@@ -201,7 +201,10 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 #endif
 
   if (base < 0 || base == 1 || base > 36)
-    base = 10;
+    {
+      __set_errno (EINVAL);
+      return 0;
+    }
 
   save = s = nptr;
 
@@ -214,8 +217,13 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   /* Check for a sign.  */
   if (*s == L_('-'))
     {
+#if UNSIGNED
+      __set_errno (EINVAL);
+      return 0;
+#else
       negative = 1;
       ++s;
+#endif
     }
   else if (*s == L_('+'))
     {

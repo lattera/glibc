@@ -24,7 +24,7 @@ subdir	:= misc
 
 headers	:= sys/uio.h iovec.h sys/ioctl.h ioctls.h ioctl-types.h \
 	   sys/ptrace.h sys/file.h sys/dir.h sys/cdefs.h \
-	   ar.h a.out.h stab.h stab.def sgtty.h \
+	   ar.h a.out.h libgen.h stab.h stab.def sgtty.h \
 	   ttyent.h syslog.h sys/syslog.h paths.h sys/reboot.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h err.h error.h\
 	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h \
@@ -55,7 +55,7 @@ routines := brk sbrk sstk ioctl \
 	    efgcvt efgcvt_r qefgcvt qefgcvt_r \
 	    hsearch hsearch_r tsearch lsearch \
 	    err error ustat \
-	    getsysstats
+	    getsysstats dirname
 aux := init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o
@@ -63,6 +63,7 @@ install-lib := libbsd-compat.a libg.a
 non-lib.a := libbsd-compat.a
 gpl2lgpl := error.c error.h
 
+tests := tst-dirname
 
 include ../Rules
 

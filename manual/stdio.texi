@@ -2438,6 +2438,17 @@ Specifies that the argument is of type @code{double *}.
 Specifies that the argument is of type @code{long double *}.
 @end table
 
+For all the above number parsing formats there is an additional optional
+flag @samp{'}.  When this flag is given the @code{scanf} function
+expects the number represented in the input string to be formatted
+according to the grouping rules of the currently selected locale
+(@pxref{General Numeric}).
+
+If the @code{"C"} or @code{"POSIX"} locale is selected there is no
+difference.  But for a locale which specifies values for the appropriate
+fields in the locale the input must have the correct form in the input.
+Otherwise the longest prefix with a correct form is processed.
+
 @node String Input Conversions
 @subsection String Input Conversions
 

@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
 #include <limits.h>
@@ -222,11 +222,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     /* '4' */  8, /* '5' */  8, /* '6' */  8, /* '7' */  8,
     /* '8' */  8, /* '9' */  8,            0,            0,
 	       0,            0,            0,            0,
-	       0,            0,            0,            0,
+	       0,            0,            0, /* 'C' */ 25,
 	       0, /* 'E' */ 19,            0, /* 'G' */ 19,
 	       0,            0,            0,            0,
     /* 'L' */ 12,            0,            0,            0,
-	       0,            0,            0,            0,
+	       0,            0,            0, /* 'S' */ 21,
 	       0,            0,            0,            0,
     /* 'X' */ 18,            0, /* 'Z' */ 13,            0,
 	       0,            0,            0,            0,
@@ -254,7 +254,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #define STEP0_3_TABLE							      \
     /* Step 0: at the beginning.  */					      \
-    static const void *step0_jumps[25] =				      \
+    static const void *step0_jumps[26] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (flag_space),		/* for ' ' */				      \
@@ -277,13 +277,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_hexa),		/* for 'X', 'x' */			      \
       REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
-      REF (form_string),	/* for 's' */				      \
+      REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
-      REF (form_strerror)	/* for 'm' */				      \
+      REF (form_strerror),	/* for 'm' */				      \
+      REF (form_wcharacter)	/* for 'C' */				      \
     };									      \
     /* Step 1: after processing width.  */				      \
-    static const void *step1_jumps[25] =				      \
+    static const void *step1_jumps[26] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -306,13 +307,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_hexa),		/* for 'X', 'x' */			      \
       REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
-      REF (form_string),	/* for 's' */				      \
+      REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
-      REF (form_strerror)	/* for 'm' */				      \
+      REF (form_strerror),	/* for 'm' */				      \
+      REF (form_wcharacter)	/* for 'C' */				      \
     };									      \
     /* Step 2: after processing precision.  */				      \
-    static const void *step2_jumps[25] =				      \
+    static const void *step2_jumps[26] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -335,13 +337,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_hexa),		/* for 'X', 'x' */			      \
       REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
-      REF (form_string),	/* for 's' */				      \
+      REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
-      REF (form_strerror)	/* for 'm' */				      \
+      REF (form_strerror),	/* for 'm' */				      \
+      REF (form_wcharacter)	/* for 'C' */				      \
     };									      \
     /* Step 3: after processing first 'l' modifier.  */			      \
-    static const void *step3_jumps[25] =				      \
+    static const void *step3_jumps[26] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -364,15 +367,16 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_hexa),		/* for 'X', 'x' */			      \
       REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
-      REF (form_string),	/* for 's' */				      \
+      REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
-      REF (form_strerror)	/* for 'm' */				      \
+      REF (form_strerror),	/* for 'm' */				      \
+      REF (form_wcharacter)	/* for 'C' */				      \
     }
 
 #define STEP4_TABLE							      \
     /* Step 4: processing format specifier.  */				      \
-    static const void *step4_jumps[25] =				      \
+    static const void *step4_jumps[26] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -395,10 +399,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_hexa),		/* for 'X', 'x' */			      \
       REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
-      REF (form_string),	/* for 's' */				      \
+      REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
       REF (form_number),	/* for 'n' */				      \
-      REF (form_strerror)	/* for 'm' */				      \
+      REF (form_strerror),	/* for 'm' */				      \
+      REF (form_wcharacter)	/* for 'C' */				      \
     }
 
 
@@ -683,15 +688,36 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
     LABEL (form_character):						      \
       /* Character.  */							      \
+      if (is_long)							      \
+	goto LABEL (form_wcharacter);					      \
       --width;	/* Account for the character itself.  */		      \
       if (!left)							      \
 	PAD (' ');							      \
       if (fspec == NULL)						      \
-	outchar ((unsigned char) va_arg (ap, int));	/* Promoted.  */      \
+	outchar ((unsigned char) va_arg (ap, int)); /* Promoted.  */	      \
       else								      \
 	outchar ((unsigned char) args_value[fspec->data_arg].pa_char);	      \
       if (left)								      \
 	PAD (' ');							      \
+      break;								      \
+									      \
+    LABEL (form_wcharacter):						      \
+      {									      \
+	/* Wide character.  */						      \
+	char buf[MB_CUR_MAX];						      \
+	mbstate_t mbstate;						      \
+	size_t len;							      \
+									      \
+	len = __wcrtomb (buf, (fspec == NULL ? va_arg (ap, wint_t)	      \
+			       : args_value[fspec->data_arg].pa_wchar),	      \
+			 &mbstate);					      \
+	width -= len;							      \
+	if (!left)							      \
+	  PAD (' ');							      \
+	outstring (buf, len);						      \
+	if (left)							      \
+	  PAD (' ');							      \
+      }									      \
       break;								      \
 									      \
     LABEL (form_string):						      \
@@ -722,18 +748,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		len = 0;						      \
 	      }								      \
 	  }								      \
-	else if (!is_long)						      \
+	else if (!is_long && spec != L_('S'))				      \
 	  {								      \
 	    if (prec != -1)						      \
-	      {								      \
-		/* Search for the end of the string, but don't search past    \
-		   the length specified by the precision.  */		      \
-		const char *end = memchr (string, '\0', prec);		      \
-		if (end)						      \
-		  len = end - string;					      \
-		else							      \
-		  len = prec;						      \
-	      }								      \
+	      /* Search for the end of the string, but don't search past      \
+		 the length specified by the precision.  */		      \
+	      len = strnlen (string, prec);				      \
 	    else							      \
 	      len = strlen (string);					      \
 	  }								      \
@@ -1176,6 +1196,7 @@ do_positional:
 	  break
 
 	T (PA_CHAR, pa_char, int); /* Promoted.  */
+	T (PA_WCHAR, pa_wchar, wint_t);
 	T (PA_INT|PA_FLAG_SHORT, pa_short_int, int); /* Promoted.  */
 	T (PA_INT, pa_int, int);
 	T (PA_INT|PA_FLAG_LONG, pa_long_int, long int);
@@ -1184,6 +1205,7 @@ do_positional:
 	T (PA_DOUBLE, pa_double, double);
 	T (PA_DOUBLE|PA_FLAG_LONG_DOUBLE, pa_long_double, long double);
 	T (PA_STRING, pa_string, const char *);
+	T (PA_WSTRING, pa_wstring, const wchar_t *);
 	T (PA_POINTER, pa_pointer, void *);
 #undef T
 	default:

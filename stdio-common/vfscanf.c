@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include "../locale/localeinfo.h"
 #include <errno.h>
@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wctype.h>
 #include <libc-lock.h>
 
 #ifdef	__GNUC__
@@ -55,6 +56,12 @@ Cambridge, MA 02139, USA.  */
 # define va_list	_IO_va_list
 # define ungetc(c, s)	(--read_in, _IO_ungetc (c, s))
 # define inchar()	((c = _IO_getc_unlocked (s)), (void) ++read_in, c)
+# define encode_error()	do {						      \
+			  if (errp != NULL) *errp |= 4;			      \
+			  _IO_funlockfile (s);				      \
+			  __set_errno (EILSEQ);				      \
+			  return done;					      \
+			} while (0)
 # define conv_error()	do {						      \
 			  if (errp != NULL) *errp |= 2;			      \
 			  _IO_funlockfile (s);				      \
@@ -88,6 +95,11 @@ Cambridge, MA 02139, USA.  */
 #else
 # define ungetc(c, s)	(--read_in, ungetc (c, s))
 # define inchar()	((c = getc (s)), (void) ++read_in, c)
+# define encode_error()	do {						      \
+			  _IO_funlockfile (s);				      \
+			  __set_errno (EILSEQ);				      \
+			  return done;					      \
+			} while (0)
 # define conv_error()	do {						      \
 			  funlockfile (s);				      \
 			  return done;					      \
@@ -173,6 +185,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     } num;
   /* Character-buffer pointer.  */
   char *str = NULL;
+  wchar_t *wstr = NULL;
   char **strptr = NULL;
   size_t strsize = 0;
   /* We must not react on white spaces immediately because they can
@@ -435,40 +448,138 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  break;
 
 	case 'c':	/* Match characters.  */
-	  if (!(flags & SUPPRESS))
+	  if ((flags & LONG) == 0)
 	    {
-	      str = ARG (char *);
-	      if (str == NULL)
-		conv_error ();
+	      if (!(flags & SUPPRESS))
+		{
+		  str = ARG (char *);
+		  if (str == NULL)
+		    conv_error ();
+		}
+
+	      c = inchar ();
+	      if (c == EOF)
+		input_error ();
+
+	      if (width == -1)
+		width = 1;
+
+	      if (!(flags & SUPPRESS))
+		{
+		  do
+		    *str++ = c;
+		  while (--width > 0 && inchar () != EOF);
+		}
+	      else
+		while (--width > 0 && inchar () != EOF);
+
+	      if (width > 0)
+		/* I.e., EOF was read.  */
+		--read_in;
+
+	      if (!(flags & SUPPRESS))
+		++done;
+
+	      break;
 	    }
+	  /* FALLTHROUGH */
+	case 'C':
+	  /* Get UTF-8 encoded wide character.  Here we assume (as in
+	     other parts of the libc) that we only have to handle
+	     UTF-8.  */
+	  {
+	    wint_t val;
+	    size_t cnt = 0;
+	    int first = 1;
 
-	  c = inchar ();
-	  if (c == EOF)
-	    input_error ();
+	    if (!(flags & SUPPRESS))
+	      {
+		wstr = ARG (wchar_t *);
+		if (str == NULL)
+		  conv_error ();
+	      }
 
-	  if (width == -1)
-	    width = 1;
+	    do
+	      {
+#define NEXT_WIDE_CHAR(First)						      \
+		c = inchar ();						      \
+		if (c == EOF)						      \
+		  /* EOF is only an error for the first character.  */	      \
+		  if (First)						      \
+		    input_error ();					      \
+		  else							      \
+		    break;						      \
+		val = c;						      \
+		if (val >= 0x80)					      \
+		  {							      \
+		    if ((c & 0xc0) == 0x80 || (c & 0xfe) == 0xfe)	      \
+		      encode_error ();					      \
+		    if ((c & 0xe0) == 0xc0)				      \
+		      {							      \
+			/* We expect two bytes.  */			      \
+			cnt = 1;					      \
+			val &= 0x1f;					      \
+		      }							      \
+		    else if ((c & 0xf0) == 0xe0)			      \
+		      {							      \
+			/* We expect three bytes.  */			      \
+			cnt = 2;					      \
+			val &= 0x0f;					      \
+		      }							      \
+		    else if ((c & 0xf8) == 0xf0)			      \
+		      {							      \
+			/* We expect four bytes.  */			      \
+			cnt = 3;					      \
+			val &= 0x07;					      \
+		      }							      \
+		    else if ((c & 0xfc) == 0xf8)			      \
+		      {							      \
+			/* We expect five bytes.  */			      \
+			cnt = 4;					      \
+			val &= 0x03;					      \
+		      }							      \
+		    else						      \
+		      {							      \
+			/* We expect six bytes.  */			      \
+			cnt = 5;					      \
+			val &= 0x01;					      \
+		      }							      \
+		    							      \
+		    do							      \
+		      {							      \
+			c = inchar ();					      \
+			if (c == EOF					      \
+			    || (c & 0xc0) == 0x80 || (c & 0xfe) == 0xfe)      \
+			  encode_error ();				      \
+			val <<= 6;					      \
+			val |= c & 0x3f;				      \
+		      }							      \
+		    while (--cnt > 0);					      \
+		  }							      \
+									      \
+		if (!(flags & SUPPRESS))				      \
+		  *wstr++ = val;					      \
+		first = 0
 
-	  if (!(flags & SUPPRESS))
-	    {
-	      do
-		*str++ = c;
-	      while (--width > 0 && inchar () != EOF);
-	    }
-	  else
-	    while (--width > 0 && inchar () != EOF);
+		NEXT_WIDE_CHAR (first);
+	      }
+	    while (--width > 0);
 
-	  if (width > 0)
-	    /* I.e., EOF was read.  */
-	    --read_in;
+	    if (width > 0)
+	      /* I.e., EOF was read.  */
+	      --read_in;
 
-	  if (!(flags & SUPPRESS))
-	    ++done;
-
+	    if (!(flags & SUPPRESS))
+	      ++done;
+	  }
 	  break;
 
 	case 's':		/* Read a string.  */
-#define STRING_ARG							      \
+	  if (flags & LONG)
+	    /* We have to process a wide character string.  */
+	    goto wide_char_string;
+
+#define STRING_ARG(Str, Type)						      \
 	  if (!(flags & SUPPRESS))					      \
 	    {								      \
 	      if (flags & MALLOC)					      \
@@ -479,14 +590,15 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    conv_error ();					      \
 		  /* Allocate an initial buffer.  */			      \
 		  strsize = 100;					      \
-		  *strptr = str = malloc (strsize);			      \
+		  *strptr = malloc (strsize * sizeof (Type));		      \
+		  Str = (Type *) *strptr;				      \
 		}							      \
 	      else							      \
-		str = ARG (char *);					      \
-	      if (str == NULL)						      \
+		Str = ARG (Type *);					      \
+	      if (Str == NULL)						      \
 		conv_error ();						      \
 	    }
-	  STRING_ARG;
+	  STRING_ARG (str, char);
 
 	  c = inchar ();
 	  if (c == EOF)
@@ -499,43 +611,44 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  ungetc (c, s);
 		  break;
 		}
-#define	STRING_ADD_CHAR(c)						      \
+#define	STRING_ADD_CHAR(Str, c, Type)					      \
 	      if (!(flags & SUPPRESS))					      \
 		{							      \
-		  *str++ = c;						      \
-		  if ((flags & MALLOC) && str == *strptr + strsize)	      \
+		  *Str++ = c;						      \
+		  if ((flags & MALLOC) && (char *) Str == *strptr + strsize)  \
 		    {							      \
 		      /* Enlarge the buffer.  */			      \
-		      str = realloc (*strptr, strsize * 2);		      \
-		      if (str == NULL)					      \
+		      Str = realloc (*strptr, strsize * 2 * sizeof (Type));   \
+		      if (Str == NULL)					      \
 			{						      \
 			  /* Can't allocate that much.  Last-ditch effort.  */\
-			  str = realloc (*strptr, strsize + 1);		      \
-			  if (str == NULL)				      \
+			  Str = realloc (*strptr,			      \
+					 (strsize + 1) * sizeof (Type));      \
+			  if (Str == NULL)				      \
 			    {						      \
 			      /* We lose.  Oh well.			      \
 				 Terminate the string and stop converting,    \
 				 so at least we don't skip any input.  */     \
-			      (*strptr)[strsize] = '\0';		      \
+			      ((Type *) (*strptr))[strsize] = '\0';	      \
 			      ++done;					      \
 			      conv_error ();				      \
 			    }						      \
 			  else						      \
 			    {						      \
-			      *strptr = str;				      \
-			      str += strsize;				      \
+			      *strptr = (char *) Str;			      \
+			      Str = ((Type *) *strptr) + strsize;	      \
 			      ++strsize;				      \
 			    }						      \
 			}						      \
 		      else						      \
 			{						      \
-			  *strptr = str;				      \
-			  str += strsize;				      \
+			  *strptr = (char *) Str;			      \
+			  Str = ((Type *) *strptr) + strsize;		      \
 			  strsize *= 2;					      \
 			}						      \
 		    }							      \
 		}
-	      STRING_ADD_CHAR (c);
+	      STRING_ADD_CHAR (str, c, char);
 	    } while ((width <= 0 || --width > 0) && inchar () != EOF);
 
 	  if (!(flags & SUPPRESS))
@@ -543,6 +656,43 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      *str = '\0';
 	      ++done;
 	    }
+	  break;
+
+	case 'S':
+	  /* Wide character string.  */
+	wide_char_string:
+	  {
+	    wint_t val;
+	    int first = 1;
+	    STRING_ARG (wstr, wchar_t);
+
+	    do
+	      {
+		size_t cnt = 0;
+		NEXT_WIDE_CHAR (first);
+
+		if (iswspace (val))
+		  {
+		    /* XXX We would have to push back the whole wide char
+		       with possibly many bytes.  But since scanf does
+		       not make a difference for white space characters
+		       we can simply push back a simple <SP> which is
+		       guaranteed to be in the [:space:] class.  */
+		    ungetc (' ', s);
+		    break;
+		  }
+
+		STRING_ADD_CHAR (wstr, val, wchar_t);
+		first = 0;
+	      }
+	    while (width <= 0 || --width > 0);
+
+	    if (!(flags & SUPPRESS))
+	      {
+		*wstr = L'\0';
+		++done;
+	      }
+	  }
 	  break;
 
 	case 'x':	/* Hexadecimal integer.  */
@@ -765,11 +915,19 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  break;
 
 	case '[':	/* Character class.  */
-	  STRING_ARG;
+	  if (flags & LONG)
+	    {
+	      STRING_ARG (wstr, wchar_t);
+	      c = '\0';		/* This is to keep gcc quiet.  */
+	    }
+	  else
+	    {
+	      STRING_ARG (str, char);
 
-	  c = inchar ();
-	  if (c == EOF)
-	    input_error ();
+	      c = inchar ();
+	      if (c == EOF)
+		input_error ();
+	    }
 
 	  if (*f == '^')
 	    {
@@ -814,31 +972,72 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  if (fc == '\0')
 	    {
-	      ungetc (c, s);
+	      if (!(flags & LONG))
+		ungetc (c, s);
 	      conv_error();
 	    }
 
-	  num.ul = read_in - 1;	/* -1 because we already read one char.  */
-	  do
+	  if (flags & LONG)
 	    {
-	      if (wp[c] == not_in)
+	      wint_t val;
+	      int first = 1;
+
+	      do
 		{
-		  ungetc (c, s);
-		  break;
+		  size_t cnt = 0;
+		  NEXT_WIDE_CHAR (first);
+		  if (val > 255 || wp[val] == not_in)
+		    {
+		      /* XXX We have a problem here.  We read a wide
+			 character and this possibly took several
+			 bytes.  But we can only push back one single
+			 character.  To be sure we don't create wrong
+			 input we push it back only in case it is
+			 representable within one byte.  */
+		      if (val < 0x80)
+			ungetc (val, s);
+		      break;
+		    }
+		  STRING_ADD_CHAR (wstr, val, wchar_t);
+		  if (width > 0)
+		    --width;
+		  first = 0;
 		}
-	      STRING_ADD_CHAR (c);
-	      if (width > 0)
-		--width;
+	      while (width != 0);
+
+	      if (first)
+		conv_error ();
+
+	      if (!(flags & SUPPRESS))
+		{
+		  *wstr = L'\0';
+		  ++done;
+		}
 	    }
-	  while (width != 0 && inchar () != EOF);
-
-	  if (read_in == num.ul)
-	    conv_error ();
-
-	  if (!(flags & SUPPRESS))
+	  else
 	    {
-	      *str = '\0';
-	      ++done;
+	      num.ul = read_in - 1; /* -1 because we already read one char.  */
+	      do
+		{
+		  if (wp[c] == not_in)
+		    {
+		      ungetc (c, s);
+		      break;
+		    }
+		  STRING_ADD_CHAR (str, c, char);
+		  if (width > 0)
+		    --width;
+		}
+	      while (width != 0 && inchar () != EOF);
+
+	      if (read_in == num.ul)
+		conv_error ();
+
+	      if (!(flags & SUPPRESS))
+		{
+		  *str = '\0';
+		  ++done;
+		}
 	    }
 	  break;
 

@@ -20,7 +20,15 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 ENTRY(__fabs)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
 	.prologue 0
+#endif
+
 	cpys	$f31,$f16,$f0
 	ret
 

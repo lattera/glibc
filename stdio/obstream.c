@@ -1,20 +1,20 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <ansidecl.h>
 #include <stdio.h>
@@ -30,7 +30,7 @@ DEFUN(grow, (stream, c), FILE *stream AND int c)
   struct obstack *const obstack = (struct obstack *) stream->__cookie;
 
   /* Move the end of the object back to include only the portion
-     of the buffer which the user has already written into.  */ 
+     of the buffer which the user has already written into.  */
   obstack_blank_fast (obstack, - (stream->__put_limit - stream->__bufp));
 
   if (stream->__target > obstack_object_size (obstack))
@@ -71,7 +71,7 @@ DEFUN(grow, (stream, c), FILE *stream AND int c)
   else
     {
       /* Extend the buffer (and the object) to include
-	 the rest of the obstack chunk (which is unitialized).
+	 the rest of the obstack chunk (which is uninitialized).
 	 Data past bufp is undefined.  */
       stream->__put_limit = stream->__buffer + stream->__bufsize;
       obstack_blank_fast (obstack, stream->__put_limit - stream->__bufp);
