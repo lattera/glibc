@@ -20,9 +20,6 @@
 #define _KERNEL_TERMIOS_H 1
 /* The following corresponds to the values from the Linux 2.1.20 kernel.  */
 
-/* We need the definition of tcflag_t, cc_t, and speed_t.  */
-#include <bits/termios.h>
-
 #define __KERNEL_NCCS 19
 
 struct __kernel_termios

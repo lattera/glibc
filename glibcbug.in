@@ -9,6 +9,17 @@ VERSION="@VERSION@"
 BUGGLIBC="bugs@gnu.org"
 ADDONS="@subdirs@"
 HOST="@host@"
+CC='@CC@'
+CFLAGS="@CFLAGS@"
+VERSIONING="@VERSIONING@"
+BUILD_STATIC="@static@"
+BUILD_SHARED="@shared@"
+BUILD_PIC_DEFAULT="@pic_default@"
+BUILD_PROFILE="@profile@"
+BUILD_OMITFP="@omitfp@"
+BUILD_BOUNDED="@bounded@"
+BUILD_STATIC_NSS="@static_nss@"
+STDIO="@stdio@"
 
 PATH=/bin:/usr/bin:/usr/local/bin:$PATH
 export PATH
@@ -125,6 +136,17 @@ ${ORGANIZATION- $ORGANIZATION_C}
 `[ -n "$ARCH" ] && echo Architecture: $ARCH`
 `[ -n "$MACHINE" ] && echo Machine: $MACHINE`
 `[ -n "$ADDONS" ] && echo Addons: $ADDONS`
+`[ -n "$CFLAGS" ] && echo Build CFLAGS: $CFLAGS`
+`[ -n "$CC" ] && echo Build CC: $CC`
+`[ -n "$VERSIONING" ] && echo Versioning: $VERSIONING`
+`[ -n "$BUILD_STATIC" ] && echo Build static: $BUILD_STATIC`
+`[ -n "$BUILD_SHARED" ] && echo Build shared: $BUILD_SHARED`
+`[ -n "$BUILD_PIC_DEFAULT" ] && echo Build pic-default: $BUILD_PIC_DEFAULT`
+`[ -n "$BUILD_PROFILE" ] && echo Build profile: $BUILD_PROFILE`
+`[ -n "$BUILD_OMITFP" ] && echo Build omitfp: $BUILD_OMITFP`
+`[ -n "$BUILD_BOUNDED" ] && echo Build bounded: $BUILD_BOUNDED`
+`[ -n "$BUILD_STATIC_NSS" ] && echo Build static-nss: $BUILD_STATIC_NSS`
+`[ -n "$STDIO" ] && echo Stdio: $STDIO`
 
 >Description:
 	$DESCRIPTION_C

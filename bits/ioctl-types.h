@@ -1,5 +1,5 @@
 /* Structure types for pre-termios terminal ioctls.  Generic Unix version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/ioctl.h> instead.
- */
+#ifndef _SYS_IOCTL_H
+# error "Never use <bits/ioctl-types.h> directly; include <sys/ioctl.h> instead."
+#endif
 
-#ifndef _BITS_IOCTL_TYPES_H
-#define _BITS_IOCTL_TYPES_H 1
-
-
-#if	defined(TIOCGETC) || defined(TIOCSETC)
+#if defined TIOCGETC || defined TIOCSETC
 /* Type of ARG for TIOCGETC and TIOCSETC requests.  */
 struct tchars
 {
@@ -41,7 +37,7 @@ struct tchars
   _IOT (_IOTS (char), 6, 0, 0, 0, 0)
 #endif
 
-#if	defined(TIOCGLTC) || defined(TIOCSLTC)
+#if defined TIOCGLTC || defined TIOCSLTC
 /* Type of ARG for TIOCGLTC and TIOCSLTC requests.  */
 struct ltchars
 {
@@ -70,7 +66,7 @@ struct sgttyb
 #define	_IOT_sgttyb	/* Hurd ioctl type field.  */ \
   _IOT (_IOTS (char), 6, _IOTS (short int), 1, 0, 0)
 
-#if	defined(TIOCGWINSZ) || defined(TIOCSWINSZ)
+#if defined TIOCGWINSZ || defined TIOCSWINSZ
 /* Type of ARG for TIOCGWINSZ and TIOCSWINSZ requests.  */
 struct winsize
 {
@@ -86,13 +82,13 @@ struct winsize
   _IOT (_IOTS (unsigned short int), 4, 0, 0, 0, 0)
 #endif
 
-#if	defined (TIOCGSIZE) || defined (TIOCSSIZE)
+#if defined TIOCGSIZE || defined TIOCSSIZE
 /* The BSD-style ioctl constructor macros use `sizeof', which can't be used
    in a preprocessor conditional.  Since the commands are always unique
    regardless of the size bits, we can safely define away `sizeof' for the
    purpose of the conditional.  */
 #  define sizeof(type) 0
-#  if defined (TIOCGWINSZ) && TIOCGSIZE == TIOCGWINSZ
+#  if defined TIOCGWINSZ && TIOCGSIZE == TIOCGWINSZ
 /* Many systems that have TIOCGWINSZ define TIOCGSIZE for source
    compatibility with Sun; they define `struct ttysize' to have identical
    layout as `struct winsize' and #define TIOCGSIZE to be TIOCGWINSZ
@@ -116,6 +112,3 @@ struct ttysize
 #  endif
 #  undef sizeof			/* See above.  */
 #endif
-
-
-#endif /* bits/ioctl-types.h */

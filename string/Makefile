@@ -33,7 +33,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strtok_r strxfrm memchr memcmp memmove memset	\
 		   mempcpy bcopy bzero ffs stpcpy stpncpy		\
 		   strcasecmp strncase strcasecmp_l strncase_l		\
-		   memccpy memcpy wordcopy strsep			\
+		   memccpy memcpy wordcopy strsep strcasestr		\
 		   swab strfry memfrob memmem				\
 		   $(addprefix argz-,append count create ctsep next	\
 			             delete extract insert stringify	\

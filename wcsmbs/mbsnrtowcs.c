@@ -43,9 +43,15 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
   size_t written = 0;
   const char *run = *src;
   const char *last = run + nmc;
+  wchar_t value;
+  size_t count;
 
   if (ps == NULL)
     ps = &internal;
+
+  /* Get information from last use of this state.  */
+  count = ps->count;
+  value = ps->value;
 
   if (dst == NULL)
     /* The LEN parameter has to be ignored if we don't actually write
@@ -55,57 +61,66 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
   /* Copy all words.  */
   while (written < len && run < last)
     {
-      wchar_t value;
-      size_t count;
-      unsigned char byte = *run++;
+      unsigned char byte;
 
-      /* We expect a start of a new multibyte character.  */
-      if (byte < 0x80)
+      /* Store address of next byte to process.  */
+      *src = run;
+
+      /* Start reading a new character only if we are in the initial
+	 state.  */
+      if (count == 0)
 	{
-	  /* One byte sequence.  */
-	  count = 0;
-	  value = byte;
-	}
-      else if ((byte & 0xe0) == 0xc0)
-	{
-	  count = 1;
-	  value = byte & 0x1f;
-	}
-      else if ((byte & 0xf0) == 0xe0)
-	{
-	  /* We expect three bytes.  */
-	  count = 2;
-	  value = byte & 0x0f;
-	}
-      else if ((byte & 0xf8) == 0xf0)
-	{
-	  /* We expect four bytes.  */
-	  count = 3;
-	  value = byte & 0x07;
-	}
-      else if ((byte & 0xfc) == 0xf8)
-	{
-	  /* We expect five bytes.  */
-	  count = 4;
-	  value = byte & 0x03;
-	}
-      else if ((byte & 0xfe) == 0xfc)
-	{
-	  /* We expect six bytes.  */
-	  count = 5;
-	  value = byte & 0x01;
-	}
-      else
-	{
-	  /* This is an illegal encoding.  */
-	  __set_errno (EILSEQ);
-	  return (size_t) -1;
+	  byte = *run++;
+
+	  /* We expect a start of a new multibyte character.  */
+	  if (byte < 0x80)
+	    {
+	      /* One byte sequence.  */
+	      count = 0;
+	      value = byte;
+	    }
+	  else if ((byte & 0xe0) == 0xc0)
+	    {
+	      count = 1;
+	      value = byte & 0x1f;
+	    }
+	  else if ((byte & 0xf0) == 0xe0)
+	    {
+	      /* We expect three bytes.  */
+	      count = 2;
+	      value = byte & 0x0f;
+	    }
+	  else if ((byte & 0xf8) == 0xf0)
+	    {
+	      /* We expect four bytes.  */
+	      count = 3;
+	      value = byte & 0x07;
+	    }
+	  else if ((byte & 0xfc) == 0xf8)
+	    {
+	      /* We expect five bytes.  */
+	      count = 4;
+	      value = byte & 0x03;
+	    }
+	  else if ((byte & 0xfe) == 0xfc)
+	    {
+	      /* We expect six bytes.  */
+	      count = 5;
+	      value = byte & 0x01;
+	    }
+	  else
+	    {
+	      /* This is an illegal encoding.  */
+	      __set_errno (EILSEQ);
+	      return (size_t) -1;
+	    }
 	}
 
       /* Read the possible remaining bytes.  */
-      while (count-- > 0)
+      while (run < last && count > 0)
 	{
 	  byte = *run++;
+	  --count;
 
 	  if ((byte & 0xc0) != 0x80)
 	    {
@@ -118,6 +133,14 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 	  value |= byte & 0x3f;
 	}
 
+      /* If this character is only partially available remember this.  */
+      if (run == last && count != 0)
+	{
+	  ps->count = count;
+	  ps->value = value;
+	  break;
+	}
+
       /* Store value is required.  */
       if (dst != NULL)
 	*dst++ = value;
@@ -128,6 +151,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 	{
 	  /* Found the end of the string.  */
 	  *src = NULL;
+	  ps->count = 0;
 	  return written;
 	}
 

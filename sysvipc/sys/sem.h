@@ -1,6 +1,5 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -30,8 +29,6 @@
 /* Get system dependent definition of `struct semid_ds' and more.  */
 #include <bits/sem.h>
 
-__BEGIN_DECLS
-
 /* The following System V style IPC functions implement a semaphore
    handling.  The definition is found in XPG2.  */
 
@@ -43,6 +40,8 @@ struct sembuf
   short int sem_flg;		/* operation flag */
 };
 
+
+__BEGIN_DECLS
 
 /* Semaphore control operation.  */
 extern int semctl __P ((int __semid, int __semnum, int __cmd,

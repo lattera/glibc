@@ -16,6 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _SIGNAL_H
+# error "Never include <bits/sigaction.h> directly; use <signal.h> instead."
+#endif
+
 /* These definitions match those used by the 4.4 BSD kernel.
    If the operating system has a `sigaction' system call that correctly
    implements the POSIX.1 behavior, there should be a system-dependent

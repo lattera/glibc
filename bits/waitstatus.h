@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_WAIT_H
-#error "Never use <bits/waitstatus.h> directly; include <sys/wait.h> instead."
+# error "Never include <bits/waitstatus.h> directly; use <sys/wait.h> instead."
 #endif
 
 
@@ -39,11 +39,11 @@
 
 /* Nonzero if STATUS indicates termination by a signal.  */
 #ifdef	__GNUC__
-#define	__WIFSIGNALED(status)						      \
+# define __WIFSIGNALED(status) \
   (__extension__ ({ int __status = (status);				      \
 		    !__WIFSTOPPED(__status) && !__WIFEXITED(__status); }))
 #else	/* Not GCC.  */
-#define	__WIFSIGNALED(status)	(!__WIFSTOPPED(status) && !__WIFEXITED(status))
+# define __WIFSIGNALED(status)	(!__WIFSTOPPED(status) && !__WIFEXITED(status))
 #endif	/* GCC.  */
 
 /* Nonzero if STATUS indicates the child is stopped.  */
@@ -60,45 +60,45 @@
 
 #ifdef	__USE_BSD
 
-#include <endian.h>
+# include <endian.h>
 
 union wait
   {
     int w_status;
     struct
       {
-#if	__BYTE_ORDER == __LITTLE_ENDIAN
+# if	__BYTE_ORDER == __LITTLE_ENDIAN
 	unsigned int __w_termsig:7; /* Terminating signal.  */
 	unsigned int __w_coredump:1; /* Set if dumped core.  */
 	unsigned int __w_retcode:8; /* Return code if exited normally.  */
 	unsigned int:16;
-#endif				/* Little endian.  */
-#if	__BYTE_ORDER == __BIG_ENDIAN
+# endif				/* Little endian.  */
+# if	__BYTE_ORDER == __BIG_ENDIAN
 	unsigned int:16;
 	unsigned int __w_retcode:8;
 	unsigned int __w_coredump:1;
 	unsigned int __w_termsig:7;
-#endif				/* Big endian.  */
+# endif				/* Big endian.  */
       } __wait_terminated;
     struct
       {
-#if	__BYTE_ORDER == __LITTLE_ENDIAN
+# if	__BYTE_ORDER == __LITTLE_ENDIAN
 	unsigned int __w_stopval:8; /* W_STOPPED if stopped.  */
 	unsigned int __w_stopsig:8; /* Stopping signal.  */
 	unsigned int:16;
-#endif				/* Little endian.  */
-#if	__BYTE_ORDER == __BIG_ENDIAN
+# endif				/* Little endian.  */
+# if	__BYTE_ORDER == __BIG_ENDIAN
 	unsigned int:16;
 	unsigned int __w_stopsig:8; /* Stopping signal.  */
 	unsigned int __w_stopval:8; /* W_STOPPED if stopped.  */
-#endif				/* Big endian.  */
+# endif				/* Big endian.  */
       } __wait_stopped;
   };
 
-#define	w_termsig	__wait_terminated.__w_termsig
-#define	w_coredump	__wait_terminated.__w_coredump
-#define	w_retcode	__wait_terminated.__w_retcode
-#define	w_stopsig	__wait_stopped.__w_stopsig
-#define	w_stopval	__wait_stopped.__w_stopval
+# define w_termsig	__wait_terminated.__w_termsig
+# define w_coredump	__wait_terminated.__w_coredump
+# define w_retcode	__wait_terminated.__w_retcode
+# define w_stopsig	__wait_stopped.__w_stopsig
+# define w_stopval	__wait_stopped.__w_stopval
 
 #endif	/* Use BSD.  */

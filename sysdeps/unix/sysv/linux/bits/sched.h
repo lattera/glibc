@@ -19,11 +19,9 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SCHED_H
-#error "Never use <bits/sched.h> directly; include <sched.h> instead."
+# error "Never include <bits/sched.h> directly; use <sched.h> instead."
 #endif
 
-
-#include <features.h>
 
 /* Scheduling algorithms.  */
 #define SCHED_OTHER	0
@@ -36,14 +34,18 @@ struct sched_param
     int sched_priority;
   };
 
+#ifdef __USE_MISC
 /* Cloning flags.  */
-#define	CSIGNAL	      0x000000ff  /* Signal mask to be sent at exit.  */
-#define	CLONE_VM      0x00000100  /* Set if VM shared between processes.  */
-#define	CLONE_FS      0x00000200  /* Set if fs info shared between processes.*/
-#define CLONE_FILES   0x00000400  /* Set if open files shared between processes*/
-#define CLONE_SIGHAND 0x00000800  /* Set if signal handlers shared.  */
-#define CLONE_PID     0x00001000  /* Set if pid shared.  */
+# define CSIGNAL       0x000000ff /* Signal mask to be sent at exit.  */
+# define CLONE_VM      0x00000100 /* Set if VM shared between processes.  */
+# define CLONE_FS      0x00000200 /* Set if fs info shared between processes.*/
+# define CLONE_FILES   0x00000400 /* Set if open files shared between processes*/
+# define CLONE_SIGHAND 0x00000800 /* Set if signal handlers shared.  */
+# define CLONE_PID     0x00001000 /* Set if pid shared.  */
+#endif
 
+
+__BEGIN_DECLS
 
 /* Clone current process.  */
 extern int __clone __P ((int (*__fn) (void *__arg), void *__child_stack,
@@ -52,3 +54,5 @@ extern int __clone __P ((int (*__fn) (void *__arg), void *__child_stack,
 extern int clone __P ((int (*__fn) (void *__arg), void *__child_stack,
 		       int __flags, void *__arg));
 #endif
+
+__END_DECLS

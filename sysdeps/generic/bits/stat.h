@@ -16,15 +16,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/stat.h> instead.
- */
+#ifndef _SYS_STAT_H
+# error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
+#endif
 
 /* This structure needs to be defined in accordance with the
    implementation of __stat, __fstat, and __lstat.  */
-
-#ifndef	_BITS_STAT_H
-#define	_BITS_STAT_H	1
 
 #include <bits/types.h>
 
@@ -73,20 +70,17 @@ struct stat
 #ifdef __USE_LARGEFILE64
 struct stat64
   {
-    __dev_t st_dev;			/* Device.  */
+    __dev_t st_dev;		/* Device.  */
 
-    __ino64_t st_ino;			/* File serial number.	*/
-    __mode_t st_mode;			/* File mode.  */
-    __nlink_t st_nlink;			/* Link count.  */
-    __uid_t st_uid;			/* User ID of the file's owner.	*/
-    __gid_t st_gid;			/* Group ID of the file's group.*/
-    __off64_t st_size;			/* Size of file, in bytes.  */
+    __ino64_t st_ino;		/* File serial number.	*/
+    __mode_t st_mode;		/* File mode.  */
+    __nlink_t st_nlink;		/* Link count.  */
+    __uid_t st_uid;		/* User ID of the file's owner.	*/
+    __gid_t st_gid;		/* Group ID of the file's group.*/
+    __off64_t st_size;		/* Size of file, in bytes.  */
 
-    __time_t st_atime;			/* Time of last access.  */
-    __time_t st_mtime;			/* Time of last modification.  */
-    __time_t st_ctime;			/* Time of last status change.  */
+    __time_t st_atime;		/* Time of last access.  */
+    __time_t st_mtime;		/* Time of last modification.  */
+    __time_t st_ctime;		/* Time of last status change.  */
   };
 #endif
-
-
-#endif /* bits/stat.h */

@@ -217,6 +217,7 @@ __getcwd (buf, size)
   char *path;
   register char *pathp;
   struct stat st;
+  int prev_errno = errno;
 
   if (size == 0)
     {
@@ -310,6 +311,9 @@ __getcwd (buf, size)
       dirstream = __opendir (dotp);
       if (dirstream == NULL)
 	goto lose;
+      /* Clear errno to distinguish EOF from error if readdir returns
+	 NULL.  */
+      __set_errno (0);
       while ((d = __readdir (dirstream)) != NULL)
 	{
 	  if (d->d_name[0] == '.' &&
@@ -343,6 +347,10 @@ __getcwd (buf, size)
 	{
 	  int save = errno;
 	  (void) __closedir (dirstream);
+	  if (save == 0)
+	    /* EOF on dirstream, which means that the current directory
+	       has been removed.  */
+	    save = ENOENT;
 	  __set_errno (save);
 	  goto lose;
 	}
@@ -393,6 +401,10 @@ __getcwd (buf, size)
     free ((__ptr_t) dotlist);
 
   memmove (path, pathp, path + size - pathp);
+
+  /* Restore errno on successful return.  */
+  __set_errno (prev_errno);
+
   return path;
 
  lose:

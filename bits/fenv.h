@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _FENV_H
-#error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
+# error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
 #endif
 
 

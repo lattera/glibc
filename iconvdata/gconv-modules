@@ -1,0 +1,145 @@
+# GNU libc iconv configuration.
+# Copyright (C) 1997 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+# Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+#
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.  */
+
+# All lines contain the following information:
+
+# If the lines start with `module'
+#  fromset:	either a name triple or a regular expression triple.
+#  toset:	a name triple or an expression with \N to get regular
+#		expression matching results.
+#  filename:	filename of the module implementing the transformation.
+#		If it is not absolute the path is made absolute by prepending
+#		the directory the configuration file is found in.
+#  cost:	optional cost of the transformation.  Default is 1.
+
+# If the lines start with `alias'
+#  alias:	alias name which is not really recognized.
+#  name:	the real name of the character set
+
+#	from			  to			  module	cost
+alias	ISO-10646//		ISO-10646/UCS4/
+alias	10646-1:1993//		ISO-10646/UCS4/
+alias	10646-1:1993/UCS4/	ISO-10646/UCS4/
+
+#	from			  to			  module	cost
+alias	ISO-IR-100//		ISO-8859-1//
+alias	ISO_8859-1:1987//	ISO-8859-1//
+alias	ISO_8859-1//		ISO-8859-1//
+alias	LATIN1//		ISO-8859-1//
+alias	L1//			ISO-8859-1//
+alias	IBM819//		ISO-8859-1//
+alias	CP819//			ISO-8859-1//
+module	ISO-8859-1//		ISO-10646/UCS4/		ISO8859-1	1
+module	ISO-10646/UCS4/		ISO-8859-1//		ISO8859-1	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-101//		ISO-8859-2//
+alias	ISO_8859-2:1987//	ISO-8859-2//
+alias	ISO_8859-2//		ISO-8859-2//
+alias	LATIN2//		ISO-8859-2//
+alias	L2//			ISO-8859-2//
+module	ISO-8859-2//		ISO-10646/UCS4/		ISO8859-2	1
+module	ISO-10646/UCS4/		ISO-8859-2//		ISO8859-2	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-109//		ISO-8859-3//
+alias	ISO_8859-3:1988//	ISO-8859-3//
+alias	ISO_8859-3//		ISO-8859-3//
+alias	LATIN3//		ISO-8859-3//
+alias	L3//			ISO-8859-3//
+module	ISO-8859-3//		ISO-10646/UCS4/		ISO8859-3	1
+module	ISO-10646/UCS4/		ISO-8859-3//		ISO8859-3	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-110//		ISO-8859-4//
+alias	ISO_8859-4:1988//	ISO-8859-4//
+alias	ISO_8859-4//		ISO-8859-4//
+alias	LATIN4//		ISO-8859-4//
+alias	L4//			ISO-8859-4//
+module	ISO-8859-4//		ISO-10646/UCS4/		ISO8859-4	1
+module	ISO-10646/UCS4/		ISO-8859-4//		ISO8859-4	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-144//		ISO-8859-5//
+alias	ISO_8859-5:1988//	ISO-8859-5//
+alias	ISO_8859-5//		ISO-8859-5//
+alias	CYRILLIC//		ISO-8859-5//
+module	ISO-8859-5//		ISO-10646/UCS4/		ISO8859-5	1
+module	ISO-10646/UCS4/		ISO-8859-5//		ISO8859-5	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-127//		ISO-8859-6//
+alias	ISO_8859-6:1987//	ISO-8859-6//
+alias	ISO_8859-6//		ISO-8859-6//
+alias	ECMA-114//		ISO-8859-6//
+alias	ASMO-708//		ISO-8859-6//
+alias	ARABIC//		ISO-8859-6//
+module	ISO-8859-6//		ISO-10646/UCS4/		ISO8859-6	1
+module	ISO-10646/UCS4/		ISO-8859-6//		ISO8859-6	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-126//		ISO-8859-7//
+alias	ISO_8859-7:1987//	ISO-8859-7//
+alias	ISO_8859-7//		ISO-8859-7//
+alias	ELOT_928//		ISO-8859-7//
+alias	ECMA-118//		ISO-8859-7//
+alias	GREEK//			ISO-8859-7//
+alias	GREEK8//		ISO-8859-7//
+module	ISO-8859-7//		ISO-10646/UCS4/		ISO8859-7	1
+module	ISO-10646/UCS4/		ISO-8859-7//		ISO8859-7	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-138//		ISO-8859-8//
+alias	ISO_8859-8:1988//	ISO-8859-8//
+alias	ISO_8859-8//		ISO-8859-8//
+alias	HEBREW//		ISO-8859-8//
+module	ISO-8859-8//		ISO-10646/UCS4/		ISO8859-8	1
+module	ISO-10646/UCS4/		ISO-8859-8//		ISO8859-8	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-148//		ISO-8859-9//
+alias	ISO_8859-9:1989//	ISO-8859-9//
+alias	ISO_8859-9//		ISO-8859-9//
+alias	LATIN5//		ISO-8859-9//
+alias	L5//			ISO-8859-9//
+module	ISO-8859-9//		ISO-10646/UCS4/		ISO8859-9	1
+module	ISO-10646/UCS4/		ISO-8859-9//		ISO8859-9	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-157//		ISO-8859-10//
+alias	ISO_8859-10:1993//	ISO-8859-10//
+alias	ISO_8859-10//		ISO-8859-10//
+alias	LATIN6//		ISO-8859-10//
+alias	L6//			ISO-8859-10//
+module	ISO-8859-10//		ISO-10646/UCS4/		ISO8859-10	1
+module	ISO-10646/UCS4/		ISO-8859-10//		ISO8859-10	1
+
+#	from			  to			  module	cost
+alias	T.61//			T.61-8BIT//
+alias	ISO-IR-103//		T.61-8BIT//
+module	T.61-8BIT//		ISO-10646/UCS4/		T.61		1
+module	ISO-10646/UCS4/		T.61-8BIT//		T.61		1
+
+#	from			  to			  module	cost
+alias	ISO-IR-156//		ISO_6937//
+alias	ISO_6937:1992//		ISO_6937//
+alias	ISO6937//		ISO_6937//
+module	ISO_6937//		ISO-10646/UCS4/		ISO_6937	1
+module	ISO-10646/UCS4/		ISO_6937//		ISO_6937	1

@@ -1,6 +1,5 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -29,18 +28,18 @@
 /* Get system dependent definition of `struct msqid_ds' and more.  */
 #include <bits/msq.h>
 
-__BEGIN_DECLS
-
 /* The following System V style IPC functions implement a message queue
    system.  The definition is found in XPG2.  */
 
 /* Template for struct to be used as argument for `msgsnd' and `msgrcv'.  */
 struct msgbuf
-{
-  long int mtype;		/* type of received/sent message */
-  char mtext[1];		/* text of the message */
-};
+  {
+    long int mtype;		/* type of received/sent message */
+    char mtext[1];		/* text of the message */
+  };
 
+
+__BEGIN_DECLS
 
 /* Message queue control operation.  */
 extern int msgctl __P ((int __msqid, int __cmd, struct msqid_ds *__buf));

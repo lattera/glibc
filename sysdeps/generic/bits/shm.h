@@ -1,6 +1,5 @@
 /* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,11 +17,9 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_SHM_H
-#error "Never use <bits/shm.h> directly; include <sys/shm.h> instead."
+# error "Never include <bits/shm.h> directly; use <sys/shm.h> instead."
 #endif
 
-
-#include <features.h>
 #include <sys/types.h>
 
 /* Flags for `shmat'.  */
@@ -35,19 +32,15 @@
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
 
-__BEGIN_DECLS
-
 /* Data structure describing a set of semaphores.  */
 struct shmid_ds
-{
-  struct ipc_perm sem_perm;		/* operation permission struct */
-  int shm_segsz;			/* size of segment in bytes */
-  __time_t sem_atime;			/* time of last shmat() */
-  __time_t sem_dtime;			/* time of last shmdt() */
-  __time_t sem_ctime;			/* time of last change by shmctl() */
-  __pid_t shm_cpid;			/* pid of creator */
-  __pid_t shm_lpid;			/* pid of last shmop */
-  unsigned short int shm_nattch;	/* number of current attaches */
-};
-
-__END_DECLS
+  {
+    struct ipc_perm sem_perm;		/* operation permission struct */
+    int shm_segsz;			/* size of segment in bytes */
+    __time_t sem_atime;			/* time of last shmat() */
+    __time_t sem_dtime;			/* time of last shmdt() */
+    __time_t sem_ctime;			/* time of last change by shmctl() */
+    __pid_t shm_cpid;			/* pid of creator */
+    __pid_t shm_lpid;			/* pid of last shmop */
+    unsigned short int shm_nattch;	/* number of current attaches */
+  };

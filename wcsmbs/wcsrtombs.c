@@ -59,7 +59,12 @@ __wcsrtombs (dst, src, len, ps)
 
   while (written < len)
     {
-      wchar_t wc = *run++;
+      wchar_t wc;
+
+      /* Store position of first unprocessed word.  */
+      *src = run;
+
+      wc = *run++;
 
       if (wc < 0 || wc > 0x7fffffff)
 	{
@@ -73,6 +78,7 @@ __wcsrtombs (dst, src, len, ps)
 	  /* Found the end.  */
 	  if (dst != NULL)
 	    *dst = '\0';
+	  ps->count = 0;
 	  *src = NULL;
 	  return written;
 	}
@@ -119,6 +125,9 @@ __wcsrtombs (dst, src, len, ps)
 
   /* Store position of first unprocessed word.  */
   *src = run;
+
+  /* Signal that we finished correctly.  */
+  ps->count = 0;
 
   return written;
 }

@@ -17,8 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef	_BITS_DLFCN_H
-#define	_BITS_DLFCN_H 1
+#ifndef _DLFCN_H
+# error "Never use <bits/dlfcn.h> directly; include <dlfcn.h> instead."
+#endif
 
 /* The MODE argument to `dlopen' contains one of the following: */
 #define RTLD_LAZY	0x001	/* Lazy function call binding.  */
@@ -33,10 +34,9 @@
 __BEGIN_DECLS
 
 /* Some SGI specific calls that aren't implemented yet.  */
-extern void *sgidladd __P ((const char *, int));
-extern void *sgidlopen_version __P ((const char *, int, const char *, int));
-extern char *sgigetdsoversion __P ((const char *));
+extern void *sgidladd __P ((__const char *, int));
+extern void *sgidlopen_version __P ((__const char *, int, __const char *,
+				     int));
+extern char *sgigetdsoversion __P ((__const char *));
 
 __END_DECLS
-
-#endif	/* bits/dlfcn.h */

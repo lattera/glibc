@@ -16,8 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _TERMBITS_H
-#define _TERMBITS_H	1
+#ifndef _TERMIOS_H
+# error "Never include <bits/termios.h> directly; use <termios.h> instead."
+#endif
 
 typedef unsigned char	cc_t;
 typedef unsigned int	speed_t;
@@ -73,7 +74,7 @@ struct termios {
 #define ICRNL	0000400
 #define IXON	0001000
 #define IXOFF	0002000
-#if !defined(KERNEL) || defined(__USE_BSD)
+#if !defined KERNEL || defined __USE_BSD
   /* POSIX.1 doesn't want these... */
 # define IXANY		0004000
 # define IUCLC		0010000
@@ -276,5 +277,3 @@ struct termio {
 #define N_SLIP		1
 #define N_MOUSE		2
 #define N_PPP		3
-
-#endif /* _TERMBITS_H */

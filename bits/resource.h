@@ -17,6 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _SYS_RESOURCE_H
+# error "Never use <bits/resource.h> directly; include <sys/resource.h> instead."
+#endif
+
 /* These are the values for 4.4 BSD and GNU.  Earlier BSD systems have a
    subset of these kinds of resource limit.  In systems where `getrlimit'
    and `setrlimit' are not system calls, these are the values used by the C
@@ -107,7 +111,8 @@ enum __rusage_who
 #define RUSAGE_CHILDREN RUSAGE_CHILDREN
   };
 
-#include <sys/time.h>           /* For `struct timeval'.  */
+#define __need_timeval
+#include <bits/time.h>           /* For `struct timeval'.  */
 
 /* Structure which says how much of each resource has been used.  */
 struct rusage

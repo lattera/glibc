@@ -1,3 +1,256 @@
+1997-11-26 04:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* eld/dl-profile.c (_dl_start_profile): Avoid FP calculation when
+	computing s_scale.  Patch by a sun <asun@zoology.washington.edu>.
+
+	* iconv/gconv_close.c: Correct freeing of descriptor data.
+	* iconv/gconv_simple.c: Return correct error values for illegal or
+	incomplete characters.
+
+	* Makefile (iconvdata/%): Special goal to simplify iconvdata
+	development.
+	* iconvdata/Makefile: New file.
+	* iconvdata/configure: Likewise.
+	* iconvdata/extra-module.mk: Likewise.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/iso6937.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso8859-10.c: Likewise.
+	* iconvdata/iso8859-10.h: Likewise.
+	* iconvdata/iso8859-2.c: Likewise.
+	* iconvdata/iso8859-2.h: Likewise.
+	* iconvdata/iso8859-3.c: Likewise.
+	* iconvdata/iso8859-3.h: Likewise.
+	* iconvdata/iso8859-4.c: Likewise.
+	* iconvdata/iso8859-4.h: Likewise.
+	* iconvdata/iso8859-5.c: Likewise.
+	* iconvdata/iso8859-5.h: Likewise.
+	* iconvdata/iso8859-6.c: Likewise.
+	* iconvdata/iso8859-6.h: Likewise.
+	* iconvdata/iso8859-7.c: Likewise.
+	* iconvdata/iso8859-7.h: Likewise.
+	* iconvdata/iso8859-8.c: Likewise.
+	* iconvdata/iso8859-8.h: Likewise.
+	* iconvdata/iso8859-9.c: Likewise.
+	* iconvdata/iso8859-9.h: Likewise.
+	* iconvdata/iso8859-generic.c: Likewise.
+	* iconvdata/t61.c: Likewise.
+
+	* string/Makefile (routines): Add strcasestr.
+	* string/string.h: Add prototype for strcasestr.
+	* sysdeps/generic/strcasestr.c: New file.
+	* wcsmbs/mbrtowc.c: Simplify special case a bit.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Correctly handle incomplete characters.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Make sure SRC argument is correct when
+	partial character is read.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wmemrtombs.c: Likewise.
+	* wcsmbs/wmemrtowcs.c: Likewise.
+
+	* io/ftw.h: Include <sys/stat.h> instead of <bits/stat.h>.
+	* login/pty.h: Include <sys/ioctl.h> instead og <bits/ioctl-types.h>.
+	* sysdeps/i386/__longjmp.S: Define _SETJMP_H.
+	* sysdeps/i386/elf/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/kernel_termios.h: Do include
+	<bits/termios.h>.
+
+	* sysdeps/posix/mk-stdiolim.c: Output file with comment.
+	* sysdeps/unix/sysv/linux/stdio_lim.h.in: Add comment.
+
+	* sysdeps/unix/sysv/linux/sys/mman.h: Pretty print.
+	* sysvipc/sys/ipc.h: Likewise.
+	* sysvipc/sys/msg.h: Likewise.
+	* sysvipc/sys/sem.h: Likewise.
+	* sysvipc/sys/shm.h: Likewise.
+
+	* sysdeps/alpha/bits/endian.h: Issue error message if the header is
+	used directly.
+	* sysdeps/alpha/bits/setjmp.h: Likewise.
+	* sysdeps/alpha/fpu/bits/fenv.h: Likewise.
+	* sysdeps/arm/bits/endian.h: Likewise.
+	* sysdeps/arm/bits/setjmp.h: Likewise.
+	* sysdeps/generic/bits/byteswap.h: Likewise.
+	* sysdeps/generic/bits/confname.h: Likewise.
+	* sysdeps/generic/bits/dirent.h: Likewise.
+	* sysdeps/generic/bits/dlfcn.h: Likewise.
+	* sysdeps/generic/bits/endian.h: Likewise.
+	* sysdeps/generic/bits/fenv.h: Likewise.
+	* sysdeps/generic/bits/huge_val.h: Likewise.
+	* sysdeps/generic/bits/in.h: Likewise.
+	* sysdeps/generic/bits/ioctl-types.h: Likewise.
+	* sysdeps/generic/bits/ioctls.h: Likewise.
+	* sysdeps/generic/bits/ipc.h: Likewise.
+	* sysdeps/generic/bits/msq.h: Likewise.
+	* sysdeps/generic/bits/poll.h: Likewise.
+	* sysdeps/generic/bits/resource.h: Likewise.
+	* sysdeps/generic/bits/sched.h: Likewise.
+	* sysdeps/generic/bits/sem.h: Likewise.
+	* sysdeps/generic/bits/setjmp.h: Likewise.
+	* sysdeps/generic/bits/shm.h: Likewise.
+	* sysdeps/generic/bits/sigaction.h: Likewise.
+	* sysdeps/generic/bits/sigcontext.h: Likewise.
+	* sysdeps/generic/bits/socket.h: Likewise.
+	* sysdeps/generic/bits/stat.h: Likewise.
+	* sysdeps/generic/bits/statfs.h: Likewise.
+	* sysdeps/generic/bits/stdio_lim.h: Likewise.
+	* sysdeps/generic/bits/termios.h: Likewise.
+	* sysdeps/generic/bits/time.h: Likewise.
+	* sysdeps/generic/bits/uio.h: Likewise.
+	* sysdeps/generic/bits/utmp.h: Likewise.
+	* sysdeps/generic/bits/utmpx.h: Likewise.
+	* sysdeps/generic/bits/utsname.h: Likewise.
+	* sysdeps/generic/bits/waitflags.h: Likewise.
+	* sysdeps/generic/bits/waitstatus.h: Likewise.
+	* sysdeps/gnu/bits/utmp.h: Likewise.
+	* sysdeps/gnu/bits/utmpx.h: Likewise.
+	* sysdeps/i386/bits/byteswap.h: Likewise.
+	* sysdeps/i386/bits/endian.h: Likewise.
+	* sysdeps/i386/bits/huge_val.h: Likewise.
+	* sysdeps/i386/bits/setjmp.h: Likewise.
+	* sysdeps/i386/fpu/bits/fenv.h: Likewise.
+	* sysdeps/ieee754/bits/huge_val.h: Likewise.
+	* sysdeps/m68k/bits/byteswap.h: Likewise.
+	* sysdeps/m68k/bits/endian.h: Likewise.
+	* sysdeps/m68k/bits/setjmp.h: Likewise.
+	* sysdeps/m68k/fpu/bits/fenv.h: Likewise.
+	* sysdeps/mach/hurd/alpha/bits/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/bits/ioctls.h: Likewise.
+	* sysdeps/mach/hurd/bits/stat.h: Likewise.
+	* sysdeps/mach/hurd/hppa/bits/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/i386/bits/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/mips/bits/sigcontext.h: Likewise.
+	* sysdeps/mips/bits/dlfcn.h: Likewise.
+	* sysdeps/mips/bits/endian.h: Likewise.
+	* sysdeps/mips/bits/setjmp.h: Likewise.
+	* sysdeps/mips/dec/bits/endian.h: Likewise.
+	* sysdeps/mips/mips64/bits/setjmp.h: Likewise.
+	* sysdeps/mips/mipsel/bits/endian.h: Likewise.
+	* sysdeps/mips/p40/bits/endian.h: Likewise.
+	* sysdeps/powerpc/bits/endian.h: Likewise.
+	* sysdeps/powerpc/bits/fenv.h: Likewise.
+	* sysdeps/powerpc/bits/setjmp.h: Likewise.
+	* sysdeps/sparc/sparc32/bits/endian.h: Likewise.
+	* sysdeps/sparc/sparc32/bits/setjmp.h: Likewise.
+	* sysdeps/sparc/sparc32/fpu/bits/fenv.h: Likewise.
+	* sysdeps/sparc/sparc64/bits/endian.h: Likewise.
+	* sysdeps/sparc/sparc64/fpu/bits/fenv.h: Likewise.
+	* sysdeps/unix/bsd/bits/dirent.h: Likewise.
+	* sysdeps/unix/bsd/bits/stat.h: Likewise.
+	* sysdeps/unix/bsd/bits/waitflags.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/bits/dirent.h: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/bsd/osf/bits/sigaction.h: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/bits/sigcontext.h: Likewise.
+	* sysdeps/unix/bsd/sun/sparc/bits/sigcontext.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/bits/resource.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/bits/termios.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/bits/utsname.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/bits/utsname.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/bits/sigcontext.h: Likewise.
+	* sysdeps/unix/common/bits/dirent.h: Likewise.
+	* sysdeps/unix/sysv/bits/dirent.h: Likewise.
+	* sysdeps/unix/sysv/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/bits/utmp.h: Likewise.
+	* sysdeps/unix/sysv/bits/utsname.h: Likewise.
+	* sysdeps/unix/sysv/irix4/bits/confname.h: Likewise.
+	* sysdeps/unix/sysv/irix4/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/ioctls.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/dirent.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/in.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/ioctl-types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/ioctls.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/poll.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigcontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/uio.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/utsname.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/waitflags.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/poll.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/endian.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/ioctl-types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/poll.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ioctl-types.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/ioctls.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/poll.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/setjmp.h: Likewise.
+	* sysdeps/unix/sysv/minix/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/bits/confname.h: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/bits/utsname.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/bits/waitflags.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/i386/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/bits/sigcontext.h: Likewise.
+	* sysdeps/vax/bits/huge_val.h: Likewise.
+	* sysdeps/vax/bits/setjmp.h: Likewise.
+	* sysdeps/wordsize-32/bits/elfclass.h: Likewise.
+	* sysdeps/wordsize-64/bits/elfclass.h: Likewise.
+
+1997-11-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libio/stdio.h: Correct comment of sys_nerr/sys_errlist
+
+1997-11-25  Paul Eggert  <eggert@shade.twinsun.com>
+
+	* strftime.c (strftime):
+	No longer any need to undef or declare if emacs is defined.
+	(my_strftime): When checking a -1 returned by mktime, don't blow up
+	if localtime_r returns NULL.
+
+1997-11-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* README.template: Fix spelling.
+
+1997-11-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Enhance --enable-add-ons description a wee bit.
+
+1997-11-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* glibcbug.in: Add more information of build environment and flags.
+
+1997-11-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/getcwd.c: Recognize EOF from readdir and translate
+	it into ENOENT.
+
 1997-11-24 03:01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-support.c: Call __libc_init_secure to make sure

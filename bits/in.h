@@ -18,8 +18,9 @@
 
 /* Generic version.  */
 
-#ifndef _NETINET_INBITS_H
-#define _NETINET_INBITS_H 1
+#ifndef _NETINET_IN_H
+# error "Never use <bits/in.h> directly; include <netinet/in.h> instead."
+#endif
 
 /* Link numbers.  */
 #define	IMPLINK_IP		155
@@ -55,10 +56,10 @@ struct ip_opts
 
 /* Structure used for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP. */
 struct ip_mreq
-{
-  struct in_addr imr_multiaddr;	/* IP multicast address of group */
-  struct in_addr imr_interface;	/* local IP address of interface */
-};
+  {
+    struct in_addr imr_multiaddr;	/* IP multicast address of group */
+    struct in_addr imr_interface;	/* local IP address of interface */
+  };
 
 /* IPV6 socket options.  */
 #define IPV6_ADDRFORM		1
@@ -80,5 +81,3 @@ struct ip_mreq
 #define IPV6_MULTICAST_LOOP	19
 #define IPV6_ADD_MEMBERSHIP	20
 #define IPV6_DROP_MEMBERSHIP	21
-
-#endif	/* netinet/inbits.h */

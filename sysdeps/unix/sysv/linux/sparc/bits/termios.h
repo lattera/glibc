@@ -17,8 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SPARC_TERMBITS_H
-#define _SPARC_TERMBITS_H	1
+#ifndef _TERMIOS_H
+# error "Never include <bits/termios.h> directly; use <termios.h> instead."
+#endif
 
 typedef unsigned char cc_t;
 typedef unsigned int speed_t;
@@ -34,7 +35,7 @@ struct termios
     cc_t c_line;		/* line discipline */
     cc_t c_cc[NCCS];		/* control characters */
 #ifdef __KERNEL__
-#define SIZEOF_USER_TERMIOS sizeof (struct termios) - (2*sizeof (cc_t))
+# define SIZEOF_USER_TERMIOS sizeof (struct termios) - (2*sizeof (cc_t))
     cc_t _x_cc[2];		/* We need them to hold vmin/vtime */
 #endif
   };
@@ -64,11 +65,11 @@ struct termios
  * shared with eof/eol
  */
 #ifdef __KERNEL__
-#define VMIN     16
-#define VTIME    17
+# define VMIN     16
+# define VTIME    17
 #else
-#define VMIN     VEOF
-#define VTIME    VEOL
+# define VMIN     VEOF
+# define VTIME    VEOL
 #endif
 
 /* c_iflag bits */
@@ -213,5 +214,3 @@ struct termios
 #define	TCSANOW		0
 #define	TCSADRAIN	1
 #define	TCSAFLUSH	2
-
-#endif /* !(_SPARC_TERMBITS_H) */

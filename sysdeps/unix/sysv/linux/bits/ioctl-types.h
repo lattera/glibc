@@ -17,12 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/ioctl.h> instead.
- */
-
-#ifndef _BITS_IOCTL_TYPES_H
-#define _BITS_IOCTL_TYPES_H 1
+#ifndef _SYS_IOCTL_H
+# error "Never use <bits/ioctl-types.h> directly; include <sys/ioctl.h> instead."
+#endif
 
 /* Get definition of constants for use with `ioctl'.  */
 #include <asm/ioctls.h>
@@ -69,6 +66,3 @@ struct termio
 #define N_PPP		3
 #define N_STRIP		4
 #define N_AX25		5
-
-
-#endif /* bits/ioctl-types.h */

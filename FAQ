@@ -109,6 +109,10 @@ please let me know.
 	  I get
 	    XXX: Symbol `_sys_errlist' has different size in shared object, consider re-linking
 	  Why?  What to do?''
+
+[Q31]	``What's the problem with configure --enable-omitfp?''
+
+[Q32]	``Why don't signals interrupt system calls anymore?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -351,9 +355,8 @@ incompatibilities:
 * the `signal' function's behaviour corresponds to the BSD semantic and
   not the SysV semantic as it was in libc-5.  The interface on all GNU
   systems shall be the same and BSD is the semantic of choice.  To use
-  the SysV behaviour simply use `sysv_signal'.  The major difference is
-  that the SysV implementation sets the SA_ONESHOT flag and so the handler
-  gets removed after the first call.
+  the SysV behaviour simply use `sysv_signal', or define _XOPEN_SOURCE.
+  See question 32 for details.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -533,13 +536,15 @@ In this file you have to change a few things:
 
 - remove all expression `%{...:-lgmon}';  there is no libgmon in glibc
 
+- fix a minor bug by changing %{pipe:-} to %|
+
 
 Things are getting a bit more complicated if you have GNU libc
 installed in some other place than /usr, i.e., if you do not want to
 use it instead of the old libc.  In this case the needed startup files
 and libraries are not found in the regular places.  So the specs file
-must tell the compiler and linker exactly what to use.  Here is for
-example the gcc-2.7.2 specs file when GNU libc is installed at
+must tell the compiler and linker exactly what to use.  Here is what
+the gcc-2.7.2 specs file should look like when GNU libc is installed at
 /usr:
 
 -----------------------------------------------------------------------
@@ -547,7 +552,7 @@ example the gcc-2.7.2 specs file when GNU libc is installed at
 %{V} %{v:%{!V:-V}} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*}
 
 *asm_final:
-%{pipe:-}
+%|
 
 *cpp:
 %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}
@@ -805,6 +810,66 @@ happen.  So in case of doubt report such a warning message as a problem.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q31]	``What's the problem with configure --enable-omitfp?''
+
+{AJ} When configuring with --enable-omitfp the libraries are build
+without frame pointers. Some compilers produce in this situation buggy
+code and therefore we don't advise using it at the moment.
+
+If you use --enable-omitfp, you're on your own. If you encounter
+problems with a library that was build this way, I'll advise you to
+rebuild the library without --enable-omitfp.  If the problem vanishes
+consider tracking the problem down and report it as compiler failure.
+
+Since a library build with --enable-omitfp is undebuggable, a
+debuggable library is also build - you can recognize it by the suffix
+"_g" to the library names.
+
+The compilation of this extra libraries and the compiler optimizations
+slow down the build process and need more disk space.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q32]	``Why don't signals interrupt system calls anymore?''
+
+[A32] {ZW} By default GNU libc uses the BSD semantics for signal(),
+unlike Linux libc 5 which used System V semantics.  This is partially
+for compatibility with other systems and partially because the BSD
+semantics tend to make programming with signals easier.
+
+There are three differences:
+
+* BSD-style signals that occur in the middle of a system call do not
+  affect the system call; System V signals cause the system call to
+  fail and set errno to EINTR.
+
+* BSD signal handlers remain installed once triggered.  System V signal
+  handlers work only once, so one must reinstall them each time.
+
+* A BSD signal is blocked during the execution of its handler.  In other
+  words, a handler for SIGCHLD (for example) does not need to worry about
+  being interrupted by another SIGCHLD.  It may, however, be interrrupted
+  by other signals.
+
+There is general consensus that for `casual' programming with signals, the
+BSD semantics are preferable.  You don't need to worry about system calls
+returning EINTR, and you don't need to worry about the race conditions
+associated with one-shot signal handlers.
+
+If you are porting an old program that relies on the old semantics, you can
+quickly fix the problem by changing signal() to sysv_signal() throughout.
+Alternatively, define _XOPEN_SOURCE before including <signal.h>.
+
+For new programs, the sigaction() function allows you to specify precisely
+how you want your signals to behave.  All three differences listed above are
+individually switchable on a per-signal basis with this function.
+
+If all you want is for one specific signal to cause system calls to fail
+and return EINTR (for example, to implement a timeout) you can do this with
+siginterrupt().
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
@@ -815,6 +880,7 @@ Answers were given by:
 {EY} Eric Youngdale, <eric@andante.jic.com>
 {PB} Phil Blundell, <Philip.Blundell@pobox.com>
 {MK} Mark Kettenis, <kettenis@phys.uva.nl>
+{ZW} Zack Weinberg, <zack@rabi.phys.columbia.edu>
 
 Local Variables:
  mode:text

@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_WAIT_H
-#error "Never use <bits/waitflags.h> directly; include <sys/wait.h> instead."
+# error "Never include <bits/waitflags.h> directly; use <sys/wait.h> instead."
 #endif
 
 
@@ -28,7 +28,7 @@
 #define	WUNTRACED	4	/* Report status of stopped children.  */
 
 #ifdef __USE_SVID
-#define WEXITED		1	/* Look for children that have exited.  */
-#define WTRAPPED	2	/* Look for processes that stopped
+# define WEXITED	1	/* Look for children that have exited.  */
+# define WTRAPPED	2	/* Look for processes that stopped
 				   while tracing.  */
 #endif

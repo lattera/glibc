@@ -1,9 +1,13 @@
 /* Define the machine-dependent type `jmp_buf'.  SPARC version.  */
 
-#if	defined (__USE_MISC) || defined (_ASM)
-#define	JB_SP	0
-#define	JB_FP	1
-#define	JB_PC	2
+#ifndef _SETJMP_H
+# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
+#endif
+
+#if defined __USE_MISC || defined _ASM
+# define JB_SP	0
+# define JB_FP	1
+# define JB_PC	2
 #endif
 
 #ifndef	_ASM

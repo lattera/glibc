@@ -21,23 +21,9 @@
  * Never include this file directly; use <time.h> instead.
  */
 
-#ifdef __need_timeval
-# undef __need_timeval
-# ifndef _STRUCT_TIMEVAL
-#  define _STRUCT_TIMEVAL	1
-/* A time value that is accurate to the nearest
-   microsecond but also has a range of years.  */
-struct timeval
-  {
-    time_t tv_sec;		/* Seconds.  */
-    time_t tv_usec;		/* Microseconds.  */
-  };
-# endif	/* struct timeval */
-#endif	/* need timeval */
-
-
-#ifndef _BITS_TIME_H
-#define _BITS_TIME_H	1
+#ifndef __need_timeval
+# ifndef _BITS_TIME_H
+#  define _BITS_TIME_H	1
 
 /* ISO/IEC 9899:1990 7.12.1: <time.h>
    The macro `CLOCKS_PER_SEC' is the number per second of the value
@@ -45,12 +31,26 @@ struct timeval
 /* CAE XSH, Issue 4, Version 2: <time.h>
    The value of CLOCKS_PER_SEC is required to be 1 million on all
    XSI-conformant systems. */
-# define CLOCKS_PER_SEC  1000000
+#  define CLOCKS_PER_SEC  1000000
 
-# ifndef __STRICT_ANSI__
+#  ifndef __STRICT_ANSI__
 /* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
    presents the real value for clock ticks per second for the system.  */
-#  define CLK_TCK 100
-# endif
+#   define CLK_TCK 100
+#  endif
 
-#endif	/* bits/time.h */
+# endif	/* bits/time.h */
+#endif
+
+#ifndef _STRUCT_TIMEVAL
+# define _STRUCT_TIMEVAL	1
+# include <bits/types.h>
+
+/* A time value that is accurate to the nearest
+   microsecond but also has a range of years.  */
+struct timeval
+  {
+    __time_t tv_sec;		/* Seconds.  */
+    __time_t tv_usec;		/* Microseconds.  */
+  };
+#endif	/* struct timeval */

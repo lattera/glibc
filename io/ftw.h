@@ -26,7 +26,7 @@
 #include <features.h>
 
 #include <sys/types.h>
-#include <bits/stat.h>
+#include <sys/stat.h>
 
 
 __BEGIN_DECLS

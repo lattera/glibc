@@ -17,8 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _BITS_BYTESWAP_H
-#define _BITS_BYTESWAP_H	1
+#if !defined _BYTESWAP_H && !defined _NETINET_IN_H
+# error "Never use <bits/byteswap.h> directly; include <byteswap.h> instead."
+#endif
 
 /* Swap bytes in 16 bit value.  */
 #define __bswap_constant_16(x) \
@@ -88,5 +89,3 @@
 	__r.__l[1] = __bswap_32 (__v.__l[0]);				      \
 	__r.__ll; })
 #endif
-
-#endif /* bits/byteswap.h */

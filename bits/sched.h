@@ -1,6 +1,6 @@
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
    Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifndef _SCHED_H
-#error "Never use <bits/sched.h> directly; include <sched.h> instead."
+# error "Never include <bits/sched.h> directly; use <sched.h> instead."
 #endif
 
 

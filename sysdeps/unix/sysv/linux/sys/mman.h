@@ -18,10 +18,9 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_MMAN_H
-
 #define	_SYS_MMAN_H	1
-#include <features.h>
 
+#include <features.h>
 #include <bits/types.h>
 #define __need_size_t
 #include <stddef.h>

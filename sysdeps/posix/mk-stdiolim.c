@@ -21,6 +21,32 @@
 int
 main()
 {
+  /* Print copyright message.  */
+  printf ("\
+/* Stdio limits for POSIX systems.\n\
+   Copyright (C) 1994, 1997 Free Software Foundation, Inc.\n\
+   This file is part of the GNU C Library.\n\
+\n\
+   The GNU C Library is free software; you can redistribute it and/or\n\
+   modify it under the terms of the GNU Library General Public License as\n\
+   published by the Free Software Foundation; either version 2 of the\n\
+   License, or (at your option) any later version.\n\
+\n\
+   The GNU C Library is distributed in the hope that it will be useful,\n\
+   but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n\
+   Library General Public License for more details.\n\
+\n\
+   You should have received a copy of the GNU Library General Publicn\n\
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,\n\
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,\n\
+   Boston, MA 02111-1307, USA.  */\n\
+\n\
+#ifndef _STDIO_H\n\
+# error \"Never include <bits/stdio_lim.h> directly; use <stdio.h> instead.\"\n\
+#endif\n\
+\n");
+
   /* These values correspond to the code in sysdeps/posix/tempname.c.
      Change the values here if you change that code.  */
   printf ("#define L_tmpnam %u\n", sizeof ("/usr/tmp/") + 9);

@@ -16,8 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _BITS_DIRENT_H
-#define _BITS_DIRENT_H	1
+#ifndef _DIRENT_H
+# error "Never use <bits/dirent.h> directly; include <dirent.h> instead."
+#endif
 
 struct dirent
   {
@@ -50,5 +51,3 @@ struct dirent64
 #define _DIRENT_HAVE_D_RECLEN
 #define _DIRENT_HAVE_D_OFF
 #define _DIRENT_HAVE_D_TYPE
-
-#endif /* bits/dirent.h */

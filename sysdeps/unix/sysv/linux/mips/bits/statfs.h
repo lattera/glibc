@@ -16,12 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/statfs.h> instead.
- */
-
-#ifndef _BITS_STATFS_H
-#define _BITS_STATFS_H
+#ifndef _SYS_STATFS_H
+# error "Never include <bits/statfs.h> directly; use <sys/statfs.h> instead."
+#endif
 
 #include <bits/types.h>  /* for __fsid_t and __fsblkcnt_t*/
 
@@ -70,5 +67,3 @@ struct statfs64
     long int f_spare[6];
   };
 #endif
-
-#endif	/* bits/statfs.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -38,9 +38,8 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   if (s == NULL)
     {
       /* See first paragraph of description in 7.16.6.3.2.  */
-      pwc = NULL;
-      s = "";
-      n = 1;
+      ps->count = 0;
+      return 0;
     }
 
   if (n > 0)

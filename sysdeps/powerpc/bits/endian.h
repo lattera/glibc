@@ -18,6 +18,10 @@
 
 /* PowerPC can be little or big endian.  Hopefully gcc will know...  */
 
+#ifndef _ENDIAN_H
+# error "Never use <bits/endian.h> directly; include <endian.h> instead."
+#endif
+
 #if defined __BIG_ENDIAN__ || defined _BIG_ENDIAN
 # if defined __LITTLE_ENDIAN__ || defined _LITTLE_ENDIAN
 #  error Please fix sysdeps/powerpc/bits/endian.h (compiling bi-endian?).

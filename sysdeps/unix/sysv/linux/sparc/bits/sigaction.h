@@ -17,6 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _SIGNAL_H
+# error "Never include <bits/sigaction.h> directly; use <signal.h> instead."
+#endif
+
 /* Structure describing the action to be taken when a signal arrives.  */
 struct sigaction
   {
@@ -30,7 +34,7 @@ struct sigaction
     unsigned long sa_flags;
 
     /* Not used by Linux/Sparc yet.  */
-    void (*sa_restorer)(void);
+    void (*sa_restorer) __P ((void));
   };
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -17,10 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_IPC_BUF_H
-
-#define _SYS_IPC_BUF_H	1
-#include <features.h>
+#ifndef _SYS_IPC_H
+# error "Never use <bits/ipc.h> directly; include <sys/ipc.h> instead."
+#endif
 
 #include <sys/types.h>
 
@@ -34,23 +33,16 @@
 #define IPC_SET		1		/* set `ipc_perm' options */
 #define IPC_STAT	2		/* get `ipc_perm' options */
 
-
-__BEGIN_DECLS
-
 /* Special key values.  */
 #define IPC_PRIVATE	((key_t) 0)	/* private key */
 
 
 /* Data structure used to pass permission information to IPC operations.  */
 struct ipc_perm
-{
-  __uid_t uid;				/* owner's user ID */
-  __gid_t gid;				/* owner's group ID */
-  __uid_t cuid;				/* creator's user ID */
-  __gid_t cgid;				/* creator's group ID */
-  __mode_t mode;			/* read/write permission */
-};
-
-__END_DECLS
-
-#endif /* _SYS_IPC_BUF_H */
+  {
+    __uid_t uid;			/* owner's user ID */
+    __gid_t gid;			/* owner's group ID */
+    __uid_t cuid;			/* creator's user ID */
+    __gid_t cgid;			/* creator's group ID */
+    __mode_t mode;			/* read/write permission */
+  };

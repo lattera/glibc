@@ -21,6 +21,16 @@
  * Never include this file directly; use <time.h> instead.
  */
 
+#ifndef __need_timeval
+# ifndef _BITS_TIME_H
+#  define _BITS_TIME_H	1
+
+#  define CLOCKS_PER_SEC 60
+
+# endif	/* bits/time.h */
+#endif
+
+
 #ifdef __need_timeval
 # undef __need_timeval
 # ifndef _STRUCT_TIMEVAL
@@ -34,11 +44,3 @@ struct timeval
   };
 # endif	/* struct timeval */
 #endif	/* need timeval */
-
-
-#ifndef _BITS_TIME_H
-#define	_BITS_TIME_H	1
-
-#define CLOCKS_PER_SEC 60
-
-#endif	/* bits/time.h */

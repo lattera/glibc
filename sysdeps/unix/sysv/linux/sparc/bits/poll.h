@@ -16,6 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _SYS_POLL_H
+# error "Never use <bits/poll.h> directly; include <sys/poll.h> instead."
+#endif
 
 /* Event types that can be polled for.  These bits may be set in `events'
    to indicate the interesting event types; they will appear in `revents'

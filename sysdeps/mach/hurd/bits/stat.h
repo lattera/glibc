@@ -16,12 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/stat.h> instead.
- */
-
-#ifndef	_BITS_STAT_H
-#define	_BITS_STAT_H	1
+#ifndef _SYS_STAT_H
+# error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
+#endif
 
 #include <bits/types.h>
 
@@ -189,6 +186,3 @@ struct stat64
 #ifdef	__USE_BSD
 #define	CMASK		0022
 #endif
-
-
-#endif /* bits/stat.h */

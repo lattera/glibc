@@ -163,11 +163,11 @@ One can use it to easily construct complex number like in
 @smallexample
 3.0 - _Imaginary_I * 4.0
 @end smallexample
-@end deftypevr
 
 @noindent
 which results in the complex number with a real part of 3.0 and a
 imaginary part -4.0.
+@end deftypevr
 
 @noindent
 A more intuitive approach is to use the following macro.

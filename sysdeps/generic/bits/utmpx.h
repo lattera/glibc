@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _UTMPX_H
-#error "Never use <bits/utmpx.h> directly; include <utmpx.h> instead."
+# error "Never include <bits/utmpx.h> directly; use <utmpx.h> instead."
 #endif
 
 
@@ -26,9 +26,9 @@
 #define	__UT_HOSTSIZE	16
 
 struct utmpx
-{
-  char ut_line[__UT_LINESIZE];
-  char ut_name[__UT_NAMESIZE];
-  char ut_host[__UT_HOSTSIZE];
-  long ut_time;
-};
+  {
+    char ut_line[__UT_LINESIZE];
+    char ut_name[__UT_NAMESIZE];
+    char ut_host[__UT_HOSTSIZE];
+    long int ut_time;
+  };

@@ -17,20 +17,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <termios.h> instead.
- */
-
-
-#ifndef _BITS_TERMIOS_H
-#define _BITS_TERMIOS_H 1
+#ifndef _TERMIOS_H
+# error "Never include <bits/termios.h> directly; use <termios.h> instead."
+#endif
 
 typedef unsigned char	cc_t;
 typedef unsigned int	speed_t;
 typedef unsigned int	tcflag_t;
 
 
-#if defined __USE_BSD
+#ifdef __USE_BSD
 
 struct sgttyb
   {
@@ -83,10 +79,10 @@ struct termios
 #define VKILL		 3		/* Kill-line character [ICANON].  */
 #define VMIN		 4		/* Minimum number of bytes read at once [!ICANON].  */
 #define VTIME		 5		/* Time-out value (tenths of a second) [!ICANON].  */
-#if defined (__USE_BSD)
-#define VEOL2		 6		/* Second EOL character [ICANON].  */
+#ifdef __USE_BSD
+# define VEOL2		 6		/* Second EOL character [ICANON].  */
 /* The next two are guesses ... */
-#define VSWTC		 7		/* ??? */
+# define VSWTC		 7		/* ??? */
 #endif
 #define VSWTCH		VSWTC
 #define VSTART		 8		/* Start (X-ON) character [IXON, IXOFF].  */
@@ -96,17 +92,17 @@ struct termios
 /*
  * VDSUSP is not supported
  */
-#if defined (__USE_BSD)
+#if defined __USE_BSD
 #define VDSUSP		11		/* Delayed suspend character [ISIG].  */
 #endif
 #endif
-#if defined (__USE_BSD)
-#define VREPRINT	12		/* Reprint-line character [ICANON].  */
+#ifdef __USE_BSD
+# define VREPRINT	12		/* Reprint-line character [ICANON].  */
 #endif
-#if defined (__USE_BSD)
-#define VDISCARD	13		/* Discard character [IEXTEN].  */
-#define VWERASE		14		/* Word-erase character [ICANON].  */
-#define VLNEXT		15		/* Literal-next character [IEXTEN].  */
+#ifdef __USE_BSD
+# define VDISCARD	13		/* Discard character [IEXTEN].  */
+# define VWERASE	14		/* Word-erase character [ICANON].  */
+# define VLNEXT		15		/* Literal-next character [IEXTEN].  */
 #endif
 #define VEOF		16		/* End-of-file character [ICANON].  */
 #define VEOL		17		/* End-of-line character [ICANON].  */
@@ -121,51 +117,51 @@ struct termios
 #define INLCR	0000100		/* Map NL to CR on input.  */
 #define IGNCR	0000200		/* Ignore CR.  */
 #define ICRNL	0000400		/* Map CR to NL on input.  */
-#if defined (__USE_BSD)
-#define IUCLC	0001000		/* Map upper case to lower case on input.  */
+#ifdef __USE_BSD
+# define IUCLC	0001000		/* Map upper case to lower case on input.  */
 #endif
 #define IXON	0002000		/* Enable start/stop output control.  */
-#if defined (__USE_BSD)
-#define IXANY	0004000		/* Any character will restart after stop.  */
+#ifdef __USE_BSD
+# define IXANY	0004000		/* Any character will restart after stop.  */
 #endif
 #define IXOFF	0010000		/* Enable start/stop input control.  */
-#if defined (__USE_BSD)
-#define IMAXBEL	0020000		/* Ring bell when input queue is full.  */
+#ifdef __USE_BSD
+# define IMAXBEL 0020000	/* Ring bell when input queue is full.  */
 #endif
 
 /* c_oflag bits */
 #define OPOST	0000001		/* Perform output processing.  */
-#if defined (__USE_BSD)
-#define OLCUC	0000002		/* Map lower case to upper case on output.  */
-#define ONLCR	0000004		/* Map NL to CR-NL on output.  */
-#define OCRNL	0000010
-#define ONOCR	0000020
-#define ONLRET	0000040
-#define OFILL	0000100
-#define OFDEL	0000200
-#define NLDLY	0000400
-#define   NL0	0000000
-#define   NL1	0000400
-#define CRDLY	0003000
-#define   CR0	0000000
-#define   CR1	0001000
-#define   CR2	0002000
-#define   CR3	0003000
-#define TABDLY	0014000
-#define   TAB0	0000000
-#define   TAB1	0004000
-#define   TAB2	0010000
-#define   TAB3	0014000
-#define   XTABS	0014000
-#define BSDLY	0020000
-#define   BS0	0000000
-#define   BS1	0020000
-#define VTDLY	0040000
-#define   VT0	0000000
-#define   VT1	0040000
-#define FFDLY	0100000
-#define   FF0	0000000
-#define   FF1	0100000
+#ifdef __USE_BSD
+# define OLCUC	0000002		/* Map lower case to upper case on output.  */
+# define ONLCR	0000004		/* Map NL to CR-NL on output.  */
+# define OCRNL	0000010
+# define ONOCR	0000020
+# define ONLRET	0000040
+# define OFILL	0000100
+# define OFDEL	0000200
+# define NLDLY	0000400
+# define   NL0	0000000
+# define   NL1	0000400
+# define CRDLY	0003000
+# define   CR0	0000000
+# define   CR1	0001000
+# define   CR2	0002000
+# define   CR3	0003000
+# define TABDLY	0014000
+# define   TAB0	0000000
+# define   TAB1	0004000
+# define   TAB2	0010000
+# define   TAB3	0014000
+# define  XTABS	0014000
+# define BSDLY	0020000
+# define   BS0	0000000
+# define   BS1	0020000
+# define VTDLY	0040000
+# define   VT0	0000000
+# define   VT1	0040000
+# define FFDLY	0100000
+# define   FF0	0000000
+# define   FF1	0100000
 /*
 #define PAGEOUT ???
 #define WRAP    ???
@@ -203,14 +199,14 @@ struct termios
 #define PARODD	0001000		/* Odd parity instead of even.  */
 #define HUPCL	0002000		/* Hang up on last close.  */
 #define CLOCAL	0004000		/* Ignore modem status lines.  */
-#if defined (__USE_BSD)
-#define CBAUDEX 0010000
-#define  B57600  0010001
-#define  B115200 0010002
-#define  B230400 0010003
-#define  B460800 0010004
-#define CIBAUD	  002003600000	/* input baud rate (not used) */
-#define CRTSCTS	  020000000000		/* flow control */
+#ifdef __USE_BSD
+# define CBAUDEX  0010000
+# define  B57600  0010001
+# define  B115200 0010002
+# define  B230400 0010003
+# define  B460800 0010004
+# define CIBAUD	  002003600000	/* input baud rate (not used) */
+# define CRTSCTS  020000000000		/* flow control */
 #endif
 
 /* c_lflag bits */
@@ -223,14 +219,14 @@ struct termios
 #define ECHONL	0000100		/* Echo NL even if ECHO is off.  */
 #define NOFLSH	0000200		/* Disable flush after interrupt.  */
 #define IEXTEN	0000400		/* Enable DISCARD and LNEXT.  */
-#if defined (__USE_BSD)
-#define ECHOCTL	0001000		/* Echo control characters as ^X.  */
-#define ECHOPRT	0002000		/* Hardcopy visual erase.  */
-#define ECHOKE	0004000		/* Visual erase for KILL.  */
+#ifdef __USE_BSD
+# define ECHOCTL 0001000	/* Echo control characters as ^X.  */
+# define ECHOPRT 0002000	/* Hardcopy visual erase.  */
+# define ECHOKE	 0004000	/* Visual erase for KILL.  */
 #endif
 #define FLUSHO	0020000
-#if defined (__USE_BSD)
-#define PENDIN	0040000		/* Retype pending input (state).  */
+#ifdef __USE_BSD
+# define PENDIN	0040000		/* Retype pending input (state).  */
 #endif
 #define TOSTOP	0100000		/* Send SIGTTOU for background output.  */
 #define ITOSTOP	TOSTOP
@@ -256,5 +252,3 @@ struct termios
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
   _IOT (_IOTS (cflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
-
-#endif /* bits/termios.h */

@@ -1,6 +1,5 @@
 /* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Brendan Kehoe (brendan@zen.org).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,12 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/stat.h> instead.
- */
-
-#ifndef	_BITS_STAT_H
-#define	_BITS_STAT_H	1
+#ifndef _SYS_STAT_H
+# error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
+#endif
 
 #include <bits/types.h>
 
@@ -34,37 +30,37 @@
 /* Structure describing file characteristics.  */
 struct stat
   {
-    unsigned long st_dev;	/* Device.  */
-    long st_filler1[3];
-    unsigned long st_ino;		/* File serial number.		*/
-    unsigned long st_mode;	/* File mode.  */
-    unsigned long st_nlink;	/* Link count.  */
-    long st_uid;		/* User ID of the file's owner.	*/
-    long st_gid;		/* Group ID of the file's group.*/
-    unsigned long st_rdev;	/* Device number, if device.  */
-    long st_filler2[2];
+    unsigned long itn st_dev;	/* Device.  */
+    long int st_filler1[3];
+    unsigned long int st_ino;	/* File serial number.		*/
+    unsigned long int st_mode;	/* File mode.  */
+    unsigned long int st_nlink;	/* Link count.  */
+    long int st_uid;		/* User ID of the file's owner.	*/
+    long int st_gid;		/* Group ID of the file's group.*/
+    unsigned long int st_rdev;	/* Device number, if device.  */
+    long int st_filler2[2];
 
-    long st_size;		/* Size of file, in bytes.  */
+    long int st_size;		/* Size of file, in bytes.  */
     /* SVR4 added this extra long to allow for expansion of off_t.  */
-    long st_filler3;
+    long int st_filler3;
 
-    long st_atime;		/* Time of last access.  */
-    unsigned long st_atime_usec;
-    long st_mtime;		/* Time of last modification.  */
-    unsigned long st_mtime_usec;
-    long st_ctime;		/* Time of last status change.  */
-    unsigned long st_ctime_usec;
+    long int st_atime;		/* Time of last access.  */
+    unsigned long int st_atime_usec;
+    long int st_mtime;		/* Time of last modification.  */
+    unsigned long int st_mtime_usec;
+    long int st_ctime;		/* Time of last status change.  */
+    unsigned long int st_ctime_usec;
 
-    long st_blksize;		/* Optimal block size for I/O.  */
+    long int st_blksize;	/* Optimal block size for I/O.  */
 #define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
 
     __blkcnt_t st_blocks;	/* Number of 512-byte blocks allocated.  */
     char st_fstype[16];		/* The type of this filesystem.  */
     int st_aclcnt;
-    unsigned long st_level;
-    unsigned long st_flags;
-    unsigned long st_cmwlevel;
-    long st_filler4[4];
+    unsigned long int st_level;
+    unsigned long int st_flags;
+    unsigned long int st_cmwlevel;
+    long int st_filler4[4];
   };
 
 /* Encoding of the file mode.  */
@@ -90,5 +86,3 @@ struct stat
 #define	__S_IREAD	0400	/* Read by owner.  */
 #define	__S_IWRITE	0200	/* Write by owner.  */
 #define	__S_IEXEC	0100	/* Execute by owner.  */
-
-#endif	/* bits/stat.h */

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _FENV_H
-#error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
+# error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
 #endif
 
 
@@ -72,5 +72,5 @@ typedef unsigned long fenv_t;
 #endif
 
 /* For internal use only: access the fp state register.  */
-#define __fenv_stfsr(X)   __asm__("stx %%fsr,%0" : "=m"(X))
-#define __fenv_ldfsr(X)   __asm__ __volatile__("ldx %0,%%fsr" : : "m"(X))
+#define __fenv_stfsr(X)   __asm__ ("stx %%fsr,%0" : "=m" (X))
+#define __fenv_ldfsr(X)   __asm__ __volatile__ ("ldx %0,%%fsr" : : "m" (X))

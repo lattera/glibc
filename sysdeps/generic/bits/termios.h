@@ -1,5 +1,5 @@
 /* termios type and macro definitions.  4.4 BSD/generic GNU version.
-   Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,31 +17,35 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _TERMIOS_H
+# error "Never include <bits/termios.h> directly; use <termios.h> instead."
+#endif
+
 /* These macros are also defined in some <bits/ioctls.h> files (with
    numerically identical values), but this serves to shut up cpp's
    complaining. */
 #ifdef __USE_BSD
 
-#ifdef MDMBUF
-#undef MDMBUF
-#endif
-#ifdef FLUSHO
-#undef FLUSHO
-#endif
-#ifdef PENDIN
-#undef PENDIN
-#endif
+# ifdef MDMBUF
+#  undef MDMBUF
+# endif
+# ifdef FLUSHO
+#  undef FLUSHO
+# endif
+# ifdef PENDIN
+#  undef PENDIN
+# endif
 
 #endif /* __USE_BSD */
 
 #ifdef ECHO
-#undef ECHO
+# undef ECHO
 #endif
 #ifdef TOSTOP
-#undef TOSTOP
+# undef TOSTOP
 #endif
 #ifdef NOFLSH
-#undef NOFLSH
+# undef NOFLSH
 #endif
 
 
@@ -85,15 +89,15 @@ struct termios
   tcflag_t c_oflag;
 #define	OPOST	(1 << 0)	/* Perform output processing.  */
 #ifdef	__USE_BSD
-#define	ONLCR	(1 << 1)	/* Map NL to CR-NL on output.  */
-#define	OXTABS	(1 << 2)	/* Expand tabs to spaces.  */
-#define	ONOEOT	(1 << 8)	/* Discard EOT (^D) on output.  */
+# define ONLCR	(1 << 1)	/* Map NL to CR-NL on output.  */
+# define OXTABS	(1 << 2)	/* Expand tabs to spaces.  */
+# define ONOEOT	(1 << 8)	/* Discard EOT (^D) on output.  */
 #endif
 
   /* Control modes.  */
   tcflag_t c_cflag;
 #ifdef	__USE_BSD
-#define	CIGNORE	(1 << 0)	/* Ignore these control flags.  */
+# define CIGNORE	(1 << 0)	/* Ignore these control flags.  */
 #endif
 #define	CSIZE	(CS5|CS6|CS7|CS8)	/* Number of bits per byte (mask).  */
 #define	CS5	0		/* 5 bits per byte.  */
@@ -107,15 +111,15 @@ struct termios
 #define	HUPCL	(1 << 14)	/* Hang up on last close.  */
 #define	CLOCAL	(1 << 15)	/* Ignore modem status lines.  */
 #ifdef	__USE_BSD
-#define	CCTS_OFLOW	(1 << 16)	/* CTS flow control of output.  */
-#define	CRTS_IFLOW	(1 << 17)	/* RTS flow control of input.  */
-#define	MDMBUF		(1 << 20)	/* Carrier flow control of output.  */
+# define CCTS_OFLOW	(1 << 16)	/* CTS flow control of output.  */
+# define CRTS_IFLOW	(1 << 17)	/* RTS flow control of input.  */
+# define MDMBUF		(1 << 20)	/* Carrier flow control of output.  */
 #endif
 
   /* Local modes.  */
   tcflag_t c_lflag;
 #ifdef	__USE_BSD
-#define	ECHOKE	(1 << 0)	/* Visual erase for KILL.  */
+# define ECHOKE	(1 << 0)	/* Visual erase for KILL.  */
 #endif
 #define	_ECHOE	(1 << 1)	/* Visual erase for ERASE.  */
 #define	ECHOE	_ECHOE
@@ -126,15 +130,15 @@ struct termios
 #define	_ECHONL	(1 << 4)	/* Echo NL even if ECHO is off.  */
 #define	ECHONL	_ECHONL
 #ifdef	__USE_BSD
-#define	ECHOPRT	(1 << 5)	/* Hardcopy visual erase.  */
-#define	ECHOCTL	(1 << 6)	/* Echo control characters as ^X.  */
+# define ECHOPRT	(1 << 5)	/* Hardcopy visual erase.  */
+# define ECHOCTL	(1 << 6)	/* Echo control characters as ^X.  */
 #endif
 #define	_ISIG	(1 << 7)	/* Enable signals.  */
 #define	ISIG	_ISIG
 #define	_ICANON	(1 << 8)	/* Do erase and kill processing.  */
 #define	ICANON	_ICANON
 #ifdef	__USE_BSD
-#define	ALTWERASE (1 << 9)	/* Alternate WERASE algorithm.  */
+# define ALTWERASE (1 << 9)	/* Alternate WERASE algorithm.  */
 #endif
 #define	_IEXTEN	(1 << 10)	/* Enable DISCARD and LNEXT.  */
 #define	IEXTEN	_IEXTEN
@@ -142,9 +146,9 @@ struct termios
 #define	_TOSTOP	(1 << 22)	/* Send SIGTTOU for background output.  */
 #define	TOSTOP	_TOSTOP
 #ifdef	__USE_BSD
-#define	FLUSHO	(1 << 23)	/* Output being flushed (state).  */
-#define	NOKERNINFO (1 << 25)	/* Disable VSTATUS.  */
-#define	PENDIN	(1 << 29)	/* Retype pending input (state).  */
+# define FLUSHO	(1 << 23)	/* Output being flushed (state).  */
+# define NOKERNINFO (1 << 25)	/* Disable VSTATUS.  */
+# define PENDIN	(1 << 29)	/* Retype pending input (state).  */
 #endif
 #define	_NOFLSH	(1 << 31)	/* Disable flush after interrupt.  */
 #define	NOFLSH	_NOFLSH
@@ -153,32 +157,32 @@ struct termios
 #define	VEOF	0		/* End-of-file character [ICANON].  */
 #define	VEOL	1		/* End-of-line character [ICANON].  */
 #ifdef	__USE_BSD
-#define	VEOL2	2		/* Second EOL character [ICANON].  */
+# define VEOL2	2		/* Second EOL character [ICANON].  */
 #endif
 #define	VERASE	3		/* Erase character [ICANON].  */
 #ifdef	__USE_BSD
-#define	VWERASE	4		/* Word-erase character [ICANON].  */
+# define VWERASE	4		/* Word-erase character [ICANON].  */
 #endif
 #define	VKILL	5		/* Kill-line character [ICANON].  */
 #ifdef	__USE_BSD
-#define	VREPRINT 6		/* Reprint-line character [ICANON].  */
+# define VREPRINT 6		/* Reprint-line character [ICANON].  */
 #endif
 #define	VINTR	8		/* Interrupt character [ISIG].  */
 #define	VQUIT	9		/* Quit character [ISIG].  */
 #define	VSUSP	10		/* Suspend character [ISIG].  */
 #ifdef	__USE_BSD
-#define	VDSUSP	11		/* Delayed suspend character [ISIG].  */
+# define VDSUSP	11		/* Delayed suspend character [ISIG].  */
 #endif
 #define	VSTART	12		/* Start (X-ON) character [IXON, IXOFF].  */
 #define	VSTOP	13		/* Stop (X-OFF) character [IXON, IXOFF].  */
 #ifdef	__USE_BSD
-#define	VLNEXT	14		/* Literal-next character [IEXTEN].  */
-#define	VDISCARD 15		/* Discard character [IEXTEN].  */
+# define VLNEXT	14		/* Literal-next character [IEXTEN].  */
+# define VDISCARD 15		/* Discard character [IEXTEN].  */
 #endif
 #define	VMIN	16		/* Minimum number of bytes read at once [!ICANON].  */
 #define	VTIME	17		/* Time-out value (tenths of a second) [!ICANON].  */
 #ifdef	__USE_BSD
-#define	VSTATUS	18		/* Status character [ICANON].  */
+# define VSTATUS	18		/* Status character [ICANON].  */
 #endif
 #define	NCCS	20		/* Value duplicated in <hurd/tioctl.defs>.  */
   cc_t c_cc[NCCS];
@@ -202,8 +206,8 @@ struct termios
 #define	B19200	19200		/* 19200 baud.  */
 #define	B38400	38400		/* 38400 baud.  */
 #ifdef	__USE_BSD
-#define	EXTA	19200
-#define	EXTB	38400
+# define EXTA	19200
+# define EXTB	38400
 #endif
 };
 
@@ -215,7 +219,7 @@ struct termios
 #define	TCSADRAIN	1	/* Change when pending output is written.  */
 #define	TCSAFLUSH	2	/* Flush pending input before changing.  */
 #ifdef	__USE_BSD
-#define	TCSASOFT	0x10	/* Flag: Don't alter hardware state.  */
+# define TCSASOFT	0x10	/* Flag: Don't alter hardware state.  */
 #endif
 
 /* Values for the QUEUE_SELECTOR argument to `tcflush'.  */

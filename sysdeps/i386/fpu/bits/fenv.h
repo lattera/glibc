@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _FENV_H
-#error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
+# error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
 #endif
 
 
@@ -61,7 +61,8 @@ enum
 typedef unsigned short int fexcept_t;
 
 
-/* Type representing floating-point environment.  This function corresponds to the layout of the block written by the `fstenv'.  */
+/* Type representing floating-point environment.  This function corresponds
+   to the layout of the block written by the `fstenv'.  */
 typedef struct
   {
     unsigned short int control_word;

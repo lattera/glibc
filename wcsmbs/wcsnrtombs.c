@@ -63,7 +63,12 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 
   while (written < len && nwc-- > 0)
     {
-      wchar_t wc = *run++;
+      wchar_t wc;
+
+      /* Store position of first unprocessed word.  */
+      *src = run;
+
+      wc = *run++;
 
       if (wc < 0 || wc > 0x7fffffff)
 	{

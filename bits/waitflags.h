@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_WAIT_H
-#error "Never use <bits/waitflags.h> directly; include <sys/wait.h> instead."
+# error "Never include <bits/waitflags.h> directly; use <sys/wait.h> instead."
 #endif
 
 

@@ -17,6 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _SYS_RESOURCE_H
+# error "Never use <bits/resource.h> directly; include <sys/resource.h> instead."
+#endif
+
 #include <asm/resource.h>
 #include <bits/types.h>
 
@@ -148,7 +152,8 @@ enum __rusage_who
 #define RUSAGE_BOTH RUSAGE_BOTH
 };
 
-#include <sys/time.h>		/* For `struct timeval'.  */
+#define __need_timeval
+#include <bits/time.h>		/* For `struct timeval'.  */
 
 /* Structure which says how much of each resource has been used.  */
 struct rusage

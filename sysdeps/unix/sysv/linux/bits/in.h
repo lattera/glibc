@@ -18,8 +18,9 @@
 
 /* Linux version.  */
 
-#ifndef _NETINET_INBITS_H
-#define _NETINET_INBITS_H 1
+#ifndef _NETINET_IN_H
+# error "Never use <bits/in.h> directly; include <netinet/in.h> instead."
+#endif
 
 /* Options for use with `getsockopt' and `setsockopt' at the IP level.
    The first word in the comment at the right is the data type used;
@@ -71,5 +72,3 @@ struct ip_mreq
 #define IPV6_MULTICAST_LOOP	19
 #define IPV6_ADD_MEMBERSHIP	20
 #define IPV6_DROP_MEMBERSHIP	21
-
-#endif	/* netinet/inbits.h */

@@ -52,7 +52,12 @@ __mbsrtowcs (dst, src, len, ps)
     {
       wchar_t value;
       size_t count;
-      unsigned char byte = *run++;
+      unsigned char byte;
+
+      /* Store address of next byte to process.  */
+      *src = run;
+
+      byte = *run++;
 
       /* We expect a start of a new multibyte character.  */
       if (byte < 0x80)

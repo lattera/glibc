@@ -17,11 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _UTMP_H
-# error "Never use <bits/utmp.h> directly; include <utmp.h> instead."
+# error "Never include <bits/utmp.h> directly; use <utmp.h> instead."
 #endif
-
-
-#include <features.h>
 
 #include <paths.h>
 #include <time.h>
@@ -31,7 +28,6 @@
 #define	UT_LINESIZE	8
 #define	UT_HOSTSIZE	16
 
-__BEGIN_DECLS
 
 struct lastlog
   {
@@ -51,5 +47,3 @@ struct utmp
 
 
 #define _HAVE_UT_HOST 1		/* We have the ut_host field.  */
-
-__END_DECLS

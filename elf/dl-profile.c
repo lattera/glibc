@@ -402,7 +402,16 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 
   /* Setup counting data.  */
   if (kcountsize < highpc - lowpc)
-    s_scale = ((double) kcountsize / (highpc - lowpc)) * SCALE_1_TO_1;
+    {
+      /* XXX I've not yet verified that the second expression is really
+	 well suited but something like this is in any case necessary
+	 for targets without hardware FP support.  --drepper  */
+#if 0
+      s_scale = ((double) kcountsize / (highpc - lowpc)) * SCALE_1_TO_1;
+#else
+      s_scale = (kcountsize * SCALE_1_TO_1) / (highpc - lowpc);
+#endif
+    }
   else
     s_scale = SCALE_1_TO_1;
 

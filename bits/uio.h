@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_UIO_H
-#error "Never use <bits/uio.h> directly; include <sys/uio.h> instead."
+# error "Never include <bits/uio.h> directly; use <sys/uio.h> instead."
 #endif
 
 

@@ -1,6 +1,5 @@
 /* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -35,10 +34,10 @@
 /* Segment low boundary address multiple.  */
 #define SHMLBA		getpagesize ()
 
-__BEGIN_DECLS
-
 /* The following System V style IPC functions implement a shared memory
    facility.  The definition is found in XPG4.2.  */
+
+__BEGIN_DECLS
 
 /* Shared memory control operation.  */
 extern int shmctl __P ((int __shmid, int __cmd, struct shmid_ds *__buf));

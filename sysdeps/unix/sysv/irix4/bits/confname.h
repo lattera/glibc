@@ -17,6 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _UNISTD_H
+# error "Never use <bits/confname.h> directly; include <unistd.h> instead."
+#endif
+
 /* Values for the NAME argument to `pathconf' and `fpathconf'.  */
 enum
   {

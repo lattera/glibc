@@ -16,11 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _JMP_BUF_H 
-#define _JMP_BUF_H 1
+
+#ifndef _SETJMP_H
+# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
+#endif
 
 #include <ucontext.h>
 
 typedef ucontext_t __jmp_buf[1];
-
-#endif /* jmp_buf.h */

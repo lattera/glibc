@@ -1,6 +1,5 @@
 /* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,10 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_SEM_BUF_H
-
-#define _SYS_SEM_BUF_H	1
-#include <features.h>
+#ifndef _SYS_SEM_H
+# error "Never include <bits/sem.h> directly; use <sys/sem.h> instead."
+#endif
 
 #include <sys/types.h>
 
@@ -36,8 +34,6 @@
 #define SETVAL		16		/* set semval */
 #define SETALL		17		/* set all semval's */
 
-
-__BEGIN_DECLS
 
 /* Data structure describing a set of semaphores.  */
 struct semid_ds
@@ -64,8 +60,8 @@ union semun
 #ifdef __USE_MISC
 
 /* ipcs ctl cmds */
-#define SEM_STAT 18
-#define SEM_INFO 19
+# define SEM_STAT 18
+# define SEM_INFO 19
 
 struct  seminfo
 {
@@ -82,7 +78,3 @@ struct  seminfo
 };
 
 #endif /* __USE_MISC */
-
-__END_DECLS
-
-#endif /* bits/sem_buf.h */

@@ -154,6 +154,15 @@ extern size_t strspn __P ((__const char *__s, __const char *__accept));
 extern char *strpbrk __P ((__const char *__s, __const char *__accept));
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 extern char *strstr __P ((__const char *__haystack, __const char *__needle));
+
+#ifdef __USE_GNU
+/* Similar to `strstr' but this function ignores the case of both strings.  */
+extern char *__strcasestr __P ((__const char *__haystack,
+				__const char *__needle));
+extern char *strcasestr __P ((__const char *__haystack,
+			      __const char *__needle));
+#endif
+
 /* Divide S into tokens separated by characters in DELIM.  */
 extern char *strtok __P ((char *__restrict __s,
 			  __const char *__restrict __delim));

@@ -1,6 +1,5 @@
 /* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,10 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_IPC_BUF_H
-
-#define _SYS_IPC_BUF_H	1
-#include <features.h>
+#ifndef _SYS_IPC_H
+# error "Never use <bits/ipc.h> directly; include <sys/ipc.h> instead."
+#endif
 
 #include <sys/types.h>
 
@@ -34,9 +32,6 @@
 #define IPC_SET		1		/* Set `ipc_perm' options.  */
 #define IPC_STAT	2		/* Get `ipc_perm' options.  */
 #define IPC_INFO	3		/* See ipcs.  */
-
-
-__BEGIN_DECLS
 
 /* Special key values.  */
 #define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
@@ -63,9 +58,14 @@ struct ipc_kludge
     long int msgtyp;
   };
 
+
+__BEGIN_DECLS
+
 /* The actual system call: all functions are multiplexed by this.  */
 extern int __ipc __P ((int __call, int __first, int __second, int __third,
 		       void *__ptr));
+
+__END_DECLS
 
 /* The codes for the functions to use the multiplexer `__ipc'.  */
 #define IPCOP_semop	 1
@@ -79,7 +79,3 @@ extern int __ipc __P ((int __call, int __first, int __second, int __third,
 #define IPCOP_shmdt	22
 #define IPCOP_shmget	23
 #define IPCOP_shmctl	24
-
-__END_DECLS
-
-#endif /* bits/ipc_buf.h */

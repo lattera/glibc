@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/ioctl.h> instead.
- */
-
-#ifndef _BITS_IOCTLS_H
-#define _BITS_IOCTLS_H 1
+#ifndef _SYS_IOCTL_H
+# error "Never use <bits/ioctls.h> directly; include <sys/ioctl.h> instead."
+#endif
 
 /* Use the definitions from the kernel header files.  */
 #include <asm/ioctls.h>
 #include <linux/sockios.h>
-
-#endif /* bits/ioctls.h  */

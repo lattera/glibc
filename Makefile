@@ -334,6 +334,9 @@ FORCE:
 rpm/%: subdir_distinfo
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) subdirs='$(subdirs)' $(@F)
 
+iconvdata/%:
+	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+
 # This is a special goal for people making binary distributions.  Normally
 # everybody uses the DES based crypt library but for the distribution we
 # need the only-MD5 based one as well.

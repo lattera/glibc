@@ -17,6 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _DIRENT_H
+# error "Never use <bits/dirent.h> directly; include <dirent.h> instead."
+#endif
+
 struct dirent
   {
     unsigned short int d_fileno;

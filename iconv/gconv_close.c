@@ -40,11 +40,11 @@ __gconv_close (gconv_t cd)
       if (srunp->end_fct != NULL)
 	(*srunp->end_fct) (drunp);
       else
-	{
-	  free (drunp->outbuf);
-	  if (drunp->data != NULL)
-	    free (drunp->data);
-	}
+	if (drunp->data != NULL)
+	  free (drunp->data);
+
+      if (!drunp->is_last && drunp->outbuf != NULL)
+	free (drunp->outbuf);
 
       /* Next step.  */
       ++srunp;

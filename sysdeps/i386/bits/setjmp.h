@@ -1,12 +1,16 @@
 /* Define the machine-dependent type `jmp_buf'.  Intel 386 version.  */
 
-#if	defined (__USE_MISC) || defined (_ASM)
-#define	JB_BX	0
-#define	JB_SI	1
-#define	JB_DI	2
-#define	JB_BP	3
-#define	JB_SP	4
-#define	JB_PC	5
+#ifndef _SETJMP_H
+# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
+#endif
+
+#if defined __USE_MISC || defined _ASM
+# define JB_BX	0
+# define JB_SI	1
+# define JB_DI	2
+# define JB_BP	3
+# define JB_SP	4
+# define JB_PC	5
 #endif
 
 #ifndef	_ASM

@@ -16,32 +16,29 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/ioctl.h> instead.
- */
-
-#ifndef	_BITS_IOCTLS_H
-#define	_BITS_IOCTLS_H	1
+#ifndef _SYS_IOCTL_H
+# error "Never use <bits/ioctls.h> directly; include <sys/ioctl.h> instead."
+#endif
 
 /* These macros are also defined in <bits/termios.h> (with numerically
    identical values) but this serves to shut up cpp's complaining. */
 #ifdef MDMBUF
-#undef MDMBUF
+# undef MDMBUF
 #endif
 #ifdef ECHO
-#undef ECHO
+# undef ECHO
 #endif
 #ifdef TOSTOP
-#undef TOSTOP
+# undef TOSTOP
 #endif
 #ifdef FLUSHO
-#undef FLUSHO
+# undef FLUSHO
 #endif
 #ifdef PENDIN
-#undef PENDIN
+# undef PENDIN
 #endif
 #ifdef NOFLSH
-#undef NOFLSH
+# undef NOFLSH
 #endif
 
 /* Hurd ioctl request are made up of several fields:
@@ -331,23 +328,20 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 
 /* From 4.4 <sys/ttydev.h>.   */
 #ifdef USE_OLD_TTY
-#define B0	0
-#define B50	1
-#define B75	2
-#define B110	3
-#define B134	4
-#define B150	5
-#define B200	6
-#define B300	7
-#define B600	8
-#define B1200	9
-#define	B1800	10
-#define B2400	11
-#define B4800	12
-#define B9600	13
-#define EXTA	14
-#define EXTB	15
+# define B0	0
+# define B50	1
+# define B75	2
+# define B110	3
+# define B134	4
+# define B150	5
+# define B200	6
+# define B300	7
+# define B600	8
+# define B1200	9
+# define B1800	10
+# define B2400	11
+# define B4800	12
+# define B9600	13
+# define EXTA	14
+# define EXTB	15
 #endif /* USE_OLD_TTY */
-
-
-#endif /* bits/ioctls.h */

@@ -1,4 +1,4 @@
-/* pty.h - Functions for pseudo TTY handling.
+/* Functions for pseudo TTY handling.
    Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,8 +22,8 @@
 
 #include <features.h>
 
-#include <bits/ioctl-types.h>
 #include <termios.h>
+#include <sys/ioctl.h>
 
 
 __BEGIN_DECLS

@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_WAIT_H
-#error "Never use <bits/waitflags.h> directly; include <sys/wait.h> instead."
+# error "Never include <bits/waitflags.h> directly; use <sys/wait.h> instead."
 #endif
 
 
@@ -26,5 +26,5 @@
 #define	WNOHANG		1	/* Don't block waiting.  */
 #define	WUNTRACED	2	/* Report status of stopped children.  */
 #ifdef  __USE_GNU
-#define WNOREAP		4	/* Don't remove record of child reported.  */
+# define WNOREAP	4	/* Don't remove record of child reported.  */
 #endif

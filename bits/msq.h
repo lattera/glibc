@@ -1,6 +1,5 @@
 /* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,14 +20,11 @@
 #error "Never use <bits/msq.h> directly; include <sys/msg.h> instead."
 #endif
 
-
-#include <features.h>
 #include <sys/types.h>
 
 /* Define options for message queue functions.  */
 #define MSG_NOERROR	010000	/* no error if message is too big */
 
-__BEGIN_DECLS
 
 /* Structure of record for one message inside the kernel.
    The type `struct __msg' is opaque.  */
@@ -43,5 +39,3 @@ struct msqid_ds
   __pid_t msg_lspid;		/* pid of last msgsnd() */
   __pid_t msg_lrpid;		/* pid of last msgrcv() */
 };
-
-__END_DECLS

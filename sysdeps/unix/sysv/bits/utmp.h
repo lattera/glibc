@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _UTMP_H
-#error "Never use <bits/utmp.h> directly; include <utmp.h> instead."
+# error "Never include <bits/utmp.h> directly; use <utmp.h> instead."
 #endif
 
 
@@ -28,7 +28,6 @@
 #define _PATH_WTMP      "/var/adm/wtmp"
 #define _PATH_LASTLOG   "/var/adm/lastlog"
 
-__BEGIN_DECLS
 
 struct utmp
   {
@@ -36,14 +35,14 @@ struct utmp
     char ut_user[8];
     char ut_id[4];
     char ut_line[12];
-    short ut_pid;
-    short ut_type;
+    short int ut_pid;
+    short int ut_type;
     struct exit_status
       {
-	short e_termination;
-	short e_exit;
+	short int e_termination;
+	short int e_exit;
       } ut_exit;
-    time_t ut_time;
+    __time_t ut_time;
   };
 
 
@@ -53,5 +52,3 @@ struct utmp
 #define _HAVE_UT_ID	1
 #define _HAVE_UT_TV	1
 #define _HAVE_UT_HOST	1
-
-__END_DECLS

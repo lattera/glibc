@@ -17,6 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _SIGNAL_H
+# error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
+#endif
+
 /* State of this thread when the signal was taken.  */
 struct sigcontext
   {

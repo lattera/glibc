@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <gconv.h>
 #include <stdlib.h>
 #include <string.h>
@@ -112,22 +113,33 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
     }
   else
     {
+      int save_errno = errno;
       do_write = 0;
 
       do
 	{
 	  const char *newinbuf = inbuf;
-	  size_t actually = __wmemrtombs (&data->outbuf[data->outbufavail],
-					  (const wchar_t **) &newinbuf,
-					  *inlen / sizeof (wchar_t),
-					  data->outbufsize - data->outbufavail,
-					  (mbstate_t *) data->data);
+	  size_t actually;
+
+	  errno = 0;
+	  actually = __wmemrtombs (&data->outbuf[data->outbufavail],
+				   (const wchar_t **) &newinbuf,
+				   *inlen / sizeof (wchar_t),
+				   data->outbufsize - data->outbufavail,
+				   (mbstate_t *) data->data);
 
 	  /* Remember how much we converted.  */
 	  do_write += newinbuf - inbuf;
 	  *inlen -= (newinbuf - inbuf) * sizeof (wchar_t);
 
 	  data->outbufavail += actually;
+
+	  /* Check whether an illegal character appeared.  */
+	  if (errno != 0)
+	    {
+	      result = GCONV_ILLEGAL_INPUT;
+	      break;
+	    }
 
 	  if (data->is_last)
 	    {
@@ -159,6 +171,8 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 	    }
 	}
       while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
+
+      __set_errno (save_errno);
     }
 
   if (written != NULL && data->is_last)
@@ -201,23 +215,40 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
     }
   else
     {
+      int save_errno = errno;
       do_write = 0;
 
       do
 	{
 	  const char *newinbuf = inbuf;
-	  size_t actually = __wmemrtowcs ((wchar_t *) &data->outbuf[data->outbufavail],
-					  &newinbuf, *inlen,
-					  ((data->outbufsize
-					    - data->outbufavail)
-					   / sizeof (wchar_t)),
-					  (mbstate_t *) data->data);
+	  size_t actually;
+
+	  errno = 0;
+	  actually = __wmemrtowcs ((wchar_t *) &data->outbuf[data->outbufavail],
+				   &newinbuf, *inlen,
+				   ((data->outbufsize
+				     - data->outbufavail) / sizeof (wchar_t)),
+				   (mbstate_t *) data->data);
 
 	  /* Remember how much we converted.  */
 	  do_write += actually;
 	  *inlen -= newinbuf - inbuf;
 
 	  data->outbufavail += actually * sizeof (wchar_t);
+
+	  /* Check whether an illegal character appeared.  */
+	  if (errno != 0)
+	    {
+	      result = GCONV_ILLEGAL_INPUT;
+	      break;
+	    }
+
+	  if (*inlen == 0 && !mbsinit ((mbstate_t *) data->data))
+	    {
+	      /* We have an incomplete character at the end.  */
+	      result = GCONV_INCOMPLETE_INPUT;
+	      break;
+	    }
 
 	  if (data->is_last)
 	    {
@@ -249,6 +280,8 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 	    }
 	}
       while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
+
+      __set_errno (save_errno);
     }
 
   if (written != NULL && data->is_last)

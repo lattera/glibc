@@ -1,6 +1,5 @@
 /* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -20,7 +19,7 @@
 #ifndef _SYS_IPC_H
 #define _SYS_IPC_H	1
 
-#include <sys/cdefs.h>
+#include <features.h>
 
 /* Get system dependent definition of `struct ipc_perm' and more.  */
 #include <bits/ipc.h>

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _UTMP_H
-#error "Never use <bits/utmp.h> directly; include <utmpx.h> instead."
+# error "Never include <bits/utmp.h> directly; use <utmpx.h> instead."
 #endif
 
 #include <paths.h>
@@ -33,38 +33,38 @@
 /* The structure describing an entry in the database of
    previous logins.  */
 struct lastlog
-{
-  time_t ll_time;
-  char ll_line[UT_LINESIZE];
-  char ll_host[UT_HOSTSIZE];
-};
+  {
+    __time_t ll_time;
+    char ll_line[UT_LINESIZE];
+    char ll_host[UT_HOSTSIZE];
+  };
 
 
 /* The structure describing the status of a terminated process.  This
    type is used in `struct utmp' below.  */
 struct exit_status
-{
-  short int e_termination;	/* Process termination status.  */
-  short int e_exit;		/* Process exit status.  */
-};
+  {
+    short int e_termination;	/* Process termination status.  */
+    short int e_exit;		/* Process exit status.  */
+  };
 
 
 /* The structure describing an entry in the user accounting database.  */
 struct utmp
-{
-  short int ut_type;		/* Type of login.  */
-  pid_t ut_pid;			/* Process ID of login process.  */
-  char ut_line[UT_LINESIZE];	/* Devicename.  */
-  char ut_id[4];		/* Inittab ID.  */
-  char ut_user[UT_NAMESIZE];	/* Username.  */
-  char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
-  struct exit_status ut_exit;	/* Exit status of a process marked
+  {
+    short int ut_type;		/* Type of login.  */
+    pid_t ut_pid;		/* Process ID of login process.  */
+    char ut_line[UT_LINESIZE];	/* Devicename.  */
+    char ut_id[4];		/* Inittab ID.  */
+    char ut_user[UT_NAMESIZE];	/* Username.  */
+    char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
+    struct exit_status ut_exit;	/* Exit status of a process marked
 				   as DEAD_PROCESS.  */
-  long ut_session;		/* Session ID, used for windowing.  */
-  struct timeval ut_tv;		/* Time entry was made.  */
-  int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
-  char pad[20];			/* Reserved for future use.  */
-};
+    long ut_session;		/* Session ID, used for windowing.  */
+    struct timeval ut_tv;	/* Time entry was made.  */
+    int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
+    char pad[20];		/* Reserved for future use.  */
+  };
 
 /* Backwards compatibility hacks.  */
 #define ut_name		ut_user

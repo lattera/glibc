@@ -3,10 +3,14 @@
    want to be able to share the installed headerfiles between both,
    so we define __BYTE_ORDER based on GCC's predefines.  */
 
-#ifdef __MIPSEB__
-#define __BYTE_ORDER __BIG_ENDIAN
-#else
-#ifdef __MIPSEL__
-#define __BYTE_ORDER __LITTLE_ENDIAN
+#ifndef _ENDIAN_H
+# error "Never use <bits/endian.h> directly; include <endian.h> instead."
 #endif
+
+#ifdef __MIPSEB__
+# define __BYTE_ORDER __BIG_ENDIAN
+#else
+# ifdef __MIPSEL__
+#  define __BYTE_ORDER __LITTLE_ENDIAN
+# endif
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -48,8 +48,10 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 
   if (s == NULL)
     {
-      s = fake;
-      wc = L'\0';
+      /* This is equivalent to wcrtomb (<<internal>, L'\0', ps).  We
+	 only have to reset the state.  */
+      ps->count = 0;
+      return 1;
     }
 
   /* Store the UTF8 representation of WC.  */
@@ -65,6 +67,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
       /* It's a one byte sequence.  */
       if (s != NULL)
 	*s = (char) wc;
+      ps->count = 0;
       return 1;
     }
 

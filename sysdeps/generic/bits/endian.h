@@ -6,4 +6,8 @@
    So if cross-compiling to a machine with a different byte order,
    the bits/endian.h file for that machine must exist.  */
 
+#ifndef _ENDIAN_H
+# error "Never use <bits/endian.h> directly; include <endian.h> instead."
+#endif
+
 #error Machine byte order unknown.

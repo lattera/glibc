@@ -49,7 +49,7 @@ ac_help="$ac_help
   --disable-versioning    do not include versioning information in the
                           library objects [default=yes if supported]"
 ac_help="$ac_help
-  --enable-add-ons=DIR... configure and build named extra directories"
+  --enable-add-ons=DIR1,DIR2... configure and build named extra directories"
 ac_help="$ac_help
   --enable-static-nss     build static NSS modules [default=no]"
 
@@ -1989,7 +1989,7 @@ fi
 
 if test $VERSIONING = no; then
   echo "\
-*** WARNING: You should not compile GNU libc without versioning. Not using 
+*** WARNING: You should not compile GNU libc without versioning. Not using
 *** versioning will introduce incompatibilities so that old binaries
 *** will not run anymore.
 *** For versioning you need recent binutils (binutils-2.8.1.0.17 or newer)."

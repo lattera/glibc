@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SIGNAL_H
-#error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
+# error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
 
 

@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #define _ASM
+#define _SETJMP_H
 #include <bits/setjmp.h>
 
 	/* We include the BSD entry points here as well but we make
