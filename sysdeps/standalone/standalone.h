@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sys/cdefs.h>
 
-extern void _Board_Initialize __PP ((void));
+extern void _Board_Initialize __P ((void));
 
 extern int _Console_Putc __P ((char c));
 extern int _Console_Getc __P ((int poll));
