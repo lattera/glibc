@@ -1,3 +1,9 @@
+1998-03-08 22:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Delay initialization of path structure if
+	the dynamically linker is invoked implicitly until we read the
+	dynamic section.
+
 1998-03-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/chown.c: Add versioning stuff.

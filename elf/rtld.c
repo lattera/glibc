@@ -400,9 +400,8 @@ of this helper program; chances are you did not intend to run this program.\n",
       main_map->l_entry = *user_entry;
       main_map->l_opencount = 1;
 
-      /* Initialize the data structures for the search paths for shared
-	 objects.  */
-      _dl_init_paths (NULL);
+      /* We delay initializing the path structure until we got the dynamic
+	 information for the program.  */
     }
 
   /* Scan the program header table for the dynamic section.  */
@@ -469,6 +468,11 @@ of this helper program; chances are you did not intend to run this program.\n",
   if (main_map->l_info[DT_HASH])
     /* Set up our cache of pointers into the hash table.  */
     _dl_setup_hash (main_map);
+
+  if (*user_entry != (ElfW(Addr)) &ENTRY_POINT)
+    /* Initialize the data structures for the search paths for shared
+       objects.  */
+    _dl_init_paths (NULL);
 
   /* Put the link_map for ourselves on the chain so it can be found by
      name.  Note that at this point the global chain of link maps contains
