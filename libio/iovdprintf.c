@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 
 #include "libioP.h"
 #include "libio.h"
+#include <stdio_ext.h>
 
 int
 _IO_vdprintf (d, format, arg)
@@ -59,6 +60,9 @@ _IO_vdprintf (d, format, arg)
     (_IO_mask_flags (&tmpfil.file, _IO_NO_READS,
 		     _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING)
      | _IO_DELETE_DONT_CLOSE);
+#ifdef _IO_MTSAFE_IO
+  __fsetlocking ((FILE *) &tmpfil, FSETLOCKING_BYCALLER);
+#endif
 
   done = _IO_vfprintf ((_IO_FILE *) &tmpfil, format, arg);
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #include "strfile.h"
 #include "libioP.h"
 #include <string.h>
+#include <stdio_ext.h>
 
 #if 0
 /* The following definitions are for exposition only.
@@ -107,6 +108,11 @@ _IO_str_init_static (sf, ptr, size, pstart)
     }
   /* A null _allocate_buffer function flags the strfile as being static. */
   sf->_s._allocate_buffer = (_IO_alloc_type) 0;
+
+#ifdef _IO_MTSAFE_IO
+  /* We never have to lock this stream.  */
+  __fsetlocking ((FILE *) fp, FSETLOCKING_BYCALLER);
+#endif
 }
 
 void

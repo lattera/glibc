@@ -1,5 +1,5 @@
 /* Print output of stream to given obstack.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -28,6 +28,7 @@
 #include <errno.h>
 #include <obstack.h>
 #include <stdarg.h>
+#include <stdio_ext.h>
 
 
 struct _IO_obstack_file
@@ -166,6 +167,9 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
   obstack_blank_fast (obstack, room);
 
   new_f.ofile.obstack = obstack;
+#ifdef _IO_MTSAFE_IO
+  __fsetlocking ((FILE *) &new_f.ofile.file, FSETLOCKING_BYCALLER);
+#endif
 
   result = _IO_vfprintf ((_IO_FILE *) &new_f.ofile.file, format, args);
 

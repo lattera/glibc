@@ -29,6 +29,7 @@
 #include <string.h>
 #include "libioP.h"
 #include "stdio.h"
+#include <stdio_ext.h>
 #include "strfile.h"
 
 int
@@ -60,6 +61,9 @@ _IO_vasprintf (result_ptr, format, args)
   sf._sbf._f._flags &= ~_IO_USER_BUF;
   sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   sf._s._free_buffer = (_IO_free_type) free;
+#ifdef _IO_MTSAFE_IO
+  __fsetlocking ((FILE *) &sf, FSETLOCKING_BYCALLER);
+#endif
   ret = _IO_vfprintf ((_IO_FILE *) &sf, format, args);
   if (ret < 0)
     return ret;
