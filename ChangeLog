@@ -1,3 +1,10 @@
+1999-11-29  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/bits/byteswap.h (__bswap_32): Rename local variable
+	__v to __bswap_32_v.
+	(__bswap_64): Rename local variables __v and __r to __bswap_64_v
+	and __bswap_64_r to avoid clash with __bswap_32 macro.
+
 1999-11-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/t.61.c (CHARSET_NAME): Correct name to what is used in
