@@ -35,9 +35,9 @@ main (int argc, char *argv[])
 
   for (cnt = 0; cnt < (int) (sizeof (tests) / sizeof (tests[0])); ++cnt)
     {
-      md5_init_ctx (&ctx);
-      md5_process_bytes (tests[cnt].input, strlen (tests[cnt].input), &ctx);
-      md5_finish_ctx (&ctx, sum);
+      __md5_init_ctx (&ctx);
+      __md5_process_bytes (tests[cnt].input, strlen (tests[cnt].input), &ctx);
+      __md5_finish_ctx (&ctx, sum);
       result |= memcmp (tests[cnt].result, sum, 16);
     }
 

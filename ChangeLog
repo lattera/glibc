@@ -1,5 +1,8 @@
 1999-10-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* md5-crypt/md5test.c: Correct names of MD5 functions after
+	removing of public names.
+
 	* configure.in: Don't allow --enable-kernel without parameter.
 
 1999-10-25  Ulrich Drepper  <drepper@cygnus.com>
