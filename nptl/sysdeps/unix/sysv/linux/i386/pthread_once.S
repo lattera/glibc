@@ -105,8 +105,7 @@ __pthread_once:
 	pushl	%edx
 	call	__pthread_cleanup_push	/* Note: no @PLT.  */
 
-	movl	44(%esp), %eax
-	call	*%eax
+	call	*44(%esp)
 
 	/* Pop the cleanup handler.  This code depends on the once
 	   handler and _pthread_cleanup_push not touch the content
@@ -144,20 +143,17 @@ pthread_once = __pthread_once
 	.type	clear_once_control,@function
 	.align	16
 clear_once_control:
-	pushl	%esi
 	pushl	%ebx
 
-	movl	12(%esp), %ebx
+	movl	8(%esp), %ebx
 	movl	$0, (%ebx)
 
-	xorl	%esi, %esi
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
 	popl	%ebx
-	popl	%esi
 	ret
 	.size	clear_once_control,.-clear_once_control
 

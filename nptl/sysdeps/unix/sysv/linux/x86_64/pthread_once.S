@@ -38,18 +38,20 @@ __pthread_once:
 	testl	$2, (%rdi)
 	jz	1f
 	xorl	%eax, %eax
-0:	ret
+	retq
 
-1:	xorq	%rsi, %rsi
+	/* Preserve the function pointer.  */
+1:	pushq	%rsi
+	xorq	%r10, %r10
 
 	/* Not yet initialized or initialization in progress.
 	   Get the fork generation counter now.  */
 6:	movl	(%rdi), %eax
 
-5:	movq	%rax, %rdx
+5:	movl	%eax, %edx
 
 	testl	$2, %eax
-	jnz	0b
+	jnz	4f
 
 	andl	$3, %edx
 	orl	__fork_generation(%rip), %edx
@@ -70,8 +72,8 @@ __pthread_once:
 	jnz	3f	/* Different for generation -> run initializer.  */
 
 	/* Somebody else got here first.  Wait.  */
-	movq	%rsi, %rcx		/* movl $FUTEX_WAIT, %ecx */
-	movl	$SYS_futex, %eax
+	movq	%r10, %rsi		/* movl $FUTEX_WAIT, %ecx */
+	movq	$SYS_futex, %eax
 	syscall
 	jmp	6b
 
@@ -88,14 +90,11 @@ __pthread_once:
 	movq	%rsp, %rdi
 	call	__pthread_cleanup_push	/* Note: no @PLT.  */
 
-	movq	48(%rsp), %rax
-	call	*%rax
+	call	*40(%rsp)
 
-	/* Pop the cleanup handler.  This code depends on the once
-	   handler and _pthread_cleanup_push not touch the content
-	   of the stack.  Otherwise the first parameter would have
-	   to be reloaded.  */
-	xorq	%rdi, %rdi
+	/* Pop the cleanup handler.  */
+	movq	%rsp, %rdi
+	xorq	%rsi, %rsi
 	call	__pthread_cleanup_pop	/* Note: no @PLT.  */
 
 	addq	$32, %rsp
@@ -110,12 +109,12 @@ __pthread_once:
 	/* Wake up all other threads.  */
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %esi
-	xorq	%rcx, %rcx
-	movl	$SYS_futex, %eax
+	movq	$SYS_futex, %rax
 	syscall
 
-4:	xorq	%rax, %rax
-	ret
+4:	addq	$4, %rsp
+	xorq	%rax, %rax
+	retq
 
 	.size	__pthread_once,.-__pthread_once
 
@@ -128,11 +127,10 @@ pthread_once = __pthread_once
 clear_once_control:
 	movl	$0, (%rdi)
 
-	xorq	%rcx, %rcx
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %esi
-	movl	$SYS_futex, %eax
+	movq	$SYS_futex, %rax
 	syscall
 
-	ret
+	retq
 	.size	clear_once_control,.-clear_once_control

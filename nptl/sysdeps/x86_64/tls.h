@@ -60,30 +60,6 @@ typedef struct
 /* Get system call information.  */
 # include <sysdep.h>
 
-/* The old way: using LDT.  */
-
-/* Structure passed to `modify_ldt', 'set_thread_area', and 'clone' calls.  */
-struct user_desc
-{
-  unsigned int entry_number;
-  unsigned long int base_addr;
-  unsigned int limit;
-  unsigned int seg_32bit:1;
-  unsigned int contents:2;
-  unsigned int read_exec_only:1;
-  unsigned int limit_in_pages:1;
-  unsigned int seg_not_present:1;
-  unsigned int useable:1;
-  unsigned int empty:25;
-};
-
-/* Initializing bit fields is slow.  We speed it up by using a union.  */
-union user_desc_init
-{
-  struct user_desc desc;
-  unsigned int vals[4];
-};
-
 
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
@@ -126,20 +102,6 @@ union user_desc_init
 # define TLS_SET_FS(val) \
   __asm ("movl %0, %%fs" :: "q" (val))
 
-
-# ifndef __NR_set_thread_area
-#  define __NR_set_thread_area 205
-# endif
-# ifndef TLS_FLAG_WRITABLE
-#  define TLS_FLAG_WRITABLE		0x00000001
-# endif
-
-// XXX Enable for the real world.
-#if 0
-# ifndef __ASSUME_SET_THREAD_AREA
-#  error "we need set_thread_area"
-# endif
-#endif
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the

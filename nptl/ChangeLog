@@ -1,5 +1,17 @@
 2003-03-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Fix many
+	leftovers from the ia32 code.
+
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Remove unneccessary
+	memory load.
+	(clear_once_control): Don't load %esi.
+
+	* sysdeps/x86_64/tls.h: Remove all traces of segment descriptor
+	handling.
+
+	* sysdeps/unix/sysv/linux/x86_64/fork.c: New file.
+
 	* sysdeps/unix/sysv/linux/s390/createthread.c: Moved to...
 	* sysdeps/unix/sysv/linux/createthread.c: ...here.
 
