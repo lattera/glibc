@@ -1,3 +1,10 @@
+2003-10-09  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* Makefile: Allow for c++-types-$(config-machine)-$(config-os).data in
+	addition to c++-types-$(base-machine)-$(config-os).data.
+	* scripts/data/c++-types-powerpc-linux-gnu.data: New file.
+	* scripts/data/c++-types-powerpc64-linux-gnu.data: New file.
+
 2003-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/mntent_r.c (decode_name): Fix decoding of tab, add decoding
