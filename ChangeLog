@@ -1,3 +1,9 @@
+2003-11-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Introduce __libc_sqrtl symbol.
+	Define it appropriately after last change.  Use it where __sqrtl
+	was used.
+
 2003-11-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (sqrt): Don't inline

@@ -441,6 +441,9 @@ __inline_mathcodeNP2 (fmod, __x, __y, \
 # if !__GNUC_PREREQ (3,3)
 __inline_mathopNP (sqrt, "fsqrt")
 __inline_mathopNP_ (long double, __sqrtl, "fsqrt")
+#  define __libc_sqrtl(n) __sqrtl (n)
+# else
+#  define __libc_sqrtl(n) __builtin_sqrtl (n)
 # endif
 #endif
 
@@ -463,8 +466,8 @@ __inline_mathopNP (cos, "fcos")
 __inline_mathop_declNP (log, "fldln2; fxch; fyl2x", "0" (__x) : "st(1)")
 __inline_mathop_declNP (log10, "fldlg2; fxch; fyl2x", "0" (__x) : "st(1)")
 
-__inline_mathcodeNP (asin, __x, return __atan2l (__x, __sqrtl (1.0 - __x * __x)))
-__inline_mathcodeNP (acos, __x, return __atan2l (__sqrtl (1.0 - __x * __x), __x))
+__inline_mathcodeNP (asin, __x, return __atan2l (__x, __libc_sqrtl (1.0 - __x * __x)))
+__inline_mathcodeNP (acos, __x, return __atan2l (__libc_sqrtl (1.0 - __x * __x), __x))
 #endif /* __FAST_MATH__ */
 
 __inline_mathop_declNP (atan, "fld1; fpatan", "0" (__x) : "st(1)")
@@ -557,18 +560,19 @@ __inline_mathcodeNP (log1p, __x, \
 /* The argument range of the inline version of asinhl is slightly reduced.  */
 __inline_mathcodeNP (asinh, __x, \
   register long double  __y = __fabsl (__x);				      \
-  return (log1pl (__y * __y / (__sqrtl (__y * __y + 1.0) + 1.0) + __y)	      \
+  return (log1pl (__y * __y / (__libc_sqrtl (__y * __y + 1.0) + 1.0) + __y)   \
 	  * __sgn1l (__x)))
 
 __inline_mathcodeNP (acosh, __x, \
-  return logl (__x + __sqrtl (__x - 1.0) * __sqrtl (__x + 1.0)))
+  return logl (__x + __libc_sqrtl (__x - 1.0) * __libc_sqrtl (__x + 1.0)))
 
 __inline_mathcodeNP (atanh, __x, \
   register long double __y = __fabsl (__x);				      \
   return -0.5 * log1pl (-(__y + __y) / (1.0 + __y)) * __sgn1l (__x))
 
 /* The argument range of the inline version of hypotl is slightly reduced.  */
-__inline_mathcodeNP2 (hypot, __x, __y, return __sqrtl (__x * __x + __y * __y))
+__inline_mathcodeNP2 (hypot, __x, __y,
+		      return __libc_sqrtl (__x * __x + __y * __y))
 
 __inline_mathcodeNP(logb, __x, \
   register long double __value;						      \
@@ -681,7 +685,7 @@ __inline_mathcode (__coshm1, __x, \
   return 0.5 * (__exm1 / (__exm1 + 1.0)) * __exm1)
 
 __inline_mathcode (__acosh1p, __x, \
-  return log1pl (__x + __sqrtl (__x) * __sqrtl (__x + 2.0)))
+  return log1pl (__x + __libc_sqrtl (__x) * __libc_sqrtl (__x + 2.0)))
 
 #endif /* __FAST_MATH__ */
 #endif /* __USE_MISC  */
