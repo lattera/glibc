@@ -1,3 +1,12 @@
+2001-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/TESTS: Add entries for IBM1160 and IBM1161.
+	* iconvdata/testdata/IBM1160: New file.
+	* iconvdata/testdata/IBM1160..UTF8: New file.
+	* iconvdata/testdata/IBM1161: New file.
+	* iconvdata/testdata/IBM1161..UTF8: New file.
+	Patch by Masahide Washizawa <WASHI@jp.ibm.com>.
+
 2001-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/bsd/ulimit.c (ulimit): Handle overflow in
