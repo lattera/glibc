@@ -597,20 +597,20 @@ extern wint_t fgetwc_unlocked __P ((FILE *__stream));
 
 
 /* Write a character to STREAM.  */
-extern wint_t fputwc __P ((wint_t __wc, FILE *__stream));
-extern wint_t putwc __P ((wint_t __wc, FILE *__stream));
+extern wint_t fputwc __P ((wchar_t __wc, FILE *__stream));
+extern wint_t putwc __P ((wchar_t __wc, FILE *__stream));
 
 /* Write a character to stdout.  */
-extern wint_t putwchar __P ((wint_t __wc));
+extern wint_t putwchar __P ((wchar_t __wc));
 
 #ifdef __USE_GNU
 /* Faster version when locking is not necessary.  */
-extern wint_t fputwc_unlocked __P ((wint_t __wc, FILE *__stream));
+extern wint_t fputwc_unlocked __P ((wchar_t __wc, FILE *__stream));
 
 /* These are defined to be equivalent to the `char' functions defined
    in POSIX.1:1996.  */
-extern wint_t putwc_unlocked __P ((wint_t __wc, FILE *__stream));
-extern wint_t putwchar_unlocked __P ((wint_t __wc));
+extern wint_t putwc_unlocked __P ((wchar_t __wc, FILE *__stream));
+extern wint_t putwchar_unlocked __P ((wchar_t __wc));
 #endif
 
 

@@ -1,3 +1,15 @@
+1999-06-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/libio.h (_IO_putwc): Correct type of first argument.
+	* wcsmbs/wchar.h: (fputwc, putwc, putwchar, fputwc_unlocked,
+	putwc_unlocked, putwchar_unlocked): Likewise.
+	* libio/fputwc.c: Likewise.
+	* libio/fputwc_unlocked.c: Likewise.
+	* libio/putwc.c: Likewise.
+	* libio/putwc_unlocked.c: Likewise.
+	* libio/putwchar.c: Likewise.
+	* libio/putwchar_unlocked.c: Likewise.
+
 1999-06-19  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/gnu/siglist.h: File moved to ...
