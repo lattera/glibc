@@ -75,10 +75,6 @@ endef
 $(common-objpfx)dummy.c:
 	rm -f $@
 	echo 'void __dummy__ (void) { }' > $@
-$(common-objpfx)empty.c:
-	cp -f /dev/null $@
-common-generated += dummy.o dummy.c empty.c \
-		    $(addprefix empty,$(object-suffixes))
 
 # This makes all the auxiliary and test programs.
 
@@ -171,13 +167,6 @@ before-compile: $(before-compile)
 
 $(common-objpfx)dummy.o: $(common-objpfx)dummy.c $(before-compile);
 	$(compile-command.c)
-
-define o-iterator-doit
-$(common-objpfx)empty$o: $(common-objpfx)empty.c $(before-compile);
-	$$(compile-command.c)
-endef
-object-suffixes-left := $(object-suffixes)
-include $(o-iterator)
 
 # There's no good place to put this - here will do.
 # The dependencies are wrong if it's run from the top level.
