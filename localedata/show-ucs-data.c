@@ -32,7 +32,7 @@ main (int argc, char *argv[])
 		{
 		  unsigned int val = strtoul (runp + 2, NULL, 16);
 
-		  putchar ('<');
+		  //putchar ('<');
 		  if (val < 128)
 		    putchar (val);
 		  else if (val < 0x800)
@@ -46,7 +46,7 @@ main (int argc, char *argv[])
 		      putchar (0x80 | ((val >> 6) & 0x3f));
 		      putchar (0x80 | (val & 0x3f));
 		    }
-		  putchar ('>');
+		  //putchar ('>');
 		  runp += 7;
 		}
 	      else

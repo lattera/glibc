@@ -1,31 +1,16 @@
 # Begin of automatic generation
 
-# acos
-Test "acos (0.7) == 0.7953988301841435554":
-float: 1
-ifloat: 1
-ildouble: 1150
-ldouble: 1150
-
 # acosh
 Test "acosh (7) == 2.6339157938496334172":
 ldouble: 1
 ildouble: 1
 
 # asin
-Test "asin (-0.5) == -pi/6": 
-float: 2
-ifloat: 2
-Test "asin (0.5) == pi/6":
-float: 2
-ifloat: 2
 Test "asin (0.7) == 0.77539749661075306374035335271498708":
-float: 2
-ifloat: 2
 double: 1
 idouble: 1
-ildouble: 1147
-ldouble: 1147
+ldouble: 1
+ildouble: 1
 
 # asinh
 Test "asinh (0.7) == 0.652666566082355786":
@@ -33,17 +18,9 @@ ildouble: 656
 ldouble: 656
 
 # atan
-Test "atan (0.7) == 0.6107259643892086165":
-ildouble: 549
-ldouble: 549
-
-# atan2
-Test "atan2 (0.4, 0.0003) == 1.5700463269355215718":
-ildouble: 1
-ldouble: 1
-Test "atan2 (0.7, 1) == 0.6107259643892086165":
-ildouble: 549
-ldouble: 549
+#Test "atan (0.7) == 0.6107259643892086165":
+#ildouble: 549
+#ldouble: 549
 
 # atanh
 Test "atanh (0.7) == 0.8673005276940531944":
@@ -98,8 +75,8 @@ double: 1
 float: 7
 idouble: 1
 ifloat: 7
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 Test "Imaginary part of: cacosh (-2 - 3 i) == -1.9833870299165354323 + 2.1414491111159960199 i":
 double: 1
 float: 4
@@ -215,27 +192,9 @@ ildouble: 447
 ldouble: 447
 
 # cbrt
-Test "cbrt (-0.001) == -0.1":
-ildouble: 717
-ldouble: 717
-Test "cbrt (-27.0) == -3.0":
-double: 1
-idouble: 1
-ildouble: 948
-ldouble: 948
 Test "cbrt (0.7) == 0.8879040017426007084":
 double: 1
 idouble: 1
-ildouble: 346
-ldouble: 346
-Test "cbrt (0.970299) == 0.99":
-double: 1
-idouble: 1
-ildouble: 306
-ldouble: 306
-Test "cbrt (8) == 2":
-ildouble: 191
-ldouble: 191
 
 # ccos
 Test "Real part of: ccos (-2 - 3 i) == -4.1896256909688072301 - 9.1092278937553365979 i":
@@ -453,15 +412,17 @@ ldouble: 0.25
 
 # cosh
 Test "cosh (0.7) == 1.255169005630943018":
-ildouble: 309
-ldouble: 309
+ildouble: 2
+ldouble: 2
 
 # cpow
 Test "Real part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 double: 1
-float: 4
+float: 5
 idouble: 1
-ifloat: 4
+ifloat: 5
+ldouble: 1
+ildouble: 1
 Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 float: 2
 ifloat: 2
@@ -475,6 +436,9 @@ idouble: 1.104
 ifloat: 2.5333
 ildouble: 1
 ldouble: 1
+Test "Real part of: cpow (2 + 0 i, 10 + 0 i) == 1024.0 + 0.0 i":
+ldouble: 1
+ildouble: 1
 
 # csin
 Test "Real part of: csin (0.7 + 1.2 i) == 1.1664563419657581376 + 1.1544997246948547371 i":
@@ -575,8 +539,8 @@ ldouble: 2
 Test "Imaginary part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383224937 i":
 float: 1
 ifloat: 1
-ildouble: 23
-ldouble: 23
+ildouble: 24
+ldouble: 24
 Test "Real part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 float: 1
@@ -655,6 +619,8 @@ float: 1
 ifloat: 1
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 
 # fmod
 Test "fmod (-6.5, -2.3) == -1.9":
@@ -906,21 +872,17 @@ ildouble: 725
 ldouble: 725
 
 # sin
-Test "sin (0.7) == 0.64421768723769105367":
-ildouble: 627
-ldouble: 627
+Test "sin (0.7) == 0.64421768723769105367261435139872014":
+ildouble: 1
+ldouble: 1
 
 # sincos
-Test "sincos (0.7, &sin_res, &cos_res) puts 0.64421768723769105367 in sin_res":
-ildouble: 627
-ldouble: 627
+Test "sincos (0.7, &sin_res, &cos_res) puts 0.64421768723769105367261435139872014 in sin_res":
+ldouble: 1
+ildouble: 1
 Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842625585999019186495 in cos_res":
-float: 1
-ifloat: 1
 double: 1
 idouble: 1
-ildouble: 528
-ldouble: 528
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
 float: 0.5
@@ -1005,6 +967,8 @@ float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 2
+ildouble: 2
 Test "y0 (1.0) == 0.088256964215676957983":
 double: 2
 float: 1
@@ -1028,6 +992,8 @@ float: 1
 ifloat: 1
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 
 # y1
 Test "y1 (0.1) == -6.4589510947020269877":
@@ -1174,31 +1140,17 @@ idouble: 1
 ifloat: 1
 
 # Maximal error of functions:
-Function: "acos":
-ildouble: 1149
-ldouble: 1149
-
 Function: "asin":
-float: 2
-ifloat: 2
 double: 1
 idouble: 1
-ildouble: 1147
-ldouble: 1147
+ldouble: 1
+ildouble: 1
 
 Function: "asinh":
 double: 1
 idouble: 1
 ildouble: 656
 ldouble: 656
-
-Function: "atan":
-ildouble: 549
-ldouble: 549
-
-Function: "atan2":
-ildouble: 549
-ldouble: 549
 
 Function: "atanh":
 double: 1
@@ -1305,8 +1257,6 @@ ldouble: 447
 Function: "cbrt":
 double: 1
 idouble: 1
-ildouble: 948
-ldouble: 948
 
 Function: Real part of "ccos":
 double: 1
@@ -1389,22 +1339,24 @@ ildouble: 529
 ldouble: 529
 
 Function: "cosh":
-ildouble: 309
-ldouble: 309
+ildouble: 2
+ldouble: 2
 
 Function: Real part of "cpow":
 double: 1
-float: 4
+float: 5
 idouble: 1
-ifloat: 4
+ifloat: 5
+ldouble: 1
+ildouble: 1
 
 Function: Imaginary part of "cpow":
 double: 1.104
 float: 2.5333
 idouble: 1.104
 ifloat: 2.5333
-ildouble: 2
-ldouble: 2
+ildouble: 4
+ldouble: 4
 
 Function: Real part of "csin":
 float: 1
@@ -1639,6 +1591,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ldouble: 2
+ildouble: 2
 
 Function: "y1":
 double: 3

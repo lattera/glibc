@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -78,9 +78,9 @@ _IO_getline_info (fp, buf, n, delim, extract_delim, eof)
 		*ptr++ = c;
 	      else if (extract_delim < 0)
 		_IO_sputbackc (fp, c);
-	      return ptr - buf;
 	      if (extract_delim > 0)
 		++len;
+	      return ptr - buf;
 	    }
 	  *ptr++ = c;
 	  n--;

@@ -11,6 +11,7 @@ libc {
   GLIBC_2.2
   GLIBC_2.2.1
   GLIBC_2.2.2
+  GLIBC_2.2.3
 %ifdef USE_IN_LIBIO
   HURD_CTHREADS_0.3
 %endif
@@ -31,6 +32,7 @@ libm {
   GLIBC_2.0
   GLIBC_2.1
   GLIBC_2.2
+  GLIBC_2.2.3
 }
 libnsl {
   GLIBC_2.0
