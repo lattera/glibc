@@ -48,7 +48,7 @@ routines	:=							      \
 
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-fopenloc	      \
-	tst-fgetws tst-ungetwc1 tst-ungetwc2 tst-swscanf
+	tst-fgetws tst-ungetwc1 tst-ungetwc2 tst-swscanf tst-sscanf
 test-srcs = test-freopen
 
 all: # Make this the default target; it will be defined in Rules.

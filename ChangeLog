@@ -3,6 +3,9 @@
 	* stdio-common/vfscanf.c: Fix handling of %l[].
 	Reported by Mitsuru Chinen <mchinen@yamato.ibm.com>.
 
+	* libio/Makefile (tests): Add tst-sscanf.
+	* libio/tst-sscanf.c: New file.
+
 	* elf/dl-addr.c (_dl_addr): Fix tests to determine dli_sname.
 	* malloc/mtrace.c (tr_where): dli_sname always points to a
 	non-empty string if != NULL.
