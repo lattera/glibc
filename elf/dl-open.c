@@ -37,7 +37,7 @@
 #ifndef SHARED
 /* Giving this initialized value preallocates some surplus bytes in the
    static TLS area, see __libc_setup_tls (libc-tls.c).  */
-size_t _dl_tls_static_size = 576;
+size_t _dl_tls_static_size = 2048;
 #endif
 
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,

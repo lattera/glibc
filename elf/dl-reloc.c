@@ -200,7 +200,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
       if (__builtin_expect ((sym_map)->l_tls_offset == 0, 0)		      \
 	  && !allocate_static_tls (sym_map))				      \
 	{								      \
-	  errstring = N_("shared object cannot be dlopen()ed");		      \
+	  errstring = N_("\
+shared object cannot be dlopen()ed: static TLS memory too small");	      \
 	  INTUSE(_dl_signal_error) (0, (map)->l_name, NULL, errstring);	      \
 	}								      \
     } while (0)
