@@ -32,9 +32,12 @@ endif
 ifeq ($(subdir),stdio-common)
 
 vpath errlist.c $(full_config_sysdirs)
-$(objpfx)errlist-compat.c: errlist.c \
-				   $(..)sysdeps/gnu/errlist-compat.awk \
-				   $(common-objpfx)Versions.v.i
+ifeq ($(build-shared),yes)
+$(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
+			   $(common-objpfx)Versions.v.i
+else
+$(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk
+endif
 	$(AWK) -v maxerr=`\
 	  $(CC) -S $(CPPFLAGS) $(CFLAGS) -DNOT_IN_libc -DEMIT_ERR_MAX $< -o - \
 	  | sed -n 's/^.*@@@[^0-9]*\([0-9]*\)[^0-9]*@@@.*$$/\1/p'` \
