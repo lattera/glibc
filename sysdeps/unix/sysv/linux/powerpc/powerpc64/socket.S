@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
 
 #define P(a, b) P2(a, b)
@@ -45,7 +45,7 @@
 /* If this is just socket.S leave it alone! */
 #else
 #ifndef __socket
-#define __socket P(__,socket) 
+#define __socket P(__,socket)
 #endif
 #endif
 

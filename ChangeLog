@@ -1,3 +1,13 @@
+2003-01-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Include
+	sysdep-cancel.h, not sysdep.h.
+
+2003-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (nscd_run): Protect accept call with
+	TEMP_FAILURE_RETRY.
+
 2003-01-15  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/Makefile: Include $(common-objpfx)s-proto-bp.d.
