@@ -113,12 +113,16 @@ __add_to_environ (name, value, combined, replace)
      const char *combined;
      int replace;
 {
-  register char **ep = __environ;
+  register char **ep;
   register size_t size;
   const size_t namelen = strlen (name);
   const size_t vallen = value != NULL ? strlen (value) + 1 : 0;
 
   LOCK;
+
+  /* We have to get the pointer now that we have the lock and not earlier
+     since another thread might have created a new environment.  */
+  ep = __environ;
 
   size = 0;
   if (ep != NULL)

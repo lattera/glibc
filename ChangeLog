@@ -1,3 +1,11 @@
+1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/setenv.c: Update(__add_to_environ): Initialize
+	ep after we have the lock.
+
+	* sysdeps/unix/sysv/linux/alpha/sigcontextinfo.h: New file.
+	Patch by Richard Henderson.
+
 1999-08-19  Andreas Schwab  <schwab@suse.de>
 
 	* libio/iovswscanf.c (vswscanf): Make stream unoriented initially
