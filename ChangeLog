@@ -1,3 +1,7 @@
+2005-02-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Fix a typo.
+
 2005-02-08  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Remove use of
