@@ -23,7 +23,7 @@
 #define ELF_MACHINE_NAME "i386"
 
 #include <sys/param.h>
-
+#include <sysdep.h>
 #include <tls.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
