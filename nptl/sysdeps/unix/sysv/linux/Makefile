@@ -1,4 +1,4 @@
-# Copyright (C) 2002 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -21,6 +21,8 @@ ifeq ($(subdir),nptl)
 sysdep_routines += register-atfork unregister-atfork libc_pthread_init
 
 libpthread-sysdep_routines += pt-fork
+
+gen-as-const-headers += lowlevelcond.sym
 endif
 
 ifeq ($(subdir),posix)

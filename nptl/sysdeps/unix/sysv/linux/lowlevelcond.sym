@@ -1,0 +1,9 @@
+#include <stddef.h>
+#include <bits/pthreadtypes.h>
+
+--
+
+cond_lock	offsetof (pthread_cond_t, __data.__lock)
+total_seq	offsetof (pthread_cond_t, __data.__total_seq)
+wakeup_seq	offsetof (pthread_cond_t, __data.__wakeup_seq)
+woken_seq	offsetof (pthread_cond_t, __data.__woken_seq)
