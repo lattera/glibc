@@ -97,6 +97,13 @@ extern int __setsockopt (int __fd, int __level, int __optname,
 			 __const void *__optval,
 			 socklen_t __optlen) attribute_hidden;
 
+/* Put the current value for socket FD's option OPTNAME at protocol level LEVEL
+   into OPTVAL (which is *OPTLEN bytes long), and set *OPTLEN to the value's
+   actual length.  Returns 0 on success, -1 for errors.  */
+extern int __getsockopt (int __fd, int __level, int __optname,
+			 void *__restrict __optval,
+			 socklen_t *__restrict __optlen) attribute_hidden;
+
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
 extern int __getsockname (int __fd, __SOCKADDR_ARG __addr,
 			  socklen_t *__restrict __len) attribute_hidden;

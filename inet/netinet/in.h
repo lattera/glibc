@@ -296,6 +296,51 @@ struct group_source_req
   };
 
 
+/* Full-state filter operations.  */
+struct ip_msfilter
+  {
+    /* IP multicast address of group.  */
+    struct in_addr imsf_multiaddr;
+
+    /* Local IP address of interface.  */
+    struct in_addr imsf_interface;
+
+    /* Filter mode.  */
+    uint32_t imsf_fmode;
+
+    /* Number of source addresses.  */
+    uint32_t imsf_numsrc;
+    /* Source addresses.  */
+    struct in_addr imsf_slist[1];
+  };
+
+#define IP_MSFILTER_SIZE(numsrc) (sizeof (struct ip_msfilter) \
+				  - sizeof (struct in_addr)		      \
+				  + (numsrc) * sizeof (struct in_addr))
+
+struct group_filter
+  {
+    /* Interface index.  */
+    uint32_t gf_interface;
+
+    /* Group address.  */
+    struct sockaddr_storage gf_group;
+
+    /* Filter mode.  */
+    uint32_t gf_fmode;
+
+    /* Number of source addresses.  */
+    uint32_t gf_numsrc;
+    /* Source addresses.  */
+    struct sockaddr_storage gf_slist[1];
+};
+
+#define GROUP_FILTER_SIZE(numsrc) (sizeof (struct group_filter) \
+				   - sizeof (struct sockaddr_storage)	      \
+				   + ((numsrc)				      \
+				      * sizeof (struct sockaddr_storage)))
+
+
 /* Get system-specific definitions.  */
 #include <bits/in.h>
 

@@ -1,5 +1,13 @@
 2004-08-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/netinet/in.h: Define struct ip_msfilter, IP_MSFILTER_SIZE,
+	struct group_filter, and GROUP_FILTER_SIZE.
+	* include/sys/socket.h: Declare __getsockopt.
+	* sysdeps/unix/sysv/linux/setipv4sourcefilter.c: New file.
+	* sysdeps/unix/sysv/linux/getipv4sourcefilter.c: New file.
+	* sysdeps/unix/sysv/linux/setsourcefilter.c: New file.
+	* sysdeps/unix/sysv/linux/getsourcefilter.c: New file.
+
 	* po/ko.po: Update from translation team.
 
 2004-08-04  Jakub Jelinek  <jakub@redhat.com>
