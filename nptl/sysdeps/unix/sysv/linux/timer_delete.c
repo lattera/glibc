@@ -58,10 +58,6 @@ timer_delete (timerid)
 	  __no_posix_timers = 1;
 # endif
 
-	  /* We have to get rid of the helper thread if we created one.  */
-	  if (kt->sigev_notify == SIGEV_THREAD)
-	    (void) pthread_cancel (kt->th);
-
 	  /* Free the memory.  */
 	  (void) free (kt);
 

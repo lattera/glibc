@@ -26,6 +26,7 @@
 #include <sysdep.h>
 #include <kernel-features.h>
 #include <internaltypes.h>
+#include <nptl/pthreadP.h>
 #include "kernel-posix-timers.h"
 
 
@@ -138,12 +139,16 @@ timer_create (clock_id, evp, timerid)
 	  if (__no_posix_timers > 0)
 # endif
 	    {
-		  sigset_t ss;
-		  sigemptyset (&ss);
-		  sigaddset (&ss, TIMER_SIG);
-		  pthread_sigmask (SIG_BLOCK, &ss, NULL);
-	      struct timer *newp;
+	      /* Create the helper thread.  */
+	      pthread_once (&__helper_once, __start_helper_thread);
+	      if (__helper_tid == 0)
+		{
+		  /* No resources to start the helper thread.  */
+		  __set_errno (EAGAIN);
+		  return -1;
+		}
 
+	      struct timer *newp;
 	      newp = (struct timer *) malloc (sizeof (struct timer));
 	      if (newp == NULL)
 		return -1;
@@ -176,57 +181,29 @@ timer_create (clock_id, evp, timerid)
 	      (void) pthread_attr_setdetachstate (&newp->attr,
 						  PTHREAD_CREATE_DETACHED);
 
-	      /* Set up the barrier for sychronization.  */
-	      (void) pthread_barrier_init (&newp->bar, NULL, 2);
-
-	      /* The helper thread needs only very little resources
-		 and should go away automatically when canceled.  */
-	      pthread_attr_t attr;
-	      (void) pthread_attr_init (&attr);
-	      (void) pthread_attr_setdetachstate (&attr,
-						  PTHREAD_CREATE_DETACHED);
-	      (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
-
-	      /* Create the helper thread for this timer.  */
-	      int res = pthread_create (&newp->th, &attr,
-					__timer_helper_thread, newp);
-	      if (res != 0)
-		goto err_out;
-
-	      /* No need for the attribute anymore.  */
-	      (void) pthread_attr_destroy (&attr);
-
 	      /* Create the event structure for the kernel timer.  */
 	      struct sigevent sev;
 	      sev.sigev_value.sival_ptr = newp;
-	      sev.sigev_signo = TIMER_SIG;
+	      sev.sigev_signo = SIGTIMER;
 	      sev.sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID;
 	      /* This is the thread ID of the helper thread.  */
-	      sev._sigev_un._pad[0] = ((struct pthread *) newp->th)->tid;
-
-	      /* Wait until the helper thread is set up.  */
-	      (void) pthread_barrier_wait (&newp->bar);
-
-	      /* No need for the barrier anymore.  */
-	      (void) pthread_barrier_destroy (&newp->bar);
+	      sev._sigev_un._pad[0] = __helper_tid;
 
 	      /* Create the timer.  */
 	      INTERNAL_SYSCALL_DECL (err);
-	      res = INTERNAL_SYSCALL (timer_create, err, 3, clock_id, &sev,
-				      &newp->ktimerid);
+	      int res = INTERNAL_SYSCALL (timer_create, err, 3, clock_id, &sev,
+					  &newp->ktimerid);
 	      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
 		{
 		  *timerid = (timer_t) newp;
 		  return 0;
 		}
 
-	      /* Something went wrong.  Kill the thread.  */
-	      pthread_cancel (newp->th);
 	      /* Free the resources.  */
-	      res = INTERNAL_SYSCALL_ERRNO (res, err);
-	    err_out:
 	      free (newp);
-	      __set_errno (res);
+
+	      __set_errno (INTERNAL_SYSCALL_ERRNO (res, err));
+
 	      return -1;
 	    }
 	}

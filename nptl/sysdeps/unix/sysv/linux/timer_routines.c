@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <sysdep.h>
 #include <kernel-features.h>
+#include <nptl/pthreadP.h>
 #include "kernel-posix-timers.h"
 
 
@@ -40,24 +41,14 @@ timer_sigev_thread (void *arg)
 
 
 /* Helper function to support starting threads for SIGEV_THREAD.  */
-void *
-attribute_hidden
-__timer_helper_thread (void *arg)
+static void *
+timer_helper_thread (void *arg)
 {
-  /* Block all signals.  */
+  /* Block all signals.  We will only wait for the signal the kernel
+     will send.  */
   sigset_t ss;
-
-  sigfillset (&ss);
-  (void) pthread_sigmask (SIG_BLOCK, &ss, NULL);
-
-  struct timer *tk = (struct timer *) arg;
-
-  /* Synchronize with the parent.  */
-  (void) pthread_barrier_wait (&tk->bar);
-
-  /* We will only wait for the signal the kernel will send.  */
   sigemptyset (&ss);
-  sigaddset (&ss, TIMER_SIG);
+  sigaddset (&ss, SIGTIMER);
 
   /* Endless loop of waiting for signals.  The loop is only ended when
      the thread is canceled.  */
@@ -65,15 +56,60 @@ __timer_helper_thread (void *arg)
     {
       siginfo_t si;
 
-      if (sigwaitinfo (&ss, &si) > 0 && si.si_timerid == tk->ktimerid)
+      if (sigwaitinfo (&ss, &si) > 0 && si.si_code == SI_TIMER)
 	{
+
+	  struct timer *tk = (struct timer *) si.si_ptr;
+
 	  /* That the signal we are waiting for.  */
 	  pthread_t th;
-	  (void) pthread_create (&th, &tk->attr, timer_sigev_thread, arg);
+	  (void) pthread_create (&th, &tk->attr, timer_sigev_thread, tk);
 	}
     }
 }
 
+
+/* Control variable for helper thread creation.  */
+pthread_once_t __helper_once attribute_hidden;
+
+
+/* TID of the helper thread.  */
+pid_t __helper_tid attribute_hidden;
+
+
+/* Reset variables so that after a fork a new helper thread gets started.  */
+static void
+reset_helper_control (void)
+{
+  __helper_once = PTHREAD_ONCE_INIT;
+  __helper_tid = 0;
+}
+
+
+void
+attribute_hidden
+__start_helper_thread (void)
+{
+  /* The helper thread needs only very little resources
+     and should go away automatically when canceled.  */
+  pthread_attr_t attr;
+  (void) pthread_attr_init (&attr);
+  (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
+
+  /* Create the helper thread for this timer.  */
+  pthread_t th;
+  int res = pthread_create (&th, &attr, timer_helper_thread, NULL);
+  if (res == 0)
+    /* We managed to start the helper thread.  */
+    __helper_tid = ((struct pthread *) th)->tid;
+
+  /* No need for the attribute anymore.  */
+  (void) pthread_attr_destroy (&attr);
+
+  /* We have to make sure that after fork()ing a new helper thread can
+     be created.  */
+  pthread_atfork (NULL, NULL, reset_helper_control);
+}
 #endif
 
 #ifndef __ASSUME_POSIX_TIMERS
