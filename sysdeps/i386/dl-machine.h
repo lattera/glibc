@@ -162,7 +162,7 @@ extern ElfW(Addr) _dl_fixup (struct link_map *__unbounded l,
      ARCH_FIXUP_ATTRIBUTE;
 extern ElfW(Addr) _dl_profile_fixup (struct link_map *l,
 				     ElfW(Word) reloc_offset,
-				     ElfW(Addr) retaddr, const void *regs,
+				     ElfW(Addr) retaddr, void *regs,
 				     long int *framesizep)
      ARCH_FIXUP_ATTRIBUTE;
 # endif
