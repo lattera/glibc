@@ -145,7 +145,6 @@ $(objpfx)%_server.c $(objpfx)%_server.h:
 
 # To get header files that declare both the straight and __ functions,
 # we generate two files and paste them together.
-$(objpfx)%_server.uh:; $(mig.uh)
 $(objpfx)%.uh:; $(mig.uh)
 define mig.uh
 $(make-target-directory)
@@ -153,7 +152,6 @@ $(include-%.defs) | \
 $(MIG) - /dev/null $(MIGFLAGS) \
        -header $@ -server /dev/null -user /dev/null
 endef
-$(objpfx)%_server.__h:; $(mig.__h)
 $(objpfx)%.__h:; $(mig.__h)
 define mig.__h
 $(make-target-directory)
@@ -176,8 +174,8 @@ interface-headers := $(user-interfaces:%=%.h) \
 
 # Remove the generated user stub source and header files,
 # and don't distribute them.
-mach-generated = $(interface-routines:%=%.c) \
-		 $(foreach h,$(interface-headers:%.h=%),$h.h $h.uh $h.__h)
+mach-generated = $(interface-routines:%=%.c) $(interface-headers) \
+		 $(foreach h,$(user-interfaces),$h.uh $h.__h)
 generated += $(mach-generated)
 
 # These are needed to generate the dependencies.
