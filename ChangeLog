@@ -1,5 +1,12 @@
 Wed Jan 17 11:04:58 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/statbuf.h (_STAT_VER_LINUX,
+	_STAT_VER_SVR4, _STAT_VER): New macros.
+	(_MKNOD_VER_LINUX, _MKNOD_VER_SVR4, _MKNOD_VER): New macros.
+
+	* sysdeps/unix/sysv/sysv4/i386/statbuf.h (_STAT_VER, _MKNOD_VER):
+	New macros.
+
 	* io/sys/stat.h (_STAT_VER, _MKNOD_VER): New macros.
 	(__xstat, __fxstat, __lxstat, __xmknod): Declare new functions.
 	[__GNUC__] (stat, fstat, lstat, mknod): Define these (and __ names)

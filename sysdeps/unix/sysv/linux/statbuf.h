@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,15 @@ Cambridge, MA 02139, USA.  */
 #ifndef	_STATBUF_H
 #define	_STATBUF_H
 
-/* Current version of stat system call.  */
-#define _STAT_VER 1
+/* Versions of the `struct stat' data structure.  */
+#define _STAT_VER_LINUX		1
+#define _STAT_VER_SVR4		2
+#define _STAT_VER		_STAT_VER_LINUX	/* The one defined below.  */
+
+/* Versions of the `xmknod' interface.  */
+#define _MKNOD_VER_LINUX	1
+#define _MKNOD_VER_SVR4		2
+#define _MKNOD_VER		_MKNOD_VER_LINUX /* The bits defined below.  */
 
 
 struct stat
