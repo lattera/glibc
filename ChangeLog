@@ -1,3 +1,20 @@
+1999-07-20  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): Use correct arguments in
+	__vm_allocate calls.
+
+1999-07-20  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/sysd-stdio.c (__stdio_read): Call
+	_hurd_fd_read with new OFFSET argument set to -1.
+	(__stdio_write): Call _hurd_fd_write with new OFFSET argument set
+	to -1.
+
+1999-07-17  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdexec.c (_hurd_exec): Prune trailing null ports from the
+	descriptor table sent in the RPC.
+
 1999-07-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* time/strptime.c [!_LIBC]: Fix __mon_day size.  Reported by

@@ -61,7 +61,7 @@ __stdio_read (cookie, buf, n)
   if (! fd)
     return __hurd_fail (EBADF);
 
-  if (err = _hurd_fd_read (fd, buf, &n))
+  if (err = _hurd_fd_read (fd, buf, &n, -1))
     return fd_fail (fd, err);
 
   return n;
@@ -86,7 +86,7 @@ __stdio_write (cookie, buf, n)
   do
     {
       wrote = nleft;
-      if (err = _hurd_fd_write (fd, buf, &wrote))
+      if (err = _hurd_fd_write (fd, buf, &wrote, -1))
 	return fd_fail (fd, err);
       buf += wrote;
       nleft -= wrote;

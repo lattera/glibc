@@ -46,7 +46,8 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       && prot == (PROT_READ|PROT_WRITE)) /* cf VM_PROT_DEFAULT */
     {
       /* vm_allocate has (a little) less overhead in the kernel too.  */
-      err = __vm_allocate (&mapaddr, len, !(flags & MAP_FIXED));
+      err = __vm_allocate (__mach_task_self (), &mapaddr, len,
+			   !(flags & MAP_FIXED));
 
       if (err == KERN_NO_SPACE && (flags & MAP_FIXED))
 	{
@@ -54,7 +55,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	  /* The region is already allocated; deallocate it first.  */
 	  err = __vm_deallocate (__mach_task_self (), mapaddr, len);
 	  if (!err)
-	    err = __vm_allocate (&mapaddr, len, 0);
+	    err = __vm_allocate (__mach_task_self (), &mapaddr, len, 0);
 	}
 
       return err ? (__ptr_t) (long int) __hurd_fail (err) : (__ptr_t) mapaddr;
