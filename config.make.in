@@ -23,6 +23,7 @@ have-initfini = @libc_cv_have_initfini@
 have-no-whole-archive = @libc_cv_ld_no_whole_archive@
 have-no-exceptions = @libc_cv_gcc_no_exceptions@
 have-bash2 = @libc_cv_have_bash2@
+have-ksh = @libc_cv_have_ksh@
 
 # Configuration options.
 gnu-as = @gnu_as@
@@ -49,5 +50,6 @@ INSTALL_DATA = @INSTALL_DATA@
 LN_S = @LN_S@
 MSGFMT = @MSGFMT@
 BASH = @BASH@
+KSH = @KSH@
 
 # More variables may be inserted below by configure.

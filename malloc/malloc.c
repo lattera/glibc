@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>
    and Doug Lea <dl@cs.oswego.edu>, 1996.
@@ -1521,7 +1521,7 @@ ptmalloc_init __MALLOC_P((void))
   __malloc_hook = malloc_starter;
   __free_hook = free_starter;
 #endif
-#if defined(_LIBC)
+#if defined(_LIBC) && !defined (NO_THREADS)
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();

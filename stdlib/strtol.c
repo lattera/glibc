@@ -1,5 +1,5 @@
 /* strtol - Convert string representation of a number into an integer value.
-   Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -217,13 +217,8 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   /* Check for a sign.  */
   if (*s == L_('-'))
     {
-#if UNSIGNED
-      __set_errno (EINVAL);
-      return 0;
-#else
       negative = 1;
       ++s;
-#endif
     }
   else if (*s == L_('+'))
     {
@@ -317,6 +312,8 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 	      ? -((unsigned LONG int) (LONG_MIN + 1)) + 1
 	      : (unsigned LONG int) LONG_MAX))
     overflow = 1;
+#else
+  overflow |= negative;
 #endif
 
   if (overflow)

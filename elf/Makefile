@@ -1,6 +1,6 @@
 # Makefile for elf subdirectory of GNU C Library.
 
-# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -100,13 +100,15 @@ $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 $(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
 
 ifneq ($(have-bash2),yes)
-$(objpfx)ldd: ldd.sh.in Makefile
+$(objpfx)ldd: ldd.sh.in $(common-objpfx)version.mk \
+	      $(common-objpfx)soversions.mk $(common-objpfx)config.make
 	sed -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
 	    -e 's%@VERSION@%$(version)%g' < $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
 else
-$(objpfx)ldd: ldd.bash.in Makefile
+$(objpfx)ldd: ldd.bash.in $(common-objpfx)version.mk \
+	      $(common-objpfx)soversions.mk $(common-objpfx)config.make
 	sed -e 's%@BASH@%$(BASH)%g' \
 	    -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
 	    -e 's%@VERSION@%$(version)%g' \

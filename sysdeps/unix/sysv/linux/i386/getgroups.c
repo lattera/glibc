@@ -1,5 +1,4 @@
-/* Definitions of macros to access `dev_t' values.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +16,28 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_SYSMACROS_H
+#include <sys/types.h>
+#include <unistd.h>
 
-#define _SYS_SYSMACROS_H	1
+#include <linux/posix_types.h>
 
-/* For compatibility we provide alternative names.  */
-#define major(dev) (((dev) >> 8) & 0xff)
-#define minor(dev) ((dev) & 0xff)
-#define makedev(major, minor) (((major) << 8) | (minor))
+extern int __syscall_getgroups __P ((int, __kernel_gid_t *));
 
-#endif /* _SYS_SYSMACROS_H */
+/* For Linux we must convert the array of groups from the format that the
+   kernel returns.  */
+int
+__getgroups (n, groups)
+     int n;
+     gid_t *groups;
+{
+  int i, ngids;
+  __kernel_gid_t kernel_groups[n];
+
+  ngids = __syscall_getgroups (n, kernel_groups);
+  if (n != 0 && ngids > 0)
+    for (i = 0; i < ngids; i++)
+      groups[i] = kernel_groups[i];
+  return ngids;
+}
+
+weak_alias (__getgroups, getgroups)

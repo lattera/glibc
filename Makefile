@@ -38,7 +38,6 @@ endef
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
-config.status: configure version.h; $(SHELL) ./config.status --recheck
 
 include Makeconfig
 
@@ -198,7 +197,7 @@ $(includedir)/gnu/lib-names.h: $(common-objpfx)soversions.mk
 	  for l in $$libs; do \
 	    upname=`echo $$l | sed 's/[.]so.*//' | \
 		    tr '[:lower:]-' '[:upper:]_'`; \
-	    echo "#define	$${upname}_SO	$$l"; \
+	    echo "#define	$${upname}_SO	\"$$l\""; \
 	  done;) | sort; \
 	 echo; \
 	 echo '#endif	/* gnu/lib-names.h */';) > $(objpfx)lib-names.h
@@ -210,8 +209,8 @@ endif
 
 # The `glibcbug' script contains the version number and it shall be rebuild
 # whenever this changes or the `glibcbug.in' file.
-glibcbug: glibcbug.in config.status
-	CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
+$(objpfx)glibcbug: $(common-objpfx)config.status glibcbug.in
+	cd $(<D); CONFIG_FILES=$(@F) CONFIG_HEADERS= $(SHELL) $(<F)
 
 # This makes the Info or DVI file of the documentation from the Texinfo source.
 .PHONY: info dvi

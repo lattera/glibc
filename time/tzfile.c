@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -113,16 +113,28 @@ __tzfile_read (const char *file)
 
   if (*file != '/')
     {
-      static const char tzdir[] = TZDIR;
-      register const unsigned int len = strlen (file) + 1;
-      char *new = (char *) __alloca (sizeof (tzdir) + len);
-      memcpy (new, tzdir, sizeof(tzdir) - 1);
-      new[sizeof (tzdir) - 1] = '/';
-      memcpy (&new[sizeof (tzdir)], file, len);
+      static const char default_tzdir[] = TZDIR;
+      const char *tzdir;
+      unsigned int len, tzdir_len;
+      char *new;
+
+      tzdir = __secure_getenv ("TZDIR");
+      if (tzdir == NULL || *tzdir == '\0')
+	{
+	  tzdir = default_tzdir;
+	  tzdir_len = sizeof (default_tzdir) - 1;
+	}
+      else
+	tzdir_len = strlen (tzdir);
+      len = strlen (file) + 1;
+      new = (char *) __alloca (tzdir_len + 1 + len);
+      memcpy (new, tzdir, tzdir_len);
+      new[tzdir_len] = '/';
+      memcpy (&new[tzdir_len + 1], file, len);
       file = new;
     }
 
-  f = fopen(file, "r");
+  f = fopen (file, "r");
   if (f == NULL)
     return;
 
@@ -171,6 +183,12 @@ __tzfile_read (const char *file)
       fread(type_idxs, 1, num_transitions, f) != num_transitions)
     goto lose;
 
+  /* Check for bogus indices in the data file, so we can hereafter
+     safely use type_idxs[T] as indices into `types' and never crash.  */
+  for (i = 0; i < num_transitions; ++i)
+    if (type_idxs[i] >= num_types)
+      goto lose;
+
   if (BYTE_ORDER != BIG_ENDIAN || sizeof (time_t) != 4)
     {
       /* Decode the transition times, stored as 4-byte integers in
@@ -188,6 +206,8 @@ __tzfile_read (const char *file)
       if (fread (x, 1, 4, f) != 4 ||
 	  fread (&types[i].isdst, 1, 1, f) != 1 ||
 	  fread (&types[i].idx, 1, 1, f) != 1)
+	goto lose;
+      if (types[i].idx >= chars) /* Bogus index in data file.  */
 	goto lose;
       types[i].offset = (long int) decode (x);
     }
@@ -335,6 +355,10 @@ __tzfile_default (char *std, char *dst, long int stdoff, long int dstoff)
   types[1].offset = dstoff;
   types[1].isdst = 1;
 
+  /* Reset the zone names to point to the user's names.  */
+  __tzname[0] = &zone_names[0];
+  __tzname[1] = &zone_names[stdlen];
+
   compute_tzname_max (stdlen + dstlen);
 }
 
@@ -425,7 +449,7 @@ compute_tzname_max (size_t chars)
       const char *start = p;
       while (*p != '\0')
 	++p;
-      if (p - start > __tzname_cur_max)
+      if ((size_t) (p - start) > __tzname_cur_max)
 	__tzname_cur_max = p - start;
     } while (++p < &zone_names[chars]);
 }

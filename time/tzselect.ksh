@@ -1,4 +1,4 @@
-#! /bin/ksh
+#! @KSH@
 # Ask the user about the time zone, and output the resulting TZ value to stdout.
 # Interact with the user via stderr and stdin.
 
@@ -11,7 +11,7 @@
 # you can use either of the following free programs instead:
 #
 #	Bourne-Again shell (bash)
-#	<URL:ftp://prep.ai.mit.edu:/pub/gnu/bash-1.14.7.tar.gz>
+#	<URL:ftp://prep.ai.mit.edu:/pub/gnu/bash-2.0.tar.gz>
 #	(or any later version)
 #
 #	Public domain ksh
@@ -22,7 +22,7 @@
 # you can use either of the following free programs instead:
 #
 #	GNU awk (gawk)
-#	<URL:ftp://prep.ai.mit.edu:/pub/gnu/gawk-3.0.0.tar.gz>
+#	<URL:ftp://prep.ai.mit.edu:/pub/gnu/gawk-3.0.2.tar.gz>
 #	(or any later version)
 #
 #	mawk
@@ -32,7 +32,7 @@
 
 # Specify default values for environment variables if they are unset.
 : ${AWK=awk}
-: ${TZDIR=$(pwd)}
+: ${TZDIR=@TZDIR@}
 
 # Check for awk Posix compliance.
 ($AWK -v x=y 'BEGIN { exit 123 }') </dev/null >/dev/null 2>&1

@@ -22,6 +22,216 @@ Tue Jan  7 09:48:15 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
 	* signal/sigempty.c (sigemptyset): Correct typo: Empty set should
 	have all bits zero.
 
+Sun Jan 19 04:38:20 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* config.make.in (have-ksh, KSH): New variables.  Will be filled
+	in by configure.
+	* configure.in: Add test for ksh like shell (prefer bash).
+	* time/Makefile (tests): Depend on install-test-data.
+	(distribute): Add simplebackw.
+	(generated-dirs): New variable.
+	[$(have-ksh)==yes] (install-others): Add iso3166.tab and zone.tab.
+	(install-bin): Add tzselect.
+	(install-test-data): Install the zoneinfo files which are needed
+	for the test case in the build directory.
+	(test-tz-ENV): New variable.  Call test-tz program using data in
+	build directory.
+	* time/simpleback: New file.
+	* time/test-tz.c: Pretty print.
+	* time/tzfile.c: Use value of environment variable TZDIR as directory
+	to look for zone info files.
+	don't let search for DST data destroy already found values.
+	* time/tzselect.ksh: Use @KSH@ and @TZDIR@ to be substituted when
+	installing.
+	* time/tzset.c (__tzset_internal): Avoid freeing string twice.
+	Set DST zone name to normal zone name if no information is provided.
+
+	* time/mktime.c (mktime): Call __tzset_internal to use current
+	value of TZ.
+
+	* Makerules (common-clean): Remove $(generated-dirs) inclusing content.
+
+	* glibcbug.in: Fix several bugs.  Reported by several people.
+
+	* elf/Makefile: Correct dependecies for $(objpfx)ldd.
+
+	* inet/netinet/ip.h: Define IPTOS_LOWCOST and IPTOS_MINCOST.
+
+	* locale/C-time.c: Update copyright.
+	* locale/localeinfo.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/direntry.h: Likewise.
+
+	* locale/programs/ld-time.c (time_finish): Correct message string.
+	* locale/programs/linereader.c (lr_token): Use correctly `number'
+	not `digit' in message string.
+
+	* stdlib/strtol.c [UNSIGNED]: Don't punt immediately when `-' is
+	seen.  Instead return ULONG_MAX and set ERANGE.
+	* stdlib/tst-strtol.c: Correct test to reflect above change.
+
+Sun Jan 19 03:22:30 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/mtio.h: Don't use <linux/mtio.h>.
+	We must not use <linux/posix_types.h>.
+
+	* sysdeps/unix/sysv/linux/sys/ipc_buf.h: Don't use __kernel_* types
+	since we must not use <linux/posix_types.h>.
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/ipc_buf.h: New file.  Similar
+	to sysdeps/unix/sysv/linux/sys/ipc_buf.h, but use alpha relavent
+	types.
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: New file.  Similar
+	to sysdeps/unix/sysv/linux/sys/procfs.h, but use alpha relavent
+	types.
+
+Sun Jan 19 01:48:20 1997  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/libm-i387/e_exp.S: Correct computation of fractional
+	part.
+	* sysdeps/libm-i387/e_expf.S: Likewise.
+	* sysdeps/libm-i387/e_expl.S: Likewise.
+	* sysdeps/libm-i387/s_expm1.S: Correct computation of fractional
+	part.  Take care of additional value left on stack by fscale.
+	* sysdeps/libm-i387/s_expm1f.S: Likewise.
+	* sysdeps/libm-i387/s_expm1l.S: Likewise.
+
+Fri Jan 17 17:45:32 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/getopt.c: Change all direct usages of `gettext' to `_'.
+
+	* sysdeps/generic/sysd-stdio.c (__stdio_reopen): Add missing
+	parameter.
+	Reported by Harmanjit Singh <harman@netearth.iitd.ernet.in>.
+
+Thu Jan 16 23:39:25 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/Makefile (tests): Add scanf11.
+	* stdio-common/scanf11.c: New file.
+	* stdio-common/vfscanf.c (__vfscanf): Increment `done' when %n
+	was processed and value is not suppressed.
+	* stdio-common/bug10.c: Correct test to expect %n increment the
+	return value of scanf.
+	* stdio-common/scanf1.c: Likewise.
+	* stdio-common/scanf3.c: Likewise.
+	* stdio-common/scanf10.c: Likewise.
+	* stdio-common/tstdiomisc.c: Likewise.
+
+	* time/strptime.c: Add lots of conditional compiling to enable use
+	outside glibc.  When used in glibc, make sure C locale format
+	strings will always be recognized.
+
+Sat Jan 11 18:53:47 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h (major, minor, makedev):
+	Fix definitions so that they work with __kernel_dev_t.
+
+Sat Jan 11 14:24:10 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/kernel_sigaction.h,
+	sysdeps/unix/sysv/linux/alpha/kernel_sigaction.h,
+	sysdeps/unix/sysv/linux/sigaction.c: New files.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add s_sigaction.
+
+Sun Jan 12 15:22:33 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc-symbols.h (link_warning): Make sure that the .gnu.warning
+	section is not allocated.
+	Update and reformat copyright.
+
+Sun Jan 12 12:19:28 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/Makefile ($(objpfx)ldd): Fix depedency list.
+
+Sat Jan 11 15:11:26 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/Makefile ($(common-objpfx)sysd-syscalls): Fix
+	command so that it works in subdirectories.
+
+Wed Jan  8 22:07:58 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add s_getgroups and
+	s_setgroups.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgroups.c,
+	sysdeps/unix/sysv/linux/i386/setgroups.c,
+	sysdeps/unix/sysv/linux/m68k/getgroups.c,
+	sysdeps/unix/sysv/linux/m68k/setgroups.c: New files.
+
+Wed Jan  8 19:42:59 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (config.status): Delete bogus rule.
+	($(objpfx)glibcbug): Renamed from plain `glibcbug', depend on
+	config.status in build directory, fix command to change to build
+	directory.
+	* Makeconfig ($(common-objpfx)config.status): Depend on version.h.
+
+Thu Jan  9 08:47:54 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* glibcbug.in (while): We test for four and not five conditions,
+	set MAIL_AGENT instead of RMAIL, filter spaces and tabs.
+
+Thu Jan 16 22:00:27 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/syslog.c: Don't define cancel_handler if _LIBC_REENTRANT
+	is not defined.  Reported by Andreas Jaeger.
+
+Thu Jan  9 08:47:54 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* new-malloc/malloc.c (__MALLOC_P): define call to pthread
+	initializer only if NO_THREADS is not defined.
+
+Wed Jan  8 21:28:58 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* resolv/nss_dns/dns-host.c: Clean-up: delete unnecessary includes
+	and variables.
+
+Thu Jan 16 21:50:27 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/arpa/inet.h: Include <netinet/in.h> to get struct in_addr
+	defined.
+
+Tue Jan  7 17:29:59 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (LDLIBS-c.so): New variable.
+
+Tue Jan  7 19:22:00 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile ($(includedir)/gnu/lib-names.h): Define the library
+	names as strings, not as sequence of tokens that may fall apart.
+
+Fri Jan 10 14:08:41 1997  Roland McGrath  <roland@fmh.frob.com>
+
+	* time/tzfile.c (__tzfile_read): Check for bogus type and zone name
+	indices in data file and punt, so a bogus file can't crash us.
+
+Thu Jan 16 20:29:15 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* values.h [__USE_MISC]: Define BITSPERBYTE.
+
+Fri Jan 17 14:16:28 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* stdio/vdprintf.c: Moved file to ...
+	* sysdeps/posix/vdprintf.c: Here.  De-ansideclificate.
+	* sysdeps/stub/vdprintf.c: New file.
+	* sysdeps/mach/hurd/vdprintf.c: New file.
+
+Thu Jan  9 15:59:35 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/posix_opt.h: New file.
+
+	* sysdeps/mach/hurd/sigwait.c (sigwait): Don't affect signal mask.
+
+	* sysdeps/unix/bsd/tcsendbrk.c (tcsendbreak): Finish
+	deansideclification.
+
+	* sysdeps/mach/libc-lock.h: Add kludges to pretend to implement
+	recursive locks.
+
+Tue Jan  7 09:48:15 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* signal/sigempty.c (sigemptyset): Correct typo: Empty set should
+	have all bits zero.
+
 Tue Jan  7 23:44:39 1997  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/gethstbynm.c: Include additional headers for additional

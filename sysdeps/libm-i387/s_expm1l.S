@@ -1,8 +1,9 @@
 /* ix87 specific implementation of exp(x)-1.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
    Based on code by John C. Bowman <bowman@ipp-garching.mpg.de>.
+   Corrections by H.J. Lu (hjl@gnu.ai.mit.edu), 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -64,15 +65,16 @@ ENTRY(__expm1l)
 	fmulp			// log2(e)*x
 	fld	%st		// log2(e)*x : log2(e)*x
 	frndint			// int(log2(e)*x) : log2(e)*x
-	fsub	%st, %st(1)	// int(log2(e)*x) : fract(log2(e)*x)
+	fsubr	%st, %st(1)	// int(log2(e)*x) : fract(log2(e)*x)
 	fxch			// fract(log2(e)*x) : int(log2(e)*x)
 	f2xm1			// 2^fract(log2(e)*x)-1 : int(log2(e)*x)
 	fscale			// 2^(log2(e)*x)-2^int(log2(e)*x) : int(log2(e)*x)
 	fxch			// int(log2(e)*x) : 2^(log2(e)*x)-2^int(log2(e)*x)
 	fldl	MO(one)		// 1 : int(log2(e)*x) : 2^(log2(e)*x)-2^int(log2(e)*x)
-	fscale			// 2^int(log2(e)*x) : 2^(log2(e)*x)-2^int(log2(e)*x)
-	faddp			// 2^(log2(e)*x)
-	fsubl	MO(one)
+	fscale			// 2^int(log2(e)*x) : int(log2(e)*x) : 2^(log2(e)*x)-2^int(log2(e)*x)
+	fsubrl	MO(one)		// 1-2^int(log2(e)*x) : int(log2(e)*x) : 2^(log2(e)*x)-2^int(log2(e)*x)
+	fstp	%st(1)		// 1-2^int(log2(e)*x) : 2^(log2(e)*x)-2^int(log2(e)*x)
+	fsubrp	%st, %st(1)	// 2^(log2(e)*x)
 	ret
 
 2:	testl	$0x200, %eax	// Test sign.

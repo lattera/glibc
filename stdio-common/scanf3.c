@@ -13,7 +13,7 @@ main(int arc, char *argv[])
   printf("Result of sscanf = %d\n", res);
   printf("Scanned format %%u = %u\n", val);
   printf("Possibly scanned format %%n = %d\n", n);
-  if (n != 3 || val != 111 || res != 1)
+  if (n != 3 || val != 111 || res != 2)
     abort ();
 
   val = n = -1;
@@ -21,7 +21,7 @@ main(int arc, char *argv[])
   printf("Result of sscanf = %d\n", res);
   printf("Scanned format %%u = %u\n", val);
   printf("Possibly scanned format %%n = %d\n", n);
-  if (n != 3 || val != 111 || res != 1)
+  if (n != 3 || val != 111 || res != 2)
     abort ();
 
   return 0;

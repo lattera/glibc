@@ -40,6 +40,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
+#include <netinet/in.h>		/* To define `struct in_addr'.  */
 
 __BEGIN_DECLS
 u_long		 inet_addr __P((const char *));

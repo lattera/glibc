@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -452,15 +452,18 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  /* Corrigendum 1 to ISO C 1990 describes the allowed flags
 	     with the 'n' conversion specifier.  */
 	  if (!(flags & SUPPRESS))
-	    /* Don't count the read-ahead.  */
-	    if (flags & LONGDBL)
-	      *ARG (long long int *) = read_in;
-	    else if (flags & LONG)
-	      *ARG (long int *) = read_in;
-	    else if (flags & SHORT)
-	      *ARG (short int *) = read_in;
-	    else
-	      *ARG (int *) = read_in;
+	    {
+	      /* Don't count the read-ahead.  */
+	      if (flags & LONGDBL)
+		*ARG (long long int *) = read_in;
+	      else if (flags & LONG)
+		*ARG (long int *) = read_in;
+	      else if (flags & SHORT)
+		*ARG (short int *) = read_in;
+	      else
+		*ARG (int *) = read_in;
+	      ++done;
+	    }
 	  break;
 
 	case 'c':	/* Match characters.  */

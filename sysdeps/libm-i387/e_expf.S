@@ -25,7 +25,7 @@ ENTRY(__ieee754_expf)
 	fmulp				/* x * log2(e) */
 	fstl	%st(1)
 	frndint				/* int(x * log2(e)) */
-	fsub	%st,%st(1)		/* fract(x * log2(e)) */
+	fsubr	%st,%st(1)		/* fract(x * log2(e)) */
 	fxch
 	f2xm1				/* 2^(fract(x * log2(e))) - 1 */
 	fld1

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -344,6 +344,8 @@ endef
 # Also omits crti.o and crtn.o, which we do not want
 # since we define our own `.init' section specially.
 LDFLAGS-c.so = -nostdlib -nostartfiles
+# But we still want to link libc.so against -lgcc.
+LDLIBS-c.so = -lgcc
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
 # Use our own special initializer and finalizer files for libc.so.
@@ -823,6 +825,7 @@ endef
 # Also remove the dependencies and generated source files.
 common-clean: common-mostlyclean
 	-rm -f $(addprefix $(objpfx),$(generated)) $(+depfiles)
+	-rm -fr $(addprefix $(objpfx),$(generated-dirs))
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
 	-rm -f $(common-objpfx)distinfo-$(subdir)
 

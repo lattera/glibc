@@ -1,5 +1,5 @@
 /* Old compatibility names for <limits.h> and <float.h> constants.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,9 @@
    <limits.h> and/or <float.h> instead of <values.h>.  */
 
 #ifndef	_VALUES_H
+
 #define	_VALUES_H	1
+#include <features.h>
 
 #include <limits.h>
 
@@ -30,7 +32,7 @@
 #define CHARBITS	_TYPEBITS (char)
 #define SHORTBITS	_TYPEBITS (short int)
 #define INTBITS		_TYPEBITS (int)
-#define LONGBITS	_TYPEBITS (long)
+#define LONGBITS	_TYPEBITS (long int)
 #define PTRBITS		_TYPEBITS (char *)
 #define DOUBLEBITS	_TYPEBITS (double)
 #define FLOATBITS	_TYPEBITS (float)
@@ -58,5 +60,10 @@
 #define	DMAXEXP		DBL_MAX_EXP
 #define	FMAXEXP		FLT_MAX_EXP
 
+
+#ifdef __USE_MISC
+/* Some systems define this name instead of CHAR_BIT or CHARBITS.  */
+#define BITSPERBYTE	CHAR_BIT
+#endif
 
 #endif	/* values.h */

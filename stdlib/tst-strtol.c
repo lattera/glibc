@@ -37,8 +37,8 @@ static const struct ltest tests[] =
     { "  0",		0,		0,	0,	0 },
     { "0xffffffffg",	0xffffffff,	0,	'g',	0 },
     { "0xf1f2f3f4f5",	0xffffffff,	0,	0,	ERANGE },
-    { "-0x123456789",	0,		0,	0,	EINVAL },
-    { "-0xfedcba98",	0,		0,	0,	EINVAL },
+    { "-0x123456789",	0xffffffff,	0,	0,	ERANGE },
+    { "-0xfedcba98",	0xffffffff,	0,	0,	ERANGE },
     { NULL,		0,		0,	0,	0 },
 #else
     /* assume 64 bit long... */
@@ -65,8 +65,8 @@ static const struct ltest tests[] =
     { "0xffffffffg",	0xffffffff,	0,	'g',	0 },
     { "0xffffffffffffffffg",	0xffffffffffffffff,	0,	'g',	0 },
     { "0xf1f2f3f4f5f6f7f8f9",	0xffffffffffffffff,	0,	0,	ERANGE },
-    { "-0x123456789abcdef01",	0,			0,	0,	EINVAL },
-    { "-0xfedcba987654321",	0,			0,	0,	EINVAL },
+    { "-0x123456789abcdef01",	0xffffffffffffffff,	0,	0,	ERANGE },
+    { "-0xfedcba987654321",	0xffffffffffffffff,	0,	0,	ERANGE },
     { NULL,		0,		0,	0,	0 },
 #endif
   };

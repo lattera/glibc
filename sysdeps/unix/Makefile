@@ -289,7 +289,7 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 	  test -f $$dir/syscalls.list && \
 	  { $(SHELL) $(dir $<)$(notdir $<) \
 		     $$dir $(object-suffixes) || exit 1; }; \
-	  test $$dir = sysdeps/unix && break; \
+	  test $$dir = $(..)sysdeps/unix && break; \
 	done > $@T
 	mv -f $@T $@
 

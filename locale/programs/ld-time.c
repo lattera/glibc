@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -335,7 +335,7 @@ time_finish (struct localedef_t *locale)
 	  if (str == NULL || *str == '\0')
 	    {
 	      error (0, 0, _("missing era name in string %d in `era' field"
-			     "in category `%s'"), idx + 1, "LC_TIME");
+			     " in category `%s'"), idx + 1, "LC_TIME");
 	      time->era_entries[idx].name =
 		time->era_entries[idx].format = "";
 	    }

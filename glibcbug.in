@@ -29,11 +29,11 @@ trap 'rm -f $TEMP $TEMP.x' 0
 PASSWD="cat /etc/passwd"
 
 if [ -f /usr/lib/sendmail ] ; then
-        RMAIL="/usr/lib/sendmail -oi -t"
+        MAIL_AGENT="/usr/lib/sendmail -oi -t"
 elif [ -f /usr/sbin/sendmail ] ; then
-        RMAIL="/usr/sbin/sendmail -oi -t"
+        MAIL_AGENT="/usr/sbin/sendmail -oi -t"
 else
-        RMAIL=rmail
+        MAIL_AGENT=rmail
 fi
 
 # Figure out how to echo a string without a trailing newline
@@ -153,8 +153,8 @@ SED_CMD='
 /$PATTERN/{
 s|||
 s|<.*>||
-s|^[    ]*||
-s|[     ]*$||
+s|^[ 	]*||
+s|[ 	]*$||
 p
 q
 }'
@@ -199,7 +199,7 @@ while :; do
     *)  echo "$COMMAND: \`$CLASS' is not a valid value for \`Class'."
   esac
 
-  [ $CNT -lt 5 ] &&
+  [ $CNT -lt 4 ] &&
     echo "Errors were found with the problem report."
 
   while :; do
@@ -239,9 +239,9 @@ sed  -e "
 /^>Description:/,/^>[A-Za-z-]*:/s;$DESCRIPTION_C;;
 /^>How-To-Repeat:/,/^>[A-Za-z-]*:/s;$HOW_TO_REPEAT_C;;
 /^>Fix:/,/^>[A-Za-z-]*:/s;$FIX_C;;
-" $TEMP > $REF
+" $TEMP > $TEMP.x
 
-if $MAIL_AGENT < $REF; then
+if $MAIL_AGENT $BUGGLIBC < $TEMP.x; then
   echo "$COMMAND: problem report sent"
   xs=0; exit
 else

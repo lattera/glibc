@@ -17,7 +17,7 @@ struct {
 
 
 int
-main(int argc, char ** argv)
+main (int argc, char ** argv)
 {
   int errors = 0;
   struct tm tm;
@@ -36,8 +36,7 @@ main(int argc, char ** argv)
   for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
     {
       putenv (tests[i].env);
-      tzset ();
-      t = mktime(&tm);
+      t = mktime (&tm);
       if (t != tests[i].expected)
 	{
 	  printf ("%s: flunked test %u (expected %lu, got %lu)\n",

@@ -108,16 +108,12 @@ __tzset_internal (always)
 
   /* Free old storage.  */
   if (tz_rules[0].name != NULL && *tz_rules[0].name != '\0')
-    {
-      free((void *) tz_rules[0].name);
-      tz_rules[0].name = NULL;
-    }
+    free((void *) tz_rules[0].name);
   if (tz_rules[1].name != NULL && *tz_rules[1].name != '\0' &&
       tz_rules[1].name != tz_rules[0].name)
-    {
-      free((void *) tz_rules[1].name);
-      tz_rules[1].name = NULL;
-    }
+    free((void *) tz_rules[1].name);
+  tz_rules[0].name = NULL;
+  tz_rules[1].name = NULL;
 
   /* Save the value of `tz'.  */
   if (old_tz != NULL)
@@ -234,6 +230,9 @@ __tzset_internal (always)
 	  tz += l;
 	}
     }
+  else
+    /* There is no DST.  */
+    tz_rules[1].name = tz_rules[0].name;
 
   /* Figure out the DST offset from GMT.  */
   if (*tz == '-' || *tz == '+')

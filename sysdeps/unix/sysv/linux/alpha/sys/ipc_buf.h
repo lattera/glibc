@@ -46,11 +46,11 @@ __BEGIN_DECLS
 struct ipc_perm
   {
     __key_t __key;			/* Key.  */
-    unsigned short int uid;		/* Owner's user ID.  */
-    unsigned short int gid;		/* Owner's group ID.  */
-    unsigned short int cuid;		/* Creator's user ID.  */
-    unsigned short int cgid;		/* Creator's group ID.  */
-    unsigned short int mode;		/* Read/write permission.  */
+    unsigned int uid;			/* Owner's user ID.  */
+    unsigned int gid;			/* Owner's group ID.  */
+    unsigned int cuid;			/* Creator's user ID.  */
+    unsigned int cgid;			/* Creator's group ID.  */
+    unsigned int mode;			/* Read/write permission.  */
     unsigned short int __seq;		/* Sequence number.  */
   };
 

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 #
 #	Makefile for time routines
@@ -36,14 +36,20 @@ routines	:= offtime asctime clock ctime ctime_r difftime	\
 others	:= ap zdump zic
 tests	:= test_time clocktest test-tz
 
+# Before the test-tz test can be run we need the data to be installed.
+tests: install-test-data
+
+
 tzfiles := africa antarctica asia australasia europe northamerica \
 	   southamerica etcetera factory systemv backward \
 	   solar87 solar88 solar89
 # pacificnew doesn't compile; if it is to be used, it should be included in
 # northamerica.
-distribute := $(distribute) $(tzfiles) leapseconds pacificnew
+distribute := $(distribute) $(tzfiles) leapseconds pacificnew simplebackw
 
 install-sbin := zic zdump
+
+generated-dirs = testdata
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -70,6 +76,11 @@ install-others = $(addprefix $(zonedir)/,$(zonenames) \
 					 $(zonenames:%=posix/%) \
 					 $(zonenames:%=right/%)) \
 		 $(installed-localtime-file) $(installed-posixrules-file)
+endif
+
+ifeq ($(have-ksh),yes)
+install-others += $(zonedir)/iso3166.tab $(zonedir)/zone.tab
+install-bin += tzselect
 endif
 
 include ../Rules
@@ -146,3 +157,25 @@ CFLAGS-zic.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
 CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
 CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
 CFLAGS-tzfile.c = $(tz-cflags)
+
+# We have to make sure the data for testing the tz functions is available.
+.PHONY: install-test-data
+install-test-data: northamerica $(objpfx)zic $(leapseconds) yearistype \
+		   etcetera simplebackw
+	-mkdir $(objpfx)testdata
+	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
+	  -y yearistype northamerica
+	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
+	  -y yearistype etcetera
+	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
+	  -y yearistype simplebackw
+test-tz-ENV = TZDIR=$(objpfx)testdata
+
+
+$(objpfx)tzselect: tzselect.ksh
+	sed -e 's%@KSH@%$(KSH)%g' \
+	    -e 's%@TZDIR@%$(zonedir)%g' < $< > $@.new
+	chmod 555 $@.new
+	mv -f $@.new $@
+
+$(addprefix $(zonedir)/,iso3166.tab zone.tab): $(zonedir)/%: %; $(do-install)

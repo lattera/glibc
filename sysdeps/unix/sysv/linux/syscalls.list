@@ -35,6 +35,7 @@ s_getdents	EXTRA	getdents	3	__getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 s_reboot	EXTRA	reboot		3	__syscall_reboot
+s_sigaction	sigaction sigaction	3	__syscall_sigaction
 s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
 s_ustat		ustat	ustat		2	__syscall_ustat

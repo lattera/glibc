@@ -260,7 +260,7 @@ incompatibilities:
 
 * swapon(): the interface of this function didn't changed, but the
   prototype is in a separate header file <sys/swap.h>.  For the additional
-  argument of of swapon() you should use the SWAP_* constants from
+  argument of swapon() you should use the SWAP_* constants from
   <linux/swap.h>, which get defined when <sys/swap.h> is included.
 
 * errno: If a program uses variable "errno", then it _must_ include header
@@ -297,6 +297,13 @@ incompatibilities:
   the resolver library are not included in the libc itself.  There is
   a separate library libresolv.  If you find some symbols starting with
   `res_*' undefined simply add -lresolv to your call of the linker.
+
+* the `signal' function's behaviour corresponds to the BSD semantic and
+  not the SysV semantic as it was in libc-5.  The interface on all GNU
+  systems shall be the same and BSD is the semantic of choice.  To use
+  the SysV behaviour simply use `sysv_signal'.  The major difference is
+  that the SysV implementation sets the SA_ONESHOT flag and so the handler
+  gets removed after the first call.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -365,10 +372,10 @@ catalog files to the XPG4 form:
 [Q13]	``How do I configure GNU libc so that the essential libraries
 	  like libc.so go into /lib and the other into /usr/lib?''
 
-[A13] {UD} Like all other GNU packages GNU libc is configured to use a
-base directory and install all files relative to this.  If you intend
-to really use GNU libc on your system this base directory is /usr.  I.e.,
-you run
+[A13] {UD,AJ} Like all other GNU packages GNU libc is configured to
+use a base directory and install all files relative to this.  If you
+intend to really use GNU libc on your system this base directory is
+/usr.  I.e., you run
 	configure --prefix=/usr <other_options>
 
 Some systems like Linux have a filesystem standard which makes a
@@ -378,10 +385,10 @@ located on the same disk partition as /.  The /usr subtree might be
 found on another partition/disk.
 
 To install the essential libraries which come with GNU libc in /lib
-one must explicitly tell this.  Autoconf has no option for this so you
-have to use the file where all user supplied additional information
-should go in: `configparms' (see the `INSTALL' file).  For Linux the
-`configparms' file should contain:
+one must explicitly tell this (except on Linux, see below).  Autoconf
+has no option for this so you have to use the file where all user
+supplied additional information should go in: `configparms' (see the
+`INSTALL' file).  Therefore the `configparms' file should contain:
 
 slibdir=/lib
 sysconfdir=/etc
@@ -389,6 +396,10 @@ sysconfdir=/etc
 The first line specifies the directory for the essential libraries,
 the second line the directory for file which are by tradition placed
 in a directory named /etc.
+
+No rule without an exception: If you configure for Linux with
+--prefix=/usr, then slibdir and sysconfdir will automatically be
+defined as stated above.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -534,7 +545,7 @@ a different name: ld-linux.so.2.  So you have to replace
 by
 	%{!dynamic-linker:-dynamic-linker=/home/gnu/lib/ld.so.1}
 
-in the above example specs file ti make it work for other systems.
+in the above example specs file to make it work for other systems.
 
 Future versions of GCC will automatically provide the correct specs.
 
@@ -606,6 +617,7 @@ Answers were given by:
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
 {RM} Roland McGrath, <roland@gnu.ai.mit.edu>
 {HJL} H.J. Lu, <hjl@gnu.ai.mit.edu>
+{AJ} Andreas Jaeger, <aj@arthur.pfalz.de>
 
 Local Variables:
  mode:text

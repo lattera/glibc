@@ -383,6 +383,21 @@ else
 fi
 AC_SUBST(libc_cv_have_bash2)
 
+dnl We need a ksh compatible shell for tzselect.
+if test "$BASH" = no; then
+  AC_PATH_PROG(KSH, ksh, no)
+  if test "$KSH" = no; then
+    libc_cv_have_ksh=no
+  else
+    libc_cv_have_ksh=yes
+  fi
+else
+  KSH="$BASH"
+  AC_SUBST(KSH)
+  libc_cv_have_ksh=yes
+fi
+AC_SUBST(libc_cv_have_ksh)
+
 AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c

@@ -84,11 +84,6 @@
 #include <string.h>
 #include <sys/syslog.h>
 
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <arpa/nameser.h>
-#include <resolv.h>
-
 #include "nsswitch.h"
 
 /* Get implementation for some internal functions.  */
@@ -126,14 +121,6 @@ enum nss_status
 _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 			   char *buffer, size_t buflen, int *h_errnop)
 {
-  struct host_data
-  {
-    char *aliases[MAX_NR_ALIASES];
-    unsigned char host_addr[16];	/* IPv4 or IPv6 */
-    char *h_addr_ptrs[MAX_NR_ADDRS + 1];
-    char linebuffer[0];
-  } *host_data = (struct host_data *) buffer;
-  int linebuflen = buflen - offsetof (struct host_data, linebuffer);
   querybuf host_buffer;
   int size, type, n;
   const char *cp;

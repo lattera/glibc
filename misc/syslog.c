@@ -73,7 +73,9 @@ __libc_lock_define_initialized (static, syslog_lock)
 static void openlog_internal(const char *, int, int);
 static void closelog_internal(void);
 static void sigpipe_handler (int);
+#ifdef _LIBC_REENTRANT
 static void cancel_handler (void *);
+#endif
 
 /*
  * syslog, vsyslog --
@@ -310,6 +312,7 @@ closelog ()
   __libc_cleanup_region_end (1);
 }
 
+#ifdef _LIBC_REENTRANT
 static void
 cancel_handler (void *ptr)
 {
@@ -322,6 +325,7 @@ cancel_handler (void *ptr)
   /* Free the lock.  */
   __libc_lock_unlock (syslog_lock);
 }
+#endif
 
 /* setlogmask -- set the log mask level */
 int
