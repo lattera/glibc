@@ -1,3 +1,10 @@
+1999-07-23  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/bits/termios.h (ONOEOT): Change value to 1<<3, to
+	match BSD value; previous value of 1<<8 was a typo.  I bet nothing
+	ever used this, so I'm not going to worry about compatibility.
+	[__USE_GNU] (IUCLC, OLCUC): New macros.
+
 1999-07-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/libintl.h: Undefine N_ and _ first to avoid warnings.
