@@ -39,7 +39,7 @@
 
 
 #ifndef __P
-# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+# if defined __GNUC__ || (defined __STDC__ && __STDC__)
 #  define __P(args) args
 # else
 #  define __P(args) ()
@@ -101,47 +101,24 @@ localtime_r (t, tp)
 #ifdef _NL_CURRENT
 # define get_alt_number(from, to, n) \
   ({									      \
-    __label__ do_normal;						      \
-    if (*decided != raw)						      \
-      {									      \
-	const char *alts = _NL_CURRENT (LC_TIME, ALT_DIGITS);		      \
-	int __n = n;							      \
-	int any = 0;							      \
-	while (*rp == ' ')						      \
-	  ++rp;								      \
-	val = 0;							      \
-	do {								      \
-	  val *= 10;							      \
-	  while (*alts != '\0')						      \
-	    {								      \
-	      size_t len = strlen (alts);				      \
-	      if (strncasecmp (alts, rp, len) == 0)			      \
-	        break;							      \
-	      alts += len + 1;						      \
-	      ++val;							      \
-	    }								      \
-	  if (*alts == '\0')						      \
-	    {								      \
-	      if (*decided == not && ! any)				      \
-		goto do_normal;						      \
-	      /* If we haven't read anything it's an error.  */		      \
-	      if (! any)						      \
-		return NULL;						      \
-	      /* Correct the premature multiplication.  */		      \
-	      val /= 10;						      \
-	      break;							      \
-	    }								      \
-	  else								      \
-	    *decided = loc;						      \
-	} while (--__n > 0 && val * 10 <= to);				      \
+     __label__ do_normal;						      \
+									      \
+     if (*decided != raw)						      \
+       {								      \
+	 val = _nl_parse_alt_digit (&rp);				      \
+	 if (val == -1 && *decided != loc)				      \
+	   {								      \
+	     *decided = loc;						      \
+	     goto do_normal;						      \
+	   }								      \
 	if (val < from || val > to)					      \
 	  return NULL;							      \
-      }									      \
-    else								      \
-      {									      \
+       }								      \
+     else								      \
+       {								      \
        do_normal:							      \
-        get_number (from, to, n);					      \
-      }									      \
+	 get_number (from, to, n);					      \
+       }								      \
     0;									      \
   })
 #else
@@ -770,6 +747,7 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 	      tm->tm_year = val;
 	      want_era = 1;
 	      want_xday = 1;
+	      want_century = 1;
 	      break;
 	    case 'Y':
 	      if (*decided != raw)
@@ -893,7 +871,7 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 	      /* Match hour in 12-hour clock using alternate numeric
 		 symbols.  */
 	      get_alt_number (1, 12, 2);
-	      tm->tm_hour = val - 1;
+	      tm->tm_hour = val % 12;
 	      have_I = 1;
 	      break;
 	    case 'm':
@@ -963,7 +941,7 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 
   if (era_cnt != -1)
     {
-      era = _nl_select_era_entry(era_cnt);
+      era = _nl_select_era_entry (era_cnt);
       if (want_era)
 	tm->tm_year = (era->start_date[0]
 		       + ((tm->tm_year - era->offset)
@@ -974,7 +952,12 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
     }
   else
     if (want_era)
-      return NULL;
+      {
+	/* No era found but we have seen an E modifier.  Rectify some
+	   values.  */
+	if (want_century && century == -1 && tm->tm_year < 69)
+	  tm->tm_year += 100;
+      }
 
   if (want_xday && !have_wday)
     {
@@ -993,8 +976,10 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 	}
       day_of_the_week (tm);
     }
+
   if (want_xday && !have_yday)
     day_of_the_year (tm);
+
   if ((have_uweek || have_wweek) && have_wday)
     {
       int save_wday = tm->tm_wday;

@@ -205,6 +205,9 @@ extern const char *_nl_get_alt_digit (unsigned int number);
 /* Similar, but now for wide characters.  */
 extern const wchar_t *_nl_get_walt_digit (unsigned int number);
 
+/* Parse string as alternative digit and return numeric value.  */
+extern int _nl_parse_alt_digit (const char **strp);
+
 /* Postload processing.  */
 extern void _nl_postload_ctype (void);
 extern void _nl_postload_time (void);

@@ -1,5 +1,5 @@
 /* Define current locale data for LC_TIME category.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -247,6 +247,63 @@ _nl_get_walt_digit (unsigned int number)
   __libc_lock_unlock (__libc_setlocale_lock);
 
   return (wchar_t *) result;
+}
+
+
+int
+_nl_parse_alt_digit (const char **strp)
+{
+  const char *str = *strp;
+  int result = -1;
+  size_t cnt;
+  size_t maxlen = 0;
+
+  __libc_lock_lock (__libc_setlocale_lock);
+
+  if (alt_digits_initialized == 0)
+    {
+      alt_digits_initialized = 1;
+
+      if (alt_digits == NULL)
+	alt_digits = malloc (100 * sizeof (const char *));
+
+      if (alt_digits != NULL)
+	{
+	  const char *ptr = _NL_CURRENT (LC_TIME, ALT_DIGITS);
+
+	  if (alt_digits != NULL)
+	    for (cnt = 0; cnt < 100; ++cnt)
+	      {
+		alt_digits[cnt] = ptr;
+
+		/* Skip digit format. */
+		ptr = strchr (ptr, '\0') + 1;
+	      }
+	}
+    }
+
+  /* Matching is not unambiguos.  The alternative digits could be like
+     I, II, III, ... and the first one is a substring of the second
+     and third.  Therefore we must keep on searching until we found
+     the longest possible match.  Note that this is not specified in
+     the standard.  */
+  for (cnt = 0; cnt < 100; ++cnt)
+    {
+      size_t len = strlen (alt_digits[cnt]);
+
+      if (len > maxlen && strncmp (alt_digits[cnt], str, len) == 0)
+	{
+	  maxlen = len;
+	  result = (int) cnt;
+	}
+    }
+
+  __libc_lock_unlock (__libc_setlocale_lock);
+
+  if (result != -1)
+    *strp += maxlen;
+
+  return result;
 }
 
 

@@ -1,5 +1,11 @@
 2001-08-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/lc-time.c (_nl_parse_alt_digit): New function.
+	* locale/localeinfo.h: Add prototype for it.
+	* time/strptime.c (get_alt_number): Use _nl_parse_alt_digit to get
+	the value.  Correct computation of hour for %OI.  If no %EC given
+	but %Ey use numeric formular.
+
 	* dlfcn/Makefile (tststatic-ENV): Also add $(common-objpfx)elf for
 	ld.so.
 
