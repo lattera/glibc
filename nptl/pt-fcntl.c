@@ -38,7 +38,7 @@ __fcntl (int fd, int cmd, ...)
   va_start (ap, cmd);
 
 #ifdef INLINE_SYSCALL
-  int result = INLINE_SYSCALL (fcntl, 3, fd, cmd, va_arg (ap, long int));
+  int result = INLINE_SYSCALL (fcntl64, 3, fd, cmd, va_arg (ap, long int));
 #else
   int result = __libc_fcntl (fd, cmd, va_arg (ap, long int));
 #endif

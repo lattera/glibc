@@ -1,5 +1,7 @@
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* pt-fcntl.c (__fcntl): Use fcntl64 syscall, not fcntl.
+
 	* Versions [libpthread: GLIBC_2.3.2]: Remove creat, poll, pselect,
 	readv, select, sigpause, sigsuspend, sigwaitinfo, waitid, writev.
 	* Makefile (libpthread-routines): Remove pt-creat, pt-poll,

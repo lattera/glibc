@@ -35,8 +35,8 @@ extern int __syscall_fcntl64 (int __fd, int __cmd, ...);
 int __have_no_fcntl64;
 
 
-int
-__libc_fcntl (int fd, int cmd, ...)
+static int
+do_fcntl (int fd, int cmd, ...)
 {
 # ifdef __NR_fcntl64
   if (! __have_no_fcntl64)

@@ -155,10 +155,6 @@ libpthread {
     # Cancellation wrapper
     __nanosleep;
   }
-  GLIBC_2.3.2 {
-    creat; poll; pselect; readv; select; sigpause; sigsuspend;
-    sigwaitinfo; __xpg_sigpause; waitid; writev;
-  }
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread
     __libc_internal_tsd_get; __libc_internal_tsd_set;

@@ -1,3 +1,10 @@
+2002-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions [libpthread: GLIBC_2.3.2]: Remove creat, poll, pselect,
+	readv, select, sigpause, sigsuspend, sigwaitinfo, waitid, writev.
+	* wrapsyscall.c: Remove creat, poll, pselect, readv, select,
+	sigpause, sigsuspend, sigwaitinfo, waitid, and writev wrappers.
+
 2002-12-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* wrapsyscall.c (CANCELABLE_SYSCALL): Don't define function as

@@ -1,12 +1,16 @@
+2002-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (do_fcntl): This is the
+	original __libc_fcntl code.  Just renamed.
+
 2002-12-15  Andreas Schwab  <schwab@suse.de>
 
-	* sysdeps/unix/sysv/linux/m68k/clone.S: Make inline syscall to
-	_exit.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Make inline syscall to _exit.
 
-2002-12-14  Olaf Hering <olh@suse.de>
+2002-12-14  Olaf Hering  <olh@suse.de>
 
-        * sysdeps/powerpc/bits/setjmp.h: Include <bits/wordsize.h>.
-        * sysdeps/powerpc/powerpc64/setjmp.S: Fix typo in r18 load.
+	* sysdeps/powerpc/bits/setjmp.h: Include <bits/wordsize.h>.
+	* sysdeps/powerpc/powerpc64/setjmp.S: Fix typo in r18 load.
 
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
