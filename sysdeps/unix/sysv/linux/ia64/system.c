@@ -16,12 +16,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sched.h>
-#include <signal.h>
-#include <sysdep.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <bits/libc-lock.h>
 #include <kernel-features.h>
 
 /* We have to and actually can handle cancelable system().  The big
@@ -38,37 +32,4 @@
 		  &pid, NULL, NULL)
 #endif
 
-static void cancel_handler (void *arg);
-
-#define CLEANUP_HANDLER \
-  __libc_cleanup_region_start (1, cancel_handler, &pid)
-
-#define CLEANUP_RESET \
-  __libc_cleanup_region_end (0)
-
-
-/* Linux has waitpid(), so override the generic unix version.  */
-#include <sysdeps/posix/system.c>
-
-
-/* The cancellation handler.  */
-static void
-cancel_handler (void *arg)
-{
-  pid_t child = *(pid_t *) arg;
-
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (kill, err, 2, child, SIGKILL);
-
-  TEMP_FAILURE_RETRY (__waitpid (child, NULL, 0));
-
-  DO_LOCK ();
-
-  if (SUB_REF () == 0)
-    {
-      (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
-      (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
-    }
-
-  DO_UNLOCK ();
-}
+#include "../system.c"
