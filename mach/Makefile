@@ -65,7 +65,7 @@ generated =
 # Define mach-syscalls and sysno-*.
 ifndef no_deps
 ifndef inhibit_mach_syscalls
-include $(objpfx)mach-syscalls.mk
+-include $(objpfx)mach-syscalls.mk
 endif
 endif
 $(objpfx)mach-syscalls.mk: syscalls.awk Makefile
