@@ -429,7 +429,6 @@ __pthread_initialize_minimal(void)
      part of the TLS allocation.  We have to initialize the data
      structure by hand.  This initialization must mirror the struct
      definition above.  */
-  self->p_header.data.self = self;
   self->p_nextlive = self->p_prevlive = self;
   self->p_tid = PTHREAD_THREADS_MAX;
   self->p_lock = &__pthread_handles[0].h_lock;
@@ -633,6 +632,7 @@ int __pthread_initialize_manager(void)
   }
 
   /* Initialize the descriptor.  */
+  tcb->p_header.data.tcb = tcb;
   tcb->p_header.data.self = tcb;
   tcb->p_lock = &__pthread_handles[1].h_lock;
 # ifndef HAVE___THREAD

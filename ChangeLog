@@ -1,5 +1,11 @@
 2002-08-11  Roland McGrath  <roland@redhat.com>
 
+	* elf/tst-tlsmod4.c (in_dso): Insert a random library call before use
+	of the TLS macros, otherwise the compiler might not have initialized
+	the PIC register yet when we use the PLT via asm.
+	* elf/tst-tlsmod3.c (in_dso2): Likewise.
+	* elf/tst-tlsmod2.c (in_dso): Likewise.
+
 	* sunrpc/svc_authux.c (_svcauth_unix): Remove spurious printf (ugh!).
 
 	* sysdeps/i386/bits/byteswap.h (__bswap_16, __bswap_32, __bswap_64):

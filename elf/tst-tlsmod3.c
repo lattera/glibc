@@ -15,10 +15,15 @@ COMMON_INT_DEF(comm_n);
 int
 in_dso2 (void)
 {
-  int *foop = TLS_GD (foo);
+  int *foop;
   int result = 0;
   static int n;
-  int *np = TLS_GD (comm_n);
+  int *np;
+
+  puts ("foo");			/* Make sure PLT is used before macros.  */
+
+  foop = TLS_GD (foo);
+  np = TLS_GD (comm_n);
 
   if (n != *np)
     {

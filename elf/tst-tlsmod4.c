@@ -12,8 +12,12 @@ COMMON_INT_DEF(baz);
 int
 in_dso (int n, int *caller_bazp)
 {
-  int *bazp = TLS_GD (baz);
+  int *bazp;
   int result = 0;
+
+  puts ("foo");			/* Make sure PLT is used before macros.  */
+
+  bazp = TLS_GD (baz);
 
   if (caller_bazp != NULL && bazp != caller_bazp)
     {
