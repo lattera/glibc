@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 union ieee754_float
   {
     float f;
-    
+
     /* This is the IEEE 754 single-precision format.  */
     struct
       {
@@ -61,7 +61,7 @@ union ieee754_float
 union ieee754_double
   {
     double d;
-    
+
     /* This is the IEEE 754 double-precision format.  */
     struct
       {
@@ -108,7 +108,7 @@ union ieee754_double
 union ieee854_long_double
   {
     long double d;
-    
+
     /* This is the IEEE 854 double-extended-precision format.  */
     struct
       {
@@ -127,7 +127,7 @@ union ieee854_long_double
 	unsigned int empty:16;
 #endif
       } ieee;
-    
+
     /* This is for NaNs in the IEEE 854 double-extended-precision format.  */
     struct
       {
@@ -144,7 +144,7 @@ union ieee854_long_double
 	unsigned int mantissa1:32;
 	unsigned int mantissa0:30;
 	unsigned int quiet_nan:1;
-	unsigned int one:1
+	unsigned int one:1;
 	unsigned int exponent:15;
 	unsigned int negative:1;
 	unsigned int empty:16;
