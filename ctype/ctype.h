@@ -216,8 +216,7 @@ toupper (int __c) __THROW
   ((locale)->__ctype_b[(int) (c)] & (unsigned short int) type)
 
 # define __exctype_l(name) 						      \
-  extern int name (int, __locale_t) __THROW;				      \
-  extern int __##name (int, __locale_t) __THROW
+  extern int name (int, __locale_t) __THROW
 
 /* The following names are all functions:
      int isCHARACTERISTIC(int c, locale_t *locale);
@@ -291,8 +290,8 @@ extern int toupper_l (int __c, __locale_t __l) __THROW;
 #  define isblank_l(c,l)	__isblank_l ((c), (l))
 
 #  if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
-#   define isascii_l(c,l)	__isascii ((c), (l))
-#   define toascii_l(c,l)	__toascii ((c), (l))
+#   define isascii_l(c,l)	__isascii_l ((c), (l))
+#   define toascii_l(c,l)	__toascii_l ((c), (l))
 #  endif
 
 # endif /* Not __NO_CTYPE.  */

@@ -1385,7 +1385,7 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
     *p = L_('\0');
   return i;
 }
-#ifdef _LIBC
+#if defined _LIBC && !defined USE_IN_EXTENDED_LOCALE_MODEL
 libc_hidden_def (my_strftime)
 #endif
 

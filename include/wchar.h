@@ -3,6 +3,20 @@
 
 # ifdef _WCHAR_H
 
+extern __typeof (wcscasecmp_l) __wcscasecmp_l;
+extern __typeof (wcsncasecmp_l) __wcsncasecmp_l;
+extern __typeof (wcscoll_l) __wcscoll_l;
+extern __typeof (wcsxfrm_l) __wcsxfrm_l;
+extern __typeof (wcstol_l) __wcstol_l;
+extern __typeof (wcstoul_l) __wcstoul_l;
+extern __typeof (wcstoll_l) __wcstoll_l;
+extern __typeof (wcstoull_l) __wcstoull_l;
+extern __typeof (wcstod_l) __wcstod_l;
+extern __typeof (wcstof_l) __wcstof_l;
+extern __typeof (wcstold_l) __wcstold_l;
+extern __typeof (wcsftime_l) __wcsftime_l;
+
+
 libc_hidden_proto (__wcstof_internal)
 libc_hidden_proto (__wcstod_internal)
 libc_hidden_proto (__wcstold_internal)

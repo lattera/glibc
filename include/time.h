@@ -4,6 +4,9 @@
 #else
 # include <time/time.h>
 
+extern __typeof (strftime_l) __strftime_l;
+extern __typeof (strptime_l) __strptime_l;
+
 libc_hidden_proto (time)
 libc_hidden_proto (asctime)
 libc_hidden_proto (mktime)

@@ -48,6 +48,11 @@ extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
    above are defined as macros in the headers.  */
 #include <string/string.h>
 
+extern __typeof (strcoll_l) __strcoll_l;
+extern __typeof (strxfrm_l) __strxfrm_l;
+extern __typeof (strcasecmp_l) __strcasecmp_l;
+extern __typeof (strncasecmp_l) __strncasecmp_l;
+
 /* Alternative version which doesn't pollute glibc's namespace.  */
 #undef strndupa
 #define strndupa(s, n)							      \

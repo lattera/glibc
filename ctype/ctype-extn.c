@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,3 +59,4 @@ __isblank_l (int c, __locale_t l)
 {
   return __isctype_l (c, _ISblank, l);
 }
+weak_alias (__isblank_l, isblank_l)

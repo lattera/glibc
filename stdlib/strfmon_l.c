@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the given locale.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -20,3 +20,5 @@
 
 #define USE_IN_EXTENDED_LOCALE_MODEL	1
 #include <strfmon.c>
+
+weak_alias (__strfmon_l, strfmon_l)

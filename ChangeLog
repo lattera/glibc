@@ -1,4 +1,33 @@
+2002-08-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* ctype/ctype.h (isascii_l, toascii_l): Define to __*_l counterparts.
+	* ctype/ctype-extn.c (isblank_l): Add weak alias.
+	* sysdeps/generic/strtol_l.c (strtol_l): Likewise.
+	* sysdeps/generic/strtoll_l.c (strtoll_l): Likewise.
+	* sysdeps/generic/strtoul_l.c (strtoul_l): Likewise.
+	* sysdeps/generic/strtoull_l.c (strtoull_l): Likewise.
+	* wctype/iswctype_l.c (iswctype_l): Likewise.
+
 2002-08-27  Roland McGrath  <roland@redhat.com>
+
+	* time/strftime.c [USE_IN_EXTENDED_LOCALE_MODEL]: No libc_hidden_def.
+
+	* ctype/ctype.h (__exctype_l): Don't declare __ name.
+	* stdlib/stdlib.h: Don't declare __*_l names.
+	* include/stdlib.h: Declare them here instead.
+	* include/string.h: Don't declare __*_l names.
+	* string/string.h: Declare them here instead.
+	* time/time.h: Don't declare __*_l names.
+	* include/time.h: Declare them here instead.
+	* wcsmbs/wchar.h: Don't declare __*_l names.
+	* include/wchar.h: Declare them here instead.
+	* wctype/wctype.h: Declare iswalnum_l, not __iswalnum_l.
+	Don't declare __*_l names.
+	* include/wctype.h: Declare them here instead.
+	* stdlib/monetary.h: Declare strfmon_l, not __strfmon_l.
+	* stdlib/strfmon_l.c (strfmon_l): Define as weak alias.
+	* locale/langinfo.h: Don't declare __nl_langinfo_l.
+	* include/langinfo.h: Declare it here with __typeof.
 
 	* time/strptime.c [USE_IN_EXTENDED_LOCALE_MODEL]: Define __strptime_l
 	instead, taking an extra __locale_t argument.

@@ -10,6 +10,14 @@
 /* Now define the internal interfaces.  */
 #ifndef __Need_M_And_C
 
+extern __typeof (strtol_l) __strtol_l;
+extern __typeof (strtoul_l) __strtoul_l;
+extern __typeof (strtoll_l) __strtoll_l;
+extern __typeof (strtoull_l) __strtoull_l;
+extern __typeof (strtod_l) __strtod_l;
+extern __typeof (strtof_l) __strtof_l;
+extern __typeof (strtold_l) __strtold_l;
+
 libc_hidden_proto (exit)
 libc_hidden_proto (abort)
 libc_hidden_proto (getenv)

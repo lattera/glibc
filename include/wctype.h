@@ -49,6 +49,21 @@ extern int __iswctype_internal (wint_t __wc, wctype_t __desc) attribute_hidden;
 extern wctype_t __wctype (__const char *__property);
 extern wint_t __towctrans (wint_t __wc, wctrans_t __desc);
 
+extern __typeof (iswalnum_l) __iswalnum_l;
+extern __typeof (iswalpha_l) __iswalpha_l;
+extern __typeof (iswblank_l) __iswblank_l;
+extern __typeof (iswcntrl_l) __iswcntrl_l;
+extern __typeof (iswdigit_l) __iswdigit_l;
+extern __typeof (iswlower_l) __iswlower_l;
+extern __typeof (iswgraph_l) __iswgraph_l;
+extern __typeof (iswprint_l) __iswprint_l;
+extern __typeof (iswpunct_l) __iswpunct_l;
+extern __typeof (iswspace_l) __iswspace_l;
+extern __typeof (iswupper_l) __iswupper_l;
+extern __typeof (iswxdigit_l) __iswxdigit_l;
+extern __typeof (towlower_l) __towlower_l;
+extern __typeof (towupper_l) __towupper_l;
+
 libc_hidden_proto (__iswctype)
 libc_hidden_proto (__iswalnum_l)
 libc_hidden_proto (__iswalpha_l)
