@@ -1,6 +1,12 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevelsem.h: New needed anymore.
+	* sysdeps/unix/sysv/linux/s390/lowlevelsem.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_post.c: Include lowlevellock.h
+	instead of lowlevelsem.h.
+	* sysdeps/unix/sysv/linux/s390/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_trywait.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_wait.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/Makefile (gen-as-const-headers): Add
 	lowlevelrwlock.sym.

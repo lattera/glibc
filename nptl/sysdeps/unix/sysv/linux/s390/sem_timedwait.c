@@ -19,7 +19,7 @@
 
 #include <errno.h>
 #include <sysdep.h>
-#include <lowlevelsem.h>
+#include <lowlevellock.h>
 #include <internaltypes.h>
 
 #include <shlib-compat.h>
@@ -44,13 +44,13 @@ sem_timedwait (sem, abstime)
       /* Check for invalid timeout values.  */
       if (abstime->tv_nsec >= 1000000000)
 	{
-	  __set_errno(EINVAL);
+	  __set_errno (EINVAL);
 	  return -1;
 	}
 
       /* Get the current time.  */
       struct timeval tv;
-      gettimeofday(&tv, NULL);
+      (void) gettimeofday (&tv, NULL);
 
       /* Compute the relative timeout.  */
       struct timespec rt;
@@ -59,12 +59,12 @@ sem_timedwait (sem, abstime)
       if (rt.tv_nsec < 0)
 	{
 	  rt.tv_nsec += 1000000000;
-	  rt.tv_sec--;
+	  --rt.tv_sec;
 	}
       /* Already timed out.  */
       if (rt.tv_sec < 0)
 	{
-	  __set_errno(ETIMEDOUT);
+	  __set_errno (ETIMEDOUT);
 	  return -1;
 	}
 

@@ -19,7 +19,7 @@
 
 #include <errno.h>
 #include <sysdep.h>
-#include <lowlevelsem.h>
+#include <lowlevellock.h>
 #include <internaltypes.h>
 
 #include <shlib-compat.h>
