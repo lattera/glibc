@@ -47,11 +47,17 @@ __syscall_error:
 
 #if defined(_LIBC_REENTRANT) && USE___THREAD
 
+#ifndef NOT_IN_libc
+# define SYSCALL_ERROR_ERRNO __libc_errno
+#else
+# define SYSCALL_ERROR_ERRNO errno
+#endif
+
 	LOADGP
 	PROLOGUE
 	mov	v0, t0
 	call_pal PAL_rduniq
-	ldq	t1, __libc_errno(gp) !gottprel
+	ldq	t1, SYSCALL_ERROR_ERRNO(gp) !gottprel
 	addq	v0, t1, v0
 	stl	t0, 0(v0)
 	lda	v0, -1
