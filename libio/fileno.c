@@ -32,8 +32,11 @@ fileno (fp)
 {
   CHECK_FILE (fp, EOF);
 
-  if (!(fp->_flags & _IO_IS_FILEBUF))
-    return EOF;
+  if (!(fp->_flags & _IO_IS_FILEBUF) || _IO_fileno (fp) < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
 
   return _IO_fileno (fp);
 }

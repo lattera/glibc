@@ -2137,7 +2137,7 @@ module.  These lines must contain three or four more words.
 The first word specifies the source character set, the second word the
 destination character set of conversion implemented in this module.  The
 third word is the name of the loadable module.  The filename is
-constructed by appending the usual shared object prefix (normally
+constructed by appending the usual shared object suffix (normally
 @file{.so}) and this file is then supposed to be found in the same
 directory the @file{gconv-modules} file is in.  The last word on the
 line, which is optional, is a numeric value representing the cost of the
@@ -2202,11 +2202,11 @@ existing examples.  It'll become clearer once it is. --drepper}
 A last remark about the @file{gconv-modules} is about the names not
 ending with @code{//}.  There often is a character set named
 @code{INTERNAL} mentioned.  From the discussion above and the chosen
-name it should have become clear that this is the names for the
+name it should have become clear that this is the name for the
 representation used in the intermediate step of the triangulation.  We
 have said that this is UCS4 but actually it is not quite right.  The
 UCS4 specification also includes the specification of the byte ordering
-used.  Since an UCS4 value consists of four bytes a stored value is
+used.  Since a UCS4 value consists of four bytes a stored value is
 effected by byte ordering.  The internal representation is @emph{not}
 the same as UCS4 in case the byte ordering of the processor (or at least
 the running process) is not the same as the one required for UCS4.  This
@@ -2231,7 +2231,7 @@ is necessary to get an overview.
 
 From the perspective of the user of @code{iconv} the interface is quite
 simple: the @code{iconv_open} function returns a handle which can be
-used in calls @code{iconv} and finally the handle is freed with a call
+used in calls to @code{iconv} and finally the handle is freed with a call
 to @code{iconv_close}.  The problem is: the handle has to be able to
 represent the possibly long sequences of conversion steps and also the
 state of each conversion since the handle is all which is passed to the
@@ -2278,7 +2278,7 @@ The interface will be explained below.
 @itemx int max_needed_from
 @itemx int min_needed_to
 @itemx int max_needed_to;
-These values have to be filled in the the init function of the module.
+These values have to be filled in the init function of the module.
 The @code{min_needed_from} value specifies how many bytes a character of
 the source character set at least needs.  The @code{max_needed_from}
 specifies the maximum value which also includes possible shift

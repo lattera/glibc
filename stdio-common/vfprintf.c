@@ -1861,15 +1861,17 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
 {
   CHAR_T buf[_IO_BUFSIZ];
   struct helper_file helper;
-  register _IO_FILE *hp = (_IO_FILE *) &helper;
+  register _IO_FILE *hp = &helper._f.file;
   int result, to_flush;
 
   /* Initialize helper.  */
   helper._put_stream = s;
 #ifdef COMPILE_WPRINTF
   _IO_wsetp (hp, buf, buf + sizeof buf / sizeof (CHAR_T));
+  hp->_mode = 1;
 #else
   _IO_setp (hp, buf, buf + sizeof buf);
+  hp->_mode = -1;
 #endif
   hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS;
 #if _IO_JUMPS_OFFSET

@@ -149,7 +149,7 @@ _IO_old_file_close_it (fp)
 
   _IO_un_link (fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
-  fp->_fileno = EOF;
+  fp->_fileno = -1;
   fp->_old_offset = _IO_pos_BAD;
 
   return close_status ? close_status : write_status;

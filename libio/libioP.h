@@ -98,7 +98,7 @@ extern "C" {
 #endif
 
 /* The 'finish' function does any final cleaning up of an _IO_FILE object.
-   It does not delete (free) it, but does everything else to finalize it/
+   It does not delete (free) it, but does everything else to finalize it.
    It matches the streambuf::~streambuf virtual destructor.  */
 typedef void (*_IO_finish_t) __PMT ((_IO_FILE *, int)); /* finalize */
 #define _IO_FINISH(FP) JUMP1 (__finish, FP, 0)
@@ -422,7 +422,7 @@ extern int _IO_file_stat __P ((_IO_FILE *, void *));
 extern int _IO_file_close __P ((_IO_FILE *));
 extern int _IO_file_underflow __P ((_IO_FILE *));
 extern int _IO_file_overflow __P ((_IO_FILE *, int));
-#define _IO_file_is_open(__fp) ((__fp)->_fileno >= 0)
+#define _IO_file_is_open(__fp) ((__fp)->_fileno != -1)
 extern void _IO_file_init __P ((_IO_FILE *));
 extern _IO_FILE* _IO_file_attach __P ((_IO_FILE *, int));
 extern _IO_FILE* _IO_file_open __P ((_IO_FILE *, const char *, int, int,

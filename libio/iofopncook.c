@@ -167,5 +167,10 @@ fopencookie (cookie, mode, io_functions)
     _IO_mask_flags (&new_f->cfile.__file, read_write,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
+  /* We use a negative number different from -1 for _fileno to mark that
+     this special stream is not associated with a real file, but still has
+     to be treated as such.  */
+  new_f->cfile.__file._fileno = -2;
+
   return &new_f->cfile.__file;
 }
