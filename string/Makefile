@@ -39,7 +39,8 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 			             delete extract insert stringify	\
 				     addsep replace)			\
 		   envz basename					\
-		   strcoll_l strxfrm_l string-inlines memrchr
+		   strcoll_l strxfrm_l string-inlines memrchr		\
+		   xpg-strerror
 
 # Gcc internally generates calls to unbounded memcpy and memset
 # for -fbounded-pointer compiles.  Glibc uses memchr for explicit checks.

@@ -1,3 +1,10 @@
+2004-03-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pthread_getaffinity.c
+	(__pthread_getaffinity_new): Use INT_MAX instead of UINT_MAX.
+	* pthread_getattr_np.c (pthread_getattr_np): Double size every cycle.
+	If realloc fails, break out of the loop.
+
 2004-03-20  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/pthread_setaffinity.c

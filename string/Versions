@@ -73,4 +73,8 @@ libc {
     # m*
     memrchr;
   }
+  GLIBC_2.3.4 {
+    # x*
+    __xpg_strerror_r;
+  }
 }

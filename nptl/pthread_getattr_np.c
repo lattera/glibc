@@ -135,16 +135,18 @@ pthread_getattr_np (thread_id, attr)
 
   if (ret == 0)
     {
-      size_t size = 32;
+      size_t size = 16;
       cpu_set_t *cpuset = NULL;
 
       do
 	{
+	  size <<= 1;
+
 	  void *newp = realloc (cpuset, size);
 	  if (newp == NULL)
 	    {
-	      free (cpuset);
 	      ret = ENOMEM;
+	      break;
 	    }
 	  cpuset = (cpu_set_t *) newp;
 

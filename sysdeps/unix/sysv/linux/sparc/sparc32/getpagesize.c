@@ -31,12 +31,16 @@
 int
 __getpagesize ()
 {
-  if (GLRO(dl_pagesize) == 0)
+  int ret = GLRO(dl_pagesize);
+  if (ret == 0)
     {
       INTERNAL_SYSCALL_DECL (err);
-      GLRO(dl_pagesize) = INTERNAL_SYSCALL (getpagesize, err, 0);
+      ret = INTERNAL_SYSCALL (getpagesize, err, 0);
+#ifndef SHARED
+      GLRO(dl_pagesize) = ret;
+#endif
     }
-  return GLRO(dl_pagesize);
+  return ret;
 }
 libc_hidden_def (__getpagesize)
 weak_alias (__getpagesize, getpagesize)
