@@ -1,4 +1,4 @@
-/* Return value of complex exponential function for float complex value.
+/* Complex cosine hyperbole function for float.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -23,70 +23,71 @@
 
 
 __complex__ float
-__cexpf (__complex__ float x)
+__ccoshf (__complex__ float x)
 {
   __complex__ float retval;
+
+  __real__ x = fabsf (__real__ x);
 
   if (isfinite (__real__ x))
     {
       if (isfinite (__imag__ x))
 	{
 	  float exp_val = __expf (__real__ x);
+	  float rec_exp_val = 1.0 / exp_val;
 
-	  if (isfinite (exp_val))
-	    {
-	      __real__ retval = exp_val * __cosf (__imag__ x);
-	      __imag__ retval = exp_val * __sinf (__imag__ x);
-	    }
-	  else
-	    {
-	      __real__ retval = __copysignf (exp_val, __cosf (__imag__ x));
-	      __imag__ retval = __copysignf (exp_val, __sinf (__imag__ x));
-	    }
+	  __real__ retval = (0.5 * (exp_val + rec_exp_val)
+			     * __cosf (__imag__ x));
+	  __imag__ retval = (0.5 * (exp_val + rec_exp_val)
+			     * __sinf (__imag__ x));
 	}
       else
 	{
-	  /* If the imaginary part is +-inf or NaN and the real part
-	     is not +-inf the result is NaN + iNaN.  */
-	  __real__ retval = __nanf ("");
-	  __imag__ retval = __nanf ("");
+	  if (__real__ x == 0)
+	    {
+	      __imag__ retval = 0.0;
+	      __real__ retval = __nanf ("") + __nanf ("");
+	    }
+	  else
+	    {
+	      __real__ retval = __nanf ("");
+	      __imag__ retval = __nanf ("") + __nanf ("");
+	    }
 	}
     }
   else if (__isinff (__real__ x))
     {
-      if (isfinite (__imag__ x))
-	{
-	  float value = signbit (__real__ x) ? 0.0 : HUGE_VALF;
-
-	  if (__imag__ x == 0.0)
-	    {
-	      __real__ retval = value;
-	      __imag__ retval = __imag__ x;
-	    }
-	  else
-	    {
-	      __real__ retval = __copysignf (value, __cosf (__imag__ x));
-	      __imag__ retval = __copysignf (value, __sinf (__imag__ x));
-	    }
-	}
-      else if (signbit (__real__ x) == 0)
+      if (__imag__ x == 0.0)
 	{
 	  __real__ retval = HUGE_VALF;
-	  __imag__ retval = __nanf ("");
+	  __imag__ retval = __imag__ x;
+	}
+      else if (isfinite (__imag__ x))
+	{
+	  __real__ retval = __copysignf (HUGE_VALF, __cosf (__imag__ x));
+	  __imag__ retval = __copysignf (HUGE_VALF, __sinf (__imag__ x));
 	}
       else
 	{
-	  __real__ retval = 0.0;
-	  __imag__ retval = __copysignf (0.0, __imag__ x);
+	  /* The addition raises the invalid exception.  */
+	  __real__ retval = HUGE_VALF;
+	  __imag__ retval = __nanf ("") + __nanf ("");
 	}
     }
   else
     {
-      /* If the real part is NaN the result is NaN + iNan.  */
-      __real__ retval = __nanf ("");
-      __imag__ retval = __nanf ("");
+      if (__imag__ x == 0.0)
+	{
+	  __real__ retval = __nanf ("");
+	  __imag__ retval = __imag__ x;
+	}
+      else
+	{
+	  __real__ retval = __nanf ("");
+	  __imag__ retval = __nanf ("");
+	}
     }
 
   return retval;
 }
-weak_alias (__cexpf, cexpf)
+weak_alias (__ccoshf, ccoshf)

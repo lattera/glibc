@@ -105,7 +105,12 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   Elf32_Addr loadbase;
 
   if (ELF32_R_TYPE (reloc->r_info) == R_SPARC_RELATIVE)
-    *reloc_addr += map->l_addr + reloc->r_addend;
+    {
+#ifndef RTLD_BOOTSTRAP
+      if (map != &_dl_rtld_map) /* Already done in rtld itself. */
+#endif
+	*reloc_addr += map->l_addr + reloc->r_addend;
+    }
   else
     {
       Elf32_Addr value;

@@ -56,6 +56,10 @@ main (void)
   puts ("There should be no further output from this test.");
   fflush (stdout);
 
+  /* We must remove this entry to assure the `cmp' binary does not use
+     the perhaps incompatible new shared libraries.  */
+  unsetenv ("LD_LIBRARY_PATH");
+
   asprintf (&printbuf, "cmp %s %s", inname, outname);
   result = system (printbuf);
   remove (inname);

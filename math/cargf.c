@@ -1,6 +1,7 @@
-/* Load a shared object at run time.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Compute argument of complex float value.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,35 +18,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-#include <link.h>
-#include <dlfcn.h>
+#include <complex.h>
+#include <math.h>
 
-struct dlopen_args
+float
+__cargf (__complex__ float x)
 {
-  /* The arguments for dlopen_doit.  */
-  const char *file;
-  int mode;
-  /* The return value of dlopen_doit.  */
-  struct link_map *new;
-};
-
-
-static void
-dlopen_doit (void *a)
-{
-  struct dlopen_args *args = (struct dlopen_args *) a;
-
-  args->new = _dl_open (args->file ?: "", args->mode);
+  return __atan2f (__imag__ x, __real__ x);
 }
-
-
-void *
-dlopen (const char *file, int mode)
-{
-  struct dlopen_args args;
-  args.file = file;
-  args.mode = mode;
-
-  return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
-}
+weak_alias (__cargf, cargf)

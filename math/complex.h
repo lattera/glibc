@@ -21,7 +21,11 @@
  */
 
 #ifndef _COMPLEX_H
+
 #define _COMPLEX_H	1
+#include <features.h>
+
+__BEGIN_DECLS
 
 /* We might need to add support for more compilers here.  But once ISO
    C 9X is out hopefully all maintained compilers will provide the data
@@ -41,7 +45,7 @@
 #define I _Imaginary_I
 
 
-/* Optimization aids.  This is not yet implemented in gcc and yonce it
+/* Optimization aids.  This is not yet implemented in gcc and once it
    is this will probably be available in a gcc header.  */
 #define CX_LIMITED_RANGE_ON
 #define CX_LIMITED_RANGE_OFF
@@ -98,5 +102,7 @@
 #undef	__MATHDECL_1
 #undef	__MATHDECL
 #undef	__MATHCALL
+
+__END_DECLS
 
 #endif /* complex.h */

@@ -110,32 +110,26 @@ contact <bug-glibc@prep.ai.mit.edu>
 **** Almost done!
 
 
-[10] Write AVL-tree based tsearch() et.al. functions.  Currently only
-     a very simple algorithm is used.
-     There is a public domain version but using this would cause problems
-     with the assignment.
-
-
-[11] Extend regex and/or rx to work with wide characters and complete
+[10] Extend regex and/or rx to work with wide characters and complete
      implementation of character class and collation class handling.
 
      It is planed to do a complete rewrite.
 
 
-[12] Write access function for netmasks, bootparams, and automount
+[11] Write access function for netmasks, bootparams, and automount
      databases for nss_files and nss_db module.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.
 
 
-[13] Rewrite utmp/wtmp functions to use database functions.  This is much
+[12] Rewrite utmp/wtmp functions to use database functions.  This is much
      better than the normal flat file format.
 
 **** There are plans for a new approach to this problem.  Please contact
      bug-glibc@prep.ai.mit.edu before starting to work.)
 
 
-[14] Several more or less small functions have to be written:
+[13] Several more or less small functions have to be written:
 
      + tcgetid() and waitid()			from XPG4.2
      + grantpt(), ptsname(), unlockpt()		from XPG4.2
@@ -145,7 +139,7 @@ contact <bug-glibc@prep.ai.mit.edu>
      More information are available on request.
 
 
-[15] We need to write a library for on-the-fly transformation of streams
+[14] We need to write a library for on-the-fly transformation of streams
      of text.  In fact, this would be a recode-library (you know, GNU recode).
      This is needed in several places in the GNU libc and I already have
      rather concrete plans but so far no possibility to start this.

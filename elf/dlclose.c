@@ -20,13 +20,14 @@
 #include <link.h>
 #include <dlfcn.h>
 
+static void
+dlclose_doit (void *handle)
+{
+  _dl_close (handle);
+}
+
 int
 dlclose (void *handle)
 {
-  void doit (void)
-    {
-      _dl_close (handle);
-    }
-
-  return _dlerror_run (doit) ? -1 : 0;
+  return _dlerror_run (dlclose_doit, handle) ? -1 : 0;
 }

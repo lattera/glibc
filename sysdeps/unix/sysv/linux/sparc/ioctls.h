@@ -1,5 +1,4 @@
-/* Load a shared object at run time.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,35 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-#include <link.h>
-#include <dlfcn.h>
+#ifndef _IOCTLS_H
+#define _IOCTLS_H 1
 
-struct dlopen_args
-{
-  /* The arguments for dlopen_doit.  */
-  const char *file;
-  int mode;
-  /* The return value of dlopen_doit.  */
-  struct link_map *new;
-};
+/* Use the definitions from the kernel header files.  */
+#include <asm/ioctls.h>
+#include <sys/kernel_termios.h>
 
+/* Oh well, this is necessary since the kernel data structure is
+   different from the user-level version.  */
+#undef  TCGETS
+#undef  TCSETS
+#undef  TCSETSW
+#undef  TCSETSF
+#define TCGETS	_IOR ('t', 19, struct __kernel_termios)
+#define TCSETS	_IOW ('t', 20, struct __kernel_termios)
+#define TCSETSW	_IOW ('t', 21, struct __kernel_termios)
+#define TCSETSF	_IOW ('t', 22, struct __kernel_termios)
 
-static void
-dlopen_doit (void *a)
-{
-  struct dlopen_args *args = (struct dlopen_args *) a;
+#include <linux/sockios.h>
 
-  args->new = _dl_open (args->file ?: "", args->mode);
-}
-
-
-void *
-dlopen (const char *file, int mode)
-{
-  struct dlopen_args args;
-  args.file = file;
-  args.mode = mode;
-
-  return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
-}
+#endif /* ioctls.h  */

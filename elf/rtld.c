@@ -140,6 +140,55 @@ _dl_start (void *arg)
 
 void _start (void);
 
+/* Some helper functions.  */
+
+/* Arguments to relocate_doit.  */
+struct relocate_args
+{
+  struct link_map *l;
+  int lazy;
+};
+
+struct map_args
+{
+  /* Argument to map_doit.  */
+  char *str;
+  /* Return value of map_doit.  */
+  struct link_map *main_map;
+};
+
+/* Arguments to version_check_doit.  */
+struct version_check_args
+{
+  struct link_map *main_map;
+  int doexit;
+};
+
+static void
+relocate_doit (void *a)
+{
+  struct relocate_args *args = (struct relocate_args *) a;
+
+  _dl_relocate_object (args->l, _dl_object_relocation_scope (args->l),
+		       args->lazy);
+}
+
+static void
+map_doit (void *a)
+{
+  struct map_args *args = (struct map_args *)a;
+  args->main_map = _dl_map_object (NULL, args->str, lt_library, 0);
+}
+
+static void
+version_check_doit (void *a)
+{
+  struct version_check_args *args = (struct version_check_args *)a;
+  if (_dl_check_all_versions (args->main_map, 1) && args->doexit)
+    /* We cannot start the application.  Abort now.  */
+    _exit (1);
+}
+
 unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
 
 static void
@@ -234,14 +283,13 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       if (mode == verify)
 	{
-	  void doit (void)
-	    {
-	      main_map = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
-	    }
 	  char *err_str = NULL;
 	  const char *obj_name __attribute__ ((unused));
+	  struct map_args args;
 
-	  (void) _dl_catch_error (&err_str, &obj_name, doit);
+	  args.str = _dl_argv[0];
+	  (void) _dl_catch_error (&err_str, &obj_name, map_doit, &args);
+	  main_map = args.main_map;
 	  if (err_str != NULL)
 	    {
 	      free (err_str);
@@ -469,14 +517,10 @@ of this helper program; chances are you did not intend to run this program.\n",
   /* Now let us see whether all libraries are available in the
      versions we need.  */
   {
-    void doit (void)
-      {
-	if (_dl_check_all_versions (main_map, 1) && mode == normal)
-	  /* We cannot start the application.  Abort now.  */
-	  _exit (1);
-      }
-
-    _dl_receive_error (print_missing_version, doit);
+    struct version_check_args args;
+    args.doexit = mode == normal;
+    args.main_map = main_map;
+    _dl_receive_error (print_missing_version, version_check_doit, &args);
   }
 
   if (mode != normal)
@@ -535,11 +579,10 @@ of this helper program; chances are you did not intend to run this program.\n",
       else if (lazy >= 0)
 	{
 	  /* We have to do symbol dependency testing.  */
+	  struct relocate_args args;
 	  struct link_map *l;
-	  void doit (void)
-	    {
-	      _dl_relocate_object (l, _dl_object_relocation_scope (l), lazy);
-	    }
+
+	  args.lazy = lazy;
 
 	  l = _dl_loaded;
 	  while (l->l_next)
@@ -548,7 +591,8 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    {
 	      if (l != &_dl_rtld_map && l->l_opencount > 0)
 		{
-		  _dl_receive_error (print_unresolved, doit);
+		  args.l = l;
+		  _dl_receive_error (print_unresolved, relocate_doit, &args);
 		  *_dl_global_scope_end = NULL;
 		}
 	      l = l->l_prev;

@@ -24,57 +24,82 @@
 
 #include <dl-hash.h>
 
+struct dlvsym_args
+{
+  /* The arguments to dlvsym_doit.  */
+  void *handle;
+  const char *name;
+  struct r_found_version version;
+  ElfW(Addr) caller;
+  /* The return values of dlvsym_doit.  */
+  ElfW(Addr) loadbase;
+  const ElfW(Sym) *ref;
+};
+
+
+static void
+dlvsym_doit (void *a)
+{
+  struct dlvsym_args *args = (struct dlvsym_args *)a;
+  args->ref = NULL;
+
+  if (args->handle == NULL)
+    /* Search the global scope.  */
+    args->loadbase = _dl_lookup_versioned_symbol (args->name, &args->ref,
+						  &(_dl_global_scope
+						    ?: _dl_default_scope)[2],
+						  NULL, &args->version, 0);
+  else if (args->handle == RTLD_NEXT)
+    {
+      struct link_map *l, *match;
+
+      /* Find the highest-addressed object that CALLER is not below.  */
+      match = NULL;
+      for (l = _dl_loaded; l; l = l->l_next)
+	if (args->caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
+	  match = l;
+
+      if (! match)
+	_dl_signal_error (0, NULL, _("\
+RTLD_NEXT used in code not dynamically loaded"));
+
+      l = match;
+      while (l->l_loader)
+	l = l->l_loader;
+
+      args->loadbase = _dl_lookup_versioned_symbol_skip	(args->name,
+							 &args->ref,
+							 &_dl_loaded,
+							 NULL, &args->version,
+							 l);
+    }
+  else
+    {
+      /* Search the scope of the given object.  */
+      struct link_map *map = args->handle;
+      struct link_map *mapscope[2] = { map, NULL };
+      args->loadbase = _dl_lookup_versioned_symbol (args->name, &args->ref,
+						    mapscope, map->l_name,
+						    &args->version, 0);
+    }
+}
+
 void *
 __dlvsym (void *handle, const char *name, const char *version_str)
 {
-  ElfW(Addr) caller = (ElfW(Addr)) __builtin_return_address (0);
-  ElfW(Addr) loadbase;
-  struct r_found_version version;
-  const ElfW(Sym) *ref = NULL;
-  void doit (void)
-    {
-      if (handle == NULL)
-	/* Search the global scope.  */
-	loadbase = _dl_lookup_versioned_symbol
-	  (name, &ref, &(_dl_global_scope ?: _dl_default_scope)[2], NULL,
-	   &version, 0);
-      else if (handle == RTLD_NEXT)
-	{
-	  struct link_map *l, *match;
+  struct dlvsym_args args;
 
-	  /* Find the highest-addressed object that CALLER is not below.  */
-	  match = NULL;
-	  for (l = _dl_loaded; l; l = l->l_next)
-	    if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
-	      match = l;
-
-	  if (! match)
-	    _dl_signal_error (0, NULL, _("\
-RTLD_NEXT used in code not dynamically loaded"));
-
-	  l = match;
-	  while (l->l_loader)
-	    l = l->l_loader;
-
-	  loadbase = _dl_lookup_versioned_symbol_skip
-	    (name, &ref, &_dl_loaded, NULL, &version, l);
-	}
-      else
-	{
-	  /* Search the scope of the given object.  */
-	  struct link_map *map = handle;
-	  struct link_map *mapscope[2] = { map, NULL };
-	  loadbase = _dl_lookup_versioned_symbol
-	    (name, &ref, mapscope, map->l_name, &version, 0);
-	}
-    }
+  args.handle = handle;
+  args.name = name;
+  args.caller = (ElfW(Addr)) __builtin_return_address (0);
 
   /* Compute hash value to the version string.  */
-  version.name = version_str;
-  version.hash = _dl_elf_hash (version_str);
+  args.version.name = version_str;
+  args.version.hash = _dl_elf_hash (version_str);
   /* We don't have a specific file where the symbol can be found.  */
-  version.filename = NULL;
+  args.version.filename = NULL;
 
-  return _dlerror_run (doit) ? NULL : (void *) (loadbase + ref->st_value);
+  return (_dlerror_run (dlvsym_doit, &args)
+	  ? NULL : (void *) (args.loadbase + args.ref->st_value));
 }
 weak_alias (__dlvsym, dlvsym)

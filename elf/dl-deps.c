@@ -22,6 +22,29 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 
+struct openaux_args
+{
+  /* The arguments to openaux.  */
+  struct link_map *map;
+  int trace_mode;
+  const char *strtab;
+  ElfW(Dyn) *d;
+
+  /* The return value of openaux.  */
+  struct link_map *aux;
+};
+
+static void
+openaux (void *a)
+{
+  struct openaux_args *args = (struct openaux_args *) a;
+
+  args->aux = _dl_map_object (args->map, args->strtab + args->d->d_un.d_val,
+			      (args->map->l_type == lt_executable
+			       ? lt_library : args->map->l_type),
+			      args->trace_mode);
+}
+
 void
 _dl_map_object_deps (struct link_map *map,
 		     struct link_map **preloads, unsigned int npreloads,
@@ -75,27 +98,21 @@ _dl_map_object_deps (struct link_map *map,
       /* There is at least one auxiliary library specified.  We try to
 	 load it, and if we can, use its symbols in preference to our
 	 own.  But if we can't load it, we just silently ignore it.  */
-      const char *strtab
+      struct openaux_args args;
+      args.strtab
 	= ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
-      ElfW(Dyn) *d;
+      args.map = map;
+      args.trace_mode = trace_mode;
 
-      for (d = map->l_ld; d->d_tag != DT_NULL; ++d)
-	if (d->d_tag == DT_AUXILIARY)
+      for (args.d = map->l_ld; args.d->d_tag != DT_NULL; ++args.d)
+	if (args.d->d_tag == DT_AUXILIARY)
 	  {
-	    struct link_map *aux;
-	    void openaux (void)
-	      {
-		aux = _dl_map_object (map, strtab + d->d_un.d_val,
-				      (map->l_type == lt_executable
-				       ? lt_library : map->l_type),
-				      trace_mode);
-	      }
 	    char *errstring;
 	    const char *objname;
-	    if (! _dl_catch_error (&errstring, &objname, openaux))
+	    if (! _dl_catch_error (&errstring, &objname, openaux, &args))
 	      /* The auxiliary object is actually there.  Use it as
 		 the first search element, even before MAP itself.  */
-	      preload (aux);
+	      preload (args.aux);
 	  }
     }
 

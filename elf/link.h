@@ -238,21 +238,26 @@ extern void _dl_signal_error (int errcode,
    error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING and
    *OBJECT are set to the strings passed to _dl_signal_error, and the error
    code passed is the return value.  ERRSTRING if nonzero points to a
-   malloc'ed string which the caller has to free after use.  */
+   malloc'ed string which the caller has to free after use.
+   ARGS is passed as argument to OPERATE.  */
 extern int _dl_catch_error (char **errstring,
 			    const char **object,
-			    void (*operate) (void));
+			    void (*operate) (void *),
+			    void *args);
 
 /* Call OPERATE, receiving errors from `dl_signal_error'.  Unlike
    `_dl_catch_error' the operation is resumed after the OPERATE
-   function returns.  */
-extern void _dl_receive_error (receiver_fct fct, void (*operate) (void));
+   function returns.
+   ARGS is passed as argument to OPERATE.  */
+extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
+			       void *args);
 
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
    _dl_catch_error.  Returns zero for success, nonzero for failure; and
-   arranges for `dlerror' to return the error details.  */
-extern int _dlerror_run (void (*operate) (void));
+   arranges for `dlerror' to return the error details.  
+   ARGS is passed as argument to OPERATE.  */
+extern int _dlerror_run (void (*operate) (void *), void *args);
 
 
 /* Open the shared object NAME and map in its segments.

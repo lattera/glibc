@@ -85,19 +85,25 @@ _dl_signal_error (int errcode,
 int
 _dl_catch_error (char **errstring,
 		 const char **objname,
-		 void (*operate) (void))
+		 void (*operate) (void *),
+		 void *args)
 {
   int errcode;
-  struct catch *old, c = { errstring: NULL, objname: NULL };
-  /* We need not handle `receiver' since setting a `catch' is handle
+  struct catch *old, c;
+  /* We need not handle `receiver' since setting a `catch' is handled
      before it.  */
+
+  /* Some systems (.e.g, SPARC) handle constructors to local variables
+     inefficient.  So we initialize `c' by hand.  */
+  c.errstring = NULL;
+  c.objname   = NULL;
 
   old = catch;
   errcode = setjmp (c.env);
   if (errcode == 0)
     {
       catch = &c;
-      (*operate) ();
+      (*operate) (args);
       catch = old;
       *errstring = NULL;
       *objname = NULL;
@@ -112,7 +118,7 @@ _dl_catch_error (char **errstring,
 }
 
 void
-_dl_receive_error (receiver_fct fct, void (*operate) (void))
+_dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
 {
   struct catch *old_catch;
   receiver_fct old_receiver;
@@ -124,7 +130,7 @@ _dl_receive_error (receiver_fct fct, void (*operate) (void))
   catch = NULL;
   receiver = fct;
 
-  (*operate) ();
+  (*operate) (args);
 
   catch = old_catch;
   receiver = old_receiver;

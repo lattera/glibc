@@ -1,9 +1,27 @@
-#include <ansidecl.h>
+/* Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
 void
-DEFUN(write_data, (stream), FILE *stream)
+write_data (FILE *stream)
 {
   int i;
   for (i=0; i<100; i++)
@@ -15,7 +33,7 @@ DEFUN(write_data, (stream), FILE *stream)
 }
 
 void
-DEFUN(read_data, (stream), FILE *stream)
+read_data (FILE *stream)
 {
   int i, j;
 
@@ -32,10 +50,14 @@ DEFUN(read_data, (stream), FILE *stream)
 }
 
 int
-DEFUN_VOID(main)
+main (void)
 {
   FILE *output, *input;
   int wstatus, rstatus;
+
+  /* We must remove this entry to assure the `cat' binary does not use
+     the perhaps incompatible new shared libraries.  */
+  unsetenv ("LD_LIBRARY_PATH");
 
   output = popen ("/bin/cat >/tmp/tstpopen.tmp", "w");
   if (output == NULL)

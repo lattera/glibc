@@ -64,7 +64,7 @@ dlerror (void)
 }
 
 int
-_dlerror_run (void (*operate) (void))
+_dlerror_run (void (*operate) (void *), void *args)
 {
   if (last_errstring != NULL)
     /* Free the error string from the last failed command.  This can
@@ -72,6 +72,6 @@ _dlerror_run (void (*operate) (void))
     free (last_errstring);
 
   last_errcode = _dl_catch_error (&last_errstring, &last_object_name,
-				  operate);
+				  operate, args);
   return last_errstring != NULL;
 }

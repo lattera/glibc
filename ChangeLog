@@ -1,3 +1,102 @@
+1997-03-29 17:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/Makefile (routines): Add carg, s_ccosh and s_csinh.
+
+	* math/complex.h: Add C++ protection.
+
+	* math/libm-test.c (cexp_test): Correct a few bugs.
+	(csinh_test): New function.
+	(ccosh_test): New function.
+	(cacos_test): New function.
+	(cacosh_test): New function.
+	(casinh_test): New function.
+	(catanh_test): New function.
+	(main): Add calls to csinh_test and ccosh_test.
+
+	* misc/Makefile (tests): Add tst-tsearch.
+	Add rule to link tst-tsearch against libm.
+	* misc/tsearch.c: Rewritten to use Red-Black-Tree algorithm by
+	Bernd Schmidt <crux@Pool.Informatik.RWTH-Aachen.DE>.
+	* misc/tst-tsearch.c: New file.
+
+	* stdio-common/bug5.c: Clear LD_LIBRARY_PATH environment variable
+	before using system.
+	* stdio-common/test-popen.c: Clear LD_LIBRARY_PATH environment variable
+	before using popen.
+
+	* sysdeps/libm-ieee754/s_cexp.c: Correct handling of special cases.
+	* sysdeps/libm-ieee754/s_cexpf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpl.c: Likewise.
+
+	* sysdeps/libm-i387/s_cexp.S: New file.  ix87 specific implementation
+	of complex exponential function.
+	* sysdeps/libm-i387/s_cexpf.S: New file.
+	* sysdeps/libm-i387/s_cexpl.S: New file.
+
+	* sysdeps/libm-ieee754/s_ccosh.c: New file.  Implementation of
+	complex cosh function.
+	* sysdeps/libm-ieee754/s_ccoshf.c: New file.
+	* sysdeps/libm-ieee754/s_ccoshl.c: New file.
+	* sysdeps/libm-ieee754/s_csinh.c: New file.  Implementation of
+	complex sinh function.
+	* sysdeps/libm-ieee754/s_csinhf.c: New file.
+	* sysdeps/libm-ieee754/s_csinhl.c: New file.
+
+	* math/carg.c: New file.  Generic implementatio of carg function.
+	* math/cargf.c: New file.
+	* math/cargl.c: New file.
+
+1997-03-29 16:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/system.c: Update copyright.
+
+1997-03-29 04:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-error.c (_dl_catch_error): Add another argument which is
+	passed to OPERATE.
+	(_dl_receive_error): Likewise.
+	* elf/link.h: Change prototypes for _dl_catch_error and
+	_dl_receive_error to reflect above change.
+	* elf/dl-deps.c: Don't use nested function.  Call _dl_catch_error
+	with additional argument with pointer to data.
+	* elf/dlclose.c: Likewise.
+	* elf/dlerror.c: Likewise.
+	* elf/dlopen.c: Likewise.
+	* elf/dlsym.c: Likewise.
+	* elf/dlvsym.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	Patch by Bernd Schmidt <crux@Pool.Informatik.RWTH-Aachen.DE>.
+
+1997-03-28 21:14  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* elf/dl-error.c: Manually set up the values of "c", this avoids a
+	call to memcpy and a zero 152 bytes structure.
+
+	* sysdeps/sparc/dl-machine.h (elf_machine_rela): Test
+	RTLD_BOOTSTRAP to avoid performing relative relocs on a second
+	pass.
+
+	* sysdeps/sparc/udiv_qrnnd.S: Make the code PIC aware.
+
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add kernel_stat.h and
+	kernel_sigaction.h
+
+	Add Linux/SPARC specific definitions.
+	* sysdeps/unix/sysv/linux/sparc/fcntlbits.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/ioctls.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/kernel_sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/kernel_stat.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/signum.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/termbits.h: New file.
+
+1997-03-28 13:06  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet_serv): Use
+	__getservbyname_r() not getservbyname().
+	(BROKEN_LIKE_POSIX): Define to 1 so we get strict POSIX behaviour.
+
 1997-03-27 02:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* gmon/gmon.c (monstartup): Mark all messages.

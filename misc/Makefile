@@ -64,7 +64,7 @@ install-lib := libbsd-compat.a libg.a
 non-lib.a := libbsd-compat.a
 gpl2lgpl := error.c error.h
 
-tests := tst-dirname
+tests := tst-dirname tst-tsearch
 
 include ../Rules
 
@@ -77,3 +77,9 @@ $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
 
 
 CFLAGS-init-misc.c = -fkeep-inline-functions
+
+ifeq ($(build-shared),yes)
+$(objpfx)tst-tsearch: $(common-objpfx)math/libm.so$(libm.so-version)
+else
+$(objpfx)tst-tsearch: $(common-objpfx)math/libm.a
+endif

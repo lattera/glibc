@@ -1,6 +1,6 @@
 ! SPARC  __udiv_qrnnd division support, used from longlong.h.
 
-! Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+! Copyright (C) 1993, 1994, 1997 Free Software Foundation, Inc.
 
 ! This file is part of the GNU MP Library.
 
@@ -18,6 +18,8 @@
 ! along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
 ! the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+!
+! Added PIC support - May/96, Miguel de Icaza
 
 ! INPUT PARAMETERS
 ! rem_ptr	i0
@@ -25,6 +27,7 @@
 ! n0		i2
 ! d		i3
 
+#include "DEFS.h"
 #include "sysdep.h"
 #undef ret	/* Kludge for glibc */
 
@@ -34,16 +37,25 @@ LC0:	.double	0r4294967296
 LC1:	.double	0r2147483648
 
 	.align	4
-	.global	C_SYMBOL_NAME(__udiv_qrnnd)
-C_SYMBOL_NAME(__udiv_qrnnd):
+	.global	__udiv_qrnnd
+FUNC(__udiv_qrnnd)
 	!#PROLOGUE# 0
 	save	%sp,-104,%sp
 	!#PROLOGUE# 1
 	st	%i1,[%fp-8]
 	ld	[%fp-8],%f10
+#ifdef __PIC__
+._XL11:
+	call	._XL1
+	fitod	%f10,%f4
+._XL1:
+	sub	%o7,(._XL11-LC0),%o7
+	ldd	[%o7],%f8
+#else
 	sethi	%hi(LC0),%o7
 	fitod	%f10,%f4
 	ldd	[%o7+%lo(LC0)],%f8
+#endif
 	cmp	%i1,0
 	bge	L248
 	mov	%i0,%i5
@@ -66,8 +78,17 @@ L249:
 	faddd	%f4,%f8,%f4
 L250:
 	fdivd	%f2,%f4,%f2
+#ifdef __PIC__
+._XL22:
+	call	._XL2
+	nop
+._XL2:
+	sub	%o7,(._XL22-LC1),%o7
+	ldd	[%o7],%f4
+#else
 	sethi	%hi(LC1),%o7
 	ldd	[%o7+%lo(LC1)],%f4
+#endif
 	fcmped	%f2,%f4
 	nop
 	fbge,a	L251

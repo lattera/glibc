@@ -45,7 +45,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* getaddrinfo() v1.13 */
 
 /* To do what POSIX says, even when it's broken: */
-/* #define BROKEN_LIKE_POSIX 1 */
+#define BROKEN_LIKE_POSIX 1
 #define LOCAL 1
 #define INET6 1
 #define HOSTTABLE 0
@@ -168,21 +168,34 @@ static int gaih_local(const char *name, const struct gaih_service *service,
 };
 #endif /* LOCAL */
 
-static struct gaih_typeproto gaih_inet_typeproto[] = {
+static struct gaih_typeproto gaih_inet_typeproto[] =
+{
   { 0, 0, NULL },
-  { SOCK_STREAM, IPPROTO_TCP, (char *)"tcp" },
-  { SOCK_DGRAM, IPPROTO_UDP, (char *)"udp" },
+  { SOCK_STREAM, IPPROTO_TCP, (char *) "tcp" },
+  { SOCK_DGRAM, IPPROTO_UDP, (char *) "udp" },
   { 0, 0, NULL }
 };
 
 static int gaih_inet_serv(char *servicename, struct gaih_typeproto *tp, struct gaih_servtuple **st)
 {
   struct servent *s;
+  int tmpbuflen = 1024;
+  struct servent ts;
+  char *tmpbuf = __alloca (tmpbuflen);
+  while (__getservbyname_r (servicename, tp->name, &ts, tmpbuf, tmpbuflen, &s))
+    {
+      if (errno == ERANGE)
+	{
+	  tmpbuflen *= 2;
+	  tmpbuf = __alloca (tmpbuflen);
+	}
+      else
+	{
+	  return GAIH_OKIFUNSPEC | -EAI_SERVICE;
+	}
+    }
 
-  if (!(s = getservbyname(servicename, tp->name)))
-    return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
-
-  if (!(*st = malloc(sizeof(struct gaih_servtuple))))
+  if (!(*st = malloc (sizeof (struct gaih_servtuple))))
     return -EAI_MEMORY;
 
   (*st)->next = NULL;
