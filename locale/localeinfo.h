@@ -92,6 +92,14 @@ enum value_type
 };
 
 
+/* Definitions for `era' information from LC_TIME.  */
+#define ERA_NAME_FORMAT_MEMBERS 4
+#define ERA_M_NAME   0
+#define ERA_M_FORMAT 1
+#define ERA_W_NAME   2
+#define ERA_W_FORMAT 3
+
+
 /* Structure to access `era' information from LC_TIME.  */
 struct era_entry
 {
@@ -154,6 +162,15 @@ extern void _nl_remove_locale (int locale, struct locale_data *data);
 
 /* Return `era' entry which corresponds to TP.  Used in strftime.  */
 extern struct era_entry *_nl_get_era_entry (const struct tm *tp);
+
+/* Return `era' string of the cnt'th `category' entry.  */
+extern const void *_nl_get_era_nf_entry (int cnt, int category);
+
+/* Return a offset of `era' year of the cnt'th entry.  */
+extern int _nl_get_era_year_offset (int cnt, int category);
+
+/* Return a start of `era' year of the cnt'th entry.  */
+extern int _nl_get_era_year_start (int cnt);
 
 /* Return `alt_digit' which corresponds to NUMBER.  Used in strftime.  */
 extern const char *_nl_get_alt_digit (unsigned int number);

@@ -1,3 +1,14 @@
+1999-12-02  Akira Yoshiyama  <yosshy@debian.or.jp>
+
+	* locale/lc-time.c (_nl_get_era_entry): Separate eras
+	initialization as _nl_init_era_entry().
+	* locale/lc-time.c (_nl_get_era_nf_entry): New function.
+	* locale/lc-time.c (_nl_get_era_year_offset): New function.
+	* locale/lc-time.c (_nl_get_era_year_start): New function.
+	* locale/localeinfo.h: Declare new functions.
+	Define ERA_NAME_FORMAT_MEMBERS, ERA_M_NAME, ERA_M_FORMAT, ERA_W_NAME,
+	and ERA_W_FORMAT.
+
 1999-12-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/regex.c (SYNTAX): Make more portable.
@@ -5,38 +16,38 @@
 
 1999-11-18  Roland McGrath  <roland@baalperazim.frob.com>
 
-        * hurd/hurdsig.c (_hurdsig_init): If __hurd_threadvar_stack_mask is
-        nonzero, use cthread_fork to create the signal thread.
-        * hurd/msgportdemux.c (_hurd_msgport_receive): Initialize
-        _hurd_msgport_thread here (to self).
-        * sysdeps/mach/hurd/fork.c (__fork): When __hurd_sigthread_stack_end
-        is zero, instead compute child signal thread's starting SP from parent
-        signal thread's current SP and the threadvar_stack variables.
-        * hurd/Versions (GLIBC_2.1.3): Add cthread_fork, cthread_detach.
-        These are now referenced weakly by _hurdsig_init.
+	* hurd/hurdsig.c (_hurdsig_init): If __hurd_threadvar_stack_mask is
+	nonzero, use cthread_fork to create the signal thread.
+	* hurd/msgportdemux.c (_hurd_msgport_receive): Initialize
+	_hurd_msgport_thread here (to self).
+	* sysdeps/mach/hurd/fork.c (__fork): When __hurd_sigthread_stack_end
+	is zero, instead compute child signal thread's starting SP from parent
+	signal thread's current SP and the threadvar_stack variables.
+	* hurd/Versions (GLIBC_2.1.3): Add cthread_fork, cthread_detach.
+	These are now referenced weakly by _hurdsig_init.
 
-        * hurd/report-wait.c (_S_msg_report_wait): Fix typo:
-        &_hurd_itimer_thread not &_hurd_msgport_thread.
+	* hurd/report-wait.c (_S_msg_report_wait): Fix typo:
+	&_hurd_itimer_thread not &_hurd_msgport_thread.
 
 1999-10-01  Roland McGrath  <roland@baalperazim.frob.com>
 
-        * hurd/hurdfchdir.c (_hurd_change_directory_port_from_fd): Rewrite
-        without HURD_DPORT_USE to clean up warnings.
-        * hurd/dtable.c (get_dtable_port): Likewise.
+	* hurd/hurdfchdir.c (_hurd_change_directory_port_from_fd): Rewrite
+	without HURD_DPORT_USE to clean up warnings.
+	* hurd/dtable.c (get_dtable_port): Likewise.
 
-        * hurd/hurdioctl.c (rectty_dtable): Renamed to install_ctty.
-        (install_ctty): Do the changing of the cttyid port cell here, inside
-        the critical section while we holding the dtable lock.
-        (_hurd_setcttyid, tiocsctty, tiocnotty): Use that instead of changing
-        the port cell and calling rectty_dtable.
-        (_hurd_locked_install_cttyid): New function, split out of install_ctty.
-        (install_ctty): Use it inside a critical section, with the lock held.
-        * sysdeps/mach/hurd/setsid.c (__setsid): Use
-        _hurd_locked_install_cttyid to effect the cttyid and dtable changes
-        after proc_setsid, having held the dtable lock throughout.
-        * hurd/dtable.c (ctty_new_pgrp): With the dtable lock held, check the
-        cttyid port for null and bail out early if so.  The dtable lock
-        serializes us after any cttyid change and its associated dtable update.
+	* hurd/hurdioctl.c (rectty_dtable): Renamed to install_ctty.
+	(install_ctty): Do the changing of the cttyid port cell here, inside
+	the critical section while we holding the dtable lock.
+	(_hurd_setcttyid, tiocsctty, tiocnotty): Use that instead of changing
+	the port cell and calling rectty_dtable.
+	(_hurd_locked_install_cttyid): New function, split out of install_ctty.
+	(install_ctty): Use it inside a critical section, with the lock held.
+	* sysdeps/mach/hurd/setsid.c (__setsid): Use
+	_hurd_locked_install_cttyid to effect the cttyid and dtable changes
+	after proc_setsid, having held the dtable lock throughout.
+	* hurd/dtable.c (ctty_new_pgrp): With the dtable lock held, check the
+	cttyid port for null and bail out early if so.  The dtable lock
+	serializes us after any cttyid change and its associated dtable update.
 
 1999-11-14  Roland McGrath  <roland@baalperazim.frob.com>
 

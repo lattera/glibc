@@ -33,8 +33,11 @@ __libc_lock_define (extern, __libc_setlocale_lock)
 
 static int era_initialized;
 static struct era_entry **eras;
+static const void **eras_nf;
 static size_t num_eras;
 
+#define ERAS_NF(cnt, category) \
+  *(eras_nf + ERA_NAME_FORMAT_MEMBERS * (cnt) + (category))
 
 static int alt_digits_initialized;
 static const char **alt_digits;
@@ -54,31 +57,46 @@ _nl_postload_time (void)
 }
 
 
-struct era_entry *
-_nl_get_era_entry (const struct tm *tp)
+static void
+init_era_entry (void)
 {
-  struct era_entry *result;
   size_t cnt;
-
-  __libc_lock_lock (__libc_setlocale_lock);
 
   if (era_initialized == 0)
     {
       size_t new_num_eras = _NL_CURRENT_WORD (LC_TIME,
 					      _NL_TIME_ERA_NUM_ENTRIES);
 
-      if (eras != NULL && new_num_eras == 0)
+      if (new_num_eras == 0)
 	{
-	  free (eras);
-	  eras = NULL;
+	  if (eras != NULL)
+	    {
+	      free (eras);
+	      eras = NULL;
+	    }
+	  if (eras_nf != NULL)
+	    {
+	      free (eras_nf);
+	      eras_nf = NULL;
+	    }
 	}
-      else if (new_num_eras != 0)
+      else
 	{
 	  if (num_eras != new_num_eras)
-	    eras = realloc (eras, new_num_eras * sizeof (struct era_entry *));
+	    {
+	      eras = realloc (eras,
+			      new_num_eras * sizeof (struct era_entry *));
+	      eras_nf = realloc (eras_nf,
+				 new_num_eras * sizeof (void *)
+				 * ERA_NAME_FORMAT_MEMBERS);
+	    }
 
-	  if (eras == NULL)
-	    num_eras = 0;
+	  if (eras == NULL || eras_nf == NULL)
+	    {
+	      num_eras = 0;
+	      eras = NULL;
+	      eras_nf = NULL;
+	    }
 	  else
 	    {
 	      const char *ptr = _NL_CURRENT (LC_TIME, _NL_TIME_ERA_ENTRIES);
@@ -90,16 +108,23 @@ _nl_get_era_entry (const struct tm *tp)
 
 		  /* Skip numeric values.  */
 		  ptr += sizeof (struct era_entry);
-		  /* Skip era name.  */
+
+		  /* Set and skip era name.  */
+		  ERAS_NF (cnt, ERA_M_NAME) = (void *) ptr;
 		  ptr = strchr (ptr, '\0') + 1;
-		  /* Skip era format.  */
+
+		  /* Set and skip era format.  */
+		  ERAS_NF (cnt, ERA_M_FORMAT) = (void *) ptr;
 		  ptr = strchr (ptr, '\0') + 1;
 
 		  ptr += 3 - (((ptr - (const char *) eras[cnt]) + 3) & 3);
 
-		  /* Skip wide era name.  */
+		  /* Set and skip wide era name.  */
+		  ERAS_NF (cnt, ERA_W_NAME) = (void *) ptr;
 		  ptr = (char *) (wcschr ((wchar_t *) ptr, '\0') + 1);
-		  /* Skip wide era format.  */
+
+		  /* Set and skip wide era format.  */
+		  ERAS_NF (cnt, ERA_W_FORMAT) = (void *) ptr;
 		  ptr = (char *) (wcschr ((wchar_t *) ptr, '\0') + 1);
 		}
 	    }
@@ -107,6 +132,18 @@ _nl_get_era_entry (const struct tm *tp)
 
       era_initialized = 1;
     }
+}
+
+
+struct era_entry *
+_nl_get_era_entry (const struct tm *tp)
+{
+  struct era_entry *result;
+  size_t cnt;
+
+  __libc_lock_lock (__libc_setlocale_lock);
+
+  init_era_entry ();
 
   /* Now compare date with the available eras.  */
   for (cnt = 0; cnt < num_eras; ++cnt)
@@ -123,6 +160,67 @@ _nl_get_era_entry (const struct tm *tp)
       break;
 
   result = cnt < num_eras ? eras[cnt] : NULL;
+
+  __libc_lock_unlock (__libc_setlocale_lock);
+
+  return result;
+}
+
+
+const void *
+_nl_get_era_nf_entry (int cnt, int category)
+{
+  const void *result;
+
+  __libc_lock_lock (__libc_setlocale_lock);
+
+  init_era_entry ();
+
+  if (eras_nf == NULL)
+    result = NULL;
+  else
+    result = ERAS_NF (cnt, category);
+
+  __libc_lock_unlock (__libc_setlocale_lock);
+
+  return result;
+}
+
+
+int
+_nl_get_era_year_offset (int cnt, int val)
+{
+  __libc_lock_lock (__libc_setlocale_lock);
+
+  init_era_entry ();
+
+  if (eras == NULL)
+    val = -1;
+  else
+    {
+      val -= eras[cnt]->offset;
+
+      if (val < 0 ||
+	  val > (eras[cnt]->stop_date[0] - eras[cnt]->start_date[0]))
+	val = -1;
+    }
+
+  __libc_lock_unlock (__libc_setlocale_lock);
+
+  return val;
+}
+
+
+int
+_nl_get_era_year_start (int cnt)
+{
+  int result;
+
+  __libc_lock_lock (__libc_setlocale_lock);
+
+  _nl_init_era_entry();
+
+  result = eras[cnt]->start_date[0];
 
   __libc_lock_unlock (__libc_setlocale_lock);
 
