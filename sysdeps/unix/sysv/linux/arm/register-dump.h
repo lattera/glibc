@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pb@nexus.co.uk>, 1998.
 
@@ -72,12 +72,12 @@ register_dump (int fd, union k_sigcontext *ctx)
       hexvalue (ctx->v20.reg.ARM_r7, regs[7], 8);
       hexvalue (ctx->v20.reg.ARM_r8, regs[8], 8);
       hexvalue (ctx->v20.reg.ARM_r9, regs[9], 8);
-      hexvalue (ctx->v20.reg.ARM_r10, regs[10], 4);
-      hexvalue (ctx->v20.reg.ARM_fp, regs[11], 4);
-      hexvalue (ctx->v20.reg.ARM_ip, regs[12], 4);
-      hexvalue (ctx->v20.reg.ARM_sp, regs[13], 4);
-      hexvalue (ctx->v20.reg.ARM_lr, regs[14], 4);
-      hexvalue (ctx->v20.reg.ARM_pc, regs[15], 4);
+      hexvalue (ctx->v20.reg.ARM_r10, regs[10], 8);
+      hexvalue (ctx->v20.reg.ARM_fp, regs[11], 8);
+      hexvalue (ctx->v20.reg.ARM_ip, regs[12], 8);
+      hexvalue (ctx->v20.reg.ARM_sp, regs[13], 8);
+      hexvalue (ctx->v20.reg.ARM_lr, regs[14], 8);
+      hexvalue (ctx->v20.reg.ARM_pc, regs[15], 8);
       hexvalue (ctx->v20.reg.ARM_cpsr, regs[16], 8);
       hexvalue (ctx->v20.trap_no, regs[17], 8);
       hexvalue (ctx->v20.error_code, regs[18], 8);
@@ -95,12 +95,12 @@ register_dump (int fd, union k_sigcontext *ctx)
       hexvalue (ctx->v21.arm_r7, regs[7], 8);
       hexvalue (ctx->v21.arm_r8, regs[8], 8);
       hexvalue (ctx->v21.arm_r9, regs[9], 8);
-      hexvalue (ctx->v21.arm_r10, regs[10], 4);
-      hexvalue (ctx->v21.arm_fp, regs[11], 4);
-      hexvalue (ctx->v21.arm_ip, regs[12], 4);
-      hexvalue (ctx->v21.arm_sp, regs[13], 4);
-      hexvalue (ctx->v21.arm_lr, regs[14], 4);
-      hexvalue (ctx->v21.arm_pc, regs[15], 4);
+      hexvalue (ctx->v21.arm_r10, regs[10], 8);
+      hexvalue (ctx->v21.arm_fp, regs[11], 8);
+      hexvalue (ctx->v21.arm_ip, regs[12], 8);
+      hexvalue (ctx->v21.arm_sp, regs[13], 8);
+      hexvalue (ctx->v21.arm_lr, regs[14], 8);
+      hexvalue (ctx->v21.arm_pc, regs[15], 8);
       hexvalue (ctx->v21.arm_cpsr, regs[16], 8);
       hexvalue (ctx->v21.trap_no, regs[17], 8);
       hexvalue (ctx->v21.error_code, regs[18], 8);

@@ -1,14 +1,25 @@
+1999-01-04  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/register-dump.h: Correct widths of
+	register values.
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h: New file.
+
 1999-01-04  Ulrich Drepper  <drepper@cygnus.com>
 
+	* csu/version.c (banner): Update date.
 	* catgets/gencat.c: Update year in copyright message text.
 	* db2/makedb.c: Likewise.
 	* debug/catchsegv.sh: Likewise.
 	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c: Likewise.
 	* iconv/iconv_prog.c: Likewise.
 	* locale/programs/locale.c: Likewise.
 	* locale/programs/localedef.c: Likewise.
+	* login/programs/utmpd.c: Likewise.
 	* malloc/mtrace.pl: Likewise.
 	* nscd/nscd.c: Likewise.
+	* nss/getent.c: Likewise.
+	* posix/getconf.c: Likewise.
 
 1999-01-02  Philip Blundell  <philb@gnu.org>
 
@@ -41,8 +52,7 @@
 	* Makerules: Remove all references to obsolete variables
 	tests-static and test-srcs-static.
 	* Make-dist: Likewise.
-	* Rules: Likewise.  Remove rules to generate obsolete
-	empty.{c,o*}.
+	* Rules: Likewise.  Remove rules to generate obsolete empty.{c,o*}.
 
 1999-01-03  Philip Blundell  <philb@gnu.org>
 
