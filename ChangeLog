@@ -1,3 +1,9 @@
+2002-03-25  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/gconv_simple.c (ucs4le_internal_loop_single): Handle
+	little endian.
+	Reported by Artur Zaprzala <zybi@talex.com.pl>.
+
 2002-03-24  Andreas Jaeger  <aj@suse.de>
 
 	* manual/memory.texi (Aligned Memory Blocks): Fix typo.
