@@ -1,3 +1,8 @@
+2001-08-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_lock_t): Define
+	non-opaque lock types also if _IO_MTSAFE_IO is defined.
+
 2001-08-23  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_region_start): Take

@@ -23,7 +23,7 @@
 #include <pthread.h>
 
 /* Mutex type.  */
-#ifdef _LIBC
+#if defined(_LIBC) || defined(_IO_MTSAFE_IO)
 typedef pthread_mutex_t __libc_lock_t;
 typedef pthread_rwlock_t __libc_rwlock_t;
 typedef struct { pthread_mutex_t mutex; } __libc_lock_recursive_t;
