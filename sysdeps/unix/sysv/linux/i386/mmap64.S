@@ -48,7 +48,7 @@ ENTRY (BP_SYM (__mmap64))
 
 	movl OFFLO(%esp), %edx
 	movl OFFHI(%esp), %ecx
-	testl $0x3ff, %edx
+	testl $0xfff, %edx
 	jne L(einval)
 	shrdl $12, %ecx, %edx		/* mmap2 takes the offset in pages.  */
 	shrl $12, %ecx

@@ -1,5 +1,9 @@
 2000-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/mmap.S (__mmap): Return -EINVAL
+	even if bits 10 a 11 are non-zero.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S (__mmap64): Likewise.
+
 	* Makeconfig: Ensures the soversions.mk part of Makefile gets
 	included before building gnu/lib-names.h
 	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.

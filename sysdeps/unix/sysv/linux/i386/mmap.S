@@ -42,7 +42,7 @@ ENTRY (__mmap)
 	movl 32(%esp), %esi
 	movl 36(%esp), %edi
 	movl 40(%esp), %ebp
-	testl $0x3ff, %ebp
+	testl $0xfff, %ebp
 	movl $-EINVAL, %eax
 	jne L(skip)
 	shrl $12, %ebp			/* mmap2 takes the offset in pages.  */
