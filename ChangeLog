@@ -1,5 +1,9 @@
 2004-08-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): I rfc3484 sorting is
+	performed, make sure it is still the first entry after sotring
+	which has the ai_canonname information.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Really set ai_canonname
 	only in one entry.
 

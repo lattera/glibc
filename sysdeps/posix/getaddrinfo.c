@@ -1437,6 +1437,7 @@ getaddrinfo (const char *name, const char *service,
       /* Sort results according to RFC 3484.  */
       struct sort_result results[nresults];
       struct addrinfo *q;
+      char *canonname = NULL;
 
       for (i = 0, q = p; q != NULL; ++i, q = q->ai_next)
 	{
@@ -1459,6 +1460,14 @@ getaddrinfo (const char *name, const char *service,
 
 	      close_not_cancel_no_status (fd);
 	    }
+
+	  /* Remember the canonical name.  */
+	  if (q->ai_canonname != NULL)
+	    {
+	      assert (canonname == NULL);
+	      canonname = q->ai_canonname;
+	      q->ai_canonname = NULL;
+	    }
 	}
 
       /* We got all the source addresses we can get, now sort using
@@ -1470,6 +1479,9 @@ getaddrinfo (const char *name, const char *service,
       for (i = 1; i < nresults; ++i)
 	q = q->ai_next = results[i].dest_addr;
       q->ai_next = NULL;
+
+      /* Fill in the canonical name into the new first entry.  */
+      p->ai_canonname = canonname;
     }
 
   if (p)
