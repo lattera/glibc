@@ -1,3 +1,8 @@
+1998-10-18  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
+ 
+        * sysdeps/unix/opendir.c: Check at runtime for kernel support for 
+        O_DIRECTORY.
+ 
 1998-10-20  H.J. Lu  <hjl@gnu.org> 
  
         * sysdeps/unix/sysv/linux/i386/setresuid.c (__setresuid): Fix 
