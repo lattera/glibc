@@ -1,3 +1,9 @@
+Tue Jun 25 17:22:55 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): Initialize PARENT to
+	THISDIR, and don't ever deallocate PARENT unless it's != THISDIR.
+
 Tue Jun 25 10:58:23 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* inet/getrpcent.c: Fix macros.
