@@ -9,7 +9,8 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <unistd.h>
-#include <pthread.h>
+#if _POSIX_THREADS
+# include <pthread.h>
 
 
 /* Creating timers in another thread should work too.  */
@@ -77,5 +78,9 @@ do_test (void)
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
+# define TEST_FUNCTION do_test ()
+#else
+# define TEST_FUNCTION 0
+#endif
+
 #include "../test-skeleton.c"

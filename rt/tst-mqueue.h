@@ -21,42 +21,64 @@
 #include <mqueue.h>
 #include <search.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <sys/uio.h>
+#include <unistd.h>
 
-/* List of temporary files.  */
-struct temp_mq_list
-{
-  struct qelem q;
-  char name[1];
-} *temp_mq_list;
+static int temp_mq_fd;
 
 /* Add temporary files in list.  */
 static void
 __attribute__ ((unused))
 add_temp_mq (const char *name)
 {
-  size_t len = strlen (name);
-  struct temp_mq_list *newp
-    = (struct temp_mq_list *) calloc (sizeof (*newp) + len, 1);
-  if (newp != NULL)
-    {
-      memcpy (newp->name, name, len + 1);
-      if (temp_mq_list == NULL)
-        temp_mq_list = (struct temp_mq_list *) &newp->q;
-      else
-        insque (newp, temp_mq_list);
-    }
+  struct iovec iov[2];
+  iov[0].iov_base = (char *) name;
+  iov[0].iov_len = strlen (name);
+  iov[1].iov_base = (char *) "\n";
+  iov[1].iov_len = 1;
+  if (writev (temp_mq_fd, iov, 2) != iov[0].iov_len + 1)
+    printf ("Could not record temp mq filename %s\n", name);
 }
 
-/* Delete all temporary files.  */
+/* Delete all temporary message queues.  */
 static void
-delete_temp_mqs (void)
+do_cleanup (void)
 {
-  while (temp_mq_list != NULL)
+  if (lseek (temp_mq_fd, 0, SEEK_SET) != 0)
+    return;
+
+  FILE *f = fdopen (temp_mq_fd, "r");
+  if (f == NULL)
+    return;
+
+  char *line = NULL;
+  size_t n = 0;
+  ssize_t rets;
+  while ((rets = getline (&line, &n, f)) > 0)
     {
-      mq_unlink (temp_mq_list->name);
-      temp_mq_list = (struct temp_mq_list *) temp_mq_list->q.q_forw;
+      if (line[rets - 1] != '\n')
+        continue;
+
+      line[rets - 1] = '\0';
+      mq_unlink (line);
     }
+  fclose (f);
 }
 
-#define CLEANUP_HANDLER	delete_temp_mqs ()
+static void
+do_prepare (void)
+{
+  char name [] = "/tmp/tst-mqueueN.XXXXXX";
+  temp_mq_fd = mkstemp (name);
+  if (temp_mq_fd == -1)
+    {
+      printf ("Could not create temporary file %s: %m\n", name);
+      exit (1);
+    }
+  unlink (name);
+}
+
+#define PREPARE(argc, argv) do_prepare ()
+#define CLEANUP_HANDLER	do_cleanup ()

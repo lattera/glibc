@@ -83,7 +83,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
       result = 1;
     }
   else
-    result = check_attrs (&attr, nonblock, 0);
+    result |= check_attrs (&attr, nonblock, 0);
 
   if (mq_receive (q, &v[0], 1, NULL) != -1)
     {
@@ -156,7 +156,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
       result = 1;
     }
   else
-    result = check_attrs (&attr, nonblock, 10);
+    result |= check_attrs (&attr, nonblock, 10);
 
   pid_t pid = fork ();
   if (pid == -1)
@@ -188,7 +188,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
 	  result = 1;
 	}
       else
-	result = check_attrs (&attr, nonblock, 10);
+	result |= check_attrs (&attr, nonblock, 10);
 
       unsigned char vr[11] = { };
       unsigned int prio;
@@ -272,7 +272,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
 	  result = 1;
 	}
       else
-	result = check_attrs (&attr, nonblock, 0);
+	result |= check_attrs (&attr, nonblock, 0);
 
       if (mq_close (q) != 0)
 	{
@@ -284,9 +284,10 @@ do_one_test (mqd_t q, const char *name, int nonblock)
     }
 
   int status;
-  if (waitpid (pid, &status, 0) != pid)
+  if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
     {
       printf ("waitpid failed: %m\n");
+      kill (pid, SIGKILL);
       result = 1;
     }
   else if (!WIFEXITED (status) || WEXITSTATUS (status))
@@ -302,7 +303,7 @@ do_one_test (mqd_t q, const char *name, int nonblock)
       result = 1;
     }
   else
-    result = check_attrs (&attr, nonblock, 0);
+    result |= check_attrs (&attr, nonblock, 0);
 
   return result;
 }
@@ -313,8 +314,8 @@ do_test (void)
 {
   int result = 0;
 
-  char name[sizeof "/tst-mqueue-" + sizeof (pid_t) * 3];
-  snprintf (name, sizeof (name), "/tst-mqueue-%u", getpid ());
+  char name[sizeof "/tst-mqueue1-" + sizeof (pid_t) * 3];
+  snprintf (name, sizeof (name), "/tst-mqueue1-%u", getpid ());
 
   struct mq_attr attr = { .mq_maxmsg = 10, .mq_msgsize = 1 };
   mqd_t q = mq_open (name, O_CREAT | O_EXCL | O_WRONLY, 0600, &attr);
@@ -327,7 +328,7 @@ do_test (void)
   else
     add_temp_mq (name);
 
-  result = do_one_test (q, name, 0);
+  result |= do_one_test (q, name, 0);
 
   mqd_t q2 = mq_open (name, O_WRONLY | O_NONBLOCK);
   if (q2 == (mqd_t) -1)

@@ -1,3 +1,55 @@
+2004-04-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/syslog.c (vsyslog): Avoid freeing failbuf.
+
+2004-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* rt/Makefile (tests): Add tst-timer4.
+	* rt/tst-timer4.c: New test.
+
+2004-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* rt/tst-mqueue5.c (rtmin_code): New variable.
+	(rtmin_handler): Set it.
+	(thr, do_child, do_test): Also check rtmin_code.
+
+2004-04-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* rt/Makefile (tests): Add tst-mqueue7.
+	(tst-mqueue7-ARGS): Set.
+	* rt/tst-mqueue7.c: New test.
+
+2004-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* rt/Makefile (tests): Add tst-mqueue5 and tst-mqueue6.
+	* rt/tst-mqueue1.c (do_one_test): Bitwise or check_attrs () into
+	result instead of replacing it.  Use TEMP_FAILURE_RETRY around
+	waitpid, kill child if waitpid failed.
+	(do_test): Bitwise or check_attrs () into result instead of replacing
+	it.  Change temp mq name.
+	* rt/tst-mqueue5.c: New test.
+	* rt/tst-mqueue6.c: New test.
+	* rt/tst-mqueue.h: Include stdio.h, unistd.h, sys/uio.h.
+	(temp_mq_list, delete_temp_mqs): Remove.
+	(temp_mq_fd): New variable.
+	(do_cleanup, do_prepare): New functions.
+	(add_temp_mq): Rewritten to use a temp file.
+	(PREPARE): Define.
+	(CLEANUP_HANDLER): Change to do_cleanup ().
+
+	* rt/tst-timer3.c: Don't fail if _POSIX_THREADS is not available.
+
+2004-04-13  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/s390/ffs.c: Include limits.h
+
+2004-04-13  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (SUBSTITUTE_ARGS_1,
+	SUBSTITUTE_ARGS_2, SUBSTITUTE_ARGS_3, SUBSTITUTE_ARGS_4,
+	SUBSTITUTE_ARGS_5, SUBSTITUTE_ARGS_6, SUBSTITUTE_ARGS_7): Load
+	argument values into temporary variables.
+
 2004-04-15  Atsushi Nemoto <anemo@mba.ocn.ne.jp>
 
 	* sysdeps/mips/dl-machine.h (RTLD_START): Do not use nested .end.

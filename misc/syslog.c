@@ -237,7 +237,7 @@ vsyslog(pri, fmt, ap)
 		    v->iov_len = 1;
 		  }
 
-		__libc_cleanup_push (free, buf);
+		__libc_cleanup_push (free, buf == failbuf ? NULL : buf);
 
 		/* writev is a cancellation point.  */
 		(void)__writev(STDERR_FILENO, iov, v - iov + 1);
@@ -305,7 +305,8 @@ vsyslog(pri, fmt, ap)
 	__libc_cleanup_pop (0);
 	__libc_lock_unlock (syslog_lock);
 
-	free (buf);
+	if (buf != failbuf)
+		free (buf);
 }
 libc_hidden_def (vsyslog)
 

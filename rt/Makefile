@@ -44,7 +44,7 @@ librt-routines = $(aio-routines) \
 tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
 	 tst-aio7 tst-mqueue1 tst-mqueue2 tst-mqueue3 tst-mqueue4 \
-	 tst-timer3
+	 tst-mqueue5 tst-mqueue6 tst-mqueue7 tst-timer3 tst-timer4
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)
@@ -74,6 +74,8 @@ endif
 ifeq (yes,$(build-bounded))
 $(tests:%=$(objpfx)%-bp): $(objpfx)librt_b.a $(bounded-thread-library)
 endif
+
+tst-mqueue7-ARGS = -- $(built-program-cmd)
 
 ifeq (yes,$(build-static-nss))
 otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
