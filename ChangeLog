@@ -1,5 +1,8 @@
 2004-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/ioctl.c (__ioctl): Use
+	__tcgetattr() instead of tcgetattr().
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S [SHARED]:
 	Use __GI_exit.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ __ioctl (int fd, unsigned long int request, ...)
   switch (request)
     {
     case TCGETS:
-      result = tcgetattr (fd, (struct termios *) arg);
+      result = __tcgetattr (fd, (struct termios *) arg);
       break;
 
     case TCSETS:
