@@ -249,6 +249,10 @@ _dl_close (void *_map)
 	}
     }
 
+  /* Notify the debugger those objects are finalized and gone.  */
+  _r_debug.r_state = RT_CONSISTENT;
+  _dl_debug_state ();
+
   /* Now we can perhaps also remove the modules for which we had
      dependencies because of symbol lookup.  */
   if (__builtin_expect (rellist != NULL, 0))
@@ -261,6 +265,14 @@ _dl_close (void *_map)
 
   free (list);
 
+  /* Release the lock.  */
+  __libc_lock_unlock (_dl_load_lock);
+}
+
+
+static void
+free_mem (void)
+{
   if (__builtin_expect (_dl_global_scope_alloc, 0) != 0
       && _dl_main_searchlist->r_nlist == _dl_initial_searchlist.r_nlist)
     {
@@ -276,11 +288,5 @@ _dl_close (void *_map)
       /* Now free the old map.  */
       free (old);
     }
-
-  /* Notify the debugger those objects are finalized and gone.  */
-  _r_debug.r_state = RT_CONSISTENT;
-  _dl_debug_state ();
-
-  /* Release the lock.  */
-  __libc_lock_unlock (_dl_load_lock);
 }
+text_set_element (__libc_subfreeres, free_mem);
