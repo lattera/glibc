@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -128,6 +128,10 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	  struct kernel_dirent64 *kdp;
 	  const size_t size_diff = (offsetof (struct kernel_dirent64, d_name)
 				    - offsetof (DIRENT_TYPE, d_name));
+
+	  /* Return the error if encountered.  */
+	  if (retval == -1)
+	    return -1;
 
 	  /* If the structure returned by the kernel is identical to what we
 	     need, don't do any conversions.  */

@@ -1,3 +1,10 @@
+2002-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getdents.c [__ASSUME_GETDENTS64_SYSCALL]
+	(__GETDENTS): Check for failed getdents64 syscall.
+	* dirent/Makefile (tests): Add bug-readdir1.
+	* dirent/bug-readdir1.c: New file.
+
 2002-06-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-lookup.c (_dl_debug_bindings): Use type_class 4 for TLS
