@@ -6,6 +6,7 @@
 	* sysdeps/unix/sysv/linux/ifaddrs.c: Export netlink handling functions.
 	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Implement using
 	netlink if possible.  Fall back on ioctl method if necessary.
+	* sysdeps/unix/sysv/linux/Dist: Add netlinkaccess.h.
 
 	* include/unistd.h: Declare __truncate.
 	* sysdeps/generic/truncate.c: Also define __truncate.
