@@ -1,3 +1,7 @@
+2004-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/ypclnt.c: Cleanup last patch.
+
 2004-02-09  Andreas Jaeger  <aj@suse.de>
 
 	* configure.in: Remove glibcbug creation.
