@@ -60,7 +60,8 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   neededobj1.c neededobj2.c neededobj3.c neededobj4.c \
 		   neededobj5.c neededobj6.c firstobj.c \
 		   unload2mod.c unload2dep.c ltglobmod1.c ltglobmod2.c \
-		   testobj.h vismod.h globalmod1.c
+		   testobj.h vismod.h globalmod1.c \
+		   dblloadmod1.c dblloadmod2.c dblloadmod3.c
 
 include ../Makeconfig
 
@@ -102,10 +103,10 @@ endif
 ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
-	reldep reldep2 reldep3 reldep4 next $(tests-nodelete-$(have-z-nodelete)) \
+	reldep reldep2 reldep3 reldep4 $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 neededtest4 unload2 lateglobal initfirst global \
-	restest2
+	restest2 next #dblload dblunload
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -120,7 +121,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		reldep4mod1 reldep4mod2 reldep4mod3 reldep4mod4 \
 		neededobj1 neededobj2 neededobj3 neededobj4 \
 		neededobj5 neededobj6 firstobj globalmod1 \
-		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj
+		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj \
+		dblloadmod1 dblloadmod2 dblloadmod3
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -281,6 +283,8 @@ $(objpfx)firstobj.so: $(shared-thread-library)
 $(objpfx)globalmod1.so: $(libdl)
 $(objpfx)reldep4mod1.so: $(objpfx)reldep4mod3.so
 $(objpfx)reldep4mod2.so: $(objpfx)reldep4mod4.so
+$(objpfx)dblloadmod1.so: $(objpfx)dblloadmod3.so
+$(objpfx)dblloadmod2.so: $(objpfx)dblloadmod3.so
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
@@ -413,3 +417,9 @@ $(objpfx)initfirst.out: $(objpfx)firstobj.so
 
 $(objpfx)global: $(objpfx)globalmod1.so
 $(objpfx)global.out: $(objpfx)reldepmod1.so
+
+$(objpfx)dblload: $(libdl)
+$(objpfx)dblload.out: $(objpfx)dblloadmod1.so $(objpfx)dblloadmod2.so
+
+$(objpfx)dblunload: $(libdl)
+$(objpfx)dblunload.out: $(objpfx)dblloadmod1.so $(objpfx)dblloadmod2.so

@@ -1,3 +1,13 @@
+2001-09-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile: Add rules to build new tests.  Don't run them yet since
+	they both fail.
+	* elf/dblload.c: New file.
+	* elf/dblloadmod1.c: New file.
+	* elf/dblloadmod2.c: New file.
+	* elf/dblloadmod3.c: New file.
+	* elf/dblunload.c: New file.
+
 2001-09-04  Richard Henderson  <rth@redhat.com>
 
 	* elf/elf.h (R_ALPHA_OP_*, R_ALPHA_IMMED_*): Remove.
