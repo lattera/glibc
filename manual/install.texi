@@ -220,6 +220,25 @@ The distribution already includes the on-line formatted version of the
 manual, as Info files.  You can regenerate those with @w{@code{make
 info}}, but it shouldn't be necessary.
 
+The library has a number of special-purpose configuration parameters
+which you can find in @file{Makeconfig}.  These can be overwritten with
+the file @file{configparms}.  To change them, create a
+@file{configparms} in your build directory and add values as appropriate
+for your system.  The file is included and parsed by @code{make} and has
+to follow the conventions for makefiles.
+
+It is easy to configure the GNU C library for cross-compilation by
+setting a few variables in @file{configparms}.  Set @code{CC} to the
+cross-compiler for the target you configured the library for; it is
+important to use this same @code{CC} value when running
+@code{configure}, like this: @samp{CC=@var{target}-gcc configure
+@var{target}}.  Set @code{BUILD_CC} to the compiler to use for for
+programs run on the build system as part of compiling the library.  You
+may need to set @code{AR} and @code{RANLIB} to cross-compiling versions
+of @code{ar} and @code{ranlib} if the native tools are not configured to
+work with object files for the target you configured for.
+
+
 @node Running make install
 @appendixsec Installing the C Library
 @cindex installing
@@ -318,12 +337,12 @@ have bugs which only show up in big projects like GNU @code{libc}.
 Version 3.76.1 seems OK but some people have reported problems.
 
 @item
-EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95, 2.95.1
+EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95 or newer
 
 The GNU C library can only be compiled with the GNU C compiler family.
 As of the 2.1 release, EGCS 1.0.3 or higher is required.  GCC 2.8.1 can
 also be used (but see the FAQ for reasons why you might not want to).
-Earlier versions simply are too buggy.  As of this writing, GCC 2.95.1
+Earlier versions simply are too buggy.  As of this writing, GCC 2.95.2
 is the compiler we advise to use.
 
 You can use whatever compiler you like to compile programs that use GNU
