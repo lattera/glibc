@@ -1,5 +1,41 @@
 2001-06-01  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/alpha/fpu/fclrexcpt.c: #include <shlib-compat.h>
+	and use compat_symbol/versioned_symbol instead of plain
+	symbol_version/default_symbol_version.
+	* sysdeps/alpha/fpu/fegetenv.c: Likewise.
+	* sysdeps/alpha/fpu/fesetenv.c: Likewise.
+	* sysdeps/alpha/fpu/feupdateenv.c: Likewise.
+	* sysdeps/alpha/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/alpha/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/alpha/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/arm/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fegetenv.c: Likewise.
+	* sysdeps/arm/fpu/fesetenv.c: Likewise.
+	* sysdeps/arm/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/i386/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fegetenv.c: Likewise.
+	* sysdeps/i386/fpu/fesetenv.c: Likewise.
+	* sysdeps/i386/fpu/feupdateenv.c: Likewise.
+	* sysdeps/i386/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/i386/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/m68k/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/fegetenv.c: Likewise.
+	* sysdeps/m68k/fpu/fesetenv.c: Likewise.
+	* sysdeps/m68k/fpu/feupdateenv.c: Likewise.
+	* sysdeps/m68k/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/m68k/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/powerpc/fclrexcpt.c: Likewise.
+	* sysdeps/powerpc/fpu/fegetenv.c: Likewise.
+	* sysdeps/powerpc/fpu/fesetenv.c: Likewise.
+	* sysdeps/powerpc/fpu/feupdateenv.c: Likewise.
+	* sysdeps/powerpc/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/powerpc/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/powerpc/fpu/fsetexcptflg.c: Likewise.
+
 	* iconvdata/cp1258.c: Include <stdlib.h> for abort decl.
 	* iconvdata/iso-2022-cn-ext.c: Likewise.
 

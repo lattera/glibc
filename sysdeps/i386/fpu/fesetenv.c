@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -77,6 +77,11 @@ __fesetenv (const fenv_t *envp)
   /* Success.  */
   return 0;
 }
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetenv, __old_fesetenv)
-symbol_version (BP_SYM (__old_fesetenv), BP_SYM (fesetenv), GLIBC_2.1);
-default_symbol_version (BP_SYM (__fesetenv), BP_SYM (fesetenv), GLIBC_2.2);
+compat_symbol (libm, BP_SYM (__old_fesetenv), BP_SYM (fesetenv), GLIBC_2_1);
+#endif
+
+versioned_symbol (libm, BP_SYM (__fesetenv), BP_SYM (fesetenv), GLIBC_2_2);
