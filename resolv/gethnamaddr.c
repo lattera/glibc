@@ -636,7 +636,7 @@ gethostbyaddr(addr, len, af)
 	int n, size;
 	querybuf buf;
 	register struct hostent *hp;
-	char qbuf[MAXDNAME+1], *qp;
+	char qbuf[MAXDNAME+1], *qp = NULL;
 #ifdef SUNSECURITY
 	register struct hostent *rhp;
 	char **haddr;
