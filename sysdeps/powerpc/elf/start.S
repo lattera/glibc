@@ -1,5 +1,5 @@
 /* Startup code for programs linked with GNU libc.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,5 +61,6 @@ END(_start)
 
 /* Define a symbol for the first piece of initialized data.  */
 	.section ".data"
+	.globl	__data_start
 __data_start:
 weak_alias (__data_start, data_start)

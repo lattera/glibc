@@ -46,7 +46,7 @@ static void free_key_mem (void *mem);
 char *
 dlerror (void)
 {
-  char *buf;
+  char *buf = NULL;
   struct dl_action_result *result;
 
   /* Get error string.  */
@@ -64,9 +64,8 @@ dlerror (void)
 	    free ((char *) result->errstring);
 	  result->errstring = NULL;
 	}
-      buf = NULL;
     }
-  else
+  else if (result->errstring != NULL)
     {
       buf = (char *) result->errstring;
       if (__asprintf (&buf, result->errcode != 0 ? "%s: %s: %s" : "%s: %s",

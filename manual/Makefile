@@ -1,4 +1,4 @@
-# Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1992-1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ TEXI2DVI = texi2dvi
 AWK = gawk
 endif
 
-TEXI2PDF = pdftexinfo
+TEXI2PDF = texi2dvi --pdf
 
 ifneq ($(strip $(MAKEINFO)),:)
 all: info

@@ -27,6 +27,12 @@ main (void)
   void *h;
   const char *s;
 
+  /* Test that dlerror works initially.  */
+  s = dlerror ();
+  printf ("dlerror() without prior dl*() call returned: %s\n", s);
+  if (s != NULL)
+    return 1;
+
   h = dlopen ("errmsg1mod.so", RTLD_NOW);
   if (h != NULL)
     {

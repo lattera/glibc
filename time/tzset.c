@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -175,7 +175,8 @@ tzset_internal (always)
 
   /* No data file found.  Default to UTC if nothing specified.  */
 
-  if (tz == NULL || *tz == '\0')
+  if (tz == NULL || *tz == '\0'
+      || (TZDEFAULT != NULL && strcmp (tz, TZDEFAULT) == 0))
     {
       tz_rules[0].name = tz_rules[1].name = "UTC";
       tz_rules[0].type = tz_rules[1].type = J0;

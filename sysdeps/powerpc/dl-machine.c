@@ -1,6 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 
-   Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -236,11 +235,11 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    _dl_profile_map = map;
-	  
+
 	  /* For the long entries, subtract off data_words.  */
 	  tramp[0] = OPCODE_ADDIS_HI (11, 11, -data_words);
 	  tramp[1] = OPCODE_ADDI (11, 11, -data_words);
-	  
+
 	  /* Multiply index of entry by 3 (in r11).  */
 	  tramp[2] = OPCODE_SLWI (12, 11, 1);
 	  tramp[3] = OPCODE_ADD (11, 12, 11);
@@ -249,7 +248,7 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	      /* Load address of link map in r12.  */
 	      tramp[4] = OPCODE_LI (12, (Elf32_Word) map);
 	      tramp[5] = OPCODE_ADDIS_HI (12, 12, (Elf32_Word) map);
-	      
+
 	      /* Call _dl_runtime_resolve.  */
 	      tramp[6] = OPCODE_BA (dlrr);
 	    }
@@ -259,15 +258,15 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	      tramp[4] = OPCODE_LI (12, dlrr);
 	      tramp[5] = OPCODE_ADDIS_HI (12, 12, dlrr);
 	      tramp[6] = OPCODE_MTCTR (12);
-	      
+
 	      /* Load address of link map in r12.  */
 	      tramp[7] = OPCODE_LI (12, (Elf32_Word) map);
 	      tramp[8] = OPCODE_ADDIS_HI (12, 12, (Elf32_Word) map);
-	      
+
 	      /* Call _dl_runtime_resolve.  */
 	      tramp[9] = OPCODE_BCTR ();
 	    }
-	  
+
 	  /* Set up the lazy PLT entries.  */
 	  offset = PLT_INITIAL_ENTRY_WORDS;
 	  i = 0;
@@ -329,7 +328,7 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
     {
       Elf32_Word *plt, *data_words;
       Elf32_Word index, offset, num_plt_entries;
-      
+
       num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
 			 / sizeof(Elf32_Rela));
       plt = (Elf32_Word *) D_PTR (map, l_info[DT_PLTGOT]);
@@ -343,7 +342,7 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
 	{
 	  data_words[index] = finaladdr;
 	  PPC_SYNC;
-	  *reloc_addr = OPCODE_B ((PLT_LONGBRANCH_ENTRY_WORDS - (offset+1)) 
+	  *reloc_addr = OPCODE_B ((PLT_LONGBRANCH_ENTRY_WORDS - (offset+1))
 				  * 4);
 	}
       else
@@ -368,13 +367,25 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
 static void
 dl_reloc_overflow (struct link_map *map,
 		   const char *name,
-		   Elf32_Addr *const reloc_addr)
+		   Elf32_Addr *const reloc_addr,
+		   const Elf32_Sym *sym,
+		   const Elf32_Sym *refsym)
 {
   char buffer[128];
   char *t;
+  const Elf32_Sym *errsym = sym ?: refsym;
   t = stpcpy (buffer, name);
   t = stpcpy (t, " relocation at 0x00000000");
   _itoa_word ((unsigned) reloc_addr, t, 16, 0);
+  if (errsym)
+    {
+      const char *strtab;
+
+      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
+      t = stpcpy (t, " for symbol `");
+      t = stpcpy (t, strtab + errsym->st_name);
+      t = stpcpy (t, "'");
+    }
   t = stpcpy (t, " out of range");
   _dl_signal_error (0, map->l_name, buffer);
 }
@@ -402,14 +413,14 @@ __process_machine_rela (struct link_map *map,
 
     case R_PPC_ADDR24:
       if (finaladdr > 0x01fffffc && finaladdr < 0xfe000000)
-	dl_reloc_overflow (map,  "R_PPC_ADDR24", reloc_addr);
+	dl_reloc_overflow (map,  "R_PPC_ADDR24", reloc_addr, sym, refsym);
       *reloc_addr = (*reloc_addr & 0xfc000003) | (finaladdr & 0x3fffffc);
       break;
 
     case R_PPC_ADDR16:
     case R_PPC_UADDR16:
       if (finaladdr > 0x7fff && finaladdr < 0x8000)
-	dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr);
+	dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr, sym, refsym);
       *(Elf32_Half*) reloc_addr = finaladdr;
       break;
 
@@ -429,7 +440,7 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_ADDR14_BRTAKEN:
     case R_PPC_ADDR14_BRNTAKEN:
       if (finaladdr > 0x7fff && finaladdr < 0x8000)
-	dl_reloc_overflow (map,  "R_PPC_ADDR14", reloc_addr);
+	dl_reloc_overflow (map,  "R_PPC_ADDR14", reloc_addr, sym, refsym);
       *reloc_addr = (*reloc_addr & 0xffff0003) | (finaladdr & 0xfffc);
       if (rinfo != R_PPC_ADDR14)
 	*reloc_addr = ((*reloc_addr & 0xffdfffff)
@@ -441,7 +452,7 @@ __process_machine_rela (struct link_map *map,
       {
 	Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
 	if (delta << 6 >> 6 != delta)
-	  dl_reloc_overflow (map,  "R_PPC_REL14", reloc_addr);
+	  dl_reloc_overflow (map,  "R_PPC_REL14", reloc_addr, sym, refsym);
 	*reloc_addr = (*reloc_addr & 0xfc000003) | (delta & 0x3fffffc);
       }
       break;
@@ -485,7 +496,7 @@ __process_machine_rela (struct link_map *map,
 	  {
 	    Elf32_Word *plt, *data_words;
 	    Elf32_Word index, offset, num_plt_entries;
-	    
+
 	    plt = (Elf32_Word *) D_PTR (map, l_info[DT_PLTGOT]);
 	    offset = reloc_addr - plt;
 
@@ -497,8 +508,8 @@ __process_machine_rela (struct link_map *map,
 		data_words = plt + PLT_DATA_START_WORDS (num_plt_entries);
 		data_words[index] = finaladdr;
 		reloc_addr[0] = OPCODE_LI (11, index * 4);
-		reloc_addr[1] = OPCODE_B ((PLT_LONGBRANCH_ENTRY_WORDS 
-					   - (offset+1)) 
+		reloc_addr[1] = OPCODE_B ((PLT_LONGBRANCH_ENTRY_WORDS
+					   - (offset+1))
 					  * 4);
 		MODIFIED_CODE_NOQUEUE (reloc_addr + 1);
 	      }

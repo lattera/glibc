@@ -1,5 +1,39 @@
 2001-01-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/Makefile (TEXI2PDF): Change to texi2dvi --pdf.
+	Suggested by Minko Markov <mmarkov@home.com>.
+
+2001-01-02  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/elf/start.S (__data_start): Make it global.
+	* sysdeps/powerpc/dl-machine.c (dl_reloc_overflow): Print the name of
+	the failing symbol.
+	(__process_machine_rela): Pass symbol to dl_reloc_overflow().
+
+2001-01-02  Ben Collins  <bcollins@debian.org>
+
+	* time/tzset.c (tzset_internal): Make sure we fall back to UTC
+	if TZ is not set and TZDEFAULT is not present.
+
+2001-01-01  Ben Collins  <bcollins@debian.org>
+
+	* string/strings.h: Make sure we declare our functions even if
+	string.h is already included, based on whether or not __USE_BSD is
+	defined.
+
+2001-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/dlerror.c (dlerror): Handle call of dlerror() before any
+	other dlopen() and dlsym().
+	Based on a patch by Ben Collins <bcollins@debian.org>.
+
+2001-01-02  Andreas Jaeger  <aj@suse.de>
+
+	* dlfcn/errmsg1.c (main): Call dlerror initially.
+	Reported by Ben Collins <bcollins@debian.org>.
+
+2001-01-02  Ulrich Drepper  <drepper@redhat.com>
+
 	* intl/dcigettext.c (guess_category_value): Rewrite so that LANGUAGE
 	value is ignored if the selected locale is the C locale.
 	* intl/tst-gettext.c: Set locale for above change.

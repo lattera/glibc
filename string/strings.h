@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,96,97,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,96,97,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,9 @@
 #define	_STRINGS_H	1
 
 /* We don't need and should not read this file if <string.h> was already
-   read.  */
-#ifndef _STRING_H
+   read. The one exception being that if __USE_BSD isn't defined, then
+   these aren't defined in string.h, so we need to define them here.  */
+#if !defined _STRING_H || !defined __USE_BSD
 
 # include <features.h>
 # define __need_size_t
