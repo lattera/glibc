@@ -1,4 +1,11 @@
+2001-12-10  Thorsten Kukuk  <kukuk@suse.de>
+
+	* io/ftw.c (ftw_startup): Check, if the path is search and readable.
+
 2001-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/Makefile (tests): Add bug-ftw3.
+	* io/bug-ftw3.c: New file.
 
 	* sysdeps/generic/glob.c (glob): Return only pattern if nothing
 	matches and GLOB_NOCHECK is set.

@@ -473,6 +473,9 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
       return -1;
     }
 
+  if (__access (dir, R_OK) != 0)
+    return -1;
+
   data.maxdir = descriptors < 1 ? 1 : descriptors;
   data.actdir = 0;
   data.dirstreams = (struct dir_data **) alloca (data.maxdir
