@@ -1,3 +1,8 @@
+2002-12-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/brk.c (__brk): Use INTERNAL_SYSCALL
+	instead of INLINE_SYSCALL.
+
 2002-12-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_sigaction): Fix

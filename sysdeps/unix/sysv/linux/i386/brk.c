@@ -36,7 +36,7 @@ __brk (void *addr)
 {
   void *__unbounded newbrk;
 
-  newbrk = INLINE_SYSCALL (brk, 1, __ptrvalue (addr));
+  newbrk = INTERNAL_SYSCALL (brk, 1, __ptrvalue (addr));
 
   __curbrk = newbrk;
 
