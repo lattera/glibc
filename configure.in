@@ -892,7 +892,7 @@ if test $libc_cv_ld_no_whole_archive = yes; then
 fi
 AC_SUBST(no_whole_archive)dnl
 
-AC_CACHE_CHECK(for gcc -fno-exceptions, libc_cv_gcc_no_exceptions, [dnl
+AC_CACHE_CHECK(for gcc -fexceptions, libc_cv_gcc_exceptions, [dnl
 cat > conftest.c <<\EOF
 _start () {}
 int __eh_pc;
@@ -900,17 +900,17 @@ __throw () {}
 EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS
-			    -nostdlib -nostartfiles -fno-exceptions
+			    -nostdlib -nostartfiles -fexceptions
 			    -o conftest conftest.c 1>&AC_FD_CC]); then
-  libc_cv_gcc_no_exceptions=yes
+  libc_cv_gcc_exceptions=yes
 else
-  libc_cv_gcc_no_exceptions=no
+  libc_cv_gcc_exceptions=no
 fi
 rm -f conftest*])
-if test $libc_cv_ld_no_whole_archive = yes; then
-  no_exceptions=-fno-exceptions
+if test $libc_cv_gcc_exceptions = yes; then
+  exceptions=-fexceptions
 fi
-AC_SUBST(no_exceptions)dnl
+AC_SUBST(exceptions)dnl
 
 if test "$base_machine" = alpha ; then
 AC_CACHE_CHECK(for function ..ng prefix, libc_cv_gcc_alpha_ng_prefix, [dnl

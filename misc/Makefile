@@ -63,6 +63,9 @@ gpl2lgpl := error.c error.h
 
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent
 
+CFLAGS-tsearch.c = $(exceptions)
+CFLAGS-lsearch.c = $(exceptions)
+
 include ../Rules
 
 $(objpfx)libbsd-compat.a: $(dep-dummy-lib); $(make-dummy-lib)

@@ -604,14 +604,14 @@ typedef __compar_fn_t comparison_fn_t;
 
 /* Do a binary search for KEY in BASE, which consists of NMEMB elements
    of SIZE bytes each, using COMPAR to perform the comparisons.  */
-extern __ptr_t bsearch __P ((__const __ptr_t __key, __const __ptr_t __base,
-			     size_t __nmemb, size_t __size,
-			     __compar_fn_t __compar));
+extern __ptr_t bsearch __PMS ((__const __ptr_t __key, __const __ptr_t __base,
+			       size_t __nmemb, size_t __size,
+			       __compar_fn_t __compar));
 
 /* Sort NMEMB elements of BASE, of SIZE bytes each,
    using COMPAR to perform the comparisons.  */
-extern void qsort __P ((__ptr_t __base, size_t __nmemb, size_t __size,
-			__compar_fn_t __compar));
+extern void qsort __PMS ((__ptr_t __base, size_t __nmemb, size_t __size,
+			  __compar_fn_t __compar));
 
 
 /* Return the absolute value of X.  */

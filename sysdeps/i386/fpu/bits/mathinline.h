@@ -581,13 +581,7 @@ __MATH_INLINE int __finite (double __x) __attribute__ ((__const__));
 __MATH_INLINE int
 __finite (double __x)
 {
-  register int __result;
-  __asm__ __volatile__
-    ("orl	$0x800fffff, %0\n\t"
-     "incl	%0\n\t"
-     "shrl	$31, %0"
-     : "=r" (__result) : "0" (((int *) &__x)[1]) : "cc");
-  return __result;
+  return ((((int *) &__x)[1] | 0x800fffff) + 1) >> 31;
 }
 
 /* Miscellaneous functions */

@@ -67,6 +67,10 @@ distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h
 
 generated += isomac isomac.out
 
+CFLAGS-bsearch.c = $(exceptions)
+CFLAGS-msort.c = $(exceptions)
+CFLAGS-qsort.c = $(exceptions)
+
 include ../Rules
 
 

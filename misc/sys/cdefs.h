@@ -26,7 +26,17 @@
 
 #ifdef __GNUC__
 
-# define __P(args)	args	/* GCC can always grok prototypes.  */
+/* GCC can always grok prototypes.  For C++ programs we add throw()
+   to help it optimize the function calls.  But this works only with
+   gcc 2.8.x and egcs.  */
+# if defined __cplusplus && __GNUC_MINOR__ >= 8
+#  define __P(args)	args throw ()
+# else
+#  define __P(args)	args
+# endif
+/* This macro will be used for functions which might take C++ callback
+   functions.  */
+# define __PMS(args)	args
 # define __DOTS		, ...
 
 #else	/* Not GCC.  */
@@ -36,6 +46,7 @@
 # if (defined __STDC__ && __STDC__) || defined __cplusplus
 
 #  define __P(args)	args
+#  define __PMS(args)	args
 #  define __const	const
 #  define __signed	signed
 #  define __volatile	volatile
@@ -44,6 +55,7 @@
 # else	/* Not ANSI C or C++.  */
 
 #  define __P(args)	()	/* No prototypes.  */
+#  define __PMS(args)	()
 #  define __const		/* No ANSI C keywords.  */
 #  define __signed
 #  define __volatile

@@ -2531,9 +2531,9 @@ if test $libc_cv_ld_no_whole_archive = yes; then
   no_whole_archive=-Wl,--no-whole-archive
 fi
 
-echo $ac_n "checking for gcc -fno-exceptions""... $ac_c" 1>&6
-echo "configure:2536: checking for gcc -fno-exceptions" >&5
-if eval "test \"`echo '$''{'libc_cv_gcc_no_exceptions'+set}'`\" = set"; then
+echo $ac_n "checking for gcc -fexceptions""... $ac_c" 1>&6
+echo "configure:2536: checking for gcc -fexceptions" >&5
+if eval "test \"`echo '$''{'libc_cv_gcc_exceptions'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.c <<\EOF
@@ -2542,18 +2542,18 @@ int __eh_pc;
 __throw () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS
-			    -nostdlib -nostartfiles -fno-exceptions
+			    -nostdlib -nostartfiles -fexceptions
 			    -o conftest conftest.c 1>&5'; { (eval echo configure:2547: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
-  libc_cv_gcc_no_exceptions=yes
+  libc_cv_gcc_exceptions=yes
 else
-  libc_cv_gcc_no_exceptions=no
+  libc_cv_gcc_exceptions=no
 fi
 rm -f conftest*
 fi
 
-echo "$ac_t""$libc_cv_gcc_no_exceptions" 1>&6
-if test $libc_cv_ld_no_whole_archive = yes; then
-  no_exceptions=-fno-exceptions
+echo "$ac_t""$libc_cv_gcc_exceptions" 1>&6
+if test $libc_cv_gcc_exceptions = yes; then
+  exceptions=-fexceptions
 fi
 
 if test "$base_machine" = alpha ; then
@@ -2818,6 +2818,7 @@ fi
 
 
 
+
   
 if test $gnu_ld = yes; then
   cat >> confdefs.h <<\EOF
@@ -2851,7 +2852,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:2855: checking whether -fPIC is default" >&5
+echo "configure:2856: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3059,11 +3060,12 @@ s%@PERL@%$PERL%g
 s%@VERSIONING@%$VERSIONING%g
 s%@libc_cv_have_initfini@%$libc_cv_have_initfini%g
 s%@no_whole_archive@%$no_whole_archive%g
-s%@no_exceptions@%$no_exceptions%g
+s%@exceptions@%$exceptions%g
 s%@uname_sysname@%$uname_sysname%g
 s%@uname_release@%$uname_release%g
 s%@uname_version@%$uname_version%g
 s%@stdio@%$stdio%g
+s%@old_glibc_headers@%$old_glibc_headers%g
 s%@libc_cv_slibdir@%$libc_cv_slibdir%g
 s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
 s%@libc_cv_rootsbindir@%$libc_cv_rootsbindir%g
