@@ -1,3 +1,8 @@
+2003-03-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-cond10.
+	* tst-cond10.c: New file.
+
 2003-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-tls2.c (do_test): Add TEMP_FAILURE_RETRY around sem_wait call.
