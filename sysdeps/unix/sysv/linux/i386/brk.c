@@ -1,5 +1,5 @@
 /* brk system call for Linux/i386.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,11 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 void *__curbrk;
+
+/* Old braindamage in GCC's crtstuff.c requires this symbol in an attempt
+   to work around different old braindamage in the old Linux ELF dynamic
+   linker.  */
+weak_alias (__curbrk, ___brk_addr)
 
 int
 __brk (void *addr)
