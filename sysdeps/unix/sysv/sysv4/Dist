@@ -1,2 +1,4 @@
+__getpgid.c
+__setpgid.c
 sysconfig.h
 siginfo.h
