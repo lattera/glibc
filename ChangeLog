@@ -1,3 +1,9 @@
+2003-03-11  Ralf Baechle  <ralf@linux-mips.org>
+
+	* sysdeps/unix/sysv/linux/mips/clone.S (__thread_start): Use jal
+	instead of jalr to invoke subroutine so restoring the $gp register
+	will work properly.
+
 2003-03-11  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (__NR_pread64): Define

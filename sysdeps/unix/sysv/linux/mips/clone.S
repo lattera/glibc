@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ralf Baechle <ralf@gnu.ai.mit.edu>, 1996.
+   Contributed by Ralf Baechle <ralf@linux-mips.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -93,7 +93,7 @@ ENTRY(__thread_start)
 	lw		a0,4(sp)	/* Argument pointer.  */
 
 	/* Call the user's function.  */
-	jalr		t9
+	jal		t9
 
 	/* Call _exit rather than doing it inline for breakpoint purposes.  */
 	move		a0,v0
