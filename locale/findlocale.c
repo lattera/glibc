@@ -51,9 +51,6 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   const char *territory;
   const char *codeset;
   const char *normalized_codeset;
-  const char *special;
-  const char *sponsor;
-  const char *revision;
   struct loaded_l10nfile *locale_file;
 
   if ((*name)[0] == '\0')
@@ -96,33 +93,24 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 
 		language[_territory[.codeset]][@modifier]
 
-     and six parts for the CEN syntax:
-
-	language[_territory][+audience][+special][,[sponsor][_revision]]
-
      Beside the first all of them are allowed to be missing.  If the
      full specified locale is not found, the less specific one are
      looked for.  The various part will be stripped of according to
      the following order:
-		(1) revision
-		(2) sponsor
-		(3) special
-		(4) codeset
-		(5) normalized codeset
-		(6) territory
-		(7) audience/modifier
+		(1) codeset
+		(2) normalized codeset
+		(3) territory
+		(4) modifier
    */
   mask = _nl_explode_name (loc_name, &language, &modifier, &territory,
-			   &codeset, &normalized_codeset, &special,
-			   &sponsor, &revision);
+			   &codeset, &normalized_codeset);
 
   /* If exactly this locale was already asked for we have an entry with
      the complete name.  */
   locale_file = _nl_make_l10nflist (&_nl_locale_file_list[category],
 				    locale_path, locale_path_len, mask,
 				    language, territory, codeset,
-				    normalized_codeset, modifier, special,
-				    sponsor, revision,
+				    normalized_codeset, modifier,
 				    _nl_category_names[category], 0);
 
   if (locale_file == NULL)
@@ -132,8 +120,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
       locale_file = _nl_make_l10nflist (&_nl_locale_file_list[category],
 					locale_path, locale_path_len, mask,
 					language, territory, codeset,
-					normalized_codeset, modifier, special,
-					sponsor, revision,
+					normalized_codeset, modifier,
 					_nl_category_names[category], 1);
       if (locale_file == NULL)
 	/* This means we are out of core.  */
@@ -230,8 +217,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
     }
 
   /* Determine whether the user wants transliteration or not.  */
-  if ((modifier != NULL && __strcasecmp (modifier, "TRANSLIT") == 0)
-      || (special != NULL && __strcasecmp (special, "TRANSLIT") == 0))
+  if (modifier != NULL && __strcasecmp (modifier, "TRANSLIT") == 0)
     ((struct locale_data *) locale_file->data)->use_translit = 1;
 
   /* Increment the usage count.  */

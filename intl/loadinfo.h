@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -39,17 +39,10 @@
 #endif
 
 /* Encoding of locale name parts.  */
-#define CEN_REVISION		1
-#define CEN_SPONSOR		2
-#define CEN_SPECIAL		4
-#define XPG_NORM_CODESET	8
-#define XPG_CODESET		16
-#define TERRITORY		32
-#define CEN_AUDIENCE		64
-#define XPG_MODIFIER		128
-
-#define CEN_SPECIFIC	(CEN_REVISION|CEN_SPONSOR|CEN_SPECIAL|CEN_AUDIENCE)
-#define XPG_SPECIFIC	(XPG_CODESET|XPG_NORM_CODESET|XPG_MODIFIER)
+#define XPG_NORM_CODESET	1
+#define XPG_CODESET		2
+#define XPG_TERRITORY		4
+#define XPG_MODIFIER		8
 
 
 struct loaded_l10nfile
@@ -77,9 +70,8 @@ _nl_make_l10nflist PARAMS ((struct loaded_l10nfile **l10nfile_list,
 			    const char *language, const char *territory,
 			    const char *codeset,
 			    const char *normalized_codeset,
-			    const char *modifier, const char *special,
-			    const char *sponsor, const char *revision,
-			    const char *filename, int do_allocate));
+			    const char *modifier, const char *filename,
+			    int do_allocate));
 
 
 extern const char *_nl_expand_alias PARAMS ((const char *name));
@@ -90,10 +82,7 @@ extern int _nl_explode_name PARAMS ((char *name, const char **language,
 				     const char **modifier,
 				     const char **territory,
 				     const char **codeset,
-				     const char **normalized_codeset,
-				     const char **special,
-				     const char **sponsor,
-				     const char **revision));
+				     const char **normalized_codeset));
 
 extern char *_nl_find_language PARAMS ((const char *name));
 
