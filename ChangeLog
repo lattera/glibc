@@ -1,5 +1,7 @@
 2000-10-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/arm/libm-test-ulps: Updated.
+
 	* sysdeps/generic/dl-cache.h (CACHEMAGIC_VERSION_NEW): New value.
 
 2000-10-25  Andreas Jaeger  <aj@suse.de>
