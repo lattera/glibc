@@ -1,3 +1,13 @@
+2002-08-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Replace member
+	`bool _dl_initial_dtv_malloced' with `void *_dl_initial_dtv'.
+	* elf/rtld.c (dl_main): Set it to the new dtv for the main thread.
+	* sysdeps/generic/dl-tls.c (__tls_get_addr): When reallocating the
+	dtv, check if it matches _dl_initial_dtv; if so, malloc and copy the
+	old data, abandoning the original memory allocated by rtld at startup,
+	instead of calling realloc normally.
+
 2002-08-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/fr.po: Update from translation team.
