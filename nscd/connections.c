@@ -786,6 +786,10 @@ nscd_run (void *p)
 	  continue;
 	}
 
+      /* Check whether this is a valid request type.  */
+      if (req.type < GETPWBYNAME || req.type >= LASTREQ)
+	goto close_and_out;
+
       /* Some systems have no SO_PEERCRED implementation.  They don't
 	 care about security so we don't as well.  */
 #ifdef SO_PEERCRED
@@ -798,8 +802,7 @@ nscd_run (void *p)
 	    {
 	      dbg_log (_("error getting callers id: %s"),
 		       strerror_r (errno, buf, sizeof (buf)));
-	      close (fd);
-	      continue;
+	      goto close_and_out;
 	    }
 
 	  if (req.type < GETPWBYNAME || req.type > LASTDBREQ
@@ -825,8 +828,6 @@ nscd_run (void *p)
 	{
 	  if (debug_level > 0)
 	    dbg_log (_("key length in request too long: %d"), req.key_len);
-	  close (fd);
-	  continue;
 	}
       else
 	{
@@ -859,10 +860,11 @@ handle_request: request received (Version = %d)"), req.version);
 
 	  /* Phew, we got all the data, now process it.  */
 	  handle_request (fd, &req, keybuf, uid);
-
-	  /* We are done.  */
-	  close (fd);
 	}
+
+    close_and_out:
+      /* We are done.  */
+      close (fd);
 
       /* Just determine whether any data is present.  We do this to
 	 measure whether clients are queued up.  */
