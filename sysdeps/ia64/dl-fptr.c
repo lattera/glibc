@@ -109,7 +109,7 @@ new_fdesc_table (struct local *l)
   new_table = __mmap (0, size, PROT_READ | PROT_WRITE,
 		      MAP_ANON | MAP_PRIVATE, -1, 0);
   if (new_table == MAP_FAILED)
-    _dl_signal_error (errno, NULL, "cannot map pages for fdesc table");
+    _dl_signal_error (errno, NULL, NULL, "cannot map pages for fdesc table");
 
   new_table->len = (size - sizeof (*new_table)) / sizeof (struct ia64_fdesc);
   fdesc = &new_table->fdesc[0];
@@ -182,7 +182,7 @@ make_fptr_table (struct link_map *map)
   fptr_table = __mmap (NULL, size, PROT_READ | PROT_WRITE,
 		       MAP_ANON | MAP_PRIVATE, -1, 0);
   if (fptr_table == MAP_FAILED)
-    _dl_signal_error (errno, NULL, "cannot map pages for fptr table");
+    _dl_signal_error (errno, NULL, NULL, "cannot map pages for fptr table");
 
   map->l_mach.fptr_table_len = len;
   map->l_mach.fptr_table = fptr_table;
@@ -203,7 +203,7 @@ __ia64_make_fptr (struct link_map *map, const Elf64_Sym *sym, Elf64_Addr ip)
   symidx = sym - symtab;
 
   if (symidx >= map->l_mach.fptr_table_len)
-    _dl_signal_error (0, NULL,
+    _dl_signal_error (0, NULL, NULL,
 		      "internal error: symidx out of range of fptr table");
 
   if (!ftab[symidx])

@@ -239,7 +239,7 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
 	}
     }
 
-  _dl_signal_error (0, NULL, "cannot find runtime link map");
+  _dl_signal_error (0, NULL, NULL, "cannot find runtime link map");
   return NULL;
 }
 

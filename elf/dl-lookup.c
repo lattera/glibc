@@ -151,8 +151,15 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
       if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
 	undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
 
-      /* And increment the counter in the referenced object.  */
-      ++map->l_opencount;
+      if (map->l_searchlist.r_list != NULL)
+	/* And increment the counter in the referenced object.  */
+	++map->l_opencount;
+      else
+	/* We have to bump the counts for all dependencies since so far
+	   this object was only a normal or transitive dependency.
+	   Now it might be closed with _dl_close() directly.  */
+	for (list = map->l_initfini; *list != NULL; ++list)
+	  ++(*list)->l_opencount;
 
       /* Display information if we are debugging.  */
       if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))

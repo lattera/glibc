@@ -95,7 +95,7 @@ elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 					 int noplt))
 {
   _dl_signal_error (0, "Elf32_Rela relocation requested -- unused on "
-		    ELF_MACHINE_NAME);
+		    NULL, ELF_MACHINE_NAME);
 }
 
 

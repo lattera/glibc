@@ -23,6 +23,9 @@
 #define ELF_FUNCTION_PTR_IS_SPECIAL
 #define DL_UNMAP_IS_SPECIAL
 
+/* Forward declaration.  */
+struct link_map;
+
 void *_dl_symbol_address (const struct link_map *map, const ElfW(Sym) *ref);
 
 #define DL_SYMBOL_ADDRESS(map, ref) _dl_symbol_address(map, ref)

@@ -391,7 +391,7 @@ dl_reloc_overflow (struct link_map *map,
       t = stpcpy (t, "'");
     }
   t = stpcpy (t, " out of range");
-  _dl_signal_error (0, map->l_name, buffer);
+  _dl_signal_error (0, map->l_name, NULL, buffer);
 }
 
 void

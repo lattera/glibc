@@ -101,7 +101,7 @@ __hppa_make_fptr (const struct link_map *sym_map, Elf32_Addr value,
 	      if (_dl_zerofd == -1)
 		{
 		  __close (fd);
-		  _dl_signal_error (errno, NULL,
+		  _dl_signal_error (errno, NULL, NULL,
 				    "cannot open zero fill device");
 		}
 	    }
@@ -110,7 +110,7 @@ __hppa_make_fptr (const struct link_map *sym_map, Elf32_Addr value,
 	  __fptr_next = __mmap (0, _dl_pagesize, PROT_READ | PROT_WRITE,
 				MAP_ANON | MAP_PRIVATE, ANONFD, 0);
 	  if (__fptr_next == MAP_FAILED)
-	    _dl_signal_error(errno, NULL, "cannot map page for fptr");
+	    _dl_signal_error(errno, NULL, NULL, "cannot map page for fptr");
 	  __fptr_count = _dl_pagesize / sizeof (struct hppa_fptr);
 	}
       f = __fptr_next++;

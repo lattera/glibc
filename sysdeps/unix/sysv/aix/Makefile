@@ -11,11 +11,11 @@ sysdep_routines += aix-syscalls
 $(objpfx)aix-syscalls.o : /lib/syscalls.exp
 	echo "static int a;" > foo.c
 	$(CC) -c foo.c
-	ld -bM:SRE -bnoentry -bI:/lib/syscalls.exp -bE:/lib/syscalls.exp foo.o -o $@
+	ld -bM:SRE -bpT:0x00000000 -bpD:0x00000000 -bnoentry -bI:/lib/syscalls.exp -bE:/lib/syscalls.exp foo.o -o $@
 	rm foo.c foo.o
 
 
-endif 
+endif
 
 ifeq ($(subdir),misc)
 sysdep_routines  += dl-error dl-support dl-libc dl-open dl-sym \
@@ -39,4 +39,3 @@ inhibit-glue = yes
 ifeq ($(subdir),timezone)
 CPPFLAGS-zic.c = -Dunix
 endif
-

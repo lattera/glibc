@@ -355,7 +355,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   weak_extern (_dl_rtld_map);
 #endif
 
-#if !define RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
+#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_SPARC_RELATIVE, 0))
     {
 # if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC

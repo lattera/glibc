@@ -1,4 +1,38 @@
+2001-09-07  Tom Rix  <trix@redhat.com>
+
+	* sysdeps/unix/sysv/aix/sysv_termio.h: New file.
+
+2001-08-26  Tom Rix  <trix@redhat.com>
+
+	* sysdeps/unix/sysv/aix/Makefile (aix-syscalls.o): More linker
+	command line options.
+	* sysdeps/unix/sysv/aix/start.s: New file, rework of start.c
+	* sysdeps/unix/sysv/aix/start.c: Removed.
+	* sysdeps/unix/sysv/aix/start-libc.c: New file.
+	* sysdeps/unix/sysv/aix/init-first.c: New file.
+	* sysdeps/unix/sysv/aix/fcntl.c: Alias __libc_fcntl to __fcntl.
+
+2001-09-08  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/arm/dl-machine.h: Fix usage of new _dl_signal_error() format.
+	* sysdeps/generic/dl-machine.h: Likewise.
+	* sysdeps/hppa/dl-fptr.c: Likewise.
+	* sysdeps/ia64/dl-fptr.c: Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-machine.c: Likewise.
+
+2001-09-07  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/sparc/sparc32/dl-machine.h: Fix typo.
+
+	* sysdeps/hppa/dl-lookupcfg.h: Forward declare struct link_map.
+
 2001-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-lookup.c (add_dependency): Bump l_opencount of all
+	dependencies if necessary.
 
 	* elf/dl-close.c (_dl_close): If object has no r_list (i.e., wasn't
 	loaded directly) determine length if l_initfini list by iterating
