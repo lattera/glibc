@@ -1,3 +1,13 @@
+2005-02-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Set *h_errnop to
+	NETDB_INTERNAL if buffer is too small.
+
+	* nscd/hstcache.c (INCR): Remove.
+	(addhstbyX): Double buflen in each iteration rather than add INCR.
+	* nscd/grpcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
 2005-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/libc_fatal.c: Print backtrace and memory

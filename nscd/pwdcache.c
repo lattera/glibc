@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -425,11 +425,10 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
     {
       char *old_buffer = buffer;
       errno = 0;
-#define INCR 1024
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
-	  buflen += INCR;
+	  buflen *= 2;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
 	    {
@@ -450,7 +449,7 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
       else
 	/* Allocate a new buffer on the stack.  If possible combine it
 	   with the previously allocated buffer.  */
-	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
+	buffer = (char *) extend_alloca (buffer, buflen, 2 * buflen);
     }
 
 #if 0
