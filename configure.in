@@ -1074,11 +1074,18 @@ dnl cross-platform since the gcc used can be a cross compiler.  Without
 dnl introducing new options this is not easily doable.  Instead use a tool
 dnl which always is cross-platform: readelf.  To detect whether -z combreloc
 dnl look for a section named .rel.dyn.
-    if readelf -S conftest.so | fgrep .rel.dyn > /dev/null; then
-      AC_DEFINE(HAVE_Z_COMBRELOC)
+    if readelf -S conftest.so | grep '\.rel\(a\|\)\.dyn' > /dev/null; then
+      libc_cv_z_combreloc=yes
+    else
+      libc_cv_z_combreloc=no
     fi
+  else
+    libc_cv_z_combreloc=no
   fi
   rm -f conftest*])
+  if test "$libc_cv_z_combreloc" = yes; then
+    AC_DEFINE(HAVE_Z_COMBRELOC)
+  fi
 fi
 
 if test $elf != yes; then

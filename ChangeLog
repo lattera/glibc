@@ -1,5 +1,7 @@
 2001-08-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Fix test for .rela.dyn section.
+
 	* elf/dl-runtime.c: Update calls to _dl_lookup_*.
 
 2001-08-26  Jakub Jelinek  <jakub@redhat.com>
