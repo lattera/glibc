@@ -1,3 +1,14 @@
+1999-07-07  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/getpt.c: Check that /dev/pts is mounted.
+	(_PATH_DEVPTS, DEVPTS_SUPER_MAGIC): New definitions.
+	(_PATH_DEVPTMX): Use _PATH_DEV.
+
+1999-07-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* malloc/tst-malloc.c: New file.  Tests some basic functionality.
+	* malloc/Makefile (tests): Add tst-malloc.
+
 1999-07-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/oldtmpfile.c: Adjust call of __gen_tempname to match new
@@ -9,7 +20,7 @@
 
 	* sysdeps/unix/sysv/linux/configure.in: Don't test for libc4 in
 	ldd for SPARC.
-	* /sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed: New file.
+	* sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed: New file.
 	Patch by Cristian Gafton.
 
 1999-07-02  Cristian Gafton  <gafton@redhat.com>

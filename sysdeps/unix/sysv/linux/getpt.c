@@ -20,9 +20,17 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <paths.h>
+#include <sys/statfs.h>
+
+/* Constant that identifies the `devpts' filesystem.  */
+#define DEVPTS_SUPER_MAGIC	0x1cd1
 
 /* Path to the master pseudo terminal cloning device.  */
-#define _PATH_DEVPTMX "/dev/ptmx"
+#define _PATH_DEVPTMX _PATH_DEV "ptmx"
+/* Directory containing the UNIX98 pseudo terminals.  */
+#define _PATH_DEVPTS _PATH_DEV "pts"
 
 /* Prototype for function that opens BSD-style master pseudo-terminals.  */
 int __bsd_getpt (void);
@@ -38,7 +46,25 @@ __getpt (void)
     {
       fd = __open (_PATH_DEVPTMX, O_RDWR);
       if (fd != -1)
-	return fd;
+	{
+	  struct statfs fsbuf;
+	  static int devpts_mounted;
+
+	  /* Check that the /dev/pts filesystem is mounted.  */
+	  if (devpts_mounted
+	      || (__statfs (_PATH_DEVPTS, &fsbuf) == 0
+		  && fsbuf.f_type == DEVPTS_SUPER_MAGIC))
+	    {
+	      /* Everything is ok.  */
+	      devpts_mounted = 1;
+	      return fd;
+	    }
+
+	  /* If /dev/pts is not mounted then the UNIX98 pseudo terminals
+             are not usable.  */
+	  __close (fd);
+	  have_no_dev_ptmx = 1;
+	}
       else
 	{
 	  if (errno == ENOENT || errno == ENODEV)
