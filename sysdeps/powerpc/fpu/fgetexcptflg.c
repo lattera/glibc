@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv_libc.h>
+#include <bp-sym.h>
 
 int
 __fegetexceptflag (fexcept_t *flagp, int excepts)
@@ -34,5 +35,5 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
   return 0;
 }
 strong_alias (__fegetexceptflag, __old_fegetexceptflag)
-symbol_version (__old_fegetexceptflag, fegetexceptflag, GLIBC_2.1);
-default_symbol_version (__fegetexceptflag, fegetexceptflag, GLIBC_2.2);
+symbol_version (BP_SYM (__old_fegetexceptflag), BP_SYM (fegetexceptflag), GLIBC_2.1);
+default_symbol_version (BP_SYM (__fegetexceptflag), BP_SYM (fegetexceptflag), GLIBC_2.2);

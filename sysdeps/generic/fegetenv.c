@@ -20,6 +20,7 @@
 
 #include <fenv.h>
 #include <shlib-compat.h>
+#include <bp-sym.h>
 
 int
 fegetenv (fenv_t *envp)
@@ -29,9 +30,9 @@ fegetenv (fenv_t *envp)
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fegetenv, __old_fegetenv)
-compat_symbol (libm, __old_fegetenv, fegetenv, GLIBC_2_1);
+compat_symbol (libm, BP_SYM (__old_fegetenv), BP_SYM (fegetenv), GLIBC_2_1);
 #endif
-versioned_symbol (libm, __fegetenv, fegetenv, GLIBC_2_2);
+versioned_symbol (libm, BP_SYM (__fegetenv), BP_SYM (fegetenv), GLIBC_2_2);
 
 stub_warning (fegetenv)
 #include <stub-tag.h>

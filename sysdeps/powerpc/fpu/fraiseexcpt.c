@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv_libc.h>
+#include <bp-sym.h>
 
 #undef feraiseexcept
 int
@@ -55,5 +56,5 @@ __feraiseexcept (int excepts)
   return 0;
 }
 strong_alias (__feraiseexcept, __old_feraiseexcept)
-symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
-default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.2);
+symbol_version (BP_SYM (__old_feraiseexcept), BP_SYM (feraiseexcept), GLIBC_2.1);
+default_symbol_version (BP_SYM (__feraiseexcept), BP_SYM (feraiseexcept), GLIBC_2.2);

@@ -18,6 +18,7 @@
 
 #include <fcntl.h>
 #include <stdarg.h>
+#include <bp-sym.h>
 
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
@@ -36,5 +37,5 @@ __libc_open64 (const char *file, int oflag, ...)
 
   return __libc_open (file, oflag | O_LARGEFILE, mode);
 }
-weak_alias (__libc_open64, __open64)
-weak_alias (__libc_open64, open64)
+weak_alias (__libc_open64, BP_SYM (__open64))
+weak_alias (__libc_open64, BP_SYM (open64))
