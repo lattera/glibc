@@ -32,7 +32,7 @@ routines = alloca_cutoff forward libc-lowlevellock libc-lowlevelmutex \
 	   libc-cancellation
 shared-only-routines = forward
 
-libpthread-routines = init events \
+libpthread-routines = init events version \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
 		      pthread_self pthread_equal pthread_yield \
@@ -109,7 +109,7 @@ libpthread-routines = init events \
 		      herrno res pt-allocrtsig \
 		      pthread_kill_other_threads
 
-libpthread-shared-only-routines = pt-allocrtsig
+libpthread-shared-only-routines = version pt-allocrtsig
 
 libpthread-nonshared = pthread_atfork
 
@@ -263,6 +263,13 @@ $(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
 generated += crti.S defs.h pt-initfini.s
+
+$(objpfx)version.os: $(objpfx)banner.h
+$(objpfx)banner.h: Banner
+	sed 's/\(.*\)/"\1\\n"/' $< > $@
+generated += banner.h
+# Give libpthread.so an entry point and make it directly runnable itself.
+LDFLAGS-pthread.so += -e __nptl_main
 endif
 
 ifeq (no,$(cross-compiling))

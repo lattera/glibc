@@ -1,3 +1,9 @@
+2003-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libpthread-routines): Add version.  Add rules to build
+	version.os and banner.h.
+	* version.c: New file.
+
 2003-01-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread_mutex_lock.c (__pthread_mutex_lock_internal): Make
