@@ -1,3 +1,13 @@
+2000-06-12  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/kernel_stat.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/xstatconv.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/fxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/lxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/xstat64.c: New file.
+
 2000-06-12  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
 	    Yutaka Niibe  <gniibe@chroot.org>
 
