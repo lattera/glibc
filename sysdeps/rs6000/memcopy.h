@@ -39,7 +39,7 @@ Cambridge, MA 02139, USA.  */
 #define BYTE_COPY_BWD(dst_ep, src_ep, nbytes)				      \
   do									      \
     {									      \
-      size_t __nbytes;							      \
+      size_t __nbytes = (nbytes);					      \
       dst_ep -= __nbytes;						      \
       src_ep -= __nbytes;						      \
       asm volatile("mtspr	1,%2\n"					      \

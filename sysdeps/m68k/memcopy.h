@@ -67,24 +67,24 @@ Cambridge, MA 02139, USA.  */
   do									      \
     {									      \
       size_t __nblocks = (nbytes) / 32 + 1;				      \
-      switch ((nbytes) % 32 / sizeof (op_t))				      \
+      switch ((nbytes) / sizeof (op_t) % 8)				      \
 	do								      \
 	  {								      \
-	    --((op_t *) dst_ep) = --((op_t *) src_ep);			      \
+	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
 	  case 7:							      \
-	    --((op_t *) dst_ep) = --((op_t *) src_ep);			      \
+	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
 	  case 6:							      \
-	    --((op_t *) dst_ep) = --((op_t *) src_ep);			      \
+	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
 	  case 5:							      \
-	    --((op_t *) dst_ep) = --((op_t *) src_ep);			      \
+	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
 	  case 4:							      \
-	    --((op_t *) dst_ep) = --((op_t *) src_ep);			      \
+	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
 	  case 3:							      \
-	    --((op_t *) dst_ep) = --((op_t *) src_ep);			      \
+	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
 	  case 2:							      \
-	    --((op_t *) dst_ep) = --((op_t *) src_ep);			      \
+	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
 	  case 1:							      \
-	    --((op_t *) dst_ep) = --((op_t *) src_ep);			      \
+	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
 	  case 0:							      \
 	    __nblocks--;						      \
 	  }								      \
