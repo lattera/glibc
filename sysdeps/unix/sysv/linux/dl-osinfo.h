@@ -19,6 +19,11 @@
 
 #include <sys/sysctl.h>
 
+/* There is no prototype for __sysctl in that file.  */
+extern int __sysctl (int *name, int nlen, void *oldval,
+		     size_t *oldlenp, void *newval, size_t newlen);
+
+
 #ifdef SHARED
 /* This is the function used in the dynamic linker to print the fatal error
    message.  */

@@ -138,6 +138,10 @@ _dl_sysdep_start (void **start_argptr,
 	break;
       }
 
+#ifdef DL_SYSDEP_OSCHECK
+  DL_SYSDEP_OSCHECK (dl_fatal);
+#endif
+
   /* Linux doesn't provide us with any of these values on the stack
      when the dynamic linker is run directly as a program.  */
 
@@ -177,10 +181,6 @@ _dl_sysdep_start (void **start_argptr,
      possible we stop the program.  */
   if (__builtin_expect (__libc_enable_secure, 0))
     __libc_check_standard_fds ();
-
-#ifdef DL_SYSDEP_OSCHECK
-  DL_SYSDEP_OSCHECK (dl_fatal);
-#endif
 
   (*dl_main) (phdr, phnum, &user_entry);
   return user_entry;
