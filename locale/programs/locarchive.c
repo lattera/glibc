@@ -272,7 +272,10 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   newhead.string_offset = (newhead.namehash_offset
 			   + (newhead.namehash_size
 			      * sizeof (struct namehashent)));
-  newhead.string_size = MAX (2 * newhead.string_used, newhead.string_size);
+  /* Keep the string table size aligned to 4 bytes, so that
+     all the struct { uint32_t } types following are happy.  */
+  newhead.string_size = MAX ((2 * newhead.string_used + 3) & -4,
+			     newhead.string_size);
 
   newhead.locrectab_offset = newhead.string_offset + newhead.string_size;
   newhead.locrectab_size = MAX (2 * newhead.locrectab_used,

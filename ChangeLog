@@ -1,3 +1,9 @@
+2002-10-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (enlarge_archive): Make sure
+	string_size is always a multiple of 4.
+	Reported by Andreas Schwab <schwab@suse.de>.
+
 2002-10-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Initialize the static
