@@ -21,15 +21,12 @@
 
 #include <string.h>
 #include <syscall.h>
+#include <sysdep.h>
 #include <sys/signal.h>
 #include <errno.h>
 #include <kernel_sigaction.h>
 
 /* SPARC 64bit userland requires a kernel that has rt signals anyway. */
-
-extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
-				   struct kernel_sigaction *, unsigned long,
-				   size_t);
 
 static void __rt_sigreturn_stub (void);
 
@@ -50,8 +47,8 @@ __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
 
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  ret = __syscall_rt_sigaction (sig, act ? &kact : 0, oact ? &koact : 0,
-				stub, _NSIG / 8);
+  ret = INLINE_SYSCALL (rt_sigaction, 5, sig, act ? &kact : 0,
+			oact ? &koact : 0, stub, _NSIG / 8);
 
   if (oact && ret >= 0)
     {

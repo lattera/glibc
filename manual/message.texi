@@ -190,18 +190,16 @@ Otherwise the values of environment variables from the standard
 environment are examined (@pxref{Standard Environment}).  Which
 variables are examined is decided by the @var{flag} parameter of
 @code{catopen}.  If the value is @code{NL_CAT_LOCALE} (which is defined
-in @file{nl_types.h}) then the @code{catopen} function examines the
-environment variable @code{LC_ALL}, @code{LC_MESSAGES}, and @code{LANG}
-in this order.  The first variable which is set in the current
-environment will be used.
+in @file{nl_types.h}) then the @code{catopen} function use the name of
+the locale currently selected for the @code{LC_MESSAGES} category.
 
-If @var{flag} is zero only the @code{LANG} environment variable is
-examined.  This is a left-over from the early days of this function
-where the other environment variable were not known.
+If @var{flag} is zero the @code{LANG} environment variable is examined.
+This is a left-over from the early days where the concept of the locales
+had not even reached the level of POSIX locales.
 
-In any case the environment variable should have a value of the form
-@code{@var{lang}[_@var{terr}[.@var{codeset}]]} as explained above.  If
-no environment variable is set the @code{"C"} locale is used which
+The environment variable and the locale name should have a value of the
+form @code{@var{lang}[_@var{terr}[.@var{codeset}]]} as explained above.
+If no environment variable is set the @code{"C"} locale is used which
 prevents any translation.
 
 The return value of the function is in any case a valid string.  Either

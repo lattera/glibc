@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -43,53 +43,13 @@
 	C_LABEL(name);							\
 	.type name,@function;
 
-#ifdef PIC
-# ifdef _LIBC_REENTRANT
-#  define SYSCALL_ERROR_HANDLER						\
-	save	%sp, -192, %sp;						\
-	call	__errno_location;					\
-	 nop;								\
-	st	%i0,[%o0];						\
-	sub	%g0,1,%i0;						\
-	jmpl	%i7+8, %g0;						\
-	 restore
-# else
-#  define SYSCALL_ERROR_HANDLER						\
-	.global C_SYMBOL_NAME(errno);					\
-	.type C_SYMBOL_NAME(errno),@object;				\
-	mov	%o7, %g3;						\
-  101:	call	102f;							\
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(101b-.)), %g2;		\
-  102:	or	%g2,%lo(_GLOBAL_OFFSET_TABLE_-(101b-.)), %g2;		\
-	sethi	%hi(errno), %o1;					\
-	add	%g2, %o7, %l7;						\
-	or	%o1, %lo(errno), %o1;					\
-	mov	%g3,%o7;						\
-	ldx	[%l7+%o1], %g2;						\
-	st	%o0, [%g2];						\
-	retl;								\
-	 sub	%g0, 1, %i0
-# endif
-#else
-# ifdef _LIBC_REENTRANT
-#  define SYSCALL_ERROR_HANDLER						\
+#define SYSCALL_ERROR_HANDLER						\
 	save	%sp, -192, %sp;						\
 	call	__errno_location;					\
 	 nop;								\
 	st	%i0, [%o0];						\
-	sub	%g0, 1, %i0;						\
 	jmpl	%i7+8, %g0;						\
-	 restore
-# else
-#  define SYSCALL_ERROR_HANDLER						\
-	.global C_SYMBOL_NAME(errno);					\
-	.type C_SYMBOL_NAME(errno),@object;				\
-	sethi	%hi(errno), %g1;					\
-	st	%i0, [%g1 + %lo(errno)];				\
-	retl;								\
-	 sub	%g0, 1, %i0
-# endif
-#endif
+	 restore %g0, -1, %o0
 
 #define PSEUDO(name, syscall_name, args)				\
 	.text;								\
@@ -114,6 +74,30 @@
 #define r0              %o0
 #define r1              %o1
 #define MOVE(x,y)       mov x, y
+
+#else  /* __ASSEMBLER__ */
+
+#define __SYSCALL_STRING						\
+	"ta	0x6d;"							\
+	"bcc,pt	%%xcc, 1f;"						\
+	" nop;"								\
+	"save	%%sp, -192, %%sp;"					\
+	"call	__errno_location;"					\
+	" nop;"								\
+	"st	%%i0,[%%o0];"						\
+	"restore %%g0, -1, %%o0;"					\
+	"1:"
+
+#define __SYSCALL_CLOBBERS "g2", "g3", "g4", "g5", "g7",		\
+	"f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7",			\
+	"f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",		\
+	"f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",		\
+	"f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",		\
+	"f32", "f34", "f36", "f38", "f40", "f42", "f44", "f46",		\
+	"f48", "f50", "f52", "f54", "f56", "f58", "f60", "f62",		\
+	"cc", "memory"
+
+#include <sysdeps/unix/sysv/linux/sparc/sysdep.h>
 
 #endif	/* __ASSEMBLER__ */
 

@@ -1,5 +1,30 @@
-2000-01-29  Ulrich Drepper  <drepper@redhat.com>
+2000-01-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (struct locale_collate_t): Change
+	type of plane_size and plane_cnt to uint32_t.
+	Reported by Jakub Jelinek.
+
+2000-01-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h
+	(SYSCALL_ERROR_HANDLER): Optimize.
+	(__SYSCALL_STRING, __SYSCALL_CLOBBERS): Define.
+	Include linux/sparc/sysdep.h.
+	Use a different guard define than linux/sparc/sysdep.h.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Remove
+	stubs for inlined syscalls.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h
+	(SYSCALL_ERROR_HANDLER): Optimize.
+	(__SYSCALL_STRING, __SYSCALL_CLOBBERS): Define.
+	Include linux/sparc/sysdep.h.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Remove
+	stubs for inlined syscalls.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c (__sigaction):
+	Use INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h: New file.
+
+2000-01-29  Ulrich Drepper  <drepper@redhat.com>
 	* locale/loadlocale.c (_nl_load_locale): Optimize a bit.  Pretty
 	print.  Add checks for _POSIX_MMAPPED_FILES where necessary.
 	(_nl_unload_locale): If locale data was mmapped use munmap.

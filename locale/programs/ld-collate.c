@@ -180,8 +180,8 @@ struct locale_collate_t
   struct element_t *mbheads[256];
 
   /* Table size of wide character hash table.  */
-  size_t plane_size;
-  size_t plane_cnt;
+  uint32_t plane_size;
+  uint32_t plane_cnt;
 
   /* Arrays with heads of the list for each of the leading bytes in
      the multibyte sequences.  */

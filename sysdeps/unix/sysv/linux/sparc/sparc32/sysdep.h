@@ -17,8 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _LINUX_SPARC_SYSDEP_H
-#define _LINUX_SPARC_SYSDEP_H 1
+#ifndef _LINUX_SPARC32_SYSDEP_H
+#define _LINUX_SPARC32_SYSDEP_H 1
 
 #include <sysdeps/unix/sparc/sysdep.h>
 
@@ -56,20 +56,18 @@
         .type   C_SYMBOL_NAME(__errno_location),@function;	\
 	save   %sp,-96,%sp;					\
 	call   __errno_location;				\
-	nop;							\
-	st %i0,[%o0];						\
-	restore;						\
-	retl;							\
-	mov -1,%o0;
+	 nop;							\
+	st	%i0,[%o0];					\
+	jmpl	%i7+8,%g0;					\
+	 restore %g0,-1,%o0;
 #else
 #define SYSCALL_ERROR_HANDLER					\
-	save %sp,-96,%sp;					\
-	call __errno_location;					\
+	save	%sp,-96,%sp;					\
+	call	__errno_location;				\
 	nop;							\
-	st %i0,[%o0];						\
-	restore;						\
-	retl;							\
-	mov -1,%o0;
+	st	%i0,[%o0];					\
+	jmpl	%i7+8,%g0;					\
+	 restore %g0,-1,%o0;
 #endif   /* PIC */
 
 #define PSEUDO(name, syscall_name, args)			\
@@ -81,6 +79,32 @@
 	nop;							\
 	SYSCALL_ERROR_HANDLER;					\
 9000:;
+
+#else  /* __ASSEMBLER__ */
+
+#define __SYSCALL_STRING						\
+	"ta	0x10;"							\
+	"bcs	2f;"							\
+	" nop;"								\
+	"1:"								\
+	".subsection 2;"						\
+	"2:"								\
+	"save	%%sp, -192, %%sp;"					\
+	"call	__errno_location;"					\
+	" nop;"								\
+	"st	%%i0,[%%o0];"						\
+	"ba	1b;"							\
+	" restore %%g0, -1, %%o0;"					\
+	".previous;"
+
+#define __SYSCALL_CLOBBERS "g2", "g3", "g4", "g5", "g7",		\
+	"f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7",			\
+	"f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",		\
+	"f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",		\
+	"f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",		\
+	"cc", "memory"
+
+#include <sysdeps/unix/sysv/linux/sparc/sysdep.h>
 
 #endif	/* __ASSEMBLER__ */
 
