@@ -846,42 +846,45 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --disable-sanity-checks really do not use threads (should not be used
-			  except in special situations) default=yes
-  --enable-shared         build shared library default=yes if GNU ld & ELF
-  --enable-profile        build profiled library default=yes
-  --enable-omitfp         build undebuggable optimized library default=no
-  --enable-bounded        build with runtime bounds checking default=no
-  --disable-versioning    do not include versioning information in the
-                          library objects default=yes if supported
-  --enable-oldest-abi=ABI configure the oldest ABI supported e.g. 2.2
-                          default=glibc default
-  --enable-add-ons=DIR1,DIR2...
-			  configure and build add-ons in DIR1,DIR2,...
-                          search for add-ons if no parameter given
+  --disable-sanity-checks really do not use threads (should not be used except
+                          in special situations) [default=yes]
+  --enable-shared         build shared library [default=yes if GNU ld &
+                          ELF]
+  --enable-profile        build profiled library [default=yes]
+  --enable-omitfp         build undebuggable optimized library
+                          [default=no]
+  --enable-bounded        build with runtime bounds checking
+                          [default=no]
+  --disable-versioning    do not include versioning information in the library
+                          objects [default=yes if supported]
+  --enable-oldest-abi=ABI configure the oldest ABI supported [e.g. 2.2]
+                          [default=glibc default]
+  --enable-add-ons[=DIRS...]
+                          configure and build add-ons in DIR1,DIR2,... search
+                          for add-ons if no parameter given
   --disable-hidden-plt    do not hide internal function calls to avoid PLT
-  --enable-static-nss     build static NSS modules default=no
+  --enable-static-nss     build static NSS modules [default=no]
   --disable-force-install don't force installation of files from this package,
-			  even if they are older than the installed files
-  --enable-kernel=VERSION compile for compatibility with kernel not older
-                           than VERSION
+                          even if they are older than the installed files
+  --enable-kernel=VERSION compile for compatibility with kernel not older than
+                          VERSION
   --enable-all-warnings   enable all useful warnings gcc can issue
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-gmp=DIRECTORY	  find GMP source code in DIRECTORY (not needed)
+  --with-gmp=DIRECTORY    find GMP source code in DIRECTORY (not needed)
   --with-gd=DIR           find libgd include dir and library with prefix DIR
   --with-gd-include=DIR   find libgd include files in DIR
   --with-gd-lib=DIR       find libgd library files in DIR
-  --with-fp		  if using floating-point hardware default=yes
-  --with-binutils=PATH	  specify location of binutils (as and ld)
-  --with-elf		  if using the ELF object format
-  --with-xcoff		  if using the XCOFF object format
+  --with-fp               if using floating-point hardware [default=yes]
+  --with-binutils=PATH    specify location of binutils (as and ld)
+  --with-elf              if using the ELF object format
+  --with-xcoff            if using the XCOFF object format
   --without-cvs           if CVS should not be used
-  --with-headers=PATH     location of system headers to use
-                          e.g. /usr/src/linux/include
-                          default=compiler default
+  --with-headers=PATH     location of system headers to use (for example
+                          /usr/src/linux/include) [default=compiler
+                          default]
   --with-tls              enable support for TLS
   --without-__thread      do not use TLS features even when supporting them
 
@@ -1318,7 +1321,8 @@ config_vars=
 # Check whether --with-gmp or --without-gmp was given.
 if test "${with_gmp+set}" = set; then
   withval="$with_gmp"
-  case "$with_gmp" in
+
+case "$with_gmp" in
 yes) { { echo "$as_me:$LINENO: error: --with-gmp requires an argument; use --with-gmp=DIRECTORY" >&5
 echo "$as_me: error: --with-gmp requires an argument; use --with-gmp=DIRECTORY" >&2;}
    { (exit 1); exit 1; }; } ;;
@@ -4880,7 +4884,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 4883 "configure"
+#line 4887 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5177,7 +5181,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5180 "configure"
+#line 5184 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5276,7 +5280,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5279 "configure"
+#line 5283 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5344,7 +5348,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5347 "configure"
+#line 5351 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };

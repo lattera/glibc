@@ -1,3 +1,10 @@
+2002-10-19  Art Haas <ahaas@neosoft.com>
+
+	* configure.in: Replace AC_CONFIG_HEADER with AC_CONFIG_HEADERS,
+	add AC_HELP_STRING to all AC_ARG_WITH and AC_ARG_ENABLE macros,
+	add autoconf quotes to the AC_CONFIG_AUX_DIR macro.
+	* configure: Regenerated.
+
 2002-10-19  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Call AC_CONFIG_SUBDIRS with empty argument
