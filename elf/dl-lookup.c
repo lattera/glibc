@@ -87,7 +87,7 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	      return map->l_addr;
 	    case STB_WEAK:
 	      /* Weak definition.  Use this value if we don't find another.  */
-	      if (weak_value.a == 0)
+	      if (! weak_value.s)
 		{
 		  weak_value.s = sym;
 		  weak_value.a = map->l_addr;

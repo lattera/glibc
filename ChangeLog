@@ -1,3 +1,9 @@
+Wed Sep  6 19:41:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Test WEAK_VALUE.s rather
+	than WEAK_VALUE.a to see if a weak value has been set.  A valid
+	weak value may set WEAK_VALUE.a to 0.
+
 Fri Sep  1 16:16:12 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/i386/longjmp-ts.c: Use new array format for
