@@ -1,5 +1,8 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/Makefile (tests): Add tst-defintions.
+	* math/tst-definitions.c: New file.
+
 	* stdlib/Makefile (headers): Add bits/wchar.h.
 	* sysdeps/unix/sysv/linux/i386/bits/wchar.h: New file.
 	* sysdeps/generic/bits/wchar.h: New file.
