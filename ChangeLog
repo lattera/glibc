@@ -1,3 +1,7 @@
+2003-02-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/tls-macros.h [sparc] (TLS_LD, TLS_GD): Add "cc" clobbers.
+
 2003-01-25  Jim Meyering  <jim@meyering.net>
 
 	* io/ftw.c (object_compare): Compare inode numbers before device
