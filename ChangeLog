@@ -1,5 +1,11 @@
 1999-07-11  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/hurd/brk.c (static_data_start): New variable.
+	(_hurd_set_brk, init_brk): Use that instead of &__data_start.
+	Initialize it from &__data_start if defined, or else &_end.
+
+1999-07-11  Roland McGrath  <roland@baalperazim.frob.com>
+
 	* sysdeps/mach/hurd/mmap.c (__mmap): Short-circuit to vm_allocate
 	for MAP_ANON, prot==PROT_READ|PROT_WRITE.
 
