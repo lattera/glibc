@@ -51,7 +51,9 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 
   inline void cleanup (void)
     {
-      __mach_port_deallocate (__mach_task_self (), parent);
+      if (parent != thisdir)
+	__mach_port_deallocate (__mach_task_self (), parent);
+
       __mach_port_deallocate (__mach_task_self (), thisid);
       __mach_port_deallocate (__mach_task_self (), thisdevid);
       __mach_port_deallocate (__mach_task_self (), rootid);
@@ -101,6 +103,7 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
       return __hurd_fail (err), NULL;
     }
 
+  parent = thisdir;
   while (thisid != rootid)
     {
       /* PARENT is a port to the directory we are currently on;
@@ -121,7 +124,8 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
       newp = __file_name_lookup_under (parent, "..", O_READ, 0);
       if (newp == MACH_PORT_NULL)
 	goto lose;
-      __mach_port_deallocate (__mach_task_self (), parent);
+      if (parent != thisdir)
+	__mach_port_deallocate (__mach_task_self (), parent);
       parent = newp;
 
       /* Get this directory's identity and figure out if it's a mount point. */
