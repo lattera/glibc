@@ -28,7 +28,7 @@
 /* For multiprocessor systems, we want to ensure all memory accesses
    are completed before we reset a lock.  On other systems, we still
    need to make sure that the compiler has flushed everything to memory.  */
-#define MEMORY_BARRIER() __asm__ ("sync" : : : "memory")
+#define MEMORY_BARRIER() __asm__ __volatile__ ("sync" : : : "memory")
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
@@ -36,9 +36,11 @@
 register char * stack_pointer __asm__ ("r1");
 
 /* Compare-and-swap for semaphores. */
-/* note that test-and-set(x) is the same as compare-and-swap(x, 0, 1) */
+/* note that test-and-set(x) is the same as !compare-and-swap(x, 0, 1) */
 
 #define HAS_COMPARE_AND_SWAP
+#define IMPLEMENT_TAS_WITH_CAS
+
 #if BROKEN_PPC_ASM_CR0
 static
 #else
@@ -50,7 +52,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
   int ret;
 
   MEMORY_BARRIER ();
-  __asm__ (
+  __asm__ __volatile__ (
 	   "0:    lwarx %0,0,%1 ;"
 	   "      xor. %0,%3,%0;"
 	   "      bne 1f;"

@@ -34,7 +34,7 @@ ENTRY (BP_SYM (strchr))
 # define rCHR	r5	/* byte we're looking for, spread over the whole word */
 # define rWORD	r8	/* the current word */
 #else
-# define rSTR	r3	/* current word pointer */
+# define rSTR	r8	/* current word pointer */
 # define rCHR	r4	/* byte we're looking for, spread over the whole word */
 # define rWORD	r5	/* the current word */
 #endif
@@ -52,10 +52,10 @@ ENTRY (BP_SYM (strchr))
 	rlwimi	rCHR, rCHR, 8, 16, 23
 	li	rMASK, -1
 	rlwimi	rCHR, rCHR, 16, 0, 15
-	rlwinm	rIGN, rSTR, 3, 27, 28
+	rlwinm	rIGN, rRTN, 3, 27, 28
 	lis	rFEFE, -0x101
 	lis	r7F7F, 0x7f7f
-	clrrwi	rSTR, rSTR, 2
+	clrrwi	rSTR, rRTN, 2
 	addi	rFEFE, rFEFE, -0x101
 	addi	r7F7F, r7F7F, 0x7f7f
 /* Test the first (partial?) word.  */
@@ -90,7 +90,7 @@ L(loopentry):
    happened, though.  */
 L(missed):
 	and.	rTMP1, rTMP1, rTMP2
-	li	rSTR, 0
+	li	rRTN, 0
 	STORE_RETURN_VALUE (rSTR)
 	beqlr
 /* It did happen. Decide which one was first...
@@ -108,7 +108,7 @@ L(missed):
 	bgtlr
 	cntlzw	rCLZB, rTMP2
 	srwi	rCLZB, rCLZB, 3
-	add	rSTR, rSTR, rCLZB
+	add	rRTN, rSTR, rCLZB
 	CHECK_BOUNDS_HIGH_RTN (rSTR, rTMP2, twlge)
 	STORE_RETURN_VALUE (rSTR)
 	blr
@@ -121,7 +121,7 @@ L(foundit):
 	cntlzw	rCLZB, rTMP2
 	subi	rSTR, rSTR, 4
 	srwi	rCLZB, rCLZB, 3
-	add	rSTR, rSTR, rCLZB
+	add	rRTN, rSTR, rCLZB
 	CHECK_BOUNDS_HIGH_RTN (rSTR, rTMP2, twlge)
 	STORE_RETURN_VALUE (rSTR)
 	blr

@@ -1,3 +1,8 @@
+2000-07-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/strchr.S: Correct bugs introduced in BP-ification.
+	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 2000-07-21  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/malloc.c (chunk_alloc): Try mmap_chunk() for smaller
