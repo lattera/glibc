@@ -1223,13 +1223,20 @@ where the result is placed in.
 @comment XPG
 @deftypefun {char *} realpath (const char *restrict @var{name}, char *restrict @var{resolved})
 
-The @code{realpath} function behaves just like
-@code{canonicalize_file_name} but instead of allocating a buffer for the
-result it is placed in the buffer pointed to by @var{resolved}.
+A call to @code{realpath} where the @var{resolved} parameter is
+@code{NULL} behaves exactly like @code{canonicalize_file_name}.  The
+function allocates a buffer for the file name and returns a pointer to
+it.  If @var{resolved} is not @code{NULL} it points to a buffer into
+which the result is copied.  It is the callers responsibility to
+allocate a buffer which is large enough.  On systems which define
+@code{PATH_MAX} this means the buffer must be large enough for a
+pathname of this size.  For systems without limitations on the pathname
+length the requirement cannot be met and programs should not call
+@code{realpath} with anything but @code{NULL} for the second parameter.
 
-One other difference is that the buffer @var{resolved} will contain the
-part of the path component which does not exist or is not readable if
-the function returns @code{NULL} and @code{errno} is set to
+One other difference is that the buffer @var{resolved} (if nonzero) will
+contain the part of the path component which does not exist or is not
+readable if the function returns @code{NULL} and @code{errno} is set to
 @code{EACCES} or @code{ENOENT}.
 
 This function is declared in @file{stdlib.h}.
