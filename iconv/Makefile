@@ -34,7 +34,7 @@ CFLAGS-gconv_db.c = -DSTATIC_GCONV
 CFLAGS-gconv_simple.c = -DSTATIC_GCONV
 endif
 
-tests	= tst-iconv1 tst-iconv2
+tests	= tst-iconv1 tst-iconv2 tst-iconv3
 
 distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c
 

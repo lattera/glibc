@@ -1,7 +1,30 @@
+2001-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/skeleton.c: Reset outbuf for next round of the loop.
+	Reported by Owen Taylor <otaylor@redhat.com>.
+	* iconv/Makefile (tests): Add tst-iconv3.
+	* iconv/tst-iconv3.c: New file.
+
+	* iconvdata/ibm930.c: Fix handling of state.  Optimize a bit.
+	* iconvdata/ibm933.c: Likewise.
+	* iconvdata/ibm935.c: Likewise.
+	* iconvdata/ibm937.c: Likewise.
+	* iconvdata/ibm939.c: Likewise.
+	* iconvdata/ibm930.h: Adjust single byte table for optimization.
+	* iconvdata/ibm933.h: Likewise.
+	* iconvdata/ibm935.h: Likewise.
+	* iconvdata/ibm939.h: Likewise.
+
+	* iconvdata/testdata/IBM930: Add misssing SI.
+	* iconvdata/testdata/IBM933: Likewise.
+	* iconvdata/testdata/IBM935: Likewise.
+	* iconvdata/testdata/IBM937: Likewise.
+	* iconvdata/testdata/IBM939: Likewise.
+
 2001-01-06  Andreas Jaeger  <aj@suse.de>
 
-        * configure.in: Check for old add-ons that shouldn't be used with
-        current glibc anymore.
+	* configure.in: Check for old add-ons that shouldn't be used with
+	current glibc anymore.
 
 2001-01-06  Mark Kettenis  <kettenis@gnu.org>
 

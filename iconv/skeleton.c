@@ -1,5 +1,5 @@
 /* Skeleton for a conversion module.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -398,7 +398,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 			   || (uintptr_t) inptr % MIN_NEEDED_TO != 0)));
 #endif
 
-      do
+      while (1)
 	{
 	  struct __gconv_trans_data *trans;
 
@@ -561,10 +561,18 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		/* All the output is consumed, we can make another run
 		   if everything was ok.  */
 		if (status == __GCONV_FULL_OUTPUT)
-		  status = __GCONV_OK;
+		  {
+		    status = __GCONV_OK;
+		    outbuf = data->__outbuf;
+		  }
 	    }
+
+	  if (status != __GCONV_OK)
+	    break;
+
+	  /* Reset the output buffer pointer for the next round.  */
+	  outbuf = data->__outbuf;
 	}
-      while (status == __GCONV_OK);
 
 #ifdef END_LOOP
       END_LOOP

@@ -1,5 +1,5 @@
 /* Conversion to and from IBM937.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>, 2000.
 
@@ -32,26 +32,68 @@
 #define CHARSET_NAME	"IBM937//"
 #define FROM_LOOP	from_ibm937
 #define TO_LOOP		to_ibm937
+#define MIN_NEEDED_FROM	1
+#define MAX_NEEDED_FROM	2
+#define MIN_NEEDED_TO	4
+#define MAX_NEEDED_TO	4
+#define PREPARE_LOOP \
+  int save_curcs;							      \
+  int *curcsp = &data->__statep->__count;
+#define EXTRA_LOOP_ARGS		, curcsp
 
 /* Definitions of initialization and destructor function.  */
 #define DEFINE_INIT	1
 #define DEFINE_FINI	1
 
-#define MIN_NEEDED_FROM	1
-#define MIN_NEEDED_TO	4
+
+/* Since this is a stateful encoding we have to provide code which resets
+   the output state to the initial state.  This has to be done during the
+   flushing.  */
+#define EMIT_SHIFT_TO_INIT \
+  if ((data->__statep->__count & ~7) != sb)				      \
+    {									      \
+      if (FROM_DIRECTION)						      \
+	data->__statep->__count &= 7;					      \
+      else								      \
+	{								      \
+	  unsigned char *outbuf = data->__outbuf;			      \
+									      \
+	  /* We are not in the initial state.  To switch back we have	      \
+	     to emit `SI'.  */						      \
+	  if (__builtin_expect (outbuf >= data->__outbufend, 0))	      \
+	    /* We don't have enough room in the output buffer.  */	      \
+	    status = __GCONV_FULL_OUTPUT;				      \
+	  else								      \
+	    {								      \
+	      /* Write out the shift sequence.  */			      \
+	      *outbuf++ = SI;						      \
+	      data->__outbuf = outbuf;					      \
+	      data->__statep->__count &= 7;				      \
+	    }								      \
+	}								      \
+    }
+
+
+/* Since we might have to reset input pointer we must be able to save
+   and retore the state.  */
+#define SAVE_RESET_STATE(Save) \
+  if (Save)								      \
+    save_curcs = *curcsp;						      \
+  else									      \
+    *curcsp = save_curcs
+
 
 /* Current codeset type.  */
 enum
 {
-  init = 0,
-  sb,
-  db
+  sb = 0,
+  db = 64
 };
 
 /* First, define the conversion function from IBM-937 to UCS4.  */
 #define MIN_NEEDED_INPUT  	MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT  	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT 	MIN_NEEDED_TO
-#define INIT_PARAMS 		int curcs = init;
 #define LOOPFCT 		FROM_LOOP
 #define BODY \
   {									      \
@@ -59,12 +101,6 @@ enum
 									      \
     if (__builtin_expect (ch, 0) == SO)					      \
       {									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
-	  {								      \
-	    result = __GCONV_INCOMPLETE_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
 	/* Shift OUT, change to DBCS converter.  */			      \
 	if (curcs == db)						      \
 	  {								      \
@@ -73,16 +109,10 @@ enum
 	  }								      \
 	curcs = db;							      \
 	++inptr;							      \
-	ch = *inptr;							      \
+	continue;							      \
       }									      \
     else if (__builtin_expect (ch, 0) == SI)				      \
       {									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
-	  {								      \
-	    result = __GCONV_INCOMPLETE_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
 	/* Shift IN, change to SBCS converter.  */			      \
 	if (curcs == sb)						      \
 	  {								      \
@@ -91,10 +121,10 @@ enum
 	  }								      \
 	curcs = sb;							      \
 	++inptr;							      \
-	ch = *inptr;							      \
+	continue;							      \
       }									      \
 									      \
-    if (curcs == sb || curcs == init)					      \
+    if (curcs == sb)							      \
       {									      \
 	/* Use the UCS4 table for single byte.  */			      \
 	ch = __ibm937sb_to_ucs4[ch];					      \
@@ -107,19 +137,20 @@ enum
 		break;							      \
 	      }								      \
 	    ++*irreversible;						      \
-	    ++inptr;							      \
-	    continue;							      \
 	  }								      \
 	else								      \
 	  {								      \
 	    put32 (outptr, ch);						      \
 	    outptr += 4;						      \
-	    inptr++;							      \
 	  }								      \
+	++inptr;							      \
       }									      \
-    else if (curcs == db)						      \
+    else								      \
       {									      \
 	/* Use the IBM937 table for double byte.  */			      \
+									      \
+	assert (curcs == db);						      \
+									      \
 	ch = ibm937db_to_ucs4(inptr[0], inptr[1]);			      \
 	if (__builtin_expect (ch, L'\1') == L'\0' && *inptr != '\0')	      \
 	  {								      \
@@ -130,24 +161,25 @@ enum
 		break;							      \
 	      }								      \
 	    ++*irreversible;						      \
-	    inptr += 2;							      \
-	    continue;							      \
 	  }								      \
 	else								      \
 	  {								      \
 	    put32 (outptr, ch);						      \
 	    outptr += 4;						      \
-	    inptr += 2;							      \
 	  }								      \
+	inptr += 2;							      \
       }									      \
   }
 #define LOOP_NEED_FLAGS
+#define EXTRA_LOOP_DECLS	, int *curcsp
+#define INIT_PARAMS		int curcs = *curcsp & ~7
+#define UPDATE_PARAMS		*curcsp = curcs
 #include <iconv/loop.c>
 
 /* Next, define the other direction.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_TO
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define INIT_PARAMS 		int curcs = init;
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
@@ -174,7 +206,7 @@ enum
 	  }								      \
 	else								      \
 	  {								      \
-	    if (curcs == init || curcs == sb)				      \
+	    if (curcs == sb)						      \
 	      {								      \
 		*outptr++ = SO;						      \
 		if (__builtin_expect (outptr == outend, 0))		      \
@@ -207,6 +239,9 @@ enum
     inptr += 4;								      \
   }
 #define LOOP_NEED_FLAGS
+#define EXTRA_LOOP_DECLS	, int *curcsp
+#define INIT_PARAMS		int curcs = *curcsp & ~7
+#define UPDATE_PARAMS		*curcsp = curcs
 #include <iconv/loop.c>
 
 /* Now define the toplevel functions.  */
