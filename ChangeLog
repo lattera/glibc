@@ -1,3 +1,11 @@
+2005-01-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Remove code using
+	RESOLVE.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Remove code
+	using RESOLVE.
+	* elf/rtld.c (_dl_start): Remove RESOLVE definition.
+
 2005-01-25  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Test

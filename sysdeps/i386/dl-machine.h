@@ -344,17 +344,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #endif	/* !RTLD_BOOTSTRAP and have no -z combreloc */
     {
       const Elf32_Sym *const refsym = sym;
-#ifndef RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-#else
-      Elf32_Addr value = RESOLVE (&sym, version, r_type);
-
-# ifndef RTLD_BOOTSTRAP
-      if (sym != NULL)
-# endif
-	value += sym->st_value;
-#endif	/* use TLS and !RTLD_BOOTSTRAP */
+      Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       switch (r_type)
 	{

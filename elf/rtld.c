@@ -345,8 +345,6 @@ _dl_start (void *arg)
 #define RTLD_BOOTSTRAP
 #define RESOLVE_MAP(sym, version, flags) \
   ((*(sym))->st_shndx == SHN_UNDEF ? 0 : &bootstrap_map)
-#define RESOLVE(sym, version, flags) \
-  ((*(sym))->st_shndx == SHN_UNDEF ? 0 : bootstrap_map.l_addr)
 #include "dynamic-link.h"
 
   if (HP_TIMING_INLINE && HP_TIMING_AVAIL)

@@ -282,18 +282,9 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #ifndef RTLD_BOOTSTRAP
       const Elf64_Sym *const refsym = sym;
 #endif
-#ifndef RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf64_Addr value = (sym == NULL ? 0
 			  : (Elf64_Addr) sym_map->l_addr + sym->st_value);
-#else
-      Elf64_Addr value = RESOLVE (&sym, version, r_type);
-
-# ifndef RTLD_BOOTSTRAP
-      if (sym != NULL)
-# endif
-	value += sym->st_value;
-#endif
 
 #if defined RTLD_BOOTSTRAP && !USE___THREAD
       assert (r_type == R_X86_64_GLOB_DAT || r_type == R_X86_64_JUMP_SLOT);
