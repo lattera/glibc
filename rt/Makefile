@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -49,4 +49,8 @@ include ../Rules
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)librt.so: $(common-objpfx)libc.so $(shared-thread-library)
 
+ifeq (yes,$(build-shared))
 $(objpfx)tst-aio: $(objpfx)librt.so $(shared-thread-library)
+else
+$(objpfx)tst-aio: $(objpfx)librt.a $(static-thread-library)
+endif

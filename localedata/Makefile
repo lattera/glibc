@@ -69,6 +69,7 @@ $(inst_i18ndir)/repertoiremaps/%: repertoiremaps/% $(+force); $(do-install)
 
 
 ifeq (no,$(cross-compiling))
+ifeq (yes,$(build-shared))
 .PHONY: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch
 tests: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch
 do-collate-test: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
@@ -80,6 +81,7 @@ do-tst-locale: tst-locale.sh $(ld-test-srcs)
 	$(SHELL) -e $< $(common-objpfx)
 do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch do-tst-fmon
 	$(SHELL) -e $< $(common-objpfx)
+endif
 endif
 
 # Sometimes the whole collection of locale files should be installed.

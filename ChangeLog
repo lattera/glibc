@@ -1,5 +1,28 @@
 1999-03-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* rt/Makefile: Link against static library if no shared lib is
+	available.
+
+	* localedata/Makefile: The shells scripts implementing the test
+ 	require the dynamic linker which is not available with
+ 	--disable-shared.  Skip the test if --disable-shared is given.
+
+	* linuxthreads/Makefile: Link test against static libpthread if no 
+ 	shared lib is available.
+
+	* iconvdata/Makefile (tests): Run iconv-test only if we're
+	building shared libraries.
+	* elf/Makefile (tests): Likewise for elf tests.
+
+	* posix/Makefile: The test frameworks globtest and wordexp-test
+	require the dynamic linker which is not available with
+	--disable-shared.  Skip the test if --disable-shared is given.
+
+	* grp/Makefile (otherlibs): For static nss build link against
+	necessary libs.
+
+1999-03-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* debug/Makefile (install-bin): Install and build catchsegv only
 	if build-shared == yes.  Reported by jussi@jlaako.pp.fi [PR
 	libc/965].

@@ -232,7 +232,9 @@ endif # build-shared = yes
 
 include ../Rules
 
+ifeq (yes,$(build-shared))
 tests: $(objpfx)iconv-test.out
+endif
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \

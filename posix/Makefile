@@ -56,9 +56,12 @@ routines :=								      \
 include ../Makeconfig
 
 aux		:= init-posix environ
-tests		:= tstgetopt testfnm runtests wordexp-test runptests	     \
+tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-preadwrite test-vfork
+ifeq (yes,$(build-shared))
 test-srcs	:= globtest
+tests           += wordexp-test
+endif
 others		:= getconf
 install-bin	:= getconf
 ifeq (yes,$(build-static))
@@ -75,6 +78,8 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 include ../Rules
 
 ifeq (no,$(cross-compiling))
+# globtest and wordexp-test currently only works with shared libraries
+ifeq (yes,$(build-shared))
 .PHONY: do-globtest do-wordexp-test
 tests: do-globtest do-wordexp-test
 do-globtest: $(objpfx)globtest
@@ -83,6 +88,7 @@ do-globtest: $(objpfx)globtest
 do-wordexp-test: $(objpfx)wordexp-test
 	$(SHELL) -e wordexp-tst.sh $(common-objpfx) $(elf-objpfx) \
 		 $(rtld-installed-name)
+endif
 endif
 
 CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes

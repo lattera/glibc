@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -53,9 +53,15 @@ CFLAGS-cancel.c += -D__NO_WEAK_PTHREAD_ALIASES
 $(objpfx)libpthread.so: $(common-objpfx)libc.so
 
 # Make sure we link with the thread library.
-$(objpfx)ex1: $(objpfx)libpthread.so
-$(objpfx)ex2: $(objpfx)libpthread.so
-$(objpfx)ex3: $(objpfx)libpthread.so
-$(objpfx)ex4: $(objpfx)libpthread.so
-$(objpfx)ex5: $(objpfx)libpthread.so
-$(objpfx)ex6: $(objpfx)libpthread.so
+ifeq ($(build-shared),yes)
+libpthread = $(objpfx)libpthread.so
+else
+libpthread = $(objpfx)libpthread.a
+endif
+
+$(objpfx)ex1: $(libpthread)
+$(objpfx)ex2: $(libpthread)
+$(objpfx)ex3: $(libpthread)
+$(objpfx)ex4: $(libpthread)
+$(objpfx)ex5: $(libpthread)
+$(objpfx)ex6: $(libpthread)
