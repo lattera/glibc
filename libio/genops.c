@@ -705,14 +705,16 @@ _IO_flush_all_linebuffered ()
       _IO_OVERFLOW (fp, EOF);
 }
 
-static void _IO_unbuffer_all __P ((void));
+static void _IO_unbuffer_write __P ((void));
 
 static void
-_IO_unbuffer_all ()
+_IO_unbuffer_write ()
 {
   _IO_FILE *fp;
   for (fp = _IO_list_all; fp != NULL; fp = fp->_chain)
-    if (! (fp->_flags & _IO_UNBUFFERED))
+    if (! (fp->_flags & _IO_UNBUFFERED)
+	&& (! (fp->_flags & _IO_NO_WRITES)
+	    || (fp->_flags & _IO_IS_APPENDING)))
       _IO_SETBUF (fp, NULL, 0);
 }
 
@@ -728,7 +730,7 @@ _IO_cleanup ()
 
      The following will make the standard streambufs be unbuffered,
      which forces any output from late destructors to be written out. */
-  _IO_unbuffer_all ();
+  _IO_unbuffer_write ();
 
   return result;
 }

@@ -1,6 +1,33 @@
+1998-11-29 1998  H.J. Lu  <hjl@gnu.org>
+
+	* libio/genops.c (_IO_unbuffer_write): Renamed from
+	_IO_unbuffer_all.
+	(_IO_cleanup): Call _IO_unbuffer_write instead of
+	_IO_unbuffer_all.
+
 1998-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* intl/localealias.c: Use *_unlocked version of stdio function if
+	_LIBC_REENTRANT is defined, not _LIBC.
+
+1998-12-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* include/grp.h: Add prototypes for internal functions
+	__getgrgid_r and __getgrnam_r.
+
+	* inet/herrno.c: Include <netdb.h> for prototype, undef h_errno.
+
+	* resolv/nsap_addr.c: Include <arpa/inet.h> for inet_nsap_addr and
+	inet_nsap_ntoa prototypes.
+
+1998-12-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (syscall-%.h): Pass -I option
+	to gcc to have it find the correct system header.
+	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
+
 	* Makefile (postclean): Add sysd-sorted.
+	Reported by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
 
 1998-12-01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 

@@ -33,7 +33,7 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	 echo ''; \
 	 SUNPRO_DEPENDENCIES='$(@:.h=.d) $(patsubst $(objpfx)%,$$(objpfx)%,\
 						    $(@:.d=.h) $(@:.h=.d))' \
-	 $(CC) -E -x c $< -D_LIBC -dM | \
+	 $(CC) -E -x c $(sysincludes) $< -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p'; \
 	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)

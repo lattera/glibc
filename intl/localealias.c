@@ -133,11 +133,11 @@ struct block_list
 # define alloca(size) (malloc (size))
 #endif	/* have alloca */
 
-#if defined _LIBC || defined HAVE_FGETS_UNLOCKED
+#if defined _LIBC_REENTRANT || defined HAVE_FGETS_UNLOCKED
 # undef fgets
 # define fgets(buf, len, s) fgets_unlocked (buf, len, s)
 #endif
-#if defined _LIBC || defined HAVE_FEOF_UNLOCKED
+#if defined _LIBC_REENTRANT || defined HAVE_FEOF_UNLOCKED
 # undef feof
 # define feof(s) feof_unlocked (s)
 #endif

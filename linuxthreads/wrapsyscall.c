@@ -1,5 +1,5 @@
 /* Wrapper arpund system calls to provide cancelation points.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -19,10 +19,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fcntl.h>
+#include <sys/mman.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdlib.h>
+#include <termios.h>
 #include <sys/resource.h>
 #include <sys/wait.h>
 #include <sys/socket.h>
@@ -87,8 +90,8 @@ strong_alias (lseek, __lseek)
 
 
 /* msync(2).  */
-CANCELABLE_SYSCALL (int, msync, (const void *start, size_t length, int flags),
-		    (start, length, flags))
+CANCELABLE_SYSCALL (int, msync, (__ptr_t addr, size_t length, int flags),
+		    (addr, length, flags))
 
 
 /* nanosleep(2).  */

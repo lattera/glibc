@@ -23,6 +23,7 @@ static char rcsid[] = "$Id$";
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <ctype.h>
 #include <resolv.h>

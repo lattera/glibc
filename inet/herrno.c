@@ -17,6 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <features.h>
+#include <netdb.h>
+#undef h_errno
 
 /* We need to have the error status variable of the resolver
    accessible in the libc.  */
