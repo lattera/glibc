@@ -577,6 +577,8 @@ required definitions can be found in the @file{ftw.h} header.
 Both functions of this @code{ftw} family take as one of the arguments a
 reference to a callback function.  The functions must be of these types.
 
+@comment ftw.h
+@comment GNU
 @deftp {Data Type} __ftw_func_t
 
 @smallexample
@@ -592,12 +594,7 @@ for the file named by the first parameter.
 The last parameter is a flag given more information about the current
 file.  It can have the following values:
 
-@vindex FTW_F
-@vindex FTW_D
-@vindex FTW_NS
-@vindex FTW_DNR
-@vindex FTW_SL
-@table @code
+@vtable @code
 @item FTW_F
 The current item is a normal file or files which do not fit into one of
 the following categories.  This means especially special files, sockets
@@ -617,9 +614,32 @@ file does not exist.  The situation for @code{nftw} is different.
 This value is only available if the program is compiled with
 @code{_BSD_SOURCE} or @code{_XOPEN_EXTENDED} defined before including
 the first header.  The original SVID systems do not have symbolic links.
-@end table
+@end vtable
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+type is in fact @code{__ftw64_func_t} since this mode also changes
+@code{struct stat} to be @code{struct stat64}.
 @end deftp
 
+For the LFS interface and the use in the function @code{ftw64} the
+header @file{ftw.h} defines another function type.
+
+@comment ftw.h
+@comment GNU
+@deftp {Data Type} __ftw64_func_t
+
+@smallexample
+int (*) (const char *, const struct stat64 *, int)
+@end smallexample
+
+This type is used just like @code{__ftw_func_t} for the callback
+function, but this time called from @code{ftw64}.  The second parameter
+to the function is this time a pointer to a variable of type
+@code{struct stat64} which is able to represent the larger values.
+@end deftp
+
+@comment ftw.h
+@comment GNU
 @deftp {Data Type} __nftw_func_t
 
 @smallexample
@@ -643,8 +663,31 @@ not exist.
 
 The last parameter of the callback function is a pointer to a structure
 with some extra information as described below.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+type is in fact @code{__nftw64_func_t} since this mode also changes
+@code{struct stat} to be @code{struct stat64}.
 @end deftp
 
+For the LFS interface there is also a variant of this data type
+available which has to be used with the @code{nftw64} function.
+
+@comment ftw.h
+@comment GNU
+@deftp {Data Type} __nftw64_func_t
+
+@smallexample
+int (*) (const char *, const struct stat64 *, int, struct FTW *)
+@end smallexample
+
+This type is used just like @code{__nftw_func_t} for the callback
+function, but this time called from @code{nftw64}.  The second parameter
+to the function is this time a pointer to a variable of type
+@code{struct stat64} which is able to represent the larger values.
+@end deftp
+
+@comment ftw.h
+@comment XPG4.2
 @deftp {Data Type} {struct FTW}
 The contained information helps to interpret the name parameter and
 gives some information about current state of the traversal of the
@@ -713,6 +756,23 @@ function calls returned @math{0} and all actions performed by the
 @code{stat} on an item) the function return @math{-1}.  If a callback
 function returns a value other than @math{0} this value is returned as
 the return value of @code{ftw}.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is in fact @code{ftw64}.  I.e., the LFS
+interface transparently replaces the old interface.
+@end deftypefun
+
+@comment ftw.h
+@comment Unix98
+@deftypefun int ftw64 (const char *@var{filename}, __ftw64_func_t @var{func}, int @var{descriptors})
+This function is similar to @code{ftw} but it can work on filesystems
+with large files since the information about the files is reported using
+a variable of type @code{struct stat64} which is passed by reference to
+the callback function.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is available under the name @code{ftw} and
+transparently replaces the old implementation.
 @end deftypefun
 
 @comment ftw.h
@@ -731,7 +791,7 @@ The second difference is that @code{nftw} takes an additional fourth
 argument which is @math{0} or a combination of any of the following
 values, combined using bitwise OR.
 
-@table @code
+@vtable @code
 @item FTW_PHYS
 While traversing the directory symbolic links are not followed.  I.e.,
 if this flag is given symbolic links are reported using the
@@ -752,7 +812,7 @@ If this option is given the function visits first all files and
 subdirectories before the callback function is called for the directory
 itself (depth-first processing).  This also means the type flag given to
 the callback function is @code{FTW_DP} and not @code{FTW_D}.
-@end table
+@end vtable
 
 The return value is computed in the same way as for @code{ftw}.
 @code{nftw} return @math{0} if no failure occurred in @code{nftw} and
@@ -760,6 +820,23 @@ all callback function call return values are also @math{0}.  For
 internal errors such as memory problems @math{-1} is returned and
 @var{errno} is set accordingly.  If the return value of a callback
 invocation is nonzero this very same value is returned.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is in fact @code{nftw64}.  I.e., the LFS
+interface transparently replaces the old interface.
+@end deftypefun
+
+@comment ftw.h
+@comment Unix98
+@deftypefun int nftw64 (const char *@var{filename}, __nftw64_func_t @var{func}, int @var{descriptors}, int @var{flag})
+This function is similar to @code{nftw} but it can work on filesystems
+with large files since the information about the files is reported using
+a variable of type @code{struct stat64} which is passed by reference to
+the callback function.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is available under the name @code{nftw} and
+transparently replaces the old implementation.
 @end deftypefun
 
 
@@ -1312,7 +1389,7 @@ This is the fractional part of the time of last modification to the
 attributes of the file.  @xref{File Times}.
 
 @c !!! st_rdev
-@item unsigned int st_blocks
+@item blkcnt_t st_blocks
 This is the amount of disk space that the file occupies, measured in
 units of 512-byte blocks.
 
@@ -1346,6 +1423,88 @@ integer types that you know and love.)  These typedef names are defined
 in the header file @file{sys/types.h} as well as in @file{sys/stat.h}.
 Here is a list of them.
 
+The extensions for the Large File Support (LFS) require even on 32 bits
+machine types which can handle file sizes up to @math{2^63}.  Therefore
+a new definition of @code{struct stat} is necessary.
+
+@comment sys/stat.h
+@comment LFS
+@deftp {Data Type} {struct stat64}
+The members of this type are the same and have the same names as those
+in @code{struct stat}.  The only difference is that the members
+@code{st_ino}, @code{st_size}, and @code{st_blocks} have a different
+type to support larger values.
+
+@table @code
+@item mode_t st_mode
+Specifies the mode of the file.  This includes file type information
+(@pxref{Testing File Type}) and the file permission bits
+(@pxref{Permission Bits}).
+
+@item ino64_t st_ino
+The file serial number, which distinguishes this file from all other
+files on the same device.
+
+@item dev_t st_dev
+Identifies the device containing the file.  The @code{st_ino} and
+@code{st_dev}, taken together, uniquely identify the file.  The
+@code{st_dev} value is not necessarily consistent across reboots or
+system crashes, however.
+
+@item nlink_t st_nlink
+The number of hard links to the file.  This count keeps track of how
+many directories have entries for this file.  If the count is ever
+decremented to zero, then the file itself is discarded as soon as no
+process still holds it open.  Symbolic links are not counted in the
+total.
+
+@item uid_t st_uid
+The user ID of the file's owner.  @xref{File Owner}.
+
+@item gid_t st_gid
+The group ID of the file.  @xref{File Owner}.
+
+@item off64_t st_size
+This specifies the size of a regular file in bytes.  For files that
+are really devices and the like, this field isn't usually meaningful.
+For symbolic links, this specifies the length of the file name the link
+refers to.
+
+@item time_t st_atime
+This is the last access time for the file.  @xref{File Times}.
+
+@item unsigned long int st_atime_usec
+This is the fractional part of the last access time for the file.
+@xref{File Times}.
+
+@item time_t st_mtime
+This is the time of the last modification to the contents of the file.
+@xref{File Times}.
+
+@item unsigned long int st_mtime_usec
+This is the fractional part of the time of last modification to the
+contents of the file.  @xref{File Times}.
+
+@item time_t st_ctime
+This is the time of the last modification to the attributes of the file.
+@xref{File Times}.
+
+@item unsigned long int st_ctime_usec
+This is the fractional part of the time of last modification to the
+attributes of the file.  @xref{File Times}.
+
+@c !!! st_rdev
+@item blkcnt64_t st_blocks
+This is the amount of disk space that the file occupies, measured in
+units of 512-byte blocks.
+
+@item unsigned int st_blksize
+The optimal block size for reading of writing this file, in bytes.  You
+might use this size for allocating the buffer space for reading of
+writing the file.  (This is unrelated to @code{st_blocks}.)
+@end table
+@end deftp
+
 @comment sys/types.h
 @comment POSIX.1
 @deftp {Data Type} mode_t
@@ -1360,6 +1519,20 @@ GNU system, this is equivalent to @code{unsigned int}.
 This is an arithmetic data type used to represent file serial numbers.
 (In Unix jargon, these are sometimes called @dfn{inode numbers}.)
 In the GNU system, this type is equivalent to @code{unsigned long int}.
+
+If the source is compiled with @code{_FILE_OFFSET_BITS == 64} this type
+is transparently replaced by @code{ino64_t}.
+@end deftp
+
+@comment sys/types.h
+@comment Unix98
+@deftp {Data Type} ino64_t
+This is an arithmetic data type used to represent file serial numbers
+for the use in LFS.  In the GNU system, this type is equivalent to
+@code{unsigned long longint}.
+
+When compiling with @code{_FILE_OFFSET_BITS == 64} this type is
+available under the name @code{ino_t}.
 @end deftp
 
 @comment sys/types.h
@@ -1374,6 +1547,27 @@ In the GNU system, this is equivalent to @code{int}.
 @deftp {Data Type} nlink_t
 This is an arithmetic data type used to represent file link counts.
 In the GNU system, this is equivalent to @code{unsigned short int}.
+@end deftp
+
+@comment sys/types.h
+@comment Unix98
+@deftp {Data Type} blkcnt_t
+This is an arithmetic data type used to represent block counts.
+In the GNU system, this is equivalent to @code{unsigned long int}.
+
+If the source is compiled with @code{_FILE_OFFSET_BITS == 64} this type
+is transparently replaced by @code{blkcnt64_t}.
+@end deftp
+
+@comment sys/types.h
+@comment Unix98
+@deftp {Data Type} blkcnt64_t
+This is an arithmetic data type used to represent block counts for the
+use in LFS.  In the GNU system, this is equivalent to @code{unsigned
+long long int}.
+
+When compiling with @code{_FILE_OFFSET_BITS == 64} this type is
+available under the name @code{blkcnt_t}.
 @end deftp
 
 @node Reading Attributes
@@ -1404,6 +1598,23 @@ are defined for this function:
 @item ENOENT
 The file named by @var{filename} doesn't exist.
 @end table
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is in fact @code{stat64} since the LFS interface transparently
+replaces the normal implementation.
+@end deftypefun
+
+@comment sys/stat.h
+@comment Unix98
+@deftypefun int stat64 (const char *@var{filename}, struct stat64 *@var{buf})
+This function is similar to @code{stat} but it is also able to work on
+file larger then @math{2^31} bytes on 32 bits systems.  To be able to do
+this the result is stored in a variable of type @code{struct stat64} to
+which @var{buf} must point.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is available under the name @code{stat} and so transparently
+replaces the interface for small fiels on 32 bits machines.
 @end deftypefun
 
 @comment sys/stat.h
@@ -1421,6 +1632,24 @@ on failure.  The following @code{errno} error conditions are defined for
 @item EBADF
 The @var{filedes} argument is not a valid file descriptor.
 @end table
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is in fact @code{fstat64} since the LFS interface transparently
+replaces the normal implementation.
+@end deftypefun
+
+@comment sys/stat.h
+@comment Unix98
+@deftypefun int fstat64 (int @var{filedes}, struct stat64 *@var{buf})
+This function is similar to @code{fstat} but it is prepared to work on
+large files on 32 bits platforms.  For large files the file descriptor
+@var{filedes} should be returned by @code{open64} or @code{creat64}.
+The @var{buf} pointer points to a variable of type @code{struct stat64}
+which is able to represent the larger values.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is available under the name @code{fstat} and so transparently
+replaces the interface for small fiels on 32 bits machines.
 @end deftypefun
 
 @comment sys/stat.h
@@ -1430,6 +1659,23 @@ The @code{lstat} function is like @code{stat}, except that it does not
 follow symbolic links.  If @var{filename} is the name of a symbolic
 link, @code{lstat} returns information about the link itself; otherwise,
 @code{lstat} works like @code{stat}.  @xref{Symbolic Links}.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is in fact @code{lstat64} since the LFS interface transparently
+replaces the normal implementation.
+@end deftypefun
+
+@comment sys/stat.h
+@comment Unix98
+@deftypefun int lstat64 (const char *@var{filename}, struct stat64 *@var{buf})
+This function is similar to @code{lstat} but it is also able to work on
+file larger then @math{2^31} bytes on 32 bits systems.  To be able to do
+this the result is stored in a variable of type @code{struct stat64} to
+which @var{buf} must point.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
+function is available under the name @code{lstat} and so transparently
+replaces the interface for small fiels on 32 bits machines.
 @end deftypefun
 
 @node Testing File Type
@@ -2328,6 +2574,25 @@ some other @w{ISO C} systems the file may fail to be deleted if the program
 terminates abnormally).
 
 This function is reentrant.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is in fact @code{tmpfile64}.  I.e., the
+LFS interface transparently replaces the old interface.
+@end deftypefun
+
+@comment stdio.h
+@comment Unix98
+@deftypefun {FILE *} tmpfile64 (void)
+This function is similar to @code{tmpfile} but the stream it returns a
+pointer for is opened using @code{tmpfile64}.  Therefore this stream can be
+used even on files larger then @math{2^31} bytes on 32 bits machines.
+
+Please note that the return type is still @code{FILE *}.  There is no
+special @code{FILE} type for the LFS interface.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{tmpfile}
+and so transparently replaces the old interface.
 @end deftypefun
 
 @comment stdio.h

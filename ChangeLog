@@ -1,3 +1,20 @@
+1998-06-12 23:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/arith.texi: Fix problem with @math and texinfo.tex.
+
+	* manual/filesys.texi: Document LFS functions.
+	* manual/llio.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/time.texi: Likewise.
+
+	* manual/llio.texi: Document AIO functions.
+
+	* resource/sys/resource.h: Mark second argument of setrlimit as const.
+	* sysdeps/generic/setrlimit.c: Likewise.
+	* sysdeps/generic/setrlimit64.c: Likewise.
+	* sysdeps/mach/hurd/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/setrlimit.c: Likewise.
+
 1998-06-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/generic/getenv.c: Fix last change.

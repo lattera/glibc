@@ -836,8 +836,8 @@ are NaN, one of the values is returned.
 @deftypefunx {long double} fmal (long double @var{x}, long double @var{y}, long double @var{z})
 @cindex butterfly
 The name of the function @code{fma} means floating-point multiply-add.
-I.e., the operation performed is @math{(@var{x} @mul{} @var{y}) +
-@var{z}}.  The speciality of this function is that the intermediate
+I.e., the operation performed is @math{(@var{x} @mul{} @var{y}) + @var{z}}.
+The speciality of this function is that the intermediate
 result is not rounded and the addition is performed with the full
 precision of the multiplcation.
 

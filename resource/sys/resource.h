@@ -52,11 +52,11 @@ extern int getrlimit64 __P ((enum __rlimit_resource __resource,
    Return 0 if successful, -1 if not (and sets errno).  */
 #ifndef __USE_FILE_OFFSET64
 extern int setrlimit __P ((enum __rlimit_resource __resource,
-			   struct rlimit *__rlimits));
+			   __const struct rlimit *__rlimits));
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (setrlimit, __P ((enum __rlimit_resource __resource,
-					struct rlimit *__rlimits)),
+					__const struct rlimit *__rlimits)),
 		       setrlimit64);
 # else
 #  define setrlimit setrlimit64
@@ -64,7 +64,7 @@ extern int __REDIRECT (setrlimit, __P ((enum __rlimit_resource __resource,
 #endif
 #ifdef __USE_LARGEFILE64
 extern int setrlimit64 __P ((enum __rlimit_resource __resource,
-			     struct rlimit64 *__rlimits));
+			     __const struct rlimit64 *__rlimits));
 #endif
 
 /* Return resource usage information on process indicated by WHO

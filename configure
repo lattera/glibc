@@ -1119,14 +1119,14 @@ while test $# -gt 0; do
 done
 
 # Add the default directories.
+default_sysnames=sysdeps/generic
 if test "$elf" = yes; then
-  sysnames="$names sysdeps/generic/elf sysdeps/generic"
-else
-  sysnames="$names sysdeps/generic"
+  default_sysnames="sysdeps/generic/elf $default_sysnames"
 fi
+sysnames="$names $default_sysnames"
 
 # The other names were emitted during the scan.
-echo "$ac_t""sysdeps/generic" 1>&6
+echo "$ac_t""$default_sysnames" 1>&6
 
 
 ### Locate tools.

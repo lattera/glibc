@@ -1645,11 +1645,28 @@ and store them in @code{*@var{rlp}}.
 
 The return value is @code{0} on success and @code{-1} on failure.  The
 only possible @code{errno} error condition is @code{EFAULT}.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is in fact @code{getrlimit64}.  I.e., the
+LFS interface transparently replaces the old interface.
+@end deftypefun
+
+@comment sys/resource.h
+@comment Unix98
+@deftypefun int getrlimit64 (int @var{resource}, struct rlimit64 *@var{rlp})
+This function is similar to the @code{getrlimit} but its second
+parameter is a pointer to a variable of type @code{struct rlimit64}
+which allows this function to read values which wouldn't fit in the
+member of a @code{struct rlimit}.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{getrlimit}
+and so transparently replaces the old interface.
 @end deftypefun
 
 @comment sys/resource.h
 @comment BSD
-@deftypefun int setrlimit (int @var{resource}, struct rlimit *@var{rlp})
+@deftypefun int setrlimit (int @var{resource}, const struct rlimit *@var{rlp})
 Store the current value and the maximum value of resource @var{resource}
 in @code{*@var{rlp}}.
 
@@ -1661,6 +1678,23 @@ following @code{errno} error condition is possible:
 You tried to change the maximum permissible limit value,
 but you don't have privileges to do so.
 @end table
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is in fact @code{setrlimit64}.  I.e., the
+LFS interface transparently replaces the old interface.
+@end deftypefun
+
+@comment sys/resource.h
+@comment Unix98
+@deftypefun int setrlimit64 (int @var{resource}, const struct rlimit64 *@var{rlp})
+This function is similar to the @code{setrlimit} but its second
+parameter is a pointer to a variable of type @code{struct rlimit64}
+which allows this function to set values which wouldn't fit in the
+member of a @code{struct rlimit}.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{setrlimit}
+and so transparently replaces the old interface.
 @end deftypefun
 
 @comment sys/resource.h
@@ -1670,12 +1704,12 @@ This structure is used with @code{getrlimit} to receive limit values,
 and with @code{setrlimit} to specify limit values.  It has two fields:
 
 @table @code
-@item rlim_cur
+@item rlim_t rlim_cur
 The current value of the limit in question.
 This is also called the ``soft limit''.
 @cindex soft limit
 
-@item rlim_max
+@item rlim_t rlim_max
 The maximum permissible value of the limit in question.  You cannot set
 the current value of the limit to a larger number than this maximum.
 Only the super user can change the maximum permissible value.
@@ -1685,6 +1719,30 @@ This is also called the ``hard limit''.
 
 In @code{getrlimit}, the structure is an output; it receives the current
 values.  In @code{setrlimit}, it specifies the new values.
+@end deftp
+
+For the LFS functions a similar type is defined in @file{sys/resource.h}.
+
+@comment sys/resource.h
+@comment Unix98
+@deftp {Data Type} {struct rlimit64}
+This structure is used with @code{getrlimit64} to receive limit values,
+and with @code{setrlimit64} to specify limit values.  It has two fields:
+
+@table @code
+@item rlim64_t rlim_cur
+The current value of the limit in question.
+This is also called the ``soft limit''.
+
+@item rlim64_t rlim_max
+The maximum permissible value of the limit in question.  You cannot set
+the current value of the limit to a larger number than this maximum.
+Only the super user can change the maximum permissible value.
+This is also called the ``hard limit''.
+@end table
+
+In @code{getrlimit64}, the structure is an output; it receives the current
+values.  In @code{setrlimit64}, it specifies the new values.
 @end deftp
 
 Here is a list of resources that you can specify a limit for.

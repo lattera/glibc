@@ -209,6 +209,10 @@ Any other characters in @var{opentype} are simply ignored.  They may be
 meaningful in other systems.
 
 If the open fails, @code{fopen} returns a null pointer.
+
+When the sources are compiling with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits machine this function is in fact @code{fopen64} since the LFS
+interface replaces transparently the old interface.
 @end deftypefun
 
 You can have multiple streams (or file descriptors) pointing to the same
@@ -219,6 +223,21 @@ whether the streams are in one program (not usual) or in several
 programs (which can easily happen).  It may be advantageous to use the
 file locking facilities to avoid simultaneous access.  @xref{File
 Locks}.
+
+@comment stdio.h
+@comment Unix98
+@deftypefun {FILE *} fopen64 (const char *@var{filename}, const char *@var{opentype})
+This function is similar to @code{fopen} but the stream it returns a
+pointer for is opened using @code{open64}.  Therefore this stream can be
+used even on files larger then @math{2^31} bytes on 32 bits machines.
+
+Please note that the return type is still @code{FILE *}.  There is no
+special @code{FILE} type for the LFS interface.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{fopen}
+and so transparently replaces the old interface.
+@end deftypefun
 
 @comment stdio.h
 @comment ISO
@@ -254,6 +273,25 @@ programs in which use of a standard stream for certain purposes is
 hard-coded.  In the GNU C library, you can simply close the standard
 streams and open new ones with @code{fopen}.  But other systems lack
 this ability, so using @code{freopen} is more portable.
+
+When the sources are compiling with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits machine this function is in fact @code{freopen64} since the LFS
+interface replaces transparently the old interface.
+@end deftypefun
+
+@comment stdio.h
+@comment Unix98
+@deftypefun {FILE *} freopen64 (const char *@var{filename}, const char *@var{opentype}, FILE *@var{stream})
+This function is similar to @code{freopen}.  The only difference is that
+on 32 bits machine the stream returned is able to read beyond the
+@math{2^31} bytes limits imposed by the normal interface.  It should be
+noted that the stream pointed to by @var{stream} need not be opened
+using @code{fopen64} or @code{freopen64} since its mode is not important
+for this function.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{freopen}
+and so transparently replaces the old interface.
 @end deftypefun
 
 
@@ -3098,6 +3136,25 @@ the return value is the current file position.
 
 The function is an extension defined in the Unix Single Specification
 version 2.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is in fact @code{ftello64}.  I.e., the
+LFS interface transparently replaces the old interface.
+@end deftypefun
+
+@comment stdio.h
+@comment Unix98
+@deftypefun off64_t ftello64 (FILE *@var{stream})
+This function is similar to @code{ftello} with the only difference that
+the return value is of type @code{off64_t}.  This also requires that the
+stream @var{stream} was opened using either @code{fopen64},
+@code{freopen64}, or @code{tmpfile64} since otherwise the underlying
+file operations to position the file pointer beyond the @math{2^31}
+bytes limit might fail.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{ftello}
+and so transparently replaces the old interface.
 @end deftypefun
 
 @comment stdio.h
@@ -3136,6 +3193,25 @@ The functionality and return value is the same as for @code{fseek}.
 
 The function is an extension defined in the Unix Single Specification
 version 2.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system this function is in fact @code{fseeko64}.  I.e., the
+LFS interface transparently replaces the old interface.
+@end deftypefun
+
+@comment stdio.h
+@comment Unix98
+@deftypefun int fseeko64 (FILE *@var{stream}, off64_t @var{offset}, int @var{whence})
+This function is similar to @code{fseeko} with the only difference that
+the @var{offset} parameter is of type @code{off64_t}.  This also
+requires that the stream @var{stream} was opened using either
+@code{fopen64}, @code{freopen64}, or @code{tmpfile64} since otherwise
+the underlying file operations to position the file pointer beyond the
+@math{2^31} bytes limit might fail.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{fseeko}
+and so transparently replaces the old interface.
 @end deftypefun
 
 @strong{Portability Note:} In non-POSIX systems, @code{ftell},
@@ -3272,6 +3348,22 @@ file position of a stream, for use by the functions @code{fgetpos} and
 In the GNU system, @code{fpos_t} is equivalent to @code{off_t} or
 @code{long int}.  In other systems, it might have a different internal
 representation.
+
+When compiling with @code{_FILE_OFFSET_BITS == 64} on a 32 bits machine
+this type is in fact equivalent to @code{off64_t} since the LFS
+interface transparently replaced the old interface.
+@end deftp
+
+@comment stdio.h
+@comment Unix98
+@deftp {Data Type} fpos64_t
+This is the type of an object that can encode information about the
+file position of a stream, for use by the functions @code{fgetpos64} and
+@code{fsetpos64}.
+
+In the GNU system, @code{fpos64_t} is equivalent to @code{off64_t} or
+@code{long long int}.  In other systems, it might have a different internal
+representation.
 @end deftp
 
 @comment stdio.h
@@ -3282,11 +3374,27 @@ stream @var{stream} in the @code{fpos_t} object pointed to by
 @var{position}.  If successful, @code{fgetpos} returns zero; otherwise
 it returns a nonzero value and stores an implementation-defined positive
 value in @code{errno}.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system the function is in fact @code{fgetpos64}.  I.e., the LFS
+interface transparently replaced the old interface.
+@end deftypefun
+
+@comment stdio.h
+@comment Unix98
+@deftypefun int fgetpos64 (FILE *@var{stream}, fpos64_t *@var{position})
+This function is similar to @code{fgetpos} but the file position is
+returned in a variable of type @code{fpos64_t} to which @var{position}
+points.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{fgetpos}
+and so transparently replaces the old interface.
 @end deftypefun
 
 @comment stdio.h
 @comment ISO
-@deftypefun int fsetpos (FILE *@var{stream}, const fpos_t @var{position})
+@deftypefun int fsetpos (FILE *@var{stream}, const fpos_t *@var{position})
 This function sets the file position indicator for the stream @var{stream}
 to the position @var{position}, which must have been set by a previous
 call to @code{fgetpos} on the same stream.  If successful, @code{fsetpos}
@@ -3294,6 +3402,22 @@ clears the end-of-file indicator on the stream, discards any characters
 that were ``pushed back'' by the use of @code{ungetc}, and returns a value
 of zero.  Otherwise, @code{fsetpos} returns a nonzero value and stores
 an implementation-defined positive value in @code{errno}.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits system the function is in fact @code{fsetpos64}.  I.e., the LFS
+interface transparently replaced the old interface.
+@end deftypefun
+
+@comment stdio.h
+@comment Unix98
+@deftypefun int fsetpos64 (FILE *@var{stream}, const fpos64_t *@var{position})
+This function is similar to @code{fsetpos} but the file position used
+for positioning is provided in a variable of type @code{fpos64_t} to
+which @var{position} points.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
+bits machine this function is available under the name @code{fsetpos}
+and so transparently replaces the old interface.
 @end deftypefun
 
 @node Stream Buffering
