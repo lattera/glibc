@@ -1,3 +1,10 @@
+1997-05-01 03:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): For Linux-2.0 and up the
+	kernel can return negative values.  Only fail when return value is
+	in range in range which is never returned as valid address.
+	Patch by Bruno Haible <haible@ilog.fr>.
+
 1997-04-30 17:35  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/libm-test.c: Implement test for exceptions.

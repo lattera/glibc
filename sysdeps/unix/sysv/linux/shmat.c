@@ -33,5 +33,6 @@ shmat (shmid, shmaddr, shmflg)
   unsigned long raddr;
 
   retval = __ipc (IPCOP_shmat, shmid, shmflg, (int) &raddr, shmaddr);
-  return retval < 0 ? (void *) retval : (void *) raddr;
+  return ((unsigned long int) retval > -(unsigned long int) SHMLBA
+	  ? (void *) retval : (void *) raddr);
 }
