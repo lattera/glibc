@@ -33,6 +33,7 @@ shared-only-routines = forward
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
+install-lib-ldscripts := libpthread.so
 
 libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptlongjmp pthread signals specific errno lockfile \

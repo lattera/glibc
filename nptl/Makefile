@@ -27,6 +27,7 @@ headers := pthread.h semaphore.h bits/semaphore.h
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
+install-lib-ldscripts := libpthread.so
 
 routines = alloca_cutoff forward libc-lowlevellock libc-lowlevelmutex \
 	   libc-cancellation
