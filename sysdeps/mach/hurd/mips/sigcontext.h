@@ -38,4 +38,6 @@ struct sigcontext
     int sc_fp;			/* Frame pointer.  */
     int sc_pc;			/* Instruction pointer.  */
     int sc_ps;			/* Processor status.  */
+
+    int sc_mdlo, sc_mdhi;	/* High and low multiplication results.  */
   };
