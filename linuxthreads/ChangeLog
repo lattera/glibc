@@ -1,3 +1,8 @@
+1999-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manager.c: Remove inclusion of <linux/tasks.h> since it's not
+	needed anymore.
+
 1999-07-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* internals.h: Align _pthread_descr_struct to 32 bytes.

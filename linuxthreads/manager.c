@@ -26,7 +26,6 @@
 #include <sys/param.h>
 #include <sys/time.h>
 #include <sys/wait.h>           /* for waitpid macros */
-#include <linux/tasks.h>
 
 #include "pthread.h"
 #include "internals.h"
