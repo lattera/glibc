@@ -1,5 +1,5 @@
 /* getrusage -- Get resource usage information about processes.  Hurd version.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ __getrusage (who, usage)
      struct rusage *usage;
 {
   struct task_basic_info bi;
+  struct task_events_info ei;
   struct task_thread_times_info tti;
   mach_msg_type_number_t count;
   error_t err;
@@ -43,6 +44,14 @@ __getrusage (who, usage)
       err = __task_info (__mach_task_self (), TASK_BASIC_INFO,
 			 (task_info_t) &bi, &count);
       if (err)
+	return __hurd_fail (err);
+
+      count = TASK_EVENTS_INFO_COUNT;
+      err = __task_info (__mach_task_self (), TASK_EVENTS_INFO,
+			 (task_info_t) &ei, &count);
+      if (err == KERN_INVALID_ARGUMENT)	/* microkernel doesn't implement it */
+	memset (&ei, 0, sizeof ei);
+      else if (err)
 	return __hurd_fail (err);
 
       count = TASK_THREAD_TIMES_INFO_COUNT;
@@ -61,6 +70,11 @@ __getrusage (who, usage)
       usage->ru_stime.tv_sec = bi.system_time.seconds;
       usage->ru_stime.tv_usec = bi.system_time.microseconds;
 
+      /* These statistics map only approximately.  */
+      usage->ru_majflt = ei.pageins;
+      usage->ru_minflt = ei.faults - ei.pageins;
+      usage->ru_msgsnd = ei.messages_sent; /* Mach IPC, not SysV IPC */
+      usage->ru_msgrcv = ei.messages_received; /* Mach IPC, not SysV IPC */
       break;
 
     case RUSAGE_CHILDREN:
