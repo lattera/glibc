@@ -13,6 +13,7 @@
 	* elf/dl-close.c (_dl_close): Likewise.
 	* elf/dl-load.c (_dl_map_object): Likewise.
 	* iconv/iconv_prog.c (process_fd): Likewise.
+	* stdio-common/vfscanf.c (_IO_vfscanf): Likewise.
 
 	* locale/localeinfo.h (struct locale_data): Use __flexarr instead
 	of a zero-length array.
