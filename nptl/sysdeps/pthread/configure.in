@@ -7,9 +7,11 @@ fi
 
 if test "x$libc_cv_asm_cfi_directives" != xyes; then
   dnl We need this only for some architectures.
-  if test "x$base_machine" = xi386 || test "x$base_machine" = "xx86_86"; then
-    AC_MSG_ERROR(CFI directive support in assembler is required)
-  fi
+  case "$base_machine" in
+    i386 | x86_64 | powerpc | s390)
+      AC_MSG_ERROR(CFI directive support in assembler is required) ;;
+    *) ;;
+  esac
 fi
 
 dnl Iff <unwind.h> is available, make sure it is the right one and it
