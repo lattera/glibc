@@ -1,8 +1,10 @@
 2005-01-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/bits/link.h: Use namespace-safe identifiers in
+	La_x86_64_xmm definition.
+
 	* posix/Makefile: Use CFLAGS-*.os instead of CFLAGS-*.c for frame
 	pointer option.
-
 	* stdlib/Makefile (CFLAGS-system.os): Use this instead of
 	CFLAGS-system.c for frame pointer option.
 
