@@ -1,3 +1,32 @@
+Thu Oct 26 03:01:22 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* sysdeps/unix/sysv/linux/syscall.h: Strip list of syscalls in
+	comment to the necessary ones.  Add _readv and _writev.
+
+	* sysdeps/unix/configure.in: Change syntax for system call test
+	candidates and adapt sed script for this.  Now use : to separate
+	syscall name and file name.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (ENTRY): System call
+	number is now set is DO_CALL.  So call with additional argument.
+	(DO_CALL): Takes an additional argument.  Load system call
+	number according to new argument.
+	(SYSCALL_ERROR_HANDLER): Add ; after last ret statement.
+	* sysdeps/unix/sysv/linux/i386/brk.S [PIC]: Define __syscall_error
+	locally using SYSCALL_ERROR_HANDLER macro.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sbrk.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/xmknod.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscall.S: Likewise.
+	Don't use DO_CALL macro; instead use lower level macros for better
+	control. 
+
+	* sysdeps/unix/sysv/linux/sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/sigaction.S: File removed.
+	* sysdeps/unix/sysv/linux/signal.S: File removed.
+
 Wed Oct 25 14:23:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdstartup.c (_hurd_startup): Use new
