@@ -104,7 +104,12 @@
    - Compiler has errors
 
    With e.g. gcc 2.7.2.2 the test for cexp fails because of a compiler error.
- */
+
+
+   To Do: All parameter should be numbers that can be represented as
+   exact floating point values.  Currently some values cannot be represented
+   exactly and therefore the result is not the expected result.
+*/
 
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE

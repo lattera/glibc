@@ -484,13 +484,13 @@ ldouble: 128
 
 # ctan
 Test "Real part of: ctan (-2 - 3 i) == 0.0037640256415042482 - 1.0032386273536098014 i":
-ildouble: 437
-ldouble: 437
+ildouble: 439
+ldouble: 439
 Test "Imaginary part of: ctan (-2 - 3 i) == 0.0037640256415042482 - 1.0032386273536098014 i":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 Test "Real part of: ctan (0.7 + 1.2 i) == 0.1720734197630349001 + 0.9544807059989405538 i":
 double: 1
 float: 1
@@ -506,13 +506,13 @@ ldouble: 367
 
 # ctanh
 Test "Real part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383224937 i":
-ildouble: 2
-ldouble: 2
+ildouble: 5
+ldouble: 5
 Test "Imaginary part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383224937 i":
 float: 1
 ifloat: 1
-ildouble: 23
-ldouble: 23
+ildouble: 25
+ldouble: 25
 Test "Real part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 float: 1
@@ -551,8 +551,8 @@ double: 24
 float: 12
 idouble: 24
 ifloat: 12
-ldouble: 4
-ildouble: 4
+ldouble: 12
+ildouble: 12
 Test "erfc (9) == 0.41370317465138102381e-36":
 ldouble: 36
 ildouble: 36
