@@ -54,7 +54,7 @@ tst_wcsstr (FILE * fp, int debug_flg)
 	    continue;
 	  }
 
-	for (i = 0, err = 0; *(ws2 + i) != 0 && i < MBSSIZE; i++)
+	for (i = 0, err = 0; *(ws2 + i) != 0 && i < WCSSIZE; i++)
 	  {
 	    if (debug_flg)
 	      {

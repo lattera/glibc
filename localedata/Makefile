@@ -85,7 +85,7 @@ locale_test_suite := tst_iswalnum tst_iswprint tst_towctrans tst_wcsncmp \
 		     tst_wcscspn tst_wcswidth tst_iswlower tst_swscanf	 \
 		     tst_wcslen tst_wctob tst_iswctype tst_towlower	 \
 		     tst_wcscat tst_towupper tst_wcscmp tst_wcsncat	 \
-		     tst_wcsncpy tst_wcsxfrm tst_wcwidth
+		     tst_wcsncpy tst_wcsxfrm tst_wcwidth tst_mbrlen
 tests = $(locale_test_suite)
 endif
 endif
@@ -161,6 +161,7 @@ tst_iswpunct-ENV = $(TEST_MBWC_ENV)
 tst_iswspace-ENV = $(TEST_MBWC_ENV)
 tst_iswupper-ENV = $(TEST_MBWC_ENV)
 tst_iswxdigit-ENV = $(TEST_MBWC_ENV)
+tst_mbrlen-ENV = $(TEST_MBWC_ENV)
 tst_swscanf-ENV = $(TEST_MBWC_ENV)
 tst_towctrans-ENV = $(TEST_MBWC_ENV)
 tst_towlower-ENV = $(TEST_MBWC_ENV)

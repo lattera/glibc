@@ -1,5 +1,22 @@
 2000-06-28  Andreas Jaeger  <aj@suse.de>
 
+	* Makefile (locale_test_suite): Add tst_mbrlen.
+	(tst_mbrlen-ENV): New.
+
+	* tests-mbwc/tst_mbrlen.c: New file
+
+	* tests-mbwc/dat_mbrlen.c: New file.
+
+	* tests-mbwc/tst_types.h (struct TIN_MBSTOWCS_REC): Use const
+	char*.
+	(struct TST_HEAD): Use const char* instead of an array.
+
+	* tests-mbwc/tst_wcsstr.c (tst_wcsstr): ws2 has size WCSSIZE.
+
+	* tests-mbwc/dat_iswalnum.c (TST_ISW_LOC): Add tests for de_UTF8.
+
+	* tests-mbwc/tgn_locdef.h (TST_LOC_de_UTF8): Added.
+
 	* tests-mbwc/tgn_locdef.h (TST_LOC_de_UTF8): Added.
 
 2000-06-27  Ulrich Drepper  <drepper@redhat.com>

@@ -16,7 +16,6 @@
 #include "tst_funcs.h"
 #include "tgn_funcdef.h"
 
-#define NAMESIZE	   64
 #define MBSSIZE		   24
 #define WCSSIZE		   12
 #define MONFMTSIZE	   16
@@ -53,7 +52,7 @@ TST_FID;
 typedef struct
 {
   int func_id;
-  const char locale[NAMESIZE];
+  const char *locale;
 }
 TST_HEAD;
 
@@ -208,7 +207,7 @@ typedef struct
   {
     char w_flg;
     char s_flg;
-    char s[MBSSIZE];
+    const char *s;
     size_t n;
   }
   seq[MBSTOWCS_SEQNUM];
