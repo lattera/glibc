@@ -1,7 +1,7 @@
 /Maybe extra code for non-ELF binaries/a\
   file=$1\
   # Run the ldd stub.\
-  lddlibc4 $file\
+  lddlibc4 "$file"\
   # Test the result.\
   if test $? -lt 3; then\
     return 0;\

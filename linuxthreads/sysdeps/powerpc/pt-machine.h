@@ -2,7 +2,6 @@
    powerpc version.
    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson <rth@tamu.edu>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -31,34 +30,6 @@
 #define sync() __asm__ __volatile__ ("sync")
 #endif
 
-/* Spinlock implementation; required.  */
-#if BROKEN_PPC_ASM_CR0
-static
-#else
-extern inline
-#endif
-int
-testandset (int *spinlock)
-{
-  int ret;
-
-  sync();
-  __asm__ __volatile__(
-		       "0:    lwarx %0,0,%1 ;"
-		       "      cmpwi %0,0;"
-		       "      bne 1f;"
-		       "      stwcx. %2,0,%1;"
-		       "      bne- 0b;"
-		       "1:    "
-	: "=&r"(ret)
-	: "r"(spinlock), "r"(1)
-	: "cr0", "memory");
-  sync();
-
-  return ret != 0;
-}
-
-
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
 #define CURRENT_STACK_FRAME  stack_pointer
@@ -74,7 +45,7 @@ static
 extern inline
 #endif
 int
-__compare_and_swap (int *p, int oldval, int newval)
+__compare_and_swap (long *p, long oldval, long newval)
 {
   int ret;
 

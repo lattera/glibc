@@ -1,3 +1,13 @@
+1998-08-24  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* spinlock.c (__pthread_lock): Reset p_nextwaiting to NULL if it
+	turned out that we didn't need to queue after all.
+
+1998-08-22  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/pt-machine.h: Remove testandset, it's not used
+	and wastes space; correct types.
+
 1998-08-08 11:18  H.J. Lu  <hjl@gnu.org>
 
 	* signals.c (sigaction): Handle NULL argument.

@@ -102,33 +102,43 @@ case $# in
   exit 1
   ;;
 1)
+  single_file=t
+  ;;
+*)
+  single_file=f
+  ;;
+esac
+
+result=0
+for file do
   # We don't list the file name when there is only one.
-  case "$1" in
-  */*) file="$1"
+  test $single_file = t || echo "${file}:"
+  case $file in
+  */*) :
        ;;
-  *) file="./$1"
+  *) file=./$file
      ;;
   esac
   if test ! -f "$file"; then
-    echo "ldd: ${file}:" $"no such file"
-    exit 1
+    echo "ldd: ${file}:" $"No such file or directory" >&2
+    result=1
   elif test -r "$file"; then
-    test -x "$file" ||
-    echo 'ldd:' $"\
+    test -x "$file" || echo 'ldd:' $"\
 warning: you do not have execution permission for" "\`$file'" >&2
     verify_out=`${RTLD} --verify "$file"`
     case $? in
     0)
-      eval $add_env exec '"$file"' || exit 1
+      eval $add_env '"$file"' || result=1
       ;;
     1)
       # This can be a non-ELF binary or no binary at all.
-      nonelf $file ||
-      echo $"	not a dynamic executable"
-      exit 1
+      nonelf "$file" || {
+	echo $"	not a dynamic executable"
+	result=1
+      }
       ;;
     2)
-      eval $add_env exec \${RTLD} '"$file"' || exit 1
+      eval $add_env \${RTLD} '"$file"' || result=1
       ;;
     *)
       echo 'ldd:' ${RTLD} $"exited with unknown exit code" "($?)" >&2
@@ -137,52 +147,9 @@ warning: you do not have execution permission for" "\`$file'" >&2
     esac
   else
     echo 'ldd:' $"error: you do not have read permission for" "\`$file'" >&2
-    exit 1
+    result=1
   fi
-  exit
-  ;;
-*)
-  result=0
-  for file; do
-    echo "${file}:"
-    case "$file" in
-    */*) :
-         ;;
-    *) file="./$file"
-       ;;
-    esac
-    if test ! -f "$file"; then
-      echo "ldd: ${file}:" $"no such file"
-      result=1
-    elif test -r "$file"; then
-      test -x "$file" || echo 'ldd:' $"\
-warning: you do not have execution permission for" "\`$file'" >&2
-      verify_out=`${RTLD} --verify "$file"`
-      case $? in
-      0)
-	eval $add_env '"$file"' || result=1
-	;;
-      1)
-	# This can be a non-ELF binary or no binary at all.
-	nonelf $file || {
-	  echo $"	not a dynamic executable"
-	  result=1
-	}
-	;;
-      2)
-        eval $add_env ${RTLD} '"$file"' || result=1
-	;;
-      *)
-	echo 'ldd:' ${RTLD} $"exited with unknown exit code" "($?)" >&2
-	exit 1
-	;;
-      esac
-    else
-      echo 'ldd:' $"error: you do not have read permission for" "\`$file'" >&2
-      result=1
-    fi
-  done
-esac
+done
 
 exit $result
 # Local Variables:

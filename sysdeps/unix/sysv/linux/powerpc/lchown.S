@@ -1,5 +1,5 @@
-/* Low-level statistical profiling support function.  Linux/i386 version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* lchown system call.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <signal.h>
-#include <sigcontextinfo.h>
+/* Some old kernel headers call lchown() 'chown'.  The number is
+   the same.  */
+	
+#include <sysdep.h>
 
-static void
-profil_counter (int signo, SIGCONTEXT scp)
-{
-  profil_count ((void *) GET_PC (scp));
-}
+#ifdef __NR_lchown
+	PSEUDO (__lchown, lchown, 3)
+#else
+	PSEUDO (__lchown, chown, 3)
+#endif
+	ret
+	PSEUDO_END(__lchown)
+	weak_alias (__lchown, lchown)
+#if defined PIC && defined DO_VERSIONING
+	symbol_version (__lchown, chown, GLIBC_2.0);
+#endif

@@ -1,6 +1,4 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 s_llseek	llseek	_llseek		5	__sys_llseek
-
-getresuid	-	getresuid	3	getresuid
-getresgid	-	getresgid	3	getresgid
+s_chown		chown	chown		3	__syscall_chown

@@ -83,7 +83,11 @@ enum
 
 
 /* Possible value for FLAGS parameter of `umount2'.  */
-#define MNT_FORCE		/* Force unmounting.  */
+enum
+{
+  MNT_FORCE = 1			/* Force unmounting.  */
+#define MNT_FORCE MNT_FORCE
+};
 
 
 __BEGIN_DECLS

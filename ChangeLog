@@ -1,4 +1,47 @@
-Mon Aug 24 10:37:38 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-08-24 16:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/catchsegv.sh: Handle text preceding backtrace better.
+	* sysdeps/generic/segfault.c: Allow register dump.  Allow handler
+	to be installed for other signals than SIGSEGV.
+	* sysdeps/generic/register-dump.h: New file.
+	* sysdeps/i386/register-dump.h: New file.
+	* sysdeps/powerpc/register-dump.h: New file.
+
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h: Use macros from
+	sigcontextinfo.h.
+	* sysdeps/unix/sysv/linux/powerpc/profil-counter.h: Use i386 version.
+
+1998-08-24  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/sigcontextinfo.h: New file.
+
+1998-08-09  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/lchown.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add chown, remove
+	getresuid, getresgid.
+
+1998-08-16  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Fix bugs.  Set up stack
+	pointer in userland.
+
+1998-08-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/mount.h (MNT_FORCE): Define as enum
+	and fix value.
+
+1998-08-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/ldd.bash.in: Add missing quotes around $file.  Make loop
+	over arguments Bourne shell compatible.  Don't exit unsuccessfully
+	if nonelf returns successfully.  Avoid duplicating most of the
+	script.
+	* sysdeps/unix/sysv/linux/ldd-rewrite.sed: Add missing quotes
+	around $file.
+
+1998-08-24 10:37  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/Makefile (sysdep_headers): Add
 	sys/reg.h.
@@ -17,53 +60,53 @@ Mon Aug 24 10:37:38 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	Likewise.
 
 1998-08-17  H.J. Lu  <hjl@gnu.org>
- 
-	* libio/Versions (_IO_do_write, _IO_file_attach, 
-	_IO_file_close_it, _IO_file_finish, _IO_file_fopen, 
-	_IO_file_init, _IO_file_overflow, _IO_file_seekoff, 
-	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow, 
-	_IO_file_write, _IO_file_xsputn): Added to GLIBC_2.1. 
 
-	* libio/fileops.c (_IO_do_write, _IO_file_attach, 
-	_IO_file_close_it, _IO_file_finish, _IO_file_fopen, 
-	_IO_file_init, _IO_file_overflow, _IO_file_seekoff, 
-	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow, 
-	_IO_file_write, _IO_file_xsputn): Change the prefix to 
-	"_IO_new_". Added to GLIBC_2.1. 
- 
-	* libio/libioP.h (_IO_do_write, _IO_file_attach, 
-	_IO_file_close_it, _IO_file_finish, _IO_file_fopen, 
-	_IO_file_init, _IO_file_overflow, _IO_file_seekoff, 
-	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow, 
-	_IO_file_write, _IO_file_xsputn): Add prototypes for the prefix 
-	"_IO_new_". 
- 
-	* libio/oldfileops.c (_IO_do_write, _IO_file_attach, 
-	_IO_file_close_it, _IO_file_finish, _IO_file_fopen, 
-	_IO_file_init, _IO_file_overflow, _IO_file_seekoff, 
-	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow, 
-	_IO_file_write, _IO_file_xsputn): Added to GLIBC_2.0. 
- 
+	* libio/Versions (_IO_do_write, _IO_file_attach,
+	_IO_file_close_it, _IO_file_finish, _IO_file_fopen,
+	_IO_file_init, _IO_file_overflow, _IO_file_seekoff,
+	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow,
+	_IO_file_write, _IO_file_xsputn): Added to GLIBC_2.1.
+
+	* libio/fileops.c (_IO_do_write, _IO_file_attach,
+	_IO_file_close_it, _IO_file_finish, _IO_file_fopen,
+	_IO_file_init, _IO_file_overflow, _IO_file_seekoff,
+	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow,
+	_IO_file_write, _IO_file_xsputn): Change the prefix to
+	"_IO_new_". Added to GLIBC_2.1.
+
+	* libio/libioP.h (_IO_do_write, _IO_file_attach,
+	_IO_file_close_it, _IO_file_finish, _IO_file_fopen,
+	_IO_file_init, _IO_file_overflow, _IO_file_seekoff,
+	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow,
+	_IO_file_write, _IO_file_xsputn): Add prototypes for the prefix
+	"_IO_new_".
+
+	* libio/oldfileops.c (_IO_do_write, _IO_file_attach,
+	_IO_file_close_it, _IO_file_finish, _IO_file_fopen,
+	_IO_file_init, _IO_file_overflow, _IO_file_seekoff,
+	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow,
+	_IO_file_write, _IO_file_xsputn): Added to GLIBC_2.0.
+
 1998-08-23  Richard Henderson  <rth@cygnus.com>
 
 	* Makeconfig (LDFLAGS): Remove.
 
-	* csu/initfini.c: Return to .text before __gmon_start__. 
+	* csu/initfini.c: Return to .text before __gmon_start__.
 
-	* elf/elf.h (EM_FAKE_ALPHA): Rename from EM_OLD_ALPHA. 
-	(STO_MIPS_*): Rename from STO_*. 
-	(STB_MIPS_SPLIT_COMMON): Rename from STB_SPLIT_COMMON. 
-	(STO_ALPHA_NOPV, STO_ALPHA_STD_GPLOAD): New. 
+	* elf/elf.h (EM_FAKE_ALPHA): Rename from EM_OLD_ALPHA.
+	(STO_MIPS_*): Rename from STO_*.
+	(STB_MIPS_SPLIT_COMMON): Rename from STB_SPLIT_COMMON.
+	(STO_ALPHA_NOPV, STO_ALPHA_STD_GPLOAD): New.
 
-	* math/atest-exp.c (mpn_bitsize): Fix bit location calculation. 
-	(main): e3s is negative on zero. 
-	* math/atest-exp2.c: Likewise. 
+	* math/atest-exp.c (mpn_bitsize): Fix bit location calculation.
+	(main): e3s is negative on zero.
+	* math/atest-exp2.c: Likewise.
 	* math/atest-sincos.c: Likewise.
 
-1998-08-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* Makerules (install): Add comment about absolute paths. 
- 
+1998-08-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makerules (install): Add comment about absolute paths.
+
 1998-08-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/vsnprintf.c (_IO_vsnprintf): Set first byte of destination

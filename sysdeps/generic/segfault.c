@@ -18,15 +18,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <ctype.h>
 #include <execinfo.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 /* This file defines macros to access the content of the sigcontext element
    passed up by the signal handler.  */
 #include <sigcontextinfo.h>
+
+/* Get code to possibly dump the content of all registers.  */
+#include <register-dump.h>
 
 /* This is a global variable set at program start time.  It marks the
    highest used stack address.  */
@@ -76,6 +81,8 @@ catch_segfault (int signal, SIGCONTEXT ctx)
   int fd;
   void **arr;
   size_t cnt;
+  struct sigaction sa;
+  const char *sigstring;
 
   /* This is the name of the file we are writing to.  If none is given
      or we cannot write to this file write to stderr.  */
@@ -88,9 +95,17 @@ catch_segfault (int signal, SIGCONTEXT ctx)
 	fd = 2;
     }
 
-#define WRITE_STRING(s) write (fd, s, sizeof (s) - 1)
-  WRITE_STRING ("*** Segmentation Fault\n");
-  WRITE_STRING ("Backtrace:\n");
+#define WRITE_STRING(s) write (fd, s, strlen (s))
+  WRITE_STRING ("*** ");
+  sigstring = strsignal (signal);
+  WRITE_STRING (sigstring);
+  WRITE_STRING ("\n");
+
+#ifdef REGISTER_DUMP
+  REGISTER_DUMP;
+#endif
+
+  WRITE_STRING ("\nBacktrace:\n");
 
   top_frame = GET_FRAME (ctx);
   top_stack = GET_STACK (ctx);
@@ -124,8 +139,12 @@ catch_segfault (int signal, SIGCONTEXT ctx)
   /* Now generate nicely formatted output.  */
   __backtrace_symbols_fd (arr, cnt, fd);
 
-  /* Nothing else to do.  */
-  _exit (128 + SIGSEGV);
+  /* Pass on the signal (so that a core file is produced).  */
+  sa.sa_handler = SIG_DFL;
+  sigemptyset (&sa.sa_mask);
+  sa.sa_flags = 0;
+  sigaction (signal, &sa, NULL);
+  raise (signal);
 }
 
 
@@ -134,12 +153,36 @@ __attribute__ ((constructor))
 install_handler (void)
 {
   struct sigaction sa;
+  const char *sigs = getenv ("SEGFAULT_SIGNALS");
 
   sa.sa_handler = (void *) catch_segfault;
   sigemptyset (&sa.sa_mask);
   sa.sa_flags = SA_RESTART;
 
-  sigaction (SIGSEGV, &sa, NULL);
+  if (sigs == NULL)
+    sigaction (SIGSEGV, &sa, NULL);
+  else if (sigs[0] == '\0')
+    /* Do not do anything.  */
+    return;
+  else
+    {
+      const char *where;
+      int all = __strcasecmp (sigs, "all");
+
+#define INSTALL_FOR_SIG(sig, name) \
+      where = __strcasestr (sigs, name);				      \
+      if (all || (where != NULL						      \
+		  && (where == sigs || !isalnum (where[-1]))		      \
+		  && !isalnum (where[sizeof (name) - 1])))		      \
+	sigaction (sig, &sa, NULL);
+
+      INSTALL_FOR_SIG (SIGSEGV, "segv");
+      INSTALL_FOR_SIG (SIGILL, "ill");
+      INSTALL_FOR_SIG (SIGBUS, "bus");
+      INSTALL_FOR_SIG (SIGSTKFLT, "stkflt");
+      INSTALL_FOR_SIG (SIGABRT, "abrt");
+      INSTALL_FOR_SIG (SIGFPE, "fpe");
+    }
 
   /* Maybe we are expected to use an alternative stack.  */
   if (getenv ("SEGFAULT_USE_ALTSTACK") != 0)

@@ -47,9 +47,10 @@ void __pthread_lock(struct _pthread_fastlock * lock)
       newstatus = 1;
     } else {
       self = thread_self();
-      self->p_nextwaiting = (pthread_descr) oldstatus;
       newstatus = (long) self;
     }
+    if (self != NULL)
+      self->p_nextwaiting = (pthread_descr) oldstatus;
   } while(! compare_and_swap(&lock->status, oldstatus, newstatus,
                              &lock->spinlock));
   if (oldstatus != 0) suspend(self);

@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,56 +28,60 @@
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
 
 ENTRY(__clone)
-	/* Set up stack frame, save registers.  */
-	stwu  %r1,-32(%r1)
 	/* Check for child_stack == NULL || fn == NULL.  */
-	cmpwi %cr0,%r4,0
-	stw   %r31,16(%r1)
-	cmpwi %cr1,%r3,0
-	stw   %r30,20(%r1)
-	beq-  %cr0,badargs
-	beq-  %cr1,badargs
+	cmpwi	%cr0,%r4,0
+	cmpwi	%cr1,%r3,0
+	cror	cr0*4+eq,cr1*4+eq,cr0*4+eq
+	beq-	%cr0,L(badargs)
 
+	/* Set up stack frame for parent.  */
+	stwu	%r1,-32(%r1)
+	stmw	%r29,16(%r1)
+	
 	/* Set up stack frame for child.  */
-	addi  %r4,%r4,-16
-	clrrwi %r4,%r4,4
-	li    %r0,0
-	stw   %r0,0(%r4)
+	clrrwi	%r4,%r4,4
+	li	%r0,0
+	stwu	%r0,-16(%r4)
 
-	/* Save fn, args across syscall.  */
-	mr    %r30,%r3		/* Function in r30.  */
-	mr    %r31,%r6		/* Arguments in r31.  */
+	/* Save fn, args, stack across syscall.  */
+	mr	%r29,%r3		/* Function in r29.  */
+	mr	%r30,%r4		/* Stack pointer in r30.  */
+	mr	%r31,%r6		/* Argument in r31.  */
 
 	/* 'flags' argument is first parameter to clone syscall. (The other
 	   argument is the stack pointer, already in r4.)  */
-	mr    %r3,%r5
+	mr	%r3,%r5
 
 	/* Do the call.  */
 	DO_CALL(SYS_ify(clone))
-	bso-  error
-	beq   child
 
-	/* Parent.  Restore registers & return.  */
-	lwz   %r31,16(%r1)
-	lwz   %r30,20(%r1)
-	addi  %r1,%r1,32
-	blr
+	/* Check for child process.  */
+	cmpwi	%cr1,%r3,0
+	crandc	cr1*4+eq,cr1*4+eq,cr0*4+so
+	bne-	%cr1,L(parent)		/* The '-' is to minimise the race.  */
 
-child:
+	/* On at least mklinux DR3a5, clone() doesn't actually change
+	   the stack pointer.  I'm pretty sure this is a bug, because
+	   it adds a race condition if a signal is sent to a thread
+	   just after it is created (in the previous three instructions).  */
+	mr	%r1,%r30
 	/* Call procedure.  */
-	mtlr  %r30
-	mr    %r3,%r31
-	blrl
+	mtctr	%r29
+	mr	%r3,%r31
+	bctrl
 	/* Call _exit with result from procedure.  */
-	b JUMPTARGET(_exit)
+	b	JUMPTARGET(_exit)
 
-badargs:
-	li    %r3,EINVAL
-error:
-	lwz   %r31,16(%r1)
-	lwz   %r30,20(%r1)
-	addi  %r1,%r1,32
-	b JUMPTARGET(__syscall_error)
+L(parent):
+	/* Parent.  Restore registers & return.  */
+	lmw	%r29,16(%r1)
+	addi	%r1,%r1,32
+	bnslr+
+	b	JUMPTARGET(__syscall_error)
+
+L(badargs):
+	li	%r3,EINVAL
+	b	JUMPTARGET(__syscall_error)
 END (__clone)
 
 weak_alias (__clone, clone)
