@@ -30,8 +30,9 @@
 # egrep -v '^_' |
 # sort -u
 #
-cxx=$1
-data=$2
+data=$1
+shift
+cxx="$*"
 while read t; do
   echo -n "$t:"
   $cxx -S -xc++ -o - -D_GNU_SOURCE <(cat <<EOF
@@ -87,7 +88,6 @@ size_t
 socklen_t
 ssize_t
 suseconds_t
-timer_t
 time_t
 u_char
 uid_t

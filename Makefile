@@ -228,6 +228,16 @@ mostlyclean: parent-mostlyclean
 tests-clean:
 	@$(MAKE) subdir_testclean no_deps=t
 
+tests: $(objpfx)c++-types-check.out
+ifneq (no,$(CXX)$(wildcard scripts/data/c++-types-$(base-machine)-$(config-os).data))
+$(objpfx)c++-types-check.out: scripts/data/c++-types-$(base-machine)-$(config-os).data
+	scripts/check-c++-types.sh $^ $(CXX) $(filter-out -std=gnu99,$(CFLAGS)) $(CPPFLAGS) > $@
+else
+$(objpfx)c++-types-check.out:
+	@echo 'WARNING C++ tests not run; create a c++-types-XXX file'
+	@echo "not run" > $@
+endif
+
 # The realclean target is just like distclean for the parent, but we want
 # the subdirs to know the difference in case they care.
 realclean distclean: parent-clean
@@ -286,6 +296,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 			    merge-abilist.awk extract-abilist.awk	\
 			    rpm2dynsym.sh				\
 			    )						\
+		$(wildcard scripts/data/*.data)				\
 		$(wildcard abilist/*.abilist)
 
 distribute := $(strip $(distribute))

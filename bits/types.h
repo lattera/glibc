@@ -51,14 +51,13 @@ __extension__ typedef signed long long int __int64_t;
 __extension__ typedef unsigned long long int __uint64_t;
 #endif
 
-/* quad_t is also 64 bits, but is traditionally defined as `long long'
-   even when `long' is also 64 bits.  */
-#ifdef __GLIBC_HAVE_LONG_LONG
-__extension__ typedef long long int __quad_t;
-__extension__ typedef unsigned long long int __u_quad_t;
-#elif __WORDSIZE == 64
+/* quad_t is also 64 bits.  */
+#if __WORDSIZE == 64
 typedef long int __quad_t;
 typedef unsigned long int __u_quad_t;
+#elif defined __GLIBC_HAVE_LONG_LONG
+__extension__ typedef long long int __quad_t;
+__extension__ typedef unsigned long long int __u_quad_t;
 #else
 typedef struct
 {
@@ -106,9 +105,9 @@ typedef struct
 #define __U32_TYPE		unsigned int
 #define __SLONGWORD_TYPE	long int
 #define __ULONGWORD_TYPE	unsigned long int
-#define	__SQUAD_TYPE		long long int
-#define	__UQUAD_TYPE		unsigned long long int
 #if __WORDSIZE == 32
+# define __SQUAD_TYPE		long long int
+# define __UQUAD_TYPE		unsigned long long int
 # define __SWORD_TYPE		int
 # define __UWORD_TYPE		unsigned int
 # define __SLONG32_TYPE		long int
@@ -116,6 +115,8 @@ typedef struct
 # define __S64_TYPE		__quad_t
 # define __U64_TYPE		__u_quad_t
 #elif __WORDSIZE == 64
+# define __SQUAD_TYPE		long int
+# define __UQUAD_TYPE		unsigned long int
 # define __SWORD_TYPE		long int
 # define __UWORD_TYPE		unsigned long int
 # define __SLONG32_TYPE		int

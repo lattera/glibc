@@ -1,3 +1,17 @@
+2003-09-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/bits/types.h (__quad_t): Make long int if 64-bit.
+	(__u_quad_t): Make unsigned long int if 64-bit.
+	(__SQUAD_TYPE): Make long int if 64-bit.
+	(__UQUAD_TYPE): Make unsigned long int if 64-bit.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h: Remove.
+
+2003-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Run check-c++-types.sh if possible.
+	* scripts/check-c++-types.h: New file.
+	* scripts/data/c++-ctypes-i386-linux-gnu.data: New file.
+
 2003-09-08  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (register_dump):
@@ -12,8 +26,7 @@
 2003-09-08  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/malloc.c (sYSMALLOc): Move foreign sbrk accounting into
-	contiguous case.  Bug report from Prem Gopalan
-	<prem@mazunetworks.com>.
+	contiguous case.  Bug report from Prem Gopalan <prem@mazunetworks.com>.
 	(mALLOPt): Avoid requirement of C99.
 
 2003-09-08  Ulrich Drepper  <drepper@redhat.com>
