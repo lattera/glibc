@@ -93,25 +93,25 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	  result->__data[cnt].__internal_use = 0;
 	  result->__data[cnt].__statep = &result->__data[cnt].__state;
 	}
-    }
 
-  if (res != __GCONV_OK)
-    {
-      /* Something went wrong.  Free all the resources.  */
-      int serrno = errno;
-
-      if (result != NULL)
+      if (res != __GCONV_OK)
 	{
-	  while (cnt-- > 0)
-	    free (result->__data[cnt].__outbuf);
+	  /* Something went wrong.  Free all the resources.  */
+	  int serrno = errno;
 
-	  free (result);
-	  result = NULL;
+	  if (result != NULL)
+	    {
+	      while (cnt-- > 0)
+		free (result->__data[cnt].__outbuf);
+
+	      free (result);
+	      result = NULL;
+	    }
+
+	  __gconv_close_transform (steps, nsteps);
+
+	  __set_errno (serrno);
 	}
-
-      __gconv_close_transform (steps, nsteps);
-
-      __set_errno (serrno);
     }
 
   *handle = result;

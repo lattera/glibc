@@ -17,9 +17,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define _GNU_SOURCE 1
-
-#include <assert.h>
 #include <errno.h>
 #include <error.h>
 #include <dirent.h>
@@ -34,31 +31,17 @@
 #include <sys/types.h>
 
 #include "ldconfig.h"
-
-#define CACHEMAGIC "ld.so-1.7.0"
+#include "dl-cache.h"
 
 struct cache_entry
 {
-  char *lib;
-  char *path;
-  int flags;
-  struct cache_entry *next;
+  char *lib;			/* Library name.  */
+  char *path;			/* Path to find library.  */
+  int flags;			/* Flags to indicate kind of library.  */
+  unsigned long int hwcap;	/* Important hardware capabilities.  */
+  int bits_hwcap;		/* Number of bits set in hwcap.  */
+  struct cache_entry *next;	/* Next entry in list.  */
 };
-
-struct file_entry
-{
-  int flags;		/* This is 1 for an ELF library.  */
-  unsigned int key, value; /* String table indices.  */
-};
-
-
-struct cache_file
-{
-  char magic[sizeof CACHEMAGIC - 1];
-  unsigned int nlibs;
-  struct file_entry libs[0];
-};
-
 
 /* List of all cache entries.  */
 static struct cache_entry *entries;
@@ -69,7 +52,7 @@ static const char *flag_descr[] =
 
 /* Print a single entry.  */
 static void
-print_entry (const char *lib, int flag, const char *key)
+print_entry (const char *lib, int flag, unsigned long int hwcap, const char *key)
 {
   printf ("\t%s (", lib);
   switch (flag & FLAG_TYPE_MASK)
@@ -93,14 +76,17 @@ print_entry (const char *lib, int flag, const char *key)
     case 0:
       break;
     default:
-      fprintf (stdout, ",%d", flag & FLAG_REQUIRED_MASK);
+      printf (",%d", flag & FLAG_REQUIRED_MASK);
       break;
     }
+  if (hwcap != 0)
+    printf (", hwcap: 0x%lx", hwcap);
   printf (") => %s\n", key);
 }
 
 
-/* Print the whole cache file.  */
+/* Print the whole cache file, if a file contains the new cache format
+   hidden in the old one, print the contents of the new format.  */
 void
 print_cache (const char *cache_name)
 {
@@ -109,7 +95,9 @@ print_cache (const char *cache_name)
   int fd;
   unsigned int i;
   struct cache_file *cache;
+  struct cache_file_new *cache_new = NULL;
   const char *cache_data;
+  int format = 0;
 
   fd = open (cache_name, O_RDONLY);
   if (fd < 0)
@@ -128,20 +116,63 @@ print_cache (const char *cache_name)
     error (EXIT_FAILURE, errno, _("mmap of cache file failed.\n"));
   cache_size = st.st_size;
 
-  if (cache_size < sizeof (struct cache_file)
-      || memcmp (cache->magic, CACHEMAGIC, sizeof CACHEMAGIC - 1))
-    return;
-  /* This is where the strings start.  */
-  cache_data = (const char *) &cache->libs[cache->nlibs];
+  if (cache_size < sizeof (struct cache_file))
+    error (EXIT_FAILURE, 0, _("File is not a cache file.\n"));
 
-  printf (_("%d libs found in cache `%s'\n"), cache->nlibs, cache_name);
+  if (memcmp (cache->magic, CACHEMAGIC, sizeof CACHEMAGIC - 1))
+    {
+      /* This can only be the new format without the old one.  */
+      cache_new = (struct cache_file_new *) cache;
 
-  /* Print everything.  */
-  for (i = 0; i < cache->nlibs; i++)
-    print_entry (cache_data + cache->libs[i].key,
-		 cache->libs[i].flags,
-		 cache_data + cache->libs[i].value);
+      if (memcmp (cache_new->magic, CACHEMAGIC_NEW, sizeof CACHEMAGIC_NEW - 1)
+	  || memcmp (cache_new->version, CACHE_VERSION,
+		      sizeof CACHE_VERSION - 1))
+	error (EXIT_FAILURE, 0, _("File is not a cache file.\n"));
+      format = 1;
+      /* This is where the strings start.  */
+      cache_data = (const char *) cache;
+    }
+  else
+    {
+      /* This is where the strings start.  */
+      cache_data = (const char *) &cache->libs[cache->nlibs];
 
+      /* Check for a new cache embedded in the old format.  */
+      if (cache_size >
+	  (sizeof (struct cache_file)
+	   + cache->nlibs * sizeof (struct file_entry)
+	   + sizeof (struct cache_file_new)))
+	{
+	  cache_new = (struct cache_file_new *) cache_data;
+
+	  if (!memcmp (cache_new->magic, CACHEMAGIC_NEW, sizeof CACHEMAGIC_NEW - 1)
+	      && !memcmp (cache_new->version, CACHE_VERSION,
+			  sizeof CACHE_VERSION - 1))
+	    format = 1;
+	}
+    }
+
+  if (format == 0)
+    {
+      printf (_("%d libs found in cache `%s'\n"), cache->nlibs, cache_name);
+
+      /* Print everything.  */
+      for (i = 0; i < cache->nlibs; i++)
+	print_entry (cache_data + cache->libs[i].key,
+		     cache->libs[i].flags, 0,
+		     cache_data + cache->libs[i].value);
+    }
+  else if (format == 1)
+    {
+      printf (_("%d libs found in cache `%s'\n"), cache_new->nlibs, cache_name);
+
+      /* Print everything.  */
+      for (i = 0; i < cache_new->nlibs; i++)
+	print_entry (cache_data + cache_new->libs[i].key,
+		     cache_new->libs[i].flags,
+		     cache_new->libs[i].hwcap,
+		     cache_data + cache_new->libs[i].value);
+    }
   /* Cleanup.  */
   munmap (cache, cache_size);
   close (fd);
@@ -155,45 +186,6 @@ init_cache (void)
 }
 
 
-/* Helper function which must match the one in the dynamic linker, so that
-   we rely on the same sort order.  */
-int
-cache_libcmp (const char *p1, const char *p2)
-{
-  while (*p1 != '\0')
-    {
-      if (*p1 >= '0' && *p1 <= '9')
-        {
-          if (*p2 >= '0' && *p2 <= '9')
-            {
-	      /* Must compare this numerically.  */
-	      int val1;
-	      int val2;
-
-	      val1 = *p1++ - '0';
-	      val2 = *p2++ - '0';
-	      while (*p1 >= '0' && *p1 <= '9')
-	        val1 = val1 * 10 + *p1++ - '0';
-	      while (*p2 >= '0' && *p2 <= '9')
-	        val2 = val2 * 10 + *p2++ - '0';
-	      if (val1 != val2)
-		return val1 - val2;
-	    }
-	  else
-            return 1;
-        }
-      else if (*p2 >= '0' && *p2 <= '9')
-        return -1;
-      else if (*p1 != *p2)
-        return *p1 - *p2;
-      else
-	{
-	  ++p1;
-	  ++p2;
-	}
-    }
-  return *p1 - *p2;
-}
 
 static
 int compare (const struct cache_entry *e1, const struct cache_entry *e2)
@@ -201,80 +193,142 @@ int compare (const struct cache_entry *e1, const struct cache_entry *e2)
   int res;
 
   /* We need to swap entries here to get the correct sort order.  */
-  res = cache_libcmp (e2->lib, e1->lib);
+  res = _dl_cache_libcmp (e2->lib, e1->lib);
   if (res == 0)
     {
       if (e1->flags < e2->flags)
 	return 1;
       else if (e1->flags > e2->flags)
 	return -1;
+      /* Sort by most specific hwcap.  */
+      else if (e2->bits_hwcap > e1->bits_hwcap)
+	return 1;
+      else if (e2->bits_hwcap < e1->bits_hwcap)
+	return -1;
+      else if (e2->hwcap > e1->hwcap)
+	return 1;
+      else if (e2->hwcap < e1->hwcap)
+	return -1;
     }
   return res;
 }
-
 
 /* Save the contents of the cache.  */
 void
 save_cache (const char *cache_name)
 {
   struct cache_entry *entry;
-  int i, fd;
+  int fd, idx_old, idx_new;
   size_t total_strlen, len;
   char *strings, *str, *temp_name;
-  struct cache_file *file_entries;
-  size_t file_entries_size;
+  struct cache_file *file_entries = NULL;
+  struct cache_file_new *file_entries_new = NULL;
+  size_t file_entries_size = 0;
+  size_t file_entries_new_size = 0;
   unsigned int str_offset;
   /* Number of cache entries.  */
   int cache_entry_count = 0;
+  /* Number of normal cache entries.  */
+  int cache_entry_old_count = 0;
 
   /* The cache entries are sorted already, save them in this order. */
 
   /* Count the length of all strings.  */
+  /* The old format doesn't contain hwcap entries and doesn't contain
+     libraries in subdirectories with hwcaps entries.  Count therefore
+     also all entries with hwcap == 0.  */
   total_strlen = 0;
   for (entry = entries; entry != NULL; entry = entry->next)
     {
       /* Account the final NULs.  */
       total_strlen += strlen (entry->lib) + strlen (entry->path) + 2;
       ++cache_entry_count;
+      if (entry->hwcap == 0)
+	++cache_entry_old_count;
     }
 
   /* Create the on disk cache structure.  */
   /* First an array for all strings.  */
-  strings = (char *)xmalloc (total_strlen + 1);
+  strings = (char *)xmalloc (total_strlen);
 
-  /* And the list of all entries.  */
-  file_entries_size = sizeof (struct cache_file)
-    + cache_entry_count * sizeof (struct file_entry);
-  file_entries = (struct cache_file *) xmalloc (file_entries_size);
-
-  /* Fill in the header.  */
-  memset (file_entries, 0, sizeof (struct cache_file));
-  memcpy (file_entries->magic, CACHEMAGIC, sizeof CACHEMAGIC - 1);
-
-  file_entries->nlibs = cache_entry_count;
-
-  str_offset = 0;
-  str = strings;
-  for (i = 0, entry = entries; entry != NULL; entry = entry->next, ++i)
+  if (opt_format != 2)
     {
-      file_entries->libs[i].flags = entry->flags;
+      /* And the list of all entries in the old format.  */
+      file_entries_size = sizeof (struct cache_file)
+	+ cache_entry_old_count * sizeof (struct file_entry);
+      file_entries = (struct cache_file *) xmalloc (file_entries_size);
+
+      /* Fill in the header.  */
+      memset (file_entries, 0, sizeof (struct cache_file));
+      memcpy (file_entries->magic, CACHEMAGIC, sizeof CACHEMAGIC - 1);
+
+      file_entries->nlibs = cache_entry_old_count;
+    }
+
+  if (opt_format != 0)
+    {
+      /* And the list of all entries in the new format.  */
+      file_entries_new_size = sizeof (struct cache_file_new)
+	+ cache_entry_count * sizeof (struct file_entry_new);
+      file_entries_new = (struct cache_file_new *) xmalloc (file_entries_new_size);
+
+      /* Fill in the header.  */
+      memset (file_entries_new, 0, sizeof (struct cache_file_new));
+      memcpy (file_entries_new->magic, CACHEMAGIC_NEW, sizeof CACHEMAGIC_NEW - 1);
+      memcpy (file_entries_new->version, CACHE_VERSION, sizeof CACHE_VERSION - 1);
+
+      file_entries_new->nlibs = cache_entry_count;
+      file_entries_new->len_strings = total_strlen;
+    }
+
+  /* If we have both formats, we hide the new format in the strings
+     table, we have to adjust all string indices for this so that
+     old libc5/glibc 2 dynamic linkers just ignore them.  */
+  if (opt_format == 1)
+    str_offset = file_entries_new_size;
+  else
+    str_offset = 0;
+
+  str = strings;
+  for (idx_old = 0, idx_new = 0, entry = entries; entry != NULL;
+       entry = entry->next, ++idx_new)
+    {
       /* First the library.  */
-      /* XXX: Actually we can optimize here and remove duplicates.  */
-      file_entries->libs[i].key = str_offset;
+      if (opt_format != 2)
+	{
+	  file_entries->libs[idx_old].flags = entry->flags;
+	  /* XXX: Actually we can optimize here and remove duplicates.  */
+	  file_entries->libs[idx_old].key = str_offset;
+	}
+      if (opt_format != 0)
+	{
+	  /* We could subtract file_entries_new_size from str_offset -
+	     not doing so makes the code easier, the string table
+	     always begins at the beginning of the the new cache
+	     struct.  */
+	  file_entries_new->libs[idx_new].flags = entry->flags;
+	  file_entries_new->libs[idx_new].hwcap = entry->hwcap;
+	  file_entries_new->libs[idx_new].key = str_offset;
+	}
       len = strlen (entry->lib);
       str = stpcpy (str, entry->lib);
       /* Account the final NUL.  */
       ++str;
       str_offset += len + 1;
       /* Then the path.  */
-      file_entries->libs[i].value = str_offset;
+      if (opt_format != 2)
+	file_entries->libs[idx_old].value = str_offset;
+      if (opt_format != 0)
+	file_entries_new->libs[idx_new].value = str_offset;
       len = strlen (entry->path);
       str = stpcpy (str, entry->path);
       /* Account the final NUL.  */
       ++str;
       str_offset += len + 1;
+      /* Ignore entries with hwcap for old format.  */
+      if (entry->hwcap == 0)
+	++idx_old;
     }
-  assert (str_offset == total_strlen);
 
   /* Write out the cache.  */
 
@@ -293,8 +347,17 @@ save_cache (const char *cache_name)
 	   temp_name);
 
   /* Write contents.  */
-  if (write (fd, file_entries, file_entries_size) != (ssize_t)file_entries_size)
-    error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
+  if (opt_format != 2)
+    {
+      if (write (fd, file_entries, file_entries_size) != (ssize_t)file_entries_size)
+	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
+    }
+  if (opt_format != 0)
+    {
+      if (write (fd, file_entries_new, file_entries_new_size)
+	  != (ssize_t)file_entries_new_size)
+	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
+    }
 
   if (write (fd, strings, total_strlen) != (ssize_t)total_strlen)
     error (EXIT_FAILURE, errno, _("Writing of cache data failed."));
@@ -325,13 +388,15 @@ save_cache (const char *cache_name)
     }
 }
 
+
 /* Add one library to the cache.  */
 void
-add_to_cache (const char *path, const char *lib, int flags)
+add_to_cache (const char *path, const char *lib, int flags,
+	      unsigned long int hwcap)
 {
   struct cache_entry *new_entry, *ptr, *prev;
   char *full_path;
-  int len;
+  int len, i;
 
   new_entry = (struct cache_entry *) xmalloc (sizeof (struct cache_entry));
 
@@ -343,6 +408,14 @@ add_to_cache (const char *path, const char *lib, int flags)
   new_entry->lib = xstrdup (lib);
   new_entry->path = full_path;
   new_entry->flags = flags;
+  new_entry->hwcap = hwcap;
+  new_entry->bits_hwcap = 0;
+
+  /* Count the number of bits set in the masked value.  */
+  for (i = 0; (~((1UL << i) - 1) & hwcap) != 0; ++i)
+    if ((hwcap & (1UL << i)) != 0)
+      ++new_entry->bits_hwcap;
+
 
   /* Keep the list sorted - search for right place to insert.  */
   ptr = entries;

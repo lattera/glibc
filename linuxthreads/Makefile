@@ -38,7 +38,7 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       oldsemaphore events getcpuclockid
 
 vpath %.c Examples
-tests = ex1 ex2 ex3 ex4 ex5 ex6
+tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7
 
 include ../Rules
 
@@ -66,3 +66,4 @@ $(objpfx)ex3: $(libpthread)
 $(objpfx)ex4: $(libpthread)
 $(objpfx)ex5: $(libpthread)
 $(objpfx)ex6: $(libpthread)
+$(objpfx)ex7: $(libpthread)

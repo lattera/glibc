@@ -22,31 +22,16 @@
 #include <sys/mman.h>
 #include <dl-cache.h>
 
+
 /* System-dependent function to read a file's whole contents
    in the most convenient manner available.  */
 extern void *_dl_sysdep_read_whole_file (const char *filename,
 					 size_t *filesize_ptr,
 					 int mmap_prot);
 
-#ifndef LD_SO_CACHE
-# define LD_SO_CACHE "/etc/ld.so.cache"
-#endif
-
-#define CACHEMAGIC "ld.so-1.7.0"
-
-struct cache_file
-  {
-    char magic[sizeof CACHEMAGIC - 1];
-    unsigned int nlibs;
-    struct
-      {
-	int flags;		/* This is 1 for an ELF library.  */
-	unsigned int key, value; /* String table indices.  */
-      } libs[0];
-  };
-
 /* This is the starting address and the size of the mmap()ed file.  */
 static struct cache_file *cache;
+static struct cache_file_new *cache_new;
 static size_t cachesize;
 
 /* 1 if cache_data + PTR points into the cache.  */
@@ -56,45 +41,100 @@ static size_t cachesize;
    binaries.  */
 int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
-/* Helper function which must match the one in ldconfig, so that
-   we rely on the same sort order.  */
-static int
-_dl_cache_libcmp (const char *p1, const char *p2)
-{
-  while (*p1 != '\0')
-    {
-      if (*p1 >= '0' && *p1 <= '9')
-        {
-          if (*p2 >= '0' && *p2 <= '9')
-            {
-	      /* Must compare this numerically.  */
-	      int val1;
-	      int val2;
+#define SEARCH_CACHE(cache)						  \
+/* We use binary search since the table is sorted in the cache file.	  \
+   The first matching entry in the table is returned.			  \
+   It is important to use the same algorithm as used while generating	  \
+   the cache file.  */							  \
+do									  \
+  {									  \
+    left = 0;								  \
+    right = cache->nlibs - 1;						  \
+    middle = (left + right) / 2;					  \
+    cmpres = 1;								  \
+    									  \
+    while (left <= right)						  \
+      {									  \
+	/* Make sure string table indices are not bogus before using	  \
+	   them.  */							  \
+	if (! _dl_cache_verify_ptr (cache->libs[middle].key))		  \
+	  {								  \
+	    cmpres = 1;							  \
+	    break;							  \
+	  }								  \
+									  \
+	/* Actually compare the entry with the key.  */			  \
+	cmpres = _dl_cache_libcmp (name,				  \
+				   cache_data + cache->libs[middle].key); \
+	if (cmpres == 0)						  \
+	  /* Found it.  */						  \
+	  break;							  \
+									  \
+	if (cmpres < 0)							  \
+	  left = middle + 1;						  \
+	else								  \
+	  right = middle - 1;						  \
+									  \
+	middle = (left + right) / 2;					  \
+      }									  \
+									  \
+    if (cmpres == 0)							  \
+      {									  \
+	/* LEFT now marks the last entry for which we know the name is	  \
+	   correct.  */							  \
+	left = middle;							  \
+									  \
+	/* There might be entries with this name before the one we	  \
+	   found.  So we have to find the beginning.  */		  \
+	while (middle > 0						  \
+	       /* Make sure string table indices are not bogus before	  \
+		  using them.  */					  \
+	       && _dl_cache_verify_ptr (cache->libs[middle - 1].key)	  \
+	       /* Actually compare the entry.  */			  \
+	       && (_dl_cache_libcmp (name,				  \
+				     cache_data				  \
+				     + cache->libs[middle - 1].key)	  \
+		   == 0))						  \
+	  --middle;							  \
+									  \
+	do								  \
+	  {								  \
+	    int flags;							  \
+									  \
+	    /* Only perform the name test if necessary.  */		  \
+	    if (middle > left						  \
+		/* We haven't seen this string so far.  Test whether the  \
+		   index is ok and whether the name matches.  Otherwise	  \
+		   we are done.  */					  \
+		&& (! _dl_cache_verify_ptr (cache->libs[middle].key)	  \
+		    || (_dl_cache_libcmp (name,				  \
+					  cache_data			  \
+					  + cache->libs[middle].key)	  \
+			!= 0)))						  \
+	      break;							  \
+									  \
+	    flags = cache->libs[middle].flags;				  \
+	    if (_dl_cache_check_flags (flags)				  \
+		&& _dl_cache_verify_ptr (cache->libs[middle].value))	  \
+	      {								  \
+		if (best == NULL || flags == _dl_correct_cache_id)	  \
+		  {							  \
+		    HWCAP_CHECK;					  \
+		    best = cache_data + cache->libs[middle].value;	  \
+		    							  \
+		    if (flags == _dl_correct_cache_id)			  \
+		      /* We've found an exact match for the shared	  \
+			 object and no general `ELF' release.  Stop	  \
+			 searching.  */					  \
+		      break;						  \
+		  }							  \
+	      }								  \
+	  }								  \
+	while (++middle <= right);					  \
+      }									  \
+  }									  \
+while (0)
 
-	      val1 = *p1++ - '0';
-	      val2 = *p2++ - '0';
-	      while (*p1 >= '0' && *p1 <= '9')
-	        val1 = val1 * 10 + *p1++ - '0';
-	      while (*p2 >= '0' && *p2 <= '9')
-	        val2 = val2 * 10 + *p2++ - '0';
-	      if (val1 != val2)
-		return val1 - val2;
-	    }
-	  else
-            return 1;
-        }
-      else if (*p2 >= '0' && *p2 <= '9')
-        return -1;
-      else if (*p1 != *p2)
-        return *p1 - *p2;
-      else
-	{
-	  ++p1;
-	  ++p2;
-	}
-    }
-  return *p1 - *p2;
-}
 
 
 /* Look up NAME in ld.so.cache and return the file name stored there,
@@ -117,10 +157,38 @@ _dl_load_cache_lookup (const char *name)
       /* Read the contents of the file.  */
       void *file = _dl_sysdep_read_whole_file (LD_SO_CACHE, &cachesize,
 					       PROT_READ);
+
+      /* We can handle three different cache file formats here:
+	 - the old libc5/glibc2.0/2.1 format
+	 - the old format with the new format in it
+	 - only the new format
+	 The following checks if the cache contains any of these formats.  */
       if (file && cachesize > sizeof *cache &&
 	  !memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1))
-	/* Looks ok.  */
-	cache = file;
+	{
+	  /* Looks ok.  */
+	  cache = file;
+
+	  /* Check for new version.  */
+	  cache_new = (struct cache_file_new *) &cache->libs[cache->nlibs];
+	  if (cachesize <
+	      (sizeof (struct cache_file) + cache->nlibs * sizeof (struct file_entry)
+	       + sizeof (struct cache_file_new))
+	      || memcmp (cache_new->magic, CACHEMAGIC_NEW,
+			  sizeof CACHEMAGIC_NEW - 1)
+	      || memcmp (cache_new->version, CACHE_VERSION,
+			 sizeof CACHE_VERSION - 1))
+	    cache_new = (void *) -1;
+	}
+      else if (file && cachesize > sizeof *cache_new)
+	{
+	  cache_new = (struct cache_file_new *) file;
+	  if (memcmp (cache_new->magic, CACHEMAGIC_NEW,
+		      sizeof CACHEMAGIC_NEW - 1)
+	      || memcmp (cache_new->version, CACHE_VERSION,
+			 sizeof CACHE_VERSION - 1))
+	    cache_new = (void *) -1;
+	}
       else
 	{
 	  if (file)
@@ -139,88 +207,23 @@ _dl_load_cache_lookup (const char *name)
 
   best = NULL;
 
-  /* We use binary search since the table is sorted in the cache file.
-     It is important to use the same algorithm as used while generating
-     the cache file.  */
-  left = 0;
-  right = cache->nlibs - 1;
-  middle = (left + right) / 2;
-  cmpres = 1;
-
-  while (left <= right)
+  if (cache_new != (void *) -1)
     {
-      /* Make sure string table indices are not bogus before using them.  */
-      if (! _dl_cache_verify_ptr (cache->libs[middle].key))
-	{
-	  cmpres = 1;
-	  break;
-	}
+      /* This file ends in static libraries where we don't have a hwcap.  */
+      unsigned long int *hwcap;
+      weak_extern (_dl_hwcap);
 
-      /* Actually compare the entry with the key.  */
-      cmpres = _dl_cache_libcmp (name, cache_data + cache->libs[middle].key);
-      if (cmpres == 0)
-	/* Found it.  */
-	break;
+      hwcap = &_dl_hwcap;
 
-      if (cmpres < 0)
-	left = middle + 1;
-      else
-	right = middle - 1;
-
-      middle = (left + right) / 2;
+#define HWCAP_CHECK							     \
+      if (hwcap && (cache_new->libs[middle].hwcap & *hwcap) > _dl_hwcap)     \
+	continue
+      SEARCH_CACHE (cache_new);
     }
-
-  if (cmpres == 0)
-    {
-      /* LEFT now marks the last entry for which we know the name is
-	 correct.  */
-      left = middle;
-
-      /* There might be entries with this name before the one we
-         found.  So we have to find the beginning.  */
-      while (middle > 0
-	     /* Make sure string table indices are not bogus before
-                using them.  */
-	     && _dl_cache_verify_ptr (cache->libs[middle - 1].key)
-	     /* Actually compare the entry.  */
-	     && (_dl_cache_libcmp (name,
-				   cache_data + cache->libs[middle - 1].key)
-		 == 0))
-	--middle;
-
-      do
-	{
-	  int flags;
-
-	  /* Only perform the name test if necessary.  */
-	  if (middle > left
-	      /* We haven't seen this string so far.  Test whether the
-		 index is ok and whether the name matches.  Otherwise
-		 we are done.  */
-	      && (! _dl_cache_verify_ptr (cache->libs[middle].key)
-		  || (_dl_cache_libcmp (name,
-					cache_data + cache->libs[middle].key)
-		      != 0)))
-	    break;
-
-	  flags = cache->libs[middle].flags;
-	  if (_dl_cache_check_flags (flags)
-	      && _dl_cache_verify_ptr (cache->libs[middle].value))
-	    {
-	      if (best == NULL || flags == _dl_correct_cache_id)
-		{
-		  best = cache_data + cache->libs[middle].value;
-
-		  if (flags == _dl_correct_cache_id)
-		    /* We've found an exact match for the shared
-		       object and no general `ELF' release.  Stop
-		       searching.  */
-		    break;
-		}
-	    }
-	}
-      while (++middle <= right);
-    }
+  else
+#undef HWCAP_CHECK
+#define HWCAP_CHECK do {} while (0)
+    SEARCH_CACHE (cache);
 
   /* Print our result if wanted.  */
   if (_dl_debug_libs && best != NULL)

@@ -68,7 +68,9 @@ main (int argc, char *argv[])
   setenv ("LANGUAGE", "existing-locale", 1);
   setenv ("LC_ALL", "non-existing-locale", 1);
   setenv ("LC_MESSAGES", "non-existing-locale", 1);
+  setenv ("LC_CTYPE", "non-existing-locale", 1);
   setenv ("LANG", "non-existing-locale", 1);
+  unsetenv ("OUTPUT_CHARSET");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
   textdomain ("existing-domain");

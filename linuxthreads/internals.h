@@ -199,7 +199,7 @@ struct pthread_request {
   pthread_descr req_thread;     /* Thread doing the request */
   enum {                        /* Request kind */
     REQ_CREATE, REQ_FREE, REQ_PROCESS_EXIT, REQ_MAIN_THREAD_EXIT,
-    REQ_POST, REQ_DEBUG
+    REQ_POST, REQ_DEBUG, REQ_KICK
   } req_kind;
   union {                       /* Arguments for request */
     struct {                    /* For REQ_CREATE: */

@@ -73,9 +73,13 @@ void pthread_exit(void * retval)
     request.req_kind = REQ_MAIN_THREAD_EXIT;
     __libc_write(__pthread_manager_request, (char *)&request, sizeof(request));
     suspend(self);
+    /* Main thread flushes stdio streams and runs atexit functions.
+       It also calls a handler within LinuxThreads which sends a process exit
+       request to the thread manager. */
+    exit(0); 
   }
-  /* Exit the process (but don't flush stdio streams, and don't run
-     atexit functions). */
+  /* Threads other than the main one  terminate without flushing stdio streams
+     or running atexit functions. */
   _exit(0);
 }
 

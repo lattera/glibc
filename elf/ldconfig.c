@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -32,10 +32,12 @@
 #include <sys/types.h>
 
 #include "ldconfig.h"
+#include "dl-cache.h"
 
-#ifndef LD_SO_CACHE
-# define LD_SO_CACHE "/etc/ld.so.cache"
-#endif
+/* We don't need this here - silence the compiler.  */
+#define _dl_sysdep_message(string, args...) do {} while (0);
+
+#include "dl-procinfo.h"
 
 #ifndef LD_SO_CONF
 # define LD_SO_CONF "/etc/ld.so.conf"
@@ -49,6 +51,7 @@
 struct lib_entry
   {
     int flags;
+    unsigned long int hwcap;
     char *lib;
     char *path;
   };
@@ -63,7 +66,7 @@ static const struct
   {"libc5", FLAG_ELF_LIBC5},
   {"libc6", FLAG_ELF_LIBC6},
   {"glibc2", FLAG_ELF_LIBC6}
-};  
+};
 
 
 /* List of directories to handle.  */
@@ -84,6 +87,10 @@ static int opt_print_cache = 0;
 
 /* Be verbose.  */
 int opt_verbose = 0;
+
+/* Format to support.  */
+/* 0: only libc5/glibc2; 1: both; 2: only glibc 2.2.  */
+int opt_format = 1;
 
 /* Build cache.  */
 static int opt_build_cache = 1;
@@ -123,6 +130,7 @@ static const struct argp_option options[] =
   { NULL, 'f', "CONF", 0, N_("Use CONF as configuration file"), 0},
   { NULL, 'n', NULL, 0, N_("Only process directories specified on the command line.  Don't build cache."), 0},
   { NULL, 'l', NULL, 0, N_("Manually link individual libraries."), 0},
+  { "format", 'c', "FORMAT", 0, N_("Format to use: new, old or compat (default)"), 0},
   { NULL, 0, NULL, 0, NULL, 0 }
 };
 
@@ -138,7 +146,53 @@ static struct argp argp =
   options, parse_opt, NULL, doc, NULL, NULL, NULL
 };
 
+/* Check if string corresponds to an important hardware capability.  */
+static int
+is_hwcap (const char *name)
+{
+  int hwcap_idx = _dl_string_hwcap (name);
+  
+  if (hwcap_idx != -1 && ((1 << hwcap_idx) & HWCAP_IMPORTANT))
+    return 1;
+  return 0;
+}
 
+/* Get hwcap encoding of path.  */
+static unsigned long int
+path_hwcap (const char *path)
+{
+  char *str = xstrdup (path);
+  char *ptr;
+  unsigned long int hwcap = 0;
+  unsigned long int h;
+
+  size_t len;
+
+  len = strlen (str);
+  if (str[len] == '/')
+    str[len] = '\0';
+
+  /* Search pathname from the end and check for hwcap strings.  */
+  for (;;)
+    {
+      ptr = strrchr (str, '/');
+
+      if (ptr == NULL)
+	break;
+
+      h = _dl_string_hwcap (ptr+1);
+
+      if (h == -1)
+	break;
+      hwcap += 1 << h;
+
+      /* Search the next part of the path.  */
+      *ptr = '\0';
+    }
+
+  free (str);
+  return hwcap;
+}
 
 /* Handle program arguments.  */
 static error_t
@@ -174,6 +228,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'X':
       opt_link = 0;
       break;
+    case 'c':
+      if (strcmp (arg, "old") == 0)
+	opt_format = 0;
+      else if (strcmp (arg, "compat") == 0)
+	opt_format = 1;
+      else if (strcmp (arg, "new") == 0)
+	opt_format = 2;
+      break;
     default:
       return ARGP_ERR_UNKNOWN;
     }
@@ -190,7 +252,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1999");
+"), "2000");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Andreas Jaeger");
 }
@@ -202,10 +264,10 @@ add_dir (const char *line)
   char *equal_sign;
   struct dir_entry *entry, *ptr, *prev;
   unsigned int i;
-  
+
   entry = xmalloc (sizeof (struct dir_entry));
   entry->next = NULL;
-  
+
   /* Search for an '=' sign.  */
   entry->path = xstrdup (line);
   equal_sign = strchr (entry->path, '=');
@@ -235,7 +297,7 @@ add_dir (const char *line)
       entry->path [i] = '\0';
       --i;
     }
-  
+
   ptr = dir_entries;
   prev = ptr;
   while (ptr != NULL)
@@ -270,7 +332,7 @@ create_links (const char *path, const char *libname, const char *soname)
   int do_link = 1;
   int do_remove = 1;
   /* XXX: The logics in this function should be simplified.  */
-  
+
   /* Get complete path.  */
   snprintf (full_libname, sizeof full_libname, "%s/%s", path, libname);
   snprintf (full_soname, sizeof full_soname, "%s/%s", path, soname);
@@ -405,7 +467,7 @@ manual_link (char *library)
    - create symbolic links to the soname for each library
 
    This has to be done separatly for each directory.
-   
+
    To keep track of which libraries to add to the cache and which
    links to create, we save a list of all libraries.
 
@@ -416,7 +478,7 @@ manual_link (char *library)
        if new library is newer, replace entry
        otherwise ignore this library
      otherwise add library to list
-   
+
    For example, if the two libraries libxy.so.1.1 and libxy.so.1.2
    exist and both have the same soname, e.g. libxy.so, a symbolic link
    is created from libxy.so.1.2 (the newer one) to libxy.so.
@@ -424,7 +486,7 @@ manual_link (char *library)
    libxy.so.1.1.  */
 
 /* Information for one library.  */
-struct dlib_entry 
+struct dlib_entry
 {
   char *name;
   char *soname;
@@ -446,12 +508,18 @@ search_dir (const struct dir_entry *entry)
   int nchars;
   struct stat stat_buf;
   int is_link;
-  
+  unsigned long int hwcap = path_hwcap (entry->path);
+
   dlibs = NULL;
 
   if (opt_verbose)
-    printf ("%s:\n", entry->path);
-  
+    {
+      if (hwcap != 0)
+	printf ("%s: (hwcap: 0x%lx)\n", entry->path, hwcap);
+      else
+	printf ("%s:\n", entry->path);
+    }
+
   dir = opendir (entry->path);
   if (dir == NULL)
     {
@@ -459,7 +527,7 @@ search_dir (const struct dir_entry *entry)
 	error (0, errno, _("Can't open directory %s"), entry->path);
       return;
     }
-  
+
 
   while ((direntry = readdir (dir)) != NULL)
     {
@@ -468,15 +536,17 @@ search_dir (const struct dir_entry *entry)
       /* We only look at links and regular files.  */
       if (direntry->d_type != DT_UNKNOWN
 	  && direntry->d_type != DT_LNK
-	  && direntry->d_type != DT_REG)
+	  && direntry->d_type != DT_REG
+	  && direntry->d_type != DT_DIR)
 	continue;
 #endif /* _DIRENT_HAVE_D_TYPE  */
-
-      /* Does this file look like a shared library?  The dynamic
-	 linker is also considered as shared library.  */
-      if ((strncmp (direntry->d_name, "lib", 3) != 0
-	   && strncmp (direntry->d_name, "ld-", 3) != 0)
-	  || strstr (direntry->d_name, ".so") == NULL)
+      /* Does this file look like a shared library or is it a hwcap
+	 subdirectory?  The dynamic linker is also considered as
+	 shared library.  */
+      if (((strncmp (direntry->d_name, "lib", 3) != 0
+	    && strncmp (direntry->d_name, "ld-", 3) != 0)
+	   || strstr (direntry->d_name, ".so") == NULL)
+	  && !is_hwcap (direntry->d_name))
 	continue;
       nchars = snprintf (buf, sizeof (buf), "%s/%s", entry->path,
 			 direntry->d_name);
@@ -490,6 +560,16 @@ search_dir (const struct dir_entry *entry)
       if (lstat (buf, &stat_buf))
 	{
 	  error (0, errno, _("Can't lstat %s"), buf);
+	  continue;
+	}
+      else if (S_ISDIR (stat_buf.st_mode) && is_hwcap (direntry->d_name))
+	{
+	  /* Handle subdirectory also, make a recursive call.  */
+	  struct dir_entry new_entry;
+	  new_entry.path = buf;
+	  new_entry.flag = entry->flag;
+	  new_entry.next = NULL;
+	  search_dir (&new_entry);
 	  continue;
 	}
       else if (!S_ISREG (stat_buf.st_mode) && !S_ISLNK (stat_buf.st_mode))
@@ -506,7 +586,7 @@ search_dir (const struct dir_entry *entry)
 	  free (soname);
 	  soname = xstrdup (direntry->d_name);
 	}
-      
+
       if (flag == FLAG_ELF
 	  && (entry->flag == FLAG_ELF_LIBC5
 	      || entry->flag == FLAG_ELF_LIBC6))
@@ -524,7 +604,7 @@ search_dir (const struct dir_entry *entry)
 	      && entry->flag != FLAG_ANY)
 	    error (0, 0, _("libc4 library %s in wrong directory"), buf);
 	}
-      
+
       /* Add library to list.  */
       for (dlib_ptr = dlibs; dlib_ptr != NULL; dlib_ptr = dlib_ptr->next)
 	{
@@ -535,7 +615,7 @@ search_dir (const struct dir_entry *entry)
 		 is newer.  */
 	      if ((!is_link && dlib_ptr->is_link)
 		  || (is_link == dlib_ptr->is_link
-		      && cache_libcmp (dlib_ptr->name, direntry->d_name) < 0))
+		      && _dl_cache_libcmp (dlib_ptr->name, direntry->d_name) < 0))
 		{
 		  /* It's newer - add it.  */
 		  /* Flag should be the same - sanity check.  */
@@ -586,11 +666,11 @@ search_dir (const struct dir_entry *entry)
       if (dlib_ptr->is_link == 0)
 	create_links (entry->path, dlib_ptr->name, dlib_ptr->soname);
       if (opt_build_cache)
-	add_to_cache (entry->path, dlib_ptr->soname, dlib_ptr->flag);
+	add_to_cache (entry->path, dlib_ptr->soname, dlib_ptr->flag, hwcap);
     }
 
   /* Free all resources.  */
-  while (dlibs) 
+  while (dlibs)
     {
       dlib_ptr = dlibs;
       free (dlib_ptr->soname);
@@ -627,7 +707,7 @@ parse_conf (const char *filename)
   FILE *file;
   char *line = NULL;
   size_t len = 0;
-  
+
   file = fopen (filename, "r");
 
   if (file == NULL)
@@ -667,7 +747,7 @@ int
 main (int argc, char **argv)
 {
   int remaining;
-  
+
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
@@ -685,7 +765,7 @@ main (int argc, char **argv)
 
   if (config_file == NULL)
     config_file = LD_SO_CONF;
-  
+
   /* Chroot first.  */
   if (opt_chroot)
     {
@@ -713,8 +793,8 @@ main (int argc, char **argv)
 
       exit (0);
     }
-  
-  
+
+
   if (opt_build_cache)
     init_cache ();
 
@@ -726,7 +806,7 @@ main (int argc, char **argv)
 
       parse_conf (config_file);
     }
-  
+
   search_dirs ();
 
   if (opt_build_cache)

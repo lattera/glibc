@@ -162,13 +162,22 @@ int __pthread_manager(void *arg)
       case REQ_PROCESS_EXIT:
         pthread_handle_exit(request.req_thread,
                             request.req_args.exit.code);
+	/* NOTREACHED */
         break;
       case REQ_MAIN_THREAD_EXIT:
         main_thread_exiting = 1;
+	/* Reap children in case all other threads died and the signal handler
+	   went off before we set main_thread_exiting to 1, and therefore did
+	   not do REQ_KICK. */
+	pthread_reap_children();
+
         if (__pthread_main_thread->p_nextlive == __pthread_main_thread) {
           restart(__pthread_main_thread);
-          return 0;
-        }
+	  /* The main thread will now call exit() which will trigger an
+	     __on_exit handler, which in turn will send REQ_PROCESS_EXIT
+	     to the thread manager. In case you are wondering how the
+	     manager terminates from its loop here. */
+	}	      
         break;
       case REQ_POST:
         __new_sem_post(request.req_args.post);
@@ -179,6 +188,10 @@ int __pthread_manager(void *arg)
 	if (__pthread_threads_debug && __pthread_sig_debug > 0)
 	  raise(__pthread_sig_debug);
         break;
+      case REQ_KICK:
+	/* This is just a prod to get the manager to reap some
+	   threads right away, avoiding a potential delay at shutdown. */
+	break;
       }
     }
   }
@@ -591,7 +604,7 @@ static void pthread_exited(pid_t pid)
   if (main_thread_exiting &&
       __pthread_main_thread->p_nextlive == __pthread_main_thread) {
     restart(__pthread_main_thread);
-    _exit(0);
+    /* Same logic as REQ_MAIN_THREAD_EXIT. */
   }
 }
 
@@ -685,7 +698,22 @@ static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode)
 
 void __pthread_manager_sighandler(int sig)
 {
+  int kick_manager = terminated_children == 0 && main_thread_exiting;
   terminated_children = 1;
+
+  /* If the main thread is terminating, kick the thread manager loop
+     each time some threads terminate. This eliminates a two second
+     shutdown delay caused by the thread manager sleeping in the
+     call to __poll(). Instead, the thread manager is kicked into
+     action, reaps the outstanding threads and resumes the main thread
+     so that it can complete the shutdown. */
+
+  if (kick_manager) {
+    struct pthread_request request;
+    request.req_thread = 0;
+    request.req_kind = REQ_KICK;
+    __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
+  }
 }
 
 /* Adjust priority of thread manager so that it always run at a priority

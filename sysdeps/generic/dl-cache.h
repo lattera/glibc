@@ -1,5 +1,5 @@
 /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,3 +21,101 @@
 
 #define _dl_cache_check_flags(flags)			\
   ((flags) == 1 || (flags) == _DL_CACHE_DEFAULT_ID)
+
+
+#ifndef LD_SO_CACHE
+# define LD_SO_CACHE "/etc/ld.so.cache"
+#endif
+
+#define CACHEMAGIC "ld.so-1.7.0"
+
+/* libc5 and glibc 2.0/2.1 use the same format.  For glibc 2.2 another
+   format has been added in a compatible way:
+   The beginning of the string table is used for the new table:
+   	old_magic
+	nlibs
+	libs[0]
+	...
+	libs[nlibs-1]
+	new magic
+	newnlibs
+	...
+	newlibs[0]
+	...
+	newlibs[newnlibs-1]
+	string 1
+	string 2
+	...
+*/
+struct file_entry
+{
+  int flags;		/* This is 1 for an ELF library.  */
+  unsigned int key, value; /* String table indices.  */
+};
+
+struct cache_file
+{
+  char magic[sizeof CACHEMAGIC - 1];
+  unsigned int nlibs;
+  struct file_entry libs[0];
+};
+
+#define CACHEMAGIC_NEW "glibc-ld.so.cache"
+#define CACHE_VERSION "1.0"
+
+
+struct file_entry_new
+{
+  int flags;			/* This is 1 for an ELF library.  */
+  unsigned int key, value;	/* String table indices.  */
+  unsigned long hwcap;		/* Hwcap entry.  */
+};
+
+struct cache_file_new
+{
+  char magic[sizeof CACHEMAGIC_NEW - 1];
+  char version[sizeof CACHE_VERSION - 1];
+  unsigned int nlibs;		/* Number of entries.  */
+  unsigned int len_strings;	/* Size of string table. */
+  unsigned int unused[4];	/* Leave space for future extensions.  */
+  struct file_entry_new libs[0]; /* Entries describing libraries.  */
+  /* After this the string table of size len_strings is found.  */
+};
+
+static int
+_dl_cache_libcmp (const char *p1, const char *p2)
+{
+  while (*p1 != '\0')
+    {
+      if (*p1 >= '0' && *p1 <= '9')
+        {
+          if (*p2 >= '0' && *p2 <= '9')
+            {
+	      /* Must compare this numerically.  */
+	      int val1;
+	      int val2;
+
+	      val1 = *p1++ - '0';
+	      val2 = *p2++ - '0';
+	      while (*p1 >= '0' && *p1 <= '9')
+	        val1 = val1 * 10 + *p1++ - '0';
+	      while (*p2 >= '0' && *p2 <= '9')
+	        val2 = val2 * 10 + *p2++ - '0';
+	      if (val1 != val2)
+		return val1 - val2;
+	    }
+	  else
+            return 1;
+        }
+      else if (*p2 >= '0' && *p2 <= '9')
+        return -1;
+      else if (*p1 != *p2)
+        return *p1 - *p2;
+      else
+	{
+	  ++p1;
+	  ++p2;
+	}
+    }
+  return *p1 - *p2;
+}

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -37,10 +37,8 @@ extern void init_cache (void);
 
 extern void save_cache (const char *cache_name);
 
-extern void add_to_cache (const char *path, const char *lib, int flags);
-
-extern int cache_libcmp (const char *p1, const char *p2);
-
+extern void add_to_cache (const char *path, const char *lib, int flags,
+			  unsigned long int hwcap);
 
 /* Declared in readlib.c.  */
 extern int process_file (const char *file_name, const char *lib, int *flag,
@@ -54,6 +52,8 @@ extern int process_elf_file (const char *file_name, const char *lib, int *flag,
 /* Declared in ldconfig.c.  */
 extern int opt_verbose;
 
+extern int opt_format;
+
 /* Prototypes for a few program-wide used functions.  */
 extern void *xmalloc (size_t __n);
 extern void *xcalloc (size_t __n, size_t __size);
@@ -61,4 +61,3 @@ extern void *xrealloc (void *__p, size_t __n);
 extern char *xstrdup (const char *__str);
 
 #endif /* ! _LDCONFIG_H  */
-

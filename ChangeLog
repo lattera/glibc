@@ -1,3 +1,68 @@
+2000-05-06  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_open.c (__gconv_open): If __gconv_find_transform
+	returned != __GCONV_OK, there is nothing to clean up.
+
+2000-05-06  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/tst-gettext.c (main): Disable possibly existing LC_CTYPE and
+	OUTPUT_CHARSET environment variables.
+
+2000-05-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/dl-cache.h (struct file_entry_new): New.
+	(struct cache_file_new): New.
+	(struct file_entry): New (moved from cache.c).
+	(struct cache_file): New (moved from cache.c).
+
+	* sysdeps/generic/dl-cache.c (SEARCH_CACHE): New macro, broken out
+	from _dl_load_cache_lookup.
+	(_dl_load_cache_lookup): Move search to SEARCH_CACHE macro, handle
+	the different cache formats.
+	New variable cache_new for new format.
+
+	* elf/ldconfig.h: Change according to changes in cache.c and
+	ldconfig.c; remove cache_libcmp; add opt_format.
+
+	* elf/ldconfig.c: Include "dl-cache.h" and "dl-procinfo.h"; remove
+	stuff that's defined in those headers.
+	Add hwcap to struct lib_entry.
+	(opt_format): New variable to select cache format.
+	(options): Add format parameter.
+	(is_hwcap): New function.
+	(path_hwcap): New function.
+	(parse_opt): Handle new format parameter.
+	(search_dir): Handle hwcap, search also subdirectories with hwcap.
+
+	* elf/cache.c (_GNU_SOURCE): Removed.  Not needed anymore since
+	ldconfig is part of glibc.
+	Include dl-cache.h and remove stuff that's defined there.
+	(struct cache_entry): Add new member hwcap.
+	(print_entry): Print hwcap, cleanup a bit.
+	(print_cache): Print new and old formats.
+	(compare): Use _dl_cache_libcmp from dl-cache.h; handle hwcap.
+	(save_cache): Save new and old formats.
+	(add_to_cache): Handle hwcap.
+
+	* sysdeps/generic/dl-cache.c (_dl_cache_libcmp): Moved from here...
+	* sysdeps/generic/dl-cache.h (_dl_cache_libcmp): ...to here.
+	* sysdeps/generic/dl-cache.c (LD_SO_CACHE): Moved from here...
+	* sysdeps/generic/dl-cache.h (LD_SO_CACHE): ...to here.
+	* sysdeps/generic/dl-cache.c (CACHEMAGIC): Moved from here...
+	* sysdeps/generic/dl-cache.h (CACHEMAGIC): ...to here.
+
+2000-05-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c (alignof): New macro.
+	(_nl_find_msg): Use it instead of __alignof__. Pass correct output
+	buffer length to __gconv/iconv. If malloc (freemem_size) fails, set
+	freemem_size to 0.
+
+2000-05-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c (dcigettext): Fix interpretation of tsearch
+	return value.
+
 2000-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/dcigettext.c (DCIGETTEXT): Always define local variable `index'.
