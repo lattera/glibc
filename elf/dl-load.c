@@ -297,7 +297,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	  cp = strcpy (curwd, ".");
 	}
 
-      /* Remove trailing slashes.  */
+      /* Remove trailing slashes (except for "/").  */
       while (len > 1 && cp[len - 1] == '/')
 	--len;
 
@@ -321,8 +321,8 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	    continue;
 	}
 
-      /* Now add one.  */
-      if (len > 0)
+      /* Now add one if there is none so far.  */
+      if (len > 0 && cp[len - 1] != '/')
 	cp[len++] = '/';
 
       /* See if this directory is already known.  */
@@ -609,7 +609,7 @@ _dl_init_paths (const char *llp)
 static
 #endif
 struct link_map *
-_dl_map_object_from_fd (char *name, int fd, char *realname,
+_dl_map_object_from_fd (const char *name, int fd, char *realname,
 			struct link_map *loader, int l_type)
 {
   struct link_map *l = NULL;
@@ -727,7 +727,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 #endif
 
   /* Enter the new object in the list of loaded objects.  */
-  l = _dl_new_object (realname, name, l_type, loader != NULL);
+  l = _dl_new_object (realname, name, l_type);
   if (! l)
     lose (ENOMEM, "cannot create shared object descriptor");
   l->l_opencount = 1;
@@ -995,7 +995,10 @@ print_search_path (struct r_search_path_elem **list,
 	if ((*list)->status[cnt] != nonexisting)
 	  {
 	    char *cp = __mempcpy (endp, capstr[cnt].str, capstr[cnt].len);
-	    cp[-1] = '\0';
+	    if (cp == buf || (cp == buf + 1 && buf[0] == '/'))
+	      cp[0] = '\0';
+	    else
+	      cp[-1] = '\0';
 	    _dl_debug_message (0, first ? "" : ":", buf, NULL);
 	    first = 0;
 	  }
@@ -1211,7 +1214,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       /* If dynamically linked, try the DT_RPATH of the executable itself
 	 and the LD_LIBRARY_PATH environment variable.  */
       l = _dl_loaded;
-      if (fd == -1 && l && l->l_type != lt_loaded
+      if (fd == -1 && l && l->l_type != lt_loaded && l != loader
 	  && l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
 	fd = open_path (name, namelen, preloaded, l->l_rpath_dirs, &realname);
 
@@ -1277,8 +1280,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL
-	      || (l = _dl_new_object (name_copy, name, type,
-				      loader != NULL)) == NULL)
+	      || (l = _dl_new_object (name_copy, name, type)) == NULL)
 	    _dl_signal_error (ENOMEM, name,
 			      "cannot create shared object descriptor");
 	  /* We use an opencount of 0 as a sign for the faked entry.  */

@@ -1,3 +1,20 @@
+1998-09-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (fillin_rpath): Handle "/" as RPATH correctly.
+	(_dl_map_object_from_fd): Make NAME argument const.
+	Remove last parameter in _dl_new_object call.
+	(print_search_path): Correct construction of composed path name.
+	(_dl_map_object): Prevent looking at RPATH of the main map twice.
+	Remove last parameter in _dl_new_object call.
+	* elf/dl-object.c: Remove last parameter.  Determine whether create
+	origin entry based on empty realname.  Handle file in root directory
+	correctly.
+	* elf/ldsodefs.h: Adjust prototype for _dl_new_object.
+	* elf/rtld.c (dl_main): Add comment describing reason for memory leak.
+	Remove last parameter in _dl_new_object call.
+	* sysdeps/generic/dl-origin.h: Handle file in root directory correctly.
+	* sysdeps/unix/sysv/linux/dl-origin.h: Likewise.
+
 1998-09-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-close.c (_dl_close): Add more comments and correct some.

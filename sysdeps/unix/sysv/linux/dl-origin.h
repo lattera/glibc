@@ -37,13 +37,15 @@ get_origin (void)
       result = (char *) malloc (last_slash - linkval + 1);
       if (result == NULL)
 	result = (char *) -1;
+      else if (last_slash == linkval)
+	memcpy (result, "/", 2);
       else
 	*((char *) __mempcpy (result, linkval, last_slash - linkval)) = '\0';
     }
   else
     {
       result = (char *) -1;
-      /* We use te environment variable LD_ORIGIN_PATH.  If it is set make
+      /* We use the environment variable LD_ORIGIN_PATH.  If it is set make
 	 a copy and strip out trailing slashes.  */
       if (_dl_origin_path != NULL)
 	{
@@ -54,7 +56,7 @@ get_origin (void)
 	  else
 	    {
 	      char *cp = __mempcpy (result, _dl_origin_path, len);
-	      while (cp > result && cp[-1] == '/')
+	      while (cp > result + 1 && cp[-1] == '/')
 		--cp;
 	      *cp = '\0';
 	    }

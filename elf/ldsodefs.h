@@ -356,11 +356,9 @@ extern struct link_map **_dl_object_relocation_scope (struct link_map *map)
 
 
 /* Allocate a `struct link_map' for a new object being loaded,
-   and enter it into the _dl_loaded list.  If find origin is nonzero
-   determine the origin of the file.  */
+   and enter it into the _dl_loaded list.  */
 extern struct link_map *_dl_new_object (char *realname, const char *libname,
-					int type, int find_origin)
-     internal_function;
+					int type) internal_function;
 
 /* Relocate the given object (if it hasn't already been).
    SCOPE is passed to _dl_lookup_symbol in symbol lookups.

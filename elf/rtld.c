@@ -417,6 +417,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 
       phdr = main_map->l_phdr;
       phent = main_map->l_phnum;
+      /* We overwrite here a pointer to a malloc()ed string.  But since
+	 the malloc() implementation used at this point is the dummy
+	 implementations which has no real free() function it does not
+	 makes sense to free the old string first.  */
       main_map->l_name = (char *) "";
       *user_entry = main_map->l_entry;
     }
@@ -424,7 +428,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      main_map = _dl_new_object ((char *) "", "", lt_executable, 0);
+      main_map = _dl_new_object ((char *) "", "", lt_executable);
       if (main_map == NULL)
 	_dl_sysdep_fatal ("cannot allocate memory for link map\n", NULL);
       main_map->l_phdr = phdr;

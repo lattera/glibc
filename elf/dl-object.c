@@ -33,7 +33,7 @@ struct link_map *_dl_default_scope[5];
 
 struct link_map *
 internal_function
-_dl_new_object (char *realname, const char *libname, int type, int find_origin)
+_dl_new_object (char *realname, const char *libname, int type)
 {
   size_t libname_len = strlen (libname) + 1;
   struct link_map *new = calloc (sizeof *new, 1);
@@ -63,7 +63,7 @@ _dl_new_object (char *realname, const char *libname, int type, int find_origin)
     }
 
   /* Don't try to find the origin for the main map.  */
-  if (! find_origin)
+  if (realname[0] == '\0')
     new->l_origin = NULL;
   else
     {
@@ -117,9 +117,16 @@ _dl_new_object (char *realname, const char *libname, int type, int find_origin)
 	}
 
       if (origin != (char *) -1)
-	/* Now remove the filename and the slash.  Do this even if the
-	   string is something like "/foo" which leaves an empty string.  */
-	*strrchr (origin, '/') = '\0';
+	{
+	  /* Now remove the filename and the slash.  Do this even if the
+	     string is something like "/foo" which leaves an empty string.  */
+	  char *last = strrchr (origin, '/');
+
+	  if (last == origin)
+	    origin[1] = '\0';
+	  else
+	    *last = '\0';
+	}
 
       new->l_origin = origin;
     }
