@@ -46,8 +46,8 @@ aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name \
 others		= localedef locale
 #others-static	= localedef locale
 install-bin	= localedef locale
-extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
-		  $(lib-modules:=.o)
+extra-objs	= $(localedef-modules:=.o) $(localedef-aux:=.o) \
+		  $(locale-modules:=.o) $(lib-modules:=.o)
 
 extra-libs	= libBrokenLocale
 extra-libs-others = $(extra-libs)

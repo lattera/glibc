@@ -1,3 +1,8 @@
+2002-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Don't use rule for crt%.o, spell it out as rules for
+	crti.o and crtn.o.
+
 2002-08-30  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (extra-objs, omit-deps): Add crtn.
@@ -12,8 +17,8 @@
 
 2002-08-30  Jakub Jelinek  <jakub@redhat.com>
 
-        * pthread.c (__pthread_initialize_minimal): Call __uselocale even
-        if [! SHARED].
+	* pthread.c (__pthread_initialize_minimal): Call __uselocale even
+	if [! SHARED].
 
 2002-08-30  Roland McGrath  <roland@redhat.com>
 
