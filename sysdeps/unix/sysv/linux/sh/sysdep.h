@@ -160,7 +160,7 @@
 	 mov _IMM1,r0; \
 	.align 2; \
      0: .long _GLOBAL_OFFSET_TABLE_; \
-     1: .long PLTJMP(C_SYMBOL_NAME(__errno_location))-(2b+2-.)
+     1: .long PLTJMP(C_SYMBOL_NAME(__errno_location))-(2b-.)
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
 #  endif

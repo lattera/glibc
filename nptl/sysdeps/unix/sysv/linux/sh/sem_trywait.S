@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,7 +83,7 @@ __new_sem_trywait:
 	.long	errno@GOTTPOFF
 #else
 .Lerrloc1:
-	.long	__errno_location@PLT-(.Lerrloc1b+2-.)
+	.long	__errno_location@PLT-(.Lerrloc1b-.)
 #endif
 	.size	__new_sem_trywait,.-__new_sem_trywait
 	versioned_symbol(libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1)

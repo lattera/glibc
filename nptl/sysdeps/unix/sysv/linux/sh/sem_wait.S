@@ -155,7 +155,7 @@ __new_sem_wait:
 	.long	errno@GOTTPOFF
 #else
 .Lerrloc0:
-	.long	__errno_location@PLT-(.Lerrloc0b+2-.)
+	.long	__errno_location@PLT-(.Lerrloc0b-.)
 #endif
 .Lenable0:
 	.long	__pthread_enable_asynccancel-.Lenable0b

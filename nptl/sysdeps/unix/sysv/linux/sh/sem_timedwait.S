@@ -228,7 +228,7 @@ sem_timedwait:
 	.long	errno@GOTTPOFF
 #else
 .Lerrloc2:
-	.long	__errno_location@PLT-(.Lerrloc2b+2-.)
+	.long	__errno_location@PLT-(.Lerrloc2b-.)
 #endif
 .Lenable0:
 	.long	__pthread_enable_asynccancel-.Lenable0b

@@ -210,7 +210,7 @@ __pthread_once:
 
 	.align	2
 .Lsigsetjmp:
-	.long	__sigsetjmp@PLT-(.Lsigsetjmp0+2-.)
+	.long	__sigsetjmp@PLT-(.Lsigsetjmp0-.)
 .Lcpush:
 	.long	HIDDEN_JUMPTARGET(__pthread_register_cancel)-.Lcpush0
 .Lcpop:

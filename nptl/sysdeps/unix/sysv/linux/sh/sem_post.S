@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -81,7 +81,7 @@ __new_sem_post:
 	.long	errno@GOTTPOFF
 #else
 .Lerrloc3:
-	.long	__errno_location@PLT-(.Lerrloc3b+2-.)
+	.long	__errno_location@PLT-(.Lerrloc3b-.)
 #endif
 	.size	__new_sem_post,.-__new_sem_post
 	versioned_symbol(libpthread, __new_sem_post, sem_post, GLIBC_2_1)

@@ -114,7 +114,7 @@
 	 mov r0,r2; \
 	.align 2; \
      1: .long _GLOBAL_OFFSET_TABLE_; \
-     2: .long __local_enable_asynccancel@PLT - (0b+2-.); \
+     2: .long __local_enable_asynccancel@PLT - (0b-.); \
      3: mov.l @r15+,r12
 
 #  define CDISABLE \
@@ -129,7 +129,7 @@
 	 nop; \
 	.align 2; \
      1: .long _GLOBAL_OFFSET_TABLE_; \
-     2: .long __local_disable_asynccancel@PLT - (0b+2-.); \
+     2: .long __local_disable_asynccancel@PLT - (0b-.); \
      3: mov.l @r15+,r12
 # else
 #  define CENABLE \
