@@ -1,0 +1,46 @@
+libc {
+  GLIBC_2.0 {
+    __mach_msg; mach_msg; __mach_reply_port; mach_reply_port;
+    __mach_task_self_; __mach_thread_self; mach_thread_self;
+    mach_host_self; __mach_host_self;
+    swtch_pri; __swtch_pri; swtch; __swtch;
+    thread_switch; __thread_switch;
+
+    mig_init;
+    __mig_allocate; __mig_deallocate; mig_deallocate; mig_allocate;
+    __mig_get_reply_port; __mig_put_reply_port; __mig_dealloc_reply_port;
+    mig_get_reply_port; mig_put_reply_port; mig_dealloc_reply_port;
+
+    mach_msg_server_timeout; mach_msg_server;
+    get_privileged_ports; __get_privileged_ports;
+    mach_setup_thread; __mach_setup_thread;
+    mach_open_devstream;
+
+    vm_page_size; __vm_page_size;
+
+    __spin_lock_solid;
+
+    # system call shortcuts
+    vm_map; __vm_map;
+    vm_allocate; __vm_allocate;
+    vm_deallocate; __vm_deallocate;
+    task_create; __task_create;
+    task_terminate; __task_terminate;
+    task_suspend; __task_suspend;
+    task_set_special_port; __task_set_special_port;
+    mach_port_allocate; __mach_port_allocate;
+    mach_port_deallocate; __mach_port_deallocate;
+    mach_port_insert_right; __mach_port_insert_right;
+    mach_port_allocate_name; __mach_port_allocate_name;
+    thread_depress_abort; __thread_depress_abort;
+
+    # Placeholders for the Hurd libthreads implementation.
+    cthread_getspecific; cthread_keycreate; cthread_setspecific;
+    __libc_getspecific;
+
+    # Function versions of Mach macros.
+    __mutex_init; __mutex_trylock;
+    __mutex_lock; __mutex_unlock;
+    __mutex_lock_solid; __mutex_unlock_solid;
+  }
+}

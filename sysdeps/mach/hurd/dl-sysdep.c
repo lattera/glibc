@@ -504,11 +504,11 @@ off_t weak_function
 __lseek (int fd, off_t offset, int whence)
 {
   error_t err;
-  
+
   err = __io_seek ((mach_port_t) fd, offset, whence, &offset);
   if (err)
     return __hurd_fail (err);
-  
+
   return offset;
 }
 
@@ -574,9 +574,9 @@ int weak_function
 __fxstat (int vers, int fd, struct stat *buf)
 {
   error_t err;
-  
+
   assert (vers == _STAT_VER);
-  
+
   err = __io_stat ((mach_port_t) fd, buf);
   if (err)
     return __hurd_fail (err);
@@ -589,7 +589,7 @@ __xstat (int vers, const char *file, struct stat *buf)
 {
   error_t err;
   mach_port_t port;
-  
+
   assert (vers == _STAT_VER);
 
   err = open_file (file, 0, &port, buf);
@@ -606,7 +606,7 @@ __getpid ()
 {
   pid_t pid, ppid;
   int orphaned;
-  
+
   if (__proc_getpids (_dl_hurd_data->portarray[INIT_PORT_PROC],
 		      &pid, &ppid, &orphaned))
     return -1;
@@ -645,7 +645,7 @@ abort (void)
     /* Try for ever and ever.  */
     ABORT_INSTRUCTION;
 }
-
+
 /* This function is called by interruptible RPC stubs.  For initial
    dynamic linking, just use the normal mach_msg.  Since this defn is
    weak, the real defn in libc.so will override it if we are linked into
@@ -664,7 +664,13 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		     timeout, notify);
 }
 
-
+char * weak_function
+__getcwd (char *buf, size_t size) /* XXX loser elf/dl-object.c */
+{
+  abort ();
+  return NULL;
+}
+
 void
 internal_function
 _dl_show_auxv (void)
