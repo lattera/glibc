@@ -92,10 +92,10 @@
 #define MAX_NR_ALIASES	48
 #define MAX_NR_ADDRS	48
 
-#if PACKETSZ > 1024
+#if PACKETSZ > 65536
 # define MAXPACKET	PACKETSZ
 #else
-# define MAXPACKET	1024
+# define MAXPACKET	65536
 #endif
 /* As per RFC 1034 and 1035 a host name cannot exceed 255 octets in length.  */
 #ifdef MAXHOSTNAMELEN

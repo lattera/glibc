@@ -85,10 +85,10 @@ static const char rcsid[] = "$BINDId: res_query.c,v 8.20 2000/02/29 05:39:12 vix
 /* Options.  Leave them on. */
 /* #undef DEBUG */
 
-#if PACKETSZ > 1024
+#if PACKETSZ > 65536
 #define MAXPACKET	PACKETSZ
 #else
-#define MAXPACKET	1024
+#define MAXPACKET	65536
 #endif
 
 /*

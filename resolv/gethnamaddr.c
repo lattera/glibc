@@ -115,10 +115,10 @@ static void map_v4v6_hostent __P((struct hostent *hp, char **bp, int *len));
 extern void addrsort __P((char **, int));
 #endif
 
-#if PACKETSZ > 1024
+#if PACKETSZ > 65536
 #define	MAXPACKET	PACKETSZ
 #else
-#define	MAXPACKET	1024
+#define	MAXPACKET	65536
 #endif
 
 /* As per RFC 1034 and 1035 a host name cannot exceed 255 octets in length.  */
