@@ -1,5 +1,7 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add missing comma.
+
 	* malloc/memusage.c (me): Use access() to determine whether we
 	should write the output file or not.
 

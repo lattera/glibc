@@ -5,7 +5,7 @@
   "LOCPATH",								      \
   "MALLOC_TRACE",							      \
   "NLSPATH",								      \
-  "RESOLV_HOST_CONF"							      \
+  "RESOLV_HOST_CONF",							      \
   "RES_OPTIONS",							      \
   "TMPDIR",								      \
   "TZDIR"
