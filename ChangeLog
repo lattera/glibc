@@ -1,3 +1,9 @@
+2002-11-19  Jim Meyering  <jim@meyering.net>
+
+	* time/mktime.c (__mon_yday, __mktime_internal) [!_LIBC]: Declare
+	as `static'.
+	* time/strptime.c (__mon_yday) [!_LIBC]: Declare as `static'.
+
 2002-11-23  Roland McGrath  <roland@redhat.com>
 
 	* scripts/abilist.awk: Avoid strtonum function, not there in mawk.
