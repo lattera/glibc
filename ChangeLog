@@ -1,3 +1,7 @@
+2001-06-20  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/settimeofday.c: Include time.h.
+
 2001-06-19  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-64/dl-cache.h: New file.
