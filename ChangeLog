@@ -1,3 +1,9 @@
+2001-07-23  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/iconvconfig.c: Include <sys/cdefs.h> and use
+	__attribute_malloc__ for older GCC versions.
+	* iconv/strtab.c: Likewise.
+
 2001-07-22  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): Support SA_RESETHAND
