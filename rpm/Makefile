@@ -90,3 +90,7 @@ glibc-$(version).$(config).rpm: $(config) rpmrc $(instfiles)
 
 # Avoid time-consuming implicit rule search.
 $(instfiles) : ;
+
+.PHONY: clean
+clean:
+	rm -f $(config) glibc-$(version).$(config).rpm
