@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,12 +23,12 @@
 ENTRY (__mmap)
 
 	/* Because we can only get five args through the syscall interface, and
-	   mmap() takes six, we need to build a parameter block and pass its	
+	   mmap() takes six, we need to build a parameter block and pass its
 	   address instead.  The 386 port does a similar trick.  */
 
 	/* This code previously moved sp into ip and stored the args using
-	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had 
-	   to be restored after the syscall completed.  It saved an 
+	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had
+	   to be restored after the syscall completed.  It saved an
 	   instruction and meant no stack cleanup work was required.
 
 	   This will not work in the case of a mmap call being interrupted
@@ -47,10 +47,9 @@ ENTRY (__mmap)
 	add	sp, sp, #16
 
 	cmn	r0, $4096
-	bhs	PLTJMP(syscall_error);
-	ret
+	RETINSTR(movcc, pc, lr)
+	b	PLTJMP(syscall_error);
 
 PSEUDO_END (__mmap)
 
 weak_alias (__mmap, mmap)
-weak_alias (__mmap, mmap64)
