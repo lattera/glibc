@@ -87,7 +87,7 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(descr) \
+# define TLS_INIT_TP(descr, firstcall) \
   ({									      \
     void *_descr = (descr);						      \
     int result;								      \

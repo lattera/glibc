@@ -1,5 +1,11 @@
 2002-08-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (_dl_start): Pass extra argument 1 to TLS_INIT_TP.
+	(dl_main): Padd extra argument 0 to TLS_INIT_TP.
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Pass extra
+	argument 1 to TLS_INIT_TP.
+	* sysdeps/generic/tls.h (TLS_INIT_TP): Describe new parameter.
+
 	* sysdeps/generic/dl-tls.c (allocate_dtv): Optimize a bit.
 
 	* elf/Versions [ld] (GLIBC_PRIVATE): Add _dl_get_tls_static_info.
@@ -47,7 +53,7 @@
 	* libio/tst-mmap-offend.c: New file.
 	* libio/Makefile (tests): Add it.
 
-	* locale/loadarchive.c (_nl_load_locale_from_archive) Store strdup of
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Store strdup of
 	the name as passed, rather than the name in the archive dictionary.
 
 2002-08-15  Ulrich Drepper  <drepper@redhat.com>

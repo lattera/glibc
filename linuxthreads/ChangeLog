@@ -1,5 +1,14 @@
 2002-08-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/tls.h (TLS_INIT_TP): Add new parameter and pass it on
+	to TLS_SETUP_GS_SEGMENT.
+	(TLS_SETUP_GS_SEGMENT): Add new parameter and pass it on to
+	TLS_DO_SET_THREAD_AREA.
+	(TLS_DO_SET_THREAD_AREA): If new parameter is zero determine
+	entry number from %gs value.
+	* sysdeps/sh/tls.h (TLS_INIT_TP): Add new parameter and simply
+	ignore it.
+
 	* manager.c (pthread_handle_create): Pass NULL to _dl_allocate_tls.
 	Pass true to _dl_deallocate_tls.
 	(pthread_free): Likewise.

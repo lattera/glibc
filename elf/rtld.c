@@ -262,11 +262,12 @@ _dl_start (void *arg)
 	INSTALL_DTV ((char *) tlsblock + bootstrap_map.l_tls_offset,
 		     initdtv);
 
-	if (TLS_INIT_TP ((char *) tlsblock + bootstrap_map.l_tls_offset) != 0)
+	if (TLS_INIT_TP ((char *) tlsblock + bootstrap_map.l_tls_offset, 1)
+	    != 0)
 	  _dl_fatal_printf ("cannot setup thread-local storage\n");
 # elif TLS_DTV_AT_TP
 	INSTALL_DTV (tlsblock, initdtv);
-	if (TLS_INIT_TP (tlsblock) != 0)
+	if (TLS_INIT_TP (tlsblock, 1) != 0)
 	  _dl_fatal_printf ("cannot setup thread-local storage\n");
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
@@ -1475,7 +1476,7 @@ cannot allocate TLS data structures for initial thread");
       _dl_allocate_tls_init (tcbp);
 
       /* And finally install it for the main thread.  */
-      TLS_INIT_TP (tcbp);
+      TLS_INIT_TP (tcbp, 0);
     }
 #endif
 

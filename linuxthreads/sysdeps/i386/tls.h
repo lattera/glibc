@@ -115,12 +115,16 @@ typedef struct
   __builtin_expect (result, 0) != 0 ? -1 : nr * 8 + 7;			      \
 })
 
-#  define TLS_DO_SET_THREAD_AREA(descr)					      \
+#  define TLS_DO_SET_THREAD_AREA(descr, firstcall)			      \
 ({									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { -1, (unsigned long int) (descr), sizeof (struct _pthread_descr_struct), \
       1, 0, 0, 0, 0, 1, 0 };						      \
   int result;								      \
+  if (!firstcall)							      \
+    ldt_entry.entry_number = ({ int _gs;				      \
+				asm ("movw %%gs, %w0" : "=q" (_gs));	      \
+				(_gs & 0xffff) >> 3; });		      \
   asm volatile (TLS_LOAD_EBX						      \
 		"int $0x80\n\t"						      \
 		TLS_LOAD_EBX						      \
@@ -134,10 +138,11 @@ typedef struct
 })
 
 #  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
-#   define TLS_SETUP_GS_SEGMENT(descr) TLS_DO_SET_THREAD_AREA (descr)
+#   define TLS_SETUP_GS_SEGMENT(descr, firstcall) \
+  TLS_DO_SET_THREAD_AREA (descr, firstcall)
 #  elif defined __NR_set_thread_area
-#   define TLS_SETUP_GS_SEGMENT(descr) \
-  ({ int __seg = TLS_DO_SET_THREAD_AREA (descr); \
+#   define TLS_SETUP_GS_SEGMENT(descr, firstcall) \
+  ({ int __seg = TLS_DO_SET_THREAD_AREA (descr, firstcall); \
      __seg == -1 ? TLS_DO_MODIFY_LDT (descr, 0) : __seg; })
 #  else
 #   define TLS_SETUP_GS_SEGMENT(descr) TLS_DO_MODIFY_LDT ((descr), 0)
@@ -146,7 +151,7 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-#  define TLS_INIT_TP(descr)						      \
+#  define TLS_INIT_TP(descr, firstcall)					      \
   ({									      \
     void *_descr = (descr);						      \
     tcbhead_t *head = _descr;						      \
@@ -156,7 +161,7 @@ typedef struct
     /* For now the thread descriptor is at the same address.  */	      \
     head->self = _descr;						      \
 									      \
-    __gs = TLS_SETUP_GS_SEGMENT (_descr);				      \
+    __gs = TLS_SETUP_GS_SEGMENT (_descr, firstcall);			      \
     if (__builtin_expect (__gs, 7) != -1)				      \
       {									      \
 	asm ("movw %w0, %%gs" : : "q" (__gs));				      \
