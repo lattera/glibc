@@ -57,4 +57,13 @@ struct sigcontext
   unsigned long int sc_mask;	/* signal mask to restore after handler returns */
 };
 
+/* sc_flag bit definitions. */
+#define IA64_SC_FLAG_ONSTACK_BIT	0	/* is handler running on signal stack? */
+#define IA64_SC_FLAG_IN_SYSCALL_BIT	1	/* did signal interrupt a syscall? */
+#define IA64_SC_FLAG_FPH_VALID_BIT	2	/* is state in f[32]-f[127] valid? */
+
+#define IA64_SC_FLAG_ONSTACK		(1 << IA64_SC_FLAG_ONSTACK_BIT)
+#define IA64_SC_FLAG_IN_SYSCALL		(1 << IA64_SC_FLAG_IN_SYSCALL_BIT)
+#define IA64_SC_FLAG_FPH_VALID		(1 << IA64_SC_FLAG_FPH_VALID_BIT)
+
 #endif /* _BITS_SIGCONTEXT_H */

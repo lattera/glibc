@@ -1,3 +1,16 @@
+2002-02-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/test-a64l.c (tests): Add more test cases.
+
+	* sunrpc/rtime.c (rtime): Change type of thetime to uint32_t.
+	Reported by Walter Harms <WHarms@bfs.de>.
+
+2002-02-11  Jes Sorensen  <jes@trained-monkey.org>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: Add sc_flag bit
+	definitions for struct sigcontext.
+	Suggested by David Mosberger-Tang.
+
 2002-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c (remove_slotinfo): New function.  Handles everything

@@ -1,5 +1,5 @@
 /* Test program for the l64a and a64l functions.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@suse.de>.
 
@@ -38,6 +38,12 @@ static const struct a64l_test tests[] =
     { "", 0 },
     { "/", 1 },
     { "FT", 2001 },
+    { "zzzzz1", 0xffffffff },
+    { "zzzz1", 0x3ffffff },
+    { "zzz1", 0xfffff },
+    { "zz1", 0x3fff },
+    { "z1", 0xff },
+    { "1", 0x3 },
     { NULL, 0 }
   };
 
