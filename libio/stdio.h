@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #define EOF (-1)
 #endif
 #ifndef BUFSIZ
-#define BUFSIZ 1024
+#define BUFSIZ _IO_BUFSIZ
 #endif
 
 #define _IOFBF 0 /* Fully buffered. */
@@ -234,21 +234,16 @@ extern int putc_unlocked __P ((int, FILE *));
 extern int putchar_locked __P ((int));
 extern int putchar_unlocked __P ((int));
 
-# define getc_unlocked(fp) _IO_getc_unlocked (fp)
-# define getc_locked(fp) fgetc (fp)
-# define getchar_unlocked() getc_unlocked (stdin)
-# define getchar_locked() getc_locked (stdin)
-# define getc(fp) getc_locked (fp)
-
-# define putc_unlocked(c, fp) putc_unlocked (c, fp)
-# define putc_locked(c, fp) putc_locked (c, fp)
-# define putchar_unlocked(c) putc_unlocked (c, stdout)
-# define putchar_locked(c) putc_locked (c, stdout)
-# define putc(c, fp) putc_locked (c, fp)
-
-#else
-# define getc(fp) _IO_getc_unlocked (fp)
-# define putc(c, fp) _IO_putc_unlocked (c, fp)
+# ifndef _LIBC
+#  define getc_unlocked(fp) _IO_getc_unlocked (fp)
+#  define getc_locked(fp) fgetc (fp)
+#  define getchar_unlocked() getc_unlocked (stdin)
+#  define getchar_locked() getc_locked (stdin)
+#  define getc(fp) getc_locked (fp)
+#  define putchar_unlocked(c) putc_unlocked (c, stdout)
+#  define putchar_locked(c) putc_locked (c, stdout)
+#  define putc(c, fp) putc_locked (c, fp)
+# endif
 
 #endif /* __USE_REENTRANT */
 

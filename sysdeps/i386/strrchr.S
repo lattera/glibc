@@ -1,6 +1,6 @@
-/* strchr (str, ch) -- Return pointer to last occurrence of CH in STR.
+/* strrchr (str, ch) -- Return pointer to last occurrence of CH in STR.
 For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
 This file is part of the GNU C Library.
@@ -84,7 +84,7 @@ L12:	orb %dl, %dl		/* is NUL? */
 	cmpb %dl, %cl		/* compare byte */
 	jne L13			/* target found => return */
 	movl %esi, %eax		/* remember pointer as result */
-L13:	orb %cl, %cl		/* is NUL? */
+L13:	orb %dl, %dl		/* is NUL? */
 	jz L2			/* yes => return NULL */
 	incl %esi		/* increment pointer */
 
@@ -134,7 +134,11 @@ L13:	orb %cl, %cl		/* is NUL? */
 	/* These fill bytes make the main loop be correctly aligned.
 	   We cannot use align because it is not the following instruction
 	   which should be aligned.  */
-	.byte 0, 0, 0, 0, 0, 0, 0, 0
+	.byte 0, 0
+#ifndef	PROF
+	/* Profiling adds some code and so changes the alignment.  */
+	.byte 0
+#endif
 
 L4:	subl $4, %esi		/* adjust pointer */
 L41:	subl $4, %esi

@@ -77,7 +77,7 @@ doc-only-dist = Makefile COPYING.LIB mkinstalldirs
 distribute = $(minimal-dist)	       					\
 	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
 			$(minimal-dist)))				\
-	     libc.?? libc.??s texinfo.tex summary.texi			\
+	     libc.info* libc.?? libc.??s texinfo.tex summary.texi	\
 	     stamp-summary chapters chapters-incl
 export distribute := $(distribute)
 

@@ -44,19 +44,18 @@ LINE_PARSER
      result->sp_warn = (time_t) -1;
      result->sp_inact = (time_t) -1;
      result->sp_expire = (time_t) -1;
-     result->sp_flag = (time_t) -1;
+     result->sp_flag = ~0ul;
    }
  else
    {
-     INT_FIELD (result->sp_warn, ISCOLON, 0, 10, (time_t));
-     INT_FIELD (result->sp_inact, ISCOLON, 0, 10, (time_t));
-     INT_FIELD (result->sp_expire, ISCOLON, 0, 10, (time_t));
-     while (isspace (*line))
-       ++line;
-     if (*line == '\0')
-       result->sp_flag = -1;
-     else
-       INT_FIELD (result->sp_flag, ISCOLON, 0, 10, );
+     INT_FIELD_MAYBE_NULL (result->sp_warn, ISCOLON, 0, 10, (time_t),
+			   (time_t) -1);
+     INT_FIELD_MAYBE_NULL (result->sp_inact, ISCOLON, 0, 10, (time_t),
+			   (time_t) -1);
+     INT_FIELD_MAYBE_NULL (result->sp_expire, ISCOLON, 0, 10, (time_t),
+			   (time_t) -1);
+     INT_FIELD_MAYBE_NULL (result->sp_flag, ISCOLON, 0, 10,
+			   (unsigned long int), ~0ul);
    }
  )
 

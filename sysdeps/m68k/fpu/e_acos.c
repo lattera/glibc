@@ -16,8 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
+#define __NO_M81_MATH_INLINES
 #include <math.h>
+#include "math_private.h"
 
 #ifndef	FUNC
 #define	FUNC	__ieee754_acos
@@ -27,7 +28,8 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 float_type
-DEFUN(FUNC, (x), float_type x)
+FUNC (x)
+     float_type x;
 {
   return __m81_u(FUNC)(x);
 }

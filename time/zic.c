@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.77";
+static char	elsieid[] = "@(#)zic.c	7.78";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -136,9 +136,9 @@ static void	usage P((void));
 static void	writezone P((const char * name));
 static int	yearistype P((int year, const char * type));
 
-#if !HAVE_STRERROR
+#if !(HAVE_STRERROR - 0)
 static char *	strerror P((int));
-#endif /* !HAVE_STRERROR */
+#endif /* !(HAVE_STRERROR - 0) */
 
 static int		charcnt;
 static int		errors;
@@ -375,19 +375,18 @@ char * const	ptr;
 ** Error handling.
 */
 
-#if ! HAVE_STRERROR
+#if !(HAVE_STRERROR - 0)
 static char *
 strerror(errnum)
 int	errnum;
 {
-	extern char *sys_errlist[];
-	extern int sys_nerr;
+	extern char *	sys_errlist[];
+	extern int	sys_nerr;
 
-	if (errnum > 0 && errnum <= sys_nerr)
-		return sys_errlist[errnum];
-	return "Unknown system error";
+	return (errnum > 0 && errnum <= sys_nerr) ?
+		sys_errlist[errnum] : "Unknown system error";
 }
-#endif /* ! HAVE_STRERROR */
+#endif /* !(HAVE_STRERROR - 0) */
 
 static void
 eats(name, num, rname, rnum)

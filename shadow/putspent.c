@@ -28,48 +28,48 @@ putspent (const struct spwd *p, FILE *stream)
 {
   int errors = 0;
 
-  if (fprintf (stream, "%s:%s", p->sp_namp, p->sp_pwdp) < 0)
+  if (fprintf (stream, "%s:%s:", p->sp_namp, p->sp_pwdp) < 0)
     ++errors;
 
   if ((p->sp_lstchg != (time_t) -1
-       && fprintf (stream, "%ld", p->sp_lstchg) < 0)
+       && fprintf (stream, "%ld:", p->sp_lstchg) < 0)
       || (p->sp_lstchg == (time_t) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
   if ((p->sp_min != (time_t) -1
-       && fprintf (stream, "%ld", p->sp_min) < 0)
+       && fprintf (stream, "%ld:", p->sp_min) < 0)
       || (p->sp_min == (time_t) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
   if ((p->sp_max != (time_t) -1
-       && fprintf (stream, "%ld", p->sp_max) < 0)
+       && fprintf (stream, "%ld:", p->sp_max) < 0)
       || (p->sp_max == (time_t) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
   if ((p->sp_warn != (time_t) -1
-       && fprintf (stream, "%ld", p->sp_warn) < 0)
+       && fprintf (stream, "%ld:", p->sp_warn) < 0)
       || (p->sp_warn == (time_t) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
   if ((p->sp_inact != (time_t) -1
-       && fprintf (stream, "%ld", p->sp_inact) < 0)
+       && fprintf (stream, "%ld:", p->sp_inact) < 0)
       || (p->sp_inact == (time_t) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
   if ((p->sp_expire != (time_t) -1
-       && fprintf (stream, "%ld", p->sp_expire) < 0)
+       && fprintf (stream, "%ld:", p->sp_expire) < 0)
       || (p->sp_expire == (time_t) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
-  if ((p->sp_flag != -1l
-       && fprintf (stream, "%ld", p->sp_flag) < 0)
-      || (p->sp_flag == -1l
+  if ((p->sp_flag != ~0ul
+       && fprintf (stream, "%ld:", p->sp_flag) < 0)
+      || (p->sp_flag == ~0ul
 	  && putc (':', stream) == EOF))
     ++errors;
 

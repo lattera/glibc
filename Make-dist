@@ -40,6 +40,9 @@ else
 sysdep_dirs := $(addprefix $(..),$(sysdep_dirs))
 endif
 
+# Don't distribute add-on subdirs.
+subdirs := $(filter-out $(add-ons),$(subdirs))
+
 # Make sure both stdio and libio get in, whichever is in use.
 subdirs += stdio libio
 
@@ -129,8 +132,8 @@ endif
 $(..)glibc-$(version):
 	ln -s . $@
 
-+tsrcs := $(+tsrcs) \
-	  TAGS
+#+tsrcs := $(+tsrcs) \
+#	  TAGS
 .PHONY: TAGS
 TAGS: $(..)MakeTAGS
 	$(MAKE) -f $< $@ -o subdir_TAGS
@@ -195,7 +198,7 @@ $(tardir).tar: dist.tar subdir_dist
 	@echo Files listed here have names exceeding 14 chars.
 	tar xfv $< -C /tmp | sed -n '/[^/]\{15,\}/p'
 	tar covf $@ -C /tmp $(tardir)
-	-rm -fr /tmp/$(tardir) &
+	-rm -fr /tmp/$(tardir) dist.tar &
 
 %.Z: %
 	compress -c $< > $@

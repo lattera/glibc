@@ -16,7 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#define __NO_M81_MATH_INLINES
 #include <math.h>
+#include "math_private.h"
 
 #ifndef FUNC
 #define FUNC sin
@@ -35,7 +37,7 @@ __CONCATX(__kernel_,FUNC) (x, y, iy)
 {
   float_type sin_x, cos_x, sin_y, cos_y;
   if (iy == 0)
-    return __m81_u_(__CONCATX(__,FUNC)) (x);
+    return __m81_u(__CONCATX(__,FUNC)) (x);
   __asm__ __volatile__ ("fsincosx %2,%0:%1" : "=f" (cos_x), "=f" (sin_x)
 			: "f" (x));
   __asm__ __volatile__ ("fsincosx %2,%0:%1" : "=f" (cos_y), "=f" (sin_y)

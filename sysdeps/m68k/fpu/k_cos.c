@@ -16,7 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#define __NO_M81_MATH_INLINES
 #include <math.h>
+#include "math_private.h"
 
 #ifndef FUNC
 #define FUNC cos

@@ -48,6 +48,6 @@ endif
 aux	:=								      \
 	cleanup fileops genops stdfiles stdio strops
 
-distribute := iolibio.h libioP.h strfile.h
+distribute := iolibio.h libioP.h strfile.h Banner
 
 include ../Rules

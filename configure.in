@@ -256,10 +256,6 @@ if test "$elf" = yes; then
 fi
 
 
-# Remove the leading slashes.
-sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
-
-
 # Expand the list of system names into a full list of directories
 # from each element's parent name and Implies file (if present).
 set $sysnames

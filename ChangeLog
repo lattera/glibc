@@ -1,3 +1,164 @@
+Mon Sep  9 20:31:27 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.c (banner): Report to bug-glibc@prep not @gnu.
+	Reported by Andreas Jaeger.
+
+	* libio/stdio.h [!__USE_REENTRANT]: Don't define getc as
+ 	_IO_getc_unlocked.
+	[__USE_REENTRANT]: Don't define
+
+Mon Sep  9 15:59:32 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/strrchr.c: Fix bug where NUL byte is not recognized
+	when it is the third byte in the string.  Reported by
+	NIIBE Yutaka.
+	* string/tester.c: Add tests for above bug to strlen, strchr, and
+	strrchr tests.
+
+Fri Sep  6 21:23:33 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/e_acos.c: Deansideclized.  Include
+	"math_private.h" to get prototype.
+	* sysdeps/m68k/fpu/e_fmod.c: Likewise.
+	* sysdeps/m68k/fpu/k_cos.c: Likewise.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+
+	* sysdeps/m68k/fpu/k_sin.c: Remove uneeded indirection of
+	__m81_u.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+
+Sun Sep  1 18:01:35 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h: Check for __NO_M81_MATH_INLINES
+	instead of __NO_MATH_INLINES.
+	(__M81_MATH_INLINES): Renamed from __MATH_INLINES.
+	* sysdeps/m68k/fpu/e_acos.c: Define __NO_M81_MATH_INLINES.
+	* sysdeps/m68k/fpu/e_fmod.c: Likewise.
+	* sysdeps/m68k/fpu/k_cos.c: Likewise.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+	* sysdeps/m68k/fpu/s_atan.c: Likewise.
+	* sysdeps/m68k/fpu/s_frexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogb.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_ldexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_modf.c: Likewise.
+	* sysdeps/m68k/fpu/k_cos.c: Use inline version of __cos.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+
+Mon Sep  9 12:55:14 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_files/files-parse.c (INT_FIELD_MAYBE_NULL): Check for
+	available character before converting number and return with
+	error if none is available.
+
+Fri Sep  6 22:09:08 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/init-first.h: New file, generic
+	implementation for architectures where parameters are passed on
+	stack.
+	* sysdeps/unix/sysv/linux/m68k/init-first.h: Removed.
+	* sysdeps/unix/sysv/linux/i386/init-first.h: Removed.
+
+Fri Sep  6 22:05:32 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Remove unneeded sysnames frobbing.
+
+Mon Sep  9 05:29:09 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/zic.c: Update from ADO 96l.
+	* time/africa: Update from ADO 96k.
+	* time/antarctica: Likewise.
+	* time/asia: Likewise.
+	* time/australia: Likewise.
+	* time/europe: Likewise.
+	* time/northamerica: Likewise.
+	* time/southamerica: Likewise.
+
+Mon Sep  9 05:03:47 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* sysdeps/unix/sysv/linux/i386/init-first.h: Work around buggy
+	gcc <= 2.7.2.1 which optimizes away address operations on weak
+	objects.
+
+	* nss/nss_files/files-parse.c (INT_FIELD_MAYBE_NULL): New macro.
+	Like INT_FIELD but also accept non-existing field.
+	* shadow/sgetspent_r.c (LINE_PARSER): Use INT_FIELD_MAYBE_NULL
+	for last four fields.
+	* shadow/putspent.c (putspent): Print `:' after numeric value.
+
+Mon Sep  9 02:42:48 1996  Richard Henderson  <rth@tamu.edu>
+
+	* libio/stdio.h (BUFSIZ): Define using _IO_BUFSIZ.
+
+Sun Sep  8 16:43:56 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Make-dist: Filter out $(add-ons) from $(subdirs).
+	Don't distribute TAGS files.
+	($(tardir).tar): Remove dist.tar when all is done.
+	* manual/Makefile (distribute): Add libc.info*.
+	* libio/Makefile (distribute): Add Banner.
+	* inet/Makefile (headers): Add netinet/tcp.h.
+
+	* resolv/Makefile (libresolv-routines): Add getnetnamadr.
+
+	* crypt-README: Removed.
+	* gnu-stabs.h: Removed.
+
+	* sysdeps/alpha/copysign.S: Renamed to...
+	* sysdeps/alpha/s_copysign.S: ...this.
+	* sysdeps/alpha/fabs.S: Renamed to...
+	* sysdeps/alpha/s_fabs.S: ...this.
+
+	* sysdeps/m68k/isinfl.c: Renamed to...
+	* sysdeps/m68k/s_isinfl.c: ...this.
+	* sysdeps/m68k/isnanl.c: Renamed to...
+	* sysdeps/m68k/s_isnanl.c: ...this.
+
+	* sysdeps/sparc/sqrt.c: Renamed to...
+	* sysdeps/sparc/e_sqrt.c: ...this.  Function name now is
+	__ieee754_sqrt.
+
+	* sysdeps/generic/get_str.c: Removed.
+
+	* sysdeps/ieee754/cbrt.c: Removed.
+	* sysdeps/ieee754/drem.c: Removed.
+	* sysdeps/ieee754/logb.c: Removed.
+	* sysdeps/ieee754/sqrt.c: Removed.
+
+	* sysdeps/stub/cbrt.c: Removed.
+	* sysdeps/stub/cos.c: Removed.
+	* sysdeps/stub/drem.c: Removed.
+	* sysdeps/stub/isinf.c: Removed.
+	* sysdeps/stub/isinfl.c: Removed.
+	* sysdeps/stub/isnanl.c: Removed.
+	* sysdeps/stub/logb.c: Removed.
+	* sysdeps/stub/sin.c: Removed.
+	* sysdeps/stub/sqrt.c: Removed.
+
+	* sysdeps/tahoe/log10.c: Removed.
+
+	* sysdeps/vax/index.s: Removed.
+	* sysdeps/vax/rindex.s: Removed.
+	* sysdeps/vax/bcmp.s: Removed.
+	* sysdeps/vax/log10.c: Removed.
+	* sysdeps/vax/infnan.c: Removed.
+	* sysdeps/vax/Dist: Add fl.h.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add llseek.S.
+
+	* inet/rcmd.c (rcmd): Make messages more uniform.
+
+Sun Sep  8 14:15:42 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/de.po: Update.
+	* po/es.po: Update.
+	* po/ko.po: Update.
+	* po/pl.po: New file.
+	* po/nl.po: New file.
+
 Sat Sep  7 18:41:17 1996  Richard Henderson  <rth@tamu.edu>
 
 	* Makeconfig (+link): Filter out start, pre & postinit from the
@@ -11,7 +172,7 @@ Sun Sep  8 02:36:02 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/SYS_libc.c (_libc_intl_domainname): Change value to "libc".
 	This is consistent with all other GNU packages.  We shouldn't
-	take care for a possible clash.  Somebody will name the domain
+	take care for a possible clash.  Nobody will name the domain
 	of a package libc if it is not the libc itself.
 	* MakeTAGS ($P/SYS_libc.pot): Rename to $P/libc.pot.
 	* po/Makefile (domainname): Change to libc.

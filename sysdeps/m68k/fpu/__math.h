@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sys/cdefs.h>
 
-#ifdef	__NO_MATH_INLINES
+#ifdef	__NO_M81_MATH_INLINES
 /* This is used when defining the functions themselves.  Define them with
    __ names, and with `static inline' instead of `extern inline' so the
    bodies will always be used, never an external function call.  */
@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
 #else
 #define	__m81_u(x)	x
 #define __m81_inline	extern __inline
-#define	__MATH_INLINES	1
+#define	__M81_MATH_INLINES	1
 #endif
 
 /* Define a const math function.  */

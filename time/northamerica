@@ -1,4 +1,4 @@
-# @(#)northamerica	7.26
+# @(#)northamerica	7.27
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -202,9 +202,9 @@ Zone America/Los_Angeles -7:52:58 -	LMT	1883 Nov 18 12:00
 #
 # From Paul Eggert (1995-12-19):
 # Howse writes that Alaska switched from the Julian to the Gregorian calendar,
-# and from east-of-GMT to west-of-GMT days, in 1867 when the US purchased it
-# from Russia.  We omit this transition, since we can't represent changes
-# from Julian to Gregorian.
+# and from east-of-GMT to west-of-GMT days, when the US bought it from Russia.
+# This was on 1867-10-18.  We omit this transition, since we can't represent
+# changes from Julian to Gregorian.
 #
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone America/Juneau	 -8:57:41 -	LMT	1900 Aug 20 12:00
@@ -472,12 +472,9 @@ Link	Pacific/Honolulu	HST
 # Whitman Publishing Co, 2 Niagara Av, Ealing, London (undated), which
 # I found in the UCLA library.
 #
-# I invented the abbreviation SPST for St Pierre Standard Time; SPDT likewise.
-# Corrections are welcome!
-#
 # See the `europe' file for Greenland.
 #
-# See the `africa' file for Zone naming conventions.
+# See the `africa' file for time zone naming and abbreviation conventions.
 
 # Canada
 
@@ -839,7 +836,6 @@ Rule	NT_YK	1919	only	-	May	25	2:00	1:00	D
 Rule	NT_YK	1919	only	-	Nov	 1	0:00	0	S
 Rule	NT_YK	1942	only	-	Feb	 9	2:00	1:00	D
 Rule	NT_YK	1945	only	-	Sep	30	2:00	0	S
-#							0:00 ??
 Rule	NT_YK	1965	only	-	Apr	lastSun	0:00	2:00	DD
 Rule	NT_YK	1965	only	-	Oct	lastSun	2:00	0	S
 Rule	NT_YK	1980	1986	-	Apr	lastSun	2:00	1:00	D
@@ -1158,7 +1154,7 @@ Zone America/El_Salvador -5:56:48 -	LMT	1921		# San Salvador
 
 # Grenada
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	America/Grenada	-4:07:00 -	LMT	1911 Jul
+Zone	America/Grenada	-4:07:00 -	LMT	1911 Jul	# St George's
 			-4:00	-	AST
 
 # Guadeloupe
@@ -1263,7 +1259,7 @@ Zone America/St_Lucia	-4:04:00 -	LMT	1890		# Castries
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone America/Miquelon	-3:44:40 -	LMT	1911 May 15	# St Pierre
 			-4:00	-	AST	1980 May
-			-3:00	Mont	SP%sT
+			-3:00	Mont	PM%sT	# Pierre & Miquelon Time
 
 # St Vincent and the Grenadines
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]

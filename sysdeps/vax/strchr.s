@@ -103,3 +103,5 @@ Lreent:
 	beql	2f		/* not found: return NULL */
 	movl	r1,r0
 2:	ret
+
+weak_alias (strchr, index)

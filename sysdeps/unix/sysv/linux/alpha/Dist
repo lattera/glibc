@@ -4,3 +4,4 @@ ioperm.c
 init-first.h
 clone.S
 sys/io.h
+llseek.S

@@ -173,7 +173,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		    from.sin_port >= IPPORT_RESERVED ||
 		    from.sin_port < IPPORT_RESERVED / 2) {
 			(void)fprintf(stderr,
-			    _("socket: protocol failure in circuit setup.\n"));
+			    _("socket: protocol failure in circuit setup\n"));
 			goto bad2;
 		}
 	}

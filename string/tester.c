@@ -208,7 +208,19 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   it = "strlen";
   check(strlen("") == 0, 1);		/* Empty. */
   check(strlen("a") == 1, 2);		/* Single char. */
-  check(strlen("abcd") == 4, 3);		/* Multiple chars. */
+  check(strlen("abcd") == 4, 3);	/* Multiple chars. */
+  {
+    char buf[4096];
+    int i;
+    char *p;
+    for (i=0; i < 0x100; i++)
+      {
+	p = (char *)((int)(buf + 0xff) & ~0xff) + i;
+	strcpy (p, "OK");
+	strcpy (p+3, "BAD/WRONG");
+	check(strlen(p) == 2, 4+i);
+      }
+   }
 
   /* strchr.  */
   it = "strchr";
@@ -223,6 +235,18 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   (void) strcpy(one, "");
   check(strchr(one, 'b') == NULL, 7);	/* Empty string. */
   check(strchr(one, '\0') == one, 8);	/* NUL in empty string. */
+  {
+    char buf[4096];
+    int i;
+    char *p;
+    for (i=0; i < 0x100; i++)
+      {
+	p = (char *)((int)(buf + 0xff) & ~0xff) + i;
+	strcpy (p, "OK");
+	strcpy (p+3, "BAD/WRONG");
+	check(strchr(p, '/') == NULL, 9+i);
+      }
+   }
 
 #if 0
   /* index - just like strchr.  */
@@ -253,6 +277,18 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   (void) strcpy(one, "");
   check(strrchr(one, 'b') == NULL, 7);	/* Empty string. */
   check(strrchr(one, '\0') == one, 8);	/* NUL in empty string. */
+  {
+    char buf[4096];
+    int i;
+    char *p;
+    for (i=0; i < 0x100; i++)
+      {
+	p = (char *)((int)(buf + 0xff) & ~0xff) + i;
+	strcpy (p, "OK");
+	strcpy (p+3, "BAD/WRONG");
+	check(strrchr(p, '/') == NULL, 9+i);
+      }
+   }
 
 #if 0
   /* rindex - just like strrchr.  */
@@ -515,8 +551,8 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     char buf[128 + sizeof(long)];
     long align, len, i, pos;
 
-    for (align = 0; align < sizeof(long); ++align) {
-      for (len = 0; len < sizeof(buf) - align; ++len) {
+    for (align = 0; align < (long) sizeof(long); ++align) {
+      for (len = 0; len < (long) (sizeof(buf) - align); ++len) {
 	for (i = 0; i < len; ++i) {
 	  buf[align + i] = 'x';		/* don't depend on memset... */
 	}

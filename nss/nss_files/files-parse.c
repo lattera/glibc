@@ -121,6 +121,24 @@ parse_line (char *line, struct STRUCTURE *result,			      \
     line = endp;							      \
   }
 
+#define INT_FIELD_MAYBE_NULL(variable, terminator_p, swallow, base, convert, default)	      \
+  {									      \
+    char *endp;								      \
+    if (*line == '\0')							      \
+      /* We expect some more input, so don't allow the string to end here. */ \
+      return 0;								      \
+    variable = convert (strtol (line, &endp, base));			      \
+    if (endp == line)							      \
+      variable = default;						      \
+    if (terminator_p (*endp))						      \
+      do								      \
+	++endp;								      \
+      while (swallow && terminator_p (*endp));				      \
+    else if (*endp != '\0')						      \
+      return 0;								      \
+    line = endp;							      \
+  }
+
 #define ISCOLON(c) ((c) == ':')
 
 

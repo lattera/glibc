@@ -59,3 +59,5 @@ ENTRY(memcmp, 0)
 	cmpc3	r5,(r1),(r3)
 	jeql	0b		/* loop if same */
 	jbr	1b
+
+weak_alias (memcmp, bcmp)
