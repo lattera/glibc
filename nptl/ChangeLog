@@ -30,6 +30,7 @@
 	handler interfaces.
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Add quite a bit of
 	complication to generate unwind information for syscall wrappers.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Likewise.
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Define
 	__cleanup_fct_attribute.
 

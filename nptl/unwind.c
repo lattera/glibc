@@ -69,28 +69,32 @@ __pthread_unwind (__pthread_unwind_buf_t *buf)
   struct _pthread_cleanup_buffer *oldp = ibuf->priv.data.cleanup;
   struct _pthread_cleanup_buffer *curp = THREAD_GETMEM (self, cleanup);
 
-  while (curp != oldp)
+  if (curp != oldp)
     {
-      /* Pointer to the next element.  */
-      struct _pthread_cleanup_buffer *nextp = curp->__prev;
+      do
+	{
+	  /* Pointer to the next element.  */
+	  struct _pthread_cleanup_buffer *nextp = curp->__prev;
 
-      /* Call the handler.  */
-      curp->__routine (curp->__arg);
+	  /* Call the handler.  */
+	  curp->__routine (curp->__arg);
 
-      /* To the next.  */
-      curp = nextp;
+	  /* To the next.  */
+	  curp = nextp;
+	}
+      while (curp != oldp);
+
+      /* Mark the current element as handled.  */
+      THREAD_SETMEM (self, cleanup, curp);
     }
-
-  /* Mark the current element as handled.  */
-  THREAD_SETMEM (self, cleanup, curp);
 
 #ifdef HAVE_FORCED_UNWIND
   /* This is not a catchable exception, so don't provide any details about
      the exception type.  We do need to initialize the field though.  */
-  ibuf->priv.data.exc.exception_class = 0;
-  ibuf->priv.data.exc.exception_cleanup = unwind_cleanup;
+  THREAD_SETMEM (self, exc.exception_class, 0);
+  THREAD_SETMEM (self, exc.exception_cleanup, unwind_cleanup);
 
-  _Unwind_ForcedUnwind (&ibuf->priv.data.exc, unwind_stop, ibuf);
+  _Unwind_ForcedUnwind (&self->exc, unwind_stop, ibuf);
 #else
   /* We simply jump to the registered setjmp buffer.  */
   __libc_longjmp ((struct __jmp_buf_tag *) ibuf->cancel_jmp_buf, 1);

@@ -29,6 +29,7 @@
 # define PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
+  L(name##START):							      \
     SINGLE_THREAD_P;							      \
     jne L(pseudo_cancel);						      \
     DO_CALL (syscall_name, args);					      \
@@ -54,7 +55,100 @@
     RESTSTK_##args							      \
     cmpq $-4095, %rax;							      \
     jae SYSCALL_ERROR_LABEL;						      \
-  L(pseudo_end):
+  L(pseudo_end):							      \
+									      \
+  /* Create unwinding information for the syscall wrapper.  */		      \
+  .section .eh_frame,"a",@progbits;					      \
+  L(STARTFRAME):							      \
+    /* Length of the CIE.  */						      \
+    .long L(ENDCIE)-L(STARTCIE);					      \
+  L(STARTCIE):								      \
+    /* CIE ID.  */							      \
+    .long 0;								      \
+    /* Version number.  */						      \
+    .byte 1;								      \
+    /* NUL-terminated augmentation string.  Note "z" means there is an	      \
+       augmentation value later on.  */					      \
+    .string "zR";							      \
+    /* Code alignment factor.  */					      \
+    .uleb128 1;								      \
+    /* Data alignment factor.  */					      \
+    .sleb128 -8;							      \
+    /* Return address register column.  */				      \
+    .byte 16;								      \
+    /* Augmentation value length.  */					      \
+    .uleb128 1;								      \
+    /* Encoding: DW_EH_PE_pcrel + DW_EH_PE_sdata4.  */			      \
+    .byte 0x1b;								      \
+    /* Start of the table initialization.  */				      \
+    .byte 0xc;								      \
+    .uleb128 7;								      \
+    .uleb128 8;								      \
+    .byte 0x90;								      \
+    .uleb128 1;								      \
+    .align 8;								      \
+  L(ENDCIE):								      \
+    /* Length of the FDE.  */						      \
+    .long L(ENDFDE)-L(STARTFDE);					      \
+  L(STARTFDE):								      \
+    /* CIE pointer.  */							      \
+    .long L(STARTFDE)-L(STARTFRAME);					      \
+    /* PC-relative start address of the code.  */			      \
+    .long L(name##START)-.;						      \
+    /* Length of the code.  */						      \
+    .long L(name##END)-L(name##START);					      \
+    /* No augmentation data.  */					      \
+    .uleb128 0;								      \
+    /* The rest of the code depends on the number of parameters the syscall   \
+       takes.  */							      \
+    EH_FRAME_##args(name);						      \
+    .align 4;								      \
+  L(ENDFDE):								      \
+  .previous
+
+# define EH_FRAME_0(name) \
+    .byte 4;								      \
+    .long L(SAVESTK)-L(name##START);					      \
+    .byte 14;								      \
+    .uleb128 32;							      \
+    .byte 4;								      \
+    .long L(RESTSTK)-L(SAVESTK);					      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .align 8
+
+# define EH_FRAME_1(name) EH_FRAME_0 (name)
+# define EH_FRAME_2(name) EH_FRAME_1 (name)
+
+# define EH_FRAME_3(name) \
+    .byte 4;								      \
+    .long L(SAVESTK)-L(name##START);					      \
+    .byte 14;								      \
+    .uleb128 48;							      \
+    .byte 4;								      \
+    .long L(RESTSTK)-L(SAVESTK);					      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .align 8
+
+# define EH_FRAME_4(name) EH_FRAME_3 (name)
+
+# define EH_FRAME_5(name) \
+    .byte 4;								      \
+    .long L(SAVESTK)-L(name##START);					      \
+    .byte 14;								      \
+    .uleb128 64;							      \
+    .byte 4;								      \
+    .long L(RESTSTK)-L(SAVESTK);					      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .align 8
+
+# define EH_FRAME_6(name) EH_FRAME_5 (name)
+
+
+# undef ASM_SIZE_DIRECTIVE
+# define ASM_SIZE_DIRECTIVE(name) L(name##END): .size name,.-name;
 
 # define PUSHARGS_0	/* Nothing.  */
 # define PUSHARGS_1	PUSHARGS_0 movq %rdi, 8(%rsp);
@@ -73,20 +167,20 @@
 # define POPARGS_6	POPARGS_5 movq 48(%rsp), %r9;
 
 /* We always have to align the stack before calling a function.  */
-# define SAVESTK_0	subq $24, %rsp;
+# define SAVESTK_0	subq $24, %rsp; L(SAVESTK):
 # define SAVESTK_1	SAVESTK_0
 # define SAVESTK_2	SAVESTK_1
-# define SAVESTK_3	subq $40, %rsp;
+# define SAVESTK_3	subq $40, %rsp; L(SAVESTK):
 # define SAVESTK_4	SAVESTK_3
-# define SAVESTK_5	subq $56, %rsp;
+# define SAVESTK_5	subq $56, %rsp; L(SAVESTK):
 # define SAVESTK_6	SAVESTK_5
 
-# define RESTSTK_0	addq $24,%rsp;
+# define RESTSTK_0	addq $24,%rsp; L(RESTSTK):
 # define RESTSTK_1	RESTSTK_0
 # define RESTSTK_2	RESTSTK_1
-# define RESTSTK_3	addq $40, %rsp;
+# define RESTSTK_3	addq $40, %rsp; L(RESTSTK):
 # define RESTSTK_4	RESTSTK_3
-# define RESTSTK_5	addq $56, %rsp;
+# define RESTSTK_5	addq $56, %rsp; L(RESTSTK):
 # define RESTSTK_6	RESTSTK_5
 
 # ifdef IS_IN_libpthread

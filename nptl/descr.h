@@ -63,18 +63,19 @@
    information.  */
 struct pthread_unwind_buf
 {
+  struct
+  {
+    __jmp_buf jmp_buf;
+    int mask_was_saved;
+  } cancel_jmp_buf[1];
+
   union
   {
     /* This is the placeholder of the public version.  */
-    void *pad[16];
+    void *pad[4];
 
     struct
     {
-#ifdef HAVE_FORCED_UNWIND
-      /* First the machine-specific unwind info.  */
-      struct _Unwind_Exception exc;
-#endif
-
       /* Pointer to the previous cleanup buffer.  */
       __pthread_unwind_buf_t *prev;
 
@@ -87,12 +88,6 @@ struct pthread_unwind_buf
       int canceltype;
     } data;
   } priv;
-
-  struct
-  {
-    __jmp_buf jmp_buf;
-    int mask_was_saved;
-  } cancel_jmp_buf[1];
 };
 
 
@@ -225,6 +220,11 @@ struct pthread
   td_eventbuf_t eventbuf;
   /* Next descriptor with a pending event.  */
   struct pthread *nextevent;
+
+#ifdef HAVE_FORCED_UNWIND
+  /* Machine-specific unwind info.  */
+  struct _Unwind_Exception exc;
+#endif
 
   /* If nonzero pointer to area allocated for the stack and its
      size.  */
