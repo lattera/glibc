@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    Sparc v9 version.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -31,7 +31,7 @@ testandset (int *spinlock)
   int ret;
 
   __asm__ __volatile__("ldstub %1,%0"
-	: "=r"(ret), "=m"(*spinlock) : "m"(*spinlock));
+	: "=r" (ret), "=m" (*spinlock) : "m" (*spinlock));
 
   return ret;
 }
@@ -50,14 +50,14 @@ testandset (int *spinlock)
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  stack_pointer
+#define CURRENT_STACK_FRAME  (stack_pointer + (2 * 128))
 register char *stack_pointer __asm__ ("%sp");
 
 
 /* Registers %g6 and %g7 are reserved by the ABI for "system use".  It
    happens that Solaris uses %g6 for the thread pointer -- we do the same.  */
 struct _pthread_descr_struct;
-register struct _pthread_descr_struct *__thread_self __asm__("%g6");
+register struct _pthread_descr_struct *__thread_self __asm__ ("%g6");
 
 /* Return the thread descriptor for the current thread.  */
 #define THREAD_SELF  __thread_self

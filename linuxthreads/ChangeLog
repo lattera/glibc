@@ -1,3 +1,9 @@
+2001-04-11  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/sparc32/pt-machine.h (stack_pointer): Advance
+	up closer to user local variables so that new cleanup heuristics work.
+	* sysdeps/sparc/sparc64/pt-machine.h (stack_pointer): Likewise.
+
 2001-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* cancel.c (_pthread_cleanup_push): Catch invalid __prev buffer

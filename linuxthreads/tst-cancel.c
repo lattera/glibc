@@ -20,6 +20,7 @@ cleanup (void *arg)
   char *cp = stpcpy (s, "cleanup ");
   *cp++ = '0' + nr;
   *cp++ = '\n';
+  __libc_lseek (fd, 0, SEEK_END);
   __libc_write (fd, s, cp - s);
 }
 
