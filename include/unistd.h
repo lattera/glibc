@@ -1,4 +1,5 @@
-#include <posix/unistd.h>
+#ifndef _UNISTD_H
+# include <posix/unistd.h>
 
 /* Now define the internal interfaces.  */
 extern int __access __P ((__const char *__name, int __type));
@@ -61,3 +62,4 @@ extern int __profil __P ((unsigned short int *__sample_buffer, size_t __size,
 			  size_t __offset, unsigned int __scale));
 extern int __getdtablesize __P ((void));
 extern int __brk __P ((__ptr_t __addr));
+#endif
