@@ -1,3 +1,19 @@
+1999-06-14  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/connections.c (handle_request): Only root is allowed to
+	send GETSTAT request in non secure mode.
+	* nscd/nscd.c: Print error message if other then root try to
+	use getstat.
+
+1999-06-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add __sysctl.
+
+1999-06-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/time.texi (Limits on Resources): Describe RLIMIT_AS.
+	Closes PR libc/1164, reported by sascha@schumann.2ns.de.
+
 1999-06-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/generic/strchr.c: Include <memcopy.h> and use reg_char

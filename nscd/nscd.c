@@ -205,6 +205,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
       }
 
     case 'g':
+      if (getuid () != 0)
+	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
       receive_print_stats ();
       /* Does not return.  */
 

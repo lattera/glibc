@@ -2552,6 +2552,15 @@ open more files than this, it gets error code @code{EMFILE}.
 4.4 BSD does.
 
 @comment sys/resource.h
+@comment Unix98
+@item RLIMIT_AS
+@vindex RLIMIT_AS
+The maximum size of total memory that this process should get.  If the
+process tries to allocate more memory beyond this amount with, for
+example, @code{brk}, @code{malloc}, @code{mmap} or @code{sbrk}, the
+allocation function fails.
+
+@comment sys/resource.h
 @comment BSD
 @item RLIM_NLIMITS
 @vindex RLIM_NLIMITS

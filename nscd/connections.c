@@ -311,13 +311,15 @@ cannot handle old request version %d; current version is %d"),
       break;
 
     case GETSTAT:
-      send_stats (fd, dbs);
-      break;
-
     case SHUTDOWN:
-      /* Accept shutdown only from root */
+      /* Accept shutdown and getstat only from root */
       if (secure_in_use && uid == 0)
-	termination_handler (0);
+	{
+	  if (req->type == GETSTAT)
+	    send_stats (fd, dbs);
+	  else
+	    termination_handler (0);
+	}
       else
 	{
 	  struct ucred caller;
@@ -330,8 +332,14 @@ cannot handle old request version %d; current version is %d"),
 	      dbg_log (_("error getting callers id: %s"),
 		       strerror_r (errno, buf, sizeof (buf)));
 	    }
-	  else if (caller.uid == 0)
-	    termination_handler (0);
+	  else
+	    if (caller.uid == 0)
+	      {
+		if (req->type == GETSTAT)
+		  send_stats (fd, dbs);
+		else
+		  termination_handler (0);
+	      }
 	}
       break;
 
