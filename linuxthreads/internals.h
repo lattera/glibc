@@ -405,9 +405,6 @@ extern int __pthread_spin_unlock (pthread_spinlock_t *__lock);
 extern int __pthread_spin_init (pthread_spinlock_t *__lock, int __pshared);
 extern int __pthread_spin_destroy (pthread_spinlock_t *__lock);
 
-extern int __pthread_clock_gettime (hp_timing_t freq, struct timespec *tp);
-extern void __pthread_clock_settime (hp_timing_t offset);
-
 /* Global pointers to old or new suspend functions */
 
 extern void (*__pthread_restart)(pthread_descr);

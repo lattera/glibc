@@ -1,3 +1,19 @@
+2004-07-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/getcpuclockid.c (pthread_getcpuclockid): Allow
+	using other thread's clock.
+	* ptclock_gettime.c (__pthread_clock_gettime): Likewise.
+	* ptclock_settime.c (__pthread_clock_settime): Likewise.
+	* internals.h (__pthread_clock_gettime, __pthread_clock_settime):
+	Remove prototypes.
+	Reported by Bernd Schmidt <bernds@redhat.com>.
+	* Makefile (librt-tests): Add tst-clock1.
+	* tst-clock1.c: New test.
+
+	* sysdeps/x86_64/Versions: New file.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: New file.
+
 2004-04-16  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/ia64/tls.h (INIT_SYSINFO): Cast dl_sysinfo to void*.

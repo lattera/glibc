@@ -105,7 +105,7 @@ omit-deps += crti crtn
 CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions $(fno-unit-at-a-time)
 endif
 
-librt-tests = ex10 ex11
+librt-tests = ex10 ex11 tst-clock1
 tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14 ex15 ex16 \
 	ex17 ex18 tst-cancel tst-context bug-sleep \
