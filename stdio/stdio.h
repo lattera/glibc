@@ -302,7 +302,7 @@ extern char *tmpnam_r __P ((char *__s));
 #endif
 
 
-#if def(__USE_SVID) || defined(__USE_XOPEN)
+#if defined(__USE_SVID) || defined(__USE_XOPEN)
 /* Generate a unique temporary filename using up to five characters of PFX
    if it is not NULL.  The directory to put this file in is searched for
    as follows: First the environment variable "TMPDIR" is checked.

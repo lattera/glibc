@@ -96,7 +96,7 @@
 # define ungetc(c, s)	(--read_in, ungetc (c, s))
 # define inchar()	((c = getc (s)), (void) ++read_in, c)
 # define encode_error()	do {						      \
-			  _IO_funlockfile (s);				      \
+			  funlockfile (s);				      \
 			  __set_errno (EILSEQ);				      \
 			  return done;					      \
 			} while (0)

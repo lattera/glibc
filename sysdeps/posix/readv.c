@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -27,9 +26,11 @@ Cambridge, MA 02139, USA.  */
    The buffers are filled in the order specified.
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
-int
-DEFUN(readv, (fd, vector, count),
-      int fd AND CONST struct iovec *vector AND size_t count)
+ssize_t
+readv (fd, vector, count)
+     int fd;
+     const struct iovec *vector;
+     size_t count;
 {
   char *buffer;
   size_t bytes;

@@ -1,5 +1,5 @@
 /* Standard header for all Mach programs.
-Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -70,6 +70,14 @@ mach_msg_server_timeout (boolean_t (*__demux) (mach_msg_header_t *__request,
 			 mach_msg_option_t __option,
 			 mach_msg_timeout_t __timeout);
 
+
+/* Deallocate all port rights and out-of-line memory in MSG. */
+extern void
+__mach_msg_destroy (mach_msg_header_t *msg),
+mach_msg_destroy (mach_msg_header_t *msg);
+
+/* XXX should be in mach/message.h. */
+extern typeof (mach_msg) __mach_msg;
 
 #define __need_FILE
 #include <stdio.h>

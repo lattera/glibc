@@ -106,8 +106,20 @@ struct stat
    protection bits for unknown users.  */
 #define S_IUNKSHIFT	12
 
-/* All the unused bits.  */
-#define	S_ISPARE	(~(S_IFMT|S_INOCACHE|S_IUNKNOWN|07777))
+/* Read only bits: */
+
+/* There is a passive translator set for this file */
+#define S_IPTRANS	000010000000
+/* There is an active translator running on this file */
+#define S_IATRANS	000020000000
+/* This is the root of a filesystem (or single node translator) */
+#define S_IROOT		000040000000
+/* All the bits relevant to translators */
+#define S_ITRANS	000070000000
+
+/* ALL the unused bits.  */
+#define	S_ISPARE	(~(S_IFMT|S_ITRANS|S_INOCACHE|    \
+			   S_IUSEUNK|S_IUNKNOWN|07777))
 #endif
 
 /* Default file creation mask (umask).  */

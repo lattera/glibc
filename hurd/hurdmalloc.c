@@ -37,6 +37,14 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.12  1996/11/15 19:44:13  thomas
+ * Tue Nov 12 16:58:41 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+ *
+ * 	* mach/msg-destroy.c (mach_msg_destroy_port,
+ * 	mach_msg_destroy_memory): Use prototype	syntax.
+ * 	* hurd/hurdmalloc.c (more_memory, malloc_fork_prepare,
+ * 	malloc_fork_parent, malloc_fork_child): Likewise.
+ *
  * Revision 1.11  1996/06/06 15:13:47  miles
  * Changes to bring in line with the hurd libthreads/malloc.c:
  *   (more_memory): Use assert_perror instead of MACH_CALL.
@@ -206,9 +214,7 @@ malloc_init (void)
 }
 
 static void
-more_memory(size, fl)
-	int size;
-	register free_list_t fl;
+more_memory(int size, free_list_t fl)
 {
 	register int amount;
 	register int n;
@@ -448,7 +454,8 @@ print_malloc_free_list()
 }
 #endif	DEBUG
 
-static void malloc_fork_prepare()
+static void 
+malloc_fork_prepare(void)
 /*
  * Prepare the malloc module for a fork by insuring that no thread is in a
  * malloc critical section.
@@ -461,7 +468,8 @@ static void malloc_fork_prepare()
     }
 }
 
-static void malloc_fork_parent()
+static void 
+malloc_fork_parent(void)
 /*
  * Called in the parent process after a fork() to resume normal operation.
  */
@@ -473,7 +481,8 @@ static void malloc_fork_parent()
     }
 }
 
-static void malloc_fork_child()
+static void
+malloc_fork_child(void)
 /*
  * Called in the child process after a fork() to resume normal operation.
  */

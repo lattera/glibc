@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 #include <string.h>
 #include <hurd/ioctl.h>
-
+#include <mach/mig_support.h>
 
 #define typesize(type)	(1 << (type))
 

@@ -894,6 +894,73 @@ Go home and have a glass of warm, dairy-fresh milk.
 This error code has no purpose.
 @end deftypevr
 
+@comment errno.h
+@comment XOPEN: Bad message
+@deftypevr Macro int EBADMSG
+@comment errno 107
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: Identifier removed
+@deftypevr Macro int EIDRM
+@comment errno 108
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: Multihop attempted
+@deftypevr Macro int EMULTIHOP
+@comment errno 109
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: No data available
+@deftypevr Macro int ENODATA
+@comment errno 110
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: Link has been severed
+@deftypevr Macro int ENOLINK
+@comment errno 111
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: No message of desired type
+@deftypevr Macro int ENOMSG
+@comment errno 112
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: Out of streams resources
+@deftypevr Macro int ENOSR
+@comment errno 113
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: Device not a stream
+@deftypevr Macro int ENOSTR
+@comment errno 114
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: Value too large for defined data type
+@deftypevr Macro int EOVERFLOW
+@comment errno 115
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: Protocol error
+@deftypevr Macro int EPROTO
+@comment errno 116
+@end deftypevr
+
+@comment errno.h
+@comment XOPEN: Timer expired
+@deftypevr Macro int ETIME
+@comment errno 117
+@end deftypevr
+
+
 @emph{The following error codes are defined by the Linux/i386 kernel.
 They are not yet documented.}
 
@@ -901,18 +968,6 @@ They are not yet documented.}
 @comment Linux???: Interrupted system call should be restarted
 @deftypevr Macro int ERESTART
 @comment errno ???/85
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: No message of desired type
-@deftypevr Macro int ENOMSG
-@comment errno ???/42
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: Identifier removed
-@deftypevr Macro int EIDRM
-@comment errno ???/43
 @end deftypevr
 
 @comment errno.h
@@ -1012,30 +1067,6 @@ They are not yet documented.}
 @end deftypevr
 
 @comment errno.h
-@comment Linux???: Device not a stream
-@deftypevr Macro int ENOSTR
-@comment errno ???/60
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: No data available
-@deftypevr Macro int ENODATA
-@comment errno ???/61
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: Timer expired
-@deftypevr Macro int ETIME
-@comment errno ???/62
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: Out of streams resources
-@deftypevr Macro int ENOSR
-@comment errno ???/63
-@end deftypevr
-
-@comment errno.h
 @comment Linux???: Machine is not on the network
 @deftypevr Macro int ENONET
 @comment errno ???/64
@@ -1045,12 +1076,6 @@ They are not yet documented.}
 @comment Linux???: Package not installed
 @deftypevr Macro int ENOPKG
 @comment errno ???/65
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: Link has been severed
-@deftypevr Macro int ENOLINK
-@comment errno ???/67
 @end deftypevr
 
 @comment errno.h
@@ -1072,33 +1097,9 @@ They are not yet documented.}
 @end deftypevr
 
 @comment errno.h
-@comment Linux???: Protocol error
-@deftypevr Macro int EPROTO
-@comment errno ???/71
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: Multihop attempted
-@deftypevr Macro int EMULTIHOP
-@comment errno ???/72
-@end deftypevr
-
-@comment errno.h
 @comment Linux???: RFS specific error
 @deftypevr Macro int EDOTDOT
 @comment errno ???/73
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: Not a data message
-@deftypevr Macro int EBADMSG
-@comment errno ???/74
-@end deftypevr
-
-@comment errno.h
-@comment Linux???: Value too large for defined data type
-@deftypevr Macro int EOVERFLOW
-@comment errno ???/75
 @end deftypevr
 
 @comment errno.h

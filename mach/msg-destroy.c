@@ -26,6 +26,17 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.4  1996/11/15 19:44:43  thomas
+ * Tue Nov 12 16:58:41 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+ *
+ * 	* mach/mach.h (__mach_msg_destroy, mach_msg_destroy, __mach_msg):
+ *  	Provide prototypes.
+ *
+ * 	* mach/msg-destroy.c (mach_msg_destroy_port,
+ * 	mach_msg_destroy_memory): Use prototype	syntax.
+ * 	* hurd/hurdmalloc.c (more_memory, malloc_fork_prepare,
+ * 	malloc_fork_parent, malloc_fork_child): Likewise.
+ *
  * Revision 1.3  1995/01/23 22:16:52  roland
  * (mach_msg_destroy): Define as weak alias for __mach_msg_destroy.
  *
@@ -53,8 +64,8 @@
 #include <mach_init.h>
 #endif
 
-static void mach_msg_destroy_port();
-static void mach_msg_destroy_memory();
+static void mach_msg_destroy_port(mach_port_t, mach_msg_type_name_t);
+static void mach_msg_destroy_memory(vm_offset_t, vm_size_t);
 
 /*
  *	Routine:	mach_msg_destroy

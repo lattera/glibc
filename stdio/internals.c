@@ -24,8 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Make sure that FP has its functions set.  */
 void
-__stdio_check_funcs (fp)
-     register FILE *fp;
+__stdio_check_funcs (register FILE *fp)
 {
   if (!fp->__seen)
     {
@@ -51,8 +50,7 @@ __stdio_check_funcs (fp)
 /* Figure out what kind of buffering (none, line, or full)
    and what buffer size to give FP.  */
 static void
-init_stream (fp)
-     register FILE *fp;
+init_stream (register FILE *fp)
 {
   __stdio_check_funcs (fp);
 
@@ -141,8 +139,7 @@ __stdio_check_offset (stream)
    seeking as necessary and updating its `offset' field.
    Sets ferror(FP) (and possibly errno) for errors.  */
 static void
-seek_to_target (fp)
-     FILE *fp;
+seek_to_target (FILE *fp)
 {
   int save = errno;
   if (__stdio_check_offset (fp) == EOF)
@@ -197,9 +194,7 @@ seek_to_target (fp)
    flushed to avoid a system call for a single character.
    This is the default `output room' function.  */
 static void
-flushbuf (fp, c)
-     register FILE *fp;
-     int c;
+flushbuf (register FILE *fp, int c)
 {
   int flush_only = c == EOF;
   size_t buffer_written;
@@ -394,8 +389,7 @@ flushbuf (fp, c)
 /* Fill the buffer for FP and return the first character read (or EOF).
    This is the default `input_room' function.  */
 static int
-fillbuf (fp)
-     register FILE *fp;
+fillbuf (register FILE *fp)
 {
   /* How far into the buffer we read we want to start bufp.  */
   size_t buffer_offset = 0;

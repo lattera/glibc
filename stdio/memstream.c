@@ -29,9 +29,7 @@ struct memstream_info
 
 /* Enlarge STREAM's buffer.  */
 static void
-enlarge_buffer (stream, c)
-     register FILE *stream;
-     int c;
+enlarge_buffer (register FILE *stream, int c)
 {
   struct memstream_info *info = (struct memstream_info *) stream->__cookie;
   size_t need;
@@ -96,10 +94,7 @@ enlarge_buffer (stream, c)
    There is no external state to munge.  */
 
 static int
-seek (cookie, pos, whence)
-     void *cookie;
-     fpos_t *pos;
-     int whence;
+seek (void *cookie, fpos_t *pos, int whence)
 {
   switch (whence)
     {
@@ -120,8 +115,7 @@ seek (cookie, pos, whence)
 }
 
 static int
-free_info (cookie)
-     void *cookie;
+free_info (void *cookie)
 {
 #if 0
   struct memstream_info *info = (struct memstream_info *) cookie;

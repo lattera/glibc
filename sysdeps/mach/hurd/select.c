@@ -117,67 +117,76 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
     return -1;
 
   /* Send them all io_select request messages.  */
-  err = 0;
-  got = 0;
-  portset = MACH_PORT_NULL;
-  for (i = firstfd; i <= lastfd; ++i)
-    if (d[i].type)
-      {
-	int type = d[i].type;
-	d[i].reply_port = __mach_reply_port ();
-	err = __io_select (d[i].io_port, d[i].reply_port,
-			   /* Poll only when there's a single descriptor.  */
-			   (firstfd == lastfd) ? to : 0,
-			   &type);
-	switch (err)
+		     
+  if (firstfd == -1)
+    /* But not if there were no ports to deal with at all. */
+    portset = __mach_reply_port ();
+  else
+    {
+      err = 0;
+      got = 0;
+      portset = MACH_PORT_NULL;
+      
+      for (i = firstfd; i <= lastfd; ++i)
+	if (d[i].type)
 	  {
-	  case MACH_RCV_TIMED_OUT:
-	    /* No immediate response.  This is normal.  */
-	    err = 0;
-	    if (firstfd == lastfd)
-	      /* When there's a single descriptor, we don't need a portset,
-		 so just pretend we have one, but really use the single reply
-		 port.  */
-	      portset = d[i].reply_port;
-	    else if (got == 0)
-	      /* We've got multiple reply ports, so we need a port set to
-		 multiplex them.  */
+	    int type = d[i].type;
+	    d[i].reply_port = __mach_reply_port ();
+	    err = __io_select (d[i].io_port, d[i].reply_port,
+			       /* Poll only if there's a single descriptor.  */
+			       (firstfd == lastfd) ? to : 0,
+			       &type);
+	    switch (err)
 	      {
-		/* We will wait again for a reply later.  */
-		if (portset == MACH_PORT_NULL)
-		  /* Create the portset to receive all the replies on.  */
-		  err = __mach_port_allocate (__mach_task_self (),
-					      MACH_PORT_RIGHT_PORT_SET,
-					      &portset);
-		if (! err)
-		  /* Put this reply port in the port set.  */
-		  __mach_port_move_member (__mach_task_self (),
-					   d[i].reply_port, portset);
+	      case MACH_RCV_TIMED_OUT:
+		/* No immediate response.  This is normal.  */
+		err = 0;
+		if (firstfd == lastfd)
+		  /* When there's a single descriptor, we don't need a
+		     portset, so just pretend we have one, but really
+		     use the single reply port.  */
+		  portset = d[i].reply_port;
+		else if (got == 0)
+		  /* We've got multiple reply ports, so we need a port set to
+		     multiplex them.  */
+		  {
+		    /* We will wait again for a reply later.  */
+		    if (portset == MACH_PORT_NULL)
+		      /* Create the portset to receive all the replies on.  */
+		      err = __mach_port_allocate (__mach_task_self (),
+						  MACH_PORT_RIGHT_PORT_SET,
+						  &portset);
+		    if (! err)
+		      /* Put this reply port in the port set.  */
+		      __mach_port_move_member (__mach_task_self (),
+					       d[i].reply_port, portset);
+		  }
+		break;
+
+	      default:
+		/* No other error should happen.  Callers of select
+		   don't expect to see errors, so we simulate
+		   readiness of the erring object and the next call
+		   hopefully will get the error again.  */
+		type = SELECT_ALL;
+		/* FALLTHROUGH */
+
+	      case 0:
+		/* We got an answer.  */
+		if ((type & SELECT_ALL) == 0)
+		  /* Bogus answer; treat like an error, as a fake positive.  */
+		  type = SELECT_ALL;
+		
+		/* This port is already ready already.  */
+		d[i].type &= type;
+		d[i].type |= SELECT_RETURNED;
+		++got;
+		break;
 	      }
-	    break;
-
-	  default:
-	    /* No other error should happen.  Callers of select don't
-	       expect to see errors, so we simulate readiness of the erring
-	       object and the next call hopefully will get the error again.  */
-	    type = SELECT_ALL;
-	    /* FALLTHROUGH */
-
-	  case 0:
-	    /* We got an answer.  */
-	    if ((type & SELECT_ALL) == 0)
-	      /* Bogus answer; treat like an error, as a fake positive.  */
-	      type = SELECT_ALL;
-
-	    /* This port is already ready already.  */
-	    d[i].type &= type;
-	    d[i].type |= SELECT_RETURNED;
-	    ++got;
-	    break;
+	    _hurd_port_free (&d[i].cell->port, &d[i].ulink, d[i].io_port);
 	  }
-	_hurd_port_free (&d[i].cell->port, &d[i].ulink, d[i].io_port);
-      }
-
+    }
+  
   /* Now wait for reply messages.  */
   if (!err && got == 0)
     {
@@ -234,7 +243,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 		  (msg.success.result & SELECT_ALL) == 0)
 		{
 		  /* Error or bogus reply.  Simulate readiness.  */
-		  __mach_msg_destroy (&msg);
+		  __mach_msg_destroy (&msg.head);
 		  msg.success.result = SELECT_ALL;
 		}
 
@@ -242,13 +251,15 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
                  readiness.  */
 	      {
 		int had = got;
-		for (i = firstfd; i <= lastfd; ++i)
-		  if (d[i].type && d[i].reply_port == msg.head.msgh_local_port)
-		    {
-		      d[i].type &= msg.success.result;
-		      d[i].type |= SELECT_RETURNED;
-		      ++got;
-		    }
+		if (firstfd != -1)
+		  for (i = firstfd; i <= lastfd; ++i)
+		    if (d[i].type
+			&& d[i].reply_port == msg.head.msgh_local_port)
+		      {
+			d[i].type &= msg.success.result;
+			d[i].type |= SELECT_RETURNED;
+			++got;
+		      }
 		assert (got > had);
 	      }
 	    }
@@ -280,10 +291,11 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	err = 0;
     }
 
-  for (i = firstfd; i <= lastfd; ++i)
-    if (d[i].type)
-      __mach_port_destroy (__mach_task_self (), d[i].reply_port);
-  if (firstfd != lastfd && portset != MACH_PORT_NULL)
+  if (firstfd != -1)
+    for (i = firstfd; i <= lastfd; ++i)
+      if (d[i].type)
+	__mach_port_destroy (__mach_task_self (), d[i].reply_port);
+  if (firstfd == -1 || (firstfd != lastfd && portset != MACH_PORT_NULL))
     /* Destroy PORTSET, but only if it's not actually the reply port for a
        single descriptor (in which case it's destroyed in the previous loop;
        not doing it here is just a bit more efficient).  */
@@ -298,26 +310,27 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 
   /* Set the user bitarrays.  We only ever have to clear bits, as all desired
      ones are initially set.  */
-  for (i = firstfd; i <= lastfd; ++i)
-    {
-      int type = d[i].type;
+  if (firstfd != -1)
+    for (i = firstfd; i <= lastfd; ++i)
+      {
+	int type = d[i].type;
+	
+	if ((type & SELECT_RETURNED) == 0)
+	  type = 0;
 
-      if ((type & SELECT_RETURNED) == 0)
-	type = 0;
-
-      if (type & SELECT_READ)
-	got++;
-      else if (readfds)
-	FD_CLR (i, readfds);
-      if (type & SELECT_WRITE)
-	got++;
-      else if (writefds)
-	FD_CLR (i, writefds);
-      if (type & SELECT_URG)
-	got++;
-      else if (exceptfds)
-	FD_CLR (i, exceptfds);
-    }
+	if (type & SELECT_READ)
+	  got++;
+	else if (readfds)
+	  FD_CLR (i, readfds);
+	if (type & SELECT_WRITE)
+	  got++;
+	else if (writefds)
+	  FD_CLR (i, writefds);
+	if (type & SELECT_URG)
+	  got++;
+	else if (exceptfds)
+	  FD_CLR (i, exceptfds);
+      }
 
   return got;
 }

@@ -27,9 +27,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Dissect the given mode string into an __io_mode.  */
 int
-__getmode (mode, mptr)
-     const char *mode;
-     __io_mode *mptr;
+__getmode (const char *mode, __io_mode *mptr)
 {
   register unsigned char i;
 

@@ -256,7 +256,7 @@ __libc_init_first (int argc __attribute__ ((unused)), ...)
    cause ld.so to gain an init function, which is not a cool thing. */
 
 void 
-_dl_start () 
+_dl_start (void) 
 { 
   abort (); 
 }
