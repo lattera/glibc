@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -124,6 +124,8 @@ default_symbol_version (__select_tv64, __select, GLIBC_2.1)
    The 'p' is for 'public'.  *Shrug*  */
 strong_alias (__select_tv64, __select_tv64p)
 default_symbol_version (__select_tv64p, select, GLIBC_2.1)
+libc_hidden_ver (__select_tv64, __select)
 #else
 weak_alias (__select, select)
+libc_hidden_def (__select)
 #endif

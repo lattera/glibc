@@ -18,11 +18,9 @@
 
 #include <unistd.h>
 
-#undef __chown
-
 int
 __chown (const char *file, uid_t owner, gid_t group)
 {
   return chown (file, owner, group);
 }
-INTDEF(__chown)
+libc_hidden_def (__chown)

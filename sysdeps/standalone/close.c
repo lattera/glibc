@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
    This file is part of the GNU C Library.
@@ -39,6 +39,5 @@ __close (fd)
   __FD_Table[ fd ].in_use = 0;
   return 0;
 }
-
-
+libc_hidden_def (__close)
 weak_alias (__close, close)

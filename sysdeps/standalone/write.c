@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
    This file is part of the GNU C Library.
@@ -67,5 +67,7 @@ __libc_write (int fd, const void *buf, size_t nbytes)
   return count;
 }
 
+libc_hidden_def (__libc_write)
 weak_alias (__libc_write, __write)
+libc_hidden_weak (__write)
 weak_alias (__libc_write, write)

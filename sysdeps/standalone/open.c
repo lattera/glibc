@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
    This file is part of the GNU C Library.
@@ -82,6 +82,7 @@ __open (file, oflag)
 
   return newfd;
 }
+libc_hidden_def (__open)
 
 /* Initialization Code for Console I/O */
 

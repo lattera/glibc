@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,3 +25,4 @@ __statfs (const char *file, struct statfs *buf)
 {
   return statfs (file, buf);
 }
+libc_hidden_def (__statfs)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
@@ -28,4 +28,5 @@ PSEUDO (__pipe, pipe, 0)
 	ret
 PSEUDO_END(__pipe)
 
+libc_hidden_def (__pipe)
 weak_alias (__pipe, pipe)

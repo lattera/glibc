@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,4 +32,5 @@ __sigaction (sig, act, oact)
 {
   return _sigaction (sig, act, oact);
 }
+libc_hidden_def (__sigaction)
 strong_alias (__sigaction, sigaction)

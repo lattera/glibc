@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1995,1997,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,4 +29,5 @@ SYSCALL__ (pipe, 1)
 	clrl d0
 	rts
 
+libc_hidden_def (__pipe)
 weak_alias (__pipe, pipe)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995-1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995-1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,4 +29,5 @@ __sigsuspend (set)
 {
   return _sigsuspend (set);
 }
+libc_hidden_def (__sigsuspend)
 weak_alias (__sigsuspend, sigsuspend)

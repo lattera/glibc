@@ -18,8 +18,6 @@
 
 #include <unistd.h>
 
-#undef __getpgid
-
 extern int kgetpgidx (pid_t pid);
 
 int
@@ -27,5 +25,5 @@ __getgpid (pid_t pid)
 {
   return kgetpgidx (pid);
 }
-INTDEF(__getgpid)
+libc_hidden_def (__getgpid)
 strong_alias (__getpgid, getpgid)

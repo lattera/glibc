@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
    This file is part of the GNU C Library.
@@ -80,6 +80,7 @@ __libc_read (int fd, void *buf, size_t nbytes)
   *buffer = data;
   return 1;
 }
-
+libc_hidden_def (__libc_read)
 weak_alias (__libc_read, __read)
+libc_hidden_weak (__read)
 weak_alias (__libc_read, read)

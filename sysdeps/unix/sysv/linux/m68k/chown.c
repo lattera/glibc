@@ -71,5 +71,5 @@ __chown (const char *file, uid_t owner, gid_t group)
   return INLINE_SYSCALL (chown, 3, CHECK_STRING (file), owner, group);
 #endif
 }
-INTDEF(__chown)
+libc_hidden_def (__chown)
 weak_alias (__chown, chown)
