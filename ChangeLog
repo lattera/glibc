@@ -1,3 +1,7 @@
+2000-04-07  Andreas Jaeger  <aj@suse.de>
+
+	* posix/Makefile (CFLAGS-regex.c): Remove DEBUG.
+
 2000-04-10  Andreas Jaeger  <aj@suse.de>
 
 	* intl/Makefile: Don't run do-gettext-test when cross-compiling.
