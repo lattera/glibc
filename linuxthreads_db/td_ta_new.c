@@ -16,7 +16,6 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
@@ -36,7 +35,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   /* See whether the library contains the necessary symbols.  */
   if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "__pthread_threads_debug",
 		         &addr) != PS_OK)
-    return TD_LIBTHREAD;
+    return TD_NOLIBTHREAD;
 
   /* Fill in the appropriate information.  */
   *ta = (td_thragent_t *) malloc (sizeof (td_thragent_t));

@@ -1,5 +1,15 @@
 1999-11-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Add more pr* types used
+	by the debugger.
+	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Likewise.
+
+1999-11-01  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/net/if_arp.h: Add ARPHDR_HWX25.
 
 	* sysdeps/unix/sysv/linux/kernel-features.h

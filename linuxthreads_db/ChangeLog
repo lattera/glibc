@@ -1,3 +1,17 @@
+1999-11-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Add more pr* types used
+	by the debugger.
+	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Likewise.
+	* thread_db.h: Shuffle types around to make things work for gdb.
+	* thread_dbP.h: Include proc_service.h before thread_db.h.
+
+	* td_ta_new.c: It's TD_NOLIBTHREAD, not TD_LIBTHREAD.
+
 1999-10-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* td_ta_new.c: p_startfct does not exist anymore.

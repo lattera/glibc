@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <resource.h>
+#include <sys/resource.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
@@ -29,10 +29,12 @@
    the limits are now unsigned.  */
 #if !defined __ASSUME_NEW_GETRLIMIT_SYSCALL && defined __NR_ugetrlimit
 static int no_new_getrlimit;
+#else
+# define no_new_getrlimit	0
 #endif
 
 int
-getrlimit (resource, rlimits)
+__getrlimit (resource, rlimits)
      enum __rlimit_resource resource;
      struct rlimit *rlimits;
 {
@@ -59,3 +61,4 @@ getrlimit (resource, rlimits)
   return INLINE_SYSCALL (getrlimit, 2, resource, rlimits);
 #endif
 }
+weak_alias (__getrlimit, getrlimit)

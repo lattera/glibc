@@ -1,4 +1,26 @@
-typedef enum {
+/* Copyright (C) 1999 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+/* The definitions in this file must correspond to those in the debugger.  */
+#include <sys/procfs.h>
+
+typedef enum
+{
   PS_OK,          /* generic "call succeeded" */
   PS_ERR,         /* generic. */
   PS_BADPID,      /* bad process handle */
@@ -11,10 +33,6 @@ typedef enum {
    * lwp
    */
 }       ps_err_e;
-
-typedef unsigned long paddr_t;
-
-
 
 
 struct ps_prochandle;		/* user defined. */
@@ -41,4 +59,3 @@ extern ps_err_e ps_lgetfpregs(struct ps_prochandle *,
                         lwpid_t, prfpregset_t *);
 extern ps_err_e ps_lsetfpregs(struct ps_prochandle *,
                         lwpid_t, const prfpregset_t *);
-

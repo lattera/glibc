@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,6 +99,18 @@ struct elf_prpsinfo
     char pr_fname[16];			/* Filename of executable.  */
     char pr_psargs[ELF_PRARGSZ];	/* Initial part of arg list.  */
   };
+
+
+/* Addresses.  */
+typedef void *psaddr_t;
+
+/* Register sets.  Linux has different names.  */
+typedef gregset_t prgregset_t;
+typedef fpregset_t prfpregset_t;
+
+/* We don't have any differences between processes and threads,
+   therefore habe only ine PID type.  */
+typedef __pid_t lwpid_t;
 
 
 typedef struct elf_prstatus prstatus_t;

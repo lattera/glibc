@@ -3,10 +3,9 @@
 #define _THREAD_DBP_H	1
 
 #include <string.h>
+#include "proc_service.h"
 #include "thread_db.h"
 #include "../linuxthreads/internals.h"
-
-#include "proc_service.h"
 
 
 /* Comment out the following for less verbose output.  */

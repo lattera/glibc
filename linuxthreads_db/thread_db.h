@@ -25,33 +25,33 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <sys/types.h>
-#include <sys/ucontext.h>
+#include <sys/procfs.h>
 
 
 /* Error codes of the library.  */
 typedef enum
 {
-  TD_OK,	/* No error.  */
-  TD_ERR,	/* No further specified error.  */
-  TD_NOTHR,	/* No matching thread found.  */
-  TD_NOSV,	/* No matching synchronization handle found.  */
-  TD_NOLWP,	/* No matching light-weighted process found.  */
-  TD_BADPH,	/* Invalid process handle.  */
-  TD_BADTH,	/* Invalid thread handle.  */
-  TD_BADSH,	/* Invalid synchronization handle.  */
-  TD_BADTA,	/* Invalid thread agent.  */
-  TD_BADKEY,	/* Invalid key.  */
-  TD_NOMSG,	/* No event available.  */
-  TD_NOFPREGS,	/* No floating-point register content available.  */
-  TD_LIBTHREAD,	/* Application not linked with thread library.  */
-  TD_NOEVENT,	/* Requested event is not supported.  */
-  TD_NOCAPAB,	/* Capability not available.  */
-  TD_DBERR,	/* Internal debug library error.  */
-  TD_NOAPLIC,	/* Operation is not applicable.  */
-  TD_NOTSD,	/* No thread-specific data available.  */
-  TD_MALLOC,	/* Out of memory.  */
-  TD_PARTIALREG,/* Not entire register set was read or written.  */
-  TD_NOXREGS	/* X register set not available for given thread.  */
+  TD_OK,	  /* No error.  */
+  TD_ERR,	  /* No further specified error.  */
+  TD_NOTHR,	  /* No matching thread found.  */
+  TD_NOSV,	  /* No matching synchronization handle found.  */
+  TD_NOLWP,	  /* No matching light-weighted process found.  */
+  TD_BADPH,	  /* Invalid process handle.  */
+  TD_BADTH,	  /* Invalid thread handle.  */
+  TD_BADSH,	  /* Invalid synchronization handle.  */
+  TD_BADTA,	  /* Invalid thread agent.  */
+  TD_BADKEY,	  /* Invalid key.  */
+  TD_NOMSG,	  /* No event available.  */
+  TD_NOFPREGS,	  /* No floating-point register content available.  */
+  TD_NOLIBTHREAD, /* Application not linked with thread library.  */
+  TD_NOEVENT,	  /* Requested event is not supported.  */
+  TD_NOCAPAB,	  /* Capability not available.  */
+  TD_DBERR,	  /* Internal debug library error.  */
+  TD_NOAPLIC,	  /* Operation is not applicable.  */
+  TD_NOTSD,	  /* No thread-specific data available.  */
+  TD_MALLOC,	  /* Out of memory.  */
+  TD_PARTIALREG,  /* Not entire register set was read or written.  */
+  TD_NOXREGS	  /* X register set not available for given thread.  */
 } td_err_e;
 
 
@@ -80,9 +80,6 @@ typedef enum
 
 
 /* Types of the debugging library.  */
-
-/* Addresses.  */
-typedef void *psaddr_t;
 
 /* Handle for a process.  This type is opaque.  */
 typedef struct td_thragent td_thragent_t;
@@ -229,10 +226,6 @@ typedef struct td_ta_stats
 typedef pthread_t thread_t;
 typedef pthread_key_t thread_key_t;
 
-/* Linux has different names for the register set types.  */
-typedef gregset_t prgregset_t;
-typedef fpregset_t prfpregset_t;
-
 
 /* Callback for iteration over threads.  */
 typedef int td_thr_iter_f __P ((const td_thrhandle_t *, void *));
@@ -244,10 +237,6 @@ typedef int td_key_iter_f __P ((thread_key_t, void (*) (void *), void *));
 
 /* Forward declaration.  This has to be defined by the user.  */
 struct ps_prochandle;
-
-/* We don't have any differences between processes and threads, therefore
-   have only one PID type.  */
-typedef pid_t lwpid_t;
 
 
 /* Information about the thread.  */
@@ -359,11 +348,11 @@ extern td_err_e td_thr_get_info (const td_thrhandle_t *__th,
 
 /* Retrieve floating-point register contents of process running thread TH.  */
 extern td_err_e td_thr_getfpregs (const td_thrhandle_t *__th,
-				  prfpregset_t *__regset);
+				  fpregset_t *__regset);
 
 /* Retrieve general register contents of process running thread TH.  */
 extern td_err_e td_thr_getgregs (const td_thrhandle_t *__th,
-				 prgregset_t __gregs);
+				 gregset_t __gregs);
 
 /* Retrieve extended register contents of process running thread TH.  */
 extern td_err_e td_thr_getxregs (const td_thrhandle_t *__th, void *__xregs);
@@ -373,11 +362,11 @@ extern td_err_e td_thr_getxregsize (const td_thrhandle_t *__th, int *__sizep);
 
 /* Set floating-point register contents of process running thread TH.  */
 extern td_err_e td_thr_setfpregs (const td_thrhandle_t *__th,
-				  const prfpregset_t *__fpregs);
+				  const fpregset_t *__fpregs);
 
 /* Set general register contents of process running thread TH.  */
 extern td_err_e td_thr_setgregs (const td_thrhandle_t *__th,
-				 prgregset_t __gregs);
+				 gregset_t __gregs);
 
 /* Set extended register contents of process running thread TH.  */
 extern td_err_e td_thr_setxregs (const td_thrhandle_t *__th,
