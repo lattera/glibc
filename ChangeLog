@@ -1,3 +1,9 @@
+2003-03-26  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: Use INTERNAL_SYSCALL and
+	do not check for errors (unless testing for 32bit variant).
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: Likewise.
+
 2003-03-27  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO_RET_NOERRNO): Use

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,27 +35,28 @@ extern int __syscall_setfsgid32 (__kernel_gid32_t);
 #  if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */
-extern int __libc_missing_32bit_uids;
+extern int __libc_missing_32bit_uids attribute_hidden;
 #  endif
 # endif /* __NR_setfsgid32 */
 
 int
 setfsgid (gid_t gid)
 {
+  INTERNAL_SYSCALL_DECL (err);
 # if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (setfsgid32, 1, gid);
+  /* No error checking. */
+  return INTERNAL_SYSCALL (setfsuid32, err, 1, uid);
 # else
 #  ifdef __NR_setfsgid32
   if (__libc_missing_32bit_uids <= 0)
     {
       int result;
-      int saved_errno = errno;
 
-      result = INLINE_SYSCALL (setfsgid32, 1, gid);
-      if (result == 0 || errno != ENOSYS)
+      result = INTERNAL_SYSCALL (setfsuid32, err, 1, uid);
+      if (! INTERNAL_SYSCALL_ERROR_P (result, err)
+	  || INTERNAL_SYSCALL_ERRNO (result, err) != ENOSYS)
 	return result;
 
-      __set_errno (saved_errno);
       __libc_missing_32bit_uids = 1;
     }
 #  endif /* __NR_setfsgid32 */
@@ -65,7 +66,8 @@ setfsgid (gid_t gid)
       return -1;
     }
 
-  return INLINE_SYSCALL (setfsgid, 1, gid);
+  /* No error checking. */
+  return INTERNAL_SYSCALL (setfsuid, err, 1, uid);
 # endif
 }
 #endif
