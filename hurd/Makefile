@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,8 @@ include ../Makeconfig
 
 
 headers = hurd.h $(interface-headers) \
-	  $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h \
-		            resource.h threadvar.h lookup.h)
+	  $(addprefix hurd/,fd.h id.h port.h signal.h sigpreempt.h \
+			    userlink.h resource.h threadvar.h lookup.h)
 
 distribute := hurdstartup.h hurdfault.h intr-rpc.defs STATUS
 
@@ -51,10 +51,10 @@ routines = hurdstartup hurdinit \
 	   fopenport \
  	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
-	   $(sig) $(dtable) hurdinline port-cleanup
+	   $(sig) $(dtable) hurdinline port-cleanup # report-wait
 sig	= hurdsig hurdfault faultexc siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
-	  thread-self thread-cancel intr-msg
+	  thread-self thread-cancel intr-msg catch-signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output

@@ -1,3 +1,19 @@
+Thu Jan  4 11:35:18 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/setitimer.c: Code rearranged a bit to use new
+	preemption interface.
+
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler):
+	Use _hurdsig_catch_memory_fault.
+
+	* hurd/Makefile (headers): Add hurd/sigpreempt.h.
+	(sig): Add catch-signal.
+
+	* hurd/hurdfault.c (_hurdsig_fault_catch_exception_raise):
+	Rewritten using a preempter in new interface.
+	* hurd/hurdfault.h (_hurdsig_catch_fault): Likewise.
+	(_hurdsig_catch_memory_fault): New macro.
+
 Wed Jan  3 20:23:42 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/catch-signal.c: New file.

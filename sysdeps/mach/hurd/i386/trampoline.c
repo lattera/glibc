@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  i386 version.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include "hurdfault.h"
 
-     
+
 struct mach_msg_trap_args
   {
     void *retaddr;		/* Address mach_msg_trap will return to.  */
@@ -50,7 +50,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   extern const void _hurd_intr_rpc_msg_sp_restored;
   void *volatile sigsp;
   struct sigcontext *scp;
-  struct 
+  struct
     {
       int signo;
       long int sigcode;
@@ -67,10 +67,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       /* We have a previous sigcontext that sigreturn was about
 	 to restore when another signal arrived.  We will just base
 	 our setup on that.  */
-      if (_hurdsig_catch_fault (SIGSEGV))
-	assert (_hurdsig_fault_sigcode >= (long int) ss->context &&
-		_hurdsig_fault_sigcode < (long int) (ss->context + 1));
-      else
+      if (! _hurdsig_catch_memory_fault (ss->context))
 	{
 	  memcpy (&state->basic, &ss->context->sc_i386_thread_state,
 		  sizeof (state->basic));
@@ -97,7 +94,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 per-thread variables, cthreads.  */
     }
   /* This code has intimate knowledge of the special mach_msg system call
-     done in intr-msg.c; that code does: 
+     done in intr-msg.c; that code does:
 					movl %esp, %ecx
 					leal ARGS, %esp
 	_hurd_intr_rpc_msg_cx_sp:	movl $-25, %eax
@@ -107,7 +104,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      We must check for the window during which %esp points at the
      mach_msg arguments.  The space below until %ecx is used by
      the _hurd_intr_rpc_mach_msg frame, and must not be clobbered.  */
-  else if (state->basic.eip >= (int) &_hurd_intr_rpc_msg_cx_sp && 
+  else if (state->basic.eip >= (int) &_hurd_intr_rpc_msg_cx_sp &&
 	   state->basic.eip < (int) &_hurd_intr_rpc_msg_sp_restored)
     /* The SP now points at the mach_msg args, but there is more stack
        space used below it.  The real SP is saved in %ecx; we must push the
@@ -121,10 +118,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   sigsp -= sizeof (*stackframe);
   stackframe = sigsp;
 
-  if (_hurdsig_catch_fault (SIGSEGV))
+  if (_hurdsig_catch_memory_fault (stackframe))
     {
-      assert (_hurdsig_fault_sigcode >= (long int) stackframe &&
-	      _hurdsig_fault_sigcode <= (long int) (stackframe + 1));
       /* We got a fault trying to write the stack frame.
 	 We cannot set up the signal handler.
 	 Returning NULL tells our caller, who will nuke us with a SIGILL.  */
@@ -187,17 +182,15 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 still waiting for a reply.  We will have it run the special
 	 trampoline code which retries the message receive before running
 	 the signal handler.
-	 
+
 	 To do this we change the OPTION argument on its stack to enable only
 	 message reception, since the request message has already been
 	 sent.  */
 
       struct mach_msg_trap_args *args = (void *) state->basic.esp;
 
-      if (_hurdsig_catch_fault (SIGSEGV))
+      if (_hurdsig_catch_memory_fault (args))
 	{
-	  assert (_hurdsig_fault_sigcode >= (long int) args &&
-		  _hurdsig_fault_sigcode < (long int) (args + 1));
 	  /* Faulted accessing ARGS.  Bomb.  */
 	  return NULL;
 	}

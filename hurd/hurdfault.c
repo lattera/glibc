@@ -1,5 +1,5 @@
 /* Handle faults in the signal thread.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,12 +29,9 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 
 jmp_buf _hurdsig_fault_env;
+struct hurd_signal_preempter _hurdsig_fault_preempter;
 
 static mach_port_t forward_sigexc;
-
-int _hurdsig_fault_expect_signo;
-long int _hurdsig_fault_sigcode;
-int _hurdsig_fault_sigerror;
 
 kern_return_t
 _hurdsig_fault_catch_exception_raise (mach_port_t port,
@@ -45,6 +42,8 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
 				      int subcode)
 {
   int signo;
+  long int sigcode;
+  int sigerror;
 
   if (port != forward_sigexc ||
       thread != _hurd_msgport_thread || task != __mach_task_self ())
@@ -52,10 +51,11 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
 
   /* Call the machine-dependent function to translate the Mach exception
      codes into a signal number and subcode.  */
-  _hurd_exception2signal (exception, code, subcode, &signo,
-			  &_hurdsig_fault_sigcode, &_hurdsig_fault_sigerror);
+  _hurd_exception2signal (exception, code, subcode,
+			  &signo, &sigcode, &sigerror);
 
-  return signo == _hurdsig_fault_expect_signo ? 0 : EGREGIOUS;
+  return HURD_PREEMPT_SIGNAL_P (&_hurdsig_fault_preempter, signo, sigcode)
+    ? 0 : EGREGIOUS;
 }
 
 static void
@@ -85,19 +85,17 @@ faulted (void)
 
   /* Run the exc demuxer which should call the server function above.
      That function returns 0 if the exception was expected.  */
-  switch (_hurdsig_fault_exc_server (&request.head, &reply.head))
-    {
-    case KERN_SUCCESS:
-      if (reply.head.msgh_remote_port != MACH_PORT_NULL)
-	__mach_msg (&reply.head, MACH_SEND_MSG, reply.head.msgh_size,
-		    0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-      break;
-    default:
-      __mach_msg_destroy (&request.head);
-    case MIG_NO_REPLY:
-    }
+  _hurdsig_fault_exc_server (&request.head, &reply.head);
+  if (reply.head.msgh_remote_port != MACH_PORT_NULL)
+    __mach_msg (&reply.head, MACH_SEND_MSG, reply.head.msgh_size,
+		0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+  if (reply.result == MIG_BAD_ID)
+    __mach_msg_destroy (&request.head);
 
-  _hurdsig_fault_expect_signo = 0;
+  if (reply.result)
+    __libc_fatal ("BUG: unexpected fault in signal thread\n");
+
+  _hurdsig_fault_preempter.signals = 0;
   longjmp (_hurdsig_fault_env, 1);
 }
 
@@ -125,8 +123,10 @@ _hurdsig_fault_init (void)
   err = __mach_port_insert_right (__mach_task_self (), sigexc,
 				  sigexc, MACH_MSG_TYPE_MAKE_SEND);
   assert_perror (err);
+#if 0				/* XXX gdb bites */
   err = __thread_set_special_port (_hurd_msgport_thread,
 				   THREAD_EXCEPTION_PORT, sigexc);
+#endif
   __mach_port_deallocate (__mach_task_self (), sigexc);
   assert_perror (err);
 

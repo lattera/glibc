@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/time.h>
 #include <hurd.h>
 #include <hurd/signal.h>
+#include <hurd/sigpreempt.h>
 #include <hurd/msg_request.h>
 #include <mach/message.h>
 
@@ -109,9 +110,29 @@ timer_thread (void)
     }
 }
 
-/* Forward declaration.  */
-static sighandler_t preempt_sigalrm (thread_t thread, int signo,
-				     long int sigcode, int sigerror);
+
+static sighandler_t
+restart_itimer (struct hurd_signal_preempter *preempter,
+		struct hurd_sigstate *ss,
+		int *signo, long int *sigcode,
+		int *sigerror)
+{
+  static int setitimer_locked (const struct itimerval *new,
+			       struct itimerval *old, void *crit);
+
+  /* This function gets called in the signal thread
+     each time a SIGALRM is arriving (even if blocked).  */
+  struct itimerval it;
+
+  /* Either reload or disable the itimer.  */
+  __spin_lock (&_hurd_itimer_lock);
+  it.it_value = it.it_interval = _hurd_itimerval.it_interval;
+  setitimer_locked (&it, NULL, NULL);
+
+  /* Continue with normal delivery (or hold, etc.) of SIGALRM.  */
+  return SIG_ERR;
+}
+
 
 /* Called before any normal SIGALRM signal is delivered.
    Reload the itimer, or disable the itimer.  */
@@ -138,12 +159,20 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
     {
       /* Make sure the itimer thread is set up.  */
 
-      if (_hurd_signal_preempt[SIGALRM] == NULL)
+      /* Set up a signal preempter global for all threads to
+	 run `restart_itimer' each time a SIGALRM would arrive.  */
+      static struct hurd_signal_preempter preempter =
 	{
-	  static struct hurd_signal_preempt preempt =
-	    { preempt_sigalrm, 0, 0, NULL };
-	  _hurd_signal_preempt[SIGALRM] = &preempt;
+	  __sigmask (SIGALRM), 0, 0,
+	  &restart_itimer,
+	};
+      __mutex_lock (&_hurd_siglock);
+      if (! preempter.next && _hurdsig_preempters != &preempter)
+	{
+	  preempter.next = _hurdsig_preempters;
+	  _hurdsig_preempters = &preempter;
 	}
+      __mutex_unlock (&_hurd_siglock);
 
       if (_hurd_itimer_port == MACH_PORT_NULL)
 	{
@@ -170,7 +199,7 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
 					 &_hurd_itimer_thread_stack_size))
 	    {
 	      __thread_terminate (_hurd_itimer_thread);
-	      _hurd_itimer_thread = MACH_PORT_NULL;	  
+	      _hurd_itimer_thread = MACH_PORT_NULL;
 	      goto out;
 	    }
 	  _hurd_itimer_thread_suspended = 1;
@@ -292,25 +321,6 @@ DEFUN(__setitimer, (which, new, old),
   crit = _hurd_critical_section_lock ();
   __spin_lock (&_hurd_itimer_lock);
   return setitimer_locked (new, old, crit);
-}
-
-static sighandler_t
-preempt_sigalrm (thread_t thread, int signo, long int sigcode, int sigerror)
-{
-  struct itimerval it;
-
-  if (thread != _hurd_sigthread || signo != SIGALRM || sigcode != 0)
-    /* Too much monkey business.  */
-    return SIG_DFL;
-
-  /* Either reload or disable the itimer.  */
-  __spin_lock (&_hurd_itimer_lock);
-  it = _hurd_itimerval;
-  it.it_value = it.it_interval;
-  setitimer_locked (&it, NULL, NULL);
-
-  /* Continue with normal delivery of SIGALRM.  */
-  return SIG_DFL;
 }
 
 static void

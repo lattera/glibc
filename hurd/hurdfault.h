@@ -1,5 +1,5 @@
 /* Declarations for handling faults in the signal thread.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #ifndef _HURD_FAULT_H
 #define _HURD_FAULT_H
 
+#include <hurd/sigpreempt.h>
 #include <setjmp.h>
 
 /* Call this before code that might fault in the signal thread; SIGNO is
@@ -27,23 +28,24 @@ Cambridge, MA 02139, USA.  */
    returns zero the first time, and returns again nonzero if the signal
    does arrive.  */
 
-#define _hurdsig_catch_fault(signo) \
-  (_hurdsig_fault_expect_signo = (signo), setjmp (_hurdsig_fault_env))
+#define _hurdsig_catch_fault(sigset, firstcode, lastcode)	\
+  (_hurdsig_fault_preempter.signals = (sigset),			\
+   _hurdsig_fault_preempter.first = (long int) (firstcode),	\
+   _hurdsig_fault_preempter.last = (long int) (lastcode),	\
+   setjmp (_hurdsig_fault_env))
 
 /* Call this at the end of a section protected by _hurdsig_catch_fault.  */
 
 #define _hurdsig_end_catch_fault() \
-  (_hurdsig_fault_expect_signo = 0)
+  (_hurdsig_fault_preempter.signals = 0)
 
 extern jmp_buf _hurdsig_fault_env;
-extern int _hurdsig_fault_expect_signo;
-
-/* If _hurdsig_catch_fault returns nonzero, these variables
-   contain information about the signal that arrived.  */
+extern struct hurd_signal_preempter _hurdsig_fault_preempter;
 
 
+#define _hurdsig_catch_memory_fault(object) \
+  _hurdsig_catch_fault (sigmask (SIGSEGV) | sigmask (SIGBUS), \
+			(object), (object) + 1)
 
-extern long int _hurdsig_fault_sigcode;
-extern int _hurdsig_fault_sigerror;
 
-#endif	/* hurd/fault.h */
+#endif	/* hurdfault.h */
