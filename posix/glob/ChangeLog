@@ -1,3 +1,8 @@
+Mon Aug  7 14:04:36 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob_in_dir): Allocate GLOB_MARK byte in case when
+ 	(NFOUND == 0 && (FLAGS & GLOB_NOCHECK)).
+
 Sat Apr 29 15:46:57 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c (S_ISDIR): Define if undefined.
