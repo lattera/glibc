@@ -1,3 +1,8 @@
+2004-06-07  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (lll_futex_requeue):
+	Pass val argument as 6th system call argument in %r7.
+
 2004-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (tests): Add tst-cond16.
