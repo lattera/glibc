@@ -9,6 +9,10 @@ libc {
     # s*
     semctl; semget; semop; shmat; shmctl; shmdt; shmget;
   }
+  GLIBC_2.3.3 {
+    # Non-standard function.
+    semtimedop;
+  }
   GLIBC_PRIVATE {
     # Cancellation point entries.
     __libc_msgrcv; __libc_msgsnd;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,7 @@ __END_DECLS
 #define IPCOP_semop	 1
 #define IPCOP_semget	 2
 #define IPCOP_semctl	 3
+#define IPCOP_semtimedop 4
 #define IPCOP_msgsnd	11
 #define IPCOP_msgrcv	12
 #define IPCOP_msgget	13

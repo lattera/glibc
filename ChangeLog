@@ -1,3 +1,14 @@
+2003-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ipc_priv.h: Define IPCOP_semtimedop.
+	* sysdeps/generic/semtimedop.c: New file.
+	* sysdeps/unix/sysv/linux/i386/semtimedop.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add semtimedop.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysvipc/Makefile (routines): Add semtimedop.
+	* sysvipc/Versions [GLIBC_2.3.3] (glibc): Add semtimedop.
+	* sysvipc/sys/sem.h: Declare semtimedop.
+
 2003-04-02  Daniel Jacobowitz  <drow@mvista.com>
 
 	* configure.in: Check for __register_frame_info in both

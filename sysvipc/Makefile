@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ headers	:= sys/ipc.h sys/msg.h sys/sem.h sys/shm.h \
 
 routines := ftok \
 	    msgsnd msgrcv msgget msgctl \
-	    semop semget semctl \
+	    semop semget semctl semtimedop \
 	    shmat shmdt shmget shmctl
 
 include ../Rules

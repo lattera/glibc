@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,11 @@
 /* Get system dependent definition of `struct semid_ds' and more.  */
 #include <bits/sem.h>
 
+#ifdef __USE_GNU
+# define __need_timespec
+# include <time.h>
+#endif
+
 /* The following System V style IPC functions implement a semaphore
    handling.  The definition is found in XPG2.  */
 
@@ -52,6 +57,12 @@ extern int semget (key_t __key, int __nsems, int __semflg) __THROW;
 
 /* Operate on semaphore.  */
 extern int semop (int __semid, struct sembuf *__sops, size_t __nsops) __THROW;
+
+#ifdef __USE_GNU
+/* Operate on semaphore with timeout.  */
+extern int semtimedop (int __semid, struct sembuf *__sops, size_t __nsops,
+		       __const struct timespec *__timeout) __THROW;
+#endif
 
 __END_DECLS
 
