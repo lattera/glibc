@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -23,16 +23,9 @@
 #include <netdb.h>
 #include <string.h>
 #include <netgroup.h>
-#include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
 
 #include "nss-nisplus.h"
-
-__libc_lock_define_initialized (static, lock)
-
-static nis_result *data = NULL;
-static unsigned long data_size = 0;
-static unsigned long position = 0;
 
 #define NISENTRYVAL(idx,col,res) \
         ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
@@ -40,34 +33,37 @@ static unsigned long position = 0;
 #define NISENTRYLEN(idx,col,res) \
         ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
-static enum nss_status
-_nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
-			     size_t buflen, int *errnop)
+enum nss_status
+_nss_nisplus_getnetgrent_r (struct __netgrent *result, char *buffer,
+			    size_t buflen, int *errnop)
 {
   enum nss_status status;
 
   /* Some sanity checks.  */
-  if (data == NULL || data_size == 0)
+  if (result->data == NULL || result->data_size == 0)
     return NSS_STATUS_NOTFOUND;
 
-  if (position == data_size)
+  if (result->position == result->data_size)
     return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
 
-  if (NISENTRYLEN (position, 1, data) > 0)
+  unsigned int entrylen
+    = NISENTRYLEN (result->position, 1, (nis_result *) result->data);
+  if (entrylen > 0)
     {
       /* We have a list of other netgroups.  */
 
       result->type = group_val;
-      if (NISENTRYLEN (position, 1, data) >= buflen)
+      if (entrylen >= buflen)
 	{
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      strncpy (buffer, NISENTRYVAL (position, 1, data),
-	       NISENTRYLEN (position, 1, data));
-      buffer[NISENTRYLEN (position, 1, data)] = '\0';
+      strncpy (buffer, NISENTRYVAL (result->position, 1,
+				    (nis_result *) result->data),
+	       entrylen);
+      buffer[entrylen] = '\0';
       result->val.group = buffer;
-      ++position;
+      ++result->position;
       result->first = 0;
 
       return NSS_STATUS_SUCCESS;
@@ -75,8 +71,13 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
 
   /* Before we can copy the entry to the private buffer we have to make
      sure it is big enough.  */
-  if (NISENTRYLEN (position, 2, data) + NISENTRYLEN (position, 3, data) +
-      NISENTRYLEN (position, 4, data) + 6 > buflen)
+  unsigned int hostlen
+    = NISENTRYLEN (result->position, 2, (nis_result *) result->data);
+  unsigned int userlen
+    = NISENTRYLEN (result->position, 3, (nis_result *) result->data);
+  unsigned int domainlen
+    = NISENTRYLEN (result->position, 4, (nis_result *) result->data);
+  if (hostlen + userlen + domainlen + 6 > buflen)
     {
       *errnop = ERANGE;
       status = NSS_STATUS_TRYAGAIN;
@@ -87,40 +88,43 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
 
       result->type = triple_val;
 
-      if (NISENTRYLEN (position, 2, data) == 0)
+      if (hostlen == 0)
 	result->val.triple.host = NULL;
       else
 	{
 	  result->val.triple.host = cp;
-	  cp = __stpncpy (cp, NISENTRYVAL (position, 2, data),
-			  NISENTRYLEN (position, 2, data));
+	  cp = __stpncpy (cp, NISENTRYVAL (result->position, 2,
+					   (nis_result *) result->data),
+			  hostlen);
 	  *cp++ = '\0';
 	}
 
-      if (NISENTRYLEN (position, 3, data) == 0)
+      if (userlen == 0)
 	result->val.triple.user = NULL;
       else
 	{
 	  result->val.triple.user = cp;
-	  cp = __stpncpy (cp, NISENTRYVAL (position, 3, data),
-			  NISENTRYLEN (position, 3, data));
+	  cp = __stpncpy (cp, NISENTRYVAL (result->position, 3,
+					   (nis_result *) result->data),
+			  userlen);
 	  *cp++ = '\0';
 	}
 
-      if (NISENTRYLEN (position, 4, data) == 0)
+      if (domainlen == 0)
 	result->val.triple.domain = NULL;
       else
 	{
 	  result->val.triple.domain = cp;
-	  cp = __stpncpy (cp, NISENTRYVAL (position, 4, data),
-			  NISENTRYLEN (position, 4, data));
+	  cp = __stpncpy (cp, NISENTRYVAL (result->position, 4,
+					   (nis_result *) result->data),
+			  domainlen);
 	  *cp = '\0';
 	}
 
       status = NSS_STATUS_SUCCESS;
 
       /* Remember where we stopped reading.  */
-      ++position;
+      ++result->position;
 
       result->first = 0;
     }
@@ -128,8 +132,20 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
   return status;
 }
 
+static void
+internal_endnetgrent (struct __netgrent *netgrp)
+{
+  if (netgrp->data != NULL)
+    {
+      nis_freeresult ((nis_result *) netgrp->data);
+      netgrp->data = NULL;
+      netgrp->data_size = 0;
+      netgrp->position = 0;
+    }
+}
+
 enum nss_status
-_nss_nisplus_setnetgrent (const char *group, struct __netgrent *dummy)
+_nss_nisplus_setnetgrent (const char *group, struct __netgrent *netgrp)
 {
   enum nss_status status;
   char buf[strlen (group) + 30];
@@ -139,68 +155,38 @@ _nss_nisplus_setnetgrent (const char *group, struct __netgrent *dummy)
 
   status = NSS_STATUS_SUCCESS;
 
-  __libc_lock_lock (lock);
-
-  if (data != NULL)
-    {
-      nis_freeresult (data);
-      data = NULL;
-      data_size = 0;
-      position = 0;
-    }
+  internal_endnetgrent (netgrp);
 
   sprintf (buf, "[name=%s],netgroup.org_dir", group);
 
-  data = nis_list (buf, EXPAND_NAME, NULL, NULL);
+  netgrp->data = (char *) nis_list (buf, EXPAND_NAME, NULL, NULL);
 
-  if (data == NULL)
+  if (netgrp->data == NULL)
     {
       __set_errno (ENOMEM);
       status = NSS_STATUS_TRYAGAIN;
     }
-  else if (niserr2nss (data->status) != NSS_STATUS_SUCCESS)
+  else if (niserr2nss (((nis_result *) netgrp->data)->status)
+	   != NSS_STATUS_SUCCESS)
     {
-      status = niserr2nss (data->status);
-      nis_freeresult (data);
-      data = NULL;
+      status = niserr2nss (((nis_result *) netgrp->data)->status);
+
+      internal_endnetgrent (netgrp);
     }
   else
-    data_size = data->objects.objects_len;
-
-  __libc_lock_unlock (lock);
-
-  return status;
-}
-
-enum nss_status
-_nss_nisplus_endnetgrent (struct __netgrent *dummy)
-{
-  __libc_lock_lock (lock);
-
-  if (data != NULL)
     {
-      nis_freeresult (data);
-      data = NULL;
-      data_size = 0;
-      position = 0;
+      netgrp->data_size = ((nis_result *) netgrp->data)->objects.objects_len;
+      netgrp->position = 0;
+      netgrp->first = 1;
     }
 
-  __libc_lock_unlock (lock);
-
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status
-_nss_nisplus_getnetgrent_r (struct __netgrent *result,
-			    char *buffer, size_t buflen, int *errnop)
+_nss_nisplus_endnetgrent (struct __netgrent *netgrp)
 {
-  enum nss_status status;
+  internal_endnetgrent (netgrp);
 
-  __libc_lock_lock (lock);
-
-  status = _nss_nisplus_parse_netgroup (result, buffer, buflen, errnop);
-
-  __libc_lock_unlock (lock);
-
-  return status;
+  return NSS_STATUS_SUCCESS;
 }

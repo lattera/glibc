@@ -28,10 +28,6 @@
 /* Protect above variable against multiple uses at the same time.  */
 __libc_lock_define_initialized (static, lock)
 
-/* This handle for the NSS data base is shared between all
-   set/get/endXXXent functions.  */
-static service_user *nip;
-
 /* The whole information for the set/get/endnetgrent functions are
    kept in this structure.  */
 static struct __netgrent dataset;
@@ -45,7 +41,7 @@ extern int __nss_netgroup_lookup (service_user **nip, const char *name,
    current location if it's not nil.  Return nonzero if there are no
    services (left).  */
 static enum nss_status
-setup (void **fctp, const char *func_name, int all)
+setup (void **fctp, const char *func_name, int all, service_user **nipp)
 {
   /* Remember the first service_entry, it's always the same.  */
   static service_user *startp;
@@ -53,19 +49,21 @@ setup (void **fctp, const char *func_name, int all)
 
   if (startp == NULL)
     {
-      no_more = __nss_netgroup_lookup (&nip, func_name, fctp);
-      startp = no_more ? (service_user *) -1 : nip;
+      /* Executing this more than once at the same time must yield the
+	 same result every time.  So we need no locking.  */
+      no_more = __nss_netgroup_lookup (nipp, func_name, fctp);
+      startp = no_more ? (service_user *) -1 : *nipp;
     }
   else if (startp == (service_user *) -1)
     /* No services at all.  */
     return 1;
   else
     {
-      if (all || !nip)
+      if (all || *nipp == NULL)
 	/* Reset to the beginning of the service list.  */
-	nip = startp;
+	*nipp = startp;
       /* Look up the first function.  */
-      no_more = __nss_lookup (&nip, func_name, fctp);
+      no_more = __nss_lookup (nipp, func_name, fctp);
     }
   return no_more;
 }
@@ -101,16 +99,15 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
   } fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   struct name_list *new_elem;
-  int no_more;
 
   /* Cycle through all the services and run their setnetgrent functions.  */
-  no_more = setup (&fct.ptr, "setnetgrent", 1);
+  int no_more = setup (&fct.ptr, "setnetgrent", 1, &datap->nip);
   while (! no_more)
     {
       /* Ignore status, we force check in `__nss_next'.  */
       status = (*fct.f) (group, datap);
 
-      no_more = __nss_next (&nip, "setnetgrent", &fct.ptr, status, 0);
+      no_more = __nss_next (&datap->nip, "setnetgrent", &fct.ptr, status, 0);
     }
 
   /* Add the current group to the list of known groups.  */
@@ -173,20 +170,19 @@ internal_endnetgrent (struct __netgrent *datap)
     enum nss_status (*f) (struct __netgrent *);
     void *ptr;
   } fct;
-  int no_more;
 
   /* Remember which was the last used service.  */
-  old_nip = nip;
+  old_nip = datap->nip;
 
   /* Cycle through all the services and run their endnetgrent functions.  */
-  no_more = setup (&fct.ptr, "endnetgrent", 1);
+  int no_more = setup (&fct.ptr, "endnetgrent", 1, &datap->nip);
   while (! no_more)
     {
       /* Ignore status, we force check in `__nss_next'.  */
       (void) (*fct.f) (datap);
 
-      no_more = (nip == old_nip
-		 || __nss_next (&nip, "endnetgrent", &fct.ptr, 0, 1));
+      no_more = (datap->nip == old_nip
+		 || __nss_next (&datap->nip, "endnetgrent", &fct.ptr, 0, 1));
     }
 
   /* Now free list of all netgroup names from last run.  */
@@ -222,7 +218,6 @@ internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
     enum nss_status (*f) (struct __netgrent *, char *, size_t, int *);
     void *ptr;
   } fct;
-  int no_more;
 
   /* Initialize status to return if no more functions are found.  */
   enum nss_status status = NSS_STATUS_NOTFOUND;
@@ -230,7 +225,7 @@ internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
   /* Run through available functions, starting with the same function last
      run.  We will repeat each function as long as it succeeds, and then go
      on to the next service action.  */
-  no_more = setup (&fct.ptr, "getnetgrent_r", 0);
+  int no_more = setup (&fct.ptr, "getnetgrent_r", 0, &datap->nip);
   while (! no_more)
     {
       status = (*fct.f) (datap, buffer, buflen, &errno);
@@ -284,7 +279,7 @@ internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 	    }
 	}
 
-      no_more = __nss_next (&nip, "getnetgrent_r", &fct.ptr, status, 0);
+      no_more = __nss_next (&datap->nip, "getnetgrent_r", &fct.ptr, status, 0);
     }
 
   if (status == NSS_STATUS_SUCCESS)
@@ -337,14 +332,12 @@ innetgr (const char *netgroup, const char *host, const char *user,
     int (*f) (struct __netgrent *, char *, size_t, int *);
     void *ptr;
   } getfct;
-  struct name_list *known = NULL;
-  struct name_list *needed = NULL;
+  struct __netgrent entry;
   int result = 0;
-  int no_more;
   const char *current_group = netgroup;
   int real_entry = 0;
 
-  __libc_lock_lock (lock);
+  memset (&entry, '\0', sizeof (entry));
 
   /* Walk through the services until we found an answer or we shall
      not work further.  We can do some optimization here.  Since all
@@ -352,19 +345,14 @@ innetgr (const char *netgroup, const char *host, const char *user,
      the work during one walk through the service list.  */
   while (1)
     {
-      no_more = setup (&setfct.ptr, "setnetgrent", 1);
+      int no_more = setup (&setfct.ptr, "setnetgrent", 1, &entry.nip);
       while (! no_more)
 	{
-	  enum nss_status status;
-	  struct __netgrent entry;
-
-	  /* Clear the space for the netgroup data.  */
-	  __bzero (&entry, sizeof (entry));
-
 	  /* Open netgroup.  */
-	  status = (*setfct.f) (current_group, &entry);
+	  enum nss_status status = (*setfct.f) (current_group, &entry);
+
 	  if (status == NSS_STATUS_SUCCESS
-	      && __nss_lookup (&nip, "getnetgrent_r", &getfct.ptr) == 0)
+	      && __nss_lookup (&entry.nip, "getnetgrent_r", &getfct.ptr) == 0)
 	    {
 	      char buffer[1024];
 
@@ -376,7 +364,8 @@ innetgr (const char *netgroup, const char *host, const char *user,
 		      /* Make sure we haven't seen the name before.  */
 		      struct name_list *namep;
 
-		      for (namep = known; namep != NULL; namep = namep->next)
+		      for (namep = entry.known_groups; namep != NULL;
+			   namep = namep->next)
 			if (strcmp (entry.val.group, namep->name) == 0)
 			  break;
 		      if (namep == NULL
@@ -393,9 +382,9 @@ innetgr (const char *netgroup, const char *host, const char *user,
 			      break;
 			    }
 
-			  namep->next = needed;
+			  namep->next = entry.needed_groups;
 			  memcpy (namep->name, entry.val.group, group_len);
-			  needed = namep;
+			  entry.needed_groups = namep;
 			}
 		    }
 		  else
@@ -425,21 +414,21 @@ innetgr (const char *netgroup, const char *host, const char *user,
 	    }
 
 	  /* Free all resources of the service.  */
-	  if (__nss_lookup (&nip, "endnetgrent", &endfct.ptr) == 0)
+	  if (__nss_lookup (&entry.nip, "endnetgrent", &endfct.ptr) == 0)
 	    (*endfct.f) (&entry);
 
 	  /* Look for the next service.  */
-	  no_more = __nss_next (&nip, "setnetgrent",
+	  no_more = __nss_next (&entry.nip, "setnetgrent",
 				&setfct.ptr, status, 0);
 	}
 
-      if (result == 0 && needed != NULL)
+      if (result == 0 && entry.needed_groups != NULL)
 	{
-	  struct name_list *tmp = needed;
-	  needed = tmp->next;
-	  tmp->next = known;
-	  known = tmp;
-	  current_group = known->name;
+	  struct name_list *tmp = entry.needed_groups;
+	  entry.needed_groups = tmp->next;
+	  tmp->next = entry.known_groups;
+	  entry.known_groups = tmp;
+	  current_group = entry.known_groups->name;
 	  continue;
 	}
 
@@ -447,22 +436,9 @@ innetgr (const char *netgroup, const char *host, const char *user,
       break;
     }
 
-  __libc_lock_unlock (lock);
-
   /* Free the memory.  */
-  while (known != NULL)
-    {
-      struct name_list *tmp = known;
-      known = known->next;
-      free (tmp);
-    }
-  while (needed != NULL)
-    {
-      struct name_list *tmp = needed;
-      needed = needed->next;
-      free (tmp);
-    }
+  free_memory (&entry);
 
-  return result == 1;
+  return result;
 }
 libc_hidden_def (innetgr)

@@ -20,6 +20,8 @@
 #ifndef _NETGROUP_H
 #define _NETGROUP_H	1
 
+#include <nsswitch.h>
+
 /* A netgroup can consist of names of other netgroups.  We have to
    track which netgroups were read and which still have to be read.  */
 struct name_list
@@ -51,11 +53,19 @@ struct __netgrent
      functions.  We must avoid global variables.  */
   char *data;
   size_t data_size;
-  char *cursor;
+  union
+  {
+    char *cursor;
+    unsigned long int position;
+  };
   int first;
 
   struct name_list *known_groups;
   struct name_list *needed_groups;
+
+  /* This handle for the NSS data base is shared between all
+     set/get/endXXXent functions.  */
+  service_user *nip;
 };
 
 
