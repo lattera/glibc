@@ -488,11 +488,11 @@ enum
   __NOEXPR,			/* Regex matching ``no'' input.  */
 #define NOEXPR			__NOEXPR
   __YESSTR,			/* Output string for ``yes''.  */
-#if defined __USE_GNU || (defined __USE_XOPEN || !defined __USE_XOPEN2K)
+#if defined __USE_GNU || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 # define YESSTR			__YESSTR
 #endif
   __NOSTR,			/* Output string for ``no''.  */
-#if defined __USE_GNU || (defined __USE_XOPEN || !defined __USE_XOPEN2K)
+#if defined __USE_GNU || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 # define NOSTR			__NOSTR
 #endif
   _NL_NUM_LC_MESSAGES,
