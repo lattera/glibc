@@ -27,7 +27,7 @@
 
 #ifndef atomic_compare_and_exchange_acq
 # define atomic_compare_and_exchange_acq(mem, newval, oldval) \
-  ({ __typeof (__arch_compare_and_exchange_8_acq (mem, newval, oldval))	      \
+  ({ __typeof (__arch_compare_and_exchange_32_acq (mem, newval, oldval))      \
 	 __result;							      \
      if (sizeof (*mem) == 1)						      \
        __result = __arch_compare_and_exchange_8_acq (mem, newval, oldval);    \
@@ -82,14 +82,14 @@
 #ifndef atomic_bit_set
 # define atomic_bit_set(mem, bit) \
   (void) ({ __typeof (mem) __memp = (mem);				      \
-	    while (1)							      \
-	      {								      \
-		__typeof (*mem) __oldval = *__memp;			      \
+	    __typeof (*mem) __mask = (1 << (bit));			      \
+	    __typeof (*mem) __oldval;					      \
 									      \
-		if (atomic_compare_and_exchange_acq (__memp,		      \
-						     __oldval | 1 << bit,     \
-						     __oldval) == 0)	      \
-		  break;						      \
+	    do								      \
+	      __oldval = *__memp;					      \
+	     while (atomic_compare_and_exchange_acq (__memp,		      \
+						     __oldval | __mask,	      \
+						     __oldval));	      \
 	      }})
 #endif
 
