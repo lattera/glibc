@@ -18,7 +18,7 @@ constant F_WRLCK
 
 constant SEEK_SET
 constant SEEK_CUR
-constant SEED_END
+constant SEEK_END
 
 constant O_CREAT
 constant O_EXCL
@@ -89,7 +89,6 @@ function int open (const char*, int, ...)
 #ifdef XOPEN2K
 function int posix_fadvise (int, off_t, size_t, int)
 function int posix_fallocate (int, off_t, size_t)
-function int posix_madvise (void*, size_t, int)
 #endif
 
 allow-header sys/stat.h
