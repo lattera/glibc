@@ -1,3 +1,8 @@
+2004-12-16  Roland McGrath  <roland@redhat.com>
+
+	* nscd/Makefile ($(objpfx)nscd): Don't depend on $(selinux-LIBS),
+	which is usually a -lselinux that make will resolve wrongly.
+
 2004-12-16  Andreas Jaeger  <aj@suse.de>
 
 	* math/math.h: Use #if defined to not receive warnings about
