@@ -1,5 +1,7 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/do-lookup.h (FCT): st_value can be zero for STT_TLS symbols.
+
 	* po/fr.po: Update from translation team.
 
 	* elf/tls-macros.h: Add alternative macros for use in PIC.

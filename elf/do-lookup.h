@@ -77,10 +77,12 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 	  sym = &symtab[symidx];
 
 	  assert (ELF_RTYPE_CLASS_PLT == 1);
-	  if (sym->st_value == 0 || /* No value.  */
-	      /* ((type_class & ELF_RTYPE_CLASS_PLT)
-		  && (sym->st_shndx == SHN_UNDEF)) */
-	      (type_class & (sym->st_shndx == SHN_UNDEF)))
+	  if ((sym->st_value == 0 /* No value.  */
+#ifdef USE_TLS
+	       && ELFW(ST_TYPE) (sym->st_info) != STT_TLS
+#endif
+	       )
+	      || (type_class & (sym->st_shndx == SHN_UNDEF)))
 	    continue;
 
 	  if (ELFW(ST_TYPE) (sym->st_info) > STT_FUNC
