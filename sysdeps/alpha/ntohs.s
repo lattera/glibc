@@ -1,2 +1,0 @@
-/* This is a dummy to avoid including the generic version.  htons and
-ntohs are identical and htons.S defines appropriate aliases.  */
