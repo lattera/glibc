@@ -1,7 +1,7 @@
 2004-09-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.c (termination_handler): Reset timestamp so that
-	client immediately stop using the database.
+	clients immediately stop using the database.
 
 	* nscd/nscd-client.h (__nscd_get_map_ref): Drop volatile from last
 	parameter.
