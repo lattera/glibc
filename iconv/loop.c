@@ -257,6 +257,7 @@
 
 /* The function returns the status, as defined in gconv.h.  */
 static inline int
+__attribute ((always_inline))
 FCTNAME (LOOPFCT) (struct __gconv_step *step,
 		   struct __gconv_step_data *step_data,
 		   const unsigned char **inptrp, const unsigned char *inend,
@@ -342,6 +343,7 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
 # define SINGLE(fct) SINGLE2 (fct)
 # define SINGLE2(fct) fct##_single
 static inline int
+__attribute ((always_inline))
 SINGLE(LOOPFCT) (struct __gconv_step *step,
 		 struct __gconv_step_data *step_data,
 		 const unsigned char **inptrp, const unsigned char *inend,

@@ -1,5 +1,5 @@
 /* Access functions for GB2312 conversion.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -30,6 +30,7 @@ extern const uint16_t __gb2312_to_ucs[];
 
 
 static inline uint32_t
+__attribute ((always_inline))
 gb2312_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = *(*s);
@@ -67,6 +68,7 @@ extern const char __gb2312_from_ucs4_tab8[][2];
 extern const char __gb2312_from_ucs4_tab9[][2];
 
 static inline size_t
+__attribute ((always_inline))
 ucs4_to_gb2312 (uint32_t wch, unsigned char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;

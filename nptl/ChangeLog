@@ -1,3 +1,8 @@
+2003-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (queue_stack): Always inline.
+	* ptreadhP.h (__do_cancel): Likewise.
+
 2003-06-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/sem_timedwait.c (sem_timedwait): Fix

@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 /* Inner part of the lookup functions.  We return a value > 0 if we
    found the symbol, the value 0 if nothing is found and < 0 if
    something bad happened.  */
-static inline int
+static int
 FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
      struct sym_val *result, struct r_scope_elem *scope, size_t i, ARG,
      struct link_map *skip, int type_class)

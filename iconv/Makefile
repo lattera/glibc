@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1997,1998,2000,2001,2002,2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,11 +35,11 @@ CFLAGS-gconv_cache.c = -DSTATIC_GCONV
 CFLAGS-gconv_simple.c = -DSTATIC_GCONV
 endif
 
-vpath %.c ../locale/programs
+vpath %.c ../locale/programs ../intl
 
 iconv_prog-modules = iconv_charmap charmap charmap-dir linereader \
 		     dummy-repertoire simple-hash xstrdup xmalloc
-iconvconfig-modules = strtab xmalloc
+iconvconfig-modules = strtab xmalloc hash-string
 extra-objs	   = $(iconv_prog-modules:=.o) $(iconvconfig-modules:=.o)
 CFLAGS-iconv_prog.c = -I../locale/programs
 CFLAGS-iconv_charmap.c = -I../locale/programs

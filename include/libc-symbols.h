@@ -359,11 +359,11 @@
 #  endif
 
 /* Return a pointer (void *const *) to the first element of SET.  */
-#  define symbol_set_first_element(set)	(&__start_##set)
+#  define symbol_set_first_element(set)	((void *const *) (&__start_##set))
 
 /* Return true iff PTR (a void *const *) has been incremented
    past the last element in SET.  */
-#  define symbol_set_end_p(set, ptr)	((ptr) >= &__stop_##set)
+#  define symbol_set_end_p(set, ptr) ((ptr) >= (void *const *) &__stop_##set)
 
 # else	/* Not ELF: a.out.  */
 

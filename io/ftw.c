@@ -258,6 +258,7 @@ find_object (struct ftw_data *data, struct STAT *st)
 
 
 static inline int
+__attribute ((always_inline))
 open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 {
   int result = 0;
@@ -348,7 +349,8 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 }
 
 
-static inline int
+static int
+internal_function
 process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 	       size_t namlen)
 {

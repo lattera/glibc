@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95-99, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 1995-2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -128,7 +128,7 @@ extern int _nl_msg_cat_cntr;
 
 
 /* Construct a new composite name.  */
-static inline char *
+static char *
 new_composite_name (int category, const char *newnames[__LC_LAST])
 {
   size_t last_len = 0;

@@ -47,7 +47,7 @@ routines := htonl htons		\
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
 	    in6_addr getnameinfo if_index ifaddrs
 
-aux := check_pf
+aux := check_pf ifreq
 
 tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
 	 tst-gethnm test-ifaddrs

@@ -1,5 +1,5 @@
 /* Implements a string hashing function.
-   Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,27 +34,5 @@
 /* Defines the so called `hashpjw' function by P.J. Weinberger
    [see Aho/Sethi/Ullman, COMPILERS: Principles, Techniques and Tools,
    1986, 1987 Bell Telephone Laboratories, Inc.]  */
-static unsigned long int hash_string PARAMS ((const char *__str_param));
-
-static inline unsigned long int
-hash_string (str_param)
-     const char *str_param;
-{
-  unsigned long int hval, g;
-  const char *str = str_param;
-
-  /* Compute the hash value for the given string.  */
-  hval = 0;
-  while (*str != '\0')
-    {
-      hval <<= 4;
-      hval += (unsigned long int) *str++;
-      g = hval & ((unsigned long int) 0xf << (HASHWORDBITS - 4));
-      if (g != 0)
-	{
-	  hval ^= g >> (HASHWORDBITS - 8);
-	  hval ^= g;
-	}
-    }
-  return hval;
-}
+extern unsigned long int __hash_string PARAMS ((const char *__str_param))
+     attribute_hidden;

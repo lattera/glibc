@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -125,7 +125,7 @@ detect_conflict (const char *alias)
 
 
 /* Add new alias.  */
-static inline void
+static void
 add_alias (char *rp, void *modules)
 {
   /* We now expect two more string.  The strings are normalized
@@ -178,7 +178,7 @@ add_alias (char *rp, void *modules)
 
 
 /* Insert a data structure for a new module in the search tree.  */
-static inline void
+static void
 internal_function
 insert_module (struct gconv_module *newp, int tobefreed)
 {

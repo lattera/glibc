@@ -72,6 +72,7 @@ __gconv_btwoc_ascii (struct __gconv_step *step, unsigned char c)
 
 
 static inline int
+__attribute ((always_inline))
 internal_ucs4_loop (struct __gconv_step *step,
 		    struct __gconv_step_data *step_data,
 		    const unsigned char **inptrp, const unsigned char *inend,
@@ -113,6 +114,7 @@ internal_ucs4_loop (struct __gconv_step *step,
 
 #ifndef _STRING_ARCH_unaligned
 static inline int
+__attribute ((always_inline))
 internal_ucs4_loop_unaligned (struct __gconv_step *step,
 			      struct __gconv_step_data *step_data,
 			      const unsigned char **inptrp,
@@ -161,6 +163,7 @@ internal_ucs4_loop_unaligned (struct __gconv_step *step,
 
 
 static inline int
+__attribute ((always_inline))
 internal_ucs4_loop_single (struct __gconv_step *step,
 			   struct __gconv_step_data *step_data,
 			   const unsigned char **inptrp,
@@ -219,6 +222,7 @@ internal_ucs4_loop_single (struct __gconv_step *step,
 
 
 static inline int
+__attribute ((always_inline))
 ucs4_internal_loop (struct __gconv_step *step,
 		    struct __gconv_step_data *step_data,
 		    const unsigned char **inptrp, const unsigned char *inend,
@@ -283,6 +287,7 @@ ucs4_internal_loop (struct __gconv_step *step,
 
 #ifndef _STRING_ARCH_unaligned
 static inline int
+__attribute ((always_inline))
 ucs4_internal_loop_unaligned (struct __gconv_step *step,
 			      struct __gconv_step_data *step_data,
 			      const unsigned char **inptrp,
@@ -352,6 +357,7 @@ ucs4_internal_loop_unaligned (struct __gconv_step *step,
 
 
 static inline int
+__attribute ((always_inline))
 ucs4_internal_loop_single (struct __gconv_step *step,
 			   struct __gconv_step_data *step_data,
 			   const unsigned char **inptrp,
@@ -426,6 +432,7 @@ ucs4_internal_loop_single (struct __gconv_step *step,
 
 
 static inline int
+__attribute ((always_inline))
 internal_ucs4le_loop (struct __gconv_step *step,
 		      struct __gconv_step_data *step_data,
 		      const unsigned char **inptrp, const unsigned char *inend,
@@ -467,6 +474,7 @@ internal_ucs4le_loop (struct __gconv_step *step,
 
 #ifndef _STRING_ARCH_unaligned
 static inline int
+__attribute ((always_inline))
 internal_ucs4le_loop_unaligned (struct __gconv_step *step,
 				struct __gconv_step_data *step_data,
 				const unsigned char **inptrp,
@@ -518,6 +526,7 @@ internal_ucs4le_loop_unaligned (struct __gconv_step *step,
 
 
 static inline int
+__attribute ((always_inline))
 internal_ucs4le_loop_single (struct __gconv_step *step,
 			     struct __gconv_step_data *step_data,
 			     const unsigned char **inptrp,
@@ -573,6 +582,7 @@ internal_ucs4le_loop_single (struct __gconv_step *step,
 
 
 static inline int
+__attribute ((always_inline))
 ucs4le_internal_loop (struct __gconv_step *step,
 		      struct __gconv_step_data *step_data,
 		      const unsigned char **inptrp, const unsigned char *inend,
@@ -638,6 +648,7 @@ ucs4le_internal_loop (struct __gconv_step *step,
 
 #ifndef _STRING_ARCH_unaligned
 static inline int
+__attribute ((always_inline))
 ucs4le_internal_loop_unaligned (struct __gconv_step *step,
 				struct __gconv_step_data *step_data,
 				const unsigned char **inptrp,
@@ -711,6 +722,7 @@ ucs4le_internal_loop_unaligned (struct __gconv_step *step,
 
 
 static inline int
+__attribute ((always_inline))
 ucs4le_internal_loop_single (struct __gconv_step *step,
 			     struct __gconv_step_data *step_data,
 			     const unsigned char **inptrp,

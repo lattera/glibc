@@ -361,7 +361,7 @@ static struct r_search_path_struct rtld_search_dirs;
 
 static size_t max_dirnamelen;
 
-static inline struct r_search_path_elem **
+static struct r_search_path_elem **
 fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	      int check_trusted, const char *what, const char *where)
 {
@@ -1935,8 +1935,7 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
 
   unsigned int idx = 0;
   char *allocptr = (char *) &si->dls_serpath[si->dls_cnt];
-  inline void add_path (const struct r_search_path_struct *sps,
-			unsigned int flags)
+  void add_path (const struct r_search_path_struct *sps, unsigned int flags)
 # define add_path(sps, flags) add_path(sps, 0) /* XXX */
     {
       if (sps->dirs != (void *) -1)

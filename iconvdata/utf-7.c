@@ -1,5 +1,5 @@
 /* Conversion module for UTF-7.
-   Copyright (C) 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -93,7 +93,7 @@ isxbase64 (uint32_t ch)
 
 
 /* Converts a value in the range 0..63 to a base64 encoded char.  */
-static inline unsigned char
+static unsigned char
 base64 (unsigned int i)
 {
   if (i < 26)

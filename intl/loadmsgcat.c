@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1209,7 +1209,7 @@ _nl_load_domain (domain_file, domainbinding)
 		for (i = 0; i < n_sysdep_strings; i++)
 		  {
 		    const char *msgid = inmem_orig_sysdep_tab[i].pointer;
-		    nls_uint32 hash_val = hash_string (msgid);
+		    nls_uint32 hash_val = __hash_string (msgid);
 		    nls_uint32 idx = hash_val % domain->hash_size;
 		    nls_uint32 incr = 1 + (hash_val % (domain->hash_size - 2));
 

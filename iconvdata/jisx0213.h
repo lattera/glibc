@@ -1,5 +1,5 @@
 /* Functions for JISX0213 conversion.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <bruno@clisp.org>, 2002.
 
@@ -32,6 +32,7 @@ extern const uint16_t __jisx0213_from_ucs_level2[];
 #define NELEMS(arr) (sizeof (arr) / sizeof (arr[0]))
 
 static inline uint32_t
+__attribute ((always_inline))
 jisx0213_to_ucs4 (unsigned int row, unsigned int col)
 {
   uint32_t val;
@@ -64,6 +65,7 @@ jisx0213_to_ucs4 (unsigned int row, unsigned int col)
 }
 
 static inline uint16_t
+__attribute ((always_inline))
 ucs4_to_jisx0213 (uint32_t ucs)
 {
   if (ucs < NELEMS (__jisx0213_from_ucs_level1) << 6)

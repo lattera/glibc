@@ -116,7 +116,7 @@ extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
 
 /* Called when a thread reacts on a cancellation request.  */
 static inline void
-__attribute ((noreturn))
+__attribute ((noreturn, always_inline))
 __do_cancel (void)
 {
   struct pthread *self = THREAD_SELF;

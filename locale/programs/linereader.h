@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
@@ -95,6 +95,7 @@ extern struct token *lr_token (struct linereader *lr,
 			       struct localedef_t *locale,
 			       const struct repertoire_t *repertoire,
 			       int verbose);
+extern void lr_ignore_rest (struct linereader *lr, int verbose);
 
 
 #define lr_error(lr, fmt, args...) \
@@ -103,6 +104,7 @@ extern struct token *lr_token (struct linereader *lr,
 
 
 static inline int
+__attribute ((always_inline))
 lr_getc (struct linereader *lr)
 {
   if (lr->idx == lr->bufact)
@@ -120,6 +122,7 @@ lr_getc (struct linereader *lr)
 
 
 static inline int
+__attribute ((always_inline))
 lr_ungetc (struct linereader *lr, int ch)
 {
   if (lr->idx == 0)
@@ -139,35 +142,6 @@ lr_ungetn (struct linereader *lr, size_t n)
 
   lr->idx -= n;
   return 0;
-}
-
-
-static inline void
-lr_ignore_rest (struct linereader *lr, int verbose)
-{
-  if (verbose)
-    {
-      while (isspace (lr->buf[lr->idx]) && lr->buf[lr->idx] != '\n'
-	     && lr->buf[lr->idx] != lr->comment_char)
-	if (lr->buf[lr->idx] == '\0')
-	  {
-	    if (lr_next (lr) < 0)
-	      return;
-	  }
-	else
-	  ++lr->idx;
-
-      if (lr->buf[lr->idx] != '\n' && ! feof (lr->fp)
-	  && lr->buf[lr->idx] != lr->comment_char)
-	lr_error (lr, _("trailing garbage at end of line"));
-    }
-
-  /* Ignore continued line.  */
-  while (lr->bufact > 0 && lr->buf[lr->bufact - 1] != '\n')
-    if (lr_next (lr) < 0)
-      break;
-
-  lr->idx = lr->bufact;
 }
 
 

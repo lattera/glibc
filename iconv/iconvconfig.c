@@ -784,7 +784,7 @@ new_name (const char *str, struct Strent *strent)
   newp->name = str;
   newp->strent = strent;
   newp->module_idx = -1;
-  newp->hashval = hash_string (str);
+  newp->hashval = __hash_string (str);
 
   ++nnames;
 

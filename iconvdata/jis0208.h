@@ -1,5 +1,5 @@
 /* Access functions for JISX0208 conversion.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -43,6 +43,7 @@ struct jisx0208_ucs_idx
 
 
 static inline uint32_t
+__attribute ((always_inline))
 jisx0208_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = *(*s);
@@ -70,6 +71,7 @@ jisx0208_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 
 
 static inline size_t
+__attribute ((always_inline))
 ucs4_to_jisx0208 (uint32_t wch, char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;

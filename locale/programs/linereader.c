@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -107,6 +107,35 @@ int
 lr_eof (struct linereader *lr)
 {
   return lr->bufact = 0;
+}
+
+
+void
+lr_ignore_rest (struct linereader *lr, int verbose)
+{
+  if (verbose)
+    {
+      while (isspace (lr->buf[lr->idx]) && lr->buf[lr->idx] != '\n'
+	     && lr->buf[lr->idx] != lr->comment_char)
+	if (lr->buf[lr->idx] == '\0')
+	  {
+	    if (lr_next (lr) < 0)
+	      return;
+	  }
+	else
+	  ++lr->idx;
+
+      if (lr->buf[lr->idx] != '\n' && ! feof (lr->fp)
+	  && lr->buf[lr->idx] != lr->comment_char)
+	lr_error (lr, _("trailing garbage at end of line"));
+    }
+
+  /* Ignore continued line.  */
+  while (lr->bufact > 0 && lr->buf[lr->bufact - 1] != '\n')
+    if (lr_next (lr) < 0)
+      break;
+
+  lr->idx = lr->bufact;
 }
 
 

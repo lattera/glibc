@@ -1,5 +1,5 @@
 /* Access functions for CNS 11643 handling.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -40,6 +40,7 @@ extern const uint32_t __cns11643l15_to_ucs4_tab[];
 
 
 static inline uint32_t
+__attribute ((always_inline))
 cns11643_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = *(*s);
@@ -140,6 +141,7 @@ extern const char __cns11643_from_ucs4p2c_tab[][3];
 
 
 static inline size_t
+__attribute ((always_inline))
 ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;

@@ -202,6 +202,7 @@ get_cached_stack (size_t *sizep, void **memp)
 /* Add a stack frame which is not used anymore to the stack.  Must be
    called with the cache lock held.  */
 static inline void
+__attribute ((always_inline))
 queue_stack (struct pthread *stack)
 {
   /* We unconditionally add the stack to the list.  The memory may

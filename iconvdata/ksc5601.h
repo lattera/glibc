@@ -1,5 +1,5 @@
 /* Access functions for KS C 5601-1992 based encoding conversion.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,7 @@ extern const struct map __ksc5601_hanja_from_ucs[KSC5601_HANJA];
 
 
 static inline uint32_t
+__attribute ((always_inline))
 ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = **s;
@@ -85,6 +86,7 @@ ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 }
 
 static inline size_t
+__attribute ((always_inline))
 ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
@@ -116,6 +118,7 @@ ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char *s, size_t avail)
 
 
 static inline size_t
+__attribute ((always_inline))
 ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
@@ -146,6 +149,7 @@ ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char *s, size_t avail)
 }
 
 static inline  size_t
+__attribute ((always_inline))
 ucs4_to_ksc5601_sym (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
@@ -177,6 +181,7 @@ ucs4_to_ksc5601_sym (uint32_t wch, unsigned char *s, size_t avail)
 
 
 static inline size_t
+__attribute ((always_inline))
 ucs4_to_ksc5601 (uint32_t wch, unsigned char *s, size_t avail)
 {
   if (wch >= 0xac00 && wch <= 0xd7a3)

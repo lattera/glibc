@@ -1,5 +1,5 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,7 +27,6 @@
 
 #include <dlfcn.h>
 #include <gconv_int.h>
-#include <gconv_charset.h>
 
 
 /* Simple data structure for alias mapping.  We have two names, `from'

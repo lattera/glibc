@@ -159,7 +159,7 @@ find_module_idx (const char *str, size_t *idxp)
   hashtab = (struct hash_entry *) ((char *) gconv_cache
 				   + header->hash_offset);
 
-  hval = hash_string (str);
+  hval = __hash_string (str);
   idx = hval % header->hash_size;
   hval2 = 1 + hval % (header->hash_size - 2);
 

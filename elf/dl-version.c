@@ -1,5 +1,5 @@
 /* Handle symbol and library versioning.
-   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -53,6 +53,7 @@
 
 
 static inline struct link_map *
+__attribute ((always_inline))
 find_needed (const char *name, struct link_map *map)
 {
   struct link_map *tmap;
