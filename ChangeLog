@@ -1,3 +1,8 @@
+2002-10-31  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/bits/byteswap.h [__GNUC__ < 2] (__bswap_32):
+	Renamed from __bswap_16 (typo fix).  Reported by <dens@stl.sarov.ru>.
+
 2002-10-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (syscall-%.h): Add -D for each
