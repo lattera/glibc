@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,13 +57,11 @@ __BEGIN_DECLS
 
 /* Do the file control operation described by CMD on FD.
    The remaining arguments are interpreted depending on CMD.  */
-extern int __fcntl (int __fd, int __cmd, ...) __THROW;
 extern int fcntl (int __fd, int __cmd, ...) __THROW;
 
 /* Open FILE and return a new file descriptor for it, or -1 on error.
    OFLAG determines the type of access used.  If O_CREAT is on OFLAG,
    the third argument is taken as a `mode_t', the mode of the created file.  */
-extern int __open (__const char *__file, int __oflag, ...) __THROW;
 #ifndef __USE_FILE_OFFSET64
 extern int open (__const char *__file, int __oflag, ...) __THROW;
 #else

@@ -1,3 +1,8 @@
+2001-02-05  Andreas Jaeger  <aj@suse.de>
+
+	* io/fcntl.h: Move __fcntl and __open to...
+	* include/fcntl.h: ...here.
+
 2001-02-04  Philip Blundell  <philb@gnu.org>
 
 	* configure.in: Distinguish ARM from Thumb.
