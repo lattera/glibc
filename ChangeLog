@@ -1,3 +1,48 @@
+Sat Aug 17 12:19:37 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* login/pututline_r.c (__pututline_r): Fix handling of case where
+ 	getutid_r() fails with ESRCH.  Reported by Miquel van Smoorenburg.
+
+Wed Aug 14 14:10:54 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Change entry
+ 	for "Jensen" so _bus_base() returns 0 on that platform.  Use
+ 	_bus_base_sparse() to determine base address of sparse memory.
+
+	* sysdeps/unix/sysv/linux/sys/io.h: Enclose #include <asm/io.h>
+	and declarations in __BEGIN_DECLS/__END_DECLS.
+
+Sun Aug 18 13:37:09 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* err.h: New file.  Wrapper around misc/err.h.
+
+	Correct solution of multiple initialization problem by
+	Roland McGrath.
+	* csu/initfini.c: Remove global variable __libc_is_static.
+	* elf/rtld.c: Introduce new global variable _dl_starting_up.
+	It's nonzero during the startup.
+	* elf/dl-open.c (_dl_open): When _dl_start function is not
+	available (i.e., if in static libc) set `__libc_multiple_libcs'
+	to nonzero value.
+	* sysdeps/unix/sysv/linux/init-first.c (__libc_multiple_libc):
+	New global variable.
+	(init): Undo change of Fri Aug  2 03:12:40 1996.
+	Initialize `__libc_multiple_libcs' to nonzero only if this is
+	a shared lib called from a statically linked program and don't
+	call `personality' and `setfpucw' in this case either.
+	* sysdeps/generic/sbrk.c: Undo change of Fri Aug  2 03:12:40 1996.
+	Don't call brk(0) until `__libc_multiple_libcs' is nonzero.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Clear _dl_starting_up
+	before jumping to user code.
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Likewise.
+
+Fri Aug 16 04:59:01 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c: Remove hack from
+	Thu Aug  8 12:40:20 1996.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = csu]: Use
+	-fkeep-inline-functions flag instead.
+
 Fri Aug 16 01:24:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/ruserpass.c (userpass): Allocate buffer for .netrc file
