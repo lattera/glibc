@@ -1,3 +1,13 @@
+2001-01-15  Hiroyuki Machida <machida@sm.sony.co.jp>
+
+	* sysdeps/unix/sysv/linux/mips/register-dump.h (REGISTER_DUMP):
+	Change type of CTX to (struct sigcontext *).
+	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h (GET_PC): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(SIGCONTEXT): Likewise. Add 2nd arg _code.
+	(SIGCONTEXT_EXTRA_ARGS): Add 2nd arg _code.
+
 2001-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/texinfo.tex: Update from upstream version.
@@ -8,7 +18,7 @@
 	_nss_*_getntohost_r prototype.
 	(ether_ntohost): Pass errno pointer to NSS function.
 
-2001-01-12  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+2001-01-12  Franz Sirl	<Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h (MS_SYNC): Fix value.
 	(MAP_LOCKED): New definition.
@@ -19,7 +29,7 @@
 	* assert/assert.h: Use static_cast instead of C-style cast for C++.
 	Patch by Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>.
 
-2001-01-12  Ben Collins  <bcollins@debian.org>
+2001-01-12  Ben Collins	 <bcollins@debian.org>
 
 	* sysdeps/generic/segfault.c (install_handler): Use access, not
 	__access.
@@ -185,7 +195,7 @@
 2001-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/byteswap.h (__bswap_64): Partly revert last
-	patch.  We must use unsigned int for l member of union.
+	patch.	We must use unsigned int for l member of union.
 
 	* sysdeps/powerpc/elf/libc-start.c (__libc_start_main): Don't call
 	_dl_aux_init for shared libraries.
@@ -193,7 +203,7 @@
 	* sysdeps/unix/sysv/linux/glob64.c: Moved to ...
 	* sysdeps/gnu/glob64.c: ...here.  New file.
 
-2001-01-07  Ben Collins  <bcollins@debian.org>
+2001-01-07  Ben Collins	 <bcollins@debian.org>
 
 	* manual/examples/longopt.c: Make the "struct option" a little
 	more like it should be, adding usage of required_argument,
@@ -233,7 +243,7 @@
 	(HAVE_AUX_VECTOR): Defined.
 	(_dl_aux_init): Declared.
 
-2001-01-05  Ben Collins  <bcollins@debian.org>
+2001-01-05  Ben Collins	 <bcollins@debian.org>
 
 	* manual/string.texi (Finding Tokens in a String): Document XPG
 	basename() and dirname(), as well as GNU basename().
@@ -248,7 +258,7 @@
 	* math/bits/cmathcalls.h: Don't define inline cimag, creal or conj
 	for GCC 2.97 or later.
 
-2001-01-05  Ben Collins  <bcollins@debian.org>
+2001-01-05  Ben Collins	 <bcollins@debian.org>
 
 	* manual/stdio.texi (getline): Clarify the return value in the
 	case of EOF being reached before a newline.
@@ -334,7 +344,7 @@
 	* io/bug-ftw1.c: New file.
 
 	* elf/dl-support.c (non_dynamic_init): Don't define DL_FIND_AUXV
-	if it is not available.  Instead use it only if it is available.
+	if it is not available.	 Instead use it only if it is available.
 	* sysdeps/unix/sysv/linux/ldsodefs.h: New file.
 
 	* iconv/gconv_simple.c (internal_ics4_loop): Correct test for
@@ -352,7 +362,7 @@
 
 2001-01-04  H.J. Lu  <hjl@gnu.org>
 
-	* elf/dl-support.c (DL_FIND_AUXV): New.  Defined if not defined.
+	* elf/dl-support.c (DL_FIND_AUXV): New.	 Defined if not defined.
 	(_dl_clktck): Declared.
 	(non_dynamic_init): Take 3 arguments.
 	Set _dl_pagesize, _dl_platform and _dl_clktck from AUX.
@@ -365,12 +375,12 @@
 	'translation_length' fields.
 	(transcmp): Don't compare 'plindex' fields.
 	(plural_lookup): New function.
-	(DCIGETTEXT): Change cache handing in the plural case.  Don't call
+	(DCIGETTEXT): Change cache handing in the plural case.	Don't call
 	plural_eval before the translation and its catalog file have been
 	found. Remove plindex from cache key.  Add 'translation_length' and
 	'domain' to cache result.
 	(_nl_find_msg): Remove index argument, return length of translation
-	to the caller instead.  Weaken comparison of string lengths, to account
+	to the caller instead.	Weaken comparison of string lengths, to account
 	for plural entries.  Call iconv() on the entire result string, not
 	only on the portion needed so far.
 	* intl/loadinfo.h (_nl_find_msg): Remove index argument, add lengthp
@@ -436,7 +446,7 @@
 	* include/stdio.h: Only provide __getwc_unlocked prototype if
 	USE_IN_LIBIO is defined.
 
-2001-01-04  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+2001-01-04  Kaz Kojima	<kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/socket.S (__socket): Fix error code
 	handling.
@@ -469,13 +479,13 @@
 	* nss/nsswitch.c: Include files for missing prototypes, remove
 	buggy declaration of prototypes.
 
-2001-01-03  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+2001-01-03  Franz Sirl	<Franz.Sirl-kernel@lauterbach.com>
 
 	* resolv/Versions: Fix bracing.
 	* sysdeps/powerpc/soft-fp/Versions: Likewise.
 	* sysdeps/sparc/sparc64/soft-fp/Versions: Likewise.
 
-2001-01-02  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+2001-01-02  Franz Sirl	<Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/powerpc/dl-machine.c (__process_machine_rela): Fix typo.
 
@@ -484,19 +494,19 @@
 	* manual/Makefile (TEXI2PDF): Change to texi2dvi --pdf.
 	Suggested by Minko Markov <mmarkov@home.com>.
 
-2001-01-02  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+2001-01-02  Franz Sirl	<Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/powerpc/elf/start.S (__data_start): Make it global.
 	* sysdeps/powerpc/dl-machine.c (dl_reloc_overflow): Print the name of
 	the failing symbol.
 	(__process_machine_rela): Pass symbol to dl_reloc_overflow().
 
-2001-01-02  Ben Collins  <bcollins@debian.org>
+2001-01-02  Ben Collins	 <bcollins@debian.org>
 
 	* time/tzset.c (tzset_internal): Make sure we fall back to UTC
 	if TZ is not set and TZDEFAULT is not present.
 
-2001-01-01  Ben Collins  <bcollins@debian.org>
+2001-01-01  Ben Collins	 <bcollins@debian.org>
 
 	* string/strings.h: Make sure we declare our functions even if
 	string.h is already included, based on whether or not __USE_BSD is
@@ -705,7 +715,7 @@
 	Remove struct bb and __bb_head since those are declared by
 	sys/gmon.h.
 
-2000-12-22  Ben Collins  <bcollins@debian.org>
+2000-12-22  Ben Collins	 <bcollins@debian.org>
 
 	* manual/charset.texi: Fix typo in description of WCHAR_MAX.
 
@@ -724,7 +734,7 @@
 
 	* dlfcn/errmsg1mod.c: Add prototype for foo to shut up GCC.
 
-2000-12-27  Ben Collins  <bcollins@debian.org>
+2000-12-27  Ben Collins	 <bcollins@debian.org>
 
 	* elf/dl-open.c (_dl_open): Correctly set the new objname pointer
 	when reallocating the error strings.
@@ -898,7 +908,7 @@
 	* locale/iso-4217.def: Change entry for Eritrea.
 	Reported by Daniel Yacob <yacob@geez.org>.
 
-2000-12-23  Ben Collins  <bcollins@debian.org>
+2000-12-23  Ben Collins	 <bcollins@debian.org>
 
 	* manual/charset.texi (Extended Char Intro): Fix typo in ISO 6937
 	description.
@@ -1168,7 +1178,7 @@
 	* elf/testobj1_1.c: Likewise.
 	* elf/preloadtest.c: Likewise.
 
-2000-12-15  Ben Collins  <bcollins@debian.org>
+2000-12-15  Ben Collins	 <bcollins@debian.org>
 
 	* misc/sys/cdefs.h: Fix thinko in checks for flexarr macros.
 	Patch by Akim Demaille <akim@epita.fr> in Debian bug report.
