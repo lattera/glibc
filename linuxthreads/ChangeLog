@@ -1,3 +1,10 @@
+2003-01-05  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h (SINGLE_THREAD_P):
+	Fix for PIC.
+	(CENABLE): Likewise.
+	(CDISABLE): Likewise.
+
 2003-01-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (libc.so-no-z-defs): Define to yes.
