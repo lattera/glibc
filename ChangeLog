@@ -1,3 +1,16 @@
+2000-04-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/mips/pipe.S: Reorder instructions since .reorder is
+	default.
+
+	* sysdeps/mips/__longjmp.c (__longjmp): Use $25 to fix problems
+	with some applications.
+	Patches by Ralf Baechle <ralf@uni-koblenz.de>.
+
+	* sysdeps/mips/bsd-setjmp.S: Use __PIC__.
+	* sysdeps/mips/bsd-_setjmp.S: Likewise.
+	* sysdeps/mips/setjmp.S: Likewise.
+	
 2000-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/globtest.sh: Work around inconsistency with expanding ~/
