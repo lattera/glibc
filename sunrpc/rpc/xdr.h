@@ -249,8 +249,9 @@ struct xdr_discrim
  * of external representation.
  */
 
-#define IXDR_GET_INT32(buf)           ((int32_t)ntohl((uint32_t)*(buf)++))
-#define IXDR_PUT_INT32(buf, v)        (*(buf)++ = (int32_t)htonl((uint32_t)v))
+#define IXDR_GET_INT32(buf)           ((int32_t)ntohl(*((uint32_t *) buf)++))
+#define IXDR_PUT_INT32(buf, v)        (*((int32_t *) buf)++ \
+					= (int32_t)htonl((uint32_t)v))
 #define IXDR_GET_U_INT32(buf)         ((uint32_t)IXDR_GET_INT32(buf))
 #define IXDR_PUT_U_INT32(buf, v)      IXDR_PUT_INT32((buf), ((int32_t)(v)))
 
