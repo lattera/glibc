@@ -1,8 +1,3 @@
-2000-04-18  H.J. Lu  <hjl@gnu.org>
-
-        * posix/globtest.sh: Properly apply the patch by Ulrich Drepper
-        <drepper@redhat.com> on 2000-04-13.
-
 2000-04-27  Bruno Haible  <clisp.cons.org>
 
 	* intl/ngettext.c [!_LIBC]: Fix definition of NGETTEXT.

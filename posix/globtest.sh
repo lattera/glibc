@@ -235,18 +235,18 @@ echo ~ | cmp - $testout || result=1
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -q -t "$testdir" "~/" |
 sort > $testout
-echo ~/ | cmp - $testout || result=1
-
-# Test tilde expansion with username
-${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
-${common_objpfx}posix/globtest -q -t "$testdir" "~"$USER |
-sort > $testout
 # Some shell incorrectly(?) convert ~/ into // if ~ expands to /.
 if test ~/ = //; then
     echo / | cmp - $testout || result=1
 else
     echo ~/ | cmp - $testout || result=1
 fi
+
+# Test tilde expansion with username
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -q -t "$testdir" "~"$USER |
+sort > $testout
+eval echo ~$USER | cmp - $testout || result=1
 
 # Tilde expansion shouldn't match a file
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
