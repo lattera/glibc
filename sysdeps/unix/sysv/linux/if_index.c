@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,98,99,2000,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,98,99,2000,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -211,18 +211,26 @@ if_indextoname (unsigned int ifindex, char *ifname)
 
       close_not_cancel_no_status (fd);
 
-#  if __ASSUME_SIOCGIFNAME == 0
       if (status  < 0)
 	{
+#  if __ASSUME_SIOCGIFNAME == 0
 	  if (errno == EINVAL)
 	    siocgifname_works_not = 1; /* Don't make the same mistake twice. */
+	  else
+#  endif
+	    {
+	      if (errno == ENODEV)
+		/* POSIX requires ENXIO.  */
+		__set_errno (ENXIO);
+
+	      return NULL;
+	    }
 	}
       else
 	return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
 
+#  if __ASSUME_SIOCGIFNAME == 0
       __set_errno (serrno);
-#  else
-      return status < 0 ? NULL : strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
 #  endif
     }
 # endif
@@ -240,6 +248,9 @@ if_indextoname (unsigned int ifindex, char *ifname)
 	  }
 
       if_freenameindex (idx);
+
+      if (result == NULL)
+	__set_errno (ENXIO);
     }
   return result;
 # endif
