@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1304,9 +1304,9 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 		{
 		  if (! l->l_addr)
 		    l->l_addr = ph->p_vaddr;
-		  else if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
+		  if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
 		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
-		  else if ((ph->p_flags & PF_X)
+		  if ((ph->p_flags & PF_X)
 			   && ph->p_vaddr + ph->p_memsz >= l->l_text_end)
 		    l->l_text_end = ph->p_vaddr + ph->p_memsz;
 		}
