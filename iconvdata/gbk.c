@@ -42,7 +42,7 @@
              int(($g - 0x8140) / 256) * 192 + (($g - 0x8140) & 0xff), $u);
    }
    printf ("\n");
- 
+
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 static const uint16_t __gbk_to_ucs[] =
@@ -13247,17 +13247,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	case 0x261:							      \
 	  cp = "\xa8\xc0";						      \
 	  break;							      \
-	case 0x2c7:							      \
-	  cp = "\xa1\xa6";						      \
-	  break;							      \
-	case 0x2c9:							      \
-	  cp = "\xa1\xa5";						      \
-	  break;							      \
-	case 0x2ca:							      \
-	  cp = "\xa8\x40";						      \
-	  break;							      \
-	case 0x2cb:							      \
-	  cp = "\xa8\x41";						      \
+	case 0x2c7 ... 0x2cb:						      \
+	  cp = "\xa1\xa6\0\0\0\0\0\0\xa1\xa5\0\0\xa8\x40\0\0\xa8\x41"[(ch - 0x2c7) * 4];						      \
 	  break;							      \
 	case 0x2d9:							      \
 	  cp = "\xa8\x42";						      \
@@ -13296,14 +13287,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  buf[0] = '\xa8';						      \
 	  buf[1] = '\x80' + (ch - 0x2588);				      \
 	  break;							      \
-	case 0x2593:							      \
-	  cp = "\xa8\x88";						      \
-	  break;							      \
-	case 0x2594:							      \
-	  cp = "\xa8\x89";						      \
-	  break;							      \
-	case 0x2595:							      \
-	  cp = "\xa8\x8a";						      \
+	case 0x2593 ... 0x2595:						      \
+	  cp = "\xa8\x88\0\0\xa8\x89\0\0\xa8\x8a"[(ch - 0x2593) * 4];	      \
 	  break;							      \
 	case 0x25a0:							      \
 	  cp = "\xa1\xf6";						      \
@@ -13433,23 +13418,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	case 0xff01 ... 0xff5e:						      \
 	  cp = __gbk_from_ucs4_tab12[ch - 0xff01];			      \
 	  break;							      \
-	case 0xffe0:							      \
-	  cp = "\xa1\xe9";						      \
-	  break;							      \
-	case 0xffe1:							      \
-	  cp = "\xa1\xea";						      \
-	  break;							      \
-	case 0xffe2:							      \
-	  cp = "\xa9\x56";						      \
-	  break;							      \
-	case 0xffe3:							      \
-	  cp = "\xa3\xfe";						      \
-	  break;							      \
-	case 0xffe4:							      \
-	  cp = "\xa9\x57";						      \
-	  break;							      \
-	case 0xffe5:							      \
-	  cp = "\xa3\xa4";						      \
+	case 0xffe0 ... 0xffe5:						      \
+	  cp = "\xa1\xe9\0\0\xa1\xea\0\0\xa9\x56\0\0\xa3\xfe\0\0\xa9\x57\0\0\xa3\xa4"[(ch - 0xffe0) * 4];						      \
 	  break;							      \
 	default:							      \
 	  cp = "";							      \
