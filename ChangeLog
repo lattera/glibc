@@ -1,3 +1,10 @@
+2005-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): Decrement l_opencount before
+	printing debug message.
+	* elf/dl-open.c (dl_open_worker): Always print the new opencount
+	in debug messages.
+
 2005-03-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c (_dl_close): Unify debug message format.

@@ -282,7 +282,7 @@ dl_open_worker (void *a)
       /* Let the user know about the opencount.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("opening file=%s [%lu]; opencount=%u\n\n",
-			  new->l_name, new->l_ns, new->l_opencount);
+			  new->l_name, new->l_ns, new->l_opencount + 1);
 
       /* If the user requested the object to be in the global namespace
 	 but it is not so far, add it now.  */

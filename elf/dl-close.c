@@ -138,13 +138,13 @@ _dl_close (void *_map)
   /* Decrement the reference count.  */
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
     {
+      /* Decrement the object's reference counter, not the dependencies'.  */
+      --map->l_opencount;
+
       /* There are still references to this object.  Do nothing more.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("\nclosing file=%s; opencount=%u\n",
 			  map->l_name, map->l_opencount);
-
-      /* Decrement the object's reference counter, not the dependencies'.  */
-      --map->l_opencount;
 
       /* If the direct use counter reaches zero we have to decrement
 	 all the dependencies' usage counter.  */
