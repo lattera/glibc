@@ -1,3 +1,11 @@
+Wed Jun  5 15:42:51 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* mach/Machrules (%_server.uh, %_server.__h): New rules, so that the
+	corrsponding .defs file with without the `_server' will be used.
+	
+	* mach/Makefile (mach/mach_interface.defs): Renamed from mach_interface.defs.
+	(mach/memory_object_user.defs): New variable.
+
 Wed Jun  5 00:01:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makerules (distinfo-vars): Add sysdep_routines.
