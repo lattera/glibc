@@ -1,5 +1,10 @@
 2000-04-18  Andreas Jaeger  <aj@suse.de>
 
+	* manual/startup.texi (Environment Access): Fix putenv prototype
+	according to recent changes.
+	Reported by Andries Brouwer <Andries.Brouwer@cwi.nl>, closes
+	PR libc/1692.
+
 	* elf/rtld.c (print_statistics): Added HP_TIMINIG_NONAVAIL where
 	needed.
 
