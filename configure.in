@@ -630,17 +630,12 @@ AC_SUBST(libc_cv_have_ksh)
 
 AC_PROG_AWK
 AC_PATH_PROG(PERL, perl, no)
-if [ -n "$PERL" ] ; then
-   eval $($PERL -V:apiversion)
-   if expr $apiversion \< "5" ; then
-       PERL=no
-   fi
-   unset apiversion
+if test "$PERL" != no &&
+   (eval `$PERL -V:apiversion`; test `expr "$apiversion" \< 5` -ne 0); then
+  PERL=no
 fi
-AC_SUBST(PERL)
 AC_PATH_PROG(INSTALL_INFO, install-info, no,
 	     $PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin)
-AC_SUBST(INSTALL_INFO)
 if test "$INSTALL_INFO" != "no"; then
 AC_CACHE_CHECK(for old Debian install-info, libc_cv_old_debian_install_info,
  [mkdir conftest.d
