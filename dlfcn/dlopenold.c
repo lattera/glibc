@@ -22,7 +22,8 @@
 
 /* This file is for compatibility with glibc 2.0.  Compile it only if
    versioning is used.  */
-#if defined PIC && DO_VERSIONING
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libdl, GLIBC_2_0, GLIBC_2_1)
 
 struct dlopen_args
 {
@@ -58,5 +59,5 @@ __dlopen_nocheck (const char *file, int mode)
 
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
 }
-symbol_version (__dlopen_nocheck, dlopen, GLIBC_2.0);
+compat_symbol (libdl, __dlopen_nocheck, dlopen, GLIBC_2_0);
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,98,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -31,6 +31,8 @@ extern void *_IO_stdin_used;
 weak_extern (_IO_stdin_used);
 #endif
 
+#include <shlib-compat.h>
+
 FILE*
 freopen (filename, mode, fp)
      const char* filename;
@@ -43,7 +45,7 @@ freopen (filename, mode, fp)
     return NULL;
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-#if defined PIC && DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
   if (&_IO_stdin_used == NULL)
     /* If the shared C library is used by the application binary which
        was linked against the older version of libio, we just use the

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -23,6 +23,9 @@
    Public License.  This exception does not however invalidate any
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 #define _IO_USE_OLD_IO_FILE
 #ifndef _POSIX_SOURCE
@@ -141,7 +144,7 @@ _IO_old_proc_open (fp, command, mode)
     {
       int child_std_end = mode[0] == 'r' ? 1 : 0;
       struct _IO_proc_file *p;
-      
+
       _IO_close (parent_end);
       if (child_end != child_std_end)
 	{
@@ -275,7 +278,9 @@ struct _IO_jump_t _IO_old_proc_jumps = {
 };
 
 strong_alias (_IO_old_popen, __old_popen)
-symbol_version (_IO_old_popen, _IO_popen, GLIBC_2.0);
-symbol_version (__old_popen, popen, GLIBC_2.0);
-symbol_version (_IO_old_proc_open, _IO_proc_open, GLIBC_2.0);
-symbol_version (_IO_old_proc_close, _IO_proc_close, GLIBC_2.0);
+compat_symbol (libc, _IO_old_popen, _IO_popen, GLIBC_2_0);
+compat_symbol (libc, __old_popen, popen, GLIBC_2_0);
+compat_symbol (libc, _IO_old_proc_open, _IO_proc_open, GLIBC_2_0);
+compat_symbol (libc, _IO_old_proc_close, _IO_proc_close, GLIBC_2_0);
+
+#endif

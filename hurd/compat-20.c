@@ -1,5 +1,5 @@
 /* Old-versioned functions for binary compatibility with glibc-2.0.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,9 +24,14 @@
 
    These definitions can be removed when the soname changes.  */
 
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+
 void
 _hurd_proc_init_compat_20 (char **argv)
 {
   _hurd_proc_init (argv, NULL, 0);
 }
-symbol_version (_hurd_proc_init_compat_20, _hurd_proc_init, GLIBC_2.0);
+compat_symbol (libc, _hurd_proc_init_compat_20, _hurd_proc_init, GLIBC_2_0);
+
+#endif

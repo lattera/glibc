@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -22,6 +22,9 @@
    Public License.  This exception does not however invalidate any
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 #define _IO_USE_OLD_IO_FILE
 #ifdef __STDC__
@@ -131,5 +134,7 @@ _IO_old_fdopen (fd, mode)
 }
 
 strong_alias (_IO_old_fdopen, __old_fdopen)
-symbol_version (_IO_old_fdopen, _IO_fdopen, GLIBC_2.0);
-symbol_version (__old_fdopen, fdopen, GLIBC_2.0);
+compat_symbol (libc, _IO_old_fdopen, _IO_fdopen, GLIBC_2_0);
+compat_symbol (libc, __old_fdopen, fdopen, GLIBC_2_0);
+
+#endif

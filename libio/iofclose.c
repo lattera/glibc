@@ -40,7 +40,7 @@ _IO_new_fclose (fp)
 
   CHECK_FILE(fp, EOF);
 
-#if defined PIC && DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
   /* We desperately try to help programs which are using streams in a
      strange way and mix old and new functions.  Detect old streams
      here.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -23,6 +23,9 @@
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
 
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+
 #define _IO_USE_OLD_IO_FILE
 #include "libioP.h"
 #include "stdio.h"
@@ -41,4 +44,5 @@ __old_pclose (fp)
   return _IO_old_fclose (fp);
 }
 
-symbol_version (__old_pclose, pclose, GLIBC_2.0);
+compat_symbol (libc, __old_pclose, pclose, GLIBC_2_0);
+#endif

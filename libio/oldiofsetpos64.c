@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -25,6 +25,9 @@
 
 #include <libioP.h>
 #include <errno.h>
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 
 int
 _IO_old_fsetpos64 (fp, posp)
@@ -58,7 +61,9 @@ _IO_old_fsetpos64 (fp, posp)
 }
 
 #ifdef weak_alias
-symbol_version (_IO_old_fsetpos64, _IO_fsetpos64, GLIBC_2.0);
+compat_symbol (libc, _IO_old_fsetpos64, _IO_fsetpos64, GLIBC_2_0);
 strong_alias (_IO_fsetpos64, __old_fsetpos64)
-symbol_version (__old_fsetpos64, _IO_fsetpos64, GLIBC_2.0);
+compat_symbol (libc, __old_fsetpos64, _IO_fsetpos64, GLIBC_2_0);
+#endif
+
 #endif

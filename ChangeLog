@@ -1,5 +1,26 @@
 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* dlfcn/dlopen.c: Use <shlib-compat.h> macros.
+	* dlfcn/dlopenold.c: Likewise.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* hurd/hurdinit.c: Likewise.
+	* hurd/compat-20.c: Likewise.
+	* libio/oldiofopen.c: Likewise.
+	* libio/oldiofclose.c: Likewise.
+	* libio/oldiofdopen.c: Likewise.
+	* libio/oldfileops.c: Likewise.
+	* libio/oldstdfiles.c: Likewise.
+	* libio/oldiofsetpos.c: Likewise.
+	* libio/oldiofgetpos.c: Likewise.
+	* libio/oldiofgetpos64.c: Likewise.
+	* libio/oldiofsetpos64.c: Likewise.
+	* libio/oldiopopen.c: Likewise.
+	* libio/oldpclose.c: Likewise.
+	* libio/oldtmpfile.c: Likewise.
+	* libio/freopen.c (freopen): Likewise.
+	* libio/iofclose.c (_IO_new_fclose): Likewise.
+
 	* sysdeps/mach/sys/reboot.h: Include <features.h>.
 	(reboot): Declare it.
 

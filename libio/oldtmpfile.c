@@ -51,5 +51,5 @@ __old_tmpfile (void)
   return f;
 }
 
-symbol_version (__old_tmpfile, tmpfile, GLIBC_2.0);
+compat_symbol (libc, __old_tmpfile, tmpfile, GLIBC_2_0);
 #endif

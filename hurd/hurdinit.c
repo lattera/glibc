@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -170,16 +170,8 @@ _hurd_new_proc_init (char **argv,
     __msg_sig_post (_hurd_msgport, SIGTRAP, 0, __mach_task_self ());
 }
 
-/* XXX Remove this versioning stuff and rename __new_hurd_proc_init
-   above back to _hurd_proc_init when we bump the libc soname.  */
-
-#if defined PIC && DO_VERSIONING
-default_symbol_version (_hurd_new_proc_init, _hurd_proc_init, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_alias (_hurd_new_proc_init, _hurd_proc_init)
-# endif
-#endif
+#include <shlib-compat.h>
+versioned_symbol (libc, _hurd_new_proc_init, _hurd_proc_init, GLIBC_2_1);
 
 /* Called when we get a message telling us to change our proc server port.  */
 

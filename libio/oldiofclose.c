@@ -67,7 +67,7 @@ _IO_old_fclose (fp)
 }
 
 strong_alias (_IO_old_fclose, __old_fclose)
-symbol_version (_IO_old_fclose, _IO_fclose, GLIBC_2.0);
-symbol_version (__old_fclose, fclose, GLIBC_2.0);
+compat_symbol (libc, _IO_old_fclose, _IO_fclose, GLIBC_2_0);
+compat_symbol (libc, __old_fclose, fclose, GLIBC_2_0);
 
 #endif

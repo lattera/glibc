@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,96,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
 
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 /* This file provides definitions of _IO_stdin, _IO_stdout, and _IO_stderr
    for C code.  Compare stdstreams.cc.
@@ -89,5 +91,7 @@ _IO_check_libio ()
 	 - (int) sizeof (struct _IO_FILE_complete));
     }
 }
+
+#endif
 
 #endif

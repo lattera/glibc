@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -215,7 +215,9 @@ done:
   return status == NSS_STATUS_SUCCESS ? 0 : errno;
 }
 
-#if defined SHARED && DO_VERSIONING
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1_2)
 #define OLD(name) OLD1 (name)
 #define OLD1(name) __old_##name
 
@@ -233,13 +235,13 @@ OLD (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 }
 
 #define do_symbol_version(real, name, version) \
-  symbol_version(real, name, version)
-do_symbol_version(OLD (REENTRANT_NAME), REENTRANT_NAME, GLIBC_2.0);
+  compat_symbol (libc, real, name, version)
+do_symbol_version (OLD (REENTRANT_GETNAME), REENTRANT_NAME, GLIBC_2_0);
 
 #define do_default_symbol_version(real, name, version) \
-  default_symbol_version(real, name, version)
-do_default_symbol_version(INTERNAL (REENTRANT_NAME), REENTRANT_NAME,
-			  GLIBC_2.1.2);
+  versioned_symbol (libc, real, name, version)
+do_default_symbol_version (INTERNAL (REENTRANT_NAME),
+			   REENTRANT_NAME, GLIBC_2_1_2);
 #else
 #define do_weak_alias(n1, n2) weak_alias (n1, n2)
 do_weak_alias (INTERNAL (REENTRANT_NAME), REENTRANT_NAME)

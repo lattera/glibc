@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -26,8 +26,8 @@
 
 /* This is a compatibility file.  If we don't build the libc with
    versioning don't compile this file.  */
-#if defined PIC && DO_VERSIONING
-
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 #ifndef _POSIX_SOURCE
 # define _POSIX_SOURCE
@@ -773,18 +773,18 @@ struct _IO_jump_t _IO_old_file_jumps =
   JUMP_INIT(stat, _IO_file_stat)
 };
 
-symbol_version (_IO_old_do_write, _IO_do_write, GLIBC_2.0);
-symbol_version (_IO_old_file_attach, _IO_file_attach, GLIBC_2.0);
-symbol_version (_IO_old_file_close_it, _IO_file_close_it, GLIBC_2.0);
-symbol_version (_IO_old_file_finish, _IO_file_finish, GLIBC_2.0);
-symbol_version (_IO_old_file_fopen, _IO_file_fopen, GLIBC_2.0);
-symbol_version (_IO_old_file_init, _IO_file_init, GLIBC_2.0);
-symbol_version (_IO_old_file_setbuf, _IO_file_setbuf, GLIBC_2.0);
-symbol_version (_IO_old_file_sync, _IO_file_sync, GLIBC_2.0);
-symbol_version (_IO_old_file_overflow, _IO_file_overflow, GLIBC_2.0);
-symbol_version (_IO_old_file_seekoff, _IO_file_seekoff, GLIBC_2.0);
-symbol_version (_IO_old_file_underflow, _IO_file_underflow, GLIBC_2.0);
-symbol_version (_IO_old_file_write, _IO_file_write, GLIBC_2.0);
-symbol_version (_IO_old_file_xsputn, _IO_file_xsputn, GLIBC_2.0);
+compat_symbol (libc, _IO_old_do_write, _IO_do_write, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_attach, _IO_file_attach, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_close_it, _IO_file_close_it, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_finish, _IO_file_finish, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_fopen, _IO_file_fopen, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_init, _IO_file_init, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_setbuf, _IO_file_setbuf, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_sync, _IO_file_sync, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_overflow, _IO_file_overflow, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_seekoff, _IO_file_seekoff, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_underflow, _IO_file_underflow, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_write, _IO_file_write, GLIBC_2_0);
+compat_symbol (libc, _IO_old_file_xsputn, _IO_file_xsputn, GLIBC_2_0);
 
-#endif /* PIC && DO_VERSIONING */
+#endif

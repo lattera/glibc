@@ -65,6 +65,6 @@ _IO_old_fopen (filename, mode)
 }
 
 strong_alias (_IO_old_fopen, __old_fopen)
-symbol_version (_IO_old_fopen, _IO_fopen, GLIBC_2.0);
-symbol_version (__old_fopen, fopen, GLIBC_2.0);
+compat_symbol (libc, _IO_old_fopen, _IO_fopen, GLIBC_2_0);
+compat_symbol (libc, __old_fopen, fopen, GLIBC_2_0);
 #endif
