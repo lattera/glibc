@@ -1,5 +1,6 @@
 /* Definitions of inline math functions implemented by the m68881/2.
-   Copyright (C) 1991,92,93,94,96,97,98,99,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,96,97,98,99,2000,2002, 2003
+     Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -176,28 +177,6 @@ __inline_mathop(trunc, intrz)
    for the function names.  */
 
 #define __inline_functions(float_type, s)				  \
-__m81_inline float_type							  \
-__m81_u(__CONCAT(__frexp,s))(float_type __value, int *__expptr)	__THROW	  \
-{									  \
-  float_type __mantissa, __exponent;					  \
-  int __iexponent;							  \
-  unsigned long __fpsr;							  \
-  __asm("ftst%.x %1\n"							  \
-	"fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	  \
-  if (__fpsr & (7 << 24))						  \
-    {									  \
-      /* Not finite or zero.  */					  \
-      *__expptr = 0;							  \
-      return __value;							  \
-    }									  \
-  __asm("fgetexp%.x %1, %0" : "=f" (__exponent) : "f" (__value));	  \
-  __iexponent = (int) __exponent + 1;					  \
-  *__expptr = __iexponent;						  \
-  __asm("fscale%.l %2, %0" : "=f" (__mantissa)				  \
-	: "0" (__value), "dmi" (-__iexponent));				  \
-  return __mantissa;							  \
-}									  \
-									  \
 __m81_defun (float_type, __CONCAT(__floor,s), (float_type __x))	__THROW	  \
 {									  \
   float_type __result;							  \
@@ -386,8 +365,6 @@ extern __inline rettype name args1 __THROW		\
   return __CONCAT(__,name) args2;			\
 }
 
-__inline_forward(double,frexp, (double __value, int *__expptr),
-		 (__value, __expptr))
 __inline_forward_c(double,floor, (double __x), (__x))
 __inline_forward_c(double,ceil, (double __x), (__x))
 # ifdef __USE_MISC
@@ -416,8 +393,6 @@ __inline_forward(void,sincos, (double __x, double *__sinx, double *__cosx),
 
 # if defined __USE_MISC || defined __USE_ISOC99
 
-__inline_forward(float,frexpf, (float __value, int *__expptr),
-		 (__value, __expptr))
 __inline_forward_c(float,floorf, (float __x), (__x))
 __inline_forward_c(float,ceilf, (float __x), (__x))
 #  ifdef __USE_MISC
@@ -438,8 +413,6 @@ __inline_forward(void,sincosf, (float __x, float *__sinx, float *__cosx),
 		 (__x, __sinx, __cosx))
 # endif
 
-__inline_forward(long double,frexpl, (long double __value, int *__expptr),
-		 (__value, __expptr))
 __inline_forward_c(long double,floorl, (long double __x), (__x))
 __inline_forward_c(long double,ceill, (long double __x), (__x))
 # ifdef __USE_MISC
