@@ -17,6 +17,7 @@ typedef unsigned int wint_t;
    these as macros and thus we couldn't add libc_hidden_proto.  */
 
 extern int iswalpha (wint_t __wc);
+extern int iswalnum (wint_t __wc);
 extern int iswdigit (wint_t __wc);
 extern int iswlower (wint_t __wc);
 extern int iswspace (wint_t __wc);
@@ -25,6 +26,7 @@ extern wint_t towlower (wint_t __wc);
 extern wint_t towupper (wint_t __wc);
 
 libc_hidden_proto (iswalpha)
+libc_hidden_proto (iswalnum)
 libc_hidden_proto (iswdigit)
 libc_hidden_proto (iswlower)
 libc_hidden_proto (iswspace)

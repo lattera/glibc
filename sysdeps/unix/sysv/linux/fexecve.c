@@ -40,10 +40,10 @@ fexecve (fd, argv, envp)
   /* We use the /proc filesystem to get the information.  If it is not
      mounted we fail.  */
   char buf[sizeof "/proc/self/fd/" + sizeof (int) * 3];
-  snprintf (buf, sizeof (buf), "/proc/self/fd/%d", fd);
+  __snprintf (buf, sizeof (buf), "/proc/self/fd/%d", fd);
 
   /* We do not need the return value.  */
-  execve (buf, argv, envp);
+  __execve (buf, argv, envp);
 
   int save = errno;
 

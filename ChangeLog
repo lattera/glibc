@@ -1,5 +1,12 @@
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/wctype.h: Define iswalnum with libc_hidden_proto.
+
+	* include/signal.h: Define raise with libc_hidden_proto.
+
+	* sysdeps/unix/sysv/linux/fexecve.c (fexecve): Use __snprintf and
+	__execve instead of snprintf and execve.
+
 	* sysdeps/x86_64/fpu/libm-test-ulps: Relax errors for float and double
 	again a bit.
 
