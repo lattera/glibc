@@ -55,6 +55,9 @@ logout (const char *line)
 #else
       time (&ut->ut_time);
 #endif
+#if _HAVE_UT_TYPE - 0
+      ut->ut_type = DEAD_PROCESS;
+#endif
 
       if (pututline (ut) >= 0)
 	result = 1;

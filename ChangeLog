@@ -1,3 +1,18 @@
+Sat Mar  1 20:21:31 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/utmp_file.c (pututline_file): Correctly decide whether
+	LAST_ENTRY matches DATA.
+	Don't depend on ut_id ever being set.
+	(proc_utmp_eq): New function.
+	(internal_getut_r): Renamed from internal_getutid_r.
+	Use proc_utmp_eq.
+
+	* login/logout.c (logout): Change type of entry to be DEAD_PROCESS.
+
+Tue Feb 25 19:42:50 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/fcntlbits.h (O_NORW): New macro.
+
 1997-02-27 05:12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/Makefile: Add rules to run and distribute xtract-typefun.
