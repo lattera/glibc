@@ -1,5 +1,7 @@
 2001-02-10  Andreas Jaeger  <aj@suse.de>
 
+	* posix/Makefile: Fix typo, it's build-static-nss.
+
 	* iconv/Makefile (extra-objs): New.
 
 2001-02-10  Mark Kettenis  <kettenis@gnu.org>
