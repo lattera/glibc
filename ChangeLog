@@ -1,5 +1,9 @@
 1998-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Make Unix98 compliant
+	by working removing SIG_IGN handler for SIGCHLD if necessary.
+	Patch by H.J. Lu <hjl@lucon.org>.
+
 	* stdio-common/printf_fphex.c (__printf_fphex): Correct printing
 	of denormalized numbers.
 
