@@ -1,5 +1,15 @@
 2004-03-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/wctype.h: Add libc_hidden_proto for __towctrans.
+	* wctype/towctrans.c: Add libc_hidden_def.
+
+	* libio/memstream.c (open_memstream): Use _IO_init with INTUSE.
+
+	* posix/regexec.c (transit_state): Remove unused variable
+	next_state.
+
+	* posix/regcomp.c (init_dfa): Use __btowc instead of btowc.
+
 	* sysdeps/generic/ldsodefs.h: Define new structure rtld_global_ro.
 	Declare _rtld_global_ro and _rtld_local_ro.  Move members of
 	rtld_global structure into the new one if they are modified only

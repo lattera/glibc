@@ -2148,7 +2148,7 @@ transit_state (err, mctx, state)
      re_dfastate_t *state;
 {
   re_dfa_t *const dfa = mctx->dfa;
-  re_dfastate_t **trtable, *next_state;
+  re_dfastate_t **trtable;
   unsigned char ch;
 
   if (re_string_cur_idx (&mctx->input) + 1 >= mctx->input.bufs_len
@@ -2208,13 +2208,13 @@ transit_state (err, mctx, state)
 }
 
 /* Update the state_log if we need */
-re_dfastate_t *                                                                                              
-merge_state_with_log (err, mctx, next_state)                                                                 
-     reg_errcode_t *err;                                                                                     
-     re_match_context_t *mctx;                                                                               
-     re_dfastate_t *next_state;                                                                              
-{                                                                                                            
-  re_dfa_t *const dfa = mctx->dfa;                                                                           
+re_dfastate_t *
+merge_state_with_log (err, mctx, next_state)
+     reg_errcode_t *err;
+     re_match_context_t *mctx;
+     re_dfastate_t *next_state;
+{
+  re_dfa_t *const dfa = mctx->dfa;
   int cur_idx = re_string_cur_idx (&mctx->input);
 
   if (cur_idx > mctx->state_log_top)

@@ -867,7 +867,7 @@ init_dfa (dfa, pat_len)
       else
 	for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
 	  for (j = 0; j < UINT_BITS; ++j, ++ch)
-	    if (btowc (ch) != WEOF)
+	    if (__btowc (ch) != WEOF)
 	      dfa->sb_char[i] |= 1 << j;
     }
 #endif

@@ -67,6 +67,7 @@ extern __typeof (iswxdigit_l) __iswxdigit_l;
 extern __typeof (towlower_l) __towlower_l;
 extern __typeof (towupper_l) __towupper_l;
 
+libc_hidden_proto (__towctrans)
 libc_hidden_proto (__iswctype)
 libc_hidden_proto (__iswalnum_l)
 libc_hidden_proto (__iswalpha_l)
