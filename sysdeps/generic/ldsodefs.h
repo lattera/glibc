@@ -172,21 +172,8 @@ struct libname_list
 
 
 /* Test whether given NAME matches any of the names of the given object.  */
-static __inline int
-__attribute__ ((unused, always_inline))
-_dl_name_match_p (const char *__name, struct link_map *__map)
-{
-  int __found = strcmp (__name, __map->l_name) == 0;
-  struct libname_list *__runp = __map->l_libname;
-
-  while (! __found && __runp != NULL)
-    if (strcmp (__name, __runp->name) == 0)
-      __found = 1;
-    else
-      __runp = __runp->next;
-
-  return __found;
-}
+extern int _dl_name_match_p (const char *__name, struct link_map *__map)
+     internal_function;
 
 /* Function used as argument for `_dl_receive_error' function.  The
    arguments are the error code, error string, and the objname the

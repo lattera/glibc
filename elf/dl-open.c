@@ -177,15 +177,31 @@ check_libc_caller (const void *caller)
       struct link_map *l;
 
       for (l = GL(dl_loaded); l != NULL; l = l->l_next)
-	if (_dl_name_match_p (expected1, l))
+	if (strcmp (expected1, l->l_name) == 0)
 	  {
+	  is_1:
 	    expected1_from = (const void *) l->l_map_start;
 	    expected1_to = (const void *) l->l_map_end;
 	  }
-	else if (_dl_name_match_p (expected2, l))
+	else if (strcmp (expected1, l->l_name) == 0)
 	  {
+	  is_2:
 	    expected2_from = (const void *) l->l_map_start;
 	    expected2_to = (const void *) l->l_map_end;
+	  }
+	else
+	  {
+	    struct libname_list *runp = l->l_libname;
+
+	    while (runp != NULL)
+	      {
+		if (strcmp (expected1, runp->name) == 0)
+		  goto is_1;
+		else if (strcmp (expected2, runp->name) == 0)
+		  goto is_2;
+
+		runp = runp->next;
+	      }
 	  }
 
       assert (expected1_from != NULL);

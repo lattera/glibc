@@ -1,5 +1,9 @@
 2004-03-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h: Don't define _dl_name_match_p as inline.
+	* elf/dl-misc.c: Define _dl_name_match_p here.
+	* elf/dl-open.c (check_libc_caller): Don't use _dl_name_match_p.
+
 	* elf/dl-open.c (dl_open_worker): Check that _dl_open is called
 	from the right place.
 
