@@ -28,16 +28,16 @@
 #endif
 
 /* Old hook values.  */
-static void (*old_free_hook) __P ((__ptr_t ptr, __const __ptr_t));
-static __ptr_t (*old_malloc_hook) __P ((__malloc_size_t size, const __ptr_t));
-static __ptr_t (*old_memalign_hook) __P ((__malloc_size_t alignment,
-					  __malloc_size_t size,
-					  const __ptr_t));
-static __ptr_t (*old_realloc_hook) __P ((__ptr_t ptr, __malloc_size_t size,
-					 __const __ptr_t));
+static void (*old_free_hook) (__ptr_t ptr, __const __ptr_t);
+static __ptr_t (*old_malloc_hook) (__malloc_size_t size, const __ptr_t);
+static __ptr_t (*old_memalign_hook) (__malloc_size_t alignment,
+				     __malloc_size_t size,
+				     const __ptr_t);
+static __ptr_t (*old_realloc_hook) (__ptr_t ptr, __malloc_size_t size,
+				    __const __ptr_t);
 
 /* Function to call when something awful happens.  */
-static void (*abortfunc) __P ((enum mcheck_status));
+static void (*abortfunc) (enum mcheck_status);
 
 /* Arbitrary magical numbers.  */
 #define MAGICWORD	0xfedabeeb
@@ -69,7 +69,7 @@ static int pedantic;
 # include <string.h>
 # define flood memset
 #else
-static void flood __P ((__ptr_t, int, __malloc_size_t));
+static void flood (__ptr_t, int, __malloc_size_t);
 static void
 flood (ptr, val, size)
      __ptr_t ptr;
@@ -82,10 +82,8 @@ flood (ptr, val, size)
 }
 #endif
 
-static enum mcheck_status checkhdr __P ((const struct hdr *));
 static enum mcheck_status
-checkhdr (hdr)
-     const struct hdr *hdr;
+checkhdr (const struct hdr *hdr)
 {
   enum mcheck_status status;
 
@@ -121,7 +119,7 @@ checkhdr (hdr)
 }
 
 void
-mcheck_check_all ()
+mcheck_check_all (void)
 {
   /* Walk through all the active blocks and test whether they were tempered
      with.  */
@@ -144,10 +142,8 @@ mcheck_check_all ()
 libc_hidden_def (mcheck_check_all)
 #endif
 
-static void unlink_blk __P ((struct hdr *ptr));
 static void
-unlink_blk (ptr)
-     struct hdr *ptr;
+unlink_blk (struct hdr *ptr)
 {
   if (ptr->next != NULL)
     {
@@ -165,10 +161,8 @@ unlink_blk (ptr)
     root = ptr->next;
 }
 
-static void link_blk  __P ((struct hdr *ptr));
 static void
-link_blk (hdr)
-     struct hdr *hdr;
+link_blk (struct hdr *hdr)
 {
   hdr->prev = NULL;
   hdr->next = root;
@@ -183,12 +177,8 @@ link_blk (hdr)
 				      + (uintptr_t) hdr->next->next);
     }
 }
-
-static void freehook __P ((__ptr_t, const __ptr_t));
 static void
-freehook (ptr, caller)
-     __ptr_t ptr;
-     const __ptr_t caller;
+freehook (__ptr_t ptr, const __ptr_t caller)
 {
   if (pedantic)
     mcheck_check_all ();
@@ -211,11 +201,8 @@ freehook (ptr, caller)
   __free_hook = freehook;
 }
 
-static __ptr_t mallochook __P ((__malloc_size_t, const __ptr_t));
 static __ptr_t
-mallochook (size, caller)
-     __malloc_size_t size;
-     const __ptr_t caller;
+mallochook (__malloc_size_t size, const __ptr_t caller)
 {
   struct hdr *hdr;
 
@@ -241,12 +228,9 @@ mallochook (size, caller)
   return (__ptr_t) (hdr + 1);
 }
 
-static __ptr_t memalignhook __P ((__malloc_size_t, __malloc_size_t,
-				  const __ptr_t));
 static __ptr_t
-memalignhook (alignment, size, caller)
-     __malloc_size_t alignment, size;
-     const __ptr_t caller;
+memalignhook (__malloc_size_t alignment, __malloc_size_t size,
+	      const __ptr_t caller)
 {
   struct hdr *hdr;
   __malloc_size_t slop;
@@ -277,12 +261,8 @@ memalignhook (alignment, size, caller)
   return (__ptr_t) (hdr + 1);
 }
 
-static __ptr_t reallochook __P ((__ptr_t, __malloc_size_t, const __ptr_t));
 static __ptr_t
-reallochook (ptr, size, caller)
-     __ptr_t ptr;
-     __malloc_size_t size;
-     const __ptr_t caller;
+reallochook (__ptr_t ptr, __malloc_size_t size, const __ptr_t caller)
 {
   struct hdr *hdr;
   __malloc_size_t osize;
@@ -333,11 +313,9 @@ reallochook (ptr, size, caller)
   return (__ptr_t) (hdr + 1);
 }
 
-static void mabort __P ((enum mcheck_status status))
-     __attribute__ ((noreturn));
+__attribute__ ((noreturn))
 static void
-mabort (status)
-     enum mcheck_status status;
+mabort (enum mcheck_status status)
 {
   const char *msg;
   switch (status)
@@ -369,7 +347,7 @@ mabort (status)
 
 int
 mcheck (func)
-     void (*func) __P ((enum mcheck_status));
+     void (*func) (enum mcheck_status);
 {
   abortfunc = (func != NULL) ? func : &mabort;
 
@@ -399,7 +377,7 @@ libc_hidden_def (mcheck)
 
 int
 mcheck_pedantic (func)
-      void (*func) __P ((enum mcheck_status));
+      void (*func) (enum mcheck_status);
 {
   int res = mcheck (func);
   if (res == 0)
