@@ -371,7 +371,11 @@ gcc 2.95.x does not work correctly on mips-linux.
 
 You need also recent binutils, anything before and including 2.10 will not
 work correctly.  Either try the Linux binutils 2.10.0.33 from HJ Lu or the
-current development version from CVS of binutils.
+current development version of binutils from CVS.
+
+Please note that `make check' might fail for a number of the math tests
+because of problems of the FPU emulation in the Linux kernel (the MIPS FPU
+doesn't handle all cases and needs help from the kernel).
 
 For details check also my page <http://www.suse.de/~aj/glibc-mips.html>.
 
