@@ -10,7 +10,7 @@
 	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Initialize
 	symidx correctly.
 
-	* sysdeps/mips/add_n.S: Use __PIC__, add .end directive.
+	* sysdeps/mips/add_n.S: Use __PIC__, add end directive.
 	* sysdeps/mips/addmul_1.S: Likewise.
 	* sysdeps/mips/lshift.S: Likewise.
 	* sysdeps/mips/mul_1.S: Likewise.
