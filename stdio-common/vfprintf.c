@@ -497,11 +497,9 @@ vfprintf (s, format, ap)
 
           case 'c':
             /* Character.  */
+	    --specs[cnt].info.width;/* Account for the character itself.  */
             if (!specs[cnt].info.left)
-              {
-                --specs[cnt].info.width;
-                PAD (' ');
-              }
+	      PAD (' ');
             outchar ((unsigned char) args_value[specs[cnt].data_arg].pa_char);
             if (specs[cnt].info.left)
               PAD (' ');

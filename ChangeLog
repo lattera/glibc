@@ -1,5 +1,8 @@
 Sun Nov  5 16:09:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* stdio-common/vfprintf.c (%c): Count the character itself towards
+	the field width in all cases.
+
 	* sysdeps/mach/hurd/getpriority.c (getpriority): Cast
 	__vm_deallocate arg to vm_address_t.
 
