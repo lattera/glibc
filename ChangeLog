@@ -1,4 +1,14 @@
+2000-12-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* catgets/gencat.c (read_input_file): Avoid calling obstack_free
+	with a pointer not returned by obstack_ functions.
+
 2000-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/bits/stat.h (struct stat): Align with AIX
+	version.
+	(struct stat64): Likewise.
+	Reported by Michael Keezer <mkeezer@redhat.com>.
 
 	* timezone/asia: Update from tzdata2000h.
 	* timezone/australasia: Likewise.

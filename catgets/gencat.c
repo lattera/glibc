@@ -566,13 +566,14 @@ this is the first definition"));
       else if (isalnum (this_line[0]) || this_line[0] == '_')
 	{
 	  const char *ident = this_line;
+	  char *line = this_line;
 	  int message_number;
 
 	  do
-	    ++this_line;
-	  while (this_line[0] != '\0' && !isspace (this_line[0]));
-	  if (this_line[0] != '\0')
-	    *this_line++ = '\0';	/* Terminate the identifier.  */
+	    ++line;
+	  while (line[0] != '\0' && !isspace (line[0]));
+	  if (line[0] != '\0')
+	    *line++ = '\0';	/* Terminate the identifier.  */
 
 	  /* Now we found the beginning of the message itself.  */
 
@@ -647,7 +648,7 @@ duplicated message identifier"));
 	      char *outbuf;
 	      size_t outlen;
 	      struct message_list *newp;
-	      size_t this_line_len = strlen (this_line) + 1;
+	      size_t line_len = strlen (line) + 1;
 
 	      /* We need the conversion.  */
 	      if (cd_towc == (iconv_t) -1
@@ -662,8 +663,8 @@ duplicated message identifier"));
 		 message is stateful.  */
 	      while (1)
 		{
-		  inbuf = this_line;
-		  inlen = this_line_len;
+		  inbuf = line;
+		  inlen = line_len;
 		  outbuf = (char *) wbuf;
 		  outlen = wbufsize;
 
@@ -693,8 +694,6 @@ invalid character: message ignored"));
 		  wbuf = (wchar_t *) xrealloc (wbuf, wbufsize);
 		}
 
-	      used = 1;	/* Yes, we use the line.  */
-
 	      /* Strip quote characters, change escape sequences into
 		 correct characters etc.  */
 	      normalize_line (fname, start_line, cd_towc, wbuf,
@@ -705,14 +704,17 @@ invalid character: message ignored"));
 		 memory allocated for the original string.  */
 	      obstack_free (&current->mem_pool, this_line);
 
+	      used = 1;	/* Yes, we use the line.  */
+
 	      /* Now fill in the new string.  It should never happen that
 		 the replaced string is longer than the original.  */
 	      inbuf = (char *) wbuf;
 	      inlen = (wcslen (wbuf) + 1) * sizeof (wchar_t);
 
 	      outlen = obstack_room (&current->mem_pool);
-	      start_line = (char *) obstack_alloc (&current->mem_pool, outlen);
-	      outbuf = start_line;
+	      obstack_blank (&current->mem_pool, outlen);
+	      this_line = (char *) obstack_base (&current->mem_pool);
+	      outbuf = this_line;
 
 	      /* Flush the state.  */
 	      iconv (cd_tomb, NULL, NULL, NULL, NULL);
@@ -727,11 +729,12 @@ invalid character: message ignored"));
 	      assert (outbuf[-1] == '\0');
 
 	      /* Free the memory in the obstack we don't use.  */
-	      obstack_free (&current->mem_pool, outbuf);
+	      obstack_blank (&current->mem_pool, -(int) outlen);
+	      line = obstack_finish (&current->mem_pool);
 
 	      newp = (struct message_list *) xmalloc (sizeof (*newp));
 	      newp->number = message_number;
-	      newp->message = this_line;
+	      newp->message = line;
 	      /* Remember symbolic name; is NULL if no is given.  */
 	      newp->symbol = ident;
 	      /* Remember where we found the character.  */

@@ -23,11 +23,7 @@
 struct stat
   {
     __dev_t st_dev;			/* Device.  */
-#ifndef __USE_FILE_OFFSET64
     __ino_t st_ino;			/* File serial number.	*/
-#else
-    __ino64_t st_ino;			/* File serial number.	*/
-#endif
     __mode_t st_mode;			/* File mode.  */
     __nlink_t st_nlink;			/* Link count.  */
     unsigned short int st_flag;		/* Flag word.  */
@@ -46,11 +42,7 @@ struct stat
     __time_t st_ctime;			/* Time of last status change.  */
     unsigned long int __unused3;
     __blksize_t st_blksize;		/* Optimal block size for I/O.  */
-#ifndef __USE_FILE_OFFSET64
     __blkcnt_t st_blocks;		/* Number 512-byte blocks allocated. */
-#else
-    __blkcnt64_t st_blocks;		/* Number 512-byte blocks allocated. */
-#endif
     int st_vfstype;			/* Type of the filesystem.  */
     unsigned int st_vfs;		/* Vfs number.  */
     unsigned int st_type;		/* Vnode type.  */
@@ -69,7 +61,7 @@ struct stat
 struct stat64
   {
     __dev_t st_dev;			/* Device.  */
-    __ino64_t st_ino;			/* File serial number.	*/
+    __ino_t st_ino;			/* File serial number.	*/
     __mode_t st_mode;			/* File mode.  */
     __nlink_t st_nlink;			/* Link count.  */
     unsigned short int st_flag;		/* Flag word.  */
@@ -84,7 +76,7 @@ struct stat64
     __time_t st_ctime;			/* Time of last status change.  */
     unsigned long int __unused3;
     __blksize_t st_blksize;		/* Optimal block size for I/O.  */
-    __blkcnt64_t st_blocks;		/* Number 512-byte blocks allocated. */
+    __blkcnt_t st_blocks;		/* Number 512-byte blocks allocated. */
     int st_vfstype;			/* Type of the filesystem.  */
     unsigned int st_vfs;		/* Vfs number.  */
     unsigned int st_type;		/* Vnode type.  */
