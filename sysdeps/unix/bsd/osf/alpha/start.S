@@ -20,40 +20,42 @@ Cambridge, MA 02139, USA.  */
 
 .comm errno,		4
 
-!.sdata
-!.globl STARTFRM
-!STARTFRM = 0
+#if 0
+.sdata
+.globl STARTFRM
+STARTFRM = 0
+#endif
 
 .text
 ENTRY(__start)
 	lda	sp, -16(sp)
 	stq	zero, 8(sp)
 
-	! This branch puts the address of the current insn in t0.
+	/* This branch puts the address of the current insn in t0. */
 	br	t0, 10f
 10:
-	! We set the GP register by using the address of the ldgp
-	! (what we just put into t0).
+	/* We set the GP register by using the address of the ldgp */
+	/* (what we just put into t0). */
 	ldgp	gp, 0(t0)
 
-	! get argc
+	/* get argc */
 	ldl	a0, 16(sp)
 
-	! get argv
+	/* get argv */
 	lda	a1, 24(sp)
 
-	! move ahead to envp
+	/* move ahead to envp */
 	s8addq	a0, a1, a2
 	addq	a2, 0x8, a2
 
-	! Store in environ.
+	/* Store in environ. */
 	stq	a2, environ
 
-	! Clear out errno.
-!	ldgp	gp, 0(t12)
+	/* Clear out errno. */
+/*	ldgp	gp, 0(t12) */
 	stl	zero, errno
 
-	! Call main.
+	/* Call main. */
 	jsr	ra, main
 	ldgp	gp, 0(ra)
 
