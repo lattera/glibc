@@ -1,5 +1,9 @@
 2002-08-07  Roland McGrath  <roland@redhat.com>
 
+	* resolv/res_debug.c (latlon2ul): Add const to argument type, and use
+	it internally.
+	(precsize_aton): Likewise.
+
 	* inet/getnetgrent_r.c (endnetgrent, __getnetgrent_r): Actually call
 	the static symbols added in the last change (doofus is me).
 
