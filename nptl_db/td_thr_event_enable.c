@@ -1,5 +1,5 @@
 /* Enable event process-wide.
-   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -31,10 +31,11 @@ td_thr_event_enable (th, onoff)
   LOG ("td_thr_event_enable");
 
   /* Write the new value into the thread data structure.  */
+  const bool value = onoff != 0;
   if (ps_pdwrite (th->th_ta_p->ph,
 		  ((char *) th->th_unique
 		   + offsetof (struct pthread, report_events)),
-		  &onoff, sizeof (int)) != PS_OK)
+		  &value, sizeof value) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   return TD_OK;
