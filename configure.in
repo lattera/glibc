@@ -159,6 +159,7 @@ mips*)		base_machine=mips machine=mips/$machine ;;
 mips64*)	base_machine=mips64 machine=mips/mips64/$machine ;;
 sparc[6789])	base_machine=sparc machine=sparc/$machine ;;
 supersparc)	base_machine=sparc machine=sparc/sparc8 ;;
+sparc64)	base_machine=sparc64 machine=sparc64/$machine ;;
 esac
 changequote([,])dnl
 AC_SUBST(base_machine)
@@ -527,7 +528,8 @@ VERS {
 };
 EOF
   if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AC_FD_CC 2>&AC_FD_CC; then
-    if AC_TRY_COMMAND([${CC-cc} $CFLAGS --shared -o conftest.so conftest.o
+    if AC_TRY_COMMAND([${CC-cc} $CFLAGS -shared -o conftest.so conftest.o
+					-nostartfiles -nostdlib
 					-Wl,--version-script,conftest.map
 		       1>&AC_FD_CC]);
     then
@@ -822,6 +824,7 @@ AC_SUBST(profile)
 AC_SUBST(omitfp)
 AC_SUBST(bounded)
 AC_SUBST(static_nss)
+AC_SUBST(nopic_initfini)
 
 AC_SUBST(DEFINES)
 

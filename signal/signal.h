@@ -297,12 +297,12 @@ extern int sigstack __P ((__const struct sigstack *__ss,
 			  struct sigstack *__oss));
 
 /* Alternate interface.  */
-struct sigaltstack
+typedef struct sigaltstack
   {
     __ptr_t ss_sp;
     size_t ss_size;
     int ss_flags;
-  };
+  } stack_t;
 
 extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 			     struct sigaltstack *__oss));

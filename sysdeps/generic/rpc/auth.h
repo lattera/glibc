@@ -177,6 +177,11 @@ extern AUTH *authdes_create __P ((char *__servername, u_int __window,
 #define AUTH_DES	3		/* des style (encrypted timestamps) */
 #define AUTH_KERB       4               /* kerberos style */
 
+/*
+ * XDR an opaque authentication struct.
+ */
+extern bool_t xdr_opaque_auth __P ((XDR *__xdrs, struct opaque_auth *__ap));
+
 __END_DECLS
 
 #endif /* rpc/auth.h */

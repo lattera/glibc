@@ -33,7 +33,7 @@
 # define UMUL_TIME 1
 #endif
 #ifndef UDIV_TIME
-# define UDIV_TIME 1
+# define UDIV_TIME 3
 #endif
 
 /* Control memory layout.  */
@@ -68,14 +68,12 @@ struct base_table_t
 
 /* To reduce the memory needed we include some fields of the tables
    only conditionally.  */
-#if BITS_PER_MP_LIMB == 32
-# if UDIV_TIME > 2 * UMUL_TIME
-#  define SEL1(X) X,
-#  define SEL2(X) ,X
-# else
-#  define SEL1(X)
-#  define SEL2(X)
-# endif
+#if UDIV_TIME > 2 * UMUL_TIME
+# define SEL1(X) X,
+# define SEL2(X) ,X
+#else
+# define SEL1(X)
+# define SEL2(X)
 #endif
 
 
@@ -83,41 +81,41 @@ struct base_table_t
 static const struct base_table_t base_table[] =
 {
 #if BITS_PER_MP_LIMB == 64
-  /*  2 */ {0ul, 1, 1},
-  /*  3 */ {0xaaaaaaaaaaaaaaabul, 0, 1},
-  /*  4 */ {0ul, 1, 2},
-  /*  5 */ {0xcccccccccccccccdul, 0, 2},
-  /*  6 */ {0xaaaaaaaaaaaaaaabul, 0, 2},
-  /*  7 */ {0x2492492492492493ul, 1, 3},
-  /*  8 */ {0ul, 1, 3},
-  /*  9 */ {0xe38e38e38e38e38ful, 0, 3},
-  /* 10 */ {0xcccccccccccccccdul, 0, 3},
-  /* 11 */ {0x2e8ba2e8ba2e8ba3ul, 0, 1},
-  /* 12 */ {0xaaaaaaaaaaaaaaabul, 0, 3},
-  /* 13 */ {0x4ec4ec4ec4ec4ec5ul, 0, 2},
-  /* 14 */ {0x2492492492492493ul, 1, 4},
-  /* 15 */ {0x8888888888888889ul, 0, 3},
-  /* 16 */ {0ul, 1, 4},
-  /* 17 */ {0xf0f0f0f0f0f0f0f1ul, 0, 4},
-  /* 18 */ {0xe38e38e38e38e38ful, 0, 4},
-  /* 19 */ {0xd79435e50d79435ful, 0, 4},
-  /* 20 */ {0xcccccccccccccccdul, 0, 4},
-  /* 21 */ {0x8618618618618619ul, 1, 5},
-  /* 22 */ {0x2e8ba2e8ba2e8ba3ul, 0, 2},
-  /* 23 */ {0x642c8590b21642c9ul, 1, 5},
-  /* 24 */ {0xaaaaaaaaaaaaaaabul, 0, 4},
-  /* 25 */ {0x47ae147ae147ae15ul, 1, 5},
-  /* 26 */ {0x4ec4ec4ec4ec4ec5ul, 0, 3},
-  /* 27 */ {0x97b425ed097b425ful, 0, 4},
-  /* 28 */ {0x2492492492492493ul, 1, 5},
-  /* 29 */ {0x1a7b9611a7b9611bul, 1, 5},
-  /* 30 */ {0x8888888888888889ul, 0, 4},
-  /* 31 */ {0x0842108421084211ul, 1, 5},
-  /* 32 */ {0ul, 1, 5},
-  /* 33 */ {0x0f83e0f83e0f83e1ul, 0, 1},
-  /* 34 */ {0xf0f0f0f0f0f0f0f1ul, 0, 5},
-  /* 35 */ {0xea0ea0ea0ea0ea0ful, 0, 5},
-  /* 36 */ {0xe38e38e38e38e38ful, 0, 5}
+  /*  2 */ {SEL1(0ul) 1, 1},
+  /*  3 */ {SEL1(0xaaaaaaaaaaaaaaabul) 0, 1},
+  /*  4 */ {SEL1(0ul) 1, 2},
+  /*  5 */ {SEL1(0xcccccccccccccccdul) 0, 2},
+  /*  6 */ {SEL1(0xaaaaaaaaaaaaaaabul) 0, 2},
+  /*  7 */ {SEL1(0x2492492492492493ul) 1, 3},
+  /*  8 */ {SEL1(0ul) 1, 3},
+  /*  9 */ {SEL1(0xe38e38e38e38e38ful) 0, 3},
+  /* 10 */ {SEL1(0xcccccccccccccccdul) 0, 3},
+  /* 11 */ {SEL1(0x2e8ba2e8ba2e8ba3ul) 0, 1},
+  /* 12 */ {SEL1(0xaaaaaaaaaaaaaaabul) 0, 3},
+  /* 13 */ {SEL1(0x4ec4ec4ec4ec4ec5ul) 0, 2},
+  /* 14 */ {SEL1(0x2492492492492493ul) 1, 4},
+  /* 15 */ {SEL1(0x8888888888888889ul) 0, 3},
+  /* 16 */ {SEL1(0ul) 1, 4},
+  /* 17 */ {SEL1(0xf0f0f0f0f0f0f0f1ul) 0, 4},
+  /* 18 */ {SEL1(0xe38e38e38e38e38ful) 0, 4},
+  /* 19 */ {SEL1(0xd79435e50d79435ful) 0, 4},
+  /* 20 */ {SEL1(0xcccccccccccccccdul) 0, 4},
+  /* 21 */ {SEL1(0x8618618618618619ul) 1, 5},
+  /* 22 */ {SEL1(0x2e8ba2e8ba2e8ba3ul) 0, 2},
+  /* 23 */ {SEL1(0x642c8590b21642c9ul) 1, 5},
+  /* 24 */ {SEL1(0xaaaaaaaaaaaaaaabul) 0, 4},
+  /* 25 */ {SEL1(0x47ae147ae147ae15ul) 1, 5},
+  /* 26 */ {SEL1(0x4ec4ec4ec4ec4ec5ul) 0, 3},
+  /* 27 */ {SEL1(0x97b425ed097b425ful) 0, 4},
+  /* 28 */ {SEL1(0x2492492492492493ul) 1, 5},
+  /* 29 */ {SEL1(0x1a7b9611a7b9611bul) 1, 5},
+  /* 30 */ {SEL1(0x8888888888888889ul) 0, 4},
+  /* 31 */ {SEL1(0x0842108421084211ul) 1, 5},
+  /* 32 */ {SEL1(0ul) 1, 5},
+  /* 33 */ {SEL1(0x0f83e0f83e0f83e1ul) 0, 1},
+  /* 34 */ {SEL1(0xf0f0f0f0f0f0f0f1ul) 0, 5},
+  /* 35 */ {SEL1(0xea0ea0ea0ea0ea0ful) 0, 5},
+  /* 36 */ {SEL1(0xe38e38e38e38e38ful) 0, 5}
 #endif
 #if BITS_PER_MP_LIMB == 32
   /*  2 */ {SEL1(0ul) 1, 1, {0, 31, 0x80000000ul SEL2(0xfffffffful)}},

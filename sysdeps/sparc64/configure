@@ -1,0 +1,3 @@
+ # Local configure fragment for sysdeps/sparc64
+
+nopic_initfini=yes

@@ -87,13 +87,13 @@ tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 CFLAGS-test-float.c = -fno-inline
 CFLAGS-test-double.c = -fno-inline
 CFLAGS-test-ldouble.c = -fno-inline
-LDLIBS-test-ifloat = libm
-LDLIBS-test-idouble = libm
-LDLIBS-test-ildoubl = libm
-LDLIBS-test-float = libm
-LDLIBS-test-double = libm
-LDLIBS-test-ldouble = libm
-LDLIBS-test-matherr = libm
+LDLIBS-test-ifloat = math/libm
+LDLIBS-test-idouble = math/libm
+LDLIBS-test-ildoubl = math/libm
+LDLIBS-test-float = math/libm
+LDLIBS-test-double = math/libm
+LDLIBS-test-ldouble = math/libm
+LDLIBS-test-matherr = math/libm
 
 distribute += libm-test.c
 
@@ -116,6 +116,8 @@ CPPFLAGS-s_lib_version.c := -D_POSIX_MODE
 # only the fdlibm code.
 CPPFLAGS += -D__NO_MATH_INLINES
 
+# Using omit-long-double-fcts is only a temporary hack.
+ifneq ($(omit-long-double-fcts),yes)
 ifneq ($(long-double-fcts),yes)
 # The `double' and `long double' types are the same on this machine.
 # We won't compile the `long double' code at all.  Tell the `double' code
@@ -123,6 +125,7 @@ ifneq ($(long-double-fcts),yes)
 # defining those aliases, tell <math.h> to declare the `FUNCl' names with
 # `double' instead of `long double'.
 CPPFLAGS += -DNO_LONG_DOUBLE -D_Mlong_double_=double
+endif
 endif
 
 # The fdlibm code generates a lot of these warnings but is otherwise clean.

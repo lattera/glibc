@@ -1,41 +1,40 @@
-! SPARC v9 __mpn_addmul_1 -- Multiply a limb vector with a single limb and
-! add the product to a second limb vector.
+/* SPARC v9 __mpn_addmul_1 -- Multiply a limb vector with a single limb and
+   add the product to a second limb vector.
 
-! Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996 Free Software Foundation, Inc.
 
-! This file is part of the GNU MP Library.
+   This file is part of the GNU MP Library.
 
-! The GNU MP Library is free software; you can redistribute it and/or modify
-! it under the terms of the GNU Library General Public License as published by
-! the Free Software Foundation; either version 2 of the License, or (at your
-! option) any later version.
+   The GNU MP Library is free software; you can redistribute it and/or modify
+   it under the terms of the GNU Library General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or (at your
+   option) any later version.
 
-! The GNU MP Library is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-! or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-! License for more details.
+   The GNU MP Library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+   License for more details.
 
-! You should have received a copy of the GNU Library General Public License
-! along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
-! the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-! MA 02111-1307, USA.
+   You should have received a copy of the GNU Library General Public License
+   along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
+   the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA.  */
+
+#include <sysdep.h>
 
 
-! INPUT PARAMETERS
-! res_ptr	o0
-! s1_ptr	o1
-! size		o2
-! s2_limb	o3
+/* INPUT PARAMETERS
+   res_ptr	o0
+   s1_ptr	o1
+   size		o2
+   s2_limb	o3  */
 
-.section	".text"
-	.align 4
-	.global __mpn_addmul_1
-	.type	 __mpn_addmul_1,#function
-	.proc	016
-__mpn_addmul_1:
+
+ENTRY(__mpn_addmul_1)
 	!#PROLOGUE#	0
-	save	%sp,-160,%sp
+	save	%sp,-128,%sp
 	!#PROLOGUE#	1
+
 	sub	%g0,%i2,%o7
 	sllx	%o7,3,%g5
 	sub	%i1,%g5,%o3
@@ -51,7 +50,7 @@ __mpn_addmul_1:
              !  mid-1 !
              !  mid-2 !
 		 !   lo   !
-.Loop:
+1:
 	sllx	%o7,3,%g1
 	ldx	[%o3+%g1],%g5
 	srl	%g5,0,%i0		! zero hi bits
@@ -79,11 +78,11 @@ __mpn_addmul_1:
 	addcc	%l1,%i0,%i0
 	movcs	%xcc,1,%g5
 	stx	%i0,[%o4+%g1]
-	brnz	%o7,.Loop
-	add	%i1,%g5,%o0		! compute new cy_limb
+	brnz	%o7,1b
+	 add	%i1,%g5,%o0		! compute new cy_limb
 
 	mov	%o0,%i0
-	ret
-	restore
-.LLfe1:
-	.size  __mpn_addmul_1,.LLfe1-__mpn_addmul_1
+	jmpl	%i7+8, %g0
+	 restore
+
+END(__mpn_addmul_1)

@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <sys/trap.h>
 
 #define _ASM 1
 #include <bits/setjmp.h>

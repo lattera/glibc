@@ -25,7 +25,7 @@ void
 feraiseexcept (int excepts)
 {
   /* Raise exceptions represented by EXPECTS.  But we must raise only
-     one signal at a time.  It is important the if the overflow/underflow
+     one signal at a time.  It is important that if the overflow/underflow
      exception and the inexact exception are given at the same time,
      the overflow/underflow exception follows the inexact exception.  */
 
@@ -91,8 +91,21 @@ feraiseexcept (int excepts)
   /* Last: inexact.  */
   if ((FE_INEXACT & excepts) != 0)
     {
-      long double d;
-      __asm__ ("fmul %%st, %%st(0); fwait" : "=t" (d) : "0" (LDBL_MAX));
-      (void) &d;
+      /* There is no way to raise only the overflow flag.  Do it the
+	 hard way.  */
+      fenv_t temp;
+
+      /* Bah, we have to clear selected exceptions.  Since there is no
+	 `fldsw' instruction we have to do it the hard way.  */
+      __asm__ ("fnstenv %0" : "=m" (*&temp));
+
+      /* Set the relevant bits.  */
+      temp.status_word |= FE_INEXACT;
+
+      /* Put the new data in effect.  */
+      __asm__ ("fldenv %0" : : "m" (*&temp));
+
+      /* And raise the exception.  */
+	__asm__ ("fwait");
     }
 }

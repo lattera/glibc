@@ -17,5 +17,12 @@ struct kernel_stat
     unsigned long int __unused3;
     long int st_blksize;
     long int st_blocks;
-    unsigned long int __unused4[2];
+    unsigned long int __unused4;
+    unsigned long int __unused5;
   };
+
+#define _HAVE___UNUSED1
+#define _HAVE___UNUSED2
+#define _HAVE___UNUSED3
+#define _HAVE___UNUSED4
+#define _HAVE___UNUSED5

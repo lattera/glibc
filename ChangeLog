@@ -1,3 +1,117 @@
+1997-06-29 23:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* config.make.in: Define need-nopic-initfini.
+	* configure.in: Write out nopic_initfini.
+	* csu/Makefile: Generate no-PIC crt code if need-nopic-initfini
+	is defined.
+
+	* sysdeps/i386/fpu/fraiseexcpt.c: Correct FE_INEXACT case.
+
+	* sysdeps/sparc/rem.S: Get trap definition properly.
+	* sysdeps/sparc/sdiv.S: Likewise.
+	* sysdeps/sparc/udiv.S: Likewise.
+	* sysdeps/sparc/urem.S: Likewise.
+	* sysdeps/sparc/setjmp.S: Include <sys/trap.h>.
+	* sysdeps/sparc/sys/trap.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/trap.h: New file.
+
+1997-06-25 10:26  Thorsten Kukuk  <kukuk@uni-paderborn.de>
+
+	* sysdeps/generic/rpc/auth.h: Add xdr_opaque_auth declaration.
+
+1997-06-29 10:34  Fila Kolodny  <fila@ibi.com>
+
+	* sysdeps/mach/hurd/select.c (__select): Change MACH_MSG_SIZE_INTEGER_T
+	to MACH_MSG_TYPE_INTEGER_T.
+
+1997-06-29  01:04  Richard Henderson  <richard@gnu.ai.mit.edu>
+
+	Initial sparc64-linux support:
+	* configure.in: Recognize sparc64 as being different from sparc.
+	* io/ftwtest-sh: Only invoke ld.so if it exists.
+	* math/Makefile (LDLIBS-*): Change from libm to math/libm to get
+	static tests to link.  Honour $(omit-long-double-fcts) == yes.
+	* math/libm-test.c (test_single_exception): The argument to
+	fetestexcept is `int' not `fexcept_t'.
+	* shlib-versions: Recognize sparc64.
+	* signal/signal.h: Add typedef for stack_t.
+
+	* stdio-common/_itoa.c: Defaulting UMUL_TIME==UDIV_TIME is broken.
+	Attempt to fix up most of this by cleaning up assumptions below,
+	but give up and change the defaults.
+
+	* setjmp/longjmp.c: Moved to ...
+	* sysdeps/generic/longjmp.c: ... here.
+	* setjmp/sigjmp.c: Moved to ...
+	* sysdeps/generic/sigjmp.c: ... here.
+
+	* sysdeps/sparc/bsd-_setjmp.S [PIC]: There wasn't even valid asm here.
+	Ought to fix up gas to catch these silly things properly.
+	* sysdeps/sparc/bsd-setjmp.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/errno.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/kernel_sigaction.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/kernel_stat.h: Tell xstat about
+	the unused fields.
+
+	* sysdeps/sparc/sparc64/add_n.s: Moved to ...
+	* sysdeps/sparc64/add_n.S: ... here.  Fix up %g4 and stack usage.
+	* sysdeps/sparc/sparc64/addmul_1.s: Likewise.
+	* sysdeps/sparc/sparc64/gmp-mparam.h: Likewise.
+	* sysdeps/sparc/sparc64/lshift.s: Likewise.
+	* sysdeps/sparc/sparc64/mul_1.s: Likewise.
+	* sysdeps/sparc/sparc64/rshift.s: Likewise.
+	* sysdeps/sparc/sparc64/sub_n.s: Likewise.
+	* sysdeps/sparc/sparc64/submul_1.s: Likewise.
+
+	* sysdeps/sparc64/Implies: New file.
+	* sysdeps/sparc64/Makefile: Likewise.
+	* sysdeps/sparc64/bits/endian.h: Likewise.
+	* sysdeps/sparc64/bsd-_setjmp.S: Likewise.
+	* sysdeps/sparc64/bsd-setjmp.S: Likewise.
+	* sysdeps/sparc64/dl-machine.h: Likewise.
+	* sysdeps/sparc64/elf/Makefile: Likewise.
+	* sysdeps/sparc64/elf/crtbegin.S: Likewise.
+	* sysdeps/sparc64/elf/crtbeginS.S: Likewise.
+	* sysdeps/sparc64/elf/crtend.S: Likewise.
+	* sysdeps/sparc64/elf/crtendS.S: Likewise.
+	* sysdeps/sparc64/elf/start.S: Likewise.
+	* sysdeps/sparc64/fpu_control.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/__longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/bits/setjmp.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/fork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/init-first.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/kernel_stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/pipe.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/sigjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/ucontext.h: Likewise.
+
+1997-06-28 16:28  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* configure.in: Add -nostartfiles -nostdlib when check for
+	--version-script.
+
+1997-06-28 12:03  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/powerpc/bits/endian.h: New file.
+
+1997-06-28 20:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add getresgid and
+	setresgid.
+
 1997-06-27 20:09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sys/quota.h: Add <asm/types.h>.

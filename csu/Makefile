@@ -52,19 +52,42 @@ CPPFLAGS += -DHAVE_INITFINI
 # "functions" _init and _fini to run the .init and .fini sections.
 crtstuff = crti crtn
 
+# If we need separate startup code, require separate code.
+ifeq ($(need-nopic-initfini),yes)
+crtstuff += crtiS crtnS
+endif
+
 install-lib += $(crtstuff:=.o)
 extra-objs += $(crtstuff:=.o)
-generated += $(crtstuff:=.S) initfini.s align.h end.h
+generated += $(crtstuff:=.S) initfini.s initfiniS.s align.h end.h
 omit-deps += $(crtstuff)
 
 # Special rules for the building of crti.o and crtn.o
 $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
-	$(compile.S) -fPIC -g0 -o $@
+	$(compile.S) -g0 -o $@
 
 $(objpfx)initfini.s: initfini.c
+	$(compile.c) -g0 -S -finhibit-size-directive \
+		$(no-exceptions) -o $@
+
+$(objpfx)initfiniS.s: initfini.c
 	$(compile.c) -g0 -S -fPIC -finhibit-size-directive \
 		$(no-exceptions) -o $@
 
+ifneq ($(need-nopic-initfini),yes)
+# We only have one kind of startup code files.  Static binaries and
+# shared libraries are build using the PIC version.
+$(objpfx)crti.S: $(objpfx)initfiniS.s
+	sed -n -e '1,/@HEADER_ENDS/p' \
+	       -e '/@_.*_PROLOG_BEGINS/,/@_.*_PROLOG_ENDS/p' \
+	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+
+$(objpfx)crtn.S: $(objpfx)initfiniS.s
+	sed -n -e '1,/@HEADER_ENDS/p' \
+	       -e '/@_.*_EPILOG_BEGINS/,/@_.*_EPILOG_ENDS/p' \
+	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+else
+# We have to build two versions, one with one without PIC code.
 $(objpfx)crti.S: $(objpfx)initfini.s
 	sed -n -e '1,/@HEADER_ENDS/p' \
 	       -e '/@_.*_PROLOG_BEGINS/,/@_.*_PROLOG_ENDS/p' \
@@ -74,6 +97,17 @@ $(objpfx)crtn.S: $(objpfx)initfini.s
 	sed -n -e '1,/@HEADER_ENDS/p' \
 	       -e '/@_.*_EPILOG_BEGINS/,/@_.*_EPILOG_ENDS/p' \
 	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+
+$(objpfx)crtiS.S: $(objpfx)initfiniS.s
+	sed -n -e '1,/@HEADER_ENDS/p' \
+	       -e '/@_.*_PROLOG_BEGINS/,/@_.*_PROLOG_ENDS/p' \
+	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+
+$(objpfx)crtnS.S: $(objpfx)initfiniS.s
+	sed -n -e '1,/@HEADER_ENDS/p' \
+	       -e '/@_.*_EPILOG_BEGINS/,/@_.*_EPILOG_ENDS/p' \
+	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+endif
 
 $(objpfx)defs.h: $(objpfx)initfini.s
 	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \

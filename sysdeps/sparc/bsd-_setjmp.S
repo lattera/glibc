@@ -20,24 +20,21 @@
 #include <sysdep.h>
 
 ENTRY (_setjmp)
-#ifdef PIC
-1:
-	jmpl  2f,%o1
-	nop
-2:
-	sethi %hi(_GLOBAL_OFFSET_TABLE_-(1b-.)),%l7
-	or    %l7,%lo(_GLOBAL_OFFSET_TABLE_-(1b-.)),%l7
-	add   %l7,%o1,%l7
-	sethi %hi(C_SYMBOL_NAME (__sigsetjmp)),%g1
-	or    %g1,%lo(C_SYMBOL_NAME (__sigsetjmp)),%g1
-	ld    [%l7+%g1],%g1
-	ld    [%g1],%g1
-	jmpl  %g1,%g0
-	mov   %g0,%o1           /* Pass second argument of zero */
-#else
 
-	sethi %hi(C_SYMBOL_NAME (__sigsetjmp)), %g1
-	or %lo(C_SYMBOL_NAME (__sigsetjmp)), %g1, %g1
-	jmp %g1
-	mov %g0, %o1		/* Pass second argument of zero.  */
+#ifdef PIC
+	save	%sp, -64, %sp
+1:	call	2f
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %g1
+2:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %g1
+	add	%g1, %o7, %g1
+	sethi	%hi(C_SYMBOL_NAME(__sigsetjmp)), %g2
+	restore
+	or	%g2, %lo(C_SYMBOL_NAME(__sigsetjmp)), %g2
+	ld	[%g1+%g2], %g1
+#else
+	sethi	%hi(C_SYMBOL_NAME(__sigsetjmp)), %g1
+	or	%g1, %lo(C_SYMBOL_NAME(__sigsetjmp)), %g1
 #endif
+
+	jmp %g1
+	 mov %g0, %o1		/* Pass second argument of zero.  */

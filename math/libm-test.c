@@ -251,7 +251,7 @@ static void
 test_single_exception (const char *test_name,
                        short int exception,
                        short int exc_flag,
-                       fexcept_t fe_flag,
+                       int fe_flag,
                        const char *flag_name)
 {
 #ifndef TEST_INLINE

@@ -13,6 +13,7 @@ geteuid		-	geteuid		0	__geteuid	geteuid
 getpgid		-	getpgid		1	__getpgid	getpgid
 getpgrp		-	getpgrp		0	getpgrp
 getppid		-	getppid		0	__getppid	getppid
+getresgid	EXTRA	getresgid	3	getresgid
 getresuid	EXTRA	getresuid	3	getresuid
 getsid		-	getsid		1	getsid
 init_module	EXTRA	init_module	5	init_module
@@ -54,6 +55,7 @@ select		-	_newselect	5	__select	select
 setfsgid	EXTRA	setfsgid	1	setfsgid
 setfsuid	EXTRA	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	__setpgid	setpgid
+setresgid	EXTRA	setresgid	3	setresgid
 setresuid	EXTRA	setresuid	3	setresuid
 sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask

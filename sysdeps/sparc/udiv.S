@@ -38,15 +38,7 @@
 
 
 #include "DEFS.h"
-#ifdef __linux__
-#include <asm/traps.h>
-#else
-#ifdef __svr4__
 #include <sys/trap.h>
-#else
-#include <machine/trap.h>
-#endif
-#endif
 
 FUNC(.udiv)
 
@@ -176,14 +168,14 @@ Ldivloop:
 	subcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (7*2+1), %o2
-	
+
 L.4.23:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (7*2-1), %o2
-	
-	
+
+
 L.3.19:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
@@ -194,15 +186,15 @@ L.3.19:
 	subcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (5*2+1), %o2
-	
+
 L.4.21:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (5*2-1), %o2
-	
-	
-	
+
+
+
 L.2.17:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
@@ -218,14 +210,14 @@ L.2.17:
 	subcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (3*2+1), %o2
-	
+
 L.4.19:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (3*2-1), %o2
-	
-	
+
+
 L.3.17:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
@@ -236,16 +228,16 @@ L.3.17:
 	subcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (1*2+1), %o2
-	
+
 L.4.17:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (1*2-1), %o2
-	
-	
-	
-	
+
+
+
+
 L.1.16:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
@@ -266,14 +258,14 @@ L.1.16:
 	subcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (-1*2+1), %o2
-	
+
 L.4.15:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (-1*2-1), %o2
-	
-	
+
+
 L.3.15:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
@@ -284,15 +276,15 @@ L.3.15:
 	subcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (-3*2+1), %o2
-	
+
 L.4.13:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (-3*2-1), %o2
-	
-	
-	
+
+
+
 L.2.15:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
@@ -308,14 +300,14 @@ L.2.15:
 	subcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (-5*2+1), %o2
-	
+
 L.4.11:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (-5*2-1), %o2
-	
-	
+
+
 L.3.13:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
@@ -326,16 +318,16 @@ L.3.13:
 	subcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (-7*2+1), %o2
-	
+
 L.4.9:
 	! remainder is negative
 	addcc	%o3,%o5,%o3
 		b	9f
 		add	%o2, (-7*2-1), %o2
-	
-	
-	
-	
+
+
+
+
 	9:
 Lend_regular_divide:
 	subcc	%o4, 1, %o4
