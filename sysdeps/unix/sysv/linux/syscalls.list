@@ -35,6 +35,7 @@ nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
 pause		-	pause		i:	__libc_pause	pause
 personality	init-first personality	i:i	__personality	personality
 pipe		-	pipe		i:f	__pipe		pipe
+pivot_root	EXTRA	pivot_root	i:ss	pivot_root
 prctl		EXTRA	prctl		i:iiiii	prctl
 query_module	EXTRA	query_module	i:sipip	query_module
 quotactl	EXTRA	quotactl	i:isip	quotactl

@@ -90,4 +90,8 @@ libc {
     # ipc ctl interface change.
     semctl; shmctl; msgctl;
   }
+  GLIBC_2.2.1 {
+    # p*
+    pivot_root
+  }
 }

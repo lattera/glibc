@@ -1,5 +1,14 @@
 2000-11-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions.def: Add GLIBC_2.2.1 for glibc.
+
+2000-11-22  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add pivot_root.
+	* sysdeps/unix/sysv/linux/Versions: Add pivot_root at GLIBC_2.2.1.
+
+2000-11-22  Ulrich Drepper  <drepper@redhat.com>
+
 	* rt/aio_suspend.c (aio_suspend): Convert timeout value to
 	absolute time for pthread_cond_timedwait call.
 	Reported by Lawrence Chen <lchen@opentext.com> [libc/1930].
