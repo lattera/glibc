@@ -24,6 +24,9 @@
 /* Type of the initializer.  */
 typedef void (*init_t) (int, char **, char **);
 
+/* Flag, nonzero during startup phase.  */
+extern int _dl_starting_up;
+
 
 void
 internal_function
@@ -127,4 +130,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   /* Notify the debugger all new objects are now ready to go.  */
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
+
+  /* Finished starting up.  */
+  _dl_starting_up = 0;
 }

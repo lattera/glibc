@@ -1,5 +1,12 @@
 2000-03-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-init.c (_dl_init): Clear _dl_starting_up at end of
+	with size of dynamic sectionfunction.
+	* sysdeps/i386/dl-machine.h: Remove code to clear _dl_starting_up.
+
+	* misc/sys/cdefs.h: Don't allow gcc in traditional mode to be
+	with size of dynamic sectionused.
+
 	* elf/Makefile (dl-routines): Remove preinit.
 	* elf/Versions: Remove _dl_preinit.
 	* elf/dl-preinit.c: Removed.  Move content into...

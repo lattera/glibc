@@ -233,9 +233,6 @@ _dl_start_user:\n\
 	call _dl_init@PLT\n\
 	# Push argc back on the stack.\n\
 	push %esi\n\
-	# Clear the startup flag.\n\
-	movl _dl_starting_up@GOT(%ebx), %eax\n\
-	movl $0, (%eax)\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
 	movl _dl_fini@GOT(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\
