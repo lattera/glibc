@@ -1,3 +1,20 @@
+2004-11-09  Paul Eggert  <eggert@cs.ucla.edu.
+
+	[BZ #535]
+	* time/difftime.c: Fix a double-rounding bug on hosts with
+	64-bit time_t and long double being IEEE double.  Also, port
+	to more valid C99 hosts, even those that have padding bits.
+	Don't include <values.h> since it is marked as an obsolescent
+	interface.  Include <limits.h>, <float.h>, and <stdint.h> instead.
+	(TYPE_BITS, TYPE_FLOATING, TYPE_SIGNED): New macros.
+	(subtract): New static function, that works correctly without
+	double-rounding, even on hosts with 64-bit time_t.  Also cater
+	to hosts with padding bits.
+	(__difftime): Use it.  Use DBL_MANT_DIG and LDBL_MANT_DIG to
+	determine whether floating types are wide enough: the old
+	test (which used sizeof) could in theory report the wrong results
+	on hosts with padding bits in floating-point values.
+
 2004-11-11  Simon Josefsson  <jas@extundo.com>
 
 	[BZ #542]
