@@ -193,18 +193,19 @@ __open_catalog (__nl_catd catalog)
     }
 
   /* Avoid dealing with directories and block devices */
-  if (fd < 0)
+  if (__builtin_expect (fd, 0) < 0)
     {
       catalog->status = nonexisting;
       goto unlock_return;
     }
 
-  if (__fxstat (_STAT_VER, fd, &st) < 0)
+  if (__builtin_expect (__fxstat (_STAT_VER, fd, &st), 0) < 0)
     {
       catalog->status = nonexisting;
       goto close_unlock_return;
     }
-  if (!S_ISREG (st.st_mode) || st.st_size < sizeof (struct catalog_obj))
+  if (__builtin_expect (!S_ISREG (st.st_mode), 0)
+      || st.st_size < sizeof (struct catalog_obj))
     {
       /* `errno' is not set correctly but the file is not usable.
 	 Use an reasonable error value.  */
@@ -230,7 +231,8 @@ __open_catalog (__nl_catd catalog)
   catalog->file_ptr =
     (struct catalog_obj *) __mmap (NULL, st.st_size, PROT_READ,
 				   MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
-  if (catalog->file_ptr != (struct catalog_obj *) MAP_FAILED)
+  if (__builtin_expect (catalog->file_ptr != (struct catalog_obj *) MAP_FAILED,
+			1))
     /* Tell the world we managed to mmap the file.  */
     catalog->status = mmapped;
   else
@@ -270,7 +272,8 @@ __open_catalog (__nl_catd catalog)
   /* Determine whether the file is a catalog file and if yes whether
      it is written using the correct byte order.  Else we have to swap
      the values.  */
-  if (catalog->file_ptr->magic == CATGETS_MAGIC)
+  if (__builtin_expect (catalog->file_ptr->magic, CATGETS_MAGIC)
+      == CATGETS_MAGIC)
     swapping = 0;
   else if (catalog->file_ptr->magic == SWAPU32 (CATGETS_MAGIC))
     swapping = 1;

@@ -1,6 +1,8 @@
 2000-05-26  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-load.c (_dl_map_object): Don't ignore RPATHs of loader ==
+	* catgets/open_catalog.c (__open_catalog): Add a few __builtin_expect.
+
+	* elf/dl-load.c (_dl_map_object): Don't ignore RPATHs if loader ==
 	NULL.
 
 	* posix/tst-preadwrite.c: Allow parallel execution of
