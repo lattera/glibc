@@ -63,10 +63,6 @@
    -s,--silent outputs only the error count (equals --verbose=0)
  */
 
-/* Define if the following ISO C 9X functions are implemented: exp2,
-   log2.  */
-#undef ISO_9X_IMPLEMENTED
-
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
 #endif
@@ -103,6 +99,12 @@ static MATHTYPE plus_infty, minus_infty, nan_value;
 
 typedef MATHTYPE (*mathfunc) (MATHTYPE);
 
+#define BUILD_COMPLEX(real, imag) \
+  ({ __complex__ MATHTYPE __retval;					      \
+     __real__ __retval = (real);					      \
+     __imag__ __retval = (imag);					      \
+     __retval; })
+
 
 #define ISINF(x) \
 (sizeof (x) == sizeof (float) ?						      \
@@ -134,18 +136,6 @@ asm ("fnstsw":"=a" (sw));
 #endif
 }
 
-
-/*
-   Call to an external function so that floating point registers
-   get moved to memory
- */
-static void
-this_does_nothing (void)
-{
-  clock_t dummy;
-
-  dummy = clock ();
-}
 
 /*
    Get a random value x with min_value < x < max_value
@@ -644,10 +634,15 @@ exp_test (void)
 }
 
 
-#ifdef ISO_9X_IMPLEMENTED
 static void
 exp2_test (void)
 {
+  errno = 0;
+  exp2(0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   check ("exp2 (+0) == 1", FUNC(exp2) (0), 1);
   check ("exp2 (-0) == 1", FUNC(exp2) (minus_zero), 1);
 
@@ -655,7 +650,6 @@ exp2_test (void)
   check ("exp2 (-inf) == 0", FUNC(exp2) (minus_infty), 0);
   check ("exp2 (10) == 1024", FUNC(exp2) (10), 1024);
 }
-#endif
 
 
 static void
@@ -892,7 +886,6 @@ log1p_test (void)
 }
 
 
-#ifdef ISO_9X_IMPLEMENTED
 static void
 log2_test (void)
 {
@@ -914,7 +907,6 @@ log2_test (void)
   check ("log2 (256) == 8", FUNC(log2) (256.0), 8);
 
 }
-#endif
 
 
 static void
@@ -1540,32 +1532,92 @@ cexp_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(cexp) (plus_zero + 1.0i * plus_zero);
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_zero, plus_zero));
   check ("real(cexp(0 + 0i)) = 1", __real__ result, 1);
   check ("imag(cexp(0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (minus_zero + 1.0i * plus_zero);
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_zero, plus_zero));
   check ("real(cexp(-0 + 0i)) = 1", __real__ result, 1);
   check ("imag(cexp(-0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (plus_zero + 1.0i * minus_zero);
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_zero, minus_zero));
   check ("real(cexp(0 - 0i)) = 1", __real__ result, 1);
-  check ("imag(cexp(0 - 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (minus_zero + 1.0i * minus_zero);
+  check ("imag(cexp(0 - 0i)) = -0", __imag__ result, minus_zero);
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(cexp(-0 - 0i)) = 1", __real__ result, 1);
-  check ("imag(cexp(-0 - 0i)) = 0", __imag__ result, 0);
+  check ("imag(cexp(-0 - 0i)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(cexp) (plus_infty + 1.0i * plus_zero);
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, plus_zero));
   check_isinfp ("real(cexp(+inf + 0i)) = +inf", __real__ result);
   check ("imag(cexp(+inf + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (plus_infty + 1.0i * minus_zero);
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(cexp(+inf - 0i)) = +inf", __real__ result);
   check ("imag(cexp(+inf - 0i)) = 0", __imag__ result, 0);
 
-  result = FUNC(cexp) (minus_infty + 1.0i * plus_zero);
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, plus_zero));
   check ("real(cexp(-inf + 0i)) = 0", __real__ result, 0);
   check ("imag(cexp(-inf + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (minus_infty + 1.0i * minus_zero);
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, minus_zero));
   check ("real(cexp(-inf - 0i)) = 0", __real__ result, 0);
-  check ("imag(cexp(-inf - 0i)) = 0", __imag__ result, 0);
+  check ("imag(cexp(-inf - 0i)) = -0", __imag__ result, minus_zero);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (100.0, plus_infty));
+  check_isnan ("real(cexp(x + i inf)) = NaN", __real__ result);
+  check_isnan ("imag(cexp(x + i inf)) = NaN", __imag__ result);
+  result = FUNC(cexp) (BUILD_COMPLEX (100.0, minus_infty));
+  check_isnan ("real(cexp(x - i inf)) = NaN", __real__ result);
+  check_isnan ("imag(cexp(x - i inf)) = NaN", __imag__ result);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, 2.0));
+  check ("real(cexp(-inf + 2.0i)) = -0", __real__ result, minus_zero);
+  check ("imag(cexp(-inf + 2.0i)) = 0", __imag__ result, 0);
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, 4.0));
+  check ("real(cexp(-inf + 4.0i)) = -0", __real__ result, minus_zero);
+  check ("imag(cexp(-inf + 4.0i)) = -0", __imag__ result, minus_zero);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, 2.0));
+  check_isinfn ("real(cexp(+inf + 2.0i)) = -0", __real__ result);
+  check_isinfp ("imag(cexp(+inf + 2.0i)) = 0", __imag__ result);
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, 4.0));
+  check_isinfn ("real(cexp(+inf + 4.0i)) = -0", __real__ result);
+  check_isinfn ("imag(cexp(+inf + 4.0i)) = -0", __imag__ result);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, plus_infty));
+  check_isinfp ("real(cexp(+inf + i inf)) = +inf", __real__ result);
+  check_isnan ("imag(cexp(+inf + i inf)) = NaN", __imag__ result);
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, minus_infty));
+  check_isinfp ("real(cexp(+inf - i inf)) = +inf", __real__ result);
+  check_isnan ("imag(cexp(+inf - i inf)) = NaN", __imag__ result);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, plus_infty));
+  check ("real(cexp(-inf + i inf)) = 0", __real__ result, 0);
+  check ("imag(cexp(-inf + i inf)) = 0", __imag__ result, 0);
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, minus_infty));
+  check ("real(cexp(-inf - i inf)) = 0", __real__ result, 0);
+  check ("imag(cexp(-inf - i inf)) = 0", __imag__ result, 0);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, nan_value));
+  check ("real(cexp(-inf + i NaN)) = 0", __real__ result, 0);
+  check ("imag(cexp(-inf + i NaN)) = 0", fabs (__imag__ result), 0);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, nan_value));
+  check_isinfp ("real(cexp(+inf + i NaN)) = +inf", __real__ result);
+  check_isnan ("imag(cexp(+inf + i NaN)) = NaN", __imag__ result);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (nan_value, 1.0));
+  check_isnan ("real(cexp(NaN + 1i)) = NaN", __real__ result);
+  check_isnan ("imag(cexp(NaN + 1i)) = NaN", __imag__ result);
+  result = FUNC(cexp) (BUILD_COMPLEX (nan_value, 1.0));
+  check_isnan ("real(cexp(NaN + i inf)) = NaN", __real__ result);
+  check_isnan ("imag(cexp(NaN + i inf)) = NaN", __imag__ result);
+  result = FUNC(cexp) (BUILD_COMPLEX (nan_value, 1.0));
+  check_isnan ("real(cexp(NaN + i NaN)) = NaN", __real__ result);
+  check_isnan ("imag(cexp(NaN + i NaN)) = NaN", __imag__ result);
+
+  result = FUNC(cexp) (BUILD_COMPLEX (0, nan_value));
+  check_isnan ("real(cexp(0 + i NaN)) = NaN", __real__ result);
+  check_isnan ("imag(cexp(0 + i NaN)) = NaN", __imag__ result);
+  result = FUNC(cexp) (BUILD_COMPLEX (1, nan_value));
+  check_isnan ("real(cexp(1 + i NaN)) = NaN", __real__ result);
+  check_isnan ("imag(cexp(1 + i NaN)) = NaN", __imag__ result);
 }
 
 
@@ -1578,9 +1630,9 @@ inverse_func_pair_test (const char *test_name,
   int result;
 
   a = f1 (x);
-  this_does_nothing ();
+  (void) &a;
   b = inverse (a);
-  this_does_nothing ();
+  (void) &b;
 
   result = check_equal (b, x, epsilon, &difference);
   output_result (test_name, result,
@@ -1630,11 +1682,11 @@ identities1_test (MATHTYPE x, MATHTYPE epsilon)
   int result;
 
   res1 = FUNC(sin) (x);
-  this_does_nothing ();
+  (void) &res1;
   res2 = FUNC(cos) (x);
-  this_does_nothing ();
+  (void) &res2;
   res3 = res1 * res1 + res2 * res2;
-  this_does_nothing ();
+  (void) &res3;
 
   result = check_equal (res3, 1.0, epsilon, &diff);
   output_result_ext ("sin^2 + cos^2 == 1", result,
@@ -1650,13 +1702,13 @@ identities2_test (MATHTYPE x, MATHTYPE epsilon)
   int result;
 
   res1 = FUNC(sin) (x);
-  this_does_nothing ();
+  (void) &res1;
   res2 = FUNC(cos) (x);
-  this_does_nothing ();
+  (void) &res2;
   res3 = FUNC(tan) (x);
-  this_does_nothing ();
+  (void) &res3;
   res4 = res1 / res2;
-  this_does_nothing ();
+  (void) &res4;
 
   result = check_equal (res4, res3, epsilon, &diff);
   output_result_ext ("sin/cos == tan", result,
@@ -1672,11 +1724,11 @@ identities3_test (MATHTYPE x, MATHTYPE epsilon)
   int result;
 
   res1 = FUNC(sinh) (x);
-  this_does_nothing ();
+  (void) &res1;
   res2 = FUNC(cosh) (x);
-  this_does_nothing ();
+  (void) &res2;
   res3 = res2 * res2 - res1 * res1;
-  this_does_nothing ();
+  (void) &res3;
 
   result = check_equal (res3, 1.0, epsilon, &diff);
   output_result_ext ("cosh^2 - sinh^2 == 1", result,
@@ -1721,7 +1773,10 @@ basic_tests (void)
   NaN_var = nan_value;
   Inf_var = one_var / zero_var;
 
-  this_does_nothing ();
+  (void) &zero_var;
+  (void) &one_var;
+  (void) &NaN_var;
+  (void) &Inf_var;
 
   check_isinfp ("isinf (inf) == +1", Inf_var);
   check_isinfn ("isinf (-inf) == -1", -Inf_var);
@@ -1854,9 +1909,7 @@ main (int argc, char *argv[])
   cos_test ();
   cosh_test ();
   exp_test ();
-#ifdef ISO_9X_IMPLEMENTED
   exp2_test ();
-#endif
   expm1_test ();
   frexp_test ();
   ilogb_test ();
@@ -1864,9 +1917,7 @@ main (int argc, char *argv[])
   log_test ();
   log10_test ();
   log1p_test ();
-#ifdef ISO_9X_IMPLEMENTED
   log2_test ();
-#endif
   logb_test ();
   modf_test ();
   scalb_test ();

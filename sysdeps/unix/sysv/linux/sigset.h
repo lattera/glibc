@@ -54,16 +54,47 @@ typedef struct
 #define __sigword(sig)	(((sig) - 1) / (8 * sizeof (unsigned long int)))
 
 #if defined __GNUC__ && __GNUC__ >= 2
-#define __sigemptyset(set) \
+# define __sigemptyset(set) \
   (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
 		    sigset_t *__set = (set);				      \
 		    while (--__cnt >= 0) __set->__val[__cnt] = 0;	      \
 		    0; }))
-#define __sigfillset(set) \
+# define __sigfillset(set) \
   (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
 		    sigset_t *__set = (set);				      \
 		    while (--__cnt >= 0) __set->__val[__cnt] = ~0UL;	      \
 		    0; }))
+
+# ifdef _GNU_SOURCE
+/* The POSIX does not specify for handling the whole signal set in one
+   command.  This is often wanted and so we define three more functions
+   here.  */
+# define __sigisemptyset(set) \
+  (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
+		    const sigset_t *__set = (set);			      \
+		    int __ret = __set->__val[--__cnt];			      \
+		    while (!__ret && --__cnt >= 0)			      \
+			__ret = __set->__val[__cnt];			      \
+		    __ret; }))
+# define __sigandset(dest, left, right) \
+  (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
+		    sigset_t *__dest = (dest);				      \
+		    const sigset_t *__left = (left);			      \
+		    const sigset_t *__right = (right);			      \
+		    while (--__cnt >= 0)				      \
+		      __dest->__val[__cnt] = (__left->__val[__cnt]	      \
+					      & __right->__val[__cnt]);	      \
+		    0; }))
+# define __sigorset(dest, left, right) \
+  (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
+		    sigset_t *__dest = (dest);				      \
+		    const sigset_t *__left = (left);			      \
+		    const sigset_t *__right = (right);			      \
+		    while (--__cnt >= 0)				      \
+		      __dest->__val[__cnt] = (__left->__val[__cnt]	      \
+					      | __right->__val[__cnt]);	      \
+		    0; }))
+# endif
 #endif
 
 /* These functions needn't check for a bogus signal number -- error

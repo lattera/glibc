@@ -36,39 +36,39 @@ static char sccsid[] = "@(#)svc_run.c 1.1 87/10/13 Copyr 1984 Sun Micro";
  * This is the rpc server side idle loop
  * Wait for input, call server program.
  */
+#include <errno.h>
 #include <rpc/rpc.h>
-#include <sys/errno.h>
 
 void
-svc_run()
+svc_run (void)
 {
 #ifdef FD_SETSIZE
-	fd_set readfds;
+  fd_set readfds;
 #else
-      int readfds;
+  int readfds;
 #endif /* def FD_SETSIZE */
-#ifndef errno
-	extern int errno;
-#endif
 
-	for (;;) {
+  for (;;)
+    {
 #ifdef FD_SETSIZE
-		readfds = svc_fdset;
+      readfds = svc_fdset;
 #else
-		readfds = svc_fds;
+      readfds = svc_fds;
 #endif /* def FD_SETSIZE */
-		switch (select(_rpc_dtablesize(), &readfds, (int *)0, (int *)0,
-			       (struct timeval *)0)) {
-		case -1:
-			if (errno == EINTR) {
-				continue;
-			}
-			perror("svc_run: - select failed");
-			return;
-		case 0:
-			continue;
-		default:
-			svc_getreqset(&readfds);
-		}
+      switch (select (_rpc_dtablesize (), &readfds, (fd_set *)NULL,
+		      (fd_set *)NULL, (struct timeval *) 0))
+	{
+	case -1:
+	  if (errno == EINTR)
+	    {
+	      continue;
+	    }
+	  perror (_("svc_run: - select failed"));
+	  return;
+	case 0:
+	  continue;
+	default:
+	  svc_getreqset (&readfds);
 	}
+    }
 }

@@ -41,94 +41,102 @@ static char sccsid[] = "@(#)clnt_simple.c 1.35 87/08/11 Copyr 1984 Sun Micro";
 #include <alloca.h>
 #include <errno.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <rpc/rpc.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <strings.h>
 
-static struct callrpc_private {
-	CLIENT	*client;
-	int	socket;
-	int	oldprognum, oldversnum, valid;
-	char	*oldhost;
-} *callrpc_private;
+static struct callrpc_private
+  {
+    CLIENT *client;
+    int socket;
+    u_long oldprognum, oldversnum, valid;
+    char *oldhost;
+  }
+ *callrpc_private;
 
-callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
-	char *host;
-	xdrproc_t inproc, outproc;
-	char *in, *out;
+int
+callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
+	 xdrproc_t inproc, const char *in, xdrproc_t outproc, char *out)
 {
-	register struct callrpc_private *crp = callrpc_private;
-	struct sockaddr_in server_addr;
-	enum clnt_stat clnt_stat;
-	struct hostent hostbuf, *hp;
-	struct timeval timeout, tottimeout;
+  struct callrpc_private *crp = callrpc_private;
+  struct sockaddr_in server_addr;
+  enum clnt_stat clnt_stat;
+  struct hostent hostbuf, *hp;
+  struct timeval timeout, tottimeout;
 
-	if (crp == 0) {
-		crp = (struct callrpc_private *)calloc(1, sizeof (*crp));
-		if (crp == 0)
-			return (0);
-		callrpc_private = crp;
+  if (crp == 0)
+    {
+      crp = (struct callrpc_private *) calloc (1, sizeof (*crp));
+      if (crp == 0)
+	return 0;
+      callrpc_private = crp;
+    }
+  if (crp->oldhost == NULL)
+    {
+      crp->oldhost = malloc (256);
+      crp->oldhost[0] = 0;
+      crp->socket = RPC_ANYSOCK;
+    }
+  if (crp->valid && crp->oldprognum == prognum && crp->oldversnum == versnum
+      && strcmp (crp->oldhost, host) == 0)
+    {
+      /* reuse old client */
+    }
+  else
+    {
+      size_t buflen;
+      char *buffer;
+      int herr;
+
+      crp->valid = 0;
+      if (crp->socket != RPC_ANYSOCK)
+	{
+	  (void) close (crp->socket);
+	  crp->socket = RPC_ANYSOCK;
 	}
-	if (crp->oldhost == NULL) {
-		crp->oldhost = malloc(256);
-		crp->oldhost[0] = 0;
-		crp->socket = RPC_ANYSOCK;
+      if (crp->client)
+	{
+	  clnt_destroy (crp->client);
+	  crp->client = NULL;
 	}
-	if (crp->valid && crp->oldprognum == prognum && crp->oldversnum == versnum
-		&& strcmp(crp->oldhost, host) == 0) {
-		/* reuse old client */
-	} else {
-		size_t buflen;
-		char *buffer;
-		int herr;
 
-		crp->valid = 0;
-		if (crp->socket != RPC_ANYSOCK)
-		  {
-		    (void)close(crp->socket);
-		    crp->socket = RPC_ANYSOCK;
-		  }
-		if (crp->client) {
-			clnt_destroy(crp->client);
-			crp->client = NULL;
-		}
+      buflen = 1024;
+      buffer = __alloca (buflen);
+      while (__gethostbyname_r (host, &hostbuf, buffer, buflen,
+				&hp, &herr) < 0)
+	if (herr != NETDB_INTERNAL || errno != ERANGE)
+	  return (int) RPC_UNKNOWNHOST;
+	else
+	  {
+	    /* Enlarge the buffer.  */
+	    buflen *= 2;
+	    buffer = __alloca (buflen);
+	  }
 
-		buflen = 1024;
-		buffer = __alloca (buflen);
-		while (__gethostbyname_r (host, &hostbuf, buffer, buflen,
-					  &hp, &herr) < 0)
-		  if (herr != NETDB_INTERNAL || errno != ERANGE)
-		    return (int) RPC_UNKNOWNHOST;
-		  else
-		    {
-		      /* Enlarge the buffer.  */
-		      buflen *= 2;
-		      buffer = __alloca (buflen);
-		    }
-
-		timeout.tv_usec = 0;
-		timeout.tv_sec = 5;
-		bcopy(hp->h_addr, (char *)&server_addr.sin_addr, hp->h_length);
-		server_addr.sin_family = AF_INET;
-		server_addr.sin_port =  0;
-		if ((crp->client = clntudp_create(&server_addr, (u_long)prognum,
-		    (u_long)versnum, timeout, &crp->socket)) == NULL)
-			return ((int) rpc_createerr.cf_stat);
-		crp->valid = 1;
-		crp->oldprognum = prognum;
-		crp->oldversnum = versnum;
-		(void) strncpy(crp->oldhost, host, 255);
-		crp->oldhost[256] = '\0';
-	}
-	tottimeout.tv_sec = 25;
-	tottimeout.tv_usec = 0;
-	clnt_stat = clnt_call(crp->client, procnum, inproc, in,
-	    outproc, out, tottimeout);
-	/*
-	 * if call failed, empty cache
-	 */
-	if (clnt_stat != RPC_SUCCESS)
-		crp->valid = 0;
-	return ((int) clnt_stat);
+      timeout.tv_usec = 0;
+      timeout.tv_sec = 5;
+      bcopy (hp->h_addr, (char *) &server_addr.sin_addr, hp->h_length);
+      server_addr.sin_family = AF_INET;
+      server_addr.sin_port = 0;
+      if ((crp->client = clntudp_create (&server_addr, (u_long) prognum,
+			  (u_long) versnum, timeout, &crp->socket)) == NULL)
+	return (int) rpc_createerr.cf_stat;
+      crp->valid = 1;
+      crp->oldprognum = prognum;
+      crp->oldversnum = versnum;
+      (void) strncpy (crp->oldhost, host, 255);
+      crp->oldhost[256] = '\0';
+    }
+  tottimeout.tv_sec = 25;
+  tottimeout.tv_usec = 0;
+  clnt_stat = clnt_call (crp->client, procnum, inproc, (char *) in,
+			 outproc, out, tottimeout);
+  /*
+   * if call failed, empty cache
+   */
+  if (clnt_stat != RPC_SUCCESS)
+    crp->valid = 0;
+  return (int) clnt_stat;
 }

@@ -43,12 +43,10 @@ static char sccsid[] = "@(#)pmap_getport.c 1.9 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/pmap_clnt.h>
 #include <sys/socket.h>
 
-#if 0	/* these seem to be gratuitous --roland@gnu */
-#include <net/if.h>
-#endif
-
-static struct timeval timeout = { 5, 0 };
-static struct timeval tottimeout = { 60, 0 };
+static const struct timeval timeout =
+{5, 0};
+static const struct timeval tottimeout =
+{60, 0};
 
 /*
  * Find the mapped port for program,version.
@@ -56,35 +54,40 @@ static struct timeval tottimeout = { 60, 0 };
  * Returns 0 if no map exists.
  */
 u_short
-pmap_getport(address, program, version, protocol)
-	struct sockaddr_in *address;
-	u_long program;
-	u_long version;
-	u_int protocol;
+pmap_getport (address, program, version, protocol)
+     struct sockaddr_in *address;
+     u_long program;
+     u_long version;
+     u_int protocol;
 {
-	u_short port = 0;
-	int socket = -1;
-	register CLIENT *client;
-	struct pmap parms;
+  u_short port = 0;
+  int socket = -1;
+  CLIENT *client;
+  struct pmap parms;
 
-	address->sin_port = htons(PMAPPORT);
-	client = clntudp_bufcreate(address, PMAPPROG,
-	    PMAPVERS, timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
-	if (client != (CLIENT *)NULL) {
-		parms.pm_prog = program;
-		parms.pm_vers = version;
-		parms.pm_prot = protocol;
-		parms.pm_port = 0;  /* not needed or used */
-		if (CLNT_CALL(client, PMAPPROC_GETPORT, xdr_pmap, &parms,
-		    xdr_u_short, &port, tottimeout) != RPC_SUCCESS){
-			rpc_createerr.cf_stat = RPC_PMAPFAILURE;
-			clnt_geterr(client, &rpc_createerr.cf_error);
-		} else if (port == 0) {
-			rpc_createerr.cf_stat = RPC_PROGNOTREGISTERED;
-		}
-		CLNT_DESTROY(client);
+  address->sin_port = htons (PMAPPORT);
+  client = clntudp_bufcreate (address, PMAPPROG,
+	      PMAPVERS, timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+  if (client != (CLIENT *) NULL)
+    {
+      parms.pm_prog = program;
+      parms.pm_vers = version;
+      parms.pm_prot = protocol;
+      parms.pm_port = 0;	/* not needed or used */
+      if (CLNT_CALL (client, PMAPPROC_GETPORT, (xdrproc_t)xdr_pmap,
+		     (caddr_t)&parms, (xdrproc_t)xdr_u_short,
+		     (caddr_t)&port, tottimeout) != RPC_SUCCESS)
+	{
+	  rpc_createerr.cf_stat = RPC_PMAPFAILURE;
+	  clnt_geterr (client, &rpc_createerr.cf_error);
 	}
-	/* (void)close(socket); CLNT_DESTROY already closed it */
-	address->sin_port = 0;
-	return (port);
+      else if (port == 0)
+	{
+	  rpc_createerr.cf_stat = RPC_PROGNOTREGISTERED;
+	}
+      CLNT_DESTROY (client);
+    }
+  /* (void)close(socket); CLNT_DESTROY already closed it */
+  address->sin_port = 0;
+  return port;
 }

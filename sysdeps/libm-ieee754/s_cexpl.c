@@ -1,4 +1,4 @@
-/* Return value of complex exponential function for long double complex value.
+/* Return value of complex exponential function for float complex value.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -31,33 +31,48 @@ __cexpl (__complex__ long double x)
     {
       if (isfinite (__imag__ x))
 	{
-	  retval = __expl (__real__ x) * (__cosl (__imag__ x)
-					  + 1i * __sinl (__imag__ x));
+	  long double exp_val = __expl (__real__ x);
+
+	  __real__ retval = exp_val * __cosl (__imag__ x);
+	  __imag__ retval = exp_val * __sinl (__imag__ x);
 	}
       else
-	/* If the imaginary part is +-inf or NaN and the real part is
-	   not +-inf the result is NaN + iNan.  */
-	retval = __nanl ("") + 1.0i * __nanl ("");
+	{
+	  /* If the imaginary part is +-inf or NaN and the real part
+	     is not +-inf the result is NaN + iNaN.  */
+	  __real__ retval = __nanl ("");
+	  __imag__ retval = __nanl ("");
+	}
     }
   else if (__isinfl (__real__ x))
     {
-      if (isfinite (__imag x))
+      if (isfinite (__imag__ x))
 	{
 	  if (signbit (__real__ x) == 0 && __imag__ x == 0.0)
-	    retval = HUGE_VALL;
+	    retval = HUGE_VAL;
 	  else
-	    retval = ((signbit (__real__ x) ? 0.0 : HUGE_VALL)
-		      * (__cosl (__imag__ x) + 1i * __sinl (__imag__ x)));
+	    {
+	      long double value = signbit (__real__ x) ? 0.0 : HUGE_VALL;
+
+	      __real__ retval = value * __cosl (__imag__ x);
+	      __imag__ retval = value * __sinl (__imag__ x);
+	    }
 	}
-      else if (signbit (__real__ x))
-	retval = HUGE_VALL + 1.0i * __nanl ("");
+      else if (signbit (__real__ x) == 0)
+	{
+	  __real__ retval = HUGE_VALL;
+	  __imag__ retval = __nanl ("");
+	}
       else
 	retval = 0.0;
     }
   else
-    /* If the real part is NaN the result is NaN + iNan.  */
-    retval = __nanl ("") + 1.0i * __nanl ("");
+    {
+      /* If the real part is NaN the result is NaN + iNaN.  */
+      __real__ retval = __nanl ("");
+      __imag__ retval = __nanl ("");
+    }
 
   return retval;
 }
-weak_alias (__cexpl, cexpl)
+weak_alias (__cexp, cexp)

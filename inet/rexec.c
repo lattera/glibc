@@ -53,7 +53,7 @@ int
 rexec(ahost, rport, name, pass, cmd, fd2p)
 	char **ahost;
 	int rport;
-	char *name, *pass, *cmd;
+	const char *name, *pass, *cmd;
 	int *fd2p;
 {
 	struct sockaddr_in sin, sin2, from;

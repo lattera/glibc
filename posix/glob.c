@@ -250,7 +250,6 @@ extern char *alloca ();
 #undef	GLOB_PERIOD
 #include <glob.h>
 
-static int glob_pattern_p __P ((const char *pattern, int quote));
 static int glob_in_dir __P ((const char *pattern, const char *directory,
 			     int flags,
 			     int (*errfunc) __P ((const char *, int)),
@@ -288,7 +287,7 @@ next_brace_sub (const char *begin)
 	  while (*cp != '\0' && (*cp != '}' || depth > 0))
 	    {
 	      if (*cp == '}')
-		++depth;
+		--depth;
 	      ++cp;
 	    }
 	  if (*cp == '\0')
@@ -617,7 +616,7 @@ glob (pattern, flags, errfunc, pglob)
     }
 #endif	/* Not VMS.  */
 
-  if (glob_pattern_p (dirname, !(flags & GLOB_NOESCAPE)))
+  if (__glob_pattern_p (dirname, !(flags & GLOB_NOESCAPE)))
     {
       /* The directory name contains metacharacters, so we
 	 have to glob for the directory, and then glob for
@@ -844,8 +843,8 @@ prefix_array (dirname, array, n)
 
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.  */
-static int
-glob_pattern_p (pattern, quote)
+int
+__glob_pattern_p (pattern, quote)
      const char *pattern;
      int quote;
 {
@@ -876,6 +875,9 @@ glob_pattern_p (pattern, quote)
 
   return 0;
 }
+#ifdef _LIBC
+weak_alias (__glob_pattern_p, glob_pattern_p)
+#endif
 
 
 /* Like `glob', but PATTERN is a final pathname component,
@@ -900,7 +902,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
   struct globlink *names = NULL;
   size_t nfound = 0;
 
-  if (!glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE)))
+  if (!__glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE)))
     {
       stream = NULL;
       flags |= GLOB_NOCHECK;
@@ -958,7 +960,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
     }
 
   if (nfound == 0 && (flags & GLOB_NOMAGIC) &&
-      ! glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE)))
+      ! __glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE)))
     flags |= GLOB_NOCHECK;
 
   if (nfound == 0 && (flags & GLOB_NOCHECK))

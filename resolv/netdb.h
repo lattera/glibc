@@ -364,6 +364,39 @@ extern int getnetgrent_r __P ((char **__hostp, char **__userp,
 #endif	/* misc */
 
 
+#ifdef __USE_BSD
+/* Call `rshd' at port RPORT on remote machine *AHOST to execute CMD.
+   The local user is LOCUSER, on the remote machine the command is
+   executed as REMUSER.  In *FD2P the descriptor to the socket for the
+   connection is returned.  The caller must have the right to use a
+   reserved port.  When the function returns *AHOST contains the
+   official host name.  */
+extern int rcmd __P ((char **__ahost, unsigned short int __rport,
+		      __const char *__locuser, __const char *__remuser,
+		      __const char *__cmd, int *__fd2p));
+
+/* Call `rexecd' at port RPORT on remote machine *AHOST to execute
+   CMD.  The process runs at the remote machine using the ID of user
+   NAME whose cleartext password is PASSWD.  In *FD2P the descriptor
+   to the socket for the connection is returned.  When the function
+   returns *AHOST contains the official host name.  */
+extern int rexec __P ((char **__ahost, int __rport, __const char *__name,
+		       __const char *__pass, __const char *__cmd,
+		       int *__fd2p));
+
+/* Check whether user REMUSER on system RHOST is allowed to login as LOCUSER.
+   If SUSER is not zero the user tries to become superuser.  Return 0 if
+   it is possible.  */
+extern int ruserok __P ((__const char *__rhost, int __suser,
+			 __const char *__remuser, __const char *__locuser));
+
+/* Try to allocate reserved port, returning a descriptor for a socket opened
+   at this port or -1 if unsuccessful.  The search for an available port
+   will start at ALPORT and continues with lower numbers.  */
+extern int rresvport __P ((int *__alport));
+#endif
+
+
 /* Extension from POSIX.1g.  */
 #ifdef	__USE_POSIX
 /* Structure to contain information about address of a service provider.  */

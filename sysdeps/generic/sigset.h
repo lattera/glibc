@@ -1,5 +1,5 @@
 /* __sig_atomic_t, __sigset_t, and related definitions.  Generic/BSD version.
-   Copyright (C) 1991, 1992, 1994, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,14 @@ typedef unsigned long int __sigset_t;
 
 #define	__sigemptyset(set)	((*(set) = (__sigset_t) 0), 0)
 #define	__sigfillset(set)	((*(set) = ~(__sigset_t) 0), 0)
+
+#ifdef _GNU_SOURCE
+# define __sigisemptyset(set)	(*(set) == (__sigset_t) 0)
+# define __sigandset(dest, left, right) \
+				((*(set) = (*(left) & *(right))), 0)
+# define __sigorset(dest, left, right) \
+				((*(set) = (*(left) | *(right))), 0)
+#endif
 
 /* These functions needn't check for a bogus signal number -- error
    checking is done in the non __ versions.  */

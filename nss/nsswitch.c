@@ -106,8 +106,8 @@ __nss_database_lookup (const char *database, const char *alternate_name,
 	  *ni = entry->service;
 
       if (*ni == NULL && alternate_name != NULL)
-	/* We haven't found a an entry so far.  Try to find it with
-	   the alternative name.  */
+	/* We haven't found an entry so far.  Try to find it with the
+	   alternative name.  */
 	for (entry = service_table->entry; entry != NULL; entry = entry->next)
 	  if (strcmp (alternate_name, entry->name) == 0)
 	    *ni = entry->service;

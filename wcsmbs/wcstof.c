@@ -27,5 +27,11 @@
 #define	MPN2FLOAT	__mpn_construct_float
 #define	FLOAT_HUGE_VAL	HUGE_VALF
 #define	USE_WIDE_CHAR	1
+#define SET_MANTISSA(flt, mant) \
+  do { union ieee754_float u;						      \
+       u.f = (flt);							      \
+       u.ieee.mantissa = (mant) & 0x7fffff;				      \
+       (flt) = u.f;							      \
+  } while (0)
 
 #include "../stdlib/strtod.c"

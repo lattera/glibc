@@ -1,6 +1,5 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,22 +16,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
+#include <signal.h>
 
-/* The actual implementation for all floating point sizes is in strtod.c.
-   These macros tell it to produce the `long double' version, `wcstold'.  */
+/* Combine sets LEFT and RIGHT by logical OR and place result in DEST.  */
+int
+sigorset (dest, left, right)
+     sigset_t *dest;
+     const sigset_t *left;
+     const sigset_t *right;
+{
+  if (dest == NULL || left == NULL || right == NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-#define	FLOAT		long double
-#define	FLT		LDBL
-#define	STRTOF		wcstold
-#define	MPN2FLOAT	__mpn_construct_long_double
-#define	FLOAT_HUGE_VAL	HUGE_VALL
-#define	USE_WIDE_CHAR	1
-#define SET_MANTISSA(flt, mant) \
-  do { union ieee854_long_double u;					      \
-       u.d = (flt);							      \
-       u.ieee.mantissa0 = ((mant) >> 32) & 0x7fffffff;			      \
-       u.ieee.mantissa1 = (mant) & 0xffffffff;				      \
-       (flt) = u.d;							      \
-  } while (0)
-
-#include "../stdlib/strtod.c"
+  return __sigorset (dest, left, right);
+}

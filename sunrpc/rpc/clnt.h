@@ -66,22 +66,33 @@ enum clnt_stat {
 	RPC_PROCUNAVAIL=10,		/* procedure unavailable */
 	RPC_CANTDECODEARGS=11,		/* decode arguments error */
 	RPC_SYSTEMERROR=12,		/* generic "other problem" */
-
+	RPC_NOBROADCAST = 21,		/* Broadcasting not supported */
 	/*
 	 * callrpc & clnt_create errors
 	 */
 	RPC_UNKNOWNHOST=13,		/* unknown host name */
 	RPC_UNKNOWNPROTO=17,		/* unknown protocol */
+	RPC_UNKNOWNADDR = 19,		/* Remote address unknown */
 
 	/*
-	 * _ create errors
+	 * rpcbind errors
 	 */
-	RPC_PMAPFAILURE=14,		/* the pmapper failed in its call */
+	RPC_RPCBFAILURE=14,		/* portmapper failed in its call */
+#define RPC_PMAPFAILURE RPC_RPCBFAILURE
 	RPC_PROGNOTREGISTERED=15,	/* remote program is not registered */
+	RPC_N2AXLATEFAILURE = 22,	/* Name to addr translation failed */
 	/*
 	 * unspecified error
 	 */
-	RPC_FAILED=16
+	RPC_FAILED=16,
+	RPC_INTR=18,
+	RPC_TLIERROR=20,
+	RPC_UDERROR=23,
+        /*
+         * asynchronous errors
+         */
+        RPC_INPROGRESS = 24,
+        RPC_STALERACHANDLE = 25
 };
 
 
@@ -89,19 +100,19 @@ enum clnt_stat {
  * Error info.
  */
 struct rpc_err {
-	enum clnt_stat re_status;
-	union {
-		int RE_errno;		/* related system error */
-		enum auth_stat RE_why;	/* why the auth error occurred */
-		struct {
-			u_long low;	/* lowest verion supported */
-			u_long high;	/* highest verion supported */
-		} RE_vers;
-		struct {		/* maybe meaningful if RPC_FAILED */
-			long s1;
-			long s2;
-		} RE_lb;		/* life boot & debugging only */
-	} ru;
+  enum clnt_stat re_status;
+  union {
+    int RE_errno;		/* related system error */
+    enum auth_stat RE_why;	/* why the auth error occurred */
+    struct {
+      u_long low;		/* lowest verion supported */
+      u_long high;		/* highest verion supported */
+    } RE_vers;
+    struct {			/* maybe meaningful if RPC_FAILED */
+      long s1;
+      long s2;
+    } RE_lb;			/* life boot & debugging only */
+  } ru;
 #define	re_errno	ru.RE_errno
 #define	re_why		ru.RE_why
 #define	re_vers		ru.RE_vers
@@ -114,18 +125,25 @@ struct rpc_err {
  * Created by individual implementations, see e.g. rpc_udp.c.
  * Client is responsible for initializing auth, see e.g. auth_none.c.
  */
-typedef struct {
-	AUTH	*cl_auth;			/* authenticator */
-	struct clnt_ops {
-		enum clnt_stat	(*cl_call)();	/* call remote procedure */
-		void		(*cl_abort)();	/* abort a call */
-		void		(*cl_geterr)();	/* get specific error code */
-		bool_t		(*cl_freeres)(); /* frees results */
-		void		(*cl_destroy)();/* destroy this structure */
-		bool_t          (*cl_control)();/* the ioctl() of rpc */
-	} *cl_ops;
-	caddr_t			cl_private;	/* private stuff */
-} CLIENT;
+typedef struct CLIENT CLIENT;
+struct CLIENT {
+  AUTH	*cl_auth;		 /* authenticator */
+  struct clnt_ops {
+    enum clnt_stat (*cl_call) __P ((CLIENT *, u_long, xdrproc_t,
+				    caddr_t, xdrproc_t, 
+				    caddr_t, struct timeval));	
+			       	/* call remote procedure */
+    void (*cl_abort) __P ((void));  /* abort a call */
+    void (*cl_geterr) __P ((CLIENT *, struct rpc_err *));	
+				/* get specific error code */
+    bool_t (*cl_freeres) __P ((CLIENT *, xdrproc_t, caddr_t)); 
+				/* frees results */
+    void (*cl_destroy) __P ((CLIENT *)); /* destroy this structure */
+    bool_t (*cl_control) __P ((CLIENT *, int, char *));
+				/* the ioctl() of rpc */
+  } *cl_ops;
+  caddr_t cl_private;		/* private stuff */
+};
 
 
 /*
@@ -189,16 +207,29 @@ typedef struct {
 #define	clnt_control(cl,rq,in) ((*(cl)->cl_ops->cl_control)(cl,rq,in))
 
 /*
- * control operations that apply to both udp and tcp transports
+ * control operations that apply to all transports
  */
-#define CLSET_TIMEOUT       1   /* set timeout (timeval) */
-#define CLGET_TIMEOUT       2   /* get timeout (timeval) */
-#define CLGET_SERVER_ADDR   3   /* get server's address (sockaddr) */
+#define CLSET_TIMEOUT		1	/* set timeout (timeval) */
+#define CLGET_TIMEOUT		2	/* get timeout (timeval) */
+#define CLGET_SERVER_ADDR	3	/* get server's address (sockaddr) */
+#define CLGET_FD                6       /* get connections file descriptor */
+#define CLGET_SVC_ADDR          7       /* get server's address (netbuf) */
+#define CLSET_FD_CLOSE          8       /* close fd while clnt_destroy */
+#define CLSET_FD_NCLOSE         9       /* Do not close fd while clnt_destroy*/
+#define CLGET_XID               10      /* Get xid */
+#define CLSET_XID               11      /* Set xid */
+#define CLGET_VERS              12      /* Get version number */
+#define CLSET_VERS              13      /* Set version number */
+#define CLGET_PROG              14      /* Get program number */
+#define CLSET_PROG              15      /* Set program number */
+#define CLSET_SVC_ADDR          16      /* get server's address (netbuf) */
+#define CLSET_PUSH_TIMOD        17      /* push timod if not already present */
+#define CLSET_POP_TIMOD         18      /* pop timod */
 /*
- * udp only control operations
+ * Connectionless only control operations
  */
-#define CLSET_RETRY_TIMEOUT 4   /* set retry timeout (timeval) */
-#define CLGET_RETRY_TIMEOUT 5   /* get retry timeout (timeval) */
+#define CLSET_RETRY_TIMEOUT	4	/* set retry timeout (timeval) */
+#define CLGET_RETRY_TIMEOUT	5	/* get retry timeout (timeval) */
 
 /*
  * void
@@ -239,7 +270,8 @@ typedef struct {
  *	u_long prog;
  *	u_long vers;
  */
-extern CLIENT *clntraw_create __P ((u_long __prog, u_long __vers));
+extern CLIENT *clntraw_create __P ((__const u_long __prog, 
+				    __const u_long __vers));
 
 
 /*
@@ -247,12 +279,12 @@ extern CLIENT *clntraw_create __P ((u_long __prog, u_long __vers));
  * CLIENT *
  * clnt_create(host, prog, vers, prot)
  *	char *host; 	-- hostname
- *	u_int prog;	-- program number
- *	u_int vers;	-- version number
+ *	u_long prog;	-- program number
+ *	u_ong vers;	-- version number
  *	char *prot;	-- protocol
  */
-extern CLIENT *clnt_create __P ((char *__host, u_int __prog, u_int __vers,
-				 char *__prot));
+extern CLIENT *clnt_create __P ((__const char *__host, __const u_long __prog, 
+				 __const u_long __vers, __const char *__prot));
 
 
 /*
@@ -302,11 +334,17 @@ extern CLIENT *clntudp_bufcreate __P ((struct sockaddr_in *__raddr,
 				       int *__sockp, u_int __sendsz,
 				       u_int __recvsz));
 
+extern int callrpc __P ((__const char *__host, __const u_long __prognum, 
+			 __const u_long __versnum, __const u_long __procnum,
+			 __const xdrproc_t __inproc, __const char *__in,
+			 __const xdrproc_t __outproc, char *__out));
+extern int _rpc_dtablesize __P ((void));
+
 /*
  * Print why creation failed
  */
-extern void clnt_pcreateerror __P ((char *__msg));	/* stderr */
-extern char *clnt_spcreateerror __P ((char *__msg));	/* string */
+extern void clnt_pcreateerror __P ((__const char *__msg));	/* stderr */
+extern char *clnt_spcreateerror __P ((__const char *__msg));	/* string */
 
 /*
  * Like clnt_perror(), but is more verbose in its output
@@ -316,8 +354,10 @@ extern void clnt_perrno __P ((enum clnt_stat __num));	/* stderr */
 /*
  * Print an English error message, given the client error code
  */
-extern void clnt_perror __P ((CLIENT *__clnt, char *__msg)); 	/* stderr */
-extern char *clnt_sperror __P ((CLIENT *__clnt, char *__msg));	/* string */
+extern void clnt_perror __P ((CLIENT *__clnt, __const char *__msg)); 
+							/* stderr */
+extern char *clnt_sperror __P ((CLIENT *__clnt, __const char *__msg)); 
+							/* string */
 
 /*
  * If a creation fails, the following allows the user to figure out why.
@@ -336,7 +376,8 @@ extern struct rpc_createerr rpc_createerr;
  */
 extern char *clnt_sperrno __P ((enum clnt_stat __num));	/* string */
 
-
+extern int getrpcport __P ((__const char * __host, u_long __prognum,
+			   u_long __versnum, u_int proto));
 
 #define UDPMSGSIZE	8800	/* rpc imposed limit on udp msg size */
 #define RPCSMALLMSGSIZE	400	/* a more reasonable packet size */

@@ -41,6 +41,7 @@ static char sccsid[] = "@(#)xdr_reference.c 1.11 87/08/11 SMI";
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 
@@ -56,38 +57,42 @@ static char sccsid[] = "@(#)xdr_reference.c 1.11 87/08/11 SMI";
  * proc is the routine to handle the referenced structure.
  */
 bool_t
-xdr_reference(xdrs, pp, size, proc)
-	register XDR *xdrs;
-	caddr_t *pp;		/* the pointer to work on */
-	u_int size;		/* size of the object pointed to */
-	xdrproc_t proc;		/* xdr routine to handle the object */
+xdr_reference (xdrs, pp, size, proc)
+     XDR *xdrs;
+     caddr_t *pp;		/* the pointer to work on */
+     u_int size;		/* size of the object pointed to */
+     xdrproc_t proc;		/* xdr routine to handle the object */
 {
-	register caddr_t loc = *pp;
-	register bool_t stat;
+  caddr_t loc = *pp;
+  bool_t stat;
 
+  if (loc == NULL)
+    switch (xdrs->x_op)
+      {
+      case XDR_FREE:
+	return TRUE;
+
+      case XDR_DECODE:
+	*pp = loc = (caddr_t) mem_alloc (size);
 	if (loc == NULL)
-		switch (xdrs->x_op) {
-		case XDR_FREE:
-			return (TRUE);
+	  {
+	    (void) fputs (_("xdr_reference: out of memory\n"), stderr);
+	    return FALSE;
+	  }
+	bzero (loc, (int) size);
+	break;
+      default:
+	break;
+      }
 
-		case XDR_DECODE:
-			*pp = loc = (caddr_t) mem_alloc(size);
-			if (loc == NULL) {
-				(void) fprintf(stderr,
-				    "xdr_reference: out of memory\n");
-				return (FALSE);
-			}
-			bzero(loc, (int)size);
-			break;
-	}
+  stat = (*proc) (xdrs, loc, LASTUNSIGNED);
 
-	stat = (*proc)(xdrs, loc, LASTUNSIGNED);
-
-	if (xdrs->x_op == XDR_FREE) {
-		mem_free(loc, size);
-		*pp = NULL;
-	}
-	return (stat);
+  if (xdrs->x_op == XDR_FREE)
+    {
+      mem_free (loc, size);
+      *pp = NULL;
+    }
+  return stat;
 }
 
 
@@ -111,22 +116,24 @@ xdr_reference(xdrs, pp, size, proc)
  *
  */
 bool_t
-xdr_pointer(xdrs,objpp,obj_size,xdr_obj)
-	register XDR *xdrs;
-	char **objpp;
-	u_int obj_size;
-	xdrproc_t xdr_obj;
+xdr_pointer (xdrs, objpp, obj_size, xdr_obj)
+     XDR *xdrs;
+     char **objpp;
+     u_int obj_size;
+     xdrproc_t xdr_obj;
 {
 
-	bool_t more_data;
+  bool_t more_data;
 
-	more_data = (*objpp != NULL);
-	if (! xdr_bool(xdrs,&more_data)) {
-		return (FALSE);
-	}
-	if (! more_data) {
-		*objpp = NULL;
-		return (TRUE);
-	}
-	return (xdr_reference(xdrs,objpp,obj_size,xdr_obj));
+  more_data = (*objpp != NULL);
+  if (!xdr_bool (xdrs, &more_data))
+    {
+      return FALSE;
+    }
+  if (!more_data)
+    {
+      *objpp = NULL;
+      return TRUE;
+    }
+  return xdr_reference (xdrs, objpp, obj_size, xdr_obj);
 }

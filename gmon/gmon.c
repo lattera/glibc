@@ -125,7 +125,7 @@ monstartup (lowpc, highpc)
   cp = malloc (p->kcountsize + p->fromssize + p->tossize);
   if (! cp)
     {
-      ERR("monstartup: out of memory\n");
+      ERR(_("monstartup: out of memory\n"));
       return;
     }
   bzero(cp, p->kcountsize + p->fromssize + p->tossize);
@@ -194,25 +194,25 @@ static void
 write_call_graph (fd)
      int fd;
 {
+#define NARCS_PER_WRITEV	32
   u_char tag = GMON_TAG_CG_ARC;
-  struct gmon_cg_arc_record raw_arc[4]
+  struct gmon_cg_arc_record raw_arc[NARCS_PER_WRITEV]
     __attribute__ ((aligned (__alignof__ (char*))));
   int from_index, to_index, from_len;
   u_long frompc;
+  struct iovec iov[2 * NARCS_PER_WRITEV];
+  int nfilled;
 
-  struct iovec iov[8] =
+  for (nfilled = 0; nfilled < NARCS_PER_WRITEV; ++nfilled)
     {
-      { &tag, sizeof (tag) },
-      { &raw_arc[0], sizeof (struct gmon_cg_arc_record) },
-      { &tag, sizeof (tag) },
-      { &raw_arc[1], sizeof (struct gmon_cg_arc_record) },
-      { &tag, sizeof (tag) },
-      { &raw_arc[2], sizeof (struct gmon_cg_arc_record) },
-      { &tag, sizeof (tag) },
-      { &raw_arc[3], sizeof (struct gmon_cg_arc_record) },
-    };
-  int nfilled = 0;
+      iov[2 * nfilled].iov_base = &tag;
+      iov[2 * nfilled].iov_len = sizeof (tag);
 
+      iov[2 * nfilled + 1].iov_base = &raw_arc[nfilled];
+      iov[2 * nfilled + 1].iov_len = sizeof (struct gmon_cg_arc_record);
+    }
+
+  nfilled = 0;
   from_len = _gmonparam.fromssize / sizeof (*_gmonparam.froms);
   for (from_index = 0; from_index < from_len; ++from_index)
     {
@@ -226,19 +226,20 @@ write_call_graph (fd)
 	   to_index != 0;
 	   to_index = _gmonparam.tos[to_index].link)
 	{
-	  if (nfilled > 3)
+	  *(char **) raw_arc[nfilled].from_pc = (char *) frompc;
+	  *(char **) raw_arc[nfilled].self_pc =
+	    (char *)_gmonparam.tos[to_index].selfpc;
+	  *(int *) raw_arc[nfilled].count = _gmonparam.tos[to_index].count;
+
+	  if (++nfilled == NARCS_PER_WRITEV)
 	    {
 	      __writev (fd, iov, 2 * nfilled);
 	      nfilled = 0;
 	    }
-	  *(char **) raw_arc[nfilled].from_pc = (char *)frompc;
-	  *(char **) raw_arc[nfilled].self_pc =
-	    (char *)_gmonparam.tos[to_index].selfpc;
-	  *(int *) raw_arc[nfilled].count = _gmonparam.tos[to_index].count;
-	  ++nfilled;
 	}
     }
-  __writev (fd, iov, 2 * nfilled);
+  if (nfilled > 0)
+    __writev (fd, iov, 2 * nfilled);
 }
 
 
@@ -268,17 +269,11 @@ write_bb_counts (fd)
   /* Write each group of basic-block info (all basic-blocks in a
      compilation unit form a single group). */
 
-  nfilled = 0;
   for (grp = __bb_head; grp; grp = grp->next)
     {
       ncounts = grp->ncounts;
-      if (nfilled > 0)
-	{
-	  __writev (fd, bbbody, nfilled);
-	  nfilled = 0;
-	}
       __writev (fd, bbhead, 2);
-      for (i = 0; i < ncounts; ++i)
+      for (nfilled = i = 0; i < ncounts; ++i)
 	{
 	  if (nfilled > (sizeof (bbbody) / sizeof (bbbody[0])) - 2)
 	    {
@@ -289,9 +284,9 @@ write_bb_counts (fd)
 	  bbbody[nfilled++].iov_base = (char *) &grp->addresses[i];
 	  bbbody[nfilled++].iov_base = &grp->counts[i];
 	}
+      if (nfilled > 0)
+	__writev (fd, bbbody, nfilled);
     }
-  if (nfilled > 0)
-    __writev (fd, bbbody, nfilled);
 }
 
 

@@ -38,35 +38,37 @@ static  char sccsid[] = "@(#)getrpcport.c 1.3 87/08/11 SMI";
 #include <alloca.h>
 #include <errno.h>
 #include <stdio.h>
-#include <rpc/rpc.h>
 #include <netdb.h>
+#include <string.h>
+#include <rpc/rpc.h>
+#include <rpc/clnt.h>
+#include <rpc/pmap_clnt.h>
 #include <sys/socket.h>
 
 int
-getrpcport(host, prognum, versnum, proto)
-	char *host;
+getrpcport (const char *host, u_long prognum, u_long versnum, u_int proto)
 {
-	struct sockaddr_in addr;
-	struct hostent hostbuf, *hp;
-	size_t buflen;
-	char *buffer;
-	int herr;
+  struct sockaddr_in addr;
+  struct hostent hostbuf, *hp;
+  size_t buflen;
+  char *buffer;
+  int herr;
 
-	buflen = 1024;
+  buflen = 1024;
+  buffer = __alloca (buflen);
+  while (__gethostbyname_r (host, &hostbuf, buffer, buflen, &hp, &herr)
+	 < 0)
+    if (herr != NETDB_INTERNAL || errno != ERANGE)
+      return 0;
+    else
+      {
+	/* Enlarge the buffer.  */
+	buflen *= 2;
 	buffer = __alloca (buflen);
-	while (__gethostbyname_r (host, &hostbuf, buffer, buflen, &hp, &herr)
-	       < 0)
-	  if (herr != NETDB_INTERNAL || errno != ERANGE)
-	    return 0;
-	  else
-	    {
-	      /* Enlarge the buffer.  */
-	      buflen *= 2;
-	      buffer = __alloca (buflen);
-	    }
+      }
 
-	bcopy(hp->h_addr, (char *) &addr.sin_addr, hp->h_length);
-	addr.sin_family = AF_INET;
-	addr.sin_port =  0;
-	return (pmap_getport(&addr, prognum, versnum, proto));
+  bcopy (hp->h_addr, (char *) &addr.sin_addr, hp->h_length);
+  addr.sin_family = AF_INET;
+  addr.sin_port = 0;
+  return pmap_getport (&addr, prognum, versnum, proto);
 }

@@ -32,9 +32,6 @@ __BEGIN_DECLS
 #define __need_size_t
 #include <stddef.h>
 
-#define __need_size_t
-#include <stddef.h>
-
 
 /* The group structure.	 */
 struct group

@@ -30,7 +30,8 @@ routines	:= signal raise killpg \
 		   sigstack sigaltstack sigintr \
 		   sigsetops sigempty sigfillset sigaddset sigdelset sigismem \
 		   sigreturn \
-		   siggetmask sysv_signal
+		   siggetmask sysv_signal \
+		   sigisempty sigandset sigorset
 
 tests		:= tst-signal
 

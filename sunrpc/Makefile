@@ -80,9 +80,6 @@ extra-objs = $(rpcgen-objs)
 
 all: # Make this the default target; it will be defined in Rules.
 
-# Sun's code is not too clean.
-override +gccwarn := -w
-
 include ../Makeconfig
 
 ifeq (no,$(cross-compiling))
@@ -95,6 +92,19 @@ librpcsvc-routines = $(rpcsvc:%.x=x%)
 librpcsvc-inhibit-o = .so # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
 endif
+
+CFLAGS-xbootparam.c = -Wno-unused
+CFLAGS-xnlm_prot.c = -Wno-unused
+CFLAGS-xrstat.c = -Wno-unused
+CFLAGS-xyppasswd.c = -Wno-unused
+CFLAGS-xklm_prot.c = -Wno-unused
+CFLAGS-xrex.c = -Wno-unused
+CFLAGS-xsm_inter.c = -Wno-unused
+CFLAGS-xmount.c = -Wno-unused
+CFLAGS-xrusers.c = -Wno-unused
+CFLAGS-xspray.c = -Wno-unused
+CFLAGS-xnfs_prot.c = -Wno-unused
+CFLAGS-xrquote.c = -Wno-unused
 
 include ../Rules
 

@@ -31,13 +31,18 @@ __cexpf (__complex__ float x)
     {
       if (isfinite (__imag__ x))
 	{
-	  retval = __expf (__real__ x) * (__cosf (__imag__ x)
-					  + 1i * __sinf (__imag__ x));
+	  float exp_val = __expf (__real__ x);
+
+	  __real__ retval = exp_val * __cosf (__imag__ x);
+	  __imag__ retval = exp_val * __sinf (__imag__ x);
 	}
       else
-	/* If the imaginary part is +-inf or NaN and the real part is
-	   not +-inf the result is NaN + iNan.  */
-	retval = __nanf ("") + 1.0i * __nanf ("");
+	{
+	  /* If the imaginary part is +-inf or NaN and the real part
+	     is not +-inf the result is NaN + iNaN.  */
+	  __real__ retval = __nanf ("");
+	  __imag__ retval = __nanf ("");
+	}
     }
   else if (__isinff (__real__ x))
     {
@@ -46,17 +51,27 @@ __cexpf (__complex__ float x)
 	  if (signbit (__real__ x) == 0 && __imag__ x == 0.0)
 	    retval = HUGE_VALF;
 	  else
-	    retval = ((signbit (__real__ x) ? 0.0 : HUGE_VALF)
-		      * (__cosf (__imag__ x) + 1i * __sinf (__imag__ x)));
+	    {
+	      float value = signbit (__real__ x) ? 0.0 : HUGE_VALF;
+
+	      __real__ retval = value * __cosf (__imag__ x);
+	      __imag__ retval = value * __sinf (__imag__ x);
+	    }
 	}
-      else if (signbit (__real__ x))
-	retval = HUGE_VALF + 1.0i * __nanf ("");
+      else if (signbit (__real__ x) == 0)
+	{
+	  __real__ retval = HUGE_VALF;
+	  __imag__ retval = __nanf ("");
+	}
       else
 	retval = 0.0;
     }
   else
-    /* If the real part is NaN the result is NaN + iNan.  */
-    retval = __nanf ("") + 1.0i * __nanf ("");
+    {
+      /* If the real part is NaN the result is NaN + iNan.  */
+      __real__ retval = __nanf ("");
+      __imag__ retval = __nanf ("");
+    }
 
   return retval;
 }

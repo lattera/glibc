@@ -37,6 +37,9 @@
 #ifndef __SVC_HEADER__
 #define __SVC_HEADER__
 
+#include <features.h>
+#include <rpc/rpc_msg.h>
+
 __BEGIN_DECLS
 
 /*
@@ -70,23 +73,31 @@ enum xprt_stat {
 /*
  * Server side transport handle
  */
-typedef struct {
-	int		xp_sock;
-	u_short		xp_port;	 /* associated port number */
-	struct xp_ops {
-	    bool_t	(*xp_recv)();	 /* receive incoming requests */
-	    enum xprt_stat (*xp_stat)(); /* get transport status */
-	    bool_t	(*xp_getargs)(); /* get arguments */
-	    bool_t	(*xp_reply)();	 /* send reply */
-	    bool_t	(*xp_freeargs)();/* free mem allocated for args */
-	    void	(*xp_destroy)(); /* destroy this struct */
-	} *xp_ops;
-	int		xp_addrlen;	 /* length of remote address */
-	struct sockaddr_in xp_raddr;	 /* remote address */
-	struct opaque_auth xp_verf;	 /* raw response verifier */
-	caddr_t		xp_p1;		 /* private */
-	caddr_t		xp_p2;		 /* private */
-} SVCXPRT;
+typedef struct SVCXPRT SVCXPRT;
+struct SVCXPRT {
+  int xp_sock;
+  u_short xp_port;		/* associated port number */
+  const struct xp_ops {
+    bool_t	(*xp_recv) __P ((SVCXPRT *__xprt, struct rpc_msg *__msg));
+				/* receive incoming requests */
+    enum xprt_stat (*xp_stat) __P ((SVCXPRT *__xprt));
+				/* get transport status */
+    bool_t	(*xp_getargs) __P ((SVCXPRT *__xprt, xdrproc_t __xdr_args,
+				    caddr_t args_ptr)); /* get arguments */
+    bool_t	(*xp_reply) __P ((SVCXPRT *__xprt, struct rpc_msg *__msg));
+				/* send reply */
+    bool_t	(*xp_freeargs) __P ((SVCXPRT *__xprt, xdrproc_t __xdr_args,
+				     caddr_t args_ptr));
+				/* free mem allocated for args */
+    void	(*xp_destroy) __P ((SVCXPRT *__xprt));
+				/* destroy this struct */
+  } *xp_ops;
+  int		xp_addrlen;	 /* length of remote address */
+  struct sockaddr_in xp_raddr;	 /* remote address */
+  struct opaque_auth xp_verf;	 /* raw response verifier */
+  caddr_t		xp_p1;		 /* private */
+  caddr_t		xp_p2;		 /* private */
+};
 
 /*
  *  Approved way of getting address of caller
@@ -153,11 +164,12 @@ struct svc_req {
  *	u_long prog;
  *	u_long vers;
  *	void (*dispatch)();
- *	int protocol;  like TCP or UDP, zero means do not register
+ *	u_long protocol;  like TCP or UDP, zero means do not register
  */
 extern bool_t	svc_register __P ((SVCXPRT *__xprt, u_long __prog,
-				   u_long __vers, void (*__dispatch) (),
-				   int __protocol));
+				   u_long __vers, void (*__dispatch)
+				   __P ((struct svc_req *, SVCXPRT *)),
+				   u_long __protocol));
 
 /*
  * Service un-registration
@@ -257,11 +269,9 @@ extern int svc_fds;
  * a small program implemented by the svc_rpc implementation itself;
  * also see clnt.h for protocol numbers.
  */
-extern void rpctest_service();
-
 extern void	svc_getreq __P ((int __rdfds));
 extern void	svc_getreqset __P ((fd_set *readfds));
-extern void	svc_run __P ((void)) __attribute__ ((noreturn));
+extern void	svc_run __P ((void)); /* __attribute__ ((noreturn)) */
 
 /*
  * Socket to use on svcxxx_create call to get default socket

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -103,6 +103,16 @@ extern int glob __P ((const char *__pattern, int __flags,
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 extern void globfree __P ((glob_t *__pglob));
 
+
+#ifdef _GNU_SOURCE
+/* Return nonzero if PATTERN contains any metacharacters.
+   Metacharacters can be quoted with backslashes if QUOTE is nonzero.
+
+   This function is not part of the interface specified by POSIX.2
+   but several programs want to use it.  */
+extern int __glob_pattern_p __P ((__const char *__pattern, int __quote));
+extern int glob_pattern_p __P ((__const char *__pattern, int __quote));
+#endif
 
 #ifdef	__cplusplus
 }

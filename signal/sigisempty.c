@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +16,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _NETINET_ICMP_H
-#define	_NETINET_ICMP_H 1
+#include <errno.h>
+#include <signal.h>
 
-#include <asm/types.h>
-#include <linux/icmp.h>
+/* Test whether SET is empty.  */
+int
+sigisemptyset (set)
+     const sigset_t *set;
+{
+  if (set == NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-#endif	/* netinet/icmp.h */
+    return __sigisemptyset (set);
+}

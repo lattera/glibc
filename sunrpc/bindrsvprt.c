@@ -1,4 +1,3 @@
-static  char sccsid[] = "@(#)bindresvport.c	2.2 88/07/29 4.0 RPCSRC 1.8 88/02/08 SMI";
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,11 +26,15 @@ static  char sccsid[] = "@(#)bindresvport.c	2.2 88/07/29 4.0 RPCSRC 1.8 88/02/08
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-
+#if !defined(lint) && defined(SCCSIDS)
+static char sccsid[] = "@(#)bindresvport.c	2.2 88/07/29 4.0 RPCSRC 1.8 88/02/08 SMI";
+#endif
 /*
  * Copyright (c) 1987 by Sun Microsystems, Inc.
  */
 
+#include <unistd.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/errno.h>
 #include <sys/socket.h>
@@ -40,41 +43,46 @@ static  char sccsid[] = "@(#)bindresvport.c	2.2 88/07/29 4.0 RPCSRC 1.8 88/02/08
 /*
  * Bind a socket to a privileged IP port
  */
-bindresvport(sd, sin)
-	int sd;
-	struct sockaddr_in *sin;
+int
+bindresvport (int sd, struct sockaddr_in *sin)
 {
-	int res;
-	static short port;
-	struct sockaddr_in myaddr;
+  int res;
+  static short port;
+  struct sockaddr_in myaddr;
 #ifndef errno
-	extern int errno;
+  extern int errno;
 #endif
-	int i;
+  int i;
 
 #define STARTPORT 600
 #define ENDPORT (IPPORT_RESERVED - 1)
 #define NPORTS	(ENDPORT - STARTPORT + 1)
 
-	if (sin == (struct sockaddr_in *)0) {
-		sin = &myaddr;
-		bzero(sin, sizeof (*sin));
-		sin->sin_family = AF_INET;
-	} else if (sin->sin_family != AF_INET) {
-		__set_errno (EPFNOSUPPORT);
-		return (-1);
+  if (sin == (struct sockaddr_in *) 0)
+    {
+      sin = &myaddr;
+      bzero (sin, sizeof (*sin));
+      sin->sin_family = AF_INET;
+    }
+  else if (sin->sin_family != AF_INET)
+    {
+      __set_errno (EPFNOSUPPORT);
+      return -1;
+    }
+  if (port == 0)
+    {
+      port = (getpid () % NPORTS) + STARTPORT;
+    }
+  res = -1;
+  __set_errno (EADDRINUSE);
+  for (i = 0; i < NPORTS && res < 0 && errno == EADDRINUSE; i++)
+    {
+      sin->sin_port = htons (port++);
+      if (port > ENDPORT)
+	{
+	  port = STARTPORT;
 	}
-	if (port == 0) {
-		port = (getpid() % NPORTS) + STARTPORT;
-	}
-	res = -1;
-	__set_errno (EADDRINUSE);
-	for (i = 0; i < NPORTS && res < 0 && errno == EADDRINUSE; i++) {
-		sin->sin_port = htons(port++);
-		if (port > ENDPORT) {
-			port = STARTPORT;
-		}
-		res = bind(sd, sin, sizeof(struct sockaddr_in));
-	}
-	return (res);
+      res = bind (sd, sin, sizeof (struct sockaddr_in));
+    }
+  return res;
 }

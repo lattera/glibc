@@ -35,13 +35,21 @@
 #ifndef __TYPES_RPC_HEADER__
 #define __TYPES_RPC_HEADER__
 
-#define	bool_t	int
-#define	enum_t	int
-#define	FALSE	(0)
-#define	TRUE	(1)
-#define __dontcare__	-1
+typedef int bool_t;
+typedef int enum_t;
+
+#define        __dontcare__    -1
+
+#ifndef FALSE
+#      define  FALSE   (0)
+#endif
+
+#ifndef TRUE
+#      define  TRUE    (1)
+#endif
+
 #ifndef NULL
-#	define NULL 0
+#      define  NULL 0
 #endif
 
 #include <stdlib.h>		/* For malloc decl.  */

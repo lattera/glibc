@@ -35,6 +35,7 @@ static char sccsid[] = "@(#)clnt_generic.c 1.4 87/08/11 (C) 1987 SMI";
  */
 #include <alloca.h>
 #include <errno.h>
+#include <string.h>
 #include <rpc/rpc.h>
 #include <sys/socket.h>
 #include <sys/errno.h>
@@ -46,95 +47,96 @@ static char sccsid[] = "@(#)clnt_generic.c 1.4 87/08/11 (C) 1987 SMI";
  * change using the rpc equivalent of ioctl()'s.
  */
 CLIENT *
-clnt_create(hostname, prog, vers, proto)
-	char *hostname;
-	unsigned prog;
-	unsigned vers;
-	char *proto;
+clnt_create (const char *hostname, u_long prog, u_long vers,
+	     const char *proto)
 {
-	struct hostent hostbuf, *h;
-	size_t hstbuflen;
-	char *hsttmpbuf;
-	struct protoent protobuf, *p;
-	size_t prtbuflen;
-	char *prttmpbuf;
-	struct sockaddr_in sin;
-	int sock;
-	struct timeval tv;
-	CLIENT *client;
-	int herr;
+  struct hostent hostbuf, *h;
+  size_t hstbuflen;
+  char *hsttmpbuf;
+  struct protoent protobuf, *p;
+  size_t prtbuflen;
+  char *prttmpbuf;
+  struct sockaddr_in sin;
+  int sock;
+  struct timeval tv;
+  CLIENT *client;
+  int herr;
 
-	hstbuflen = 1024;
+  hstbuflen = 1024;
+  hsttmpbuf = __alloca (hstbuflen);
+  while (__gethostbyname_r (hostname, &hostbuf, hsttmpbuf, hstbuflen,
+			    &h, &herr) < 0)
+    if (herr != NETDB_INTERNAL || errno != ERANGE)
+      {
+	rpc_createerr.cf_stat = RPC_UNKNOWNHOST;
+	return NULL;
+      }
+    else
+      {
+	/* Enlarge the buffer.  */
+	hstbuflen *= 2;
 	hsttmpbuf = __alloca (hstbuflen);
-	while (__gethostbyname_r (hostname, &hostbuf, hsttmpbuf, hstbuflen,
-				  &h, &herr) < 0)
-	  if (herr != NETDB_INTERNAL || errno != ERANGE)
-	    {
-	      rpc_createerr.cf_stat = RPC_UNKNOWNHOST;
-	      return NULL;
-	    }
-	  else
-	    {
-	      /* Enlarge the buffer.  */
-	      hstbuflen *= 2;
-	      hsttmpbuf = __alloca (hstbuflen);
-	    }
+      }
 
-	if (h->h_addrtype != AF_INET) {
-		/*
-		 * Only support INET for now
-		 */
-		rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-		rpc_createerr.cf_error.re_errno = EAFNOSUPPORT;
-		return (NULL);
-	}
-	sin.sin_family = h->h_addrtype;
-	sin.sin_port = 0;
-	bzero(sin.sin_zero, sizeof(sin.sin_zero));
-	bcopy(h->h_addr, (char*)&sin.sin_addr, h->h_length);
+  if (h->h_addrtype != AF_INET)
+    {
+      /*
+       * Only support INET for now
+       */
+      rpc_createerr.cf_stat = RPC_SYSTEMERROR;
+      rpc_createerr.cf_error.re_errno = EAFNOSUPPORT;
+      return NULL;
+    }
+  sin.sin_family = h->h_addrtype;
+  sin.sin_port = 0;
+  bzero (sin.sin_zero, sizeof (sin.sin_zero));
+  bcopy (h->h_addr, (char *) &sin.sin_addr, h->h_length);
 
-	prtbuflen = 1024;
+  prtbuflen = 1024;
+  prttmpbuf = __alloca (prtbuflen);
+  while (__getprotobyname_r (proto, &protobuf, prttmpbuf, prtbuflen, &p)
+	 < 0)
+    if (errno != ERANGE)
+      {
+	rpc_createerr.cf_stat = RPC_UNKNOWNPROTO;
+	rpc_createerr.cf_error.re_errno = EPFNOSUPPORT;
+	return NULL;
+      }
+    else
+      {
+	/* Enlarge the buffer.  */
+	prtbuflen *= 2;
 	prttmpbuf = __alloca (prtbuflen);
-	while (__getprotobyname_r (proto, &protobuf, prttmpbuf, prtbuflen, &p)
-	       < 0)
-	  if (errno != ERANGE)
-	    {
-	      rpc_createerr.cf_stat = RPC_UNKNOWNPROTO;
-	      rpc_createerr.cf_error.re_errno = EPFNOSUPPORT;
-	      return NULL;
-	    }
-	  else
-	    {
-	      /* Enlarge the buffer.  */
-	      prtbuflen *= 2;
-	      prttmpbuf = __alloca (prtbuflen);
-	    }
+      }
 
-	sock = RPC_ANYSOCK;
-	switch (p->p_proto) {
-	case IPPROTO_UDP:
-		tv.tv_sec = 5;
-		tv.tv_usec = 0;
-		client = clntudp_create(&sin, prog, vers, tv, &sock);
-		if (client == NULL) {
-			return (NULL);
-		}
-		tv.tv_sec = 25;
-		clnt_control(client, CLSET_TIMEOUT, &tv);
-		break;
-	case IPPROTO_TCP:
-		client = clnttcp_create(&sin, prog, vers, &sock, 0, 0);
-		if (client == NULL) {
-			return (NULL);
-		}
-		tv.tv_sec = 25;
-		tv.tv_usec = 0;
-		clnt_control(client, CLSET_TIMEOUT, &tv);
-		break;
-	default:
-		rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-		rpc_createerr.cf_error.re_errno = EPFNOSUPPORT;
-		return (NULL);
+  sock = RPC_ANYSOCK;
+  switch (p->p_proto)
+    {
+    case IPPROTO_UDP:
+      tv.tv_sec = 5;
+      tv.tv_usec = 0;
+      client = clntudp_create (&sin, prog, vers, tv, &sock);
+      if (client == NULL)
+	{
+	  return NULL;
 	}
-	return (client);
+      tv.tv_sec = 25;
+      clnt_control (client, CLSET_TIMEOUT, (char *)&tv);
+      break;
+    case IPPROTO_TCP:
+      client = clnttcp_create (&sin, prog, vers, &sock, 0, 0);
+      if (client == NULL)
+	{
+	  return NULL;
+	}
+      tv.tv_sec = 25;
+      tv.tv_usec = 0;
+      clnt_control (client, CLSET_TIMEOUT, (char *)&tv);
+      break;
+    default:
+      rpc_createerr.cf_stat = RPC_SYSTEMERROR;
+      rpc_createerr.cf_error.re_errno = EPFNOSUPPORT;
+      return (NULL);
+    }
+  return client;
 }

@@ -31,6 +31,12 @@
 # endif
 # define MPN2FLOAT	__mpn_construct_double
 # define FLOAT_HUGE_VAL	HUGE_VAL
+# define SET_MANTISSA(flt, mant) \
+  do { union ieee754_double u;						      \
+       u.d = (flt);							      \
+       u.ieee.mantissa0 = ((mant) >> 32) & 0xfffff;			      \
+       u.ieee.mantissa1 = (mant) & 0xffffffff;				      \
+  } while (0)
 #endif
 
 #ifdef USE_WIDE_CHAR
@@ -44,6 +50,7 @@
 # define ISXDIGIT(Ch) iswxdigit (Ch)
 # define TOLOWER(Ch) towlower (Ch)
 # define STRNCASECMP(S1, S2, N) __wcsncasecmp ((S1), (S2), (N))
+# define STRTOULL(S, E, B) wcstoull ((S), (E), (B))
 #else
 # define STRING_TYPE char
 # define CHAR_TYPE char
@@ -53,6 +60,7 @@
 # define ISXDIGIT(Ch) isxdigit (Ch)
 # define TOLOWER(Ch) tolower (Ch)
 # define STRNCASECMP(S1, S2, N) __strncasecmp ((S1), (S2), (N))
+# define STRTOULL(S, E, B) strtoull ((S), (E), (B))
 #endif
 /* End of configuration part.  */
 
@@ -461,6 +469,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
       if (TOLOWER (c) == L_('n') && STRNCASECMP (cp, L_("an"), 2) == 0)
 	{
+	  FLOAT retval = NAN;
+
 	  /* Return NaN.  */
 	  if (endptr != NULL)
 	    {
@@ -480,12 +490,25 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		    /* The closing brace is missing.  Only match the NAN
 		       part.  */
 		    cp = startp;
+		  else
+		    {
+		      /* This is a system-dependent way to specify the
+			 bitmask used for the NaN.  We expect it to be
+			 a number which is put in the mantissa of the
+			 number.  */
+		      STRING_TYPE *endp;
+		      unsigned long long int mant;
+
+		      mant = STRTOULL (startp, &endp, 0);
+		      if (endp == cp)
+			SET_MANTISSA (retval, mant);
+		    }
 		}
 
 	      *endptr = (STRING_TYPE *) cp;
 	    }
 
-	  return NAN;
+	  return retval;
 	}
 
       /* It is really a text we do not recognize.  */

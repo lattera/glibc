@@ -42,46 +42,43 @@ static char sccsid[] = "@(#)pmap_clnt.c 1.37 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
 
-static struct timeval timeout = { 5, 0 };
-static struct timeval tottimeout = { 60, 0 };
+extern void get_myaddress (struct sockaddr_in *addr);
 
-void clnt_perror();
-
+static const struct timeval timeout = {5, 0};
+static const struct timeval tottimeout = {60, 0};
 
 /*
  * Set a mapping between program,version and port.
  * Calls the pmap service remotely to do the mapping.
  */
 bool_t
-pmap_set(program, version, protocol, port)
-	u_long program;
-	u_long version;
-	int protocol;
-	u_short port;
+pmap_set (u_long program, u_long version, int protocol, u_short port)
 {
-	struct sockaddr_in myaddress;
-	int socket = -1;
-	register CLIENT *client;
-	struct pmap parms;
-	bool_t rslt;
+  struct sockaddr_in myaddress;
+  int socket = -1;
+  CLIENT *client;
+  struct pmap parms;
+  bool_t rslt;
 
-	get_myaddress(&myaddress);
-	client = clntudp_bufcreate(&myaddress, PMAPPROG, PMAPVERS,
-	    timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
-	if (client == (CLIENT *)NULL)
-		return (FALSE);
-	parms.pm_prog = program;
-	parms.pm_vers = version;
-	parms.pm_prot = protocol;
-	parms.pm_port = port;
-	if (CLNT_CALL(client, PMAPPROC_SET, xdr_pmap, &parms, xdr_bool, &rslt,
-	    tottimeout) != RPC_SUCCESS) {
-		clnt_perror(client, _("Cannot register service"));
-		return (FALSE);
-	}
-	CLNT_DESTROY(client);
-	/* (void)close(socket); CLNT_DESTROY closes it */
-	return (rslt);
+  get_myaddress (&myaddress);
+  client = clntudp_bufcreate (&myaddress, PMAPPROG, PMAPVERS,
+			timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+  if (client == (CLIENT *) NULL)
+    return (FALSE);
+  parms.pm_prog = program;
+  parms.pm_vers = version;
+  parms.pm_prot = protocol;
+  parms.pm_port = port;
+  if (CLNT_CALL (client, PMAPPROC_SET, (xdrproc_t)xdr_pmap, (caddr_t)&parms,
+		 (xdrproc_t)xdr_bool, (caddr_t)&rslt,
+		 tottimeout) != RPC_SUCCESS)
+    {
+      clnt_perror (client, _("Cannot register service"));
+      return FALSE;
+    }
+  CLNT_DESTROY (client);
+  /* (void)close(socket); CLNT_DESTROY closes it */
+  return rslt;
 }
 
 /*
@@ -89,27 +86,25 @@ pmap_set(program, version, protocol, port)
  * Calls the pmap service remotely to do the un-mapping.
  */
 bool_t
-pmap_unset(program, version)
-	u_long program;
-	u_long version;
+pmap_unset (u_long program, u_long version)
 {
-	struct sockaddr_in myaddress;
-	int socket = -1;
-	register CLIENT *client;
-	struct pmap parms;
-	bool_t rslt;
+  struct sockaddr_in myaddress;
+  int socket = -1;
+  CLIENT *client;
+  struct pmap parms;
+  bool_t rslt;
 
-	get_myaddress(&myaddress);
-	client = clntudp_bufcreate(&myaddress, PMAPPROG, PMAPVERS,
-	    timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
-	if (client == (CLIENT *)NULL)
-		return (FALSE);
-	parms.pm_prog = program;
-	parms.pm_vers = version;
-	parms.pm_port = parms.pm_prot = 0;
-	CLNT_CALL(client, PMAPPROC_UNSET, xdr_pmap, &parms, xdr_bool, &rslt,
-	    tottimeout);
-	CLNT_DESTROY(client);
-	/* (void)close(socket); CLNT_DESTROY already closed it */
-	return (rslt);
+  get_myaddress (&myaddress);
+  client = clntudp_bufcreate (&myaddress, PMAPPROG, PMAPVERS,
+			timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
+  if (client == (CLIENT *) NULL)
+    return FALSE;
+  parms.pm_prog = program;
+  parms.pm_vers = version;
+  parms.pm_port = parms.pm_prot = 0;
+  CLNT_CALL (client, PMAPPROC_UNSET, (xdrproc_t)xdr_pmap, (caddr_t)&parms,
+	     (xdrproc_t)xdr_bool, (caddr_t)&rslt, tottimeout);
+  CLNT_DESTROY (client);
+  /* (void)close(socket); CLNT_DESTROY already closed it */
+  return rslt;
 }

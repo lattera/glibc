@@ -47,43 +47,34 @@ static char sccsid[] = "@(#)pmap_getmaps.c 1.10 87/08/11 Copyr 1984 Sun Micro";
 #include <stdio.h>
 #include <errno.h>
 
-#if 0	/* these seem to be gratuitous --roland@gnu */
-#include <net/if.h>
-#include <sys/ioctl.h>
-#define NAMELEN 255
-#define MAX_BROADCAST_SIZE 1400
-#endif
-
-#ifndef errno
-extern int errno;
-#endif
-
 /*
  * Get a copy of the current port maps.
  * Calls the pmap service remotely to do get the maps.
  */
 struct pmaplist *
-pmap_getmaps(address)
-	 struct sockaddr_in *address;
+pmap_getmaps (struct sockaddr_in *address)
 {
-	struct pmaplist *head = (struct pmaplist *)NULL;
-	int socket = -1;
-	struct timeval minutetimeout;
-	register CLIENT *client;
+  struct pmaplist *head = (struct pmaplist *) NULL;
+  int socket = -1;
+  struct timeval minutetimeout;
+  CLIENT *client;
 
-	minutetimeout.tv_sec = 60;
-	minutetimeout.tv_usec = 0;
-	address->sin_port = htons(PMAPPORT);
-	client = clnttcp_create(address, PMAPPROG,
-	    PMAPVERS, &socket, 50, 500);
-	if (client != (CLIENT *)NULL) {
-		if (CLNT_CALL(client, PMAPPROC_DUMP, xdr_void, NULL, xdr_pmaplist,
-		    &head, minutetimeout) != RPC_SUCCESS) {
-			clnt_perror(client, "pmap_getmaps rpc problem");
-		}
-		CLNT_DESTROY(client);
+  minutetimeout.tv_sec = 60;
+  minutetimeout.tv_usec = 0;
+  address->sin_port = htons (PMAPPORT);
+  client = clnttcp_create (address, PMAPPROG,
+			   PMAPVERS, &socket, 50, 500);
+  if (client != (CLIENT *) NULL)
+    {
+      if (CLNT_CALL (client, PMAPPROC_DUMP, (xdrproc_t)xdr_void, NULL,
+		     (xdrproc_t)xdr_pmaplist, (caddr_t)&head,
+		     minutetimeout) != RPC_SUCCESS)
+	{
+	  clnt_perror (client, _("pmap_getmaps rpc problem"));
 	}
-	/* (void)close(socket); CLNT_DESTROY already closed it */
-	address->sin_port = 0;
-	return (head);
+      CLNT_DESTROY (client);
+    }
+  /* (void)close(socket); CLNT_DESTROY already closed it */
+  address->sin_port = 0;
+  return head;
 }

@@ -183,6 +183,19 @@ extern int sigdelset __P ((sigset_t *__set, int __signo));
 /* Return 1 if SIGNO is in SET, 0 if not.  */
 extern int sigismember __P ((__const sigset_t *__set, int __signo));
 
+#ifdef __USE_GNU
+/* Return non-empty value is SET is not empty.  */
+extern int sigisemptyset __P ((__const sigset_t *__set));
+
+/* Build new signal set by combining the two inputs set using logical AND.  */
+extern int sigandset __P ((sigset_t *__set, __const sigset_t *__left,
+			   __const sigset_t *__right));
+
+/* Build new signal set by combining the two inputs set using logical OR.  */
+extern int sigorset __P ((sigset_t *__set, __const sigset_t *__left,
+			  __const sigset_t *__right));
+#endif	/* GNU */
+
 /* Get the system-specific definitions of `struct sigaction'
    and the `SA_*' and `SIG_*'. constants.  */
 #include <sigaction.h>

@@ -1,6 +1,4 @@
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)svc_auth.c	2.1 88/08/07 4.0 RPCSRC; from 1.19 87/08/11 Copyr 1984 Sun Micro";
-#endif
+/* @(#)svc_auth.c       2.4 88/08/15 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -29,15 +27,20 @@ static char sccsid[] = "@(#)svc_auth.c	2.1 88/08/07 4.0 RPCSRC; from 1.19 87/08/
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
+#if !defined(lint) && defined(SCCSIDS)
+static char sccsid[] = "@(#)svc_auth.c 1.19 87/08/11 Copyr 1984 Sun Micro";
+#endif
 
 /*
- * svc_auth_nodes.c, Server-side rpc authenticator interface,
+ * svc_auth.c, Server-side rpc authenticator interface.
  * *WITHOUT* DES authentication.
  *
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
 #include <rpc/rpc.h>
+#include <rpc/svc.h>
+#include <rpc/svc_auth.h>
 
 /*
  * svcauthsw is the bdevsw of server side authentication.
@@ -47,25 +50,31 @@ static char sccsid[] = "@(#)svc_auth.c	2.1 88/08/07 4.0 RPCSRC; from 1.19 87/08/
  * The server auth flavors must implement a routine that looks
  * like:
  *
- *	enum auth_stat
- *	flavorx_auth(rqst, msg)
- *		register struct svc_req *rqst;
- *		register struct rpc_msg *msg;
+ *      enum auth_stat
+ *      flavorx_auth(rqst, msg)
+ *              register struct svc_req *rqst;
+ *              register struct rpc_msg *msg;
  *
  */
 
-enum auth_stat _svcauth_null();		/* no authentication */
-enum auth_stat _svcauth_unix();		/* unix style (uid, gids) */
-enum auth_stat _svcauth_short();	/* short hand unix style */
+static enum auth_stat _svcauth_null (struct svc_req *, struct rpc_msg *);
+				/* no authentication */
+extern enum auth_stat _svcauth_unix (struct svc_req *, struct rpc_msg *);
+				/* unix style (uid, gids) */
+extern enum auth_stat _svcauth_short (struct svc_req *, struct rpc_msg *);
+				/* short hand unix style */
 
-static struct {
-	enum auth_stat (*authenticator)();
-} svcauthsw[] = {
-	_svcauth_null,			/* AUTH_NULL */
-	_svcauth_unix,			/* AUTH_UNIX */
-	_svcauth_short,			/* AUTH_SHORT */
+static const struct
+  {
+    enum auth_stat (*authenticator) (struct svc_req *, struct rpc_msg *);
+  }
+svcauthsw[] =
+{
+  { _svcauth_null },		/* AUTH_NULL */
+  { _svcauth_unix },		/* AUTH_UNIX */
+  { _svcauth_short }		/* AUTH_SHORT */
 };
-#define	AUTH_MAX	2		/* HIGHEST AUTH NUMBER */
+#define	AUTH_MAX	2	/* HIGHEST AUTH NUMBER */
 
 
 /*
@@ -87,28 +96,22 @@ static struct {
  * invalid.
  */
 enum auth_stat
-_authenticate(rqst, msg)
-	register struct svc_req *rqst;
-	struct rpc_msg *msg;
+_authenticate (register struct svc_req *rqst, struct rpc_msg *msg)
 {
-	register int cred_flavor;
+  register int cred_flavor;
 
-	rqst->rq_cred = msg->rm_call.cb_cred;
-	rqst->rq_xprt->xp_verf.oa_flavor = _null_auth.oa_flavor;
-	rqst->rq_xprt->xp_verf.oa_length = 0;
-	cred_flavor = rqst->rq_cred.oa_flavor;
-	if ((cred_flavor <= AUTH_MAX) && (cred_flavor >= AUTH_NULL)) {
-		return ((*(svcauthsw[cred_flavor].authenticator))(rqst, msg));
-	}
+  rqst->rq_cred = msg->rm_call.cb_cred;
+  rqst->rq_xprt->xp_verf.oa_flavor = _null_auth.oa_flavor;
+  rqst->rq_xprt->xp_verf.oa_length = 0;
+  cred_flavor = rqst->rq_cred.oa_flavor;
+  if ((cred_flavor <= AUTH_MAX) && (cred_flavor >= AUTH_NULL))
+    return (*(svcauthsw[cred_flavor].authenticator)) (rqst, msg);
 
-	return (AUTH_REJECTEDCRED);
+  return AUTH_REJECTEDCRED;
 }
 
-enum auth_stat
-_svcauth_null(/*rqst, msg*/)
-	/*struct svc_req *rqst;
-	struct rpc_msg *msg;*/
+static enum auth_stat
+_svcauth_null (struct svc_req *rqst, struct rpc_msg *msg)
 {
-
-	return (AUTH_OK);
+  return AUTH_OK;
 }

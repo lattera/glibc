@@ -1,3 +1,163 @@
+1997-03-27 02:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* gmon/gmon.c (monstartup): Mark all messages.
+	(write_call_graph): Rewrite to use larger I/O vector for writev
+	call to reduce syscall overhead.
+	(write_bb_counts): Simplify writev handling.
+
+	* inet/rexec.c: Make string parameters `const'.
+	* resolv/netdb.h: Add prototypes for rcmd, rexec, ruserok, and
+	rresvport.
+
+	* math/Makefile: Don't define CFLAGS-* macros to prevent inlining
+	in libm-test.
+	* math/libm-test.c (this_does_nothing): Remove functions.  It's
+	notuseful on any platform but ix86.
+	(inverse_func_pair_test): Don't use this_does_nothing.  Use
+	memory reference.
+	(identities1_test): Likewise.
+	(identities2_test): Likewise.
+	(identities3_test): Likewise.
+	(basic_test): Likewise.
+	Patch by Andreas Schwab.
+	(BUILD_COMPLEX): New macro.  Create complex number from real and
+	imaginary parts.  This works around bugs/inefficiencies in current
+	gcc.
+	(cexp_test): Use BUILD_COMPLEX.  Add more tests.
+
+	* nss/nsswitch.c: Fix typo.
+
+	* posix/glob.h: Add declaration for glob_pattern_p.
+	* posix/glob.c: Rename glob_pattern_p to __glob_pattern_p and
+	make glob_pattern_p a weak alias.  This function is used in other
+	packages (e.g. bash).
+
+	* signal/Makefile (routines): Add sigisempty, sigandset, and
+	sigorset.
+	* signal/signal.h: Add prototypes for sigisempty, sigandset, and
+	sigorset.
+	* signal/sigisempty.c: New file.
+	* signal/sigandset.c: New file.
+	* signal/sigorset.c: New file.
+	* sysdeps/generic/sigset.h: Define __sigisemptyset, __sigandset,
+	and __sigorset.
+	* sysdeps/unix/sysv/linux/sigset.h: Likewise.
+
+	* stdlib/strtod.c: Handle `n-char-sequence' in NaN parsing.  It
+	determines the bits in the mantissa part of the NaN.
+	* stdlib/strtof.c: Define SET_MANTISSA for float type.
+	* wcsmbs/wcstof.c: Define SET_MANTISSA for float type.
+	* stdlib/strtold.c: Define SET_MANTISSA for long double type.
+	* wcsmbs/wcstold.c: Define SET_MANTISSA for long double type.
+
+	* sysdeps/libm-ieee754/s_cexp.c: Use explicit assignment to
+	complex number components.  Some more corrects for special cases.
+	* sysdeps/libm-ieee754/s_cexpf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpl.c: Likewise.
+
+	* sysdeps/sparc/elf/start.S: Remove as per request of Miguel de Icaza.
+
+	* sysdeps/unix/sysv/linux/netinet/icmp.h: Remove since we have
+	ip_icmp.h.  Reported by HJ Lu.
+
+1997-03-25 03:50  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/Makefile (CFLAGS-rtld.c): Add -Wno-unused.
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Rewritten as for
+	i386.
+	(elf_machine_lookup_noexec_p, elf_machine_lookup_noplt_p,
+	ELF_MACHINE_RELOC_NOPLT): Define.
+
+1997-03-25 03:48  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* grp/grp.h: Include <stddef.h> only once.
+
+1997-03-25 09:38  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/termbits.h (OXTABS): Don't define.
+	* sysdeps/unix/sysv/linux/alpha/termbits.h (OXTABS): Likewise.
+
+	* termios/sys/ttydefaults.h (TTYDEF_OFLAG): Use either OXTABS or
+	TAB3, if one of them is defined.
+
+1997-03-26 04:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c (next_brace_sub): Decrement depth counter when '}'
+	is found.
+	Patch by Dennis Henriksen <opus@flamingo.osrl.dk>.
+
+1997-03-25  16:25  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/Makefile: Comment gccwarn out.
+	* sunrpc/auth_none.c: Fix prototypes and parameters for compiling
+	with enabled warnings.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/authuxprot.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/getrpcport.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/pmap_prot.c: Likewise.
+	* sunrpc/pmap_prot2.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/rpc/auth.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/svc_auth.h: Likewise.
+	* sunrpc/rpc/types.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sunrpc/rpc_clntout.c: Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+	* sunrpc/rpc_dtable.c: Likewise.
+	* sunrpc/rpc_prot.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_auth.c: Likewise.
+	* sunrpc/svc_authux.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
+1997-03-25 13:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c (log2_test): Compile this function and call it.
+	(exp2_test): Likewise, but check whether function really exists
+	before testing.
+
+	* math/Makefile (libm-calls): Add s_log2 and s_exp2.
+
+1997-03-25 04:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	Implement exp2 function.
+	* sysdeps/libm-i387/s_exp2.S: New file.
+	* sysdeps/libm-i387/s_exp2f.S: New file.
+	* sysdeps/libm-i387/s_exp2l.S: New file.
+
+	Implement log2 function.
+	* sysdeps/libm-i387/s_log2.S: New file.
+	* sysdeps/libm-i387/s_log2f.S: New file.
+	* sysdeps/libm-i387/s_log2l.S: New file.
+	* sysdeps/libm-ieee754/s_log2.c: New file.
+	* sysdeps/libm-ieee754/s_log2f.c: New file.
+	* sysdeps/stub/s_log2.c: New file.  Stub version.
+
 1997-03-24 19:58  Richard Henderson  <rth@tamu.edu>
 
 	* stdlib/tst-strtol.c (tests): Correct 64-bit entry.
