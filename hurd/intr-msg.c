@@ -1,5 +1,5 @@
 /* Replacement for mach_msg used in interruptible Hurd RPCs.
-   Copyright (C) 95,96,97,98,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,9 @@
 
 #include "intr-msg.h"
 
+#ifdef NDR_CHAR_ASCII		/* OSF Mach flavors have different names.  */
+# define mig_reply_header_t	mig_reply_error_t
+#endif
 
 error_t
 _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
@@ -40,7 +43,15 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
   const mach_msg_option_t user_option = option;
   const mach_msg_timeout_t user_timeout = timeout;
 
-  struct clobber { int i[2]; };
+  struct clobber
+  {
+#ifdef NDR_CHAR_ASCII
+    NDR_record_t ndr;
+#else
+    mach_msg_type_t type;
+#endif
+    error_t err;
+  };
   union msg
   {
     mach_msg_header_t header;
@@ -48,7 +59,11 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
     struct
     {
       mach_msg_header_t header;
+#ifdef NDR_CHAR_ASCII
+      NDR_record_t ndr;
+#else
       int type;
+#endif
       int code;
     } check;
     struct
@@ -147,8 +162,12 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	 the message buffer and we might need to clean up the port rights.  */
     case MACH_SEND_TIMED_OUT:
     case MACH_SEND_INVALID_NOTIFY:
+#ifdef MACH_SEND_NO_NOTIFY
     case MACH_SEND_NO_NOTIFY:
+#endif
+#ifdef MACH_SEND_NOTIFY_IN_PROGRESS
     case MACH_SEND_NOTIFY_IN_PROGRESS:
+#endif
       if (MACH_MSGH_BITS_REMOTE (msg->msgh_bits) == MACH_MSG_TYPE_MOVE_SEND)
 	{
 	  __mach_port_deallocate (__mach_task_self (), msg->msgh_remote_port);
@@ -159,6 +178,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	}
       if (msg->msgh_bits & MACH_MSGH_BITS_COMPLEX)
 	{
+#ifndef MACH_MSG_PORT_DESCRIPTOR
 	  /* Check for MOVE_SEND rights in the message.  These hold refs
 	     that we need to release in case the message is in fact never
 	     re-sent later.  Since it might in fact be re-sent, we turn
@@ -228,6 +248,62 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		  ++(void **) ty;
 		}
 	    }
+#else  /* Untyped Mach IPC flavor. */
+	  mach_msg_body_t *body = (void *) (msg + 1);
+	  mach_msg_descriptor_t *desc = (void *) (body + 1);
+	  mach_msg_descriptor_t *desc_end = desc + body->msgh_descriptor_count;
+	  for (; desc < desc_end; ++desc)
+	    switch (desc->type.type)
+	      {
+	      case MACH_MSG_PORT_DESCRIPTOR:
+		switch (desc->port.disposition)
+		  {
+		  case MACH_MSG_TYPE_MOVE_SEND:
+		    __mach_port_deallocate (mach_task_self (),
+					    desc->port.name);
+		    desc->port.disposition = MACH_MSG_TYPE_COPY_SEND;
+		    break;
+		  case MACH_MSG_TYPE_COPY_SEND:
+		  case MACH_MSG_TYPE_MOVE_RECEIVE:
+		    break;
+		  default:
+		    assert (! "unexpected port type in interruptible RPC");
+		  }
+		break;
+	      case MACH_MSG_OOL_DESCRIPTOR:
+		if (desc->out_of_line.deallocate)
+		  __vm_deallocate (__mach_task_self (),
+				   (vm_address_t) desc->out_of_line.address,
+				   desc->out_of_line.size);
+		break;
+	      case MACH_MSG_OOL_PORTS_DESCRIPTOR:
+		switch (desc->ool_ports.disposition)
+		  {
+		  case MACH_MSG_TYPE_MOVE_SEND:
+		    {
+		      mach_msg_size_t i;
+		      const mach_port_t *ports = desc->ool_ports.address;
+		      for (i = 0; i < desc->ool_ports.count; ++i)
+			__mach_port_deallocate (__mach_task_self (), ports[i]);
+		      desc->ool_ports.disposition = MACH_MSG_TYPE_COPY_SEND;
+		      break;
+		    }
+		  case MACH_MSG_TYPE_COPY_SEND:
+		  case MACH_MSG_TYPE_MOVE_RECEIVE:
+		    break;
+		  default:
+		    assert (! "unexpected port type in interruptible RPC");
+		  }
+		if (desc->ool_ports.deallocate)
+		  __vm_deallocate (__mach_task_self (),
+				   (vm_address_t) desc->ool_ports.address,
+				   desc->ool_ports.count
+				   * sizeof (mach_port_t));
+		break;
+	      default:
+		assert (! "unexpected descriptor type in interruptible RPC");
+	      }
+#endif
 	}
       break;
 
@@ -285,6 +361,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
     case MACH_MSG_SUCCESS:
       {
 	/* We got a reply.  Was it EINTR?  */
+#ifdef MACH_MSG_TYPE_BIT
 	const union
 	{
 	  mach_msg_type_t t;
@@ -292,10 +369,13 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	} check =
 	  { t: { MACH_MSG_TYPE_INTEGER_T, sizeof (integer_t) * 8,
 		 1, TRUE, FALSE, FALSE, 0 } };
+#endif
 
         if (m->reply.RetCode == EINTR &&
 	    m->header.msgh_size == sizeof m->reply &&
+#ifdef MACH_MSG_TYPE_BIT
 	    m->check.type == check.i &&
+#endif
 	    !(m->header.msgh_bits & MACH_MSGH_BITS_COMPLEX))
 	  {
 	    /* It is indeed EINTR.  Is the interrupt for us?  */

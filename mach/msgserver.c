@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +49,12 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.9  2002/02/18 20:56:35  roland
+ * 2002-02-18  Roland McGrath  <roland@frob.com>
+ *
+ * 	* mach/msgserver.c (__mach_msg_server_timeout) [! MACH_RCV_LARGE]:
+ * 	Double MAX_SIZE and don't retry on MACH_RCV_TOO_LARGE.
+ *
  * Revision 1.8  2002/02/17 07:13:32  roland
  * 2002-02-16  Roland McGrath  <roland@frob.com>
  *
@@ -116,8 +122,12 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
 
   if (max_size == 0)
     {
+#ifdef MACH_RCV_LARGE
       option |= MACH_RCV_LARGE;
       max_size = 2 * __vm_page_size; /* Generic.  Good? XXX */
+#else
+      max_size = 4 * __vm_page_size; /* XXX */
+#endif
     }
 
   request = __alloca (max_size);
@@ -187,6 +197,7 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
       switch (mr)
 	{
 	case MACH_RCV_TOO_LARGE:
+#ifdef MACH_RCV_LARGE
 	  /* The request message is larger than MAX_SIZE, and has not
 	     been dequeued.  The message header has the actual size of
 	     the message.  We recurse here in hopes that the compiler
@@ -194,6 +205,10 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
 	     space instead of way too much.  */
 	  return __mach_msg_server_timeout (demux, request->Head.msgh_size,
 					    rcv_name, option, timeout);
+#else
+	  /* XXX the kernel has destroyed the msg */
+	  break;
+#endif
 
 	case MACH_SEND_INVALID_DEST:
 	  /* The reply can't be delivered, so destroy it.  This error

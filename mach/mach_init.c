@@ -24,6 +24,11 @@ mach_port_t __mach_task_self_;
 vm_size_t __vm_page_size = 0;	/* Must be data not bss for weak alias.  */
 weak_alias (__vm_page_size, vm_page_size)
 
+#ifdef NDR_DEF_HEADER
+/* This defines NDR_record, which the MiG-generated stubs use. XXX namespace */
+# include NDR_DEF_HEADER
+#endif
+
 void
 __mach_init (void)
 {

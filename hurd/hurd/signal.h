@@ -1,5 +1,5 @@
 /* Implementing POSIX.1 signals under the Hurd.
-   Copyright (C) 1993, 94, 95, 96, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,96,98,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +38,7 @@
 #include <hurd/msg.h>
 
 #include <cthreads.h>		/* For `struct mutex'.  */
+#include <setjmp.h>		/* For `jmp_buf'.  */
 #include <spin-lock.h>
 #include <hurd/threadvar.h>	/* We cache sigstate in a threadvar.  */
 struct hurd_signal_preemptor;	/* <hurd/sigpreempt.h> */
@@ -204,7 +205,7 @@ _hurd_critical_section_unlock (void *our_lock)
       __spin_unlock (&ss->critical_section_lock);
       pending = ss->pending & ~ss->blocked;
       __spin_unlock (&ss->lock);
-      if (pending)
+      if (! __sigisemptyset (&pending))
 	/* There are unblocked signals pending, which weren't
 	   delivered because we were in the critical section.
 	   Tell the signal thread to deliver them now.  */

@@ -193,7 +193,8 @@ _hurdsig_fault_init (void)
     assert (MACH_PORT_RECEIVE_STATUS_COUNT == sizeof lim / sizeof (natural_t));
     err = __mach_port_set_attributes (__mach_task_self (), forward_sigexc,
 				      MACH_PORT_RECEIVE_STATUS,
-				      &lim, MACH_PORT_RECEIVE_STATUS_COUNT);
+				      (mach_port_info_t) &lim,
+				      MACH_PORT_RECEIVE_STATUS_COUNT);
   }
 #else
   err = __mach_port_set_qlimit (__mach_task_self (), forward_sigexc, 1);

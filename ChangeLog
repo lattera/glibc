@@ -1,4 +1,30 @@
+2002-02-18  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/configure.in: Check for <mach/machine/ndr_def.h>
+	or <machine/ndr_def.h> and add -DNDR_DEF_HEADER=... to DEFINES.
+	* sysdeps/mach/configure: Regenerated.
+	* mach/mach_init.c [NDR_DEF_HEADER]: #include it.
+
+	* hurd/hurdfault.c (_hurdsig_fault_init): Add a cast.
+
+	* hurd/hurd/signal.h: Include <setjmp.h> for `jmp_buf' decl.
+
+	* mach/msgserver.c (__mach_msg_server_timeout) [! MACH_RCV_LARGE]:
+	Double MAX_SIZE and don't retry on MACH_RCV_TOO_LARGE.
+
 2002-02-17  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/times.c
+	[NO_CREATION_TIME] (startup_time): New static variable.
+	[NO_CREATION_TIME] (times_init): New static function in __libc_subinit.
+	(__times) [NO_CREATION_TIME]: Use startup_time in lieu of task
+	creation_time from task_basic_info.
+	(__times): Use __gettimeofday instead of __host_get_time.
+
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg) [! MACH_MSG_TYPE_BIT]:
+	Use untyped Mach IPC message format.
+
+	* hurd/catch-exc.c: Include <assert.h>, missing from last change.
 
 	* hurd/Versions (libc: GLIBC_2.0): Add _S_catch_exception_raise_state,
 	_S_catch_exception_raise_state_identity,

@@ -18,6 +18,7 @@
 
 #include <mach/exc_server.h>
 #include <hurd/signal.h>
+#include <assert.h>
 
 /* Called by the microkernel when a thread gets an exception.  */
 

@@ -236,3 +236,70 @@ if test $libc_cv_mach_host_page_size = yes; then
 EOF
 
 fi
+
+ac_safe=`echo "mach/machine/ndr_def.h" | sed 'y%./+-%__p_%'`
+echo $ac_n "checking for mach/machine/ndr_def.h""... $ac_c" 1>&6
+echo "configure:243: checking for mach/machine/ndr_def.h" >&5
+if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 248 "configure"
+#include "confdefs.h"
+#include <mach/machine/ndr_def.h>
+EOF
+ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
+{ (eval echo configure:253: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
+if test -z "$ac_err"; then
+  rm -rf conftest*
+  eval "ac_cv_header_$ac_safe=yes"
+else
+  echo "$ac_err" >&5
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_header_$ac_safe=no"
+fi
+rm -f conftest*
+fi
+if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+    DEFINES="$DEFINES -DNDR_DEF_HEADER='<mach/machine/ndr_def.h>'"
+else
+  echo "$ac_t""no" 1>&6
+ac_safe=`echo "machine/ndr_def.h" | sed 'y%./+-%__p_%'`
+echo $ac_n "checking for machine/ndr_def.h""... $ac_c" 1>&6
+echo "configure:274: checking for machine/ndr_def.h" >&5
+if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 279 "configure"
+#include "confdefs.h"
+#include <machine/ndr_def.h>
+EOF
+ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
+{ (eval echo configure:284: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
+if test -z "$ac_err"; then
+  rm -rf conftest*
+  eval "ac_cv_header_$ac_safe=yes"
+else
+  echo "$ac_err" >&5
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_header_$ac_safe=no"
+fi
+rm -f conftest*
+fi
+if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+    DEFINES="$DEFINES -DNDR_DEF_HEADER='<machine/ndr_def.h>'"
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+fi
+

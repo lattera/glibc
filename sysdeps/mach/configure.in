@@ -68,3 +68,8 @@ AC_EGREP_HEADER(host_page_size, mach/mach_host.defs,
 if test $libc_cv_mach_host_page_size = yes; then
   AC_DEFINE([HAVE_HOST_PAGE_SIZE])
 fi
+
+AC_CHECK_HEADER(mach/machine/ndr_def.h, [dnl
+  DEFINES="$DEFINES -DNDR_DEF_HEADER='<mach/machine/ndr_def.h>'"], [dnl
+AC_CHECK_HEADER(machine/ndr_def.h, [dnl
+  DEFINES="$DEFINES -DNDR_DEF_HEADER='<machine/ndr_def.h>'"])])
