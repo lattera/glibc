@@ -1,3 +1,8 @@
+2004-02-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Handle
+	_SC_NGROUPS_MAX.
+
 2004-02-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* wcsmbs/mbrtowc.c (__mbrtowc): Cap s + n at the end of address space.

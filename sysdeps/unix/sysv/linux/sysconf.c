@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <fcntl.h>
 #include <sysdep.h>
 #include <time.h>
 #include <unistd.h>
@@ -46,7 +47,40 @@ __sysconf (int name)
       }
 #endif
 
+    case _SC_NGROUPS_MAX:
+      {
+	/* Try to read the information from the /proc/sys/kernel/ngroups_max
+	   file.  */
+	int fd = __open ("/proc/sys/kernel/ngroups_max", O_RDONLY);
+	if (fd != -1)
+	  {
+	    /* This is more than enough, the file contains a single
+	       integer.  */
+	    char buf[32];
+	    long int res = -1l;
+
+	    ssize_t n = __read (fd, buf, sizeof (buf) - 1);
+	    if (n > 0)
+	      {
+		/* Terminate the string.  */
+		buf[n] = '\0';
+
+		char *endp;
+		res = strtol (buf, &endp, 10);
+		if (endp == buf || (*endp != '\0' && *endp != '\n'))
+		  res = -1l;
+	      }
+
+	    __close (fd);
+
+	    if (res != -1)
+	      return res;
+	  }
+      }
+      break;
+
     default:
-      return posix_sysconf (name);
+      break;
     }
+  return posix_sysconf (name);
 }
