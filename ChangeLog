@@ -1,3 +1,8 @@
+2001-07-13  Andreas Jaeger  <aj@suse.de>
+
+	* libio/fileops.c: Include unistd.h for lseek64 prototype.  Closes
+	PR libc/2372.
+
 2001-07-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makeconfig: Add some more changes to handle AIX linker better.
