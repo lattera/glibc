@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-TW handling.
-   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -143,7 +143,7 @@
 	if (__builtin_expect (found, 1) == 0)				      \
 	  {								      \
 	    /* We ran out of space.  */					      \
-	    result = __GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 	if (__builtin_expect (found, 1) != __UNKNOWN_10646_CHAR)	      \
@@ -160,7 +160,7 @@
 	    if (__builtin_expect (found, 1) == 0)			      \
 	      {								      \
 		/* We ran out of space.  */				      \
-		result = __GCONV_INCOMPLETE_INPUT;			      \
+		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 	    if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)	      \
