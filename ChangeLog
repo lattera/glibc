@@ -1,3 +1,7 @@
+2005-02-11  Roland McGrath  <roland@redhat.com>
+
+	* scripts/soversions.awk: Fix default version set handling.
+
 2005-02-10  Roland McGrath  <roland@redhat.com>
 
 	[BZ #157]
