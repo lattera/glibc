@@ -1,7 +1,8 @@
 2002-09-19  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/_exit.c (_exit): Don't use ABORT_INSTRUCTION
-	if it is not defined.  Reported by Glen Nakamura <glen@imodulo.com>.
+	* sysdeps/unix/sysv/linux/_exit.c: Include <errno.h>.
+	(_exit): Don't use ABORT_INSTRUCTION if it is not defined.
+	Reported by Glen Nakamura <glen@imodulo.com>.
 
 2002-09-19  Neal H. Walfield  <neal@cs.uml.edu>
 
