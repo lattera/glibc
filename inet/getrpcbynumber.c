@@ -26,4 +26,4 @@ Boston, MA 02111-1307, USA.  */
 #define ADD_PARAMS	int number
 #define ADD_VARIABLES	number
 
-#include "../nss/getXXbyYY_r.c"
+#include "../nss/getXXbyYY.c"

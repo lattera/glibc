@@ -463,7 +463,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
 	/* If the requested name matches the soname of a loaded object,
 	   use that object.  */
 	(l->l_info[DT_SONAME] &&
-	 ! strcmp (name, (const char *) (l->addr +
+	 ! strcmp (name, (const char *) (l->l_addr +
 					 l->l_info[DT_SONAME]->d_un.d_ptr))))
       {
 	/* The object is already loaded.

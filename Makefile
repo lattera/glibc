@@ -83,7 +83,7 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 					      data headers others)
 
 headers := errno.h sys/errno.h errnos.h limits.h values.h	\
-	   features.h gnu-versions.h
+	   features.h gnu-versions.h libc-lock.h
 aux	 = sysdep $(libc-init) version
 
 echo-headers: subdir_echo-headers

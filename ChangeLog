@@ -1,5 +1,12 @@
 Tue Jun 25 02:59:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makefile (headers): Add libc-lock.h.
+	* sysdeps/stub/libc-lock.h: New file.
+
+	* inet/getrpcbynumber.c: Remove _r typo.
+
+	* elf/dl-load.c (_dl_map_object): Fix typo in last change.
+
 	* nss/nss_files/files-parse.c (parse_list): Reset ELT for elements
 	after the first!
 
