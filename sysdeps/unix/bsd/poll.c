@@ -104,7 +104,7 @@ __poll (fds, nfds, timeout)
   tv.tv_sec = timeout / 1000;
   tv.tv_usec = (timeout % 1000) * 1000;
 
-  do
+  while (1)
     {
       ready = __select (maxfd + 1, rset, wset, xset,
 			timeout == -1 ? NULL : &tv);
@@ -169,9 +169,12 @@ __poll (fds, nfds, timeout)
 		else if (errno == EBADF)
 		  f->revents |= POLLNVAL;
 	      }
+	  /* Try again.  */
+	  continue;
 	}
+
+      break;
     }
-  while (ready == 0);
 
   if (ready > 0)
     for (f = fds; f < &fds[nfds]; ++f)

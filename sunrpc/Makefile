@@ -43,16 +43,15 @@ subdir	:= sunrpc
 #	rpc_dtablesize.c -> rpc_dtable.c
 #	svc_auth_unix.c -> svc_authux.c
 #	xdr_reference.c -> xdr_ref.c
-#	rpcsvc/bootparam_prot.x -> rpcsvc/bootparam.x
 
-rpcsvc = bootparam.x nlm_prot.x rstat.x \
+rpcsvc = bootparam_prot.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
 	 rusers.x spray.x nfs_prot.x rquota.x key_prot.x
 headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 			   pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h svc.h \
 			   svc_auth.h types.h xdr.h auth_des.h \
 			   des_crypt.h key_prot.h rpc_des.h) \
-	  $(rpcsvc:%=rpcsvc/%)
+	  $(rpcsvc:%=rpcsvc/%) rpcsvc/bootparam.h
 install-others = $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
 	    $(rpcsvc:%.x=rpcsvc/%.stmp) rpc-proto.c rpc-proto.d rpcgen
@@ -92,7 +91,6 @@ endif
 ifeq (no,$(cross-compiling))
 # We can only build this library if we can run the rpcgen we build.
 headers += $(rpcsvc:%.x=rpcsvc/%.h)
-install-others += $(inst_includedir)/rpcsvc/bootparam_prot.h
 extra-libs := librpcsvc
 extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
 librpcsvc-routines = $(rpcsvc:%.x=x%)
@@ -100,7 +98,7 @@ librpcsvc-inhibit-o = .os # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
 endif
 
-CFLAGS-xbootparam.c = -Wno-unused
+CFLAGS-xbootparam_prot.c = -Wno-unused
 CFLAGS-xnlm_prot.c = -Wno-unused
 CFLAGS-xrstat.c = -Wno-unused
 CFLAGS-xyppasswd.c = -Wno-unused
@@ -128,14 +126,6 @@ $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
 # Tell rpcgen that it should unset LD_LIBRARY_PATH before executing the
 # preprocessor.
 rpcgen-cmd = $(built-program-cmd)
-
-# The proper file name is longer than 14 chars, so we install it under
-# a shorter name.  But if the filesystem can handle it, we want to
-# install under the proper name as well.
-$(inst_includedir)/rpcsvc/bootparam_prot.h: \
-  $(inst_includedir)/rpcsvc/bootparam.h $(+force)
-	@echo It is safe to ignore an error here if this file name is too long.
-	-$(do-install)
 
 # Install the rpc data base file.
 $(inst_sysconfdir)/rpc: etc.rpc $(+force)

@@ -1,3 +1,11 @@
+1999-04-18  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/Makefile: Remove special handling of bootparam.x,
+	add rpcsvc/bootparam.h to headers.
+	* sunrpc/rpcsvc/bootparam.h: New, for backward compatibility.
+	* sunrpc/rpcsvc/bootparam.x: Renamed to...
+	* sunrpc/rpcsvc/bootparam_prot.x: ...this.
+
 1999-04-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/bsd/poll.c (__poll): Add more compatiblity code to
