@@ -1,3 +1,9 @@
+2001-11-10  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/e_log2l.c: New file.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c: Likewise.
+	Contributed by Stephen L Moshier <moshier@mediaone.net>.
+
 2001-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-minimal.c (realloc): Handle NULL for first parameter
