@@ -1,3 +1,18 @@
+2000-07-09  Mark Kettenis  <kettenis@gnu.org>
+
+	* elf/rtld.c (dl_main): Move call to __libc_check_standard_fds...
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): ... to here.
+
+2000-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h: Include ISO C99 features if the compiler used
+	is an ISO C99 compiler.
+	Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
+
+2000-07-08  Mark Kettenis  <kettenis@gnu.org>
+
+	* iconv/gconv_conf.c: Include <bits/libc-lock.h>.
+
 2000-07-10  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c: Make alias weak since

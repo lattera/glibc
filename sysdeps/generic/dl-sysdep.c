@@ -45,6 +45,9 @@ extern fpu_control_t _dl_fpu_control;
 extern void _end;
 extern void ENTRY_POINT (void);
 
+/* Protect SUID program against misuse of file descriptors.  */
+extern void __libc_check_standard_fds (void);
+
 ElfW(Addr) _dl_base_addr;
 int __libc_enable_secure;
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
@@ -166,6 +169,12 @@ _dl_sysdep_start (void **start_argptr,
        break up that far.  When the user program examines its break, it
        will see this new value and not clobber our data.  */
     __sbrk (_dl_pagesize - ((&_end - (void *) 0) & (_dl_pagesize - 1)));
+
+  /* If this is a SUID program we make sure that FDs 0, 1, and 2 are
+     allocated.  If necessary we are doing it ourself.  If it is not
+     possible we stop the program.  */
+  if (__builtin_expect (__libc_enable_secure, 0))
+    __libc_check_standard_fds ();
 
   (*dl_main) (phdr, phnum, &user_entry);
   return user_entry;

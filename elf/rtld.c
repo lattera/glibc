@@ -52,9 +52,6 @@ extern void *_dl_sysdep_read_whole_file (const char *filename,
 					 size_t *filesize_ptr,
 					 int mmap_prot);
 
-/* Protec SUID program against misuse of file descriptors.  */
-extern void __libc_check_standard_fds (void);
-
 /* Helper function to handle errors while resolving symbols.  */
 static void print_unresolved (int errcode, const char *objname,
 			      const char *errsting);
@@ -399,12 +396,6 @@ dl_main (const ElfW(Phdr) *phdr,
   hp_timing_t stop;
   hp_timing_t diff;
 #endif
-
-  /* First thing, if this is a SUID program we make sure that FDs 0,
-     1, and 2 are allocated.  If necessary we are doing it ourself.
-     If it is not possible we stop the program.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
-    __libc_check_standard_fds ();
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode, &_dl_lazy);

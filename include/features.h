@@ -152,7 +152,8 @@
    which was used prior to the standard acceptance.  This macro will
    eventually go away and the features enabled by default once the ISO C99
    standard is widely adopted.  */
-#if defined _ISOC99_SOURCE || defined _ISOC9X_SOURCE
+#if (defined _ISOC99_SOURCE || defined _ISOC9X_SOURCE \
+     || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L))
 # define __USE_ISOC99	1
 #endif
 
