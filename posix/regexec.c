@@ -606,15 +606,16 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   reg_errcode_t err;
   re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
   int left_lim, right_lim, incr;
-  int fl_longest_match, match_first, match_last = -1;
-  int fast_translate, sb;
+  int fl_longest_match, match_first, match_kind, match_last = -1;
+  int sb, ch;
 #if defined _LIBC || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)
   re_match_context_t mctx = { .dfa = dfa };
 #else
   re_match_context_t mctx;
 #endif
-  char *fastmap = ((preg->fastmap != NULL && preg->fastmap_accurate
-		    && range && !preg->can_be_null) ? preg->fastmap : NULL);
+  char *fastmap = (preg->fastmap != NULL && preg->fastmap_accurate
+		   && range && !preg->can_be_null) ? preg->fastmap : NULL;
+  unsigned RE_TRANSLATE_TYPE t = (unsigned RE_TRANSLATE_TYPE) preg->translate;
 
 #if !(defined _LIBC || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L))
   memset (&mctx, '\0', sizeof (re_match_context_t));
@@ -685,88 +686,100 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   left_lim = (range < 0) ? start + range : start;
   right_lim = (range < 0) ? start : start + range;
   sb = dfa->mb_cur_max == 1;
-  fast_translate = sb || !(preg->syntax & RE_ICASE || preg->translate);
+  match_kind =
+    (fastmap
+     ? ((sb || !(preg->syntax & RE_ICASE || t) ? 4 : 0)
+	| (range >= 0 ? 2 : 0)
+	| (t != NULL ? 1 : 0))
+     : 8);
 
-  for (;;)
+  for (;; match_first += incr)
     {
-      /* At first get the current byte from input string.  */
-      if (fastmap)
-	{
-	  if (BE (fast_translate, 1))
-	    {
-	      unsigned RE_TRANSLATE_TYPE t
-		= (unsigned RE_TRANSLATE_TYPE) preg->translate;
-	      if (BE (range >= 0, 1))
-		{
-		  if (BE (t != NULL, 0))
-		    {
-		      while (BE (match_first < right_lim, 1)
-			     && !fastmap[t[(unsigned char) string[match_first]]])
-			++match_first;
-		    }
-		  else
-		    {
-		      while (BE (match_first < right_lim, 1)
-			     && !fastmap[(unsigned char) string[match_first]])
-			++match_first;
-		    }
-		  if (BE (match_first == right_lim, 0))
-		    {
-		      int ch = match_first >= length
-			       ? 0 : (unsigned char) string[match_first];
-		      if (!fastmap[t ? t[ch] : ch])
-			break;
-		    }
-		}
-	      else
-		{
-		  while (match_first >= left_lim)
-		    {
-		      int ch = match_first >= length
-			       ? 0 : (unsigned char) string[match_first];
-		      if (fastmap[t ? t[ch] : ch])
-			break;
-		      --match_first;
-		    }
-		  if (match_first < left_lim)
-		    break;
-		}
-	    }
-	  else
-	    {
-	      int ch;
+      err = REG_NOMATCH;
+      if (match_first < left_lim || right_lim < match_first)
+	goto free_return;
 
-	      do
-		{
-		  /* In this case, we can't determine easily the current byte,
-		     since it might be a component byte of a multibyte
-		     character.  Then we use the constructed buffer
-		     instead.  */
-		  /* If MATCH_FIRST is out of the valid range, reconstruct the
-		     buffers.  */
-		  if (mctx.input.raw_mbs_idx + mctx.input.valid_raw_len
-		      <= match_first
-		      || match_first < mctx.input.raw_mbs_idx)
-		    {
-		      err = re_string_reconstruct (&mctx.input, match_first,
-						   eflags);
-		      if (BE (err != REG_NOERROR, 0))
-			goto free_return;
-		    }
-		  /* If MATCH_FIRST is out of the buffer, leave it as '\0'.
-		     Note that MATCH_FIRST must not be smaller than 0.  */
-		  ch = ((match_first >= length) ? 0
-		       : re_string_byte_at (&mctx.input,
-					    match_first
-					    - mctx.input.raw_mbs_idx));
-		  if (fastmap[ch])
-		    break;
-		  match_first += incr;
-		}
-	      while (match_first >= left_lim && match_first <= right_lim);
-	      if (! fastmap[ch])
-		break;
+      /* Advance as rapidly as possible through the string, until we
+	 find a plausible place to start matching.  This may be done
+	 with varying efficiency, so there are various possibilities:
+	 only the most common of them are specialized, in order to
+	 save on code size.  We use a switch statement for speed.  */
+      switch (match_kind)
+	{
+	case 8:
+	  /* No fastmap.  */
+	  break;
+
+	case 7:
+	  /* Fastmap with single-byte translation, match forward.  */
+	  while (BE (match_first < right_lim, 1)
+		 && !fastmap[t[(unsigned char) string[match_first]]])
+	    ++match_first;
+	  goto forward_match_found_start_or_reached_end;
+
+	case 6:
+	  /* Fastmap without translation, match forward.  */
+	  while (BE (match_first < right_lim, 1)
+		 && !fastmap[(unsigned char) string[match_first]])
+	    ++match_first;
+
+	forward_match_found_start_or_reached_end:
+	  if (BE (match_first == right_lim, 0))
+	    {
+	      ch = match_first >= length
+		       ? 0 : (unsigned char) string[match_first];
+	      if (!fastmap[t ? t[ch] : ch])
+		goto free_return;
 	    }
+	  break;
+
+	case 4:
+	case 5:
+	  /* Fastmap without multi-byte translation, match backwards.  */
+	  while (match_first >= left_lim)
+	    {
+	      ch = match_first >= length
+		       ? 0 : (unsigned char) string[match_first];
+	      if (fastmap[t ? t[ch] : ch])
+		break;
+	      --match_first;
+	    }
+	  if (match_first < left_lim)
+	    goto free_return;
+	  break;
+
+	default:
+	  /* In this case, we can't determine easily the current byte,
+	     since it might be a component byte of a multibyte
+	     character.  Then we use the constructed buffer instead.  */
+	  for (;;)
+	    {
+	      /* If MATCH_FIRST is out of the valid range, reconstruct the
+		 buffers.  */
+	      unsigned int offset = match_first - mctx.input.raw_mbs_idx;
+	      if (BE (offset >= (unsigned int) mctx.input.valid_raw_len, 0))
+		{
+		  err = re_string_reconstruct (&mctx.input, match_first,
+					       eflags);
+		  if (BE (err != REG_NOERROR, 0))
+		    goto free_return;
+
+		  offset = match_first - mctx.input.raw_mbs_idx;
+		}
+	      /* If MATCH_FIRST is out of the buffer, leave it as '\0'.
+		 Note that MATCH_FIRST must not be smaller than 0.  */
+	      ch = (match_first >= length
+		    ? 0 : re_string_byte_at (&mctx.input, offset));
+	      if (fastmap[ch])
+		break;
+	      match_first += incr;
+	      if (match_first < left_lim || match_first > right_lim)
+	        {
+	          err = REG_NOMATCH;
+	          goto free_return;
+	        }
+	    }
+	  break;
 	}
 
       /* Reconstruct the buffers so that the matcher can assume that
@@ -774,57 +787,60 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
       err = re_string_reconstruct (&mctx.input, match_first, eflags);
       if (BE (err != REG_NOERROR, 0))
 	goto free_return;
+
 #ifdef RE_ENABLE_I18N
-     /* Eliminate it when it is a component of a multibyte character
-	 and isn't the head of a multibyte character.  */
-      if (sb || re_string_first_byte (&mctx.input, 0))
+     /* Don't consider this char as a possible match start if it part,
+	yet isn't the head, of a multibyte character.  */
+      if (!sb && !re_string_first_byte (&mctx.input, 0))
+	continue;
 #endif
+
+      /* It seems to be appropriate one, then use the matcher.  */
+      /* We assume that the matching starts from 0.  */
+      mctx.state_log_top = mctx.nbkref_ents = mctx.max_mb_elem_len = 0;
+      match_last = check_matching (&mctx, fl_longest_match,
+				   range >= 0 ? &match_first : NULL);
+      if (match_last != -1)
 	{
-	  /* It seems to be appropriate one, then use the matcher.  */
-	  /* We assume that the matching starts from 0.  */
-	  mctx.state_log_top = mctx.nbkref_ents = mctx.max_mb_elem_len = 0;
-	  match_last = check_matching (&mctx, fl_longest_match,
-				       range >= 0 ? &match_first : NULL);
-	  if (match_last != -1)
+	  if (BE (match_last == -2, 0))
 	    {
-	      if (BE (match_last == -2, 0))
+	      err = REG_ESPACE;
+	      goto free_return;
+	    }
+	  else
+	    {
+	      mctx.match_last = match_last;
+	      if ((!preg->no_sub && nmatch > 1) || dfa->nbackref)
 		{
-		  err = REG_ESPACE;
-		  goto free_return;
+		  re_dfastate_t *pstate = mctx.state_log[match_last];
+		  mctx.last_node = check_halt_state_context (&mctx, pstate,
+							     match_last);
+		}
+	      if ((!preg->no_sub && nmatch > 1 && dfa->has_plural_match)
+		  || dfa->nbackref)
+		{
+		  err = prune_impossible_nodes (&mctx);
+		  if (err == REG_NOERROR)
+		    break;
+		  if (BE (err != REG_NOMATCH, 0))
+		    goto free_return;
+		  match_last = -1;
 		}
 	      else
-		{
-		  mctx.match_last = match_last;
-		  if ((!preg->no_sub && nmatch > 1) || dfa->nbackref)
-		    {
-		      re_dfastate_t *pstate = mctx.state_log[match_last];
-		      mctx.last_node = check_halt_state_context (&mctx, pstate,
-								 match_last);
-		    }
-		  if ((!preg->no_sub && nmatch > 1 && dfa->has_plural_match)
-		      || dfa->nbackref)
-		    {
-		      err = prune_impossible_nodes (&mctx);
-		      if (err == REG_NOERROR)
-			break;
-		      if (BE (err != REG_NOMATCH, 0))
-			goto free_return;
-		      match_last = -1;
-		    }
-		  else
-		    break; /* We found a match.  */
-		}
+		break; /* We found a match.  */
 	    }
-	  match_ctx_clean (&mctx);
 	}
-      /* Update counter.  */
-      match_first += incr;
-      if (match_first < left_lim || right_lim < match_first)
-	break;
+
+      match_ctx_clean (&mctx);
     }
 
+#ifdef DEBUG
+  assert (match_last != -1);
+  assert (err == REG_NOERROR);
+#endif
+
   /* Set pmatch[] if we need.  */
-  if (match_last != -1 && nmatch > 0)
+  if (nmatch > 0)
     {
       int reg_idx;
 
@@ -869,7 +885,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	    pmatch[reg_idx].rm_eo += match_first;
 	  }
     }
-  err = (match_last == -1) ? REG_NOMATCH : REG_NOERROR;
+
  free_return:
   re_free (mctx.state_log);
   if (dfa->nbackref)
@@ -1072,6 +1088,20 @@ check_matching (mctx, fl_longest_match, p_match_first)
   while (!re_string_eoi (&mctx->input))
     {
       re_dfastate_t *old_state = cur_state;
+      int next_char_idx = re_string_cur_idx (&mctx->input) + 1;
+
+      if (BE (next_char_idx >= mctx->input.bufs_len, 0)
+          || (BE (next_char_idx >= mctx->input.valid_len, 0)
+              && mctx->input.valid_len < mctx->input.len))
+        {
+          err = extend_buffers (mctx);
+          if (BE (err != REG_NOERROR, 0))
+	    {
+	      assert (err == REG_ESPACE);
+	      return -2;
+	    }
+        }
+
       cur_state = transit_state (&err, mctx, cur_state);
       if (mctx->state_log != NULL)
 	cur_state = merge_state_with_log (&err, mctx, cur_state);
@@ -1090,10 +1120,10 @@ check_matching (mctx, fl_longest_match, p_match_first)
 	    break;
 	}
 
-      if (at_init_state)
+      if (BE (at_init_state, 0))
 	{
 	  if (old_state == cur_state)
-	    next_start_idx = re_string_cur_idx (&mctx->input);
+	    next_start_idx = next_char_idx;
 	  else
 	    at_init_state = 0;
 	}
@@ -1109,13 +1139,16 @@ check_matching (mctx, fl_longest_match, p_match_first)
 	      /* We found an appropriate halt state.  */
 	      match_last = re_string_cur_idx (&mctx->input);
 	      match = 1;
+
+	      /* We found a match, do not modify match_first below.  */
+	      p_match_first = NULL;
 	      if (!fl_longest_match)
 		break;
 	    }
 	}
-   }
+    }
 
-  if (match_last == -1 && p_match_first)
+  if (p_match_first)
     *p_match_first += next_start_idx;
 
   return match_last;
@@ -2167,23 +2200,14 @@ transit_state (err, mctx, state)
   re_dfastate_t **trtable;
   unsigned char ch;
 
-  if (re_string_cur_idx (&mctx->input) + 1 >= mctx->input.bufs_len
-      || (re_string_cur_idx (&mctx->input) + 1 >= mctx->input.valid_len
-	  && mctx->input.valid_len < mctx->input.len))
+#ifdef RE_ENABLE_I18N
+  /* If the current state can accept multibyte.  */
+  if (BE (state->accept_mb, 0))
     {
-      *err = extend_buffers (mctx);
+      *err = transit_state_mb (mctx, state);
       if (BE (*err != REG_NOERROR, 0))
 	return NULL;
     }
-
-#ifdef RE_ENABLE_I18N
-      /* If the current state can accept multibyte.  */
-      if (state->accept_mb)
-	{
-	  *err = transit_state_mb (mctx, state);
-	  if (BE (*err != REG_NOERROR, 0))
-	    return NULL;
-	}
 #endif /* RE_ENABLE_I18N */
 
   /* Then decide the next state with the single byte.  */

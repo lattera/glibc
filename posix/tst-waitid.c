@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <error.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -56,16 +56,15 @@ sigchld (int signo, siginfo_t *info, void *ctx)
 {
   if (signo != SIGCHLD)
     {
-      error (0, 0, "SIGCHLD handler got signal %d instead!", signo);
+      printf ("SIGCHLD handler got signal %d instead!\n", signo);
       _exit (EXIT_FAILURE);
     }
 
   if (! expecting_sigchld)
     {
       spurious_sigchld = 1;
-      error (0, 0,
-	     "spurious SIGCHLD: signo %d code %d status %d pid %d\n",
-	     info->si_signo, info->si_code, info->si_status, info->si_pid);
+      printf ("spurious SIGCHLD: signo %d code %d status %d pid %d\n",
+	      info->si_signo, info->si_code, info->si_status, info->si_pid);
     }
   else
     {
@@ -79,7 +78,7 @@ check_sigchld (const char *phase, int *ok, int code, int status, pid_t pid)
 {
   if (expecting_sigchld)
     {
-      error (0, 0, "missing SIGCHLD on %s", phase);
+      printf ("missing SIGCHLD on %s\n", phase);
       *ok = EXIT_FAILURE;
       expecting_sigchld = 0;
       return;
@@ -87,22 +86,22 @@ check_sigchld (const char *phase, int *ok, int code, int status, pid_t pid)
 
   if (sigchld_info.si_signo != SIGCHLD)
     {
-      error (0, 0, "SIGCHLD for %s signal %d", phase, sigchld_info.si_signo);
+      printf ("SIGCHLD for %s signal %d\n", phase, sigchld_info.si_signo);
       *ok = EXIT_FAILURE;
     }
   if (sigchld_info.si_code != code)
     {
-      error (0, 0, "SIGCHLD for %s code %d", phase, sigchld_info.si_code);
+      printf ("SIGCHLD for %s code %d\n", phase, sigchld_info.si_code);
       *ok = EXIT_FAILURE;
     }
   if (sigchld_info.si_status != status)
     {
-      error (0, 0, "SIGCHLD for %s status %d", phase, sigchld_info.si_status);
+      printf ("SIGCHLD for %s status %d\n", phase, sigchld_info.si_status);
       *ok = EXIT_FAILURE;
     }
   if (sigchld_info.si_pid != pid)
     {
-      error (0, 0, "SIGCHLD for %s pid %d", phase, sigchld_info.si_pid);
+      printf ("SIGCHLD for %s pid %d\n", phase, sigchld_info.si_pid);
       *ok = EXIT_FAILURE;
     }
 }
@@ -121,7 +120,7 @@ do_test (int argc, char *argv[])
   sa.sa_sigaction = &sigchld;
   if (sigemptyset (&sa.sa_mask) < 0 || sigaction (SIGCHLD, &sa, NULL) < 0)
     {
-      error (0, errno, "setting SIGCHLD handler");
+      printf ("setting SIGCHLD handler: %m\n");
       return EXIT_FAILURE;
     }
 #endif
@@ -131,7 +130,7 @@ do_test (int argc, char *argv[])
   pid_t pid = fork ();
   if (pid < 0)
     {
-      error (0, errno, "fork");
+      printf ("fork: %m\n");
       return EXIT_FAILURE;
     }
   else if (pid == 0)
@@ -156,18 +155,18 @@ do_test (int argc, char *argv[])
   switch (fail)
     {
     default:
-      error (0, 0, "waitid returned bogus value %d\n", fail);
+      printf ("waitid returned bogus value %d\n", fail);
       RETURN (EXIT_FAILURE);
     case -1:
-      error (0, errno, "waitid WNOHANG on stopped");
+      printf ("waitid WNOHANG on stopped: %m\n");
       RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo == 0)
 	break;
       if (info.si_signo == SIGCHLD)
-	error (0, 0, "waitid WNOHANG on stopped status %d\n", info.si_status);
+	printf ("waitid WNOHANG on stopped status %d\n", info.si_status);
       else
-	error (0, 0, "waitid WNOHANG on stopped signal %d\n", info.si_signo);
+	printf ("waitid WNOHANG on stopped signal %d\n", info.si_signo);
       RETURN (EXIT_FAILURE);
     }
 
@@ -179,34 +178,34 @@ do_test (int argc, char *argv[])
   switch (fail)
     {
     default:
-      error (0, 0, "waitid WSTOPPED|WNOHANG returned bogus value %d\n", fail);
+      printf ("waitid WSTOPPED|WNOHANG returned bogus value %d\n", fail);
       RETURN (EXIT_FAILURE);
     case -1:
-      error (0, errno, "waitid WSTOPPED|WNOHANG on stopped");
+      printf ("waitid WSTOPPED|WNOHANG on stopped: %m\n");
       RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
-	  error (0, 0, "waitid WSTOPPED|WNOHANG on stopped signal %d\n",
-		 info.si_signo);
+	  printf ("waitid WSTOPPED|WNOHANG on stopped signal %d\n",
+		  info.si_signo);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_STOPPED)
 	{
-	  error (0, 0, "waitid WSTOPPED|WNOHANG on stopped code %d\n",
-		 info.si_code);
+	  printf ("waitid WSTOPPED|WNOHANG on stopped code %d\n",
+		  info.si_code);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGSTOP)
 	{
-	  error (0, 0, "waitid WSTOPPED|WNOHANG on stopped status %d\n",
-		 info.si_status);
+	  printf ("waitid WSTOPPED|WNOHANG on stopped status %d\n",
+		  info.si_status);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
-	  error (0, 0, "waitid WSTOPPED|WNOHANG on stopped pid %d != %d\n",
-		 info.si_pid, pid);
+	  printf ("waitid WSTOPPED|WNOHANG on stopped pid %d != %d\n",
+		  info.si_pid, pid);
 	  RETURN (EXIT_FAILURE);
 	}
     }
@@ -215,7 +214,7 @@ do_test (int argc, char *argv[])
 
   if (kill (pid, SIGCONT) != 0)
     {
-      error (0, errno, "kill (%d, SIGCONT)", pid);
+      printf ("kill (%d, SIGCONT): %m\n", pid);
       RETURN (EXIT_FAILURE);
     }
 
@@ -225,7 +224,7 @@ do_test (int argc, char *argv[])
 #if WCONTINUED != 0
   if (expecting_sigchld)
     {
-      error (0, 0, "no SIGCHLD seen for SIGCONT (optional)");
+      printf ("no SIGCHLD seen for SIGCONT (optional)\n");
       expecting_sigchld = 0;
     }
   else
@@ -238,35 +237,34 @@ do_test (int argc, char *argv[])
   switch (fail)
     {
     default:
-      error (0, 0,
-	     "waitid WCONTINUED|WNOWAIT returned bogus value %d\n", fail);
+      printf ("waitid WCONTINUED|WNOWAIT returned bogus value %d\n", fail);
       RETURN (EXIT_FAILURE);
     case -1:
-      error (0, errno, "waitid WCONTINUED|WNOWAIT on continued");
+      printf ("waitid WCONTINUED|WNOWAIT on continued: %m\n");
       RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
-	  error (0, 0, "waitid WCONTINUED|WNOWAIT on continued signal %d\n",
-		 info.si_signo);
+	  printf ("waitid WCONTINUED|WNOWAIT on continued signal %d\n",
+		  info.si_signo);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_CONTINUED)
 	{
-	  error (0, 0, "waitid WCONTINUED|WNOWAIT on continued code %d\n",
-		 info.si_code);
+	  printf ("waitid WCONTINUED|WNOWAIT on continued code %d\n",
+		  info.si_code);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGCONT)
 	{
-	  error (0, 0, "waitid WCONTINUED|WNOWAIT on continued status %d\n",
-		 info.si_status);
+	  printf ("waitid WCONTINUED|WNOWAIT on continued status %d\n",
+		  info.si_status);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
-	  error (0, 0, "waitid WCONTINUED|WNOWAIT on continued pid %d != %d\n",
-		 info.si_pid, pid);
+	  printf ("waitid WCONTINUED|WNOWAIT on continued pid %d != %d\n",
+		  info.si_pid, pid);
 	  RETURN (EXIT_FAILURE);
 	}
     }
@@ -279,34 +277,32 @@ do_test (int argc, char *argv[])
   switch (fail)
     {
     default:
-      error (0, 0, "waitid WCONTINUED returned bogus value %d\n", fail);
+      printf ("waitid WCONTINUED returned bogus value %d\n", fail);
       RETURN (EXIT_FAILURE);
     case -1:
-      error (0, errno, "waitid WCONTINUED on continued");
+      printf ("waitid WCONTINUED on continued: %m\n");
       RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
-	  error (0, 0, "waitid WCONTINUED on continued signal %d\n",
-		 info.si_signo);
+	  printf ("waitid WCONTINUED on continued signal %d\n", info.si_signo);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_CONTINUED)
 	{
-	  error (0, 0, "waitid WCONTINUED on continued code %d\n",
-		 info.si_code);
+	  printf ("waitid WCONTINUED on continued code %d\n", info.si_code);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGCONT)
 	{
-	  error (0, 0, "waitid WCONTINUED on continued status %d\n",
-		 info.si_status);
+	  printf ("waitid WCONTINUED on continued status %d\n",
+		  info.si_status);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
-	  error (0, 0, "waitid WCONTINUED on continued pid %d != %d\n",
-		 info.si_pid, pid);
+	  printf ("waitid WCONTINUED on continued pid %d != %d\n",
+		  info.si_pid, pid);
 	  RETURN (EXIT_FAILURE);
 	}
     }
@@ -317,22 +313,20 @@ do_test (int argc, char *argv[])
   switch (fail)
     {
     default:
-      error (0, 0, "waitid returned bogus value %d\n", fail);
+      printf ("waitid returned bogus value %d\n", fail);
       RETURN (EXIT_FAILURE);
     case -1:
-      error (0, errno, "waitid WCONTINUED|WNOHANG on waited continued");
+      printf ("waitid WCONTINUED|WNOHANG on waited continued: %m\n");
       RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo == 0)
 	break;
       if (info.si_signo == SIGCHLD)
-	error (0, 0,
-	       "waitid WCONTINUED|WNOHANG on waited continued status %d\n",
-	       info.si_status);
+	printf ("waitid WCONTINUED|WNOHANG on waited continued status %d\n",
+		info.si_status);
       else
-	error (0, 0,
-	       "waitid WCONTINUED|WNOHANG on waited continued signal %d\n",
-	       info.si_signo);
+	printf ("waitid WCONTINUED|WNOHANG on waited continued signal %d\n",
+		info.si_signo);
       RETURN (EXIT_FAILURE);
     }
 
@@ -340,26 +334,25 @@ do_test (int argc, char *argv[])
   expecting_sigchld = 1;
   if (kill (pid, SIGSTOP) != 0)
     {
-      error (0, errno, "kill (%d, SIGSTOP)", pid);
+      printf ("kill (%d, SIGSTOP): %m\n", pid);
       RETURN (EXIT_FAILURE);
     }
   pid_t wpid = waitpid (pid, &fail, WUNTRACED);
   if (wpid < 0)
     {
-      error (0, errno, "waitpid WUNTRACED on stopped");
+      printf ("waitpid WUNTRACED on stopped: %m\n");
       RETURN (EXIT_FAILURE);
     }
   else if (wpid != pid)
     {
-      error (0, 0,
-	     "waitpid WUNTRACED on stopped returned %d != %d (status %x)",
-	     wpid, pid, fail);
+      printf ("waitpid WUNTRACED on stopped returned %d != %d (status %x)\n",
+	      wpid, pid, fail);
       RETURN (EXIT_FAILURE);
     }
   else if (!WIFSTOPPED (fail) || WIFSIGNALED (fail) || WIFEXITED (fail)
 	   || WIFCONTINUED (fail) || WSTOPSIG (fail) != SIGSTOP)
     {
-      error (0, 0, "waitpid WUNTRACED on stopped: status %x", fail);
+      printf ("waitpid WUNTRACED on stopped: status %x\n", fail);
       RETURN (EXIT_FAILURE);
     }
   CHECK_SIGCHLD ("stopped", CLD_STOPPED, SIGSTOP);
@@ -367,7 +360,7 @@ do_test (int argc, char *argv[])
   expecting_sigchld = 1;
   if (kill (pid, SIGCONT) != 0)
     {
-      error (0, errno, "kill (%d, SIGCONT)", pid);
+      printf ("kill (%d, SIGCONT): %m\n", pid);
       RETURN (EXIT_FAILURE);
     }
 
@@ -376,7 +369,7 @@ do_test (int argc, char *argv[])
 
   if (expecting_sigchld)
     {
-      error (0, 0, "no SIGCHLD seen for SIGCONT (optional)");
+      printf ("no SIGCHLD seen for SIGCONT (optional)\n");
       expecting_sigchld = 0;
     }
   else
@@ -386,24 +379,24 @@ do_test (int argc, char *argv[])
   if (wpid < 0)
     {
       if (errno == EINVAL)
-	error (0, 0, "waitpid does not support WCONTINUED");
+	printf ("waitpid does not support WCONTINUED\n");
       else
 	{
-	  error (0, errno, "waitpid WCONTINUED on continued");
+	  printf ("waitpid WCONTINUED on continued: %m\n");
 	  RETURN (EXIT_FAILURE);
 	}
     }
   else if (wpid != pid)
     {
-      error (0, 0,
-	     "waitpid WCONTINUED on continued returned %d != %d (status %x)",
+      printf ("\
+waitpid WCONTINUED on continued returned %d != %d (status %x)\n",
 	     wpid, pid, fail);
       RETURN (EXIT_FAILURE);
     }
   else if (WIFSTOPPED (fail) || WIFSIGNALED (fail) || WIFEXITED (fail)
 	   || !WIFCONTINUED (fail))
     {
-      error (0, 0, "waitpid WCONTINUED on continued: status %x", fail);
+      printf ("waitpid WCONTINUED on continued: status %x\n", fail);
       RETURN (EXIT_FAILURE);
     }
 #endif
@@ -413,7 +406,7 @@ do_test (int argc, char *argv[])
   /* Die, child, die!  */
   if (kill (pid, SIGKILL) != 0)
     {
-      error (0, errno, "kill (%d, SIGKILL)", pid);
+      printf ("kill (%d, SIGKILL): %m\n", pid);
       RETURN (EXIT_FAILURE);
     }
 
@@ -425,34 +418,30 @@ do_test (int argc, char *argv[])
   switch (fail)
     {
     default:
-      error (0, 0, "waitid WNOWAIT returned bogus value %d\n", fail);
+      printf ("waitid WNOWAIT returned bogus value %d\n", fail);
       RETURN (EXIT_FAILURE);
     case -1:
-      error (0, errno, "waitid WNOWAIT on killed");
+      printf ("waitid WNOWAIT on killed: %m\n");
       RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
-	  error (0, 0, "waitid WNOWAIT on killed signal %d\n",
-		 info.si_signo);
+	  printf ("waitid WNOWAIT on killed signal %d\n", info.si_signo);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_KILLED)
 	{
-	  error (0, 0, "waitid WNOWAIT on killed code %d\n",
-		 info.si_code);
+	  printf ("waitid WNOWAIT on killed code %d\n", info.si_code);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGKILL)
 	{
-	  error (0, 0, "waitid WNOWAIT on killed status %d\n",
-		 info.si_status);
+	  printf ("waitid WNOWAIT on killed status %d\n", info.si_status);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
-	  error (0, 0, "waitid WNOWAIT on killed pid %d != %d\n",
-		 info.si_pid, pid);
+	  printf ("waitid WNOWAIT on killed pid %d != %d\n", info.si_pid, pid);
 	  RETURN (EXIT_FAILURE);
 	}
     }
@@ -470,34 +459,30 @@ do_test (int argc, char *argv[])
   switch (fail)
     {
     default:
-      error (0, 0, "waitid WNOHANG returned bogus value %d\n", fail);
+      printf ("waitid WNOHANG returned bogus value %d\n", fail);
       RETURN (EXIT_FAILURE);
     case -1:
-      error (0, errno, "waitid WNOHANG on killed");
+      printf ("waitid WNOHANG on killed: %m\n");
       RETURN (EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
-	  error (0, 0, "waitid WNOHANG on killed signal %d\n",
-		 info.si_signo);
+	  printf ("waitid WNOHANG on killed signal %d\n", info.si_signo);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_KILLED)
 	{
-	  error (0, 0, "waitid WNOHANG on killed code %d\n",
-		 info.si_code);
+	  printf ("waitid WNOHANG on killed code %d\n", info.si_code);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGKILL)
 	{
-	  error (0, 0, "waitid WNOHANG on killed status %d\n",
-		 info.si_status);
+	  printf ("waitid WNOHANG on killed status %d\n", info.si_status);
 	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
-	  error (0, 0, "waitid WNOHANG on killed pid %d != %d\n",
-		 info.si_pid, pid);
+	  printf ("waitid WNOHANG on killed pid %d != %d\n", info.si_pid, pid);
 	  RETURN (EXIT_FAILURE);
 	}
     }
@@ -507,13 +492,13 @@ do_test (int argc, char *argv[])
     {
       if (errno != ECHILD)
 	{
-	  error (0, errno, "waitid WEXITED on killed");
+	  printf ("waitid WEXITED on killed: %m\n");
 	  RETURN (EXIT_FAILURE);
 	}
     }
   else
     {
-      error (0, 0, "waitid WEXITED returned bogus value %d\n", fail);
+      printf ("waitid WEXITED returned bogus value %d\n", fail);
       RETURN (EXIT_FAILURE);
     }
 

@@ -576,7 +576,7 @@ re_string_reconstruct (pstr, idx, eflags)
      int idx, eflags;
 {
   int offset = idx - pstr->raw_mbs_idx;
-  if (offset < 0)
+  if (BE (offset < 0, 0))
     {
       /* Reset buffer.  */
 #ifdef RE_ENABLE_I18N
@@ -596,10 +596,10 @@ re_string_reconstruct (pstr, idx, eflags)
       offset = idx;
     }
 
-  if (offset != 0)
+  if (BE (offset != 0, 1))
     {
       /* Are the characters which are already checked remain?  */
-      if (offset < pstr->valid_raw_len
+      if (BE (offset < pstr->valid_raw_len, 1)
 #ifdef RE_ENABLE_I18N
 	  /* Handling this would enlarge the code too much.
 	     Accept a slowdown in that case.  */
@@ -614,7 +614,7 @@ re_string_reconstruct (pstr, idx, eflags)
 	    memmove (pstr->wcs, pstr->wcs + offset,
 		     (pstr->valid_len - offset) * sizeof (wint_t));
 #endif /* RE_ENABLE_I18N */
-	  if (pstr->mbs_allocated)
+	  if (BE (pstr->mbs_allocated, 0))
 	    memmove (pstr->mbs, pstr->mbs + offset,
 		     pstr->valid_len - offset);
 	  pstr->valid_len -= offset;
@@ -711,7 +711,7 @@ re_string_reconstruct (pstr, idx, eflags)
 				      ? CONTEXT_NEWLINE : 0));
 	    }
 	}
-      if (!pstr->mbs_allocated)
+      if (!BE (pstr->mbs_allocated, 0))
 	pstr->mbs += offset;
     }
   pstr->raw_mbs_idx = idx;
@@ -733,16 +733,17 @@ re_string_reconstruct (pstr, idx, eflags)
     }
   else
 #endif /* RE_ENABLE_I18N */
+  if (BE (pstr->mbs_allocated, 0))
     {
       if (pstr->icase)
 	build_upper_buffer (pstr);
       else if (pstr->trans != NULL)
 	re_string_translate_buffer (pstr);
-      else
-	pstr->valid_len = pstr->len;
     }
-  pstr->cur_idx = 0;
+  else
+    pstr->valid_len = pstr->len;
 
+  pstr->cur_idx = 0;
   return REG_NOERROR;
 }
 
@@ -840,16 +841,13 @@ re_string_context_at (input, idx, eflags)
      int idx, eflags;
 {
   int c;
-  if (idx < 0 || idx == input->len)
-    {
-      if (idx < 0)
-	/* In this case, we use the value stored in input->tip_context,
-	   since we can't know the character in input->mbs[-1] here.  */
-	return input->tip_context;
-      else /* (idx == input->len) */
-	return ((eflags & REG_NOTEOL) ? CONTEXT_ENDBUF
-		: CONTEXT_NEWLINE | CONTEXT_ENDBUF);
-    }
+  if (BE (idx < 0, 0))
+    /* In this case, we use the value stored in input->tip_context,
+       since we can't know the character in input->mbs[-1] here.  */
+    return input->tip_context;
+  if (BE (idx == input->len, 0))
+    return ((eflags & REG_NOTEOL) ? CONTEXT_ENDBUF
+	    : CONTEXT_NEWLINE | CONTEXT_ENDBUF);
 #ifdef RE_ENABLE_I18N
   if (input->mb_cur_max > 1)
     {

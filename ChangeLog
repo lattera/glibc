@@ -1,11 +1,31 @@
+2004-11-09  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (transit_state): Remove the check for
+	out-of-bounds buffers.
+	(check_matching): Check here for out-of-bounds buffers.
+	(re_search_internal): Store into match_kind a set of bits
+	indicating which incantation of fastmap scanning must be
+	used.  Use a switch statement instead of multiple ifs.
+	Exit the final "for (;;)" with goto free_return unless
+	the match succeeded, thus simplifying some conditionals.
+
+	* posix/regex_internal.c (re_string_reconstruct,
+	re_string_context_at): Add several branch predictions for
+	case-sensitive matching and no transition table being used.
+
+2004-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-waitid.c: Don't use error to print error message, they
+	won't end up in the .out file.
+
 2004-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd-client.h (libc_locked_map_ptr): Add new first
 	parameter, used as class for definition.
 	* nscd/nscd_getpw_r.c: Adjust for libc_locked_map_ptr change.
 	(pw_map_free): Ensure no crash after memory is freed.
-	* nscd/nscd_getgr.c: Likewise.  Make map externally visible.
-	* nscd/nscd_gethst.c: Likewise.
+	* nscd/nscd_getgr_r.c: Likewise.  Make map externally visible.
+	* nscd/nscd_gethst_r.c: Likewise.
 	* nscd/nscd_getai.c: Use map from nscd_gethost.c.
 	* nscd/nscd_initgroups.c: Use map from nscd_getgr.c.
 
