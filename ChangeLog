@@ -1,3 +1,44 @@
+1997-06-04 05:09  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/argp-help.c (_help): Use uparams.usage_indent instead of
+	the USAGE_INDENT macro.
+
+	* manual/summary.awk: Strip trailing commas from node-names.
+
+	* manual/.cvsignore: Ignore chapters-incl[12] rather than
+	chapters-incl.
+
+	* manual/Makefile (%.c.texi): Deal with multiple @-commands on a
+	single line.
+
+	* manual/string.texi (Argz Functions, Envz Functions): Add magic
+	comments for generating summary.texi.
+
+1997-06-02 22:18  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* manual/argp.texi: New file.
+	* manual/examples/argp-ex1.c, manual/examples/argp-ex2.c,
+	manual/examples/argp-ex3.c, manual/examples/argp-ex4.c: New files.
+	* manual/Makefile [chapters] (chapters-incl1): New rule & include.
+	[chapters-incl1] (chapters-incl2): New rule & include.
+	(chapters-incl): Set based on $(chapters-incl1) & $(chapters-incl2).
+	* manual/maint.texi (Contributors): Give myself credit.
+
+1997-06-01 15:01  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* manual/getopt.texi: New file.
+	* manual/startup.texi: Mention argp_parse in places that
+	previously mentioned only getopt.
+	Include getopt.texi (now containing all the getopt nodes that used
+	to be here) and argp.texi.
+	(Program Arguments): Move parsing bits into the new Parsing
+	Program Arguments node.
+	(Parsing Program Arguments): New node.
+	(Parsing Options, Example of Getopt, Long Options, Long Option
+	Example): Nodes removed.
+	* manual/libc.texinfo: (Program Arguments): Menu updated.
+	(Parsing Program Arguments): New menu.
+
 1997-06-04 20:57  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/string.texi: Add comments to discourage use of index and

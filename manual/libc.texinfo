@@ -745,11 +745,14 @@ Process Startup and Termination
 Program Arguments
 
 * Argument Syntax::             By convention, options start with a hyphen.
-* Parsing Options::             The @code{getopt} function.
-* Example of Getopt::           An example of parsing options with @code{getopt}.
-* Long Options::                GNU utilities should accept long-named options.
-                                 Here is how to do that.
-* Long Option Example::         An example of using @code{getopt_long}.
+* Parsing Program Arguments::   Ways to parse program options and arguments.
+
+Parsing Program Arguments
+
+* Getopt::                      Parsing program options using @code{getopt}.
+* Argp::                        Parsing program options using @code{argp_parse}.
+* Suboptions::                  Some programs need more detailed options.
+* Suboptions Example::          This shows how it could be done for @code{mount}.
 
 Environment Variables
 

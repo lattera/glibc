@@ -64,12 +64,6 @@ is this null pointer.
 For the command @samp{cat foo bar}, @var{argc} is 3 and @var{argv} has
 three elements, @code{"cat"}, @code{"foo"} and @code{"bar"}.
 
-If the syntax for the command line arguments to your program is simple
-enough, you can simply pick the arguments off from @var{argv} by hand.
-But unless your program takes a fixed number of arguments, or all of the
-arguments are interpreted in the same way (as file names, for example),
-you are usually better off using @code{getopt} to do the parsing.
-
 In Unix systems you can define @code{main} a third way, using three arguments:
 
 @smallexample
@@ -84,13 +78,7 @@ allow this three-argument form, so to be portable it is best to write
 
 @menu
 * Argument Syntax::             By convention, options start with a hyphen.
-* Parsing Options::             The @code{getopt} function.
-* Example of Getopt::           An example of parsing options with @code{getopt}.
-* Long Options::                GNU suggests utilities accept long-named options.
-			   Here is how to do that.
-* Long Option Example::         An example of using @code{getopt_long}.
-* Suboptions::                  Some programs need more detailed options.
-* Suboptions Example::          This shows how it could be done for @code{mount}.
+* Parsing Program Arguments::   Ways to parse program options and arguments.
 @end menu
 
 @node Argument Syntax
@@ -100,7 +88,8 @@ allow this three-argument form, so to be portable it is best to write
 @cindex command argument syntax
 
 POSIX recommends these conventions for command line arguments.
-@code{getopt} (@pxref{Parsing Options}) makes it easy to implement them.
+@code{getopt} (@pxref{Getopt}) and @code{argp_parse} (@pxref{Argp}) make
+it easy to implement them.
 
 @itemize @bullet
 @item
@@ -127,14 +116,14 @@ other words, the whitespace separating them is optional.)  Thus,
 @item
 Options typically precede other non-option arguments.
 
-The implementation of @code{getopt} in the GNU C library normally makes
-it appear as if all the option arguments were specified before all the
-non-option arguments for the purposes of parsing, even if the user of
-your program intermixed option and non-option arguments.  It does this
-by reordering the elements of the @var{argv} array.  This behavior is
-nonstandard; if you want to suppress it, define the
-@code{_POSIX_OPTION_ORDER} environment variable.  @xref{Standard
-Environment}.
+The implementations of @code{getopt} and @code{argp_parse} in the GNU C
+library normally make it appear as if all the option arguments were
+specified before all the non-option arguments for the purposes of
+parsing, even if the user of your program intermixed option and
+non-option arguments.  They do this by reordering the elements of the
+@var{argv} array.  This behavior is nonstandard; if you want to suppress
+it, define the @code{_POSIX_OPTION_ORDER} environment variable.
+@xref{Standard Environment}.
 
 @item
 The argument @samp{--} terminates all options; any following arguments
@@ -164,255 +153,41 @@ accept an argument that is itself optional.
 Eventually, the GNU system will provide completion for long option names
 in the shell.
 
-@node Parsing Options
-@subsection Parsing Program Options
+@node Parsing Program Arguments
+@subsection Parsing Program Arguments
+
 @cindex program arguments, parsing
 @cindex command arguments, parsing
 @cindex parsing program arguments
+If the syntax for the command line arguments to your program is simple
+enough, you can simply pick the arguments off from @var{argv} by hand.
+But unless your program takes a fixed number of arguments, or all of the
+arguments are interpreted in the same way (as file names, for example),
+you are usually better off using @code{getopt} (@pxref{Getopt}) or
+@code{argp_parse} (@pxref{Argp}) to do the parsing.
 
-Here are the details about how to call the @code{getopt} function.  To
-use this facility, your program must include the header file
-@file{unistd.h}.
-@pindex unistd.h
+@code{getopt} is more standard (the short-option only version of it is a
+part of the POSIX standard), but using @code{argp_parse} is often
+easier, both for very simple and very complex option structures, because
+it does more of the dirty work for you.
 
-@comment unistd.h
-@comment POSIX.2
-@deftypevar int opterr
-If the value of this variable is nonzero, then @code{getopt} prints an
-error message to the standard error stream if it encounters an unknown
-option character or an option with a missing required argument.  This is
-the default behavior.  If you set this variable to zero, @code{getopt}
-does not print any messages, but it still returns the character @code{?}
-to indicate an error.
-@end deftypevar
+@menu
+* Getopt::                      Parsing program options using @code{getopt}.
+* Argp::                        Parsing program options using @code{argp_parse}.
+* Suboptions::                  Some programs need more detailed options.
+* Suboptions Example::          This shows how it could be done for @code{mount}.
+@end menu
 
-@comment unistd.h
-@comment POSIX.2
-@deftypevar int optopt
-When @code{getopt} encounters an unknown option character or an option
-with a missing required argument, it stores that option character in
-this variable.  You can use this for providing your own diagnostic
-messages.
-@end deftypevar
+@c Getopt and argp start at the @section level so that there's
+@c enough room for their internal hierarchy (mostly a problem with
+@c argp).         -Miles
 
-@comment unistd.h
-@comment POSIX.2
-@deftypevar int optind
-This variable is set by @code{getopt} to the index of the next element
-of the @var{argv} array to be processed.  Once @code{getopt} has found
-all of the option arguments, you can use this variable to determine
-where the remaining non-option arguments begin.  The initial value of
-this variable is @code{1}.
-@end deftypevar
+@include getopt.texi
+@include argp.texi
 
-@comment unistd.h
-@comment POSIX.2
-@deftypevar {char *} optarg
-This variable is set by @code{getopt} to point at the value of the
-option argument, for those options that accept arguments.
-@end deftypevar
-
-@comment unistd.h
-@comment POSIX.2
-@deftypefun int getopt (int @var{argc}, char **@var{argv}, const char *@var{options})
-The @code{getopt} function gets the next option argument from the
-argument list specified by the @var{argv} and @var{argc} arguments.
-Normally these values come directly from the arguments received by
-@code{main}.
-
-The @var{options} argument is a string that specifies the option
-characters that are valid for this program.  An option character in this
-string can be followed by a colon (@samp{:}) to indicate that it takes a
-required argument.
-
-If the @var{options} argument string begins with a hyphen (@samp{-}), this
-is treated specially.  It permits arguments that are not options to be
-returned as if they were associated with option character @samp{\0}.
-
-The @code{getopt} function returns the option character for the next
-command line option.  When no more option arguments are available, it
-returns @code{-1}.  There may still be more non-option arguments; you
-must compare the external variable @code{optind} against the @var{argc}
-parameter to check this.
-
-If the option has an argument, @code{getopt} returns the argument by
-storing it in the variable @var{optarg}.  You don't ordinarily need to
-copy the @code{optarg} string, since it is a pointer into the original
-@var{argv} array, not into a static area that might be overwritten.
-
-If @code{getopt} finds an option character in @var{argv} that was not
-included in @var{options}, or a missing option argument, it returns
-@samp{?} and sets the external variable @code{optopt} to the actual
-option character.  If the first character of @var{options} is a colon
-(@samp{:}), then @code{getopt} returns @samp{:} instead of @samp{?} to
-indicate a missing option argument.  In addition, if the external
-variable @code{opterr} is nonzero (which is the default), @code{getopt}
-prints an error message.
-@end deftypefun
-
-@node Example of Getopt
-@subsection Example of Parsing Arguments with @code{getopt}
-
-Here is an example showing how @code{getopt} is typically used.  The
-key points to notice are:
-
-@itemize @bullet
-@item
-Normally, @code{getopt} is called in a loop.  When @code{getopt} returns
-@code{-1}, indicating no more options are present, the loop terminates.
-
-@item
-A @code{switch} statement is used to dispatch on the return value from
-@code{getopt}.  In typical use, each case just sets a variable that
-is used later in the program.
-
-@item
-A second loop is used to process the remaining non-option arguments.
-@end itemize
-
-@smallexample
-@include testopt.c.texi
-@end smallexample
-
-Here are some examples showing what this program prints with different
-combinations of arguments:
-
-@smallexample
-% testopt
-aflag = 0, bflag = 0, cvalue = (null)
-
-% testopt -a -b
-aflag = 1, bflag = 1, cvalue = (null)
-
-% testopt -ab
-aflag = 1, bflag = 1, cvalue = (null)
-
-% testopt -c foo
-aflag = 0, bflag = 0, cvalue = foo
-
-% testopt -cfoo
-aflag = 0, bflag = 0, cvalue = foo
-
-% testopt arg1
-aflag = 0, bflag = 0, cvalue = (null)
-Non-option argument arg1
-
-% testopt -a arg1
-aflag = 1, bflag = 0, cvalue = (null)
-Non-option argument arg1
-
-% testopt -c foo arg1
-aflag = 0, bflag = 0, cvalue = foo
-Non-option argument arg1
-
-% testopt -a -- -b
-aflag = 1, bflag = 0, cvalue = (null)
-Non-option argument -b
-
-% testopt -a -
-aflag = 1, bflag = 0, cvalue = (null)
-Non-option argument -
-@end smallexample
-
-@node Long Options
-@subsection Parsing Long Options
-
-To accept GNU-style long options as well as single-character options,
-use @code{getopt_long} instead of @code{getopt}.  This function is
-declared in @file{getopt.h}, not @file{unistd.h}.  You should make every
-program accept long options if it uses any options, for this takes
-little extra work and helps beginners remember how to use the program.
-
-@comment getopt.h
-@comment GNU
-@deftp {Data Type} {struct option}
-This structure describes a single long option name for the sake of
-@code{getopt_long}.  The argument @var{longopts} must be an array of
-these structures, one for each long option.  Terminate the array with an
-element containing all zeros.
-
-The @code{struct option} structure has these fields:
-
-@table @code
-@item const char *name
-This field is the name of the option.  It is a string.
-
-@item int has_arg
-This field says whether the option takes an argument.  It is an integer,
-and there are three legitimate values: @w{@code{no_argument}},
-@code{required_argument} and @code{optional_argument}.
-
-@item int *flag
-@itemx int val
-These fields control how to report or act on the option when it occurs.
-
-If @code{flag} is a null pointer, then the @code{val} is a value which
-identifies this option.  Often these values are chosen to uniquely
-identify particular long options.
-
-If @code{flag} is not a null pointer, it should be the address of an
-@code{int} variable which is the flag for this option.  The value in
-@code{val} is the value to store in the flag to indicate that the option
-was seen.
-@end table
-@end deftp
-
-@comment getopt.h
-@comment GNU
-@deftypefun int getopt_long (int @var{argc}, char **@var{argv}, const char *@var{shortopts}, struct option *@var{longopts}, int *@var{indexptr})
-Decode options from the vector @var{argv} (whose length is @var{argc}).
-The argument @var{shortopts} describes the short options to accept, just as
-it does in @code{getopt}.  The argument @var{longopts} describes the long
-options to accept (see above).
-
-When @code{getopt_long} encounters a short option, it does the same
-thing that @code{getopt} would do: it returns the character code for the
-option, and stores the options argument (if it has one) in @code{optarg}.
-
-When @code{getopt_long} encounters a long option, it takes actions based
-on the @code{flag} and @code{val} fields of the definition of that
-option.
-
-If @code{flag} is a null pointer, then @code{getopt_long} returns the
-contents of @code{val} to indicate which option it found.  You should
-arrange distinct values in the @code{val} field for options with
-different meanings, so you can decode these values after
-@code{getopt_long} returns.  If the long option is equivalent to a short
-option, you can use the short option's character code in @code{val}.
-
-If @code{flag} is not a null pointer, that means this option should just
-set a flag in the program.  The flag is a variable of type @code{int}
-that you define.  Put the address of the flag in the @code{flag} field.
-Put in the @code{val} field the value you would like this option to
-store in the flag.  In this case, @code{getopt_long} returns @code{0}.
-
-For any long option, @code{getopt_long} tells you the index in the array
-@var{longopts} of the options definition, by storing it into
-@code{*@var{indexptr}}.  You can get the name of the option with
-@code{@var{longopts}[*@var{indexptr}].name}.  So you can distinguish among
-long options either by the values in their @code{val} fields or by their
-indices.  You can also distinguish in this way among long options that
-set flags.
-
-When a long option has an argument, @code{getopt_long} puts the argument
-value in the variable @code{optarg} before returning.  When the option
-has no argument, the value in @code{optarg} is a null pointer.  This is
-how you can tell whether an optional argument was supplied.
-
-When @code{getopt_long} has no more options to handle, it returns
-@code{-1}, and leaves in the variable @code{optind} the index in
-@var{argv} of the next remaining argument.
-@end deftypefun
-
-@node Long Option Example
-@subsection Example of Parsing Long Options
-
-@smallexample
-@include longopt.c.texi
-@end smallexample
-
-@node Suboptions
-@subsection Parsing of Suboptions
+@node Suboptions, Suboptions Example, Argp, Parsing Program Arguments
+@c This is a @section so that it's at the same level as getopt and argp
+@section Parsing of Suboptions
 
 Having a single level of options is sometimes not enough.  There might
 be too many options which have to be available or a set of options is
@@ -452,7 +227,7 @@ possible value is returned in @var{valuep} and the return value of the
 function is @samp{-1}.
 @end deftypefun
 
-@node Suboptions Example
+@node Suboptions Example, , Suboptions, Parsing Program Arguments
 @subsection Parsing of Suboptions Example
 
 The code which might appear in the @code{mount}(8) program is a perfect
@@ -699,7 +474,8 @@ This specifies what locale to use for formatting date/time values.
 @cindex _POSIX_OPTION_ORDER environment variable.
 
 If this environment variable is defined, it suppresses the usual
-reordering of command line arguments by @code{getopt}.  @xref{Argument Syntax}.
+reordering of command line arguments by @code{getopt} and
+@code{argp_parse}.  @xref{Argument Syntax}.
 
 @c !!! GNU also has COREFILE, CORESERVER, EXECSERVERS
 @end table

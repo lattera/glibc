@@ -8,5 +8,5 @@ glibc-*
 *.toc *.aux *.log
 *.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
 
-chapters chapters-incl summary.texi stamp-*
+chapters chapters-incl1 chapters-incl2 summary.texi stamp-*
 distinfo

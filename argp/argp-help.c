@@ -1499,7 +1499,7 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
       do
 	{
 	  int old_lm;
-	  int old_wm = __argp_fmtstream_set_wmargin (fs, USAGE_INDENT);
+	  int old_wm = __argp_fmtstream_set_wmargin (fs, uparams.usage_indent);
 	  char *levels = pattern_levels;
 
 	  __argp_fmtstream_printf (fs, "%s %s",
@@ -1508,7 +1508,7 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
 
 	  /* We set the lmargin as well as the wmargin, because hol_usage
 	     manually wraps options with newline to avoid annoying breaks.  */
-	  old_lm = __argp_fmtstream_set_lmargin (fs, USAGE_INDENT);
+	  old_lm = __argp_fmtstream_set_lmargin (fs, uparams.usage_indent);
 
 	  if (flags & ARGP_HELP_SHORT_USAGE)
 	    /* Just show where the options go.  */

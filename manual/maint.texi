@@ -902,6 +902,10 @@ David Mosberger-Tang contributed the port to Linux/Alpha
 (@code{alpha-@var{anything}-linux}).
 
 @item
+Miles Bader wrote the argp argument-parsing package, and the argz/envz
+interfaces.
+
+@item
 Stephen R. van den Berg contributed a highly-optimized @code{strstr} function.
 
 @item

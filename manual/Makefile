@@ -39,11 +39,20 @@ endif
 chapters: libc.texinfo
 	$(find-includes)
 ifdef chapters
--include chapters-incl
-chapters-incl: $(chapters)
+# @includes in chapter files
+-include chapters-incl1
+chapters-incl1: $(chapters)
 	$(find-includes)
-chapters-incl := $(filter-out summary.texi,$(chapters-incl))
+chapters-incl1 := $(filter-out summary.texi,$(chapters-incl1))
 endif
+ifdef chapters-incl1
+# @includes in files included by chapter files, if any
+-include chapters-incl2
+chapters-incl2: $(chapters-incl1)
+	$(find-includes)
+endif
+
+chapters-incl := $(chapters-incl1) $(chapters-incl2)
 
 define find-includes
 (echo '$(@F) :=' \\	;\
@@ -75,7 +84,7 @@ dir-add.texi: xtract-typefun.awk $(chapters)
 	sed -e 's,[{}],@&,g'				\
 	    -e 's,/\*\(@.*\)\*/,\1,g'			\
 	    -e 's,/\*  *,/* @r{,g' -e 's,  *\*/,} */,'	\
-	    -e 's/\(@[a-z][a-z]*\)@{\([^}]*\)@}/\1{\2}/'\
+	    -e 's/\(@[a-z][a-z]*\)@{\([^}]*\)@}/\1{\2}/g'\
 	    $< | expand > $@.new
 	mv -f $@.new $@
 
