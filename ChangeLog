@@ -1,3 +1,8 @@
+2004-10-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Versions: Things are still in flux, it
+	seems.  Undo last additions.
+
 2004-10-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/execvp.c (execvp): Also ignore ENODEV and ETIMEDOUT errno
