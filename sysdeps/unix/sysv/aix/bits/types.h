@@ -71,7 +71,7 @@ typedef int __pid_t;			/* Type of process identifications.  */
 typedef long int __ssize_t;		/* Type of a byte count, or error.  */
 typedef __u_long __rlim_t;		/* Type of resource counts.  */
 typedef __u_quad_t __rlim64_t;		/* Type of resource counts (LFS).  */
-typedef __u_long __id_t;		/* General type for ID.  */
+typedef unsigned int __id_t;		/* General type for ID.  */
 
 typedef struct
   {
@@ -82,7 +82,7 @@ typedef struct
 typedef long int __daddr_t;		/* The type of a disk address.  */
 typedef char *__caddr_t;
 typedef long int __time_t;
-typedef __u_long __useconds_t;
+typedef unsigned int __useconds_t;
 typedef int __suseconds_t;
 typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 
@@ -128,7 +128,7 @@ typedef int __t_scalar_t;
 typedef unsigned int __t_uscalar_t;
 
 /* Duplicates info from stdint.h but this is used in unistd.h.  */
-typedef int __intptr_t;
+typedef signed long __intptr_t;
 
 /* Duplicate info from sys/socket.h.  */
 typedef unsigned int __socklen_t;
