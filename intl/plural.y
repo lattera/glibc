@@ -1,6 +1,6 @@
 %{
 /* Expression parsing for plural form selection.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -235,7 +235,7 @@ yylex (YYSTYPE *lval, const char **pexp)
     case '0': case '1': case '2': case '3': case '4':
     case '5': case '6': case '7': case '8': case '9':
       {
-	unsigned long int n = exp[-1] - '0';
+	unsigned long int n = result - '0';
 	while (exp[0] >= '0' && exp[0] <= '9')
 	  {
 	    n *= 10;

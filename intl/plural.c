@@ -16,7 +16,7 @@
 #line 1 "plural.y"
 
 /* Expression parsing for plural form selection.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <stdarg.h>
 #include <stdlib.h>
 #include "gettext.h"
@@ -42,12 +46,12 @@
 #define YYLEX_PARAM	&((struct parse_args *) arg)->cp
 #define YYPARSE_PARAM	arg
 
-#line 32 "plural.y"
+#line 36 "plural.y"
 typedef union {
   unsigned long int num;
   struct expression *exp;
 } YYSTYPE;
-#line 37 "plural.y"
+#line 41 "plural.y"
 
 /* Prototypes for local functions.  */
 static struct expression *new_exp (enum operator op, int n, ...);
@@ -117,8 +121,8 @@ static const short yyrhs[] = {    19,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-    55,    61,    66,    71,    76,    81,    86,    91,    96,   101,
-   106,   111,   116,   122
+    59,    65,    70,    75,    80,    85,    90,    95,   100,   105,
+   110,   115,   120,   126
 };
 #endif
 
@@ -734,90 +738,90 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 56 "plural.y"
+#line 60 "plural.y"
 {
 	    ((struct parse_args *) arg)->res = yyvsp[0].exp;
 	  ;
     break;}
 case 2:
-#line 62 "plural.y"
+#line 66 "plural.y"
 {
 	    if ((yyval.exp = new_exp (qmop, 3, yyvsp[-4].exp, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 3:
-#line 67 "plural.y"
+#line 71 "plural.y"
 {
 	    if ((yyval.exp = new_exp (lor, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 4:
-#line 72 "plural.y"
+#line 76 "plural.y"
 {
 	    if ((yyval.exp = new_exp (land, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 5:
-#line 77 "plural.y"
+#line 81 "plural.y"
 {
 	    if ((yyval.exp = new_exp (equal, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 6:
-#line 82 "plural.y"
+#line 86 "plural.y"
 {
 	    if ((yyval.exp = new_exp (not_equal, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 7:
-#line 87 "plural.y"
+#line 91 "plural.y"
 {
 	    if ((yyval.exp = new_exp (plus, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 8:
-#line 92 "plural.y"
+#line 96 "plural.y"
 {
 	    if ((yyval.exp = new_exp (minus, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 9:
-#line 97 "plural.y"
+#line 101 "plural.y"
 {
 	    if ((yyval.exp = new_exp (mult, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 10:
-#line 102 "plural.y"
+#line 106 "plural.y"
 {
 	    if ((yyval.exp = new_exp (divide, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 11:
-#line 107 "plural.y"
+#line 111 "plural.y"
 {
 	    if ((yyval.exp = new_exp (module, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 12:
-#line 112 "plural.y"
+#line 116 "plural.y"
 {
 	    if ((yyval.exp = new_exp (var, 0)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 13:
-#line 117 "plural.y"
+#line 121 "plural.y"
 {
 	    if ((yyval.exp = new_exp (num, 0)) == NULL)
 	      YYABORT;
@@ -825,7 +829,7 @@ case 13:
 	  ;
     break;}
 case 14:
-#line 123 "plural.y"
+#line 127 "plural.y"
 {
 	    yyval.exp = yyvsp[-1].exp
 	  ;
@@ -1052,7 +1056,7 @@ yyerrhandle:
     }
   return 1;
 }
-#line 128 "plural.y"
+#line 132 "plural.y"
 
 
 static struct expression *
@@ -1156,9 +1160,10 @@ yylex (YYSTYPE *lval, const char **pexp)
   result = *exp++;
   switch (result)
     {
-    case '0' ... '9':
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
       {
-	unsigned long int n = exp[-1] - '0';
+	unsigned long int n = result - '0';
 	while (exp[0] >= '0' && exp[0] <= '9')
 	  {
 	    n *= 10;

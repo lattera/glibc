@@ -1,3 +1,7 @@
+2001-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/plural.y (yylex): Minimal improvement in number scanner.
+
 2000-07-31  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/plural.y: Include config.h. Needed to define 'inline' away for
