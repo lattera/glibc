@@ -126,6 +126,7 @@ please let me know.
 3.14.	The pow() inline function I get when including <math.h> is broken.
 	I get segmentation faults when I run the program.
 3.15.	The sys/sem.h file lacks the definition of `union semun'.
+3.16.	Why has <netinet/ip_fw.h> disappeared?
 
 4. Miscellaneous
 
@@ -1274,6 +1275,15 @@ fixes the problem.  I don't know about gcc 2.8 and 2.8.1.
 versions defined this but it was an error since it does not make much sense
 when thinking about it.  The standards describing the System V IPC functions
 define it this way and therefore programs must be adopted.
+
+
+3.16.	Why has <netinet/ip_fw.h> disappeared?
+
+{AJ} The corresponding Linux kernel data structures and constants are
+totally different in Linux 2.0 and Linux 2.1.  This situation has to be
+taken care in user programs using the firewall structures and therefore
+those programs (ipfw is AFAIK the only one) should deal with this problem
+themselves.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

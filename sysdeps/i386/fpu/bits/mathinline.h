@@ -565,6 +565,52 @@ __inline_mathcode3 (fma, __x, __y, __z, return (__x * __y) + __z)
 
 __inline_mathop(rint, "frndint")
 
+#define __lrint_code \
+  long int __lrintres;							      \
+  __asm__ __volatile__							      \
+    ("fistpl %0"							      \
+     : "=m" (__lrintres) : "t" (__x) : "st");				      \
+  return __lrintres
+__MATH_INLINE long int
+lrintf (float __x)
+{
+  __lrint_code;
+}
+__MATH_INLINE long int
+lrint (double __x)
+{
+  __lrint_code;
+}
+__MATH_INLINE long int
+lrintl (long double __x)
+{
+  __lrint_code;
+}
+#undef __lrint_code
+
+#define __llrint_code \
+  long long int __llrintres;						      \
+  __asm__ __volatile__							      \
+    ("fistpll %0"							      \
+     : "=m" (__llrintres) : "t" (__x) : "st");				      \
+  return __llrintres
+__MATH_INLINE long long int
+llrintf (float __x)
+{
+  __llrint_code;
+}
+__MATH_INLINE long long int
+llrint (double __x)
+{
+  __llrint_code;
+}
+__MATH_INLINE long long int
+llrintl (long double __x)
+{
+  __llrint_code;
+}
+#undef __llrint_code
+
 #endif
 
 
@@ -572,12 +618,13 @@ __inline_mathop(rint, "frndint")
 
 __inline_mathcode2 (drem, __x, __y, \
   register double __value;						      \
+  register int __clobbered;						      \
   __asm __volatile__							      \
     ("1:	fprem1\n\t"						      \
      "fstsw	%%ax\n\t"						      \
      "sahf\n\t"								      \
      "jp	1b"							      \
-     : "=t" (__value) : "0" (__x), "u" (__y) : "ax", "cc");		      \
+     : "=t" (__value), "=&a" (__clobbered) : "0" (__x), "u" (__y) : "cc");    \
   return __value)
 
 

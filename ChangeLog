@@ -1,3 +1,8 @@
+1998-11-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Add optimizations for lrint
+	and llrint.
+
 1998-11-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/netinet/ip_fw.h: Removed.  There are too
