@@ -1,4 +1,4 @@
-1998-06-25    Andi Kleen <ak@muc.de>
+1998-06-25  Andi Kleen <ak@muc.de>
 
 	* inet/rcmd.c (rcmd): Change to use __poll instead of select.
 	* resolv/res_send.c (res_send): Likewise.
@@ -33,8 +33,7 @@
 
 1998-06-26  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/i386/fpu/bits/mathinline.h (__finite): Use alias-safe
-	code.
+	* sysdeps/i386/fpu/bits/mathinline.h (__finite): Use alias-safe code.
 
 1998-06-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
