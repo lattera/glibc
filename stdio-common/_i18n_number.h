@@ -27,13 +27,9 @@ static CHAR_T *
 _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
 {
 #ifdef COMPILE_WPRINTF
-  wint_t wdecimal = L'\0';
-  wint_t wthousands = L'\0';
 # define decimal NULL
 # define thousands NULL
 #else
-  wint_t wdecimal = L'\0';
-  wint_t wthousands = L'\0';
   char decimal[MB_LEN_MAX];
   char thousands[MB_LEN_MAX];
 #endif
@@ -42,12 +38,12 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
      to their equivalent in locale. This is defined for locales which
      use extra decimal point and thousands-sep.  */
   wctrans_t map = __wctrans ("to_outpunct");
-  if (map != NULL)
-    {
-      wdecimal = __towctrans (L'.', map);
-      wthousands = __towctrans (L',', map);
+  wint_t wdecimal = __towctrans (L'.', map);
+  wint_t wthousands = __towctrans (L',', map);
 
 #ifndef COMPILE_WPRINTF
+  if (__builtin_expect (map != NULL, 0))
+    {
       mbstate_t state;
       memset (&state, '\0', sizeof (state));
 
@@ -58,8 +54,8 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
 
       if (__wcrtomb (thousands, wthousands, &state) == (size_t) -1)
 	memcpy (thousands, ",", 2);
-#endif
     }
+#endif
 
   /* Copy existing string so that nothing gets overwritten.  */
   CHAR_T *src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
