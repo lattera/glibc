@@ -1,5 +1,11 @@
 2000-02-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Add definition of
+	_fpreg and _fpstate and use it to define fpregset_t.
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h (prgregset_t): Define
+	using elf_gregset_t.
+	(prfpregset_t): Define using elf_fpregset_t.
+
 	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Make fpregset_t
 	definition compatible with definition in 2.1.2 and before.
 	(struct ucontext): Use fpregset_t.

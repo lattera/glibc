@@ -26,6 +26,10 @@
    included in <signal.h>.  */
 #include <bits/sigcontext.h>
 
+/* We also need the definition of the userlevel data representation
+   for the register contexts.  */
+#include <sys/user.h>
+
 
 /* Type for general register.  */
 typedef int greg_t;
@@ -81,8 +85,28 @@ enum
 };
 #endif
 
+/* Definitions taken from the kernel headers.  */
+struct _fpreg
+{
+  unsigned short int significand[4];
+  unsigned short int exponent;
+};
+
+struct _fpstate
+{
+  unsigned long int cw;
+  unsigned long int sw;
+  unsigned long int tag;
+  unsigned long int ipoff;
+  unsigned long int cssel;
+  unsigned long int dataoff;
+  unsigned long int datasel;
+  struct _fpreg _st[8];
+  unsigned long int status;
+};
+
 /* Structure to describe FPU registers.  */
-typedef struct user_fpregs_struct fpregset_t;
+typedef struct _fpstate *fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
@@ -103,7 +127,7 @@ typedef struct ucontext
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     __sigset_t uc_sigmask;
-    fpregset_t __fpregs_mem;
+    struct _fpstate __fpregs_mem;
   } ucontext_t;
 
 #endif /* sys/ucontext.h */
