@@ -1,3 +1,20 @@
+2003-09-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h: New.
+	(__SSIZE_T_TYPE): Define to __SWORD_TYPE for gcc 2.95.x and
+	__SLONGWORD_TYPE otherwise.
+
+2003-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/Makefile (CFLAGS-ftw.c): Add -fexceptions.
+	(CFLAGS-ftw64.c): Likewise.
+
+2003-09-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/Makefile (CFLAGS-nscd_getpw_r.c): Add -fexceptions.
+	(CFLAGS-nscd_getgr_r.c): Likewise.
+	(CFLAGS-nscd_gethst_r.c): Likewise.
+
 2003-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/if_index.c: Use only non-cancelable

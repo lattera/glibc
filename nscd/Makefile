@@ -53,6 +53,10 @@ distribute := nscd.h nscd-client.h dbg_log.h \
 
 include ../Rules
 
+CFLAGS-nscd_getpw_r.c = -fexceptions
+CFLAGS-nscd_getgr_r.c = -fexceptions
+CFLAGS-nscd_gethst_r.c = -fexceptions
+
 # This makes sure -DNOT_IN_libc is passed for all these modules.
 cpp-srcs-left := $(nscd-modules:=.c)
 lib := nonlib
