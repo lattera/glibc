@@ -50,8 +50,7 @@ iterate_thread_list (const td_thragent_t *ta, td_thr_iter_f *callback,
 
   while (list.next != head)
     {
-      psaddr_t addr = ((psaddr_t) list.next
-		       - offsetof (struct pthread, list));
+      psaddr_t addr = ((psaddr_t) list.next - offsetof (struct pthread, list));
 
       int schedpolicy;
       if (ps_pdread (ta->ph, &((struct pthread *) addr)->schedpolicy,
