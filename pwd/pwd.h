@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995-2001,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ __BEGIN_DECLS
 #define __need_size_t
 #include <stddef.h>
 
-#ifdef __USE_XOPEN
+#if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are
    available here.  */
 # ifndef __gid_t_defined

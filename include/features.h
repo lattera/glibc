@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1995-2002, 2003   Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,8 @@
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993;
-			if >=199506L, add IEEE Std 1003.1c-1995
+			if >=199506L, add IEEE Std 1003.1c-1995;
+			if >=200112L, all of IEEE 1003.1-2004
    _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
 			Single Unix conformance is wanted, to 600 for the
 			upcoming sixth revision.

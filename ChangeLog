@@ -1,3 +1,22 @@
+2004-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/bits/posix1_lim.h: Fix values for _POSIX_CHILD_MAX and
+	_POSIX_OPEN_MAX.  Add _POSIX_HOST_NAME_MAX, _POSIX_SYMLINK_MAX,
+	_POSIX_SYMLOOP_MAX, and _POSIX_RE_DUP_MAX.
+	Reported by Andrew Josey.
+
+	* include/features.h: Document _POSIX_C_SOURCE == 200112L.
+
+	* grp/grp.h: Define gid_t if __USE_XOPEN2K is defined.
+	* pwd/pwd.h: Define uid_t and gid_t if __USE_XOPEN2K is defined.
+	* io/sys/stat.h: Define dev_t, gid_t, ino_t, mode_t, nlink_t,
+	off_t, time_t, and uid_t if __USE_XOPEN2K is defined.
+	* signal/signal.h: Define pid_t if __USE_XOPEN2K is defined.
+	* posix/unistd.h: Define gid_t, off_t, pid_t, uid_t, and
+	useconds_t if __USE_XOPEN2K is defined.
+	* io/utime.h: Define time_t if __USE_XOPEN2K is defined.
+	* libio/stdio.h: Declare fseeko and ftello if __USE_XOPEN2K is defined.
+
 2004-07-19  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_compat/compat-initgroups.c (getgrent_next_nss): Don't

@@ -28,7 +28,7 @@
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
 #if defined __USE_XOPEN || defined __USE_MISC
-# ifdef __USE_XOPEN
+# if defined __USE_XOPEN || defined __USE_XOPEN2K
 #  define __need_time_t
 # endif
 # ifdef __USE_MISC
@@ -37,7 +37,7 @@
 # include <time.h>		/* For time_t resp. timespec.  */
 #endif
 
-#ifdef __USE_XOPEN
+#if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are
    available here.  */
 # ifndef __dev_t_defined

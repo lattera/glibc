@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991,1994-2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1991,1994-2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -658,7 +658,7 @@ __END_NAMESPACE_STD
    file offset.  `long int' is not the right type.  These definitions
    are originally defined in the Large File Support API.  */
 
-#ifdef __USE_LARGEFILE
+#if defined __USE_LARGEFILE || defined __USE_XOPEN2K
 # ifndef __USE_FILE_OFFSET64
 /* Seek to a certain position on STREAM.
 
