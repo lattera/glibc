@@ -46,8 +46,6 @@ libdl-map	:= libdl.map
 
 before-compile = $(objpfx)trusted-dirs.h $(objpfx)rtldtbl.h
 
-# We need GNU awk for the genrtldtbl.awk script.
-GAWK = gawk
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -149,7 +147,7 @@ $(objpfx)trusted-dirs.h: Makefile
 	mv -f $@T $@
 $(objpfx)rtldtbl.h: Makefile
 	$(make-target-directory)
-	echo "$(default-rpath)" | $(GAWK) -f genrtldtbl.awk > $@T
+	echo "$(default-rpath)" | awk -f genrtldtbl.awk > $@T
 	mv -f $@T $@
 CPPFLAGS-dl-load.c = -I$(objdir)/$(subdir)
 CFLAGS-dl-load.c += -Wno-uninitialized

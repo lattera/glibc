@@ -166,7 +166,7 @@ __printf_fphex (FILE *fp,
 	  if (__isinfl (fpnum.ldbl.d))
 	    special = isupper (info->spec) ? "INF" : "inf";
 
-	  negative = fpnum.ldbl.d < 0;
+	  negative = signbit (fpnum.ldbl.d);
 	}
     }
   else
@@ -184,7 +184,7 @@ __printf_fphex (FILE *fp,
 	  if (__isinf (fpnum.dbl.d))
 	    special = isupper (info->spec) ? "INF" : "inf";
 
-	  negative = fpnum.dbl.d < 0;
+	  negative = signbit (fpnum.dbl.d);
 	}
     }
 

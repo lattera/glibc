@@ -434,6 +434,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    flags |= LONGDBL;
 	    break;
 	  case 'a':
+	    /* The `a' is used as a flag only if followed by `s', `S' or
+	       `['.  */
+	    if (*f != 's' && *f != 'S' && *f != '[')
+	      {
+		--f;
+		break;
+	      }
 	    if (flags & TYPEMOD)
 	      /* Signal illegal format element.  */
 	      conv_error ();
@@ -917,6 +924,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'f':
 	case 'g':
 	case 'G':
+	case 'a':
 	case 'A':
 	  c = inchar ();
 	  if (c == EOF)

@@ -70,11 +70,6 @@ __remquof (float x, float y, int *quo)
       x -= 2 * y;
       cquo += 2;
     }
-  if (x >= y)
-    {
-      x -= y;
-      ++cquo;
-    }
 
   if (hy < 0x01000000)
     {

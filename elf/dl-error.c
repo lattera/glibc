@@ -80,7 +80,7 @@ _dl_signal_error (int errcode,
       char buffer[1024];
       _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
 			": error in loading shared libraries: ",
-			objname ?: "", objname ? ": " : "",
+			objname ?: "", objname && *objname ? ": " : "",
 			errstring, errcode ? ": " : "",
 			(errcode
 			 ? _strerror_internal (errcode, buffer, sizeof buffer)

@@ -19,7 +19,7 @@
 #
 #	Sub-makefile for libdb.
 #
-#	The code is lifted straight from the db 2.3.10 distribution
+#	The code is lifted straight from the db 2.3.12 distribution
 #	with minimal changes.
 #
 
@@ -34,7 +34,7 @@ headers = db.h db_185.h
 
 distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
 	     db/db.src db185/db185_int.h hash/hash.src log/log.src \
-	     txn/txn.src \
+	     txn/txn.src README \
 	     $(addprefix include/,btree.h btree_auto.h btree_ext.h \
 				  clib_ext.h common_ext.h cxx_int.h \
 				  db.h.src db_185.h.src db_am.h db_auto.h \
@@ -43,10 +43,11 @@ distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
 				  hash.h hash_auto.h hash_ext.h lock.h \
 				  lock_ext.h log.h log_auto.h log_ext.h \
 				  mp.h mp_ext.h mutex_ext.h os_ext.h queue.h \
-				  shqueue.h txn.h txn_auto.h txn_ext.h) \
+				  shqueue.h txn.h txn_auto.h txn_ext.h \
+				  os_func.h) \
 	     $(addprefix mutex/,x86.gcc uts4.cc.s sparc.gcc parisc.hp \
 				parisc.gcc alpha.gcc alpha.dec README \
-				68020.gcc)
+				68020.gcc tsl_parisc.s)
 
 vpath %.c $(subdir-dirs)
 

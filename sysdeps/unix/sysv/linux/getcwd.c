@@ -69,19 +69,20 @@ __getcwd (char *buf, size_t size)
   n = __readlink ("/proc/self/cwd", path, alloc_size - 1);
   if (n != -1)
     {
-      if (n >= alloc_size - 1)
+      if (path[0] == '/')
 	{
-	  if (size > 0)
-	    return NULL;
+	  if (n >= alloc_size - 1)
+	    {
+	      if (buf == NULL)
+		free (path);
+	      return NULL;
+	    }
+
+	  path[n] = '\0';
+	  return buf ?: (char *) realloc (path, (size_t) n + 1);
 	}
       else
-	if (path[0] == '/')
-	  {
-	    path[n] = '\0';
-	    return buf ?: (char *) realloc (path, (size_t) n + 1);
-	  }
-	else
-	  no_new_dcache = 1;
+	no_new_dcache = 1;
     }
 
   /* Set to no_new_dcache only if error indicates that proc doesn't exist.  */

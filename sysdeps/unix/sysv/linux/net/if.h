@@ -147,6 +147,7 @@ struct ifconf
 #define	ifc_buf	ifc_ifcu.ifcu_buf	/* Buffer address.  */
 #define	ifc_req	ifc_ifcu.ifcu_req	/* Array of structures.  */
 
+__BEGIN_DECLS
 
 /* Convert an interface name to an index, and vice versa.  */
 
@@ -166,5 +167,7 @@ extern struct if_nameindex *if_nameindex __P ((void));
 /* Free the data returned from if_nameindex.  */
 
 extern void if_freenameindex __P ((struct if_nameindex *__ptr));
+
+__END_DECLS
 
 #endif /* net/if.h */

@@ -98,17 +98,22 @@ _IO_proc_open (fp, command, mode)
     return NULL;
   if (_IO_pipe (pipe_fds) < 0)
     return NULL;
-  if (mode[0] == 'r')
+  if (mode[0] == 'r' && mode[1] == '\0')
     {
       parent_end = pipe_fds[0];
       child_end = pipe_fds[1];
       read_or_write = _IO_NO_WRITES;
     }
-  else
+  else if (mode[0] == 'w' && mode[1] == '\0')
     {
       parent_end = pipe_fds[1];
       child_end = pipe_fds[0];
       read_or_write = _IO_NO_READS;
+    }
+  else
+    {
+      __set_errno (EINVAL);
+      return NULL;
     }
   ((_IO_proc_file *) fp)->pid = child_pid = _IO_fork ();
   if (child_pid == 0)

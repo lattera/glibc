@@ -910,7 +910,7 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 	(s=`cd $s; /bin/pwd`; \
 	 $(patsubst %/,cd %;,$(objpfx)) \
 	 sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
-	  `sed -n -e '\@: $s@{; s@^.*: $s/\([a-z0-9_./-]*\.c\).*$$@'"$$s"'/\1@; h; }' \
+	  `sed -n -e '\@ $s/[^ ]*\.c@{; s@^.* $s/\([^ ]*\.c\).*$$@'"$$s"'/\1@; h; }' \
 		-e '/stub-tag\.h/{; g; p; }' \
 		  $(patsubst $(objpfx)%,%,$^) /dev/null` \
 	     /dev/null) > $@T

@@ -24,6 +24,7 @@
 #define MATHCONST(x) x##L
 #define CHOOSE(Clongdouble,Cdouble,Cfloat) Clongdouble
 #define PRINTF_EXPR "Le"
+#define PRINTF_XEXPR "La"
 #define TEST_INLINE
 
 #ifdef __NO_MATH_INLINES

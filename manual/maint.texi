@@ -189,7 +189,7 @@ build the GNU C library:
 
 @itemize @bullet
 @item
-@code{make} 3.75
+GNU @code{make} 3.75
 
 You need the latest version of GNU @code{make}.  Modifying the GNU C
 Library to work with other @code{make} programs would be so hard that we
@@ -209,7 +209,7 @@ On PowerPC, GCC versions dated earlier than 970904 are known not to work
 (they crash), including 2.7.2.
 
 @item
-@code{binutils} 2.8.1
+GNU @code{binutils} 2.8.1.0.17
 
 Using the GNU @code{binutils} (assembler, linker, and related tools) is
 preferable when possible, and they are required to build an ELF shared C
@@ -217,7 +217,7 @@ library.  We recommend @code{binutils} version 2.8.1 or later; earlier
 versions are known to have problems or to not support all architectures.
 
 @item
-@code{texinfo} 3.11
+GNU @code{texinfo} 3.11
 
 To correctly translate and install the Texinfo documentation you need
 this version of the @code{texinfo} package.  Former versions did not
@@ -236,7 +236,7 @@ If you change any configuration file you will need also
 
 @itemize @bullet
 @item
-@code{autoconf} 2.12
+GNU @code{autoconf} 2.12
 @end itemize
 
 @noindent
@@ -245,6 +245,13 @@ and if you change any of the message translation files you will also need
 @itemize @bullet
 @item
 @code{GNU gettext} 0.10 or later
+@end itemize
+
+If any of the manual files changed you will need this
+
+@itemize @bullet
+@item
+GNU @code{awk} 3.0
 @end itemize
 
 @noindent

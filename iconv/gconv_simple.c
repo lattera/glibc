@@ -123,14 +123,23 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 					  data->outbufsize - data->outbufavail,
 					  (mbstate_t *) data->data);
 
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
 	  /* Remember how much we converted.  */
 	  do_write += newinbuf - inbuf;
 	  *inlen -= (newinbuf - inbuf) * sizeof (wchar_t);
 
 	  data->outbufavail += actually;
+
+	  if (data->is_last)
+	    {
+	      /* This is the last step.  */
+	      result = (*inlen < sizeof (wchar_t)
+			? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT);
+	      break;
+	    }
+
+	  /* Status so far.  */
+	  result = GCONV_EMPTY_INPUT;
+
 	  if (data->outbufavail > 0)
 	    {
 	      /* Call the functions below in the chain.  */
@@ -140,7 +149,7 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 			       written, 0);
 
 	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail)
+	      if (newavail != data->outbufavail && newavail > 0)
 		{
 		  memmove (data->outbuf,
 			   &data->outbuf[data->outbufavail - newavail],
@@ -204,14 +213,23 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 					   / sizeof (wchar_t)),
 					  (mbstate_t *) data->data);
 
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
 	  /* Remember how much we converted.  */
 	  do_write += actually;
 	  *inlen -= newinbuf - inbuf;
 
 	  data->outbufavail += actually * sizeof (wchar_t);
+
+	  if (data->is_last)
+	    {
+	      /* This is the last step.  */
+	      result = (data->outbufavail + sizeof (wchar_t) > data->outbufsize
+			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
+	      break;
+	    }
+
+	  /* Status so far.  */
+	  result = GCONV_EMPTY_INPUT;
+
 	  if (data->outbufavail > 0)
 	    {
 	      /* Call the functions below in the chain.  */
@@ -221,7 +239,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 			       written, 0);
 
 	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail)
+	      if (newavail != data->outbufavail && newavail > 0)
 		{
 		  memmove (data->outbuf,
 			   &data->outbuf[data->outbufavail - newavail],
@@ -236,5 +254,5 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
   if (written != NULL && data->is_last)
     *written = do_write;
 
-  return GCONV_OK;
+  return result;
 }

@@ -23,6 +23,7 @@
 #define MATHCONST(x) x
 #define CHOOSE(Clongdouble,Cdouble,Cfloat) Cfloat
 #define PRINTF_EXPR "e"
+#define PRINTF_XEXPR "a"
 #define TEST_FLOAT 1
 #define TEST_INLINE 1
 

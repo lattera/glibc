@@ -18,19 +18,63 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <ctype.h>
 #include <errno.h>
 #include <iconv.h>
+#include <string.h>
 
 #include <gconv.h>
+
+
+static inline void
+strip (char *s)
+{
+  int slash_count = 0;
+  char *wp;
+  wp = s;
+
+  while (*s != '\0')
+    {
+      if (isalnum (*s) || *s == '_' || *s == '-' || *s == '.')
+	*wp++ = *s;
+      else if (*s == '/')
+	{
+	  if (++slash_count == 2)
+	    break;
+	  *wp++ = '/';
+	}
+      ++s;
+    }
+
+  while (slash_count++ < 2)
+    *wp++ = '/';
+
+  *wp = '\0';
+}
 
 
 iconv_t
 iconv_open (const char *tocode, const char *fromcode)
 {
+  char *tocode_conv;
+  char *fromcode_conv;
+  size_t tocode_len;
+  size_t fromcode_len;
   gconv_t cd;
   int res;
 
-  res = __gconv_open (tocode, fromcode, &cd);
+  /* Normalize the name.  We remove all characters beside alpha-numeric,
+     '_', '-', '/', and '.'.  */
+  tocode_len = strlen (tocode);
+  tocode_conv = alloca (tocode_len + 3);
+  strip (memcpy (tocode_conv, tocode, tocode_len + 1));
+
+  fromcode_len = strlen (fromcode);
+  fromcode_conv = alloca (fromcode_len + 3);
+  strip (memcpy (fromcode_conv, fromcode, fromcode_len + 1));
+
+  res = __gconv_open (tocode_conv[2] == '\0' ? tocode : tocode_conv,
+		      fromcode_conv[2] == '\0' ? fromcode, fromcode_conv, &cd);
 
   if (res != GCONV_OK)
     {

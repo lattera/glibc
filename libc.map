@@ -13,6 +13,8 @@ GLIBC_2.0 {
     _obstack;
     __progname_full; __progname;
 
+    _IO_list_all; _IO_stderr_; _IO_stdin_; _IO_stdout_;
+
     # This is for ix86 only.
     _fp_hw;
 
@@ -23,14 +25,15 @@ GLIBC_2.0 {
     __sigsetjmp; _setjmp; __sigaddset; __sigdelset; __sigismember;
     __sysv_signal; __bsd_getpgrp; _longjmp; _mcount;
     __divqu; __remqu; __divqs; __remqs; __divlu; __remlu; __divls;
-    __remls;
+    __remls; __divl; __reml; __divq; __remq; __divqu; __remqu;
 
     # functions which have an additional interface since they are
     # are cancelable.
     __libc_wait; __libc_waitpid; __libc_pause; __libc_nanosleep;
     __libc_open; __libc_close; __libc_read; __libc_write;
     __libc_lseek; __libc_fcntl; __libc_tcdrain; __libc_fsync;
-    __libc_msync; __libc_system;
+    __libc_msync; __libc_system; __libc_accept; __libc_send; __libc_recvfrom;
+    __libc_recvmsg; __libc_sendmsg; __libc_recv; __libc_sendto; __libc_connect;
 
     # interface of malloc functions
     __libc_calloc; __libc_free; __libc_mallinfo; __libc_malloc;
@@ -87,6 +90,7 @@ GLIBC_2.0 {
     _IO_str_underflow; _IO_str_init_static; _IO_str_init_readonly;
     _IO_str_seekoff; _IO_str_pbackfail; _IO_file_jumps;
     _IO_peekc_locked; _IO_flockfile; _IO_funlockfile;
+    _IO_fopen; _IO_fclose;
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;
@@ -177,9 +181,9 @@ GLIBC_2.0 {
     ferror_unlocked; fexecve; fflush; fflush_unlocked; ffs; fgetc;
     fgetgrent; fgetgrent_r; fgetpos; fgetpos64; fgetpwent; fgetpwent_r; fgets;
     fgetspent; fgetspent_r; fileno; fileno_unlocked; finite; finitef;
-    finitel; flock; flockfile; fmtmsg; fnmatch; fopen64; fopencookie;
+    finitel; flock; flockfile; fmtmsg; fnmatch; fopen; fopen64; fopencookie;
     fork; fpathconf; fprintf; fputc; fputc_unlocked; fputs; fread; free;
-    freeaddrinfo; freopen64; frexp; frexpf; frexpl; fscanf; fseek;
+    freeaddrinfo; freopen; freopen64; frexp; frexpf; frexpl; fscanf; fseek;
     fseeko; fseeko64; fsetpos; fsetpos64; fstatfs; fstatfs64; fsync; ftell;
     ftello; ftello64; ftime; ftok; ftruncate; ftruncate64; ftrylockfile;
     fts_children; fts_close; fts_open; fts_read; fts_set; ftw; ftw64;
@@ -226,7 +230,8 @@ GLIBC_2.0 {
     inet6_isipv4mapped; inet_addr; inet_aton; inet_lnaof; inet_makeaddr;
     inet_netof; inet_network; inet_nsap_addr; inet_nsap_ntoa; inet_ntoa;
     inet_ntop; inet_pton; init_module; initgroups; initstate; initstate_r;
-    innetgr; insque; ioctl; ioperm; iopl; iruserok;
+    innetgr; insque; ioctl; ioperm; iopl; iruserok; iconv_open; iconv;
+    iconv_close;
 
     isalnum; isalpha; isascii; isatty; isblank; iscntrl; isdigit;
     isfdtype; isgraph; isinf; isinff; isinfl; islower; isnan; isnanf;
@@ -413,17 +418,19 @@ GLIBC_2.0 {
     xdrrec_endofrecord; xdrrec_eof; xdrrec_skiprecord; xdrstdio_create;
     xencrypt; xprt_register; xprt_unregister;
 
-    _IO_list_all;
-
-    _IO_stdin_; _IO_stdout_; _IO_stderr_;
-    _IO_fopen; fopen; freopen; _IO_fclose; fclose;
-
   local:
     *;
 };
 
 GLIBC_2.1 {
   global:
-    _IO_fopen; fopen; _IO_fclose; fclose;
+    # global variables
     _IO_2_1_stdin_; _IO_2_1_stdout_; _IO_2_1_stderr_;
+
+    # functions used in other libraries
+    _IO_fclose; _IO_fopen;
+
+    # functions in normal name space
+    fopen; fclose;
+
 } GLIBC_2.0;

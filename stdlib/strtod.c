@@ -793,26 +793,20 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	val = 10 + TOLOWER (*startp++) - L_('a');
       bits = nbits[val];
 
-      if (pos + 1 >= 4)
+      if (pos + 1 >= 4 || pos + 1 >= bits)
 	{
 	  /* We don't have to care for wrapping.  This is the normal
-	     case so we add this optimization.  */
+	     case so we add the first clause in the `if' expression as
+	     an optimization.  It is a compile-time constant and so does
+	     not cost anything.  */
 	  retval[idx] = val << (pos - bits + 1);
 	  pos -= bits;
 	}
       else
 	{
-	  if (pos + 1 >= bits)
-	    {
-	      retval[idx] = val << (pos - bits + 1);
-	      pos -= bits;
-	    }
-	  else
-	    {
-	      retval[idx--] = val >> (bits - pos - 1);
-	      retval[idx] = val << (BITS_PER_MP_LIMB - (bits - pos - 1));
-	      pos = BITS_PER_MP_LIMB - 1 - (bits - pos - 1);
-	    }
+	  retval[idx--] = val >> (bits - pos - 1);
+	  retval[idx] = val << (BITS_PER_MP_LIMB - (bits - pos - 1));
+	  pos = BITS_PER_MP_LIMB - 1 - (bits - pos - 1);
 	}
 
       while (--dig_no > 0 && idx >= 0)

@@ -151,7 +151,6 @@ problem.
 @deftypevr Macro {const float imaginary} _Imaginary_I
 This macro is a representation of the value ``@math{1i}''.  I.e., it is
 the value for which
-@end deftypevr
 
 @smallexample
 _Imaginary_I * _Imaginary_I = -1
@@ -164,6 +163,7 @@ One can use it to easily construct complex number like in
 @smallexample
 3.0 - _Imaginary_I * 4.0
 @end smallexample
+@end deftypevr
 
 @noindent
 which results in the complex number with a real part of 3.0 and a

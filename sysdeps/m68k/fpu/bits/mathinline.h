@@ -70,22 +70,22 @@
 
 
 #if (!defined __NO_MATH_INLINES && defined __OPTIMIZE__) \
-    || defined __LIBC_M81_MATH_INLINES
+    || defined __LIBC_INTERNAL_MATH_INLINES
 
-#ifdef	__LIBC_M81_MATH_INLINES
+#ifdef	__LIBC_INTERNAL_MATH_INLINES
 /* This is used when defining the functions themselves.  Define them with
    __ names, and with `static inline' instead of `extern inline' so the
    bodies will always be used, never an external function call.  */
-#define __m81_u(x)		__CONCAT(__,x)
-#define __m81_inline		static __inline
+# define __m81_u(x)		__CONCAT(__,x)
+# define __m81_inline		static __inline
 #else
-#define __m81_u(x)		x
-#ifdef __cplusplus
-#define __m81_inline		__inline
-#else
-#define __m81_inline		extern __inline
-#endif
-#define __M81_MATH_INLINES	1
+# define __m81_u(x)		x
+# ifdef __cplusplus
+#  define __m81_inline		__inline
+# else
+#  define __m81_inline		extern __inline
+# endif
+# define __M81_MATH_INLINES	1
 #endif
 
 /* Define a const math function.  */
@@ -99,12 +99,12 @@
    is the name of the fpu operation (without leading f).  */
 
 #if defined __USE_MISC || defined __USE_ISOC9X
-#define __inline_mathop(func, op)			\
+# define __inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)			\
   __inline_mathop1(float, __CONCAT(func,f), op)		\
   __inline_mathop1(long double, __CONCAT(func,l), op)
 #else
-#define __inline_mathop(func, op)			\
+# define __inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)
 #endif
 
@@ -116,7 +116,7 @@
     return __result;							      \
   }
 
-#ifdef __LIBC_M81_MATH_INLINES
+#ifdef __LIBC_INTERNAL_MATH_INLINES
 /* ieee style elementary functions */
 /* These are internal to the implementation of libm.  */
 __inline_mathop(__ieee754_acos, acos)
@@ -154,21 +154,21 @@ __inline_mathop(sin, sin)
 __inline_mathop(tan, tan)
 __inline_mathop(tanh, tanh)
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
 __inline_mathop(rint, int)
 __inline_mathop(expm1, etoxm1)
 __inline_mathop(log1p, lognp1)
-#endif
+# endif
 
-#ifdef __USE_MISC
+# ifdef __USE_MISC
 __inline_mathop(significand, getman)
-#endif
+# endif
 
-#ifdef __USE_ISOC9X
+# ifdef __USE_ISOC9X
 __inline_mathop(log2, log2)
 __inline_mathop(exp2, twotox)
 __inline_mathop(trunc, intrz)
-#endif
+# endif
 
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 
@@ -176,9 +176,9 @@ __inline_mathop(trunc, intrz)
    functions, using __FLOAT_TYPE as the domain type and __S as the suffix
    for the function names.  */
 
-#ifdef __LIBC_M81_MATH_INLINES
+#ifdef __LIBC_INTERNAL_MATH_INLINES
 /* Internally used functions.  */
-#define __internal_inline_functions(float_type, s)			     \
+# define __internal_inline_functions(float_type, s)			     \
 __m81_defun (float_type, __CONCAT(__ieee754_remainder,s),		     \
 	     (float_type __x, float_type __y))				     \
 {									     \
@@ -198,7 +198,7 @@ __m81_defun (float_type, __CONCAT(__ieee754_fmod,s),			     \
 __internal_inline_functions (double,)
 __internal_inline_functions (float,f)
 __internal_inline_functions (long double,l)
-#undef __internal_inline_functions
+# undef __internal_inline_functions
 
 /* Get the m68881 condition codes, to quickly check multiple conditions.  */
 static __inline__ unsigned long
@@ -210,12 +210,12 @@ __m81_test (long double __val)
 }
 
 /* Bit values returned by __m81_test.  */
-#define __M81_COND_NAN (1 << 24)
-#define __M81_COND_INF (2 << 24)
-#define __M81_COND_ZERO (4 << 24)
-#define __M81_COND_NEG (8 << 24)
+# define __M81_COND_NAN (1 << 24)
+# define __M81_COND_INF (2 << 24)
+# define __M81_COND_ZERO (4 << 24)
+# define __M81_COND_NEG (8 << 24)
 
-#endif /* __LIBC_M81_MATH_INLINES */
+#endif /* __LIBC_INTENRAL_MATH_INLINES */
 
 /* The rest of the functions are available to the user.  */
 
@@ -374,14 +374,14 @@ __inline_functions (long double,l)
 
 /* Note that there must be no whitespace before the argument passed for
    NAME, to make token pasting work correctly with -traditional.  */
-#define __inline_forward_c(rettype, name, args1, args2)	\
+# define __inline_forward_c(rettype, name, args1, args2)	\
 extern __inline rettype __attribute__((__const__))	\
 name args1						\
 {							\
   return __CONCAT(__,name) args2;			\
 }
 
-#define __inline_forward(rettype, name, args1, args2)	\
+# define __inline_forward(rettype, name, args1, args2)	\
 extern __inline rettype name args1			\
 {							\
   return __CONCAT(__,name) args2;			\
@@ -391,76 +391,76 @@ __inline_forward(double,frexp, (double __value, int *__expptr),
 		 (__value, __expptr))
 __inline_forward_c(double,floor, (double __x), (__x))
 __inline_forward_c(double,ceil, (double __x), (__x))
-#ifdef __USE_MISC
+# ifdef __USE_MISC
 __inline_forward_c(int,isinf, (double __value), (__value))
 __inline_forward_c(int,finite, (double __value), (__value))
 __inline_forward_c(double,scalbn, (double __x, int __n), (__x, __n))
 __inline_forward_c(double,scalbln, (double __x, long int __n), (__x, __n))
-#endif
-#if defined __USE_MISC || defined __USE_XOPEN
-#ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
+# endif
+# if defined __USE_MISC || defined __USE_XOPEN
+#  ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
 __inline_forward_c(int,isnan, (double __value), (__value))
-#endif
-#endif
-#ifdef __USE_ISOC9X
+#  endif
+# endif
+# ifdef __USE_ISOC9X
 __inline_forward_c(double,nearbyint, (double __value), (__value))
 __inline_forward_c(long int,lrint, (double __value), (__value))
 __inline_forward_c(double,fma, (double __x, double __y, double __z),
 		   (__x, __y, __z))
-#endif
-#ifdef __USE_GNU
+# endif
+# ifdef __USE_GNU
 __inline_forward(void,sincos, (double __x, double *__sinx, double *__cosx),
 		 (__x, __sinx, __cosx))
-#endif
+# endif
 
-#if defined __USE_MISC || defined __USE_ISOC9X
+# if defined __USE_MISC || defined __USE_ISOC9X
 
 __inline_forward(float,frexpf, (float __value, int *__expptr),
 		 (__value, __expptr))
 __inline_forward_c(float,floorf, (float __x), (__x))
 __inline_forward_c(float,ceilf, (float __x), (__x))
-#ifdef __USE_MISC
+#  ifdef __USE_MISC
 __inline_forward_c(int,isinff, (float __value), (__value))
 __inline_forward_c(int,finitef, (float __value), (__value))
 __inline_forward_c(float,scalbnf, (float __x, int __n), (__x, __n))
 __inline_forward_c(float,scalblnf, (float __x, long int __n), (__x, __n))
 __inline_forward_c(int,isnanf, (float __value), (__value))
-#endif
-#ifdef __USE_ISOC9X
+#  endif
+# ifdef __USE_ISOC9X
 __inline_forward_c(float,nearbyintf, (float __value), (__value))
 __inline_forward_c(long int,lrintf, (float __value), (__value))
 __inline_forward_c(float,fmaf, (float __x, float __y, float __z),
 		   (__x, __y, __z))
-#endif
-#ifdef __USE_GNU
+# endif
+# ifdef __USE_GNU
 __inline_forward(void,sincosf, (float __x, float *__sinx, float *__cosx),
 		 (__x, __sinx, __cosx))
-#endif
+# endif
 
 __inline_forward(long double,frexpl, (long double __value, int *__expptr),
 		 (__value, __expptr))
 __inline_forward_c(long double,floorl, (long double __x), (__x))
 __inline_forward_c(long double,ceill, (long double __x), (__x))
-#ifdef __USE_MISC
+# ifdef __USE_MISC
 __inline_forward_c(int,isinfl, (long double __value), (__value))
 __inline_forward_c(int,finitel, (long double __value), (__value))
 __inline_forward_c(long double,scalbnl, (long double __x, int __n), (__x, __n))
 __inline_forward_c(long double,scalblnl, (long double __x, long int __n),
 		   (__x, __n))
 __inline_forward_c(int,isnanl, (long double __value), (__value))
-#endif
-#ifdef __USE_ISOC9X
+# endif
+# ifdef __USE_ISOC9X
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
 __inline_forward_c(long int,lrintl, (long double __value), (__value))
 __inline_forward_c(long double,fmal,
 		   (long double __x, long double __y, long double __z),
 		   (__x, __y, __z))
-#endif
-#ifdef __USE_GNU
+# endif
+# ifdef __USE_GNU
 __inline_forward(void,sincosl,
 		 (long double __x, long double *__sinx, long double *__cosx),
 		 (__x, __sinx, __cosx))
-#endif
+# endif
 
 #endif /* Use misc or ISO C9X */
 

@@ -422,7 +422,7 @@ AC_CHECK_TOOL(RANLIB, ranlib, :)
 
 AC_PATH_PROG(BASH, bash, no)
 if test "$BASH" != no &&
-   $BASH -c 'test "$BASH_VERSINFO"
+   $BASH -c 'test "$BASH_VERSINFO" \
 	     && test "$BASH_VERSINFO" -ge 2 >&/dev/null'; then
   libc_cv_have_bash2=yes
 else
@@ -596,9 +596,13 @@ _sym:
 .symver _sym,sym@VERS
 EOF
   cat > conftest.map <<EOF
-VERS {
+VERS_1 {
 	global: sym;
 };
+
+VERS_2 {
+        global: sym;
+} VERS_1;
 EOF
   if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AC_FD_CC 2>&AC_FD_CC; then
     if AC_TRY_COMMAND([${CC-cc} $CFLAGS -shared -o conftest.so conftest.o
@@ -627,6 +631,13 @@ else
 fi
 AC_SUBST(VERSIONING)
 
+if test $VERSIONING = no; then
+  echo "\
+*** WARNING: You should not compile GNU libc without versioning. Not using 
+*** versioning will introduce incompatibilities so that old binaries
+*** will not run anymore.
+*** For versioning you need recent binutils (binutils-2.8.1.0.17 or newer)."
+fi
 if test $elf = yes; then
   AC_CACHE_CHECK(for .previous assembler directive,
 		 libc_cv_asm_previous_directive, [dnl

@@ -27,6 +27,7 @@ __gconv (gconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
 	 size_t *outbytesleft, size_t *converted)
 {
   size_t last_step = cd->nsteps - 1;
+  size_t oldinbytes = *inbytesleft;
   int result;
 
   cd->data[last_step].outbuf = *outbuf;
@@ -36,9 +37,10 @@ __gconv (gconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
   if (converted != NULL)
     *converted = 0;
 
-  result = (*cd->steps->fct) (cd->steps, cd->data, inbuf, inbytesleft,
+  result = (*cd->steps->fct) (cd->steps, cd->data, *inbuf, inbytesleft,
 			      converted, inbuf == NULL || *inbuf == NULL);
 
+  *inbuf += oldinbytes - *inbytesleft;
   *outbuf += cd->data[last_step].outbufavail;
   *outbytesleft -= cd->data[last_step].outbufavail;
 

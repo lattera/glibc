@@ -1,5 +1,6 @@
 fenv_const.c
 fenv_libc.h
+ppc-mcount.S
 quad_float.h
 fe_nomask.c
 t_sqrt.c

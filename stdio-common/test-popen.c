@@ -82,6 +82,21 @@ main (void)
 
   remove ("/tmp/tstpopen.tmp");
 
+  errno = 0;
+  output = popen ("/bin/cat", "m");
+  if (output != NULL)
+    {
+      puts ("popen called with illegal mode does not return NULL");
+      puts ("Test FAILED!");
+      exit (1);
+    }
+  if (errno != EINVAL)
+    {
+      puts ("popen called with illegal mode does not set errno to EINVAL");
+      puts ("Test FAILED!");
+      exit (1);
+    }
+
   puts (wstatus | rstatus  ? "Test FAILED!" : "Test succeeded.");
   exit (wstatus | rstatus);
 }

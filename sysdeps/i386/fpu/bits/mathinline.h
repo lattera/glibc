@@ -22,64 +22,123 @@
 # error "Never use <bits/mathinline.h> directly; include <math.h> instead."
 #endif
 
+#ifdef __cplusplus
+# define __MATH_INLINE __inline
+#else
+# define __MATH_INLINE extern __inline
+#endif
+
 
 #if defined __USE_ISOC9X && defined __GNUC__ && __GNUC__ >= 2
 /* ISO C 9X defines some macros to perform unordered comparisons.  The
    ix87 FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
-# define isgreater(x, y) \
+# ifdef __i686__
+/* For the PentiumPro and more recent processors we can provide
+   better code.  */
+#  define isgreater(x, y) \
      ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; testb $0x45, %%ah; setz %%al;"	      \
+	__asm__ ("fucomip; seta %%al"					      \
+		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
+	__result; })
+#  define isgreaterequal(x, y) \
+     ({ register char __result;						      \
+	__asm__ ("fucomip; setae %%al"					      \
+		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
+	__result; })
+
+#  define isless(x, y) \
+     ({ register char __result;						      \
+	__asm__ ("fucomip; setb %%al"					      \
+		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
+	__result; })
+
+#  define islessequal(x, y) \
+     ({ register char __result;						      \
+	__asm__ ("fucomip; setbe %%al"					      \
+		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
+	__result; })
+
+#  define islessgreater(x, y) \
+     ({ register char __result;						      \
+	__asm__ ("fucomip; setne %%al"					      \
+		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
+	__result; })
+
+#  define isunordered(x, y) \
+     ({ register char __result;						      \
+	__asm__ ("fucomip; setp %%al"					      \
+		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
+	__result; })
+# else
+/* This is the dumb, portable code for i386 and above.  */
+#  define isgreater(x, y) \
+     ({ register char __result;						      \
+	__asm__ ("fucompp; fnstsw; testb $0x45, %%ah; setz %%al"	      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
-# define isgreaterequal(x, y) \
+#  define isgreaterequal(x, y) \
      ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al;"	      \
+	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al"	      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
-# define isless(x, y) \
+#  define isless(x, y) \
      ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x45, %%ah;"      \
-		 "setz %%al"						      \
+	__asm__ ("fucompp; fnstsw; sahf; setb %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
-# define islessequal(x, y) \
+#  define islessequal(x, y) \
      ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x05, %%ah;"      \
-		 "setz %%al"						      \
+	__asm__ ("fucompp; fnstsw; sahf; setbe %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
-# define islessgreater(x, y) \
+#  define islessgreater(x, y) \
      ({ register char __result;						      \
-	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al;"	      \
+	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al"	      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
-# define isunordered(x, y) \
+#  define isunordered(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; sahf; setp %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
+# endif	/* __i686__ */
+
+/* XXX Argh!!!  More compiler errors.  */
+#if 0
+/* Test for negative number.  Used in the signbit() macro.  */
+__MATH_INLINE int
+__signbitf (float __x)
+{
+  union { float __f; int __i; } __u = { __f: __x }; return __u.__i < 0;
+}
+__MATH_INLINE int
+__signbit (double __x)
+{
+  union { double __d; int __i[2]; } __u = { __d: __x }; return __u.__i[1] < 0;
+}
+__MATH_INLINE int
+__signbitl (long double __x)
+{
+  union { long double __l; int __i[3]; } __u = { __l: __x };
+  return (__u.__i[2] & 0x8000) != 0;
+}
+#endif
 #endif
 
-
-#ifdef	__GNUC__
-#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
-#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7)
+#if defined __GNUC__ && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7))
 
-#ifdef __cplusplus
-# define __MATH_INLINE __inline
-#else
-# define __MATH_INLINE extern __inline
-#endif
+#if ((!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
+     && defined __OPTIMIZE__)
 
 /* A macro to define float, double, and long double versions of various
    math functions for the ix87 FPU.  FUNC is the function name (which will
@@ -163,8 +222,10 @@
   {									      \
     code;								      \
   }
+#endif
 
 
+#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 /* Miscellaneous functions */
 
 __inline_mathcode (__sgn, __x, \
@@ -550,6 +611,16 @@ __inline_mathcode (__acosh1p, __x, \
 #undef __atan2_code
 #undef __sincos_code
 
-#endif /* Not gcc <= 2.7.  */
 #endif /* __NO_MATH_INLINES  */
+
+
+/* This code is used internally in the GNU libc.  */
+#if 0
+/* XXX I hate compiler bugs.  The current version produces wrong code
+   if this optimization is used.  */
+#ifdef __LIBC_INTERNAL_MATH_INLINES
+__inline_mathop (__ieee754_sqrt, "fsqrt")
+#endif
+#endif
+
 #endif /* __GNUC__  */

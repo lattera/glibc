@@ -49,6 +49,10 @@ static char sccsid[] = "@(#)pty.c	8.1 (Berkeley) 6/4/93";
 #include <pty.h>
 #include <utmp.h>
 
+#ifndef REVOKE
+# define REVOKE(Line) revoke (Line)
+#endif
+
 int
 openpty(amaster, aslave, name, termp, winp)
 	int *amaster, *aslave;
@@ -56,13 +60,15 @@ openpty(amaster, aslave, name, termp, winp)
 	struct termios *termp;
 	struct winsize *winp;
 {
-	static char line[] = "/dev/ptyXX";
+	char line[11];
 	register const char *cp1, *cp2;
 	register int master, slave, ttygid;
 	size_t buflen = sysconf (_SC_GETGR_R_SIZE_MAX);
 	char buffer[buflen];
 	struct group grbuffer;
 	struct group *gr;
+
+	strcpy (line, "/dev/ptyXX");
 
 	if (getgrnam_r("tty", &grbuffer, buffer, buflen, &gr) >= 0)
 		ttygid = gr->gr_gid;
@@ -80,7 +86,7 @@ openpty(amaster, aslave, name, termp, winp)
 				line[5] = 't';
 				(void) chown(line, getuid(), ttygid);
 				(void) chmod(line, S_IRUSR|S_IWUSR|S_IWGRP);
-				(void) revoke(line);
+				REVOKE(line);
 				if ((slave = open(line, O_RDWR, 0)) != -1) {
 					*amaster = master;
 					*aslave = slave;

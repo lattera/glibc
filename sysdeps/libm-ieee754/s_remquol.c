@@ -71,11 +71,6 @@ __remquol (long double x, long double p, int *quo)
       x -= 2 * p;
       cquo += 2;
     }
-  if (x >= p)
-    {
-      x -= p;
-      ++cquo;
-    }
 
   if (ep < 0x0002)
     {

@@ -420,7 +420,7 @@ _dl_init_paths (void)
 
       if (_dl_platform != NULL)
 	{
-	  char *tmp;
+	  char *tmp, *orig;
 
 	  relem->machdirnamelen = relem->dirnamelen + _dl_platformlen + 1;
 	  tmp = (char *) malloc (relem->machdirnamelen + 1);
@@ -428,11 +428,12 @@ _dl_init_paths (void)
 	    _dl_signal_error (ENOMEM, NULL,
 			      "cannot create cache for search path");
 
-	  relem->dirname = tmp;
+	  orig = tmp;
 	  tmp = __mempcpy (tmp, relem->dirname, relem->dirnamelen);
 	  tmp = __mempcpy (tmp, _dl_platform, _dl_platformlen);
 	  *tmp++ = '/';
 	  *tmp = '\0';
+	  relem->dirname = orig;
 
 	  relem->machdirstatus = unknown;
 

@@ -3761,6 +3761,9 @@ malloc_update_mallinfo(ar_ptr, mi) arena *ar_ptr; struct mallinfo *mi;
 #endif
   INTERNAL_SIZE_T avail;
 
+  /* Initialize the memory.  */
+  memset (mi, '\0', sizeof (struct mallinfo));
+
   (void)mutex_lock(&ar_ptr->mutex);
   avail = chunksize(top(ar_ptr));
   navail = ((long)(avail) >= (long)MINSIZE)? 1 : 0;

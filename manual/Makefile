@@ -103,7 +103,8 @@ distribute = $(minimal-dist)	       					\
 			$(minimal-dist)))				\
 	     libc.info* libc.?? libc.??s texinfo.tex summary.texi	\
 	     stamp-summary chapters chapters-incl1 chapters-incl2	\
-	     xtract-typefun.awk dir-add.texi dir-add.info dir
+	     xtract-typefun.awk dir-add.texi dir-add.info dir		\
+	     stdio-fp.c
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^

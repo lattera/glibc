@@ -1,6 +1,5 @@
 /* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@arthur.pfalz.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,17 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define FUNC(function) function ## f
-#define MATHTYPE float
-#define TEST_MSG "testing float (without inline functions)\n"
-#define MATHCONST(x) x
-#define CHOOSE(Clongdouble,Cdouble,Cfloat) Cfloat
-#define PRINTF_EXPR "e"
-#define PRINTF_XEXPR "a"
-#define TEST_FLOAT 1
+#ifndef _SYS_UCONTEXT_H
+#define _SYS_UCONTEXT_H	1
 
-#ifndef __NO_MATH_INLINES
-# define __NO_MATH_INLINES
-#endif
+#error "No system dependent context structure definitions"
 
-#include "libm-test.c"
+#endif /* sys/ucontext.h */

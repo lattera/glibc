@@ -1,3 +1,187 @@
+1997-11-22 19:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_simple.c: Fix lots of bugs.
+	* iconv/iconv_open.c: Normalize names before passing them to
+	__gconv_open.
+
+	* libio/iolibio.h: Add prototypes for _IO_{new,old}_fclose.
+
+	* libio/iopopen.c: Check for correct mode argument and punt otherwise.
+	* stdio-common/test-popen.c: Add test for above change.
+
+	* math/libm-test.c: Print test results also using %a format,
+	specified in PRINTF_XEXPR macro.
+	* math/test-double.c: Define PRINTF_XEXPR.
+	* math/test-float.c: Likewise.
+	* math/test-ldouble.c: Likewise.
+	* math/test-idouble.c: Likewise.
+	* math/test-ifloat.c: Likewise.
+	* math/test-ildoubl.c: Likewise.
+
+	* stdio-common/vfscanf.c: Recognize a in format specifier only as
+	modifier if used before s, S, or [.  Otherwise it's the hexadecimal
+	FP number format.
+
+	* stdlib/strtod.c: Little code cleanup.
+
+	* sysdeps/i386/Makefile: Define __LIBC_INTERNAL_MATH_INLINES for
+	compiling in math subdir.
+
+	* sysdeps/m68k/fpu/e_acos.c: Define __LIBC_INTERNAL_MATH_INLINES
+	instead of __LIBC_M81_MATH_INLINES.
+	* sysdeps/m68k/fpu/e_atan2.c: Likewise.
+	* sysdeps/m68k/fpu/e_fmod.c: Likewise.
+	* sysdeps/m68k/fpu/e_pow.c: Likewise.
+	* sysdeps/m68k/fpu/e_scalb.c: Likewise.
+	* sysdeps/m68k/fpu/k_cos.c: Likewise.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+	* sysdeps/m68k/fpu/s_atan.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccos.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccosh.c: Likewise.
+	* sysdeps/m68k/fpu/s_cexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_csin.c: Likewise.
+	* sysdeps/m68k/fpu/s_csinh.c: Likewise.
+	* sysdeps/m68k/fpu/s_frexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogb.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrint.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrintf.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrintl.c: Likewise.
+	* sysdeps/m68k/fpu/s_lrint.c: Likewise.
+	* sysdeps/m68k/fpu/s_modf.c: Likewise.
+	* sysdeps/m68k/fpu/s_remquo.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbn.c: Likewise.
+	* sysdeps/m68k/fpu/s_sincos.c: Likewise.
+	* sysdeps/m68k/fpu/bits/mathinline.h: Define optimizations if
+	__LIBC_INTERNAL_MATH_INLINES is defined.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Define special i686 versions
+	of compare macros from ISO C 9X.  Optimize generic versions a bit.
+	Define __signbit inline functions and __ieee754_sqrt which can be
+	used if the ompiler is fixed.
+
+	* sysdeps/posix/sysv_signal.c: Define sysv_signal as weak alias.
+
+1997-11-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules ($(common-objpfx)stub-$(subdir)): Look for
+	sysdeps/generic in the whole dep file, not only in the first line.
+
+1997-11-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/ieee754/bits/nan.h (__nan) [!__GNUC__]: Fix type.
+
+1997-11-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/arith.texi (Imaginary Unit): Move @end deftypevr to right
+	place.
+
+1997-11-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-error.c (_dl_signal_error): Only print colon if OBJNAME
+	is non-empty.
+
+1997-11-20 16:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (malloc_update_mallinfo): Initialize struct for
+	return value.
+
+1997-11-19 21:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/getcwd.c: Free allocated buffer if
+	readlink succeeds but the return value is too long.
+
+	* stdio-common/printf_fphex.c: Determine sign of number correctly.
+
+1997-11-19 02:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Export __divl, __reml, __divq, __remq, __divqu and
+	__remqu for Alpha.
+
+1997-11-18 23:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/sys/ucontext.h: Stub context file.
+
+	* libio/iofprintf.c: Removed.  We use the stdio-common version.
+
+	* manual/Makefile (distribute): Add stdio-fp.c.
+
+	* sysdeps/powerpc/Dist: Add ppc-mcount.S.
+
+	* db2/Makefile (distribute): Add include/os_func.h, README and
+	mutex/tsl_parisc.s.
+
+	* hesiod/Makefile (distribute): Add README.hesiod.
+
+1997-11-18 22:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.c: Correctly call transformation function.
+
+	* manual/maint.texi: Document need of binutils 2.8.1.0.17.
+
+1997-11-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/libm-ieee754/s_remquo.c (__remquo): Fix function (gave
+	wrong results for e.g. remquo (3,2, &x)).
+	* sysdeps/libm-ieee754/s_remquof.c (__remquof): Likewise.
+	* sysdeps/libm-ieee754/s_remquol.c (__remquol): Likewise.
+
+1997-11-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in (ld --version-script): Test if the same symbol
+	maybe defined in all versions (needed by recent changes to
+	libc.map and supported with binutils 2.8.1.0.17) and issue warning
+	if versioning is not supported/enabled.
+	(bash test): Correct test case.
+
+	* math/libm-test.c: Added counting/reporting of number of test cases.
+
+	* elf/Makefile ($(objpfx)rtldtbl.h): gawk is not longer required,
+	use awk instead.
+
+	* sysdeps/unix/sysv/linux/net/if.h: Add __BEGIN_DECLS/__END_DECLS.
+
+1997-11-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/dl-load.c (_dl_init_paths): Correct __mempcpy logic.
+
+1997-11-18 18:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/pty.c: Define REVOKE to use revoke function.
+	Replace revoke call by use of REVOKE.
+	* sysdeps/unix/sysv/linux/pty.c: New file.  Define REVOKE as
+	empty and #include generic version.
+	Suggested by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-11-18 16:02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add socket functions with __libc_* names.
+	Reported by Andreas Jaeger.
+
+1997-11-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Tidy up (remove duplicates, sort entries).
+
+1997-11-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* iconv/gconv.h: Add __BEGIN_DECLS/__END_DECLS.
+
+1997-11-18 06:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/pty.c: Make thread safe.  Fix bug when calling
+	again after successful call.
+	Patch by Marc Lehmann <pcg@goof.com>.
+
+1997-11-17  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c, time/strftime.c (_REENTRANT): #define,
+	as some hosts need this to declare localtime_r properly.
+
+1997-11-18 06:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add iconv_open, iconv, and iconv_close.
+
 1997-11-18 02:31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/Makefile: New file.

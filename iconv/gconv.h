@@ -24,6 +24,8 @@
 #include <sys/types.h>
 #include <regex.h>
 
+__BEGIN_DECLS
+
 /* Error codes for gconv functions.  */
 enum
 {
@@ -201,5 +203,7 @@ extern int __gconv_transform_init_rstate __P ((struct gconv_step *__step,
 extern void __gconv_transform_end_rstate __P ((struct gconv_step_data *__data));
 
 #endif
+
+__END_DECLS
 
 #endif /* gconv.h */

@@ -71,11 +71,6 @@ __remquo (double x, double y, int *quo)
       x -= 2 * y;
       cquo += 2;
     }
-  if (x >= y)
-    {
-      x -= y;
-      ++cquo;
-    }
 
   if (hy < 0x00200000)
     {

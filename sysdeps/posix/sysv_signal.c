@@ -56,3 +56,5 @@ __sysv_signal (sig, handler)
 
   return oact.sa_handler;
 }
+
+weak_alias (__sysv_signal, sysv_signal)
