@@ -566,7 +566,7 @@ ifeq (yes,$(build-shared))
 # The PIC object files are named foo.os.
 object-suffixes += .os
 CPPFLAGS-.os = -DPIC
-CFLAGS-.os = $(pic-ccflag) -fno-common
+CFLAGS-.os = $(pic-ccflag)
 libtype.os := lib%_pic.a
 # This can be changed by a sysdep makefile
 pic-ccflag = -fPIC
@@ -621,6 +621,7 @@ ifeq (yes, $(build-shared))
 # Process the shlib-versions file, which tells us what shared library
 # version numbers to use when we install shared objects on this system.
 -include $(common-objpfx)soversions.mk
+ifndef avoid-generated
 $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 			       $(wildcard $(patsubst %, $(..)%/shlib-versions,\
 							$(add-ons))) \
@@ -648,9 +649,14 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 	   done; \
 	 done;) > $@T; exit 0
 	mv -f $@T $@
+endif
 
+postclean-generated += soversions.mk
+
+ifndef avoid-generated
 # Get $(version) defined with the release version number.
 -include $(common-objpfx)version.mk
+endif
 
 # Generate the header containing the names of all shared libraries.
 # We use a stamp file to avoid uncessary recompilations.
