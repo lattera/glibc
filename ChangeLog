@@ -2,6 +2,19 @@
 
 	* version.h (VERSION): Bump to 2.2.94.
 
+	* sysdeps/powerpc/fpu/Dist: Move fprrest.S and fprsave.S to...
+	* sysdeps/powerpc/powerpc32/fpu/Dist: ...here.  New file.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Move kernel_stat.h to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Dist: ...here.
+
+	* sysdeps/i386/Makefile: Remove obsolete db2 rules.
+
+	* sysdeps/unix/sysv/linux/Makefile: Add exit-thread.S.
+
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Add ldd-rewrite.sh.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Dist: New file.
+
 2002-09-18  Roland McGrath  <roland@redhat.com>
 
 	* locale/lc-ctype.c (_nl_postload_ctype): Add compat_symbol decls for

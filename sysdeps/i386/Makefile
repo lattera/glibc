@@ -17,10 +17,6 @@ shared-only-routines += divdi3
 endif
 endif
 
-ifeq ($(subdir),db2)
-CPPFLAGS += -DHAVE_SPINLOCKS=1 -DHAVE_ASSEM_X86_GCC=1
-endif
-
 ifeq ($(subdir),gmon)
 sysdep_routines += i386-mcount
 endif

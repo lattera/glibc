@@ -3,6 +3,7 @@ bits/pthreadtypes.h
 cmsg_nxthdr.c
 dl-brk.c
 dl-sbrk.c
+exit-thread.S
 getdirentries.c
 getdirentries64.c
 ipc_priv.h
