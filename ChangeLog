@@ -1,5 +1,10 @@
 2000-02-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/fprsave.S: New file.
+	* sysdeps/powerpc/fprrest.S: New file.
+	* sysdeps/powerpc/Makefile [$(subdir)=misc] (sysdep_routines):
+	Add fprsave and fprrest.
+
 	* sysdeps/powerpc/gprrest0.S: Use ASM_GLOBAL_DIRECTIVE instead of
 	.globl.
 	* sysdeps/powerpc/gprsave0.S: Likewise.

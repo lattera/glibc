@@ -12,7 +12,7 @@ sysdep_routines += ppc-mcount
 endif
 
 ifeq ($(subdir),misc)
-sysdep_routines += gprsave0 gprrest0 gprsave1 gprrest1
+sysdep_routines += gprsave0 gprrest0 gprsave1 gprrest1 fprsave fprrest
 endif
 
 # On PPC, -fpic works until the GOT contains 2^15 bytes, and possibly
