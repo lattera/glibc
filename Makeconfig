@@ -737,8 +737,7 @@ ifeq (yes, $(build-shared))
 # (but no commands).
 %.v.i: $(common-objpfx)config.h
 	sed '/^[ 	]*#/d;s/^[ 	]*%/#/' $(filter-out FORCE %.h,$^) \
-	| $(CC) -E -undef -I$(common-objdir) -I$(..)include \
-		   -include $(common-objpfx)config.h \
+	| $(CC) -E -undef $(CPPFLAGS) \
 		   -DASSEMBLER -x assembler-with-cpp - \
 		   > $@T
 	mv -f $@T $@
