@@ -1,3 +1,14 @@
+2003-06-25  Andreas Jaeger  <aj@suse.de>
+
+	* posix/transbug.c: Include <string.h> for memset and strlen
+	declarations.
+
+	* stdio-common/tst-sprintf.c: Include <stdlib.h> for free declaration.
+
+	* stdlib/tst-strtod.c (main): Pass long double value.
+
+	* test-skeleton.c: Include <time.h> for nanosleep declaration.
+
 2003-06-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/time.h: Don't define CLOCK_IDFIELD_SIZE if _ISOMAC is

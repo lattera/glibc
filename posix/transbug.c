@@ -5,6 +5,7 @@
 #include <regex.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 /* lowercase chars mapped to uppercase */
 static const char casetable[] = {

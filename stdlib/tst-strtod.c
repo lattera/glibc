@@ -153,7 +153,7 @@ main (int argc, char ** argv)
   if (strtold (input2, NULL) != +1.000000000116415321826934814453125)
     {
       printf ("input2: %La != %La\n", strtold (input2, NULL),
-	      +1.000000000116415321826934814453125);
+	      +1.000000000116415321826934814453125L);
       status = 1;
     }
 
