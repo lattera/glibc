@@ -1,3 +1,11 @@
+2001-06-04  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/locfile.c (siblings_uncached, siblings, full_read,
+	compare_files): New functions.
+	(write_locale_data): Use xmalloc. Compare the file with the locale
+	data files for the same category in other locales, and reuse it if
+	possible and safe.
+
 2001-06-07  Mark Kettenis  <kettenis@gnu.org>
 
 	* grp/initgroups.c (initgroups): Factor out re-usable code into...
