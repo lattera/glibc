@@ -1,8 +1,5 @@
 2004-06-18  Roland McGrath  <roland@frob.com>
 
-	[BZ #209]
-	* ChangeLog: Another attempt to test the loginfo script.
-
 	* NEWS: Fix a typo.  Update bug-reporting instructions.
 
 2004-06-13  Jakub Jelinek  <jakub@redhat.com>
