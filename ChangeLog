@@ -1,3 +1,7 @@
+1999-04-27  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/get-host.c: Include <hurd/lookup.h>.
+
 1999-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/malloc.c (rEALLOc): Only free memory for size 0 if oldmem
