@@ -30,6 +30,9 @@
 /* Get __FD_* definitions.  */
 #include <bits/select.h>
 
+/* Get __sigset_t.  */
+#include <bits/sigset.h>
+
 /* Get definition of timer specification structures.  */
 #define __need_timespec
 #include <time.h>
@@ -79,10 +82,12 @@ extern int select __P ((int __nfds, __fd_set *__readfds,
 /* XXX Once/if POSIX.1g gets official this prototype will be available
    when defining __USE_POSIX.  */
 /* Same as above only that the TIMEOUT value is given with higher
-   resolution.  This version should be used.  */
+   resolution and a sigmask which is been set temporarily.  This version
+   should be used.  */
 extern int pselect __P ((int __nfds, __fd_set *__readfds,
 			 __fd_set *__writefds, __fd_set *__exceptfds,
-			 struct timespec *__timeout));
+			 const struct timespec *__timeout,
+			 const __sigset_t *__sigmask));
 #endif
 
 __END_DECLS

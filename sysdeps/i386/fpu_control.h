@@ -1,5 +1,5 @@
 /* FPU control word bits.  i387 version.
-   Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe.
 
@@ -94,12 +94,5 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
-
-__BEGIN_DECLS
-
-/* Called at startup.  It can be used to manipulate fpu control register.  */
-extern void __setfpucw __P ((fpu_control_t));
-
-__END_DECLS
 
 #endif	/* fpu_control.h */

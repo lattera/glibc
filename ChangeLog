@@ -1,3 +1,38 @@
+1998-11-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_NO_PLT): New defined macro.
+	(elf_machine_got_rel): Remove scope variable.  Use scope from the map.
+	Don't modify _dl_global_scope_end in the end.
+	(__dl_runtime_resolv): Also use scope from the map.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+	* elf/dl-runtime.c: Don't define fixup and profile_fixup if
+	ELF_MACHINE_NO_PLT is defined.
+	* sysdeps/mips/sys/ucontext.h: New file.
+	Patches by kaz Kojima <kkojima@rr.iij4u.or.jp>.
+
+1998-11-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/generic/pselect.c (__pselect): Change interface, 
+	set/restore sigmask. 
+ 
+	* misc/sys/select.h: Change declaration according to Stevens' Unix  
+	Network Programming. 
+	* include/sys/select.h (__pselect): Likewise. 
+	Reported by <bwelling@anomaly.munge.com> [PR libc/872]. 
+ 
+	* include/fpu_control.h: New file, contains __setfpucw 
+	declaration. 
+ 
+	* sysdeps/generic/fpu_control.h: Remove __setfpucw declaration, 
+	it's an internal symbol. 
+	* sysdeps/alpha/fpu/fpu_control.h: Likewise. 
+	* sysdeps/arm/fpu/fpu_control.h: Likewise. 
+	* sysdeps/i386/fpu_control.h: Likewise. 
+	* sysdeps/m68k/fpu_control.h: Likewise. 
+	* sysdeps/powerpc/fpu_control.h: Likewise. 
+	* sysdeps/sparc/sparc32/fpu/fpu_control.h: Likewise. 
+	* sysdeps/sparc/sparc64/fpu/fpu_control.h: Likewise. 
+ 
 1998-11-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.104.

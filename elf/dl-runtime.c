@@ -39,11 +39,12 @@
    to that address.  Future calls will bounce directly from the PLT to the
    function.  */
 
+#ifndef ELF_MACHINE_NO_PLT
 static ElfW(Addr) __attribute__ ((unused))
 fixup (
-#ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
-       ELF_MACHINE_RUNTIME_FIXUP_ARGS,
-#endif
+# ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
+        ELF_MACHINE_RUNTIME_FIXUP_ARGS,
+# endif
        struct link_map *l, ElfW(Word) reloc_offset)
 {
   const ElfW(Sym) *const symtab
@@ -96,9 +97,9 @@ fixup (
 
   return value;
 }
+#endif
 
-
-#ifndef PROF
+#if !defined PROF && !defined ELF_MACHINE_NO_PLT
 
 static ElfW(Addr) __attribute__ ((unused))
 profile_fixup (
@@ -172,7 +173,7 @@ profile_fixup (
   return value;
 }
 
-#endif /* PROF */
+#endif /* PROF && ELF_MACHINE_NO_PLT */
 
 
 /* This macro is defined in dl-machine.h to define the entry point called

@@ -33,6 +33,7 @@ in the future, are:
 	sparc-*-linux-gnu	Linux-2.x on SPARC
 	sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 	arm-*-none		ARM standalone systems
+	arm-*-linux		Linux-2.x on ARM
 	arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 
 Ports to other Linux platforms are in development, and may in fact work
@@ -60,7 +61,7 @@ a local mirror first.
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
-(for powerpc see question ?powerpc).
+(for powerpc see question ?powerpc; for ARM see question ?arm).
 
 {ZW} You may have problems if you try to mix code compiled with
 EGCS and with GCC 2.8.1. See ?exception for details.
@@ -104,6 +105,16 @@ variables.  There is a temporary patch at:
 <http://discus.anu.edu.au/~geoffk/egcs-3.diff>
 
 Later versions of egcs may fix this problem.
+
+??arm	Which tools should I use for ARM?
+
+{PB} You should use egcs 1.1 or a later version.  For ELF systems some
+changes are needed to the compiler; a patch against egcs-1.1.x can be found
+at:
+
+<ftp://ftp.netwinder.org/users/p/philb/egcs-1.1.1pre2-diff-981126>
+
+Binutils 2.9.1.0.16 or later is also required.
 
 ??	Do I need some more things to compile the GNU C Library?
 
@@ -1146,9 +1157,20 @@ from your favorite mirror of ftp.gnu.org.
 where the headers are stable.  There are still lots of incompatible changes
 made and the libc headers have to follow.
 
-Also, make sure you have a suitably recent kernel.  As of the 970401
-snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
-required kernel version is at least 2.1.30.
+{PB} The 2.1 release of GNU libc aims to comply with the current versions of
+all the relevant standards.  The IPv6 support libraries for older Linux
+systems used a different naming convention and so code written to work with
+them may need to be modified.  If the standards make incompatible changes in
+the future then the libc may need to change again.
+
+IPv6 will not work with a 2.0.x kernel.  When kernel 2.2 is released it
+should contain all the necessary support; until then you should use the
+latest 2.1.x release you can find.  As of 98/11/26 the currently recommended 
+kernel for IPv6 is 2.1.129.
+
+Also, as of the 2.1 release the IPv6 API provided by GNU libc is not
+100% complete.  In particular the getipnodebyname and getipnodebyaddr
+functions are not implemented.
 
 ??	When I set the timezone by setting the TZ environment variable
 	to EST5EDT things go wrong since glibc computes the wrong time

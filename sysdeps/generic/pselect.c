@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -18,24 +18,28 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <signal.h>
 #include <sys/time.h>
 #include <sys/select.h>
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
-   after waiting the interval specified therein.  Returns the number of ready
-   descriptors, or -1 for errors.  */
+   after waiting the interval specified therein.  Additionally set the sigmask
+   SIGMASK for this call.  Returns the number of ready descriptors, or -1 for
+   errors.  */
 int
-__pselect (nfds, readfds, writefds, exceptfds, timeout)
+__pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
      int nfds;
      fd_set *readfds;
      fd_set *writefds;
      fd_set *exceptfds;
-     struct timespec *timeout;
+     const struct timespec *timeout;
+     const sigset_t *sigmask;
 {
   struct timeval tval;
   int retval;
+  sigset_t savemask;
 
   /* Change nanosecond number to microseconds.  This may loose
      precision and therefore the `pselect` should be available.  But
@@ -43,13 +47,13 @@ __pselect (nfds, readfds, writefds, exceptfds, timeout)
   if (timeout != NULL)
     TIMESPEC_TO_TIMEVAL (&tval, timeout);
 
+  /* The setting and restoring of the signal mask and the select call
+     should be an atomic operation.  This can't be done without kernel
+     help.  */
+  __sigprocmask (SIG_SETMASK, sigmask, &savemask);
   retval = __select (nfds, readfds, writefds, exceptfds,
 		     timeout != NULL ? &tval : NULL);
-
-  /* Change the result back.  The remaining time must be made
-     available to the caller.  */
-  if (timeout != NULL)
-    TIMEVAL_TO_TIMESPEC (&tval, timeout);
+  __sigprocmask (SIG_SETMASK, &savemask, NULL);
 
   return retval;
 }
