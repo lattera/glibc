@@ -1170,7 +1170,11 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* Make sure we are dlopen()ing an object which has the DF_1_NOOPEN
      flag set.  */
-  if (__builtin_expect (l->l_flags_1 & DF_1_NOOPEN, 0)
+  if ((__builtin_expect (l->l_flags_1 & DF_1_NOOPEN, 0)
+#ifdef USE_TLS
+       || __builtin_expect (l->l_flags & DF_STATIC_TLS, 0)
+#endif
+       )
       && (mode & __RTLD_DLOPEN))
     {
       /* We are not supposed to load this object.  Free all resources.  */

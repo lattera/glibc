@@ -237,6 +237,7 @@ struct link_map
     /* Various flag words.  */
     ElfW(Word) l_feature_1;
     ElfW(Word) l_flags_1;
+    ElfW(Word) l_flags;
 
     /* Temporarily used in `dl_close'.  */
     unsigned int l_idx;

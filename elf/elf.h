@@ -730,6 +730,7 @@ typedef struct
 #define DF_SYMBOLIC	0x00000002	/* Symbol resolutions starts here */
 #define DF_TEXTREL	0x00000004	/* Object contains text relocations */
 #define DF_BIND_NOW	0x00000008	/* No lazy binding for this object */
+#define DF_STATIC_TLS	0x00000010	/* Module uses the static TLS model */
 
 /* State flags selectable in the `d_un.d_val' element of the DT_FLAGS_1
    entry in the dynamic section.  */
