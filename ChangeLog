@@ -1,3 +1,8 @@
+2003-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/getnameinfo.c: Move domain out of nrl_domainname scope and
+	define it with libc_freeres_ptr.
+
 2003-10-01  Roland McGrath  <roland@redhat.com>
 
 	* elf/rtld.c (dl_main): Add cast in last change.

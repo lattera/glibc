@@ -55,12 +55,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # define min(x,y) (((x) > (y)) ? (y) : (x))
 #endif /* min */
 
+libc_freeres_ptr (static char *domain);
+
 
 static char *
 internal_function
 nrl_domainname (void)
 {
-  static char *domain;
   static int not_first;
 
   if (! not_first)
