@@ -167,7 +167,6 @@ typedef struct
 #define EM_386		 3		/* Intel 80386 */
 #define EM_68K		 4		/* Motorola m68k family */
 #define EM_88K		 5		/* Motorola m88k family */
-#define EM_486		 6		/* Intel 80486 */
 #define EM_860		 7		/* Intel 80860 */
 #define EM_MIPS		 8		/* MIPS R3000 big-endian */
 #define EM_S370		 9		/* Amdahl */

@@ -31,7 +31,6 @@ elf_machine_matches_host (Elf32_Half e_machine)
   switch (e_machine)
     {
     case EM_386:
-    case EM_486:
       return 1;
     default:
       return 0;

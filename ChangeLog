@@ -1,5 +1,11 @@
 1999-10-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/elf.h: Remove EM_486 entry.
+	* sysdeps/i386/dl-machine.h (elf_machine_matches_host): Remove
+	test for EM_486.
+
+1999-10-07  Ulrich Drepper  <drepper@cygnus.com>
+
 	* debug/Makefile (install-bin): Add pcprofiledump and xtrace.
 	Add rules for both programs.
 	* debug/pcprofiledump.c: New file.
