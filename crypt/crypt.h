@@ -30,14 +30,14 @@
 __BEGIN_DECLS
 
 /* Encrypt at most 8 characters from KEY using salt to perturb DES.  */
-extern char *crypt (__const char *__key, __const char *__salt);
+extern char *crypt (__const char *__key, __const char *__salt) __THROW;
 
 /* Setup DES tables according KEY.  */
-extern void setkey (__const char *__key);
+extern void setkey (__const char *__key) __THROW;
 
 /* Encrypt data in BLOCK in place if EDFLAG is zero; otherwise decrypt
    block in place.  */
-extern void encrypt (char *__block, int __edflag);
+extern void encrypt (char *__block, int __edflag) __THROW;
 
 #ifdef __USE_GNU
 /* Reentrant versions of the functions above.  The additional argument
@@ -57,13 +57,13 @@ struct crypt_data
   };
 
 extern char *crypt_r (__const char *__key, __const char *__salt,
-		      struct crypt_data * __restrict __data);
+		      struct crypt_data * __restrict __data) __THROW;
 
 extern void setkey_r (__const char *__key,
-		      struct crypt_data * __restrict __data);
+		      struct crypt_data * __restrict __data) __THROW;
 
 extern void encrypt_r (char *__block, int __edflag,
-		       struct crypt_data * __restrict __data);
+		       struct crypt_data * __restrict __data) __THROW;
 #endif
 
 __END_DECLS
