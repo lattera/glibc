@@ -56,6 +56,9 @@
 /* Define if versioning of the library is wanted.  */
 #undef	DO_VERSIONING
 
+/* Defined to the oldest ABI we support, like 2.1.  */
+#undef GLIBC_OLDEST_ABI
+
 /* Define if static NSS modules are wanted.  */
 #undef	DO_STATIC_NSS
 

@@ -45,6 +45,7 @@ with-cvs = @with_cvs@
 old-glibc-headers = @old_glibc_headers@
 
 versioning = @VERSIONING@
+oldest-abi = @oldest_abi@
 no-whole-archive = @no_whole_archive@
 exceptions = @exceptions@
 have_doors = @linux_doors@

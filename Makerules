@@ -135,7 +135,7 @@ ifndef avoid-generated
 before-compile := $(common-objpfx)abi-versions.h $(before-compile)
 $(common-objpfx)abi-versions.h: $(..)scripts/abi-versions.awk \
 				$(common-objpfx)Versions.all
-	LC_ALL=C $(AWK) -f $^ > $@T
+	LC_ALL=C $(AWK) -v oldest_abi=$(oldest-abi) -f $^ > $@T
 	mv -f $@T $@
 endif # avoid-generated
 endif # $(versioning) = yes

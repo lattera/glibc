@@ -30,6 +30,9 @@ There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n\
 Compiled by GNU CC version "__VERSION__".\n"
 #include "version-info.h"
+#ifdef GLIBC_OLDEST_ABI
+"The oldest ABI supported: " GLIBC_OLDEST_ABI ".\n"
+#endif
 "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n";
 
 #include <unistd.h>
