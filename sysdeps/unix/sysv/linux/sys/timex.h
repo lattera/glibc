@@ -22,7 +22,7 @@
 #include <features.h>
 #include <sys/time.h>
 
-/* These definitions from linux/timex.h as of 2.1.130.  */
+/* These definitions from linux/timex.h as of 2.2.0.  */
 
 struct ntptimeval
 {
@@ -110,6 +110,9 @@ struct timex
 #define TIME_WAIT	4	/* leap second has occurred */
 #define TIME_ERROR	5	/* clock not synchronized */
 #define TIME_BAD	TIME_ERROR /* bw compat */
+
+/* Maximum time constant of the PLL.  */
+#define MAXTC		6
 
 __BEGIN_DECLS
 

@@ -29,8 +29,7 @@
 #undef getc_unlocked
 
 int
-__getc_unlocked (fp)
-     FILE *fp;
+__getc_unlocked (FILE *fp)
 {
   CHECK_FILE (fp, EOF);
   return _IO_getc_unlocked (fp);

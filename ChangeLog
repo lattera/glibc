@@ -1,5 +1,17 @@
 1999-01-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/genops.c (_IO_un_link): Move #ifdef introduced in last
+	change in right place.
+
+	* sysdeps/unix/sysv/linux/sys/timex.h: Add MAXTC from kernel
+	header.  Suggested by Thomas Quinot <thomas@Cuivre.FR.EU.ORG>.
+
+1999-01-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libio/getc_u.c (__getc_unlocked): Avoid compiler warning.
+
+1999-01-28  Ulrich Drepper  <drepper@cygnus.com>
+
 	* libio/genops.c (_IO_un_link, _IO_link_in): Don't use locking if
 	_IO_MTSAFE_IO is not defined.
 

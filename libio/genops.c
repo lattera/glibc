@@ -41,8 +41,8 @@ _IO_un_link (fp)
 {
   if (fp->_flags & _IO_LINKED)
     {
-#ifdef _IO_MTSAFE_IO
       _IO_FILE **f;
+#ifdef _IO_MTSAFE_IO
       _IO_lock_lock (list_all_lock);
 #endif
       for (f = &_IO_list_all; *f != NULL; f = &(*f)->_chain)
