@@ -1,5 +1,9 @@
 2003-06-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthreadP.h: Mark __pthread_mutex_unlock_usercnt also hidden.
+	* pthread_mutex_unlock.c (__pthread_mutex_unlock_usercnt): Add
+	attribute_hidden.
+
 	* pthreadP.h (__pthread_mutex_init_internal): Mark hidden.
 	(__pthread_mutex_lock_internal): Likewise.
 	(__pthread_mutex_unlock_internal): Likewise.

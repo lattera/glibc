@@ -259,7 +259,8 @@ extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_unlock_internal (pthread_mutex_t *__mutex)
      attribute_hidden;
 extern int __pthread_mutex_unlock_usercnt (pthread_mutex_t *__mutex,
-					   bool __decr) internal_function;
+					   bool __decr)
+     attribute_hidden internal_function;
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);

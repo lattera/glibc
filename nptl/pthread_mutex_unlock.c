@@ -23,7 +23,7 @@
 
 
 int
-internal_function
+internal_function attribute_hidden
 __pthread_mutex_unlock_usercnt (mutex, decr)
      pthread_mutex_t *mutex;
      bool decr;
