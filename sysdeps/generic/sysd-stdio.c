@@ -26,6 +26,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+extern __io_read_fn __stdio_read;
+extern __io_write_fn __stdio_write;
+extern __io_seek_fn __stdio_seek;
+extern __io_close_fn __stdio_close;
+extern __io_fileno_fn __stdio_fileno;
+
 /* Read N bytes into BUF from COOKIE.  */
 int
 __stdio_read (void *cookie, char *buf, size_t n)

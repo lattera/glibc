@@ -1,3 +1,11 @@
+1998-09-03  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* mach/Makefile: Use -include for mach-syscalls.mk to silence warning.
+
+	* sysdeps/mach/hurd/sysd-stdio.c: Declare fns
+	__stdio_{read,write,seek,close,fileno} using __io_*_fn types.
+	* sysdeps/generic/sysd-stdio.c: Likewise.
+
 1998-09-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c (fillin_rpath): Handle "/" as RPATH correctly.

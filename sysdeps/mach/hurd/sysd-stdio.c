@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,9 +23,14 @@
 #include <fcntl.h>
 #include <hurd/fd.h>
 
-/* Check ERR for wanting to generate a signal.  */
+extern __io_read_fn __stdio_read;
+extern __io_write_fn __stdio_write;
+extern __io_seek_fn __stdio_seek;
+extern __io_close_fn __stdio_close;
+extern __io_fileno_fn __stdio_fileno;
 
-int __stdio_fileno (void *);
+
+/* Check ERR for wanting to generate a signal.  */
 
 static inline int
 fd_fail (struct hurd_fd *fd, error_t err)
