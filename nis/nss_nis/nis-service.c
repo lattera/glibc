@@ -279,18 +279,21 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
     return NSS_STATUS_UNAVAIL;
 
   /* If the protocol is given, we could try if our NIS server knows
-     about services.byservicename map. If yes, we only need one query */
-  if (protocol != NULL)
+     about services.byservicename map. If yes, we only need one query.
+     If the protocol is not given, try first name/tcp, then name/udp
+     and then fallback to sequential scanning of services.byname map.  */
+  const char *proto = protocol != NULL ? protocol : "tcp";
+  do
     {
-      char key[strlen (name) + strlen (protocol) + 2];
+      char key[strlen (name) + strlen (proto) + 2];
       char *cp, *result;
       size_t keylen, len;
       int int_len;
 
-      /* key is: "name/protocol" */
+      /* key is: "name/proto" */
       cp = stpcpy (key, name);
       *cp++ = '/';
-      stpcpy (cp, protocol);
+      stpcpy (cp, proto);
       keylen = strlen (key);
       status = yperr2nss (yp_match (domain, "services.byservicename", key,
 				    keylen, &result, &int_len));
@@ -329,6 +332,7 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 	    return NSS_STATUS_SUCCESS;
 	}
     }
+  while (protocol == NULL && (proto[0] == 't' ? (proto = "udp") : NULL));
 
   struct ypall_callback ypcb;
   struct search_t req;
@@ -343,7 +347,7 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
   req.buflen = buflen;
   req.errnop = errnop;
   req.status = NSS_STATUS_NOTFOUND;
-  status = yperr2nss (yp_all (domain, "services.byservicename", &ypcb));
+  status = yperr2nss (yp_all (domain, "services.byname", &ypcb));
 
   if (status != NSS_STATUS_SUCCESS)
     return status;
@@ -362,16 +366,19 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
-  /* If the protocol is given, we only need one query */
-  if (protocol != NULL)
+  /* If the protocol is given, we only need one query.
+     Otherwise try first port/tcp, then port/udp and then fallback
+     to sequential scanning of services.byname.  */
+  const char *proto = protocol != NULL ? protocol : "tcp";
+  do
     {
-      char key[100 + strlen (protocol) + 2];
+      char key[sizeof (int) * 3 + strlen (proto) + 2];
       char *result;
       size_t keylen, len;
       int int_len;
 
-      /* key is: "port/protocol" */
-      keylen = snprintf (key, sizeof (key), "%d/%s", port, protocol);
+      /* key is: "port/proto" */
+      keylen = snprintf (key, sizeof (key), "%d/%s", ntohs (port), proto);
       status = yperr2nss (yp_match (domain, "services.byname", key,
 				    keylen, &result, &int_len));
       len = int_len;
@@ -409,6 +416,7 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
 	    return NSS_STATUS_SUCCESS;
 	}
     }
+  while (protocol == NULL && (proto[0] == 't' ? (proto = "udp") : NULL));
 
   if (port == -1)
     return NSS_STATUS_NOTFOUND;

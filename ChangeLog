@@ -1,4 +1,19 @@
+2004-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): If protocol
+	== NULL, try name/tcp and name/udp first before falling back into
+	the sequential scanning.  Use services.byname database for
+	sequential scanning.
+	(_nss_nis_getservbyport_r): Likewise.  Just allocate sizeof (int) * 3
+	chars for integer.
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyport_r): Convert
+	proto to host by order for snprintf.
+
 2004-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (services_keys): Don't implement lookups with
+	missing protocol using getservent loop, just pass NULL.
 
 	* sysdeps/unix/sysv/linux/i386/setgroups.c (setgroups): Avoid
 	comparison with limit if we can rely on the syscall being available.

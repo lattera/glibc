@@ -638,53 +638,18 @@ services_keys (int number, char *key[])
       struct servent *serv;
       char *proto = strchr (key[i], '/');
 
-      if (proto == NULL)
-	{
-	  setservent (0);
-	  if (isdigit (key[i][0]))
-	    {
-	      int port = htons (atol (key[i]));
-	      while ((serv = getservent ()) != NULL)
-		if (serv->s_port == port)
-		  {
-		    print_services (serv);
-		    break;
-		  }
-	    }
-	  else
-	    {
-	      int j;
+      if (proto != NULL)
+	*proto++ = '\0';
 
-	      while ((serv = getservent ()) != NULL)
-		if (strcmp (serv->s_name, key[i]) == 0)
-		  {
-		    print_services (serv);
-		    break;
-		  }
-		else
-		  for (j = 0; serv->s_aliases[j]; ++j)
-		    if (strcmp (serv->s_aliases[j], key[i]) == 0)
-		      {
-			print_services (serv);
-			break;
-		      }
-	    }
-	  endservent ();
-	}
+      if (isdigit (key[i][0]))
+	serv = getservbyport (htons (atol (key[i])), proto);
       else
-	{
-	  *proto++ = '\0';
+	serv = getservbyname (key[i], proto);
 
-	  if (isdigit (key[i][0]))
-	    serv = getservbyport (htons (atol (key[i])), proto);
-	  else
-	    serv = getservbyname (key[i], proto);
-
-	  if (serv == NULL)
-	    result = 2;
-	  else
-	    print_services (serv);
-	}
+      if (serv == NULL)
+	result = 2;
+      else
+	print_services (serv);
     }
 
   return result;
