@@ -1,3 +1,18 @@
+2000-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/big5.c: Regenerated after BIG5 charmap change.
+	Patch by Tung-Han Hsieh <thhsieh@twcpro.phys.ntu.edu.tw>.
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Fix typo in
+	comparison with new cache magic bytes.
+	Patch by Denis Zaitsev <zzz@cd-club.ru>.
+
+2000-11-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/C-translit.h.in: Update from translit_neutral.
+	* locale/C-translit.h: Regenerated.
+	* intl/tst-translit.c: Update.
+
 2000-11-04  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/Dist: Remove clk_tck.c.

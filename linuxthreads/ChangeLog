@@ -1,3 +1,9 @@
+2000-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* cancel.c (pthread_cancel): Always set p_canceled, even if we are
+	not doing it right now.
+	Reported by Kaz Kylheku <kaz@ashi.footprints.net>.
+
 2000-10-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* Examples/ex4.c (main): Don't use exit() to avoid warning with

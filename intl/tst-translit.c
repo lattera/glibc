@@ -41,8 +41,8 @@ main (void)
 
   TEST ("test", "<<(C) AEss>>");
   TEST ("test", "<<(C) AEss>>");
-  TEST ("onemore", "1/2*1/2=1/4");
-  TEST ("onemore", "1/2*1/2=1/4");
+  TEST ("onemore", " 1/2 * 1/2 = 1/4 ");
+  TEST ("onemore", " 1/2 * 1/2 = 1/4 ");
   TEST ("test", "<<(C) AEss>>");
 
   return result;
