@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <signal.h>
+#include <stddef.h>
 
 static __sighandler_t user_handlers[NSIG];
 
