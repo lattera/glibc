@@ -74,7 +74,7 @@ static int eval_expr (char *expr, long int *result) internal_function;
 
 #define W_CHUNK	(100)
 
-/* Result of w_newword will be ignored if it the last word. */
+/* Result of w_newword will be ignored if it's the last word. */
 static inline char *
 w_newword (size_t *actlen, size_t *maxlen)
 {
@@ -1203,7 +1203,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  goto syntax;
 	}
 
-      /* Now collect the pattern. */
+      /* Now collect the pattern, but don't expand it yet. */
       ++*offset;
       for (; words[*offset]; ++(*offset))
 	{
@@ -1224,8 +1224,18 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	      break;
 
 	    case '\\':
-	      if (!pattern_is_quoted && words[++*offset] == '\0')
+	      if (pattern_is_quoted)
+		/* Quoted; treat as normal character. */
+		break;
+
+	      /* Otherwise, it's an escape: next character is literal. */
+	      if (words[++*offset] == '\0')
 		goto syntax;
+
+	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen, '\\');
+	      if (pattern == NULL)
+		goto no_space;
+
 	      break;
 
 	    case '\'':
@@ -1383,6 +1393,153 @@ envsubst:
 
   if (action != ACT_NONE)
     {
+      int expand_pattern = 0;
+
+      /* First, find out if we need to expand pattern (i.e. if we will
+       * use it). */
+      switch (action)
+	{
+	case ACT_RP_SHORT_LEFT:
+	case ACT_RP_LONG_LEFT:
+	case ACT_RP_SHORT_RIGHT:
+	case ACT_RP_LONG_RIGHT:
+	  /* Always expand for these. */
+	  expand_pattern = 1;
+	  break;
+
+	case ACT_NULL_ERROR:
+	case ACT_NULL_SUBST:
+	case ACT_NULL_ASSIGN:
+	  if (!value || (!*value && colon_seen))
+	    /* If param is unset, or set but null and a colon has been seen,
+	       the expansion of the pattern will be needed. */
+	    expand_pattern = 1;
+
+	  break;
+
+	case ACT_NONNULL_SUBST:
+	  /* Expansion of word will be needed if parameter is set and not null,
+	     or set null but no colon has been seen. */
+	  if (value && (*value || !colon_seen))
+	    expand_pattern = 1;
+
+	  break;
+
+	default:
+	  assert (! "Unrecognised action!");
+	}
+
+      if (expand_pattern)
+	{
+	  /* We need to perform tilde expansion, parameter expansion,
+             command substitution, and arithmetic expansion.  We also
+	     have to be a bit careful with wildcard characters, as
+	     pattern might be given to fnmatch soon.  To do this, we
+	     convert quotes to escapes. */
+
+	  char *expanded;
+	  size_t exp_len;
+	  size_t exp_maxl;
+	  char *p;
+	  int quoted = 0; /* 1: single quotes; 2: double */
+
+	  expanded = w_newword (&exp_len, &exp_maxl);
+	  for (p = pattern; p && *p; p++)
+	    {
+	      int offset;
+
+	      switch (*p)
+		{
+		case '"':
+		  if (quoted == 2)
+		    quoted = 0;
+		  else if (quoted == 0)
+		    quoted = 2;
+		  else break;
+
+		  continue;
+
+		case '\'':
+		  if (quoted == 1)
+		    quoted = 0;
+		  else if (quoted == 0)
+		    quoted = 1;
+		  else break;
+
+		  continue;
+
+		case '*':
+		case '?':
+		  if (quoted)
+		    {
+		      /* Convert quoted wildchar to escaped wildchar. */
+		      expanded = w_addchar (expanded, &exp_len,
+					    &exp_maxl, '\\');
+
+		      if (expanded == NULL)
+			goto no_space;
+		    }
+		  break;
+
+		case '$':
+		  offset = 0;
+		  error = parse_dollars (&expanded, &exp_len, &exp_maxl, p,
+					 &offset, flags, NULL, NULL, NULL, 1);
+		  if (error)
+		    {
+		      if (free_value)
+			free (value);
+
+		      if (expanded)
+			free (expanded);
+
+		      goto do_error;
+		    }
+
+		  p += offset;
+		  continue;
+
+		case '~':
+		  if (quoted || exp_len)
+		    break;
+
+		  offset = 0;
+		  error = parse_tilde (&expanded, &exp_len, &exp_maxl, p,
+				       &offset, 0);
+		  if (error)
+		    {
+		      if (free_value)
+			free (value);
+
+		      if (expanded)
+			free (expanded);
+
+		      goto do_error;
+		    }
+
+		  p += offset;
+		  continue;
+
+		case '\\':
+		  expanded = w_addchar (expanded, &exp_len, &exp_maxl, '\\');
+		  ++p;
+		  assert (*p); /* checked when extracted initially */
+		  if (expanded == NULL)
+		    goto no_space;
+		}
+
+	      expanded = w_addchar (expanded, &exp_len, &exp_maxl, *p);
+
+	      if (expanded == NULL)
+		goto no_space;
+	    }
+
+	  if (pattern)
+		  free (pattern);
+
+	  pattern = expanded;
+	}
+
       switch (action)
 	{
 	case ACT_RP_SHORT_LEFT:
@@ -1521,33 +1678,12 @@ envsubst:
 	    /* Substitute parameter */
 	    break;
 
+	  error = 0;
 	  if (!colon_seen && value)
 	    /* Substitute NULL */
-	    error = 0;
+	    ;
 	  else if (*pattern)
-	    {
-	      /* Expand 'pattern' and write it to stderr */
-	      wordexp_t	we;
-
-	      error = wordexp (pattern, &we, flags);
-
-	      if (error == 0)
-		{
-		  int i;
-
-		  fprintf (stderr, "%s:", env);
-
-		  for (i = 0; i < we.we_wordc; ++i)
-		    {
-		      fprintf (stderr, " %s", we.we_wordv[i]);
-		    }
-
-		  fprintf (stderr, "\n");
-		  error = WRDE_BADVAL;
-		}
-
-	      wordfree (&we);
-	    }
+	    fprintf (stderr, "%s: %s\n", env, pattern);
 	  else
 	    {
 	      fprintf (stderr, "%s: parameter null or not set\n", env);
@@ -1563,95 +1699,35 @@ envsubst:
 	    /* Substitute parameter */
 	    break;
 
+	  if (free_value && value)
+	    free (value);
+
 	  if (!colon_seen && value)
-	    {
-	      /* Substitute NULL */
-	      if (free_value)
-		free (value);
-	      goto success;
-	    }
-
-	subst_word:
-	  {
-	    /* Substitute word */
-	    wordexp_t we;
-	    int i;
-
-	    if (free_value)
-	      free (value);
-
-	    if (quoted)
-	      {
-		/* No field-splitting is allowed, so imagine
-		   quotes around the word.  */
-		char *qtd_pattern = malloc (3 + strlen (pattern));
-		if (qtd_pattern)
-		  sprintf (qtd_pattern, "\"%s\"", pattern);
-		free (pattern);
-		pattern = qtd_pattern;
-	      }
-
-	    if (pattern == NULL && (pattern = __strdup ("")) == NULL)
-	      goto no_space;
-
-	    error = wordexp (pattern, &we, flags);
-	    if (error)
-	      goto do_error;
-
-	    /* Fingers crossed that the quotes worked.. */
-	    assert (!quoted || we.we_wordc == 1);
-
-	    /* Substitute */
-	    for (i = 0; i < we.we_wordc; ++i)
-	      if ((error = w_addword (pwordexp, __strdup (we.we_wordv[i])))
-		  != 0)
-		break;
-
-	    if (i < we.we_wordc)
-	      {
-		/* Ran out of space */
-		wordfree (&we);
-		goto do_error;
-	      }
-
-	    if (action == ACT_NULL_ASSIGN)
-	      {
-		char *words;
-		char *cp;
-		size_t words_size = 0;
-
-		if (special)
-		  /* Cannot assign special parameters. */
-		  goto syntax;
-
-		for (i = 0; i < we.we_wordc; i++)
-		  words_size += strlen (we.we_wordv[i]) + 1; /* for <space> */
-		words_size++;
-
-		cp = words = __alloca (words_size);
-		*words = 0;
-		for (i = 0; i < we.we_wordc - 1; i++)
-		  {
-		    cp = __stpcpy (cp, we.we_wordv[i]);
-		    *cp++ = ' ';
-		  }
-
-		strcpy (cp, we.we_wordv[i]);
-
-		/* Also assign */
-		setenv (env, words, 1);
-	      }
-
-	    wordfree (&we);
+	    /* Substitute NULL */
 	    goto success;
-	  }
+
+	  value = pattern ? __strdup (pattern) : pattern;
+	  free_value = 1;
+
+	  if (pattern && !value)
+	    goto no_space;
+
+	  break;
 
 	case ACT_NONNULL_SUBST:
-	  if (value && *value)
-	    goto subst_word;
+	  if (value && (*value || !colon_seen))
+	    {
+	      if (free_value && value)
+		free (value);
 
-	  if (!colon_seen && value)
-	    goto subst_word;
+	      value = pattern ? __strdup (pattern) : pattern;
+	      free_value = 1;
+
+	      if (pattern && !value)
+		goto no_space;
+
+	      break;
+	    }
 
 	  /* Substitute NULL */
 	  if (free_value)
@@ -1671,8 +1747,17 @@ envsubst:
 	      goto success;
 	    }
 
-	  /* This checks for '=' so it knows to assign */
-	  goto subst_word;
+	  if (free_value && value)
+	    free (value);
+
+	  value = pattern ? __strdup (pattern) : pattern;
+	  free_value = 1;
+
+	  if (pattern && !value)
+	    goto no_space;
+
+	  setenv (env, value, 1);
+	  break;
 
 	default:
 	  assert (! "Unrecognised action!");
@@ -2190,10 +2275,8 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 	    if (strchr ("\n|&;<>(){}", ch))
 	      {
 		/* Fail */
-		wordfree (pwordexp);
-		pwordexp->we_wordc = 0;
-		pwordexp->we_wordv = old_wordv;
-		return WRDE_BADCHAR;
+		error = WRDE_BADCHAR;
+		goto do_error;
 	      }
 
 	    /* "Ordinary" character -- add it to word */

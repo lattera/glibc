@@ -81,6 +81,7 @@ struct test_case_struct
     { 0, NULL, "\"quoted\"", 0, 1, { "quoted", }, IFS },
     { 0, "foo", "\"$var\"\"$var\"", 0, 1, { "foofoo", }, IFS },
     { 0, NULL, "'singly-quoted'", 0, 1, { "singly-quoted", }, IFS },
+    { 0, NULL, "contin\\\nuation", 0, 1, { "continuation", }, IFS },
 
     /* Simple command substitution */
     { 0, NULL, "$(echo hello)", 0, 1, { "hello", }, IFS },
@@ -118,10 +119,16 @@ struct test_case_struct
     { 0, NULL, "${var:-'}'}", 0, 1, { "}", }, IFS },
     { 0, NULL, "${var-}", 0, 0, { NULL }, IFS },
 
+    { 0, "pizza", "${var#${var}}", 0, 0, { NULL }, IFS },
+    { 0, "pepperoni", "${var%$(echo oni)}", 0, 1, { "pepper" }, IFS },
+    { 0, "6pack", "${var#$((6))}", 0, 1, { "pack" }, IFS },
+    { 0, "b*witched", "${var##b*}", 0, 0, { NULL }, IFS },
+    { 0, "b*witched", "${var##\"b*\"}", 0, 1, { "witched" }, IFS },
     { 0, "banana", "${var%na*}", 0, 1, { "bana", }, IFS },
     { 0, "banana", "${var%%na*}", 0, 1, { "ba", }, IFS },
     { 0, "borabora-island", "${var#*bora}", 0, 1, { "bora-island", }, IFS },
-    { 0, "borabora-island", "${var##*bora}", 0, 1, {"-island", }, IFS },
+    { 0, "borabora-island", "${var##*bora}", 0, 1, { "-island", }, IFS },
+    { 0, "coconut", "${var##\\*co}", 0, 1, { "coconut", }, IFS },
     { 0, "100%", "${var%0%}", 0, 1, { "10" }, IFS },
 
     /* Pathname expansion */
