@@ -1,3 +1,14 @@
+1998-01-26  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/dl-machine.h (TRAMPOLINE_TEMPLATE): Move declaration
+	of the trampoline function into the macro.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Fix ldgp for PROF.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Revert last change;
+	kernel 2.1.82 has this fixed.
+
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h: New file.
+
 1998-01-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add change to

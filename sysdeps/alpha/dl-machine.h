@@ -123,7 +123,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 /* This code is used in dl-runtime.c to call the `fixup' function
    and then redirect to the address it returns.  */
-#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name, IMB) asm ( "\
+#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name, IMB)	\
+  extern void tramp_name (void);				\
+  asm ( "\
 	.globl " #tramp_name "
 	.ent " #tramp_name "
 " #tramp_name ":
@@ -205,8 +207,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #else
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
   TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup, imb);	\
-  extern void _dl_runtime_resolve (void);			\
-  extern void _dl_runtime_profile (void);			\
   strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
 #endif
 
