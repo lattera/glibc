@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de> and
    Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -350,7 +350,8 @@ feexcp_nomask_test (const char *flag_name, int fe_exc)
   int status;
   pid_t pid;
 
-  printf ("Test: after fedisable (%s) processes will abort\n", flag_name);
+  printf ("Test: after fedisableexcept (%s) processes will abort\n",
+	  flag_name);
   printf ("      when feraiseexcept (%s) is called.\n", flag_name);
   pid = fork ();
   if (pid == 0)
@@ -403,7 +404,8 @@ feexcp_mask_test (const char *flag_name, int fe_exc)
   int exception;
   pid_t pid;
 
-  printf ("Test: after fedisable (%s) processes will not abort\n", flag_name);
+  printf ("Test: after fedisableexcept (%s) processes will not abort\n",
+	  flag_name);
   printf ("      when feraiseexcept (%s) is called.\n", flag_name);
   pid = fork ();
   if (pid == 0)

@@ -1,3 +1,8 @@
+2003-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* math/test-fenv.c (feexcp_nomask_test): Fix comment
+	(feexcp_mask_test): Likewise.
+
 2003-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locale.c (main): Fix typo in last patch.
