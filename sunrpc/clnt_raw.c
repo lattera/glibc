@@ -92,8 +92,8 @@ clntraw_create (u_long prog, u_long vers)
 {
   struct clntraw_private_s *clp = clntraw_private;
   struct rpc_msg call_msg;
-  XDR *xdrs = &clp->xdr_stream;
-  CLIENT *client = &clp->client_object;
+  XDR *xdrs;
+  CLIENT *client;
 
   if (clp == 0)
     {
@@ -102,6 +102,8 @@ clntraw_create (u_long prog, u_long vers)
 	return (0);
       clntraw_private = clp;
     }
+  xdrs = &clp->xdr_stream;
+  client = &clp->client_object;
   /*
    * pre-serialize the static part of the call msg and stash it away
    */
