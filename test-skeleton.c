@@ -155,6 +155,9 @@ main (int argc, char *argv[])
 	test_dir = "/tmp";
     }
 
+  /* Make sure we see all message, even those on stdout.  */
+  setvbuf (stdout, NULL, _IONBF, 0);
+
   /* If we are not expected to fork run the function immediately.  */
   if (direct)
     return TEST_FUNCTION;
@@ -213,7 +216,7 @@ main (int argc, char *argv[])
 	fprintf (stderr, "Incorrect signal from child: got `%s', need `%s'\n",
 		 strsignal (WTERMSIG (status)), strsignal (EXPECTED_SIGNAL));
       else
-	fprintf (stderr, "Incorrect signal from child: got `%s'\n",
+	fprintf (stderr, "Didn't expect signal from child: got `%s'\n",
 		 strsignal (WTERMSIG (status)));
       exit (1);
     }

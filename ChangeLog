@@ -1,5 +1,15 @@
 1998-04-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* rt/tst-aio.c: Add test for aio_read and lio_listio.
+
+	* rt/lio_listio.c: Correct total counter handling.
+
+	* rt/aio_misc.c (handle_fildes_io): Correctly dequeue elements
+	from request queue.
+
+	* test-skeleton.c (main): Make stdout unbuffered.  Improve message
+	of signal on exit even more.
+
 	* rt/aio_suspend.c (aio_suspend): Use PTHREAD_COND_INITIALIZER
 	instead of call to pthread_cond_init.
 	* rt/lio_listio.c (lio_listio): Likewise.

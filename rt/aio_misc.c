@@ -476,6 +476,8 @@ handle_fildes_io (void *arg)
 	    runp->next_fd->last_fd = runp->last_fd;
 	  if (runp->last_fd != NULL)
 	    runp->last_fd->next_fd = runp->next_fd;
+	  else
+	    requests = runp->next_fd;
 	}
       else
 	{
@@ -486,6 +488,8 @@ handle_fildes_io (void *arg)
 	    runp->next_fd->last_fd = runp->next_prio;
 	  if (runp->last_fd != NULL)
 	    runp->last_fd->next_fd = runp->next_prio;
+	  else
+	    requests = runp->next_prio;
 	}
 
       /* Free the old element.  */

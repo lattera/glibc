@@ -69,13 +69,29 @@ test_file (const void *buf, size_t size, int fd, const char *msg)
       return 1;
     }
 
-  if (ftruncate (fd, 0) < 0)
-    {
-      error (0, errno, "%s: failed truncate", msg);
-      return 1;
-    }
+  printf ("%s test ok\n", msg);
 
   return 0;
+}
+
+
+void
+do_wait (struct aiocb **cbp, size_t nent)
+{
+  int go_on;
+  do
+    {
+      size_t cnt;
+
+      aio_suspend ((const struct aiocb *const *) cbp, nent, NULL);
+      go_on = 0;
+      for (cnt = 0; cnt < nent; ++cnt)
+	if (cbp[cnt] != NULL && aio_error (cbp[cnt]) == EINPROGRESS)
+	  go_on = 1;
+	else
+	  cbp[cnt] = NULL;
+    }
+  while (go_on);
 }
 
 
@@ -90,7 +106,6 @@ do_test (int argc, char *argv[])
   size_t cnt;
   int fd;
   int result = 0;
-  int go_on;
 
   name_len = strlen (test_dir);
   name = malloc (name_len + sizeof ("/aioXXXXXX"));
@@ -120,23 +135,50 @@ do_test (int argc, char *argv[])
   for (cnt = 10; cnt > 0; )
     aio_write (cbp[--cnt]);
   /* Wait 'til the results are there.  */
-  do
-    {
-      aio_suspend ((const struct aiocb *const *) cbp, 10, NULL);
-      go_on = 0;
-      for (cnt = 0; cnt < 10; ++cnt)
-	if (cbp[cnt] != NULL && aio_error (cbp[cnt]) == EINPROGRESS)
-	  go_on = 1;
-	else
-	  {
-	    if (cbp[cnt] != NULL)
-	      printf ("request %d finished\n", cnt);
-	    cbp[cnt] = NULL;
-	  }
-    }
-  while (go_on);
+  do_wait (cbp, 10);
   /* Test this.  */
   result |= test_file (buf, sizeof (buf), fd, "aio_write");
+
+  /* Read now as we've written it.  */
+  memset (buf, '\0', sizeof (buf));
+  /* Issue the commands.  */
+  for (cnt = 10; cnt > 0; )
+    {
+      --cnt;
+      cbp[cnt] = &cbs[cnt];
+      aio_read (cbp[cnt]);
+    }
+  /* Wait 'til the results are there.  */
+  do_wait (cbp, 10);
+  /* Test this.  */
+  for (cnt = 0; cnt < 1000; ++cnt)
+    if (buf[cnt] != '0' + (cnt / 100))
+      {
+	result = 1;
+	error (0, 0, "comparison failed for aio_read test");
+	break;
+      }
+
+  if (cnt == 1000)
+    puts ("aio_read test ok");
+
+  /* Remove the test file contents.  */
+  if (ftruncate (fd, 0) < 0)
+    {
+      error (0, errno, "ftruncate failed\n");
+      result = 1;
+    }
+
+  /* Test lio_listio.  */
+  for (cnt = 0; cnt < 10; ++cnt)
+    {
+      cbs[cnt].aio_lio_opcode = LIO_WRITE;
+      cbp[cnt] = &cbs[cnt];
+    }
+  /* Issue the command.  */
+  lio_listio (LIO_WAIT, cbp, 10, NULL);
+  /* ...and immediately test it since we started it in wait mode.  */
+  result |= test_file (buf, sizeof (buf), fd, "lio_listio (write)");
 
   return result;
 }

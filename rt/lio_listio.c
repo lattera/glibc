@@ -93,7 +93,7 @@ lio_listio (mode, list, nent, sig)
 	  {
 	    waitlist[cnt].cond = &cond;
 	    waitlist[cnt].next = requests[cnt]->waiting;
-	    waitlist[cnt].counterp = NULL;
+	    waitlist[cnt].counterp = &total;
 	    waitlist[cnt].sigevp = NULL;
 	    requests[cnt]->waiting = &waitlist[cnt];
 	    ++total;
@@ -105,8 +105,7 @@ lio_listio (mode, list, nent, sig)
       pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
       while (total > 0)
-	if (pthread_cond_wait (&cond, &__aio_requests_mutex) == 0)
-	  --total;
+	pthread_cond_wait (&cond, &__aio_requests_mutex);
 
       /* Now it's time to restore the cancelation state.  */
       pthread_setcancelstate (oldstate, NULL);
