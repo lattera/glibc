@@ -41,6 +41,8 @@ libc {
 
     # functions used in libmachuser and libhurduser
     _S_catch_exception_raise;
+    _S_catch_exception_raise_state;
+    _S_catch_exception_raise_state_identity;
     _S_msg_add_auth; _S_msg_del_auth;
     _S_msg_describe_ports;
     _S_msg_get_dtable; _S_msg_set_dtable;
@@ -53,7 +55,10 @@ libc {
     _S_msg_get_init_ports; _S_msg_set_init_ports;
     _S_msg_proc_newids; _S_msg_report_wait;
     _S_msg_sig_post; _S_msg_sig_post_untraced;
-    _hurd_intr_rpc_mach_msg; _hurdsig_fault_catch_exception_raise;
+    _hurd_intr_rpc_mach_msg;
+    _hurdsig_fault_catch_exception_raise;
+    _hurdsig_fault_catch_exception_raise_state;
+    _hurdsig_fault_catch_exception_raise_state_identity;
 
     # "quasi-internal" variables
     _hurd_device_master;

@@ -30,7 +30,7 @@ NF == 1 && $1 == "(" { inproto=1 }
 
 echo == 1 { print $0; }
 
-/^}$/ \
+/^}$/ && proto != "" \
   {
     print "{";
     print "  kern_return_t err;";

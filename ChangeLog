@@ -1,5 +1,27 @@
 2002-02-17  Roland McGrath  <roland@frob.com>
 
+	* hurd/Versions (libc: GLIBC_2.0): Add _S_catch_exception_raise_state,
+	_S_catch_exception_raise_state_identity,
+	_hurdsig_fault_catch_exception_raise_state,
+	_hurdsig_fault_catch_exception_raise_state_identity.
+
+	* mach/shortcut.awk: Don't apply the /^}$/ rule when $proto == "".
+
+	* sysdeps/mach/getsysstats.c (__get_avphys_pages) [HOST_VM_INFO]: Use
+	__host_info with HOST_VM_INFO flavor instead of __vm_statistics.
+
+	* sysdeps/mach/hurd/getpriority.c [TASK_SCHED_TIMESHARE_INFO]: Find
+	`base_priority' in PIP->timeshare_base_info instead of PIP->taskinfo.
+
+	* sysdeps/mach/hurd/dl-sysdep.c [FMH]: Define for i386 only.
+	(fmh, unfmh): Define these functions only #if FMH.  Otherwise define
+	them as no-op macros.
+	[FMH] (ELF_MACHINE_USER_ADDRESS_MASK): Redefine it to zero.
+	(__mmap): Uncomment uses of ELF_MACHINE_USER_ADDRESS_MASK.
+
+	* sysdeps/powerpc/dl-machine.h
+	(ELF_MACHINE_USER_ADDRESS_MASK): New macro.
+
 	* hurd/hurdselect.c (_hurd_select) [MACH_MSG_TRAILER_MINIMUM_SIZE]:
 	Use untyped Mach IPC message format.
 

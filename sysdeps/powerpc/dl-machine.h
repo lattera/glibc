@@ -253,6 +253,10 @@ _dl_prof_resolve:	\n\
 ");
 #endif
 
+/* Mask identifying addresses reserved for the user program,
+   where the dynamic linker should not map anything.  */
+#define ELF_MACHINE_USER_ADDRESS_MASK	0xf0000000UL
+
 /* The actual _start code is in dl-start.S.  Use a really
    ugly bit of assembler to let dl-start.o see _dl_start.  */
 #define RTLD_START asm (".globl _dl_start");

@@ -1,5 +1,5 @@
 /* System dependent pieces of sysconf; Mach version
-   Copyright (C) 1996, 97, 99, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,7 +84,17 @@ __get_avphys_pages ()
   vm_statistics_data_t vs;
   kern_return_t err;
 
+#ifdef HOST_VM_INFO
+  {
+    mach_msg_type_number_t count = HOST_VM_INFO_COUNT;
+    err = __host_info (__mach_host_self (), HOST_VM_INFO,
+		       (host_info_t) &vs, &count);
+    if (!err && count < HOST_VM_INFO_COUNT)
+      err = EGRATUITOUS;
+  }
+#else
   err = __vm_statistics (__mach_task_self (), &vs);
+#endif
   if (err)
     return __hurd_fail (err);
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,8 +55,13 @@ getpriority (enum __priority_which which, id_t who)
 			     (vm_address_t) oldpi, oldpisize * sizeof pi[0]);
 	  pip = (struct procinfo *) pi;
 	}
+#ifdef TASK_SCHED_TIMESHARE_INFO
+      if (!onerr && pip->timeshare_base_info.base_priority > maxpri)
+	maxpri = pip->timeshare_base_info.base_priority;
+#else
       if (!onerr && pip->taskinfo.base_priority > maxpri)
 	maxpri = pip->taskinfo.base_priority;
+#endif
       return 0;
     }
 

@@ -71,7 +71,14 @@ unsigned long int __hurd_threadvar_stack_offset
   = (unsigned long int) &threadvars;
 unsigned long int __hurd_threadvar_stack_mask;
 
+#define FMH defined(__i386__)
+#if ! FMH
+# define fmh()		((void)0)
+# define unfmh()	((void)0)
+#else
 /* XXX loser kludge for vm_map kernel bug */
+#undef	ELF_MACHINE_USER_ADDRESS_MASK
+#define ELF_MACHINE_USER_ADDRESS_MASK	0
 static vm_address_t fmha;
 static vm_size_t fmhs;
 static void unfmh(void){
@@ -93,7 +100,7 @@ static void fmh(void) {
     assert_perror(err);}
   }
 /* XXX loser kludge for vm_map kernel bug */
-
+#endif
 
 
 Elf32_Addr
@@ -446,7 +453,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   mapaddr = (vm_address_t) addr;
   err = __vm_map (__mach_task_self (),
-		  &mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
+		  &mapaddr, (vm_size_t) len, ELF_MACHINE_USER_ADDRESS_MASK,
 		  !(flags & MAP_FIXED),
 		  memobj_rd,
 		  (vm_offset_t) offset,
@@ -460,7 +467,8 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       err = __vm_deallocate (__mach_task_self (), mapaddr, len);
       if (! err)
 	err = __vm_map (__mach_task_self (),
-			&mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
+			&mapaddr, (vm_size_t) len,
+			ELF_MACHINE_USER_ADDRESS_MASK,
 			!(flags & MAP_FIXED),
 			memobj_rd, (vm_offset_t) offset,
 			flags & (MAP_COPY|MAP_PRIVATE),
