@@ -75,7 +75,7 @@ $(objpfx)mach-syscalls.mk: syscalls.awk Makefile
 	$(CC) $(CPPFLAGS) -E -x c-header - \
 	      -D_MACH_`echo $(base-machine) | tr a-z A-Z`_SYSCALL_SW_H_=1 | \
 	sed -n -e 's/^kernel_trap(\(.*\),\([-0-9]*\),\([0-9]*\))$$/\1 \2 \3/p'\
-	| awk -f $< > $@-new
+	| $(AWK) -f $< > $@-new
 	cat $@-dep >> $@-new; rm -f $@-dep
 	mv $@-new $@
 generated += mach-syscalls.mk
@@ -117,8 +117,8 @@ mach/mach_interface.uh mach/mach_host.uh mach/mach_port.uh: $(objpfx)mach-syscal
 ifdef mach-shortcuts
 $(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: shortcut.awk \
 						$(objpfx)RPC_%_rpc.c
-	gawk -v alias=$* -v call=__$* -v rpc=__$*_rpc -v syscall=__syscall_$* \
-	     -f $^ > $@-new
+	$(AWK)	-v alias=$* -v call=__$* -v rpc=__$*_rpc \
+		-v syscall=__syscall_$* -f $^ > $@-new
 	mv $@-new $@
 generated += $(mach-shortcuts:%=%.c)
 endif	# mach-shortcuts
@@ -148,5 +148,5 @@ include ../Rules
 generated += errsystems.c
 $(objpfx)errsystems.c: errsystems.awk err_*.sub \
 		       $(wildcard $(addsuffix /err_*.sub,$(+sysdep_dirs)))
-	gawk -v subsys='$(filter-out $<,$^)' -f $^ > $@.n
+	$(AWK) -v subsys='$(filter-out $<,$^)' -f $^ > $@.n
 	mv $@.n $@

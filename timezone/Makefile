@@ -89,7 +89,7 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 # The extra kludge for the $(tzlinks) files is necessary since running zic
 # this file requires all other files to exist.  Blech!
 	(echo 'define $*-zones'						    ;\
-	 awk '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^   ;\
+	 $(AWK) '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^ ;\
 	 echo 'endef'							    ;\
 	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		    ;\
 	 echo 'ifdef $*-zones'						    ;\

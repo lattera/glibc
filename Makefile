@@ -116,7 +116,7 @@ libc-init = set-init
 else
 libc-init = munch-init
 $(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
-	awk -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
+	$(AWK) -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
 	mv -f $@-t $@
 generated := $(generated) munch-init.c
 endif

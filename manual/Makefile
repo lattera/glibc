@@ -21,8 +21,6 @@
 subdir := manual
 export subdir := $(subdir)
 
-# We need GNU awk for the xtract-typefun script.
-GAWK = gawk
 # Allow override
 INSTALL_INFO = install-info
 
@@ -62,7 +60,7 @@ chapters-incl := $(chapters-incl1) $(chapters-incl2)
 
 define find-includes
 (echo '$(@F) :=' \\	;\
- awk '$$1 == "@include" { print $$2 " \\" }' $^) > $@.new
+ $(AWK) '$$1 == "@include" { print $$2 " \\" }' $^) > $@.new
 mv -f $@.new $@
 endef
 
@@ -78,7 +76,7 @@ libc.dvi: texinfo.tex
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;
 stamp-summary: summary.awk $(chapters) $(chapters-incl)
-	awk -f $^ \
+	$(AWK) -f $^ \
 	| sort -df +1 -2 | tr '\014' '\012' > summary-tmp
 	./move-if-change summary-tmp summary.texi
 # touch is broken on our machines.  Sigh.
@@ -88,10 +86,10 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # access to the documentation of the function, variables, and other
 # definitions.
 dir-add.texinfo: xtract-typefun.awk $(chapters) $(chapters-incl)
-	(echo "@dircategory GNU C library functions";			\
+	$(SHELL) -c '(echo "@dircategory GNU C library functions";	\
 	 echo "@direntry";						\
-	 $(GAWK) -f $^ | sort;						\
-	 echo "@end direntry";) > $@.new
+	 $(AWK) -f $^;							\
+	 echo "@end direntry";)' > $@.new
 	mv -f $@.new $@
 
 # Generate Texinfo files from the C source for the example programs.

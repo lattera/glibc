@@ -87,7 +87,7 @@ $(common-objpfx)errnos.d: $(mach-errnos-deps)
 $(hurd)/errnos.h: $(common-objpfx)stamp-errnos ;
 $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 			      $(mach-errnos-deps)
-	gawk -f $^ > $(hurd)/errnos.h-tmp
+	$(AWK) -f $^ > $(hurd)/errnos.h-tmp
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $(hurd)/errnos.h-tmp
 	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h

@@ -557,6 +557,7 @@ else
 fi
 AC_SUBST(libc_cv_have_ksh)
 
+AC_PROG_AWK
 AC_PATH_PROGS(PERL, perl, no)
 AC_SUBST(PERL)
 

@@ -32,8 +32,6 @@
 			bytes needed.  It defaults to MIN_NEEDED_INPUT
      MAX_NEEDED_OUTPUT	likewise for output bytes.
 
-   Both values have a default of 1.
-
      LOOPFCT		name of the function created.  If not specified
 			the name is `loop' but this prevents the use
 			of multiple functions in the same file.
@@ -55,7 +53,7 @@
 
 /* We need at least one byte for the next round.  */
 #ifndef MIN_NEEDED_INPUT
-# define MIN_NEEDED_INPUT	1
+# error "MIN_NEEDED_INPUT definition missing"
 #endif
 
 /* Let's see how many bytes we produce.  */
@@ -65,7 +63,7 @@
 
 /* We produce at least one byte in the next round.  */
 #ifndef MIN_NEEDED_OUTPUT
-# define MIN_NEEDED_OUTPUT	1
+# error "MIN_NEEDED_OUTPUT definition missing"
 #endif
 
 /* Let's see how many bytes we produce.  */

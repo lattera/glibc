@@ -38,7 +38,7 @@ extern char **_dl_argv;
 extern char **_environ;
 extern size_t _dl_pagesize;
 extern const char *_dl_platform;
-extern unsigned long _dl_hwcap;
+extern unsigned long int _dl_hwcap;
 extern size_t _dl_platformlen;
 extern void _end;
 extern void ENTRY_POINT (void);
@@ -48,7 +48,6 @@ int __libc_enable_secure;
 int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 static ElfW(auxv_t) *_dl_auxv;
-static unsigned long int hwcap;
 unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
 
 
@@ -241,10 +240,11 @@ _dl_show_auxv (void)
 	_dl_sysdep_message ("AT_PLATFORM: ", av->a_un.a_ptr, "\n", NULL);
 	break;
       case AT_HWCAP:
-	hwcap = av->a_un.a_val;
-	if (_dl_procinfo (hwcap) < 0)
+	_dl_hwcap = av->a_un.a_val;
+	if (_dl_procinfo (_dl_hwcap) < 0)
 	  _dl_sysdep_message ("AT_HWCAP:    ",
-			      _itoa_word (hwcap, buf + sizeof buf - 1, 16, 0),
+			      _itoa_word (_dl_hwcap, buf + sizeof buf - 1,
+					  16, 0),
 			      "\n", NULL);
 	break;
       }
@@ -284,7 +284,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		      size_t *max_capstrlen)
 {
   /* Determine how many important bits are set.  */
-  unsigned long int mask = _dl_hwcap_mask;
+  unsigned long int masked = _dl_hwcap & _dl_hwcap_mask;
   size_t cnt = platform != NULL;
   size_t n, m;
   size_t total;
@@ -293,8 +293,9 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   struct r_strlenpair *rp;
   char *cp;
 
-  for (n = 0; (~((1UL << n) - 1) & mask) != 0; ++n)
-    if ((mask & (1UL << n)) != 0)
+  /* Count the number of bits set in the masked value.  */
+  for (n = 0; (~((1UL << n) - 1) & masked) != 0; ++n)
+    if ((masked & (1UL << n)) != 0)
       ++cnt;
 
   if (cnt == 0)
@@ -318,12 +319,12 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   /* Create temporary data structure to generate result table.  */
   temp = (struct r_strlenpair *) alloca (cnt * sizeof (*temp));
   m = 0;
-  for (n = 0; mask != 0; ++n)
-    if ((mask & (1UL << n)) != 0)
+  for (n = 0; masked != 0; ++n)
+    if ((masked & (1UL << n)) != 0)
       {
 	temp[m].str = _dl_hwcap_string (n);
 	temp[m].len = strlen (temp[m].str);
-	mask ^= 1UL << n;
+	masked ^= 1UL << n;
 	++m;
       }
   if (platform != NULL)

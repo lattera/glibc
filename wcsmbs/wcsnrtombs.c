@@ -46,7 +46,7 @@ __wcsnrtombs (dst, src, nwc, len, ps)
   struct gconv_step_data data;
   const wchar_t *srcend;
   int status;
-  size_t result;
+  size_t result = 0;
 
   /* Tell where we want the result.  */
   data.is_last = 1;

@@ -196,6 +196,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
       /* This variable is used to count the number of characters we
          actually converted.  */
       size_t converted = 0;
+      size_t last_converted;
 
       /* We preserve the initial values of the pointer variables.  */
       const char *inptr = *inbuf;
@@ -211,6 +212,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	  outptr = outbuf;
 
 	  /* Save the state.  */
+	  last_converted = converted;
 #ifdef SAVE_RESET_STATE
 	  SAVE_RESET_STATE (1);
 #endif
@@ -242,7 +244,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	  /* Write out all output which was produced.  */
 	  if (outbuf > outptr)
 	    {
-	      const char *outerr = outbuf;
+	      const char *outerr = data->outbuf;
 	      int result;
 
 	      result = (*fct) (next_step, next_data, &outerr, outbuf,
@@ -264,6 +266,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 		      outbuf = outptr;
 
 		      /* Reset the state.  */
+		      converted = last_converted;
 # ifdef SAVE_RESET_STATE
 		      SAVE_RESET_STATE (0);
 # endif
@@ -287,8 +290,8 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 
 		      /* We must run out of output buffer space in this
 			 rerun.  */
-		      assert (nstatus == GCONV_FULL_OUTPUT
-			      && outbuf == outerr);
+		      assert (outbuf == outerr);
+		      assert (nstatus == GCONV_FULL_OUTPUT);
 #endif	/* reset input buffer */
 		    }
 

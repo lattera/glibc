@@ -39,8 +39,8 @@
 
 
 /* Next, define the other direction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \

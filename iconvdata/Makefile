@@ -211,7 +211,7 @@ endif
 include ../Rules
 
 .PHONY: do-iconv-test
-#tests: do-iconv-test
+tests: do-iconv-test
 
 do-iconv-test: run-iconv-test.sh $(objpfx)gconv-modules \
 	       $(addprefix $(objpfx),$(modules.so)) \

@@ -51,19 +51,9 @@ __gconv (gconv_t cd, const char **inbuf, const char *inbufend, char **outbuf,
 
       do
 	{
-	  /* See whether the input size is reasoable for the output
-	     size.  If not adjust it.  */
-	  size_t inlen = ((inbufend - *inbuf) / cd->steps->max_needed_from
-			  * cd->steps->max_needed_from);
-
-	  if (cd->nsteps > 1)
-	    inlen = MIN (inlen, (((outbufend - cd->data[last_step].outbuf)
-				  / cd->steps[last_step].max_needed_to)
-				 * cd->steps[last_step].max_needed_to));
-
 	  last_start = *inbuf;
-	  result = (*cd->steps->fct) (cd->steps, cd->data, inbuf,
-				      *inbuf + inlen, converted, 0);
+	  result = (*cd->steps->fct) (cd->steps, cd->data, inbuf, inbufend,
+				      converted, 0);
 	}
       while (result == GCONV_EMPTY_INPUT && last_start != *inbuf
 	     && *inbuf + cd->steps->min_needed_from <= inbufend);

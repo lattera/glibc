@@ -37,37 +37,50 @@ ICONV="$codir/elf/ld.so --library-path $codir $codir/iconv/iconv_prog"
 
 # We read the file named TESTS.  All non-empty lines not starting with
 # `#' are interpreted as commands.
-while read from to targets; do
+failed=0
+while read from to subset targets; do
   # Ignore empty and comment lines.
   if test -z "$targets" || test "$from" = '#'; then continue; fi
 
   for t in $targets; do
     $ICONV -f $from -t $t testdata/$from > $temp1 ||
-      { echo "*** conversion from $from to $t failed"; exit 1; }
+      { echo "*** conversion from $from to $t failed"; failed=1; }
     if test -s testdata/$from..$t; then
       cmp $temp1 testdata/$from..$t >& /dev/null ||
-	{ echo "*** $from -> $t conversion failed"; exit 1; }
+	{ echo "*** $from -> $t conversion failed"; failed=1; }
     fi
     $ICONV -f $t -t $to -o $temp2 $temp1 ||
-      { echo "*** conversion from $t to $to failed"; exit 1; }
+      { echo "*** conversion from $t to $to failed"; failed=1; }
     test -s $temp1 && cmp testdata/$from $temp2 >& /dev/null ||
-      { echo "*** $from -> t -> $to conversion failed"; exit 1; }
+      { echo "*** $from -> t -> $to conversion failed"; failed=1; }
     rm -f $temp1 $temp2
 
-    # Now test some bigger text, entirely in ASCII.
-    $ICONV -f $from -t $t testdata/suntzus |
-    $ICONV -f $t -t $to > $temp1 ||
-      { echo "*** conversion $from->$t->$to of suntzus failed"; exit 1; }
-    cmp testdata/suntzus.txt $temp1 ||
-      { echo "*** conversion $from->$t->$to of suntzus incorrect"; exit 1; }
+    # Now test some bigger text, entirely in ASCII.  If ASCII is no subset
+    # of the coded character set we test we convert the test to this
+    # coded character set.  Otherwise we convert to all the TARGETS.
+    if test $subset = Y; then
+      $ICONV -f $from -t $t testdata/suntzus |
+      $ICONV -f $t -t $to > $temp1 ||
+	{ echo "*** conversion $from->$t->$to of suntzus failed"; failed=1; }
+      cmp testdata/suntzus $temp1 ||
+	{ echo "*** conversion $from->$t->$to of suntzus incorrect";
+	  failed=1; }
+    else
+      $ICONV -f ASCII -t $to testdata/suntzus |
+      $ICONV -f $to -f ASCII > $temp1 ||
+        { echo "*** conversion ASCII->$to->ASCII of suntzus failed";
+	  failed=1; }
+	cmp testdata/suntzus $temp1 ||
+        { echo "*** conversion ASCII->$to->ASCII of suntzus incorrect";
+	  failed=1; }
+    fi
     rm -f $temp1
-
     # All tests ok.
     echo "$from -> $t -> $to ok"
   done
 done < TESTS
 
-exit $?
+exit $failed
 # Local Variables:
 #  mode:shell-script
 # End:

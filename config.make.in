@@ -78,6 +78,7 @@ MSGFMT = @MSGFMT@
 # Script execution tools.
 BASH = @BASH@
 KSH = @KSH@
+AWK = @AWK@
 PERL = @PERL@
 
 # More variables may be inserted below by configure.

@@ -8431,7 +8431,7 @@ static const char from_ucs4_tab13[][2] =
   {									      \
     uint32_t ch = *inptr;						      \
 									      \
-    if (ch >= '\xa1' && ch <= '\xff')					      \
+    if (ch >= 0xa1 && ch <= 0xff)					      \
       {									      \
 	/* Two-byte character.  First test whether the next character	      \
 	   is also available.  */					      \
@@ -8448,9 +8448,9 @@ static const char from_ucs4_tab13[][2] =
 	idx = (ch - 0xa1) * 157;					      \
 	ch2 = inptr[1];							      \
 	/* See whether the second byte is in the correct range.  */	      \
-	if (ch2 >= '\x40' && ch2 <= '\x7e')				      \
+	if (ch2 >= 0x40 && ch2 <= 0x7e)					      \
 	  idx += ch2 - 0x40;						      \
-	else if (ch2 >= '\xa1' && ch2 <= '\xfe')			      \
+	else if (ch2 >= 0xa1 && ch2 <= 0xfe)				      \
 	  idx += 0x3f + (ch2 - 0xa1);					      \
 	else								      \
 	  {								      \
@@ -8463,7 +8463,7 @@ static const char from_ucs4_tab13[][2] =
 	ch = big5_to_ucs[idx];						      \
 									      \
 	/* Is this character defined?  */				      \
-	if (ch == L'\0' && *inptr != '\0')				      \
+	if (ch == 0 && *inptr != '\0')					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    result = GCONV_ILLEGAL_INPUT;				      \

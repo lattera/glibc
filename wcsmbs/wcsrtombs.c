@@ -42,7 +42,7 @@ __wcsrtombs (dst, src, len, ps)
 {
   struct gconv_step_data data;
   int status;
-  size_t result;
+  size_t result = 0;
 
   /* Tell where we want the result.  */
   data.is_last = 1;

@@ -287,6 +287,7 @@ dl_main (const ElfW(Phdr) *phdr,
   char *file;
   int has_interp = 0;
   unsigned int i;
+  int paths_initialized = 0;
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode, &lazy);
@@ -376,6 +377,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Initialize the data structures for the search paths for shared
 	 objects.  */
       _dl_init_paths (library_path);
+      paths_initialized = 1;
 
       if (mode == verify)
 	{
@@ -493,7 +495,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       _exit (0);
     }
 
-  if (*user_entry != (ElfW(Addr)) &ENTRY_POINT)
+  if (! paths_initialized)
     /* Initialize the data structures for the search paths for shared
        objects.  */
     _dl_init_paths (library_path);

@@ -1,3 +1,92 @@
+1998-04-21 18:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.c (__gconv): Remove bogus input buffer size computation.
+
+	* iconv/gconv_open.c (__gconv_open): Initialize outbufend element.
+
+	* iconv/gconv_simple.c (__gconv_transform_internal_ascii): Don't use
+	character in comparison with uint32_t.
+	(__gconv_transform_internal_utf8): Specify MAX_NEEDED_TO.
+	(__gconv_transform_utf8_internal): Specify MAX_NEEDED_FROM.
+	Optimize BODY a bit.
+
+	* iconv/loop.c: Require MIN_NEEDED_INPUT and MIN_NEEDED_OUTPUT to
+	be defined.
+
+	* iconv/skeleton.c: Also reset converted counter in case of an error.
+	Call reset function using correct value for output buffer start.
+
+	* iconvdata/Makefile: Re-enable tests.
+
+	* iconvdata/iso8859-1.c: Swap MIN_NEEDED_INPUT and MIN_NEEDED_OUTPUT
+	value for to-conversion.
+
+	* iconvdata/TESTS: Add new third column.
+	* iconvdata/run-iconv-test.sh: Add support for charsets which are
+	not ASCII based.
+	* iconvdata/testdata/suntzus: New file.
+
+	* elf/dl-minimal.c (__strtol_internal): Increment pointer to string
+	while reading.  Correctly used base.  Little optimization.
+	(__strtoul_internal): Likewise.
+
+	* elf/rtld.c (dl_main): Test to avoid duplicate call of _dl_init_paths
+	was wrong.  Use explicit variable.
+
+1998-04-20 23:49  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: Check for awk.
+	* config.make.in: Add AWK to be substituted.
+
+	* manual/xtract-typefun.awk: Rewrite to eliminate gawk extensions.
+	* manual/users.texi: Fix typo exposed by above rewrite.
+
+	* Makefile: Invoke awk using AWK variable.
+	* csu/Makefile: Likewise.
+	* elf/Makefile: Likewise.
+	* mach/Makefile: Likewise.
+	* manual/Makefile: Likewise.
+	* sysdeps/gnu/Makefile: Likewise.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+	* sysdeps/unix/Makefile: Likewise.
+	* timezone/Makefile: Likewise.
+
+1998-04-10  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* sysdeps/gnu/errlist.awk (ERR_REMAP): Implement error code to
+	array index translation.
+	(SYS_ERRLIST_ALIAS, SYS_NERR_ALIAS): Make weak aliases only if
+	these are defined.
+
+	* sysdeps/mach/hurd/Dist: Add errlist.c to distribution.
+
+	* sysdeps/mach/hurd/errlist.c: New file.
+	(ERR_TRANSLATE): Map Hurd error codes into errlist indices.
+	(_hurd_errlist): The Hurd error list doesn't have Unix sys_errlist
+	semantics, so rename it.
+
+1998-04-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/run-iconv-test.sh: Make portable.  Always test all
+	conversions.
+
+1998-04-21 12:30  H.J. Lu  <hjl@gnu.org>
+
+	* wcsmbs/wcsrtombs.c (__wcsrtombs): Initialize result to 0.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+
+1998-04-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/dl-sysdep.c: Handle _dl_hwcap correctly.
+
+	* wcsmbs/btowc.c (__btowc): Declare inptr as const char *.
+
+	* time/strftime.c (my_strftime): Initialize pad variable in
+	declaration.
+
+	* iconvdata/big5.c: Don't use character constants in comparisons
+	with unsigned value.
+
 1998-04-20 18:00  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add __dgettext to GLIBC_2.0 and __libc_longjmp, and
@@ -194,14 +283,14 @@
 	(_PATH_UTMPX): Define to _PATH_UTMP.  (_PATH_WTMPX): Define to
 	_PATH_WTMPX.  (RUN_LVL): Define only if __USE_GNU.  (ACCOUNTING):
 	Define if __USE_GNU.
-	* sysdeps/gnu/setutxent.c: New file.
-	* sysdeps/gnu/getutxent.c: New file.
-	* sysdeps/gnu/endutxent.c: New file.
-	* sysdeps/gnu/getutxid.c: New file.
-	* sysdeps/gnu/getutxline.c: New file.
-	* sysdeps/gnu/pututxline.c: New file.
-	* sysdeps/gnu/utmpxname.c: New file.
-	* sysdeps/gnu/updwtmpx.c: New file.
+	* sysdeps/generic/setutxent.c: New file.
+	* sysdeps/generic/getutxent.c: New file.
+	* sysdeps/generic/endutxent.c: New file.
+	* sysdeps/generic/getutxid.c: New file.
+	* sysdeps/generic/getutxline.c: New file.
+	* sysdeps/generic/pututxline.c: New file.
+	* sysdeps/generic/utmpxname.c: New file.
+	* sysdeps/generic/updwtmpx.c: New file.
 	* sysdeps/unix/sysv/linux/paths.h (_PATH_UTMP_DB): Remove.
 	* sysdeps/generic/bits/utmpx.h: Remove.
 

@@ -181,7 +181,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (*((uint32_t *) inptr) > '\x7f')					      \
+    if (*((uint32_t *) inptr) > 0x7f)					      \
       {									      \
 	/* This is no correct ANSI_X3.4-1968 character.  */		      \
 	result = GCONV_ILLEGAL_INPUT;					      \
@@ -208,6 +208,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
@@ -266,6 +267,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 #define FUNCTION_NAME		__gconv_transform_utf8_internal
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
@@ -278,69 +280,75 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
     ch = *inptr;							      \
 									      \
     if (ch < 0x80)							      \
-      /* One byte sequence.  */						      \
-      cnt = 1;								      \
-    else if ((ch & 0xe0) == 0xc0)					      \
       {									      \
-	cnt = 2;							      \
-	ch &= 0x1f;							      \
-      }									      \
-    else if ((ch & 0xf0) == 0xe0)					      \
-      {									      \
-	/* We expect three bytes.  */					      \
-	cnt = 3;							      \
-	ch &= 0x0f;							      \
-      }									      \
-    else if ((ch & 0xf8) == 0xf0)					      \
-      {									      \
-	/* We expect four bytes.  */					      \
-	cnt = 4;							      \
-	ch &= 0x07;							      \
-      }									      \
-    else if ((ch & 0xfc) == 0xf8)					      \
-      {									      \
-	/* We expect five bytes.  */					      \
-	cnt = 5;							      \
-	ch &= 0x03;							      \
-      }									      \
-    else if ((ch & 0xfe) == 0xfc)					      \
-      {									      \
-	/* We expect six bytes.  */					      \
-	cnt = 6;							      \
-	ch &= 0x01;							      \
+	/* One byte sequence.  */					      \
+	cnt = 1;							      \
+	++inptr;							      \
       }									      \
     else								      \
       {									      \
-	/* This is an illegal encoding.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
-									      \
-    if (NEED_LENGTH_TEST && inptr + cnt >= inend)			      \
-      {									      \
-	/* We don't have enough input.  */				      \
-	result = GCONV_INCOMPLETE_INPUT;				      \
-	break;								      \
-      }									      \
-									      \
-    /* Read the possible remaining bytes.  */				      \
-    for (i = 1; i < cnt; ++i)						      \
-      {									      \
-	uint32_t byte = inptr[i];					      \
-									      \
-	if ((byte & 0xc0) != 0x80)					      \
+	if ((ch & 0xe0) == 0xc0)					      \
+	  {								      \
+	    cnt = 2;							      \
+	    ch &= 0x1f;							      \
+	  }								      \
+        else if ((ch & 0xf0) == 0xe0)					      \
+	  {								      \
+	    /* We expect three bytes.  */				      \
+	    cnt = 3;							      \
+	    ch &= 0x0f;							      \
+	  }								      \
+	else if ((ch & 0xf8) == 0xf0)					      \
+	  {								      \
+	    /* We expect four bytes.  */				      \
+	    cnt = 4;							      \
+	    ch &= 0x07;							      \
+	  }								      \
+	else if ((ch & 0xfc) == 0xf8)					      \
+	  {								      \
+	    /* We expect five bytes.  */				      \
+	    cnt = 5;							      \
+	    ch &= 0x03;							      \
+	  }								      \
+	else if ((ch & 0xfe) == 0xfc)					      \
+	  {								      \
+	    /* We expect six bytes.  */					      \
+	    cnt = 6;							      \
+	    ch &= 0x01;							      \
+	  }								      \
+	else								      \
 	  {								      \
 	    /* This is an illegal encoding.  */				      \
 	    result = GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
-	ch <<= 6;							      \
-	ch |= byte & 0x3f;						      \
+	if (NEED_LENGTH_TEST && inptr + cnt > inend)			      \
+	  {								      \
+	    /* We don't have enough input.  */				      \
+	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	/* Read the possible remaining bytes.  */			      \
+	for (i = 1; i < cnt; ++i)					      \
+	  {								      \
+	    uint32_t byte = inptr[i];					      \
+									      \
+	    if ((byte & 0xc0) != 0x80)					      \
+	      {								      \
+		/* This is an illegal encoding.  */			      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    ch <<= 6;							      \
+	    ch |= byte & 0x3f;						      \
+	  }								      \
+	inptr += cnt;							      \
       }									      \
 									      \
     /* Now adjust the pointers and store the result.  */		      \
-    inptr += cnt;							      \
     *((uint32_t *) outptr)++ = ch;					      \
   }
 #include <iconv/loop.c>

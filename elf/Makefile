@@ -146,7 +146,7 @@ $(objpfx)trusted-dirs.h: Makefile $(..)Makeconfig
 	mv -f $@T $@
 $(objpfx)rtldtbl.h: Makefile $(..)Makeconfig genrtldtbl.awk
 	$(make-target-directory)
-	echo "$(default-rpath)" | awk -f genrtldtbl.awk > $@T
+	echo "$(default-rpath)" | $(AWK) -f genrtldtbl.awk > $@T
 	mv -f $@T $@
 CPPFLAGS-dl-load.c = -I$(objpfx).
 CFLAGS-dl-load.c += -Wno-uninitialized

@@ -85,7 +85,7 @@ $(objpfx)crtn.S: $(objpfx)initfini.s
 
 $(objpfx)defs.h: $(objpfx)initfini.s
 	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
-		awk -f defs.awk > $@
+		$(AWK) -f defs.awk > $@
 
 endif
 

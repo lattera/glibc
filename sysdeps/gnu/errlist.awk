@@ -34,9 +34,14 @@ BEGIN {
     print "";
     print "#ifndef SYS_ERRLIST";
     print "# define SYS_ERRLIST _sys_errlist";
+    print "# define SYS_ERRLIST_ALIAS sys_errlist";
     print "#endif";
     print "#ifndef SYS_NERR";
     print "# define SYS_NERR _sys_nerr";
+    print "# define SYS_NERR_ALIAS sys_nerr";
+    print "#endif";
+    print "#ifndef ERR_REMAP";
+    print "# define ERR_REMAP(n) n";
     print "#endif";
     print "";
     print "const char *const SYS_ERRLIST[] =";
@@ -70,7 +75,7 @@ errnoh == 3 && $1 == "@comment" && $2 == "errno" \
 errnoh == 4 && $1 == "@end" && $2 == "deftypevr" \
   {
     printf "/*%s */\n", desc;
-    printf "    [%s] = N_(\"%s\"),\n", e, etext;
+    printf "    [ERR_REMAP (%s)] = N_(\"%s\"),\n", e, etext;
     print "#endif";
     errnoh = 0;
     next;
@@ -85,8 +90,10 @@ END {
   print "  };";
   print "";
   print "const int SYS_NERR = sizeof SYS_ERRLIST / sizeof SYS_ERRLIST [0];";
-  print "#if !defined HAVE_ELF || !defined PIC || !defined DO_VERSIONING";
-  print "weak_alias (_sys_errlist, sys_errlist)";
-  print "weak_alias (_sys_nerr, sys_nerr)";
+  print "#ifdef SYS_ERRLIST_ALIAS";
+  print "weak_alias (_sys_errlist, SYS_ERRLIST_ALIAS)";
+  print "#endif";
+  print "#ifdef SYS_NERR_ALIAS";
+  print "weak_alias (_sys_nerr, SYS_NERR_ALIAS)";
   print "#endif";
   }

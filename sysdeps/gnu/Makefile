@@ -21,7 +21,7 @@
 
 $(..)sysdeps/gnu/errlist.c: $(..)sysdeps/gnu/errlist.awk \
 			    $(..)manual/errno.texi
-	awk -f $^ > $@-tmp
+	$(AWK) -f $^ > $@-tmp
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@-tmp
 	mv -f $@-tmp $@

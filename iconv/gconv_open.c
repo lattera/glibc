@@ -71,14 +71,16 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 		  /* Allocate the buffer.  */
 		  if (!data[cnt].is_last)
 		    {
-		      data[cnt].outbuf =
-			(char *) malloc (GCONV_NCHAR_GOAL
-					 * steps[cnt].max_needed_to);
+		      size_t size = (GCONV_NCHAR_GOAL
+				     * steps[cnt].max_needed_to);
+
+		      data[cnt].outbuf = (char *) malloc (size);
 		      if (data[cnt].outbuf == NULL)
 			{
 			  res = GCONV_NOMEM;
 			  break;
 			}
+		      data[cnt].outbufend = data[cnt].outbuf + size;
 		    }
 		}
 	    }

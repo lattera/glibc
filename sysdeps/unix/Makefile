@@ -54,7 +54,7 @@ $(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h
 	(echo '#ifndef _SYS_PARAM_H';	\
 	 echo '#define _SYS_PARAM_H 1';	\
 	 echo '#include <endian.h>';		\
-	 awk < $<			\
+	 $(AWK) < $<			\
 	   '/^#define[ 	]*NULL/ { print "#ifndef NULL";	\
 				  print $$0;		\
 				  print "#endif";	\
@@ -142,7 +142,7 @@ $(common-objpfx)make-errnos: $(common-objpfx)make-errnos.c
 
 $(common-objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
 			$(sysdep_dir)/unix/errnos.awk $(common-objpfx)errnos
-	awk -f $(word 2,$^) errnos="`tr '\012' ' ' < $(word 3,$^)`" $< > $@T
+	$(AWK) -f $(word 2,$^) errnos="`tr '\012' ' ' < $(word 3,$^)`" $< > $@T
 	mv $@T $@
 
 $(common-objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
@@ -176,7 +176,7 @@ $(common-objpfx)make-ioctls: $(common-objpfx)make-ioctls.c
 $(common-objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
 			       $(sysdep_dir)/unix/ioctls.awk \
 			       $(common-objpfx)ioctls
-	awk -f $(word 2,$^) requests="`cat $(word 3,$^)`" $< > $@T
+	$(AWK) -f $(word 2,$^) requests="`cat $(word 3,$^)`" $< > $@T
 	mv $@T $@
 
 

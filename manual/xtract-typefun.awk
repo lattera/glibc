@@ -4,23 +4,38 @@ BEGIN {
 }
 
 /^@node/ {
-  last_node = gensub (/@node +([^@,]+).*/, "\\1", 1);
+  name = $0;
+  sub(/^@node +/, "", name);
+  sub(/[@,].*$/, "", name);
+  last_node = name;
+}
+
+/^@deftype(fn|vr)/ {
+# The string we want is $4, except that if there were brace blocks
+# before that point then it gets shifted to the right, since awk
+# doesn't know from brace blocks.
+  id = 4; check = 2; squig = 0;
+  while(check < id)
+  {
+    if($check ~ /{/) squig++;
+    if($check ~ /}/) squig--;
+    if(squig) id++;
+    check++;
+  }
+
+  printf ("* %s: (libc)%s.\n", $id, last_node);
 }
 
 /^@deftypefun/ {
-  printf ("* %s: (libc)%s.\n",
-	  gensub (/@deftypefunx? +([^{ ]+|\{[^}]+\}) +([[:alpha:]_][[:alnum:]_]*).*/, "\\2", 1),
-    last_node);
-}
+# Likewise, except it's $3 theoretically.
+  id = 3; check = 2; squig = 0;
+  while(check < id)
+  {
+    if($check ~ /{/) squig++;
+    if($check ~ /}/) squig--;
+    if(squig) id++;
+    check++;
+  }
 
-/^@deftypevr/ {
-  printf ("* %s: (libc)%s.\n",
-	  gensub (/@deftypevrx? +([^{ ]+|\{[^}]+\}) +([^{ ]+|\{[^}]+\}) +([[:alpha:]_][[:alnum:]_]*).*/, "\\3", 1),
-    last_node);
-}
-
-/^@deftypefn/ {
-  printf ("* %s: (libc)%s.\n",
-	  gensub (/@deftypefnx? +([^{ ]+|\{[^}]+\}) +[^{ ]*(\{[^}]+\})? +([[:alpha:]_][[:alnum:]_]*).*/, "\\3", 1),
-    last_node);
+  printf ("* %s: (libc)%s.\n", $id, last_node);
 }

@@ -31,7 +31,7 @@ __btowc (c)
   char buf[sizeof (wchar_t)];
   struct gconv_step_data data;
   char inbuf[1];
-  char *inptr = inbuf;
+  const char *inptr = inbuf;
   size_t converted;
   int status;
 

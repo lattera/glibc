@@ -233,6 +233,7 @@ __strtol_internal (const char *nptr, char **endptr, int base, int group)
     }
 
   assert (base == 0);
+  base = 10;
   if (*nptr == '0')
     {
       if (nptr[1] == 'x' || nptr[1] == 'X')
@@ -243,8 +244,6 @@ __strtol_internal (const char *nptr, char **endptr, int base, int group)
       else
 	base = 8;
     }
-  else
-    base = 10;
 
   while (*nptr >= '0' && *nptr <= '9')
     {
@@ -257,8 +256,9 @@ __strtol_internal (const char *nptr, char **endptr, int base, int group)
 	  errno = ERANGE;
 	  return sign > 0 ? LONG_MAX : LONG_MIN;
 	}
-      result *= 10;
+      result *= base;
       result += digval;
+      ++nptr;
     }
 
   return (long int) result * sign;
@@ -295,6 +295,7 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
     }
 
   assert (base == 0);
+  base = 10;
   if (*nptr == '0')
     {
       if (nptr[1] == 'x' || nptr[1] == 'X')
@@ -305,8 +306,6 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
       else
 	base = 8;
     }
-  else
-    base = 10;
 
   while (*nptr >= '0' && *nptr <= '9')
     {
@@ -317,8 +316,9 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
 	  errno = ERANGE;
 	  return ULONG_MAX;
 	}
-      result *= 10;
+      result *= base;
       result += digval;
+      ++nptr;
     }
 
   return result * sign;
