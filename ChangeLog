@@ -1,5 +1,9 @@
 2000-09-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Correct position of
+	st_blocks member in stat and stat64 structs.
+	Patch by Bill Nottingham <notting@redhat.com>.
+
 	* iconvdata/tst-tables.sh: Add warning that GB18030 test might
 	take longer.
 

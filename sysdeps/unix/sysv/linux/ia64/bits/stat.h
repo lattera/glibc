@@ -45,8 +45,8 @@ struct stat
     long int __reserved1;	/* Reserved for mtime.nanoseconds.  */
     __time_t st_ctime;		/* Time of last status change.  */
     long int __reserved2;	/* Reserved for ctime.nanoseconds.  */
-    __blkcnt_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
+    __blkcnt_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
     long int __unused[3];
   };
 
@@ -69,8 +69,8 @@ struct stat64
     long int __reserved1;	/* Reserved for mtime.nanoseconds.  */
     __time_t st_ctime;		/* Time of last status change.  */
     long int __reserved2;	/* Reserved for ctime.nanoseconds.  */
-    __blkcnt64_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
+    __blkcnt64_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
     long int __unused[3];
   };
 #endif
