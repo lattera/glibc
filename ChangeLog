@@ -1,5 +1,7 @@
 2001-08-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* argp/argp-help.c: Fix two problems introduced in last change.
+
 	* include/dirent.h: Include <dirstream.h> first.
 
 2001-08-19  Ulrich Drepper  <drepper@redhat.com>

@@ -1768,9 +1768,8 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 
 #ifdef USE_IN_LIBIO
 	  if (_IO_fwide (stream, 0) > 0)
-	    fputws_unlocked (state
-			     ? state->name : program_invocation_short_name,
-			     stream);
+	    __fwprintf (stream, L"%s",
+			state ? state->name : program_invocation_short_name);
 	  else
 #endif
 	    fputs_unlocked (state
@@ -1811,7 +1810,7 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stream, 0) > 0)
-		__fwprintf (stream, ": %s",
+		__fwprintf (stream, L": %s",
 			    __strerror_r (errnum, buf, sizeof (buf)));
 	      else
 #endif
