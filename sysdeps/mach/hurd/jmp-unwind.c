@@ -49,7 +49,6 @@ _longjmp_unwind (jmp_buf env, int val)
 	 _JMPBUF_UNWINDS (env[0].__jmpbuf, ss->preempters))
     ss->preempters = ss->preempters->next;
 
-  __spin_unlock (&ss->critical_section_lock);
   __spin_unlock (&ss->lock);
 
   /* Iterate over the current thread's list of active resources.
