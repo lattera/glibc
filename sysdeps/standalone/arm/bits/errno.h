@@ -38,17 +38,19 @@
 # define EMFILE		10
 # define ENAMETOOLONG	11	/* File name too long */
 # define ELOOP		12	/* Too many symbolic links encountered */
-# define ENOMSG          13      /* No message of desired type */
+# define ENOMSG		13      /* No message of desired type */
 # define E2BIG		14	/* Arg list too long */
 # define EINTR		15
 # define EILSEQ		16
-# define ENOEXEC		17
+# define ENOEXEC	17
 # define ENOENT		18
 # define EPROTOTYPE	19
 # define ESRCH		20
 # define EPERM		21
-# define ENOTDIR         22
-# define ESTALE          23
+# define ENOTDIR	22
+# define ESTALE		23
+# define EISDIR		24
+# define EOPNOTSUPP	25	/* Operation not supported.  */
 #endif
 
 #define __set_errno(val) errno = (val)
