@@ -16,8 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-register int sp asm ("$29"), fp asm ("$30");
-
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <hurd/threadvar.h>
@@ -45,19 +43,31 @@ __sigreturn (const struct sigcontext *scp)
      reply port in use by the thread when interrupted.  */
   reply_port =
     (mach_port_t *) __hurd_threadvar_location (_HURD_THREADVAR_MIG_REPLY);
-  if (*reply_port)
+  if (*reply_port != MACH_PORT_NULL)
     __mach_port_destroy (__mach_task_self (), *reply_port);
   *reply_port = scp->sc_reply_port;
 
-  /* Restore registers.  */
+  /* Load all the registers from the sigcontext.  */
 #define restore_gpr(n) \
-  asm volatile ("lw $" #n ",%0" : : "m" (scpreg->sc_gpr[n]))
+  asm volatile ("lw $" #n ",%0" : : "m" (scpreg->sc_gpr[n - 1]))
 
-  asm volatile (".set noreorder; .set noat;");
   {
     register const struct sigcontext *const scpreg asm ("$1") = scp;
 
-    /* Load the general-purpose registers from the sigcontext.  */
+    /* Just beyond the top of the user stack, store the user's value for $1
+       (which we are using for SCPREG).  We restore this register as the
+       very last thing, below.  */
+    ((int *) scpreg->sc_gpr[29 - 1])[-1] = scpreg->sc_gpr[0];
+
+    /* First restore the multiplication result registers.  The compiler
+       will use some temporary registers, so we do this before restoring
+       the general registers.  */
+    asm volatile ("mtlo %0" : : "r" (scpreg->sc_mdlo));
+    asm volatile ("mthi %0" : : "r" (scpreg->sc_mdhi));
+
+    asm volatile (".set noreorder; .set noat;");
+
+    /* Restore the normal registers.  */
     restore_gpr (2);
     restore_gpr (3);
     restore_gpr (4);
@@ -84,20 +94,16 @@ __sigreturn (const struct sigcontext *scp)
     restore_gpr (25);
     /* Registers 26-27 are kernel-only.  */
     restore_gpr (28);
-
-    /* Now the special-purpose registers.  */
-    sp = scpreg->sc_sp;		/* Stack pointer.  */
-    fp = scpreg->sc_fp;		/* Frame pointer.  */
+    restore_gpr (29);		/* Stack pointer.  */
+    restore_gpr (30);		/* Frame pointer.  */
     restore_gpr (31);		/* Return address.  */
 
     /* Now jump to the saved PC.  */
-    asm volatile ("lw $24, %0\n" /* Load saved PC into temporary $t8.  */
-		  "j $24\n"	/* Jump to the saved PC value.  */
-		  "lw $1, %1\n" /* Restore $at in delay slot.  */
-		  : :
-		  "m" (scpreg->sc_pc),
-		  "m" (scpreg->sc_r1) /* $at */
-		  : "$24");	/* XXX clobbers $24 (aka $t8)!! */
+    asm volatile ("lw $1, %0\n"	/* Load saved PC into $1.  */
+		  "j $1\n"	/* Jump to the saved PC value.  */
+		  "lw $1, -4(sp)\n" /* Restore $1 from stack in delay slot.  */
+		  : : "m" (scpreg->sc_pc));
+
     asm volatile (".set reorder; .set at;");
   }
 
