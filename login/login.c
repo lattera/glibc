@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <limits.h>
 #include <string.h>
@@ -133,6 +134,10 @@ login (const struct utmp *ut)
       if (tty != _tty)
 	free (tty);		/* Free buffer malloced by tty_name.  */
     }
+  else
+    /* We provide a default value so that the output does not contain
+       an random bytes in this field.  */
+    strncpy (copy.ut_line, "???", UT_LINESIZE);
 
   /* Update the WTMP file.  Here we have to add a new entry.  */
   updwtmp (_PATH_WTMP, &copy);

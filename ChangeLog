@@ -1,3 +1,8 @@
+2002-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/login.c (login): Always initialize ut_line field
+	[PR libc/2991].
+
 2002-02-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/Makefile (sysdep_routines): Add
