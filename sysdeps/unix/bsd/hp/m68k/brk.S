@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #define	SYS_brk	17
 #endif
 
-#ifndef	__GNU_STAB__
+#ifndef	HAVE_GNU_LD
 #define	__end	_end
 #endif
 
@@ -33,7 +33,7 @@ ___curbrk:
 
 .text
 ENTRY (__brk)
-	movel __end, d0
+	movel POUND(__end), d0
 	cmpl sp@(4), d0
 	ble 0f
 	movel d0, sp@(4)
