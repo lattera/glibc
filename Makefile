@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -267,7 +267,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 			    mkinstalldirs move-if-change install-sh	\
 			    test-installation.pl gen-FAQ.pl versions.awk\
 			    gen-sorted.awk abi-versions.awk		\
-			    firstversions.awk documented.sh)
+			    firstversions.awk documented.sh cpp)
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h

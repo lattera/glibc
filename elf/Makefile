@@ -1,4 +1,4 @@
-# Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -62,7 +62,11 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   neededobj5.c neededobj6.c firstobj.c \
 		   unload2mod.c unload2dep.c ltglobmod1.c ltglobmod2.c \
 		   testobj.h vismod.h globalmod1.c \
-		   dblloadmod1.c dblloadmod2.c dblloadmod3.c
+		   dblloadmod1.c dblloadmod2.c dblloadmod3.c \
+		   reldep6mod4.c reldep6mod3.c reldep6mod2.c reldep6mod1.c \
+		   reldep6mod0.c \
+		   unwind-dw2.c unwind-dw2-fde.c unwind.h unwind-pe.h \
+		   unwind-dw2-fde.h dwarf2.h
 
 include ../Makeconfig
 

@@ -1,3 +1,14 @@
+2002-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (distribute): Add scripts/cpp.
+	* elf/Makefile (distribute): Add reldep6mod[01234].c,
+	unwind-dw2.c, unwind-dw2-fde.c, unwind.h, unwind-pe.h,
+	unwind-dw2-fde.h, and dwarf2.h.
+	* sysdeps/unix/bsd/bsd4.4/Dist: New file.
+	* sysdeps/unix/sysv/aix/Dist: Add sysv_termio.h and start-libc.c.
+	* sysdeps/unix/sysv/linux/ia64/Dist: Add ldd-rewrite.sed.
+	* sysdeps/unix/sysv/linux/s390/Dist: Likewise.
+
 2002-01-07  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup): Use

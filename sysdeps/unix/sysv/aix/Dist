@@ -7,6 +7,8 @@ dl-close.c
 dl-libc.c
 dlldr.h
 kernel_proto.h
+start-libc.c
+sysv_termio.h
 bits/utmpx.h
 gnu/lib-names.h
 uitrunc.c
