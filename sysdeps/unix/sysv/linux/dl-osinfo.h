@@ -33,7 +33,7 @@ static inline void
 __attribute__ ((__noreturn__))
 dl_fatal (const char *str)
 {
-  _dl_sysdep_output (2, str, NULL);
+  _dl_dprintf (2, str);
   _exit (1);
 }
 #endif

@@ -21,6 +21,8 @@
 #ifndef _DL_PROCINFO_H
 #define _DL_PROCINFO_H	1
 
+#include <ldsodefs.h>
+
 /* If anything should be added here check whether the size of each string
    is still ok with the given array size.  */
 extern const char _dl_x86_cap_flags[][7];
@@ -43,13 +45,13 @@ _dl_procinfo (int word)
      in the kernel sources.  */
   int i;
 
-  _dl_sysdep_message ("AT_HWCAP:   ", NULL);
+  _dl_printf ("AT_HWCAP:   ");
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_sysdep_message (" ", _dl_x86_cap_flags[i], NULL);
+      _dl_printf (" %s", _dl_x86_cap_flags[i]);
 
-  _dl_sysdep_message ("\n", NULL);
+  _dl_printf ("\n");
 
   return 0;
 }

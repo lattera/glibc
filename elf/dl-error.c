@@ -1,5 +1,5 @@
 /* Error handling for runtime dynamic linker.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,13 +97,14 @@ _dl_signal_error (int errcode, const char *objname, const char *errstring)
     {
       /* Lossage while resolving the program's own symbols is always fatal.  */
       char buffer[1024];
-      _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
-			": error while loading shared libraries: ",
+      _dl_fatal_printf ("\
+%s: error while loading shared libraries: %s%s%s%s%s\n",
+			_dl_argv[0] ?: "<program name unknown>",
 			objname ?: "", objname && *objname ? ": " : "",
 			errstring, errcode ? ": " : "",
 			(errcode
 			 ? __strerror_r (errcode, buffer, sizeof buffer)
-			 : ""), "\n", NULL);
+			 : ""));
     }
 }
 
@@ -143,7 +144,7 @@ _dl_catch_error (const char **objname, const char **errstring,
 
   old = tsd_getspecific ();
   errcode = setjmp (c.env);
-  if (errcode == 0)
+  if (__builtin_expect (errcode, 0) == 0)
     {
       tsd_setspecific (&c);
       (*operate) (args);

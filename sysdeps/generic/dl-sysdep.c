@@ -264,7 +264,7 @@ _dl_show_auxv (void)
 	      else if (__builtin_expect (auxvars[idx].form, hex) == hex)
 		val = _itoa_word (av->a_un.a_val, buf + sizeof buf - 1, 16, 0);
 
-	      _dl_sysdep_message (auxvars[idx].label, val, "\n", NULL);
+	      _dl_printf ("%s%s\n", auxvars[idx].label, val);
 	    }
 	}
     }

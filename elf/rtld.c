@@ -452,7 +452,7 @@ dl_main (const ElfW(Phdr) *phdr,
       /* If we have no further argument the program was called incorrectly.
 	 Grant the user some education.  */
       if (_dl_argc < 2)
-	_dl_sysdep_fatal ("\
+	_dl_fatal_printf ("\
 Usage: ld.so [OPTION]... EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
 You have invoked `ld.so', the helper program for shared library executables.\n\
 This program usually lives in the file `/lib/ld.so', and special directives\n\
@@ -472,8 +472,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   --library-path PATH   use given PATH instead of content of the environment\n\
                         variable LD_LIBRARY_PATH\n\
   --inhibit-rpath LIST  ignore RUNPATH and RPATH information in object names\n\
-                        in LIST\n",
-			  NULL);
+                        in LIST\n");
 
       ++_dl_skip_args;
       --_dl_argc;
@@ -522,7 +521,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 This will be what dlopen on "" returns.  */
       _dl_new_object ((char *) "", "", lt_executable, NULL);
       if (_dl_loaded == NULL)
-	_dl_sysdep_fatal ("cannot allocate memory for link map\n", NULL);
+	_dl_fatal_printf ("cannot allocate memory for link map\n");
       _dl_loaded->l_phdr = phdr;
       _dl_loaded->l_phnum = phnum;
       _dl_loaded->l_entry = *user_entry;
@@ -865,7 +864,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 functions we call below for output may no longer work properly
 	 after relocation.  */
       if (! _dl_loaded->l_info[DT_NEEDED])
-	_dl_sysdep_message ("\t", "statically linked\n", NULL);
+	_dl_printf ("\tstatically linked\n");
       else
 	{
 	  struct link_map *l;
@@ -873,19 +872,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  for (l = _dl_loaded->l_next; l; l = l->l_next)
 	    if (l->l_faked)
 	      /* The library was not found.  */
-	      _dl_sysdep_message ("\t", l->l_libname->name, " => not found\n",
-				  NULL);
+	      _dl_printf ("\t%s => not found\n", l->l_libname->name);
 	    else
-	      {
-		char buf[20], *bp;
-		buf[sizeof buf - 1] = '\0';
-		bp = _itoa_word (l->l_addr, &buf[sizeof buf - 1], 16, 0);
-		while ((size_t) (&buf[sizeof buf - 1] - bp)
-		       < sizeof l->l_addr * 2)
-		  *--bp = '0';
-		_dl_sysdep_message ("\t", l->l_libname->name, " => ",
-				    l->l_name, " (0x", bp, ")\n", NULL);
-	      }
+	      _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
+			  l->l_name, sizeof l->l_addr * 2, l->l_addr);
 	}
 
       if (__builtin_expect (mode, trace) != trace)
@@ -894,7 +884,6 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    const ElfW(Sym) *ref = NULL;
 	    ElfW(Addr) loadbase;
 	    lookup_t result;
-	    char buf[20], *bp;
 
 	    result = _dl_lookup_symbol (_dl_argv[i], _dl_loaded,
 					&ref, _dl_loaded->l_scope,
@@ -902,16 +891,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
 
-	    buf[sizeof buf - 1] = '\0';
-	    bp = _itoa_word (ref->st_value, &buf[sizeof buf - 1], 16, 0);
-	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof loadbase * 2)
-	      *--bp = '0';
-	    _dl_sysdep_message (_dl_argv[i], " found at 0x", bp, NULL);
-	    buf[sizeof buf - 1] = '\0';
-	    bp = _itoa_word (loadbase, &buf[sizeof buf - 1], 16, 0);
-	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof loadbase * 2)
-	      *--bp = '0';
-	    _dl_sysdep_message (" in object at 0x", bp, "\n", NULL);
+	    _dl_printf ("%s found at 0x%0*Zd in object at 0x%0*Zd\n",
+			_dl_argv[i], sizeof ref->st_value * 2, ref->st_value,
+			sizeof loadbase * 2, loadbase);
 	  }
       else
 	{
@@ -961,13 +943,12 @@ of this helper program; chances are you did not intend to run this program.\n\
 
 		  if (first)
 		    {
-		      _dl_sysdep_message ("\n\tVersion information:\n", NULL);
+		      _dl_printf ("\n\tVersion information:\n");
 		      first = 0;
 		    }
 
-		  _dl_sysdep_message ("\t", (map->l_name[0]
-					     ? map->l_name : _dl_argv[0]),
-				      ":\n", NULL);
+		  _dl_printf ("\t%s:\n",
+			      map->l_name[0] ? map->l_name : _dl_argv[0]);
 
 		  while (1)
 		    {
@@ -981,22 +962,17 @@ of this helper program; chances are you did not intend to run this program.\n\
 			{
 			  const char *fname = NULL;
 
-			  _dl_sysdep_message ("\t\t",
-					      strtab + ent->vn_file,
-					      " (", strtab + aux->vna_name,
-					      ") ",
-					      (aux->vna_flags
-					       & VER_FLG_WEAK
-					       ? "[WEAK] " : ""),
-					      "=> ", NULL);
-
 			  if (needed != NULL
 			      && match_version (strtab + aux->vna_name,
 						needed))
 			    fname = needed->l_name;
 
-			  _dl_sysdep_message (fname ?: "not found", "\n",
-					      NULL);
+			  _dl_printf ("\t\t%s (%s) %s=> %s\n",
+				      strtab + ent->vn_file,
+				      strtab + aux->vna_name,
+				      aux->vna_flags & VER_FLG_WEAK
+				      ? "[WEAK] " : "",
+				      fname ?: "not found");
 
 			  if (aux->vna_next == 0)
 			    /* No more symbols.  */
@@ -1155,7 +1131,7 @@ print_unresolved (int errcode __attribute__ ((unused)), const char *objname,
 {
   if (objname[0] == '\0')
     objname = _dl_argv[0] ?: "<main program>";
-  _dl_sysdep_error (errstring, "	(", objname, ")\n", NULL);
+  _dl_error_printf ("%s	(%s)\n", errstring, objname);
 }
 
 /* This is a little helper function for resolving symbols while
@@ -1164,8 +1140,8 @@ static void
 print_missing_version (int errcode __attribute__ ((unused)),
 		       const char *objname, const char *errstring)
 {
-  _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>", ": ",
-		    objname, ": ", errstring, "\n", NULL);
+  _dl_error_printf ("%s: %s: %s\n", _dl_argv[0] ?: "<program name unknown>",
+		    objname, errstring);
 }
 
 /* Nonzero if any of the debugging options is enabled.  */
@@ -1206,7 +1182,7 @@ process_dl_debug (const char *dl_debug)
 	    case 4:
 	      if (memcmp (dl_debug, "help", 4) == 0)
 		{
-		  _dl_sysdep_message ("\
+		  _dl_printf ("\
 Valid options for the LD_DEBUG environment variable are:\n\
 \n\
   bindings   display information about symbol binding\n\
@@ -1219,8 +1195,7 @@ Valid options for the LD_DEBUG environment variable are:\n\
   versions   display version dependencies\n\
 \n\
 To direct the debugging output into a file instead of standard output\n\
-a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
-				  NULL);
+a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
 		  _exit (0);
 		}
 
@@ -1288,8 +1263,8 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 	  {
 	    /* Display a warning and skip everything until next separator.  */
 	    char *startp = strndupa (dl_debug, len);
-	    _dl_sysdep_error ("warning: debug option `", startp,
-			      "' unknown; try LD_DEBUG=help\n", NULL);
+	    _dl_error_printf ("\
+warning: debug option `%s' unknown; try LD_DEBUG=help\n", startp);
 	    break;
 	  }
 	}
@@ -1511,21 +1486,19 @@ print_statistics (void)
   if (HP_TIMING_AVAIL)
     {
       HP_TIMING_PRINT (buf, sizeof (buf), rtld_total_time);
-      _dl_debug_message (1, "\nruntime linker statistics:\n"
-			 "  total startup time in dynamic loader: ",
-			 buf, "\n", NULL);
+      _dl_debug_printf ("\nruntime linker statistics:\n"
+			"  total startup time in dynamic loader: %s\n", buf);
     }
 
   /* Print relocation statistics.  */
   if (HP_TIMING_AVAIL)
     {
+      char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), relocate_time);
-      _dl_debug_message (1, "            time needed for relocation: ", buf,
-			 NULL);
       cp = _itoa_word ((1000 * relocate_time) / rtld_total_time,
-		       buf + sizeof (buf), 10, 0);
-      wp = buf;
-      switch (buf + sizeof (buf) - cp)
+		       pbuf + sizeof (pbuf), 10, 0);
+      wp = pbuf;
+      switch (pbuf + sizeof (pbuf) - cp)
 	{
 	case 3:
 	  *wp++ = *cp++;
@@ -1536,26 +1509,23 @@ print_statistics (void)
 	  *wp++ = *cp++;
 	}
       *wp = '\0';
-      _dl_debug_message (0, " (", buf, "%)\n", NULL);
+      _dl_debug_printf ("            time needed for relocation: %s (%s)\n",
+			buf, pbuf);
     }
 #endif
-  buf[sizeof (buf) - 1] = '\0';
-  _dl_debug_message (1, "                 number of relocations: ",
-		     _itoa_word (_dl_num_relocations,
-				 buf + sizeof (buf) - 1, 10, 0),
-		     "\n", NULL);
+  _dl_debug_printf ("                 number of relocations: %lu\n",
+		    _dl_num_relocations);
 
 #ifndef HP_TIMING_NONAVAIL
   /* Time spend while loading the object and the dependencies.  */
   if (HP_TIMING_AVAIL)
     {
+      char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), load_time);
-      _dl_debug_message (1, "           time needed to load objects: ", buf,
-			 NULL);
       cp = _itoa_word ((1000 * load_time) / rtld_total_time,
-		       buf + sizeof (buf), 10, 0);
-      wp = buf;
-      switch (buf + sizeof (buf) - cp)
+		       pbuf + sizeof (pbuf), 10, 0);
+      wp = pbuf;
+      switch (pbuf + sizeof (pbuf) - cp)
 	{
 	case 3:
 	  *wp++ = *cp++;
@@ -1566,7 +1536,8 @@ print_statistics (void)
 	  *wp++ = *cp++;
 	}
       *wp = '\0';
-      _dl_debug_message (0, " (", buf, "%)\n", NULL);
+      _dl_debug_printf ("           time needed to load objects: %s (%s)\n",
+			buf, pbuf);
     }
 #endif
 }

@@ -30,7 +30,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "dynamic-link.h"
-#include <stdio-common/_itoa.h>
 
 #include <dl-dst.h>
 
@@ -802,7 +801,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* Print debugging message.  */
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
-    _dl_debug_message (1, "file=", name, ";  generating link map\n", NULL);
+    _dl_debug_printf ("file=%s;  generating link map\n", name);
 
   /* This is the ELF header.  We read it in `open_verify'.  */
   header = (void *) fbp->buf;
@@ -1060,34 +1059,14 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   l->l_entry += l->l_addr;
 
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
-    {
-      const size_t nibbles = sizeof (void *) * 2;
-      char buf1[nibbles + 1];
-      char buf2[nibbles + 1];
-      char buf3[nibbles + 1];
-
-      buf1[nibbles] = '\0';
-      buf2[nibbles] = '\0';
-      buf3[nibbles] = '\0';
-
-      memset (buf1, '0', nibbles);
-      memset (buf2, '0', nibbles);
-      memset (buf3, '0', nibbles);
-      _itoa_word ((unsigned long int) l->l_ld, &buf1[nibbles], 16, 0);
-      _itoa_word ((unsigned long int) l->l_addr, &buf2[nibbles], 16, 0);
-      _itoa_word (maplength, &buf3[nibbles], 16, 0);
-
-      _dl_debug_message (1, "  dynamic: 0x", buf1, "  base: 0x", buf2,
-			 "   size: 0x", buf3, "\n", NULL);
-      memset (buf1, '0', nibbles);
-      memset (buf2, '0', nibbles);
-      memset (buf3, ' ', nibbles);
-      _itoa_word ((unsigned long int) l->l_entry, &buf1[nibbles], 16, 0);
-      _itoa_word ((unsigned long int) l->l_phdr, &buf2[nibbles], 16, 0);
-      _itoa_word (l->l_phnum, &buf3[nibbles], 10, 0);
-      _dl_debug_message (1, "    entry: 0x", buf1, "  phdr: 0x", buf2,
-			 "  phnum:   ", buf3, "\n\n", NULL);
-    }
+    _dl_debug_printf ("  dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*Zx\n"
+		      "    entry: 0x%0*lx  phdr: 0x%0*lx  phnum:   %*u\n\n",
+		      sizeof (void *) * 2, (unsigned long int) l->l_ld,
+		      sizeof (void *) * 2, (unsigned long int) l->l_addr,
+		      sizeof (void *) * 2, maplength,
+		      sizeof (void *) * 2, (unsigned long int) l->l_entry,
+		      sizeof (void *) * 2, (unsigned long int) l->l_phdr,
+		      sizeof (void *) * 2, l->l_phnum);
 
   elf_get_dynamic_info (l);
 
@@ -1172,7 +1151,7 @@ print_search_path (struct r_search_path_elem **list,
   char buf[max_dirnamelen + max_capstrlen];
   int first = 1;
 
-  _dl_debug_message (1, " search path=", NULL);
+  _dl_debug_printf (" search path=");
 
   while (*list != NULL && (*list)->what == what) /* Yes, ==.  */
     {
@@ -1187,18 +1166,23 @@ print_search_path (struct r_search_path_elem **list,
 	      cp[0] = '\0';
 	    else
 	      cp[-1] = '\0';
-	    _dl_debug_message (0, first ? "" : ":", buf, NULL);
-	    first = 0;
+	    if (first)
+	      {
+		_dl_debug_printf_c ("%s", buf);
+		first = 0;
+	      }
+	    else
+	      _dl_debug_printf_c (":%s", buf);
 	  }
 
       ++list;
     }
 
   if (name != NULL)
-    _dl_debug_message (0, "\t\t(", what, " from file ",
-			name[0] ? name : _dl_argv[0], ")\n", NULL);
+    _dl_debug_printf_c ("\t\t(%s from file %s)\n", what,
+			name[0] ? name : _dl_argv[0]);
   else
-    _dl_debug_message (0, "\t\t(", what, ")\n", NULL);
+    _dl_debug_printf_c ("\t\t(%s)\n", what);
 }
 
 /* Open a file and verify it is an ELF file for this architecture.  We
@@ -1373,7 +1357,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
 	  /* Print name we try if this is wanted.  */
 	  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
-	    _dl_debug_message (1, "  trying file=", buf, "\n", NULL);
+	    _dl_debug_printf ("  trying file=%s\n", buf);
 
 	  fd = open_verify (buf, fbp);
 	  if (this_dir->status[cnt] == unknown)
@@ -1507,9 +1491,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
   /* Display information if we are debugging.  */
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0) && loader != NULL)
-    _dl_debug_message (1, "\nfile=", name, ";  needed by ",
-		       loader->l_name[0] ? loader->l_name : _dl_argv[0],
-		       "\n", NULL);
+    _dl_debug_printf ("\nfile=%s;  needed by %s\n", name,
+		      loader->l_name[0] ? loader->l_name : _dl_argv[0]);
 
   if (strchr (name, '/') == NULL)
     {
@@ -1518,7 +1501,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       size_t namelen = strlen (name) + 1;
 
       if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
-	_dl_debug_message (1, "find library=", name, "; searching\n", NULL);
+	_dl_debug_printf ("find library=%s; searching\n", name);
 
       fd = -1;
 
@@ -1655,7 +1638,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Add another newline when we a tracing the library loading.  */
       if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
-        _dl_debug_message (1, "\n", NULL);
+        _dl_debug_printf ("\n");
     }
   else
     {

@@ -41,9 +41,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     lazy = 0;
 
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_RELOC, 0))
-    _dl_debug_message (1, "\nrelocation processing: ",
-		       l->l_name[0] ? l->l_name : _dl_argv[0],
-		       lazy ? " (lazy)\n" : "\n", NULL);
+    _dl_printf ("\nrelocation processing: %s%s\n",
+		l->l_name[0] ? l->l_name : _dl_argv[0], lazy ? " (lazy)" : "");
 
   if (__builtin_expect (l->l_info[DT_TEXTREL] != NULL, 0))
     {
@@ -99,17 +98,18 @@ cannot make segment writable for relocation"));
 	   if it only contains lead function) the l_info[DT_PLTRELSZ]
 	   will be NULL.  */
 	if (l->l_info[DT_PLTRELSZ] == NULL)
-	  _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
-			    ": profiler found no PLTREL in object ",
-			    l->l_name, "\n", NULL);
+	  _dl_fatal_printf ("%s: profiler found no PLTREL in object %s\n",
+			    _dl_argv[0] ?: "<program name unknown>",
+			    l->l_name);
 
 	l->l_reloc_result =
 	  (ElfW(Addr) *) calloc (sizeof (ElfW(Addr)),
 				 l->l_info[DT_PLTRELSZ]->d_un.d_val);
 	if (l->l_reloc_result == NULL)
-	  _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
-			    ": profiler out of memory shadowing PLTREL of ",
-			    l->l_name, "\n", NULL);
+	  _dl_fatal_printf ("\
+%s: profiler out of memory shadowing PLTREL of %s\n",
+			    _dl_argv[0] ?: "<program name unknown>",
+			    l->l_name);
       }
   }
 

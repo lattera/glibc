@@ -1,5 +1,5 @@
 /* Optional code to distinguish library flavours.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -41,7 +41,7 @@
 	      break;							      \
 									      \
 	  /* We print a `5' or `6' depending on the outcome.  */	      \
-	  _dl_sysdep_message (d->d_tag != DT_NULL ? "5\n" : "6\n", NULL);     \
+	  _dl_printf (d->d_tag != DT_NULL ? "5\n" : "6\n");		      \
 	}								      \
     }									      \
   while (0)

@@ -121,9 +121,9 @@ empty dynamics string token substitution"));				      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \
 		if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))     \
-		  _dl_debug_message (1, "cannot load auxiliary `", __str,     \
-				     "' because of empty dynamic string"      \
-				     " token substitution\n", NULL);	      \
+		  _dl_debug_printf ("cannot load auxiliary `%s' because of"   \
+				    "empty dynamic string token "	      \
+				    "substitution\n", __str);		      \
 		continue;						      \
 	      }								      \
 	  }								      \
@@ -294,11 +294,10 @@ _dl_map_object_deps (struct link_map *map,
 		  {
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
-		      _dl_debug_message (1, "load auxiliary object=",
-					 name, " requested by file=",
-					 l->l_name[0]
-					 ? l->l_name : _dl_argv[0],
-					 "\n", NULL);
+		      _dl_debug_printf ("load auxiliary object=%s"
+					" requested by file=%s\n", name,
+					l->l_name[0]
+					? l->l_name : _dl_argv[0]);
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
@@ -317,11 +316,10 @@ _dl_map_object_deps (struct link_map *map,
 		  {
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
-		      _dl_debug_message (1, "load filtered object=", name,
-					 " requested by file=",
-					 l->l_name[0]
-					 ? l->l_name : _dl_argv[0],
-					 "\n", NULL);
+		      _dl_debug_printf ("load filtered object=%s"
+					" requested by file=%s\n", name,
+					l->l_name[0]
+					? l->l_name : _dl_argv[0]);
 
 		    /* For filter objects the dependency must be available.  */
 		    if (_dl_catch_error (&objname, &errstring, openaux, &args))

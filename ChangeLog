@@ -28,6 +28,12 @@
 	* sysdeps/generic/dl-sysdep.c: Likewise.
 	* sysdeps/generic/libc-start.c: Likewise.
 	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/hppa/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	* sysdeps/s390/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
 	* sysdeps/unix/sysv/linux/dl-osinfo.h: Likewise.
 	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Likewise.
 	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Likewise.

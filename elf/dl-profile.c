@@ -266,9 +266,8 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
     {
       /* We cannot write the profiling data so don't do anything.  */
       char buf[400];
-      _dl_sysdep_message (filename, ": cannot open file: ",
-			  __strerror_r (errno, buf, sizeof buf),
-			  "\n", NULL);
+      _dl_error_printf ("%s: cannot open file: %s\n", filename,
+			__strerror_r (errno, buf, sizeof buf));
       return;
     }
 
@@ -278,9 +277,8 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       char buf[400];
       int errnum = errno;
       __close (fd);
-      _dl_sysdep_message (filename, ": cannot stat file: ",
-			  __strerror_r (errnum, buf, sizeof buf),
-			  "\n", NULL);
+      _dl_error_printf ("%s: cannot stat file: %s\n", filename,
+			__strerror_r (errnum, buf, sizeof buf));
       return;
     }
 
@@ -300,9 +298,8 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 	cannot_create:
 	  errnum = errno;
 	  __close (fd);
-	  _dl_sysdep_message (filename, ": cannot create file: ",
-			      __strerror_r (errnum, buf, sizeof buf),
-			      "\n", NULL);
+	  _dl_error_printf ("%s: cannot create file: %s\n", filename,
+			    __strerror_r (errnum, buf, sizeof buf));
 	  return;
 	}
 
@@ -319,9 +316,8 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       if (addr != NULL)
 	__munmap ((void *) addr, expected_size);
 
-      _dl_sysdep_message (filename,
-			  ": file is no correct profile data file for `",
-			  _dl_profile, "'\n", NULL);
+      _dl_error_printf ("%s: file is no correct profile data file for `%s'\n",
+			filename, _dl_profile);
       return;
     }
 
@@ -332,9 +328,8 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       char buf[400];
       int errnum = errno;
       __close (fd);
-      _dl_sysdep_message (filename, ": cannot map file: ",
-			  __strerror_r (errnum, buf, sizeof buf),
-			  "\n", NULL);
+      _dl_error_printf ("%s: cannot map file: %s\n", filename,
+			__strerror_r (errnum, buf, sizeof buf));
       return;
     }
 
@@ -377,7 +372,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   if (tos == NULL)
     {
       __munmap ((void *) addr, expected_size);
-      _dl_sysdep_fatal ("Out of memory while initializing profiler\n", NULL);
+      _dl_fatal_printf ("Out of memory while initializing profiler\n");
       /* NOTREACHED */
     }
 

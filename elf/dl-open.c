@@ -243,17 +243,8 @@ dl_open_worker (void *a)
     {
       /* Let the user know about the opencount.  */
       if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
-	{
-	  char buf[20];
-
-	  buf[sizeof buf - 1] = '\0';
-
-	  _dl_debug_message (1, "opening file=", new->l_name,
-			     "; opencount == ",
-			     _itoa_word (new->l_opencount,
-					 buf + sizeof buf - 1, 10, 0),
-			     "\n\n", NULL);
-	}
+	_dl_debug_printf ("opening file=%s; opencount == %u\n\n",
+			  new->l_name, new->l_opencount);
 
       /* If the user requested the object to be in the global namespace
 	 but it is not so far, add it now.  */
@@ -343,17 +334,8 @@ dl_open_worker (void *a)
 
   /* Let the user know about the opencount.  */
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
-    {
-      char buf[20];
-
-      buf[sizeof buf - 1] = '\0';
-
-      _dl_debug_message (1, "opening file=", new->l_name,
-			 "; opencount == ",
-			 _itoa_word (new->l_opencount,
-				     buf + sizeof buf - 1, 10, 0),
-			 "\n\n", NULL);
-    }
+    _dl_debug_printf ("opening file=%s; opencount == %u\n\n",
+		      new->l_name, new->l_opencount);
 }
 
 
@@ -453,17 +435,15 @@ show_scope (struct link_map *new)
 
       numbuf[0] = '0' + scope_cnt;
       numbuf[1] = '\0';
-      _dl_sysdep_message ("scope ", numbuf, ":", NULL);
+      _dl_printf ("scope %s:", numbuf);
 
       for (cnt = 0; cnt < new->l_scope[scope_cnt]->r_nlist; ++cnt)
 	if (*new->l_scope[scope_cnt]->r_list[cnt]->l_name)
-	  _dl_sysdep_message (" ",
-			      new->l_scope[scope_cnt]->r_list[cnt]->l_name,
-			      NULL);
+	  _dl_printf (" %s", new->l_scope[scope_cnt]->r_list[cnt]->l_name)
 	else
-	  _dl_sysdep_message (" <main>", NULL);
+	  _dl_printf (" <main>", NULL);
 
-      _dl_sysdep_message ("\n", NULL);
+      _dl_printf ("\n", NULL);
     }
 }
 #endif

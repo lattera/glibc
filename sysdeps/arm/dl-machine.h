@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -436,10 +436,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      const char *strtab;
 
 	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
-				": Symbol `", strtab + refsym->st_name,
-				"' has different size in shared object, "
-				"consider re-linking\n", NULL);
+	      _dl_error_printf ("\
+%s: Symbol `%s' has different size in shared object, consider re-linking\n",
+				_dl_argv[0] ?: "<program name unknown>",
+				strtab + refsym->st_name);
 	    }
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));

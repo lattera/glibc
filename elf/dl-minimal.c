@@ -187,13 +187,10 @@ void weak_function
 __assert_fail (const char *assertion,
 	       const char *file, unsigned int line, const char *function)
 {
-  char buf[64];
-  buf[sizeof buf - 1] = '\0';
-  _dl_sysdep_fatal ("BUG IN DYNAMIC LINKER ld.so: ",
-		    file, ": ", _itoa_word (line, buf + sizeof buf - 1, 10, 0),
-		    ": ", function ?: "", function ? ": " : "",
-		    "Assertion `", assertion, "' failed!\n",
-		    NULL);
+  _dl_fatal_printf ("\
+BUG IN DYNAMIC LINKER ld.so: %s: %u: %s%sAssertion `%s' failed!\n",
+		    file, line, function ?: "", function ? ": " : "",
+		    assertion);
 
 }
 
@@ -203,15 +200,10 @@ __assert_perror_fail (int errnum,
 		      const char *function)
 {
   char errbuf[64];
-  char buf[64];
-  buf[sizeof buf - 1] = '\0';
-  _dl_sysdep_fatal ("BUG IN DYNAMIC LINKER ld.so: ",
-		    file, ": ", _itoa_word (line, buf + sizeof buf - 1, 10, 0),
-		    ": ", function ?: "", function ? ": " : "",
-		    "Unexpected error: ",
-		    __strerror_r (errnum, errbuf, sizeof (errbuf)), "\n",
-		    NULL);
-
+  _dl_fatal_printf ("\
+BUG IN DYNAMIC LINKER ld.so: %s: %u: %s%sUnexpected error: %s\n",
+		    file, line, function ?: "", function ? ": " : "",
+		    __strerror_r (errnum, errbuf, sizeof (errbuf)));
 }
 
 #endif

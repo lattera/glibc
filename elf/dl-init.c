@@ -54,8 +54,8 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
 
   /* Print a debug message if wanted.  */
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
-    _dl_debug_message (1, "\ncalling init: ",
-		       l->l_name[0] ? l->l_name : _dl_argv[0], "\n\n", NULL);
+    _dl_debug_printf ("\ncalling init: %s\n\n",
+		      l->l_name[0] ? l->l_name : _dl_argv[0]);
 
   /* Now run the local constructors.  There are two forms of them:
      - the one named by DT_INIT
@@ -109,9 +109,9 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
       unsigned int cnt;
 
       if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
-	_dl_debug_message (1, "\ncalling preinit: ",
-			   main_map->l_name[0]
-			   ? main_map->l_name : _dl_argv[0], "\n\n", NULL);
+	_dl_debug_printf ("\ncalling preinit: %s\n\n",
+			  main_map->l_name[0]
+			  ? main_map->l_name : _dl_argv[0]);
 
       addrs = (ElfW(Addr) *) (main_map->l_info[DT_PREINIT_ARRAY]->d_un.d_ptr
 			      + main_map->l_addr);

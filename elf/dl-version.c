@@ -84,9 +84,10 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
 
   /* Display information about what we are doing while debugging.  */
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_VERSIONS, 0))
-    _dl_debug_message (1, "checking for version `", string, "' in file ",
-		       map->l_name[0] ? map->l_name : _dl_argv[0],
-		       " required by file ", name, "\n", NULL);
+    _dl_debug_printf ("\
+checking for version `%s' in file %s required by file %s\n",
+		      string, map->l_name[0] ? map->l_name : _dl_argv[0],
+		      name);
 
   if (__builtin_expect (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL, 0))
     {

@@ -27,8 +27,6 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
-#include <stdio-common/_itoa.h>
-
 
 /* Type of the constructor functions.  */
 typedef void (*fini_t) (void);
@@ -76,11 +74,8 @@ _dl_close (void *_map)
 
 	  buf[sizeof buf - 1] = '\0';
 
-	  _dl_debug_message (1, "\nclosing file=", map->l_name,
-			     "; opencount == ",
-			     _itoa_word (map->l_opencount,
-					 buf + sizeof buf - 1, 10, 0),
-			     "\n", NULL);
+	  _dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
+			    map->l_name, map->l_opencount);
 	}
 
       /* One decrement the object itself, not the dependencies.  */
@@ -134,10 +129,8 @@ _dl_close (void *_map)
 	  && imap->l_init_called)
 	{
 	  /* When debugging print a message first.  */
-	  if (//__builtin_expect (_dl_debug_impcalls, 0))
-	      __builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
-	    _dl_debug_message (1, "\ncalling fini: ", imap->l_name,
-			       "\n\n", NULL);
+	  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+	    _dl_debug_printf ("\ncalling fini: %s\n\n", imap->l_name);
 
 	  /* Call its termination function.  */
 	  if (imap->l_info[DT_FINI_ARRAY] != NULL)
