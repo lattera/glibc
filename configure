@@ -1091,7 +1091,7 @@ test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
 
 if test "$INSTALL" = "${srcdir}/install-sh -c"; then
   # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL='$(..)./install-sh -c'
+  INSTALL='\$(..)./install-sh -c'
 fi
 echo $ac_n "checking whether ln -s works""... $ac_c" 1>&6
 echo "configure:1098: checking whether ln -s works" >&5

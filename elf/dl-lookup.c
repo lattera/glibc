@@ -93,6 +93,10 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	  map->l_type == lt_executable)
 	continue;
 
+      /* Skip objects without symbol tables.  */
+      if (map->l_info[DT_SYMTAB] == NULL)
+	continue;
+
       symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
       strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
       if (map->l_nversions > 0 && map->l_info[VERSTAG (DT_VERSYM)] != NULL)
@@ -364,8 +368,13 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 void
 _dl_setup_hash (struct link_map *map)
 {
-  ElfW(Symndx) *hash = (void *)(map->l_addr + map->l_info[DT_HASH]->d_un.d_ptr);
+  ElfW(Symndx) *hash;
   ElfW(Symndx) nchain;
+
+  if (!map->l_info[DT_HASH])
+    return;
+  hash = (void *)(map->l_addr + map->l_info[DT_HASH]->d_un.d_ptr);
+
   map->l_nbuckets = *hash++;
   nchain = *hash++;
   map->l_buckets = hash;

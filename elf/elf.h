@@ -783,6 +783,13 @@ typedef struct
 #define DT_SPARC_PLTFMT	0x70000001	/* .plt format version/type */
 #define DT_SPARC_NUM	2
 
+/* Bits present in AT_HWCAP, primarily for Sparc32.  */
+
+#define HWCAP_SPARC_FLUSH	1	/* The cpu supports flush insn.  */
+#define HWCAP_SPARC_STBAR	2
+#define HWCAP_SPARC_SWAP	4
+#define HWCAP_SPARC_MULDIV	8
+
 /* MIPS R3000 specific definitions.  */
 
 /* Legal values for e_flags field of Elf32_Ehdr.  */

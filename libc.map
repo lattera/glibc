@@ -41,7 +41,7 @@ GLIBC_2.0 {
     # functions with required interface outside normal name space
     _exit; __ivaliduser; __open_catalog;
     __argz_count; __argz_stringify; __argz_next;
-    __check_rhosts_file; __rcmd_errstr;
+    __check_rhosts_file; __rcmd_errstr; __xpg_basename;
 
     # functions from the experimental locale implementation
     __*_l; __newlocale; __duplocale; __freelocale;

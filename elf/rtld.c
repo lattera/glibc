@@ -53,13 +53,13 @@ static void print_unresolved (int errcode, const char *objname,
 static void print_missing_version (int errcode, const char *objname,
 				   const char *errsting);
 
-
 int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
 int _dl_verbose;
 const char *_dl_platform;
 size_t _dl_platformlen;
+unsigned long _dl_hwcap;
 struct r_search_path *_dl_search_paths;
 const char *_dl_profile;
 const char *_dl_profile_output;
@@ -80,6 +80,7 @@ static void dl_main (const ElfW(Phdr) *phdr,
 
 struct link_map _dl_rtld_map;
 struct libname_list _dl_rtld_libname;
+struct libname_list _dl_rtld_libname2;
 
 #ifdef RTLD_START
 RTLD_START
@@ -119,19 +120,22 @@ _dl_start (void *arg)
      the operating system's program loader where to find the program
      header table in core.  */
 
-
   /* Transfer data about ourselves to the permanent link_map structure.  */
   _dl_rtld_map.l_addr = bootstrap_map.l_addr;
   _dl_rtld_map.l_ld = bootstrap_map.l_ld;
+  _dl_rtld_map.l_opencount = 1;
   memcpy (_dl_rtld_map.l_info, bootstrap_map.l_info,
 	  sizeof _dl_rtld_map.l_info);
   _dl_setup_hash (&_dl_rtld_map);
 
   /* Cache the DT_RPATH stored in ld.so itself; this will be
      the default search path.  */
-  _dl_rpath = (void *) (_dl_rtld_map.l_addr +
-			_dl_rtld_map.l_info[DT_STRTAB]->d_un.d_ptr +
-			_dl_rtld_map.l_info[DT_RPATH]->d_un.d_val);
+  if (_dl_rtld_map.l_info[DT_STRTAB] && _dl_rtld_map.l_info[DT_RPATH])
+    {
+      _dl_rpath = (void *) (_dl_rtld_map.l_addr +
+			    _dl_rtld_map.l_info[DT_STRTAB]->d_un.d_ptr +
+			    _dl_rtld_map.l_info[DT_RPATH]->d_un.d_val);
+    }
 
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
@@ -416,6 +420,23 @@ of this helper program; chances are you did not intend to run this program.\n",
 	_dl_rtld_libname.name = (const char *) main_map->l_addr + ph->p_vaddr;
 	_dl_rtld_libname.next = NULL;
 	_dl_rtld_map.l_libname = &_dl_rtld_libname;
+
+	/* Ordinarilly, we would get additional names for the loader from
+	   our DT_SONAME.  This can't happen if we were actually linked as
+	   a static executable (detect this case when we have no DYNAMIC).
+	   If so, assume the filename component of the interpreter path to
+	   be our SONAME, and add it to our name list.  */
+	if (_dl_rtld_map.l_ld == NULL)
+	  {
+	    char *p = strrchr (_dl_rtld_libname.name, '/');
+	    if (p)
+	      {
+		_dl_rtld_libname2.name = p+1;
+		_dl_rtld_libname2.next = NULL;
+		_dl_rtld_libname.next = &_dl_rtld_libname2;
+	      }
+	  }
+
 	has_interp = 1;
 	break;
       }
@@ -696,74 +717,70 @@ of this helper program; chances are you did not intend to run this program.\n",
 
 	      for (map = _dl_loaded; map != NULL; map = map->l_next)
 		{
-		  const char *strtab =
-		    (const char *) (map->l_addr
-				    + map->l_info[DT_STRTAB]->d_un.d_ptr);
+		  const char *strtab;
 		  ElfW(Dyn) *dyn = map->l_info[VERNEEDTAG];
+		  ElfW(Verneed) *ent;
 
-		  if (dyn != NULL)
+		  if (dyn == NULL)
+		    continue;
+
+		  strtab = (const char *)
+		    (map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+		  ent = (ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
+
+		  if (first)
 		    {
-		      ElfW(Verneed) *ent =
-			(ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
+		      _dl_sysdep_message ("\n\tVersion information:\n", NULL);
+		      first = 0;
+		    }
 
-		      if (first)
-			{
-			  _dl_sysdep_message ("\n\tVersion information:\n",
-					      NULL);
-			  first = 0;
-			}
+		  _dl_sysdep_message ("\t", (map->l_name[0]
+					     ? map->l_name : _dl_argv[0]),
+				      ":\n", NULL);
 
-		      _dl_sysdep_message ("\t", (map->l_name[0]
-						 ? map->l_name
-						 : _dl_argv[0]), ":\n",
-					  NULL);
+		  while (1)
+		    {
+		      ElfW(Vernaux) *aux;
+		      struct link_map *needed;
+
+		      needed = find_needed (strtab + ent->vn_file);
+		      aux = (ElfW(Vernaux) *) ((char *) ent + ent->vn_aux);
 
 		      while (1)
 			{
-			  ElfW(Vernaux) *aux;
-			  struct link_map *needed;
+			  const char *fname = NULL;
 
-			  needed = find_needed (strtab + ent->vn_file);
-			  aux = (ElfW(Vernaux) *) ((char *) ent + ent->vn_aux);
+			  _dl_sysdep_message ("\t\t",
+					      strtab + ent->vn_file,
+					      " (", strtab + aux->vna_name,
+					      ") ",
+					      (aux->vna_flags
+					       & VER_FLG_WEAK
+					       ? "[WEAK] " : ""),
+					      "=> ", NULL);
 
-			  while (1)
-			    {
-			      const char *fname = NULL;
+			  if (needed != NULL
+			      && match_version (strtab+aux->vna_name, needed))
+			    fname = needed->l_name;
 
-			      _dl_sysdep_message ("\t\t",
-						  strtab + ent->vn_file,
-						  " (", strtab + aux->vna_name,
-						  ") ",
-						  (aux->vna_flags
-						   & VER_FLG_WEAK
-						   ? "[WEAK] " : ""),
-						  "=> ", NULL);
+			  _dl_sysdep_message (fname ?: "not found", "\n",
+					      NULL);
 
-			      if (needed != NULL
-				  && match_version (strtab + aux->vna_name,
-						    needed))
-				fname = needed->l_name;
-
-			      _dl_sysdep_message (fname ?: "not found", "\n",
-						  NULL);
-
-			      if (aux->vna_next == 0)
-				/* No more symbols.  */
-				break;
-
-			      /* Next symbol.  */
-			      aux = (ElfW(Vernaux) *) ((char *) aux
-						   + aux->vna_next);
-			    }
-
-			  if (ent->vn_next == 0)
-			    /* No more dependencies.  */
+			  if (aux->vna_next == 0)
+			    /* No more symbols.  */
 			    break;
 
-			  /* Next dependency.  */
-			  ent = (ElfW(Verneed) *) ((char *) ent
-						   + ent->vn_next);
+			  /* Next symbol.  */
+			  aux = (ElfW(Vernaux) *) ((char *) aux
+						   + aux->vna_next);
 			}
+
+		      if (ent->vn_next == 0)
+			/* No more dependencies.  */
+			break;
+
+		      /* Next dependency.  */
+		      ent = (ElfW(Verneed) *) ((char *) ent + ent->vn_next);
 		    }
 		}
 	    }

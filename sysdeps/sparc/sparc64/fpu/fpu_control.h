@@ -41,13 +41,11 @@
 
 /* Now two recommended cw */
 
-/* Linux default:
+/* Linux and IEEE default:
      - extended precision
      - rounding to nearest
      - no exceptions  */
 #define _FPU_DEFAULT  0x0
-
-/* IEEE:  same as above  */
 #define _FPU_IEEE     0x0
 
 /* Type of the control word.  */

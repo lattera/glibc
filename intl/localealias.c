@@ -85,7 +85,7 @@ void free ();
 # define strdup __strdup
 
 /* We need locking here since we can be called from different palces.  */
-# include <libc-lock.h>
+# include <bits/libc-lock.h>
 
 __libc_lock_define_initialized (static, lock);
 #endif

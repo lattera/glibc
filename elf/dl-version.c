@@ -155,15 +155,22 @@ int
 _dl_check_map_versions (struct link_map *map, int verbose)
 {
   int result = 0;
-  const char *strtab = (const char *) (map->l_addr
-				       + map->l_info[DT_STRTAB]->d_un.d_ptr);
+  const char *strtab;
   /* Pointer to section with needed versions.  */
-  ElfW(Dyn) *dyn = map->l_info[VERSTAG (DT_VERNEED)];
+  ElfW(Dyn) *dyn;
   /* Pointer to dynamic section with definitions.  */
-  ElfW(Dyn) *def = map->l_info[VERSTAG (DT_VERDEF)];
+  ElfW(Dyn) *def;
   /* We need to find out which is the highest version index used
     in a dependecy.  */
   unsigned int ndx_high = 0;
+
+  /* If we don't have a string table, we must be ok.  */
+  if (map->l_info[DT_STRTAB] == NULL)
+    return 0;
+  strtab = (const char *) (map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+
+  dyn = map->l_info[VERSTAG (DT_VERNEED)];
+  def = map->l_info[VERSTAG (DT_VERDEF)];
 
   if (dyn != NULL)
     {

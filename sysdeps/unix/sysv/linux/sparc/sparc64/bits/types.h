@@ -42,7 +42,7 @@ typedef signed long int __int64_t;
 typedef unsigned long int __uint64_t;
 typedef __quad_t *__qaddr_t;
 
-typedef __u_int __dev_t;		/* Type of device numbers.  */
+typedef __u_long __dev_t;		/* Type of device numbers.  */
 typedef __u_int __uid_t;		/* Type of user identifications.  */
 typedef __u_int __gid_t;		/* Type of group identifications.  */
 typedef __u_int __ino_t;		/* Type of file serial numbers.  */

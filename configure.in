@@ -371,7 +371,7 @@ AC_MSG_RESULT(sysdeps/generic sysdeps/stub)
 AC_PROG_INSTALL
 if test "$INSTALL" = "${srcdir}/install-sh -c"; then
   # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL='$(..)./install-sh -c'
+  INSTALL='\$(..)./install-sh -c'
 fi
 AC_PROG_LN_S
 AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)

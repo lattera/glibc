@@ -127,7 +127,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 #endif
   filedata = (void *) __mmap ((caddr_t) 0, st.st_size, PROT_READ,
 			      MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
-  if (filedata == MAP_FAILED)
+  if ((void *) filedata == MAP_FAILED)
     {
       if (errno == ENOSYS)
 	{

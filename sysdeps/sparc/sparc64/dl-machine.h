@@ -220,6 +220,13 @@ elf_machine_lazy_rel (struct link_map *map, const Elf64_Rela *reloc)
 /* The SPARC overlaps DT_RELA and DT_PLTREL.  */
 #define ELF_MACHINE_PLTREL_OVERLAP 1
 
+/* The return value from dl-runtime's fixup, if it should be special.  */
+#define ELF_FIXUP_RETURN_VALUE(map, result)				\
+  ((map)->l_info[DT_SPARC(PLTFMT)]					\
+   && (map)->l_info[DT_SPARC(PLTFMT)]->d_un.d_val == 2			\
+   ? (result) + (map)->l_info[DT_PLTGOT]->d_un.d_ptr + (map)->l_addr	\
+   : (result))
+
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
@@ -232,10 +239,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   if (l->l_info[DT_JMPREL] && lazy)
     {
       got = (Elf64_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
-      got[1] = (Elf64_Addr) l;  /* Identify this shared object.  */
       /* This function will get called to fix up the GOT entry indicated by
          the offset on the stack, and then jump to the resolved address.  */
-      got[2] = (Elf64_Addr) &_dl_runtime_resolve;
+      got[1] = (Elf64_Addr) &_dl_runtime_resolve;
+      got[2] = (Elf64_Addr) l;  /* Identify this shared object.  */
     }
 
   return lazy;
@@ -248,9 +255,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.type _dl_runtime_resolve, @function
 _dl_runtime_resolve:
 	save %sp, -160, %sp
-	mov %g5, %o0
+	mov %g1, %o0
 	call fixup
-	 mov %g6, %o1
+	 mov %g2, %o1
 	jmp %o0
 	 restore
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve

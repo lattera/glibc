@@ -74,24 +74,19 @@ ENTRY(____sparc_signal_trampoline)
 1:
 #ifdef PIC
 	/* Save return address */
-	mov	%o7,%o4
-___sxx:
-	call	___syy
-	nop
-___syy:
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(___sxx-.)),%o5
-	or	%o5,%lo(_GLOBAL_OFFSET_TABLE_-(___sxx-.)),%o5
-	add	%o7,%o5,%o5
+	mov	%o7,%o5
+11:	call	12f
+	 sethi	%hi(_GLOBAL_OFFSET_TABLE_-(11b-.)),%o4
+12:	or	%o5,%lo(_GLOBAL_OFFSET_TABLE_-(11b-.)),%o4
+	add	%o7,%o4,%o4
 	/* restore return address */
-	mov	%o4,%o7
-	mov	%o5,%o4
+	mov	%o5,%o7
 	/* o4 has the GOT pointer */
 #endif
 	sethi	%hi(C_SYMBOL_NAME(____sig_table)),%o5
 	or	%o5,%lo(C_SYMBOL_NAME(____sig_table)),%o5
 #ifdef PIC
-	add	%o5,%o4,%o4
-	ld	[%o4],%o5
+	ld	[%o4+%o5], %o5
 #endif
 	sll	%o0,2,%o4
 	add	%o5,%o4,%o4
@@ -141,3 +136,5 @@ ___syy:
 	/* if we return, sysreturn failed */
 	mov	SYS_ify(exit),%g1
 	t	0x10
+
+END(____sparc_signal_trampoline)

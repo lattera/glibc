@@ -565,7 +565,7 @@ by
 
 in the above example specs file to make it work for other systems.
 
-Version 2.7.2.2 does and future versions of GCC will automatically
+Version 2.7.2.3 does and future versions of GCC will automatically
 provide the correct specs.
 
 
@@ -595,13 +595,9 @@ GROUP ( libc.so.6 ld-linux.so.2 libc.a )
 	  any other system I saw.  This is a bug, isn't it?''
 
 [A18] {UD} No, this is no bug.  This version of the GNU libc already
-follows the to-be-released POSIX.1g standard.  In this standard
-the type `size_t' is used for all parameters which describe a size.
-So better change now.
-
-This change is critical for system which have
-	sizeof (int) != sizeof (size_t)
-like the Alpha.
+follows the Single Unix specifications (and I think the POSIX.1g
+draft which adopted the solution).  The type for parameter describing
+a size is now `socklen_t', a new type.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -617,28 +613,9 @@ invalid.  I.e., an emulated FPU is for the libc as good as a real one.
 [Q20]	``How can I compile gcc 2.7.2.1 from the gcc source code using
 	  glibc 2.x?
 
-[A20] {AJ} There's only support for glibc 2.0 in gcc 2.7.2.2 or later.
-
-gcc 2.7.2.2 has also a nasty bug.  It installs its own version of
-assert.h into /usr/<machine>/include that is not compatible with
-glibc.  Please remove this file - otherwise you get lots of problems
-with configure.
-
-For 2.7.2.2 you should also use the following patch and configure for
-e.g. i486-linux.
------------------------------------------------------------------------
---- configure       Tue Feb 11 15:57:17 1997
-+++ configure   Wed Feb 12 23:09:29 1997
-@@ -1021,7 +1021,7 @@
-                gnu_ld=yes
-                # GNU libc version 2 does not supply these;
-                # we want them from GCC.
--               extra_parts="crtbegin.o crtend.o"
-+               extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS.o"
-                ;;
-         i[3456]86-go32-msdos | i[3456]86-*-go32)
-               cpu_type=i386
------------------------------------------------------------------------
+[A20] {AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3
+or later.  You should get at least gcc 2.7.2.3.  All previous versions
+had problems with glibc support.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -698,13 +675,13 @@ very beginning and if it is not usable `configure' will bark.
 [Q24]	``I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	  works great.  But the glibc NIS+ doesn't seem to work.''
 
-[A24]	The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
-	file for storing information about the NIS+ server and their
-	public keys, because the nis.conf file do not contain all
-	necessary information.  You have to copy a NIS_COLD_START file
-	from a Solaris client (the NIS_COLD_START file is byte order
-	independend) or generate it new with nisinit from the nis-tools
-	(look at http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
+[A24] The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
+file for storing information about the NIS+ server and their public
+keys, because the nis.conf file do not contain all necessary
+information.  You have to copy a NIS_COLD_START file from a Solaris
+client (the NIS_COLD_START file is byte order independend) or generate
+it new with nisinit from the nis-tools (look at
+http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

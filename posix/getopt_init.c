@@ -27,7 +27,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#include "../stdio-common/_itoa.h"
+#include <stdio-common/_itoa.h>
 
 /* Variable to synchronize work.  */
 char *__getopt_nonoption_flags;
@@ -40,13 +40,13 @@ extern pid_t __libc_pid;
    application it does not exist anymore since it was saved for the use
    in getopt.  */
 void
-__getopt_clean_environment (void)
+__getopt_clean_environment (char **env)
 {
   /* Bash 2.0 puts a special variable in the environment for each
      command it runs, specifying which ARGV elements are the results
      of file name wildcard expansion and therefore should not be
      considered as options.  */
-  static const char envvar_tail[] = "_GNU_nonoption_argv_flags_";
+  static const char envvar_tail[] = "_GNU_nonoption_argv_flags_=";
   char var[100];
   char *cp, **ep;
   size_t len;
@@ -56,19 +56,19 @@ __getopt_clean_environment (void)
   if (__libc_pid == 0)
     __libc_pid = getpid ();
 
-  /* Construct "_<PID>_GNU_nonoption_argv_flags_" string.  */
+  /* Construct "_<PID>_GNU_nonoption_argv_flags_=" string.  */
   cp = memcpy (&var[sizeof (var) - sizeof (envvar_tail)], envvar_tail,
 	       sizeof (envvar_tail));
   cp = _itoa_word (__libc_pid, cp, 10, 0);
   *--cp = '_';
   len = (var + sizeof (var) - 1) - cp;
 
-  for (ep = __environ; *ep != NULL; ++ep)
-    if (!strncmp (*ep, cp, len) && (*ep)[len] == '=')
+  for (ep = env; *ep != NULL; ++ep)
+    if (!strncmp (*ep, cp, len))
       {
 	/* Found it.  Store this pointer and move later ones back.  */
 	char **dp = ep;
-	__getopt_nonoption_flags = &(*ep)[len + 1];
+	__getopt_nonoption_flags = &(*ep)[len];
 	do
 	  dp[0] = dp[1];
 	while (*dp++);

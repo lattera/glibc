@@ -1167,19 +1167,131 @@ translations from the file
 @end smallexample
 
 From the above descriptions it should be clear which component of this
-filename is determined fromby which source.
+filename is determined by which source.
 
-@c Describe:
-@c * message inheritence
-@c * locale aliasing
-@c * character set dependence
+In the above example we assumed that the @code{LANGUAGE} environment
+variable to @code{de}.  This might be an appropriate selection but what
+happens if the user wants to use @code{LC_ALL} because of the wider
+usability and here the required value is @code{de_DE.ISO-8859-1}?  We
+already mentioned above that a situation like this is not infrequent.
+E.g., a person might prefer reading a dialect and if this is not
+available fall back on the standard language.
+
+The @code{gettext} functions know about situations like this and can
+handle them gracefully.  The functions recognize the format of the value
+of the environment variable.  It can split the value is different pieces
+and by leaving out the only or the other part it can construct new
+values.  This happens of course in a predictable way.  To understand
+this one must know the format of the environment variable value.  There
+are to more or less standardized forms:
+
+@table @emph
+@item X/Open Format
+@code{language[_territory[.codeset]][@@modifier]}
+
+@item CEN Format (European Community Standard)
+@code{language[_territory][+audience][+special][,[sponsor][_revision]]}
+@end table
+
+The functions will automatically recognize which format is used.  Less
+specific locale names will be stripped of in the order of the following
+list:
+
+@enumerate
+@item
+@code{revision}
+@item
+@code{sponsor}
+@item
+@code{special}
+@item
+@code{codeset}
+@item
+@code{normalized codeset}
+@item
+@code{territory}
+@item
+@code{audience}/@code{modifier}
+@end enumerate
+
+From the last entry one can see that the meaning of the @code{modifer}
+field in the X/Open format and the @code{audience} format have the same
+meaning.  Beside one can see that the @code{language} field for obvious
+reasons never will be dropped.
+
+The only new thing is the @code{normalized codeset} entry.  This is
+another goodie which is introduced to help reducing the chaos which
+derives from the inability of the people to standardize the names of
+character sets.  Instead of @w{ISO-8859-1} one can often see @w{8859-1},
+@w{88591}, @w{iso8859-1}, or @w{iso_8859-1}.  The @code{normalized
+codeset} value is generated from the user-provided character set name by
+applying the following rules:
+
+@enumerate
+@item
+Remove all characters beside numbers and letters.
+@item
+Fold letters to lowercase.
+@item
+If the same only contains digits prepend the string @code{"iso"}.
+@end enumerate
+
+@noindent
+So all of the above name will be normalized to @code{iso88591}.  This
+allows the program user much more freely choosing the locale name.
+
+Even this extended functionality still does not help to solve the
+problem that completely different names can be used to denote the same
+locale (e.g., @code{de} and @code{german}).  To be of help in this
+situation the locale implementation and also the @code{gettext}
+functions know about aliases.
+
+The file @file{/usr/share/locale/locale.alias} (replace @file{/usr} with
+whatever prefix you used for configuring the C library) contains a
+mapping of alternative names to more regular names.  The system manager
+is free to add new entries to fill her/his own needs.  The selected
+locale from the environment is compared with the entries in the first
+column of this file ignoring the case.  If they match the value of the
+second column is used instead for the further handling.
+
+In the description of the format of the environment variables we already
+mentioned the character set as a factor in the selection of the message
+catalog.  In fact, only catalogs which contain text written using the
+character set of the system/program can be used (directly; there will
+come a solution for this some day).  This means for the user that s/he
+will always have to take care for this.  If in the collection of the
+message catalogs there are files for the same language but coded using
+different character sets the user has to be careful.
 
 
 @node Helper programs for gettext
 @subsection Programs to handle message catalogs for @code{gettext}
 
-@c Describe:
-@c * msgfmt
-@c * xgettext
-@c Mention:
-@c * other programs from GNU gettext
+The GNU C Library does not contain the source code for the programs to
+handle message catalogs for the @code{gettext} functions.  As part of
+the GNU project the GNU gettext package contains everything the
+developer needs.  The functionality provided by the tools in this
+package by far exceeds the abilities of the @code{gencat} program
+described above for the @code{catgets} functions.
+
+There is a program @code{msgfmt} which is the equivalent program to the
+@code{gencat} program.  It generates from the human-readable and
+-editable form of the message catalog a binary file which can be used by
+the @code{gettext} functions.  But there are several more programs
+available.
+
+The @code{xgettext} program can be used to automatically extract the
+translatable messages from a source file.  I.e., the programmer need not
+take care for the translations and the list of messages which have to be
+translated.  S/He will simply wrap the translatable string in calls to
+@code{gettext} et.al and the rest will be done by @code{xgettext}.  This
+program has a lot of option which help to customize the output or do
+help to understand the input better.
+
+Other programs help to manage development cycle when new messages appear
+in the source files or when a new translation of the messages appear.
+here it should only be noted that using all the tools in GNu gettext it
+is possible to @emph{completely} automize the handling of message
+catalog.  Beside marking the translatable string in the source code and
+generating the translations the developers do not have anything to do
+themself.

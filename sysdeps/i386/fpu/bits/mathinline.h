@@ -73,6 +73,10 @@
 #ifdef	__GNUC__
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
+/* The gcc, version 2.7 or below, has problems with all this inlining
+   code.  So disable it for this version of the compiler.  */
+#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7)
+
 #ifdef __cplusplus
 # define __MATH_INLINE __inline
 #else
@@ -152,6 +156,80 @@
   {									      \
     code;								      \
   }
+
+
+/* Miscellaneous functions */
+
+__inline_mathcode (__sgn, __x, \
+  return __x == 0.0 ? 0.0 : (__x > 0.0 ? 1.0 : -1.0))
+
+__inline_mathcode (__pow2, __x, \
+  register long double __value;						      \
+  register long double __exponent;					      \
+  long int __p = (long int) __x;					      \
+  if (__x == (long double) __p)						      \
+    {									      \
+      __asm __volatile__						      \
+	("fscale"							      \
+	 : "=t" (__value) : "0" (1.0), "u" (__x));			      \
+      return __value;							      \
+    }									      \
+  __asm __volatile__							      \
+    ("fldl	%%st(0)\n\t"						      \
+     "frndint			# int(x)\n\t"				      \
+     "fxch\n\t"								      \
+     "fsub	%%st(1)		# fract(x)\n\t"				      \
+     "f2xm1			# 2^(fract(x)) - 1\n\t"			      \
+     : "=t" (__value), "=u" (__exponent) : "0" (__x));			      \
+  __value += 1.0;							      \
+  __asm __volatile__							      \
+    ("fscale"								      \
+     : "=t" (__value) : "0" (__value), "u" (__exponent));		      \
+  return __value)
+
+#define __sincos_code \
+  register long double __cosr;						      \
+  register long double __sinr;						      \
+  __asm __volatile__							      \
+    ("fsincos\n\t"							      \
+     "fnstsw	%%ax\n\t"						      \
+     "testl	$0x400, %%eax\n\t"					      \
+     "jz	1f\n\t"							      \
+     "fldpi\n\t"							      \
+     "fadd	%%st(0)\n\t"						      \
+     "fxch	%%st(1)\n\t"						      \
+     "2: fprem1\n\t"							      \
+     "fnstsw	%%ax\n\t"						      \
+     "testl	$0x400, %%eax\n\t"					      \
+     "jnz	2b\n\t"							      \
+     "fstp	%%st(1)\n\t"						      \
+     "fsincos\n\t"							      \
+     "1:"								      \
+     : "=t" (__cosr), "=u" (__sinr) : "0" (__x));			      \
+  *__sinx = __sinr;							      \
+  *__cosx = __cosr
+
+__MATH_INLINE void __sincos (double __x, double *__sinx, double *__cosx);
+__MATH_INLINE void
+__sincos (double __x, double *__sinx, double *__cosx)
+{
+  __sincos_code;
+}
+
+__MATH_INLINE void __sincosf (float __x, float *__sinx, float *__cosx);
+__MATH_INLINE void
+__sincosf (float __x, float *__sinx, float *__cosx)
+{
+  __sincos_code;
+}
+
+__MATH_INLINE void __sincosl (long double __x, long double *__sinx,
+			      long double *__cosx);
+__MATH_INLINE void
+__sincosl (long double __x, long double *__sinx, long double *__cosx)
+{
+  __sincos_code;
+}
 
 
 /* Optimized inline implementation, sometimes with reduced precision
@@ -278,10 +356,10 @@ __inline_mathop (sqrt, "fsqrt")
 __inline_mathop_ (long double, __sqrtl, "fsqrt")
 
 #if defined __GNUC__ && (__GNUC__ > 2 || __GNUC__ == 2 && __GNUC_MINOR__ >= 8)
-__inline_mathcode_ (fabs, __x, return __builtin_fabs (__x))
-__inline_mathcode_ (fabsf, __x, return __builtin_fabsf (__x))
-__inline_mathcode_ (fabsl, __x, return __builtin_fabsl (__x))
-__inline_mathcode_ (__fabsl, __x, return __builtin_fabsl (__x))
+__inline_mathcode_ (double, fabs, __x, return __builtin_fabs (__x))
+__inline_mathcode_ (float, fabsf, __x, return __builtin_fabsf (__x))
+__inline_mathcode_ (long double, fabsl, __x, return __builtin_fabsl (__x))
+__inline_mathcode_ (long double, __fabsl, __x, return __builtin_fabsl (__x))
 #else
 __inline_mathop (fabs, "fabs")
 __inline_mathop_ (long double, __fabsl, "fabs")
@@ -356,7 +434,7 @@ ldexp (double __x, int __y)
 /* Optimized versions for some non-standardized functions.  */
 #if defined __USE_ISOC9X || defined __USE_MISC
 
-__inline_mathop_decl (log2, "fyl2x", "u" (1.0), "0" (__x) : "st(1)")
+__inline_mathop(log2, "fld1; fxch; fyl2x")
 
 __inline_mathcode (expm1, __x, __expm1_code)
 
@@ -443,14 +521,11 @@ __finite (double __x)
     ("orl	$0x800fffff, %0\n\t"
      "incl	%0\n\t"
      "shrl	$31, %0"
-     : "=q" (__result) : "0" (((int *) &__x)[1]));
+     : "=q" (__result) : "0" (((int *) &__x)[1]) : "cc");
   return __result;
 }
 
 /* Miscellaneous functions */
-
-__inline_mathcode (__sgn, __x, \
-  return __x == 0.0 ? 0.0 : (__x > 0.0 ? 1.0 : -1.0))
 
 __inline_mathcode (__coshm1, __x, \
   register long double __exm1 = __expm1l (__fabsl (__x));		      \
@@ -458,69 +533,6 @@ __inline_mathcode (__coshm1, __x, \
 
 __inline_mathcode (__acosh1p, __x, \
   return log1pl (__x + __sqrtl (__x) * __sqrtl (__x + 2.0)))
-
-__inline_mathcode (__pow2, __x, \
-  register long double __value;						      \
-  register long double __exponent;					      \
-  long int __p = (long int) __x;					      \
-  if (__x == (long double) __p)						      \
-    return ldexpl (1.0, __p);						      \
-  __asm __volatile__							      \
-    ("fldl	%%st(0)\n\t"						      \
-     "frndint			# int(x)\n\t"				      \
-     "fxch\n\t"								      \
-     "fsub	%%st(1)		# fract(x)\n\t"				      \
-     "f2xm1			# 2^(fract(x)) - 1\n\t"			      \
-     : "=t" (__value), "=u" (__exponent) : "0" (__x));			      \
-  __value += 1.0;							      \
-  __asm __volatile__							      \
-    ("fscale"								      \
-     : "=t" (__value) : "0" (__value), "u" (__exponent));		      \
-  return __value)
-
-#define __sincos_code \
-  register long double __cosr;						      \
-  register long double __sinr;						      \
-  __asm __volatile__							      \
-    ("fsincos\n\t"							      \
-     "fnstsw	%%ax\n\t"						      \
-     "testl	$0x400, %%eax\n\t"					      \
-     "jz	1f\n\t"							      \
-     "fldpi\n\t"							      \
-     "fadd	%%st(0)\n\t"						      \
-     "fxch	%%st(1)\n\t"						      \
-     "2: fprem1\n\t"							      \
-     "fnstsw	%%ax\n\t"						      \
-     "testl	$0x400, %%eax\n\t"					      \
-     "jnz	2b\n\t"							      \
-     "fstp	%%st(1)\n\t"						      \
-     "fsincos\n\t"							      \
-     "1:"								      \
-     : "=t" (__cosr), "=u" (__sinr) : "0" (__x));			      \
-  *__sinx = __sinr;							      \
-  *__cosx = __cosr
-
-__MATH_INLINE void __sincos (double __x, double *__sinx, double *__cosx);
-__MATH_INLINE void
-__sincos (double __x, double *__sinx, double *__cosx)
-{
-  __sincos_code;
-}
-
-__MATH_INLINE void __sincosf (float __x, float *__sinx, float *__cosx);
-__MATH_INLINE void
-__sincosf (float __x, float *__sinx, float *__cosx)
-{
-  __sincos_code;
-}
-
-__MATH_INLINE void __sincosl (long double __x, long double *__sinx,
-			      long double *__cosx);
-__MATH_INLINE void
-__sincosl (long double __x, long double *__sinx, long double *__cosx)
-{
-  __sincos_code;
-}
 
 #endif /* __USE_MISC  */
 
@@ -530,6 +542,7 @@ __sincosl (long double __x, long double *__sinx, long double *__cosx)
 #undef __atan2_code
 #undef __sincos_code
 
+#endif /* Not gcc <= 2.7.  */
 #endif /* __NO_MATH_INLINES  */
 #endif /* __GNUC__  */
 

@@ -57,20 +57,12 @@ static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-  asm ("	call .Lhere\n"
-       ".Lhere:	popl %0\n"
-       "	subl $.Lhere, %0"
+  asm ("	call 1f\n"
+       "1:	popl %0\n"
+       "	subl 1b@GOT(%%ebx), %0"
        : "=r" (addr));
   return addr;
 }
-/* The `subl' insn above will contain an R_386_32 relocation entry
-   intended to insert the run-time address of the label `.Lhere'.
-   This will be the first relocation in the text of the dynamic linker;
-   we skip it to avoid trying to modify read-only text in this early stage.  */
-#define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) \
-  ++(const Elf32_Rel *) (dynamic_info)[DT_REL]->d_un.d_ptr; \
-  (dynamic_info)[DT_RELSZ]->d_un.d_val -= sizeof (Elf32_Rel);
-
 
 #ifndef PROF
 /* We add a declaration of this function here so that in dl-runtime.c
@@ -132,6 +124,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
+	.align 16
 _dl_runtime_resolve:
 	pushl %eax		# Preserve registers otherwise clobbered.
 	pushl %ecx
@@ -147,6 +140,7 @@ _dl_runtime_resolve:
 
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, @function
+	.align 16
 _dl_runtime_profile:
 	pushl %eax		# Preserve registers otherwise clobbered.
 	pushl %ecx
@@ -167,6 +161,7 @@ _dl_runtime_profile:
 	.globl _dl_runtime_profile
 	.type _dl_runtime_resolve, @function
 	.type _dl_runtime_profile, @function
+	.align 16
 _dl_runtime_resolve:
 _dl_runtime_profile:
 	pushl %eax		# Preserve registers otherwise clobbered.

@@ -252,6 +252,11 @@ extern char *alloca ();
 #undef	GLOB_PERIOD
 #include <glob.h>
 
+static
+#if __GNUC__ - 0 >= 2
+inline
+#endif
+const char *next_brace_sub __P ((const char *begin));
 static int glob_in_dir __P ((const char *pattern, const char *directory,
 			     int flags,
 			     int (*errfunc) __P ((const char *, int)),

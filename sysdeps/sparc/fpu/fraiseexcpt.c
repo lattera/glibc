@@ -20,14 +20,16 @@
 #include <fenv.h>
 #include <math.h>
 
-static void
-ignore_me(double foo)
-{
-}
-
 void
 feraiseexcept (int excepts)
 {
+  static volatile double sink;
+  static const struct {
+    double zero, one, max, min, sixteen, pi;
+  } c = {
+    0.0, 1.0, DBL_MAX, DBL_MIN, 16.0, M_PI
+  };
+
   /* Raise exceptions represented by EXPECTS.  But we must raise only
      one signal at a time.  It is important the if the overflow/underflow
      exception and the inexact exception are given at the same time,
@@ -37,30 +39,30 @@ feraiseexcept (int excepts)
   if ((FE_INVALID & excepts) != 0)
     {
       /* One example of a invalid operation is 0/0.  */
-      ignore_me (0.0 / 0.0);
+      sink = c.zero / c.zero;
     }
 
   /* Next: division by zero.  */
   if ((FE_DIVBYZERO & excepts) != 0)
     {
-      ignore_me (1.0 / 0.0);
+      sink = c.one / c.zero;
     }
 
   /* Next: overflow.  */
   if ((FE_OVERFLOW & excepts) != 0)
     {
-      ignore_me (LDBL_MAX * LDBL_MAX);
+      sink = c.max * c.max;
     }
 
   /* Next: underflow.  */
   if ((FE_UNDERFLOW & excepts) != 0)
     {
-      ignore_me (LDBL_MIN / 16.0);
+      sink = c.min / c.sixteen;
     }
 
   /* Last: inexact.  */
   if ((FE_INEXACT & excepts) != 0)
     {
-      ignore_me (1.0 / M_PI);
+      sink = c.one / c.pi;
     }
 }

@@ -72,5 +72,5 @@ typedef unsigned int fenv_t;
 #endif
 
 /* For internal use only: access the fp state register.  */
-#define __fenv_stfsr(X)   __asm__("stfsr %0" : "=m"(X))
-#define __fenv_ldfsr(X)   __asm__ __volatile__("ldfsr %0" : : "m"(X))
+#define __fenv_stfsr(X)   __asm__("st %%fsr,%0" : "=m"(X))
+#define __fenv_ldfsr(X)   __asm__ __volatile__("ld %0,%%fsr" : : "m"(X))

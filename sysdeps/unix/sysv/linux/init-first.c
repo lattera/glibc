@@ -50,7 +50,7 @@ static void
 init (int argc, char **argv, char **envp)
 {
   extern int __personality (int);
-  extern void __getopt_clean_environment (void);
+  extern void __getopt_clean_environment (char **);
 
   /* We must not call `personality' twice.  */
   if (!__libc_multiple_libcs)
@@ -74,7 +74,7 @@ init (int argc, char **argv, char **envp)
   __libc_init (argc, argv, envp);
 
   /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment ();
+  __getopt_clean_environment (envp);
 
 #ifdef PIC
   __libc_global_ctors ();

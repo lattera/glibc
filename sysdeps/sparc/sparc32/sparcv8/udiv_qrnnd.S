@@ -27,66 +27,75 @@
 
 #include "sysdep.h"
 
-	.text
-	.align 4
-	.global	C_SYMBOL_NAME(__udiv_qrnnd)
-C_SYMBOL_NAME(__udiv_qrnnd):
+ENTRY(__udiv_qrnnd)
 	tst	%o3
-	bneg	Largedivisor
+	bneg	LOC(largedivisor)
 	mov	8,%g1
 
-	b	Lp1
+	b	LOC(p1)
 	addxcc	%o2,%o2,%o2
 
-Lplop:	bcc	Ln1
+LOC(plop):
+	bcc	LOC(n1)
 	addxcc	%o2,%o2,%o2
-Lp1:	addx	%o1,%o1,%o1
+LOC(p1):
+	addx	%o1,%o1,%o1
 	subcc	%o1,%o3,%o4
-	bcc	Ln2
+	bcc	LOC(n2)
 	addxcc	%o2,%o2,%o2
-Lp2:	addx	%o1,%o1,%o1
+LOC(p2):
+	addx	%o1,%o1,%o1
 	subcc	%o1,%o3,%o4
-	bcc	Ln3
+	bcc	LOC(n3)
 	addxcc	%o2,%o2,%o2
-Lp3:	addx	%o1,%o1,%o1
+LOC(p3):
+	addx	%o1,%o1,%o1
 	subcc	%o1,%o3,%o4
-	bcc	Ln4
+	bcc	LOC(n4)
 	addxcc	%o2,%o2,%o2
-Lp4:	addx	%o1,%o1,%o1
+LOC(p4):
+	addx	%o1,%o1,%o1
 	addcc	%g1,-1,%g1
-	bne	Lplop
+	bne	LOC(plop)
 	subcc	%o1,%o3,%o4
-	bcc	Ln5
+	bcc	LOC(n5)
 	addxcc	%o2,%o2,%o2
-Lp5:	st	%o1,[%o0]
+LOC(p5):
+	st	%o1,[%o0]
 	retl
 	xnor	%g0,%o2,%o0
 
-Lnlop:	bcc	Lp1
+LOC(nlop):
+	bcc	LOC(p1)
 	addxcc	%o2,%o2,%o2
-Ln1:	addx	%o4,%o4,%o4
+LOC(n1):
+	addx	%o4,%o4,%o4
 	subcc	%o4,%o3,%o1
-	bcc	Lp2
+	bcc	LOC(p2)
 	addxcc	%o2,%o2,%o2
-Ln2:	addx	%o4,%o4,%o4
+LOC(n2):
+	addx	%o4,%o4,%o4
 	subcc	%o4,%o3,%o1
-	bcc	Lp3
+	bcc	LOC(p3)
 	addxcc	%o2,%o2,%o2
-Ln3:	addx	%o4,%o4,%o4
+LOC(n3):
+	addx	%o4,%o4,%o4
 	subcc	%o4,%o3,%o1
-	bcc	Lp4
+	bcc	LOC(p4)
 	addxcc	%o2,%o2,%o2
-Ln4:	addx	%o4,%o4,%o4
+LOC(n4):
+	addx	%o4,%o4,%o4
 	addcc	%g1,-1,%g1
-	bne	Lnlop
+	bne	LOC(nlop)
 	subcc	%o4,%o3,%o1
-	bcc	Lp5
+	bcc	LOC(p5)
 	addxcc	%o2,%o2,%o2
-Ln5:	st	%o4,[%o0]
+LOC(n5):
+	st	%o4,[%o0]
 	retl
 	xnor	%g0,%o2,%o0
 
-Largedivisor:
+LOC(largedivisor):
 	and	%o2,1,%o5	! %o5 = n0 & 1
 
 	srl	%o2,1,%o2
@@ -98,89 +107,109 @@ Largedivisor:
 	srl	%o3,1,%g3	! %g3 = floor(d / 2)
 	add	%g3,%g2,%g3	! %g3 = ceil(d / 2)
 
-	b	LLp1
+	b	LOC(Lp1)
 	addxcc	%o2,%o2,%o2
 
-LLplop:	bcc	LLn1
+LOC(Lplop):
+	bcc	LOC(Ln1)
 	addxcc	%o2,%o2,%o2
-LLp1:	addx	%o1,%o1,%o1
+LOC(Lp1):
+	addx	%o1,%o1,%o1
 	subcc	%o1,%g3,%o4
-	bcc	LLn2
+	bcc	LOC(Ln2)
 	addxcc	%o2,%o2,%o2
-LLp2:	addx	%o1,%o1,%o1
+LOC(Lp2):
+	addx	%o1,%o1,%o1
 	subcc	%o1,%g3,%o4
-	bcc	LLn3
+	bcc	LOC(Ln3)
 	addxcc	%o2,%o2,%o2
-LLp3:	addx	%o1,%o1,%o1
+LOC(Lp3):
+	addx	%o1,%o1,%o1
 	subcc	%o1,%g3,%o4
-	bcc	LLn4
+	bcc	LOC(Ln4)
 	addxcc	%o2,%o2,%o2
-LLp4:	addx	%o1,%o1,%o1
+LOC(Lp4):
+	addx	%o1,%o1,%o1
 	addcc	%g1,-1,%g1
-	bne	LLplop
+	bne	LOC(Lplop)
 	subcc	%o1,%g3,%o4
-	bcc	LLn5
+	bcc	LOC(Ln5)
 	addxcc	%o2,%o2,%o2
-LLp5:	add	%o1,%o1,%o1	! << 1
+LOC(Lp5):
+	add	%o1,%o1,%o1	! << 1
 	tst	%g2
-	bne	Oddp
+	bne	LOC(Oddp)
 	add	%o5,%o1,%o1
 	st	%o1,[%o0]
 	retl
 	xnor	%g0,%o2,%o0
 
-LLnlop:	bcc	LLp1
+LOC(Lnlop):
+	bcc	LOC(Lp1)
 	addxcc	%o2,%o2,%o2
-LLn1:	addx	%o4,%o4,%o4
+LOC(Ln1):
+	addx	%o4,%o4,%o4
 	subcc	%o4,%g3,%o1
-	bcc	LLp2
+	bcc	LOC(Lp2)
 	addxcc	%o2,%o2,%o2
-LLn2:	addx	%o4,%o4,%o4
+LOC(Ln2):
+	addx	%o4,%o4,%o4
 	subcc	%o4,%g3,%o1
-	bcc	LLp3
+	bcc	LOC(Lp3)
 	addxcc	%o2,%o2,%o2
-LLn3:	addx	%o4,%o4,%o4
+LOC(Ln3):
+	addx	%o4,%o4,%o4
 	subcc	%o4,%g3,%o1
-	bcc	LLp4
+	bcc	LOC(Lp4)
 	addxcc	%o2,%o2,%o2
-LLn4:	addx	%o4,%o4,%o4
+LOC(Ln4):
+	addx	%o4,%o4,%o4
 	addcc	%g1,-1,%g1
-	bne	LLnlop
+	bne	LOC(Lnlop)
 	subcc	%o4,%g3,%o1
-	bcc	LLp5
+	bcc	LOC(Lp5)
 	addxcc	%o2,%o2,%o2
-LLn5:	add	%o4,%o4,%o4	! << 1
+LOC(Ln5):
+	add	%o4,%o4,%o4	! << 1
 	tst	%g2
-	bne	Oddn
+	bne	LOC(Oddn)
 	add	%o5,%o4,%o4
 	st	%o4,[%o0]
 	retl
 	xnor	%g0,%o2,%o0
 
-Oddp:	xnor	%g0,%o2,%o2
+LOC(Oddp):
+	xnor	%g0,%o2,%o2
 	! q' in %o2. r' in %o1
 	addcc	%o1,%o2,%o1
-	bcc	LLp6
+	bcc	LOC(Lp6)
 	addx	%o2,0,%o2
 	sub	%o1,%o3,%o1
-LLp6:	subcc	%o1,%o3,%g0
-	bcs	LLp7
+LOC(Lp6):
+	subcc	%o1,%o3,%g0
+	bcs	LOC(Lp7)
 	subx	%o2,-1,%o2
 	sub	%o1,%o3,%o1
-LLp7:	st	%o1,[%o0]
+LOC(Lp7):
+	st	%o1,[%o0]
 	retl
 	mov	%o2,%o0
 
-Oddn:	xnor	%g0,%o2,%o2
+LOC(Oddn):
+	xnor	%g0,%o2,%o2
 	! q' in %o2. r' in %o4
 	addcc	%o4,%o2,%o4
-	bcc	LLn6
+	bcc	LOC(Ln6)
 	addx	%o2,0,%o2
 	sub	%o4,%o3,%o4
-LLn6:	subcc	%o4,%o3,%g0
-	bcs	LLn7
+LOC(Ln6):
+	subcc	%o4,%o3,%g0
+	bcs	LOC(Ln7)
 	subx	%o2,-1,%o2
 	sub	%o4,%o3,%o4
-LLn7:	st	%o4,[%o0]
+LOC(Ln7):
+	st	%o4,[%o0]
 	retl
 	mov	%o2,%o0
+
+END(__udiv_qrnnd)

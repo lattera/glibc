@@ -59,10 +59,10 @@ omit-deps += $(crtstuff)
 
 # Special rules for the building of crti.o and crtn.o
 $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
-	$(compile.S) -g0 $(ASFLAGS-.so) -o $@
+	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
 $(objpfx)initfini.s: initfini.c
-	$(compile.c) -g0 -S -fPIC -finhibit-size-directive \
+	$(compile.c) -O0 -g0 -S -fPIC -finhibit-size-directive \
 		$(no-exceptions) -o $@
 
 # We only have one kind of startup code files.  Static binaries and

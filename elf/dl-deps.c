@@ -28,6 +28,10 @@
    is signaled by the AUXTAG entry in l_info.  */
 #define AUXTAG	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM \
 		 + DT_EXTRATAGIDX (DT_AUXILIARY))
+/* Whether an shared object references one or more auxiliary objects
+   is signaled by the AUXTAG entry in l_info.  */
+#define FILTERTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM \
+		   + DT_EXTRATAGIDX (DT_FILTER))
 
 
 /* When loading auxiliary objects we must ignore errors.  It's ok if
@@ -138,7 +142,7 @@ _dl_map_object_deps (struct link_map *map,
     {
       struct link_map *l = runp->map;
 
-      if (l->l_info[AUXTAG] || l->l_info[DT_NEEDED])
+      if (l->l_info[AUXTAG] || l->l_info[FILTERTAG] || l->l_info[DT_NEEDED])
 	{
 	  const char *strtab = ((void *) l->l_addr
 				+ l->l_info[DT_STRTAB]->d_un.d_ptr);
@@ -190,119 +194,87 @@ _dl_map_object_deps (struct link_map *map,
 		    dep->l_reserved = 1;
 		  }
 	      }
-	    else if (d->d_tag == DT_AUXILIARY)
+	    else if (d->d_tag == DT_AUXILIARY || d->d_tag == DT_FILTER)
 	      {
 		char *errstring;
 		const char *objname;
+		struct list *newp;
 
-		/* Store the tag in the argument structure.  */
-		args.d = d;
-
-		if (_dl_catch_error (&errstring, &objname, openaux, &args))
+		if (d->d_tag == DT_AUXILIARY)
 		  {
-		    /* We are not interested in the error message.  */
-		    assert (errstring != NULL);
-		    free (errstring);
+		    /* Store the tag in the argument structure.  */
+		    args.d = d;
+
+		    /* We must be prepared that the addressed shared
+		       object is not available.  */
+		    if (_dl_catch_error (&errstring, &objname, openaux, &args))
+		      {
+			/* We are not interested in the error message.  */
+			assert (errstring != NULL);
+			free (errstring);
+
+			/* Simply ignore this error and continue the work.  */
+			continue;
+		      }
 		  }
 		else
+		  /* For filter objects the dependency must be available.  */
+		  args.aux = _dl_map_object (l, strtab + d->d_un.d_val,
+					     (l->l_type == lt_executable
+					      ? lt_library : l->l_type),
+					     trace_mode);
+
+		/* The auxiliary object is actually available.
+		   Incorporate the map in all the lists.  */
+
+		/* Allocate new entry.  This always has to be done.  */
+		newp = alloca (sizeof (struct list));
+
+		/* Copy the content of the current entry over.  */
+		memcpy (newp, orig, sizeof (*newp));
+
+		/* Initialize new entry.  */
+		orig->done = 0;
+		orig->map = args.aux;
+		orig->dup = newp;
+
+		/* We must handle two situations here: the map is new,
+		   so we must add it in all three lists.  If the map
+		   is already known, we have two further possibilities:
+		   - if the object is before the current map in the
+		   search list, we do nothing.  It is already found
+		   early
+		   - if the object is after the current one, we must
+		   move it just before the current map to make sure
+		   the symbols are found early enough
+		*/
+		if (args.aux->l_reserved)
 		  {
-		    /* The auxiliary object is actually available.
-		       Incorporate the map in all the lists.  */
+		    /* The object is already somewhere in the list.
+		       Locate it first.  */
+		    struct list *late;
 
-		    /* Allocate new entry.  This always has to be done.  */
-		    struct list *newp = alloca (sizeof (struct list));
+		    /* This object is already in the search list we
+		       are building.  Don't add a duplicate pointer.
+		       Release the reference just added by
+		       _dl_map_object.  */
+		    --args.aux->l_opencount;
 
-		    /* Copy the content of the current entry over.  */
-		    memcpy (newp, orig, sizeof (*newp));
+		    for (late = orig; late->unique; late = late->unique)
+		      if (late->unique->map == args.aux)
+			break;
 
-		    /* Initialize new entry.  */
-		    orig->done = 0;
-		    orig->map = args.aux;
-		    orig->dup = newp;
-
-		    /* We must handle two situations here: the map is new,
-		       so we must add it in all three lists.  If the map
-		       is already known, we have two further possibilities:
-		       - if the object is before the current map in the
-		         search list, we do nothing.  It is already found
-			 early
-		       - if the object is after the current one, we must
-		         move it just before the current map to make sure
-			 the symbols are found early enough
-		    */
-		    if (args.aux->l_reserved)
+		    if (late->unique)
 		      {
-			/* The object is already somewhere in the
-			   list.  Locate it first.  */
-			struct list *late;
-
-			/* This object is already in the search list
-			   we are building.  Don't add a duplicate
-			   pointer.  Release the reference just added
-			   by _dl_map_object.  */
-			--args.aux->l_opencount;
-
-			for (late = orig; late->unique; late = late->unique)
-			  if (late->unique->map == args.aux)
-			    break;
-
-			if (late->unique)
-			  {
-			    /* The object is somewhere behind the current
-			       position in the search path.  We have to
-			       move it to this earlier position.  */
-			    orig->unique = newp;
-
-			    /* Now remove the later entry from the unique
-			       list.  */
-			    late->unique = late->unique->unique;
-
-			    /* We must move the earlier in the chain.  */
-			    if (args.aux->l_prev)
-			      args.aux->l_prev->l_next = args.aux->l_next;
-			    if (args.aux->l_next)
-			      args.aux->l_next->l_prev = args.aux->l_prev;
-
-			    args.aux->l_prev = newp->map->l_prev;
-			    newp->map->l_prev = args.aux;
-			    if (args.aux->l_prev != NULL)
-			      args.aux->l_prev->l_next = args.aux;
-			    args.aux->l_next = newp->map;
-			  }
-			else
-			  {
-			    /* The object must be somewhere earlier in
-			       the list.  That's good, we only have to
-			       insert an entry for the duplicate list.  */
-			    orig->unique = NULL;	/* Never used.  */
-
-			    /* Now we have a problem.  The element pointing
-			       to ORIG in the unique list must point to
-			       NEWP now.  This is the only place where we
-			       need this backreference and this situation
-			       is really not that frequent.  So we don't
-			       use a double-linked list but instead search
-			       for the preceding element.  */
-			    late = head;
-			    while (late->unique != orig)
-			      late = late->unique;
-			    late->unique = newp;
-			  }
-		      }
-		    else
-		      {
-			/* This is easy.  We just add the symbol right
-			   here.  */
+			/* The object is somewhere behind the current
+			   position in the search path.  We have to
+			   move it to this earlier position.  */
 			orig->unique = newp;
-			++nlist;
-			/* Set the mark bit that says it's already in
-			   the list.  */
-			args.aux->l_reserved = 1;
 
-			/* The only problem is that in the double linked
-			   list of all objects we don't have this new
-			   object at the correct place.  Correct this
-			   here.  */
+			/* Now remove the later entry from the unique list.  */
+			late->unique = late->unique->unique;
+
+			/* We must move the earlier in the chain.  */
 			if (args.aux->l_prev)
 			  args.aux->l_prev->l_next = args.aux->l_next;
 			if (args.aux->l_next)
@@ -314,19 +286,60 @@ _dl_map_object_deps (struct link_map *map,
 			  args.aux->l_prev->l_next = args.aux;
 			args.aux->l_next = newp->map;
 		      }
+		    else
+		      {
+			/* The object must be somewhere earlier in the
+			   list.  That's good, we only have to insert
+			   an entry for the duplicate list.  */
+			orig->unique = NULL;	/* Never used.  */
 
-		    /* Move the tail pointers if necessary.  */
-		    if (orig == utail)
-		      utail = newp;
-		    if (orig == dtail)
-		      dtail = newp;
-
-		    /* Move on the insert point.  */
-		    orig = newp;
-
-		    /* We always add an entry to the duplicate list.  */
-		    ++nduplist;
+			/* Now we have a problem.  The element
+			   pointing to ORIG in the unique list must
+			   point to NEWP now.  This is the only place
+			   where we need this backreference and this
+			   situation is really not that frequent.  So
+			   we don't use a double-linked list but
+			   instead search for the preceding element.  */
+			late = head;
+			while (late->unique != orig)
+			  late = late->unique;
+			late->unique = newp;
+		      }
 		  }
+		else
+		  {
+		    /* This is easy.  We just add the symbol right here.  */
+		    orig->unique = newp;
+		    ++nlist;
+		    /* Set the mark bit that says it's already in the list.  */
+		    args.aux->l_reserved = 1;
+
+		    /* The only problem is that in the double linked
+		       list of all objects we don't have this new
+		       object at the correct place.  Correct this here.  */
+		    if (args.aux->l_prev)
+		      args.aux->l_prev->l_next = args.aux->l_next;
+		    if (args.aux->l_next)
+		      args.aux->l_next->l_prev = args.aux->l_prev;
+
+		    args.aux->l_prev = newp->map->l_prev;
+		    newp->map->l_prev = args.aux;
+		    if (args.aux->l_prev != NULL)
+		      args.aux->l_prev->l_next = args.aux;
+		    args.aux->l_next = newp->map;
+		  }
+
+		/* Move the tail pointers if necessary.  */
+		if (orig == utail)
+		  utail = newp;
+		if (orig == dtail)
+		  dtail = newp;
+
+		/* Move on the insert point.  */
+		orig = newp;
+
+		/* We always add an entry to the duplicate list.  */
+		++nduplist;
 	      }
 	}
       else

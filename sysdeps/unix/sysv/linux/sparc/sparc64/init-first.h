@@ -55,7 +55,7 @@
 	 restore
 	ldx	[%sp+" __S(STACK_BIAS) "+22*8], %o0
 	add	%sp, " __S(STACK_BIAS) "+23*8, %o1
-	sll	%o0, 3, %o2
+	sllx	%o0, 3, %o2
 	add	%o2, %o1, %o2
 	ba	" #INIT "
 	 add	%o2, 8, %o2
@@ -83,10 +83,10 @@
 	 nop
 	ldx	[%sp+" __S(STACK_BIAS) "+22*8], %o0
 	add	%sp, " __S(STACK_BIAS) "+23*8, %o1
-	sll	%o0, 3, %o2
+	sllx	%o0, 3, %o2
 	add	%o2, %o1, %o2
-	add	%o2, 8, %o2
-	ba,a	" #INIT "
+	ba	" #INIT "
+	 add	%o2, 8, %o2
 	.size "#NAME ", .-" #NAME);
 
 #endif

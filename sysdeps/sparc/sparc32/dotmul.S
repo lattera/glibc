@@ -10,11 +10,13 @@
  * This code optimizes short (less than 13-bit) multiplies.
  */
 
-#include "sysdep.h"
+#include <sysdep.h>
+
+
 ENTRY(.mul)
 	mov	%o0, %y		! multiplier -> Y
 	andncc	%o0, 0xfff, %g0	! test bits 12..31
-	be	Lmul_shortway	! if zero, can do it the short way
+	be	LOC(mul_shortway)	! if zero, can do it the short way
 	andcc	%g0, %g0, %o4	! zero the partial product and clear N and V
 
 	/*
@@ -81,7 +83,7 @@ ENTRY(.mul)
 				!  and put upper half in place
 #endif
 
-Lmul_shortway:
+LOC(mul_shortway):
 	/*
 	 * Short multiply.  12 steps, followed by a final shift step.
 	 * The resulting bits are off by 12 and (32-12) = 20 bit positions,
@@ -121,3 +123,5 @@ Lmul_shortway:
 	or	%o5, %o0, %o0	! construct low part of result
 	retl
 	sra	%o4, 20, %o1	! ... and extract high part of result
+
+END(.mul)

@@ -406,6 +406,9 @@ _dl_init_paths (void)
 	{
 	  fake_path_list = (struct r_search_path_elem **)
 	    malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
+	  if (fake_path_list == NULL)
+	    _dl_signal_error (ENOMEM, NULL,
+			      "cannot create cache for search path");
 
 	  (void) fillin_rpath (local_strdup (llp), fake_path_list, ":;",
 			       __libc_enable_secure ? trusted_dirs : NULL);
@@ -901,23 +904,33 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 
   /* Look for this name among those already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
-    if (l->l_opencount > 0 && _dl_name_match_p (name, l) ||
-	/* If the requested name matches the soname of a loaded object,
-	   use that object.  */
-	(l->l_info[DT_SONAME] &&
-	 ! strcmp (name, (const char *) (l->l_addr +
-					 l->l_info[DT_STRTAB]->d_un.d_ptr +
-					 l->l_info[DT_SONAME]->d_un.d_val))))
-      {
-	/* The object is already loaded.
-	   Just bump its reference count and return it.  */
-	const char *soname = (const char *) (l->l_addr +
-					     l->l_info[DT_STRTAB]->d_un.d_ptr +
-					     l->l_info[DT_SONAME]->d_un.d_val);
-	add_name_to_object (l, local_strdup (soname));
-	++l->l_opencount;
-	return l;
-      }
+    {
+      /* If the requested name matches the soname of a loaded object,
+	 use that object.  Elide this check for names that have not
+	 yet been opened.  */
+      if (l->l_opencount <= 0)
+	continue;
+      if (!_dl_name_match_p (name, l))
+	{
+	  const char *soname;
+
+	  if (l->l_info[DT_SONAME] == NULL)
+	    continue;
+
+	  soname = (const char *) (l->l_addr
+				   + l->l_info[DT_STRTAB]->d_un.d_ptr
+				   + l->l_info[DT_SONAME]->d_un.d_val);
+	  if (strcmp (name, soname) != 0)
+	    continue;
+
+	  /* We have a match on a new name -- cache it.  */
+	  add_name_to_object (l, local_strdup (soname));
+	}
+
+      /* We have a match -- bump the reference count and return it.  */
+      ++l->l_opencount;
+      return l;
+    }
 
   if (strchr (name, '/') == NULL)
     {

@@ -27,12 +27,9 @@
 ! size		o2
 ! s2_limb	o3
 
-#include "sysdep.h"
+#include <sysdep.h>
 
-.text
-	.align 4
-	.global	C_SYMBOL_NAME(__mpn_submul_1)
-C_SYMBOL_NAME(__mpn_submul_1):
+ENTRY(__mpn_submul_1)
 	sub	%g0,%o2,%o2		! negate ...
 	sll	%o2,2,%o2		! ... and scale size
 	sub	%o1,%o2,%o1		! o1 is offset s1_ptr
@@ -40,7 +37,8 @@ C_SYMBOL_NAME(__mpn_submul_1):
 
 	mov	0,%o0			! clear cy_limb
 
-Loop:	ld	[%o1+%o2],%o4
+LOC(loop):
+	ld	[%o1+%o2],%o4
 	ld	[%g1+%o2],%g2
 	umul	%o4,%o3,%o5
 	rd	%y,%g3
@@ -51,8 +49,10 @@ Loop:	ld	[%o1+%o2],%o4
 	st	%g2,[%g1+%o2]
 
 	addcc	%o2,4,%o2
-	bne	Loop
+	bne	LOC(loop)
 	 nop
 
 	retl
 	 nop
+
+END(__mpn_submul_1)

@@ -99,9 +99,9 @@ _nl_find_domain (dirname, locale, domainname)
 
 	language[_territory][+audience][+special][,[sponsor][_revision]]
 
-     Beside the first all of them are allowed to be missing.  If the
-     full specified locale is not found, the less specific one are
-     looked for.  The various part will be stripped of according to
+     Beside the first part all of them are allowed to be missing.  If
+     the full specified locale is not found, the less specific one are
+     looked for.  The various parts will be stripped off according to
      the following order:
 		(1) revision
 		(2) sponsor

@@ -34,10 +34,12 @@ extern char **_dl_argv;
 extern char **_environ;
 extern size_t _dl_pagesize;
 extern const char *_dl_platform;
+extern unsigned long _dl_hwcap;
 extern size_t _dl_platformlen;
 extern void _end;
 extern void ENTRY_POINT (void);
 
+ElfW(Addr) _dl_base_addr;
 int __libc_enable_secure;
 int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
 				   of init-first.  */
@@ -87,6 +89,9 @@ _dl_sysdep_start (void **start_argptr,
       case AT_ENTRY:
 	user_entry = av->a_un.a_val;
 	break;
+      case AT_BASE:
+	_dl_base_addr = av->a_un.a_val;
+	break;
       case AT_UID:
 	uid = av->a_un.a_val;
 	break;
@@ -103,7 +108,7 @@ _dl_sysdep_start (void **start_argptr,
 	_dl_platform = av->a_un.a_ptr;
 	break;
       case AT_HWCAP:
-	/* Well, what shall we use?  A string or an integer with bits?  */
+	_dl_hwcap = av->a_un.a_val;
 	break;
       }
 
@@ -187,6 +192,12 @@ _dl_show_auxv (void)
 					16, 0),
 			    "\n", NULL);
 	break;
+      case AT_BASE:
+	_dl_sysdep_message ("AT_BASE:    0x",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					16, 0),
+			    "\n", NULL);
+	break;
       case AT_UID:
 	_dl_sysdep_message ("AT_UID:      ",
 			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
@@ -215,10 +226,9 @@ _dl_show_auxv (void)
 	_dl_sysdep_message ("AT_PLATFORM: ", av->a_un.a_ptr, NULL);
 	break;
       case AT_HWCAP:
-	/* Well, what shall we use?  A string or an integer with bits?  */
 	_dl_sysdep_message ("AT_HWCAP:    ",
 			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
+					16, 0),
 			    "\n", NULL);
 	break;
       }

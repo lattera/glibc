@@ -21,32 +21,76 @@
    This is done in one of two ways: either in the stack context
    of program start, or having dlopen pass them in.  */
 
-#define SYSDEP_CALL_INIT(NAME, INIT)					      \
-void NAME (void *arg)							      \
-{									      \
-  int argc;								      \
-  char **argv, **envp;							      \
-  /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.   \
-     If the address would be taken inside the expression the optimizer	      \
-     would try to be too smart and throws it away.  Grrr.  */		      \
-  int *dummy_addr = &_dl_starting_up;					      \
-									      \
-  __libc_multiple_libcs = dummy_addr && !_dl_starting_up;		      \
-									      \
-  if (!__libc_multiple_libcs)						      \
-    {									      \
-      argc = *(int *) arg;						      \
-      argv = (char **) (arg + 4);					      \
-      envp = &argv[argc+1];						      \
-    }									      \
-  else									      \
-    {									      \
-      argc = (int) arg;							      \
-      argv = ((char ***) &arg)[1];					      \
-      envp = ((char ***) &arg)[2];					      \
-    }									      \
-									      \
-  INIT (argc, argv, envp);						      \
-}
+#include <sysdep.h>
 
+#define __S1(x) #x
+#define __S(x) __S1(x)
 
+#ifdef PIC
+
+#define SYSDEP_CALL_INIT(NAME, INIT) asm("\
+	.weak _dl_starting_up
+	.global " #NAME "
+	.type " #NAME ",@function
+" #NAME ":
+	save	%sp, -64, %sp
+1:	call	11f
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+11:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+	add	%l7, %o7, %l7
+	/* Are we a dynamic libc being loaded into a static program?  */
+	sethi	%hi(_dl_starting_up), %l2
+	or	%l2, %lo(_dl_starting_up), %l2
+	ld	[%l7+%l2], %l2
+	cmp	%l2, 0
+	beq	3f
+	 sethi	%hi(__libc_multiple_libcs), %l3
+	ld	[%l2], %l2
+	subcc	%g0, %l2, %g0
+	subx	%g0, -1, %l2
+3:	or	%l3, %lo(__libc_multiple_libcs), %l3
+	ld	[%l7+%l3], %l3
+	cmp	%l2, 0
+	st	%l2, [%l3]
+	/* If so, argc et al are in %o0-%o2 already.  Otherwise, load them.  */
+	bnz	" #INIT "
+	 restore
+	ld	[%sp+22*4], %o0
+	add	%sp, 23*4, %o1
+	sll	%o0, 2, %o2
+	add	%o2, %o1, %o2
+	ba	" #INIT "
+	 add	%o2, 4, %o2
+	.size "#NAME ", .-" #NAME);
+
+#else
+
+#define SYSDEP_CALL_INIT(NAME, INIT) asm("\
+	.weak _dl_starting_up
+	.global " #NAME "
+	.type " #NAME ",@function
+" #NAME ":
+	/* Are we a dynamic libc being loaded into a static program?  */
+	sethi	%hi(_dl_starting_up), %g2
+	or	%g2, %lo(_dl_starting_up), %g2
+	cmp	%g2, 0
+	beq	3f
+	 sethi	%hi(__libc_multiple_libcs), %g3
+	ld	[%g4+%g2], %g2
+	subcc	%g0, %g2, %g0
+	subx	%g0, -1, %g2
+3:	or	%g3, %lo(__libc_multiple_libcs), %g3
+	cmp	%g2, 0
+	st	%g2, [%g3+%g4]
+	/* If so, argc et al are in %o0-%o2 already.  Otherwise, load them.  */
+	bnz	" #INIT "
+	 nop
+	ld	[%sp+22*4], %o0
+	add	%sp, 23*4, %o1
+	sll	%o0, 2, %o2
+	add	%o2, %o1, %o2
+	ba	" #INIT "
+	 add	%o2, 4, %o2
+	.size "#NAME ", .-" #NAME);
+
+#endif

@@ -14,13 +14,14 @@
  *	bnz	overflow	(or tnz)
  */
 
-#include "DEFS.h"
-FUNC(.umul)
+#include <sysdep.h>
+
+ENTRY(.umul)
 	or	%o0, %o1, %o4
-	mov	%o0, %y		! multiplier -> Y
-	andncc	%o4, 0xfff, %g0	! test bits 12..31 of *both* args
-	be	Lmul_shortway	! if zero, can do it the short way
-	andcc	%g0, %g0, %o4	! zero the partial product and clear N and V
+	mov	%o0, %y			! multiplier -> Y
+	andncc	%o4, 0xfff, %g0		! test bits 12..31 of *both* args
+	be	LOC(mul_shortway)	! if zero, can do it the short way
+	 andcc	%g0, %g0, %o4		! zero the partial product; clear N & V
 
 	/*
 	 * Long multiply.  32 steps, followed by a final shift step.
@@ -59,7 +60,6 @@ FUNC(.umul)
 	mulscc	%o4, %o1, %o4	! 32
 	mulscc	%o4, %g0, %o4	! final shift
 
-
 	/*
 	 * Normally, with the shift-and-add approach, if both numbers are
 	 * positive you get the correct result.  With 32-bit two's-complement
@@ -97,20 +97,20 @@ FUNC(.umul)
 #if 0
 	tst	%o1
 	bl,a	1f		! if %o1 < 0 (high order bit = 1),
-	add	%o4, %o0, %o4	! %o4 += %o0 (add y to upper half)
+	 add	%o4, %o0, %o4	! %o4 += %o0 (add y to upper half)
 1:	rd	%y, %o0		! get lower half of product
 	retl
-	addcc	%o4, %g0, %o1	! put upper half in place and set Z for %o1==0
+	 addcc	%o4, %g0, %o1	! put upper half in place and set Z for %o1==0
 #else
 	/* Faster code from tege@sics.se.  */
 	sra	%o1, 31, %o2	! make mask from sign bit
 	and	%o0, %o2, %o2	! %o2 = 0 or %o0, depending on sign of %o1
 	rd	%y, %o0		! get lower half of product
 	retl
-	addcc	%o4, %o2, %o1	! add compensation and put upper half in place
+	 addcc	%o4, %o2, %o1	! add compensation and put upper half in place
 #endif
 
-Lmul_shortway:
+LOC(mul_shortway):
 	/*
 	 * Short multiply.  12 steps, followed by a final shift step.
 	 * The resulting bits are off by 12 and (32-12) = 20 bit positions,
@@ -150,4 +150,6 @@ Lmul_shortway:
 	srl	%o5, 20, %o5	! shift low bits right 20
 	or	%o5, %o0, %o0
 	retl
-	addcc	%g0, %g0, %o1	! %o1 = zero, and set Z
+	 addcc	%g0, %g0, %o1	! %o1 = zero, and set Z
+
+END(.umul)

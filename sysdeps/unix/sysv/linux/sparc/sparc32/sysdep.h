@@ -36,44 +36,51 @@
 /* Linux/SPARC uses a different trap number */
 #undef PSEUDO
 #undef ENTRY
+#undef END
+#undef LOC
 
 #define ENTRY(name) \
 	.global C_SYMBOL_NAME(name); \
-	.align 2;\
+	.align 4;\
 	C_LABEL(name);\
 	.type name,@function;
 
+#define END(name) \
+	.size name, . - name
+
+#define LOC(name)  . ## L ## name
+
 #ifdef PIC
-#define SYSCALL_ERROR_HANDLER \
-	.global C_SYMBOL_NAME(__errno_location);\
-        .type   C_SYMBOL_NAME(__errno_location),@function;\
-	save   %sp,-96,%sp;\
-	call   __errno_location;\
-	nop;\
-	st %i0,[%o0];\
-	restore;\
-	retl;\
+#define SYSCALL_ERROR_HANDLER					\
+	.global C_SYMBOL_NAME(__errno_location);		\
+        .type   C_SYMBOL_NAME(__errno_location),@function;	\
+	save   %sp,-96,%sp;					\
+	call   __errno_location;				\
+	nop;							\
+	st %i0,[%o0];						\
+	restore;						\
+	retl;							\
 	mov -1,%o0;
 #else
-#define SYSCALL_ERROR_HANDLER \
-	save %sp,-96,%sp;						      \
-	call __errno_location;						      \
-	nop;								      \
-	st %i0,[%o0];							      \
-	restore;							      \
-	retl;								      \
+#define SYSCALL_ERROR_HANDLER					\
+	save %sp,-96,%sp;					\
+	call __errno_location;					\
+	nop;							\
+	st %i0,[%o0];						\
+	restore;						\
+	retl;							\
 	mov -1,%o0;
 #endif   /* PIC */
 
-#define PSEUDO(name, syscall_name, args) \
-	.text;								      \
-	ENTRY(name);							      \
-	LOADSYSCALL(syscall_name);					      \
-	ta 0x10;							      \
-	bcc,a 1f;							      \
-	nop;								      \
-	SYSCALL_ERROR_HANDLER;						      \
-1:;
+#define PSEUDO(name, syscall_name, args)			\
+	.text;							\
+	ENTRY(name);						\
+	LOADSYSCALL(syscall_name);				\
+	ta 0x10;						\
+	bcc,a 9000f;						\
+	nop;							\
+	SYSCALL_ERROR_HANDLER;					\
+9000:;
 
 #endif	/* ASSEMBLER */
 

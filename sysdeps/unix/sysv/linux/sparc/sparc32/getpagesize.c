@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+#include <unistd.h>
+#include <sys/param.h>
 
-/* Code produced by Sun's C compiler calls this function with two extra
-   arguments which it makes relocatable symbols but seem always to be
-   the constant 96; I have no idea what they are for.  */
+/* Return the system page size.  This value will either be 4k or 8k depending
+   on whether or not we are running on Sparc v9 machine.  */
 
-#ifndef NO_UNDERSCORES
-#define __builtin_alloca ___builtin_alloca
-#endif
+/* If we are not a static program, this value is collected from the system
+   via the AT_PAGESZ auxiliary argument.  If we are a static program, we
+   have to guess.  We should _really_ get Linux a proper sysconf()...  */
 
-ENTRY (__builtin_alloca)
-	sub %sp, %o0, %sp	/* Push some stack space.  */
-	retl			/* Return; the returned buffer leaves 96 */
-	add %sp, 96, %o0	/* bytes of register save area at the top. */
-END (__builtin_alloca)
+extern size_t _dl_pagesize;
+
+int
+__getpagesize ()
+{
+  if (_dl_pagesize == 0)
+    _dl_pagesize = EXEC_PAGESIZE;
+  return _dl_pagesize;
+}
+
+weak_alias (__getpagesize, getpagesize)

@@ -51,6 +51,12 @@ typedef struct _IO_FILE FILE;
 
 #include <libio.h>
 
+#ifdef __cplusplus
+# define __STDIO_INLINE __inline
+#else
+# define __STDIO_INLINE extern __inline
+#endif
+
 /* The type of the second argument to `fgetpos' and `fsetpos'.  */
 typedef _G_fpos_t fpos_t;
 
@@ -235,36 +241,40 @@ extern int vsprintf __P ((char *__restrict __s,
 			  _G_va_list __arg));
 
 #ifdef	__OPTIMIZE__
-extern __inline int
+__STDIO_INLINE int
 vprintf (const char *__restrict __fmt, _G_va_list __arg)
 {
   return vfprintf (stdout, __fmt, __arg);
 }
 #endif /* Optimizing.  */
 
-#if defined __USE_GNU || defined __USE_ISOC9X
+#if defined __USE_BSD || defined __USE_ISOC9X
 /* Maximum chars of output to write in MAXLEN.  */
-extern int __snprintf __P ((char *__s, size_t __maxlen,
-			    __const char *__format, ...));
-extern int snprintf __P ((char *__s, size_t __maxlen,
-			  __const char *__format, ...));
+extern int __snprintf __P ((char *__restrict __s, size_t __maxlen,
+			    __const char *__restrict __format, ...));
+extern int snprintf __P ((char *__restrict __s, size_t __maxlen,
+			  __const char *__restrict __format, ...));
 
-extern int __vsnprintf __P ((char *__s, size_t __maxlen,
-			     __const char *__format, _G_va_list __arg));
-extern int vsnprintf __P ((char *__s, size_t __maxlen,
-			   __const char *__format, _G_va_list __arg));
+extern int __vsnprintf __P ((char *__restrict __s, size_t __maxlen,
+			     __const char *__restrict __format,
+			     _G_va_list __arg));
+extern int vsnprintf __P ((char *__restrict __s, size_t __maxlen,
+			   __const char *__restrict __format,
+			   _G_va_list __arg));
 #endif
 
 #ifdef __USE_GNU
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
-extern int vasprintf __P ((char **__ptr, __const char *__f,
-			   _G_va_list __arg));
-extern int asprintf __P ((char **__ptr, __const char *__fmt, ...));
+extern int vasprintf __P ((char **__restrict __ptr,
+			   __const char *__restrict __f, _G_va_list __arg));
+extern int asprintf __P ((char **__restrict __ptr,
+			  __const char *__restrict __fmt, ...));
 
 /* Write formatted output to a file descriptor.  */
-extern int vdprintf __P ((int __fd, __const char *__fmt, _G_va_list __arg));
-extern int dprintf __P ((int __fd, __const char *__fmt, ...));
+extern int vdprintf __P ((int __fd, __const char *__restrict __fmt,
+			  _G_va_list __arg));
+extern int dprintf __P ((int __fd, __const char *__restrict __fmt, ...));
 #endif
 
 
@@ -279,19 +289,24 @@ extern int sscanf __P ((__const char *__restrict __s,
 
 #ifdef	__USE_GNU
 /* Read formatted input from S into argument list ARG.  */
-extern int __vfscanf __P ((FILE *__s, __const char *__format,
+extern int __vfscanf __P ((FILE *__restrict __s,
+			   __const char *__restrict __format,
 			   _G_va_list __arg));
-extern int vfscanf __P ((FILE *__s, __const char *__format,
+extern int vfscanf __P ((FILE *__restrict __s,
+			 __const char *__restrict __format,
 			 _G_va_list __arg));
 
 /* Read formatted input from stdin into argument list ARG.  */
-extern int __vscanf __P ((__const char *__format, _G_va_list __arg));
-extern int vscanf __P ((__const char *__format, _G_va_list __arg));
+extern int __vscanf __P ((__const char *__restrict __format,
+			  _G_va_list __arg));
+extern int vscanf __P ((__const char *__restrict __format, _G_va_list __arg));
 
 /* Read formatted input from S into argument list ARG.  */
-extern int __vsscanf __P ((__const char *__s, __const char *__format,
+extern int __vsscanf __P ((__const char *__restrict __s,
+			   __const char *__restrict __format,
 			   _G_va_list __arg));
-extern int vsscanf __P ((__const char *__s, __const char *__format,
+extern int vsscanf __P ((__const char *__restrict __s,
+			 __const char *__restrict __format,
 			 _G_va_list __arg));
 #endif /* Use GNU.  */
 
@@ -308,7 +323,7 @@ extern int getchar __P ((void));
 #define getc(_fp) _IO_getc (_fp)
 
 #ifdef	__OPTIMIZE__
-extern __inline int
+__STDIO_INLINE int
 getchar (void)
 {
   return _IO_getc (stdin);
@@ -321,13 +336,13 @@ extern int getc_unlocked __P ((FILE *__stream));
 extern int getchar_unlocked __P ((void));
 
 #ifdef __OPTIMIZE__
-extern __inline int
+__STDIO_INLINE int
 getc_unlocked (FILE *__fp)
 {
   return _IO_getc_unlocked (__fp);
 }
 
-extern __inline int
+__STDIO_INLINE int
 getchar_unlocked (void)
 {
   return _IO_getc_unlocked (stdin);
@@ -348,7 +363,7 @@ extern int putchar __P ((int __c));
 #define putc(_ch, _fp) _IO_putc (_ch, _fp)
 
 #ifdef __OPTIMIZE__
-extern __inline int
+__STDIO_INLINE int
 putchar (int __c)
 {
   return _IO_putc (__c, stdout);
@@ -360,7 +375,7 @@ putchar (int __c)
 extern int fputc_unlocked __P ((int __c, FILE *__stream));
 
 #ifdef __OPTIMIZE__
-extern __inline int
+__STDIO_INLINE int
 fputc_unlocked (int __c, FILE *__stream)
 {
   return _IO_putc_unlocked (__c, __stream);
@@ -374,13 +389,13 @@ extern int putc_unlocked __P ((int __c, FILE *__stream));
 extern int putchar_unlocked __P ((int __c));
 
 #ifdef __OPTIMIZE__
-extern __inline int
+__STDIO_INLINE int
 putc_unlocked (int __c, FILE *__stream)
 {
   return _IO_putc_unlocked (__c, __stream);
 }
 
-extern __inline int
+__STDIO_INLINE int
 putchar_unlocked (int __c)
 {
   return _IO_putc_unlocked (__c, stdout);
@@ -423,7 +438,7 @@ _IO_ssize_t __getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 _IO_ssize_t getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 
 #ifdef	__OPTIMIZE__
-extern __inline _IO_ssize_t
+__STDIO_INLINE _IO_ssize_t
 getline (char **__lineptr, size_t *__n, FILE *__stream)
 {
   return __getdelim (__lineptr, __n, '\n', __stream);
@@ -488,13 +503,13 @@ extern int feof_unlocked __P ((FILE *__stream));
 extern int ferror_unlocked __P ((FILE *__stream));
 
 #ifdef __OPTIMIZE__
-extern __inline int
+__STDIO_INLINE int
 feof_unlocked (FILE *__stream)
 {
   return _IO_feof_unlocked (__stream);
 }
 
-extern __inline int
+__STDIO_INLINE int
 ferror_unlocked (FILE *__stream)
 {
   return _IO_ferror_unlocked (__stream);
@@ -578,6 +593,9 @@ extern void funlockfile __P ((FILE *__stream));
 #endif /* POSIX || misc */
 
 __END_DECLS
+
+/* Define helper macro.  */
+#undef __STDIO_INLINE
 
 #endif /* <stdio.h> included.  */
 

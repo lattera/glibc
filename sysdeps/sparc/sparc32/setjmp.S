@@ -22,33 +22,29 @@
 #define _ASM 1
 #include <bits/setjmp.h>
 
+ENTRY(_setjmp)
+	b	1f
+	 set	0, %o1
+END(_setjmp)
+
+ENTRY(setjmp)
+	set	1, %o1
+END(setjmp)
+
 ENTRY (__sigsetjmp)
-	/* Save our SP and FP; in the delay slot of the jump, save our
-	   return PC.  Save the signal mask if requested with a tail-call
-	   for simplicity; it always returns zero.  */
-	ta   ST_FLUSH_WINDOWS
-#ifdef PIC
-	mov  %o7,%g1
-2:
-	call 1f
-	nop
 1:
-	sethi %hi(_GLOBAL_OFFSET_TABLE_-(2b-.)),%g2
-	or    %g2,%lo(_GLOBAL_OFFSET_TABLE_-(2b-.)),%g2
-	add   %g2,%o7,%g2
-	sethi %hi(C_SYMBOL_NAME (__sigjmp_save)), %g3
-	or    %g3,%lo(C_SYMBOL_NAME (__sigjmp_save)), %g3
-	st    %sp, [%o0 + (JB_SP * 4)]
-	st    %fp, [%o0 + (JB_FP * 4)]
-	mov   %g1,%o7
-	ld    [%g2+%g3],%g1
-	jmp   %g1
-	st   %o7, [%o0+(JB_PC*4)]
-#else
-	sethi %hi(C_SYMBOL_NAME (__sigjmp_save)), %g1
-	st %sp, [%o0 + (JB_SP*4)]
-	or %lo(C_SYMBOL_NAME (__sigjmp_save)), %g1, %g1
-	st %fp, [%o0 + (JB_FP*4)]
-	jmp %g1
-	 st %o7, [%o0 + (JB_PC*4)]
-#endif /* PIC */
+	/* Save our PC, SP and FP.  Save the signal mask if requested with
+	   a tail-call for simplicity; it always returns zero.  */
+	ta	ST_FLUSH_WINDOWS
+
+	st	%o7, [%o0 + (JB_PC * 4)]
+	st	%sp, [%o0 + (JB_SP * 4)]
+	st	%fp, [%o0 + (JB_FP * 4)]
+
+	mov	%o7, %g1
+	call	__sigjmp_save
+	 mov	%g1, %o7
+END(__sigsetjmp)
+
+weak_extern(_setjmp)
+weak_extern(setjmp)

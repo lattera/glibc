@@ -346,7 +346,7 @@ static ElfW(Addr) _dl_preferred_address = 1
 
 /* We require the address of the PLT entry returned from fixup, not
    the first word of the PLT entry. */
-#define ELF_FIXUP_RETURNS_ADDRESS 1
+#define ELF_FIXUP_RETURN_VALUE(map, result)  (&(result))
 
 /* Nonzero iff TYPE should not be allowed to resolve to one of
    the main executable's symbols, as for a COPY reloc.  */

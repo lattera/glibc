@@ -1,3 +1,181 @@
+1997-08-24 12:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in (INSTALL): Quote `$'.
+
+	* libc.map: Add __xpg_basename.
+
+	* csu/Makefile (initfini.s): Disable optimization.
+
+	* elf/dl-deps.c: Implement handling of DL_FILTER.
+
+	* elf/dl-load.c (_dl_init_paths): Add error check.
+
+	* intl/finddomain.c (_nl_find_domain): Correct comment.
+	* intl/localealias.c: Include <bits/libc-lock.h> not <libc-lock.h>.
+
+	* libio/stdio.h: Make {,v}snprintf available if __USE_BSD.
+	Change extern inline functions to work correctly in C++.
+
+	* locale/iso-4217.def: Update for more recent ISO 4217 version.
+
+	* locale/loadlocale.c (_nl_load_locale): Add cast.
+
+	* manual/message.texi: Finish gettext section.
+
+	* posix/getopt_init.c: Don't use relative #include path.
+	(__getopt_clean_environment): Change function to take pointer to
+	environment as argument.  Optimize generation of test string a bit.
+	* sysdeps/unix/sysv/linux/init-first.c: Call __getopt_clean_environment
+	with additional argument.
+
+	* poisx/glob.c: Add prototype for next_brace_sub.
+
+	* sysdeps/generic/dl-sysdep.c: Recognize AT_BASE value on auxiliary
+	vector.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_load_address): Rewrite
+	to not generate relocation entry.  Suggested by Richard Henderson.
+	(ELF_MACHINE_BEFORE_RTLD_RELOC): Removed.
+	(elf_machine_runtime_setup): Add .aligns.
+
+	* sysdeps/i386/fpu/fraiseexcpt.c: Add volatile to asms.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Partially undo change of
+	1997-08-14 03:14.  gcc 2.7.2* is really broken in some aspects.
+
+	* sysdeps/standalone/i386/i386.h: Clean up asm statements a bit.
+	* sysdeps/standalone/i960/i960ca.h: Likewise.
+
+1997-08-22 19:04  Richard Henderson  <rth@cygnus.com>
+
+	* elf/rtld.c (_dl_start): Init _dl_rtld_map.l_opencount due to
+	undocumented test addition in _dl_map_object.
+
+	Support ET_EXEC versions of ld.so, for debugging at least:
+
+	* elf/dl-load.c (_dl_map_object): Add_name_to_object could get
+	called despite the DT_SONAME != NULL test, segfaulting.  Simplify
+	the code here as well.
+	* elf/dl-lookup.c (do_lookup): Skip objects with no symtab.
+	(_dl_setup_hash): Likewise for hash tables.
+	* elf/dl-version.c (_dl_check_map_versions): Likewise for strtabs.
+	* elf/rtld.c (_dl_start): Likewise for rpath.
+	(_dl_rtld_libname2): New variable.
+	(dl_main): Use it to add an soname for ourselves when we don't have
+	one of our own.  Base it on the target's .interp.
+	(dl_main): Again, skip printing of objects that don't have strtabs.
+
+	Sparc 32 merge:
+
+	* elf/dl-runtime.c (ELF_FIXUP_RETURN_VALUE): Provide default value.
+	(fixup): Simplify code.  Use ELF_FIXUP_RETURN_VALUE.
+	(profile_fixup): Likewise, though this still needs fixing for
+	Sparc32 and PPC.
+	* sysdeps/powerpc/dl-machine.h: Transmute ELF_FIXUP_RETURNS_ADDRESS
+	to ELF_FIXUP_RETURN_VALUE.
+
+	* sysdeps/sparc/sparc32/dl-machine.h: Implement lazy relocation.
+	Fix up _dl_start_user to handle _dl_skip_args properly.
+	Use _dl_hwcap to determine if "flush" is available/needed.
+
+	* sysdeps/sparc/configure.in: Remove.  It doesn't actually do
+	anything anymore, and what it did do is done somewhere else.
+	* sysdeps/sparc/configure: Likewise.
+
+	* sysdeps/sparc/fpu/bits/mathdef.h (FP_ILOGB0, FP_ILOGBNAN): New.
+
+	* sysdeps/sparc/fpu/fraiseexcpt.c: Rearrange for smaller code.
+
+	* sysdeps/sparc/sparc32/Makefile: Fix sparc->sparc/sparc32 bits
+	in divrem expansions.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h (END, LOC): New
+	definitions for assembly syntax differences.
+
+	* sysdeps/sparc/sparc32/__longjmp.S: %g6,%g7 are reserved to the
+	"system".  Use %g2,%g3 instead.  Use new local label macro.
+	* sysdeps/sparc/sparc32/add_n.S: Use <sysdep.h> and ENTRY, END,
+	and LOC for proper assembly headers/footers.
+	* sysdeps/sparc/sparc32/addmul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/alloca.S: Likewise.
+	* sysdeps/sparc/sparc32/dotmul.S: Likewise.
+	* sysdeps/sparc/sparc32/lshift.S: Likewise.
+	* sysdeps/sparc/sparc32/mul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/rshift.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/addmul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/mul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/submul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/udiv_qrnnd.S: Likewise.
+	* sysdeps/sparc/sparc32/sub_n.S: Likewise.
+	* sysdeps/sparc/sparc32/submul_1.S: Likewise.
+	* sysdeps/sparc/sparc32/udiv_qrnnd.S: Likewise.
+	* sysdeps/sparc/sparc32/umul.S: Likewise.
+	* sysdeps/sparc/sparc32/divrem.m4: Likewise.
+	* sysdeps/sparc/sparc32/rem.S: Regenerate.
+	* sysdeps/sparc/sparc32/sdiv.S: Regenerate.
+	* sysdeps/sparc/sparc32/udiv.S: Regenerate.
+	* sysdeps/sparc/sparc32/urem.S: Regenerate.
+
+	* sysdeps/sparc/sparc32/sparcv8/dotmul.S: New file.
+	* sysdeps/sparc/sparc32/sparcv8/rem.S: New file.
+	* sysdeps/sparc/sparc32/sparcv8/sdiv.S: New file.
+	* sysdeps/sparc/sparc32/sparcv8/udiv.S: New file.
+	* sysdeps/sparc/sparc32/sparcv8/umul.S: New file.
+	* sysdeps/sparc/sparc32/sparcv8/urem.S: New file.
+
+	* sysdeps/sparc/sparc32/bsd-_setjmp.S: Dike out.
+	* sysdeps/sparc/sparc32/bsd-setjmp.S: Likewise.
+	* sysdeps/sparc/sparc32/setjmp.S: Add _setjmp and setjmp entry points.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/__sigtrampoline.S:
+	Clean up PIC code.
+
+	* sysdeps/sparc/sparc32/elf/start.S: New file, slightly modified
+	from the sparc64 version.
+	* sysdeps/sparc/sparc32/elf/start.c: Removed.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/init-first.h: Rewrite in
+	assembly based on the sparc64 version.
+
+	* sysdeps/sparc/sparc32/fpu/bits/fenv.h: Duh.  Use proper syntax
+	for manipulating %fsr.
+	* sysdeps/sparc/sparc32/fpu/fpu_control.h: Make IEEE conformance
+	be the default.
+
+	* elf/elf.h (HWCAP_SPARC_*): New definitions.
+	* elf/rtld.c (_dl_hwcap): New variable.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Record AT_HWCAP.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getpagesize.c: New file.
+	Attempt to get hold of the page size based on what we might have
+	been told at startup time in _dl_pagesize.  This will be obsolete
+	when I finish the kernel hooks for a proper sysconf(), stay tuned.
+
+	Sparc 64 merge:
+
+	* sysdeps/sparc/sparc64/dl-machine.h (ELF_FIXUP_RETURN_VALUE): New.
+	Figure out the right thing to return based on the .plt format.
+
+	* sysdeps/sparc/sparc64/fpu/fpu_control.h: Update comment.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h (__dev_t):
+	Should have been 64-bits wide.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/init-first.h: sll->sllx,
+	optimize for branch delay slot usage.
+
+1997-08-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* csu/Makefile ($(objpfx)crt%.o): Fix a missing *.so -> *.os
+	change.
+
+1997-08-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (identities): Change epsilon.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Correct arguments to fabs,
+	fabsf, fabsl, __fabsl.
+
 1997-08-20 05:30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/catgets.c (catclose): Use __munmap instead of munmap.
@@ -120,10 +298,10 @@
 
 	* sysdeps/libm-i387/e_remainder.S: Pretty print.
 	* sysdeps/libm-i387/e_remainderf.S: Likewise.
-	* sysdeps/libm-i387/e_remainderl.S: Pop extra value for FPU stack.
+	* sysdeps/libm-i387/e_remainderl.S: Pop extra value from FPU stack.
 	* sysdeps/libm-i387/s_cexp.S: Little optimization.
 	* sysdeps/libm-i387/s_cexpl.S: Likewise.
-	* sysdep/libm-ieee754/s_csinhl.c: Include <fenv.h>.
+	* sysdeps/libm-ieee754/s_csinhl.c: Include <fenv.h>.
 
 1997-08-18 15:21  Ulrich Drepper  <drepper@cygnus.com>
 

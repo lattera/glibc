@@ -87,6 +87,10 @@ _dl_object_relocation_scope (struct link_map *l)
 # define VERSYMIDX(sym)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (sym))
 #endif
 
+#ifndef ELF_FIXUP_RETURN_VALUE
+#define ELF_FIXUP_RETURN_VALUE(map, result)  (result)
+#endif
+
 /* We need to define the function as a local symbol so that the reference
    in the trampoline code will be a local PC-relative call.  Tell the
    compiler not to worry that the function appears not to be called.  */
@@ -120,6 +124,7 @@ fixup (
   const PLTREL *const reloc
     = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
 		      reloc_offset);
+  ElfW(Addr) *const rel_addr = (ElfW(Addr) *)(l->l_addr + reloc->r_offset);
 
   /* Set up the scope to find symbols referenced by this object.  */
   struct link_map **scope = _dl_object_relocation_scope (l);
@@ -144,21 +149,17 @@ fixup (
 
 	elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
 			    &l->l_versions[ndx],
-			    (void *) (l->l_addr + reloc->r_offset));
+			    (void *) rel_addr);
       }
     else
       elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			  NULL, (void *) (l->l_addr + reloc->r_offset));
+			  NULL, (void *) rel_addr);
   }
 
   *_dl_global_scope_end = NULL;
 
   /* Return the address that was written by the relocation.  */
-#ifdef ELF_FIXUP_RETURNS_ADDRESS
-  return (ElfW(Addr))(l->l_addr + reloc->r_offset);
-#else
-  return *(ElfW(Addr) *) (l->l_addr + reloc->r_offset);
-#endif
+  return ELF_FIXUP_RETURN_VALUE(l, *rel_addr);
 }
 
 
@@ -219,17 +220,10 @@ profile_fixup (
   }
 
   *_dl_global_scope_end = NULL;
+  (*mcount_fct) (retaddr, result);
 
   /* Return the address that was written by the relocation.  */
-#ifdef ELF_FIXUP_RETURNS_ADDRESS
-  (*mcount_fct) (retaddr, result);
-
-  return &result;	/* XXX This cannot work.  What to do??? --drepper */
-#else
-  (*mcount_fct) (retaddr, result);
-
-  return result;
-#endif
+  return ELF_FIXUP_RETURN_VALUE(l, result);
 }
 #endif
 

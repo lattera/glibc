@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.0.90\n"
-"POT-Creation-Date: 1997-03-27 03:03+0100\n"
+"POT-Creation-Date: 1997-08-21 03:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,95 +14,95 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: ENCODING\n"
 
-#: nis/nis_print.c:210
+#: nis/nis_print.c:247
 msgid "\t\tAccess Rights : "
 msgstr ""
 
-#: nis/nis_print.c:208
+#: nis/nis_print.c:245
 #, c-format
 msgid "\t\tAttributes    : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:229
+#: nis/nis_print.c:267
 #, c-format
 msgid "\tEntry data of type %s\n"
 msgstr ""
 
-#: nis/nis_print.c:115
+#: nis/nis_print.c:152
 #, c-format
 msgid "\tName       : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:116
+#: nis/nis_print.c:153
 msgid "\tPublic Key : "
 msgstr ""
 
-#: nis/nis_print.c:142
+#: nis/nis_print.c:179
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
 msgstr ""
 
-#: nis/nis_print.c:206
+#: nis/nis_print.c:243
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:232
+#: nis/nis_print.c:270
 #, c-format
 msgid "\t[%u] - [%u bytes] "
 msgstr ""
 
-#: nis/nis_print.c:174
+#: nis/nis_print.c:211
 #, c-format
 msgid ""
 "\n"
 "Direct Type : %d\n"
 msgstr ""
 
-#: nis/nis_print.c:188
+#: nis/nis_print.c:225
 msgid ""
 "\n"
 "Group Members :\n"
 msgstr ""
 
-#: nis/nis_print.c:252
+#: nis/nis_print.c:290
 #, c-format
 msgid ""
 "\n"
 "Time to Live  : %lu (seconds)\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:680
+#: sunrpc/rpcinfo.c:678
 msgid "       rpcinfo -b prognum versnum\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:681
+#: sunrpc/rpcinfo.c:679
 msgid "       rpcinfo -d prognum versnum\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:679
+#: sunrpc/rpcinfo.c:677
 msgid "       rpcinfo -p [ host ]\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:678
+#: sunrpc/rpcinfo.c:675
 msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
 msgstr ""
 
-#: nis/nis_print.c:286
+#: nis/nis_print.c:313
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:577
+#: sunrpc/rpcinfo.c:573
 msgid "   program vers proto   port\n"
 msgstr ""
 
-#: time/zic.c:419
+#: time/zic.c:421
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr ""
 
-#: argp/argp-help.c:1511
+#: argp/argp-help.c:1518
 msgid " [OPTION...]"
 msgstr ""
 
@@ -110,17 +110,17 @@ msgstr ""
 msgid " done\n"
 msgstr ""
 
-#: time/zic.c:416
+#: time/zic.c:418
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr ""
 
-#: time/zic.c:943
+#: time/zic.c:947
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr ""
 
-#: time/zic.c:951
+#: time/zic.c:955
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr ""
@@ -135,7 +135,7 @@ msgstr ""
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr ""
 
-#: time/zic.c:754
+#: time/zic.c:758
 #, c-format
 msgid "%s in ruleless zone"
 msgstr ""
@@ -155,52 +155,52 @@ msgstr ""
 msgid "%s%sUnknown signal %d\n"
 msgstr ""
 
-#: time/zic.c:2172
+#: time/zic.c:2185
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr ""
 
-#: locale/programs/charmap.c:176
+#: locale/programs/charmap.c:244
 #, c-format
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr ""
 
-#: time/zic.c:1443
+#: time/zic.c:1456
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr ""
 
-#: time/zic.c:2150
+#: time/zic.c:2163
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr ""
 
-#: time/zic.c:608
+#: time/zic.c:610
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr ""
 
-#: time/zic.c:780
+#: time/zic.c:784
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr ""
 
-#: time/zic.c:1433
+#: time/zic.c:1446
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr ""
 
-#: time/zic.c:849
+#: time/zic.c:853
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr ""
 
-#: time/zic.c:842
+#: time/zic.c:846
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr ""
 
-#: time/zic.c:1507
+#: time/zic.c:1520
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr ""
@@ -210,122 +210,127 @@ msgstr ""
 msgid "%s: Error writing standard output "
 msgstr ""
 
-#: time/zic.c:827
+#: time/zic.c:831
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr ""
 
-#: time/zic.c:357
+#: time/zic.c:359
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr ""
 
-#: time/zic.c:522
+#: time/zic.c:524
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr ""
 
-#: time/zic.c:482
+#: time/zic.c:484
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr ""
 
-#: time/zic.c:492
+#: time/zic.c:494
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr ""
 
-#: time/zic.c:502
+#: time/zic.c:504
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr ""
 
-#: time/zic.c:512
+#: time/zic.c:514
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr ""
 
-#: argp/argp-parse.c:628
+#: argp/argp-parse.c:637
 #, c-format
 msgid "%s: Too many arguments\n"
 msgstr ""
 
-#: time/zic.c:1872
+#: login/programs/database.c:129
+#, c-format
+msgid "%s: cannot get modification time"
+msgstr ""
+
+#: time/zic.c:1885
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
 
-#: locale/programs/charmap.c:593 locale/programs/locfile.c:900
+#: locale/programs/charmap.c:661 locale/programs/locfile.c:900
 #, c-format
 msgid "%s: error in state machine"
 msgstr ""
 
-#: posix/getopt.c:785
+#: posix/getopt.c:783
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:788
+#: posix/getopt.c:786
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:709
+#: posix/getopt.c:707
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:680
+#: posix/getopt.c:678
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:726 posix/getopt.c:899
+#: posix/getopt.c:724 posix/getopt.c:897
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr ""
 
-#: posix/getopt.c:704
+#: posix/getopt.c:702
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:883
+#: posix/getopt.c:881
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:865
+#: posix/getopt.c:863
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:818 posix/getopt.c:948
+#: posix/getopt.c:816 posix/getopt.c:946
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
 
-#: time/zic.c:834 time/zic.c:1246 time/zic.c:1266
+#: time/zic.c:838 time/zic.c:1251 time/zic.c:1275
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr ""
 
-#: locale/programs/charmap.c:600
+#: locale/programs/charmap.c:668
 #, c-format
 msgid "%s: premature end of file"
 msgstr ""
 
-#: posix/getopt.c:759
+#: posix/getopt.c:757
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr ""
 
-#: posix/getopt.c:755
+#: posix/getopt.c:753
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""
 
-#: time/zic.c:441
+#: time/zic.c:443
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d "
@@ -338,7 +343,15 @@ msgstr ""
 msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr ""
 
-#: nis/nis_print.c:290
+#: argp/argp-parse.c:164
+msgid "(PROGRAM ERROR) No version known!?"
+msgstr ""
+
+#: argp/argp-parse.c:776
+msgid "(PROGRAM ERROR) Option should have been recognized!?"
+msgstr ""
+
+#: nis/nis_print.c:110
 msgid "(Unknown object)\n"
 msgstr ""
 
@@ -347,7 +360,7 @@ msgstr ""
 msgid "(unknown authentication error - %d)"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:616
+#: sunrpc/rpcinfo.c:612
 msgid "(unknown)"
 msgstr ""
 
@@ -411,7 +424,7 @@ msgstr ""
 msgid "Aborted"
 msgstr ""
 
-#: nis/nis_print.c:250
+#: nis/nis_print.c:288
 msgid "Access Rights : "
 msgstr ""
 
@@ -451,17 +464,12 @@ msgstr ""
 msgid "Argument list too long"
 msgstr ""
 
-#: nis/nis_error.c:65
+#: nis/nis_error.c:66
 msgid "Attempt to remove a non-empty table"
 msgstr ""
 
 #: stdio-common/../sysdeps/gnu/errlist.c:770
 msgid "Attempting to link in too many shared libraries"
-msgstr ""
-
-#: nis/nis_print.c:221
-#, c-format
-msgid "Attributes : %d\n"
 msgstr ""
 
 #: sunrpc/clnt_perr.c:273
@@ -473,7 +481,7 @@ msgstr ""
 msgid "Authentication error"
 msgstr ""
 
-#: nis/nis_print.c:259
+#: nis/nis_print.c:86
 msgid "BOGUS OBJECT\n"
 msgstr ""
 
@@ -507,11 +515,11 @@ msgstr ""
 msgid "Bad value for ai_flags"
 msgstr ""
 
-#: locale/programs/localedef.c:109
+#: locale/programs/localedef.c:108
 msgid "Be strictly POSIX conform"
 msgstr ""
 
-#: nis/nis_print.c:237
+#: nis/nis_print.c:275
 msgid "Binary data\n"
 msgstr ""
 
@@ -522,7 +530,7 @@ msgstr ""
 msgid "Block device required"
 msgstr ""
 
-#: sunrpc/pmap_rmt.c:356
+#: sunrpc/pmap_rmt.c:357
 msgid "Broadcast select problem"
 msgstr ""
 
@@ -542,7 +550,7 @@ msgstr ""
 msgid "Bus error"
 msgstr ""
 
-#: nis/nis_print.c:44
+#: nis/nis_print.c:46
 msgid "CDS"
 msgstr ""
 
@@ -550,7 +558,7 @@ msgstr ""
 msgid "CPU time limit exceeded"
 msgstr ""
 
-#: nis/nis_error.c:32
+#: nis/nis_error.c:33
 msgid "Cache expired"
 msgstr ""
 
@@ -558,19 +566,19 @@ msgstr ""
 msgid "Can not access a needed shared library"
 msgstr ""
 
-#: nis/ypclnt.c:697
+#: nis/ypclnt.c:703
 msgid "Can't bind to server which serves this domain"
 msgstr ""
 
-#: nis/ypclnt.c:709
+#: nis/ypclnt.c:715
 msgid "Can't communicate with portmapper"
 msgstr ""
 
-#: nis/ypclnt.c:711
+#: nis/ypclnt.c:717
 msgid "Can't communicate with ypbind"
 msgstr ""
 
-#: nis/ypclnt.c:713
+#: nis/ypclnt.c:719
 msgid "Can't communicate with ypserv"
 msgstr ""
 
@@ -587,7 +595,7 @@ msgstr ""
 msgid "Cannot assign requested address"
 msgstr ""
 
-#: sunrpc/pmap_rmt.c:266
+#: sunrpc/pmap_rmt.c:267
 msgid "Cannot create socket for broadcast rpc"
 msgstr ""
 
@@ -595,7 +603,7 @@ msgstr ""
 msgid "Cannot exec a shared library directly"
 msgstr ""
 
-#: sunrpc/pmap_rmt.c:369
+#: sunrpc/pmap_rmt.c:370
 msgid "Cannot receive reply to broadcast"
 msgstr ""
 
@@ -608,11 +616,11 @@ msgstr ""
 msgid "Cannot send after transport endpoint shutdown"
 msgstr ""
 
-#: sunrpc/pmap_rmt.c:329
+#: sunrpc/pmap_rmt.c:330
 msgid "Cannot send broadcast packet"
 msgstr ""
 
-#: sunrpc/pmap_rmt.c:273
+#: sunrpc/pmap_rmt.c:274
 msgid "Cannot set socket option SO_BROADCAST"
 msgstr ""
 
@@ -620,7 +628,7 @@ msgstr ""
 msgid "Channel number out of range"
 msgstr ""
 
-#: nis/nis_print.c:201
+#: nis/nis_print.c:238
 #, c-format
 msgid "Character Separator : %c\n"
 msgstr ""
@@ -634,7 +642,7 @@ msgstr ""
 msgid "Client credential too weak"
 msgstr ""
 
-#: nis/nis_print.c:203
+#: nis/nis_print.c:240
 msgid "Columns             :\n"
 msgstr ""
 
@@ -642,7 +650,7 @@ msgstr ""
 msgid "Communication error on send"
 msgstr ""
 
-#: locale/programs/localedef.c:117
+#: locale/programs/localedef.c:116
 msgid "Compile locale specification"
 msgstr ""
 
@@ -687,8 +695,8 @@ msgstr ""
 msgid "Convert key to lower case"
 msgstr ""
 
-#: catgets/gencat.c:235 db/makedb.c:230 locale/programs/locale.c:267
-#: locale/programs/localedef.c:392
+#: catgets/gencat.c:235 db/makedb.c:231 locale/programs/locale.c:267
+#: locale/programs/localedef.c:395
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -704,7 +712,7 @@ msgstr ""
 msgid "Create C header file NAME containing symbol definitions"
 msgstr ""
 
-#: locale/programs/localedef.c:108
+#: locale/programs/localedef.c:107
 msgid "Create output even if warning messages were issued"
 msgstr ""
 
@@ -712,36 +720,42 @@ msgstr ""
 msgid "Create simple DB database from textual input."
 msgstr ""
 
-#: nis/nis_print.c:253
+#: nis/nis_print.c:291
 #, c-format
 msgid "Creation Time : %s"
 msgstr ""
 
-#: nis/nis_print.c:123
+#: nis/nss_nisplus/nisplus-publickey.c:91
+#: nis/nss_nisplus/nisplus-publickey.c:161
+#, c-format
+msgid "DES entry for netname %s not unique\n"
+msgstr ""
+
+#: nis/nis_print.c:160
 msgid "DH.\n"
 msgstr ""
 
-#: nis/nis_print.c:265
+#: nis/nis_print.c:92
 msgid "DIRECTORY\n"
 msgstr ""
 
-#: nis/nis_print.c:40
+#: nis/nis_print.c:42
 msgid "DNANS"
 msgstr ""
 
-#: nis/nis_print.c:36
+#: nis/nis_print.c:38
 msgid "DNS"
 msgstr ""
 
-#: nis/nis_error.c:51
+#: nis/nis_error.c:52
 msgid "Database for table does not exist"
 msgstr ""
 
-#: nis/ypclnt.c:723
+#: nis/ypclnt.c:729
 msgid "Database is busy"
 msgstr ""
 
-#: nis/nis_print.c:172
+#: nis/nis_print.c:209
 msgid "Default Access rights: "
 msgstr ""
 
@@ -772,7 +786,7 @@ msgstr ""
 msgid "Device or resource busy"
 msgstr ""
 
-#: nis/nis_print.c:247
+#: nis/nis_print.c:285
 #, c-format
 msgid "Directory     : %s\n"
 msgstr ""
@@ -796,7 +810,7 @@ msgstr ""
 msgid "Do not use existing catalog, force new output file"
 msgstr ""
 
-#: nis/ypclnt.c:769
+#: nis/ypclnt.c:775
 msgid "Domain not bound"
 msgstr ""
 
@@ -805,15 +819,15 @@ msgstr ""
 msgid "EMT trap"
 msgstr ""
 
-#: nis/nis_print.c:277
+#: nis/nis_print.c:101
 msgid "ENTRY\n"
 msgstr ""
 
-#: nis/nis_print.c:235
+#: nis/nis_print.c:273
 msgid "Encrypted data\n"
 msgstr ""
 
-#: nis/nis_error.c:52
+#: nis/nis_error.c:53
 msgid "Entry/Table type mismatch"
 msgstr ""
 
@@ -822,11 +836,11 @@ msgstr ""
 msgid "Error %d"
 msgstr ""
 
-#: nis/nis_error.c:56
+#: nis/nis_error.c:57
 msgid "Error in RPC subsystem"
 msgstr ""
 
-#: nis/nis_error.c:66
+#: nis/nis_error.c:67
 msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
 msgstr ""
 
@@ -834,16 +848,12 @@ msgstr ""
 msgid "Error in unknown error system: "
 msgstr ""
 
-#: nis/nis_error.c:59
+#: nis/nis_error.c:60
 msgid "Error while talking to callback proc"
 msgstr ""
 
 #: inet/ruserpass.c:161
 msgid "Error: .netrc file is readable by others."
-msgstr ""
-
-#: nis/nis_call.c:180
-msgid "Error: could not find a NIS_COLD_START file\n"
 msgstr ""
 
 #: stdio-common/../sysdeps/gnu/errlist.c:698
@@ -898,7 +908,7 @@ msgstr ""
 msgid "Filesize limit exceeded"
 msgstr ""
 
-#: nis/nis_error.c:37
+#: nis/nis_error.c:38
 msgid "First/Next chain broken"
 msgstr ""
 
@@ -907,7 +917,7 @@ msgstr ""
 msgid "Floating point exception"
 msgstr ""
 
-#: nis/nis_error.c:67
+#: nis/nis_error.c:68
 msgid "Full resync required for directory"
 msgstr ""
 
@@ -918,7 +928,7 @@ msgstr ""
 msgid "Function not implemented"
 msgstr ""
 
-#: nis/nis_print.c:269
+#: nis/nis_print.c:95
 msgid "GROUP\n"
 msgstr ""
 
@@ -934,7 +944,7 @@ msgid ""
 "is -, output is written to standard output.\n"
 msgstr ""
 
-#: nis/nis_error.c:36
+#: nis/nis_error.c:37
 msgid "Generic system error"
 msgstr ""
 
@@ -942,18 +952,30 @@ msgstr ""
 msgid "Get locale-specific information."
 msgstr ""
 
+#: argp/argp-parse.c:89
+msgid "Give a short usage message"
+msgstr ""
+
+#: argp/argp-parse.c:88
+msgid "Give this help list"
+msgstr ""
+
 #. TRANS This error code has no purpose.
 #: stdio-common/../sysdeps/gnu/errlist.c:606
 msgid "Gratuitous error"
 msgstr ""
 
-#: nis/nis_print.c:249
+#: nis/nis_print.c:287
 #, c-format
 msgid "Group         : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:185
+#: nis/nis_print.c:222
 msgid "Group Flags :"
+msgstr ""
+
+#: argp/argp-parse.c:92
+msgid "Hang for SECS seconds (default 3600)"
 msgstr ""
 
 #: stdio-common/../sysdeps/unix/siglist.c:30
@@ -986,7 +1008,7 @@ msgstr ""
 msgid "IOT trap"
 msgstr ""
 
-#: nis/nis_print.c:34
+#: nis/nis_print.c:36
 msgid "IVY"
 msgstr ""
 
@@ -1002,7 +1024,7 @@ msgstr ""
 msgid "Illegal instruction"
 msgstr ""
 
-#: nis/nis_error.c:61
+#: nis/nis_error.c:62
 msgid "Illegal object type for operation"
 msgstr ""
 
@@ -1040,7 +1062,7 @@ msgstr ""
 msgid "Information request"
 msgstr ""
 
-#: locale/programs/localedef.c:99
+#: locale/programs/localedef.c:98
 msgid "Input Files:"
 msgstr ""
 
@@ -1049,11 +1071,11 @@ msgstr ""
 msgid "Input/output error"
 msgstr ""
 
-#: nis/ypclnt.c:703
+#: nis/ypclnt.c:709
 msgid "Internal NIS error"
 msgstr ""
 
-#: nis/ypclnt.c:767
+#: nis/ypclnt.c:773
 msgid "Internal ypbind error"
 msgstr ""
 
@@ -1077,7 +1099,7 @@ msgstr ""
 msgid "Interrupted system call should be restarted"
 msgstr ""
 
-#: nis/nis_error.c:44
+#: nis/nis_error.c:45
 msgid "Invalid Object for operation"
 msgstr ""
 
@@ -1087,11 +1109,11 @@ msgstr ""
 msgid "Invalid argument"
 msgstr ""
 
-#: posix/regex.c:960
+#: posix/regex.c:978
 msgid "Invalid back reference"
 msgstr ""
 
-#: posix/regex.c:958
+#: posix/regex.c:976
 msgid "Invalid character class name"
 msgstr ""
 
@@ -1103,11 +1125,11 @@ msgstr ""
 msgid "Invalid client verifier"
 msgstr ""
 
-#: posix/regex.c:957
+#: posix/regex.c:975
 msgid "Invalid collation character"
 msgstr ""
 
-#: posix/regex.c:964
+#: posix/regex.c:982
 msgid "Invalid content of \\{\\}"
 msgstr ""
 
@@ -1128,15 +1150,15 @@ msgstr ""
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr ""
 
-#: posix/regex.c:967
+#: posix/regex.c:985
 msgid "Invalid preceding regular expression"
 msgstr ""
 
-#: posix/regex.c:965
+#: posix/regex.c:983
 msgid "Invalid range end"
 msgstr ""
 
-#: posix/regex.c:956
+#: posix/regex.c:974
 msgid "Invalid regular expression"
 msgstr ""
 
@@ -1166,7 +1188,7 @@ msgstr ""
 msgid "Is a named type file"
 msgstr ""
 
-#: nis/nis_print.c:129
+#: nis/nis_print.c:166
 msgid "Kerberous.\n"
 msgstr ""
 
@@ -1175,11 +1197,11 @@ msgstr ""
 msgid "Killed"
 msgstr ""
 
-#: nis/nis_print.c:281
+#: nis/nis_print.c:104
 msgid "LINK\n"
 msgstr ""
 
-#: nis/nis_local_names.c:125
+#: nis/nis_local_names.c:126
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr ""
@@ -1200,7 +1222,7 @@ msgstr ""
 msgid "Level 3 reset"
 msgstr ""
 
-#: nis/nis_error.c:53
+#: nis/nis_error.c:54
 msgid "Link Points to illegal name"
 msgstr ""
 
@@ -1212,11 +1234,20 @@ msgstr ""
 msgid "Link number out of range"
 msgstr ""
 
-#: nis/ypclnt.c:715
+#: nis/nis_print.c:256
+msgid "Linked Object Type : "
+msgstr ""
+
+#: nis/nis_print.c:258
+#, c-format
+msgid "Linked to : %s\n"
+msgstr ""
+
+#: nis/ypclnt.c:721
 msgid "Local domain name not set"
 msgstr ""
 
-#: nis/ypclnt.c:705
+#: nis/ypclnt.c:711
 msgid "Local resource allocation failure"
 msgstr ""
 
@@ -1224,21 +1255,21 @@ msgstr ""
 msgid "Machine is not on the network"
 msgstr ""
 
-#: nis/nis_error.c:45
+#: nis/nis_error.c:46
 msgid "Malformed Name, or illegal name"
 msgstr ""
 
-#: argp/argp-help.c:1132
+#: argp/argp-help.c:1135
 msgid ""
 "Mandatory or optional arguments to long options are also mandatory or "
 "optional for any corresponding short options."
 msgstr ""
 
-#: nis/nis_print.c:112
+#: nis/nis_print.c:149
 msgid "Master Server :\n"
 msgstr ""
 
-#: nis/nis_error.c:75
+#: nis/nis_error.c:76
 msgid "Master server busy, full dump rescheduled."
 msgstr ""
 
@@ -1246,7 +1277,7 @@ msgstr ""
 msgid "Memory allocation failure"
 msgstr ""
 
-#: posix/regex.c:966
+#: posix/regex.c:984
 msgid "Memory exhausted"
 msgstr ""
 
@@ -1256,20 +1287,20 @@ msgstr ""
 msgid "Message too long"
 msgstr ""
 
-#: nis/nis_error.c:57
+#: nis/nis_error.c:58
 msgid "Missing or malformed attribute"
 msgstr ""
 
-#: nis/nis_print.c:254
+#: nis/nis_print.c:292
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr ""
 
-#: nis/nis_error.c:50
+#: nis/nis_error.c:51
 msgid "Modification failed"
 msgstr ""
 
-#: nis/nis_error.c:63
+#: nis/nis_error.c:64
 msgid "Modify operation failed"
 msgstr ""
 
@@ -1282,7 +1313,7 @@ msgid "Multihop attempted"
 msgstr ""
 
 #: catgets/gencat.c:106 catgets/gencat.c:110 db/makedb.c:58
-#: locale/programs/localedef.c:120
+#: locale/programs/localedef.c:119
 msgid "NAME"
 msgstr ""
 
@@ -1292,45 +1323,48 @@ msgid ""
 "[-a|-m]"
 msgstr ""
 
-#: nis/nis_print.c:30
+#: nis/nis_print.c:32
 msgid "NIS"
 msgstr ""
 
-#: nis/ypclnt.c:719
+#: nis/ypclnt.c:725
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr ""
 
-#: nis/ypclnt.c:717
+#: nis/ypclnt.c:723
 msgid "NIS map data base is bad"
 msgstr ""
 
-#: nis/nis_error.c:68
+#: nis/nis_error.c:69
 msgid "NIS+ operation failed"
 msgstr ""
 
-#: nis/nis_error.c:33
+#: nis/nis_error.c:34
 msgid "NIS+ servers unreachable"
 msgstr ""
 
-#: nis/nis_error.c:69
+#: nis/nis_error.c:70
 msgid "NIS+ service is unavailable or not installed"
 msgstr ""
 
-#: nis/nis_print.c:262
+#: nis/nis_cache.c:111 nis/nis_cache.c:177 nis/nis_cache.c:185
+msgid "NIS+: cache file is corrupt!"
+msgstr ""
+
+#: nis/nis_cache.c:254
+msgid "NIS+: nis_cachemgr failed to refresh object for us"
+msgstr ""
+
+#: nis/nis_print.c:89
 msgid "NO OBJECT\n"
 msgstr ""
 
-#: nis/nis_print.c:220
-#, c-format
-msgid "Name : %s\n"
-msgstr ""
-
-#: nis/nis_print.c:106
+#: nis/nis_print.c:143
 #, c-format
 msgid "Name : '%s'\n"
 msgstr ""
 
-#: nis/nis_error.c:40
+#: nis/nis_error.c:41
 msgid "Name not served by this server"
 msgstr ""
 
@@ -1342,11 +1376,11 @@ msgstr ""
 msgid "Name or service not known"
 msgstr ""
 
-#: nis/nis_error.c:49
+#: nis/nis_error.c:50
 msgid "Name/entry isn't unique"
 msgstr ""
 
-#: nis/nis_error.c:58
+#: nis/nis_error.c:59
 msgid "Named object is not searchable"
 msgstr ""
 
@@ -1409,7 +1443,7 @@ msgstr ""
 msgid "No data available"
 msgstr ""
 
-#: nis/nis_error.c:73
+#: nis/nis_error.c:74
 msgid "No file space on server"
 msgstr ""
 
@@ -1421,23 +1455,27 @@ msgstr ""
 msgid "No locks available"
 msgstr ""
 
-#: posix/regex.c:955
+#: posix/regex.c:973
 msgid "No match"
+msgstr ""
+
+#: stdio-common/../sysdeps/gnu/errlist.c:802
+msgid "No medium found"
 msgstr ""
 
 #: stdio-common/../sysdeps/gnu/errlist.c:630
 msgid "No message of desired type"
 msgstr ""
 
-#: nis/ypclnt.c:707
+#: nis/ypclnt.c:713
 msgid "No more records in map database"
 msgstr ""
 
-#: posix/regex.c:5324
+#: posix/regex.c:5436
 msgid "No previous regular expression"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:573
+#: sunrpc/rpcinfo.c:569
 msgid "No remote programs registered.\n"
 msgstr ""
 
@@ -1459,11 +1497,11 @@ msgstr ""
 msgid "No such file or directory"
 msgstr ""
 
-#: nis/ypclnt.c:701
+#: nis/ypclnt.c:707
 msgid "No such key in map"
 msgstr ""
 
-#: nis/ypclnt.c:699
+#: nis/ypclnt.c:705
 msgid "No such map in server's domain"
 msgstr ""
 
@@ -1472,11 +1510,7 @@ msgstr ""
 msgid "No such process"
 msgstr ""
 
-#: argp/argp-parse.c:163
-msgid "No version known!?"
-msgstr ""
-
-#: nis/nis_error.c:60
+#: nis/nis_error.c:61
 msgid "Non NIS+ namespace encountered"
 msgstr ""
 
@@ -1484,11 +1518,11 @@ msgstr ""
 msgid "Non-recoverable failure in name resolution"
 msgstr ""
 
-#: nis/nis_print.c:120
+#: nis/nis_print.c:157
 msgid "None.\n"
 msgstr ""
 
-#: nis/nis_error.c:48
+#: nis/nis_error.c:49
 msgid "Not Found, no such name"
 msgstr ""
 
@@ -1501,24 +1535,24 @@ msgstr ""
 msgid "Not a directory"
 msgstr ""
 
-#: nis/nis_error.c:30
+#: nis/nis_error.c:31
 msgid "Not found"
 msgstr ""
 
-#: nis/nis_error.c:43
+#: nis/nis_error.c:44
 msgid "Not master server for this domain"
 msgstr ""
 
-#: nis/nis_error.c:39
+#: nis/nis_error.c:40
 msgid "Not owner"
 msgstr ""
 
-#: nis/nis_print.c:200
+#: nis/nis_print.c:237
 #, c-format
 msgid "Number of Columns   : %d\n"
 msgstr ""
 
-#: nis/nis_print.c:301
+#: nis/nis_print.c:327
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr ""
@@ -1535,17 +1569,17 @@ msgstr ""
 msgid "Numerical result out of range"
 msgstr ""
 
-#: nis/nis_print.c:305
+#: nis/nis_print.c:331
 #, c-format
 msgid "Object #%d:\n"
 msgstr ""
 
-#: nis/nis_print.c:246
+#: nis/nis_print.c:284
 #, c-format
 msgid "Object Name   : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:255
+#: nis/nis_print.c:293
 msgid "Object Type   : "
 msgstr ""
 
@@ -1557,11 +1591,11 @@ msgstr ""
 msgid "Object is remote"
 msgstr ""
 
-#: nis/nis_error.c:42
+#: nis/nis_error.c:43
 msgid "Object with same name exists"
 msgstr ""
 
-#: time/zic.c:1966
+#: time/zic.c:1979
 msgid "Odd number of quotation marks"
 msgstr ""
 
@@ -1618,16 +1652,16 @@ msgstr ""
 msgid "Out of streams resources"
 msgstr ""
 
-#: locale/programs/localedef.c:106
+#: locale/programs/localedef.c:105
 msgid "Output control:"
 msgstr ""
 
-#: nis/nis_print.c:248
+#: nis/nis_print.c:286
 #, c-format
 msgid "Owner         : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:285
+#: nis/nis_print.c:107
 msgid "PRIVATE\n"
 msgstr ""
 
@@ -1635,16 +1669,16 @@ msgstr ""
 msgid "Package not installed"
 msgstr ""
 
-#: nis/nis_error.c:54
+#: nis/nis_error.c:55
 msgid "Partial Success"
 msgstr ""
 
-#: nis/nis_error.c:62
+#: nis/nis_error.c:63
 msgid "Passed object is not the same object on server"
 msgstr ""
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.c:38 nis/ypclnt.c:721
+#: nis/nis_error.c:39 nis/ypclnt.c:727
 #: stdio-common/../sysdeps/gnu/errlist.c:96
 msgid "Permission denied"
 msgstr ""
@@ -1653,7 +1687,7 @@ msgstr ""
 msgid "Power failure"
 msgstr ""
 
-#: posix/regex.c:968
+#: posix/regex.c:986
 msgid "Premature end of regular expression"
 msgstr ""
 
@@ -1661,15 +1695,19 @@ msgstr ""
 msgid "Print content of database file, one entry a line"
 msgstr ""
 
-#: locale/programs/localedef.c:112
+#: locale/programs/localedef.c:111
 msgid "Print more messages"
 msgstr ""
 
-#: nis/nis_error.c:29
+#: argp/argp-parse.c:149
+msgid "Print program version"
+msgstr ""
+
+#: nis/nis_error.c:30
 msgid "Probable success"
 msgstr ""
 
-#: nis/nis_error.c:31
+#: nis/nis_error.c:32
 msgid "Probably not found"
 msgstr ""
 
@@ -1709,7 +1747,7 @@ msgstr ""
 msgid "Protocol wrong type for socket"
 msgstr ""
 
-#: nis/nis_error.c:64
+#: nis/nis_error.c:65
 msgid "Query illegal for named table"
 msgstr ""
 
@@ -1727,7 +1765,7 @@ msgstr ""
 msgid "RPC bad procedure for program"
 msgstr ""
 
-#: nis/ypclnt.c:695
+#: nis/ypclnt.c:701
 msgid "RPC failure on NIS operation"
 msgstr ""
 
@@ -1827,11 +1865,11 @@ msgstr ""
 msgid "RPC: Unknown protocol"
 msgstr ""
 
-#: nis/nis_print.c:126
+#: nis/nis_print.c:163
 msgid "RSA.\n"
 msgstr ""
 
-#: elf/dlsym.c:49 elf/dlvsym.c:52
+#: elf/dlsym.c:61 elf/dlvsym.c:63
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr ""
 
@@ -1840,7 +1878,7 @@ msgstr ""
 msgid "Read-only file system"
 msgstr ""
 
-#: posix/regex.c:969
+#: posix/regex.c:987
 msgid "Regular expression too big"
 msgstr ""
 
@@ -1856,21 +1894,21 @@ msgstr ""
 msgid "Remove password or make file unreadable by others."
 msgstr ""
 
-#: nis/nis_print.c:114
+#: nis/nis_print.c:151
 msgid "Replicate :\n"
 msgstr ""
 
-#: argp/argp-help.c:1565
+#: argp/argp-help.c:1572
 #, c-format
 msgid "Report bugs to %s.\n"
 msgstr ""
 
-#: catgets/gencat.c:222 db/makedb.c:217 locale/programs/locale.c:254
-#: locale/programs/localedef.c:378
+#: catgets/gencat.c:222 db/makedb.c:218 locale/programs/locale.c:254
+#: locale/programs/localedef.c:381
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"
 msgstr ""
 
-#: nis/ypclnt.c:693
+#: nis/ypclnt.c:699
 msgid "Request arguments bad"
 msgstr ""
 
@@ -1908,7 +1946,7 @@ msgstr ""
 #. TRANS connect (whatever the operation).  You can use @code{select} to find out
 #. TRANS when the operation will be possible; @pxref{Waiting for I/O}.
 #. TRANS
-#. TRANS @strong{Portability Note:} In older Unix many systems, this condition
+#. TRANS @strong{Portability Note:} In many older Unix systems, this condition
 #. TRANS was indicated by @code{EWOULDBLOCK}, which was a distinct error code
 #. TRANS different from @code{EAGAIN}.  To make your program portable, you should
 #. TRANS check for both codes and treat them the same.
@@ -1927,15 +1965,15 @@ msgstr ""
 msgid "Resource temporarily unavailable"
 msgstr ""
 
-#: nis/nis_error.c:47
+#: nis/nis_error.c:48
 msgid "Results Sent to callback proc"
 msgstr ""
 
-#: nis/nis_print.c:32
+#: nis/nis_print.c:34
 msgid "SUNYP"
 msgstr ""
 
-#: nis/nis_print.c:202
+#: nis/nis_print.c:239
 #, c-format
 msgid "Search Path         : %s\n"
 msgstr ""
@@ -1945,11 +1983,11 @@ msgstr ""
 msgid "Segmentation fault"
 msgstr ""
 
-#: nis/nis_error.c:35
+#: nis/nis_error.c:36
 msgid "Server busy, try again"
 msgstr ""
 
-#: nis/nis_error.c:41
+#: nis/nis_error.c:42
 msgid "Server out of memory"
 msgstr ""
 
@@ -1963,6 +2001,10 @@ msgstr ""
 
 #: posix/../sysdeps/posix/gai_strerror.c:38
 msgid "Servname not supported for ai_socktype"
+msgstr ""
+
+#: argp/argp-parse.c:90
+msgid "Set the program name"
 msgstr ""
 
 #: stdio-common/../sysdeps/unix/siglist.c:29
@@ -1984,11 +2026,15 @@ msgstr ""
 msgid "Software caused connection abort"
 msgstr ""
 
-#: locale/programs/localedef.c:102
+#: sunrpc/rpcinfo.c:657
+msgid "Sorry. You are not root\n"
+msgstr ""
+
+#: locale/programs/localedef.c:101
 msgid "Source definitions are found in FILE"
 msgstr ""
 
-#: locale/programs/localedef.c:104
+#: locale/programs/localedef.c:103
 msgid "Specify code set for mapping ISO 10646 elements"
 msgstr ""
 
@@ -2008,7 +2054,7 @@ msgstr ""
 msgid "Stale NFS file handle"
 msgstr ""
 
-#: nis/nis_print.c:300
+#: nis/nis_print.c:326
 #, c-format
 msgid "Status            : %s\n"
 msgstr ""
@@ -2041,16 +2087,16 @@ msgstr ""
 msgid "Structure needs cleaning"
 msgstr ""
 
-#: nis/nis_error.c:28 nis/ypclnt.c:691 nis/ypclnt.c:765 posix/regex.c:954
+#: nis/nis_error.c:29 nis/ypclnt.c:697 nis/ypclnt.c:771 posix/regex.c:972
 #: stdio-common/../sysdeps/gnu/errlist.c:7
 msgid "Success"
 msgstr ""
 
-#: locale/programs/localedef.c:111
+#: locale/programs/localedef.c:110
 msgid "Suppress warnings and information messages"
 msgstr ""
 
-#: locale/programs/localedef.c:101
+#: locale/programs/localedef.c:100
 msgid "Symbolic character names defined in FILE"
 msgstr ""
 
@@ -2062,11 +2108,11 @@ msgstr ""
 msgid "System information:"
 msgstr ""
 
-#: nis/ypclnt.c:771
+#: nis/ypclnt.c:777
 msgid "System resource allocation failure"
 msgstr ""
 
-#: locale/programs/localedef.c:374
+#: locale/programs/localedef.c:377
 #, c-format
 msgid ""
 "System's directory for character maps: %s\n"
@@ -2074,11 +2120,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: nis/nis_print.c:273
+#: nis/nis_print.c:98
 msgid "TABLE\n"
 msgstr ""
 
-#: nis/nis_print.c:199
+#: nis/nis_print.c:236
 #, c-format
 msgid "Table Type          : %s\n"
 msgstr ""
@@ -2101,7 +2147,7 @@ msgstr ""
 msgid "Text file busy"
 msgstr ""
 
-#: nis/nis_print.c:164
+#: nis/nis_print.c:201
 #, c-format
 msgid "Time to live : %s\n"
 msgstr ""
@@ -2110,7 +2156,7 @@ msgstr ""
 msgid "Timer expired"
 msgstr ""
 
-#: nis/nis_error.c:55
+#: nis/nis_error.c:56
 msgid "Too Many Attributes"
 msgstr ""
 
@@ -2171,7 +2217,7 @@ msgstr ""
 msgid "Trace/breakpoint trap"
 msgstr ""
 
-#: posix/regex.c:959
+#: posix/regex.c:977
 msgid "Trailing backslash"
 msgstr ""
 
@@ -2196,7 +2242,7 @@ msgstr ""
 msgid "Transport endpoint is not connected"
 msgstr ""
 
-#: argp/argp-help.c:1538
+#: argp/argp-help.c:1545
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr ""
@@ -2206,33 +2252,28 @@ msgstr ""
 msgid "Trying %s...\n"
 msgstr ""
 
-#: nis/nis_print.c:219
-#, c-format
-msgid "Type : %d\n"
-msgstr ""
-
-#: nis/nis_print.c:107
+#: nis/nis_print.c:144
 #, c-format
 msgid "Type : %s\n"
 msgstr ""
 
-#: nis/nis_print.c:46
+#: nis/nis_print.c:48
 msgid "UNKNOWN"
 msgstr ""
 
-#: nis/nis_error.c:72
+#: nis/nis_error.c:73
 msgid "Unable to authenticate NIS+ client"
 msgstr ""
 
-#: nis/nis_error.c:71
+#: nis/nis_error.c:72
 msgid "Unable to authenticate NIS+ server"
 msgstr ""
 
-#: nis/nis_error.c:46
+#: nis/nis_error.c:47
 msgid "Unable to create callback"
 msgstr ""
 
-#: nis/nis_error.c:74
+#: nis/nis_error.c:75
 msgid "Unable to create process on server"
 msgstr ""
 
@@ -2241,7 +2282,7 @@ msgstr ""
 msgid "Unknown .netrc keyword %s"
 msgstr ""
 
-#: nis/ypclnt.c:725
+#: nis/ypclnt.c:731
 msgid "Unknown NIS error code"
 msgstr ""
 
@@ -2258,7 +2299,7 @@ msgstr ""
 msgid "Unknown host"
 msgstr ""
 
-#: nis/nis_error.c:34
+#: nis/nis_error.c:35
 msgid "Unknown object"
 msgstr ""
 
@@ -2279,27 +2320,27 @@ msgstr ""
 msgid "Unknown system error"
 msgstr ""
 
-#: nis/ypclnt.c:773
+#: nis/ypclnt.c:779
 msgid "Unknown ypbind error"
 msgstr ""
 
-#: nis/nis_print.c:132
+#: nis/nis_print.c:169
 msgid "Unknown.\n"
 msgstr ""
 
-#: posix/regex.c:962
+#: posix/regex.c:980
 msgid "Unmatched ( or \\("
 msgstr ""
 
-#: posix/regex.c:970
+#: posix/regex.c:988
 msgid "Unmatched ) or \\)"
 msgstr ""
 
-#: posix/regex.c:961
+#: posix/regex.c:979
 msgid "Unmatched [ or [^"
 msgstr ""
 
-#: posix/regex.c:963
+#: posix/regex.c:981
 msgid "Unmatched \\{"
 msgstr ""
 
@@ -2318,7 +2359,7 @@ msgstr ""
 msgid "Usage: %s variable_name [pathname]\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:677
+#: sunrpc/rpcinfo.c:673
 msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
 msgstr ""
 
@@ -2341,7 +2382,7 @@ msgstr ""
 msgid "Virtual timer expired"
 msgstr ""
 
-#: time/zic.c:1871
+#: time/zic.c:1884
 msgid "Wild result from command execution"
 msgstr ""
 
@@ -2370,38 +2411,42 @@ msgstr ""
 msgid "Write output to file NAME"
 msgstr ""
 
-#: catgets/gencat.c:240 db/makedb.c:235 locale/programs/locale.c:272
-#: locale/programs/localedef.c:397
+#: catgets/gencat.c:240 db/makedb.c:236 locale/programs/locale.c:272
+#: locale/programs/localedef.c:400
 #, c-format
 msgid "Written by %s.\n"
 msgstr ""
 
-#: nis/nis_print.c:38
+#: stdio-common/../sysdeps/gnu/errlist.c:806
+msgid "Wrong medium type"
+msgstr ""
+
+#: nis/nis_print.c:40
 msgid "X500"
 msgstr ""
 
-#: nis/nis_print.c:42
+#: nis/nis_print.c:44
 msgid "XCHS"
 msgstr ""
 
-#: nis/ypclnt.c:142
+#: nis/ypclnt.c:147
 msgid "YPBINDPROC_DOMAIN: Internal error\n"
 msgstr ""
 
-#: nis/ypclnt.c:146
+#: nis/ypclnt.c:151
 #, c-format
 msgid "YPBINDPROC_DOMAIN: No server for domain %s\n"
 msgstr ""
 
-#: nis/ypclnt.c:150
+#: nis/ypclnt.c:155
 msgid "YPBINDPROC_DOMAIN: Resource allocation failure\n"
 msgstr ""
 
-#: nis/ypclnt.c:154
+#: nis/ypclnt.c:159
 msgid "YPBINDPROC_DOMAIN: Unknown error\n"
 msgstr ""
 
-#: nis/nis_error.c:70
+#: nis/nis_error.c:71
 msgid "Yes, 42 is the meaning of life"
 msgstr ""
 
@@ -2410,17 +2455,11 @@ msgstr ""
 msgid "You really blew it this time"
 msgstr ""
 
-#: time/zic.c:1048
+#: time/zic.c:1052
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 
-#: nis/nis_server.c:36 nis/nis_server.c:48 nis/nis_server.c:68
-#: nis/nis_server.c:80
-#, c-format
-msgid "__do_niscall: Error #%d\n"
-msgstr ""
-
-#: locale/programs/charmap.c:397 locale/programs/locfile.c:363
+#: locale/programs/charmap.c:465 locale/programs/locfile.c:363
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr ""
@@ -2451,7 +2490,7 @@ msgstr ""
 msgid "ai_socktype not supported"
 msgstr ""
 
-#: locale/programs/charmap.c:267
+#: locale/programs/charmap.c:335
 #, c-format
 msgid "argument to <%s> must be a single character"
 msgstr ""
@@ -2473,15 +2512,15 @@ msgstr ""
 msgid "bad .rhosts owner"
 msgstr ""
 
-#: locale/programs/charmap.c:212 locale/programs/locfile.c:231
+#: locale/programs/charmap.c:280 locale/programs/locfile.c:231
 msgid "bad argument"
 msgstr ""
 
-#: time/zic.c:1170
+#: time/zic.c:1174
 msgid "blank FROM field on Link line"
 msgstr ""
 
-#: time/zic.c:1174
+#: time/zic.c:1178
 msgid "blank TO field on Link line"
 msgstr ""
 
@@ -2501,19 +2540,23 @@ msgstr ""
 msgid "broadcast: ioctl (get interface flags)"
 msgstr ""
 
-#: sunrpc/svc_udp.c:439
+#: login/programs/request.c:167
+msgid "buffer overflow"
+msgstr ""
+
+#: sunrpc/svc_udp.c:442
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr ""
 
-#: sunrpc/svc_udp.c:433
+#: sunrpc/svc_udp.c:436
 msgid "cache_set: victim alloc failed"
 msgstr ""
 
-#: sunrpc/svc_udp.c:422
+#: sunrpc/svc_udp.c:425
 msgid "cache_set: victim not found"
 msgstr ""
 
-#: time/zic.c:1698
+#: time/zic.c:1711
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 
@@ -2522,9 +2565,13 @@ msgstr ""
 msgid "can't reassign procedure number %d\n"
 msgstr ""
 
-#: locale/programs/localedef.c:271
+#: locale/programs/localedef.c:274
 #, c-format
 msgid "cannot `stat' locale file `%s'"
+msgstr ""
+
+#: elf/dl-load.c:144
+msgid "cannot allocate name record"
 msgstr ""
 
 #: locale/programs/ld-collate.c:1317
@@ -2541,12 +2588,12 @@ msgstr ""
 msgid "cannot insert new collating symbol definition: %s"
 msgstr ""
 
-#: db/makedb.c:142
+#: db/makedb.c:143
 #, c-format
 msgid "cannot open database file `%s': %s"
 msgstr ""
 
-#: catgets/gencat.c:271 db/makedb.c:161
+#: catgets/gencat.c:271 db/makedb.c:162
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr ""
@@ -2556,12 +2603,12 @@ msgstr ""
 msgid "cannot open locale definition file `%s'"
 msgstr ""
 
-#: catgets/gencat.c:776 catgets/gencat.c:817 db/makedb.c:170
+#: catgets/gencat.c:776 catgets/gencat.c:817 db/makedb.c:171
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr ""
 
-#: locale/programs/locfile.c:1008
+#: locale/programs/locfile.c:1020
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr ""
@@ -2575,22 +2622,30 @@ msgstr ""
 msgid "cannot read character map directory `%s'"
 msgstr ""
 
+#: login/programs/request.c:91
+msgid "cannot read from client"
+msgstr ""
+
 #: locale/programs/locale.c:306
 #, c-format
 msgid "cannot read locale directory `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:293
+#: locale/programs/localedef.c:296
 #, c-format
 msgid "cannot read locale file `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:318
+#: locale/programs/localedef.c:321
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:431
+#: login/programs/request.c:120
+msgid "cannot write to client"
+msgstr ""
+
+#: locale/programs/localedef.c:434
 msgid "category data requested more than once: should not happen"
 msgstr ""
 
@@ -2628,7 +2683,7 @@ msgstr ""
 msgid "character map `%s' already defined"
 msgstr ""
 
-#: locale/programs/charmap.c:76
+#: locale/programs/charmap.c:77
 #, c-format
 msgid "character map file `%s' not found"
 msgstr ""
@@ -2665,6 +2720,10 @@ msgstr ""
 msgid "connect to address %s: "
 msgstr ""
 
+#: elf/dl-load.c:128
+msgid "could not allocate name string"
+msgstr ""
+
 #: sunrpc/svc_simple.c:78
 msgid "couldn't create an rpc server\n"
 msgstr ""
@@ -2674,7 +2733,7 @@ msgstr ""
 msgid "couldn't register prog %d vers %d\n"
 msgstr ""
 
-#: locale/programs/charmap.c:86
+#: locale/programs/charmap.c:154
 #, c-format
 msgid "default character map file `%s' not found"
 msgstr ""
@@ -2707,7 +2766,7 @@ msgstr ""
 msgid "duplicate definition for character `%.*s'"
 msgstr ""
 
-#: db/makedb.c:314
+#: db/makedb.c:315
 msgid "duplicate key"
 msgstr ""
 
@@ -2715,7 +2774,7 @@ msgstr ""
 msgid "duplicate set definition"
 msgstr ""
 
-#: time/zic.c:963
+#: time/zic.c:967
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr ""
@@ -2736,19 +2795,19 @@ msgstr ""
 msgid "empty weight name: line ignored"
 msgstr ""
 
-#: sunrpc/svc_udp.c:365
+#: sunrpc/svc_udp.c:368
 msgid "enablecache: cache already enabled"
 msgstr ""
 
-#: sunrpc/svc_udp.c:371
+#: sunrpc/svc_udp.c:374
 msgid "enablecache: could not allocate cache"
 msgstr ""
 
-#: sunrpc/svc_udp.c:379
+#: sunrpc/svc_udp.c:382
 msgid "enablecache: could not allocate cache data"
 msgstr ""
 
-#: sunrpc/svc_udp.c:386
+#: sunrpc/svc_udp.c:389
 msgid "enablecache: could not allocate cache fifo"
 msgstr ""
 
@@ -2768,16 +2827,16 @@ msgstr ""
 msgid "expect string argument for `copy'"
 msgstr ""
 
-#: time/zic.c:854
+#: time/zic.c:858
 msgid "expected continuation line not found"
 msgstr ""
 
-#: locale/programs/locfile.c:1032
+#: locale/programs/locfile.c:1044
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr ""
 
-#: nis/ypclnt.c:187
+#: nis/nis_cache.c:129 nis/nis_call.c:150 nis/ypclnt.c:195
 msgid "fcntl: F_SETFD"
 msgstr ""
 
@@ -2825,11 +2884,11 @@ msgstr ""
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr ""
 
-#: time/zic.c:1147
+#: time/zic.c:1151
 msgid "illegal CORRECTION field on Leap line"
 msgstr ""
 
-#: time/zic.c:1151
+#: time/zic.c:1155
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr ""
 
@@ -2845,11 +2904,11 @@ msgstr ""
 msgid "illegal collation element"
 msgstr ""
 
-#: locale/programs/charmap.c:196
+#: locale/programs/charmap.c:264
 msgid "illegal definition"
 msgstr ""
 
-#: locale/programs/charmap.c:349
+#: locale/programs/charmap.c:417
 msgid "illegal encoding given"
 msgstr ""
 
@@ -2890,23 +2949,23 @@ msgstr ""
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr ""
 
-#: db/makedb.c:144
+#: db/makedb.c:145
 msgid "incorrectly formatted file"
 msgstr ""
 
-#: time/zic.c:811
+#: time/zic.c:815
 msgid "input line of unknown type"
 msgstr ""
 
-#: time/zic.c:1760
+#: time/zic.c:1773
 msgid "internal error - addtype called with bad isdst"
 msgstr ""
 
-#: time/zic.c:1768
+#: time/zic.c:1781
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr ""
 
-#: time/zic.c:1764
+#: time/zic.c:1777
 msgid "internal error - addtype called with bad ttisstd"
 msgstr ""
 
@@ -2915,43 +2974,43 @@ msgstr ""
 msgid "internal error in %s, line %u"
 msgstr ""
 
-#: time/zic.c:1019
+#: time/zic.c:1023
 msgid "invalid GMT offset"
 msgstr ""
 
-#: time/zic.c:1022
+#: time/zic.c:1026
 msgid "invalid abbreviation format"
 msgstr ""
 
-#: time/zic.c:1112 time/zic.c:1313 time/zic.c:1327
+#: time/zic.c:1116 time/zic.c:1326 time/zic.c:1340
 msgid "invalid day of month"
 msgstr ""
 
-#: time/zic.c:1270
+#: time/zic.c:1279
 msgid "invalid ending year"
 msgstr ""
 
-#: time/zic.c:1084
+#: time/zic.c:1088
 msgid "invalid leaping year"
 msgstr ""
 
-#: time/zic.c:1099 time/zic.c:1202
+#: time/zic.c:1103 time/zic.c:1206
 msgid "invalid month name"
 msgstr ""
 
-#: time/zic.c:918
+#: time/zic.c:922
 msgid "invalid saved time"
 msgstr ""
 
-#: time/zic.c:1250
+#: time/zic.c:1255
 msgid "invalid starting year"
 msgstr ""
 
-#: time/zic.c:1128 time/zic.c:1230
+#: time/zic.c:1132 time/zic.c:1235
 msgid "invalid time of day"
 msgstr ""
 
-#: time/zic.c:1318
+#: time/zic.c:1331
 msgid "invalid weekday name"
 msgstr ""
 
@@ -2963,11 +3022,11 @@ msgstr ""
 msgid "line before ellipsis does not contain definition for character constant"
 msgstr ""
 
-#: time/zic.c:791
+#: time/zic.c:795
 msgid "line too long"
 msgstr ""
 
-#: locale/programs/localedef.c:265
+#: locale/programs/localedef.c:268
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
 msgstr ""
@@ -2986,12 +3045,14 @@ msgstr ""
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
 #: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1442
-#: locale/programs/ld-collate.c:1471 locale/programs/locfile.c:962
-#: locale/programs/xmalloc.c:68 posix/getconf.c:250
+#: locale/programs/ld-collate.c:1471 locale/programs/locfile.c:974
+#: locale/programs/xmalloc.c:70 login/programs/database.c:62
+#: login/programs/database.c:79 login/programs/database.c:95
+#: posix/getconf.c:250
 msgid "memory exhausted"
 msgstr ""
 
-#: malloc/obstack.c:462
+#: malloc/obstack.c:466
 msgid "memory exhausted\n"
 msgstr ""
 
@@ -3009,12 +3070,44 @@ msgstr ""
 msgid "missing era name in string %d in `era' field in category `%s'"
 msgstr ""
 
-#: gmon/gmon.c:128
+#: gmon/gmon.c:132
 msgid "monstartup: out of memory\n"
 msgstr ""
 
-#: time/zic.c:913
+#: time/zic.c:917
 msgid "nameless rule"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:266
+#: nis/nss_nisplus/nisplus-publickey.c:271
+#: nis/nss_nisplus/nisplus-publickey.c:332
+#: nis/nss_nisplus/nisplus-publickey.c:340
+#, c-format
+msgid "netname2user: (nis+ lookup): %s\n"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:285
+#, c-format
+msgid "netname2user: DES entry for %s in directory %s not unique"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:354
+#, c-format
+msgid "netname2user: LOCAL entry for %s in directory %s not unique"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:198
+#, c-format
+msgid "netname2user: missing group id list in '%s'."
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:304
+#, c-format
+msgid "netname2user: principal name '%s' too long"
+msgstr ""
+
+#: nis/nss_nisplus/nisplus-publickey.c:362
+msgid "netname2user: should not have uid 0"
 msgstr ""
 
 #: sunrpc/svc_simple.c:153
@@ -3027,7 +3120,7 @@ msgstr ""
 msgid "no correct regular expression for field `%s' in category `%s': %s"
 msgstr ""
 
-#: time/zic.c:2086
+#: time/zic.c:2099
 msgid "no day in month matches rule"
 msgstr ""
 
@@ -3039,17 +3132,17 @@ msgstr ""
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr ""
 
-#: locale/programs/localedef.c:324
+#: locale/programs/localedef.c:327
 msgid "no output file produced because warning were issued"
 msgstr ""
 
-#: locale/programs/charmap.c:315 locale/programs/charmap.c:466
-#: locale/programs/charmap.c:545
+#: locale/programs/charmap.c:383 locale/programs/charmap.c:534
+#: locale/programs/charmap.c:613
 msgid "no symbolic name given"
 msgstr ""
 
-#: locale/programs/charmap.c:380 locale/programs/charmap.c:512
-#: locale/programs/charmap.c:578
+#: locale/programs/charmap.c:448 locale/programs/charmap.c:580
+#: locale/programs/charmap.c:646
 msgid "no symbolic name given for end of range"
 msgstr ""
 
@@ -3058,7 +3151,7 @@ msgstr ""
 msgid "no weight defined for symbol `%s'"
 msgstr ""
 
-#: locale/programs/charmap.c:430
+#: locale/programs/charmap.c:498
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr ""
 
@@ -3070,23 +3163,24 @@ msgstr ""
 msgid "preprocessor error"
 msgstr ""
 
-#: db/makedb.c:330
+#: db/makedb.c:331
 #, c-format
 msgid "problems while reading `%s'"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:237 sunrpc/rpcinfo.c:384
+#: sunrpc/rpcinfo.c:237 sunrpc/rpcinfo.c:383
 #, c-format
 msgid "program %lu is not available\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:265 sunrpc/rpcinfo.c:311 sunrpc/rpcinfo.c:409
-#: sunrpc/rpcinfo.c:455 sunrpc/rpcinfo.c:478 sunrpc/rpcinfo.c:512
+#: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333
+#: sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453 sunrpc/rpcinfo.c:476
+#: sunrpc/rpcinfo.c:510
 #, c-format
 msgid "program %lu version %lu is not available\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:518
+#: sunrpc/rpcinfo.c:515
 #, c-format
 msgid "program %lu version %lu ready and waiting\n"
 msgstr ""
@@ -3109,39 +3203,39 @@ msgstr ""
 msgid "registerrpc: out of memory\n"
 msgstr ""
 
-#: time/zic.c:1821
+#: time/zic.c:1834
 msgid "repeated leap second moment"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:733
+#: sunrpc/rpcinfo.c:731
 #, c-format
 msgid "rpcinfo: %s is unknown host\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:696
+#: sunrpc/rpcinfo.c:694
 #, c-format
 msgid "rpcinfo: %s is unknown service\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:668
+#: sunrpc/rpcinfo.c:664
 #, c-format
 msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:640
+#: sunrpc/rpcinfo.c:636
 #, c-format
 msgid "rpcinfo: broadcast failed: %s\n"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:560
+#: sunrpc/rpcinfo.c:556
 msgid "rpcinfo: can't contact portmapper"
 msgstr ""
 
-#: sunrpc/rpcinfo.c:567
+#: sunrpc/rpcinfo.c:563
 msgid "rpcinfo: can't contact portmapper: "
 msgstr ""
 
-#: time/zic.c:704 time/zic.c:706
+#: time/zic.c:708 time/zic.c:710
 msgid "same rule name in multiple files"
 msgstr ""
 
@@ -3162,7 +3256,7 @@ msgid ""
 "specification of sorting weight for collation symbol does not make sense"
 msgstr ""
 
-#: time/zic.c:775
+#: time/zic.c:779
 msgid "standard input"
 msgstr ""
 
@@ -3175,8 +3269,16 @@ msgstr ""
 msgid "starting date is illegal in string %d in `era' field in category `%s'"
 msgstr ""
 
-#: time/zic.c:1274
+#: time/zic.c:1287
 msgid "starting year greater than ending year"
+msgstr ""
+
+#: time/zic.c:1261 time/zic.c:1285
+msgid "starting year too high to be represented"
+msgstr ""
+
+#: time/zic.c:1259 time/zic.c:1283
+msgid "starting year too low to be represented"
 msgstr ""
 
 #: locale/programs/ld-time.c:335
@@ -3184,7 +3286,7 @@ msgstr ""
 msgid "stopping date is illegal in string %d in `era' field in category `%s'"
 msgstr ""
 
-#: sunrpc/svc_run.c:66
+#: sunrpc/svc_run.c:81
 msgid "svc_run: - select failed"
 msgstr ""
 
@@ -3251,10 +3353,10 @@ msgid ""
 "in charset"
 msgstr ""
 
-#: locale/programs/charmap.c:314 locale/programs/charmap.c:348
-#: locale/programs/charmap.c:378 locale/programs/charmap.c:465
-#: locale/programs/charmap.c:511 locale/programs/charmap.c:544
-#: locale/programs/charmap.c:576
+#: locale/programs/charmap.c:382 locale/programs/charmap.c:416
+#: locale/programs/charmap.c:446 locale/programs/charmap.c:533
+#: locale/programs/charmap.c:579 locale/programs/charmap.c:612
+#: locale/programs/charmap.c:644
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr ""
@@ -3307,7 +3409,7 @@ msgstr ""
 msgid "syntax error in order specification"
 msgstr ""
 
-#: locale/programs/charmap.c:195 locale/programs/charmap.c:211
+#: locale/programs/charmap.c:263 locale/programs/charmap.c:279
 #, c-format
 msgid "syntax error in prolog: %s"
 msgstr ""
@@ -3324,11 +3426,11 @@ msgstr ""
 msgid "this is the first definition"
 msgstr ""
 
-#: time/zic.c:1117
+#: time/zic.c:1121
 msgid "time before zero"
 msgstr ""
 
-#: time/zic.c:1125 time/zic.c:1986 time/zic.c:2005
+#: time/zic.c:1129 time/zic.c:1999 time/zic.c:2018
 msgid "time overflow"
 msgstr ""
 
@@ -3344,15 +3446,15 @@ msgstr ""
 msgid "too many character classes defined"
 msgstr ""
 
-#: time/zic.c:1815
+#: time/zic.c:1828
 msgid "too many leap seconds"
 msgstr ""
 
-#: time/zic.c:1787
+#: time/zic.c:1800
 msgid "too many local time types"
 msgstr ""
 
-#: time/zic.c:1741
+#: time/zic.c:1754
 msgid "too many transitions?!"
 msgstr ""
 
@@ -3360,7 +3462,7 @@ msgstr ""
 msgid "too many weights"
 msgstr ""
 
-#: time/zic.c:2109
+#: time/zic.c:2122
 msgid "too many, or too long, time zone abbreviations"
 msgstr ""
 
@@ -3377,7 +3479,7 @@ msgstr ""
 msgid "two lines in a row containing `...' are not allowed"
 msgstr ""
 
-#: time/zic.c:1281
+#: time/zic.c:1294
 msgid "typed single year"
 msgstr ""
 
@@ -3385,7 +3487,7 @@ msgstr ""
 msgid "undefined"
 msgstr ""
 
-#: locale/programs/charmap.c:617 locale/programs/charmap.c:628
+#: locale/programs/charmap.c:685 locale/programs/charmap.c:696
 #, c-format
 msgid "unknown character `%s'"
 msgstr ""
@@ -3417,7 +3519,7 @@ msgstr ""
 msgid "unknown symbol `%.*s': line ignored"
 msgstr ""
 
-#: time/zic.c:747
+#: time/zic.c:751
 msgid "unruly zone"
 msgstr ""
 
@@ -3445,16 +3547,16 @@ msgstr ""
 msgid "upper limit in range is not smaller then lower limit"
 msgstr ""
 
-#: time/zic.c:2052
+#: time/zic.c:2065
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
-#: locale/programs/charmap.c:438 locale/programs/charmap.c:492
+#: locale/programs/charmap.c:506 locale/programs/charmap.c:560
 #, c-format
 msgid "value for %s must be an integer"
 msgstr ""
 
-#: locale/programs/charmap.c:233
+#: locale/programs/charmap.c:301
 #, c-format
 msgid "value for <%s> must lie between 1 and 4"
 msgstr ""
@@ -3464,7 +3566,7 @@ msgstr ""
 msgid "value for field `%s' in category `%s' must not be the empty string"
 msgstr ""
 
-#: locale/programs/charmap.c:245
+#: locale/programs/charmap.c:313
 msgid "value of <mb_cur_max> must be greater than the value of <mb_cur_min>"
 msgstr ""
 
@@ -3484,7 +3586,7 @@ msgstr ""
 msgid "values for field `%s' in category `%s' must be smaller than 127"
 msgstr ""
 
-#: login/utmp_file.c:84
+#: login/utmp_file.c:85
 msgid "while opening UTMP file"
 msgstr ""
 
@@ -3496,11 +3598,11 @@ msgstr ""
 msgid "while preparing output"
 msgstr ""
 
-#: db/makedb.c:357
+#: db/makedb.c:358
 msgid "while reading database"
 msgstr ""
 
-#: db/makedb.c:319
+#: db/makedb.c:320
 msgid "while writing data base file"
 msgstr ""
 
@@ -3508,23 +3610,23 @@ msgstr ""
 msgid "wrong number of arguments"
 msgstr ""
 
-#: time/zic.c:1075
+#: time/zic.c:1079
 msgid "wrong number of fields on Leap line"
 msgstr ""
 
-#: time/zic.c:1166
+#: time/zic.c:1170
 msgid "wrong number of fields on Link line"
 msgstr ""
 
-#: time/zic.c:909
+#: time/zic.c:913
 msgid "wrong number of fields on Rule line"
 msgstr ""
 
-#: time/zic.c:979
+#: time/zic.c:983
 msgid "wrong number of fields on Zone continuation line"
 msgstr ""
 
-#: time/zic.c:937
+#: time/zic.c:941
 msgid "wrong number of fields on Zone line"
 msgstr ""
 
@@ -3536,10 +3638,10 @@ msgstr ""
 msgid "xdrrec_create: out of memory\n"
 msgstr ""
 
-#: nis/ypclnt.c:813
+#: nis/ypclnt.c:819
 msgid "yp_update: cannot convert host to netname\n"
 msgstr ""
 
-#: nis/ypclnt.c:825
+#: nis/ypclnt.c:831
 msgid "yp_update: cannot get server address\n"
 msgstr ""

@@ -47,8 +47,8 @@ define(V, `%o5')dnl
 dnl
 dnl m4 reminder: ifelse(a,b,c,d) => if a is b, then c, else d
 define(T, `%g1')dnl
-define(SC, `%g7')dnl
-ifelse(S, `true', `define(SIGN, `%g6')')dnl
+define(SC, `%g2')dnl
+ifelse(S, `true', `define(SIGN, `%g3')')dnl
 
 dnl
 dnl This is the recursive definition for developing quotient digits.
@@ -65,7 +65,7 @@ dnl modified to reflect the output R.
 dnl
 define(DEVELOP_QUOTIENT_BITS,
 `	! depth $1, accumulated bits $2
-	bl	L.$1.eval(2**N+$2)
+	bl	LOC($1.eval(2**N+$2))
 	srl	V,1,V
 	! remainder is positive
 	subcc	R,V,R
@@ -73,7 +73,7 @@ define(DEVELOP_QUOTIENT_BITS,
 	`	b	9f
 		add	Q, ($2*2+1), Q
 	', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2+1)')')
-L.$1.eval(2**N+$2):
+LOC($1.eval(2**N+$2)):
 	! remainder is negative
 	addcc	R,V,R
 	ifelse($1, N,
@@ -82,18 +82,10 @@ L.$1.eval(2**N+$2):
 	', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2-1)')')
 	ifelse($1, 1, `9:')')dnl
 
-#include "sysdep.h"
-#ifdef __linux__
-#include <asm/traps.h>
-#else
-#ifdef __svr4__
+#include <sysdep.h>
 #include <sys/trap.h>
-#else
-#include <machine/trap.h>
-#endif
-#endif
 
-FUNC(NAME)
+ENTRY(NAME)
 ifelse(S, `true',
 `	! compute sign of result; if neither is negative, no problem
 	orcc	divisor, dividend, %g0	! either negative?
@@ -124,11 +116,11 @@ ifelse(OP, `div',
 
 1:
 	cmp	R, V			! if divisor exceeds dividend, done
-	blu	Lgot_result		! (and algorithm fails otherwise)
+	blu	LOC(got_result)		! (and algorithm fails otherwise)
 	clr	Q
 	sethi	%hi(1 << (WORDSIZE - TOPBITS - 1)), T
 	cmp	R, T
-	blu	Lnot_really_big
+	blu	LOC(not_really_big)
 	clr	ITER
 
 	! `Here the dividend is >= 2**(31-N) or so.  We must be careful here,
@@ -146,7 +138,7 @@ ifelse(OP, `div',
 
 	! Now compute SC.
 	2:	addcc	V, V, V
-		bcc	Lnot_too_big
+		bcc	LOC(not_too_big)
 		add	SC, 1, SC
 
 		! We get here if the divisor overflowed while shifting.
@@ -155,14 +147,14 @@ ifelse(OP, `div',
 		sll	T, TOPBITS, T	! high order bit
 		srl	V, 1, V		! rest of V
 		add	V, T, V
-		b	Ldo_single_div
+		b	LOC(do_single_div)
 		sub	SC, 1, SC
 
-	Lnot_too_big:
+	LOC(not_too_big):
 	3:	cmp	V, R
 		blu	2b
 		nop
-		be	Ldo_single_div
+		be	LOC(do_single_div)
 		nop
 	/* NB: these are commented out in the V8-Sparc manual as well */
 	/* (I do not understand this) */
@@ -177,15 +169,15 @@ ifelse(OP, `div',
 	! order bit set in the first step, just falling into the regular
 	! division loop will mess up the first time around.
 	! So we unroll slightly...
-	Ldo_single_div:
+	LOC(do_single_div):
 		subcc	SC, 1, SC
-		bl	Lend_regular_divide
+		bl	LOC(end_regular_divide)
 		nop
 		sub	R, V, R
 		mov	1, Q
-		b	Lend_single_divloop
+		b	LOC(end_single_divloop)
 		nop
-	Lsingle_divloop:
+	LOC(single_divloop):
 		sll	Q, 1, Q
 		bl	1f
 		srl	V, 1, V
@@ -197,37 +189,37 @@ ifelse(OP, `div',
 		add	R, V, R
 		sub	Q, 1, Q
 	2:
-	Lend_single_divloop:
+	LOC(end_single_divloop):
 		subcc	SC, 1, SC
-		bge	Lsingle_divloop
+		bge	LOC(single_divloop)
 		tst	R
-		b,a	Lend_regular_divide
+		b,a	LOC(end_regular_divide)
 
-Lnot_really_big:
+LOC(not_really_big):
 1:
 	sll	V, N, V
 	cmp	V, R
 	bleu	1b
 	addcc	ITER, 1, ITER
-	be	Lgot_result
+	be	LOC(got_result)
 	sub	ITER, 1, ITER
 
 	tst	R	! set up for initial iteration
-Ldivloop:
+LOC(divloop):
 	sll	Q, N, Q
 	DEVELOP_QUOTIENT_BITS(1, 0)
-Lend_regular_divide:
+LOC(end_regular_divide):
 	subcc	ITER, 1, ITER
-	bge	Ldivloop
+	bge	LOC(divloop)
 	tst	R
-	bl,a	Lgot_result
+	bl,a	LOC(got_result)
 	! non-restoring fixup here (one instruction only!)
 ifelse(OP, `div',
 `	sub	Q, 1, Q
 ', `	add	R, divisor, R
 ')
 
-Lgot_result:
+LOC(got_result):
 ifelse(S, `true',
 `	! check to see if answer should be < 0
 	tst	SIGN
@@ -236,3 +228,5 @@ ifelse(S, `true',
 1:')
 	retl
 	ifelse(OP, `div', `mov Q, %o0', `mov R, %o0')
+
+END(NAME)
