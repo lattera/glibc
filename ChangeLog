@@ -1,3 +1,15 @@
+2003-03-27  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/dl-machine.h (RTLD_START): Wrap ".save rp, r0"
+	directive into empty .prologue region to ensure that call-chain
+	is terminated even for the first instruction.
+
+	* sysdeps/ia64/elf/start.S (_start): Use ".save rp, r0" idiom
+	to terminate call-chain right from the get-go.
+
+	* sysdeps/unix/sysv/linux/ia64/fork.S (fork): Remove unnecessary
+	stop bit between compare & branch.
+
 2003-03-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/strtod.c (INTERNAL): Recognize first digit after decimal
@@ -9,7 +21,6 @@
 2003-03-29  Alexandre Oliva  <aoliva@redhat.com>
 
 	* configure.in: Add mips64* support.
-	* configure: Rebuilt.
 	* sysdeps/mips/bits/endian.h: Make it bi-endian.
 	* sysdeps/mips/mipsel/bits/endian.h: Removed.
 	* sysdeps/mips/mips64/n32/el/bits/endian.h: Removed.

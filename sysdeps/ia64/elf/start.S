@@ -40,6 +40,9 @@
 	.type _start,@function
 _start:
 	.prologue
+	.save rp, r0
+	.body
+	.prologue
 	{ .mlx
 	  alloc r2 = ar.pfs,0,0,7,0
 	  movl r3 = FPSR_DEFAULT
@@ -76,8 +79,7 @@ _start:
 	{ .mmi
 	  ld8 out3 = [out3]	/* pointer to `init' function descriptor */
 	  ld8 out4 = [out4]	/* pointer to `fini' function descriptor */
-	  .save rp, r4
-	  mov r4 = r0		/* terminate unwind chain with a NULL return-pointer */
+	  nop 0
 	}
 	.body
 	{ .mib

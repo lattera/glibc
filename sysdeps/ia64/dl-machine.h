@@ -301,8 +301,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "_start:\n"								      \
 "0:	{ .mii\n"							      \
 "	  .prologue\n"							      \
-"	  .save ar.pfs, r32\n"						      \
 "	  .save rp, r0\n"						      \
+"	  .body\n"							      \
+"	  .prologue\n"							      \
+"	  .save ar.pfs, r32\n"						      \
 "	  alloc loc0 = ar.pfs, 0, 3, 4, 0\n"				      \
 "	  .body\n"							      \
 "	  mov r2 = ip\n"						      \
@@ -332,8 +334,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	.proc _dl_start_user#\n"					      \
 "_dl_start_user:\n"							      \
 "	 .prologue\n"							      \
-"	 .save ar.pfs, r32\n"						      \
 "	 .save rp, r0\n"						      \
+"	  .body\n"							      \
+"	 .prologue\n"							      \
+"	 .save ar.pfs, r32\n"						      \
 "	 .body\n"							      \
 "	{ .mii\n"							      \
 "	  /* Save the pointer to the user entry point fptr in loc2.  */\n"    \
