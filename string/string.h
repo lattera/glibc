@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -230,7 +230,7 @@ extern char *strerror_r (int __errnum, char *__buf, size_t __buflen) __THROW;
    the namespace rules does not allow this.  */
 extern void __bzero (void *__s, size_t __n) __THROW;
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_BSD
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
 extern void bcopy (__const void *__src, void *__dest, size_t __n) __THROW;
 
@@ -268,7 +268,7 @@ extern int strcasecmp (__const char *__s1, __const char *__s2) __THROW;
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
 extern int strncasecmp (__const char *__s1, __const char *__s2, size_t __n)
      __THROW;
-#endif /* Use BSD or X/Open Unix.  */
+#endif /* Use BSD.  */
 
 #ifdef	__USE_GNU
 /* Again versions of a few functions which use the given locale instead

@@ -1,0 +1,31 @@
+constant NULL
+
+type size_t
+
+function {void*} memccpy (void*, const void*, int, size_t)
+function {void*} memchr (const void*, int, size_t)
+function int memcmp (const void*, const void*, size_t)
+function {void*} memcpy (void*, const void*, size_t)
+function {void*} memmove (void*, const void*, size_t)
+function {void*} memset (void*, int, size_t)
+function {char*} strcat (char*, const char*)
+function {char*} strchr (const char*, int)
+function int strcmp (const char*, const char*)
+function int strcoll (const char*, const char*)
+function {char*} strcpy (char*, const char*)
+function size_t strcspn (const char*, const char*)
+function {char*} strdup (const char*)
+function {char*} strerror (int)
+function size_t strlen (const char*)
+function {char*} strncat (char*, const char*, size_t)
+function int strncmp (const char*, const char*, size_t)
+function {char*} strncpy (char*, const char*, size_t)
+function {char*} strpbrk (const char*, const char*)
+function {char*} strrchr (const char*, int)
+function size_t strspn (const char*, const char*)
+function {char*} strstr (const char*, const char*)
+function {char*} strtok (char*, const char*)
+function {char*} strtok_r (char*, const char*, char**)
+function size_t strxfrm (char*, const char*, size_t)
+
+allow-header stddef.h

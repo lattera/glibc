@@ -1,0 +1,10 @@
+function int bcmp (const void*, const void*, size_t)
+function void bcopy (const void*, void*, size_t)
+function void bzero (void*, size_t)
+function int ffs (int)
+function {char*} index (const char*, int)
+function {char*} rindex (const char*, int)
+function int strcasecmp (const char*, const char*)
+function int strncasecmp (const char*, const char*, size_t)
+
+type size_t
