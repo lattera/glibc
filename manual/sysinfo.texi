@@ -349,13 +349,14 @@ provides some functions to retrieve this information portably.
 
 Traditionally Unix systems have a file named @file{/etc/fstab} which
 describes all possibly mounted filesystems.  The @code{mount} program
-uses this file to mount at startup time of the system all the necessary
-filesystems.  The information about all the filesystems actually mounted
-is normally kept in a file named @file{/etc/mtab}.  Both files share
-the same syntax and it is crucial that this syntax is followed all the
-time.  Therefore it is best to never directly write the files.  The
-functions described in this section can do this and they also provide
-the functionality to convert the external textual representation to the
+uses this file to mount at startup time of the system all the
+necessary filesystems.  The information about all the filesystems
+actually mounted is normally kept in a file named either
+@file{/var/run/mtab} or @file{/etc/mtab}.  Both files share the same
+syntax and it is crucial that this syntax is followed all the time.
+Therefore it is best to never directly write the files.  The functions
+described in this section can do this and they also provide the
+functionality to convert the external textual representation to the
 internal representation.
 
 Note that the @file{fstab} and @file{mtab} files are maintained on a
@@ -367,15 +368,19 @@ files as described herein.
 
 @vindex _PATH_FSTAB
 @vindex _PATH_MNTTAB
-@vindex FSTAB
 @vindex _PATH_MOUNTED
+@vindex FSTAB
+@vindex MNTTAB
+@vindex MOUNTED
 The filenames given above should never be used directly.  The portable
-way to handle these file is to use the macros @code{_PATH_FSTAB},
-defined in @file{fstab.h} and @code{_PATH_MNTTAB}, defined in
-@file{mntent.h}, respectively.  There are also two alternate macro names
-@code{FSTAB} and @code{_PATH_MOUNTED} defined but both names are
-deprecated and kept only for backward compatibility.  The two former
-names should always be used.
+way to handle these file is to use the macro @code{_PATH_FSTAB},
+defined in @file{fstab.h}, or @code{_PATH_MNTTAB}, defined in
+@file{mntent.h} and @file{paths.h}, for @file{fstab}; and the macro
+@code{_PATH_MOUNTED}, also defined in @file{mntent.h} and
+@file{paths.h}, for @file{mtab}.  There are also two alternate macro
+names @code{FSTAB}, @code{MNTTAB}, and @code{MOUNTED} defined but
+these names are deprecated and kept only for backward compatibility.
+The names @code{_PATH_MNTTAB} and @code{_PATH_MOUNTED} should always be used.
 
 @menu
 * fstab::                       The @file{fstab} file

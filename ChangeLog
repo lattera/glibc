@@ -1,3 +1,9 @@
+2002-08-27  Roland McGrath  <roland@redhat.com>
+
+	* manual/sysinfo.texi (Mount Information): Correct file name to macro
+	assocations for _PATH_MNTTAB, MNTTAB, _PATH_MOUNTED, MOUNTED.
+	Say mtab is in either /var/run or /etc.
+
 2002-08-26  Roland McGrath  <roland@redhat.com>
 
 	* manual/errno.texi (Error Codes): Added ECANCELED (118 for Hurd).
