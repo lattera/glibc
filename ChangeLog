@@ -1,5 +1,8 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/limits.h-data: Mark constants as optional wherever
+	appropriate.
+
 	* posix/bits/posix2_lim.h: Set correct values for
 	_POSIX2_COLL_WEIGHTS_MAX and _POSIX2_CHARCLASS_NAME_MAX.  Remove
 	EQUIV_CLASS_MAX.

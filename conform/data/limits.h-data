@@ -54,48 +54,48 @@ macro RE_DUP_MAX
 
 constant _POSIX_CLOCKRES_MIN <= 20000000
 
-constant _POSIX_AIO_LISTIO_MAX	2
-constant _POSIX_AIO_MAX 1
-constant _POSIX_ARG_MAX 4096
-constant _POSIX_CHILD_MAX 6
-constant _POSIX_DELAYTIMER_MAX 32
-constant _POSIX_LINK_MAX 8
-constant _POSIX_LOGIN_NAME_MAX 9
-constant _POSIX_MAX_CANON 255
-constant _POSIX_MAX_INPUT 255
-constant _POSIX_MQ_OPEN_MAX 8
-constant _POSIX_MQ_PRIO_MAX 32
-constant _POSIX_NAME_MAX 14
-constant _POSIX_NGROUPS_MAX 0
-constant _POSIX_OPEN_MAX 16
-constant _POSIX_PATH_MAX 256
-constant _POSIX_PIPE_BUF 512
-constant _POSIX_RE_DUP_MAX 255
-constant _POSIX_RTSIG_MAX 8
-constant _POSIX_SEM_NSEMS_MAX 256
-constant _POSIX_SEM_VALUE_MAX 32767
-constant _POSIX_SIGQUEUE_MAX 32
-constant _POSIX_SSIZE_MAX 32767
-constant _POSIX_STREAM_MAX 8
-constant _POSIX_SS_REPL_MAX 4
-constant _POSIX_SYMLINK_MAX 255
-constant _POSIX_SYMLOOP_MAX 8
-constant _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4
-constant _POSIX_THREAD_KEYS_MAX 128
-constant _POSIX_THREAD_THREADS_MAX 64
-constant _POSIX_TIMER_MAX 32
-constant _POSIX_TTY_NAME_MAX 9
-constant _POSIX_TZNAME_MAX 6
-constant _POSIX2_BC_BASE_MAX 99
-constant _POSIX2_BC_DIM_MAX 2048
-constant _POSIX2_BC_SCALE_MAX 99
-constant _POSIX2_BC_STRING_MAX 1000
-constant _POSIX2_CHARCLASS_NAME_MAX 14
-constant _POSIX2_COLL_WEIGHTS_MAX 2
-constant _POSIX2_EXPR_NEST_MAX 32
-constant _POSIX2_LINE_MAX 2048
-constant _POSIX2_RE_DUP_MAX 255
-constant _XOPEN_IOV_MAX 16
+optional-constant _POSIX_AIO_LISTIO_MAX	2
+optional-constant _POSIX_AIO_MAX 1
+optional-constant _POSIX_ARG_MAX 4096
+optional-constant _POSIX_CHILD_MAX 6
+optional-constant _POSIX_DELAYTIMER_MAX 32
+optional-constant _POSIX_LINK_MAX 8
+optional-constant _POSIX_LOGIN_NAME_MAX 9
+optional-constant _POSIX_MAX_CANON 255
+optional-constant _POSIX_MAX_INPUT 255
+optional-constant _POSIX_MQ_OPEN_MAX 8
+optional-constant _POSIX_MQ_PRIO_MAX 32
+optional-constant _POSIX_NAME_MAX 14
+optional-constant _POSIX_NGROUPS_MAX 0
+optional-constant _POSIX_OPEN_MAX 16
+optional-constant _POSIX_PATH_MAX 256
+optional-constant _POSIX_PIPE_BUF 512
+optional-constant _POSIX2_RE_DUP_MAX 255
+optional-constant _POSIX_RTSIG_MAX 8
+optional-constant _POSIX_SEM_NSEMS_MAX 256
+optional-constant _POSIX_SEM_VALUE_MAX 32767
+optional-constant _POSIX_SIGQUEUE_MAX 32
+optional-constant _POSIX_SSIZE_MAX 32767
+optional-constant _POSIX_STREAM_MAX 8
+optional-constant _POSIX_SS_REPL_MAX 4
+optional-constant _POSIX_SYMLINK_MAX 255
+optional-constant _POSIX_SYMLOOP_MAX 8
+optional-constant _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4
+optional-constant _POSIX_THREAD_KEYS_MAX 128
+optional-constant _POSIX_THREAD_THREADS_MAX 64
+optional-constant _POSIX_TIMER_MAX 32
+optional-constant _POSIX_TTY_NAME_MAX 9
+optional-constant _POSIX_TZNAME_MAX 6
+optional-constant _POSIX2_BC_BASE_MAX 99
+optional-constant _POSIX2_BC_DIM_MAX 2048
+optional-constant _POSIX2_BC_SCALE_MAX 99
+optional-constant _POSIX2_BC_STRING_MAX 1000
+optional-constant _POSIX2_CHARCLASS_NAME_MAX 14
+optional-constant _POSIX2_COLL_WEIGHTS_MAX 2
+optional-constant _POSIX2_EXPR_NEST_MAX 32
+optional-constant _POSIX2_LINE_MAX 2048
+optional-constant _POSIX2_RE_DUP_MAX 255
+optional-constant _XOPEN_IOV_MAX 16
 
 constant CHAR_BIT >= 8
 constant CHAR_MAX
@@ -117,13 +117,12 @@ constant LONG_MIN <= 2147483647
 constant SCHAR_MIN <= -127
 constant SHRT_MIN <= -32767
 
-constant CHARCLASS_NAME_MAX >= 14
-constant NL_ARGMAX >= 9
-constant NL_LANGMAX >= 14
-constant NL_MSGMAX >= 32767
-constant NL_NMAX
-constant NL_SETMAX >= 255
-constant NL_TEXTMAX
-constant NZERO >= 20
-constant TMP_MAX >= 10000
-
+optional-constant CHARCLASS_NAME_MAX >= 14
+optional-constant NL_ARGMAX >= 9
+optional-constant NL_LANGMAX >= 14
+optional-constant NL_MSGMAX >= 32767
+optional-constant NL_NMAX
+optional-constant NL_SETMAX >= 255
+optional-constant NL_TEXTMAX
+optional-constant NZERO >= 20
+optional-constant TMP_MAX >= 10000
