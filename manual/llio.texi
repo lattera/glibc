@@ -849,6 +849,16 @@ is not valid) or if @var{stream} does not do I/O to a file,
 @code{fileno} returns @math{-1}.
 @end deftypefun
 
+@comment stdio.h
+@comment GNU
+@deftypefun int fileno_unlocked (FILE *@var{stream})
+The @code{fileno_unlocked} function is equivalent to the @code{fileno}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
+@end deftypefun
+
 @cindex standard file descriptors
 @cindex file descriptors, standard
 There are also symbolic constants defined in @file{unistd.h} for the

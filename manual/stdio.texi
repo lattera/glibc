@@ -17,6 +17,7 @@ representing a communications channel to a file, device, or process.
                                  devices are created for you.
 * Opening Streams::             How to create a stream to talk to a file.
 * Closing Streams::             Close a stream when you are finished with it.
+* Streams and Threads::         Issues with streams in threaded programs.
 * Simple Output::               Unformatted output by characters and lines.
 * Character Input::             Unformatted input by characters and words.
 * Line Input::                  Reading a line or a record from a stream.
@@ -369,6 +370,273 @@ might not be closed properly.  Buffered output might not be flushed and
 files may be incomplete.  For more information on buffering of streams,
 see @ref{Stream Buffering}.
 
+In some situations it is useful to know whether a given stream is
+available for reading or writing.  This information is normally not
+available and would have have to be remembered separately.  Solaris
+introduced a few functions to get this information from the stream
+descriptor and these functions are also available in the GNU C library.
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __freadable (FILE *@var{stream})
+The @code{__freadable} function determines whether the stream
+@var{stream} was opened to allow reading.  In this case the return value
+is nonzero.  For write-only streams the function returns zero.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __fwritaable (FILE *@var{stream})
+The @code{__fwritable} function determines whether the stream
+@var{stream} was opened to allow writing.  In this case the return value
+is nonzero.  For read-only streams the function returns zero.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
+
+For a slightly different kind of problems there are two more functions.
+They provide even finer-grained information.
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __freading (FILE *@var{stream})
+The @code{__freading} function determines whether the stream
+@var{stream} was last read from or whether it is opened read-only.  In
+this case the return value is nonzero, otherwise it is zero.
+Determining whether a stream opened for reading and writing was last
+used for writing allows to draw conclusions about the content about the
+buffer, among other things.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __fwriting (FILE *@var{stream})
+The @code{__fwriting} function determines whether the stream
+@var{stream} was last written to or whether it is opened write-only.  In
+this case the return value is nonzero, otherwise it is zero.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
+
+@node Streams and Threads
+@section Streams and Threads
+
+@cindex threads
+@cindex multi-threaded application
+Streams can be used in multi-threaded applications in the same way they
+are used in single-threaded applications.  But the programmer must be
+aware of a the possible complications.  It is important to know about
+these also if the program one writes never use threads since the design
+and implementation of many stream functions is heavily influenced by the
+requierements added by multi-threaded programming.
+
+The POSIX standard requires that by default the stream operations are
+atomic.  I.e., issueing two stream operations for the same stream in two
+threads at the same time will cause the operations to be executed as if
+they were issued sequentially.  The buffer operations performed while
+reading or writing are protected from other uses of the same stream.  To
+do this each stream has an internal lock object which has to be
+(implicitly) acquired before any work can be done.
+
+But there are situations where this is not enough and there are also
+situations where this is not wanted.  The implicit locking is not enough
+if the program requires more than one stream function call to happen
+atomically.  One example would be if an output line a program wants to
+generate is created by several function calls.  The functions by
+themselves would ensure only atomicity of their own operation, but not
+atomicity over all the function calls.  For this it is necessary to
+perform the stream locking in the application code.
+
+@comment stdio.h
+@comment POSIX
+@deftypefun void flockfile (FILE *@var{stream})
+The @code{flockfile} function acquires the internal locking object
+associated with the stream @var{stream}.  This ensure that no other
+thread can explicitly through @code{flockfile}/@code{ftrylockfile} or
+implicit through a call of a stream function lock the stream.  The
+thread will block until the lock is acquired.  An explicit call to
+@code{funlockfile} has to be used to release the lock.
+@end deftypefun
+
+@comment stdio.h
+@comment POSIX
+@deftypefun int ftrylockfile (FILE *@var{stream})
+The@code{ftrylockfile} function tries to acquire the internal locking
+object associated with the stream @var{stream} just like
+@code{flockfile}.  But unlike @code{flockfile} this function does not
+block if the lock is not available.  @code{ftrylockfile} returns zero if
+the lock was successfully acquired.  Otherwise the stream is locked by
+another thread.
+@end deftypefun
+
+@comment stdio.h
+@comment POSIX
+@deftypefun void funlockfile (FILE *@var{stream})
+The @code{funlockfile} function releases the internal locking object of
+the stream @var{stream}. The stream must have been locked before by a
+call to @code{flockfile} or a successful call of @code{ftrylockfile}.
+The implicit locking performed by the stream operations do not count.
+The @code{funlockfile} function does not return an error status and the
+behavior of a call for a stream which is not locked by the current
+thread is undefined.
+@end deftypefun
+
+The following example shows how the functions above can be used to
+generate an output line atomically even in multi-threaded applications
+(yes, the same job could be done with one @code{fprintf} call but it is
+sometimes not possible):
+
+@smallexample
+FILE *fp;
+@{
+   ...
+   flockfile (fp);
+   fputs ("This is test number ", fp);
+   fprintf (fp, "%d\n", test);
+   funlockfile (fp)
+@}
+@end smallexample
+
+Without the explicit locking it would be possible for another thread to
+use the stream @var{fp} after the @code{fputs} call return and before
+@code{fprintf} was called with the result that the number does not
+follow the word @samp{number}.
+
+From this description it might already be clear that the locking objects
+in streams are no simple mutexes.  Since locking the same stream twice
+in the same thread is allowed the locking objects must be equivalent to
+recursive mutexes.  These mutexes keep track of the owner and the number
+of times the lock is acquired.  The same number of @code{funlockfile}
+calls by the same threads is necessary to unlock the stream completely.
+For instance:
+
+@smallexample
+void
+foo (FILE *fp)
+@{
+  ftrylockfile (fp);
+  fputs ("in foo\n", fp);
+  /* @r{This is very wrong!!!}  */
+  funlockfile (fp);
+@}
+@end smallexample
+
+It is important here that the @code{funlockfile} function is only called
+if the @code{ftrylockfile} function succeeded in locking the stream.  It
+is therefore always wrong to ignore the result of @code{ftrylockfile}.
+And it makes no sense since otherwise one would use @code{flockfile}.
+The result of code like that above is that either @code{funlockfile}
+tries to free a stream hasn't been locked by the current thread or it
+frees the stream prematurely.  The code should look like this:
+
+@smallexample
+void
+foo (FILE *fp)
+@{
+  if (ftrylockfile (fp) == 0)
+    @{
+      fputs ("in foo\n", fp);
+      funlockfile (fp);
+    @}
+@}
+@end smallexample
+
+Now that we covered why it is necessary to have these locking it is
+necessary to talk about siuations when locking is unwanted and what can
+be done.  The locking operations (explicit or implicit) don't come for
+free.  Even if a lock is not taken the cost is not zero.  The operations
+which have to be performed require memory operations which are save in
+multi-processor environments.  With the many local caches involved in
+such systems this is quite costly.  So it is best to avoid the locking
+completely if it is known that the code using the stream is never used
+in a context where more than one thread can use the stream at one time.
+This can be determined most of the time for application code; for
+library code which can be used in many contexts one should default to be
+conservative and use locking.
+
+There are two basic mechanisms to avoid locking.  The first is to use
+the @code{_unlocked} variants of the stream operations.  The POSIX
+standard defines quite a few of those and the GNU library adds a few
+more.  These variants of the functions behave just like the functions
+with the name without the suffix except that they are not locking the
+stream.  Using these functions is very desirable since they are
+potentially very much faster.  This is not only because the locking
+operation itself is avoided.  More importantly, functions like
+@code{putc} and @code{getc} are very simple and tradionally (before the
+introduction of threads) were implemented as macros which are very fast
+if the buffer is not empty.  With locking required these functions are
+now no macros anymore (the code generated would be too much).  But these
+macros are still available with the same functionality under the new
+names @code{putc_unlocked} and @code{getc_unlocked}.  This possibly huge
+difference of speed also suggests the use of the @code{_unlocked}
+functions even if locking is required.  The difference is that the
+locking then has to be performed in the program:
+
+@smallexample
+void
+foo (FILE *fp, char *buf)
+@{
+  flockfile (fp);
+  while (*buf != '/')
+    putc_unlocked (*buf++, fp);
+  funlockfile (fp);
+@}
+@end smallexample
+
+If in this example the @code{putc} function would be used and the
+explicit locking would be missing the @code{putc} function would have to
+acquire the lock in every call, potentially many times depending on when
+the loop terminates.  Writing it the way illustrated above allows the
+@code{putc_unlocked} macro to be used which means no locking and direct
+manipulation of the buffer of the stream.
+
+A second way to avoid locking is by using a non-standard function which
+was introduced in Solaris and is available in the GNU C library as well.
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __fsetlocking (FILE *@var{stream}, int @var{type})
+
+The @code{__fsetlocking} function can be used to select whether the
+stream operations will implicitly acquire the locking object of the
+stream @var{stream}.  By default this is done but it can be disabled and
+reinstated using this function.  There are three values defined for the
+@var{type} parameter.
+
+@vtable @code
+@item FSETLOCKING_INTERNAL
+The stream @code{stream} will from now on use the default internal
+locking.  Every stream operation with exception of the @code{_unlocked}
+variants will implicitly lock the stream.
+
+@item FSETLOCKING_BYCALLER
+After the @code{__fsetlocking} function returns the user is responsible
+for locking the stream.  None of the stream operations will implicitly
+do this anymore until the state is set back to
+@code{FSETLOCKING_INTERNAL}.
+
+@item FSETLOCKING_QUERY
+@code{__fsetlocking} only queries the current locking state of the
+stream.  The return value will be @code{FSETLOCKING_INTERNAL} or
+@code{FSETLOCKING_BYCALLER} depending on the state.
+@end vtable
+
+The return value of @code{__fsetlocking} is either
+@code{FSETLOCKING_INTERNAL} or @code{FSETLOCKING_BYCALLER} depending on
+the state of the stream before the call.
+
+This function and the values for the @var{type} parameter are declared
+in @file{stdio_ext.h}.
+@end deftypefun
+
+This function is especially useful when program code has to be used
+which is written without knowledge about the @code{_unlocked} functions
+(or if the programmer was to lazy to use them).
+
 @node Simple Output
 @section Simple Output by Characters or Lines
 
@@ -389,6 +657,14 @@ character @var{c} is returned.
 @end deftypefun
 
 @comment stdio.h
+@comment POSIX
+@deftypefun int fputc_unlocked (int @var{c}, FILE *@var{stream})
+The @code{fputc_unlocked} function is equivalent to the @code{fputc}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+@comment stdio.h
 @comment ISO
 @deftypefun int putc (int @var{c}, FILE *@var{stream})
 This is just like @code{fputc}, except that most systems implement it as
@@ -399,10 +675,26 @@ use for writing a single character.
 @end deftypefun
 
 @comment stdio.h
+@comment POSIX
+@deftypefun int putc_unlocked (int @var{c}, FILE *@var{stream})
+The @code{putc_unlocked} function is equivalent to the @code{putc}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+@comment stdio.h
 @comment ISO
 @deftypefun int putchar (int @var{c})
 The @code{putchar} function is equivalent to @code{putc} with
 @code{stdout} as the value of the @var{stream} argument.
+@end deftypefun
+
+@comment stdio.h
+@comment POSIX
+@deftypefun int putchar_unlocked (int @var{c})
+The @code{putchar_unlocked} function is equivalent to the @code{putchar}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
 @end deftypefun
 
 @comment stdio.h
@@ -426,6 +718,16 @@ fputs ("hungry?\n", stdout);
 
 @noindent
 outputs the text @samp{Are you hungry?} followed by a newline.
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun int fputs_unlocked (const char *@var{s}, FILE *@var{stream})
+The @code{fputs_unlocked} function is equivalent to the @code{fputs}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment stdio.h
@@ -485,6 +787,14 @@ the stream @var{stream} and returns its value, converted to an
 @end deftypefun
 
 @comment stdio.h
+@comment POSIX
+@deftypefun int fgetc_unlocked (FILE *@var{stream})
+The @code{fgetc_unlocked} function is equivalent to the @code{fgetc}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+@comment stdio.h
 @comment ISO
 @deftypefun int getc (FILE *@var{stream})
 This is just like @code{fgetc}, except that it is permissible (and
@@ -495,10 +805,26 @@ character.
 @end deftypefun
 
 @comment stdio.h
+@comment POSIX
+@deftypefun int getc_unlocked (FILE *@var{stream})
+The @code{getc_unlocked} function is equivalent to the @code{getc}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+@comment stdio.h
 @comment ISO
 @deftypefun int getchar (void)
 The @code{getchar} function is equivalent to @code{getc} with @code{stdin}
 as the value of the @var{stream} argument.
+@end deftypefun
+
+@comment stdio.h
+@comment POSIX
+@deftypefun int getchar_unlocked (void)
+The @code{getchar_unlocked} function is equivalent to the @code{getchar}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
 @end deftypefun
 
 Here is an example of a function that does input using @code{fgetc}.  It
@@ -641,6 +967,16 @@ So don't use @code{fgets} unless you know the data cannot contain a null.
 Don't use it to read files edited by the user because, if the user inserts
 a null character, you should either handle it properly or print a clear
 error message.  We recommend using @code{getline} instead of @code{fgets}.
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun {char *} fgets_unlocked (char *@var{s}, int @var{count}, FILE *@var{stream})
+The @code{fgets_unlocked} function is equivalent to the @code{fgets}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment stdio.h
@@ -836,12 +1172,32 @@ object.  Therefore, the stream remains at the actual end of the file.
 @end deftypefun
 
 @comment stdio.h
+@comment GNU
+@deftypefun size_t fread_unlocked (void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+The @code{fread_unlocked} function is equivalent to the @code{fread}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment stdio.h
 @comment ISO
 @deftypefun size_t fwrite (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
 This function writes up to @var{count} objects of size @var{size} from
 the array @var{data}, to the stream @var{stream}.  The return value is
 normally @var{count}, if the call succeeds.  Any other value indicates
 some sort of error, such as running out of space.
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun size_t fwrite_unlocked (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
+The @code{fwrite_unlocked} function is equivalent to the @code{fwrite}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 @node Formatted Output
@@ -3073,11 +3429,31 @@ indicator for the stream @var{stream} is set.
 @end deftypefun
 
 @comment stdio.h
+@comment GNU
+@deftypefun int feof_unlocked (FILE *@var{stream})
+The @code{feof_unlocked} function is equivalent to the @code{feof}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment stdio.h
 @comment ISO
 @deftypefun int ferror (FILE *@var{stream})
 The @code{ferror} function returns nonzero if and only if the error
 indicator for the stream @var{stream} is set, indicating that an error
 has occurred on a previous operation on the stream.
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun int ferror_unlocked (FILE *@var{stream})
+The @code{ferror_unlocked} function is equivalent to the @code{ferror}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 In addition to setting the error indicator associated with the stream,
@@ -3104,6 +3480,16 @@ stream @var{stream}.
 
 The file positioning functions (@pxref{File Positioning}) also clear the
 end-of-file indicator for the stream.
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun void clearerr_unlocked (FILE *@var{stream})
+The @code{clearerr_unlocked} function is equivalent to the @code{clearerr}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 Note that it is @emph{not} correct to just clear the error flag and retry
@@ -3634,12 +4020,55 @@ This function returns @code{EOF} if a write error occurs, or zero
 otherwise.
 @end deftypefun
 
+@comment stdio.h
+@comment POSIX
+@deftypefun int fflush_unlocked (FILE *@var{stream})
+The @code{fflush_unlocked} function is equivalent to the @code{fflush}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+The @code{fflush} function can be used to flush all streams currently
+opened.  While this is useful in some situations it does often more than
+necessary since it might be done in situations when terminal input is
+required and the program wants to be sure that all output is visible on
+the terminal.  But this means that only line buffered streams have to be
+flushed.  Solaris introduced a function especially for this.  It was
+always available in the GNU C library in some form but never officially
+exported.
+
+@comment stdio.h
+@comment GNU
+@deftypefun void _flushlbf (void)
+The @code{_flushlbf} function flushes all line buffered streams
+currently opened.
+
+This function is declared in the @file{stdio_ext.h} header.
+@end deftypefun
+
 @strong{Compatibility Note:} Some brain-damaged operating systems have
 been known to be so thoroughly fixated on line-oriented input and output
 that flushing a line buffered stream causes a newline to be written!
 Fortunately, this ``feature'' seems to be becoming less common.  You do
 not need to worry about this in the GNU system.
 
+In some situations it might be useful to not flush the output pending
+for a stream but instead simply forget it.  If transmission is costly
+and the output is not needed anymore this is valid reasoning.  In this
+situation a non-standard function introduced in Solaris and available in
+the GNU C library can be used.
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun void __fpurge (FILE *@var{stream})
+The @code{__fpurge} function causes the buffer of the stream
+@var{stream} to be emptied.  If the stream is currently in read mode all
+input in the buffer is lost.  If the stream is in output mode the
+buffered output is not written to the device (or whatever other
+underlying storage) and the buffer the cleared.
+
+This function is declared in @file{stdio_ext.h}.
+@end deftypefun
 
 @node Controlling Buffering
 @subsection Controlling Which Kind of Buffering
@@ -3762,6 +4191,43 @@ buffer for you.
 
 This function is provided for compatibility with old BSD code.  Use
 @code{setvbuf} instead.
+@end deftypefun
+
+It is possible to query whether a given stream is line buffered or not
+using a non-standard function introduced in Solaris and available in the
+GNU C library.
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun int __flbf (FILE *@var{stream})
+The @code{__flbf} function will return a nonzero value in case the
+stream @var{stream} is line buffered.  Otherwise the return value is
+zero.
+
+This function is declared in the @file{stdio_ext.h} header.
+@end deftypefun
+
+Two more extensions allow to determine the size of the buffer and how
+much of it is used.  These functions were also introduced in Solaris.
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun size_t __fbufsize (FILE *@var{stream})
+The @code{__fbufsize} function return the size of the buffer in the
+stream @var{stream}.  This value can be used to optimize the use of the
+stream.
+
+This function is declared in the @file{stdio_ext.h} header.
+@end deftypefun
+
+@comment stdio_ext.h
+@comment GNU
+@deftypefun size_t __fpending (FILE *@var{stream})
+The @code{__fpending} function returns the number of bytes currently in
+the output buffer.  This function should not be used on buffers in read
+mode or opened read-only.
+
+This function is declared in the @file{stdio_ext.h} header.
 @end deftypefun
 
 @node Other Kinds of Streams
