@@ -51,6 +51,6 @@ ld {
     _dl_unload_cache;
     _rtld_global; _dl_tls_symaddr; _dl_allocate_tls; _dl_deallocate_tls;
     _dl_get_tls_static_info; _dl_allocate_tls_init;
-    _dl_get_origin; _dl_tls_setup;
+    _dl_get_origin; _dl_tls_setup; _dl_rtld_di_serinfo;
   }
 }

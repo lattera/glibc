@@ -554,6 +554,16 @@ extern void _dl_setup_hash (struct link_map *map)
      internal_function attribute_hidden;
 
 
+/* Collect the directories in the search path for LOADER's dependencies.
+   The data structure is defined in <dlfcn.h>.  If COUNTING is true,
+   SI->dls_cnt and SI->dls_size are set; if false, those must be as set
+   by a previous call with COUNTING set, and SI must point to SI->dls_size
+   bytes to be used in filling in the result.  */
+extern void _dl_rtld_di_serinfo (struct link_map *loader,
+				 Dl_serinfo *si, bool counting)
+     internal_function;
+
+
 /* Search loaded objects' symbol tables for a definition of the symbol
    referred to by UNDEF.  *SYM is the symbol table entry containing the
    reference; it is replaced with the defining symbol, and the base load

@@ -576,6 +576,34 @@ decompose_rpath (struct r_search_path_struct *sps,
   sps->malloced = 1;
 }
 
+/* Make sure cached path information is stored in *SP
+   and return true if there are any paths to search there.  */
+static inline bool
+cache_rpath (struct link_map *l,
+	     struct r_search_path_struct *sp,
+	     int tag,
+	     const char *what)
+{
+  if (sp->dirs == (void *) -1)
+    return false;
+
+  if (sp->dirs != NULL)
+    return true;
+
+  if (l->l_info[tag] == NULL)
+    {
+      /* There is no path.  */
+      sp->dirs = (void *) -1;
+      return false;
+    }
+
+  /* Make sure the cache information is available.  */
+  decompose_rpath (sp, (const char *) (D_PTR (l, l_info[DT_STRTAB])
+				       + l->l_info[tag]->d_un.d_val),
+		   l, what);
+  return true;
+}
+
 
 void
 internal_function
@@ -1747,29 +1775,9 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  /* First try the DT_RPATH of the dependent object that caused NAME
 	     to be loaded.  Then that object's dependent, and on up.  */
 	  for (l = loader; fd == -1 && l; l = l->l_loader)
-	    {
-	      if (l->l_rpath_dirs.dirs == NULL)
-		{
-		  if (l->l_info[DT_RPATH] == NULL)
-		    {
-		      /* There is no path.  */
-		      l->l_rpath_dirs.dirs = (void *) -1;
-		      continue;
-		    }
-		  else
-		    {
-		      /* Make sure the cache information is available.  */
-		      size_t ptrval = (D_PTR (l, l_info[DT_STRTAB])
-				       + l->l_info[DT_RPATH]->d_un.d_val);
-		      decompose_rpath (&l->l_rpath_dirs,
-				       (const char *) ptrval, l, "RPATH");
-		    }
-		}
-
-	      if (l->l_rpath_dirs.dirs != (void *) -1)
-		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-				&realname, &fb);
-	    }
+	    if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
+	      fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
+			      &realname, &fb);
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
              itself.  */
@@ -1785,37 +1793,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	fd = open_path (name, namelen, preloaded, &env_path_list,
 			&realname, &fb);
 
-      /* Look at the RUNPATH information for this binary.
-
-	 Note that this is no real loop.  'while' is used only to enable
-	 us to use 'break' instead of a 'goto' to jump to the end.  The
-	 loop is always left after the first round.  */
-      while (fd == -1 && loader != NULL
-	     && loader->l_runpath_dirs.dirs != (void *) -1)
-	{
-	  if (loader->l_runpath_dirs.dirs == NULL)
-	    {
-	      if (loader->l_info[DT_RUNPATH] == NULL)
-		{
-		  /* No RUNPATH.  */
-		  loader->l_runpath_dirs.dirs = (void *) -1;
-		  break;
-		}
-	      else
-		{
-		  /* Make sure the cache information is available.  */
-		  size_t ptrval = (D_PTR (loader, l_info[DT_STRTAB])
-				   + loader->l_info[DT_RUNPATH]->d_un.d_val);
-		  decompose_rpath (&loader->l_runpath_dirs,
-				   (const char *) ptrval, loader, "RUNPATH");
-		}
-	    }
-
-	  if (loader->l_runpath_dirs.dirs != (void *) -1)
-	    fd = open_path (name, namelen, preloaded,
-			    &loader->l_runpath_dirs, &realname, &fb);
-	  break;
-	}
+      /* Look at the RUNPATH information for this binary.  */
+      if (fd == -1 && loader != NULL
+	  && cache_rpath (loader, &loader->l_runpath_dirs,
+			  DT_RUNPATH, "RUNPATH"))
+	fd = open_path (name, namelen, preloaded,
+			&loader->l_runpath_dirs, &realname, &fb);
 
       if (fd == -1
 	  && (__builtin_expect (! preloaded, 1)
@@ -1939,3 +1922,87 @@ cannot create shared object descriptor"));
   return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode);
 }
 INTDEF (_dl_map_object)
+
+void
+internal_function
+_dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
+{
+  if (counting)
+    {
+      si->dls_cnt = 0;
+      si->dls_size = 0;
+    }
+
+  unsigned int idx = 0;
+  char *allocptr = (char *) &si->dls_serpath[si->dls_cnt];
+  inline void add_path (const struct r_search_path_struct *sps,
+			unsigned int flags)
+# define add_path(sps, flags) add_path(sps, 0) /* XXX */
+    {
+      if (sps->dirs != (void *) -1)
+	{
+	  struct r_search_path_elem **dirs = sps->dirs;
+	  do
+	    {
+	      const struct r_search_path_elem *const r = *dirs++;
+	      if (counting)
+		{
+		  si->dls_cnt++;
+		  si->dls_size += r->dirnamelen;
+		}
+	      else
+		{
+		  Dl_serpath *const sp = &si->dls_serpath[idx++];
+		  sp->dls_name = allocptr;
+		  allocptr = __mempcpy (allocptr,
+					r->dirname, r->dirnamelen - 1);
+		  *allocptr++ = '\0';
+		  sp->dls_flags = flags;
+		}
+	    }
+	  while (*dirs != NULL);
+	}
+    }
+
+  /* When the object has the RUNPATH information we don't use any RPATHs.  */
+  if (loader->l_info[DT_RUNPATH] == NULL)
+    {
+      /* First try the DT_RPATH of the dependent object that caused NAME
+	 to be loaded.  Then that object's dependent, and on up.  */
+
+      struct link_map *l = loader;
+      do
+	{
+	  if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
+	    add_path (&l->l_rpath_dirs, XXX_RPATH);
+	  l = l->l_loader;
+	}
+      while (l != NULL);
+
+      /* If dynamically linked, try the DT_RPATH of the executable itself.  */
+      l = GL(dl_loaded);
+      if (l != NULL && l->l_type != lt_loaded && l != loader)
+	if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
+	  add_path (&l->l_rpath_dirs, XXX_RPATH);
+    }
+
+  /* Try the LD_LIBRARY_PATH environment variable.  */
+  add_path (&env_path_list, XXX_ENV);
+
+  /* Look at the RUNPATH information for this binary.  */
+  if (cache_rpath (loader, &loader->l_runpath_dirs, DT_RUNPATH, "RUNPATH"))
+    add_path (&loader->l_runpath_dirs, XXX_RUNPATH);
+
+  /* XXX
+     Here is where ld.so.cache gets checked, but we don't have
+     a way to indicate that in the results for Dl_serinfo.  */
+
+  /* Finally, try the default path.  */
+  if (!(loader->l_flags_1 & DF_1_NODEFLIB))
+    add_path (&rtld_search_dirs, XXX_default);
+
+  if (counting)
+    /* Count the struct size before the string area, which we didn't
+       know before we completed dls_cnt.  */
+    si->dls_size += (char *) &si->dls_serpath[si->dls_cnt] - (char *) si;
+}

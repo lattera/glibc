@@ -19,7 +19,8 @@
 subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
-libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 eval
+libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
+		   eval
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
 		   modcxaatexit.c modstatic.c \
@@ -37,7 +38,7 @@ libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
-	bug-dlopen1 bug-dlsym1
+	bug-dlopen1 bug-dlsym1 tst-dlinfo
 ifeq (yes,$(have-protected))
 tests += tstatexit
 endif
@@ -73,6 +74,9 @@ $(objpfx)failtest.out: $(objpfx)failtestmod.so
 
 $(objpfx)tst-dladdr: $(libdl)
 $(objpfx)tst-dladdr.out: $(objpfx)glreflib1.so
+
+$(objpfx)tst-dlinfo: $(libdl)
+$(objpfx)tst-dlinfo.out: $(objpfx)glreflib1.so
 
 LDFLAGS-default = $(LDFLAGS-rdynamic)
 $(objpfx)default: $(libdl) $(objpfx)defaultmod1.so $(objpfx)defaultmod2.so

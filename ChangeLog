@@ -1,5 +1,21 @@
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
+	* dlfcn/tst-dlinfo.c: New file.
+	* dlfcn/Makefile (tests): Add tst-dlinfo.
+	($(objpfx)tst-dlinfo): New target.
+
+	* dlfcn/dlinfo.c: New file.
+	* dlfcn/Makefile (libdl-routines): Add it.
+	* dlfcn/Versions (libdl: GLIBC_2.3.3): Add dlinfo.
+	* dlfcn/dlfcn.h [__USE_GNU]: Declare dlinfo.
+	[__USE_GNU] (RTLD_DI_*): New enum constants.
+	[__USE_GNU] (Dl_serpath, Dl_serinfo): New types.
+	* elf/dl-load.c (cache_rpath): New inline function.
+	(_dl_map_object): Use it.
+	(_dl_rtld_di_serinfo): New function.
+	* sysdeps/generic/ldsodefs.h: Declare it.
+	* elf/Versions (ld: GLIBC_PRIVATE): Add it.
+
 	* sysdeps/powerpc/elf/libc-start.c (AUX_VECTOR_INIT): Define it.
 	(LIBC_START_MAIN, LIBC_START_MAIN_AUXVEC_ARG, MAIN_AUXVEC_ARG)
 	(INIT_MAIN_ARGS): Define, and #include <sysdeps/generic/libc-start.c>.

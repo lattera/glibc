@@ -1,11 +1,14 @@
-GNU C Library NEWS -- history of user-visible changes.  2003-3-2
-Copyright (C) 1992-2002, 2003 Free Software Foundation, Inc.
+GNU C Library NEWS -- history of user-visible changes.  2003-3-15
+Copyright (C) 1992-2002,2003 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.org>.  Please send questions and suggestions to <bug-glibc@gnu.org>.
 
 Version 2.3.3
+
+* New functions `dladdr1' and `dlinfo' in <dlfcn.h> provide more ways to
+  interrogate the dynamic linker, compatible with the Solaris interface.
 
 * ELF thread-local storage support (TLS) now works on PowerPC and PowerPC64;
   implemented by Paul Mackerras, Steven Munroe, and Roland McGrath.
