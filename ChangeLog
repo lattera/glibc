@@ -1,3 +1,9 @@
+2002-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/stat.h (struct stat): Remove packed
+	attribute, change __pad{1,2} type to unsigned int.
+	(struct stat64): Remove packed attribute.
+
 2002-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/dl-tls.h: No need for #ifdef USE_TLS.
