@@ -1,3 +1,9 @@
+2003-09-17  Uwe Reimann  <Uwe_Reimann@gmx.net>
+	    Hans-Peter Nilsson  <hp@axis.com>
+
+	* sysdeps/cris/dl-machine.h (elf_machine_type_class): Classify
+	R_CRIS_GLOB_DAT as ELF_RTYPE_CLASS_PLT.  Clarify comment.
+
 2003-09-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* dirent/scandir.c: Include bits/libc-lock.h.
