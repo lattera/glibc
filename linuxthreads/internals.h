@@ -72,7 +72,8 @@ struct pthread_key_struct {
 };
 
 
-#define PTHREAD_START_ARGS_INITIALIZER(fct) { fct, NULL, {{0, }}, 0, { 0 } }
+#define PTHREAD_START_ARGS_INITIALIZER(fct) \
+  { (void *(*) (void *)) fct, NULL, {{0, }}, 0, { 0 } }
 
 /* The type of thread descriptors */
 

@@ -1,3 +1,23 @@
+1999-10-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Add various platform and architecture extensions.
+
+	* locale/lc-collate.c (_nl_postload_collate): Disable code for now.
+	* locale/setlocale.c (setlocale): Don't call _nl_find_locale for
+	LC_ALL.
+
+	* socket/sys/socket.h: Remove K&R compatibility.
+
+1999-10-16  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/in.h: Added struct in_pktinfo.
+
+1999-10-15  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/Makefile (tests): Added tst-xpg-basename.
+
+	* stdlib/tst-xpg-basename.c: New test file.
+
 1999-10-14  Cristian Gafton  <gafton@redhat.com>
 
 	* string/bits/string2.h (__stpcpy_small): Make -pedantic shut up.

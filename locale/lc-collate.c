@@ -45,6 +45,8 @@ const u_int32_t *__collate_symbol_classeswc = _nl_C_LC_COLLATE_symbol_classes;
 void
 _nl_postload_collate (void)
 {
+#if 0
+  /* XXX For now */
 #define paste(a,b) paste1(a,b)
 #define paste1(a,b) a##b
 
@@ -61,4 +63,5 @@ _nl_postload_collate (void)
   __collate_symbol_hash = current (SYMB_HASH);
   __collate_symbol_strings = (const char *) current (SYMB_STR_POOL);
   __collate_symbol_classeswc = current (SYMB_CLASSWC);
+#endif
 }

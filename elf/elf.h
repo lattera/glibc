@@ -892,6 +892,9 @@ typedef struct
 
 /* Motorola 68k specific definitions.  */
 
+/* Values for Elf32_Ehdr.e_flags.  */
+#define EF_CPU32	0x00810000
+
 /* m68k relocs.  */
 
 #define R_68K_NONE	0		/* No reloc */
@@ -946,9 +949,12 @@ typedef struct
 #define EF_SPARCV9_TSO		0
 #define EF_SPARCV9_PSO		1
 #define EF_SPARCV9_RMO		2
+#define EF_SPARC_LEDATA		0x800000 /* little endian data */
 #define EF_SPARC_EXT_MASK	0xFFFF00
-#define EF_SPARC_SUN_US1	0x000200
-#define EF_SPARC_HAL_R1		0x000400
+#define EF_SPARC_32PLUS		0x000100 /* generic V8+ features */
+#define EF_SPARC_SUN_US1	0x000200 /* Sun UltraSPARC1 extensions */
+#define EF_SPARC_HAL_R1		0x000400 /* HAL R1 extensions */
+#define EF_SPARC_SUN_US3	0x000800 /* Sun UltraSPARCIII extensions */
 
 /* SPARC relocs.  */
 
@@ -1509,6 +1515,40 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PARISC_LTOFF_TP16DF	231	/* 16 bits LT-TP-rel. address.  */
 #define R_PARISC_HIRESERVE	255
 
+/* Legal values for p_type field of Elf32_Phdr/Elf64_Phdr.  */
+
+#define PT_HP_TLS		(PT_LOOS + 0x0)
+#define PT_HP_CORE_NONE		(PT_LOOS + 0x1)
+#define PT_HP_CORE_VERSION	(PT_LOOS + 0x2)
+#define PT_HP_CORE_KERNEL	(PT_LOOS + 0x3)
+#define PT_HP_CORE_COMM		(PT_LOOS + 0x4)
+#define PT_HP_CORE_PROC		(PT_LOOS + 0x5)
+#define PT_HP_CORE_LOADABLE	(PT_LOOS + 0x6)
+#define PT_HP_CORE_STACK	(PT_LOOS + 0x7)
+#define PT_HP_CORE_SHM		(PT_LOOS + 0x8)
+#define PT_HP_CORE_MMF		(PT_LOOS + 0x9)
+#define PT_HP_PARALLEL		(PT_LOOS + 0x10)
+#define PT_HP_FASTBIND		(PT_LOOS + 0x11)
+#define PT_HP_OPT_ANNOT		(PT_LOOS + 0x12)
+#define PT_HP_HSL_ANNOT		(PT_LOOS + 0x13)
+#define PT_HP_STACK		(PT_LOOS + 0x14)
+
+#define PT_PARISC_ARCHEXT	0x70000000
+#define PT_PARISC_UNWIND	0x70000001
+
+/* Legal values for p_flags field of Elf32_Phdr/Elf64_Phdr.  */
+
+#define PF_PARISC_SBP		0x08000000
+
+#define PF_HP_PAGE_SIZE		0x00100000
+#define PF_HP_FAR_SHARED	0x00200000
+#define PF_HP_NEAR_SHARED	0x00400000
+#define PF_HP_CODE		0x01000000
+#define PF_HP_MODIFY		0x02000000
+#define PF_HP_LAZYSWAP		0x04000000
+#define PF_HP_SBP		0x08000000
+
+
 /* Alpha specific definitions.  */
 
 /* Legal values for e_flags field of Elf64_Ehdr.  */
@@ -1565,6 +1605,14 @@ typedef Elf32_Addr Elf32_Conflict;
 
 
 /* PowerPC specific declarations */
+
+/* Values for Elf32/64_Ehdr.e_flags.  */
+#define EF_PPC_EMB		0x80000000	/* PowerPC embedded flag */
+
+/* Cygnus local bits below */
+#define EF_PPC_RELOCATABLE	0x00010000	/* PowerPC -mrelocatable flag*/
+#define EF_PPC_RELOCATABLE_LIB	0x00008000	/* PowerPC -mrelocatable-lib
+						   flag */
 
 /* PowerPC relocations defined by the ABIs */
 #define R_PPC_NONE		0

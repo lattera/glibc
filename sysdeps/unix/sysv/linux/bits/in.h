@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,6 +82,14 @@ struct ip_mreqn
     struct in_addr imr_multiaddr;	/* IP multicast address of group */
     struct in_addr imr_address;		/* local IP address of interface */
     int	imr_ifindex;			/* Interface index */
+  };
+
+/* Structure used for IP_PKTINFO.  */
+struct in_pktinfo
+  {
+    int ipi_ifindex;			/* Interface index  */
+    struct in_addr ipi_spec_dst;	/* Routing destination address  */
+    struct in_addr ipi_addr;		/* Header destination address  */
   };
 
 /* Options for use with `getsockopt' and `setsockopt' at the IPv6 level.

@@ -305,26 +305,27 @@ setlocale (int category, const char *locale)
 
       /* Load the new data for each category.  */
       while (category-- > 0)
-	{
-	  /* XXX hack.  Remove when collation works.  */
-	  if (category == LC_COLLATE)
-	    {
-	      newdata[category] = NULL;
-	      continue;
-	    }
+	if (category != LC_ALL)
+	  {
+	    /* XXX hack.  Remove when collation works.  */
+	    if (category == LC_COLLATE)
+	      {
+		newdata[category] = NULL;
+		continue;
+	      }
 
-	  newdata[category] = _nl_find_locale (locale_path, locale_path_len,
-					       category,
-					       &newnames[category]);
+	    newdata[category] = _nl_find_locale (locale_path, locale_path_len,
+						 category,
+						 &newnames[category]);
 
-	  if (newdata[category] == NULL)
-	    break;
+	    if (newdata[category] == NULL)
+	      break;
 
-	  /* We must not simply free a global locale since we have no
-	     control over the usage.  So we mark it as un-deletable.  */
-	  if (newdata[category]->usage_count != UNDELETABLE)
-	    newdata[category]->usage_count = UNDELETABLE;
-	}
+	    /* We must not simply free a global locale since we have no
+	       control over the usage.  So we mark it as un-deletable.  */
+	    if (newdata[category]->usage_count != UNDELETABLE)
+	      newdata[category]->usage_count = UNDELETABLE;
+	  }
 
       /* Create new composite name.  */
       composite = (category >= 0

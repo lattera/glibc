@@ -1,3 +1,7 @@
+1999-10-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* internals.h (PTHREAD_START_ARGS_INITIALIZER): Add cast.
+
 1999-10-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pthread.c (__pthread_initial_thread): Pass argument to
