@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,96,97,98,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -229,8 +229,8 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	SIOCSIFDSTADDR	_IOW('i', 14, struct ifreq)	/* set p-p address */
 #define	OSIOCGIFDSTADDR	_IOWR('i',15, struct ifreq)	/* get p-p address */
 #define	SIOCGIFDSTADDR	_IOWR('i',34, struct ifreq)	/* get p-p address */
-#define	SIOCSIFFLAGS	_IOW('i', 16, struct ifreq)	/* set ifnet flags */
-#define	SIOCGIFFLAGS	_IOWR('i',17, struct ifreq)	/* get ifnet flags */
+#define	SIOCSIFFLAGS	_IOW('i', 16, struct ifreq_short)/* set ifnet flags */
+#define	SIOCGIFFLAGS	_IOWR('i',17, struct ifreq_short)/* get ifnet flags */
 #define	OSIOCGIFBRDADDR	_IOWR('i',18, struct ifreq)	/* get broadcast addr */
 #define	SIOCGIFBRDADDR	_IOWR('i',35, struct ifreq)	/* get broadcast addr */
 #define	SIOCSIFBRDADDR	_IOW('i',19, struct ifreq)	/* set broadcast addr */
@@ -239,8 +239,8 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	OSIOCGIFNETMASK	_IOWR('i',21, struct ifreq)	/* get net addr mask */
 #define	SIOCGIFNETMASK	_IOWR('i',37, struct ifreq)	/* get net addr mask */
 #define	SIOCSIFNETMASK	_IOW('i',22, struct ifreq)	/* set net addr mask */
-#define	SIOCGIFMETRIC	_IOWR('i',23, struct ifreq)	/* get IF metric */
-#define	SIOCSIFMETRIC	_IOW('i',24, struct ifreq)	/* set IF metric */
+#define	SIOCGIFMETRIC	_IOWR('i',23, struct ifreq_int)	/* get IF metric */
+#define	SIOCSIFMETRIC	_IOW('i',24, struct ifreq_int)	/* set IF metric */
 #define	SIOCDIFADDR	_IOW('i',25, struct ifreq)	/* delete IF addr */
 #define	SIOCAIFADDR	_IOW('i',26, struct ifaliasreq)	/* add/chg IF alias */
 
@@ -248,6 +248,12 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	OSIOCGARP	_IOWR('i',31, struct arpreq)	/* get arp entry */
 #define	SIOCGARP	_IOWR('i',38, struct arpreq)	/* get arp entry */
 #define	SIOCDARP	_IOW('i', 32, struct arpreq)	/* delete arp entry */
+
+#define SIOCGIFMTU	_IOWR('i', 51, struct ifreq_int)/* get IF mtu */
+#define SIOCSIFMTU	_IOW('i', 52, struct ifreq_int)	/* set IF mtu */
+
+#define SIOCGIFINDEX	_IOWR('i', 90, struct ifreq_int)/* get IF index */
+#define SIOCGIFNAME	_IOWR('i', 91, struct ifreq_int)/* set IF name */
 
 
 /* Compatibility with 4.3 BSD terminal driver.

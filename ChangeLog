@@ -1,3 +1,17 @@
+2001-06-26  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/Makefile (user-interfaces): Add pfinet.
+	* hurd/hurdioctl.c: Include <hurd/pfinet.h>, <net/if.h> and
+	<netinet/in.h>.
+	(siocgifconf): New function.  Register it with HURD_HANDLE_IOCTL
+	as the handler for SIOCGIFCONF.
+	* sysdeps/mach/hurd/bits/ioctls.h: Modify SIOCSIFFLAGS and
+	SIOCGIFFLAGS to be of IOC type ifreq_short.  Modify SIOCSIFMETRIC
+	and SIOCGIFMETRIC to be of IOC type ifreq_int.  Add new macro
+	definitions for SIOCGIFMTU, SIOCSIFMTU, SIOCGIFINDEX and
+	SIOCGIFNAME.
+	From Marcus Brunkmann <marcus@gnu.org>.
+
 2001-06-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/gnu/net/if.h: Correct _IOT_ifreq and add _IOT_ifreq_short

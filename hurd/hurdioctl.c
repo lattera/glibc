@@ -1,5 +1,5 @@
 /* ioctl commands which must be done in the C library.
-   Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,96,97,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -300,3 +300,32 @@ tiocnotty (int fd,
   return 0;
 }
 _HURD_HANDLE_IOCTL (tiocnotty, TIOCNOTTY);
+
+#include <hurd/pfinet.h>
+#include <net/if.h>
+#include <netinet/in.h>
+
+/* Fill in the buffer IFC->IFC_BUF of length IFC->IFC_LEN with a list
+   of ifr structures, one for each network interface.  */
+static int
+siocgifconf (int fd, int request, struct ifconf *ifc)
+{
+  error_t err;
+  int data_len = ifc->ifc_len;
+  char *data = ifc->ifc_buf;
+
+  if (data_len <= 0)
+    return 0;
+
+  err = HURD_DPORT_USE (fd, __pfinet_siocgifconf (port, ifc->ifc_len,
+						  &data, &data_len));
+  if (data_len < ifc->ifc_len)
+    ifc->ifc_len = data_len;
+  if (data != ifc->ifc_buf)
+    {
+      memcpy (ifc->ifc_buf, data, ifc->ifc_len);
+      __vm_deallocate (__mach_task_self (), (vm_address_t) data, data_len);
+    }
+  return err ? __hurd_dfail (fd, err) : 0;
+}
+_HURD_HANDLE_IOCTL (siocgifconf, SIOCGIFCONF);
