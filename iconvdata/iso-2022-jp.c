@@ -577,6 +577,12 @@ gconv_end (struct __gconv_step *data)
       {									      \
 	if (set2 == ISO88591_set)					      \
 	  {								      \
+	    if (__builtin_expect (outptr + 3 > outend, 0))		      \
+	      {								      \
+		result = __GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+									      \
 	    if (ch >= 0x80 && ch <= 0xff) 				      \
 	      {								      \
 		*outptr++ = ESC;					      \
@@ -596,6 +602,12 @@ gconv_end (struct __gconv_step *data)
 		unsigned char res = iso88597_from_ucs4[ch - 0xa0 + rp->idx];  \
 		if (res != '\0')					      \
 		  {							      \
+		    if (__builtin_expect (outptr + 3 > outend, 0))	      \
+		      {							      \
+			result = __GCONV_FULL_OUTPUT;			      \
+			break;						      \
+		      }							      \
+									      \
 		    *outptr++ = ESC;					      \
 		    *outptr++ = 'N';					      \
 		    *outptr++ = res;					      \
