@@ -38,12 +38,21 @@ struct test_case_struct
   const char *ifs;
 } test_case[] =
   {
-    /* Simple field-splitting */
+    /* Simple word- and field-splitting */
     { 0, NULL, "one", 0, 1, { "one", }, IFS },
     { 0, NULL, "one two", 0, 2, { "one", "two", }, IFS },
     { 0, NULL, "one two three", 0, 3, { "one", "two", "three", }, IFS },
     { 0, NULL, " \tfoo\t\tbar ", 0, 2, { "foo", "bar", }, IFS },
-    { 0, NULL, "  red  , white blue", 0, 3, { "red", "white", "blue", }, ", \n\t" },
+    { 0, NULL, "red , white blue", 0, 4, { "red", " ", "white", "blue", }, " ," },
+    { 0, NULL, "one two three", 0, 3, { "one", "two", "three", }, "" },
+    { 0, NULL, "one \"two three\"", 0, 2, { "one", "two three", }, IFS },
+    { 0, NULL, "one \"two three\"", 0, 2, { "one", "two three", }, "" },
+    { 0, "two three", "one \"$var\"", 0, 2, { "one", "two three", }, IFS },
+    { 0, "two three", "one $var", 0, 3, { "one", "two", "three", }, IFS },
+    { 0, "two three", "one \"$var\"", 0, 2, { "one", "two three", }, "" },
+    { 0, "two three", "one $var", 0, 2, { "one", "two three", }, "" },
+    { 0, ":abc:", "$var", 0, 2, { "", "abc", }, ":" }, /* cf. bash */
+    { 0, NULL, ":abc:", 0, 1, { " abc ", }, ":" },
 
     /* Simple parameter expansion */
     { 0, "foo", "${var}", 0, 1, { "foo", }, IFS },
@@ -120,9 +129,9 @@ struct test_case_struct
     { 0, "o thr", "*$var*", 0, 2, { "two", "three" }, IFS },
 
     /* Different IFS values */
-    { 0, NULL, "a b\tc\nd  ", 0, 4, { "a", "b", "c", "d" }, NULL /* unset */ },
-    { 0, NULL, "a b\tc d  ", 0, 1, { "a b\tc d  " }, "" /* `null' */ },
-    { 0, NULL, "a,b c\n, d", 0, 3, { "a", "b c", " d" }, "\t\n," },
+    { 0, "a b\tc\nd  ", "$var", 0, 4, { "a", "b", "c", "d" }, NULL /* unset */ },
+    { 0, "a b\tc d  ", "$var", 0, 1, { "a b\tc d  " }, "" /* `null' */ },
+    { 0, "a,b c\n, d", "$var", 0, 3, { "a", "b c", " d" }, "\t\n," },
 
     /* Other things that should succeed */
     { 0, NULL, "\\*\"|&;<>\"\\(\\)\\{\\}", 0, 1, { "*|&;<>(){}", }, IFS },

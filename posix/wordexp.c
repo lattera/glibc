@@ -159,6 +159,16 @@ w_addword (wordexp_t *pwordexp, char *word)
   size_t num_p;
   char **new_wordv;
 
+  /* Internally, NULL acts like "".  Convert NULLs to "" before
+   * the caller sees them.
+   */
+  if (word == NULL)
+    {
+      word = __strdup ("");
+      if (word == NULL)
+	goto no_space;
+    }
+
   num_p = 2 + pwordexp->we_wordc + pwordexp->we_offs;
   new_wordv = realloc (pwordexp->we_wordv, sizeof (char *) * num_p);
   if (new_wordv != NULL)
@@ -169,6 +179,7 @@ w_addword (wordexp_t *pwordexp, char *word)
       return 0;
     }
 
+no_space:
   return WRDE_NOSPACE;
 }
 
@@ -1759,7 +1770,7 @@ envsubst:
 	  /* Tag a copy onto the current word */
 	  *word = w_addstr (*word, word_length, max_length, field_begin);
 
-	  if (*word == NULL)
+	  if (*word == NULL && *field_begin != '\0')
 	    {
 	      free (value_copy);
 	      return WRDE_NOSPACE;
@@ -2160,11 +2171,13 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 	break;
 
       default:
-	/* Is it a field separator? */
-	if (strchr (ifs, words[words_offset]) == NULL)
+	/* Is it a word separator? */
+	if (strchr (" \t", words[words_offset]) == NULL)
 	  {
-	    /* Not a field separator -- but is it a valid word char? */
-	    if (strchr ("\n|&;<>(){}", words[words_offset]))
+	    char ch = words[words_offset];
+
+	    /* Not a word separator -- but is it a valid word char? */
+	    if (strchr ("\n|&;<>(){}", ch))
 	      {
 		/* Fail */
 		wordfree (pwordexp);
@@ -2175,8 +2188,12 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 
 	    /* "Ordinary" character -- add it to word */
 
+	    /* Convert IFS chars to blanks -- bash does this */
+	    if (strchr (ifs, ch))
+	      ch = ' ';
+
 	    word = w_addchar (word, &word_length, &max_length,
-			      words[words_offset]);
+			      ch);
 	    if (word == NULL)
 	      {
 		error = WRDE_NOSPACE;
@@ -2186,34 +2203,12 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 	    break;
 	  }
 
-	/* Field separator */
-	if (strchr (ifs_white, words[words_offset]))
-	  {
-	    /* It's a whitespace IFS char.  Ignore it at the beginning
-	       of a line and ignore multiple instances.  */
-	    if (!word || !*word)
-	      break;
-
-	    if (w_addword (pwordexp, word) == WRDE_NOSPACE)
-	      {
-		error = WRDE_NOSPACE;
-		goto do_error;
-	      }
-
-	    word = w_newword (&word_length, &max_length);
-	    break;
-	  }
-
-	/* It's a non-whitespace IFS char */
-
-	/* Multiple non-whitespace IFS chars are treated as one.  */
+	/* If a word has been delimited, add it to the list. */
 	if (word != NULL)
 	  {
-	    if (w_addword (pwordexp, word) == WRDE_NOSPACE)
-	      {
-		error = WRDE_NOSPACE;
-		goto do_error;
-	      }
+	    error = w_addword (pwordexp, word);
+	    if (error)
+	      goto do_error;
 	  }
 
 	word = w_newword (&word_length, &max_length);
@@ -2221,7 +2216,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 
   /* End of string */
 
-  /* There was a field separator at the end */
+  /* There was a word separator at the end */
   if (word == NULL)
     return 0;
 
@@ -2234,11 +2229,11 @@ do_error:
    *	set we_wordc and wd_wordv back to what they were.
    */
 
-  if (error == WRDE_NOSPACE)
-    return WRDE_NOSPACE;
-
   if (word != NULL)
     free (word);
+
+  if (error == WRDE_NOSPACE)
+    return WRDE_NOSPACE;
 
   wordfree (pwordexp);
   pwordexp->we_wordv = old_wordv;

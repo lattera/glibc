@@ -1,3 +1,16 @@
+1998-09-12 01:09  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: Fix wrong tests.  Add new tests.
+
+	* posix/wordexp.c (wordexp): Perform word-splitting instead of
+	field-splitting here.
+	(wordexp): If out of memory mid-word, free the word (but still
+	leave pwordexp alone for caller to see).
+	(parse_param): Allow for zero-length fields (smarter checking of
+	memory allocation failure).
+	(w_addword): Convert NULL words to "".
+	(wordexp): Convert left-over IFS characters to blanks (like bash).
+
 1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Use test -f instead of test -e.
