@@ -207,9 +207,9 @@ _dl_runtime_profile:\n\
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
-	pushl %esp\n\
+	# Note that _dl_start gets the parameter in %eax.\n\
+	movl %esp, %eax\n\
 	call _dl_start\n\
-	popl %ebx\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %edi.\n\
 	movl %eax, %edi\n\
@@ -252,7 +252,7 @@ _dl_start_user:\n\
 ");
 
 #ifndef RTLD_START_SPECIAL_INIT
-#define RTLD_START_SPECIAL_INIT /* nothing */
+# define RTLD_START_SPECIAL_INIT /* nothing */
 #endif
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
@@ -305,7 +305,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 /* The i386 never uses Elf32_Rela relocations for the dynamic linker.
    Prelinked libraries may use Elf32_Rela though.  */
 #ifdef RTLD_BOOTSTRAP
-#define ELF_MACHINE_NO_RELA 1
+# define ELF_MACHINE_NO_RELA 1
 #endif
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
@@ -342,17 +342,19 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
   else
 #endif
     {
-#ifndef RTLD_BOOTSTRAP
+#ifdef RTLD_BOOTSTRAP
+      Elf32_Addr value;
+
+      assert (r_type == R_386_GLOB_DAT || r_type == R_386_JMP_SLOT);
+
+      value = RESOLVE (&sym, version, r_type);
+      *reloc_addr = value + sym->st_value;
+#else
       const Elf32_Sym *const refsym = sym;
-#endif
       Elf32_Addr value = RESOLVE (&sym, version, r_type);
       if (sym)
 	value += sym->st_value;
 
-#ifdef RTLD_BOOTSTRAP
-      assert (r_type == R_386_GLOB_DAT || r_type == R_386_JMP_SLOT);
-      *reloc_addr = value;
-#else
       switch (r_type)
 	{
 	case R_386_GLOB_DAT:
@@ -403,7 +405,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     *reloc_addr = map->l_addr + reloc->r_addend;
   else if (ELF32_R_TYPE (reloc->r_info) != R_386_NONE)
     {
-/*      const Elf32_Sym *const refsym = sym; */
       Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
       if (sym)
 	value += sym->st_value;
@@ -457,9 +458,8 @@ elf_machine_lazy_rel (struct link_map *map,
       if (__builtin_expect (map->l_mach.plt, 0) == 0)
 	*reloc_addr += l_addr;
       else
-	*reloc_addr =
-	  map->l_mach.plt
-	  + (((Elf32_Addr) reloc_addr) - map->l_mach.gotplt) * 4;
+	*reloc_addr = (map->l_mach.plt
+		       + (((Elf32_Addr) reloc_addr) - map->l_mach.gotplt) * 4);
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);
