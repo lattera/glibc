@@ -500,7 +500,12 @@ elf_machine_rela (struct link_map *map,
 	elf_machine_fixup_plt (map, NULL, reloc, reloc_addr, sym_value);
       else if (r_type == R_ALPHA_REFQUAD)
 	{
-	  sym_value += *reloc_addr;
+	  void *reloc_addr_1 = reloc_addr;
+	  Elf64_Addr reloc_addr_val;
+
+	  /* Load value without causing unaligned trap.  */
+	  memcpy (&reloc_addr_val, reloc_addr_1, 8);
+	  sym_value += reloc_addr_val;
 #ifndef RTLD_BOOTSTRAP
 	  if (map == &_dl_rtld_map)
 	    {
@@ -516,7 +521,8 @@ elf_machine_rela (struct link_map *map,
 	      sym_value -= reloc->r_addend;
 	    }
 #endif
-	  *reloc_addr = sym_value;
+	  /* Store value without causing unaligned trap.  */
+	  memcpy (reloc_addr_1, &sym_value, 8);
 	}
       else
 	_dl_reloc_bad_type (map, r_type, 0);
