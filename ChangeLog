@@ -1,3 +1,8 @@
+2002-12-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/cache.c (add_to_cache): Don't loop forever with 1ULL << 63 set
+	in hwcap.
+
 2002-12-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/sys/cdefs.h (__attribute_deprecated__): New #define.

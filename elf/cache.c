@@ -475,7 +475,7 @@ add_to_cache (const char *path, const char *lib, int flags,
   new_entry->bits_hwcap = 0;
 
   /* Count the number of bits set in the masked value.  */
-  for (i = 0; (~((1ULL << i) - 1) & hwcap) != 0; ++i)
+  for (i = 0; (~((1ULL << i) - 1) & hwcap) != 0 && i < 8 * sizeof (hwcap); ++i)
     if ((hwcap & (1ULL << i)) != 0)
       ++new_entry->bits_hwcap;
 
