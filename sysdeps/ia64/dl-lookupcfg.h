@@ -1,5 +1,5 @@
 /* Configuration of lookup functions.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,7 @@
 /* Forward declaration.  */
 struct link_map;
 
-extern void *_dl_symbol_address (const struct link_map *map,
-				 const Elf64_Sym *ref);
+extern void *_dl_symbol_address (struct link_map *map, const Elf64_Sym *ref);
 
 #define DL_SYMBOL_ADDRESS(map, ref) _dl_symbol_address(map, ref)
 

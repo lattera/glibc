@@ -191,8 +191,7 @@ make_fptr_table (struct link_map *map)
 }
 
 Elf64_Addr
-__ia64_make_fptr (const struct link_map *map,
-		  const Elf64_Sym *sym, Elf64_Addr ip)
+__ia64_make_fptr (struct link_map *map, const Elf64_Sym *sym, Elf64_Addr ip)
 {
   Elf64_Addr *ftab = map->l_mach.fptr_table;
   const Elf64_Sym *symtab;

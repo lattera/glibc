@@ -52,8 +52,8 @@ struct ia64_fdesc_table
     struct ia64_fdesc fdesc[0];
   };
 
-extern Elf64_Addr __ia64_make_fptr (const struct link_map *,
-				    const Elf64_Sym *, Elf64_Addr);
+extern Elf64_Addr __ia64_make_fptr (struct link_map *, const Elf64_Sym *,
+				    Elf64_Addr);
 
 static inline void
 __ia64_init_bootstrap_fdesc_table (struct link_map *map)
