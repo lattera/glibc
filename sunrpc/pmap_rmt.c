@@ -370,7 +370,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
       xdrmem_create (xdrs, inbuf, (u_int) inlen, XDR_DECODE);
       if (xdr_replymsg (xdrs, &msg))
 	{
-	  if ((msg.rm_xid == xid) &&
+	  if (((u_int32_t) msg.rm_xid == (u_int32_t) xid) &&
 	      (msg.rm_reply.rp_stat == MSG_ACCEPTED) &&
 	      (msg.acpted_rply.ar_stat == SUCCESS))
 	    {
@@ -383,7 +383,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	{
 #ifdef notdef
 	  /* some kind of deserialization problem ... */
-	  if (msg.rm_xid == xid)
+	  if ((u_int32_t) msg.rm_xid == (u_int32_t) xid)
 	    fprintf (stderr, "Broadcast deserialization problem");
 	  /* otherwise, just random garbage */
 #endif

@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <bits/libc-lock.h>

@@ -39,10 +39,6 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 
-/* Undefine the following line line in the production version.  */
-/* #define _NDEBUG 1 */
-#include <assert.h>
-
 /* Get libc version number.  */
 #include "../version.h"
 

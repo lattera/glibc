@@ -40,10 +40,6 @@
 #include "locfile.h"
 #include "locales.h"
 
-/* Undefine the following line in the production version.  */
-/* #define NDEBUG 1 */
-#include <assert.h>
-
 
 /* This is a special entry of the copylist.  For all categories we don't
    have a definition we use the data for the POSIX locale.  */

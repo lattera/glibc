@@ -1,5 +1,32 @@
 1999-02-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* po/el.po: Update from translation team.
+
+1999-02-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* intl/locale.alias: Fix slovenian entry [PR libc/948].
+
+1999-02-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/sprof.c: assert.h isn't used anymore, remove inclusion.
+	* inet/ruserpass.c: Likewise.
+	* locale/programs/stringtrans.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* nscd/grpcache.c: Likewise.
+	* nss/nss_files/files-XXX.c: Likewise.
+	* stdlib/canonicalize.c: Likewise.
+	* sysdeps/posix/sigwait.c: Likewise.
+
+1999-02-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sunrpc/pmap_rmt.c (clnt_broadcast): We need 32 bit comparison
+	even on 64 bit platforms.
+
+	* sunrpc/clnt_tcp.c (clnttcp_call): Likewise.
+	Patch by Loic Prylli <Loic.Prylli@ens-lyon.fr>.
+
+1999-02-09  Ulrich Drepper  <drepper@cygnus.com>
+
 	* intl/dcgettext.c: Include locale.h is available.
 
 1999-02-08  Ulrich Drepper  <drepper@cygnus.com>

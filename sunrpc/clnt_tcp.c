@@ -300,7 +300,7 @@ call_again:
 	    continue;
 	  return ct->ct_error.re_status;
 	}
-      if ((u_int32_t) reply_msg.rm_xid == x_id)
+      if ((u_int32_t) reply_msg.rm_xid == (u_int32_t) x_id)
 	break;
     }
 

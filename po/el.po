@@ -2501,7 +2501,6 @@ msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: μνήμη εξαντλήθηκε\n"
 
 #: time/zic.c:1847
-#, more_tin_touto
 msgid "repeated leap second moment"
 msgstr "repeated leap second moment"
 
