@@ -24,6 +24,7 @@ ia64-.*-linux.*		libm=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libm=6			GLIBC_2.2
 hppa.*-.*-.*		libm=6			GLIBC_2.2
 s390x-.*-linux.*        libm=6			GLIBC_2.2
+cris-.*-linux.*		libm=6			GLIBC_2.2
 .*-.*-linux.*		libm=6
 .*-.*-gnu-gnu.*		libm=6
 
@@ -36,6 +37,7 @@ sh.*-.*-linux.*		libc=6			GLIBC_2.2
 sparc64-.*-linux.*	libc=6			GLIBC_2.2
 hppa.*-.*-.*		libc=6			GLIBC_2.2
 s390x-.*-linux.*	libc=6			GLIBC_2.2
+cris-.*-linux.*		libc=6			GLIBC_2.2
 .*-.*-linux.*		libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
@@ -62,6 +64,7 @@ ia64-.*-linux.*		ld=ld-linux-ia64.so.2	GLIBC_2.2
 mips.*-.*-linux.*	ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
 hppa.*-.*-.*		ld=ld.so.1		GLIBC_2.2
 s390x-.*-linux.*	ld=ld64.so.1		GLIBC_2.2
+cris-.*-linux.*		ld=ld.so.1		GLIBC_2.2
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1
 
@@ -69,12 +72,14 @@ s390x-.*-linux.*	ld=ld64.so.1		GLIBC_2.2
 alpha.*-.*-linux.*	libdl=2.1
 mips.*-.*-linux.*	libdl=2			GLIBC_2.0 GLIBC_2.2
 s390x-.*-linux.*        libdl=2			GLIBC_2.2
+cris-.*-linux.*		libdl=2			GLIBC_2.2
 .*-.*-.*		libdl=2
 
 # So far the -lutil interface is the same on all platforms, except for the
 # `struct utmp' format, which depends on libc.
 alpha.*-.*-linux.*	libutil=1.1
 s390x-.*-linux.*        libutil=1		GLIBC_2.2
+cris-.*-linux.*		libutil=1		GLIBC_2.2
 .*-.*-.*		libutil=1
 
 # Version number 2 is used on other systems for the BIND 4.9.5 resolver
@@ -100,6 +105,13 @@ s390x-.*-linux.*	libnss_nis=2		GLIBC_2.2
 s390x-.*-linux.*	libnss_nisplus=2	GLIBC_2.2
 s390x-.*-linux.*	libnss_ldap=2		GLIBC_2.2
 s390x-.*-linux.*	libnss_hesiod=2		GLIBC_2.2
+cris-.*-linux.*		libnss_files=2		GLIBC_2.2
+cris-.*-linux.*		libnss_dns=2		GLIBC_2.2
+cris-.*-linux.*		libnss_compat=2		GLIBC_2.2
+cris-.*-linux.*		libnss_nis=2		GLIBC_2.2
+cris-.*-linux.*		libnss_nisplus=2	GLIBC_2.2
+cris-.*-linux.*		libnss_ldap=2		GLIBC_2.2
+cris-.*-linux.*		libnss_hesiod=2		GLIBC_2.2
 .*-.*-.*		libnss_files=2
 .*-.*-.*		libnss_dns=2
 .*-.*-.*		libnss_compat=2
@@ -112,11 +124,13 @@ s390x-.*-linux.*	libnss_hesiod=2		GLIBC_2.2
 alpha.*-.*-linux.*	libnsl=1.1
 mips.*-.*-linux.*	libnsl=1		GLIBC_2.0 GLIBC_2.2
 s390x-.*-linux.*	libnsl=1		GLIBC_2.2
+cris-.*-linux.*		libnsl=1		GLIBC_2.2
 .*-.*-.*		libnsl=1
 
 # This defines the shared library version numbers we will install.
 alpha.*-.*-linux.*	libcrypt=1.1
 s390x-.*-linux.*	libcrypt=1		GLIBC_2.2
+cris-.*-linux.*		libcrypt=1		GLIBC_2.2
 .*-.*-.*		libcrypt=1
 
 # The gross patch for programs assuming broken locale implementations.
@@ -126,11 +140,13 @@ sh.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
 sparc64-.*-.*		libBrokenLocale=1	GLIBC_2.2
 hppa-.*-.*		libBrokenLocale=1	GLIBC_2.2
 s390x-.*-linux.*	libBrokenLocale=1	GLIBC_2.2
+cris-.*-linux.*		libBrokenLocale=1	GLIBC_2.2
 .*-.*-.*		libBrokenLocale=1
 
 # The real-time library from POSIX.1b.
 mips.*-.*-linux.*	librt=1			GLIBC_2.0 GLIBC_2.2
 s390x-.*-linux.*	librt=1			GLIBC_2.2
+cris-.*-linux.*		librt=1			GLIBC_2.2
 .*-.*-.*		librt=1
 
 # The asynchronous name lookup library.

@@ -1171,7 +1171,7 @@ the signal.  These are described in more detail in @ref{Flags for Sigaction}.
 
 @comment signal.h
 @comment POSIX.1
-@deftypefun int sigaction (int @var{signum}, const struct sigaction *@var{action}, struct sigaction *@var{old-action})
+@deftypefun int sigaction (int @var{signum}, const struct sigaction *restrict @var{action}, struct sigaction *restrict @var{old-action})
 The @var{action} argument is used to set up a new action for the signal
 @var{signum}, while the @var{old-action} argument is used to return
 information about the action previously associated with this symbol.
@@ -2563,7 +2563,7 @@ The prototype for the @code{sigprocmask} function is in @file{signal.h}.
 
 @comment signal.h
 @comment POSIX.1
-@deftypefun int sigprocmask (int @var{how}, const sigset_t *@var{set}, sigset_t *@var{oldset})
+@deftypefun int sigprocmask (int @var{how}, const sigset_t *restrict @var{set}, sigset_t *restrict @var{oldset})
 The @code{sigprocmask} function is used to examine or change the calling
 process's signal mask.  The @var{how} argument determines how the signal
 mask is changed, and must be one of the following values:
@@ -3088,8 +3088,8 @@ not require your program to know which direction the stack grows, which
 depends on the specific machine and operating system.
 
 @comment signal.h
-@comment BSD
-@deftp {Data Type} {struct sigaltstack}
+@comment XPG
+@deftp {Data Type} stack_t
 This structure describes a signal stack.  It contains the following members:
 
 @table @code
@@ -3136,8 +3136,8 @@ delivered on the normal user stack.
 @end deftp
 
 @comment signal.h
-@comment BSD
-@deftypefun int sigaltstack (const struct sigaltstack *@var{stack}, struct sigaltstack *@var{oldstack})
+@comment XPG
+@deftypefun int sigaltstack (const stack_t *restrict @var{stack}, stack_t *restrict @var{oldstack})
 The @code{sigaltstack} function specifies an alternate stack for use
 during signal handling.  When a signal is received by the process and
 its action indicates that the signal stack is used, the system arranges

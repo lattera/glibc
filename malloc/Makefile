@@ -55,7 +55,7 @@ aux := set-freeres
 
 include ../Makeconfig
 
-# The AWK script to analyze the output of the mtrace functions.
+# The Perl script to analyze the output of the mtrace functions.
 ifneq ($(PERL),no)
 install-bin = mtrace
 generated = mtrace

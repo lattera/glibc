@@ -12,8 +12,9 @@ functions.
 
 @menu
 * Intro: Non-Local Intro.        When and how to use these facilities.
-* Details: Non-Local Details.   Functions for non-local exits.
+* Details: Non-Local Details.    Functions for non-local exits.
 * Non-Local Exits and Signals::  Portability issues.
+* System V contexts::            Complete context control a la System V.
 @end menu
 
 @node Non-Local Intro, Non-Local Details,  , Non-Local Exits
@@ -169,7 +170,7 @@ function containing the @code{setjmp} call that have been changed since
 the call to @code{setjmp} are indeterminate, unless you have declared
 them @code{volatile}.
 
-@node Non-Local Exits and Signals,, Non-Local Details, Non-Local Exits
+@node Non-Local Exits and Signals, System V contexts, Non-Local Details, Non-Local Exits
 @section Non-Local Exits and Signals
 
 In BSD Unix systems, @code{setjmp} and @code{longjmp} also save and
@@ -211,3 +212,237 @@ argument.  If the @code{sigsetjmp} call that set this @var{state} used a
 nonzero @var{savesigs} flag, @code{siglongjmp} also restores the set of
 blocked signals.
 @end deftypefun
+
+@node System V contexts,, Non-Local Exits and Signals, Non-Local Exits
+@section Complete Context Control
+
+The Unix standard one more set of function to control the execution path
+and these functions are more powerful than those discussed in this
+chapter so far.  These function were part of the original @w{System V}
+API and by this route were added to the Unix API.  Beside on branded
+Unix implementations these interfaces are not widely available.  Not all
+platforms and/or architectures the GNU C Library is available on provide
+this interface.  Use @file{configure} to detect the availability.
+
+Similar to the @code{jmp_buf} and @code{sigjmp_buf} types used for the
+variables to contain the state of the @code{longjmp} functions the
+interfaces of interest here have an appropriate type as well.  Objects
+of this type are normally much larger since more information is
+contained.  The type is also used in a few more places as we will see.
+The types and functions described in this section are all defined and
+declared respectively in the @file{ucontext.h} header file.
+
+@comment ucontext.h
+@comment SVID
+@deftp {Data Type} ucontext_t
+
+The @code{ucontext_t} type is defined as a structure with as least the
+following elements:
+
+@table @code
+@item ucontext_t *uc_link
+This is a pointer to the next context structure which is used if the
+context described in the current structure returns.
+
+@item sigset_t uc_sigmask
+Set of signals which are blocked when this context is used.
+
+@item stack_t uc_stack
+Stack used for this context.  The value need not be (and normally is
+not) the stack pointer.  @xref{Signal Stack}.
+
+@item mcontext_t uc_mcontext
+This element contains the actual state of the process.  The
+@code{mcontext_t} type is also defined in this header but the definition
+should be treated as opaque.  Any use of knowledge of the type makes
+applications less portable.
+
+@end table
+@end deftp
+
+Objects of this type have to be created by the user.  The initialization
+and modification happens through one of the following functions:
+
+@comment ucontext.h
+@comment SVID
+@deftypefun int getcontext (ucontext_t *@var{ucp})
+The @code{getcontext} function initializes the variable pointed to by
+@var{ucp} with the context of the calling thread.  The context contains
+the content of the registers, the signal mask, and the current stack.
+Executing the contents would start at the point where the
+@code{getcontext} call just returned.
+
+The function returns @code{0} if succesful.  Otherwise it returns
+@code{-1} and sets @var{errno} accordingly.
+@end deftypefun
+
+The @code{getcontext} function is similar to @code{setjmp} but it does
+not provide an indication of whether the function returns for the first
+time or whether the initialized context was used and the execution is
+resumed at just that point.  If this is necessary the user has to take
+determine this herself.  This must be done carefully since the context
+contains registers which might contain register variables.  This is a
+good situation to define variables with @code{volatile}.
+
+Once the context variable is initialized it can be used as is or it can
+be modified.  The latter is normally done to implement co-routines or
+similar constructs.  The @code{makecontext} function is what has to be
+used to do that.
+
+@comment ucontext.h
+@comment SVID
+@deftypefun void makecontext (ucontext_t *@var{ucp}, void (*@var{func}) (void), int @var{argc}, @dots{})
+
+The @var{ucp} parameter passed to the @code{makecontext} shall be
+initialized by a call to @code{getcontext}.  The context will be
+modified to in a way so that if the context is resumed it will start by
+calling the function @code{func} which gets @var{argc} integer arguments
+passed.  The integer arguments which are to be passed should follow the
+@var{argc} parameter in the call to @code{makecontext}.
+
+Before the call to this function the @code{uc_stack} and @code{uc_link}
+element of the @var{ucp} structure should be initialized.  The
+@code{uc_stack} element describes the stack which is used for this
+context.  No two contexts which are used at the same time should use the
+same memory region for a stack.
+
+The @code{uc_link} element of the object pointed to by @var{ucp} should
+be a pointer to the context to be executed when the function @var{func}
+returns or it should be a null pointer.  See @code{setcontext} for more
+information about the exact use.
+@end deftypefun
+
+While allocating the memory for the stack one has to be careful.  Most
+modern processors keep track of whether a certain memory region is
+allowed to contain code which is executed or not.  Data segments and
+heap memory is normally not tagged to allow this.  The result is that
+programs would fail.  Examples for such code include the calling
+sequences the GNU C compiler generates for calls to nested functions.
+Safe ways to allocate stacks correctly include using memory on the
+original threads stack or explicitly allocate memory tagged for
+execution using (@pxref{Memory-mapped I/O}).
+
+@strong{Compatibility note}: The current Unix standard is very imprecise
+about the way the stack is allocated.  All implementations seem to agree
+that the @code{uc_stack} element must be used but the values stored in
+the elements of the @code{stack_t} value are unclear.  The GNU C library
+and most other Unix implementations require the @code{ss_sp} value of
+the @code{uc_stack} element to point to the base of the memory region
+allocated for the stack and the size of the memory region is stored in
+@code{ss_size}.  There are implements out there which require
+@code{ss_sp} to be set to the value the stack pointer will have (which
+can depending on the direction the stack grows be different).  This
+difference makes the @code{makecontext} function hard to use and it
+requires detection of the platform at compile time.
+
+@comment ucontext.h
+@comment SVID
+@deftypefun int setcontext (const ucontext_t *@var{ucp})
+
+The @code{setcontext} function restores the context described by
+@var{ucp}.  The context is not modified and can be reused as often as
+wanted.
+
+If the context was created by @code{getcontext} execution resumes with
+the registers filled with the same values and the same stack as if the
+@code{getcontext} call just returned.
+
+If the context was modified with a call to @code{makecontext} execution
+continues with the function passed to @code{makecontext} which gets the
+specified parameters passed.  If this function returns execution is
+resumed in the context which was referenced by the @code{uc_link}
+element of the context structure passed to @code{makecontext} at the
+time of the call.  If @code{uc_link} was a null pointer the application
+terminates in this case.
+
+Since the context contains information about the stack no two threads
+should use the same context at the same time.  The result in most cases
+would be disastrous.
+
+The @code{setcontext} function does not return unless an error occurred
+in which case it returns @code{-1}.
+@end deftypefun
+
+The @code{setcontext} function simply replaces the current context with
+the one described by the @var{ucp} parameter.  This is often useful but
+there are situations where the current context has to be preserved.
+
+@comment ucontext.h
+@comment SVID
+@deftypefun int swapcontext (ucontext_t *restrict @var{oucp}, const ucontext_t *restrict @var{ucp})
+
+The @code{swapcontext} function is similar to @code{setcontext} but
+instead of just replacing the current context the latter is first saved
+in the object pointed to by @var{oucp} as if this was a call to
+@code{getcontext}.  The saved context would resume after the call to
+@code{swapcontext}.
+
+Once the current context is saved the context described in @var{ucp} is
+installed and execution continues as described in this context.
+
+If @code{swapcontext} succeeds the function does not return unless the
+context @var{oucp} is used without prior modification by
+@code{makecontext}.  The return value in this case is @code{0}.  If the
+function fails it returns @code{-1} and set @var{errno} accordingly.
+@end deftypefun
+
+@heading Example for SVID Context Handling
+
+The easiest way to use the context handling functions is as a
+replacement for @code{setjmp} and @code{longjmp}.  The context contains
+on most platforms more information which might lead to less surprises
+but this also means using these functions is more expensive (beside
+being less portable).
+
+@smallexample
+int
+random_search (int n, int (*fp) (int, ucontext_t *))
+@{
+  volatile int cnt = 0;
+  ucontext_t uc;
+
+  /* @r{Safe current context.}  */
+  if (getcontext (&uc) < 0)
+    return -1;
+
+  /* @r{If we have not tried @var{n} times try again.}  */
+  if (cnt++ < n)
+    /* @r{Call the function with a new random number}
+       @r{and the context}.  */
+    if (fp (rand (), &uc) != 0)
+      /* @r{We found what we were looking for.}  */
+      return 1;
+
+  /* @r{Not found.}  */
+  return 0;
+@}
+@end smallexample
+
+Using contexts in such a way enables emulating exception handling.  The
+search functions passed in the @var{fp} parameter could be very large,
+nested, and complex which would make it complicated (or at least would
+require a lot of code) to leave the function with an error value which
+has to be passed down to the caller.  By using the context it is
+possible to leave the search function in one step and allow restarting
+the search which also has the nice side effect that it can be
+significantly faster.
+
+Something which is harder to implement with @code{setjmp} and
+@code{longjmp} is to switch temporarily to a different execution path
+and then resume where execution was stopped.
+
+@smallexample
+@include swapcontext.c.texi
+@end smallexample
+
+This an example how the context functions can be used to implement
+co-routines or cooperative multi-threading.  All that has to be done is
+to call every once in a while @code{swapcontext} to continue running a
+different context.  It is not allowed to do the context switching from
+the signal handler directly since neither @code{setcontext} nor
+@code{swapcontext} are functions which can be called from a signal
+handler.  But setting a variable in the signal handler and checking it
+in the body of the functions which are executed.  Since
+@code{swapcontext} is saving the current context it is possible to have
+multiple different scheduling points in the code.  Execution will always
+resume where it was left.

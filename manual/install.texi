@@ -424,6 +424,7 @@ following patterns:
 @smallexample
 alpha@var{*}-@var{*}-linux
 arm-@var{*}-linux
+cris-@var{*}-linux
 hppa-@var{*}-linux
 i@var{x}86-@var{*}-gnu
 i@var{x}86-@var{*}-linux

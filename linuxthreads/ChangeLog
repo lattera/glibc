@@ -1,3 +1,12 @@
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* sysdeps/cris/pt-machine.h: New file.
+	* sysdeps/cris/pspinlock.c: New file.
+
+2001-04-09  Hans-Peter Nilsson  <hp@axis.com>
+
+	* shlib-versions: Add case for Linux on CRIS.
+
 2001-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* attr.c (pthread_getattr_np): Correct computation of stack size

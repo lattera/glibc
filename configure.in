@@ -1141,8 +1141,13 @@ elif test $libc_cv_asm_weakext_directive = yes; then
 fi
 
 dnl The standard hppa assembler uses `;' to start comments and `!'
-dnl as a line separator.
+dnl as a line separator.  CRIS uses `;' to start comments and `@' for
+dnl line separator.
 case "${host_cpu}-${host_os}" in
+  cris*)
+    libc_cv_asm_line_sep='@'
+    AC_DEFINE_UNQUOTED(ASM_LINE_SEP, $libc_cv_asm_line_sep)
+    ;;
   hppa*linux*)
   AC_CACHE_CHECK(for assembler line separator,
 		 libc_cv_asm_line_sep, [dnl

@@ -1,3 +1,111 @@
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* sysdeps/unix/sysv/linux/cris/Dist: New file.
+	* sysdeps/unix/sysv/linux/cris/Makefile: New file.
+	* sysdeps/unix/sysv/linux/cris/_G_config.h: New file.
+	* sysdeps/unix/sysv/linux/cris/bits/fcntl.h: New file.
+	* sysdeps/unix/sysv/linux/cris/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/cris/bits/resource.h: New file.
+	* sysdeps/unix/sysv/linux/cris/brk.c: New file.
+	* sysdeps/unix/sysv/linux/cris/chown.c: New file.
+	* sysdeps/unix/sysv/linux/cris/clone.S: New file.
+	* sysdeps/unix/sysv/linux/cris/fchown.c: New file.
+	* sysdeps/unix/sysv/linux/cris/fcntl.c: New file.
+	* sysdeps/unix/sysv/linux/cris/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/cris/getegid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/geteuid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/getgid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/getgroups.c: New file.
+	* sysdeps/unix/sysv/linux/cris/getresgid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/getresuid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/getrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/cris/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/cris/getuid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/lchown.c: New file.
+	* sysdeps/unix/sysv/linux/cris/lockf64.c: New file.
+	* sysdeps/unix/sysv/linux/cris/lxstat.c: New file.
+	* sysdeps/unix/sysv/linux/cris/mmap.S: New file.
+	* sysdeps/unix/sysv/linux/cris/mmap64.S: New file.
+	* sysdeps/unix/sysv/linux/cris/msgctl.c: New file.
+	* sysdeps/unix/sysv/linux/cris/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/cris/register-dump.h: New file.
+	* sysdeps/unix/sysv/linux/cris/semctl.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setegid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/seteuid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setfsgid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setfsuid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setgid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setgroups.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setregid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setresgid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setreuid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/cris/setuid.c: New file.
+	* sysdeps/unix/sysv/linux/cris/shmctl.c: New file.
+	* sysdeps/unix/sysv/linux/cris/socket.S: New file.
+	* sysdeps/unix/sysv/linux/cris/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/cris/syscall.S: New file.
+	* sysdeps/unix/sysv/linux/cris/sysdep.S: New file.
+	* sysdeps/unix/sysv/linux/cris/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/cris/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/cris/xstat.c: New file.
+
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* sysdeps/cris/Dist: New file.
+	* sysdeps/cris/Implies: New file.
+	* sysdeps/cris/Makefile: New file.
+	* sysdeps/cris/__longjmp.S: New file.
+	* sysdeps/cris/_mcount.S: New file.
+	* sysdeps/cris/bits/endian.h: New file.
+	* sysdeps/cris/bits/setjmp.h: New file.
+	* sysdeps/cris/bits/string.h: New file.
+	* sysdeps/cris/dl-machine.h: New file.
+	* sysdeps/cris/elf/start.S: New file.
+	* sysdeps/cris/machine-gmon.h: New file.
+	* sysdeps/cris/memcopy.h: New file.
+	* sysdeps/cris/memusage.h: New file.
+	* sysdeps/cris/setjmp.S: New file.
+	* sysdeps/cris/sysdep.h: New file.
+	* sysdeps/cris/wordcopy.c: New file.
+
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* elf/elf.h: Add new relocations for CRIS.
+
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* shlib-versions: Add cases for Linux on CRIS.
+
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* configure.in (ASM_LINE_SEP tests): Handle CRIS assembly, with
+	';' for comments and '@' for line separator.
+
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (INLINE_SYSCALL): Fix
+	typo; s/==/=/ for assignment.
+
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* malloc/Makefile: Correct comment; mtrace is Perl, not AWK.
+
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* iconv/gconv_simple.c (internal_ucs4_loop_unaligned): Check for
+	empty input before checking full output.
+
+2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
+
+	* iconv/gconv.c (__gconv): Don't derefer parameter cd before
+	checking if == -1L.
+
+2001-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/rexec.c (rexec_af): Avoid calling perror with errno being set.
+
 2001-04-07  Stephen L Moshier  <moshier@mediaone.net>
 
 	* sysdeps/ieee754/ldbl-128/e_logl.c: Correct infinity and NaN

@@ -39,6 +39,7 @@ in the future, are:
 	ia64-*-linux-gnu	Linux-2.x on ia64
 	s390-*-linux-gnu	Linux-2.x on IBM S/390
 	s390x-*-linux-gnu	Linux-2.x on IBM S/390 64-bit
+	cris-*-linux-gnu	Linux-2.4+ on CRIS
 
 Ports to other Linux platforms are in development, and may in fact work
 already, but no one has sent us success reports for them.  Currently no

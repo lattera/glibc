@@ -135,10 +135,10 @@ internal_ucs4_loop_unaligned (struct __gconv_step *step,
 # endif
 
   /* Determine the status.  */
-  if (*outptrp + 4 > outend)
-    result = __GCONV_FULL_OUTPUT;
-  else if (*inptrp == inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
+  else if (*outptrp + 4 > outend)
+    result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
 

@@ -41,6 +41,8 @@ Version 2.2.3
 
 * Ulrich Drepper <drepper@redhat.com> implemented the setcontext family
   of functions for Linux/x86.
+
+* Port to Linux/CRIS contributed by Axis Communications.
 
 Version 2.2.2
 

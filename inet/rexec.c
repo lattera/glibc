@@ -117,9 +117,12 @@ retry:
 		}
 		listen(s2, 1);
 		sa2len = sizeof (sa2);
-		if (getsockname(s2, (struct sockaddr *)&sa2, &sa2len) < 0 ||
-		    sa2len != SA_LEN((struct sockaddr *)&sa2)) {
+		if (getsockname(s2, (struct sockaddr *)&sa2, &sa2len) < 0) {
 			perror("getsockname");
+			(void) __close(s2);
+			goto bad;
+		} else if (sa2len != SA_LEN((struct sockaddr *)&sa2)) {
+			__set_errno(EINVAL);
 			(void) __close(s2);
 			goto bad;
 		}
