@@ -1,3 +1,8 @@
+1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_allocate_stack): Set
+	__pthread_nonstandard_stacks if user-specified stack is used.
+
 1999-01-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add _LFS_ASYNCHRONOUS_IO,

@@ -229,6 +229,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       new_thread_bottom = (char *) attr->__stackaddr - attr->__stacksize;
       guardaddr = NULL;
       guardsize = 0;
+      __pthread_nonstandard_stacks = 1;
     }
   else
     {
