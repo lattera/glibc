@@ -1,5 +1,12 @@
 2001-04-21  Andreas Jaeger  <aj@suse.de>
 
+	* manager.c (__pthread_manager): Add noreturn
+	attribute.
+	(pthread_start_thread): Likewise, remove return statement.
+	(pthread_start_thread_event): Likewise.
+	Add noreturn attribute for pthread_handle_exit.
+	* weaks.c: Add noreturn attribute for pthread_exit.
+
 	* internals.h: Add __pthread_clock_gettime and
 	__pthread_clock_settime prototypes.
 

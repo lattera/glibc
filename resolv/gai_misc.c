@@ -281,6 +281,7 @@ __gai_enqueue_request (struct gaicb *gaicbp)
 
 
 static void *
+__attribute__ ((noreturn))
 handle_requests (void *arg)
 {
   struct requestlist *runp = (struct requestlist *) arg;

@@ -96,13 +96,16 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 				 int report_events,
 				 td_thr_events_t *event_maskp);
 static void pthread_handle_free(pthread_t th_id);
-static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode);
+static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode)
+     __attribute__ ((noreturn));
 static void pthread_reap_children(void);
 static void pthread_kill_all_threads(int sig, int main_thread_also);
 
 /* The server thread managing requests for thread creation and termination */
 
-int __pthread_manager(void *arg)
+int
+__attribute__ ((noreturn))
+__pthread_manager(void *arg)
 {
   int reqfd = (int) (long int) arg;
   struct pollfd ufd;
@@ -220,7 +223,9 @@ int __pthread_manager_event(void *arg)
 
 /* Process creation */
 
-static int pthread_start_thread(void *arg)
+static int
+__attribute__ ((noreturn))
+pthread_start_thread(void *arg)
 {
   pthread_descr self = (pthread_descr) arg;
   struct pthread_request request;
@@ -270,10 +275,11 @@ static int pthread_start_thread(void *arg)
 							   p_start_args.arg));
   /* Exit with the given return value */
   __pthread_do_exit(outcome, CURRENT_STACK_FRAME);
-  return 0;
 }
 
-static int pthread_start_thread_event(void *arg)
+static int
+__attribute__ ((noreturn))
+pthread_start_thread_event(void *arg)
 {
   pthread_descr self = (pthread_descr) arg;
 
@@ -289,7 +295,7 @@ static int pthread_start_thread_event(void *arg)
   __pthread_unlock (THREAD_GETMEM(self, p_lock));
 
   /* Continue with the real function.  */
-  return pthread_start_thread (arg);
+  pthread_start_thread (arg);
 }
 
 static int pthread_allocate_stack(const pthread_attr_t *attr,

@@ -1,5 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990-1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    Written May 1989 by Mike Haertel.
 
    This library is free software; you can redistribute it and/or
@@ -270,7 +270,8 @@ reallochook (ptr, size, caller)
   return (__ptr_t) (hdr + 1);
 }
 
-static void mabort __P ((enum mcheck_status status));
+static void mabort __P ((enum mcheck_status status))
+     __attribute__ ((noreturn));
 static void
 mabort (status)
      enum mcheck_status status;

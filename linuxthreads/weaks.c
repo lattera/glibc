@@ -1,5 +1,5 @@
 /* The weak pthread functions for Linux.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,8 @@
 extern int __pthread_return_0 (void);
 extern int __pthread_return_1 (void);
 extern void __pthread_return_void (void);
-extern void weak_function pthread_exit (void *__retval);
+extern void weak_function pthread_exit (void *__retval)
+     __attribute__ ((noreturn));
 
 /* Those are pthread functions which return 0 if successful. */
 weak_alias (__pthread_return_0, BP_SYM (__libc_pthread_attr_init_2_1))

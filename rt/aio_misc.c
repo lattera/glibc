@@ -454,6 +454,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 
 
 static void *
+__attribute__ ((noreturn))
 handle_fildes_io (void *arg)
 {
   pthread_t self = pthread_self ();
