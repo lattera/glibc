@@ -131,6 +131,9 @@ union _FP_UNION_Q
 {
   long double flt /* __attribute__((mode(TF))) */ ;
   struct {
+    _FP_W_TYPE a, b;
+  } longs;
+  struct {
 #if __BYTE_ORDER == __BIG_ENDIAN
     unsigned sign  : 1;
     unsigned exp   : _FP_EXPBITS_Q;

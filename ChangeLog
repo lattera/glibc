@@ -1,3 +1,18 @@
+2004-03-06  Richard Henderson  <rth@redhat.com>
+
+	* soft-fp/quad.h (union _FP_UNION_Q): Add longs structure.
+	* sysdeps/alpha/Implies: Add alpha/soft-fp.
+	* sysdeps/alpha/soft-fp/sfp-machine.h: Rewrite for GEM interface.
+	* sysdeps/alpha/Subdirs, sysdeps/alpha/soft-fp/Makefile,
+	sysdeps/alpha/soft-fp/Versions, sysdeps/alpha/soft-fp/local-soft-fp.h,
+	sysdeps/alpha/soft-fp/ots_add.c, sysdeps/alpha/soft-fp/ots_cmp.c,
+	sysdeps/alpha/soft-fp/ots_cmpe.c, sysdeps/alpha/soft-fp/ots_cvtqux.c,
+	sysdeps/alpha/soft-fp/ots_cvtqx.c, sysdeps/alpha/soft-fp/ots_cvttx.c,
+	sysdeps/alpha/soft-fp/ots_cvtxq.c, sysdeps/alpha/soft-fp/ots_cvtxt.c,
+	sysdeps/alpha/soft-fp/ots_div.c, sysdeps/alpha/soft-fp/ots_mul.c,
+	sysdeps/alpha/soft-fp/ots_nintxq.c, sysdeps/alpha/soft-fp/ots_sub.c:
+	New files.
+
 2004-03-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Recognize --enable-bind-now.
