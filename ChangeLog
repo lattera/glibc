@@ -1,3 +1,8 @@
+1998-10-26  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/unix/sysv/linux/Versions: Move shutdown ...
+	* socket/Versions [libc, GLIBC_2.0]: ... to here.
+
 1998-10-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* include/stdio.h: Included <stddef.h> for size_t.

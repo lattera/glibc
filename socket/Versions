@@ -30,6 +30,6 @@ libc {
     recv; recvfrom; recvmsg;
 
     # s*
-    send; sendmsg; sendto; setsockopt; socket; socketpair;
+    send; sendmsg; sendto; setsockopt; shutdown; socket; socketpair;
   }
 }
