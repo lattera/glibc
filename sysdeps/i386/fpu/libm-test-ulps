@@ -708,14 +708,12 @@ ildouble: 1
 Test "jn (10, -1.0) == 0.26306151236874532070e-9":
 float: 1
 ifloat: 1
-double: 1
-idouble: 1
 ldouble: 1
 ildouble: 1
 Test "jn (10, 0.1) == 0.26905328954342155795e-19":
-double: 5
+double: 4
 float: 2
-idouble: 5
+idouble: 4
 ifloat: 2
 ldouble: 1
 ildouble: 1
@@ -729,8 +727,6 @@ ildouble: 2
 Test "jn (10, 1.0) == 0.26306151236874532070e-9":
 float: 1
 ifloat: 1
-double: 1
-idouble: 1
 ldouble: 1
 ildouble: 1
 Test "jn (10, 2.0) == 0.25153862827167367096e-6":
@@ -926,9 +922,6 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "tgamma (4) == 6":
-ldouble:  2
-ildouble: 2
 
 # y0
 Test "y0 (0.1) == -1.5342386513503668441":
@@ -1478,9 +1471,9 @@ ldouble: 2
 ildouble: 2
 
 Function: "jn":
-double: 5
+double: 4
 float: 2
-idouble: 5
+idouble: 4
 ifloat: 2
 ldouble: 2
 ildouble: 2
