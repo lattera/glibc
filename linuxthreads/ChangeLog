@@ -1,3 +1,11 @@
+2003-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/tls.h (tcbhead_t): Use the TLS ABI required layout
+	if USE_TLS only.
+	(NONTLS_INIT_TP): Revert last change.
+	* sysdeps/ia64/tcb-offsets.sym (MULTIPLE_THREADS_OFFSET): Define to
+	offsetof (tcbhead_t, multiple_threads) if USE_TLS not defined.
+
 2003-01-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread.c (_pthread_initialize_minimal): Use

@@ -2993,13 +2993,13 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 		goto parse_bracket_exp_free_return;
 	      break;
 	    case CHAR_CLASS:
-	      ret = build_charclass (sbcset,
+	      *err = build_charclass (sbcset,
 #ifdef RE_ENABLE_I18N
-				     mbcset, &char_class_alloc,
+				      mbcset, &char_class_alloc,
 #endif /* RE_ENABLE_I18N */
-				     start_elem.opr.name, syntax);
-	      if (BE (ret != REG_NOERROR, 0))
-	       goto parse_bracket_exp_espace;
+				      start_elem.opr.name, syntax);
+	      if (BE (*err != REG_NOERROR, 0))
+	       goto parse_bracket_exp_free_return;
 	      break;
 	    default:
 	      assert (0);
@@ -3380,7 +3380,7 @@ build_word_op (dfa, not, err)
 #ifdef RE_ENABLE_I18N
       free_charset (mbcset);
 #endif /* RE_ENABLE_I18N */
-      *err = REG_ESPACE;
+      *err = ret;
       return NULL;
     }
   /* \w match '_' also.  */

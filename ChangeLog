@@ -1,5 +1,13 @@
 2003-01-16  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/regcomp.c (parse_bracket_exp): If build_charclass fails,
+	set *err to the returned error, not to REG_ESPACE unconditionally.
+	(build_word_op): Likewise.
+	* posix/Makefile (tests): Add bug-regex16.
+	* posix/bug-regex16.c: New test.
+
+2003-01-16  Jakub Jelinek  <jakub@redhat.com>
+
 	* elf/dl-load.c (_dl_map_object_from_fd): Use
 	GL(dl_tls_dtv_slotinfo_list) != NULL to check whether TLS has
 	been already initialized.
