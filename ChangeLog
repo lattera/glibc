@@ -1,3 +1,9 @@
+2000-08-15  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__libc_multiple_libcs):
+	Initialize, needed for change in common symbol handling in newer
+	binutils.  Mirrors 2000-01-03 change made by Andreas Schwab.
+
 2000-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/constload1.c: Call mtrace.  Check return value of dlclose call.

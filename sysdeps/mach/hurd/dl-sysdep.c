@@ -49,7 +49,7 @@ extern char **_environ;
 extern void ENTRY_POINT (void);
 
 int __libc_enable_secure;
-int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
+int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 /* This variable containts the lowest stack address ever used.  */
 void *__libc_stack_end;
