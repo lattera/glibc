@@ -3,118 +3,118 @@
 	* malloc/memprof.sh: Fix --help string a bit.
 
 	* argp/argp.h: Remove K&R compatiblity.
-	* assert/assert.h: Likewise
-	* catgets/nl_types.h: Likewise
-	* ctype/ctype.h: Likewise
-	* db/db.h: Likewise
-	* db/ndbm.h: Likewise
-	* db2/db.h: Likewise
-	* db2/db_185.h: Likewise
-	* debug/execinfo.h: Likewise
-	* dirent/dirent.h: Likewise
-	* dlfcn/dlfcn.h: Likewise
-	* gmon/sys/gmon.h: Likewise
-	* grp/grp.h: Likewise
-	* iconv/gconv.h: Likewise
-	* iconv/iconv.h: Likewise
-	* include/execinfo.h: Likewise
-	* inet/aliases.h: Likewise
-	* inet/netinet/ether.h: Likewise
-	* inet/netinet/in.h: Likewise
-	* intl/libintl.h: Likewise
-	* io/fcntl.h: Likewise
-	* io/fts.h: Likewise
-	* io/ftw.h: Likewise
-	* io/utime.h: Likewise
-	* io/sys/poll.h: Likewise
-	* io/sys/stat.h: Likewise
-	* io/sys/statfs.h: Likewise
-	* io/sys/statvfs.h: Likewise
-	* libio/libio.h: Likewise
-	* libio/stdio.h: Likewise
-	* linuxthreads/sysdeps/pthread/pthread.h: Likewise
-	* locale/locale.h: Likewise
-	* login/pty.h: Likewise
-	* login/utmp.h: Likewise
-	* malloc/mcheck.h: Likewise
-	* math/complex.h: Likewise
-	* math/math.h: Likewise
-	* math/math_private.h: Likewise
-	* misc/err.h: Likewise
-	* misc/fstab.h: Likewise
-	* misc/libgen.h: Likewise
-	* misc/mntent.h: Likewise
-	* misc/regexp.h: Likewise
-	* misc/search.h: Likewise
-	* misc/sgtty.h: Likewise
-	* misc/ttyent.h: Likewise
-	* misc/sys/cdefs.h: Likewise
-	* misc/sys/file.h: Likewise
-	* misc/sys/ioctl.h: Likewise
-	* misc/sys/mman.h: Likewise
-	* misc/sys/select.h: Likewise
-	* misc/sys/syslog.h: Likewise
-	* misc/sys/uio.h: Likewise
-	* misc/sys/ustat.h: Likewise
-	* nss/nss.h: Likewise
-	* posix/sched.h: Likewise
-	* posix/unistd.h: Likewise
-	* posix/wordexp.h: Likewise
-	* posix/sys/times.h: Likewise
-	* posix/sys/utsname.h: Likewise
-	* posix/sys/wait.h: Likewise
-	* pwd/pwd.h: Likewise
-	* resolv/netdb.h: Likewise
-	* resolv/resolv.h: Likewise
-	* resource/ulimit.h: Likewise
-	* resource/sys/resource.h: Likewise
-	* resource/sys/vlimit.h: Likewise
-	* resource/sys/vtimes.h: Likewise
-	* rt/aio.h: Likewise
-	* setjmp/setjmp.h: Likewise
-	* shadow/shadow.h: Likewise
-	* signal/signal.h: Likewise
-	* socket/socket.h: Likewise
-	* stdio/stdio.h: Likewise
-	* stdio-common/_itoa.h: Likewise
-	* stdio-common/_itowa.h: Likewise
-	* stdio-common/printf.h: Likewise
-	* stdlib/alloca.h: Likewise
-	* stdlib/fmtmsg.h: Likewise
-	* stdlib/monetary.h: Likewise
-	* stdlib/stdlib.h: Likewise
-	* stdlib/ucontext.h: Likewise
-	* streams/stropts.h: Likewise
-	* string/argz.h: Likewise
-	* string/envz.h: Likewise
-	* string/string.h: Likewise
-	* string/strings.h: Likewise
-	* string/bits/string2.h: Likewise
-	* sunrpc/rpc/auth.h: Likewise
-	* sunrpc/rpc/auth_des.h: Likewise
-	* sunrpc/rpc/auth_unix.h: Likewise
-	* sunrpc/rpc/clnt.h: Likewise
-	* sunrpc/rpc/des_crypt.h: Likewise
-	* sunrpc/rpc/netdb.h: Likewise
-	* sunrpc/rpc/pmap_clnt.h: Likewise
-	* sunrpc/rpc/pmap_prot.h: Likewise
-	* sunrpc/rpc/pmap_rmt.h: Likewise
-	* sunrpc/rpc/rpc_msg.h: Likewise
-	* sunrpc/rpc/svc.h: Likewise
-	* sunrpc/rpc/svc_auth.h: Likewise
-	* sunrpc/rpc/xdr.h: Likewise
-	* sysdeps/unix/sysv/linux/bits/sigstack.h: Likewise
-	* sysdeps/unix/sysv/linux/bitssocket.h: Likewise
-	* sysvipc/sys/ipc.h: Likewise
-	* sysvipc/sys/msg.h: Likewise
-	* sysvipc/sys/sem.h: Likewise
-	* sysvipc/sys/shm.h: Likewise
-	* termios/termios.h: Likewise
-	* time/time.h: Likewise
-	* time/sys/time.h: Likewise
-	* time/sys/timeb.h: Likewise
-	* wcsmbs/wchar.h: Likewise
-	* wctype/wctype.h: Likewise
+	* assert/assert.h: Likewise.
+	* catgets/nl_types.h: Likewise.
+	* ctype/ctype.h: Likewise.
+	* db/db.h: Likewise.
+	* db/ndbm.h: Likewise.
+	* db2/db.h: Likewise.
+	* db2/db_185.h: Likewise.
+	* debug/execinfo.h: Likewise.
+	* dirent/dirent.h: Likewise.
+	* dlfcn/dlfcn.h: Likewise.
+	* gmon/sys/gmon.h: Likewise.
+	* grp/grp.h: Likewise.
+	* iconv/gconv.h: Likewise.
+	* iconv/iconv.h: Likewise.
+	* include/execinfo.h: Likewise.
+	* inet/aliases.h: Likewise.
+	* inet/netinet/ether.h: Likewise.
+	* inet/netinet/in.h: Likewise.
+	* intl/libintl.h: Likewise.
+	* io/fcntl.h: Likewise.
+	* io/fts.h: Likewise.
+	* io/ftw.h: Likewise.
+	* io/utime.h: Likewise.
+	* io/sys/poll.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* io/sys/statfs.h: Likewise.
+	* io/sys/statvfs.h: Likewise.
+	* libio/libio.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* linuxthreads/sysdeps/pthread/pthread.h: Likewise.
+	* locale/locale.h: Likewise.
+	* login/pty.h: Likewise.
+	* login/utmp.h: Likewise.
+	* malloc/mcheck.h: Likewise.
+	* math/complex.h: Likewise.
+	* math/math.h: Likewise.
+	* math/math_private.h: Likewise.
+	* misc/err.h: Likewise.
+	* misc/fstab.h: Likewise.
+	* misc/libgen.h: Likewise.
+	* misc/mntent.h: Likewise.
+	* misc/regexp.h: Likewise.
+	* misc/search.h: Likewise.
+	* misc/sgtty.h: Likewise.
+	* misc/ttyent.h: Likewise.
+	* misc/sys/cdefs.h: Likewise.
+	* misc/sys/file.h: Likewise.
+	* misc/sys/ioctl.h: Likewise.
+	* misc/sys/mman.h: Likewise.
+	* misc/sys/select.h: Likewise.
+	* misc/sys/syslog.h: Likewise.
+	* misc/sys/uio.h: Likewise.
+	* misc/sys/ustat.h: Likewise.
+	* nss/nss.h: Likewise.
+	* posix/sched.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* posix/wordexp.h: Likewise.
+	* posix/sys/times.h: Likewise.
+	* posix/sys/utsname.h: Likewise.
+	* posix/sys/wait.h: Likewise.
+	* pwd/pwd.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* resolv/resolv.h: Likewise.
+	* resource/ulimit.h: Likewise.
+	* resource/sys/resource.h: Likewise.
+	* resource/sys/vlimit.h: Likewise.
+	* resource/sys/vtimes.h: Likewise.
+	* rt/aio.h: Likewise.
+	* setjmp/setjmp.h: Likewise.
+	* shadow/shadow.h: Likewise.
+	* signal/signal.h: Likewise.
+	* socket/socket.h: Likewise.
+	* stdio/stdio.h: Likewise.
+	* stdio-common/_itoa.h: Likewise.
+	* stdio-common/_itowa.h: Likewise.
+	* stdio-common/printf.h: Likewise.
+	* stdlib/alloca.h: Likewise.
+	* stdlib/fmtmsg.h: Likewise.
+	* stdlib/monetary.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* stdlib/ucontext.h: Likewise.
+	* streams/stropts.h: Likewise.
+	* string/argz.h: Likewise.
+	* string/envz.h: Likewise.
+	* string/string.h: Likewise.
+	* string/strings.h: Likewise.
+	* string/bits/string2.h: Likewise.
+	* sunrpc/rpc/auth.h: Likewise.
+	* sunrpc/rpc/auth_des.h: Likewise.
+	* sunrpc/rpc/auth_unix.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/des_crypt.h: Likewise.
+	* sunrpc/rpc/netdb.h: Likewise.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/pmap_prot.h: Likewise.
+	* sunrpc/rpc/pmap_rmt.h: Likewise.
+	* sunrpc/rpc/rpc_msg.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/svc_auth.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigstack.h: Likewise.
+	* sysdeps/unix/sysv/linux/bitssocket.h: Likewise.
+	* sysvipc/sys/ipc.h: Likewise.
+	* sysvipc/sys/msg.h: Likewise.
+	* sysvipc/sys/sem.h: Likewise.
+	* sysvipc/sys/shm.h: Likewise.
+	* termios/termios.h: Likewise.
+	* time/time.h: Likewise.
+	* time/sys/time.h: Likewise.
+	* time/sys/timeb.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* wctype/wctype.h: Likewise.
 
 1999-10-05  Roland McGrath  <roland@baalperazim.frob.com>
 
@@ -1012,7 +1012,7 @@
 
 	* conform/data/regex.h-data: Allow *_t types.
 	* conform/data/pwd.h-data: Likewise.
-	* conform/data/sched.h-data: Likewise
+	* conform/data/sched.h-data: Likewise.
 	* conform/data/pthread.h-data: Likewise.
 	* conform/data/search.h-data: Likewise.
 
@@ -2522,7 +2522,7 @@
 
 	* sysdeps/unix/sysv/linux/bits/time.h (timeval): Use __suseconds_t
 	type for tv_usec element.
-	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.
 	* sysdeps/unix/sysv/linux/bits/types.h: Define __suseconds_t.
 	* sysdeps/generic/bits/time.h: Likewise.
 	* sysdeps/mach/hurd/bits/time.h: Likewise.
@@ -4399,7 +4399,7 @@
 1999-06-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* include/features.h: Use __GNUC_PREREQ.
-	* sysdeps/i386/fpu/bits/mathinline.h: Likewise
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
 
 1999-06-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
@@ -5297,7 +5297,7 @@
 	* resolv/herror.c: Likewise.
 	* resolv/inet_addr.c: Likewise.
 	* resolv/mapv4v6addr.h: Likewise.
-	* resolv/mapv4v6hostent.h: Likewise
+	* resolv/mapv4v6hostent.h: Likewise.
 	* resolv/nss_dns/dns-host.c: Likewise.
 	* resolv/nss_dns/dns-network.c: Likewise.
 	* resolv/res_comp.c: Likewise.
@@ -7609,7 +7609,7 @@
 	* sysdeps/m68k/sys/ucontext.h (ucontext): Likewise.
 	* sysdeps/mips/sys/ucontext.h (ucontext): Likewise.
 	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h (ucontext): Likewise.
-	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h (ucontext): Likewise
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h (ucontext): Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h (ucontext): Likewise.
 
 1999-02-25  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
