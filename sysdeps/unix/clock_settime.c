@@ -57,7 +57,7 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
 	TIMESPEC_TO_TIMEVAL (&tv, tp);					      \
 									      \
 	retval = settimeofday (&tv, NULL);				      \
-	while (0)
+      } while (0)
 
 #ifdef SYSDEP_GETTIME
       SYSDEP_GETTIME;
