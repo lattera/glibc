@@ -78,10 +78,10 @@ typedef void (*__sighandler_t) (int);
    the additional function `sysv_signal' when X/Open compatibility is
    requested.  */
 extern __sighandler_t __sysv_signal (int __sig, __sighandler_t __handler)
-     __THROW;
+     __THROW __nonnull ((2));
 #ifdef __USE_GNU
 extern __sighandler_t sysv_signal (int __sig, __sighandler_t __handler)
-     __THROW;
+     __THROW __nonnull ((2));
 #endif
 
 /* Set the handler for the signal SIG to HANDLER, returning the old
@@ -89,13 +89,14 @@ extern __sighandler_t sysv_signal (int __sig, __sighandler_t __handler)
    By default `signal' has the BSD semantic.  */
 __BEGIN_NAMESPACE_STD
 #ifdef __USE_BSD
-extern __sighandler_t signal (int __sig, __sighandler_t __handler) __THROW;
+extern __sighandler_t signal (int __sig, __sighandler_t __handler)
+     __THROW __nonnull ((2));
 #else
 /* Make sure the used `signal' implementation is the SVID version. */
 # ifdef __REDIRECT_NTH
 extern __sighandler_t __REDIRECT_NTH (signal,
 				      (int __sig, __sighandler_t __handler),
-				      __sysv_signal);
+				      __sysv_signal) __nonnull ((2));
 # else
 #  define signal __sysv_signal
 # endif
@@ -105,7 +106,8 @@ __END_NAMESPACE_STD
 #ifdef __USE_XOPEN
 /* The X/Open definition of `signal' conflicts with the BSD version.
    So they defined another function `bsd_signal'.  */
-extern __sighandler_t bsd_signal (int __sig, __sighandler_t __handler) __THROW;
+extern __sighandler_t bsd_signal (int __sig, __sighandler_t __handler)
+     __THROW __nonnull ((2));
 #endif
 
 /* Send signal SIG to process number PID.  If PID is zero,
@@ -129,7 +131,8 @@ __END_NAMESPACE_STD
 
 #ifdef __USE_SVID
 /* SVID names for the same things.  */
-extern __sighandler_t ssignal (int __sig, __sighandler_t __handler) __THROW;
+extern __sighandler_t ssignal (int __sig, __sighandler_t __handler)
+     __THROW __nonnull ((2));
 extern int gsignal (int __sig) __THROW;
 #endif /* Use SVID.  */
 
@@ -210,31 +213,32 @@ typedef __sighandler_t sig_t;
 # endif
 
 /* Clear all signals from SET.  */
-extern int sigemptyset (sigset_t *__set) __THROW;
+extern int sigemptyset (sigset_t *__set) __THROW __nonnull ((1));
 
 /* Set all signals in SET.  */
-extern int sigfillset (sigset_t *__set) __THROW;
+extern int sigfillset (sigset_t *__set) __THROW __nonnull ((1));
 
 /* Add SIGNO to SET.  */
-extern int sigaddset (sigset_t *__set, int __signo) __THROW;
+extern int sigaddset (sigset_t *__set, int __signo) __THROW __nonnull ((1));
 
 /* Remove SIGNO from SET.  */
-extern int sigdelset (sigset_t *__set, int __signo) __THROW;
+extern int sigdelset (sigset_t *__set, int __signo) __THROW __nonnull ((1));
 
 /* Return 1 if SIGNO is in SET, 0 if not.  */
-extern int sigismember (__const sigset_t *__set, int __signo) __THROW;
+extern int sigismember (__const sigset_t *__set, int __signo)
+     __THROW __nonnull ((1));
 
 # ifdef __USE_GNU
 /* Return non-empty value is SET is not empty.  */
-extern int sigisemptyset (__const sigset_t *__set) __THROW;
+extern int sigisemptyset (__const sigset_t *__set) __THROW __nonnull ((1));
 
 /* Build new signal set by combining the two inputs set using logical AND.  */
 extern int sigandset (sigset_t *__set, __const sigset_t *__left,
-		      __const sigset_t *__right) __THROW;
+		      __const sigset_t *__right) __THROW __nonnull ((1, 2, 3));
 
 /* Build new signal set by combining the two inputs set using logical OR.  */
 extern int sigorset (sigset_t *__set, __const sigset_t *__left,
-		     __const sigset_t *__right) __THROW;
+		     __const sigset_t *__right) __THROW __nonnull ((1, 2, 3));
 # endif /* GNU */
 
 /* Get the system-specific definitions of `struct sigaction'
@@ -250,21 +254,22 @@ extern int sigprocmask (int __how, __const sigset_t *__restrict __set,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int sigsuspend (__const sigset_t *__set);
+extern int sigsuspend (__const sigset_t *__set) __nonnull ((1));
 
 /* Get and/or set the action for signal SIG.  */
 extern int sigaction (int __sig, __const struct sigaction *__restrict __act,
 		      struct sigaction *__restrict __oact) __THROW;
 
 /* Put in SET all signals that are blocked and waiting to be delivered.  */
-extern int sigpending (sigset_t *__set) __THROW;
+extern int sigpending (sigset_t *__set) __THROW __nonnull ((1));
 
 
 /* Select any of pending signals from SET or wait for any to arrive.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int sigwait (__const sigset_t *__restrict __set, int *__restrict __sig);
+extern int sigwait (__const sigset_t *__restrict __set, int *__restrict __sig)
+     __nonnull ((1, 2));
 
 # ifdef __USE_POSIX199309
 /* Select any of pending signals from SET and place information in INFO.
@@ -272,7 +277,7 @@ extern int sigwait (__const sigset_t *__restrict __set, int *__restrict __sig);
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int sigwaitinfo (__const sigset_t *__restrict __set,
-			siginfo_t *__restrict __info);
+			siginfo_t *__restrict __info) __nonnull ((1));
 
 /* Select any of pending signals from SET and place information in INFO.
    Wait the time specified by TIMEOUT if no signal is pending.
@@ -281,7 +286,8 @@ extern int sigwaitinfo (__const sigset_t *__restrict __set,
    __THROW.  */
 extern int sigtimedwait (__const sigset_t *__restrict __set,
 			 siginfo_t *__restrict __info,
-			 __const struct timespec *__restrict __timeout);
+			 __const struct timespec *__restrict __timeout)
+     __nonnull ((1));
 
 /* Send signal SIG to the process PID.  Associate data in VAL with the
    signal.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -100,3 +100,5 @@ pthread_cancel (th)
 
   return result;
 }
+
+PTHREAD_STATIC_FN_REQUIRE (pthread_create)

@@ -1,5 +1,7 @@
 2004-11-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* signal/signal.h: Add nonnull attributes.
+
 	* signal/signal.h: Add deprecated attributes to sigstack,
 	sigpause, sigblock, sigsetmask, siggetmask.
 

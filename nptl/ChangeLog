@@ -1,5 +1,8 @@
 2004-11-20  Jakub Jelinek  <jakub@redhat.com>
 
+	* pthread_create.c (pthread_cancel): Add PTHREAD_STATIC_FN_REQUIRE.
+	* pthread_cancel.c (pthread_create): Likewise.
+
 	* Makefile (libpthread-routines): Add vars.
 	* sysdeps/pthread/createthread.c (__pthread_multiple_threads): Remove.
 	* init.c (__default_stacksize, __is_smp): Remove.
