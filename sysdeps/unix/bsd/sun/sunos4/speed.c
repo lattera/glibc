@@ -70,7 +70,7 @@ DEFUN(cfsetospeed, (termios_p, speed),
       return -1;
     }
 
-  for (i = 0; i < sizeof (speeds) / sizeof (speed[0]); ++i)
+  for (i = 0; i < sizeof (speeds) / sizeof (speeds[0]); ++i)
     if (speeds[i] == speed)
       {
 	termios_p->c_cflag &= ~CBAUD;
@@ -95,7 +95,7 @@ DEFUN(cfsetispeed, (termios_p, speed),
       return -1;
     }
 
-  for (i = 0; i < sizeof (speeds) / sizeof (speed[0]); ++i)
+  for (i = 0; i < sizeof (speeds) / sizeof (speeds[0]); ++i)
     if (speeds[i] == speed)
       {
 	termios_p->c_cflag &= ~CIBAUD;
