@@ -139,7 +139,7 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	 * It would be possible to do so by reference counting the open
 	 * pages from the mmap, but it's unclear to me that it's worth it.
 	 */
-	if (dbmfp->addr != NULL && F_ISSET(mfp, MP_CAN_MMAP))
+	if (dbmfp->addr != NULL && F_ISSET(mfp, MP_CAN_MMAP)) {
 		if (*pgnoaddr > mfp->orig_last_pgno) {
 			/*
 			 * !!!
@@ -160,6 +160,7 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 			++mfp->stat.st_map;
 			goto done;
 		}
+	}
 
 	/* Search the hash chain for the page. */
 	for (bhp = SH_TAILQ_FIRST(&dbmp->htab[bucket], __bh);

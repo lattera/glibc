@@ -317,7 +317,7 @@ __ham_item_prev(hashp, cursorp, mode)
 	if (F_ISSET(cursorp, H_ISDUP)) {
 		if (cursorp->dpgno == PGNO_INVALID) {
 			/* Duplicates are on-page. */
-			if (cursorp->dup_off != 0)
+			if (cursorp->dup_off != 0) {
 				if ((ret = __ham_get_cpage(hashp,
 				    cursorp, mode)) != 0)
 					return (ret);
@@ -334,6 +334,7 @@ __ham_item_prev(hashp, cursorp, mode)
 					return (__ham_item(hashp,
 					    cursorp, mode));
 				}
+			}
 		} else if (cursorp->dndx > 0) {	/* Duplicates are off-page. */
 			cursorp->dndx--;
 			return (__ham_item(hashp, cursorp, mode));

@@ -333,12 +333,13 @@ __log_flush(dblp, lsn)
 	 * the record before the one beginning the current buffer is on disk.
 	 */
 	lp->s_lsn = lp->f_lsn;
-	if (!current)
+	if (!current) {
 		if (lp->s_lsn.offset == 0) {
 			--lp->s_lsn.file;
 			lp->s_lsn.offset = lp->persist.lg_max;
 		} else
 			--lp->s_lsn.offset;
+	}
 
 	return (0);
 }

@@ -2,6 +2,20 @@
 
 	* db2/common/db_apprec.c (__db_apprec): Add braces to make gcc
 	quiet.
+	* db2/btree/bt_cursor.c: Likewise.
+	* db2/common/db_region.db_c: Likewise.
+	* db2/common/db_salloc.db_c: Likewise.
+	* db2/db/db.c: Likewise.
+	* db2/db/db_rec.c: Likewise.
+	* db2/hash/hash.c: Likewise.
+	* db2/hash/hash_page.c: Likewise.
+	* db2/hash/hash_rec.c: Likewise.
+	* db2/log/log_findckp.c: Likewise.
+	* db2/log/log_get.c: Likewise.
+	* db2/log/log_put.c: Likewise.
+	* db2/mp/mp_fget.c: Likewise.
+	* db2/mp/mp_fput.c: Likewise.
+	* db2/mp/mp_region.c: Likewise.
 
 1998-09-07 09:58  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -202,12 +202,13 @@ __memp_ropen(dbmp, path, cachesize, mode, is_private, flags)
 	 * Up the user's cachesize by 25% to account for our overhead.
 	 */
 	defcache = 0;
-	if (cachesize < DB_CACHESIZE_MIN)
+	if (cachesize < DB_CACHESIZE_MIN) {
 		if (cachesize == 0) {
 			defcache = 1;
 			cachesize = DB_CACHESIZE_DEF;
 		} else
 			cachesize = DB_CACHESIZE_MIN;
+	}
 	rlen = cachesize + cachesize / 4;
 
 	/*

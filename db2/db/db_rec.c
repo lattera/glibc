@@ -89,11 +89,12 @@ __db_addrem_recover(logp, dbtp, lsnp, redo, info)
 		change = DB_MPOOL_DIRTY;
 	}
 
-	if (change)
+	if (change) {
 		if (redo)
 			LSN(pagep) = *lsnp;
 		else
 			LSN(pagep) = argp->pagelsn;
+	}
 
 	if ((ret = memp_fput(mpf, pagep, change)) == 0)
 		*lsnp = argp->prev_lsn;
@@ -249,7 +250,7 @@ __db_big_recover(logp, dbtp, lsnp, redo, info)
 	/* Now check the previous page. */
 ppage:	if (argp->prev_pgno != PGNO_INVALID) {
 		change = 0;
-		if ((ret = memp_fget(mpf, &argp->prev_pgno, 0, &pagep)) != 0)
+		if ((ret = memp_fget(mpf, &argp->prev_pgno, 0, &pagep)) != 0) {
 			if (!redo) {
 				/*
 				 * We are undoing and the page doesn't exist.
@@ -264,6 +265,7 @@ ppage:	if (argp->prev_pgno != PGNO_INVALID) {
 				if ((ret = memp_fget(mpf, &argp->prev_pgno,
 				    DB_MPOOL_CREATE, &pagep)) != 0)
 					goto out;
+		}
 
 		cmp_n = log_compare(lsnp, &LSN(pagep));
 		cmp_p = log_compare(&LSN(pagep), &argp->prevlsn);
@@ -289,7 +291,7 @@ ppage:	if (argp->prev_pgno != PGNO_INVALID) {
 	/* Now check the next page.  Can only be set on a delete. */
 npage:	if (argp->next_pgno != PGNO_INVALID) {
 		change = 0;
-		if ((ret = memp_fget(mpf, &argp->next_pgno, 0, &pagep)) != 0)
+		if ((ret = memp_fget(mpf, &argp->next_pgno, 0, &pagep)) != 0) {
 			if (!redo) {
 				/*
 				 * We are undoing and the page doesn't exist.
@@ -304,6 +306,7 @@ npage:	if (argp->next_pgno != PGNO_INVALID) {
 				if ((ret = memp_fget(mpf, &argp->next_pgno,
 				    DB_MPOOL_CREATE, &pagep)) != 0)
 					goto out;
+		}
 
 		cmp_n = log_compare(lsnp, &LSN(pagep));
 		cmp_p = log_compare(&LSN(pagep), &argp->nextlsn);
@@ -530,7 +533,7 @@ __db_addpage_recover(logp, dbtp, lsnp, redo, info)
 	if ((ret = memp_fput(mpf, pagep, change)) != 0)
 		goto out;
 
-	if ((ret = memp_fget(mpf, &argp->nextpgno, 0, &pagep)) != 0)
+	if ((ret = memp_fget(mpf, &argp->nextpgno, 0, &pagep)) != 0) {
 		if (!redo) {
 			/*
 			 * We are undoing and the page doesn't exist.  That
@@ -544,6 +547,7 @@ __db_addpage_recover(logp, dbtp, lsnp, redo, info)
 			if ((ret = memp_fget(mpf,
 			    &argp->nextpgno, DB_MPOOL_CREATE, &pagep)) != 0)
 				goto out;
+	}
 
 	change = 0;
 	cmp_n = log_compare(lsnp, &LSN(pagep));

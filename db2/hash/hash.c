@@ -359,11 +359,12 @@ __ham_get(dbp, txn, key, data, flags)
 
 	hashp->hash_accesses++;
 	hcp = (HASH_CURSOR *)TAILQ_FIRST(&ldbp->curs_queue)->internal;
-	if ((ret = __ham_lookup(hashp, hcp, key, 0, DB_LOCK_READ)) == 0)
+	if ((ret = __ham_lookup(hashp, hcp, key, 0, DB_LOCK_READ)) == 0) {
 		if (F_ISSET(hcp, H_OK))
 			ret = __ham_dup_return(hashp, hcp, data, DB_FIRST);
 		else /* Key was not found */
 			ret = DB_NOTFOUND;
+	}
 
 	if ((t_ret = __ham_item_done(hashp, hcp, 0)) != 0 && ret == 0)
 		ret = t_ret;
@@ -546,11 +547,12 @@ __ham_delete(dbp, txn, key, flags)
 	hcp = TAILQ_FIRST(&ldbp->curs_queue)->internal;
 
 	hashp->hash_accesses++;
-	if ((ret = __ham_lookup(hashp, hcp, key, 0, DB_LOCK_WRITE)) == 0)
+	if ((ret = __ham_lookup(hashp, hcp, key, 0, DB_LOCK_WRITE)) == 0) {
 		if (F_ISSET(hcp, H_OK))
 			ret = __ham_del_pair(hashp, hcp, 1);
 		else
 			ret = DB_NOTFOUND;
+	}
 
 	if ((t_ret = __ham_item_done(hashp, hcp, ret == 0)) != 0 && ret == 0)
 		ret = t_ret;
@@ -1109,7 +1111,7 @@ __ham_dup_return(hashp, hcp, val, flags)
 	 * duplicate.  In this case, we do initialization and then
 	 * let the normal duplicate code handle it.
 	 */
-	if (!F_ISSET(hcp, H_ISDUP))
+	if (!F_ISSET(hcp, H_ISDUP)) {
 		if (type == H_DUPLICATE) {
 			F_SET(hcp, H_ISDUP);
 			hcp->dup_tlen = LEN_HDATA(hcp->pagep,
@@ -1148,13 +1150,13 @@ __ham_dup_return(hashp, hcp, val, flags)
 			    hcp, pgno, 0, H_ISDUP)) != 0)
 				return (ret);
 		}
-
+	}
 
 	/*
 	 * Now, everything is initialized, grab a duplicate if
 	 * necessary.
 	 */
-	if (F_ISSET(hcp, H_ISDUP))
+	if (F_ISSET(hcp, H_ISDUP)) {
 		if (hcp->dpgno != PGNO_INVALID) {
 			pp = hcp->dpagep;
 			ndx = hcp->dndx;
@@ -1170,7 +1172,7 @@ __ham_dup_return(hashp, hcp, val, flags)
 			tmp_val.doff = hcp->dup_off + sizeof(db_indx_t);
 			myval = &tmp_val;
 		}
-
+	}
 
 	/*
 	 * Finally, if we had a duplicate, pp, ndx, and myval should be
@@ -1425,7 +1427,7 @@ __ham_c_update(hcp, chg_pgno, len, add, is_dup)
 				F_SET(lcp, H_DELETED);
 
 			/* Now adjust on-page information. */
-			if (lcp->dpgno == PGNO_INVALID)
+			if (lcp->dpgno == PGNO_INVALID) {
 				if (add) {
 					lcp->dup_tlen += len;
 					if (lcp->dndx > hcp->dndx)
@@ -1435,6 +1437,7 @@ __ham_c_update(hcp, chg_pgno, len, add, is_dup)
 					if (lcp->dndx > hcp->dndx)
 						lcp->dup_off -= len;
 				}
+			}
 		}
 	}
 	DB_THREAD_UNLOCK(hp->dbp);

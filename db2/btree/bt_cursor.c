@@ -1070,13 +1070,14 @@ __bam_c_search(dbp, cp, key, flags, isrecno, exactp)
 
 	/* If it's a deleted record, go to the next or previous one. */
 	if (cp->dpgno != PGNO_INVALID &&
-	    B_DISSET(GET_BKEYDATA(cp->page, cp->dindx)->type))
+	    B_DISSET(GET_BKEYDATA(cp->page, cp->dindx)->type)) {
 		if (flags == S_KEYLAST) {
 			if ((ret = __bam_c_prev(dbp, cp)) != 0)
 				return (ret);
 		} else
 			if ((ret = __bam_c_next(dbp, cp, 0)) != 0)
 				return (ret);
+	}
 	/*
 	 * If we don't specify an exact match (the DB_KEYFIRST/DB_KEYLAST or
 	 * DB_SET_RANGE flags were set) __bam_search() may return a deleted
@@ -1467,7 +1468,7 @@ __bam_ca_split(dbp, ppgno, lpgno, rpgno, split_indx, cleft)
 	for (dbc = TAILQ_FIRST(&dbp->curs_queue);
 	    dbc != NULL; dbc = TAILQ_NEXT(dbc, links)) {
 		cp = (CURSOR *)dbc->internal;
-		if (cp->pgno == ppgno)
+		if (cp->pgno == ppgno) {
 			if (cp->indx < split_indx) {
 				if (cleft)
 					cp->pgno = lpgno;
@@ -1475,7 +1476,8 @@ __bam_ca_split(dbp, ppgno, lpgno, rpgno, split_indx, cleft)
 				cp->pgno = rpgno;
 				cp->indx -= split_indx;
 			}
-		if (cp->dpgno == ppgno)
+		}
+		if (cp->dpgno == ppgno) {
 			if (cp->dindx < split_indx) {
 				if (cleft)
 					cp->dpgno = lpgno;
@@ -1483,6 +1485,7 @@ __bam_ca_split(dbp, ppgno, lpgno, rpgno, split_indx, cleft)
 				cp->dpgno = rpgno;
 				cp->dindx -= split_indx;
 			}
+		}
 	}
 	CURSOR_TEARDOWN(dbp);
 }

@@ -272,7 +272,7 @@ loop:	infop->addr = NULL;
 	 * obvious races in doing this, but it should eventually settle down
 	 * to a winner and then things should proceed normally.
 	 */
-	if ((ret = __db_mapregion(infop->name, infop)) != 0)
+	if ((ret = __db_mapregion(infop->name, infop)) != 0) {
 		if (ret == EAGAIN) {
 			/*
 			 * Pretend we created the region even if we didn't so
@@ -283,7 +283,7 @@ loop:	infop->addr = NULL;
 			goto retry;
 		} else
 			goto err;
-
+	}
 region_init:
 	/*
 	 * Initialize the common region information.
@@ -474,7 +474,7 @@ retry:		/* Discard the region. */
 	 * REGION_LASTDETACH flag, so that we do all necessary cleanup when
 	 * the application closes the region.
 	 */
-	if (F_ISSET(infop, REGION_PRIVATE) && !F_ISSET(infop, REGION_MALLOC))
+	if (F_ISSET(infop, REGION_PRIVATE) && !F_ISSET(infop, REGION_MALLOC)) {
 		if (F_ISSET(infop, REGION_HOLDINGSYS))
 			F_SET(infop, REGION_LASTDETACH);
 		else {
@@ -484,7 +484,7 @@ retry:		/* Discard the region. */
 			(void)__db_close(infop->fd);
 			(void)__db_unlink(infop->name);
 		}
-
+	}
 	return (ret);
 }
 
@@ -537,12 +537,13 @@ __db_rdetach(infop)
 	 * what happened.
 	 */
 	detach = 0;
-	if (F_ISSET(infop, REGION_LASTDETACH))
+	if (F_ISSET(infop, REGION_LASTDETACH)) {
 		if (rlp->refcnt == 0) {
 			detach = 1;
 			rlp->valid = 0;
 		} else
 			ret = EBUSY;
+	}
 
 	/* Release the lock. */
 	(void)__db_mutex_unlock(&rlp->lock, infop->fd);

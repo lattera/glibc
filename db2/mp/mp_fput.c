@@ -125,7 +125,7 @@ memp_fput(dbmfp, pgaddr, flags)
 	 * next time the memp_sync function runs we try writing it there, as
 	 * the checkpoint application better be able to write all of the files.
 	 */
-	if (F_ISSET(bhp, BH_WRITE))
+	if (F_ISSET(bhp, BH_WRITE)) {
 		if (F_ISSET(bhp, BH_DIRTY)) {
 			if (__memp_bhwrite(dbmp,
 			    dbmfp->mfp, bhp, NULL, &wrote) != 0 || !wrote)
@@ -136,6 +136,7 @@ memp_fput(dbmfp, pgaddr, flags)
 			--dbmfp->mfp->lsn_cnt;
 			--mp->lsn_cnt;
 		}
+	}
 
 	/* Move the buffer to the head/tail of the LRU chain. */
 	SH_TAILQ_REMOVE(&mp->bhq, bhp, q, __bh);

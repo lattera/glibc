@@ -70,11 +70,12 @@ __log_findckp(lp, lsnp)
 	if (F_ISSET(lp, DB_AM_THREAD))
 		F_SET(&data, DB_DBT_MALLOC);
 	ZERO_LSN(ckp_lsn);
-	if ((ret = log_get(lp, &last_ckp, &data, DB_CHECKPOINT)) != 0)
+	if ((ret = log_get(lp, &last_ckp, &data, DB_CHECKPOINT)) != 0) {
 		if (ret == ENOENT)
 			goto get_first;
 		else
 			return (ret);
+	}
 
 	next_lsn = last_ckp;
 	do {

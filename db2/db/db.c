@@ -265,7 +265,7 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 		retry_cnt = 0;
 open_retry:	if (LF_ISSET(DB_CREATE)) {
 			if ((ret = __db_open(real_name, flags | DB_EXCL,
-			    OKFLAGS | DB_EXCL, mode, &fd)) != 0)
+			    OKFLAGS | DB_EXCL, mode, &fd)) != 0) {
 				if (ret == EEXIST) {
 					LF_CLR(DB_CREATE);
 					goto open_retry;
@@ -274,6 +274,7 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 					    "%s: %s", fname, strerror(ret));
 					goto err;
 				}
+			}
 		} else
 			if ((ret = __db_open(real_name,
 			    flags, OKFLAGS, mode, &fd)) != 0) {
@@ -551,7 +552,7 @@ empty:	/*
 	 * Store the file id in the locker structure -- we can get it from
 	 * there as necessary, and it saves having two copies.
 	 */
-	if (need_fileid)
+	if (need_fileid) {
 		if (fname == NULL) {
 			memset(dbp->lock.fileid, 0, DB_FILE_ID_LEN);
 			if (F_ISSET(dbp, DB_AM_LOCKING) &&
@@ -562,6 +563,7 @@ empty:	/*
 			if ((ret = __db_fileid(dbenv,
 			    real_name, 1, dbp->lock.fileid)) != 0)
 				goto err;
+	}
 
 	/* No further use for the real name. */
 	if (real_name != NULL)

@@ -329,12 +329,13 @@ corrupt:/*
 	ret = EIO;
 	fail = "read";
 
-err1:	if (!silent)
+ err1:	if (!silent) {
 		if (fail == NULL)
 			__db_err(dblp->dbenv, "log_get: %s", strerror(ret));
 		else
 			__db_err(dblp->dbenv,
 			    "log_get: %s: %s", fail, strerror(ret));
+	}
 err2:	if (np != NULL)
 		__db_free(np);
 	if (tbuf != NULL)

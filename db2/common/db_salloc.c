@@ -222,11 +222,12 @@ __db_shalloc_free(regionp, ptr)
 		merged = 1;
 	}
 
-	if (!merged)
+	if (!merged) {
 		if (lastp == NULL)
 			SH_LIST_INSERT_HEAD(hp, newp, links, __data);
 		else
 			SH_LIST_INSERT_AFTER(lastp, newp, links, __data);
+	}
 }
 
 /*
