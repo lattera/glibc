@@ -37,8 +37,6 @@ void pthread_exit(void * retval)
   /* Store return value */
   __pthread_lock(THREAD_GETMEM(self, p_lock), self);
   THREAD_SETMEM(self, p_retval, retval);
-  /* Say that we've terminated */
-  THREAD_SETMEM(self, p_terminated, 1);
   /* See whether we have to signal the death.  */
   if (THREAD_GETMEM(self, p_report_events))
     {
@@ -60,6 +58,8 @@ void pthread_exit(void * retval)
 	  __linuxthreads_death_event();
 	}
     }
+  /* Say that we've terminated */
+  THREAD_SETMEM(self, p_terminated, 1);
   /* See if someone is joining on us */
   joining = THREAD_GETMEM(self, p_joining);
   __pthread_spin_unlock(THREAD_GETMEM(self, p_lock));

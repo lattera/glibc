@@ -1,3 +1,8 @@
+2000-04-24  Mark Kettenis  <kettenis@gnu.org>
+
+	* join.c (pthread_exit): Set p_terminated after reporting the
+	termination event instead of before.
+
 2000-04-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h: Only declare __pthread_rwlock_*
