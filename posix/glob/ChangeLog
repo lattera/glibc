@@ -1,3 +1,10 @@
+Fri Mar  1 10:09:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* posix/glob.c: Use canonical code from autoconf manual for dirent
+ 	include.
+	[_D_NAMLEN]: Redefine NAMLEN using this.
+	(glob_in_dir): Use NAMLEN macro.
+
 Fri Jan 19 13:28:59 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c (glob): Use prototype in getlogin decl.
