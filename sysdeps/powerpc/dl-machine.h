@@ -53,9 +53,9 @@
 #define OPCODE_SLWI(ra,rs,sh) OPCODE_RLWINM(ra,rs,sh,0,31-sh)
 
 #define PPC_DCBST(where) asm __volatile__ ("dcbst 0,%0" : : "r"(where))
-+#define PPC_SYNC asm __volatile__ ("sync")
-+#define PPC_ISYNC asm __volatile__ ("sync; isync")
-+#define PPC_ICBI(where) asm __volatile__ ("icbi 0,%0" : : "r"(where))
+#define PPC_SYNC asm __volatile__ ("sync")
+#define PPC_ISYNC asm __volatile__ ("sync; isync")
+#define PPC_ICBI(where) asm __volatile__ ("icbi 0,%0" : : "r"(where))
 
 /* Use this when you've modified some code, but it won't be in the
    instruction fetch queue (or when it doesn't matter if it is). */

@@ -26,7 +26,7 @@
 
 /* Some SPARC opcodes we need to use for self-modifying code.  */
 #define OPCODE_NOP	0x01000000 /* nop */
-#define OPCODE_CALL	0x04000000 /* call ?; add PC-rel word address */
+#define OPCODE_CALL	0x40000000 /* call ?; add PC-rel word address */
 #define OPCODE_SETHI_G1	0x03000000 /* sethi ?, %g1; add value>>10 */
 #define OPCODE_JMP_G1	0x81c06000 /* jmp %g1+?; add lo 10 bits of value */
 #define OPCODE_SAVE_SP64 0x9de3bfc0 /* save %sp, -64, %sp */
@@ -262,6 +262,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
 _dl_runtime_resolve:
+	t 1
 	#call  %g0
 	# Pass two args to fixup: the PLT address computed from the PC saved
 	# in the PLT's call insn, and the reloc offset passed in %g1.

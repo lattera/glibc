@@ -1,2 +1,5 @@
 __sigtrampoline.S
 clone.S
+start.c
+pipe.S
+fork.S

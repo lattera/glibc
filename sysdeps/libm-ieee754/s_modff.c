@@ -55,7 +55,6 @@ static float one = 1.0;
 		}
 	    }
 	} else {			/* no fraction part */
-	    u_int32_t ix;
 	    *iptr = x*one;
 	    /* We must handle NaNs separately.  */
 	    if (j0 == 0x80 && (i0 & 0x7fffff))

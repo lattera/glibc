@@ -20,11 +20,6 @@
 #ifndef _LINUX_SPARC_SYSDEP_H
 #define _LINUX_SPARC_SYSDEP_H 1
 
-/* Kernel headers use __ASSEMBLY__ */
-#ifdef ASSEMBLER
-#define __ASSEMBLY__
-#endif
-
 #include <sysdeps/unix/sparc/sysdep.h>
 
 #undef SYS_ify
@@ -40,6 +35,13 @@
 
 /* Linux/SPARC uses a different trap number */
 #undef PSEUDO
+#undef ENTRY
+
+#define ENTRY(name) \
+	.global C_SYMBOL_NAME(name); \
+	.align 2;\
+	C_LABEL(name);\
+	.type name,@function;
 
 #ifdef PIC
 #define SYSCALL_ERROR_HANDLER \

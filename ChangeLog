@@ -1,7 +1,47 @@
-1997-03-20 01:49  Ulrich Drepper  <drepper@cygnus.com>
+1997-03-20 06:07  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/libm-ieee754/s_tanhl.c (__tanhl): Correct handling of
-	-inf.
+	* sysdeps/powerpc/dl-machine.h: Fix typo in last change.
+
+	* sysdeps/unix/sparc/sysdep.h: Update copyright.
+
+1997-03-19 15:13  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* linuxthreads/sysdeps/sparc/pt-machine (RELEASE): Fix.
+
+	* stdlib/tst-strtol.c: Save the value of errno, printf may modify
+	it.
+
+	* sysdeps/sparc/DEFS.h [HAVE_ELF]: Use type @function in the FUNC
+	macro on ELF systems.
+
+	* sysdeps/sparc/configure.in: Fix.
+
+	* sysdeps/sparc/dl-machine.h: Fix OPCODE_CALL.
+
+	* sysdeps/sparc/setjmp.S: Fix my bugs.
+
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add start.c, fork.S, and pipe.S.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Define asm-CPPFLAGS and
+	as-FLAGS-.so.
+	* sysdeps/unix/sysv/linux/sparc/syscalls.list: Add fork, pipe, and
+	syscall.
+	* sysdeps/unix/sysv/linux/sparc/fork.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/pipe.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/socket.S: Fix.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h: Fix.
+
+	* elf/dl-lookup.c (do_lookup): Return true if we found a weak
+	symbol.
+	(_dl_lookup_symbol): Test against the symbol being global not
+	against the symbol being not weak (fixes important problem with
+	the SPARC linker)
+
+	* sysdeps/unix/sysv/linux/sparc/brk.c: Fix.
+
+	* sysdeps/unix/sysv/linux/sparc/start.c: Startup code for
+	Linux/SPARC (while I get my asmCPPFLAGS-so variable).
+
+1997-03-20 01:49  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig: (rpath-link): Add math/ directory.
 	(math-objdir): New variable.
@@ -47,6 +87,7 @@
 	* sysdeps/libm-ieee754/s_tanh.c: Handle x == +-0 as a special
 	case since tanh(-0) == -0.
 	* sysdeps/libm-ieee754/s_tanhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_tanhl.c (__tanhl): Correct handling of -inf.
 
 1997-03-19 21:13  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -179,7 +220,7 @@
 
 1997-03-18 05:28  Roland McGrath  <roland@frob.com>
 
-	* elf/dl-reloc.c (RESOLVE): Don't try to resolve ocal symbols.
+	* elf/dl-reloc.c (RESOLVE): Don't try to resolve local symbols.
 
 1997-03-17 21:39  Philip Blundell  <phil@london.uk.eu.org>
 

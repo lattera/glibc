@@ -60,7 +60,6 @@ static double one = 1.0;
 		}
 	    }
 	} else if (j0>51) {		/* no fraction part */
-	    u_int32_t high;
 	    *iptr = x*one;
 	    /* We must handle NaNs separately.  */
 	    if (j0 == 0x400 && ((i0 & 0xfffff) | i1))
@@ -70,10 +69,8 @@ static double one = 1.0;
 	} else {			/* fraction part in low x */
 	    i = ((u_int32_t)(0xffffffff))>>(j0-20);
 	    if((i1&i)==0) { 		/* x is integral */
-	        u_int32_t high;
 		*iptr = x;
-		GET_HIGH_WORD(high,x);
-		INSERT_WORDS(x,high&0x80000000,0);	/* return +-0 */
+		INSERT_WORDS(x,i0&0x80000000,0);	/* return +-0 */
 		return x;
 	    } else {
 	        INSERT_WORDS(*iptr,i0,i1&(~i));
