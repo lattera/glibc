@@ -13,6 +13,17 @@ float: 2
 idouble: 1
 ifloat: 2
 
+# atan2
+Test "atan2 (0.7, -1.0) == 2.530866689200584621918884506789267":
+float: 3
+ifloat: 3
+Test "atan2 (-0.7, -1.0) == -2.530866689200584621918884506789267":
+float: 3
+ifloat: 3
+Test "atan2 (1.4, -0.93) == 2.1571487668237843754887415992772736":
+float: 4
+ifloat: 4
+
 # atanh
 Test "atanh (0.7) == 0.8673005276940531944":
 double: 1
@@ -757,6 +768,10 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+
+Function: "atan2":
+float: 4
+ifloat: 4
 
 Function: "atanh":
 double: 1

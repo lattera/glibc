@@ -1,6 +1,9 @@
 2001-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Add deltas for atan2f.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sh/sh4/fpu/libm-test-ulps: Likewise.
+	* sysdeps/mips/fpu/libm-test-ulps: Likewise.
 
 2001-04-21  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
