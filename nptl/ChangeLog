@@ -1,3 +1,9 @@
+2003-09-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Define
+	_POSIX_THREAD_PRIORITY_SCHEDULING.
+	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Likewise.
+
 2003-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/stdio-lock.h (_IO_acquire_lock): Avoid
