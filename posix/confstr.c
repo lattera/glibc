@@ -57,6 +57,44 @@ confstr (name, buf, len)
       break;
 #endif
 
+    case _CS_V6_WIDTH_RESTRICTED_ENVS:
+      /* We have to return a newline-separated list of named of
+	 programming environements in which the widths of blksize_t,
+	 cc_t, mode_t, nfds_t, pid_t, ptrdiff_t, size_t, speed_t,
+	 ssize_t, suseconds_t, tcflag_t, useconds_t, wchar_t, and
+	 wint_t types are no greater than the width of type long.
+
+	 Currently this means all environment which the system allows.  */
+      {
+	static const char restenvs[] =
+#if _POSIX_V6_ILP32_OFF32 > 0
+	"_POSIX_V6_ILP32_OFF32"
+#endif
+#if _POSIX_V6_ILP32_OFFBIG > 0
+# if _POSIX_V6_ILP32_OFF32 > 0
+	"\n"
+# endif
+	"_POSIX_V6_ILP32_OFFBIG"
+#endif
+#if _POSIX_V6_LP64_OFF64 > 0
+# if _POSIX_V6_ILP32_OFF32 > 0 || _POSIX_V6_ILP32_OFFBIG > 0
+	"\n"
+# endif
+	"_POSIX_V6_LP64_OFF64"
+#endif
+#if _POSIX_V6_LPBIG_OFFBIG > 0
+# if _POSIX_V6_ILP32_OFF32 > 0 || _POSIX_V6_ILP32_OFFBIG > 0 \
+     || _POSIX_V6_LP64_OFF64 > 0
+	"\n"
+# endif
+	"_POSIX_V6_LPBIG_OFFBIG"
+#endif
+	  ;
+	string = restenvs;
+	string_len = sizeof (restenvs);
+      }
+      break;
+
     case _CS_LFS_LINTFLAGS:
     case _CS_LFS_LDFLAGS:
     case _CS_LFS_LIBS:
