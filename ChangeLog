@@ -1,5 +1,15 @@
 2000-10-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Split out ELF file
+	verification in open_verify.
+	(open_verify): New function.  Called instead of open.  Ignores valid
+	files for other architectures.
+	(open_path): Call open_verify instead of open.
+	(_dl_map_object): Likewise.
+	Somewhat based on a patch by Don Dugger <n0ano@valinux.com>.
+
+	* io/pwd.c (main): The output was missing a newline.
+
 	* posix/fnmatch_loop.c: Make FNM_LEADING_DIR behave as GNU tar
 	expects it.  Patch by Colin Watson <riva.ucam.org>.
 	* posix/tst-fnmatch.input: Add test cases for FNM_LEADING_DIR.

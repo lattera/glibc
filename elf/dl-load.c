@@ -92,6 +92,24 @@ ELF_PREFERRED_ADDRESS_DATA;
 # define ELF_FIXED_ADDRESS(loader, mapstart) ((void) 0)
 #endif
 
+/* Type for the buffer we put the ELF header and hopefully the program
+   header.  This buffer does not really have to be too large.  In most
+   cases the program header follows the ELF header directly.  If this
+   is not the case all bets are off and we can make the header arbitrarily
+   large and still won't get it read.  This means the only question is
+   how large are the ELF and program header combined.  The ELF header
+   in 64-bit files is 56 bytes long.  Each program header entry is again
+   56 bytes long.  I.e., even with a file which has 17 program header
+   entries we only have to read 1kB.  And 17 program header entries is
+   plenty, normal files have < 10.  If this heuristic should really fail
+   for some file the code in `_dl_map_object_from_fd' knows how to
+   recover.  */
+struct filebuf
+{
+  ssize_t len;
+  char buf[1024];
+};
+
 size_t _dl_pagesize;
 
 extern const char *_dl_platform;
@@ -724,29 +742,10 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 static
 #endif
 struct link_map *
-_dl_map_object_from_fd (const char *name, int fd, char *realname,
-			struct link_map *loader, int l_type, int mode)
+_dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
+			char *realname, struct link_map *loader, int l_type,
+			int mode)
 {
-  /* This is the expected ELF header.  */
-#define ELF32_CLASS ELFCLASS32
-#define ELF64_CLASS ELFCLASS64
-#ifndef VALID_ELF_HEADER
-# define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0)
-# define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
-# define VALID_ELF_ABIVERSION(ver)	(ver == 0)
-#endif
-  static const unsigned char expected[EI_PAD] =
-  {
-    [EI_MAG0] = ELFMAG0,
-    [EI_MAG1] = ELFMAG1,
-    [EI_MAG2] = ELFMAG2,
-    [EI_MAG3] = ELFMAG3,
-    [EI_CLASS] = ELFW(CLASS),
-    [EI_DATA] = byteorder,
-    [EI_VERSION] = EV_CURRENT,
-    [EI_OSABI] = ELFOSABI_SYSV,
-    [EI_ABIVERSION] = 0
-  };
   struct link_map *l = NULL;
 
   inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
@@ -765,8 +764,6 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   const ElfW(Phdr) *ph;
   size_t maplength;
   int type;
-  char *readbuf;
-  ssize_t readlength;
   struct stat64 st;
 
   /* Get file information.  */
@@ -804,64 +801,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   if (__builtin_expect (_dl_debug_files, 0))
     _dl_debug_message (1, "file=", name, ";  generating link map\n", NULL);
 
-  /* Read the header directly.  */
-  readbuf = alloca (_dl_pagesize);
-  readlength = __libc_read (fd, readbuf, _dl_pagesize);
-  if (readlength < (ssize_t) sizeof (*header))
-    LOSE (errno, N_("cannot read file data"));
-  header = (void *) readbuf;
-
-  /* Check the header for basic validity.  */
-  if (__builtin_expect (!VALID_ELF_HEADER (header->e_ident, expected, EI_PAD),
-			0))
-    {
-      /* Something is wrong.  */
-      if (*(Elf32_Word *) &header->e_ident !=
-#if BYTE_ORDER == LITTLE_ENDIAN
-	  ((ELFMAG0 << (EI_MAG0 * 8)) |
-	   (ELFMAG1 << (EI_MAG1 * 8)) |
-	   (ELFMAG2 << (EI_MAG2 * 8)) |
-	   (ELFMAG3 << (EI_MAG3 * 8)))
-#else
-	  ((ELFMAG0 << (EI_MAG3 * 8)) |
-	   (ELFMAG1 << (EI_MAG2 * 8)) |
-	   (ELFMAG2 << (EI_MAG1 * 8)) |
-	   (ELFMAG3 << (EI_MAG0 * 8)))
-#endif
-	  )
-	LOSE (0, N_("invalid ELF header"));
-      if (header->e_ident[EI_CLASS] != ELFW(CLASS))
-	{
-	  if (__ELF_NATIVE_CLASS == 32)
-	    LOSE (0, N_("ELF file class not 32-bit"));
-	  else
-	    LOSE (0, N_("ELF file class not 64-bit"));
-	}
-      if (header->e_ident[EI_DATA] != byteorder)
-	{
-	  if (BYTE_ORDER == BIG_ENDIAN)
-	    LOSE (0, "ELF file data encoding not big-endian");
-	  else
-	    LOSE (0, "ELF file data encoding not little-endian");
-	}
-      if (header->e_ident[EI_VERSION] != EV_CURRENT)
-	LOSE (0, N_("ELF file version ident does not match current one"));
-      /* XXX We should be able so set system specific versions which are
-	 allowed here.  */
-      if (!VALID_ELF_OSABI (header->e_ident[EI_OSABI]))
-	LOSE (0, N_("ELF file OS ABI invalid."));
-      if (!VALID_ELF_ABIVERSION (header->e_ident[EI_ABIVERSION]))
-	LOSE (0, N_("ELF file ABI version invalid."));
-      LOSE (0, N_("internal error"));
-    }
-
-  if (__builtin_expect (header->e_version, EV_CURRENT) != EV_CURRENT)
-    LOSE (0, N_("ELF file version does not match current one"));
-  if (! __builtin_expect (elf_machine_matches_host (header), 1))
-    LOSE (0, N_("ELF file machine architecture does not match"));
-  if (__builtin_expect (header->e_phentsize, sizeof (ElfW(Phdr)))
-      != sizeof (ElfW(Phdr)))
-    LOSE (0, N_("ELF file's phentsize not the expected size"));
+  /* This is the ELF header.  We read it in `open_verify'.  */
+  header = (void *) fbp->buf;
 
 #ifndef MAP_ANON
 # define MAP_ANON 0
@@ -889,8 +830,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   l->l_phnum = header->e_phnum;
 
   maplength = header->e_phnum * sizeof (ElfW(Phdr));
-  if (header->e_phoff + maplength <= readlength)
-    phdr = (void *) (readbuf + header->e_phoff);
+  if (header->e_phoff + maplength <= fbp->len)
+    phdr = (void *) (fbp->buf + header->e_phoff);
   else
     {
       phdr = alloca (maplength);
@@ -1254,6 +1195,123 @@ print_search_path (struct r_search_path_elem **list,
     _dl_debug_message (0, "\t\t(", what, ")\n", NULL);
 }
 
+/* Open a file and verify it is an ELF file for this architecture.  We
+   ignore only ELF files for other architectures.  Non-ELF files and
+   ELF files with different header information cause fatal errors since
+   this could mean there is something wrong in the installation and the
+   user might want to know about this.  */
+static int
+open_verify (const char *name, struct filebuf *fbp)
+{
+  /* This is the expected ELF header.  */
+#define ELF32_CLASS ELFCLASS32
+#define ELF64_CLASS ELFCLASS64
+#ifndef VALID_ELF_HEADER
+# define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0)
+# define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
+# define VALID_ELF_ABIVERSION(ver)	(ver == 0)
+#endif
+  static const unsigned char expected[EI_PAD] =
+  {
+    [EI_MAG0] = ELFMAG0,
+    [EI_MAG1] = ELFMAG1,
+    [EI_MAG2] = ELFMAG2,
+    [EI_MAG3] = ELFMAG3,
+    [EI_CLASS] = ELFW(CLASS),
+    [EI_DATA] = byteorder,
+    [EI_VERSION] = EV_CURRENT,
+    [EI_OSABI] = ELFOSABI_SYSV,
+    [EI_ABIVERSION] = 0
+  };
+  int fd;
+
+  /* Open the file.  We always open files read-only.  */
+  fd = __open (name, O_RDONLY);
+  if (fd != -1)
+    {
+      ElfW(Ehdr) *ehdr;
+
+      /* We successfully openened the file.  Now verify it is a file
+	 we can use.  */
+      __set_errno (0);
+      fbp->len = __libc_read (fd, fbp->buf, sizeof (fbp->buf));
+
+      /* This is where the ELF header is loaded.  */
+      assert (sizeof (fbp->buf) > sizeof (ElfW(Ehdr)));
+      ehdr = (ElfW(Ehdr) *) fbp->buf;
+
+      /* Now run the tests.  */
+      if (__builtin_expect (fbp->len < (ssize_t) sizeof (ElfW(Ehdr)), 0))
+	lose (errno, fd, name, NULL, NULL,
+	      errno == 0 ? N_("file too short") : N_("cannot read file data"));
+
+      /* See whether the ELF header is what we expect.  */
+      if (__builtin_expect (! VALID_ELF_HEADER (ehdr->e_ident, expected,
+						EI_PAD), 0))
+	{
+	  /* Something is wrong.  */
+	  if (*(Elf32_Word *) &ehdr->e_ident !=
+#if BYTE_ORDER == LITTLE_ENDIAN
+	      ((ELFMAG0 << (EI_MAG0 * 8)) |
+	       (ELFMAG1 << (EI_MAG1 * 8)) |
+	       (ELFMAG2 << (EI_MAG2 * 8)) |
+	       (ELFMAG3 << (EI_MAG3 * 8)))
+#else
+	      ((ELFMAG0 << (EI_MAG3 * 8)) |
+	       (ELFMAG1 << (EI_MAG2 * 8)) |
+	       (ELFMAG2 << (EI_MAG1 * 8)) |
+	       (ELFMAG3 << (EI_MAG0 * 8)))
+#endif
+	      )
+	    lose (0, fd, name, NULL, NULL, N_("invalid ELF header"));
+
+	  if (ehdr->e_ident[EI_CLASS] != ELFW(CLASS))
+	    /* This is not a fatal error.  On architectures where
+	       32-bit and 64-bit binaries can be run this might
+	       happen.  */
+	    goto close_and_out;
+
+	  if (ehdr->e_ident[EI_DATA] != byteorder)
+	    {
+	      if (BYTE_ORDER == BIG_ENDIAN)
+		lose (0, fd, name, NULL, NULL,
+		      "ELF file data encoding not big-endian");
+	      else
+		lose (0, fd, name, NULL, NULL,
+		      "ELF file data encoding not little-endian");
+	    }
+	  if (ehdr->e_ident[EI_VERSION] != EV_CURRENT)
+	    lose (0, fd, name, NULL, NULL,
+		  N_("ELF file version ident does not match current one"));
+	  /* XXX We should be able so set system specific versions which are
+	     allowed here.  */
+	  if (!VALID_ELF_OSABI (ehdr->e_ident[EI_OSABI]))
+	    lose (0, fd, name, NULL, NULL, N_("ELF file OS ABI invalid."));
+	  if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_ABIVERSION]))
+	    lose (0, fd, name, NULL, NULL,
+		  N_("ELF file ABI version invalid."));
+	  lose (0, fd, name, NULL, NULL, N_("internal error"));
+	}
+
+      if (__builtin_expect (ehdr->e_version, EV_CURRENT) != EV_CURRENT)
+	lose (0, fd, name, NULL, NULL,
+	      N_("ELF file version does not match current one"));
+      if (! __builtin_expect (elf_machine_matches_host (ehdr), 1))
+	{
+	close_and_out:
+	  __close (fd);
+	  __set_errno (ENOENT);
+	  fd = -1;
+	}
+      else if (__builtin_expect (ehdr->e_phentsize, sizeof (ElfW(Phdr)))
+	       != sizeof (ElfW(Phdr)))
+	lose (0, fd, name, NULL, NULL,
+	      N_("ELF file's phentsize not the expected size"));
+    }
+
+  return fd;
+}
+
 /* Try to open NAME in one of the directories in *DIRSP.
    Return the fd, or -1.  If successful, fill in *REALNAME
    with the malloc'd full directory name.  If it turns out
@@ -1263,7 +1321,8 @@ print_search_path (struct r_search_path_elem **list,
 
 static int
 open_path (const char *name, size_t namelen, int preloaded,
-	   struct r_search_path_struct *sps, char **realname)
+	   struct r_search_path_struct *sps, char **realname,
+	   struct filebuf *fbp)
 {
   struct r_search_path_elem **dirs = sps->dirs;
   char *buf;
@@ -1305,7 +1364,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	  if (__builtin_expect (_dl_debug_libs, 0))
 	    _dl_debug_message (1, "  trying file=", buf, "\n", NULL);
 
-	  fd = __open (buf, O_RDONLY);
+	  fd = open_verify (buf, fbp);
 	  if (this_dir->status[cnt] == unknown)
 	    {
 	      if (fd != -1)
@@ -1398,6 +1457,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   char *realname;
   char *name_copy;
   struct link_map *l;
+  struct filebuf fb;
 
   /* Look for this name among those already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -1475,12 +1535,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 		      if (l->l_rpath_dirs.dirs != (void *) -1)
 			fd = open_path (name, namelen, preloaded,
-					&l->l_rpath_dirs, &realname);
+					&l->l_rpath_dirs, &realname, &fb);
 		    }
 		}
 	      else if (l->l_rpath_dirs.dirs != (void *) -1)
 		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-				&realname);
+				&realname, &fb);
 	    }
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
@@ -1489,13 +1549,13 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if (fd == -1 && l && l->l_type != lt_loaded && l != loader
 	      && l->l_rpath_dirs.dirs != (void *) -1)
 	    fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-			    &realname);
+			    &realname, &fb);
 	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
       if (fd == -1 && env_path_list.dirs != (void *) -1)
 	fd = open_path (name, namelen, preloaded, &env_path_list,
-			&realname);
+			&realname, &fb);
 
       /* Look at the RUNPATH informaiton for this binary.  */
       if (loader != NULL && loader->l_runpath_dirs.dirs != (void *) -1)
@@ -1515,12 +1575,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 		  if (loader->l_runpath_dirs.dirs != (void *) -1)
 		    fd = open_path (name, namelen, preloaded,
-				    &loader->l_runpath_dirs, &realname);
+				    &loader->l_runpath_dirs, &realname, &fb);
 		}
 	    }
 	  else if (loader->l_runpath_dirs.dirs != (void *) -1)
 	    fd = open_path (name, namelen, preloaded,
-			    &loader->l_runpath_dirs, &realname);
+			    &loader->l_runpath_dirs, &realname, &fb);
 	}
 
       if (fd == -1)
@@ -1562,7 +1622,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 	      if (cached)
 		{
-		  fd = __open (cached, O_RDONLY);
+		  fd = open_verify (cached, &fb);
 		  if (fd != -1)
 		    {
 		      realname = local_strdup (cached);
@@ -1582,7 +1642,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	      __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
 	  && rtld_search_dirs.dirs != (void *) -1)
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
-			&realname);
+			&realname, &fb);
 
       /* Add another newline when we a tracing the library loading.  */
       if (__builtin_expect (_dl_debug_libs, 0))
@@ -1598,7 +1658,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	fd = -1;
       else
 	{
-	  fd = __open (realname, O_RDONLY);
+	  fd = open_verify (realname, &fb);
 	  if (fd == -1)
 	    free (realname);
 	}
@@ -1634,5 +1694,5 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	_dl_signal_error (errno, name, N_("cannot open shared object file"));
     }
 
-  return _dl_map_object_from_fd (name, fd, realname, loader, type, mode);
+  return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode);
 }
