@@ -1,5 +1,8 @@
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regexec.c (transit_state): Fix typo in commented-out code
+	[BZ #6].
+
 	* sysdeps/posix/getaddrinfo.c (match_prefix): Correctly match
 	partial bytes [BZ #24].
 	* posix/Makefile (tests): Add bug-ga1.

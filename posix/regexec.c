@@ -2198,7 +2198,7 @@ transit_state (err, mctx, state)
 	{
 	  /* don't use transition table  */
 	  next_state = transit_state_sb (err, mctx, state);
-	  if (BE (next_state == NULL && err != REG_NOERROR, 0))
+	  if (BE (next_state == NULL && *err != REG_NOERROR, 0))
 	    return NULL;
 	}
 #endif
