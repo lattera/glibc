@@ -110,7 +110,7 @@ ELF_PREFERRED_ADDRESS_DATA;
 struct filebuf
 {
   ssize_t len;
-#ifdef __WORDSIZE == 32
+#if __WORDSIZE == 32
 # define FILEBUF_SIZE 512
 #else
 # define FILEBUF_SIZE 640

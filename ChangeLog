@@ -1,5 +1,7 @@
 2003-03-03  Roland McGrath  <roland@redhat.com>
 
+	* elf/dl-load.c (struct filebuf): Fix typo in last change.
+
 	* sysdeps/powerpc/powerpc32/elf/configure.in: Don't define
 	PI_STATIC_AND_HIDDEN.
 	* sysdeps/powerpc/powerpc32/elf/configure: Regenerated.
