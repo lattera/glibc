@@ -1,6 +1,6 @@
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
-	* internals.h (strict __pthread_descr_struct): Add p_sem_avail.
+	* internals.h (struct __pthread_descr_struct): Add p_sem_avail.
 	* semaphore.c: Handle spurious wakeups.
 
 	* sysdeps/pthread/pthread.h: Add back PTHREAD_MUTX_FAST_NP as an alias
