@@ -1,3 +1,8 @@
+2001-06-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/dl-machine.c (__elf_preferred_address): Prefer
+	gaps below main executable.
+
 2001-07-22  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/libintl.h (ngettext, dngettext, dcngettext): Use both msgid1
