@@ -1,5 +1,5 @@
 /* Convert between the kernel's `struct stat' format, and libc's.
-   Copyright (C) 1997, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,15 +24,14 @@
 #include <xstatconv.h>
 
 
+int __libc_missing_axp_stat64;
+
 int
 __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 {
   switch (vers)
     {
     case _STAT_VER_KERNEL:
-      /* Nothing to do.  The struct is in the form the kernel expects.
-	 We should have short-circuted before we got here, but for
-	 completeness... */
       *(struct kernel_stat *) ubuf = *kbuf;
       break;
 
@@ -60,7 +59,7 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 
     case _STAT_VER_GLIBC2_1:
       {
-	struct stat64 *buf = ubuf;
+	struct glibc21_stat *buf = ubuf;
 
 	buf->st_dev = kbuf->st_dev;
 	buf->st_ino = kbuf->st_ino;
@@ -82,6 +81,36 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->__unused[1] = 0;
 	buf->__unused[2] = 0;
 	buf->__unused[3] = 0;
+      }
+      break;
+
+    case _STAT_VER_GLIBC2_3_4:
+      {
+	struct stat64 *buf = ubuf;
+
+	buf->st_dev = kbuf->st_dev;
+	buf->st_ino = kbuf->st_ino;
+	buf->st_rdev = kbuf->st_rdev;
+	buf->st_size = kbuf->st_size;
+	buf->st_blocks = kbuf->st_blocks;
+
+	buf->st_mode = kbuf->st_mode;
+	buf->st_uid = kbuf->st_uid;
+	buf->st_gid = kbuf->st_gid;
+	buf->st_blksize = kbuf->st_blksize;
+	buf->st_nlink = kbuf->st_nlink;
+	buf->__pad0 = 0;
+
+	buf->st_atime = kbuf->st_atime;
+	buf->st_atimensec = 0;
+	buf->st_mtime = kbuf->st_mtime;
+	buf->st_mtimensec = 0;
+	buf->st_ctime = kbuf->st_ctime;
+	buf->st_ctimensec = 0;
+
+	buf->__unused[0] = 0;
+	buf->__unused[1] = 0;
+	buf->__unused[2] = 0;
       }
       break;
 
