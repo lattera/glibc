@@ -31,7 +31,9 @@
 #define IPC_RMID	0		/* Remove identifier.  */
 #define IPC_SET		1		/* Set `ipc_perm' options.  */
 #define IPC_STAT	2		/* Get `ipc_perm' options.  */
-#define IPC_INFO	3		/* See ipcs.  */
+#ifdef __USE_GNU
+# define IPC_INFO	3		/* See ipcs.  */
+#endif
 
 /* Special key values.  */
 #define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
@@ -58,15 +60,17 @@ extern int __ipc (int __call, int __first, int __second, int __third,
 
 __END_DECLS
 
+#ifdef __USE_GNU
 /* The codes for the functions to use the multiplexer `__ipc'.  */
-#define IPCOP_semop	 1
-#define IPCOP_semget	 2
-#define IPCOP_semctl	 3
-#define IPCOP_msgsnd	11
-#define IPCOP_msgrcv	12
-#define IPCOP_msgget	13
-#define IPCOP_msgctl	14
-#define IPCOP_shmat	21
-#define IPCOP_shmdt	22
-#define IPCOP_shmget	23
-#define IPCOP_shmctl	24
+# define IPCOP_semop	 1
+# define IPCOP_semget	 2
+# define IPCOP_semctl	 3
+# define IPCOP_msgsnd	11
+# define IPCOP_msgrcv	12
+# define IPCOP_msgget	13
+# define IPCOP_msgctl	14
+# define IPCOP_shmat	21
+# define IPCOP_shmdt	22
+# define IPCOP_shmget	23
+# define IPCOP_shmctl	24
+#endif
