@@ -128,4 +128,22 @@
 	__o0;								\
 })
 
+#define INLINE_CLONE_SYSCALL(arg1,arg2,arg3,arg4,arg5)			\
+({									\
+	register long __o0 __asm__ ("o0") = (long)(arg1);		\
+	register long __o1 __asm__ ("o1") = (long)(arg2);		\
+	register long __o2 __asm__ ("o2") = (long)(arg3);		\
+	register long __o3 __asm__ ("o3") = (long)(arg4);		\
+	register long __o4 __asm__ ("o4") = (long)(arg5);		\
+	register long __g1 __asm__ ("g1") = __NR_clone;			\
+	__asm __volatile (__CLONE_SYSCALL_STRING :			\
+			  "=r" (__g1), "=r" (__o0), "=r" (__o1)	:	\
+			  "0" (__g1), "1" (__o0), "2" (__o1),		\
+			  "r" (__o2), "r" (__o3), "r" (__o4) :		\
+			  __SYSCALL_CLOBBERS);				\
+	__o0;								\
+})
+
+
+
 #endif /* _LINUX_SPARC_SYSDEP_H */

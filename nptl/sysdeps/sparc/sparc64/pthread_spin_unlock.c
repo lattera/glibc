@@ -1,6 +1,7 @@
-/* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  x86-64 version.
-   Copyright (C) 1994-1997,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* pthread_spin_unlock -- unlock a spin lock.  Generic version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,24 +18,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* This just does a tail-call to `__sigsetjmp (ARG, 0)'.
-   We cannot do it in C because it must be a tail-call, so frame-unwinding
-   in setjmp doesn't clobber the state restored by longjmp.  */
+#include "pthreadP.h"
+#include <atomic.h>
 
-#include <sysdep.h>
-#define _ASM
-#define _SETJMP_H
-#include <bits/setjmp.h>
-#include "bp-sym.h"
-#include "bp-asm.h"
-
-ENTRY (BP_SYM (_setjmp))
-	/* Set up arguments, we only need to set the second arg.  */
-	xorq %rsi, %rsi
-#ifdef PIC
-	jmp HIDDEN_JUMPTARGET (__sigsetjmp)
-#else
-	jmp BP_SYM (__sigsetjmp)
-#endif
-END (BP_SYM (_setjmp))
-libc_hidden_def (_setjmp)
+int
+pthread_spin_unlock (pthread_spinlock_t *lock)
+{
+  __asm __volatile ("membar #StoreStore | #LoadStore");
+  *lock = 0;
+  return 0;
+}

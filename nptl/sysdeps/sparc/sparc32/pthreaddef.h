@@ -1,5 +1,4 @@
-/* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  x86-64 version.
-   Copyright (C) 1994-1997,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,24 +16,25 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* This just does a tail-call to `__sigsetjmp (ARG, 0)'.
-   We cannot do it in C because it must be a tail-call, so frame-unwinding
-   in setjmp doesn't clobber the state restored by longjmp.  */
+/* Default stack size.  */
+#define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)
 
-#include <sysdep.h>
-#define _ASM
-#define _SETJMP_H
-#include <bits/setjmp.h>
-#include "bp-sym.h"
-#include "bp-asm.h"
+/* Required stack pointer alignment at beginning.  */
+#define STACK_ALIGN		16
 
-ENTRY (BP_SYM (_setjmp))
-	/* Set up arguments, we only need to set the second arg.  */
-	xorq %rsi, %rsi
-#ifdef PIC
-	jmp HIDDEN_JUMPTARGET (__sigsetjmp)
-#else
-	jmp BP_SYM (__sigsetjmp)
-#endif
-END (BP_SYM (_setjmp))
-libc_hidden_def (_setjmp)
+/* Minimal stack size after allocating thread descriptor and guard size.  */
+#define MINIMAL_REST_STACK	2048
+
+/* Alignment requirement for TCB.  */
+#define TCB_ALIGNMENT		16
+
+
+/* Location of current stack frame.  */
+#define CURRENT_STACK_FRAME  (stack_pointer + (2 * 64))
+register char *stack_pointer __asm__("%sp");
+
+/* XXX Until we have a better place keep the definitions here.  */
+
+/* While there is no such syscall.  */
+#define __exit_thread_inline(val) \
+  INLINE_SYSCALL (exit, 1, (val))

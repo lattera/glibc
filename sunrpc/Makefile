@@ -121,6 +121,7 @@ CFLAGS-xkey_prot.c = -Wno-unused
 CFLAGS-auth_unix.c = -fexceptions
 CFLAGS-key_call.c = -fexceptions
 CFLAGS-pmap_rmt.c = -fexceptions
+CFLAGS-clnt_perr.c = -fexceptions
 
 ifeq (yes,$(have_doors))
 CPPFLAGS-key_call.c += -DHAVE_DOORS=1

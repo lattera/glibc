@@ -1,5 +1,5 @@
-/* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  x86-64 version.
-   Copyright (C) 1994-1997,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Which thread is running on an LWP?  SPARC version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,24 +17,28 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* This just does a tail-call to `__sigsetjmp (ARG, 0)'.
-   We cannot do it in C because it must be a tail-call, so frame-unwinding
-   in setjmp doesn't clobber the state restored by longjmp.  */
+#include "thread_dbP.h"
+#include <tls.h>
 
-#include <sysdep.h>
-#define _ASM
-#define _SETJMP_H
-#include <bits/setjmp.h>
-#include "bp-sym.h"
-#include "bp-asm.h"
 
-ENTRY (BP_SYM (_setjmp))
-	/* Set up arguments, we only need to set the second arg.  */
-	xorq %rsi, %rsi
-#ifdef PIC
-	jmp HIDDEN_JUMPTARGET (__sigsetjmp)
-#else
-	jmp BP_SYM (__sigsetjmp)
-#endif
-END (BP_SYM (_setjmp))
-libc_hidden_def (_setjmp)
+td_err_e
+td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
+{
+  LOG ("td_ta_map_lwp2thr");
+
+  /* Test whether the TA parameter is ok.  */
+  if (! ta_ok (ta))
+    return TD_BADTA;
+
+  prgregset_t regs;
+  if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
+    return TD_ERR;
+
+  /* SPARC thread register is %g7.  */
+  th->th_unique = (void *) regs[7];
+
+  /* Found it.  Now complete the `td_thrhandle_t' object.  */
+  th->th_ta_p = (td_thragent_t *) ta;
+
+  return TD_OK;
+}

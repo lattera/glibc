@@ -46,6 +46,8 @@
 # define __NR_set_tid_address	218
 #elif defined __powerpc__
 # define __NR_set_tid_address	232
+#elif defined __sparc__
+# define __NR_set_tid_address	166
 #else
 # error "define __NR_set_tid_address"
 #endif
