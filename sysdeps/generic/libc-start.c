@@ -28,6 +28,11 @@ extern void __libc_init_first (int argc, char **argv, char **envp);
 extern int __libc_multiple_libcs;
 extern void *__libc_stack_end;
 
+#ifdef NEED_DL_SYSINFO
+# include "unwind-dw2-fde.h"
+static struct object eh_obj;
+#endif
+
 #include <tls.h>
 #ifndef SHARED
 # include <dl-osinfo.h>
@@ -148,6 +153,13 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
      loader did the work already.  */
   if (__builtin_expect (__libc_enable_secure, 0))
     __libc_check_standard_fds ();
+#endif
+
+#ifdef NEED_DL_SYSINFO
+  /* Register the kernel's unwind table.  */
+  if (GL(dl_sysinfo_eh_frame) != 0)
+    INTUSE(__register_frame_info_bases) ((void *) GL(dl_sysinfo_eh_frame),
+					 &eh_obj, 0, 0);
 #endif
 
   /* Register the destructor of the dynamic linker if there is any.  */

@@ -949,6 +949,7 @@ typedef struct
 /* Pointer to the global system page used for system calls and other
    nice things.  */
 #define AT_SYSINFO	32
+#define AT_SYSINFO_EH_FRAME	33
 
 
 /* Note section contents.  Each entry in the note section begins with

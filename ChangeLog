@@ -1,3 +1,21 @@
+2003-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Define AT_SYSINFO_EH_FRAME.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Handle
+	AT_SYSINFO_EH_FRAME.
+	(_dl_show_auxv):Display AT_SYSINFO_EH_FRAME value.
+	* sysdeps/generic/ldsodefs.h [NEED_DL_SYSINFO] (struct rtld_global):
+	Add _dl_sysinfo_eh_frame field.
+	* elf/dl-support.c [NEED_DL_SYSINFO]: Define _dl_sysinfo_eh_frame.
+	* sysdeps/generic/libc-start.c [NEED_DL_SYSINFO] Define eh_obj
+	variable.
+	[NEED_DL_SYSINFO] (LIBC_START_MAIN): Call __register_frame_info_bases
+	if _dl_sysinfo_eh_frame is non-NULL.
+
+	* Makeconfig (gnulib): Add -lgcc_eh.
+
+	* config.h.in: Define HAVE_FORCED_UNWIND.
+
 2003-04-15  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/strcmp.S: Convert to full 64-bit.

@@ -394,6 +394,9 @@ struct rtld_global
 #ifdef NEED_DL_SYSINFO
   /* Syscall handling improvements.  This is very specific to x86.  */
   EXTERN uintptr_t _dl_sysinfo;
+
+  /* Address of the unwind info for the vsyscall page.  */
+  EXTERN uintptr_t _dl_sysinfo_eh_frame;
 #endif
 
 #ifdef SHARED

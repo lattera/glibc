@@ -1,3 +1,7 @@
+2003-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h: Move THREAD_ATOMIC_* replacements to the top.
+
 2003-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Don't

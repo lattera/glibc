@@ -139,6 +139,9 @@ _dl_sysdep_start (void **start_argptr,
       case AT_SYSINFO:
 	GL(dl_sysinfo) = av->a_un.a_val;
 	break;
+      case AT_SYSINFO_EH_FRAME:
+	GL(dl_sysinfo_eh_frame) = av->a_un.a_val;
+	break;
 #endif
 #ifdef DL_PLATFORM_AUXV
       DL_PLATFORM_AUXV
@@ -160,7 +163,7 @@ _dl_sysdep_start (void **start_argptr,
   SEE (EGID, gid, egid);
 #endif
 
-  /* If one of the two pairs of IDs does not mattch this is a setuid
+  /* If one of the two pairs of IDs does not match this is a setuid
      or setgid run.  */
   INTUSE(__libc_enable_secure) = uid | gid;
 
@@ -228,27 +231,28 @@ _dl_show_auxv (void)
 	enum { dec, hex, str } form;
       } auxvars[] =
 	{
-	  [AT_EXECFD - 2] =		{ "AT_EXECFD:      ", dec },
-	  [AT_PHDR - 2] =		{ "AT_PHDR:        0x", hex },
-	  [AT_PHENT - 2] =		{ "AT_PHENT:       ", dec },
-	  [AT_PHNUM - 2] =		{ "AT_PHNUM:       ", dec },
-	  [AT_PAGESZ - 2] =		{ "AT_PAGESZ:      ", dec },
-	  [AT_BASE - 2] =		{ "AT_BASE:        0x", hex },
-	  [AT_FLAGS - 2] =		{ "AT_FLAGS:       0x", hex },
-	  [AT_ENTRY - 2] =		{ "AT_ENTRY:       0x", hex },
-	  [AT_NOTELF - 2] =		{ "AT_NOTELF:      ", hex },
-	  [AT_UID - 2] =		{ "AT_UID:         ", dec },
-	  [AT_EUID - 2] =		{ "AT_EUID:        ", dec },
-	  [AT_GID - 2] =		{ "AT_GID:         ", dec },
-	  [AT_EGID - 2] =		{ "AT_EGID:        ", dec },
-	  [AT_PLATFORM - 2] =		{ "AT_PLATFORM:    ", str },
-	  [AT_HWCAP - 2] =		{ "AT_HWCAP:       ", hex },
-	  [AT_CLKTCK - 2] =		{ "AT_CLKTCK:      ", dec },
-	  [AT_FPUCW - 2] =		{ "AT_FPUCW:       ", hex },
-	  [AT_DCACHEBSIZE - 2] =	{ "AT_DCACHEBSIZE: 0x", hex },
-	  [AT_ICACHEBSIZE - 2] =	{ "AT_ICACHEBSIZE: 0x", hex },
-	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE: 0x", hex },
-	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:     0x", hex }
+	  [AT_EXECFD - 2] =		{ "AT_EXECFD:           ", dec },
+	  [AT_PHDR - 2] =		{ "AT_PHDR:             0x", hex },
+	  [AT_PHENT - 2] =		{ "AT_PHENT:            ", dec },
+	  [AT_PHNUM - 2] =		{ "AT_PHNUM:            ", dec },
+	  [AT_PAGESZ - 2] =		{ "AT_PAGESZ:           ", dec },
+	  [AT_BASE - 2] =		{ "AT_BASE:             0x", hex },
+	  [AT_FLAGS - 2] =		{ "AT_FLAGS:            0x", hex },
+	  [AT_ENTRY - 2] =		{ "AT_ENTRY:            0x", hex },
+	  [AT_NOTELF - 2] =		{ "AT_NOTELF:           ", hex },
+	  [AT_UID - 2] =		{ "AT_UID:              ", dec },
+	  [AT_EUID - 2] =		{ "AT_EUID:             ", dec },
+	  [AT_GID - 2] =		{ "AT_GID:              ", dec },
+	  [AT_EGID - 2] =		{ "AT_EGID:             ", dec },
+	  [AT_PLATFORM - 2] =		{ "AT_PLATFORM:         ", str },
+	  [AT_HWCAP - 2] =		{ "AT_HWCAP:            ", hex },
+	  [AT_CLKTCK - 2] =		{ "AT_CLKTCK:           ", dec },
+	  [AT_FPUCW - 2] =		{ "AT_FPUCW:            ", hex },
+	  [AT_DCACHEBSIZE - 2] =	{ "AT_DCACHEBSIZE:      0x", hex },
+	  [AT_ICACHEBSIZE - 2] =	{ "AT_ICACHEBSIZE:      0x", hex },
+	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE:      0x", hex },
+	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:          0x", hex },
+	  [AT_SYSINFO_EH_FRAME - 2] =	{ "AT_SYSINFO_EH_FRAME: 0x", hex }
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 
