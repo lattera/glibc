@@ -1,3 +1,7 @@
+1999-07-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/arm/Versions: Undo last change.
+
 1999-07-17  Zack Weinberg  <zack@rabi.columbia.edu>
 
 	* include/libc-symbol.h: Clean up definitions of weak_alias,
