@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -272,7 +272,7 @@ ENTRY(__ieee754_powf)
 	ret
 
 25:	fstp	%st(0)
-26:	popl	%eax
+26:	addl	$4, %esp
 27:	// Raise divide-by-zero exception and get infinity value.
 	fldl	MO(one)
 	fdivl	MO(zero)

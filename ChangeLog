@@ -1,3 +1,10 @@
+1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/e_pow.S: Use addl instead of pop/pop to keep
+	program deterministic.
+	* sysdeps/i386/fpu/e_powf.S: Likewise.
+	* sysdeps/i386/fpu/e_powl.S: Likewise.
+
 1999-07-15  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* math/Makefile: Add t_sincosl and k_sincosl support routines.
