@@ -1,5 +1,10 @@
 1999-02-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/Makefile (distribute): Add do-lookup.h.
+	* elf/do-lookup.h: New file.  Split out from dl-lookup.c.
+	* elf/dl-lookup.c: Move do_lookup function in separate file and
+	include the file twice, for handling versioning and without it.
+
 	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): DT_PLTGOT
 	entry is already relocated.
 	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): Likewise.

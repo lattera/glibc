@@ -60,173 +60,15 @@ struct sym_val
 unsigned long int _dl_num_relocations;
 
 
-/* Inner part of the lookup functions.  We return a value > 0 if we
-   found the symbol, the value 0 if nothing is found and < 0 if
-   something bad happened.  */
-static inline int
-do_lookup (const char *undef_name, unsigned long int hash,
-	   const ElfW(Sym) *ref, struct sym_val *result,
-	   struct r_scope_elem *scope, size_t i, const char *reference_name,
-	   const struct r_found_version *version, struct link_map *skip,
-	   int reloc_type)
-{
-  struct link_map **list = scope->r_list;
-  size_t n = scope->r_nlist;
-  struct link_map *map;
+/* We have two different situations when looking up a simple: with or
+   without versioning.  gcc is not able to optimize a single function
+   definition serving for both purposes so we define two functions.  */
+#define VERSIONED	0
+#include "do-lookup.h"
 
-  for (; i < n; ++i)
-    {
-      const ElfW(Sym) *symtab;
-      const char *strtab;
-      const ElfW(Half) *verstab;
-      ElfW(Symndx) symidx;
-      int num_versions = 0;
-      const ElfW(Sym) *sym;
-      const ElfW(Sym) *versioned_sym = NULL;
+#define VERSIONED	1
+#include "do-lookup.h"
 
-      map = list[i];
-
-      /* Here come the extra test needed for `_dl_lookup_symbol_skip'.  */
-      if (skip != NULL && map == skip)
-	continue;
-
-      /* Skip objects that could not be opened, which can occur in trace
-	 mode.  */
-      if (map->l_opencount == 0)
-	continue;
-
-      /* Don't search the executable when resolving a copy reloc.  */
-      if (elf_machine_lookup_noexec_p (reloc_type)
-	  && map->l_type == lt_executable)
-	continue;
-
-      /* Skip objects without symbol tables.  */
-      if (map->l_info[DT_SYMTAB] == NULL)
-	continue;
-
-      /* Print some debugging info if wanted.  */
-      if (_dl_debug_symbols)
-	_dl_debug_message (1, "symbol=", undef_name, ";  lookup in file=",
-			   map->l_name[0] ? map->l_name : _dl_argv[0],
-			   "\n", NULL);
-
-      symtab = (const void *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
-      strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
-      verstab = map->l_versyms;
-
-      /* Search the appropriate hash bucket in this object's symbol table
-	 for a definition for the same symbol name.  */
-      for (symidx = map->l_buckets[hash % map->l_nbuckets];
-	   symidx != STN_UNDEF;
-	   symidx = map->l_chain[symidx])
-	{
-	  sym = &symtab[symidx];
-
-	  if (sym->st_value == 0 || /* No value.  */
-	      (elf_machine_lookup_noplt_p (reloc_type) /* Reject PLT entry.  */
-	       && sym->st_shndx == SHN_UNDEF))
-	    continue;
-
-	  if (ELFW(ST_TYPE) (sym->st_info) > STT_FUNC)
-	    /* Ignore all but STT_NOTYPE, STT_OBJECT and STT_FUNC entries
-	       since these are no code/data definitions.  */
-	    continue;
-
-	  if (sym != ref && strcmp (strtab + sym->st_name, undef_name))
-	    /* Not the symbol we are looking for.  */
-	    continue;
-
-	  if (version == NULL)
-	    {
-	      /* No specific version is selected.  When the object
-		 file also does not define a version we have a match.
-		 Otherwise we accept the default version, or in case
-		 there is only one version defined, this one version.  */
-	      if (verstab != NULL)
-		{
-		  ElfW(Half) ndx = verstab[symidx] & 0x7fff;
-		  if (ndx > 2) /* map->l_versions[ndx].hash != 0) */
-		    {
-		      /* Don't accept hidden symbols.  */
-		      if ((verstab[symidx] & 0x8000) == 0
-			  && num_versions++ == 0)
-			/* No version so far.  */
-			versioned_sym = sym;
-		      continue;
-		    }
-		}
-	    }
-	  else
-	    {
-	      if (verstab == NULL)
-		{
-		  /* We need a versioned system but haven't found any.
-		     If this is the object which is referenced in the
-		     verneed entry it is a bug in the library since a
-		     symbol must not simply disappear.  */
-		  if (version->filename != NULL
-		      && _dl_name_match_p (version->filename, map))
-		    return -2;
-		  /* Otherwise we accept the symbol.  */
-		}
-	      else
-		{
-		  /* We can match the version information or use the
-		     default one if it is not hidden.  */
-		  ElfW(Half) ndx = verstab[symidx] & 0x7fff;
-		  if ((map->l_versions[ndx].hash != version->hash
-		       || strcmp (map->l_versions[ndx].name, version->name))
-		      && (version->hidden || map->l_versions[ndx].hash
-			  || (verstab[symidx] & 0x8000)))
-		    /* It's not the version we want.  */
-		    continue;
-		}
-	    }
-
-	  /* There cannot be another entry for this symbol so stop here.  */
-	  goto found_it;
-	}
-
-      /* If we have seen exactly one versioned symbol while we are
-	 looking for an unversioned symbol and the version is not the
-	 default version we still accept this symbol since there are
-	 no possible ambiguities.  */
-      sym = num_versions == 1 ? versioned_sym : NULL;
-
-      if (sym != NULL)
-	{
-	found_it:
-	  switch (ELFW(ST_BIND) (sym->st_info))
-	    {
-	    case STB_GLOBAL:
-	      /* Global definition.  Just what we need.  */
-	      result->s = sym;
-	      result->m = map;
-	      return 1;
-	    case STB_WEAK:
-	      /* Weak definition.  Use this value if we don't find another.  */
-	      if (! result->s)
-		{
-		  result->s = sym;
-		  result->m = map;
-		}
-	      break;
-	    default:
-	      /* Local symbols are ignored.  */
-	      break;
-	    }
-	}
-
-      /* If this current map is the one mentioned in the verneed entry
-	 and we have not found a weak entry, it is a bug.  */
-      if (symidx == STN_UNDEF && version != NULL && version->filename != NULL
-	  && _dl_name_match_p (version->filename, map))
-	return -1;
-    }
-
-  /* We have not found anything until now.  */
-  return 0;
-}
 
 /* Search loaded objects' symbol tables for a definition of the symbol
    UNDEF_NAME.  */
@@ -247,7 +89,7 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
     if (do_lookup (undef_name, hash, *ref, &current_value,
-		   *scope, 0, reference_name, NULL, NULL, reloc_type))
+		   *scope, 0, reference_name, NULL, reloc_type))
       break;
 
   if (current_value.s == NULL)
@@ -301,10 +143,10 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
     assert (i < (*scope)->r_nduplist);
 
   if (! do_lookup (undef_name, hash, *ref, &current_value,
-		   *scope, i, reference_name, NULL, skip_map, 0))
+		   *scope, i, reference_name, skip_map, 0))
     while (*++scope)
       if (do_lookup (undef_name, hash, *ref, &current_value,
-		     *scope, 0, reference_name, NULL, skip_map, 0))
+		     *scope, 0, reference_name, skip_map, 0))
 	break;
 
   if (current_value.s == NULL)
@@ -349,8 +191,9 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
     {
-      int res = do_lookup (undef_name, hash, *ref, &current_value,
-			   *scope, 0, reference_name, version, NULL, reloc_type);
+      int res = do_lookup_versioned (undef_name, hash, *ref, &current_value,
+				     *scope, 0, reference_name, version, NULL,
+				     reloc_type);
       if (res > 0)
 	break;
 
@@ -420,11 +263,11 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
     assert (i < (*scope)->r_nduplist);
 
-  if (! do_lookup (undef_name, hash, *ref, &current_value,
-		   *scope, i, reference_name, version, skip_map, 0))
+  if (! do_lookup_versioned (undef_name, hash, *ref, &current_value,
+			     *scope, i, reference_name, version, skip_map, 0))
     while (*++scope)
-      if (do_lookup (undef_name, hash, *ref, &current_value,
-		     *scope, 0, reference_name, version, skip_map, 0))
+      if (do_lookup_versioned (undef_name, hash, *ref, &current_value, *scope,
+			       0, reference_name, version, skip_map, 0))
 	break;
 
   if (current_value.s == NULL)
