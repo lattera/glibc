@@ -87,7 +87,11 @@ fi
 
 # If the user gave a minimal version number test whether the available
 # kernel headers are young enough.  Additionally we have minimal
-# kernel versions for some architectures.
+# kernel versions for some architectures.  If a previous configure fragment
+# set arch_minimum_kernel already, let that override our defaults here.
+# Note that we presume such a fragment has set libc_cv_gcc_unwind_find_fde
+# if appropriate too.
+test -n "$arch_minimum_kernel" ||
 case "$machine" in
   alpha*)
     arch_minimum_kernel=2.1.100
