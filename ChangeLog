@@ -1,5 +1,7 @@
 2000-05-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile: Add GNU make magic.
+
 	* inet/Makefile (CFLAGS-rcmd.c, CFLAGS-rexec.c, CFLAGS-ruserpass.c):
 	Removed.
 	* inet/rcmd.c: Remove __P.  Remove unused variables.

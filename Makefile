@@ -47,6 +47,9 @@ mv -f $@.new $@
 endef
 endif
 
+# We don't want to run anything here in parallel.
+.NOTPARALLEL:
+
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
