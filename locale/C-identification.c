@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -29,6 +29,8 @@ const struct locale_data _nl_C_LC_IDENTIFICATION =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
+  0,
+  NULL,
   15,
   {
     { string: "ISO/IEC 14652 i18n FDCC-set" },

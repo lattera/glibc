@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -29,6 +29,8 @@ const struct locale_data _nl_C_LC_MESSAGES =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
+  0,
+  NULL,
   4,
   {
     { string: "^[yY]" },

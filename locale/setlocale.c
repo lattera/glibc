@@ -220,7 +220,8 @@ setlocale (int category, const char *locale)
   char *composite;
 
   /* Sanity check for CATEGORY argument.  */
-  if (category < 0 || category >= __LC_LAST)
+  if (__builtin_expect (category, 0) < 0
+      || __builtin_expect (category, 0) >= __LC_LAST)
     ERROR_RETURN;
 
   /* Does user want name of current locale?  */
@@ -261,7 +262,7 @@ setlocale (int category, const char *locale)
 	if (category != LC_ALL)
 	  newnames[category] = (char *) locale;
 
-      if (strchr (locale, ';') != NULL)
+      if (__builtin_expect (strchr (locale, ';') != NULL, 0))
 	{
 	  /* This is a composite name.  Make a copy and split it up.  */
 	  char *np = strdupa (locale);

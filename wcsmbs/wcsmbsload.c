@@ -146,7 +146,7 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 
   /* We should repeat the test since while we waited some other thread
      might have run this function.  */
-  if (__wcsmbs_last_locale != new_category)
+  if (__builtin_expect (__wcsmbs_last_locale != new_category, 1))
     {
       if (new_category->name == _nl_C_name)	/* Yes, pointer comparison.  */
 	{
@@ -161,6 +161,7 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	  const char *complete_name;
 	  struct __gconv_step *new_towc;
 	  struct __gconv_step *new_tomb;
+	  int use_translit;
 
 	  /* Free the old conversions.  */
 	  __gconv_close_transform (__wcsmbs_gconv_fcts.tomb, 1);
@@ -169,10 +170,17 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	  /* Get name of charset of the locale.  */
 	  charset_name = new_category->values[_NL_ITEM_INDEX(CODESET)].string;
 
+	  /* Does the user want transliteration?  */
+	  use_translit = new_category->use_translit;
+
 	  /* Normalize the name and add the slashes necessary for a
              complete lookup.  */
-	  complete_name = norm_add_slashes (charset_name);
+	  complete_name = norm_add_slashes (charset_name,
+					    use_translit ? "TRANSLIT" : NULL);
 
+	  /* It is not necessary to use transliteration in this direction
+	     since the internal character set is supposed to be able to
+	     represent all others.  */
 	  new_towc = getfct ("INTERNAL", complete_name);
 	  if (new_towc != NULL)
 	    new_tomb = getfct (complete_name, "INTERNAL");

@@ -102,18 +102,19 @@ extern struct gconv_module *__gconv_modules_db;
 
 /* The gconv functions expects the name to be in upper case and complete,
    including the trailing slashes if necessary.  */
-#define norm_add_slashes(str) \
+#define norm_add_slashes(str,suffix) \
   ({									      \
     const char *cp = (str);						      \
     char *result;							      \
     char *tmp;								      \
     size_t cnt = 0;							      \
+    size_t suffix_len = suffix == NULL ? 0 : strlen (suffix);		      \
 									      \
     while (*cp != '\0')							      \
       if (*cp++ == '/')							      \
 	++cnt;								      \
 									      \
-    tmp = result = alloca (cp - (str) + 3);				      \
+    tmp = result = alloca (cp - (str) + 3 + suffix_len);		      \
     cp = (str);								      \
     while (*cp != '\0')							      \
       *tmp++ = _toupper (*cp++);					      \
@@ -121,7 +122,11 @@ extern struct gconv_module *__gconv_modules_db;
       {									      \
 	*tmp++ = '/';							      \
 	if (cnt < 1)							      \
-	  *tmp++ = '/';							      \
+	  {								      \
+	    *tmp++ = '/';						      \
+	    if (suffix != NULL)						      \
+	      tmp = __mempcpy (tmp, suffix, suffix_len);		      \
+	  }								      \
       }									      \
     *tmp = '\0';							      \
     result;								      \

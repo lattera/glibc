@@ -37,6 +37,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
   int res;
   int conv_flags = 0;
   const char *errhand;
+  const char *ignore;
 
   /* Find out whether any error handling method is specified.  */
   errhand = strchr (toset, '/');
@@ -44,7 +45,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
     errhand = strchr (errhand + 1, '/');
   if (__builtin_expect (errhand != NULL, 1))
     {
-      if (errhand[1] == '\0')
+      if (*++errhand == '\0')
 	errhand = NULL;
       else
 	{
@@ -56,13 +57,25 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 	  flags = __GCONV_IGNORE_ERRORS;
 
-	  if (strcasecmp (errhand, "IGNORE") == 0)
+	  if (__strcasecmp (errhand, "IGNORE") == 0)
 	    {
 	      /* Found it.  This means we should ignore conversion errors.  */
 	      flags = __GCONV_IGNORE_ERRORS;
 	      errhand = NULL;
 	    }
 	}
+    }
+
+  /* For the source character set we ignore the error handler specification.
+     XXX Is this really always the best?  */
+  ignore = strchr (fromset, '/');
+  if (ignore != NULL && (ignore = strchr (ignore + 1, '/')) != NULL
+      && *++ignore != '\0')
+    {
+      char *newfromset = (char *) alloca (ignore - fromset + 1);
+
+      newfromset[ignore - fromset] = '\0';
+      fromset = memcpy (newfromset, fromset, ignore - fromset);
     }
 
   res = __gconv_find_transform (toset, fromset, &steps, &nsteps, flags);
@@ -78,7 +91,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
       if (errhand != NULL)
 	{
 	  /* Find the appropriate transliteration handling.  */
-	  if (strcasecmp (errhand, "TRANSLIT") == 0)
+	  if (__strcasecmp (errhand, "TRANSLIT") == 0)
 	    {
 	      /* It's the builtin transliteration handling.  We only
                  suport for it working on the internal encoding.  */
@@ -89,7 +102,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	      trans_fct = __gconv_transliterate;
 	      /* No context, init, or end function.  */
 	    }
-	  else if (strcasecmp (errhand, "WORK AROUND A GCC BUG") == 0)
+	  else if (__strcasecmp (errhand, "WORK AROUND A GCC BUG") == 0)
 	    {
 	      trans_init_fct = (__gconv_trans_init_fct) 1;
 	    }
@@ -151,7 +164,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	      /* Now see whether we can use the transliteration module
 		 for this step.  */
 	      for (n = 0; n < ncsnames; ++n)
-		if (strcasecmp (steps[cnt].__from_name, csnames[n]) == 0)
+		if (__strcasecmp (steps[cnt].__from_name, csnames[n]) == 0)
 		  {
 		    /* Match!  Now try the initializer.  */
 		    if (trans_init_fct == NULL
@@ -182,7 +195,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	  /* Now see whether we can use the transliteration module
 	     for this step.  */
 	  for (n = 0; n < ncsnames; ++n)
-	    if (strcasecmp (steps[cnt].__from_name, csnames[n]) == 0)
+	    if (__strcasecmp (steps[cnt].__from_name, csnames[n]) == 0)
 	      {
 		/* Match!  Now try the initializer.  */
 		if (trans_init_fct == NULL

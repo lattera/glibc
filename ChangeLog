@@ -1,3 +1,36 @@
+2000-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_int.h (norm_add_slashes): Optionally add given suffix.
+	* iconv/gconv_open.c: Remove error handling specification from `from'
+	character set name.
+	* intl/loadmsgcat.c (_nl_load_domain): Call norm_add_slashes with
+	new parameter to always enable transliteration.
+	* locale/localeinfo.h (LIMAGIC): Bump number because of incompatible
+	change.
+	(struct locale_data): Add new members use_translit and options.
+	* locale/findlocale.c (_nl_find_locale): Set use_translit flag is
+	character set name contained modifier TRANSLIT.
+	* locale/loadlocale.c (_nl_load_locale): Initialize new use_translit
+	and options fields.
+	(_nl_unload_locale): Free options string if necessary.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Enable translation if
+	the locale names suggested this.
+	* locale/C-address.c: Add two new initialilzers to adjust data
+	structure for new format.
+	* locale/C-collate.c: Likewise.
+	* locale/C-ctype.c: Likewise.
+	* locale/C-identification.c: Likewise.
+	* locale/C-measurement.c: Likewise.
+	* locale/C-messages.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-name.c: Likewise.
+	* locale/C-numeric.c: Likewise.
+	* locale/C-paper.c: Likewise.
+	* locale/C-telephone.c: Likewise.
+	* locale/C-time.c: Likewise.
+
+	* locale/setlocale.c: Add some more __builtin_expect.
+
 2000-06-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv.h (__gconv_fct): Change type of fifth parameter to

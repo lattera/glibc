@@ -89,7 +89,7 @@ struct gap
 	  {								      \
 	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
 				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outbuf, irreversible));		      \
+				   &outptr, irreversible));		      \
 	    if (result != __GCONV_OK)					      \
 	      break;							      \
 	  }								      \
@@ -112,7 +112,7 @@ struct gap
 	  {								      \
 	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
 				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outbuf, irreversible));		      \
+				   &outptr, irreversible));		      \
 	    if (result != __GCONV_OK)					      \
 	      break;							      \
 	  }								      \
@@ -137,7 +137,7 @@ struct gap
 	  {								      \
 	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
 				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outbuf, irreversible));		      \
+				   &outptr, irreversible));		      \
 	    if (result != __GCONV_OK)					      \
 	      break;							      \
 	  }								      \

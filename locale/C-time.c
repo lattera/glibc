@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -28,6 +28,8 @@ const struct locale_data _nl_C_LC_TIME =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
+  0,
+  NULL,
   62,
   {
     { string: "Sun" },

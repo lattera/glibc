@@ -32,6 +32,8 @@ const struct locale_data _nl_C_LC_NUMERIC =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
+  0,
+  NULL,
   5,
   {
     { string: "." },

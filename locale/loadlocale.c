@@ -202,6 +202,8 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   newdata->filesize = st.st_size;
   newdata->mmaped = mmaped;
   newdata->usage_count = 0;
+  newdata->use_translit = 0;
+  newdata->options = NULL;
   newdata->nstrings = filedata->nstrings;
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
@@ -231,6 +233,9 @@ _nl_unload_locale (struct locale_data *locale)
   else
 #endif
     free ((void *) locale->filedata);
+
+  if (locale->options != NULL)
+    free (locale->options);
 
   free (locale);
 }

@@ -1,5 +1,5 @@
 /* Declarations for internal libc locale interfaces
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@
 #include <intl/loadinfo.h>	/* For loaded_l10nfile definition.  */
 
 /* Magic number at the beginning of a locale data file for CATEGORY.  */
-#define	LIMAGIC(category)	(0x980505 ^ (category))
+#define	LIMAGIC(category)	(0x20000616 ^ (category))
 
 /* Two special weight constants for the collation data.  */
 #define IGNORE_CHAR	2
@@ -52,6 +52,11 @@ struct locale_data
   int mmaped;			/* If nonzero the data is mmaped.  */
 
   unsigned int usage_count;	/* Counter for users.  */
+
+  int use_translit;		/* Nonzero if the mb*towv*() and wc*tomb()
+				   functions should use transliteration.  */
+  const char *options;		/* Extra options from the locale name,
+				   not used in the path to the locale data.  */
 
   unsigned int nstrings;	/* Number of strings below.  */
   union locale_data_value

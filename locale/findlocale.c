@@ -181,6 +181,11 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
     }
   *name = (char *) ((struct locale_data *) locale_file->data)->name;
 
+  /* Determine whether the user wants transliteration or not.  */
+  if ((modifier != NULL && __strcasecmp (modifier, "TRANSLIT") == 0)
+      || (special != NULL && __strcasecmp (special, "TRANSLIT") == 0))
+    ((struct locale_data *) locale_file->data)->use_translit = 1;
+
   /* Increment the usage count.  */
   if (((struct locale_data *) locale_file->data)->usage_count
       < MAX_USAGE_COUNT)
