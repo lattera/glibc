@@ -175,7 +175,7 @@ _dl_start_user:
 	| Loop to call _dl_init_next for the next initializer.
 	jra 0b
 1:	| Clear the startup flag.
-	move.l #0, _dl_starting_up@GOT(%a5)
+	clr.l _dl_starting_up@GOT(%a5)
 	| Pass our finalizer function to the user in %a1.
 	move.l _dl_fini@GOT(%a5), %a1
 	| Initialize %fp with the stack pointer.
