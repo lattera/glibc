@@ -1,4 +1,4 @@
-# @(#)northamerica	7.48
+# @(#)northamerica	7.49
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -408,7 +408,7 @@ Zone America/Louisville	-5:43:02 -	LMT	1883 Nov 18 12:00
 			-5:00	US	E%sT	1974 Jan  6 2:00
 			-6:00	1:00	CDT	1974 Oct 27 2:00
 			-5:00	US	E%sT
-# Wayne County, Kentucky
+# Wayne, Clinton, and Russell Counties, Kentucky
 # From
 # <a href="http://frwebgate.access.gpo.gov/cgi-bin/getdoc.cgi?dbname=1999_register&docid=99-26945-filed">
 # Federal Register Doc. 99-26945
@@ -418,6 +418,18 @@ Zone America/Louisville	-5:43:02 -	LMT	1883 Nov 18 12:00
 # Kentucky, from the Central Time Zone to the Eastern Time Zone.... Now
 # the earliest date that the proposed change might take effect is
 # October 29, 2000.
+#
+# From
+# <a href="http://www.lake-cumberland.com/life/archive/news990129time.shtml">
+# Lake Cumberland LIFE
+# </a> (1999-01-29) via WKYM-101.7:
+# Clinton County has joined Wayne County in asking the DoT to change from
+# the Central to the Eastern time zone....  The Wayne County government made
+# the same request in December.  And while Russell County officials have not
+# taken action, the majority of respondents to a poll conducted there in
+# August indicated they would like to change to "fast time" also.
+# The three Lake Cumberland counties are the farthest east of any U.S.
+# location in the Central time zone.
 
 # Michigan
 #
@@ -902,7 +914,7 @@ Zone America/Dawson_Creek -8:00:56 -	LMT	1884
 # Nunavut ... moved ... to incorporate the whole territory into one time zone.
 # <a href="http://www.nunatsiaq.com/nunavut/nvt90903_13.html">
 # Nunavut moves to single time zone Oct. 31
-# </a> 
+# </a>
 #
 # From Antoine Leca (1999-09-06):
 # We then need to create a new timezone for the Kitikmeot region of Nunavut
@@ -916,6 +928,29 @@ Zone America/Dawson_Creek -8:00:56 -	LMT	1884
 # Pangnirtung switched to Eastern time; we'll guess 1995.
 # We'll ignore the claim about Coral Harbour for now,
 # since we have no further info.
+
+# From Rives McDow (1999-11-08):
+# On October 31, when the rest of Nunavut went to Central time,
+# Pangnirtung wobbled.  Here is the result of their wobble:
+#
+# The following businesses and organizations in Pangnirtung use Central Time:
+#
+#	First Air, Power Corp, Nunavut Construction, Health Center, RCMP,
+#	Eastern Arctic National Parks, A & D Specialist
+#
+# The following businesses and organizations in Pangnirtung use Eastern Time:
+#
+#	Hamlet office, All other businesses, Both schools, Airport operator
+#
+# This has made for an interesting situation there, which warranted the news.
+# No one there that I spoke with seems concerned, or has plans to
+# change the local methods of keeping time, as it evidently does not
+# really interfere with any activities or make things difficult locally.
+# They plan to celebrate New Year's turn-over twice, one hour apart,
+# so it appears that the situation will last at least that long.
+# The Nunavut Intergovernmental Affairs hopes that they will "come to
+# their senses", but the locals evidently don't see any problem with
+# the current state of affairs.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	NT_YK	1918	only	-	Apr	14	2:00	1:00	D
@@ -971,7 +1006,7 @@ Zone America/Dawson	-9:17:40 -	LMT	1900 Aug 20
 # The Federal District (where Mexico City is) has observed [DST] several
 # times but not recently.
 #
-# I don't where to drawn the line in the North Baja area.  28th latitude
+# I don't where to draw the line in the North Baja area.  28th latitude
 # sounds good -- but it may be higher (how far [d]o radio stations from
 # San Diego affect culture?).
 #
@@ -1009,30 +1044,30 @@ Zone America/Dawson	-9:17:40 -	LMT	1900 Aug 20
 # From Alan Perry <alan.perry@eng.sun.com> (1996-02-15):
 # A guy from our Mexico subsidiary finally found the Presidential Decree
 # outlining the timezone changes in Mexico.
-# 
+#
 # ------------- Begin Forwarded Message -------------
-# 
+#
 # I finally got my hands on the Official Presidential Decree that sets up the
 # rules for the DST changes. The rules are:
-# 
+#
 # 1. The country is divided in 3 timezones:
 #    - Baja California Norte (the Mexico/BajaNorte TZ)
 #    - Baja California Sur, Nayarit, Sinaloa and Sonora (the Mexico/BajaSur TZ)
 #    - The rest of the country (the Mexico/General TZ)
-#    
+#
 # 2. From the first Sunday in April at 2:00 AM to the last Sunday in October
 #    at 2:00 AM, the times in each zone are as follows:
 #    BajaNorte: GMT+7
 #    BajaSur:   GMT+6
 #    General:   GMT+5
-#    
+#
 # 3. The rest of the year, the times are as follows:
 #    BajaNorte: GMT+8
 #    BajaSur:   GMT+7
 #    General:   GMT+6
-#    
+#
 # The Decree was published in Mexico's Official Newspaper on January 4th.
-# 
+#
 # -------------- End Forwarded Message --------------
 # From Paul Eggert (1996-06-12):
 # For an English translation of the decree, see

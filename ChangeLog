@@ -1,3 +1,8 @@
+1999-11-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-address.c (address_output): Fix output of
+	country_num.
+
 1999-11-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* timezone/asia: Update from tzdata1999j.

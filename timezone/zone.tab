@@ -1,4 +1,4 @@
-# @(#)zone.tab	1.16
+# @(#)zone.tab	1.17
 #
 # TZ zone descriptions
 #
@@ -225,7 +225,8 @@ LV	+5657+02406	Europe/Riga
 LY	+3254+01311	Africa/Tripoli
 MA	+3339-00735	Africa/Casablanca
 MC	+4342+00723	Europe/Monaco
-MD	+4700+02850	Europe/Chisinau
+MD	+4700+02850	Europe/Chisinau	most locations
+MD	+4651+02938	Europe/Tiraspol	Transdniestria
 MG	-1855+04731	Indian/Antananarivo
 MH	+0709+17112	Pacific/Majuro	most locations
 MH	+0905+16720	Pacific/Kwajalein	Kwajalein
@@ -337,7 +338,9 @@ TV	-0831+17913	Pacific/Funafuti
 TW	+2503+12130	Asia/Taipei
 TZ	-0648+03917	Africa/Dar_es_Salaam
 UA	+5026+03031	Europe/Kiev	most locations
-UA	+4457+03406	Europe/Simferopol	Crimea
+UA	+4837+02218	Europe/Uzhgorod	Ruthenia
+UA	+4750+03510	Europe/Zaporozhye	Zaporozh'ye, E Lugansk
+UA	+4457+03406	Europe/Simferopol	central Crimea
 UG	+0019+03225	Africa/Kampala
 UM	+1700-16830	Pacific/Johnston	Johnston Atoll
 UM	+2813-17722	Pacific/Midway	Midway Islands

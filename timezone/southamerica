@@ -1,4 +1,4 @@
-# @(#)southamerica	7.32
+# @(#)southamerica	7.33
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -564,8 +564,9 @@ Rule	Peru	1987	only	-	Jan	 1	0:00	1:00	S
 Rule	Peru	1987	only	-	Apr	 1	0:00	0	-
 Rule	Peru	1990	only	-	Jan	 1	0:00	1:00	S
 Rule	Peru	1990	only	-	Apr	 1	0:00	0	-
-Rule	Peru	1993	only	-	Jan	 1	0:00	1:00	S
-Rule	Peru	1993	only	-	Apr	 1	0:00	0	-
+# IATA is ambiguous for 1993/1995; go with Shanks.
+Rule	Peru	1994	only	-	Jan	 1	0:00	1:00	S
+Rule	Peru	1994	only	-	Apr	 1	0:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	America/Lima	-5:08:12 -	LMT	1890
 			-5:09	-	LMT	1908 Jul 28 # Lima Mean Time

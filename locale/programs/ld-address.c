@@ -372,7 +372,7 @@ address_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) address->country_num;
+  iov[cnt].iov_base = (void *) &address->country_num;
   iov[cnt].iov_len = sizeof (uint32_t);
   ++cnt;
 

@@ -1,4 +1,4 @@
-# @(#)australasia	7.52
+# @(#)australasia	7.53
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -362,7 +362,8 @@ Zone Pacific/Port_Moresby 9:48:40 -	LMT	1880
 # Pitcairn
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Pitcairn	-8:40:20 -	LMT	1901		# Adamstown
-			-8:30	-	PNT	# Pitcairn Time
+			-8:30	-	PNT	1998 Apr 27 00:00
+			-8:00	-	PST	# Pitcairn Standard Time
 
 # American Samoa
 Zone Pacific/Pago_Pago	 12:37:12 -	LMT	1879 Jul  5
@@ -392,7 +393,7 @@ Zone	Pacific/Fakaofo	-11:24:56 -	LMT	1901
 # Tonga
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Tonga	1999	max	-	Oct	Sat>=1	2:00s	1:00	S
-Rule	Tonga	2000	max	-	Apr	Sun>=16	2:00s	-	-
+Rule	Tonga	2000	max	-	Apr	Sun>=16	2:00s	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Tongatapu	12:19:20 -	LMT	1901
 			12:20	-	TOT	1941 # Tonga Time
@@ -498,6 +499,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 #	 12:45	CHAST CHADT Chatham*
 #	-11:00	SST	Samoa
 #	-10:00	HST	Hawaii
+#	- 8:00	PST	Pitcairn*
 #
 # See the `northamerica' file for Hawaii.
 # See the `southamerica' file for Easter I and the Galapagos Is.
@@ -944,7 +946,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # ``I am certain, having lived there for the past decade, that "Truk"
 # (now properly known as Chuuk) ... is in the time zone GMT+10.''
 #
-# Shanks writes that Truk switched from GMT+10 to GMT+11 on 1978-10-01;
+# Shanks writes that Truk switched from UTC+10 to UTC+11 on 1978-10-01;
 # ignore this for now.
 
 # From Paul Eggert (1999-10-29):
@@ -952,8 +954,31 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # <a href="http://www.fsmgov.org/info/clocks.html">
 # The Federated States of Micronesia - Visitor Information
 # </a> (1999-01-26)
-# that Truk and Yap are GMT+10, and Ponape and Kosrae are GMT+11.
-# We don't know when Kosrae switched from GMT+12; assume January 1 for now.
+# that Truk and Yap are UTC+10, and Ponape and Kosrae are UTC+11.
+# We don't know when Kosrae switched from UTC+12; assume January 1 for now.
+
+# Pitcairn
+
+# From Rives McDow (1999-11-08):
+# A Proclamation was signed by the Governor of Pitcairn on the 27th March 1998
+# with regard to Pitcairn Standard Time.  The Proclamation is as follows.
+#
+#	The local time for general purposes in the Islands shall be
+#	Co-ordinated Universal time minus 8 hours and shall be known
+#	as Pitcairn Standard Time.
+#
+# ... I have also seen Pitcairn listed as UTC minus 9 hours in several
+# references, and can only assume that this was an error in interpretation
+# somehow in light of this proclamation.
+
+# From Rives McDow (1999-11-09):
+# The Proclamation regarding Pitcairn time came into effect on 27 April 1998
+# ... at midnight.
+
+# From Howie Phelps (1999-11-10), who talked to a Pitcairner via shortwave:
+# Betty Christian told me yesterday that their local time is the same as
+# Pacific Standard Time. They used to be 1/2 hour different from us here in
+# Sacramento but it was changed a couple of years ago.
 
 # Samoa
 

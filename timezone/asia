@@ -1,4 +1,4 @@
-# @(#)asia	7.49
+# @(#)asia	7.50
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -661,13 +661,21 @@ Zone	Asia/Tokyo	9:18:59	-	LMT	1887 Dec 31 15:00u
 
 # Jordan
 #
-# From
-# <a href="http://star.arabia.com/990701/JO9.html">
-# Jordan Week (1999-07-01)
-# </a> via Steffen Thorsen (1999-09-09):
+# From <a href="http://star.arabia.com/990701/JO9.html">
+# Jordan Week (1999-07-01) </a> via Steffen Thorsen (1999-09-09):
 # Clocks in Jordan were forwarded one hour on Wednesday at midnight,
 # in accordance with the government's decision to implement summer time
 # all year round.
+#
+# From <a href="http://star.arabia.com/990930/JO9.html">
+# Jordan Week (1999-09-30) </a> via Steffen Thorsen (1999-11-09):
+# Winter time starts today Thursday, 30 September. Clocks will be turned back
+# by one hour.  This is the latest government decision and it's final!
+# The decision was taken because of the increase in working hours in
+# government's departments from six to seven hours.
+#
+# From Paul Eggert (1999-11-09):
+# No word on Jordan's future rules; assume 04-01 to 10-01 for now.
 #
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule    Jordan	1973	only	-	Jun	6	0:00	1:00	S
@@ -690,10 +698,12 @@ Rule    Jordan	1992	1993	-	Oct	Fri>=1	0:00	0	-
 Rule    Jordan	1993	1998	-	Apr	Fri>=1	0:00	1:00	S
 Rule    Jordan	1994	only	-	Sep	Fri>=15	0:00	0	-
 Rule    Jordan	1995	1998	-	Sep	Fri>=15	0:00s	0	-
+Rule	Jordan	1999	only	-	Jul	 1	0:00	1:00	S
+Rule	Jordan	1999	max	-	Oct	 1	0:00	0	-
+Rule	Jordan	2000	max	-	Apr	 1	0:00	1:00	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Amman	2:23:44 -	LMT	1931
-			2:00	Jordan	EE%sT	1999 Jul
-			2:00	1:00	EEST
+			2:00	Jordan	EE%sT
 
 # Kazakhstan
 # From Paul Eggert (1996-11-22):
@@ -1127,7 +1137,6 @@ Zone	Asia/Dubai	3:41:12 -	LMT	1920
 			4:00	-	GST
 
 # Uzbekistan
-# 1991 transitions are from Shanks.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Samarkand	4:27:12 -	LMT	1924 May  2
 			4:00	-	SAMT	1930 Jun 21 # Samarkand Time
