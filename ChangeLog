@@ -1,5 +1,8 @@
 2004-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/ypclnt.c (do_ypcall): Add one missing unlock.  Simplify the
+	code a bit.
+
 	* misc/daemon.c (daemon): Define errno in case /dev/null is not
 	the correct device.
 

@@ -304,16 +304,10 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
   status = YPERR_YPERR;
 
   __libc_lock_lock (ypbindlist_lock);
-  if (__ypbindlist != NULL)
+  ydb = __ypbindlist;
+  while (ydb != NULL)
     {
-      ydb = __ypbindlist;
-      while (ydb != NULL)
-        {
-          if (strcmp (domain, ydb->dom_domain) == 0)
-            break;
-          ydb = ydb->dom_pnext;
-        }
-      if (ydb != NULL)
+      if (strcmp (domain, ydb->dom_domain) == 0)
 	{
           if (__yp_bind (domain, &ydb) == 0)
 	    {
@@ -322,6 +316,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 				      resp, &ydb, 0);
 	      if (status == YPERR_SUCCESS)
 	        {
+		  __libc_lock_unlock (ypbindlist_lock);
 	          __set_errno (saved_errno);
 	          return status;
 	        }
@@ -329,7 +324,10 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 	  /* We use ypbindlist, and the old cached data is
 	     invalid. unbind now and create a new binding */
 	  yp_unbind_locked (domain);
+
+	  break;
 	}
+      ydb = ydb->dom_pnext;
     }
   __libc_lock_unlock (ypbindlist_lock);
 
