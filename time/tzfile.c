@@ -44,8 +44,6 @@ struct leap
     long int change;		/* Seconds of correction to apply.  */
   };
 
-extern char * __tzstring (const char *); /* Defined in tzset.c.  */
-
 static struct ttinfo *find_transition (time_t timer) internal_function;
 static void compute_tzname_max (size_t) internal_function;
 
@@ -530,8 +528,6 @@ static void
 internal_function
 compute_tzname_max (size_t chars)
 {
-  extern size_t __tzname_cur_max; /* Defined in tzset.c. */
-
   const char *p;
 
   p = zone_names;

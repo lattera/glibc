@@ -145,6 +145,13 @@ extern int iswupper __P ((wint_t __wc));
    in the previous subclause.  */
 extern int iswxdigit __P ((wint_t __wc));
 
+/* Test for any wide character that corresponds to a standard blank
+   wide character or a locale-specific set of wide characters for
+   which `iswalnum' is false.  */
+# ifdef __USE_GNU
+extern int iswblank __P ((wint_t __wc));
+# endif
+
 /*
  * Extensible wide-character classification functions: 7.15.2.2.
  */
@@ -280,6 +287,10 @@ extern int __iswupper_l __P ((wint_t __wc, __locale_t __locale));
    in the previous subclause.  */
 extern int __iswxdigit_l __P ((wint_t __wc, __locale_t __locale));
 
+/* Test for any wide character that corresponds to a standard blank
+   wide character or a locale-specific set of wide characters for
+   which `iswalnum' is false.  */
+extern int __iswblank_l __P ((wint_t __wc, __locale_t __locale));
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */

@@ -1,5 +1,5 @@
 /* Convert `time_t' to `struct tm' in local time zone.
-   Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,6 @@
 
 /* The C Standard says that localtime and gmtime return the same pointer.  */
 struct tm _tmbuf;
-
-/* Prototype for the internal function to get information based on TZ.  */
-extern struct tm *__tz_convert __P ((const time_t *t, int use_localtime,
-				     struct tm *tp));
-
 
 
 /* Return the `struct tm' representation of *T in local time,

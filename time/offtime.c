@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <time.h>
-
-/* Defined in mktime.c.  */
-extern const unsigned short int __mon_yday[2][13];
 
 #define	SECS_PER_HOUR	(60 * 60)
 #define	SECS_PER_DAY	(SECS_PER_HOUR * 24)

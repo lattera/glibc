@@ -25,23 +25,9 @@
 #include <string.h>
 #include <time.h>
 
-/* Defined in mktime.c.  */
-extern const unsigned short int __mon_yday[2][13];
-
-/* Defined in localtime.c.  */
-extern struct tm _tmbuf;
 
 #define NOID
 #include <timezone/tzfile.h>
-
-extern int __use_tzfile;
-extern void __tzfile_read __P ((const char *file));
-extern int __tzfile_compute __P ((time_t timer, int use_localtime,
-				  long int *leap_correct, int *leap_hit,
-				  struct tm *tp));
-extern void __tzfile_default __P ((const char *std, const char *dst,
-				   long int stdoff, long int dstoff));
-extern char *__tzstring __P ((const char *string));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;

@@ -364,11 +364,12 @@ innetgr (const char *netgroup, const char *host, const char *user,
 		      real_entry = 1;
 
 		      if ((entry.val.triple.host == NULL || host == NULL
-			   || strcmp (entry.val.triple.host, host) == 0)
+			   || __strcasecmp (entry.val.triple.host, host) == 0)
 			  && (entry.val.triple.user == NULL || user == NULL
 			      || strcmp (entry.val.triple.user, user) == 0)
 			  && (entry.val.triple.domain == NULL || domain == NULL
-			      || strcmp (entry.val.triple.domain, domain) == 0))
+			      || __strcasecmp (entry.val.triple.domain,
+					       domain) == 0))
 			{
 			  result = 1;
 			  break;

@@ -214,14 +214,10 @@ extern int pthread_attr_getscope __P ((__const pthread_attr_t *__attr,
 
 #ifdef __USE_UNIX98
 /* Set the size of the guard area at the bottom of the thread.  */
-extern int __pthread_attr_setguardsize __P ((pthread_attr_t *__attr,
-					     size_t __guardsize));
 extern int pthread_attr_setguardsize __P ((pthread_attr_t *__attr,
 					   size_t __guardsize));
 
 /* Get the size of the guard area at the bottom of the thread.  */
-extern int __pthread_attr_getguardsize __P ((__const pthread_attr_t *__attr,
-					     size_t *__guardsize));
 extern int pthread_attr_getguardsize __P ((__const pthread_attr_t *__attr,
 					   size_t *__guardsize));
 #endif
@@ -230,28 +226,20 @@ extern int pthread_attr_getguardsize __P ((__const pthread_attr_t *__attr,
    Depending on whether the stack grows up or doen the value must either
    be higher or lower than all the address in the memory block.  The
    minimal size of the block must be PTHREAD_STACK_SIZE.  */
-extern int __pthread_attr_setstackaddr __P ((pthread_attr_t *__attr,
-					     void *__stackaddr));
 extern int pthread_attr_setstackaddr __P ((pthread_attr_t *__attr,
 					   void *__stackaddr));
 
 /* Return the previously set address for the stack.  */
-extern int __pthread_attr_getstackaddr __P ((__const pthread_attr_t *__attr,
-					     void **__stackaddr));
 extern int pthread_attr_getstackaddr __P ((__const pthread_attr_t *__attr,
 					   void **__stackaddr));
 
 /* Add information about the minimum stack size needed for the thread
    to be started.  This size must never be less than PTHREAD_STACK_SIZE
    and must also not exceed the system limits.  */
-extern int __pthread_attr_setstacksize __P ((pthread_attr_t *__attr,
-					     size_t __stacksize));
 extern int pthread_attr_setstacksize __P ((pthread_attr_t *__attr,
 					   size_t __stacksize));
 
 /* Return the currently used minimal stack size.  */
-extern int __pthread_attr_getstacksize __P ((__const pthread_attr_t *__attr,
-					     size_t *__stacksize));
 extern int pthread_attr_getstacksize __P ((__const pthread_attr_t *__attr,
 					   size_t *__stacksize));
 
@@ -269,11 +257,9 @@ extern int pthread_getschedparam __P ((pthread_t __target_thread,
 
 #ifdef __USE_UNIX98
 /* Determine  level of concurrency.  */
-extern int __pthread_getconcurrency __P ((void));
 extern int pthread_getconcurrency __P ((void));
 
 /* Set new concurrency level to LEVEL.  */
-extern int __pthread_setconcurrency __P ((int __level));
 extern int pthread_setconcurrency __P ((int __level));
 #endif
 
@@ -324,8 +310,6 @@ extern int pthread_mutexattr_settype __P ((pthread_mutexattr_t *__attr,
 					   int __kind));
 
 /* Return in *KIND the mutex kind attribute in *ATTR. */
-extern int __pthread_mutexattr_gettype __P ((__const pthread_mutexattr_t *__attr,
-					     int *__kind));
 extern int pthread_mutexattr_gettype __P ((__const pthread_mutexattr_t *__attr,
 					   int *__kind));
 #endif
@@ -471,7 +455,6 @@ extern int pthread_setcancelstate __P ((int __state, int *__oldstate));
 
 /* Set cancellation state of current thread to TYPE, returning the old
    type in *OLDTYPE if OLDTYPE is not NULL.  */
-extern int __pthread_setcanceltype __P ((int __type, int *__oldtype));
 extern int pthread_setcanceltype __P ((int __type, int *__oldtype));
 
 /* Cancel THREAD immediately or at the next possibility.  */
@@ -557,7 +540,6 @@ extern int pthread_atfork __P ((void (*__prepare) (void),
 /* Terminate all threads in the program except the calling process.
    Should be called just before invoking one of the exec*() functions. */
 
-extern void __pthread_kill_other_threads_np __P ((void));
 extern void pthread_kill_other_threads_np __P ((void));
 
 

@@ -1,3 +1,28 @@
+1998-12-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/getnetgrent_r.c (innetgr): Check host and domain name with
+	strcasecmp, not strcmp.  [PR libc/894].
+
+1998-12-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/regex.h: Declare re_comp, re_exec if compiling for libc to
+	get prototypes.
+
+	* wctype/wctype.h: Add prototypes for __iswblank_l and iswblank.
+
+1998-12-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/gethostid.c: Include <netdb.h> to get
+	prototype for __gethostbyname_r.
+
+	* include/time.h: Add declarations of internal interfaces.
+
+	* time/tzset.c: Remove declarations of internal interfaces.
+	* time/gmtime.c: Likewise.
+	* time/localtime.c: Likewise.
+	* time/offtime.c: Likewise.
+	* time/tzfile.c: Likewise.
+
 1998-12-01 09:47 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* sysdeps/unix/sysv/linux/sys/timex.h: Copy out
