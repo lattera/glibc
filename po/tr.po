@@ -1,13 +1,13 @@
 # Turkish translations for GNU libc messages.
-# Copyright © 2004 Free Software Foundation, Inc.
-# Nilgün Belma Bugüner <nilgun@superonline.com>, 2001, ..., 2004.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Nilgün Belma Bugüner <nilgun@superonline.com>, 2001, ..., 2005.
 # Onur Tolga Şehitoğlu <onur@lcsl.metu.edu.tr>, 1998.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.3\n"
 "POT-Creation-Date: 2004-08-05 09:16+0200\n"
-"PO-Revision-Date: 2004-08-06 11:21+0300\n"
+"PO-Revision-Date: 2005-02-27 11:10+0300\n"
 "Last-Translator: Nilgün Belma Bugüner <nilgun@superonline.com>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -2090,7 +2090,7 @@ msgstr "Sayısal sonuç kapsam dışı"
 #: stdio-common/../sysdeps/gnu/errlist.c:408
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:41
 msgid "Resource temporarily unavailable"
-msgstr "Özkaynak geçici olarak kullanışsız"
+msgstr "Özkaynak geçici olarak kullanılamaz durumda"
 
 #. TRANS In the GNU C library, this is another name for @code{EAGAIN} (above).
 #. TRANS The values are always the same, on every operating system.

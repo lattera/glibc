@@ -1,3 +1,7 @@
+2005-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/tr.po: Update from translation team.
+
 2005-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-addr.c: Cleanups.  Move declaration next to first use.
