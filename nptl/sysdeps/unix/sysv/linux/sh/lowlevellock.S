@@ -117,6 +117,7 @@ __lll_mutex_timedlock_wait:
 	mov	#1, r3
 	mov	#2, r4
 	CMPXCHG (r3, @r8, r4, r2)
+	tst	r2, r2
 	bt	8f
 
 	mov	r8, r4

@@ -133,6 +133,34 @@ __pthread_cond_timedwait:
 
 8:	
 	/* Get current time.  */
+#ifdef __NR_clock_gettime
+	/* Get the clock number.	 */
+	mov.l	@(cond_nwaiters,r8), r4
+	mov	#((1 << clock_bits) - 1), r0
+	and	r0, r4
+	/* Only clocks 0 and 1 are allowed.  Both are handled in the
+	   kernel.  */
+	mov	r15, r5
+	add	#16, r5
+	mov.w	.L__NR_clock_gettime, r3
+	trapa	#0x12
+	SYSCALL_INST_PAD
+# ifndef __ASSUME_POSIX_TIMERS
+	cmp/eq	#-ENOSYS, r0
+	bt	19f
+# endif
+
+	/* Compute relative timeout.  */
+	mov.l	@r13, r2
+	mov.l	@(4,r13), r3
+	mov.l	@(16,r15), r0
+	bra	0f
+	 mov.l	@(20,r15), r1
+.L__NR_clock_gettime:
+	.word	__NR_clock_gettime
+
+# ifndef __ASSUME_POSIX_TIMERS
+19:	
 	mov	r15, r4
 	add	#16, r4
 	mov	#0, r5
@@ -143,11 +171,30 @@ __pthread_cond_timedwait:
 	/* Compute relative timeout.  */
 	mov.l	@(20,r15), r0
 	mov.w	.L1k, r1
-	dmulu.l	r0, r1		/* Milli seconds to nano seconds.  */
+	dmulu.l	r0, r1		/* Micro seconds to nano seconds.  */
 	mov.l	@r13, r2
 	mov.l	@(4,r13), r3
 	mov.l	@(16,r15), r0
 	sts	macl, r1
+#endif
+0:	
+#else
+	mov	r15, r4
+	add	#16, r4
+	mov	#0, r5
+	mov	#SYS_gettimeofday, r3
+	trapa	#0x12
+	SYSCALL_INST_PAD
+
+	/* Compute relative timeout.  */
+	mov.l	@(20,r15), r0
+	mov.w	.L1k, r1
+	dmulu.l	r0, r1		/* Micro seconds to nano seconds.  */
+	mov.l	@r13, r2
+	mov.l	@(4,r13), r3
+	mov.l	@(16,r15), r0
+	sts	macl, r1
+#endif
 	sub	r0, r2
 	clrt
 	subc	r1, r3
