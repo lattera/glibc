@@ -35,7 +35,6 @@
 #include <string.h>
 #include <rpc/rpc.h>
 #include <sys/socket.h>
-#include <sys/errno.h>
 #include <netdb.h>
 
 /*

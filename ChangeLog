@@ -1,5 +1,7 @@
 2002-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/clnt_gen.c: Don't include <sys/errno.h>.
+
 	* elf/dl-minimal.c: Remove definition of __assert_perror_fail.
 
 	* sysdeps/wordsize-32/divdi3.c: Define __divdi3_internal.
