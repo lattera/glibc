@@ -44,7 +44,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   GOST_19768-74 GREEK-CCITT GREEK7 GREEK7-OLD INIS INIS-8	 \
 	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
 	   ISO_5428 ISO_10367-BOX MAC-IS MAC-UK NATS-DANO NATS-SEFI	 \
-	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK ISIRI-3342
+	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK ISIRI-3342 GBGBK
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -112,7 +112,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      koi8-r.c ksc5601.c ksc5601.h latin-greek.c latin-greek-1.c    \
 	      macintosh.c mac-is.c mac-uk.c nats-dano.c nats-sefi.c sjis.c  \
 	      t.61.c uhc.c sami-ws2.c iso-ir-197.c tis-620.c koi8-u.c	    \
-	      isiri-3342.c
+	      isiri-3342.c gbgbk.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

@@ -892,6 +892,10 @@ module	GBK//			INTERNAL		GBK		1
 module	INTERNAL		GBK//			GBK		1
 
 #	from			to			module		cost
+module	GBK//			EUC-CN//		GBGBK		1
+module	EUC-CN//		GBK//			GBGBK		1
+
+#	from			to			module		cost
 alias	EUCTW//			EUC-TW//
 alias	OSF0005000a//		EUC-TW//
 module	EUC-TW//		INTERNAL		EUC-TW		1

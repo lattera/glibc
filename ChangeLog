@@ -1,6 +1,13 @@
 1999-12-27  Ulrich Drepper  <drepper@cygnus.com>
 
-	* iconvdata/gbk.c: OPtimize the swrich statement in the conversion
+	* iconvdata/gbgbk.c: New file.
+	* iconvdata/Makefile (modules): Add GBGBK.
+	(distribute): Add gbgbk.c.
+	* iconvdata/gconv-modules: Add entries for GBGBK modules.
+
+	* iconvdata/euc-cn.c: Fix comment.
+
+	* iconvdata/gbk.c: Optimize the switch statement in the conversion
 	to GBK a bit.
 
 	* locale/programs/charmap.c (charmap_new_char): Recognize special
