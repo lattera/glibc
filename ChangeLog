@@ -1,6 +1,7 @@
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/aix/getegid.c: Don't try to include <sys/id.h>.
+	* sysdeps/unix/sysv/aix/geteuid.c: Don't try to include <sys/id.h>.
+	* sysdeps/unix/sysv/aix/getegid.c: Likewise.
 	* sysdeps/unix/sysv/aix/xstat64.c: Define STX_NORMAL and STX_64.
 	* sysdeps/unix/sysv/aix/xstat.c: Define STX_NORMAL.
 	* sysdeps/unix/sysv/aix/sys/param.h: Define NGROUPS.
