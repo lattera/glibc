@@ -35,7 +35,10 @@ tests = tst-aton
 
 include ../Makeconfig
 
-extra-libs := libresolv libanl libnss_dns
+extra-libs := libresolv libnss_dns
+ifeq ($(have-thread-library),yes)
+extra-libs += libanl
+endif
 extra-libs-others = $(extra-libs)
 libresolv-routines := gethnamaddr res_comp res_debug	\
 		      res_data res_mkquery res_query res_send		\
@@ -54,7 +57,7 @@ ifneq ($(build-static-nss),yes)
 libnss_dns-inhibit-o	= $(filter-out .os,$(object-suffixes))
 endif
 
-ifeq (yes,$(build-shared))
+ifeq (yesyes,$(build-shared)$(have-thread-library))
 tests: $(objpfx)ga_test
 endif
 
