@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ ENTRY (__waitpid)
 	pushfl			/* Push the flags word.  */
 	popl %eax		/* Pop it into the accumulator.  */
 	orl $0x8c4, %eax	/* Set lots of bits.  */
-	pushl $eax		/* Push the new flags word.  */
+	pushl %eax		/* Push the new flags word.  */
 	popfl			/* Pop it into the flags.  */
 	DO_CALL (wait, 2)
 	movl 4(%esp), scratch	/* Put status pointer in scratch register.  */
