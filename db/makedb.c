@@ -122,6 +122,7 @@ main (argc, argv)
 	  error (0, 0, gettext ("wrong number of arguments"));
 	  argp_help (&argp, stdout, ARGP_HELP_SEE,
 		     program_invocation_short_name);
+	  exit (1);
 	}
       input_name = argv[remaining];
     }

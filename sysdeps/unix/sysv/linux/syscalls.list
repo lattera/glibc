@@ -32,6 +32,7 @@ pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
 query_module	EXTRA	query_module	5	query_module
+quotactl	EXTRA	quotactl	4	quotactl
 s_getdents	EXTRA	getdents	3	__getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_poll		poll	poll		3	__syscall_poll

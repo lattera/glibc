@@ -1185,7 +1185,7 @@ typedef struct
 /* Used to omit pushing failure point id's when we're not debugging.  */
 #ifdef DEBUG
 #define DEBUG_PUSH PUSH_FAILURE_INT
-#define DEBUG_POP(item_addr) (item_addr)->integer = POP_FAILURE_INT ()
+#define DEBUG_POP(item_addr) *(item_addr) = POP_FAILURE_INT ()
 #else
 #define DEBUG_PUSH(item)
 #define DEBUG_POP(item_addr)
@@ -1209,7 +1209,7 @@ typedef struct
     /* Can't be int, since there is not a shred of a guarantee that int	\
        is wide enough to hold a value of something to which pointer can	\
        be assigned */							\
-    s_reg_t this_reg;							\
+    active_reg_t this_reg;						\
     									\
     DEBUG_STATEMENT (failure_id++);					\
     DEBUG_STATEMENT (nfailure_points_pushed++);				\
@@ -1217,7 +1217,7 @@ typedef struct
     DEBUG_PRINT2 ("  Before push, next avail: %d\n", (fail_stack).avail);\
     DEBUG_PRINT2 ("                     size: %d\n", (fail_stack).size);\
 									\
-    DEBUG_PRINT2 ("  slots needed: %d\n", NUM_FAILURE_ITEMS);		\
+    DEBUG_PRINT2 ("  slots needed: %ld\n", NUM_FAILURE_ITEMS);		\
     DEBUG_PRINT2 ("     available: %d\n", REMAINING_AVAIL_SLOTS);	\
 									\
     /* Ensure we have enough space allocated for what we will push.  */	\
@@ -1238,16 +1238,17 @@ typedef struct
       for (this_reg = lowest_active_reg; this_reg <= highest_active_reg; \
 	   this_reg++)							\
 	{								\
-	  DEBUG_PRINT2 ("  Pushing reg: %d\n", this_reg);		\
+	  DEBUG_PRINT2 ("  Pushing reg: %lu\n", this_reg);		\
 	  DEBUG_STATEMENT (num_regs_pushed++);				\
 									\
-	  DEBUG_PRINT2 ("    start: 0x%x\n", regstart[this_reg]);	\
+	  DEBUG_PRINT2 ("    start: %p\n", regstart[this_reg]);		\
 	  PUSH_FAILURE_POINTER (regstart[this_reg]);			\
 									\
-	  DEBUG_PRINT2 ("    end: 0x%x\n", regend[this_reg]);		\
+	  DEBUG_PRINT2 ("    end: %p\n", regend[this_reg]);		\
 	  PUSH_FAILURE_POINTER (regend[this_reg]);			\
 									\
-	  DEBUG_PRINT2 ("    info: 0x%x\n      ", reg_info[this_reg]);	\
+	  DEBUG_PRINT2 ("    info: %p\n      ",				\
+			reg_info[this_reg].word.pointer);		\
 	  DEBUG_PRINT2 (" match_null=%d",				\
 			REG_MATCH_NULL_STRING_P (reg_info[this_reg]));	\
 	  DEBUG_PRINT2 (" active=%d", IS_ACTIVE (reg_info[this_reg]));	\
@@ -1259,17 +1260,17 @@ typedef struct
 	  PUSH_FAILURE_ELT (reg_info[this_reg].word);			\
 	}								\
 									\
-    DEBUG_PRINT2 ("  Pushing  low active reg: %d\n", lowest_active_reg);\
+    DEBUG_PRINT2 ("  Pushing  low active reg: %ld\n", lowest_active_reg);\
     PUSH_FAILURE_INT (lowest_active_reg);				\
 									\
-    DEBUG_PRINT2 ("  Pushing high active reg: %d\n", highest_active_reg);\
+    DEBUG_PRINT2 ("  Pushing high active reg: %ld\n", highest_active_reg);\
     PUSH_FAILURE_INT (highest_active_reg);				\
 									\
-    DEBUG_PRINT2 ("  Pushing pattern 0x%x:\n", pattern_place);		\
+    DEBUG_PRINT2 ("  Pushing pattern %p:\n", pattern_place);		\
     DEBUG_PRINT_COMPILED_PATTERN (bufp, pattern_place, pend);		\
     PUSH_FAILURE_POINTER (pattern_place);				\
 									\
-    DEBUG_PRINT2 ("  Pushing string 0x%x: `", string_place);		\
+    DEBUG_PRINT2 ("  Pushing string %p: `", string_place);		\
     DEBUG_PRINT_DOUBLE_STRING (string_place, string1, size1, string2,   \
 				 size2);				\
     DEBUG_PRINT1 ("'\n");						\
@@ -1321,8 +1322,8 @@ typedef struct
 
 #define POP_FAILURE_POINT(str, pat, low_reg, high_reg, regstart, regend, reg_info)\
 {									\
-  DEBUG_STATEMENT (fail_stack_elt_t failure_id;)			\
-  s_reg_t this_reg;							\
+  DEBUG_STATEMENT (unsigned failure_id;)				\
+  active_reg_t this_reg;						\
   const unsigned char *string_temp;					\
 									\
   assert (!FAIL_STACK_EMPTY ());					\
@@ -1344,34 +1345,35 @@ typedef struct
   if (string_temp != NULL)						\
     str = (const char *) string_temp;					\
 									\
-  DEBUG_PRINT2 ("  Popping string 0x%x: `", str);			\
+  DEBUG_PRINT2 ("  Popping string %p: `", str);				\
   DEBUG_PRINT_DOUBLE_STRING (str, string1, size1, string2, size2);	\
   DEBUG_PRINT1 ("'\n");							\
 									\
   pat = (unsigned char *) POP_FAILURE_POINTER ();			\
-  DEBUG_PRINT2 ("  Popping pattern 0x%x:\n", pat);			\
+  DEBUG_PRINT2 ("  Popping pattern %p:\n", pat);			\
   DEBUG_PRINT_COMPILED_PATTERN (bufp, pat, pend);			\
 									\
   /* Restore register info.  */						\
   high_reg = (active_reg_t) POP_FAILURE_INT ();				\
-  DEBUG_PRINT2 ("  Popping high active reg: %d\n", high_reg);		\
+  DEBUG_PRINT2 ("  Popping high active reg: %ld\n", high_reg);		\
 									\
   low_reg = (active_reg_t) POP_FAILURE_INT ();				\
-  DEBUG_PRINT2 ("  Popping  low active reg: %d\n", low_reg);		\
+  DEBUG_PRINT2 ("  Popping  low active reg: %ld\n", low_reg);		\
 									\
   if (1)								\
     for (this_reg = high_reg; this_reg >= low_reg; this_reg--)		\
       {									\
-	DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);		\
+	DEBUG_PRINT2 ("    Popping reg: %ld\n", this_reg);		\
 									\
 	reg_info[this_reg].word = POP_FAILURE_ELT ();			\
-	DEBUG_PRINT2 ("      info: 0x%x\n", reg_info[this_reg]);	\
+	DEBUG_PRINT2 ("      info: %p\n",				\
+		      reg_info[this_reg].word.pointer);			\
 									\
 	regend[this_reg] = (const char *) POP_FAILURE_POINTER ();	\
-	DEBUG_PRINT2 ("      end: 0x%x\n", regend[this_reg]);		\
+	DEBUG_PRINT2 ("      end: %p\n", regend[this_reg]);		\
 									\
 	regstart[this_reg] = (const char *) POP_FAILURE_POINTER ();	\
-	DEBUG_PRINT2 ("      start: 0x%x\n", regstart[this_reg]);	\
+	DEBUG_PRINT2 ("      start: %p\n", regstart[this_reg]);		\
       }									\
   else									\
     {									\
@@ -4824,7 +4826,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
           DEBUG_PRINT1 ("EXECUTING dummy_failure_jump.\n");
           /* It doesn't matter what we push for the string here.  What
              the code at `fail' tests is the value for the pattern.  */
-          PUSH_FAILURE_POINT (0, 0, -2);
+          PUSH_FAILURE_POINT (NULL, NULL, -2);
           goto unconditional_jump;
 
 
@@ -4837,7 +4839,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
           DEBUG_PRINT1 ("EXECUTING push_dummy_failure.\n");
           /* See comments just above at `dummy_failure_jump' about the
              two zeroes.  */
-          PUSH_FAILURE_POINT (0, 0, -2);
+          PUSH_FAILURE_POINT (NULL, NULL, -2);
           break;
 
         /* Have to succeed matching what follows at least n times.

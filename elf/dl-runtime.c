@@ -135,7 +135,7 @@ fixup (
 #include "dynamic-link.h"
 
     /* Perform the specified relocation.  */
-    if (l->l_info[VERSYMIDX (DT_VERNEEDNUM)])
+    if (l->l_info[VERSYMIDX (DT_VERSYM)])
       {
 	const ElfW(Half) * version =
 	  (const ElfW(Half) *) (l->l_addr +

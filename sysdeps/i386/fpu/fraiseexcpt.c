@@ -32,44 +32,67 @@ feraiseexcept (int excepts)
   /* First: invalid exception.  */
   if ((FE_INVALID & excepts) != 0)
     {
-      /* One example of a invalid operation is 0 * Infinity.  */
-      double d = 0.0 * HUGE_VAL;
+      /* One example of a invalid operation is 0.0 / 0.0.  */
+      double d;
+      __asm__ ("fldz; fdiv %%st, %%st(0); fwait" : "=t" (d));
       (void) &d;
-      /* Now force the exception.  */
-      __asm__ ("fwait");
     }
 
   /* Next: division by zero.  */
   if ((FE_DIVBYZERO & excepts) != 0)
     {
       double d;
-      __asm__ ("fld1; fldz; fdivp %%st, %%st(1); fwait" : "=t" (d));
+      __asm__ ("fldz; fld1; fdivp %%st, %%st(1); fwait" : "=t" (d));
       (void) &d;
     }
 
   /* Next: overflow.  */
   if ((FE_OVERFLOW & excepts) != 0)
     {
-      long double d = LDBL_MAX * LDBL_MAX;
-      (void) &d;
-      /* Now force the exception.  */
-      __asm__ ("fwait");
+      /* There is no way to raise only the overflow flag.  Do it the
+	 hard way.  */
+      fenv_t temp;
+
+      /* Bah, we have to clear selected exceptions.  Since there is no
+	 `fldsw' instruction we have to do it the hard way.  */
+      __asm__ ("fnstenv %0" : "=m" (*&temp));
+
+      /* Set the relevant bits.  */
+      temp.status_word |= FE_OVERFLOW;
+
+      /* Put the new data in effect.  */
+      __asm__ ("fldenv %0" : : "m" (*&temp));
+
+      /* And raise the exception.  */
+	__asm__ ("fwait");
     }
 
   /* Next: underflow.  */
   if ((FE_UNDERFLOW & excepts) != 0)
     {
-      long double d = LDBL_MIN / 16.0;
-      (void) &d;
-      /* Now force the exception.  */
-      __asm__ ("fwait");
+      /* There is no way to raise only the overflow flag.  Do it the
+	 hard way.  */
+      fenv_t temp;
+
+      /* Bah, we have to clear selected exceptions.  Since there is no
+	 `fldsw' instruction we have to do it the hard way.  */
+      __asm__ ("fnstenv %0" : "=m" (*&temp));
+
+      /* Set the relevant bits.  */
+      temp.status_word |= FE_UNDERFLOW;
+
+      /* Put the new data in effect.  */
+      __asm__ ("fldenv %0" : : "m" (*&temp));
+
+      /* And raise the exception.  */
+	__asm__ ("fwait");
     }
 
   /* Last: inexact.  */
   if ((FE_INEXACT & excepts) != 0)
     {
       long double d;
-      __asm__ ("fld1; fldpi; fdivp %%st, %%st(1); fwait" : "=t" (d));
+      __asm__ ("fmul %%st, %%st(0); fwait" : "=t" (d) : "0" (LDBL_MAX));
       (void) &d;
     }
 }

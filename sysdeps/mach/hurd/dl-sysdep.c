@@ -665,6 +665,7 @@ _exit (int status)
 /* Read the whole contents of FILE into new mmap'd space with given
    protections.  The size of the file is returned in SIZE.  */
 void *
+weak_function
 _dl_sysdep_read_whole_file (const char *file, size_t *size, int prot)
 {
   struct stat stat;

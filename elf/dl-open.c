@@ -55,7 +55,7 @@ _dl_open (const char *file, int mode)
   _dl_map_object_deps (new, NULL, 0, 0);
 
   /* So far, so good.  Now check the versions.  */
-  (void) _dl_check_map_versions (new, 0);
+  (void) _dl_check_all_versions (new, 0);
 
   /* Relocate the objects loaded.  We do this in reverse order so that copy
      relocs of earlier objects overwrite the data written by later objects.  */

@@ -1,3 +1,57 @@
+1997-06-27 20:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/quota.h: Add <asm/types.h>.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+	* libc.map: Add _rpc_dtablesize.  Reported by Thorsten Kukuk.
+
+	* db/makedb.c: Exit with error if number of option is incorrect.
+
+	* math/Makefile (tests): Add test-fenv.
+	* math/test-fenv.c: New file.  Test for exception handling functions.
+	Written mainly by Andreas Jaeger.
+
+	* sysdeps/i386/fpu/fraiseexcpt.c: Correct implementation.
+
+	* sysdeps/mach/hurd/abi-tag.h: Set tag to 1 for Hurd and kernel
+	compatibility version to 0.  Reported by Roland McGrath.
+
+1997-06-27 18:49  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/standalone/brk.c (__NONE_set_memvals): Correct typo.
+	* sysdeps/standalone/arm/bits/errno.h: Add ENOTDIR.
+	* sysdeps/stub/sys/param.h: Add definition of MAX and MIN.
+
+1997-06-27 10:44  Fila Kolodny  <fila@ibi.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c: Make _dl_sysdep_read_whole_file weak.
+
+1997-06-27 00:51  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-open.c (_dl_open): Check versions of all newly loaded
+	objects, including dependencies.
+
+	* elf/dl-runtime.c (fixup): Always use version information if
+	available.
+
+1997-06-26 12:25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/bits/nan.h: Renamed from sysdeps/m68k/nan.h.
+
+1997-06-26 11:40  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/regex.c (DEBUG_POP): Assume parameter to be pointer to
+	int, not pointer to fail_stack_elt_t.
+	(PUSH_FAILURE_POINT): Fix all formats in debugging messages.  Fix
+	type of this_reg.
+	(POP_FAILURE_POINT): Likewise.  Fix type of failure_id.
+	(re_match_2_internal): Pass NULL, not 0, to PUSH_FAILURE_POINT.
+
+1997-06-27 02:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add quotactl.
+	Reported by a sun.
+
 1997-06-26 21:50  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/math.h: Move definition of macros for unordered comparison
@@ -9,7 +63,7 @@
 	* Makerules: Move definition of load-map-file before use.
 	(lib%.so): Depend on load-map-file, not lib%-map.
 
-	* manual/lgpl.texinfo: Likewise.
+	* manual/lgpl.texinfo: Update copyright.
 
 1997-06-24 09:40  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
