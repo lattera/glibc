@@ -1,7 +1,7 @@
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/not-cancel.h: New file.
-	* sysdeps/unix/sysv/linux/x86-64/not-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/not-cancel.h: New file.
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Make sure the code
 	in subsections has a symbol associated with it.
