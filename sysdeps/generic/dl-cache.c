@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <sys/mman.h>
@@ -35,7 +36,7 @@ static struct cache_file_new *cache_new;
 static size_t cachesize;
 
 /* 1 if cache_data + PTR points into the cache.  */
-#define _dl_cache_verify_ptr(ptr) (ptr < cachesize - sizeof *cache)
+#define _dl_cache_verify_ptr(ptr) (ptr < cache_data_size)
 
 /* This is the cache ID we expect.  Normally it is 3 for glibc linked
    binaries.  */
@@ -146,6 +147,7 @@ _dl_load_cache_lookup (const char *name)
   int left, right, middle;
   int cmpres;
   const char *cache_data;
+  uint32_t cache_data_size;
   const char *best;
 
   /* Print a message if the loading of libs is traced.  */
@@ -163,8 +165,8 @@ _dl_load_cache_lookup (const char *name)
 	 - the old format with the new format in it
 	 - only the new format
 	 The following checks if the cache contains any of these formats.  */
-      if (file && cachesize > sizeof *cache &&
-	  !memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1))
+      if (file != NULL && cachesize > sizeof *cache
+	  && memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1) == 0)
 	{
 	  size_t offset;
 	  /* Looks ok.  */
@@ -174,31 +176,27 @@ _dl_load_cache_lookup (const char *name)
 	  offset = ALIGN_CACHE (sizeof (struct cache_file)
 				+ cache->nlibs * sizeof (struct file_entry));
 
-	  cache_new = (struct cache_file_new *) ((void *)cache + offset);
+	  cache_new = (struct cache_file_new *) ((void *) cache + offset);
 	  if (cachesize < (offset + sizeof (struct cache_file_new))
-	      || memcmp (cache_new->magic, CACHEMAGIC_NEW,
-			  sizeof CACHEMAGIC_NEW - 1)
-	      || memcmp (cache_new->version, CACHE_VERSION,
-			 sizeof CACHE_VERSION - 1))
+	      || memcmp (cache_new->magic, CACHEMAGIC_VERSION_NEW,
+			 sizeof CACHEMAGIC_VERSION_NEW - 1) != 0)
 	    cache_new = (void *) -1;
 	}
-      else if (file && cachesize > sizeof *cache_new)
+      else if (file != NULL && cachesize > sizeof *cache_new
+	       && memcmp (cache_new->magic, CACHEMAGIC_VERSION_NEW,
+			  sizeof CACHEMAGIC_VERSION_NEW - 1) == 0)
 	{
 	  cache_new = file;
 	  cache = file;
-	  if (memcmp (cache_new->magic, CACHEMAGIC_NEW,
-		      sizeof CACHEMAGIC_NEW - 1)
-	      || memcmp (cache_new->version, CACHE_VERSION,
-			 sizeof CACHE_VERSION - 1))
-	    cache_new = (void *) -1;
 	}
       else
 	{
-	  if (file)
+	  if (file != NULL)
 	    __munmap (file, cachesize);
 	  cache = (void *) -1;
-	  return NULL;
 	}
+
+      assert (cache != NULL);
     }
 
   if (cache == (void *) -1)
@@ -216,6 +214,9 @@ _dl_load_cache_lookup (const char *name)
       /* This is where the strings start.  */
       cache_data = (const char *) cache_new;
 
+      /* Now we can compute how large the string table is.  */
+      cache_data_size = (const char *) cache + cachesize - cache_data;
+
       hwcap = &_dl_hwcap;
 
 #define HWCAP_CHECK							     \
@@ -227,6 +228,10 @@ _dl_load_cache_lookup (const char *name)
     {
       /* This is where the strings start.  */
       cache_data = (const char *) &cache->libs[cache->nlibs];
+
+      /* Now we can compute how large the string table is.  */
+      cache_data_size = (const char *) cache + cachesize - cache_data;
+
 #undef HWCAP_CHECK
 #define HWCAP_CHECK do {} while (0)
       SEARCH_CACHE (cache);

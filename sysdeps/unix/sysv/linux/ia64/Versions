@@ -11,6 +11,7 @@ libc {
     _inb; _inw; _inl;
     outb; outw; _outl;
     _outb; _outw; _outl;
+    pciconfig_read; pciconfig_write;
 
     # linuxthreads
     __clone2;

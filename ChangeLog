@@ -1,4 +1,25 @@
+2000-10-24  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (my_strftime macro)
+	[!defined _LIBC && HAVE_TZNAME && HAVE_TZSET]:
+	When redefining, do it without args, so that it works even if
+	emacs is defined and an extra argument is passed to my_stftime.
+	(my_strftime function): When evaluating a subformat, pass
+	ut_argument as well.
+
+2000-10-24  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/Versions: Add pciconfig_read and
+	pciconfig_write.
+
 2000-10-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-cache.c (_dl_cache_verify_ptr): Correct test
+	for files with new cache format.
+	(_dl_load_cache_lookup): Add variable cache_data_size for size of the
+	data.  Correctly report error if neither old not new signature is
+	found. Little optimizations.
+	Mostly based on a patch by Denis Zaitsev <zzz@cd-club.ru>.
 
 	* elf/dl-close.c (_dl_close): Optimize a bit by optimizing out the
 	nsearchlist variable.
