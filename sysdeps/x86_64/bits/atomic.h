@@ -279,19 +279,23 @@ typedef uintmax_t uatomic_max_t;
   (void) ({ if (sizeof (*mem) == 1)					      \
 	      __asm __volatile (LOCK "orb %b2, %0"			      \
 				: "=m" (*mem)				      \
-				: "m" (*mem), "i" (1 << (bit)));	      \
+				: "m" (*mem), "ir" (1 << (bit)));	      \
 	    else if (sizeof (*mem) == 2)				      \
 	      __asm __volatile (LOCK "orw %w2, %0"			      \
 				: "=m" (*mem)				      \
-				: "m" (*mem), "i" (1 << (bit)));	      \
+				: "m" (*mem), "ir" (1 << (bit)));	      \
 	    else if (sizeof (*mem) == 4)				      \
 	      __asm __volatile (LOCK "orl %2, %0"			      \
+				: "=m" (*mem)				      \
+				: "m" (*mem), "ir" (1 << (bit)));	      \
+	    else if (__builtin_constant_p (bit) && (bit) < 32)		      \
+	      __asm __volatile (LOCK "orq %2, %0"			      \
 				: "=m" (*mem)				      \
 				: "m" (*mem), "i" (1 << (bit)));	      \
 	    else							      \
 	      __asm __volatile (LOCK "orq %q2, %0"			      \
 				: "=m" (*mem)				      \
-				: "m" (*mem), "i" (1 << (bit)));	      \
+				: "m" (*mem), "r" (1UL << (bit)));	      \
 	    })
 
 
@@ -300,17 +304,17 @@ typedef uintmax_t uatomic_max_t;
      if (sizeof (*mem) == 1)						      \
        __asm __volatile (LOCK "btsb %3, %1; setc %0"			      \
 			 : "=q" (__result), "=m" (*mem)			      \
-			 : "m" (*mem), "i" (bit));			      \
+			 : "m" (*mem), "ir" (bit));			      \
      else if (sizeof (*mem) == 2)					      \
        __asm __volatile (LOCK "btsw %3, %1; setc %0"			      \
 			 : "=q" (__result), "=m" (*mem)			      \
-			 : "m" (*mem), "i" (bit));			      \
+			 : "m" (*mem), "ir" (bit));			      \
      else if (sizeof (*mem) == 4)					      \
        __asm __volatile (LOCK "btsl %3, %1; setc %0"			      \
 			 : "=q" (__result), "=m" (*mem)			      \
-			 : "m" (*mem), "i" (bit));			      \
+			 : "m" (*mem), "ir" (bit));			      \
      else							      	      \
        __asm __volatile (LOCK "btsq %3, %1; setc %0"			      \
 			 : "=q" (__result), "=m" (*mem)			      \
-			 : "m" (*mem), "i" (bit));			      \
+			 : "m" (*mem), "ir" (bit));			      \
      __result; })
