@@ -1,3 +1,8 @@
+2000-09-14  Andreas Jaeger  <aj@suse.de>
+
+	* time/clocktest.c (main): Change format, CLOCKS_PER_SEC is now
+	long.
+
 2000-09-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex.c (compile_range): Cast collseq index to unsigned char
