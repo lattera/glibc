@@ -1,3 +1,9 @@
+2003-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: New file.
+
 2003-03-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/pthread_cond_timedwait.c
