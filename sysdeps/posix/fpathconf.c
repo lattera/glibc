@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <limits.h>
+#include <sys/stat.h>
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
 
@@ -142,7 +143,16 @@ __fpathconf (fd, name)
 
     case _PC_ASYNC_IO:
 #ifdef	_POSIX_ASYNC_IO
-      return _POSIX_ASYNC_IO;
+      {
+	/* AIO is only allowed on regular files and block devices.  */
+	struct stat64 st;
+
+	if (__fxstat64 (_STAT_VER, fd, &st) < 0
+	    || (! S_ISREG (st.st_mode) && ! S_ISBLK (st.st_mode)))
+	  return -1;
+	else
+	  return 1;
+      }
 #else
       return -1;
 #endif
