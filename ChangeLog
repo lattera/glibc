@@ -1,3 +1,8 @@
+2004-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (__posix_memalign): Correct alignment check.
+	Reported by Don Heller <dheller@cse.psu.edu>.
+
 2004-03-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Remove hwcap
