@@ -22,7 +22,10 @@
 #include <features.h>
 
 #include <sys/socket.h>
+#include <sys/types.h>
 
+
+__BEGIN_DECLS
 
 /* Standard well-defined IP protocols.  */
 enum
@@ -134,6 +137,32 @@ struct in_addr
 #endif
 
 
+/* IPv6 address */
+struct in6_addr
+  {
+    union
+      {
+	u_int8_t	u6_addr8[16];
+	u_int16_t	u6_addr16[8];
+	u_int32_t	u6_addr32[4];
+#if (~0UL) > 0xffffffff
+	u_int64_t	u6_addr64[2];
+#endif
+      } in6_u;
+#define s6_addr			in6_u.u6_addr8
+#define s6_addr16		in6_u.u6_addr16
+#define s6_addr32		in6_u.u6_addr32
+#define s6_addr64		in6_u.u6_addr64
+  };
+
+extern const struct in6_addr in6addr_any;        /* :: */
+extern const struct in6_addr in6addr_loopback;   /* ::1 */
+#define IN6ADDR_ANY_INIT { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+#define IN6ADDR_LOOPBACK_INIT { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 }
+
+#define INET_ADDRSTRLEN 16
+#define INET6_ADDRSTRLEN 46
+
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <sockaddrcom.h>
 
@@ -150,6 +179,25 @@ struct sockaddr_in
 			   __SOCKADDR_COMMON_SIZE -
 			   sizeof(unsigned short int) -
 			   sizeof(struct in_addr)];
+  };
+
+/* Ditto, for IPv6.  */
+struct sockaddr_in6
+  {
+    __SOCKADDR_COMMON (sin6_);
+    u_int16_t		sin6_port;      /* Transport layer port # */
+    u_int32_t		sin6_flowinfo;  /* IPv6 flow information */
+    struct in6_addr	sin6_addr;      /* IPv6 address */
+  };
+
+/* IPv6 multicast request.  */
+struct ipv6_mreq
+  {
+    /* IPv6 multicast address of group */
+    struct in6_addr ipv6mr_multiaddr;
+
+    /* local IPv6 address of interface */
+    int		ipv6mr_ifindex;
   };
 
 
@@ -202,5 +250,57 @@ extern unsigned short int htons __P ((unsigned short int));
 #define	htonl(x)	(x)
 #define	htons(x)	(x)
 #endif
+
+
+/* IPV6 socket options.  */
+#define IPV6_ADDRFORM		1
+#define IPV6_RXINFO		2
+#define IPV6_RXHOPOPTS		3
+#define IPV6_RXDSTOPTS		4
+#define IPV6_RXSRCRT		5
+#define IPV6_PKTOPTIONS		6
+#define IPV6_CHECKSUM		7
+#define IPV6_HOPLIMIT		8
+
+#define IPV6_TXINFO		IPV6_RXINFO
+#define SCM_SRCINFO		IPV6_TXINFO
+#define SCM_SRCRT		IPV6_RXSRCRT
+
+#define IPV6_UNICAST_HOPS	16
+#define IPV6_MULTICAST_IF	17
+#define IPV6_MULTICAST_HOPS	18
+#define IPV6_MULTICAST_LOOP	19
+#define IPV6_ADD_MEMBERSHIP	20
+#define IPV6_DROP_MEMBERSHIP	21
+
+#define IN6_IS_ADDR_UNSPECIFIED(a) \
+        ((((u_int32_t *)(a))[0] == 0) && ((u_int32_t *)(a))[1] == 0) && \
+         (((u_int32_t *)(a))[2] == 0) && ((u_int32_t *)(a))[3] == 0))
+
+#define IN6_IS_ADDR_LOOPBACK(a) \
+        ((((u_int32_t *)(a))[0] == 0) && ((u_int32_t *)(a))[1] == 0) && \
+         (((u_int32_t *)(a))[2] == 0) && ((u_int32_t *)(a))[3] == htonl(1)))
+
+#define IN6_IS_ADDR_MULTICAST(a) (((u_int8_t *)(a))[0] == 0xff)
+
+#define IN6_IS_ADDR_LINKLOCAL(a) \
+        ((((u_int32_t *)(a))[0] & htonl(0xffc00000)) == htonl(0xfe800000))
+
+#define IN6_IS_ADDR_SITELOCAL(a) \
+        ((((u_int32_t *)(a))[0] & htonl(0xffc00000)) == htonl(0xfec00000))
+
+#define IN6_IS_ADDR_V4MAPPED(a) \
+        ((((u_int32_t *)(a))[0] == 0) && (((u_int32_t *)(a))[1] == 0) && \
+         (((u_int32_t *)(a))[2] == htonl(0xffff)))
+
+#define IN6_IS_ADDR_V4COMPAT(a) \
+        ((((u_int32_t *)(a))[0] == 0) && (((u_int32_t *)(a))[1] == 0) && \
+         (((u_int32_t *)(a))[2] == 0) && (ntohl(((u_int32_t *)(a))[3]) > 1))
+
+
+/* Bind socket to a priviledged IP port.  */
+extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
+
+__END_DECLS
 
 #endif	/* netinet/in.h */

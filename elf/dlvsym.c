@@ -1,4 +1,4 @@
-/* Look up a symbol in a shared object loaded by `dlopen'.
+/* Look up a versioned symbol in a shared object loaded by `dlopen'.
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,12 +22,14 @@
 #include <dlfcn.h>
 #include <setjmp.h>
 
+#include <dl-hash.h>
 
 void *
-__dlvsym (void *handle, const char *name, const char *version)
+__dlvsym (void *handle, const char *name, const char *version_str)
 {
   ElfW(Addr) caller = (ElfW(Addr)) __builtin_return_address (0);
   ElfW(Addr) loadbase;
+  struct r_found_version version;
   const ElfW(Sym) *ref = NULL;
   void doit (void)
     {
@@ -35,7 +37,7 @@ __dlvsym (void *handle, const char *name, const char *version)
 	/* Search the global scope.  */
 	loadbase = _dl_lookup_versioned_symbol
 	  (name, &ref, &(_dl_global_scope ?: _dl_default_scope)[2], NULL,
-	   version, 0);
+	   &version, 0);
       else if (handle == RTLD_NEXT)
 	{
 	  struct link_map *l, *match;
@@ -55,7 +57,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 	    l = l->l_loader;
 
 	  loadbase = _dl_lookup_versioned_symbol_skip
-	    (name, &ref, &_dl_loaded, NULL, version, l, 0);
+	    (name, &ref, &_dl_loaded, NULL, &version, l, 0);
 	}
       else
 	{
@@ -63,9 +65,15 @@ RTLD_NEXT used in code not dynamically loaded"));
 	  struct link_map *map = handle;
 	  struct link_map *mapscope[2] = { map, NULL };
 	  loadbase = _dl_lookup_versioned_symbol
-	    (name, &ref, mapscope, map->l_name, version, 0);
+	    (name, &ref, mapscope, map->l_name, &version, 0);
 	}
     }
+
+  /* Compute hash value to the version string.  */
+  version.name = version_str;
+  version.hash = _dl_elf_hash (version_str);
+  /* We don't have a specific file where the symbol can be found.  */
+  version.filename = NULL;
 
   return _dlerror_run (doit) ? NULL : (void *) (loadbase + ref->st_value);
 }

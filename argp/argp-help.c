@@ -169,6 +169,9 @@ struct hol_entry
 
   /* The cluster of options this entry belongs to, or 0 if none.  */
   struct hol_cluster *cluster;
+
+  /* The argp from which this option came.  */
+  const struct argp *argp;
 };
 
 /* A cluster of entries to reflect the argp tree structure.  */
@@ -189,6 +192,9 @@ struct hol_cluster
   /* The cluster to which this cluster belongs, or 0 if it's at the base
      level.  */
   struct hol_cluster *parent;
+
+  /* The argp from which this cluster is (eventually) derived.  */
+  const struct argp *argp;
 
   /* The distance this cluster is from the root.  */
   int depth;
@@ -215,13 +221,14 @@ struct hol
   struct hol_cluster *clusters;
 };
 
-/* Create a struct hol from an array of struct argp_option.  CLUSTER is the
+/* Create a struct hol from the options in ARGP.  CLUSTER is the
    hol_cluster in which these entries occur, or 0, if at the root.  */
 static struct hol *
-make_hol (const struct argp_option *opt, struct hol_cluster *cluster)
+make_hol (const struct argp *argp, struct hol_cluster *cluster)
 {
   char *so;
   const struct argp_option *o;
+  const struct argp_option *opts = argp->options;
   struct hol_entry *entry;
   unsigned num_short_options = 0;
   struct hol *hol = malloc (sizeof (struct hol));
@@ -231,15 +238,15 @@ make_hol (const struct argp_option *opt, struct hol_cluster *cluster)
   hol->num_entries = 0;
   hol->clusters = 0;
 
-  if (opt)
+  if (opts)
     {
       int cur_group = 0;
 
       /* The first option must not be an alias.  */
-      assert (! oalias (opt));
+      assert (! oalias (opts));
 
       /* Calculate the space needed.  */
-      for (o = opt; ! oend (o); o++)
+      for (o = opts; ! oend (o); o++)
 	{
 	  if (! oalias (o))
 	    hol->num_entries++;
@@ -254,7 +261,7 @@ make_hol (const struct argp_option *opt, struct hol_cluster *cluster)
 
       /* Fill in the entries.  */
       so = hol->short_options;
-      for (o = opt, entry = hol->entries; ! oend (o); entry++)
+      for (o = opts, entry = hol->entries; ! oend (o); entry++)
 	{
 	  entry->opt = o;
 	  entry->num = 0;
@@ -266,6 +273,7 @@ make_hol (const struct argp_option *opt, struct hol_cluster *cluster)
 	       ? cur_group + 1
 	       : cur_group);
 	  entry->cluster = cluster;
+	  entry->argp = argp;
 
 	  do
 	    {
@@ -285,10 +293,10 @@ make_hol (const struct argp_option *opt, struct hol_cluster *cluster)
 
 /* Add a new cluster to HOL, with the given GROUP and HEADER (taken from the
    associated argp child list entry), INDEX, and PARENT, and return a pointer
-   to it.  */
+   to it.  ARGP is the argp that this cluster results from.  */
 static struct hol_cluster *
 hol_add_cluster (struct hol *hol, int group, const char *header, int index,
-		 struct hol_cluster *parent)
+		 struct hol_cluster *parent, const struct argp *argp)
 {
   struct hol_cluster *cl = malloc (sizeof (struct hol_cluster));
   if (cl)
@@ -298,6 +306,7 @@ hol_add_cluster (struct hol *hol, int group, const char *header, int index,
 
       cl->index = index;
       cl->parent = parent;
+      cl->argp = argp;
 
       cl->next = hol->clusters;
       hol->clusters = cl;
@@ -657,8 +666,8 @@ hol_append (struct hol *hol, struct hol *more)
 		if (oshort (opt) && ch == opt->key)
 		  /* The next short option in MORE_SO, CH, is from OPT.  */
 		  {
-		    if (! find_char (ch,
-				     short_options, short_options + hol_so_len))
+		    if (! find_char (ch, short_options,
+				     short_options + hol_so_len))
 		      /* The short option CH isn't shadowed by HOL's options,
 			 so add it to the sum.  */
 		      *so++ = ch;
@@ -689,6 +698,18 @@ indent_to (argp_fmtstream_t stream, unsigned col)
     __argp_fmtstream_putc (stream, ' ');
 }
 
+/* Output to STREAM either a space, or a newline if there isn't room for at
+   least ENSURE characters before the right margin.  */
+static void
+space (argp_fmtstream_t stream, size_t ensure)
+{
+  if (__argp_fmtstream_point (stream) + ensure
+      >= __argp_fmtstream_rmargin (stream))
+    __argp_fmtstream_putc (stream, '\n');
+  else
+    __argp_fmtstream_putc (stream, ' ');
+}
+
 /* If the option REAL has an argument, we print it in using the printf
    format REQ_FMT or OPT_FMT depending on whether it's a required or
    optional argument.  */
@@ -715,44 +736,79 @@ struct pentry_state
   struct hol_entry **prev_entry;
   int *sep_groups;
 
-  int first;			/* True if nothing's been printed so far.  */
+  /* True if nothing's been printed so far.  */
+  int first;
+
+  /* If non-zero, the state that was used to print this help.  */
+  const struct argp_state *state;
 };
 
+/* If a user doc filter should be applied to DOC, do so.  */
+static const char *
+filter_doc (const char *doc, int key, const struct argp *argp,
+	    struct pentry_state *pest)
+{
+  if (argp->help_filter)
+    /* We must apply a user filter to this output.  */
+    {
+      void *input = __argp_input (argp, pest->state);
+      return (*argp->help_filter) (key, doc, input);
+    }
+  else
+    /* No filter.  */
+    return (char *)doc;
+}
+
 /* Prints STR as a header line, with the margin lines set appropiately, and
-   notes the fact that groups should be separated with a blank line.  Note
+   notes the fact that groups should be separated with a blank line.  ARGP is
+   the argp that should dictate any user doc filtering to take place.  Note
    that the previous wrap margin isn't restored, but the left margin is reset
    to 0.  */
 static void
-print_header (const char *str, struct pentry_state *st)
+print_header (const char *str, const struct argp *argp,
+	      struct pentry_state *pest)
 {
-  if (*str)
+  const char *tstr = gettext (str);
+  const char *fstr = filter_doc (tstr, ARGP_KEY_HELP_HEADER, argp, pest);
+
+  if (fstr)
     {
-      if (st->prev_entry && *st->prev_entry)
-	__argp_fmtstream_putc (st->stream, '\n'); /* Precede with a blank line.  */
-      indent_to (st->stream, HEADER_COL);
-      __argp_fmtstream_set_lmargin (st->stream, HEADER_COL);
-      __argp_fmtstream_set_wmargin (st->stream, HEADER_COL);
-      __argp_fmtstream_puts (st->stream, str);
-      __argp_fmtstream_set_lmargin (st->stream, 0);
+      if (*fstr)
+	{
+	  if (pest->prev_entry && *pest->prev_entry)
+	    /* Precede with a blank line.  */
+	    __argp_fmtstream_putc (pest->stream, '\n');
+	  indent_to (pest->stream, HEADER_COL);
+	  __argp_fmtstream_set_lmargin (pest->stream, HEADER_COL);
+	  __argp_fmtstream_set_wmargin (pest->stream, HEADER_COL);
+	  __argp_fmtstream_puts (pest->stream, fstr);
+	  __argp_fmtstream_set_lmargin (pest->stream, 0);
+	  __argp_fmtstream_putc (pest->stream, '\n');
+	}
+
+      if (pest->sep_groups)
+	*pest->sep_groups = 1;	/* Separate subsequent groups. */
     }
 
-  if (st->sep_groups)
-    *st->sep_groups = 1;	/* Separate subsequent groups. */
+  if (fstr != tstr)
+    free ((char *) fstr);
 }
 
 /* Inserts a comma if this isn't the first item on the line, and then makes
-   sure we're at least to column COL.  Also clears FIRST.  */
+   sure we're at least to column COL.  If this *is* the first item on a line,
+   prints any pending whitespace/headers that should precede this line. Also
+   clears FIRST.  */
 static void
-comma (unsigned col, struct pentry_state *st)
+comma (unsigned col, struct pentry_state *pest)
 {
-  if (st->first)
+  if (pest->first)
     {
-      const struct hol_entry *pe = st->prev_entry ? *st->prev_entry : 0;
-      const struct hol_cluster *cl = st->entry->cluster;
+      const struct hol_entry *pe = pest->prev_entry ? *pest->prev_entry : 0;
+      const struct hol_cluster *cl = pest->entry->cluster;
 
-      if (st->sep_groups && *st->sep_groups
-	  && pe && st->entry->group != pe->group)
-	__argp_fmtstream_putc (st->stream, '\n');
+      if (pest->sep_groups && *pest->sep_groups
+	  && pe && pest->entry->group != pe->group)
+	__argp_fmtstream_putc (pest->stream, '\n');
 
       if (pe && cl && pe->cluster != cl && cl->header && *cl->header
 	  && !hol_cluster_is_child (pe->cluster, cl))
@@ -761,18 +817,17 @@ comma (unsigned col, struct pentry_state *st)
 	   (in which case we had just popped into a sub-cluster for a bit).
 	   If so, then print the cluster's header line.  */
 	{
-	  int old_wm = __argp_fmtstream_wmargin (st->stream);
-	  print_header (cl->header, st);
-	  __argp_fmtstream_putc (st->stream, '\n');
-	  __argp_fmtstream_set_wmargin (st->stream, old_wm);
+	  int old_wm = __argp_fmtstream_wmargin (pest->stream);
+	  print_header (cl->header, cl->argp, pest);
+	  __argp_fmtstream_set_wmargin (pest->stream, old_wm);
 	}
 
-      st->first = 0;
+      pest->first = 0;
     }
   else
-    __argp_fmtstream_puts (st->stream, ", ");
+    __argp_fmtstream_puts (pest->stream, ", ");
 
-  indent_to (st->stream, col);
+  indent_to (pest->stream, col);
 }
 
 /* Print help for ENTRY to STREAM.  *PREV_ENTRY should contain the last entry
@@ -781,15 +836,19 @@ comma (unsigned col, struct pentry_state *st)
    printed before any output.  *SEP_GROUPS is also set to true if a
    user-specified group header is printed.  */
 static void
-hol_entry_help (struct hol_entry *entry, argp_fmtstream_t stream,
+hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
+		argp_fmtstream_t stream,
 		struct hol_entry **prev_entry, int *sep_groups)
 {
   unsigned num;
   const struct argp_option *real = entry->opt, *opt;
   char *so = entry->short_options;
+  /* Saved margins.  */
   int old_lm = __argp_fmtstream_set_lmargin (stream, 0);
   int old_wm = __argp_fmtstream_wmargin (stream);
-  struct pentry_state pest = { entry, stream, prev_entry, sep_groups, 1 };
+  /* PEST is a state block holding some of our variables that we'd like to
+     share with helper functions.  */
+  struct pentry_state pest = { entry, stream, prev_entry, sep_groups, 1, state };
 
   /* First emit short options.  */
   __argp_fmtstream_set_wmargin (stream, SHORT_OPT_COL); /* For truly bizarre cases. */
@@ -809,7 +868,7 @@ hol_entry_help (struct hol_entry *entry, argp_fmtstream_t stream,
 
   /* Now, long options.  */
   if (odoc (real))
-    /* Really a `documentation' option.  */
+    /* A `documentation' option.  */
     {
       __argp_fmtstream_set_wmargin (stream, DOC_OPT_COL);
       for (opt = real, num = entry->num; num > 0; opt++, num--)
@@ -823,7 +882,7 @@ hol_entry_help (struct hol_entry *entry, argp_fmtstream_t stream,
 	  }
     }
   else
-    /* A realy long option.  */
+    /* A real long option.  */
     {
       __argp_fmtstream_set_wmargin (stream, LONG_OPT_COL);
       for (opt = real, num = entry->num; num > 0; opt++, num--)
@@ -835,38 +894,44 @@ hol_entry_help (struct hol_entry *entry, argp_fmtstream_t stream,
 	  }
     }
 
+  /* Next, documentation strings.  */
   __argp_fmtstream_set_lmargin (stream, 0);
+
   if (pest.first)
     /* Didn't print any switches, what's up?  */
-    if (!oshort (real) && !real->name && real->doc)
+    if (!oshort (real) && !real->name)
       /* This is a group header, print it nicely.  */
-      print_header (real->doc, &pest);
+      print_header (real->doc, entry->argp, &pest);
     else
       /* Just a totally shadowed option or null header; print nothing.  */
       goto cleanup;		/* Just return, after cleaning up.  */
-  else if (real->doc)
-    /* Now the option documentation.  */
+  else
     {
-      unsigned col = __argp_fmtstream_point (stream);
-      const char *doc = real->doc;
+      const char *tstr = real->doc ? gettext (real->doc) : 0;
+      const char *fstr = filter_doc (tstr, real->key, entry->argp, &pest);
+      if (fstr && *fstr)
+	{
+	  unsigned col = __argp_fmtstream_point (stream);
 
-      __argp_fmtstream_set_lmargin (stream, OPT_DOC_COL);
-      __argp_fmtstream_set_wmargin (stream, OPT_DOC_COL);
+	  __argp_fmtstream_set_lmargin (stream, OPT_DOC_COL);
+	  __argp_fmtstream_set_wmargin (stream, OPT_DOC_COL);
 
-      if (col > OPT_DOC_COL + 3)
-	__argp_fmtstream_putc (stream, '\n');
-      else if (col >= OPT_DOC_COL)
-	__argp_fmtstream_puts (stream, "   ");
-      else
-	indent_to (stream, OPT_DOC_COL);
+	  if (col > OPT_DOC_COL + 3)
+	    __argp_fmtstream_putc (stream, '\n');
+	  else if (col >= OPT_DOC_COL)
+	    __argp_fmtstream_puts (stream, "   ");
+	  else
+	    indent_to (stream, OPT_DOC_COL);
 
-      __argp_fmtstream_puts (stream, doc);
+	  __argp_fmtstream_puts (stream, fstr);
+	}
+      if (fstr && fstr != tstr)
+	free ((char *) fstr);
 
       /* Reset the left margin.  */
       __argp_fmtstream_set_lmargin (stream, 0);
+      __argp_fmtstream_putc (stream, '\n');
     }
-
-  __argp_fmtstream_putc (stream, '\n');
 
   if (prev_entry)
     *prev_entry = entry;
@@ -878,7 +943,8 @@ cleanup:
 
 /* Output a long help message about the options in HOL to STREAM.  */
 static void
-hol_help (struct hol *hol, argp_fmtstream_t stream)
+hol_help (struct hol *hol, const struct argp_state *state,
+	  argp_fmtstream_t stream)
 {
   unsigned num;
   struct hol_entry *entry;
@@ -886,7 +952,7 @@ hol_help (struct hol *hol, argp_fmtstream_t stream)
   int sep_groups = 0;		/* True if we should separate different
 				   sections with blank lines.   */
   for (entry = hol->entries, num = hol->num_entries; num > 0; entry++, num--)
-    hol_entry_help (entry, stream, &last_entry, &sep_groups);
+    hol_entry_help (entry, state, stream, &last_entry, &sep_groups);
 }
 
 /* Helper functions for hol_usage.  */
@@ -927,11 +993,7 @@ usage_argful_short_opt (const struct argp_option *opt,
 	{
 	  /* Manually do line wrapping so that it (probably) won't
 	     get wrapped at the embedded space.  */
-	  if (__argp_fmtstream_point (stream) + 6 + strlen (arg)
-	      >= __argp_fmtstream_rmargin (stream))
-	    __argp_fmtstream_putc (stream, '\n');
-	  else
-	    __argp_fmtstream_putc (stream, ' ');
+	  space (stream, 6 + strlen (arg));
 	  __argp_fmtstream_printf (stream, "[-%c %s]", opt->key, arg);
 	}
     }
@@ -1008,7 +1070,7 @@ static struct hol *
 argp_hol (const struct argp *argp, struct hol_cluster *cluster)
 {
   const struct argp_child *child = argp->children;
-  struct hol *hol = make_hol (argp->options, cluster);
+  struct hol *hol = make_hol (argp, cluster);
   if (child)
     while (child->argp)
       {
@@ -1016,7 +1078,7 @@ argp_hol (const struct argp *argp, struct hol_cluster *cluster)
 	  ((child->group || child->header)
 	   /* Put CHILD->argp within its own cluster.  */
 	   ? hol_add_cluster (hol, child->group, child->header,
-			      child - argp->children, cluster)
+			      child - argp->children, cluster, argp)
 	   /* Just merge it into the parent's cluster.  */
 	   : cluster);
 	hol_append (hol, argp_hol (child->argp, child_cluster)) ;
@@ -1075,11 +1137,7 @@ argp_args_usage (const struct argp *argp, char **levels, int advance,
 
       /* Manually do line wrapping so that it (probably) won't get wrapped at
 	 any embedded spaces.  */
-      if (__argp_fmtstream_point (stream) + 1 + nl - doc
-	  >= __argp_fmtstream_rmargin (stream))
-	__argp_fmtstream_putc (stream, '\n');
-      else
-	__argp_fmtstream_putc (stream, ' ');
+      space (stream, 1 + nl - doc);
 
       __argp_fmtstream_write (stream, doc, nl - doc);
     }
@@ -1111,46 +1169,98 @@ argp_args_usage (const struct argp *argp, char **levels, int advance,
    then the first is as well.  If FIRST_ONLY is true, only the first
    occurance is output.  Returns true if anything was output.  */
 static int
-argp_doc (const struct argp *argp, int post, int pre_blank, int first_only,
+argp_doc (const struct argp *argp, const struct argp_state *state,
+	  int post, int pre_blank, int first_only,
 	  argp_fmtstream_t stream)
 {
-  const struct argp_child *child = argp->children;
-  const char *doc = argp->doc;
+  const char *text;
+  const char *inp_text;
+  void *input = 0;
   int anything = 0;
+  size_t inp_text_limit = 0;
+  const char *doc = gettext (argp->doc);
+  const struct argp_child *child = argp->children;
 
   if (doc)
     {
       char *vt = strchr (doc, '\v');
+      inp_text = post ? (vt ? vt + 1 : 0) : doc;
+      inp_text_limit = (!post && vt) ? (vt - doc) : 0;
+    }
+  else
+    inp_text = 0;
 
-      if (pre_blank && (vt || !post))
+  if (argp->help_filter)
+    /* We have to filter the doc strings.  */
+    {
+      if (inp_text_limit)
+	/* Copy INP_TEXT so that it's nul-terminated.  */
+	inp_text = strndup (inp_text, inp_text_limit);
+      input = __argp_input (argp, state);
+      text =
+	(*argp->help_filter) (post
+			      ? ARGP_KEY_HELP_POST_DOC
+			      : ARGP_KEY_HELP_PRE_DOC,
+			      inp_text, input);
+    }
+  else
+    text = (const char *) inp_text;
+
+  if (text)
+    {
+      if (pre_blank)
 	__argp_fmtstream_putc (stream, '\n');
 
-      if (vt)
-	if (post)
-	  __argp_fmtstream_puts (stream, vt + 1);
-	else
-	  __argp_fmtstream_write (stream, doc, vt - doc);
+      if (text == inp_text && inp_text_limit)
+	__argp_fmtstream_write (stream, inp_text, inp_text_limit);
       else
-	if (! post)
-	  __argp_fmtstream_puts (stream, doc);
+	__argp_fmtstream_puts (stream, text);
+
       if (__argp_fmtstream_point (stream) > __argp_fmtstream_lmargin (stream))
 	__argp_fmtstream_putc (stream, '\n');
 
       anything = 1;
     }
+
+  if (text && text != inp_text)
+    free ((char *) text);	/* Free TEXT returned from the help filter.  */
+  if (inp_text && inp_text_limit && argp->help_filter)
+    free ((char *) inp_text);	/* We copied INP_TEXT, so free it now.  */
+
+  if (post && argp->help_filter)
+    /* Now see if we have to output a ARGP_KEY_HELP_EXTRA text.  */
+    {
+      text = (*argp->help_filter) (ARGP_KEY_HELP_EXTRA, 0, input);
+      if (text)
+	{
+	  if (anything || pre_blank)
+	    __argp_fmtstream_putc (stream, '\n');
+	  __argp_fmtstream_puts (stream, text);
+	  free ((char *) text);
+	  if (__argp_fmtstream_point (stream)
+	      > __argp_fmtstream_lmargin (stream))
+	    __argp_fmtstream_putc (stream, '\n');
+	  anything = 1;
+	}
+    }
+
   if (child)
     while (child->argp && !(first_only && anything))
       anything |=
-	argp_doc ((child++)->argp, post, anything || pre_blank, first_only,
+	argp_doc ((child++)->argp, state,
+		  post, anything || pre_blank, first_only,
 		  stream);
 
   return anything;
 }
 
-/* Output a usage message for ARGP to STREAM.  FLAGS are from the set
-   ARGP_HELP_*.  NAME is what to use wherever a `program name' is needed. */
-void __argp_help (const struct argp *argp, FILE *stream,
-		  unsigned flags, char *name)
+/* Output a usage message for ARGP to STREAM.  If called from
+   argp_state_help, STATE is the relevent parsing state.  FLAGS are from the
+   set ARGP_HELP_*.  NAME is what to use wherever a `program name' is
+   needed. */
+static void
+_help (const struct argp *argp, const struct argp_state *state, FILE *stream,
+       unsigned flags, char *name)
 {
   int anything = 0;		/* Whether we've output anything.  */
   struct hol *hol = 0;
@@ -1190,7 +1300,8 @@ void __argp_help (const struct argp *argp, FILE *stream,
 	  char *levels = pattern_levels;
 
 	  __argp_fmtstream_printf (fs, "%s %s",
-				   first_pattern ? "Usage:" : "  or: ", name);
+				   _(first_pattern ? "Usage:" : "  or: "),
+				   name);
 
 	  /* We set the lmargin as well as the wmargin, because hol_usage
 	     manually wraps options with newline to avoid annoying breaks.  */
@@ -1200,7 +1311,7 @@ void __argp_help (const struct argp *argp, FILE *stream,
 	    /* Just show where the options go.  */
 	    {
 	      if (hol->num_entries > 0)
-		__argp_fmtstream_puts (fs, " [OPTION...]");
+		__argp_fmtstream_puts (fs, _(" [OPTION...]"));
 	    }
 	  else
 	    /* Actually print the options.  */
@@ -1223,13 +1334,13 @@ void __argp_help (const struct argp *argp, FILE *stream,
     }
 
   if (flags & ARGP_HELP_PRE_DOC)
-    anything |= argp_doc (argp, 0, 0, 1, fs);
+    anything |= argp_doc (argp, state, 0, 0, 1, fs);
 
   if (flags & ARGP_HELP_SEE)
     {
-      __argp_fmtstream_printf (fs,
-	       "Try `%s --help' or `%s --usage' for more information.\n",
-	       name, name);
+      __argp_fmtstream_printf (fs, _("\
+Try `%s --help' or `%s --usage' for more information.\n"),
+			       name, name);
       anything = 1;
     }
 
@@ -1241,20 +1352,21 @@ void __argp_help (const struct argp *argp, FILE *stream,
 	{
 	  if (anything)
 	    __argp_fmtstream_putc (fs, '\n');
-	  hol_help (hol, fs);
+	  hol_help (hol, state, fs);
 	  anything = 1;
 	}
     }
 
   if (flags & ARGP_HELP_POST_DOC)
     /* Print any documentation strings at the end.  */
-    anything |= argp_doc (argp, 1, anything, 0, fs);
+    anything |= argp_doc (argp, state, 1, anything, 0, fs);
 
   if ((flags & ARGP_HELP_BUG_ADDR) && argp_program_bug_address)
     {
       if (anything)
 	__argp_fmtstream_putc (fs, '\n');
-      __argp_fmtstream_printf (fs, "Report bugs to %s.\n", argp_program_bug_address);
+      __argp_fmtstream_printf (fs, _("Report bugs to %s.\n"),
+ 			       argp_program_bug_address);
       anything = 1;
     }
 
@@ -1262,6 +1374,14 @@ void __argp_help (const struct argp *argp, FILE *stream,
     hol_free (hol);
 
   __argp_fmtstream_free (fs);
+}
+
+/* Output a usage message for ARGP to STREAM.  FLAGS are from the set
+   ARGP_HELP_*.  NAME is what to use wherever a `program name' is needed. */
+void __argp_help (const struct argp *argp, FILE *stream,
+		  unsigned flags, char *name)
+{
+  _help (argp, 0, stream, flags, name);
 }
 #ifdef weak_alias
 weak_alias (__argp_help, argp_help)
@@ -1277,8 +1397,8 @@ __argp_state_help (struct argp_state *state, FILE *stream, unsigned flags)
       if (state && (state->flags & ARGP_LONG_ONLY))
 	flags |= ARGP_HELP_LONG_ONLY;
 
-      __argp_help (state ? state->argp : 0, stream, flags,
-		   state ? state->name : program_invocation_name);
+      _help (state ? state->argp : 0, state, stream, flags,
+	     state ? state->name : program_invocation_short_name);
 
       if (!state || ! (state->flags & ARGP_NO_EXIT))
 	{
@@ -1307,7 +1427,7 @@ __argp_error (struct argp_state *state, const char *fmt, ...)
 	{
 	  va_list ap;
 
-	  fputs (state ? state->name : program_invocation_name, stream);
+	  fputs (state ? state->name : program_invocation_short_name, stream);
 	  putc (':', stream);
 	  putc (' ', stream);
 
@@ -1343,7 +1463,7 @@ __argp_failure (struct argp_state *state, int status, int errnum,
 
       if (stream)
 	{
-	  fputs (state ? state->name : program_invocation_name, stream);
+	  fputs (state ? state->name : program_invocation_short_name, stream);
 
 	  if (fmt)
 	    {

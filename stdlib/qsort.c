@@ -83,7 +83,7 @@ _quicksort (pbase, total_elems, size, cmp)
      void *const pbase;
      size_t total_elems;
      size_t size;
-     int (*cmp) __P ((const void *, const void *));
+     __compar_fn_t cmp;
 {
   register char *base_ptr = (char *) pbase;
 

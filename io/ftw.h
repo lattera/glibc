@@ -34,11 +34,15 @@
 #define FTW_DNR	2		/* Unreadable directory.  */
 #define FTW_NS	3		/* Unstatable file.  */
 
+__BEGIN_DECLS
+
 /* Call a function on every element in a directory tree.  */
 extern int ftw __P ((__const char *__dir,
 		     int (*__func) (__const char *__file,
 				    __const struct stat *__status,
 				    int __flag),
 		     int __descriptors));
+
+__END_DECLS
 
 #endif	/* ftw.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -156,8 +156,8 @@ _nss_nis_getetherent_r (struct ether *result, char *buffer, size_t buflen)
 }
 
 enum nss_status
-_nss_nis_getethernam_r (const char *name, struct ether *eth,
-			char *buffer, size_t buflen)
+_nss_nis_gethostton_r (const char *name, struct ether *eth,
+		       char *buffer, size_t buflen)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -210,8 +210,8 @@ _nss_nis_getethernam_r (const char *name, struct ether *eth,
 }
 
 enum nss_status
-_nss_nis_getetherbyaddr_r (struct ether_addr *addr, struct ether *eth,
-			   char *buffer, size_t buflen)
+_nss_nis_getntohost_r (struct ether_addr *addr, struct ether *eth,
+		       char *buffer, size_t buflen)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;

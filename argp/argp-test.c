@@ -22,9 +22,12 @@
 #include <config.h>
 #endif
 
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
 #include <argp.h>
 
-char *argp_program_version = "argp-test 1.0";
+const char *argp_program_version = "argp-test 1.0";
 
 struct argp_option sub_options[] =
 {
@@ -64,10 +67,27 @@ sub_parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static char *
+sub_help_filter (int key, const char *text, void *input)
+{
+  if (key == ARGP_KEY_HELP_EXTRA)
+    return strdup ("This is some extra text from the sub parser (note that it \
+is preceded by a blank line).");
+  else
+    return (char *)text;
+}
+
 static struct argp sub_argp = {
-  sub_options, sub_parse_opt, sub_args_doc, sub_doc
+  sub_options, sub_parse_opt, sub_args_doc, sub_doc, 0, sub_help_filter
 };
 
+/* Structure used to communicate with the parsing functions.  */
+struct params
+{
+  unsigned foonly;		/* Value parsed for foonly.  */
+  unsigned foonly_default;	/* Default value for it.  */
+};
+
 #define OPT_PGRP 1
 #define OPT_SESS 2
 
@@ -89,7 +109,7 @@ struct argp_option options[] =
 				   " the current process)" },
 
   {0,0,0,0, "Here are some more options:"},
-  {"foonly", 'f', "ZOT", 0, "Glork a foonly"},
+  {"foonly", 'f', "ZOT", OPTION_ARG_OPTIONAL, "Glork a foonly"},
   {"zaza", 'z', 0, 0, "Snit a zar"},
 
   {0}
@@ -98,11 +118,28 @@ struct argp_option options[] =
 static const char args_doc[] = "STRING";
 static const char doc[] = "Test program for argp."
  "\vThis doc string comes after the options."
- "\nHey!  Some manual formatting!";
+ "\nHey!  Some manual formatting!"
+ "\nThe current time is: %s";
+
+static void
+popt (int key, char *arg)
+{
+  char buf[10];
+  if (isprint (key))
+    sprintf (buf, "%c", key);
+  else
+    sprintf (buf, "%d", key);
+  if (arg)
+    printf ("KEY %s: %s\n", buf, arg);
+  else
+    printf ("KEY %s\n", buf);
+}
 
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
+  struct params *params = state->input;
+
   switch (key)
     {
     case ARGP_KEY_NO_ARGS:
@@ -115,19 +152,17 @@ parse_opt (int key, char *arg, struct argp_state *state)
       printf ("ARG: %s\n", arg);
       break;
 
+    case 'f':
+      if (arg)
+	params->foonly = atoi (arg);
+      else
+	params->foonly = params->foonly_default;
+      popt (key, arg);
+      break;
+
     case 'p': case 'P': case OPT_PGRP: case 'x': case 'Q':
-    case 'r': case OPT_SESS: case 'f': case 'z':
-      {
-	char buf[10];
-	if (isprint (key))
-	  sprintf (buf, "%c", key);
-	else
-	  sprintf (buf, "%d", key);
-	if (arg)
-	  printf ("KEY %s: %s\n", buf, arg);
-	else
-	  printf ("KEY %s\n", buf);
-      }
+    case 'r': case OPT_SESS: case 'z':
+      popt (key, arg);
       break;
 
     default:
@@ -136,12 +171,39 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
+static char *
+help_filter (int key, const char *text, void *input)
+{
+  char *new_text;
+  struct params *params = input;
+
+  if (key == ARGP_KEY_HELP_POST_DOC && text)
+    {
+      time_t now = time (0);
+      asprintf (&new_text, text, ctime (&now));
+    }
+  else if (key == 'f')
+    /* Show the default for the --foonly option.  */
+    asprintf (&new_text, "%s (ZOT defaults to %x)",
+	      text, params->foonly_default);
+  else
+    new_text = (char *) text;
+
+  return new_text;
+}
+
 static struct argp_child argp_children[] = { { &sub_argp }, { 0 } };
-static struct argp argp = { options, parse_opt, args_doc, doc, argp_children };
+static struct argp argp = {
+  options, parse_opt, args_doc, doc, argp_children, help_filter
+};
 
 int
 main (int argc, char **argv)
 {
-  argp_parse (&argp, argc, argv, 0, 0, 0);
+  struct params params;
+  params.foonly = 0;
+  params.foonly_default = random ();
+  argp_parse (&argp, argc, argv, 0, 0, &params);
+  printf ("After parsing: foonly = %x\n", params.foonly);
   return 0;
 }

@@ -26,6 +26,7 @@
 #include <sys/cdefs.h>
 
 #include <sys/types.h>
+#include <sys/socket.h>
 
 __BEGIN_DECLS
 

@@ -67,21 +67,22 @@ typedef struct _code {
 	int	c_val;
 } CODE;
 
-CODE prioritynames[] = {
-	"alert",	LOG_ALERT,
-	"crit",		LOG_CRIT,
-	"debug",	LOG_DEBUG,
-	"emerg",	LOG_EMERG,
-	"err",		LOG_ERR,
-	"error",	LOG_ERR,		/* DEPRECATED */
-	"info",		LOG_INFO,
-	"none",		INTERNAL_NOPRI,		/* INTERNAL */
-	"notice",	LOG_NOTICE,
-	"panic", 	LOG_EMERG,		/* DEPRECATED */
-	"warn",		LOG_WARNING,		/* DEPRECATED */
-	"warning",	LOG_WARNING,
-	NULL,		-1,
-};
+CODE prioritynames[] =
+  {
+    { "alert", LOG_ALERT },
+    { "crit", LOG_CRIT },
+    { "debug", LOG_DEBUG },
+    { "emerg", LOG_EMERG },
+    { "err", LOG_ERR },
+    { "error", LOG_ERR },		/* DEPRECATED */
+    { "info", LOG_INFO },
+    { "none", INTERNAL_NOPRI },		/* INTERNAL */
+    { "notice", LOG_NOTICE },
+    { "panic", LOG_EMERG },		/* DEPRECATED */
+    { "warn", LOG_WARNING },		/* DEPRECATED */
+    { "warning", LOG_WARNING },
+    { NULL, -1 }
+  };
 #endif
 
 /* facility codes */
@@ -114,31 +115,32 @@ CODE prioritynames[] = {
 #define	LOG_FAC(p)	(((p) & LOG_FACMASK) >> 3)
 
 #ifdef SYSLOG_NAMES
-CODE facilitynames[] = {
-	"auth",		LOG_AUTH,
-	"authpriv",	LOG_AUTHPRIV,
-	"cron", 	LOG_CRON,
-	"daemon",	LOG_DAEMON,
-	"ftp",		LOG_FTP,
-	"kern",		LOG_KERN,
-	"lpr",		LOG_LPR,
-	"mail",		LOG_MAIL,
-	"mark", 	INTERNAL_MARK,		/* INTERNAL */
-	"news",		LOG_NEWS,
-	"security",	LOG_AUTH,		/* DEPRECATED */
-	"syslog",	LOG_SYSLOG,
-	"user",		LOG_USER,
-	"uucp",		LOG_UUCP,
-	"local0",	LOG_LOCAL0,
-	"local1",	LOG_LOCAL1,
-	"local2",	LOG_LOCAL2,
-	"local3",	LOG_LOCAL3,
-	"local4",	LOG_LOCAL4,
-	"local5",	LOG_LOCAL5,
-	"local6",	LOG_LOCAL6,
-	"local7",	LOG_LOCAL7,
-	NULL,		-1,
-};
+CODE facilitynames[] =
+  {
+    { "auth", LOG_AUTH },
+    { "authpriv", LOG_AUTHPRIV },
+    { "cron", LOG_CRON },
+    { "daemon", LOG_DAEMON },
+    { "ftp", LOG_FTP },
+    { "kern", LOG_KERN },
+    { "lpr", LOG_LPR },
+    { "mail", LOG_MAIL },
+    { "mark", INTERNAL_MARK },		/* INTERNAL */
+    { "news", LOG_NEWS },
+    { "security", LOG_AUTH },		/* DEPRECATED */
+    { "syslog", LOG_SYSLOG },
+    { "user", LOG_USER },
+    { "uucp", LOG_UUCP },
+    { "local0", LOG_LOCAL0 },
+    { "local1", LOG_LOCAL1 },
+    { "local2", LOG_LOCAL2 },
+    { "local3", LOG_LOCAL3 },
+    { "local4", LOG_LOCAL4 },
+    { "local5", LOG_LOCAL5 },
+    { "local6", LOG_LOCAL6 },
+    { "local7", LOG_LOCAL7 },
+    { NULL, -1 }
+  };
 #endif
 
 #ifdef KERNEL
@@ -186,11 +188,23 @@ CODE facilitynames[] = {
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
-void	closelog __P((void));
-void	openlog __P((const char *, int, int));
-int	setlogmask __P((int));
-void	syslog __P((int, const char *, ...));
-void	vsyslog __P((int, const char *, _BSD_VA_LIST_));
+
+/* Close desriptor used to write to system logger.  */
+extern void closelog __P ((void));
+
+/* Open connection to system logger.  */
+extern void openlog __P ((__const char *__ident, int __option,
+			  int __facility));
+
+/* Set the log mask level.  */
+extern int setlogmask __P ((int __mask));
+
+/* Generate a log message using FMT string and option arguments.  */
+extern void syslog __P ((int __pri, __const char *__fmt, ...));
+
+/* Generate a log message using FMT and using arguments pointed to by AP.  */
+extern void vsyslog __P ((int __pri, __const char *__fmt, _BSD_VA_LIST_ __ap));
+
 __END_DECLS
 
 #endif /* !KERNEL */

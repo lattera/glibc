@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include <dl-hash.h>
 #include "../stdio-common/_itoa.h"
 
 #define VERSTAG(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
@@ -33,58 +34,32 @@ struct sym_val
   };
 
 
-/* This is the hashing function specified by the ELF ABI.  In the
-   first five operations now overflow is possible so we optimized it a
-   bit.  */
-static inline unsigned
-_dl_elf_hash (const char *name)
-{
-  unsigned long int hash = 0;
-  if (*name != '\0')
-    {
-      hash = (hash << 4) + *name++;
-      if (*name != '\0')
-	{
-	  hash = (hash << 4) + *name++;
-	  if (*name != '\0')
-	    {
-	      hash = (hash << 4) + *name++;
-	      if (*name != '\0')
-		{
-		  hash = (hash << 4) + *name++;
-		  if (*name != '\0')
-		    {
-		      hash = (hash << 4) + *name++;
-		      while (*name != '\0')
-			{
-			  unsigned long int hi;
-			  hash = (hash << 4) + *name++;
-			  hi = hash & 0xf0000000;
-			  if (hi != 0)
-			    {
-			      hash ^= hi >> 24;
-			      /* The ELF ABI says `hash &= ~hi', but
-				 this is equivalent in this case and
-				 on some machines one insn instead of
-				 two.  */
-			      hash ^= hi;
-			    }
-			}
-		    }
-		}
-	    }
-	}
-    }
-  return hash;
-}
+#define make_string(string, rest...) \
+  ({									      \
+    const char *all[] = { string, ## rest };				      \
+    size_t len, cnt;							      \
+    char *result, *cp;							      \
+									      \
+    len = 1;								      \
+    for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
+      len += strlen (all[cnt]);						      \
+									      \
+    cp = result = alloca (len);						      \
+    for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
+      cp = stpcpy (cp, all[cnt]);					      \
+									      \
+    result;								      \
+  })
 
 
-/* Inner part of the lookup functions.  */
-static inline ElfW(Addr)
+/* Inner part of the lookup functions.  We return a value > 0 if we
+   found the symbol, the value 0 if nothing is found and < 0 if
+   something bad happened.  */
+static inline int
 do_lookup (const char *undef_name, unsigned long int hash,
 	   const ElfW(Sym) **ref, struct sym_val *result,
 	   struct link_map *list[], size_t i, size_t n,
-	   const char *reference_name, const hash_name_pair *version,
+	   const char *reference_name, const struct r_found_version *version,
 	   struct link_map *skip, int flags)
 {
   struct link_map *map;
@@ -108,8 +83,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 
       symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
       strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
-      if (version != NULL
-	  && map->l_nversions > 0 && map->l_info[VERSTAG (DT_VERSYM)] != NULL)
+      if (map->l_nversions > 0 && map->l_info[VERSTAG (DT_VERSYM)] != NULL)
 	verstab = ((void *) map->l_addr
 		   + map->l_info[VERSTAG (DT_VERSYM)]->d_un.d_ptr);
       else
@@ -143,13 +117,41 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	    /* Not the symbol we are looking for.  */
 	    continue;
 
-	  if (verstab != NULL)
+	  if (version == NULL)
 	    {
-	      /* We can match the version information.  */
-	      ElfW(Half) ndx = verstab[symidx] & 0x7fff;
-	      if (map->l_versions[ndx].hash != version->hash
-		  || strcmp (map->l_versions[ndx].name, version->name))
-	      continue;
+	      /* No specific version is selected.  When the object
+		 file also does not define a version we have a match.
+		 Otherwise we only accept the default version, i.e.,
+		 the version which name is "".  */
+	      if (verstab != NULL)
+		{
+		  ElfW(Half) ndx = verstab[symidx] & 0x7fff;
+		  if (map->l_versions[ndx].hash != 0)
+		    continue;
+		}
+	    }
+	  else
+	    {
+	      if (verstab == NULL)
+		{
+		  /* We need a versioned system but haven't found any.
+		     If this is the object which is referenced in the
+		     verneed entry it is a bug in the library since a
+		     symbol must not simply disappear.  */
+		  if (version->filename != NULL
+		      && _dl_name_match_p (version->filename, map))
+		    return -1;
+		  /* Otherwise we accept the symbol.  */
+		}
+	      else
+		{
+		  /* We can match the version information.  */
+		  ElfW(Half) ndx = verstab[symidx] & 0x7fff;
+		  if (map->l_versions[ndx].hash != version->hash
+		      || strcmp (map->l_versions[ndx].name, version->name))
+		    /* It's not the version we want.  */
+		    continue;
+		}
 	    }
 
 	  switch (ELFW(ST_BIND) (sym->st_info))
@@ -173,6 +175,12 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	      break;
 	    }
 	}
+
+      /* If this current is the one mentioned in the verneed entry it
+	 is a bug.  */
+      if (version != NULL && version->filename != NULL
+	  && _dl_name_match_p (version->filename, map))
+	return -1;
     }
 
   /* We have not found anything until now.  */
@@ -204,15 +212,9 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 
   if (current_value.s == NULL &&
       (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
-    {
-      /* We could find no value for a strong reference.  */
-      static const char msg[] = "undefined symbol: ";
-      const size_t len = strlen (undef_name);
-      char buf[sizeof msg + len];
-      memcpy (buf, msg, sizeof msg - 1);
-      memcpy (&buf[sizeof msg - 1], undef_name, len + 1);
-      _dl_signal_error (0, reference_name, buf);
-    }
+    /* We could find no value for a strong reference.  */
+    _dl_signal_error (0, reference_name,
+		      make_string ("undefined symbol: ", undef_name));
 
   *ref = current_value.s;
   return current_value.a;
@@ -264,7 +266,7 @@ ElfW(Addr)
 _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 			     struct link_map *symbol_scope[],
 			     const char *reference_name,
-			     const hash_name_pair *version, int flags)
+			     const struct r_found_version *version, int flags)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
@@ -272,28 +274,30 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
-    if (do_lookup (undef_name, hash, ref, &current_value,
-		   (*scope)->l_searchlist, 0, (*scope)->l_nsearchlist,
-		   reference_name, version, NULL, flags))
-      break;
+    {
+      int res = do_lookup (undef_name, hash, ref, &current_value,
+			   (*scope)->l_searchlist, 0, (*scope)->l_nsearchlist,
+			   reference_name, version, NULL, flags);
+      if (res > 0)
+	break;
+
+      if (res < 0)
+	/* Oh, oh.  The file named in the relocation entry does not
+	   contain the needed symbol.  */
+	_dl_signal_error (0, *reference_name ? reference_name : NULL,
+			  make_string ("symbol ", undef_name, ", version ",
+				       version->name,
+				       " not defined in file ",
+				       version->filename,
+				       " with link time reference"));
+    }
 
   if (current_value.s == NULL &&
       (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
-    {
-      /* We could find no value for a strong reference.  */
-      static const char msg1[] = "undefined symbol: ";
-      const size_t len = strlen (undef_name);
-      static const char msg2[] = ", version ";
-      const size_t verslen = strlen (version->name ?: "") + 1;
-      char buf[sizeof msg1 - 1 + len + sizeof msg2 - 1 + verslen];
-
-      memcpy (buf, msg1, sizeof msg1 - 1);
-      memcpy (&buf[sizeof msg1 - 1], undef_name, len + 1);
-      memcpy (&buf[sizeof msg1 - 1 + len], msg2, sizeof msg2 - 1);
-      memcpy (&buf[sizeof msg1 - 1 + len + sizeof msg2 - 1], version->name,
-	      verslen);
-      _dl_signal_error (0, reference_name, buf);
-    }
+    /* We could find no value for a strong reference.  */
+    _dl_signal_error (0, reference_name,
+		      make_string ("undefined symbol: ", undef_name,
+				   ", version ", version->name ?: NULL));
 
   *ref = current_value.s;
   return current_value.a;
@@ -307,19 +311,14 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 				  const ElfW(Sym) **ref,
 				  struct link_map *symbol_scope[],
 				  const char *reference_name,
-				  const char *version_name,
+				  const struct r_found_version *version,
 				  struct link_map *skip_map,
 				  int flags)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
   struct link_map **scope;
-  hash_name_pair version;
   size_t i;
-
-  /* First convert the VERSION_NAME into a `hash_name_pair' value.  */
-  version.hash = _dl_elf_hash (version_name);
-  version.name = version_name;
 
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;
@@ -328,11 +327,11 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 
   if (! do_lookup (undef_name, hash, ref, &current_value,
 		   (*scope)->l_dupsearchlist, i, (*scope)->l_ndupsearchlist,
-		   reference_name, &version, skip_map, flags))
+		   reference_name, version, skip_map, flags))
     while (*++scope)
       if (do_lookup (undef_name, hash, ref, &current_value,
 		     (*scope)->l_dupsearchlist, 0, (*scope)->l_ndupsearchlist,
-		     reference_name, &version, skip_map, flags))
+		     reference_name, version, skip_map, flags))
 	break;
 
   *ref = current_value.s;

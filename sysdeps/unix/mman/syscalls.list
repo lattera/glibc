@@ -3,5 +3,5 @@
 madvise		-	madvise		3	madvise
 mmap		-	mmap		6	__mmap		mmap
 mprotect	-	mprotect	3	__mprotect	mprotect
-msync		-	msync		2	__libc_msync	msync
+msync		-	msync		3	__libc_msync	msync
 munmap		-	munmap		2	__munmap	munmap

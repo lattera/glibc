@@ -58,7 +58,7 @@ find_needed (struct link_map *map, const char *name)
   unsigned int n;
 
   for (n = 0; n < map->l_nsearchlist; ++n)
-    if (_dl_does_name_match_p (name, map->l_searchlist[n]))
+    if (_dl_name_match_p (name, map->l_searchlist[n]))
       return map->l_searchlist[n];
 
   /* Should never happen.  */
@@ -246,13 +246,14 @@ _dl_check_map_versions (struct link_map *map, int verbose)
       /* Now we are ready to build the array with the version names
 	 which can be indexed by the version index in the VERSYM
 	 section.  */
-      map->l_versions = (hash_name_pair*) malloc ((ndx_high + 1)
-						  * sizeof (hash_name_pair));
-      memset (map->l_versions, '\0', (ndx_high + 1) * sizeof (hash_name_pair));
+      map->l_versions = (struct r_found_version *)
+	malloc ((ndx_high + 1) * sizeof (*map->l_versions));
+      memset (map->l_versions, '\0',
+	      (ndx_high + 1) * sizeof (*map->l_versions));
       if (map->l_versions == NULL)
 	{
 	  _dl_signal_error (ENOMEM, (*map->l_name ? map->l_name : _dl_argv[0]),
-			    "cannot allocate version name table");
+			    "cannot allocate version reference table");
 	  result = 1;
 	}
       else
@@ -273,6 +274,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 		      ElfW(Half) ndx = aux->vna_other & 0x7fff;
 		      map->l_versions[ndx].hash = aux->vna_hash;
 		      map->l_versions[ndx].name = &strtab[aux->vna_name];
+		      map->l_versions[ndx].filename = &strtab[ent->vn_file];
 
 		      if (aux->vna_next == 0)
 			/* No more symbols.  */
@@ -308,6 +310,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 		      ElfW(Half) ndx = ent->vd_ndx & 0x7fff;
 		      map->l_versions[ndx].hash = ent->vd_hash;
 		      map->l_versions[ndx].name = &strtab[aux->vda_name];
+		      map->l_versions[ndx].filename = NULL;
 		    }
 
 		  if (ent->vd_next == 0)

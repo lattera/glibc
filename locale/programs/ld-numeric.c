@@ -195,6 +195,11 @@ field `%s' in category `%s' declared more than once"),			      \
 
       if (code->tok == tok_minus1)
 	numeric->grouping[numeric->grouping_act++] = '\177';
+      else if (code->val.num == 0)
+	/* A value of 0 disables grouping from here on but we must
+	   not store a NUL character since this terminates the string.
+	   Use something different which must not be used otherwise.  */
+	numeric->grouping[numeric->grouping_act++] = '\377';
       else if (code->val.num > 126)
 	lr_error (lr, _("\
 values for field `%s' in category `%s' must be smaller than 127"),

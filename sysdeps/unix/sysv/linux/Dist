@@ -11,8 +11,16 @@ net/if_ppp.h
 net/ppp-comp.h
 net/ppp_defs.h
 net/route.h
+netatalk/atalk.h
+netinet/icmp.h
+netinet/if_fddi.h
+netinet/if_tr.h
+netinet/igmp.h
 netinet/in_systm.h
+netinet/ip_fw.h
+netinet/ip_icmp.h
 netinet/udp.h
+netipx/ipx.h
 nfs/nfs.h
 sys/acct.h
 sys/debugreg.h

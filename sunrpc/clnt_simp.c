@@ -118,7 +118,8 @@ callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
 		crp->valid = 1;
 		crp->oldprognum = prognum;
 		crp->oldversnum = versnum;
-		(void) strcpy(crp->oldhost, host);
+		(void) strncpy(crp->oldhost, host, 255);
+		crp->oldhost[256] = '\0';
 	}
 	tottimeout.tv_sec = 25;
 	tottimeout.tv_usec = 0;

@@ -423,7 +423,7 @@ _dl_start_user:\n\
 
 static inline void
 elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
-		 const ElfW(Sym) *sym, const hash_name_pair *version)
+		 const ElfW(Sym) *sym, const struct r_found_version *version)
 {
   ElfW(Addr) *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   ElfW(Addr) loadbase, undo;

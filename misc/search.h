@@ -1,5 +1,5 @@
-/* search.h -- declarations for System V style searching functions.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Declarations for System V style searching functions.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -124,8 +124,8 @@ extern void *__tdelete __P ((__const void * __key, void ** __rootp,
 #ifndef __ACTION_FN_T
 #define __ACTION_FN_T
 typedef void (*__action_fn_t) __P ((__const void *__nodep,
-				    __const VISIT __value,
-				    __const int __level));
+				    VISIT __value,
+				    int __level));
 #endif
 
 extern void twalk __P ((__const void * __root, __action_fn_t action));

@@ -23,9 +23,7 @@
 #include <string.h>
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (void)
 {
   int failures = 0;
   int i;

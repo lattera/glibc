@@ -206,7 +206,8 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
 				     ? strlen (modifier) + 1 : 0)
 				  + ((mask & CEN_SPECIAL) != 0
 				     ? strlen (special) + 1 : 0)
-				  + ((mask & (CEN_SPONSOR | CEN_REVISION) != 0)
+				  + (((mask & CEN_SPONSOR) != 0
+				      || (mask & CEN_REVISION) != 0)
 				     ? (1 + ((mask & CEN_SPONSOR) != 0
 					     ? strlen (sponsor) + 1 : 0)
 					+ ((mask & CEN_REVISION) != 0

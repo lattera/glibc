@@ -513,6 +513,8 @@ gethostbyname2(name, af)
 			if (!*cp) {
 				if (*--cp == '.')
 					break;
+				if (!strchr(name, ':'))
+					break;
 				/*
 				 * All-IPv6-legal, no dot at the end.
 				 * Fake up a hostent as if we'd actually

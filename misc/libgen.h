@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,10 +21,14 @@
 #define _LIBGEN_H	1
 #include <sys/cdefs.h>
 
+__BEGIN_DECLS
+
 /* Return directory part of PATH or "." if none is available.  */
 extern char *dirname __P ((char *__path));
 
 /* Return filename part of PATH.  */
 extern char *basename __P ((__const char *__path));
+
+__END_DECLS
 
 #endif /* libgen.h */

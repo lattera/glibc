@@ -33,6 +33,8 @@
 #define _RPC_MSG_H 1
 #include <sys/cdefs.h>
 
+#include <rpc/clnt.h>
+
 /*
  * rpc_msg.h
  * rpc message definition

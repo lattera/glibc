@@ -314,28 +314,19 @@ setlocale (int category, const char *locale)
 
       /* Load the new data for each category.  */
       while (category-- > 0)
-	/* Only actually load the data if anything will use it.  */
-	if (_nl_current[category] != NULL)
-	  {
-	    newdata[category] = _nl_find_locale (locale_path, locale_path_len,
-						 category,
-						 &newnames[category]);
+	{
+	  newdata[category] = _nl_find_locale (locale_path, locale_path_len,
+					       category,
+					       &newnames[category]);
 
-	    if (newdata[category] == NULL)
-	      break;
+	  if (newdata[category] == NULL)
+	    break;
 
-	    /* We must not simply free a global locale since we have
-	       no control over the usage.  So we mark it as
-	       un-deletable.  */
+	  /* We must not simply free a global locale since we have no
+	     control over the usage.  So we mark it as un-deletable.  */
+	  if (newdata[category]->usage_count != MAX_USAGE_COUNT)
 	    newdata[category]->usage_count = MAX_USAGE_COUNT;
-	  }
-	else
-	  {
-	    /* The data is never used; just change the name.  */
-	    newnames[category] = clever_copy (newnames[category]);
-	    if (newnames[category] == NULL)
-	      break;
-	  }
+	}
 
       /* Create new composite name.  */
       if (category >= 0

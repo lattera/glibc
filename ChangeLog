@@ -1,3 +1,219 @@
+1997-02-19 03:28  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/argp-help.c: Add support for user provided filter of help
+	messages.
+	* argp/argp-parse.c: Likewise.
+	* argp/argp.h: Likewise.
+	* argp/argp-namefrob.h: Define __argp_input.
+
+	* argp/argp-test.c: Add example for filter.
+
+1997-02-19 02:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp.h: New file.
+	* locale/programs/locale.c: Switch to use argp.
+
+	* errno.h: Make it possible to get definition of error_t even
+	after having errno.h already.
+
+	* elf/dl-hash.h: New file.  ELF hashing function.  Extracted
+	from dl-lookup.c.
+	* elf/dl-lookup.c (_dl_elf_hash): Remove definition.
+
+	* elf/dl-load.c: Rename _dl_does_name_match_p to _dl_name_match_p.
+	* elf/dl-version.c: Likewise.
+
+	* elf/dl-lookup.c: Implement new versioning lookup scheme.
+	* elf/dl-version.c (_dl_check_map_versions): Initialize new field
+	in l_versions member.
+
+	* elf/dlvsym.c: Correct call of _dl_lookup_versioned_symbol_skip
+	and _dl_lookup_versioned_symbol.
+
+	* elf/link.h: Rename hash_name_pair to struct r_found_version.
+	* sysdeps/alpha/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+
+	* intl/l10nflist.c: (_nl_make_l10nflist): Fix bug in computation of
+	length of abs_filename.
+
+	* locale/Makefile (CPPFLAGS): Define LOCALE_ALIAS_PATH.
+
+	* locale/programs/ld-monetary.c (monetary_add): Allow value 0
+	in mon_grouping information.  This means no more grouping.
+	* locale/programs/ld-numeric.c (numeric_add): Write value \377
+	when seein value 0 in grouping information.
+	* locale/programs/linereader.c (lr_close): Don't free fname since
+	it might be used in error messages.
+
+	* locale/programs/locale.c: Check whether output of `locale -a'
+	really is locale directory.  Also print locale aliases.
+
+	* misc/search.h (__action_fn_t): Parameters VALUE and LEVEL cannot
+	be const.
+
+1997-02-19 02:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/bsd/sun/sunos4/resourcebits.h: Correct #defin to
+	#define.  Reported by Rick Flower <FLOWER@sdvax2.sdd.TRW.COM>.
+
+1997-02-19 01:37  Erik Troan  <ewt@redhat.com>
+
+	* shadow/sgetspent_r.c: Accept empty third, fourth and fifth fields.
+
+1997-02-19 01:02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/mman/syscalls.list: msync takes 3 arguments.
+	Reported by Andreas Jaeger <aj@arthur.pfalz.de>.
+
+	* sysdeps/stub/msync.c (msync): Add missing third parameter.
+
+1997-02-19 00:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/bsd/sigsuspend.c: Call __sigpause with needed
+	additional argument.
+
+1997-02-18 22:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/net/ethernet.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/if_ether.c: Add BSD compatibility.
+	* sysdeps/unix/sysv/linux/net/if_slip.h: New file.
+	Contributed by a sun <asun@zoology.washington.edu>.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Include <sys/socket.h>.
+	* sunrpc/rpc/rpc_msg.h: Include <rpc/clnt.h>.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+1997-02-16 14:25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules ((common-objpfx)distinfo-$(subdir)): Depend on sysdep
+	makefiles which may change the distinfo variables.
+
+1997-02-16 14:03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers)
+	[$(subdir)=misc]: Add sys/quota.h.
+	(sysdep_headers) [$(subdir)=inet]: Add netinet/udp.h.
+
+1997-02-17 13:12  aleph1@dfw.net
+
+	* sunrpc/clnt_simp.c (callrpc): Prevent buffer overflow by using
+	strncpy.
+
+1997-02-18 03:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/bug10.c (main): Correct parameter.
+
+1997-02-17 02:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/obstack.h: Add `extern "C"' protection.
+	* posix/regex.h: Likewise.
+	* io/ftw.h: Likewise.
+	* misc/libgen.h: Likewise.
+	* login/utmp.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/reboot.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
+	* sunrpc/rpc/pmap_rmt.h: Likewise.
+	* sunrpc/rpc/auth_des.h: Likewise.
+	* elf/link.h: Likewise.
+	Reported by HJ Lu.
+
+1997-02-17 01:45  a sun  <asun@zoology.washington.edu>
+
+	Linux specific network headers.
+	* sysdeps/unix/sysv/linux/netinet/if_fddi.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/ip_icmp.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/ip_fw.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/igmp.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/icmp.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/ip.h: New file.
+	* sysdeps/unix/sysv/linux/netinet/tcp.h: New file.
+	* sysdeps/unix/sysv/linux/netipx/ipx.h: New file.
+	* sysdeps/unix/sysv/linux/netatalk/atalk.h: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add new network headers.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=misc] (sysdep_headers):
+	Add sys/quota.h.
+	[$(subdir)=inet] (sysdep_headers): Add new network header.
+
+	* sysdeps/unix/sysv/linux/netinet/udp.h: Add Linux specific changes.
+
+	* inet/netinet/ip.h: Move to sysdeps/generic.
+	* inet/netinet/tcp.h: Likewise.
+	* sysdeps/generic/netinet/ip.h: Moved to here from inet/netinet.
+	* sysdeps/generic/netinet/tcp.h: Likewise.
+
+1997-02-17 01:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/sys/syslog.h (prioritynames): Correct definition to use
+	braces where necessary.
+	(facilitynames): Likewise.
+	Patch by Ronald F. Guilmette <rfg@monkeys.com>.
+	Comment and beautify declarations.
+
+1997-02-16 19:54 1997  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* inet/Makefile (routines): Add in6_addr, getnameinfo.
+	* inet/getnameinfo.c: New file.  Implementation of getnameinfo()
+	by Craig Metz.
+	* inet/in6_addr.c: New file.  IPv6 addressing constants.
+	* posix/Makefile (routines): Add gai_strerror.
+	* resolv/netdb.h: Add more constants for IPv6 basic API.
+	* sysdeps/posix/gai_strerror.c: New file.
+	* sysdeps/stub/gai_strerror.c New file.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Add definitions for IPv6
+	basic API.
+
+	* sysdeps/posix/getaddrinfo.c: Update from latest version by
+	Craig Metz and use reentrant getXXbyYY functions.
+
+1997-02-15 14:32 Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* argp/argp.h: Declare argp_program_version as const char.
+	* argp/argp-test.c: Likewise
+
+	* stdlib/testrand.c (main): Declare main prototype.
+	* stdlib/testdiv.c (main): Likewise.
+	* string/testcopy.c (main): Likewise.
+	* string/test-ffs.c (main): Likewise.
+	* time/test_time.c (main): Likewise.
+
+	* locale/duplocale.c (__duplocale): Return result.
+
+1997-02-16 03:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: Declare bindresvport.
+	Reported by fabsoft@fabserver1.zarm.uni-bremen.de.
+
+	* nss/nss.h: Remove declaration of __nss_shlib_revision.
+	* nss/nsswitch.c: Don't use NSS_SHLIB_VERSION macro.
+
+1997-02-16 03:48  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
+
+	* nis/nss_nis/nis-ethers.c (_nss_nis_getethernam_r): Rename to
+	_nss_nis_gethostton_r.
+	(_nss_nis_getetherbyaddr_r): Rename to _nss_nis_getntohost_r.
+
+1997-02-15 22:37  Andy Berkheimer  <andy@tho.org>
+
+	* resolv/gethnamaddr.c (gethostbyname2): Test for ':' in name before
+	trying to resolv name as numeric IPv6 address.
+	* nss/digits_dots.c: Likewise.
+
+Sat Feb 15 04:51:08 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/setlocale.c (setlocale): Don't try to be clever about
+	unused locales.  When the existence of the locale files isn't
+	tested the result of setlocale might be different.
+
+1997-02-15 03:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/setlocale.c (setlocale): Don't increment usage_count of
+	new locale if it already has the value MAX_USAGE_COUNT (it might
+	be the C locale data which is read-only).
+
 1997-02-15 02:41  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* argp/argp-help.c: Gettextize sources.

@@ -364,9 +364,11 @@ field `%s' in category `%s' declared more than once"),			      \
 	  if (code->tok == tok_minus1)
 	    monetary->mon_grouping[monetary->mon_grouping_act++] = '\177';
 	  else if (code->val.num == 0)
-	    lr_error (lr, _("\
-values for field `%s' in category `%s' must not be zero"),
-		      "mon_grouping", "LC_MONETARY");
+	    /* A value of 0 disables grouping from here on but we must
+	       not store a NUL character since this terminates the
+	       string.  Use something different which must not be used
+	       otherwise.  */
+	    monetary->mon_grouping[monetary->mon_grouping_act++] = '\377';
 	  else if (code->val.num > 126)
 	    lr_error (lr, _("\
 values for field `%s' in category `%s' must be smaller than 127"),

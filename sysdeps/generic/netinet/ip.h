@@ -33,6 +33,9 @@
  *	@(#)ip.h	8.1 (Berkeley) 6/10/93
  */
 
+#ifndef _NETINET_IP_H
+#define _NETINET_IP_H
+
 #include <gnu/types.h>
 #include <endian.h>
 #include <netinet/in.h>
@@ -165,3 +168,5 @@ struct	ip_timestamp {
 #define	IPTTLDEC	1		/* subtracted when forwarding */
 
 #define	IP_MSS		576		/* default maximum segment size */
+
+#endif /* netinet/ip.h. */

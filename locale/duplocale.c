@@ -52,4 +52,6 @@ __duplocale (__locale_t dataset)
 
   /* It's done.  */
   __libc_lock_unlock (__libc_setlocale_lock);
+
+  return result;
 }

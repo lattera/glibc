@@ -24,10 +24,6 @@
 #define _NSS_H	1
 #include <features.h>
 
-/* Revision number of NSS interface (must be a string).  */
-#define NSS_SHLIB_REVISION __nss_shlib_revision
-extern const char *const __nss_shlib_revision;
-
 
 __BEGIN_DECLS
 

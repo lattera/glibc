@@ -25,6 +25,8 @@
 
 #include <elf.h>
 
+__BEGIN_DECLS
+
 /* We use this macro to refer to ELF types independent of the native wordsize.
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
 #define ElfW(type)	_ElfW (Elf, __ELF_NATIVE_CLASS, type)
@@ -76,11 +78,13 @@ extern ElfW(Dyn) _DYNAMIC[];
 
 /* For the version handling we need an array with only names and their
    hash values.  */
-typedef struct
-{
-  const char *name;
-  ElfW(Word) hash;
-} hash_name_pair;
+struct r_found_version
+  {
+    const char *name;
+    ElfW(Word) hash;
+
+    const char *filename;
+  };
 
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
@@ -153,14 +157,14 @@ struct link_map
 
     /* Array with version names.  */
     unsigned int l_nversions;
-    hash_name_pair *l_versions;
+    struct r_found_version *l_versions;
   };
 
 
 /* Test whether given NAME matches any of the names of the given object.  */
 static inline int
 __attribute__ ((unused))
-_dl_does_name_match_p (const char *__name, struct link_map *__map)
+_dl_name_match_p (const char *__name, struct link_map *__map)
 {
   int __found = strcmp (__name, __map->l_name) == 0;
   struct libname_list *__runp = __map->l_libname;
@@ -301,7 +305,7 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
 					       const ElfW(Sym) **sym,
 					       struct link_map *symbol_scope[],
 					       const char *reference_name,
-					       const hash_name_pair *version,
+					       const struct r_found_version *version,
 					       int flags);
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
@@ -318,7 +322,7 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
 						    const ElfW(Sym) **sym,
 						    struct link_map *symbol_scope[],
 						    const char *reference_name,
-						    const char *version_name,
+						    const struct r_found_version *version,
 						    struct link_map *skip_this,
 						    int flags);
 
@@ -398,5 +402,6 @@ extern void _dl_debug_state (void);
    in the `r_ldbase' member.  Returns the address of the structure.  */
 extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase);
 
+__END_DECLS
 
 #endif /* link.h */

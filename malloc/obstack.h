@@ -106,6 +106,10 @@ Summary:
 
 #ifndef __OBSTACK_H__
 #define __OBSTACK_H__
+
+#ifdef __cpluscplus
+extern "C" {
+#endif
 
 /* We use subtraction of (char *) 0 instead of casting to int
    because on word-addressable machines a simple cast to int
@@ -577,5 +581,9 @@ __extension__								\
 #endif
 
 #endif /* not __GNUC__ or not __STDC__ */
+
+#ifdef __cplusplus
+}	/* C++ */
+#endif
 
 #endif /* not __OBSTACK_H__ */

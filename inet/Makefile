@@ -43,7 +43,8 @@ routines := ntohl ntohs htonl htons		\
 	    ether_ntoa ether_ntoa_r ether_ntoh \
 	    rcmd rexec ruserpass \
 	    getnetgrent_r getnetgrent \
-	    getaliasent_r getaliasent getaliasname getaliasname_r
+	    getaliasent_r getaliasent getaliasname getaliasname_r \
+	    in6_addr getnameinfo
 
 # No warnings about losing BSD code.
 CFLAGS-rcmd.c = -w

@@ -889,7 +889,9 @@ dist: $(filter-out %.c %.S %.s,$(distribute))
 # environment get too large.  Instead, we write all the information into
 # a generated makefile fragment `distinfo', and then include it with -f in
 # the sub-make that makes the distribution (above).
-$(common-objpfx)distinfo-$(subdir): Makefile $(..)Makerules
+$(common-objpfx)distinfo-$(subdir): Makefile $(..)Makerules \
+				    $(wildcard $(foreach dir,$(sysdirs),\
+						         $(dir)/Makefile))
 	$(distinfo-vars)
 	mv -f $@.new $@
 .PHONY: subdir_distinfo distinfo

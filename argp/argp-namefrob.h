@@ -30,6 +30,8 @@
 #define __option_is_end _option_is_end
 #undef __option_is_short
 #define __option_is_short _option_is_short
+#undef __argp_input
+#define __argp_input _argp_input
 
 /* argp-help functions */
 #undef __argp_help

@@ -108,7 +108,6 @@ void
 lr_close (struct linereader *lr)
 {
   fclose (lr->fp);
-  free ((char *) lr->fname);
   free (lr->buf);
   free (lr);
 }

@@ -23,9 +23,7 @@
 #include <malloc.h>
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (void)
 {
   char *mem, *memp;
   char *rand_mem;

@@ -51,9 +51,12 @@ LINE_PARSER
  else
    {
      STRING_FIELD (result->sp_pwdp, ISCOLON, 0);
-     INT_FIELD (result->sp_lstchg, ISCOLON, 0, 10, (long int));
-     INT_FIELD (result->sp_min, ISCOLON, 0, 10, (long int));
-     INT_FIELD (result->sp_max, ISCOLON, 0, 10, (long int));
+     INT_FIELD_MAYBE_NULL (result->sp_lstchg, ISCOLON, 0, 10, (long int),
+			   (long int) -1);
+     INT_FIELD_MAYBE_NULL (result->sp_min, ISCOLON, 0, 10, (long int),
+			   (long int) -1);
+     INT_FIELD_MAYBE_NULL (result->sp_max, ISCOLON, 0, 10, (long int),
+			   (long int -1);
      while (isspace (*line))
        ++line;
      if (*line == '\0')

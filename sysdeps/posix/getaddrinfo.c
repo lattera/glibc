@@ -42,21 +42,43 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /* This software is Copyright 1996 by Craig Metz, All Rights Reserved.  */
 
+/* getaddrinfo() v1.13 */
+
+/* To do what POSIX says, even when it's broken: */
+/* #define BROKEN_LIKE_POSIX 1 */
+#define LOCAL 1
+#define INET6 1
+#define HOSTTABLE 0
+#define RESOLVER 1
+
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <stdlib.h>
-#include <netinet/in.h>
-#ifdef INET6
-#include <netinet6/in6.h>
-#endif /* INET6 */
-#include <netdb.h>
-#include <arpa/inet.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#if LOCAL
+#include <stdio.h>
 #include <string.h>
+#include <sys/utsname.h>
+#include <sys/un.h>
+#endif /* LOCAL */
+#include <netinet/in.h>
+#include <netdb.h>
+#include <errno.h>
+
+#ifndef AF_LOCAL
+#define AF_LOCAL AF_UNIX
+#endif /* AF_LOCAL */
+#ifndef PF_LOCAL
+#define PF_LOCAL PF_UNIX
+#endif /* PF_LOCAL */
+#ifndef UNIX_PATH_MAX
+#define UNIX_PATH_MAX 108
+#endif /* UNIX_PATH_MAX */
 
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
 
-#ifdef HOSTTABLE
+#if HOSTTABLE
 struct hostent *_hostname2addr_hosts(const char *name, int);
 struct hostent *_addr2hostname_hosts(const char *name, int, int);
 #endif /* HOSTTABLE */
@@ -66,7 +88,7 @@ static struct addrinfo nullreq =
 
 struct gaih_service {
   char *name;
-  unsigned long num;
+  int num;
 };
 
 struct gaih_servtuple {
@@ -86,18 +108,69 @@ struct gaih_addrtuple {
   char addr[16];
 };
 
-static struct gaih_addrtuple nulladdr;
-
 struct gaih_typeproto {
   int socktype;
   int protocol;
-  const char *name;
+  char *name;
 };
+
+#if LOCAL
+static int gaih_local(const char *name, const struct gaih_service *service,
+		     const struct addrinfo *req, struct addrinfo **pai)
+{
+  struct utsname utsname;
+
+  if (name || (req->ai_flags & AI_CANONNAME))
+    if (uname(&utsname))
+      return -EAI_SYSTEM;
+  if (name) {
+    if (strcmp(name, "localhost") && strcmp(name, "local") && strcmp(name, "unix") && strcmp(name, utsname.nodename))
+      return (GAIH_OKIFUNSPEC | -EAI_NONAME);
+  };
+
+  if (!(*pai = malloc(sizeof(struct addrinfo) + sizeof(struct sockaddr_un) + ((req->ai_flags & AI_CANONNAME) ? (strlen(utsname.nodename) + 1): 0))))
+    return -EAI_MEMORY;
+
+  (*pai)->ai_next = NULL;
+  (*pai)->ai_flags = req->ai_flags;
+  (*pai)->ai_family = AF_LOCAL;
+  (*pai)->ai_socktype = req->ai_socktype ? req->ai_socktype : SOCK_STREAM;
+  (*pai)->ai_protocol = req->ai_protocol;
+  (*pai)->ai_addrlen = sizeof(struct sockaddr_un);
+  (*pai)->ai_addr = (void *)(*pai) + sizeof(struct addrinfo);
+#if SALEN
+  ((struct sockaddr_un *)(*pai)->ai_addr)->sun_len = sizeof(struct sockaddr_un);
+#endif /* SALEN */
+  ((struct sockaddr_un *)(*pai)->ai_addr)->sun_family = AF_LOCAL;
+  memset(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path, 0, UNIX_PATH_MAX);
+  if (service) {
+    char *c;
+    if (c = strchr(service->name, '/')) {
+      if (strlen(service->name) >= sizeof(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path))
+        return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+      strcpy(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path, service->name);
+    } else {
+      if (strlen(P_tmpdir "/") + 1 + strlen(service->name) >= sizeof(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path))
+        return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+      strcpy(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path, P_tmpdir "/");
+      strcat(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path, service->name);
+    };
+  } else {
+    if (!tmpnam(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path))
+      return -EAI_SYSTEM;
+  };
+  if (req->ai_flags & AI_CANONNAME)
+    strcpy((*pai)->ai_canonname = (char *)(*pai) + sizeof(struct addrinfo) + sizeof(struct sockaddr_un), utsname.nodename);
+  else
+    (*pai)->ai_canonname = NULL;
+  return 0;
+};
+#endif /* LOCAL */
 
 static struct gaih_typeproto gaih_inet_typeproto[] = {
   { 0, 0, NULL },
-  { SOCK_STREAM, IPPROTO_TCP, "tcp" },
-  { SOCK_DGRAM, IPPROTO_UDP, "udp" },
+  { SOCK_STREAM, IPPROTO_TCP, (char *)"tcp" },
+  { SOCK_DGRAM, IPPROTO_UDP, (char *)"udp" },
   { 0, 0, NULL }
 };
 
@@ -124,12 +197,12 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 {
   struct gaih_typeproto *tp = gaih_inet_typeproto;
   struct gaih_servtuple *st = &nullserv;
-  struct gaih_addrtuple *at = &nulladdr;
+  struct gaih_addrtuple *at = NULL;
   int i;
 
   if (req->ai_protocol || req->ai_socktype) {
     for (tp++; tp->name &&
-	  ((req->ai_socktype != tp->socktype) || !req->ai_socktype) &&
+	  ((req->ai_socktype != tp->socktype) || !req->ai_socktype) && 
 	  ((req->ai_protocol != tp->protocol) || !req->ai_protocol); tp++);
     if (!tp->name)
       if (req->ai_socktype)
@@ -139,7 +212,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
   }
 
   if (service) {
-    if (service->name) {
+    if (service->num < 0) {
       if (tp->name) {
 	if (i = gaih_inet_serv(service->name, tp, &st))
 	  return i;
@@ -182,18 +255,18 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
       if (inet_pton(AF_INET, name, at->addr) > 0)
 	at->family = AF_INET;
 
-#ifdef INET6
+#if INET6
     if (!at->family && (!req->ai_family || (req->ai_family == AF_INET6)))
       if (inet_pton(AF_INET6, name, at->addr) > 0)
 	at->family = AF_INET6;
 #endif /* INET6 */
 
-#ifdef HOSTTABLE
+#if HOSTTABLE
     if (!at->family) {
       struct hostent *h;
       struct gaih_addrtuple **pat = &at;
 
-#ifdef INET6
+#if INET6
       if (!req->ai_family || (req->ai_family == AF_INET6))
 	if (h = _hostname2addr_hosts(name, AF_INET6)) {
 	  for (i = 0; h->h_addr_list[i]; i++) {
@@ -229,14 +302,35 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
     }
 #endif /* HOSTTABLE */
 
-#ifdef RESOLVER
+#if RESOLVER
     if (!at->family) {
       struct hostent *h;
       struct gaih_addrtuple **pat = &at;
 
-#ifdef INET6
-      if (!req->ai_family || (req->ai_family == AF_INET6))
-	if (h = gethostbyname2(name, AF_INET6)) {
+#if INET6
+      if (!req->ai_family || (req->ai_family == AF_INET6)) {
+	int herrno;
+	int tmpbuflen = 1024;
+	struct hostent th;
+	char *tmpbuf = __alloca(tmpbuflen);
+	while (__gethostbyname2_r(name, AF_INET6, &th, tmpbuf, tmpbuflen,
+				  &h, &herrno)) {
+	  if (herrno == NETDB_INTERNAL) {
+	    if (errno == ERANGE) {
+	      /* Need more buffer */
+	      tmpbuflen *= 2;
+	      tmpbuf = __alloca(tmpbuflen);
+	    } else {
+	      /* Bail out */
+	      __set_h_errno(herrno);
+	      i = -EAI_SYSTEM;
+	      goto ret;
+	    }
+	  } else {
+	    break;
+	  }
+	}
+	if (h) {
 	  for (i = 0; h->h_addr_list[i]; i++) {
 	    if (!*pat) {
 	      if (!(*pat = malloc(sizeof(struct gaih_addrtuple)))) {
@@ -250,10 +344,32 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	    pat = &((*pat)->next);
 	  }
 	}
+      }
 #endif /* INET6 */
 
-      if (!req->ai_family || (req->ai_family == AF_INET))
-	if (h = gethostbyname2(name, AF_INET)) {
+      if (!req->ai_family || (req->ai_family == AF_INET)) {
+	int herrno;
+	struct hostent th;
+	int tmpbuflen = 1024;
+	char *tmpbuf = __alloca(tmpbuflen);
+	while (__gethostbyname2_r(name, AF_INET, &th, tmpbuf, tmpbuflen,
+				&h, &herrno)) {
+	  if (herrno == NETDB_INTERNAL) {
+	    if (errno == ERANGE) {
+	      /* Need more buffer */
+	      tmpbuflen *= 2;
+	      tmpbuf = __alloca(tmpbuflen);
+	    } else {
+	      /* Bail out */
+	      __set_h_errno(herrno);
+	      i = -EAI_SYSTEM;
+	      goto ret;
+	    }
+	  } else {
+	    break;
+	  }
+	}
+	if (h) {
 	  for (i = 0; h->h_addr_list[i]; i++) {
 	    if (!*pat) {
 	      if (!(*pat = malloc(sizeof(struct gaih_addrtuple)))) {
@@ -267,20 +383,39 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	    pat = &((*pat)->next);
 	  }
 	}
+      }
     }
 #endif /* RESOLVER */
 
     if (!at->family)
       return (GAIH_OKIFUNSPEC | -EAI_NONAME);
   } else {
-    memset(&nulladdr, 0, sizeof(nulladdr));
-#ifdef INET6
-    if (!req->ai_family || (req->ai_family == AF_INET6))
-      nulladdr.family = AF_INET6;
-    else
+    if (!(at = malloc(sizeof(struct gaih_addrtuple)))) {
+      i = -EAI_MEMORY;
+      goto ret;
+    };
+
+    memset(at, 0, sizeof(struct gaih_addrtuple));
+
+#if INET6
+    if (!(at->next = malloc(sizeof(struct gaih_addrtuple)))) {
+      i = -EAI_MEMORY;
+      goto ret;
+    };
+
+    at->family = AF_INET6;
+
+    memset(at->next, 0, sizeof(struct gaih_addrtuple));
+    at->next->family = AF_INET;
+#else /* INET6 */
+    at->family = AF_INET;
 #endif /* INET6 */
-    nulladdr.family = AF_INET;
-  }
+  };
+
+  if (!pai) {
+    i = 0;
+    goto ret; 
+  };
 
   {
     const char *c = NULL;
@@ -288,7 +423,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
     struct gaih_addrtuple *at2 = at;
     int j;
 #ifndef MAXHOSTNAMELEN
-# define MAXHOSTNAMELEN 128
+#define MAXHOSTNAMELEN 128
 #endif /* MAXHOSTNAMELEN */
     char buffer[MAXHOSTNAMELEN];
 
@@ -296,24 +431,44 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
       if (req->ai_flags & AI_CANONNAME) {
         struct hostent *h = NULL;
 
-#ifdef RESOLVER
-	h = gethostbyaddr(at2->addr,
-#ifdef INET6
-	    (at2->family == AF_INET6) ? sizeof(struct in6_addr) :
+#if RESOLVER
+        int herrno;
+	struct hostent th;
+	int tmpbuflen = 1024;
+	char *tmpbuf = __alloca(tmpbuflen);
+	while (__gethostbyaddr_r(at2->addr,
+#if INET6
+	    (at2->family == AF_INET6) ? sizeof(struct in6_addr) : 
 #endif /* INET6 */
-	    sizeof(struct in_addr), at2->family);
+				 sizeof(struct in_addr), at2->family, 
+				 &th, tmpbuf, tmpbuflen, &h, &herrno)) {
+	  if (herrno == NETDB_INTERNAL) {
+	    if (errno == ERANGE) {
+	      /* Need more buffer */
+	      tmpbuflen *= 2;
+	      tmpbuf = __alloca(tmpbuflen);
+	    } else {
+	      /* Bail out */
+	      __set_h_errno(herrno);
+	      i = -EAI_SYSTEM;
+	      goto ret;
+	    }
+	  } else {
+	    break; 
+	  }
+	}
 #endif /* RESOLVER */
-#ifdef HOSTTABLE
+#if HOSTTABLE
 	if (!h)
 	  h = _addr2hostname_hosts(at2->addr,
-#ifdef INET6
-	    (at2->family == AF_INET6) ? sizeof(struct in6_addr) :
+#if INET6
+	    (at2->family == AF_INET6) ? sizeof(struct in6_addr) : 
 #endif /* INET6 */
 	    sizeof(struct in_addr), at2->family);
 #endif /* HOSTTABLE */
 
 	if (!h)
-	  c = inet_ntop(at2->family, at2->addr, buffer, sizeof(buffer));
+          c = inet_ntop(at2->family, at2->addr, buffer, sizeof(buffer));
 	else
           c = h->h_name;
 
@@ -326,7 +481,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
       } else
 	j = 0;
 
-#ifdef INET6
+#if INET6
       if (at2->family == AF_INET6)
 	i = sizeof(struct sockaddr_in6);
       else
@@ -351,7 +506,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	((struct sockaddr_in *)(*pai)->ai_addr)->sin_family = at2->family;
 	((struct sockaddr_in *)(*pai)->ai_addr)->sin_port = st2->port;
 
-#ifdef INET6
+#if INET6
 	if (at2->family == AF_INET6) {
 	  ((struct sockaddr_in6 *)(*pai)->ai_addr)->sin6_flowinfo = 0;
 	  memcpy(&((struct sockaddr_in6 *)(*pai)->ai_addr)->sin6_addr, at2->addr, sizeof(struct in6_addr));
@@ -361,7 +516,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	  memcpy(&((struct sockaddr_in *)(*pai)->ai_addr)->sin_addr, at2->addr, sizeof(struct in_addr));
 	  memset(((struct sockaddr_in *)(*pai)->ai_addr)->sin_zero, 0, sizeof(((struct sockaddr_in *)(*pai)->ai_addr)->sin_zero));
 	}
-
+	
 	if (c) {
 	  (*pai)->ai_canonname = (void *)(*pai) + sizeof(struct addrinfo) + i;
 	  strcpy((*pai)->ai_canonname, c);
@@ -388,7 +543,7 @@ ret:
       st = st2;
     }
   }
-  if (at != &nulladdr) {
+  if (at) {
     struct gaih_addrtuple *at2 = at;
     while(at) {
       at2 = at->next;
@@ -406,24 +561,34 @@ struct gaih {
 };
 
 static struct gaih gaih[] = {
-#ifdef INET6
+#if INET6
   { PF_INET6, gaih_inet },
 #endif /* INET6 */
   { PF_INET, gaih_inet },
+#if LOCAL
+  { PF_LOCAL, gaih_local },
+#endif /* LOCAL */
   { PF_UNSPEC, NULL }
 };
 
 int getaddrinfo(const char *name, const char *service,
 		const struct addrinfo *req, struct addrinfo **pai)
 {
-  int i = 0;
-  int j = 0;
-  struct addrinfo *p = NULL, **end = &p;
+  int i = 0, j = 0;
+  struct addrinfo *p = NULL, **end;
   struct gaih *g = gaih, *pg = NULL;
   struct gaih_service gaih_service, *pservice;
 
+  if (name && (name[0] == '*') && !name[1])
+    name = NULL;
+
+  if (service && (service[0] == '*') && !service[1])
+    service = NULL;
+
+#if BROKEN_LIKE_POSIX
   if (!name && !service)
     return EAI_NONAME;
+#endif /* BROKEN_LIKE_POSIX */
 
   if (!req)
     req = &nullreq;
@@ -437,26 +602,35 @@ int getaddrinfo(const char *name, const char *service,
   if (service && *service) {
     char *c;
     gaih_service.num = strtoul(gaih_service.name = (void *)service, &c, 10);
-    if (!*c) {
-      if (!req->ai_socktype)
-	return EAI_SERVICE;
-      gaih_service.name = NULL;
+    if (*c) {
+      gaih_service.num = -1;
     }
+#if BROKEN_LIKE_POSIX
+      else
+        if (!req->ai_socktype)
+          return EAI_SERVICE;
+#endif /* BROKEN_LIKE_POSIX */
     pservice = &gaih_service;
   } else
     pservice = NULL;
+
+  if (pai)
+    end = &p;
+  else
+    end = NULL;
 
   while(g->gaih) {
     if ((req->ai_family == g->family) || !req->ai_family) {
       j++;
       if (!((pg && (pg->gaih == g->gaih)))) {
 	pg = g;
-	if ((i = g->gaih(name, pservice, req, end))) {
+	if (i = g->gaih(name, pservice, req, end)) {
 	  if (!req->ai_family && (i & GAIH_OKIFUNSPEC))
 	    continue;
 	  goto gaih_err;
 	}
-	while(*end) end = &((*end)->ai_next);
+	if (end)
+          while(*end) end = &((*end)->ai_next);
       }
     }
     g++;
@@ -469,6 +643,9 @@ int getaddrinfo(const char *name, const char *service,
     *pai = p;
     return 0;
   }
+
+  if (!pai && !i)
+    return 0;
 
 gaih_err:
   if (p)

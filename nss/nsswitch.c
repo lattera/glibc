@@ -65,8 +65,7 @@ __libc_lock_define_initialized (static, lock)
 
 
 /* String with revision number of the shared object files.  */
-const char *const __nss_shlib_revision = LIBNSS_FILES_SO + 15;
-
+static const char *const __nss_shlib_revision = LIBNSS_FILES_SO + 15;
 
 /* The root of the whole data base.  */
 static name_database *service_table;
@@ -332,7 +331,7 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 	    {
 	      /* Load the shared library.  */
 	      size_t shlen = (7 + strlen (ni->library->name) + 3
-			      + strlen (NSS_SHLIB_REVISION) + 1);
+			      + strlen (__nss_shlib_revision) + 1);
 	      char shlib_name[shlen];
 
 	      void do_open (void)
@@ -345,7 +344,7 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 	      __stpcpy (__stpcpy (__stpcpy (__stpcpy (shlib_name, "libnss_"),
 					    ni->library->name),
 				  ".so"),
-			NSS_SHLIB_REVISION);
+			__nss_shlib_revision);
 
 	      if (nss_dlerror_run (do_open) != 0)
 		/* Failed to load the library.  */

@@ -10,9 +10,9 @@ Please send GNU C library bug reports using the `glibcbug' script to
 Version 2.1
 
 * An additional locale model to support C++ Standard Library locale
-  model an probably more was implemented by Ulrich Drepper.
+  model and probably more was implemented by Ulrich Drepper.
 
-* Eric Youngdale and Ulrich Drepper implement versioning of objects on
+* Eric Youngdale and Ulrich Drepper implemented versioning of objects on
   symbol level.
 
 * Miles Bader provided the `argp' function family to support hierachical

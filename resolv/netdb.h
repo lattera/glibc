@@ -396,6 +396,14 @@ struct addrinfo
 #define	EAI_MEMORY	-10	/* Memory allocation failure.  */
 #define	EAI_SYSTEM	-11	/* System error returned in `errno'.  */
 
+#define NI_MAXHOST      1025
+#define NI_MAXSERV      32
+
+#define NI_NUMERICHOST 1
+#define NI_NUMERICSERV 2
+#define NI_NOFQDN 4
+#define NI_NAMEREQD 8
+#define NI_DGRAM 16
 
 /* Translate name of a service location and/or a service name to set of
    socket addresses.  */

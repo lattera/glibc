@@ -1,4 +1,4 @@
-/* locale - Implementation of the locale program according to POSIX 1003.2
+/* Implementation of the locale program according to POSIX 1003.2.
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
@@ -22,18 +22,21 @@
 # include <config.h>
 #endif
 
+#include <argp.h>
+#include <argz.h>
 #include <dirent.h>
+#include <errno.h>
 #include <error.h>
-#include <getopt.h>
 #include <langinfo.h>
 #include <libintl.h>
 #include <limits.h>
 #include <locale.h>
+#include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #include "localeinfo.h"
 
@@ -44,16 +47,44 @@ static int show_category_name;
 /* If set print the name of the item.  */
 static int show_keyword_name;
 
-/* Long options.  */
-static const struct option long_options[] =
+/* Print names of all available locales.  */
+static int do_all;
+
+/* Print names of all available character maps.  */
+static int do_charmaps = 0;
+
+/* Name and version of program.  */
+static void print_version (FILE *stream, struct argp_state *state);
+void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
+
+/* Definitions of arguments for argp functions.  */
+static struct argp_option options[] =
 {
-  { "all-locales", no_argument, NULL, 'a' },
-  { "category-name", no_argument, &show_category_name, 1 },
-  { "charmaps", no_argument, NULL, 'm' },
-  { "help", no_argument, NULL, 'h' },
-  { "keyword-name", no_argument, &show_keyword_name, 1 },
-  { "version", no_argument, NULL, 'V' },
-  { NULL, 0, NULL, 0 }
+  { NULL, 0, NULL, 0, "System information:" },
+  { "all-locales", 'a', NULL, 0, "Write names of available locales" },
+  { "charmaps", 'm', NULL, 0, "Write names of available charmaps" },
+  { NULL, 0, NULL, 0, "Modify output format:" },
+  { "category-name", 'c', NULL, 0, "Write names of selected categories" },
+  { "keyword-name", 'k', NULL, 0, "Write names of selected keywords" },
+  { NULL, 0, NULL, 0, NULL }
+};
+
+/* Short description of program.  */
+static const char doc[] = "Get locale-specific information.";
+
+/* Strings for arguments in help texts.  */
+static const char args_doc[] = "NAME\n[-a|-m]";
+
+/* Prototype for option handler.  */
+static error_t parse_opt (int key, char *arg, struct argp_state *state);
+
+/* Function to print some extra text in the help message.  */
+static char *more_help (int key, const char *text, void *input);
+
+/* Data structure to communicate with argp functions.  */
+static struct argp argp =
+{
+  options, parse_opt, args_doc, doc, NULL, more_help
 };
 
 
@@ -124,7 +155,6 @@ extern void locale_special (const char *name, int show_category_name,
 			    int show_keyword_name);
 
 /* Prototypes for local functions.  */
-static void usage (int status) __attribute__ ((noreturn));
 static void write_locales (void);
 static void write_charmaps (void);
 static void show_locale_vars (void);
@@ -134,12 +164,6 @@ static void show_info (const char *name);
 int
 main (int argc, char *argv[])
 {
-  int optchar;
-  int do_all = 0;
-  int do_help = 0;
-  int do_version = 0;
-  int do_charmaps = 0;
-
   /* Set initial values for global variables.  */
   show_category_name = 0;
   show_keyword_name = 0;
@@ -152,55 +176,13 @@ main (int argc, char *argv[])
   /* Initialize the message catalog.  */
   textdomain (PACKAGE);
 
-  while ((optchar = getopt_long (argc, argv, "achkmV", long_options, NULL))
-         != -1)
-    switch (optchar)
-      {
-      case '\0':		/* Long option.  */
-	break;
-      case 'a':
-	do_all = 1;
-	break;
-      case 'c':
-	show_category_name = 1;
-	break;
-      case 'h':
-	do_help = 1;
-	break;
-      case 'k':
-	show_keyword_name = 1;
-	break;
-      case 'm':
-	do_charmaps = 1;
-	break;
-      case 'V':
-	do_version = 1;
-	break;
-      default:
-	usage (EXIT_FAILURE);
-      }
-
-  /* Version information is requested.  */
-  if (do_version)
-    {
-      printf ("locale (GNU %s) %s\n", PACKAGE, VERSION);
-      printf (_("\
-Copyright (C) %s Free Software Foundation, Inc.\n\
-This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1995, 1996, 1997");
-      printf (_("Written by %s.\n"), "Ulrich Drepper");
-
-      exit (EXIT_SUCCESS);
-    }
-
-  /* Help is requested.  */
-  if (do_help)
-    usage (EXIT_SUCCESS);
+  /* Parse and process arguments.  */
+  argp_parse (&argp, argc, argv, 0, 0, NULL);
 
   /* `-a' requests the names of all available locales.  */
   if (do_all != 0)
     {
+      setlocale (LC_COLLATE, "");
       write_locales ();
       exit (EXIT_SUCCESS);
     }
@@ -233,61 +215,219 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 }
 
 
-/* Display usage information and exit.  */
-static void
-usage (int status)
+/* Handle program arguments.  */
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
 {
-  if (status != EXIT_SUCCESS)
-    fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
-	     __progname);
-  else
+  switch (key)
     {
-      printf (gettext ("\
-Usage: %s [OPTION]... name\n\
-Mandatory arguments to long options are mandatory for short options too.\n\
-  -h, --help            display this help and exit\n\
-  -V, --version         output version information and exit\n\
-\n\
-  -a, --all-locales     write names of available locales\n\
-  -m, --charmaps        write names of available charmaps\n\
-\n\
-  -c, --category-name   write names of selected categories\n\
-  -k, --keyword-name    write names of selected keywords\n"),
-	      __progname);
-      fputs (gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
-	     stdout);
+    case 'a':
+      do_all = 1;
+      break;
+    case 'c':
+      show_category_name = 1;
+      break;
+    case 'm':
+      do_charmaps = 1;
+      break;
+    case 'k':
+      show_keyword_name = 1;
+      break;
+    default:
+      return ARGP_ERR_UNKNOWN;
     }
-
-  exit (status);
+  return 0;
 }
 
 
-/* Write the names of all available locales to stdout.  */
+static char *
+more_help (int key, const char *text, void *input)
+{
+  switch (key)
+    {
+    case ARGP_KEY_HELP_EXTRA:
+      /* We print some extra information.  */
+      return strdup (gettext ("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"));
+    default:
+      break;
+    }
+  return (char *) text;
+}
+
+/* Print the version information.  */
+static void
+print_version (FILE *stream, struct argp_state *state)
+{
+  fprintf (stream, "locale (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, gettext ("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1995, 1996, 1997");
+  fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
+}
+
+
+/* Simple action function which prints arguments as strings.  */
+static void
+print_names (const void *nodep, VISIT value, int level)
+{
+  if (value == postorder || value == leaf)
+    puts (*(char **) nodep);
+}
+
+
+/* Write the names of all available locales to stdout.  We have some
+   sources of the information: the contents of the locale directory
+   and the locale.alias file.  To avoid duplicates and print the
+   result is a reasonable order we put all entries is a search tree
+   and print them afterwards.  */
 static void
 write_locales (void)
 {
+  void *all_data = NULL;
   DIR *dir;
   struct dirent *dirent;
+  char *alias_path;
+  size_t alias_path_len;
+  char *entry;
 
-  /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
-  puts ("POSIX");
+#define PUT(name) tsearch ((name), &all_data, \
+			   (int (*) (const void *, const void *)) strcoll)
 
-  dir = opendir (LOCALE_PATH);
+  dir = opendir (LOCALEDIR);
   if (dir == NULL)
     {
       error (1, errno, gettext ("cannot read locale directory `%s'"),
-	     LOCALE_PATH);
+	     LOCALEDIR);
       return;
     }
+
+  /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
+  PUT ("POSIX");
+  /* And so is the "C" locale.  */
+  PUT ("C");
 
   /* Now we can look for all files in the directory.  */
   while ((dirent = readdir (dir)) != NULL)
     if (strcmp (dirent->d_name, ".") != 0
 	&& strcmp (dirent->d_name, "..") != 0)
-      puts (dirent->d_name);
+      {
+	mode_t mode;
+#ifdef _DIRENT_HAVE_D_TYPE
+	if (dirent->d_type != DT_UNKNOWN)
+	  mode = DTTOIF (dirent->d_type);
+	else
+#endif
+	  {
+	    struct stat st;
+	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name) + 1];
+
+	    stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"), dirent->d_name);
+
+	    if (stat (buf, &st) < 0)
+	      continue;
+	    mode = st.st_mode;
+	  }
+
+	if (S_ISDIR (mode))
+	  PUT (strdup (dirent->d_name));
+      }
 
   closedir (dir);
+
+  /* Now read the locale.alias files.  */
+  if (argz_create_sep (LOCALE_ALIAS_PATH, ':', &alias_path, &alias_path_len))
+    error (1, errno, gettext ("while preparing output"));
+
+  entry = NULL;
+  while ((entry = argz_next (alias_path, alias_path_len, entry)))
+    {
+      static const char aliasfile[] = "/locale.alias";
+      FILE *fp;
+      char full_name[strlen (entry) + sizeof aliasfile];
+
+      stpcpy (stpcpy (full_name, entry), aliasfile);
+      fp = fopen (full_name, "r");
+      if (fp == NULL)
+	/* Ignore non-existing files.  */
+	continue;
+
+      while (! feof (fp))
+	{
+	  /* It is a reasonable approach to use a fix buffer here
+	     because
+	     a) we are only interested in the first two fields
+	     b) these fields must be usable as file names and so must
+	        not be that long  */
+	  char buf[BUFSIZ];
+	  char *alias;
+	  char *value;
+	  char *cp;
+
+	  if (fgets (buf, BUFSIZ, fp) == NULL)
+	    /* EOF reached.  */
+	    break;
+
+	  cp = buf;
+	  /* Ignore leading white space.  */
+	  while (isspace (cp[0]))
+	    ++cp;
+
+	  /* A leading '#' signals a comment line.  */
+	  if (cp[0] != '\0' && cp[0] != '#')
+	    {
+	      alias = cp++;
+	      while (cp[0] != '\0' && !isspace (cp[0]))
+		++cp;
+	      /* Terminate alias name.  */
+	      if (cp[0] != '\0')
+		*cp++ = '\0';
+
+	      /* Now look for the beginning of the value.  */
+	      while (isspace (cp[0]))
+		++cp;
+
+	      if (cp[0] != '\0')
+		{
+		  value = cp++;
+		  while (cp[0] != '\0' && !isspace (cp[0]))
+		    ++cp;
+		  /* Terminate value.  */
+		  if (cp[0] == '\n')
+		    {
+		      /* This has to be done to make the following
+			 test for the end of line possible.  We are
+			 looking for the terminating '\n' which do not
+			 overwrite here.  */
+		      *cp++ = '\0';
+		      *cp = '\n';
+		    }
+		  else if (cp[0] != '\0')
+		    *cp++ = '\0';
+
+		  /* Add the alias.  */
+		  PUT (strdup (alias));
+		}
+	    }
+
+	  /* Possibly not the whole line fits into the buffer.
+	     Ignore the rest of the line.  */
+	  while (strchr (cp, '\n') == NULL)
+	    {
+	      cp = buf;
+	      if (fgets (buf, BUFSIZ, fp) == NULL)
+		/* Make sure the inner loop will be left.  The outer
+		   loop will exit at the `feof' test.  */
+		*cp = '\n';
+	    }
+	}
+
+      fclose (fp);
+    }
+
+  twalk (all_data, print_names);
 }
 
 
@@ -295,6 +435,7 @@ write_locales (void)
 static void
 write_charmaps (void)
 {
+  void *all_data = NULL;
   DIR *dir;
   struct dirent *dirent;
 
@@ -310,9 +451,31 @@ write_charmaps (void)
   while ((dirent = readdir (dir)) != NULL)
     if (strcmp (dirent->d_name, ".") != 0
 	&& strcmp (dirent->d_name, "..") != 0)
-      puts (dirent->d_name);
+      {
+	mode_t mode;
+#ifdef _DIRENT_HAVE_D_TYPE
+	if (dirent->d_type != DT_UNKNOWN)
+	  mode = DTTOIF (dirent->d_type);
+	else
+#endif
+	  {
+	    struct stat st;
+	    char buf[sizeof (CHARMAP_PATH) + strlen (dirent->d_name) + 1];
+
+	    stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"), dirent->d_name);
+
+	    if (stat (buf, &st) < 0)
+	      continue;
+	    mode = st.st_mode;
+	  }
+
+	if (S_ISREG (mode))
+	  PUT (strdup (dirent->d_name));
+      }
 
   closedir (dir);
+
+  twalk (all_data, print_names);
 }
 
 

@@ -41,13 +41,15 @@
 #include <features.h>
 
 
+__BEGIN_DECLS
+
 struct rmtcallargs {
 	u_long prog, vers, proc, arglen;
 	caddr_t args_ptr;
 	xdrproc_t xdr_args;
 };
 
-bool_t xdr_rmtcall_args __P ((XDR *__xdrs, struct rmtcallargs *__crp));
+extern bool_t xdr_rmtcall_args __P ((XDR *__xdrs, struct rmtcallargs *__crp));
 
 struct rmtcallres {
 	u_long *port_ptr;
@@ -56,7 +58,8 @@ struct rmtcallres {
 	xdrproc_t xdr_results;
 };
 
-bool_t xdr_rmtcallres __P ((XDR *__xdrs, struct rmtcallres *__crp));
+extern bool_t xdr_rmtcallres __P ((XDR *__xdrs, struct rmtcallres *__crp));
 
+__END_DECLS
 
 #endif /* rpc/pmap_rmt.h */

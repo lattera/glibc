@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #define _RPC_AUTH_DES_H	1
 #include <sys/cdefs.h>
 
+__BEGIN_DECLS
+
 /* This is no complete version of this header.  More definitions with
    the real authentication stuff will come in 1997.  For now we only
    need to define the function for handling public keys.  */
@@ -38,5 +40,7 @@ extern int getpublickey __P ((__const char *__name, char *__key));
    the key.  */
 extern int getsecretkey __P ((__const char *__name, char *__key,
 			      __const char *__passwd));
+
+__END_DECLS
 
 #endif /* rpc/auth_des.h */

@@ -74,6 +74,7 @@ localepath = "$(localedir):$(i18ndir)"
 
 CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 	    -DLOCALEDIR='"$(localedir)"' \
+	    -DLOCALE_ALIAS_PATH='"$(localedir):$(i18ndir)"' \
 	    -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
 	    -Iprograms $(CPPFLAGS)
