@@ -430,7 +430,8 @@ find_msg (domain_file, msgid)
      struct loaded_l10nfile *domain_file;
      const char *msgid;
 {
-  size_t top, act, bottom;
+  size_t act = 0;
+  size_t top, bottom;
   struct loaded_domain *domain;
 
   if (domain_file->decided == 0)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
 # define __need_time_t
 # include <time.h>
 #endif

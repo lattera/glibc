@@ -49,10 +49,9 @@ libc {
     # f*
     fclose; fcloseall; fdopen; feof; feof_locked; feof_unlocked; ferror;
     ferror_locked; ferror_unlocked; fflush; fflush_locked; fflush_unlocked;
-    fgetc; fgetpos; fgets; fileno; fileno_locked; fileno_unlocked; flockfile;
+    fgetc; fgetpos; fgets; fileno; fileno_locked; fileno_unlocked;
     fopen; fopencookie; fputc; fputc_locked; fputc_unlocked; fputs;
-    fread; freopen; fseek; fsetpos; ftell; ftrylockfile; funlockfile;
-    fwrite;
+    fread; freopen; fseek; fsetpos; ftell; fwrite;
 
     # g*
     getc; getc_locked; getc_unlocked; getchar; getchar_unlocked; getdelim;

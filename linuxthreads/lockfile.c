@@ -1,5 +1,5 @@
 /* lockfile - Handle locking and unlocking of stream.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ __fresetlockfiles (void)
   pthread_mutexattr_t attr;
 
   __pthread_mutexattr_init (&attr);
-  __pthread_mutexattr_setkind_np (&attr, PTHREAD_MUTEX_RECURSIVE_NP);
+  __pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE_NP);
 
   for (fp = _IO_list_all; fp != NULL; fp = fp->_chain)
     __pthread_mutex_init (fp->_lock, &attr);

@@ -27,7 +27,10 @@
 
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
+# define __need_time_t
+# include <time.h>		/* For time_t.  */
+
 /* The Single Unix specification says that some more types are
    available here.  */
 # ifndef dev_t
@@ -72,7 +75,9 @@ typedef __off64_t off_t;
 typedef __uid_t uid_t;
 #  define uid_t uid_t
 # endif
+#endif	/* X/Open */
 
+#ifdef __USE_UNIX98
 # ifndef pid_t
 typedef __pid_t pid_t;
 #  define pid_t pid_t
@@ -83,7 +88,7 @@ __BEGIN_DECLS
 
 #include <bits/stat.h>
 
-#if defined __USE_BSD || defined __USE_MISC || defined __USE_UNIX98
+#if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
 # define S_IFMT		__S_IFMT
 # define S_IFDIR	__S_IFDIR
 # define S_IFCHR	__S_IFCHR

@@ -32,8 +32,8 @@ __BEGIN_DECLS
    numbers and flag bits for `open', `fcntl', et al.  */
 #include <bits/fcntl.h>
 
-/* For Unix98 all symbols from <sys/stat.h> should also be available.  */
-#ifdef __USE_UNIX98
+/* For XPG all symbols from <sys/stat.h> should also be available.  */
+#ifdef __USE_XOPEN
 # include <sys/stat.h>
 #endif
 

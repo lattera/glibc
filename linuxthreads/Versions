@@ -92,6 +92,7 @@ libpthread {
 
     pthread_getconcurrency; pthread_setconcurrency;
 
+    __pthread_mutexattr_gettype; __pthread_mutexattr_settype;
     pthread_mutexattr_gettype; pthread_mutexattr_settype;
   }
 }

@@ -185,7 +185,6 @@ extern int fflush __P ((FILE *__stream));
 
 #ifdef __USE_MISC
 /* Faster versions when locking is not required.  */
-extern int fclose_unlocked __P ((FILE *__stream));
 extern int fflush_unlocked __P ((FILE *__stream));
 #endif
 

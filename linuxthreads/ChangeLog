@@ -1,3 +1,13 @@
+1998-07-09 13:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Versions: Add __pthread_mutexattr_gettype and
+	__pthread_mutexattr_settype.
+	* lockfile.c: Use __pthread_mutexattr_settype instead of
+	__pthread_mutexattr_setkind_np.
+	* mutex.c: Define __pthread_mutexattr_gettype and
+	__pthread_mutexattr_settype.
+	* weak.c: Likewise.
+
 1998-07-08 22:26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions: Add pthread_mutexattr_gettype, pthread_mutexattr_settype.

@@ -280,7 +280,7 @@ endif
 ifeq ($(versioning),yes)
 -include $(common-objpfx)sysd-versions
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
-generated += $(versin-maps)
+generated += $(version-maps)
 
 ifndef avoid-generated
 $(common-objpfx)sysd-versions: $(..)Versions.def $(..)scripts/versions.awk \
