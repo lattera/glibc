@@ -358,7 +358,7 @@ current locale which determines the translation and therefore also the
 external encoding used.  In such a situation (and many others) the
 functions described here are perfect.  If more freedom while performing
 the conversion is necessary take a look at the @code{iconv} functions
-(@pxref{Generic Charset Conversion})
+(@pxref{Generic Charset Conversion}).
 
 @menu
 * Selecting the Conversion::     Selecting the conversion and its properties.
@@ -1015,7 +1015,7 @@ this is not a strict guarantee.  Therefore simply NUL terminating a
 piece of a running text is not always an adequate solution and therefore
 never should be used in generally used code.
 
-The generic conversion interface (see @xref{Generic Charset Conversion})
+The generic conversion interface (@xref{Generic Charset Conversion})
 does not have this limitation (it simply works on buffers, not
 strings), and the GNU C library contains a set of functions which take
 additional parameters specifying the maximal number of bytes which are
@@ -1370,7 +1370,7 @@ The function @code{mblen} is declared in @file{stdlib.h}.
 For convenience reasons the @w{ISO C89} standard defines also functions
 to convert entire strings instead of single characters.  These functions
 suffer from the same problems as their reentrant counterparts from the
-second amendment to @w{ISO C89}; see @xref{Converting Strings}.
+second amendment to @w{ISO C89}; see @ref{Converting Strings}.
 
 @comment stdlib.h
 @comment ISO
@@ -1526,7 +1526,7 @@ one has to change the @code{LC_CTYPE} locale using @code{setlocale}.
 
 This introduces major problems for the rest of the programs since
 several more functions (e.g., the character classification functions,
-@xref{Classification of Characters}) use the @code{LC_CTYPE} category.
+@pxref{Classification of Characters}) use the @code{LC_CTYPE} category.
 
 @item
 Parallel conversions to and from different character sets are not

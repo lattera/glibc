@@ -1,3 +1,25 @@
+1999-01-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/test-vfork.c: Include <sys/wait.h> for wait declaration.
+
+1999-01-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/ctype.texi: Fix cross refs and typos.
+	* manual/charset.texi: Likewise.
+
+1999-01-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Rules: Add dummp.y and dummy.o to common-generated.
+	Patch by Andreas Schwab.
+
+1999-01-18 10:07 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* manual/libc-texinfo.sh: Use tsort.awk.
+	* manual/tsort.awk: New file.
+	* manual/Makefile (minimal-dist): Add tsort.awk.
+	(distribute): Remove generated files: summary.texi,
+	stamp-summary, chapters.texi, top-menu.texi, and texis.
+
 1999-01-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/vfork.S: Test return value after

@@ -656,7 +656,7 @@ is_in_class (int c, const char *class)
 @}
 @end smallexample
 
-See @xref{Converting a Character} for more information on @code{btowc}.
+@xref{Converting a Character} for more information on @code{btowc}.
 Please note that this change probably does not improve the performance
 of the program a lot since the @code{wctype} function still has to make
 the string comparisons.  But it gets really interesting if the
@@ -690,7 +690,7 @@ This type is defined in @file{wctype.h}.
 
 @comment wctype.h
 @comment ISO
-@deftypefun wctrans_t wctrans (const char *@var{property}
+@deftypefun wctrans_t wctrans (const char *@var{property})
 The @code{wctrans} function has to be used to find out whether a named
 mapping is defined in the current locale selected for the
 @code{LC_CTYPE} category.  If the returned value is non-zero it can

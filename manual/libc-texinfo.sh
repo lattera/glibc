@@ -25,7 +25,7 @@ collect_nodes () {
 	END  { for (x in file)
 		 if (file[x] != "")
 		   print file[x] ":" x, file[nnode[x]] ":" nnode[x] }' |
-  tsort | sed 's/_/ /g; $d'
+  $AWK -f tsort.awk | sed 's/_/ /g'
 }
 
 collect_nodes $1 | build_menu

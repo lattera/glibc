@@ -105,15 +105,14 @@ dir-add.info: xtract-typefun.awk $(texis)
 	$(TEXI2DVI) $<
 
 # Distribution.
-minimal-dist = summary.awk texis.awk libc-texinfo.sh libc.texinfo	\
-	       $(filter-out summary.texi, $(nonexamples))		\
+minimal-dist = summary.awk texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
+	       $(filter-out summary.texi, $(nonexamples))		    \
 	       $(patsubst %.c.texi,examples/%.c, $(examples))
 
 doc-only-dist = Makefile COPYING.LIB
-distribute = $(minimal-dist) $(examples) texis stdio-fp.c		\
-	     libc.info* libc.?? libc.??s texinfo.tex stamp-summary	\
-	     xtract-typefun.awk dir-add.info dir			\
-	     chapters.texi top-menu.texi summary.texi
+distribute = $(minimal-dist) $(examples) stdio-fp.c	\
+	     libc.info* libc.?? libc.??s texinfo.tex	\
+	     xtract-typefun.awk dir-add.info dir
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^

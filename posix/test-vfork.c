@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <error.h>
 #include <errno.h>
+#include <sys/wait.h>
 
 void noop (void);
 
