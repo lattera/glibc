@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,4 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-
-/* Please consult the file sysdeps/unix/sysv/linux/i386/sysdep.h for
-   more information about the value -4095 used below.*/
-
-	.text
-ENTRY (syscall)
-	b .
-	nop
-
+/* HPPA implements syscall() in 'C'; see sysdep.c.  */
