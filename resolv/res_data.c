@@ -205,7 +205,7 @@ res_send_setrhook(res_send_rhook hook) {
 
 int
 res_isourserver(const struct sockaddr_in *inp) {
-	return (res_ourserver_p((const struct sockaddr_in6 *) &_res, inp));
+	return (res_ourserver_p(&_res, (const struct sockaddr_in6 *) inp));
 }
 
 int
