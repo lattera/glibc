@@ -27,7 +27,7 @@ routines	:=							      \
 	ctermid cuserid							      \
 	vfprintf vprintf printf_fp reg-printf printf-prs _itoa		      \
 	fprintf printf snprintf sprintf asprintf dprintf		      \
-	vfscanf vscanf 							      \
+	vfscanf 							      \
 	fscanf scanf sscanf						      \
 	perror psignal							      \
 	tmpfile tmpnam tempnam tempname					      \

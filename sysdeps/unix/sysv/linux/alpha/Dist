@@ -1,3 +1,4 @@
 alpha/ptrace.h alpha/regdef.h
 ieee_get_fp_control.S ieee_set_fp_control.S
 ioperm.c
+init-first.h

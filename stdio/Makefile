@@ -35,7 +35,7 @@ routines	:=							      \
 	fgets gets fputs puts						      \
 	getdelim							      \
 	fclose fflush							      \
-	vdprintf vsnprintf vsprintf vasprintf vsscanf			      \
+	vdprintf vsnprintf vsprintf vasprintf vsscanf vscanf		      \
 	memstream obstream linewrap					      \
 	internals sysd-stdio pipestream stdio_init libc_fatal
 aux	:= defs glue
