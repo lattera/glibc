@@ -130,10 +130,15 @@ struct sockaddr
 enum
   {
     MSG_OOB		= 0x01,	/* Process out-of-band data.  */
+#define MSG_OOB		MSG_OOB
     MSG_PEEK		= 0x02,	/* Peek at incoming messages.  */
+#define MSG_PEEK	MSG_PEEK
     MSG_DONTROUTE	= 0x04,	/* Don't use local routing.  */
+#define MSG_DONTROUTE	MSG_DONTROUTE
     MSG_CTRUNC		= 0x08,	/* Control data lost before delivery.  */
+#define MSG_CTRUNC	MSG_CTRUNC
     MSG_PROXY		= 0x10	/* Supply or ask second address.  */
+#define MSG_PROXY	MSG_PROXY
   };
 
 

@@ -1,3 +1,8 @@
+1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (MSG_*): Also define as
+	macros.
+
 1998-03-31 18:11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/mntent.h: New file.
