@@ -1,3 +1,8 @@
+1999-12-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/gb2312.c: Update mapping of GB 0x212c from latest
+	Unicode tables.
+
 1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/fxstat64.c: Rename have_no_stat64 to

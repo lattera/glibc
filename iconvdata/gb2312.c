@@ -1,5 +1,5 @@
 /* GB 2312 conversion tables.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -44,7 +44,7 @@ const uint16_t __gb2312_to_ucs[] =
 {
   [0x0000] = 0x3000, [0x0001] = 0x3001, [0x0002] = 0x3002, [0x0003] = 0x30fb,
   [0x0004] = 0x02c9, [0x0005] = 0x02c7, [0x0006] = 0x00a8, [0x0007] = 0x3003,
-  [0x0008] = 0x3005, [0x0009] = 0x2015, [0x000a] = 0xff5e, [0x000b] = 0x2225,
+  [0x0008] = 0x3005, [0x0009] = 0x2015, [0x000a] = 0xff5e, [0x000b] = 0x2016,
   [0x000c] = 0x2026, [0x000d] = 0x2018, [0x000e] = 0x2019, [0x000f] = 0x201c,
   [0x0010] = 0x201d, [0x0011] = 0x3014, [0x0012] = 0x3015, [0x0013] = 0x3008,
   [0x0014] = 0x3009, [0x0015] = 0x300a, [0x0016] = 0x300b, [0x0017] = 0x300c,
@@ -2029,10 +2029,10 @@ const char __gb2312_from_ucs4_tab3[][2] =
 */
 const char __gb2312_from_ucs4_tab4[][2] =
 {
-  [0x0000] = "\x21\x2a", [0x0003] = "\x21\x2e", [0x0004] = "\x21\x2f",
-  [0x0007] = "\x21\x30", [0x0008] = "\x21\x31", [0x0011] = "\x21\x2d",
-  [0x001b] = "\x21\x6b", [0x001d] = "\x21\x64", [0x001e] = "\x21\x65",
-  [0x0026] = "\x21\x79",
+  [0x0000] = "\x21\x2a", [0x0001] = "\x21\x2c", [0x0003] = "\x21\x2e",
+  [0x0004] = "\x21\x2f", [0x0007] = "\x21\x30", [0x0008] = "\x21\x31",
+  [0x0011] = "\x21\x2d", [0x001b] = "\x21\x6b", [0x001d] = "\x21\x64",
+  [0x001e] = "\x21\x65", [0x0026] = "\x21\x79"
 };
 
 /* The table can be created using
@@ -2055,9 +2055,6 @@ const char __gb2312_from_ucs4_tab4[][2] =
    }
    printf ("\n");
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-   But we have a problem here since U+2225 maps to either 0x212C or
-   0x214E.  We simply choose the first solution here.
 */
 const char __gb2312_from_ucs4_tab5[][2] =
 {
@@ -2069,14 +2066,14 @@ const char __gb2312_from_ucs4_tab5[][2] =
   [0x008e] = "\x21\x7c", [0x008f] = "\x21\x7a", [0x0090] = "\x21\x7d",
   [0x0105] = "\x21\x4a", [0x010c] = "\x21\x47", [0x010e] = "\x21\x46",
   [0x0117] = "\x21\x4c", [0x011a] = "\x21\x58", [0x011b] = "\x21\x5e",
-  [0x011d] = "\x21\x4f", [0x0122] = "\x21\x2c", [0x0124] = "\x21\x44",
+  [0x011d] = "\x21\x4f", [0x0122] = "\x21\x4e", [0x0124] = "\x21\x44",
   [0x0125] = "\x21\x45", [0x0126] = "\x21\x49", [0x0127] = "\x21\x48",
   [0x0128] = "\x21\x52", [0x012b] = "\x21\x53", [0x0131] = "\x21\x60",
   [0x0132] = "\x21\x5f", [0x0133] = "\x21\x43", [0x0134] = "\x21\x4b",
   [0x013a] = "\x21\x57", [0x0145] = "\x21\x56", [0x0149] = "\x21\x55",
   [0x015d] = "\x21\x59", [0x015e] = "\x21\x54", [0x0161] = "\x21\x5c",
   [0x0162] = "\x21\x5d", [0x016b] = "\x21\x5a", [0x016c] = "\x21\x5b",
-  [0x0196] = "\x21\x51", [0x01a2] = "\x21\x4d",
+  [0x0196] = "\x21\x51", [0x01a2] = "\x21\x4d"
 };
 
 /* The table can be created using

@@ -171,6 +171,8 @@ please let me know.
 4.6.	I've build make 3.77 against glibc 2.1 and now make gets
 	segmentation faults.
 4.7.	Why do so many programs using math functions fail on my AlphaStation?
+4.8.	The conversion table for character set XX does not match with
+what I expect.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -1714,6 +1716,31 @@ implemented in some old PALcodes of AlphaStations.  This may cause
 `Illegal Instruction' core dumps or endless loops in programs that
 catch these signals.  Updating the firmware to a 1999 release has
 fixed the problem on an AlphaStation 200 4/166.
+
+
+4.8.	The conversion table for character set XX does not match with
+what I expect.
+
+{UD} I don't doubt for a minute that some of the conversion tables contain
+errors.  We tried the best we can and relied on automatic generation of the
+data to prevent human-introduced errors but this still is no guarantee.  If
+you think you found a problem please send a bug report describing it and
+give an authoritive reference.  The latter is important since otherwise
+the current behaviour is as good as the proposed one.
+
+Before doing this look through the list of known problem first:
+
+- the GBK (simplified Chinese) encoding is based on Unicode tables.  This
+  is good.  These tables, however, differ slightly from the tables used
+  by the M$ people.  The differences are these [+ Unicode, - M$]:
+
+    +0xA1AA 0x2015
+    +0xA844 0x2014
+    -0xA1AA 0x2014
+    -0xA844 0x2015
+
+  In addition the Unicode tables contain mappings for the GBK characters
+  0xA8BC, 0xA8BF, 0xA989 to 0xA995, and 0xFE50 to 0xFEA0.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
