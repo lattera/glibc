@@ -182,11 +182,23 @@ initgroups (user, group)
       fct = __nss_lookup_function (nip, "initgroups");
 
       if (fct == NULL)
-	status = compat_call (nip, user, group, &start, &size, groups,
-			      limit, &errno);
+	{
+	  status = compat_call (nip, user, group, &start, &size, groups,
+				limit, &errno);
+
+	  if (nss_next_action (nip, NSS_STATUS_UNAVAIL) != NSS_ACTION_CONTINUE)
+	    break;
+	}
       else
 	status = _CALL_DL_FCT (fct, (user, group, &start, &size, groups, limit,
 				     &errno));
+
+      /* This is really only for debugging.  */
+      if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
+	 __libc_fatal ("illegal status in " __FUNCTION__);
+
+      if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
+	 break;
 
       if (nip->next == NULL)
 	no_more = -1;

@@ -1,3 +1,7 @@
+1998-07-07 16:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/initgroups.c: Handle directives from nsswitch.conf file.
+
 1998-07-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Add
