@@ -1717,17 +1717,24 @@ Computing table size for collation table might take a while..."),
   /* Now determine whether the UNDEFINED entry is needed and if yes,
      whether it was defined.  */
   collate->undefined.used_in_level = need_undefined ? ~0ul : 0;
-  if (need_undefined && collate->undefined.file == NULL)
+  if (collate->undefined.file == NULL)
     {
-      error (0, 0, _("no definition of `UNDEFINED'"));
+      if (need_undefined)
+	{
+	  error (0, 0, _("no definition of `UNDEFINED'"));
 
-      /* Add UNDEFINED at the end.  */
-      collate->undefined.mborder =
-	(int *) obstack_alloc (&collate->mempool, nrules * sizeof (int));
+	  /* Add UNDEFINED at the end.  */
+	  collate->undefined.mborder =
+	    (int *) obstack_alloc (&collate->mempool, nrules * sizeof (int));
 
-      for (i = 0; i < nrules; ++i)
-	collate->undefined.mborder[i] = mbact[i]++;
+	  for (i = 0; i < nrules; ++i)
+	    collate->undefined.mborder[i] = mbact[i]++;
+	}
 
+      /* In any case we will need the definition for the wide character
+	 case.  But we will not complain that it is missing since the
+	 specification strangely enough does not seem to account for
+	 this.  */
       collate->undefined.wcorder = wcact++;
     }
 
@@ -2178,6 +2185,26 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_len = table_size * sizeof (uint32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   ++cnt;
+
+  /* Since we are using the sign of an integer to mark indirection the
+     offsets in the arrays we are indirectly referring to must not be
+     zero since -0 == 0.  Therefore we add a bit of dummy content.  */
+  if (sizeof (int) == sizeof (int32_t))
+    {
+      obstack_int_grow (&extrapool, 0);
+      obstack_int_grow (&indirectpool, 0);
+    }
+  else
+    {
+      int32_t zero = 0;
+      obstack_grow (&extrapool, &zero, sizeof (zero));
+      obstack_grow (&indirectpool, &zero, sizeof (zero));
+    }
+
+  /* Now insert the `UNDEFINED' value if it is used.  Since this value
+     will probably be used more than once it is good to store the
+     weights only once.  */
+  output_weightwc (&weightpool, collate, &collate->undefined);
 
   /* Generate the table.  Walk through the lists of sequences
      starting with the same byte and add them one after the other to

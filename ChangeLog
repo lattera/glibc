@@ -1,5 +1,12 @@
 1999-12-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-collate.c (collate_finish): Always define
+	weight for UNDEFINED if not defined by the user but don't complain
+	unless it is needed in the multibyte character table.
+	(collate_output): Add extra dummy elements in wide char tables in the
+	same way done for multibyte.  Always output undefined entry in
+	wide character table.
+
 	* locale/Makefile (categories): Remove commented-out old definition.
 
 	* locale/programs/ld-collate.c (insert_value): Don't pass wide string
@@ -32,7 +39,7 @@
 
 	* soft-fp/*: Tons of new files to implement floating-point arithmetic
 	in software.
-	Contributed by  Richard Henderson, Jakub Jelinek and others.
+	Contributed by Richard Henderson, Jakub Jelinek and others.
 
 1999-12-29  Andreas Jaeger  <aj@suse.de>
 
