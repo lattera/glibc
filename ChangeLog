@@ -1,5 +1,30 @@
 2000-06-21  Andreas Jaeger  <aj@suse.de>
 
+	* stdio-common/temptest.c: Include <stdlib.h>.
+	* stdio-common/tst-fileno.c: Likewise.
+	* stdio-common/scanf4.c: Likewise.
+	* stdio-common/scanf5.c: Likewise.
+	* time/clocktest.c: Likewise.
+	* posix/test-vfork.c: Likewise.
+	* posix/globtest.c: Likewise.
+	* io/test-utime.c: Likewise.
+	* wctype/test_wcfuncs.c: Likewise.
+	* crypt/cert.c: Likewise.
+
+	* stdio-common/tst-printfsz.c: Include <string.h>.
+	* libio/tst_swscanf.c: Likewise.
+	* libio/tst_wscanf.c: Likewise.
+	* posix/runtests.c: Likewise.
+	* posix/tst-getaddrinfo.c: Likewise.
+	* posix/wordexp-test.c: Likewise.
+	* misc/tst-efgcvt.c: Likewise.
+
+	* stdlib/tst-xpg-basename.c: Include <stdlib.h> and <string.h>.
+	* nss/test-netdb.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/configure.in: Add check for minimal
+	supported kernel for MIPS.
+
 	* elf/vismod2.c: Include <stdlib.h> for abort prototype.
 	* rt/aio_suspend.c: Likewise.
 
