@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -109,7 +109,7 @@ ELF_PREFERRED_ADDRESS_DATA;
 struct filebuf
 {
   ssize_t len;
-  char buf[1024] __attribute__ ((aligned (__alignof (ElfW(Ehdr)))));
+  char buf[512] __attribute__ ((aligned (__alignof (ElfW(Ehdr)))));
 };
 
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
