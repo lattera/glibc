@@ -1,5 +1,5 @@
 /* termios type and macro definitions.  4.4 BSD/generic GNU version.
-   Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,96,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -113,6 +113,7 @@ struct termios
 #ifdef	__USE_BSD
 # define CCTS_OFLOW	(1 << 16)	/* CTS flow control of output.  */
 # define CRTS_IFLOW	(1 << 17)	/* RTS flow control of input.  */
+# define CRTSCTS	(CCTS_OFLOW|CRTS_IFLOW)	/* CTS/RTS flow control.  */
 # define MDMBUF		(1 << 20)	/* Carrier flow control of output.  */
 #endif
 
