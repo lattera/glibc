@@ -26,8 +26,46 @@
    included in <signal.h>.  */
 #include <bits/sigcontext.h>
 
-/* A machine context is exactly a sigcontext.  */
+#if __WORDSIZE == 32
+
+/* Number of general registers.  */
+#define NGREG	48
+
+/* Container for all general registers.  */
+typedef unsigned long gregset_t[NGREG];
+
+/* Container for floating-point registers and status */
+typedef struct _libc_fpstate
+{
+	double fpregs[32];
+	double fpscr;
+	unsigned int _pad[2];
+} fpregset_t;
+
+/* Container for Altivec/VMX registers and status.
+   Needs to be aligned on a 16-byte boundary. */
+typedef struct _libc_vrstate
+{
+	unsigned int vrregs[32][4];
+	unsigned int vscr;
+	unsigned int vrsave;
+	unsigned int _pad[2];
+} vrregset_t;
+
+/* Context to describe whole processor state.  */
+typedef struct
+{
+	gregset_t gregs;
+	fpregset_t fpregs;
+	vrregset_t vrregs __attribute__((__aligned__(16)));
+} mcontext_t;
+
+#else
+
+/* For 64-bit, a machine context is exactly a sigcontext.  */
 typedef struct sigcontext mcontext_t;
+
+#endif
 
 /* Userlevel context.  */
 typedef struct ucontext
@@ -36,12 +74,14 @@ typedef struct ucontext
     struct ucontext *uc_link;
     stack_t uc_stack;
 #if __WORDSIZE == 32
-    mcontext_t uc_mcontext;
-    __sigset_t uc_sigmask;
-#else
+    /* These fields are for backwards compatibility. */
+    int uc_pad[7];
+    mcontext_t *uc_regs;
+    unsigned int uc_oldsigmask[2];
+    int uc_pad2;
+#endif
     sigset_t    uc_sigmask;
     mcontext_t  uc_mcontext;  /* last for extensibility */
-#endif
   } ucontext_t;
 
 #endif /* sys/ucontext.h */

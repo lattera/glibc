@@ -1,3 +1,12 @@
+2003-06-17  Paul Mackerras  <paulus@samba.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Adjust.
+
 2003-06-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (build_word_op): Use alnum instead of alpha class.
