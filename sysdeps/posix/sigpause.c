@@ -34,9 +34,7 @@ do_sigpause (int sig_or_mask, int is_sig)
     {
       /* The modern X/Open implementation is requested.  */
       if (__sigprocmask (0, NULL, &set) < 0
-	  /* Perform the tests from sigdelset ourselves.  */
-	  || sig_or_mask <= 0 || sig_or_mask >= NSIG
-	  || __sigdelset (&set, sig_or_mask) < 0)
+	  || sigdelset (&set, sig_or_mask) < 0)
 	return -1;
     }
   else if (sigset_set_old_mask (&set, sig_or_mask) < 0)
