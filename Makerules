@@ -458,15 +458,11 @@ installed-libcs := $(foreach o,$(object-suffixes),\
 			     $(libdir)/$(patsubst %,$(libtype$o),\
 						  $(libprefix)$(libc-name)))
 install: $(installed-libcs)
-# We avoid depending on lib-noranlib because that makes the parent make
-# subdir_lib in all the subdirs, when the make install run they do will
-# update the library anyway.  Running ranlib after installing makes the
-# __.SYMDEF time stamp up to date, which avoids messages from some linkers.
-# Depending on subdir_install gets all the subdirs to update the library,
-# and is optimal for `make install' at top level.
-$(installed-libcs): $(libdir)/lib$(libprefix)%: libobjs subdir_install
+$(installed-libcs): $(libdir)/lib$(libprefix)%: lib
 	$(make-target-directory)
 	$(INSTALL_DATA) $(common-objpfx)lib$(*:$(libc-name)%=c%) $@
+# Running ranlib after installing makes the __.SYMDEF time stamp up to
+# date, which avoids messages from some linkers.
 	$(RANLIB) $@
 endif
 
