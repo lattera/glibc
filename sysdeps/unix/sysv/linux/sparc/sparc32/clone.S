@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu).
 
@@ -22,6 +23,10 @@
 
 #include <asm/errno.h>
 #include <asm/unistd.h>
+#include <tcb-offsets.h>
+
+#define CLONE_VM	0x00000100
+#define CLONE_THREAD	0x00010000
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
 	     pid_t *ptid, void *tls, pid_t *ctid); */
@@ -69,6 +74,19 @@ __clone:
 	.type	__thread_start,@function
 
 __thread_start:
+#ifdef RESET_PID
+	sethi	%hi(CLONE_THREAD), %l0
+	andcc	%i2, %l0, %g0
+	bne	1f
+	 andcc	%i2, CLONE_VM, %g0
+	bne,a	2f
+	 mov	-1,%o0
+	set	__NR_getpid,%g1
+	ta	0x10
+2:	st	%o0,[%g7 + PID]
+	st	%o0,[%g7 + TID]
+1:
+#endif
 	call	%i0
 	 mov	%i3,%o0
 	call	_exit,0

@@ -1,3 +1,8 @@
+2004-12-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: New file.
+	* sysdeps/sparc/tcb-offsets.sym: Add TID.
+
 2004-12-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: New file.

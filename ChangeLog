@@ -1,3 +1,18 @@
+2004-12-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone): Add support
+	for NPTL where the PID is stored at userlevel and needs to be reset
+	when CLONE_THREAD is not used.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h
+	(SYSCALL_ERROR_HANDLER): If RTLD_PRIVATE_ERRNO, use rtld_errno
+	instead of errno.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/socket.S: Include
+	sysdep-cancel.h instead of sysdep.h.  Handle cancellation.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Regenerate.
+
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Include stdlib.h.
+
 2004-12-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/gethostid.c: Make bi-arch safe.

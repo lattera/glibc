@@ -1,6 +1,9 @@
 # Begin of automatic generation
 
 # atan2
+Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994380":
+float: 6
+ifloat: 6
 Test "atan2 (-0.75, -1.0) == -2.49809154479650885165983415456218025":
 float: 3
 ifloat: 3
@@ -130,9 +133,14 @@ double: 1
 idouble: 1
 
 # ccos
+Test "Real part of: ccos (-2 - 3 i) == -4.18962569096880723013255501961597373 - 9.10922789375533659797919726277886212 i":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ccos (-2 - 3 i) == -4.18962569096880723013255501961597373 - 9.10922789375533659797919726277886212 i":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: ccos (0.75 + 1.25 i) == 1.38173873063425888530729933139078645 - 1.09193013555397466170919531722024128 i":
 double: 1
 float: 1
@@ -146,9 +154,13 @@ ifloat: 1
 Test "Real part of: ccosh (-2 - 3 i) == -3.72454550491532256547397070325597253 + 0.511822569987384608834463849801875634 i":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ccosh (-2 - 3 i) == -3.72454550491532256547397070325597253 + 0.511822569987384608834463849801875634 i":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "Real part of: ccosh (0.75 + 1.25 i) == 0.408242591877968807788852146397499084 + 0.780365930845853240391326216300863152 i":
 double: 1
 float: 1
@@ -195,11 +207,16 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "Real part of: clog10 (-2 - 3 i) == 0.556971676153418384603252578971164214 - 0.937554462986374708541507952140189646 i":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: clog10 (-2 - 3 i) == 0.556971676153418384603252578971164214 - 0.937554462986374708541507952140189646 i":
 double: 1
 float: 5
 idouble: 1
 ifloat: 5
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: clog10 (-3 + inf i) == inf + pi/2*log10(e) i":
 double: 1
 float: 1
@@ -342,11 +359,17 @@ ildouble: 1
 ldouble: 1
 
 # csin
+Test "Imaginary part of: csin (-2 - 3 i) == -9.15449914691142957346729954460983256 + 4.16890695996656435075481305885375484 i":
+ildouble: 1
+ldouble: 1
 Test "Real part of: csin (0.75 + 1.25 i) == 1.28722291002649188575873510790565441 + 1.17210635989270256101081285116138863 i":
 ildouble: 1
 ldouble: 1
 
 # csinh
+Test "Real part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
 double: 1
 idouble: 1
@@ -376,6 +399,11 @@ ldouble: 1
 Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctan (0.75 + 1.25 i) == 0.160807785916206426725166058173438663 + 0.975363285031235646193581759755216379 i":
 double: 1
 idouble: 1
@@ -388,6 +416,11 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
+Test "Imaginary part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 float: 1
 ifloat: 1
@@ -644,11 +677,15 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "lgamma (1.2) == -0.853740900033158497197028392998854470e-1":
 double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 # log10
 Test "log10 (0.75) == -0.124938736608299953132449886193870744":
@@ -906,8 +943,8 @@ idouble: 1
 
 # Maximal error of functions:
 Function: "atan2":
-float: 3
-ifloat: 3
+float: 6
+ifloat: 6
 ildouble: 1
 ldouble: 1
 
@@ -996,20 +1033,28 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "ccos":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "ccosh":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "ccosh":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Real part of "cexp":
 float: 1
@@ -1036,12 +1081,15 @@ ifloat: 3
 Function: Real part of "clog10":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "clog10":
 double: 1
 float: 5
 idouble: 1
 ifloat: 5
+ildouble: 1
 ldouble: 1
 
 Function: "cos":
@@ -1072,9 +1120,15 @@ Function: Real part of "csin":
 ildouble: 1
 ldouble: 1
 
+Function: Imaginary part of "csin":
+ildouble: 1
+ldouble: 1
+
 Function: Real part of "csinh":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "csinh":
 double: 1
@@ -1095,6 +1149,8 @@ ldouble: 1
 Function: Real part of "ctan":
 double: 1
 idouble: 1
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "ctan":
 double: 1
@@ -1107,10 +1163,14 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "ctanh":
 float: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "erf":
 double: 1

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, 1997.
 
@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
 
 #define P(a, b) P2(a, b)
@@ -63,7 +63,12 @@ ENTRY (__socket)
 #endif
 #endif
 
-	mov	P(SOCKOP_,socket), %o0		/* arg 1: socket subfunction */
+#if defined NEED_CANCELLATION && defined CENABLE
+	SINGLE_THREAD_P
+	cmp	%g1, 0
+	bne	.Lsocket_cancel
+#endif
+	 mov	P(SOCKOP_,socket), %o0		/* arg 1: socket subfunction */
 	add	%sp, STACK_BIAS + 128, %o1	/* arg 2: parameter block */
 	LOADSYSCALL(socketcall)
 	ta	0x6d
@@ -72,6 +77,31 @@ ENTRY (__socket)
 	 nop
 	retl
 	 nop
+
+#if defined NEED_CANCELLATION && defined CENABLE
+.Lsocket_cancel:
+	cfi_startproc
+	save	%sp, -160, %sp
+	cfi_def_cfa_register (%fp)
+	cfi_window_save
+	cfi_register (%o7, %i7)
+	CENABLE
+	 nop
+	mov	%o0, %l0
+	add	%sp, 160 + STACK_BIAS + 128, %o1
+	mov	P(SOCKOP_,socket), %o0
+	LOADSYSCALL(socketcall)
+	ta	0x6d
+
+	bcs,pn	%xcc, __syscall_error_handler2
+	 mov	%o0, %l1
+	CDISABLE
+	 mov	%l0, %o0
+	jmpl	%i7 + 8, %g0
+	 restore %g0, %l1, %o0
+	cfi_endproc
+	SYSCALL_ERROR_HANDLER2
+#endif
 
 	SYSCALL_ERROR_HANDLER
 

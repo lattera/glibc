@@ -66,6 +66,7 @@
 #include <fenv.h>
 #include <inttypes.h>
 #include <math_private.h>
+#include <stdlib.h>
 #include "t_expl.h"
 
 static const long double C[] = {

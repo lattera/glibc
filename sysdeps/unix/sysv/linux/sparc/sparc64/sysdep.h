@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -85,7 +85,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
 	call	__sparc64.get_pic.l7;					\
 	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
-	ldx	[%l7 + errno], %l0;					\
+	ldx	[%l7 + rtld_errno], %l0;				\
 	st	%i0, [%l0];						\
 	jmpl	%i7+8, %g0;						\
 	 restore %g0, -1, %o0;						\
