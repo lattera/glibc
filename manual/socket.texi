@@ -571,9 +571,10 @@ as file names.
 
 In the local namespace socket addresses are file names.  You can specify
 any file name you want as the address of the socket, but you must have
-write permission on the directory containing it.  In order to connect to
-a socket you must have read permission for it.  It's common to put
-these files in the @file{/tmp} directory.
+write permission on the directory containing it.
+@c XXX The following was said to be wrong.
+@c In order to connect to a socket you must have read permission for it.
+It's common to put these files in the @file{/tmp} directory.
 
 One peculiarity of the local namespace is that the name is only used
 when opening the connection; once open the address is not meaningful and

@@ -1,3 +1,19 @@
+2000-11-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/utf-16.c (PREPARE_LOOP): Correct typo preventing BOM from
+	being written.
+
+	* manual/socket.texi (Local Namespace Concepts): Don't mention what
+	permissions are necessary to connect to a socket.
+	Reported by Peter Eisentraut <peter_e@gmx.net>.
+
+	* sysdeps/generic/backtracesyms.c (__backtrace_symbols): Fix
+	computation of total for 64-bit machines.
+	Patch by Byron Stanoszek <gandalf@winds.org>.
+
+	* manual/arith.texi (Rounding): Correct description of fesetround
+	return value.  Patch by Conrado Badenas <Conrado.Badenas@uv.es>.
+
 2000-10-30  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
 
 	* sysdeps/mips/dl-machine.h (elf_machine_rel): Add the symbol's

@@ -45,7 +45,7 @@
   enum direction dir = ((struct utf16_data *) step->__data)->dir;	      \
   enum variant var = ((struct utf16_data *) step->__data)->var;		      \
   int swap = ((struct utf16_data *) step->__data)->swap;		      \
-  if (FROM_DIRECTION || var == UTF_16)					      \
+  if (FROM_DIRECTION && var == UTF_16)					      \
     {									      \
       if (data->__invocation_counter == 0)				      \
 	{								      \
