@@ -227,7 +227,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-locale1 tst-locale2 \
 	tst-umask1 \
 	tst-popen1 \
-	tst-clock1 \
+	tst-clock1 tst-clock2 \
 	tst-context1
 
 distribute = eintr.c
@@ -391,12 +391,14 @@ $(objpfx)tst-cancel17: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancel18: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancelx18: $(common-objpfx)rt/librt.so
+$(objpfx)tst-clock2: $(common-objpfx)rt/librt.so
 else
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancel17: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancel18: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancelx18: $(common-objpfx)rt/librt.a
+$(objpfx)tst-clock2: $(common-objpfx)rt/librt.a
 endif
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/

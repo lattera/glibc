@@ -31,7 +31,7 @@ static hp_timing_t freq;
 
 
 /* This function is defined in the thread library.  */
-extern void __pthread_clock_settime (hp_timing_t offset)
+extern void __pthread_clock_settime (clockid_t clock_id, hp_timing_t offset)
      __attribute__ ((__weak__));
 #endif
 
@@ -69,9 +69,20 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
       break;
 #endif
 
+    default:
 #if HP_TIMING_AVAIL
+      if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
+	  != CLOCK_THREAD_CPUTIME_ID)
+#endif
+	{
+	  __set_errno (EINVAL);
+	  retval = -1;
+	  break;
+	}
+
+#if HP_TIMING_AVAIL
+      /* FALLTHROUGH.  */
     case CLOCK_PROCESS_CPUTIME_ID:
-    case CLOCK_THREAD_CPUTIME_ID:
       {
 	hp_timing_t tsc;
 	hp_timing_t usertime;
@@ -98,21 +109,16 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
 	usertime = tp->tv_sec * freq + (tp->tv_nsec * freq) / 1000000000ull;
 
 	/* Determine the offset and use it as the new base value.  */
-	if (clock_id != CLOCK_THREAD_CPUTIME_ID
+	if (clock_id == CLOCK_PROCESS_CPUTIME_ID
 	    || __pthread_clock_settime == NULL)
 	  GL(dl_cpuclock_offset) = tsc - usertime;
 	else
-	  __pthread_clock_settime (tsc - usertime);
+	  __pthread_clock_settime (clock_id, tsc - usertime);
 
 	retval = 0;
       }
       break;
 #endif
-
-    default:
-      __set_errno (EINVAL);
-      retval = -1;
-      break;
     }
 
   return retval;

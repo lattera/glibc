@@ -26,7 +26,7 @@
 #if HP_TIMING_AVAIL
 # define CPUCLOCK_P(clock) \
   ((clock) == CLOCK_PROCESS_CPUTIME_ID					      \
-   || (clock) == CLOCK_THREAD_CPUTIME_ID)
+   || ((clock) & ((1 << CLOCK_IDFIELD_SIZE) - 1)) == CLOCK_THREAD_CPUTIME_ID)
 #else
 # define CPUCLOCK_P(clock) 0
 #endif

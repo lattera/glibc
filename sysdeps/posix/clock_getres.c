@@ -64,9 +64,19 @@ clock_getres (clockid_t clock_id, struct timespec *res)
       break;
 #endif	/* handled REALTIME */
 
+    default:
+#if HP_TIMING_AVAIL
+      if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
+	  != CLOCK_THREAD_CPUTIME_ID)
+#endif
+	{
+	  __set_errno (EINVAL);
+	  break;
+	}
+
 #if HP_TIMING_AVAIL && !defined HANDLED_CPUTIME
+      /* FALLTHROUGH.  */
     case CLOCK_PROCESS_CPUTIME_ID:
-    case CLOCK_THREAD_CPUTIME_ID:
       {
 	if (__builtin_expect (nsec == 0, 0))
 	  {
@@ -93,10 +103,6 @@ clock_getres (clockid_t clock_id, struct timespec *res)
       }
       break;
 #endif
-
-    default:
-      __set_errno (EINVAL);
-      break;
     }
 
   return retval;

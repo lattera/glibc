@@ -1,3 +1,13 @@
+2003-06-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h: Declare __find_thread_by_id.
+	* allocatestack.c [HP_TIMING_AVAIL]: Define __find_thread_by_id.
+	* pthread_clock_gettime.c: Allow using other thread's clock.
+	* pthread_clock_settime.c: Likewise.
+	* sysdeps/pthread/pthread_getcpuclockid.c: Likewise.
+	* Makefile: Add rules to build and run tst-clock2.
+	* tst-clock2.c: New file.
+
 2003-06-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Rewrite

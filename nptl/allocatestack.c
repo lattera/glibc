@@ -654,3 +654,50 @@ __reclaim_stacks (void)
   /* Initialize the lock.  */
   stack_cache_lock = LLL_LOCK_INITIALIZER;
 }
+
+
+#if HP_TIMING_AVAIL
+/* Find a thread given the thread ID.  */
+struct pthread *
+attribute_hidden
+__find_thread_by_id (pid_t tid)
+{
+  struct pthread *result = NULL;
+
+  lll_lock (stack_cache_lock);
+
+  /* Iterate over the list with system-allocated threads first.  */
+  list_t *runp;
+  list_for_each (runp, &stack_used)
+    {
+      struct pthread *curp;
+
+      curp = list_entry (runp, struct pthread, list);
+
+      if (curp->tid == tid)
+	{
+	  result = curp;
+	  goto out;
+	}
+    }
+
+  /* Now the list with threads using user-allocated stacks.  */
+  list_for_each (runp, &__stack_user)
+    {
+      struct pthread *curp;
+
+      curp = list_entry (runp, struct pthread, list);
+
+      if (curp->tid == tid)
+	{
+	  result = curp;
+	  goto out;
+	}
+    }
+
+ out:
+  lll_unlock (stack_cache_lock);
+
+  return result;
+}
+#endif

@@ -1,5 +1,12 @@
 2003-06-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/time.h: Define CLOCK_IDFIELD_SIZE.
+	* sysdeps/posix/clock_getres.c: Recognize thread CPU clock IDs.
+	* sysdeps/unix/clock_gettime.c: Likewise.
+	* sysdeps/unix/clock_settime.c: Likewise.
+	* sysdeps/unix/clock_nanosleep.c (CPUCLOCK_P): Adjust for new
+	clock id for thread CPU clocks.
+
 	* sysdeps/unix/sysv/linux/fstatfs64.c (__fstatfs64): Add support
 	for the fstatfs64 syscall.
 	* sysdeps/unix/sysv/linux/statfs64.c (__statfs64): Add support for

@@ -82,5 +82,10 @@ extern int __getdate_r (__const char *__string, struct tm *__resbufp);
 
 /* Determine CLK_TCK value.  */
 extern int __getclktck (void);
+
+
+/* Use in the clock_* functions.  Size of the field representing the
+   actual clock ID.  */
+#define CLOCK_IDFIELD_SIZE	3
 #endif
 #endif

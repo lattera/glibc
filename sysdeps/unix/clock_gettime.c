@@ -32,7 +32,8 @@ static hp_timing_t freq;
 
 
 /* This function is defined in the thread library.  */
-extern int __pthread_clock_gettime (hp_timing_t freq, struct timespec *tp)
+extern int __pthread_clock_gettime (clockid_t clock_id, hp_timing_t freq,
+				    struct timespec *tp)
      __attribute__ ((__weak__));
 #endif
 
@@ -64,9 +65,19 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
       break;
 #endif
 
+    default:
 #if HP_TIMING_AVAIL
+      if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
+	  != CLOCK_THREAD_CPUTIME_ID)
+#endif
+	{
+	  __set_errno (EINVAL);
+	  break;
+	}
+
+#if HP_TIMING_AVAIL
+      /* FALLTHROUGH.  */
     case CLOCK_PROCESS_CPUTIME_ID:
-    case CLOCK_THREAD_CPUTIME_ID:
       {
 	hp_timing_t tsc;
 
@@ -82,10 +93,10 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 	      break;
 	  }
 
-	if (clock_id == CLOCK_THREAD_CPUTIME_ID
+	if (clock_id != CLOCK_PROCESS_CPUTIME_ID
 	    && __pthread_clock_gettime != NULL)
 	  {
-	    retval = __pthread_clock_gettime (freq, tp);
+	    retval = __pthread_clock_gettime (clock_id, freq, tp);
 	    break;
 	  }
 
@@ -106,10 +117,6 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
       }
     break;
 #endif
-
-    default:
-      __set_errno (EINVAL);
-      break;
     }
 
   return retval;

@@ -34,13 +34,20 @@ pthread_getcpuclockid (threadid, clockid)
     /* Not a valid thread handle.  */
     return ESRCH;
 
-  /* We don't allow any process ID but our own.  */
-  if (pd != THREAD_SELF)
-    return EPERM;
-
 #ifdef CLOCK_THREAD_CPUTIME_ID
+  /* We need to store the thread ID in the CLOCKID variable together
+     with a number identifying the clock.  We reserve the low 3 bits
+     for the clock ID and the rest for the thread ID.  This is
+     problematic if the thread ID is too large.  But 29 bits should be
+     fine.
+
+     If some day more clock IDs are needed the ID part can be
+     enlarged.  The IDs are entirely internal.  */
+  if (pd->tid >= 1 << (8 * sizeof (*clockid) - CLOCK_IDFIELD_SIZE))
+    return ERANGE;
+
   /* Store the number.  */
-  *clockid = CLOCK_THREAD_CPUTIME_ID;
+  *clockid = CLOCK_THREAD_CPUTIME_ID | (pd->tid << CLOCK_IDFIELD_SIZE);
 
   return 0;
 #else
