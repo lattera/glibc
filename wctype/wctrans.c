@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,99,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1997,1999,2000,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -23,7 +23,7 @@
 #include "../locale/localeinfo.h"
 
 wctrans_t
-wctrans (const char *property)
+__wctrans (const char *property)
 {
   const char *names;
   size_t cnt;
@@ -46,3 +46,4 @@ wctrans (const char *property)
   i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
   return (wctrans_t) _NL_CURRENT_DATA (LC_CTYPE)->values[i].string;
 }
+weak_alias (__wctrans, wctrans)

@@ -1,3 +1,8 @@
+2004-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/fa_IR: Add to_outpunct info and change decimal_point and
+	thousand_sep to ASCII value.
+
 2004-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED: Add all kinds of UTF-8 locales.

@@ -49,6 +49,7 @@ extern int __iswspace (wint_t __wc);
 extern int __iswctype (wint_t __wc, wctype_t __desc);
 extern int __iswctype_internal (wint_t __wc, wctype_t __desc) attribute_hidden;
 extern wctype_t __wctype (__const char *__property);
+extern wctrans_t __wctrans (const char *__property);
 extern wint_t __towctrans (wint_t __wc, wctrans_t __desc);
 
 extern __typeof (iswalnum_l) __iswalnum_l;

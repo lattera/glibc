@@ -1,5 +1,11 @@
 2004-02-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/_i18n_number.h: Support printing localized decimal
+	point and thousand separator.
+	* wctype/wctrans.c: Add __wctrans alias.
+	* include/wctype.h: Declare __wctrans.
+	Based on a patch by Hamed Malek.
+
 	* sysdeps/i386/fpu/fclrexcpt.c (__feclearexcept): Don't touch bits
 	other than the status bits [BZ #10].
 

@@ -50,6 +50,10 @@ LC_CTYPE
 copy "i18n"
 
 outdigit <U06F0>..<U06F9>
+
+map to_outpunct; /
+  (<U002E>,<U066B>); /
+  (<U002C>,<U066C>)
 END LC_CTYPE
 
 LC_COLLATE
@@ -71,7 +75,7 @@ collating-symbol <alefmadda>
 collating-symbol <yeh>
 
 % Alternate representations displayed the same
-collating-symbol <ALT1> 
+collating-symbol <ALT1>
 collating-symbol <ALT2>
 
 collating-element <Alef-Madda> from "<U0627><U0653>"
@@ -126,7 +130,7 @@ reorder-after <U066D>
 <UFE72> IGNORE;IGNORE;IGNORE;<UFE72> %<dammatan_is>
 
 reorder-after <UFE7F>
-<U0653> IGNORE;IGNORE;IGNORE;<U0653> %<madda_no>   
+<U0653> IGNORE;IGNORE;IGNORE;<U0653> %<madda_no>
 <U0654> IGNORE;IGNORE;IGNORE;<U0654> %<hamzaabove_no>
 <U0655> IGNORE;IGNORE;IGNORE;<U0655> %<hamzabelow_no>
 <U0670> IGNORE;IGNORE;IGNORE;<U0670> %<supalef_no>
@@ -269,8 +273,8 @@ int_n_sign_posn       1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point     "<U066B>"
-thousands_sep     "<U066C>"
+decimal_point     "<U002E>"
+thousands_sep     "<U002C>"
 grouping          3
 END LC_NUMERIC
 
