@@ -1,5 +1,5 @@
 /* Configuration of lookup functions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Like IA-64, PA-RISC needs more information from the symbol lookup
-   function than just the address. */
-#define DL_LOOKUP_RETURNS_MAP
 #define ELF_FUNCTION_PTR_IS_SPECIAL
 #define DL_UNMAP_IS_SPECIAL
 
@@ -66,4 +63,3 @@ void _dl_unmap (struct link_map *map);
   ((Elf32_Addr)(addr) & 2 ? (addr) : DL_AUTO_FUNCTION_ADDRESS (map, addr))
 #define DL_DT_FINI_ADDRESS(map, addr) \
   ((Elf32_Addr)(addr) & 2 ? (addr) : DL_AUTO_FUNCTION_ADDRESS (map, addr))
-
