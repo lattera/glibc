@@ -1,3 +1,7 @@
+1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h: Only use strncmp optimization if count
+	argument is constant.
 1999-02-16  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/revoke.c: New file.
