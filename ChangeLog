@@ -1,7 +1,8 @@
 2004-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/sprof.c (read_symbols): When comparing aliases, prefer
-	strong over weak symbols if both don't start with '_'.
+	non-hidden over hidden symbols and strong over weak symbols
+	if both don't start with '_'.
 
 	* malloc/malloc.c: Use strong_alias instead of weak_alias wherever
 	possible.

@@ -28,6 +28,7 @@
 #include <locale.h>
 #include <obstack.h>
 #include <search.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -148,7 +149,8 @@ struct known_symbol
   const char *name;
   uintptr_t addr;
   size_t size;
-  int weak;
+  bool weak;
+  bool hidden;
 
   uintmax_t ticks;
   uintmax_t calls;
@@ -940,6 +942,8 @@ read_symbols (struct shobj *shobj)
 	    newsym->addr = sym->st_value;
 	    newsym->size = sym->st_size;
 	    newsym->weak = ELFW(ST_BIND) (sym->st_info) == STB_WEAK;
+	    newsym->hidden = (ELFW(ST_VISIBILITY) (sym->st_other)
+			      != STV_DEFAULT);
 	    newsym->ticks = 0;
 	    newsym->calls = 0;
 
@@ -954,9 +958,10 @@ read_symbols (struct shobj *shobj)
 	      {
 		/* The function is already defined.  See whether we have
 		   a better name here.  */
-		if (((*existp)->name[0] == '_' && newsym->name[0] != '_')
+		if (((*existp)->hidden && !newsym->hidden)
+		    || ((*existp)->name[0] == '_' && newsym->name[0] != '_')
 		    || ((*existp)->name[0] != '_' && newsym->name[0] != '_'
-			&& (*existp)->weak && !newsym->weak))
+			&& ((*existp)->weak && !newsym->weak)))
 		  *existp = newsym;
 		else
 		  /* We don't need the allocated memory.  */
@@ -995,6 +1000,8 @@ read_symbols (struct shobj *shobj)
 	      newsym->addr = symtab->st_value;
 	      newsym->size = symtab->st_size;
 	      newsym->weak = ELFW(ST_BIND) (symtab->st_info) == STB_WEAK;
+	      newsym->hidden = (ELFW(ST_VISIBILITY) (symtab->st_other)
+				!= STV_DEFAULT);
 	      newsym->ticks = 0;
 	      newsym->froms = NULL;
 	      newsym->tos = NULL;
@@ -1010,9 +1017,10 @@ read_symbols (struct shobj *shobj)
 		{
 		  /* The function is already defined.  See whether we have
 		     a better name here.  */
-		  if (((*existp)->name[0] == '_' && newsym->name[0] != '_')
+		  if (((*existp)->hidden && !newsym->hidden)
+		      || ((*existp)->name[0] == '_' && newsym->name[0] != '_')
 		      || ((*existp)->name[0] != '_' && newsym->name[0] != '_'
-			  && (*existp)->weak && !newsym->weak))
+			  && ((*existp)->weak && !newsym->weak)))
 		    *existp = newsym;
 		  else
 		    /* We don't need the allocated memory.  */
