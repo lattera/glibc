@@ -1,3 +1,8 @@
+2000-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Fix last
+	patch.
+
 2000-09-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/Implies: Reorder ieee754 implies so that ldbl-* comes
