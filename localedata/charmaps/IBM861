@@ -168,7 +168,7 @@ CHARMAP
 <Pd>                   /x9C   <U00A3> POUND SIGN
 <O//>                  /x9D   <U00D8> LATIN CAPITAL LETTER O WITH STROKE
 <Pt>                   /x9E   <U20A7> PESETA SIGN
-<O!>                   /x9F   <U00D2> LATIN CAPITAL LETTER O WITH GRAVE
+<f2>                   /x9F   <U0192> LATIN SMALL LETTER F WITH HOOK
 <a'>                   /xA0   <U00E1> LATIN SMALL LETTER A WITH ACUTE
 <i'>                   /xA1   <U00ED> LATIN SMALL LETTER I WITH ACUTE
 <o'>                   /xA2   <U00F3> LATIN SMALL LETTER O WITH ACUTE
@@ -178,6 +178,7 @@ CHARMAP
 <O'>                   /xA6   <U00D3> LATIN CAPITAL LETTER O WITH ACUTE
 <U'>                   /xA7   <U00DA> LATIN CAPITAL LETTER U WITH ACUTE
 <?I>                   /xA8   <U00BF> INVERTED QUESTION MARK
+<NI>                   /xA9   <U2310> REVERSED NOT SIGN
 <NO>                   /xAA   <U00AC> NOT SIGN
 <12>                   /xAB   <U00BD> VULGAR FRACTION ONE HALF
 <14>                   /xAC   <U00BC> VULGAR FRACTION ONE QUARTER
@@ -257,8 +258,8 @@ CHARMAP
 <-:>                   /xF6   <U00F7> DIVISION SIGN
 <?2>                   /xF7   <U2248> ALMOST EQUAL TO
 <DG>                   /xF8   <U00B0> DEGREE SIGN
-<.M>                   /xF9   <U00B7> MIDDLE DOT
-<sb>                   /xFA   <U2022> BULLET
+<Sb>                   /xF9   <U2219> BULLET OPERATOR
+<.M>                   /xFA   <U00B7> MIDDLE DOT
 <RT>                   /xFB   <U221A> SQUARE ROOT
 <nS>                   /xFC   <U207F> SUPERSCRIPT LATIN SMALL LETTER N
 <2S>                   /xFD   <U00B2> SUPERSCRIPT TWO

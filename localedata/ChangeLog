@@ -1,5 +1,15 @@
 1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* charmaps/IBM863: Correct entries 8d, ed, f8, f9, and fa.
+
+	* charmaps/IBM862: Correct entries 9d, 9f, a9, f9, and fa.
+
+	* charmaps/IBM861: Correct entries 9f, a9, f9, and fa.
+
+	* charmaps/IBM860: Correct entries 8b, 9f, a9, f9, and fa.
+
+	* charmaps/IBM857: Correct entries ee, f7, and fa.
+
 	* charmaps/IBM855: Correct entries 95, ef, and fd.
 
 	* charmaps/IBM437: Correct entries f9 and fa.

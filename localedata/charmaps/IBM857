@@ -244,7 +244,7 @@ CHARMAP
 <U!>                   /xEB   <U00D9> LATIN CAPITAL LETTER U WITH GRAVE
 <i!>                   /xEC   <U00EC> LATIN SMALL LETTER I WITH GRAVE
 <y:>                   /xED   <U00FF> LATIN SMALL LETTER Y WITH DIAERESIS
-<-M>                   /xEE   <U2014> EM DASH
+<'m>                   /xEE   <U00AF> MACRON
 <''>                   /xEF   <U00B4> ACUTE ACCENT
 <-->                   /xF0   <U00AD> SOFT HYPHEN
 <+->                   /xF1   <U00B1> PLUS-MINUS SIGN
@@ -252,10 +252,10 @@ CHARMAP
 <PI>                   /xF4   <U00B6> PILCROW SIGN
 <SE>                   /xF5   <U00A7> SECTION SIGN
 <-:>                   /xF6   <U00F7> DIVISION SIGN
-<';>                   /xF7   <U02DB> OGONEK
+<',>                   /xF7   <U00B8> CEDILLA
 <DG>                   /xF8   <U00B0> DEGREE SIGN
 <':>                   /xF9   <U00A8> DIAERESIS
-<'.>                   /xFA   <U02D9> DOT ABOVE (Mandarin Chinese light tone)
+<.M>                   /xFA   <U00B7> MIDDLE DOT
 <1S>                   /xFB   <U00B9> SUPERSCRIPT ONE
 <3S>                   /xFC   <U00B3> SUPERSCRIPT THREE
 <2S>                   /xFD   <U00B2> SUPERSCRIPT TWO
