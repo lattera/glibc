@@ -71,7 +71,7 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
       else
 	dir = NULL;
     }
-  if (dir != NULL)
+  if (dir == NULL)
     {
       if (direxists (P_tmpdir))
 	dir = P_tmpdir;

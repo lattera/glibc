@@ -1041,7 +1041,6 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  add (1, *p = '\t');
 	  break;
 
-	case 'f':
 	case 'u':		/* POSIX.2 extension.  */
 	  DO_NUMBER (1, (tp->tm_wday - 1 + 7) % 7 + 1);
 

@@ -768,10 +768,18 @@ Calendar Time
 * High-Resolution Calendar::    A time representation with greater precision.
 * Broken-down Time::            Facilities for manipulating local time.
 * Formatting Date and Time::    Converting times to strings.
+* Parsing Date and Time::       Convert textual time and date information back
+                                 into broken-down time values.
 * TZ Variable::                 How users specify the time zone.
 * Time Zone Functions::         Functions to examine or specify the time zone.
 * Time Functions Example::      An example program showing use of some of
 				 the time functions.
+
+Parsing Date and Time
+
+* Low-Level Time String Parsing::  Interpret string according to given format.
+* General Time String Parsing::    User-friendly function to parse data and
+                                    time strings.
 
 Non-Local Exits
 

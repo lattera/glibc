@@ -19,7 +19,6 @@ getsid		-	getsid		1	getsid
 init_module	EXTRA	init_module	5	init_module
 ioperm		-	ioperm		3	ioperm
 iopl		-	iopl		1	iopl
-ipc		msgget	ipc		5	__ipc
 klogctl		EXTRA	syslog		3	klogctl
 lchown		-	lchown		3	__lchown	lchown
 mlock		EXTRA	mlock		2	__mlock	mlock

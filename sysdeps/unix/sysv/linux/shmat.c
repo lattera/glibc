@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -17,7 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/shm.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 /* Attach the shared memory segment associated with SHMID to the data
    segment of the calling process.  SHMADDR and SHMFLG determine how
@@ -32,7 +36,8 @@ shmat (shmid, shmaddr, shmflg)
   int retval;
   unsigned long raddr;
 
-  retval = __ipc (IPCOP_shmat, shmid, shmflg, (int) &raddr, (void *) shmaddr);
+  retval = INLINE_SYSCALL (ipc, 5, IPCOP_shmat, shmid, shmflg, (int) &raddr,
+			   (void *) shmaddr);
   return ((unsigned long int) retval > -(unsigned long int) SHMLBA
 	  ? (void *) retval : (void *) raddr);
 }

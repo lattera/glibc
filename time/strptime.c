@@ -86,6 +86,8 @@ localtime_r (t, tp)
 #define get_number(from, to) \
   do {									      \
     val = 0;								      \
+    while (*rp == ' ')							      \
+      ++rp;								      \
     if (*rp < '0' || *rp > '9')						      \
       return NULL;							      \
     do {								      \
@@ -405,6 +407,12 @@ strptime_internal (buf, format, tm, decided)
 	  /* Match day of month.  */
 	  get_number (1, 31);
 	  tm->tm_mday = val;
+	  want_xday = 1;
+	  break;
+	case 'F':
+	  if (!recursive ("%Y-%m-%d"))
+	    return NULL;
+	  want_xday = 1;
 	  break;
 	case 'x':
 #ifdef _NL_CURRENT
@@ -433,6 +441,7 @@ strptime_internal (buf, format, tm, decided)
 	    return NULL;
 	  want_xday = 1;
 	  break;
+	case 'k':
 	case 'H':
 	  /* Match hour in 24-hour clock.  */
 	  get_number (0, 23);

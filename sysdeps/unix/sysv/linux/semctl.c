@@ -17,8 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <stdarg.h>
 #include <sys/sem.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 /* Define a `union semun' suitable for Linux here.  */
 union semun
@@ -46,5 +50,5 @@ semctl (int semid, int semnum, int cmd, ...)
 
   va_end (ap);
 
-  return __ipc (IPCOP_semctl, semid, semnum, cmd, arg);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, arg);
 }

@@ -1,5 +1,24 @@
 1998-12-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/msgctl.c: Use INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/msgget.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgsnd.c: Likewise.
+	* sysdeps/unix/sysv/linux/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/semget.c: Likewise.
+	* sysdeps/unix/sysv/linux/semop.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmat.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmdt.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmget.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove ipc syscall here.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add ipc syscall here.
+
+	* time/strftime.c: Remove 'f' format.
+
+	* time/strptime.c (get_number): Ignore trailing whitespace.
+	(strptime_internal): Handle 'F' and 'k' formats.
+
 	* sysdeps/posix/tempname.c (__path_search): Add second part of the
 	patch by Andreas Jaeger.
 

@@ -17,7 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/msg.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 
 /* Kludge to work around Linux' restriction of only up to five
@@ -44,5 +48,5 @@ msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
   tmp.msgp = msgp;
   tmp.msgtyp = msgtyp;
 
-  return __ipc (IPCOP_msgrcv, msqid, msgsz, msgflg, &tmp);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg, &tmp);
 }

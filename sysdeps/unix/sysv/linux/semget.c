@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -17,8 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/sem.h>
 #include <stdlib.h>		/* for definition of NULL */
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
@@ -29,5 +33,5 @@ semget (key, nsems, semflg)
      int nsems;
      int semflg;
 {
-  return __ipc (IPCOP_semget, key, nsems, semflg, NULL);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_semget, key, nsems, semflg, NULL);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -17,7 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/msg.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 /* Allows to control internal state and destruction of message queue
    objects.  */
@@ -28,5 +32,5 @@ msgctl (msqid, cmd, buf)
      int cmd;
      struct msqid_ds *buf;
 {
-  return __ipc (IPCOP_msgctl, msqid, cmd, 0, buf);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, buf);
 }

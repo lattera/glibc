@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -17,7 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/shm.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 /* Detach shared memory segment starting at address specified by SHMADDR
    from the caller's data segment.  */
@@ -26,5 +30,5 @@ int
 shmdt (shmaddr)
      const void *shmaddr;
 {
-  return __ipc (IPCOP_shmdt, 0, 0, 0, (void *) shmaddr);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_shmdt, 0, 0, 0, (void *) shmaddr);
 }
