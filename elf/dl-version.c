@@ -115,7 +115,7 @@ no version information available (required by ",
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
-	  _dl_signal_error (0, map->l_name,
+	  _dl_signal_error (0, map->l_name[0] ? map->l_name : _dl_argv[0],
 			    make_string ("unsupported version ",
 					 _itoa_word (def->vd_version,
 						     &buf[sizeof (buf) - 1],
@@ -149,7 +149,7 @@ no version information available (required by ",
     {
       if (verbose)
 	/* XXX We cannot translate the message.  */
-	_dl_signal_cerror (0, map->l_name,
+	_dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0],
 			   make_string ("weak version `", string,
 					"' not found (required by ", name,
 					")"));
@@ -157,7 +157,7 @@ no version information available (required by ",
     }
 
   /* XXX We cannot translate the message.  */
-  _dl_signal_cerror (0, map->l_name,
+  _dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0],
 		     make_string ("version `", string,
 				  "' not found (required by ", name, ")"));
   return 1;
