@@ -8,6 +8,11 @@
 # This file can use cpp-style conditionals starting with % instead of #
 # to test the symbols defined in config.h by configure.
 
+# In the optional third column, there can one or more symbol set names
+# listed, which must be in ascending version order reading left to right
+# and must appear in this same order in the Versions.def file.  Each listed
+# version subsumes all prior versions back to the previous listed version.
+
 # Configuration		Library=version		Earliest symbol set (optional)
 # -------------		---------------		------------------------------
 
@@ -23,6 +28,8 @@ arm.*-.*-.*		libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 alpha.*-.*-linux.*	libc=6.1
+# Working mips versions were never released between 2.0 and 2.2.
+mips.*-.*-linux.*	libc=6			GLIBC_2.0 GLIBC_2.2
 .*-.*-linux.*		libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
