@@ -34,6 +34,13 @@
 # define SWHI	swr		/* high part is right in little-endian	*/
 #endif
 
+#ifndef t0
+# define t0 a4
+#endif
+#ifndef t1
+# define t1 a5
+#endif
+
 ENTRY (memset)
 	.set	noreorder
 
