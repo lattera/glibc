@@ -1,3 +1,9 @@
+2003-07-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/ctype.h (__ctype_b_loc, __ctype_toupper_loc,
+	__ctype_tolower_loc): Avoid "dereferencing type-punned pointer will
+	break strict-aliasing rules" warnings.
+
 2003-07-29  Roland McGrath  <roland@redhat.com>
 
 	* elf/Makefile: Revert accidental changes in last commit.
