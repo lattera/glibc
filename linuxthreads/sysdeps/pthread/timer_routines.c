@@ -374,8 +374,8 @@ thread_func (void *arg)
 
 	      list_unlink (first);
 
-	      if (timer->value.it_interval.tv_sec
-		  || timer->value.it_interval.tv_nsec)
+	      if (__builtin_expect (timer->value.it_interval.tv_sec, 0) != 0
+		  || timer->value.it_interval.tv_nsec != 0)
 		{
 		  timespec_add (&timer->expirytime, &now,
 				&timer->value.it_interval);
@@ -433,7 +433,7 @@ __timer_thread_queue_timer (struct thread_node *thread,
 	}
     }
 
-  if (insert->clock != timer->clock)
+  if (timer != NULL && insert->clock != timer->clock)
     {
       if (matching == NULL)
 	/* We cannot queue this timer.  */
@@ -456,7 +456,6 @@ __timer_thread_start (struct thread_node *thread)
   int retval = 1;
 
   assert (!thread->exists);
-
   thread->exists = 1;
 
   if (pthread_create (&thread->id, &thread->attr, thread_func, thread) != 0)

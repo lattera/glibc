@@ -1,5 +1,8 @@
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/timer_routines.c (__timer_thread_queue_timer):
+	Be prepared for empty timer list.
+
 	* sysdeps/pthread/timer_create.c (timer_create): Correct names of
 	CPUTIME clock ID.  Add support for thread clocks.
 
