@@ -20,17 +20,8 @@
 #include <string.h>
 
 int
-__alphasort64 (const void *a, const void *b)
+alphasort64 (const void *a, const void *b)
 {
   return strcoll ((*(const struct dirent64 **) a)->d_name,
 		  (*(const struct dirent64 **) b)->d_name);
 }
-
-#include <shlib-compat.h>
-
-versioned_symbol (libc, __alphasort64, alphasort64, GLIBC_2_2);
-
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__alphasort64, __old_alphasort64)
-compat_symbol (libc, __old_alphasort64, alphasort64, GLIBC_2_1);
-#endif

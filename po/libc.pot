@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.1.92\n"
-"POT-Creation-Date: 2000-08-02 22:07-0700\n"
+"POT-Creation-Date: 2000-08-13 14:59-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -200,7 +200,7 @@ msgstr ""
 msgid " (changed)\n"
 msgstr ""
 
-#: timezone/zic.c:423
+#: timezone/zic.c:421
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr ""
@@ -209,21 +209,21 @@ msgstr ""
 msgid " [OPTION...]"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1712 locale/programs/ld-ctype.c:4046
+#: locale/programs/ld-collate.c:1720 locale/programs/ld-ctype.c:4046
 msgid " done\n"
 msgstr ""
 
-#: timezone/zic.c:420
+#: timezone/zic.c:418
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr ""
 
-#: timezone/zic.c:984
+#: timezone/zic.c:982
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr ""
 
-#: timezone/zic.c:992
+#: timezone/zic.c:990
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr ""
@@ -242,8 +242,8 @@ msgstr ""
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr ""
 
-#: locale/programs/ld-address.c:576 locale/programs/ld-collate.c:2727
-#: locale/programs/ld-collate.c:3820 locale/programs/ld-ctype.c:2743
+#: locale/programs/ld-address.c:576 locale/programs/ld-collate.c:2735
+#: locale/programs/ld-collate.c:3844 locale/programs/ld-ctype.c:2743
 #: locale/programs/ld-identification.c:440
 #: locale/programs/ld-measurement.c:232 locale/programs/ld-messages.c:326
 #: locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:300
@@ -258,7 +258,7 @@ msgstr ""
 msgid "%d libs found in cache `%s'\n"
 msgstr ""
 
-#: timezone/zic.c:794
+#: timezone/zic.c:792
 #, c-format
 msgid "%s in ruleless zone"
 msgstr ""
@@ -308,7 +308,7 @@ msgstr ""
 msgid "%s%sUnknown signal %d\n"
 msgstr ""
 
-#: timezone/zic.c:2229
+#: timezone/zic.c:2227
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr ""
@@ -328,42 +328,42 @@ msgstr ""
 msgid "%s: C preprocessor failed with signal %d\n"
 msgstr ""
 
-#: timezone/zic.c:1495
+#: timezone/zic.c:1493
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:2207
+#: timezone/zic.c:2205
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:646
+#: timezone/zic.c:644
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:820
+#: timezone/zic.c:818
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:1485
+#: timezone/zic.c:1483
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:631
+#: timezone/zic.c:629
 #, c-format
 msgid "%s: Can't unlink  %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:889
+#: timezone/zic.c:887
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr ""
 
-#: timezone/zic.c:882
+#: timezone/zic.c:880
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr ""
@@ -373,42 +373,42 @@ msgstr ""
 msgid "%s: Error writing "
 msgstr ""
 
-#: timezone/zic.c:1561
+#: timezone/zic.c:1559
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr ""
 
-#: timezone/zic.c:867
+#: timezone/zic.c:865
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr ""
 
-#: timezone/zic.c:361
+#: timezone/zic.c:359
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr ""
 
-#: timezone/zic.c:526
+#: timezone/zic.c:524
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr ""
 
-#: timezone/zic.c:486
+#: timezone/zic.c:484
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr ""
 
-#: timezone/zic.c:496
+#: timezone/zic.c:494
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr ""
 
-#: timezone/zic.c:506
+#: timezone/zic.c:504
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr ""
 
-#: timezone/zic.c:516
+#: timezone/zic.c:514
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr ""
@@ -418,13 +418,13 @@ msgstr ""
 msgid "%s: Too many arguments\n"
 msgstr ""
 
-#: locale/programs/ld-collate.c:423 locale/programs/ld-collate.c:449
-#: locale/programs/ld-collate.c:465
+#: locale/programs/ld-collate.c:426 locale/programs/ld-collate.c:452
+#: locale/programs/ld-collate.c:468
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1282
+#: locale/programs/ld-collate.c:1290
 #, c-format
 msgid "%s: `%s' must be a charater"
 msgstr ""
@@ -440,36 +440,36 @@ msgstr ""
 msgid "%s: `-1' must be last entry in `%s' field"
 msgstr ""
 
-#: locale/programs/ld-collate.c:413 locale/programs/ld-collate.c:439
+#: locale/programs/ld-collate.c:416 locale/programs/ld-collate.c:442
 #, c-format
 msgid "%s: `forward' and `backward' are mutually excluding each other"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1475
+#: locale/programs/ld-collate.c:1483
 #, c-format
 msgid ""
 "%s: `position' must be used for a specific level in all sections or none"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1082
+#: locale/programs/ld-collate.c:1090
 #, c-format
 msgid ""
 "%s: byte sequence of first character of sequence is not lower than that of "
 "the last character"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1040
+#: locale/programs/ld-collate.c:1048
 #, c-format
 msgid ""
 "%s: byte sequences of first and last character must have the same length"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3742
+#: locale/programs/ld-collate.c:3766
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3421
+#: locale/programs/ld-collate.c:3432
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr ""
@@ -503,7 +503,7 @@ msgstr ""
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr ""
 
-#: timezone/zic.c:1928
+#: timezone/zic.c:1926
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
@@ -529,22 +529,22 @@ msgstr ""
 msgid "%s: duplicate category version definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:2845
+#: locale/programs/ld-collate.c:2853
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:2809
+#: locale/programs/ld-collate.c:2817
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3792
+#: locale/programs/ld-collate.c:3816
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr ""
 
-#: locale/programs/ld-collate.c:717
+#: locale/programs/ld-collate.c:720
 #, c-format
 msgid "%s: empty weight string not allowed"
 msgstr ""
@@ -610,7 +610,7 @@ msgstr ""
 msgid "%s: illegal option -- %c\n"
 msgstr ""
 
-#: locale/programs/ld-address.c:573 locale/programs/ld-collate.c:3818
+#: locale/programs/ld-address.c:573 locale/programs/ld-collate.c:3842
 #: locale/programs/ld-ctype.c:2740 locale/programs/ld-identification.c:437
 #: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:324
 #: locale/programs/ld-monetary.c:932 locale/programs/ld-name.c:298
@@ -635,7 +635,7 @@ msgstr ""
 msgid "%s: invalid number for offset in string %Zd in `era' field"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3269
+#: locale/programs/ld-collate.c:3280
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr ""
@@ -665,18 +665,18 @@ msgstr ""
 msgid "%s: language abbreviation `%s' not defined"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3347 locale/programs/ld-collate.c:3460
-#: locale/programs/ld-collate.c:3796
+#: locale/programs/ld-collate.c:3358 locale/programs/ld-collate.c:3471
+#: locale/programs/ld-collate.c:3820
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3474 locale/programs/ld-collate.c:3808
+#: locale/programs/ld-collate.c:3485 locale/programs/ld-collate.c:3832
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3811
+#: locale/programs/ld-collate.c:3835
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr ""
@@ -691,12 +691,12 @@ msgstr ""
 msgid "%s: missing era name in string %Zd in `era' field"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3247
+#: locale/programs/ld-collate.c:3258
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3295
+#: locale/programs/ld-collate.c:3306
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr ""
@@ -711,7 +711,7 @@ msgstr ""
 msgid "%s: no identification for category `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:557
+#: locale/programs/ld-collate.c:560
 #, c-format
 msgid "%s: not enough sorting rules"
 msgstr ""
@@ -761,17 +761,17 @@ msgstr ""
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1273 locale/programs/ld-collate.c:3755
+#: locale/programs/ld-collate.c:1281 locale/programs/ld-collate.c:3779
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3409
+#: locale/programs/ld-collate.c:3420
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3390
+#: locale/programs/ld-collate.c:3401
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr ""
@@ -781,13 +781,13 @@ msgstr ""
 msgid "%s: output would overwrite %s\n"
 msgstr ""
 
-#: timezone/zic.c:874 timezone/zic.c:1288 timezone/zic.c:1313
+#: timezone/zic.c:872 timezone/zic.c:1286 timezone/zic.c:1311
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr ""
 
 #: locale/programs/charmap.c:801 locale/programs/ld-address.c:592
-#: locale/programs/ld-collate.c:2724 locale/programs/ld-collate.c:3836
+#: locale/programs/ld-collate.c:2732 locale/programs/ld-collate.c:3860
 #: locale/programs/ld-ctype.c:2760 locale/programs/ld-identification.c:456
 #: locale/programs/ld-measurement.c:248 locale/programs/ld-messages.c:342
 #: locale/programs/ld-monetary.c:950 locale/programs/ld-name.c:316
@@ -798,7 +798,7 @@ msgstr ""
 msgid "%s: premature end of file"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3508 locale/programs/ld-collate.c:3680
+#: locale/programs/ld-collate.c:3519 locale/programs/ld-collate.c:3704
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr ""
@@ -813,20 +813,20 @@ msgstr ""
 msgid "%s: stopping date is invalid in string %Zd in `era' field"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1207
+#: locale/programs/ld-collate.c:1215
 #, c-format
 msgid "%s: symbolic range ellipsis must not be direct followed by `order_end'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1203
+#: locale/programs/ld-collate.c:1211
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
 msgstr ""
 
-#: locale/programs/ld-address.c:583 locale/programs/ld-collate.c:484
-#: locale/programs/ld-collate.c:536 locale/programs/ld-collate.c:827
-#: locale/programs/ld-collate.c:840 locale/programs/ld-collate.c:2715
-#: locale/programs/ld-collate.c:3827 locale/programs/ld-ctype.c:1815
+#: locale/programs/ld-address.c:583 locale/programs/ld-collate.c:487
+#: locale/programs/ld-collate.c:539 locale/programs/ld-collate.c:830
+#: locale/programs/ld-collate.c:843 locale/programs/ld-collate.c:2723
+#: locale/programs/ld-collate.c:3851 locale/programs/ld-ctype.c:1815
 #: locale/programs/ld-ctype.c:2599 locale/programs/ld-ctype.c:2751
 #: locale/programs/ld-identification.c:447
 #: locale/programs/ld-measurement.c:239 locale/programs/ld-messages.c:333
@@ -867,9 +867,9 @@ msgstr ""
 msgid "%s: terminology language code `%s' not defined"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1014
+#: locale/programs/ld-collate.c:1021
 #, c-format
-msgid "%s: the start end the end symbol of a range must stand for characters"
+msgid "%s: the start and the end symbol of a range must stand for characters"
 msgstr ""
 
 #: locale/programs/ld-time.c:462
@@ -877,12 +877,12 @@ msgstr ""
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr ""
 
-#: locale/programs/ld-collate.c:521
+#: locale/programs/ld-collate.c:524
 #, c-format
 msgid "%s: too many rules; first entry only had %d"
 msgstr ""
 
-#: locale/programs/ld-collate.c:868
+#: locale/programs/ld-collate.c:871
 #, c-format
 msgid "%s: too many values"
 msgstr ""
@@ -897,17 +897,17 @@ msgstr ""
 msgid "%s: unable to open %s: %m\n"
 msgstr ""
 
-#: locale/programs/ld-collate.c:2982
+#: locale/programs/ld-collate.c:2991
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3111
+#: locale/programs/ld-collate.c:3122
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3124
+#: locale/programs/ld-collate.c:3135
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr ""
@@ -917,12 +917,12 @@ msgstr ""
 msgid "%s: unknown character in field `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3221
+#: locale/programs/ld-collate.c:3232
 #, c-format
 msgid "%s: unknown section name `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3134
+#: locale/programs/ld-collate.c:3145
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr ""
@@ -937,12 +937,11 @@ msgstr ""
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""
 
-#: timezone/zic.c:445
+#: timezone/zic.c:443
 #, c-format
 msgid ""
-"%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d "
-"directory ]\n"
-"\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+"%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
+"\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 msgstr ""
 
 #: timezone/zdump.c:174
@@ -987,7 +986,7 @@ msgstr ""
 msgid "%s: values of field `%s' must not be larger than %d"
 msgstr ""
 
-#: locale/programs/ld-collate.c:812
+#: locale/programs/ld-collate.c:815
 #, c-format
 msgid "%s: weights must use the same ellipsis symbol as the name"
 msgstr ""
@@ -1212,7 +1211,7 @@ msgstr ""
 msgid "Bad value for ai_flags"
 msgstr ""
 
-#: locale/programs/localedef.c:99
+#: locale/programs/localedef.c:104
 msgid "Be strictly POSIX conform"
 msgstr ""
 
@@ -1452,7 +1451,7 @@ msgstr ""
 msgid "Communication error on send"
 msgstr ""
 
-#: locale/programs/localedef.c:107
+#: locale/programs/localedef.c:112
 msgid "Compile locale specification"
 msgstr ""
 
@@ -1465,7 +1464,7 @@ msgstr ""
 msgid "Computing table size for character classes might take a while..."
 msgstr ""
 
-#: locale/programs/ld-collate.c:1648
+#: locale/programs/ld-collate.c:1656
 msgid "Computing table size for collation table might take a while..."
 msgstr ""
 
@@ -1509,7 +1508,7 @@ msgstr ""
 
 #: catgets/gencat.c:237 elf/ldconfig.c:252 elf/sprof.c:355
 #: iconv/iconv_prog.c:351 locale/programs/locale.c:267
-#: locale/programs/localedef.c:303 nscd/nscd.c:287 nscd/nscd_nischeck.c:90
+#: locale/programs/localedef.c:311 nscd/nscd.c:287 nscd/nscd_nischeck.c:90
 #: nss/getent.c:66 nss/makedb.c:244 posix/getconf.c:751
 #, c-format
 msgid ""
@@ -1527,11 +1526,11 @@ msgstr ""
 msgid "Create C header file NAME containing symbol definitions"
 msgstr ""
 
-#: locale/programs/localedef.c:98
+#: locale/programs/localedef.c:102
 msgid "Create old-style tables"
 msgstr ""
 
-#: locale/programs/localedef.c:97
+#: locale/programs/localedef.c:101
 msgid "Create output even if warning messages were issued"
 msgstr ""
 
@@ -1892,11 +1891,11 @@ msgstr ""
 msgid "Exec format error"
 msgstr ""
 
-#: locale/programs/localedef.c:185
+#: locale/programs/localedef.c:190
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr ""
 
-#: locale/programs/localedef.c:93
+#: locale/programs/localedef.c:97
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr ""
 
@@ -2179,7 +2178,7 @@ msgstr ""
 msgid "Information:"
 msgstr ""
 
-#: locale/programs/localedef.c:88
+#: locale/programs/localedef.c:92
 msgid "Input Files:"
 msgstr ""
 
@@ -2469,7 +2468,7 @@ msgstr ""
 msgid "Must specify user name for server-user option"
 msgstr ""
 
-#: catgets/gencat.c:107 catgets/gencat.c:111 locale/programs/localedef.c:110
+#: catgets/gencat.c:107 catgets/gencat.c:111 locale/programs/localedef.c:115
 #: nscd/nscd.c:83 nss/makedb.c:61
 msgid "NAME"
 msgstr ""
@@ -2615,7 +2614,7 @@ msgstr ""
 msgid "No data available"
 msgstr ""
 
-#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1460
+#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1468
 #: locale/programs/ld-ctype.c:385 locale/programs/ld-identification.c:132
 #: locale/programs/ld-measurement.c:93 locale/programs/ld-messages.c:98
 #: locale/programs/ld-monetary.c:194 locale/programs/ld-name.c:94
@@ -2659,7 +2658,7 @@ msgstr ""
 msgid "No more records in map database"
 msgstr ""
 
-#: posix/regex.c:5936
+#: posix/regex.c:5948
 msgid "No previous regular expression"
 msgstr ""
 
@@ -2851,7 +2850,7 @@ msgstr ""
 msgid "Object with same name exists"
 msgstr ""
 
-#: timezone/zic.c:2023
+#: timezone/zic.c:2021
 msgid "Odd number of quotation marks"
 msgstr ""
 
@@ -2926,6 +2925,10 @@ msgstr ""
 msgid "Option not supported by protocol"
 msgstr ""
 
+#: locale/programs/localedef.c:103
+msgid "Optional output file prefix"
+msgstr ""
+
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:93
 msgid "Out of stream resources"
 msgstr ""
@@ -2934,7 +2937,7 @@ msgstr ""
 msgid "Out of streams resources"
 msgstr ""
 
-#: iconv/iconv_prog.c:60 locale/programs/localedef.c:95
+#: iconv/iconv_prog.c:60 locale/programs/localedef.c:99
 msgid "Output control:"
 msgstr ""
 
@@ -3001,7 +3004,7 @@ msgstr ""
 msgid "Print current configuration statistic"
 msgstr ""
 
-#: locale/programs/localedef.c:102
+#: locale/programs/localedef.c:107
 msgid "Print more messages"
 msgstr ""
 
@@ -3240,7 +3243,7 @@ msgid "Report bugs to %s.\n"
 msgstr ""
 
 #: catgets/gencat.c:224 debug/pcprofiledump.c:181 iconv/iconv_prog.c:337
-#: locale/programs/locale.c:254 locale/programs/localedef.c:289
+#: locale/programs/locale.c:254 locale/programs/localedef.c:297
 #: malloc/memusagestat.c:602 nss/makedb.c:231
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
 msgstr ""
@@ -3386,7 +3389,7 @@ msgstr ""
 msgid "Sorry. You are not root\n"
 msgstr ""
 
-#: locale/programs/localedef.c:91
+#: locale/programs/localedef.c:95
 msgid "Source definitions are found in FILE"
 msgstr ""
 
@@ -3447,11 +3450,11 @@ msgstr ""
 msgid "Success"
 msgstr ""
 
-#: locale/programs/localedef.c:101
+#: locale/programs/localedef.c:106
 msgid "Suppress warnings and information messages"
 msgstr ""
 
-#: locale/programs/localedef.c:90
+#: locale/programs/localedef.c:94
 msgid "Symbolic character names defined in FILE"
 msgstr ""
 
@@ -3467,7 +3470,7 @@ msgstr ""
 msgid "System resource allocation failure"
 msgstr ""
 
-#: locale/programs/localedef.c:284
+#: locale/programs/localedef.c:292
 #, c-format
 msgid ""
 "System's directory for character maps : %s\n"
@@ -3716,7 +3719,7 @@ msgstr ""
 msgid "Unknown signal %d"
 msgstr ""
 
-#: misc/error.c:108 timezone/zic.c:386
+#: misc/error.c:108 timezone/zic.c:384
 msgid "Unknown system error"
 msgstr ""
 
@@ -3791,7 +3794,7 @@ msgstr ""
 msgid "Virtual timer expired"
 msgstr ""
 
-#: timezone/zic.c:1927
+#: timezone/zic.c:1925
 msgid "Wild result from command execution"
 msgstr ""
 
@@ -3829,7 +3832,7 @@ msgstr ""
 
 #: catgets/gencat.c:242 elf/ldconfig.c:257 elf/sprof.c:361
 #: iconv/iconv_prog.c:356 locale/programs/locale.c:272
-#: locale/programs/localedef.c:308 nscd/nscd.c:292 nscd/nscd_nischeck.c:95
+#: locale/programs/localedef.c:316 nscd/nscd.c:292 nscd/nscd_nischeck.c:95
 #: nss/getent.c:71 nss/makedb.c:249 posix/getconf.c:756
 #, c-format
 msgid "Written by %s.\n"
@@ -3861,7 +3864,7 @@ msgstr ""
 msgid "You really blew it this time"
 msgstr ""
 
-#: timezone/zic.c:1089
+#: timezone/zic.c:1087
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 
@@ -3877,22 +3880,22 @@ msgstr ""
 msgid "__get_myaddress: ioctl (get interface configuration)"
 msgstr ""
 
-#: locale/programs/ld-collate.c:383
+#: locale/programs/ld-collate.c:386
 #, c-format
 msgid "`%.*s' already defined as collating element"
 msgstr ""
 
-#: locale/programs/ld-collate.c:376
+#: locale/programs/ld-collate.c:379
 #, c-format
 msgid "`%.*s' already defined as collating symbol"
 msgstr ""
 
-#: locale/programs/ld-collate.c:360
+#: locale/programs/ld-collate.c:363
 #, c-format
 msgid "`%.*s' already defined in charmap"
 msgstr ""
 
-#: locale/programs/ld-collate.c:369
+#: locale/programs/ld-collate.c:372
 #, c-format
 msgid "`%.*s' already defined in repertoire"
 msgstr ""
@@ -3903,7 +3906,7 @@ msgstr ""
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1227 locale/programs/ld-ctype.c:1431
+#: locale/programs/ld-collate.c:1235 locale/programs/ld-ctype.c:1431
 #, c-format
 msgid "`%s' and `%.*s' are no valid names for symbolic range"
 msgstr ""
@@ -3956,11 +3959,11 @@ msgstr ""
 msgid "bad owner"
 msgstr ""
 
-#: timezone/zic.c:1211
+#: timezone/zic.c:1209
 msgid "blank FROM field on Link line"
 msgstr ""
 
-#: timezone/zic.c:1215
+#: timezone/zic.c:1213
 msgid "blank TO field on Link line"
 msgstr ""
 
@@ -3997,7 +4000,7 @@ msgstr ""
 msgid "cache_set: victim not found"
 msgstr ""
 
-#: timezone/zic.c:1752
+#: timezone/zic.c:1750
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 
@@ -4010,7 +4013,7 @@ msgstr ""
 msgid "can't restore segment prot after reloc"
 msgstr ""
 
-#: locale/programs/localedef.c:477
+#: locale/programs/localedef.c:487
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr ""
@@ -4134,8 +4137,8 @@ msgstr ""
 msgid "cannot open input file `%s'"
 msgstr ""
 
-#: locale/programs/localedef.c:198 locale/programs/localedef.c:213
-#: locale/programs/localedef.c:503 locale/programs/localedef.c:523
+#: locale/programs/localedef.c:203 locale/programs/localedef.c:218
+#: locale/programs/localedef.c:513 locale/programs/localedef.c:533
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr ""
@@ -4211,7 +4214,7 @@ msgstr ""
 msgid "cannot stat() file `%s': %s"
 msgstr ""
 
-#: locale/programs/localedef.c:225
+#: locale/programs/localedef.c:230
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr ""
@@ -4238,11 +4241,6 @@ msgstr ""
 
 #: locale/programs/ld-ctype.c:557
 msgid "character <SP> not defined in character map"
-msgstr ""
-
-#: locale/programs/linereader.c:710
-#, c-format
-msgid "character <U%0*X> not in repertoire map"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:431
@@ -4279,7 +4277,7 @@ msgstr ""
 msgid "character sets with locking states are not supported"
 msgstr ""
 
-#: locale/programs/localedef.c:472
+#: locale/programs/localedef.c:482
 msgid "circular dependencies between locale definitions"
 msgstr ""
 
@@ -4339,7 +4337,7 @@ msgstr ""
 msgid "duplicate definition of <%s>"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3173
+#: locale/programs/ld-collate.c:3184
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr ""
@@ -4352,7 +4350,7 @@ msgstr ""
 msgid "duplicate set definition"
 msgstr ""
 
-#: timezone/zic.c:1004
+#: timezone/zic.c:1002
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr ""
@@ -4411,7 +4409,7 @@ msgstr ""
 msgid "error getting callers id: %s"
 msgstr ""
 
-#: locale/programs/ld-collate.c:3143
+#: locale/programs/ld-collate.c:3154
 msgid "error while adding equivalent collating symbol"
 msgstr ""
 
@@ -4436,7 +4434,7 @@ msgstr ""
 msgid "expect string argument for `copy'"
 msgstr ""
 
-#: timezone/zic.c:894
+#: timezone/zic.c:892
 msgid "expected continuation line not found"
 msgstr ""
 
@@ -4510,7 +4508,7 @@ msgstr ""
 msgid "handle_request: request received (Version = %d)"
 msgstr ""
 
-#: timezone/zic.c:638
+#: timezone/zic.c:636
 msgid "hard link failed, symbolic link used"
 msgstr ""
 
@@ -4522,11 +4520,11 @@ msgstr ""
 msgid "hexadecimal range format should use only capital characters"
 msgstr ""
 
-#: timezone/zic.c:1188
+#: timezone/zic.c:1186
 msgid "illegal CORRECTION field on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1192
+#: timezone/zic.c:1190
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr ""
 
@@ -4570,7 +4568,7 @@ msgstr ""
 msgid "incorrectly formatted file"
 msgstr ""
 
-#: timezone/zic.c:851
+#: timezone/zic.c:849
 msgid "input line of unknown type"
 msgstr ""
 
@@ -4582,15 +4580,15 @@ msgstr ""
 msgid "internal error (illegal descriptor)"
 msgstr ""
 
-#: timezone/zic.c:1814
+#: timezone/zic.c:1812
 msgid "internal error - addtype called with bad isdst"
 msgstr ""
 
-#: timezone/zic.c:1822
+#: timezone/zic.c:1820
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr ""
 
-#: timezone/zic.c:1818
+#: timezone/zic.c:1816
 msgid "internal error - addtype called with bad ttisstd"
 msgstr ""
 
@@ -4603,15 +4601,15 @@ msgstr ""
 msgid "invalid ELF header"
 msgstr ""
 
-#: timezone/zic.c:1060
+#: timezone/zic.c:1058
 msgid "invalid UTC offset"
 msgstr ""
 
-#: timezone/zic.c:1063
+#: timezone/zic.c:1061
 msgid "invalid abbreviation format"
 msgstr ""
 
-#: timezone/zic.c:1153 timezone/zic.c:1365 timezone/zic.c:1379
+#: timezone/zic.c:1151 timezone/zic.c:1363 timezone/zic.c:1377
 msgid "invalid day of month"
 msgstr ""
 
@@ -4623,7 +4621,7 @@ msgstr ""
 msgid "invalid encoding given"
 msgstr ""
 
-#: timezone/zic.c:1317
+#: timezone/zic.c:1315
 msgid "invalid ending year"
 msgstr ""
 
@@ -4631,7 +4629,7 @@ msgstr ""
 msgid "invalid escape sequence"
 msgstr ""
 
-#: timezone/zic.c:1125
+#: timezone/zic.c:1123
 msgid "invalid leaping year"
 msgstr ""
 
@@ -4639,11 +4637,11 @@ msgstr ""
 msgid "invalid mode for dlopen()"
 msgstr ""
 
-#: timezone/zic.c:1140 timezone/zic.c:1243
+#: timezone/zic.c:1138 timezone/zic.c:1241
 msgid "invalid month name"
 msgstr ""
 
-#: locale/programs/charmap.c:932 locale/programs/ld-collate.c:3001
+#: locale/programs/charmap.c:932 locale/programs/ld-collate.c:3010
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr ""
@@ -4652,19 +4650,19 @@ msgstr ""
 msgid "invalid pointer size"
 msgstr ""
 
-#: timezone/zic.c:959
+#: timezone/zic.c:957
 msgid "invalid saved time"
 msgstr ""
 
-#: timezone/zic.c:1292
+#: timezone/zic.c:1290
 msgid "invalid starting year"
 msgstr ""
 
-#: timezone/zic.c:1169 timezone/zic.c:1272
+#: timezone/zic.c:1167 timezone/zic.c:1270
 msgid "invalid time of day"
 msgstr ""
 
-#: timezone/zic.c:1370
+#: timezone/zic.c:1368
 msgid "invalid weekday name"
 msgstr ""
 
@@ -4693,7 +4691,7 @@ msgid ""
 "libraries %s and %s in directory %s have same soname but different type."
 msgstr ""
 
-#: timezone/zic.c:831
+#: timezone/zic.c:829
 msgid "line too long"
 msgstr ""
 
@@ -4754,7 +4752,7 @@ msgstr ""
 msgid "more than one dynamic segment\n"
 msgstr ""
 
-#: timezone/zic.c:954
+#: timezone/zic.c:952
 msgid "nameless rule"
 msgstr ""
 
@@ -4803,11 +4801,11 @@ msgstr ""
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr ""
 
-#: timezone/zic.c:2143
+#: timezone/zic.c:2141
 msgid "no day in month matches rule"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1814
+#: locale/programs/ld-collate.c:1822
 msgid "no definition of `UNDEFINED'"
 msgstr ""
 
@@ -4829,7 +4827,7 @@ msgstr ""
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr ""
 
-#: locale/programs/localedef.c:231
+#: locale/programs/localedef.c:236
 msgid "no output file produced because warning were issued"
 msgstr ""
 
@@ -4883,7 +4881,7 @@ msgstr ""
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:968 locale/programs/ld-collate.c:1134
+#: locale/programs/ld-collate.c:972 locale/programs/ld-collate.c:1142
 #, c-format
 msgid "order for `%.*s' already defined at %s:%Zu"
 msgstr ""
@@ -4978,7 +4976,7 @@ msgstr ""
 msgid "registerrpc: out of memory\n"
 msgstr ""
 
-#: timezone/zic.c:1875
+#: timezone/zic.c:1873
 msgid "repeated leap second moment"
 msgstr ""
 
@@ -5023,7 +5021,7 @@ msgstr ""
 msgid "rpcinfo: can't contact portmapper"
 msgstr ""
 
-#: timezone/zic.c:744 timezone/zic.c:746
+#: timezone/zic.c:742 timezone/zic.c:744
 msgid "same rule name in multiple files"
 msgstr ""
 
@@ -5054,7 +5052,7 @@ msgstr ""
 msgid "socket: protocol failure in circuit setup\n"
 msgstr ""
 
-#: timezone/zic.c:815
+#: timezone/zic.c:813
 msgid "standard input"
 msgstr ""
 
@@ -5066,15 +5064,15 @@ msgstr ""
 msgid "start end end character sequence of range must have the same length"
 msgstr ""
 
-#: timezone/zic.c:1326
+#: timezone/zic.c:1324
 msgid "starting year greater than ending year"
 msgstr ""
 
-#: timezone/zic.c:1298 timezone/zic.c:1323
+#: timezone/zic.c:1296 timezone/zic.c:1321
 msgid "starting year too high to be represented"
 msgstr ""
 
-#: timezone/zic.c:1296 timezone/zic.c:1321
+#: timezone/zic.c:1294 timezone/zic.c:1319
 msgid "starting year too low to be represented"
 msgstr ""
 
@@ -5134,34 +5132,29 @@ msgstr ""
 msgid "svcunix_create: out of memory\n"
 msgstr ""
 
-#: locale/programs/linereader.c:749
+#: locale/programs/linereader.c:738
 #, c-format
 msgid "symbol `%.*s' not in charmap"
 msgstr ""
 
-#: locale/programs/linereader.c:770
+#: locale/programs/linereader.c:759
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1577 locale/programs/ld-collate.c:1778
+#: locale/programs/ld-collate.c:1585 locale/programs/ld-collate.c:1786
 #, c-format
 msgid "symbol `%s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1574 locale/programs/ld-collate.c:1775
+#: locale/programs/ld-collate.c:1582 locale/programs/ld-collate.c:1783
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1499
+#: locale/programs/ld-collate.c:1507
 #, c-format
 msgid "symbol `%s' not defined"
-msgstr ""
-
-#: locale/programs/linereader.c:725
-#, c-format
-msgid "symbol `%s' not in charmap"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:1930 locale/programs/ld-ctype.c:1981
@@ -5201,11 +5194,11 @@ msgstr ""
 msgid "this is the first definition"
 msgstr ""
 
-#: timezone/zic.c:1158
+#: timezone/zic.c:1156
 msgid "time before zero"
 msgstr ""
 
-#: timezone/zic.c:1166 timezone/zic.c:2043 timezone/zic.c:2062
+#: timezone/zic.c:1164 timezone/zic.c:2041 timezone/zic.c:2060
 msgid "time overflow"
 msgstr ""
 
@@ -5226,19 +5219,19 @@ msgstr ""
 msgid "too many bytes in character encoding"
 msgstr ""
 
-#: timezone/zic.c:1869
+#: timezone/zic.c:1867
 msgid "too many leap seconds"
 msgstr ""
 
-#: timezone/zic.c:1841
+#: timezone/zic.c:1839
 msgid "too many local time types"
 msgstr ""
 
-#: timezone/zic.c:1795
+#: timezone/zic.c:1793
 msgid "too many transitions?!"
 msgstr ""
 
-#: timezone/zic.c:2166
+#: timezone/zic.c:2164
 msgid "too many, or too long, time zone abbreviations"
 msgstr ""
 
@@ -5251,7 +5244,7 @@ msgstr ""
 msgid "trouble replying to prog %d\n"
 msgstr ""
 
-#: timezone/zic.c:1333
+#: timezone/zic.c:1331
 msgid "typed single year"
 msgstr ""
 
@@ -5287,7 +5280,7 @@ msgstr ""
 msgid "unknown set `%s'"
 msgstr ""
 
-#: timezone/zic.c:787
+#: timezone/zic.c:785
 msgid "unruly zone"
 msgstr ""
 
@@ -5295,7 +5288,7 @@ msgstr ""
 msgid "unterminated message"
 msgstr ""
 
-#: locale/programs/linereader.c:592 locale/programs/linereader.c:788
+#: locale/programs/linereader.c:592 locale/programs/linereader.c:777
 msgid "unterminated string"
 msgstr ""
 
@@ -5320,7 +5313,7 @@ msgstr ""
 msgid "usage: %s infile\n"
 msgstr ""
 
-#: timezone/zic.c:2109
+#: timezone/zic.c:2107
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
@@ -5339,7 +5332,7 @@ msgstr ""
 msgid "value of <%s> must be greater or equal than the value of <%s>"
 msgstr ""
 
-#: timezone/zic.c:435
+#: timezone/zic.c:433
 msgid "warning: "
 msgstr ""
 
@@ -5407,23 +5400,23 @@ msgstr ""
 msgid "wrong number of arguments"
 msgstr ""
 
-#: timezone/zic.c:1116
+#: timezone/zic.c:1114
 msgid "wrong number of fields on Leap line"
 msgstr ""
 
-#: timezone/zic.c:1207
+#: timezone/zic.c:1205
 msgid "wrong number of fields on Link line"
 msgstr ""
 
-#: timezone/zic.c:950
+#: timezone/zic.c:948
 msgid "wrong number of fields on Rule line"
 msgstr ""
 
-#: timezone/zic.c:1020
+#: timezone/zic.c:1018
 msgid "wrong number of fields on Zone continuation line"
 msgstr ""
 
-#: timezone/zic.c:978
+#: timezone/zic.c:976
 msgid "wrong number of fields on Zone line"
 msgstr ""
 

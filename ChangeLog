@@ -1,4 +1,12 @@
 2000-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/Makefile: Remove rules to build and distribute nss_db.
+
+	* sysdeps/generic/alphasort64.c: Remove unnecessary versioning.
+	* sysdeps/generic/scandir64.c: Likewise.
+	* sysdeps/generic/versionsort64.c: Likewise.
+
+2000-08-13  Ulrich Drepper  <drepper@redhat.com>
 	    Benjamin Koznik  <bkoz@redhat.com>
 
 	* libio/fileops.c: Merge with libstdc++-v3.

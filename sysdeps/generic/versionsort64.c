@@ -20,17 +20,8 @@
 #include <string.h>
 
 int
-__versionsort64 (const void *a, const void *b)
+versionsort64 (const void *a, const void *b)
 {
   return __strverscmp ((*(const struct dirent64 **) a)->d_name,
 		       (*(const struct dirent64 **) b)->d_name);
 }
-
-#include <shlib-compat.h>
-
-versioned_symbol (libc, __versionsort64, versionsort64, GLIBC_2_2);
-
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__versionsort64, __old_versionsort64)
-compat_symbol (libc, __old_versionsort64, versionsort64, GLIBC_2_1);
-#endif

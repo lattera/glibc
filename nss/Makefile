@@ -24,8 +24,7 @@ subdir	:= nss
 headers			:= nss.h
 distribute		:= nsswitch.h XXX-lookup.c getXXbyYY.c getXXbyYY_r.c \
 			   getXXent.c getXXent_r.c databases.def \
-			   nsswitch.conf db-Makefile digits_dots.c \
-			   function.def
+			   nsswitch.conf digits_dots.c function.def
 
 # This is the trivial part which goes into libc itself.
 routines		= nsswitch $(addsuffix -lookup,$(databases))
@@ -36,8 +35,8 @@ routines		= nsswitch $(addsuffix -lookup,$(databases))
 databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp key alias
 
-others                  := getent makedb
-install-bin             := getent makedb
+others                  := getent
+install-bin             := getent
 
 tests			= test-netdb
 
@@ -49,7 +48,7 @@ otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 endif
 
 # Specify rules for the nss_* modules.  We have some services.
-services		:= files db
+services		:= files
 
 extra-libs		= $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than
@@ -64,33 +63,14 @@ vpath %.c $(subdir-dirs)
 libnss_files-routines	:= $(addprefix files-,$(databases))
 distribute		+= files-XXX.c files-parse.c
 
-libnss_db-dbs		:= $(addprefix db-,$(filter-out hosts network key,\
-							$(databases)))
-libnss_db-routines	:= $(libnss_db-dbs) db-open
-generated		+= $(filter-out db-alias.c db-netgrp.c, \
-					$(addsuffix .c,$(libnss_db-dbs)))
-distribute		+= $(addprefix nss_db/, db-XXX.c nss_db.h dummy-db.h)
-
-
-$(objpfx)makedb: $(objpfx)db-open.o $(libdl)
 
 # Build static module if requested
 ifneq ($(build-static-nss),yes)
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
 endif
-libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
 include ../Rules
 
-
-$(objpfx)libnss_db.so: $(objpfx)libnss_files.so $(libdl)
-
-$(libnss_db-dbs:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
-	@rm -f $@.new
-	(echo '#define EXTERN_PARSER';\
-	 echo '#define GENERIC "../nss_db/db-XXX.c"';\
-	 echo '#include <$<>') > $@.new
-	mv -f $@.new $@
 
 ifeq (yes,$(build-static-nss))
 $(objpfx)getent: $(objpfx)libnss_files.a

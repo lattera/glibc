@@ -18,25 +18,13 @@
 
 #include <dirent.h>
 
-#define SCANDIR __scandir64
+#define SCANDIR scandir64
 #define READDIR __readdir64
 #define DIRENT_TYPE struct dirent64
 
-int __scandir64 (__const char *__restrict __dir,
-		 struct dirent64 ***__restrict __namelist,
-		 int (*__selector) (__const struct dirent64 *),
-		 int (*__cmp) (__const void *, __const void *));
+int scandir64 (__const char *__restrict __dir,
+	       struct dirent64 ***__restrict __namelist,
+	       int (*__selector) (__const struct dirent64 *),
+	       int (*__cmp) (__const void *, __const void *));
 
 #include <dirent/scandir.c>
-
-#undef SCANDIR
-#undef READDIR
-
-#include <shlib-compat.h>
-
-versioned_symbol (libc, __scandir64, scandir64, GLIBC_2_2);
-
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__scandir64, __old_scandir64)
-compat_symbol (libc, __old_scandir64, scandir64, GLIBC_2_1);
-#endif
