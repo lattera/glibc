@@ -1,3 +1,7 @@
+Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Rules (static-only-routines rule): Use dummy.o, not dummy.so.
+
 Wed May  8 20:04:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* extract-dynsym: New file.

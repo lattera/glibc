@@ -145,7 +145,7 @@ $(common-objpfx)sor-$(subdir): Makefile
 ifdef static-only-routines
 # These routines are to be omitted from the shared library object,
 # so we replace the PIC objects for them with the dummy object file.
-$(static-only-routines:%=$(objpfx)%.so): %.so: $(common-objpfx) dummy.so
+$(static-only-routines:%=$(objpfx)%.so): %.so: $(common-objpfx) dummy.o
 	rm -f $@
 	ln $< $@
 endif
