@@ -543,7 +543,7 @@ typedef struct
 #define NT_LWPSTATUS	16		/* Contains copy of lwpstatus struct */
 #define NT_LWPSINFO	17		/* Contains copy of lwpinfo struct */
 
-/* Legal values for the  note segment descriptor types for object files.  */
+/* Legal values for the note segment descriptor types for object files.  */
 
 #define NT_VERSION	1		/* Contains a version string.  */
 
@@ -617,6 +617,10 @@ typedef struct
    Dyn.d_un.d_val field of the Elf*_Dyn structure.  This follows Sun's
    approach.  */
 #define DT_VALRNGLO	0x6ffffd00
+#define DT_PLTPADSZ	0x6ffffdf9
+#define DT_MOVEENT	0x6ffffdfa
+#define DT_MOVESZ	0x6ffffdfb
+#define DT_FEATURE_1	0x6ffffdfc
 #define DT_POSFLAG_1	0x6ffffdfd	/* Flags for DT_* entries, effecting
 					   the following DT_* entry.  */
 #define DT_SYMINSZ	0x6ffffdfe	/* Size of syminfo table (in bytes) */
@@ -635,6 +639,9 @@ typedef struct
 /* The versioning entry types.  The next are defined as part of the
    GNU extension.  */
 #define DT_VERSYM	0x6ffffff0
+
+#define DT_RELACOUNT	0x6ffffff9
+#define DT_RELCOUNT	0x6ffffffa
 
 /* These were chosen by Sun.  */
 #define DT_FLAGS_1	0x6ffffffb	/* State flags, see DF_1_* below.  */
@@ -886,6 +893,35 @@ typedef struct
 #define ELF_NOTE_OS_LINUX	0
 #define ELF_NOTE_OS_GNU		1
 #define ELF_NOTE_OS_SOLARIS2	2
+
+
+/* Move records.  */
+typedef struct
+{
+  Elf32_Xword m_value;		/* Symbol value.  */
+  Elf32_Word m_info;		/* Size and index.  */
+  Elf32_Word m_poffset;		/* Symbol offset.  */
+  Elf32_Half m_repeat;		/* Repeat count.  */
+  Elf32_Half m_stride;		/* Stride info.  */
+} Elf32_Move;
+
+typedef struct
+{
+  Elf64_Xword m_value;		/* Symbol value.  */
+  Elf64_Xword m_info;		/* Size and index.  */
+  Elf64_Xword m_poffset;	/* Symbol offset.  */
+  Elf64_Half m_repeat;		/* Repeat count.  */
+  Elf64_Half m_stride;		/* Stride info.  */
+} Elf64_Move;
+
+/* Macro to construct move records.  */
+#define ELF32_M_SYM(info)	((info) >> 8)
+#define ELF32_M_SIZE(info)	((unsigned char) (info))
+#define ELF32_M_INFO(sym, size)	(((sym) << 8) + (unsigned char) (size))
+
+#define ELF64_M_SYM(info)	ELF32_M_SYM(info)
+#define ELF64_M_SIZE(info)	ELF32_M_SIZE(info)
+#define ELF64_M_INFO(info)	ELF32_M_INFO(info)
 
 
 /* Motorola 68k specific definitions.  */
