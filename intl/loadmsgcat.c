@@ -214,12 +214,11 @@ _nl_load_domain (domain_file)
       return;
     }
 
-  domain_file->data
-    = (struct loaded_domain *) malloc (sizeof (struct loaded_domain));
-  if (domain_file->data == NULL)
+  domain = (struct loaded_domain *) malloc (sizeof (struct loaded_domain));
+  if (domain == NULL)
     return;
+  domain_file->data = domain;
 
-  domain = (struct loaded_domain *) domain_file->data;
   domain->data = (char *) data;
   domain->use_mmap = use_mmap;
   domain->mmap_size = size;

@@ -243,9 +243,12 @@ static void *root;
 static int
 transcmp (const void *p1, const void *p2)
 {
-  struct known_translation_t *s1 = (struct known_translation_t *) p1;
-  struct known_translation_t *s2 = (struct known_translation_t *) p2;
+  const struct known_translation_t *s1;
+  const struct known_translation_t *s2;
   int result;
+
+  s1 = (const struct known_translation_t *) p1;
+  s2 = (const struct known_translation_t *) p2;
 
   result = strcmp (s1->msgid, s2->msgid);
   if (result == 0)
@@ -564,8 +567,8 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
 	  if (plural != 0)
 	    {
-	      struct loaded_domain *domaindata =
-		(struct loaded_domain *) domain->data;
+	      const struct loaded_domain *domaindata =
+		(const struct loaded_domain *) domain->data;
 	      index = plural_eval (domaindata->plural, n);
 	      if (index >= domaindata->nplurals)
 		/* This should never happen.  It means the plural expression
@@ -662,7 +665,7 @@ _nl_find_msg (domain_file, msgid, index)
      const char *msgid;
      unsigned long int index;
 {
-  struct loaded_domain *domain;
+  const struct loaded_domain *domain;
   size_t act;
   char *result;
 
@@ -672,7 +675,7 @@ _nl_find_msg (domain_file, msgid, index)
   if (domain_file->data == NULL)
     return NULL;
 
-  domain = (struct loaded_domain *) domain_file->data;
+  domain = (const struct loaded_domain *) domain_file->data;
 
   /* Locate the MSGID and its translation.  */
   if (domain->hash_size > 2 && domain->hash_tab != NULL)

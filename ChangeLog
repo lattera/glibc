@@ -43,6 +43,10 @@
 	warning.
 	* sysdeps/unix/sysv/linux/init-first.c: Add prototypes for
 	__libc_init_first and _dl_start.
+	* intl/dcigettext.c (transcmp): Make s1 and s2 const.
+	(DCIGETTEXT): Make domaindata variable const.
+	* intl/loadmsgcat.c (_nl_load_domain): Rearrange domain initialization
+	to avoid warning.
 
 2000-11-20  Hiroyuki Machida  <machida@sm.sony.co.jp>
 
