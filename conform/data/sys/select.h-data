@@ -1,10 +1,10 @@
 #if !defined ISO && !defined POSIX
+type time_t
+type suseconds_t
+
 type {struct timeval}
 element {struct timeval} time_t tv_sec
 element {struct timeval} suseconds_t tv_usec
-
-type time_t
-type suseconds_t
 
 type sigset_t
 

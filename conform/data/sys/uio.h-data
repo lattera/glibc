@@ -9,3 +9,4 @@ function ssize_t writev (int, const struct iovec*, int)
 allow iov_*
 allow IOV_*
 allow *_t
+allow UIO_MAXIOV

@@ -5,6 +5,5 @@ macro offsetof
 type ptrdiff_t
 type wchar_t
 type size_t
-type wint_t
 
 allow *_t

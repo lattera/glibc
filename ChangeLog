@@ -1,5 +1,22 @@
 2001-08-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/time.h (struct timespec): Use __time_t for tv_sec element.
+
+	* sysdeps/generic/inttypes.h: Define __wchar_t.  Use it instead of
+	wchar_t for function declarations and defintions.
+
+	* misc/sys/select.h: Define __need_time_t before including <time.h>.
+	Define suseconds_t if it hasn't happened yet.
+
+	* iconv/gconv.h: Define __need_wchar_t before including <stddef.h>.
+
+	* conform/data/sys/uio.h-data: Allow UIO_MAXIOV to be defined.
+
+	* sysdeps/generic/stdint.h: Don't get definition of wchar_t from
+	<stddef.h>.
+
+	* conform/data/stddef.h-data: Remove wint_t.
+
 	* conform/conformtest.pl: Change namespace test to take #undef
 	lines into account.
 

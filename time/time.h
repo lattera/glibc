@@ -105,7 +105,7 @@ typedef __timer_t timer_t;
    has nanoseconds instead of microseconds.  */
 struct timespec
   {
-    long int tv_sec;		/* Seconds.  */
+    __time_t tv_sec;		/* Seconds.  */
     long int tv_nsec;		/* Nanoseconds.  */
   };
 

@@ -39,10 +39,16 @@ typedef __sigset_t sigset_t;
 #endif
 
 /* Get definition of timer specification structures.  */
+#define __need_time_t
 #define __need_timespec
 #include <time.h>
 #define __need_timeval
 #include <bits/time.h>
+
+#ifndef __suseconds_t_defined
+typedef __suseconds_t suseconds_t;
+# define __suseconds_t_defined
+#endif
 
 
 /* The fd_set member is required to be an array of longs.  */
