@@ -1,3 +1,8 @@
+1999-08-28  H.J. Lu  <hjl@gnu.org>
+
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Don't count the alloca'ed
+	memory for buffer.
+		
 1999-08-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/netpacket/packet.h: Update from 2.3.15

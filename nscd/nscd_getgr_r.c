@@ -180,7 +180,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       vec[1].iov_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
       total_len += gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 
-      buflen -= total_len;
+      buflen -= gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 
       /* Get this data.  */
       if (__readv (sock, vec, 2) != total_len)
