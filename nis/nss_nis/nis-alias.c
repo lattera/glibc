@@ -184,9 +184,10 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
         ++p;
       free (result);
 
-      parse_res = _nss_nis_parse_aliasent (outkey, p, alias, buffer, buflen);
-      if (parse_res == -1)
+      if ((parse_res = _nss_nis_parse_aliasent (outkey, p, alias, 
+						buffer, buflen)) == -1)
 	{
+	  free (outkey);
 	  __set_errno (ERANGE);
 	  return NSS_STATUS_TRYAGAIN;
 	}
@@ -258,12 +259,12 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   free (result);
 
   alias->alias_local = 0;
-  parse_res = _nss_nis_parse_aliasent (name, p, alias, buffer, buflen);
-  if (parse_res == -1)
+  if ((parse_res = _nss_nis_parse_aliasent (name, p, alias, buffer, 
+					    buflen)) == -1)
     return NSS_STATUS_TRYAGAIN;
+  
+  if (parse_res)
+    return NSS_STATUS_SUCCESS;
   else
-    if (parse_res == 0)
-      return NSS_STATUS_NOTFOUND;
-    else
-      return NSS_STATUS_SUCCESS;
+    return NSS_STATUS_NOTFOUND;
 }

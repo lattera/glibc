@@ -1,3 +1,141 @@
+1997-07-22 01:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules (+make-deps): Use $(CFLAGS) in run of $(+mkdep) so
+	that optimizing is also selected for dependency generation.
+
+	* configure.in: Add machine description for TI c[34]x.
+
+	* inet/Makefile (routines): Remove ntohl and ntohs.
+	* inet/netinet/in.h: Use optimized version of hton? and ntoh?
+	for little endian machines.
+	* sysdeps/alpha/ntohl.s: Removed.
+	* sysdeps/alpha/ntohs.s: Removed.
+	* sysdeps/generic/ntohl.c: Removed.
+	* sysdeps/generic/ntohs.c: Removed.
+	* sysdeps/generic/htonl.c: Add aliases for ntohl.
+	* sysdeps/vax/htonl.s: Likewise.
+	* sysdeps/generic/htons.c: Add aliases for ntohs.
+	* sysdeps/vax/htons.s: Likewise.
+	* sysdeps/vax/ntohl.s: Removed.
+	* sysdeps/vax/ntohs.s: Removed.
+	* sysdeps/generic/bits/htontoh.h: New file.
+	* sysdeps/i386/htonl.S: New file.
+	* sysdeps/i386/htons.S: New file.
+	* sysdeps/i386/i486/htonl.S: New file.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Correct and optimized compare
+	macros.
+
+	* sysdeps/mips/dl-machine.h: Remove mips64 dependent parts.
+	* sysdeps/mips/mips64/dl-machine.h: New file.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Don't install
+	syscall-list.h.
+
+1997-07-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Add missing symbol _obstack.
+
+1997-07-14 08:22  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/mips/rtld-parms: New.
+
+	* sysdeps/unix/sysv/linux/mips/lxstat.h: Moved to
+	* sysdeps/unix/sysv/linux/mips/lxstat.c: ...this.
+
+	* sysdeps/unix/sysv/linux/mips/sgidef.h: Moved to
+	* sysdeps/unix/sysv/linux/mips/sgidefs.h: ...this.
+
+	* sysdeps/generic/dl-sysdep.c (_start): Change to ENTRY_POINT.
+
+1997-07-17 08:39  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/mips/dl-machine.h: Remove extra stuff.
+
+1997-07-06 07:18  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/bits/endian.h: Handle multiple endianess.
+
+	* stdlib/grouping.h: Suppress gcc warning about testing
+	unsigned char for less-than-zero.
+	* stdio-common/printf_fp.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+
+	* sysdeps/powerpc/add_n.s: New file.
+	* sysdeps/powerpc/sub_n.s: New file.
+	* sysdeps/powerpc/lshift.s: Ported XCOFF->ELF (from GMP).
+	* sysdeps/powerpc/mul_1.s: Ported XCOFF->ELF (from GMP).
+	* sysdeps/powerpc/addmul_1.s: Ported XCOFF->ELF (from GMP).
+	* sysdeps/powerpc/submul_1.s: Ported XCOFF->ELF (from GMP).
+	* sysdeps/powerpc/rshift.s: Ported XCOFF->ELF (from GMP).
+
+	* math/libm-test.c (cos_test, sin_test, sincos_test): Use
+	precomputed pi/6 rather than having gcc calculate it, otherwise
+	tests give inaccurate result due to inaccurate input.
+	* math/libm.map: Add __fe_*_env constants to list of exported
+	symbols.
+
+	* sysdeps/libm-ieee754/s_isinf.c: Simplify, make faster.
+	* sysdeps/libm-ieee754/s_isinff.c: Simplify, make faster.
+	* sysdeps/libm-ieee754/s_atan2f.c: Correct value of pi to be correct
+	round-to-nearest value.
+
+	* sysdeps/libm-ieee754/e_log.c: Make sure exceptions are raised.
+	* sysdeps/libm-ieee754/e_log10.c: Likewise.
+	* sysdeps/libm-ieee754/e_log10f.c: Likewise.
+	* sysdeps/libm-ieee754/e_logf.c: Likewise.
+	* sysdeps/libm-ieee754/s_log1p.c: Likewise. Also use correct -Inf.
+	* sysdeps/libm-ieee754/s_log1pf.c: Likewise. Also use correct -Inf.
+	* sysdeps/libm-ieee754/s_log2.c: Likewise.
+	* sysdeps/libm-ieee754/s_log2f.c: Likewise.
+
+1997-07-15 21:54  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_compat/compat-grp.c: Fix "buffer to small" problems
+	and memory leaks.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+	* nis/nss_nisplus-alias.c: Likewise.
+	* nis/nss_nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus-grp.c: Likewise.
+	* nis/nss_nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus-netgrp.c: Likewise.
+	* nis/nss_nisplus-network.c: Likewise.
+	* nis/nss_nisplus-proto.c: Likewise.
+	* nis/nss_nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus-service.c: Likewise.
+	* nis/nss_nisplus-spwd.c: Likewise.
+
+	* nis/nss_nisplus-parse.c: If buffer to small, give -1 back.
+
+1997-07-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Mention program
+	name in warning message.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Print program name
+	first.
+
+1997-07-20 19:33  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* libc.map: Add _null_auth and _seterr_reply.
+
+	* sunrpc/clnt_udp.c (clntudp_call): If xargs is NULL, don't encode it.
+
 1997-07-19 22:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/africa: Update from tzdata1997g.

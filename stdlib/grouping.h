@@ -1,5 +1,5 @@
 /* Internal header for proving correct grouping in strings of numbers.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -81,7 +81,11 @@ correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
 	      /* Skip the thousands separator.  */
 	      --cp;
 
-	      if (*gp == CHAR_MAX || *gp < 0)
+	      if (*gp == CHAR_MAX
+#if CHAR_MIN < 0
+		  || *gp < 0
+#endif
+		  )
 	        {
 	          /* No more thousands separators are allowed to follow.  */
 	          while (cp >= begin && (wchar_t) *cp != thousands)

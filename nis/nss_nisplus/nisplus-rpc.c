@@ -64,7 +64,7 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
     {
     no_more_room:
       __set_errno (ERANGE);
-      return 0;
+      return -1;
     }
   strncpy (first_unused, NISENTRYVAL (0, 0, result),
            NISENTRYLEN (0, 0, result));
@@ -198,8 +198,11 @@ internal_nisplus_getrpcent_r (struct rpcent *rpc, char *buffer,
   /* Get the next entry until we found a correct one. */
   do
     {
+      nis_result *saved_res;
+
       if (result == NULL)
 	{
+	  saved_res = NULL;
           if (tablename_val == NULL)
             if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
               return NSS_STATUS_UNAVAIL;
@@ -212,14 +215,28 @@ internal_nisplus_getrpcent_r (struct rpcent *rpc, char *buffer,
 	{
 	  nis_result *res;
 
+	  saved_res = result;
 	  res = nis_next_entry (tablename_val, &result->cookie);
-	  nis_freeresult (result);
 	  result = res;
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	    return niserr2nss (result->status);
+	    {
+	      nis_freeresult (saved_res);
+	      return niserr2nss (result->status);
+	    }
 	}
 
-      parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer, 
+						  buflen)) == -1)
+	{
+	  nis_freeresult (result);
+	  result = saved_res;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  if (saved_res)
+	    nis_freeresult (saved_res);
+	}
     } while (!parse_res);
 
   return NSS_STATUS_SUCCESS;
@@ -290,13 +307,13 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
       nis_freeresult (result);
 
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
+
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
 
-      if (!parse_res && errno == ERANGE)
-	return NSS_STATUS_TRYAGAIN;
-      else
-	return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_NOTFOUND;
     }
 }
 
@@ -329,12 +346,12 @@ _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
 
     nis_freeresult (result);
 
+    if (parse_res == -1)
+      return NSS_STATUS_TRYAGAIN;
+
     if (parse_res)
       return NSS_STATUS_SUCCESS;
 
-    if (!parse_res && errno == ERANGE)
-      return NSS_STATUS_TRYAGAIN;
-    else
-      return NSS_STATUS_NOTFOUND;
+    return NSS_STATUS_NOTFOUND;
   }
 }

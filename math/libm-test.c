@@ -134,6 +134,8 @@
 #define PRINT 1
 #define NO_PRINT 0
 
+/* Various constants (we must supply them precalculated for accuracy).  */
+#define M_PI_6  .52359877559829887308L
 
 static int noErrors;
 
@@ -1058,7 +1060,7 @@ cos_test (void)
 		   FUNC(cos) (minus_infty),
 		   INVALID_EXCEPTION);
 
-  check_eps ("cos (pi/3) == 0.5", FUNC(cos) (M_PI / 3.0),
+  check_eps ("cos (pi/3) == 0.5", FUNC(cos) (M_PI_6 * 2.0),
 	     0.5, CHOOSE (4e-18L, 1e-15L, 1e-7L));
   check_eps ("cos (pi/2) == 0", FUNC(cos) (M_PI_2),
 	     0, CHOOSE (1e-19L, 1e-16L, 1e-7L));
@@ -1711,8 +1713,8 @@ sin_test (void)
 		   FUNC(sin) (minus_infty),
 		   INVALID_EXCEPTION);
 
-  check_eps ("sin (pi/6) == 0.5", FUNC(sin) (M_PI / 6.0), 0.5,
-	     CHOOSE (4e-18L, 0, 0));
+  check_eps ("sin (pi/6) == 0.5", FUNC(sin) (M_PI_6),
+	     0.5,CHOOSE (4e-18L, 0, 0));
   check ("sin (pi/2) == 1", FUNC(sin) (M_PI_2), 1);
 }
 
@@ -1772,11 +1774,11 @@ sincos_test (void)
   check_eps ("sincos (pi/2, &sin, &cos) puts 0 in cos", cos_res, 0,
 	     CHOOSE (1e-18L, 1e-16, 1e-7));
 
-  FUNC(sincos) (M_PI / 6.0, &sin_res, &cos_res);
+  FUNC(sincos) (M_PI_6, &sin_res, &cos_res);
   check_eps ("sincos (pi/6, &sin, &cos) puts 0.5 in sin", sin_res, 0.5,
 	     CHOOSE (5e-18L, 0, 0));
 
-  FUNC(sincos) (M_PI / 3.0, &sin_res, &cos_res);
+  FUNC(sincos) (M_PI_6*2.0, &sin_res, &cos_res);
   check_eps ("sincos (pi/3, &sin, &cos) puts 0.5 in cos", cos_res, 0.5,
 	     CHOOSE (5e-18L, 1e-15, 1e-7));
 

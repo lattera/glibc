@@ -262,6 +262,8 @@ clntudp_call (cl, proc, xargs, argsp, xresults, resultsp, utimeout)
   time_waited.tv_usec = 0;
 call_again:
   xdrs = &(cu->cu_outxdrs);
+  if (xargs == NULL)
+    goto get_reply;
   xdrs->x_op = XDR_ENCODE;
   XDR_SETPOS (xdrs, cu->cu_xdrpos);
   /*
@@ -290,6 +292,7 @@ send_again:
     {
       return (cu->cu_error.re_status = RPC_TIMEDOUT);
     }
+ get_reply:
   /*
    * sub-optimal code appears here because we have
    * some clock time to spare while the packets are in flight.

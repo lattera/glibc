@@ -32,7 +32,7 @@ extern char **_dl_argv;
 extern char **_environ;
 extern size_t _dl_pagesize;
 extern void _end;
-extern void _start (void);
+extern void ENTRY_POINT (void);
 
 int __libc_enable_secure;
 int __libc_multiple_libcs;	/* Defining this here avoids the inclusion

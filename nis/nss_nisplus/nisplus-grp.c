@@ -117,8 +117,10 @@ internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen)
       if (next_entry >= result->objects.objects_len)
 	return NSS_STATUS_NOTFOUND;
 
-      parse_res = _nss_nisplus_parse_grent (result, next_entry, gr,
-					    buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_grent (result, next_entry, gr,
+						 buffer, buflen)) == -1)
+	return NSS_STATUS_TRYAGAIN;
+
       ++next_entry;
     }
   while (!parse_res);
@@ -170,16 +172,14 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 	}
 
       parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen);
-
       nis_freeresult (result);
 
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
 
-      if (!parse_res && errno == ERANGE)
-	return NSS_STATUS_TRYAGAIN;
-      else
-	return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_NOTFOUND;
     }
 }
 
@@ -212,12 +212,12 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
 
     nis_freeresult (result);
 
+    if (parse_res == -1)
+      return NSS_STATUS_TRYAGAIN;
+
     if (parse_res)
       return NSS_STATUS_SUCCESS;
 
-    if (!parse_res && errno == ERANGE)
-      return NSS_STATUS_TRYAGAIN;
-    else
-      return NSS_STATUS_NOTFOUND;
+    return NSS_STATUS_NOTFOUND;
   }
 }

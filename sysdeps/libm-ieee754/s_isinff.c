@@ -27,6 +27,6 @@ static char rcsid[] = "$NetBSD: s_isinff.c,v 1.3 1995/05/11 23:20:21 jtc Exp $";
 	t = ix & 0x7fffffff;
 	t ^= 0x7f800000;
 	t |= -t;
-	return ~(t >> 31) & (1 - ((ix & 0x80000000) >> 30));
+	return ~(t >> 31) & (ix >> 30);
 }
 weak_alias (__isinff, isinff)

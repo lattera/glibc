@@ -131,10 +131,10 @@ elf_machine_load_address (void)
 {
   ElfW(Addr) addr;
   asm ("	.set noreorder\n"
-       "	la %0, here\n"
+       "	dla %0, here\n"
        "	bltzal $0, here\n"
        "	nop\n"
-       "here:	subu %0, $31, %0\n"
+       "here:	dsubu %0, $31, %0\n"
        "	.set reorder\n"
        :	"=r" (addr)
        :	/* No inputs */
@@ -392,30 +392,30 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 									      \
 asm ("\n								      \
 	.text\n								      \
-	.align	2\n							      \
+	.align	3\n							      \
 	.globl	_dl_runtime_resolve\n					      \
 	.type	_dl_runtime_resolve,@function\n				      \
 	.ent	_dl_runtime_resolve\n					      \
 _dl_runtime_resolve:\n							      \
 	.set noreorder\n						      \
-	# Save slot call pc.\n						      \
-	move	$3, $31\n						      \
+	# Save old GP to $3.\n						      \
+	move	$3,$28\n						      \
 	# Modify t9 ($25) so as to point .cpload instruction.\n		      \
-	addu	$25,8\n							      \
+	daddu	$25,2*8\n						      \
 	# Compute GP.\n							      \
 	.cpload $25\n							      \
 	.set reorder\n							      \
 	# Save slot call pc.\n						      \
         move	$2, $31\n						      \
 	# Save arguments and sp value in stack.\n			      \
-	subu	$29, 40\n						      \
-	.cprestore 32\n							      \
-	sw	$15, 36($29)\n						      \
-	sw	$4, 12($29)\n						      \
-	sw	$5, 16($29)\n						      \
-	sw	$6, 20($29)\n						      \
-	sw	$7, 24($29)\n						      \
-	sw	$16, 28($29)\n						      \
+	dsubu	$29, 10*8\n						      \
+	.cprestore 8*8\n						      \
+	sd	$15, 9*8($29)\n						      \
+	sd	$4, 3*8($29)\n						      \
+	sd	$5, 4*8($29)\n						      \
+	sd	$6, 5*8($29)\n						      \
+	sd	$7, 6*8($29)\n						      \
+	sd	$16, 7*8($29)\n						      \
 	move	$16, $29\n						      \
 	move	$4, $24\n						      \
 	move	$5, $15\n						      \
@@ -423,13 +423,13 @@ _dl_runtime_resolve:\n							      \
 	move	$7, $2\n						      \
 	jal	__dl_runtime_resolve\n					      \
 	move	$29, $16\n						      \
-	lw	$31, 36($29)\n						      \
-	lw	$4, 12($29)\n						      \
-	lw	$5, 16($29)\n						      \
-	lw	$6, 20($29)\n						      \
-	lw	$7, 24($29)\n						      \
-	lw	$16, 28($29)\n						      \
-	addu	$29, 40\n						      \
+	ld	$31, 9*8($29)\n						      \
+	ld	$4, 3*8($29)\n						      \
+	ld	$5, 4*8($29)\n						      \
+	ld	$6, 5*8($29)\n						      \
+	ld	$7, 6*8($29)\n						      \
+	ld	$16, 7*8($29)\n						      \
+	daddu	$29, 10*8\n						      \
 	move	$25, $2\n						      \
 	jr	$25\n							      \
 	.end	_dl_runtime_resolve\n					      \
@@ -457,8 +457,9 @@ _dl_runtime_resolve:\n							      \
       and not just plain _start.  */
 
 #define RTLD_START asm ("\
-	.text\n"\
-_RTLD_PROLOGUE(ENTRY_POINT)\
+	.text\n\
+	.align	3\n"\
+_RTLD_PROLOGUE (ENTRY_POINT)\
 "	.globl _dl_start_user\n\
 	.set noreorder\n\
 	bltzal $0, 0f\n\
@@ -468,14 +469,12 @@ _RTLD_PROLOGUE(ENTRY_POINT)\
 	# i386 ABI book says that the first entry of GOT holds\n\
 	# the address of the dynamic structure. Though MIPS ABI\n\
 	# doesn't say nothing about this, I emulate this here.\n\
-	la $4, _DYNAMIC\n\
-	sw $4, -0x7ff0($28)\n\
+	dla $4, _DYNAMIC\n\
+	sd $4, -0x7ff0($28)\n\
 	move $4, $29\n\
-	subu $29, 16\n\
 	jal _dl_start\n\
-	addiu $29, 16\n\
 	# Get the value of label '_dl_start_user' in t9 ($25).\n\
-	la $25, _dl_start_user\n\
+	dla $25, _dl_start_user\n\
 _dl_start_user:\n\
 	.set noreorder\n\
 	.cpload $25\n\
@@ -485,51 +484,48 @@ _dl_start_user:\n\
 	move $17, $2\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
-	lw $2, _dl_skip_args\n\
+	ld $2, _dl_skip_args\n\
 	beq $2, $0, 1f\n\
 	# Load the original argument count.\n\
-	lw $4, 0($29)\n\
+	ld $4, 0($29)\n\
 	# Subtract _dl_skip_args from it.\n\
-	subu $4, $2\n\
+	dsubu $4, $2\n\
 	# Adjust the stack pointer to skip _dl_skip_args words.\n\
-	sll $2,2\n\
-	addu $29, $2\n\
+	dsll $2,2\n\
+	daddu $29, $2\n\
 	# Save back the modified argument count.\n\
-	sw $4, 0($29)\n\
+	sd $4, 0($29)\n\
 	# Get _dl_default_scope[2] as argument in _dl_init_next call below.\n\
-1:	la $2, _dl_default_scope\n\
-	lw $4, 8($2)\n\
+1:	dla $2, _dl_default_scope\n\
+	ld $4, 2*8($2)\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\
-	subu $29, 16\n\
 	jal _dl_init_next\n\
-	addiu $29, 16\n\
 	move $28, $16\n\
 	# Check for zero return,  when out of initializers.\n\
 	beq $2, $0, 2f\n\
 	# Call the shared object initializer function.\n\
 	move $25, $2\n\
-	lw $4, 0($29)\n\
-	lw $5, 4($29)\n\
-	lw $6, 8($29)\n\
-	lw $7, 12($29)\n\
+	ld $4, 0($29)\n\
+	ld $5, 1*8($29)\n\
+	ld $6, 2*8($29)\n\
+	ld $7, 3*8($29)\n\
 	jalr $25\n\
 	move $28, $16\n\
 	# Loop to call _dl_init_next for the next initializer.\n\
 	b 1b\n\
-2:	# Clear the startup flag.  Assumes 32 bit ints.\n\
-	sw $0, _dl_starting_up\n\
 	# Pass our finalizer function to the user in ra.\n\
-	la $31, _dl_fini\n\
+2:	dla $31, _dl_fini\n\
 	# Jump to the user entry point.\n\
 	move $25, $17\n\
-	lw $4, 0($29)\n\
-	lw $5, 4($29)\n\
-	lw $6, 8($29)\n\
-	lw $7, 12($29)\n\
+	ld $4, 0($29)\n\
+	ld $5, 1*8($29)\n\
+	ld $6, 2*8$29)\n\
+	ld $7, 3*8($29)\n\
 	jr $25\n"\
-_RTLD_EPILOGUE(ENTRY_POINT)\
+_RTLD_EPILOGUE(ENTRY_POINT) \
 );
+
 
 /* The MIPS never uses Elfxx_Rela relocations.  */
 #define ELF_MACHINE_NO_RELA 1

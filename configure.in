@@ -149,6 +149,8 @@ case "$machine" in
 a29k | am29000)	base_machine=a29k machine=a29k ;;
 alpha*)		base_machine=alpha machine=alpha/$machine ;;
 arm*)		base_machine=arm machine=arm/$machine ;;
+c3[012])	base_machine=cx0 machine=cx0/c30 ;;
+c4[04])		base_machine=cx0 machine=cx0/c40 ;;
 hppa*)		base_machine=hppa machine=hppa/$machine ;;
 i[3456]86)	base_machine=i386 machine=i386/$machine ;;
 m680?0)		base_machine=m68k machine=m68k/$machine ;;

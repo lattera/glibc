@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -49,10 +49,10 @@ static float zero   =  0.0;
 	GET_FLOAT_WORD(hx,x);
 
         k=0;
-        if (hx < 0x00800000) {                  /* x < 2**-126  */
+        if (hx < 0x00800000) {			/* x < 2**-126  */
             if ((hx&0x7fffffff)==0)
-                return -two25/zero;             /* log(+-0)=-inf */
-            if (hx<0) return (x-x)/zero;        /* log(-#) = NaN */
+                return -two25/(x-x);		/* log(+-0)=-inf */
+            if (hx<0) return (x-x)/(x-x);	/* log(-#) = NaN */
             k -= 25; x *= two25; /* subnormal number, scale up x */
 	    GET_FLOAT_WORD(hx,x);
         }

@@ -210,9 +210,13 @@ struct ipv6_mreq
    this was a short-sighted decision since on different systems the types
    may have different representations but the values are always the same.  */
 
+extern u_int32_t __ntohl __P ((u_int32_t __netlong));
 extern u_int32_t ntohl __P ((u_int32_t __netlong));
+extern u_int16_t __ntohs __P ((u_int16_t __netshort));
 extern u_int16_t ntohs __P ((u_int16_t __netshort));
+extern u_int32_t __htonl __P ((u_int32_t __hostlong));
 extern u_int32_t htonl __P ((u_int32_t __hostlong));
+extern u_int16_t __htons __P ((u_int16_t __hostshort));
 extern u_int16_t htons __P ((u_int16_t __hostshort));
 
 #include <endian.h>
@@ -220,10 +224,33 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
 #if __BYTE_ORDER == __BIG_ENDIAN
 /* The host byte order is the same as network byte order,
    so these functions are all just identity.  */
-#define	ntohl(x)	(x)
-#define	ntohs(x)	(x)
-#define	htonl(x)	(x)
-#define	htons(x)	(x)
+# define ntohl(x)	(x)
+# define ntohs(x)	(x)
+# define htonl(x)	(x)
+# define htons(x)	(x)
+#else
+# if __BYTE_ORDER == __LITTLE_ENDIAN && defined __OPTIMIZE__
+#  define ntohl(x)	(__builtin_constant_p (x)			  \
+			 ? __constant_htontohl (x) : __ntohl (x))
+#  define ntohs(x)	(__builtin_constant_p (x)			  \
+			 ? __constant_htontohs (x) : __ntohs (x))
+#  define htonl(x)	(__builtin_constant_p (x)			  \
+			 ? __constant_htontohl (x) : __htonl (x))
+#  define htons(x)	(__builtin_constant_p (x)			  \
+			 ? __constant_htontohl (x) : __htonl (x))
+
+#  define __constant_htontohl(x) \
+	((((x) & 0xff000000) >> 24) | \
+	 (((x) & 0x00ff0000) >>  8) | \
+	 (((x) & 0x0000ff00) <<  8) | \
+	 (((x) & 0x000000ff) << 24))
+#  define __constant_htontohs(x) \
+	((((x) & 0x0000ff00) >>  8) | \
+	 (((x) & 0x000000ff) << 8))
+
+/* Now get machine dependent optimized versions for the real work.  */
+#  include <bits/htontoh.h>
+# endif
 #endif
 
 #define IN6_IS_ADDR_UNSPECIFIED(a) \

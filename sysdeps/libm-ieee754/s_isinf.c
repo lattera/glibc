@@ -23,12 +23,11 @@ static char rcsid[] = "$NetBSD: s_isinf.c,v 1.3 1995/05/11 23:20:14 jtc Exp $";
 	double x;
 #endif
 {
-	u_int32_t hx;
-	int32_t lx;
+	int32_t hx,lx;
 	EXTRACT_WORDS(hx,lx,x);
 	lx |= (hx & 0x7fffffff) ^ 0x7ff00000;
 	lx |= -lx;
-	return ~(lx >> 31) & (1 - ((hx >> 30) & 2));
+	return ~(lx >> 31) & (hx >> 30);
 }
 weak_alias (__isinf, isinf)
 #ifdef NO_LONG_DOUBLE

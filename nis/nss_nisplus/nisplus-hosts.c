@@ -66,8 +66,9 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 
   if (room_left < NISENTRYLEN (0, 2, result) + 1)
     {
+    no_more_room:
       __set_errno (ERANGE);
-      return 0;
+      return -1;
     }
 
   data = first_unused;
@@ -96,10 +97,8 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
   room_left-=host->h_length;
 
   if (NISENTRYLEN (0, 0, result) + 1 > room_left)
-    {
-      __set_errno (ERANGE);
-      return 0;
-    }
+    goto no_more_room;
+  
   p = stpncpy (first_unused, NISENTRYVAL (0, 0, result),
 	       NISENTRYLEN (0, 0, result));
   *p = '\0';
@@ -114,10 +113,8 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
       if (strcmp (NISENTRYVAL (i, 1, result), host->h_name) != 0)
 	{
 	  if (NISENTRYLEN (i, 1, result) + 2 > room_left)
-	    {
-	      __set_errno (ERANGE);
-	      return 0;
-	    }
+	    goto no_more_room;
+	  
 	  *p++ = ' ';
 	  p = stpncpy (p, NISENTRYVAL (i, 1, result),
 		       NISENTRYLEN (i, 1, result));
@@ -133,10 +130,8 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
   first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
   host->h_addr_list = (char **) first_unused;
   if (room_left < 2 * sizeof (char *))
-    {
-      __set_errno (ERANGE);
-      return 0;
-    }
+    goto no_more_room;
+  
   room_left -= (2 * sizeof (char *));
   host->h_addr_list[0] = data;
   host->h_addr_list[1] = NULL;
@@ -154,10 +149,7 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 	break;
 
       if (room_left < sizeof (char *))
-	{
-	  __set_errno (ERANGE);
-	  return 0;
-	}
+	goto no_more_room;
 
       room_left -= sizeof (char *);
       host->h_aliases[i] = line;
@@ -174,9 +166,7 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
       else
 	host->h_aliases[i+1] = NULL;
     }
-
   return 1;
-
 }
 
 static enum nss_status
@@ -240,8 +230,11 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
   /* Get the next entry until we found a correct one. */
   do
     {
+      nis_result *saved_res;
+
       if (result == NULL)
 	{
+	  saved_res = NULL;
 	  if (tablename_val == NULL)
 	    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
 	      return NSS_STATUS_UNAVAIL;
@@ -249,9 +242,7 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 	  result = nis_first_entry(tablename_val);
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
             {
-              int retval;
-
-              retval = niserr2nss (result->status);
+              enum nss_status retval = niserr2nss (result->status);	      
               if (retval == NSS_STATUS_TRYAGAIN)
                 {
                   *herrnop = NETDB_INTERNAL;
@@ -259,20 +250,21 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
                 }
               return retval;
             }
-
+	  
 	}
       else
 	{
 	  nis_result *res2;
-
+	  
+	  saved_res = result;
 	  res2 = nis_next_entry(tablename_val, &result->cookie);
-	  nis_freeresult (result);
 	  result = res2;
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
             {
-              int retval;
+              enum nss_status retval= niserr2nss (result->status);
 
-              retval = niserr2nss (result->status);
+	      nis_freeresult (result);
+	      result = saved_res;
               if (retval == NSS_STATUS_TRYAGAIN)
                 {
                   *herrnop = NETDB_INTERNAL;
@@ -281,20 +273,24 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
               return retval;
             }
 	}
-
+      
       parse_res = _nss_nisplus_parse_hostent (result, AF_INET6,
 					      host, buffer, buflen);
-      if (!parse_res && errno != ERANGE)
+      if (parse_res < 1 && errno != ERANGE)
 	parse_res = _nss_nisplus_parse_hostent (result, AF_INET, host,
 						buffer, buflen);
-      if (!parse_res && errno == ERANGE)
+      if (parse_res < 1 && errno == ERANGE)
         {
+	  nis_freeresult (result);
+	  result = saved_res;
           *herrnop = NETDB_INTERNAL;
           return NSS_STATUS_TRYAGAIN;
         }
-
+      if (saved_res != NULL)
+	nis_freeresult (saved_res);
+      
     } while (!parse_res);
-
+  
   return NSS_STATUS_SUCCESS;
 }
 
@@ -353,10 +349,10 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
       else
 	sprintf(buf, "[cname=%s],%s", NISENTRYVAL(0, 0, result),
 		tablename_val);
-
+      
       nis_freeresult (result);
       result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
-
+      
       retval = niserr2nss (result->status);
       if (retval != NSS_STATUS_SUCCESS)
         {
@@ -373,12 +369,12 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
 	_nss_nisplus_parse_hostent (result, af, host, buffer, buflen);
 
       nis_freeresult (result);
-
-      if (parse_res)
+      
+      if (parse_res > 0)
 	return NSS_STATUS_SUCCESS;
 
       *herrnop = NETDB_INTERNAL;
-      if (!parse_res && errno == ERANGE)
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
 	return NSS_STATUS_NOTFOUND;
@@ -438,14 +434,13 @@ _nss_nisplus_gethostbyaddr_r (const char *addr, int addrlen, int type,
 
       parse_res = _nss_nisplus_parse_hostent (result, type, host,
 					      buffer, buflen);
-
       nis_freeresult (result);
-
-      if (parse_res)
+      
+      if (parse_res > 0)
 	return NSS_STATUS_SUCCESS;
-
+      
       *herrnop = NETDB_INTERNAL;
-      if (!parse_res && errno == ERANGE)
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
 	return NSS_STATUS_NOTFOUND;

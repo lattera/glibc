@@ -98,7 +98,6 @@ GLIBC_2.0 {
     fesetenv; fesetexceptflag; fesetround;
     fetestexcept; feupdateenv;
 
-
     # global variables
     _LIB_VERSION; signgam;
 
@@ -108,6 +107,9 @@ GLIBC_2.0 {
     __finite; __finitef; __finitel;
 
     __log1p;
+
+    # symbols used in macros from sysdeps/powerpc/bits/fenv.h
+    __fe_dfl_env; __fe_enabled_env; __fe_nonieee_env; __fe_nomask_env;
 
   local:
     *;

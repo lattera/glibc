@@ -87,7 +87,7 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
 	  /* The line is too long for our buffer.  */
 	no_more_room:
 	  __set_errno (ERANGE);
-	  return 0;
+	  return -1;
 	}
       else
 	{
@@ -214,8 +214,10 @@ internal_nisplus_getaliasent_r (struct aliasent *alias,
       if (next_entry >= result->objects.objects_len)
 	return NSS_STATUS_NOTFOUND;
 
-      parse_res = _nss_nisplus_parse_aliasent (result, next_entry, alias,
-					       buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_aliasent (result, next_entry, alias,
+						    buffer, buflen)) == -1)
+	return NSS_STATUS_TRYAGAIN;
+
       ++next_entry;
     } while (!parse_res);
 
@@ -247,9 +249,7 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
     if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
       return NSS_STATUS_UNAVAIL;
 
-  if (name == NULL || strlen(name) > 8)
-    return NSS_STATUS_NOTFOUND;
-  else
+  if (name != NULL || strlen(name) <= 8)
     {
       nis_result *result;
       char buf[strlen (name) + 30 + tablename_len];
@@ -261,15 +261,12 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	return niserr2nss (result->status);
 
-      parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
-					       buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
+						    buffer, buflen)) == -1)
+	return NSS_STATUS_TRYAGAIN;
 
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
-
-      if (!parse_res && errno == ERANGE)
-	return NSS_STATUS_TRYAGAIN;
-      else
-	return NSS_STATUS_NOTFOUND;
     }
+  return NSS_STATUS_NOTFOUND;
 }

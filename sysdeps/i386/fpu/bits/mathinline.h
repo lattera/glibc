@@ -30,42 +30,42 @@
 # define isgreater(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; andb $0x45, %%ah; setz %%al;"	      \
-		 "andl $0xff, %0"					      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+		 "andl $0x01, %0"					      \
+		 : "=a" (result) : "u" (y), "t" (x) : "cc", "st", "st(1)");   \
 	result; })
 
 # define isgreaterequal(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al;"	      \
-		 "andl $0xff, %0"					      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+		 "andl $0x01, %0"					      \
+		 : "=a" (result) : "u" (y), "t" (x) : "cc", "st", "st(1)");   \
 	result; })
 
 # define isless(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x45, %%ah;"      \
-		 "setz %%al; andl $0xff, %0"				      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+		 "setz %%al; andl $0x01, %0"				      \
+		 : "=a" (result) : "u" (y), "t" (x) : "cc", "st", "st(1)");   \
 	result; })
 
 # define islessequal(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x05, %%ah;"      \
-		 "setz %%al; andl $0xff, %0"				      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+		 "setz %%al; andl $0x01, %0"				      \
+		 : "=a" (result) : "u" (y), "t" (x) : "cc", "st", "st(1)");   \
 	result; })
 
 # define islessgreater(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al;"	      \
-		 "andl $0xff, %0"					      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+		 "andl $0x01, %0"					      \
+		 : "=a" (result) : "u" (y), "t" (x) : "cc", "st", "st(1)");   \
 	result; })
 
 # define isunordered(x, y) \
      ({ int result;							      \
-	__asm__ ("fucompp; fnstsw; sahf; setp %%al; andl $0xff, %0"	      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	__asm__ ("fucompp; fnstsw; sahf; setp %%al; andl $0x01, %0"	      \
+		 : "=a" (result) : "u" (y), "t" (x) : "cc", "st", "st(1)");   \
 	result; })
 #endif
 

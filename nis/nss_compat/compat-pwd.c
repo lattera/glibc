@@ -272,6 +272,9 @@ internal_endpwent (ent_t *ent)
       ent->stream = NULL;
     }
 
+  if (ent->netgroup)
+    __internal_endnetgrent (&ent->netgrdata);
+  
   ent->nis = ent->first = ent->netgroup = 0;
 
   if (ent->oldkey != NULL)
@@ -302,9 +305,6 @@ _nss_compat_endpwent (void)
   enum nss_status result;
 
   __libc_lock_lock (lock);
-
-  if (ext_ent.netgroup)
-    __internal_endnetgrent (&ext_ent.netgrdata);
 
   result = internal_endpwent (&ext_ent);
 
@@ -339,6 +339,10 @@ getpwent_next_nis_netgr (struct passwd *result, ent_t *ent, char *group,
 
   while (1)
     {
+      char *saved_cursor;
+      int parse_res;
+
+      saved_cursor = ent->netgrdata.cursor;
       status = __internal_getnetgrent_r (&host, &user, &domain,
 					 &ent->netgrdata, buffer, buflen);
       if (status != 1)
@@ -372,7 +376,13 @@ getpwent_next_nis_netgr (struct passwd *result, ent_t *ent, char *group,
       while (isspace (*p))
 	p++;
       free (outval);
-      if (_nss_files_parse_pwent (p, result, data, buflen))
+      if ((parse_res = _nss_files_parse_pwent (p, result, data, buflen)) == -1)
+	{
+	  ent->netgrdata.cursor = saved_cursor;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      if (parse_res)
 	{
 	  copy_pwd_changes (result, &ent->pwd, p2, p2len);
 	  break;
@@ -410,6 +420,9 @@ getpwent_next_nisplus_netgr (struct passwd *result, ent_t *ent, char *group,
 
   while (1)
     {
+      char *saved_cursor;
+
+      saved_cursor = ent->netgrdata.cursor;
       status = __internal_getnetgrent_r (&host, &user, &domain,
 					 &ent->netgrdata, buffer, buflen);
       if (status != 1)
@@ -419,13 +432,13 @@ getpwent_next_nisplus_netgr (struct passwd *result, ent_t *ent, char *group,
 	  give_pwd_free (&ent->pwd);
 	  return NSS_STATUS_RETURN;
 	}
-
+      
       if (user == NULL || user[0] == '-')
 	continue;
-
+      
       if (domain != NULL && strcmp (ypdomain, domain) != 0)
 	continue;
-
+      
       p2len = pwd_need_buflen (&ent->pwd);
       if (p2len > buflen)
 	{
@@ -444,7 +457,13 @@ getpwent_next_nisplus_netgr (struct passwd *result, ent_t *ent, char *group,
 	  nis_freeresult (nisres);
 	  continue;
 	}
-      parse_res = _nss_nisplus_parse_pwent (nisres, result, buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_pwent (nisres, result, buffer, 
+						 buflen)) == -1)
+	{
+	  nis_freeresult (nisres);
+	  ent->netgrdata.cursor = saved_cursor;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       nis_freeresult (nisres);
 
       if (parse_res)
@@ -485,8 +504,14 @@ getpwent_next_nisplus (struct passwd *result, ent_t *ent, char *buffer,
   buflen -= p2len;
   do
     {
+      bool_t saved_first;
+      nis_result *saved_res;
+
       if (ent->first)
 	{
+	  saved_first = TRUE;
+	  saved_res = ent->result;
+
 	  ent->result = nis_first_entry(pwdtable);
           if (niserr2nss (ent->result->status) != NSS_STATUS_SUCCESS)
 	    {
@@ -501,17 +526,32 @@ getpwent_next_nisplus (struct passwd *result, ent_t *ent, char *buffer,
 	  nis_result *res;
 
 	  res = nis_next_entry(pwdtable, &ent->result->cookie);
-	  nis_freeresult (ent->result);
+	  saved_res = ent->result;
+	  saved_first = FALSE;
 	  ent->result = res;
 	  if (niserr2nss (ent->result->status) != NSS_STATUS_SUCCESS)
 	    {
 	      ent->nis = 0;
+	      nis_freeresult (saved_res);
 	      give_pwd_free (&ent->pwd);
 	      return niserr2nss (ent->result->status);
 	    }
 	}
-      parse_res = _nss_nisplus_parse_pwent (ent->result, result, buffer,
-					    buflen);
+      if ((parse_res = _nss_nisplus_parse_pwent (ent->result, result, buffer,
+						 buflen)) == -1)
+	{
+	  nis_freeresult (ent->result);
+	  ent->result = saved_res;
+	  ent->first = saved_first;
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  if (!saved_first)
+	    nis_freeresult (saved_res);
+	}
+      
       if (parse_res &&
 	  in_blacklist (result->pw_name, strlen (result->pw_name), ent))
 	parse_res = 0; /* if result->pw_name in blacklist,search next entry */
@@ -549,6 +589,10 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
   buflen -= p2len;
   do
     {
+      bool_t saved_first;
+      char *saved_oldkey;
+      int saved_oldlen;
+      
       if (ent->first)
 	{
 	  if (yp_first (domain, "passwd.byname", &outkey, &outkeylen,
@@ -558,7 +602,10 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	      give_pwd_free (&ent->pwd);
 	      return NSS_STATUS_UNAVAIL;
 	    }
-
+	  
+	  saved_first = TRUE;
+	  saved_oldkey = ent->oldkey;
+	  saved_oldlen = ent->oldkeylen;
 	  ent->oldkey = outkey;
 	  ent->oldkeylen = outkeylen;
 	  ent->first = FALSE;
@@ -574,7 +621,9 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
-	  free (ent->oldkey);
+	  saved_first = FALSE;
+	  saved_oldkey = ent->oldkey;
+	  saved_oldlen = ent->oldkeylen;
 	  ent->oldkey = outkey;
 	  ent->oldkeylen = outkeylen;
 	}
@@ -587,7 +636,20 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 
       while (isspace (*p))
 	++p;
-      parse_res = _nss_files_parse_pwent (p, result, data, buflen);
+      if ((parse_res = _nss_files_parse_pwent (p, result, data, buflen)) == -1)
+	{
+	  free (ent->oldkey);
+	  ent->oldkey = saved_oldkey;
+	  ent->oldkeylen = saved_oldlen;
+	  ent->first = saved_first;
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  if (!saved_first)
+	    free (saved_oldkey);
+	}
       if (parse_res &&
 	  in_blacklist (result->pw_name, strlen (result->pw_name), ent))
 	parse_res = 0;
@@ -637,7 +699,13 @@ getpwent_next_file_plususer (struct passwd *result, char *buffer,
 	  nis_freeresult (res);
 	  return status;
 	}
-      parse_res = _nss_nisplus_parse_pwent (res, result, buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_pwent (res, result, buffer, 
+						 buflen)) == -1)
+	{
+	  nis_freeresult (res);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
       nis_freeresult (res);
     }
   else /* Use NIS */
@@ -645,10 +713,10 @@ getpwent_next_file_plususer (struct passwd *result, char *buffer,
       char *domain;
       char *outval;
       int outvallen;
-
+      
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
 	return NSS_STATUS_TRYAGAIN;
-
+      
       if (yp_match (domain, "passwd.byname", &result->pw_name[1],
 		    strlen (result->pw_name) - 1, &outval, &outvallen)
 	  != YPERR_SUCCESS)
@@ -658,10 +726,14 @@ getpwent_next_file_plususer (struct passwd *result, char *buffer,
       free (outval);
       while (isspace (*p))
 	p++;
-      parse_res = _nss_files_parse_pwent (p, result, data, buflen);
+      if ((parse_res = _nss_files_parse_pwent (p, result, data, buflen)) == -1)
+	{
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
     }
 
-  if (parse_res)
+  if (parse_res > 0)
     {
       copy_pwd_changes (result, &pwd, p, plen);
       give_pwd_free (&pwd);
@@ -684,10 +756,13 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
   struct parser_data *data = (void *) buffer;
   while (1)
     {
+      fpos_t pos;
       char *p;
+      int parse_res;
 
       do
 	{
+	  fgetpos (ent->stream, &pos);
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL)
 	    return NSS_STATUS_NOTFOUND;
@@ -702,7 +777,15 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
       while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines.  */
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
-	     !_nss_files_parse_pwent (p, result, data, buflen));
+	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen)));
+
+      if (parse_res == -1)
+	{
+	  /* The parser ran out of space.  */
+	  fsetpos (ent->stream, &pos);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       if (result->pw_name[0] != '+' && result->pw_name[0] != '-')
 	/* This is a real entry.  */

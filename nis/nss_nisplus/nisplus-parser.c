@@ -55,7 +55,7 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
       /* The line is too long for our buffer.  */
     no_more_room:
       __set_errno (ERANGE);
-      return 0;
+      return -1;
     }
 
   strncpy (first_unused, NISENTRYVAL(0, 0, result),
@@ -152,7 +152,7 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry,
       /* The line is too long for our buffer.  */
     no_more_room:
       __set_errno (ERANGE);
-      return 0;
+      return -1;
     }
 
   strncpy (first_unused, NISENTRYVAL (entry, 0, result),
@@ -258,7 +258,7 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
       /* The line is too long for our buffer.  */
     no_more_room:
       __set_errno (ERANGE);
-      return 0;
+      return -1;
     }
 
   strncpy (first_unused, NISENTRYVAL (0, 0, result),

@@ -313,7 +313,7 @@ S-CPPFLAGS = $(asm-CPPFLAGS)
 define +make-deps
 $(make-target-directory)
 -@rm -f $@
-$(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
+$(+mkdep) $< $(CFLAGS) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
 sed \
 -e 's,$(subst .,\.,$*)\.o,$(foreach o,$(all-object-suffixes),$(@:.d=$o)) $@,' \
 $(sed-remove-objpfx) > $(@:.d=.T)

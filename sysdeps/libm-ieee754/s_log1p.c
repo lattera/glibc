@@ -120,7 +120,7 @@ static double zero = 0.0;
 	k = 1;
 	if (hx < 0x3FDA827A) {			/* x < 0.41422  */
 	    if(ax>=0x3ff00000) {		/* x <= -1.0 */
-		if(x==-1.0) return -two54/zero; /* log1p(-1)=+inf */
+		if(x==-1.0) return -two54/(x-x);/* log1p(-1)=+inf */
 		else return (x-x)/(x-x);	/* log1p(x<-1)=NaN */
 	    }
 	    if(ax<0x3e200000) {			/* |x| < 2**-29 */

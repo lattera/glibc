@@ -74,7 +74,7 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
   if (NISENTRYLEN (0, 0, result) +1 > room_left)
     {
       __set_errno (ERANGE);
-      return 0;
+      return -1;
     }
   strncpy (p, NISENTRYVAL (0, 0, result), NISENTRYLEN (0, 0, result));
   room_left -= (NISENTRYLEN (0, 0, result) +1);
@@ -152,8 +152,11 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
   /* Get the next entry until we found a correct one. */
   do
     {
+      nis_result *saved_result;
+      
       if (result == NULL)
 	{
+	  saved_result = NULL;
 	  result = nis_first_entry(tablename_val);
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    return niserr2nss (result->status);
@@ -163,13 +166,28 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
 	  nis_result *res2;
 
 	  res2 = nis_next_entry(tablename_val, &result->cookie);
-	  nis_freeresult (result);
+	  saved_result = result;
 	  result = res2;
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	    return niserr2nss (result->status);
+	    {
+	      nis_freeresult (saved_result);
+	      return niserr2nss (result->status);
+	    }
 	}
 
-      parse_res = _nss_nisplus_parse_etherent (result, ether, buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_etherent (result, ether, buffer, 
+						    buflen)) == -1)
+	{
+	  nis_freeresult (result);
+	  result = saved_result;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  if (saved_result != NULL)
+	    nis_freeresult (saved_result);
+	}
+      
     } while (!parse_res);
 
   return NSS_STATUS_SUCCESS;
@@ -200,9 +218,7 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
     if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
       return NSS_STATUS_UNAVAIL;
 
-  if (name == NULL)
-    return NSS_STATUS_NOTFOUND;
-  else
+  if (name != NULL)
     {
       nis_result *result;
       char buf[strlen (name) + 40 + tablename_len];
@@ -212,18 +228,23 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
       result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-        return niserr2nss (result->status);
-
-      parse_res = _nss_nisplus_parse_etherent (result, eth, buffer, buflen);
-
+	{
+	  enum nss_status status = niserr2nss (result->status);
+	  nis_freeresult (result);
+	  return status;
+	}
+      
+      if ((parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
+						    buflen)) == -1)
+	{
+	  nis_freeresult (result);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+	  
       if (parse_res)
         return NSS_STATUS_SUCCESS;
-
-      if (!parse_res && errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
     }
+  return NSS_STATUS_NOTFOUND;
 }
 
 enum nss_status
@@ -255,16 +276,22 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr,
       result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	return niserr2nss (result->status);
+	{
+	  enum nss_status status = niserr2nss (result->status);
+	  nis_freeresult (result);
+	  return status;
+	}
 
-      parse_res = _nss_nisplus_parse_etherent (result, eth, buffer, buflen);
-
+      if ((parse_res = _nss_nisplus_parse_etherent (result, eth, buffer, 
+						    buflen)) == -1)
+	{
+	  nis_freeresult (result);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
-
-      if (!parse_res && errno == ERANGE)
-	return NSS_STATUS_TRYAGAIN;
-      else
-	return NSS_STATUS_NOTFOUND;
     }
+  return NSS_STATUS_NOTFOUND;
 }
+

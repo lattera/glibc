@@ -218,6 +218,10 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 
   do
     {
+      char *save_oldkey;
+      int save_oldlen;
+      bool_t save_nis_first;
+
       if (ent->nis_first)
 	{
 	  if (yp_first (domain, "group.byname", &outkey, &outkeylen,
@@ -226,7 +230,9 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	      ent->nis = 0;
 	      return NSS_STATUS_UNAVAIL;
 	    }
-
+	  save_oldkey = ent->oldkey;
+	  save_oldlen = ent->oldkeylen;
+	  save_nis_first = TRUE;
 	  ent->oldkey = outkey;
 	  ent->oldkeylen = outkeylen;
 	  ent->nis_first = FALSE;
@@ -241,7 +247,9 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
-	  free (ent->oldkey);
+	  save_oldkey = ent->oldkey;
+	  save_oldlen = ent->oldkeylen;
+	  save_nis_first = FALSE;
 	  ent->oldkey = outkey;
 	  ent->oldkeylen = outkeylen;
 	}
@@ -255,8 +263,21 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
       while (isspace (*p))
 	++p;
 
-      parse_res = _nss_files_parse_grent (p, result, data, buflen);
-
+      if ((parse_res = _nss_files_parse_grent (p, result, data, buflen)) == -1)
+	{
+	  free (ent->oldkey);
+	  ent->oldkey = save_oldkey;
+	  ent->oldkeylen = save_oldlen;
+	  ent->nis_first = save_nis_first;
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  if (!save_nis_first)
+	    free (save_oldkey);
+	}
+      
       if (parse_res &&
 	  in_blacklist (result->gr_name, strlen (result->gr_name), ent))
 	parse_res = 0; /* if result->gr_name in blacklist,search next entry */
@@ -274,8 +295,13 @@ getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
 
   do
     {
+      nis_result *save_oldres;
+      bool_t save_nis_first;
+      
       if (ent->nis_first)
         {
+	  save_oldres = ent->result;
+	  save_nis_first = TRUE;
           ent->result = nis_first_entry(grptable);
           if (niserr2nss (ent->result->status) != NSS_STATUS_SUCCESS)
             {
@@ -288,8 +314,9 @@ getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
         {
           nis_result *res;
 
+	  save_oldres = ent->result;
+	  save_nis_first = FALSE;
           res = nis_next_entry(grptable, &ent->result->cookie);
-          nis_freeresult (ent->result);
           ent->result = res;
           if (niserr2nss (ent->result->status) != NSS_STATUS_SUCCESS)
             {
@@ -297,8 +324,21 @@ getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
 	      return niserr2nss (ent->result->status);
             }
         }
-      parse_res = _nss_nisplus_parse_grent (ent->result, 0, result, buffer,
-                                            buflen);
+      if ((parse_res = _nss_nisplus_parse_grent (ent->result, 0, result, 
+						 buffer, buflen)) == -1)
+	{
+	  nis_freeresult (ent->result);
+	  ent->result = save_oldres;
+	  ent->nis_first = save_nis_first;
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  if (!save_nis_first)
+	    nis_freeresult (save_oldres);
+	}
+
       if (parse_res &&
           in_blacklist (result->gr_name, strlen (result->gr_name), ent))
         parse_res = 0; /* if result->gr_name in blacklist,search next entry */
@@ -330,7 +370,13 @@ getgrent_next_file_plusgroup (struct group *result, char *buffer,
           nis_freeresult (res);
           return status;
         }
-      parse_res = _nss_nisplus_parse_grent (res, 0, result, buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_grent (res, 0, result, buffer, 
+						 buflen)) == -1)
+	{
+	  __set_errno (ERANGE);
+	  nis_freeresult (res);
+	  return NSS_STATUS_TRYAGAIN;
+	}
       nis_freeresult (res);
     }
   else /* Use NIS */
@@ -350,7 +396,11 @@ getgrent_next_file_plusgroup (struct group *result, char *buffer,
       free (outval);
       while (isspace (*p))
         p++;
-      parse_res = _nss_files_parse_grent (p, result, data, buflen);
+      if ((parse_res = _nss_files_parse_grent (p, result, data, buflen)) == -1)
+	{
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
     }
 
   if (parse_res)
@@ -368,13 +418,24 @@ getgrent_next_file (struct group *result, ent_t *ent,
   struct parser_data *data = (void *) buffer;
   while (1)
     {
+      fpos_t pos;
+      int parse_res = 0;
       char *p;
 
       do
 	{
+	  fgetpos (ent->stream, &pos);
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL)
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      if (feof (ent->stream))
+		return NSS_STATUS_NOTFOUND;
+	      else
+		{
+		  __set_errno (ERANGE);
+		  return NSS_STATUS_TRYAGAIN;
+		}
+	    }
 
 	  /* Terminate the line for any case.  */
 	  buffer[buflen - 1] = '\0';
@@ -383,11 +444,18 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	  while (isspace (*p))
 	    ++p;
 	}
-      /* Ignore empty and comment lines.  */
-      while (*p == '\0' || *p == '#' ||
+      while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines. */
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
-	     !_nss_files_parse_grent (p, result, data, buflen));
+	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen)));
+
+      if (parse_res == -1)
+	{
+	  /* The parser ran out of space.  */
+	  fsetpos (ent->stream, &pos);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       if (result->gr_name[0] != '+' && result->gr_name[0] != '-')
 	/* This is a real entry.  */

@@ -1514,7 +1514,11 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const CHAR_T *grouping,
 	  if (*grouping == '\0')
 	    /* The previous grouping repeats ad infinitum.  */
 	    --grouping;
-	  else if (*grouping == CHAR_MAX || *grouping < 0)
+	  else if (*grouping == CHAR_MAX
+#if CHAR_MIN < 0
+		   || *grouping < 0
+#endif
+		   )
 	    {
 	      /* No further grouping to be done.
 		 Copy the rest of the number.  */

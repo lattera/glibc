@@ -121,10 +121,12 @@ internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen)
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_spent (p, sp, data, buflen);
-      if (!parse_res && errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-
+      if ((parse_res = _nss_files_parse_spent (p, sp, data, buflen)) == -1)
+	{
+	  free (outkey);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      
       free (oldkey);
       oldkey = outkey;
       oldkeylen = keylen;
@@ -190,15 +192,11 @@ _nss_nis_getspnam_r (const char *name, struct spwd *sp,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_spent (p, sp, data, buflen);
+  if ((parse_res = _nss_files_parse_spent (p, sp, data, buflen)) == -1)
+    return NSS_STATUS_TRYAGAIN;
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
+  if (parse_res)
     return NSS_STATUS_SUCCESS;
+  else
+    return NSS_STATUS_NOTFOUND;
 }

@@ -1,2 +1,0 @@
-/* This is a dummy to avoid including the generic version.  htonl and
-ntohl are identical and htonl.S defines appropriate aliases.  */

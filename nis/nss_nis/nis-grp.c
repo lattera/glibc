@@ -121,9 +121,11 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_grent (p, grp, data, buflen);
-      if (parse_res < 1 && errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
+      if ((parse_res = _nss_files_parse_grent (p, grp, data, buflen)) == -1)
+	{
+	  free (outkey);
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       free (oldkey);
       oldkey = outkey;
@@ -190,17 +192,13 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_grent (p, grp, data, buflen);
+  if ((parse_res = _nss_files_parse_grent (p, grp, data, buflen)) == -1)
+    return NSS_STATUS_TRYAGAIN;
 
-  if (parse_res < 1)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
+  if (parse_res)
     return NSS_STATUS_SUCCESS;
+  else
+    return NSS_STATUS_NOTFOUND;
 }
 
 enum nss_status
@@ -241,15 +239,11 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_grent (p, grp, data, buflen);
+  if ((parse_res = _nss_files_parse_grent (p, grp, data, buflen)) == -1)
+    return NSS_STATUS_TRYAGAIN;
 
-  if (parse_res < 1)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
+  if (parse_res)
     return NSS_STATUS_SUCCESS;
+  else
+    return NSS_STATUS_NOTFOUND;
 }

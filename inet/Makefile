@@ -27,7 +27,7 @@ headers	:= netinet/ether.h netinet/in.h netinet/if_ether.h \
 
 distribute := netgroup.h
 
-routines := ntohl ntohs htonl htons		\
+routines := htonl htons		\
 	    inet_lnaof inet_mkadr	\
 	    inet_netof inet_ntoa inet_net herrno \
 	    gethstbyad gethstbyad_r gethstbynm gethstbynm2 gethstbynm2_r \

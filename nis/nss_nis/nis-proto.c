@@ -152,17 +152,17 @@ internal_nis_getprotoent_r (struct protoent *proto,
       if (next == NULL)
         return NSS_STATUS_NOTFOUND;
       p = strcpy (buffer, next->val);
-      next = next->next;
 
       while (isspace (*p))
         ++p;
 
-      parse_res = _nss_files_parse_protoent (p, proto, data, buflen);
-      if (!parse_res && errno == ERANGE)
+      if ((parse_res = _nss_files_parse_protoent (p, proto, data, 
+						  buflen)) == -1)
         return NSS_STATUS_TRYAGAIN;
+      next = next->next;
     }
   while (!parse_res);
-
+  
   return NSS_STATUS_SUCCESS;
 }
 
@@ -221,17 +221,13 @@ _nss_nis_getprotobyname_r (const char *name, struct protoent *proto,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_protoent (p, proto, data, buflen);
+  if ((parse_res = _nss_files_parse_protoent (p, proto, data, buflen)) == -1)
+    return NSS_STATUS_TRYAGAIN;
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
+  if (parse_res)
     return NSS_STATUS_SUCCESS;
+  else
+    return NSS_STATUS_NOTFOUND;
 }
 
 enum nss_status
@@ -272,15 +268,11 @@ _nss_nis_getprotobynumber_r (int number, struct protoent *proto,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_protoent (p, proto, data, buflen);
+  if ((parse_res = _nss_files_parse_protoent (p, proto, data, buflen)) == -1)
+    return NSS_STATUS_TRYAGAIN;
 
-  if (!parse_res)
-    {
-      if (errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
-      else
-        return NSS_STATUS_NOTFOUND;
-    }
-  else
+  if (parse_res)
     return NSS_STATUS_SUCCESS;
+  else
+    return NSS_STATUS_NOTFOUND;
 }

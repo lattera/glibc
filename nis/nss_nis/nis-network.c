@@ -126,9 +126,9 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_netent (p, net, data, buflen);
-      if (!parse_res && errno == ERANGE)
+      if ((parse_res = _nss_files_parse_netent (p, net, data, buflen)) == -1)
 	{
+	  free (outkey);
 	  *herrnop = NETDB_INTERNAL;
 	  return NSS_STATUS_TRYAGAIN;
 	}
@@ -206,10 +206,10 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net,
 
   parse_res = _nss_files_parse_netent (p, net, data, buflen);
 
-  if (!parse_res)
+  if (parse_res < 1)
     {
       *herrnop = NETDB_INTERNAL;
-      if (errno == ERANGE)
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
         return NSS_STATUS_NOTFOUND;
@@ -286,10 +286,10 @@ _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
 	parse_res = _nss_files_parse_netent (p, net, data, buflen);
 
 
-	if (!parse_res)
+	if (parse_res < 1)
 	  {
 	    *herrnop = NETDB_INTERNAL;
-	    if (errno == ERANGE)
+	    if (parse_res == -1)
 	      return NSS_STATUS_TRYAGAIN;
 	    else
 	      return NSS_STATUS_NOTFOUND;

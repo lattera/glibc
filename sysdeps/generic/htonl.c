@@ -21,7 +21,7 @@
 #undef	htonl
 
 u_int32_t
-htonl (x)
+__htonl (x)
      u_int32_t x;
 {
 #if BYTE_ORDER == LITTLE_ENDIAN
@@ -30,3 +30,6 @@ htonl (x)
 
   return x;
 }
+strong_alias (__htonl, __ntohl)
+weak_alias (__htonl, htonl)
+weak_alias (__ntohl, ntohl)

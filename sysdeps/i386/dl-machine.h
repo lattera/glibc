@@ -276,9 +276,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 
 	      strtab = ((void *) map->l_addr
 			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
-	      _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
-				"' in `",
-				_dl_argv[0] ?: "<program name unknown>",
+	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
+				": Symbol `", strtab + refsym->st_name,
 				"' has different size in shared object, "
 				"consider re-linking\n", NULL);
 	    }

@@ -53,8 +53,8 @@ static float zero   =  0.0;
 	k=0;
 	if (ix < 0x00800000) {			/* x < 2**-126  */
 	    if ((ix&0x7fffffff)==0)
-		return -two25/zero;		/* log(+-0)=-inf */
-	    if (ix<0) return (x-x)/zero;	/* log(-#) = NaN */
+		return -two25/(x-x);		/* log(+-0)=-inf */
+	    if (ix<0) return (x-x)/(x-x);	/* log(-#) = NaN */
 	    k -= 25; x *= two25; /* subnormal number, scale up x */
 	    GET_FLOAT_WORD(ix,x);
 	}

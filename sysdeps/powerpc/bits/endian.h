@@ -1,3 +1,32 @@
-/* PowerPC is big-endian.  */
+/* Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-#define __BYTE_ORDER __BIG_ENDIAN
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+/* PowerPC can be little or big endian.  Hopefully gcc will know...  */
+
+#if defined __BIG_ENDIAN__ || defined _BIG_ENDIAN
+# if defined __LITTLE_ENDIAN__ || defined _LITTLE_ENDIAN
+#  error Please fix sysdeps/powerpc/bits/endian.h (compiling bi-endian?).
+# endif
+# define __BYTE_ORDER __BIG_ENDIAN
+#else
+# if defined __LITTLE_ENDIAN__ || defined _LITTLE_ENDIAN
+#  define __BYTE_ORDER __LITTLE_ENDIAN
+# else
+#  error Please fix sysdeps/powerpc/bits/endian.h.
+# endif
+#endif

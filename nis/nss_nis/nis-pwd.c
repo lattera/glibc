@@ -121,16 +121,18 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen)
         ++p;
       free (result);
 
-      parse_res = _nss_files_parse_pwent (p, pwd, data, buflen);
-      if (!parse_res && errno == ERANGE)
-        return NSS_STATUS_TRYAGAIN;
+      if ((parse_res = _nss_files_parse_pwent (p, pwd, data, buflen)) == -1)
+	{
+	  free (outkey);
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       free (oldkey);
       oldkey = outkey;
       oldkeylen = keylen;
       new_start = 0;
     }
-  while (!parse_res);
+  while (parse_res < 1);
 
   return NSS_STATUS_SUCCESS;
 }
@@ -192,9 +194,9 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 
   parse_res = _nss_files_parse_pwent (p, pwd, data, buflen);
 
-  if (!parse_res)
+  if (parse_res < 1)
     {
-      if (errno == ERANGE)
+      if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
       else
         return NSS_STATUS_NOTFOUND;
@@ -243,9 +245,9 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 
   parse_res = _nss_files_parse_pwent (p, pwd, data, buflen);
 
-  if (!parse_res)
+  if (parse_res < 1)
     {
-      if (errno == ERANGE)
+      if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
       else
         return NSS_STATUS_NOTFOUND;

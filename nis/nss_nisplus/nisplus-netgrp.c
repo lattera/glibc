@@ -80,7 +80,7 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
       NISENTRYLEN (position, 4, data) + 6 > buflen)
     {
       __set_errno (ERANGE);
-      status = NSS_STATUS_UNAVAIL;
+      status = NSS_STATUS_TRYAGAIN;
     }
   else
     {

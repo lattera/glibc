@@ -63,7 +63,7 @@ _nss_nisplus_parse_servent (nis_result *result, struct servent *serv,
     {
     no_more_room:
       __set_errno (ERANGE);
-      return 0;
+      return -1;
     }
   strncpy (first_unused, NISENTRYVAL (0, 0, result),
            NISENTRYLEN (0, 0, result));
@@ -204,8 +204,11 @@ internal_nisplus_getservent_r (struct servent *serv, char *buffer,
   /* Get the next entry until we found a correct one. */
   do
     {
+      nis_result *saved_res;
+      
       if (result == NULL)
 	{
+	  saved_res = NULL;
           if (tablename_val == NULL)
             if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
               return NSS_STATUS_UNAVAIL;
@@ -218,14 +221,28 @@ internal_nisplus_getservent_r (struct servent *serv, char *buffer,
 	{
 	  nis_result *res;
 
+	  saved_res = result;
 	  res = nis_next_entry (tablename_val, &result->cookie);
-	  nis_freeresult (result);
 	  result = res;
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	    return niserr2nss (result->status);
+	    {
+	      nis_freeresult (saved_res);
+	      return niserr2nss (result->status);
+	    }
 	}
 
-      parse_res = _nss_nisplus_parse_servent (result, serv, buffer, buflen);
+      if ((parse_res = _nss_nisplus_parse_servent (result, serv, buffer,
+						   buflen)) == -1)
+	{
+	  nis_freeresult (result);
+	  result = saved_res;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      else
+	{
+	  if (saved_res)
+	    nis_freeresult (saved_res);
+	}
     }
   while (!parse_res);
 
@@ -300,16 +317,15 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 	}
 
       parse_res = _nss_nisplus_parse_servent (result, serv, buffer, buflen);
-
       nis_freeresult (result);
+
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
 
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
 
-      if (!parse_res && errno == ERANGE)
-	return NSS_STATUS_TRYAGAIN;
-      else
-	return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_NOTFOUND;
     }
 }
 
@@ -347,15 +363,14 @@ _nss_nisplus_getservbynumber_r (const int number, const char *protocol,
 	}
 
       parse_res = _nss_nisplus_parse_servent (result, serv, buffer, buflen);
-
       nis_freeresult (result);
+
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
 
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
 
-      if (!parse_res && errno == ERANGE)
-	return NSS_STATUS_TRYAGAIN;
-      else
-	return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_NOTFOUND;
     }
 }

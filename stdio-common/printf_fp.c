@@ -982,7 +982,11 @@ __guess_grouping (unsigned int intdig_max, const char *grouping,
       ++groups;
       intdig_max -= *grouping++;
 
-      if (*grouping == CHAR_MAX || *grouping < 0)
+      if (*grouping == CHAR_MAX
+#if CHAR_MIN < 0
+	  || *grouping < 0
+#endif
+	  )
 	/* No more grouping should be done.  */
 	break;
       else if (*grouping == 0)
@@ -1023,7 +1027,11 @@ group_number (char *buf, char *bufend, unsigned int intdig_no,
       while (--len > 0);
       *p-- = thousands_sep;
 
-      if (*grouping == CHAR_MAX || *grouping < 0)
+      if (*grouping == CHAR_MAX
+#if CHAR_MIN < 0
+	  || *grouping < 0
+#endif
+	  )
 	/* No more grouping should be done.  */
 	break;
       else if (*grouping == 0)

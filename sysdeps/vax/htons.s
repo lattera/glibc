@@ -28,3 +28,6 @@ ENTRY(htons, 0)
 	movb	5(ap),r0
 	movzwl	r0,r0
 	ret
+strong_alias (__htons, __ntohs)
+weak_alias (__htons, htons)
+weak_alias (__ntohs, ntohs)

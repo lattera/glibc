@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1997 Free Software Foundation, Inc.
+/* Change byte order in word.  For Intel 80x86, x >= 3.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +17,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <netinet/in.h>
+#include <sysdep.h>
+#include "asm-syntax.h"
 
-#undef	ntohl
+/*
+   INPUT PARAMETERS:
+   word		(sp + 4)
+*/
 
-u_int32_t
-ntohl (x)
-     u_int32_t x;
-{
-#if BYTE_ORDER == LITTLE_ENDIAN
-  x = (x << 24) | ((x & 0xff00) << 8) | ((x & 0xff0000) >> 8) | (x >> 24);
-#endif
+	.text
+ENTRY (__htons)
+	movl	4(%esp), %eax
+	andl	$0xffff, %eax
+	rorw	$8, %ax
+	ret
+END (__htons)
 
-  return x;
-}
+strong_alias (__htons, __ntohs)
+weak_alias (__htons, htons)
+weak_alias (__ntohs, ntohs)

@@ -169,13 +169,12 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
       if (data->next == NULL)
         return NSS_STATUS_NOTFOUND;
       p = strcpy (buffer, data->next->val);
-      data->next = data->next->next;
       while (isspace (*p))
         ++p;
 
-      parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen);
-      if (!parse_res && errno == ERANGE)
+      if ((parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen)) == -1)
 	return NSS_STATUS_TRYAGAIN;
+      data->next = data->next->next;
     }
   while (!parse_res);
 
@@ -286,9 +285,9 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
 
   parse_res = _nss_files_parse_rpcent (p, rpc, data, buflen);
 
-  if (!parse_res)
+  if (parse_res < 1)
     {
-      if (errno == ERANGE)
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
 	return NSS_STATUS_NOTFOUND;

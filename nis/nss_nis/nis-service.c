@@ -169,13 +169,13 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
       if (data->next == NULL)
 	return NSS_STATUS_NOTFOUND;
       p = strcpy (buffer, data->next->val);
-      data->next = data->next->next;
-      while (isspace (*p))
+           while (isspace (*p))
         ++p;
 
-      parse_res = _nss_files_parse_servent (p, serv, buffer, buflen);
-      if (!parse_res && errno == ERANGE)
+      if ((parse_res = _nss_files_parse_servent (p, serv, buffer, 
+						 buflen)) == -1)
         return NSS_STATUS_TRYAGAIN;
+      data->next = data->next->next;
     }
   while (!parse_res);
 

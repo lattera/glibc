@@ -110,11 +110,13 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  if (sym->st_size > refsym->st_size
 	      || (_dl_verbose && sym->st_size < refsym->st_size))
 	    {
+	      extern char **_dl_argv;
 	      const char *strtab;
 
 	      strtab = ((void *) map->l_addr
 			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
-	      _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
+	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
+				": Symbol `", strtab + refsym->st_name,
 				"' has different size in shared object, "
 				"consider re-linking\n", NULL);
 	    }
