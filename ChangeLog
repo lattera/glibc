@@ -3,6 +3,24 @@
 	* iconvdata/Makefile: Correct rules to generate gap table.
 	* iconvdata/gap.pl: Simplify.
 
+	* iconvdata/TESTS: Name new tests.
+	* iconvdata/testdata/CP1250: New file.
+	* iconvdata/testdata/CP1250..UTF8: New file.
+	* iconvdata/testdata/CP1251: New file.
+	* iconvdata/testdata/CP1251..UTF8: New file.
+	* iconvdata/testdata/CP1252: New file.
+	* iconvdata/testdata/CP1252..UTF8: New file.
+	* iconvdata/testdata/CP1253: New file.
+	* iconvdata/testdata/CP1253..UTF8: New file.
+	* iconvdata/testdata/CP1254: New file.
+	* iconvdata/testdata/CP1254..UTF8: New file.
+	* iconvdata/testdata/CP1255: New file.
+	* iconvdata/testdata/CP1255..UTF8: New file.
+	* iconvdata/testdata/CP1256: New file.
+	* iconvdata/testdata/CP1256..UTF8: New file.
+	* iconvdata/testdata/CP1257: New file.
+	* iconvdata/testdata/CP1257..UTF8: New file.
+
 1998-04-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Add rules for ISO-2022-KR.
