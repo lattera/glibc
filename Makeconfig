@@ -86,8 +86,16 @@ include $(common-objpfx)config.make
 $(common-objpfx)config.make: $(common-objpfx)config.status $(..)config.h.in
 	cd $(<D); $(SHELL) $(<F)
 
+# Find all the sysdeps configure fragments, to make sure we re-run
+# configure when any of them changes.
+sysdep-configures = $(foreach dir,$(config-sysdirs),\
+			      $(patsubst %.in,%,\
+					 $(firstword $(wildcard \
+					    $(dir)/configure \
+					    $(dir)/configure.in)))
+
 # Force the user to configure before making.
-$(common-objpfx)config.status: $(..)configure
+$(common-objpfx)config.status: $(..)configure $(sysdep-configures)
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \

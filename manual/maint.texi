@@ -23,16 +23,21 @@
 @appendixsec How to Install the GNU C Library
 @cindex installing the library
 
-Installation of the GNU C library is relatively simple.
+Installation of the GNU C library is relatively simple, but usually
+requires several GNU tools to be installed already.
+@iftex
+(@pxref{Tools for Installation}, below.)
+@end iftex
 
-You need the latest version of GNU @code{make}.  Modifying the GNU C
-Library to work with other @code{make} programs would be so hard that we
-recommend you port GNU @code{make} instead.  @strong{Really.}@refill
+@menu
+* Tools for Installation::      We recommend using these tools to build.
+* Supported Configurations::    What systems the GNU C library runs on.
+@end menu
 
 To configure the GNU C library for your system, run the shell script
 @file{configure} with @code{sh}.  Use an argument which is the
 conventional GNU name for your system configuration---for example,
-@samp{sparc-sun-sunos4.1}, for a Sun 4 running Sunos 4.1.
+@samp{sparc-sun-sunos4.1}, for a Sun 4 running SunOS 4.1.
 @xref{Installation, Installation, Installing GNU CC, gcc.info, Using and
 Porting GNU CC}, for a full description of standard GNU configuration
 names.  If you omit the configuration name, @file{configure} will try to
@@ -40,50 +45,6 @@ guess one for you by inspecting the system it is running on.  It may or
 may not be able to come up with a guess, and the its guess might be
 wrong.  @file{configure} will tell you the canonical name of the chosen
 configuration before proceeding.
-
-The GNU C Library currently supports configurations that match the
-following patterns:
-
-@smallexample
-alpha-dec-osf1
-i386-@var{anything}-bsd4.3
-i386-@var{anything}-gnu
-i386-@var{anything}-isc2.2
-i386-@var{anything}-isc3.@var{n}
-i386-@var{anything}-sco3.2
-i386-@var{anything}-sco3.2v4
-i386-@var{anything}-sysv
-i386-@var{anything}-sysv4
-i386-force_cpu386-none
-i386-sequent-bsd
-i960-nindy960-none
-m68k-hp-bsd4.3
-m68k-mvme135-none
-m68k-mvme136-none
-m68k-sony-newsos3
-m68k-sony-newsos4
-m68k-sun-sunos4.@var{n}
-mips-dec-ultrix4.@var{n}
-mips-sgi-irix4.@var{n}
-sparc-sun-solaris2.@var{n}
-sparc-sun-sunos4.@var{n}
-@end smallexample
-
-While no other configurations are supported, there are handy aliases for
-these few.  (These aliases work in other GNU software as well.)
-
-@smallexample
-decstation
-hp320-bsd4.3 hp300bsd
-i386-sco
-i386-sco3.2v4
-i386-sequent-dynix
-i386-svr4
-news
-sun3-sunos4.@var{n} sun3
-sun4-solaris2.@var{n} sun4-sunos5.@var{n}
-sun4-sunos4.@var{n} sun4
-@end smallexample
 
 Here are some options that you should specify (if appropriate) when
 you run @code{configure}:
@@ -101,10 +62,16 @@ Use this option if you plan to use the GNU assembler, @code{gas}, when
 building the GNU C Library.  On some systems, the library may not build
 properly if you do @emph{not} use @code{gas}.
 
-@c extra blank line makes it look better
-@item --nfp
+@item --with-gnu-binutils
+This option implies both @w{@samp{--with-gnu-ld}} and @w{@samp{--with-gnu-as}}.
+On systems where GNU tools are the system tools, there is no need to
+specify this option.  These include GNU, GNU/Linux, and free BSD systems.
 
-Use this option if your computer lacks hardware floating point support.
+@c extra blank line makes it look better
+@item --without-fp
+@itemx --nfp
+
+Use this option if your computer lacks hardware floating-point support.
 
 @item --prefix=@var{directory}
 Install machine-independent data files in subdirectories of
@@ -115,6 +82,29 @@ see below.)
 Install the library and other machine-dependent files in subdirectories
 of @file{@var{directory}}.  (You can also set this in
 @file{configparms}; see below.)
+
+@item --enable-shared
+@itemx --disable-shared
+Enable or disable building of an ELF shared library on systems that
+support it.  The default is to build the shared library on systems using
+ELF when the GNU @code{binutils} are available.
+
+@item --enable-profile
+@itemx --disable-profile
+Enable or disable building of the profiled C library, @samp{-lc_p}.  The
+default is to build the profiled library.  You may wish to disable it if
+you don't plan to do profiling, because it doubles the build time of
+compiling just the unprofiled static library.
+
+@item --enable-omitfp
+Enable building a highly-optimized but possibly undebuggable static C
+library.  This causes the normal static and shared (if enabled) C
+libraries to be compiled with maximal optimization, including the
+@samp{-fomit-frame-pointer} switch that makes debugging impossible on
+many machines, and without debugging information (which makes the
+binaries substantially smaller).  An additional static library is
+compiled with no optimization and full debugging information, and
+installed as @samp{-lc_g}.
 @end table
 
 The simplest way to run @code{configure} is to do it in the directory
@@ -140,7 +130,7 @@ the proper results.
 
 This feature lets you keep sources and binaries in different
 directories, and that makes it easy to build the library for several
-different machines from the same set of sources.  Simply create a 
+different machines from the same set of sources.  Simply create a
 build directory for each target machine, and run @code{configure} in
 that directory specifying the target machine's configuration name.
 
@@ -174,57 +164,112 @@ Some of the machine-dependent code for some machines uses extensions in
 the GNU C compiler, so you may need to compile the library with GCC.
 (In fact, all of the existing complete ports require GCC.)
 
-The current release of the C library contains some header files that the
-compiler normally provides: @file{stddef.h}, @file{stdarg.h}, and
-several files with names of the form @file{va-@var{machine}.h}.  The
-versions of these files that came with older releases of GCC do not work
-properly with the GNU C library.  The @file{stddef.h} file in release
-2.2 and later of GCC is correct.  If you have release 2.2 or later of
-GCC, use its version of @file{stddef.h} instead of the C library's.  To
-do this, put the line @w{@samp{override stddef.h =}} in
-@file{configparms}.  The other files are corrected in release 2.3 and
-later of GCC.  @file{configure} will automatically detect whether the
-installed @file{stdarg.h} and @file{va-@var{machine}.h} files are
-compatible with the C library, and use its own if not.
 
-There is a potential problem with the @code{size_t} type and versions of
-GCC prior to release 2.4.  ANSI C requires that @code{size_t} always be
-an unsigned type.  For compatibility with existing systems' header
-files, GCC defines @code{size_t} in @file{stddef.h} to be whatever type
-the system's @file{sys/types.h} defines it to be.  Most Unix systems
-that define @code{size_t} in @file{sys/types.h}, define it to be a
-signed type.  Some code in the library depends on @code{size_t} being an
-unsigned type, and will not work correctly if it is signed.
-
-The GNU C library code which expects @code{size_t} to be unsigned is
-correct.  The definition of @code{size_t} as a signed type is incorrect.
-Versions 2.4 and later of GCC always define @code{size_t} as an unsigned
-type, and GCC's @file{fixincludes} script massages the system's
-@file{sys/types.h} so as not to conflict with this.
-
-In the meantime, we work around this problem by telling GCC explicitly
-to use an unsigned type for @code{size_t} when compiling the GNU C
-library.  @file{configure} will automatically detect what type GCC uses
-for @code{size_t} arrange to override it if necessary.
-
-To build the library, type @code{make lib}.  This will produce a lot of
-output, some of which looks like errors from @code{make} (but isn't).
-Look for error messages from @code{make} containing @samp{***}.  Those
-indicate that something is really wrong.
+To build the library and related programs, type @code{make}.  This will
+produce a lot of output, some of which may look like errors from
+@code{make} (but isn't).  Look for error messages from @code{make}
+containing @samp{***}.  Those indicate that something is really wrong.
 
 To build and run some test programs which exercise some of the library
-facilities, type @code{make tests}.  This will produce several files
+facilities, type @code{make check}.  This will produce several files
 with names like @file{@var{program}.out}.
 
 To format the @cite{GNU C Library Reference Manual} for printing, type
-@w{@code{make dvi}}.  To format the Info version of the manual for on
-line reading with @kbd{C-h i} in Emacs or with the @code{info} program,
-type @w{@code{make info}}.
+@w{@code{make dvi}}.
 
 To install the library and its header files, and the Info files of the
-manual, type @code{make install}, after setting the installation
-directories in @file{configparms}.  This will build things if necessary,
+manual, type @code{make install}.  This will build things if necessary,
 before installing them.@refill
+
+@node Tools for Installation
+@appendixsubsec Recommended Tools to Install the GNU C Library
+@cindex installation tools
+@cindex tools, for installing library
+
+We recommend installing the following GNU tools before attempting to
+build the GNU C library:
+
+@itemize @bullet
+@item
+@code{make} 3.75
+
+You need the latest version of GNU @code{make}.  Modifying the GNU C
+Library to work with other @code{make} programs would be so hard that we
+recommend you port GNU @code{make} instead.  @strong{Really.}
+We recommend version GNU @code{make} version 3.75 or later.
+
+@item
+GCC 2.7.2
+
+On most platforms, the GNU C library can only be compiled with the GNU C
+compiler.  We recommend GCC version 2.7.2 or later; earlier versions may
+have problems.
+
+@item
+@code{binutils} 2.6
+
+Using the GNU @code{binutils} (assembler, linker, and related tools) is
+preferable when possible, and they are required to build an ELF shared C
+library.  We recommend @code{binutils} version 2.6 or later; earlier
+versions are known to have problems.
+@end itemize
+
+@node Supported Configurations
+@appendixsubsec Supported Configurations
+@cindex configurations, all supported
+
+The GNU C Library currently supports configurations that match the
+following patterns:
+
+@smallexample
+alpha-dec-osf1
+i@var{x}86-@var{anything}-bsd4.3
+i@var{x}86-@var{anything}-gnu
+i@var{x}86-@var{anything}-isc2.2
+i@var{x}86-@var{anything}-isc3.@var{n}
+i@var{x}86-@var{anything}-linux
+i@var{x}86-@var{anything}-sco3.2
+i@var{x}86-@var{anything}-sco3.2v4
+i@var{x}86-@var{anything}-sysv
+i@var{x}86-@var{anything}-sysv4
+i@var{x}86-force_cpu386-none
+i@var{x}86-sequent-bsd
+i960-nindy960-none
+m68k-hp-bsd4.3
+m68k-mvme135-none
+m68k-mvme136-none
+m68k-sony-newsos3
+m68k-sony-newsos4
+m68k-sun-sunos4.@var{n}
+mips-dec-ultrix4.@var{n}
+mips-sgi-irix4.@var{n}
+sparc-sun-solaris2.@var{n}
+sparc-sun-sunos4.@var{n}
+@end smallexample
+
+Each case of @samp{i@var{x}86} can be @samp{i386}, @samp{i486}, or
+@samp{i586}.  All of those configurations produce a library that can run
+on any of these processors.  The library will be optimized for the
+specified processor, but will not use instructions not available on all
+of them.
+
+While no other configurations are supported, there are handy aliases for
+these few.  (These aliases work in other GNU software as well.)
+
+@smallexample
+decstation
+hp320-bsd4.3 hp300bsd
+i486-gnu
+i586-linux
+i386-sco
+i386-sco3.2v4
+i386-sequent-dynix
+i386-svr4
+news
+sun3-sunos4.@var{n} sun3
+sun4-solaris2.@var{n} sun4-sunos5.@var{n}
+sun4-sunos4.@var{n} sun4
+@end smallexample
 
 @node Reporting Bugs
 @appendixsec Reporting Bugs
@@ -723,9 +768,8 @@ to your program in order to get it to compile.
 @node Contributors
 @appendixsec Contributors to the GNU C Library
 
-The GNU C library was written almost entirely by Roland McGrath, who now
-maintains it.  Some parts of the library were contributed or worked on
-by other people.
+The GNU C library was written originally by Roland McGrath.  Some parts
+of the library were contributed or worked on by other people.
 
 @itemize @bullet
 @item
@@ -804,16 +848,21 @@ multi-precision integer functions used in those functions are taken from
 GNU MP, which was contributed by @value{tege}.
 
 @item
-The internationalization support in the library (@file{locale.h},
-@file{langinfo.h}, etc.) was written by Ulrich Drepper and Roland
-McGrath.  Ulrich Drepper adapted the support code for message catalogs
+The internationalization support in the library, and the support programs
+@code{locale} and @code{localedef}, were written by Ulrich Drepper.
+Ulrich Drepper adapted the support code for message catalogs
 (@file{libintl.h}, etc.) from the GNU @code{gettext} package, which he
-also wrote.
+also wrote.  He also contributed the entire suite of multi-byte and
+wide-character support functions (@file{wctype.h}, @file{wchar.h}, etc.).
 
 @item
 The port to Linux i386/ELF (@code{i386-@var{anything}-linux}) was
 contributed by Ulrich Drepper, based in large part on work done in
 Hongjiu Lu's Linux version of the GNU C Library.
+
+@item
+The port to Linux/m68k (@code{m68k-@var{anything}-linux}) was
+contributed by Andreas Schwab.
 
 @item
 Stephen R. van den Berg contributed a highly-optimized @code{strstr} function.
@@ -825,11 +874,9 @@ families of functions; reentrant @samp{@dots{}@code{_r}} versions of the
 several highly-optimized string functions for i@var{x}86 processors.
 
 @item
-Most of the math functions are taken from 4.4 BSD; they have been
-modified only slightly to work with the GNU C library.  The
-Internet-related code (most of the @file{inet} subdirectory) and several
-other miscellaneous functions and header files have been included with
-little or no modification.
+The Internet-related code (most of the @file{inet} subdirectory) and
+several other miscellaneous functions and header files have been
+included from 4.4 BSD with little or no modification.
 
 All code incorporated from 4.4 BSD is under the following copyright:
 

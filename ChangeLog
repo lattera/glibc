@@ -1,4 +1,23 @@
+Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makeconfig (sysdep-configures): New variable.
+	(config.status): Depend on $(sysdep-configures).
+
+Fri May 10 20:07:52 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/profil.c: New file.
+
+Fri May 10 19:59:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/Makefile (CFLAGS-setjmp.c): New variable.
+
+Fri May 10 19:55:42 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* shlib-versions: Use libm=6 and libc=6 for m68k-linux.
+
 Sun May 12 11:16:58 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* string/envz.c: Fix uses of unsigned to size_t.
 
 	* Makerules ($(libdir)/libc.so): Make the file an ld script.
 

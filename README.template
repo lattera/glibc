@@ -6,16 +6,17 @@ As of this release, the GNU C library has been ported to the following
 configurations:
 
 		alpha-dec-osf1
-		i386-bsd4.3
-		i386-force_cpu386-none
-		i386-gnu (for Hurd development only)
-		i386-isc2.2
-		i386-isc3
-		i386-sco3.2
-		i386-sco3.2v4
-		i386-sequent-bsd
-		i386-sysv
-		i386-sysv4
+		i[345]86-*-bsd4.3
+		i[345]86-*-gnu
+		i[345]86-*-isc2.2
+		i[345]86-*-isc3
+		i[345]86-*-linux
+		i[345]86-*-sco3.2
+		i[345]86-*-sco3.2v4
+		i[345]86-*-sysv
+		i[345]86-*-sysv4
+		i[345]86-force_cpu386-none
+		i[345]86-sequent-bsd
 		i960-nindy960-none
 		m68k-hp-bsd4.3
 		m68k-mvme135-none
