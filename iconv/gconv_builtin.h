@@ -49,6 +49,8 @@ BUILTIN_TRANSFORMATION ("ISO-10646/UTF-?8/", "ISO-10646/UTF", 13,
 
 BUILTIN_ALIAS ("UCS2//", "ISO-10646/UCS2/")
 BUILTIN_ALIAS ("UCS-2//", "ISO-10646/UCS2/")
+BUILTIN_ALIAS ("UNICODE//", "ISO-10646/UCS2/")
+BUILTIN_ALIAS ("UNICODEBIG//", "ISO-10646/UCS2/")
 
 BUILTIN_TRANSFORMATION (NULL, "ISO-10646/UCS2/", 15, "INTERNAL",
 			1, "=ucs2->INTERNAL",
@@ -59,6 +61,18 @@ BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8, "ISO-10646/UCS2/",
 			1, "=INTERNAL->ucs2",
 			__gconv_transform_internal_ucs2, NULL, NULL,
 			4, 4, 2, 2)
+
+
+BUILTIN_TRANSFORMATION (NULL, "UNICODELITTLE//", 15, "INTERNAL",
+			1, "=ucs2little->INTERNAL",
+			__gconv_transform_ucs2little_internal, NULL, NULL,
+			2, 2, 4, 4)
+
+BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8, "UNICODELITTLE//",
+			1, "=INTERNAL->ucs2little",
+			__gconv_transform_internal_ucs2little, NULL, NULL,
+			4, 4, 2, 2)
+
 
 BUILTIN_TRANSFORMATION ("(.*)", NULL, 0, "\\1", 1, "=dummy",
 			__gconv_transform_dummy, NULL, NULL,
