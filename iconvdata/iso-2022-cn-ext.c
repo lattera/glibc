@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-CN-EXT.
-   Copyright (C) 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -377,7 +377,8 @@ enum
 	  }								      \
       }									      \
 									      \
-    *((uint32_t *) outptr)++ = ch;					      \
+    *((uint32_t *) outptr) = ch;					      \
+    outptr += sizeof (uint32_t);					      \
   }
 #define EXTRA_LOOP_DECLS	, int *setp
 #define INIT_PARAMS		int set = (*setp >> 3) & CURRENT_MASK; \
