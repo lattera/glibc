@@ -4,6 +4,8 @@
 	(generated): Added memusage and memusagestat for make clean.
 
 	* libio/tst_putwc.c (do_test): Delete temporary file.
+	Move inclusion of test-skeleton to front to have prototype for
+	add_temp_file.
 
 	* posix/Makefile (generated): Add wordexp-tst.out.
 

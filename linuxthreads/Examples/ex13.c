@@ -18,12 +18,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define _GNU_SOURCE 1
-
-#include <unistd.h>
-#include <stdio.h>
 #include <errno.h>
 #include <pthread.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 struct thr_ctrl
 {
@@ -47,11 +46,14 @@ void
 pthr_cond_signal_mutex (pthread_cond_t * cond, pthread_mutex_t * mut)
 {
   int err;
-  if (err = pthread_mutex_lock (mut))
+  err = pthread_mutex_lock (mut);
+  if (err)
     printf ("mutex_lock  : %s\n", strerror (err));
-  if (err = pthread_cond_signal (cond))
+  err = pthread_cond_signal (cond);
+  if (err)
     printf ("cond_signal : %s\n", strerror (err));
-  if (err = pthread_mutex_unlock (mut))
+  err = pthread_mutex_unlock (mut);
+  if (err)
     printf ("mutex_unlock: %s\n", strerror (err));
 }
 
@@ -60,7 +62,6 @@ void *
 thread_start (void *ptr)
 {
   struct thr_ctrl *tc = ptr;
-  int err;
   /* Do initialization.  */
   /* ... */
   /* Signal that we are ready.  */
@@ -82,21 +83,23 @@ main (void)
   pthread_mutexattr_init (&mutattr);
   pthread_mutex_init (&threadctrl.mutex, &mutattr);
   pthread_cond_init (&threadctrl.cond, NULL);
-  if (err = pthread_mutex_lock (&threadctrl.mutex))
+  err = pthread_mutex_lock (&threadctrl.mutex);
+  if (err)
     printf ("mutex_lock : %s\n", strerror (err));
   dump_mut (&threadctrl.mutex);
   pthread_create (&thread, NULL, thread_start, &threadctrl);
   /* Wait until it's ready.  */
-  if (err = pthread_cond_wait (&threadctrl.cond, &threadctrl.mutex))
+  err = pthread_cond_wait (&threadctrl.cond, &threadctrl.mutex);
+  if (err)
     printf ("cond_wait  : %s\n", strerror (err));
   /* Now, we should have acquired the mutex again!  */
   dump_mut (&threadctrl.mutex);
   sleep (1);
   dump_mut (&threadctrl.mutex);
-  if (err = pthread_cond_wait (&threadctrl.cond, &threadctrl.mutex))
-    printf ("cond_wait  : %s\n", strerror (err));
+  err = pthread_cond_wait (&threadctrl.cond, &threadctrl.mutex);
   if (err)
     {
+      printf ("cond_wait  : %s\n", strerror (err));
       printf ("ERROR\n");
       abort ();
     };

@@ -26,8 +26,13 @@
 
 static const char outname[] = OBJPFX "tst_putwc.temp";
 
-
+/* Prototype for our test function.  */
+int do_test (void);
 #define TEST_FUNCTION do_test ()
+
+/* This defines the `main' function and some more.  */
+#include <test-skeleton.c>
+
 int
 do_test (void)
 {
@@ -36,6 +41,8 @@ do_test (void)
   size_t n = 0;
   FILE *fp;
   int res = 0;
+
+  add_temp_file (outname);
 
   fp = fopen (outname, "w+");
   if (fp == NULL)
@@ -113,6 +120,3 @@ do_test (void)
 
   return res;
 }
-
-
-#include "../test-skeleton.c"
