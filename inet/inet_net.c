@@ -48,28 +48,35 @@ inet_network(cp)
 	register u_int32_t val, base, n, i;
 	register char c;
 	u_int32_t parts[4], *pp = parts;
+	int digit;
 
 again:
-	val = 0; base = 10;
+	val = 0; base = 10; digit = 0;
 	if (*cp == '0')
-		base = 8, cp++;
+		digit = 1, base = 8, cp++;
 	if (*cp == 'x' || *cp == 'X')
 		base = 16, cp++;
-	while ((c = *cp)) {
+	while ((c = *cp) != 0) {
 		if (isdigit(c)) {
+			if (base == 8 && (c == '8' || c == '9'))
+				return (INADDR_NONE);
 			val = (val * base) + (c - '0');
 			cp++;
+			digit = 1;
 			continue;
 		}
 		if (base == 16 && isxdigit(c)) {
 			val = (val << 4) + (c + 10 - (islower(c) ? 'a' : 'A'));
 			cp++;
+			digit = 1;
 			continue;
 		}
 		break;
 	}
+	if (!digit)
+		return (INADDR_NONE);
 	if (*cp == '.') {
-		if (pp >= parts + 4)
+		if (pp >= parts + 4 || val > 0xff)
 			return (INADDR_NONE);
 		*pp++ = val, cp++;
 		goto again;
