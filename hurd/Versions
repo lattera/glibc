@@ -18,7 +18,7 @@ libc {
     _hurd_init; _hurd_proc_init;
     _hurd_exec;
     _hurd_canonicalize_directory_name_internal;
-    getuids; __getuids;
+    geteuids; seteuids;
 
     # XXX ought to exist on all platforms
     getumask;

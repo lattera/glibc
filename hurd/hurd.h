@@ -155,6 +155,11 @@ extern int setcttyid (mach_port_t);
 extern int __setauth (auth_t), setauth (auth_t);
 
 
+/* Get and set the effective UID set.  */
+extern int geteuids (int __n, uid_t *__uidset);
+extern int seteuids (int __n, const uid_t *__uidset);
+
+
 /* Split FILE into a directory and a name within the directory.  The
    directory lookup uses the current root and working directory.  If
    successful, stores in *NAME a pointer into FILE where the name

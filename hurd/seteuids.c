@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 /* Set the uid set for the current user to UIDS (N of them).  */
 int
-setuids (int n, const uid_t *uids)
+seteuids (int n, const uid_t *uids)
 {
   error_t err;
   auth_t newauth;

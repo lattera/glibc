@@ -46,7 +46,7 @@ routines = hurdstartup hurdinit \
 	   path-lookup \
 	   setauth \
 	   pid2task task2pid \
-	   getuids setuids getumask fchroot \
+	   geteuids seteuids getumask fchroot \
 	   hurdsock hurdauth \
 	   privports \
 	   msgportdemux \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <string.h>
 
 int
-__getuids (int n, uid_t *uidset)
+geteuids (int n, uid_t *uidset)
 {
   error_t err;
   int nuids;
@@ -61,5 +61,3 @@ __getuids (int n, uid_t *uidset)
 
   return nuids;
 }
-
-weak_alias (__getuids, getuids)
