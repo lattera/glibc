@@ -1,3 +1,7 @@
+2004-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/nl.po: Update from translation team.
+
 2004-01-30  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (ILL_BREAK,
