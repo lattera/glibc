@@ -1,3 +1,7 @@
+2005-03-17  Roland McGrath  <roland@redhat.com>
+
+	* nscd/aicache.c (addhstaiX): Tweak type to avoid warning.
+
 2005-03-16  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* elf/elf.h: Define MIPS TLS relocations.

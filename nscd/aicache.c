@@ -310,7 +310,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		      *family++ = th[j].h_addrtype;
 		    }
 
-	      char *cp = family;
+	      void *cp = family;
 	      if (canon != NULL)
 		cp = mempcpy (cp, canon, canonlen);
 
