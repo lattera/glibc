@@ -1,5 +1,8 @@
 1999-04-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/i486/bits/string.h: Replace __uintXX_t types with
+	base types.
+
 	* string/bits/string2.h: Fix bugs I introduced in last change.
 
 	* sysdeps/i386/i486/bits/string.h (memcmp): Don't introduce partial
