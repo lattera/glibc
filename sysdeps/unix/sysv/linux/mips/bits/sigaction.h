@@ -45,16 +45,17 @@ struct sigaction
 /* Bits in `sa_flags'.  */
 #define	SA_NOCLDSTOP  1		 /* Don't send SIGCHLD when children stop.  */
 #ifdef __USE_MISC
-# define SA_STACK     0x08000000 /* Use signal stack by using `sa_restorer'. */
-# define SA_RESTART   0x10000000 /* Restart syscall on signal return.  */
-# define SA_INTERRUPT 0x20000000 /* Historical no-op.  */
-# define SA_NODEFER   0x40000000 /* Don't automatically block the signal when
+# define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
+# define SA_RESTART   0x00000004 /* Restart syscall on signal return.  */
+# define SA_INTERRUPT 0x00000000 /* Historical no-op.  */
+# define SA_NODEFER   0x00000010 /* Don't automatically block the signal when
 				    its handler is being executed.  */
-# define SA_RESETHAND 0x80000000 /* Reset to SIG_DFL on entry to handler.  */
+# define SA_RESETHAND 0x00000002 /* Reset to SIG_DFL on entry to handler.  */
 
 /* Some aliases for the SA_ constants.  */
 # define SA_NOMASK    SA_NODEFER
 # define SA_ONESHOT   SA_RESETHAND
+# define SA_STACK     SA_ONSTACK
 #endif
 
 /* Values for the HOW argument to `sigprocmask'.  */
