@@ -1,8 +1,5 @@
 # Powerpc32 specific build options.
 
-+cflags += -Wa,-mppc -mpowerpc
-asm-CPPFLAGS += -Wa,-mppc
-
 ifeq ($(with-fp),no)
 +cflags += -msoft-float
 sysdep-LDFLAGS += -msoft-float
