@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,7 @@ _dl_addr (const void *address, Dl_info *info)
   struct link_map *l, *match;
   const ElfW(Sym) *symtab, *matchsym;
   const char *strtab;
+  ElfW(Word) strtabsize;
 
   /* Find the highest-addressed object that ADDRESS is not below.  */
   match = NULL;
@@ -70,15 +71,17 @@ _dl_addr (const void *address, Dl_info *info)
 
   symtab = (const void *) D_PTR (match, l_info[DT_SYMTAB]);
   strtab = (const void *) D_PTR (match, l_info[DT_STRTAB]);
+  strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
 
   /* We assume that the string table follows the symbol table, because
      there is no way in ELF to know the size of the dynamic symbol table!!  */
   for (matchsym = NULL; (void *) symtab < (void *) strtab; ++symtab)
     if (addr >= match->l_addr + symtab->st_value
-	&& (!matchsym
-	    || (matchsym->st_value < symtab->st_value
-		&& (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
-		    || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK))))
+	&& addr < match->l_addr + symtab->st_value + symtab->st_size
+	&& symtab->st_name < strtabsize
+	&& (matchsym == NULL || matchsym->st_value < symtab->st_value)
+	&& (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
+	    || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK))
       matchsym = symtab;
 
   if (matchsym)

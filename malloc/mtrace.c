@@ -97,7 +97,7 @@ tr_where (caller)
       if (_dl_addr (caller, &info))
 	{
 	  char *buf = (char *) "";
-	  if (info.dli_sname && info.dli_sname[0])
+	  if (info.dli_sname != NULL)
 	    {
 	      size_t len = strlen (info.dli_sname);
 	      buf = alloca (len + 6 + 2 * sizeof (void *));

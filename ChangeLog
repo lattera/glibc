@@ -1,3 +1,10 @@
+2001-08-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): Fix tests to determine dli_sname.
+	* malloc/mtrace.c (tr_where): dli_sname always points to a
+	non-empty string is != NULL.
+	Reported by Tim Janik <timj@gtk.org>.
+
 2001-08-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/xdr_rec.c (xdrrec_create): Fix buf sizes before allocating
