@@ -1,5 +1,7 @@
 1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/clone.S: Micro-optimization.
+
 	* sysdeps/unix/sysv/linux/i386/vfork.S: Add back the first
 	implementation now that the syscall is back in 2.2.0.
 

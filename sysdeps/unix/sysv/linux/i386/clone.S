@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -32,11 +32,9 @@ ENTRY(__clone)
 	/* Sanity check arguments.  */
 	movl	$-EINVAL,%eax
 	movl	4(%esp),%ecx		/* no NULL function pointers */
-	testl	%ecx,%ecx
-	jz	SYSCALL_ERROR_LABEL
+	jecxz	SYSCALL_ERROR_LABEL
 	movl	8(%esp),%ecx		/* no NULL stack pointers */
-	testl	%ecx,%ecx
-	jz	SYSCALL_ERROR_LABEL
+	jecxz	SYSCALL_ERROR_LABEL
 
 	/* Insert the argument onto the new stack.  */
 	subl	$8,%ecx
