@@ -380,7 +380,9 @@ FCT (pattern, string, no_leading_period, flags)
 			    /* We found a table entry.  Now see whether the
 			       character we are currently at has the same
 			       equivalance class value.  */
+# if !WIDE_CHAR_VERSION
 			    int len = weights[idx];
+# endif
 			    int32_t idx2;
 			    const UCHAR *np = (const UCHAR *) n;
 
