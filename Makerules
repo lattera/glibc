@@ -552,8 +552,8 @@ ifeq (yes,$(build-shared))
 install-lib-nosubdir: $(install-lib.so:%=$(libdir)/%)
 
 # Find which .so's have versions.
-versioned := $(foreach so,$(install-lib.so),\
-		       $(patsubst %,$(so),$($(so)-version)))
+versioned := $(strip $(foreach so,$(install-lib.so),\
+			       $(patsubst %,$(so),$($(so)-version))))
 
 # Install all the unversioned shared libraries.
 $(addprefix $(libdir)/,$(filter-out $(versioned),$(install-lib.so))): \

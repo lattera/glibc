@@ -1,5 +1,16 @@
 Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules (versioned): Strip whitespace.
+
+	* Rules (static-only-routines rule): Remove spurious space in dep.
+
+	* misc/getusershell.c: Undo changes of 7 May 96 (rev 1.6).
+	Cast string constants to char *.
+
+	* posix/glob/SMakefile, posix/glob/SCOPTIONS, posix/glob/Makefile.ami:
+	New files, AmigaDOS support from Aaron Digulla.
+	* posix/Makefile (glob.tar): Add AmigaDOS support files.
+
 	* sysdeps/unix/sysv/linux/net/if.h: New file.
 	* sysdeps/unix/sysv/linux/Dist: Add it.
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=socket] (headers): Add
