@@ -37,7 +37,7 @@ mask:
 #else
 #define MO(op) op
 #endif
-	
+
 ENTRY(__copysignf)
 	movlps	MO(mask),%xmm3
 	andps	%xmm3,%xmm0
