@@ -1,3 +1,9 @@
+2001-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/fi_FI: Remove FIXME comments.
+	* locales/sv_FI: Likewise.
+	Patch by Marko Myllynen <myllynen@lut.fi>.
+
 2001-01-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/cs_CZ (yesexpr, noexpr): Add caret prefix.

@@ -35,7 +35,6 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
   __gconv_t result = NULL;
   size_t cnt = 0;
   int res;
-  int conv_flags = 0;
   const char *errhand;
   const char *ignore;
   struct trans_struct *trans = NULL;
@@ -247,7 +246,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 		 output buffer.  */
 	      if (cnt < nsteps - 1)
 		{
-		  result->__data[cnt].__flags = conv_flags;
+		  result->__data[cnt].__flags = flags;
 
 		  /* Allocate the buffer.  */
 		  size = (GCONV_NCHAR_GOAL * steps[cnt].__max_needed_to);
@@ -265,7 +264,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	      else
 		{
 		  /* Handle the last entry.  */
-		  result->__data[cnt].__flags = conv_flags | __GCONV_IS_LAST;
+		  result->__data[cnt].__flags = flags | __GCONV_IS_LAST;
 
 		  break;
 		}

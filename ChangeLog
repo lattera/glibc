@@ -1,3 +1,9 @@
+2001-01-30  Yong Li  <yong.li@asu.edu>
+
+	* iconv/gconv_open.c (__gconv_open): Fix the variable used to
+	set result->__data[cnt].__flags.
+	* iconv/iconv_prog.c (main): Correct error handling method name.
+
 2001-01-29  Ben Collins  <bcollins@debian.org>
 
 	* sysdeps/sparc/fpu/fraiseexcpt.c: Include <float.h>.
