@@ -37,7 +37,7 @@ Version 2.2
   now `_res' is a thread-local instead of a global variable, modifying it
   in one thread does not have any effect in other threads.
 
-  The reoslver library was also extended to allow IPv6 as the transport
+  The resolver library was also extended to allow IPv6 as the transport
   protocol for the requests.  This work was done by Stig Venaas.
 
 * Compatibility code for K&R C compilers has been removed from the
