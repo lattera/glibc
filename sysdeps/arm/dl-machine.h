@@ -478,17 +478,25 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	case R_ARM_PC24:
 	  {
 	     Elf32_Sword addend;
-	     Elf32_Addr newvalue;
+	     Elf32_Addr newvalue, topbits;
 
 	     addend = *reloc_addr & 0x00ffffff;
 	     if (addend & 0x00800000) addend |= 0xff000000;
 
 	     newvalue = value - (Elf32_Addr)reloc_addr + (addend << 2);
-	     if (newvalue & 0xfc000003)
-	       newvalue = fix_bad_pc24(reloc_addr, value)
-		 - (Elf32_Addr)reloc_addr + (addend << 2);
-
-	     newvalue = newvalue >> 2;
+	     topbits = newvalue & 0xfe000000;
+	     if (topbits != 0xfe000000 && topbits != 0x00000000)
+	       {
+		 newvalue = fix_bad_pc24(reloc_addr, value)
+		   - (Elf32_Addr)reloc_addr + (addend << 2);
+		 topbits = newvalue & 0xfe000000;
+		 if (topbits != 0xfe000000 && topbits != 0x00000000)
+		   {
+		     _dl_signal_error (0, map->l_name,
+				       "R_ARM_PC24 relocation out of range");
+		   }
+	       }
+	     newvalue >>= 2;
 	     value = (*reloc_addr & 0xff000000) | (newvalue & 0x00ffffff);
 	     *reloc_addr = value;
 	  }
