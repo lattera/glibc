@@ -224,6 +224,8 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   memcpy (GL(dl_rtld_map).l_info, info->l.l_info,
 	  sizeof GL(dl_rtld_map).l_info);
   GL(dl_rtld_map).l_mach = info->l.l_mach;
+  GL(dl_rtld_map).l_relro_addr = info->l.l_relro_addr;
+  GL(dl_rtld_map).l_relro_size = info->l.l_relro_size;
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_opencount = 1;
@@ -793,11 +795,6 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  {
 	    GL(dl_stack_flags) = ph->p_flags;
 	    break;
-	  }
-	else if (ph->p_type == PT_GNU_RELRO)
-	  {
-	    GL(dl_loaded)->l_relro_addr = ph->p_vaddr;
-	    GL(dl_loaded)->l_relro_size = ph->p_memsz;
 	  }
 
       if (__builtin_expect (mode, normal) == verify)
@@ -1676,7 +1673,11 @@ cannot allocate TLS data structures for initial thread");
 
       /* Mark all the objects so we know they have been already relocated.  */
       for (l = GL(dl_loaded); l != NULL; l = l->l_next)
-	l->l_relocated = 1;
+	{
+	  l->l_relocated = 1;
+	  if (l->l_relro_size)
+	    _dl_protect_relro (l);
+	}
 
       _dl_sysdep_start_cleanup ();
     }

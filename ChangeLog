@@ -1,3 +1,14 @@
+2004-01-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-reloc.c (_dl_relocate_object): Move PT_GNU_RELRO protection
+	into...
+	(_dl_protect_relro): New routine.
+	* sysdeps/generic/ldsodefs.h (_dl_protect_relro): New prototype.
+	* elf/rtld.c (_dl_start_final): Copy l_relro_addr and l_relro_size
+	from bootstrap_map.
+	(_dl_main): Don't set GL(_dl_loaded)->l_relro_{addr,size} here.
+	Call _dl_protect_relro for libraries if prelinking.
+
 2004-01-23  Richard Henderson  <rth@redhat.com>
 
 	* Versions.def (libm): Replace GLIBC_2.3.3 with GLIBC_2.3.4.
@@ -9,8 +20,6 @@
 
 	* sysdeps/ieee754/dbl-64/e_pow.c (log2): Rename to my_log2 to
 	avoid warnings for builtin function log2.
-
-2004-01-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: Add proper unwind
 	information.
