@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Initialization code run first thing by the ELF startup code.  For i386/Unix.
+Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +17,30 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <unistd.h>
 #include <hurd.h>
-#include <hurd/fd.h>
+#include <unistd.h>
 
-/* Return the maximum number of file descriptors the current process
-   could possibly have (until it raises the resource limit).  */
-int
-DEFUN_VOID(__getdtablesize)
+extern void __libc_init (int, char **, char **);
+
+#ifdef PIC
+static void soinit (int argc, char *arg0, ...)
+     __attribute__ ((unused, section (".init")));
+
+void
+__libc_init_first (void)
 {
-  int size;
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_rlimits_lock);
-  size = _hurd_rlimits[RLIM_NOFILE].rlim_cur; /* XXX RLIM_INFINITY?? */
-  __mutex_unlock (&_hurd_rlimits_lock);
-  HURD_CRITICAL_END;
-  return size;
 }
+#endif
 
-weak_alias (__getdtablesize, getdtablesize)
+#ifdef PIC
+static void soinit 
+#else
+void __libc_init_first
+#endif
+(int argc, char *arg0, ...)
+{
+  char **argv = &arg0, **envp = &argv[argc + 1];
+
+  __environ = envp;
+  __libc_init (argc, argv, envp);
+}

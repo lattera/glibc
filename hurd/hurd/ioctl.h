@@ -52,9 +52,9 @@ extern int hurd_register_ioctl_handler (int first_request, int last_request,
    avoid `defined but not used' warnings.  */
 
 #define	_HURD_HANDLE_IOCTLS(handler, first, last)			      \
-  static const struct ioctl_handler handler##_ioctl_handler =		      \
-    { (first), (last), (int (*) (int, int, void *)) (handler),	      \
-	(&(handler), &(handler##_ioctl_handler), NULL) };		      \
+  static const struct ioctl_handler handler##_ioctl_handler		      \
+  	__attribute__ ((__unused__)) =					      \
+    { (first), (last), (int (*) (int, int, void *)) (handler), NULL };	      \
   text_set_element (_hurd_ioctl_handler_lists, ##handler##_ioctl_handler)
 
 /* Define a library-internal handler for a single ioctl command.  */

@@ -38,6 +38,7 @@ _dl_catch_error (const char **errstring, void (*operate) (void))
 
   signalled_errstring = NULL;
   errcode = setjmp (catch_env);
+  (*operate) ();
   *errstring = signalled_errstring;
   return *errstring ? errcode : 0;
 }

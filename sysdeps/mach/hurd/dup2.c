@@ -58,8 +58,7 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
       io_t ctty = _hurd_port_get (&d->ctty, &ctty_ulink);
       io_t port = _hurd_port_locked_get (&d->port, &ulink); /* Unlocks D.  */
 
-      __mutex_lock (&_hurd_dtable_lock);
-      if (fd2 < 0 || fd2 >= _hurd_dtablesize)
+      if (fd2 < 0)
 	{
 	  errno = EBADF;
 	  fd2 = -1;
@@ -67,16 +66,37 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
       else
 	{
 	  /* Get a hold of the destination descriptor.  */
-	  struct hurd_fd *d2 = _hurd_dtable[fd2];
-	  if (d2 == NULL)
+	  struct hurd_fd *d2;
+
+	  if (fd2 >= _hurd_dtablesize)
 	    {
-	      /* Must allocate a new one.  We don't initialize the port cells
-		 with this call so that if it fails (out of memory), we will
-		 not have already added user references for the ports, which we
-		 would then have to deallocate.  */
-	      d2 = _hurd_dtable[fd2] = _hurd_new_fd (MACH_PORT_NULL,
-						     MACH_PORT_NULL);
+	      /* The table is not large enough to hold the destination
+		 descriptor.  Enlarge it as necessary to allocate this
+		 descriptor.  */
+	      __mutex_unlock (&_hurd_dtable_lock);
+	      /* We still hold FD1's lock, but this is safe because
+		 _hurd_alloc_fd will only examine the cells starting
+		 at FD2.  */
+	      d2 = _hurd_alloc_fd (NULL, fd2);
+	      if (d2)
+		__spin_unlock (&d2->port.lock);
+	      __mutex_lock (&_hurd_dtable_lock);
 	    }
+	  else
+	    {
+	      d2 = _hurd_dtable[fd2];
+	      if (d2 == NULL)
+		{
+		  /* Must allocate a new one.  We don't initialize the port
+		     cells with this call so that if it fails (out of
+		     memory), we will not have already added user
+		     references for the ports, which we would then have to
+		     deallocate.  */
+		  d2 = _hurd_dtable[fd2] = _hurd_new_fd (MACH_PORT_NULL,
+							 MACH_PORT_NULL);
+		}
+	    }
+
 	  if (d2 == NULL)
 	    {
 	      fd2 = -1;

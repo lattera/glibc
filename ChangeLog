@@ -1,4 +1,23 @@
+Wed May  3 11:56:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dup2.c: Fixed broken test in last change.
+
 Tue May  2 01:52:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/dl-error.c (_dl_catch_error): Actually call the OPERATE
+ 	function.  Duh.
+
+	* hurd/Makefile (distribute): Added hurdstartup.h.
+	* hurd/hurd.h: Remove _hurd_startup decl.
+
+	* hurd/hurd/ioctl.h (_HURD_HANDLE_IOCTLS): Use __attribute__
+ 	((__unused__)) instead of gratuitous self reference.
+
+	* sysdeps/mach/hurd/dup2.c: Call _hurd_alloc_fd to expand the
+ 	table if FD2 doesn't fit.
+
+	* sysdeps/mach/hurd/getdtsz.c: Return the RLIM_NOFILE soft limit,
+ 	not the current table size.
 
 	* sysdeps/mach/i386/sysdep.h (SNARF_ARGS, CALL_WITH_SP): Rewritten.
 
@@ -25,7 +44,9 @@ Tue May  2 01:52:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* sysdeps/i386/elf/start.S: New file.
 	* sysdeps/generic/dl-sysdep.c: New file.
 	* sysdeps/mach/hurd/dl-sysdep.c: New file.
-
+	* sysdeps/i386/init-first.c: New file.
+	* sysdeps/stub/init-first.c: New file.
+	
 Mon May  1 18:48:30 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (LDFLAGS-c.so): Add -interp and -e switches to make
