@@ -1,3 +1,7 @@
+2002-03-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/mips/pt-machine.h (MEMORY_BARRIER): Remove.
+
 2002-03-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* internals.h (MEMORY_BARRIER): Define as asm with memory as clobber.
