@@ -1,3 +1,9 @@
+2000-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/mtrace.pl: Exit with exit code 1 if any leak was
+	detected.
+	* malloc/tst-mtrace.sh: Run mtrace script.
+
 2000-07-07  Greg McGary  <greg@mcgary.org>
 
 	* posix/regex.c (EXTEND_BUFFER): Compute increment once.
