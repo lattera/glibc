@@ -77,7 +77,8 @@ _dl_addr (const void *address, Dl_info *info)
      there is no way in ELF to know the size of the dynamic symbol table!!  */
   for (matchsym = NULL; (void *) symtab < (void *) strtab; ++symtab)
     if (addr >= match->l_addr + symtab->st_value
-	&& addr < match->l_addr + symtab->st_value + symtab->st_size
+	&& ((symtab->st_size == 0 && addr == match->l_addr + symtab->st_value)
+	    || addr < match->l_addr + symtab->st_value + symtab->st_size)
 	&& symtab->st_name < strtabsize
 	&& (matchsym == NULL || matchsym->st_value < symtab->st_value)
 	&& (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL

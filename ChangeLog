@@ -1,5 +1,8 @@
 2001-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-addr.c (_dl_addr): Handle broken binaries with zero
+	symbol sizes a bit better.
+
 	* sysdeps/ia64/strncpy.S: Complete rewrite.
 	Contributed by Jakub Jelinek <jakub@redhat.com>.
 
