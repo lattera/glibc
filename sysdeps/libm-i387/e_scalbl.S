@@ -73,10 +73,10 @@ ENTRY(__ieee754_scalbl)
 	fnstsw
 	movl	12(%esp), %edx
 	shrl	$5, %eax
-	fstp	%st(1)
+	fstp	%st
+	fstp	%st
 	andl	$0x8000, %edx
 	andl	$8, %eax
-	fstp	%st(1)
 	shrl	$11, %edx
 	addl	%edx, %eax
 	fldl	MOX(zero_nan, %eax, 1)

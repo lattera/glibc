@@ -1,3 +1,14 @@
+1998-06-18 12:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/e_scalb.S: Fix bug in FPU stack handling.
+	* sysdeps/libm-i387/e_scalbf.S: Likewise.
+	* sysdeps/libm-i387/e_scalbl.S: Likewise.
+
+1998-06-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/tst-strtod.c (long_dbl): Provide receipe to regenerate
+	longestdbl.
+
 1998-06-18 10:26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile (modules): Add MACINTOSH.
