@@ -39,7 +39,7 @@ ENTRY(strrchr)
 	.prologue 0
 #endif
 
-	zapnot	a1, 1, a1	# e0    : zero extend our test character
+	and	a1, 0xff, a1	# e0    : zero extend our test character
 	mov	zero, t6	# .. e1 : t6 is last match aligned addr
 	sll	a1, 8, t5	# e0    : replicate our test character
 	mov	zero, t7	# .. e1 : t7 is last match byte compare mask
