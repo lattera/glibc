@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,16 +60,16 @@ typedef struct
 
 typedef struct service_user
 {
-  /* Name of the service (`files', `dns', `nis', ...).  */
-  const char *name;
+  /* And the link to the next entry.  */
+  struct service_user *next;
   /* Action according to result.  */
   lookup_actions actions[5];
   /* Link to the underlying library object.  */
   service_library *library;
   /* Collection of known functions.  */
   struct entry *known;
-  /* And the link to the next entry.  */
-  struct service_user *next;
+  /* Name of the service (`files', `dns', `nis', ...).  */
+  char name[0];
 } service_user;
 
 /* To access the action based on the status value use this macro.  */
@@ -78,12 +78,12 @@ typedef struct service_user
 
 typedef struct name_database_entry
 {
-  /* Name of the database.  */
-  const char *name;
-  /* List of service to be used.  */
-  service_user *service;
   /* And the link to the next entry.  */
   struct name_database_entry *next;
+  /* List of service to be used.  */
+  service_user *service;
+  /* Name of the database.  */
+  char name[0];
 } name_database_entry;
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -575,21 +575,12 @@ nss_parse_service_list (const char *line)
 	return result;
 
 
-      new_service = (service_user *) malloc (sizeof (service_user));
+      new_service = (service_user *) malloc (sizeof (service_user)
+					     + (line - name + 1));
       if (new_service == NULL)
 	return result;
-      else
-	{
-	  char *source = (char *) malloc (line - name + 1);
-	  if (source == NULL)
-	    {
-	      free (new_service);
-	      return result;
-	    }
-	  *((char *) __mempcpy (source, name, line - name)) = '\0';
 
-	  new_service->name = source;
-	}
+      *((char *) __mempcpy (new_service->name, name, line - name)) = '\0';
 
       /* Set default actions.  */
       new_service->actions[2 + NSS_STATUS_TRYAGAIN] = NSS_ACTION_CONTINUE;
@@ -706,6 +697,7 @@ nss_getline (char *line)
 {
   const char *name;
   name_database_entry *result;
+  size_t len;
 
   /* Ignore leading white spaces.  ATTENTION: this is different from
      what is implemented in Solaris.  The Solaris man page says a line
@@ -723,21 +715,14 @@ nss_getline (char *line)
     return NULL;
   *line++ = '\0';
 
-  result = (name_database_entry *) malloc (sizeof (name_database_entry));
+  len = strlen (name) + 1;
+
+  result = (name_database_entry *) malloc (sizeof (name_database_entry) + len);
   if (result == NULL)
     return NULL;
 
   /* Save the database name.  */
-  {
-    const size_t len = strlen (name) + 1;
-    char *new = malloc (len);
-    if (new == NULL)
-      {
-	free (result);
-	return NULL;
-      }
-    result->name = memcpy (new, name, len);
-  }
+  memcpy (result->name, name, len);
 
   /* Parse the list of services.  */
   result->service = nss_parse_service_list (line);

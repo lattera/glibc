@@ -1,5 +1,13 @@
 1999-02-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nss/nsswitch.h (service_user): Change name field from const char *
+	to char[0].
+	(name_database_entry): Likewise.
+	* nss/nsswitch.c (nss_parse_service_list): Adjust memory allocation
+	for change of `service_user'.
+	(nss_getline): Adjust memory allocation for change of
+	`name_database_entry'.
+
 	* catgets/catgets.c: Correctly handle NLSPATH from environment
 	[PR libc/980].
 
@@ -11,6 +19,7 @@
 
 	* string/bits/string2.h: Only use strncmp optimization if count
 	argument is constant.
+
 1999-02-16  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/revoke.c: New file.
