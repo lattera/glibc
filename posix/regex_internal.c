@@ -1339,7 +1339,7 @@ re_dfa_add_node (dfa, token)
     {
       int new_nodes_alloc = dfa->nodes_alloc * 2;
       int *new_nexts, *new_indices;
-      re_node_set *new_edests, *new_eclosures, *new_inveclosures;
+      re_node_set *new_edests, *new_eclosures;
 
       re_token_t *new_array = re_realloc (dfa->nodes, re_token_t,
 					  new_nodes_alloc);
@@ -1350,17 +1350,13 @@ re_dfa_add_node (dfa, token)
       new_indices = re_realloc (dfa->org_indices, int, new_nodes_alloc);
       new_edests = re_realloc (dfa->edests, re_node_set, new_nodes_alloc);
       new_eclosures = re_realloc (dfa->eclosures, re_node_set, new_nodes_alloc);
-      new_inveclosures = re_realloc (dfa->inveclosures, re_node_set,
-				     new_nodes_alloc);
       if (BE (new_nexts == NULL || new_indices == NULL
-	      || new_edests == NULL || new_eclosures == NULL
-	      || new_inveclosures == NULL, 0))
+	      || new_edests == NULL || new_eclosures == NULL, 0))
 	return -1;
       dfa->nexts = new_nexts;
       dfa->org_indices = new_indices;
       dfa->edests = new_edests;
       dfa->eclosures = new_eclosures;
-      dfa->inveclosures = new_inveclosures;
       dfa->nodes_alloc = new_nodes_alloc;
     }
   dfa->nodes[dfa->nodes_len] = token;
@@ -1372,7 +1368,6 @@ re_dfa_add_node (dfa, token)
   dfa->nexts[dfa->nodes_len] = -1;
   re_node_set_init_empty (dfa->edests + dfa->nodes_len);
   re_node_set_init_empty (dfa->eclosures + dfa->nodes_len);
-  re_node_set_init_empty (dfa->inveclosures + dfa->nodes_len);
   return dfa->nodes_len++;
 }
 

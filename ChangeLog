@@ -1,3 +1,21 @@
+2005-01-27  Paolo Bonzini  <bonzini@gnu.org>
+
+	[BZ #558]
+	* posix/regcomp.c (calc_inveclosure): Return reg_errcode_t.
+	Initialize the node sets in dfa->inveclosures.
+	(analyze): Initialize inveclosures only if it is needed.
+	Check errors from calc_inveclosure.
+	* posix/regex_internal.c (re_dfa_add_node): Do not initialize
+	the inveclosure node set.
+	* posix/regexec.c (re_search_internal): If nmatch includes unused
+	subexpressions, reset them to { rm_so: -1, rm_eo: -1 } here.
+
+	* posix/regcomp.c (parse_bracket_exp) [!RE_ENABLE_I18N]:
+	Do build a SIMPLE_BRACKET token.
+
+	* posix/regexec.c (transit_state_mb): Do not examine nodes
+	where ACCEPT_MB is not set.
+
 2005-01-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/tst-fmtmsg.c: Include stdlib.h.

@@ -605,6 +605,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
   int left_lim, right_lim, incr;
   int fl_longest_match, match_first, match_kind, match_last = -1;
+  int extra_nmatch;
   int sb, ch;
 #if defined _LIBC || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)
   re_match_context_t mctx = { .dfa = dfa };
@@ -619,6 +620,9 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   memset (&mctx, '\0', sizeof (re_match_context_t));
   mctx.dfa = dfa;
 #endif
+
+  extra_nmatch = (nmatch > preg->re_nsub) ? nmatch - (preg->re_nsub + 1) : 0;
+  nmatch -= extra_nmatch;
 
   /* Check if the DFA haven't been compiled.  */
   if (BE (preg->used == 0 || dfa->init_state == NULL
@@ -882,11 +886,14 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	    pmatch[reg_idx].rm_so += match_first;
 	    pmatch[reg_idx].rm_eo += match_first;
 	  }
+      for (reg_idx = 0; reg_idx < extra_nmatch; ++reg_idx)
+	{
+	  pmatch[nmatch + reg_idx].rm_so = -1;
+	  pmatch[nmatch + reg_idx].rm_eo = -1;
+	}
 
       if (dfa->subexp_map)
-        for (reg_idx = 0;
-             reg_idx + 1 < nmatch && reg_idx < preg->re_nsub;
-             reg_idx++)
+        for (reg_idx = 0; reg_idx + 1 < nmatch; reg_idx++)
           if (dfa->subexp_map[reg_idx] != reg_idx)
             {
               pmatch[reg_idx + 1].rm_so
@@ -1371,7 +1378,7 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
      int fl_backtrack;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
-  int idx, cur_node, real_nmatch;
+  int idx, cur_node;
   re_node_set eps_via_nodes;
   struct re_fail_stack_t *fs;
   struct re_fail_stack_t fs_body = { 0, 2, NULL };
@@ -1392,15 +1399,14 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
     fs = NULL;
 
   cur_node = dfa->init_node;
-  real_nmatch = (nmatch <= preg->re_nsub) ? nmatch : preg->re_nsub + 1;
   re_node_set_init_empty (&eps_via_nodes);
 
-  prev_idx_match = (regmatch_t *) alloca (sizeof (regmatch_t) * real_nmatch);
-  memcpy (prev_idx_match, pmatch, sizeof (regmatch_t) * real_nmatch);
+  prev_idx_match = (regmatch_t *) alloca (sizeof (regmatch_t) * nmatch);
+  memcpy (prev_idx_match, pmatch, sizeof (regmatch_t) * nmatch);
 
   for (idx = pmatch[0].rm_so; idx <= pmatch[0].rm_eo ;)
     {
-      update_regs (dfa, pmatch, prev_idx_match, cur_node, idx, real_nmatch);
+      update_regs (dfa, pmatch, prev_idx_match, cur_node, idx, nmatch);
 
       if (idx == pmatch[0].rm_eo && cur_node == mctx->last_node)
 	{
@@ -2469,9 +2475,12 @@ transit_state_mb (mctx, pstate)
     {
       re_node_set dest_nodes, *new_nodes;
       int cur_node_idx = pstate->nodes.elems[i];
-      int naccepted = 0, dest_idx;
+      int naccepted, dest_idx;
       unsigned int context;
       re_dfastate_t *dest_state;
+
+      if (!dfa->nodes[cur_node_idx].accept_mb)
+        continue;
 
       if (dfa->nodes[cur_node_idx].constraint)
 	{
@@ -2484,9 +2493,8 @@ transit_state_mb (mctx, pstate)
 	}
 
       /* How many bytes the node can accept?  */
-      if (dfa->nodes[cur_node_idx].accept_mb)
-	naccepted = check_node_accept_bytes (dfa, cur_node_idx, &mctx->input,
-					     re_string_cur_idx (&mctx->input));
+      naccepted = check_node_accept_bytes (dfa, cur_node_idx, &mctx->input,
+					   re_string_cur_idx (&mctx->input));
       if (naccepted == 0)
 	continue;
 
@@ -2500,9 +2508,7 @@ transit_state_mb (mctx, pstate)
 #ifdef DEBUG
       assert (dfa->nexts[cur_node_idx] != -1);
 #endif
-      /* `cur_node_idx' may point the entity of the OP_CONTEXT_NODE,
-	 then we use pstate->nodes.elems[i] instead.  */
-      new_nodes = dfa->eclosures + dfa->nexts[pstate->nodes.elems[i]];
+      new_nodes = dfa->eclosures + dfa->nexts[cur_node_idx];
 
       dest_state = mctx->state_log[dest_idx];
       if (dest_state == NULL)
