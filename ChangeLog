@@ -1,5 +1,7 @@
 2000-01-10  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/mips/Implies: Add wordsize-32.
+
 	* sysdeps/unix/sysv/linux/mips/bits/ioctl-types.h: Add missing
 	int's.
 
