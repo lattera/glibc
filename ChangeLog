@@ -1,3 +1,9 @@
+2001-03-24  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/i386/init-first.c: Include <assert.h>.
+	(_dl_argv): Declare.
+	(init) [SHARED]: Readjust _dl_argv if we switched to a new stack.
+
 2001-03-22  Andreas Jaeger  <aj@suse.de>
 
 	* iconvdata/Makefile (generated): Add iconv-test.xxx.

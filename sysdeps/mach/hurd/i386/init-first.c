@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <hurd.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -42,6 +43,7 @@ int __libc_multiple_libcs = 1;
 
 extern int __libc_argc;
 extern char **__libc_argv;
+extern char **_dl_argv;
 
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
@@ -164,6 +166,13 @@ init (int *data)
       /* Copy the argdata from the old stack to the new one.  */
       newsp = memcpy (newsp - ((char *) &d[1] - (char *) data), data,
 		      (char *) d - (char *) data);
+
+#ifdef SHARED
+      /* And readjust the dynamic linker's idea of where the argument
+         vector lives.  */
+      assert (_dl_argv == argv);
+      _dl_argv = (void *) ((int *) newsp + 1);
+#endif
 
       /* Set up the Hurd startup data block immediately following
 	 the argument and environment pointers on the new stack.  */
