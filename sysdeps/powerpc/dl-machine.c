@@ -71,10 +71,10 @@
 #define OPCODE_SLWI(ra,rs,sh) OPCODE_RLWINM(ra,rs,sh,0,31-sh)
 
 
-#define PPC_DCBST(where) asm ("dcbst 0,%0" : : "r"(where) : "memory")
-#define PPC_SYNC asm ("sync" : : : "memory")
+#define PPC_DCBST(where) asm volatile ("dcbst 0,%0" : : "r"(where) : "memory")
+#define PPC_SYNC asm volatile ("sync" : : : "memory")
 #define PPC_ISYNC asm volatile ("sync; isync" : : : "memory")
-#define PPC_ICBI(where) asm ("icbi 0,%0" : : "r"(where) : "memory")
+#define PPC_ICBI(where) asm volatile ("icbi 0,%0" : : "r"(where) : "memory")
 #define PPC_DIE asm volatile ("tweq 0,0")
 
 /* Use this when you've modified some code, but it won't be in the
