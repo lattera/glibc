@@ -69,7 +69,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-preadwrite tst-preadwrite64 test-vfork regexbug1 \
 		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
 		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir \
-		   tst-chmod bug-regex1 bug-regex2 bug-regex3 tst-gnuglob
+		   tst-chmod bug-regex1 bug-regex2 bug-regex3 bug-regex4 \
+		   tst-gnuglob
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn

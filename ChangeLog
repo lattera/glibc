@@ -1,3 +1,26 @@
+2001-05-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust for new tests.
+
+	* math/libm-test.inc (tanh_test): Add testcases for last tanh bug.
+
+2001-05-14  Stephen L Moshier <moshier@mediaone.net>
+
+	* sysdeps/ieee754/ldbl-96/s_tanhl.c (__tanhl): Fix sign test.
+
+2001-05-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex.c (re_match_2_internal): Swap mbs_offset and csize
+	as well if swapping strings.
+	Make sure stop is not past end of second string.
+	* posix/bug-regex4.c: New test.
+	* posix/Makefile (tests): Add bug-regex4.
+
+2001-05-10  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Linux): Clarify that Linux 2.2 is minimal
+	requirement.
+
 2001-05-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/dbl-64/s_sin.c: Include "math_private.h" for

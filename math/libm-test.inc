@@ -3954,6 +3954,10 @@ tanh_test (void)
   TEST_f_f (tanh, nan_value, nan_value);
 
   TEST_f_f (tanh, 0.7L, 0.60436777711716349631L);
+  TEST_f_f (tanh, -0.7L, -0.60436777711716349631L);
+
+  TEST_f_f (tanh, 1.0L, 0.7615941559557648881194582826047935904L);
+  TEST_f_f (tanh, -1.0L, -0.7615941559557648881194582826047935904L);
 
   END (tanh);
 }

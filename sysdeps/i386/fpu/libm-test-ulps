@@ -733,14 +733,16 @@ ifloat: 1
 ldouble: 1
 ildouble: 1
 Test "jn (10, -1.0) == 0.26306151236874532070e-9":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ldouble: 1
 ildouble: 1
 Test "jn (10, 0.1) == 0.26905328954342155795e-19":
-double: 4
+double: 5
 float: 2
-idouble: 4
+idouble: 5
 ifloat: 2
 ldouble: 1
 ildouble: 1
@@ -753,6 +755,8 @@ ldouble: 2
 ildouble: 2
 Test "jn (10, 1.0) == 0.26306151236874532070e-9":
 float: 1
+double: 1
+idouble: 1
 ifloat: 1
 ldouble: 1
 ildouble: 1
@@ -932,6 +936,9 @@ idouble: 0.5
 Test "tanh (0.7) == 0.60436777711716349631":
 ildouble: 521
 ldouble: 521
+Test "tanh (-0.7) == -0.60436777711716349631":
+ildouble:  1
+ldouble:  1
 
 # tgamma
 Test "tgamma (-0.5) == -2 sqrt (pi)":
@@ -1503,9 +1510,9 @@ ldouble: 2
 ildouble: 2
 
 Function: "jn":
-double: 4
+double: 5
 float: 2
-idouble: 4
+idouble: 5
 ifloat: 2
 ldouble: 2
 ildouble: 2

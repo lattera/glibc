@@ -5595,6 +5595,12 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
       size2 = size1;
       string1 = 0;
       size1 = 0;
+#ifdef MBS_SUPPORT
+      mbs_offset2 = mbs_offset1;
+      csize2 = csize1;
+      mbs_offset1 = NULL;
+      csize1 = 0;
+#endif
     }
   end1 = string1 + size1;
   end2 = string2 + size2;
@@ -5609,6 +5615,8 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
     }
   else
     {
+      if (stop > csize1 + csize2)
+	stop = csize1 + csize2;
       end_match_1 = end1;
       mcnt = count_mbs_length(mbs_offset2, stop-csize1);
       end_match_2 = string2 + mcnt;
