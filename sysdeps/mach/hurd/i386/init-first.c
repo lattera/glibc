@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -309,14 +309,14 @@ strong_alias (posixland_init, __libc_init_first);
    This poorly-named function is called by static-start.S,
    which should not exist at all.  */
 void
-_hurd_stack_setup (int argc __attribute__ ((unused)), ...)
+_hurd_stack_setup (volatile int argc, ...)
 {
   void doinit (int *data)
     {
       /* This function gets called with the argument data at TOS.  */
-      void doinit1 (int argc, ...)
+      void doinit1 (volatile int argc, ...)
 	{
-	  init (&argc);
+	  init ((int *) &argc);
 	}
 
       /* Push the user return address after the argument data, and then
