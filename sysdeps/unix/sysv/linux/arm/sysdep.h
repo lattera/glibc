@@ -131,7 +131,7 @@
        asm volatile ("swi	%1	@ syscall " #name	\
 		     : "=r" (_a1)				\
 		     : "i" (SYS_ify(name)) ASM_ARGS_##nr	\
-		     : "a1");					\
+		     : "a1" : "memory");			\
        _sys_result = _a1;					\
      }								\
      if (_sys_result >= (unsigned int) -4095)			\

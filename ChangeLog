@@ -1,3 +1,10 @@
+2000-09-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (inline_syscall_clobbers): Add memory
+	clobber.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INLINE_SYSCALL): Likewise.
+
 2000-09-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (distribute): Add nextmod1.c and nextmod2.c.
