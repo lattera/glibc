@@ -553,6 +553,7 @@ _dl_open (const char *file, int mode, const void *caller)
 
   return args.map;
 }
+libc_hidden_def (_dl_open)
 
 
 #ifdef SCOPE_DEBUG

@@ -100,3 +100,4 @@ _dl_addr (const void *address, Dl_info *info)
 
   return 1;
 }
+libc_hidden_def (_dl_addr)

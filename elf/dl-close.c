@@ -378,6 +378,7 @@ _dl_close (void *_map)
   /* Release the lock.  */
   __libc_lock_unlock_recursive (GL(dl_load_lock));
 }
+libc_hidden_def (_dl_close)
 
 
 #ifdef USE_TLS
