@@ -1,3 +1,51 @@
+2003-03-22  Roland McGrath  <roland@redhat.com>
+
+	* include/atomic.h (atomic_increment_and_test): Invert sense of test.
+	Add comment.
+	(atomic_decrement_and_test): Add comment.
+
+2003-03-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h (atomic_compare_and_exchange_val_acq): Add comment.
+	Don't define if __arch_compare_and_exchange_val_32_acq is not defined.
+	(atomic_compare_and_exchange_bool_acq): Add comment.  Don't use
+	__oldval variable in the macro, since it might be macro argument.
+	(atomic_decrement_if_positive): Initialize __memp, remove setting
+	of non-existent variable.
+	(atomic_bit_test_set): Cast 1 to __typeof (*mem) before shifting.
+	* sysdeps/ia64/bits/atomic.h (atomic_exchange_and_add): Implement
+	using atomic_compare_and_exchange_val_acq.
+	(atomic_decrement_if_positive, atomic_bit_test_set): Define.
+	* sysdeps/s390/bits/atomic.h (__arch_compare_and_exchange_val_8_acq):
+	Renamed from...
+	(__arch_compare_and_exchange_bool_8_acq): ... this.
+	(__arch_compare_and_exchange_val_16_acq): Renamed from...
+	(__arch_compare_and_exchange_bool_16_acq): ... this.
+	(__arch_compare_and_exchange_val_32_acq): Return old value.  Renamed
+	from...
+	(__arch_compare_and_exchange_bool_32_acq): ... this.
+	(__arch_compare_and_exchange_val_64_acq): Return old value.  Renamed
+	from...
+	(__arch_compare_and_exchange_bool_64_acq): ... this.
+	(__arch_compare_and_exchange_val_32_acq): Use __typeof for local
+	variables types instead of assuming int.
+	Change prefix of local variables to __arch.
+	* sysdeps/generic/bits/atomic.h (arch_compare_and_exchange_acq):
+	Remove.
+	(atomic_compare_and_exchange_val_acq,
+	atomic_compare_and_exchange_bool_acq): Define.
+
+	* csu/tst-atomic.c: New test.
+	* csu/tst-atomic-long.c: New test.
+	* csu/Makefile (tests): Add tst-atomic and tst-atomic-long.
+
+	* malloc/memusagestat.c (main): Kill warning if uint64_t is ulong.
+
+	* sysdeps/s390/Versions: Add trailing newline.
+
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Kill warning
+	if INTERNAL_SYSCALL_ERROR_P doesn't use its first argument.
+
 2003-03-22  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Update.

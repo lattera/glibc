@@ -405,7 +405,7 @@ main (int argc, char *argv[])
     }
 
 
-  snprintf (buf, sizeof (buf), "%llu", total);
+  snprintf (buf, sizeof (buf), "%llu", (unsigned long long) total);
   gdImageString (im_out, gdFontSmall, xsize - 50, ysize - 14, buf, blue);
 
   if (!time_based)

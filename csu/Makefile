@@ -1,5 +1,5 @@
 # Makefile for csu code for GNU C library.
-# Copyright (C) 1995,96,97,98,99,2000,01,2002 Free Software Foundation, Inc.
+# Copyright (C) 1995,96,97,98,99,2000,01,02,2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -41,6 +41,8 @@ distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
 	     abi-note.S init.c munch-tmpl.c
 generated = version-info.h
 before-compile = $(objpfx)version-info.h
+
+tests := tst-atomic tst-atomic-long
 
 all: # Make this the default target; it will be defined in Rules.
 

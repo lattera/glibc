@@ -25,7 +25,19 @@
    up with real definitions.  */
 
 /* The only basic operation needed is compare and exchange.  */
-#define arch_compare_and_exchange_acq(mem, newval, oldval) \
-  ({ *(mem) == (oldval) ? 1 : (*(mem) = (newval), 0); })
+#define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+  ({ __typeof (mem) __gmemp = (mem);				      \
+     __typeof (*mem) __gret = *__gmemp;				      \
+     __typeof (*mem) __gnewval = (newval);			      \
+								      \
+     if (__gret == (oldval))					      \
+       *__gmemp = __gnewval;					      \
+     __gret; })
+
+#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+  ({ __typeof (mem) __gmemp = (mem);				      \
+     __typeof (*mem) __gnewval = (newval);			      \
+								      \
+     *__gmemp == (oldval) ? (*__gmemp = __gnewval, 0) : 1; })
 
 #endif	/* bits/atomic.h */

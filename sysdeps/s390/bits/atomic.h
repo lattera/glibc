@@ -45,34 +45,32 @@ typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
 
-#define __arch_compare_and_exchange_bool_8_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
   (abort (), 0)
 
-#define __arch_compare_and_exchange_bool_16_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
   (abort (), 0)
 
-#define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
-  ({ unsigned int *__mem = (unsigned int *) (mem);			      \
-     unsigned int __old = (unsigned int) (oldval);			      \
-     unsigned int __cmp = __old;					      \
+#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
+  ({ __typeof (mem) __archmem = (mem);					      \
+     __typeof (*mem) __archold = (oldval);				      \
      __asm __volatile ("cs %0,%2,%1"					      \
-		       : "+d" (__old), "=Q" (*__mem)			      \
-		       : "d" (newval), "m" (*__mem) : "cc" );		      \
-     __cmp != __old; })
+		       : "+d" (__archold), "=Q" (*__archmem)		      \
+		       : "d" (newval), "m" (*__archmem) : "cc" );	      \
+     __archold; })
 
 #ifdef __s390x__
-# define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
-  ({ unsigned long int *__mem = (unsigned long int *) (mem);		      \
-     unsigned long int __old = (unsigned long int) (oldval);		      \
-     unsigned long int __cmp = __old;					      \
+# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
+  ({ __typeof (mem) __archmem = (mem);					      \
+     __typeof (*mem) __archold = (oldval);				      \
      __asm __volatile ("csg %0,%2,%1"					      \
-		       : "+d" (__old), "=Q" (*__mem)			      \
-		       : "d" (newval), "m" (*__mem) : "cc" );		      \
-     __cmp != __old; })
+		       : "+d" (__archold), "=Q" (*__archmem)		      \
+		       : "d" (newval), "m" (*__archmem) : "cc" );	      \
+     __archold; })
 #else
 /* For 31 bit we do not really need 64-bit compare-and-exchange. We can
    implement them by use of the csd instruction. The straightforward
    implementation causes warnings so we skip the definition for now.  */
-# define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   (abort (), 0)
 #endif

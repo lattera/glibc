@@ -1,4 +1,5 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Internal macros for atomic operations for GNU C Library.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,7 +26,10 @@
 #include <bits/atomic.h>
 
 
-#ifndef atomic_compare_and_exchange_val_acq
+/* Atomically store NEWVAL in *MEM if *MEM is equal to OLDVAL.
+   Return the old *MEM value.  */
+#if !defined atomic_compare_and_exchange_val_acq \
+    && defined __arch_compare_and_exchange_val_32_acq
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   ({ __typeof (*mem) __result;						      \
      if (sizeof (*mem) == 1)						      \
@@ -48,6 +52,8 @@
 #endif
 
 
+/* Atomically store NEWVAL in *MEM if *MEM is equal to OLDVAL.
+   Return zero if *MEM was changed or non-zero if no exchange happened.  */
 #ifndef atomic_compare_and_exchange_bool_acq
 # ifdef __arch_compare_and_exchange_bool_32_acq
 #  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
@@ -69,8 +75,10 @@
      __result; })
 # else
 #  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
-  ({ __typeof (oldval) __oldval = (oldval);				      \
-     atomic_compare_and_exchange_val_acq (mem, newval, __oldval) != __oldval; \
+  ({ /* Cannot use __oldval here, because macros later in this file might     \
+	call this macro with __oldval argument.	 */			      \
+     __typeof (oldval) __old = (oldval);				      \
+     atomic_compare_and_exchange_val_acq (mem, newval, __old) != __old;	      \
   })
 # endif
 #endif
@@ -129,9 +137,10 @@
 #endif
 
 
+/* Add one to *MEM and return true iff it's now nonzero.  */
 #ifndef atomic_increment_and_test
 # define atomic_increment_and_test(mem) \
-  (atomic_exchange_and_add (mem, 1) == 0)
+  (atomic_exchange_and_add (mem, 1) != 0)
 #endif
 
 
@@ -140,6 +149,7 @@
 #endif
 
 
+/* Subtract 1 from *MEM and return true iff it's now zero.  */
 #ifndef atomic_decrement_and_test
 # define atomic_decrement_and_test(mem) \
   (atomic_exchange_and_add (mem, -1) == 0)
@@ -150,9 +160,8 @@
 #ifndef atomic_decrement_if_positive
 # define atomic_decrement_if_positive(mem) \
   ({ __typeof (*mem) __oldval;						      \
-     __typeof (mem) __memp;						      \
+     __typeof (mem) __memp = (mem);					      \
 									      \
-     __val = *__memp;							      \
      do									      \
        {								      \
 	 __oldval = *__memp;						      \
@@ -190,7 +199,7 @@
 # define atomic_bit_test_set(mem, bit) \
   ({ __typeof (*mem) __oldval;						      \
      __typeof (mem) __memp = (mem);					      \
-     __typeof (*mem) __mask = (1 << (bit));				      \
+     __typeof (*mem) __mask = ((__typeof (*mem)) 1 << (bit));		      \
 									      \
      do									      \
        __oldval = (*__memp);						      \

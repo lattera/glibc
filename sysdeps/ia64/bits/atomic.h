@@ -78,30 +78,49 @@ typedef uintmax_t uatomic_max_t;
   __sync_lock_test_and_set_si (mem, value)
 
 #define atomic_exchange_and_add(mem, value) \
-  ({									      \
-    __typeof (*mem) __oldval, __val;					      \
-    __typeof (mem) __memp = (mem);					      \
-    __typeof (*mem) __value = (value);					      \
+  ({ __typeof (*mem) __oldval, __val;					      \
+     __typeof (mem) __memp = (mem);					      \
+     __typeof (*mem) __value = (value);					      \
 									      \
-    __val = *__memp;							      \
-    if (sizeof (*mem) == 4)						      \
-      do								      \
-	{								      \
-	  __oldval = __val;						      \
-	  __val = __arch_compare_and_exchange_32_val_acq (__memp,	      \
-							  __oldval + __value, \
-							  __oldval);	      \
-	}								      \
-      while (__builtin_expect (__val != __oldval, 0));			      \
-    else if (sizeof (*mem) == 8)					      \
-      do								      \
-	{								      \
-	  __oldval = __val;						      \
-	  __val = __arch_compare_and_exchange_64_val_acq (__memp,	      \
-							  __oldval + __value, \
-							  __oldval);	      \
-	}								      \
-      while (__builtin_expect (__val != __oldval, 0));			      \
-    else								      \
-      abort ();								      \
-    __oldval + __value; })
+     __val = (*__memp);							      \
+     do									      \
+       {								      \
+	 __oldval = __val;						      \
+	 __val = atomic_compare_and_exchange_val_acq (__memp,		      \
+						      __oldval + __value,     \
+						      __oldval);	      \
+       }								      \
+     while (__builtin_expect (__val != __oldval, 0));			      \
+     __oldval; })
+
+#define atomic_decrement_if_positive(mem) \
+  ({ __typeof (*mem) __oldval, __val;					      \
+     __typeof (mem) __memp = (mem);					      \
+									      \
+     __val = (*__memp);							      \
+     do									      \
+       {								      \
+	 __oldval = __val;						      \
+	 if (__builtin_expect (__val <= 0, 0))				      \
+	   break;							      \
+	 __val = atomic_compare_and_exchange_val_acq (__memp,	__oldval - 1, \
+						      __oldval);	      \
+       }								      \
+     while (__builtin_expect (__val != __oldval, 0));			      \
+     __oldval; })
+
+#define atomic_bit_test_set(mem, bit) \
+  ({ __typeof (*mem) __oldval, __val;					      \
+     __typeof (mem) __memp = (mem);					      \
+     __typeof (*mem) __mask = ((__typeof (*mem)) 1 << (bit));		      \
+									      \
+     __val = (*__memp);							      \
+     do									      \
+       {								      \
+	 __oldval = __val;						      \
+	 __val = atomic_compare_and_exchange_val_acq (__memp,		      \
+						      __oldval | __mask,      \
+						      __oldval);	      \
+       }								      \
+     while (__builtin_expect (__val != __oldval, 0));			      \
+     __oldval & __mask; })
