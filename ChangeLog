@@ -1,3 +1,10 @@
+2001-03-22  Andreas Jaeger  <aj@suse.de>
+
+	* iconvdata/Makefile (generated): Add iconv-test.xxx.
+
+	* posix/Makefile (generated): Add bug-regex2.mtrace and
+	bug-regex2-mem.
+
 2001-03-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/version.c (__gnu_get_libc_release): Add prototype.
