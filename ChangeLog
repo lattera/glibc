@@ -1,3 +1,69 @@
+Mon Aug 26 02:01:37 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-open.c (_dl_open): Call library initializer with
+	correct command line arguments and environment information.
+	* elf/rtld.c (dl_main): Provide arguments to initializer of
+	ld.so itself.
+
+Sun Aug 25 19:15:46 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* shadow/Makefile (routines): Add lckpwdf.
+	* shadow/lckpwdf.c: New file.
+
+	* sysdeps/i386/fpu_control.h (_FPU_GETCW, _FPU_SETCW): Force
+	argument `cw' to be placed in memory.  Patch by Torbjorn Granlund.
+
+Sun Aug 25 12:53:37 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Add definition for `__eh_pc' and `__throw' in
+	test for --no-whole-archive.  The compiler generates dependencies
+	for this but none of the standard librares and startup files
+	are used.  Necessary for gcc >= ss-960816.
+
+Sun Aug 25 01:31:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-error.c (_dl_signal_error): If error is catched, malloc
+	return string since string might be on stack.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Undo change of
+	Wed Aug 21 10:14:59 1996.
+	* elf/dlerror.c (dlerror): Free error string after printing.
+	(_dlerror_run): If error string was not printed since last error
+	free string.
+	* rtld.c (dl_main): Free error string in case of error.
+
+Sat Aug 24 03:16:47 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/syslog.c (vsyslog): Don't use `localtime' or `gmtime' since
+ 	this changes the global state for `localtime' and `gmtime'.  Use
+ 	`__localtime_r'/`__gmtime_r' instead.
+	* resolv/res_debug.c (__p_secstodate): Likewise.
+	* sysdeps/generoc/ftime.c: Likewise.
+	* sysdeps/posix/gettimeofday.c: Likewise.
+	Reported by Paul Eggert.
+
+	* time/gmtime.c: De-ANSI-fy.
+	* time/strftime.c: Don't call non-reentrant functions which change
+ 	state.
+
+Wed Aug 21 10:14:59 1996  Richard Henderson  <rth@tamu.edu>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Malloc the error string rather
+	than putting it on the stack.
+
+Wed Aug 21 10:12:42 1996  Richard Henderson  <rth@tamu.edu>
+
+	* elf/rtld.c (dl_main): When looking up symbols in response to --list,
+	don't find .plt entries.
+
+Mon Aug 19 23:18:12 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Optimize clearing
+	_dl_starting_up.
+
+Tue Aug 20 17:42:10 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* stdio/linewrap.c (line_wrap_stream): Initialize D->seek.
+
 Sat Aug 17 12:19:37 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* login/pututline_r.c (__pututline_r): Fix handling of case where
