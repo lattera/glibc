@@ -1,3 +1,9 @@
+2004-07-12  Roland McGrath  <roland@redhat.com>
+
+	* manual/signal.texi (Interrupted Primitives): Make clear that
+	TEMP_FAILURE_RETRY evaluates its expression as long int and compares
+	it to -1 to define "failure".
+
 2004-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/ldconfig.c: Define PROCINFO_CLASS as static before including
