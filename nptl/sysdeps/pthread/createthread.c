@@ -123,7 +123,8 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 
      CLONE_CHILD_CLEARTID
 	The kernels clears the thread ID of a thread that has called
-	sys_exit() - using the same parameter as CLONE_SETTID.
+	sys_exit() in the location pointed to by the seventh parameter
+	to CLONE.
 
      CLONE_DETACHED
 	No signal is generated if the thread exists and it is

@@ -81,6 +81,7 @@
 	* misc/sys/mman.h: Add prototype for remap_file_pages.
 	* sysdeps/generic/remap_file_pages.c: New file.
 	* misc/Makefile (routines): Add remap_file_pages.
+	* misc/Versions [libc:GLIBC_2.3.3]: Add remap_file_pages.
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Define MAP_POPULATE
 	and MAP_NONBLOCK.
