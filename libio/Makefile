@@ -34,7 +34,7 @@ routines	:=							      \
 	iofputws iofputws_u iogetwline iowpadn ioungetwc putwc putwc_u	      \
 	putwchar putwchar_u putchar putchar_u fwprintf swprintf vwprintf      \
 	wprintf wscanf fwscanf vwscanf vswprintf iovswscanf swscanf wgenops   \
-	wstrops wfileops iofwide					      \
+	wstrops wfileops iofwide fwide					      \
 									      \
 	clearerr feof ferror fileno fputc freopen fseek getc getchar	      \
 	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \

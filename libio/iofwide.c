@@ -92,9 +92,6 @@ _IO_fwide (fp, mode)
        or the orientation already has been determined.  */
     return fp->_mode;
 
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
-
   /* Set the orientation appropriately.  */
   if (mode > 0)
     {
@@ -149,9 +146,6 @@ _IO_fwide (fp, mode)
 
   /* Set the mode now.  */
   fp->_mode = mode;
-
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
 
   return mode;
 }

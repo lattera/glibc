@@ -1,7 +1,12 @@
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-load.c (_dl_map_object): Implement handling of
-	DF_1_NODEFLIB.
+	* libio/Makefile (routines): Add fwide.
+	* libio/iofwide.c (_IO_fwide): Remove locking.  This is done in
+	fwide now.  Internal calls to _IO_fwide must do locking themselves
+	or don't need locking.
+	* libio/fwide.c: New file.
+
+	* elf/dl-load.c (_dl_map_object): Implement handling of DF_1_NODEFLIB.
 
 	* elf/Makefile: Add no modules for nodelete test.
 	* elf/nodelmod3.c: New file.
