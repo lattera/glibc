@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,96,97,98,99,2000 Free Software Foundation, Inc.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
 
@@ -127,6 +127,8 @@ tr_freehook (ptr, caller)
      __ptr_t ptr;
      const __ptr_t caller;
 {
+  if (ptr == NULL)
+    return;
   __libc_lock_lock (lock);
   tr_where (caller);
   /* Be sure to print it first.  */
