@@ -1,3 +1,9 @@
+2003-03-31  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/m68020/bits/atomic.h (atomic_increment_and_test):
+	Define.
+	(atomic_decrement_and_test): Fix test.
+
 2003-03-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc32/bits/atomic.h: New file.
