@@ -1,5 +1,9 @@
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Rewrite to use clone.
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Define CLONE_VFORK.
+
 	* timezone/zdump.c: Update from tzcode1999a.
 	* timezone/zic.c: Likewise.
 

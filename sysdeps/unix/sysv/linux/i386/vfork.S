@@ -1,6 +1,6 @@
 /* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Schwab <schwab@gnu.org>.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -28,37 +28,21 @@
 
 ENTRY (__vfork)
 
-#ifdef __NR_vfork
+	/* We have to use the clone() system call.  The flags to use are
+		CLONE_VFORK | CLONE_VM
+	   and we send SIGCHLD on termination (i.e., flags = 0x4111).  */
 
-	/* Pop the return PC value into ECX.  */
-	popl	%ecx
-
-	/* Stuff the syscall number in EAX and enter into the kernel.  */
-	movl	$SYS_ify (vfork), %eax
+	popl	%edx		/* Pop return address.  */
+	pushl	%ebx
+	movl	%esp, %ecx
+	movl	$0x4111, %ebx
+	movl	$SYS_ify(clone), %eax
 	int	$0x80
-	cmpl	$-4095, %eax
-	jae	.Lerror		/* Branch forward if it failed.  */
-
-	/* Jump to the return PC.  */
-	jmp	*%ecx
-
-.Lerror:
-	/* Push back the return PC.  */
-	pushl	%ecx
-
-	/* Check if vfork syscall is known at all.  */
-	cmpl	$-ENOSYS, %eax
-	jne	SYSCALL_ERROR_LABEL
-
-#endif
-
-	/* If we don't have vfork, fork is close enough.  */
-
-	movl	$SYS_ify (fork), %eax
-	int	$0x80
+	popl	%ebx
+	pushl	%edx
 	cmpl	$-4095, %eax
 	jae	SYSCALL_ERROR_LABEL
-.Lpseudo_end:
+L(pseudo_end):
 	ret
 
 PSEUDO_END (__vfork)

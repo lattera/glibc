@@ -1,6 +1,6 @@
 /* Definitions of constants and data structure for POSIX 1003.1b-1993
    scheduling interface.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,6 +39,8 @@
 # define CLONE_SIGHAND 0x00000800 /* Set if signal handlers shared.  */
 # define CLONE_PID     0x00001000 /* Set if pid shared.  */
 # define CLONE_PTRACE  0x00002000 /* Set if tracing continues on the child.  */
+# define CLONE_VFORK   0x00004000 /* Set if the parent wants the child to
+				     wake it up on mm_release.  */
 #endif
 
 /* The official definition.  */
