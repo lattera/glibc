@@ -1,3 +1,10 @@
+2003-12-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_setcancelstate,
+	pthread_setcanceltype, pthread_cancel, pthread_testcancel): Remove
+	__THROW.
+	* semaphore.h (sem_wait, sem_timedwait): Likewise.
+
 2003-12-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* manager.c (pthread_free): Call _dl_deallocate_tls even for
