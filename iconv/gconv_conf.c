@@ -326,7 +326,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 
   /* Process the known entries of the file.  Comments start with `#' and
      end with the end of the line.  Empty lines are ignored.  */
-  while (!feof (fp))
+  while (!feof_unlocked (fp))
     {
       char *rp, *endp, *word;
       ssize_t n = __getdelim (&line, &line_len, '\n', fp);

@@ -34,7 +34,7 @@ routines	:=							      \
 	clearerr feof ferror fgetc fileno fputc freopen fseek getc getchar    \
 	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \
 	iovdprintf vscanf vsnprintf obprintf fcloseall fseeko ftello	      \
-	freopen64 fseeko64 ftello64 iofread_u iofwrite_u		      \
+	freopen64 fseeko64 ftello64					      \
 									      \
 	libc_fatal
 
@@ -50,7 +50,7 @@ CPPFLAGS-.o += -DIO_DEBUG
 
 ifneq (,$(filter %REENTRANT, $(defines)))
 routines += clearerr_u feof_u ferror_u fputc_u getc_u getchar_u		      \
-	    iofflush_u putc_u putchar_u peekc
+	    iofflush_u putc_u putchar_u peekc iofread_u iofwrite_u iofgets_u
 
 CPPFLAGS += -D_IO_MTSAFE_IO
 endif

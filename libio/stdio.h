@@ -476,6 +476,12 @@ extern int putw __P ((int __w, FILE *__stream));
 extern char *fgets __P ((char *__restrict __s, int __n,
 			 FILE *__restrict __stream));
 
+#ifdef __USE_GNU
+/* This function does the same as `fgets' but does not lock the stream.  */
+extern char *fgets_unlocked __P ((char *__restrict __s, int __n,
+				  FILE *__restrict __stream));
+#endif
+
 /* Get a newline-terminated string from stdin, removing the newline.
    DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.  */
 extern char *gets __P ((char *__s));

@@ -14,6 +14,9 @@ libc {
     pthread_self; pthread_setcancelstate; pthread_setcanceltype;
     pthread_setschedparam;
   }
+  GLIBC_2.1 {
+    pthread_attr_init;
+  }
 }
 
 libpthread {

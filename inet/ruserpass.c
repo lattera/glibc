@@ -265,7 +265,7 @@ token()
 	int c;
 	struct toktab *t;
 
-	if (feof(cfile) || ferror(cfile))
+	if (feof_unlocked(cfile) || ferror_unlocked(cfile))
 		return (0);
 	while ((c = getc_unlocked(cfile)) != EOF &&
 	    (c == '\n' || c == '\t' || c == ' ' || c == ','))
