@@ -64,12 +64,12 @@ pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
 # support old timeval32 entry points
 osf_select	-	osf_select	5	__select_tv32  __select@GLIBC_2.0 select@GLIBC_2.0
 osf_gettimeofday -	osf_gettimeofday 2	__gettimeofday_tv32  __gettimeofday@GLIBC_2.0 gettimeofday@GLIBC_2.0
-osf_settimeofday -	osf_settimeofday 2	__settimeofday_tv32  __settimeofday@GLIBC_2.0 settimeofday@GLIBC_2.0
-osf_getitimer	-	osf_getitimer	2	__getitimer_tv32  __getitimer@GLIBC_2.0 getitimer@GLIBC_2.0
-osf_setitimer	-	osf_setitimer	3	__setitimer_tv32  __setitimer@GLIBC_2.0 setitimer@GLIBC_2.0
-osf_utimes	-	osf_utimes	2	__utimes_tv32  __utimes@GLIBC_2.0 utimes@GLIBC_2.0
-osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  __getrusage@GLIBC_2.0 getrusage@GLIBC_2.0
-osf_wait4	-	osf_wait4	2	__wait4_tv32  __wait4@GLIBC_2.0 wait4@GLIBC_2.0
+osf_settimeofday -	osf_settimeofday 2	__settimeofday_tv32  settimeofday@GLIBC_2.0
+osf_getitimer	-	osf_getitimer	2	__getitimer_tv32  getitimer@GLIBC_2.0
+osf_setitimer	-	osf_setitimer	3	__setitimer_tv32  setitimer@GLIBC_2.0
+osf_utimes	-	osf_utimes	2	__utimes_tv32  utimes@GLIBC_2.0
+osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  getrusage@GLIBC_2.0
+osf_wait4	-	osf_wait4	2	__wait4_tv32  wait4@GLIBC_2.0
 old_adjtimex	-	old_adjtimex	1	__adjtimex_tv32  __adjtimex@GLIBC_2.0 adjtimex@GLIBC_2.0
 
 # and one for timeval64 entry points
