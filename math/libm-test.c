@@ -3499,10 +3499,10 @@ basic_tests (void)
   /*
      And again with the value returned by the `nan' function.
    */
-  check_bool ("isnan (NAN)", isnan (FUNC(nan) ("")));
-  check_bool ("isnan (-NAN)", isnan (-FUNC(nan) ("")));
-  check_bool ("!isinf (NAN)", !(isinf (FUNC(nan) (""))));
-  check_bool ("!isinf (-NAN)", !(isinf (-FUNC(nan) (""))));
+  check_bool ("isnan (NAN)", FUNC(isnan) (FUNC(nan) ("")));
+  check_bool ("isnan (-NAN)", FUNC(isnan) (-FUNC(nan) ("")));
+  check_bool ("!isinf (NAN)", !(FUNC(isinf) (FUNC(nan) (""))));
+  check_bool ("!isinf (-NAN)", !(FUNC(isinf) (-FUNC(nan) (""))));
   check_bool ("NAN != NAN", FUNC(nan) ("") != FUNC(nan) (""));
 
   /* test if EPSILON is ok */

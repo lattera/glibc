@@ -41,9 +41,12 @@ __roundl (long double x)
 	  if (huge + x > 0.0)
 	    {
 	      se &= 0x8000;
-	      if (j0 == -1)
-		se |= 0x3fff;
 	      i0 = i1 = 0;
+	      if (j0 == -1)
+		{
+		  se |= 0x3fff;
+		  i0 = 0x80000000;
+		}
 	    }
 	}
       else
@@ -55,7 +58,7 @@ __roundl (long double x)
 	  if (huge + x > 0.0)
 	    {
 	      /* Raise inexact if x != 0.  */
-	      u_int32_t j = i0 + 0x40000000 >> j0;
+	      u_int32_t j = i0 + (0x40000000 >> j0);
 	      if (j < i0)
 		se += 1;
 	      i0 = (j & ~i) | 0x80000000;
@@ -86,7 +89,10 @@ __roundl (long double x)
 	    {
 	      u_int32_t k = i0 + 1;
 	      if (k < i0)
-		se += 1;
+		{
+		  se += 1;
+		  k |= 0x80000000;
+		}
 	      i0 = k;
 	    }
 	  i1 = j;

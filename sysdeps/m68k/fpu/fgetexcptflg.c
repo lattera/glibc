@@ -1,5 +1,7 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Store current representation for exceptions.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,25 +18,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _LIBGEN_H
+#include <fenv.h>
 
-#define _LIBGEN_H	1
-#include <sys/cdefs.h>
+void
+fegetexceptflag (fexcept_t *flagp, int excepts)
+{
+  fexcept_t fpsr;
 
-__BEGIN_DECLS
+  /* Get the current exceptions.  */
+  __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (fpsr));
 
-/* Return directory part of PATH or "." if none is available.  */
-extern char *dirname __P ((char *__path));
-
-/* Return final component of PATH.
-
-   This is the weird XPG version of this function.  It sometimes will
-   modify its argument.  Therefore we normally use the GNU version (in
-   <string.h>) and only if this header is included make the XPG
-   version available under the real name.  */
-extern char *__xpg_basename __P ((char *__path));
-#define basename(path)	__xpg_basename (path)
-
-__END_DECLS
-
-#endif /* libgen.h */
+  *flagp = fpsr & excepts & FE_ALL_EXCEPT;
+}

@@ -466,7 +466,60 @@ __finite (double __x)
      : "=q" (__result) : "0" (((int *) &__x)[1]));
   return __result;
 }
+
+
+/* ISO C 9X defines some macros to perform unordered comparisons.  The
+   ix87 FPU supports this with special opcodes and we should use them.
+   This must not be inline functions since we  have to be able to handle
+   all floating-point types.  */
+#undef isgreater
+#define isgreater(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; andb $0x45, %%ah; setz %%al;"	      \
+		 "andl $0xff, %0"					      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+#undef isgreaterequal
+#define isgreaterequal(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al;"	      \
+		 "andl $0xff, %0"					      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+#undef isless
+#define isless(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x45, %%ah;"      \
+		 "setz %%al; andl $0xff, %0"				      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+#undef islessequal
+#define islessequal(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x05, %%ah;"      \
+		 "setz %%al; andl $0xff, %0"				      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+#undef islessgreater
+#define islessgreater(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al;"	      \
+		 "andl $0xff, %0"					      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+#undef isunordered
+#define isunordered(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; sahf; setp %%al; andl $0xff, %0"	      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
 #endif
+
 
 #ifdef __USE_MISC
 __MATH_INLINE double coshm1 (double __x);

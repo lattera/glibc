@@ -1,3 +1,48 @@
+1997-04-17 16:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/libgen.h: Change prototype for of basename to XPG variant.
+	* stdlib/Makefile (routines): Add xpg_basename.
+	* stdlib/basename.c: New file.
+	* string/string.h: Don't declare basename function if basename
+	macro is available.
+
+1997-04-16 17:33  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/utmp_file.c (proc_utmp_eq): Only use ut_id field if valid.
+
+1997-04-15 12:47  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/fclrexcpt.c: New file.
+	* sysdeps/m68k/fpu/fenvbits.h: New file.
+	* sysdeps/m68k/fpu/fegetenv.c: New file.
+	* sysdeps/m68k/fpu/fegetround.c: New file.
+	* sysdeps/m68k/fpu/fesetenv.c: New file.
+	* sysdeps/m68k/fpu/fesetround.c: New file.
+	* sysdeps/m68k/fpu/feupdateenv.c: New file.
+	* sysdeps/m68k/fpu/fgetexcptflg.c: New file.
+	* sysdeps/m68k/fpu/fraiseexcpt.c: New file.
+	* sysdeps/m68k/fpu/fsetexcptflg.c: New file.
+	* sysdeps/m68k/fpu/ftestexcept.c: New file.
+	* sysdeps/m68k/fpu/mathbits.h: New file.
+
+	* sysdeps/m68k/fpu/s_remquo.c: New file.
+	* sysdeps/m68k/fpu/s_remquol.c: New file.
+	* sysdeps/m68k/fpu/s_remquof.c: New file.
+
+	* sysdeps/libm-ieee754/s_roundl.c: Restore integer bit when
+	mantissa overflows into exponent.  Fix priority of >> vs +.
+
+	* math/libm-test.c (basic_tests): Use the appropriate isnan and
+	isinf function to test the value of the nan function.
+
+1997-04-15 13:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/s_finite.S: Fix typo.
+
+	* sysdeps/i386/fpu/__math.h: Add optimized versions of isgreater,
+	isgreaterequal, isless, islessequal, islessgreater, and
+	isunordered.
+
 1997-04-15 03:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wcsstr.c: Add weak alias wcswcs for Unix98 compliance.

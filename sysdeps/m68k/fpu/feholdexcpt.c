@@ -1,5 +1,7 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Store current floating-point environment and clear exceptions.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,25 +18,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _LIBGEN_H
+#include <fenv.h>
 
-#define _LIBGEN_H	1
-#include <sys/cdefs.h>
+int
+feholdexcept (fenv_t *envp)
+{
+  fexcept_t fpcr, fpsr;
 
-__BEGIN_DECLS
+  /* Store the environment.  */
+  __asm__ ("fmovem%.l %/fpcr/%/fpsr,%0" : "=m" (*envp));
 
-/* Return directory part of PATH or "." if none is available.  */
-extern char *dirname __P ((char *__path));
+  /* Now clear all exceptions.  */
+  fpsr = envp->status_register & ~FE_ALL_EXCEPT;
+  __asm__ __volatile__ ("fmove%.l %0,%/fpsr" : : "dm" (fpsr));
+  /* And set all exceptions to non-stop.  */
+  fpcr = envp->control_register & ~(FE_ALL_EXCEPT << 5);
+  __asm__ __volatile__ ("fmove%.l %0,%!" : : "dm" (fpcr));
 
-/* Return final component of PATH.
-
-   This is the weird XPG version of this function.  It sometimes will
-   modify its argument.  Therefore we normally use the GNU version (in
-   <string.h>) and only if this header is included make the XPG
-   version available under the real name.  */
-extern char *__xpg_basename __P ((char *__path));
-#define basename(path)	__xpg_basename (path)
-
-__END_DECLS
-
-#endif /* libgen.h */
+  return 1;
+}

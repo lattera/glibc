@@ -5,10 +5,10 @@
 #include <machine/asm.h>
 
 ENTRY(__finite)
-	movl	8(%esp)
+	movl	8(%esp),%eax
 	movl    $0xFFEFFFFF,%ecx
 	subl    %eax,%ecx
-	xorl    %ecx,%eax,%eax
+	xorl    %ecx,%eax
 	shrl	$31, %eax
 	ret
 END (__finite)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,25 +16,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _LIBGEN_H
+#ifndef _MATHBITS_H
+#define _MATHBITS_H	1
 
-#define _LIBGEN_H	1
-#include <sys/cdefs.h>
+/* The m68k FPUs evaluate all values in the 96 bit floating-point format
+   which is also available for the user as `long double'.  Therefore we
+   define: */
+typedef long double float_t;	/* `float' expressions are evaluated as
+				   `long double'.  */
+typedef long double double_t;	/* `double' expressions are evaluated as
+				   `long double'.  */
 
-__BEGIN_DECLS
+/* Signal that both types are `long double'.  */
+#define FLT_EVAL_METHOD	2
 
-/* Return directory part of PATH or "." if none is available.  */
-extern char *dirname __P ((char *__path));
+/* Define `INFINITY' as value of type `float_t'.  */
+#define INFINITY	HUGE_VALL
 
-/* Return final component of PATH.
-
-   This is the weird XPG version of this function.  It sometimes will
-   modify its argument.  Therefore we normally use the GNU version (in
-   <string.h>) and only if this header is included make the XPG
-   version available under the real name.  */
-extern char *__xpg_basename __P ((char *__path));
-#define basename(path)	__xpg_basename (path)
-
-__END_DECLS
-
-#endif /* libgen.h */
+#endif /* mathbits.h */

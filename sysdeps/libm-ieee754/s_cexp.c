@@ -38,16 +38,19 @@ __cexp (__complex__ double x)
 	{
 	  /* Imaginary part is finite.  */
 	  double exp_val = __ieee754_exp (__real__ x);
+	  double sinix, cosix;
+
+	  __sincos (__imag__ x, &sinix, &cosix);
 
 	  if (isfinite (exp_val))
 	    {
-	      __real__ retval = exp_val * __cos (__imag__ x);
-	      __imag__ retval = exp_val * __sin (__imag__ x);
+	      __real__ retval = exp_val * cosix;
+	      __imag__ retval = exp_val * sinix;
 	    }
 	  else
 	    {
-	      __real__ retval = __copysign (exp_val, __cos (__imag__ x));
-	      __imag__ retval = __copysign (exp_val, __sin (__imag__ x));
+	      __real__ retval = __copysign (exp_val, cosix);
+	      __imag__ retval = __copysign (exp_val, sinix);
 	    }
 	}
       else
@@ -74,8 +77,12 @@ __cexp (__complex__ double x)
 	    }
 	  else
 	    {
-	      __real__ retval = __copysign (value, __cos (__imag__ x));
-	      __imag__ retval = __copysign (value, __sin (__imag__ x));
+	      double sinix, cosix;
+
+	      __sincos (__imag__ x, &sinix, &cosix);
+
+	      __real__ retval = __copysign (value, cosix);
+	      __imag__ retval = __copysign (value, sinix);
 	    }
 	}
       else if (signbit (__real__ x) == 0)

@@ -260,8 +260,11 @@ extern char *strfry __P ((char *__string));
 extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
 #endif
 
-#ifdef	__USE_MISC
-/* Return the file name within directory of FILENAME.  */
+#if defined __USE_MISC || !defined basename
+/* Return the file name within directory of FILENAME.  We don't
+   declare the function if the `basename' macro is available (defined
+   in <libgen.h>) which makes the XPG version of this function
+   available.  */
 extern char *basename __P ((__const char *__filename));
 #endif
 
