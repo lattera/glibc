@@ -102,7 +102,7 @@ fi
 # We need some extensions to the `ldd' script.
 
 case "$machine" in
-  i[3456]86* | m68k | sparc/sparc32)
+  i[3456]86* | m68* | sparc/sparc32)
     ldd_rewrite_script=../sysdeps/unix/sysv/linux/ldd-rewrite.sed
     ;;
   *)

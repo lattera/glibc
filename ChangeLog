@@ -1,3 +1,8 @@
+1998-04-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Remove extra dependencies for EUC-KR.so and
+	JOHAB.so.
+
 1998-04-01 13:20  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* io/Makefile (static-only-routines): Add stat64, fstat64 and
