@@ -1,4 +1,5 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,2001 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,2001,02
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +43,7 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
 				     memory_object_default		\
 				     exc mach4				\
-				     default_pager default_pager_helper	\
+				     default_pager			\
 	            )\
 		   $(addprefix device/,device device_request)
 # We produce mach_interface.h from mach.defs because there is already a

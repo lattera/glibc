@@ -1,0 +1,94 @@
+ 
+
+
+echo $ac_n "checking for task_t in mach/mach_types.h""... $ac_c" 1>&6
+echo "configure:6: checking for task_t in mach/mach_types.h" >&5
+if eval "test \"`echo '$''{'libc_cv_mach_task_t'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 11 "configure"
+#include "confdefs.h"
+#include <mach/mach_types.h>
+int main() {
+extern task_t foo;
+; return 0; }
+EOF
+if { (eval echo configure:18: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  libc_cv_mach_task_t=task_t
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  libc_cv_mach_task_t=task_port_t
+fi
+rm -f conftest*
+fi
+
+echo "$ac_t""$libc_cv_mach_task_t" 1>&6
+if test $libc_cv_mach_task_t != task_t; then
+  DEFINES="$DEFINES -Dtask_t=task_port_t"
+fi
+echo $ac_n "checking for thread_t in mach/mach_types.h""... $ac_c" 1>&6
+echo "configure:35: checking for thread_t in mach/mach_types.h" >&5
+if eval "test \"`echo '$''{'libc_cv_mach_thread_t'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 40 "configure"
+#include "confdefs.h"
+#include <mach/mach_types.h>
+int main() {
+extern thread_t foo;
+; return 0; }
+EOF
+if { (eval echo configure:47: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  libc_cv_mach_thread_t=thread_t
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  libc_cv_mach_thread_t=thread_port_t
+fi
+rm -f conftest*
+fi
+
+echo "$ac_t""$libc_cv_mach_thread_t" 1>&6
+if test $libc_cv_mach_thread_t != thread_t; then
+  DEFINES="$DEFINES -Dthread_t=thread_port_t"
+fi
+
+echo $ac_n "checking for creation_time in task_basic_info""... $ac_c" 1>&6
+echo "configure:65: checking for creation_time in task_basic_info" >&5
+if eval "test \"`echo '$''{'libc_cv_mach_task_creation_time'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 70 "configure"
+#include "confdefs.h"
+#include <mach/task_info.h>
+int main() {
+
+extern struct task_basic_info *i;
+long s = i->creation_time.seconds;
+
+; return 0; }
+EOF
+if { (eval echo configure:80: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  libc_cv_mach_task_creation_time=yes
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  libc_cv_mach_task_creation_time=no
+fi
+rm -f conftest*
+fi
+
+echo "$ac_t""$libc_cv_mach_task_creation_time" 1>&6
+if test $libc_cv_mach_task_creation_time = no; then
+  DEFINES="$DEFINES -DNO_CREATION_TIME=1"
+fi

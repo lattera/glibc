@@ -1,0 +1,32 @@
+sinclude(./aclocal.m4)dnl Autoconf lossage.
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+
+dnl
+dnl mach_TYPE_CHECK(foo_t, bar_t)
+dnl
+dnl Check if foo_t is defined by <mach/mach_types.h>.
+dnl If not, compile with -Dfoo_t=bar_t.
+dnl
+AC_DEFUN([mach_TYPE_CHECK], [dnl
+AC_CACHE_CHECK(for $1 in mach/mach_types.h, libc_cv_mach_$1,
+AC_TRY_COMPILE([#include <mach/mach_types.h>], [extern $1 foo;],
+libc_cv_mach_$1=$1, libc_cv_mach_$1=$2))
+if test [$]libc_cv_mach_$1 != $1; then
+  DEFINES="$DEFINES -D$1=$2"
+fi])
+
+dnl
+dnl OSF Mach has renamed these typedefs for some reason.
+dnl
+mach_TYPE_CHECK(task_t, task_port_t)
+mach_TYPE_CHECK(thread_t, thread_port_t)
+
+AC_CACHE_CHECK(for creation_time in task_basic_info,
+	       libc_cv_mach_task_creation_time, [dnl
+AC_TRY_COMPILE([#include <mach/task_info.h>], [
+extern struct task_basic_info *i;
+long s = i->creation_time.seconds;
+], libc_cv_mach_task_creation_time=yes, libc_cv_mach_task_creation_time=no)])
+if test $libc_cv_mach_task_creation_time = no; then
+  DEFINES="$DEFINES -DNO_CREATION_TIME=1"
+fi
