@@ -22,6 +22,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <kernel-features.h>
 
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must
@@ -60,15 +61,21 @@ __libc_sigaction (sig, act, oact)
      const struct sigaction *act;
      struct sigaction *oact;
 {
+#ifndef __ASSUME_REALTIME_SIGNALS
   struct old_kernel_sigaction k_sigact, k_osigact;
+#endif
   int result;
 
 #ifdef __NR_rt_sigaction
   /* First try the RT signals.  */
+# ifndef __ASSUME_REALTIME_SIGNALS
   if (!__libc_missing_rt_sigs)
+# endif
     {
       struct kernel_sigaction kact, koact;
+# ifndef __ASSUME_REALTIME_SIGNALS
       int saved_errno = errno;
+# endif
 
       if (act)
 	{
@@ -99,7 +106,9 @@ __libc_sigaction (sig, act, oact)
 			       act ? __ptrvalue (&kact) : NULL,
 			       oact ? __ptrvalue (&koact) : NULL, _NSIG / 8);
 
+# ifndef __ASSUME_REALTIME_SIGNALS
       if (result >= 0 || errno != ENOSYS)
+# endif
 	{
 	  if (oact && result >= 0)
 	    {
@@ -113,17 +122,20 @@ __libc_sigaction (sig, act, oact)
 	  return result;
 	}
 
+# ifndef __ASSUME_REALTIME_SIGNALS
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
+# endif
     }
 #endif
 
+#ifndef __ASSUME_REALTIME_SIGNALS
   if (act)
     {
       k_sigact.k_sa_handler = act->sa_handler;
       k_sigact.sa_mask = act->sa_mask.__val[0];
       k_sigact.sa_flags = act->sa_flags;
-#ifdef HAVE_SA_RESTORER
+# ifdef HAVE_SA_RESTORER
       /* See the comments above for why we test SA_ONSTACK.  */
       if (k_sigact.sa_flags & (SA_RESTORER | SA_ONSTACK))
 	k_sigact.sa_restorer = act->sa_restorer;
@@ -132,7 +144,7 @@ __libc_sigaction (sig, act, oact)
 	  k_sigact.sa_restorer = choose_restorer (k_sigact.sa_flags);
 	  k_sigact.sa_flags |= SA_RESTORER;
 	}
-#endif
+# endif
     }
   result = INLINE_SYSCALL (sigaction, 3, sig,
 			   act ? __ptrvalue (&k_sigact) : NULL,
@@ -142,11 +154,12 @@ __libc_sigaction (sig, act, oact)
       oact->sa_handler = k_osigact.k_sa_handler;
       oact->sa_mask.__val[0] = k_osigact.sa_mask;
       oact->sa_flags = k_osigact.sa_flags;
-#ifdef HAVE_SA_RESTORER
+# ifdef HAVE_SA_RESTORER
       oact->sa_restorer = k_osigact.sa_restorer;
-#endif
+# endif
     }
   return result;
+#endif
 }
 libc_hidden_def (__libc_sigaction)
 

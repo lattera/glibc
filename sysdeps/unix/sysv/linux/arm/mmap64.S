@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #define	EINVAL		22
 #define	ENOSYS		38
 
+#include "kernel-features.h"
+
 	/* The mmap2 system call takes six arguments, all in registers.  */
 	.text
 ENTRY (__mmap64)
@@ -39,6 +41,10 @@ ENTRY (__mmap64)
 	swi	SYS_ify (mmap2)
 	cmn	r0, $4096
 	LOADREGS(ccfd, sp!, {r4, r5, pc})
+# ifdef __ASSUME_MMAP2_SYSCALL
+	ldmfd	sp!, {r4, r5, lr}
+	b	PLTJMP(syscall_error)
+# else
 	cmn	r0, $ENOSYS
 	ldmnefd	sp!, {r4, r5, lr}
 	bne	PLTJMP(syscall_error)
@@ -49,6 +55,7 @@ ENTRY (__mmap64)
 	teq	r5, $0
 	ldmeqfd	sp!, {r4, r5, lr}
 	beq	PLTJMP(__mmap)
+# endif
 .Linval:
 	mov	r0, $-EINVAL
 	ldmfd	sp!, {r4, r5, lr}
