@@ -2,6 +2,8 @@
 
 	* wrapsyscall.c: Add __nanosleep alias.
 	* Versions (GLIBC_2.2.6): Add __nanosleep.
+	* bug-sleep.c: New file.
+	* Makefile (tests): Add bug-sleep.
 
 2002-06-19  Steven Munroe  <sjmunroe@vnet.ibm.com>
 
