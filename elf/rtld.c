@@ -823,7 +823,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   if (_dl_rtld_map.l_next)
     _dl_rtld_map.l_next->l_prev = _dl_rtld_map.l_prev;
 
-  if (__builtin_expect (_dl_rtld_map.l_opencount, 2) > 1)
+  if (__builtin_expect (_dl_rtld_map.l_opencount > 1, 1))
     {
       /* Some DT_NEEDED entry referred to the interpreter object itself, so
 	 put it back in the list of visible objects.  We insert it into the

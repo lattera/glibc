@@ -67,8 +67,7 @@ _dl_close (void *_map)
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
     {
       /* There are still references to this object.  Do nothing more.  */
-      if (//__builtin_expect (_dl_debug_files, 0))
-	  __builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
+      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
 	{
 	  char buf[20];
 
