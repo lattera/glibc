@@ -62,9 +62,13 @@ __mbsrtowcs (dst, src, len, ps)
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
     {
+      mbstate_t temp_state;
       wchar_t buf[64];		/* Just an arbitrary size.  */
       const unsigned char *inbuf = (const unsigned char *) *src;
       const unsigned char *srcend = inbuf + strlen (inbuf) + 1;
+
+      temp_state = *data.__statep;
+      data.__statep = &temp_state;
 
       result = 0;
       data.__outbufend = (char *) buf + sizeof (buf);

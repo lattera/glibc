@@ -1,5 +1,14 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/mbrtowc.c: Create temporary state object if no output is
+	written.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+
+	* wcsmbs/wcrtomb.c: Compute result correctly for successful call
+	with s == NULL.
+
 	* wcsmbs/mbsrtowcs.c: Compute return value correctly after change
 	in gconv function.
 

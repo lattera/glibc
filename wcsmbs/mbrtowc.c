@@ -34,6 +34,7 @@ static mbstate_t state;
 size_t
 __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
+  mbstate_t temp_state;
   wchar_t buf[1];
   struct __gconv_step_data data;
   int status;
@@ -57,6 +58,8 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
       data.__outbuf = (char *) buf;
       s = "";
       n = 1;
+      temp_state = *data.__statep;
+      data.__statep = &temp_state;
     }
 
   /* Make sure we use the correct function.  */

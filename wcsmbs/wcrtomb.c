@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -36,6 +36,7 @@ static mbstate_t state;
 size_t
 __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
+  mbstate_t temp_state;
   char buf[MB_CUR_MAX];
   struct __gconv_step_data data;
   int status;
@@ -56,6 +57,8 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
     {
       data.__outbuf = buf;
       wc = L'\0';
+      temp_state = *data.__statep;
+      data.__statep = &temp_state;
     }
 
   /* Make sure we use the correct function.  */
@@ -95,7 +98,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 
   if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
       || status == __GCONV_FULL_OUTPUT)
-    result = data.__outbuf - (unsigned char *) s;
+    result = data.__outbuf - (unsigned char *) (s ?: buf);
   else
     {
       result = (size_t) -1;
