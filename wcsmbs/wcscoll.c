@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,8 +19,6 @@
 
 #include <wchar.h>
 
-#define STRING_TYPE wchar_t
-#define USTRING_TYPE wint_t
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
 # define STRCOLL __wcscoll_l
 #else
@@ -28,4 +26,19 @@
 #endif
 #define STRCMP wcscmp
 
-#include <string/strcoll.c>
+
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
+int
+STRCOLL (s1, s2)
+     const wchar_t *s1;
+     const wchar_t *s2;
+#else
+int
+STRCOLL (s1, s2, l)
+     const wchar_t *s1;
+     const wchar_t *s2;
+     __locale_t l;
+#endif
+{
+  return STRCMP (s1, s2);
+}

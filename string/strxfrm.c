@@ -191,7 +191,7 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
     {
       int32_t tmp = findidx (&usrc);
       rulearr[idxmax] = tmp >> 24;
-      idxarr[idxmax] = tmp & 0x80ffffff;
+      idxarr[idxmax] = tmp & 0xffffff;
 
       ++idxmax;
     }

@@ -381,7 +381,7 @@ read_directions (struct linereader *ldfile, struct token *arg,
 	      if (! warned)
 		{
 		  lr_error (ldfile, _("\
-%s: `%s' mentioned twice in definition of weight %d"),
+%s: `%s' mentioned more than once in definition of weight %d"),
 			    "LC_COLLATE", "forward", cnt + 1);
 		}
 	    }
@@ -407,7 +407,7 @@ read_directions (struct linereader *ldfile, struct token *arg,
 	      if (! warned)
 		{
 		  lr_error (ldfile, _("\
-%s: `%s' mentioned twice in definition of weight %d"),
+%s: `%s' mentioned more than once in definition of weight %d"),
 			    "LC_COLLATE", "backward", cnt + 1);
 		}
 	    }
@@ -423,7 +423,7 @@ read_directions (struct linereader *ldfile, struct token *arg,
 	      if (! warned)
 		{
 		  lr_error (ldfile, _("\
-%s: `%s' mentioned twice in definition of weight %d"),
+%s: `%s' mentioned more than once in definition of weight %d"),
 			    "LC_COLLATE", "position", cnt + 1);
 		}
 	    }
@@ -1378,6 +1378,19 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
   /* If this assertion is hit change the type in `element_t'.  */
   assert (nrules <= sizeof (runp->used_in_level) * 8);
+
+  /* Make sure that the `position' rule is used either in all sections
+     or in none.  */
+  for (i = 0; i < nrules; ++i)
+    for (sect = collate->sections; sect != NULL; sect = sect->next)
+      if ((sect->rules[i] & sort_position)
+	  != (collate->sections->rules[i] & sort_position))
+	{
+	  error (0, 0, _("\
+%s: `position' must be used for a specific level in all sections or now"),
+		 "LC_COLLATE");
+	  break;
+	}
 
   /* Find out which elements are used at which level.  At the same
      time we find out whether we have any undefined symbols.  */

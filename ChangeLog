@@ -1,5 +1,16 @@
 1999-12-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-collate.c (read_directions): Fix a few messages.
+	(collate_finish): Test that position is used in all sections for
+	a level or in none.
+
+	* string/strxfrm.c: Optimize a bit.  We don't need the highest bit
+	of the index returned by findidx.
+
+	* string/strcoll.c: Complete rewrite for new collate implementation.
+	* wcsmbs/wcscoll.c: Don't use strcoll.c, implement dummy implementation
+	locally.
+
 	* locale/C-collate.c (_nl_C_LC_COLLATE): Add one more entry for the
 	indirect table.
 	* locale/langinfo.h: Likewise.
