@@ -86,6 +86,7 @@ __fgetpwent_r (FILE *stream, struct passwd *resbuf, char *buffer,
 	{
 	  funlockfile (stream);
 	  *result = NULL;
+	  __set_errno (ENOENT);
 	  return errno;
 	}
       if (p == NULL || buffer[buflen - 1] != '\xff')
