@@ -810,13 +810,16 @@ dist: $(filter-out %.c %.S %.s,$(distribute))
 distinfo: Makefile $(..)Makerules
 	$(distinfo-vars)
 	mv -f $@.new $@
+.PHONY: subdir_distinfo
+subdir_distinfo: distinfo
 
 define distinfo-vars
 rm -f $@.new
 $(foreach var,subdir subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
 	      others tests extra-libs $(extra-libs:%=%-routines) \
-	      $(addprefix install-,lib data bin sbin others),
+	      versioned \
+	      $(addprefix install-,lib lib.so data bin sbin others),
 echo >> $@.new '$(subdir)-$(var) := $($(var))'
 echo >> $@.new '$(var) = $$($(subdir)-$(var))')
 endef

@@ -107,6 +107,8 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 # The parent makefile sometimes invokes us with targets `subdir_REAL-TARGET'.
 subdir_%: % ;
+# For targets we don't define, do nothing.
+subdir_%: ;
 
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:

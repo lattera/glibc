@@ -76,6 +76,7 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 +subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
 		   subdir_clean subdir_distclean subdir_realclean	\
 		   tests subdir_lint.out				\
+		   subdir_distinfo					\
 		   subdir_echo-headers subdir_echo-distinfo		\
 		   subdir_install $(addprefix install-,			\
 					      no-libc.a bin lib		\
@@ -219,6 +220,7 @@ echo-distinfo: parent_echo-distinfo subdir_echo-distinfo
 parent_echo-distinfo:
 	@echo $(addprefix +header+,$(headers)) \
 	      $(addprefix +nodist+,$(generated))
+
 
 # Make the distribution tarfile.
 
@@ -244,3 +246,6 @@ makeinfo --no-validate --no-warn --no-headers $< -o $@
 endef
 INSTALL: manual/maint.texi; $(format-me)
 NOTES: manual/creature.texi; $(format-me)
+
+rpm/%: subdir_distinfo
+	$(MAKE) -C $(@D) subdirs='$(subdirs)' $(@F)

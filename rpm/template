@@ -1,0 +1,8 @@
+Name: glibc
+Description: GNU libc
+Group: Development/Libraries/Libc
+Version: @VERSION@
+Release: 1
+Copyright: LGPL, GPL
+
+%files

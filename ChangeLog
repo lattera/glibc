@@ -1,4 +1,24 @@
+Sun Jun 16 02:44:22 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* rpm/template: New file.
+	* rpm/Makefile: New file.
+
+	* Makeconfig (sysdep-configures): Remove empty variable.
+
+	* Makerules (distinfo-vars): Write defns for $(install-lib.so) and
+	$(versioned).
+
+	* manual/Makefile (subdir_%): Add new rule with no deps, secondary to
+	to rule w/dep on %, with no-op commands.
+
+	* Makerules (subdir_distinfo): New phony target; depend on distinfo.
+	* Makefile (rpm/%): New rule.
+	(+subdir_targets): Add subdir_distinfo.
+
 Sun Jun 16 00:40:20 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Don't add
+ 	fpu_control.h here.
 
 	* time/Makefile ($(installed-localtime-file)): If target exists, do
 	nothing but print a message; if not, make it an absolute symlink.
