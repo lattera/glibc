@@ -1,3 +1,11 @@
+2004-08-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (enum __rusage_who):
+	Remove __RUSAGE_BOTH constant and RUSAGE_BOTH macro.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+
 2004-08-15  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/i386/i686/Makefile (elide-routines.os): Append hp-timing to
