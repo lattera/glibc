@@ -1,5 +1,9 @@
 1997-10-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* Makerules (install): Correct last patch.
+
+1997-10-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* math/libm-test.c (cbrt_test): Add epsilon for cbrt(0.970299).
 
 1997-10-29 21:20  Ulrich Drepper  <drepper@cygnus.com>
