@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -29,7 +29,7 @@
 #define OPT_TOPLEVEL		304
 
 
-static const struct argp_option options[] =
+static const struct argp_option test_options[] =
   {
     { NULL, 0, NULL, 0, "\
 This is a test for threads so we allow ther user to selection the number of \
@@ -89,12 +89,12 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state);
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
 {
-  options, parse_opt
+  test_options, parse_opt
 };
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int argc = 2;
   char *argv[3] = { (char *) "tst-argp1", (char *) "--help", NULL };
@@ -113,3 +113,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 {
   return ARGP_ERR_UNKNOWN;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
