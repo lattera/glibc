@@ -1,3 +1,16 @@
+Fri May 10 16:22:44 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
+
+	* string/argz-create.c (__argz_create): Restore const keyword to
+ 	ARGV parm.
+	* string/argz.h (__argz_create, argz_create): Restore const
+ 	keyword.
+
+Fri May 10 11:48:03 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* string/argz.h (argz_create): Fix param type.
+	* string/argz-create.c (__argz_create): Remove const from param type.
+	* string/envz.c (envz_get): Remove const from return type.
+
 Fri May 10 09:41:54 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 
 	* string/argz.h (__argz_create, argz_create): Omit const keyword
