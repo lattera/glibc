@@ -1,3 +1,17 @@
+2000-09-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (distribute): Add nextmod1.c and nextmod2.c.
+	(tests): Add next.
+	(modules-names): Add nextmod1 and nextmod2.
+	Add rules to build and run next.
+	* elf/next.c: New file.
+	* elf/nextmod1.c: New file.
+	* elf/nextmod2.c: New file.
+
+2000-09-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol_skip): Fix a typo.
+
 2000-09-15  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/fpu/fenv_libc.h: New file.
