@@ -990,7 +990,7 @@ be needed after upgrading:
   If it has been in use, it should be switched off.
 - Programs using IPv6 have to be recompiled due to incompatible changes in
   sockaddr_in6 by the IPv6 working group.
-- The Berkeley db libraries have been removed (for details see ??nssdb).
+- The Berkeley db libraries have been removed (for details see ?nssdb).
 - The format of the locale files has changed, all locales should be
   regenerated with localedef.  All statically linked applications which use
   i18n should be recompiled, otherwise they'll not be localized.
