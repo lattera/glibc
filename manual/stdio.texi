@@ -8,7 +8,7 @@ representing a communications channel to a file, device, or process.
 
 @menu
 * Streams::                     About the data type representing a stream.
-* Standard Streams::            Streams to the standard input and output 
+* Standard Streams::            Streams to the standard input and output
                                  devices are created for you.
 * Opening Streams::             How to create a stream to talk to a file.
 * Closing Streams::             Close a stream when you are finished with it.
@@ -28,7 +28,7 @@ representing a communications channel to a file, device, or process.
 * Portable Positioning::        Random access on peculiar ANSI C systems.
 * Stream Buffering::            How to control buffering of streams.
 * Other Kinds of Streams::      Streams that do not necessarily correspond
-                                 to an open file. 
+                                 to an open file.
 @end menu
 
 @node Streams
@@ -127,7 +127,7 @@ reopening it.  @xref{Opening Streams}.
 @cindex opening a stream
 Opening a file with the @code{fopen} function creates a new stream and
 establishes a connection between the stream and a file.  This may
-involve creating a new file.  
+involve creating a new file.
 
 @pindex stdio.h
 Everything described in this section is declared in the header file
@@ -267,7 +267,7 @@ This function causes @var{stream} to be closed and the connection to
 the corresponding file to be broken.  Any buffered output is written
 and any buffered input is discarded.  The @code{fclose} function returns
 a value of @code{0} if the file was closed successfully, and @code{EOF}
-if an error was detected. 
+if an error was detected.
 
 It is important to check for errors when you call @code{fclose} to close
 an output stream, because real, everyday errors can be detected at this
@@ -302,7 +302,7 @@ These functions are declared in the header file @file{stdio.h}.
 @comment ANSI
 @deftypefun int fputc (int @var{c}, FILE *@var{stream})
 The @code{fputc} function converts the character @var{c} to type
-@code{unsigned char}, and writes it to the stream @var{stream}.  
+@code{unsigned char}, and writes it to the stream @var{stream}.
 @code{EOF} is returned if a write error occurs; otherwise the
 character @var{c} is returned.
 @end deftypefun
@@ -397,7 +397,7 @@ variable without loss of information.
 This function reads the next character as an @code{unsigned char} from
 the stream @var{stream} and returns its value, converted to an
 @code{int}.  If an end-of-file condition or read error occurs,
-@code{EOF} is returned instead.  
+@code{EOF} is returned instead.
 @end deftypefun
 
 @comment stdio.h
@@ -589,7 +589,7 @@ the input stream without removing it from the stream.  This is called
 the input it will read next.
 
 Using stream I/O, you can peek ahead at input by first reading it and
-then @dfn{unreading} it (also called  @dfn{pushing it back} on the stream).  
+then @dfn{unreading} it (also called  @dfn{pushing it back} on the stream).
 Unreading a character makes it available to be input again from the stream,
 by  the next call to @code{fgetc} or other input function on that stream.
 
@@ -645,7 +645,7 @@ so that the next input characters will be @samp{9} and @samp{b}.
 
 @node How Unread
 @subsection Using @code{ungetc} To Do Unreading
- 
+
 The function to unread a character is called @code{ungetc}, because it
 reverses the action of @code{getc}.
 
@@ -792,7 +792,7 @@ useful for printing error messages, tables of data, and the like.
 * Dynamic Output::		Functions that allocate memory for the output.
 * Variable Arguments Output::   @code{vprintf} and friends.
 * Parsing a Template String::   What kinds of args does a given template
-                                 call for? 
+                                 call for?
 * Example of Parsing::          Sample program using @code{parse_printf_format}.
 @end menu
 
@@ -886,12 +886,12 @@ In more detail, output conversion specifications consist of an
 initial @samp{%} character followed in sequence by:
 
 @itemize @bullet
-@item 
+@item
 Zero or more @dfn{flag characters} that modify the normal behavior of
 the conversion specification.
 @cindex flag character (@code{printf})
 
-@item 
+@item
 An optional decimal integer specifying the @dfn{minimum field width}.
 If the normal conversion produces fewer characters than this, the field
 is padded with spaces to the specified width.  This is a @emph{minimum}
@@ -906,7 +906,7 @@ printed) is used as the field width.  The value must be an @code{int}.
 If the value is negative, this means to set the @samp{-} flag (see
 below) and to use the absolute value as the field width.
 
-@item 
+@item
 An optional @dfn{precision} to specify the number of digits to be
 written for the numeric conversions.  If the precision is specified, it
 consists of a period (@samp{.}) followed optionally by a decimal integer
@@ -932,7 +932,7 @@ types.)
 A character that specifies the conversion to be applied.
 @end itemize
 
-The exact options that are permitted and how they are interpreted vary 
+The exact options that are permitted and how they are interpreted vary
 between the different conversion specifiers.  See the descriptions of the
 individual conversions for information about the particular options that
 they use.
@@ -941,7 +941,7 @@ With the @samp{-Wformat} option, the GNU C compiler checks calls to
 @code{printf} and related functions.  It examines the format string and
 verifies that the correct number and types of arguments are supplied.
 There is also a GNU C syntax to tell the compiler that a function you
-write uses a @code{printf}-style format string.  
+write uses a @code{printf}-style format string.
 @xref{Function Attributes, , Declaring Attributes of Functions,
 gcc.info, Using GNU CC}, for more information.
 
@@ -1355,7 +1355,7 @@ prints:
 @end smallexample
 
 @noindent
-and sets @code{nchar} to @code{7}, because @samp{3 bears} is seven 
+and sets @code{nchar} to @code{7}, because @samp{3 bears} is seven
 characters.
 
 
@@ -1521,7 +1521,7 @@ Since that method is impossible, we provide alternative functions, the
 @code{vprintf} series, which lets you pass a @code{va_list} to describe
 ``all of my arguments after the first five.''
 
-When it is sufficient to define a macro rather than a real function, 
+When it is sufficient to define a macro rather than a real function,
 the GNU C compiler provides a way to do this much more easily with macros.
 For example:
 
@@ -1610,7 +1610,7 @@ as for @code{vprintf}.@refill
 Here's an example showing how you might use @code{vfprintf}.  This is a
 function that prints error messages to the stream @code{stderr}, along
 with a prefix indicating the name of the program
-(@pxref{Error Messages}, for a description of 
+(@pxref{Error Messages}, for a description of
 @code{program_invocation_short_name}).
 
 @smallexample
@@ -1838,7 +1838,7 @@ validate_args (char *format, int nargs, OBJECT *args)
       error ("too few arguments (at least %d required)", nwanted);
       return 0;
     @}
-    
+
   /* @r{Check the C type wanted for each argument}
      @r{and see if the object given is suitable.}  */
   for (i = 0; i < nwanted; i++)
@@ -1899,16 +1899,16 @@ The facilities of this section are declared in the header file
 @file{printf.h}.
 
 @menu
-* Registering New Conversions::         Using @code{register_printf_function} 
+* Registering New Conversions::         Using @code{register_printf_function}
                                          to register a new output conversion.
 * Conversion Specifier Options::        The handler must be able to get
                                          the options specified in the
-                                         template when it is called. 
+                                         template when it is called.
 * Defining the Output Handler::         Defining the handler and arginfo
                                          functions that are passed as arguments
-                                         to @code{register_printf_function}.  
+                                         to @code{register_printf_function}.
 * Printf Extension Example::            How to define a @code{printf}
-                                         handler function. 
+                                         handler function.
 @end menu
 
 @strong{Portability Note:} The ability to extend the syntax of
@@ -2063,7 +2063,7 @@ argument list containing the values to be printed to your handler.
 Unlike most other functions that can be passed an explicit variable
 argument list, this is a @emph{pointer} to a @code{va_list}, rather than
 the @code{va_list} itself.  Thus, you should fetch arguments by
-means of @code{va_arg (@var{type}, *ap_pointer)}.
+means of @code{va_arg (*ap_pointer, @var{type})}.
 
 (Passing a pointer here allows the function that calls your handler
 function to update its own @code{va_list} variable to account for the
@@ -2082,7 +2082,7 @@ This is the data type that a handler function should have.
 If you are going to use @w{@code{parse_printf_format}} in your
 application, you should also define a function to pass as the
 @var{arginfo-function} argument for each new conversion you install with
-@code{register_printf_function}. 
+@code{register_printf_function}.
 
 You should define these functions with a prototype like:
 
@@ -2109,7 +2109,7 @@ the number and type of arguments used by a conversion specifier.
 @subsection @code{printf} Extension Example
 
 Here is an example showing how to define a @code{printf} handler function.
-This program defines a data structure called a @code{Widget} and 
+This program defines a data structure called a @code{Widget} and
 defines the @samp{%W} conversion to print information about @w{@code{Widget *}}
 arguments, including the pointer value and the name stored in the data
 structure.  The @samp{%W} conversion supports the minimum field width and
@@ -2279,7 +2279,7 @@ rather than a pointer to an @code{int}.
 A character that specifies the conversion to be applied.
 @end itemize
 
-The exact options that are permitted and how they are interpreted vary 
+The exact options that are permitted and how they are interpreted vary
 between the different conversion specifiers.  See the descriptions of the
 individual conversions for information about the particular options that
 they allow.
@@ -2288,7 +2288,7 @@ With the @samp{-Wformat} option, the GNU C compiler checks calls to
 @code{scanf} and related functions.  It examines the format string and
 verifies that the correct number and types of arguments are supplied.
 There is also a GNU C syntax to tell the compiler that a function you
-write uses a @code{scanf}-style format string.  
+write uses a @code{scanf}-style format string.
 @xref{Function Attributes, , Declaring Attributes of Functions,
 gcc.info, Using GNU CC}, for more information.
 
@@ -2442,7 +2442,7 @@ Specifies that the argument is of type @code{long double *}.
 @subsection String Input Conversions
 
 This section describes the @code{scanf} input conversions for reading
-string and character values: @samp{%s}, @samp{%[}, and @samp{%c}.  
+string and character values: @samp{%s}, @samp{%[}, and @samp{%c}.
 
 You have two options for how to receive the input from these
 conversions:
@@ -2503,15 +2503,15 @@ character and a following @samp{]} character, using the same syntax used
 in regular expressions.  As special cases:
 
 @itemize @bullet
-@item 
+@item
 A literal @samp{]} character can be specified as the first character
 of the set.
 
-@item 
+@item
 An embedded @samp{-} character (that is, one that is not the first or
 last character of the set) is used to specify a range of characters.
 
-@item 
+@item
 If a caret character @samp{^} immediately follows the initial @samp{[},
 then the set of allowed input characters is the everything @emph{except}
 the characters listed.
@@ -2536,7 +2536,7 @@ the standard whitespace characters.  This is slightly different from
 @samp{%[} reports a matching failure while @samp{%s} simply discards the
 initial whitespace.
 
-@item %25[a-z] 
+@item %25[a-z]
 Matches up to 25 lowercase characters.
 @end table
 
@@ -2960,7 +2960,7 @@ thing you can rely on is that you can use it subsequently as the
 @var{offset} argument to @code{fseek} to move back to the same file
 position.
 
-@item 
+@item
 In a call to @code{fseek} on a text stream, either the @var{offset} must
 either be zero; or @var{whence} must be @code{SEEK_SET} and the
 @var{offset} must be the result of an earlier call to @code{ftell} on
@@ -3103,7 +3103,7 @@ When you try to do output and the output buffer is full.
 @item
 When the stream is closed.  @xref{Closing Streams}.
 
-@item 
+@item
 When the program terminates by calling @code{exit}.
 @xref{Normal Termination}.
 
@@ -3212,7 +3212,7 @@ to use for the @var{size} argument to @code{setvbuf}.  This value is
 guaranteed to be at least @code{256}.
 
 The value of @code{BUFSIZ} is chosen on each system so as to make stream
-I/O efficient.  So it is a good idea to use @code{BUFSIZ} as the size 
+I/O efficient.  So it is a good idea to use @code{BUFSIZ} as the size
 for the buffer when you call @code{setvbuf}.
 
 Actually, you can get an even better value to use for the buffer size
@@ -3281,7 +3281,7 @@ specific to GNU.  Other systems or C implementations might or might not
 provide equivalent functionality.
 
 @menu
-* String Streams::              Streams that get data from or put data in 
+* String Streams::              Streams that get data from or put data in
                                  a string or memory buffer.
 * Obstack Streams::		Streams that store data in an obstack.
 * Custom Streams::              Defining your own streams with an arbitrary
@@ -3456,9 +3456,9 @@ programmed by you.  We call these @dfn{custom streams}.
 
 @menu
 * Streams and Cookies::         The @dfn{cookie} records where to fetch or
-                                 store data that is read or written. 
+                                 store data that is read or written.
 * Hook Functions::              How you should define the four @dfn{hook
-                                 functions} that a custom stream needs. 
+                                 functions} that a custom stream needs.
 @end menu
 
 @node Streams and Cookies
@@ -3481,7 +3481,7 @@ functions don't know what's inside the cookie, but your functions will
 know.
 
 When you create a custom stream, you must specify the cookie pointer,
-and also the four hook functions stored in a structure of type 
+and also the four hook functions stored in a structure of type
 @code{cookie_io_functions_t}.
 
 These facilities are declared in @file{stdio.h}.
@@ -3490,7 +3490,7 @@ These facilities are declared in @file{stdio.h}.
 @comment stdio.h
 @comment GNU
 @deftp {Data Type} {cookie_io_functions_t}
-This is a structure type that holds the functions that define the 
+This is a structure type that holds the functions that define the
 communications protocol between the stream and its cookie.  It has
 the following members:
 
@@ -3576,7 +3576,7 @@ the GNU library, @code{fpos_t} is equivalent to @code{off_t} or
 @code{long int}, and simply represents the number of bytes from the
 beginning of the file.
 
-After doing the seek operation, your function should store the resulting 
+After doing the seek operation, your function should store the resulting
 file position relative to the beginning of the file in @var{position}.
 Your function should return a value of @code{0} on success and @code{-1}
 to indicate an error.

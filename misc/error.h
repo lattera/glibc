@@ -1,5 +1,5 @@
 /* error.h -- declaration for error-reporting function
-   Copyright (C) 1995 Software Foundation, Inc.
+   Copyright (C) 1995, 1996 Software Foundation, Inc.
 
 This file is part of the GNU C Library.  Its master source is NOT part of
 the C library, however.  The master source lives in /gd/gnu/lib.
@@ -35,11 +35,23 @@ Cambridge, MA 02139, USA.  */
 # endif
 #endif
 
-#if __STDC__
-void error (int, int, const char *, ...) \
-  __attribute__ ((__format__ (__printf__, 3, 4)));
+#if defined (__STDC__) && __STDC__
+
+/* Print a message with `fprintf (stderr, FORMAT, ...)';
+   if ERRNUM is nonzero, follow it with ": " and strerror (ERRNUM).
+   If STATUS is nonzero, terminate the program with `exit (STATUS)'.  */
+
+extern void error (int status, int errnum, const char *format, ...)
+     __attribute__ ((__format__ (__printf__, 3, 4)));
+
+/* If NULL, error will flush stdout, then print on stderr the program
+   name, a colon and a space.  Otherwise, error will call this
+   function without parameters instead.  */
+extern void (*error_print_progname) (void);
+
 #else
 void error ();
+extern void (*error_print_progname) ();
 #endif
 
 /* This variable is incremented each time `error' is called.  */

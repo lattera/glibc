@@ -21,35 +21,38 @@ Cambridge, MA 02139, USA.  */
    93/12/06 to use stack space instead of malloc, and to handle
    large messages with MACH_RCV_LARGE.  */
 
-/* 
+/*
  * Mach Operating System
  * Copyright (c) 1991,1990 Carnegie Mellon University
  * All Rights Reserved.
- * 
+ *
  * Permission to use, copy, modify and distribute this software and its
  * documentation is hereby granted, provided that both the copyright
  * notice and this permission notice appear in all copies of the
  * software, derivative works or modified versions, and any portions
  * thereof, and that both notices appear in supporting documentation.
- * 
+ *
  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"
  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
+ *
  * Carnegie Mellon requests users of this software to return to
- * 
+ *
  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
  *  School of Computer Science
  *  Carnegie Mellon University
  *  Pittsburgh PA 15213-3890
- * 
+ *
  * any improvements or extensions that they make and grant Carnegie Mellon
  * the rights to redistribute these changes.
  */
 /*
  * HISTORY
  * $Log$
- * Revision 1.3  1995/01/21 15:00:57  roland
+ * Revision 1.4  1996/01/29 15:44:23  roland
+ * Declare DEMUX arg with prototype.
+ *
+ * Revision 1.3  1995/01/21  15:00:57  roland
  * Converted to use weak aliases with macros from libc-symbols.h.
  *
  * Revision 1.2  1994/10/10  07:20:14  roland
@@ -60,14 +63,14 @@ Cambridge, MA 02139, USA.  */
  *
  * Revision 2.4  91/05/14  17:53:22  mrt
  * 	Correcting copyright
- * 
+ *
  * Revision 2.3  91/02/14  14:17:47  mrt
  * 	Added new Mach copyright
  * 	[91/02/13  12:44:20  mrt]
- * 
+ *
  * Revision 2.2  90/08/06  17:23:58  rpd
  * 	Created.
- * 
+ *
  */
 
 
@@ -183,7 +186,7 @@ weak_alias (__mach_msg_server_timeout, mach_msg_server_timeout)
 
 mach_msg_return_t
 __mach_msg_server (demux, max_size, rcv_name)
-     boolean_t (*demux) ();
+     boolean_t (*demux) (mach_msg_header_t *in, mach_msg_header_t *out);
      mach_msg_size_t max_size;
      mach_port_t rcv_name;
 {

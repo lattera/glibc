@@ -5,8 +5,8 @@
 
 subdir = db
 
-dbdirs = btree db hash mpool recno
-vpath %.c $(dbdirs)
+subdir-dirs = btree db hash mpool recno
+vpath %.c $(subdir-dirs)
 
 routines := bt_close bt_conv bt_debug bt_delete bt_get bt_open bt_overflow \
 	    bt_page bt_put bt_search bt_seq bt_split bt_utils		   \

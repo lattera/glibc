@@ -1,3 +1,20 @@
+Thu Jan 25 21:10:39 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* db/Makefile (subdir-dirs): Renamed from dbdirs.
+
+	* Makerules (distinfo-vars): Add subdir-dirs.
+
+	* MakeTAGS: Remove vpath directives.
+	(all-dirs): Prepend $(subdir-dirs).
+	(all-sources, all-headers): Use wildcard to find sources.
+
+Mon Jan 29 10:44:38 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* malloc/Makefile (CFLAGS-vm-limit.c, CFLAGS-ralloc.c): New
+	variables.
+
+	* mach/msgserver.c: Declare DEMUX arg with prototype.
+
 Sun Jan 28 17:25:38 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* setjmp/setjmp.h (jmp_buf): Give a tag in the struct defn, to

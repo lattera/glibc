@@ -49,15 +49,11 @@ endif
 
 # Find all sysdep dirs there are, but putting the ones
 # we are configured to use first and preserving their order.
-all-dirs := $(objdir) \
+all-dirs := $(subdir-dirs) \
+	    $(objdir) \
 	    $(sysdep-dirs) \
 	    $(source_dirs) \
 	    $(filter-out $(sysdep-dirs),$(sysdep_dirs))
-
-vpath %.h $(all-dirs)
-vpath %.c $(all-dirs)
-vpath %.S $(all-dirs)
-vpath %.s $(all-dirs)
 
 # Find all the subdirs there are, but putting the ones
 # we are configured to use first and preserving their order.
@@ -83,15 +79,17 @@ all-dist := $(filter-out %.h %.c %.s %.S,$(all-dist))
 
 # All different versions of $(sources), preserving the configured sysdep
 # directory order.
-all-sources = $(shell find . $(all-dirs) -maxdepth 1 \( -name fnord \
-			   $(foreach file,$(sort $(sources) $(sources:.c=.S) \
-						 $(sources:.c=.s)),\
-				     -o -name $(file)) \
-			   \) -print)
+all-sources = $(wildcard $(sort $(sources) $(sources:.c=.S) \
+				$(sources:.c=.s))) \
+	      $(foreach dir,$(all-dirs),\
+			$(wildcard \
+			   $(addprefix $(dir)/,\
+				       $(sort $(sources) $(sources:.c=.S) \
+					      $(sources:.c=.s)))))
 
-all-headers = $(shell find . $(all-dirs) -maxdepth 1 \( -name fnord \
-			   $(foreach file,$(headers),-o -name $(file)) \
-			   \) -print)
+all-headers = $(wildcard $(headers)) \
+	      $(foreach dir,$(all-dirs),\
+			$(wildcard $(addprefix $(dir)/,$(headers))))
 
 tags_sources := $(strip $(tags_sources))
 

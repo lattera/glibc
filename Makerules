@@ -681,7 +681,7 @@ distinfo: Makefile $(..)Makerules
 
 define distinfo-vars
 rm -f $@.new
-$(foreach var,subdir sources elided-routines headers distribute \
+$(foreach var,subdir subdir-dirs sources elided-routines headers distribute \
 	      dont_distribute generated others tests,
 echo >> $@.new '$(var)	:= $($(var))')
 echo >> $@.new 'sources := $$(sources) $$(addsuffix .c,$$(elided-routines))'
