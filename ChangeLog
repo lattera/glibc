@@ -1,5 +1,8 @@
 2004-12-19  Roland McGrath  <roland@redhat.com>
 
+	* iconv/Makefile (test-iconvconfig): New target.
+	[$(cross-compiling) != yes] (xtests): Depend on it.
+
 	* iconv/iconvconfig.c (nostdlib, output_file, output_file_len):
 	New variables.
 	(options, parse_opt, main): Take new options --nostdlib and

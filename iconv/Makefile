@@ -78,3 +78,15 @@ $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 
 $(objpfx)iconv_prog: $(iconv_prog-modules:%=$(objpfx)%.o)
 $(objpfx)iconvconfig: $(iconvconfig-modules:%=$(objpfx)%.o)
+
+ifneq ($(cross-compiling),yes)
+xtests: test-iconvconfig
+endif
+
+.PHONY: test-iconvconfig
+test-iconvconfig: /dev/null $(objpfx)iconvconfig
+	tmp=$(objpfx)gconv-modules.cache.$$$$; \
+	rm -f $$tmp; \
+	$(make-test-out) --output=$$tmp --nostdlib $(inst_gconvdir) && \
+	cmp $$tmp $(inst_gconvdir)/gconv-modules.cache && \
+	rm -f $$tmp
