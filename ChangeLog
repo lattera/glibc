@@ -1,11 +1,18 @@
 2001-11-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_open.c (__gconv_open): Empty codeset name now means using
+	the current locale's codeset.
+	* iconv/iconv_open.c (iconv_open): Don't strip out everything for
+	empty input string.
+	* iconv/iconv_prog.c: Pass empty strings as default value for to-
+	and from-charset.  Don't determine locale's charset here.
+
 	* libio/genops.c (_IO_flush_all_lockp): New function.  The same code
 	as the old _IO_flush_all but lock only if parameter is nonzero.
 	(_IO_flush_all): Call _IO_flush_all_lockp with 1 as parameter.
 	* libio/libioP.h: Add prototype for _IO_flush_all_lockp.
 	* sysdeps/generic/abort.c (fflush): Define to _IO_flush_all_lockp(0)
-	if libio is used.
+	if libio is used [PR libc/2575].
 
 2001-11-28  Jakub Jelinek  <jakub@redhat.com>
 

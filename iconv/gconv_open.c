@@ -20,6 +20,7 @@
 
 #include <errno.h>
 #include <locale.h>
+#include "../locale/localeinfo.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -147,6 +148,25 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
       newfromset[ignore - fromset] = '\0';
       fromset = memcpy (newfromset, fromset, ignore - fromset);
+    }
+
+  /* If the string is empty define this to mean the charset of the
+     currently selected locale.  */
+  if (strcmp (toset, "//") == 0)
+    {
+      const char *codeset = _NL_CURRENT (LC_CTYPE, CODESET);
+      size_t len = strlen (codeset);
+      char *dest;
+      toset = dest = (char *) alloca (len + 3);
+      memcpy (__mempcpy (dest, codeset, len), "//", 3);
+    }
+  if (strcmp (fromset, "//") == 0)
+    {
+      const char *codeset = _NL_CURRENT (LC_CTYPE, CODESET);
+      size_t len = strlen (codeset);
+      char *dest;
+      fromset = dest = (char *) alloca (len + 3);
+      memcpy (__mempcpy (dest, codeset, len), "//", 3);
     }
 
   res = __gconv_find_transform (toset, fromset, &steps, &nsteps, flags);

@@ -25,7 +25,6 @@
 #include <error.h>
 #include <fcntl.h>
 #include <iconv.h>
-#include <langinfo.h>
 #include <locale.h>
 #include <search.h>
 #include <stdio.h>
@@ -92,9 +91,11 @@ static struct argp argp =
   options, parse_opt, args_doc, doc, NULL, more_help
 };
 
-/* Code sets to convert from and to respectively.  */
-static const char *from_code;
-static const char *to_code;
+/* Code sets to convert from and to respectively.  An empty string as the
+   default causes the 'iconv_open' function to look up the charset of the
+   currently selected locale and use it.  */
+static const char *from_code = "";
+static const char *to_code = "";
 
 /* File to write output to.  If NULL write to stdout.  */
 static const char *output_file;
@@ -140,20 +141,6 @@ main (int argc, char *argv[])
     {
       print_known_names ();
       exit (EXIT_SUCCESS);
-    }
-  if (from_code == NULL)
-    {
-      /* The Unix standard says that in this case the charset of the current
-	 locale is used.  */
-      from_code = nl_langinfo (CODESET);
-      assert (from_code != NULL);
-    }
-  if (to_code == NULL)
-    {
-      /* The Unix standard says that in this case the charset of the current
-	 locale is used.  */
-      to_code = nl_langinfo (CODESET);
-      assert (to_code != NULL);
     }
 
   /* If we have to ignore errors make sure we use the appropriate name for

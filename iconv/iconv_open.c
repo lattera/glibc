@@ -40,14 +40,15 @@ iconv_open (const char *tocode, const char *fromcode)
   /* Normalize the name.  We remove all characters beside alpha-numeric,
      '_', '-', '/', and '.'.  */
   tocode_len = strlen (tocode);
-  tocode_conv = alloca (tocode_len + 3);
+  tocode_conv = (char *) alloca (tocode_len + 3);
   strip (tocode_conv, tocode);
-  tocode = tocode_conv[2] == '\0' ? upstr (tocode_conv, tocode) : tocode_conv;
+  tocode = (tocode_conv[2] == '\0' && tocode[0] != '\0'
+	    ? upstr (tocode_conv, tocode) : tocode_conv);
 
   fromcode_len = strlen (fromcode);
-  fromcode_conv = alloca (fromcode_len + 3);
+  fromcode_conv = (char *) alloca (fromcode_len + 3);
   strip (fromcode_conv, fromcode);
-  fromcode = (fromcode_conv[2] == '\0'
+  fromcode = (fromcode_conv[2] == '\0' && fromcode[0] != '\0'
 	      ? upstr (fromcode_conv, fromcode) : fromcode_conv);
 
   res = __gconv_open (tocode, fromcode, &cd, 0);
