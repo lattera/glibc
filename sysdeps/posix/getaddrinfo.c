@@ -762,7 +762,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
     return 0;
 
   {
-    const char *c = NULL;
     struct gaih_servtuple *st2;
     struct gaih_addrtuple *at2 = at;
     size_t socklen, namelen;
@@ -773,7 +772,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
      */
     while (at2 != NULL)
       {
-	if (req->ai_flags & AI_CANONNAME)
+	const char *c = NULL;
+
+	/* Only the first entry gets the canonical name.  */
+	if (at2 == at && (req->ai_flags & AI_CANONNAME) != 0)
 	  {
 	    struct hostent *h = NULL;
 

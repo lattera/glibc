@@ -1,5 +1,8 @@
 2004-06-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): For AI_CANONNAME,
+	determine the canonical name only for the first returned entry.
+
 	* inet/bug-if1.c: New file.
 	* inet/Makefile (tests): Add bug-if1.
 
