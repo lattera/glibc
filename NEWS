@@ -1,9 +1,14 @@
-GNU C Library NEWS -- history of user-visible changes.  2004-6-18
+GNU C Library NEWS -- history of user-visible changes.  2004-8-5
 Copyright (C) 1992-2002,2003,2004 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
+
+Version 2.3.4
+
+* Support for RFC 3678.  Real implementations exist only for Linux so far.
+  Implemented by Ulrich Drepper.
 
 Version 2.3.3
 

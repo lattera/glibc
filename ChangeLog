@@ -6,7 +6,7 @@
 	* sysdeps/unix/sysv/linux/setipv4sourcefilter.c: New file.
 	* sysdeps/unix/sysv/linux/getipv4sourcefilter.c: New file.
 	* sysdeps/unix/sysv/linux/setsourcefilter.c: New file.
-	* sysdeps/unix/sysv/linux/getsourcefilter.c: New file.
+	* sysdeps/unix/sysv/linux/getsourcefilter.c: New file. [BZ #211]
 
 	* po/ko.po: Update from translation team.
 
