@@ -44,7 +44,7 @@ __setreuid (uid_t ruid, uid_t euid)
 #if __ASSUME_32BITUIDS > 0
   return INLINE_SYSCALL (setresuid32, 3, ruid, euid, -1);
 #else
-# ifdef __NR_setreuid32
+# ifdef __NR_setresuid32
   if (__libc_missing_32bit_uids <= 0)
     {
       int result;
@@ -66,7 +66,13 @@ __setreuid (uid_t ruid, uid_t euid)
       return -1;
     }
 
-  return INLINE_SYSCALL (setresuid, 3, ruid, euid, -1);
+# ifdef __NR_setresuid
+  itn result = INLINE_SYSCALL (setresuid, 3, ruid, euid, -1);
+# endif
+  if (result == -1 && errno == ENOSYS)
+    result = INLINE_SYSCALL (setreuid, 2, ruid, euid);
+
+  return result;
 #endif
 }
 weak_alias (__setreuid, setreuid)

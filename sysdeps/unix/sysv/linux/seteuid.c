@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <sysdep.h>
 #include "kernel-features.h"
 
 #if defined __NR_setresuid || __ASSUME_SETRESUID_SYSCALL > 0
@@ -38,6 +39,9 @@ seteuid (uid_t uid)
       return -1;
     }
 
+# if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (setresuid32, 3, -1, uid, -1);
+# else
   /* First try the syscall.  */
   result = __setresuid (-1, uid, -1);
 # if __ASSUME_SETRESUID_SYSCALL == 0
@@ -49,6 +53,7 @@ seteuid (uid_t uid)
 # endif
 
   return result;
+# endif
 }
 libc_hidden_def (seteuid)
 #else

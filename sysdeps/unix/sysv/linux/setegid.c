@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#ifdef __NR_setresgid
+#include <sysdep.h>
+#include "kernel-features.h"
+
+#if defined __NR_setresgid || __ASSUME_SETRESUID_SYSCALL > 0
 
 extern int __setresgid (gid_t rgid, gid_t egid, gid_t sgid);
 
@@ -36,15 +39,21 @@ setegid (gid_t gid)
       return -1;
     }
 
+# if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (setresgid32, 3, -1, gid, -1);
+# else
   /* First try the syscall.  */
   result = __setresgid (-1, gid, -1);
+#  if __ASSUME_SETRESUID_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use emulation.  This may not work
        since `setregid' also sets the saved group ID when GID is not
        equal to the real group ID, making it impossible to switch back. */
     result = __setregid (-1, gid);
+#  endif
 
   return result;
+# endif
 }
 libc_hidden_def (setegid)
 #else

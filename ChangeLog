@@ -1,5 +1,15 @@
 2003-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/seteuid.c (seteuid): Use setresuid32
+	syscall directly if possible.  If __ASSUME_SETRESUID_SYSCALL is
+	defined drop compatibility code.
+	* sysdeps/unix/sysv/linux/setegid.c (setegid): Use setresgid32
+	syscall directly if possible.  If __ASSUME_SETRESUID_SYSCALL is
+	defined drop compatibility code.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c (seteuid): Use
+	setresuid32 syscall directly if possible.
+	* sysdeps/unix/sysv/linux/i386/setegid.c (setegid): Use
+	setresgid32 syscall directly if possible.
 	* sysdeps/unix/sysv/linux/i386/setregid.c (__setregid): Make POSIX
 	compliant.  Don't change sgid.
 	* sysdeps/unix/sysv/linux/i386/setreuid.c (__setreuid): Make POSIX
