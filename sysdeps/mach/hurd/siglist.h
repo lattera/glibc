@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,4 +20,4 @@
 
 #include <sysdeps/gnu/siglist.h> /* This file defines the canonical list.  */
 
-#define	OLD_SIGLIST_SIZE_STR	"32" /* For GLIBC_2.0 binary compatibility.  */
+#define	OLD_SIGLIST_SIZE_STR	"33" /* For GLIBC_2.0 binary compatibility.  */

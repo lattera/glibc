@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Define list of all signal numbers and their names.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +19,17 @@
 
 #include <stddef.h>
 #include <signal.h>
-#include <sizes.h>
 #include <libintl.h>
+
+#include <bits/wordsize.h>
+#if	__WORDSIZE == 32
+#define PTR_SIZE_STR "4"
+#elif	__WORDSIZE == 64
+#define PTR_SIZE_STR "8"
+#else
+#error	unexpected wordsize __WORDSIZE
+#endif
+
 
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 # define SYS_SIGLIST	__new_sys_siglist
@@ -36,7 +46,7 @@ asm (".data; .globl __old_sys_siglist;  __old_sys_siglist:");
 const char *const SYS_SIGLIST[NSIG] =
 {
 #define init_sig(sig, abbrev, desc)   [sig] desc,
-#include "siglist.h"
+#include <siglist.h>
 #undef init_sig
 };
 
@@ -50,7 +60,7 @@ asm (".data; .globl __old_sys_sigabbrev;  __old_sys_sigabbrev:");
 const char *const SYS_SIGABBREV[NSIG] =
 {
 #define init_sig(sig, abbrev, desc)   [sig] abbrev,
-#include "siglist.h"
+#include <siglist.h>
 #undef init_sig
 };
 
