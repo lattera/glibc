@@ -32,14 +32,12 @@ trampoline:
 
 .globl syscall_error
 ENTRY (__sigvec)
-	/* Put the address of the trampoline in a scratch register.  */
-	mov $trampoline, scratch
-	/* Now exchange this register with the fourth word on the stack,
-	   where the fourth argument to the system call would go.  */
-	xchg 16(%esp), scratch
+	pushl $trampoline	/* Push fourth arg: trampoline address.  */
+	pushl 16(%esp)		/* Push third arg: our third arg.  */
+	pushl 16(%esp)		/* Push second arg: our second arg.  */
+	pushl 16(%esp)		/* Push first arg: our first arg.  */
 	ARGS_4	 		/* Point the syscall at the arguments.  */
 	DO_CALL (sigvec, 4)	/* Do the system call.  */
-	/* Exchange again, restoring the stack word.  */
-	xchg 16(%esp), scratch
+	addl %esp, $16		/* Pop those four args.  */
 	jb syscall_error	/* Check for error.  */
 	ret
