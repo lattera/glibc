@@ -34,12 +34,12 @@ if ($dialect ne "ISO" && $dialect ne "POSIX" && $dialect ne "XPG3"
   die "unknown dialect \"$dialect\"";
 }
 
-$CFLAGS{"ISO"} = "-I. '-D__attribute__(x)=' -ansi";
-$CFLAGS{"POSIX"} = "-I. '-D__attribute__(x)=' -D_POSIX_C_SOURCE=199912";
-$CFLAGS{"XPG3"} = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE";
-$CFLAGS{"XPG4"} = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE_EXTENDED";
-$CFLAGS{"UNIX98"} = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
-$CFLAGS{"XOPEN2K"} = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
+$CFLAGS{"ISO"} = "-I. -fno-builtin '-D__attribute__(x)=' -ansi";
+$CFLAGS{"POSIX"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_POSIX_C_SOURCE=199912";
+$CFLAGS{"XPG3"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE";
+$CFLAGS{"XPG4"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE_EXTENDED";
+$CFLAGS{"UNIX98"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
+$CFLAGS{"XOPEN2K"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
 
 
 # These are the ISO C99 keywords.

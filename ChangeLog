@@ -1,5 +1,7 @@
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: Add -fno-builtin to CFLAGS.
+
 	* conform/data/stdlib.h-data: Add _Exit.
 
 	* inet/arpa/inet.h: Don't include <sys/types.h>.  Define socklen_t
