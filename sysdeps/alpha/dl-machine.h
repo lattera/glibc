@@ -29,6 +29,10 @@
 #include <string.h>
 
 
+/* Mask identifying addresses reserved for the user program,
+   where the dynamic linker should not map anything.  */
+#define ELF_MACHINE_USER_ADDRESS_MASK	0x120000000UL
+
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (const Elf64_Ehdr *ehdr)
