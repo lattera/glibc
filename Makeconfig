@@ -405,7 +405,7 @@ ifeq (yes,$(build-shared))
 link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
 	    $(elfobjdir)/$(rtld-installed-name) \
-	    $(common-objpfx)libc.a $(gnulib)
+	    $(common-objpfx)libc_nonshared.a $(gnulib)
 # Choose the default search path for the dynamic linker based on
 # where we will install libraries.
 ifneq ($(libdir),$(slibdir))
@@ -573,7 +573,7 @@ endif
 # The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
 # to pass different flags for each flavor.
 libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
-all-object-suffixes := .o .os .op .og .ob
+all-object-suffixes := .o .os .op .og .ob .oS
 object-suffixes :=
 ifeq (yes,$(build-static))
 CPPFLAGS-.o = $(pic-default)
@@ -619,6 +619,13 @@ CFLAGS-.ob = -g -fbounded-pointers
 libtype.ob = lib%_b.a
 endif
 
+# Special library that contains the static-only routines for libc.
+libtype.oS = lib%_nonshared.a
+# Must build the routines as PIC, though, because they can end up in (users')
+# shared objects.  We don't want to use CFLAGS-os because users may, for
+# example, make that processor-specific.
+CFLAGS-.oS = $(CFLAGS-.o) $(pic-ccflag)
+CPPFLAGS-.oS = $(CPPFLAGS-.o)
 
 +gnu-stabs = $(shell echo>&2 '*** BARF ON ME')
 

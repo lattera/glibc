@@ -260,6 +260,8 @@ following patterns:
 
 @smallexample
 alpha-@var{anything}-linux
+arm-@var{anything}-linuxaout
+arm-@var{anything}-none
 i@var{x}86-@var{anything}-gnu
 i@var{x}86-@var{anything}-linux
 m68k-@var{anything}-linux

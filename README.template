@@ -12,6 +12,8 @@ configurations:
 		powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
 		sparc-*-linux-gnu	Linux-2.x on SPARC
 		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
+		arm-*-none		ARM standalone systems
+		arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 
 
 Former releases of this library (version 1.09.1 and perhaps earlier

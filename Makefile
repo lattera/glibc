@@ -336,12 +336,15 @@ define format-me
 makeinfo --no-validate --no-warn --no-headers $< -o $@
 -chmod a-w $@
 endef
-INSTALL: manual/maint.texi; $(format-me)
+INSTALL: manual/install.texi; $(format-me)
 NOTES: manual/creature.texi; $(format-me)
 manual/dir-add.texi manual/dir-add.info: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 FAQ: gen-FAQ.pl FAQ.in
 	$(PERL) $^ > $@.new && rm -f $@ && mv $@.new $@ && chmod a-w $@
+ifeq ($(with-cvs),yes)
+	test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated:  $(PERL) $^' $@
+endif
 FORCE:
 
 rpm/%: subdir_distinfo

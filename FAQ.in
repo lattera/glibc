@@ -33,6 +33,8 @@ probably in the future, are:
 	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
 	sparc-*-linux-gnu	Linux-2.x on SPARC
 	sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
+	arm-*-none		ARM standalone systems
+	arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 
 Ports to other Linux platforms are in development, and may in fact
 work already, but no one has sent us success reports for them.

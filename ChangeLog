@@ -1,3 +1,48 @@
+1998-03-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Supported Configurations): Add
+	arm-linuxaout and arm-none.
+
+1998-03-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.93.
+
+1998-03-25 07:30  H.J. Lu  <hjl@gnu.org>
+
+	* configure.in (libc_cv_ar_S): New to indicate if ar S works.
+
+	* config.make.in (have-ar-S): New, substituted by libc_cv_ar_S.
+
+	* Makerules (CREATE_ARFLAGS): New determined by $(have-ar-S).
+	(do-ar, build-extra-lib): Use $(CREATE_ARFLAGS) for $(AR).
+
+1998-03-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (link-libc): Add missing use of libc_nonshared.a.
+
+1998-03-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	Put the static-only routines in a separate library.
+	* Makeconfig (libtype.oS, CFLAGS-.oS, CPPFLAGS-.oS): New
+	variables.
+	(all-object-suffixes): Add .oS.
+	* Makerules (libc_static-name): New variable.
+	(installed-libcs): Add libc_nonshared.a.
+	($(inst_libdir)/libc.so): Use libc_nonshared.a instead of libc.a.
+	(object-suffixes-for-rules): New variable.  Use it instead of
+	object-suffixes for generating compilation rules.
+	(rmobjs): Also remove *.oS.
+	* Rules (subdir_lib): Depend on $(objpfx)stamp.oS.
+	($(objpfx)stamp.oS): New target.
+
+1998-03-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (FAQ): Automatically check in regenerated FAQ.
+
+1998-03-26 10:16  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* Makefile (INSTALL): Depend on install.texi, not maint.texi.
+
 1998-03-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: Add sizes.h.
