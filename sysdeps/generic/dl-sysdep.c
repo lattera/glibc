@@ -80,6 +80,7 @@ _dl_sysdep_start (void **start_argptr,
   ElfW(Addr) user_entry;
   ElfW(auxv_t) *av;
 #ifdef HAVE_AUX_SECURE
+# define set_seen(tag) (tag)	/* Evaluate for the side effects.  */
 # define set_seen_secure() ((void) 0)
 #else
   uid_t uid = 0;
@@ -123,6 +124,7 @@ _dl_sysdep_start (void **start_argptr,
 	_dl_base_addr = av->a_un.a_val;
 	break;
 #endif
+#ifndef HAVE_AUX_SECURE
       case AT_UID:
       case AT_EUID:
 	uid ^= av->a_un.a_val;
@@ -131,8 +133,11 @@ _dl_sysdep_start (void **start_argptr,
       case AT_EGID:
 	gid ^= av->a_un.a_val;
 	break;
+#endif
       case AT_SECURE:
+#ifndef HAVE_AUX_SECURE
 	seen = -1;
+#endif
 	INTUSE(__libc_enable_secure) = av->a_un.a_val;
 	break;
       case AT_PLATFORM:
