@@ -1,3 +1,8 @@
+2000-10-11  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Set cache.
+	Patch by Denis Zaitsev <zzz@cd-club.ru>.
+
 2000-10-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128/s_nexttoward.c (__nexttoward): If x == y,
