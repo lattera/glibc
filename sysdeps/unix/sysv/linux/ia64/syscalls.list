@@ -68,6 +68,7 @@ rt_sigtimedwait	EXTRA	rt_sigtimedwait	i:pppi	__syscall_rt_sigtimedwait	rt_sigtim
 s_execve	execve	execve		i:spp	__syscall_execve
 s_getcwd	getcwd	getcwd		i:pi	__syscall_getcwd	getcwd
 s_getdents	getdents getdents	i:ipi	__syscall_getdents	getdents
+s_getdents64	getdents64 getdents64	i:ipi	__syscall_getdents64
 s_mknod		xmknod	mknod		i:sii	__syscall_mknod
 s_readv		readv	readv		i:ipi	__syscall_readv
 s_writev	writev	writev		i:ipi	__syscall_writev

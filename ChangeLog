@@ -1,3 +1,10 @@
+2000-09-01  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add
+	__syscall_getdents64 wrapper.
+
+	* sysdeps/unix/sysv/linux/ia64/net/route.h: New file.
+
 2000-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/gb18030.c: Many many changes.  Make consistent with
