@@ -122,8 +122,10 @@
 
 # define TLS_GD(x) \
   ({ int *__l, __c, __d;						      \
-     asm (".long 0x66666666\n\t"					      \
+     asm (".byte 0x66\n\t"						      \
 	  "leaq " #x "@tlsgd(%%rip),%%rdi\n\t"				      \
+	  ".word 0x6666\n\t"						      \
+	  "rex64\n\t"							      \
 	  "call __tls_get_addr@plt"					      \
 	  : "=a" (__l), "=&c" (__c), "=&d" (__d)			      \
 	  : : "rdi", "rsi", "r8", "r9", "r10", "r11"); 			      \
