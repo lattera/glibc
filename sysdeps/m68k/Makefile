@@ -1,7 +1,5 @@
-# m68k/bsd really means m68k with MIT assembler syntax.
+# This uses MIT assembler syntax.  We have no convenient
+# way to choose a sysdep file based on MIT vs Motorola syntax.
+# No existing m68k ports use Motorola syntax.
 
-ifeq ($(subdir),uf-crypt)
-
-crypt := crypt.sun3 # Use uf-crypt/crypt.sun3.S.
-
-endif # uf-crypt
+crypt := crypt.sun3	# Use uf-crypt/crypt.sun3.S.
