@@ -1321,6 +1321,11 @@ lower_subexp (err, preg, node)
   bin_tree_t *op, *cls, *tree1, *tree;
 
   if (preg->no_sub
+      /* We do not optimize empty subexpressions, because otherwise we may
+	 have bad CONCAT nodes with NULL children.  This is obviously not
+	 very common, so we do not lose much.  An example that triggers
+	 this case is the sed "script" /\(\)/x.  */
+      && node->left != NULL
       && (node->token.opr.idx >= 8 * sizeof (dfa->used_bkref_map)
 	  || !(dfa->used_bkref_map & (1 << node->token.opr.idx))))
     return node->left;

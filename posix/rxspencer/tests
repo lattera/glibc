@@ -376,6 +376,7 @@ a(b?c)+d	-	accd	accd
 a[bc]d		-	xyzaaabcaababdacd	abd
 a[ab]c		-	aaabc	abc
 abc		s	abc	abc
+()		s	abc	@abc
 a*		&	b	@b
 
 # Let's have some fun -- try to match a C comment.

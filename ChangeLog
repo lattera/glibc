@@ -1,3 +1,9 @@
+2005-02-10  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (lower_subexp): Do not optimize empty
+	subexpressions even with REG_NOSUB.
+	* posix/rxspencer/tests: Add a previously failing testcase.
+
 2005-02-21  Alan Modra <amodra@bigpond.net.au>
 
 	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Assert that dtv
