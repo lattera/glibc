@@ -1,5 +1,11 @@
 2000-03-31  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/mips/fpu/fgetexcptflg.c: Fix last patch to use #if.
+	* sysdeps/mips/fpu/fegetenv.c: Likewise.
+	* sysdeps/mips/fpu/feupdateenv.c: Likewise.
+	* sysdeps/mips/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/mips/fpu/fesetenv.c: Likewise.
+
 	* sysdeps/generic/ldsodefs.h: DT_INIT_ARRAY is not relocated
 	  anymore, update comment.
 
