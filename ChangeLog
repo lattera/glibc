@@ -1,3 +1,9 @@
+1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add missing
+	Ruffian entry back.
+	Patch by Christian Gafton.
+
 1998-10-08  Paul Eggert  <eggert@twinsun.com>
 
 	* time/mktime.c (__mktime_internal): When the requested time falls
