@@ -1,3 +1,46 @@
+Sun Mar  5 19:40:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/localeinfo.h: Rewritten for new locale system, using
+	locale data files and with <langinfo.h> interface.
+	* locale/setlocale.c: Rewritten to use locale data files.
+	* langinfo.h: New file.
+        * locale/langinfo.h: New file.
+        * locale/nl_langinfo.c: New file.
+        * locale/loadlocale.c: New file.
+        * locale/lc-ctype.c: New file.
+        * locale/lc-messages.c: New file.
+        * locale/lc-monetary.c: New file.
+        * locale/lc-numeric.c: New file.
+        * locale/lc-time.c: New file.
+        * locale/categories.def: New file.
+	* locale/Makefile (headers): Remove localeinfo.h.
+	(distribute): New variable; put localeinfo.h here, and categories.def.
+	(routines): Add loadlocale.
+	(categories): New variable.
+	(aux): Use that to get C-category and lc-category.
+	* ctype/ctype.h (_IS*): Use independent bits for all but _ISalnum.
+	* locale/C-ctype.c, locale/C-messages.c: New files.
+ 	* locale/C-monetary.c, locale/C-numeric.c, locale/C-time.c:
+	Default "C" locale data updated for new locale system.
+	* locale/C-collate.c: File removed.
+        * locale/C-ctype_ct.c: File removed.
+        * locale/C-ctype_mb.c: File removed.
+        * locale/C-response.c: File removed.
+	* locale/localeconv.c: Use _NL_CURRENT macro to access locale data.
+	* stdio/printf_fp.c, stdio/vfprintf.c, stdio/vfscanf.c,
+	  stdlib/strtod.c, time/asctime.c, time/strftime.c:
+	Include ../locale/localeinfo.h and use _NL_CURRENT macro to access
+	locale data.
+	* time/localtime.c: Don't include <localeinfo.h>.
+	* time/tzset.c: Don't use locale items for default TZ value or
+	"GMT" string (use "UTC").
+
+	* stdio/vfprintf.c [USE_IN_LIBIO] (PAD): Only call the function if
+ 	WIDTH>0; update DONE.
+
+	* malloc/malloc.c (morecore): Fix last change to calculate by
+ 	blocks instead of bytes.
+
 Fri Mar  3 12:24:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/generic/sys/mman.h (__mmap, __munmap): Declare these.

@@ -34,14 +34,14 @@ Cambridge, MA 02139, USA.  */
 #include <ctype.h>
 #include <errno.h>
 #include <float.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 #include <math.h>
 #include <stdlib.h>
-#include "gmp.h"
-#include "gmp-impl.h"
+#include "../stdio/gmp.h"
+#include "../stdio/gmp-impl.h"
 #include <gmp-mparam.h>
-#include "longlong.h"
-#include "fpioconst.h"
+#include "../stdio/longlong.h"
+#include "../stdio/fpioconst.h"
 
 #define NDEBUG 1
 #include <assert.h>
@@ -350,15 +350,15 @@ STRTOF (nptr, endptr)
   /* Return with no conversion if the grouping of [STARTP,CP) is bad.  */
 #define	CHECK_GROUPING if (! grouping_ok (startp, cp)) RETURN (0.0, nptr); else
 
-  grouping = _numeric_info->grouping; /* Cache the grouping info array.  */
+  grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
   if (*grouping <= 0 || *grouping == CHAR_MAX)
     grouping = NULL;
   else
     {
       /* Figure out the thousands seperator character.  */
-      if (mbtowc (&thousands_sep, _numeric_info->thousands_sep,
-		  strlen (_numeric_info->thousands_sep)) <= 0)
-	thousands = (wchar_t) *_numeric_info->thousands_sep;
+      if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+		  strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+	thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
       if (thousands == L'\0')
 	grouping = NULL;
     }
@@ -369,9 +369,9 @@ STRTOF (nptr, endptr)
 #endif
 
   /* Find the locale's decimal point character.  */
-  if (mbtowc (&decimal, _numeric_info->decimal_point,
-	      strlen (_numeric_info->decimal_point)) <= 0)
-    decimal = (wchar_t) *_numeric_info->decimal_point;
+  if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
+    decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
 
 
   /* Prepare number representation.  */

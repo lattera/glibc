@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 #include <errno.h>
 #include <limits.h>
 #include <ctype.h>
@@ -93,9 +93,9 @@ DEFUN(__vfscanf, (s, format, arg),
     }
 
   /* Figure out the decimal point character.  */
-  if (mbtowc(&decimal, _numeric_info->decimal_point,
-	     strlen(_numeric_info->decimal_point)) <= 0)
-    decimal = (wchar_t) *_numeric_info->decimal_point;
+  if (mbtowc(&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+	     strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
+    decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
 
   c = inchar();
 

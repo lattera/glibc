@@ -3,7 +3,7 @@
    _
 */
 
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 #include <ctype.h>
 #include <limits.h>
 #include <stddef.h>
@@ -90,19 +90,20 @@ DEFUN(strftime, (s, maxsize, format, tp),
       char *s AND size_t maxsize AND
       CONST char *format AND register CONST struct tm *tp)
 {
-  CONST char *CONST a_wkday = _time_info->abbrev_wkday[tp->tm_wday];
-  CONST char *CONST f_wkday = _time_info->full_wkday[tp->tm_wday];
-  CONST char *CONST a_month = _time_info->abbrev_month[tp->tm_mon];
-  CONST char *CONST f_month = _time_info->full_month[tp->tm_mon];
+  CONST char *CONST a_wkday = _NL_CURRENT (LC_TIME, ABDAY_1 + tp->tm_wday);
+  CONST char *CONST f_wkday = _NL_CURRENT (LC_TIME, DAY_1 + tp->tm_wday);
+  CONST char *CONST a_month = _NL_CURRENT (LC_TIME, ABMON_1 + tp->tm_mon);
+  CONST char *CONST f_month = _NL_CURRENT (LC_TIME, MON_1 + tp->tm_mon);
   size_t aw_len = strlen(a_wkday);
   size_t am_len = strlen(a_month);
   size_t wkday_len = strlen(f_wkday);
   size_t month_len = strlen(f_month);
   int hour12 = tp->tm_hour;
-  CONST char *CONST ampm = _time_info->ampm[hour12 >= 12];
-  size_t ap_len = strlen(ampm);
-  CONST unsigned int y_week0 = week(tp, 0);
-  CONST unsigned int y_week1 = week(tp, 1);
+  CONST char *CONST ampm = _NL_CURRENT (LC_TIME,
+					hour12 > 12 ? PM_STR : AM_STR);
+  size_t ap_len = strlen (ampm);
+  CONST unsigned int y_week0 = week (tp, 0);
+  CONST unsigned int y_week1 = week (tp, 1);
   CONST char *zone;
   size_t zonelen;
   register size_t i = 0;
@@ -172,7 +173,7 @@ DEFUN(strftime, (s, maxsize, format, tp),
 	  break;
 
 	case 'c':
-	  subfmt = _time_info->date_time;
+	  subfmt = _NL_CURRENT (LC_TIME, D_T_FMT);
 	subformat:
 	  {
 	    size_t len = strftime (p, maxsize - i, subfmt, tp);
@@ -265,11 +266,11 @@ DEFUN(strftime, (s, maxsize, format, tp),
 	  break;
 
 	case 'X':
-	  subfmt = _time_info->time;
+	  subfmt = _NL_CURRENT (LC_TIME, T_FMT);
 	  goto subformat;
 
 	case 'x':
-	  subfmt = _time_info->date;
+	  subfmt = _NL_CURRENT (LC_TIME, D_FMT);
 	  goto subformat;
 
 	case 'Y':

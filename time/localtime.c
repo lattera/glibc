@@ -17,7 +17,6 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
 #include <stddef.h>
 #include <ctype.h>
 #include <stdio.h>

@@ -32,7 +32,8 @@ Cambridge, MA 02139, USA.  */
 #include <gmp.h>
 #include <gmp-impl.h>
 #include <longlong.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
+#include <limits.h>
 #include <math.h>
 #include <printf.h>
 #include <stdarg.h>
@@ -227,22 +228,22 @@ __printf_fp (fp, info, args)
 
 
   /* Figure out the decimal point character.  */
-  if (mbtowc (&decimal, _numeric_info->decimal_point,
-	      strlen (_numeric_info->decimal_point)) <= 0)
-    decimal = (wchar_t) *_numeric_info->decimal_point;
+  if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
+    decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
 
 
   if (info->group)
     {
-      grouping = _numeric_info->grouping; /* Cache the grouping info array.  */
+      grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
       if (*grouping <= 0 || *grouping == CHAR_MAX)
 	grouping = NULL;
       else
 	{
 	  /* Figure out the thousands seperator character.  */
-	  if (mbtowc (&thousands_sep, _numeric_info->thousands_sep,
-		      strlen (_numeric_info->thousands_sep)) <= 0)
-	    thousands_sep = (wchar_t) *_numeric_info->thousands_sep;
+	  if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+	    thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 	  if (thousands_sep == L'\0')
 	    grouping = NULL;
 	}

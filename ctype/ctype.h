@@ -34,20 +34,21 @@ __BEGIN_DECLS
    many things must be changed that use `unsigned short int's.  */
 enum
 {
-  _ISupper = 1 << 0,			/* UPPERCASE.  */
-  _ISlower = 1 << 1,			/* lowercase.  */
-  _IScntrl = 1 << 2,			/* Control character.  */
-  _ISdigit = 1 << 3,			/* Numeric.  */
-  _ISspace = 1 << 4,			/* Whitespace.  */
-  _IShex = 1 << 5,			/* A - F, a - f.  */
-  _ISpunct = 1 << 6,			/* Punctuation.  */
-  _NOgraph = 1 << 7,			/* Printing but nongraphical.  */
-  _ISblank = 1 << 8,			/* Blank (usually SPC and TAB).  */
-  _ISalpha = 1 << 9,			/* Alphabetic.  */
-  _ISalnum = _ISalpha | _ISdigit,	/* Alphanumeric.  */
-  _ISxdigit = _ISdigit | _IShex,	/* Hexadecimal numeric.  */
-  _ISgraph = _ISalnum | _ISpunct,	/* Graphical.  */
-  _ISprint = _ISgraph | _NOgraph	/* Printing.  */
+  _ISupper = 1 << 0,		/* UPPERCASE.  */
+  _ISlower = 1 << 1,		/* lowercase.  */
+  _ISalpha = 1 << 2,	        /* Alphabetic.  */
+  _ISdigit = 1 << 3,		/* Numeric.  */
+  _ISxdigit = 1 << 4,           /* Hexadecimal numeric.  */
+  _ISspace = 1 << 5,		/* Whitespace.  */
+  _ISprint = 1 << 6,            /* Printing.  */
+  _ISgraph = 1 << 7,	        /* Graphical.  */
+  _ISblank = 1 << 8,		/* Blank (usually SPC and TAB).  */
+  _IScntrl = 1 << 9,		/* Control character.  */
+  _ISpunct = 1 << 10,		/* Punctuation.  */
+
+  /* The following are defined in POSIX.2 as being combinations of the
+     classes above.  */
+  _ISalnum = _ISalpha | _ISdigit	/* Alphanumeric.  */
 };
 
 /* These are defined in localeinfo.c.
@@ -115,7 +116,7 @@ extern int toascii __P ((int __c));
 #endif /* Use SVID or use misc.  */
 
 #ifdef	__USE_SVID
-/* These are the same as `toupper' and and `tolower'.  */
+/* These are the same as `toupper' and `tolower'.  */
 __exctype (_toupper);
 __exctype (_tolower);
 #endif

@@ -6,23 +6,12 @@ PARTICULAR PURPOSE.  */
 
 #include "localeinfo.h"
 
-const struct locale_data _nl_C_LC_MONETARY =
+const struct locale_data _nl_C_LC_MESSAGES =
 {
   NULL, 0, /* no file mapped */
-  15,
+  4,
+  "[yY][[:alpha:]]",
+  "[nN][[:alpha:]]",
   "",
   "",
-  "",
-  "",
-  "\377",
-  "",
-  "",
-  "\377",
-  "\377",
-  "\377",
-  "\377",
-  "\377",
-  "\377",
-  "\377",
-  "\377",
 };

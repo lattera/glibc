@@ -17,7 +17,6 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
 #include <ctype.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -112,21 +111,20 @@ DEFUN_VOID(__tzset)
     }
 
   if (tz == NULL || *tz == '\0')
-    tz = _time_info->tz;
-  if (tz == NULL || *tz == '\0')
     {
       __tzfile_read((char *) NULL);
       if (!__use_tzfile)
 	{
-	  size_t len = strlen(_time_info->ut0) + 1;
+	  const char UTC[] = "UTC";
+	  size_t len = sizeof UTC;
 	  tz_rules[0].name = (char *) malloc(len);
 	  if (tz_rules[0].name == NULL)
 	    return;
 	  tz_rules[1].name = (char *) malloc(len);
 	  if (tz_rules[1].name == NULL)
 	    return;
-	  memcpy((PTR) tz_rules[0].name, _time_info->ut0, len);
-	  memcpy((PTR) tz_rules[1].name, _time_info->ut0, len);
+	  memcpy ((PTR) tz_rules[0].name, UTC, len);
+	  memcpy ((PTR) tz_rules[1].name, UTC, len);
 	  tz_rules[0].type = tz_rules[1].type = J0;
 	  tz_rules[0].m = tz_rules[0].n = tz_rules[0].d = 0;
 	  tz_rules[1].m = tz_rules[1].n = tz_rules[1].d = 0;
@@ -139,7 +137,7 @@ DEFUN_VOID(__tzset)
       return;
     }
 
-  /* Clear out old state and reset to unnamed GMT.  */
+  /* Clear out old state and reset to unnamed UTC.  */
   memset (tz_rules, 0, sizeof tz_rules);
   tz_rules[0].name = tz_rules[1].name = (char *) "";
 
@@ -165,7 +163,7 @@ DEFUN_VOID(__tzset)
 
   tz += l;
 
-  /* Figure out the standard offset from GMT.  */
+  /* Figure out the standard offset from UTC.  */
   if (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit(*tz)))
     return;
 

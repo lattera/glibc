@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 #include <errno.h>
 #include <stdio.h>
 #include <time.h>
@@ -39,9 +39,9 @@ DEFUN(asctime, (tp), CONST struct tm *tp)
   
   if (sprintf (result, format,
 	       (tp->tm_wday < 0 || tp->tm_wday >= 7 ?
-		"???" : _time_info->abbrev_wkday[tp->tm_wday]),
+		"???" : _NL_CURRENT (LC_TIME, ABDAY_1 + tp->tm_wday)),
 	       (tp->tm_mon < 0 || tp->tm_mon >= 12 ?
-		"???" : _time_info->abbrev_month[tp->tm_mon]),
+		"???" : _NL_CURRENT (LC_TIME, ABMON_1 + tp->tm_mon)),
 	       tp->tm_mday, tp->tm_hour, tp->tm_min,
 	       tp->tm_sec, 1900 + tp->tm_year) < 0)
     return NULL;

@@ -1,0 +1,116 @@
+/* Definition of all available locale categories and their items.  -*- C -*-
+Copyright (C) 1995 Free Software Foundation, Inc.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+/* These definitions are used by the locale-related files in the C library
+   and the programs `localedef' and `locale'.
+
+   The general format of the descriptions is like this:
+
+     DEFINE_CATEGORY (ID, name, ( items ), setlocale-postload,
+		      locale-input, locale-check, locale-output)
+
+   where items itself is an array of entries in the form
+
+     { ID, name, value-type, min, max }
+
+   The usage of the load, check, output functions depends on the individual
+   program code which loads this file.
+
+   The various value types for the items are `string', `stringarray', `byte'
+   and `bytearray'.  These cover all possiblee values in the current locale
+   definitions.  `min' and `max' can be individually used again.  */
+
+#ifndef NO_POSTLOAD
+#define NO_POSTLOAD NULL
+#endif
+
+DEFINE_CATEGORY (LC_COLLATE, "LC_COLLATE",
+		   (
+		     { 0 }	/* No data encoding yet.  */
+		   ), NO_POSTLOAD, collate_input, NULL, NULL )
+
+
+/* The actual definition of ctype is meaningless here.  It is hard coded in
+   the code because it has to be handled very specially.  Only the names of
+   the functions are important.  */
+DEFINE_CATEGORY (LC_CTYPE, "LC_CTYPE",
+		   (
+		     { _NL_CTYPE_CLASS_EB, "ctype-class-eb", string },
+		     { _NL_CTYPE_TOUPPER_EB, "ctype-toupper-eb", string },
+		     { _NL_CTYPE_TOLOWER_EB, "ctype-tolower-eb", string },
+		     { _NL_CTYPE_CLASS_EL, "ctype-class-el", string },
+		     { _NL_CTYPE_TOUPPER_EL, "ctype-toupper-el", string },
+		     { _NL_CTYPE_TOLOWER_EL, "ctype-tolower-el", string },
+		     { 0 }
+		   ), _nl_postload_ctype,
+		 ctype_input, ctype_check, ctype_output )
+
+
+DEFINE_CATEGORY (LC_MONETARY, "LC_MONETARY",
+		   (
+		     { INT_CURR_SYMBOL,   "int_curr_symbol",   string },
+		     { CURRENCY_SYMBOL,   "currency_symbol",   string },
+		     { MON_DECIMAL_POINT, "mon_decimal_point", string },
+		     { MON_THOUSANDS_SEP, "mon_thousands_sep", string },
+		     { MON_GROUPING,      "mon_grouping",      bytearray },
+		     { POSITIVE_SIGN,     "positive_sign",     string },
+		     { NEGATIVE_SIGN,     "negative_sign",     string },
+		     { INT_FRAC_DIGITS,   "int_frac_digits",   byte },
+		     { FRAC_DIGITS,       "frac_digits",       byte },
+		     { P_CS_PRECEDES,     "p_cs_precedes",     byte, 0, 1 },
+		     { P_SEP_BY_SPACE,    "p_sep_by_space",    byte, 0, 2 },
+		     { N_CS_PRECEDES,     "n_cs_precedes",     byte, 0, 1 },
+		     { N_SEP_BY_SPACE,    "n_sep_by_space",    byte, 0, 2 },
+		     { P_SIGN_POSN,       "p_sign_posn",       byte, 0, 4 },
+		     { N_SIGN_POSN,       "n_sign_posn",       byte, 0, 4 },
+		     { 0 }
+		   ), NO_POSTLOAD, NULL, monetary_check, NULL )
+
+
+DEFINE_CATEGORY (LC_NUMERIC, "LC_NUMERIC",
+		   (
+		     { DECIMAL_POINT, "decimal_point", string },
+		     { THOUSANDS_SEP, "thousands_sep", string },
+		     { GROUPING,      "grouping",      bytearray },
+		     { 0 }
+		   ), NO_POSTLOAD, NULL, numeric_check, NULL)
+
+
+DEFINE_CATEGORY (LC_TIME, "LC_TIME",
+		   (
+		     { ABDAY_1,    "abday",      stringarray,  7,  7 },
+		     { DAY_1,      "day",        stringarray,  7,  7 },
+		     { ABMON_1,    "abmon",      stringarray, 12, 12 },
+		     { MON_1,      "mon",        stringarray, 12, 12 },
+		     { AM_STR,     "am_pm",      stringarray,  2,  2 },
+		     { D_T_FMT,    "d_t_fmt",    string },
+		     { D_FMT,      "d_fmt",      string },
+		     { T_FMT,      "t_fmt",      string },
+		     { T_FMT_AMPM, "t_fmt_ampm", string },
+		     { 0 }
+		   ), NO_POSTLOAD, NULL, NULL, NULL )
+
+
+DEFINE_CATEGORY (LC_MESSAGES, "LC_MESSAGES",
+		   (
+		     { YESEXPR, "yesexpr", string },
+		     { NOEXPR,  "noexpr",  string },
+		     { YESSTR,  "yesstr",  string },
+		     { NOSTR,   "nostr",   string },
+		     { 0 }
+		   ), NO_POSTLOAD, NULL, messages_check, NULL )

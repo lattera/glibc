@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 #include <ctype.h>
 #include <errno.h>
 #include <float.h>
@@ -38,7 +38,8 @@ Cambridge, MA 02139, USA.  */
 /* This code is for use in libio.  */
 #include <libioP.h>
 #define PUT(f, s, n)	_IO_sputn (f, s, n)
-#define PAD(padchar)	_IO_padn (s, padchar, width)
+#define PAD(padchar)	\
+  (width > 0 ? (_IO_padn (s, padchar, width), done += width) : 0)
 #define PUTC(c, f)	_IO_putc(c, f)
 #define vfprintf	_IO_vfprintf
 #define size_t		_IO_size_t
@@ -159,10 +160,10 @@ DEFUN(vfprintf, (s, format, args),
   (void) mblen ((char *) NULL, 0);
 
   /* Figure out the thousands seperator character.  */
-  if (mbtowc (&thousands_sep, _numeric_info->thousands_sep,
-	      strlen (_numeric_info->thousands_sep)) <= 0)
-    thousands_sep = (wchar_t) *_numeric_info->thousands_sep;
-  grouping = _numeric_info->grouping; /* Cache the grouping info array.  */
+  if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+	      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+    thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+  grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
   if (*grouping == '\0' || thousands_sep == L'\0')
     grouping = NULL;
 
