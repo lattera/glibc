@@ -1,8 +1,16 @@
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED: Add missing supported locales.
+
+	* locales/fa_IR: Correct a few of the contained bugs.
+
 	* locales/zh_HK: New file.
 
 	* charmaps/BIG5HKSCS: New file.
+
+	* locales/en_CA,2.5: Removed.
+	* locales/fr_CA,2.13: Removed.
+	* locales/in_ID: Removed.
 
 	* locales/sq_AL: New file.
 	* SUPPORTED: Add sq_AL.ISO-8859-1.

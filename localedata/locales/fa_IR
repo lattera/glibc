@@ -71,8 +71,8 @@ alpha   <U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;<U0047>;<U0048>;<U0049>;
 % I'm not sure how can I make Persian digits get accepted
 % as digits.
 %
-digit   <U0030>;...;<U0039>;/
-	<0f>;...;<9f>
+digit   <U0030>...<U0039>;/
+	<U06F0>...<U06F9>
 %
 xdigit  <U0030>;<U0031>;<U0032>;<U0033>;<U0034>;/
         <U0035>;<U0036>;<U0037>;<U0038>;<U0039>;/
