@@ -62,6 +62,7 @@ extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
 #endif
 
 libc_hidden_proto (__mempcpy)
+libc_hidden_proto (__stpcpy)
 libc_hidden_proto (__stpncpy)
 libc_hidden_proto (__rawmemchr)
 libc_hidden_proto (__strcasecmp)

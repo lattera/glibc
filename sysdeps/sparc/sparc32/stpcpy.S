@@ -1,6 +1,6 @@
 /* Copy SRC to DEST returning the address of the terminating '\0' in DEST.
    For SPARC v7.
-   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
 
@@ -77,7 +77,7 @@ ENTRY(__stpcpy)
 6:	andcc		%o0, 3, %g0
 	bne		16f
 	 sub		%g0, 4, %g1
-	 
+
 11:	add		%g1, 4, %g1
 	ld		[%o1 + %g1], %o5
 	sub		%o5, %o2, %o4
@@ -161,3 +161,4 @@ ENTRY(__stpcpy)
 END(__stpcpy)
 
 weak_alias(__stpcpy, stpcpy)
+libc_hidden_def (__stpcpy)
