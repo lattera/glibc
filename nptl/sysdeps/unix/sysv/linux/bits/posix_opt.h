@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,9 +72,6 @@
 /* We have the reentrant functions described in POSIX.  */
 #define _POSIX_REENTRANT_FUNCTIONS      1
 #define _POSIX_THREAD_SAFE_FUNCTIONS	200112L
-
-/* We provide priority scheduling for threads.  */
-#define	_POSIX_THREAD_PRIORITY_SCHEDULING	200112L
 
 /* We support user-defined stack sizes.  */
 #define _POSIX_THREAD_ATTR_STACKSIZE	200112L
