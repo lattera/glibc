@@ -29,7 +29,13 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 {
   if (ch > 0x9f)
     {
-      if (__builtin_expect (ucs4_to_ksc5601 (ch, cp, 2), 0)
+      if (__builtin_expect (ch, 0) == 0x20a9)
+	{
+	  /* Half-width Korean Currency WON sign.  */
+	  cp[0] = '\\';
+	  cp[1] = '\0';
+	}
+      else if (__builtin_expect (ucs4_to_ksc5601 (ch, cp, 2), 0)
 	  != __UNKNOWN_10646_CHAR)
 	{
 	  cp[0] |= 0x80;
@@ -38,9 +44,10 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
       else
 	cp[0] = '\0';
     }
-  /* XXX Think about 0x5c ; '\'.  */
   else
     {
+      /* There is no mapping for U005c but we nevertheless map it to
+	 \x5c.  */
       cp[0] = (unsigned char) ch;
       cp[1] = '\0';
     }
@@ -67,17 +74,14 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
   {									      \
     uint32_t ch = *inptr;						      \
 									      \
-    /* Half-width Korean Currency WON sign				      \
-									      \
-       if (inchar == 0x5c)						      \
-	 ch =  0x20a9;							      \
-       else if (inchar <= 0x7f)						      \
-	 ch = (uint32_t) inchar;					      \
-    */									      \
-									      \
     if (ch <= 0x9f)							      \
-      /* Plain ASCII.  */						      \
-      ++inptr;								      \
+      {									      \
+	/* Plain ASCII with one exception.  */				      \
+	if (ch == 0x5c)							      \
+	  /* Half-width Korean Currency WON sign.  */			      \
+	  ch = 0x20a9;							      \
+	++inptr;							      \
+      }									      \
     /* 0xfe(->0x7e : row 94) and 0xc9(->0x59 : row 41) are		      \
        user-defined areas.  */						      \
     else if (__builtin_expect (ch, 0xa1) == 0xa0			      \
