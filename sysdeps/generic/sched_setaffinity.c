@@ -23,7 +23,7 @@
 
 /* Retrieve the CPU affinity mask for a particular process.  */
 int
-sched_setaffinity (pid, mask)
+sched_setaffinity (pid, cpuset)
      pid_t pid;
      const cpu_set_t *cpuset;
 {
