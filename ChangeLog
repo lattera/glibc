@@ -1,5 +1,23 @@
 2001-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/sys/time.h-data: Allow sys/select.h.
+	* conform/data/sys/un.h-data: Fix typo.
+	* time/sys/time.h: Don't include all of <time.h>, just struct timeval.
+	* sysdeps/posix/clock_getres.c: Include <time.h> instead of
+	<sys/time.h>.
+	* sysdeps/unix/clock_nanosleep.c: Likewise.
+	* sysdeps/unix/i386/clock_getcpuclockid.c: Likewise.
+	* sysdeps/unix/i386/i586/clock_getres.c: Likewise.
+	* sysdeps/unix/clock_gettime.c: Also include <time.h>.
+	* sysdeps/unix/clock_settime.c: Likewise.
+
+	* sysdeps/generic/pselect.c: Include <stddef.h> for NULL.
+	* login/getutent.c: Likewise.
+	* login/getutid.c: Likewise.
+	* login/getutline.c: Likewise.
+
+	* socket/sys/un.h: Define SUN_LEN only if __USE_MISC.
+
 	* sysdeps/unix/sysv/linux/bits/statvfs.h: Change type of f_fsid field
 	to unsigned long.  Add __f_unused.  Define _STATVFSBUF_F_UNUSED.
 	* sysdeps/unix/sysv/linux/internal_statvfs.c: Adjust initialization of

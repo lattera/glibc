@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <stddef.h>	/* For NULL.  */
 #include <sys/time.h>
 #include <sys/select.h>
 
