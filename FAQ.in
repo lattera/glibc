@@ -1602,29 +1602,29 @@ this should be necessary.
 supports synchronous context switches only.  There are several reasons for
 this:
 
- o UNIX provides no other (portable) way of effecting a synchronous
-   context switch (also known as co-routine switch).  Some versions
-   support this via setjmp()/longjmp() but this does not work
-   universally.
+- UNIX provides no other (portable) way of effecting a synchronous
+  context switch (also known as co-routine switch).  Some versions
+  support this via setjmp()/longjmp() but this does not work
+  universally.
 
- o As defined by the UNIX '98 standard, the only way setcontext()
-   could trigger an asychronous context switch is if this function
-   were invoked on the ucontext_t pointer passed as the third argument
-   to a signal handler.  But according to draft 5, XPG6, XBD 2.4.3,
-   setcontext() is not among the set of routines that may be called
-   from a signal handler.
+- As defined by the UNIX '98 standard, the only way setcontext()
+  could trigger an asychronous context switch is if this function
+  were invoked on the ucontext_t pointer passed as the third argument
+  to a signal handler.  But according to draft 5, XPG6, XBD 2.4.3,
+  setcontext() is not among the set of routines that may be called
+  from a signal handler.
 
- o If setcontext() were to be used for asynchronous context switches,
-   all kinds of synchronization and re-entrancy issues could arise and
-   these problems have already been solved by real multi-threading
-   libraries (e.g., POSIX threads or Linux threads).
+- If setcontext() were to be used for asynchronous context switches,
+  all kinds of synchronization and re-entrancy issues could arise and
+  these problems have already been solved by real multi-threading
+  libraries (e.g., POSIX threads or Linux threads).
 
- o Synchronous context switching can be implemented entirely in
-   user-level and less state needs to be saved/restored than for an
-   asynchronous context switch.  It is therefore useful to distinguish
-   between the two types of context switches.  Indeed, some
-   application vendors are known to use setcontext() to implement
-   co-routines on top of normal (heavier-weight) pre-emptable threads.
+- Synchronous context switching can be implemented entirely in
+  user-level and less state needs to be saved/restored than for an
+  asynchronous context switch.  It is therefore useful to distinguish
+  between the two types of context switches.  Indeed, some
+  application vendors are known to use setcontext() to implement
+  co-routines on top of normal (heavier-weight) pre-emptable threads.
 
 It should be noted that if someone was dead-bent on using setcontext()
 on the third arg of a signal handler, then IA-64 Linux could support
