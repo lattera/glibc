@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	 SYS_sethostid
 
-SYSCALL (sethostid)
+SYSCALL (sethostid, 1)
 	ret
 
 #else
