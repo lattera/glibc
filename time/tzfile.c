@@ -1,22 +1,21 @@
 /* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -43,7 +42,8 @@ struct leap
     long int change;		/* Seconds of correction to apply.  */
   };
 
-static void compute_tzname_max __P ((size_t));
+static struct ttinfo *find_transition (time_t timer);
+static void compute_tzname_max (size_t);
 
 static size_t num_transitions;
 static time_t *transitions = NULL;
@@ -77,30 +77,31 @@ decode (const void *ptr)
 }
 
 void
-DEFUN(__tzfile_read, (file), CONST char *file)
+__tzfile_read (const char *file)
 {
   size_t num_isstd, num_isgmt;
   register FILE *f;
   struct tzhead tzhead;
   size_t chars;
   register size_t i;
+  struct ttinfo *info;
 
   __use_tzfile = 0;
 
   if (transitions != NULL)
-    free((PTR) transitions);
+    free ((void *) transitions);
   transitions = NULL;
   if (type_idxs != NULL)
-    free((PTR) type_idxs);
+    free ((void *) type_idxs);
   type_idxs = NULL;
   if (types != NULL)
-    free((PTR) types);
+    free ((void *) types);
   types = NULL;
   if (zone_names != NULL)
-    free((PTR) zone_names);
+    free ((void *) zone_names);
   zone_names = NULL;
   if (leaps != NULL)
-    free((PTR) leaps);
+    free ((void *) leaps);
   leaps = NULL;
 
   if (file == NULL)
@@ -112,12 +113,12 @@ DEFUN(__tzfile_read, (file), CONST char *file)
 
   if (*file != '/')
     {
-      static CONST char tzdir[] = TZDIR;
-      register CONST unsigned int len = strlen(file) + 1;
-      char *new = (char *) __alloca(sizeof(tzdir) + len);
-      memcpy(new, tzdir, sizeof(tzdir) - 1);
-      new[sizeof(tzdir) - 1] = '/';
-      memcpy(&new[sizeof(tzdir)], file, len);
+      static const char tzdir[] = TZDIR;
+      register const unsigned int len = strlen (file) + 1;
+      char *new = (char *) __alloca (sizeof (tzdir) + len);
+      memcpy (new, tzdir, sizeof(tzdir) - 1);
+      new[sizeof (tzdir) - 1] = '/';
+      memcpy (&new[sizeof (tzdir)], file, len);
       file = new;
     }
 
@@ -125,7 +126,7 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   if (f == NULL)
     return;
 
-  if (fread((PTR) &tzhead, sizeof(tzhead), 1, f) != 1)
+  if (fread ((void *) &tzhead, sizeof (tzhead), 1, f) != 1)
     goto lose;
 
   num_transitions = (size_t) decode (tzhead.tzh_timecnt);
@@ -166,8 +167,8 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   if (sizeof (time_t) < 4)
       abort ();
 
-  if (fread((PTR) transitions, 4, num_transitions, f) != num_transitions ||
-      fread((PTR) type_idxs, 1, num_transitions, f) != num_transitions)
+  if (fread(transitions, 4, num_transitions, f) != num_transitions ||
+      fread(type_idxs, 1, num_transitions, f) != num_transitions)
     goto lose;
 
   if (BYTE_ORDER != BIG_ENDIAN || sizeof (time_t) != 4)
@@ -184,30 +185,30 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   for (i = 0; i < num_types; ++i)
     {
       unsigned char x[4];
-      if (fread((PTR) x, 1, 4, f) != 4 ||
-	  fread((PTR) &types[i].isdst, 1, 1, f) != 1 ||
-	  fread((PTR) &types[i].idx, 1, 1, f) != 1)
+      if (fread (x, 1, 4, f) != 4 ||
+	  fread (&types[i].isdst, 1, 1, f) != 1 ||
+	  fread (&types[i].idx, 1, 1, f) != 1)
 	goto lose;
       types[i].offset = (long int) decode (x);
     }
 
-  if (fread((PTR) zone_names, 1, chars, f) != chars)
+  if (fread (zone_names, 1, chars, f) != chars)
     goto lose;
 
   for (i = 0; i < num_leaps; ++i)
     {
       unsigned char x[4];
-      if (fread((PTR) x, 1, sizeof(x), f) != sizeof(x))
+      if (fread (x, 1, sizeof (x), f) != sizeof (x))
 	goto lose;
       leaps[i].transition = (time_t) decode (x);
-      if (fread((PTR) x, 1, sizeof(x), f) != sizeof(x))
+      if (fread (x, 1, sizeof (x), f) != sizeof (x))
 	goto lose;
       leaps[i].change = (long int) decode (x);
     }
 
   for (i = 0; i < num_isstd; ++i)
     {
-      char c = getc(f);
+      char c = getc (f);
       if (c == EOF)
 	goto lose;
       types[i].isstd = c != 0;
@@ -217,7 +218,7 @@ DEFUN(__tzfile_read, (file), CONST char *file)
 
   for (i = 0; i < num_isgmt; ++i)
     {
-      char c = getc(f);
+      char c = getc (f);
       if (c == EOF)
 	goto lose;
       types[i].isgmt = c != 0;
@@ -225,7 +226,14 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   while (i < num_types)
     types[i++].isgmt = 0;
 
-  (void) fclose(f);
+  fclose (f);
+
+  info = find_transition (0);
+  for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
+       ++i)
+    __tzname[types[i].isdst] = &zone_names[types[i].idx];
+  if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
+    __tzname[info->isdst] = &zone_names[info->idx];
 
   compute_tzname_max (chars);
 
@@ -233,7 +241,7 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   return;
 
  lose:;
-  (void) fclose(f);
+  fclose(f);
 }
 
 /* The user specified a hand-made timezone, but not its DST rules.
@@ -241,9 +249,7 @@ DEFUN(__tzfile_read, (file), CONST char *file)
    from the TZDEFRULES file.  */
 
 void
-DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
-      char *std AND char *dst AND
-      long int stdoff AND long int dstoff)
+__tzfile_default (char *std, char *dst, long int stdoff, long int dstoff)
 {
   size_t stdlen, dstlen, i;
   long int rule_offset, rule_stdoff, rule_dstoff;
@@ -332,12 +338,10 @@ DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
   compute_tzname_max (stdlen + dstlen);
 }
 
-int
-DEFUN(__tzfile_compute, (timer, leap_correct, leap_hit),
-      time_t timer AND long int *leap_correct AND int *leap_hit)
+static struct ttinfo *
+find_transition (time_t timer)
 {
-  struct ttinfo *info;
-  register size_t i;
+  size_t i;
 
   if (num_transitions == 0 || timer < transitions[0])
     {
@@ -360,7 +364,16 @@ DEFUN(__tzfile_compute, (timer, leap_correct, leap_hit),
       i = type_idxs[i - 1];
     }
 
-  info = &types[i];
+  return &types[i];
+}
+
+int
+__tzfile_compute (time_t timer, long int *leap_correct, int *leap_hit)
+{
+  struct ttinfo *info;
+  register size_t i;
+
+  info = find_transition (timer);
   __daylight = info->isdst;
   __timezone = info->offset;
   for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
@@ -400,7 +413,7 @@ DEFUN(__tzfile_compute, (timer, leap_correct, leap_hit),
 }
 
 void
-DEFUN(compute_tzname_max, (chars), size_t chars)
+compute_tzname_max (size_t chars)
 {
   extern size_t __tzname_cur_max; /* Defined in __tzset.c. */
 

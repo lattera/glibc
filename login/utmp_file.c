@@ -140,14 +140,14 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
   memset (&fl, '\0', sizeof (struct flock));
   fl.l_type = F_WRLCK;
   fl.l_whence = SEEK_SET;
-  result = fcntl (file_fd, F_SETLKW, &fl);
+  fcntl (file_fd, F_SETLKW, &fl);
 
   /* Read the next entry.  */
   nbytes = read (file_fd, &last_entry, sizeof (struct utmp));
 
   /* And unlock the file.  */
   fl.l_type = F_UNLCK;
-  result = fcntl (file_fd, F_SETLKW, &fl);
+  fcntl (file_fd, F_SETLKW, &fl);
 
   if (nbytes != sizeof (struct utmp))
     {
@@ -292,6 +292,7 @@ getutid_r_file (const struct utmp *id, struct utmp *buffer,
 static struct utmp *
 pututline_file (const struct utmp *data)
 {
+  struct flock fl;			/* Information struct for locking.  */
   struct utmp buffer;
   struct utmp *pbuf;
   int found;
@@ -299,6 +300,10 @@ pututline_file (const struct utmp *data)
   if (file_fd < 0)
     /* Something went wrong.  */
     return NULL;
+
+  if (file_fd == INT_MIN)
+    /* The file is closed.  Open it again.  */
+    setutent_file (0);
 
   /* Find the correct place to insert the data.  */
   if (file_offset > 0)
@@ -318,14 +323,10 @@ pututline_file (const struct utmp *data)
       found = internal_getutid_r (data, &buffer);
 
   /* Try to lock the file.  */
-  if (flock (file_fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
-    {
-      /* Oh, oh.  The file is already locked.  Wait a bit and try again.  */
-      sleep (1);
-
-      /* This time we ignore the error.  */
-      (void) flock (file_fd, LOCK_EX | LOCK_NB);
-    }
+  memset (&fl, '\0', sizeof (struct flock));
+  fl.l_type = F_WRLCK;
+  fl.l_whence = SEEK_SET;
+  fcntl (file_fd, F_SETLKW, &fl);
 
   if (found < 0)
     {
@@ -338,8 +339,8 @@ pututline_file (const struct utmp *data)
 
 	  if (lseek (file_fd, 0, SEEK_END) < 0)
 	    {
-	      (void) flock (file_fd, LOCK_UN);
-	      return NULL;
+	      pbuf = NULL;
+	      goto unlock_return;
 	    }
 	}
     }
@@ -365,8 +366,10 @@ pututline_file (const struct utmp *data)
       pbuf = (struct utmp *) data;
     }
 
+ unlock_return:
    /* And unlock the file.  */
-  (void) flock (file_fd, LOCK_UN);
+  fl.l_type = F_UNLCK;
+  fcntl (file_fd, F_SETLKW, &fl);
 
   return pbuf;
 }

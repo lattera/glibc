@@ -514,9 +514,12 @@ tzset (void)
 
   __tzset ();
 
-  /* Set `tzname'.  */
-  __tzname[0] = (char *) tz_rules[0].name;
-  __tzname[1] = (char *) tz_rules[1].name;
+  if (!__use_tzfile)
+    {
+      /* Set `tzname'.  */
+      __tzname[0] = (char *) tz_rules[0].name;
+      __tzname[1] = (char *) tz_rules[1].name;
+    }
 
   __libc_lock_unlock (__tzset_lock);
 }

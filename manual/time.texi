@@ -638,14 +638,24 @@ The number is padded with spaces.
 
 @item -
 The number is not padded at all.
+
+@item 0
+The number is padded with zeros even if the format spefies padding
+with spaces.
 @end table
 
 The default action is to pad the number with zeros to keep it a constant
 width.  Numbers that do not have a range indicated below are never
 padded, since there is no natural width for them.
 
-An optional modifier can follow the optional flag.  The modifiers, which
-are POSIX.2 extensions, are:
+Following the flag an optional specification of the width is possible.
+This is specified in decimal notation.  If the natural size of the
+output is of the field has less than the specifed number of character,
+the result is written right adjusted and space padded to the given
+size.
+
+An optional modifier can follow the optional flag and width
+specification.  The modifiers, which are POSIX.2 extensions, are:
 
 @table @code
 @item E
@@ -660,7 +670,8 @@ Use the locale's alternate numeric symbols for numbers.  This modifier
 applies only to numeric format specifiers.
 @end table
 
-A modifier is ignored if no alternate representation is available.
+If the format supports the modifier but no alternate representation
+is available, it is ignored.
 
 The conversion specifier ends with a format specifier taken from the
 following list.  The whole @samp{%} sequence is replaced in the output
@@ -867,6 +878,10 @@ repeat the call, providing a bigger array.
 
 If @var{s} is a null pointer, @code{strftime} does not actually write
 anything, but instead returns the number of characters it would have written.
+
+According to POSIX.1 every call to @code{strftime} implies a call to
+@code{tzset}.  So the contents of the environment variable @code{TZ}
+is examined before any output is produced.
 
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun

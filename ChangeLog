@@ -1,3 +1,23 @@
+Mon Dec 16 02:15:42 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Make sure tzset() sets always tzname[].
+	* time/tzfile.c: De-ANSI-declfy.
+	(find_transition): New function.  Set tzname according to given time.
+	(__tzread_file): Use find_transition to set tzname.
+	(__tzfile_compute): Use find_transition instead of doing the work
+	self.
+	* time/tzset.c (tzset): Set tzname[] directly only if !__use_tzfile.
+
+Sun Dec 15 16:52:34 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/utmp-file.c (pututline_file): Open file if closed.
+	Reported by Roma Ekzhanov <ekzhanov@paragraph.com>.
+	Use fcntl instead of flock.
+
+Sun Dec 15 14:20:51 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/time.texi: Update documentation of strftime function.
+
 Sun Dec 15 01:53:20 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (subdirs): Change crypt to md5-crypt.
