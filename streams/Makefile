@@ -1,4 +1,4 @@
-# Copyright (C) 1998 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= streams
 
-headers		= stropts.h sys/stropts.h bits/stropts.h
+headers		= stropts.h sys/stropts.h bits/stropts.h bits/xtitypes.h
 routines	= isastream getmsg getpmsg putmsg putpmsg fattach fdetach
 
 include ../Rules

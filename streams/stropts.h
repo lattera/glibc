@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 
 #include <features.h>
 #include <bits/types.h>
+#include <bits/xtitypes.h>
 
 #ifndef __gid_t_defined
 typedef __gid_t gid_t;
