@@ -1,5 +1,6 @@
 2000-06-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (distribute): Add tst-ctype-de_DE.in.
 	* tst-ctype.c: Read in more tests from stdin.
 	* tst-ctype.sh: Feed extra test data to program via stdin.
 	* tst-ctype-de_DE.in: New file.

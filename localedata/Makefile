@@ -61,7 +61,8 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(charmaps) $(locales) $(repertoiremaps)			\
 	      tst-rpmatch.sh tst-locale.sh tst-fmon.sh sort-test.sh	\
 	      tst-fmon.data $(test-input-data) $(ld-test-srcs)		\
-	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh tst-ctype.sh
+	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh tst-ctype.sh \
+	      tst-ctype-de_DE.in
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
