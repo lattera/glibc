@@ -197,11 +197,7 @@ static void pthread_handle_sigcancel(int sig);
 static void pthread_handle_sigrestart(int sig);
 #ifdef __i386__
 static void pthread_handle_sigrestart_nonrt(int sig, struct sigcontext ctx);
-static void pthread_handle_sigrestart_rt(int sig, struct siginfo *si,
-					 struct ucontext *uc);
 static void pthread_handle_sigcancel_nonrt(int sig, struct sigcontext ctx);
-static void pthread_handle_sigcancel_rt(int sig, struct siginfo *si,
-					 struct ucontext *uc);
 #endif
 static void pthread_handle_sigdebug(int sig);
 
@@ -369,12 +365,7 @@ static void pthread_initialize(void)
 #ifndef __i386__
   sa.sa_handler = pthread_handle_sigrestart;
 #else
-# if !__ASSUME_REALTIME_SIGNALS
-  if (__pthread_sig_restart < SIGRTMIN)
-    sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart_nonrt;
-  else
-# endif
-    sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart_rt;
+  sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart_nonrt;
 #endif
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
@@ -382,12 +373,7 @@ static void pthread_initialize(void)
 #ifndef __i386__
   sa.sa_handler = pthread_handle_sigcancel;
 #else
-# if !__ASSUME_REALTIME_SIGNALS
-  if (__pthread_sig_restart < SIGRTMIN)
-    sa.sa_handler = (__sighandler_t) pthread_handle_sigcancel_nonrt;
-  else
-# endif
-    sa.sa_handler = (__sighandler_t) pthread_handle_sigcancel_rt;
+  sa.sa_handler = (__sighandler_t) pthread_handle_sigcancel_nonrt;
 #endif
   sa.sa_flags = 0;
   __sigaction(__pthread_sig_cancel, &sa, NULL);
@@ -675,18 +661,9 @@ static void pthread_handle_sigrestart(int sig)
 }
 
 #ifdef __i386__
-# if !__ASSUME_REALTIME_SIGNALS
 static void pthread_handle_sigrestart_nonrt(int sig, struct sigcontext ctx)
 {
   asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
-  pthread_handle_sigrestart(sig);
-}
-# endif
-
-static void pthread_handle_sigrestart_rt(int sig, struct siginfo *si,
-					 struct ucontext *uc)
-{
-  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[REG_GS]));
   pthread_handle_sigrestart(sig);
 }
 #endif
@@ -726,18 +703,9 @@ static void pthread_handle_sigcancel(int sig)
 }
 
 #ifdef __i386__
-# if !__ASSUME_REALTIME_SIGNALS
 static void pthread_handle_sigcancel_nonrt(int sig, struct sigcontext ctx)
 {
   asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
-  pthread_handle_sigcancel(sig);
-}
-# endif
-
-static void pthread_handle_sigcancel_rt(int sig, struct siginfo *si,
-					 struct ucontext *uc)
-{
-  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[REG_GS]));
   pthread_handle_sigcancel(sig);
 }
 #endif

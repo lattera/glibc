@@ -1,8 +1,14 @@
+2000-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c: Correct long-time braino.  We never set SA_SIGINFO and
+	therefore don't need the _rt versions of the signal handlers.
+
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c (pthread_yield): New function.
 	* sysdeps/pthread/pthread.h (pthread_yield): Add prototype.
 	* Versions [libpthread] (GLIBC_2.2): Add pthread_yield.
+	* internals.h: Declare __pthread_yield.
 
 	* pthread.c (pthread_initialize): Avoid a bit more code if
 	realtime signals are known to exist.

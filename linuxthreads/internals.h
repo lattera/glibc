@@ -439,6 +439,8 @@ int __pthread_timedsuspend_new(pthread_descr self, const struct timespec *abs);
 
 void __pthread_wait_for_restart_signal(pthread_descr self);
 
+int __pthread_yield (void);
+
 /* Global pointers to old or new suspend functions */
 
 extern void (*__pthread_restart)(pthread_descr);
