@@ -1,3 +1,37 @@
+1998-09-06 09:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.96.
+
+	Rewrite runtime linker to be truly thread-safe.  There is now no
+	global variable specifying the scope.  We create all needed
+	scopes at the time the link maps are created.
+	* elf/Versions [GLIBC_2.1]: Add _dl_loaded and _dl_main_searchlist.
+	* elf/link.h: Add struct r_scope_elem and use this for l_searchlist,
+	l_symbolic_searchlist, l_scope, and l_local_scope elements in
+	struct link_map.
+	* elf/dl-close.c: Rewritten accordingly.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-symbol.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/dlfcn.h: Likewise.
+	* elf/dlsym.c: Likewise.
+	* elf/dlvsym.c: Likewise.
+	* elf/ldsodefs.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Likewise.
+
 1998-09-05  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/mach/hurd/i386/init-first.c (init1): Call

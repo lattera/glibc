@@ -227,9 +227,10 @@ _dl_start_user:\n\
 	leal (%esp,%eax,4), %esp\n\
 	# Push back the modified argument count.\n\
 	pushl %ecx\n\
-	# Push _dl_default_scope[2] as argument in _dl_init_next call below.\n\
-	movl _dl_default_scope@GOT(%ebx), %eax\n\
-	movl 8(%eax), %esi\n\
+	# Push the searchlist of the main object as argument in\n\
+	# _dl_init_next call below.\n\
+	movl _dl_main_searchlist@GOT(%ebx), %eax\n\
+	movl (%eax), %esi\n\
 0:	movl %esi,%eax\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\

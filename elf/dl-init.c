@@ -26,7 +26,7 @@
 
 ElfW(Addr)
 internal_function
-_dl_init_next (struct link_map *map)
+_dl_init_next (struct r_scope_elem *searchlist)
 {
   unsigned int i;
 
@@ -34,10 +34,10 @@ _dl_init_next (struct link_map *map)
      dependency order, so processing that list from back to front gets us
      breadth-first leaf-to-root order.  */
 
-  i = map->l_nsearchlist;
+  i = searchlist->r_nlist;
   while (i-- > 0)
     {
-      struct link_map *l = map->l_searchlist[i];
+      struct link_map *l = searchlist->r_list[i];
 
       if (l->l_init_called)
 	/* This object is all done.  */
@@ -53,8 +53,8 @@ _dl_init_next (struct link_map *map)
 	  continue;
 	}
 
-      if (l->l_info[DT_INIT] &&
-	  !(l->l_name[0] == '\0' && l->l_type == lt_executable))
+      if (l->l_info[DT_INIT]
+	  && (l->l_name[0] != '\0' || l->l_type != lt_executable))
 	{
 	  /* Run this object's initializer.  */
 	  l->l_init_running = 1;

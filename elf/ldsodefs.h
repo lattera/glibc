@@ -282,7 +282,7 @@ extern void _dl_close (struct link_map *map)
    symbols can be chosen.  */
 extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
 				     const ElfW(Sym) **sym,
-				     struct link_map *symbol_scope[],
+				     struct r_scope_elem *symbol_scope[],
 				     const char *reference_name,
 				     int reloc_type)
      internal_function;
@@ -290,7 +290,7 @@ extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
 /* Lookup versioned symbol.  */
 extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
 					       const ElfW(Sym) **sym,
-					       struct link_map *symbol_scope[],
+					       struct r_scope_elem *symbol_scope[],
 					       const char *reference_name,
 					       const struct r_found_version *version,
 					       int reloc_type)
@@ -299,7 +299,7 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
 extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
 					  const ElfW(Sym) **sym,
-					  struct link_map *symbol_scope[],
+					  struct r_scope_elem *symbol_scope[],
 					  const char *reference_name,
 					  struct link_map *skip_this)
      internal_function;
@@ -308,7 +308,7 @@ extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
    skip shared objects.  */
 extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
 						    const ElfW(Sym) **sym,
-						    struct link_map *symbol_scope[],
+						    struct r_scope_elem *symbol_scope[],
 						    const char *reference_name,
 						    const struct r_found_version *version,
 						    struct link_map *skip_this)
@@ -325,46 +325,24 @@ extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name)
 
 /* Structure describing the dynamic linker itself.  */
 extern struct link_map _dl_rtld_map;
-
-/* The list of objects currently loaded is the third element of the
-   `_dl_default_scope' array, and the fourth element is always null.
-   This leaves two slots before it that are used when resolving
-   DT_SYMBOLIC objects' references one after it for normal references
-   (see below).  */
-#define _dl_loaded	(_dl_default_scope[2])
-extern struct link_map *_dl_default_scope[5];
-
-/* Null-terminated list of objects in the dynamic `global scope'.  The
-   list starts at [2]; i.e. &_dl_global_scope[2] is the argument
-   passed to _dl_lookup_symbol to search the global scope.  To search
-   a specific object and its dependencies in preference to the global
-   scope, fill in the [1] slot and pass its address; for two specific
-   object scopes, fill [0] and [1].  The list is double-terminated; to
-   search the global scope and then a specific object and its
-   dependencies, set *_dl_global_scope_end.  This variable initially
-   points to _dl_default_scope, and _dl_loaded is always kept in [2]
-   of this list.  A new list is malloc'd when new objects are loaded
-   with RTLD_GLOBAL.  */
-extern struct link_map **_dl_global_scope, **_dl_global_scope_end;
-extern size_t _dl_global_scope_alloc; /* Number of slots malloc'd.  */
-
-/* Hack _dl_global_scope[0] and [1] as necessary, and return a pointer into
-   _dl_global_scope that should be passed to _dl_lookup_symbol for symbol
-   references made in the object MAP's relocations.  */
-extern struct link_map **_dl_object_relocation_scope (struct link_map *map)
-     internal_function;
-
+/* And a pointer to the map for the main map.  */
+extern struct link_map *_dl_loaded;
+/* Array representing global scope.  */
+extern struct r_scope_elem *_dl_global_scope[2];
+/* Direct pointer to the searchlist of the main object.  */
+extern struct r_scope_elem *_dl_main_searchlist;
 
 /* Allocate a `struct link_map' for a new object being loaded,
-   and enter it into the _dl_loaded list.  */
+   and enter it into the _dl_main_map list.  */
 extern struct link_map *_dl_new_object (char *realname, const char *libname,
-					int type) internal_function;
+					int type, struct link_map *loader)
+     internal_function;
 
 /* Relocate the given object (if it hasn't already been).
    SCOPE is passed to _dl_lookup_symbol in symbol lookups.
    If LAZY is nonzero, don't relocate its PLT.  */
 extern void _dl_relocate_object (struct link_map *map,
-				 struct link_map *scope[],
+				 struct r_scope_elem *scope[],
 				 int lazy, int consider_profiling);
 
 /* Check the version dependencies of all objects available through
@@ -377,11 +355,11 @@ extern int _dl_check_all_versions (struct link_map *map, int verbose)
 extern int _dl_check_map_versions (struct link_map *map, int verbose)
      internal_function;
 
-/* Return the address of the next initializer function for MAP or one of
+/* Return the address of the next initializer function for SCOPE or one of
    its dependencies that has not yet been run.  When there are no more
    initializers to be run, this returns zero.  The functions are returned
    in the order they should be called.  */
-extern ElfW(Addr) _dl_init_next (struct link_map *map) internal_function;
+extern ElfW(Addr) _dl_init_next (struct r_scope_elem *scope) internal_function;
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */

@@ -25,16 +25,17 @@
 
 #include <assert.h>
 
-/* List of objects currently loaded is [2] of this, aka _dl_loaded.  */
-struct link_map *_dl_default_scope[5];
 
 /* Allocate a `struct link_map' for a new object being loaded,
    and enter it into the _dl_loaded list.  */
 
 struct link_map *
 internal_function
-_dl_new_object (char *realname, const char *libname, int type)
+_dl_new_object (char *realname, const char *libname, int type,
+		struct link_map *loader)
 {
+  struct link_map *l;
+  int idx;
   size_t libname_len = strlen (libname) + 1;
   struct link_map *new = calloc (sizeof *new, 1);
   struct libname_list *newname = malloc (sizeof *newname + libname_len);
@@ -46,26 +47,37 @@ _dl_new_object (char *realname, const char *libname, int type)
   newname->next = NULL;
   new->l_libname = newname;
   new->l_type = type;
+  new->l_loader = loader;
 
-  if (_dl_loaded == NULL)
+  /* Counter for the scopes we have to handle.  */
+  idx = 0;
+
+  if (_dl_loaded != NULL)
     {
-      new->l_prev = new->l_next = NULL;
-      _dl_loaded = new;
-    }
-  else
-    {
-      struct link_map *l = _dl_loaded;
+      l = _dl_loaded;
       while (l->l_next)
 	l = l->l_next;
       new->l_prev = l;
-      new->l_next = NULL;
+      /* new->l_next = NULL;	Would be necesary but we use calloc.  */
       l->l_next = new;
-    }
 
-  /* Don't try to find the origin for the main map.  */
-  if (realname[0] == '\0')
-    new->l_origin = NULL;
+      /* Add the global scope.  */
+      new->l_scope[idx++] = &_dl_loaded->l_searchlist;
+    }
+  /* This is our local scope.  */
+  if (loader != NULL)
+    {
+      while (loader->l_loader != NULL)
+	loader = loader->l_loader;
+      new->l_scope[idx] = &loader->l_searchlist;
+    }
   else
+    new->l_scope[idx] = &new->l_searchlist;
+
+  new->l_local_scope[0] = new->l_scope[idx];
+
+  /* Don't try to find the origin for the main map which has the name "".  */
+  if (realname[0] != '\0')
     {
       char *origin;
 

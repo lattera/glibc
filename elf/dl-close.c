@@ -57,8 +57,8 @@ _dl_close (struct link_map *map)
       return;
     }
 
-  list = map->l_searchlist;
-  nsearchlist = map->l_nsearchlist;
+  list = map->l_searchlist.r_list;
+  nsearchlist = map->l_searchlist.r_nlist;
 
   /* Call all termination functions at once.  */
   for (i = 0; i < nsearchlist; ++i)
@@ -103,16 +103,18 @@ _dl_close (struct link_map *map)
 	  if (imap->l_global)
 	    {
 	      /* This object is in the global scope list.  Remove it.  */
-	      struct link_map **tail = _dl_global_scope_end;
+	      unsigned int cnt = _dl_main_searchlist->r_nlist;
+
 	      do
-		--tail;
-	      while (*tail != imap);
-	      while (tail < _dl_global_scope_end)
+		--cnt;
+	      while (_dl_main_searchlist->r_list[cnt] != imap);
+	      while (cnt < _dl_main_searchlist->r_nlist)
 		{
-		  tail[0] = tail[1];
-		  ++tail;
+		  _dl_main_searchlist->r_list[0]
+		    = _dl_main_searchlist->r_list[1];
+		  ++cnt;
 		}
-	      --_dl_global_scope_end;
+	      --_dl_main_searchlist->r_nlist;
 	    }
 
 	  /* We can unmap all the maps at once.  We determined the
@@ -135,8 +137,6 @@ _dl_close (struct link_map *map)
 #endif
 	  if (imap->l_next)
 	    imap->l_next->l_prev = imap->l_prev;
-	  if (imap->l_searchlist && imap->l_searchlist != list)
-	    free (imap->l_searchlist);
 
 	  if (imap->l_versions != NULL)
 	    free (imap->l_versions);
@@ -156,15 +156,14 @@ _dl_close (struct link_map *map)
 	  while (lnp != NULL);
 
 	  /* Remove the searchlists.  */
-	  if (imap->l_dupsearchlist != imap->l_searchlist)
+	  if (imap->l_searchlist.r_duplist != imap->l_searchlist.r_list)
 	    {
-	      /* If a l_searchlist object exists there always also is
-		 a l_dupsearchlist object.  */
-	      assert (imap->l_dupsearchlist != NULL);
-	      free (imap->l_dupsearchlist);
+	      /* If a r_list exists there always also is a r_duplist.  */
+	      assert (imap->l_searchlist.r_list != NULL);
+	      free (imap->l_searchlist.r_duplist);
 	    }
-	  if (imap != map && imap->l_searchlist != NULL)
-	    free (imap->l_searchlist);
+	  if (imap != map && imap->l_searchlist.r_list != NULL)
+	    free (imap->l_searchlist.r_list);
 
 	  free (imap);
 	}

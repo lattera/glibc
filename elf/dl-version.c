@@ -61,9 +61,9 @@ find_needed (const char *name, struct link_map *map)
 
   /* The required object is not in the global scope, look to see if it is
      a dependency of the current object.  */
-  for (n = 0; n < map->l_nsearchlist; n++)
-    if (_dl_name_match_p (name, map->l_searchlist[n]))
-      return map->l_searchlist[n];
+  for (n = 0; n < map->l_searchlist.r_nlist; n++)
+    if (_dl_name_match_p (name, map->l_searchlist.r_list[n]))
+      return map->l_searchlist.r_list[n];
 
   /* Should never happen.  */
   return NULL;

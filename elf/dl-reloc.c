@@ -27,8 +27,8 @@
 
 
 void
-_dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy,
-		     int consider_profiling)
+_dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
+		     int lazy, int consider_profiling)
 {
   if (l->l_relocated)
     return;

@@ -372,32 +372,33 @@ _dl_map_object_deps (struct link_map *map,
 
   /* Store the search list we built in the object.  It will be used for
      searches in the scope of this object.  */
-  map->l_searchlist = malloc (nlist * sizeof (struct link_map *));
-  if (map->l_searchlist == NULL)
+  map->l_searchlist.r_list = malloc (nlist * sizeof (struct link_map *));
+  if (map->l_searchlist.r_list == NULL)
     _dl_signal_error (ENOMEM, map->l_name,
 		      "cannot allocate symbol search list");
-  map->l_nsearchlist = nlist;
+  map->l_searchlist.r_nlist = nlist;
 
   for (nlist = 0, runp = known; runp; runp = runp->unique)
     {
-      map->l_searchlist[nlist++] = runp->map;
+      map->l_searchlist.r_list[nlist++] = runp->map;
 
       /* Now clear all the mark bits we set in the objects on the search list
 	 to avoid duplicates, so the next call starts fresh.  */
       runp->map->l_reserved = 0;
     }
 
-  map->l_ndupsearchlist = nduplist;
+  map->l_searchlist.r_nduplist = nduplist;
   if (nlist == nduplist)
-    map->l_dupsearchlist = map->l_searchlist;
+    map->l_searchlist.r_duplist = map->l_searchlist.r_list;
   else
     {
-      map->l_dupsearchlist = malloc (nduplist * sizeof (struct link_map *));
-      if (map->l_dupsearchlist == NULL)
+      map->l_searchlist.r_duplist = malloc (nduplist
+					    * sizeof (struct link_map *));
+      if (map->l_searchlist.r_duplist == NULL)
 	_dl_signal_error (ENOMEM, map->l_name,
 			  "cannot allocate symbol search list");
 
       for (nlist = 0, runp = known; runp; runp = runp->dup)
-	map->l_dupsearchlist[nlist++] = runp->map;
+	map->l_searchlist.r_duplist[nlist++] = runp->map;
     }
 }

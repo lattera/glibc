@@ -19,63 +19,6 @@
 
 #include <unistd.h>
 #include <elf/ldsodefs.h>
-
-
-/* The global scope we will use for symbol lookups.
-   This will be modified by _dl_open if RTLD_GLOBAL is used.  */
-struct link_map **_dl_global_scope = _dl_default_scope;
-struct link_map **_dl_global_scope_end = &_dl_default_scope[3];
-
-
-/* Hack _dl_global_scope[0] and [1] as necessary, and return a pointer into
-   _dl_global_scope that should be passed to _dl_lookup_symbol for symbol
-   references made in the object L's relocations.  */
-inline struct link_map **
-internal_function
-_dl_object_relocation_scope (struct link_map *l)
-{
-  if (l->l_info[DT_SYMBOLIC])
-    {
-      /* This object's global references are to be resolved first
-	 in the object itself, and only secondarily in more global
-	 scopes.  */
-
-      if (! l->l_searchlist)
-	/* We must construct the searchlist for this object.  */
-	_dl_map_object_deps (l, NULL, 0, 0);
-
-      /* The primary scope is this object itself and its
-	 dependencies.
-
-	 XXX This is wrong.  Only the object must be searched, not
-	 the dependencies. --drepper  */
-      _dl_global_scope[0] = l;
-
-      /* Secondary is the dependency tree that reached L; the object
-	 requested directly by the user is at the root of that tree.  */
-      while (l->l_loader)
-	l = l->l_loader;
-      _dl_global_scope[1] = l;
-
-      /* Finally, the global scope follows.  */
-
-      return _dl_global_scope;
-    }
-  else
-    {
-      /* Use first the global scope, and then the scope of the root of the
-	 dependency tree that first caused this object to be loaded.  */
-      while (l->l_loader)
-	l = l->l_loader;
-      /* There is no point in searching the same list twice.  This isn't
-	 guaranteed to always find all duplicates if new objects are added
-	 to the global scope, but is good enough most of the time.  */
-      if (_dl_global_scope[2] != l)
-	*_dl_global_scope_end = l;
-      return &_dl_global_scope[2];
-    }
-}
-
 #include "dynamic-link.h"
 
 #if !defined ELF_MACHINE_NO_RELA || ELF_MACHINE_NO_REL
@@ -115,9 +58,6 @@ fixup (
   void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
   ElfW(Addr) value;
 
-  /* Set up the scope to find symbols referenced by this object.  */
-  struct link_map **scope = _dl_object_relocation_scope (l);
-
   /* Sanity check that we're really looking at a PLT relocation.  */
   assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
@@ -134,13 +74,13 @@ fixup (
 	if (version->hash != 0)
 	  {
 	    value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
-						&sym, scope, l->l_name,
+						&sym, l->l_scope, l->l_name,
 						version, ELF_MACHINE_JMP_SLOT);
 	    break;
 	  }
       }
     case 0:
-      value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
+      value = _dl_lookup_symbol (strtab + sym->st_name, &sym, l->l_scope,
 				 l->l_name, ELF_MACHINE_JMP_SLOT);
     }
 
@@ -153,8 +93,6 @@ fixup (
 
   /* Finally, fix up the plt itself.  */
   elf_machine_fixup_plt (l, reloc, rel_addr, value);
-
-  *_dl_global_scope_end = NULL;
 
   return value;
 }
@@ -191,9 +129,6 @@ profile_fixup (
 			  reloc_offset);
       const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
 
-      /* Set up the scope to find symbols referenced by this object.  */
-      struct link_map **scope = _dl_object_relocation_scope (l);
-
       /* Sanity check that we're really looking at a PLT relocation.  */
       assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
@@ -210,14 +145,14 @@ profile_fixup (
 	    if (version->hash != 0)
 	      {
 		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
-						    &sym, scope, l->l_name,
-						    version,
+						    &sym, l->l_scope,
+						    l->l_name, version,
 						    ELF_MACHINE_JMP_SLOT);
 		break;
 	      }
 	  }
 	case 0:
-	  value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
+	  value = _dl_lookup_symbol (strtab + sym->st_name, &sym, l->l_scope,
 				     l->l_name, ELF_MACHINE_JMP_SLOT);
 	}
 
@@ -227,8 +162,6 @@ profile_fixup (
 
       /* And now perhaps the relocation addend.  */
       value = elf_machine_plt_value (l, reloc, value);
-
-      *_dl_global_scope_end = NULL;
 
       /* Store the result for later runs.  */
       *resultp = value;

@@ -46,8 +46,7 @@ dlvsym_doit (void *a)
   if (args->handle == NULL)
     /* Search the global scope.  */
     args->loadbase = _dl_lookup_versioned_symbol (args->name, &args->ref,
-						  &(_dl_global_scope
-						    ?: _dl_default_scope)[2],
+						  _dl_global_scope,
 						  NULL, &args->version, 0);
   else if (args->handle == RTLD_NEXT)
     {
@@ -67,23 +66,19 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader)
 	l = l->l_loader;
 
-      {
-	struct link_map *mapscope[2] = { l, NULL };
-	args->loadbase = _dl_lookup_versioned_symbol_skip (args->name,
-							   &args->ref,
-							   mapscope,
-							   NULL,
-							   &args->version,
-							   match);
-      }
+      args->loadbase = _dl_lookup_versioned_symbol_skip (args->name,
+							 &args->ref,
+							 l->l_local_scope,
+							 NULL, &args->version,
+							 match);
     }
   else
     {
       /* Search the scope of the given object.  */
       struct link_map *map = args->handle;
-      struct link_map *mapscope[2] = { map, NULL };
       args->loadbase = _dl_lookup_versioned_symbol (args->name, &args->ref,
-						    mapscope, map->l_name,
+						    map->l_local_scope,
+						    map->l_name,
 						    &args->version, 0);
     }
 }

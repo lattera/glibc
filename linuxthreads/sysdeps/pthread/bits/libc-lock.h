@@ -152,7 +152,9 @@ typedef pthread_key_t __libc_key_t;
 #ifdef _LIBC
 
 /* Fast thread-specific data internal to libc.  */
-enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0, _LIBC_TSD_KEY_N };
+enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
+			_LIBC_TSD_KEY_DL_ERROR,
+			_LIBC_TSD_KEY_N };
 
 extern void *__libc_internal_tsd_get __P ((enum __libc_tsd_key_t));
 extern int __libc_internal_tsd_set __P ((enum __libc_tsd_key_t,

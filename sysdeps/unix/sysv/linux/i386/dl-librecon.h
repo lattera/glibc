@@ -27,14 +27,16 @@
       /* We have to find out whether the binary is linked against	      \
 	 libc 5 or glibc.  We do this by looking at all the DT_NEEDED	      \
 	 entries.  If one is libc.so.5 this is a libc 5 linked binary.  */    \
-      if (main_map->l_info[DT_NEEDED])					      \
+      if (_dl_loaded->l_info[DT_NEEDED])				      \
 	{								      \
 	  /* We have dependencies.  */					      \
-	  const char *strtab = ((void *) main_map->l_addr		      \
-				+ main_map->l_info[DT_STRTAB]->d_un.d_ptr);   \
 	  const ElfW(Dyn) *d;						      \
+	  const char *strtab;						      \
 									      \
-	  for (d = main_map->l_ld; d->d_tag != DT_NULL; ++d)		      \
+	  strtab = ((void *) _dl_loaded->l_addr				      \
+		    + _dl_loaded->l_info[DT_STRTAB]->d_un.d_ptr);	      \
+									      \
+	  for (d = _dl_loaded->l_ld; d->d_tag != DT_NULL; ++d)		      \
 	    if (d->d_tag == DT_NEEDED					      \
 		&& strcmp (strtab + d->d_un.d_val, "libc.so.5") == 0)	      \
 	      break;							      \

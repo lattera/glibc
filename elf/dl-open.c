@@ -77,7 +77,7 @@ dl_open_worker (void *a)
 
   /* Load the named object.  */
   args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0);
-  if (new->l_searchlist)
+  if (new->l_searchlist.r_list)
     /* It was already open.  */
     return;
 
@@ -97,21 +97,6 @@ dl_open_worker (void *a)
     {
       if (! l->l_relocated)
 	{
-	  /* We use an indirect call call for _dl_relocate_object because
-	     we must avoid using the PLT in the call.  If our PLT entry for
-	     _dl_relocate_object hasn't been used yet, then the dynamic
-	     linker fixup routine will clobber _dl_global_scope during its
-	     work.  We must be sure that nothing will require a PLT fixup
-	     between when _dl_object_relocation_scope returns and when we
-	     enter the dynamic linker's code (_dl_relocate_object).  */
-	  __typeof (_dl_relocate_object) *reloc = &_dl_relocate_object;
-
-	  /* GCC is very clever.  If we wouldn't add some magic it would
-	     simply optimize away our nice little variable `reloc' and we
-	     would result in a not working binary.  So let's swing the
-	     magic ward.  */
-	  asm ("" : "=r" (reloc) : "0" (reloc));
-
 #ifdef PIC
 	  if (_dl_profile != NULL)
 	    {
@@ -122,7 +107,7 @@ dl_open_worker (void *a)
 		 start the profiling.  */
 	      struct link_map *old_profile_map = _dl_profile_map;
 
-	      (*reloc) (l, _dl_object_relocation_scope (l), 1, 1);
+	      _dl_relocate_object (l, l->l_scope, 1, 1);
 
 	      if (old_profile_map == NULL && _dl_profile_map != NULL)
 		/* We must prepare the profiling.  */
@@ -130,10 +115,8 @@ dl_open_worker (void *a)
 	    }
 	  else
 #endif
-	    (*reloc) (l, _dl_object_relocation_scope (l),
-		      (mode & RTLD_BINDING_MASK) == RTLD_LAZY, 0);
-
-	  *_dl_global_scope_end = NULL;
+	    _dl_relocate_object (l, l->l_scope,
+				 (mode & RTLD_BINDING_MASK) == RTLD_LAZY, 0);
 	}
 
       if (l == new)
@@ -146,50 +129,58 @@ dl_open_worker (void *a)
     {
       /* The symbols of the new object and its dependencies are to be
 	 introduced into the global scope that will be used to resolve
-	 references from other dynamically-loaded objects.  */
+	 references from other dynamically-loaded objects.
 
+	 The global scope is the searchlist in the main link map.  We
+	 extend this list if necessary.  There is one problem though:
+	 since this structure was allocated very early (before the libc
+	 is loaded) the memory it uses is allocated by the malloc()-stub
+	 in the ld.so.  When we come here these functions are not used
+	 anymore.  Instead the malloc() implementation of the libc is
+	 used.  But this means the block from the main map cannot be used
+	 in an realloc() call.  Therefore we allocate a completely new
+	 array the first time we have to add something to the locale scope.  */
       if (_dl_global_scope_alloc == 0)
 	{
 	  /* This is the first dynamic object given global scope.  */
-	  _dl_global_scope_alloc = 8;
-	  _dl_global_scope = malloc (_dl_global_scope_alloc
-				     * sizeof (struct link_map *));
-	  if (! _dl_global_scope)
+	  struct link_map **new_global;
+
+	  _dl_global_scope_alloc = _dl_main_searchlist->r_nlist + 8;
+	  new_global = (struct link_map **)
+	    malloc (_dl_global_scope_alloc * sizeof (struct link_map *));
+	  if (new_global == NULL)
 	    {
-	      _dl_global_scope = _dl_default_scope;
+	      _dl_global_scope_alloc = 0;
 	    nomem:
 	      new->l_global = 0;
 	      _dl_signal_error (ENOMEM, file, "cannot extend global scope");
 	    }
-	  _dl_global_scope[2] = _dl_default_scope[2];
-	  _dl_global_scope[3] = new;
-	  _dl_global_scope[4] = NULL;
-	  _dl_global_scope[5] = NULL;
-	  _dl_global_scope_end = &_dl_global_scope [4];
-	}
-      else
-	{
-	  if (_dl_global_scope_end + 3
-	      > _dl_global_scope + _dl_global_scope_alloc)
-	    {
-	      /* Must extend the list.  */
-	      struct link_map **new = realloc (_dl_global_scope,
-					       _dl_global_scope_alloc * 2
-					       * sizeof (struct link_map *));
-	      if (! new)
-		goto nomem;
-	      _dl_global_scope = new;
-	      _dl_global_scope_end = new + _dl_global_scope_alloc - 2;
-	      _dl_global_scope_alloc *= 2;
-	    }
 
-	  /* Append the new object and re-terminate the list.  */
-	  *_dl_global_scope_end++ = new;
-	  /* We keep the list double-terminated so the last element
-	     can be filled in for symbol lookups.  */
-	  _dl_global_scope_end[0] = NULL;
-	  _dl_global_scope_end[1] = NULL;
+	  /* Copy over the old entries.  */
+	  memcpy (new_global, _dl_main_searchlist->r_list,
+		  (_dl_main_searchlist->r_nlist * sizeof (struct link_map *)));
+
+	  _dl_main_searchlist->r_list = new_global;
 	}
+      else if (_dl_main_searchlist->r_nlist == _dl_global_scope_alloc)
+	{
+	  /* We have to extend the existing array of link maps in the
+	     main map.  */
+	  struct link_map **new_global;
+
+	  new_global = (struct link_map **)
+	    malloc ((_dl_global_scope_alloc + 8) * sizeof (struct link_map *));
+	  if (new_global == NULL)
+	    goto nomem;
+
+	  _dl_global_scope_alloc += 8;
+	  _dl_main_searchlist->r_list = new_global;
+	}
+
+      /* Now add the new entry.  */
+      _dl_main_searchlist->r_list[_dl_main_searchlist->r_nlist] = new;
+
+      /* XXX Do we have to add something to r_dupsearchlist???  --drepper */
     }
 
 
@@ -201,9 +192,13 @@ dl_open_worker (void *a)
   _dl_debug_state ();
 
   /* Run the initializer functions of new objects.  */
-  while (init = _dl_init_next (new))
+  while (init = _dl_init_next (&new->l_searchlist))
     (*(void (*) (int, char **, char **)) init) (__libc_argc, __libc_argv,
 						__environ);
+
+  if (new->l_global)
+    /* Now we can make the new map available in the global scope.  */
+    ++_dl_main_searchlist->r_nlist;
 
   if (_dl_sysdep_start == NULL)
     /* We must be the static _dl_open in libc.a.  A static program that
@@ -240,9 +235,6 @@ _dl_open (const char *file, int mode)
     {
       /* Some error occured during loading.  */
       char *local_errstring;
-
-      /* Reset the global scope.  */
-      *_dl_global_scope_end = NULL;
 
       /* Remove the object from memory.  It may be in an inconsistent
 	 state if relocation failed, for example.  */

@@ -28,7 +28,7 @@ _dl_symbol_value (struct link_map *map, const char *name)
 {
   ElfW(Addr) loadbase;
   const ElfW(Sym) *ref = NULL;
-  struct link_map *scope[2] = { map, NULL };
-  loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0);
+  loadbase = _dl_lookup_symbol (name, &ref, map->l_local_scope, map->l_name,
+				0);
   return loadbase + ref->st_value;
 }

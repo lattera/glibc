@@ -63,12 +63,12 @@ struct sym_val
 static inline int
 do_lookup (const char *undef_name, unsigned long int hash,
 	   const ElfW(Sym) *ref, struct sym_val *result,
-	   struct link_map *scope, size_t i, const char *reference_name,
+	   struct r_scope_elem *scope, size_t i, const char *reference_name,
 	   const struct r_found_version *version, struct link_map *skip,
 	   int reloc_type)
 {
-  struct link_map **list = scope->l_searchlist;
-  size_t n = scope->l_nsearchlist;
+  struct link_map **list = scope->r_list;
+  size_t n = scope->r_nlist;
   struct link_map *map;
 
   for (; i < n; ++i)
@@ -212,13 +212,13 @@ do_lookup (const char *undef_name, unsigned long int hash,
 ElfW(Addr)
 internal_function
 _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
-		   struct link_map *symbol_scope[],
+		   struct r_scope_elem *symbol_scope[],
 		   const char *reference_name,
 		   int reloc_type)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
-  struct link_map **scope;
+  struct r_scope_elem **scope;
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
@@ -260,19 +260,19 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 ElfW(Addr)
 internal_function
 _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
-			struct link_map *symbol_scope[],
+			struct r_scope_elem *symbol_scope[],
 			const char *reference_name,
 			struct link_map *skip_map)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
-  struct link_map **scope;
+  struct r_scope_elem **scope;
   size_t i;
 
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;
-  for (i = 0; (*scope)->l_dupsearchlist[i] != skip_map; ++i)
-    assert (i < (*scope)->l_ndupsearchlist);
+  for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
+    assert (i < (*scope)->r_nduplist);
 
   if (! do_lookup (undef_name, hash, *ref, &current_value,
 		   *scope, i, reference_name, NULL, skip_map, 0))
@@ -309,14 +309,14 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
 ElfW(Addr)
 internal_function
 _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
-			     struct link_map *symbol_scope[],
+			     struct r_scope_elem *symbol_scope[],
 			     const char *reference_name,
 			     const struct r_found_version *version,
 			     int reloc_type)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
-  struct link_map **scope;
+  struct r_scope_elem **scope;
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
@@ -375,20 +375,20 @@ ElfW(Addr)
 internal_function
 _dl_lookup_versioned_symbol_skip (const char *undef_name,
 				  const ElfW(Sym) **ref,
-				  struct link_map *symbol_scope[],
+				  struct r_scope_elem *symbol_scope[],
 				  const char *reference_name,
 				  const struct r_found_version *version,
 				  struct link_map *skip_map)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
-  struct link_map **scope;
+  struct r_scope_elem **scope;
   size_t i;
 
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;
-  for (i = 0; (*scope)->l_dupsearchlist[i] != skip_map; ++i)
-    assert (i < (*scope)->l_ndupsearchlist);
+  for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
+    assert (i < (*scope)->r_nduplist);
 
   if (! do_lookup (undef_name, hash, *ref, &current_value,
 		   *scope, i, reference_name, version, skip_map, 0))

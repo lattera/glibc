@@ -21,15 +21,22 @@
 #define	_DLFCN_H 1
 
 #include <features.h>
+#define __need_NULL
+#include <stddef.h>
 
 /* Collect various system dependand definitions and declarations.  */
 #include <bits/dlfcn.h>
 
-/* If the first argument of `dlsym' is set to RTLD_NEXT the run-time
-   address of the symbol called NAME in the next shared object is
-   returned.  The "next" relation is defined by the order the shared
-   objects were loaded.  */
+/* If the first argument of `dlsym' or `dlvsym' is set to RTLD_NEXT
+   the run-time address of the symbol called NAME in the next shared
+   object is returned.  The "next" relation is defined by the order
+   the shared objects were loaded.  */
 #define RTLD_NEXT	((void *) -1l)
+
+/* If the first argument to `dlsym' or `dlvsym' is set to RTLD_DEFAULT
+   the run-time address of the symbol called NAME in the global scope
+   is returned.  */
+#define RTLD_DEFAULT	NULL
 
 __BEGIN_DECLS
 
@@ -57,6 +64,7 @@ extern void *dlvsym __P ((void *__handle, __const char *__name,
    the error string so that a following call returns null.  */
 extern char *dlerror __P ((void));
 
+#ifdef __USE_GNU
 /* Fill in *INFO with the following information about ADDRESS.
    Returns 0 iff no shared object's segments contain that address.  */
 typedef struct
@@ -68,7 +76,6 @@ typedef struct
   } Dl_info;
 extern int dladdr __P ((const void *__address, Dl_info *__info));
 
-#ifdef __USE_GNU
 /* To support profiling of shared objects it is a good idea to call
    the function found using `dlsym' using the following macro since
    these calls do not use the PLT.  But this would mean the dynamic

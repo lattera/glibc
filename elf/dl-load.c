@@ -529,7 +529,12 @@ _dl_init_paths (const char *llp)
   l = _dl_loaded;
   if (l != NULL)
     {
-      if (l->l_type != lt_loaded && l->l_info[DT_RPATH])
+      /* We should never get here when initializing in a static application.
+	 If this is a dynamically linked application _dl_loaded always
+	 points to the main map which is not dlopen()ed.  */
+      assert (l->l_type != lt_loaded);
+
+      if (l->l_info[DT_RPATH])
 	{
 	  /* Allocate room for the search path and fill in information
 	     from RPATH.  */
@@ -727,11 +732,10 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 #endif
 
   /* Enter the new object in the list of loaded objects.  */
-  l = _dl_new_object (realname, name, l_type);
+  l = _dl_new_object (realname, name, l_type, loader);
   if (! l)
     lose (ENOMEM, "cannot create shared object descriptor");
   l->l_opencount = 1;
-  l->l_loader = loader;
 
   /* Extract the remaining details we need from the ELF header
      and then read in the program header table.  */
@@ -972,6 +976,35 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   elf_get_dynamic_info (l->l_ld, l->l_info);
   if (l->l_info[DT_HASH])
     _dl_setup_hash (l);
+
+  /* If this object has DT_SYMBOLIC set modify now its scope.  We don't
+     have to do this for the main map.  */
+  if (l->l_info[DT_SYMBOLIC] && &l->l_searchlist != l->l_scope[0])
+    {
+      /* Create an appropriate searchlist.  It contains only this map.
+
+	 XXX This is the definition of DT_SYMBOLIC in SysVr4.  The old
+	 GNU ld.so implementation had a different interpretation which
+	 is more reasonable.  We are prepared to add this possibility
+	 back as part of a GNU extension of the ELF format.  */
+      l->l_symbolic_searchlist.r_list =
+	(struct link_map **) malloc (sizeof (struct link_map *));
+
+      if (l->l_symbolic_searchlist.r_list == NULL)
+	lose (ENOMEM, "cannot create searchlist");
+
+      l->l_symbolic_searchlist.r_list[0] = l;
+      l->l_symbolic_searchlist.r_nlist = 1;
+      l->l_symbolic_searchlist.r_duplist = l->l_symbolic_searchlist.r_list;
+      l->l_symbolic_searchlist.r_nduplist = 1;
+
+      /* Now move the existing entries one back.  */
+      memmove (&l->l_scope[1], &l->l_scope[0],
+	       3 * sizeof (struct r_scope_elem *));
+
+      /* Now add the new entry.  */
+      l->l_scope[0] = &l->l_symbolic_searchlist;
+    }
 
   return l;
 }
@@ -1280,7 +1313,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL
-	      || (l = _dl_new_object (name_copy, name, type)) == NULL)
+	      || (l = _dl_new_object (name_copy, name, type, loader)) == NULL)
 	    _dl_signal_error (ENOMEM, name,
 			      "cannot create shared object descriptor");
 	  /* We use an opencount of 0 as a sign for the faked entry.  */

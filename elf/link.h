@@ -80,6 +80,24 @@ struct libname_list;
 struct r_found_version;
 struct r_search_path_elem;
 
+/* Forward declaration.  */
+struct link_map;
+
+/* Structure to describe a single list of scope elements.  The lookup
+   functions get passed an array of pointers to such structures.  */
+struct r_scope_elem
+{
+  /* Array of maps for the scope.  */
+  struct link_map **r_list;
+  /* Number of entries in the scope.  */
+  unsigned int r_nlist;
+
+  /* Array of maps which also includes duplicates.  */
+  struct link_map **r_duplist;
+  /* Number of elements in this list.  */
+  unsigned int r_nduplist;
+};
+
 
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
@@ -119,15 +137,14 @@ struct link_map
     ElfW(Half) l_phnum;		/* Number of program header entries.  */
 
     /* Array of DT_NEEDED dependencies and their dependencies, in
-       dependency order for symbol lookup.  This is null before the
-       dependencies have been loaded.  */
-    struct link_map **l_searchlist;
-    unsigned int l_nsearchlist;
+       dependency order for symbol lookup (with and without
+       duplicates).  There is no entry before the dependencies have
+       been loaded.  */
+    struct r_scope_elem l_searchlist;
 
-    /* We keep another list in which we keep duplicates.  This is
-       needed in _dl_lookup_symbol_skip to implemented RTLD_NEXT.  */
-    struct link_map **l_dupsearchlist;
-    unsigned int l_ndupsearchlist;
+    /* We need a special searchlist to process objects marked with
+       DT_SYMBOLIC.  */
+    struct r_scope_elem l_symbolic_searchlist;
 
     /* Dependent object that first caused this object to be loaded.  */
     struct link_map *l_loader;
@@ -168,6 +185,14 @@ struct link_map
     /* Start and finish of memory map for this object.  l_map_start
        need not be the same as l_addr.  */
     ElfW(Addr) l_map_start, l_map_end;
+
+    /* This is an array defining the lookup scope for this link map.
+     There are at most three different scope lists.  */
+    struct r_scope_elem *l_scope[4];
+
+    /* A similar array, this time only with the local scope.  This is
+       used occasionally.  */
+    struct r_scope_elem *l_local_scope[2];
   };
 
 #endif /* link.h */

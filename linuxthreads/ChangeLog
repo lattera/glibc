@@ -1,3 +1,8 @@
+1998-09-06 09:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (enum __libc_tsd_key_t): Add
+	_LIBC_TSD_KEY_DL_ERROR.
+
 1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/i686/pt-machine.h (testandset): Add memory clobber.

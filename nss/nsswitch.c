@@ -292,10 +292,10 @@ static void
 get_sym (void *a)
 {
   struct get_sym_args *args = (struct get_sym_args *) a;
-  struct link_map *scope[2] = { args->map, NULL };
   args->ref = NULL;
   args->loadbase = _dl_lookup_symbol (args->name, &args->ref,
-				      scope, args->map->l_name, 0);
+				      args->map->l_local_scope,
+				      args->map->l_name, 0);
 }
 #endif
 

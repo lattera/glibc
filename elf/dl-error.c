@@ -22,6 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <elf/ldsodefs.h>
+#include <bits/libc-lock.h>
 
 /* This structure communicates state between _dl_catch_error and
    _dl_signal_error.  */
@@ -31,14 +32,57 @@ struct catch
     jmp_buf env;		/* longjmp here on error.  */
   };
 
-/* This points to such a structure during a call to _dl_catch_error.
-   During implicit startup and run-time work for needed shared libraries,
-   this is null.  */
+/* Multiple threads at once can use the `_dl_catch_error' function.  The
+   calls can come from the `_dl_map_object_deps', `_dlerror_run', or from
+   any of the libc functionality which loads dynamic objects (NSS, iconv).
+   Therefore we have to be prepared to safe the state in thread-local
+   memory.  `catch' will only be used for the non-threaded case.
+
+   Please note the horrible kludge we have to use to check for the
+   thread functions to be defined.  The problem is that while running
+   ld.so standalone (i.e., before the relocation with the libc symbols
+   available) we do not have a real handling of undefined weak symbols.
+   All symbols are relocated, regardless of the availability.  They are
+   relocated relative to the load address of the dynamic linker.  Adding
+   this start address to zero (the value in the GOT for undefined symbols)
+   leads to an address which is the load address of ld.so.  Once we have
+   relocated with the libc values the value is NULL if the function is
+   not available.  Our "solution" is to regard NULL and the ld.so load
+   address as indicators for unavailable weak symbols.   */
 static struct catch *catch;
+
+#ifdef PIC
+# define tsd_setspecific(data) \
+  if (__libc_internal_tsd_set != (void *) _dl_rtld_map.l_addr		      \
+      && __libc_internal_tsd_set != NULL)				      \
+    __libc_internal_tsd_set (_LIBC_TSD_KEY_DL_ERROR, data);		      \
+  else									      \
+    catch = (data)
+# define tsd_getspecific() \
+  (__libc_internal_tsd_set != (void *) _dl_rtld_map.l_addr		      \
+   && __libc_internal_tsd_set != NULL					      \
+   ? (struct catch *) __libc_internal_tsd_get (_LIBC_TSD_KEY_DL_ERROR)	      \
+   : catch)
+#else
+# define tsd_setspecific(data) \
+  if (__libc_internal_tsd_set != NULL)					      \
+    __libc_internal_tsd_set (_LIBC_TSD_KEY_DL_ERROR, data);		      \
+  else									      \
+    catch = (data)
+# define tsd_getspecific() \
+  (__libc_internal_tsd_set != NULL					      \
+   ? (struct catch *) __libc_internal_tsd_get (_LIBC_TSD_KEY_DL_ERROR)	      \
+   : catch)
+#endif
+
 
 /* This points to a function which is called when an error is
    received.  Unlike the handling of `catch' this function may return.
-   The arguments will be the `errstring' and `objname'.  */
+   The arguments will be the `errstring' and `objname'.
+
+   Since this functionality is not used in normal programs (only in ld.so)
+   we do not care about multi-threaded programs here.  We keep this as a
+   global variable.  */
 static receiver_fct receiver;
 
 
@@ -48,27 +92,30 @@ _dl_signal_error (int errcode,
 		  const char *objname,
 		  const char *errstring)
 {
+  struct catch *lcatch;
+
   if (! errstring)
     errstring = "DYNAMIC LINKER BUG!!!";
 
-  if (catch)
+  lcatch = tsd_getspecific ();
+  if (lcatch != NULL)
     {
       /* We are inside _dl_catch_error.  Return to it.  We have to
 	 duplicate the error string since it might be allocated on the
 	 stack.  */
       size_t objname_len = objname ? strlen (objname) + 2 : 0;
       size_t errstring_len = strlen (errstring) + 1;
-      catch->errstring = malloc (objname_len + errstring_len);
-      if (catch->errstring != NULL)
+      lcatch->errstring = malloc (objname_len + errstring_len);
+      if (lcatch->errstring != NULL)
 	{
 	  if (objname_len > 0)
 	    {
-	      memcpy (catch->errstring, objname, objname_len - 2);
-	      memcpy (catch->errstring + objname_len - 2, ": ", 2);
+	      memcpy (lcatch->errstring, objname, objname_len - 2);
+	      memcpy (lcatch->errstring + objname_len - 2, ": ", 2);
 	    }
-	  memcpy (catch->errstring + objname_len, errstring, errstring_len);
+	  memcpy (lcatch->errstring + objname_len, errstring, errstring_len);
 	}
-      longjmp (catch->env, errcode ?: -1);
+      longjmp (lcatch->env, errcode ?: -1);
     }
   else if (receiver)
     {
@@ -106,19 +153,19 @@ _dl_catch_error (char **errstring,
      inefficient.  So we initialize `c' by hand.  */
   c.errstring = NULL;
 
-  old = catch;
+  old = tsd_getspecific ();
   errcode = setjmp (c.env);
   if (errcode == 0)
     {
-      catch = &c;
+      tsd_setspecific (&c);
       (*operate) (args);
-      catch = old;
+      tsd_setspecific (old);
       *errstring = NULL;
       return 0;
     }
 
   /* We get here only if we longjmp'd out of OPERATE.  */
-  catch = old;
+  tsd_setspecific (old);
   *errstring = c.errstring;
   return errcode == -1 ? 0 : errcode;
 }
@@ -130,15 +177,15 @@ _dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
   struct catch *old_catch;
   receiver_fct old_receiver;
 
-  old_catch = catch;
+  old_catch = tsd_getspecific ();
   old_receiver = receiver;
 
   /* Set the new values.  */
-  catch = NULL;
+  tsd_setspecific (NULL);
   receiver = fct;
 
   (*operate) (args);
 
-  catch = old_catch;
+  tsd_setspecific (old_catch);
   receiver = old_receiver;
 }
