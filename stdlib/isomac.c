@@ -52,7 +52,7 @@
      preprocessor has something similar to gcc's -dM option. Tune
      PRINT_MACROS in this case. This program assumes headers are found
      under /usr/include and that there is a writable /tmp directory.
-     Tune SYSTEM_INCLUDE and TMPFILE if your system differs.
+     Tune SYSTEM_INCLUDE if your system differs.
      #define BROKEN_SYSTEM if system(NULL) bombs -- one more violation
      of ISO C, by the way.
 
@@ -75,8 +75,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TMPFILE             "/tmp/macros"
 #define HEADER_MAX          256
+
+static const char *macrofile;
 
 /* ISO C header names including Amendment 1 (without ".h" suffix).  */
 static char *header[] =
@@ -247,8 +248,10 @@ get_null_defines (void)
   FILE *input;
   int first = 1;
 
+  macrofile = tmpnam (NULL);
+
   command = malloc (sizeof fmt + sizeof "/dev/null" + 2 * strlen (CC)
-		    + strlen (INC) + strlen (TMPFILE));
+		    + strlen (INC) + strlen (macrofile));
 
   if (command == NULL)
     {
@@ -256,7 +259,7 @@ get_null_defines (void)
       exit (1);
     }
 
-  sprintf (command, fmt, "/dev/null", CC, INC, CC, TMPFILE);
+  sprintf (command, fmt, "/dev/null", CC, INC, CC, macrofile);
 
   if (system (command))
     {
@@ -264,11 +267,11 @@ get_null_defines (void)
       return NULL;
     }
   free (command);
-  input = fopen (TMPFILE, "r");
+  input = fopen (macrofile, "r");
 
   if (input == NULL)
     {
-      printf ("Could not read %s: ", TMPFILE);
+      printf ("Could not read %s: ", macrofile);
       perror (NULL);
       return NULL;
     }
@@ -321,7 +324,7 @@ get_null_defines (void)
     }
   result[result_len] = NULL;
   fclose (input);
-  remove (TMPFILE);
+  remove (macrofile);
 
   return (const char **) result;
 }
@@ -335,7 +338,7 @@ check_header (const char *file_name, const char **except)
   int result = 0;
 
   command = malloc (sizeof fmt + strlen (file_name) + 2 * strlen (CC)
-		    + strlen (INC) + strlen (TMPFILE));
+		    + strlen (INC) + strlen (macrofile));
 
   if (command == NULL)
     {
@@ -344,7 +347,7 @@ check_header (const char *file_name, const char **except)
     }
 
   puts (file_name);
-  sprintf (command, fmt, file_name, CC, INC, CC, TMPFILE);
+  sprintf (command, fmt, file_name, CC, INC, CC, macrofile);
 
   if (system (command))
     {
@@ -352,11 +355,11 @@ check_header (const char *file_name, const char **except)
       result = 1;
     }
   free (command);
-  input = fopen (TMPFILE, "r");
+  input = fopen (macrofile, "r");
 
   if (input == NULL)
     {
-      printf ("Could not read %s: ", TMPFILE);
+      printf ("Could not read %s: ", macrofile);
       perror (NULL);
       return 1;
     }
@@ -430,7 +433,7 @@ check_header (const char *file_name, const char **except)
 	}
     }
   fclose (input);
-  remove (TMPFILE);
+  remove (macrofile);
 
   return result;
 }

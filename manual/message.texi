@@ -1075,7 +1075,7 @@ code similar to the following:
 @end smallexample
 
 @noindent
-After the first complains from people internationalizing the code people
+After the first complaints from people internationalizing the code people
 either completely avoided formulations like this or used strings like
 @code{"file(s)"}.  Both look unnatural and should be avoided.  First
 tries to solve the problem correctly looked like this:
@@ -1193,11 +1193,11 @@ details are explained in the GNU @code{gettext} manual.  Here only a a
 bit of information is provided.
 
 The information about the plural form selection has to be stored in the
-header entry (the one with the empty (@code{msgid} string).  There should
-be something like:
+header entry (the one with the empty (@code{msgid} string).  It looks
+like this:
 
 @smallexample
-  nplurals=2; plural=n == 1 ? 0 : 1
+Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;
 @end smallexample
 
 The @code{nplurals} value must be a decimal number which specifies how
@@ -1222,11 +1222,11 @@ below).@footnote{Additions are welcome.  Send appropriate information to
 @table @asis
 @item Only one form:
 Some languages only require one single form.  There is no distinction
-between the singular and plural form.  And appropriate header entry
+between the singular and plural form.  An appropriate header entry
 would look like this:
 
 @smallexample
-nplurals=1; plural=0
+Plural-Forms: nplurals=1; plural=0;
 @end smallexample
 
 @noindent
@@ -1246,7 +1246,7 @@ This is the form used in most existing programs since it is what English
 is using.  A header entry would look like this:
 
 @smallexample
-nplurals=2; plural=n != 1
+Plural-Forms: nplurals=2; plural=n != 1;
 @end smallexample
 
 (Note: this uses the feature of C expressions that boolean expressions
@@ -1274,7 +1274,7 @@ Esperanto
 Exceptional case in the language family.  The header entry would be:
 
 @smallexample
-nplurals=2; plural=n>1
+Plural-Forms: nplurals=2; plural=n>1;
 @end smallexample
 
 @noindent
@@ -1289,7 +1289,7 @@ French
 The header entry would be:
 
 @smallexample
-nplurals=3; plural=n==1 ? 0 : n==2 ? 1 : 2
+Plural-Forms: nplurals=3; plural=n==1 ? 0 : n==2 ? 1 : 2;
 @end smallexample
 
 @noindent
@@ -1304,7 +1304,8 @@ Gaeilge
 The header entry would look like this:
 
 @smallexample
-nplurals=3; plural=n%100/10==1 ? 2 : n%10==1 ? 0 : (n+9)%10>3 ? 2 : 1
+Plural-Forms: nplurals=3; \
+    plural=n%100/10==1 ? 2 : n%10==1 ? 0 : (n+9)%10>3 ? 2 : 1;
 @end smallexample
 
 @noindent
@@ -1319,8 +1320,9 @@ Czech, Russian, Slovak
 The header entry would look like this:
 
 @smallexample
-nplurals=3; plural=n==1 ? 0 : \
-  n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2
+Plural-Forms: nplurals=3; \
+    plural=n==1 ? 0 : \
+           n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;
 @end smallexample
 
 (Continuation in the next line is possible.)
@@ -1337,7 +1339,8 @@ Polish
 The header entry would look like this:
 
 @smallexample
-nplurals=4; plural=n==1 ? 0 : n%10==2 ? 1 : n%10==3 || n%10==4 ? 2 : 3
+Plural-Forms: nplurals=4; \
+    plural=n==1 ? 0 : n%10==2 ? 1 : n%10==3 || n%10==4 ? 2 : 3;
 @end smallexample
 
 @noindent

@@ -163,6 +163,7 @@ please let me know.
 	when I try to use it, it always returns -1 and sets errno to ENOSYS.
 3.22.	My program segfaults when I call fclose() on the FILE* returned
 	from setmntent().  Is this a glibc bug?
+3.23.	I get "undefined reference to `atexit'"
 
 4. Miscellaneous
 
@@ -1682,6 +1683,17 @@ fclose(), not free(), even though the FILE * is also a pointer.
 In the case of setmntent(), it may appear to work in most cases, but it
 won't always work.  Unfortunately, for compatibility reasons, we can't
 change the return type of setmntent() to something other than FILE *.
+
+
+3.23.	I get "undefined reference to `atexit'"
+
+{UD} This means that your installation is somehow broken.  The situation is
+the same as for 'stat', 'fstat', etc (see question 2.7).  Investigate why the
+linker does not pick up libc_nonshared.a.
+
+If a similar message is issued at runtime this means that the application or
+DSO is not linked against libc.  This can cause problems since 'atexit' is
+not exported anymore.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

@@ -18,7 +18,7 @@
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-pcprofileso=@LIBDIR@/libpcprofile.so
+pcprofileso=@SLIBDIR@/libpcprofile.so
 pcprofiledump=@BINDIR@/pcprofiledump
 
 # Print usage message.

@@ -25,8 +25,9 @@
 #include <signal.h>
 #include <sys/wait.h>
 
-#define TMPFILE             "/tmp/macros"
 #define HEADER_MAX          256
+
+static const char *macrofile;
 
 /* <aio.h>.  */
 static const char *const aio_syms[] =
@@ -712,8 +713,10 @@ get_null_defines (void)
   FILE *input;
   int first = 1;
 
+  macrofile = tmpnam (NULL);
+
   command = malloc (sizeof fmt + sizeof "/dev/null" + 2 * strlen (CC)
-		    + strlen (INC) + strlen (TMPFILE));
+		    + strlen (INC) + strlen (macrofile));
 
   if (command == NULL)
     {
@@ -721,7 +724,7 @@ get_null_defines (void)
       exit (1);
     }
 
-  sprintf (command, fmt, "/dev/null", CC, INC, CC, TMPFILE);
+  sprintf (command, fmt, "/dev/null", CC, INC, CC, macrofile);
 
   if (xsystem (command))
     {
@@ -729,11 +732,11 @@ get_null_defines (void)
       return NULL;
     }
   free (command);
-  input = fopen (TMPFILE, "r");
+  input = fopen (macrofile, "r");
 
   if (input == NULL)
     {
-      printf ("Could not read %s: ", TMPFILE);
+      printf ("Could not read %s: ", macrofile);
       perror (NULL);
       return NULL;
     }
@@ -782,7 +785,7 @@ get_null_defines (void)
     }
   result[result_len] = NULL;
   fclose (input);
-  remove (TMPFILE);
+  remove (macrofile);
 
   return (const char **) result;
 }
@@ -799,7 +802,7 @@ check_header (const struct header *header, const char **except)
 
   memset (found, '\0', header->nsyms * sizeof (int));
   command = alloca (sizeof fmt + strlen (header->name) + 2 * strlen (CC)
-		    + strlen (INC) + strlen (TMPFILE));
+		    + strlen (INC) + strlen (macrofile));
 
 
   if (command == NULL)
@@ -809,13 +812,13 @@ check_header (const struct header *header, const char **except)
     }
 
   printf ("=== %s ===\n", header->name);
-  sprintf (command, fmt, header->name, CC, INC, CC, TMPFILE);
+  sprintf (command, fmt, header->name, CC, INC, CC, macrofile);
 
   /* First see whether this subset is supported at all.  */
   if (header->subset != NULL)
     {
       sprintf (line, testfmt, header->subset, header->subset, CC, INC, CC,
-	       TMPFILE);
+	       macrofile);
       if (xsystem (line))
 	{
 	  printf ("!! not available\n");
@@ -828,11 +831,11 @@ check_header (const struct header *header, const char **except)
       puts ("system() returned nonzero");
       result = 1;
     }
-  input = fopen (TMPFILE, "r");
+  input = fopen (macrofile, "r");
 
   if (input == NULL)
     {
-      printf ("Could not read %s: ", TMPFILE);
+      printf ("Could not read %s: ", macrofile);
       perror (NULL);
       return 1;
     }
@@ -884,7 +887,7 @@ check_header (const struct header *header, const char **except)
       result |= 1;
     }
   fclose (input);
-  remove (TMPFILE);
+  remove (macrofile);
 
   for (i = 0; i < header->nsyms; ++i)
     if (found[i] == 0)

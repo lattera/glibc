@@ -32,12 +32,12 @@ __lrint (double x)
 weak_alias (__lrint, lrint)
 
 /* This code will also work for a 'float' argument.  */
-asm ("\
-        .globl __lrintf
-        .globl lrintf
-        .weak lrintf
-	.set __lrintf,__lrint
-	.set lrintf,__lrint
+asm ("\n\
+	.globl __lrintf	\n\
+	.globl lrintf	\n\
+	.weak lrintf	\n\
+	.set __lrintf,__lrint	\n\
+	.set lrintf,__lrint	\n\
 ");
 
 #ifdef NO_LONG_DOUBLE

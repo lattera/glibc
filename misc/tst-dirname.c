@@ -1,5 +1,5 @@
 /* Test program for dirname function a la XPG.
-   Copyright (C) 1996, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -54,6 +54,13 @@ main (void)
   /* Some more tests.   */
   result |= test ("/usr/lib/", "/usr");
   result |= test ("/usr", "/");
+  result |= test ("a//", ".");
+  result |= test ("a////", ".");
+  result |= test ("////usr", "/");
+  result |= test ("////usr//", "/");
+  result |= test ("//usr", "//");
+  result |= test ("//usr//", "//");
+  result |= test ("//", "//");
 
   return result != 0;
 }

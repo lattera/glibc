@@ -1,3 +1,53 @@
+2001-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/dirname.c (dirname): Handle multiple slashes correctly.
+
+2001-04-03  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-64/initfini.c: Fix __gmon_start__ GOT access.
+
+2001-04-03  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/bcopy.S: Optimize for speed.
+	* sysdeps/s390/s390-64/bcopy.S: Likewise.
+	* sysdeps/s390/s390-32/mempcy.S: Likewise.
+	* sysdeps/s390/s390-64/memcpy.S: Likewise.
+
+2001-04-02  Bruno Haible  <haible@clisp.cons.org>
+
+	* manual/message.texi (Advanced gettext functions): More specific
+	syntax in the plural formula examples.
+
+2001-04-02  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/atomicity.h: Silence warnings.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	* sysdeps/powerpc/register-dump.h: Likewise.
+	* sysdeps/powerpc/fpu/s_lrint.c: Likewise.
+
+2001-04-02  Andreas Jaeger  <aj@suse.de>
+
+	* misc/tst-dirname.c (main): Add more tests, derived from a bug
+	report by Michael Kerrisk <mtk16@ext.canterbury.ac.nz>.
+
+2001-04-01  Andreas Jaeger  <aj@suse.de>
+
+	* debug/xtrace.sh (pcprofileso): Use SLIBDIR since libpcprofile.so
+	is installed there.
+	* malloc/memusage.sh (memusageso): Likewise for libmemusage.so.
+
+2001-04-01  H.J. Lu  <hjl@gnu.org>
+
+	* posix/annexc.c (macrofile): Renamed from TMPFILE and set to
+	tmpnam (NULL).
+	* stdlib/isomac.c (macrofile): Likewise.
+
+2001-03-30  Thorsten Kukuk  <kukuk@suse.de>
+
+	* inet/rcmd.c: Allow AF_UNSPEC as parameter.
+	* nis/ypclnt.c (yp_all): Print error message only at last try,
+	check for protocoll error only if we don't have a network error.
+
 2001-04-02  Andreas Schwab  <schwab@suse.de>
 
 	* resolv/res_data.c (res_isourserver): Fix cast.

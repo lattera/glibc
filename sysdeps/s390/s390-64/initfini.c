@@ -68,8 +68,8 @@ _init:
 	AGHI	15,-160
 	STG	1,0(15)
         LARL    12,_GLOBAL_OFFSET_TABLE_
-        LGHI    1,__gmon_start__@GOT
-	LG      1,0(1,12)
+	LARL    1,__gmon_start__@GOTENT
+	LG      1,0(1)
 	LTGR    1,1
 	JE      .L22
 	BASR    14,1

@@ -1,4 +1,4 @@
-/* Set a block of memory to some byte value.  For IBM S390
+/* memcpy - copy a block from source to destination.  S/390 version.
    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
@@ -17,25 +17,30 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * R2 = address to destination memory area
- * R3 = address to source memory area
- * R4 = number of bytes to copy
- */
+/* INPUT PARAMETERS
+     %r2 = address of destination memory area
+     %r3 = address of source memory area
+     %r4 = number of bytes to copy.  */
 
 #include "sysdep.h"
 #include "asm-syntax.h"
 
 	.text
 ENTRY(memcpy)
-	ltr     %r5,%r4
+	ltr     %r4,%r4
+	jz      .L3
+	ahi     %r4,-1              # length - 1
+	lr      %r1,%r2             # copy destination address
+	lr      %r5,%r4
+	sra     %r5,8
 	jz      .L1
-	lr      %r4,%r3             # %r4/%r5 = source ptr/len
-	lr      %r3,%r5             # %r2/%r3 = dest ptr/len
-	lr      %r0,%r2             # save source address
-.L0:    mvcle   %r2,%r4,0           # thats it, MVCLE is your friend
-	jo      .L0
-	lr      %r2,%r0             # return value is source address
-.L1:
-	br      %r14
-END(memset)
+.L0:	mvc     0(256,%r1),0(%r3)   # move in 256 byte chunks
+	la      %r1,256(%r1)
+	la      %r3,256(%r3)
+	brct    %r5,.L0
+.L1:	bras    %r5,.L2             # setup base pointer for execute
+	mvc     0(1,%r1),0(%r3)     # instruction for execute
+.L2:	ex      %r4,0(%r5)          # execute mvc with length ((%r4)&255)+1
+.L3:	br      %r14
+END(memcpy)
+	

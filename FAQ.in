@@ -565,7 +565,7 @@ exactly what to use.
 Version 2.7.2.3 does and future versions of GCC will automatically
 provide the correct specs.
 
-??	Looking through the shared libc file I haven't found the
+??nonsh	Looking through the shared libc file I haven't found the
 	functions `stat', `lstat', `fstat', and `mknod' and while
 	linking on my Linux system I get error messages.  How is
 	this supposed to work?
@@ -1437,6 +1437,16 @@ fclose(), not free(), even though the FILE * is also a pointer.
 In the case of setmntent(), it may appear to work in most cases, but it
 won't always work.  Unfortunately, for compatibility reasons, we can't
 change the return type of setmntent() to something other than FILE *.
+
+??	I get "undefined reference to `atexit'"
+
+{UD} This means that your installation is somehow broken.  The situation is
+the same as for 'stat', 'fstat', etc (see ?nonsh).  Investigate why the
+linker does not pick up libc_nonshared.a.
+
+If a similar message is issued at runtime this means that the application or
+DSO is not linked against libc.  This can cause problems since 'atexit' is
+not exported anymore.
 
 
 ? Miscellaneous

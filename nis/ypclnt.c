@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -729,7 +729,9 @@ yp_all (const char *indomain, const char *inmap,
 
       if (result != RPC_SUCCESS)
 	{
-	  clnt_perror (clnt, "yp_all: clnt_call");
+	  /* Print the error message only on the last try */
+	  if (try == MAXTRIES - 1)
+	    clnt_perror (clnt, "yp_all: clnt_call");
 	  res = YPERR_RPC;
 	}
       else
@@ -738,7 +740,7 @@ yp_all (const char *indomain, const char *inmap,
       __yp_unbind (ydb);
       clnt_destroy (clnt);
 
-      if (status != YP_NOMORE)
+      if (res == YPERR_SUCCESS && status != YP_NOMORE)
 	{
 	  __set_errno (saved_errno);
 	  return ypprot_err (status);

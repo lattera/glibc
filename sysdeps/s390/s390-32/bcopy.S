@@ -1,4 +1,4 @@
-/* bcopy -- copy a block from source to destination.  For IBM S390
+/* bcopy -- copy a block from source to destination.  S/390 version.
    This file is part of the GNU C Library.
    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
@@ -18,48 +18,53 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * R2 = address of source
- * R3 = address of destination
- * R4 = number of bytes to copy
- */
+/* INPUT PARAMETERS
+     %r2 = address of source
+     %r3 = address of destination
+     %r4 = number of bytes to copy.  */
 
 #include "sysdep.h"
 #include "asm-syntax.h"
 
         .text
 ENTRY(__bcopy)
+	ltr     %r1,%r4             # zero bcopy ?
+	jz      .L4
         clr     %r2,%r3             # check against destructive overlap
         jnl     .L0
-        lr      %r1,%r2
-        alr     %r1,%r4
+        alr     %r1,%r2
         clr     %r1,%r3
-        jh      .L2
-.L0:
-	lr      %r5,%r4		    # source length
-        lr      %r4,%r2             # source address
-        sr      %r1,%r1             # set pad byte to zero
-	lr      %r2,%r3             # set destination
-        lr      %r3,%r5             # destination length = source length
-.L1:    mvcle   %r2,%r4,0(%r1)      # thats it, MVCLE is your friend
-        jo      .L1
-        br      %r14
-.L2:                                # destructive overlay, can not use mvcle
+        jh      .L5
+.L0:	ahi     %r4,-1              # length - 1
+	lr      %r1,%r4
+	srl     %r1,8
+	ltr     %r1,%r1
+	jz      .L2
+.L1:	mvc     0(256,%r3),0(%r2)   # move in 256 byte chunks
+	la      %r2,256(%r2)
+	la      %r3,256(%r3)
+	brct    %r1,.L1
+.L2:	bras    %r1,.L3             # setup base pointer for execute
+	mvc     0(1,%r3),0(%r2)     # instruction for execute
+.L3:	ex      %r4,0(%r1)          # execute mvc with length ((%r4)&255)+1
+.L4:	br      %r14
+
+.L5:                                # destructive overlay, can not use mvcle
         lr     %r1,%r2              # bcopy is called with source,dest
         lr     %r2,%r3              # memmove with dest,source! Oh, well...
         lr     %r3,%r1
         basr   %r1,0
-.L3:
+.L6:
 #ifdef PIC
-        al     %r1,.L4-.L3(%r1)     # get address of global offset table
+        al     %r1,.L7-.L6(%r1)     # get address of global offset table
                                     # load address of memmove
         l      %r1,memmove@GOT12(%r1)
         br     %r1
-.L4:    .long  _GLOBAL_OFFSET_TABLE_-.L3
+.L7:    .long  _GLOBAL_OFFSET_TABLE_-.L6
 #else
-        al     %r1,.L4-.L3(%r1)     # load address of memmove
+        al     %r1,.L7-.L6(%r1)     # load address of memmove
         br     %r1                  # jump to memmove
-.L4:    .long  memmove-.L3
+.L7:    .long  memmove-.L6
 #endif
 
 END(__bcopy)
@@ -67,3 +72,4 @@ END(__bcopy)
 #ifndef NO_WEAK_ALIAS
 weak_alias (__bcopy, bcopy)
 #endif
+

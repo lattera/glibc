@@ -1,5 +1,5 @@
 /* dirname - return directory part of PATH.
-   Copyright (C) 1996, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -32,16 +32,40 @@ dirname (char *path)
   last_slash = path != NULL ? strrchr (path, '/') : NULL;
 
   if (last_slash != NULL && last_slash != path && last_slash[1] == '\0')
-    /* The '/' is the last character, we have to look further.  */
-    last_slash = __memrchr (path, '/', last_slash - path);
+    {
+      /* Determine whether all remaining characters are slashes.  */
+      char *runp;
+
+      for (runp = last_slash; runp != path; --runp)
+	if (runp[-1] != '/')
+	  break;
+
+      /* The '/' is the last character, we have to look further.  */
+      if (runp != path)
+	last_slash = __memrchr (path, '/', runp - path);
+    }
 
   if (last_slash != NULL)
     {
+      /* Determine whether all remaining characters are slashes.  */
+      char *runp;
+
+      for (runp = last_slash; runp != path; --runp)
+	if (runp[-1] != '/')
+	  break;
+
       /* Terminate the path.  */
-      if (last_slash == path)
-	/* The last slash is the first character in the string.  We have to
-	   return "/".  */
-	++last_slash;
+      if (runp == path)
+	{
+	  /* The last slash is the first character in the string.  We have to
+	     return "/".  As a special case we have to return "//" if there
+	     are exactly two slashes at the beginning of the string.  See
+	     XBD 4.10 Path Name Resolution for more information.  */
+	  if (last_slash == path + 1)
+	    ++last_slash;
+	  else
+	    last_slash = path + 1;
+	}
 
       last_slash[0] = '\0';
     }
