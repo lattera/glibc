@@ -120,23 +120,23 @@ __log1pl (long double xm1)
   int32_t ix;
   int e;
 
-  x = xm1 + 1.0L;
-
-  /* Test for domain errors.  */
-  if (x > maxlog)
-    return (big * big);
-
-  /* Test for NaN input. */
+  /* Test for NaN or infinity input. */
   u.value = xm1;
   ix = u.parts32.w0 & 0x7fffffff;
-  if ((ix >= 0x7fff0000)
-      && (((ix & 0xffff) | u.parts32.w1 | u.parts32.w2 | u.parts32.w3) != 0))
-    return x;
+  if (ix >= 0x7fff0000)
+    return xm1;
 
+  /* log1p(+- 0) = +- 0.  */
+  if ((ix == 0) && (u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
+    return xm1;
+
+  x = xm1 + 1.0L;
+
+  /* log1p(-1) = -inf */
   if (x <= 0.0L)
     {
       if (x == 0.0L)
-	return (-big * big);
+	return (-1.0L / zero);
       else
 	return (zero / zero);
     }
