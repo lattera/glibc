@@ -74,16 +74,17 @@ getpass (prompt)
 
   /* Read the password.  */
   nread = __getline (&buf, &bufsize, in);
-  if (nread < 0 && buf != NULL)
-    buf[0] = '\0';
-  else if (buf[nread - 1] == '\n')
-    {
-      /* Remove the newline.  */
-      buf[nread - 1] = '\0';
-      if (echo_off)
-	/* Write the newline that was not echoed.  */
-	putc ('\n', out);
-    }
+  if (buf != NULL)
+    if (nread < 0)
+      buf[0] = '\0';
+    else if (buf[nread - 1] == '\n')
+      {
+	/* Remove the newline.  */
+	buf[nread - 1] = '\0';
+	if (echo_off)
+	  /* Write the newline that was not echoed.  */
+	  putc ('\n', out);
+      }
 
   /* Restore echoing.  */
   if (echo_off)
