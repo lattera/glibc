@@ -1,3 +1,7 @@
+1999-02-03  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/utimes.c (__utimes): Deal with TVP being NULL.
+
 1999-02-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.1.
