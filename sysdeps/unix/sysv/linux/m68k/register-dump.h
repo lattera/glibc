@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -51,15 +51,15 @@
 static void __attribute__ ((unused))
 __dummy__ (void)
 {
-  asm ("
-catch_segfault:
-	move.l 12(%%sp),%%a0
-	lea %c0(%%a0),%%a0
-	/* Clear the first 4 bytes to make it a null fp state, just
-	   in case the handler does return.  */
-	clr.l (%%a0)+
-	movem.l %%d2-%%d7/%%a2-%%a6,(%%a0)
-	fmovem.x %%fp2-%%fp7,11*4(%%a0)
+  asm ("\n\
+catch_segfault:\n\
+	move.l 12(%%sp),%%a0\n\
+	lea %c0(%%a0),%%a0\n\
+	/* Clear the first 4 bytes to make it a null fp state, just\n\
+	   in case the handler does return.  */\n\
+	clr.l (%%a0)+\n\
+	movem.l %%d2-%%d7/%%a2-%%a6,(%%a0)\n\
+	fmovem.x %%fp2-%%fp7,11*4(%%a0)\n\
 	jra real_catch_segfault"
        : : "n" (offsetof (struct sigcontext, sc_fpstate)));
 }
