@@ -412,7 +412,7 @@ do_test (void)
       pthread_t th;
       if (pthread_create (&th, NULL, tests[cnt].tf, NULL) != 0)
 	{
-	  printf ("create for round %d test failed\n", cnt);
+	  printf ("create for round %zd test failed\n", cnt);
 	  exit (1);
 	}
 
@@ -429,22 +429,22 @@ do_test (void)
 
       if (pthread_cancel (th) != 0)
 	{
-	  printf ("cancel in round %d failed\n", cnt);
+	  printf ("cancel in round %zd failed\n", cnt);
 	  exit (1);
 	}
 
       void *status;
       if (pthread_join (th, &status) != 0)
 	{
-	  printf ("join in round %d failed\n", cnt);
+	  printf ("join in round %zd failed\n", cnt);
 	  exit (1);
 	}
       if (status != PTHREAD_CANCELED)
 	{
-	  printf ("thread in round %d not canceled\n", cnt);
+	  printf ("thread in round %zd not canceled\n", cnt);
 	  exit (1);
 	}
-      printf ("test %d successful\n", cnt);
+      printf ("test %zd successful\n", cnt);
 
       if (pthread_barrier_destroy (&b2) != 0)
 	{
