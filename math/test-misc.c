@@ -52,6 +52,8 @@ main (void)
 
 #  if LDBL_MANT_DIG == 64
     m = 0xf.fffffffffffffffp-4L;
+#  elif LDBL_MANT_DIG == 113
+    m = 0x1.ffffffffffffffffffffffffffffp-1L;
 #  else
 #   error "Please adjust"
 #  endif

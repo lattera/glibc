@@ -1,3 +1,7 @@
+2000-12-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-misc.c (main): Adjust m for IEEE quad long double.
+
 2000-12-13  Andreas Jaeger  <aj@suse.de>
 
 	* manual/message.texi (Using gettextized software): Fix typo.
