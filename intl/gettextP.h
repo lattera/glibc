@@ -1,6 +1,6 @@
 /* Header describing internals of gettext library
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
-   Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,6 +19,10 @@
 
 #ifndef _GETTEXTP_H
 #define _GETTEXTP_H
+
+#if defined HAVE_ICONV || defined _LIBC
+# include <iconv.h>
+#endif
 
 #include "loadinfo.h"
 
@@ -67,6 +71,10 @@ struct loaded_domain
   struct string_desc *trans_tab;
   nls_uint32 hash_size;
   nls_uint32 *hash_tab;
+#if defined HAVE_ICONV || defined _LIBC
+  iconv_t conv;
+#endif
+  char **conv_tab;
 };
 
 struct binding

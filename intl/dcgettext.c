@@ -83,6 +83,10 @@ void free ();
 # include <locale.h>
 #endif
 
+#if defined HAVE_SYS_PARAM_H || defined _LIBC
+# include <sys/param.h>
+#endif
+
 #include "gettext.h"
 #include "gettextP.h"
 #ifdef _LIBC
@@ -91,6 +95,11 @@ void free ();
 # include "libgettext.h"
 #endif
 #include "hash-string.h"
+
+/* Thread safetyness.  */
+#ifdef _LIBC
+# include <bits/libc-lock.h>
+#endif
 
 /* @@ end of prolog @@ */
 
@@ -171,8 +180,6 @@ const char _nl_default_dirname[] = GNULOCALEDIR;
 struct binding *_nl_domain_bindings;
 
 /* Prototypes for local functions.  */
-static char *find_msg PARAMS ((struct loaded_l10nfile *domain_file,
-			       const char *msgid)) internal_function;
 static const char *category_to_name PARAMS ((int category)) internal_function;
 static const char *guess_category_value PARAMS ((int category,
 						 const char *categoryname))
@@ -396,7 +403,7 @@ DCGETTEXT (domainname, msgid, category)
 
       if (domain != NULL)
 	{
-	  retval = find_msg (domain, msgid);
+	  retval = _nl_find_msg (domain, msgid);
 
 	  if (retval == NULL)
 	    {
@@ -404,7 +411,7 @@ DCGETTEXT (domainname, msgid, category)
 
 	      for (cnt = 0; domain->successor[cnt] != NULL; ++cnt)
 		{
-		  retval = find_msg (domain->successor[cnt], msgid);
+		  retval = _nl_find_msg (domain->successor[cnt], msgid);
 
 		  if (retval != NULL)
 		    break;
@@ -428,9 +435,9 @@ weak_alias (__dcgettext, dcgettext);
 #endif
 
 
-static char *
+char *
 internal_function
-find_msg (domain_file, msgid)
+_nl_find_msg (domain_file, msgid)
      struct loaded_l10nfile *domain_file;
      const char *msgid;
 {
@@ -464,8 +471,88 @@ find_msg (domain_file, msgid)
 	  && strcmp (msgid,
 		     domain->data + W (domain->must_swap,
 				       domain->orig_tab[nstr - 1].offset)) == 0)
-	return (char *) domain->data + W (domain->must_swap,
-					  domain->trans_tab[nstr - 1].offset);
+	{
+	  /* We found an entry.  If we have to convert the string to use
+	     a different character set this is the time.  */
+	  char *result =
+	    (char *) domain->data + W (domain->must_swap,
+				       domain->trans_tab[nstr - 1].offset);
+
+	  if (
+#if HAVE_ICONV || defined _LIBC
+	      domain->conv != (iconv_t) -1
+#endif
+	      )
+	    {
+	      /* We are supposed to do a conversion.  First allocate an
+		 appropriate table with the same structure as the hash
+		 table in the file where we can put the pointers to the
+		 converted strings in.  */
+	      if (domain->conv_tab == NULL
+		  && ((domain->conv_tab = (char **) calloc (domain->hash_size,
+							    sizeof (char *)))
+		      == NULL))
+		/* Mark that we didn't succeed allocating a table.  */
+		domain->conv_tab = (char **) -1;
+
+	      if (domain->conv_tab == (char **) -1)
+		/* Nothing we can do, no more memory.  */
+		return NULL;
+
+	      if (domain->conv_tab[idx] == NULL)
+		{
+		  /* We haven't used this string so far, so it is not
+		     translated yet.  Do this now.  */
+#ifdef _LIBC
+		  /* For glibc we use a bit more efficient memory handling.
+		     We allocate always larger blocks which get used over
+		     time.  This is faster than many small allocations.   */
+		  __libc_lock_define_initialized (static, lock)
+		  static char *freemem;
+		  static size_t freemem_size;
+		  /* Note that we include the NUL byte.  */
+		  size_t resultlen = strlen (result) + 1;
+		  const char *inbuf = result;
+		  size_t inbytesleft = resultlen;
+		  char *outbuf = freemem;
+		  size_t outbytesleft = freemem_size;
+
+		  __libc_lock_lock (lock);
+
+		  while (iconv (domain->conv, &inbuf, &inbytesleft, &outbuf,
+				&outbytesleft) == (size_t) -1L)
+		    {
+		      if (errno != E2BIG)
+			goto out;
+
+		      /* We must resize the buffer.  */
+		      freemem_size = MAX (2 * freemem_size, 4064);
+		      freemem = (char *) malloc (freemem_size);
+		      if (freemem == NULL)
+			goto out;
+
+		      inbuf = result;
+		      inbytesleft = resultlen;
+		      outbuf = freemem;
+		      outbytesleft = freemem_size;
+		    }
+
+		  /* We have now in our buffer a converted string.  Put this
+		     in the hash table  */
+		  domain->conv_tab[idx] = freemem;
+		  freemem = outbuf;
+		  freemem_size = outbytesleft;
+
+		out:
+		  __libc_lock_unlock (lock);
+#endif
+		}
+
+	      result = domain->conv_tab[idx];
+	    }
+
+	  return result;
+	}
 
       while (1)
 	{

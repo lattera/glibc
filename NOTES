@@ -18,18 +18,57 @@ comments.  You could also use the `-D' option to GCC, but it's better
 if you make the source files indicate their own meaning in a
 self-contained way.
 
+   This system exists to allow the library to conform to multiple
+standards.  Although the different standards are often described as
+supersets of each other, they are usually incompatible because larger
+standards require functions with names that smaller ones reserve to the
+user program.  This is not mere pedantry -- it has been a problem in
+practice.  For instance, some non-GNU programs define functions named
+`getline' that have nothing to do with this library's `getline'.  They
+would not be compilable if all features were enabled indescriminantly.
+
+   This should not be used to verify that a program conforms to a
+limited standard.  It is insufficent for this purpose, as it will not
+protect you from including header files outside the standard, or
+relying on semantics undefined within the standard.
+
  - Macro: _POSIX_SOURCE
      If you define this macro, then the functionality from the POSIX.1
      standard (IEEE Standard 1003.1) is available, as well as all of the
      ISO C facilities.
 
+     The state of `_POSIX_SOURCE' is irrelevant if you define the macro
+     `_POSIX_C_SOURCE' to a positive integer.
+
  - Macro: _POSIX_C_SOURCE
-     If you define this macro with a value of `1', then the
-     functionality from the POSIX.1 standard (IEEE Standard 1003.1) is
-     made available.  If you define this macro with a value of `2',
-     then both the functionality from the POSIX.1 standard and the
-     functionality from the POSIX.2 standard (IEEE Standard 1003.2) are
-     made available.  This is in addition to the ISO C facilities.
+     Define this macro to a positive integer to control which POSIX
+     functionality is made available.  The greater the value of this
+     macro, the more functionality is made available.
+
+     If you define this macro to a value greater than or equal to `1',
+     then the functionality from the 1990 edition of the POSIX.1
+     standard (IEEE Standard 1003.1-1990) is made available.
+
+     If you define this macro to a value greater than or equal to `2',
+     then the functionality from the 1992 edition of the POSIX.2
+     standard (IEEE Standard 1003.2-1992) is made available.
+
+     If you define this macro to a value greater than or equal to
+     `199309L', then the functionality from the 1993 edition of the
+     POSIX.1b standard (IEEE Standard 1003.1b-1993) is made available.
+
+     Greater values for `_POSIX_C_SOURCE' will enable future extensions.
+     The POSIX standards process will define these values as necessary,
+     and the GNU C Library should support them some time after they
+     become standardized.  The 1996 edition of POSIX.1 (ISO/IEC 9945-1:
+     1996) states that if you define `_POSIX_C_SOURCE' to a value
+     greater than or equal to `199506L', then the functionality from
+     the 1996 edition is made available.
+
+     The Single Unix Specification specify that setting this macro to
+     the value `199506L' selects all the values specified by the POSIX
+     standards plus those of the Single Unix Specification, i.e., is the
+     same as if `_XOPEN_SOURCE' is set to `500' (see below).
 
  - Macro: _BSD_SOURCE
      If you define this macro, functionality derived from 4.3 BSD Unix
@@ -72,12 +111,12 @@ self-contained way.
 
      If the macro `_XOPEN_SOURCE' has the value 500 this includes all
      functionality described so far plus some new definitions from the
-     Single Unix specification, version 2.
+     Single Unix Specification, version 2.
 
  - Macro: _LARGEFILE_SOURCE
      If this macro is defined some extra functions are available which
      rectify a few shortcomings in all previous standards.  More
-     concreten the functions `fseeko' and `ftello' are available.
+     concrete the functions `fseeko' and `ftello' are available.
      Without these functions the difference between the ISO C interface
      (`fseek', `ftell') and the low-level POSIX interface (`lseek')
      would lead to problems.
@@ -85,7 +124,7 @@ self-contained way.
      This macro was introduced as part of the Large File Support
      extension (LFS).
 
- - Variable: Macro _LARGEFILE64_SOURCE
+ - Macro: _LARGEFILE64_SOURCE
      If you define this macro an additional set of function gets
      available which enables to use on 32 bit systems to use files of
      sizes beyond the usual limit of 2GB.  This interface is not
@@ -103,7 +142,7 @@ self-contained way.
      extension (LFS).  It is a transition interface for the time 64 bit
      offsets are not generally used (see `_FILE_OFFSET_BITS'.
 
- - Variable: _FILE_OFFSET_BITS
+ - Macro: _FILE_OFFSET_BITS
      This macro lets decide which file system interface shall be used,
      one replacing the other.  While `_LARGEFILE64_SOURCE' makes the
      64 bit interface available as an additional interface

@@ -31,8 +31,21 @@
 # include <stdlib.h>
 #endif
 
+#if defined HAVE_STRING_H || defined _LIBC
+# ifndef _GNU_SOURCE
+#  define _GNU_SOURCE	1
+# endif
+# include <string.h>
+#else
+# include <strings.h>
+#endif
+
 #if defined HAVE_UNISTD_H || defined _LIBC
 # include <unistd.h>
+#endif
+
+#ifdef _LIBC
+# include <langinfo.h>
 #endif
 
 #if (defined HAVE_MMAP && defined HAVE_MUNMAP && !defined DISALLOW_MMAP) \
@@ -46,6 +59,10 @@
 
 #include "gettext.h"
 #include "gettextP.h"
+
+#ifdef _LIBC
+# include "../locale/localeinfo.h"
+#endif
 
 /* @@ end of prolog @@ */
 
@@ -79,6 +96,7 @@ _nl_load_domain (domain_file)
   struct mo_file_header *data = (struct mo_file_header *) -1;
   int use_mmap = 0;
   struct loaded_domain *domain;
+  char *nullentry;
 
   domain_file->decided = 1;
   domain_file->data = NULL;
@@ -200,9 +218,40 @@ _nl_load_domain (domain_file)
       return;
     }
 
-  /* Show that one domain is changed.  This might make some cached
-     translations invalid.  */
-  ++_nl_msg_cat_cntr;
+  /* Now find out about the character set the file is encoded with.
+     This can be found (in textual form) in the entry "".  If this
+     entry does not exist or if this does not contain the `charset='
+     information, we will assume the charset matches the one the
+     current locale and we don't have to perform any conversion.  */
+#if HAVE_ICONV || defined _LIBC
+  domain->conv = (iconv_t) -1;
+#endif
+  nullentry = _nl_find_msg (domain_file, "");
+  if (nullentry != NULL)
+    {
+      char *charsetstr = strstr (nullentry, "charset=");
+
+      if (charsetstr != NULL)
+	{
+	  size_t len;
+	  char *charset;
+
+	  charsetstr += strlen ("charset=");
+	  len = strcspn (charsetstr, " \t\n");
+
+	  charset = (char *) alloca (len + 1);
+#if defined _LIBC || HAVE_MEMPCPY
+	  *((char *) mempcpy (charset, charsetstr, len)) = '\0';
+#else
+	  memcpy (charset, charsetstr, len);
+	  charset[len] = '\0';
+#endif
+
+#if HAVE_ICONV || defined _LIBC
+	  domain->conv = iconv_open ((*_nl_current[LC_CTYPE])->values[_NL_ITEM_INDEX (CODESET)].string, charset);
+#endif
+	}
+    }
 }
 
 

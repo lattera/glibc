@@ -1,3 +1,9 @@
+1999-08-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* pthread.c (__pthread_reset_main_thread): Undo last change.
+	(__pthread_kill_other_threads_np): Reset signal handlers for the
+	signals we used in the thread implementation here.
+
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pthread.c (__pthread_reset_main_thread): Reset signal handlers

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -16,6 +16,9 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
+
+#ifndef _LOADINFO_H
+#define _LOADINFO_H	1
 
 #ifndef PARAMS
 # if __STDC__
@@ -77,3 +80,10 @@ extern int _nl_explode_name PARAMS ((char *name, const char **language,
 				     const char **revision));
 
 extern char *_nl_find_language PARAMS ((const char *name));
+
+
+extern char *_nl_find_msg PARAMS ((struct loaded_l10nfile *domain_file,
+				   const char *msgid))
+     internal_function;
+
+#endif	/* loadinfo.h */

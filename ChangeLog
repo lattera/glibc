@@ -9,6 +9,16 @@
 
 	* elf/elf.h: Corrected SHT_ values from new draft.
 
+	* intl/gettextP.h (struct loaded_domain): Add conv element.
+	* intl/dcgettext.c (find_msg): Rename to _nl_find_msg and make public.
+	Instead of returning found message directly convert it using iconv
+	if a conversion was found when opening the file.
+	* intl/loadinfo.h: Protect against multiple inclusion.
+	Declare _nl_find_msg.
+	* intl/loadmsgcat.c (_nl_load_domain): Try to determine charset used
+	in the message file and if necessary find approrpiate
+	conversion to match currently selected charset.
+
 1999-08-20  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/sys/sendfile.h: Fix typo.
