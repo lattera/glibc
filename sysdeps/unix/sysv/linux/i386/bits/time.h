@@ -1,5 +1,5 @@
 /* System-dependent timing definitions.  Linux/x86 version.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@
    XSI-conformant systems. */
 #  define CLOCKS_PER_SEC  1000000l
 
-#  ifndef __STRICT_ANSI__
+#  if !defined __STRICT_ANSI__ && !defined __USE_XOPEN2K
 /* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
    presents the real value for clock ticks per second for the system.  */
 #   include <bits/types.h>

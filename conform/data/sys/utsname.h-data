@@ -1,11 +1,11 @@
 #ifndef ISO
 type {struct utsname}
 
-element {struct utsname} char sysname [1]
-element {struct utsname} char nodename [1]
-element {struct utsname} char release [1]
-element {struct utsname} char version [1]
-element {struct utsname} char machine [1]
+element {struct utsname} char sysname []
+element {struct utsname} char nodename []
+element {struct utsname} char release []
+element {struct utsname} char version []
+element {struct utsname} char machine []
 
 function int uname (struct utsname *)
 #endif

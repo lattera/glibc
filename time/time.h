@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ __BEGIN_DECLS
 # include <bits/time.h>
 
 /* This is the obsolete POSIX.1-1988 name for the same constant.  */
-# ifdef	__USE_POSIX
+# if defined __USE_POSIX && !defined __USE_XOPEN2K
 #  ifndef CLK_TCK
 #   define CLK_TCK	CLOCKS_PER_SEC
 #  endif

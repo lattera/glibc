@@ -130,7 +130,7 @@ function int tcflush (int, int)
 function int tcgetattr (int, struct termios*)
 function pid_t tcgetsid (int)
 function int tcsendbreak (int, int)
-function int tcsetattr (int, int, struct termios*)
+function int tcsetattr (int, int, const struct termios*)
 
 allow CBAUD
 allow DEFECHO

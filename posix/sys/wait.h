@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,96,97,98,99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1994,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,12 +27,8 @@
 
 __BEGIN_DECLS
 
-#include <bits/types.h>
-
-#if defined __USE_XOPEN && !defined __pid_t_defined
-typedef __pid_t pid_t;
-# define __pid_t_defined
-#endif
+#include <signal.h>
+#include <sys/resource.h>
 
 /* These macros could also be defined int <stdlib.h>.  */
 #if !defined _STDLIB_H || !defined __USE_XOPEN

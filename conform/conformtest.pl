@@ -12,21 +12,21 @@ GetOptions ('headers=s' => \@headers, 'dialect=s' => \$dialect);
 if (@headers == ()) {
   @headers = ("wordexp.h", "wctype.h", "wchar.h", "varargs.h", "utmpx.h",
 	      "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "time.h",
-	      "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h", "sys/un.h",
-	      "sys/uio.h", "sys/types.h", "sys/times.h", "sys/timeb.h",
-	      "sys/time.h", "sys/statvfs.h", "sys/stat.h", "sys/socket.h",
-	      "sys/shm.h", "sys/sem.h", "sys/select.h", "sys/resource.h",
-	      "sys/msg.h", "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h",
-	      "strings.h", "string.h", "stdlib.h", "stdio.h", "stdint.h",
-	      "stddef.h", "stdarg.h", "spawn.h", "signal.h", "setjmp.h",
-	      "semaphore.h", "search.h", "sched.h", "regex.h", "pwd.h",
-	      "pthread.h", "poll.h", "nl_types.h", "netinet/tcp.h",
-	      "netinet/in.h", "net/if.h", "netdb.h", "ndbm.h", "mqueue.h",
-	      "monetary.h", "math.h", "locale.h", "libgen.h", "limits.h",
-	      "langinfo.h", "iso646.h", "inttypes.h", "iconv.h", "grp.h",
-	      "glob.h", "ftw.h", "fnmatch.h", "fmtmsg.h", "float.h", "fcntl.h",
-	      "errno.h", "dlfcn.h", "dirent.h", "ctype.h", "cpio.h",
-	      "assert.h", "arpa/inet.h", "aio.h");
+	      "tgmath.h", "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h",
+	      "sys/un.h", "sys/uio.h", "sys/types.h", "sys/times.h",
+	      "sys/timeb.h", "sys/time.h", "sys/statvfs.h", "sys/stat.h",
+	      "sys/socket.h", "sys/shm.h", "sys/sem.h", "sys/select.h",
+	      "sys/resource.h", "sys/msg.h", "sys/mman.h", "sys/ipc.h",
+	      "syslog.h", "stropts.h", "strings.h", "string.h", "stdlib.h",
+	      "stdio.h", "stdint.h", "stddef.h", "stdarg.h", "spawn.h",
+	      "signal.h", "setjmp.h", "semaphore.h", "search.h", "sched.h",
+	      "regex.h", "pwd.h", "pthread.h", "poll.h", "nl_types.h",
+	      "netinet/tcp.h", "netinet/in.h", "net/if.h", "netdb.h", "ndbm.h",
+	      "mqueue.h", "monetary.h", "math.h", "locale.h", "libgen.h",
+	      "limits.h", "langinfo.h", "iso646.h", "inttypes.h", "iconv.h",
+	      "grp.h", "glob.h", "ftw.h", "fnmatch.h", "fmtmsg.h", "float.h",
+	      "fcntl.h", "errno.h", "dlfcn.h", "dirent.h", "ctype.h", "cpio.h",
+	      "complex.h", "assert.h", "arpa/inet.h", "aio.h");
 }
 
 if ($dialect ne "ISO" && $dialect ne "POSIX" && $dialect ne "XPG3"
@@ -56,6 +56,7 @@ $CFLAGS{"XOPEN2K"} = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
 $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
 $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
 $mustprepend{'signal.h'} = "#include <pthread.h>\n";
+$mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
 $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
 
 # Make a hash table from this information.
@@ -807,9 +808,10 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Test for type of function $fname",
 		   "Function \"$fname\" has incorrect type.", $res, 0);
-    } elsif (/^variable *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*)/) {
+    } elsif (/^variable *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) *(.*)/) {
       my($type) = "$2$3";
       my($vname) = "$4";
+      my($rest) = "$5";
       my($res) = $missing;
 
       # Remember that this name is allowed.
@@ -820,7 +822,8 @@ while ($#headers >= 0) {
       print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       # print TESTFILE "#undef $fname\n";
-      print TESTFILE "$type *foobarbaz = &$vname;\n";
+      print TESTFILE "typedef $type xyzzy$rest;\n";
+      print TESTFILE "$xyzzy *foobarbaz = &$vname;\n";
       close (TESTFILE);
 
       $res = compiletest ($fnamebase, "Test availability of variable $vname",
@@ -831,7 +834,7 @@ while ($#headers >= 0) {
       print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       # print TESTFILE "#undef $fname\n";
-      print TESTFILE "extern $type $vname;\n";
+      print TESTFILE "extern $type $vname$rest;\n";
       close (TESTFILE);
 
       compiletest ($fnamebase, "Test for type of variable $fname",

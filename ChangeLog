@@ -1,5 +1,30 @@
 2001-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/time.h-data: CLK_TCK is not in XPG6.  Fix tzname entry.
+	* sysdeps/mach/hurd/bits/time.h: Don't define CLK_TCK for XPG6.
+	* sysdeps/mach/hurd/i386/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/time.h: Likewise.
+	* time/time.h: Likewise.
+
+	* conform/conformtest.pl (@headers): Add complex.h and tgmath.h.
+	* conform/data/complex.h-data: New file.
+	* conform/data/tgmath.h-data: New file.
+
+	* conform/data/wchar.h-data: Add missing functions.
+
+	* sysdeps/gnu/bits/utmpx.h: Define RUN_LVL only if __USE_GNU.
+
+	* conform/data/termios.h-data: Add missing const in tcsetattr()
+	prototype.
+
+	* posix/sys/wait.h: Include <signal.h> and <sys/resource.h>.
+	Don't define pid_t here.
+
+	* conform/data/sys/utsname.h-data: Don't provide fixed array sizes.
+
 	* conform/data/sys/time.h-data: Allow sys/select.h.
 	* conform/data/sys/un.h-data: Fix typo.
 	* time/sys/time.h: Don't include all of <time.h>, just struct timeval.

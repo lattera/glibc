@@ -11,7 +11,9 @@ element {struct tm} int tm_yday
 element {struct tm} int tm_isdst
 
 constant NULL
+#ifndef XOPEN2K
 constant CLK_TCK
+#endif
 constant CLOCKS_PER_SEC
 constant CLOCK_PROCESS_CPUTIME_ID
 constant CLOCK_THREAD_CPUTIME_ID
@@ -68,7 +70,7 @@ function void tzset (void)
 
 variable int daylight
 variable {long int} timezone
-// variable {char*} tzname []
+variable {char*} tzname [2]
 
 allow tm_*
 allow clock_*

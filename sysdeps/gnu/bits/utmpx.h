@@ -1,5 +1,5 @@
 /* Structures and definitions for the user accounting database.  GNU version.
-   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -71,7 +71,9 @@ struct utmpx
 /* Values for the `ut_type' field of a `struct utmpx'.  */
 #define EMPTY		0	/* No valid user accounting information.  */
 
-#define RUN_LVL		1	/* The system's runlevel.  */
+#ifdef __USE_GNU
+# define RUN_LVL	1	/* The system's runlevel.  */
+#endif
 #define BOOT_TIME	2	/* Time of system boot.  */
 #define NEW_TIME	3	/* Time after system clock changed.  */
 #define OLD_TIME	4	/* Time when system clock changed.  */
