@@ -1,5 +1,5 @@
 /* Cache handling for group lookup.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <error.h>
 #include <grp.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -28,6 +29,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <libintl.h>
+#include <stackinfo.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
@@ -204,11 +206,12 @@ addgrbyname (struct database *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 256;
+  int buflen = 1024;
   char *buffer = alloca (buflen);
   struct group resultbuf;
   struct group *grp;
   uid_t oldeuid = 0;
+  bool use_malloc = false;
 
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%s\" in group cache!"), (char *)key);
@@ -222,15 +225,47 @@ addgrbyname (struct database *db, int fd, request_header *req,
   while (__getgrnam_r (key, &resultbuf, buffer, buflen, &grp) != 0
 	 && errno == ERANGE)
     {
+      char *old_buffer = buffer;
       errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
+      buflen += 1024;
+
+      if (__builtin_expect (buflen > 32768, 0))
+	{
+	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
+	  if (buffer == NULL)
+	    {
+	      /* We ran out of memory.  We cannot do anything but
+		 sending a negative response.  In reality this should
+		 never happen.  */
+	      grp = NULL;
+	      buffer = old_buffer;
+	      break;
+	    }
+	  use_malloc = true;
+	}
+      else
+	{
+	  buffer = alloca (buflen);
+#if _STACK_GROWS_DOWN
+	  if (buffer + buflen == old_buffer)
+	    buflen = 2 * buflen - 1024;
+#elif _STACK_GROWS_UP
+	  if (old_buffer + buflen - 1024 == buffer)
+	    {
+	      buffer = old_buffer;
+	      buflen = 2 * buflen - 1024;
+	    }
+#endif
+	}
     }
 
   if (secure[grpdb])
     seteuid (oldeuid);
 
   cache_addgr (db, fd, req, key, grp, uid);
+
+  if (use_malloc)
+    free (buffer);
 }
 
 
@@ -242,14 +277,15 @@ addgrbygid (struct database *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 256;
+  int buflen = 1024;
   char *buffer = alloca (buflen);
   struct group resultbuf;
   struct group *grp;
   uid_t oldeuid = 0;
   char *ep;
-  gid_t gid = strtoul ((char *)key, &ep, 10); 
-  
+  gid_t gid = strtoul ((char *)key, &ep, 10);
+  bool use_malloc = false;
+
   if (*(char*)key == '\0' || *ep != '\0')  /* invalid numeric gid */
     {
       if (debug_level > 0)
@@ -271,13 +307,45 @@ addgrbygid (struct database *db, int fd, request_header *req,
   while (__getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0
 	 && errno == ERANGE)
     {
+      char *old_buffer = buffer;
       errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
+      buflen += 1024;
+
+      if (__builtin_expect (buflen > 32768, 0))
+	{
+	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
+	  if (buffer == NULL)
+	    {
+	      /* We ran out of memory.  We cannot do anything but
+		 sending a negative response.  In reality this should
+		 never happen.  */
+	      grp = NULL;
+	      buffer = old_buffer;
+	      break;
+	    }
+	  use_malloc = true;
+	}
+      else
+	{
+	  buffer = alloca (buflen);
+#if _STACK_GROWS_DOWN
+	  if (buffer + buflen == old_buffer)
+	    buflen = 2 * buflen - 1024;
+#elif _STACK_GROWS_UP
+	  if (old_buffer + buflen - 1024 == buffer)
+	    {
+	      buffer = old_buffer;
+	      buflen = 2 * buflen - 1024;
+	    }
+#endif
+	}
     }
 
   if (secure[grpdb])
     seteuid (oldeuid);
 
   cache_addgr (db, fd, req, key, grp, uid);
+
+  if (use_malloc)
+    free (buffer);
 }
