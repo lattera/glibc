@@ -8,6 +8,8 @@
 	* manager.c: Likewise.
 	* ptclock_gettime.c: New file.
 	* ptclock_settime.c: New file.
+	* internals.h: Fix parameter type for __pthread_clock_gettime and
+	__pthread_clock_settime.
 
 	* sysdeps/i386/i586/ptclock_gettime.c: Removed.
 	* sysdeps/i386/i586/ptclock_settime.c: Removed.
