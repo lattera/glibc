@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,7 +70,18 @@
 			 __tgmres = Fct (Val);				      \
 		       else if (sizeof (Val) == sizeof (float))		      \
 			 __tgmres = Fct##f (Val);			      \
-		       else 						      \
+		       else						      \
+			 __tgmres = __tgml(Fct) (Val);			      \
+		       __tgmres; }))
+
+# define __TGMATH_UNARY_REAL_RET_ONLY(Val, RetType, Fct) \
+     (__extension__ ({ RetType __tgmres;				      \
+		       if (sizeof (Val) == sizeof (double)		      \
+			   || __builtin_classify_type (Val) != 8)	      \
+			 __tgmres = Fct (Val);				      \
+		       else if (sizeof (Val) == sizeof (float))		      \
+			 __tgmres = Fct##f (Val);			      \
+		       else						      \
 			 __tgmres = __tgml(Fct) (Val);			      \
 		       __tgmres; }))
 
@@ -81,7 +92,7 @@
 			 __tgmres = Fct (Val1, Val2);			      \
 		       else if (sizeof (Val1) == sizeof (float))	      \
 			 __tgmres = Fct##f (Val1, Val2);		      \
-		       else 						      \
+		       else						      \
 			 __tgmres = __tgml(Fct) (Val1, Val2);		      \
 		       __tgmres; }))
 
@@ -155,7 +166,7 @@
 			   else						      \
 			     __tgmres = Cfct (Val);			      \
 			 }						      \
-		       else 						      \
+		       else						      \
 			 {						      \
 			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
 			     __tgmres = Fct##f (Val);			      \
@@ -173,7 +184,7 @@
 			 __tgmres = Fct (Val);				      \
 		       else if (sizeof (Val) == sizeof (__complex__ float))   \
 			 __tgmres = Fct##f (Val);			      \
-		       else 						      \
+		       else						      \
 			 __tgmres = __tgml(Fct) (Val);			      \
 		       __tgmres; }))
 
@@ -345,13 +356,13 @@
 
 /* Round X to nearest integral value according to current rounding
    direction.  */
-#define lrint(Val) __TGMATH_UNARY_REAL_ONLY (Val, lrint)
-#define llrint(Val) __TGMATH_UNARY_REAL_ONLY (Val, llrint)
+#define lrint(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, lrint)
+#define llrint(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long long int, llrint)
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
-#define lround(Val) __TGMATH_UNARY_REAL_ONLY (Val, lround)
-#define llround(Val) __TGMATH_UNARY_REAL_ONLY (Val, llround)
+#define lround(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, lround)
+#define llround(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long long int, llround)
 
 
 /* Return X with its signed changed to Y's.  */

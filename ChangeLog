@@ -1,3 +1,11 @@
+2003-03-03  Andreas Jaeger  <aj@suse.de>
+
+	* math/tgmath.h (__TGMATH_UNARY_REAL_RET_ONLY): New definition.
+	(llrint): Use it to correct return type.
+	(lrint): Likewise.
+	(lround): Likewise.
+	(llround): Likewise.
+
 2003-03-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (struct filebuf): For 64-bit platforms use 640
@@ -27,6 +35,7 @@
 
 	* po/es.po: Update from translation team.
 	* po/fr.po: Likewise.
+	* po/gl.po: Likewise.
 	* po/sk.po: Likewise.
 	* po/sv.po: Likewise.
 
