@@ -6,6 +6,7 @@
 
 	* stdlib/tst-strtod.c (locale_test): New function.
 	(main): Call locale_test.
+	* stdlib/Makefile (tst-strtod-ENV): New variable.
 
 2001-01-24  Mark Kettenis  <kettenis@gnu.org>
 

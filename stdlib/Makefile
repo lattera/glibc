@@ -131,6 +131,8 @@ endif
 # Testdir has to be named stdlib and needs to be writable
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 
+tst-strtod-ENV = LOCPATH=$(common-objpfx)localedata
+
 # Run a test on the header files we use.
 tests: $(objpfx)isomac.out $(objpfx)tst-fmtmsg.out
 
