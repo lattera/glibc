@@ -35,9 +35,8 @@ BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8,
 			4, 4, 4, 4)
 BUILTIN_TRANSFORMATION (NULL, "ISO-10646/UCS4/", 15,
 			"INTERNAL", 1, "=ucs4->INTERNAL",
-			__gconv_transform_internal_ucs4, NULL, NULL,
+			__gconv_transform_ucs4_internal, NULL, NULL,
 			4, 4, 4, 4)
-/* Please note that we need only one function for both direction.  */
 
 BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8,
 			"UCS-4LE//", 1, "=INTERNAL->ucs4le",
@@ -45,9 +44,8 @@ BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8,
 			4, 4, 4, 4)
 BUILTIN_TRANSFORMATION (NULL, "UCS-4LE//", 15,
 			"INTERNAL", 1, "=ucs4le->INTERNAL",
-			__gconv_transform_internal_ucs4le, NULL, NULL,
+			__gconv_transform_ucs4le_internal, NULL, NULL,
 			4, 4, 4, 4)
-/* Please note that we need only one function for both direction.  */
 
 BUILTIN_ALIAS ("UTF8//", "ISO-10646/UTF8/")
 BUILTIN_ALIAS ("UTF-8//", "ISO-10646/UTF8/")

@@ -1,5 +1,15 @@
 2000-04-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_simple.c: Define separate functions to convert from
+	UCS4/UCS4-LE to the internal encoding.
+	* iconv/gconv_builtin.h: Use separate functions to convert from
+	UCS4/UCS4-LE to the internal encoding.
+	* iconv/gconv_int.h: Declare __gconv_transform_ucs4_internal and
+	__gconv_transform_ucs4le_internal.
+
+	* iconv/gconv_simple.c (internal_utf8_loop): Correct check for
+	output buffer overflow.  Reported by Ulrich.Brink@sap.com.
+
 	* iconv/skeleton.c: Add some more __builtin_expect.
 	* iconv/loop.c: Likewise.
 
