@@ -1,5 +1,10 @@
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/ether_aton_r.c (ether_aton_r): Preserve high-nibble value
+	in hex conversion.
+	* inet/ether_aton.c (ether_aton): Declare result variable static.
+	Reported by ahyung@unixg.ubc.ca.
+
 	* sysdeps/unix/sysv/linux/bits/sem.h: Don't define union semun.
 	Define macro _SEM_SEMUN_UNDEFINED instead.
 	Reported by Dirk Laessig <d.laessig@tu-bs.de>.
