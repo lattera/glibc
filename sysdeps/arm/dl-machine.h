@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -110,7 +110,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GL(dl_profile), l))
+	  if (_dl_name_match_p (GLRO(dl_profile), l))
 	    /* Say that we really want profiling and the timers are
 	       started.  */
 	    GL(dl_profile_map) = l;
@@ -334,9 +334,9 @@ _dl_start_user:\n\
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
+  if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    GL(dl_platform) = NULL;
+    GLRO(dl_platform) = NULL;
 }
 
 static inline Elf32_Addr
@@ -444,7 +444,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (GL(dl_verbose) && sym->st_size < refsym->st_size))
+	      || (GLRO(dl_verbose) && sym->st_size < refsym->st_size))
 	    {
 	      const char *strtab;
 
@@ -556,7 +556,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (GL(dl_verbose) && sym->st_size < refsym->st_size))
+	      || (GLRO(dl_verbose) && sym->st_size < refsym->st_size))
 	    {
 	      const char *strtab;
 

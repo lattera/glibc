@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  m68k version.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GL(dl_profile), l))
+	  if (_dl_name_match_p (GLRO(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */
@@ -248,7 +248,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (sym->st_size < refsym->st_size && GL(dl_verbose)))
+	      || (sym->st_size < refsym->st_size && GLRO(dl_verbose)))
 	    {
 	      const char *strtab;
 
