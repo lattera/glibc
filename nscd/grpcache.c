@@ -75,7 +75,7 @@ struct groupdata
 
 static void
 cache_addgr (struct database *db, int fd, request_header *req, void *key,
-	     struct group *grp, uid_t owner)
+	     struct group *grp, uid_t owner, int type)
 {
   ssize_t total;
   ssize_t written;
@@ -179,6 +179,11 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       cache_add (GETGRBYNAME, gr_name, gr_name_len, data,
 		 total, data, 0, t, db, owner);
 
+      /* If the key is different from the name add a separate entry.  */
+      if (type == GETGRBYNAME && strcmp (key, gr_name) != 0)
+	cache_add (GETGRBYNAME, key, strlen (key) + 1, data,
+		   total, data, 0, t, db, owner);
+
       cache_add (GETGRBYGID, cp, n, data, total, data, 1, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);
@@ -248,7 +253,7 @@ addgrbyname (struct database *db, int fd, request_header *req,
   if (secure[grpdb])
     seteuid (oldeuid);
 
-  cache_addgr (db, fd, req, key, grp, uid);
+  cache_addgr (db, fd, req, key, grp, uid, GETGRBYNAME);
 
   if (use_malloc)
     free (buffer);
@@ -320,7 +325,7 @@ addgrbygid (struct database *db, int fd, request_header *req,
   if (secure[grpdb])
     seteuid (oldeuid);
 
-  cache_addgr (db, fd, req, key, grp, uid);
+  cache_addgr (db, fd, req, key, grp, uid, GETGRBYGID);
 
   if (use_malloc)
     free (buffer);

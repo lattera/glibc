@@ -1,3 +1,9 @@
+2004-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/grpcache.c (cache_addgr): If necessary, add entry also
+	under the name the user provided.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+
 2004-07-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/posix/waitid.c [WEXITED]: Clear WEXITED bit in OPTIONS for
