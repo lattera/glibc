@@ -1,5 +1,7 @@
 2000-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (process_envvars): Open debug output file with O_NOFOLLOW.
+
 	* locale/Makefile (routines): Add nl_langinfo_l.
 	* locale/Versions [libc] (GLIBC_2.2): Add __nl_langinfo_l.
 	* locale/nl_langinfo_l.c: New file.

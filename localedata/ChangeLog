@@ -1,3 +1,9 @@
+2000-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/uk_UA: Fix yesexpr.
+	* locales/ru_UA: Likewise.
+	Patches by Andrew V. Samoilov <sav@bcs.zp.ua>.
+
 2000-09-24  Bruno Haible  <haible@clisp.cons.org>
 
 	* charmaps/UTF-8: Expand <Hangul Syllable> and <Private Use> ranges,

@@ -1497,6 +1497,11 @@ process_envvars (enum mode *modep, int *lazyp)
      messages to this file.  */
   if (any_debug && debug_output != NULL && !__libc_enable_secure)
     {
+#ifdef O_NOFOLLOW
+      const int flags = O_WRONLY | O_APPEND | O_CREAT | O_NOFOLLOW;
+#else
+      const int flags = O_WRONLY | O_APPEND | O_CREAT;
+#endif
       size_t name_len = strlen (debug_output);
       char buf[name_len + 12];
       char *startp;
@@ -1506,7 +1511,7 @@ process_envvars (enum mode *modep, int *lazyp)
       *--startp = '.';
       startp = memcpy (startp - name_len, debug_output, name_len);
 
-      _dl_debug_fd = __open (startp, O_WRONLY | O_APPEND | O_CREAT, 0666);
+      _dl_debug_fd = __open (startp, flags, 0666);
       if (_dl_debug_fd == -1)
 	/* We use standard output if opening the file failed.  */
 	_dl_debug_fd = STDOUT_FILENO;
