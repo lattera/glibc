@@ -1,5 +1,8 @@
 1998-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/getdate.c (check_mday): tm_mon contains values from 0 to 11,
+	not 1 to 12.
+
 	* manual/texinfo.tex: Update to latest version.
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add ipc.

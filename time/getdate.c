@@ -71,24 +71,24 @@ check_mday (int year, int mon, int mday)
 {
   switch (mon)
     {
-    case 1:
-    case 3:
-    case 5:
+    case 0:
+    case 2:
+    case 4:
+    case 6:
     case 7:
-    case 8:
-    case 10:
-    case 12:
+    case 9:
+    case 11:
       if (mday >= 1 && mday <= 31)
 	return 1;
       break;
-    case 4:
-    case 6:
-    case 9:
-    case 11:
+    case 3:
+    case 5:
+    case 8:
+    case 10:
       if (mday >= 1 && mday <= 30)
 	return 1;
       break;
-    case 2:
+    case 1:
       if (mday >= 1 && mday < (__isleap (year) ? 29 : 28))
 	return 1;
       break;
