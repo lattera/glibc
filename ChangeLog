@@ -1,3 +1,7 @@
+2002-01-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/errnos.awk: Tighten up device_types.h matching.
+
 2002-01-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/stdlib.h: Define inlines for the _l variants of the strto*
