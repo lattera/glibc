@@ -1,3 +1,9 @@
+2000-04-20  Andreas Jaeger  <aj@suse.de>
+
+	* elf/rtld.c (print_statistics): Move ifndef further up.
+	(_dl_start_final): Added HP_TIMINIG_NONAVAIL to avoid warnings.
+	(dl_main): Likewise.
+
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* gmon/gmon.c: Add weak alias moncontrol for __moncontrol.

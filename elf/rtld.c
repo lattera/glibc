@@ -241,7 +241,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
      of the dynamic linker, and then unwind our frame and run the user
      entry point on the same stack we entered on.  */
   *start_addr =  _dl_sysdep_start (arg, &dl_main);
-
+#ifndef HP_TIMING_NONAVAIL
   if (HP_TIMING_AVAIL)
     {
       hp_timing_t end_time;
@@ -252,6 +252,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
       /* Compute the difference.  */
       HP_TIMING_DIFF (rtld_total_time, start_time, end_time);
     }
+#endif
 
   if (__builtin_expect (_dl_debug_statistics, 0))
     print_statistics ();
@@ -1018,9 +1019,11 @@ of this helper program; chances are you did not intend to run this program.\n\
 
     struct link_map *l;
     int consider_profiling = _dl_profile != NULL;
+#ifndef HP_TIMING_NONAVAIL
     hp_timing_t start;
     hp_timing_t stop;
     hp_timing_t add;
+#endif
 
     /* If we are profiling we also must do lazy reloaction.  */
     _dl_lazy |= consider_profiling;
@@ -1466,6 +1469,7 @@ static void
 print_statistics (void)
 {
   char buf[200];
+#ifndef HP_TIMING_NONAVAIL
   char *cp;
   char *wp;
 
@@ -1479,7 +1483,6 @@ print_statistics (void)
     }
 
   /* Print relocation statistics.  */
-#ifndef HP_TIMING_NONAVAIL
   if (HP_TIMING_AVAIL)
     {
       HP_TIMING_PRINT (buf, sizeof (buf), relocate_time);
