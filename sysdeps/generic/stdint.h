@@ -269,13 +269,13 @@ typedef unsigned long long int	uintmax_t;
 /* Limits of `wchar_t'.  */
 # ifndef WCHAR_MIN
 /* These constants might also be defined in <wchar.h>.  */
-#  define WCHAR_MIN		(-2147483647-1)
+#  define WCHAR_MIN		(0)
 #  define WCHAR_MAX		(2147483647)
 # endif
 
 /* Limits of `wint_t'.  */
 # define WINT_MIN		(0)
-# define WINT_MAX		(4294967295U)
+# define WINT_MAX		(2147483647)
 
 #endif	/* C++ && limit macros */
 

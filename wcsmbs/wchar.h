@@ -77,8 +77,8 @@ typedef __mbstate_t mbstate_t;
 
 #ifndef WCHAR_MIN
 /* These constants might also be defined in <inttypes.h>.  */
-# define WCHAR_MIN ((wchar_t) 0)
-# define WCHAR_MAX (~WCHAR_MIN)
+# define WCHAR_MIN (0)
+# define WCHAR_MAX (0x7fffffff)
 #endif
 
 #ifndef WEOF

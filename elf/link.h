@@ -70,7 +70,8 @@ extern struct r_debug _r_debug;
    of whatever module refers to `_DYNAMIC'.  So, to find its own
    `struct r_debug', a program could do:
      for (dyn = _DYNAMIC; dyn->d_tag != DT_NULL)
-       if (dyn->d_tag == DT_DEBUG) r_debug = (struct r_debug) dyn->d_un.d_ptr;
+       if (dyn->d_tag == DT_DEBUG)
+	 r_debug = (struct r_debug *) dyn->d_un.d_ptr;
    */
 extern ElfW(Dyn) _DYNAMIC[];
 

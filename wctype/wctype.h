@@ -235,21 +235,6 @@ extern wint_t towupper __P ((wint_t __wc));
 /* Map the wide character WC using the mapping described by DESC.  */
 extern wint_t __towctrans __P ((wint_t __wc, wctrans_t __desc));
 
-#if __GNUC__ >= 2 && defined __OPTIMIZE__
-/* The tables are always organized in a way which allows direct access
-   for single byte characters.  */
-extern __const __int32_t *__ctype_tolower; /* Case conversions.  */
-extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
-
-# define towlower(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (wint_t) __ctype_tolower[wc] : towlower (wc))
-# define towuppert(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (wint_t) __ctype_toupper[wc] : towupper (wc))
-
-#endif	/* gcc && optimizing */
-
 __END_DECLS
 
 #endif	/* need iswxxx.  */

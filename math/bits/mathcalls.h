@@ -210,6 +210,9 @@ __MATHCALLX (nan,, (__const char *__tagb), (__const__));
 #endif
 
 
+/* Return nonzero if VALUE is not a number.  */
+__MATHDECLX (int,__isnan,, (_Mdouble_ __value), (__const__));
+
 #if defined __USE_MISC || defined __USE_XOPEN
 /* Return nonzero if VALUE is not a number.  */
 __MATHDECLX (int,isnan,, (_Mdouble_ __value), (__const__));

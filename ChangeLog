@@ -1,3 +1,22 @@
+1999-09-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wchar.h (WCHAR_MIN, WCHAR_MAX): Use all-numeric values.
+
+	* sysdeps/generic/stdint.h: Correct WCHAR_MIN, WCHAR_MAX, and
+	WINT_MAX values.
+
+	* wctype/wctype.h: Remove incorrect towlower/towupper optimizations.
+
+1999-09-09  Andreas Schwab  <schwab@suse.de>
+
+	* elf/link.h: Fix comment.
+
+1999-09-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/bits/mathcalls.h: Add __isnan declaration [PR libc/1294].
+
+	* math/math.h: Pretty print.
+
 1999-09-10  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/generic/getenv.c (getenv): Fix lookup for single
