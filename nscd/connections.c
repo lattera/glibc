@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -467,7 +467,7 @@ nscd_run (void *p)
 	     to 1kb.  */
 	  if (req.key_len < 0 || req.key_len > 1024)
 	    {
-	      dbg_log (_("key length in request too long: %zd"), req.key_len);
+	      dbg_log (_("key length in request too long: %d"), req.key_len);
 	      close (fd);
 	      continue;
 	    }
