@@ -1,8 +1,13 @@
-/^[ 	]*\.end/   { need_end = 1 }
+/^[ 	]*\.endp/	 { need_endp = 1 }
+/^[ 	]*\.end/	 { need_end = 1 }
 /^[ 	]*\.align/ { if($2 > max) max = $2; }
 
 END {
-    if(need_end)
+    if(need_endp)
+    {
+	print "#define END_INIT .endp _init";
+	print "#define END_FINI .endp _fini";
+    } else if(need_end)
     {
 	print "#define END_INIT .end _init";
 	print "#define END_FINI .end _fini";

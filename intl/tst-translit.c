@@ -29,6 +29,7 @@ main (void)
   const char *s;
 
   setenv ("LANGUAGE", "existing-locale", 1);
+  unsetenv ("OUTPUT_CHARSET");
   textdomain ("translit");
   bindtextdomain ("translit", OBJPFX "domaindir");
 

@@ -20,15 +20,12 @@
 /* Includes */
 
 #include <limits.h>
+#include <resolv.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
-
-#define __RES_PTHREAD_INTERNAL
-#include <resolv.h> /* for per-thread resolver context */
-
 
 #include "pt-machine.h"
 #include "semaphore.h"

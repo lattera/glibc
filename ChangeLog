@@ -1,3 +1,22 @@
+2000-07-25  Mark Kettenis  <kettenis@gnu.org>
+
+	* nss/nss_files/files-netgrp.c (strip_whitespace): New function.
+	(_nss_netgroup_parseline): Use strip_whitespace to strip off any
+	leading and trailing spaces from host, user and domain name.
+
+2000-07-25  Jes Sorensen  <jes@linuxcare.com>
+
+	* csu/defs.awk: Add support for need_endp.
+
+2000-07-25  Mark Kettenis  <kettenis@gnu.org>
+
+	* resolv/resolv.h: Remove __P from res_send_qhook and
+	res_send_rhook typedefs.
+
+2000-07-25  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/tst-translit.c (main): Unset OUTPUT_CHARSET.
+
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_builtin.h: Add WCHAR_T alias.

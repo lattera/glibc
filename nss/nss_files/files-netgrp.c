@@ -1,5 +1,5 @@
 /* Netgroup file parser in nss_files modules.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -159,6 +159,24 @@ _nss_files_endnetgrent (struct __netgrent *result)
   return NSS_STATUS_SUCCESS;
 }
 
+static char *
+strip_whitespace (char *str)
+{
+  char *cp = str;
+
+  /* Skip leading spaces.  */
+  while (isspace (*cp))
+    cp++;
+
+  str = cp;
+  while (*cp != '\0' && ! isspace(*cp))
+    cp++;
+
+  /* Null-terminate, stripping off any trailing spaces.  */
+  *cp = '\0';
+
+  return *str == '\0' ? NULL : str;
+}
 
 enum nss_status
 _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
@@ -235,15 +253,14 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
       memcpy (buffer, host, cp - host);
       result->type = triple_val;
 
-      buffer[(user - host) - 1] = '\0';
-      result->val.triple.host = *host == ',' ? NULL : buffer;
+      buffer[(user - host) - 1] = '\0';	/* Replace ',' with '\0'.  */
+      result->val.triple.host = strip_whitespace (buffer);
 
-      buffer[(domain - host) - 1] = '\0';
-      result->val.triple.user = *user == ',' ? NULL : buffer + (user - host);
+      buffer[(domain - host) - 1] = '\0'; /* Replace ',' with '\0'.  */
+      result->val.triple.user = strip_whitespace (buffer + (user - host));
 
-      buffer[(cp - host) - 1] = '\0';
-      result->val.triple.domain =
-	*domain == ')' ? NULL : buffer + (domain - host);
+      buffer[(cp - host) - 1] = '\0'; /* Replace ')' with '\0'.  */
+      result->val.triple.domain = strip_whitespace (buffer + (domain - host));
 
       status = NSS_STATUS_SUCCESS;
 

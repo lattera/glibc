@@ -30,6 +30,12 @@
 #include "spinlock.h"
 #include "restart.h"
 
+/* We need the global/static resolver state here.  */
+#include <resolv.h>
+#undef _res
+
+extern struct __res_state _res;
+
 /* Sanity check.  */
 #if __ASSUME_REALTIME_SIGNALS && !defined __SIGRTMIN
 # error "This must not happen; new kernel assumed but old headers"

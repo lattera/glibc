@@ -87,19 +87,19 @@
 typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
 	res_sendhookact;
 
-typedef res_sendhookact (*res_send_qhook)__P((struct sockaddr_in * const *ns,
-					      const u_char **query,
-					      int *querylen,
-					      u_char *ans,
-					      int anssiz,
-					      int *resplen));
+typedef res_sendhookact (*res_send_qhook) (struct sockaddr_in * const *ns,
+					   const u_char **query,
+					   int *querylen,
+					   u_char *ans,
+					   int anssiz,
+					   int *resplen);
 
-typedef res_sendhookact (*res_send_rhook)__P((const struct sockaddr_in *ns,
-					      const u_char *query,
-					      int querylen,
-					      u_char *ans,
-					      int anssiz,
-					      int *resplen));
+typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *ns,
+					   const u_char *query,
+					   int querylen,
+					   u_char *ans,
+					   int anssiz,
+					   int *resplen);
 
 struct res_sym {
 	int	number;		/* Identifying number, like T_MX */
