@@ -516,14 +516,6 @@ extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t) __THROW;
 extern void _IO_free_wbackup_area (_IO_FILE *) __THROW;
 #endif
 
-static inline void
-_IO_acquire_lock_fct (_IO_FILE **p)
-{
-  _IO_FILE *fp = *p;
-  if ((fp->_flags & _IO_USER_LOCK) == 0)
-    _IO_funlockfile (fp);
-}
-
 #ifdef __cplusplus
 }
 #endif

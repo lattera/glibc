@@ -970,3 +970,12 @@ extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 #else
 # define CHECK_FILE(FILE, RET) COERCE_FILE (FILE)
 #endif
+
+static inline void
+__attribute__ ((__always_inline__))
+_IO_acquire_lock_fct (_IO_FILE **p)
+{
+  _IO_FILE *fp = *p;
+  if ((fp->_flags & _IO_USER_LOCK) == 0)
+    _IO_funlockfile (fp);
+}

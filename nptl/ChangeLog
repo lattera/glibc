@@ -1,5 +1,9 @@
 2003-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/bits/stdio-lock.h (_IO_acquire_lock): Avoid
+	nested function, use static inline function from libio.h.
+	Code by Richard Henderson.
+
 	* sysdeps/pthread/bits/libc-lock.h: Mark pthread_setcancelstate as
 	weak.
 
