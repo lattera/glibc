@@ -1,3 +1,8 @@
+2004-07-14  Kaz  Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h: Don't reset _dl_starting_up here.
+	(elf_machine_rela_relative): Remove unused valiable.
+
 2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #263]

@@ -364,12 +364,7 @@ _dl_start_user:\n\
 	add r1,r0\n\
 	jsr @r0\n\
 	 nop\n\
-1:	! Clear the startup flag.\n\
-	mov.l .L_dl_starting_up,r0\n\
-	mov.l @(r0,r12),r0\n\
-	mov #0,r2\n\
-	mov.l r2,@r0\n\
-	! Pass our finalizer function to the user in r4, as per ELF ABI.\n\
+1:	! Pass our finalizer function to the user in r4, as per ELF ABI.\n\
 	mov.l .L_dl_fini,r0\n\
 	mov.l @(r0,r12),r4\n\
 	! Jump to the user's entry point.\n\
@@ -384,8 +379,6 @@ _dl_start_user:\n\
 	.long _dl_init_internal@PLT\n\
 .L_dl_loaded:\n\
 	.long _rtld_local@GOT\n\
-.L_dl_starting_up:\n\
-	.long _dl_starting_up@GOT\n\
 .L_dl_fini:\n\
 	.long _dl_fini@GOT\n\
 .previous\n\
@@ -629,7 +622,6 @@ static inline void
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
-  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   Elf32_Addr value;
 
   if (reloc->r_addend)
