@@ -1,7 +1,7 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 # System calls with wrappers.
-s_ioctl		ioctl	ioctl		i:iip	__syscall_ioctl
+s_ioctl		ioctl	ioctl		i:iiI	__syscall_ioctl
 s_ipc		msgget	ipc		i:iiiip	__syscall_ipc
 s_llseek	llseek	_llseek		i:iiipi	__syscall__llseek
 s_chown		chown	chown		i:sii	__syscall_chown
@@ -22,7 +22,7 @@ getresgid	-	getresgid	i:ppp	getresgid
 getresuid	-	getresuid	i:ppp	getresuid
 s_getrlimit	getrlimit getrlimit	i:ip	__syscall_getrlimit
 s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
-s_mmap2		mmap64	mmap2		P:aniiii __syscall_mmap2
+s_mmap2		mmap64	mmap2		b:aniiii __syscall_mmap2
 s_poll		poll	poll		i:pii	__syscall_poll
 s_pread64	pread64	pread		i:ibnii	__syscall_pread
 s_ptrace	ptrace	ptrace		i:iipp	__syscall_ptrace

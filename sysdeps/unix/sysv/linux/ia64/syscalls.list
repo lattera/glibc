@@ -8,7 +8,7 @@ pread		-	pread		4	__syscall_pread	__syscall_pread64 __pread pread __pread64 prea
 pwrite		-	pwrite		4	__syscall_pwrite	__syscall_pwrite64 __pwrite pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
-mmap		-	mmap		P:aniiii __mmap		mmap __mmap64 mmap64
+mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 
@@ -26,7 +26,7 @@ semget		-	semget		i:iii	__semget	semget
 semctl		-	semctl		i:iiii	__semctl	semctl
 
 # proper socket implementations:
-accept		-	accept		i:ipp	__libc_accept	__accept accept
+accept		-	accept		i:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
 connect		-	connect		i:ipi	__libc_connect	__connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
@@ -34,7 +34,7 @@ getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 listen		-	listen		i:ii	__listen	listen
 recv		-	recv		i:ibni	__libc_recv	__recv recv
-recvfrom	-	recvfrom	i:ibnibN	__libc_recvfrom	__recvfrom recvfrom
+recvfrom	-	recvfrom	i:ibniBN	__libc_recvfrom	__recvfrom recvfrom
 recvmsg		-	recvmsg		i:ipi	__libc_recvmsg	recvmsg
 send		-	send		i:ibni	__libc_send	__send send
 sendmsg		-	sendmsg		i:ipi	__libc_sendmsg	sendmsg

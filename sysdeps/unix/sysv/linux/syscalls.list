@@ -25,9 +25,9 @@ madvise		-	madvise		i:pii	posix_madvise	madvise
 mincore		-	mincore		i:iip	mincore
 mlock		EXTRA	mlock		i:bn	__mlock	mlock
 mlockall	EXTRA	mlockall	i:i	__mlockall	mlockall
-mmap		-	mmap		P:aniiii	__mmap		mmap
+mmap		-	mmap		b:aniiii	__mmap		mmap
 mount		EXTRA	mount		i:sssip	__mount	mount
-mremap		EXTRA	mremap		P:aini	__mremap	mremap
+mremap		EXTRA	mremap		b:aini	__mremap	mremap
 munlock		EXTRA	munlock		i:ai	__munlock	munlock
 munlockall	EXTRA	munlockall	i:	__munlockall	munlockall
 nanosleep	-	nanosleep	i:pp	__libc_nanosleep	__nanosleep nanosleep
@@ -46,16 +46,16 @@ sched_rr_gi	-	sched_rr_get_interval	i:ip	__sched_rr_get_interval	sched_rr_get_in
 sched_setp	-	sched_setparam	i:ip	__sched_setparam	sched_setparam
 sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler
 sched_yield	-	sched_yield	i:	__sched_yield	sched_yield
-select		-	_newselect	i:ipppp	__select	select
+select		-	_newselect	i:iPPPP	__select	select
 sendfile	EXTRA	sendfile	i:iipi	sendfile
 setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid
 setresuid	EXTRA	setresuid	i:iii	__setresuid	setresuid
 setresgid	EXTRA	setresgid	i:iii	__setresgid	setresgid
-sigaltstack	-	sigaltstack	i:pp	__sigaltstack	sigaltstack
+sigaltstack	-	sigaltstack	i:PP	__sigaltstack	sigaltstack
 sysinfo		EXTRA	sysinfo		i:p	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
 uselib		EXTRA	uselib		i:s	uselib
-wait4		-	wait4		i:ipip	__wait4		wait4
+wait4		-	wait4		i:iWiP	__wait4		wait4

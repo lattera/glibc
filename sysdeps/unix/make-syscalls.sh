@@ -8,23 +8,24 @@
 # Syscall Signature Key Letters for BP Thunks:
 #
 # a: unchecked address (e.g., 1st arg to mmap)
-# b: non-NULL buffer (e.g., 2nd arg to read)
+# b: non-NULL buffer (e.g., 2nd arg to read; return value from mmap)
 # B: optionally-NULL buffer (e.g., 4th arg to getsockopt)
 # f: buffer of 2 ints (e.g., 4th arg to socketpair)
+# F: 3rd arg to fcntl
 # i: scalar (any signedness & size: int, long, long long, enum, whatever)
+# I: 3rd arg to ioctl
 # n: scalar buffer length (e.g., 3rd arg to read)
 # N: pointer to value/return scalar buffer length (e.g., 6th arg to recvfrom)
-# p: pointer to typed object (e.g., any non-void* arg)
-# P: pointer return value (e.g., return value from mmap)
-# s: string (e.g., 1st arg to open)
+# p: non-NULL pointer to typed object (e.g., any non-void* arg)
+# P: optionally-NULL pointer to typed object (e.g., 2nd argument to gettimeofday)
+# s: non-NULL string (e.g., 1st arg to open)
+# S: optionally-NULL string (e.g., 1st arg to acct)
 # v: vararg scalar (e.g., optional 3rd arg to open)
-# V: vararg pointer (e.g., 3rd arg to fcntl & ioctl)
+# W: wait status, optionally-NULL pointer to int (e.g., 2nd arg of wait4)
 
-ptrlet='[abBfNpPs]'
-argdig='[1-9]'
-fixarg='[^vV]'$argdig	# fixed args (declare extern)
-ptrarg=$ptrlet$argdig	# pointer arg (toss bounds)
-intarg='[inv]'$argdig	# scalar arg
+ptr='[abBfFINpPsSW]'	# all pointer keyletters
+int='[inv]'		# all scalar keyletters
+typ='[ifnNpP]'		# typed-arg keyletters: we capture type for use in thunk
 
 ##############################################################################
 
@@ -185,7 +186,7 @@ shared-only-routines += $file
 
   case x"$callnum",$srcfile,$args in
   x-,-,* | x*,*.[sS],*V*) ;;
-  x*,-,*$ptrlet* | x*,*.[sS],*$ptrlet*)
+  x*,-,*$ptr* | x*,*.[sS],*$ptr*)
 
     nv_weak=`for name in $weak; do
 		case $name in
@@ -200,16 +201,16 @@ shared-only-routines += $file
     # convert signature string to individual numbered arg names
     # e.g., i:ipbN -> i0 i1 p2 b3 N4
     set `echo $args |
-	sed -e 's/^\(.\):\(.*\)/\2 \10/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \11/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \12/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \13/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \14/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \15/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \16/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \17/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \18/' \
-	    -e 's/^\([^ ]\)\(.*\)/\2 \19/'`
+	sed -e 's/^\(.\):\(.*\)/\2 <\10>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\11>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\12>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\13>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\14>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\15>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\16>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\17>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\18>/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 <\19>/'`
     rtn=$1; shift
     args=$*
     arglist=`echo $* |sed 's/ /, /g'`
@@ -222,43 +223,53 @@ shared-only-routines += $file
     echo "bp-thunks += $file"
     echo "\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto.d"
 
-    # generate macro head & thunk prologue
-    echo "\
-	(echo '#define $callname($arglist) r0, $rtn; \\'; \\
-	 echo '`echo $args | \
-		    sed -e 's/\('$fixarg'\)/extern \1, \1v;/g' \
-			-e 's/\(v'$argdig'\)/extern int \1v;/g'` \\'; \\
-	 echo '__typeof (r0) BP_SYM ($strong) (`echo $args | \
-		    sed -e 's/ /, /g' \
-			-e 's/\('$ptrarg'\)/__typeof (\1v) *__bounded \1a/g' \
-			-e 's/\('$intarg'\)/__typeof (\1v) \1a/g'`) { \\'; \\
-	 echo '  extern __typeof (r0) ($callname) (`echo $args | \
-		    sed -e 's/ /, /g' \
-			-e 's/\('$ptrarg'\)/__typeof (\1v) *__unbounded/g' \
-			-e 's/\('$intarg'\)/__typeof (\1v)/g'`); \\'; \\"
+    # generate macro head
+    echo "	(echo '#define $callname(`echo $arglist | \
+	    sed -e 's/[<>]//g'`) `echo $rtn | \
+	    sed -e 's/<\('$typ'0\)>/\1v;/g' \
+		-e 's/<\(b0\)>/x0; extern char \1v;/g'` \\'; \\"
 
-    # stash length arg for use with mman calls that return pointers
-    len=`echo $args |sed -e 's/.*\('n$argdig'\).*/\1/'`
+    # generate extern decls of dummy variables for each arg
+    echo "	 echo '`echo $args | \
+	    sed -e 's/<\('$typ'[1-9]\)>/extern \1, \1v;/g' \
+		-e 's/<\([abBFIsS][1-9]\)>/extern char \1v;/g' \
+		-e 's/<\([Wv][1-9]\)>/extern int \1v;/g'` \\'; \\"
 
-    # generate thunk epilogue
-    funcall="($callname) (`echo $args | \
-	    sed -e 's/ /, /g' \
-		-e 's/\('a$argdig'\)/__ptrvalue (\1a)/g' \
-		-e 's/\('s$argdig'\)/CHECK_STRING (\1a)/g' \
-		-e 's/\('p$argdig'\)/CHECK_1 (\1a)/g' \
-		-e 's/\('f$argdig'\)/CHECK_N (\1a, 2)/g' \
-		-e 's/\('b$argdig'\), \('n$argdig'\)/CHECK_N (\1a, \2), \2/g' \
-		-e 's/\('b$argdig'\), \('N$argdig'\)/CHECK_N (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
-		-e 's/\('B$argdig'\), \('n$argdig'\)/CHECK_Nopt (\1a, \2), \2/g' \
-		-e 's/\('B$argdig'\), \('N$argdig'\)/CHECK_Nopt (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
-		-e 's/\('[ivn]$argdig'\)/\1a/g'`)"
+    # generate bounded-pointer thunk declarator
+    echo "	 echo '`echo $rtn | \
+	    sed -e 's/<\('$ptr'0\)>/__typeof (\1v) *__bounded/g' \
+		-e 's/<\('$int'0\)>/__typeof (\1v)/g'` BP_SYM ($strong) (`echo $arglist | \
+	    sed -e 's/<\('$ptr'[1-9]\)>/__typeof (\1v) *__bounded \1a/g' \
+		-e 's/<\('$int'[1-9]\)>/__typeof (\1v) \1a/g'`) { \\'; \\"
 
-    case $rtn in
-    P*) echo "	 echo '{ __typeof ($rtn) *__bounded rtn; \\'; \\
-	 echo '  __ptrlow (rtn) = __ptrvalue (rtn) = $funcall; \\'; \\
-	 echo '  __ptrhigh (rtn) = __ptrlow (rtn) + ${len}a; return rtn; } \\'; \\" ;;
-    *) echo "	 echo '  return $funcall; \\'; \\" ;;
-    esac
+    # generate extern primitive syscall declaration
+    echo "	 echo '  extern `echo $rtn | \
+	    sed -e 's/<\('$ptr'0\)>/__typeof (\1v) *__unbounded/g' \
+		-e 's/<\('$int'0\)>/__typeof (\1v)/g'` ($callname) (`echo $arglist | \
+	    sed -e 's/<\('$ptr'[1-9]\)>/__typeof (\1v) *__unbounded/g' \
+		-e 's/<\('$int'[1-9]\)>/__typeof (\1v)/g'`); \\'; \\"
+
+    # generate call the primtive system call, optionally wrapping bounds
+    # around the result if the signature's return keyletter is `b'.
+    echo "	 echo '  return `echo $rtn |
+	    sed -e 's/<b0>/BOUNDED_N (/' \
+		-e 's/<.0>//'`($callname) (`echo $arglist | \
+	    sed -e 's/<\(a[1-9]\)>/__ptrvalue (\1a)/g' \
+		-e 's/<\(b[1-9]\)>, <\(n[1-9]\)>/CHECK_N (\1a, \2a), \2a/g' \
+		-e 's/<\(b[1-9]\)>, <\(N[1-9]\)>/CHECK_N (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
+		-e 's/<\(B[1-9]\)>, <\(n[1-9]\)>/CHECK_Nopt (\1a, \2a), \2a/g' \
+		-e 's/<\(B[1-9]\)>, <\(N[1-9]\)>/CHECK_Nopt (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
+		-e 's/<\(f[1-9]\)>/CHECK_N (\1a, 2)/g' \
+		-e 's/<\(i[1-9]\)>, <\(F[1-9]\)>/\1a, CHECK_FCNTL (\2a, \1a)/g' \
+		-e 's/<\(i[1-9]\)>, <\(I[1-9]\)>/\1a, CHECK_IOCTL (\2a, \1a)/g' \
+		-e 's/<\(p[1-9]\)>/CHECK_1 (\1a)/g' \
+		-e 's/<\([PW][1-9]\)>/CHECK_1opt (\1a)/g' \
+		-e 's/<\(s[1-9]\)>/CHECK_STRING (\1a)/g' \
+		-e 's/<\(S[1-9]\)>/CHECK_STRINGopt (\1a)/g' \
+		-e 's/<\([ivn][1-9]\)>/\1a/g'`)`echo $rtn $args |
+	    sed -e 's/<b0>.*<\(n[1-9]\)>.*/, \1a)/' \
+		-e 's/<.0>.*//'`; \\'; \\"
+
     echo "	 echo '} \\'; \\"
 
     # generate thunk aliases
@@ -272,9 +283,9 @@ shared-only-routines += $file
 	 echo '#include <bp-thunks.h>'; \\
 	) | \$(COMPILE.c) -x c -o \$@ -"
 ### Use this for debugging intermediate output:
-### echo '	) >$(@:.ob=.c)
-###	$(subst -c,-E,$(COMPILE.c)) -o $(@:.ob=.ib) $(@:.ob=.c)
-###	$(COMPILE.c) -x cpp-output -o $@ $(@:.ob=.ib)'
+### 	) >\$(@:.ob=.c)
+### 	\$(subst -c,-E,\$(COMPILE.c)) -o \$(@:.ob=.ib) \$(@:.ob=.c)
+### 	\$(COMPILE.c) -x cpp-output -o \$@ \$(@:.ob=.ib)"
     echo endif
     ;;
   esac
