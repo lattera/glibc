@@ -21,7 +21,8 @@
 #
 subdir	:= string
 
-headers	:= string.h strings.h memory.h endian.h bytesex.h
+headers	:= string.h strings.h memory.h endian.h bytesex.h \
+	   argz.h envz.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   strerror _strerror strlen strnlen			\
@@ -31,7 +32,10 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   bcopy bzero ffs stpcpy stpncpy			\
 		   strcasecmp strncase					\
 		   memccpy memcpy wordcopy strsep			\
-		   swab strfry memfrob memmem
+		   swab strfry memfrob memmem				\
+		   $(addprefix argz-,append count create		\
+			             delete extract insert stringify)	\
+		   envz
 
 tests		:= tester testcopy test-ffs
 distribute	:= memcopy.h pagecopy.h

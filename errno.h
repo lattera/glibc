@@ -47,6 +47,14 @@ extern int errno;
 #endif
 
 #ifdef __USE_GNU
+
+/* The Hurd <errnos.h> defines `error_t' as an enumerated type
+   so that printing `error_t' values in the debugger shows the names.  */
+#ifndef __error_t_defined
+typedef int error_t;
+#define __error_t_defined	1
+#endif
+
 /* The full and simple forms of the name with which the program was
    invoked.  These variables are set up automatically at startup based on
    the value of ARGV[0] (this works only if you use GNU ld).  */

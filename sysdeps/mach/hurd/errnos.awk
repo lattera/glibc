@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -144,6 +144,7 @@ END \
    symbolic values.  */";
     print "#ifdef __USE_GNU";
     print "typedef enum __error_t_codes error_t;"
+    print "#define __error_t_defined\t1"
     print "#endif";
     print "";
     print "/* errno is a per-thread variable.  */";

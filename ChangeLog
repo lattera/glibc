@@ -1,3 +1,16 @@
+Mon Apr 29 00:11:59 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* errno.h [!__error_t_defined] (error_t): New type.
+	* sysdeps/mach/hurd/errnos.awk: #define __error_t_defined after the
+	typedef in errnos.h.
+
+	* string/envz.c, string/envz.h: New files.
+	* string/argz.h, string/argz-append.c, string/argz-count.c,
+	string/argz-create.c, string/argz-delete.c, string/argz-extract.c,
+	string/argz-insert.c, string/argz-stringify.c: New files.
+	* string/Makefile (routines): Add envz, argz-*.
+	(headers): Add argz.h, envz.h.
+
 Sun Apr 28 14:14:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/i386/Makefile: New file.
