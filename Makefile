@@ -225,18 +225,16 @@ tests-clean:
 
 tests: $(objpfx)c++-types-check.out
 ifneq ($(CXX),no)
-ifneq (,$(wildcard scripts/data/c++-types-$(config-machine)-$(config-os).data))
-$(objpfx)c++-types-check.out: scripts/data/c++-types-$(config-machine)-$(config-os).data
-	scripts/check-c++-types.sh $^ $(CXX) $(filter-out -std=gnu99,$(CFLAGS)) $(CPPFLAGS) > $@
-else
-ifneq (,$(wildcard scripts/data/c++-types-$(base-machine)-$(config-os).data))
-$(objpfx)c++-types-check.out: scripts/data/c++-types-$(base-machine)-$(config-os).data
-	scripts/check-c++-types.sh $^ $(CXX) $(filter-out -std=gnu99,$(CFLAGS)) $(CPPFLAGS) > $@
+check-data := $(firstword $(wildcard \
+	        $(foreach M,$(config-machine) $(base-machine),\
+			  scripts/data/c++-types-$M-$(config-os).data)))
+ifneq (,$(check-data))
+$(objpfx)c++-types-check.out: $(check-data)
+	scripts/check-c++-types.sh $^ $(CXX) $(filter-out -std=gnu99 -Wstrict-prototypes,$(CFLAGS)) $(CPPFLAGS) > $@
 else
 $(objpfx)c++-types-check.out:
 	@echo 'WARNING C++ tests not run; create a c++-types-XXX file'
 	@echo "not run" > $@
-endif
 endif
 endif
 
