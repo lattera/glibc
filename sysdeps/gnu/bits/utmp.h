@@ -1,5 +1,6 @@
 /* The `struct utmp' type, describing entries in the utmp file.  GNU version.
-   Copyright (C) 1993, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1996, 1997, 1998, 1999, 2002
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +25,7 @@
 #include <paths.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <bits/wordsize.h>
 
 
 #define UT_LINESIZE	32
@@ -35,7 +37,11 @@
    previous logins.  */
 struct lastlog
   {
+#if __WORDSIZE == 64 && defined __WORDSIZE_COMPAT32
+    int32_t ll_time;
+#else
     __time_t ll_time;
+#endif
     char ll_line[UT_LINESIZE];
     char ll_host[UT_HOSTSIZE];
   };
@@ -61,8 +67,21 @@ struct utmp
   char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
   struct exit_status ut_exit;	/* Exit status of a process marked
 				   as DEAD_PROCESS.  */
+/* The ut_session and ut_tv fields must be the same size when compiled
+   32- and 64-bit.  This allows data files and shared memory to be
+   shared between 32- and 64-bit applications.  */
+#if __WORDSIZE == 64 && defined __WORDSIZE_COMPAT32
+  int32_t ut_session;		/* Session ID, used for windowing.  */
+  struct
+  {
+    int32_t tv_sec;		/* Seconds.  */
+    int32_t tv_usec;		/* Microseconds.  */
+  } ut_tv;			/* Time entry was made.  */
+#else
   long int ut_session;		/* Session ID, used for windowing.  */
   struct timeval ut_tv;		/* Time entry was made.  */
+#endif
+
   int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
   char __unused[20];		/* Reserved for future use.  */
 };

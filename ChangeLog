@@ -1,3 +1,46 @@
+2002-10-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/gnu/bits/utmp.h: Include <bits/wordsize.h>.
+	(struct lastlog) [__WORDSIZE == 64 && __WORDSIZE_COMPAT32]:
+	Use int32_t for ll_time.
+	(struct utmp) [__WORDSIZE == 64 && __WORDSIZE_COMPAT32]:
+	Use int32_t instead of long int for ut_session.
+	Use an anonymous struct with 32-bit fields for ut_tv.
+	* sysdeps/gnu/bits/utmpx.h: Include <bits/wordsize.h>.
+	(struct utmpx) [__WORDSIZE == 64 && __WORDSIZE_COMPAT32]: Do the same
+	here as in utmp.h for `struct utmp'.
+	* sysdeps/unix/sysv/linux/powerpc/bits/utmp.h: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/bits/utmpx.h: File removed.
+	* sysdeps/unix/sysv/linux/sparc/bits/utmp.h: File removed.
+	* sysdeps/unix/sysv/linux/sparc/bits/utmpx.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/bits/utmp.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/bits/utmpx.h: File removed.
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Replaced with the contents
+	of the sysdeps/unix/sysv/linux/i386/bits/resource.h file.
+	All the following files were identical or equivalent to it.
+	* sysdeps/unix/sysv/linux/i386/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/arm/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/cris/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/hppa/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/m68k/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/s390/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/sh/bits/resource.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/bits/resource.h: File removed.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (struct msghdr): Use size_t
+	instead of int for msg_iovlen, instead of socklen_t for msg_controllen.
+	Other than the previously incorrect sign of msg_iovlen, this is a
+	no-op on 32-bit platforms.  On 64-bit platforms it makes this header
+	match their layouts as well, so the following are now identical to it.
+	* sysdeps/unix/sysv/linux/s390/bits/socket.h: File removed.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/bits/socket.h: File removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/socket.h: File removed.
+	* sysdeps/unix/sysv/linux/alpha/bits/socket.h: File removed.
+
 2002-10-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/fpathconf.c (__fpathconf): Add

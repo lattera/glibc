@@ -1,5 +1,5 @@
 /* Structures and definitions for the user accounting database.  GNU version.
-   Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 
 #include <bits/types.h>
 #include <sys/time.h>
+#include <bits/wordsize.h>
 
 
 #ifdef __USE_GNU
@@ -62,8 +63,21 @@ struct utmpx
   char ut_host[__UT_HOSTSIZE];	/* Hostname for remote login.  */
   struct __exit_status ut_exit;	/* Exit status of a process marked
 				   as DEAD_PROCESS.  */
+
+/* The fields ut_session and ut_tv must be the same size when compiled
+   32- and 64-bit.  This allows files and shared memory to be shared
+   between 32- and 64-bit applications.  */
+#if __WORDSIZE == 64 && defined __WORDSIZE_COMPAT32
+  __int32_t ut_session;		/* Session ID, used for windowing.  */
+  struct
+  {
+    __int32_t tv_sec;		/* Seconds.  */
+    __int32_t tv_usec;		/* Microseconds.  */
+  } ut_tv;			/* Time entry was made.  */
+#else
   long int ut_session;		/* Session ID, used for windowing.  */
   struct timeval ut_tv;		/* Time entry was made.  */
+#endif
   __int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
   char __unused[20];		/* Reserved for future use.  */
 };
