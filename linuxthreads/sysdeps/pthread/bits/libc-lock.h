@@ -180,7 +180,6 @@ typedef pthread_key_t __libc_key_t;
 
 /* Lock the recursive named lock variable.  */
 #define __libc_lock_lock_recursive(NAME) __libc_lock_lock ((NAME).mutex)
-#define __rtld_lock_lock_recursive(NAME) __libc_lock_lock_recursive (NAME)
 
 /* Try to lock the named lock variable.  */
 #define __libc_lock_trylock(NAME) \
@@ -203,8 +202,23 @@ typedef pthread_key_t __libc_key_t;
 
 /* Unlock the recursive named lock variable.  */
 #define __libc_lock_unlock_recursive(NAME) __libc_lock_unlock ((NAME).mutex)
-#define __rtld_lock_unlock_recursive(NAME) __libc_lock_unlock_recursive (NAME)
 
+#if defined _LIBC && defined SHARED
+# define __rtld_lock_default_lock_recursive(lock) \
+  ++((pthread_mutex_t *)(lock))->__m_count;
+
+# define __rtld_lock_default_unlock_recursive(lock) \
+  --((pthread_mutex_t *)(lock))->__m_count;
+
+# define __rtld_lock_lock_recursive(NAME) \
+  GL(dl_rtld_lock_recursive) (&(NAME).mutex)
+
+# define __rtld_lock_unlock_recursive(NAME) \
+  GL(dl_rtld_unlock_recursive) (&(NAME).mutex)
+#else
+#define __rtld_lock_lock_recursive(NAME) __libc_lock_lock_recursive (NAME)
+#define __rtld_lock_unlock_recursive(NAME) __libc_lock_unlock_recursive (NAME)
+#endif
 
 /* Define once control variable.  */
 #if PTHREAD_ONCE_INIT == 0

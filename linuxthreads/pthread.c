@@ -588,6 +588,15 @@ static void pthread_initialize(void)
   /* Transfer the old value from the dynamic linker's internal location.  */
   *__libc_dl_error_tsd () = *(*GL(dl_error_catch_tsd)) ();
   GL(dl_error_catch_tsd) = &__libc_dl_error_tsd;
+
+  /* Make __rtld_lock_{,un}lock_recursive use pthread_mutex_{,un}lock,
+     keep the lock count from the ld.so implementation.  */
+  GL(dl_rtld_lock_recursive) = (void *) __pthread_mutex_lock;
+  GL(dl_rtld_unlock_recursive) = (void *) __pthread_mutex_unlock;
+  unsigned int rtld_lock_count = GL(dl_load_lock).mutex.__m_count;
+  GL(dl_load_lock).mutex.__m_count = 0;
+  while (rtld_lock_count-- > 0)
+    __pthread_mutex_lock (&GL(dl_load_lock).mutex);
 #endif
 
 #ifdef USE_TLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -54,7 +54,7 @@ __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
 
   THREAD_SETMEM (self, cleanup, cbuf);
 }
-
+hidden_def (__pthread_cleanup_upto)
 
 
 void

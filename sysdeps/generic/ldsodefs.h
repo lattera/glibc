@@ -349,6 +349,12 @@ struct rtld_global
   /* Structure describing the dynamic linker itself.  */
   EXTERN struct link_map _dl_rtld_map;
 
+#if defined SHARED && defined _LIBC_REENTRANT \
+    && defined __rtld_lock_default_lock_recursive
+  EXTERN void (*_dl_rtld_lock_recursive) (void *);
+  EXTERN void (*_dl_rtld_unlock_recursive) (void *);
+#endif
+
   /* Keep the conditional TLS members at the end so the layout of the
      structure used by !USE_TLS code matches the prefix of the layout in
      the USE_TLS rtld.  Note that `struct link_map' is conditionally

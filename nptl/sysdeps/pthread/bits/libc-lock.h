@@ -248,9 +248,6 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_mutex_lock, (&(NAME).mutex), 0)
 #endif
 
-#define __rtld_lock_lock_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_lock, (&(NAME).mutex), 0)
-
 /* Try to lock the named lock variable.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_trylock(NAME) \
@@ -319,8 +316,25 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
 #endif
 
-#define __rtld_lock_unlock_recursive(NAME) \
+#if defined _LIBC && defined SHARED
+# define __rtld_lock_default_lock_recursive(lock) \
+  ++((pthread_mutex_t *)(lock))->__data.__count;
+
+# define __rtld_lock_default_unlock_recursive(lock) \
+  --((pthread_mutex_t *)(lock))->__data.__count;
+
+# define __rtld_lock_lock_recursive(NAME) \
+  GL(dl_rtld_lock_recursive) (&(NAME).mutex)
+
+# define __rtld_lock_unlock_recursive(NAME) \
+  GL(dl_rtld_unlock_recursive) (&(NAME).mutex)
+#else
+# define __rtld_lock_lock_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_lock, (&(NAME).mutex), 0)
+
+# define __rtld_lock_unlock_recursive(NAME) \
   __libc_maybe_call (__pthread_mutex_unlock, (&(NAME).mutex), 0)
+#endif
 
 /* Define once control variable.  */
 #if PTHREAD_ONCE_INIT == 0

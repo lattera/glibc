@@ -1,3 +1,16 @@
+2003-08-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h [_LIBC && SHARED]
+	(__rtld_lock_default_lock_recursive,
+	__rtld_lock_default_unlock_recursive): Define.
+	[_LIBC && SHARED] (__rtld_lock_lock_recursive,
+	__rtld_lock_unlock_recursive): Define using
+	GL(_dl_rtld_*lock_recursive).
+	* pthread.c (pthread_initialize): Initialize _dl_rtld_lock_recursive
+	and _dl_rtld_unlock_recursive.  Lock GL(_dl_load_lock) the same
+	number of times as GL(_dl_load_lock) using non-mt implementation was
+	nested.
+
 2003-07-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/bits/typesizes.h (__SSIZE_T_TYPE): Define.

@@ -588,6 +588,20 @@ _dl_initial_error_catch_tsd (void)
 }
 #endif
 
+#if defined SHARED && defined _LIBC_REENTRANT \
+    && defined __rtld_lock_default_lock_recursive
+static void rtld_lock_default_lock_recursive (void *lock)
+{
+  __rtld_lock_default_lock_recursive (lock);
+}
+
+static void rtld_lock_default_unlock_recursive (void *lock)
+{
+  __rtld_lock_default_unlock_recursive (lock);
+}
+#endif
+
+
 static const char *library_path;	/* The library search path.  */
 static const char *preloadlist;		/* The list preloaded objects.  */
 static int version_info;		/* Nonzero if information about
@@ -624,6 +638,12 @@ dl_main (const ElfW(Phdr) *phdr,
 
 #ifdef USE_TLS
   GL(dl_init_static_tls) = &_dl_nothread_init_static_tls;
+#endif
+
+#if defined SHARED && defined _LIBC_REENTRANT \
+    && defined __rtld_lock_default_lock_recursive
+  GL(dl_rtld_lock_recursive) = rtld_lock_default_lock_recursive;
+  GL(dl_rtld_unlock_recursive) = rtld_lock_default_unlock_recursive;
 #endif
 
   /* Process the environment variable which control the behaviour.  */

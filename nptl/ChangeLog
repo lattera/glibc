@@ -1,3 +1,19 @@
+2003-08-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h [_LIBC && SHARED]
+	(__rtld_lock_default_lock_recursive,
+	__rtld_lock_default_unlock_recursive): Define.
+	[_LIBC && SHARED] (__rtld_lock_lock_recursive,
+	__rtld_lock_unlock_recursive): Define using
+	GL(_dl_rtld_*lock_recursive).
+	* init.c (__pthread_initialize_minimal_internal): Initialize
+	_dl_rtld_lock_recursive and _dl_rtld_unlock_recursive.
+	Lock GL(_dl_load_lock) the same number of times as
+	GL(_dl_load_lock) using non-mt implementation was nested.
+
+	* pthreadP.h (__pthread_cleanup_upto): Add hidden_proto.
+	* pt-longjmp.c (__pthread_cleanup_upto): Add hidden_def.
+
 2003-08-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-cancel17.c (do_test): Make len2 maximum of page size and

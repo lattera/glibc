@@ -1117,12 +1117,12 @@ main (int argc, char **argv)
 
   if (!opt_only_cline)
     {
+      parse_conf (config_file);
+
       /* Always add the standard search paths.  */
       add_system_dir (SLIBDIR);
       if (strcmp (SLIBDIR, LIBDIR))
 	add_system_dir (LIBDIR);
-
-      parse_conf (config_file);
     }
 
   search_dirs ();

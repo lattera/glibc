@@ -217,6 +217,9 @@ extern void __reclaim_stacks (void) attribute_hidden;
 
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);
+#if defined NOT_IN_libc && defined IS_IN_libpthread
+hidden_proto (__pthread_cleanup_upto)
+#endif
 
 
 /* Functions with versioned interfaces.  */

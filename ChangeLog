@@ -1,3 +1,17 @@
+2003-08-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (_rtld_global): Add
+	_dl_rtld_lock_recursive and _dl_rtld_unlock_recursive.
+	* elf/rtld.c (rtld_lock_default_lock_recursive,
+	rtld_lock_default_unlock_recursive): New functions.
+	(dl_main): Initialize _dl_rtld_lock_recursive and
+	_dl_rtld_unlock_recursive.
+
+2003-08-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (main): Append SLIBDIR and LIBDIR to
+	config_file directories instead of prepending.
+
 2003-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
