@@ -1,3 +1,8 @@
+Mon Mar  6 12:34:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* ctype/ctype.h (_ISbit): New macro, defined dependent on byte order.
+	(_IS* enum): Use _ISbit to produce values.
+
 Sun Mar  5 19:40:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* locale/localeinfo.h: Rewritten for new locale system, using

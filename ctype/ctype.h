@@ -27,39 +27,50 @@ Cambridge, MA 02139, USA.  */
 
 __BEGIN_DECLS
 
-/* These are all the characteristics of characters.  All the
-   interdependencies (such as that an alphabetic is an uppercase or a
-   lowercase) are here.  If there get to be more than
-   (sizeof (unsigned short int) * CHAR_BIT) distinct characteristics,
-   many things must be changed that use `unsigned short int's.  */
+/* These are all the characteristics of characters.
+   If there get to be more than 16 distinct characteristics,
+   many things must be changed that use `unsigned short int's.
+
+   The characteristics are stored always in network byte order (big
+   endian).  We define the bit value interpretations here dependent on the
+   machine's byte order.  */
+
+#include <endian.h>
+#if __BYTE_ORDER == __BIG_ENDIAN
+#define _ISbit(bit)	(1 << bit)
+#else /* __BYTE_ORDER == __LITTLE_ENDIAN */
+#define _ISbit(bit)	((1 << bit) << (bit < 8 ? 8 : -8))
+#endif
+
 enum
 {
-  _ISupper = 1 << 0,		/* UPPERCASE.  */
-  _ISlower = 1 << 1,		/* lowercase.  */
-  _ISalpha = 1 << 2,	        /* Alphabetic.  */
-  _ISdigit = 1 << 3,		/* Numeric.  */
-  _ISxdigit = 1 << 4,           /* Hexadecimal numeric.  */
-  _ISspace = 1 << 5,		/* Whitespace.  */
-  _ISprint = 1 << 6,            /* Printing.  */
-  _ISgraph = 1 << 7,	        /* Graphical.  */
-  _ISblank = 1 << 8,		/* Blank (usually SPC and TAB).  */
-  _IScntrl = 1 << 9,		/* Control character.  */
-  _ISpunct = 1 << 10,		/* Punctuation.  */
+  _ISupper = _ISbit (0),	/* UPPERCASE.  */
+  _ISlower = _ISbit (1),	/* lowercase.  */
+  _ISalpha = _ISbit (2),	/* Alphabetic.  */
+  _ISdigit = _ISbit (3),	/* Numeric.  */
+  _ISxdigit = _ISbit (4),	/* Hexadecimal numeric.  */
+  _ISspace = _ISbit (5),	/* Whitespace.  */
+  _ISprint = _ISbit (6),	/* Printing.  */
+  _ISgraph = _ISbit (7),	/* Graphical.  */
+  _ISblank = _ISbit (8),	/* Blank (usually SPC and TAB).  */
+  _IScntrl = _ISbit (9),	/* Control character.  */
+  _ISpunct = _ISbit (10),	/* Punctuation.  */
 
   /* The following are defined in POSIX.2 as being combinations of the
      classes above.  */
   _ISalnum = _ISalpha | _ISdigit	/* Alphanumeric.  */
 };
 
-/* These are defined in localeinfo.c.
+/* These are defined in ctype-info.c.
    The declarations here must match those in localeinfo.h.
 
-   These point to the second element ([1]) of arrays of size (UCHAR_MAX + 1).
-   EOF is -1, so [EOF] is the first element of the original array.
-   ANSI requires that the ctype functions work for `unsigned char' values
-   and for EOF.  The case conversion arrays are of `short int's rather than
-   `unsigned char's because tolower (EOF) must be EOF, which doesn't fit
-   into an `unsigned char'.  */
+   These point into arrays of 384, so they can be indexed by any `unsigned
+   char' value [0,255]; by EOF (-1); or by any `signed char' value
+   [-128,-1).  ANSI requires that the ctype functions work for `unsigned
+   char' values and for EOF; we also support negative `signed char' values
+   for broken old programs.  The case conversion arrays are of `short int's
+   rather than `unsigned char's because tolower (EOF) must be EOF, which
+   doesn't fit into an `unsigned char'.  */
 extern __const unsigned short int *__ctype_b;	/* Characteristics.  */
 extern __const short int *__ctype_tolower;	/* Case conversions.  */
 extern __const short int *__ctype_toupper;	/* Case conversions.  */

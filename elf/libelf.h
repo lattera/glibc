@@ -107,7 +107,7 @@ typedef struct
 /* Data descriptor.  */
 typedef struct
 {
-  Elf_Void *d_buf;
+  void *d_buf;
   Elf_Type d_type;
   size_t d_size;
   off_t d_off;			/* Offset into section.  */
@@ -155,7 +155,7 @@ extern unsigned int elf_flagdata __P ((Elf_Data *__data, Elf_Cmd __cmd,
 extern unsigned	int elf_flagehdr __P ((Elf *__elf, Elf_Cmd __cmd,
 				       unsigned int __flags));
 /* Modify flags affecting the ELF program header.  */
-extern unsigned	int elf_flagphdr __P ((Elf *__elf, Elf_Cmd, __cmd
+extern unsigned	int elf_flagphdr __P ((Elf *__elf, Elf_Cmd __cmd,
 				       unsigned int __flags));
 /* Modify flags affecting the given section's data.  */
 extern unsigned	int elf_flagscn __P ((Elf_Scn *__scn, Elf_Cmd __cmd,
@@ -221,8 +221,9 @@ elf_hash (__const char *__name)
       __hi = __hash & 0xf0000000;
       if (__hi != 0)
 	__hash ^= __hi >> 24;
-      hash &= ~__hi;
+      __hash &= ~__hi;
     }
+  return __hash;
 }
 #endif
 
@@ -261,7 +262,7 @@ extern char *elf_strptr __P ((Elf *__elf, size_t __section, size_t __offset));
 
 /* If CMD is ELF_C_NULL, update ELF's data structures based on any
    user modifications, and set the ELF_F_DIRTY flag if anything changed.
-   If CMD is ELF_C_WRITE, do that and then write the changes to the file.
+   If CMD is ELF_C_WRITE, do that and then write the changes to the file.  */
 extern off_t elf_update __P ((Elf *__elf, Elf_Cmd __cmd));
 
 /* Handle ELF version VER.  Return the old version handled,
