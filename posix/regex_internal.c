@@ -1040,7 +1040,7 @@ re_dfa_add_node (dfa, token, mode)
      re_token_t token;
      int mode;
 {
-  if (dfa->nodes_len >= dfa->nodes_alloc)
+  if (BE (dfa->nodes_len >= dfa->nodes_alloc, 0))
     {
       re_token_t *new_array;
       dfa->nodes_alloc *= 2;

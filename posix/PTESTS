@@ -270,7 +270,8 @@
 1¦63¦a\{1,63\}¦aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa¦
 # 2.8.3.4  BRE Precedence
 # GA143
-2¦20¦\^\[[[.].]]\\(\\1\\)\*\\{1,2\\}\$¦a^[]\(1\)*\{1,2\}$b¦
+#W There are numerous bugs in the original version.
+2¦19¦\^\[[[.].]]\\(\\1\\)\*\\{1,2\\}\$¦a^[]\(\1\)*\{1,2\}$b¦
 1¦6¦[[=*=]][[=\=]][[=]=]][[===]][[...]][[:punct:]]¦*\]=.;¦
 1¦6¦[$\(*\)^]*¦$\()*^¦
 1¦1¦[\1]¦1¦

@@ -1,4 +1,11 @@
+2003-11-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/PTESTS: Fix first test of GA143.
+
 2003-11-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.c (re_dfa_add_node): Add BE, reallocation
+	isn't likely.
 
 	* locale/programs/charmap.c (charmap_read): If encoding is found
 	not ASCII compatible, set enc_not_ascii_compatible.
