@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -37,14 +37,22 @@ timer_create (clock_id, evp, timerid)
   struct timer_node *newtimer = NULL;
   struct thread_node *thread = NULL;
 
-  if (clock_id != CLOCK_REALTIME
+  if (0
 #ifdef _POSIX_CPUTIME
-      && clock_id != CLOCK_PROCESS_CPUTIME_ID
+      || clock_id == CLOCK_PROCESS_CPUTIME_ID
 #endif
 #ifdef _POSIX_THREAD_CPUTIME
-      && clock_id != CLOCK_THREAD_CPUTIME_ID
+      || clock_id == CLOCK_THREAD_CPUTIME_ID
 #endif
       )
+    {
+      /* We don't allow timers for CPU clocks.  At least not in the
+	 moment.  */
+      __set_errno (ENOTSUP);
+      return -1;
+    }
+
+  if (clock_id != CLOCK_REALTIME)
     {
       __set_errno (EINVAL);
       return -1;
