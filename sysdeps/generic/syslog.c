@@ -73,7 +73,9 @@ __libc_lock_define_initialized (static, syslog_lock)
 
 static void openlog_internal(const char *, int, int) internal_function;
 static void closelog_internal(void);
+#ifndef NO_SIGPIPE
 static void sigpipe_handler (int);
+#endif
 
 
 struct cleanup_arg
