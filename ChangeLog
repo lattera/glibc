@@ -1,5 +1,7 @@
 2004-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/tst-gettext.c (main): Improve some messages. [BZ #33]
+
 	* time/strptime_l.c (__strptime_internal): Fix handling of %Ey.
 	[BZ #28]
 

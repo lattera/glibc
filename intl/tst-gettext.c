@@ -1,5 +1,5 @@
 /* Test of the gettext functions.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -160,7 +160,7 @@ main (int argc, char *argv[])
       result = 1;
     }
 
-  puts ("test `gettext' with LC_ALL set");
+  puts ("test `gettext' with LC_MESSAGES set");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
   textdomain ("existing-domain");
@@ -173,13 +173,13 @@ main (int argc, char *argv[])
      LC_MESSAGES category.  We leave this value set for the `dgettext'
      and `dcgettext' tests.  */
   textdomain ("non-existing-domain");
-  puts ("test `gettext' with LC_xxx deciding");
+  puts ("test `gettext' with LC_MESSAGES deciding");
   if (negative_gettext_test () != 0)
     {
       puts ("FAILED");
       result = 1;
     }
-  puts ("test `dgettext' with LC_xxx deciding");
+  puts ("test `dgettext' with LC_MESSAGES deciding");
   if (positive_dgettext_test ("existing-domain") != 0)
     {
       puts ("FAILED");
