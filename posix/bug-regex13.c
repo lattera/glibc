@@ -34,7 +34,33 @@ static struct
 } tests[] = {
   {RE_BACKSLASH_ESCAPE_IN_LISTS, "[0\\-9]", "1", -1}, /* It should not match.  */
   {RE_BACKSLASH_ESCAPE_IN_LISTS, "[0\\-9]", "-", 0}, /* It should match.  */
-  {RE_SYNTAX_POSIX_BASIC, "s1\n.*\ns3", "s1\ns2\ns3", 0}
+  {RE_SYNTAX_POSIX_BASIC, "s1\n.*\ns3", "s1\ns2\ns3", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}c", "ac", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}c", "abc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}c", "abbc", -1},
+  /* Nested duplication.  */
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{1}{1}c", "ac", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{1}{1}c", "abc", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{1}{1}c", "abbc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{2}{2}c", "ac", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{2}{2}c", "abbc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{2}{2}c", "abbbbc", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{2}{2}c", "abbbbbc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}{1}c", "ac", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}{1}c", "abc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}{1}c", "abbc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{1}{0}c", "ac", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{1}{0}c", "abc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{1}{0}c", "abbc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}*c", "ac", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}*c", "abc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}*c", "abbc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}?c", "ac", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}?c", "abc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}?c", "abbc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}+c", "ac", 0},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}+c", "abc", -1},
+  {RE_SYNTAX_POSIX_EXTENDED, "ab{0}+c", "abbc", -1},
 };
 
 int

@@ -1746,7 +1746,7 @@ check_dst_limits_calc_pos (dfa, mctx, limit, eclosures, subexp_idx, from_node,
      int limit, subexp_idx, from_node, str_idx;
 {
   struct re_backref_cache_entry *lim = mctx->bkref_ents + limit;
-      int node_idx;
+  int node_idx;
 
   /* If we are outside the range of the subexpression, return -1 or 1.  */
   if (str_idx < lim->subexp_from)
@@ -1761,23 +1761,23 @@ check_dst_limits_calc_pos (dfa, mctx, limit, eclosures, subexp_idx, from_node,
 
   /* Else, we are on the boundary: examine the nodes on the epsilon
      closure.  */
-      for (node_idx = 0; node_idx < eclosures->nelem; ++node_idx)
-	{
-	  int node = eclosures->elems[node_idx];
+  for (node_idx = 0; node_idx < eclosures->nelem; ++node_idx)
+    {
+      int node = eclosures->elems[node_idx];
       switch (dfa->nodes[node].type)
 	{
 	case OP_BACK_REF:
-	    {
-	      int bi = search_cur_bkref_entry (mctx, str_idx);
-	      for (; bi < mctx->nbkref_ents; ++bi)
-		{
-		  struct re_backref_cache_entry *ent = mctx->bkref_ents + bi;
+	  {
+	    int bi = search_cur_bkref_entry (mctx, str_idx);
+	    for (; bi < mctx->nbkref_ents; ++bi)
+	      {
+		struct re_backref_cache_entry *ent = mctx->bkref_ents + bi;
 		int dst, cpos;
 
 		/* If this backreference goes beyond the point we're
 		   examining, don't go any further.  */
-		  if (ent->str_idx > str_idx)
-		    break;
+		if (ent->str_idx > str_idx)
+		  break;
 
 		if (ent->node != node || ent->subexp_from != ent->subexp_to)
 		  continue;
@@ -1788,7 +1788,7 @@ check_dst_limits_calc_pos (dfa, mctx, limit, eclosures, subexp_idx, from_node,
 		   node, don't recurse because it would cause an
 		   infinite loop: a regex that exhibits this behavior
 		   is ()\1*\1*  */
-		      dst = dfa->edests[node].elems[0];
+		dst = dfa->edests[node].elems[0];
 		if (dst == from_node)
 		  {
 		    if (str_idx == lim->subexp_from)
@@ -1797,17 +1797,17 @@ check_dst_limits_calc_pos (dfa, mctx, limit, eclosures, subexp_idx, from_node,
 		      return 0;
 		  }
 
-		      cpos = check_dst_limits_calc_pos (dfa, mctx, limit,
-							dfa->eclosures + dst,
-							subexp_idx, dst,
-							str_idx);
+		cpos = check_dst_limits_calc_pos (dfa, mctx, limit,
+						  dfa->eclosures + dst,
+						  subexp_idx, dst,
+						  str_idx);
 
 		if (cpos == -1 && str_idx == lim->subexp_from)
 		  return -1;
 
 		if (cpos == 0 /* && str_idx == lim->lim->subexp_to */)
 		  return 0;
-	    }
+	      }
 	      break;
 	    }
 
@@ -3416,6 +3416,11 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	  if (constraint & NEXT_WORD_CONSTRAINT)
 	    {
 	      unsigned int any_set = 0;
+	      if (type == CHARACTER && !node->word_char)
+		{
+		  bitset_empty (accepts);
+		  continue;
+		}
 #ifdef RE_ENABLE_I18N
 	      if (dfa->mb_cur_max > 1)
 		for (j = 0; j < BITSET_UINTS; ++j)
@@ -3430,6 +3435,11 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	  if (constraint & NEXT_NOTWORD_CONSTRAINT)
 	    {
 	      unsigned int any_set = 0;
+	      if (type == CHARACTER && node->word_char)
+		{
+		  bitset_empty (accepts);
+		  continue;
+		}
 #ifdef RE_ENABLE_I18N
 	      if (dfa->mb_cur_max > 1)
 		for (j = 0; j < BITSET_UINTS; ++j)

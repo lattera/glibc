@@ -1,3 +1,18 @@
+2003-12-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (duplicate_node, duplicate_node_closure): Revert
+	2003-11-24 changes.
+	* posix/regexec.c (group_nodes_into_DFAstates): For CHARACTER with
+	NEXT_{,NOT}WORD_CONSTRAINT check word_char bit.
+	* posix/bug-regex19.c (tests): Add new tests.
+
+	* posix/regexec.c (check_dst_limits_calc_pos): Fix formatting.
+
+	* posix/regcomp.c (parse_dup_op): Return NULL if dup_elem is NULL,
+	after checking syntax.  Optimize.
+	(calc_first): Fix comment.
+	* posix/bug-regex13.c (tests): Add new tests.
+
 2003-12-21  Roland McGrath  <roland@redhat.com>
 
 	* manual/arith.texi (Parsing of Integers): Typo fix.
