@@ -1,5 +1,5 @@
 /* futimes -- change access and modification times of open file.  Linux version.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #include <utime.h>
 #include <sys/time.h>
 #include <stdio-common/_itoa.h>
+#include <fcntl.h>
 
 #include "kernel-features.h"
 
@@ -40,31 +41,58 @@ __futimes (int fd, const struct timeval tvp[2])
   char *cp = _itoa_word ((unsigned int) fd, fname + sizeof (fname) - 1, 10, 0);
   cp = memcpy (cp - sizeof (selffd) + 1, selffd, sizeof (selffd) - 1);
 
+  int result;
 #ifdef __NR_utimes
-  int result = INLINE_SYSCALL (utimes, 2, cp, tvp);
+  result = INLINE_SYSCALL (utimes, 2, cp, tvp);
 # ifndef __ASSUME_UTIMES
-  if (result != -1 || errno != ENOSYS)
+  if (result == -1 && errno == ENOSYS)
 # endif
-    return result;
 #endif
-
-  /* The utimes() syscall does not exist or is not available in the
-     used kernel.  Use utime().  For this we have to convert to the
-     data format utime() expects.  */
-#ifndef __ASSUME_UTIMES
-  struct utimbuf buf;
-  struct utimbuf *times;
-
-  if (tvp != NULL)
     {
-      times = &buf;
-      buf.actime = tvp[0].tv_sec + (tvp[0].tv_usec + 500000) / 1000000;
-      buf.modtime = tvp[1].tv_sec + (tvp[1].tv_usec + 500000) / 1000000;
-    }
-  else
-    times = NULL;
+      /* The utimes() syscall does not exist or is not available in the
+	 used kernel.  Use utime().  For this we have to convert to the
+	 data format utime() expects.  */
+#ifndef __ASSUME_UTIMES
+      struct utimbuf buf;
+      struct utimbuf *times;
 
-  return INLINE_SYSCALL (utime, 2, cp, times);
+      if (tvp != NULL)
+	{
+	  times = &buf;
+	  buf.actime = tvp[0].tv_sec + (tvp[0].tv_usec + 500000) / 1000000;
+	  buf.modtime = tvp[1].tv_sec + (tvp[1].tv_usec + 500000) / 1000000;
+	}
+      else
+	times = NULL;
+
+      result = INLINE_SYSCALL (utime, 2, cp, times);
 #endif
+    }
+
+  if (result == -1)
+    /* Check for errors that result from failing to find /proc.
+       This means we can't do futimes at all, so return ENOSYS
+       rather than some confusing error.  */
+    switch (errno)
+      {
+      case EACCES:
+	if (tvp == NULL)  /* Could be a path problem or a file problem.  */
+	  break;
+	/*FALLTHROUGH*/
+      case ELOOP:
+      case ENAMETOOLONG:
+      case ENOTDIR:
+	errno = ENOSYS;
+	break;
+
+      case ENOENT:
+	/* Validate the file descriptor by letting fcntl set errno to
+	   EBADF if it's bogus.  Otherwise it's a /proc issue.  */
+	if (INLINE_SYSCALL (fcntl, 3, fd, F_GETFD, 0) != -1)
+	  errno = ENOSYS;
+	break;
+      }
+
+  return result;
 }
 weak_alias (__futimes, futimes)
