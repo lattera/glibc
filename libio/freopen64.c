@@ -44,8 +44,7 @@ freopen64 (filename, mode, fp)
   CHECK_FILE (fp, NULL);
   if (!(fp->_flags & _IO_IS_FILEBUF))
     return NULL;
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   if (filename == NULL && _IO_fileno (fp) >= 0)
     {
       fd = __dup (_IO_fileno (fp));
@@ -68,8 +67,7 @@ freopen64 (filename, mode, fp)
       if (filename != NULL)
 	free ((char *) filename);
     }
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
   return result;
 #else
   __set_errno (ENOSYS);

@@ -52,15 +52,13 @@ _IO_old_fclose (fp)
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
     INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
 
-  _IO_cleanup_region_start ((void (*) (void *)) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
     status = _IO_old_file_close_it (fp);
   else
     status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
   _IO_FINISH (fp);
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
   if (_IO_have_backup (fp))
     INTUSE(_IO_free_backup_area) (fp);
   if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)

@@ -1,3 +1,67 @@
+2003-08-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/Makefile: Compile fputc.c, fputwc.c, freopen64.c, freopen.c,
+	fseek.c, fseeko64.c, fseeko.c, ftello64.c, ftello.c, fwide.c, getc.c,
+	getchar.c, getwc.c, getwchar.c, iofclose.c, iofflush.c, iofgetpos64.c,
+	iofgetpos.c, iofgets.c, iofgetws.c, iofputs.c, iofputws.c, iofread.c,
+	iofsetpos64.c, iofsetpos.c, ioftell.c, iofwrite.c, iogetdelim.c,
+	iogetline.c, iogets.c, iogetwline.c, ioputs.c, ioseekoff.c,
+	ioseekpos.c, iosetbuffer.c, iosetvbuf.c, ioungetc.c, ioungetwc.c,
+	oldfileops.c, oldiofclose.c, oldiofgetpos64.c, oldiofgetpos.c,
+	oldiofsetpos64.c, oldiofsetpos.c, peekc.c, putc.c, putchar.c, putwc.c,
+	putwchar.c and rewind.c with exceptions.
+	* sysdeps/generic/bits/stdio-lock.h (_IO_acquire_lock,
+	_IO_release_lock): Define.
+	* libio/fileops.c (_IO_new_file_underflow): Use it.
+	* libio/fputc.c (fputc): Likewise.
+	* libio/fputwc.c (fputwc): Likewise.
+	* libio/freopen64.c (freopen64):
+	* libio/freopen.c (freopen): Likewise.
+	* libio/fseek.c (fseek): Likewise.
+	* libio/fseeko64.c (fseeko64): Likewise.
+	* libio/fseeko.c (fseeko): Likewise.
+	* libio/ftello64.c (ftello64): Likewise.
+	* libio/ftello.c (ftello): Likewise.
+	* libio/fwide.c (fwide): Likewise.
+	* libio/getc.c (_IO_getc): Likewise.
+	* libio/getchar.c (getchar): Likewise.
+	* libio/getwc.c (_IO_getwc): Likewise.
+	* libio/getwchar.c (getwchar): Likewise.
+	* libio/iofclose.c (_IO_new_fclose):
+	* libio/iofflush.c (_IO_fflush): Likewise.
+	* libio/iofgetpos64.c (_IO_new_fgetpos64): Likewise.
+	* libio/iofgetpos.c (_IO_new_fgetpos): Likewise.
+	* libio/iofgets.c (_IO_fgets): Likewise.
+	* libio/iofgetws.c (fgetws): Likewise.
+	* libio/iofputs.c (_IO_fputs):
+	* libio/iofputws.c (_IO_fputs): Likewise.
+	* libio/iofread.c (_IO_fread): Likewise.
+	* libio/iofsetpos64.c (_IO_new_fsetpos64): Likewise.
+	* libio/iofsetpos.c (_IO_new_fsetpos): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	* libio/iofwrite.c (_IO_fwrite): Likewise.
+	* libio/iogetdelim.c (_IO_getdelim): Likewise.
+	* libio/iogets.c (_IO_gets): Likewise.
+	* libio/ioputs.c (_IO_puts): Likewise.
+	* libio/ioseekoff.c (_IO_seekoff): Likewise.
+	* libio/ioseekpos.c (_IO_seekpos): Likewise.
+	* libio/iosetbuffer.c (_IO_setbuffer): Likewise.
+	* libio/iosetvbuf.c (_IO_setvbuf): Likewise.
+	* libio/ioungetc.c (_IO_ungetc): Likewise.
+	* libio/ioungetwc.c (ungetwc): Likewise.
+	* libio/oldiofclose.c (_IO_old_fclose): Likewise.
+	* libio/oldiofgetpos64.c (_IO_old_fgetpos64): Likewise.
+	* libio/oldiofgetpos.c (_IO_old_fgetpos): Likewise.
+	* libio/oldiofsetpos64.c (_IO_old_fsetpos64): Likewise.
+	* libio/oldiofsetpos.c (_IO_old_fsetpos): Likewise.
+	* libio/peekc.c (_IO_peekc_locked): Likewise.
+	* libio/putc.c (_IO_putc): Likewise.
+	* libio/putchar.c (putchar): Likewise.
+	* libio/putwc.c (putwc): Likewise.
+	* libio/putwchar.c (putwchar): Likewise.
+	* libio/rewind.c (rewind): Likewise.
+	* libio/wfileops.c (_IO_wfile_underflow): Likewise.
+
 2003-08-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* signal/signal.h: sighold, sigrelse, sigignore, sigset were

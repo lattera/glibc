@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,95,96,97,98,99,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998, 1999, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,11 +27,9 @@ putwc (wc, fp)
 {
   wint_t result;
   CHECK_FILE (fp, WEOF);
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   result = _IO_putwc_unlocked (wc, fp);
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
   return result;
 }
 libc_hidden_def (putwc)

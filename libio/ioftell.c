@@ -36,16 +36,14 @@ _IO_ftell (fp)
 {
   _IO_off64_t pos;
   CHECK_FILE (fp, -1L);
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
   if (_IO_in_backup (fp))
     {
       if (_IO_vtable_offset (fp) != 0 || fp->_mode <= 0)
 	pos -= fp->_IO_save_end - fp->_IO_save_base;
     }
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
   if (pos == _IO_pos_BAD)
     {
 #ifdef EIO

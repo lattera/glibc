@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1996,1997,1998,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,7 @@ _IO_gets (buf)
   int ch;
   char *retval;
 
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-			    _IO_stdin);
-  _IO_flockfile (_IO_stdin);
+  _IO_acquire_lock (_IO_stdin);
   ch = _IO_getc_unlocked (_IO_stdin);
   if (ch == EOF)
     {
@@ -67,8 +65,7 @@ _IO_gets (buf)
   buf[count] = 0;
   retval = buf;
 unlock_return:
-  _IO_funlockfile (_IO_stdin);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (_IO_stdin);
   return retval;
 }
 

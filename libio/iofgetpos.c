@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,8 +38,7 @@ _IO_new_fgetpos (fp, posp)
   _IO_off64_t pos;
   int result = 0;
   CHECK_FILE (fp, EOF);
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
   if (_IO_in_backup (fp))
     {
@@ -72,8 +71,7 @@ _IO_new_fgetpos (fp, posp)
 	posp->__state = fp->_wide_data->_IO_state;
     }
 
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
   return result;
 }
 

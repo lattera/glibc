@@ -35,8 +35,7 @@ _IO_setbuffer (fp, buf, size)
      _IO_size_t size;
 {
   CHECK_FILE (fp, );
-  _IO_cleanup_region_start ((void (*) (void *)) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   fp->_flags &= ~_IO_LINE_BUF;
   if (!buf)
     size = 0;
@@ -44,8 +43,7 @@ _IO_setbuffer (fp, buf, size)
   if (_IO_vtable_offset (fp) == 0 && fp->_mode == 0 && _IO_CHECK_WIDE (fp))
     /* We also have to set the buffer using the wide char function.  */
     (void) _IO_WSETBUF (fp, buf, size);
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
 }
 INTDEF(_IO_setbuffer)
 

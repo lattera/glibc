@@ -5,7 +5,7 @@
 
 2003-08-29  Jakub Jelinek  <jakuB@redhat.com>
 
-	* tst-cancel.c (tf_sigwait, tf_sigwaitinfo, tf_sigtimedwait): Add
+	* tst-cancel4.c (tf_sigwait, tf_sigwaitinfo, tf_sigtimedwait): Add
 	sigemptyset before sigaddset.  Reported by jreiser@BitWagon.com.
 
 2003-08-27  Ulrich Drepper  <drepper@redhat.com>

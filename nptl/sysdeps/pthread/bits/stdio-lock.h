@@ -1,5 +1,5 @@
-/* Thread package specific definitions of stream lock type.  Generic version.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Thread package specific definitions of stream lock type.  NPTL version.
+   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,5 +85,26 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 #define _IO_cleanup_region_end(_doit) \
   __libc_cleanup_region_end (_doit)
 
+#if defined _LIBC && !defined NOT_IN_libc
+
+# ifdef __EXCEPTIONS
+#  define _IO_acquire_lock(_fp) \
+  do {									      \
+    auto inline __attribute__((always_inline)) void			      \
+    _IO_acquire_lock_fct (int *p __attribute__ ((__unused__)))		      \
+      {									      \
+	if (((_fp)->_flags & _IO_USER_LOCK) == 0)			      \
+	  _IO_funlockfile (_fp);					      \
+      }									      \
+    int _IO_acquire_lock_dummy						      \
+      __attribute__ ((cleanup (_IO_acquire_lock_fct)));			      \
+    _IO_flockfile (_fp)
+
+# else
+#  define _IO_acquire_lock(_fp) _IO_acquire_lock_needs_exceptions_enabled
+# endif
+# define _IO_release_lock(_fp) ; } while (0)
+
+#endif
 
 #endif /* bits/stdio-lock.h */

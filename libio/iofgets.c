@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 1999, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,8 +41,7 @@ _IO_fgets (buf, n, fp)
   CHECK_FILE (fp, NULL);
   if (n <= 0)
     return NULL;
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   /* This is very tricky since a file descriptor may be in the
      non-blocking mode. The error flag doesn't mean much in this
      case. We return an error only when there is a new error. */
@@ -59,8 +59,7 @@ _IO_fgets (buf, n, fp)
       result = buf;
     }
   fp->_IO_file_flags |= old_error;
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
   return result;
 }
 

@@ -217,16 +217,13 @@ _IO_wfile_underflow (fp)
 	 traditional Unix systems did this for stdout.  stderr better
 	 not be line buffered.  So we do just that here
 	 explicitly.  --drepper */
-      _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-				_IO_stdout);
-      _IO_flockfile (_IO_stdout);
+      _IO_acquire_lock (_IO_stdout);
 
       if ((_IO_stdout->_flags & (_IO_LINKED | _IO_NO_WRITES | _IO_LINE_BUF))
 	  == (_IO_LINKED | _IO_LINE_BUF))
 	_IO_OVERFLOW (_IO_stdout, EOF);
 
-      _IO_funlockfile (_IO_stdout);
-      _IO_cleanup_region_end (0);
+      _IO_release_lock (_IO_stdout);
 #endif
     }
 

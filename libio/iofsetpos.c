@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995, 1997-2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998, 1999, 2000, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,8 +37,7 @@ _IO_new_fsetpos (fp, posp)
 {
   int result;
   CHECK_FILE (fp, EOF);
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   if (_IO_seekpos_unlocked (fp, posp->__pos, _IOS_INPUT|_IOS_OUTPUT)
       == _IO_pos_BAD)
     {
@@ -57,8 +57,7 @@ _IO_new_fsetpos (fp, posp)
 	/* This is a stateful encoding, restore the state.  */
 	fp->_wide_data->_IO_state = posp->__state;
     }
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
   return result;
 }
 

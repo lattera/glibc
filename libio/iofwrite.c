@@ -40,12 +40,10 @@ _IO_fwrite (buf, size, count, fp)
   CHECK_FILE (fp, 0);
   if (request == 0)
     return 0;
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
+  _IO_acquire_lock (fp);
   if (_IO_vtable_offset (fp) != 0 || _IO_fwide (fp, -1) == -1)
     written = _IO_sputn (fp, (const char *) buf, request);
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
+  _IO_release_lock (fp);
   if (written == request)
     return count;
   else
