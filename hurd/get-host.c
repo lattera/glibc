@@ -72,7 +72,7 @@ _hurd_get_host_config (const char *item, char *buf, size_t buflen)
     }
 
   /* Remove newlines in case someone wrote the file by hand.  */
-  while (buf[nread - 1] == '\n' && nread > 0)
+  while (nread > 0 && buf[nread - 1] == '\n')
     buf[--nread] = '\0';
 
   /* Null-terminate the result if there is enough space.  */
