@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,5 +96,15 @@
 
 /* We support asynchronous I/O.  */
 #define _POSIX_ASYNCHRONOUS_IO	1
+/* Alternative name for Unix98.  */
+#define _LFS_ASYNCHRONOUS_IO	1
+
+/* The LFS support in asynchronous I/O is also available.  */
+#define _LFS64_ASYNCHRONOUS_IO	1
+
+/* The rest of the LFS is also available.  */
+#define _LFS_LARGEFILE		1
+#define _LFS64_LARGEFILE	1
+#define _LFS64_STDIO		1
 
 #endif /* posix_opt.h */

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   mempcpy bcopy bzero ffs ffsll stpcpy stpncpy		\
 		   strcasecmp strncase strcasecmp_l strncase_l		\
 		   memccpy memcpy wordcopy strsep strcasestr		\
-		   swab strfry memfrob memmem				\
+		   swab strfry memfrob memmem rawmemchr			\
 		   $(addprefix argz-,append count create ctsep next	\
 			             delete extract insert stringify	\
 				     addsep replace)			\

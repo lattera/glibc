@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -249,6 +249,16 @@ __mempcpy_small (void *__dest1, char __src1,
 }
 #  endif
 # endif
+#endif
+
+
+/* Return pointer to C in S.  */
+#ifndef _HAVE_STRING_ARCH_strchr
+extern __ptr_t __rawmemchr (const __ptr_t __s, int __c);
+# define strchr(s, c) \
+  (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
+		  ? (char *) __rawmemchr (s, c)				      \
+		  : strchr (s, c)))
 #endif
 
 

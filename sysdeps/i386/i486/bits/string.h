@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -375,6 +375,30 @@ memchr (__const void *__s, int __c, size_t __n)
 #endif
   return __res - 1;
 }
+
+
+/* Return pointer to C in S.  */
+#define _HAVE_STRING_ARCH_rawmemchr 1
+__STRING_INLINE void *
+__rawmemchr (const void *__s, int __c)
+{
+  register unsigned long int __d0;
+  register unsigned char *__res;
+  __asm__ __volatile__
+    ("cld\n\t"
+     "repne; scasb\n\t"
+     : "=D" (__res), "=&c" (__d0)
+     : "a" (__c), "0" (__s), "1" (0xffffffff)
+     : "cc");
+  return __res - 1;
+}
+#ifdef __USE_GNU
+__STRING_INLINE void *
+rawmemchr (const void *__s, int __c)
+{
+  return __rawmemchr (__s, __c);
+}
+#endif	/* use GNU */
 
 
 /* Return the length of S.  */
@@ -1049,7 +1073,9 @@ __strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
 #define _HAVE_STRING_ARCH_strchr 1
 #define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
-		  ? __strchr_c (s, ((c) & 0xff) << 8)			      \
+		  ? ((c) == '\0'					      \
+		     ? (char *) __rawmemchr (s, c)			      \
+		     : __strchr_c (s, ((c) & 0xff) << 8))		      \
 		  : __strchr_g (s, c)))
 
 __STRING_INLINE char *__strchr_c (__const char *__s, int __c);

@@ -1,3 +1,8 @@
+1999-01-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add _LFS_ASYNCHRONOUS_IO,
+	_LFS_LARGEFILE, _LFS64_LARGEFILE, and _LFS64_STDIO from Unix98.
+
 1999-01-07  Xavier Leroy  <Xavier.Leroy@inria.fr>
 
 	* pthread.c: Use a third signal __pthread_sig_debug distinct

@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -108,12 +108,11 @@ _dl_close (struct link_map *map)
 	      do
 		--cnt;
 	      while (_dl_main_searchlist->r_list[cnt] != imap);
-	      while (cnt < _dl_main_searchlist->r_nlist)
-		{
-		  _dl_main_searchlist->r_list[0]
-		    = _dl_main_searchlist->r_list[1];
-		  ++cnt;
-		}
+
+	      while (++cnt < _dl_main_searchlist->r_nlist)
+		_dl_main_searchlist->r_list[cnt - 1]
+		  = _dl_main_searchlist->r_list[cnt];
+
 	      --_dl_main_searchlist->r_nlist;
 	      if (_dl_main_searchlist->r_nlist
 		  == _dl_initial_searchlist.r_nlist)

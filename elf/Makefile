@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -74,6 +74,8 @@ others-static	+= ldconfig
 others		+= ldconfig
 install-rootsbin += ldconfig
 endif
+
+tests = loadtest
 
 include ../Rules
 
@@ -199,6 +201,32 @@ $(objpfx)sprof: $(objpfx)libdl.so$(libdl.so-version)
 else
 $(objpfx)sprof: $(objpfx)libdl.a
 endif
+
+# This macro is similar to build-shlib but it does not define a soname
+# and it does not depend on the destination name to start with `lib'.
+define build-module
+$(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
+	  -B$(csu-objpfx) $(load-map-file) \
+	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
+	  -Wl,--whole-archive -Wl,-soname,$(@F) \
+	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
+	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
+endef
+
+modules-names = testobj1 testobj2 testobj3
+test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
+
+$(objpfx)testobj2.so: $(objpfx)testobj1.so
+LDLIBS-testobj2.so = $(objpfx)testobj1.so
+
+$(test-modules): $(objpfx)%.so: %.c
+	$(build-module)
+
+$(objpfx)loadtest: $(objpfx)libdl.so
+LDFLAGS-loadtest = -rdynamic
+
+$(objpfx)loadtest.out: $(test-modules)
 
 # muwahaha
 

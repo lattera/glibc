@@ -1,3 +1,34 @@
+1999-01-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (tests): Add loadtest.
+	Add rules to generate test modules.
+	* Makeconfig (+link): Add $(LDFLAGS-$(@F)) to command line.
+	* elf/loadtest.c: New file.
+	* elf/testobj1.c: New file.
+	* elf/testobj2.c: New file.
+	* elf/testobj3.c: New file.
+
+	* elf/dl-close.c: Correct removing module from global list.
+
+	* elf/dl-open.c: Add debugging code.
+
+	* include/string.h: Add __rawmemchr prototype.
+	* string/Makefile (routines): Add rawmemchr.
+	* string/Versions [GLIBC_2.1]: Add __rawmemchr and rawmemchr.
+	* string/string.h: Add prototype for rawmemchr.
+	* string/bits/string2.h: Optimize strchr with rawmemchr.
+	* sysdeps/generic/rawmemchr.c: New file.
+	* sysdeps/i386/rawmemchr.c: New file.
+	* sysdeps/i386/i486/bits/string.h: Add rawmemchr inline code.
+	Optimize strchr with rawmemchr.
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define _LFS_LARGEFILE,
+	_LFS64_LARGEFILE, and _LFS64_STDIO for Unix98.
+
+1999-01-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/nis_error.c (nis_errlist): Fix capitilasation.
+
 1999-01-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/Makefile (tests): Add test-vfork.

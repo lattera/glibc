@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,6 +42,11 @@ extern char **__libc_argv;
 
 extern char **__environ;
 
+/* Undefine the following for debugging.  */
+/* #define SCOPE_DEBUG 1 */
+#ifdef SCOPE_DEBUG
+static void show_scope (struct link_map *new);
+#endif
 
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we
@@ -85,6 +90,10 @@ dl_open_worker (void *a)
 
   /* So far, so good.  Now check the versions.  */
   (void) _dl_check_all_versions (new, 0);
+
+#ifdef SCOPE_DEBUG
+  show_scope (new);
+#endif
 
   /* Relocate the objects loaded.  We do this in reverse order so that copy
      relocs of earlier objects overwrite the data written by later objects.  */
@@ -195,3 +204,34 @@ _dl_open (const char *file, int mode)
 
   return args.map;
 }
+
+
+#ifdef SCOPE_DEBUG
+#include <unistd.h>
+
+static void
+show_scope (struct link_map *new)
+{
+  int scope_cnt;
+
+  for (scope_cnt = 0; new->l_scope[scope_cnt] != NULL; ++scope_cnt)
+    {
+      char numbuf[2];
+      unsigned int cnt;
+
+      numbuf[0] = '0' + scope_cnt;
+      numbuf[1] = '\0';
+      _dl_sysdep_message ("scope ", numbuf, ":", NULL);
+
+      for (cnt = 0; cnt < new->l_scope[scope_cnt]->r_nlist; ++cnt)
+	if (*new->l_scope[scope_cnt]->r_list[cnt]->l_name)
+	  _dl_sysdep_message (" ",
+			      new->l_scope[scope_cnt]->r_list[cnt]->l_name,
+			      NULL);
+	else
+	  _dl_sysdep_message (" <main>", NULL);
+
+      _dl_sysdep_message ("\n", NULL);
+    }
+}
+#endif

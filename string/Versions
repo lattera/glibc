@@ -41,14 +41,17 @@ libc {
     strsignal; strspn; strstr; strtok; strtok_r; strxfrm; swab;
   }
   GLIBC_2.1 {
-    # functions used in other libraries
-    __strcasestr;
+    # functions used in macros and other libraries
+    __rawmemchr; __strcasestr;
 
     # f*
     ffsl; ffsll;
 
     # m*
     mempcpy;
+
+    # r*
+    rawmemchr;
 
     # s*
     strcasestr; strverscmp;

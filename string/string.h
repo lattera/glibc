@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,6 +59,12 @@ extern int memcmp __P ((__const __ptr_t __s1, __const __ptr_t __s2,
 
 /* Search N bytes of S for C.  */
 extern __ptr_t memchr __P ((__const __ptr_t __s, int __c, size_t __n));
+
+#ifdef __USE_GNU
+/* Search in S for C.  This is similar to `memchr' but there is no
+   length limit.  */
+extern __ptr_t rawmemchr __P ((__const __ptr_t __s, int __c));
+#endif
 
 
 /* Copy SRC to DEST.  */
