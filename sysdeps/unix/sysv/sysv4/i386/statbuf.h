@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,11 @@ Cambridge, MA 02139, USA.  */
 
 #include <gnu/types.h>
 
+/* Versions of the `struct stat' data structure and
+   the bits of the `xmknod' interface.  */
+#define _STAT_VER	2
+#define _MKNOD_VER	2
+
 /* Structure describing file characteristics.  */
 struct stat
   {
@@ -35,7 +40,7 @@ struct stat
     long st_filler2[2];
 
     long st_size;		/* Size of file, in bytes.  */
-    /* SVR4 added this extra long to allow for expansion of off_t.  */ 
+    /* SVR4 added this extra long to allow for expansion of off_t.  */
     long st_filler3;
 
     long st_atime;		/* Time of last access.  */
