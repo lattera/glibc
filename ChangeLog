@@ -1,3 +1,44 @@
+1997-10-13 03:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Move _IO_fopen, fopen, _IO_stdin_, _IO_stdout_,
+	_IO_stderr_, _IO_list_all, and freopen to GLIBC_2.1 version.
+	* include/libc-symbol.h: Define define_symbol.
+	* libio/Makefile [$(versioning)=yes] (routines): Add oldiofopen and
+	oldfreopen.
+	[$(versioning)=yes] (aux): Add oldfileops and oldstdfiles.
+	* libio/fileops.c: Use _IO_FILE_complete when accessing _offset field.
+	* libio/freopen.c: Use versioning.
+	* libio/iofopen.c: Likewise.  Generate object of type
+	_IO_FILE_complete.
+	* libio/iofopen64.c: Generate object of type _IO_FILE_complete.
+	* libio/iolibio.h: Declare _IO_{old,new}_fopen and __{old,new}_freopen.
+	Define _IO_old_freopen.
+	* libio/libio.h: Remove _offset field from _IO_FILE.  Rename _unused2
+	field to _old_offset.  Declare _IO_std*_ streams as of type
+	_IO_FILE_complete.
+	* libio/libioP.h: Define _IO_FILE_complete.
+	Declare callbacks for old fileops implementation.
+	* libio/stdfile.c: Define standard stream of type _IO_FILE_complete.
+	* libio/stdio.c: Correctly address FILE part of standard streams.
+	* libio/oldfileops.c: New file.
+	* libio/oldfreopen.c: New file.
+	* libio/oldiofopen.c: New file.
+	* libio/oldstdfiles.c: New file.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Define fma optimization.
+
+	* sysdeps/libm-i387/e_scalb.S: Make sure code gets into .text section.
+	* sysdeps/libm-i387/e_scalbl.S: Likewise.
+	* sysdeps/libm-i387/s_fma.S: Fix typo.
+	* sysdeps/libm-i387/s_fmaf.S: Likewise.
+	* sysdeps/libm-i387/s_fmal.S: Likewise.
+
+1997-10-12 20:14  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/stub/getsid.c: Add a stub_warning.
+	* sysdeps/stub/mmap.c: Likewise.
+	* sysdeps/stub/munmap.c: Likewise.
+
 1997-10-12 05:09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/Makefile (routines): Remove iofprintf.
@@ -36,9 +77,9 @@
 	* math/bits/mathcalls.h: Add nextafterx, scalbln, fma, lrint, llrint,
 	lround, and llround.
 	Change second argument of scalbn to `int'.
-	* sysdeps/libm-ieee754/s_fma.S: New file.
-	* sysdeps/libm-ieee754/s_fmaf.S: New file.
-	* sysdeps/libm-ieee754/s_fmal.S: New file.
+	* sysdeps/libm-ieee754/s_fma.c: New file.
+	* sysdeps/libm-ieee754/s_fmaf.c: New file.
+	* sysdeps/libm-ieee754/s_fmal.c: New file.
 	* sysdeps/libm-i387/s_fma.S: New file.
 	* sysdeps/libm-i387/s_fmaf.S: New file.
 	* sysdeps/libm-i387/s_fmal.S: New file.
@@ -51,10 +92,10 @@
 	* sysdeps/libm-ieee754/s_llrint.c: Remove version which works on
 	80bit double.
 	* sysdeps/libm-ieee754/s_lrint.c: Likewise.
-	* sysdeps/libm-ieee754/s_llrintf.S: New file.
-	* sysdeps/libm-ieee754/s_llrintl.S: New file.
-	* sysdeps/libm-ieee754/s_lrintf.S: New file.
-	* sysdeps/libm-ieee754/s_lrintl.S: New file.
+	* sysdeps/libm-ieee754/s_llrintf.c: New file.
+	* sysdeps/libm-ieee754/s_llrintl.c: New file.
+	* sysdeps/libm-ieee754/s_lrintf.c: New file.
+	* sysdeps/libm-ieee754/s_lrintl.c: New file.
 	* sysdeps/libm-i387/s_scalbln.c: New file.  Empty file.
 	* sysdeps/libm-i387/s_scalblnf.c: New file.  Empty file.
 	* sysdeps/libm-i387/s_scalblnl.c: New file.  Empty file.

@@ -207,7 +207,7 @@ struct _IO_FILE {
 
   int _fileno;
   int _blksize;
-  _IO_off_t _unused2;	/* This used to be _offset but it's too small.  */
+  _IO_off_t _old_offset; /* This used to be _offset but it's too small.  */
 
 #define __HAVE_COLUMN /* temporary */
   /* 1+column number of pbase(); 0 is unknown. */
@@ -218,16 +218,14 @@ struct _IO_FILE {
   /*  char* _save_gptr;  char* _save_egptr; */
 
   _IO_lock_t *_lock;
-
-  _IO_off64_t _offset;
 };
 
 #ifndef __cplusplus
 typedef struct _IO_FILE _IO_FILE;
 #endif
 
-struct _IO_FILE_plus;
-extern struct _IO_FILE_plus _IO_stdin_, _IO_stdout_, _IO_stderr_;
+struct _IO_FILE_complete;
+extern struct _IO_FILE_complete _IO_stdin_, _IO_stdout_, _IO_stderr_;
 #define _IO_stdin ((_IO_FILE*)(&_IO_stdin_))
 #define _IO_stdout ((_IO_FILE*)(&_IO_stdout_))
 #define _IO_stderr ((_IO_FILE*)(&_IO_stderr_))

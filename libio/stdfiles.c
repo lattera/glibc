@@ -33,26 +33,23 @@
 #include "libioP.h"
 
 #ifdef _IO_MTSAFE_IO
-#define DEF_STDFILE(NAME, FD, CHAIN, FLAGS) \
+#define DEF_STDFILE(INAME, NAME, FD, CHAIN, FLAGS) \
   static _IO_lock_t _IO_stdfile_##FD##_lock = _IO_lock_initializer; \
-  struct _IO_FILE_plus NAME \
-    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps}
+  struct _IO_FILE_complete INAME \
+    = {{FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps},}; \
+  symbol_version (INAME, NAME, GLIBC_2.1)
 #else
-#define DEF_STDFILE(NAME, FD, CHAIN, FLAGS) \
-  struct _IO_FILE_plus NAME \
-    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps}
+#define DEF_STDFILE(INAME, FD, CHAIN, FLAGS) \
+  struct _IO_FILE_complete INAME \
+    = {{FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps},}; \
+  symbol_version (INAME, NAME, GLIBC_2.1)
 #endif
 
-DEF_STDFILE(_IO_stdin_, 0, 0, _IO_NO_WRITES);
-DEF_STDFILE(_IO_stdout_, 1, &_IO_stdin_.file, _IO_NO_READS);
-DEF_STDFILE(_IO_stderr_, 2, &_IO_stdout_.file,
+DEF_STDFILE(_IO_new_stdin_, _IO_stdin_, 0, 0, _IO_NO_WRITES);
+DEF_STDFILE(_IO_new_stdout_, _IO_stdout_, 1, &_IO_new_stdin_.plus.file,
+	    _IO_NO_READS);
+DEF_STDFILE(_IO_new_stderr_, _IO_stderr_, 2, &_IO_new_stdout_.plus.file,
             _IO_NO_READS+_IO_UNBUFFERED);
 
-_IO_FILE *_IO_list_all = &_IO_stderr_.file;
-
-#ifdef _G_USING_THUNKS
-#if defined(__GNUC__) && __GNUC__ >= 2
-const
-#endif
-int _libio_using_thunks = 1;
-#endif
+_IO_FILE *_IO_new_list_all = &_IO_new_stderr_.plus.file;
+symbol_version (_IO_new_list_all, _IO_list_all, GLIBC_2.1);

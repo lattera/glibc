@@ -36,4 +36,5 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   return (caddr_t) -1;
 }
 
+stub_warning (mmap)
 weak_alias (__mmap, mmap)

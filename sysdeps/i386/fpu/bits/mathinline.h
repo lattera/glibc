@@ -125,9 +125,21 @@
   __inline_mathcode_ (double, func, arg, code)				      \
   __inline_mathcode_ (float, __CONCAT(func,f), arg, code)		      \
   __inline_mathcode_ (long double, __CONCAT(func,l), arg, code)
+# define __inline_mathcode2(func, arg1, arg2, code) \
+  __inline_mathcode2_ (double, func, arg1, arg2, code)			      \
+  __inline_mathcode2_ (float, __CONCAT(func,f), arg1, arg2, code)	      \
+  __inline_mathcode2_ (long double, __CONCAT(func,l), arg1, arg2, code)
+# define __inline_mathcode3(func, arg1, arg2, arg3, code) \
+  __inline_mathcode3_ (double, func, arg1, arg2, arg3, code)		      \
+  __inline_mathcode3_ (float, __CONCAT(func,f), arg1, arg2, arg3, code)	      \
+  __inline_mathcode3_ (long double, __CONCAT(func,l), arg1, arg2, arg3, code)
 #else
 # define __inline_mathcode(func, arg, code) \
-  __inline_mathcode_ (double, func, arg, code)
+  __inline_mathcode_ (double, func, (arg), code)
+# define __inline_mathcode2(func, arg1, arg2, code) \
+  __inline_mathcode2_ (double, func, arg1, arg2, code)
+# define __inline_mathcode3(func, arg1, arg2, arg3, code) \
+  __inline_mathcode3_ (double, func, arg1, arg2, arg3, code)
 #endif
 
 #define __inline_mathcode_(float_type, func, arg, code) \
@@ -137,20 +149,17 @@
     code;								      \
   }
 
-
-#if defined __USE_MISC || defined __USE_ISOC9X
-# define __inline_mathcode2(func, arg1, arg2, code)			      \
-  __inline_mathcode2_ (double, func, arg1, arg2, code)			      \
-  __inline_mathcode2_ (float, __CONCAT(func,f), arg1, arg2, code)	      \
-  __inline_mathcode2_ (long double, __CONCAT(func,l), arg1, arg2, code)
-#else
-# define __inline_mathcode2(func, arg1, arg2, code) \
-  __inline_mathcode2_ (double, func, arg1, arg2, code)
-#endif
-
 #define __inline_mathcode2_(float_type, func, arg1, arg2, code) \
   __MATH_INLINE float_type func (float_type, float_type);		      \
   __MATH_INLINE float_type func (float_type arg1, float_type arg2)	      \
+  {									      \
+    code;								      \
+  }
+
+#define __inline_mathcode3_(float_type, func, arg1, arg2, arg3, code) \
+  __MATH_INLINE float_type func (float_type, float_type, float_type);	      \
+  __MATH_INLINE float_type func (float_type arg1, float_type arg2,	      \
+				 float_type arg3)			      \
   {									      \
     code;								      \
   }
@@ -493,6 +502,7 @@ ldexpl (long double __x, int __y)
   __ldexp_code;
 }
 
+__inline_mathcode3 (fma, __x, __y, __z, return (__x * __y) + __z)
 #endif
 
 

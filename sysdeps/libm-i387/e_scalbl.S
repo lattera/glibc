@@ -36,7 +36,7 @@ minus_zero:
 #define MOX(op,x,f) op(,x,f)
 #endif
 
-
+	.text
 ENTRY(__ieee754_scalbl)
 	fldt	16(%esp)
 	fxam

@@ -42,6 +42,10 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
 
+ifeq ($(versioning),yes)
+routines += oldiofopen oldfreopen
+endif
+
 CPPFLAGS-.o += -DIO_DEBUG
 
 ifneq (,$(filter %REENTRANT, $(defines)))
@@ -53,6 +57,10 @@ endif
 
 aux	:=								      \
 	fileops genops stdfiles stdio strops
+
+ifeq ($(versioning),yes)
+aux	+= oldfileops oldstdfiles
+endif
 
 distribute := iolibio.h libioP.h strfile.h Banner
 

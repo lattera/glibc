@@ -27,7 +27,7 @@
 #include "stdio.h"
 
 FILE*
-freopen (filename, mode, fp)
+__new_freopen (filename, mode, fp)
      const char* filename;
      const char* mode;
      FILE* fp;
@@ -42,3 +42,5 @@ freopen (filename, mode, fp)
   _IO_cleanup_region_end (1);
   return result;
 }
+
+symbol_version (__new_freopen, freopen, GLIBC_2.1);

@@ -23,15 +23,33 @@
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
 
+
+/* This file provides definitions of _IO_stdin, _IO_stdout, and _IO_stderr
+   for C code.  Compare stdstreams.cc.
+   (The difference is that here the vtable field is set to 0,
+   so the objects defined are not valid C++ objects.  On the other
+   hand, we don't need a C++ compiler to build this file.) */
+
 #include "libioP.h"
-#include "stdio.h"
 
-/* Define non-macro versions of stdin/stdout/stderr, for use by
-   debuggers.  */
+#ifdef _IO_MTSAFE_IO
+#define DEF_STDFILE(INAME, NAME, FD, CHAIN, FLAGS) \
+  static _IO_lock_t _IO_stdfile_##FD##_lock = _IO_lock_initializer; \
+  struct _IO_FILE_plus INAME \
+    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_old_file_jumps}; \
+  symbol_version (INAME, NAME,)
+#else
+#define DEF_STDFILE(INAME, NAME, FD, CHAIN, FLAGS) \
+  struct _IO_FILE_plus INAME \
+    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_old_file_jumps}; \
+  symbol_version (INAME, NAME,)
+#endif
 
-#undef stdin
-#undef stdout
-#undef stderr
-FILE *stdin = &_IO_stdin_.plus.file;
-FILE *stdout = &_IO_stdout_.plus.file;
-FILE *stderr = &_IO_stderr_.plus.file;
+DEF_STDFILE(_IO_old_stdin_, _IO_stdin_, 0, 0, _IO_NO_WRITES);
+DEF_STDFILE(_IO_old_stdout_, _IO_stdout_, 1, &_IO_old_stdin_.file,
+	    _IO_NO_READS);
+DEF_STDFILE(_IO_old_stderr_, _IO_stderr_, 2, &_IO_old_stdout_.file,
+            _IO_NO_READS+_IO_UNBUFFERED);
+
+_IO_FILE *_IO_old_list_all = &_IO_old_stderr_.file;
+symbol_version (_IO_old_list_all, _IO_list_all,);

@@ -27,3 +27,4 @@ getsid (pid_t pid)
   __set_errno (ENOSYS);
   return (pid_t) -1;
 }
+stub_warning (getsid)

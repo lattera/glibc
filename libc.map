@@ -3,7 +3,6 @@ GLIBC_2.0 {
     # global variables
     _errno; _itoa_lower_digits; _itoa_upper_digits;
     __ctype_b; __ctype_tolower; __ctype_toupper;
-    _IO_stderr_; _IO_stdin_; _IO_stdout_;
     _nl_msg_cat_cntr; __environ; _environ; _res;
     ___brk_addr; __curbrk; _nl_current_LC_CTYPE; _libc_intl_domainname;
     _sys_errlist; _sys_siglist; __progname; _nl_default_dirname;
@@ -86,7 +85,7 @@ GLIBC_2.0 {
     _IO_remove_marker; _IO_marker_difference; _IO_marker_delta;
     _IO_seekmark; _IO_unsave_markers; _IO_str_overflow;
     _IO_str_underflow; _IO_str_init_static; _IO_str_init_readonly;
-    _IO_str_seekoff; _IO_str_pbackfail; _IO_list_all; _IO_file_jumps;
+    _IO_str_seekoff; _IO_str_pbackfail; _IO_file_jumps;
     _IO_peekc_locked;
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
@@ -178,9 +177,9 @@ GLIBC_2.0 {
     ferror_unlocked; fexecve; fflush; fflush_unlocked; ffs; fgetc;
     fgetgrent; fgetgrent_r; fgetpos; fgetpos64; fgetpwent; fgetpwent_r; fgets;
     fgetspent; fgetspent_r; fileno; fileno_unlocked; finite; finitef;
-    finitel; flock; flockfile; fmtmsg; fnmatch; fopen; fopen64; fopencookie;
+    finitel; flock; flockfile; fmtmsg; fnmatch; fopen64; fopencookie;
     fork; fpathconf; fprintf; fputc; fputc_unlocked; fputs; fread; free;
-    freeaddrinfo; freopen; freopen64; frexp; frexpf; frexpl; fscanf; fseek;
+    freeaddrinfo; freopen64; frexp; frexpf; frexpl; fscanf; fseek;
     fseeko; fseeko64; fsetpos; fsetpos64; fstatfs; fstatfs64; fsync; ftell;
     ftello; ftello64; ftime; ftok; ftruncate; ftruncate64; ftrylockfile;
     fts_children; fts_close; fts_open; fts_read; fts_set; ftw; ftw64;
@@ -417,3 +416,9 @@ GLIBC_2.0 {
   local:
     *;
 };
+
+GLIBC_2.1 {
+  global:
+    _IO_fopen; fopen; _IO_stdin_; _IO_stdout_; _IO_stderr_; _IO_list_all;
+    freopen;
+} GLIBC_2.0;

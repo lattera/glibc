@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -24,48 +24,23 @@
    General Public License.  */
 
 #include "libioP.h"
-#ifdef __STDC__
-#include <stdlib.h>
-#endif
+#include "stdio.h"
 
-_IO_FILE *
-_IO_new_fopen (filename, mode)
-     const char *filename;
-     const char *mode;
+FILE*
+__old_freopen (filename, mode, fp)
+     const char* filename;
+     const char* mode;
+     FILE* fp;
 {
-  struct locked_FILE
-  {
-    struct _IO_FILE_complete fp;
-#ifdef _IO_MTSAFE_IO
-    _IO_lock_t lock;
-#endif
-  } *new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
-
-  if (new_f == NULL)
+  FILE *result;
+  CHECK_FILE (fp, NULL);
+  if (!(fp->_flags & _IO_IS_FILEBUF))
     return NULL;
-#ifdef _IO_MTSAFE_IO
-  new_f->fp.plus.file._lock = &new_f->lock;
-#endif
-  _IO_init (&new_f->fp.plus.file, 0);
-  _IO_JUMPS (&new_f->fp.plus.file) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp.plus.file);
-#if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fp.plus.vtable = NULL;
-#endif
-  if (_IO_file_fopen (&new_f->fp.plus.file, filename, mode, 0) != NULL)
-        return (_IO_FILE *) &new_f->fp.plus;
-  _IO_un_link (&new_f->fp.plus.file);
-  free (new_f);
-  return NULL;
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_flockfile (fp);
+  result = _IO_old_freopen (filename, mode, fp);
+  _IO_cleanup_region_end (1);
+  return result;
 }
 
-#ifdef DO_VERSIONING
-strong_alias (_IO_new_fopen, __new_fopen)
-symbol_version (_IO_new_fopen, _IO_fopen, GLIBC_2.1);
-symbol_version (__new_fopen, fopen, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_symbol (_IO_new_fopen, _IO_fopen)
-weak_symbol (_IO_new_fopen, fopen)
-# endif
-#endif
+symbol_version (__old_freopen, freopen,);

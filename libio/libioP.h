@@ -267,6 +267,17 @@ struct _IO_FILE_plus
   const struct _IO_jump_t *vtable;
 };
 
+/* We had to extend _IO_FILE but this isn't easily possible without
+   compatibility problems.  So we mimic the C++ way to do this which
+   especially takes care that the position of the vtable stays the
+   same.  */
+struct _IO_FILE_complete
+{
+  struct _IO_FILE_plus plus;;
+  _IO_off64_t _offset;
+  int _unused2[16];	/* Make sure we don't get into trouble again.  */
+};
+
 /* Generic functions */
 
 extern _IO_fpos64_t _IO_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
@@ -321,10 +332,13 @@ extern int _IO_default_showmanyc __P ((_IO_FILE *));
 extern void _IO_default_imbue __P ((_IO_FILE *, void *));
 
 extern struct _IO_jump_t _IO_file_jumps;
+extern struct _IO_jump_t _IO_new_file_jumps;
+extern struct _IO_jump_t _IO_old_file_jumps;
 extern struct _IO_jump_t _IO_streambuf_jumps;
 extern struct _IO_jump_t _IO_proc_jumps;
 extern struct _IO_jump_t _IO_str_jumps;
 extern int _IO_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
+extern int _IO_old_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_flush_all __P ((void));
 extern void _IO_cleanup __P ((void));
 extern void _IO_flush_all_linebuffered __P ((void));
@@ -366,6 +380,23 @@ extern int _IO_file_sync __P ((_IO_FILE *));
 extern int _IO_file_close_it __P ((_IO_FILE *));
 extern _IO_fpos64_t _IO_file_seek __P ((_IO_FILE *, _IO_off64_t, int));
 extern void _IO_file_finish __P ((_IO_FILE *, int));
+
+extern _IO_FILE* _IO_old_file_setbuf __P ((_IO_FILE *, char *, _IO_ssize_t));
+extern _IO_fpos64_t _IO_old_file_seekoff __P ((_IO_FILE *, _IO_off64_t, int,
+					       int));
+extern _IO_size_t _IO_old_file_xsputn __P ((_IO_FILE *, const void *,
+					    _IO_size_t));
+extern int _IO_old_file_underflow __P ((_IO_FILE *));
+extern int _IO_old_file_overflow __P ((_IO_FILE *, int));
+extern void _IO_old_file_init __P ((_IO_FILE *));
+extern _IO_FILE* _IO_old_file_attach __P ((_IO_FILE *, int));
+extern _IO_FILE* _IO_old_file_fopen __P ((_IO_FILE *, const char *,
+					  const char *));
+extern _IO_ssize_t _IO_old_file_write __P ((_IO_FILE *, const void *,
+					    _IO_ssize_t));
+extern int _IO_old_file_sync __P ((_IO_FILE *));
+extern int _IO_old_file_close_it __P ((_IO_FILE *));
+extern void _IO_old_file_finish __P ((_IO_FILE *, int));
 
 /* Jumptable functions for proc_files. */
 extern _IO_FILE* _IO_proc_open __P ((_IO_FILE *, const char *, const char *));

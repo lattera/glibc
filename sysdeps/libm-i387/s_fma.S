@@ -26,7 +26,7 @@ ENTRY(__fma)
 	fldl	12(%esp)	// x : y
 	fmulp			// x * y
 	fldl	20(%esp)	// z : x * y
-	fmulp			// (x * y) + z
+	faddp			// (x * y) + z
 	ret
 END(__fma)
 weak_alias (__fma, fma)

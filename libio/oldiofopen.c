@@ -28,14 +28,15 @@
 #include <stdlib.h>
 #endif
 
+
 _IO_FILE *
-_IO_new_fopen (filename, mode)
+_IO_old_fopen (filename, mode)
      const char *filename;
      const char *mode;
 {
   struct locked_FILE
   {
-    struct _IO_FILE_complete fp;
+    struct _IO_FILE_plus fp;
 #ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
 #endif
@@ -44,28 +45,21 @@ _IO_new_fopen (filename, mode)
   if (new_f == NULL)
     return NULL;
 #ifdef _IO_MTSAFE_IO
-  new_f->fp.plus.file._lock = &new_f->lock;
+  new_f->fp.file._lock = &new_f->lock;
 #endif
-  _IO_init (&new_f->fp.plus.file, 0);
-  _IO_JUMPS (&new_f->fp.plus.file) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp.plus.file);
+  _IO_init (&new_f->fp.file, 0);
+  _IO_JUMPS (&new_f->fp.file) = &_IO_old_file_jumps;
+  _IO_file_init (&new_f->fp.file);
 #if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fp.plus.vtable = NULL;
+  new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_fopen (&new_f->fp.plus.file, filename, mode, 0) != NULL)
-        return (_IO_FILE *) &new_f->fp.plus;
-  _IO_un_link (&new_f->fp.plus.file);
+  if (_IO_old_file_fopen (&new_f->fp.file, filename, mode) != NULL)
+        return (_IO_FILE *) &new_f->fp;
+  _IO_un_link (&new_f->fp.file);
   free (new_f);
   return NULL;
 }
 
-#ifdef DO_VERSIONING
-strong_alias (_IO_new_fopen, __new_fopen)
-symbol_version (_IO_new_fopen, _IO_fopen, GLIBC_2.1);
-symbol_version (__new_fopen, fopen, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_symbol (_IO_new_fopen, _IO_fopen)
-weak_symbol (_IO_new_fopen, fopen)
-# endif
-#endif
+strong_alias (_IO_old_fopen, __old_fopen)
+symbol_version (_IO_old_fopen, _IO_fopen,);
+symbol_version (__old_fopen, fopen,);

@@ -26,7 +26,7 @@ ENTRY(__fmal)
 	fldt	16(%esp)	// x : y
 	fmulp			// x * y
 	fldt	28(%esp)	// z : x * y
-	fmulp			// (x * y) + z
+	faddp			// (x * y) + z
 	ret
 END(__fmal)
 weak_alias (__fmal, fmal)

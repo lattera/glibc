@@ -30,4 +30,5 @@ __munmap (caddr_t addr, size_t len)
   return -1;
 }
 
+stub_warning (munmap)
 weak_alias (__munmap, munmap)

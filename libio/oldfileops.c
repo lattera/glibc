@@ -24,6 +24,10 @@
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
 
+/* This is a compatibility file.  If we don't build the libc with
+   versioning don't compile this file.  */
+#if DO_VERSIONING
+
 
 #ifndef _POSIX_SOURCE
 # define _POSIX_SOURCE
@@ -106,14 +110,13 @@ extern int errno;
 
 
 void
-_IO_file_init (fp)
+_IO_old_file_init (fp)
      _IO_FILE *fp;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   /* POSIX.1 allows another file handle to be used to change the position
      of our file descriptor.  Hence we actually don't know the actual
      position before we do the first fseek (and until a following fflush). */
-  fc->_offset = _IO_pos_BAD;
+  fp->_old_offset = _IO_pos_BAD;
   fp->_IO_file_flags |= CLOSED_FILEBUF_FLAGS;
 
   _IO_link_in(fp);
@@ -121,10 +124,9 @@ _IO_file_init (fp)
 }
 
 int
-_IO_file_close_it (fp)
+_IO_old_file_close_it (fp)
      _IO_FILE *fp;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   int write_status, close_status;
   if (!_IO_file_is_open (fp))
     return EOF;
@@ -143,13 +145,13 @@ _IO_file_close_it (fp)
   _IO_un_link (fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
   fp->_fileno = EOF;
-  fc->_offset = _IO_pos_BAD;
+  fp->_old_offset = _IO_pos_BAD;
 
   return close_status ? close_status : write_status;
 }
 
 void
-_IO_file_finish (fp, dummy)
+_IO_old_file_finish (fp, dummy)
      _IO_FILE *fp;
      int dummy;
 {
@@ -163,11 +165,10 @@ _IO_file_finish (fp, dummy)
 }
 
 _IO_FILE *
-_IO_file_fopen (fp, filename, mode, is32not64)
+_IO_old_file_fopen (fp, filename, mode)
      _IO_FILE *fp;
      const char *filename;
      const char *mode;
-     int is32not64;
 {
   int oflags = 0, omode;
   int read_write, fdesc;
@@ -199,19 +200,13 @@ _IO_file_fopen (fp, filename, mode, is32not64)
       omode = O_RDWR;
       read_write &= _IO_IS_APPENDING;
     }
-#ifdef _G_OPEN64
-  fdesc = (is32not64
-	   ? open (filename, omode|oflags, oprot)
-	   : _G_OPEN64 (filename, omode|oflags, oprot));
-#else
   fdesc = open (filename, omode|oflags, oprot);
-#endif
   if (fdesc < 0)
     return NULL;
   fp->_fileno = fdesc;
   _IO_mask_flags (fp, read_write,_IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
   if (read_write & _IO_IS_APPENDING)
-    if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
+    if (_IO_SEEKOFF (fp, (_IO_off_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
 	== _IO_pos_BAD && errno != ESPIPE)
       return NULL;
   _IO_link_in (fp);
@@ -219,11 +214,10 @@ _IO_file_fopen (fp, filename, mode, is32not64)
 }
 
 _IO_FILE *
-_IO_file_attach (fp, fd)
+_IO_old_file_attach (fp, fd)
      _IO_FILE *fp;
      int fd;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   if (_IO_file_is_open (fp))
     return NULL;
   fp->_fileno = fd;
@@ -231,15 +225,15 @@ _IO_file_attach (fp, fd)
   fp->_flags |= _IO_DELETE_DONT_CLOSE;
   /* Get the current position of the file. */
   /* We have to do that since that may be junk. */
-  fc->_offset = _IO_pos_BAD;
-  if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
+  fp->_old_offset = _IO_pos_BAD;
+  if (_IO_SEEKOFF (fp, (_IO_off_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
       == _IO_pos_BAD && errno != ESPIPE)
     return NULL;
   return fp;
 }
 
 _IO_FILE *
-_IO_file_setbuf (fp, p, len)
+_IO_old_file_setbuf (fp, p, len)
      _IO_FILE *fp;
      char *p;
      _IO_ssize_t len;
@@ -258,12 +252,11 @@ _IO_file_setbuf (fp, p, len)
    Then mark FP as having empty buffers. */
 
 int
-_IO_do_write (fp, data, to_do)
+_IO_old_do_write (fp, data, to_do)
      _IO_FILE *fp;
      const char *data;
      _IO_size_t to_do;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   _IO_size_t count;
   if (to_do == 0)
     return 0;
@@ -273,14 +266,14 @@ _IO_do_write (fp, data, to_do)
        is not needed nor desirable for Unix- or Posix-like systems.
        Instead, just indicate that offset (before and after) is
        unpredictable. */
-    fc->_offset = _IO_pos_BAD;
+    fp->_old_offset = _IO_pos_BAD;
   else if (fp->_IO_read_end != fp->_IO_write_base)
     {
-      _IO_fpos64_t new_pos
+      _IO_pos_t new_pos
 	= _IO_SYSSEEK (fp, fp->_IO_write_base - fp->_IO_read_end, 1);
       if (new_pos == _IO_pos_BAD)
 	return EOF;
-      fc->_offset = new_pos;
+      fp->_old_offset = new_pos;
     }
   count = _IO_SYSWRITE (fp, data, to_do);
   if (fp->_cur_column)
@@ -293,10 +286,9 @@ _IO_do_write (fp, data, to_do)
 }
 
 int
-_IO_file_underflow (fp)
+_IO_old_file_underflow (fp)
      _IO_FILE *fp;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   _IO_ssize_t count;
 #if 0
   /* SysV does not make this test; take it out for compatibility */
@@ -343,13 +335,13 @@ _IO_file_underflow (fp)
   fp->_IO_read_end += count;
   if (count == 0)
     return EOF;
-  if (fc->_offset != _IO_pos_BAD)
-    _IO_pos_adjust (fc->_offset, count);
+  if (fp->_old_offset != _IO_pos_BAD)
+    _IO_pos_adjust (fp->_old_offset, count);
   return *(unsigned char *) fp->_IO_read_ptr;
 }
 
 int
-_IO_file_overflow (f, ch)
+_IO_old_file_overflow (f, ch)
       _IO_FILE *f;
       int ch;
 {
@@ -400,10 +392,9 @@ _IO_file_overflow (f, ch)
 }
 
 int
-_IO_file_sync (fp)
+_IO_old_file_sync (fp)
      _IO_FILE *fp;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   _IO_size_t delta;
   int retval = 0;
 
@@ -419,8 +410,8 @@ _IO_file_sync (fp)
       if (_IO_in_backup (fp))
 	delta -= eGptr () - Gbase ();
 #endif
-      _IO_off64_t new_pos = _IO_SYSSEEK (fp, delta, 1);
-      if (new_pos != (_IO_off64_t) EOF)
+      _IO_off_t new_pos = _IO_SYSSEEK (fp, delta, 1);
+      if (new_pos != (_IO_off_t) EOF)
 	fp->_IO_read_end = fp->_IO_read_ptr;
 #ifdef ESPIPE
       else if (errno == ESPIPE)
@@ -430,7 +421,7 @@ _IO_file_sync (fp)
 	retval = EOF;
     }
   if (retval != EOF)
-    fc->_offset = _IO_pos_BAD;
+    fp->_old_offset = _IO_pos_BAD;
   /* FIXME: Cleanup - can this be shared? */
   /*    setg(base(), ptr, ptr); */
   _IO_cleanup_region_end (1);
@@ -438,14 +429,13 @@ _IO_file_sync (fp)
 }
 
 _IO_fpos64_t
-_IO_file_seekoff (fp, offset, dir, mode)
+_IO_old_file_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
      int dir;
      int mode;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
-  _IO_fpos64_t result;
+  _IO_pos_t result;
   _IO_off64_t delta, new_offset;
   long count;
   /* POSIX.1 8.2.3.7 says that after a call the fflush() the file
@@ -480,10 +470,10 @@ _IO_file_seekoff (fp, offset, dir, mode)
     case _IO_seek_cur:
       /* Adjust for read-ahead (bytes is buffer). */
       offset -= fp->_IO_read_end - fp->_IO_read_ptr;
-      if (fc->_offset == _IO_pos_BAD)
+      if (fp->_old_offset == _IO_pos_BAD)
 	goto dumb;
       /* Make offset absolute, assuming current pointer is file_ptr(). */
-      offset += _IO_pos_as_off (fc->_offset);
+      offset += _IO_pos_as_off (fp->_old_offset);
 
       dir = _IO_seek_set;
       break;
@@ -491,7 +481,7 @@ _IO_file_seekoff (fp, offset, dir, mode)
       break;
     case _IO_seek_end:
       {
-	struct _G_stat64 st;
+	struct stat st;
 	if (_IO_SYSSTAT (fp, &st) == 0 && S_ISREG (st.st_mode))
 	  {
 	    offset += st.st_size;
@@ -504,12 +494,12 @@ _IO_file_seekoff (fp, offset, dir, mode)
   /* At this point, dir==_IO_seek_set. */
 
   /* If destination is within current buffer, optimize: */
-  if (fc->_offset != _IO_pos_BAD && fp->_IO_read_base != NULL
+  if (fp->_old_offset != _IO_pos_BAD && fp->_IO_read_base != NULL
       && !_IO_in_backup (fp))
     {
       /* Offset relative to start of main get area. */
-      _IO_fpos64_t rel_offset = (offset - fc->_offset
-				 + (fp->_IO_read_end - fp->_IO_read_base));
+      _IO_pos_t rel_offset = (offset - fp->_old_offset
+			      + (fp->_IO_read_end - fp->_IO_read_base));
       if (rel_offset >= 0)
 	{
 #if 0
@@ -582,7 +572,7 @@ _IO_file_seekoff (fp, offset, dir, mode)
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + delta,
 	    fp->_IO_buf_base + count);
   _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
-  fc->_offset = result + count;
+  fp->_old_offset = result + count;
   _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
   return offset;
  dumb:
@@ -591,60 +581,18 @@ _IO_file_seekoff (fp, offset, dir, mode)
   result = _IO_SYSSEEK (fp, offset, dir);
   if (result != EOF)
     _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
-  fc->_offset = result;
+  fp->_old_offset = result;
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
   _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
   return result;
 }
 
 _IO_ssize_t
-_IO_file_read (fp, buf, size)
-     _IO_FILE *fp;
-     void *buf;
-     _IO_ssize_t size;
-{
-  return read (fp->_fileno, buf, size);
-}
-
-_IO_fpos64_t
-_IO_file_seek (fp, offset, dir)
-     _IO_FILE *fp;
-     _IO_off64_t offset;
-     int dir;
-{
-#ifdef _G_LSEEK64
-  return _G_LSEEK64 (fp->_fileno, offset, dir);
-#else
-  return lseek (fp->_fileno, offset, dir);
-#endif
-}
-
-int
-_IO_file_stat (fp, st)
-     _IO_FILE *fp;
-     void *st;
-{
-#ifdef _G_STAT64
-  return _G_FSTAT64 (fp->_fileno, (struct _G_stat64 *) st);
-#else
-  return fstat (fp->_fileno, (struct _G_stat64 *) st);
-#endif
-}
-
-int
-_IO_file_close (fp)
-     _IO_FILE *fp;
-{
-  return close (fp->_fileno);
-}
-
-_IO_ssize_t
-_IO_file_write (f, data, n)
+_IO_old_file_write (f, data, n)
      _IO_FILE *f;
      const void *data;
      _IO_ssize_t n;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) f;
   _IO_ssize_t to_do = n;
   while (to_do > 0)
     {
@@ -658,13 +606,13 @@ _IO_file_write (f, data, n)
       data = (void *) ((char *) data + count);
     }
   n -= to_do;
-  if (fc->_offset >= 0)
-    fc->_offset += n;
+  if (f->_old_offset >= 0)
+    f->_old_offset += n;
   return n;
 }
 
 _IO_size_t
-_IO_file_xsputn (f, data, n)
+_IO_old_file_xsputn (f, data, n)
      _IO_FILE *f;
      const void *data;
      _IO_size_t n;
@@ -745,97 +693,28 @@ _IO_file_xsputn (f, data, n)
   return n - to_do;
 }
 
-#if 0
-/* Work in progress */
-_IO_size_t
-_IO_file_xsgetn (fp, data, n)
-     _IO_FILE *fp;
-     void *data;
-     _IO_size_t n;
-{
-  register _IO_size_t more = n;
-  register char *s = data;
-  for (;;)
-    {
-      /* Data available. */
-      _IO_ssize_t count = fp->_IO_read_end - fp->_IO_read_ptr;
-      if (count > 0)
-	{
-	  if (count > more)
-	    count = more;
-	  if (count > 20)
-	    {
-	      memcpy (s, fp->_IO_read_ptr, count);
-	      s += count;
-	      fp->_IO_read_ptr += count;
-	    }
-	  else if (count <= 0)
-	    count = 0;
-	  else
-	    {
-	      register char *p = fp->_IO_read_ptr;
-	      register int i = (int) count;
-	      while (--i >= 0)
-		*s++ = *p++;
-	      fp->_IO_read_ptr = p;
-            }
-            more -= count;
-        }
-#if 0
-      if (! _IO_in put_mode (fp)
-	  && ! _IO_have_markers (fp) && ! IO_have_backup (fp))
-	{
-	  /* This is an optimization of _IO_file_underflow */
-	  if (fp->_flags & _IO_NO_READS)
-	    break;
-	  /* If we're reading a lot of data, don't bother allocating
-	     a buffer.  But if we're only reading a bit, perhaps we should ??*/
-	  if (count <= 512 && fp->_IO_buf_base == NULL)
-	    _IO_doallocbuf (fp);
-	  if (fp->_flags & (_IO_LINE_BUF|_IO_UNBUFFERED))
-	    _IO_flush_all_linebuffered ();
 
-	  _IO_switch_to_get_mode (fp); ???;
-	  count = _IO_SYSREAD (fp, s, more);
-	  if (count <= 0)
-	     {
-	       if (count == 0)
-		 fp->_flags |= _IO_EOF_SEEN;
-	       else
-		 fp->_flags |= _IO_ERR_SEEN, count = 0;
-	     }
-
-	  s += count;
-	  more -= count;
-	}
-#endif
-      if (more == 0 || __underflow (fp) == EOF)
-	break;
-    }
-  return n - more;
-}
-#endif
-
-struct _IO_jump_t _IO_file_jumps =
+struct _IO_jump_t _IO_old_file_jumps =
 {
   JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow),
+  JUMP_INIT(finish, _IO_old_file_finish),
+  JUMP_INIT(overflow, _IO_old_file_overflow),
+  JUMP_INIT(underflow, _IO_old_file_underflow),
   JUMP_INIT(uflow, _IO_default_uflow),
   JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_file_xsputn),
+  JUMP_INIT(xsputn, _IO_old_file_xsputn),
   JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_file_seekoff),
+  JUMP_INIT(seekoff, _IO_old_file_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_file_setbuf),
+  JUMP_INIT(setbuf, _IO_old_file_setbuf),
   JUMP_INIT(sync, _IO_file_sync),
   JUMP_INIT(doallocate, _IO_file_doallocate),
   JUMP_INIT(read, _IO_file_read),
   JUMP_INIT(write, _IO_file_write),
   JUMP_INIT(seek, _IO_file_seek),
   JUMP_INIT(close, _IO_file_close),
-  JUMP_INIT(stat, _IO_file_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
+  JUMP_INIT(stat, _IO_file_stat)
 };
+
+
+#endif /* DO_VERSIONING */

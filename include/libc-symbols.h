@@ -325,4 +325,11 @@ extern const char _libc_intl_domainname[];
 # endif	/* ELF.  */
 #endif	/* Have GNU ld.  */
 
+#if DO_VERSIONING
+# define symbol_version(real, name, version) \
+     __asm__ (".symver " #real "," #name "@" #version)
+#else
+# define symbol_version(real, name, version)
+#endif
+
 #endif /* libc-symbols.h */
