@@ -1,3 +1,7 @@
+1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signals.c: Pass sigcontext through wrapper to the user function.
+
 1999-08-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions [ld.so] (GLIBC_2.0): Export __libc_internal_tsd_get and
