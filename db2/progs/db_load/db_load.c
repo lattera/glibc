@@ -161,7 +161,7 @@ main(argc, argv)
 
 	/* Get each key/data pair and add them to the database. */
 	for (recno = 1;; ++recno) {
-		if (dbtype == DB_RECNO)
+		if (dbtype == DB_RECNO) {
 			if (checkprint) {
 				if (dbt_rprint(&data))
 					break;
@@ -169,7 +169,7 @@ main(argc, argv)
 				if (dbt_rdump(&data))
 					break;
 			}
-		else
+		} else
 			if (checkprint) {
 				if (dbt_rprint(&key))
 					break;

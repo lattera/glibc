@@ -161,17 +161,23 @@ void __pthread_destroy_specifics()
 
 /* Thread-specific data for libc. */
 
-int __libc_internal_tsd_set(enum __libc_tsd_key_t key, const void * pointer)
+static int
+libc_internal_tsd_set(enum __libc_tsd_key_t key, const void * pointer)
 {
   pthread_descr self = thread_self();
 
   THREAD_SETMEM_NC(self, p_libc_specific[key], (void *) pointer);
   return 0;
 }
+int (*__libc_internal_tsd_set)(enum __libc_tsd_key_t key, const void * pointer)
+     = libc_internal_tsd_set;
 
-void * __libc_internal_tsd_get(enum __libc_tsd_key_t key)
+static void *
+libc_internal_tsd_get(enum __libc_tsd_key_t key)
 {
   pthread_descr self = thread_self();
 
   return THREAD_GETMEM_NC(self, p_libc_specific[key]);
 }
+void * (*__libc_internal_tsd_get)(enum __libc_tsd_key_t key)
+     = libc_internal_tsd_get;

@@ -1,4 +1,5 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* libc-internal interface for thread-specific data.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +17,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/fsuid.h>
+#include <bits/libc-tsd.h>
 
-#include <sysdep.h>
-#include <sys/syscall.h>
+/* This file provides uinitialized (common) definitions for the
+   hooks used internally by libc to access thread-specific data.
 
-#include <linux/posix_types.h>
+   When -lpthread is used, it provides initialized definitions for these
+   variables (in specific.c), which override these uninitialized definitions.
 
-#ifdef __NR_setfsgid
-extern int __syscall_setfsgid (__kernel_gid_t);
+   If -lpthread is not used, these uninitialized variables default to zero,
+   which the __libc_tsd_* macros check for.   */
 
-int
-setfsgid (gid_t gid)
-{
-  if (gid != (gid_t) ((__kernel_gid_t) gid))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  return INLINE_SYSCALL (setfsgid, 1, gid);
-}
-#endif
+void *(*__libc_internal_tsd_get) __P ((enum __libc_tsd_key_t));
+int (*__libc_internal_tsd_set) __P ((enum __libc_tsd_key_t,
+				     __const void *));

@@ -28,6 +28,7 @@
 #include <sys/un.h>
 
 #include "nscd-client.h"
+#include "nscd_proto.h"
 
 int __nss_not_use_nscd_passwd;
 

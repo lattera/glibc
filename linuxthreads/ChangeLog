@@ -1,3 +1,25 @@
+1998-11-29  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/pthread/bits/libc-tsd.h (__libc_tsd_define, __libc_tsd_get,
+	__libc_tsd_set): New macros for new interface.
+	* no-tsd.c: New file, provide uninitialized defns of
+	__libc_internal_tsd_get and __libc_internal_tsd_set.
+	* Makefile (routines): Add no-tsd.
+
+1998-10-12  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* internals.h: Include <bits/libc-tsd.h>, not <bits/libc-lock.h>.
+	* sysdeps/pthread/bits/libc-lock.h (__libc_internal_tsd_get,
+	__libc_internal_tsd_set): Move decls to ...
+	* sysdeps/pthread/bits/libc-tsd.h: New file for __libc_internal_tsd_*
+	declarations.
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_internal_tsd_get,
+	__libc_internal_tsd_set): Make these pointers to functions, not
+	functions; remove #pragma weak decls for them.
+	* specific.c (__libc_internal_tsd_get, __libc_internal_tsd_set):
+	Define static functions and initialized pointers to them.
+
 1998-11-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (CFLAGS-mutex.c): Define as -D__NO_WEAK_PTHREAD_ALIASES.

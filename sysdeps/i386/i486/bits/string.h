@@ -59,6 +59,9 @@
 	 ? __memcpy_by2 (dest, src, n)					      \
 	 : __memcpy_g (dest, src, n))))
 
+__STRING_INLINE void *__memcpy_by4 (void *__dest, __const void *__src,
+				    size_t __n);
+
 __STRING_INLINE void *
 __memcpy_by4 (void *__dest, __const void *__src, size_t __n)
 {
@@ -77,6 +80,9 @@ __memcpy_by4 (void *__dest, __const void *__src, size_t __n)
      : "memory", "cc");
   return __dest;
 }
+
+__STRING_INLINE void *__memcpy_by2 (void *__dest, __const void *__src,
+				    size_t __n);
 
 __STRING_INLINE void *
 __memcpy_by2 (void *__dest, __const void *__src, size_t __n)
@@ -102,7 +108,10 @@ __memcpy_by2 (void *__dest, __const void *__src, size_t __n)
   return __dest;
 }
 
-__STRING_INLINE void *
+__STRING_INLINE void *__memcpy_g (void *__dest, __const void *__src,
+				  size_t __n);
+
+     __STRING_INLINE void *
 __memcpy_g (void *__dest, __const void *__src, size_t __n)
 {
   register unsigned long int __d0, __d1, __d2;
@@ -203,6 +212,8 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 	 ? __memset_gc_by2 (s, c, n)					      \
 	 : __memset_gg (s, c, n))))
 
+__STRING_INLINE void *__memset_cc_by4 (void *__s, int __c, size_t __n);
+
 __STRING_INLINE void *
 __memset_cc_by4 (void *__s, int __c, size_t __n)
 {
@@ -219,6 +230,8 @@ __memset_cc_by4 (void *__s, int __c, size_t __n)
      : "memory", "cc");
   return __s;
 }
+
+__STRING_INLINE void *__memset_cc_by2 (void *__s, int __c, size_t __n);
 
 __STRING_INLINE void *
 __memset_cc_by2 (void *__s, int __c, size_t __n)
@@ -241,6 +254,8 @@ __memset_cc_by2 (void *__s, int __c, size_t __n)
   return __s;
 }
 
+__STRING_INLINE void *__memset_gc_by4 (void *__s, int __c, size_t __n);
+
 __STRING_INLINE void *
 __memset_gc_by4 (void *__s, int __c, size_t __n)
 {
@@ -261,6 +276,8 @@ __memset_gc_by4 (void *__s, int __c, size_t __n)
      : "memory", "cc");
   return __s;
 }
+
+__STRING_INLINE void *__memset_gc_by2 (void *__s, int __c, size_t __n);
 
 __STRING_INLINE void *
 __memset_gc_by2 (void *__s, int __c, size_t __n)
@@ -287,6 +304,8 @@ __memset_gc_by2 (void *__s, int __c, size_t __n)
   return __s;
 }
 
+__STRING_INLINE void *__memset_cg (void *__s, int __c, size_t __n);
+
 __STRING_INLINE void *
 __memset_cg (void *__s, int __c, size_t __n)
 {
@@ -303,6 +322,8 @@ __memset_cg (void *__s, int __c, size_t __n)
      : "memory", "cc");
   return __s;
 }
+
+__STRING_INLINE void *__memset_gg (void *__s, int __c, size_t __n);
 
 __STRING_INLINE void *
 __memset_gg (void *__s, int __c, size_t __n)
@@ -362,6 +383,8 @@ memchr (__const void *__s, int __c, size_t __n)
   (__extension__ (__builtin_constant_p (str)				      \
 		  ? __builtin_strlen (str)				      \
 		  : __strlen_g (str)))
+__STRING_INLINE size_t __strlen_g (__const char *__str);
+
 __STRING_INLINE size_t
 __strlen_g (__const char *__str)
 {
@@ -437,6 +460,8 @@ __strlen_g (__const char *__str)
 			break;						      \
 		      }							      \
 		    (char *) __dest; }))
+
+__STRING_INLINE char *__strcpy_g (char *__dest, __const char *__src);
 
 __STRING_INLINE char *
 __strcpy_g (char *__dest, __const char *__src)
@@ -530,6 +555,9 @@ __strcpy_g (char *__dest, __const char *__src)
 		      }							      \
 		    (char *) __dest; }))
 
+__STRING_INLINE char *__mempcpy_by4 (char *__dest, __const char *__src,
+				     size_t __srclen);
+
 __STRING_INLINE char *
 __mempcpy_by4 (char *__dest, __const char *__src, size_t __srclen)
 {
@@ -548,6 +576,9 @@ __mempcpy_by4 (char *__dest, __const char *__src, size_t __srclen)
      : "memory", "cc");
   return __tmp;
 }
+
+__STRING_INLINE char *__mempcpy_by2 (char *__dest, __const char *__src,
+				     size_t __srclen);
 
 __STRING_INLINE char *
 __mempcpy_by2 (char *__dest, __const char *__src, size_t __srclen)
@@ -573,6 +604,9 @@ __mempcpy_by2 (char *__dest, __const char *__src, size_t __srclen)
   return __tmp + 2;
 }
 
+__STRING_INLINE char *__mempcpy_byn (char *__dest, __const char *__src,
+				     size_t __srclen);
+
 __STRING_INLINE char *
 __mempcpy_byn (char *__dest, __const char *__src, size_t __srclen)
 {
@@ -594,6 +628,8 @@ __mempcpy_byn (char *__dest, __const char *__src, size_t __srclen)
      : "memory", "cc");
   return __tmp;
 }
+
+__STRING_INLINE char *__stpcpy_g (char *__dest, __const char *__src);
 
 __STRING_INLINE char *
 __stpcpy_g (char *__dest, __const char *__src)
@@ -633,6 +669,9 @@ __stpcpy_g (char *__dest, __const char *__src)
       ? __strncpy_by2 (dest, src, srclen, n)				      \
       : __strncpy_byn (dest, src, srclen, n)))
 
+__STRING_INLINE char *__strncpy_by4 (char *__dest, __const char __src[],
+				     size_t __srclen, size_t __n);
+
 __STRING_INLINE char *
 __strncpy_by4 (char *__dest, __const char __src[], size_t __srclen, size_t __n)
 {
@@ -652,6 +691,9 @@ __strncpy_by4 (char *__dest, __const char __src[], size_t __srclen, size_t __n)
   (void) memset (__tmp, '\0', __n - __srclen);
   return __dest;
 }
+
+__STRING_INLINE char *__strncpy_by2 (char *__dest, __const char __src[],
+				     size_t __srclen, size_t __n);
 
 __STRING_INLINE char *
 __strncpy_by2 (char *__dest, __const char __src[], size_t __srclen, size_t __n)
@@ -678,6 +720,9 @@ __strncpy_by2 (char *__dest, __const char __src[], size_t __srclen, size_t __n)
   return __dest;
 }
 
+__STRING_INLINE char *__strncpy_byn (char *__dest, __const char __src[],
+				     size_t __srclen, size_t __n);
+
 __STRING_INLINE char *
 __strncpy_byn (char *__dest, __const char __src[], size_t __srclen, size_t __n)
 {
@@ -700,6 +745,9 @@ __strncpy_byn (char *__dest, __const char __src[], size_t __srclen, size_t __n)
   (void) memset (__tmp, '\0', __n - __srclen);
   return __dest;
 }
+
+__STRING_INLINE char *__strncpy_gg (char *__dest, __const char *__src,
+				    size_t __n);
 
 __STRING_INLINE char *
 __strncpy_gg (char *__dest, __const char *__src, size_t __n)
@@ -738,6 +786,9 @@ __strncpy_gg (char *__dest, __const char *__src, size_t __n)
 		  ? __strcat_c (dest, src, strlen (src) + 1)		      \
 		  : __strcat_g (dest, src)))
 
+__STRING_INLINE char *__strcat_c (char *__dest, __const char __src[],
+				  size_t __srclen);
+
 __STRING_INLINE char *
 __strcat_c (char *__dest, __const char __src[], size_t __srclen)
 {
@@ -764,6 +815,8 @@ __strcat_c (char *__dest, __const char __src[], size_t __srclen)
   (void) memcpy (__tmp, __src, __srclen);
   return __dest;
 }
+
+__STRING_INLINE char *__strcat_g (char *__dest, __const char *__src);
 
 __STRING_INLINE char *
 __strcat_g (char *__dest, __const char *__src)
@@ -799,6 +852,9 @@ __strcat_g (char *__dest, __const char *__src)
 		       : (memcpy (strchr (__dest, '\0'),		      \
 				  (__const char *) src, n), __dest))	      \
 		    : __strncat_g (__dest, src, n); }))
+
+__STRING_INLINE char *__strncat_g (char *__dest, __const char __src[],
+				   size_t __n);
 
 __STRING_INLINE char *
 __strncat_g (char *__dest, __const char __src[], size_t __n)
@@ -918,6 +974,8 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
 		      }							      \
 		    __result; }))
 
+__STRING_INLINE int __strcmp_gg (__const char *__s1, __const char *__s2);
+
 __STRING_INLINE int
 __strcmp_gg (__const char *__s1, __const char *__s2)
 {
@@ -953,6 +1011,9 @@ __strcmp_gg (__const char *__s1, __const char *__s2)
 		  : (__builtin_constant_p (s2) && strlen (s2) < ((size_t) (n))\
 		     ? strcmp (s1, s2)					      \
 		     : __strncmp_g (s1, s2, n))))
+
+__STRING_INLINE int __strncmp_g (__const char *__s1, __const char *__s2,
+				size_t __n);
 
 __STRING_INLINE int
 __strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
@@ -991,6 +1052,8 @@ __strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
 		  ? __strchr_c (s, ((c) & 0xff) << 8)			      \
 		  : __strchr_g (s, c)))
 
+__STRING_INLINE char *__strchr_c (__const char *__s, int __c);
+
 __STRING_INLINE char *
 __strchr_c (__const char *__s, int __c)
 {
@@ -1011,6 +1074,8 @@ __strchr_c (__const char *__s, int __c)
      : "cc");
   return __res;
 }
+
+__STRING_INLINE char *__strchr_g (__const char *__s, int __c);
 
 __STRING_INLINE char *
 __strchr_g (__const char *__s, int __c)
@@ -1053,6 +1118,8 @@ __strchr_g (__const char *__s, int __c)
 		  : __strrchr_g (s, c)))
 
 #ifdef __i686__
+__STRING_INLINE char *__strrchr_c (__const char *__s, int __c);
+
 __STRING_INLINE char *
 __strrchr_c (__const char *__s, int __c)
 {
@@ -1071,6 +1138,8 @@ __strrchr_c (__const char *__s, int __c)
      : "cc");
   return __res - 1;
 }
+
+__STRING_INLINE char *__strrchr_g (__const char *__s, int __c);
 
 __STRING_INLINE char *
 __strrchr_g (__const char *__s, int __c)
@@ -1092,6 +1161,8 @@ __strrchr_g (__const char *__s, int __c)
   return __res - 1;
 }
 #else
+__STRING_INLINE char *__strrchr_c (__const char *__s, int __c);
+
 __STRING_INLINE char *
 __strrchr_c (__const char *__s, int __c)
 {
@@ -1112,6 +1183,8 @@ __strrchr_c (__const char *__s, int __c)
      : "cc");
   return __res;
 }
+
+__STRING_INLINE char *__strrchr_g (__const char *__s, int __c);
 
 __STRING_INLINE char *
 __strrchr_g (__const char *__s, int __c)
@@ -1159,6 +1232,8 @@ __strrchr_g (__const char *__s, int __c)
 			: __strcspn_cg (s, reject, strlen (reject))))	      \
 		  : __strcspn_g (s, reject)))
 
+__STRING_INLINE size_t __strcspn_c1 (__const char *__s, int __reject);
+
 __STRING_INLINE size_t
 __strcspn_c1 (__const char *__s, int __reject)
 {
@@ -1178,6 +1253,9 @@ __strcspn_c1 (__const char *__s, int __reject)
      : "cc");
   return (__res - 1) - __s;
 }
+
+__STRING_INLINE size_t __strcspn_cg (__const char *__s, __const char __reject[],
+				    size_t __reject_len);
 
 __STRING_INLINE size_t
 __strcspn_cg (__const char *__s, __const char __reject[], size_t __reject_len)
@@ -1201,7 +1279,9 @@ __strcspn_cg (__const char *__s, __const char __reject[], size_t __reject_len)
   return (__res - 1) - __s;
 }
 
+__STRING_INLINE size_t __strcspn_g (__const char *__s, __const char *__reject);
 #ifdef __PIC__
+
 __STRING_INLINE size_t
 __strcspn_g (__const char *__s, __const char *__reject)
 {
@@ -1269,6 +1349,8 @@ __strcspn_g (__const char *__s, __const char *__reject)
 			: __strspn_cg (s, accept, strlen (accept))))	      \
 		  : __strspn_g (s, accept)))
 
+__STRING_INLINE size_t __strspn_c1 (__const char *__s, int __accept);
+
 __STRING_INLINE size_t
 __strspn_c1 (__const char *__s, int __accept)
 {
@@ -1286,6 +1368,9 @@ __strspn_c1 (__const char *__s, int __accept)
      : "cc");
   return (__res - 1) - __s;
 }
+
+__STRING_INLINE size_t __strspn_cg (__const char *__s, __const char __accept[],
+				    size_t __accept_len);
 
 __STRING_INLINE size_t
 __strspn_cg (__const char *__s, __const char __accept[], size_t __accept_len)
@@ -1309,7 +1394,9 @@ __strspn_cg (__const char *__s, __const char __accept[], size_t __accept_len)
   return (__res - 1) - __s;
 }
 
+__STRING_INLINE size_t __strspn_g (__const char *__s, __const char *__accept);
 #ifdef __PIC__
+
 __STRING_INLINE size_t
 __strspn_g (__const char *__s, __const char *__accept)
 {
@@ -1375,6 +1462,9 @@ __strspn_g (__const char *__s, __const char *__accept)
 			: __strpbrk_cg (s, accept, strlen (accept))))	      \
 		  : __strpbrk_g (s, accept)))
 
+__STRING_INLINE char *__strpbrk_cg (__const char *__s, __const char __accept[],
+				    size_t __accept_len);
+
 __STRING_INLINE char *
 __strpbrk_cg (__const char *__s, __const char __accept[], size_t __accept_len)
 {
@@ -1401,7 +1491,9 @@ __strpbrk_cg (__const char *__s, __const char __accept[], size_t __accept_len)
   return __res;
 }
 
+__STRING_INLINE char *__strpbrk_g (__const char *__s, __const char *__accept);
 #ifdef __PIC__
+
 __STRING_INLINE char *
 __strpbrk_g (__const char *__s, __const char *__accept)
 {
@@ -1479,6 +1571,9 @@ __strpbrk_g (__const char *__s, __const char *__accept)
 
 /* Please note that this function need not handle NEEDLEs with a
    length shorter than two.  */
+__STRING_INLINE char *__strstr_cg (__const char *__haystack, __const char __needle[],
+				   size_t __needle_len);
+
 __STRING_INLINE char *
 __strstr_cg (__const char *__haystack, __const char __needle[],
 	     size_t __needle_len)
@@ -1504,7 +1599,9 @@ __strstr_cg (__const char *__haystack, __const char __needle[],
   return __res;
 }
 
+__STRING_INLINE char *__strstr_g (__const char *__haystack, __const char *__needle);
 #ifdef __PIC__
+
 __STRING_INLINE char *
 __strstr_g (__const char *__haystack, __const char *__needle)
 {

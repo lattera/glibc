@@ -22,7 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <elf/ldsodefs.h>
-#include <bits/libc-lock.h>
+#include <bits/libc-tsd.h>
 
 /* This structure communicates state between _dl_catch_error and
    _dl_signal_error.  */
@@ -36,44 +36,11 @@ struct catch
    calls can come from `_dl_map_object_deps', `_dlerror_run', or from
    any of the libc functionality which loads dynamic objects (NSS, iconv).
    Therefore we have to be prepared to save the state in thread-local
-   memory.  `catch' will only be used for the non-threaded case.
+   memory.  */
 
-   Please note the horrible kludge we have to use to check for the
-   thread functions to be defined.  The problem is that while running
-   ld.so standalone (i.e., before the relocation with the available
-   libc symbols) we do not have a real handling of undefined weak symbols.
-   All symbols are relocated, regardless of the availability.  They are
-   relocated relative to the load address of the dynamic linker.  Adding
-   this start address to zero (the value in the GOT for undefined symbols)
-   leads to an address which is the load address of ld.so.  Once we have
-   relocated with the libc values the value is NULL if the function is
-   not available.  Our "solution" is to regard NULL and the ld.so load
-   address as indicators for unavailable weak symbols.   */
-static struct catch *catch;
-
-#ifdef PIC
-# define tsd_setspecific(data) \
-  if (__libc_internal_tsd_set != (void *) _dl_rtld_map.l_addr		      \
-      && __libc_internal_tsd_set != NULL)				      \
-    __libc_internal_tsd_set (_LIBC_TSD_KEY_DL_ERROR, data);		      \
-  else									      \
-    catch = (data)
-# define tsd_getspecific() \
-  (__libc_internal_tsd_set != (void *) _dl_rtld_map.l_addr		      \
-   && __libc_internal_tsd_set != NULL					      \
-   ? (struct catch *) __libc_internal_tsd_get (_LIBC_TSD_KEY_DL_ERROR)	      \
-   : catch)
-#else
-# define tsd_setspecific(data) \
-  if (__libc_internal_tsd_set != NULL)					      \
-    __libc_internal_tsd_set (_LIBC_TSD_KEY_DL_ERROR, data);		      \
-  else									      \
-    catch = (data)
-# define tsd_getspecific() \
-  (__libc_internal_tsd_set != NULL					      \
-   ? (struct catch *) __libc_internal_tsd_get (_LIBC_TSD_KEY_DL_ERROR)	      \
-   : catch)
-#endif
+__libc_tsd_define (static, DL_ERROR)
+#define tsd_getspecific()	__libc_tsd_get (DL_ERROR)
+#define tsd_setspecific(data)	__libc_tsd_set (DL_ERROR, (data))
 
 
 /* This points to a function which is called when an error is

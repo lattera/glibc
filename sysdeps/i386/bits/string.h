@@ -45,6 +45,9 @@
 		  : memcpy (dest, src, n)))
 /* This looks horribly ugly, but the compiler can optimize it totally,
    as the count is constant.  */
+__STRING_INLINE void *__memcpy_c (void *__dest, __const void *__src,
+				  size_t __n);
+
 __STRING_INLINE void *
 __memcpy_c (void *__dest, __const void *__src, size_t __n)
 {
@@ -170,6 +173,9 @@ memmove (void *__dest, __const void *__src, size_t __n)
 		     : __memset_cg (s, 0x01010101UL * (unsigned char) (c), n))\
 		  : __memset_gg (s, c, n)))
 
+__STRING_INLINE void *__memset_cc (void *__s, unsigned long int __pattern,
+				   size_t __n);
+
 __STRING_INLINE void *
 __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
 {
@@ -211,13 +217,15 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
       return __s;
     case 2:
       __COMMON_CODE ("\n\tstosw");
-      return s;
+      return __s;
     case 3:
       __COMMON_CODE ("\n\tstosw\n\tstosb");
       return __s;
     }
 #undef __COMMON_CODE
 }
+
+__STRING_INLINE void *__memset_cg (void *__s, unsigned long __c, size_t __n);
 
 __STRING_INLINE void *
 __memset_cg (void *__s, unsigned long __c, size_t __n)
@@ -239,6 +247,8 @@ __memset_cg (void *__s, unsigned long __c, size_t __n)
      : "memory");
   return __s;
 }
+
+__STRING_INLINE void *__memset_gg (void *__s, char __c, size_t __n);
 
 __STRING_INLINE void *
 __memset_gg (void *__s, char __c, size_t __n)
@@ -455,6 +465,8 @@ strncmp (__const char *__s1, __const char *__s2, size_t __n)
 		  ? __strchr_c (s, ((c) & 0xff) << 8)			      \
 		  : __strchr_g (s, c)))
 
+__STRING_INLINE char *__strchr_g (__const char *__s, int __c);
+
 __STRING_INLINE char *
 __strchr_g (__const char *__s, int __c)
 {
@@ -477,6 +489,8 @@ __strchr_g (__const char *__s, int __c)
      : "cc");
   return __res - 1;
 }
+
+__STRING_INLINE char *__strchr_c (__const char *__s, int __c);
 
 __STRING_INLINE char *
 __strchr_c (__const char *__s, int __c)

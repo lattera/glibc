@@ -1,3 +1,60 @@
+1998-11-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/nscd_getpw_r.c: Include nscd_proto.h for prototypes.
+
+	* sysdeps/generic/errno-loc.c: Include <errno.h> for prototype,
+	undefine errno to get variable.
+
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: Include <sys/fsuid.h>
+	instead of <unistd.h> for prototype.
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: Likewise.
+
+1998-11-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/err.h: Correct comments and use protected attribute keywords.
+	Reported by Joseph Myers <jsm28@cam.ac.uk>.
+
+1998-11-29  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* malloc/thread-m.h [_LIBC]: Include <bits/libc-tsd.h>, and
+	remove tsd stuff from pthreads/cthreads libc sections.
+	Use __libc_tsd_define for MALLOC key.
+	[_LIBC] (tsd_key_t, tsd_key_create): Define to a zero-size type and a
+	no-op, respectively.
+	[_LIBC] (tsd_setspecific, tsd_getspecific): Use __libc_tsd_get/set.
+
+	* elf/dl-error.c: Include <bits/libc-tsd.h>.
+	Use __libc_tsd_define for DL_ERROR key.
+	(tsd_setspecific, tsd_getspecific): Rewritten using __libc_tsd_get/set.
+
+	* sysdeps/mach/hurd/bits/libc-tsd.h: New file.
+	* sysdeps/generic/bits/libc-tsd.h: New file.
+	* Makefile (distribute): Add bits/libc-tsd.h.
+
+1998-10-12  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* elf/dl-error.c: Remove kludge to check for ld.so load address.
+	There is no need if weak undefined symbols are not used in ld.so;
+	see linuxthreads/ChangeLog for changes to files
+	linuxthreads/sysdeps/pthread/bits/libc-lock.h and
+	linuxthreads/sysdeps/pthread/bits/libc-tsd.h.
+
+1998-11-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/i386/bits/string.h (__memset_cc): Fix typo (s->__s).
+
+	* sysdeps/i386/i486/bits/string.h: Add prototypes for all new
+	inline functions.
+	* sysdeps/i386/bits/string.h: Likewise.
+
+1998-11-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/ipc.h: Remove ipc_kludge.
+
+1998-11-30  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* db2/progs/db_load/db_load.c (main): Avoid -Wparentheses warning.
+
 1998-09-12  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/mach/hurd/dl-sysdep.c: Do not define

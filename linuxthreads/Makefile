@@ -27,7 +27,7 @@ linuxthreads-version := $(shell sed -n 's/^.*$(subdir)-\([0-9.]*\).*$$/\1/p' \
 headers := pthread.h semaphore.h bits/semaphore.h
 distribute := internals.h queue.h restart.h spinlock.h
 
-routines := weaks
+routines := weaks no-tsd
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)

@@ -1,5 +1,5 @@
 /* 4.4BSD utility functions for error messages.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,27 +30,28 @@
 
 __BEGIN_DECLS
 
-/* Print FORMAT on stderr.  */
+/* Print "program: ", FORMAT, ": ", the standard error string for errno,
+   and a newline, on stderr.  */
 extern void warn __P ((__const char *__format, ...))
-     __attribute__ ((format (printf, 1, 2)));
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 extern void vwarn __P ((__const char *__format, __gnuc_va_list))
-     __attribute__ ((format (printf, 1, 0)));
+     __attribute__ ((__format__ (__printf__, 1, 0)));
 
-/* Print "program: ", and FORMAT, and a newline, on stderr.  */
+/* Likewise, but without ": " and the standard error string.  */
 extern void warnx __P ((__const char *__format, ...))
-     __attribute__ ((format (printf, 1, 2)));
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 extern void vwarnx __P ((__const char *__format, __gnuc_va_list))
-     __attribute__ ((format (printf, 1, 0)));
+     __attribute__ ((__format__ (__printf__, 1, 0)));
 
 /* Likewise, and then exit with STATUS.  */
 extern void err __P ((int __status, __const char *__format, ...))
-     __attribute__ ((noreturn, format (printf, 2, 3)));
+     __attribute__ ((__noreturn__, __format__ (__printf__, 2, 3)));
 extern void verr __P ((int __status, __const char *__format, __gnuc_va_list))
-     __attribute__ ((noreturn, format (printf, 2, 0)));
+     __attribute__ ((__noreturn__, __format__ (__printf__, 2, 0)));
 extern void errx __P ((int __status, __const char *__format, ...))
-     __attribute__ ((noreturn, format (printf, 2, 3)));
+     __attribute__ ((__noreturn__, __format__ (__printf__, 2, 3)));
 extern void verrx __P ((int __status, __const char *, __gnuc_va_list))
-     __attribute__ ((noreturn, format (printf, 2, 0)));
+     __attribute__ ((__noreturn__, __format__ (__printf__, 2, 0)));
 
 __END_DECLS
 

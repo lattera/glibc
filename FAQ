@@ -24,22 +24,23 @@ please let me know.
 	What's wrong?
 1.4.	Do I need a special linker or assembler?
 1.5.	Which compiler should I use for powerpc?
-1.6.	Do I need some more things to compile the GNU C Library?
-1.7.	What version of the Linux kernel headers should be used?
-1.8.	The compiler hangs while building iconvdata modules.  What's
+1.6.	Which tools should I use for ARM?
+1.7.	Do I need some more things to compile the GNU C Library?
+1.8.	What version of the Linux kernel headers should be used?
+1.9.	The compiler hangs while building iconvdata modules.  What's
 	wrong?
-1.9.	When I run `nm -u libc.so' on the produced library I still
+1.10.	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
-1.10.	What are these `add-ons'?
-1.11.	My XXX kernel emulates a floating-point coprocessor for me.
+1.11.	What are these `add-ons'?
+1.12.	My XXX kernel emulates a floating-point coprocessor for me.
 	Should I enable --with-fp?
-1.12.	When compiling GNU libc I get lots of errors saying functions
+1.13.	When compiling GNU libc I get lots of errors saying functions
 	in glibc are duplicated in libgcc.
-1.13.	Why do I get messages about missing thread functions when I use
+1.14.	Why do I get messages about missing thread functions when I use
 	librt?  I don't even use threads.
-1.14.	What's the problem with configure --enable-omitfp?
-1.15.	I get failures during `make check'.  What shall I do?
-1.16.	What is symbol versioning good for?  Do I need it?
+1.15.	What's the problem with configure --enable-omitfp?
+1.16.	I get failures during `make check'.  What shall I do?
+1.17.	What is symbol versioning good for?  Do I need it?
 
 2. Installation and configuration issues
 
@@ -140,6 +141,8 @@ please let me know.
 	to EST5EDT things go wrong since glibc computes the wrong time
 	from this information.
 4.4.	What other sources of documentation about glibc are available?
+4.5.	The timezone string for Sydney/Australia is wrong since even when
+	daylight saving time is in effect the timezone string is EST.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -163,6 +166,7 @@ in the future, are:
 	sparc-*-linux-gnu	Linux-2.x on SPARC
 	sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 	arm-*-none		ARM standalone systems
+	arm-*-linux		Linux-2.x on ARM
 	arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 
 Ports to other Linux platforms are in development, and may in fact work
@@ -191,7 +195,7 @@ a local mirror first.
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
-(for powerpc see question question 1.5).
+(for powerpc see question question 1.5; for ARM see question question 1.6).
 
 {ZW} You may have problems if you try to mix code compiled with
 EGCS and with GCC 2.8.1. See question 2.8 for details.
@@ -240,7 +244,18 @@ variables.  There is a temporary patch at:
 Later versions of egcs may fix this problem.
 
 
-1.6.	Do I need some more things to compile the GNU C Library?
+1.6.	Which tools should I use for ARM?
+
+{PB} You should use egcs 1.1 or a later version.  For ELF systems some
+changes are needed to the compiler; a patch against egcs-1.1.x can be found
+at:
+
+<ftp://ftp.netwinder.org/users/p/philb/egcs-1.1.1pre2-diff-981126>
+
+Binutils 2.9.1.0.16 or later is also required.
+
+
+1.7.	Do I need some more things to compile the GNU C Library?
 
 {UD} Yes, there are some more :-).
 
@@ -284,7 +299,7 @@ Later versions of egcs may fix this problem.
   If you have some more measurements let me know.
 
 
-1.7.	What version of the Linux kernel headers should be used?
+1.8.	What version of the Linux kernel headers should be used?
 
 {AJ,UD} The headers from the most recent Linux kernel should be used.  The
 headers used while compiling the GNU C library and the kernel binary used
@@ -307,7 +322,7 @@ kernel sources to the 2.1 tree, do `make oldconfig', and say no to all the
 new options.
 
 
-1.8.	The compiler hangs while building iconvdata modules.  What's
+1.9.	The compiler hangs while building iconvdata modules.  What's
 	wrong?
 
 {ZW} This is a problem with old versions of GCC.  Initialization of large
@@ -317,7 +332,7 @@ time.
 The problem is fixed in egcs 1.1 but not in earlier releases.
 
 
-1.9.	When I run `nm -u libc.so' on the produced library I still
+1.10.	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
 
 {UD} Yes, this is ok.  There can be several kinds of unresolved symbols:
@@ -333,7 +348,7 @@ Generally, you should make sure you find a real program which produces
 errors while linking before deciding there is a problem.
 
 
-1.10.	What are these `add-ons'?
+1.11.	What are these `add-ons'?
 
 {UD} To avoid complications with export rules or external source code some
 optional parts of the libc are distributed as separate packages (e.g., the
@@ -356,7 +371,7 @@ else.  The existing makefiles do most of the work; only some few stub rules
 must be written to get everything running.
 
 
-1.11.	My XXX kernel emulates a floating-point coprocessor for me.
+1.12.	My XXX kernel emulates a floating-point coprocessor for me.
 	Should I enable --with-fp?
 
 {ZW} An emulated FPU is just as good as a real one, as far as the C library
@@ -370,7 +385,7 @@ far more trouble than it's worth: you then have to compile
 (libgcc.a for GNU C), because the calling conventions change.
 
 
-1.12.	When compiling GNU libc I get lots of errors saying functions
+1.13.	When compiling GNU libc I get lots of errors saying functions
 	in glibc are duplicated in libgcc.
 
 {EY} This is *exactly* the same problem that I was having.  The problem was
@@ -387,7 +402,7 @@ problems of this kind.  The setting of CFLAGS is checked at the very
 beginning and if it is not usable `configure' will bark.
 
 
-1.13.	Why do I get messages about missing thread functions when I use
+1.14.	Why do I get messages about missing thread functions when I use
 	librt?  I don't even use threads.
 
 {UD} In this case you probably mixed up your installation.  librt uses
@@ -403,7 +418,7 @@ given path to find the implicitly referenced library while not disturbing
 any other link path.
 
 
-1.14.	What's the problem with configure --enable-omitfp?
+1.15.	What's the problem with configure --enable-omitfp?
 
 {AJ} When --enable-omitfp is set the libraries are built without frame
 pointers.  Some compilers produce buggy code for this model and therefore we
@@ -422,7 +437,7 @@ The compilation of these extra libraries and the compiler optimizations slow
 down the build process and need more disk space.
 
 
-1.15.	I get failures during `make check'.  What shall I do?
+1.16.	I get failures during `make check'.  What shall I do?
 
 {AJ} The testsuite should compile and run cleanly on your system, every
 failure should be looked into.  Depending on the failure I wouldn't advise
@@ -445,7 +460,7 @@ There are some failures which are not directly related to the GNU libc:
   development kernels have fixes for the floating point support on Alpha.
 
 
-1.16.	What is symbol versioning good for?  Do I need it?
+1.17.	What is symbol versioning good for?  Do I need it?
 
 {AJ} Symbol versioning solves problems that are related to interface
 changes.  One version of an interface might have been introduced in a
@@ -565,7 +580,7 @@ question 3.8 for details.
 source code.  Until this law gets abolished we cannot ship the cryptographic
 functions together with glibc.
 
-The functions are available, as an add-on (see question 1.10).  People in the US
+The functions are available, as an add-on (see question 1.11).  People in the US
 may get it from the same place they got GNU libc from.  People outside the
 US should get the code from ftp://ftp.ifi.uio.no/pub/gnu, or another archive
 site outside the USA.  The README explains how to install the sources.
@@ -1333,9 +1348,20 @@ from your favorite mirror of ftp.gnu.org.
 where the headers are stable.  There are still lots of incompatible changes
 made and the libc headers have to follow.
 
-Also, make sure you have a suitably recent kernel.  As of the 970401
-snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
-required kernel version is at least 2.1.30.
+{PB} The 2.1 release of GNU libc aims to comply with the current versions of
+all the relevant standards.  The IPv6 support libraries for older Linux
+systems used a different naming convention and so code written to work with
+them may need to be modified.  If the standards make incompatible changes in
+the future then the libc may need to change again.
+
+IPv6 will not work with a 2.0.x kernel.  When kernel 2.2 is released it
+should contain all the necessary support; until then you should use the
+latest 2.1.x release you can find.  As of 98/11/26 the currently recommended
+kernel for IPv6 is 2.1.129.
+
+Also, as of the 2.1 release the IPv6 API provided by GNU libc is not
+100% complete.  In particular the getipnodebyname and getipnodebyaddr
+functions are not implemented.
 
 
 4.3.	When I set the timezone by setting the TZ environment variable
@@ -1374,6 +1400,21 @@ Looijaard describes a different way installing glibc2 as secondary libc at
 <http://huizen.dds.nl/~frodol/glibc>.
 
 Please note that this is not a complete list.
+
+
+4.5.	The timezone string for Sydney/Australia is wrong since even when
+	daylight saving time is in effect the timezone string is EST.
+
+{UD} The problem for some timezones is that the local authorities decided
+to use the term "summer time" instead of "daylight saving time".  In this
+case the abbreviation character `S' is the same as the standard one.  So,
+for Sydney we have
+
+	Eastern Standard Time	= EST
+	Eastern Summer Time	= EST
+
+Great!  To get this bug fixed convince the authorities to change the laws
+and regulations of the country this effects.  glibc behaves correctly.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

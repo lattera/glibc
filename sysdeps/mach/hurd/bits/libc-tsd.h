@@ -1,4 +1,5 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* libc-internal interface for thread-specific data.  Hurd version.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +17,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/fsuid.h>
+#ifndef _BITS_LIBC_TSD_H
+#define _BITS_LIBC_TSD_H 1
 
-#include <sysdep.h>
-#include <sys/syscall.h>
+#include <hurd/threadvar.h>
 
-#include <linux/posix_types.h>
+#define __libc_tsd_define(CLASS, KEY) /* nothing, always have threadvars */
 
-#ifdef __NR_setfsgid
-extern int __syscall_setfsgid (__kernel_gid_t);
+#define __libc_tsd_threadvar_location(KEY) \
+  ((void **) __hurd_threadvar_location (_HURD_THREADVAR_##KEY))
 
-int
-setfsgid (gid_t gid)
-{
-  if (gid != (gid_t) ((__kernel_gid_t) gid))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+#define __libc_tsd_get(KEY) \
+  (*__libc_tsd_threadvar_location (KEY))
 
-  return INLINE_SYSCALL (setfsgid, 1, gid);
-}
-#endif
+#define __libc_tsd_set(KEY, VALUE) \
+  (*__libc_tsd_threadvar_location (KEY) = (VALUE))
+
+
+#endif	/* bits/libc-tsd.h */

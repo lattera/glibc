@@ -40,19 +40,7 @@ typedef pthread_t thread_id;
 /* mutex */
 typedef pthread_mutex_t	mutex_t;
 
-/* thread specific data */
-typedef void * tsd_key_t;
-
 #define MUTEX_INITIALIZER	PTHREAD_MUTEX_INITIALIZER
-
-#define tsd_key_create(key, destr) ( *(key) = NULL )
-#define tsd_setspecific(key, data) \
-  if (__libc_internal_tsd_set != NULL) {				      \
-    __libc_internal_tsd_set(_LIBC_TSD_KEY_MALLOC, data);		      \
-  } else { (key) = (Void_t *) data; }
-#define tsd_getspecific(key, vptr) \
-  (vptr = (__libc_internal_tsd_get != NULL				      \
-	   ? __libc_internal_tsd_get(_LIBC_TSD_KEY_MALLOC) : (key)))
 
 #define mutex_init(m)		\
    (__pthread_mutex_init != NULL ? __pthread_mutex_init (m, NULL) : 0)
@@ -85,20 +73,6 @@ typedef void * tsd_key_t;
 
 #define mutex_trylock(m) (!__mutex_trylock(m))
 
-#include <hurd/threadvar.h>
-
-/* thread specific data */
-typedef int tsd_key_t;
-
-static int tsd_keys_alloced = 0;
-
-#define tsd_key_create(key, destr) \
-  (assert (tsd_keys_alloced == 0), tsd_keys_alloced++)
-#define tsd_setspecific(key, data) \
-  (*__hurd_threadvar_location (_HURD_THREADVAR_MALLOC) = (unsigned long)(data))
-#define tsd_getspecific(key, vptr) \
-  ((vptr) = (void *)*__hurd_threadvar_location (_HURD_THREADVAR_MALLOC))
-
 #define thread_atfork(prepare, parent, child) do {} while(0)
 #define thread_atfork_static(prepare, parent, child) \
  text_set_element(_hurd_fork_prepare_hook, prepare); \
@@ -113,6 +87,18 @@ static int tsd_keys_alloced = 0;
 #define NO_THREADS
 
 #endif /* MUTEX_INITIALIZER && PTHREAD_MUTEX_INITIALIZER */
+
+
+/* thread specific data */
+
+#include <bits/libc-tsd.h>
+
+typedef int tsd_key_t[0];	/* no key data structure, libc magic does it */
+__libc_tsd_define (, MALLOC)	/* declaration/common definition */
+#define tsd_key_create(key, destr)	((void) (key))
+#define tsd_setspecific(key, data)	__libc_tsd_set (MALLOC, (data))
+#define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (MALLOC))
+
 
 #elif defined(USE_PTHREADS) /* Posix threads */
 

@@ -149,19 +149,6 @@ typedef pthread_key_t __libc_key_t;
 #define __libc_setspecific(KEY, VALUE) \
   (__pthread_setspecific != NULL ? __pthread_setspecific (KEY, VALUE) : 0)
 
-#ifdef _LIBC
-
-/* Fast thread-specific data internal to libc.  */
-enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
-			_LIBC_TSD_KEY_DL_ERROR,
-			_LIBC_TSD_KEY_N };
-
-extern void *__libc_internal_tsd_get __P ((enum __libc_tsd_key_t));
-extern int __libc_internal_tsd_set __P ((enum __libc_tsd_key_t,
-					 __const void *));
-
-#endif
-
 
 /* Register handlers to execute before and after `fork'.  */
 #define __libc_atfork(PREPARE, PARENT, CHILD) \
@@ -183,8 +170,6 @@ weak_extern (__pthread_mutexattr_settype)
 weak_extern (__pthread_key_create)
 weak_extern (__pthread_setspecific)
 weak_extern (__pthread_getspecific)
-weak_extern (__libc_internal_tsd_get)
-weak_extern (__libc_internal_tsd_set)
 weak_extern (__pthread_once)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
@@ -202,8 +187,6 @@ weak_extern (_pthread_cleanup_pop_restore)
 #  pragma weak __pthread_key_create
 #  pragma weak __pthread_setspecific
 #  pragma weak __pthread_getspecific
-#  pragma weak __libc_internal_tsd_get
-#  pragma weak __libc_internal_tsd_set
 #  pragma weak __pthread_once
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
