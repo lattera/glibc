@@ -1,3 +1,9 @@
+2000-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_callback.c (__nis_create_callback): Check result of
+	memory allocation.  Fix memory leaks.  Use __builtin_expect.
+	(__nis_destroy_callback): Fix memory leaks.
+
 2000-04-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/elf/start.S: Use __PIC__ instead of PIC.
