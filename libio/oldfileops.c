@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -26,7 +26,7 @@
 
 /* This is a compatibility file.  If we don't build the libc with
    versioning don't compile this file.  */
-#if DO_VERSIONING
+#if defined PIC && DO_VERSIONING
 
 
 #ifndef _POSIX_SOURCE
@@ -719,4 +719,4 @@ struct _IO_jump_t _IO_old_file_jumps =
 };
 
 
-#endif /* DO_VERSIONING */
+#endif /* PIC && DO_VERSIONING */

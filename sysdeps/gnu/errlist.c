@@ -2,7 +2,14 @@
 
 #include <errno.h>
 
-const char *const _sys_errlist[] =
+#ifndef SYS_ERRLIST
+# define SYS_ERRLIST _sys_errlist
+#endif
+#ifndef SYS_NERR
+# define SYS_NERR _sys_nerr
+#endif
+
+const char *const SYS_ERRLIST[] =
   {
     [0] = N_("Success"),
 #ifdef EPERM
@@ -807,6 +814,8 @@ TRANS This error code has no purpose. */
 #endif
   };
 
-const int _sys_nerr = sizeof _sys_errlist / sizeof _sys_errlist[0];
+const int SYS_NERR = sizeof SYS_ERRLIST / sizeof SYS_ERRLIST [0];
+#ifndef PIC
 weak_alias (_sys_errlist, sys_errlist)
 weak_alias (_sys_nerr, sys_nerr)
+#endif

@@ -1,3 +1,73 @@
+1998-02-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Don't mark lchown as
+	extra syscall.
+
+	* grp/Makefile: Fix logic when checking for thread package.
+	* pwd/Makefile: Likewise.
+
+1998-02-11 08:23  H.J. Lu  <hjl@gnu.org>
+
+	* elf/Makefile (rtld-map): Replaced by libc-map.
+
+	* elf/rtld.map: Removed.
+
+	* libc.map (__libc_enable_secure, _dl_catch_error,
+	_dl_check_all_versions, _dl_debug_initialize, _dl_debug_state,
+	_dl_default_scope, _dl_global_scope_end, _dl_init_next,
+	_dl_lookup_symbol, _dl_map_object, _dl_map_object_deps,
+	_dl_object_relocation_scope, _dl_relocate_object,
+	_dl_signal_error, _dl_starting_up, _dl_sysdep_start,
+	_r_debug): Added for ld.so.
+
+1998-02-10 08:38  H.J. Lu  <hjl@gnu.org>
+
+	* libio/iofclose.c: Check PIC && DO_VERSIONING instead of
+	DO_VERSIONING.
+	* libio/iofdopen.c: Ditto.
+	* libio/iofopen.c: Ditto.
+	* libio/oldfileops.c: Ditto.
+
+	* libc.map (sys_nerr, _sys_errlist, sys_errlist): Added for
+	version GLIBC_2.1.
+
+	* sysdeps/unix/sysv/linux/Makefile (stdio-common): Removed
+	oldsiglist from sysdep_routines and shared-only-routines.
+
+	* sysdeps/unix/sysv/linux/errlist.c: New.
+	* sysdeps/unix/sysv/linux/errlist.h: New.
+	* sysdeps/unix/sysv/linux/sizes.h: New.
+	* sysdeps/unix/sysv/linux/alpha/sizes.h: New.
+	* sysdeps/unix/sysv/linux/sparc64/sizes.h: New.
+
+	* sysdeps/unix/sysv/linux/oldsiglist.c: Removed.
+
+	* sysdeps/unix/sysv/linux/siglist.c: Include <sizes.h>.
+	(__old_sys_siglist, __old_sys_sigabbrev): Use ELF .size
+	directive.
+
+	* sysdeps/unix/sysv/linux/siglist.h (OLD_SIGLIST_SIZE_STR): New.
+
+	* sysdeps/unix/sysv/linux/Dist (errlist.h, sizes.h.): Added.
+	(oldsiglist.c): Removed.
+
+	* sysdeps/gnu/errlist.awk (SYS_SIGLIST, SYS_NERR): New.
+	(_sys_siglist): Use SYS_SIGLIST instead.
+	(_sys_nerr): Use SYS_NERR instead.
+
+	* sysdeps/gnu/errlist.c: Rebuilt.
+
+1998-02-11 08:35  H.J. Lu  <hjl@gnu.org>
+
+	* elf/Makefile (others-static): New, set to ldconfig.
+	($(objpfx)ldconfig): Removed.
+
+	* Rules (binaries-all, binaries-static, binaries-shared): New.
+	Create targets for $(binaries-static) and $(binaries-shared).
+
+	* Makeconfig (+link-static, link-libc-static,
+	link-extra-libs-static): New for static linking.
+
 1998-02-11  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/memory.texi (Using the Memory Debugger): Fix typo.

@@ -426,6 +426,14 @@ GLIBC_2.0 {
     xdrrec_endofrecord; xdrrec_eof; xdrrec_skiprecord; xdrstdio_create;
     xencrypt; xprt_register; xprt_unregister;
 
+    # Those are in the dynamic linker, but used by libc.so.
+    __libc_enable_secure; _dl_catch_error; _dl_check_all_versions;
+    _dl_debug_initialize; _dl_debug_state; _dl_default_scope;
+    _dl_global_scope_end; _dl_init_next; _dl_lookup_symbol;
+    _dl_map_object; _dl_map_object_deps; _dl_object_relocation_scope;
+    _dl_relocate_object; _dl_signal_error; _dl_starting_up;
+    _dl_sysdep_start; _r_debug;
+
   local:
     *;
 };
@@ -454,4 +462,6 @@ GLIBC_2.1 {
     getrusage;
     wait4;
 
+    # New errlist.
+    _sys_errlist; sys_errlist; sys_nerr;
 } GLIBC_2.0;

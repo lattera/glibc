@@ -1,14 +1,15 @@
 stdio_lim.h.in
 cmsg_nxthdr.c
+errlist.h
 init-first.h
 kernel_sigaction.h
 kernel_stat.h
 kernel_termios.h
 llseek.c
-oldsiglist.c
 s_pread64.c
 s_pwrite64.c
 siglist.h
+sizes.h
 socketcall.h
 sysctl.c
 termio.h

@@ -29,7 +29,7 @@ routines := fgetpwent getpw putpwent \
 include ../Rules
 
 # We can later add the names of other thread packages here.
-ifeq (,$(findstring linuxthreads,$(add-ons)))
+ifneq (,$(findstring linuxthreads,$(add-ons)))
 
 CFLAGS-getpwuid_r.c = -DUSE_NSCD=1
 CFLAGS-getpwnam_r.c = -DUSE_NSCD=1

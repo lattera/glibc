@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,3 +63,5 @@
 #elif defined(SIGPWR)
   init_sig (SIGPWR, "PWR", N_("Power failure"))
 #endif
+
+#define	OLD_SIGLIST_SIZE_STR	"32"

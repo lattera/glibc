@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -129,7 +129,7 @@ _IO_new_fdopen (fd, mode)
   return (_IO_FILE *) &new_f->fp;
 }
 
-#ifdef DO_VERSIONING
+#if defined PIC && DO_VERSIONING
 strong_alias (_IO_new_fdopen, __new_fdopen)
 default_symbol_version (_IO_new_fdopen, _IO_fdopen, GLIBC_2.1);
 default_symbol_version (__new_fdopen, fdopen, GLIBC_2.1);

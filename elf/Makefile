@@ -35,7 +35,6 @@ elide-routines.os = $(dl-routines) dl-support enbl-secure
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
-rtld-map	:= rtld.map
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h
@@ -61,15 +60,9 @@ generated      += ldd
 endif
 
 ifeq (yes,$(has-ldconfig))
+others-static	+= ldconfig
 others		+= ldconfig
 install-rootsbin = ldconfig
-
-$(objpfx)ldconfig: $(objpfx)ldconfig.o
-	$(CC) -nostdlib -nostartfiles -o $@ $(sysdep-LDFLAGS) -static	      \
-	      $(addprefix $(csu-objpfx),start.o) $(+preinit)		      \
-	      $(filter-out $(addprefix $(csu-objpfx),start.o) $(+preinit)     \
-		$(link-extra-libs) $(common-objpfx)libc% $(+postinit),$^)     \
-	      $(link-extra-libs) $(common-objpfx)libc.a $(gnulib) $(+postinit)
 endif
 
 include ../Rules
@@ -114,7 +107,7 @@ define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 	  -Wl,-rpath=$(default-rpath) $(LDFLAGS-rtld) \
 	  $(filter-out $(objpfx)rtld-ldscript,$^) \
-	  -Wl,--version-script=$(rtld-map)
+	  -Wl,--version-script=$(libc-map)
 endef
 else
 $(objpfx)ld.so: $(objpfx)librtld.os
@@ -123,7 +116,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os
 define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 	  -Wl,-rpath=$(default-rpath) $^ \
-	  -Wl,--version-script=$(rtld-map)
+	  -Wl,--version-script=$(libc-map)
 endef
 endif
 

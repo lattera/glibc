@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ _IO_new_fclose (fp)
   return status;
 }
 
-#ifdef DO_VERSIONING
+#if defined PIC && DO_VERSIONING
 strong_alias (_IO_new_fclose, __new_fclose)
 default_symbol_version (_IO_new_fclose, _IO_fclose, GLIBC_2.1);
 default_symbol_version (__new_fclose, fclose, GLIBC_2.1);

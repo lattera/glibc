@@ -67,12 +67,6 @@ endif
 ifeq ($(subdir),stdio-common)
 # Just disable the auto generation in sysdeps/generic
 inhibit-siglist := yes
-
-ifeq ($(versioning),yes)
-sysdep_routines += oldsiglist
-endif
-
-shared-only-routines += oldsiglist
 endif
 
 ifeq ($(subdir),inet)

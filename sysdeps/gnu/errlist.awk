@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,14 @@ BEGIN {
     print "";
     print "#include <errno.h>";
     print "";
-    print "const char *const _sys_errlist[] =";
+    print "#ifndef SYS_ERRLIST";
+    print "# define SYS_ERRLIST _sys_errlist";
+    print "#endif";
+    print "#ifndef SYS_NERR";
+    print "# define SYS_NERR _sys_nerr";
+    print "#endif";
+    print "";
+    print "const char *const SYS_ERRLIST[] =";
     print "  {";
     print "    [0] = N_(\"Success\"),"
   }
@@ -77,7 +84,9 @@ errnoh == 4 \
 END {
   print "  };";
   print "";
-  print "const int _sys_nerr = sizeof _sys_errlist / sizeof _sys_errlist[0];";
+  print "const int SYS_NERR = sizeof SYS_ERRLIST / sizeof SYS_ERRLIST [0];";
+  print "#ifndef PIC";
   print "weak_alias (_sys_errlist, sys_errlist)";
   print "weak_alias (_sys_nerr, sys_nerr)";
+  print "#endif";
   }

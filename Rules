@@ -94,19 +94,27 @@ tests: $(tests:%=$(objpfx)%.out)
 endif
 
 ifeq ($(build-programs),yes)
-ifneq "$(strip $(others) $(tests) $(test-srcs))" ""
-$(addprefix $(objpfx),$(others) $(tests) $(test-srcs)): %: %.o \
-  $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
-  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
-	$(+link)
-endif
+binaries-all = $(others) $(tests) $(test-srcs)
+binaries-static = $(others-static) $(tests-static) $(test-srcs-static)
 else
-ifneq "$(strip $(tests) $(test-srcs))" ""
-$(addprefix $(objpfx),$(tests) $(test-srcs)): %: %.o \
+binaries-all = $(tests) $(test-srcs)
+binaries-static = $(tests-static) $(test-srcs-static)
+endif
+
+binaries-shared = $(filter-out $(binaries-static), $(binaries-all))
+
+ifneq "$(strip $(binaries-shared))" ""
+$(addprefix $(objpfx),$(binaries-shared)): %: %.o \
   $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
 endif
+
+ifneq "$(strip $(binaries-static))" ""
+$(addprefix $(objpfx),$(binaries-static)): %: %.o \
+  $(sort $(filter $(common-objpfx)libc%,$(link-libc-static))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-static)
 endif
 
 ifneq "$(strip $(tests) $(test-srcs))" ""

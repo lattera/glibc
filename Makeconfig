@@ -380,6 +380,18 @@ ifndef +link
 			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs) $(link-libc) $(+postctor) $(+postinit)
 endif
+# Command for statically linking programs with the C library.
+ifndef +link-static
++link-static = $(CC) -nostdlib -nostartfiles -static -o $@ \
+	      $(sysdep-LDFLAGS) $(LDFLAGS)  \
+	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
+	      $(+preinit) $(+prector) \
+	      $(filter-out $(addprefix $(csu-objpfx),start.o \
+						     $(start-installed-name))\
+			   $(+preinit) $(link-extra-libs-static) \
+			   $(common-objpfx)libc% $(+postinit),$^) \
+	      $(link-extra-libs-static) $(link-libc-static) $(+postctor) $(+postinit)
+endif
 ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
 config-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
@@ -425,6 +437,11 @@ else
 link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
 endif
 endif
+
+# The static libraries.
+link-libc-static = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
+link-extra-libs-static = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
+
 ifndef gnulib
 gnulib := -lgcc
 endif
