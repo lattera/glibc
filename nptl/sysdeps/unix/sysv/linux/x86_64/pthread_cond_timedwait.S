@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -212,8 +212,21 @@ __pthread_cond_timedwait:
 
 15:	cmpq	$-ETIMEDOUT, %r14
 	jne	8b
+	jmp	24f
 
-13:	incq	wakeup_seq(%rdi)
+	/* Lock.  */
+13:	movq	8(%rsp), %rdi
+	movl	$1, %esi
+	xorl	%eax, %eax
+	LOCK
+#if cond_lock == 0
+	cmpxchgl %esi, (%rdi)
+#else
+	cmpxchgl %esi, cond_lock(%rdi)
+#endif
+	jne	23f
+
+24:	incq	wakeup_seq(%rdi)
 	movq	$ETIMEDOUT, %r14
 	jmp	14f
 
@@ -327,6 +340,17 @@ __pthread_cond_timedwait:
 	js	13b
 	jmp	21b
 #endif
+
+	/* Locking after time elapsed failed.  */
+23:
+#if cond_lock != 0
+	addq	$cond_lock, %rdi
+#endif
+	callq	__lll_mutex_lock_wait
+#if cond_lock != 0
+	subq	$cond_lock, %rdi
+#endif
+	jmp	24b
 .LENDCODE:
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,

@@ -1,3 +1,10 @@
+2004-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Get internal lock in case timeout has
+	passed before the futex syscall.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+
 2004-01-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c: Pretty printing.
