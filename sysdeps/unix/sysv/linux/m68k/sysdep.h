@@ -43,13 +43,22 @@
    for a real error by making sure the value in %d0 is a real error
    number.  Linus said he will make sure the no syscall returns a value
    in -1 .. -4095 as a valid result so we can savely test with -4095.  */
+
+/* We don't want the label for the error handler to be visible in the symbol
+   table when we define it here.  */
+#ifdef PIC
+#define SYSCALL_ERROR_LABEL .Lsyscall_error
+#else
+#define SYSCALL_ERROR_LABEL __syscall_error
+#endif
+
 #undef PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (syscall_name, args);					      \
     cmp.l &-4095, %d0;							      \
-    jcc syscall_error
+    jcc SYSCALL_ERROR_LABEL
 
 #undef PSEUDO_END
 #define PSEUDO_END(name)						      \
@@ -60,7 +69,7 @@
 /* Store (- %d0) into errno through the GOT.  */
 #ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
-syscall_error:								      \
+SYSCALL_ERROR_LABEL:							      \
     neg.l %d0;								      \
     move.l %d0, -(%sp);							      \
     jbsr __errno_location@PLTPC;					      \
@@ -70,9 +79,9 @@ syscall_error:								      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
     rts;
-#else
+#else /* !_LIBC_REENTRANT */
 #define SYSCALL_ERROR_HANDLER						      \
-syscall_error:								      \
+SYSCALL_ERROR_LABEL:							      \
     move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \
     move.l %d0, (%a0);							      \

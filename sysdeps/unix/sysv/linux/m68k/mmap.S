@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ ENTRY (__mmap)
 	/* Kludge: negative numbers are among the legal return values.
 	   If %d0 is between -4096 and 0 then there was an error.  */
 	cmp.l #-4096, %d0
-	jhi syscall_error
+	jhi SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  Copy it to %a0 because
 	   mmap is declared to return a pointer.  */

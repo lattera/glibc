@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,6 @@ ENTRY (syscall)
 	trap &0			/* Do the system call.  */
 	UNDOARGS_5		/* Unfrob arguments.  */
 	cmp.l &-4095, %d0	/* Check %d0 for error.  */
-	jcc syscall_error	/* Jump to error handler if negative.  */
+	jcc SYSCALL_ERROR_LABEL	/* Jump to error handler if negative.  */
 	rts			/* Return to caller.  */
 PSEUDO_END (syscall)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ ENTRY (__socket)
 
 	/* %d0 is < 0 if there was an error.  */
 	tst.l %d0
-	jmi syscall_error
+	jmi SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
 	rts
