@@ -131,6 +131,18 @@ extern int __pthread_debug attribute_hidden;
 #define SIGTIMER	(__SIGRTMIN + 1)
 
 
+/* Atomic operations on TLS memory.  */
+#ifndef THREAD_ATOMIC_CMPXCHG_VAL
+# define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, new, old) \
+  atomic_compare_and_exchange_val_acq (&(descr)->member, new, old)
+#endif
+
+#ifndef THREAD_ATOMIC_BIT_SET
+# define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
+  atomic_bit_set (&(descr)->member, bit)
+#endif
+
+
 /* This function is responsible for calling all registered cleanup
    handlers and then terminate the thread.  This includes dellocating
    the thread-specific data.  The implementation is complicated by the
@@ -151,7 +163,7 @@ __do_cancel (void)
   struct pthread *self = THREAD_SELF;
 
   /* Make sure we get no more cancellations.  */
-  atomic_bit_set (&self->cancelhandling, EXITING_BIT);
+  THREAD_ATOMIC_BIT_SET (self, cancelhandling, EXITING_BIT);
 
   /* Throw an exception.  */
   // XXX TBI
