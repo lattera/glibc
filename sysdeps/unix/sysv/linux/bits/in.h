@@ -25,18 +25,40 @@
 /* Options for use with `getsockopt' and `setsockopt' at the IP level.
    The first word in the comment at the right is the data type used;
    "bool" means a boolean value stored in an `int'.  */
-#define	IP_TOS		   1	/* int; IP type of service and precedence.  */
-#define	IP_TTL		   2	/* int; IP time to live.  */
-#define	IP_HDRINCL	   3	/* int; Header is included with data.  */
-#define	IP_OPTIONS	   4	/* ip_opts; IP per-packet options.  */
+#define IP_TOS             1	/* int; IP type of service and precedence.  */
+#define IP_TTL             2	/* int; IP time to live.  */
+#define IP_HDRINCL         3	/* int; Header is included with data.  */
+#define IP_OPTIONS         4	/* ip_opts; IP per-packet options.  */
+#define IP_ROUTER_ALERT    5	/* bool */
+#define IP_RECVOPTS        6	/* bool */
+#define IP_RETOPTS         7	/* bool */
+#define IP_PKTINFO         8	/* bool */
+#define IP_PKTOPTIONS      9
+#define IP_PMTUDISC        10	/* obsolete name? */
+#define IP_MTU_DISCOVER    10	/* int; see below */
+#define IP_RECVERR         11	/* bool */
+#define IP_RECVTTL         12	/* bool */
+#define IP_RECVTOS         13	/* bool */
 #define IP_MULTICAST_IF    32	/* in_addr; set/get IP multicast i/f */
 #define IP_MULTICAST_TTL   33	/* u_char; set/get IP multicast ttl */
 #define IP_MULTICAST_LOOP  34	/* i_char; set/get IP multicast loopback */
 #define IP_ADD_MEMBERSHIP  35	/* ip_mreq; add an IP group membership */
 #define IP_DROP_MEMBERSHIP 36	/* ip_mreq; drop an IP group membership */
 
+/* For BSD compatibility.  */
+#define IP_RECVRETOPTS	IP_RETOPTS
+
+/* IP_MTU_DISCOVER arguments.  */
+#define IP_PMTUDISC_DONT   0	/* Never send DF frames.  */
+#define IP_PMTUDISC_WANT   1	/* Use per route hints.  */
+#define IP_PMTUDISC_DO     2	/* Always DF.  */
+
 /* To select the IP level.  */
 #define SOL_IP	0
+
+#define IP_DEFAULT_MULTICAST_TTL        1
+#define IP_DEFAULT_MULTICAST_LOOP       1
+#define IP_MAX_MEMBERSHIPS              20
 
 /* Structure used to describe IP options for IP_OPTIONS. The `ip_dst'
    field is used for the first-hop gateway when using a source route
@@ -54,20 +76,34 @@ struct ip_mreq
     struct in_addr imr_interface;	/* local IP address of interface */
   };
 
-/* IPV6 socket options.  */
+/* As above but including interface specification by index.  */
+struct ip_mreqn
+  {
+    struct in_addr imr_multiaddr;	/* IP multicast address of group */
+    struct in_addr imr_address;		/* local IP address of interface */
+    int	imr_ifindex;			/* Interface index */
+  };
+
+/* As above but for IPv6.  */
+struct ipv6_mreq 
+  {
+    struct in6_addr ipv6mr_multiaddr;   /* IPv6 multicast address of group */
+    int	ipv6mr_ifindex;			/* local IPv6 address of interface */
+  };
+
+/* Options for use with `getsockopt' and `setsockopt' at the IPv6 level.
+   The first word in the comment at the right is the data type used;
+   "bool" means a boolean value stored in an `int'.  */
 #define IPV6_ADDRFORM		1
 #define IPV6_PKTINFO		2
-#define IPV6_RXHOPOPTS		3 /* obsolete name */
-#define IPV6_RXDSTOPTS		4 /* obsolete name */
-#define IPV6_HOPOPTS		IPV6_RXHOPOPTS  /* new name */
-#define IPV6_DSTOPTS		IPV6_RXDSTOPTS  /* new name */
+#define IPV6_HOPOPTS		3
+#define IPV6_DSTOPTS		4
 #define IPV6_RXSRCRT		5
 #define IPV6_PKTOPTIONS		6
 #define IPV6_CHECKSUM		7
 #define IPV6_HOPLIMIT		8
-
-#define SCM_SRCRT		IPV6_RXSRCRT
-
+#define IPV6_NEXTHOP		9
+#define IPV6_AUTHHDR		10
 #define IPV6_UNICAST_HOPS	16
 #define IPV6_MULTICAST_IF	17
 #define IPV6_MULTICAST_HOPS	18
@@ -75,3 +111,17 @@ struct ip_mreq
 #define IPV6_ADD_MEMBERSHIP	20
 #define IPV6_DROP_MEMBERSHIP	21
 #define IPV6_ROUTER_ALERT	22
+
+#define SCM_SRCRT		IPV6_RXSRCRT
+
+#define IPV6_RXHOPOPTS		IPV6_HOPOPTS	/* obsolete name */
+#define IPV6_RXDSTOPTS		IPV6_DSTOPTS	/* obsolete name */
+
+/* IPV6_MTU_DISCOVER values.  */
+#define IPV6_PMTUDISC_DONT	0	/* Never send DF frames.  */
+#define IPV6_PMTUDISC_WANT	1	/* Use per route hints.  */
+#define IPV6_PMTUDISC_DO	2	/* Always DF.  */
+
+/* Socket level values for IPv6.  */
+#define SOL_IPV6        41
+#define SOL_ICMPV6      58

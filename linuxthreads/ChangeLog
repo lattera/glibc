@@ -1,14 +1,19 @@
-1998-09-15  David S. Miller  <davem@pierdol.cobaltmicro.com> 
- 
-	* sysdeps/sparc/sparc32/pt-machine.h (INIT_THREAD_SELF): Add nr 
-	argument. 
-	* sysdeps/sparc/sparc64/pt-machine.h (INIT_THREAD_SELF): Likewise. 
- 
-1998-09-12 14:24 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
- 
-	* linuxthreads/sysdeps/unix/sysv/linux/bits/sigthread.h: Add 
-	multiple inclusion guard. 
- 
+1998-10-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* semaphore.h: Include <sys/types.h> so that _pthread_descr
+	is declared.
+
+1998-09-15  David S. Miller  <davem@pierdol.cobaltmicro.com>
+
+	* sysdeps/sparc/sparc32/pt-machine.h (INIT_THREAD_SELF): Add nr
+	argument.
+	* sysdeps/sparc/sparc64/pt-machine.h (INIT_THREAD_SELF): Likewise.
+
+1998-09-12 14:24 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* linuxthreads/sysdeps/unix/sysv/linux/bits/sigthread.h: Add
+	multiple inclusion guard.
+
 1998-09-02 11:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* signals.c (sigaction): Check that sig is less than NSIG to avoid

@@ -1,3 +1,11 @@
+1998-10-05  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/bits/in.h: Add various new structures
+	and constants.  Tidy up formatting a little.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (SOL_IPV6, SOL_ICMPV6):
+	Move definitions to in.h.
+
 1998-10-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/sys/swap.h (SWAP_FLAG_PREFER,

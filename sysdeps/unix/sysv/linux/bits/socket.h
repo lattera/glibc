@@ -115,8 +115,6 @@ enum __socket_type
 
    XXX These definitions also should go into the appropriate headers as
    far as they are available.  */
-#define SOL_IPV6        41
-#define SOL_ICMPV6      58
 #define SOL_RAW		255
 #define SOL_DECNET      261
 #define SOL_X25         262
