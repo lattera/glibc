@@ -189,6 +189,14 @@ extern void __funlockfile (FILE *);
 # define is_longlong is_long_double
 #endif
 
+/* If `long' and `int' is effectively the same type we don't have to
+   handle `long separately.  */
+#if INT_MAX == LONG_MAX
+# define is_long_num	0
+#else
+# define is_long_num	is_long
+#endif
+
 
 /* Global variables.  */
 static const char null[] = "(null)";
@@ -524,13 +532,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	  if (fspec == NULL)						      \
 	    {								      \
-	      if (is_long)						      \
+	      if (is_long_num)						      \
 		signed_number = va_arg (ap, long int);			      \
 	      else  /* `char' and `short int' will be promoted to `int'.  */  \
 		signed_number = va_arg (ap, int);			      \
 	    }								      \
 	  else								      \
-	    if (is_long)						      \
+	    if (is_long_num)						      \
 	      signed_number = args_value[fspec->data_arg].pa_long_int;	      \
 	    else							      \
 	      signed_number = args_value[fspec->data_arg].pa_int;	      \
@@ -608,7 +616,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	{								      \
 	  if (fspec == NULL)						      \
 	    {								      \
-	      if (is_long)						      \
+	      if (is_long_num)						      \
 		number.word = va_arg (ap, unsigned long int);		      \
 	      else if (!is_short)					      \
 		number.word = va_arg (ap, unsigned int);		      \
@@ -616,7 +624,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		number.word = (unsigned short int) va_arg (ap, unsigned int); \
 	    }								      \
 	  else								      \
-	    if (is_long)						      \
+	    if (is_long_num)						      \
 	      number.word = args_value[fspec->data_arg].pa_u_long_int;	      \
 	    else if (is_char)						      \
 	      number.word = (unsigned char)				      \
@@ -987,7 +995,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	{								      \
 	  if (is_longlong)						      \
 	    *(long long int *) va_arg (ap, void *) = done;		      \
-	  else if (is_long)						      \
+	  else if (is_long_num)						      \
 	    *(long int *) va_arg (ap, void *) = done;			      \
 	  else if (!is_short)						      \
 	    *(int *) va_arg (ap, void *) = done;			      \
@@ -997,7 +1005,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       else								      \
 	if (is_longlong)						      \
 	  *(long long int *) args_value[fspec->data_arg].pa_pointer = done;   \
-	else if (is_long)						      \
+	else if (is_long_num)						      \
 	  *(long int *) args_value[fspec->data_arg].pa_pointer = done;	      \
 	else if (!is_short)						      \
 	  *(int *) args_value[fspec->data_arg].pa_pointer = done;	      \

@@ -43,17 +43,24 @@
 # define need_longlong	1
 #endif
 
+/* Determine whether we have to handle `long'.  */
+#if INT_MAX == LONG_MAX
+# define need_long	0
+#else
+# define need_long 	1
+#endif
+
 /* Those are flags in the conversion format. */
-# define LONG		0x001	/* l: long or double */
-# define LONGDBL	0x002	/* L: long long or long double */
-# define SHORT		0x004	/* h: short */
-# define SUPPRESS	0x008	/* *: suppress assignment */
-# define POINTER	0x010	/* weird %p pointer (`fake hex') */
-# define NOSKIP		0x020	/* do not skip blanks */
-# define WIDTH		0x040	/* width was given */
-# define GROUP		0x080	/* ': group numbers */
-# define MALLOC		0x100	/* a: malloc strings */
-# define CHAR		0x200	/* hh: char */
+#define LONG		0x001	/* l: long or double */
+#define LONGDBL		0x002	/* L: long long or long double */
+#define SHORT		0x004	/* h: short */
+#define SUPPRESS	0x008	/* *: suppress assignment */
+#define POINTER		0x010	/* weird %p pointer (`fake hex') */
+#define NOSKIP		0x020	/* do not skip blanks */
+#define WIDTH		0x040	/* width was given */
+#define GROUP		0x080	/* ': group numbers */
+#define MALLOC		0x100	/* a: malloc strings */
+#define CHAR		0x200	/* hh: char */
 
 
 #ifdef USE_IN_LIBIO
@@ -446,7 +453,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      /* A double `l' is equivalent to an `L'.  */
 	      ++f;
-	      flags |= need_longlong ? LONGDBL : LONG;
+	      flags |= LONGDBL | LONG;
 	    }
 	  else
 	    /* ints are long ints.  */
@@ -455,7 +462,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'q':
 	case 'L':
 	  /* doubles are long doubles, and ints are long long ints.  */
-	  flags |= need_longlong ? LONGDBL : LONG;
+	  flags |= LONGDBL | LONG;
 	  break;
 	case 'a':
 	  /* The `a' is used as a flag only if followed by `s', `S' or
@@ -534,12 +541,14 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      /* Don't count the read-ahead.  */
 	      if (need_longlong && (flags & LONGDBL))
 		*ARG (long long int *) = read_in;
-	      else if (flags & LONG)
+	      else if (need_long && (flags & LONG))
 		*ARG (long int *) = read_in;
 	      else if (flags & SHORT)
 		*ARG (short int *) = read_in;
-	      else
+	      else if (!(flags & CHAR))
 		*ARG (int *) = read_in;
+	      else
+		*ARG (char *) = read_in;
 
 #ifdef NO_BUG_IN_ISO_C_CORRIGENDUM_1
 	      /* We have a severe problem here.  The ISO C standard
@@ -946,28 +955,28 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  if (need_longlong && (flags & LONGDBL))
 		    *ARG (unsigned LONGLONG int *) = num.uq;
-		  else if (flags & LONG)
+		  else if (need_long && (flags & LONG))
 		    *ARG (unsigned long int *) = num.ul;
 		  else if (flags & SHORT)
 		    *ARG (unsigned short int *)
 		      = (unsigned short int) num.ul;
-		  else if (flags & CHAR)
-		    *ARG (unsigned char *) = (unsigned char) num.ul;
-		  else
+		  else if (!(flags & CHAR))
 		    *ARG (unsigned int *) = (unsigned int) num.ul;
+		  else
+		    *ARG (unsigned char *) = (unsigned char) num.ul;
 		}
 	      else
 		{
 		  if (need_longlong && (flags & LONGDBL))
 		    *ARG (LONGLONG int *) = num.q;
-		  else if (flags & LONG)
+		  else if (need_long && (flags & LONG))
 		    *ARG (long int *) = num.l;
 		  else if (flags & SHORT)
 		    *ARG (short int *) = (short int) num.l;
-		  else if (flags & CHAR)
-		    *ARG (signed char *) = (signed char) num.ul;
-		  else
+		  else if (!(flags & CHAR))
 		    *ARG (int *) = (int) num.l;
+		  else
+		    *ARG (signed char *) = (signed char) num.ul;
 		}
 	      ++done;
 	    }
@@ -1267,7 +1276,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  base = 16;
 	  /* A PTR must be the same size as a `long int'.  */
 	  flags &= ~(SHORT|LONGDBL);
-	  flags |= LONG;
+	  if (need_long)
+	    flags |= LONG;
 	  number_signed = 0;
 	  read_pointer = 1;
 	  goto number;

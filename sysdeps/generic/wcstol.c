@@ -20,4 +20,4 @@
 
 #define	USE_WIDE_CHAR	1
 
-#include <stdlib/strtol.c>
+#include <sysdeps/generic/strtol.c>

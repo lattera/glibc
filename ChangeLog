@@ -1,4 +1,13 @@
+1999-05-26  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* stdlib/longlong.h (add_ssaaaa, sub_ddmmss, umul_ppmm):
+	Optimized sparc64 routines.
+
 1999-05-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c (vfprintf): Don't handle long numbers if
+	they are the same as ints.
+	* stdio-common/vfscanf.c (_IO_vfscanf): Likewise.
 
 	* version.h (VERSION): Bump to 2.1.90.
 	(RELEASE): Mark as development.
