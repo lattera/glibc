@@ -1,3 +1,8 @@
+2001-06-14  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/fcntl.h [ __USE_POSIX199309 || __USE_UNIX98]:
+	(O_DSYNC, O_RSYNC): New macros, both defined to O_SYNC as Linux does.
+
 2001-06-13  Roland McGrath  <roland@frob.com>
 
 	* rt/aio_notify.c: Include <unistd.h> for _POSIX_REALTIME_SIGNALS.
