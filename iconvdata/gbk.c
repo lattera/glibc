@@ -5549,7 +5549,7 @@ static const char __gbk_from_ucs4_tab1[][2] =
   [0x0044] = "\xa8\xa8", [0x0045] = "\xa8\xa6", [0x0046] = "\xa8\xba",
   [0x0048] = "\xa8\xac", [0x0049] = "\xa8\xaa", [0x004e] = "\xa8\xb0",
   [0x004f] = "\xa8\xae", [0x0053] = "\xa1\xc2", [0x0055] = "\xa8\xb4",
-  [0x0056] = "\xa8\xb2", [0x0058] = "\xa8\xb9",
+  [0x0056] = "\xa8\xb2", [0x0058] = "\xa8\xb9", [0x005d] = "\xa8\xa1"
 };
 
 /* The table can be created using
@@ -13190,11 +13190,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
       {									      \
       switch (ch)							      \
 	{								      \
-	case 0xa4 ... 0x100:						      \
+	case 0xa4 ... 0x101:						      \
 	  cp = __gbk_from_ucs4_tab1[ch - 0xa4];				      \
-	  break;							      \
-	case 0x101:							      \
-	  cp = "\xa8\xa1";						      \
 	  break;							      \
 	case 0x113:							      \
 	  cp = "\xa8\xa5";						      \
@@ -13248,7 +13245,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  cp = "\xa8\xc0";						      \
 	  break;							      \
 	case 0x2c7 ... 0x2cb:						      \
-	  cp = "\xa1\xa6\0\0\0\0\0\0\xa1\xa5\0\0\xa8\x40\0\0\xa8\x41"[(ch - 0x2c7) * 4];						      \
+	  cp = "\xa1\xa6\0\0\0\0\0\0\xa1\xa5\0\0\xa8\x40\0\0\xa8\x41" + ((ch - 0x2c7) * 4); \
 	  break;							      \
 	case 0x2d9:							      \
 	  cp = "\xa8\x42";						      \
@@ -13288,7 +13285,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  buf[1] = '\x80' + (ch - 0x2588);				      \
 	  break;							      \
 	case 0x2593 ... 0x2595:						      \
-	  cp = "\xa8\x88\0\0\xa8\x89\0\0\xa8\x8a"[(ch - 0x2593) * 4];	      \
+	  cp = "\xa8\x88\0\0\xa8\x89\0\0\xa8\x8a" + ((ch - 0x2593) * 4);      \
 	  break;							      \
 	case 0x25a0:							      \
 	  cp = "\xa1\xf6";						      \
@@ -13419,13 +13416,13 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  cp = __gbk_from_ucs4_tab12[ch - 0xff01];			      \
 	  break;							      \
 	case 0xffe0 ... 0xffe5:						      \
-	  cp = "\xa1\xe9\0\0\xa1\xea\0\0\xa9\x56\0\0\xa3\xfe\0\0\xa9\x57\0\0\xa3\xa4"[(ch - 0xffe0) * 4];						      \
+	  cp = "\xa1\xe9\0\0\xa1\xea\0\0\xa9\x56\0\0\xa3\xfe\0\0\xa9\x57\0\0\xa3\xa4" + ((ch - 0xffe0) * 4); \
 	  break;							      \
 	default:							      \
 	  cp = "";							      \
 	  break; 							      \
 	}								      \
-      if (cp[0] == '\0' && ch != 0)					      \
+      if (cp == NULL || (cp[0] == '\0' && ch != 0))			      \
 	{								      \
 	  /* Illegal character.  */					      \
 	  result = __GCONV_ILLEGAL_INPUT;				      \
