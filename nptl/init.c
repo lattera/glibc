@@ -104,6 +104,12 @@ __pthread_initialize_minimal (void)
   /* Unlike in the dynamically linked case the dynamic linker has not
      taken care of initializing the TLS data structures.  */
   __libc_setup_tls (TLS_TCB_SIZE, TLS_TCB_ALIGN);
+
+  /* We must prevent gcc from being clever and move any of the
+     following code ahead of the __libc_setup_tls call.  This function
+     will initialize the thread register which is subsequently
+     used.  */
+  __asm __volatile ("");
 #endif
 
   /* Minimal initialization of the thread descriptor.  */
