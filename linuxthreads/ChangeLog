@@ -1,3 +1,14 @@
+2002-08-22  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/useldt.h (INIT_THREAD_SELF): Remove [HAVE_TLS_SUPPORT]
+	conditional.
+	(INIT_THREAD_SELF): Pass second arg to DO_SET_THREAD_AREA.
+	(DO_SET_THREAD_AREA): Take second arg, pass to DO_SET_THREAD_AREA_REUSE
+	macro.  That chooses whether to reuse %gs value or let kernel set it.
+	[USE_TLS] (DO_SET_THREAD_AREA_REUSE): New macro, always 1.
+	[!USE_TLS] (DO_SET_THREAD_AREA_REUSE): New macro, true if arg is
+	not constant 0.
+
 2002-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tls.h (TLS_SETUP_GS_SEGMENT): Add new parameter
