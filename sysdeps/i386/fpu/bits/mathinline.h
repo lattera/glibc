@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
 
@@ -412,56 +412,6 @@ __inline_mathcodeNP (tan, __x, \
   __asm __volatile__							      \
     ("fptan"								      \
      : "=t" (__value2), "=u" (__value) : "0" (__x));			      \
-  return __value)
-
-
-__inline_mathcodeNP2 (pow, __x, __y, \
-  register long double __value;						      \
-  register long double __exponent;					      \
-  __extension__ long long int __p = (long long int) __y;		      \
-  if (__x == 0.0)							      \
-    {									      \
-       if (__y > 0.0)							      \
-	 return __y == (double) __p && (__p & 1) != 0 ? __x : 0.0;	      \
-       else if (__y < 0.0)						      \
-	 return (__y == (double) __p && (-__p & 1) != 0			      \
-		 ? 1.0 / __x : 1.0 / fabs (__x));			      \
-    }									      \
-  if (__y == (double) __p)						      \
-    {									      \
-      long double __r = 1.0;						      \
-      if (__p == 0)							      \
-	return 1.0;							      \
-      if (__p < 0)							      \
-	{								      \
-	  __p = -__p;							      \
-	  __x = 1.0 / __x;						      \
-	}								      \
-      while (1)								      \
-	{								      \
-	  if (__p & 1)							      \
-	    __r *= __x;							      \
-	  __p >>= 1;							      \
-	  if (__p == 0)							      \
-	    return __r;							      \
-	  __x *= __x;							      \
-	}								      \
-      /* NOTREACHED */							      \
-    }									      \
-  __asm __volatile__							      \
-    ("fyl2x" : "=t" (__value) : "0" (__x), "u" (1.0) : "st(1)");	      \
-  __asm __volatile__							      \
-    ("fmul	%%st(1)		# y * log2(x)\n\t"			      \
-     "fst	%%st(1)\n\t"						      \
-     "frndint			# int(y * log2(x))\n\t"			      \
-     "fxch\n\t"								      \
-     "fsub	%%st(1)		# fract(y * log2(x))\n\t"		      \
-     "f2xm1			# 2^(fract(y * log2(x))) - 1\n\t"	      \
-     : "=t" (__value), "=u" (__exponent) : "0" (__y), "1" (__value));	      \
-  __value += 1.0;							      \
-  __asm __volatile__							      \
-    ("fscale"								      \
-     : "=t" (__value) : "0" (__value), "u" (__exponent));		      \
   return __value)
 #endif /* __FAST_MATH__ */
 

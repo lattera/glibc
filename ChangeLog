@@ -1,25 +1,34 @@
+2001-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/libm-test.inc (pow_test): Correct expected results for x == +-1.
+	* sysdeps/i386/fpu/e_pow.S: Handle x == +-1 correctly.
+	* sysdeps/i386/fpu/e_powf.S: Likewise.
+	* sysdeps/i386/fpu/e_powl.S: Likewise.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Remove pow inline code.
+
 2001-02-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/Makefile (libm-calls): It's e_exp2 not s_exp2.
 
 	* sysdeps/generic/s_exp2l.c: Renamed to...
-	* sysdeps/generic/s_exp2l.c: ...this.   New file.
+	* sysdeps/generic/e_exp2l.c: ...this.   New file.
 	* sysdeps/i386/fpu/s_exp2.S: Renamed to...
-	* sysdeps/i386/fpu/s_exp2.S: ...this.   New file.
+	* sysdeps/i386/fpu/e_exp2.S: ...this.   New file.
 	* sysdeps/i386/fpu/s_exp2f.S: Renamed to...
-	* sysdeps/i386/fpu/s_exp2f.S: ...this.   New file.
+	* sysdeps/i386/fpu/e_exp2f.S: ...this.   New file.
 	* sysdeps/i386/fpu/s_exp2l.S: Renamed to...
-	* sysdeps/i386/fpu/s_exp2l.S: ...this.   New file.
+	* sysdeps/i386/fpu/e_exp2l.S: ...this.   New file.
 	* sysdeps/ieee754/flt-32/s_exp2f.c: Renamed to...
-	* sysdeps/ieee754/flt-32/s_exp2f.c: ...this.   New file.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: ...this.   New file.
 	* sysdeps/ieee754/dbl-64/s_exp2.c: Renamed to...
-	* sysdeps/ieee754/dbl-64/s_exp2.c: ...this.   New file.
+	* sysdeps/ieee754/dbl-64/e_exp2.c: ...this.   New file.
 	* sysdeps/m68k/fpu/s_exp2.c: Renamed to...
-	* sysdeps/m68k/fpu/s_exp2.c: ...this.   New file.
+	* sysdeps/m68k/fpu/e_exp2.c: ...this.   New file.
 	* sysdeps/m68k/fpu/s_exp2f.c: Renamed to...
-	* sysdeps/m68k/fpu/s_exp2f.c: ...this.   New file.
+	* sysdeps/m68k/fpu/e_exp2f.c: ...this.   New file.
 	* sysdeps/m68k/fpu/s_exp2l.c: Renamed to...
-	* sysdeps/m68k/fpu/s_exp2l.c: ...this.   New file.
+	* sysdeps/m68k/fpu/e_exp2l.c: ...this.   New file.
 
 2001-02-17  Andreas Jaeger  <aj@suse.de>
 

@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -130,7 +130,18 @@ ENTRY(__ieee754_pow)
 	orl	%edx, %ecx
 	jnz	6b
 	fstp	%st(0)		// ST*x
-30:	ret
+	ret
+
+	/* y is ±NAN */
+30:	fldl	4(%esp)		// x : y
+	fldl	MO(one)		// 1.0 : x : y
+	fucomp	%st(1)		// x : y
+	fnstsw
+	sahf
+	je	31f
+	fxch			// y : x
+31:	fstp	%st(1)
+	ret
 
 	.align ALIGNARG(4)
 2:	/* y is a real number.  */
@@ -189,8 +200,7 @@ ENTRY(__ieee754_pow)
 	ret
 
 	.align ALIGNARG(4)
-14:	fldl	MO(infinity)
-	fmull	MO(zero)	// raise invalid exception
+14:	fldl	MO(one)
 	ret
 
 	.align ALIGNARG(4)

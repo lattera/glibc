@@ -3468,7 +3468,7 @@ pow_test (void)
 
   TEST_ff_f (pow, nan_value, nan_value, nan_value);
   TEST_ff_f (pow, 0, nan_value, nan_value);
-  TEST_ff_f (pow, 1, nan_value, nan_value);
+  TEST_ff_f (pow, 1, nan_value, 1);
   TEST_ff_f (pow, -1, nan_value, nan_value);
   TEST_ff_f (pow, nan_value, 1, nan_value);
   TEST_ff_f (pow, nan_value, -1, nan_value);
@@ -3476,10 +3476,10 @@ pow_test (void)
   /* pow (x, NaN) == NaN.  */
   TEST_ff_f (pow, 3.0, nan_value, nan_value);
 
-  TEST_ff_f (pow, 1, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -1, plus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, 1, minus_infty, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -1, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, 1, plus_infty, 1);
+  TEST_ff_f (pow, -1, plus_infty, 1);
+  TEST_ff_f (pow, 1, minus_infty, 1);
+  TEST_ff_f (pow, -1, minus_infty, 1);
 
   TEST_ff_f (pow, -0.1L, 1.1L, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -0.1L, -1.1L, nan_value, INVALID_EXCEPTION);
