@@ -1,3 +1,8 @@
+2000-06-23  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Replace arg-count
+	with signatures.
+
 2000-06-23  Andreas Jaeger  <aj@suse.de>
 
 	* io/test-stat.c: Add copyright header, mention Maciej.
