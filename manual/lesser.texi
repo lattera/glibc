@@ -1,8 +1,8 @@
 @ifset lgpl-appendix
-@appendix GNU LESSER GENERAL PUBLIC LICENSE
+@appendix GNU Lesser General Public License
 @end ifset
 @ifclear lgpl-appendix
-@unnumbered GNU LESSER GENERAL PUBLIC LICENSE
+@unnumbered GNU Lesser General Public License
 @end ifclear
 
 @cindex LGPL, Lesser General Public License
