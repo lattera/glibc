@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -26,11 +26,6 @@
 # include <config.h>
 #endif
 
-#ifdef _LIBC
-# define HAVE_LIMITS_H 1
-# define STDC_HEADERS 1
-#endif
-
 /* Assume that leap seconds are possible, unless told otherwise.
    If the host has a `zic' command with a `-L leapsecondfilename' option,
    then it supports leap seconds; otherwise it probably doesn't.  */
@@ -41,31 +36,15 @@
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
 
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
+#include <limits.h>
 
 #if DEBUG
 # include <stdio.h>
-# if STDC_HEADERS
-#  include <stdlib.h>
-#  include <string.h>
-# endif
+# include <stdlib.h>
+# include <string.h>
 /* Make it work even if the system's libc has its own mktime routine.  */
 # define mktime my_mktime
 #endif /* DEBUG */
-
-#ifndef __P
-# if defined __GNUC__ || (defined __STDC__ && __STDC__)
-#  define __P(args) args
-# else
-#  define __P(args) ()
-# endif  /* GCC.  */
-#endif  /* Not __P.  */
-
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
-#endif
 
 /* The extra casts work around common compiler bugs.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
@@ -74,13 +53,6 @@
 #define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
 			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
 #define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
-
-#ifndef INT_MIN
-# define INT_MIN TYPE_MINIMUM (int)
-#endif
-#ifndef INT_MAX
-# define INT_MAX TYPE_MAXIMUM (int)
-#endif
 
 #ifndef TIME_T_MIN
 # define TIME_T_MIN TYPE_MINIMUM (time_t)
@@ -395,8 +367,7 @@ static time_t localtime_offset;
 
 /* Convert *TP to a time_t value.  */
 time_t
-mktime (tp)
-     struct tm *tp;
+mktime (struct tm *tp)
 {
 #ifdef _LIBC
   /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
@@ -420,9 +391,7 @@ libc_hidden_weak (timelocal)
 #if DEBUG
 
 static int
-not_equal_tm (a, b)
-     struct tm *a;
-     struct tm *b;
+not_equal_tm (const struct tm *a, const struct tm *b)
 {
   return ((a->tm_sec ^ b->tm_sec)
 	  | (a->tm_min ^ b->tm_min)
@@ -436,8 +405,7 @@ not_equal_tm (a, b)
 }
 
 static void
-print_tm (tp)
-     struct tm *tp;
+print_tm (const struct tm *tp)
 {
   if (tp)
     printf ("%04d-%02d-%02d %02d:%02d:%02d yday %03d wday %d isdst %d",
@@ -449,19 +417,15 @@ print_tm (tp)
 }
 
 static int
-check_result (tk, tmk, tl, lt)
-     time_t tk;
-     struct tm tmk;
-     time_t tl;
-     struct tm *lt;
+check_result (time_t tk, struct tm tmk, time_t tl, const struct tm *lt)
 {
   if (tk != tl || !lt || not_equal_tm (&tmk, lt))
     {
       printf ("mktime (");
-      print_tm (&tmk);
-      printf (")\nyields (");
       print_tm (lt);
-      printf (") == %ld, should be %ld\n", (long) tl, (long) tk);
+      printf (")\nyields (");
+      print_tm (&tmk);
+      printf (") == %ld, should be %ld\n", (long int) tk, (long int) tl);
       return 1;
     }
 
@@ -469,14 +433,12 @@ check_result (tk, tmk, tl, lt)
 }
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int status = 0;
   struct tm tm, tmk, tml;
   struct tm *lt;
-  time_t tk, tl;
+  time_t tk, tl, tl1;
   char trailer;
 
   if ((argc == 3 || argc == 4)
@@ -498,7 +460,7 @@ main (argc, argv)
 	  tml = *lt;
 	  lt = &tml;
 	}
-      printf ("mktime returns %ld == ", (long) tl);
+      printf ("mktime returns %ld == ", (long int) tl);
       print_tm (&tmk);
       printf ("\n");
       status = check_result (tl, tmk, tl, lt);
@@ -510,23 +472,26 @@ main (argc, argv)
       time_t to = atol (argv[3]);
 
       if (argc == 4)
-	for (tl = from; tl <= to; tl += by)
+	for (tl = from; by < 0 ? to <= tl : tl <= to; tl = tl1)
 	  {
 	    lt = localtime (&tl);
 	    if (lt)
 	      {
 		tmk = tml = *lt;
 		tk = mktime (&tmk);
-		status |= check_result (tk, tmk, tl, tml);
+		status |= check_result (tk, tmk, tl, &tml);
 	      }
 	    else
 	      {
-		printf ("localtime (%ld) yields 0\n", (long) tl);
+		printf ("localtime (%ld) yields 0\n", (long int) tl);
 		status = 1;
 	      }
+	    tl1 = tl + by;
+	    if ((tl1 < tl) != (by < 0))
+	      break;
 	  }
       else
-	for (tl = from; tl <= to; tl += by)
+	for (tl = from; by < 0 ? to <= tl : tl <= to; tl = tl1)
 	  {
 	    /* Null benchmark.  */
 	    lt = localtime (&tl);
@@ -534,13 +499,16 @@ main (argc, argv)
 	      {
 		tmk = tml = *lt;
 		tk = tl;
-		status |= check_result (tk, tmk, tl, tml);
+		status |= check_result (tk, tmk, tl, &tml);
 	      }
 	    else
 	      {
-		printf ("localtime (%ld) yields 0\n", (long) tl);
+		printf ("localtime (%ld) yields 0\n", (long int) tl);
 		status = 1;
 	      }
+	    tl1 = tl + by;
+	    if ((tl1 < tl) != (by < 0))
+	      break;
 	  }
     }
   else
@@ -557,6 +525,6 @@ main (argc, argv)
 
 /*
 Local Variables:
-compile-command: "gcc -DDEBUG -DHAVE_LIMITS_H -DSTDC_HEADERS -Wall -W -O -g mktime.c -o mktime"
+compile-command: "gcc -DDEBUG -Wall -W -O -g mktime.c -o mktime"
 End:
 */
