@@ -202,7 +202,7 @@ weak_alias (__srandom_r, srandom_r)
 int
 __initstate_r (seed, arg_state, n, buf)
      unsigned int seed;
-     void *arg_state;
+     char *arg_state;
      size_t n;
      struct random_data *buf;
 {
@@ -264,7 +264,7 @@ weak_alias (__initstate_r, initstate_r)
    Returns a pointer to the old state information.  */
 int
 __setstate_r (arg_state, buf)
-     void *arg_state;
+     char *arg_state;
      struct random_data *buf;
 {
   int32_t *new_state = (int32_t *) arg_state;
