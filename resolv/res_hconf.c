@@ -538,7 +538,8 @@ _res_hconf_reorder_addrs (struct hostent *hp)
 
       num_ifs = 0;
 
-      sd = __opensock ();
+      /* The SIOCGIFNETMASK ioctl will only work on an AF_INET socket.  */
+      sd = __socket (AF_INET, SOCK_DGRAM, 0);
       if (sd < 0)
 	return;
 
@@ -546,7 +547,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       __libc_lock_lock (lock);
 
       /* Get a list of interfaces.  */
-      __ifreq (&ifr, &num);
+      __ifreq (&ifr, &num, sd);
       if (!ifr)
 	goto cleanup;
 
@@ -577,7 +578,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       ifaddrs = realloc (ifaddrs, num_ifs * sizeof (ifaddrs[0]));
 
     cleanup1:
-      __if_freereq (ifr);
+      __if_freereq (ifr, num);
 
     cleanup:
       /* Release lock, preserve error value, and close socket.  */

@@ -1,5 +1,31 @@
 2002-07-24  Roland McGrath  <roland@frob.com>
 
+	Added <ifaddrs.h> interface with functions `getifaddrs', `freeifaddrs'.
+	This implementation supports only IPv4.
+	* inet/ifaddrs.h: New file.
+	* sysdeps/generic/ifaddrs.c: New file.
+	* sysdeps/gnu/ifaddrs.c: New file.
+	* inet/test-ifaddrs.c: New file.
+	* inet/Makefile (routines): Add ifaddrs.
+	(headers): Add ifaddrs.h here.
+	(tests): Add test-ifaddrs.
+	* inet/Versions (GLIBC_2.3): New set, add getifaddrs and freeifaddrs.
+
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Use an explicit
+	socket call to get an AF_INET socket, instead of using __opensock.
+	The SIOCGIFNETMASK ioctl will work only with a PF_INET socket.
+
+	* sysdeps/generic/ifreq.h (__ifreq): Take third argument SOCKFD,
+	if not -1 use it instead of calling __opensock.
+	* sysdeps/unix/sysv/linux/ifreq.h (__ifreq): Likewise.
+	* sysdeps/mach/hurd/ifreq.h (__ifreq): Take new argument and ignore it.
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Pass new argument.
+
+	* sysdeps/mach/hurd/ifreq.h: New file.
+	* sysdeps/generic/ifreq.h (__if_freereq): Take second argument NUM_IFS.
+	* sysdeps/unix/sysv/linux/ifreq.h (__if_freereq): Likewise.
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Update caller.
+
 	* libio/fileops.c (_IO_file_seekoff_mmap): Don't rely on FP->_offset,
 	which gets moved around.  Calculate size of mmap'd buffer instead.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -34,21 +34,23 @@ static int old_siocgifconf;
 
 
 static inline void
-__ifreq (struct ifreq **ifreqs, int *num_ifs)
+__ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 {
-  int fd = __opensock ();
+  int fd = sockfd;
   struct ifconf ifc;
   int rq_len;
   int nifs;
 # define RQ_IFS	4
 
   if (fd < 0)
+    fd = __opensock ();
+  if (fd < 0)
     {
       *num_ifs = 0;
       *ifreqs = NULL;
       return;
     }
-  
+
   ifc.ifc_buf = NULL;
 
   /* We may be able to get the needed buffer size directly, rather than
@@ -79,8 +81,9 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs)
 	{
 	  if (ifc.ifc_buf)
 	    free (ifc.ifc_buf);
-	  
-	  __close (fd);
+
+	  if (fd != sockfd)
+	    __close (fd);
 
 	  *num_ifs = 0;
 	  *ifreqs = NULL;
@@ -91,14 +94,16 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs)
   while (ifc.ifc_len == rq_len && old_siocgifconf);
 
   nifs = ifc.ifc_len / sizeof (struct ifreq);
-  __close (fd);
+
+  if (fd != sockfd)
+    __close (fd);
 
   *num_ifs = nifs;
   *ifreqs = realloc (ifc.ifc_buf, nifs * sizeof (struct ifreq));
 }
 
 static inline void
-__if_freereq (struct ifreq *ifreqs)
+__if_freereq (struct ifreq *ifreqs, int num_ifs)
 {
   free (ifreqs);
 }

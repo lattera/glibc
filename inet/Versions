@@ -64,6 +64,12 @@ libc {
     # r*
     rcmd_af; rexec_af; rresvport_af; ruserok_af;
   }
+  GLIBC_2.3 {
+    # f*
+    freeifaddrs;
+    # g*
+    getifaddrs;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __internal_endnetgrent; __internal_getnetgrent_r;
