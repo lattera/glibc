@@ -1,3 +1,7 @@
+1998-05-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locales/ru_SU: Add repertoiremap.
+
 1998-05-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/ru_SU: New file.
