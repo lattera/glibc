@@ -67,7 +67,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 
   if (*name == NULL || (*name)[0] == '\0'
       || (__builtin_expect (__libc_enable_secure, 0)
-	  && memchr (*name, '/', *name) != NULL))
+	  && strchr (*name, '/') != NULL))
     *name = (char *) _nl_C_name;
 
   if (__builtin_expect (strcmp (*name, _nl_C_name), 1) == 0
@@ -257,7 +257,7 @@ free_mem (void)
 	    if (data != NULL && data->usage_count != UNDELETABLE)
 	      _nl_unload_locale (data);
 	    runp = runp->next;
-	    free (here->filename);
+	    free ((char *) here->filename);
 	    free (here);
 	  }
       }

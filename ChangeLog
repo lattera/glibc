@@ -1,5 +1,7 @@
 2000-08-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/findlocale.c (free_mem): Add cast to avoid warning.
+
 	* intl/dcigettext.c (DCIGETTEXT): Remove _nl_find_language in code
 	to determine invalid locale name.
 	* locale/findlocale.c (_nl_find_locale): Likewise.
