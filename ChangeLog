@@ -1,3 +1,8 @@
+2004-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c (__tzfile_default): Correct setting of rule_stdoff
+	and rule_dstoff after reading the posixrules file.
+
 2004-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (__posix_memalign): Correct alignment check.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993, 1995-2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -423,6 +423,12 @@ __tzfile_default (const char *std, const char *dst,
 	 as specified by this transition.  */
       isdst = trans_type->isdst;
     }
+
+  /* Now that we adjusted the transitions to the requested offsets,
+     reset the rule_stdoff and rule_dstoff values appropriately.  They
+     are used elsewhere.  */
+  rule_stdoff = stdoff;
+  rule_dstoff = dstoff;
 
   /* Reset types 0 and 1 to describe the user's settings.  */
   types[0].idx = 0;
