@@ -77,6 +77,9 @@ hidden_def (__stack_user)
 /* Number of threads running.  */
 static unsigned int nptl_nthreads = 1;
 
+/* Number of threads created.  */
+static unsigned int nptl_ncreated;
+
 
 /* Check whether the stack is still used or not.  */
 #define FREE_P(descr) ((descr)->tid == 0)
@@ -224,10 +227,10 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 {
   struct pthread *pd;
   size_t size;
-  size_t pagesize = __sysconf (_SC_PAGESIZE);
+  size_t pagesize_m1 = __sysconf (_SC_PAGESIZE) - 1;
 
   assert (attr != NULL);
-  assert (powerof2 (pagesize));
+  assert (powerof2 (pagesize_m1 + 1));
   assert (TCB_ALIGNMENT >= STACK_ALIGN);
 
   /* Get the stack size from the attribute if it is set.  Otherwise we
@@ -309,15 +312,24 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       size_t reqsize;
       void *mem;
 
+#if COLORING_INCREMENT != 0
+      /* Add one more page for stack coloring.  Don't to it for stacks
+	 with 16 times pagesize or larger.  This might just cause
+	 unnecessary misalignment.  */
+      if (size <= 16 * pagesize_m1)
+	size += pagesize_m1 + 1;
+#endif
+
       /* Adjust the stack size for alignment.  */
       size &= ~(__static_tls_align - 1);
       assert (size != 0);
 
       /* Make sure the size of the stack is enough for the guard and
 	 eventually the thread descriptor.  */
-      guardsize = (attr->guardsize + pagesize - 1) & ~(pagesize - 1);
+      guardsize = (attr->guardsize + pagesize_m1) & ~pagesize_m1;
       if (__builtin_expect (size < (guardsize + __static_tls_size
-				    + MINIMAL_REST_STACK), 0))
+				    + MINIMAL_REST_STACK + pagesize_m1 + 1),
+			    0))
 	/* The stack is too small (or the guard too large).  */
 	return EINVAL;
 
@@ -336,8 +348,31 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	     never get a NULL pointer back from MMAP.  */
 	  assert (mem != NULL);
 
+#if COLORING_INCREMENT != 0
+	  /* Atomically increment NCREATED.  */
+	  unsigned int ncreated = atomic_exchange_and_add (&nptl_ncreated, 1);
+
+	  /* We chose the offset for coloring by incrementing it for
+	     every new thread by a fixed amount.  The offset used
+	     module the page size.  Even if coloring would be better
+	     relative to higher alignment values it makes no sense to
+	     do it since the mmap() interface does not allow us to
+	     specify any alignment for the returned memory block.  */
+	  size_t coloring = (ncreated * COLORING_INCREMENT) & pagesize_m1;
+
+	  /* Make sure the coloring offsets does not disturb the alignment
+	     of the TCB and static TLS block.  */
+	  if (__builtin_expect ((coloring & (__static_tls_align - 1)) != 0, 0))
+	    coloring = (((coloring + __static_tls_align - 1)
+			 & ~(__static_tls_align - 1))
+			& ~pagesize_m1);
+#else
+	  /* Unless specified we do not make any adjustments.  */
+# define coloring 0
+#endif
+
 	  /* Place the thread descriptor at the end of the stack.  */
-	  pd = (struct pthread *) ((char *) mem + size) - 1;
+	  pd = (struct pthread *) ((char *) mem + size - coloring) - 1;
 
 	  /* Remember the stack-related values.  */
 	  pd->stackblock = mem;
