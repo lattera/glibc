@@ -10,6 +10,26 @@
 	* malloc/memusage.sh: ...this.  New file.
 	* malloc/memprofstat.c: Rename to...
 	* malloc/memusagestat.c: ...this.  New file.
+	* sysdeps/alpha/memprof.h: Rename to..
+	* sysdeps/alpha/memusage.h: ...this.  New file.
+	* sysdeps/arm/memprof.h: Rename to..
+	* sysdeps/arm/memusage.h: ...this.  New file.
+	* sysdeps/generic/memprof.h: Rename to..
+	* sysdeps/generic/memusage.h: ...this.  New file.
+	* sysdeps/i386/memprof.h: Rename to..
+	* sysdeps/i386/memusage.h: ...this.  New file.
+	* sysdeps/ia64/memprof.h: Rename to..
+	* sysdeps/ia64/memusage.h: ...this.  New file.
+	* sysdeps/m68k/memprof.h: Rename to..
+	* sysdeps/m68k/memusage.h: ...this.  New file.
+	* sysdeps/mips/memprof.h: Rename to..
+	* sysdeps/mips/memusage.h: ...this.  New file.
+	* sysdeps/powerpc/memprof.h: Rename to..
+	* sysdeps/powerpc/memusage.h: ...this.  New file.
+	* sysdeps/sparc/memprof.h: Rename to..
+	* sysdeps/sparc/memusage.h: ...this.  New file.
+	* sysdeps/sh/memprof.h: Rename to..
+	* sysdeps/sh/memusage.h: ...this.  New file.
 
 	* elf/sprof.c (print_version): Update year.
 
