@@ -298,6 +298,7 @@ static int
 process_block (iconv_t cd, const char *addr, size_t len, FILE *output)
 {
 #define OUTBUF_SIZE	32768
+  const char *start = addr;
   char outbuf[OUTBUF_SIZE];
   char *outptr;
   size_t outlen;
@@ -332,7 +333,8 @@ conversion stopped due to problem in writing the output"));
 	  switch (errno)
 	    {
 	    case EILSEQ:
-	      error (0, 0, _("illegal input sequence"));
+	      error (0, 0, _("illegal input sequence at position %ld"),
+		     addr - start);
 	      break;
 	    case EINVAL:
 	      error (0, 0, _("\
@@ -448,7 +450,7 @@ insert_print_list (const void *nodep, VISIT value, int level)
   if (value == leaf || value == postorder)
     {
       const struct gconv_alias *s = *(const struct gconv_alias **) nodep;
-      tsearch (s->fromname, &printlist, (__compar_fn_t) strcoll);
+      tsearch (s->fromname, &printlist, (__compar_fn_t) strverscmp);
     }
 }
 
@@ -487,7 +489,7 @@ do_print  (const void *nodep, VISIT value, int level)
 	    }
 	}
       else
-	  not_first = 1;
+	not_first = 1;
 
       fwrite (s, len, 1, stdout);
       column += len;

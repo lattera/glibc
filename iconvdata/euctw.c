@@ -23,7 +23,7 @@
 #include <cns11643.h>
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"EUC-TW"
+#define CHARSET_NAME		"EUC-TW//"
 #define FROM_LOOP		from_euc_tw
 #define TO_LOOP			to_euc_tw
 #define DEFINE_INIT		1

@@ -23,7 +23,7 @@
 /* Get the conversion table.  */
 #include <ebcdic-at-de-a.h>
 
-#define CHARSET_NAME	"EBCDIC-AT-DE-A"
+#define CHARSET_NAME	"EBCDIC-AT-DE-A//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-generic.c>

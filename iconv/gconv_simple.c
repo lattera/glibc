@@ -418,3 +418,68 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 #endif
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
+
+
+/* Convert from UCS2 in little endian to the internal (UCS4-like) format.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		2
+#define MIN_NEEDED_TO		4
+#define FROM_DIRECTION		1
+#define FROM_LOOP		ucs2little_internal_loop
+#define TO_LOOP			ucs2little_internal_loop /* This is not used.*/
+#define FUNCTION_NAME		__gconv_transform_ucs2little_internal
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+# define BODY \
+  *((uint32_t *) outptr)++ = *((uint16_t *) inptr)++;
+#else
+# define BODY \
+  *((uint32_t *) outptr)++ = bswap_16 (*((uint16_t *) inptr)++);
+#endif
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>
+
+
+/* Convert from the internal (UCS4-like) format to UCS2 in little endian.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		4
+#define MIN_NEEDED_TO		2
+#define FROM_DIRECTION		1
+#define FROM_LOOP		internal_ucs2little_loop
+#define TO_LOOP			internal_ucs2little_loop /* This is not used.*/
+#define FUNCTION_NAME		__gconv_transform_internal_ucs2little
+
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+# define BODY \
+  {									      \
+    if (*((uint32_t *) inptr) >= 0x10000)				      \
+      {									      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+    *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;			      \
+  }
+#else
+# define BODY \
+  {									      \
+    if (*((uint32_t *) inptr) >= 0x10000)				      \
+      {									      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
+    /* Please note that we use the `uint32_t' from-pointer as an `uint16_t'   \
+       pointer which works since we are on a little endian machine.  */	      \
+    *((uint16_t *) outptr)++ = bswap_16 (*((uint16_t *) inptr));	      \
+    inptr += 4;								      \
+  }
+#endif
+#include <iconv/loop.c>
+#include <iconv/skeleton.c>

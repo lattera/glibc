@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -447,18 +447,22 @@ extern int vsnprintf __P ((char *__s, size_t __maxlen,
 #ifdef __USE_GNU
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
-extern int vasprintf __P ((char **__ptr, __const char *__f,
-			   __gnuc_va_list __arg))
+extern int vasprintf __P ((char **__restrict __ptr,
+			   __const char *__restrict __f, __gnuc_va_list __arg))
      __attribute__ ((__format__ (__printf__, 2, 0)));
-extern int asprintf __P ((char **__ptr, __const char *__fmt, ...))
-     __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int __asprintf __P ((char **__restrict __ptr,
+			    __const char *__restrict __fmt, ...))
+     __attribute__ ((__format__ (__printf__, 2, 3)));
+extern int asprintf __P ((char **__restrict __ptr,
+			  __const char *__restrict __fmt, ...))
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 
 /* Write formatted output to a file descriptor.  */
-extern int vdprintf __P ((int __fd, __const char *__fmt,
+extern int vdprintf __P ((int __fd, __const char *__restrict __fmt,
 			  __gnuc_va_list __arg))
      __attribute__ ((__format__ (__printf__, 2, 0)));
-extern int dprintf __P ((int __fd, __const char *__fmt, ...))
-     __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int dprintf __P ((int __fd, __const char *__restrict __fmt, ...))
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 #endif
 
 

@@ -8412,7 +8412,7 @@ static const char from_ucs4_tab13[][2] =
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"BIG5"
+#define CHARSET_NAME		"BIG5//"
 #define FROM_LOOP		from_big5
 #define TO_LOOP			to_big5
 #define DEFINE_INIT		1

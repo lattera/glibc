@@ -46,7 +46,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"EUC-KR"
+#define CHARSET_NAME		"EUC-KR//"
 #define FROM_LOOP		from_euc_kr
 #define TO_LOOP			to_euc_kr
 #define DEFINE_INIT		1
@@ -70,7 +70,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
        if (inchar == 0x5c)						      \
 	 ch =  0x20a9;							      \
        else if (inchar <= 0x7f)						      \
-	 ch = (wchar_t) inchar;						      \
+	 ch = (uint32_t) inchar;					      \
     */									      \
 									      \
     if (ch <= 0x7f)							      \

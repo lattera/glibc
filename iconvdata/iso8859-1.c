@@ -21,7 +21,7 @@
 #include <stdint.h>
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"ISO-8859-1"
+#define CHARSET_NAME		"ISO-8859-1//"
 #define FROM_LOOP		from_iso8859_1
 #define TO_LOOP			to_iso8859_1
 #define DEFINE_INIT		1

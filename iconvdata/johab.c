@@ -220,7 +220,7 @@ johab_from_ucs4 (uint32_t ch, unsigned char *cp)
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"JOHAB"
+#define CHARSET_NAME		"JOHAB//"
 #define FROM_LOOP		from_johab
 #define TO_LOOP			to_johab
 #define DEFINE_INIT		1
@@ -243,7 +243,7 @@ johab_from_ucs4 (uint32_t ch, unsigned char *cp)
        if (ch == 0x5c)							      \
 	 ch =  0x20a9;							      \
        else if (ch < 0x7f)						      \
-	 ch = (wchar_t) ch;						      \
+	 ch = (uint32_t) ch;						      \
     */									      \
     if (ch < 0x7f)							      \
       /* Plain ASCII.  */						      \

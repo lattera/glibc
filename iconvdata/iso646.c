@@ -62,6 +62,56 @@ enum variant
   illegal_var,
   US,		/* ANSI_X3.4-1968 */
   GB,		/* BS_4730 */
+  CA,		/* CSA_Z243.4-1985-1 */
+  CA2,		/* CSA_Z243.4-1985-2 */
+  DE,		/* DIN_66003 */
+  DK,		/* DS_2089 */
+  ES,		/* ES */
+  ES2,		/* ES2 */
+  CN,		/* GB_1988-80 */
+  IT,		/* IT */
+  JP,		/* JIS_C6220-1969-RO */
+  JP_OCR_B,	/* JIS_C6229-1984-B */
+  YU,		/* JUS_I.B1.002 */
+  KR,		/* KSC5636 */
+  HU,		/* MSZ_7795.3 */
+  CU,		/* NC_NC00-10 */
+  FR,		/* NF_Z_62-010 */
+  FR1,		/* NF_Z_62-010_(1973) */
+  NO,		/* NS_4551-1 */
+  NO2,		/* NS_4551-2 */
+  PT,		/* PT */
+  PT2,		/* PT2 */
+  SE,		/* SEN_850200_B */
+  SE2		/* SEN_850200_C */
+};
+
+static const char *names[] =
+{
+  [US] = "ANSI_X3.4-1968//",
+  [GB] = "BS_4730//",
+  [CA] = "CSA_Z243.4-1985-1//",
+  [CA2] = "CSA_Z243.4-1985-2//",
+  [DE] = "DIN_66003//",
+  [DK] = "DS_2089//",
+  [ES] = "ES//",
+  [ES2] = "ES2//",
+  [CN] = "GB_1988-80//",
+  [IT] = "IT//",
+  [JP] = "JIS_C6220-1969-RO//",
+  [JP_OCR_B] = "JIS_C6229-1984-B//",
+  [YU] = "JUS_I.B1.002//",
+  [KR] = "KSC5636//",
+  [HU] = "MSZ_7795.3//",
+  [CU] = "NC_NC00-10//",
+  [FR] = "NF_Z_62-010//",
+  [FR1] = "NF_Z_62-010_(1973)//",
+  [NO] = "NS_4551-1//",
+  [NO2] = "NS_4551-2//",
+  [PT] = "PT//",
+  [PT2] = "PT2//",
+  [SE] = "SEN_850200_B//",
+  [SE2] = "SEN_850200_C//"
 };
 
 struct iso646_data
@@ -76,35 +126,21 @@ gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
   struct iso646_data *new_data;
-  enum direction dir;
+  enum direction dir = illegal_dir;
   enum variant var;
   int result;
 
-  if (__strcasestr (step->from_name, "ANSI_X3.4-1968") != NULL)
-    {
-      dir = from_iso646;
-      var = US;
-    }
-  else if (__strcasestr (step->from_name, "BS_4730") != NULL)
-    {
-      dir = from_iso646;
-      var = GB;
-    }
-  else if (__strcasestr (step->to_name, "ANSI_X3.4-1968") != NULL)
-    {
-      dir = to_iso646;
-      var = US;
-    }
-  else if (__strcasestr (step->to_name, "BS_4730") != NULL)
-    {
-      dir = to_iso646;
-      var = GB;
-    }
-  else
-    {
-      dir = illegal_dir;
-      var = illegal_var;
-    }
+  for (var = sizeof (names) / sizeof (names[0]) - 1; var > illegal_var; --var)
+    if (__strcasecmp (step->from_name, names[var]) == 0)
+      {
+	dir = from_iso646;
+	break;
+      }
+    else if (__strcasecmp (step->to_name, names[var]) == 0)
+      {
+	dir = to_iso646;
+	break;
+      }
 
   result = GCONV_NOCONV;
   if (dir != illegal_dir
@@ -115,15 +151,16 @@ gconv_init (struct gconv_step *step)
       new_data->dir = dir;
       new_data->var = var;
       step->data = new_data;
+
+      step->min_needed_from = MIN_NEEDED_FROM;
+      step->max_needed_from = MIN_NEEDED_FROM;
+      step->min_needed_to = MIN_NEEDED_TO;
+      step->max_needed_to = MIN_NEEDED_TO;
+
+      step->stateful = 0;
+
       result = GCONV_OK;
     }
-
-  step->min_needed_from = MIN_NEEDED_FROM;
-  step->max_needed_from = MIN_NEEDED_FROM;
-  step->min_needed_to = MIN_NEEDED_TO;
-  step->max_needed_to = MIN_NEEDED_TO;
-
-  step->stateful = 0;
 
   return result;
 }
@@ -145,27 +182,208 @@ gconv_end (struct gconv_step *data)
     uint32_t ch;							      \
     int failure = GCONV_OK;						      \
 									      \
-    switch (*inptr)							      \
+    ch = *inptr;							      \
+    switch (ch)								      \
       {									      \
-      case '\x23':							      \
-	if (var == GB)							      \
+      case 0x23:							      \
+	if (var == GB || var == ES || var == IT || var == FR || var == FR1)   \
 	  ch = 0xa3;							      \
-	else								      \
-	  ch = 0x23;							      \
+	else if (var == NO2)						      \
+	  ch = 0xa7;							      \
 	break;								      \
-      case '\x7e':							      \
-	if (var == GB)							      \
+      case 0x24:							      \
+	if (var == CN)							      \
+	  ch = 0xa5;							      \
+	else if (var == HU || var == CU || var == SE || var == SE2)	      \
+	  ch = 0xa4;							      \
+	break;								      \
+      case 0x40:							      \
+	if (var == CA || var == CA2 || var == FR || var == FR1)		      \
+	  ch = 0xe0;							      \
+	else if (var == DE || var == ES || var == IT || var == PT)	      \
+	  ch = 0xa7;							      \
+	else if (var == ES2)						      \
+	  ch = 0x2022;							      \
+	else if (var == YU)						      \
+	  ch = 0x17d;							      \
+	else if (var == HU)						      \
+	  ch = 0xc1;							      \
+	else if (var == PT2)						      \
+	  ch = 0xb4;							      \
+	else if (var == SE2)						      \
+	  ch = 0xc9;							      \
+	break;								      \
+      case 0x5b:							      \
+	if (var == CA || var == CA2)					      \
+	  ch = 0xe2;							      \
+	else if (var == DE || var == SE || var == SE2)			      \
+	  ch = 0xc4;							      \
+	else if (var == DK || var == NO || var == NO2)			      \
+	  ch = 0xc6;							      \
+	else if (var == ES || var == ES2 || var == CU)			      \
+	  ch = 0xa1;							      \
+	else if (var == IT || var == FR || var == FR1)			      \
+	  ch = 0xb0;							      \
+	else if (var == JP_OCR_B)					      \
+	  ch = 0x2329;							      \
+	else if (var == YU)						      \
+	  ch = 0x160;							      \
+	else if (var == HU)						      \
+	  ch = 0xc9;							      \
+	else if (var == PT || var == PT2)				      \
+	  ch = 0xc3;							      \
+	break;								      \
+      case 0x5c:							      \
+	if (var == CA || var == CA2 || var == IT || var == FR || var == FR1)  \
+	  ch = 0xe7;							      \
+	else if (var == DE || var == HU || var == SE || var == SE2)	      \
+	  ch = 0xd6;							      \
+	else if (var == DK || var == NO || var == NO2)			      \
+	  ch = 0xd8;							      \
+	else if (var == ES || var == ES2 || var == CU)			      \
+	  ch = 0xd1;							      \
+	else if (var == JP || var == JP_OCR_B)				      \
+	  ch = 0xa5;							      \
+	else if (var == YU)						      \
+	  ch = 0x110;							      \
+	else if (var == KR)						      \
+	  ch = 0x20a9;							      \
+	else if (var == PT || var == PT2)				      \
+	  ch = 0xc7;							      \
+	break;								      \
+      case 0x5d:							      \
+	if (var == CA || var == CA2)					      \
+	  ch = 0xea;							      \
+	else if (var == DE || var == HU)				      \
+	  ch = 0xdc;							      \
+	else if (var == DK || var == NO || var == NO2 || var == SE	      \
+		 || var == SE2)						      \
+	  ch = 0xc5;							      \
+	else if (var == ES)						      \
+	  ch = 0xbf;							      \
+	else if (var == ES2)						      \
+	  ch = 0xc7;							      \
+	else if (var == IT)						      \
+	  ch = 0xe9;							      \
+	else if (var == JP_OCR_B)					      \
+	  ch = 0x232a;							      \
+	else if (var == YU)						      \
+	  ch = 0x106;							      \
+	else if (var == FR || var == FR1)				      \
+	  ch = 0xa7;							      \
+	else if (var == PT || var == PT2)				      \
+	  ch = 0xd5;							      \
+	break;								      \
+      case 0x5e:							      \
+	if (var == CA)							      \
+	  ch = 0xee;							      \
+	else if (var == CA2)						      \
+	  ch = 0xc9;							      \
+	else if (var == ES2 || var == CU)				      \
+	  ch = 0xbf;							      \
+	else if (var == YU)						      \
+	  ch = 0x10c;							      \
+	else if (var == SE2)						      \
+	  ch = 0xdc;							      \
+	break;								      \
+      case 0x60:							      \
+	if (var == CA || var == CA2)					      \
+	  ch = 0xf4;							      \
+	else if (var == IT)						      \
+	  ch = 0xf9;							      \
+	else if (var == JP_OCR_B)					      \
+	  /* Illegal character.  */					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	else if (var == YU)						      \
+	  ch = 0x17e;							      \
+	else if (var == HU)						      \
+	  ch = 0xe1;							      \
+	else if (var == FR)						      \
+	  ch = 0xb5;							      \
+	else if (var == SE2)						      \
+	  ch = 0xe9;							      \
+	break;								      \
+      case 0x7b:							      \
+	if (var == CA || var == CA2 || var == HU || var == FR || var == FR1)  \
+	  ch = 0xe9;							      \
+	else if (var == DE || var == SE || var == SE2)			      \
+	  ch = 0xe4;							      \
+	else if (var == DK || var == NO || var == NO2)			      \
+	  ch = 0xe6;							      \
+	else if (var == ES)						      \
+	  ch = 0xb0;							      \
+	else if (var == ES2 || var == CU)				      \
+	  ch = 0xb4;							      \
+	else if (var == IT)						      \
+	  ch = 0xe0;							      \
+	else if (var == YU)						      \
+	  ch = 0x161;							      \
+	else if (var == PT || var == PT2)				      \
+	  ch = 0xe3;							      \
+	break;								      \
+      case 0x7c:							      \
+	if (var == CA || var == CA2 || var == FR || var == FR1)		      \
+	  ch = 0xf9;							      \
+	else if (var == DE || var == HU || var == SE || var == SE2)	      \
+	  ch = 0xf6;							      \
+	else if (var == DK || var == NO || var == NO2)			      \
+	  ch = 0xf8;							      \
+	else if (var == ES || var == ES2 || var == CU)			      \
+	  ch = 0xf1;							      \
+	else if (var == IT)						      \
+	  ch = 0xf2;							      \
+	else if (var == YU)						      \
+	  ch = 0x111;							      \
+	else if (var == PT || var == PT2)				      \
+	  ch = 0xe7;							      \
+	break;								      \
+      case 0x7d:							      \
+	if (var == CA || var == CA2 || var == IT || var == FR || var == FR1)  \
+	  ch = 0xe8;							      \
+	else if (var == DE || var == HU)				      \
+	  ch = 0xfc;							      \
+	else if (var == DK || var == NO || var == NO2 || var == SE	      \
+		 || var == SE2)						      \
+	  ch = 0xe5;							      \
+	else if (var == ES || var == ES2)				      \
+	  ch = 0xe7;							      \
+	else if (var == YU)						      \
+	  ch = 0x107;							      \
+	else if (var == CU)						      \
+	  ch = 0x5b;							      \
+	else if (var == PT || var == PT2)				      \
+	  ch = 0xf5;							      \
+	break;								      \
+      case 0x7e:							      \
+	if (var == GB || var == CN || var == JP || var == NO || var == SE)    \
 	  ch = 0x203e;							      \
-	else								      \
-	  ch = 0x7e;							      \
+	else if (var == CA || var == CA2)				      \
+	  ch = 0xfb;							      \
+	else if (var == DE)						      \
+	  ch = 0xdf;							      \
+	else if (var == ES2 || var == CU || var == FR || var == FR1)	      \
+	  ch = 0xa8;							      \
+	else if (var == IT)						      \
+	  ch = 0xec;							      \
+	else if (var == JP_OCR_B)					      \
+	  /* Illegal character.  */					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	else if (var == YU)						      \
+	  ch = 0x10d;							      \
+	else if (var == HU)						      \
+	  ch = 0x2dd;							      \
+	else if (var == NO2)						      \
+	  ch = 0x7c;							      \
+	else if (var == PT)						      \
+	  ch = 0xb0;							      \
+	else if (var == SE2)						      \
+	  ch = 0xfc;							      \
 	break;								      \
       default:								      \
-	ch = *inptr;							      \
 	break;								      \
       case '\x80' ... '\xff':						      \
 	/* Illegal character.  */					      \
 	failure = GCONV_ILLEGAL_INPUT;					      \
-	ch = '\0';	/* OK, gcc, here I initialize the variable.  */	      \
 	break;								      \
       }									      \
 									      \
@@ -190,54 +408,462 @@ gconv_end (struct gconv_step *data)
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    unsigned char ch;							      \
+    unsigned char ch = '\0';						      \
     int failure = GCONV_OK;						      \
 									      \
-    do									      \
+    ch = *((uint32_t *) inptr);						      \
+    switch (*((uint32_t *) inptr))					      \
       {									      \
-	switch (*((uint32_t *) inptr))					      \
-	  {								      \
-	  case 0x23:							      \
-	    if (var == GB)						      \
-	      break;							      \
-	    ch = 0x23;							      \
-	    continue;							      \
-	  case 0x7e:							      \
-	    if (var == GB)						      \
-	      break;							      \
-	    ch = 0x7e;							      \
-	    continue;							      \
-	  case 0xa3:							      \
-	    if (var != GB)						      \
-	      break;							      \
-	    ch = 0x23;							      \
-	    continue;							      \
-	  case 0x203e:							      \
-	    if (var != GB)						      \
-	      break;							      \
-	    ch = 0x7e;							      \
-	    continue;							      \
-	  default:							      \
-	    if (*((uint32_t *) inptr) > 0x7f)				      \
-	      break;							      \
-	    ch = (unsigned char) *((uint32_t *) inptr);			      \
-	    continue;							      \
-	  }								      \
-	/* When we come to this place we saw an illegal character.  */	      \
-	failure = GCONV_ILLEGAL_INPUT;					      \
-	ch = '\0';	/* OK, gcc, here I initialize the variable.  */	      \
+      case 0x23:							      \
+	if (var == GB || var == ES || var == IT || var == FR || var == FR1    \
+	    || var == NO2)						      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x24:							      \
+	if (var == CN || var == HU || var == CU || var == SE || var == SE2)   \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x40:							      \
+	if (var == CA || var == CA2 || var == DE || var == ES || var == ES2   \
+	    || var == IT || var == YU || var == HU || var == FR || var == FR1 \
+	    || var == PT || var == PT2 || var == SE2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x5b:							      \
+	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
+	    || var == ES2 || var == IT || var == JP_OCR_B || var == YU	      \
+	    || var == HU || var == FR || var == FR1 || var == NO	      \
+	    || var == NO2 || var == PT || var == PT2 || var == SE	      \
+	    || var == SE2)						      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	else if (var == CU)						      \
+	  ch = 0x7d;							      \
+	break;								      \
+      case 0x5c:							      \
+	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
+	    || var == ES2 || var == IT || var == JP || var == JP_OCR_B	      \
+	    || var == YU || var == KR || var == HU || var == CU || var == FR  \
+	    || var == FR1 || var == NO || var == NO2 || var == PT	      \
+	    || var == PT2 || var == SE || var == SE2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x5d:							      \
+	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
+	    || var == ES2 || var == IT || var == JP_OCR_B || var == YU	      \
+	    || var == HU || var == FR || var == FR1 || var == NO	      \
+	    || var == NO2 || var == PT || var == PT2 || var == SE	      \
+	    || var == SE2)						      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x5e:							      \
+	if (var == CA || var == CA2 || var == ES2 || var == YU || var == CU   \
+	    || var == SE2)						      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x60:							      \
+	if (var == CA || var == CA2 || var == IT || var == JP_OCR_B	      \
+	    || var == YU || var == HU || var == FR || var == SE2)	      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x7b:							      \
+	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
+	    || var == ES2 || var == IT || var == YU || var == HU	      \
+	    || var == CU || var == FR || var == FR1 || var == NO	      \
+	    || var == NO2 || var == PT || var == PT2 || var == SE	      \
+	    || var == SE2)						      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x7c:							      \
+	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
+	    || var == ES2 || var == IT || var == YU || var == HU || var == CU \
+	    || var == FR || var == FR1 || var == NO || var == PT	      \
+	    || var == PT2 || var == SE || var == SE2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	else if (var == NO2)						      \
+	  ch = 0x7e;							      \
+	break;								      \
+      case 0x7d:							      \
+	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
+	    || var == ES2 || var == IT || var == YU || var == HU || var == CU \
+	    || var == FR || var == FR1 || var == NO || var == NO2	      \
+	    || var == PT || var == PT2 || var == SE || var == SE2)	      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x7e:							      \
+	if (var == GB || var == CA || var == CA2 || var == DE || var == ES2   \
+	    || var == CN || var == IT || var == JP || var == JP_OCR_B	      \
+	    || var == YU || var == HU || var == CU || var == FR || var == FR1 \
+	    || var == NO || var == NO2 || var == PT || var == SE	      \
+	    || var == SE2)						      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xa1:							      \
+	if (var != ES && var != ES2 && var != CU)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5b;							      \
+	break;								      \
+      case 0xa3:							      \
+	if (var != GB && var != ES && var != IT && var != FR && var != FR1)   \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x23;							      \
+	break;								      \
+      case 0xa4:							      \
+	if (var != HU && var != CU && var != SE && var != SE2)		      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x24;							      \
+	break;								      \
+      case 0xa5:							      \
+	if (var == CN)							      \
+	  ch = 0x24;							      \
+	else if (var == JP || var == JP_OCR_B)				      \
+	  ch = 0x5c;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xa7:							      \
+	if (var == DE || var == ES || var == IT || var == PT)		      \
+	  ch = 0x40;							      \
+	else if (var == FR || var == FR1)				      \
+	  ch = 0x5d;							      \
+	else if (var == NO2)						      \
+	  ch = 0x23;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xa8:							      \
+	if (var != ES2 && var != CU && var != FR && var != FR1)		      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7e;							      \
+	break;								      \
+      case 0xb0:							      \
+	if (var == ES)							      \
+	  ch = 0x7b;							      \
+	else if (var == IT || var == FR || var == FR1)			      \
+	  ch = 0x5b;							      \
+	else if (var == PT)						      \
+	  ch = 0x7e;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xb4:							      \
+	if (var == ES2 || var == CU)					      \
+	  ch = 0x7b;							      \
+	else if (var == PT2)						      \
+	  ch = 0x40;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xb5:							      \
+	if (var != FR)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x60;							      \
+	break;								      \
+      case 0xbf:							      \
+	if (var == ES)							      \
+	  ch = 0x5d;							      \
+	else if (var == ES2 || var == CU)				      \
+	  ch = 0x5e;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xc1:							      \
+	if (var != HU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x40;							      \
+	break;								      \
+      case 0xc3:							      \
+	if (var != PT && var != PT2)					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5b;							      \
+	break;								      \
+      case 0xc4:							      \
+	if (var != DE && var != SE && var != SE2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5b;							      \
+	break;								      \
+      case 0xc5:							      \
+	if (var != DK && var != NO && var != NO2 && var != SE && var != SE2)  \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5d;							      \
+	break;								      \
+      case 0xc6:							      \
+	if (var != DK && var != NO && var != NO2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5b;							      \
+	break;								      \
+      case 0xc7:							      \
+	if (var == ES2)							      \
+	  ch = 0x5d;							      \
+	else if (var == PT || var == PT2)				      \
+	  ch = 0x5c;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xc9:							      \
+	if (var == CA2)							      \
+	  ch = 0x5e;							      \
+	else if (var == HU)						      \
+	  ch = 0x5b;							      \
+	else if (var == SE2)						      \
+	  ch = 0x40;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xd1:							      \
+	if (var != ES && var != ES2 && var != CU)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5c;							      \
+	break;								      \
+      case 0xd5:							      \
+	if (var != PT && var != PT2)					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5d;							      \
+	break;								      \
+      case 0xd6:							      \
+	if (var != DE && var != HU && var != SE && var != SE2)		      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5c;							      \
+	break;								      \
+      case 0xd8:							      \
+	if (var != DK && var != NO && var != NO2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5c;							      \
+	break;								      \
+      case 0xdc:							      \
+	if (var == DE || var == HU)					      \
+	  ch = 0x5d;							      \
+	else if (var == SE2)						      \
+	  ch = 0x5e;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xdf:							      \
+	if (var != DE)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7e;							      \
+	break;								      \
+      case 0xe0:							      \
+	if (var == CA || var == CA2 || var == FR || var == FR1)		      \
+	  ch = 0x40;							      \
+	else if (var == IT)						      \
+	  ch = 0x7b;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xe1:							      \
+	if (var != HU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x60;							      \
+	break;								      \
+      case 0xe2:							      \
+	if (var != CA && var != CA2)					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5b;							      \
+	break;								      \
+      case 0xe3:							      \
+	if (var != PT && var != PT2)					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7b;							      \
+	break;								      \
+      case 0xe4:							      \
+	if (var != DE && var != SE && var != SE2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7b;							      \
+	break;								      \
+      case 0xe5:							      \
+	if (var != DK && var != NO && var != NO2 && var != SE && var != SE2)  \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7d;							      \
+	break;								      \
+      case 0xe6:							      \
+	if (var != DK && var != NO && var != NO2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7b;							      \
+	break;								      \
+      case 0xe7:							      \
+	if (var == CA || var == CA2 || var == IT || var == FR || var == FR1)  \
+	  ch = 0x5c;							      \
+	else if (var == ES || var == ES2)				      \
+	  ch = 0x7d;							      \
+	else if (var == PT || var == PT2)				      \
+	  ch = 0x7c;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xe8:							      \
+	if (var != CA && var != CA2 && var != IT && var != FR && var != FR1)  \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7d;							      \
+	break;								      \
+      case 0xe9:							      \
+	if (var == CA || var == CA2 || var == HU || var == FR || var == FR1)  \
+	  ch = 0x7b;							      \
+	else if (var == IT)						      \
+	  ch = 0x5d;							      \
+	else if (var == SE2)						      \
+	  ch = 0x60;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xea:							      \
+	if (var != CA && var != CA2)					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5d;							      \
+	break;								      \
+      case 0xec:							      \
+	if (var != IT)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7e;							      \
+	break;								      \
+      case 0xee:							      \
+	if (var != CA)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5e;							      \
+	break;								      \
+      case 0xf1:							      \
+	if (var != ES && var != ES2 && var != CU)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7c;							      \
+	break;								      \
+      case 0xf2:							      \
+	if (var != IT)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7c;							      \
+	break;								      \
+      case 0xf4:							      \
+	if (var != CA && var != CA2)					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x60;							      \
+	break;								      \
+      case 0xf5:							      \
+	if (var != PT && var != PT2)					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7d;							      \
+	break;								      \
+      case 0xf6:							      \
+	if (var != DE && var != HU && var != SE && var != SE2)		      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7c;							      \
+	break;								      \
+      case 0xf8:							      \
+	if (var != DK && var != NO && var != NO2)			      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7c;							      \
+	break;								      \
+      case 0xf9:							      \
+	if (var == CA || var == CA2 || var == FR || var == FR1)		      \
+	  ch = 0x7c;							      \
+	else if (var == IT)						      \
+	  ch = 0x60;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0xfb:							      \
+	if (var != CA && var != CA2)					      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7e;							      \
+	break;								      \
+      case 0xfc:							      \
+	if (var == DE || var == HU)					      \
+	  ch = 0x7d;							      \
+	else if (var == SE2)						      \
+	  ch = 0x7e;							      \
+	else								      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
+      case 0x160:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5b;							      \
+	break;								      \
+      case 0x106:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5d;							      \
+	break;								      \
+      case 0x107:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7d;							      \
+	break;								      \
+      case 0x10c:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5e;							      \
+	break;								      \
+      case 0x10d:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7e;							      \
+	break;								      \
+      case 0x110:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5c;							      \
+	break;								      \
+      case 0x111:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7c;							      \
+	break;								      \
+      case 0x161:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7b;							      \
+	break;								      \
+      case 0x17d:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x40;							      \
+	break;								      \
+      case 0x17e:							      \
+	if (var != YU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x60;							      \
+	break;								      \
+      case 0x2dd:							      \
+	if (var != HU)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7e;							      \
+	break;								      \
+      case 0x2022:							      \
+	if (var != ES2)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x40;							      \
+	break;								      \
+      case 0x203e:							      \
+	if (var != GB && var != CN && var != JP && var != NO && var != SE)    \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x7e;							      \
+	break;								      \
+      case 0x20a9:							      \
+	if (var != KR)							      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5c;							      \
+	break;								      \
+      case 0x2329:							      \
+	if (var != JP_OCR_B)						      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5b;							      \
+	break;								      \
+      case 0x232a:							      \
+	if (var != JP_OCR_B)						      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	ch = 0x5d;							      \
+	break;								      \
+      default:								      \
+	if (*((uint32_t *) inptr) > 0x7f)				      \
+	  failure = GCONV_ILLEGAL_INPUT;				      \
+	break;								      \
       }									      \
-    while (0);								      \
 									      \
-    /* Hopefully gcc can recognize that the following `if' is only true	      \
-       when we fall through the `switch' statement.  */			      \
     if (failure == GCONV_ILLEGAL_INPUT)					      \
       {									      \
 	/* Exit the loop with an error.  */				      \
 	result = failure;						      \
 	break;								      \
       }									      \
-    *outptr++ = ch;							      \
+    *outptr++ = (unsigned char) ch;					      \
     inptr += 4;								      \
   }
 #define EXTRA_LOOP_DECLS	, enum variant var

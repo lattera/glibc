@@ -53,6 +53,137 @@ alias	UK//			BS_4730//
 module	BS_4730//		INTERNAL		ISO646		2
 module	INTERNAL		BS_4730//		ISO646		2
 
+alias	ISO-IR-121//		CSA_Z243.4-1985-1//
+alias	ISO646-CA//		CSA_Z243.4-1985-1//
+alias	CSA7-1//		CSA_Z243.4-1985-1//
+alias	CA//			CSA_Z243.4-1985-1//
+module	CSA_Z243.4-1985-1//	INTERNAL		ISO646		2
+module	INTERNAL		CSA_Z243.4-1985-1//	ISO646		2
+
+alias	ISO-IR-122//		CSA_Z243.4-1985-2//
+alias	ISO646-CA2//		CSA_Z243.4-1985-2//
+alias	CSA7-2//		CSA_Z243.4-1985-2//
+module	CSA_Z243.4-1985-2//	INTERNAL		ISO646		2
+module	INTERNAL		CSA_Z243.4-1985-2//	ISO646		2
+
+alias	ISO-IR-21//		DIN_66003//
+alias	DE//			DIN_66003//
+alias	ISO646-DE//		DIN_66003//
+module	DIN_66003//		INTERNAL		ISO646		2
+module	INTERNAL		DIN_66003//		ISO646		2
+
+alias	DS2089//		DS_2089//
+alias	ISO646-DK//		DS_2089//
+alias	DK//			DS_2089//
+module	DS_2089//		INTERNAL		ISO646		2
+module	INTERNAL		DS_2089//		ISO646		2
+
+alias	ISO-IR-17//		ES//
+alias	ISO646-ES//		ES//
+module	ES//			INTERNAL		ISO646		2
+module	INTERNAL		ES//			ISO646		2
+
+alias	ISO-IR-85//		ES2//
+alias	ISO646-ES2//		ES2//
+module	ES2//			INTERNAL		ISO646		2
+module	INTERNAL		ES2//			ISO646		2
+
+alias	ISO-IR-57//		GB_1988-80//
+alias	CN//			GB_1988-80//
+alias	ISO646-CN//		GB_1988-80//
+module	GB_1988-80//		INTERNAL		ISO646		2
+module	INTERNAL		GB_1988-80//		ISO646		2
+
+alias	ISO-IR-15//		IT//
+alias	ISO646-IT//		IT//
+module	IT//			INTERNAL		ISO646		2
+module	INTERNAL		IT//			ISO646		2
+
+alias	ISO-IR-14//		JIS_C6220-1969-RO//
+alias	JP//			JIS_C6220-1969-RO//
+alias	ISO646-JP//		JIS_C6220-1969-RO//
+module	JIS_C6220-1969-RO//	INTERNAL		ISO646		2
+module	INTERNAL		JIS_C6220-1969-RO//	ISO646		2
+
+alias	ISO-IR-92//		JIS_C6229-1984-B//
+alias	ISO646-JP-OCR-B//	JIS_C6229-1984-B//
+alias	JP-OCR-B//		JIS_C6229-1984-B//
+module	JIS_C6229-1984-B//	INTERNAL		ISO646		2
+module	INTERNAL		JIS_C6229-1984-B//	ISO646		2
+
+alias	ISO-IR-141//		JUS_I.B1.002//
+alias	ISO646-YU//		JUS_I.B1.002//
+alias	JS//			JUS_I.B1.002//
+alias	YU//			JUS_I.B1.002//
+module	JUS_I.B1.002//		INTERNAL		ISO646		2
+module	INTERNAL		JUS_I.B1.002//		ISO646		2
+
+alias	ISO646-KR//		KSC5636//
+module	KSC5636//		INTERNAL		ISO646		2
+module	INTERNAL		KSC5636//		ISO646		2
+
+alias	ISO-IR-86//		MSZ_7795.3//
+alias	ISO646-HU//		MSZ_7795.3//
+alias	HU//			MSZ_7795.3//
+module	MSZ_7795.3//		INTERNAL		ISO646		2
+module	INTERNAL		MSZ_7795.3//		ISO646		2
+
+alias	CUBA//			NC_NC00-10//
+alias	NC_NC00-10:81//		NC_NC00-10//
+alias	ISO-IR-151//		NC_NC00-10//
+alias	ISO646-CU//		NC_NC00-10//
+module	NC_NC00-10//		INTERNAL		ISO646		2
+module	INTERNAL		NC_NC00-10//		ISO646		2
+
+alias	ISO-IR-69//		NF_Z_62-010//
+alias	ISO646-FR//		NF_Z_62-010//
+alias	FR//			NF_Z_62-010//
+module	NF_Z_62-010//		INTERNAL		ISO646		2
+module	INTERNAL		NF_Z_62-010//		ISO646		2
+
+alias	ISO-IR-25//		NF_Z_62-010_(1973)//
+alias	ISO646-FR1//		NF_Z_62-010_(1973)//
+alias	NF_Z_62-010_1973//	NF_Z_62-010_(1973)//
+module	NF_Z_62-010_(1973)//	INTERNAL		ISO646		2
+module	INTERNAL		NF_Z_62-010_(1973)//	ISO646		2
+
+alias	ISO-IR-60//		NS_4551-1//
+alias	ISO646-NO//		NS_4551-1//
+alias	NO//			NS_4551-1//
+module	NS_4551-1//		INTERNAL		ISO646		2
+module	INTERNAL		NS_4551-1//		ISO646		2
+
+alias	ISO646-NO2//		NS_4551-2//
+alias	ISO-IR-61//		NS_4551-2//
+alias	NO2//			NS_4551-2//
+module	NS_4551-2//		INTERNAL		ISO646		2
+module	INTERNAL		NS_4551-2//		ISO646		2
+
+alias	ISO-IR-16//		PT//
+alias	ISO646-PT//		PT//
+module	PT//			INTERNAL		ISO646		2
+module	INTERNAL		PT//			ISO646		2
+
+alias	ISO-IR-84//		PT2//
+alias	ISO646-PT2		PT2//
+module	PT2//			INTERNAL		ISO646		2
+module	INTERNAL		PT2//			ISO646		2
+
+alias	ISO-IR-10//		SEN_850200_B//
+alias	FI//			SEN_850200_B//
+alias	ISO646-FI//		SEN_850200_B//
+alias	ISO646-SE//		SEN_850200_B//
+alias	SE//			SEN_850200_B//
+alias	SS636127//		SEN_850200_B//
+module	SEN_850200_B//		INTERNAL		ISO646		2
+module	INTERNAL		SEN_850200_B//		ISO646		2
+
+alias	ISO-IR-11//		SEN_850200_C//
+alias	ISO646-SE2//		SEN_850200_C//
+alias	SE2//			SEN_850200_C//
+module	SEN_850200_C//		INTERNAL		ISO646		2
+module	INTERNAL		SEN_850200_C//		ISO646		2
+
 #	from			  to			module		cost
 alias	ISO-IR-100//		ISO-8859-1//
 alias	ISO_8859-1:1987//	ISO-8859-1//
@@ -61,6 +192,7 @@ alias	LATIN1//		ISO-8859-1//
 alias	L1//			ISO-8859-1//
 alias	IBM819//		ISO-8859-1//
 alias	CP819//			ISO-8859-1//
+alias	8859_1//		ISO-8859-1//
 module	ISO-8859-1//		INTERNAL		ISO8859-1	1
 module	INTERNAL		ISO-8859-1//		ISO8859-1	1
 
@@ -70,6 +202,7 @@ alias	ISO_8859-2:1987//	ISO-8859-2//
 alias	ISO_8859-2//		ISO-8859-2//
 alias	LATIN2//		ISO-8859-2//
 alias	L2//			ISO-8859-2//
+alias	8859_2//		ISO-8859-2//
 module	ISO-8859-2//		INTERNAL		ISO8859-2	1
 module	INTERNAL		ISO-8859-2//		ISO8859-2	1
 
@@ -79,6 +212,7 @@ alias	ISO_8859-3:1988//	ISO-8859-3//
 alias	ISO_8859-3//		ISO-8859-3//
 alias	LATIN3//		ISO-8859-3//
 alias	L3//			ISO-8859-3//
+alias	8859_3//		ISO-8859-3//
 module	ISO-8859-3//		INTERNAL		ISO8859-3	1
 module	INTERNAL		ISO-8859-3//		ISO8859-3	1
 
@@ -88,6 +222,7 @@ alias	ISO_8859-4:1988//	ISO-8859-4//
 alias	ISO_8859-4//		ISO-8859-4//
 alias	LATIN4//		ISO-8859-4//
 alias	L4//			ISO-8859-4//
+alias	8859_4//		ISO-8859-4//
 module	ISO-8859-4//		INTERNAL		ISO8859-4	1
 module	INTERNAL		ISO-8859-4//		ISO8859-4	1
 
@@ -96,6 +231,7 @@ alias	ISO-IR-144//		ISO-8859-5//
 alias	ISO_8859-5:1988//	ISO-8859-5//
 alias	ISO_8859-5//		ISO-8859-5//
 alias	CYRILLIC//		ISO-8859-5//
+alias	8859_5//		ISO-8859-5//
 module	ISO-8859-5//		INTERNAL		ISO8859-5	1
 module	INTERNAL		ISO-8859-5//		ISO8859-5	1
 
@@ -106,6 +242,7 @@ alias	ISO_8859-6//		ISO-8859-6//
 alias	ECMA-114//		ISO-8859-6//
 alias	ASMO-708//		ISO-8859-6//
 alias	ARABIC//		ISO-8859-6//
+alias	8859_6//		ISO-8859-6//
 module	ISO-8859-6//		INTERNAL		ISO8859-6	1
 module	INTERNAL		ISO-8859-6//		ISO8859-6	1
 
@@ -117,6 +254,7 @@ alias	ELOT_928//		ISO-8859-7//
 alias	ECMA-118//		ISO-8859-7//
 alias	GREEK//			ISO-8859-7//
 alias	GREEK8//		ISO-8859-7//
+alias	8859_7//		ISO-8859-7//
 module	ISO-8859-7//		INTERNAL		ISO8859-7	1
 module	INTERNAL		ISO-8859-7//		ISO8859-7	1
 
@@ -125,6 +263,7 @@ alias	ISO-IR-138//		ISO-8859-8//
 alias	ISO_8859-8:1988//	ISO-8859-8//
 alias	ISO_8859-8//		ISO-8859-8//
 alias	HEBREW//		ISO-8859-8//
+alias	8859_8//		ISO-8859-8//
 module	ISO-8859-8//		INTERNAL		ISO8859-8	1
 module	INTERNAL		ISO-8859-8//		ISO8859-8	1
 
@@ -134,6 +273,7 @@ alias	ISO_8859-9:1989//	ISO-8859-9//
 alias	ISO_8859-9//		ISO-8859-9//
 alias	LATIN5//		ISO-8859-9//
 alias	L5//			ISO-8859-9//
+alias	8859_9//		ISO-8859-9//
 module	ISO-8859-9//		INTERNAL		ISO8859-9	1
 module	INTERNAL		ISO-8859-9//		ISO8859-9	1
 
@@ -201,6 +341,327 @@ module	EBCDIC-CA-FR//		INTERNAL		EBCDIC-CA-FR	1
 module	INTERNAL		EBCDIC-CA-FR//		EBCDIC-CA-FR	1
 
 #	from			  to			module		cost
+module	EBCDIC-DK-NO//		INTERNAL		EBCDIC-DK-NO	1
+module	INTERNAL		EBCDIC-DK-NO//		EBCDIC-DK-NO	1
+
+#	from			  to			module		cost
+module	EBCDIC-DK-NO-A//	INTERNAL		EBCDIC-DK-NO-A	1
+module	INTERNAL		EBCDIC-DK-NO-A//	EBCDIC-DK-NO-A	1
+
+#	from			  to			module		cost
+module	EBCDIC-ES//		INTERNAL		EBCDIC-ES	1
+module	INTERNAL		EBCDIC-ES//		EBCDIC-ES	1
+
+#	from			  to			module		cost
+module	EBCDIC-ES-A//		INTERNAL		EBCDIC-ES-A	1
+module	INTERNAL		EBCDIC-ES-A//		EBCDIC-ES-A	1
+
+#	from			  to			module		cost
+module	EBCDIC-ES-S//		INTERNAL		EBCDIC-ES-S	1
+module	INTERNAL		EBCDIC-ES-S//		EBCDIC-ES-S	1
+
+#	from			  to			module		cost
+module	EBCDIC-FI-SE//		INTERNAL		EBCDIC-FI-SE	1
+module	INTERNAL		EBCDIC-FI-SE//		EBCDIC-FI-SE	1
+
+#	from			  to			module		cost
+module	EBCDIC-FI-SE-A//	INTERNAL		EBCDIC-FI-SE-A	1
+module	INTERNAL		EBCDIC-FI-SE-A//	EBCDIC-FI-SE-A	1
+
+#	from			  to			module		cost
+module	EBCDIC-FR//		INTERNAL		EBCDIC-FR	1
+module	INTERNAL		EBCDIC-FR//		EBCDIC-FR	1
+
+#	from			  to			module		cost
+module	EBCDIC-IS-FRISS//	INTERNAL		EBCDIC-IS-FRISS	1
+module	INTERNAL		EBCDIC-IS-FRISS//	EBCDIC-IS-FRISS	1
+
+#	from			  to			module		cost
+module	EBCDIC-IT//		INTERNAL		EBCDIC-IT	1
+module	INTERNAL		EBCDIC-IT//		EBCDIC-IT	1
+
+#	from			  to			module		cost
+module	EBCDIC-PT//		INTERNAL		EBCDIC-PT	1
+module	INTERNAL		EBCDIC-PT//		EBCDIC-PT	1
+
+#	from			  to			module		cost
+module	EBCDIC-UK//		INTERNAL		EBCDIC-UK	1
+module	INTERNAL		EBCDIC-UK//		EBCDIC-UK	1
+
+#	from			  to			module		cost
+module	EBCDIC-US//		INTERNAL		EBCDIC-US	1
+module	INTERNAL		EBCDIC-US//		EBCDIC-US	1
+
+#	from			  to			module		cost
+alias	CP037//			IBM037//
+alias	EBCDIC-CP-US//		IBM037//
+alias	EBCDIC-CP-CA//		IBM037//
+alias	EBCDIC-CP-WT//		IBM037//
+alias	EBCDIC-CP-NL//		IBM037//
+module	IBM037//		INTERNAL		IBM037		1
+module	INTERNAL		IBM037//		IBM037		1
+
+#	from			  to			module		cost
+alias	EBCDIC-INT//		IBM038//
+alias	CP038//			IBM038//
+module	IBM038//		INTERNAL		IBM038		1
+module	INTERNAL		IBM038//		IBM038		1
+
+#	from			  to			module		cost
+alias	EBCDIC-INT1//		IBM256//
+module	IBM256//		INTERNAL		IBM256		1
+module	INTERNAL		IBM256//		IBM256		1
+
+#	from			  to			module		cost
+alias	CP273//			IBM273//
+module	IBM273//		INTERNAL		IBM273		1
+module	INTERNAL		IBM273//		IBM273		1
+
+#	from			  to			module		cost
+alias	EBCDIC-BE//		IBM274//
+alias	CP274//			IBM274//
+module	IBM274//		INTERNAL		IBM274		1
+module	INTERNAL		IBM274//		IBM274		1
+
+#	from			  to			module		cost
+alias	EBCDIC-BR//		IBM275//
+alias	CP275//			IBM275//
+module	IBM275//		INTERNAL		IBM275		1
+module	INTERNAL		IBM275//		IBM275		1
+
+#	from			  to			module		cost
+alias	EBCDIC-CP-DK//		IBM277//
+alias	EBCDIC-CP-NO//		IBM277//
+module	IBM277//		INTERNAL		IBM277		1
+module	INTERNAL		IBM277//		IBM277		1
+
+#	from			  to			module		cost
+alias	CP278//			IBM278//
+alias	EBCDIC-CP-FI//		IBM278//
+alias	EBCDIC-CP-SE//		IBM278//
+module	IBM278//		INTERNAL		IBM278		1
+module	INTERNAL		IBM278//		IBM278		1
+
+#	from			  to			module		cost
+alias	CP280//			IBM280//
+alias	EBCDIC-CP-IT//		IBM280//
+module	IBM280//		INTERNAL		IBM280		1
+module	INTERNAL		IBM280//		IBM280		1
+
+#	from			  to			module		cost
+alias	EBCDIC-JP-E//		IBM281//
+alias	CP281//			IBM281//
+module	IBM281//		INTERNAL		IBM281		1
+module	INTERNAL		IBM281//		IBM281		1
+
+#	from			  to			module		cost
+alias	CP284//			IBM284//
+alias	EBCDIC-CP-ES//		IBM284//
+module	IBM284//		INTERNAL		IBM284		1
+module	INTERNAL		IBM284//		IBM284		1
+
+#	from			  to			module		cost
+alias	CP285//			IBM285//
+alias	EBCDIC-CP-GB//		IBM285//
+module	IBM285//		INTERNAL		IBM285		1
+module	INTERNAL		IBM285//		IBM285		1
+
+#	from			  to			module		cost
+alias	CP290//			IBM290//
+alias	EBCDIC-JP-KANA//	IBM290//
+module	IBM290//		INTERNAL		IBM290		1
+module	INTERNAL		IBM290//		IBM290		1
+
+#	from			  to			module		cost
+alias	CP297//			IBM297//
+alias	EBCDIC-CP-FR//		IBM297//
+module	IBM297//		INTERNAL		IBM297		1
+module	INTERNAL		IBM297//		IBM297		1
+
+#	from			  to			module		cost
+alias	CP420//			IBM420//
+alias	EBCDIC-CP-AR1//		IBM420//
+module	IBM420//		INTERNAL		IBM420		1
+module	INTERNAL		IBM420//		IBM420		1
+
+#	from			  to			module		cost
+alias	CP423//			IBM423//
+alias	EBCDIC-CP-GR//		IBM423//
+module	IBM423//		INTERNAL		IBM423		1
+module	INTERNAL		IBM423//		IBM423		1
+
+#	from			  to			module		cost
+alias	CP424//			IBM424//
+alias	EBCDIC-CP-HE//		IBM424//
+module	IBM424//		INTERNAL		IBM424		1
+module	INTERNAL		IBM424//		IBM424		1
+
+#	from			  to			module		cost
+alias	CP437//			IBM437//
+alias	437//			IBM437//
+module	IBM437//		INTERNAL		IBM437		1
+module	INTERNAL		IBM437//		IBM437		1
+
+#	from			  to			module		cost
+alias	CP500//			IBM500//
+alias	500//			IBM500//
+alias	500V1//			IBM500//
+alias	EBCDIC-CP-BE//		IBM500//
+alias	EBCDIC-CP-CH//		IBM500//
+module	IBM500//		INTERNAL		IBM500		1
+module	INTERNAL		IBM500//		IBM500		1
+
+#	from			  to			module		cost
+alias	CP850//			IBM850//
+alias	850//			IBM850//
+module	IBM850//		INTERNAL		IBM850		1
+module	INTERNAL		IBM850//		IBM850		1
+
+#	from			  to			module		cost
+alias	CP851//			IBM851//
+alias	851//			IBM851//
+module	IBM851//		INTERNAL		IBM851		1
+module	INTERNAL		IBM851//		IBM851		1
+
+#	from			  to			module		cost
+alias	CP852//			IBM852//
+alias	852//			IBM852//
+module	IBM852//		INTERNAL		IBM852		1
+module	INTERNAL		IBM852//		IBM852		1
+
+#	from			  to			module		cost
+alias	CP855//			IBM855//
+alias	855//			IBM855//
+module	IBM855//		INTERNAL		IBM855		1
+module	INTERNAL		IBM855//		IBM855		1
+
+#	from			  to			module		cost
+alias	CP857//			IBM857//
+alias	857//			IBM857//
+module	IBM857//		INTERNAL		IBM857		1
+module	INTERNAL		IBM857//		IBM857		1
+
+#	from			  to			module		cost
+alias	CP860//			IBM860//
+alias	860//			IBM860//
+module	IBM860//		INTERNAL		IBM860		1
+module	INTERNAL		IBM860//		IBM860		1
+
+#	from			  to			module		cost
+alias	CP861//			IBM861//
+alias	861//			IBM861//
+module	IBM861//		INTERNAL		IBM861		1
+module	INTERNAL		IBM861//		IBM861		1
+
+#	from			  to			module		cost
+alias	CP862//			IBM862//
+alias	862//			IBM862//
+module	IBM862//		INTERNAL		IBM862		1
+module	INTERNAL		IBM862//		IBM862		1
+
+#	from			  to			module		cost
+alias	CP863//			IBM863//
+alias	863//			IBM863//
+module	IBM863//		INTERNAL		IBM863		1
+module	INTERNAL		IBM863//		IBM863		1
+
+#	from			  to			module		cost
+alias	CP864//			IBM864//
+alias	864//			IBM864//
+module	IBM864//		INTERNAL		IBM864		1
+module	INTERNAL		IBM864//		IBM864		1
+
+#	from			  to			module		cost
+alias	CP865//			IBM865//
+alias	865//			IBM865//
+module	IBM865//		INTERNAL		IBM865		1
+module	INTERNAL		IBM865//		IBM865		1
+
+#	from			  to			module		cost
+alias	CP868//			IBM868//
+alias	CP-AR//			IBM868//
+module	IBM868//		INTERNAL		IBM868		1
+module	INTERNAL		IBM868//		IBM868		1
+
+#	from			  to			module		cost
+alias	CP869//			IBM869//
+alias	869//			IBM869//
+alias	CP-GR//			IBM869//
+module	IBM869//		INTERNAL		IBM869		1
+module	INTERNAL		IBM869//		IBM869		1
+
+#	from			  to			module		cost
+alias	CP870//			IBM870//
+alias	EBCDIC-CP-ROECE//	IBM870//
+alias	EBCDIC-CP-YU//		IBM870//
+module	IBM870//		INTERNAL		IBM870		1
+module	INTERNAL		IBM870//		IBM870		1
+
+#	from			  to			module		cost
+alias	CP871//			IBM871//
+alias	EBCDIC-CP-IS//		IBM871//
+module	IBM871//		INTERNAL		IBM871		1
+module	INTERNAL		IBM871//		IBM871		1
+
+#	from			  to			module		cost
+alias	CP875//			IBM875//
+alias	EBCDIC-GREEK//		IBM875//
+module	IBM875//		INTERNAL		IBM875		1
+module	INTERNAL		IBM875//		IBM875		1
+
+#	from			  to			module		cost
+alias	CP880//			IBM880//
+alias	EBCDIC-CYRILLIC//	IBM880//
+module	IBM880//		INTERNAL		IBM880		1
+module	INTERNAL		IBM880//		IBM880		1
+
+#	from			  to			module		cost
+alias	CP891//			IBM891//
+module	IBM891//		INTERNAL		IBM891		1
+module	INTERNAL		IBM891//		IBM891		1
+
+#	from			  to			module		cost
+alias	CP903//			IBM903//
+module	IBM903//		INTERNAL		IBM903		1
+module	INTERNAL		IBM903//		IBM903		1
+
+#	from			  to			module		cost
+alias	CP904//			IBM904//
+alias	904//			IBM904//
+module	IBM904//		INTERNAL		IBM904		1
+module	INTERNAL		IBM904//		IBM904		1
+
+#	from			  to			module		cost
+alias	CP905//			IBM905//
+alias	EBCDIC-CP-TR//		IBM905//
+module	IBM905//		INTERNAL		IBM905		1
+module	INTERNAL		IBM905//		IBM905		1
+
+#	from			  to			module		cost
+alias	CP918//			IBM918//
+alias	EBCDIC-CP-AR2//		IBM918//
+module	IBM918//		INTERNAL		IBM918		1
+module	INTERNAL		IBM918//		IBM918		1
+
+#	from			  to			module		cost
+alias	CP1004//		IBM1004//
+alias	OS2LATIN1//		IBM1004//
+module	IBM1004//		INTERNAL		IBM1004		1
+module	INTERNAL		IBM1004//		IBM1004		1
+
+#	from			  to			module		cost
+alias	CP1026//		IBM1026//
+alias	1026//			IBM1026//
+module	IBM1026//		INTERNAL		IBM1026		1
+module	INTERNAL		IBM1026//		IBM1026		1
+
+#	from			  to			module		cost
+alias	CP1047//		IBM1047//
+alias	1047//			IBM1047//
+module	IBM1047//		INTERNAL		IBM1047		1
+module	INTERNAL		IBM1047//		IBM1047		1
+
+#	from			  to			module		cost
 alias	EUCKR//			EUC-KR//
 module	EUC-KR//		INTERNAL		EUC-KR		1
 module	INTERNAL		EUC-KR//		EUC-KR		1
@@ -236,3 +697,43 @@ module	INTERNAL		EUC-CN//		EUC-CN		1
 alias	EUCTW//			EUC-TW//
 module	EUC-TW//		INTERNAL		EUC-TW		1
 module	INTERNAL		EUC-TW//		EUC-TW		1
+
+#	from			  to			module		cost
+alias	MS-EE//			CP1250//
+module	CP1250//		INTERNAL		CP1250		1
+module	INTERNAL		CP1250//		CP1250		1
+
+#	from			  to			module		cost
+alias	MS-CYRL//		CP1251//
+module	CP1251//		INTERNAL		CP1251		1
+module	INTERNAL		CP1251//		CP1251		1
+
+#	from			  to			module		cost
+alias	MS-ANSI//		CP1252//
+module	CP1252//		INTERNAL		CP1252		1
+module	INTERNAL		CP1252//		CP1252		1
+
+#	from			  to			module		cost
+alias	MS-GREEK//		CP1253//
+module	CP1253//		INTERNAL		CP1253		1
+module	INTERNAL		CP1253//		CP1253		1
+
+#	from			  to			module		cost
+alias	MS-TURK//		CP1254//
+module	CP1254//		INTERNAL		CP1254		1
+module	INTERNAL		CP1254//		CP1254		1
+
+#	from			  to			module		cost
+alias	MS-TURK//		CP1255//
+module	CP1255//		INTERNAL		CP1255		1
+module	INTERNAL		CP1255//		CP1255		1
+
+#	from			  to			module		cost
+alias	MS-ARAB//		CP1256//
+module	CP1256//		INTERNAL		CP1256		1
+module	INTERNAL		CP1256//		CP1256		1
+
+#	from			  to			module		cost
+alias	WINBLATRIM//		CP1257//
+module	CP1257//		INTERNAL		CP1257		1
+module	INTERNAL		CP1257//		CP1257		1

@@ -41,7 +41,7 @@ extern const struct jisx0212_idx __jisx0212_from_ucs_idx[];
 extern const char __jisx0212_from_ucs[][2];
 
 
-static inline wchar_t
+static inline uint32_t
 jisx0212_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
   const struct jisx0212_idx *rp = __jisx0212_to_ucs_idx;
@@ -50,7 +50,7 @@ jisx0212_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
   uint32_t wch = 0;
   int idx;
 
-  if (ch < offset || (ch - offset) <= 0x6d || (ch - offset) > 0xea)
+  if (ch < offset || (ch - offset) < 0x22 || (ch - offset) > 0x6d)
     return UNKNOWN_10646_CHAR;
 
   if (avail < 2)
@@ -60,7 +60,7 @@ jisx0212_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
   if (ch2 < offset || (ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
     return UNKNOWN_10646_CHAR;
 
-  idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
+  idx = (ch - offset - 0x21) * 94 + (ch2 - offset - 0x21);
 
   while (idx > rp->end)
     ++rp;
@@ -77,7 +77,7 @@ jisx0212_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 
 
 static inline size_t
-ucs4_to_jisx0212 (wchar_t wch, char *s, size_t avail)
+ucs4_to_jisx0212 (uint32_t wch, char *s, size_t avail)
 {
   const struct jisx0212_idx *rp = __jisx0212_from_ucs_idx;
   unsigned int ch = (unsigned int) wch;

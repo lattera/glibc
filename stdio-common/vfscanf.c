@@ -935,6 +935,57 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    negative = 0;
 
+	  /* Take care for the special arguments "nan" and "inf".  */
+	  if (tolower (c) == 'n')
+	    {
+	      /* Maybe "nan".  */
+	      ADDW (c);
+	      if (inchar () == EOF || tolower (c) != 'a')
+		input_error ();
+	      ADDW (c);
+	      if (inchar () == EOF || tolower (c) != 'n')
+		input_error ();
+	      ADDW (c);
+	      /* It is "nan".  */
+	      goto scan_float;
+	    }
+	  else if (tolower (c) == 'i')
+	    {
+	      /* Maybe "inf" or "infinity".  */
+	      ADDW (c);
+	      if (inchar () == EOF || tolower (c) != 'n')
+		input_error ();
+	      ADDW (c);
+	      if (inchar () == EOF || tolower (c) != 'f')
+		input_error ();
+	      ADDW (c);
+	      /* It is as least "inf".  */
+	      if (inchar () != EOF)
+		{
+		  if (tolower (c) == 'i')
+		    {
+		      /* No we have to read the rest as well.  */
+		      ADDW (c);
+		      if (inchar () == EOF || tolower (c) != 'n')
+			input_error ();
+		      ADDW (c);
+		      if (inchar () == EOF || tolower (c) != 'i')
+			input_error ();
+		      ADDW (c);
+		      if (inchar () == EOF || tolower (c) != 't')
+			input_error ();
+		      ADDW (c);
+		      if (inchar () == EOF || tolower (c) != 'y')
+			input_error ();
+		      ADDW (c);
+		    }
+		  else
+		    /* Never mind.  */
+		    ungetc (c, s);
+		}
+	      goto scan_float;
+	    }
+
 	  is_hexa = 0;
 	  exp_char = 'e';
 	  if (c == '0')
@@ -995,6 +1046,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (wpsize == 0 || (is_hexa && wpsize == 2))
 	    conv_error ();
 
+	scan_float:
 	  /* Convert the number.  */
 	  ADDW ('\0');
 	  if (flags & LONGDBL)

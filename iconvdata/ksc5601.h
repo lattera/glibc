@@ -35,10 +35,6 @@ extern const uint16_t __ksc5601_hanja_to_ucs[KSC5601_HANJA];
 extern const uint16_t __ksc5601_hanja_from_ucs[KSC5601_HANJA][2];
 
 
-/*
-static inline wchar_t
-ksc5601_to_ucs4 (char **s, size_t avail)
-*/
 static inline uint32_t
 ksc5601_to_ucs4 (uint16_t s)
 {
@@ -144,11 +140,6 @@ ucs4_to_ksc5601_sym (uint32_t wch, uint16_t *s)
   return 0;
 }
 
-
-/*
-static inline size_t
-ucs4_to_ksc5601 (wchar_t wch, char **s, size_t avail)
-*/
 
 static inline size_t
 ucs4_to_ksc5601 (uint32_t ch, uint16_t *s)

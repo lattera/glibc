@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
-#include <unistd.>
+#include <unistd.h>
 
 #define TRANSFORM_UTMP_FILE_NAME(file_name) \
     ((strcmp (file_name, _PATH_UTMP "x") == 0 \

@@ -102,7 +102,7 @@ glob/%.h: %.h
 	ln -s ../$< $@
 
 glob/configure: glob/configure.in
-	cd glob; autoconf $(ACFLAGS)
+	cd glob && autoconf $(ACFLAGS)
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endif

@@ -25,7 +25,7 @@ struct gap
 {
   uint16_t start;
   uint16_t end;
-  int16_t idx;
+  int32_t idx;
 };
 
 /* Now we can include the tables.  */

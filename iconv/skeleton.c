@@ -137,9 +137,9 @@ int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  if (__strcasestr (step->from_name, CHARSET_NAME) != NULL)
+  if (__strcasecmp (step->from_name, CHARSET_NAME) == 0)
     step->data = &from_object;
-  else if (__strcasestr (step->to_name, CHARSET_NAME) != NULL)
+  else if (__strcasecmp (step->to_name, CHARSET_NAME) == 0)
     step->data = &to_object;
   else
     return GCONV_NOCONV;

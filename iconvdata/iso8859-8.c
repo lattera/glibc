@@ -22,7 +22,7 @@
 #include <stdint.h>
 #include <iso8859-8.h>
 
-#define CHARSET_NAME	"ISO-8859-8"
+#define CHARSET_NAME	"ISO-8859-8//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-generic.c>

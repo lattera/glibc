@@ -43,7 +43,7 @@ egrep \
 
 */
 
-static const wchar_t uhc_extra_to_ucs[8822]=
+static const uint32_t uhc_extra_to_ucs[8822]=
 {
   0xac02, 0xac03, 0xac05, 0xac06, 0xac0b, 0xac0c, 0xac0d, 0xac0e,
   0xac0f, 0xac18, 0xac1e, 0xac1f, 0xac21, 0xac22, 0xac23, 0xac25,
@@ -2607,7 +2607,7 @@ uhc_from_ucs4 (uint32_t ch, unsigned char *cp)
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"UHC"
+#define CHARSET_NAME		"UHC//"
 #define FROM_LOOP		from_uhc
 #define TO_LOOP			to_uhc
 #define DEFINE_INIT		1
@@ -2630,7 +2630,7 @@ uhc_from_ucs4 (uint32_t ch, unsigned char *cp)
     if (ch == 0x5c)							      \
       ch =  0x20a9;							      \
     else if (ch <= 0x7f)						      \
-      ch = (wchar_t) ch;						      \
+      ch = (uint32_t) ch;						      \
 */									      \
     if (ch <= 0x7f)							      \
       ++inptr;								      \

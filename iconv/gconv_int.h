@@ -158,6 +158,8 @@ __BUILTIN_TRANS (__gconv_transform_utf8_internal);
 __BUILTIN_TRANS (__gconv_transform_internal_utf8);
 __BUILTIN_TRANS (__gconv_transform_ucs2_internal);
 __BUILTIN_TRANS (__gconv_transform_internal_ucs2);
+__BUILTIN_TRANS (__gconv_transform_ucs2little_internal);
+__BUILTIN_TRANS (__gconv_transform_internal_ucs2little);
 __BUILTIN_TRANS (__gconv_transform_internal_ucs4);
 # undef __BUITLIN_TRANS
 

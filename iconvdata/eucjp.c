@@ -25,7 +25,7 @@
 #include <jis0212.h>
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"EUC-JP"
+#define CHARSET_NAME		"EUC-JP//"
 #define FROM_LOOP		from_euc_jp
 #define TO_LOOP			to_euc_jp
 #define DEFINE_INIT		1

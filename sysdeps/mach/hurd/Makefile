@@ -92,8 +92,8 @@ $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 	-chmod a-w $(hurd)/errnos.h-tmp
 	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
 ifeq ($(with-cvs),yes)
-	test ! -d CVS || \
-	  (cd $(hurd); cvs commit -m'Regenerated from $^' errnos.h)
+	test ! -d $(hurd)/CVS || \
+	  (cd $(hurd) && cvs commit -m'Regenerated from $^' errnos.h)
 endif
 	touch $@
 

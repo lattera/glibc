@@ -1,8 +1,232 @@
+<<<<<<< ChangeLog
+1998-04-23 22:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (fillin_rpath): Handle empty element returned by
+	strsep as current directory.
+
+	* iconv/gconv_builtin.h: Add aliases unicode and unicodebig for
+	Java.  Add definitions for unicodelittle implementation.
+	* iconv/gconv_int.h: Add declaration for unicodelittle functions.
+	* iconv/gconv_simple.c: Define unicodelittle functions.
+
+	* iconv/iconv_prog.c: Make program print information about position
+	of illegal character in input.
+
+	* iconv/skeleton.c: Use __strcasecmp instead of __strcasestr for
+	comparison of charset name.
+	* iconvdata/big5.c (CHARSET_NAME): Adapt for this.
+	* iconvdata/ebcdic-at-de-a.c: Likewise.
+	* iconvdata/ebcdic-at-de.c: Likewise.
+	* iconvdata/ebcdic-ca-fr.c: Likewise.
+	* iconvdata/euccn.c: Likewise.
+	* iconvdata/eucjp.c: Likewise.
+	* iconvdata/euckr.c: Likewise.
+	* iconvdata/euctw.c: Likewise.
+	* iconvdata/hp-roman8.c: Likewise.
+	* iconvdata/iso6937.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso8859-10.c: Likewise.
+	* iconvdata/iso8859-2.c: Likewise.
+	* iconvdata/iso8859-3.c: Likewise.
+	* iconvdata/iso8859-4.c: Likewise.
+	* iconvdata/iso8859-5.c: Likewise.
+	* iconvdata/iso8859-6.c: Likewise.
+	* iconvdata/iso8859-7.c: Likewise.
+	* iconvdata/iso8859-8.c: Likewise.
+	* iconvdata/iso8859-9.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/koi-8.c: Likewise.
+	* iconvdata/koi8-r.c: Likewise.
+	* iconvdata/latin-greek-1.c: Likewise.
+	* iconvdata/latin-greek.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+
+	* iconvdata/iso646.c: Add support for more ISO 646 variants.
+	* iconvdata/TESTS: Add tests for ISO646 module.
+	* iconvdata/gconv-modules: Add new modules.
+	* iconvdata/testdate/CSA_Z243.4-1985-1: New tests for ISO646 module.
+	* iconvdata/testdate/CSA_Z243.4-1985-1..UCS2: Likewise.
+	* iconvdata/testdate/CSA_Z243.4-1985-2: Likewise.
+	* iconvdata/testdate/CSA_Z243.4-1985-2..UCS4: Likewise.
+	* iconvdata/testdate/DIN_66003: Likewise.
+	* iconvdata/testdate/DIN_66003..UTF8: Likewise.
+	* iconvdata/testdate/DS_2089: Likewise.
+	* iconvdata/testdate/DS_2089..UTF8: Likewise.
+	* iconvdata/testdate/ES: Likewise.
+	* iconvdata/testdate/ES..UTF8: Likewise.
+	* iconvdata/testdate/ES2: Likewise.
+	* iconvdata/testdate/ES2..UTF8: Likewise.
+	* iconvdata/testdate/GB_1988-80: Likewise.
+	* iconvdata/testdate/GB_1988-80..UTF8: Likewise.
+	* iconvdata/testdate/IT: Likewise.
+	* iconvdata/testdate/IT..UTF8: Likewise.
+	* iconvdata/testdate/JIS_C6220-1969-RO: Likewise.
+	* iconvdata/testdate/JIS_C6220-1969-RO..UTF8: Likewise.
+	* iconvdata/testdate/JIS_C6229-1984-B: Likewise.
+	* iconvdata/testdate/JIS_C6229-1984-B..UTF8: Likewise.
+	* iconvdata/testdate/JUS_I.B1.002: Likewise.
+	* iconvdata/testdate/JUS_I.B1.002..UTF8: Likewise.
+	* iconvdata/testdate/KSC5636: Likewise.
+	* iconvdata/testdate/KSC5636..UTF8: Likewise.
+	* iconvdata/testdate/MSZ_7795.3: Likewise.
+	* iconvdata/testdate/MSZ_7795.3..UTF8: Likewise.
+	* iconvdata/testdate/NC_NC00-10: Likewise.
+	* iconvdata/testdate/NC_NC00-10..UTF8: Likewise.
+	* iconvdata/testdate/NF_Z_62-010: Likewise.
+	* iconvdata/testdate/NF_Z_62-010..UTF8: Likewise.
+	* iconvdata/testdate/NF_Z_62-010_1973: Likewise.
+	* iconvdata/testdate/NF_Z_62-010_1973..UTF8: Likewise.
+	* iconvdata/testdate/NS_4551-1: Likewise.
+	* iconvdata/testdate/NS_4551-1..UTF8: Likewise.
+	* iconvdata/testdate/NS_4551-2: Likewise.
+	* iconvdata/testdate/NS_4551-2..UTF8: Likewise.
+	* iconvdata/testdate/PT: Likewise.
+	* iconvdata/testdate/PT..UTF8: Likewise.
+	* iconvdata/testdate/PT2: Likewise.
+	* iconvdata/testdate/PT2..UTF8: Likewise.
+	* iconvdata/testdate/SEN_850200_B: Likewise.
+	* iconvdata/testdate/SEN_850200_B..UTF8: Likewise.
+	* iconvdata/testdate/SEN_850200_C: Likewise.
+	* iconvdata/testdate/SEN_850200_C..UTF8: Likewise.
+
+	* iconvdata/cns11643.h: Use uint32_t instead of wchar_t.
+	* iconvdata/cns11643l1.h: Likewise.
+	* iconvdata/latin-greek-1.h: Likewise.
+	* iconvdata/latin-greek.h: Likewise.
+	* iconvdata/koi8-r.h: Likewise.
+	* iconvdata/jis0212.h: Likewise.
+	* iconvdata/gb2312.h: Likewise.
+	* iconvdata/ksc5601.h: Likewise.
+
+	* iconvdata/8bit-gap.c: Use 32 bit type for idx element of struct gap.
+
+	* iconvdata/Makefile: Add rules for lots of more modules.
+	* iconvdata/cp1250.c: New file.
+	* iconvdata/cp1251.c: New file.
+	* iconvdata/cp1252.c: New file.
+	* iconvdata/cp1253.c: New file.
+	* iconvdata/cp1254.c: New file.
+	* iconvdata/cp1255.c: New file.
+	* iconvdata/cp1256.c: New file.
+	* iconvdata/cp1257.c: New file.
+	* iconvdata/ebcdic-dk-no-a.c: New file.
+	* iconvdata/ebcdic-dk-no.c: New file.
+	* iconvdata/ebcdic-es-a.c: New file.
+	* iconvdata/ebcdic-es-s.c: New file.
+	* iconvdata/ebcdic-es.c: New file.
+	* iconvdata/ebcdic-fi-se-a.c: New file.
+	* iconvdata/ebcdic-fi-se.c: New file.
+	* iconvdata/ebcdic-fr.c: New file.
+	* iconvdata/ebcdic-is-friss.c: New file.
+	* iconvdata/ebcdic-it.c: New file.
+	* iconvdata/ebcdic-pt.c: New file.
+	* iconvdata/ebcdic-uk.c: New file.
+	* iconvdata/ebcdic-us.c: New file.
+	* iconvdata/ibm037.c: New file.
+	* iconvdata/ibm038.c: New file.
+	* iconvdata/ibm1004.c: New file.
+	* iconvdata/ibm1026.c: New file.
+	* iconvdata/ibm1047.c: New file.
+	* iconvdata/ibm256.c: New file.
+	* iconvdata/ibm273.c: New file.
+	* iconvdata/ibm274.c: New file.
+	* iconvdata/ibm275.c: New file.
+	* iconvdata/ibm277.c: New file.
+	* iconvdata/ibm278.c: New file.
+	* iconvdata/ibm280.c: New file.
+	* iconvdata/ibm281.c: New file.
+	* iconvdata/ibm284.c: New file.
+	* iconvdata/ibm285.c: New file.
+	* iconvdata/ibm290.c: New file.
+	* iconvdata/ibm297.c: New file.
+	* iconvdata/ibm420.c: New file.
+	* iconvdata/ibm423.c: New file.
+	* iconvdata/ibm424.c: New file.
+	* iconvdata/ibm437.c: New file.
+	* iconvdata/ibm500.c: New file.
+	* iconvdata/ibm850.c: New file.
+	* iconvdata/ibm851.c: New file.
+	* iconvdata/ibm852.c: New file.
+	* iconvdata/ibm855.c: New file.
+	* iconvdata/ibm857.c: New file.
+	* iconvdata/ibm860.c: New file.
+	* iconvdata/ibm861.c: New file.
+	* iconvdata/ibm862.c: New file.
+	* iconvdata/ibm863.c: New file.
+	* iconvdata/ibm864.c: New file.
+	* iconvdata/ibm865.c: New file.
+	* iconvdata/ibm868.c: New file.
+	* iconvdata/ibm869.c: New file.
+	* iconvdata/ibm870.c: New file.
+	* iconvdata/ibm871.c: New file.
+	* iconvdata/ibm875.c: New file.
+	* iconvdata/ibm880.c: New file.
+	* iconvdata/ibm891.c: New file.
+	* iconvdata/ibm903.c: New file.
+	* iconvdata/ibm904.c: New file.
+	* iconvdata/ibm905.c: New file.
+	* iconvdata/ibm918.c: New file.
+
+	* locale/iso-4217.def: Update.
+	* localedata/locales/pt_BR: Correct.  Patches by Andreas Jaeger.
+
+	* stdio-common/vfscanf.h: Recognize nan and inf in floating-point
+	formats.
+
+1998-04-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/dl-load.c (_dl_init_paths): ';' is also a terminal for
+	LD_LIBRARY_PATH.
+
+1998-04-22  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* Makerules: Change occurances of `cd dir; cmd' to `cd dir && cmd'.
+	* Makefile: Likewise.
+	* posix/Makefile: Likewise.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+
+1998-04-22  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* sysdeps/mach/hurd/bits/dirent.h: New file.
+	* sysdeps/mach/hurd/readdir64.c: New file.
+	* sysdeps/mach/hurd/readdir64_r.c: New file.
+
+1998-04-21  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* stdio/stdio.h (vasprintf, __asprintf, asprintf, vdprintf,
+	dprintf): Synchronize declarations with libio/stdio.h.
+
+1998-04-21  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* elf/dlerror.c (dlerror): Don't assume that
+	__libc_internal_tsd_get is defined.  __libc_getspecific is already
+	well-protected, so just use it directly.
+
+1998-04-22  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* io/ftw.h (ftw): Fix typo.
+
+1998-04-21  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* sysdeps/gnu/utmp_file.c: Fix typo.
+
+1998-04-22 11:06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/run-iconv-test.sh: Fix more portability bugs.  When
+	one part of a test fails move on to the next test.
+
 1998-04-24  5:45  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/alpha/bits/setjmp.h (_JMPBUF_UNWINDS): Added.
 
-Wed Apr 22 11:06:09 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-04-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/i386/bits/setjmp.h (_JMPBUF_UNWINDS): Compare addresses
+	as pointers, not signed integers.
+
+1998-04-22 11:06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/bits/setjmp.h (_JMPBUF_UNWINDS): Added.
 

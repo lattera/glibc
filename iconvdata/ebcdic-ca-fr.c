@@ -23,7 +23,7 @@
 /* Get the conversion table.  */
 #include <ebcdic-ca-fr.h>
 
-#define CHARSET_NAME	"EBCDIC-CA-FR"
+#define CHARSET_NAME	"EBCDIC-CA-FR//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-generic.c>

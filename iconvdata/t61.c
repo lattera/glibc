@@ -23,7 +23,7 @@
 #include <string.h>
 
 /* Data taken from the WG15 tables.  */
-static const wchar_t to_ucs4[256] =
+static const uint32_t to_ucs4[256] =
 {
   /* 0x00 */ 0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   /* 0x08 */ 0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
@@ -61,7 +61,7 @@ static const wchar_t to_ucs4[256] =
 
 /* The outer array range runs from 0xc1 to 0xcf, the inner range from 0x20
    to 0x7f.  */
-static const wchar_t to_ucs4_comb[15][96] =
+static const uint32_t to_ucs4_comb[15][96] =
 {
   /* 0xc1 */
   {
@@ -365,7 +365,7 @@ static const char from_ucs4[][2] =
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"T.61"
+#define CHARSET_NAME		"T.61//"
 #define FROM_LOOP		from_t_61
 #define TO_LOOP			to_t_61
 #define DEFINE_INIT		1

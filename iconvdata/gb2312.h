@@ -28,7 +28,7 @@
 extern const uint16_t __gb2312_to_ucs[];
 
 
-static inline wchar_t
+static inline uint32_t
 gb2312_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = *(*s);
@@ -66,7 +66,7 @@ extern const char __gb2312_from_ucs4_tab8[][2];
 extern const char __gb2312_from_ucs4_tab9[][2];
 
 static inline size_t
-ucs4_to_gb2312 (wchar_t wch, char *s, size_t avail)
+ucs4_to_gb2312 (uint32_t wch, char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
   char buf[2];

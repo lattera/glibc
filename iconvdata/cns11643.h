@@ -25,13 +25,13 @@ extern const uint16_t __cns11643l2_to_ucs4_tab[];
 extern const uint16_t __cns11643l14_to_ucs4_tab[];
 
 
-static inline wchar_t
+static inline uint32_t
 cns11643_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = *(*s);
   unsigned char ch2;
   unsigned char ch3;
-  wchar_t result;
+  uint32_t result;
   int idx;
 
   if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) > 0x30)
@@ -99,7 +99,7 @@ extern const char __cns11643_from_ucs4_tab[][3];
 
 
 static inline size_t
-ucs4_to_cns11643 (wchar_t wch, char *s, size_t avail)
+ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
   char buf[2];
@@ -129,7 +129,7 @@ ucs4_to_cns11643 (wchar_t wch, char *s, size_t avail)
     case 0x2109:
       cp = "\x22\x6b";
       break;
-    case 0x2160 ...0x2169:
+    case 0x2160 ... 0x2169:
       buf[0] = '\x24';
       buf[1] = '\x2b' + (ch - 0x2160);
       break;
@@ -157,6 +157,7 @@ ucs4_to_cns11643 (wchar_t wch, char *s, size_t avail)
       break;
     case 0x2500 ... 0x2642:
       cp = __cns11643l1_from_ucs4_tab9[ch - 0x2500];
+      break;
     case 0x3000 ... 0x3029:
       cp = __cns11643l1_from_ucs4_tab10[ch - 0x3000];
       break;
@@ -199,7 +200,7 @@ ucs4_to_cns11643 (wchar_t wch, char *s, size_t avail)
       cp = "\x22\x64";
       break;
     default:
-      cp = "";
+      return UNKNOWN_10646_CHAR;
     }
 
   if (cp[0] == '\0')

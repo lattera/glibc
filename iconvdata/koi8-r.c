@@ -23,7 +23,7 @@
 /* Specify the conversion table.  */
 #define TABLES <koi8-r.h>
 
-#define CHARSET_NAME	"KOI8-R"
+#define CHARSET_NAME	"KOI8-R//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

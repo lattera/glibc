@@ -21,7 +21,7 @@
 /* Specify the conversion table.  */
 #define TABLES <latin-greek.h>
 
-#define CHARSET_NAME	"LATIN-GREEK"
+#define CHARSET_NAME	"LATIN-GREEK//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

@@ -22,7 +22,7 @@
 #include <stdint.h>
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"EUC-CN"
+#define CHARSET_NAME		"EUC-CN//"
 #define FROM_LOOP		from_euc_cn
 #define TO_LOOP			to_euc_cn
 #define DEFINE_INIT		1

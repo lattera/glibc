@@ -3980,7 +3980,7 @@ static const char from_ucs4_cjk[32657][2] =
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"SJIS"
+#define CHARSET_NAME		"SJIS//"
 #define FROM_LOOP		from_sjis
 #define TO_LOOP			to_sjis
 #define DEFINE_INIT		1
