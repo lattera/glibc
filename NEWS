@@ -23,8 +23,12 @@ Version 2.2
 * ldconfig program added by Andreas Jaeger and Jakub Jelinek.
 
 * The resolver code has been updated from bind 8.2.2-5 which supports
-  threads. No changes should be necessary for user programs.  The
+  threads.  No changes should be necessary for user programs.  The
   integration was done by Andreas Jaeger and Adam D. Bradley.
+
+* Compatibility code for K&R C compilers has been removed from the
+  header files.  A ISO C compiler is needed to use the library
+  (conforming to either C89 or C99 standard).
 
 
 Version 2.1.2

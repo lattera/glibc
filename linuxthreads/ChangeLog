@@ -1,3 +1,16 @@
+1999-12-31  Andreas Jaeger  <aj@suse.de>
+
+	* internals.h: Remove duplicate prototype declarations.
+
+	* weaks.c: Remove __THROW from prototypes since the file is not
+	compiled by a C++ compiler.
+	* internals.h: Likewise.
+
+1999-12-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/pthread/pthread.h: Move internal functions to...
+	* sysdeps/pthread/bits/libc-lock.h: ...here.
+
 1999-12-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/pthread/pthread.h: Fix typos, reformat comments.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 95, 96, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -305,13 +305,6 @@ __sysconf (name)
     case _SC_COLL_WEIGHTS_MAX:
 #ifdef	COLL_WEIGHTS_MAX
       return COLL_WEIGHTS_MAX;
-#else
-      return -1;
-#endif
-
-    case _SC_EQUIV_CLASS_MAX:
-#ifdef	EQUIV_CLASS_MAX
-      return EQUIV_CLASS_MAX;
 #else
       return -1;
 #endif
