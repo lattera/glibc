@@ -269,6 +269,7 @@ $(objpfx)mtrace-tst-loading: $(objpfx)tst-loading.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-loading.mtrace > $@
 
 $(objpfx)bug-iconv1.out: $(objpfx)gconv-modules
+$(objpfx)bug-iconv2.out: $(objpfx)gconv-modules
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
