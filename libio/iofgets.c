@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -64,4 +64,8 @@ _IO_fgets (buf, n, fp)
 
 #ifdef weak_alias
 weak_alias (_IO_fgets, fgets)
+
+# ifndef _IO_MTSAFE_IO
+weak_alias (_IO_fgets, fgets_unlocked)
+# endif
 #endif

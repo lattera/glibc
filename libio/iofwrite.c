@@ -53,4 +53,8 @@ _IO_fwrite (buf, size, count, fp)
 
 #ifdef weak_alias
 weak_alias (_IO_fwrite, fwrite)
+
+# ifndef _IO_MTSAFE_IO
+weak_alias (_IO_fwrite, fwrite_unlocked)
+# endif
 #endif

@@ -317,6 +317,13 @@ definition is added to the environment.  Otherwise, the @var{string} is
 interpreted as the name of an environment variable, and any definition
 for this variable in the environment is removed.
 
+The difference to the @code{setenv} function is that the exact string
+given as the parameter @var{string} is put into the environment.  If the
+user should change the string after the @code{putenv} call this will
+reflect in automatically in the environment.  This also requires that
+@var{string} is no automatic variable which scope is left before the
+variable is removed from the environment.
+
 This function is part of the extended Unix interface.  Since it was also
 available in old SVID libraries you should define either
 @var{_XOPEN_SOURCE} or @var{_SVID_SOURCE} before including any header.
@@ -329,11 +336,12 @@ available in old SVID libraries you should define either
 The @code{setenv} function can be used to add a new definition to the
 environment.  The entry with the name @var{name} is replaced by the
 value @samp{@var{name}=@var{value}}.  Please note that this is also true
-if @var{value} is the empty string.  A null pointer for the @var{value}
-parameter is illegal.  If the environment already contains an entry with
-key @var{name} the @var{replace} parameter controls the action.  If
-replace is zero, nothing happens.  otherwise the old entry is replaced
-by the new one.
+if @var{value} is the empty string.  To do this a new string is created
+and the strings @var{name} and @var{value} are copied.  A null pointer
+for the @var{value} parameter is illegal.  If the environment already
+contains an entry with key @var{name} the @var{replace} parameter
+controls the action.  If replace is zero, nothing happens.  Otherwise
+the old entry is replaced by the new one.
 
 Please note that you cannot remove an entry completely using this function.
 

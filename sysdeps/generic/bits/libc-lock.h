@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Stub version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -89,6 +89,9 @@
 
 /* End critical region with cleanup.  */
 #define __libc_cleanup_region_end(DOIT)
+
+/* Sometimes we have to exit the block in the middle.  */
+#define __libc_cleanup_end(DOIT)
 
 
 /* We need portable names for some of the functions.  */

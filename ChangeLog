@@ -1,5 +1,17 @@
 1999-07-29  H.J. Lu  <hjl@gnu.org>
 
+	* malloc/malloc.c (ptmalloc_init): Also initialize __libc_pagesize
+	if no threads are used.
+
+	* libio/iofwrite.c: Add weak alias for _unlocked function if not
+	_IO_MTSAFE_IO.
+	* libio/iofread.c: Likewise.
+	* libio/iofgets.c: Likewise.
+	* libio/iofputs.c: Likewise.
+
+	* sysdeps/generic/bits/libc-lock.h (__libc_cleanup_end): New
+	definition.
+
 	* stdlib/mbtowc.c: Include <string.h>.
 	* stdlib/wctomb.c: Likewise.
 	* sysdeps/unix/sysv/linux/fstatfs64.c: Likewise.
