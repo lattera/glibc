@@ -48,6 +48,15 @@
 # include <wctype.h>
 #endif
 
+/* We need some of the locale data (the collation sequence information)
+   but there is no interface to get this information in general.  Therefore
+   we support a correct implementation only in glibc.  */
+#ifdef _LIBC
+# include "../locale/localeinfo.h"
+
+# define CONCAT(a,b) __CONCAT(a,b)
+#endif
+
 /* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself.  This code is part of the GNU C
    Library, but also included in many other GNU distributions.  Compiling
@@ -192,6 +201,7 @@ __wcschrnul (s, c)
 # define STRCHR(S, C)	strchr (S, C)
 # define STRCHRNUL(S, C) __strchrnul (S, C)
 # define STRCOLL(S1, S2) strcoll (S1, S2)
+# define SUFFIX MB
 # include "fnmatch_loop.c"
 
 
@@ -209,7 +219,10 @@ __wcschrnul (s, c)
 #  define BTOWC(C)	(C)
 #  define STRCHR(S, C)	wcschr (S, C)
 #  define STRCHRNUL(S, C) __wcschrnul (S, C)
-# define STRCOLL(S1, S2) wcscoll (S1, S2)
+#  define STRCOLL(S1, S2) wcscoll (S1, S2)
+#  define SUFFIX WC
+#  define WIDE_CHAR_VERSION 1
+
 
 #  undef IS_CHAR_CLASS
 #  ifdef _LIBC

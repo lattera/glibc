@@ -31,6 +31,16 @@ FCT (pattern, string, no_leading_period, flags)
 {
   register const CHAR *p = pattern, *n = string;
   register UCHAR c;
+#ifdef _LIBC
+  const UCHAR *collseq = (const UCHAR *)
+    _NL_CURRENT(LC_COLLATE, CONCAT(_NL_COLLATE_COLLSEQ,SUFFIX));
+# ifdef WIDE_CHAR_VERSION
+  const wint_t *names = (const wint_t *)
+    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_NAMES);
+  size_t size = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_SIZE);
+  size_t layers = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_LAYERS);
+# endif
+#endif
 
   while ((c = *p++) != L('\0'))
     {
@@ -210,9 +220,9 @@ FCT (pattern, string, no_leading_period, flags)
 		    /* Leave room for the null.  */
 		    CHAR str[CHAR_CLASS_MAX_LENGTH + 1];
 		    size_t c1 = 0;
-# if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
 		    wctype_t wt;
-# endif
+#endif
 		    const CHAR *startp = p;
 
 		    for (;;)
@@ -240,7 +250,7 @@ FCT (pattern, string, no_leading_period, flags)
 		      }
 		    str[c1] = L('\0');
 
-# if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
 		    wt = IS_CHAR_CLASS (str);
 		    if (wt == 0)
 		      /* Invalid character class name.  */
@@ -248,7 +258,7 @@ FCT (pattern, string, no_leading_period, flags)
 
 		    if (ISWCTYPE (BTOWC ((UCHAR) *n), wt))
 		      goto matched;
-# else
+#else
 		    if ((STREQ (str, L("alnum")) && ISALNUM ((UCHAR) *n))
 			|| (STREQ (str, L("alpha")) && ISALPHA ((UCHAR) *n))
 			|| (STREQ (str, L("blank")) && ISBLANK ((UCHAR) *n))
@@ -262,7 +272,7 @@ FCT (pattern, string, no_leading_period, flags)
 			|| (STREQ (str, L("upper")) && ISUPPER ((UCHAR) *n))
 			|| (STREQ (str, L("xdigit")) && ISXDIGIT ((UCHAR) *n)))
 		      goto matched;
-# endif
+#endif
 		  }
 		else if (c == L('\0'))
 		  /* [ (unterminated) loses.  */
@@ -279,27 +289,117 @@ FCT (pattern, string, no_leading_period, flags)
 
 		    if (c == L('-') && *p != L(']'))
 		      {
-			/* It is a range.  */
-			CHAR lo[2];
-			CHAR fc[2];
+#if _LIBC
+			/* We have to find the collation sequence
+			   value for C.  Collation sequence is nothing
+			   we can regularly access.  The sequence
+			   value is defined by the order in which the
+			   definitions of the collation values for the
+			   various characters appear in the source
+			   file.  A strange concept, nowhere
+			   documented.  */
+			int32_t fseqidx;
+			int32_t lseqidx;
 			UCHAR cend = *p++;
+# ifdef WIDE_CHAR_VERSION
+			size_t cnt;
+# endif
+
 			if (!(flags & FNM_NOESCAPE) && cend == L('\\'))
 			  cend = *p++;
 			if (cend == L('\0'))
 			  return FNM_NOMATCH;
 
-			lo[0] = cold;
-			lo[1] = L('\0');
-			fc[0] = fn;
-			fc[1] = L('\0');
-			if (STRCOLL (lo, fc) <= 0)
+# ifdef WIDE_CHAR_VERSION
+			/* Search in the `names' array for the characters.  */
+			fseqidx = fn % size;
+			cnt = 0;
+			while (names[fseqidx] != fn)
 			  {
-			    CHAR hi[2];
-			    hi[0] = FOLD (cend);
-			    hi[1] = L('\0');
-			    if (STRCOLL (fc, hi) <= 0)
+			    if (++cnt == layers)
+			      /* XXX We don't know anything about
+				 the character we are supposed to
+				 match.  This means we are failing.  */
+			      goto range_not_matched;
+
+			    fseqidx += size;
+			  }
+			lseqidx = cold % size;
+			cnt = 0;
+			while (names[lseqidx] != cold)
+			  {
+			    if (++cnt == layers)
+			      {
+				lseqidx = -1;
+				break;
+			      }
+			    lseqidx += size;
+			  }
+# else
+			fseqidx = fn;
+			lseqidx = cold;
+# endif
+
+			/* XXX It is not entirely clear to me how to handle
+			   characters which are not mentioned in the
+			   collation specification.  */
+			if (
+# ifdef WIDE_CHAR_VERSION
+			    lseqidx == -1 ||
+# endif
+			    collseq[lseqidx] <= collseq[fseqidx])
+			  {
+			    /* We have to look at the upper bound.  */
+			    int32_t hseqidx;
+
+			    cend = FOLD (cend);
+# ifdef WIDE_CHAR_VERSION
+			    hseqidx = cend % size;
+			    cnt = 0;
+			    while (names[hseqidx] != cend)
+			      {
+				if (++cnt == layers)
+				  {
+				    /* Hum, no information about the upper
+				       bound.  The matching succeeds if the
+				       lower bound is matched exactly.  */
+				    if (lseqidx == -1 || cold != fn)
+				      goto range_not_matched;
+
+				    goto matched;
+				  }
+			      }
+# else
+			    hseqidx = cend;
+# endif
+
+			    if (
+# ifdef WIDE_CHAR_VERSION
+				(lseqidx == -1
+				 && collseq[fseqidx] == collseq[hseqidx]) ||
+# endif
+				collseq[fseqidx] <= collseq[hseqidx])
 			      goto matched;
 			  }
+# ifdef WIDE_CHAR_VERSION
+		      range_not_matched:
+# endif
+#else
+			/* We use a boring value comparison of the character
+			   values.  This is better than comparing using
+			   `strcoll' since the latter would have surprising
+			   and sometimes fatal consequences.  */
+			UCHAR cend = *p++;
+
+			if (!(flags & FNM_NOESCAPE) && cend == L('\\'))
+			  cend = *p++;
+			if (cend == L('\0'))
+			  return FNM_NOMATCH;
+
+			/* It is a range.  */
+			if (cold <= fc && fc <= c)
+			  goto matched;
+#endif
 
 			c = *p++;
 		      }
@@ -371,3 +471,4 @@ FCT (pattern, string, no_leading_period, flags)
 #undef STRCOLL
 #undef L
 #undef BTOWC
+#undef SUFFIX

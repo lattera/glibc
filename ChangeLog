@@ -1,3 +1,23 @@
+2000-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (struct element_t): Add mbseqorder
+	and wcseqorder members.
+	(struct locale_collate_t): Likewise.
+	(collate_finish): Assign collation sequence value to each character.
+	Create tables for output.
+	(collate_output): Write out tables with collation sequence information.
+	* locale/C-collate.c: Provide C locale data for collation sequence
+	table.
+	* locale/langinfo.h: Add _NL_COLLATE_COLLSEQMB and
+	_NL_COLLATE_COLLSEQWC.
+	* locale/categories.def: Add entries for _NL_COLLATE_COLLSEQMB and
+	_NL_COLLATE_COLLSEQWC.
+	* posix/fnmatch.c: Define SUFFIX and WIDE_CHAR_VERSION before
+	include fnmatch_loop.c.
+	* posix/fnmatch_loop.c: Don't use strcoll while determining whether
+	character is matched by range expression.  Use collation sequence
+	table.  Outside glibc fall back on simple character value comparison.
+
 2000-05-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/elf/start.S (ENTRY_POINT): Align stack for double
