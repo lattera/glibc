@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 
 const int beatup_iterations = 10000;
 const int num_threads = 30;
