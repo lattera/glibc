@@ -63,7 +63,7 @@ NESTED(__clone,4*SZREG,sp)
 	syscall
 
 	bnez		a3,error
-	beqz		v0,__thread_start
+	beqz		v0,.Lthread_start
 
 	/* Successful return from the parent */
 	addiu		sp,32
@@ -84,7 +84,7 @@ error:
    its own function so that we can terminate the stack trace with our
    debug info.  */
 
-ENTRY(__thread_start)
+.Lthread_start:
 	/* cp is already loaded.  */
 	.cprestore	16
 	/* The stackframe has been created on entry of clone().  */
