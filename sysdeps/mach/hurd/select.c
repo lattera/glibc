@@ -275,7 +275,7 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 
   /* Set the user bitarrays.  We only ever have to clear bits, as all desired
      ones are initially set.  */
-  for (i = firstfd; i < lastfd; ++i)
+  for (i = firstfd; i <= lastfd; ++i)
     {
       int type = types[i];
 
