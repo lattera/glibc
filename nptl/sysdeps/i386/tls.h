@@ -230,7 +230,7 @@ union user_desc_init
        TLS_SET_GS (_segdescr.desc.entry_number * 8 + 3);		      \
 									      \
      _result == 0 ? NULL						      \
-     : "set_thread_area failed when setting up thread-local storage"; })
+     : "set_thread_area failed when setting up thread-local storage\n"; })
 
 
 /* Return the address of the dtv for the current thread.  */
