@@ -48,7 +48,13 @@ __lll_lock_wait:
 
 	orl	$-1, %eax	/* Load -1.  */
 #ifndef UP
+# ifdef PIC
+	call	__i686.get_pc_thunk.bx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	cmpl	$0, __libc_locking_needed@GOTOFF(%ebx)
+# else
 	cmpl	$0, __libc_locking_needed
+# endif
 	je,pt	0f
 	lock
 0:
@@ -77,7 +83,13 @@ lll_unlock_wake_cb:
 
 	movl	20(%esp), %ebx
 #ifndef UP
+# ifdef PIC
+	call	__i686.get_pc_thunk.bx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	cmpl	$0, __libc_locking_needed@GOTOFF(%ebx)
+# else
 	cmpl	$0, __libc_locking_needed
+# endif
 	je,pt	0f
 	lock
 0:
@@ -182,3 +194,12 @@ __lll_timedwait_tid:
 6:	movl	$ETIMEDOUT, %eax
 	jmp	3b
 	.size	__lll_timedwait_tid,.-__lll_timedwait_tid
+
+
+	.section .gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits
+	.globl __i686.get_pc_thunk.bx
+	.hidden __i686.get_pc_thunk.bx
+	.type __i686.get_pc_thunk.bx,@function
+__i686.get_pc_thunk.bx:
+	movl	(%esp), %ebx
+	ret

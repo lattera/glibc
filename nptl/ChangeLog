@@ -1,3 +1,8 @@
+2002-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Correct
+	access to __libc_locking_needed for PIC.
+
 2002-12-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h (__libc_locking_needed): Only

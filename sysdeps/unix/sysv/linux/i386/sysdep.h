@@ -94,6 +94,7 @@
 __i686.get_pc_thunk.reg:						      \
   movl (%esp), %e##reg;							      \
   ret;									      \
+  .size __i686.get_pc_thunk.reg, . - __i686.get_pc_thunk.reg;		      \
   .previous;								      \
   call __i686.get_pc_thunk.reg
 # endif
