@@ -110,7 +110,7 @@ _dl_open (const char *file, int mode)
       l = l->l_prev;
     }
 
-  new->l_global = (mode & RTLD_GLOBAL);
+  new->l_global = (mode & RTLD_GLOBAL) ? 1 : 0;
   if (new->l_global)
     {
       /* The symbols of the new object and its dependencies are to be

@@ -1,5 +1,5 @@
 /* Declarations for math functions.
-   Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -262,41 +262,41 @@ extern int matherr __P ((struct exception *__exc));
 #endif	/* SVID */
 
 
-#if defined __USE_BSD || defined __USE_UNIX98
-
 /* Some useful constants.  */
-# define M_E		_Mldbl(2.7182818284590452354)	/* e */
-# define M_LOG2E	_Mldbl(1.4426950408889634074)	/* log_2 e */
-# define M_LOG10E	_Mldbl(0.43429448190325182765)	/* log_10 e */
-# define M_LN2		_Mldbl(0.69314718055994530942)	/* log_e 2 */
-# define M_LN10		_Mldbl(2.30258509299404568402)	/* log_e 10 */
-# define M_PI		_Mldbl(3.14159265358979323846)	/* pi */
-# define M_PI_2		_Mldbl(1.57079632679489661923)	/* pi/2 */
-# define M_PI_4		_Mldbl(0.78539816339744830962)	/* pi/4 */
-# define M_1_PI		_Mldbl(0.31830988618379067154)	/* 1/pi */
-# define M_2_PI		_Mldbl(0.63661977236758134308)	/* 2/pi */
-# define M_2_SQRTPI	_Mldbl(1.12837916709551257390)	/* 2/sqrt(pi) */
-# define M_SQRT2	_Mldbl(1.41421356237309504880)	/* sqrt(2) */
-# define M_SQRT1_2	_Mldbl(0.70710678118654752440)	/* 1/sqrt(2) */
-
+#if defined __USE_BSD || defined __USE_UNIX98
+# define M_E		2.7182818284590452354	/* e */
+# define M_LOG2E	1.4426950408889634074	/* log_2 e */
+# define M_LOG10E	0.43429448190325182765	/* log_10 e */
+# define M_LN2		0.69314718055994530942	/* log_e 2 */
+# define M_LN10		2.30258509299404568402	/* log_e 10 */
+# define M_PI		3.14159265358979323846	/* pi */
+# define M_PI_2		1.57079632679489661923	/* pi/2 */
+# define M_PI_4		0.78539816339744830962	/* pi/4 */
+# define M_1_PI		0.31830988618379067154	/* 1/pi */
+# define M_2_PI		0.63661977236758134308	/* 2/pi */
+# define M_2_SQRTPI	1.12837916709551257390	/* 2/sqrt(pi) */
+# define M_SQRT2	1.41421356237309504880	/* sqrt(2) */
+# define M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
 #endif
 
-/* Our constants might specify more precision than `double' can represent.
-   Use `long double' constants in standard and GNU C, where they are
-   supported and the cast to `double'.
-
-   If the constants are use in code which does not use prototypes, one
-   might get problems if a function takes a `double' argument and any
-   of the constants are provided as the argument.  In this case, cast
-   the argument to `double'.
-
-   Please note we define the macro even if the constants are not defined.
-   This helps us to use the macros in other places.  */
-#if (__STDC__ - 0 || __GNUC__ - 0) && defined __USE_GNU
-# define _Mldbl(x) x##L
-#else	/* Traditional C.  */
-# define _Mldbl(x) x
-#endif	/* Standard or GNU C.  */
+/* The above constants are not adequate for computation using `long double's.
+   Therefore we provide as an extension constants with similar names as a
+   GNU extension.  */
+#ifdef __USE_GNU
+# define M_El		2.7182818284590452354L	/* e */
+# define M_LOG2El	1.4426950408889634074L	/* log_2 e */
+# define M_LOG10El	0.43429448190325182765L	/* log_10 e */
+# define M_LN2l		0.69314718055994530942L	/* log_e 2 */
+# define M_LN10l	2.30258509299404568402L	/* log_e 10 */
+# define M_PIl		3.14159265358979323846L	/* pi */
+# define M_PI_2l	1.57079632679489661923L	/* pi/2 */
+# define M_PI_4l	0.78539816339744830962L	/* pi/4 */
+# define M_1_PIl	0.31830988618379067154L	/* 1/pi */
+# define M_2_PIl	0.63661977236758134308L	/* 2/pi */
+# define M_2_SQRTPIl	1.12837916709551257390L	/* 2/sqrt(pi) */
+# define M_SQRT2l	1.41421356237309504880L	/* sqrt(2) */
+# define M_SQRT1_2l	0.70710678118654752440L	/* 1/sqrt(2) */
+#endif
 
 
 /* Get machine-dependent inline versions (if there are any).  */

@@ -442,9 +442,11 @@ inline_struct (definition *def, int flag)
 {
   decl_list *dl;
   int i, size;
-  decl_list *cur, *psav;
+  decl_list *cur = NULL;
+  decl_list *psav;
   bas_type *ptr;
-  char *sizestr, *plus;
+  char *sizestr;
+  const char *plus;
   char ptemp[256];
   int indent = 1;
 
@@ -760,14 +762,16 @@ emit_single_in_line (int indent, declaration *decl, int flag, relation rel)
     {
       free (upp_case);
       freed = 1;
-      upp_case = "LONG";
+      /* Casting is safe since the `freed' flag is set.  */
+      upp_case = (char *) "LONG";
     }
 
   if (!strcmp (upp_case, "U_INT"))
     {
       free (upp_case);
       freed = 1;
-      upp_case = "U_LONG";
+      /* Casting is safe since the `freed' flag is set.  */
+      upp_case = (char *) "U_LONG";
     }
 
   if (flag == PUT)

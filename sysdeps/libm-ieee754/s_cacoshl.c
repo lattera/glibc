@@ -1,5 +1,5 @@
 /* Return arc hyperbole cosine for long double value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -40,15 +40,15 @@ __cacoshl (__complex__ long double x)
 	  else
 	    __imag__ res = __copysignl ((rcls == FP_INFINITE
 					 ? (__real__ x < 0.0
-					    ? M_PI - M_PI_4 : M_PI_4)
-					 : M_PI_2), __imag__ x);
+					    ? M_PIl - M_PI_4l : M_PI_4l)
+					 : M_PI_2l), __imag__ x);
 	}
       else if (rcls == FP_INFINITE)
 	{
 	  __real__ res = HUGE_VALL;
 
 	  if (icls >= FP_ZERO)
-	    __imag__ res = __copysignl (signbit (__real__ x) ? M_PI : 0.0,
+	    __imag__ res = __copysignl (signbit (__real__ x) ? M_PIl : 0.0,
 					__imag__ x);
 	  else
 	    __imag__ res = __nanl ("");
@@ -62,7 +62,7 @@ __cacoshl (__complex__ long double x)
   else if (rcls == FP_ZERO && icls == FP_ZERO)
     {
       __real__ res = 0.0;
-      __imag__ res = __copysignl (M_PI_2, __imag__ x);
+      __imag__ res = __copysignl (M_PI_2l, __imag__ x);
     }
   else
     {

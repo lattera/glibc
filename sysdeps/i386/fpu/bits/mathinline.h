@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
 
@@ -505,7 +505,7 @@ __inline_mathcode (expm1, __x, __expm1_code)
 
 /* We cannot rely on M_SQRT being defined.  So we do it for ourself
    here.  */
-# define __M_SQRT2	_Mldbl(1.41421356237309504880)	/* sqrt(2) */
+# define __M_SQRT2	1.41421356237309504880L	/* sqrt(2) */
 
 __inline_mathcode (log1p, __x, \
   register long double __value;						      \

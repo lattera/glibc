@@ -37,13 +37,13 @@ test-output := $(foreach s, .out .xout, \
 generated := $(test-input) $(test-output)
 generated-dirs := $(basename $(test-input)) en_US
 
-test-names := test1 test2 test3 test4
-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(test-names)) \
-				$(addsuffix .def,$(test-names)))
+ld-test-names := test1 test2 test3 test4
+ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
+				   $(addsuffix .def,$(ld-test-names)))
 
 distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
 	      README mnemonic.ds fr_CA,2.13.in de_DE.in da_DK.in	 \
-	      $(charmaps) $(locales) $(test-srcs)
+	      $(charmaps) $(locales) $(ld-test-srcs)
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig

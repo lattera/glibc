@@ -100,7 +100,7 @@ GLIBC_2.0 {
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid; __syscall_rt_sigqueueinfo; __getpid; __pread64; __pwrite64;
-    __strcasecmp;
+    __strcasecmp; __write;
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;
@@ -470,4 +470,7 @@ GLIBC_2.1 {
 
     # New special glibc functions.
     gnu_get_libc_release; gnu_get_libc_version;
+
+    # Changed getline function in libio.
+    _IO_getline_info;
 } GLIBC_2.0;

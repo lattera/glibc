@@ -51,6 +51,7 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 #define _G_HAVE_MMAP 1
 #define _G_HAVE_LONG_DOUBLE_IO 1
 #define _G_HAVE_IO_FILE_OPEN 1
+#define _G_HAVE_IO_GETLINE_INFO 1
 
 #define _G_IO_IO_FILE_VERSION 0x20001
 

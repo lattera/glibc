@@ -33,3 +33,10 @@ routines := offtime asctime clock ctime ctime_r difftime \
 tests	:= test_time clocktest
 
 include ../Rules
+
+tz-cflags = -DTZDIR='"$(zonedir)"' \
+	    -DTZDEFAULT='"$(localtime-file)"' \
+	    -DTZDEFRULES='"$(posixrules-file)"'
+
+CFLAGS-tzfile.c = $(tz-cflags)
+CFLAGS-tzset.c = $(tz-cflags)

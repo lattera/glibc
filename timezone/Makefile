@@ -161,8 +161,6 @@ CFLAGS-zdump.c = -Wno-strict-prototypes -DNOID
 CFLAGS-zic.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
 CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
 CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
-CFLAGS-tzfile.c = $(tz-cflags)
-CFLAGS-tzset.c = $(tz-cflags)
 
 # We have to make sure the data for testing the tz functions is available.
 $(objpfx)test-tz.out: $(addprefix $(objpfx)testdata/, America/New_York \

@@ -1,5 +1,5 @@
 /* Return arc tangent of complex long double value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -35,13 +35,13 @@ __catanl (__complex__ long double x)
     {
       if (rcls == FP_INFINITE)
 	{
-	  __real__ res = __copysignl (M_PI_2, __real__ x);
+	  __real__ res = __copysignl (M_PI_2l, __real__ x);
 	  __imag__ res = __copysignl (0.0, __imag__ x);
 	}
       else if (icls == FP_INFINITE)
 	{
 	  if (rcls >= FP_ZERO)
-	    __real__ res = __copysignl (M_PI_2, __real__ x);
+	    __real__ res = __copysignl (M_PI_2l, __real__ x);
 	  else
 	    __real__ res = __nanl ("");
 	  __imag__ res = __copysignl (0.0, __imag__ x);

@@ -832,7 +832,8 @@ open_path (const char *name, size_t namelen,
 
 		buf[this_dir->machdirnamelen - 1] = '\0';
 
-		if (stat (buf, &st) != 0 || ! S_ISDIR (st.st_mode))
+		if (__xstat (_STAT_VER, buf, &st) != 0
+		    || ! S_ISDIR (st.st_mode))
 		  /* The directory does not exist ot it is no directory.  */
 		  this_dir->machdirstatus = nonexisting;
 		else
@@ -863,7 +864,8 @@ open_path (const char *name, size_t namelen,
 
 		  buf[this_dir->dirnamelen - 1] = '\0';
 
-		  if (stat (buf, &st) != 0 || ! S_ISDIR (st.st_mode))
+		  if (__xstat (_STAT_VER, buf, &st) != 0
+		      || ! S_ISDIR (st.st_mode))
 		    /* The directory does not exist ot it is no directory.  */
 		    this_dir->dirstatus = nonexisting;
 		  else

@@ -1,3 +1,60 @@
+1998-02-17 15:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (open_path): Use __xstat instead of stat.
+
+	* localedata/tst-locale.sh: Comment out first test for now.
+
+1998-02-14 14:58  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/_G_config.h (_G_HAVE_IO_GETLINE_INFO): Defined
+	as 1.
+	* sysdeps/unix/sysv/linux/_G_config.h (_G_HAVE_IO_GETLINE_INFO):
+	Likewise.
+
+	* libio/iogetline.c (_IO_getline_info): Renamed from
+	_IO_getline.
+	(_IO_getline): Just call _IO_getline_info.
+
+	* libio/libioP.h (_IO_getline_info): New declaration.
+
+	* libc.map (_IO_getline_info, __write): Added.
+
+1998-02-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sunrpc/rpc_cout.c (inline_struct): Change typo of plus to
+	const char* to shut up gcc.
+
+1998-02-17 11:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* eld/dl-open.c (_dl_open): Assign correct value to new->l_global.
+	Patch forwarded by Cristian Gafton <gafton@redhat.com>.
+
+	* math/math.h: Define M_* constants always as `double' and add new
+	macros M_*l which are of type `long double'.
+	* sysdeps/libm-ieee754/s_cacoshl.c: Use M_*l constants now.
+	* sysdeps/libm-ieee754/s_cacosl.c: Likewise.
+	* sysdeps/libm-ieee754/s_casinhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_catanhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_catanl.c: Likewise.
+	* sysdeps/libm-ieee754/s_clog10l.c: Likewise.
+	* sysdeps/libm-ieee754/s_clogl.c: Likewise.
+	* math/libm-tst.c: Likewise.
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__M_SQRT2): Don't use _Mdbl,
+	define as long double unconditionally.
+
+1998-02-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/arith.texi (Old-style number conversion): Correct some
+	typos.
+
+1998-02-16 16:28  H.J. Lu  <hjl@gnu.org>
+
+	* time/Makefile (tz-cflags, CFLAGS-tzfile.c, CFLAGS-tzset.c):
+	Restore.
+
+	* timezone/Makefile (CFLAGS-tzfile.c, CFLAGS-tzset.c): Deleted.
+
 1998-02-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile ($(objpfx)ld.so): Don't depend on rtld-script but

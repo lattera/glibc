@@ -1,5 +1,5 @@
 /* Compute complex natural logarithm.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -34,7 +34,7 @@ __clogl (__complex__ long double x)
   if (rcls == FP_ZERO && icls == FP_ZERO)
     {
       /* Real and imaginary part are 0.0.  */
-      __imag__ result = signbit (__real__ x) ? M_PI : 0.0;
+      __imag__ result = signbit (__real__ x) ? M_PIl : 0.0;
       __imag__ result = __copysignl (__imag__ result, __imag__ x);
       /* Yes, the following line raises an exception.  */
       __real__ result = -1.0 / fabsl (__real__ x);

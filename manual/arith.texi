@@ -1337,7 +1337,7 @@ extensions in the same sense.
 
 Generally, you should avoid using these functions unless the really fit
 into the problem you have to to solve.  Otherwise it is almost always
-better to use @code{sprinf} since it's greater availability (it is an
+better to use @code{sprintf} since its greater availability (it is an
 @w{ISO C} function).
 
 
@@ -1387,14 +1387,14 @@ The prototype for this function can be found in @file{stdlib.h}.
 @comment SVID, Unix98
 @deftypefun {char *} gcvt (double @var{value}, int @var{ndigit}, char *@var{buf})
 The @code{gcvt} function also converts @var{value} to a NUL terminated
-string but does in a way similar to the @code{%g} format of
-@code{printf}.  It also does not use a static buffer but instead uses
+string but in a way similar to the @code{%g} format of
+@code{sprintf}.  It also does not use a static buffer but instead uses
 the user-provided buffer starting at @var{buf}.  It is the user's
 responsibility to make sure the buffer is long enough to contain the
-result.  Unlike the @code{ecvt} and @code{fcvt} function @code{gcvt}
-includes the sign and the decimal point character (which is determined
+result.  Unlike the @code{ecvt} and @code{fcvt} functions @code{gcvt}
+includes the sign and the decimal point characters (which are determined
 according to the current locale) in the result.  Therefore there are yet
-less reasons to use this function instead of @code{printf}.
+less reasons to use this function instead of @code{sprintf}.
 
 The return value is @var{buf}.
 
@@ -1402,11 +1402,11 @@ The prototype for this function can be found in @file{stdlib.h}.
 @end deftypefun
 
 
-All these three functions have in common that they use @code{double}
-values as the parameters.  Calling these functions using @code{long
+All three functions have in common that they use @code{double}
+values as parameter.  Calling these functions using @code{long
 double} values would mean a loss of precision due to the implicit
 rounding.  Therefore the GNU C library contains three more functions
-with similar semantic which take @code{long double} values.
+with similar semantics which take @code{long double} values.
 
 @comment stdlib.h
 @comment GNU
@@ -1453,7 +1453,7 @@ is no need for a @code{gcvt_r} function.
 @deftypefun {char *} ecvt_r (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
 The @code{ecvt_r} function is similar to the @code{ecvt} function except
 that it places its result into the user-specified buffer starting at
-@var{buf}.
+@var{buf} with length @var{len}.
 
 This function is a GNU extension.  The prototype can be found in
 @file{stdlib.h}.
@@ -1464,7 +1464,7 @@ This function is a GNU extension.  The prototype can be found in
 @deftypefun {char *} fcvt_r (double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
 The @code{fcvt_r} function is similar to the @code{fcvt} function except
 that it places its result into the user-specified buffer starting at
-@var{buf}.
+@var{buf} with length @var{len}.
 
 This function is a GNU extension.  The prototype can be found in
 @file{stdlib.h}.
@@ -1475,7 +1475,7 @@ This function is a GNU extension.  The prototype can be found in
 @deftypefun {char *} qecvt_r (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
 The @code{qecvt_r} function is similar to the @code{qecvt} function except
 that it places its result into the user-specified buffer starting at
-@var{buf}.
+@var{buf} with length @var{len}.
 
 This function is a GNU extension.  The prototype can be found in
 @file{stdlib.h}.
@@ -1483,10 +1483,10 @@ This function is a GNU extension.  The prototype can be found in
 
 @comment stdlib.h
 @comment GNU
-@deftypefun {char *} qfcvt (long double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
+@deftypefun {char *} qfcvt_r (long double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
 The @code{qfcvt_r} function is similar to the @code{qfcvt} function except
 that it places its result into the user-specified buffer starting at
-@var{buf}.
+@var{buf} with length @var{len}.
 
 This function is a GNU extension.  The prototype can be found in
 @file{stdlib.h}.
