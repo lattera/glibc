@@ -290,7 +290,7 @@ pthread_start_thread(void *arg)
   __uselocale (LC_GLOBAL_LOCALE);
 #else
   /* Initialize __resp.  */
-  __resp = &self->p_resp;
+  __resp = &self->p_res;
 #endif
   /* Make gdb aware of new thread */
   if (__pthread_threads_debug && __pthread_sig_debug > 0) {

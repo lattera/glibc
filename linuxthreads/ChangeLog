@@ -1,3 +1,8 @@
+2003-08-11  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* manager.c (pthread_start_thread) [!(USE_TLS && HAVE___THREAD)]:
+	Correct spelling of per thread resolver state.
+
 2003-08-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h [_LIBC && SHARED]

@@ -1,3 +1,8 @@
+2003-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* assert/assert.h: Use __builtin_expect in assert and
+	assert_perror definitions if possible.
+
 2003-08-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (_rtld_global): Add
