@@ -1,5 +1,8 @@
 2001-08-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/dl-lookupcfg.h: Add forward declaration for struct
+	link_map.
+
 	* configure.in: Fix test for .rela.dyn section.
 
 	* elf/dl-runtime.c: Update calls to _dl_lookup_*.
