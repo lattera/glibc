@@ -1,3 +1,12 @@
+2001-10-10  Jeff Bailey  <jbailey@nisa.net>
+
+        * sysdeps/mach/hurd/Makefile: Add $(CFLAGS) for generation of
+        bits/errno.h
+
+2001-10-07  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/setrlimit.c (__setrlimit): Never return ENOSYS.
+
 2001-10-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Add more ELFOSABI_* constants.

@@ -80,7 +80,7 @@ endef
 -include $(common-objpfx)errnos.d
 $(common-objpfx)errnos.d: $(mach-errnos-deps)
 	$(mach-errno-h) | \
-	$(CC) $(CPPFLAGS) -M -x c - | \
+	$(CC) $(CFLAGS) $(CPPFLAGS) -M -x c - | \
 	sed $(sed-remove-objpfx) -e 's,- *:,mach-errnos-deps :=,' \
 	    -e 's, \.\./, $(..),g' > $@t
 	mv -f $@t $@
