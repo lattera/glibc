@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _MATH_H
-#error "Never use <bits/mathdef.h> directly; include <math.h> instead"
+# error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
 
@@ -34,3 +34,7 @@ typedef long double double_t;	/* `double' expressions are evaluated as
 
 /* Define `INFINITY' as value of type `float_t'.  */
 #define INFINITY	HUGE_VALL
+
+/* The values returned by `ilogb' for 0 and NaN respectively.  */
+#define FP_ILOGB0	0
+#define FP_ILOGBNAN	0x7fffffff
