@@ -1,5 +1,8 @@
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/gconv-modules: Add remaining aliases from Internet
+	standards.
+
 	* iconv/gconv_int.h (gconv_module): Add new element from_regex_mem.
 	* iconv/gconv_conf.c (module_compare): Make s1 and s2 const.
 	(detect_conflict): New function.
