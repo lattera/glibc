@@ -45,7 +45,7 @@
 
 #ifndef atomic_compare_and_exchange_rel
 # define atomic_compare_and_exchange_rel(mem, oldval, newval) \
-  compare_and_exchange_acq (mem, oldval, newval)
+  atomic_compare_and_exchange_acq (mem, oldval, newval)
 #endif
 
 
@@ -57,14 +57,15 @@
 									      \
      do									      \
        __oldval = (*__memp);						      \
-     while (compare_and_exchange_acq (__memp, __oldval + __value, __oldval)); \
+     while (atomic_compare_and_exchange_acq (__memp, __oldval + __value,      \
+					     __oldval));		      \
 									      \
      __value; })
 #endif
 
 
 #ifndef atomic_add
-# define atomic_add(mem, value) (void) exchange_and_add (mem, value)
+# define atomic_add(mem, value) (void) atomic_exchange_and_add (mem, value)
 #endif
 
 
@@ -85,8 +86,9 @@
 	      {								      \
 		__typeof (*mem) __oldval = *__memp;			      \
 									      \
-		if (compare_and_exchange_acq (__memp, __oldval | 1 << bit,    \
-					      __oldval) == 0)		      \
+		if (atomic_compare_and_exchange_acq (__memp,		      \
+						     __oldval | 1 << bit,     \
+						     __oldval) == 0)	      \
 		  break;						      \
 	      }})
 #endif
