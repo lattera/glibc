@@ -415,9 +415,11 @@ extern "C" {
 #if __STD_C
 void* memset(void*, int, size_t);
 void* memcpy(void*, const void*, size_t);
+void* memmove(void*, const void*, size_t);
 #else
 Void_t* memset();
 Void_t* memcpy();
+Void_t* memmove();
 #endif
 #endif
 
@@ -461,6 +463,9 @@ do {                                                                          \
                                      *mcdst   = *mcsrc  ;                     \
   } else memcpy(dest, src, mcsz);                                             \
 } while(0)
+
+#define MALLOC_MEMMOVE(dest,src,nbytes)                                       \
+  memmove(dest, src, mcsz)
 
 #else /* !USE_MEMCPY */
 
