@@ -176,7 +176,7 @@ weak_extern (__pthread_mutex_trylock)
 weak_extern (__pthread_mutex_unlock)
 weak_extern (__pthread_mutexattr_init)
 weak_extern (__pthread_mutexattr_destroy)
-weak_extern (__pthread_mutexattr_setkind_np)
+weak_extern (__pthread_mutexattr_settype)
 weak_extern (__pthread_key_create)
 weak_extern (__pthread_setspecific)
 weak_extern (__pthread_getspecific)
@@ -195,7 +195,7 @@ weak_extern (_pthread_cleanup_pop_restore)
 # pragma weak __pthread_mutex_unlock
 # pragma weak __pthread_mutexattr_init
 # pragma weak __pthread_mutexattr_destroy
-# pragma weak __pthread_mutexattr_setkind_np
+# pragma weak __pthread_mutexattr_settype
 # pragma weak __pthread_key_create
 # pragma weak __pthread_setspecific
 # pragma weak __pthread_getspecific

@@ -116,11 +116,6 @@ main (int argc, char **argv)
       exit (EXIT_FAILURE);
     }
 
-  signal (SIGINT, termination_handler);
-  signal (SIGQUIT, termination_handler);
-  signal (SIGTERM, termination_handler);
-  signal (SIGPIPE, SIG_IGN);
-
   /* Check if we are already running. */
   if (check_pid (_PATH_NSCDPID))
     {
@@ -131,14 +126,21 @@ main (int argc, char **argv)
   /* Behave like a daemon.  */
   if (go_background)
     {
+      int i;
+
+      if (fork ())
+	exit (0);
+
+      for (i = 0; i < getdtablesize (); i++)
+	close (i);
+
+      if (fork ())
+	exit (0);
+
+      chdir ("/");
+
       openlog ("nscd", LOG_CONS | LOG_ODELAY, LOG_DAEMON);
 
-      if (daemon (0, 0) < 0)
-	{
-	  fprintf (stderr, _("connot auto-background: %s\n"),
-		   strerror (errno));
-	  exit (EXIT_FAILURE);
-	}
       if (write_pid (_PATH_NSCDPID) < 0)
         dbg_log ("%s: %s", _PATH_NSCDPID, strerror (errno));
 
@@ -147,6 +149,12 @@ main (int argc, char **argv)
       signal (SIGTTIN, SIG_IGN);
       signal (SIGTSTP, SIG_IGN);
     }
+
+  signal (SIGINT, termination_handler);
+  signal (SIGQUIT, termination_handler);
+  signal (SIGTERM, termination_handler);
+  signal (SIGPIPE, SIG_IGN);
+
   /* Cleanup files created by a previous `bind' */
   unlink (_PATH_NSCDSOCKET);
 

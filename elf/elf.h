@@ -510,9 +510,6 @@ typedef struct
 					   entry */
 } Elf32_Verdef;
 
-#if 0
-/* XXX We have no information what types should be used for 64 bit
-   architectures.  What is following is only an intelligent guess.  */
 typedef struct
 {
   Elf64_Half	vd_version;		/* Version revision */
@@ -524,11 +521,7 @@ typedef struct
   Elf64_Word	vd_next;		/* Offset in bytes to next verdef
 					   entry */
 } Elf64_Verdef;
-#else
-/* The linker doesn't even parameterize the version info swapping
-   routines.  I wonder if it should or is this good enough.  */
-typedef Elf32_Verdef Elf64_Verdef;
-#endif
+
 
 /* Legal values for vd_version (version revision).  */
 #define VER_DEF_NONE	0		/* No version */
@@ -543,24 +536,18 @@ typedef Elf32_Verdef Elf64_Verdef;
 
 typedef struct
 {
-  Elf32_Addr	vda_name;		/* Version or dependency names */
+  Elf32_Word	vda_name;		/* Version or dependency names */
   Elf32_Word	vda_next;		/* Offset in bytes to next verdaux
 					   entry */
 } Elf32_Verdaux;
 
-#if 0
-/* XXX We have no information what types should be used for 64 bit
-   architectures.  What is following is only an intelligent guess.  */
 typedef struct
 {
-  Elf64_Addr	vda_name;		/* Version or dependency names */
+  Elf64_Word	vda_name;		/* Version or dependency names */
   Elf64_Word	vda_next;		/* Offset in bytes to next verdaux
 					   entry */
 } Elf64_Verdaux;
-#else
-/* The linker doesn't even parameterize this -- should it?  */
-typedef Elf32_Verdaux Elf64_Verdaux;
-#endif
+
 
 /* Version dependency section.  */
 
@@ -568,30 +555,24 @@ typedef struct
 {
   Elf32_Half	vn_version;		/* Version of structure */
   Elf32_Half	vn_cnt;			/* Number of associated aux entries */
-  Elf32_Addr	vn_file;		/* Offset of filename for this
+  Elf32_Word	vn_file;		/* Offset of filename for this
 					   dependency */
   Elf32_Word	vn_aux;			/* Offset in bytes to vernaux array */
   Elf32_Word	vn_next;		/* Offset in bytes to next verneed
 					   entry */
 } Elf32_Verneed;
 
-#if 0
-/* XXX We have no information what types should be used for 64 bit
-   architectures.  What is following is only an intelligent guess.  */
 typedef struct
 {
   Elf64_Half	vn_version;		/* Version of structure */
   Elf64_Half	vn_cnt;			/* Number of associated aux entries */
-  Elf64_Addr	vn_file;		/* Offset of filename for this
+  Elf64_Word	vn_file;		/* Offset of filename for this
 					   dependency */
   Elf64_Word	vn_aux;			/* Offset in bytes to vernaux array */
   Elf64_Word	vn_next;		/* Offset in bytes to next verneed
 					   entry */
 } Elf64_Verneed;
-#else
-/* The linker doesn't even parameterize this -- should it?  */
-typedef Elf32_Verneed Elf64_Verneed;
-#endif
+
 
 /* Legal values for vn_version (version revision).  */
 #define VER_NEED_NONE	 0		/* No version */
@@ -605,30 +586,24 @@ typedef struct
   Elf32_Word	vna_hash;		/* Hash value of dependency name */
   Elf32_Half	vna_flags;		/* Dependency specific information */
   Elf32_Half	vna_other;		/* Unused */
-  Elf32_Addr	vna_name;		/* Dependency name string offset */
+  Elf32_Word	vna_name;		/* Dependency name string offset */
   Elf32_Word	vna_next;		/* Offset in bytes to next vernaux
 					   entry */
 } Elf32_Vernaux;
 
-#if 0
-/* XXX We have no information what types should be used for 64 bit
-   architectures.  What is following is only an intelligent guess.  */
 typedef struct
 {
   Elf64_Word	vna_hash;		/* Hash value of dependency name */
   Elf64_Half	vna_flags;		/* Dependency specific information */
   Elf64_Half	vna_other;		/* Unused */
-  Elf64_Addr	vna_name;		/* Dependency name string offset */
+  Elf64_Word	vna_name;		/* Dependency name string offset */
   Elf64_Word	vna_next;		/* Offset in bytes to next vernaux
 					   entry */
 } Elf64_Vernaux;
-#else
-/* The linker doesn't even parameterize these -- should it?  */
-typedef Elf32_Vernaux Elf64_Vernaux;
-#endif
+
 
 /* Legal values for vna_flags.  */
-#define VER_FLG_WEAK	0x2		/* Weak verison identifier */
+#define VER_FLG_WEAK	0x2		/* Weak version identifier */
 
 
 /* Auxiliary vector.  */

@@ -490,13 +490,25 @@ glob (pattern, flags, errfunc, pglob)
   filename = strrchr (pattern, '/');
   if (filename == NULL)
     {
-      filename = pattern;
+      /* This can mean two things: a simple name or "~name".  The later
+	 case is nothing but a notation for a directory.  */
+      if ((flags & GLOB_TILDE) && pattern[0] == '~')
+	{
+	  dirname = pattern;
+	  dirlen = strlen (pattern);
+
+	  filename = "";
+	}
+      else
+	{
+	  filename = pattern;
 #ifdef _AMIGA
-      dirname = (char *) "";
+	  dirname = (char *) "";
 #else
-      dirname = (char *) ".";
+	  dirname = (char *) ".";
 #endif
-      dirlen = 0;
+	  dirlen = 0;
+	}
     }
   else if (filename == pattern)
     {
@@ -516,15 +528,16 @@ glob (pattern, flags, errfunc, pglob)
       dirname[dirlen] = '\0';
 #endif
       ++filename;
-    }
 
-  if (filename[0] == '\0' && dirlen > 1)
-    /* "pattern/".  Expand "pattern", appending slashes.  */
-    {
-      int val = glob (dirname, flags | GLOB_MARK, errfunc, pglob);
-      if (val == 0)
-	pglob->gl_flags = (pglob->gl_flags & ~GLOB_MARK) | (flags & GLOB_MARK);
-      return val;
+      if (filename[0] == '\0' && dirlen > 1)
+	/* "pattern/".  Expand "pattern", appending slashes.  */
+	{
+	  int val = glob (dirname, flags | GLOB_MARK, errfunc, pglob);
+	  if (val == 0)
+	    pglob->gl_flags = ((pglob->gl_flags & ~GLOB_MARK)
+			       | (flags & GLOB_MARK));
+	  return val;
+	}
     }
 
   if (!(flags & GLOB_APPEND))

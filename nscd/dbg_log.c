@@ -51,7 +51,10 @@ dbg_log (const char *fmt,...)
     {
       snprintf (msg, sizeof (msg), "%d: %s\n", getpid (), msg2);
       if (dbgout)
-	fputs (msg, dbgout);
+	{
+	  fputs (msg, dbgout);
+	  fflush (dbgout);
+	}
       else
 	fputs (msg, stderr);
     }

@@ -1,3 +1,17 @@
+1998-07-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* weaks.c: Define pthread_mutexattr_[sg]ettype instead of
+	__pthread_mutexattr_[sg]ettype.  Add more weak aliases.
+	* Versions: Put __pthread_mutexattr_settype under version
+	GLIBC_2.0.  Don't export __pthread_mutexattr_setkind_np and
+	__pthread_mutexattr_gettype.
+
+1998-07-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/pthread/bits/libc-lock.h: Make
+	__pthread_mutexattr_settype weak.  Don't make
+	__pthread_mutexattr_setkind_np weak.
+
 1998-07-16 10:52  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_handle_create): Check whether sched_setscheduler

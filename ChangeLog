@@ -1,10 +1,28 @@
+1998-07-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/glob.c (glob): Fix problems with handle tilde.
+	Reported by Brian Wellington <bwelling@anomaly.munge.com>.
+
+	* elf/elf.h: Really define Elf64_Verdef, Elf64_Verdaux, Elf64_Verneed,
+	and Elf64_Vernaux.
+
+1998-07-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Recognize pgcc as compiler.
+	Reported by sauron@angband.ee.ualberta.ca.
+
+1998-07-02  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nscd/dbg_log.c: Make sure, that debug message is really written.
+	* nscd/nscd.c: Don't use daemon(), set signal handler after fork.
+
 1998-07-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/glob.c: Fix two problems with GLOB_DOOFFS.
 	Reported by bwelling@anomaly.munge.com [PR libc/720].
 
 	* sysdeps/libm-ieee754/k_standard.c: Return NAN for libm not in
-	SVID more for gamma(x) with x interger <= 0.
+	SVID more for gamma(x) with x integer <= 0.
 	Reported by Stephen L Moshier <moshier@mediaone.net>.
 
 	* math/libm-test.c (gamma_test): Add test for gamma(-1) and gamma(0).
