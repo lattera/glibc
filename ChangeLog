@@ -1,3 +1,22 @@
+2004-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h: Move _dl_initial_searclist,
+	_dl_hp_timing_overhead, _dl_init_all_dirs, and the content of
+	dl-procinfo.c from _rtld_global to _rtld_global_ro.
+	* elf/rtld.c: Adjust initializer for _rtld_global_ro.
+	* elf/dl-close.c: Use GLRO instead of GL where appropriate.
+	* elf/dl-libc.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* sysdeps/i386/dl-procinfo.h: Likewise.
+	* sysdeps/i386/i686/hp-timing.h: Likewise.
+	* sysdeps/ia64/hp-timing.h: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h: Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h: Likewise.
+
 2004-03-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-lookup.c: We don't need for specialized lookup functions.

@@ -597,14 +597,15 @@ free_slotinfo (struct dtv_slotinfo_list **elemp)
 libc_freeres_fn (free_mem)
 {
   if (__builtin_expect (GL(dl_global_scope_alloc), 0) != 0
-      && GL(dl_main_searchlist)->r_nlist == GL(dl_initial_searchlist).r_nlist)
+      && (GL(dl_main_searchlist)->r_nlist
+	  == GLRO(dl_initial_searchlist).r_nlist))
     {
       /* All object dynamically loaded by the program are unloaded.  Free
 	 the memory allocated for the global scope variable.  */
       struct link_map **old = GL(dl_main_searchlist)->r_list;
 
       /* Put the old map in.  */
-      GL(dl_main_searchlist)->r_list = GL(dl_initial_searchlist).r_list;
+      GL(dl_main_searchlist)->r_list = GLRO(dl_initial_searchlist).r_list;
       /* Signal that the original map is used.  */
       GL(dl_global_scope_alloc) = 0;
 

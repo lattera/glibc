@@ -209,7 +209,7 @@ libc_freeres_fn (free_mem)
 
   /* Remove all search directories.  */
   d = GL(dl_all_dirs);
-  while (d != GL(dl_init_all_dirs))
+  while (d != GLRO(dl_init_all_dirs))
     {
       struct r_search_path_elem *old = d;
       d = d->next;

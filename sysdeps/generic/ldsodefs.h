@@ -213,8 +213,6 @@ struct rtld_global
   EXTERN struct r_scope_elem *_dl_global_scope[2];
   /* Direct pointer to the searchlist of the main object.  */
   EXTERN struct r_scope_elem *_dl_main_searchlist;
-  /* Copy of the content of `_dl_main_searchlist'.  */
-  EXTERN struct r_scope_elem _dl_initial_searchlist;
   /* This is zero at program start to signal that the global scope map is
      allocated by rtld.  Later it keeps the size of the map.  It might be
      reset if in _dl_close if the last global object is removed.  */
@@ -243,9 +241,6 @@ struct rtld_global
 #if HP_TIMING_AVAIL || HP_SMALL_TIMING_AVAIL
   /* Start time on CPU clock.  */
   EXTERN hp_timing_t _dl_cpuclock_offset;
-
-  /* Overhead of a high-precision timing measurement.  */
-  EXTERN hp_timing_t _dl_hp_timing_overhead;
 #endif
 
   /* Map of shared object to be profiled.  */
@@ -257,16 +252,10 @@ struct rtld_global
 
   /* List of search directories.  */
   EXTERN struct r_search_path_elem *_dl_all_dirs;
-  EXTERN struct r_search_path_elem *_dl_init_all_dirs;
 
 #ifdef _LIBC_REENTRANT
   EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
 #endif
-
-  /* Get architecture specific definitions.  */
-#define PROCINFO_DECL
-#define PROCINFO_CLASS EXTERN
-#include <dl-procinfo.c>
 
   /* Structure describing the dynamic linker itself.  */
   EXTERN struct link_map _dl_rtld_map;
@@ -388,6 +377,9 @@ struct rtld_global_ro
   EXTERN const char *_dl_platform;
   EXTERN size_t _dl_platformlen;
 
+  /* Copy of the content of `_dl_main_searchlist' at startup time.  */
+  EXTERN struct r_scope_elem _dl_initial_searchlist;
+
   /* CLK_TCK as reported by the kernel.  */
   EXTERN int _dl_clktck;
 
@@ -419,6 +411,11 @@ struct rtld_global_ro
   /* Mask for important hardware capabilities we honour. */
   EXTERN unsigned long int _dl_hwcap_mask;
 
+  /* Get architecture specific definitions.  */
+#define PROCINFO_DECL
+#define PROCINFO_CLASS EXTERN
+#include <dl-procinfo.c>
+
   /* Names of shared object for which the RPATH should be ignored.  */
   EXTERN const char *_dl_inhibit_rpath;
 
@@ -438,6 +435,14 @@ struct rtld_global_ro
   EXTERN const char *_dl_trace_prelink;
   /* Map of shared object to be prelink traced.  */
   EXTERN struct link_map *_dl_trace_prelink_map;
+
+  /* All search directories defined at startup.  */
+  EXTERN struct r_search_path_elem *_dl_init_all_dirs;
+
+#if HP_TIMING_AVAIL || HP_SMALL_TIMING_AVAIL
+  /* Overhead of a high-precision timing measurement.  */
+  EXTERN hp_timing_t _dl_hp_timing_overhead;
+#endif
 
 #ifdef NEED_DL_SYSINFO
   /* Syscall handling improvements.  This is very specific to x86.  */

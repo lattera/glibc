@@ -1,5 +1,5 @@
 /* Linux/i386 version of processor capability information handling macros.
-   Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -35,7 +35,7 @@ _dl_procinfo (int word)
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_printf (" %s", GL(dl_x86_cap_flags)[i]);
+      _dl_printf (" %s", GLRO(dl_x86_cap_flags)[i]);
 
   _dl_printf ("\n");
 

@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  i686 version.
-   Copyright (C) 1998, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -97,17 +97,17 @@ typedef unsigned long long int hp_timing_t;
 /* Use two 'rdtsc' instructions in a row to find out how long it takes.  */
 #define HP_TIMING_DIFF_INIT() \
   do {									      \
-    if (GL(dl_hp_timing_overhead) == 0)					      \
+    if (GLRO(dl_hp_timing_overhead) == 0)				      \
       {									      \
 	int __cnt = 5;							      \
-	GL(dl_hp_timing_overhead) = ~0ull;				      \
+	GLRO(dl_hp_timing_overhead) = ~0ull;				      \
 	do								      \
 	  {								      \
 	    hp_timing_t __t1, __t2;					      \
 	    HP_TIMING_NOW (__t1);					      \
 	    HP_TIMING_NOW (__t2);					      \
-	    if (__t2 - __t1 < GL(dl_hp_timing_overhead))		      \
-	      GL(dl_hp_timing_overhead) = __t2 - __t1;			      \
+	    if (__t2 - __t1 < GLRO(dl_hp_timing_overhead))		      \
+	      GLRO(dl_hp_timing_overhead) = __t2 - __t1;		      \
 	  }								      \
 	while (--__cnt > 0);						      \
       }									      \
@@ -121,7 +121,7 @@ typedef unsigned long long int hp_timing_t;
   do {									      \
     char __not_done;							      \
     hp_timing_t __oldval = (Sum);					      \
-    hp_timing_t __diff = (Diff) - GL(dl_hp_timing_overhead);		      \
+    hp_timing_t __diff = (Diff) - GLRO(dl_hp_timing_overhead);		      \
     do									      \
       {									      \
 	hp_timing_t __newval = __oldval + __diff;			      \

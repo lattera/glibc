@@ -1,5 +1,5 @@
 /* i386 version of processor capability information handling macros.
-   Copyright (C) 1998, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -68,14 +68,14 @@ static inline const char *
 __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
-  return GL(dl_x86_cap_flags)[idx];
+  return GLRO(dl_x86_cap_flags)[idx];
 };
 
 static inline const char *
 __attribute__ ((unused))
 _dl_platform_string (int idx)
 {
-  return GL(dl_x86_platforms)[idx - _DL_FIRST_PLATFORM];
+  return GLRO(dl_x86_platforms)[idx - _DL_FIRST_PLATFORM];
 };
 
 static inline int
@@ -86,7 +86,7 @@ _dl_string_hwcap (const char *str)
 
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, GL(dl_x86_cap_flags)[i]) == 0)
+      if (strcmp (str, GLRO(dl_x86_cap_flags)[i]) == 0)
 	return i;
     }
   return -1;
@@ -101,7 +101,7 @@ _dl_string_platform (const char *str)
   if (str != NULL)
     for (i = 0; i < _DL_PLATFORMS_COUNT; ++i)
       {
-	if (strcmp (str, GL(dl_x86_platforms)[i]) == 0)
+	if (strcmp (str, GLRO(dl_x86_platforms)[i]) == 0)
 	  return _DL_FIRST_PLATFORM + i;
       }
   return -1;

@@ -93,8 +93,6 @@ INTVARDEF(_dl_starting_up)
    (except those which cannot be added for some reason).  */
 struct rtld_global _rtld_global =
   {
-    /* Get architecture specific initializer.  */
-#include <dl-procinfo.c>
     /* Default presumption without further information is executable stack.  */
     ._dl_stack_flags = PF_R|PF_W|PF_X,
 #ifdef _LIBC_REENTRANT
@@ -113,6 +111,8 @@ extern struct rtld_global _rtld_local
    read-only after relocation.  */
 struct rtld_global_ro _rtld_global_ro attribute_relro =
   {
+    /* Get architecture specific initializer.  */
+#include <dl-procinfo.c>
 #ifdef NEED_DL_SYSINFO
     ._dl_sysinfo = DL_SYSINFO_DEFAULT,
 #endif
@@ -1720,6 +1720,14 @@ cannot allocate TLS data structures for initial thread");
 #endif
   }
 
+  /* Now set up the variable which helps the assembler startup code.  */
+  GL(dl_main_searchlist) = &GL(dl_loaded)->l_searchlist;
+  GL(dl_global_scope)[0] = &GL(dl_loaded)->l_searchlist;
+
+  /* Save the information about the original global scope list since
+     we need it in the memory handling later.  */
+  GLRO(dl_initial_searchlist) = *GL(dl_main_searchlist);
+
   if (prelinked)
     {
       struct link_map *l;
@@ -1832,14 +1840,6 @@ cannot allocate TLS data structures for initial thread");
 	  HP_TIMING_ACCUM_NT (relocate_time, add);
 	}
     }
-
-  /* Now set up the variable which helps the assembler startup code.  */
-  GL(dl_main_searchlist) = &GL(dl_loaded)->l_searchlist;
-  GL(dl_global_scope)[0] = &GL(dl_loaded)->l_searchlist;
-
-  /* Save the information about the original global scope list since
-     we need it in the memory handling later.  */
-  GL(dl_initial_searchlist) = *GL(dl_main_searchlist);
 
 #ifndef NONTLS_INIT_TP
 # define NONTLS_INIT_TP do { } while (0)
