@@ -1091,4 +1091,5 @@ __sysconf (name)
     }
 }
 
+#undef __sysconf
 weak_alias (__sysconf, sysconf)

@@ -228,6 +228,8 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 			  newp->__trans_fct = runp->trans_fct;
 			  newp->__trans_context_fct = runp->trans_context_fct;
 			  newp->__trans_end_fct = runp->trans_end_fct;
+			  newp->__data = NULL;
+			  newp->__next = NULL;
 
 			  lastp = NULL;
 			  for (endp = result->__data[cnt].__trans;
