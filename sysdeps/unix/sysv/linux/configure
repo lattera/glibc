@@ -204,10 +204,19 @@ if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   libc_cv_rootsbindir="/sbin"
 fi
 
-# Under Linux the LinuxThreads add-on should be available.
+# Under Linux the LinuxThreads or NPTL add-on should be available.
 case $add_ons in
+  # Only one of the add-ons should be available.
+  *linuxthreads*nptl*|*nptl*linuxthreads*)
+    echo "\
+*** LinuxThreads and NPTL add-ons are both available.  Only one must be used."
+    exit 1
+    ;;
   # It is available.  Good.
   *linuxthreads*)
+    linuxthreads_missing=
+    ;;
+  *nptl*)
     linuxthreads_missing=
     ;;
   *)
@@ -287,7 +296,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:291: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:300: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message

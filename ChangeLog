@@ -1,3 +1,7 @@
+2002-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/configure.in: Recognize nptl add-on name.
+
 2002-09-24  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/mach/hurd/Versions (ld: GLIBC_2.0): Move __libc_read,
