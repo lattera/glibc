@@ -30,6 +30,7 @@
 
 /* The character which represents newline.  */
 #define NEWLINE_CHAR '\n'
+#define WIDE_NEWLINE_CHAR L'\n'
 
 /* Rename to standard API for using out of glibc.  */
 #ifndef _LIBC
@@ -349,6 +350,8 @@ typedef struct bin_tree_t bin_tree_t;
 
 #define IS_WORD_CHAR(ch) (isalnum (ch) || (ch) == '_')
 #define IS_NEWLINE(ch) ((ch) == NEWLINE_CHAR)
+#define IS_WIDE_WORD_CHAR(ch) (iswalnum (ch) || (ch) == L'_')
+#define IS_WIDE_NEWLINE(ch) ((ch) == WIDE_NEWLINE_CHAR)
 
 #define NOT_SATISFY_PREV_CONSTRAINT(constraint,context) \
  ((((constraint) & PREV_WORD_CONSTRAINT) && !IS_WORD_CONTEXT (context)) \

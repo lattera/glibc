@@ -66,7 +66,8 @@ static void re_string_construct_common (const char *str, int len,
 					re_string_t *pstr,
 					RE_TRANSLATE_TYPE trans, int icase);
 #ifdef RE_ENABLE_I18N
-static int re_string_skip_chars (re_string_t *pstr, int new_raw_idx);
+static int re_string_skip_chars (re_string_t *pstr, int new_raw_idx,
+				 wint_t *last_wc);
 #endif /* RE_ENABLE_I18N */
 static re_dfastate_t *create_newstate_common (re_dfa_t *dfa,
 					      const re_node_set *nodes,
@@ -338,21 +339,24 @@ build_wcs_upper_buffer (pstr)
    Return the index.  */
 
 static int
-re_string_skip_chars (pstr, new_raw_idx)
+re_string_skip_chars (pstr, new_raw_idx, last_wc)
      re_string_t *pstr;
      int new_raw_idx;
+     wint_t *last_wc;
 {
   mbstate_t prev_st;
   int rawbuf_idx, mbclen;
+  wchar_t wc = 0;
 
   /* Skip the characters which are not necessary to check.  */
   for (rawbuf_idx = pstr->raw_mbs_idx + pstr->valid_len;
        rawbuf_idx < new_raw_idx;)
     {
-      int remain_len = pstr->len - rawbuf_idx;
+      int remain_len;
+      remain_len = pstr->len - rawbuf_idx;
       prev_st = pstr->cur_state;
-      mbclen = mbrlen ((const char *) pstr->raw_mbs + rawbuf_idx, remain_len,
-		       &pstr->cur_state);
+      mbclen = mbrtowc (&wc, (const char *) pstr->raw_mbs + rawbuf_idx,
+			remain_len, &pstr->cur_state);
       if (BE (mbclen == (size_t) -2 || mbclen == (size_t) -1 || mbclen == 0, 0))
 	{
 	  /* We treat these cases as a singlebyte character.  */
@@ -362,6 +366,7 @@ re_string_skip_chars (pstr, new_raw_idx)
       /* Then proceed the next character.  */
       rawbuf_idx += mbclen;
     }
+  *last_wc = (wint_t) wc;
   return rawbuf_idx;
 }
 #endif /* RE_ENABLE_I18N  */
@@ -441,12 +446,12 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 
   if (offset != 0)
     {
-      pstr->tip_context = re_string_context_at (pstr, offset - 1, eflags,
-						newline);
       /* Are the characters which are already checked remain?  */
       if (offset < pstr->valid_len)
 	{
 	  /* Yes, move them to the front of the buffer.  */
+	  pstr->tip_context = re_string_context_at (pstr, offset - 1, eflags,
+						    newline);
 #ifdef RE_ENABLE_I18N
 	  if (MB_CUR_MAX > 1)
 	    memmove (pstr->wcs, pstr->wcs + offset,
@@ -471,11 +476,26 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 	  if (MB_CUR_MAX > 1)
 	    {
 	      int wcs_idx;
-	      pstr->valid_len = re_string_skip_chars (pstr, idx) - idx;
+	      wint_t wc;
+	      pstr->valid_len = re_string_skip_chars (pstr, idx, &wc) - idx;
 	      for (wcs_idx = 0; wcs_idx < pstr->valid_len; ++wcs_idx)
 		pstr->wcs[wcs_idx] = WEOF;
+	      if (pstr->trans && wc <= 0xff)
+		wc = pstr->trans[wc];
+	      pstr->tip_context = (IS_WIDE_WORD_CHAR (wc) ? CONTEXT_WORD
+				   : ((newline && IS_WIDE_NEWLINE (wc))
+				      ? CONTEXT_NEWLINE : 0));
 	    }
+	  else
 #endif /* RE_ENABLE_I18N */
+	    {
+	      int c = pstr->raw_mbs[pstr->raw_mbs_idx + offset - 1];
+	      if (pstr->trans)
+		c = pstr->trans[c];
+	      pstr->tip_context = (IS_WORD_CHAR (c) ? CONTEXT_WORD
+				   : ((newline && IS_NEWLINE (c))
+				      ? CONTEXT_NEWLINE : 0));
+	    }
 	}
       if (!MBS_CASE_ALLOCATED (pstr))
 	{
@@ -542,10 +562,32 @@ re_string_context_at (input, idx, eflags, newline_anchor)
 	return ((eflags & REG_NOTEOL) ? CONTEXT_ENDBUF
 		: CONTEXT_NEWLINE | CONTEXT_ENDBUF);
     }
-  c = re_string_byte_at (input, idx);
-  if (IS_WORD_CHAR (c))
-    return CONTEXT_WORD;
-  return (newline_anchor && IS_NEWLINE (c)) ? CONTEXT_NEWLINE : 0;
+  if (MB_CUR_MAX == 1)
+    {
+      c = re_string_byte_at (input, idx);
+      if (IS_WORD_CHAR (c))
+	return CONTEXT_WORD;
+      return (newline_anchor && IS_NEWLINE (c)) ? CONTEXT_NEWLINE : 0;
+    }
+  else
+    {
+      wint_t wc;
+      int wc_idx = idx;
+      while(input->wcs[wc_idx] == WEOF)
+	{
+#ifdef DEBUG
+	  /* It must not happen.  */
+	  assert (wc_idx >= 0);
+#endif
+	  --wc_idx;
+	  if (wc_idx < 0)
+	    return input->tip_context;
+	}
+      wc = input->wcs[wc_idx];
+      if (IS_WIDE_WORD_CHAR (wc))
+	return CONTEXT_WORD;
+      return (newline_anchor && IS_WIDE_NEWLINE (wc)) ? CONTEXT_NEWLINE : 0;
+    }
 }
 
 /* Functions for set operation.  */

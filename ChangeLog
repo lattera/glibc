@@ -1,3 +1,14 @@
+2002-11-11  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regex_internal.c (re_string_skip_chars): Also return the last
+	wide character.
+	(re_string_reconstruct): Calculate the context by itself when the
+	offset points out of the valid range.
+	(re_string_context_at): Use wide character when MB_CUR_MAX > 1.
+	* posix/regex_internal.h (WIDE_NEWLINE_CHAR): New macro.
+	(IS_WIDE_WORD_CHAR): New macro.
+	(IS_WIDE_NEWLINE): New macro.
+
 2002-11-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/strchr.S: Don't use one register for two
