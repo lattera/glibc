@@ -226,6 +226,11 @@ extern const char _libc_intl_domainname[];
 # define internal_function	/* empty */
 #endif
 
+/* Prepare for the case that `__builtin_expect' is not available.  */
+#ifndef HAVE_BUILTIN_EXPECT
+# define __builtin_expect(expr, val) (expr)
+#endif
+
 /* When a reference to SYMBOL is encountered, the linker will emit a
    warning message MSG.  */
 #ifdef HAVE_GNU_LD

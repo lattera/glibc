@@ -1,5 +1,11 @@
 1998-10-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* include/libc-symbols.h: If HAVE_BUILTIN_EXPECT is not defined
+	define __builtin_expect as a macro substituting to the first
+	argument.
+	* config.h.in: Define HAVE_BUILTIN_EXPECT.
+	* configure.in: Add test for __builtin_expect.
+
 	* sysdeps/unix/sysv/linux/bits/types.h: Include
 	bits/pthreadtypes.h only not for POSIX 199506.
 	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.

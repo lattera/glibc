@@ -987,6 +987,28 @@ static)
   ;;
 esac
 
+dnl Check whether compiler understands __builtin_expect.
+AC_CACHE_CHECK(for __builtin_expect, libc_cv_gcc_builtin_expect,
+[cat > conftest.c <<EOF
+#line __oline__ "configure"
+int foo (int a)
+{
+  a = __builtin_expect (a, 10);
+  return a == 10 ? 0 : 1;
+}
+EOF
+dnl No \ in command here because it ends up inside ''.
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS -nostdlib -nostartfiles
+			    -o conftest conftest.c -lgcc >&AC_FD_CC]); then
+  libc_cv_gcc_builtin_expect=yes
+else
+  libc_cv_gcc_builtin_expect=no
+fi
+rm -f conftest*])
+if test "$libc_cv_gcc_builtin_expect" = yes; then
+  AC_DEFINE(HAVE_BUILTIN_EXPECT)
+fi
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

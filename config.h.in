@@ -59,6 +59,9 @@
    with static variable. */
 #undef	HAVE_DWARF2_UNWIND_INFO_STATIC
 
+/* Define if the compiler supports __builtin_expect.  */
+#undef	HAVE_BUILTIN_EXPECT
+
 /* Define if the regparm attribute shall be used for local functions
    (gcc on ix86 only).  */
 #undef	USE_REGPARMS
