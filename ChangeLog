@@ -1,3 +1,7 @@
+2003-11-08  Andreas Schwab  <schwab@suse.de>
+
+	* scripts/data/c++-types-ia64-linux-gnu.data: New file.
+
 2003-11-10  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* io/ftwtest-sh: Fix nested sed commands.
