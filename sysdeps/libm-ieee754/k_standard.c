@@ -29,7 +29,10 @@ static char rcsid[] = "$NetBSD: k_standard.c,v 1.6 1995/05/10 20:46:35 jtc Exp $
 #undef fflush
 #endif	/* !defined(_USE_WRITE) */
 
-#ifdef __STDC__
+/* XXX gcc versions until now don't delay the 0.0/0.0 division until
+   runtime but produce NaN at copile time.  This is wrong since the
+   exceptions are not set correctly.  */
+#if 0 && defined __STDC__
 static const double zero = 0.0;	/* used as const */
 #else
 static double zero = 0.0;	/* used as const */

@@ -31,7 +31,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strncat strncmp strncpy				\
 		   strrchr strpbrk strsignal strspn strstr strtok	\
 		   strtok_r strxfrm memchr memcmp memmove memset	\
-		   mempcpy bcopy bzero ffs stpcpy stpncpy		\
+		   mempcpy bcopy bzero ffs ffsll stpcpy stpncpy		\
 		   strcasecmp strncase strcasecmp_l strncase_l		\
 		   memccpy memcpy wordcopy strsep strcasestr		\
 		   swab strfry memfrob memmem				\

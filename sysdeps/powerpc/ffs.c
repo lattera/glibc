@@ -1,6 +1,6 @@
 /* Find first set bit in a word, counted from least significant end.
    For PowerPC.
-   Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,3 +29,4 @@ __ffs (int x)
   return 32 - cnt;
 }
 weak_alias (__ffs, ffs)
+weak_alais (__ffs, ffsl)

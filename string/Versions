@@ -44,6 +44,9 @@ libc {
     # functions used in other libraries
     __strcasestr;
 
+    # f*
+    ffsl; ffsll;
+
     # m*
     mempcpy;
 

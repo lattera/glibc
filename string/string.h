@@ -234,8 +234,17 @@ extern char *rindex __P ((__const char *__s, int __c));
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
-extern int __ffs __P ((int __i));
-extern int ffs __P ((int __i));
+extern int __ffs __P ((int __i)) __attribute__ ((const));
+extern int ffs __P ((int __i)) __attribute__ ((const));
+
+/* The following two functions are non-standard but necessary for non-32 bit
+   platforms.  */
+# ifdef	__USE_GNU
+extern int ffsl __P ((long int __l)) __attribute__ ((const));
+#  ifdef __GNUC__
+extern int ffsll __P ((long long int __ll)) __attribute__ ((const));
+#  endif
+# endif
 
 /* Compare S1 and S2, ignoring case.  */
 extern int __strcasecmp __P ((__const char *__s1, __const char *__s2));

@@ -1567,6 +1567,25 @@ __strstr_g (__const char *__haystack, __const char *__needle)
 #endif
 
 
+/* Bit find functions.  We define only the i686 version since for the other
+   processors gcc generates good code.  */
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+# ifdef __i686__
+#  define _HAVE_STRING_ARCH_ffs 1
+#  define ffs(word) (__builtin_constant_p (word)			      \
+		     ? __builtin_ffs (word)				      \
+		     : ({ int __cnt, __tmp;				      \
+			  __asm__ __volatile__				      \
+			    ("bsfl %2,%0\n\t"				      \
+			     "cmovel %1,%0"				      \
+			     : "=&r" (__cnt), "=r" (__tmp)		      \
+			     : "rm" (word), "1" (-1));			      \
+			  __cnt + 1; }))
+
+#  define ffsl(word) ffs(word)
+# endif	/* i686 */
+#endif	/* BSD || X/Open */
+
 #undef __STRING_INLINE
 
 #endif	/* use string inlines && GNU CC */

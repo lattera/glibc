@@ -21,34 +21,22 @@
 #define ffsl __something_else
 #include <string.h>
 
-#undef	ffs
+#undef	ffsll
 
 /* Find the first bit set in I.  */
 int
-__ffs (i)
-     int i;
+ffsll (i)
+     long long int i;
 {
-  static const unsigned char table[] =
-    {
-      0,1,2,2,3,3,3,3,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
-      6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
-      7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-      7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-      8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
-      8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
-      8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
-      8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
-    };
-  unsigned int a;
-  unsigned int x = i & -i;
+  unsigned long long int x = i & -i;
 
-  a = x <= 0xffff ? (x <= 0xff ? 0 : 8) : (x <= 0xffffff ?  16 : 24);
-
-  return table[x >> a] + a;
+  if (x <= 0xffffffff)
+    return ffs (i);
+  else
+    return 32 + ffs (i >> 32);
 }
-weak_alias (__ffs, ffs)
 
-#if ULONG_MAX == UINT_MAX
+#if ULONG_MAX != UINT_MAX
 #undef ffsl
-weak_alias (__ffs, ffsl)
+weak_alias (ffsll, ffsl)
 #endif

@@ -459,8 +459,8 @@ AC_CHECK_PROG_VER(MAKE, make gmake, --version,
   [3.75 | 3.76.[1-9]* | 3.7[789]* | 3.[89]*], critic_missing=t)
 
 AC_CHECK_PROG_VER(MSGFMT, msgfmt gmsgfmt, --version,
-  [GNU gettext.*\([0-9][0-9]*\.[0-9]*\)],
-  [0.[1-9][0-9] | [1-9].*], MSGFMT=: aux_missing=t)
+  [GNU gettext.* \([0-9]*\.[0-9.]*\)],
+  [0.[1-9][0-9].* | [1-9].*], MSGFMT=: aux_missing=t)
 AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
   [GNU texinfo \([0-9][0-9.]*\)],
   [3.1[1-9] | 3.[2-9][0-9]], MAKEINFO=: aux_missing=t)

@@ -1,3 +1,41 @@
+1998-07-30 12:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/ffs.c: Add ffsl entry point.
+	* sysdeps/i386/i686/ffs.c: Likewise.
+	* sysdeps/m68k/ffs.c: Likewise.
+	* sysdeps/powerpc/ffs.c: Likewise.
+
+	* sysdeps/i386/i486/bits/string.h: Add optimizations for ffs/ffsl
+	on i686.
+
+1998-07-30  Richard Henderson  <rth@cygnus.com>
+
+	* elf/Makefile (ld-map): Move initialization below Makeconfig include.
+
+	* sysdeps/libm-ieee754/k_standard.c (zero): Make non-const to
+	work around gcc bug.
+
+	* string/string.h (ffsl, ffsll): Prototype.
+	* string/Version (GLIBC_2.1): Add them.
+	* sysdeps/alpha/ffs.S: Schedule for EV5.  Add ffsl and ffsll
+	entry points.
+	* sysdeps/alpha/ffsll.S: New file.  Empty.
+	* sysdeps/generic/ffs.c: Add ffsl and ffsll entry points.
+	* sysdeps/generic/ffsll.c: New file.
+	* string/Makefile (routines): Add ffsll.
+
+1998-07-30 10:03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Don't define CLK_TCK for
+	strictly ISO C compliant programs.
+	* sysdeps/unix/sysv/linux/mips/bits/time.h: Likewise.
+
+1998-07-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/protocols/rwhod.h: Correct typo in comment.
+
+	* configure.in: Use better regex for gettext.
+
 1998-07-29 21:29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Define more EM_* constants, ELFCLASSNUM, ELFDATANUM,
