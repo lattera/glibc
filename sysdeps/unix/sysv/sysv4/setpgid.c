@@ -28,7 +28,7 @@ extern int __pgrpsys __P ((int type, ...));
 int
 DEFUN(__setpgid, (pid, pgid), int pid AND int pgid)
 {
-  return __pgrpsys (1, pid, pgid);
+  return __pgrpsys (5, pid, pgid);
 }
 
 weak_alias (__setpgid, setpgid)
