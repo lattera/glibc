@@ -1,5 +1,8 @@
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* attr.c (__pthread_attr_setguardsize): Don't round guardsize
+	here.  Reported by Bruce <bruce@puremagic.com>.
+
 	* linuxthreads.texi: Changes terminology to 'type' from 'kind' when
 	discussing mutexes. (As per the Unix98 name for the API.)
 	Changes documentation for pthread_mutexattr_setkind_np() and
