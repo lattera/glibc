@@ -20,10 +20,7 @@
 #include <unistd.h>
 
 int
-__getresuid (euid, ruid, suid)
-    uid_t euid;
-    uid_t ruid;
-    uid_t suid;
+__getresuid (uid_t euid, uid_t ruid, uid_t suid)
 {
   __set_errno (ENOSYS);
   return -1;
