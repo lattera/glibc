@@ -267,9 +267,10 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 	      /* Handle the pushed elements now.  */
 	      size_t backw;
 
-	      for (backw = idxcnt - 1; backw >= backw_stop; --backw)
+	      backw = idxcnt;
+	      while (backw > backw_stop)
 		{
-		  size_t len = weights[idxarr[backw]++];
+		  size_t len = weights[idxarr[--backw]++];
 
 		  if (needed + len < n)
 		    while (len-- > 0)
@@ -363,9 +364,10 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 	      /* Handle the pushed elements now.  */
 	      size_t backw;
 
-	      for (backw = idxmax - 1; backw >= backw_stop; --backw)
+	      backw = idxmax - 1;
+	      while (backw > backw_stop)
 		{
-		  size_t len = weights[idxarr[backw]++];
+		  size_t len = weights[idxarr[--backw]++];
 		  if (len != 0)
 		    {
 		      buflen = utf8_encode (buf, val);
@@ -398,7 +400,7 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
      a `position' rule at the end and if no non-ignored character
      is found the last \1 byte is immediately followed by a \0 byte
      signalling this.  We can avoid the \1 byte(s).  */
-  if (needed > 2 && dest[needed - 2] == '\1')
+  if (needed <= n && needed > 2 && dest[needed - 2] == '\1')
     {
       /* Remove the \1 byte.  */
       --needed;

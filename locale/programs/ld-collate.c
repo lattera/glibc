@@ -88,6 +88,9 @@ struct element_t
      we changed if necessary but I doubt this is necessary.  */
   unsigned int used_in_level;
 
+  /* Nonzero if this is a real character definition.  */
+  int is_character;
+
   struct element_list_t *weights;
 
   /* Where does the definition come from.  */
@@ -243,7 +246,8 @@ make_seclist_elem (struct locale_collate_t *collate, const char *string,
 
 static struct element_t *
 new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
-	     const uint32_t *wcs, const char *name, size_t namelen)
+	     const uint32_t *wcs, const char *name, size_t namelen,
+	     int is_character)
 {
   struct element_t *newp;
 
@@ -278,6 +282,7 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
   newp->mborder = NULL;
   newp->wcorder = 0;
   newp->used_in_level = 0;
+  newp->is_character = is_character;
 
   /* Will be allocated later.  */
   newp->weights = NULL;
@@ -547,14 +552,14 @@ find_element (struct linereader *ldfile, struct locale_collate_t *collate,
 
 	  if (result == NULL)
 	    result = sym->order = new_element (collate, NULL, 0, NULL,
-					       NULL, 0);
+					       NULL, 0, 0);
 	}
       else if (find_entry (&collate->elem_table, str, len,
 			   (void **) &result) != 0)
 	{
 	  /* It's also no collation element.  So it is a character
 	     element defined later.  */
-	  result = new_element (collate, NULL, 0, NULL, str, len);
+	  result = new_element (collate, NULL, 0, NULL, str, len, 1);
 	  if (result != NULL)
 	    /* Insert it into the sequence table.  */
 	    insert_entry (&collate->seq_table, str, len, result);
@@ -839,7 +844,8 @@ insert_value (struct linereader *ldfile, struct token *arg,
 	  elem = sym->order;
 
 	  if (elem == NULL)
-	    elem = sym->order = new_element (collate, NULL, 0, NULL, NULL, 0);
+	    elem = sym->order = new_element (collate, NULL, 0, NULL, NULL, 0,
+					     0);
 	}
       else if (find_entry (&collate->elem_table, arg->val.str.startmb,
 			   arg->val.str.lenmb, (void **) &elem) != 0)
@@ -859,8 +865,8 @@ insert_value (struct linereader *ldfile, struct token *arg,
 
 	  /* We have to allocate an entry.  */
 	  elem = new_element (collate, seq != NULL ? seq->bytes : NULL,
-			      seq != NULL ? seq->nbytes : 0,
-			      wcs, arg->val.str.startmb, arg->val.str.lenmb);
+			      seq != NULL ? seq->nbytes : 0, wcs,
+			      arg->val.str.startmb, arg->val.str.lenmb, 1);
 
 	  /* And add it to the table.  */
 	  if (insert_entry (&collate->seq_table, arg->val.str.startmb,
@@ -937,8 +943,8 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
   assert (arg == NULL || endp != NULL);
 
   /* Both, the start and the end symbol, must stand for characters.  */
-  if ((startp == NULL || startp->name == NULL)
-      || (endp == NULL || endp->name == NULL))
+  if ((startp != NULL && (startp->name == NULL || ! startp->is_character))
+      || (endp != NULL && (endp->name == NULL|| ! endp->is_character)))
     {
       lr_error (ldfile, _("\
 %s: the start end the end symbol of a range must stand for characters"),
@@ -1045,7 +1051,7 @@ sequence is not lower than that of the last character"), "LC_COLLATE");
 
 		      /* We have to allocate an entry.  */
 		      elem = new_element (collate, mbcnt, len, wcs, seq->name,
-					  namelen);
+					  namelen, 1);
 
 		      /* And add it to the table.  */
 		      if (insert_entry (&collate->seq_table, seq->name,
@@ -1241,7 +1247,7 @@ order for `%.*s' already defined at %s:%zu"),
 					  seq != NULL ? seq->nbytes : 0,
 					  wc == ILLEGAL_CHAR_VALUE
 					  ? NULL : wcs,
-					  buf, lenfrom);
+					  buf, lenfrom, 1);
 		    }
 		  else
 		    {
@@ -2103,10 +2109,14 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 		}
 
 	      ldfile->return_widestr = 1;
+	      ldfile->translate_strings = 1;
 
 	      /* Finally the string with the replacement.  */
 	      arg = lr_token (ldfile, charmap, repertoire);
+
 	      ldfile->return_widestr = 0;
+	      ldfile->translate_strings = 0;
+
 	      if (arg->tok != tok_string)
 		goto err_label;
 
@@ -2139,8 +2149,11 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 		      if (insert_entry (&collate->elem_table,
 					symbol, symbol_len,
 					new_element (collate,
-						     NULL, 0, NULL, symbol,
-						     symbol_len)) < 0)
+						     arg->val.str.startmb,
+						     arg->val.str.lenmb - 1,
+						     arg->val.str.startwc,
+						     symbol, symbol_len, 0))
+			  < 0)
 			lr_error (ldfile, _("\
 error while adding collating element"));
 		    }

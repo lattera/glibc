@@ -1,3 +1,38 @@
+1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* ld-collate.c (struct element_t): Add field is_character and use it
+	to distinguish real character from collating elements and symbols.
+	(new_element): Take new parameter to initialize is_character.  Change
+	all callers.
+	(handle_ellipsis): Use is_character field to make sure ellipsis is
+	only used with characters.
+	(collate_read): Fix reading of collating elements.
+
+	* string/strxfrm.c: Correct loop end detection and memory access
+	in the little optimization at the end.
+
+	* locale/programs/ld-monetary.c (monetary_finish): Correct code to
+	emit warnings.  Provide default value for mon_decimal_point.
+
+	* locale/programs/ld-collate.c (collate_finish): Don't crash if this
+	category wasn't defined.
+	(collate_output): Likewise.
+
+	* locale/programs/ld-address.c: Don't emit message about not defined
+	category if be_quiet.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-identification.c: Likewise.
+	* locale/programs/ld-measurement.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-telephone.c: Likewise.
+
+	* locale/programs/locfile.c (write_locale_data): Correct memory
+	allocation for fname.
+
 1999-12-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-collate.c (read_directions): Fix a few messages.
