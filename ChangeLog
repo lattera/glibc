@@ -13,6 +13,13 @@
 
 2003-02-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* catgets/gencat.c (read_input_file): Collision between
+	auto-assigned numbers and user-defined nubmers is not fatal.
+	Handle it.
+	Patch by Michael M. Lampkin <michael.lampkin@ieee.org>.
+
+	* catgets/gencat.c (main): Return 1 if messages have been printed.
+
 	* iconv/iconv_prog.c (main): Unify messages.
 
 	* stdlib/strtod.c (INTERNAL): Remove bogus clearing of second word

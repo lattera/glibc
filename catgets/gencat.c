@@ -197,7 +197,7 @@ main (int argc, char *argv[])
   if (result != NULL)
     write_out (result, output_name, header_name);
 
-  return EXIT_SUCCESS;
+  return error_message_count != 0;
 }
 
 
@@ -613,11 +613,40 @@ this is the first definition"));
 		{
 		  /* Oh, oh.  There is already a message with this
 		     number in the message set.  */
-		  error_at_line (0, 0, fname, start_line,
-				 gettext ("duplicated message number"));
-		  error_at_line (0, 0, runp->fname, runp->line,
-				 gettext ("this is the first definition"));
-		  message_number = 0;
+		  if (runp->symbol == NULL)
+		    {
+		      /* The existing message had its number specified
+			 by the user.  Fatal collision type uh, oh.  */
+		      error_at_line (0, 0, fname, start_line,
+				     gettext ("duplicated message number"));
+		      error_at_line (0, 0, runp->fname, runp->line,
+				     gettext ("this is the first definition"));
+		      message_number = 0;
+		    }
+		  else
+		    {
+		      /* Collision was with number auto-assigned to a
+			 symbolic.  Change existing symbolic number
+			 and move to end the list (if not already there).  */
+		      runp->number = ++current->current_set->last_message;
+
+		      if (runp->next != NULL)
+			{
+			  struct message_list *endp;
+
+			  if (lastp == NULL)
+			    current->current_set->messages=runp->next;
+			  else
+			    lastp->next=runp->next;
+
+			  endp = runp->next;
+			  while (endp->next != NULL)
+			    endp = endp->next;
+
+			  endp->next = runp;
+			  runp->next = NULL;
+			}
+		    }
 		}
 	      ident = NULL;	/* We don't have a symbol.  */
 
