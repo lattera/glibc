@@ -87,12 +87,4 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
 #define __libc_lock_unlock_recursive __libc_lock_unlock
 #define __libc_lock_lock_recursive __libc_lock_lock
 
-/* XXX until cthreads supports recursive locks */
-#define __libc_lock_define_initialized_recursive __libc_lock_define_initialized
-#define __libc_lock_init_recursive __libc_lock_init
-#define __libc_lock_fini_recursive __libc_lock_fini
-#define __libc_lock_trylock_recursive __libc_lock_trylock
-#define __libc_lock_unlock_recursive __libc_lock_unlock
-#define __libc_lock_lock_recursive __libc_lock_lock
-
 #endif	/* libc-lock.h */
