@@ -1,5 +1,10 @@
 2002-12-10  Roland McGrath  <roland@redhat.com>
 
+	* manual/libc-texinfo.sh: Emit @set ADD-ON for each ADD-ON that
+	contributes a manual chapter.
+	* manual/signal.texi (Process Signal Mask): Use @ifset linuxthreads
+	around xref to it.
+
 	* sysdeps/unix/sysv/linux/dl-librecon.h (EXTRA_LD_ENVVARS): Refer to
 	and move contents to ...
 	(EXTRA_LD_ENVVARS_LINUX): ... this new macro.  Add break for nonmatch.

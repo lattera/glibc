@@ -28,6 +28,12 @@ collect_nodes () {
   $AWK -f tsort.awk | sed 's/_/ /g'
 }
 
+# Emit "@set ADD-ON" for each add-on contributing a manual chapter.
+for addon in $2; do
+  addon=`basename $addon .texi`
+  echo >&3 "@set $addon"
+done
+
 collect_nodes $1 | build_menu
 
 if [ -n "$2" ]; then
