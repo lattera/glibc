@@ -1,5 +1,28 @@
 2001-06-13  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/fork.c (LOSE): Put `goto lose' in dead code
+	so the label is not considered unused.
+
+	* sysdeps/mach/hurd/pwrite64.c: New file.
+	* sysdeps/mach/hurd/pread64.c: New file.
+
+	* sysdeps/mach/hurd/pread.c
+	(__libc_pread): Define this name, with __pread as an alias.
+	* sysdeps/mach/hurd/pwrite.c
+	(__libc_pwrite): Define this name, with __pwrite as an alias.
+
+	Implement POSIX "shared memory objects" as regular
+	files residing in the /var/run/shm/ directory.
+	This works on any system that supports _POSIX_MAPPED_FILES,
+	to make it also support _POSIX_SHARED_MEMORY_OBJECTS.
+	* sysdeps/posix/shm_open.c: New file.
+	* sysdeps/posix/shm_unlink.c: New file.
+	* sysdeps/mach/hurd/bits/posix_opt.h
+	(_POSIX_SHARED_MEMORY_OBJECTS): Define it.
+
+	* rt/aio_notify.c (__aio_notify_only) [! _POSIX_REALTIME_SIGNALS]:
+	Use raise instead of __aio_sigqueue.
+
 	* sysdeps/mach/hurd/pread.c: Fail with EINVAL if OFFSET is negative.
 	* sysdeps/mach/hurd/pwrite.c: Likewise.
 

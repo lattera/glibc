@@ -1,5 +1,5 @@
 /* Notify initiator of AIO request.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -58,10 +58,19 @@ __aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
 	result = -1;
     }
   else if (sigev->sigev_notify == SIGEV_SIGNAL)
-    /* We have to send a signal.  */
-    if (__aio_sigqueue (sigev->sigev_signo, sigev->sigev_value, caller_pid)
-	< 0)
-      result = -1;
+    {
+      /* We have to send a signal.  */
+#if _POSIX_REALTIME_SIGNALS
+      /* Note that the standard gives us the option of using a plain
+	 non-queuing signal here when SA_SIGINFO is not set for the signal.  */
+      if (__aio_sigqueue (sigev->sigev_signo, sigev->sigev_value, caller_pid)
+	  < 0)
+	result = -1;
+#else
+      /* There are no queued signals on this system at all.  */
+      result = raise (sigev->sigev_signo);
+#endif
+    }
 
   return result;
 }

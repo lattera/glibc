@@ -1,6 +1,5 @@
-/* Read block from given position in file without changing file pointer.
-   Hurd version.
-   Copyright (C) 1999,2001 Free Software Foundation, Inc.
+/* shm_unlink -- remove a POSIX shared memory object.  Generic POSIX version.
+   Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,22 +17,46 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
 #include <unistd.h>
-#include <hurd/fd.h>
 
-ssize_t
-__libc_pread (int fd, void *buf, size_t nbytes, off_t offset)
+#if ! _POSIX_MAPPED_FILES
+#include <sysdeps/generic/shm_unlink.c>
+
+#else
+
+#include <errno.h>
+#include <sys/mman.h>
+#include <string.h>
+#include <stdlib.h>
+#include <paths.h>
+
+#define SHMDIR	(_PATH_VARRUN "shm/")
+
+/* Remove shared memory object.  */
+int
+shm_unlink (const char *name)
 {
-  error_t err;
-  if (offset < 0)
-    err = EINVAL;
-  else
-    err = HURD_FD_USE (fd, _hurd_fd_read (descriptor, buf, &nbytes, offset));
-  return err ? __hurd_dfail (fd, err) : nbytes;
+  size_t namelen;
+  char *fname;
+
+  /* Construct the filename.  */
+  while (name[0] == '/')
+    ++name;
+
+  if (name[0] == '\0')
+    {
+      /* The name "/" is not supported.  */
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  namelen = strlen (name);
+  fname = (char *) __alloca (sizeof SHMDIR - 1 + namelen + 1);
+  __mempcpy (__mempcpy (fname, SHMDIR, sizeof SHMDIR - 1),
+	     name, namelen + 1);
+
+
+  return __unlink (name);
 }
 
-#ifndef __libc_pread
-strong_alias (__libc_pread, __pread)
-weak_alias (__libc_pread, pread)
 #endif

@@ -25,7 +25,7 @@
 /* Write NBYTES of BUF to FD at given position OFFSET without changing
    the file position.  Return the number written, or -1.  */
 ssize_t
-__pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
+__libc_pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
 {
   error_t err;
   if (offset < 0)
@@ -34,4 +34,8 @@ __pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
     err = HURD_FD_USE (fd, _hurd_fd_write (descriptor, buf, &nbytes, offset));
   return err ? __hurd_dfail (fd, err) : nbytes;
 }
-weak_alias (__pwrite, pwrite)
+
+#ifndef __libc_pwrite
+strong_alias (__libc_pwrite, __pwrite)
+weak_alias (__libc_pwrite, pwrite)
+#endif

@@ -31,6 +31,13 @@
 /* Processes have a saved set-user-ID and a saved set-group-ID.  */
 #define	_POSIX_SAVED_IDS	1
 
+#if 0				/* XXX implement aio_* */
+/* Asynchronous I/O is supported.  */
+#define _POSIX_ASYNCHRONOUS_IO	1
+/* Alternative name for Unix98.  */
+#define _LFS_ASYNCHRONOUS_IO	_POSIX_ASYNCHRONOUS_IO
+#endif
+
 /* Synchronizing file data is supported, but msync is missing.  */
 #undef _POSIX_SYNCHRONIZED_IO
 
@@ -45,6 +52,9 @@
 
 /* Setting of memory protections is supported.  */
 #define	_POSIX_MEMORY_PROTECTION	1
+
+/* POSIX.4 shared memory objects are supported (using regular files).  */
+#define _POSIX_SHARED_MEMORY_OBJECTS	_POSIX_MAPPED_FILES
 
 /* Implementation supports `poll' function.  */
 #define	_POSIX_POLL	1

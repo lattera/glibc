@@ -64,7 +64,7 @@ __fork (void)
   __spin_lock (&ss->critical_section_lock);
 
 #undef	LOSE
-#define LOSE assert_perror (err) /* XXX */
+#define LOSE do { assert_perror (err); goto lose; } while (0) /* XXX */
 
   if (! setjmp (env))
     {
