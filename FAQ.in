@@ -68,8 +68,8 @@ to use EGCS.  Comparing the sizes of glibc on Intel compiled with a recent
 EGCS and gcc 2.8.1 shows this:
 
 		  text    data     bss     dec     hex filename
-egcs-2.93.10	862897   15944   12824  891665   d9b11 libc.so
-gcc-2.8.1	959965   16468   12152  988585   f15a9 libc.so
+   egcs-2.93.10	862897   15944   12824  891665   d9b11 libc.so
+   gcc-2.8.1	959965   16468   12152  988585   f15a9 libc.so
 
 Make up your own decision.
 
@@ -651,7 +651,7 @@ ypbind.  ypbind 3.3 and older versions don't always remove these files, so
 glibc will continue to use them.  Other BSD versions seem to work correctly.
 Until ypbind 3.4 is released, you can find a patch at
 
-    ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc4.diff.gz
+    <ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc4.diff.gz>
 
 ??	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
 	RPC: Unable to receive; errno = Connection refused" when using NIS.
@@ -736,7 +736,7 @@ gcc-2.8.1 together with libstdc++ 2.8.1.1.  egcs 1.1 has the better C++
 support and works directly with glibc 2.1.  If you use gcc-2.8.1 with
 libstdc++ 2.8.1.1, you need to modify libstdc++ a bit.  A patch is available
 as:
-	ftp://alpha.gnu.org/gnu/libstdc++-2.8.1.1-glibc2.1-diff.gz
+	<ftp://alpha.gnu.org/gnu/libstdc++-2.8.1.1-glibc2.1-diff.gz>
 
 Please note that libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work
 very well with the GNU C library due to vtable thunks.  If you're upgrading
@@ -872,7 +872,7 @@ The glibc-compat add-on will provide the libcompat.a library, the older
 nss modules, and a few other files.  Together, they should make it
 possible to do development with old static libraries on a glibc 2.1
 system.  This add-on is still in development.  You can get it from
-	ftp://alpha.gnu.org/gnu/glibc-compat-2.1.tar.gz
+	<ftp://alpha.gnu.org/gnu/glibc-compat-2.1.tar.gz>
 but please keep in mind that it is experimental.
 
 ??	Why is extracting files via tar so slow?
@@ -1135,7 +1135,7 @@ This disables the optimization for that specific call.
 	stdin/stdout/stderr. Why?
 
 {RM,AJ} Constructs like:
-static FILE *InPtr = stdin;
+   static FILE *InPtr = stdin;
 
 lead to this message.  This is correct behaviour with glibc since stdin is
 not a constant expression.  Please note that a strict reading of ISO C does
@@ -1150,17 +1150,17 @@ this way were versioning problems with the size of the FILE structure.
 To fix those programs you've got to initialize the variable at run time.
 This can be done, e.g. in main, like:
 
-static FILE *InPtr;
-int main(void)
-{
-  InPtr = stdin;
-}
+   static FILE *InPtr;
+   int main(void)
+   {
+     InPtr = stdin;
+   }
 
 or by constructors (beware this is gcc specific):
 
-static FILE *InPtr;
-static void inPtr_construct (void) __attribute__((constructor));
-static void inPtr_construct (void) { InPtr = stdin; }
+   static FILE *InPtr;
+   static void inPtr_construct (void) __attribute__((constructor));
+   static void inPtr_construct (void) { InPtr = stdin; }
 
 
 ??	I can't compile with gcc -traditional (or
@@ -1169,9 +1169,9 @@ static void inPtr_construct (void) { InPtr = stdin; }
 {AJ} glibc2 does break -traditional and -traditonal-cpp - and will continue
 to do so.  For example constructs of the form:
 
-enum {foo
-#define foo foo
-}
+   enum {foo
+   #define foo foo
+   }
 
 are useful for debugging purposes (you can use foo with your debugger that's
 why we need the enum) and for compatibility (other systems use defines and

@@ -1,5 +1,5 @@
 /* Convert string representation of a number into an integer value.
-   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -344,27 +344,63 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 
   overflow = 0;
   i = 0;
-  for (c = *s; c != L_('\0'); c = *++s)
+  c = *s;
+  if (sizeof (long int) != sizeof (LONG int))
     {
-      if (s == end)
-	break;
-      if (c >= L_('0') && c <= L_('9'))
-	c -= L_('0');
-      else if (ISALPHA (c))
-	c = TOUPPER (c) - L_('A') + 10;
-      else
-	break;
-      if ((int) c >= base)
-	break;
-      /* Check for overflow.  */
-      if (i > cutoff || (i == cutoff && c > cutlim))
-	overflow = 1;
-      else
+      unsigned long int j = 0;
+
+      for (;c != L_('\0'); c = *++s)
 	{
-	  i *= (unsigned LONG int) base;
-	  i += c;
+	  if (s == end)
+	    break;
+	  if (c >= L_('0') && c <= L_('9'))
+	    c -= L_('0');
+	  else if (ISALPHA (c))
+	    c = TOUPPER (c) - L_('A') + 10;
+	  else
+	    break;
+	  if ((int) c >= base)
+	    break;
+	  /* Note that we never can have an overflow.  */
+	  else
+	    {
+	      unsigned long int jj = j * (unsigned long int) base;
+	      if (jj < j)
+		{
+		  /* We have an overflow.  Now use the long representation.  */
+		  i = (unsigned LONG int) j;
+		  goto use_long;
+		}
+	      j = jj;
+	      j += c;
+	    }
 	}
+
+      i = (unsigned LONG int) j;
     }
+  else
+    for (;c != L_('\0'); c = *++s)
+      {
+	if (s == end)
+	  break;
+	if (c >= L_('0') && c <= L_('9'))
+	  c -= L_('0');
+	else if (ISALPHA (c))
+	  c = TOUPPER (c) - L_('A') + 10;
+	else
+	  break;
+	if ((int) c >= base)
+	  break;
+	/* Check for overflow.  */
+	if (i > cutoff || (i == cutoff && c > cutlim))
+	  overflow = 1;
+	else
+	  {
+	  use_long:
+	    i *= (unsigned LONG int) base;
+	    i += c;
+	  }
+      }
 
   /* Check if anything actually happened.  */
   if (s == save)

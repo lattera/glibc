@@ -1,5 +1,7 @@
 1999-05-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/strtol.c: Optimize inner loop of long long versions.
+
 	* sysdeps/gnu/utmpx.h: Add needed type definitions according to
 	Unix98.  Add forward declaration of struct utmp.
 
