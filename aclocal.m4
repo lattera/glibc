@@ -4,6 +4,7 @@ dnl Each sysdep configure.in does GLIBC_PROVIDES first, to avoid any
 dnl AC_REQUIREs or AC_BEFOREs duplicating their code.
 dnl
 define([GLIBC_PROVIDES], [dnl
+AC_PROVIDE([AC_CONFIG_AUX_DIR_DEFAULT])dnl
 AC_PROVIDE([_AS_ECHO_N_PREPARE])dnl
 AC_PROVIDE([_AS_CR_PREPARE])dnl
 AC_PROVIDE([_AS_TR_SH_PREPARE])dnl

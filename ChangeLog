@@ -1,3 +1,15 @@
+2004-07-01  Roland McGrath  <roland@redhat.com>
+
+	* aclocal.m4: Add provide for AC_CONFIG_AUX_DIR_DEFAULT.
+
+	* Makeconfig ($(common-objpfx)shlib-versions.v.i): Move top-level
+	$(..)shlib-versions file to last in deps list.  This lets add-ons give
+	more-specific matches that override defaults in the top-level file.
+
+	* sysdeps/unix/sysv/linux/configure.in: If arch_minimum_kernel was
+	already set, don't set it or libc_cv_gcc_unwind_find_fde.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 2004-07-01  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/fpu/bits/mathinline.h [__LIBC_INTERNAL_MATH_INLINES]

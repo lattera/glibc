@@ -792,10 +792,11 @@ ifeq (yes, $(build-shared))
 ifeq ($(sysd-sorted-done),t)
 -include $(common-objpfx)soversions.mk
 ifndef avoid-generated
+# This lets add-ons give more-specific matches that override defaults
+# in the top-level file.
 $(common-objpfx)shlib-versions.v.i: \
-	$(..)shlib-versions $(wildcard $(patsubst %, $(..)%/shlib-versions,\
-						     $(add-ons) \
-						     $(subdirs)))
+	$(wildcard $(patsubst %, $(..)%/shlib-versions,$(add-ons) $(subdirs)))\
+	$(..)shlib-versions
 $(common-objpfx)soversions.i: $(common-objpfx)shlib-versions.v
 	default_setname='$(filter-out %_default,$(oldest-abi:%=GLIBC_%))'; \
 	while read conf version setname; do \
