@@ -1,5 +1,10 @@
 1998-10-19  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/hurd/i386/init-first.c (posixland_init): New function,
+	broken out of init1.
+	(init1) [PIC]: Call it.
+	(__libc_init_first) [! PIC]: Call it.
+
 	* nscd/nscd-client.h: New file, broken out of "nscd.h".
 	* nscd/nscd.h: Move defns needed by clients to "nscd-client.h",
 	and #include that.

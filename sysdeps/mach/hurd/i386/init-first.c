@@ -48,6 +48,23 @@ void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
    Importantly, these are called before anything tries to use malloc.  */
 DEFINE_HOOK (_hurd_preinit_hook, (void));
 
+
+/* We call this once the Hurd magic is all set up and we are ready to be a
+   Posixoid program.  This does the same things the generic version does.  */
+static void internal_function
+posixland_init (int argc, char **argv)
+{
+  __libc_init (argc, argv, __environ);
+
+  /* This is a hack to make the special getopt in GNU libc working.  */
+  __getopt_clean_environment (__environ);
+
+#ifdef PIC
+  __libc_global_ctors ();
+#endif
+}
+
+
 static void
 init1 (int argc, char *arg0, ...)
 {
@@ -107,20 +124,14 @@ init1 (int argc, char *arg0, ...)
 		d->intarray, d->intarraysize);
 
 #ifndef PIC
-  __libc_enable_secure = _dl_hurd_data->flags & EXEC_SECURE;
-#endif
-
-  __libc_init (argc, argv, __environ);
-
-  /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment (__environ);
-
-#ifdef PIC
-  __libc_global_ctors ();
+  __libc_enable_secure = d->flags & EXEC_SECURE;
+#else
+  posixland_init(argc, argv);
 #endif
 }
 
-static void
+
+static inline void
 init (int *data)
 {
   int argc = *data;
@@ -232,15 +243,22 @@ _init (int argc, ...)
 
 
 void
-__libc_init_first (int argc __attribute__ ((unused)), ...)
+__libc_init_first (int argc, char **argv, char **envp)
+#ifdef PIC
 {
+  /* Everything was done in the shared library initializer, _init.  */
+}
+#else
+{
+  posixland_init(argc, argv);
 }
 
-
+/* XXX This is all a crock and I am not happy with it.
+   This poorly-named function is called by static-start.S,
+   which should not exist at all.  */
 void
 _hurd_stack_setup (int argc __attribute__ ((unused)), ...)
 {
-#ifndef PIC
   void doinit (int *data)
     {
       /* This function gets called with the argument data at TOS.  */
@@ -252,7 +270,7 @@ _hurd_stack_setup (int argc __attribute__ ((unused)), ...)
       /* Push the user return address after the argument data, and then
 	 jump to `doinit1' (above), so it is as if __libc_init_first's
 	 caller had called `doinit1' with the argument data already on the
-	 stack.  */
+      stack.  */
       *--data = (&argc)[-1];
       asm volatile ("movl %0, %%esp\n" /* Switch to new outermost stack.  */
 		    "movl $0, %%ebp\n" /* Clear outermost frame pointer.  */
@@ -266,8 +284,8 @@ _hurd_stack_setup (int argc __attribute__ ((unused)), ...)
   RUN_HOOK (_hurd_preinit_hook, ());
 
   _hurd_startup ((void **) &argc, &doinit);
-#endif
 }
+#endif
 
 
 /* This function is defined here so that if this file ever gets into
