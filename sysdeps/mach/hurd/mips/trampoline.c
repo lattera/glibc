@@ -150,6 +150,12 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 calls we retry need only wait to receive the reply message.  */
       args->option &= ~MACH_SEND_MSG;
 
+      /* Limit the time to receive the reply message, in case the server
+	 claimed that `interrupt_operation' succeeded but in fact the RPC
+	 is hung.  */
+      args->option |= MACH_RCV_TIMEOUT;
+      args->timeout = _hurd_interrupted_rpc_timeout;
+
       state->basic.pc = (int) &&rpc_wait_trampoline;
       state->basic.r29 = (int) sigsp; /* $29 is the stack pointer register.  */
       /* After doing the message receive, the trampoline code will need to
