@@ -109,9 +109,8 @@ enum
 		    {							      \
 		      /* Write out the shift sequence before the last	      \
 			 character.  */					      \
-		      int set = data->__statep->__count & CURRENT_SEL_MASK;   \
-									      \
-		      assert (set == JISX0208_1983_set);		      \
+		      assert ((data->__statep->__count & CURRENT_SEL_MASK)    \
+			      == JISX0208_1983_set);			      \
 		      *outbuf++ = ESC;					      \
 		      *outbuf++ = '$';					      \
 		      *outbuf++ = 'B';					      \

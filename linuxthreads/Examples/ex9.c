@@ -32,7 +32,6 @@ static pthread_barrier_t barrier;
 int
 main (void)
 {
-  pthread_t th; 
   pthread_t thread_list[NUM_THREADS]; 
   int i;
 

@@ -15,8 +15,6 @@ do_test (void)
   char *buf;
   int fd;
   FILE *fp;
-  int ch;
-  char tm[20];
 
   buf = (char *) malloc (strlen (test_dir) + sizeof "/tst-eof.XXXXXX");
   if (buf == NULL)

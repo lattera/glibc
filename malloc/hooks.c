@@ -367,6 +367,8 @@ realloc_check(oldmem, bytes, caller)
         }
       }
 #if HAVE_MREMAP
+    } else {
+      newmem = chunk2mem(newp);
     }
 #endif
   } else {

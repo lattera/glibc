@@ -1,5 +1,64 @@
 2002-07-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/hooks.c (realloc_check): If mremap succeeds actually use
+	the result.
+
+	* sysdeps/i386/i486/bits/string.h: Add early clobber for "a"
+	output parameter.  Reported by Denis Zaitsev <zzz@cd-club.ru>.
+
+	* Versions.def (libthread_db): Add GLIBC_2.3.
+
+2002-07-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/freopen.c (freopen): Reset jump tables, use mmap stdio for the
+	new stream if possible.
+	* libio/freopen64.c (freopen64): Likewise.
+	* libio/Makefile (tests): Add tst-freopen.
+	* libio/tst-freopen.c: New file.
+
+2002-07-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/stdio.h (obstack_printf): Add format attribute.
+	(obstack_vprintf): Likewise.
+
+2002-07-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.h (re_token_t): Shrink the structure to 8
+	resp. 16 bytes on 32-bit resp. 64-bit platforms.
+	(re_charset_t, re_string_t): Reorder structure members for 64-bit
+	architectures.
+
+2002-07-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (re_compile_internal): Move clearing of dfa...
+	(init_dfa): ...here.
+
+2002-07-05  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (parse_sub_exp): Add nodes OP_OPEN_SUBEXP and
+	OP_CLOSE_SUBEXP at both ends of sub expressions instead of SUBEXP
+	nodes in parse trees.
+	(calc_first): Fix the Definition of `firsts' of OP_OPEN_SUBEXP
+	and OP_CLOSE_SUBEXP, and remove the definition of SUBEXP.
+	(calc_epsdest): Treat OP_OPEN_SUBEXP and OP_CLOSE_SUBEXP as the
+	nodes which can epsilon transit.
+	* posix/regex_internal.h: Add OP_OPEN_SUBEXP and OP_CLOSE_SUBEXP
+	to IS_EPSILON_NODE macro.
+	* posix/regexec.c (update_regs): New function to update registers
+	by refering OP_OPEN_SUBEXP and OP_CLOSE_SUBEXP nodes.
+	(proceed_next_node): Use the entities of the nodes to determine
+	whether the node can transit to.
+	(set_regs): Use update_regs function to update registers.
+
+2002-07-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bug-regex4.c (main): Remove duplicate setlocale.
+	* posix/bug-regex6.c: New file.
+	* posix/Makefile (tests): Add bug-regex6.
+	(bug-regex6-ENV): Set LOCPATH.
+
+2002-07-10  Ulrich Drepper  <drepper@redhat.com>
+
 	* Versions.def [libpthread]: Add GLIBC_2.2.6.
 	* posix/Versions [libc] (GLIBC_2.2.6): Add __nanosleep.
 
