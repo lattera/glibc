@@ -79,6 +79,7 @@ execvp (file, argv)
       int got_eacces = 0;
       char *path, *p, *name;
       size_t len;
+      size_t pathlen;
 
       path = getenv ("PATH");
       if (path == NULL)
@@ -93,9 +94,10 @@ execvp (file, argv)
 	}
 
       len = strlen (file) + 1;
-      name = __alloca (strlen (path) + len + 1);
+      pathlen = strlen (path);
+      name = __alloca (pathlen + len + 1);
       /* Copy the file name at the top.  */
-      name = (char *) memcpy (name - len, file, len);
+      name = (char *) memcpy (name + pathlen + 1, file, len);
       /* And add the slash.  */
       *--name = '/';
 
