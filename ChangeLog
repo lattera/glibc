@@ -180,9 +180,6 @@
 
 	* sysdeps/i386/i486/bits/string.h: Fix typos.
 
-	* nss/nsswitch.c (__nss_lookup): Fix the bogus checking for
-	"adjusted for next function".
-
 1998-03-28 00:13  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/alpha/readdir.c (__readdir64): New
