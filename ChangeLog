@@ -1,3 +1,8 @@
+2003-01-04  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Add nanosecond
+	fields.
+
 2002-01-03  Paul Eggert  <eggert@twinsun.com>
 
 	* malloc/obstack.h (__INT_TO_PTR) [__STDC__]: Cast result to
