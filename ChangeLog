@@ -1,3 +1,9 @@
+2002-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h (profil_counter):
+	Add hack to prevent the compiler from clobbering the signal
+	context.
+
 2002-10-11  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_ERROR_HANDLER):
