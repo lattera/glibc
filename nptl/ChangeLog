@@ -1,3 +1,17 @@
+2003-02-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-rwlock8 and tst-rwlock9.
+	* tst-rwlock8.c: New file.
+	* tst-rwlock9.c: New file.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Fix
+	complete broken rwlock implementation.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: Likewise.
+
 2003-02-23  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (nptl-version): Change regexp so case sensitivity is ok.
