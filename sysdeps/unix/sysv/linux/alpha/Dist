@@ -1,6 +1,7 @@
 alpha/ptrace.h
 alpha/regdef.h
 clone.S
+dl-brk.S
 ieee_get_fp_control.S
 ieee_set_fp_control.S
 ioperm.c
