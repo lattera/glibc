@@ -23,6 +23,8 @@ extern int __sigvec (int __sig, __const struct sigvec *__vec,
 extern int __sigreturn (struct sigcontext *__scp);
 extern int __sigaltstack (__const struct sigaltstack *__ss,
 			  struct sigaltstack *__oss);
+extern int __libc_sigaction (int sig, const struct sigaction *act,
+			     struct sigaction *oact);
 
 /* Allocate real-time signal with highest/lowest available priority.  */
 extern int __libc_allocate_rtsig (int __high);
