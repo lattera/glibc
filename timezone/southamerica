@@ -1,4 +1,4 @@
-# @(#)southamerica	7.37
+# @(#)southamerica	7.38
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -249,7 +249,12 @@ Zone	America/La_Paz	-4:32:36 -	LMT	1890
 # <a href="http://pcdsh01.on.br/verao1.html">
 # Brazilian official page
 # </a>
-#
+
+# From Jesper Norgaard (2000-11-03):
+# [For an official list of which regions in Brazil use which time zones, see:]
+# http://pcdsh01.on.br/Fusbr.htm
+# http://pcdsh01.on.br/Fusbrhv.htm
+
 # From Paul Eggert (2000-10-02):
 # The official decrees referenced below are taken from
 # <a href="http://pcdsh01.on.br/DecHV.html">
@@ -373,6 +378,11 @@ Rule	Brazil	1999	only	-	Oct	 3	 0:00	1:00	S
 Rule	Brazil	2000	only	-	Feb	27	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/DEC3592.htm">3,592</a> (2000-09-06)
 # adopted by the same states as before.
+# Decree <a href="http://pcdsh01.on.br/Dec3630.jpg">3,630</a> (2000-10-13)
+# repeals DST in PE and RR, effective 2000-10-15 00:00.
+# Decree <a href="http://pcdsh01.on.br/Dec3632.jpg">3,632</a> (2000-10-17)
+# repeals DST in SE, AL, PB, RN, CE, PI and MA, effective 2000-10-22 00:00.
+#
 # These give only one year's rules.  After that, the rules are guesses
 # and are quite possibly wrong, but are more likely than no DST at all.
 Rule	Brazil	2000	max	-	Oct	Sun>=8	 0:00	1:00	S
@@ -381,22 +391,32 @@ Rule	Brazil	2001	max	-	Feb	Sun>=15	 0:00	0	-
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 #
-# Fernando de Noronha
+# Atlantic islands: Fernando de Noronha, Trindade, Martin Vaz,
+# Atol das Rocas, and Penedos de Sao Pedro e Sao Paulo
 Zone America/Noronha	-2:09:40 -	LMT	1914
 			-2:00	Brazil	FN%sT	1990 Sep 17
 			-2:00	-	FNT
 #
 # Amapa (AP), east Para (PA)
+# East Para includes Belem, Maraba, Serra Norte, and Sao Felix do Xingu.
 Zone America/Belem	-3:13:56 -	LMT	1914
 			-3:00	Brazil	BR%sT	1988 Sep 12
 			-3:00	-	BRT
 #
 # Maranhao (MA), Piaui (PI), Ceara (CE), Rio Grande do Norte (RN),
-# Paraiba (PB), Pernambuco (PE) (except Fernando de Noronha)
+# Paraiba (PB)
 Zone America/Fortaleza	-2:34:00 -	LMT	1914
 			-3:00	Brazil	BR%sT	1990 Sep 17
 			-3:00	-	BRT	1999 Sep 30
-			-3:00	Brazil	BR%sT
+			-3:00	Brazil	BR%sT	2000 Oct 22
+			-3:00	-	BRT
+#
+# Pernambuco (PE) (except Atlantic islands)
+Zone America/Recife	-2:19:36 -	LMT	1914
+			-3:00	Brazil	BR%sT	1990 Sep 17
+			-3:00	-	BRT	1999 Sep 30
+			-3:00	Brazil	BR%sT	2000 Oct 15
+			-3:00	-	BRT
 #
 # Tocantins (TO)
 Zone America/Araguaina	-3:12:48 -	LMT	1914
@@ -410,7 +430,8 @@ Zone America/Maceio	-2:22:52 -	LMT	1914
 			-3:00	-	BRT	1995 Oct 13
 			-3:00	Brazil	BR%sT	1996 Sep  4
 			-3:00	-	BRT	1999 Sep 30
-			-3:00	Brazil	BR%sT
+			-3:00	Brazil	BR%sT	2000 Oct 22
+			-3:00	-	BRT
 #
 # Bahia (BA), Goias (GO), Distrito Federal (DF), Minas Gerais (MG),
 # Espirito Santo (ES), Rio de Janeiro (RJ), Sao Paulo (SP), Parana (PR),
@@ -425,6 +446,7 @@ Zone America/Cuiaba	-3:44:20 -	LMT	1914
 			-4:00	Brazil	AM%sT
 #
 # west Para (PA), Rondonia (RO)
+# West Para includes Altamira, Oribidos, Prainha, Oriximina, and Santarem.
 Zone America/Porto_Velho -4:15:36 -	LMT	1914
 			-4:00	Brazil	AM%sT	1988 Sep 12
 			-4:00	-	AMT
@@ -433,22 +455,29 @@ Zone America/Porto_Velho -4:15:36 -	LMT	1914
 Zone America/Boa_Vista	-4:02:40 -	LMT	1914
 			-4:00	Brazil	AM%sT	1988 Sep 12
 			-4:00	-	AMT	1999 Sep 30
-			-4:00	Brazil	AM%sT
+			-4:00	Brazil	AM%sT	2000 Oct 15
+			-4:00	-	AMT
 #
-# Amazonas (AM)
+# east Amazonas (AM): Boca do Acre, Jutai, Manaus, Floriano Peixoto
 Zone America/Manaus	-4:00:04 -	LMT	1914
 			-4:00	Brazil	AM%sT	1988 Sep 12
 			-4:00	-	AMT	1993 Sep 28
 			-4:00	Brazil	AM%sT	1994 Sep 22
 			-4:00	-	AMT
 #
+# west Amazonas (AM): Atalaia do Norte, Boca do Maoco, Benjamin Constant,
+#	Eirunepe, Envira, Ipixuna
+Zone America/Eirunepe	-4:39:28 -	LMT	1914
+			-5:00	Brazil	AC%sT	1988 Sep 12
+			-5:00	-	ACT	1993 Sep 28
+			-5:00	Brazil	AC%sT	1994 Sep 22
+			-5:00	-	ACT
+#
 # Acre (AC)
 # Rio_Branco is too ambiguous, since there's a Rio Branco in Uruguay too.
 Zone America/Porto_Acre	-4:31:12 -	LMT	1914
 			-5:00	Brazil	AC%sT	1988 Sep 12
 			-5:00	-	ACT
-#
-# Martin Vaz and Trindade are like America/Noronha.
 
 
 # Chile

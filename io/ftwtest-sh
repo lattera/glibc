@@ -5,10 +5,12 @@ objpfx=$1
 
 # We expect one parameter which is the test program.  This must understand
 # a number options:
-#   --phys	use the FTW_PHYS flag
-#   --chdir	use the FTW_CHDIR and print the current directory in the
-#		callback
-#   --depth	use the FTW_DEPTH flag
+#   --phys		use the FTW_PHYS flag
+#   --chdir		use the FTW_CHDIR and print the current directory
+#			in the callback
+#   --depth		use the FTW_DEPTH flag
+#   --early-exit 	print file@2 item only and return non-zero from the
+#			callback when it is seen
 testprogram=$2
 
 # We cannot test this as root.
@@ -133,6 +135,15 @@ base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmpreal/f
 base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
 base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
 base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2/lvl3, level = 5
+EOF
+rm $testout
+
+LD_LIBRARY_PATH=$objpfx $ldso $testprogram --early-exit $tmpdir |
+    sort > $testout
+
+cat <<EOF | cmp $testout - || exit 1
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+succeeded
 EOF
 rm $testout
 

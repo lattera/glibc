@@ -1,4 +1,4 @@
-# @(#)backward	7.18
+# @(#)backward	7.19
 
 # This file provides links between current names for time zones
 # and their old names.  Many names changed in late 1993.
@@ -8,6 +8,7 @@ Link	America/Tijuana		America/Ensenada
 Link	America/Indianapolis	America/Fort_Wayne
 Link	America/Indiana/Knox	America/Knox_IN
 Link	America/St_Thomas	America/Virgin
+Link	Asia/Dhaka		Asia/Dacca
 Link	Asia/Ashgabat		Asia/Ashkhabad
 Link	Asia/Jerusalem		Asia/Tel_Aviv
 Link	Asia/Thimphu		Asia/Thimbu

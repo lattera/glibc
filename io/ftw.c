@@ -426,15 +426,11 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
       int save_err;
       char *runp = dir.content;
 
-      assert (result == 0);
-
-      while (*runp != '\0')
+      while (result == 0 && *runp != '\0')
 	{
 	  char *endp = strchr (runp, '\0');
 
 	  result = process_entry (data, &dir, runp, endp - runp);
-	  if (result != 0)
-	    break;
 
 	  runp = endp + 1;
 	}

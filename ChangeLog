@@ -1,3 +1,20 @@
+2000-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/asia: Update from tzdata2000h.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
+2000-12-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/ftw.c (ftw_dir): If process_entry returned non-zero result
+	and dir.stream is NULL, only free dir.content.
+	* io/ftwtest.c (cb, main): Add --early-exit option to test it.
+	* io/ftwtest-sh: Test with --early-exit.
+
 2000-12-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/efgcvt.c (FCVT_MAXDIG): Define.

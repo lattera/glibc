@@ -1,4 +1,4 @@
-# @(#)asia	7.57
+# @(#)asia	7.58
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -116,7 +116,7 @@ Zone	Asia/Bahrain	3:22:20 -	LMT	1920		# Al Manamah
 
 # Bangladesh
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Asia/Dacca	6:01:40 -	LMT	1890
+Zone	Asia/Dhaka	6:01:40 -	LMT	1890
 			5:53:20	-	HMT	1941 Oct    # Howrah Mean Time?
 			6:30	-	BURT	1942 May 15 # Burma Time
 			5:30	-	IST	1942 Sep
@@ -330,12 +330,35 @@ Zone	Asia/Tbilisi	2:59:16 -	LMT	1880
 			4:00 E-EurAsia	GE%sT
 
 # East Timor
+
+# From Joao Carrascalao, brother of the former governor of East Timor, in
+# <a href="http://etan.org/et99c/december/26-31/30ETMAY.htm">
+# East Timor may be late for its millennium
+# </a> (1999-12-26/31):
+# Portugal tried to change the time forward in 1974 because the sun
+# rises too early but the suggestion raised a lot of problems with the
+# Timorese and I still don't think it would work today because it
+# conflicts with their way of life.
+
+# From Paul Eggert (2000-12-04):
+# We don't have any record of the above attempt.
+# Most likely our records are incomplete, but we have no better data.
+
+# <a href="http://www.hri.org/news/world/undh/last/00-08-16.undh.html">
+# From Manoel de Almeida e Silva, Deputy Spokesman for the UN Secretary-General
+# (2000-08-16)</a>:
+# The Cabinet of the East Timor Transition Administration decided
+# today to advance East Timor's time by one hour.  The time change,
+# which will be permanent, with no seasonal adjustment, will happen at
+# midnight on Saturday, September 16.
+
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Dili	8:22:20 -	LMT	1912
-			8:00	-	TPT	1942 Feb 21 23:00
+			8:00	-	TPT	1942 Feb 21 23:00 # E Timor Time
 			9:00	-	JST	1945 Aug
 			9:00	-	TPT	1976 May  3
-			8:00	-	TPT	# East Timor Time
+			8:00	-	TPT	2000 Sep 17 00:00
+			9:00	-	TPT
 
 # India
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
