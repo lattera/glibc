@@ -24,6 +24,9 @@
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(word) -1
 
+/* There are no hardware capabilities defined.  */
+#define _dl_hwcap_string(idx) ""
+
 /* By default there is no important hardware capability.  */
 #define HWCAP_IMPORTANT (0)
 

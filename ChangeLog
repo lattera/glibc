@@ -1,3 +1,17 @@
+1998-04-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/dl-procinfo.h (_dl_hwcap_string): Provide
+	default.
+
+1998-04-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (installed-libcs): Fix typo.
+
+1998-04-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/Makefile ($(objpfx)UHC.so): Link against libKSC.
+	(UHC-routines): Remove ksc5601.
+
 1998-04-03 16:29  Philip Blundell  <pb@nexus.co.uk>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO): Fix typo

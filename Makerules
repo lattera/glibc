@@ -649,7 +649,7 @@ endef
 # should install libc.a; this way "make install" in a subdir is guaranteed
 # to install everything it changes.
 ifdef objects
-installed-libcs := $(foreach o,$(filter-out .so,$(object-suffixes-for-libc)),\
+installed-libcs := $(foreach o,$(filter-out .os,$(object-suffixes-for-libc)),\
 			     $(inst_libdir)/$(patsubst %,$(libtype$o),\
 						     $(libprefix)$(libc-name)))
 install: $(installed-libcs)

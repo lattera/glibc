@@ -56,7 +56,7 @@ EBCDIC-AT-DE-A-routines := ebcdic-at-de-a
 EBCDIC-CA-FR-routines := ebcdic-ca-fr
 EUC-KR-routines := euckr
 JOHAB-routines := johab
-UHC-routines := uhc ksc5601
+UHC-routines := uhc
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 
@@ -64,9 +64,11 @@ LDFLAGS-EUC-KR.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)EUC-KR.so: $(objpfx)libKSC.so
 LDFLAGS-JOHAB.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)JOHAB.so: $(objpfx)libKSC.so
+LDFLAGS-UHC.so = -Wl,-rpath,$(gconvdir)
+$(objpfx)UHC.so: $(objpfx)libKSC.so
 
-LDFLAGS-libJIS.so = -Wl,-soname,libJIS.so
-LDFLAGS-libKSC.so = -Wl,-soname,libKSC.so
+LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
+LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
 
 distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
