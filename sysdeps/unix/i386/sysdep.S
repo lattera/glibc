@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 2000, 2002, 2004
+/* Copyright (C) 1991,1992,1993,1994,1995,1996,1997,2000,2002,2004,2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -47,7 +47,12 @@ notb:
 #endif
 #ifndef	PIC
 # if USE___THREAD
+#  ifndef NO_TLS_DIRECT_SEG_REFS
 	movl %eax, %gs:C_SYMBOL_NAME(errno@NTPOFF)
+#  else
+	movl %gs:0, %ecx
+	movl %eax, C_SYMBOL_NAME(errno@NTPOFF)(%ecx)
+#  endif
 # elif !defined _LIBC_REENTRANT
 	movl %eax, C_SYMBOL_NAME(errno)
 # else
@@ -66,7 +71,12 @@ notb:
 
 	/* Pop %ebx value saved before jumping here.  */
 	popl %ebx
+#  ifndef NO_TLS_DIRECT_SEG_REFS
+	addl %gs:0, %ecx
+	movl %eax, (%ecx)
+#  else
 	movl %eax, %gs:0(%ecx)
+#  endif
 # elif RTLD_PRIVATE_ERRNO
 	movl %eax, C_SYMBOL_NAME(rtld_errno@GOTOFF)(%ebx)
 

@@ -61,3 +61,7 @@ CFLAGS-dlopenold.c += -mpreferred-stack-boundary=4
 CFLAGS-dlclose.c += -mpreferred-stack-boundary=4
 CFLAGS-dlerror.c += -mpreferred-stack-boundary=4
 endif
+
+ifneq (,$(filter -mno-tls-direct-seg-refs,$(CFLAGS)))
+defines += -DNO_TLS_DIRECT_SEG_REFS
+endif
