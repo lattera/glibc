@@ -1,3 +1,43 @@
+2001-12-28  Andreas Jaeger  <aj@suse.de>
+
+	* td_init.c (td_init): Don't use __FUNCTION__ as literal.
+	* td_log.c (td_log): Likewise.
+	* td_ta_delete.c (td_ta_delete): Likewise.
+	* td_ta_get_nthreads.c (td_ta_get_nthreads): Likewise.
+	* td_ta_get_ph.c (td_ta_get_ph): Likewise.
+	* td_ta_map_id2thr.c (td_ta_map_id2thr): Likewise.
+	* td_ta_map_lwp2thr.c (td_ta_map_lwp2thr): Likewise.
+	* td_ta_new.c (td_ta_new): Likewise.
+	* td_ta_clear_event.c (td_ta_clear_event): Likewise.
+	* td_ta_enable_stats.c (td_ta_enable_stats): Likewise.
+	* td_ta_event_addr.c (td_ta_event_addr): Likewise.
+	* td_ta_event_getmsg.c (td_ta_event_getmsg): Likewise.
+	* td_ta_get_stats.c (td_ta_get_stats): Likewise.
+	* td_ta_reset_stats.c (td_ta_reset_stats): Likewise.
+	* td_ta_set_event.c (td_ta_set_event): Likewise.
+	* td_ta_setconcurrency.c (td_ta_setconcurrency): Likewise.
+	* td_ta_thr_iter.c (td_ta_thr_iter): Likewise.
+	* td_ta_tsd_iter.c (td_ta_tsd_iter): Likewise.
+	* td_thr_clear_event.c (td_thr_clear_event): Likewise.
+	* td_thr_dbresume.c (td_thr_dbresume): Likewise.
+	* td_thr_dbsuspend.c (td_thr_dbsuspend): Likewise.
+	* td_thr_event_enable.c (td_thr_event_enable): Likewise.
+	* td_thr_event_getmsg.c (td_thr_event_getmsg): Likewise.
+	* td_thr_get_info.c (td_thr_get_info): Likewise.
+	* td_thr_getfpregs.c (td_thr_getfpregs): Likewise.
+	* td_thr_getgregs.c (td_thr_getgregs): Likewise.
+	* td_thr_getxregs.c (td_thr_getxregs): Likewise.
+	* td_thr_getxregsize.c (td_thr_getxregsize): Likewise.
+	* td_thr_set_event.c (td_thr_set_event): Likewise.
+	* td_thr_setfpregs.c (td_thr_setfpregs): Likewise.
+	* td_thr_setgregs.c (td_thr_setgregs): Likewise.
+	* td_thr_setprio.c (td_thr_setprio): Likewise.
+	* td_thr_setsigpending.c (td_thr_setsigpending): Likewise.
+	* td_thr_setxregs.c (td_thr_setxregs): Likewise.
+	* td_thr_sigsetmask.c (td_thr_sigsetmask): Likewise.
+	* td_thr_tsd.c (td_thr_tsd): Likewise.
+	* td_thr_validate.c (td_thr_validate): Likewise.
+
 2001-04-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_ta_map_id2thr.c: If thread terminated return TD_NOTHR.

@@ -1,51 +1,22 @@
+2001-12-19  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/profil-counter.h: Move/copy to ...
+	* sysdeps/unix/sysv/linux/s390/s390-32/profil-counter.h: ... here,
+	remove high order bit from the program counter.
+	* sysdeps/unix/sysv/linux/s390/s390-64/profil-counter.h: ... and here.
+
+2001-12-19  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela): Remove
+	unnecessary code and add missing reloc types.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela): Add empty
+	case for reloc type R_390_NONE.
+
 2001-12-28  Andreas Jaeger  <aj@suse.de>
 
 	* io/bug-ftw3.c: Include string.h for prototypes.
 
 	* crypt/md5test.c (main): Remove unused variable.
-
-	* linuxthreads_db/td_init.c (td_init): Don't use __FUNCTION__ as
-	literal.
-	* linuxthreads_db/td_log.c (td_log): Likewise.
-	* linuxthreads_db/td_ta_delete.c (td_ta_delete): Likewise.
-	* linuxthreads_db/td_ta_get_nthreads.c (td_ta_get_nthreads): Likewise.
-	* linuxthreads_db/td_ta_get_ph.c (td_ta_get_ph): Likewise.
-	* linuxthreads_db/td_ta_map_id2thr.c (td_ta_map_id2thr): Likewise.
-	* linuxthreads_db/td_ta_map_lwp2thr.c (td_ta_map_lwp2thr): Likewise.
-	* linuxthreads_db/td_ta_new.c (td_ta_new): Likewise.
-	* linuxthreads_db/td_ta_clear_event.c (td_ta_clear_event): Likewise.
-	* linuxthreads_db/td_ta_enable_stats.c (td_ta_enable_stats): Likewise.
-	* linuxthreads_db/td_ta_event_addr.c (td_ta_event_addr): Likewise.
-	* linuxthreads_db/td_ta_event_getmsg.c (td_ta_event_getmsg): Likewise.
-	* linuxthreads_db/td_ta_get_stats.c (td_ta_get_stats): Likewise.
-	* linuxthreads_db/td_ta_reset_stats.c (td_ta_reset_stats): Likewise.
-	* linuxthreads_db/td_ta_set_event.c (td_ta_set_event): Likewise.
-	* linuxthreads_db/td_ta_setconcurrency.c (td_ta_setconcurrency):
-	Likewise.
-	* linuxthreads_db/td_ta_thr_iter.c (td_ta_thr_iter): Likewise.
-	* linuxthreads_db/td_ta_tsd_iter.c (td_ta_tsd_iter): Likewise.
-	* linuxthreads_db/td_thr_clear_event.c (td_thr_clear_event): Likewise.
-	* linuxthreads_db/td_thr_dbresume.c (td_thr_dbresume): Likewise.
-	* linuxthreads_db/td_thr_dbsuspend.c (td_thr_dbsuspend): Likewise.
-	* linuxthreads_db/td_thr_event_enable.c (td_thr_event_enable):
-	Likewise.
-	* linuxthreads_db/td_thr_event_getmsg.c (td_thr_event_getmsg):
-	Likewise.
-	* linuxthreads_db/td_thr_get_info.c (td_thr_get_info): Likewise.
-	* linuxthreads_db/td_thr_getfpregs.c (td_thr_getfpregs): Likewise.
-	* linuxthreads_db/td_thr_getgregs.c (td_thr_getgregs): Likewise.
-	* linuxthreads_db/td_thr_getxregs.c (td_thr_getxregs): Likewise.
-	* linuxthreads_db/td_thr_getxregsize.c (td_thr_getxregsize): Likewise.
-	* linuxthreads_db/td_thr_set_event.c (td_thr_set_event): Likewise.
-	* linuxthreads_db/td_thr_setfpregs.c (td_thr_setfpregs): Likewise.
-	* linuxthreads_db/td_thr_setgregs.c (td_thr_setgregs): Likewise.
-	* linuxthreads_db/td_thr_setprio.c (td_thr_setprio): Likewise.
-	* linuxthreads_db/td_thr_setsigpending.c (td_thr_setsigpending):
-	Likewise.
-	* linuxthreads_db/td_thr_setxregs.c (td_thr_setxregs): Likewise.
-	* linuxthreads_db/td_thr_sigsetmask.c (td_thr_sigsetmask): Likewise.
-	* linuxthreads_db/td_thr_tsd.c (td_thr_tsd): Likewise.
-	* linuxthreads_db/td_thr_validate.c (td_thr_validate): Likewise.
 
 	* dlfcn/modstatic.c: Add prototype to avoid warning.
 

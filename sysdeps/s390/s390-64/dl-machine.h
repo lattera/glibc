@@ -415,6 +415,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  *(unsigned short *) reloc_addr =
 	    value + reloc->r_addend - (Elf64_Addr) reloc_addr;
 	  break;
+	case R_390_NONE:
+	  break;
 #endif
 #if !defined(RTLD_BOOTSTRAP) || defined(_NDEBUG)
 	default:
