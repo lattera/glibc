@@ -25,11 +25,9 @@ int
 __sigsetjmp (jmp_buf env, int savemask)
 {
   /* Save our caller's FP and PC.  */
-  asm ("movl 12(fp), %0" : "=g" (env[0].__fp));
-  asm ("movl 16(fp), %0" : "=g" (env[0].__pc));
+  asm ("movl 12(fp), %0" : "=g" (env[0].__jmpbuf[0].__fp));
+  asm ("movl 16(fp), %0" : "=g" (env[0].__jmpbuf[0].__pc));
 
   /* Save the signal mask if requested.  */
-  __sigjmp_save (env, savemask);
-
-  return 0;
+  return __sigjmp_save (env, savemask);
 }
