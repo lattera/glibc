@@ -30,7 +30,7 @@ LEAF(__brk, 0)
 	ldgp	gp, 0(t12)
 	.prologue 1
 
-	ldi	v0, __NR_brk
+	ldiq	v0, __NR_brk
 	call_pal PAL_callsys
 
 	/* Correctly handle the brk(0) query case.  */
@@ -46,7 +46,7 @@ LEAF(__brk, 0)
 
 	/* What a horrible way to die.  */
 error:	ldi	v0, ENOMEM
-	jmp	zero, syscall_error
+	jmp	zero, __syscall_error
 
 	END(__brk)
 
