@@ -1,5 +1,5 @@
 /* brk system call for Linux/HPPA.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ weak_alias (__curbrk, ___brk_addr)
 int
 __brk (void *addr)
 {
-  void *newbrk, *scratch;
+  void *newbrk;
 
   __curbrk = newbrk = INLINE_SYSCALL(brk, 1, addr);
 
