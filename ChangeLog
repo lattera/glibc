@@ -1,3 +1,8 @@
+2002-06-13  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/s_isinf.c (INTDEFX): Define to get correct
+	expansion order.
+
 2002-06-12  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/tmpfile.c [USE_IN_LIBIO] (tmpfile): Don't #define
