@@ -20,7 +20,6 @@ Boston, MA 02111-1307, USA.  */
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include "localeinfo.h"
 
 #ifndef STRING_TYPE
 # define STRING_TYPE char
@@ -30,7 +29,7 @@ Boston, MA 02111-1307, USA.  */
 
 /* Include the shared helper functions.  `strxfrm'/`wcsxfrm' also use
    these functions.  */
-#include "weight.h"
+#include "../locale/weight.h"
 
 
 /* Compare S1 and S2, returning less than, equal to or

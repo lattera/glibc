@@ -239,7 +239,7 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
 	value = 0;
 
       if (value == 0)
-	error_with_loc (0, 0, patch->fname, patch->lineno,
+	error_at_line (0, 0, patch->fname, patch->lineno,
 			_("no weight defined for symbol `%s'"), patch->token);
       else
 	*patch->where.pos = value;

@@ -1,8 +1,10 @@
 /* libgettext.h -- Message catalogs for internationalization.
 Copyright (C) 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
 Contributed by Ulrich Drepper.
 This file is derived from the file libgettext.h in the GNU gettext package.
+
+This file is part of the GNU C Library.  Its master source is NOT part of
+the C library, however.  The master source lives in /gd/gnu/lib.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,8 +18,8 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 #ifndef _LIBINTL_H
 #define _LIBINTL_H	1

@@ -1,5 +1,17 @@
 Thu Mar 28 03:25:10 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* locale/programs/xmalloc.c: Test _LIBC as well as STDC_HEADERS.
+
+	* locale/programs/ld-collate.c (collate_finish): Use error_at_line
+	instead of error_with_loc.
+
+	* locale/weight.h: Use u_int32_t instead of u32_t.
+	* string/strxfrm.c: Likewise.
+
+	* string/strxfrm.c: Find weight.h in ../locale; don't #include
+	"localeinfo.h".
+	* string/strcoll.c: Likewise.
+
 	* intl/Makefile (copysrc): Add missing > in sed cmd.
 
 Sat Mar 23 17:52:49 1996  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
@@ -49,8 +61,9 @@ Sat Mar 23 17:52:49 1996  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 	_NL_CTYPE_MAP_NAMES, _NL_CTYPE_WIDTH): New internal values for
 	extended LC_CTYPE and LC_COLLATE implementation.
 
-	* locale/simple-hash.c, locale/simple-hash.h, locale/xmalloc.c,
- 	locale/xstrdup.c: Helper functions for locale related programs.
+	* locale/programs/simple-hash.c, locale/programs/simple-hash.h,
+ 	locale/programs/xmalloc.c, locale/programs/xstrdup.c: Helper functions
+ 	for locale related programs.
 
 	* locale/C-collate.c, locale/C-ctype.c,
         locale/C-messages.c, locale/C-monetary.c,
@@ -72,19 +85,19 @@ Sat Mar 23 17:52:49 1996  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 	for collation tables.
 
 	* locale/programs/charmap-kw.gperf, locale/programs/charmap-kw.h,
-        locale/programs/charmap.c, locale/programs/charset.c,
-        locale/programs/charset.h, locale/programs/config.h,
-        locale/programs/ctypedump.c, locale/programs/ld-collate.c,
-        locale/programs/ld-ctype.c, locale/programs/ld-messages.c,
-        locale/programs/ld-monetary.c, locale/programs/ld-numeric.c,
-        locale/programs/ld-time.c, locale/programs/linereader.c,
-        locale/programs/linereader.h, locale/programs/locale.c,
-        locale/programs/localedef.c, locale/programs/locales.h,
-        locale/programs/locfile-kw.gperf, locale/programs/locfile-kw.h,
-        locale/programs/locfile-token.h, locale/programs/locfile.c,
-        locale/programs/locfile.h, locale/programs/stringtrans.c,
-        locale/programs/stringtrans.h: Implementation of locale related
-        programs.
+ 	locale/programs/charmap.c, locale/programs/charset.c,
+ 	locale/programs/charset.h, locale/programs/config.h,
+ 	locale/programs/ctypedump.c, locale/programs/ld-collate.c,
+ 	locale/programs/ld-ctype.c, locale/programs/ld-messages.c,
+ 	locale/programs/ld-monetary.c, locale/programs/ld-numeric.c,
+ 	locale/programs/ld-time.c, locale/programs/linereader.c,
+ 	locale/programs/linereader.h, locale/programs/locale.c,
+ 	locale/programs/localedef.c, locale/programs/locales.h,
+ 	locale/programs/locfile-kw.gperf, locale/programs/locfile-kw.h,
+ 	locale/programs/locfile-token.h, locale/programs/locfile.c,
+ 	locale/programs/locfile.h, locale/programs/stringtrans.c,
+ 	locale/programs/stringtrans.h: Implementation of locale related
+ 	programs.
 
 	* locale/weight.h: Functions to access collation tables.
 

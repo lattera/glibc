@@ -18,7 +18,8 @@ not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
-
+#include <langinfo.h>
+#include "localeinfo.h"
 
 #ifndef STRING_TYPE
 # error STRING_TYPE not defined
@@ -32,10 +33,11 @@ typedef struct weight_t
 {
   struct weight_t *prev;
   struct weight_t *next;
-  struct data_pair {
-    size_t number;
-    u32_t *value;
-  } data[0];
+  struct data_pair
+    {
+      size_t number;
+      const u_int32_t *value;
+    } data[0];
 } weight_t;
 
 
@@ -70,7 +72,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
       slot = (ch * (collate_nrules + 1)) % collate_hash_size;
 
       level = 0;
-      while (__collate_table[slot] != (u32_t) ch)
+      while (__collate_table[slot] != (u_int32_t) ch)
 	{
 	  if (__collate_table[slot + 1] == 0
 	      || ++level >= collate_hash_layers)
@@ -116,7 +118,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
       /* This is a comparison between a u32_t array (aka wchar_t) and
 	 an 8-bit string.  */
       for (idx = 0; __collate_extra[slot + 2 + idx] != 0; ++idx)
-	if (__collate_extra[slot + 2 + idx] != (u32_t) str[idx])
+	if (__collate_extra[slot + 2 + idx] != (u_int32_t) str[idx])
 	  break;
 
       /* When the loop finished with all character of the collation

@@ -20,7 +20,6 @@ Boston, MA 02111-1307, USA.  */
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include "localeinfo.h"
 
 #ifndef STRING_TYPE
 # define STRING_TYPE char
@@ -32,16 +31,15 @@ Boston, MA 02111-1307, USA.  */
 
 /* Include the shared helper functions.  `strxfrm'/`wcsxfrm' also use
    these functions.  */
-#include "weight.h"
+#include "../locale/weight.h"
 
 
 /* Write 32 bit value UTF-8 encoded but only if enough space is left.  */
 static __inline size_t
-print_val (value, dest, max, act)
-     u32_t value;
-     STRING_TYPE *dest;
-     size_t max;
-     size_t act;
+print_val (u_int32_t value,
+	   STRING_TYPE *dest,
+	   size_t max,
+	   size_t act)
 {
   char tmp[6];
   int idx = 0;
@@ -139,7 +137,7 @@ STRXFRM (dest, src, n)
       do
 	{
 	  int ignore = 0;
-	  u32_t w;
+	  u_int32_t w;
 
 	  /* Here we have to check for IGNORE entries.  If these are
 	     found we count them and go on witht he next value.  */
