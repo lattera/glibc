@@ -49,6 +49,24 @@
 #endif
 
 
+/* Store NEWVALUE in *MEM and return the old value.  */
+#ifndef atomic_exchange
+# define atomic_exchange(mem, newvalue) \
+  ({ __typeof (*mem) __oldval;						      \
+     __typeof (mem) __memp = (mem);					      \
+     __typeof (*mem) __value = (newvalue);				      \
+									      \
+     do									      \
+       __oldval = (*__memp);						      \
+     while (__builtin_expect (atomic_compare_and_exchange_acq (__memp,	      \
+							       __value,	      \
+							       __oldval), 0));\
+									      \
+     __oldval; })
+#endif
+
+
+/* Add VALUE to *MEM and return the old value of *MEM.  */
 #ifndef atomic_exchange_and_add
 # define atomic_exchange_and_add(mem, value) \
   ({ __typeof (*mem) __oldval;						      \
@@ -57,10 +75,12 @@
 									      \
      do									      \
        __oldval = (*__memp);						      \
-     while (atomic_compare_and_exchange_acq (__memp, __oldval + __value,      \
-					     __oldval));		      \
+     while (__builtin_expect (atomic_compare_and_exchange_acq (__memp,	      \
+							       __oldval	      \
+							       + __value,     \
+							       __oldval), 0));\
 									      \
-     __oldval + __value; })
+     __oldval; })
 #endif
 
 
@@ -91,6 +111,26 @@
 #endif
 
 
+/* Decrement *MEM if it is > 0, and return the old value.  */
+#ifndef atomic_decrement_if_positive(mem) \
+  ({ __typeof (*mem) __val;						      \
+     __typeof (*mem) __oldval;						      \
+     __typeof (mem) __memp;						      \
+     									      \
+     __val = *__memp;							      \
+     do									      \
+       {								      \
+	 if (__builtin_expect (__val <= 0, 0))				      \
+	   break;							      \
+	 __oldval = __val;						      \
+	 __val = atomic_compare_and_exchange_acq (__memp, __oldval - 1,	      \
+						  __oldval);		      \
+       }								      \
+     while (__builtin_expect (__val != __oldval, 0));			      \
+     __val; })
+#endif
+
+
 #ifndef atomic_add_negative
 # define atomic_add_negative(mem, value) \
   (atomic_exchange_and_add (mem, value) < 0)
@@ -117,8 +157,10 @@
 									      \
      do									      \
        __oldval = (*__memp);						      \
-     while (atomic_compare_and_exchange_acq (__memp,			      \
-					     __oldval | __mask, __oldval));   \
+     while (__builtin_expect (atomic_compare_and_exchange_acq (__memp,	      \
+							       __oldval	      \
+							       | __mask,      \
+							       __oldval), 0));\
 									      \
      __oldval & __mask; })
 #endif
