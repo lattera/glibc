@@ -299,6 +299,26 @@ typedef unsigned int UHWtype;
 #define impn_sqr_n_basecase	__MPN(impn_sqr_n_basecase)
 #define impn_sqr_n		__MPN(impn_sqr_n)
 
+#ifndef _PROTO
+#if defined (__STDC__) || defined (__cplusplus)
+#define _PROTO(x) x
+#else
+#define _PROTO(x) ()
+#endif
+#endif
+
+/* Prototypes for internal mpn calls.  */
+extern void impn_mul_n_basecase _PROTO ((mp_ptr prodp, mp_srcptr up,
+					 mp_srcptr vp, mp_size_t size));
+extern void impn_mul_n _PROTO ((mp_ptr prodp, mp_srcptr up, mp_srcptr vp,
+				mp_size_t size, mp_ptr tspace));
+extern void impn_sqr_n_basecase _PROTO ((mp_ptr prodp, mp_srcptr up,
+					 mp_size_t size));
+extern void impn_sqr_n _PROTO ((mp_ptr prodp, mp_srcptr up, mp_size_t size,
+				mp_ptr tspace));
+
+
+
 #ifndef IEEE_DOUBLE_BIG_ENDIAN
 #define IEEE_DOUBLE_BIG_ENDIAN 1
 #endif

@@ -18,11 +18,16 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.comm errno, 4
+	.comm errno, 4
+#ifdef __ELF__
+	.type errno, @object
+#endif
 
 	.text
-ENTRY(__start)
+LEAF(__start, 16)
 	lda	sp, -16(sp)
+	.prologue 0
+
 	stq	zero, 8(sp)		/* terminate frame chain */
 
 	br	t0, 1f
@@ -33,8 +38,7 @@ ENTRY(__start)
 	ldgp	gp, 0(ra)
 
 	/* clear out errno. */
-	lda	t0, errno
-	stl	zero, 0(t0)
+	stl	zero, (errno)
 
 	ldl	a0, 16(sp)	/* get argc */
 	lda	a1, 24(sp)	/* get argv */
@@ -45,26 +49,32 @@ ENTRY(__start)
 	addq	a2, 0x8, a2
 	stq	a2, 0(t0)
 
-#ifndef HAVE_INITFINI
 	mov	a0, s0
 	mov	a1, s1
 	mov	a2, s2
 
-	jsr	ra, __libc_init
+#ifdef HAVE_INITFINI
+	/* register the _fini sections to ensure destructors get run: */
+	lda	a0, _fini
+	jsr	ra, atexit
 	ldgp	gp, 0(ra)
 
-	mov	s0, a0
-	mov	s1, a1
-	mov	s2, a2
+	/* Now run the _init section of the program itself.  The _init
+	   sections of shared libraries will be run by the dynamic linker.  */
+	jsr	ra, _init
+	ldgp	gp, 0(ra)
 
 	/* initialize constructors: */
 	jsr	ra, __main
 	ldgp	gp, 0(ra)
+#else
+	jsr	ra, __libc_init
+	ldgp	gp, 0(ra)
+#endif
 
 	mov	s0, a0
 	mov	s1, a1
 	mov	s2, a2
-#endif
 
 	jsr	ra, main
 	ldgp	gp, 0(ra)
@@ -89,5 +99,10 @@ ENTRY(__start)
 	.globl __data_start
 __data_start:
 	.long 0
+
+#ifdef __ELF__
+	.size __data_start, 4
+	.type __data_start, @object
+#endif
 
 weak_alias(__data_start, data_start)

@@ -88,6 +88,12 @@ static char rcsid[] = "$Id$";
 # include <../conf/options.h>
 #endif
 
+#ifdef SPRINTF_CHAR
+# define SPRINTF(x) strlen(sprintf/**/x)
+#else
+# define SPRINTF(x) sprintf x
+#endif
+
 #define	MAXALIASES	35
 #define	MAXADDRS	35
 #define	MAXADDRBUFSIZE	8192
@@ -475,8 +481,7 @@ gethostbyname2(name, af)
 				 * Fake up a hostent as if we'd actually
 				 * done a lookup.
 				 */
-				if (inet_pton(af, name, host_addr,
-					       sizeof host_addr) <= 0) {
+				if (inet_pton(af, name, host_addr) <= 0) {
 					h_errno = HOST_NOT_FOUND;
 					return (NULL);
 				}
@@ -487,7 +492,7 @@ gethostbyname2(name, af)
 				host.h_name = hostbuf;
 				host.h_aliases = host_aliases;
 				host_aliases[0] = NULL;
-				h_addr_ptrs[0] = (char *)&host_addr;
+				h_addr_ptrs[0] = (char *)host_addr;
 				h_addr_ptrs[1] = NULL;
 				host.h_addr_list = h_addr_ptrs;
 				if (_res.options & RES_USE_INET6)
@@ -617,9 +622,9 @@ gethostbyaddr(addr, len, af)
 			case AF_INET6:
 				qp = qbuf;
 				for (n = IN6ADDRSZ - 1; n >= 0; n--) {
-					qp += sprintf(qp, "%x.%x.",
-						      uaddr[n] & 0xf,
-						      (uaddr[n] >> 4) & 0xf);
+					qp += SPRINTF((qp, "%x.%x.",
+						       uaddr[n] & 0xf,
+						       (uaddr[n] >> 4) & 0xf));
 				}
 				strcpy(qp, "ip6.int");
 				break;
@@ -770,12 +775,12 @@ _gethtent()
 		goto again;
 	*cp++ = '\0';
 	if ((_res.options & RES_USE_INET6) &&
-	    inet_pton(AF_INET6, p, host_addr, sizeof host_addr) > 0) {
+	    inet_pton(AF_INET6, p, host_addr) > 0) {
 		af = AF_INET6;
 		len = IN6ADDRSZ;
-	} else if (inet_pton(AF_INET, p, host_addr, sizeof host_addr) > 0) {
+	} else if (inet_pton(AF_INET, p, host_addr) > 0) {
 		if (_res.options & RES_USE_INET6) {
-			map_v4v6_address((char*)&host_addr, (char*)&host_addr);
+			map_v4v6_address((char*)host_addr, (char*)host_addr);
 			af = AF_INET6;
 			len = IN6ADDRSZ;
 		} else {
@@ -785,7 +790,7 @@ _gethtent()
 	} else {
 		goto again;
 	}
-	h_addr_ptrs[0] = (char *)&host_addr;
+	h_addr_ptrs[0] = (char *)host_addr;
 	h_addr_ptrs[1] = NULL;
 	host.h_addr_list = h_addr_ptrs;
 	host.h_length = len;
@@ -859,7 +864,7 @@ struct hostent *
 _gethtbyname(name)
 	const char *name;
 {
-	extern struct hostent *_gethtbyname2 __P((const char *, int));
+	extern struct hostent *_gethtbyname2();
 	struct hostent *hp;
 
 	if (_res.options & RES_USE_INET6) {

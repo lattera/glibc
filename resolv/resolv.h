@@ -245,9 +245,6 @@ int	 res_nameinquery __P((const char *, int, int,
 			      const u_char *, const u_char *));
 int	 res_queriesmatch __P((const u_char *, const u_char *,
 			       const u_char *, const u_char *));
-/* XXX - these last two don't belong in the resolver */
-u_int	 inet_nsap_addr __P((const char *, u_char *, int maxlen));
-char	*inet_nsap_ntoa __P((int, const u_char *, char *ascii));
 __END_DECLS
 
 #endif /* !_RESOLV_H_ */

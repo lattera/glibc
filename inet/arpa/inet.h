@@ -49,6 +49,10 @@ struct in_addr	 inet_makeaddr __P((u_int32_t , u_int32_t));
 u_int32_t	 inet_netof __P((struct in_addr));
 u_int32_t	 inet_network __P((const char *));
 char		*inet_ntoa __P((struct in_addr));
+int		 inet_pton __P((int af, const char *src, void *dst));
+const char	*inet_ntop __P((int af, const void *src, char *dst, size_t s));
+u_int		 inet_nsap_addr __P((const char *, u_char *, int maxlen));
+char		*inet_nsap_ntoa __P((int, const u_char *, char *ascii));
 __END_DECLS
 
 #endif /* !_INET_H_ */

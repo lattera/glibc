@@ -17,12 +17,13 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /* sigsuspend is a special syscall since it needs to dereference the
-sigset.  */
+   sigset.  */
 
 #include <sysdep.h>
 
 	.text
-ENTRY(sigsuspend)
+
+LEAF(sigsuspend, 0)
 	.prologue 0
 
 	ldq	a0, 0(a0)
@@ -33,7 +34,6 @@ ENTRY(sigsuspend)
 
 error:	br	gp, 1f
 1:	ldgp	gp, 0(gp)
-	lda	pv, syscall_error
-	jmp	zero, (pv)
+	jmp	zero, syscall_error
 
 	.end sigsuspend

@@ -37,7 +37,7 @@ static int	inet_pton4 __P((const char *src, u_char *dst));
 static int	inet_pton6 __P((const char *src, u_char *dst));
 
 /* int
- * inet_pton(af, src, dst, size)
+ * inet_pton(af, src, dst)
  *	convert from presentation format (which usually means ASCII printable)
  *	to network format (which is usually some kind of binary format).
  * return:
@@ -48,24 +48,15 @@ static int	inet_pton6 __P((const char *src, u_char *dst));
  *	Paul Vixie, 1996.
  */
 int
-inet_pton(af, src, dst, size)
+inet_pton(af, src, dst)
 	int af;
 	const char *src;
 	void *dst;
-	size_t size;
 {
 	switch (af) {
 	case AF_INET:
-		if (size < INADDRSZ) {
-			errno = ENOSPC;
-			return (-1);
-		}
 		return (inet_pton4(src, dst));
 	case AF_INET6:
-		if (size < IN6ADDRSZ) {
-			errno = ENOSPC;
-			return (-1);
-		}
 		return (inet_pton6(src, dst));
 	default:
 		errno = EINVAL;
@@ -207,12 +198,12 @@ inet_pton6(src, dst)
 		 * Since some memmove()'s erroneously fail to handle
 		 * overlapping regions, we'll do the shift by hand.
 		 */
-		const howmany = tp - colonp;
+		const int n = tp - colonp;
 		int i;
 
-		for (i = 1; i <= howmany; i++) {
-			endp[- i] = colonp[howmany - i];
-			colonp[howmany - i] = 0;
+		for (i = 1; i <= n; i++) {
+			endp[- i] = colonp[n - i];
+			colonp[n - i] = 0;
 		}
 		tp = endp;
 	}

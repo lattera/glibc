@@ -49,4 +49,3 @@ struct utmp {
 __END_DECLS
 
 #endif /* utmpbits.h */
-

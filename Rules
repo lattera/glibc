@@ -126,33 +126,7 @@ subdir_echo-distinfo:
 # our portions of the library because the parent make will install it later
 # (likewise the stubs file).
 .PHONY: subdir_install
-subdir_install: install-no-libc.a lib-noranlib stubs \
-		$(common-objpfx)sor-$(subdir)
-
-ifdef objpfx
-sor-objpfx = $(objpfx:../%=%)
-else
-sor-objpfx = $(subdir)
-endif
-
-ifndef libc.so-version
-# Undefine this because it can't work when we libc.so is unversioned.
-static-only-routines =
-endif
-
-# This communicates to the parent during install the set of routines that
-# need to be put into the special libc.so archive.
-$(common-objpfx)sor-$(subdir): Makefile
-	echo $(static-only-routines:%=$(sor-objpfx)%.o) > $@T
-	mv -f $@T $@
-
-ifdef static-only-routines
-# These routines are to be omitted from the shared library object,
-# so we replace the PIC objects for them with the empty object file.
-$(static-only-routines:%=$(objpfx)%.so): %.so: $(objpfx)empty.o
-	rm -f $@
-	ln $< $@
-endif
+subdir_install: install-no-libc.a lib-noranlib stubs
 
 .PHONY: subdir_TAGS subdir_dist
 subdir_TAGS: TAGS

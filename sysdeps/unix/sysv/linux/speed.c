@@ -1,5 +1,5 @@
 /* `struct termios' speed frobnication functions.  Linux version.
-Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,7 @@ static const speed_t speeds[] =
     57600,
     115200,
     230400,
+    460800,
   };
 
 
@@ -68,7 +69,7 @@ strong_alias (cfgetospeed, cfgetispeed);
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
 int
-cfsetospeed  (termios_p, speed) 
+cfsetospeed  (termios_p, speed)
      struct termios *termios_p;
      speed_t speed;
 {

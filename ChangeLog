@@ -1,3 +1,30 @@
+Fri May 24 02:31:36 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/speed.c: Add new speed value 460800.
+
+Thu May 23 23:09:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* FAQ: Add answer for 100% source code compatibility to Linux
+	libc by David Mosberger-Tang.
+
+	Update from bind-4.3.4-T3B.
+	* inet/arpa/inet.h: Add prototypes for inet_pton, inet_ntop,
+	inet_nsap_addr, and inet_nsap_ntoa.
+	* resolv/gethnamaddr.c: Correct compatibility problems (sprintf),
+	remove fourth argument to inet_pton and correct handling of
+	host_addr passing.
+	* resolv/inet_ntop.c: Correct compatibility problems (sprintf).
+	* resolv/inet_pton.c: Remove fourth argument.
+	* resolv/resolv.h: Remove prototypes for inet_nsap_addr and
+	inet_nsap_ntoa.  Now on <arpa/inet.h>.
+
+	* stdlib/gmp-impl.h: Add prototypes for internal functions.
+
+Thu May 23 22:49:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Rules (subdir_install): Remove dep on sor-$(subdir).
+	(static-only-routines): Removed variable and associated rules.
+
 Wed May 22 00:40:50 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/unix/sysv/linux/alpha/speed.c (speeds): Add entry for
@@ -5,7 +32,7 @@ Wed May 22 00:40:50 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/unix/sysv/linux/alpha/statbuf.h: New file.
 
-	* sysdeps/unix/sysv/linux/Makefile (headers): Add
+	* sysdeps/unix/sysv/linux/alpha/Makefile (headers): Add
  	alpha/ptrace.h.
 	* sysdeps/unix/sysv/linux/alpha/alpha/ptrace.h: New file.
 
@@ -32,15 +59,16 @@ Wed May 22 00:40:50 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 	to simplify declaration of leaf functions.
 
 	* sysdeps/alpha/_mcount.S, sysdeps/alpha/bb_init_func.S,
- 	sysdeps/alpha/bsd-setjmp.S, sysdeps/alpha/ffs.S,
+ 	sysdeps/alpha/bsd-_setjmp.S, sysdeps/alpha/ffs.S,
  	sysdeps/alpha/htonl.S, sysdeps/alpha/htons.S, sysdeps/alpha/memchr.S,
  	sysdeps/alpha/setjmp.S, sysdeps/alpha/strlen.S,
  	sysdeps/alpha/udiv_qrnnd.S, sysdeps/unix/sysv/linux/alpha/brk.S,
  	sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S,
  	sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S,
  	sysdeps/unix/sysv/linux/alpha/pipe.S,
- 	sysdeps/unix/sysv/linux/sigsuspend.S,
+ 	sysdeps/unix/sysv/linux/alpha/sigsuspend.S,
  	sysdeps/unix/sysv/linux/alpha/syscall.S,
+ 	sysdeps/unix/sysv/linux/alpha/start.S,
  	sysdeps/unix/sysv/linux/alpha/sysdep.S: Remove include of regdef.h.
   	sysdep.h includes it now. Replace ENTRY by LEAF with appropriate
  	framesize declaration.  Replace "lda pv,sym/jsr pv" by "jsr sym".

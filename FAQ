@@ -19,6 +19,28 @@ this document let me know.
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems the GNU C Library runs on?''
 
+[Q2]	``What compiler do I need to translate GNU libc?''
+
+[Q3]	``When starting make I get only errors messages.
+	  What's wrong?''
+
+[Q4]	``After I changed configure.in I get `Autoconf version X.Y.
+	  or higher is required for this script'.  What can I do?''
+
+[Q5]	``Do I need a special linker or archiver?''
+
+[Q6]	``Do I need some more things to compile GNU C Library?''
+
+[Q7]	``When I run `nm libc.so|grep " U "' on the produced library
+	  I still find unresolved symbols?  Can this be ok?''
+
+[Q8]	``I expect GNU libc to be 100% source code compatible with
+	  the old Linux based GNU libc.  Why isn't it like this?''
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q1]	``What systems the GNU C Library runs on?''
+
 [A1] {UD} This is difficult to answer.  The file `README' lists the
 architectures GNU libc is known to run *at some time*.  This does not
 mean that it still can be compiled and run on them in the moment.
@@ -128,11 +150,67 @@ errors while linking.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q8]	``I expect GNU libc to be 100% source code compatible with
+	  the old Linux based GNU libc.  Why isn't it like this?''
 
+[A8] {DMT} Not every extension in Linux libc's history was well
+thought.  In fact it had a lot of problems with standard compliance
+and cleanliness.  With the introduction of a new version number these
+errors now can be corrected.  The following list shows a list of the
+know source code incompatibilities.
+
+* _GNU_SOURCE: glibc does not automatically define _GNU_SOURCE.  Thus,
+  if a program depends on GNU extensions, it is necessary
+  to compile it with C compiler option -D_GNU_SOURCE.  This difference
+  normally mainfests itself in the form of missing prototypes and/or
+  data type definitions.  Thus, if you get such errors, the first thing you
+  should do is grep the header files in /usr/include and /usr/include/sys
+  to check whether the functions are really missing or whether it is
+  just necessary to add a define of _GNU_SOURCE.  Similar comments apply
+  to _BSD_SOURCE, _POSIX_SOURCE, _SVID_SOURCE etc (see
+  /usr/include/features.h).
+
+* reboot(): GNU libc sanitizes the interface of reboot() to be more
+  compatible with the interface used on other OSes.  In particular,
+  reboot() as implemented in glibc takes just one argument.  This argument
+  corresponds to the third argument of the Linux reboot system call.
+  That is, a call of the form reboot(a, b, c) needs to be changed into
+  reboot(c).
+
+* errno: If a program uses variable "errno", then it _must_ include header
+  file <errno.h>.  The old libc often (erroneously) declared this variable
+  implicitly as a side-effect of including other libc header files.  glibc
+  is careful to avoid such namespace pollution, which, in turn, means that
+  you really need to include the header files that you depend on.  This
+  difference normally manifests itself in the form of the compiler
+  complaining about the references of the undeclared symbol "errno".
+
+* Linux-specific syscalls: All Linux system calls now have appropriate
+  library wrappers and corresponding declarations in various header files.
+  This is because the syscall() macro that was traditionally used to
+  work around missing syscall wrappers are inherently non-portable and
+  error-prone.  The following tables lists all the new syscall stubs,
+  the header-file declaring their interface and the system call name.
+
+       syscall name:	wrapper name:	declaring header file:
+       -------------	-------------	----------------------
+       bdflush		bdflush		<unistd.h>
+       create_module	create_module	<sys/module.h>
+       delete_module	delete_module	<sys/module.h>
+       get_kernel_syms	get_kernel_syms	<sys/module.h>
+       init_module	init_module	<sys/module.h>
+       syslog		ksyslog_ctl	<unistd.h>
+
+  To get the Linux-specific declarations in <unistd.h>, you'll need
+  to define C pre-processor macro _LINUX_SOURCE during compilation.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
+{DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
 
 
 Local Variables:

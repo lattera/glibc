@@ -29,6 +29,12 @@ static char rcsid[] = "$Id$";
 #include <stdio.h>
 #include "../conf/portability.h"
 
+#ifdef SPRINTF_CHAR
+# define SPRINTF(x) strlen(sprintf/**/x)
+#else
+# define SPRINTF(x) sprintf x
+#endif
+
 /*
  * WARNING: Don't even consider trying to compile this on a system where
  * sizeof(int) < 4.  sizeof(int) > 4 is fine; all the world's not a VAX.
@@ -84,7 +90,7 @@ inet_ntop4(src, dst, size)
 	static const char fmt[] = "%u.%u.%u.%u";
 	char tmp[sizeof "255.255.255.255"];
 
-	if (sprintf(tmp, fmt, src[0], src[1], src[2], src[3]) > size) {
+	if (SPRINTF((tmp, fmt, src[0], src[1], src[2], src[3])) > size) {
 		errno = ENOSPC;
 		return (NULL);
 	}
@@ -170,7 +176,7 @@ inet_ntop6(src, dst, size)
 			tp += strlen(tp);
 			break;
 		}
-		tp += sprintf(tp, "%x", words[i]);
+		tp += SPRINTF((tp, "%x", words[i]));
 	}
 	/* Was it a trailing run of 0x00's? */
 	if (best.base != -1 && (best.base + best.len) == (IN6ADDRSZ / INT16SZ))
