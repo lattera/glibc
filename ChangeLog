@@ -1,3 +1,8 @@
+2003-01-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (re_compile_internal): If clearing buffer, clear
+	allocated too.  Reported by Al Viro <aviro@redhat.com>.
+
 2003-01-16  Roland McGrath  <roland@redhat.com>
 
 	Tweak merged .abilist file format to merge duplicate symbols in
