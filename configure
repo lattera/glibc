@@ -1451,7 +1451,7 @@ echo "configure:1443: checking version of $CC" >&5
   echo "$ac_t""$ac_prog_version" 1>&6
 fi
 if test $ac_verc_fail = yes; then
-  critic_missing=t
+  critic_missing="$critic_missing make"
 fi
 
 for ac_prog in gnumake gmake make
@@ -1512,7 +1512,7 @@ fi
 
 if test -n "$critic_missing"; then
 { echo "configure: error: 
-*** Some critical program is missing or too old.
+*** These critical programs are missing or too old:$critic_missing
 *** Check the INSTALL file for required versions." 1>&2; exit 1; }
 fi
 
@@ -1568,7 +1568,7 @@ echo "configure:1560: checking version of $MSGFMT" >&5
   echo "$ac_t""$ac_prog_version" 1>&6
 fi
 if test $ac_verc_fail = yes; then
-  MSGFMT=: aux_missing=t
+  MSGFMT=: aux_missing="$aux_missing msgfmt"
 fi
 
 for ac_prog in makeinfo
@@ -1622,7 +1622,7 @@ echo "configure:1614: checking version of $MAKEINFO" >&5
   echo "$ac_t""$ac_prog_version" 1>&6
 fi
 if test $ac_verc_fail = yes; then
-  MAKEINFO=: aux_missing=t
+  MAKEINFO=: aux_missing="$aux_missing makeinfo"
 fi
 
 for ac_prog in gsed sed
@@ -1676,7 +1676,7 @@ echo "configure:1668: checking version of $SED" >&5
   echo "$ac_t""$ac_prog_version" 1>&6
 fi
 if test $ac_verc_fail = yes; then
-  SED=: aux_missing=t
+  SED=: aux_missing="$aux_missing sed"
 fi
 
 
@@ -2065,7 +2065,7 @@ fi
 #   [2.10.[1-9]* | 2.1[1-9]* | 2.9-ia64-*], AS=: critic_missing=t)
 
 test -n "$aux_missing" && echo "configure: warning: 
-*** An auxiliary program is missing or too old;
+*** These auxiliary programs are missing or too old:$aux_missing
 *** some features will be disabled.
 *** Check the INSTALL file for required versions." 1>&2
 

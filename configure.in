@@ -559,7 +559,7 @@ AC_REQUIRE([AC_CHECK_TOOL_PREFIX])dnl
 AC_CHECK_PROG_VER(CC, ${ac_tool_prefix}gcc ${ac_tool_prefix}cc, -v,
   [version \([egcygnustpi-]*[0-9.]*\)],
   [*gcc-2.9[5-9].*|*2.8.[1-9]*|*2.9|*2.9.[0-9]*|2.9[5-9]*|3.[0-9]*|cygnus-2.9[1-9]*|gcc-2.9[5-9]|gcc-2.1[0-9][0-9]|sgicc-*],
-  critic_missing=t)
+  critic_missing="$critic_missing make")
 AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
   [GNU Make[^0-9]*\([0-9][0-9.]*\)],
   [3.79* | 3.[89]*], critic_missing=t)
@@ -567,20 +567,23 @@ AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
 
 if test -n "$critic_missing"; then
 AC_MSG_ERROR([
-*** Some critical program is missing or too old.
+*** These critical programs are missing or too old:$critic_missing
 *** Check the INSTALL file for required versions.])
 fi
 
 
 AC_CHECK_PROG_VER(MSGFMT, gnumsgfmt gmsgfmt msgfmt, --version,
   [GNU gettext.* \([0-9]*\.[0-9.]*\)],
-  [0.10.3[6-9]* | 0.10.[4-9][0-9]* | 0.1[1-9]* | 0.[2-9][0-9]* | [1-9].*], MSGFMT=: aux_missing=t)
+  [0.10.3[6-9]* | 0.10.[4-9][0-9]* | 0.1[1-9]* | 0.[2-9][0-9]* | [1-9].*],
+  MSGFMT=: aux_missing="$aux_missing msgfmt")
 AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
   [GNU texinfo.* \([0-9][0-9.]*\)],
-  [4.*], MAKEINFO=: aux_missing=t)
+  [4.*],
+  MAKEINFO=: aux_missing="$aux_missing makeinfo")
 AC_CHECK_PROG_VER(SED, gsed sed, --version,
   [GNU sed version \([0-9]*\.[0-9.]*\)],
-  [3.0[2-9]*|3.[1-9]*|[4-9]*], SED=: aux_missing=t)
+  [3.0[2-9]*|3.[1-9]*|[4-9]*],
+  SED=: aux_missing="$aux_missing sed")
 
 AC_PROG_CC_LOCAL
 AC_CANONICAL_BUILD
@@ -600,7 +603,7 @@ AC_CHECK_TOOL(MIG, mig)
 #   [2.10.[1-9]* | 2.1[1-9]* | 2.9-ia64-*], AS=: critic_missing=t)
 
 test -n "$aux_missing" && AC_MSG_WARN([
-*** An auxiliary program is missing or too old;
+*** These auxiliary programs are missing or too old:$aux_missing
 *** some features will be disabled.
 *** Check the INSTALL file for required versions.])
 
