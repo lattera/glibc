@@ -36,5 +36,5 @@ skip:
 	sw v0, errno
 
 	/* And just kick back a -1.  */
-	li v0, -1
 	j ra
+	li v0, -1
