@@ -1,5 +1,5 @@
 /* Handle loading/unloading of shared object for transformation.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -83,11 +83,13 @@ __gconv_find_shlib (const char *name)
   if (keyp == NULL)
     {
       /* This name was not known before.  */
-      found = malloc (sizeof (struct __gconv_loaded_object));
+      size_t namelen = strlen (name) + 1;
+
+      found = malloc (sizeof (struct __gconv_loaded_object) + namelen);
       if (found != NULL)
 	{
 	  /* Point the tree node at this new structure.  */
-	  found->name = name;
+	  found->name = (char *) memcpy (found + 1, name, namelen);
 	  found->counter = -TRIES_BEFORE_UNLOAD - 1;
 	  found->handle = NULL;
 

@@ -714,8 +714,6 @@ add_builtins (void)
 
   /* add the builtin transformations.  */
   for (cnt = 0; cnt < nbuiltin_trans; ++cnt)
-    {
-      printf("%s: %s -> %s\n", builtin_trans[cnt].module,builtin_trans[cnt].from,builtin_trans[cnt].to);
     new_module (builtin_trans[cnt].from,
 		strlen (builtin_trans[cnt].from) + 1,
 		builtin_trans[cnt].to,
@@ -723,7 +721,6 @@ add_builtins (void)
 		"", builtin_trans[cnt].module,
 		strlen (builtin_trans[cnt].module) + 1,
 		builtin_trans[cnt].cost, 0);
-    }
 }
 
 

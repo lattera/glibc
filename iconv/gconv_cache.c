@@ -177,12 +177,8 @@ find_module (const char *directory, const char *filename,
 {
   size_t dirlen = strlen (directory);
   size_t fnamelen = strlen (filename) + 1;
-  char *fullname;
+  char fullname[dirlen + fnamelen];
   int status = __GCONV_NOCONV;
-
-  fullname = (char *) malloc (dirlen + fnamelen);
-  if (fullname == NULL)
-    return __GCONV_NOMEM;
 
   memcpy (__mempcpy (fullname, directory, dirlen), filename, fnamelen);
 
@@ -191,7 +187,7 @@ find_module (const char *directory, const char *filename,
     {
       status = __GCONV_OK;
 
-      result->__modname = fullname;
+      result->__modname = NULL;
       result->__fct = result->__shlib_handle->fct;
       result->__init_fct = result->__shlib_handle->init_fct;
       result->__end_fct = result->__shlib_handle->end_fct;
@@ -200,9 +196,6 @@ find_module (const char *directory, const char *filename,
       if (result->__init_fct != NULL)
 	status = DL_CALL_FCT (result->__init_fct, (result));
     }
-
-  if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
-    free (fullname);
 
   return status;
 }
@@ -406,6 +399,18 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
     }
 
   return __GCONV_OK;
+}
+
+
+/* Free memory allocated for the transformation record.  */
+void
+internal_function
+__gconv_release_cache (struct __gconv_step *steps, size_t nsteps)
+{
+  if (cache != NULL)
+    /* The only thing we have to deallocate is the record with the
+       steps.  */
+    free (steps);
 }
 
 

@@ -713,17 +713,24 @@ internal_function
 __gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
 {
   int result = __GCONV_OK;
+  size_t cnt;
 
-#ifndef STATIC_GCONV
   /* Acquire the lock.  */
   __libc_lock_lock (lock);
 
-  while (nsteps-- > 0)
-    __gconv_release_step (&steps[nsteps]);
+#ifndef STATIC_GCONV
+  cnt = nsteps;
+  while (cnt-- > 0)
+    __gconv_release_step (&steps[cnt]);
+#endif
+
+  /* If we use the cache we free a bit more since we don't keep any
+     transformation records around, they are cheap enough to
+     recreate.  */
+  __gconv_release_cache (steps, nsteps);
 
   /* Release the lock.  */
   __libc_lock_unlock (lock);
-#endif
 
   return result;
 }

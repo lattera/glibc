@@ -1,5 +1,14 @@
 2001-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_cache.c (find_module): Don't allocate room for the
+	filename.  Use alloca, we don't need it beyond this function.
+	(__gconv_release_cache): New function.
+	* iconv/gconv_db.c (__gconv_close_transform): Call
+	__gconv_release_cache after the steps are handled.
+	* iconv/gconv_dl.c (__gconv_find_shlib): Allocate file name in the
+	record as well.
+	* iconv/gconv_int.h: Add prototype fpr __gconv_release_cache.
+
 	* iconv/gconv_cache.c (__gconv_lookup_cache): Catch one more
 	boundary case and reject it.
 

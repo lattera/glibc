@@ -210,6 +210,11 @@ extern int __gconv_close_transform (struct __gconv_step *steps,
 				    size_t nsteps)
      internal_function;
 
+/* Free all resources allocated for the transformation record when
+   using the cache.  */
+extern void __gconv_release_cache (struct __gconv_step *steps, size_t nsteps)
+     internal_function;
+
 /* Load shared object named by NAME.  If already loaded increment reference
    count.  */
 extern struct __gconv_loaded_object *__gconv_find_shlib (const char *name)
