@@ -272,6 +272,11 @@ ifndef +link
 	$(^:$(common-objpfx)libc.a=$(link-libc)) \
 	$(addprefix $(csu-objpfx),$(+postinit))
 endif
+ifndef config-LDFLAGS
+ifeq (yes,$(build-shared))
+config-LDFLAGS = -Wl,-dynamic-linker=$(libdir)$(rtld-installed-name)
+endif
+endif
 ifndef link-libc
 ifeq (yes,$(build-shared))
 link-libc = -L$(common-objdir) -lc $(gnulib)
@@ -290,6 +295,12 @@ ifdef objpfx
 csu-objpfx = $(objpfx)
 else
 csu-objpfx = $(..)csu/
+endif
+
+ifeq (yes,$(build-shared))
+ifndef rtld-installed-name
+rtld-installed-name = ld.so
+endif
 endif
 
 ifndef LD

@@ -166,12 +166,24 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
   void *file_mapping = NULL;
   size_t mapping_size = 0;
 
+#define LOSE(s) lose (0, (s))
   void lose (int code, const char *msg)
     {
       (void) close (fd);
       if (file_mapping)
 	munmap (file_mapping, mapping_size);
       _dl_signal_error (code, l ? l->l_name : name, msg);
+    }
+
+  inline caddr_t map_segment (Elf32_Addr mapstart, size_t len,
+			      int prot, int fixed, off_t offset)
+    {
+      caddr_t mapat = mmap ((caddr_t) mapstart, len, prot,
+			    fixed|MAP_COPY|MAP_FILE|MAP_INHERIT,
+			    fd, offset);
+      if (mapat == (caddr_t) -1)
+	lose (errno, "failed to map segment from shared object");
+      return mapat;
     }
 
   /* Make sure LOCATION is mapped in.  */
@@ -194,6 +206,9 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
     }
 
   const Elf32_Ehdr *header;
+  const Elf32_Phdr *phdr;
+  const Elf32_Phdr *ph;
+  int type;
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -210,8 +225,6 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
   /* Map in the first page to read the header.  */
   header = map (0, sizeof *header);
 
-#undef LOSE
-#define LOSE(s) lose (0, (s))
   /* Check the header for basic validity.  */
   if (*(Elf32_Word *) &header->e_ident != ((ELFMAG0 << (EI_MAG0 * 8)) |
 					   (ELFMAG1 << (EI_MAG1 * 8)) |
@@ -242,27 +255,26 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	_dl_signal_error (errno, NULL, "cannot open zero fill device");
     }
 
+  /* Extract the remaining details we need from the ELF header
+     and then map in the program header table.  */
+  l->l_entry = header->e_entry;
+  type = header->e_type;
+  l->l_phnum = header->e_phnum;
+  phdr = map (header->e_phoff, l->l_phnum * sizeof (Elf32_Phdr));
+
   {
-    /* Copy the program header table into stack space so we can then unmap
-       the headers.  */
-    Elf32_Phdr phdr[header->e_phnum];
-    const Elf32_Phdr *ph;
-    int anywhere, type;
+    /* Scan the program header table, collecting its load commands.  */
+    struct loadcmd
+      {
+	Elf32_Addr mapstart, mapend, dataend, allocend;
+	off_t mapoff;
+	int prot;
+      } loadcmds[l->l_phnum], *c;
+    size_t nloadcmds = 0;
 
-    type = header->e_type;
-    anywhere = type == ET_DYN || type == ET_REL;
-    l->l_entry = header->e_entry;
-
-    ph = map (header->e_phoff, header->e_phnum * sizeof (Elf32_Phdr));
-    memcpy (phdr, ph, sizeof phdr);
-    l->l_phnum = header->e_phnum;
-
-    /* We are done reading the file's headers now.  Unmap them.  */
-    munmap (file_mapping, mapping_size);
-
-    /* Scan the program header table, processing its load commands.  */
-    l->l_addr = 0;
     l->l_ld = 0;
+    l->l_phdr = 0;
+    l->l_addr = 0;
     for (ph = phdr; ph < &phdr[l->l_phnum]; ++ph)
       switch (ph->p_type)
 	{
@@ -277,114 +289,126 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	  break;
 
 	case PT_LOAD:
-	  /* A load command tells us to map in part of the file.  */
+	  /* A load command tells us to map in part of the file.
+	     We record the load commands and process them all later.  */
 	  if (ph->p_align % pagesize != 0)
 	    LOSE ("ELF load command alignment not page-aligned");
 	  if ((ph->p_vaddr - ph->p_offset) % ph->p_align)
 	    LOSE ("ELF load command address/offset not properly aligned");
 	  {
-	    Elf32_Addr mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-	    Elf32_Addr mapend = ((ph->p_vaddr + ph->p_filesz + ph->p_align - 1)
-				 & ~(ph->p_align - 1));
-	    off_t mapoff = ph->p_offset & ~(ph->p_align - 1);
-	    caddr_t mapat;
-	    int prot = 0;
+	    struct loadcmd *c = &loadcmds[nloadcmds++];
+	    c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
+	    c->mapend = ((ph->p_vaddr + ph->p_filesz + ph->p_align - 1)
+			 & ~(ph->p_align - 1));
+	    c->dataend = ph->p_vaddr + ph->p_filesz;
+	    c->allocend = ph->p_vaddr + ph->p_memsz;
+	    c->mapoff = ph->p_offset & ~(ph->p_align - 1);
+	    c->prot = 0;
 	    if (ph->p_flags & PF_R)
-	      prot |= PROT_READ;
+	      c->prot |= PROT_READ;
 	    if (ph->p_flags & PF_W)
-	      prot |= PROT_WRITE;
+	      c->prot |= PROT_WRITE;
 	    if (ph->p_flags & PF_X)
-	      prot |= PROT_EXEC;
-
-	    if (anywhere)
-	      {
-		/* XXX this loses if the first segment mmap call puts
-		   it someplace where the later segments cannot fit.  */
-		mapat = mmap ((caddr_t) (l->l_addr + mapstart),
-			      mapend - mapstart,
-			      prot, MAP_COPY|MAP_FILE|MAP_INHERIT |
-			      /* Let the system choose any convenient
-				 location if this is the first segment.
-				 Following segments must be contiguous in
-				 virtual space with the first.  */
-			      (l->l_addr == 0 ? 0 : MAP_FIXED),
-			      fd, mapoff);
-		if (l->l_addr == 0)
-		  /* This was the first segment mapped, so MAPAT is
-		     the address the system chose for us.  Record it.  */
-		  l->l_addr = (Elf32_Addr) mapat - mapstart;
-	      }
-	    else
-	      {
-		mapat = mmap ((caddr_t) mapstart, mapend - mapstart,
-			      prot, MAP_COPY|MAP_FILE|MAP_INHERIT|MAP_FIXED,
-			      fd, mapoff);
-		/* This file refers to absolute addresses.  So consider its
-		   "load base" to be zero, since that is what we add to the
-		   file's addresses to find them in our memory.  */
-		l->l_addr = 0;
-	      }
-	    if (mapat == (caddr_t) -1)
-	      lose (errno, "failed to map segment from shared object");
-
-	    if (ph->p_memsz > ph->p_filesz)
-	      {
-		/* Extra zero pages should appear at the end of this segment,
-		   after the data mapped from the file.   */
-		caddr_t zero, zeroend, zeropage;
-
-		mapat += ph->p_vaddr - mapstart;
-		zero = mapat + ph->p_filesz;
-		zeroend = mapat + ph->p_memsz;
-		zeropage = (caddr_t) ((Elf32_Addr) (zero + pagesize - 1)
-				      & ~(pagesize - 1));
-
-		if (zeroend < zeropage)
-		  /* All the extra data is in the last page of the segment.
-		     We can just zero it.  */
-		  zeropage = zeroend;
-		if (zeropage > zero)
-		  {
-		    /* Zero the final part of the last page of the segment.  */
-		    if ((prot & PROT_WRITE) == 0)
-		      {
-			/* Dag nab it.  */
-			if (mprotect ((caddr_t) ((Elf32_Addr) zero
-						 & ~(pagesize - 1)),
-				      pagesize,
-				      prot|PROT_WRITE) < 0)
-			  lose (errno, "cannot change memory protections");
-		      }
-		    memset (zero, 0, zeropage - zero);
-		    if ((prot & PROT_WRITE) == 0)
-		      mprotect ((caddr_t) ((Elf32_Addr) zero
-					   & ~(pagesize - 1)),
-				pagesize, prot);
-		  }
-
-		if (zeroend > zeropage)
-		  /* Map the remaining zero pages in from the zero fill FD.  */
-		  mapat = mmap (zeropage, zeroend - zeropage, prot,
-				MAP_ANON|MAP_PRIVATE|MAP_FIXED|MAP_INHERIT,
-				_dl_zerofd, 0);
-	      }
+	      c->prot |= PROT_EXEC;
+	    break;
 	  }
 	}
 
-    if (l->l_ld == 0)
+    /* We are done reading the file's headers now.  Unmap them.  */
+    munmap (file_mapping, mapping_size);
+
+    /* Now process the load commands and map segments into memory.  */
+    c = loadcmds;
+
+    if (type == ET_DYN || type == ET_REL)
       {
-	if (type == ET_DYN)
-	  LOSE ("object file has no dynamic section");
+	/* This is a position-independent shared object.  We can let the
+	   kernel map it anywhere it likes, but we must have space for all
+	   the segments in their specified positions relative to the first.
+	   So we map the first segment without MAP_FIXED, but with its
+	   extent increased to cover all the segments.  Then we unmap the
+	   excess portion, and there is known sufficient space there to map
+	   the later segments.  */
+ 	caddr_t mapat;
+	mapat = map_segment (c->mapstart,
+			     loadcmds[nloadcmds - 1].allocend - c->mapstart,
+			     c->prot, 0, c->mapoff);
+	l->l_addr = (Elf32_Addr) mapat - c->mapstart;
+
+	/* Unmap the excess portion, and then jump into the normal
+	   segment-mapping loop to handle the portion of the segment past
+	   the end of the file mapping.  */
+	munmap (mapat + c->mapend,
+		loadcmds[nloadcmds - 1].allocend - c->mapend);
+	goto postmap;
       }
-    else
-      (Elf32_Addr) l->l_ld += l->l_addr;
 
-    if (l->l_phdr == 0)
-      l->l_phdr = (void *) ((const Elf32_Ehdr *) l->l_addr)->e_phoff;
-    (Elf32_Addr) l->l_phdr += l->l_addr;
+    while (c < &loadcmds[nloadcmds])
+      {
+	if (c->mapend > c->mapstart)
+	  /* Map the segment contents from the file.  */
+	  map_segment (l->l_addr + c->mapstart, c->mapend - c->mapstart,
+		       c->prot, MAP_FIXED, c->mapoff);
 
-    l->l_entry += l->l_addr;
+      postmap:
+	if (c->allocend > c->dataend)
+	  {
+	    /* Extra zero pages should appear at the end of this segment,
+	       after the data mapped from the file.   */
+	    Elf32_Addr zero, zeroend, zeropage;
+
+	    zero = l->l_addr + c->dataend;
+	    zeroend = l->l_addr + c->allocend;
+	    zeropage = (zero + pagesize - 1) & ~(pagesize - 1);
+
+	    if (zeroend < zeropage)
+	      /* All the extra data is in the last page of the segment.
+		 We can just zero it.  */
+	      zeropage = zeroend;
+
+	    if (zeropage > zero)
+	      {
+		/* Zero the final part of the last page of the segment.  */
+		if ((c->prot & PROT_WRITE) == 0)
+		  {
+		    /* Dag nab it.  */
+		    if (mprotect ((caddr_t) (zero & ~(pagesize - 1)),
+				  pagesize, c->prot|PROT_WRITE) < 0)
+		      lose (errno, "cannot change memory protections");
+		  }
+		memset ((void *) zero, 0, zeropage - zero);
+		if ((c->prot & PROT_WRITE) == 0)
+		  mprotect ((caddr_t) (zero & ~(pagesize - 1)),
+			    pagesize, c->prot);
+	      }
+
+	    if (zeroend > zeropage)
+	      {
+		/* Map the remaining zero pages in from the zero fill FD.  */
+		caddr_t mapat;
+		mapat = mmap ((caddr_t) zeropage, zeroend - zeropage, c->prot,
+			      MAP_ANON|MAP_PRIVATE|MAP_FIXED|MAP_INHERIT,
+			      _dl_zerofd, 0);
+		if (mapat == (caddr_t) -1)
+		  lose (errno, "cannot map zero pages");
+	      }
+	  }
+
+	++c;
+      }
   }
+
+  if (l->l_ld == 0)
+    {
+      if (type == ET_DYN)
+	LOSE ("object file has no dynamic section");
+    }
+  else
+    (Elf32_Addr) l->l_ld += l->l_addr;
+
+  if (l->l_phdr == 0)
+    l->l_phdr = (void *) ((const Elf32_Ehdr *) l->l_addr)->e_phoff;
+  (Elf32_Addr) l->l_phdr += l->l_addr;
 
   elf_get_dynamic_info (l->l_ld, l->l_info);
   if (l->l_info[DT_HASH])

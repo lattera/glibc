@@ -281,6 +281,13 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       if (list_only)
 	{
+	  if (! _dl_loaded->l_info[DT_NEEDED])
+	    {
+	      _dl_sysdep_message (_dl_loaded->l_name, ": statically linked\n",
+				  NULL);
+	      _exit (1);
+	    }
+
 	  for (l = _dl_loaded->l_next; l; l = l->l_next)
 	    {
 	      char buf[20], *bp;

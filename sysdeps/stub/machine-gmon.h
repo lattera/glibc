@@ -26,3 +26,5 @@ void mcount (u_long arg)						      \
 {									      \
   _mcount (caller return PC, my return PC);				      \
 }
+
+#error "sysdeps/MACHINE/machine-gmon.h missing"

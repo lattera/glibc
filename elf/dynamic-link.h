@@ -32,6 +32,9 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM])
   for (i = 0; i < DT_NUM; ++i)
     info[i] = NULL;
 
+  if (! dyn)
+    return;
+
   while (dyn->d_tag != DT_NULL)
     {
       assert (dyn->d_tag < DT_NUM);

@@ -42,7 +42,33 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/port.h>
 
 #include <errno.h>
-#define	__hurd_fail(err)	(errno = (err), -1)
+
+_EXTERN_INLINE int
+__hurd_fail (error_t err)
+{
+  switch (err)
+    {
+    case EMACH_SEND_INVALID_DEST:
+    case EMIG_SERVER_DIED:
+      /* The server has disappeared!  */
+      err = EIEIO;
+      break;
+
+    case KERN_NO_SPACE:
+      err = ENOMEM;
+      break;
+    case KERN_INVALID_ARGUMENT:
+      err = EINVAL;
+      break;
+
+    case 0:
+      return 0;
+    default:
+    }
+
+  errno = err;
+  return -1;
+}
 
 /* Basic ports and info, initialized by startup.  */
 

@@ -1,0 +1,26 @@
+#! /bin/sh
+
+# This is the `ldd' command, which lists what shared libraries are
+# used by given dynamically-linked executables.  It works by invoking the
+# run-time dynamic linker as a command and giving it the special `--list'
+# switch.
+
+RTLD=@RTLD@
+
+case $# in
+0)
+  echo >&2 "Usage: $0 FILE..."
+  exit 1 ;;
+1)
+  # We don't list the file name when there is only one.
+  exec ${RTLD} --list "$1" && exit 1
+  exit ;;
+*)
+  set -e	# Bail out immediately if ${RTLD} loses on any argument.
+  for file; do
+    echo "${file}:"
+    ${RTLD} --list "$file"
+  done
+esac
+
+exit 0

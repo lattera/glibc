@@ -27,18 +27,18 @@ extra-libs	= libelf libdl
 libelf-routines	:= elf_hash
 libdl-routines	:= dlopen dlclose dlsym dlerror
 libdl-inhibit-o	= $(filter-out .so,$(object-suffixes)) # Build only shared.
-LDFLAGS-dl.so	:= -e 0 # work around ld bug
 
 rtld-routines	:= rtld $(addprefix dl-,load lookup object reloc	\
 				        runtime sysdep error init fini)
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h \
-		  soinit.c sofini.c
+		  soinit.c sofini.c ldd.sh.in
 
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
-install-lib	= ld.so
+install-others	= $(libdir)(rtld-installed-name)
+install-bin	= ldd
 endif
 
 include ../Rules
@@ -54,3 +54,9 @@ $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 	$(LINK.o) -shared -o $(@:$(objpfx)%=%) \
 		  $(LDFLAGS.so) $(LDFLAGS-dl.so) \
 		  -Wl,--whole-archive $(^:$(objpfx)%=%)
+
+$(libdir)$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
+
+$(objpfx)ldd: ldd.sh.in
+	sed 's%@RTLD@%$(libdir)/$(rtld-installed-name)%g' < $< > $@.new
+	mv -f $@.new $@

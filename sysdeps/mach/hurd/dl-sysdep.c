@@ -262,10 +262,9 @@ open (const char *file_name, int mode, ...)
   file_t startdir, newpt, fileport;
   int dealloc_dir;
   int nloops;
-
+  error_t err;
 
   assert (mode == O_RDONLY);
-
 
   startdir = _dl_hurd_data->portarray[file_name[0] == '/' ?
 				      INIT_PORT_CRDIR : INIT_PORT_CWDIR];
@@ -273,30 +272,28 @@ open (const char *file_name, int mode, ...)
   while (file_name[0] == '/')
     file_name++;
 
-  if (errno = __dir_lookup (startdir, file_name, mode, 0,
-					  &doretry, retryname, &fileport))
-    return -1;
+  if (err = __dir_lookup (startdir, file_name, mode, 0,
+			  &doretry, retryname, &fileport))
+    return __hurd_fail (err);
 
   dealloc_dir = 0;
   nloops = 0;
-  errno = 0;
   
   while (1)
     {
       if (dealloc_dir)
 	__mach_port_deallocate (__mach_task_self (), startdir);
-      if (errno)
-	return -1;
+      if (err)
+	return __hurd_fail (err);
 
       switch (doretry)
 	{
 	case FS_RETRY_REAUTH:
 	  {
 	    mach_port_t ref = __mach_reply_port ();
-	    errno = __io_reauthenticate
-	      (fileport, ref, MACH_MSG_TYPE_MAKE_SEND);
-	    if (! errno)
-	      errno = __auth_user_authenticate
+	    err = __io_reauthenticate (fileport, ref, MACH_MSG_TYPE_MAKE_SEND);
+	    if (! err)
+	      err = __auth_user_authenticate
 		(_dl_hurd_data->portarray[INIT_PORT_AUTH],
 		 fileport,
 		 ref, MACH_MSG_TYPE_MAKE_SEND,
@@ -304,18 +301,15 @@ open (const char *file_name, int mode, ...)
 	    __mach_port_destroy (__mach_task_self (), ref);
 	  }
 	  __mach_port_deallocate (__mach_task_self (), fileport);
-	  if (errno)
-	    return -1;
+	  if (err)
+	    return __hurd_fail (err);
 	  fileport = newpt;
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
 #ifdef SYMLOOP_MAX
 	  if (nloops++ >= SYMLOOP_MAX)
-	    {
-	      errno = ELOOP;
-	      return -1;
-	    }
+	    return __hurd_fail (ELOOP);
 #endif
 
 	  /* An empty RETRYNAME indicates we have the final port.  */
@@ -327,11 +321,11 @@ open (const char *file_name, int mode, ...)
 
 	    opened:
 	      /* We have the file open.  Now map it.  */
-	      errno = __io_map (fileport, &memobj_rd, &memobj_wr);
+	      err = __io_map (fileport, &memobj_rd, &memobj_wr);
 	      if (dealloc_dir)
 		__mach_port_deallocate (__mach_task_self (), fileport);
-	      if (errno)
-		return -1;
+	      if (err)
+		return __hurd_fail (err);
 	      if (memobj_wr != MACH_PORT_NULL)
 		__mach_port_deallocate (__mach_task_self (), memobj_wr);
 
@@ -359,26 +353,20 @@ open (const char *file_name, int mode, ...)
 		{
 		  int fd;
 		  char *end;
-		  errno = 0;
+		  err = 0;
 		  fd = (int) strtol (retryname, &end, 10);
-		  if (end == NULL || errno || /* Malformed number.  */
+		  if (end == NULL || err || /* Malformed number.  */
 		      /* Check for excess text after the number.  A slash
 			 is valid; it ends the component.  Anything else
 			 does not name a numeric file descriptor.  */
 		      (*end != '/' && *end != '\0'))
-		    {
-		      errno = ENOENT;
-		      return -1;
-		    }
+		    return __hurd_fail (ENOENT);
 		  if (fd < 0 || fd >= _dl_hurd_data->dtablesize ||
 		      _dl_hurd_data->dtable[fd] == MACH_PORT_NULL)
-		    {
-		      /* If the name was a proper number, but the file
-			 descriptor does not exist, we return EBADF instead
-			 of ENOENT.  */
-		      errno = EBADF;
-		      return -1;
-		    }
+		    /* If the name was a proper number, but the file
+		       descriptor does not exist, we return EBADF instead
+		       of ENOENT.  */
+		    return __hurd_fail (EBADF);
 		  fileport = _dl_hurd_data->dtable[fd];
 		  if (*end == '\0')
 		    {
@@ -459,13 +447,13 @@ open (const char *file_name, int mode, ...)
 		      }
 
 		  case '\0':
-		    if (errno = opentty (&fileport))
-		      return -1;
+		    if (err = opentty (&fileport))
+		      return __hurd_fail (err);
 		    dealloc_dir = 1;
 		    goto opened;
 		  case '/':
-		    if (errno = opentty (&startdir))
-		      return -1;
+		    if (err = opentty (&startdir))
+		      return __hurd_fail (err);
 		    dealloc_dir = 1;
 		    strcpy (retryname, &retryname[4]);
 		    break;
@@ -478,18 +466,16 @@ open (const char *file_name, int mode, ...)
 
 	    default:
 	    bad_magic:
-	      errno = EGRATUITOUS;
-	      return -1;
+	      return __hurd_fail (EGRATUITOUS);
 	    }
 	  break;		
 
 	default:
-	  errno = EGRATUITOUS;
-	  return -1;
+	  return __hurd_fail (EGRATUITOUS);
 	}
 
-      errno = __dir_lookup (startdir, file_name, mode, 0,
-			    &doretry, retryname, &fileport);
+      err = __dir_lookup (startdir, file_name, mode, 0,
+			  &doretry, retryname, &fileport);
     }
 }
 
@@ -504,6 +490,7 @@ close (int fd)
 caddr_t
 mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
+  error_t err;
   vm_prot_t vmprot;
   vm_address_t mapaddr;
 
@@ -516,14 +503,14 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
     vmprot |= VM_PROT_EXECUTE;
 
   mapaddr = (vm_address_t) addr;
-  errno = __vm_map (__mach_task_self (),
-		    &mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
-		    !(flags & MAP_FIXED),
-		    (mach_port_t) fd, (vm_offset_t) offset,
-		    flags & (MAP_COPY|MAP_PRIVATE),
-		    vmprot, VM_PROT_ALL,
-		    (flags & MAP_INHERIT) ? VM_INHERIT_COPY : VM_INHERIT_NONE);
-  return errno ? (caddr_t) -1 : (caddr_t) mapaddr;
+  err = __vm_map (__mach_task_self (),
+		  &mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
+		  !(flags & MAP_FIXED),
+		  (mach_port_t) fd, (vm_offset_t) offset,
+		  flags & (MAP_COPY|MAP_PRIVATE),
+		  vmprot, VM_PROT_ALL,
+		  (flags & MAP_INHERIT) ? VM_INHERIT_COPY : VM_INHERIT_NONE);
+  return err ? (caddr_t) __hurd_fail (err) : (caddr_t) mapaddr;
 }
 
 void

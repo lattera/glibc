@@ -1,3 +1,37 @@
+Mon Oct  9 02:54:14 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makeconfig (config-LDFLAGS): Define to
+	-Wl-dynamic-linker=$(libdir)$(rtld-installed-name).
+	(rtld-installed-name): New variable.
+	* elf/Makefile (install-lib): Variable removed.
+	(install-others): Define this instead, to
+	$(libdir)(rtld-installed-name). 
+	($(libdir)(rtld-installed-name)): New target; install from ld.so.
+
+	* elf/ldd.sh.in: New file.
+	* elf/Makefile (distribute): Add ldd.sh.in.
+	(install-bin): Add ldd.
+	($(objpfx)ldd: ldd.sh.in): New rule.
+
+	* sysdeps/mach/hurd/dl-sysdep.c: Use __hurd_fail throughout.
+	* hurd/hurd.h (__hurd_fail): Replace macro with inline function.
+	Translate some Mach errors to Hurd errors.
+
+	* elf/rtld.c (dl_main): Under --list, print msg if executable is
+	statically linked.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Rewrote program header
+	table processing.
+
+Sat Oct  7 01:25:48 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/stub/machine-gmon.h: Add #error.
+
+Fri Oct  6 01:49:48 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): If DYN is null, don't
+	examine it.
+
 Fri Sep 29 03:43:51 1995  Paul Eggert  <eggert@twinsun.com>
 
 	Rewrite mktime from scratch for performance, and for correctness
