@@ -71,7 +71,7 @@
 
 /* The fdlibm code requires no interrupts for exceptions.  Don't
    change the rounding mode, it would break long double I/O!  */
-#define _FPU_DEFAULT  0x00000000 /* Default value.  */
+#define _FPU_DEFAULT  0x00001000 /* Default value.  */
 
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t;
