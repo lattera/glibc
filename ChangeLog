@@ -3,7 +3,6 @@
 	* posix/regexbug1.c: Make it an error if the test fails.
 
 1999-08-23  Andreas Schwab  <schwab@suse.de>
-	    Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/regex.c (re_match_2_internal): Correct check for charset
 	after exactn in loop.
