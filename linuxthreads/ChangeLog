@@ -1,3 +1,8 @@
+1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_handle_create): Set p_pid of new thread
+	before calling the callback function to report a new thread.
+
 1999-12-20  Andreas Jaeger  <aj@suse.de>
 
 	* pthread.c (pthread_initialize): Move getrlimit call after

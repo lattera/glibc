@@ -445,6 +445,11 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	      new_thread->p_eventbuf.eventnum = TD_CREATE;
 	      __pthread_last_event = new_thread;
 
+	      /* We have to set the PID here since the callback function
+		 in the debug library will need it and we cannot guarantee
+		 the child got scheduled before the debugger.  */
+	      new_thread->p_pid = pid;
+
 	      /* Now call the function which signals the event.  */
 	      __linuxthreads_create_event ();
 
