@@ -15,6 +15,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#define glob64 __no_glob64_decl
+#define globfree64 __no_globfree64_decl
+
 #include <sys/types.h>
 #include <glob.h>
 
@@ -37,3 +40,6 @@ extern void __new_globfree (glob_t *__pglob);
 
 default_symbol_version(__new_glob, glob, GLIBC_2.1);
 default_symbol_version(__new_globfree, globfree, GLIBC_2.1);
+
+weak_alias (__new_glob, glob64)
+weak_alias (__new_globfree, globfree64)

@@ -1121,6 +1121,8 @@ prefix_array (dirname, array, n)
 }
 
 
+/* We must not compile this function twice.  */
+#if !defined _LIBC || !defined glob
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.  */
 int
@@ -1155,8 +1157,9 @@ __glob_pattern_p (pattern, quote)
 
   return 0;
 }
-#ifdef _LIBC
+# ifdef _LIBC
 weak_alias (__glob_pattern_p, glob_pattern_p)
+# endif
 #endif
 
 

@@ -307,7 +307,8 @@ endif
 
 $(common-objpfx)s-proto.d: $(common-objpfx)%.d: $(..)sysdeps/unix/%.S \
 			   $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
-	$(+make-deps)
+# Don't try to use compat.h in the db2 subdir
+	$(subst -include ./compat.h,,$(+make-deps))
 
 common-generated += s-proto.d
 postclean-generated += sysd-syscalls

@@ -73,7 +73,7 @@ libc {
     __pread64; __pwrite64;
 
     # g*
-    gai_strerror; getnameinfo;
+    gai_strerror; getnameinfo; glob64; globfree64;
 
     # p*
     pread; pread64; pwrite; pwrite64;

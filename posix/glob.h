@@ -77,19 +77,11 @@ extern "C" {
 #define	GLOB_NOSPACE	1	/* Ran out of memory.  */
 #define	GLOB_ABORTED	2	/* Read error.  */
 #define	GLOB_NOMATCH	3	/* No matches found.  */
-
+#define GLOB_NOSYS	4	/* Not implemented.  */
 #ifdef _GNU_SOURCE
 /* Previous versions of this file defined GLOB_ABEND instead of
    GLOB_ABORTED.  Provide a compatibility definition here.  */
 # define GLOB_ABEND GLOB_ABORTED
-#endif
-
-/* This value is returned if the implementation does not support
-   `glob'.  Since this is not the case here it will never be
-   returned but the conformance test suites still require the symbol
-   to be defined.  */
-#ifdef _XOPEN_SOURCE
-# define GLOB_NOSYS	(-1)
 #endif
 
 /* Structure describing a globbing run.  */
@@ -112,6 +104,25 @@ typedef struct
     int (*gl_stat) __PMT ((__const char *, struct stat *));
   } glob_t;
 
+#ifdef _LARGEFILE64_SOURCE
+struct stat64;
+typedef struct
+  {
+    size_t gl_pathc;
+    char **gl_pathv;
+    size_t gl_offs;
+    int gl_flags;
+
+    /* If the GLOB_ALTDIRFUNC flag is set, the following functions
+       are used instead of the normal file access functions.  */
+    void (*gl_closedir) __PMT ((void *));
+    struct dirent64 *(*gl_readdir) __PMT ((void *));
+    __ptr_t (*gl_opendir) __PMT ((__const char *));
+    int (*gl_lstat) __PMT ((__const char *, struct stat64 *));
+    int (*gl_stat) __PMT ((__const char *, struct stat64 *));
+  } glob64_t;
+#endif
+
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
    If a directory cannot be opened or read and ERRFUNC is not nil,
@@ -120,12 +131,33 @@ typedef struct
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
+#if _FILE_OFFSET_BITS != 64
 extern int glob __P ((__const char *__pattern, int __flags,
 		      int (*__errfunc) __P ((__const char *, int)),
 		      glob_t *__pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 extern void globfree __P ((glob_t *__pglob));
+#else
+# if __GNUC__ >= 2
+extern int glob __P ((__const char *__pattern, int __flags,
+		      int (*__errfunc) __P ((__const char *, int)),
+		      glob_t *__pglob)) __asm__ ("glob64");
+
+extern void globfree __P ((glob_t *__pglob)) __asm__ ("globfree64");
+# else
+#  define glob glob64
+#  define globfree globfree64
+# endif
+#endif
+
+#ifdef _LARGEFILE64_SOURCE
+extern int glob64 __P ((__const char *__pattern, int __flags,
+			int (*__errfunc) __P ((__const char *, int)),
+			glob64_t *__pglob));
+
+extern void globfree64 __P ((glob64_t *__pglob));
+#endif
 
 
 #ifdef _GNU_SOURCE

@@ -1,3 +1,27 @@
+1998-08-10 15:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/dirent.h: Protect from double inclusion.
+
+1998-08-09  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* posix/glob.h: Add LFS support for glob and globfree.
+	* posix/Versions [GLIBC_2.1]: Add glob64 and globfree64.
+	* posix/Makefile (routines): Add glob64.
+	* sysdeps/generic/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/glob64.c: New file.
+	* sysdeps/generic/glob.c [_LIBC && glob] (__glob_pattern_p):
+	Elide function.
+	* sysdeps/unix/sysv/linux/alpha/glob.c: Add glob64 as a weak alias
+	for __new_glob.  Likewise for globfree64.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/glob.c: New file.
+
+1998-08-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/Makefile ($(common-objpfx)s-proto.d): Remove
+	-include flag from command.
+
 1998-08-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nss_db/db-XXX.c (_nss_db_getXXX): If buffer is too small

@@ -532,6 +532,7 @@ File Attributes
 * Testing File Access::         How to find out if your process can
                                  access a file.
 * File Times::                  About the time attributes of a file.
+* File Size::			Manually changing the size of a file.
 
 Pipes and FIFOs
 
