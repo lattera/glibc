@@ -1,3 +1,20 @@
+2003-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/cris/sysdep.h (INLINE_SYSCALL): Cast
+	result to long int so that extensions to long long int work.
+	Patch by Uwe Reimann <libc-alpha@pulsar.homelinux.net>.
+
+2003-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (main): Use add_system_dir instead of add_dir.
+	* sysdeps/generic/dl-cache.h (add_system_dir): Define.
+	* sysdeps/unix/sysv/linux/x86_64/dl-cache.h: Include sparc
+	dl-cache.h.
+	* sysdeps/unix/sysv/linux/s390/dl-cache.h: New file.
+	* sysdeps/unix/sysv/linux/mips/dl-cache.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/dl-cache.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/dl-cache.h: New file.
+
 2003-06-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* test-skeleton.c (timeout_handler): If waitpid returned 0,

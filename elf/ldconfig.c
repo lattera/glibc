@@ -1103,9 +1103,9 @@ main (int argc, char **argv)
   if (!opt_only_cline)
     {
       /* Always add the standard search paths.  */
-      add_dir (SLIBDIR);
+      add_system_dir (SLIBDIR);
       if (strcmp (SLIBDIR, LIBDIR))
-	add_dir (LIBDIR);
+	add_system_dir (LIBDIR);
 
       parse_conf (config_file);
     }

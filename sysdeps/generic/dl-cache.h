@@ -32,6 +32,10 @@
 # define LD_SO_CACHE SYSCONFDIR "/ld.so.cache"
 #endif
 
+#ifndef add_system_dir
+# define add_system_dir(dir) add_dir (dir)
+#endif
+
 #define CACHEMAGIC "ld.so-1.7.0"
 
 /* libc5 and glibc 2.0/2.1 use the same format.  For glibc 2.2 another
