@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 
-extern int __sco_pgrp __P ((int type, ...));
+extern int __pgrpsys __P ((int type, ...));
 
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
@@ -28,5 +28,5 @@ extern int __sco_pgrp __P ((int type, ...));
 int
 DEFUN(__setpgrp, (pid, pgid), int pid AND int pgid)
 {
-  return __sco_pgrp (1, pid, pgid);
+  return __pgrpsys (5, pid, pgid);
 }
