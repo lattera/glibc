@@ -1,3 +1,14 @@
+2001-05-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/e_acosl.c: New file, contributed by
+	Stephen L Moshier <moshier@mediaone.net>.
+
+	* math/libm-test.inc (sinh_test): Add new test case.
+
+	* sysdeps/ieee754/ldbl_96/e_sinhl.c (__ieee754_sinhl): sinhl(x) =
+	x when x < 2^-32.
+	Patch by Stephen L Moshier <moshier@mediaone.net>.
+
 2001-05-23  Andreas Jaeger  <aj@suse.de>
 
 	* iconvdata/testdata/WINDOWS-1255..UTF-8: Renamed to...

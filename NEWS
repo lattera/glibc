@@ -8,8 +8,8 @@ Please send GNU C library bug reports using the `glibcbug' script to
 
 Version 2.2.4
 
-* Stephen Moshier implemented expm1, log1p for the 128-bit long double
-  format.
+* Stephen Moshier implemented expm1, log1p, acos for the 128-bit long
+  double format.
 
 Version 2.2.3
 

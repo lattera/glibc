@@ -3878,7 +3878,8 @@ sinh_test (void)
   TEST_f_f (sinh, nan_value, nan_value);
 
   TEST_f_f (sinh, 0.7L, 0.75858370183953350346L);
-
+  TEST_f_f (sinh, 0x8p-32L, 1.86264514923095703232705808926175479e-9L);
+  
   END (sinh);
 }
 
