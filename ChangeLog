@@ -1,5 +1,10 @@
 2001-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/sys/time.h: Make settimeofday and adjtime available if
+	_BSD_SOURCE.
+
+	* time/sys/time.h: Make timer* macros available for BSD.
+
 	* iconvdata/gb18030.c: Update for Dec 2000 re-release of GB18030.
 	Patch by Yong Li <rigel863@yahoo.com>.
 
