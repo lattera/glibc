@@ -1,3 +1,7 @@
+2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/pthread/Makefile: File removed.
+
 2000-03-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* mutex.c (__pthread_reset_pthread_once): Reset once_masterlock.

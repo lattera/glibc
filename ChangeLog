@@ -1,5 +1,8 @@
 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/sys/reboot.h: Include <features.h>.
+	(reboot): Declare it.
+
 	* libio/Makefile (headers): Add bits/stdio-lock.h here.
 
 	* sysdeps/mach/hurd/bits/stdio-lock.h: New file.

@@ -1,31 +1,37 @@
-/* 
+/*
  * Mach Operating System
  * Copyright (c) 1993,1991,1990 Carnegie Mellon University
  * All Rights Reserved.
- * 
+ *
  * Permission to use, copy, modify and distribute this software and its
  * documentation is hereby granted, provided that both the copyright
  * notice and this permission notice appear in all copies of the
  * software, derivative works or modified versions, and any portions
  * thereof, and that both notices appear in supporting documentation.
- * 
+ *
  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"
  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
+ *
  * Carnegie Mellon requests users of this software to return to
- * 
+ *
  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
  *  School of Computer Science
  *  Carnegie Mellon University
  *  Pittsburgh PA 15213-3890
- * 
+ *
  * any improvements or extensions that they make and grant Carnegie Mellon
  * the rights to redistribute these changes.
  */
 /*
  * HISTORY
  * $Log$
+ * Revision 1.3  2000/03/27 04:09:08  roland
+ * 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
+ *
+ * 	* sysdeps/mach/sys/reboot.h: Include <features.h>.
+ * 	(reboot): Declare it.
+ *
  * Revision 1.2  1998/05/29 10:19:59  drepper
  * Use __ASSEMBLER__ test macro not ASSEMBLER.
  *
@@ -35,30 +41,30 @@
  * Revision 2.8  93/03/11  13:46:40  danner
  * 	u_long -> u_int.
  * 	[93/03/09            danner]
- * 
+ *
  * Revision 2.7  92/05/21  17:25:11  jfriedl
  * 	Appended 'U' to constants that would otherwise be signed.
  * 	[92/05/16            jfriedl]
- * 
+ *
  * Revision 2.6  91/06/19  11:59:44  rvb
  * 	Second byte of boothowto is flags for "startup" program.
  * 	[91/06/18            rvb]
  * 	Add ifndef __ASSEMBLER__ so that vax_init.s can include it.
  * 	[91/06/11            rvb]
- * 
+ *
  * Revision 2.5  91/05/14  17:40:11  mrt
  * 	Correcting copyright
- * 
+ *
  * Revision 2.4  91/02/05  17:56:48  mrt
  * 	Changed to new Mach copyright
  * 	[91/02/01  17:49:12  mrt]
- * 
+ *
  * Revision 2.3  90/08/27  22:12:56  dbg
  * 	Added definitions used by Mach Kernel: RB_DEBUGGER, RB_UNIPROC,
  * 	RB_NOBOOTRC, RB_ALTBOOT.  Moved RB_KDB to 0x04 (Mach value).
  * 	Removed RB_RDONLY, RB_DUMP, RB_NOSYNC.
  * 	[90/08/14            dbg]
- * 
+ *
  */
 
 /*
@@ -82,6 +88,8 @@
 
 #ifndef	_SYS_REBOOT_H_
 #define	_SYS_REBOOT_H_
+
+#include <features.h>
 
 /*
  * Arguments to reboot system call.
@@ -149,5 +157,13 @@
 extern int boothowto;
 #endif	/* __ASSEMBLER__ */
 #endif
+
+__BEGIN_DECLS
+
+/* Reboot or halt the system.  */
+extern int reboot (int __howto) __THROW;
+
+__END_DECLS
+
 
 #endif	/* _SYS_REBOOT_H_ */

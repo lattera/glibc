@@ -50,13 +50,14 @@ typedef struct _IO_cthreads_lock _IO_lock_t;
 #define _IO_lock_lock(_name) __libc_lock_lock ((_name).mutex)
 #define _IO_lock_unlock(_name) __libc_lock_unlock ((_name).mutex)
 
-
+#ifdef _LIBC
 #include <bits/libc-lock.h>
 
 #define _IO_cleanup_region_start(_fct, _fp) \
      __libc_cleanup_region_start (_fct, _fp)
 #define _IO_cleanup_region_end(_doit) \
      __libc_cleanup_region_end (_doit)
+#endif
 
 
 #endif /* bits/stdio-lock.h */
