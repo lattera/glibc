@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -18,7 +18,14 @@
    02111-1307 USA.  */
 
 #include <rpc/types.h>
+
+/* We play dirty tricks with aliases.  */
+#define xdr_quad_t Xdr_quad_t
+#define xdr_u_quad_t Xdr_u_quad_t
 #include <rpc/xdr.h>
+#undef xdr_quad_t
+#undef xdr_u_quad_t
+
 
 /* XDR 64bit integers */
 bool_t
@@ -47,6 +54,7 @@ xdr_int64_t (XDR *xdrs, int64_t *ip)
       return FALSE;
     }
 }
+strong_alias (xdr_int64_t, xdr_quad_t)
 
 /* XDR 64bit unsigned integers */
 bool_t
@@ -75,6 +83,7 @@ xdr_uint64_t (XDR *xdrs, uint64_t *uip)
       return FALSE;
     }
 }
+strong_alias (xdr_int64_t, xdr_u_quad_t)
 
 /* XDR 32bit integers */
 bool_t

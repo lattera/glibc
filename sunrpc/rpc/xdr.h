@@ -303,6 +303,8 @@ extern bool_t xdr_int32_t (XDR *__xdrs, int32_t *__ip) __THROW;
 extern bool_t xdr_uint32_t (XDR *__xdrs, uint32_t *__up) __THROW;
 extern bool_t xdr_int64_t (XDR *__xdrs, int64_t *__ip) __THROW;
 extern bool_t xdr_uint64_t (XDR *__xdrs, uint64_t *__up) __THROW;
+extern bool_t xdr_quad_t (XDR *__xdrs, quad_t *__ip) __THROW;
+extern bool_t xdr_u_quad_t (XDR *__xdrs, u_quad_t *__up) __THROW;
 extern bool_t xdr_bool (XDR *__xdrs, bool_t *__bp) __THROW;
 extern bool_t xdr_enum (XDR *__xdrs, enum_t *__ep) __THROW;
 extern bool_t xdr_array (XDR * _xdrs, caddr_t *__addrp, u_int *__sizep,

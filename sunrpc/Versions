@@ -113,4 +113,7 @@ libc {
     __rpc_thread_svc_fdset; __rpc_thread_createerr;
     __rpc_thread_svc_pollfd; __rpc_thread_svc_max_pollfd;
   }
+  GLIBC_2.3.4 {
+    xdr_quad_t; xdr_u_quad_t;
+  }
 }
