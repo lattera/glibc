@@ -1,3 +1,13 @@
+2000-05-02  Andreas Jaeger  <aj@suse.de>
+
+	* conform/conformtest.pl: Test for macros with string constants,
+	check for minimum and maximum values.
+	Add limits.h to headers.
+
+	* conform/data/cpio.h-data: Test for value of MAGIC.
+
+	* conform/data/limits.h-data: New file.
+
 2000-04-30  Bruno Haible  <haible@clisp.cons.org>
 
 	* math/Makefile (headers): Add bits/fenvinline.h.

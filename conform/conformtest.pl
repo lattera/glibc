@@ -5,21 +5,23 @@ $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 
 # List of the headers we are testing.
 @headers = ("wordexp.h", "wctype.h", "wchar.h", "varargs.h", "utmpx.h",
-	    "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "time.h",
-	    "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h", "sys/un.h",
-	    "sys/uio.h", "sys/types.h", "sys/times.h", "sys/timeb.h",
-	    "sys/time.h", "sys/statvfs.h", "sys/stat.h", "sys/socket.h",
-	    "sys/shm.h", "sys/sem.h", "sys/resource.h", "sys/msg.h",
-	    "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h", "strings.h",
-	    "string.h", "stdlib.h", "stdio.h", "stddef.h", "stdarg.h",
-	    "spawn.h", "signal.h", "setjmp.h", "semaphore.h",
-	    "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
-	    "poll.h", "nl_types.h", "netinet/tcp.h", "netinet/in.h",
-	    "net/if.h", "netdb.h", "ndbm.h", "mqueue.h", "monetary.h",
-	    "math.h", "locale.h", "libgen.h", "langinfo.h", "iso646.h",
-	    "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h", "fnmatch.h",
-	    "fmtmsg.h", "float.h", "fcntl.h", "errno.h", "dlfcn.h", "dirent.h",
-	    "ctype.h", "cpio.h", "assert.h", "arpa/inet.h", "aio.h");
+	     "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "time.h",
+	     "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h", "sys/un.h",
+	     "sys/uio.h", "sys/types.h", "sys/times.h", "sys/timeb.h",
+	     "sys/time.h", "sys/statvfs.h", "sys/stat.h", "sys/socket.h",
+	     "sys/shm.h", "sys/sem.h", "sys/resource.h", "sys/msg.h",
+	     "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h", "strings.h",
+	     "string.h", "stdlib.h", "stdio.h", "stddef.h", "stdarg.h",
+	     "spawn.h", "signal.h", "setjmp.h", "semaphore.h",
+	     "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
+	     "poll.h", "nl_types.h", "netinet/tcp.h", "netinet/in.h",
+	     "net/if.h", "netdb.h", "ndbm.h", "mqueue.h", "monetary.h",
+	     "math.h", "locale.h", "libgen.h", "limits.h", "langinfo.h",
+	     "iso646.h", "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h",
+	     "fnmatch.h", "fmtmsg.h", "float.h", "fcntl.h", "errno.h",
+	     "dlfcn.h", "dirent.h", "ctype.h", "cpio.h", "assert.h",
+	     "arpa/inet.h", "aio.h");
+
 
 # These are the ISO C99 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
@@ -268,7 +270,7 @@ while ($#headers >= 0) {
   control: while (<CONTROL>) {
     chop;
     next control if (/^#/);
-    next control if (/^[ 	]*$/);
+    next control if (/^[	]*$/);
 
     if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
       my($struct) = "$2$3";
@@ -307,6 +309,79 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Testing for type of member $member",
 		   "Member \"$member\" does not have the correct type.", $res);
+    } elsif (/^constant *([a-zA-Z0-9_]*) ([>=<]+) ([A-Za-z0-9_]*)/) {
+      my($const) = $1;
+      my($op) = $2;
+      my($value) = $3;
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $const;
+
+      # Generate a program to test for the availability of this constant.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "__typeof__ ($const) a = $const;\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Testing for constant $const",
+			  "Constant \"$const\" not available.", $res);
+
+      if ($value ne "") {
+	# Generate a program to test for the value of this constant.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	# Negate the value since 0 means ok
+	print TESTFILE "int main (void) { return !($const $op $value); }\n";
+	close (TESTFILE);
+
+	$res = runtest ($fnamebase, "Testing for value of constant $const",
+			"Constant \"$const\" has not the right value.", $res);
+      }
+    } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*)?/) {
+      my($const) = $1;
+      my($type) = "$3$4";
+      my($value) = $5;
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $const;
+
+      # Generate a program to test for the availability of this constant.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "__typeof__ ($const) a = $const;\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Testing for constant $const",
+			  "Constant \"$const\" not available.", $res);
+
+      # Test the types of the members.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "__typeof__ (($type) 0) a;\n";
+      print TESTFILE "extern __typeof__ ($const) a;\n";
+      close (TESTFILE);
+
+      compiletest ($fnamebase, "Testing for type of constant $const",
+		   "Constant \"$const\" does not have the correct type.",
+		   $res);
+
+      if ($value ne "") {
+	# Generate a program to test for the value of this constant.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	print TESTFILE "int main (void) { return $const != $value; }\n";
+	close (TESTFILE);
+
+	$res = runtest ($fnamebase, "Testing for value of constant $const",
+			"Constant \"$const\" has not the right value.", $res);
+      }
     } elsif (/^constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)?/) {
       my($const) = $1;
       my($value) = $2;
@@ -526,7 +601,39 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Test for type of function $fname",
 		   "Function \"$fname\" has incorrect type.", $res);
-    } elsif (/^macro *([^ 	]*)/) {
+    } elsif (/^macro-str *([^	]*)\s*(\".*\")/) {
+      # The above regex doesn't handle a \" in a string.
+      my($macro) = "$1";
+      my($string) = "$2";
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $macro;
+
+      # Generate a program to test for availability of this macro.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "#ifndef $macro\n";
+      print TESTFILE "# error \"Macro $macro not defined\"\n";
+      print TESTFILE "#endif\n";
+      close (TESTFILE);
+
+      compiletest ($fnamebase, "Test availability of macro $macro",
+		   "Macro \"$macro\" is not available.", $missing);
+
+      # Generate a program to test for the value of this macro.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      # We can't include <string.h> here.
+      print TESTFILE "extern int (strcmp)(const char *, const char *);\n";
+      print TESTFILE "int main (void) { return strcmp ($macro, $string) != 0;}\n";
+      close (TESTFILE);
+
+      $res = runtest ($fnamebase, "Testing for value of macro $macro",
+		      "Macro \"$macro\" has not the right value.", $res);
+    } elsif (/^macro *([^	]*)/) {
       my($macro) = "$1";
 
       # Remember that this name is allowed.
@@ -567,7 +674,7 @@ while ($#headers >= 0) {
     open (ALLOW, "$CC -E -D$dialect - < data/$ah-data |");
     acontrol: while (<ALLOW>) {
       next acontrol if (/^#/);
-      next acontrol if (/^[ 	]*$/);
+      next acontrol if (/^[	]*$/);
 
       if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
 	push @allow, $7;
@@ -594,7 +701,7 @@ while ($#headers >= 0) {
 	push @allow, $4;
       } elsif (/^macro-function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
 	push @allow, $4;
-      } elsif (/^macro *([^ 	]*)/) {
+      } elsif (/^macro *([^	]*)/) {
 	push @allow, $1;
       } elsif (/^allow *(.*)/) {
 	push @allow, $1;

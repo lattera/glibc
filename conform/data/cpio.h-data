@@ -19,8 +19,8 @@ constant C_ISCHR 0020000
 constant C_ISCTG 0110000
 constant C_ISLNK 0120000
 constant C_ISSOCK 0140000
-# XXX We should be able to test a constant string content here.
-constant MAGIC
+
+macro-str MAGIC "070707"
 
 allow *_t
 #endif
