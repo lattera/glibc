@@ -60,14 +60,12 @@ _dl_addr (const void *address, Dl_info *info)
 
   /* Now we know what object the address lies in.  */
   info->dli_fname = match->l_name;
-  info->dli_fbase = (void *) match->l_addr;
+  info->dli_fbase = (void *) match->l_map_start;
 
   /* If this is the main program the information is incomplete.  */
-  if (__builtin_expect (info->dli_fbase == NULL, 0))
-    {
-      info->dli_fname = _dl_argv[0];
-      info->dli_fbase = (void *) match->l_map_start;
-    }
+  if (__builtin_expect (l->l_name[0], 'a') == '\0'
+      && l->l_type == lt_executable)
+    info->dli_fname = _dl_argv[0];
 
   symtab = (const void *) D_PTR (match, l_info[DT_SYMTAB]);
   strtab = (const void *) D_PTR (match, l_info[DT_STRTAB]);
@@ -81,7 +79,7 @@ _dl_addr (const void *address, Dl_info *info)
        dynamic symbol table and no hash table is present.  The ELF
        binary is ill-formed but what shall we do?  Use the beginning of
        the string table which generally follows the symbol table.  */
-    symtabend = strtab;
+    symtabend = (const ElfW(Sym) *) strtab;
 
   /* We assume that the string table follows the symbol table, because
      there is no way in ELF to know the size of the dynamic symbol table!!  */

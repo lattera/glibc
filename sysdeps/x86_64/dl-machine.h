@@ -283,13 +283,24 @@ _dl_start_user:\n\
 .previous\n\
 ");
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
+   TLS variable, so undefined references should not be allowed to
+   define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_type_class(type) \
-  ((((type) == R_X86_64_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT)  \
+#ifdef USE_TLS
+# define elf_machine_type_class(type) \
+  ((((type) == R_X86_64_JUMP_SLOT
+     || (type) == R_X86_64_DTPMOD64
+     || (type) == R_X86_64_DTPOFF64 || (type) == R_X86_64_DTPOFF32
+     || (type) == R_X86_64_TPOFF64 || (type) == R_X86_64_TPOFF32)
+    * ELF_RTYPE_CLASS_PLT)  \
    | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
+# define elf_machine_type_class(type) \
+  ((((type) == R_X86_64_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT) \
+   | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_X86_64_JUMP_SLOT
@@ -366,14 +377,19 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #ifndef RTLD_BOOTSTRAP
       const Elf64_Sym *const refsym = sym;
 #endif
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      Elf64_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+#else
       Elf64_Addr value = RESOLVE (&sym, version, r_type);
 
 # ifndef RTLD_BOOTSTRAP
       if (sym != NULL)
 # endif
 	value += sym->st_value;
+#endif
 
-#ifdef RTLD_BOOTSTRAP
+#if defined RTLD_BOOTSTRAP && !(USE_TLS && HAVE___THREAD)
       assert (r_type == R_X86_64_GLOB_DAT || r_type == R_X86_64_JUMP_SLOT);
       *reloc_addr = value + reloc->r_addend;
 #else
@@ -383,6 +399,44 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	case R_X86_64_JUMP_SLOT:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
+
+#ifdef USE_TLS
+	case R_X86_64_DTPMOD64:
+# ifdef RTLD_BOOTSTRAP
+	  /* During startup the dynamic linker is always the module
+	     with index 1.
+	     XXX If this relocation is necessary move before RESOLVE
+	     call.  */
+	  *reloc_addr = 1;
+# else
+	  /* Get the information from the link map returned by the
+	     resolve function.  */
+	  if (sym_map != NULL)
+	    *reloc_addr = sym_map->l_tls_modid;
+# endif
+	  break;
+	case R_X86_64_DTPOFF64:
+# ifndef RTLD_BOOTSTRAP
+	  /* During relocation all TLS symbols are defined and used.
+	     Therefore the offset is already correct.  */
+	  if (sym != NULL)
+	    *reloc_addr = sym->st_value + reloc->r_addend;
+# endif
+	  break;
+	case R_X86_64_TPOFF64:
+	  /* The offset is negative, forward from the thread pointer.  */
+# ifndef RTLD_BOOTSTRAP
+	  if (sym != NULL)
+# endif
+	    /* We know the offset of the object the symbol is contained in.
+	       It is a negative value which will be added to the
+	       thread pointer.  */
+	    *reloc_addr = (sym->st_value + reloc->r_addend
+			   - sym_map->l_tls_offset);
+	  break;
+#endif	/* use TLS */
+
+#ifndef RTLD_BOOTSTRAP
 	case R_X86_64_64:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
@@ -439,6 +493,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
+#endif
 	}
 #endif
     }

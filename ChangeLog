@@ -1,3 +1,20 @@
+2002-09-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): Set dli_fbase to l_map_start
+	unconditionally.  Set dli_fname to _dl_argv[0] only for main program.
+
+2002-09-27  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-addr.c (_dl_addr): Add a cast.
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela) [USE_TLS]: Handle new
+	TLS relocs R_X86_64_DTPMOD64, R_X86_64_DTPOFF64, and R_X86_64_TPOFF64.
+
+	* elf/elf.h (R_X86_64_DTPMOD64, R_X86_64_DTPOFF64, R_X86_64_TPOFF64,
+	R_X86_64_TLSGD, R_X86_64_TLSLD, R_X86_64_DTPOFF32,
+	R_x86_64_GOTTPOFF, R_X86_64_TPOFF32): New macros.
+	(R_X86_64_NUM): Update the value.
+
 2002-09-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_load_address): Don't
