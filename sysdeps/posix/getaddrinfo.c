@@ -100,8 +100,8 @@ struct gaih_typeproto
 
 static struct gaih_typeproto gaih_inet_typeproto[] =
 {
-  { 0, 0, NULL },
-  { SOCK_STREAM, IPPROTO_TCP, (char *) "tcp" ,0 },
+  { 0, 0, NULL, 0 },
+  { SOCK_STREAM, IPPROTO_TCP, (char *) "tcp", 0 },
   { SOCK_DGRAM, IPPROTO_UDP, (char *) "udp", 0 },
   { SOCK_RAW, IPPROTO_RAW, (char *) "raw", GAI_PROTO_NOSERVICE },
   { 0, 0, NULL, 0 }
@@ -145,10 +145,10 @@ gaih_local (const char *name, const struct gaih_service *service,
       struct gaih_typeproto *tp = gaih_inet_typeproto + 1;
 
       while (tp->name != NULL
-	     && (req->ai_socktype != tp->socktype || req->ai_socktype == 0)
 	     && ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0
-		 || req->ai_protocol != tp->protocol
-		 || req->ai_protocol == 0))
+		 || (req->ai_socktype != 0 && req->ai_socktype != tp->socktype)
+		 || (req->ai_protocol != 0
+		     && req->ai_protocol != tp->protocol)))
 	++tp;
 
       if (tp->name == NULL)
@@ -299,10 +299,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
       ++tp;
 
       while (tp->name != NULL
-	     && (req->ai_socktype != tp->socktype || req->ai_socktype == 0)
-	     && ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0
-		 || req->ai_protocol != tp->protocol
-		 || req->ai_protocol == 0))
+	     && ((req->ai_socktype != 0 && req->ai_socktype != tp->socktype)
+		 || (req->ai_protocol != 0
+		     && req->ai_protocol != tp->protocol)))
 	++tp;
 
       if (tp->name == NULL)
@@ -334,7 +333,12 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      struct gaih_servtuple **pst = &st;
 	      for (tp++; tp->name; tp++)
 		{
-		  struct gaih_servtuple *newp = (struct gaih_servtuple *)
+		  struct gaih_servtuple *newp;
+
+		  if ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0)
+		    continue;
+
+		  newp = (struct gaih_servtuple *)
 		    __alloca (sizeof (struct gaih_servtuple));
 
 		  if ((rc = gaih_inet_serv (service->name, tp, newp)))

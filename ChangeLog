@@ -1,5 +1,8 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/getaddrinfo.c: Correct modifications done for
+	PR1515.  Patch by Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>.
+
 	* posix/regex.h (RE_SYNTAX_POSIX_EXTENDED): Add RE_CONTEXT_INVALID_OPS.
 	* posix/regex.c (regex_compile): Return appropriate errors for
 	unterminated brace expressions.  Detect invalid characters
