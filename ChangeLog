@@ -1,3 +1,23 @@
+Thu Feb 15 13:57:08 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* mach/Machrules: Use -include for $(*.ir).
+
+	* hurd/hurd/ioctl.h (_HURD_HANDLE_IOCTLS): Mask off type bits in
+	request values.
+	* sysdeps/mach/hurd/ioctls.h (_IOC_NOTYPE): New macro.
+	(_IOT_COUNT2): Field is 3 bits, not 2.
+	* sysdeps/mach/hurd/ioctl.c: Ignore handler if it fails with ENOTTY.
+	* hurd/hurdioctl.c (_hurd_lookup_ioctl_handler): Mask off type
+	bits before looking up handler.
+	(fioctl): Use __hurd_dfail.
+	(fioctl, fioclex): Use ENOTTY for bogus request instead of EGRATUITOUS.
+
+Wed Feb 14 00:21:17 1996 David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/alpha/memchr.c (memchr): loop searching for matching
+	character bailed out one too early; changed constant 6 to
+	7 to fix this.
+
 Wed Feb 14 01:08:58 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* posix/execvp.c: When executing shell on script, first arg is

@@ -1,5 +1,5 @@
 /* User-registered handlers for specific `ioctl' requests.
-Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 #define	__need___va_list
 #include <stdarg.h>
+#include <ioctls.h>
 
 
 /* Type of handler function, called like ioctl to do its entire job.  */
@@ -30,7 +31,8 @@ typedef int (*ioctl_handler_t) (int fd, int request, void *arg);
 /* Structure that records an ioctl handler.  */
 struct ioctl_handler
   {
-    int first_request, last_request; /* Range of handled request values.  */
+    /* Range of handled _IOC_NOTYPE (REQUEST) values.  */
+    int first_request, last_request;
 
     /* Handler function, called like ioctl to do its entire job.  */
     ioctl_handler_t handler;
@@ -54,7 +56,8 @@ extern int hurd_register_ioctl_handler (int first_request, int last_request,
 #define	_HURD_HANDLE_IOCTLS(handler, first, last)			      \
   static const struct ioctl_handler handler##_ioctl_handler		      \
   	__attribute__ ((__unused__)) =					      \
-    { (first), (last), (int (*) (int, int, void *)) (handler), NULL };	      \
+    { _IOC_NOTYPE (first), _IOC_NOTYPE (last),				      \
+	(int (*) (int, int, void *)) (handler), NULL };	      		      \
   text_set_element (_hurd_ioctl_handler_lists, ##handler##_ioctl_handler)
 
 /* Define a library-internal handler for a single ioctl command.  */

@@ -60,7 +60,7 @@ ifdef user-interfaces
 *.ir := $(addprefix $(objpfx),$(foreach if,$(user-interfaces),$(if).ir))
 ifndef no_deps
 ifndef inhibit_interface_rules
-include $(*.ir)
+-include $(*.ir)
 endif
 endif
 ifneq "$(*.ir)" "$(wildcard $(*.ir))"

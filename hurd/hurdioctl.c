@@ -36,6 +36,10 @@ _hurd_lookup_ioctl_handler (int request)
   void *const *ptr;
   const struct ioctl_handler *h;
 
+  /* Mask off the type bits, so that we see requests in a single group as a
+     contiguous block of values.  */
+  request = _IOC_NOTYPE (request);
+
   for (ptr = symbol_set_first_element (_hurd_ioctl_handler_lists);
        !symbol_set_end_p (_hurd_ioctl_handler_lists, ptr);
        ++ptr)
@@ -62,7 +66,7 @@ fioctl (int fd,
   switch (request)
     {
     default:
-      err = EGRATUITOUS;
+      err = ENOTTY;
       break;
 
     case FIONREAD:
@@ -97,7 +101,7 @@ fioctl (int fd,
       break;
     }
 
-  return err ? __hurd_fail (err) : 0;
+  return err ? __hurd_dfail (fd, err) : 0;
 }
 
 _HURD_HANDLE_IOCTLS (fioctl, FIOGETOWN, FIONREAD);
@@ -112,7 +116,7 @@ fioclex (int fd,
   switch (request)
     {
     default:
-      return __hurd_fail (EGRATUITOUS);
+      return __hurd_fail (ENOTTY);
     case FIOCLEX:
       flag = FD_CLOEXEC;
       break;
@@ -123,7 +127,7 @@ fioclex (int fd,
 
   return __fcntl (fd, F_SETFD, flag);
 }
-_HURD_HANDLE_IOCTLS (fioclex, FIOCLEX, FIONCLEX);
+_HURD_HANDLE_IOCTL (fioclex, FIOCLEX, FIONCLEX);
 
 #include <hurd/term.h>
 #include <hurd/tioctl.h>

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -129,8 +129,17 @@ DEFUN(__ioctl, (fd, request),
     /* Check for a registered handler for REQUEST.  */
     ioctl_handler_t handler = _hurd_lookup_ioctl_handler (request);
     if (handler)
-      /* This handler groks REQUEST.  Se lo puntamonos.  */
-      return (*handler) (fd, request, arg);
+      {
+	/* This handler groks REQUEST.  Se lo puntamonos.  */
+	int save = errno;
+	int result = (*handler) (fd, request, arg);
+	if (result != -1 || errno != ENOTTY)
+	  return result;
+
+	/* The handler doesn't really grok this one.
+	   Try the normal RPC translation.  */
+	errno = save;
+      }
   }
 
   /* Compute the Mach message ID for the RPC from the group and command

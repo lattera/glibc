@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,16 +21,20 @@ Cambridge, MA 02139, USA.  */
 #define	_IOCTLS_H	1
 
 /* Hurd ioctl request are made up of several fields:
-     bits 31-30: inout direction (enum __ioctl_dir)
-     bits 29-12: type encoding as follows; zero count indicates omitted datum
-	  29-28: datum #0 type (enum __ioctl_datum)
-	  27-26: datum #1 type (enum __ioctl_datum)
-	  25-24: datum #2 type (enum __ioctl_datum)
-	  23-19: datum #0 count	[0..31]
-	  18-14: datum #1 count [0..31]
-	  13-12: datum #2 count [0..3]
-     bits 11- 8: group (letter - 'f': ['f'..'v'])
-     bits  7- 0: command	[0..127]
+
+    10987654321098765432109876543210
+    IOt0t1t2cc0c0cc1c1cc2ggggccccccc
+
+     bits [31,30]: inout direction (enum __ioctl_dir)
+     bits [29,11]: type encoding as follows; zero count indicates omitted datum
+	  [29,28]: datum #0 type (enum __ioctl_datum)
+	  [27,26]: datum #1 type (enum __ioctl_datum)
+	  [24,25]: datum #2 type (enum __ioctl_datum)
+	  [23,19]: datum #0 count	[0,31]
+	  [18,14]: datum #1 count [0,31]
+	  [13,11]: datum #2 count [0,3]
+     bits [07,10]: group (letter - 'f': ['f','v'])
+     bits [00,06]: command	[0,127]
 
    The following macros construct and dissect these fields.  */
 
@@ -50,9 +54,10 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32 };
 
 /* Dissect an ioctl into its component fields.  */
 #define _IOC_INOUT(request)	(((unsigned int) (request) >> 30) & IOC_INOUT)
-#define _IOC_GROUP(request)	('f' + (((unsigned int) (request) >> 7) & 15))
+#define _IOC_GROUP(request)	('f' + (((unsigned int) (request) >> 7) & 0xf))
 #define _IOC_COMMAND(request)	((unsigned int) (request) & 0x7f)
 #define _IOC_TYPE(request)	(((unsigned int) (request) >> 11) & 0x7ffff)
+#define _IOC_NOTYPE(request)	((unsigned int) (request) & 0x3ff)
 
 /* Construct a type information field from
    the broken-out type and count fields.  */
@@ -65,7 +70,7 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32 };
 #define	_IOT_TYPE2(type)	(((unsigned int) (type) >> 13) & 3)
 #define	_IOT_COUNT0(type)	(((unsigned int) (type) >> 8) & 0x1f)
 #define	_IOT_COUNT1(type)	(((unsigned int) (type) >> 3) & 0x1f)
-#define	_IOT_COUNT2(type)	(((unsigned int) (type) >> 0) & 3)
+#define	_IOT_COUNT2(type)	(((unsigned int) (type) >> 0) & 7)
 
 /* Construct an ioctl from all the broken-out fields.  */
 #define	_IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)		      \
