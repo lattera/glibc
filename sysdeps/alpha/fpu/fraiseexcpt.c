@@ -67,4 +67,4 @@ __feraiseexcept (int excepts)
 }
 strong_alias (__feraiseexcept, __old_feraiseexcept)
 symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
-default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.1.3);
+default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.2);
