@@ -1,3 +1,8 @@
+1998-02-11 14:39  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_missing_rt_sigs):
+	Rename from __libc_have_rt_sigs and leave as COMMON data.
+	
 1998-02-11 08:30  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/libm-ieee754/w_powl.c (__powl): Use __finitel instead
