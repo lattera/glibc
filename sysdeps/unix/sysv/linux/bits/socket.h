@@ -193,8 +193,8 @@ enum
 #define	MSG_FIN		MSG_FIN
     MSG_SYN		= 0x400,
 #define	MSG_SYN		MSG_SYN
-    MSG_URG		= 0x800,
-#define	MSG_URG		MSG_URG
+    MSG_CONFIRM		= 0x800, /* Confirm path validity.  */
+#define	MSG_CONFIRM	MSG_CONFIRM
     MSG_RST		= 0x1000,
 #define	MSG_RST		MSG_RST
     MSG_ERRQUEUE	= 0x2000, /* Fetch message from error queue.  */

@@ -1,5 +1,10 @@
 2000-07-27  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/bits/socket.h: Rename MSG_URG TO
+	MSG_CONFIRM following kernel 2.4.0 (MSG_URG was never used).
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+        Reported by Andi Kleen <ak@suse.de>.
+
 	* rt/tst-aio64.c: Add tests for aio_fsync64 and aio_cancel64.
 	(do_wait): Test requests with aio_return64.
 	(do_test): Change callers of do_wait.
