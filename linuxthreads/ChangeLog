@@ -1,3 +1,14 @@
+2000-12-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/s390/pt-machine.h (testandset): Use long int as return
+	value.
+	* sysdeps/arm/pt-machine.h (testandset): Likewise.
+	* sysdeps/hppa/pt-machine.h (testandset): Likewise.
+	* sysdeps/m68k/pt-machine.h (testandset): Likewise.
+	* sysdeps/sh/pt-machine.h (testandset): Likewise.
+	* sysdeps/sparc/sparc32/pt-machine.h (testandset): Likewise.
+	* sysdeps/sparc/sparc64/pt-machine.h (testandset): Likewise.
+
 2000-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/pt-machine.h (testandset): Adjust for prototype change.
