@@ -65,7 +65,7 @@
 	   character is also available.  */				      \
 	uint32_t ch2;							      \
 									      \
-	if (inptr + (ch == 0x8e ? 3 : 1) >= inend)			      \
+	if (inptr + 1 >= inend)						      \
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result.  */					      \
@@ -73,7 +73,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	ch2 = *inptr;							      \
+	ch2 = *(inptr + 1);						      \
 									      \
 	/* All second bytes of a multibyte character must be >= 0xa1. */      \
 	if (ch2 < 0xa1 || ch2 == 0xff)					      \
@@ -96,8 +96,15 @@
 	    const char *endp = inptr + 1;				      \
 									      \
 	    ch = cns11643_to_ucs4 (&endp, inend - inptr - 1, 0x80);	      \
-	    /* Please note that we need not test for the missing input	      \
-	       characters here anymore.  */				      \
+									      \
+	    if (ch == 0)						      \
+	      {								      \
+		/* The third or fourth character is not available.  Store     \
+		   the intermediate result.  */				      \
+		result = __GCONV_INCOMPLETE_INPUT;			      \
+		break;							      \
+	      }								      \
+									      \
 	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal input.  */					      \

@@ -1,5 +1,5 @@
 /* Access functions for CNS 11643, plane 1 handling.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -44,7 +44,7 @@ cns11643l1_to_ucs4 (const unsigned char **s, size_t avail,
     return __UNKNOWN_10646_CHAR;
 
   idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
-  if (idx > 0x2196)
+  if (idx > 0x21f2)
     return __UNKNOWN_10646_CHAR;
 
   (*s) += 2;
@@ -137,7 +137,7 @@ ucs4_to_cns11643l1 (uint32_t wch, unsigned char *s, size_t avail)
       break;
     case 0x3105 ... 0x3129:
       buf[0] = '\x25';
-      buf[1] = '\x26' + (ch - 0x3105);
+      buf[1] = '\x47' + (ch - 0x3105);
       break;
     case 0x32a3:
       cp = "\x22\x21";

@@ -1,5 +1,5 @@
 /* Mapping tables for CNS 11643, plane 1 handling.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -1637,7 +1637,8 @@ const char __cns11643l1_from_ucs4_tab6[][2] =
   [0x000a] = "\x22\x49", [0x000b] = "\x22\x48", [0x0014] = "\x22\x45",
   [0x0015] = "\x22\x46", [0x0016] = "\x22\x4d", [0x0019] = "\x22\x4e",
   [0x001f] = "\x22\x50", [0x0020] = "\x22\x4f", [0x0027] = "\x22\x44",
-  [0x003d] = "\x22\x3d",
+  [0x003d] = "\x22\x3d", [0x004b] = "\x22\x3b", [0x004c] = "\x22\x3e",
+  [0x0051] = "\x22\x39", [0x0052] = "\x22\x3a",
 };
 
 /* Graphic pictures for control codes.  The table can be created using

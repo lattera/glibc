@@ -75,7 +75,6 @@ __gconv_get_builtin_trans (const char *name, struct __gconv_step *step)
   step->__fct = map[cnt].fct;
   step->__init_fct = map[cnt].init;
   step->__end_fct = map[cnt].end;
-  step->__counter = INT_MAX;
   step->__shlib_handle = NULL;
   step->__modname = NULL;
 

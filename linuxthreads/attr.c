@@ -147,7 +147,7 @@ int __pthread_attr_setguardsize(pthread_attr_t *attr, size_t guardsize)
   size_t ps = __getpagesize ();
 
   /* First round up the guard size.  */
-  guardsize = roundup (guardsize, ps);
+  guardsize = page_roundup (guardsize, ps);
 
   /* The guard size must not be larger than the stack itself */
   if (guardsize >= attr->__stacksize) return EINVAL;

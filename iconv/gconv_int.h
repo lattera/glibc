@@ -55,7 +55,7 @@ struct gconv_alias
    object is also handled.  */
 struct __gconv_loaded_object
 {
-  /* Name of the object.  */
+  /* Name of the object.  It must be the first structure element.  */
   const char *name;
 
   /* Reference counter for the db functionality.  If no conversion is
@@ -201,7 +201,7 @@ extern struct __gconv_loaded_object *__gconv_find_shlib (const char *name)
 
 /* Release shared object.  If no further reference is available unload
    the object.  */
-extern int __gconv_release_shlib (struct __gconv_loaded_object *handle)
+extern void __gconv_release_shlib (struct __gconv_loaded_object *handle)
      internal_function;
 
 /* Fill STEP with information about builtin module with NAME.  */

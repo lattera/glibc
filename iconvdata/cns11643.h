@@ -1,5 +1,5 @@
 /* Access functions for CNS 11643, plane 2 handling.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -50,19 +50,19 @@ cns11643_to_ucs4 (const char **s, size_t avail, unsigned char offset)
 
   idx = (ch2 - 0x21 - offset) * 94 + (ch3 - 0x21 - offset);
 
-  if ((ch - 0x21 - offset) == 1)
+  if ((ch - 0x20 - offset) == 1)
     {
-      if (idx > 0x2196)
+      if (idx > 0x21f2)
 	return __UNKNOWN_10646_CHAR;
       result = __cns11643l1_to_ucs4_tab[idx];
     }
-  else if ((ch - 0x21 - offset) == 2)
+  else if ((ch - 0x20 - offset) == 2)
     {
       if (idx > 0x1de1)
 	return __UNKNOWN_10646_CHAR;
       result = __cns11643l2_to_ucs4_tab[idx];
     }
-  else if ((ch - 0x21 - offset) == 0xe)
+  else if ((ch - 0x20 - offset) == 0xe)
     {
       if (idx > 0x19bd)
 	return __UNKNOWN_10646_CHAR;
@@ -166,7 +166,7 @@ ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
       break;
     case 0x3105 ... 0x3129:
       buf[0] = '\x25';
-      buf[1] = '\x26' + (ch - 0x3105);
+      buf[1] = '\x47' + (ch - 0x3105);
       break;
     case 0x32a3:
       cp = "\x22\x21";
@@ -177,12 +177,13 @@ ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
     case 0x4e00 ... 0x9f9c:
       cp = __cns11643l1_from_ucs4_tab12[ch - 0x4e00];
 
-      if (cp[0] == '\0')
-	{
-	  /* Let's try the other planes.  */
-	  needed = 3;
-	  cp = __cns11643_from_ucs4_tab[ch - 0x4e00];
-	}
+      if (cp[0] != '\0')
+	break;
+      /* FALLTHROUGH.  Let's try the other planes.  */
+    case 0x9f9d ... 0x9fa5:
+      /* Let's try the other planes.  */
+      needed = 3;
+      cp = __cns11643_from_ucs4_tab[ch - 0x4e00];
       break;
     case 0xfe30 ... 0xfe6b:
       cp = __cns11643l1_from_ucs4_tab13[ch - 0xfe30];

@@ -34,19 +34,6 @@
 #endif
 
 
-/* These are definitions used by some of the functions for handling
-   UTF-8 encoding below.  */
-static const uint32_t encoding_mask[] =
-{
-  ~0x7ff, ~0xffff, ~0x1fffff, ~0x3ffffff
-};
-
-static const unsigned char encoding_byte[] =
-{
-  0xc0, 0xe0, 0xf0, 0xf8, 0xfc
-};
-
-
 /* Transform from the internal, UCS4-like format, to UCS4.  The
    difference between the internal ucs4 format and the real UCS4
    format is, if any, the endianess.  The Unicode/ISO 10646 says that
@@ -856,7 +843,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	char *start;							      \
 									      \
 	for (step = 2; step < 6; ++step)				      \
-	  if ((wc & encoding_mask[step - 2]) == 0)			      \
+	  if ((wc & (~(uint32_t)0 << (5 * step + 1))) == 0)		      \
 	    break;							      \
 									      \
 	if (__builtin_expect (outptr + step > outend, 0))		      \
@@ -867,7 +854,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	  }								      \
 									      \
 	start = outptr;							      \
-	*outptr = encoding_byte[step - 2];				      \
+	*outptr = (unsigned char) (~0xff >> step);			      \
 	outptr += step;							      \
 	--step;								      \
 	do								      \

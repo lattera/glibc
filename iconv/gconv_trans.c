@@ -330,6 +330,7 @@ __gconv_translit_find (struct trans_struct *trans)
 	    {
 	      /* Copy the data.  */
 	      *trans = (*found)->info;
+	      (*found)->open_count++;
 	      res = 0;
 	    }
 	}
@@ -345,7 +346,7 @@ __gconv_translit_find (struct trans_struct *trans)
 	__gconv_get_path ();
 
       /* See whether we have to append .so.  */
-      if (name_len <= 3 || memcmp (&trans->name[name_len - 3], ".so", 3) != 0)
+      if (name_len <= 4 || memcmp (&trans->name[name_len - 4], ".so", 3) != 0)
 	need_so = 1;
 
       /* Create a new entry.  */
@@ -366,7 +367,7 @@ __gconv_translit_find (struct trans_struct *trans)
 
 	  newp->fname = cp;
 
-	  /* Seach in all the directories.  */
+	  /* Search in all the directories.  */
 	  for (runp = __gconv_path_elem; runp->name != NULL; ++runp)
 	    {
 	      cp = __mempcpy (__stpcpy ((char *) newp->fname, runp->name),
@@ -381,6 +382,9 @@ __gconv_translit_find (struct trans_struct *trans)
 		  break;
 		}
 	    }
+
+	  if (res)
+	    newp->fname = NULL;
 
 	  /* In any case we'll add the entry to our search tree.  */
 	  if (__tsearch (newp, &search_tree, trans_compare) == NULL)

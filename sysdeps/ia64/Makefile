@@ -3,6 +3,6 @@ CPPFLAGS-start.S = -D__ASSEMBLY__
 endif
 
 ifeq ($(subdir),elf)
-dl-routines += dl-symaddr dl-fptr
-rtld-routines += dl-symaddr dl-fptr
+sysdep-dl-routines += dl-symaddr dl-fptr
+sysdep_routines += $(sysdep-dl-routines)
 endif

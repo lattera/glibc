@@ -29,12 +29,15 @@ routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
 				  version profile)
+all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
-elide-routines.os = $(dl-routines) dl-support enbl-secure
+elide-routines.os = $(all-dl-routines) dl-support enbl-secure
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal
+all-rtld-routines = $(rtld-routines) $(sysdep-dl-routines)
+
 distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   dl-cache.h dl-hash.h soinit.c sofini.c ldd.bash.in \
 		   genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
@@ -60,7 +63,7 @@ ld-map		= $(common-objpfx)ld.map
 endif
 
 ifeq (yes,$(build-shared))
-extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os interp.os
+extra-objs	= $(all-rtld-routines:%=%.os) soinit.os sofini.os interp.os
 generated	+= librtld.os dl-allobjs.os ld.so ldd
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
@@ -118,7 +121,7 @@ endif
 # Command to link into a larger single relocatable object.
 reloc-link = $(LINK.o) -nostdlib -nostartfiles -r -o $@
 
-$(objpfx)dl-allobjs.os: $(rtld-routines:%=$(objpfx)%.os)
+$(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 	$(reloc-link) $^
 
 # Link together the dynamic linker into a single relocatable object.

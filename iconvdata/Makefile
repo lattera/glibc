@@ -51,6 +51,8 @@ modules.so := $(addsuffix .so, $(modules))
 
 tests = bug-iconv1 bug-iconv2 tst-loading
 
+test-srcs := tst-table-from tst-table-to
+
 include ../Makeconfig
 
 libJIS-routines := jis0201 jis0208 jis0212
@@ -89,7 +91,10 @@ LDFLAGS-libISOIR165.so = -Wl,-soname,$(@F)
 distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
 	      TESTS $(filter-out testdata/CVS%, $(wildcard testdata/*))	    \
-	      run-iconv-test.sh 8bit-generic.c 8bit-gap.c		    \
+	      run-iconv-test.sh tst-tables.sh tst-table.sh		    \
+	      tst-table-charmap.sh tst-table-from.c tst-table-to.c	    \
+	      EUC-JP.irreversible ISIRI-3342.irreversible SJIS.irreversible \
+	      8bit-generic.c 8bit-gap.c					    \
 	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \
 	      cns11643l1.c cns11643l1.h cp1250.c cp1251.c cp1252.c cp1253.c \
@@ -244,7 +249,8 @@ include ../Rules
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-tests: $(objpfx)iconv-test.out $(objpfx)mtrace-tst-loading
+tests: $(objpfx)iconv-test.out $(objpfx)tst-tables.out \
+       $(objpfx)mtrace-tst-loading
 endif
 endif
 
@@ -258,6 +264,17 @@ $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
 			 $(common-objdir)/iconv/iconv_prog TESTS
 	$(SHELL) -e $< $(common-objdir) > $@
+
+$(objpfx)tst-tables.out: tst-tables.sh $(objpfx)gconv-modules \
+			 $(addprefix $(objpfx),$(modules.so)) \
+			 $(objpfx)tst-table-from $(objpfx)tst-table-to
+	$(SHELL) $< $(common-objpfx) $(common-objpfx)iconvdata/ > $@
+
+do-tests-clean common-mostlyclean: tst-tables-clean
+
+.PHONY: tst-tables-clean
+tst-tables-clean:
+	-rm -f $(objpfx)tst-*.table $(objpfx)tst-EUC-TW.irreversible
 
 ifdef objpfx
 $(objpfx)gconv-modules: gconv-modules

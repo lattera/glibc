@@ -1,3 +1,20 @@
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/EUC-TW: Add commented non-reversible mappings.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/CP949: New file.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/GB2312: Remove 0x80..0xA0, 0xAA..0xAF, 0xF8..FF.
+
+2000-09-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/EUC-JP: Nonreversibly map 0xA1C0 to U+005C and 0x8FA2B7 to
+	U+007E.
+
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/zh_HK: Use zh_TW data for LC_MESSAGES.

@@ -163,7 +163,8 @@ free_derivation (void *p)
   size_t cnt;
 
   for (cnt = 0; cnt < deriv->nsteps; ++cnt)
-    if (deriv->steps[cnt].__end_fct)
+    if (deriv->steps[cnt].__counter > 0
+	&& deriv->steps[cnt].__end_fct != NULL)
       DL_CALL_FCT (deriv->steps[cnt].__end_fct, (&deriv->steps[cnt]));
 
   /* Free the name strings.  */
@@ -174,6 +175,28 @@ free_derivation (void *p)
   free (deriv);
 }
 
+
+/* Decrement the reference count for a single step in a steps array.  */
+static inline void
+release_step (struct __gconv_step *step)
+{
+  if (--step->__counter == 0)
+    {
+      /* Call the destructor.  */
+      if (step->__end_fct != NULL)
+	DL_CALL_FCT (step->__end_fct, (step));
+
+#ifndef STATIC_GCONV
+      /* Skip builtin modules; they are not reference counted.  */
+      if (step->__shlib_handle != NULL)
+	{
+	  /* Release the loaded module.  */
+	  __gconv_release_shlib (step->__shlib_handle);
+	  step->__shlib_handle = NULL;
+	}
+#endif
+    }
+}
 
 static int
 internal_function
@@ -222,7 +245,6 @@ gen_steps (struct derivation_step *best, const char *toset,
 
 	      result[step_cnt].__shlib_handle = shlib_handle;
 	      result[step_cnt].__modname = shlib_handle->name;
-	      result[step_cnt].__counter = 1;
 	      result[step_cnt].__fct = shlib_handle->fct;
 	      result[step_cnt].__init_fct = shlib_handle->init_fct;
 	      result[step_cnt].__end_fct = shlib_handle->end_fct;
@@ -232,6 +254,8 @@ gen_steps (struct derivation_step *best, const char *toset,
 	    /* It's a builtin transformation.  */
 	    __gconv_get_builtin_trans (current->code->module_name,
 				       &result[step_cnt]);
+
+	  result[step_cnt].__counter = 1;
 
 	  /* Call the init function.  */
 	  result[step_cnt].__data = NULL;
@@ -245,6 +269,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 		   failed = 1;
 		   /* Make sure we unload this modules.  */
 		   --step_cnt;
+		   result[step_cnt].__end_fct = NULL;
 		   break;
 		 }
 	     }
@@ -256,13 +281,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	{
 	  /* Something went wrong while initializing the modules.  */
 	  while (++step_cnt < *nsteps)
-	    {
-	      if (result[step_cnt].__end_fct != NULL)
-		DL_CALL_FCT (result[step_cnt].__end_fct, (&result[step_cnt]));
-#ifndef STATIC_GCONV
-	      __gconv_release_shlib (result[step_cnt].__shlib_handle);
-#endif
-	    }
+	    release_step (&result[step_cnt]);
 	  free (result);
 	  *nsteps = 0;
 	  *handle = NULL;
@@ -292,29 +311,38 @@ increment_counter (struct __gconv_step *steps, size_t nsteps)
   int result = __GCONV_OK;
 
   while (cnt-- > 0)
-    if (steps[cnt].__counter++ == 0)
-      {
-	steps[cnt].__shlib_handle =
-	  __gconv_find_shlib (steps[cnt].__modname);
-	if (steps[cnt].__shlib_handle == NULL)
-	  {
-	    /* Oops, this is the second time we use this module (after
-	       unloading) and this time loading failed!?  */
-	    while (++cnt < nsteps)
-	      __gconv_release_shlib (steps[cnt].__shlib_handle);
-	    result = __GCONV_NOCONV;
-	    break;
-	  }
+    {
+      struct __gconv_step *step = &steps[cnt];
 
-	steps[cnt].__init_fct = steps[cnt].__shlib_handle->init_fct;
-	steps[cnt].__fct = steps[cnt].__shlib_handle->fct;
-	steps[cnt].__end_fct = steps[cnt].__shlib_handle->end_fct;
+      if (step->__counter++ == 0)
+	{
+	  /* Skip builtin modules.  */
+	  if (step->__modname != NULL)
+	    {
+	      /* Reopen a previously used module.  */
+	      step->__shlib_handle = __gconv_find_shlib (step->__modname);
+	      if (step->__shlib_handle == NULL)
+		{
+		  /* Oops, this is the second time we use this module
+		     (after unloading) and this time loading failed!?  */
+		  --step->__counter;
+		  while (++cnt < nsteps)
+		    release_step (&steps[cnt]);
+		  result = __GCONV_NOCONV;
+		  break;
+		}
 
-	if (steps[cnt].__end_fct != NULL)
-	  DL_CALL_FCT (steps[cnt].__end_fct, (&steps[cnt]));
-	if (steps[cnt].__init_fct != NULL)
-	  DL_CALL_FCT (steps[cnt].__init_fct, (&steps[cnt]));
-      }
+	      /* The function addresses defined by the module may
+		 have changed.  */
+	      step->__fct = step->__shlib_handle->fct;
+	      step->__init_fct = step->__shlib_handle->init_fct;
+	      step->__end_fct = step->__shlib_handle->end_fct;
+	    }
+
+	  if (step->__init_fct != NULL)
+	    DL_CALL_FCT (step->__init_fct, (step));
+	}
+    }
   return result;
 }
 #endif
@@ -333,9 +361,8 @@ find_derivation (const char *toset, const char *toset_expand,
   int best_cost_lo = INT_MAX;
   int result;
 
-  /* There is a small chance that this derivation is meanwhile found.  This
-     can happen if in `find_derivation' we look for this derivation, didn't
-     find it but at the same time another thread looked for this derivation. */
+  /* Look whether an earlier call to `find_derivation' has already
+     computed a possible derivation.  If so, return it immediately.  */
   result = derivation_lookup (fromset_expand ?: fromset, toset_expand ?: toset,
 			      handle, nsteps);
   if (result == __GCONV_OK)
@@ -346,9 +373,32 @@ find_derivation (const char *toset, const char *toset_expand,
       return result;
     }
 
-  /* For now we use a simple algorithm with quadratic runtime behaviour.
-     The task is to match the `toset' with any of the available rules,
-     starting from FROMSET.  */
+  /* The task is to find a sequence of transformations, backed by the
+     existing modules - whether builtin or dynamically loadable -,
+     starting at `fromset' (or `fromset_expand') and ending at `toset'
+     (or `toset_expand'), and with minimal cost.
+
+     For computer scientists, this is a shortest path search in the
+     graph where the nodes are all possible charsets and the edges are
+     the transformations listed in __gconv_modules_db.
+
+     For now we use a simple algorithm with quadratic runtime behaviour.
+     A breadth-first search, starting at `fromset' and `fromset_expand'.
+     The list starting at `first' contains all nodes that have been
+     visited up to now, in the order in which they have been visited --
+     excluding the goal nodes `toset' and `toset_expand' which get
+     managed in the list starting at `solution'.
+     `current' walks through the list starting at `first' and looks
+     which nodes are reachable from the current node, adding them to
+     the end of the list [`first' or `solution' respectively] (if
+     they are visited the first time) or updating them in place (if
+     they have have already been visited).
+     In each node of either list, cost_lo and cost_hi contain the
+     minimum cost over any paths found up to now, starting at `fromset'
+     or `fromset_expand', ending at that node.  best_cost_lo and
+     best_cost_hi represent the minimum over the elements of the
+     `solution' list.  */
+
   if (fromset_expand != NULL)
     {
       first = NEW_STEP (fromset_expand, 0, 0, NULL, NULL);
@@ -373,16 +423,17 @@ find_derivation (const char *toset, const char *toset_expand,
 	 searching for prefixes.  So we search for the first entry with a
 	 matching prefix and any other matching entry can be found from
 	 this place.  */
-      struct gconv_module *node = __gconv_modules_db;
+      struct gconv_module *node;
 
       /* Maybe it is not necessary anymore to look for a solution for
-	 this entry since the cost is already as high (or heigher) as
+	 this entry since the cost is already as high (or higher) as
 	 the cost for the best solution so far.  */
       if (current->cost_hi > best_cost_hi
 	  || (current->cost_hi == best_cost_hi
 	      && current->cost_lo >= best_cost_lo))
 	continue;
 
+      node = __gconv_modules_db;
       while (node != NULL)
 	{
 	  int cmpres = strcmp (current->result_set, node->from_string);
@@ -404,37 +455,52 @@ find_derivation (const char *toset, const char *toset_expand,
 		  struct derivation_step *step;
 
 		  /* We managed to find a derivation.  First see whether
-		     this is what we are looking for.  */
+		     we have reached one of the goal nodes.  */
 		  if (strcmp (result_set, toset) == 0
 		      || (toset_expand != NULL
 			  && strcmp (result_set, toset_expand) == 0))
 		    {
-		      if (solution == NULL || cost_hi < best_cost_hi
+		      /* Append to the `solution' list if there
+			 is no entry with this name.  */
+		      for (step = solution; step != NULL; step = step->next)
+			if (strcmp (result_set, step->result_set) == 0)
+			  break;
+
+		      if (step == NULL)
+			{
+			  step = NEW_STEP (result_set,
+					   cost_hi, cost_lo,
+					   runp, current);
+			  step->next = solution;
+			  solution = step;
+			}
+		      else if (step->cost_hi > cost_hi
+			       || (step->cost_hi == cost_hi
+				   && step->cost_lo > cost_lo))
+			{
+			  /* A better path was found for the node,
+			     on the `solution' list.  */
+			  step->code = runp;
+			  step->last = current;
+			  step->cost_hi = cost_hi;
+			  step->cost_lo = cost_lo;
+			}
+
+		      /* Update best_cost accordingly.  */
+		      if (cost_hi < best_cost_hi
 			  || (cost_hi == best_cost_hi
 			      && cost_lo < best_cost_lo))
 			{
 			  best_cost_hi = cost_hi;
 			  best_cost_lo = cost_lo;
 			}
-
-		      /* Append this solution to list.  */
-		      if (solution == NULL)
-			solution = NEW_STEP (result_set, 0, 0, runp, current);
-		      else
-			{
-			  while (solution->next != NULL)
-			    solution = solution->next;
-
-			  solution->next = NEW_STEP (result_set, 0, 0,
-						     runp, current);
-			}
 		    }
 		  else if (cost_hi < best_cost_hi
 			   || (cost_hi == best_cost_hi
 			       && cost_lo < best_cost_lo))
 		    {
-		      /* Append at the end if there is no entry with
-			 this name.  */
+		      /* Append at the end of the `first' list if there
+			 is no entry with this name.  */
 		      for (step = first; step != NULL; step = step->next)
 			if (strcmp (result_set, step->result_set) == 0)
 			  break;
@@ -450,31 +516,36 @@ find_derivation (const char *toset, const char *toset_expand,
 			       || (step->cost_hi == cost_hi
 				   && step->cost_lo > cost_lo))
 			{
+			  /* A better path was found for the node,
+			     on the `first' list.  */
 			  step->code = runp;
 			  step->last = current;
 
 			  /* Update the cost for all steps.  */
 			  for (step = first; step != NULL;
 			       step = step->next)
-			    {
-			      struct derivation_step *back;
+			    /* But don't update the start nodes.  */
+			    if (step->code != NULL)
+			      {
+				struct derivation_step *back;
+				int hi, lo;
 
-			      if (step->code == NULL)
-				/* This is one of the entries we started
-				   from.  */
-				continue;
+				hi = step->code->cost_hi;
+				lo = step->code->cost_lo;
 
-			      step->cost_hi = step->code->cost_hi;
-			      step->cost_lo = step->code->cost_lo;
+				for (back = step->last; back->code != NULL;
+				     back = back->last)
+				  {
+				    hi += back->code->cost_hi;
+				    lo += back->code->cost_lo;
+				  }
 
-			      for (back = step->last; back->code != NULL;
-				   back = back->last)
-				{
-				  step->cost_hi += back->code->cost_hi;
-				  step->cost_lo += back->code->cost_lo;
-				}
-			    }
+				step->cost_hi = hi;
+				step->cost_lo = lo;
+			      }
 
+			  /* Likewise for the nodes on the solution list.
+			     Also update best_cost accordingly.  */
 			  for (step = solution; step != NULL;
 			       step = step->next)
 			    {
@@ -487,7 +558,6 @@ find_derivation (const char *toset, const char *toset_expand,
 				  || (step->cost_hi == best_cost_hi
 				      && step->cost_lo < best_cost_lo))
 				{
-				  solution = step;
 				  best_cost_hi = step->cost_hi;
 				  best_cost_lo = step->cost_lo;
 				}
@@ -509,10 +579,26 @@ find_derivation (const char *toset, const char *toset_expand,
     }
 
   if (solution != NULL)
-    /* We really found a way to do the transformation.  Now build a data
-       structure describing the transformation steps.*/
-    result = gen_steps (solution, toset_expand ?: toset,
-			fromset_expand ?: fromset, handle, nsteps);
+    {
+      /* We really found a way to do the transformation.  */
+
+      /* Choose the best solution.  This is easy because we know that
+	 the solution list has at most length 2 (one for every possible
+	 goal node).  */
+      if (solution->next != NULL)
+	{
+	  struct derivation_step *solution2 = solution->next;
+
+	  if (solution2->cost_hi < solution->cost_hi
+	      || (solution2->cost_hi == solution->cost_hi
+		  && solution2->cost_lo < solution->cost_lo))
+	    solution = solution2;
+	}
+
+      /* Now build a data structure describing the transformation steps.  */
+      result = gen_steps (solution, toset_expand ?: toset,
+			  fromset_expand ?: fromset, handle, nsteps);
+    }
   else
     {
       /* We haven't found a transformation.  Clear the result values.  */
@@ -609,14 +695,7 @@ __gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
   __libc_lock_lock (lock);
 
   while (nsteps-- > 0)
-    if (steps[nsteps].__shlib_handle != NULL
-	&& --steps[nsteps].__counter == 0)
-      {
-	result = __gconv_release_shlib (steps[nsteps].__shlib_handle);
-	if (result != __GCONV_OK)
-	  break;
-	steps[nsteps].__shlib_handle = NULL;
-      }
+    release_step (&steps[nsteps]);
 
   /* Release the lock.  */
   __libc_lock_unlock (lock);

@@ -8644,8 +8644,21 @@ static const char from_ucs4_tab15[][2] =
 									      \
 	inptr += 2;							      \
       }									      \
-    else								      \
+    else if (ch <= 0x80)						      \
       ++inptr;								      \
+    else								      \
+      {									      \
+	/* This is illegal.  */						      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
 									      \
     put32 (outptr, ch);							      \
     outptr += 4;							      \

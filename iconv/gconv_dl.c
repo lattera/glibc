@@ -164,7 +164,9 @@ do_release_shlib (const void *nodep, VISIT value, int level)
     }
   else if (obj->counter <= 0)
     {
-      if (--obj->counter < -TRIES_BEFORE_UNLOAD && obj->handle != NULL)
+      if (obj->counter >= -TRIES_BEFORE_UNLOAD)
+	--obj->counter;
+      if (obj->counter < -TRIES_BEFORE_UNLOAD && obj->handle != NULL)
 	{
 	  /* Unload the shared object.  */
 	  __libc_dlclose (obj->handle);
@@ -175,7 +177,7 @@ do_release_shlib (const void *nodep, VISIT value, int level)
 
 
 /* Notify system that a shared object is not longer needed.  */
-int
+void
 internal_function
 __gconv_release_shlib (struct __gconv_loaded_object *handle)
 {
@@ -186,8 +188,6 @@ __gconv_release_shlib (struct __gconv_loaded_object *handle)
      with release counts <= 0.  This way we can finally unload them
      if necessary.  */
   __twalk (loaded, do_release_shlib);
-
-  return __GCONV_OK;
 }
 
 
