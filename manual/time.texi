@@ -96,8 +96,8 @@ such as arithmetic and printing work properly and consistently no matter
 what the underlying representation is.
 
 Note that the clock can wrap around.  On a 32bit system with
-@code{CLOCKS_PER_SEC} set to one million a wrap around happens after
-around 36 minutes.
+@code{CLOCKS_PER_SEC} set to one million this function will return the
+same value approximately every 72 minutes.
 
 @comment time.h
 @comment ISO
