@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -19,6 +19,8 @@
 
 #ifndef _LOADINFO_H
 #define _LOADINFO_H	1
+
+#include <bits/libc-lock.h>
 
 /* Declarations of locale dependent catalog lookup functions.
    Implemented in
@@ -61,6 +63,7 @@ struct loaded_l10nfile
 {
   const char *filename;
   int decided;
+  __libc_lock_define_recursive (, lock);
 
   const void *data;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -273,10 +273,14 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
     return NULL;
 
   retval->filename = abs_filename;
+  /* If more than one directory is in the list this is a pseudo-entry
+     which just references others.  We do not try to load data for it,
+     ever.  */
   retval->decided = (__argz_count (dirlist, dirlist_len) != 1
 		     || ((mask & XPG_CODESET) != 0
 			 && (mask & XPG_NORM_CODESET) != 0));
   retval->data = NULL;
+  __libc_lock_init_recursive (retval->lock);
 
   if (last == NULL)
     {

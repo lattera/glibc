@@ -1,5 +1,5 @@
 /* Implementation of the internal dcigettext function.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -439,7 +439,15 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   search->domainname = (char *) domainname;
   search->category = category;
 
+  /* Since tfind/tsearch manage a balanced tree, concurrent tfind and
+     tsearch calls can be fatal.  */
+  __libc_rwlock_define_initialized (static, tree_lock);
+  __libc_rwlock_rdlock (tree_lock);
+
   foundp = (struct known_translation_t **) tfind (search, &root, transcmp);
+
+  __libc_rwlock_unlock (tree_lock);
+
   freea (search);
   if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
     {
@@ -633,9 +641,14 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 		      newp->translation = retval;
 		      newp->translation_length = retlen;
 
+		      __libc_rwlock_wrlock (tree_lock);
+
 		      /* Insert the entry in the search tree.  */
 		      foundp = (struct known_translation_t **)
 			tsearch (newp, &root, transcmp);
+
+		      __libc_rwlock_unlock (tree_lock);
+
 		      if (foundp == NULL
 			  || __builtin_expect (*foundp != newp, 0))
 			/* The insert failed.  */
@@ -680,7 +693,7 @@ _nl_find_msg (domain_file, domainbinding, msgid, lengthp)
   char *result;
   size_t resultlen;
 
-  if (domain_file->decided == 0)
+  if (domain_file->decided <= 0)
     _nl_load_domain (domain_file, domainbinding);
 
   if (domain_file->data == NULL)
