@@ -1,5 +1,10 @@
 Tue Jul  9 06:19:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/Makefile (stamp-errnos): Uncomment CVS commit cmds.
+
+	* sysdeps/gnu/errlist.awk: Undo mib's bogus changes.  The
+	sysdeps/mach/hurd/errnos.awk bug fix was the only correct change.
+
 	* sysdeps/generic/machine-gmon.h [NO_UNDERSCORES]: Declare _mcount
 	before using it in lhs of weak_alias.
 
