@@ -112,7 +112,7 @@ ENTRY(__memchr)
 	 clr		%o0
 
 	/* Check every byte. */
-8:	srl		%g4, 24, %g5 
+8:	srl		%g4, 24, %g5
 	and		%g5, 0xff, %g5
 	cmp		%g5, %o1
 	be		4f
@@ -143,3 +143,6 @@ ENTRY(__memchr)
 END(__memchr)
 
 weak_alias (__memchr, memchr)
+#if !__BOUNDED_POINTERS__
+weak_alias (__memchr, __ubp_memchr)
+#endif

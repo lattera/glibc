@@ -85,6 +85,15 @@ get_proc_path (char *buffer, size_t bufsize)
     /* Replacing the value failed.  This means another thread was
        faster and we don't need the copy anymore.  */
     free (copy_result);
+#if __BOUNDED_POINTERS__
+  else
+    {
+      /* compare_and_swap only copied the pointer value, so we must
+	 now copy the bounds as well.  */
+      __ptrlow (mount_proc) = __ptrlow (copy_result);
+      __ptrhigh (mount_proc) = __ptrhigh (copy_result);
+    }
+#endif
 
   return mount_proc;
 }

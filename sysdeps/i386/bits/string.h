@@ -28,7 +28,7 @@
 /* We only provide optimizations if the user selects them and if
    GNU CC is used.  */
 #if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
-    && defined __GNUC__ && __GNUC__ >= 2
+    && defined __GNUC__ && __GNUC__ >= 2 && !__BOUNDED_POINTERS__
 
 #ifndef __STRING_INLINE
 # ifdef __cplusplus

@@ -67,7 +67,7 @@ ENTRY(__memchr)
 	unop			#	:
 	sll	a1, 32, t1	#-e0    : t1 = chchchch00000000
 	or	t1, a1, a1	# e1	: a1 = chchchchchchchch
-	extql	t0, a0, t6	# e0    : 
+	extql	t0, a0, t6	# e0    :
 	beq	t3, $first_quad	# .. e1 :
 
 	ldq_u	t5, -1(t4)	#-e1	: eight or less bytes to search
@@ -170,3 +170,6 @@ $not_found:
         END(__memchr)
 
 weak_alias (__memchr, memchr)
+#if !__BOUNDED_POINTERS__
+weak_alias (__memchr, __ubp_memchr)
+#endif

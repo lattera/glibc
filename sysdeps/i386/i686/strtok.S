@@ -39,15 +39,39 @@
 
    We do a common implementation here.  */
 
-#ifndef USE_AS_STRTOK_R
+#ifdef USE_AS_STRTOK_R
+# define SAVE_PTR 0(%ecx)
+#else
 	.bss
 	.local save_ptr
 	ASM_TYPE_DIRECTIVE (save_ptr, @object)
 	.size save_ptr, 4
 save_ptr:
+# if __BOUNDED_POINTERS__
+	.space 12
+# else
 	.space 4
+# endif
 
-#define FUNCTION BP_SYM (strtok)
+# ifdef PIC
+#  define SAVE_PTR save_ptr@GOTOFF(%ebx)
+# else
+#  define SAVE_PTR save_ptr
+# endif
+
+# define FUNCTION strtok
+#endif
+
+#if !defined USE_AS_STRTOK_R && defined PIC
+# define PARMS	LINKAGE+256+4	/* space for table and saved PIC register */
+#else
+# define PARMS	LINKAGE+256	/* space for table */
+#endif
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define DELIM	STR+PTR_SIZE
+#ifdef USE_AS_STRTOK_R
+# define SAVE	DELIM+PTR_SIZE
 #endif
 
 	.text
@@ -56,12 +80,6 @@ save_ptr:
 0:	movl (%esp), %ebx
 	ret
 #endif
-
-#define PARMS	LINKAGE		/* no space for saved regs */
-#define RTN	PARMS
-#define STR	RTN+RTN_SIZE
-#define DELIM	STR+PTR_SIZE
-#define SAVE	DELIM+PTR_SIZE
 
 ENTRY (BP_SYM (FUNCTION))
 	ENTER
@@ -89,36 +107,39 @@ ENTRY (BP_SYM (FUNCTION))
 	/* Note: %ecx = 0 !!! */
 	movl %edx, %edi
 
-#if !defined USE_AS_STRTOK_R && defined PIC
-	movl 264(%esp), %edx		/* Get start of string.  */
-#else
-	movl 260(%esp), %edx		/* Get start of string.  */
-#endif
+	movl STR(%esp), %edx		/* Get start of string.  */
 
 #ifdef USE_AS_STRTOK_R
 	/* The value is stored in the third argument.  */
-	movl 268(%esp), %eax
+	movl SAVE(%esp), %eax
 	movl (%eax), %eax
 #else
 	/* The value is in the local variable defined above.  But
 	   we have to take care for PIC code.  */
-# ifndef PIC
-	movl save_ptr, %eax
-# else
-	movl save_ptr@GOTOFF(%ebx), %eax
-# endif
+	movl SAVE_PTR, %eax
 #endif
 
 	/* If the pointer is NULL we have to use the stored value of
 	   the last run.  */
 	cmpl $0, %edx
 	cmove %eax, %edx
-
-#if !defined USE_AS_STRTOK_R && defined PIC
-	movl 268(%esp), %eax		/* Get start of delimiter set.  */
-#else
-	movl 264(%esp), %eax		/* Get start of delimiter set.  */
+#if __BOUNDED_POINTERS__
+# ifdef USE_AS_STRTOK_R
+	movl SAVE(%esp), %ecx	/* borrow %ecx for a moment */
+# endif
+	je L(0)
+	/* Save bounds of incoming non-NULL STR into save area.  */
+	movl 4+STR(%esp), %eax
+	movl %eax, 4+SAVE_PTR
+	movl 8+STR(%esp), %eax
+	movl %eax, 8+SAVE_PTR
+L(0):	CHECK_BOUNDS_LOW (%edx, SAVE_PTR)
+# ifdef USE_AS_STRTOK_R
+	xorl %ecx, %ecx		/* restore %ecx to zero */
+# endif
 #endif
+	movl DELIM(%esp), %eax		/* Get start of delimiter set.  */
+	CHECK_BOUNDS_LOW (%eax, DELIM(%esp))
 
 /* For understanding the following code remember that %ecx == 0 now.
    Although all the following instruction only modify %cl we always
@@ -126,17 +147,17 @@ ENTRY (BP_SYM (FUNCTION))
 
 L(2):	movb (%eax), %cl	/* get byte from stopset */
 	testb %cl, %cl		/* is NUL char? */
-	jz L(1)			/* yes => start compare loop */
+	jz L(1_1)		/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 1(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L(1)			/* yes => start compare loop */
+	jz L(1_2)		/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 2(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L(1)			/* yes => start compare loop */
+	jz L(1_3)		/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 3(%eax), %cl	/* get byte from stopset */
@@ -145,7 +166,16 @@ L(2):	movb (%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
 	jnz L(2)		/* no => process next dword from stopset */
 
-L(1):	leal -4(%edx), %eax	/* prepare loop */
+#if __BOUNDED_POINTERS__
+	jmp L(1_0)		/* pointer is correct for bounds check */
+L(1_3):	incl %eax		/* adjust pointer for bounds check */
+L(1_2):	incl %eax		/* ditto */
+L(1_1):	incl %eax		/* ditto */
+L(1_0):	CHECK_BOUNDS_HIGH (%eax, DELIM(%esp), jbe)
+#else
+L(1_3):; L(1_2):; L(1_1):	/* fall through */
+#endif
+	leal -4(%edx), %eax	/* prepare loop */
 
 	/* We use a neat trick for the following loop.  Normally we would
 	   have to test for two termination conditions
@@ -204,10 +234,7 @@ L(7):	addl $4, %edx		/* adjust pointer for full loop round */
 L(10):	incl %edx
 L(9):	incl %edx
 
-L(8):	/* Remove the stopset table.  */
-	addl $256, %esp
-
-	cmpl %eax, %edx
+L(8):	cmpl %eax, %edx
 	je L(returnNULL)	/* There was no token anymore.  */
 
 	movb $0, (%edx)		/* Terminate string.  */
@@ -217,22 +244,26 @@ L(8):	/* Remove the stopset table.  */
 	leal 1(%edx), %ecx
 	cmovne %ecx, %edx
 
-L(return):
 	/* Store the pointer to the next character.  */
-#ifdef USE_AS_STRTOK_R
-	movl 12(%esp), %ecx
-	movl %edx, (%ecx)
-#else
-# ifndef PIC
-	movl %edx, save_ptr
-# else
-	movl %edx, save_ptr@GOTOFF(%ebx)
-	popl %ebx
+# ifdef USE_AS_STRTOK_R
+	movl SAVE(%esp), %ecx
 # endif
+	movl %edx, SAVE_PTR
+	CHECK_BOUNDS_HIGH (%edx, SAVE_PTR, jb)
+	RETURN_BOUNDED_POINTER (SAVE_PTR)
+
+L(epilogue):
+	/* Remove the stopset table.  */
+	addl $256, %esp
+#if !defined USE_AS_STRTOK_R && defined PIC
+	popl %ebx
 #endif
-	ret
+	LEAVE
+	RET_PTR
 
 L(returnNULL):
 	xorl %eax, %eax
-	jmp L(return)
+	RETURN_NULL_BOUNDED_POINTER
+	jmp L(epilogue)
+
 END (BP_SYM (FUNCTION))

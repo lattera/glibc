@@ -33,8 +33,8 @@
    possible; the remaining few bytes are searched one at a time.
 
    The word by word search is performed by xor-ing the word with a word
-   containing chr in every byte.  If there is a hit, the result will 
-   contain a zero byte in the corresponding position.  The presence and 
+   containing chr in every byte.  If there is a hit, the result will
+   contain a zero byte in the corresponding position.  The presence and
    position of that zero byte is detected with a czx instruction.
 
    All the loops in this function could have had the internal branch removed
@@ -63,7 +63,7 @@ ENTRY(__memchr)
 	.rotp	p[MEMLAT+3]
         mov 	saved_lc = ar.lc 	// save the loop counter
 	mov	saved_pr = pr		// save the predicates
-	mov 	ret0 = str	
+	mov 	ret0 = str
 	and 	tmp = 7, str		// tmp = str % 8
 	cmp.ne	p7, p0 = r0, r0		// clear p7
 	extr.u	chr = in1, 0, 8		// chr = (unsigned char) in1
@@ -91,7 +91,7 @@ ENTRY(__memchr)
 	mux1	chrx8 = chr, @brcst ;;	// get a word full of chr
 	mov	ar.lc = loopcnt
 	mov	pr.rot = 1 << 16 ;;
-.l2:	
+.l2:
 (p[0])		mov	addr[0] = ret0
 (p[0])		ld8	value[0] = [ret0], 8
 (p[MEMLAT])	xor	aux[0] = value[MEMLAT], chrx8
@@ -100,7 +100,7 @@ ENTRY(__memchr)
 (p7)		br.cond.dpnt .foundit
 		br.ctop.dptk .l2
 .srchfew:
-	adds	loopcnt = -1, len 	
+	adds	loopcnt = -1, len
 	cmp.eq	p6, p0 = len, r0
 (p6)	br.cond.spnt .notfound ;;
 	mov	ar.lc = loopcnt
@@ -109,7 +109,7 @@ ENTRY(__memchr)
 	;;
 	cmp.eq	p6, p0 = val, chr
 (p6)	br.cond.dpnt	.foundit
-	br.cloop.sptk	.l3 ;;	
+	br.cloop.sptk	.l3 ;;
 .notfound:
 	cmp.ne	p6, p0 = r0, r0	// clear p6 (p7 was already 0 when we got here)
 	mov	ret0 = r0 ;;	// return NULL
@@ -124,3 +124,6 @@ ENTRY(__memchr)
 END(__memchr)
 
 weak_alias (__memchr, memchr)
+#if !__BOUNDED_POINTERS__
+weak_alias (__memchr, __ubp_memchr)
+#endif

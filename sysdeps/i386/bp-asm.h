@@ -80,21 +80,21 @@
 
 /* Take bounds from BP_MEM and affix them to the pointer
    value in %eax, stuffing all into memory at RTN(%esp).
-   Use %ecx as a scratch register.  */
+   Use %edx as a scratch register.  */
 
 #   define RETURN_BOUNDED_POINTER(BP_MEM)	\
-	movl RTN(%esp), %ecx;			\
-	movl %eax, 0(%ecx);			\
+	movl RTN(%esp), %edx;			\
+	movl %eax, 0(%edx);			\
 	movl 4+BP_MEM, %eax;			\
-	movl %eax, 4(%ecx);			\
+	movl %eax, 4(%edx);			\
 	movl 8+BP_MEM, %eax;			\
-	movl %eax, 8(%ecx)
+	movl %eax, 8(%edx)
 
 #   define RETURN_NULL_BOUNDED_POINTER		\
-	movl RTN(%esp), %ecx;			\
-	movl %eax, 0(%ecx);			\
-	movl %eax, 4(%ecx);			\
-	movl %eax, 8(%ecx)
+	movl RTN(%esp), %edx;			\
+	movl %eax, 0(%edx);			\
+	movl %eax, 4(%edx);			\
+	movl %eax, 8(%edx)
 
 /* The caller of __errno_location is responsible for allocating space
    for the three-word BP return-value and passing pushing its address

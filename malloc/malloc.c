@@ -653,7 +653,7 @@ do {                                                                          \
 # endif
 #endif
 
-
+#include <bp-checks.h>
 
 #ifndef DEFAULT_TRIM_THRESHOLD
 #define DEFAULT_TRIM_THRESHOLD (128 * 1024)
@@ -1291,8 +1291,8 @@ static void      free_atfork();
 
 /* conversion from malloc headers to user pointers, and back */
 
-#define chunk2mem(p)   ((Void_t*)((char*)(p) + 2*SIZE_SZ))
-#define mem2chunk(mem) ((mchunkptr)((char*)(mem) - 2*SIZE_SZ))
+#define chunk2mem(p) ((Void_t*)((char*)(p) + 2*SIZE_SZ))
+#define mem2chunk(mem) BOUNDED_1((mchunkptr)((char*)(mem) - 2*SIZE_SZ))
 
 /* pad request bytes into a usable size, return non-zero on overflow */
 
@@ -1339,7 +1339,7 @@ static void      free_atfork();
 
 /* Treat space at ptr + offset as a chunk */
 
-#define chunk_at_offset(p, s)  ((mchunkptr)(((char*)(p)) + (s)))
+#define chunk_at_offset(p, s)  BOUNDED_1((mchunkptr)(((char*)(p)) + (s)))
 
 
 
@@ -1406,7 +1406,8 @@ static void      free_atfork();
 
 /* access macros */
 
-#define bin_at(a, i)   ((mbinptr)((char*)&(((a)->av)[2*(i)+2]) - 2*SIZE_SZ))
+#define bin_at(a, i)   BOUNDED_1(_bin_at(a, i))
+#define _bin_at(a, i)  ((mbinptr)((char*)&(((a)->av)[2*(i)+2]) - 2*SIZE_SZ))
 #define init_bin(a, i) ((a)->av[2*(i)+2] = (a)->av[2*(i)+3] = bin_at((a), (i)))
 #define next_bin(b)    ((mbinptr)((char*)(b) + 2 * sizeof(((arena*)0)->av[0])))
 #define prev_bin(b)    ((mbinptr)((char*)(b) - 2 * sizeof(((arena*)0)->av[0])))
@@ -1492,7 +1493,7 @@ static void      free_atfork();
 /* Static bookkeeping data */
 
 /* Helper macro to initialize bins */
-#define IAV(i) bin_at(&main_arena, i), bin_at(&main_arena, i)
+#define IAV(i) _bin_at(&main_arena, i), _bin_at(&main_arena, i)
 
 static arena main_arena = {
     {
@@ -2710,7 +2711,7 @@ Void_t* mALLOc(bytes) size_t bytes;
     if(!victim) return 0;
   } else
     (void)mutex_unlock(&ar_ptr->mutex);
-  return chunk2mem(victim);
+  return BOUNDED_N(chunk2mem(victim), bytes);
 }
 
 static mchunkptr
@@ -2743,7 +2744,7 @@ chunk_alloc(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
 
     /* No traversal or size check necessary for small bins.  */
 
-    q = bin_at(ar_ptr, idx);
+    q = _bin_at(ar_ptr, idx);
     victim = last(q);
 
     /* Also scan the next one, since it would have a remainder < MINSIZE */
@@ -2851,7 +2852,7 @@ chunk_alloc(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
     for (;;)
     {
       startidx = idx;          /* (track incomplete blocks) */
-      q = bin = bin_at(ar_ptr, idx);
+      q = bin = _bin_at(ar_ptr, idx);
 
       /* For each bin in this block ... */
       do
@@ -3229,7 +3230,8 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
 
 #if HAVE_MREMAP
     newp = mremap_chunk(oldp, nb);
-    if(newp) return chunk2mem(newp);
+    if(newp)
+      return BOUNDED_N(chunk2mem(newp), bytes);
 #endif
     /* Note the extra SIZE_SZ overhead. */
     if(oldsize - SIZE_SZ >= nb) return oldmem; /* do nothing */
@@ -3262,7 +3264,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
   newp = chunk_realloc(ar_ptr, oldp, oldsize, nb);
 
   (void)mutex_unlock(&ar_ptr->mutex);
-  return newp ? chunk2mem(newp) : NULL;
+  return newp ? BOUNDED_N(chunk2mem(newp), bytes) : NULL;
 }
 
 static mchunkptr
@@ -3294,6 +3296,7 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
 
   if ((long)(oldsize) < (long)(nb))
   {
+    Void_t* oldmem = BOUNDED_N(chunk2mem(oldp), oldsize);
 
     /* Try expanding forward */
 
@@ -3329,6 +3332,8 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
       nextsize = 0;
     }
 
+    oldsize -= SIZE_SZ;
+
     /* Try shifting backwards. */
 
     if (!prev_inuse(oldp))
@@ -3348,7 +3353,7 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
             unlink(prev, bck, fwd);
             newp = prev;
             newsize += prevsize + nextsize;
-            MALLOC_COPY(chunk2mem(newp), chunk2mem(oldp), oldsize - SIZE_SZ);
+            MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize);
             top(ar_ptr) = chunk_at_offset(newp, nb);
             set_head(top(ar_ptr), (newsize - nb) | PREV_INUSE);
             set_head_size(newp, nb);
@@ -3363,7 +3368,7 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
           unlink(prev, bck, fwd);
           newp = prev;
           newsize += nextsize + prevsize;
-          MALLOC_COPY(chunk2mem(newp), chunk2mem(oldp), oldsize - SIZE_SZ);
+          MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize);
           goto split;
         }
       }
@@ -3374,7 +3379,7 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
         unlink(prev, bck, fwd);
         newp = prev;
         newsize += prevsize;
-        MALLOC_COPY(chunk2mem(newp), chunk2mem(oldp), oldsize - SIZE_SZ);
+        MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize);
         goto split;
       }
     }
@@ -3414,7 +3419,7 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
     }
 
     /* Otherwise copy, free, and exit */
-    MALLOC_COPY(chunk2mem(newp), chunk2mem(oldp), oldsize - SIZE_SZ);
+    MALLOC_COPY(BOUNDED_N(chunk2mem(newp), oldsize), oldmem, oldsize);
     chunk_free(ar_ptr, oldp);
     return newp;
   }
@@ -3519,7 +3524,7 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
     }
     if(!p) return 0;
   }
-  return chunk2mem(p);
+  return BOUNDED_N(chunk2mem(p), bytes);
 }
 
 static mchunkptr
@@ -3727,7 +3732,7 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
     }
     if (p == 0) return 0;
   }
-  mem = chunk2mem(p);
+  mem = BOUNDED_N(chunk2mem(p), n * elem_size);
 
   /* Two optional cases in which clearing not necessary */
 
@@ -3744,7 +3749,8 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   }
 #endif
 
-  MALLOC_ZERO(mem, csz - SIZE_SZ);
+  csz -= SIZE_SZ;
+  MALLOC_ZERO(BOUNDED_N(chunk2mem(p), csz), csz);
   return mem;
 }
 
@@ -4375,7 +4381,7 @@ chunk2mem_check(mchunkptr p, size_t sz)
 chunk2mem_check(p, sz) mchunkptr p; size_t sz;
 #endif
 {
-  unsigned char* m_ptr = (unsigned char*)chunk2mem(p);
+  unsigned char* m_ptr = (unsigned char*)BOUNDED_N(chunk2mem(p), sz);
   size_t i;
 
   for(i = chunksize(p) - (chunk_is_mmapped(p) ? 2*SIZE_SZ+1 : SIZE_SZ+1);
@@ -4581,7 +4587,8 @@ realloc_check(oldmem, bytes, caller)
         /* Must alloc, copy, free. */
         newp = (top_check() >= 0) ? chunk_alloc(&main_arena, nb) : NULL;
         if (newp) {
-          MALLOC_COPY(chunk2mem(newp), oldmem, oldsize - 2*SIZE_SZ);
+          MALLOC_COPY(BOUNDED_N(chunk2mem(newp), nb),
+		      oldmem, oldsize - 2*SIZE_SZ);
           munmap_chunk(oldp);
         }
       }
@@ -4598,7 +4605,8 @@ realloc_check(oldmem, bytes, caller)
       memset((char*)oldmem + 2*sizeof(mbinptr), 0,
              oldsize - (2*sizeof(mbinptr)+2*SIZE_SZ+1));
     } else if(nb > oldsize+SIZE_SZ) {
-      memset((char*)chunk2mem(newp) + oldsize, 0, nb - (oldsize+SIZE_SZ));
+      memset((char*)BOUNDED_N(chunk2mem(newp), bytes) + oldsize,
+	     0, nb - (oldsize+SIZE_SZ));
     }
 #endif
 #if HAVE_MMAP
@@ -4652,7 +4660,7 @@ malloc_starter(sz, caller) size_t sz; const Void_t *caller;
     return 0;
   victim = chunk_alloc(&main_arena, nb);
 
-  return victim ? chunk2mem(victim) : 0;
+  return victim ? BOUNDED_N(chunk2mem(victim), sz) : 0;
 }
 
 static void
@@ -4695,7 +4703,7 @@ malloc_atfork(sz, caller) size_t sz; const Void_t *caller;
       if(request2size(sz, nb))
         return 0;
       victim = chunk_alloc(&main_arena, nb);
-      return victim ? chunk2mem(victim) : 0;
+      return victim ? BOUNDED_N(chunk2mem(victim), sz) : 0;
     } else {
       if(top_check()<0 || request2size(sz+1, nb))
         return 0;

@@ -39,15 +39,27 @@
 
    We do a common implementation here.  */
 
-#ifndef USE_AS_STRTOK_R
+#ifdef USE_AS_STRTOK_R
+# define SAVE_PTR 0(%ecx)
+#else
 	.bss
 	.local save_ptr
 	ASM_TYPE_DIRECTIVE (save_ptr, @object)
 	.size save_ptr, 4
 save_ptr:
+# if __BOUNDED_POINTERS__
+	.space 12
+# else
 	.space 4
+# endif
 
-#define FUNCTION strtok
+# ifdef PIC
+#  define SAVE_PTR save_ptr@GOTOFF(%ebx)
+# else
+#  define SAVE_PTR save_ptr
+# endif
+
+# define FUNCTION strtok
 #endif
 
 #define PARMS	LINKAGE		/* no space for saved regs */
@@ -62,10 +74,9 @@ ENTRY (BP_SYM (FUNCTION))
 
 	movl STR(%esp), %edx
 	movl DELIM(%esp), %eax
-	CHECK_BOUNDS_LOW (%edx, STR(%esp))
 	CHECK_BOUNDS_LOW (%eax, DELIM(%esp))
 
-#if !defined (USE_AS_STRTOK_R) && defined (PIC)
+#if !defined USE_AS_STRTOK_R && defined PIC
 	pushl %ebx			/* Save PIC register.  */
 	call L(here)
 L(here):
@@ -76,7 +87,22 @@ L(here):
 	/* If the pointer is NULL we have to use the stored value of
 	   the last run.  */
 	cmpl $0, %edx
-	jne L(0)
+#if __BOUNDED_POINTERS__
+	movl SAVE(%esp), %ecx
+	je L(0)
+	/* Save bounds of incoming non-NULL STR into save area.  */
+	movl 4+STR(%esp), %eax
+	movl %eax, 4+SAVE_PTR
+	movl 8+STR(%esp), %eax
+	movl %eax, 8+SAVE_PTR
+	CHECK_BOUNDS_LOW (%edx, SAVE_PTR)
+	jmp L(1)
+L(0):	movl SAVE_PTR, %edx
+	CHECK_BOUNDS_LOW (%edx, SAVE_PTR)
+	jmp L(1)
+#else
+	jne L(1)
+#endif
 
 #ifdef USE_AS_STRTOK_R
 	/* The value is stored in the third argument.  */
@@ -85,14 +111,10 @@ L(here):
 #else
 	/* The value is in the local variable defined above.  But
 	   we have to take care for PIC code.  */
-# ifndef PIC
-	movl save_ptr, %edx
-# else
-	movl save_ptr@GOTOFF(%ebx), %edx
-# endif
+	movl SAVE_PTR, %edx
 #endif
 
-L(0):
+L(1):
 	/* First we create a table with flags for all possible characters.
 	   For the ASCII (7bit/8bit) or ISO-8859-X character sets which are
 	   supported by the C string functions we have 256 characters.
@@ -195,7 +217,7 @@ L(2):	movb (%eax), %cl	/* get byte from stopset */
 L(1_3):	incl %eax		/* adjust pointer for bounds check */
 L(1_2):	incl %eax		/* ditto */
 L(1_1):	incl %eax		/* ditto */
-L(1_0):	CHECK_BOUNDS_HIGH (%eax, DELIM(%esp), jb)
+L(1_0):	CHECK_BOUNDS_HIGH (%eax, DELIM(%esp), jbe)
 #else
 L(1_3):; L(1_2):; L(1_1):	/* fall through */
 #endif
@@ -273,25 +295,17 @@ L(8):	/* Remove the stopset table.  */
 	incl %edx
 L(11):
 
-L(return):
 	/* Store the pointer to the next character.  */
 #ifdef USE_AS_STRTOK_R
 	movl SAVE(%esp), %ecx
-	movl %edx, (%ecx)
-#else
-# ifndef PIC
-	movl %edx, save_ptr
-# else
-	movl %edx, save_ptr@GOTOFF(%ebx)
-	popl %ebx
-# endif
 #endif
-#if __BOUNDED_POINTERS__
-	testl %eax, %eax
-	jz L(ret)
-	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
-	RETURN_BOUNDED_POINTER (STR(%esp))
-L(ret):
+	movl %edx, SAVE_PTR
+	CHECK_BOUNDS_HIGH (%edx, SAVE_PTR, jb)
+	RETURN_BOUNDED_POINTER (SAVE_PTR)
+
+L(epilogue):
+#if !defined USE_AS_STRTOK_R && defined PIC
+	popl %ebx
 #endif
 	LEAVE
 	RET_PTR
@@ -299,6 +313,6 @@ L(ret):
 L(returnNULL):
 	xorl %eax, %eax
 	RETURN_NULL_BOUNDED_POINTER
-	jmp L(return)
+	jmp L(epilogue)
 
 END (BP_SYM (FUNCTION))

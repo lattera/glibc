@@ -26,7 +26,6 @@
 #if __BOUNDED_POINTERS__
 
 # define BOUNDS_VIOLATED (__builtin_trap (), 0)
-extern int __memchr (const char *__unbounded, int, unsigned);
 
 /* Verify that pointer's value >= low.  Return pointer value.  */
 # define CHECK_BOUNDS_LOW(ARG)					\
@@ -45,10 +44,12 @@ extern int __memchr (const char *__unbounded, int, unsigned);
     && BOUNDS_VIOLATED),				\
    __ptrvalue (ARG))
 
+extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
+
 # define _CHECK_STRING(ARG, COND)				\
   (((COND)							\
     && (__ptrvalue (ARG) < __ptrlow (ARG)			\
-	|| !__memchr (__ptrvalue (ARG), '\0',			\
+	|| !__ubp_memchr (__ptrvalue (ARG), '\0',			\
 		      (__ptrhigh (ARG) - __ptrvalue (ARG))))	\
     && BOUNDS_VIOLATED),					\
    __ptrvalue (ARG))

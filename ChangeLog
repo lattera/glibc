@@ -1,3 +1,49 @@
+2000-07-26  Greg McGary  <greg@mcgary.org>
+
+	* Makeconfig (+link-bounded, link-libc-bounded,
+	link-extra-libs-bounded): New variables.
+	(built-program-cmd): Omit $(run-program-prefix) for static BP tests.
+	* Makerules (do-tests-clean, common-mostlyclean): Remove BP test files.
+	* Rules (tests-bp.out): New variable.
+	(tests): Conditionally add BP tests.
+	(binaries-bounded): Add variable and associated rule.
+	* csu/Makefile [build-bounded] (extra-objs, install-lib):
+	Move conditional stuff after place where condition is defined.
+
+	* malloc/malloc.c (bp-checks.h): Add #include.
+	(mem2chunk, chunk_at_offset, bin_at): Wrap BOUNDED_1 around expression.
+	(_bin_at): Add unbounded version of bin_at.
+	(IAV, chunk_alloc): Use unbounded _bin_at.
+	(mALLOc, rEALLOc, chunk_realloc, mEMALIGn, cALLOc,
+	chunk2mem_check, realloc_check, malloc_starter, malloc_atfork):
+	Wrap BOUNDED_N around return value.
+	(chunk_realloc): Adjust oldsize once.
+
+	* sysdeps/generic/bp-checks.h (__memchr): Remove incorrect decl.
+	(__ubp_memchr): Add correct decl.
+	(_CHECK_STRING): Use __ubp_memchr.
+	* sysdeps/alpha/memchr.S [!__BOUNDED_POINTERS__] (__ubp_memchr):
+	New alias for unbounded-pointer __memchr.
+	* sysdeps/i386/memchr.S: Likewise.
+	* sysdeps/ia64/memchr.S: Likewise.
+	* sysdeps/m68k/memchr.S: Likewise.
+	* sysdeps/sparc/sparc32/memchr.S: Likewise.
+	* sysdeps/sparc/sparc64/memchr.S: Likewise.
+	* sysdeps/vax/memchr.s: Likewise.
+
+	* sysdeps/i386/strtok.S: Fix bounds checks to pass tests.
+	(SAVE_PTR): New macro.  (save_ptr): Expand size as BP.
+	(strtok): Don't bother to write into SAVE_PTR when returning NULL.
+	* sysdeps/i386/i686/strtok.S: Likewise.
+	* sysdeps/i386/bp-asm.h (RETURN_BOUNDED_POINTER,
+	RETURN_NULL_BOUNDED_POINTER): Use %ecx as the scratch register.
+
+	* sysdeps/i386/bits/string.h [!__BOUNDED_POINTERS__]: Disable inlines.
+	* sysdeps/i386/i486/bits/string.h [!__BOUNDED_POINTERS__]: Likewise.
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Copy
+	bounds of copy_result to mount_proc.
+
 2000-07-25  Bruno Haible  <haible@clisp.cons.org>
 
 	* wctype/wctype.h (__wctrans_l): New declaration.
