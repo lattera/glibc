@@ -1,3 +1,7 @@
+2004-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Define more ppc64 specific dynamic tags.
+
 2004-04-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): If protocol
@@ -11,7 +15,7 @@
 
 2004-03-31  Andreas Jaeger  <aj@suse.de>
 
-        * libio/fileops.c (new_do_write): Return _IO_size_t to make 64-bit
+	* libio/fileops.c (new_do_write): Return _IO_size_t to make 64-bit
         clean.
 
 2004-03-31  Ulrich Drepper  <drepper@redhat.com>

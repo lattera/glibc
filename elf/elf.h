@@ -2077,7 +2077,9 @@ typedef Elf32_Addr Elf32_Conflict;
 
 /* PowerPC64 specific values for the Dyn d_tag field.  */
 #define DT_PPC64_GLINK  (DT_LOPROC + 0)
-#define DT_PPC64_NUM    1
+#define DT_PPC64_OPD	(DT_LOPROC + 1)
+#define DT_PPC64_OPDSZ	(DT_LOPROC + 2)
+#define DT_PPC64_NUM    3
 
 
 /* ARM specific declarations */
