@@ -1,5 +1,8 @@
 1998-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* include/limits.h: Include gcc's header even if this file is
+	found more than once before it (PR libc/778)
+
 	* sysdeps/unix/sysv/linux/Makefile (subdirs==misc)
 	[sysdep_headers]: Remove sys/debugreg.h.
 	* sysdeps/unix/sysv/linux/i386/Makefile (subdirs==misc)

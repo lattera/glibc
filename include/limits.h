@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,14 +45,9 @@
 #define MB_LEN_MAX	6
 
 
-#if __GNUC__ >= 2
-
- /* Get the compiler's limits.h, which defines all the ANSI constants.  */
-# ifndef _GCC_LIMITS_H_		/* This is what GCC's file defines.  */
-#  include_next <limits.h>
-# endif
-
-#else	/* Not GCC 2.  */
+/* If we are not using GNU CC we have to define all the symbols ourself.
+   Otherwise use gcc's definitions (see below).  */
+#if !defined __GNUC__ || __GNUC__ < 2
 
 /* We only protect from multiple inclusion here, because all the other
    #include's protect themselves, and in GCC 2 we may #include_next through
@@ -126,3 +121,13 @@
 #endif	/* GCC 2.  */
 
 #endif	/* !_LIBC_LIMITS_H_ */
+
+ /* Get the compiler's limits.h, which defines almost all the ISO constants.
+
+    We put this #include_next outside the double inclusion check because
+    it should be possible to include this file more than once and still get
+    the definitions from gcc's header.  */
+#if defined __GNUC__ && !defined _GCC_LIMITS_H_
+/* `_GCC_LIMITS_H_' is what GCC's file defines.  */
+# include_next <limits.h>
+#endif
