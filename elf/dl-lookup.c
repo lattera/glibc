@@ -279,6 +279,7 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 			     const struct r_found_version *version,
 			     int reloc_type)
 {
+  extern char **_dl_argv;
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
   struct link_map **scope;
@@ -295,7 +296,9 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
       if (res < 0)
 	/* Oh, oh.  The file named in the relocation entry does not
 	   contain the needed symbol.  */
-	_dl_signal_error (0, reference_name,
+	_dl_signal_error (0, (*reference_name
+			      ? reference_name
+			      : (_dl_argv[0] ?: "<main program>")),
 			  make_string ("symbol ", undef_name, ", version ",
 				       version->name,
 				       " not defined in file ",

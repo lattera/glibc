@@ -103,6 +103,6 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 
   __libc_lock_unlock (dirp->lock);
 
-  return dp != NULL ? 0 : -1;
+  return dp != NULL ? 0 : errno;
 }
 weak_alias (__readdir_r, readdir_r)

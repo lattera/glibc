@@ -127,10 +127,10 @@ extern int __wcscoll_l __P ((__const wchar_t *__s1, __const wchar_t *__s2,
    `wcscoll' to the original strings.  */
 extern size_t __wcsxfrm_l __P ((wchar_t *__s1, __const wchar_t *__s2,
 				size_t __n, __locale_t __loc));
-#endif
 
 /* Duplicate S, returning an identical malloc'd string.  */
 extern wchar_t *wcsdup __P ((__const wchar_t *__s));
+#endif
 
 /* Find the first occurrence of WC in WCS.  */
 extern wchar_t *wcschr __P ((__const wchar_t *__wcs, wchar_t __wc));
@@ -138,11 +138,11 @@ extern wchar_t *wcschr __P ((__const wchar_t *__wcs, wchar_t __wc));
 extern wchar_t *wcsrchr __P ((__const wchar_t *__wcs, wchar_t __wc));
 
 /* Return the length of the initial segmet of WCS which
-   consists entirely of wide-characters not in REJECT.  */
+   consists entirely of wide characters not in REJECT.  */
 extern size_t wcscspn __P ((__const wchar_t *__wcs,
 			    __const wchar_t *__reject));
 /* Return the length of the initial segmet of WCS which
-   consists entirely of wide-characters in  ACCEPT.  */
+   consists entirely of wide characters in  ACCEPT.  */
 extern size_t wcsspn __P ((__const wchar_t *__wcs, __const wchar_t *__accept));
 /* Find the first occurrence in WCS of any character in ACCEPT.  */
 extern wchar_t *wcspbrk __P ((__const wchar_t *__wcs,
@@ -155,27 +155,27 @@ extern wchar_t *wcstok __P ((wchar_t *__restrict __s,
 			     __const wchar_t *__restrict __delim,
 			     wchar_t **__restrict __ptr));
 
-/* Return the number of wide-characters in S.  */
+/* Return the number of wide characters in S.  */
 extern size_t wcslen __P ((__const wchar_t *__s));
 
 
-/* Search N bytes of S for C.  */
+/* Search N wide characters of S for C.  */
 extern wchar_t *wmemchr __P ((__const wchar_t *__s, wchar_t __c, size_t __n));
 
-/* Compare N bytes of S1 and S2.  */
+/* Compare N wide characters of S1 and S2.  */
 extern int wmemcmp __P ((__const wchar_t *__restrict __s1,
 			 __const wchar_t *__restrict __s2, size_t __n));
 
-/* Copy N bytes of SRC to DEST.  */
+/* Copy N wide characters of SRC to DEST.  */
 extern wchar_t *wmemcpy __P ((wchar_t *__restrict __s1,
 			      __const wchar_t *__restrict __s2, size_t __n));
 
-/* Copy N bytes of SRC to DEST, guaranteeing
+/* Copy N wide characters of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
 extern wchar_t *wmemmove __P ((wchar_t *__s1, __const wchar_t *__s2,
 			       size_t __n));
 
-/* Set N bytes of S to C.  */
+/* Set N wide characters of S to C.  */
 extern wchar_t *wmemset __P ((wchar_t *__s, wchar_t __c, size_t __n));
 
 

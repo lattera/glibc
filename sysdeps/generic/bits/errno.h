@@ -22,20 +22,15 @@
 #undef	__need_Emath
 #define	__Emath_defined	1
 
-# define EDOM	1
-# define ERANGE	2
+# define EDOM	XXX	<--- fill in what is actually needed
+# define ERANGE	XXX	<--- fill in what is actually needed
 #endif
 
 #ifdef	_ERRNO_H
-# define ENOSYS	3
-# define EINVAL	4
-# define ESPIPE	5
-# define EBADF	6
-# define ENOMEM	7
-# define EACCES	8
-# define ENFILE  9
-# define EMFILE  10
-# define ENOMSG  11
+# error "Define here all the missing error messages for the port.  These"
+# error "must match the numbers of the kernel."
+# define Exxxx	XXX
+...
 #endif
 
 #define __set_errno(val) errno = (val)

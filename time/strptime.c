@@ -549,10 +549,7 @@ strptime_internal (buf, format, tm, decided)
 	  break;
 	case 'Y':
 	  /* Match year including century number.  */
-	  if (sizeof (time_t) > 4)
-	    get_number (0, 9999);
-	  else
-	    get_number (0, 2036);
+	  get_number (0, 9999);
 	  tm->tm_year = val - 1900;
 	  break;
 	case 'Z':
@@ -712,6 +709,7 @@ strptime_internal (buf, format, tm, decided)
 	    case 'y':
 	      /* Match year within century using alternate numeric symbols.  */
 	      get_alt_number (0, 99);
+	      tm->tm_year = val >= 69 ? val : val + 100;
 	      break;
 	    default:
 	      return NULL;

@@ -23,6 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* This is the internal function we use to generate the error string.  */
+extern char *_strerror_internal __P ((int, char *, size_t));
+
 /* This structure communicates state between _dl_catch_error and
    _dl_signal_error.  */
 struct catch
@@ -74,11 +77,14 @@ _dl_signal_error (int errcode,
     {
       /* Lossage while resolving the program's own symbols is always fatal.  */
       extern char **_dl_argv;	/* Set in rtld.c at startup.  */
+      char buffer[1024];
       _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
 			": error in loading shared libraries: ",
 			objname ?: "", objname ? ": " : "",
 			errstring, errcode ? ": " : "",
-			errcode ? strerror (errcode) : "", "\n", NULL);
+			(errcode
+			 ? _strerror_internal (errcode, buffer, sizeof buffer)
+			 : ""), "\n", NULL);
     }
 }
 
@@ -93,7 +99,7 @@ _dl_catch_error (char **errstring,
   /* We need not handle `receiver' since setting a `catch' is handled
      before it.  */
 
-  /* Some systems (.e.g, SPARC) handle constructors to local variables
+  /* Some systems (e.g., SPARC) handle constructors to local variables
      inefficient.  So we initialize `c' by hand.  */
   c.errstring = NULL;
   c.objname   = NULL;

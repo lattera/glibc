@@ -8,6 +8,7 @@
 VERSION="@VERSION@"
 BUGGLIBC="bugs@gnu.org"
 ADDONS="@subdirs@"
+HOST="@host@"
 
 PATH=/bin:/usr/bin:/usr/local/bin:$PATH
 export PATH
@@ -119,6 +120,7 @@ ${ORGANIZATION- $ORGANIZATION_C}
 >Release:	libc-${VERSION}
 >Environment:
 	$ENVIRONMENT_C
+`[ -n "$HOST" ] && echo Host type: $HOST`
 `[ -n "$SYSTEM" ] && echo System: $SYSTEM`
 `[ -n "$ARCH" ] && echo Architecture: $ARCH`
 `[ -n "$MACHINE" ] && echo Machine: $MACHINE`

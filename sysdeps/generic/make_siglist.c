@@ -17,6 +17,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
+
+/* Include signal.h now so that we can safely reinclude it again in
+   signame.c later on.  We completely override the definitions, we
+   just have to be sure that the include guard in signal.h keeps it
+   from redefining the signal values.  */
 #include <signal.h>
 
 /* Get this configuration's defns of the signal numbers.  */
@@ -31,6 +36,9 @@
 #define HAVE_STRSIGNAL
 #define HAVE_PSIGNAL
 #define sys_siglist my_siglist	/* Avoid clash with signal.h.  */
+
+#undef NSIG
+#define NSIG _NSIG	/* make sure that the value from SIGNUM_H is used.  */
 
 #include "signame.c"
 

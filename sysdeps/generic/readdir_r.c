@@ -27,7 +27,7 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 {
   __set_errno (ENOSYS);
   *result = NULL;
-  return -1;
+  return ENOSYS;
 }
 weak_alias (__readdir_r, readdir_r)
 

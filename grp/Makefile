@@ -20,6 +20,7 @@
 #	Sub-makefile for grp portion of the library.
 #
 subdir	:= grp
+headers := grp.h
 
 routines := fgetgrent initgroups setgroups \
 	    getgrent getgrgid getgrnam \

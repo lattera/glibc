@@ -25,17 +25,36 @@ self-contained way.
 If you define this macro, then the functionality from the POSIX.1
 standard (IEEE Standard 1003.1) is available, as well as all of the
 @w{ISO C} facilities.
+
+The state of @code{_POSIX_SOURCE} is irrelevant if you define the
+macro @code{_POSIX_C_SOURCE} to a positive integer.
 @end defvr
 
 @comment (none)
 @comment POSIX.2
-@defvr Macro _POSIX_C_SOURCE
-If you define this macro with a value of @code{1}, then the
-functionality from the POSIX.1 standard (IEEE Standard 1003.1) is made
-available.  If you define this macro with a value of @code{2}, then both
-the functionality from the POSIX.1 standard and the functionality from
-the POSIX.2 standard (IEEE Standard 1003.2) are made available.  This is
-in addition to the @w{ISO C} facilities.
+Define this macro to a positive integer to control which POSIX
+functionality is made available.  The greater the value of this macro,
+the more functionality is made available.
+
+If you define this macro to a value greater than or equal to @code{1},
+then the functionality from the 1990 edition of the POSIX.1 standard
+(IEEE Standard 1003.1-1990) is made available.
+
+If you define this macro to a value greater than or equal to @code{2},
+then the functionality from the 1992 edition of the POSIX.2 standard
+(IEEE Standard 1003.2-1992) is made available.
+
+If you define this macro to a value greater than or equal to @code{199309L},
+then the functionality from the 1993 edition of the POSIX.1b standard
+(IEEE Standard 1003.1b-1993) is made available.
+
+Greater values for @code{_POSIX_C_SOURCE} will enable future extensions.
+The POSIX standards process will define these values as necessary, and
+the GNU C Library should support them some time after they become standardized.
+The 1996 edition of POSIX.1 (ISO/IEC 9945-1: 1996) states that
+if you define @code{_POSIX_C_SOURCE} to a value greater than
+or equal to @code{199506L}, then the functionality from the 1996
+edition is made available.
 
 The Single Unix Specification specify that setting this macro to the
 value @code{199506L} selects all the values specified by the POSIX

@@ -351,8 +351,8 @@ The return value is @code{0} in case the next entry was read
 successfully.  In this case a pointer to the result is returned in
 *@var{result}.  It is not required that *@var{result} is the same as
 @var{entry}.  If something goes wrong while executing @code{readdir_r}
-the function returns @code{-1}.  The @code{errno} variable is set like
-described for @code{readdir}.
+the function returns a value indicating the error (as described for
+@code{readdir}).
 
 @strong{Portability Note:} On some systems, @code{readdir_r} may not
 return a terminated string as the file name even if no @code{d_reclen}

@@ -20,6 +20,7 @@
 #	Sub-makefile for ctype portion of the library.
 #
 subdir	:= ctype
+headers	:= ctype.h
 
 routines	:= ctype ctype-extn ctype_l
 aux		:= ctype-info

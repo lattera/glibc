@@ -500,6 +500,35 @@ if test $libc_cv_need_minus_P = yes; then
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
+# gcc 2.7.x has a bug where if -pipe is set, the assembler will always
+# be told to read stdin.  This causes the compiler to hang when fed an
+# .s file.
+if test $ac_cv_prog_gcc = yes; then
+ case `${CC-cc} -v 2>&1` in
+  *2.7*)
+  # We must check this even if -pipe is not given here, because the user
+  # might do `make CFLAGS=-pipe'.
+  AC_CACHE_CHECK(for gcc 2.7.x -pipe bug, libc_cv_gcc_pipe_bug, [dnl
+   cat >conftest.s <<EOF
+foo:
+EOF
+   if ${CC-cc} -pipe -c conftest.s <conftest.s 2>/dev/null; then
+    libc_cv_gcc_pipe_bug=no
+   else
+    libc_cv_gcc_pipe_bug=yes
+   fi
+   rm -f conftest*])
+  if test $libc_cv_gcc_pipe_bug = yes; then
+   makeCC="${CC-cc} -B\$(common-objpfx)"
+   makeCFLAGS=$CFLAGS
+   CFLAGS=`echo $CFLAGS |sed 's/-pipe//'`
+  fi;;
+ *) libc_cv_gcc_pipe_bug=no;;
+ esac
+else
+ libc_cv_gcc_pipe_bug=no
+fi
+
 AC_CACHE_CHECK(for assembler global-symbol directive,
 	       libc_cv_asm_global_directive, [dnl
 libc_cv_asm_global_directive=UNKNOWN
@@ -957,6 +986,17 @@ fi
 
 VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
 AC_SUBST(VERSION)
+
+if test $libc_cv_gcc_pipe_bug = yes; then
+ realCC=$CC
+ CC=$makeCC
+ CFLAGS=$makeCFLAGS
+fi
+AC_OUTPUT_COMMANDS([
+if test "$realCC"; then
+ sed -e 's/%{pipe:-}/%|/g' `$realCC -print-file-name=specs` >specsT
+ mv specsT specs
+fi], [realCC=$realCC])
 
 AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, ,
           [echo '$config_vars' >> config.make; test -d bits || mkdir bits])

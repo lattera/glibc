@@ -86,7 +86,7 @@ GLIBC_2.0 {
     _IO_seekmark; _IO_unsave_markers; _IO_str_overflow;
     _IO_str_underflow; _IO_str_init_static; _IO_str_init_readonly;
     _IO_str_seekoff; _IO_str_pbackfail; _IO_file_jumps;
-    _IO_peekc_locked;
+    _IO_peekc_locked; _IO_flockfile; _IO_funlockfile;
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;

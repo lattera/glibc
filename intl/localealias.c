@@ -84,6 +84,9 @@ void free ();
 # define strcasecmp __strcasecmp
 # define strdup __strdup
 
+# define mempcpy __mempcpy
+# define HAVE_MEMPCPY	1
+
 /* We need locking here since we can be called from different palces.  */
 # include <bits/libc-lock.h>
 
@@ -231,8 +234,13 @@ read_alias_file (fname, fname_len)
 
   full_fname = (char *) alloca (fname_len + sizeof aliasfile);
   ADD_BLOCK (block_list, full_fname);
+#ifdef HAVE_MEMPCPY
+  mempcpy (mempcpy (full_fname, fname, fname_len),
+	   aliasfile, sizeof aliasfile);
+#else
   memcpy (full_fname, fname, fname_len);
   memcpy (&full_fname[fname_len], aliasfile, sizeof aliasfile);
+#endif
 
   fp = fopen (full_fname, "r");
   if (fp == NULL)
@@ -254,9 +262,22 @@ read_alias_file (fname, fname_len)
       char *value;
       char *cp;
 
-      if (fgets (buf, BUFSIZ, fp) == NULL)
+      if (fgets (buf, sizeof buf, fp) == NULL)
 	/* EOF reached.  */
 	break;
+
+      /* Possibly not the whole line fits into the buffer.  Ignore
+	 the rest of the line.  */
+      if (strchr (buf, '\n') == NULL)
+	{
+	  char altbuf[BUFSIZ];
+	  do
+	    if (fgets (altbuf, sizeof altbuf, fp) == NULL)
+	      /* Make sure the inner loop will be left.  The outer loop
+		 will exit at the `feof' test.  */
+	      break;
+	  while (strchr (altbuf, '\n') == NULL);
+	}
 
       cp = buf;
       /* Ignore leading white space.  */
@@ -324,24 +345,13 @@ read_alias_file (fname, fname_len)
 					alias, alias_len);
 	      string_space_act += alias_len;
 
-	      map[nmap].alias = memcpy (&string_space[string_space_act],
+	      map[nmap].value = memcpy (&string_space[string_space_act],
 					value, value_len);
 	      string_space_act += value_len;
 
 	      ++nmap;
 	      ++added;
 	    }
-	}
-
-      /* Possibly not the whole line fits into the buffer.  Ignore
-	 the rest of the line.  */
-      while (strchr (cp, '\n') == NULL)
-	{
-	  cp = buf;
-	  if (fgets (buf, BUFSIZ, fp) == NULL)
-	    /* Make sure the inner loop will be left.  The outer loop
-	       will exit at the `feof' test.  */
-	    *cp = '\n';
 	}
     }
 
