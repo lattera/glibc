@@ -23,9 +23,12 @@ through a @dfn{one-way function}, a function which makes it difficult to
 work out what its input was by looking at its output, before storing in
 the file.
 
-The GNU C library already provides a one-way function based on MD5 and
-for compatibility with Unix systems the standard one-way function based
-on the Data Encryption Standard.
+The GNU C library provides a one-way function that is compatible with
+the behavior of the @code{crypt} function introduced in FreeBSD 2.0.
+It supports two one-way algorithms: one based on the MD5
+message-digest algorithm that is compatible with modern BSD systems,
+and the other based on the Data Encryption Standard (DES) that is
+compatible with Unix systems.
 
 It also provides support for Secure RPC, and some library functions that
 can be used to perform normal DES encryption.
@@ -33,7 +36,7 @@ can be used to perform normal DES encryption.
 @menu
 * Legal Problems::              This software can get you locked up, or worse.
 * getpass::                     Prompting the user for a password.
-* crypt::                       A one-way function for UNIX passwords.
+* crypt::                       A one-way function for passwords.
 * DES Encryption::              Routines for DES encryption.
 @end menu
 

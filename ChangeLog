@@ -1,3 +1,8 @@
+2002-11-11  Paul Eggert  <eggert@twinsun.com>
+
+        * manual/crypt.texi (Cryptographic Functions): Mention that
+        the MD5 one-way algorithm is compatible with BSD's.
+
 2002-11-11  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regex_internal.c (re_string_skip_chars): Also return the last
