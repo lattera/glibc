@@ -6,6 +6,7 @@ getpgid		-	getpgid		1	getpgid
 getpgrp		-	getpgrp		0	getpgrp
 getsid		-	getsid		1	getsid
 gtty		-	gtty		2	gtty
+ipc		-	ipc		5	__ipc
 mlock		-	mlock		2	__mlock	mlock
 mlockall	-	mlockall	1	__mlockall	mlockall
 mount		-	mount		5	__mount	mount

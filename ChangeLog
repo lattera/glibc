@@ -1,3 +1,8 @@
+Tue Feb 13 05:12:02 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add ipc syscall.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: File removed.
+
 Sat Feb 10 13:09:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/isinfl.c, sysdeps/m68k/fpu/isnanl.c,
