@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -149,7 +149,7 @@ repertoire_read (const char *filename)
   while (1)
     {
       /* What's on?  */
-      struct token *now = lr_token (repfile, NULL, NULL);
+      struct token *now = lr_token (repfile, NULL, NULL, verbose);
       enum token_t nowtok = now->tok;
       struct token *arg;
 
@@ -168,7 +168,7 @@ repertoire_read (const char *filename)
 	  if (nowtok == tok_escape_char || nowtok == tok_comment_char)
 	    {
 	      /* We know that we need an argument.  */
-	      arg = lr_token (repfile, NULL, NULL);
+	      arg = lr_token (repfile, NULL, NULL, verbose);
 
 	      if (arg->tok != tok_ident)
 		{

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -642,7 +642,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -668,7 +668,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ignore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -685,7 +685,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  now = lr_token (ldfile, charmap, NULL);			      \
+	  now = lr_token (ldfile, charmap, NULL, verbose);		      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
 	  else if (monetary->cat != NULL)				      \
@@ -720,7 +720,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	    }								      \
 									      \
 	  ldfile->return_widestr = 1;					      \
-	  now = lr_token (ldfile, charmap, repertoire);			      \
+	  now = lr_token (ldfile, charmap, repertoire, verbose);	      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
 	  if (monetary->cat != NULL)					      \
@@ -761,7 +761,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  now = lr_token (ldfile, charmap, NULL);			      \
+	  now = lr_token (ldfile, charmap, NULL, verbose);		      \
 	  if (now->tok != tok_minus1 && now->tok != tok_number)		      \
 	    goto err_label;						      \
 	  else if (monetary->cat != -2)					      \
@@ -813,7 +813,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;
 	    }
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok != tok_minus1 && now->tok != tok_number)
 	    goto err_label;
 	  else
@@ -861,11 +861,11 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 		    grouping[act++] = now->val.num;
 
 		  /* Next must be semicolon.  */
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		  if (now->tok != tok_semicolon)
 		    break;
 
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		}
 	      while (now->tok == tok_minus1 || now->tok == tok_number);
 
@@ -891,7 +891,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;
 	    }
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok != tok_number)
 	    goto err_label;
 	  if (now->val.num == 0)
@@ -908,11 +908,11 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	  if (!ignore_content)
 	    monetary->conversion_rate[0] = now->val.num;
 	  /* Next must be a semicolon.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok != tok_semicolon)
 	    goto err_label;
 	  /* And another number.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok != tok_number)
 	    goto err_label;
 	  if (now->val.num == 0)
@@ -925,7 +925,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 
 	case tok_end:
 	  /* Next we assume `LC_MONETARY'.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok == tok_eof)
 	    break;
 	  if (now->tok == tok_eol)
@@ -942,7 +942,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
 

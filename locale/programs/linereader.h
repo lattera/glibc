@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
@@ -91,7 +91,8 @@ extern void lr_close (struct linereader *lr);
 extern int lr_next (struct linereader *lr);
 extern struct token *lr_token (struct linereader *lr,
 			       const struct charmap_t *charmap,
-			       const struct repertoire_t *repertoire);
+			       const struct repertoire_t *repertoire,
+			       int verbose);
 
 
 #define lr_error(lr, fmt, args...) \

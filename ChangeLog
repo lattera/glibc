@@ -1,3 +1,43 @@
+2001-02-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/Makefile (iconv_prog-modules): Define.  Add vpath to find
+	files in locale/programs.  Add CFLAGS definition to allow compiling
+	localedef files.
+	* iconv/dummy-repertoire.c: New file.
+	* iconv/iconv_charmap.c: New file.
+	* iconv/iconv_prog.h: New file.
+	* iconv/iconv_prog.c: Make verbose and omit_invalid global.
+	(main): If parameter for -f and -t contain slashes try first to resolve
+	the strings as filenames of charmap files.  Use them for conversion
+	in this case.
+	* iconvdata/run-iconv-test.sh: If charmaps exist also run tests with
+	iconv getting charmap names as parameters.
+	* locale/programs/linereader.c (lr_token): Take extra parameters
+	verbose and pass it to get_string.
+	(get_string): Take extra parameters verbose.
+	* locale/programs/charmap.c (parse_charmap): Take extra parameters
+	verbose and be_quiet.  Change all callers of lr_token and
+	parse_charmap.
+	* locale/programs/charmap.h: Likewise.
+	* locale/programs/ld-address.c: Likewise.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-identification.c: Likewise.
+	* locale/programs/ld-measurement.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-telephone.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/programs/linereader.c: Likewise.
+	* locale/programs/linereader.h: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* locale/programs/locfile.c: Likewise.
+	* locale/programs/locfile.h: Likewise.
+	* locale/programs/repertoire.c: Likewise.
+
 2001-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv_prog.c (main): If output file name is "-" write to

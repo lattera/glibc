@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -65,7 +65,8 @@ struct charseq
 
 
 /* Prototypes for charmap handling functions.  */
-extern struct charmap_t *charmap_read (const char *filename);
+extern struct charmap_t *charmap_read (const char *filename, int verbose,
+				       int be_quiet, int use_default);
 
 /* Return the value stored under the given key in the hashing table.  */
 extern struct charseq *charmap_find_value (const struct charmap_t *charmap,

@@ -190,7 +190,7 @@ main (int argc, char *argv[])
     error (3, 0, _("FATAL: system does not define `_POSIX2_LOCALEDEF'"));
 
   /* Process charmap file.  */
-  charmap = charmap_read (charmap_file);
+  charmap = charmap_read (charmap_file, verbose, be_quiet, 1);
 
   /* Add the first entry in the locale list.  */
   memset (&global, '\0', sizeof (struct localedef_t));

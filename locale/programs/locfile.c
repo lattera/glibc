@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -95,7 +95,7 @@ locfile_read (struct localedef_t *result, struct charmap_t *charmap)
     /* Parse locale definition file and store result in RESULT.  */
   while (1)
     {
-      struct token *now = lr_token (ldfile, charmap, NULL);
+      struct token *now = lr_token (ldfile, charmap, NULL, verbose);
       enum token_t nowtok = now->tok;
       struct token *arg;
 
@@ -111,7 +111,7 @@ locfile_read (struct localedef_t *result, struct charmap_t *charmap)
 	case tok_escape_char:
 	case tok_comment_char:
 	  /* We need an argument.  */
-	  arg = lr_token (ldfile, charmap, NULL);
+	  arg = lr_token (ldfile, charmap, NULL, verbose);
 
 	  if (arg->tok != tok_ident)
 	    {
@@ -138,7 +138,7 @@ argument to `%s' must be a single character"),
 
 	case tok_repertoiremap:
 	  /* We need an argument.  */
-	  arg = lr_token (ldfile, charmap, NULL);
+	  arg = lr_token (ldfile, charmap, NULL, verbose);
 
 	  if (arg->tok != tok_ident)
 	    {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -31,7 +31,11 @@
 #include "charmap.h"
 #include "error.h"
 #include "linereader.h"
-#include "localedef.h"
+
+/* Prototypes for a few program-wide used functions.  */
+extern void *xmalloc (size_t __n);
+extern void *xrealloc (void *__p, size_t __n);
+extern char *xstrdup (const char *__str);
 
 
 /* Prototypes for local functions.  */
@@ -40,7 +44,8 @@ static struct token *get_symname (struct linereader *lr);
 static struct token *get_ident (struct linereader *lr);
 static struct token *get_string (struct linereader *lr,
 				 const struct charmap_t *charmap,
-				 const struct repertoire_t *repertoire);
+				 const struct repertoire_t *repertoire,
+				 int verbose);
 
 
 struct linereader *
@@ -158,7 +163,7 @@ extern char *program_name;
 
 struct token *
 lr_token (struct linereader *lr, const struct charmap_t *charmap,
-	  const struct repertoire_t *repertoire)
+	  const struct repertoire_t *repertoire, int verbose)
 {
   int ch;
 
@@ -290,7 +295,7 @@ lr_token (struct linereader *lr, const struct charmap_t *charmap,
       return &lr->token;
 
     case '"':
-      return get_string (lr, charmap, repertoire);
+      return get_string (lr, charmap, repertoire, verbose);
 
     case '-':
       ch = lr_getc (lr);
@@ -563,7 +568,7 @@ get_ident (struct linereader *lr)
 
 static struct token *
 get_string (struct linereader *lr, const struct charmap_t *charmap,
-	    const struct repertoire_t *repertoire)
+	    const struct repertoire_t *repertoire, int verbose)
 {
   int return_widestr = lr->return_widestr;
   char *buf;

@@ -36,7 +36,9 @@
 #ifdef _POSIX_MAPPED_FILES
 # include <sys/mman.h>
 #endif
+#include <charmap.h>
 #include <gconv_int.h>
+#include "iconv_prog.h"
 
 /* Get libc version number.  */
 #include "../version.h"
@@ -94,13 +96,13 @@ static const char *to_code;
 static const char *output_file;
 
 /* Nonzero if verbose ouput is wanted.  */
-static int verbose;
+int verbose;
 
 /* Nonzero if list of all coded character sets is wanted.  */
 static int list;
 
 /* If nonzero omit invalid character from output.  */
-static int omit_invalid;
+int omit_invalid;
 
 /* Prototypes for the functions doing the actual work.  */
 static int process_block (iconv_t cd, char *addr, size_t len, FILE *output);
@@ -117,6 +119,8 @@ main (int argc, char *argv[])
   FILE *output;
   iconv_t cd;
   const char *orig_to_code;
+  struct charmap_t *from_charmap = NULL;
+  struct charmap_t *to_charmap = NULL;
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -179,18 +183,23 @@ main (int argc, char *argv[])
       to_code = newp;
     }
 
-  /* Let's see whether we have these coded character sets.  */
-  cd = iconv_open (to_code, from_code);
-  if (cd == (iconv_t) -1)
-    {
-      if (errno == EINVAL)
-	error (EXIT_FAILURE, 0,
-	       _("conversion from `%s' to `%s' not supported"),
-	       from_code, orig_to_code);
-      else
-	error (EXIT_FAILURE, errno,
-	       _("failed to start conversion processing"));
-    }
+  /* POSIX 1003.2b introduces a silly thing: the arguments to -t anf -f
+     can be file names of charmaps.  In this case iconv will have to read
+     those charmaps and use them to do the conversion.  But there are
+     holes in the specification.  There is nothing said that if -f is a
+     charmap filename that -t must be, too.  And vice versa.  There is
+     also no word about the symbolic names used.  What if they don't
+     match?  */
+  if (strchr (from_code, '/') != NULL)
+    /* The from-name might be a charmap file name.  Try reading the
+       file.  */
+    from_charmap = charmap_read (from_code, /*0, 1*/1, 0, 0);
+
+  if (strchr (orig_to_code, '/') != NULL)
+    /* The to-name might be a charmap file name.  Try reading the
+       file.  */
+    to_charmap = charmap_read (orig_to_code, /*0, 1,*/1,0, 0);
+
 
   /* Determine output file.  */
   if (output_file != NULL && strcmp (output_file, "-") != 0)
@@ -202,92 +211,117 @@ main (int argc, char *argv[])
   else
     output = stdout;
 
-  /* Now process the remaining files.  Write them to stdout or the file
-     specified with the `-o' parameter.  If we have no file given as
-     the parameter process all from stdin.  */
-  if (remaining == argc)
-    {
-      if (process_file (cd, stdin, output) != 0)
-	status = EXIT_FAILURE;
-    }
+  /* At this point we have to handle two cases.  The first one is
+     where a charmap is used for the from- or to-charset, or both.  We
+     handle this special since it is very different from the sane way of
+     doing things.  The other case allows converting using the iconv()
+     function.  */
+  if (from_charmap != NULL || to_charmap != NULL)
+    /* Construct the conversion table and do the conversion.  */
+    status = charmap_conversion (from_code, from_charmap, to_code, to_charmap,
+				 argc, remaining, argv, output);
   else
-    do
-      {
-	struct stat st;
-	char *addr;
-	int fd;
+    {
+      /* Let's see whether we have these coded character sets.  */
+      cd = iconv_open (to_code, from_code);
+      if (cd == (iconv_t) -1)
+	{
+	  if (errno == EINVAL)
+	    error (EXIT_FAILURE, 0,
+		   _("conversion from `%s' to `%s' not supported"),
+		   from_code, orig_to_code);
+	  else
+	    error (EXIT_FAILURE, errno,
+		   _("failed to start conversion processing"));
+	}
 
-
-	if (verbose)
-	  printf ("%s:\n", argv[remaining]);
-	if (strcmp (argv[remaining], "-") == 0)
-	  fd = 0;
-	else
+      /* Now process the remaining files.  Write them to stdout or the file
+	 specified with the `-o' parameter.  If we have no file given as
+	 the parameter process all from stdin.  */
+      if (remaining == argc)
+	{
+	  if (process_file (cd, stdin, output) != 0)
+	    status = EXIT_FAILURE;
+	}
+      else
+	do
 	  {
-	    fd = open (argv[remaining], O_RDONLY);
+	    struct stat st;
+	    char *addr;
+	    int fd;
 
-	    if (fd == -1)
+	    if (verbose)
+	      printf ("%s:\n", argv[remaining]);
+	    if (strcmp (argv[remaining], "-") == 0)
+	      fd = 0;
+	    else
 	      {
-		error (0, errno, _("cannot open input file `%s'"),
-		       argv[remaining]);
-		status = EXIT_FAILURE;
-		continue;
+		fd = open (argv[remaining], O_RDONLY);
+
+		if (fd == -1)
+		  {
+		    error (0, errno, _("cannot open input file `%s'"),
+			   argv[remaining]);
+		    status = EXIT_FAILURE;
+		    continue;
+		  }
 	      }
-	  }
 
 #ifdef _POSIX_MAPPED_FILES
-	/* We have possibilities for reading the input file.  First try
-	   to mmap() it since this will provide the fastest solution.  */
-	if (fstat (fd, &st) == 0
-	    && ((addr = mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
-		!= MAP_FAILED))
-	  {
-	    /* Yes, we can use mmap().  The descriptor is not needed
-               anymore.  */
-	    if (close (fd) != 0)
-	      error (EXIT_FAILURE, errno, _("error while closing input `%s'"),
-		     argv[remaining]);
-
-	    if (process_block (cd, addr, st.st_size, output) < 0)
+	    /* We have possibilities for reading the input file.  First try
+	       to mmap() it since this will provide the fastest solution.  */
+	    if (fstat (fd, &st) == 0
+		&& ((addr = mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE,
+				  fd, 0)) != MAP_FAILED))
 	      {
-		/* Something went wrong.  */
-		status = EXIT_FAILURE;
+		/* Yes, we can use mmap().  The descriptor is not needed
+		   anymore.  */
+		if (close (fd) != 0)
+		  error (EXIT_FAILURE, errno,
+			 _("error while closing input `%s'"),
+			 argv[remaining]);
+
+		if (process_block (cd, addr, st.st_size, output) < 0)
+		  {
+		    /* Something went wrong.  */
+		    status = EXIT_FAILURE;
+
+		    /* We don't need the input data anymore.  */
+		    munmap ((void *) addr, st.st_size);
+
+		    /* We cannot go on with producing output since it might
+		       lead to problem because the last output might leave
+		       the output stream in an undefined state.  */
+		    break;
+		  }
 
 		/* We don't need the input data anymore.  */
 		munmap ((void *) addr, st.st_size);
-
-		/* We cannot go on with producing output since it might
-		   lead to problem because the last output might leave
-		   the output stream in an undefined state.  */
-		break;
 	      }
-
-	    /* We don't need the input data anymore.  */
-	    munmap ((void *) addr, st.st_size);
-	  }
-	else
+	    else
 #endif	/* _POSIX_MAPPED_FILES */
-	  {
-	    /* Read the file in pieces.  */
-	    if (process_fd (cd, fd, output) != 0)
 	      {
-		/* Something went wrong.  */
-		status = EXIT_FAILURE;
+		/* Read the file in pieces.  */
+		if (process_fd (cd, fd, output) != 0)
+		  {
+		    /* Something went wrong.  */
+		    status = EXIT_FAILURE;
 
-		/* We don't need the input file anymore.  */
+		    /* We don't need the input file anymore.  */
+		    close (fd);
+
+		    /* We cannot go on with producing output since it might
+		       lead to problem because the last output might leave
+		       the output stream in an undefined state.  */
+		    break;
+		  }
+
+		/* Now close the file.  */
 		close (fd);
-
-		/* We cannot go on with producing output since it might
-		   lead to problem because the last output might leave
-		   the output stream in an undefined state.  */
-		break;
 	      }
-
-	    /* Now close the file.  */
-	    close (fd);
 	  }
-      }
-    while (++remaining < argc);
+	while (++remaining < argc);
+    }
 
   /* Close the output file now.  */
   if (fclose (output))
@@ -402,7 +436,7 @@ conversion stopped due to problem in writing the output"));
              character sets we have to flush the state now.  */
 	  outptr = outbuf;
 	  outlen = OUTBUF_SIZE;
-	  n = iconv (cd, NULL, NULL, &outptr, &outlen);
+	  (void) iconv (cd, NULL, NULL, &outptr, &outlen);
 
 	  if (outptr != outbuf)
 	    {

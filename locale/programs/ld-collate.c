@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -508,7 +508,7 @@ read_directions (struct linereader *ldfile, struct token *arg,
 	}
 
       if (valid)
-	arg = lr_token (ldfile, charmap, repertoire);
+	arg = lr_token (ldfile, charmap, repertoire, verbose);
 
       if (arg->tok == tok_eof || arg->tok == tok_eol || arg->tok == tok_comma
 	  || arg->tok == tok_semicolon)
@@ -572,7 +572,7 @@ read_directions (struct linereader *ldfile, struct token *arg,
 	    }
 	}
 
-      arg = lr_token (ldfile, charmap, repertoire);
+      arg = lr_token (ldfile, charmap, repertoire, verbose);
     }
 
   if (nrules == 0)
@@ -697,7 +697,7 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 
   weight_cnt = 0;
 
-  arg = lr_token (ldfile, charmap, repertoire);
+  arg = lr_token (ldfile, charmap, repertoire, verbose);
   do
     {
       if (arg->tok == tok_eof || arg->tok == tok_eol)
@@ -867,11 +867,11 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 	  break;
 	}
 
-      arg = lr_token (ldfile, charmap, repertoire);
+      arg = lr_token (ldfile, charmap, repertoire, verbose);
       /* This better should be the end of the line or a semicolon.  */
       if (arg->tok == tok_semicolon)
 	/* OK, ignore this and read the next token.  */
-	arg = lr_token (ldfile, charmap, repertoire);
+	arg = lr_token (ldfile, charmap, repertoire, verbose);
       else if (arg->tok != tok_eof && arg->tok != tok_eol)
 	{
 	  /* It's a syntax error.  */
@@ -2567,7 +2567,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -2575,18 +2575,19 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
   if (nowtok == tok_copy)
     {
       state = 2;
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       if (now->tok != tok_string)
 	{
 	  SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
 
 	skip_category:
 	  do
-	    now = lr_token (ldfile, charmap, NULL);
+	    now = lr_token (ldfile, charmap, NULL, verbose);
 	  while (now->tok != tok_eof && now->tok != tok_end);
 
 	  if (now->tok != tok_eof
-	      || (now = lr_token (ldfile, charmap, NULL), now->tok == tok_eof))
+	      || (now = lr_token (ldfile, charmap, NULL, verbose),
+		  now->tok == tok_eof))
 	    lr_error (ldfile, _("%s: premature end of file"), "LC_COLLATE");
 	  else if (now->tok != tok_lc_collate)
 	    {
@@ -2615,7 +2616,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 
       lr_ignore_rest (ldfile, 1);
 
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
 
@@ -2636,7 +2637,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ingore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -2645,7 +2646,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 	case tok_copy:
 	  /* Allow copying other locales.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok != tok_string)
 	    goto err_label;
 
@@ -2668,7 +2669,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  if (state != 0)
 	    goto err_label;
 
-	  arg = lr_token (ldfile, charmap, NULL);
+	  arg = lr_token (ldfile, charmap, NULL, verbose);
 	  if (arg->tok != tok_number)
 	    goto err_label;
 	  if (collate->col_weight_max != -1)
@@ -2691,7 +2692,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  if (state != 0)
 	    goto err_label;
 
-	  arg = lr_token (ldfile, charmap, repertoire);
+	  arg = lr_token (ldfile, charmap, repertoire, verbose);
 	  if (arg->tok != tok_bsymbol)
 	    goto err_label;
 	  else if (!ignore_content)
@@ -2738,7 +2739,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  if (state != 0)
 	    goto err_label;
 
-	  arg = lr_token (ldfile, charmap, repertoire);
+	  arg = lr_token (ldfile, charmap, repertoire, verbose);
 	  if (arg->tok != tok_bsymbol)
 	    goto err_label;
 	  else
@@ -2747,7 +2748,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      size_t symbol_len = arg->val.str.lenmb;
 
 	      /* Next the `from' keyword.  */
-	      arg = lr_token (ldfile, charmap, repertoire);
+	      arg = lr_token (ldfile, charmap, repertoire, verbose);
 	      if (arg->tok != tok_from)
 		{
 		  free ((char *) symbol);
@@ -2758,7 +2759,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      ldfile->translate_strings = 1;
 
 	      /* Finally the string with the replacement.  */
-	      arg = lr_token (ldfile, charmap, repertoire);
+	      arg = lr_token (ldfile, charmap, repertoire, verbose);
 
 	      ldfile->return_widestr = 0;
 	      ldfile->translate_strings = 0;
@@ -2807,7 +2808,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  if (state != 0 && state != 2)
 	    goto err_label;
 
-	  arg = lr_token (ldfile, charmap, repertoire);
+	  arg = lr_token (ldfile, charmap, repertoire, verbose);
 	  if (arg->tok != tok_bsymbol)
 	    goto err_label;
 	  else
@@ -2818,12 +2819,12 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      size_t endsymbol_len = 0;
 	      enum token_t ellipsis = tok_none;
 
-	      arg = lr_token (ldfile, charmap, repertoire);
+	      arg = lr_token (ldfile, charmap, repertoire, verbose);
 	      if (arg->tok == tok_ellipsis2 || arg->tok == tok_ellipsis4)
 		{
 		  ellipsis = arg->tok;
 
-		  arg = lr_token (ldfile, charmap, repertoire);
+		  arg = lr_token (ldfile, charmap, repertoire, verbose);
 		  if (arg->tok != tok_bsymbol)
 		    {
 		      free (symbol);
@@ -2954,7 +2955,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  if (state != 0)
 	    goto err_label;
 
-	  arg = lr_token (ldfile, charmap, repertoire);
+	  arg = lr_token (ldfile, charmap, repertoire, verbose);
 	  if (arg->tok != tok_bsymbol)
 	    goto err_label;
 	  else
@@ -2965,7 +2966,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      size_t symname_len;
 	      struct symbol_t *symval;
 
-	      arg = lr_token (ldfile, charmap, repertoire);
+	      arg = lr_token (ldfile, charmap, repertoire, verbose);
 	      if (arg->tok != tok_bsymbol)
 		{
 		  if (newname != NULL)
@@ -3022,7 +3023,7 @@ error while adding equivalent collating symbol"));
 
 	case tok_script:
 	  /* We get told about the scripts we know.  */
-	  arg = lr_token (ldfile, charmap, repertoire);
+	  arg = lr_token (ldfile, charmap, repertoire, verbose);
 	  if (arg->tok != tok_bsymbol)
 	    goto err_label;
 	  else
@@ -3074,7 +3075,7 @@ error while adding equivalent collating symbol"));
 	  /* The 14652 draft does not specify whether all `order_start' lines
 	     must contain the same number of sort-rules, but 14651 does.  So
 	     we require this here as well.  */
-	  arg = lr_token (ldfile, charmap, repertoire);
+	  arg = lr_token (ldfile, charmap, repertoire, verbose);
 	  if (arg->tok == tok_bsymbol)
 	    {
 	      /* This better should be a section name.  */
@@ -3133,7 +3134,7 @@ error while adding equivalent collating symbol"));
 		    }
 
 		  /* Next should come the end of the line or a semicolon.  */
-		  arg = lr_token (ldfile, charmap, repertoire);
+		  arg = lr_token (ldfile, charmap, repertoire, verbose);
 		  if (arg->tok == tok_eol)
 		    {
 		      uint32_t cnt;
@@ -3156,7 +3157,7 @@ error while adding equivalent collating symbol"));
 		    }
 
 		  /* Get the next token.  */
-		  arg = lr_token (ldfile, charmap, repertoire);
+		  arg = lr_token (ldfile, charmap, repertoire, verbose);
 		}
 	    }
 	  else
@@ -3237,7 +3238,7 @@ error while adding equivalent collating symbol"));
 	    goto err_label;
 	  state = 3;
 
-	  arg = lr_token (ldfile, charmap, repertoire);
+	  arg = lr_token (ldfile, charmap, repertoire, verbose);
 	  if (arg->tok == tok_bsymbol || arg->tok == tok_ucs4)
 	    {
 	      /* Find this symbol in the sequence table.  */
@@ -3366,7 +3367,7 @@ error while adding equivalent collating symbol"));
 	  state = 5;
 
 	  /* Get the name of the sections we are adding after.  */
-	  arg = lr_token (ldfile, charmap, repertoire);
+	  arg = lr_token (ldfile, charmap, repertoire, verbose);
 	  if (arg->tok == tok_bsymbol)
 	    {
 	      /* Now find a section with this name.  */
@@ -3399,7 +3400,7 @@ error while adding equivalent collating symbol"));
 		    {
 		      lr_ignore_rest (ldfile, 0);
 
-		      now = lr_token (ldfile, charmap, NULL);
+		      now = lr_token (ldfile, charmap, NULL, verbose);
 		    }
 		  while (now->tok == tok_reorder_sections_after
 			 || now->tok == tok_reorder_sections_end
@@ -3596,7 +3597,7 @@ error while adding equivalent collating symbol"));
 
 		  /* Process the rest of the line which might change
                      the collation rules.  */
-		  arg = lr_token (ldfile, charmap, repertoire);
+		  arg = lr_token (ldfile, charmap, repertoire, verbose);
 		  if (arg->tok != tok_eof && arg->tok != tok_eol)
 		    read_directions (ldfile, arg, charmap, repertoire,
 				     collate);
@@ -3710,7 +3711,7 @@ error while adding equivalent collating symbol"));
 		error (0, 0, _("%s: missing `reorder-sections-end' keyword"),
 		       "LC_COLLATE");
 	    }
-	  arg = lr_token (ldfile, charmap, NULL);
+	  arg = lr_token (ldfile, charmap, NULL, verbose);
 	  if (arg->tok == tok_eof)
 	    break;
 	  if (arg->tok == tok_eol)
@@ -3727,7 +3728,7 @@ error while adding equivalent collating symbol"));
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
 

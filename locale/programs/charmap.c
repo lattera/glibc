@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -34,7 +34,6 @@
 #include "linereader.h"
 #include "charmap.h"
 #include "charmap-dir.h"
-#include "locfile.h"
 #include "repertoire.h"
 
 #include <assert.h>
@@ -47,13 +46,17 @@
 extern void *xmalloc (size_t __n);
 
 /* Prototypes for local functions.  */
-static struct charmap_t *parse_charmap (struct linereader *cmfile);
+static struct charmap_t *parse_charmap (struct linereader *cmfile,
+					int verbose, int be_quiet);
 static void new_width (struct linereader *cmfile, struct charmap_t *result,
 		       const char *from, const char *to,
 		       unsigned long int width);
 static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 			      int nbytes, char *bytes, const char *from,
 			      const char *to, int decimal_ellipsis, int step);
+
+
+static const char *null_pointer;
 
 static struct linereader *
 cmlr_open (const char *directory, const char *name, kw_hash_fct_t hf)
@@ -82,7 +85,7 @@ cmlr_open (const char *directory, const char *name, kw_hash_fct_t hf)
 }
 
 struct charmap_t *
-charmap_read (const char *filename)
+charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
 {
   struct charmap_t *result = NULL;
 
@@ -129,14 +132,14 @@ charmap_read (const char *filename)
 
       if (cmfile != NULL)
 	{
-	  result = parse_charmap (cmfile);
+	  result = parse_charmap (cmfile, verbose, be_quiet);
 
 	  if (result == NULL && !be_quiet)
 	    error (0, errno, _("character map file `%s' not found"), filename);
 	}
     }
 
-  if (result == NULL && filename != NULL)
+  if (result == NULL && filename != NULL && strchr (filename, '/') == NULL)
     {
       /* OK, one more try.  We also accept the names given to the
 	 character sets in the files.  Sometimes they differ from the
@@ -170,7 +173,7 @@ charmap_read (const char *filename)
 
 		  cmfile = cmlr_open (CHARMAP_PATH, dirent, charmap_hash);
 		  if (cmfile != NULL)
-		    result = parse_charmap (cmfile);
+		    result = parse_charmap (cmfile, verbose, be_quiet);
 
 		  break;
 		}
@@ -180,13 +183,13 @@ charmap_read (const char *filename)
 	}
     }
 
-  if (result == NULL)
+  if (result == NULL && DEFAULT_CHARMAP != NULL)
     {
       struct linereader *cmfile;
 
       cmfile = cmlr_open (CHARMAP_PATH, DEFAULT_CHARMAP, charmap_hash);
       if (cmfile != NULL)
-	result = parse_charmap (cmfile);
+	result = parse_charmap (cmfile, verbose, be_quiet);
 
       if (result == NULL)
 	error (4, errno, _("default character map file `%s' not found"),
@@ -220,7 +223,7 @@ charmap_read (const char *filename)
      must have the same value as the 'wchar_t' code, which in glibc is the
      same as the Unicode code, which for all of the enumerated characters
      is identical to the ASCII code. */
-  if (result != NULL)
+  if (result != NULL && use_default)
     {
       static const char basic_charset[] =
 	{
@@ -256,7 +259,7 @@ character map `%s' is not ASCII compatible, locale not ISO C compliant\n"),
 
 
 static struct charmap_t *
-parse_charmap (struct linereader *cmfile)
+parse_charmap (struct linereader *cmfile, int verbose, int be_quiet)
 {
   struct charmap_t *result;
   int state;
@@ -293,7 +296,7 @@ parse_charmap (struct linereader *cmfile)
   while (1)
     {
       /* What's on?  */
-      struct token *now = lr_token (cmfile, NULL, NULL);
+      struct token *now = lr_token (cmfile, NULL, NULL, verbose);
       enum token_t nowtok = now->tok;
       struct token *arg;
 
@@ -351,7 +354,7 @@ parse_charmap (struct linereader *cmfile)
 	    }
 
 	  /* We know that we need an argument.  */
-	  arg = lr_token (cmfile, NULL, NULL);
+	  arg = lr_token (cmfile, NULL, NULL, verbose);
 
 	  switch (nowtok)
 	    {

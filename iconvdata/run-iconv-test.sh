@@ -59,13 +59,10 @@ while read from to subset targets; do
   if test -n "$targets"; then
     for t in $targets; do
       if test -f testdata/$from; then
-	echo $ac_n "test data: $from -> $t $ac_c"
+	echo $ac_n "   test data: $from -> $t $ac_c"
 	$PROG -f $from -t $t testdata/$from > $temp1 ||
 	  { if test $? -gt 128; then exit 1; fi
-	    echo "FAILED"
-	    failed=1
-	    continue
-	  }
+	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
 	if test -s testdata/$from..$t; then
 	  cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
@@ -75,10 +72,7 @@ while read from to subset targets; do
 	echo $ac_n " -> $from $ac_c"
 	$PROG -f $t -t $to -o $temp2 $temp1 ||
 	  { if test $? -gt 128; then exit 1; fi
-	    echo "FAILED"
-	    failed=1
-	    continue
-	  }
+	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
 	test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
 	  { echo "/FAILED"; failed=1; continue; }
@@ -90,21 +84,45 @@ while read from to subset targets; do
       # of the coded character set we convert the text to this coded character
       # set.  Otherwise we convert to all the TARGETS.
       if test $subset = Y; then
-	echo $ac_n "   suntzu: $from -> $t -> $to $ac_c"
+	echo $ac_n "      suntzu: $from -> $t -> $to $ac_c"
 	$PROG -f $from -t $t testdata/suntzus |
 	$PROG -f $t -t $to > $temp1 ||
 	  { if test $? -gt 128; then exit 1; fi
-	    echo "FAILED"
-	    failed=1
-	    continue
-	  }
+	    echo "FAILED"; failed=1; continue; }
 	echo $ac_n "OK$ac_c"
 	cmp testdata/suntzus $temp1 ||
-	  { echo "/FAILED";
-	    failed=1; continue; }
+	  { echo "/FAILED"; failed=1; continue; }
 	echo "/OK"
       fi
       rm -f $temp1
+
+      # And tests where iconv(1) has to handle charmaps.
+      if test "$t" = UTF8; then tc=UTF-8; else tc="$t"; fi
+      if test -f ../localedata/charmaps/$from &&
+         test -f ../localedata/charmaps/$tc &&
+	 test -f testdata/$from; then
+	echo $ac_n "test charmap: $from -> $t $ac_c"
+	$PROG -f ../localedata/charmaps/$from -t ../localedata/charmaps/$tc \
+	      testdata/$from > $temp1 ||
+	  { if test $? -gt 128; then exit 1; fi
+	    echo "FAILED"; failed=1; continue; }
+	echo $ac_n "OK$ac_c"
+	if test -s testdata/$from..$t; then
+	  cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
+	    { echo "/FAILED"; failed=1; continue; }
+	  echo $ac_n "/OK$ac_c"
+	fi
+	echo $ac_n " -> $from $ac_c"
+	$PROG -t ../localedata/charmaps/$from -f ../localedata/charmaps/$tc \
+	      -o $temp2 $temp1 ||
+	  { if test $? -gt 128; then exit 1; fi
+	    echo "FAILED"; failed=1; continue; }
+	echo $ac_n "OK$ac_c"
+	test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
+	  { echo "/FAILED"; failed=1; continue; }
+	echo "/OK"
+	rm -f $temp1 $temp2
+      fi
     done
   fi
 
@@ -113,14 +131,10 @@ while read from to subset targets; do
     $PROG -f ASCII -t $to testdata/suntzus |
     $PROG -f $to -t ASCII > $temp1 ||
       { if test $? -gt 128; then exit 1; fi
-	echo "FAILED"
-	failed=1
-	continue
-      }
+	echo "FAILED"; failed=1; continue; }
     echo $ac_n "OK$ac_c"
     cmp testdata/suntzus $temp1 ||
-      { echo "/FAILED";
-	failed=1; continue; }
+      { echo "/FAILED"; failed=1; continue; }
     echo "/OK"
   fi
 done < TESTS

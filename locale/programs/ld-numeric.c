@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -207,7 +207,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -233,7 +233,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ingore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -251,7 +251,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	    }								      \
 									      \
 	  ldfile->return_widestr = 1;					      \
-	  now = lr_token (ldfile, charmap, repertoire);			      \
+	  now = lr_token (ldfile, charmap, repertoire, verbose);	      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
 	  if (numeric->cat != NULL)					      \
@@ -291,7 +291,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;
 	    }
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok != tok_minus1 && now->tok != tok_number)
 	    goto err_label;
 	  else
@@ -338,11 +338,11 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 		    grouping[act++] = now->val.num;
 
 		  /* Next must be semicolon.  */
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		  if (now->tok != tok_semicolon)
 		    break;
 
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		}
 	      while (now->tok == tok_minus1 || now->tok == tok_number);
 
@@ -361,7 +361,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 
 	case tok_end:
 	  /* Next we assume `LC_NUMERIC'.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok == tok_eof)
 	    break;
 	  if (now->tok == tok_eol)
@@ -378,7 +378,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
 

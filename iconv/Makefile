@@ -34,9 +34,19 @@ CFLAGS-gconv_db.c = -DSTATIC_GCONV
 CFLAGS-gconv_simple.c = -DSTATIC_GCONV
 endif
 
+vpath %.c ../locale/programs
+
+iconv_prog-modules = iconv_charmap charmap charmap-dir linereader \
+		     dummy-repertoire simple-hash xstrdup xmalloc
+CFLAGS-iconv_prog.c = -I../locale/programs
+CFLAGS-iconv_charmap.c = -I../locale/programs
+CFLAGS-dummy-repertoire.c = -I../locale/programs
+CFLAGS-charmap.c = -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
+		   -DDEFAULT_CHARMAP=null_pointer
+
 tests	= tst-iconv1 tst-iconv2 tst-iconv3
 
-distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c
+distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c iconv_prog.h
 
 others		= iconv_prog
 install-others	= $(inst_bindir)/iconv
@@ -47,3 +57,5 @@ include ../Rules
 
 $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 	$(do-install-program)
+
+$(objpfx)iconv_prog: $(iconv_prog-modules:%=$(objpfx)%.o)

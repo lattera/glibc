@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -1878,7 +1878,7 @@ read_translit_entry (struct linereader *ldfile, struct locale_ctype_t *ctype,
 
       /* Next we have one or more transliterations.  They are
 	 separated by semicolons.  */
-      now = lr_token (ldfile, charmap, repertoire);
+      now = lr_token (ldfile, charmap, repertoire, verbose);
 
       if (!first && (now->tok == tok_semicolon || now->tok == tok_eol))
 	{
@@ -1939,7 +1939,7 @@ read_translit_ignore_entry (struct linereader *ldfile,
      single characters, possibly defining a range when an ellipsis is used.  */
   while (1)
     {
-      struct token *now = lr_token (ldfile, charmap, repertoire);
+      struct token *now = lr_token (ldfile, charmap, repertoire, verbose);
       struct translit_ignore_t *newp;
       uint32_t from;
 
@@ -1983,7 +1983,7 @@ read_translit_ignore_entry (struct linereader *ldfile,
 
       /* Now we expect either a semicolon, an ellipsis, or the end of the
 	 line.  */
-      now = lr_token (ldfile, charmap, repertoire);
+      now = lr_token (ldfile, charmap, repertoire, verbose);
 
       if (now->tok == tok_ellipsis2 || now->tok == tok_ellipsis2_2)
 	{
@@ -1992,7 +1992,7 @@ read_translit_ignore_entry (struct linereader *ldfile,
 	  uint32_t to;
 	  int step = now->tok == tok_ellipsis2_2 ? 2 : 1;
 
-	  now = lr_token (ldfile, charmap, repertoire);
+	  now = lr_token (ldfile, charmap, repertoire, verbose);
 
 	  if (now->tok == tok_eol || now->tok == tok_eof)
 	    {
@@ -2033,7 +2033,7 @@ to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
 	    }
 
 	  /* And the next token.  */
-	  now = lr_token (ldfile, charmap, repertoire);
+	  now = lr_token (ldfile, charmap, repertoire, verbose);
 	}
 
       if (now->tok == tok_eol || now->tok == tok_eof)
@@ -2084,7 +2084,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -2092,18 +2092,19 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       if (now->tok != tok_string)
 	{
 	  SYNTAX_ERROR (_("%s: syntax error"), "LC_CTYPE");
 
 	skip_category:
 	  do
-	    now = lr_token (ldfile, charmap, NULL);
+	    now = lr_token (ldfile, charmap, NULL, verbose);
 	  while (now->tok != tok_eof && now->tok != tok_end);
 
 	  if (now->tok != tok_eof
-	      || (now = lr_token (ldfile, charmap, NULL), now->tok == tok_eof))
+	      || (now = lr_token (ldfile, charmap, NULL, verbose),
+		  now->tok == tok_eof))
 	    lr_error (ldfile, _("%s: premature end of file"), "LC_CTYPE");
 	  else if (now->tok != tok_lc_ctype)
 	    {
@@ -2132,7 +2133,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 
       lr_ignore_rest (ldfile, 1);
 
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
 
@@ -2157,7 +2158,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ingore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -2165,14 +2166,14 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
       switch (nowtok)
 	{
 	case tok_charclass:
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  while (now->tok == tok_ident || now->tok == tok_string)
 	    {
 	      ctype_class_new (ldfile, ctype, now->val.str.startmb);
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	      if (now->tok != tok_semicolon)
 		break;
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	    }
 	  if (now->tok != tok_eol)
 	    SYNTAX_ERROR (_("\
@@ -2180,14 +2181,14 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 	  break;
 
 	case tok_charconv:
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  while (now->tok == tok_ident || now->tok == tok_string)
 	    {
 	      ctype_map_new (ldfile, ctype, now->val.str.startmb, charmap);
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	      if (now->tok != tok_semicolon)
 		break;
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	    }
 	  if (now->tok != tok_eol)
 	    SYNTAX_ERROR (_("\
@@ -2205,7 +2206,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 
 	  /* We simply forget the `class' keyword and use the following
 	     operand to determine the bit.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok == tok_ident || now->tok == tok_string)
 	    {
 	      /* Must can be one of the predefined class names.  */
@@ -2251,7 +2252,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 	    }
 
 	  /* The next character must be a semicolon.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok != tok_semicolon)
 	    goto err_label;
 	  goto read_charclass;
@@ -2283,7 +2284,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 	  last_token = tok_none;
 	  ellipsis_token = tok_none;
 	  step = 1;
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  while (now->tok != tok_eol && now->tok != tok_eof)
 	    {
 	      uint32_t wch;
@@ -2420,7 +2421,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 		}
 
 	      /* Next we expect a semicolon or the end of the line.  */
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	      if (now->tok == tok_eol || now->tok == tok_eof)
 		break;
 
@@ -2440,7 +2441,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 
 		  ellipsis_token = now->tok;
 
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		  continue;
 		}
 
@@ -2448,7 +2449,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 		goto err_label;
 
 	      /* And get the next character.  */
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 
 	      ellipsis_token = tok_none;
 	      step = 1;
@@ -2523,7 +2524,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 
 	  /* We simply forget the `map' keyword and use the following
 	     operand to determine the mapping.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok == tok_ident || now->tok == tok_string)
 	    {
 	      size_t cnt;
@@ -2545,7 +2546,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  else
 	    mapidx = now->tok - tok_toupper;
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  /* This better should be a semicolon.  */
 	  if (now->tok != tok_semicolon)
 	    goto err_label;
@@ -2561,7 +2562,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 	    }
 	  ctype->tomap_done[mapidx] = 1;
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  while (now->tok != tok_eol && now->tok != tok_eof)
 	    {
 	      struct charseq *from_seq;
@@ -2574,24 +2575,24 @@ with character code range values one must use the absolute ellipsis `...'"));
 		goto err_label;
 
 	      /* Next comes the from-value.  */
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	      if (get_character (now, charmap, repertoire, &from_seq,
 				 &from_wch) != 0)
 		goto err_label;
 
 	      /* The next is a comma.  */
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	      if (now->tok != tok_comma)
 		goto err_label;
 
 	      /* And the other value.  */
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	      if (get_character (now, charmap, repertoire, &to_seq,
 				 &to_wch) != 0)
 		goto err_label;
 
 	      /* And the last thing is the closing brace.  */
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	      if (now->tok != tok_close_brace)
 		goto err_label;
 
@@ -2613,9 +2614,9 @@ with character code range values one must use the absolute ellipsis `...'"));
 		}
 
 	      /* Now comes a semicolon or the end of the line/file.  */
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, NULL, verbose);
 	      if (now->tok == tok_semicolon)
-		now = lr_token (ldfile, charmap, NULL);
+		now = lr_token (ldfile, charmap, NULL, verbose);
 	    }
 	  break;
 
@@ -2627,7 +2628,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 	      do
 		{
 		  lr_ignore_rest (ldfile, 0);
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		}
 	      while (now->tok != tok_translit_end && now->tok != tok_eof);
 
@@ -2650,7 +2651,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  ldfile->return_widestr = 1;
 
 	  /* We proceed until we see the `translit_end' token.  */
-	  while (now = lr_token (ldfile, charmap, repertoire),
+	  while (now = lr_token (ldfile, charmap, repertoire, verbose),
 		 now->tok != tok_translit_end && now->tok != tok_eof)
 	    {
 	      if (now->tok == tok_eol)
@@ -2664,7 +2665,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 		  const char *repertoire_name;
 		  struct translit_include_t *include_stmt, **include_ptr;
 
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		  /* This should be a string or an identifier.  In any
 		     case something to name a locale.  */
 		  if (now->tok != tok_string && now->tok != tok_ident)
@@ -2677,12 +2678,12 @@ with character code range values one must use the absolute ellipsis `...'"));
 		  locale_name = now->val.str.startmb;
 
 		  /* Next should be a semicolon.  */
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		  if (now->tok != tok_semicolon)
 		    goto translit_syntax;
 
 		  /* Now the repertoire name.  */
-		  now = lr_token (ldfile, charmap, NULL);
+		  now = lr_token (ldfile, charmap, NULL, verbose);
 		  if ((now->tok != tok_string && now->tok != tok_ident)
 		      || now->val.str.startmb == NULL)
 		    goto translit_syntax;
@@ -2716,7 +2717,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 		    {
 		      /* We expect a single character or string as the
 			 argument.  */
-		      now = lr_token (ldfile, charmap, NULL);
+		      now = lr_token (ldfile, charmap, NULL, verbose);
 		      wstr = read_widestring (ldfile, now, charmap,
 					      repertoire);
 
@@ -2746,7 +2747,7 @@ previous definition was here"));
 			break;
 
 		      /* Maybe there is another replacement we can use.  */
-		      now = lr_token (ldfile, charmap, NULL);
+		      now = lr_token (ldfile, charmap, NULL, verbose);
 		      if (now->tok == tok_eol || now->tok == tok_eof)
 			{
 			  /* Nothing found.  We tell the user.  */
@@ -2837,7 +2838,7 @@ previous definition was here"));
 
 	case tok_end:
 	  /* Next we assume `LC_CTYPE'.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, NULL, verbose);
 	  if (now->tok == tok_eof)
 	    break;
 	  if (now->tok == tok_eol)
@@ -2856,7 +2857,7 @@ previous definition was here"));
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
       nowtok = now->tok;
     }
 

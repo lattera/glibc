@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -54,7 +54,7 @@ handle_copy (struct linereader *ldfile, struct charmap_t *charmap,
   struct token *now;
   int warned = 0;
 
-  now = lr_token (ldfile, charmap, NULL);
+  now = lr_token (ldfile, charmap, NULL, verbose);
   if (now->tok != tok_string)
     lr_error (ldfile, _("expect string argument for `copy'"));
   else if (!ignore_content)
@@ -74,7 +74,7 @@ locale name should consist only of portable characters"));
 
   /* The rest of the line must be empty and the next keyword must be
      `END xxx'.  */
-  while ((now = lr_token (ldfile, charmap, NULL))->tok != tok_end
+  while ((now = lr_token (ldfile, charmap, NULL, verbose))->tok != tok_end
 	 && now->tok != tok_eof)
     {
       if (warned == 0)
@@ -90,7 +90,7 @@ no other keyword shall be specified when `copy' is used"));
   if (now->tok != tok_eof)
     {
       /* Handle `END xxx'.  */
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, NULL, verbose);
 
       if (now->tok != token)
 	lr_error (ldfile, _("\
