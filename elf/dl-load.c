@@ -1875,7 +1875,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	    {
 	      l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 	      if (l && l->l_type != lt_loaded && l != loader
-		  && l->l_rpath_dirs.dirs != (void *) -1)
+		  && cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
 		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
 				&realname, &fb);
 	    }

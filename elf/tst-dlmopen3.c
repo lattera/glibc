@@ -1,6 +1,5 @@
 #include <dlfcn.h>
 #include <stdio.h>
-#include <gnu/lib-names.h>
 
 
 static int
