@@ -1,5 +1,8 @@
 2000-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add
+	_POSIX_SHARED_MEMORY_OBJECTS.
+
 	* rt/Makefile (tests): Add tst-shm.
 	Add rules to generate tst-shm.
 	* rt/tst-shm.c: New file.

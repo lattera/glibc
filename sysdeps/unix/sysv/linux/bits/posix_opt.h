@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,5 +83,8 @@
 
 /* POSIX timers are available.  */
 #define _POSIX_TIMERS	1
+
+/* POSIX shared memory objects are implemented.  */
+#define _POSIX_SHARED_MEMORY_OBJECTS	1
 
 #endif /* bits/posix_opt.h */
