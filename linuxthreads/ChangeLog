@@ -1,3 +1,7 @@
+2001-04-18  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile (otherlibs): Added.
+
 2001-04-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: New file.

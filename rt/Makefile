@@ -64,3 +64,8 @@ endif
 ifeq (yes,$(build-bounded))
 $(tests:%=$(objpfx)%-bp): $(objpfx)librt_b.a $(bounded-thread-library)
 endif
+
+ifeq (yes,$(build-static-nss))
+otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
+             $(resolvobjdir)/libresolv.a
+endif

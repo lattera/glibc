@@ -120,3 +120,8 @@ $(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
 
 generated += crti.S defs.h pt-initfini.s
 endif
+
+ifeq (yes,$(build-static-nss))
+otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
+             $(resolvobjdir)/libresolv.a
+endif
