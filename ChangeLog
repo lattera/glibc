@@ -1,3 +1,7 @@
+2003-07-05  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/elf/initfini.c: Avoid .ent/.end.
+
 2003-07-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Also check for .cfi_rel_offset pseudo-op.
