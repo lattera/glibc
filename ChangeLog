@@ -1,5 +1,8 @@
 1999-07-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* misc/mntent_r.c: Allow spaces and tabs in entry names by
+	encoding these characters.
+
 	* string/bits/string2.h: Fix aliasing problems.
 	* sysdeps/i386/i486/bits/string.h: Likewise.
 	* sysdeps/i386/bits/string.h: Likewise.
