@@ -1,5 +1,8 @@
 1999-05-03  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/bits/select.h (__FD_ZERO): Remove memory output
+	specification.  It's not necessary.
+
 	* elf/Makefile (trusted-dirs.st): Use gen-trusted-dirs.awk.
 	* elf/gen-trusted-dirs.awk: New file.
 	* elf/dl-load.c (systems_dirs): Moved into file scope.  Initialize

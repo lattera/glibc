@@ -27,11 +27,10 @@
   do {									      \
     int __d0, __d1;							      \
     __asm__ __volatile__ ("cld; rep; stosl"				      \
-			  : "=m" (__FDS_BITS (fdsp)[__FDELT (__FD_SETSIZE)]), \
-			    "=c" (__d0), "=D" (__d1)			      \
-			  : "a" (0), "1" (sizeof (__fd_set)		      \
+			  : "=c" (__d0), "=D" (__d1)			      \
+			  : "a" (0), "0" (sizeof (__fd_set)		      \
 					  / sizeof (__fd_mask)),	      \
-			    "2" (&__FDS_BITS (fdsp)[0])			      \
+			    "1" (&__FDS_BITS (fdsp)[0])			      \
 			  : "memory");					      \
   } while (0)
 
