@@ -1,5 +1,17 @@
 Tue Jun 25 02:59:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* nss/nss_files/files-parse.c (parse_list): Reset ELT for elements
+	after the first!
+
+	* nss/nsswitch.c (__nss_database_lookup): If nsswitch.conf is missing
+	or doesn't mention DATABASE, use an internal default equivalent to
+	"DATABASE: compat [NOTFOUND=return] dns [NOTFOUND=return] files".
+	(nss_lookup_function): Call nss_new_service as needed.
+	(nss_parse_file): Don't bother calling nss_new_service here.
+
+	* grp/fgetgrent.c (LINE_PARSER): Pass zero SWALLOW arg for fields.
+	* pwd/fgetpwent.c: Likewise.
+
 	* malloc/malloc.h: Declare malloc_object_allocated_size, malloc_walk.
 	* malloc/Makefile (dist-routines): Add malloc-size, malloc-walk.
 	* malloc/malloc-size.c: New file.

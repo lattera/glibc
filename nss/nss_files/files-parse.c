@@ -137,6 +137,7 @@ parse_list (char *line, struct parser_data *data, int datalen)
 	      do
 		++line;
 	      while (TRAILING_LIST_SEPARATOR_P (*line));
+	      elt = line;
 	    }
 	  else if (*line == '\0' || *line == '\n')
 	    {

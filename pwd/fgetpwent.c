@@ -29,12 +29,12 @@ struct pwent_data {};
 #include "../nss/nss_files/files-parse.c"
 LINE_PARSER
 (
- STRING_FIELD (result->pw_name, ISCOLON);
- STRING_FIELD (result->pw_passwd, ISCOLON);
- INT_FIELD (result->pw_uid, ISCOLON, 10,);
- INT_FIELD (result->pw_gid, ISCOLON, 10,);
- STRING_FIELD (result->pw_gecos, ISCOLON);
- STRING_FIELD (result->pw_dir, ISCOLON);
+ STRING_FIELD (result->pw_name, ISCOLON, 0);
+ STRING_FIELD (result->pw_passwd, ISCOLON, 0);
+ INT_FIELD (result->pw_uid, ISCOLON, 0, 10,);
+ INT_FIELD (result->pw_gid, ISCOLON, 0, 10,);
+ STRING_FIELD (result->pw_gecos, ISCOLON, 0);
+ STRING_FIELD (result->pw_dir, ISCOLON, 0);
  result->pw_shell = line;
 )
 

@@ -31,9 +31,9 @@ struct grent_data {};
 #include "../nss/nss_files/files-parse.c"
 LINE_PARSER
 (
- STRING_FIELD (result->gr_name, ISCOLON);
- STRING_FIELD (result->gr_passwd, ISCOLON);
- INT_FIELD (result->gr_gid, ISCOLON, 10,);
+ STRING_FIELD (result->gr_name, ISCOLON, 0);
+ STRING_FIELD (result->gr_passwd, ISCOLON, 0);
+ INT_FIELD (result->gr_gid, ISCOLON, 0, 10,);
 )
 
 

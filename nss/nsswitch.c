@@ -86,29 +86,50 @@ nss_init (void)
 int
 __nss_database_lookup (const char *database, service_user **ni)
 {
-  /* Return first `service_user' entry for DATABASE.
-     XXX Will use perfect hashing function for known databases.  */
-  name_database_entry *entry;
+  if (nss_initialized == 0)
+    nss_init ();
 
   /* Test whether configuration data is available.  */
-  if (service_table == NULL)
+  if (service_table)
     {
-      if (nss_initialized == 0)
-	nss_init ();
+      /* Return first `service_user' entry for DATABASE.
+	 XXX Will use perfect hashing function for known databases.  */
+      name_database_entry *entry;
 
-      if (service_table == NULL)
-	return -1;
+      /* XXX Could use some faster mechanism here.  But each database is
+	 only requested once and so this might not be critical.  */
+      for (entry = service_table->entry; entry != NULL; entry = entry->next)
+	if (strcmp (database, entry->name) == 0)
+	  {
+	    *ni = entry->service;
+	    return 0;
+	  }
     }
 
-  /* XXX Could use some faster mechanism here.  But each database is
-     only requested once and so this might not be critical.  */
-  for (entry = service_table->entry; entry != NULL; entry = entry->next)
-    if (strcmp (database, entry->name) == 0)
-      break;
-
-  if (entry == NULL || (*ni = entry->service) == NULL)
-    return -1;
-
+  /* No configuration data is available, either because nsswitch.conf
+     doesn't exist or because it doesn't have a line for this database.
+     Use a default equivalent to:
+     	database: compat [NOTFOUND=return] dns [NOTFOUND=return] files
+     */
+  {
+#define DEFAULT_SERVICE(name, next)					      \
+    static service_user default_##name =				      \
+      {									      \
+	#name,								      \
+	{								      \
+	  NSS_ACTION_CONTINUE,						      \
+	  NSS_ACTION_CONTINUE,						      \
+	  NSS_ACTION_RETURN,						      \
+	  NSS_ACTION_RETURN,						      \
+	},								      \
+	NULL, NULL,							      \
+	next								      \
+      }
+    DEFAULT_SERVICE (files, NULL);
+    DEFAULT_SERVICE (dns, &default_files);
+    DEFAULT_SERVICE (compat, &default_dns);
+    *ni = &default_compat;
+  }
   return 0;
 }
 
@@ -196,14 +217,25 @@ nss_lookup_function (service_user *ni, const char *fct_name)
   if (nss_find_entry (&ni->known, fct_name, &result) >= 0)
     return result;
 
-  /* If we failed to allocate the needed data structures for the
-     service return an error.  This should only happen when we are out
-     of memory.  */
-  if (ni->library == NULL)
-    return NULL;
-
   /* We now modify global data.  Protect it.  */
   __libc_lock_lock (lock);
+
+  if (ni->library == NULL)
+    {
+      /* This service has not yet been used.  Fetch the service library
+	 for it, creating a new one if need be.  If there is no service
+	 table from the file, this static variable holds the head of the
+	 service_library list made from the default configuration.  */
+      static name_database default_table;
+      ni->library = nss_new_service (service_table ?: &default_table,
+				     ni->name);
+      if (ni->library == NULL)
+	{
+	  /* This only happens when out of memory.  */
+	  __libc_lock_unlock (lock);
+	  return NULL;
+	}
+    }
 
   if (ni->library->lib_handle == NULL)
     {
@@ -373,15 +405,6 @@ nss_parse_file (const char *fname)
   free (line);
   /* Close configuration file.  */
   fclose (fp);
-
-  /* Now create for each service we could use an entry in LIBRARY list.  */
-  for (last = result->entry; last != NULL; last = last->next)
-    {
-      service_user *runp;
-
-      for (runp = last->service; runp != NULL; runp = runp->next)
-	runp->library = nss_new_service (result, runp->name);
-    }
 
   return result;
 }
