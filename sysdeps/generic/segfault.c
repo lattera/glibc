@@ -28,6 +28,9 @@
 #include <unistd.h>
 #include <stdio-common/_itoa.h>
 
+/* Get the definition of "struct layout".  */
+#include <frame.h>
+
 /* This file defines macros to access the content of the sigcontext element
    passed up by the signal handler.  */
 #include <sigcontextinfo.h>
@@ -71,14 +74,6 @@ extern void *__libc_stack_end;
 
 /* We'll use tis a lot.  */
 #define WRITE_STRING(s) write (fd, s, strlen (s))
-
-
-struct layout
-{
-  void *next;
-  void *return_address;
-};
-
 
 /* Name of the output file.  */
 static const char *fname;

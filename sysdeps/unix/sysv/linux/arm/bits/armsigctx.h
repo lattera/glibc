@@ -1,5 +1,5 @@
 /* Definition of `struct sigcontext' for Linux/ARM
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,12 @@
 /* The format of struct sigcontext changed between 2.0 and 2.1 kernels.
    Fortunately 2.0 puts a magic number in the first word and this is not
    a legal value for `trap_no', so we can tell them apart.  */
+
+/* Early 2.2 and 2.3 kernels do not have the `fault_address' member in
+   the sigcontext structure.  Unfortunately there is no reliable way
+   to test for its presence and this word will contain garbage for too-old
+   kernels.  Versions 2.2.14 and 2.3.35 (plus later versions) are known to
+   include this element.  */
 
 #ifndef __ARMSIGCTX_H
 #define __ARMSIGCTX_H	1
@@ -50,6 +56,7 @@ union k_sigcontext
 	unsigned long int arm_lr;
 	unsigned long int arm_pc;
 	unsigned long int arm_cpsr;
+	unsigned long fault_address;
       } v21;
     struct
       {

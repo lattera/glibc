@@ -19,7 +19,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <execinfo.h>
-
+#include <frame.h>
+#include <sigcontextinfo.h>
 
 /* This is a global variable set at program start time.  It marks the
    highest used stack address.  */
@@ -49,11 +50,11 @@ extern void *__libc_stack_end;
 # define INNER_THAN <
 #endif
 
-struct layout
-{
-  struct layout *next;
-  void *return_address;
-};
+/* By default assume the `next' pointer in struct layout points to the
+   next struct layout.  */
+#ifndef ADVANCE_STACK_FRAME
+# define ADVANCE_STACK_FRAME(next) ((struct layout *) (next))
+#endif
 
 int
 __backtrace (array, size)
@@ -81,7 +82,7 @@ __backtrace (array, size)
 
       array[cnt++] = current->return_address;
 
-      current = current->next;
+      current = ADVANCE_STACK_FRAME (current->next);
     }
 
   return cnt;
