@@ -78,9 +78,10 @@
 				     INTUSE(_IO_sputbackwc) (s, c))))
 #  define ungetc_not_eof(c, s)	((void) (--read_in,			      \
 					 INTUSE(_IO_sputbackwc) (s, c)))
-#  define inchar()	(c == WEOF ? WEOF				      \
+#  define inchar()	(c == WEOF ? ((errno = inchar_errno), WEOF)	      \
 			 : ((c = _IO_getwc_unlocked (s)),		      \
-			    (void) (c != WEOF && ++read_in), c))
+			    (void) (c != WEOF				      \
+				    ? ++read_in : (inchar_errno = errno)), c))
 
 #  define MEMCPY(d, s, n) __wmemcpy (d, s, n)
 #  define ISSPACE(Ch)	  iswspace (Ch)
@@ -108,9 +109,10 @@
 				     INTUSE(_IO_sputbackc) (s, (unsigned char) c))))
 #  define ungetc_not_eof(c, s)	((void) (--read_in,			      \
 					 INTUSE(_IO_sputbackc) (s, (unsigned char) c)))
-#  define inchar()	(c == EOF ? EOF					      \
+#  define inchar()	(c == EOF ? ((errno = inchar_errno), EOF)	      \
 			 : ((c = _IO_getc_unlocked (s)),		      \
-			    (void) (c != EOF && ++read_in), c))
+			    (void) (c != EOF				      \
+				    ? ++read_in : (inchar_errno = errno)), c))
 #  define MEMCPY(d, s, n) memcpy (d, s, n)
 #  define ISSPACE(Ch)	  isspace (Ch)
 #  define ISDIGIT(Ch)	  isdigit (Ch)
@@ -272,6 +274,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   register int width;		/* Maximum field width.  */
   register int flags;		/* Modifiers for current format element.  */
 
+  /* Errno of last failed inchar call.  */
+  int inchar_errno = 0;
   /* Status for reading F-P nums.  */
   char got_dot, got_e, negative;
   /* If a [...] is a [^...].  */
