@@ -676,8 +676,8 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
   if ((c < L_('0') || c > L_('9'))
-      && (base == 16 && (c < (wint_t) TOLOWER (L_('a'))
-			 || c > (wint_t) TOLOWER (L_('f'))))
+      && (base == 16 && (c < (CHAR_TYPE) TOLOWER (L_('a'))
+			 || c > (CHAR_TYPE) TOLOWER (L_('f'))))
 #ifdef USE_WIDE_CHAR
       && c != (wint_t) decimal
 #else

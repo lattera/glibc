@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -162,7 +162,7 @@ fmtmsg (long int classification, const char *label, int severity,
 			  do_action ? "TO FIX: " : "",
 			  do_action ? action : "",
 			  do_action && do_tag ? "  " : "",
-			  do_tag ? tag : "") == WEOF)
+			  do_tag ? tag : "") < 0)
 	    /* Oh, oh.  An error occurred during the output.  */
 	    result = MM_NOMSG;
 	}
@@ -179,7 +179,7 @@ fmtmsg (long int classification, const char *label, int severity,
 		     do_action ? "TO FIX: " : "",
 		     do_action ? action : "",
 		     do_action && do_tag ? "  " : "",
-		     do_tag ? tag : "") == EOF)
+		     do_tag ? tag : "") < 0)
 	  /* Oh, oh.  An error occurred during the output.  */
 	  result = MM_NOMSG;
     }

@@ -361,9 +361,9 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 	  )
 	{
 	  for (c = *end; c != L_('\0'); c = *++end)
-	    if (((wchar_t) c < L_('0') || (wchar_t) c > L_('9'))
+	    if (((STRING_TYPE) c < L_('0') || (STRING_TYPE) c > L_('9'))
 # ifdef USE_WIDE_CHAR
-		&& c != thousands
+		&& (wchar_t) c != thousands
 # else
 		&& ({ for (cnt = 0; cnt < thousands_len; ++cnt)
 		      if (thousands[cnt] != end[cnt])
@@ -400,7 +400,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 	    c -= L_('0');
 #ifdef USE_NUMBER_GROUPING
 # ifdef USE_WIDE_CHAR
-	  else if (grouping && c == thousands)
+	  else if (grouping && (wchar_t) c == thousands)
 	    continue;
 # else
 	  else if (thousands_len)
@@ -448,7 +448,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 	  c -= L_('0');
 #ifdef USE_NUMBER_GROUPING
 # ifdef USE_WIDE_CHAR
-	else if (grouping && c == thousands)
+	else if (grouping && (wchar_t) c == thousands)
 	  continue;
 # else
 	else if (thousands_len)
