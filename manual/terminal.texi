@@ -1873,8 +1873,8 @@ an error, a value of @math{-1} is returned instead.  The following
 @code{errno} conditions are defined for this function:
 
 @table @code
-@item ENFILE
-There are no master pseudo-terminals available.
+@item ENOENT
+There are no free master pseudo-terminals available.
 @end table
 
 This function is a GNU extension.
@@ -2030,7 +2030,13 @@ the slave is set to the values specified in the structure that
 @var{winp} points to.
 
 The normal return value from @code{openpty} is @math{0}; a value of
-@math{-1} is returned in case of failure.
+@math{-1} is returned in case of failure.  The following @code{errno}
+conditions are defined for this function:
+
+@table @code
+@item ENOENT
+There are no free pseudo-terminal pairs available.
+@end table
 
 @strong{Warning:} Using the @code{openpty} function with @var{name} not
 set to @code{NULL} is @strong{very dangerous} because it provides no
