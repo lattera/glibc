@@ -39,7 +39,7 @@
 
 /* Nonzero if STATUS indicates termination by a signal.  */
 #define __WIFSIGNALED(status) \
-  (((signed char) ((((((status) + 1) & 0xffff) - 1) & 0x7f) + 1) >> 1) > 0)
+  (((signed char) (((status) & 0x7f) + 1) >> 1) > 0)
 
 /* Nonzero if STATUS indicates the child is stopped.  */
 #define	__WIFSTOPPED(status)	(((status) & 0xff) == 0x7f)
