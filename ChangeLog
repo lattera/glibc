@@ -1,5 +1,8 @@
 2000-06-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/time.h: Add missing __THROW for clock_getcpuclockid
+	prototype.
+
 	* elf/Makefile (distribute): Add dl-dtprocnum.h.
 	* include/elf.h: Include also <dl-dtprocnum.h>.
 	* elf/dl-deps.c: Likewise.

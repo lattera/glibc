@@ -278,7 +278,7 @@ extern int clock_settime (clockid_t __clock_id, __const struct timespec *__tp)
 
 #  ifdef __USE_XOPEN2K
 /* Return clock ID for CPU-time clock.  */
-extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id);
+extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) __THROW;
 #  endif
 
 
