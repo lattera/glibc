@@ -1,6 +1,8 @@
 #ifndef	_LOCALE_H
 #include <locale/locale.h>
 
+extern __typeof (uselocale) __uselocale;
+
 libc_hidden_proto (setlocale)
 
 /* This has to be changed whenever a new locale is defined.  */
