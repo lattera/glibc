@@ -1,25 +1,24 @@
 /* _memcopy.c -- subroutines for memory copy functions.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1996 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* BE VERY CAREFUL IF YOU CHANGE THIS CODE...!  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <memcopy.h>
 
@@ -28,8 +27,10 @@ Cambridge, MA 02139, USA.  */
    Both SRCP and DSTP should be aligned for memory operations on `op_t's.  */
 
 void
-DEFUN(_wordcopy_fwd_aligned, (dstp, srcp, len),
-      long int dstp AND long int srcp AND size_t len)
+_wordcopy_fwd_aligned (dstp, srcp, len)
+     long int dstp;
+     long int srcp;
+     size_t len;
 {
   op_t a0, a1;
 
@@ -71,7 +72,7 @@ DEFUN(_wordcopy_fwd_aligned, (dstp, srcp, len),
       dstp -= 2 * OPSIZ;
       len += 1;
       goto do6;
-      
+
     case 0:
       if (OP_T_THRES <= 3 * OPSIZ && len == 0)
 	return;
@@ -134,8 +135,10 @@ DEFUN(_wordcopy_fwd_aligned, (dstp, srcp, len),
    *not* be aligned.  */
 
 void
-DEFUN(_wordcopy_fwd_dest_aligned, (dstp, srcp, len),
-      long int dstp AND long int srcp AND size_t len)
+_wordcopy_fwd_dest_aligned (dstp, srcp, len)
+     long int dstp;
+     long int srcp;
+     size_t len;
 {
   op_t a0, a1, a2, a3;
   int sh_1, sh_2;
@@ -219,8 +222,10 @@ DEFUN(_wordcopy_fwd_dest_aligned, (dstp, srcp, len),
    operations on `op_t's.  */
 
 void
-DEFUN(_wordcopy_bwd_aligned, (dstp, srcp, len),
-      long int dstp AND long int srcp AND size_t len)
+_wordcopy_bwd_aligned (dstp, srcp, len)
+     long int dstp;
+     long int srcp;
+     size_t len;
 {
   op_t a0, a1;
 
@@ -262,7 +267,7 @@ DEFUN(_wordcopy_bwd_aligned, (dstp, srcp, len),
       a1 = ((op_t *) srcp)[6];
       len += 1;
       goto do6;
-      
+
     case 0:
       if (OP_T_THRES <= 3 * OPSIZ && len == 0)
 	return;
@@ -325,8 +330,10 @@ DEFUN(_wordcopy_bwd_aligned, (dstp, srcp, len),
    operations on `op_t', but SRCP must *not* be aligned.  */
 
 void
-DEFUN(_wordcopy_bwd_dest_aligned, (dstp, srcp, len),
-      long int dstp AND long int srcp AND size_t len)
+_wordcopy_bwd_dest_aligned (dstp, srcp, len)
+     long int dstp;
+     long int srcp;
+     size_t len;
 {
   op_t a0, a1, a2, a3;
   int sh_1, sh_2;

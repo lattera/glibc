@@ -159,7 +159,7 @@ __internal_endnetgrent (struct __netgrent *datap)
   /* Remember which was the last used service.  */
   old_nip = nip;
 
-  /* Cycle through all the services and run their setnetgrent functions.  */
+  /* Cycle through all the services and run their endnetgrent functions.  */
   no_more = setup ((void **) &fct, "endnetgrent", 1);
   while (! no_more)
     {
@@ -187,9 +187,9 @@ endnetgrent (void)
 
 
 int
-__internal_getnetgrent (char **hostp, char **userp, char **domainp,
-			struct __netgrent *datap,
-			char *buffer, size_t buflen)
+__internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
+			  struct __netgrent *datap,
+			  char *buffer, size_t buflen)
 {
   enum nss_status (*fct) (struct __netgrent *, char *, size_t);
   int no_more;
@@ -278,8 +278,8 @@ __getnetgrent_r (char **hostp, char **userp, char **domainp,
 
   __libc_lock_lock (lock);
 
-  status = __internal_getnetgrent (hostp, userp, domainp, &dataset,
-				   buffer, buflen);
+  status = __internal_getnetgrent_r (hostp, userp, domainp, &dataset,
+				     buffer, buflen);
 
   __libc_lock_unlock (lock);
 

@@ -53,6 +53,10 @@ struct lastlog
 };
 
 
+/* XXX We are not ready to use this now.  It needs some more research.
+   Simly copying the behaviour of other implementations is no big
+   help.  */
+#if 0
 /* Which program created the record.  */
 enum utlogin
 {
@@ -68,6 +72,7 @@ enum utlogin
   xterm
   /* More could be added here.  */
 };
+#endif
 
 
 struct exit_status
@@ -91,9 +96,7 @@ struct utmp
   long ut_session;		/* Session ID, used for windowing.  */
   struct timeval ut_tv;		/* Time entry was made.  */
   int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
-  enum utlogin ut_login;	/* To store information about source.  */
-  short int ut_syslen;		/* Significant length of ut_host.  */
-  char pad[14];			/* Reserved for future use.  */
+  char pad[18];			/* Reserved for future use.  */
 };
 
 /* Backwards compatibility hacks.  */

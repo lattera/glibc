@@ -54,7 +54,7 @@ inet_nsap_addr(ascii, binary, maxlen)
 	register u_char c, nib;
 	u_int len = 0;
 
-	while ((c = *ascii++) != '\0' && len < maxlen) {
+	while ((c = *ascii++) != '\0' && (int) len < maxlen) {
 		if (c == '.' || c == '+' || c == '/')
 			continue;
 		if (!isascii(c))

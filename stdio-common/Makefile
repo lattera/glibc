@@ -48,6 +48,7 @@ tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 
 include ../Rules
 
+CFLAGS-vfprintf.c = -Wno-uninitialized
 CFLAGS-_itoa.c = -Wno-unused
 CFLAGS-tst-printf.c = -Wno-format
 CFLAGS-tstdiomisc.c = -Wno-format

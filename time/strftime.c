@@ -493,6 +493,7 @@ strftime (s, maxsize, format, tp)
 #endif /* ! DO_MULTIBYTE */
 
       /* Check for flags that can modify a format.  */
+      pad = 0;
       while (1)
 	{
 	  switch (*++f)
@@ -510,7 +511,6 @@ strftime (s, maxsize, format, tp)
 	      continue;
 
 	    default:
-	      pad = 0;
 	      break;
 	    }
 	  break;

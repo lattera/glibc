@@ -4,3 +4,7 @@ asm-CPPFLAGS := $(asm-CPPFLAGS) -DGAS_SYNTAX
 
 # The i386 `long double' is a distinct type we support.
 long-double-fcts = yes
+
+ifeq ($(subdir),elf)
+CFLAGS-rtld.c += -Wno-uninitialized
+endif

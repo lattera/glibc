@@ -105,7 +105,7 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
 		/* Remove these characters from the stored line.  */
 		result->cursor -= 2;
 
-	      /* Get netxt line.  */
+	      /* Get next line.  */
 	      curlen = getline (&line, &line_len, fp);
 	      if (curlen <= 0)
 		break;

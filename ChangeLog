@@ -1,3 +1,50 @@
+Sun Dec 22 00:01:27 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/getnetgrent.c: Reformat copyright.
+
+	* inet/getnetgrent_r.c (__internal_endnetgrent): Correct comment.
+	(__internal_getnetgrent): Rename to __internal_getnetgrent_r as
+	required in change nis/nss_compat/* at Thu Dec 19 14:24:50 1996.
+	Reported by Thorsten Kukuk <kukuk@weber.uni-paderborn.de>.
+
+	* nss/nss_files/files-netgrp.c: Fix typo.
+	* login/utmp_db.c: Comment out unused variables.
+	* misc/tst-dirname.c: Provide prototype for main (for now).
+	* new-malloc/mcheck-init.c: Include <mcheck.h>.
+	* new-malloc/obstack.c: Provide real prototypes.
+
+	* resolv/base64.c (b64_ntop): Use size_t as type of `i', not int.
+	(b64_pton): Likewise for `tarindex'.
+	* resolv/nsap_addr.c (inet_nsap_addr): Add cast to prevent warning.
+
+	* stdio-common/Makefile: Add CFLAGS-vfprintf.c to prevent warning.
+	* stdio-common/printf-parse.h: Remove definition of MIN and MAX.
+	* stdio-common/printf-prs.c: Include <sys/param.h> to get MIN and MAX.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdlib/gmp-impl.h: Only define MIN and MAX if not already done.
+	* stdlib/tst-strtol.c: Don't use -2147483648 as unsigned long value.
+
+	* sysdeps/generic/Makefile ($(subdir)=string): Define
+	CFLAGS-wordcopy.c to prevent warning.
+	* sysdeps/generic/mul_n.c (mpn_mul_n): Don't define as inline.
+	* sysdeps/generic/wordcopy.c: De-ANSI-declfy.
+	* sysdeps/i386/Makefile ($(subdir)=elf): Define CFLAGS-rtld.c
+	to prevent warning.
+	* sysdeps/i386/dl-machine.h: Correct copyright.
+	* sysdeps/unix/closedir.c: Likewise.
+	* sysdeps/unix/dirstream.h: Likewise.
+	* sysdeps/unix/opendir.c: Likewise.
+	* time/tzset.c: Add prototype for __tzset_internal.
+
+	* sysdeps/gnu/utmpbits.h (enum utlogin): Comment out since the
+	way it is supposed to work is not yet known.
+	(struct utmp): Remove ut_login and ut_syslen field for now.
+
+Sat Dec 21 16:23:54 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c: Fix another bug in handling flags made it
+	impossible to use the `-', `_', or `0' flag.
+
 Sat Dec 21 04:14:16 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/common/pause.c: Add missing second argument in

@@ -77,6 +77,7 @@ static int compute_change __P ((tz_rule *rule, int year));
 static char *old_tz = NULL;
 
 /* Interpret the TZ envariable.  */
+void __tzset_internal __P ((void));
 void
 __tzset_internal ()
 {

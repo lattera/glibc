@@ -358,7 +358,7 @@ impn_sqr_n (prodp, up, size, tspace)
 }
 
 /* This should be made into an inline function in gmp.h.  */
-inline void
+void
 #if __STDC__
 mpn_mul_n (mp_ptr prodp, mp_srcptr up, mp_srcptr vp, mp_size_t size)
 #else

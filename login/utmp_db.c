@@ -37,9 +37,11 @@ static const char default_file_name[] = _PATH_UTMP_DB;
 static const char *file_name = (const char *) default_file_name;
 
 /* Descriptor for database.  */
+#if 0
+/* XXX One day this will become menaingful again.  */
 static DB *db_fd;
 static char last_date[16];
-
+#endif
 
 /* Our local functions.  */
 static int setutent_db (int reset);

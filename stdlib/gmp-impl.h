@@ -66,8 +66,12 @@ MA 02111-1307, USA. */
 #endif
 
 #define ABS(x) (x >= 0 ? x : -x)
+#ifndef MIN
 #define MIN(l,o) ((l) < (o) ? (l) : (o))
+#endif
+#ifndef MAX
 #define MAX(h,i) ((h) > (i) ? (h) : (i))
+#endif
 
 /* Field access macros.  */
 #define SIZ(x) ((x)->_mp_size)

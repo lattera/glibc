@@ -137,7 +137,7 @@ b64_ntop(src, srclength, target, targsize)
 	size_t datalength = 0;
 	u_char input[3];
 	u_char output[4];
-	int i;
+	size_t i;
 
 	while (2 < srclength) {
 		input[0] = *src++;
@@ -204,7 +204,8 @@ b64_pton(src, target, targsize)
 	u_char *target;
 	size_t targsize;
 {
-	int tarindex, state, ch;
+	size_t tarindex;
+	int state, ch;
 	char *pos;
 
 	state = 0;
