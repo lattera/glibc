@@ -36,7 +36,6 @@ main (int argc, char *argv[])
   for (cnt = 0; cnt < (int) (sizeof (tests) / sizeof (tests[0])); ++cnt)
     {
       int i;
-      int j;
 
       __md5_init_ctx (&ctx);
       __md5_process_bytes (tests[cnt].input, strlen (tests[cnt].input), &ctx);

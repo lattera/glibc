@@ -2,6 +2,7 @@
 #include <ftw.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 static int cb_called;
