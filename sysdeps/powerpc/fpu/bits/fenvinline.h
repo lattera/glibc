@@ -39,8 +39,8 @@
       ? (__extension__ ({ __asm__ __volatile__				      \
 			  ("mtfsb1 %s0"					      \
 			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
-			  (void)0; }))					      \
-      : (void)0)							      \
+			  0; }))					      \
+      : 0)								      \
    : (feraiseexcept) (__excepts))
 
 /* Inline definition for feclearexcept.  */
@@ -52,8 +52,8 @@
       ? (__extension__ ({ __asm__ __volatile__				      \
 			  ("mtfsb0 %s0"					      \
 			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
-			  (void)0; }))					      \
-      : (void)0)							      \
+			  0; }))					      \
+      : 0)								      \
    : (feclearexcept) (__excepts))
 
 #endif /* __GNUC__ && !_SOFT_FLOAT */

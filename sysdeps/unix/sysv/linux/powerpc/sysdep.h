@@ -49,11 +49,11 @@
   .align ALIGNARG(2);							      \
 0:.long 0;								      \
   .previous;								      \
-  mflr  %r0;								      \
-  stw   %r0,4(%r1);	       						      \
+  mflr  r0;								      \
+  stw   r0,4(r1);	       						      \
   bl    _GLOBAL_OFFSET_TABLE_@local-4;					      \
-  mflr  %r11;								      \
-  lwz   %r0,0b@got(%r11);						      \
+  mflr  r11;								      \
+  lwz   r0,0b@got(r11);							      \
   bl    JUMPTARGET(_mcount);
 #else  /* PIC */
 #define CALL_MCOUNT							      \
@@ -61,10 +61,10 @@
   .align ALIGNARG(2);							      \
 0:.long 0;								      \
   .previous;								      \
-  mflr  %r0;								      \
-  lis   %r11,0b@ha;		       					      \
-  stw   %r0,4(%r1);	       						      \
-  addi  %r0,%r11,0b@l;							      \
+  mflr  r0;								      \
+  lis   r11,0b@ha;		       					      \
+  stw   r0,4(r1);	       						      \
+  addi  r0,r11,0b@l;							      \
   bl    JUMPTARGET(_mcount);
 #endif /* PIC */
 #else  /* PROF */
