@@ -446,6 +446,42 @@ memchr (__const void *__s, int __c, size_t __n)
 }
 #endif
 
+#define _HAVE_STRING_ARCH_memrchr 1
+#ifndef _FORCE_INLINES
+__STRING_INLINE void *
+__memrchr (__const void *__s, int __c, size_t __n)
+{
+  register unsigned long int __d0;
+#ifdef __i686__
+  register unsigned long int __d1;
+#endif
+  register void *__res;
+  if (__n == 0)
+    return NULL;
+#ifdef __i686__
+  __asm__ __volatile__
+    ("std\n\t"
+     "repne; scasb\n\t"
+     "cmovne %2,%0\n\t"
+     "cld"
+     : "=D" (__res), "=&c" (__d0), "=&r" (__d1)
+     : "a" (__c), "0" (__s), "1" (__n), "2" (1)
+     : "cc");
+#else
+  __asm__ __volatile__
+    ("std\n\t"
+     "repne; scasb\n\t"
+     "je 1f\n\t"
+     "movl $1,%0\n"
+     "1:\tcld"
+     : "=D" (__res), "=&c" (__d0)
+     : "a" (__c), "0" (__s), "1" (__n)
+     : "cc");
+#endif
+  return __res - 1;
+}
+#endif
+
 /* Return pointer to C in S.  */
 #define _HAVE_STRING_ARCH_rawmemchr 1
 __STRING_INLINE void *__rawmemchr (const void *__s, int __c);

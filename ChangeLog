@@ -1,3 +1,12 @@
+1999-10-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i486/bits/string.h (__memrchr): New function.
+
+	* sysdeps/i386/bits/string.h (__memrchr): Add cld to comply to
+	conventions.
+
+	* string/Versions: Export memrchr.
+
 1999-10-04  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* misc/Versions (GLIBC_2.2): Add getloadavg.

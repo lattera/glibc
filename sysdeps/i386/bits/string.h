@@ -300,7 +300,8 @@ memchr (__const void *__s, int __c, size_t __n)
      "movl $1,%0\n"
      "1:"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s), "1" (__n));
+     : "a" (__c), "0" (__s), "1" (__n)
+     : "cc");
   return __res - 1;
 }
 #endif
@@ -319,9 +320,10 @@ __memrchr (__const void *__s, int __c, size_t __n)
      "repne; scasb\n\t"
      "je 1f\n\t"
      "movl $1,%0\n"
-     "1:"
+     "1:\tcld"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s), "1" (__n));
+     : "a" (__c), "0" (__s), "1" (__n)
+     : "cc");
   return __res - 1;
 }
 #endif
