@@ -1,5 +1,8 @@
 2002-09-11  Roland McGrath  <roland@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Use l_addr instead of
+	l_map_start to adjust l_tls_initimage.
+
 	* nss/getnssent_r.c (__nss_getent_r): Use EAGAIN instead of errno
 	when using h_errno and it's not set to NETDB_INTERNAL.
 	* nss/getXXbyYY_r.c [NEED_H_ERRNO]: Likewise.

@@ -1131,7 +1131,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 #ifdef USE_TLS
     /* Adjust the address of the TLS initialization image.  */
     if (l->l_tls_initimage != NULL)
-      l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_map_start;
+      l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
 #endif
 
   /* We are done mapping in the file.  We no longer need the descriptor.  */
