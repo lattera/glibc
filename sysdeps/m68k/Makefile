@@ -33,3 +33,6 @@ m68k-syntax-flag = -DMIT_SYNTAX
 endif
 
 asm-CPPFLAGS += $(m68k-syntax-flag)
+
+# Make sure setjmp.c is compiled with a frame pointer
+CFLAGS-setjmp.c := -fno-omit-frame-pointer
