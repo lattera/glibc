@@ -3,7 +3,7 @@
 	* libio/freopen.c (freopen): Reset _mode after succesful
 	reopening.
 	* libio/freopen64.c (freopen64): Likewise.
-	Patch by Yoshito Kawada <KAWADA@jp.ibm.com>.
+	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
 
 2000-11-15  H.J. Lu  <hjl@gnu.org>
 
