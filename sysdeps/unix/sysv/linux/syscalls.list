@@ -15,6 +15,7 @@ getegid		-	getegid		i:	__getegid	getegid
 geteuid		-	geteuid		i:	__geteuid	geteuid
 getpgid		-	getpgid		i:i	__getpgid	getpgid
 getpgrp		-	getpgrp		i:	getpgrp
+getpmsg		-	getpmsg		i:ipppp	getpmsg
 getppid		-	getppid		i:	__getppid	getppid
 getresuid	-	getresuid	i:ppp	getresuid
 getresgid	-	getresgid	i:ppp	getresgid
@@ -40,6 +41,7 @@ personality	init-first personality	i:i	__personality	personality
 pipe		-	pipe		i:f	__pipe		pipe
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root
 prctl		EXTRA	prctl		i:iiiii	prctl
+putpmsg		-	putpmsg		i:ippii	putpmsg
 query_module	EXTRA	query_module	i:sipip	query_module
 quotactl	EXTRA	quotactl	i:isip	quotactl
 sched_getaffinity -	sched_getaffinity	i:iip	sched_getaffinity

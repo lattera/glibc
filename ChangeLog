@@ -1,3 +1,21 @@
+2002-12-16  Roland McGrath  <roland@redhat.com>
+
+	* sunrpc/xdr_mem.c (xdrmem_inline): Fix argument type.
+	* sunrpc/xdr_rec.c (xdrrec_inline): Likewise.
+	* sunrpc/xdr_stdio.c (xdrstdio_inline): Likewise.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add getpmsg, putpmsg.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Remove s_getpmsg,
+	s_putpmsg.
+	* sysdeps/unix/sysv/linux/i386/getpmsg.c: File removed.
+	* sysdeps/unix/sysv/linux/i386/putpmsg.c: File removed.
+	* sysdeps/unix/sysv/linux/m68k/getpmsg.c: File removed.
+	* sysdeps/unix/sysv/linux/m68k/putpmsg.c: File removed.
+	* sysdeps/unix/sysv/linux/mips/getpmsg.c: File removed.
+	* sysdeps/unix/sysv/linux/mips/putpmsg.c: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/getpmsg.c: File removed.
+	* sysdeps/unix/sysv/linux/powerpc/putpmsg.c: File removed.
+
 2002-12-13  Paul Eggert  <eggert@twinsun.com>
 
 	* sunrpc/rpc/xdr.h (struct XDR.xdr_ops.x_inline): 2nd arg
