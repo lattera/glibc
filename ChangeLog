@@ -1,5 +1,7 @@
 2000-09-09  Andreas Jaeger  <aj@suse.de>
 
+	* manual/message.texi (Advanced gettext functions): Fix typo.
+
 	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include <string.h> for
 	strncpy prototype.
 

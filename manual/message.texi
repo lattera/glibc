@@ -1253,7 +1253,7 @@ Turkish
 @end table
 
 @item Two forms, singular used for one only
-This is the form used in most existing programs sine it is what English
+This is the form used in most existing programs since it is what English
 is using.  A header entry would look like this:
 
 @smallexample
