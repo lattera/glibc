@@ -24,19 +24,7 @@
 #define SIG_UNBLOCK	1
 #define SIG_SETMASK	2
 
-#define SC_NAT	0x008
-#define SC_BSP	0x048
-#define SC_RNAT	0x050
-#define SC_UNAT	0x060
-#define SC_FPSR	0x068
-#define SC_PFS	0x070
-#define SC_LC	0x078
-#define SC_PR	0x080
-#define SC_BR	0x088
-#define SC_GR	0x0c8
-#define SC_FR	0x1d0
-#define SC_MASK	0xa50
-
+#include <sigcontext-offsets.h>
 
 #define rTMP	r16
 #define rPOS	r16

@@ -4,6 +4,7 @@ endif
 
 ifeq ($(subdir),stdlib)
 sysdep_routines += __start_context
+gen-as-const-headers += sigcontext-offsets.sym
 endif
 
 ifeq ($(subdir),misc)

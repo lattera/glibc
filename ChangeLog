@@ -1,3 +1,12 @@
+2003-06-02  Richard C. Bilson  <rcbilson@plg.uwaterloo.ca>
+
+	Replace hard-coded offsets into struct sigcontext with generated file.
+	* sysdeps/unix/sysv/linux/ia64/sigcontext-offsets.sym: New file.
+	* sysdeps/unix/sysv/linux/ia64/Makefile
+	[$(subdir) = stdlib] (gen-as-const-headers): Add it.
+	* sysdeps/unix/sysv/linux/ia64/ucontext_i.h: Include it instead of
+	defining SC_* macros here.
+
 2003-06-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h (CLONE_PID): Remove.
