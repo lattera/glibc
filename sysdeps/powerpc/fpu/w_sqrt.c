@@ -1,5 +1,5 @@
-/* Single-precision floating point square root.
-   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
+/* Double-precision floating point square root.
+   Copyright (C) 1997, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,7 +79,7 @@ __sqrt(double x)
 	  t_sqrt = __t_sqrt + (xi0 >> (52-32-8-1)  & 0x3fe);
 	  sg = t_sqrt[0];
 	  sy = t_sqrt[1];
-	  
+
 	  /* Here we have three Newton-Rhapson iterations each of a
 	     division and a square root and the remainder of the
 	     argument reduction, all interleaved.   */
