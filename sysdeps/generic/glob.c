@@ -1135,6 +1135,7 @@ globfree (pglob)
 	if (pglob->gl_pathv[pglob->gl_offs + i] != NULL)
 	  free ((__ptr_t) pglob->gl_pathv[pglob->gl_offs + i]);
       free ((__ptr_t) pglob->gl_pathv);
+      pglob->gl_pathv = NULL;
     }
 }
 #if defined _LIBC && !defined globfree
