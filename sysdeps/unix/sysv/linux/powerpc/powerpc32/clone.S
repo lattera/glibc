@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.
-   Copyright (C) 1997,98,99,2000,02 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,02,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,10 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
+#define CLONE_VM	0x00000100
+#define CLONE_THREAD	0x00010000
+
+
 /* This is the only really unusual system call in PPC linux, but not
    because of any weirdness in the system call itself; because of
    all the freaky stuff we have to do to make the call useful.  */
@@ -44,11 +48,15 @@ ENTRY (BP_SYM (__clone))
 	beq-	cr0,L(badargs)
 
 	/* Set up stack frame for parent.  */
-	stwu	r1,-32(r1)
-#ifndef __ASSUME_FIXED_CLONE_SYSCALL
-	stmw	r29,16(r1)
+	stwu	r1,-36(r1)
+#ifdef RESET_PID
+	stmw	r28,16(r1)
 #else
+# ifndef __ASSUME_FIXED_CLONE_SYSCALL
+	stmw	r29,16(r1)
+# else
 	stmw	r30,16(r1)
+# endif
 #endif
 
 	/* Set up stack frame for child.  */
@@ -60,6 +68,9 @@ ENTRY (BP_SYM (__clone))
 	mr	r30,r3			/* Function in r30.  */
 #ifndef __ASSUME_FIXED_CLONE_SYSCALL
 	mr	r29,r4			/* Stack pointer in r29.  */
+#endif
+#ifdef RESET_PID
+	mr	r28,r5
 #endif
 	mr	r31,r6			/* Argument in r31.  */
 
@@ -88,6 +99,19 @@ ENTRY (BP_SYM (__clone))
 	mr	r1,r29
 #endif
 
+#ifdef RESET_PID
+	andis.	r0,r28,1	/* This is & CLONE_THREAD */
+	bne+	r0,L(oldpid)
+	andi.	r0,r28,CLONE_VM
+	li	r3,-1
+	bne-	r0,L(nomoregetpid)
+	DO_CALL(SYS_ify(getpid))
+L(nomoregetpid):
+	stw	r3,TID(r2)
+	stw	r3,PID(r2)
+L(oldpid):
+#endif
+
 	/* Call procedure.  */
 	mtctr	r30
 	mr	r3,r31
@@ -97,12 +121,16 @@ ENTRY (BP_SYM (__clone))
 
 L(parent):
 	/* Parent.  Restore registers & return.  */
-#ifndef __ASSUME_FIXED_CLONE_SYSCALL
-	lmw	r29,16(r1)
+#ifdef RESET_PID
+	lmw	r28,16(r1)
 #else
+# ifndef __ASSUME_FIXED_CLONE_SYSCALL
+	lmw	r29,16(r1)
+# else
 	lmw	r30,16(r1)
+# endif
 #endif
-	addi	r1,r1,32
+	addi	r1,r1,36
 	bnslr+
 	b	JUMPTARGET(__syscall_error)
 

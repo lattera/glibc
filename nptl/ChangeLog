@@ -1,3 +1,7 @@
+2004-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: New file.
+
 2004-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/tcb-offsets.sym: Add TID.
