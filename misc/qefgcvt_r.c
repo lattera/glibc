@@ -1,6 +1,6 @@
 /* Compatibility functions for floating point formatting, reentrant,
    long double versions.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,5 +22,6 @@
 #define FUNC_PREFIX q
 #define FLOAT_FMT_FLAG "L"
 #define FLOAT_NAME_EXT l
+# define NDIGIT_MAX LDBL_DIG
 
 #include "efgcvt_r.c"

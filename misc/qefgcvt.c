@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting, long double version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,5 +24,6 @@
    we don't have log10 available in the preprocessor.  Since we cannot
    assume anything on the used `long double' format be generous.  */
 #define MAXDIG (LDBL_DIG + 12)
+#define NDIGIT_MAX LDBL_DIG
 
 #include "efgcvt.c"

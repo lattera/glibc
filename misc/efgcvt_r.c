@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting, reentrant versions.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,11 @@
 #include <sys/param.h>
 
 #ifndef FLOAT_TYPE
-#define FLOAT_TYPE double
-#define FUNC_PREFIX
-#define FLOAT_FMT_FLAG
-#define FLOAT_NAME_EXT
+# define FLOAT_TYPE double
+# define FUNC_PREFIX
+# define FLOAT_FMT_FLAG
+# define FLOAT_NAME_EXT
+# define NDIGIT_MAX DBL_DIG
 #endif
 
 #define APPEND(a, b) APPEND2 (a, b)
@@ -87,7 +88,8 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
     /* Value is Inf or NaN.  */
     *sign = 0;
 
-  n = __snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", ndigit, value);
+  n = __snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", MIN (ndigit, NDIGIT_MAX),
+		  value);
   if (n < 0)
     return -1;
 

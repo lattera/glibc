@@ -2199,6 +2199,9 @@ index in the string of the first digit after the decimal point.
 @var{neg} is set to a nonzero value if @var{value} is negative, zero
 otherwise.
 
+If @var{ndigit} decimal digits would exceed the precision of a
+@code{double} it is reduced to a system-specific value.
+
 The returned string is statically allocated and overwritten by each call
 to @code{ecvt}.
 
@@ -2220,6 +2223,9 @@ left of the decimal point.  For example, if @var{ndigit} is @code{-1},
 negative and larger than the number of digits to the left of the decimal
 point in @var{value}, @var{value} will be rounded to one significant digit.
 
+If @var{ndigit} decimal digits would exceed the precision of a
+@code{double} it is reduced to a system-specific value.
+
 The returned string is statically allocated and overwritten by each call
 to @code{fcvt}.
 @end deftypefun
@@ -2230,6 +2236,9 @@ to @code{fcvt}.
 @code{gcvt} is functionally equivalent to @samp{sprintf(buf, "%*g",
 ndigit, value}.  It is provided only for compatibility's sake.  It
 returns @var{buf}.
+
+If @var{ndigit} decimal digits would exceed the precision of a
+@code{double} it is reduced to a system-specific value.
 @end deftypefun
 
 As extensions, the GNU C library provides versions of these three
@@ -2238,22 +2247,25 @@ functions that take @code{long double} arguments.
 @comment stdlib.h
 @comment GNU
 @deftypefun {char *} qecvt (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg})
-This function is equivalent to @code{ecvt} except that it
-takes a @code{long double} for the first parameter.
+This function is equivalent to @code{ecvt} except that it takes a
+@code{long double} for the first parameter and that @var{ndigit} is
+restricted by the precision of a @code{long double}.
 @end deftypefun
 
 @comment stdlib.h
 @comment GNU
 @deftypefun {char *} qfcvt (long double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{neg})
 This function is equivalent to @code{fcvt} except that it
-takes a @code{long double} for the first parameter.
+takes a @code{long double} for the first parameter and that @var{ndigit} is
+restricted by the precision of a @code{long double}.
 @end deftypefun
 
 @comment stdlib.h
 @comment GNU
 @deftypefun {char *} qgcvt (long double @var{value}, int @var{ndigit}, char *@var{buf})
-This function is equivalent to @code{gcvt} except that it
-takes a @code{long double} for the first parameter.
+This function is equivalent to @code{gcvt} except that it takes a
+@code{long double} for the first parameter and that @var{ndigit} is
+restricted by the precision of a @code{long double}.
 @end deftypefun
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -130,6 +130,10 @@ special (void)
   p = ecvt (INFINITY, 10, &decpt, &sign);
   if (sign != 0 || strcmp (p, "inf") != 0)
     output_error ("ecvt", NAN, 10, "inf", 0, 0, p, decpt, sign);
+
+  /* Simply make sure these calls with large NDIGITs don't crash.  */
+  (void) ecvt (123.456, 10000, &decpt, &sign);
+  (void) fcvt (123.456, 10000, &decpt, &sign);
 
 }
 

@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/param.h>
 #include <float.h>
 #include <bits/libc-lock.h>
 
@@ -29,6 +30,7 @@
 /* Actually we have to write (DBL_DIG + log10 (DBL_MAX_10_EXP)) but we
    don't have log10 available in the preprocessor.  */
 # define MAXDIG (DBL_DIG + 3)
+# define NDIGIT_MAX DBL_DIG
 #endif
 
 #define APPEND(a, b) APPEND2 (a, b)
@@ -39,30 +41,15 @@
 #define ECVT_BUFFER APPEND (FUNC_PREFIX, ecvt_buffer)
 
 
-static char *FCVT_BUFFER;
-static char *ECVT_BUFFER;
+static char FCVT_BUFFER[MAXDIG];
+static char ECVT_BUFFER[MAXDIG];
 
-
-static void
-APPEND (FUNC_PREFIX, fcvt_allocate) (void)
-{
-  FCVT_BUFFER = (char *) malloc (MAXDIG);
-}
 
 char *
 APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
      FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
 {
-  __libc_once_define (static, once);
-  __libc_once (once, APPEND (FUNC_PREFIX, fcvt_allocate));
-
-  if (FCVT_BUFFER == NULL)
-    /* If no core is available we don't have a chance to run the
-       program successfully and so returning NULL is an acceptable
-       result.  */
-    return NULL;
-
   (void) APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
 				       FCVT_BUFFER, MAXDIG);
 
@@ -70,26 +57,11 @@ APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
 }
 
 
-static void
-APPEND (FUNC_PREFIX, ecvt_allocate) (void)
-{
-  ECVT_BUFFER = (char *) malloc (MAXDIG);
-}
-
 char *
 APPEND (FUNC_PREFIX, ecvt) (value, ndigit, decpt, sign)
      FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
 {
-  __libc_once_define (static, once);
-  __libc_once (once, APPEND (FUNC_PREFIX, ecvt_allocate));
-
-  if (ECVT_BUFFER == NULL)
-    /* If no core is available we don't have a chance to run the
-       program successfully and so returning NULL is an acceptable
-       result.  */
-    return NULL;
-
   (void) APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign,
 				       ECVT_BUFFER, MAXDIG);
 
@@ -102,21 +74,6 @@ APPEND (FUNC_PREFIX, gcvt) (value, ndigit, buf)
      int ndigit;
      char *buf;
 {
-  sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", ndigit, value);
+  sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
   return buf;
 }
-
-
-/* Make sure the memory is freed if the programs ends while in
-   memory-debugging mode and something actually was allocated.  */
-static void
-__attribute__ ((unused))
-free_mem (void)
-{
-  if (FCVT_BUFFER != NULL)
-    free (FCVT_BUFFER);
-  if (ECVT_BUFFER != NULL)
-    free (ECVT_BUFFER);
-}
-
-text_set_element (__libc_subfreeres, free_mem);
