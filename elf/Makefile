@@ -147,6 +147,8 @@ modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 
+CFLAGS-vismod2.c := -DNOT_IN_libc
+
 include ../Rules
 
 ifeq (yes,$(build-shared))

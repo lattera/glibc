@@ -1,5 +1,9 @@
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
+	* locale/nl_langinfo.c: Use _NL_CURRENT_DATA.
+
+	* elf/Makefile (CFLAGS-vismod2.c): New variable.
+
 	* locale/setlocale.c (_nl_current_names): Variable moved ...
 	* locale/localename.c (_nl_current_names): ... here, new file.
 	Make it global, with attribute_hidden.
