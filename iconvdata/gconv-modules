@@ -362,6 +362,8 @@ module	ISO-8859-10//		INTERNAL		ISO8859-10	1
 module	INTERNAL		ISO-8859-10//		ISO8859-10	1
 
 #	from			to			module		cost
+alias	ISO8859-11//		ISO-8859-11//
+alias	ISO885911//		ISO-8859-11//
 module	ISO-8859-11//		INTERNAL		ISO8859-11	1
 module	INTERNAL		ISO-8859-11//		ISO8859-11	1
 
