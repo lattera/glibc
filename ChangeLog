@@ -1,6 +1,6 @@
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>
 
-	* nss/getXXbyYY_r.c (REENTRANT_NAME): Return 0 is no entry has
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Return 0 if no entry has
 	been found.
 
 	* sysdeps/posix/sysconf.c (__sysconf): Test for LOGIN_NAME_MAX and
