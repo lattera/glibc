@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ struct sigcontext
     int sc_onstack;
     
     /* Signal mask to restore.  */
-    sigset_t sc_mask;
+    __sigset_t sc_mask;
     
     /* Program counter when the signal hit.  */
     __ptr_t sc_pc;

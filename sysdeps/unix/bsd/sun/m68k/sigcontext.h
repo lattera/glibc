@@ -1,5 +1,5 @@
 /* Structure describing state saved while handling a signal.  Sun 3 version.
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 struct sigcontext
   {
     int sc_onstack;
-    sigset_t sc_mask;
+    __sigset_t sc_mask;
 
     int sc_sp, sc_pc, sc_ps;
   };

@@ -25,7 +25,7 @@ struct sigcontext
     /* These first members are machine-independent.  */
 
     int sc_onstack;		/* Nonzero if running on sigstack.  */
-    sigset_t sc_mask;		/* Blocked signals to restore.  */
+    __sigset_t sc_mask;		/* Blocked signals to restore.  */
 
     /* MiG reply port this thread is using.  */
     unsigned int sc_reply_port;

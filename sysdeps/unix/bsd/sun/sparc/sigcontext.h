@@ -1,5 +1,5 @@
 /* Structure describing state saved while handling a signal.  Sparc version.
-Copyright (C) 1992 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 struct sigcontext
   {
     int sc_onstack;
-    sigset_t sc_mask;
+    __sigset_t sc_mask;
 
 #define	SPARC_MAXREGWINDOW 31	/* Maximum usable register windows.  */
     int sc_sp, sc_pc, sc_npc, sc_psr, sc_g1, sc_o0;
