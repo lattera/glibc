@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,17 +90,34 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   unsigned int i;
   int result = 0;
 
-  /* Avoid self-references.  */
+  /* Avoid self-references and references to objects which cannot be
+     unloaded anyway.  */
   if (undef_map == map)
-    return 0;
-
-  /* Don't create cross-reference between modules which are
-     dynamically loaded by the same dlopen() call.  */
-  if (undef_map->l_opencount == 0 && map->l_opencount == 0)
     return 0;
 
   /* Make sure nobody can unload the object while we are at it.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
+
+  /* Don't create cross-reference between modules which are
+     dynamically loaded by the same dlopen() call.  */
+  if (undef_map->l_opencount == 0 && map->l_opencount == 0)
+    goto out;
+
+  /* Avoid references to objects which cannot be unloaded anyway.  */
+  if (map->l_type != lt_loaded
+      || (map->l_flags_1 & DF_1_NODELETE) != 0)
+    goto out;
+
+  /* If the object with the undefined reference cannot be removed ever
+     just make sure the same is true for the object which contains the
+     definition.  */
+  if (undef_map->l_type != lt_loaded
+      || (undef_map->l_flags_1 & DF_1_NODELETE) != 0)
+    {
+      ++map->l_opencount;
+      map->l_flags |= DF_1_NODELETE;
+      goto out;
+    }
 
   /* Determine whether UNDEF_MAP already has a reference to MAP.  First
      look in the normal dependencies.  */

@@ -32,6 +32,10 @@
 
 __BEGIN_DECLS
 
+/* These definitions are normally provided by ucontext.h via 
+   asm/sigcontext.h, asm/ptrace.h, and asm/elf.h.  Otherwise we define 
+   them here.  */ 
+#ifndef __PPC64_ELF_H
 #define ELF_NGREG       48      /* includes nip, msr, lr, etc. */
 #define ELF_NFPREG      33      /* includes fpscr */
 #define ELF_NVRREG      33      /* includes vscr */
@@ -41,6 +45,7 @@ typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 typedef double elf_fpreg_t;
 typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
+#endif
 
 /* gcc 3.1 and newer support __uint128_t.  */
 #if !__GNUC_PREREQ(3,1)

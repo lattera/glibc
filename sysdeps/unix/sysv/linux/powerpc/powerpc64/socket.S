@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@
 #define NARGS 3
 #endif
 
-#define stackblock 48 /* offset to parm save area */
+#define stackblock 80 /* offset to socket parm area.  */
 
 #ifndef socket
 /* If this is just socket.S leave it alone! */
@@ -51,7 +51,7 @@
 
 	.text
 ENTRY(__socket)
-	stdu r1,-112(r1)
+	stdu r1,-144(r1)
 #if NARGS >= 1
 	std  r3,stackblock(r1)
 #endif
@@ -79,11 +79,40 @@ ENTRY(__socket)
 #if NARGS >= 9
 #error too many arguments!
 #endif
-	li	r3,P(SOCKOP_,socket)
+
+#if defined NEED_CANCELLATION && defined CENABLE
+	SINGLE_THREAD_P
+	bne-	.Lsocket_cancel
+#endif
+
+	li    r3,P(SOCKOP_,socket)
 	addi	r4,r1,stackblock
 	DO_CALL(SYS_ify(socketcall))
-	addi	r1,r1,112
+	addi	r1,r1,144
 	PSEUDO_RET
+
+#if defined NEED_CANCELLATION && defined CENABLE
+.Lsocket_cancel:
+	mflr	r9
+	std   r9,144+16(r1)
+	CENABLE
+	std  	r3,72(r1)
+	li	  r3,P(SOCKOP_,socket)
+	addi	r4,r1,stackblock
+	DO_CALL(SYS_ify(socketcall))
+	mfcr	r0
+	std   r3,64(r1)
+	std   r0,8(r1)
+	ld  	r3,72(r1)
+	CDISABLE
+	ld    r4,144+16(r1)
+	ld    r0,8(r1)
+	ld    r3,64(r1)
+	mtlr	r4
+	mtcr	r0
+	addi	r1,r1,144
+	PSEUDO_RET
+#endif
 PSEUDO_END (__socket)
 
 weak_alias (__socket, socket)

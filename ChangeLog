@@ -1,4 +1,104 @@
-2003-01-10  Guido Günther <agx@sigxcpu.org>
+2003-01-11  Jim Meyering  <jim@meyering.net>
+
+	* io/ftw.c [HAVE_CONFIG_H]: Include <config.h>.
+	[HAVE_SYS_PARAM_H || _LIBC]: Guard inclusion of <sys/param.h>.
+	Include <sys/stat.h>, not <include/sys/stat.h>, if !_LIBC.
+	[!_LIBC] (__chdir, __closedir, __fchdir, __getcwd, __opendir): Define.
+	[!_LIBC] (__readdir64, __tdestroy, __tfind, __tsearch): Define.
+	[!_LIBC] (internal_function, dirent64, MAX): Define.
+	(__set_errno): Define if not already defined.
+	(open_dir_stream): When FTW_CHDIR is enabled, invoke opendir on
+	the basename, not the entire file name.
+	(process_entry): When FTW_CHDIR is enabled, invoke XSTAT or LXSTAT on
+	the basename, not the entire file name.
+
+2003-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/tester.c (test_strcpy): Disable last added strcpy until
+	it is fixed.
+
+2003-01-11  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/socket.S: Add cancellation support.
+
+2003-01-11  Andreas Schwab  <schwab@suse.de>
+
+	* Makerules: Add vpath for %.dynsym and %.so so that the
+	implicit rule chaining for check-abi works.
+
+2003-01-11  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Add non-PIC case.
+
+2003-01-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/tls-macros.h [__ia64__] (__TLS_CALL_CLOBBERS): Define.
+	[__ia64__] (TLS_LE, TLS_IE): Fix typos.  Add ;; at start of asm if
+	gp is used early.
+	[__ia64__] (TLS_LD, TLS_GD): Likewise.  Use __TLS_CALL_CLOBBERS.
+	* elf/Makefile ($(objpfx)tst-tlsmod5.so, $(objpfx)tst-tlsmod6.so):
+	Ensure libc.so in DT_NEEDED.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Move
+	CHECK_STATIC_TLS before l_tls_offset use.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel, elf_machine_rela):
+	Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_storage) [TLS_DTV_AT_TP]:
+	Allocate TLS_PRE_TCB_SIZE bytes below result.
+	(_dl_deallocate_tls) [TLS_DTV_AT_TP]: Adjust before freeing.
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): If
+	TLS_INIT_TP_EXPENSIVE is not defined, allocate even if no PT_TLS
+	segment has been found.  If TLS_DTV_AT_TP, allocate TLS_PRE_TCB_SIZE
+	bytes below result and add tcb_offset to memsz.
+	* sysdeps/ia64/dl-tls.h (__tls_get_addr): New prototype.
+	* sysdeps/ia64/dl-machine.h: Include tls.h.
+	(elf_machine_type_class): Return ELF_RTYPE_CLASS_PLT for TLS relocs
+	too.
+	(elf_machine_rela): Assume if sym_map != NULL sym is non-NULL too.
+	Handle R_IA64_DTPMOD*, R_IA64_DTPREL* and R_IA64_TPREL* relocations.
+	* sysdeps/ia64/libc-tls.c: New file.
+
+2003-01-10  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/sysdep.h (PSEUDO_RET): Add branch hit.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h (STAT_VER_LINUX):
+	Fix type.  Move definition out of #if.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pwrite64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Add cancellation
+	support.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: Remove
+	ftruncate64, pread64, pwrite64, truncate64 entries.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(INLINE_SYSCALL): New version that supports function call like
+	syscalls.  Add __builtin_expect.
+	(LOADARGS_n): Add argument size safety checks.
+	(INTERNAL_SYSCALL): New Macro.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h [__PPC_ELF_H]: Avoid
+	redefinition of elf_fpreg_t and elf_fpregset_t.
+
+2003-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): Add several asserts.  Correct and
+	simplify test for unloading.  If loader of a DSO is unloaded do not
+	use its scope anymore.  Fall back to own scope and adjust opencounts.
+	Fix several comments.
+	* elf/dl-deps.c (_dl_map_object_deps): Always allocate memory for
+	the l_searchlist, not only for l_initfini.
+
+	* elf/dl-lookup.c (add_dependencies): Avoid creating relocation
+	dependencies if objects cannot be removed.  Remove object with the
+	definition as not unloadable if necessary.
+
+	* elf/reldep6.c: Create relocation dependency before closing the first
+	module.
+
+2003-01-10  Guido Günther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/mips/fork.S: Add PSEUDO_END.
 	* sysdeps/unix/mips/brk.S: Likewise.
@@ -17,6 +117,22 @@
 	(__ASSUME_MMAP2_SYSCALL, __ASSUME_TRUNCATE64_SYSCALL)
 	(__ASSUME_STAT64_SYSCALL, __ASSUME_FCNTL64)
 	(__ASSUME_VFORK_SYSCALL): Define for m68k kernels >= 2.4.12.
+
+2003-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run reldep9 test.
+	* elf/reldep9.c: New file.
+	* elf/reldep9mod1.c: New file.
+	* elf/reldep9mod2.c: New file.
+	* elf/reldep9mod3.c: New file.
+
+2003-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile: Add rules to build and run nodelete2 test.
+	* elf/nodelete2.c: New file.
+	* elf/nodel2mod1.c: New file.
+	* elf/nodel2mod2.c: New file.
+	* elf/nodel2mod3.c: New file.
 
 2003-01-09  Jakub Jelinek  <jakub@redhat.com>
 

@@ -69,65 +69,7 @@
 #endif	/* __ASSEMBLER__ */
 
 #undef INLINE_SYSCALL
-#if 1
-#define INLINE_SYSCALL(name, nr, args...)	\
-  ({						\
-    DECLARGS_##nr;				\
-    long ret, err;				\
-    LOADARGS_##nr(name, args);			\
-    __asm __volatile ("sc\n\t"			\
-		      "mfcr	%1\n\t"		\
-		      : "=r" (r3), "=r" (err)	\
-		      : ASM_INPUT_##nr		\
-		      : "cc", "memory");	\
-    ret = r3;					\
-    if (err & 1 << 28)				\
-      {						\
-	__set_errno (ret);			\
-	ret = -1L;				\
-      }						\
-    ret;					\
-  })
 
-#define DECLARGS_0 register long r0 __asm__ ("r0");	\
-		   register long r3 __asm__ ("r3")
-#define DECLARGS_1 DECLARGS_0
-#define DECLARGS_2 DECLARGS_1; register long r4 __asm__ ("r4")
-#define DECLARGS_3 DECLARGS_2; register long r5 __asm__ ("r5")
-#define DECLARGS_4 DECLARGS_3; register long r6 __asm__ ("r6")
-#define DECLARGS_5 DECLARGS_4; register long r7 __asm__ ("r7")
-#define DECLARGS_6 DECLARGS_5; register long r8 __asm__ ("r8")
-
-#define LOADARGS_0(name) \
-	r0 = __NR_##name
-#define LOADARGS_1(name, arg1) \
-	LOADARGS_0(name); \
-	r3 = (long) (arg1)
-#define LOADARGS_2(name, arg1, arg2) \
-	LOADARGS_1(name, arg1); \
-	r4 = (long) (arg2)
-#define LOADARGS_3(name, arg1, arg2, arg3) \
-	LOADARGS_2(name, arg1, arg2); \
-	r5 = (long) (arg3)
-#define LOADARGS_4(name, arg1, arg2, arg3, arg4) \
-	LOADARGS_3(name, arg1, arg2, arg3); \
-	r6 = (long) (arg4)
-#define LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5) \
-	LOADARGS_4(name, arg1, arg2, arg3, arg4); \
-	r7 = (long) (arg5)
-#define LOADARGS_6(name, arg1, arg2, arg3, arg4, arg5, arg6) \
-	LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5); \
-	r8 = (long) (arg6)
-
-#define ASM_INPUT_0 "r" (r0)
-#define ASM_INPUT_1 ASM_INPUT_0, "0" (r3)
-#define ASM_INPUT_2 ASM_INPUT_1, "r" (r4)
-#define ASM_INPUT_3 ASM_INPUT_2, "r" (r5)
-#define ASM_INPUT_4 ASM_INPUT_3, "r" (r6)
-#define ASM_INPUT_5 ASM_INPUT_4, "r" (r7)
-#define ASM_INPUT_6 ASM_INPUT_5, "r" (r8)
-
-#else
 /* This version is for kernels that implement system calls that
    behave like function calls as far as register saving.  */
 #define INLINE_SYSCALL(name, nr, args...)			\
@@ -149,40 +91,89 @@
 		      : ASM_INPUT_##nr				\
 		      : "r9", "r10", "r11", "r12",		\
 		        "fr0", "fr1", "fr2", "fr3",		\
-			"fr4", "fr5", "fr6", "fr7",		\
-			"fr8", "fr9", "fr10", "fr11",		\
-			"fr12", "fr13",				\
-			"ctr", "lr",				\
-			"cr0", "cr1", "cr5", "cr6", "cr7",	\
-			"memory");				\
+			      "fr4", "fr5", "fr6", "fr7",		\
+            "fr8", "fr9", "fr10", "fr11",		\
+            "fr12", "fr13",				\
+            "ctr", "lr",				\
+            "cr0", "cr1", "cr5", "cr6", "cr7",	\
+            "memory");				\
     ret = r3;							\
-    if (err & 1 << 28)						\
+    if (__builtin_expect ((err & (1 << 28)), 0))  \
       {								\
-	__set_errno (ret);					\
-	ret = -1L;						\
+        __set_errno (ret);					\
+        ret = -1L;						\
       }								\
     ret;							\
   })
 
-#define LOADARGS_0(name) \
+/* Define a macro which expands inline into the wrapper code for a system
+   call. This use is for internal calls that do not need to handle errors
+   normally. It will never touch errno. This returns just what the kernel
+   gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
+   the negation of the return value in the kernel gets reverted.  */
+
+# undef INTERNAL_SYSCALL
+# define INTERNAL_SYSCALL(name, nr, args...)				\
+  ({									\
+    register long r0  __asm__ ("r0");					\
+    register long r3  __asm__ ("r3");					\
+    register long r4  __asm__ ("r4");					\
+    register long r5  __asm__ ("r5");					\
+    register long r6  __asm__ ("r6");					\
+    register long r7  __asm__ ("r7");					\
+    register long r8  __asm__ ("r8");					\
+    LOADARGS_##nr(name, args);						\
+    __asm__ __volatile__						\
+      ("sc\n\t"								\
+       "bns+	0f\n\t"							\
+       "neg	%1,%1\n"						\
+       "0:"								\
+       : "=&r" (r0),							\
+         "=&r" (r3), "=&r" (r4), "=&r" (r5),  \
+         "=&r" (r6), "=&r" (r7), "=&r" (r8)	\
+       : ASM_INPUT_##nr							\
+       : "r9", "r10", "r11", "r12",		\
+         "cr0", "ctr", "memory");					\
+    (int) r3;								\
+  })
+  
+# undef INTERNAL_SYSCALL_ERROR_P
+# define INTERNAL_SYSCALL_ERROR_P(val)   ((unsigned long) (val) >= 0xfffffffffffff001u)
+  
+# undef INTERNAL_SYSCALL_ERRNO
+# define INTERNAL_SYSCALL_ERRNO(val)     (-(val))
+
+#define LOADARGS_0(name, dummy) \
 	r0 = __NR_##name
 #define LOADARGS_1(name, arg1) \
-	LOADARGS_0(name); \
+	LOADARGS_0(name, 0); \
+	extern void __illegally_sized_syscall_##name##_arg1 (void); \
+	if (sizeof (arg1) > 8) __illegally_sized_syscall_##name##_arg1 (); \
 	r3 = (long) (arg1)
 #define LOADARGS_2(name, arg1, arg2) \
 	LOADARGS_1(name, arg1); \
+	extern void __illegally_sized_syscall_##name##_arg2 (void); \
+	if (sizeof (arg2) > 8) __illegally_sized_syscall_##name##_arg2 (); \
 	r4 = (long) (arg2)
 #define LOADARGS_3(name, arg1, arg2, arg3) \
 	LOADARGS_2(name, arg1, arg2); \
+	extern void __illegally_sized_syscall_##name##_arg3 (void); \
+	if (sizeof (arg3) > 8) __illegally_sized_syscall_##name##_arg3 (); \
 	r5 = (long) (arg3)
 #define LOADARGS_4(name, arg1, arg2, arg3, arg4) \
 	LOADARGS_3(name, arg1, arg2, arg3); \
+	extern void __illegally_sized_syscall_##name##_arg4 (void); \
+	if (sizeof (arg4) > 8) __illegally_sized_syscall_##name##_arg4 (); \
 	r6 = (long) (arg4)
 #define LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5) \
 	LOADARGS_4(name, arg1, arg2, arg3, arg4); \
+	extern void __illegally_sized_syscall_##name##_arg5 (void); \
+	if (sizeof (arg5) > 8) __illegally_sized_syscall_##name##_arg5 (); \
 	r7 = (long) (arg5)
 #define LOADARGS_6(name, arg1, arg2, arg3, arg4, arg5, arg6) \
 	LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5); \
+	extern void __illegally_sized_syscall_##name##_arg6 (void); \
+	if (sizeof (arg6) > 8) __illegally_sized_syscall_##name##_arg6 (); \
 	r8 = (long) (arg6)
 
 #define ASM_INPUT_0 "0" (r0)
@@ -192,7 +183,5 @@
 #define ASM_INPUT_4 ASM_INPUT_3, "4" (r6)
 #define ASM_INPUT_5 ASM_INPUT_4, "5" (r7)
 #define ASM_INPUT_6 ASM_INPUT_5, "6" (r8)
-
-#endif
 
 #endif /* linux/powerpc/powerpc64/sysdep.h */

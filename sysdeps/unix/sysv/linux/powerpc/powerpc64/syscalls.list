@@ -16,7 +16,6 @@ rt_sigtimedwait	-	rt_sigtimedwait	i:pppi	__syscall_rt_sigtimedwait
 s_fcntl		fcntl 	fcntl		i:iiF	__syscall_fcntl
 s_fcntl64	fcntl64	fcntl64		i:iiF	__syscall_fcntl64
 s_fstat64	fxstat64 fstat64	i:ip	__syscall_fstat64
-s_ftruncate64	ftruncate64 ftruncate64	i:iii	__syscall_ftruncate64
 s_getcwd	getcwd	getcwd		i:pi	__syscall_getcwd
 s_getdents	getdents getdents	i:ipi	__syscall_getdents
 s_getdents64	getdents getdents64	i:ipi	__syscall_getdents64
@@ -26,10 +25,8 @@ s_getrlimit	getrlimit getrlimit	i:ip	__syscall_getrlimit
 s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
 s_mmap2		mmap64	mmap2		b:aniiii __syscall_mmap2
 s_poll		poll	poll		i:pii	__syscall_poll
-s_pread64	pread64	pread		i:ibnii	__syscall_pread
 s_ptrace	ptrace	ptrace		i:iipp	__syscall_ptrace
 s_putpmsg	putpmsg	putpmsg		i:ippii	__syscall_putpmsg
-s_pwrite64	pwrite64 pwrite		i:ibnii	__syscall_pwrite
 s_reboot	reboot	reboot		i:iii	__syscall_reboot
 s_setrlimit	setrlimit setrlimit	i:ip	__syscall_setrlimit
 s_sigaction	sigaction sigaction	i:ipp	__syscall_sigaction
@@ -38,7 +35,6 @@ s_sigprocmask	sigprocmask sigprocmask	i:ipp	__syscall_sigprocmask
 s_sigsuspend	sigsuspend sigsuspend	i:iii	__syscall_sigsuspend
 s_stat64	xstat64 stat64		i:sp	__syscall_stat64
 s_sysctl	sysctl	_sysctl		i:p	__syscall__sysctl
-s_truncate64	truncate64 truncate64	i:sii	__syscall_truncate64
 s_ugetrlimit	getrlimit ugetrlimit	i:ip	__syscall_ugetrlimit
 s_ustat		ustat	ustat		i:ip	__syscall_ustat
 s_vfork		vfork	vfork		i:	__syscall_vfork

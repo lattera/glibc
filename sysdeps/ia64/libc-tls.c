@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  IA-64 version.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,14 +17,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <sysdeps/generic/libc-tls.c>
 
-/* On IA-64 the __tls_get_addr function take the module ID and the
-   offset as parameters.  */
-#define GET_ADDR_ARGS		size_t m, size_t offset
-#define GET_ADDR_MODULE		m
-#define GET_ADDR_OFFSET		offset
+#if USE_TLS
 
-/* We have no tls_index type.  */
-#define DONT_USE_TLS_INDEX	1
+/* On IA-64, as it lacks linker optimizations, __tls_get_addr can be
+   called even in statically linked binaries.
+   In this case module must be always 1 and PT_TLS segment
+   exist in the binary, otherwise it would not link.  */
 
-extern void *__tls_get_addr (size_t m, size_t offset);
+void *
+__tls_get_addr (size_t m, size_t offset)
+{
+  dtv_t *dtv = THREAD_DTV ();
+  return (char *) dtv[1].pointer + offset;
+}
+
+#endif
+

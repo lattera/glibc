@@ -307,6 +307,8 @@ __pthread_initialize_minimal(void)
 # elif !USE___THREAD
   if (__builtin_expect (GL(dl_tls_max_dtv_idx) == 0, 0))
     {
+      tcbhead_t *tcbp;
+
       /* There is no actual TLS being used, so the thread register
 	 was not initialized in the dynamic linker.  */
 
@@ -318,7 +320,7 @@ __pthread_initialize_minimal(void)
       __libc_malloc_pthread_startup (true);
 
       if (__builtin_expect (_dl_tls_setup (), 0)
-	  || __builtin_expect ((self = _dl_allocate_tls (NULL)) == NULL, 0))
+	  || __builtin_expect ((tcbp = _dl_allocate_tls (NULL)) == NULL, 0))
 	{
 	  static const char msg[] = "\
 cannot allocate TLS data structures for initial thread\n";
@@ -326,7 +328,7 @@ cannot allocate TLS data structures for initial thread\n";
 					    msg, sizeof msg - 1));
 	  abort ();
 	}
-      const char *lossage = TLS_INIT_TP (self, 0);
+      const char *lossage = TLS_INIT_TP (tcbp, 0);
       if (__builtin_expect (lossage != NULL, 0))
 	{
 	  static const char msg[] = "cannot set up thread-local storage: ";
@@ -343,7 +345,7 @@ cannot allocate TLS data structures for initial thread\n";
 	 the hooks might not work with that block from the plain malloc.
 	 So we record this block as unfreeable just as the dynamic linker
 	 does when it allocates the DTV before the libc malloc exists.  */
-      GL(dl_initial_dtv) = GET_DTV (self);
+      GL(dl_initial_dtv) = GET_DTV (tcbp);
 
       __libc_malloc_pthread_startup (false);
     }
@@ -558,7 +560,10 @@ int __pthread_initialize_manager(void)
   int pid;
   struct pthread_request request;
   int report_events;
-  pthread_descr tcb;
+  pthread_descr mgr;
+#ifdef USE_TLS
+  tcbhead_t *tcbp;
+#endif
 
   __pthread_multiple_threads = 1;
   __pthread_main_thread->p_header.data.multiple_threads = 1;
@@ -588,31 +593,39 @@ int __pthread_initialize_manager(void)
 
 #ifdef USE_TLS
   /* Allocate memory for the thread descriptor and the dtv.  */
-  __pthread_handles[1].h_descr = manager_thread = tcb
-    = _dl_allocate_tls (NULL);
-  if (tcb == NULL) {
+  tcbp  = _dl_allocate_tls (NULL);
+  if (tcbp == NULL) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
     __libc_close(manager_pipe[1]);
     return -1;
   }
 
-  /* Initialize the descriptor.  */
-  tcb->p_header.data.tcb = tcb;
-  tcb->p_header.data.self = tcb;
-  tcb->p_header.data.multiple_threads = 1;
-  tcb->p_lock = &__pthread_handles[1].h_lock;
-# ifndef HAVE___THREAD
-  tcb->p_errnop = &tcb->p_errno;
+# if TLS_TCB_AT_TP
+  mgr = (pthread_descr) tcbp;
+# elif TLS_DTV_AT_TP
+  /* pthread_descr is located right below tcbhead_t which _dl_allocate_tls
+     returns.  */
+  mgr = (pthread_descr) tcbp - 1;
 # endif
-  tcb->p_start_args = (struct pthread_start_args) PTHREAD_START_ARGS_INITIALIZER(__pthread_manager);
-  tcb->p_nr = 1;
+  __pthread_handles[1].h_descr = manager_thread = mgr;
+
+  /* Initialize the descriptor.  */
+  mgr->p_header.data.tcb = tcbp;
+  mgr->p_header.data.self = mgr;
+  mgr->p_header.data.multiple_threads = 1;
+  mgr->p_lock = &__pthread_handles[1].h_lock;
+# ifndef HAVE___THREAD
+  mgr->p_errnop = &mgr->p_errno;
+# endif
+  mgr->p_start_args = (struct pthread_start_args) PTHREAD_START_ARGS_INITIALIZER(__pthread_manager);
+  mgr->p_nr = 1;
 # if __LT_SPINLOCK_INIT != 0
   self->p_resume_count = (struct pthread_atomic) __ATOMIC_INITIALIZER;
 # endif
-  tcb->p_alloca_cutoff = PTHREAD_STACK_MIN / 4;
+  mgr->p_alloca_cutoff = PTHREAD_STACK_MIN / 4;
 #else
-  tcb = &__pthread_manager_thread;
+  mgr = &__pthread_manager_thread;
 #endif
 
   __pthread_manager_request = manager_pipe[1]; /* writing end */
@@ -649,24 +662,24 @@ int __pthread_initialize_manager(void)
       if ((mask & (__pthread_threads_events.event_bits[idx] | event_bits))
 	  != 0)
 	{
-	  __pthread_lock(tcb->p_lock, NULL);
+	  __pthread_lock(mgr->p_lock, NULL);
 
 #ifdef NEED_SEPARATE_REGISTER_STACK
 	  pid = __clone2(__pthread_manager_event,
 			 (void **) __pthread_manager_thread_bos,
 			 THREAD_MANAGER_STACK_SIZE,
 			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-			 tcb);
+			 mgr);
 #elif _STACK_GROWS_UP
 	  pid = __clone(__pthread_manager_event,
 			(void **) __pthread_manager_thread_bos,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-			tcb);
+			mgr);
 #else
 	  pid = __clone(__pthread_manager_event,
 			(void **) __pthread_manager_thread_tos,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-			tcb);
+			mgr);
 #endif
 
 	  if (pid != -1)
@@ -675,18 +688,18 @@ int __pthread_initialize_manager(void)
 	         the newly created thread's data structure.  We cannot let
 	         the new thread do this since we don't know whether it was
 	         already scheduled when we send the event.  */
-	      tcb->p_eventbuf.eventdata = tcb;
-	      tcb->p_eventbuf.eventnum = TD_CREATE;
-	      __pthread_last_event = tcb;
-	      tcb->p_tid = 2* PTHREAD_THREADS_MAX + 1;
-	      tcb->p_pid = pid;
+	      mgr->p_eventbuf.eventdata = mgr;
+	      mgr->p_eventbuf.eventnum = TD_CREATE;
+	      __pthread_last_event = mgr;
+	      mgr->p_tid = 2* PTHREAD_THREADS_MAX + 1;
+	      mgr->p_pid = pid;
 
 	      /* Now call the function which signals the event.  */
 	      __linuxthreads_create_event ();
 	    }
 
 	  /* Now restart the thread.  */
-	  __pthread_unlock(tcb->p_lock);
+	  __pthread_unlock(mgr->p_lock);
 	}
     }
 
@@ -695,13 +708,13 @@ int __pthread_initialize_manager(void)
 #ifdef NEED_SEPARATE_REGISTER_STACK
       pid = __clone2(__pthread_manager, (void **) __pthread_manager_thread_bos,
 		     THREAD_MANAGER_STACK_SIZE,
-		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, tcb);
+		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, mgr);
 #elif _STACK_GROWS_UP
       pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_bos,
-		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, tcb);
+		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, mgr);
 #else
       pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
-		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, tcb);
+		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, mgr);
 #endif
     }
   if (__builtin_expect (pid, 0) == -1) {
@@ -710,8 +723,8 @@ int __pthread_initialize_manager(void)
     __libc_close(manager_pipe[1]);
     return -1;
   }
-  tcb->p_tid = 2* PTHREAD_THREADS_MAX + 1;
-  tcb->p_pid = pid;
+  mgr->p_tid = 2* PTHREAD_THREADS_MAX + 1;
+  mgr->p_pid = pid;
   /* Make gdb aware of new thread manager */
   if (__builtin_expect (__pthread_threads_debug, 0) && __pthread_sig_debug > 0)
     {

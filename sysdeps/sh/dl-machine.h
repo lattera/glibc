@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SH version.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -579,10 +579,10 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	     It is a positive value which will be added to the thread
 	     pointer.  To get the variable position in the TLS block
 	     we add the offset from that of the TLS block.  */
+	  CHECK_STATIC_TLS (map, sym_map);
 	  *reloc_addr
 	    = ((sym == NULL ? 0 : sym_map->l_tls_offset + sym->st_value)
 	       + reloc->r_addend);
-	  CHECK_STATIC_TLS (map, sym_map);
 # endif
 	  break;
 #endif	/* use TLS */

@@ -1,5 +1,5 @@
 /* Initialization code for TLS in statically linked application.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -134,15 +134,16 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 	  break;
 	}
 
+#ifdef TLS_INIT_TP_EXPENSIVE
   if (memsz == 0 && tcbsize <= TLS_INIT_TCB_SIZE)
     {
       /* We do not need a TLS block and no thread descriptor.  */
-#ifdef NONTLS_INIT_TP
+# ifdef NONTLS_INIT_TP
       NONTLS_INIT_TP;
-#endif
+# endif
       return;
     }
-
+#endif
 
   /* We have to set up the TCB block which also (possibly) contains
      'errno'.  Therefore we avoid 'malloc' which might touch 'errno'.
@@ -157,8 +158,10 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   tcb_offset = roundup (memsz + GL(dl_tls_static_size), tcbalign);
   tlsblock = __sbrk (tcb_offset + tcbsize + max_align);
 # elif TLS_DTV_AT_TP
-  tlsblock = __sbrk (roundup (tcbsize, align) + memsz + max_align
-		     + GL(dl_tls_static_size));
+  tcb_offset = roundup (tcbsize, align ?: 1);
+  tlsblock = __sbrk (tcb_offset + memsz + max_align
+		     + TLS_PRE_TCB_SIZE + GL(dl_tls_static_size));
+  tlsblock += TLS_PRE_TCB_SIZE;
 # else
   /* In case a model with a different layout for the TCB and DTV
      is defined add another #elif here and in the following #ifs.  */
@@ -179,7 +182,6 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 			   - roundup (memsz, align ?: 1));
   static_map.l_tls_offset = roundup (memsz, align ?: 1);
 # elif TLS_DTV_AT_TP
-  tcb_offset = roundup (tcbsize, align);
   static_dtv[2].pointer = (char *) tlsblock + tcb_offset;
   static_map.l_tls_offset = tcb_offset;
 # else
@@ -222,6 +224,8 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 
 # if TLS_TCB_AT_TP
   memsz += tcbsize;
+# elif TLS_DTV_AT_TP
+  memsz += tcb_offset;
 # endif
 
   init_static_tls (memsz, MAX (TLS_TCB_ALIGN, max_align));

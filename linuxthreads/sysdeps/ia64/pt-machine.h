@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    IA-64 version.
-   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,10 +64,10 @@ register struct _pthread_descr_struct *__thread_self __asm__("r13");
 
 
 /* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) __thread_self->member
-#define THREAD_GETMEM_NC(descr, member) __thread_self->member
-#define THREAD_SETMEM(descr, member, value) __thread_self->member = (value)
-#define THREAD_SETMEM_NC(descr, member, value) __thread_self->member = (value)
+#define THREAD_GETMEM(descr, member) THREAD_SELF->member
+#define THREAD_GETMEM_NC(descr, member) THREAD_SELF->member
+#define THREAD_SETMEM(descr, member, value) THREAD_SELF->member = (value)
+#define THREAD_SETMEM_NC(descr, member, value) THREAD_SELF->member = (value)
 
 
 /* Memory barrier */

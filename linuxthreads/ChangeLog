@@ -1,3 +1,50 @@
+2003-01-11  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h (PSEUDO_RET):
+	Correctly unstack lr.
+	(UNDOARGS_5): Fix ordering of pushes and pops.
+	(SINGLE_THREAD_P_PIC): New.
+	(SINGLE_THREAD_P_INT): New.
+	(SINGLE_THREAD_P): Implement in terms of above.  Restore lr if it
+	was stacked.
+	(PSEUDO): Use SINGLE_THREAD_P_INT.
+
+2003-01-11  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/vfork.S: New file.
+
+2003-01-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/tls.h (tcbhead_t): Change into dtv_t *, void *.
+	[HAVE_TLS_SUPPORT] (USE_TLS, TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN,
+	TLS_TCB_SIZE, TLS_PRE_TCB_SIZE, TLS_TCB_ALIGN, TLS_DTV_AT_TP,
+	INSTALL_DTV, INSTALL_NEW_DTV, GET_DTV, TLS_INIT_TP, THREAD_SELF,
+	INIT_THREAD_SELF): Define.
+	[HAVE_TLS_SUPPORT]: Include descr.h.
+	(NONTLS_INIT_TP): Point __thread_self at the end of dummy
+	struct _pthread_descr_struct.
+	* sysdeps/ia64/pt-machine.h (THREAD_GETMEM, THREAD_GETMEM_NC,
+	THREAD_SETMEM, THREAD_SETMEM_NC): Define using THREAD_SELF,
+	not __thread_self.
+	* sysdeps/ia64/tcb-offsets.sym (MULTIPLE_THREADS_OFFSET): Adjust
+	computation.
+	* pthread.c (__pthread_initialize_minimal): Use tcbp, not self
+	for TCB pointer.
+	(__pthread_initialize_manager): Rename tcb to mgr.
+	Use tcbp for TCB pointer, if TLS_DTV_AT_TP set mgr to sizeof (struct
+	_pthread_descr) below tcbp, otherwise to tcbp.
+	* manager.c (pthread_handle_create): If TLS_DTV_AT_TP, set
+	new_thread to be below _dl_allocate_tls ().  Adjust new_thread back
+	before freeing.  Fix clone arguments if report_events and USE_TLS.
+	(pthread_free): Adjust th back before freeing.
+
+2003-01-10  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Makefile: Moved to ...
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: New File.
+
 2003-01-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/vfork.S: New file.

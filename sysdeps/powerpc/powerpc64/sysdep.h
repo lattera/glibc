@@ -216,7 +216,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
   DO_CALL (SYS_ify (syscall_name));
 
 #define PSEUDO_RET \
-    bnslr; \
+    bnslr+; \
     b JUMPTARGET(__syscall_error)
 
 #define ret PSEUDO_RET

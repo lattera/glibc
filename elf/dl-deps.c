@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -455,12 +455,14 @@ _dl_map_object_deps (struct link_map *map,
 	  needed[nneeded++] = NULL;
 
 	  l->l_initfini = (struct link_map **)
-	    malloc ((nneeded + 1) * sizeof needed[0]);
+	    malloc ((2 * nneeded + 1) * sizeof needed[0]);
 	  if (l->l_initfini == NULL)
 	    INTUSE(_dl_signal_error) (ENOMEM, map->l_name, NULL,
 				      N_("cannot allocate dependency list"));
 	  l->l_initfini[0] = l;
 	  memcpy (&l->l_initfini[1], needed, nneeded * sizeof needed[0]);
+	  memcpy (&l->l_initfini[nneeded + 1], l->l_initfini,
+		  nneeded * sizeof needed[0]);
 	}
 
       /* If we have no auxiliary objects just go on to the next map.  */

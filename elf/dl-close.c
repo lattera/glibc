@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -138,7 +138,7 @@ _dl_close (void *_map)
 	_dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
 			  map->l_name, map->l_opencount);
 
-      /* One decrement the object itself, not the dependencies.  */
+      /* Decrement the object's reference counter, not the dependencies'.  */
       --map->l_opencount;
 
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
@@ -165,7 +165,7 @@ _dl_close (void *_map)
     }
   --new_opencount[0];
   for (i = 1; list[i] != NULL; ++i)
-    if ((! (list[i]->l_flags_1 & DF_1_NODELETE) || ! list[i]->l_init_called)
+    if ((list[i]->l_flags_1 & DF_1_NODELETE) == 0
 	/* Decrement counter.  */
 	&& --new_opencount[i] == 0)
       {
@@ -185,7 +185,10 @@ _dl_close (void *_map)
 		{
 		  assert (dep_list[j]->l_idx < map->l_searchlist.r_nlist);
 		  if (--new_opencount[dep_list[j]->l_idx] == 0)
-		    mark_removed (dep_list[j]);
+		    {
+		      assert (dep_list[j]->l_type == lt_loaded);
+		      mark_removed (dep_list[j]);
+		    }
 		}
 	      }
 
@@ -200,8 +203,11 @@ _dl_close (void *_map)
 			    == remmap->l_reldeps[j]))
 		      /* Yes, it is.  */
 		      if (--new_opencount[remmap->l_reldeps[j]->l_idx] == 0)
-			/* This one is now gone, too.  */
-			mark_removed (remmap->l_reldeps[j]);
+			{
+			  /* This one is now gone, too.  */
+			  assert (remmap->l_reldeps[j]->l_type == lt_loaded);
+			  mark_removed (remmap->l_reldeps[j]);
+			}
 		  }
 	      }
 	  }
@@ -215,57 +221,98 @@ _dl_close (void *_map)
     {
       struct link_map *imap = list[i];
       if (new_opencount[i] == 0 && imap->l_type == lt_loaded
-	  && (imap->l_info[DT_FINI] || imap->l_info[DT_FINI_ARRAY])
-	  && (! (imap->l_flags_1 & DF_1_NODELETE) || ! imap->l_init_called)
-	  /* Skip any half-cooked objects that were never initialized.  */
-	  && imap->l_init_called)
+	  && (imap->l_flags_1 & DF_1_NODELETE) == 0)
 	{
 	  /* When debugging print a message first.  */
 	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
 	    _dl_debug_printf ("\ncalling fini: %s\n\n", imap->l_name);
 
-	  /* Call its termination function.  */
-	  if (imap->l_info[DT_FINI_ARRAY] != NULL)
+	  /* Call its termination function.  Do not do it for
+	     half-cooked objects.  */
+	  if (imap->l_init_called)
 	    {
-	      ElfW(Addr) *array =
-		(ElfW(Addr) *) (imap->l_addr
-				+ imap->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
-	      unsigned int sz = (imap->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-				 / sizeof (ElfW(Addr)));
-	      unsigned int cnt;
+	      if (imap->l_info[DT_FINI_ARRAY] != NULL)
+		{
+		  ElfW(Addr) *array =
+		    (ElfW(Addr) *) (imap->l_addr
+				    + imap->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
+		  unsigned int sz = (imap->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
+				     / sizeof (ElfW(Addr)));
+		  unsigned int cnt;
 
-	      for (cnt = 0; cnt < sz; ++cnt)
-		((fini_t) (imap->l_addr + array[cnt])) ();
+		  for (cnt = 0; cnt < sz; ++cnt)
+		    ((fini_t) (imap->l_addr + array[cnt])) ();
+		}
+
+	      /* Next try the old-style destructor.  */
+	      if (imap->l_info[DT_FINI] != NULL)
+		(*(void (*) (void)) DL_DT_FINI_ADDRESS
+		 (imap, ((void *) imap->l_addr
+			 + imap->l_info[DT_FINI]->d_un.d_ptr))) ();
 	    }
 
-	  /* Next try the old-style destructor.  */
-	  if (imap->l_info[DT_FINI] != NULL)
-	    (*(void (*) (void)) DL_DT_FINI_ADDRESS
-	      (imap, (void *) imap->l_addr
-		     + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
-	}
-      else if (new_opencount[i] != 0 && imap->l_type == lt_loaded)
-	{
-	  /* The object is still used.  But the object we are unloading
-	     right now is responsible for loading it and therefore we
-	     have the search list of the current object in its scope.
-	     Remove it.  */
-	  struct r_scope_elem **runp = imap->l_scope;
+	  /* This object must not be used anymore.  We must remove the
+	     reference from the scope.  */
+	  unsigned int j;
+	  struct link_map **searchlist = map->l_searchlist.r_list;
+	  unsigned int nsearchlist = map->l_searchlist.r_nlist;
 
-	  while (*runp != NULL)
-	    if (*runp == &map->l_searchlist)
+#ifndef NDEBUG
+	  bool found = false;
+#endif
+	  for (j = 0; j < nsearchlist; ++j)
+	    if (imap == searchlist[j])
 	      {
-		/* Copy all later elements.  */
-		while ((runp[0] = runp[1]) != NULL)
-		  ++runp;
+		/* This is the object to remove.  Copy all the
+		   following ones.  */
+		while (++j < nsearchlist)
+		  searchlist[j - 1] = searchlist[j];
+
+		searchlist[j - 1] = NULL;
+
+		--map->l_searchlist.r_nlist;
+
+#ifndef NDEBUG
+		found = true;
+#endif
 		break;
 	      }
+	  assert (found);
+	}
+      else if (new_opencount[i] != 0 && imap->l_type == lt_loaded
+	       && imap->l_searchlist.r_list == NULL
+	       && imap->l_initfini != NULL)
+	{
+	  /* The object is still used.  But the object we are
+	     unloading right now is responsible for loading it.  If
+	     the current object does not have it's own scope yet we
+	     have to create one.  This has to be done before running
+	     the finalizers.
+
+	     To do this count the number of dependencies.  */
+	  unsigned int cnt;
+	  for (cnt = 1; imap->l_initfini[cnt] != NULL; ++cnt)
+	    if (imap->l_initfini[cnt]->l_idx >= i
+		&& imap->l_initfini[cnt]->l_idx < nopencount)
+	      ++new_opencount[imap->l_initfini[cnt]->l_idx];
 	    else
-	      ++runp;
+	      ++imap->l_initfini[cnt]->l_opencount;
+
+	  /* We simply reuse the l_initfini list.  */
+	  imap->l_searchlist.r_list = &imap->l_initfini[cnt + 1];
+	  imap->l_searchlist.r_nlist = cnt;
+
+	  for (cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
+	    if (imap->l_scope[cnt] = &map->l_searchlist)
+	      {
+		imap->l_scope[cnt] = &imap->l_searchlist;
+		break;
+	      }
 	}
 
       /* Store the new l_opencount value.  */
       imap->l_opencount = new_opencount[i];
+
       /* Just a sanity check.  */
       assert (imap->l_type == lt_loaded || imap->l_opencount > 0);
     }

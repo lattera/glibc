@@ -66,7 +66,12 @@
   END (name)
 
 #ifndef PIC
-# define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+# define SYSCALL_ERROR_HANDLER	\
+	mov.l 0f,r1; \
+	jmp @r1; \
+	 mov r0,r4; \
+	.align 2; \
+     0: .long __syscall_error
 #else
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER	\

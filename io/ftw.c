@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -18,6 +18,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <dirent.h>
 #include <errno.h>
 #include <ftw.h>
@@ -25,11 +29,48 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/param.h>
-#include <include/sys/stat.h>
+#if HAVE_SYS_PARAM_H || defined _LIBC
+# include <sys/param.h>
+#endif
+#ifdef _LIBC
+# include <include/sys/stat.h>
+#else
+# include <sys/stat.h>
+#endif
 
 /* #define NDEBUG 1 */
 #include <assert.h>
+
+#ifndef _LIBC
+# undef __chdir
+# define __chdir chdir
+# undef __closedir
+# define __closedir closedir
+# undef __fchdir
+# define __fchdir fchdir
+# undef __getcwd
+# define __getcwd getcwd
+# undef __opendir
+# define __opendir opendir
+# undef __readdir64
+# define __readdir64 readdir
+# undef __tdestroy
+# define __tdestroy tdestroy
+# undef __tfind
+# define __tfind tfind
+# undef __tsearch
+# define __tsearch tsearch
+# undef internal_function
+# define internal_function /* empty */
+# undef dirent64
+# define dirent64 dirent
+# undef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+
+#ifndef __set_errno
+# define __set_errno(Val) errno = (Val)
+#endif
 
 /* Support for the LFS API version.  */
 #ifndef FTW_NAME
@@ -213,9 +254,11 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
   /* Open the new stream.  */
   if (result == 0)
     {
+      const char *name = ((data->flags & FTW_CHDIR)
+			  ? data->dirbuf + data->ftw.base: data->dirbuf);
       assert (data->dirstreams[data->actdir] == NULL);
 
-      dirp->stream = __opendir (data->dirbuf);
+      dirp->stream = __opendir (name);
       if (dirp->stream == NULL)
 	result = -1;
       else
@@ -251,7 +294,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
       char *newp;
 
       data->dirbufsize *= 2;
-      newp = realloc (data->dirbuf, data->dirbufsize);
+      newp = (char *) realloc (data->dirbuf, data->dirbufsize);
       if (newp == NULL)
 	return -1;
       data->dirbuf = newp;
@@ -259,14 +302,17 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
   *((char *) __mempcpy (data->dirbuf + data->ftw.base, name, namlen)) = '\0';
 
+  if ((data->flags & FTW_CHDIR) == 0)
+    name = data->dirbuf;
+
   if (((data->flags & FTW_PHYS)
-       ? LXSTAT (_STAT_VER, data->dirbuf, &st)
-       : XSTAT (_STAT_VER, data->dirbuf, &st)) < 0)
+       ? LXSTAT (_STAT_VER, name, &st)
+       : XSTAT (_STAT_VER, name, &st)) < 0)
     {
       if (errno != EACCES && errno != ENOENT)
 	result = -1;
       else if (!(data->flags & FTW_PHYS)
-	       && LXSTAT (_STAT_VER, data->dirbuf, &st) == 0
+	       && LXSTAT (_STAT_VER, name, &st) == 0
 	       && S_ISLNK (st.st_mode))
 	flag = FTW_SLN;
       else

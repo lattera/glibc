@@ -48,6 +48,18 @@ main (void)
       exit (1);
     }
 
+  baz = dlsym (h2, "baz");
+  if (baz == NULL)
+    {
+      printf ("cannot get address of \"baz\": %s\n", dlerror ());
+      exit (1);
+    }
+  if (baz () != 31)
+    {
+      printf ("baz() did not return 31\n");
+      exit (1);
+    }
+
   if (dlclose (h1) != 0)
     {
       printf ("closing h1 failed: %s\n", dlerror ());

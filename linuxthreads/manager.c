@@ -590,6 +590,10 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread = _dl_allocate_tls (NULL);
   if (new_thread == NULL)
     return EAGAIN;
+# if TLS_DTV_AT_TP
+  /* pthread_descr is right below TP.  */
+  --new_thread;
+# endif
 #else
   /* Prevent warnings.  */
   new_thread = NULL;
@@ -607,6 +611,9 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
       if (sseg >= PTHREAD_THREADS_MAX)
 	{
 #ifdef USE_TLS
+# if TLS_DTV_AT_TP
+	  ++new_thread;
+# endif
 	  _dl_deallocate_tls (new_thread, true);
 #endif
 	  return EAGAIN;
@@ -631,7 +638,11 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread_id = sseg + pthread_threads_counter;
   /* Initialize the thread descriptor.  Elements which have to be
      initialized to zero already have this value.  */
+#if defined USE_TLS && TLS_DTV_AT_TP
+  new_thread->p_header.data.tcb = new_thread + 1;
+#else
   new_thread->p_header.data.tcb = new_thread;
+#endif
   new_thread->p_header.data.self = new_thread;
   new_thread->p_header.data.multiple_threads = 1;
   new_thread->p_tid = new_thread_id;
@@ -711,15 +722,15 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	   other, to get less paging and fewer mmaps.  */
 	  pid = __clone2(pthread_start_thread_event,
   		 (void **)new_thread_bottom,
-			 (char *)new_thread - new_thread_bottom,
+			 (char *)stack_addr - new_thread_bottom,
 			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 			 __pthread_sig_cancel, new_thread);
 #elif _STACK_GROWS_UP
-	  pid = __clone(pthread_start_thread_event, (void **) new_thread_bottom,
+	  pid = __clone(pthread_start_thread_event, (void *) new_thread_bottom,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 			__pthread_sig_cancel, new_thread);
 #else
-	  pid = __clone(pthread_start_thread_event, (void **) new_thread,
+	  pid = __clone(pthread_start_thread_event, stack_addr,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 			__pthread_sig_cancel, new_thread);
 #endif
@@ -794,6 +805,9 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 #endif
       }
 #ifdef USE_TLS
+# if TLS_DTV_AT_TP
+    ++new_thread;
+# endif
     _dl_deallocate_tls (new_thread, true);
 #endif
     __pthread_handles[sseg].h_descr = NULL;
@@ -881,6 +895,9 @@ static void pthread_free(pthread_descr th)
       munmap(guardaddr, stacksize + guardsize);
 
 #ifdef USE_TLS
+# if TLS_DTV_AT_TP
+      ++th;
+# endif
       _dl_deallocate_tls (th, true);
 #endif
     }

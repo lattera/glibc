@@ -282,9 +282,18 @@ internal_function
 _dl_allocate_tls_storage (void)
 {
   void *result;
+  size_t size = GL(dl_tls_static_size);
+
+# if TLS_DTV_AT_TP
+  /* Memory layout is:
+     [ TLS_PRE_TCB_SIZE ] [ TLS_TCB_SIZE ] [ TLS blocks ]
+			  ^ This should be returned.  */
+  size += (TLS_PRE_TCB_SIZE + GL(dl_tls_static_align) - 1)
+	  & ~(GL(dl_tls_static_align) - 1);
+# endif
 
   /* Allocate a correctly aligned chunk of memory.  */
-  result = __libc_memalign (GL(dl_tls_static_align), GL(dl_tls_static_size));
+  result = __libc_memalign (GL(dl_tls_static_align), size);
   if (__builtin_expect (result != NULL, 0))
     {
       /* Allocate the DTV.  */
@@ -292,12 +301,20 @@ _dl_allocate_tls_storage (void)
 
 # if TLS_TCB_AT_TP
       /* The TCB follows the TLS blocks.  */
-      result = (char *) result + GL(dl_tls_static_size) - TLS_TCB_SIZE;
-# endif
+      result = (char *) result + size - TLS_TCB_SIZE;
 
       /* Clear the TCB data structure.  We can't ask the caller (i.e.
 	 libpthread) to do it, because we will initialize the DTV et al.  */
       memset (result, 0, TLS_TCB_SIZE);
+# elif TLS_DTV_AT_TP
+      result = (char *) result + size - GL(dl_tls_static_size);
+
+      /* Clear the TCB data structure and TLS_PRE_TCB_SIZE bytes before it.
+	 We can't ask the caller (i.e. libpthread) to do it, because we will
+	 initialize the DTV et al.  */
+      memset ((char *) result - TLS_PRE_TCB_SIZE, 0,
+	      TLS_PRE_TCB_SIZE + TLS_TCB_SIZE);
+# endif
 
       result = allocate_dtv (result);
       if (result == NULL)
@@ -405,6 +422,10 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
 # if TLS_TCB_AT_TP
       /* The TCB follows the TLS blocks.  Back up to free the whole block.  */
       tcb -= GL(dl_tls_static_size) - TLS_TCB_SIZE;
+# elif TLS_DTV_AT_TP
+      /* Back up the TLS_PRE_TCB_SIZE bytes.  */
+      tcb -= (TLS_PRE_TCB_SIZE + GL(dl_tls_static_align) - 1)
+	     & ~(GL(dl_tls_static_align) - 1);
 # endif
       free (tcb);
     }

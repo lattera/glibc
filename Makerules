@@ -1138,6 +1138,8 @@ ifeq ($(versioning),yes)
 	mv -f $@T $@
 
 vpath %.symlist $(objpfx) $(common-objpfx)
+vpath %.dynsym $(objpfx) $(common-objpfx)
+vpath %.so $(objpfx) $(common-objpfx)
 check-abi-%: $(..)scripts/extract-abilist.awk $(common-objpfx)config.make \
 	     %.abilist %.symlist
 	LC_ALL=C \

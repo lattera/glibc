@@ -1,4 +1,4 @@
-# Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,9 @@ distribute	:= rtld-Rules \
 		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
 		   circlemod3.c circlemod3a.c nodlopenmod2.c \
 		   tls-macros.h \
-		   reldep8mod1.c reldep8mod2.c reldep8mod3.c
+		   reldep8mod1.c reldep8mod2.c reldep8mod3.c \
+		   nodel2mod1.c nodel2mod2.c nodel2mod3.c \
+		   reldep9mod1.c reldep9mod2.c reldep9mod3.c
 
 include ../Makeconfig
 
@@ -138,9 +140,10 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8
+#	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
-tests-nodelete-yes = nodelete
+tests-nodelete-yes = nodelete nodelete2
 tests-nodlopen-yes = nodlopen nodlopen2
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
@@ -160,12 +163,14 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsmod5 tst-tlsmod6 \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a \
-		reldep8mod1 reldep8mod2 reldep8mod3
+		reldep8mod1 reldep8mod2 reldep8mod3 \
+		reldep9mod1 reldep9mod2 reldep9mod3
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
 modules-vis-yes = vismod1 vismod2 vismod3
-modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
+modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
+		       nodel2mod1 nodel2mod2 nodel2mod3
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 # We need this variable to be sure the test modules get the right CPPFLAGS.
@@ -363,7 +368,13 @@ $(objpfx)reldep6mod2.so: $(objpfx)reldep6mod1.so
 $(objpfx)reldep6mod3.so: $(objpfx)reldep6mod2.so
 $(objpfx)reldep6mod4.so: $(objpfx)reldep6mod1.so
 $(objpfx)tst-tlsmod3.so: $(objpfx)tst-tlsmod2.so
+# For tst-tls9-static, make sure the modules it dlopens have libc.so in DT_NEEDED
+$(objpfx)tst-tlsmod5.so: $(common-objpfx)libc.so
+$(objpfx)tst-tlsmod6.so: $(common-objpfx)libc.so
 $(objpfx)reldep8mod3.so: $(objpfx)reldep8mod1.so $(objpfx)reldep8mod2.so
+$(objpfx)nodel2mod3.so: $(objpfx)nodel2mod1.so $(objpfx)nodel2mod2.so
+$(objpfx)reldep9mod2.so: $(objpfx)reldep9mod1.so
+$(objpfx)reldep9mod3.so: $(objpfx)reldep9mod1.so $(objpfx)reldep9mod2.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
@@ -530,6 +541,13 @@ $(objpfx)reldep7.out: $(objpfx)reldep7mod1.so $(objpfx)reldep7mod2.so
 
 $(objpfx)reldep8: $(libdl)
 $(objpfx)reldep8.out: $(objpfx)reldep8mod3.so
+
+LDFLAGS-nodel2mod2.so = -Wl,--enable-new-dtags,-z,nodelete
+$(objpfx)nodelete2: $(libdl)
+$(objpfx)nodelete2.out: $(objpfx)nodel2mod3.so
+
+$(objpfx)reldep9: $(libdl)
+$(objpfx)reldep9.out: $(objpfx)reldep9mod3.so
 
 $(objpfx)tst-tls3: $(objpfx)tst-tlsmod1.so
 

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -445,8 +445,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     block we subtract the offset from that of the TLS block.  */
 	  if (sym != NULL)
 	    {
-	      *reloc_addr += sym_map->l_tls_offset - sym->st_value;
 	      CHECK_STATIC_TLS (map, sym_map);
+	      *reloc_addr += sym_map->l_tls_offset - sym->st_value;
 	    }
 # endif
 	  break;
@@ -460,8 +460,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     thread pointer.  */
 	  if (sym != NULL)
 	    {
-	      *reloc_addr += sym->st_value - sym_map->l_tls_offset;
 	      CHECK_STATIC_TLS (map, sym_map);
+	      *reloc_addr += sym->st_value - sym_map->l_tls_offset;
 	    }
 # endif
 	  break;
@@ -555,20 +555,20 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	     It is a positive value which will be subtracted from the
 	     thread pointer.  To get the variable position in the TLS
 	     block we subtract the offset from that of the TLS block.  */
+	  CHECK_STATIC_TLS (map, sym_map);
 	  *reloc_addr
 	    = (sym == NULL ? 0 : sym_map->l_tls_offset - sym->st_value)
 	      + reloc->r_addend;
-	  CHECK_STATIC_TLS (map, sym_map);
 	  break;
 	case R_386_TLS_TPOFF:
 	  /* The offset is negative, forward from the thread pointer.  */
 	  /* We know the offset of object the symbol is contained in.
 	     It is a negative value which will be added to the
 	     thread pointer.  */
+	  CHECK_STATIC_TLS (map, sym_map);
 	  *reloc_addr
 	    = (sym == NULL ? 0 : sym->st_value - sym_map->l_tls_offset)
 	      + reloc->r_addend;
-	  CHECK_STATIC_TLS (map, sym_map);
 	  break;
 # endif	/* use TLS */
 # ifndef RESOLVE_CONFLICT_FIND_MAP

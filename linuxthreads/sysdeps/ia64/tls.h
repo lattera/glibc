@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  linuxthreads/IA-64 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,34 +33,90 @@ typedef union dtv
 } dtv_t;
 
 
-/* FIXME: Only temporary.  When TLS is supported on IA-64,
-   pthread_descr struct needs to be immediately below r13 and
-   at r13 a struct { dtv_t *dtv; void *private; }.  */
 typedef struct
 {
-  void *tcb;		/* Pointer to the TCB.  Not necessary the
-			   thread descriptor used by libpthread.  */
   dtv_t *dtv;
-  void *self;		/* Pointer to the thread descriptor.  */
-  int multiple_threads;
+  void *private;
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
-#undef USE_TLS
+#ifdef HAVE_TLS_SUPPORT
 
-#if USE_TLS
+/* Signal that TLS support is available.  */
+# define USE_TLS        1
+
+# ifndef __ASSEMBLER__
+/* This is the size of the initial TCB.  */
+#  define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
+
+/* Alignment requirements for the initial TCB.  */
+#  define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
+
+/* This is the size of the TCB.  */
+#  define TLS_TCB_SIZE sizeof (tcbhead_t)
+
+/* This is the size we need before TCB.  */
+#  define TLS_PRE_TCB_SIZE sizeof (struct _pthread_descr_struct)
+
+/* Alignment requirements for the TCB.  */
+#  define TLS_TCB_ALIGN __alignof__ (struct _pthread_descr_struct)
+
+/* The DTV is allocated at the TP; the TCB is placed elsewhere.  */
+#  define TLS_DTV_AT_TP 1
+
+/* Install the dtv pointer.  The pointer passed is to the element with
+   index -1 which contain the length.  */
+#  define INSTALL_DTV(tcbp, dtvp) \
+  ((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1
+
+/* Install new dtv for current thread.  */
+#  define INSTALL_NEW_DTV(DTV) \
+  (((tcbhead_t *)__thread_self)->dtv = (DTV))
+
+/* Return dtv of given thread descriptor.  */
+#  define GET_DTV(tcbp) \
+  (((tcbhead_t *) (tcbp))->dtv)
+
+/* Code to initially initialize the thread pointer.  This might need
+   special attention since 'errno' is not yet available and if the
+   operation can cause a failure 'errno' must not be touched.  */
+#  define TLS_INIT_TP(tcbp, secondcall) \
+  (__thread_self = (tcbp), NULL)
+
+/* Return the address of the dtv for the current thread.  */
+#  define THREAD_DTV() \
+  (((tcbhead_t *)__thread_self)->dtv)
+
+/* Return the thread descriptor for the current thread.  */
+#  undef THREAD_SELF
+#  define THREAD_SELF (__thread_self - 1)
+
+#  undef INIT_THREAD_SELF
+#  define INIT_THREAD_SELF(descr, nr) \
+  (__thread_self = (struct _pthread_descr_struct *)(descr) + 1)
+
+/* Get the thread descriptor definition.  */
+#  include <linuxthreads/descr.h>
+
+# endif
 
 #else
 
-#define NONTLS_INIT_TP \
-  do { 								\
-    static const tcbhead_t nontls_init_tp			\
-      = { .multiple_threads = 0 };				\
-    __thread_self = (__typeof (__thread_self)) &nontls_init_tp;	\
+# ifndef __ASSEMBLER__
+/* Get the thread descriptor definition.  */
+#  include <linuxthreads/descr.h>
+
+#  define NONTLS_INIT_TP \
+  do { 									\
+    static struct _pthread_descr_struct nontls_init_tp			\
+      = { .p_header.data.multiple_threads = 0 };			\
+    __thread_self = ((__typeof (__thread_self)) &nontls_init_tp) + 1;	\
   } while (0)
+
+#endif
 
 #endif /* USE_TLS */
 
