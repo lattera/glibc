@@ -10,6 +10,9 @@
 
 2004-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/setenv.c (__add_to_environ): Don't let the
+	temporary copies of the variables accumulate on the stack.
+
 	* stdio-common/_i18n_number.h: Finish last patch.
 
 2004-02-09  Ulrich Drepper  <drepper@redhat.com>
