@@ -581,7 +581,10 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 
       dir = rec_dirsearch (name, dir, flags, &status);
       if (dir == NULL)
-	return status;
+	{
+	  __set_errno (saved_errno);
+	  return status;
+	}
     }
 
   if (flags & MASTER_ONLY)
@@ -600,6 +603,8 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 			   flags, cb, &cinfo);
 
   nis_free_directory (dir);
+
+  __set_errno (saved_errno);
 
   return retcode;
 }

@@ -104,7 +104,6 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 	  struct iovec vec[2];
 	  u_short port;
 	  int fd;
-	  int saved_errno = errno;
 
 	  sprintf (path, "%s/%s.%ld", BINDINGDIR, domain, YPBINDVERS);
 	  fd = open (path, O_RDONLY);
@@ -133,14 +132,11 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 		}
 	      close (fd);
 	    }
-	  __set_errno (saved_errno);
 	}
 #endif /* USE_BINDINGDIR */
 
       if (ysd->dom_vers == -1)
 	{
-	  int saved_errno = errno;
-
 	  if(ysd->dom_client)
 	    {
 	      clnt_destroy(ysd->dom_client);
@@ -157,7 +153,6 @@ __yp_bind (const char *domain, dom_binding **ypdb)
             {
               if (is_new)
                 free (ysd);
-	      __set_errno (saved_errno);
               return YPERR_YPBIND;
             }
           /*
@@ -170,7 +165,6 @@ __yp_bind (const char *domain, dom_binding **ypdb)
               clnt_destroy (client);
               if (is_new)
                 free (ysd);
-	      __set_errno (saved_errno);
               return YPERR_YPBIND;
             }
 
@@ -253,6 +247,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
   bool_t use_ypbindlist = FALSE;
   int try, status;
   enum clnt_stat result;
+  int saved_errno = errno;
 
   try = 0;
   status = YPERR_YPERR;
@@ -281,6 +276,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 	{
 	  if (use_ypbindlist)
 	    __libc_lock_unlock (ypbindlist_lock);
+	  __set_errno (saved_errno);
 	  return YPERR_DOMAIN;
 	}
 
@@ -316,6 +312,8 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 	free (ydb);
 	ydb = NULL;
       }
+
+  __set_errno (saved_errno);
 
   return status;
 }
@@ -670,6 +668,7 @@ yp_all (const char *indomain, const char *inmap,
   CLIENT *clnt;
   unsigned long status;
   int clnt_sock;
+  int saved_errno = errno;
 
   if (indomain == NULL || indomain[0] == '\0' ||
       inmap == NULL || inmap == '\0')
@@ -682,6 +681,7 @@ yp_all (const char *indomain, const char *inmap,
     {
       if (__yp_bind (indomain, &ydb) != 0)
 	{
+	  __set_errno (saved_errno);
 	  return YPERR_DOMAIN;
 	}
 
@@ -691,7 +691,10 @@ yp_all (const char *indomain, const char *inmap,
       clnt_sin.sin_port = 0;
       clnt = clnttcp_create (&clnt_sin, YPPROG, YPVERS, &clnt_sock, 0, 0);
       if (clnt == NULL)
-	return YPERR_PMAP;
+	{
+	  __set_errno (saved_errno);
+	  return YPERR_PMAP;
+	}
       req.domain = (char *) indomain;
       req.map = (char *) inmap;
 
@@ -714,9 +717,14 @@ yp_all (const char *indomain, const char *inmap,
       close (clnt_sock);
 
       if (status != YP_NOMORE)
-	return ypprot_err (status);
-      try++;
+	{
+	  __set_errno (saved_errno);
+	  return ypprot_err (status);
+	}
+      ++try;
     }
+
+  __set_errno (saved_errno);
 
   return res;
 }
