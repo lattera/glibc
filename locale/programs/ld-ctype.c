@@ -1447,11 +1447,8 @@ Computing table size for character classes might take a while..."),
 	    }
     }
 
-  /* Compute MB_CUR_MAX.  Please note the value mb_cur_max in the
-     character set definition gives the number of bytes in the wide
-     character representation.  We compute the number of bytes used
-     for the UTF-8 encoded form.  */
-  ctype->mb_cur_max = ((int []) { 2, 3, 5, 6 }) [charset->mb_cur_max - 1];
+  /* Compute MB_CUR_MAX.  */
+  ctype->mb_cur_max = charset->mb_cur_max;
 
   /* We need the name of the currently used 8-bit character set to
      make correct conversion between this 8-bit representation and the
