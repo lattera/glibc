@@ -1,3 +1,8 @@
+2002-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/examples/mkfsock.c (make_named_socket): Make sure name is
+	always NUL-terminated.  Patch by Chris D. Sloan <cds@cs.hmc.edu>.
+
 2002-02-01  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/atomicity.h (exchange_and_add): Use branch

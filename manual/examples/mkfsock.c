@@ -23,6 +23,7 @@ make_named_socket (const char *filename)
   /* Bind a name to the socket.  */
   name.sun_family = AF_LOCAL;
   strncpy (name.sun_path, filename, sizeof (name.sun_path));
+  name.sun_path[sizeof (name.sun_path) - 1] = '\0';
 
   /* The size of the address is
      the offset of the start of the filename,

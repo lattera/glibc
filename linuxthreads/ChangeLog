@@ -1,3 +1,12 @@
+2002-02-01  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Use a
+	different register in the delayed slot.  Use branch likely.
+
+	* sysdeps/mips/pt-machine.h (testandset): Call _test_and_set.
+	(__compare_and_swap): Return 0 only when failed to compare. Use
+	branch likely.
+
 2002-02-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* Versions (__libc_internal_tsd_get, __libc_internal_tsd_set,
