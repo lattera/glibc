@@ -41,7 +41,7 @@ struct qelem
 extern void insque __P ((struct qelem *__elem, struct qelem *__prev));
 
 /* Unlink ELEM from the doubly-linked list that it is in.  */
-extern void remque __P ((struct qelem *elem))
+extern void remque __P ((struct qelem *elem));
 
 
 __END_DECLS

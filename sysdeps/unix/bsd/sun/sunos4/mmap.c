@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,8 +34,9 @@ extern caddr_t __mmap_syscall (caddr_t addr, size_t len,
 
 
 caddr_t
-mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
+__mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   return __mmap_syscall (addr, len, prot, flags | _MAP_NEW, fd, offset);
 }
-	
+
+weak_alias (__mmap, mmap)

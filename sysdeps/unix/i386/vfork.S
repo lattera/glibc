@@ -1,5 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,25 +15,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <errno.h>
-#include <mach.h>
+#include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
+/* Go directly into __vfork, don't do anything with the stack ptr.  */
 
-int
-__munmap (caddr_t addr, size_t len)
-{
-  kern_return_t err;
-  if (err = __vm_deallocate (__mach_task_self (),
-			     (vm_address_t) addr, (vm_size_t) len))
-    {
-      errno = err;
-      return -1;
-    }
-  return 0;
-}
-
-weak_alias (__munmap, munmap)
+ENTRY(vfork)
+	jmp __vfork

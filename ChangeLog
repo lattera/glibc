@@ -1,3 +1,36 @@
+Fri Mar  3 12:24:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/generic/sys/mman.h (__mmap, __munmap): Declare these.
+	* sysdeps/unix/sysv/irix4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/osf1/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/sys/mman.h: Likewise.
+	* sysdeps/stub/munmap.c (munmap): Rename to __munmap, add weak
+ 	alias munmap.
+	* sysdeps/unix/mman/munmap.S: Likewise.
+	* sysdeps/mach/munmap.c: Likewise.
+	* sysdeps/mach/hurd/mmap.c (mmap): Rename to __mmap, add weak
+ 	alias mmap.
+	* sysdeps/unix/mman/mmap.S: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/mmap.c: Likewise.
+	* sysdeps/stub/mmap.c: Likewise.
+
+	* sysdeps/unix/bsd/setsid.c: Use __getpgid instead of __getpgrp.
+
+	* sysdeps/unix/dirfd.c: #undef dirfd before function defn.
+
+Thu Mar  2 12:15:24 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* misc/search.h: Add missing semicolon.
+
+	* sysdeps/unix/dirfd.c: Fix typo.
+
+	* sysdeps/generic/sys/mman.h (mmap): Use __off_t instead of off_t
+ 	in decl.
+
+	* stdio/vfscanf.c (%c): In no-assign case, fix loop to decrement
+ 	WIDTH before test.
+
 Wed Mar  1 00:57:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdlib/strtod.c: Fixes from drepper.

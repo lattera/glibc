@@ -33,7 +33,7 @@ DEFUN_VOID(__setsid)
   int tty;
   int save = errno;
 
-  if (__getpgrp (pid) == pid)
+  if (__getpgid (pid) == pid)
     {
       /* Already the leader.  */
       errno = EPERM;

@@ -231,8 +231,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      while (inchar() != EOF && --width > 0);
 	    }
 	  else
-	    while (inchar() != EOF && width > 0)
-	      --width;
+	    while (inchar() != EOF && --width > 0);
 
 	  if (do_assign)
 	    ++done;

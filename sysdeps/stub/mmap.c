@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/mman.h>
 #include <errno.h>
 
-/* Map addresses starting near ADDR and extending for LEN bytes.  from
+/* Map addresses starting near ADDR and extending for LEN bytes.  From
    OFFSET into the file FD describes according to PROT and FLAGS.  If ADDR
    is nonzero, it is the desired mapping address.  If the MAP_FIXED bit is
    set in FLAGS, the mapping will be at ADDR exactly (which must be
@@ -30,9 +30,10 @@ Cambridge, MA 02139, USA.  */
    deallocates any previous mapping for the affected region.  */
 
 caddr_t
-mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
+__mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   errno = ENOSYS;
   return (caddr_t) -1;
 }
-	
+
+weak_alias (__mmap, mmap)
