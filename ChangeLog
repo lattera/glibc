@@ -1,5 +1,7 @@
 2001-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/fts.c (fts_safe_changedir): Use __fxstat64 instead of __fstat.
+
 	* sunrpc/svcauth_des.c (_svcauth_des): Avoid using bcopy.
 	* sunrpc/xdr_rec.c: Likewise.
 	* sunrpc/xdr_mem.c: Likewise.

@@ -1091,14 +1091,14 @@ fts_safe_changedir(sp, p, fd, path)
 	const char *path;
 {
 	int ret, oerrno, newfd;
-	struct stat sb;
+	struct stat64 sb;
 
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
 	if (fd < 0 && (newfd = __open(path, O_RDONLY, 0)) < 0)
 		return (-1);
-	if (__fstat(newfd, &sb)) {
+	if (__fxstat64(_STAT_VER, newfd, &sb)) {
 		ret = -1;
 		goto bail;
 	}
