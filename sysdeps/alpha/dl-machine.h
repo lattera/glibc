@@ -544,15 +544,25 @@ elf_machine_rela (struct link_map *map,
   else
     {
       Elf64_Addr sym_value;
+      Elf64_Addr sym_raw_value;
 
 #if defined USE_TLS && !defined RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      sym_value = sym ? sym_map->l_addr + sym->st_value : 0;
+      sym_raw_value = sym_value = reloc->r_addend;
+      if (sym)
+	{
+	  sym_raw_value += sym->st_value;
+	  sym_value = sym_raw_value + sym_map->l_addr;
+	}
 #else
       Elf64_Addr loadbase = RESOLVE (&sym, version, r_type);
-      sym_value = sym ? loadbase + sym->st_value : 0;
+      sym_raw_value = sym_value = reloc->r_addend;
+      if (sym)
+	{
+	  sym_raw_value += sym->st_value;
+	  sym_value = sym_raw_value + loadbase;
+	}
 #endif
-      sym_value += reloc->r_addend;
 
       if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
@@ -600,18 +610,18 @@ elf_machine_rela (struct link_map *map,
 #ifndef RTLD_BOOTSTRAP
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
-	  *reloc_addr = sym_value;
+	  *reloc_addr = sym_raw_value;
 #endif
 	}
       else if (r_type == R_ALPHA_TPREL64)
 	{
 #ifdef RTLD_BOOTSTRAP
-	  *reloc_addr = sym_value - map->l_tls_offset;
+	  *reloc_addr = sym_raw_value - map->l_tls_offset;
 #else
 	  if (sym_map)
 	    {
 	      CHECK_STATIC_TLS (map, sym_map);
-	      *reloc_addr = sym_value - sym_map->l_tls_offset;
+	      *reloc_addr = sym_raw_value - sym_map->l_tls_offset;
 	    }
 #endif
 	}
