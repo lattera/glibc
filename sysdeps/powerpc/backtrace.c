@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 
 #include <execinfo.h>
 #include <stddef.h>
+#include <bp-checks.h>
 
 /* This is the stack layout we see with every stack frame.
    Note that every routine is required by the ABI to lay out the stack
@@ -32,8 +33,8 @@
 */
 struct layout
 {
-  struct layout *next;
-  void *return_address;
+  struct layout *__unbounded next;
+  void *__unbounded return_address;
 };
 
 int
@@ -47,10 +48,11 @@ __backtrace (void **array, int size)
 
   /* Get the address on top-of-stack.  */
   asm volatile ("lwz %0,0(1)" : "=r"(current));
+  current = BOUNDED_1 (current);
 
   for (				count = 0;
        current != NULL && 	count < size;
-       current = current->next, count++)
+       current = BOUNDED_1 (current->next), count++)
     array[count] = current->return_address;
 
   /* It's possible the second-last stack frame can't return

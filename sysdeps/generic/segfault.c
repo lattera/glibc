@@ -1,5 +1,5 @@
 /* Catch segmentation faults and print backtrace.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -27,6 +27,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio-common/_itoa.h>
+
+#include <bp-checks.h>
 
 /* Get the definition of "struct layout".  */
 #include <frame.h>
@@ -69,7 +71,7 @@ extern void *__libc_stack_end;
 /* By default assume the `next' pointer in struct layout points to the
    next struct layout.  */
 #ifndef ADVANCE_STACK_FRAME
-# define ADVANCE_STACK_FRAME(next) ((struct layout *) (next))
+# define ADVANCE_STACK_FRAME(next) BOUNDED_1 ((struct layout *) (next))
 #endif
 
 /* We'll use tis a lot.  */
@@ -103,8 +105,8 @@ static void
 catch_segfault (int signal, SIGCONTEXT ctx)
 {
   struct layout *current;
-  void *top_frame;
-  void *top_stack;
+  void *__unbounded top_frame;
+  void *__unbounded top_stack;
   int fd;
   void **arr;
   size_t cnt;
@@ -135,7 +137,7 @@ catch_segfault (int signal, SIGCONTEXT ctx)
 
   /* First count how many entries we'll have.  */
   cnt = 1;
-  current = (struct layout *) top_frame;
+  current = BOUNDED_1 ((struct layout *) top_frame);
   while (!((void *) current INNER_THAN top_stack
 	   || !((void *) current INNER_THAN __libc_stack_end)))
     {
@@ -149,7 +151,7 @@ catch_segfault (int signal, SIGCONTEXT ctx)
   /* First handle the program counter from the structure.  */
   arr[0] = GET_PC (ctx);
 
-  current = (struct layout *) top_frame;
+  current = BOUNDED_1 ((struct layout *) top_frame);
   cnt = 1;
   while (!((void *) current INNER_THAN top_stack
 	   || !((void *) current INNER_THAN __libc_stack_end)))

@@ -1,3 +1,44 @@
+2000-07-29  Greg McGary  <greg@mcgary.org>
+
+	* Rules (test-bp-inputs, make-test-out): New variables.
+	($(objpfx)%-bp.out): New rule.
+	($(objpfx)%.out): Rewrite in terms of new variables.
+
+	* libio/iovswscanf.c (vswscanf): Pass _IO_FILE_plus pointer to
+	internal function that uses vtable.
+	* libio/vsnprintf.c (_IO_vsnprintf): Likewise.
+	* libio/vswprintf.c (_IO_vswprintf): Likewise.
+
+	* malloc/malloc.c (mem2chunk): Define in terms of chunk_at_offset.
+	(malloc_extend_top): Convert brk to chunk using chunk_at_offset.
+	(chunk_align): Likewise.
+
+	* time/asctime.c (ab_day_name, ab_month_name): Rewrite expression
+	in a way that conforms to decl, and avoids spurious bounds violation.
+
+	* sysdeps/arm/frame.h (struct layout): Make pointers __unbounded.
+	* sysdeps/generic/frame.h: Likewise.
+	* sysdeps/generic/backtrace.c (ADVANCE_STACK_FRAME): Wrap bounds
+	around return value.
+	(__backtrace): Qualify frame-pointer chain and return address
+	pointers as __unbounded.  Wrap bounds around variable `current'.
+	* sysdeps/generic/segfault.c (ADVANCE_STACK_FRAME): Wrap bounds
+	around return value.
+	(catch_segfault): Qualify frame-pointer chain and return address
+	pointers as __unbounded.  Wrap bounds around variable `current'.
+	* sysdeps/i386/backtrace.c (struct layout): Make pointers __unbounded.
+	(ADVANCE_STACK_FRAME): Wrap bounds around return value.
+	* sysdeps/powerpc/backtrace.c (struct layout): Make pointers __unbounded.
+	(__backtrace): Qualify frame-pointer chain and return address
+	pointers as __unbounded.  Wrap bounds around variable `current'.
+
+	* sysdeps/i386/addmul_1.S: s2_limb is scalar so remove bounds check.
+	* sysdeps/i386/mul_1.S: Likewise.
+	* sysdeps/i386/submul_1.S: Likewise.
+	* sysdeps/i386/i586/addmul_1.S: Likewise.
+	* sysdeps/i386/i586/mul_1.S: Add bounds checks.
+	* sysdeps/i386/i586/submul_1.S: Likewise.
+
 2000-07-27  Andreas Jaeger  <aj@suse.de>
 
 	* libio/Depend: New file, libio needs localedata for tests.

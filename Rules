@@ -129,12 +129,16 @@ endif
 ifneq "$(strip $(tests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
+
+make-test-out = GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+		$($*-ENV) $(built-program-cmd) $($*-ARGS)
+$(objpfx)%-bp.out: %.input $(objpfx)%-bp
+	$(make-test-out) > $@ < $(word 1,$^)
 $(objpfx)%.out: %.input $(objpfx)%
-	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-	  $($*-ENV) $(built-program-cmd) $($*-ARGS) < $(word 1,$^) > $@
+	$(make-test-out) > $@ < $(word 1,$^)
 $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
-	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-	  $($*-ENV) $(built-program-cmd) $($*-ARGS) > $@
+	$(make-test-out) > $@
+
 endif	# tests
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \

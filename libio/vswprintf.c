@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -130,7 +130,7 @@ _IO_vswprintf (string, maxlen, format, args)
   _IO_fwide (&sf.f._sbf._f, 1);
   string[0] = L'\0';
   _IO_wstr_init_static (&sf.f._sbf._f, string, maxlen - 1, string);
-  ret = _IO_vfwprintf (&sf.f._sbf._f, format, args);
+  ret = _IO_vfwprintf ((_IO_FILE *) &sf.f._sbf, format, args);
 
   if (sf.f._sbf._f._wide_data->_IO_buf_base != sf.overflow_buf)
     *sf.f._sbf._f._wide_data->_IO_write_ptr = '\0';

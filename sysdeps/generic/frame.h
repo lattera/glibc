@@ -19,6 +19,6 @@
 
 struct layout
 {
-  void *next;
-  void *return_address;
+  void *__unbounded next;
+  void *__unbounded return_address;
 };

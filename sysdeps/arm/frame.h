@@ -20,7 +20,7 @@
 /* This is the APCS stack backtrace structure.  */
 struct layout
 {
-  struct layout *next;
-  void *sp;
-  void *return_address;
+  struct layout *__unbounded next;
+  void *__unbounded sp;
+  void *__unbounded return_address;
 };

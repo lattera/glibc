@@ -1292,7 +1292,7 @@ static void      free_atfork();
 /* conversion from malloc headers to user pointers, and back */
 
 #define chunk2mem(p) ((Void_t*)((char*)(p) + 2*SIZE_SZ))
-#define mem2chunk(mem) BOUNDED_1((mchunkptr)((char*)(mem) - 2*SIZE_SZ))
+#define mem2chunk(mem) chunk_at_offset((mem), -2*SIZE_SZ)
 
 /* pad request bytes into a usable size, return non-zero on overflow */
 
@@ -2513,7 +2513,7 @@ malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
 
       sbrked_mem += correction;
 
-      top(&main_arena) = (mchunkptr)brk;
+      top(&main_arena) = chunk_at_offset(brk, 0);
       top_size = new_brk - brk + correction;
       set_head(top(&main_arena), top_size | PREV_INUSE);
 
@@ -3574,7 +3574,7 @@ arena* ar_ptr; INTERNAL_SIZE_T nb; size_t alignment;
     brk = (char*)mem2chunk(((m + alignment - 1)) & -(long)alignment);
     if ((long)(brk - (char*)(p)) < (long)MINSIZE) brk += alignment;
 
-    newp = (mchunkptr)brk;
+    newp = chunk_at_offset(brk, 0);
     leadsize = brk - (char*)(p);
     newsize = chunksize(p) - leadsize;
 

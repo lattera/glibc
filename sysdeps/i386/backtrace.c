@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <execinfo.h>
+#include <bp-checks.h>
 
 
 /* This is a global variable set at program start time.  It marks the
@@ -36,8 +37,8 @@ extern void *__libc_stack_end;
 */
 struct layout
 {
-  struct layout *next;
-  void *return_address;
+  struct layout *__unbounded next;
+  void *__unbounded return_address;
 };
 
 int
@@ -52,7 +53,7 @@ __backtrace (array, size)
   int cnt = 0;
 
   /* We skip the call to this function, it makes no sense to record it.  */
-  current = (struct layout *) ebp;
+  current = BOUNDED_1 ((struct layout *) ebp);
   while (cnt < size)
     {
       if ((void *) current < esp || (void *) current > __libc_stack_end)

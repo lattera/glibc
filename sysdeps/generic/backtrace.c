@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.  Generic version.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -22,6 +22,7 @@
 #include <signal.h>
 #include <frame.h>
 #include <sigcontextinfo.h>
+#include <bp-checks.h>
 
 /* This is a global variable set at program start time.  It marks the
    highest used stack address.  */
@@ -54,7 +55,7 @@ extern void *__libc_stack_end;
 /* By default assume the `next' pointer in struct layout points to the
    next struct layout.  */
 #ifndef ADVANCE_STACK_FRAME
-# define ADVANCE_STACK_FRAME(next) ((struct layout *) (next))
+# define ADVANCE_STACK_FRAME(next) BOUNDED_1 ((struct layout *) (next))
 #endif
 
 int
@@ -63,15 +64,15 @@ __backtrace (array, size)
      int size;
 {
   struct layout *current;
-  void *top_frame;
-  void *top_stack;
+  void *__unbounded top_frame;
+  void *__unbounded top_stack;
   int cnt = 0;
 
   top_frame = __builtin_frame_address (0);
   top_stack = CURRENT_STACK_FRAME;
 
   /* We skip the call to this function, it makes no sense to record it.  */
-  current = (struct layout *) top_frame;
+  current = BOUNDED_1 ((struct layout *) top_frame);
   while (cnt < size)
     {
       if ((void *) current INNER_THAN top_stack
