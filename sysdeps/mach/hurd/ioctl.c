@@ -97,7 +97,6 @@ __ioctl (int fd, unsigned long int request, ...)
 		  *t = io2mach_type (count, type);
 		  p = __mempcpy (p, argptr, len);
 		  argptr += len;
-		  p += len;
 		  p = (void *) (((uintptr_t) p + sizeof (*t) - 1)
 				& ~(sizeof (*t) - 1));
 		  t = p;
