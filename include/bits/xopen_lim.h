@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@
 #ifndef _XOPEN_LIM_H
 #define _XOPEN_LIM_H	1
 
-#define __need_FOPEN_MAX
 #define __need_IOV_MAX
 #include <bits/stdio_lim.h>
 

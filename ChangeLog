@@ -1,5 +1,7 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/bits/xopen_lim.h: Don't define FOPEN_MAX here.
+
 	* conform/data/limits.h-data: Mark constants as optional wherever
 	appropriate.
 
