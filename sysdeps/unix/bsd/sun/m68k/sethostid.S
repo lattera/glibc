@@ -30,7 +30,7 @@ SYSCALL (sethostid, 1)
 .globl _sethostid
 .even
 _sethostid:
-	movel #ENOSYS, ___errno
+	movel #ENOSYS, _errno
 	moveq #-1, d0
 	rts
 

@@ -31,8 +31,8 @@ SYSCALL (sethostid, 1)
 
 ENTRY (sethostid)
 	mov ENOSYS, %o0
-	sethi %hi(___errno), %g1
-	st %o0, [%g1 + %lo(___errno)]
+	sethi %hi(_errno), %g1
+	st %o0, [%g1 + %lo(_errno)]
 	retl
 	sub %g0, 1, %o0
 
