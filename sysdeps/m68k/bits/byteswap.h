@@ -34,17 +34,17 @@
 
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_32(x) \
-  __extension__					\
-  ({ unsigned int __v;				\
-     if (__builtin_constant_p (x))		\
-       __v = __bswap_constant_32 (x);		\
-     else					\
-       __asm__ __volatile__ ("ror%.w %#8, %0;"	\
-			     "swap %0;"		\
-			     "ror%.w %#8, %0"	\
-			     : "=d" (__v)	\
-			     : "0" (x));	\
-     __v; })
+  __extension__						\
+  ({ unsigned int __bswap_32_v;				\
+     if (__builtin_constant_p (x))			\
+       __bswap_32_v = __bswap_constant_32 (x);		\
+     else						\
+       __asm__ __volatile__ ("ror%.w %#8, %0;"		\
+			     "swap %0;"			\
+			     "ror%.w %#8, %0"		\
+			     : "=d" (__bswap_32_v)	\
+			     : "0" (x));		\
+     __bswap_32_v; })
 #else
 # define __bswap_32(x) __bswap_constant_32 (x)
 #endif
@@ -52,11 +52,11 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 /* Swap bytes in 64 bit value.  */
 # define __bswap_64(x) \
-  __extension__						\
-  ({ union { unsigned long long int __ll;		\
-	     unsigned long int __l[2]; } __v, __r;	\
-     __v.__ll = (x);					\
-     __r.__l[0] = __bswap_32 (__v.__l[1]);		\
-     __r.__l[1] = __bswap_32 (__v.__l[0]);		\
-     __r.__ll; })
+  __extension__								\
+  ({ union { unsigned long long int __ll;				\
+	     unsigned long int __l[2]; } __bswap_64_v, __bswap_64_r;	\
+     __bswap_64_v.__ll = (x);						\
+     __bswap_64_r.__l[0] = __bswap_32 (__bswap_64_v.__l[1]);		\
+     __bswap_64_r.__l[1] = __bswap_32 (__bswap_64_v.__l[0]);		\
+     __bswap_64_r.__ll; })
 #endif
