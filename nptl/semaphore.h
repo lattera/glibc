@@ -39,7 +39,7 @@ extern int sem_init (sem_t *__sem, int __pshared, unsigned int __value)
 /* Free resources associated with semaphore object SEM.  */
 extern int sem_destroy (sem_t *__sem) __THROW;
 
-/* Open a named semaphore NAME with open flaot OFLAG.  */
+/* Open a named semaphore NAME with open flags OFLAG.  */
 extern sem_t *sem_open (__const char *__name, int __oflag, ...) __THROW;
 
 /* Close descriptor for named semaphore SEM.  */
