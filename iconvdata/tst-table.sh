@@ -61,15 +61,18 @@ diff ${objpfx}tst-${charset}.table ${objpfx}tst-${charset}.inverse.table | \
   grep '^[<>]' | sed -e 's,^. ,,' > ${objpfx}tst-${charset}.irreversible.table
 
 # Check 1: charmap and iconv forward should be identical.
-cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.table
+cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.table ||
+exit 1
 
 # Check 2: the difference between the two iconv directions.
 if test -f ${irreversible}; then
   cat ${objpfx}tst-${charset}.charmap.table ${irreversible} | sort | uniq -u \
     > ${objpfx}tst-${charset}.tmp.table
-  cmp -s ${objpfx}tst-${charset}.tmp.table ${objpfx}tst-${charset}.inverse.table
+  cmp -s ${objpfx}tst-${charset}.tmp.table ${objpfx}tst-${charset}.inverse.table ||
+  exit 1
 else
-  cmp -s ${objpfx}tst-${charset}.table ${objpfx}tst-${charset}.inverse.table
+  cmp -s ${objpfx}tst-${charset}.table ${objpfx}tst-${charset}.inverse.table ||
+  exit 1
 fi
 
 exit 0

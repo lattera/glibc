@@ -1,5 +1,10 @@
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/tst-tables.sh: Actually return with an error if
+	something goes wrong.
+	* iconvdata/tst-table.sh: Return with an error if any of the cmp fails.
+	* iconvdata/big5hkscs.c (BODY of FROM_LOOP): Reject 0xff as input.
+
 	* iconvdata/tst-tables.sh: Add BIG5HKSCS.
 
 	* iconvdata/tst-table-to.c (main): Correct cast in iconv call.

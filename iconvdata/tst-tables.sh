@@ -179,7 +179,7 @@ cat <<EOF |
   ISO-IR-197
   TIS-620
   KOI8-U
-  ISIRI-3342
+  #ISIRI-3342                         This charset concept is completely broken
   #
   # Multibyte encodings come here
   #
@@ -205,9 +205,14 @@ cat <<EOF |
 EOF
 while read charset charmap; do
   case ${charset} in \#*) continue;; esac
-  echo "Testing ${charset}" 1>&2
-  ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap} \
-  || { echo "failed: ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}"; status=1; }
+  echo -n "Testing ${charset}" 1>&2
+  if ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}; then
+    echo 1>&2
+  else
+    echo "failed: ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}"
+    echo " *** FAILED ***" 1>&2
+    exit 1
+  fi
 done
 
-exit $status
+exit $?

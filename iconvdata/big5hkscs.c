@@ -11727,6 +11727,11 @@ static struct
 									      \
 	inptr += 2;							      \
       }									      \
+    else if (__builtin_expect (ch, 0) == 0xff)				      \
+      {									      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
     else								      \
       ++inptr;								      \
 									      \
