@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,31 +16,39 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
+#define __need_size_t
+#include <stddef.h>
 #include <stdio.h>
+#include <errno.h>
 
-/* Generate a (hopefully) unique temporary filename
-   in DIR (if applicable), using prefix PFX.
-   If DIR_SEARCH is nonzero, perform directory searching
-   malarkey as per the SVID for tempnam.
-   Return the generated filename or NULL if one could not
-   be generated, putting the length of the string in *LENPTR.  */
-char *
-__stdio_gen_tempname (buf, bufsize, dir, pfx, dir_search, lenptr, streamptr,
-		      large_file)
-     char *buf;
-     size_t bufsize;
+/* Perform the "SVID path search malarkey" on DIR and PFX.  Write a
+   template suitable for use in __gen_tempname into TMPL, bounded
+   by TMPL_LEN. */
+int
+__path_search (tmpl, tmpl_len, dir, pfx)
+     char *tmpl;
+     size_t tmpl_len;
      const char *dir;
      const char *pfx;
-     int dir_search;
-     size_t *lenptr;
-     FILE **streamptr;
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (__path_search)
+
+/* Generate a (hopefully) unique temporary filename
+   in DIR (if applicable), using template TMPL.
+   If OPENIT is 1, open the file and return a fd.  If LARGEFILE is 1,
+   use open64() to do that. */
+     int
+       __gen_tempname (tmpl, openit, largefile)
+     char *tmpl;
+     int openit;
      int large_file;
 {
-  *lenptr = 0;
   __set_errno (ENOSYS);
-  return NULL;
+  return -1;
 }
 
-stub_warning (__stdio_gen_tempname)
+stub_warning (__gen_tempname)
 #include <stub-tag.h>

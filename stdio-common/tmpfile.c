@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@
 
 #include <stdio.h>
 
+#ifdef _USE_IN_LIBIO
+# define fdopen _IO_new_fdopen
+#endif
 
 /* This returns a new stream opened on a temporary file (generated
    by tmpnam) The file is opened with mode "w+b" (binary read/write).
@@ -27,17 +30,20 @@ FILE *
 tmpfile ()
 {
   char buf[FILENAME_MAX];
-  char *filename;
+  int fd;
   FILE *f;
 
-  filename = __stdio_gen_tempname (buf, sizeof (buf), (char *) NULL, "tmpf", 0,
-				   (size_t *) NULL, &f, 0);
-  if (filename == NULL)
+  if (__path_search (buf, FILENAME_MAX, NULL, "tmpf"))
+    return NULL;
+  if ((fd = __gen_tempname (buf, 1, 0)) < 0)
     return NULL;
 
   /* Note that this relies on the Unix semantics that
      a file is not really removed until it is closed.  */
-  (void) remove (filename);
+  (void) remove (buf);
+
+  if ((f = fdopen (fd, "w+b")) == NULL)
+    close (fd);
 
   return f;
 }

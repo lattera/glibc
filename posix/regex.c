@@ -3525,7 +3525,11 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
 
   /* If the search isn't to be a backwards one, don't waste time in a
      search for a pattern that must be anchored.  */
-  if (bufp->used > 0 && (re_opcode_t) bufp->buffer[0] == begbuf && range > 0)
+  if (bufp->used > 0 && range > 0
+      && ((re_opcode_t) bufp->buffer[0] == begbuf
+	  /* `begline' is like `begbuf' if it cannot match at newlines.  */
+	  || ((re_opcode_t) bufp->buffer[0] == begline
+	      && !bufp->newline_anchor)))
     {
       if (startpos > 0)
 	return -1;
@@ -5737,7 +5741,7 @@ weak_alias (__regexec, regexec)
    from either regcomp or regexec.   We don't use PREG here.  */
 
 size_t
-__regerror (errcode, preg, errbuf, errbuf_size)
+regerror (errcode, preg, errbuf, errbuf_size)
     int errcode;
     const regex_t *preg;
     char *errbuf;

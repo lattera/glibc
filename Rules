@@ -89,12 +89,14 @@ else
 others: $(addprefix $(objpfx),$(extra-objs))
 endif
 ifeq ($(cross-compiling),yes)
-tests: $(addprefix $(objpfx),$(tests) $(tests-static) $(test-srcs))
+tests: $(addprefix $(objpfx),$(tests) $(test-srcs))
+ifeq ($(build-static),yes)
+tests: $(addprefix $(objpfx),$(tests-static))
+endif
 else
-ifneq (($build-static),yes)
 tests: $(tests:%=$(objpfx)%.out)
-else
-tests: $(tests:%=$(objpfx)%.out) $(tests-static:%=$(objpfx)%.sout)
+ifeq ($(build-static),yes)
+tests: $(tests-static:%=$(objpfx)%.sout)
 endif
 endif
 

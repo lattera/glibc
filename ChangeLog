@@ -1,3 +1,91 @@
+1998-08-03 16:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/catgets.c: Use mmap/munmap only is _POSIX_MAPPED_FILES
+	is defined.
+	* catgets/open_catalog.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* intl/loadmsgcat.c: Likewise.
+	* locale/findlocale.c: Likewise.
+	* locale/loadlocale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* malloc/malloc.c: Likewise.
+
+	* elf/elf.h: Fix typo.
+
+	* math/Makefile: Use $(LN_S) instead of ln.
+
+	* sysdeps/generic/getpgid.c: Fix return type.
+
+1998-08-01 02:49 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/posix/tempname.c (__stdio_gen_tempname): Rename to
+	__gen_tempname and simplify the interface.  Strip out the
+	code to do path search and create FILE objects.  This function
+	now takes a mktemp() style template and returns either a name
+	or a file descriptor.
+	(__path_search): New function; searches for directories for
+	temp files.
+	* sysdeps/generic/tempname.c: Stub out __gen_tempname and
+	__path_search, not __stdio_gen_tempname.
+
+	* libio/stdio.h: Prototype __gen_tempname and __path_search,
+	not __stdio_gen_tempname.
+	* stdio/stdio.h: Likewise.
+
+	* stdio-common/tempnam.c: Use __path_search and __gen_tempname.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/tmpfile64.c: Likewise.
+	* stdio-common/tmpnam.c: Likewise.
+	* stdio-common/tmpnam_r.c: Likewise.
+
+	* misc/mkstemp.c: New file.  Use __gen_tempname.
+	* misc/mktemp.c: Likewise.
+
+	* sysdeps/posix/mkstemp.c: Removed.
+	* sysdeps/posix/mktemp.c: Removed.
+	* sysdeps/generic/mkstemp.c: Removed.
+	* sysdeps/generic/mktemp.c: Removed.
+
+1998-08-02  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* configure.in: Check, if door add-on is installed.
+	* config.make.in: Add have_doors.
+	* sunrpc/Makefile: Add HAVE_DOOR define.
+	* sunrpc/key_call.c: Add keyserv/door interface.
+
+	* sunrpc/svc_unix.c: Call setsockopt only if SO_PASSCRED is defined.
+	* sunrpc/clnt_unix.c: Likewise.
+
+1998-08-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/netinet/in.h (IN_CLASSC): Correct mask.
+	Reported by Ian Staniforth <I.Staniforth@sheffield.ac.uk> [fixes
+	PR libc/727].
+
+1998-08-03 10:23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/Makefile: Fix installation problem with --disable-shared.
+	* posix/Makefile: Likewise.
+
+1998-08-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/regex.c (re_search_2): Optimize searching for anchored
+	pattern if '^' cannot match at embedded newlines.
+	(regerror): Renamed from __regerror, which it should only be
+	called if _LIBC.
+
+1998-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/svc_unix.c (__msgread): Check setsockopt return value.
+
+1998-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/glob.c: Remove obsolete cast.
+
+1998-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Rules (tests): Fix last change.
+
 1998-07-31 17:59  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/Makefile [subdir==misc] (sysdep_routines):

@@ -307,7 +307,10 @@ __msgread (int sock, void *buf, size_t cnt)
   msg.msg_controllen = sizeof (struct cmessage);
   msg.msg_flags = 0;
 
-  setsockopt (sock, SOL_SOCKET, SO_PASSCRED, &on, sizeof (on));
+#ifdef SO_PASSCRED
+  if (setsockopt (sock, SOL_SOCKET, SO_PASSCRED, &on, sizeof (on)))
+    return -1;
+#endif
 
   return recvmsg (sock, &msg, 0);
 }

@@ -24,7 +24,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/mman.h>
+#ifdef _POSIX_MAPPED_FILES
+# include <sys/mman.h>
+#endif
 #include <sys/stat.h>
 
 #include "catgetsinfo.h"
@@ -194,19 +196,20 @@ __open_catalog (__nl_catd catalog)
       goto unlock_return;
     }
 
-#ifndef MAP_COPY
-    /* Linux seems to lack read-only copy-on-write.  */
-# define MAP_COPY MAP_PRIVATE
-#endif
-#ifndef MAP_FILE
-    /* Some systems do not have this flag; it is superfluous.  */
-# define MAP_FILE 0
-#endif
-#ifndef MAP_INHERIT
-    /* Some systems might lack this; they lose.  */
-# define MAP_INHERIT 0
-#endif
   catalog->file_size = st.st_size;
+#ifdef _POSIX_MAPPED_FILES
+# ifndef MAP_COPY
+    /* Linux seems to lack read-only copy-on-write.  */
+#  define MAP_COPY MAP_PRIVATE
+# endif
+# ifndef MAP_FILE
+    /* Some systems do not have this flag; it is superfluous.  */
+#  define MAP_FILE 0
+# endif
+# ifndef MAP_INHERIT
+    /* Some systems might lack this; they lose.  */
+#  define MAP_INHERIT 0
+# endif
   catalog->file_ptr =
     (struct catalog_obj *) __mmap (NULL, st.st_size, PROT_READ,
 				   MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
@@ -214,6 +217,7 @@ __open_catalog (__nl_catd catalog)
     /* Tell the world we managed to mmap the file.  */
     catalog->status = mmapped;
   else
+#endif /* _POSIX_MAPPED_FILES */
     {
       /* mmap failed perhaps because the system call is not
 	 implemented.  Try to load the file.  */
@@ -258,9 +262,11 @@ __open_catalog (__nl_catd catalog)
     invalid_file:
       /* Invalid file.  Free the resources and mark catalog as not
 	 usable.  */
+#ifdef _POSIX_MAPPED_FILES
       if (catalog->status == mmapped)
 	__munmap ((void *) catalog->file_ptr, catalog->file_size);
       else
+#endif	/* _POSIX_MAPPED_FILES */
 	free (catalog->file_ptr);
       catalog->status = nonexisting;
       goto unlock_return;

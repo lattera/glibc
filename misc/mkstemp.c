@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +16,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stdlib.h>
-#include <string.h>
 #include <errno.h>
+#include <stdio.h>
+#include <unistd.h>
 
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
-   they are replaced with a string that makes the filename unique.  */
-char *
-mktemp (template)
+   they are replaced with a string that makes the filename unique.
+   Then open the file and return a fd. */
+int
+mkstemp (template)
      char *template;
 {
-  if (strcmp (&template[strlen (template) - 6], "XXXXXX"))
-    {
-      __set_errno (EINVAL);
-      return template;
-    }
-
-  __set_errno (ENOSYS);
-  return NULL;
+  return __gen_tempname (template, 1, 0);
 }
-
-stub_warning (mktemp)
-#include <stub-tag.h>

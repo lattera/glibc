@@ -57,6 +57,9 @@ routines := brk sbrk sstk ioctl \
 	    hsearch hsearch_r tsearch lsearch \
 	    err error ustat \
 	    getsysstats dirname regexp
+
+include ../Makeconfig
+
 aux := init-misc
 ifeq ($(build-static),yes)
 install-lib := libbsd-compat.a libg.a

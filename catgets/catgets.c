@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -166,15 +166,18 @@ catclose (nl_catd catalog_desc)
 
   catalog = (__nl_catd) catalog_desc;
 
+#ifdef _POSIX_MAPPED_FILES
   if (catalog->status == mmapped)
     __munmap ((void *) catalog->file_ptr, catalog->file_size);
-  else if (catalog->status == malloced)
-    free ((void *) catalog->file_ptr);
-  else if (catalog->status != closed && catalog->status != nonexisting)
-    {
-      __set_errno (EBADF);
-      return -1;
-    }
+  else
+#endif	/* _POSIX_MAPPED_FILES */
+    if (catalog->status == malloced)
+      free ((void *) catalog->file_ptr);
+    else if (catalog->status != closed && catalog->status != nonexisting)
+      {
+	__set_errno (EBADF);
+	return -1;
+      }
 
   if (catalog->nlspath)
     free ((void *) catalog->nlspath);

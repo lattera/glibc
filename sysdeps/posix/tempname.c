@@ -28,119 +28,99 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#ifdef USE_IN_LIBIO
-# include "libioP.h"
-# include <libio.h>
-#endif
-
 /* Return nonzero if DIR is an existent directory.  */
 static int
-diraccess (const char *dir)
+direxists (const char *dir)
 {
   struct stat buf;
   return __stat (dir, &buf) == 0 && S_ISDIR (buf.st_mode);
 }
 
-/* Return nonzero if FILE exists.  */
-static int
-exists (const char *file)
+/* Path search algorithm, for tmpnam, tmpfile, etc.  If DIR is
+   non-null and exists, uses it; otherwise uses the first of $TMPDIR,
+   P_tmpdir, /tmp that exists.  Copies into TMPL a template suitable
+   for use with mk[s]temp.  Will fail (-1) if DIR is non-null and
+   doesn't exist, none of the searched dirs exists, or there's not
+   enough space in TMPL. */
+int
+__path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx)
 {
-  /* We can stat the file even if we can't read its data.  */
-  struct stat st;
-  int save = errno;
-  if (__stat (file, &st) == 0)
-    return 1;
-  else
+  const char *d;
+  size_t dlen, plen;
+
+  if (!pfx || !pfx[0])
     {
-      /* We report that the file exists if stat failed for a reason other
-	 than nonexistence.  In this case, it may or may not exist, and we
-	 don't know; but reporting that it does exist will never cause any
-	 trouble, while reporting that it doesn't exist when it does would
-	 violate the interface of __stdio_gen_tempname.  */
-      int exists = errno != ENOENT;
-      __set_errno (save);
-      return exists;
-    }
-}
-
-
-/* These are the characters used in temporary filenames.  */
-static const char letters[] =
-  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-/* Generate a temporary filename and return it (in a static buffer).  If
-   STREAMPTR is not NULL, open a stream "w+b" on the file and set
-   *STREAMPTR to it.  If DIR_SEARCH is nonzero, DIR and PFX are used as
-   described for tempnam.  If not, a temporary filename in P_tmpdir with no
-   special prefix is generated.  If LENPTR is not NULL, *LENPTR is set the
-   to length (including the terminating '\0') of the resultant filename,
-   which is returned.  This goes through a cyclic pattern of all possible
-   filenames consisting of five decimal digits of the current pid and three
-   of the characters in `letters'.  Data for tempnam and tmpnam is kept
-   separate, but when tempnam is using P_tmpdir and no prefix (i.e, it is
-   identical to tmpnam), the same data is used.  Each potential filename is
-   tested for an already-existing file of the same name, and no name of an
-   existing file will be returned.  When the cycle reaches its end
-   (12345ZZZ), NULL is returned.  */
-char *
-__stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
-		      const char *pfx, int dir_search, size_t *lenptr,
-		      FILE **streamptr, int large_file)
-{
-  int saverrno = errno;
-  static const char tmpdir[] = P_tmpdir;
-  size_t plen, dlen, len;
-  char *XXXXXX;
-  static uint64_t value;
-  struct timeval tv;
-  int count;
-
-  if (dir_search)
-    {
-      register const char *d = __secure_getenv ("TMPDIR");
-      if (d != NULL && !diraccess (d))
-	d = NULL;
-      if (d == NULL && dir != NULL && diraccess (dir))
-	d = dir;
-      if (d == NULL && diraccess (tmpdir))
-	d = tmpdir;
-      if (d == NULL && diraccess ("/tmp"))
-	d = "/tmp";
-      if (d == NULL)
-	{
-	  __set_errno (ENOENT);
-	  return NULL;
-	}
-      dir = d;
+      pfx = "file";
+      plen = 4;
     }
   else
-    dir = tmpdir;
-
-  dlen = strlen (dir);
-
- /* Remove trailing slashes from the directory name.  */
-  while (dlen > 1 && dir[dlen - 1] == '/')
-    --dlen;
-
-  if (pfx != NULL && *pfx != '\0')
     {
       plen = strlen (pfx);
       if (plen > 5)
 	plen = 5;
     }
+
+  d = __secure_getenv ("TMPDIR");
+  if (d != NULL && direxists (d))
+    dir = d;
+  else if (dir != NULL && direxists (dir))
+    /* nothing */ ;
+  else if (direxists (P_tmpdir))
+    dir = P_tmpdir;
+  else if (direxists ("/tmp"))
+    dir = "/tmp";
   else
-    plen = 0;
+    {
+      __set_errno (ENOENT);
+      return -1;
+    }
 
-  len = __snprintf (buf, bufsize, "%.*s/%.*sXXXXXX",
-	      (int) dlen, dir, (int) plen, pfx);
+  dlen = strlen (dir);
+  while (dlen > 1 && dir[dlen - 1] == '/')
+    dlen--;			/* remove trailing slashes */
 
-  if (len < dlen + plen + 7)
-  {
+  /* check we have room for "${dir}/${pfx}XXXXXX\0" */
+  if (tmpl_len < dlen + 1 + plen + 6 + 1)
+    {
       __set_errno (EINVAL);
-      return NULL;
-  }
+      return -1;
+    }
 
-  XXXXXX = &buf[dlen + plen + 1];
+  sprintf (tmpl, "%*s/%*sXXXXXX", dlen, dir, plen, pfx);
+  return 0;
+}
+
+/* These are the characters used in temporary filenames.  */
+static const char letters[] =
+"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+/* Generate a temporary file name based on TMPL.  TMPL must match the
+   rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
+   does not exist at the time of the call to __gen_tempname.  TMPL is
+   overwritten with the result.  If OPENIT is nonzero, creates the
+   file and returns a read-write fd; the file is mode 0600 modulo
+   umask.  If LARGEFILE is nonzero, uses open64() instead of open().
+
+   We use a clever algorithm to get hard-to-predict names. */
+int
+__gen_tempname (char *tmpl, int openit, int largefile)
+{
+  int len;
+  char *XXXXXX;
+  static uint64_t value;
+  struct timeval tv;
+  int count, fd;
+  int save_errno = errno;
+
+  len = strlen (tmpl);
+  if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  /* This is where the Xs start.  */
+  XXXXXX = &tmpl[len - 6];
 
   /* Get some more or less random data.  */
   __gettimeofday (&tv, NULL);
@@ -163,116 +143,45 @@ __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
       v /= 62;
       XXXXXX[5] = letters[v % 62];
 
-      if (streamptr != NULL)
+      if (openit)
 	{
-	  /* Try to create the file atomically.  */
-#ifdef _G_OPEN64
-	  int fd = (large_file
-		    ? __open (buf, O_RDWR|O_CREAT|O_EXCL, 0666)
-		    : _G_OPEN64 (buf, O_RDWR|O_CREAT|O_EXCL, 0666));
+	  /* XXX Do we want to fail on largefile if 64 bit fileops
+	     are not implemented, or just fall back to the old stuff? */
+#ifndef __stub_open64
+	  fd = (largefile
+		? __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0666)
+		: __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, 0666));
 #else
-	  int fd = __open (buf, O_RDWR|O_CREAT|O_EXCL, 0666);
+	  fd = __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0666);
 #endif
 	  if (fd >= 0)
 	    {
-	      /* We got a new file that did not previously exist.
-		 Create a stream for it.  */
-#ifdef USE_IN_LIBIO
-	      int save;
-	      struct locked_FILE
-		{
-		  struct _IO_FILE_plus fp;
-#ifdef _IO_MTSAFE_IO
-		  _IO_lock_t lock;
-#endif
-		} *new_f;
-	      struct _IO_FILE_plus *fp;
-
-	      new_f = (struct locked_FILE *)
-		malloc (sizeof (struct locked_FILE));
-	      if (new_f == NULL)
-		{
-		  /* We lost trying to create a stream (out of memory?).
-		     Nothing to do but remove the file, close the descriptor,
-		     and return failure.  */
-		  save = errno;
-		lose:
-		  (void) remove (buf);
-		  (void) __close (fd);
-		  __set_errno (save);
-		  return NULL;
-		}
-	      fp = &new_f->fp;
-#ifdef _IO_MTSAFE_IO
-	      fp->file._lock = &new_f->lock;
-#endif
-	      _IO_init (&fp->file, 0);
-	      _IO_JUMPS (&fp->file) = &_IO_file_jumps;
-	      _IO_file_init (&fp->file);
-# if !_IO_UNIFIED_JUMPTABLES
-	      fp->vtable = NULL;
-# endif
-	      if (_IO_file_attach (&fp->file, fd) == NULL)
-		{
-		  save = errno;
-		  free (fp);
-		  goto lose;
-		}
-	      fp->file._flags &= ~_IO_DELETE_DONT_CLOSE;
-
-	      *streamptr = (FILE *) fp;
-#else
-	      *streamptr = __newstream ();
-	      if (*streamptr == NULL)
-		{
-		  /* We lost trying to create a stream (out of memory?).
-		     Nothing to do but remove the file, close the descriptor,
-		     and return failure.  */
-		  const int save = errno;
-		  (void) remove (buf);
-		  (void) __close (fd);
-		  __set_errno (save);
-		  return NULL;
-		}
-	      (*streamptr)->__cookie = (__ptr_t) (long int) fd;
-	      (*streamptr)->__mode.__write = 1;
-	      (*streamptr)->__mode.__read = 1;
-	      (*streamptr)->__mode.__binary = 1;
-#endif
+	      __set_errno (save_errno);
+	      return fd;
 	    }
-#if defined EMFILE || defined ENFILE || defined EINTR
-	  else if (0
-# ifdef EMFILE
-		   || errno == EMFILE
-# endif
-# ifdef ENFILE
-		   || errno == ENFILE
-# endif
-# ifdef EINTR
-		   || errno == EINTR
-# endif
-		   )
-	    /* We cannot open anymore files since all descriptors are
-	       used or because we got a signal.  */
-	    return NULL;
-#endif
-	  else
-	    continue;
+	  else if (errno != EEXIST)
+	    /* Any other error will apply also to other names we might
+	       try, and there are 2^32 or so of them, so give up now. */
+	    return -1;
 	}
-      else if (exists (buf))
-	continue;
-
-      /* If the file already existed we have continued the loop above,
-	 so we only get here when we have a winning name to return.  */
-
-      __set_errno (saverrno);
-
-      if (lenptr != NULL)
-	*lenptr = len + 1;
-      return buf;
+      else
+	{
+	  struct stat st;
+	  if (__stat (tmpl, &st) < 0)
+	    {
+	      if (errno == ENOENT)
+		{
+		  __set_errno (save_errno);
+		  return 0;
+		}
+	      else
+		/* Give up now. */
+		return -1;
+	    }
+	}
     }
 
   /* We got out of the loop because we ran out of combinations to try.  */
-  __set_errno (EEXIST);		/* ? */
-  return NULL;
+  __set_errno (EEXIST);
+  return -1;
 }

@@ -1168,6 +1168,12 @@ AC_SUBST(nopic_initfini)
 
 AC_SUBST(DEFINES)
 
+case "$add_ons" in
+  *door*) linux_doors=yes ;;
+  *) linux_doors=no ;;
+esac
+AC_SUBST(linux_doors)
+
 if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
   config_makefile=
 else

@@ -511,7 +511,7 @@ glob (pattern, flags, errfunc, pglob)
 	 case is nothing but a notation for a directory.  */
       if ((flags & (GLOB_TILDE|GLOB_TILDE_CHECK)) && pattern[0] == '~')
 	{
-	  dirname = (char *) pattern;
+	  dirname = pattern;
 	  dirlen = strlen (pattern);
 
 	  /* Set FILENAME to NULL as a special flag.  This is ugly but

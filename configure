@@ -2879,6 +2879,12 @@ echo "$ac_t""$pic_default" 1>&6
 
 
 
+case "$add_ons" in
+  *door*) linux_doors=yes ;;
+  *) linux_doors=no ;;
+esac
+
+
 if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
   config_makefile=
 else
@@ -3083,6 +3089,7 @@ s%@bounded@%$bounded%g
 s%@static_nss@%$static_nss%g
 s%@nopic_initfini@%$nopic_initfini%g
 s%@DEFINES@%$DEFINES%g
+s%@linux_doors@%$linux_doors%g
 s%@VERSION@%$VERSION%g
 s%@RELEASE@%$RELEASE%g
 

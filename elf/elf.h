@@ -1170,7 +1170,7 @@ typedef struct
 #define DT_MIPS_AUX_DYNAMIC  0x70000031 /* Address of aux .dynamic.  */
 #define DT_MIPS_NUM	     0x32
 
-/* Legal values for DT_MIPS_FLAG Elf32_Dyn entry.  */
+/* Legal values for DT_MIPS_FLAGS Elf32_Dyn entry.  */
 
 #define RHF_NONE		   0		/* No flags */
 #define RHF_QUICKSTART		   (1 << 0)	/* Use quickstart */

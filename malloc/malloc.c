@@ -493,6 +493,10 @@ do {                                                                          \
 #endif
 
 
+#ifndef LACKS_UNISTD_H
+#  include <unistd.h>
+#endif
+
 /*
   Define HAVE_MMAP to optionally make malloc() use mmap() to
   allocate very large blocks.  These will be returned to the
@@ -500,7 +504,9 @@ do {                                                                          \
 */
 
 #ifndef HAVE_MMAP
-#define HAVE_MMAP 1
+# ifdef _POSIX_MAPPED_FILES
+#  define HAVE_MMAP 1
+# endif
 #endif
 
 /*
@@ -540,10 +546,6 @@ do {                                                                          \
   The following mechanics for getpagesize were adapted from
   bsd/gnu getpagesize.h
 */
-
-#ifndef LACKS_UNISTD_H
-#  include <unistd.h>
-#endif
 
 #ifndef malloc_getpagesize
 #  ifdef _SC_PAGESIZE         /* some SVR4 systems omit an underscore */

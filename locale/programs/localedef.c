@@ -30,7 +30,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/mman.h>
+#ifdef _POSIX2_LOCALEDEF
+# include <sys/mman.h>
+#endif
 #include <sys/stat.h>
 
 #include "error.h"
@@ -276,10 +278,12 @@ cannot `stat' locale file `%s'"),
 		       fname);
 
 	      localedef->len[cat] = st.st_size;
+#ifdef _POSIX_MAPPED_FILES
 	      localedef->categories[cat].generic
 		= mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
 
 	      if (localedef->categories[cat].generic == MAP_FAILED)
+#endif	/* _POSIX_MAPPED_FILES */
 		{
 		  size_t left = st.st_size;
 		  void *read_ptr;

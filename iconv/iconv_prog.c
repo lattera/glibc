@@ -30,7 +30,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/mman.h>
+#ifdef _POSIX_MAPPED_FILES
+# include <sys/mman.h>
+#endif
 #include <gconv_int.h>
 
 /* Get libc version number.  */
@@ -176,6 +178,7 @@ main (int argc, char *argv[])
 	    continue;
 	  }
 
+#ifdef _POSIX_MAPPED_FILES
 	/* We have possibilities for reading the input file.  First try
 	   to mmap() it since this will provide the fastest solution.  */
 	if (fstat (fd, &st) == 0
@@ -206,6 +209,7 @@ main (int argc, char *argv[])
 	    munmap ((void *) addr, st.st_size);
 	  }
 	else
+#endif	/* _POSIX_MAPPED_FILES */
 	  {
 	    /* Read the file in pieces.  */
 	    if (process_fd (cd, fd, output) != 0)

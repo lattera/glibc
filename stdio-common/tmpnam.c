@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <string.h>
 
-
 /* Generate a unique filename in P_tmpdir.
 
    This function is *not* thread safe!  */
@@ -30,20 +29,21 @@ tmpnam (char *s)
      where S != NULL.  */
   static char buf[L_tmpnam];
   char tmpbuf[L_tmpnam];
-  char *result;
 
   /* In the following call we use the buffer pointed to by S if
      non-NULL although we don't know the size.  But we limit the size
-     to FILENAME_MAX characters in any case.  */
-  result = __stdio_gen_tempname (s ?: tmpbuf, L_tmpnam, (const char *) NULL,
-				 (const char *) NULL, 0,
-				 (size_t *) NULL, (FILE **) NULL, 0);
+     to L_tmpnam characters in any case.  */
+  if (__path_search (s ? : tmpbuf, L_tmpnam, NULL, NULL))
+    return NULL;
 
-  if (result != NULL && s == NULL)
+  if (__gen_tempname (s ? : tmpbuf, 0, 0))
+    return NULL;
+
+  if (s == NULL)
     {
-      memcpy (buf, result, L_tmpnam);
-      result = buf;
+      memcpy (buf, tmpbuf, L_tmpnam);
+      return buf;
     }
-
-  return result;
+  else
+    return s;
 }

@@ -23,7 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/mman.h>
+#ifdef _POSIX_MAPPED_FILES
+# include <sys/mman.h>
+#endif
 #include <sys/stat.h>
 
 #include "localeinfo.h"
@@ -113,24 +115,32 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 
   /* Map in the file's data.  */
   save_err = errno;
-#ifndef MAP_COPY
+#ifdef _POSIX_MAPPED_FILES
+# ifndef MAP_COPY
   /* Linux seems to lack read-only copy-on-write.  */
-#define MAP_COPY MAP_PRIVATE
-#endif
-#ifndef	MAP_FILE
+#  define MAP_COPY MAP_PRIVATE
+# endif
+# ifndef MAP_FILE
   /* Some systems do not have this flag; it is superfluous.  */
-#define	MAP_FILE 0
-#endif
-#ifndef MAP_INHERIT
+#  define MAP_FILE 0
+# endif
+# ifndef MAP_INHERIT
   /* Some systems might lack this; they lose.  */
-#define MAP_INHERIT 0
-#endif
+#  define MAP_INHERIT 0
+# endif
   filedata = (void *) __mmap ((caddr_t) 0, st.st_size, PROT_READ,
 			      MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
-  if ((void *) filedata == MAP_FAILED)
+  if ((void *) filedata != MAP_FAILED)
+    {
+      if (st.st_size < sizeof (*filedata))
+	/* This cannot be a locale data file since it's too small.  */
+	goto puntfd;
+    }
+  else
     {
       if (errno == ENOSYS)
 	{
+#endif	/* _POSIX_MAPPED_FILES */
 	  /* No mmap; allocate a buffer and read from the file.  */
 	  mmaped = 0;
 	  filedata = malloc (st.st_size);
@@ -156,13 +166,12 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	  else
 	    goto puntfd;
 	  __set_errno (save_err);
+#ifdef _POSIX_MAPPED_FILES
 	}
       else
 	goto puntfd;
     }
-  else if (st.st_size < sizeof (*filedata))
-    /* This cannot be a locale data file since it's too small.  */
-    goto puntfd;
+#endif	/* _POSIX_MAPPED_FILES */
 
   if (filedata->magic == LIMAGIC (category))
     /* Good data file in our byte order.  */
@@ -175,7 +184,12 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	/* Bad data file in either byte order.  */
 	{
 	puntmap:
-	  __munmap ((caddr_t) filedata, st.st_size);
+#ifdef _POSIX_MAPPED_FILES
+	  if (mmaped)
+	    __munmap ((caddr_t) filedata, st.st_size);
+	  else
+#endif	/* _POSIX_MAPPED_FILES */
+	    free (filedata);
 	puntfd:
 	  __close (fd);
 	  return;
@@ -228,9 +242,11 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 void
 _nl_unload_locale (struct locale_data *locale)
 {
+#ifdef _POSIX_MAPPED_FILES
   if (locale->mmaped)
     __munmap ((caddr_t) locale->filedata, locale->filesize);
   else
+#endif
     free ((void *) locale->filedata);
 
   free (locale);

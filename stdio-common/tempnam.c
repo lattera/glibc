@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
 
 /* Generate a unique temporary filename using up to five characters of PFX
    if it is not NULL.  The directory to put this file in is searched for
@@ -34,17 +30,12 @@ char *
 tempnam (const char *dir, const char *pfx)
 {
   char buf[FILENAME_MAX];
-  size_t len;
-  char *s;
-  char *t = __stdio_gen_tempname (buf, sizeof (buf), dir, pfx, 1,
-				  &len, (FILE **) NULL, 0);
 
-  if (t == NULL)
+  if (__path_search (buf, FILENAME_MAX, dir, pfx))
     return NULL;
 
-  s = (char *) malloc (len);
-  if (s == NULL)
+  if (__gen_tempname (buf, 0, 0))
     return NULL;
 
-  return (char *) memcpy (s, t, len);
+  return strdup (buf);
 }

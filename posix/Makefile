@@ -52,6 +52,8 @@ routines :=								      \
 	getaddrinfo gai_strerror wordexp				      \
 	pread pwrite pread64 pwrite64
 
+include ../Makeconfig
+
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests wordexp-test runptests
 test-srcs	:= globtest

@@ -40,6 +40,7 @@ old-glibc-headers = @old_glibc_headers@
 versioning = @VERSIONING@
 no-whole-archive = @no_whole_archive@
 exceptions = @exceptions@
+have_doors = @linux_doors@
 
 have-bash2 = @libc_cv_have_bash2@
 have-ksh = @libc_cv_have_ksh@

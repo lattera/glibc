@@ -109,6 +109,10 @@ CFLAGS-xnfs_prot.c = -Wno-unused
 CFLAGS-xrquota.c = -Wno-unused
 CFLAGS-xkey_prot.c = -Wno-unused
 
+ifeq (yes,$(have_doors))
+CPPFLAGS-key_call.c += -DHAVE_DOORS=1
+endif
+
 include ../Rules
 
 $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
