@@ -77,7 +77,6 @@ __pthread_setaffinity_new (pthread_t th, size_t cpusetsize,
 	 fulfilled.  */
       return EINVAL;
 
-  INTERNAL_SYSCALL_DECL (err);
   res = INTERNAL_SYSCALL (sched_setaffinity, err, 3, pd->tid, cpusetsize,
 			  cpuset);
   return (INTERNAL_SYSCALL_ERROR_P (res, err)
@@ -90,10 +89,10 @@ versioned_symbol (libpthread, __pthread_setaffinity_new,
 
 #if SHLIB_COMPAT(libpthread, 2_3_3, 2_3_4)
 int
-__pthread_setaffinity_old (const pthread_attr_t *attr, cpu_set_t *cpuset)
+__pthread_setaffinity_old (pthread_t th, cpu_set_t *cpuset)
 {
   /* The old interface by default assumed a 1024 processor bitmap.  */
-  return __pthread_setaffinity_new (attr, 128, cpuset);
+  return __pthread_setaffinity_new (th, 128, cpuset);
 }
 compat_symbol (libpthread, __pthread_setaffinity_old, pthread_setaffinity_np,
 	       GLIBC_2_3_3);

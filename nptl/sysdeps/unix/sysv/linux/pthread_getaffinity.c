@@ -50,10 +50,10 @@ versioned_symbol (libpthread, __pthread_getaffinity_new,
 
 #if SHLIB_COMPAT(libpthread, 2_3_3, 2_3_4)
 int
-__pthread_getaffinity_old (const pthread_attr_t *attr, cpu_set_t *cpuset)
+__pthread_getaffinity_old (pthread_t th, cpu_set_t *cpuset)
 {
   /* The old interface by default assumed a 1024 processor bitmap.  */
-  return __pthread_getaffinity_new (attr, 128, cpuset);
+  return __pthread_getaffinity_new (th, 128, cpuset);
 }
 compat_symbol (libpthread, __pthread_getaffinity_old, pthread_getaffinity_np,
 	       GLIBC_2_3_3);

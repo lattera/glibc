@@ -1,3 +1,13 @@
+2004-03-20  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c
+	(__pthread_setaffinity_old): Fix interface.
+	* sysdeps/unix/sysv/linux/pthread_getaffinity.c
+	(__pthread_getaffinity_old): Likewise.
+
+	* sysdeps/unix/sysv/linux/pthread_setaffinity.c
+	(__pthread_setaffinity_new): Remove duplicate declaration.
+
 2004-03-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (CENABLE): Save
