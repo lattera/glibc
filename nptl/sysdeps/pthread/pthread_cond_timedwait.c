@@ -159,7 +159,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
       /* Check whether we are eligible for wakeup.  */
       val = cond->__data.__wakeup_seq;
-      if (val > seq && cond->__data.__woken_seq < val)
+      if (val != seq && cond->__data.__woken_seq != val)
 	break;
 
       /* Not woken yet.  Maybe the time expired?  */

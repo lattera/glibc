@@ -143,7 +143,7 @@ __pthread_cond_wait (cond, mutex)
       /* Check whether we are eligible for wakeup.  */
       val = cond->__data.__wakeup_seq;
     }
-  while (! (val > seq && cond->__data.__woken_seq < val));
+  while (val == seq || cond->__data.__woken_seq == val);
 
   /* Another thread woken up.  */
   ++cond->__data.__woken_seq;

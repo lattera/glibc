@@ -65,7 +65,7 @@ cond_timedwait(cv, mutex, timeout):
 
      val = cv->wakeup_seq;
 
-     if (val > seq && cv->woken_seq < val) {
+     if (val != seq && cv->woken_seq != val) {
        ret = 0;
        break;
      }

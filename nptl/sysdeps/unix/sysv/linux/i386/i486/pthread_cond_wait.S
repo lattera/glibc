@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -133,16 +133,14 @@ __pthread_cond_wait:
 	movl	wakeup_seq+4(%ebx), %edx
 
 	cmpl	8(%esp), %edx
-	ja	7f
-	jb	8b
+	jne	7f
 	cmpl	4(%esp), %edi
-	jbe	8b
+	je	8b
 
 7:	cmpl	%ecx, %edx
-	ja	9f
-	jb	8b
+	jne	9f
 	cmp	%eax, %edi
-	jna	8b
+	je	8b
 
 9:	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
