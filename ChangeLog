@@ -1,5 +1,8 @@
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c: Also test for HAVE_VISIBILITY_ATTRIBUTE before
+	defining DONT_USE_BOOTSTRAP_MAP.
+
 	* libio/tst-freopen.c (main): Use correct formats for __LINE__.
 	* libio/tst-mmap-setvbuf.c (main): Likewise.
 	* libio/tst-widetext.c (main): Likewise.

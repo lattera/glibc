@@ -129,7 +129,8 @@ TLS_INIT_HELPER
    is fine, too.  The latter is impotant here.  We can avoid setting
    up a temporary link map for ld.so if we can mark _rtld_global as
    hidden.  */
-#if defined PI_STATIC_AND_HIDDEN && defined HAVE_HIDDEN
+#if defined PI_STATIC_AND_HIDDEN && defined HAVE_HIDDEN \
+    && defined HAVE_VISIBILITY_ATTRIBUTE
 # define DONT_USE_BOOTSTRAP_MAP	1
 #endif
 

@@ -1,3 +1,27 @@
+2002-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* tests-mbwc/tst_mbrlen.c: Use correct format in test result printing
+	code.
+	* tests-mbwc/tst_mbrtowc.c: Likewise.
+	* tests-mbwc/tst_mbsrtowcs.c: Likewise.
+	* tests-mbwc/tst_mbstowcs.c: Likewise.
+	* tests-mbwc/tst_strfmon.c: Likewise.
+	* tests-mbwc/tst_strxfrm.c: Likewise.
+	* tests-mbwc/tst_swscanf.c: Likewise.
+	* tests-mbwc/tst_wcscat.c: Likewise.
+	* tests-mbwc/tst_wcschr.c: Likewise.
+	* tests-mbwc/tst_wcscpy.c: Likewise.
+	* tests-mbwc/tst_wcscspn.c: Likewise.
+	* tests-mbwc/tst_wcsncat.c: Likewise.
+	* tests-mbwc/tst_wcsncpy.c: Likewise.
+	* tests-mbwc/tst_wcspbrk.c: Likewise.
+	* tests-mbwc/tst_wcsrtombs.c: Likewise.
+	* tests-mbwc/tst_wcsspn.c: Likewise.
+	* tests-mbwc/tst_wcsstr.c: Likewise.
+	* tests-mbwc/tst_wcstod.c: Likewise.
+	* tests-mbwc/tst_wcstok.c: Likewise.
+	* tests-mbwc/tst_wcstombs.c: Likewise.
+
 2002-08-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* charmaps/BIG5-HKSCS (WIDTH): Change <UE000> to <UE003> at start of
