@@ -1077,7 +1077,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  slotinfo[++i].map = l;
       assert (i == GL(dl_tls_max_dtv_idx));
 
-      /* Computer the TLS offsets for the various blocks.  We call this
+      /* Compute the TLS offsets for the various blocks.  We call this
 	 function even if none of the modules available at startup time
 	 uses TLS to initialize some variables.  */
       _dl_determine_tlsoffset ();
@@ -1090,7 +1090,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       tcbp = INTUSE(_dl_allocate_tls) ();
       if (tcbp == NULL)
 	_dl_fatal_printf ("\
-cannot allocate TLS data structures for inital thread");
+cannot allocate TLS data structures for initial thread");
 
       /* And finally install it for the main thread.  */
       TLS_INIT_TP (tcbp);

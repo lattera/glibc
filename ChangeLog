@@ -1,5 +1,9 @@
 2002-07-31  Roland McGrath  <roland@frob.com>
 
+	* elf/rtld.c (dl_main): Fix typo in error message.
+
+2002-07-31  Roland McGrath  <roland@frob.com>
+
 	* sysdeps/mach/hurd/Versions (ld: GLIBC_2.0): __fxstat -> __fxstat64,
 	__xstat -> __xstat64, __lseek -> __libc_lseek64.  Completes 2002-06-09
 	sysdeps/mach/hurd/dl-sysdep.c change.
