@@ -38,6 +38,8 @@ struct dbstat
 {
   int enabled;
   int check_file;
+  int shared;
+  int persistent;
   size_t module;
 
   unsigned long int postimeout;
@@ -88,6 +90,8 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
     {
       data.dbs[cnt].enabled = dbs[cnt].enabled;
       data.dbs[cnt].check_file = dbs[cnt].check_file;
+      data.dbs[cnt].shared = dbs[cnt].shared;
+      data.dbs[cnt].persistent = dbs[cnt].persistent;
       data.dbs[cnt].module = dbs[cnt].head->module;
       data.dbs[cnt].postimeout = dbs[cnt].postimeout;
       data.dbs[cnt].negtimeout = dbs[cnt].negtimeout;
@@ -213,6 +217,9 @@ receive_print_stats (void)
       const char *enabled = nl_langinfo (data.dbs[i].enabled ? YESSTR : NOSTR);
       const char *check_file = nl_langinfo (data.dbs[i].check_file
 					    ? YESSTR : NOSTR);
+      const char *shared = nl_langinfo (data.dbs[i].shared ? YESSTR : NOSTR);
+      const char *persistent = nl_langinfo (data.dbs[i].persistent
+					    ? YESSTR : NOSTR);
 
       if (enabled[0] == '\0')
 	/* The locale does not provide this information so we have to
@@ -221,6 +228,10 @@ receive_print_stats (void)
 	enabled = data.dbs[i].enabled ? _("     yes") : _("      no");
       if (check_file[0] == '\0')
 	check_file = data.dbs[i].check_file ? _("     yes") : _("      no");
+      if (shared[0] == '\0')
+	shared = data.dbs[i].shared ? _("     yes") : _("      no");
+      if (persistent[0] == '\0')
+	persistent = data.dbs[i].persistent ? _("     yes") : _("      no");
 
       if (all == 0)
 	/* If nothing happened so far report a 0% hit rate.  */
@@ -228,6 +239,8 @@ receive_print_stats (void)
 
       printf (_("\n%s cache:\n\n"
 		"%15s  cache is enabled\n"
+		"%15s  cache is persistent\n"
+		"%15s  cache is shared\n"
 		"%15zu  suggested size\n"
 		"%15zu  total data pool size\n"
 		"%15zu  used data pool size\n"
@@ -245,7 +258,7 @@ receive_print_stats (void)
 		"%15" PRIuMAX "  number of delays on wrlock\n"
 		"%15" PRIuMAX "  memory allocations failed\n"
 		"%15s  check /etc/%s for changes\n"),
-	      dbnames[i], enabled,
+	      dbnames[i], enabled, persistent, shared,
 	      data.dbs[i].module,
 	      data.dbs[i].datasize, data.dbs[i].dataused,
 	      data.dbs[i].postimeout, data.dbs[i].negtimeout,

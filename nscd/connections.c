@@ -258,14 +258,16 @@ nscd_init (void)
 			       dbnames[cnt]);
 
 		    dbs[cnt].wr_fd = fd;
-		    dbs[cnt].ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
 		    fd = -1;
 		    /* We also need a read-only descriptor.  */
-		    dbs[cnt].ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
-		    if (dbs[cnt].ro_fd == -1)
-		      dbg_log (_("\
+		    if (dbs[cnt].shared)
+		      {
+			dbs[cnt].ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
+			if (dbs[cnt].ro_fd == -1)
+			  dbg_log (_("\
 cannot create read-only descriptor for \"%s\"; no mmap"),
-			       dbs[cnt].db_filename);
+				   dbs[cnt].db_filename);
+		      }
 
 		    // XXX Shall we test whether the descriptors actually
 		    // XXX point to the same file?
@@ -299,7 +301,7 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 		fd = open (dbs[cnt].db_filename,
 			   O_RDWR | O_CREAT | O_EXCL | O_TRUNC,
 			   S_IRUSR | S_IWUSR);
-		if (fd != -1)
+		if (fd != -1 && dbs[cnt].shared)
 		  ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
 	      }
 	    else
@@ -312,7 +314,7 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 
 		/* We do not need the file name anymore after we
 		   opened another file descriptor in read-only mode.  */
-		if (fd != -1)
+		if (fd != -1 && dbs[cnt].shared)
 		  {
 		    ro_fd = open (fname, O_RDONLY);
 
@@ -344,7 +346,7 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 	      {
 		/* Tell the user if we could not create the read-only
 		   descriptor.  */
-		if (ro_fd == -1)
+		if (ro_fd == -1 && dbs[cnt].shared)
 		  dbg_log (_("\
 cannot create read-only descriptor for \"%s\"; no mmap"),
 			   dbs[cnt].db_filename);
