@@ -1,3 +1,7 @@
+2000-07-26  Andreas Jaeger  <aj@suse.de>
+
+	* pthread.c: Initialize p_sem_avail.
+
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* internals.h (struct __pthread_descr_struct): Add p_sem_avail.

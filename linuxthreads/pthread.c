@@ -89,6 +89,7 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   0,                          /* char p_woken_by_cancel */
   0,                          /* char p_condvar_avail */
+  0,                          /* char p_sem_avail */
   NULL,                       /* struct pthread_extricate_if *p_extricate */
   NULL,	                      /* pthread_readlock_info *p_readlock_list; */
   NULL,                       /* pthread_readlock_info *p_readlock_free; */
@@ -145,6 +146,7 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   0,                          /* char p_woken_by_cancel */
   0,                          /* char p_condvar_avail */
+  0,                          /* char p_sem_avail */
   NULL,                       /* struct pthread_extricate_if *p_extricate */
   NULL,	                      /* pthread_readlock_info *p_readlock_list; */
   NULL,                       /* pthread_readlock_info *p_readlock_free; */
