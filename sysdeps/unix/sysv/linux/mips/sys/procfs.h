@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,10 +40,6 @@ struct elf_siginfo
     int si_errno;			/* Errno.  */
   };
 
-typedef elf_greg_t greg_t;
-typedef elf_gregset_t gregset_t;
-typedef elf_fpregset_t fpregset_t;
-#define NGREG ELF_NGREG
 
 /* Definitions to generate Intel SVR4-like core files.  These mostly
    have the same names as the SVR4 types with "elf_" tacked on the
