@@ -1137,7 +1137,9 @@ process_envvars (enum mode *modep, int *lazyp)
 	  /* Do we bind early?  */
 	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0
 	      && (envline[12] == '1' || envline[12] == 'y'
-		  || envline[12] == 'Y'))
+		  || envline[12] == 'Y'
+		  || ((envline[12] == 'o' || envline[12] == 'O')
+		      && (envline[13] == 'n' || envline[13] == 'N'))))
 	    bind_now = 1;
 	  break;
 
@@ -1222,8 +1224,16 @@ process_envvars (enum mode *modep, int *lazyp)
      messages to this file.  */
   if (any_debug && debug_output != NULL && !__libc_enable_secure)
     {
-      _dl_debug_fd = __open (debug_output, O_WRONLY | O_APPEND | O_CREAT,
-			     0666);
+      size_t name_len = strlen (debug_output);
+      char buf[name_len + 12];
+      char *startp;
+
+      buf[name_len + 11] = '\0';
+      startp = _itoa_word (__getpid (), &buf[name_len + 11], 10, 0);
+      *--startp = '.';
+      startp = memcpy (startp - name_len, debug_output, name_len);
+
+      _dl_debug_fd = __open (startp, O_WRONLY | O_APPEND | O_CREAT, 0666);
       if (_dl_debug_fd == -1)
 	/* We use standard output if opening the file failed.  */
 	_dl_debug_fd = STDOUT_FILENO;

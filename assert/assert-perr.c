@@ -25,7 +25,7 @@
 extern const char *__assert_program_name; /* In assert.c.  */
 
 #ifdef USE_IN_LIBIO
-# include <libo/iolibio.h>
+# include <libio/iolibio.h>
 # define fflush(s) _IO_fflush (s)
 #endif
 

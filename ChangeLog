@@ -1,3 +1,8 @@
+1998-07-16 19:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (process_envvars): Also recognize on as LD_BIND_NOW value.
+	(process_envvars): Append .PID to LD_DEBUG_OUTPUT file name.
+
 1998-07-16 13:44  Ulrich Drepper  <drepper@cygnus.com>
 
 	* argp/argp-fmtstream.c: Fix warnings introduced in last change.
