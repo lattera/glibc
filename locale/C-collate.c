@@ -119,11 +119,11 @@ const struct locale_data _nl_C_LC_COLLATE =
     { string: NULL },
     /* _NL_COLLATE_INDIRECTMB */
     { string: NULL },
-    /* _NL_COLLATE_HASH_SIZE */
-    { word: 0 },
-    /* _NL_COLLATE_HASH_LAYERS */
-    { word: 0 },
-    /* _NL_COLLATE_NAMES */
+    /* _NL_COLLATE_GAP1 */
+    { string: NULL },
+    /* _NL_COLLATE_GAP2 */
+    { string: NULL },
+    /* _NL_COLLATE_GAP3 */
     { string: NULL },
     /* _NL_COLLATE_TABLEWC */
     { string: NULL },

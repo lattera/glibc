@@ -20,36 +20,17 @@
 #include <ctype.h>
 #include <wctype.h>
 
-#include "cname-lookup.h"
 #include "wchar-lookup.h"
-
-
-extern unsigned int *__ctype32_b;
 
 
 int
 __iswctype (wint_t wc, wctype_t desc)
 {
-  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
-    {
-      /* Old locale format.  */
-      size_t idx;
+  /* If the user passes in an invalid DESC valid (the one returned from
+     `wctype' in case of an error) simply return 0.  */
+  if (desc == (wctype_t) 0)
+    return 0;
 
-      idx = cname_lookup (wc);
-      if (idx == ~((size_t) 0))
-	return 0;
-
-      return __ctype32_b[idx] & desc;
-    }
-  else
-    {
-      /* If the user passes in an invalid DESC valid (the one returned from
-	 `wctype' in case of an error) simply return 0.  */
-      if (desc == (wctype_t) 0)
-	return 0;
-
-      /* New locale format.  */
-      return wctype_table_lookup ((const char *) desc, wc);
-    }
+  return wctype_table_lookup ((const char *) desc, wc);
 }
 weak_alias (__iswctype, iswctype)

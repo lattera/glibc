@@ -96,11 +96,6 @@ STRCOLL (s1, s2, l)
   int seq1len;
   int seq2len;
   int use_malloc;
-#ifdef WIDE_CHAR_VERSION
-  size_t size;
-  size_t layers;
-  const wint_t *names;
-#endif
 
 #include WEIGHT_H
 
@@ -118,12 +113,6 @@ STRCOLL (s1, s2, l)
     current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_EXTRA,SUFFIX))].string;
   indirect = (const int32_t *)
     current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_INDIRECT,SUFFIX))].string;
-# ifdef WIDE_CHAR_VERSION
-  names = (const wint_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_NAMES)].string;
-  size = current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)].word;
-  layers = current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].word;
-# endif
 #else
   rulesets = (const unsigned char *)
     _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULESETS);
@@ -135,22 +124,13 @@ STRCOLL (s1, s2, l)
     _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_EXTRA,SUFFIX));
   indirect = (const int32_t *)
     _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_INDIRECT,SUFFIX));
-# ifdef WIDE_CHAR_VERSION
-  names = (const wint_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_NAMES);
-  size = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_SIZE);
-  layers = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_LAYERS);
-# endif
 #endif
   use_malloc = 0;
 
   assert (((uintptr_t) table) % sizeof (table[0]) == 0);
   assert (((uintptr_t) weights) % sizeof (weights[0]) == 0);
-  assert (((uintptr_t) weights) % sizeof (weights[0]) == 0);
   assert (((uintptr_t) extra) % sizeof (extra[0]) == 0);
   assert (((uintptr_t) indirect) % sizeof (indirect[0]) == 0);
-#ifdef WIDE_CHAR_VERSION
-  assert (((uintptr_t) names) % sizeof (names[0]) == 0);
-#endif
 
   /* We need this a few times.  */
   s1len = STRLEN (s1);

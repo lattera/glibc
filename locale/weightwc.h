@@ -24,29 +24,9 @@ findidx (const wint_t **cpp)
   int_fast32_t i;
   const wint_t *cp;
   wint_t ch;
-  size_t cnt = 0;
 
   ch = *(*cpp)++;
-  if (size != 0)
-    {
-      /* Old locale format.  */
-      size_t idx;
-
-      idx = ch % size;
-      while (names[idx] != ch)
-	{
-	  if (++cnt == layers)
-	    /* We didn't find the name.  It is case for UNDEFINED.  */
-	    return 0;
-	  idx += size;
-	}
-      i = table[idx];
-    }
-  else
-    {
-      /* New locale format.  */
-      i = collidx_table_lookup ((const char *) table, ch);
-    }
+  i = collidx_table_lookup ((const char *) table, ch);
 
   if (i >= 0)
     /* This is an index into the weight table.  Cool.  */

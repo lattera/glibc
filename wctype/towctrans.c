@@ -20,7 +20,6 @@
 #include <wctype.h>
 
 /* Define the lookup function.  */
-#include "cname-lookup.h"
 #include "wchar-lookup.h"
 
 wint_t
@@ -31,22 +30,6 @@ __towctrans (wint_t wc, wctrans_t desc)
   if (desc == (wctrans_t) 0)
     return wc;
 
-  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
-    {
-      /* Old locale format.  */
-      size_t idx;
-
-      idx = cname_lookup (wc);
-      if (idx == ~((size_t) 0))
-	/* Character is not known.  Default action is to simply return it.  */
-	return wc;
-
-      return (wint_t) desc[idx];
-    }
-  else
-    {
-      /* New locale format.  */
-      return wctrans_table_lookup ((const char *) desc, wc);
-    }
+  return wctrans_table_lookup ((const char *) desc, wc);
 }
 weak_alias (__towctrans, towctrans)

@@ -17,9 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stdint.h>
+
 /* Tables indexed by a wide character are compressed through the use
    of a multi-level lookup.  The compression effect comes from blocks
-   that don't need particular data and from block that can share their
+   that don't need particular data and from blocks that can share their
    data.  */
 
 /* Bit tables are accessed by cutting wc in four blocks of bits:

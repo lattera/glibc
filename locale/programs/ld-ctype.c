@@ -166,20 +166,16 @@ struct locale_ctype_t
   size_t default_missing_lineno;
 
   /* The arrays for the binary representation.  */
-  uint32_t plane_size;
-  uint32_t plane_cnt;
   char_class_t *ctype_b;
   char_class32_t *ctype32_b;
-  uint32_t *names;
-  uint32_t **map;
-  uint32_t **map32;
+  uint32_t **map_b;
+  uint32_t **map32_b;
   uint32_t **class_b;
   struct iovec *class_3level;
   struct iovec *map_3level;
   uint32_t *class_name_ptr;
   uint32_t *map_name_ptr;
-  unsigned char *width;
-  struct iovec width_3level;
+  struct iovec width;
   uint32_t mb_cur_max;
   const char *codeset_name;
   uint32_t *translit_from_idx;
@@ -857,9 +853,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
   static const char nulbytes[4] = { 0, 0, 0, 0 };
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   const size_t nelems = (_NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1)
-			 + (oldstyle_tables
-			    ? (ctype->map_collection_nr - 2)
-			    : (ctype->nr_charclass + ctype->map_collection_nr)));
+			 + ctype->nr_charclass + ctype->map_collection_nr);
   struct iovec iov[2 + nelems + 2 * ctype->nr_charclass
 		  + ctype->map_collection_nr + 4];
   struct locale_file data;
@@ -889,7 +883,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  {
 #define CTYPE_EMPTY(name) \
 	  case name:							      \
-	    iov[2 + elem + offset].iov_base = (void *) "";		      \
+	    iov[2 + elem + offset].iov_base = NULL;			      \
 	    iov[2 + elem + offset].iov_len = 0;				      \
 	    idx[elem + 1] = idx[elem];					      \
 	    break
@@ -897,6 +891,9 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  CTYPE_EMPTY(_NL_CTYPE_GAP1);
 	  CTYPE_EMPTY(_NL_CTYPE_GAP2);
 	  CTYPE_EMPTY(_NL_CTYPE_GAP3);
+	  CTYPE_EMPTY(_NL_CTYPE_GAP4);
+	  CTYPE_EMPTY(_NL_CTYPE_GAP5);
+	  CTYPE_EMPTY(_NL_CTYPE_GAP6);
 
 #define CTYPE_DATA(name, base, len)					      \
 	  case _NL_ITEM_INDEX (name):					      \
@@ -910,30 +907,22 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		      (256 + 128) * sizeof (char_class_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TOUPPER,
-		      ctype->map[0],
+		      ctype->map_b[0],
 		      (256 + 128) * sizeof (uint32_t));
 	  CTYPE_DATA (_NL_CTYPE_TOLOWER,
-		      ctype->map[1],
+		      ctype->map_b[1],
 		      (256 + 128) * sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TOUPPER32,
-		      ctype->map32[0],
-		      (oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256)
-		      * sizeof (uint32_t));
+		      ctype->map32_b[0],
+		      256 * sizeof (uint32_t));
 	  CTYPE_DATA (_NL_CTYPE_TOLOWER32,
-		      ctype->map32[1],
-		      (oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256)
-		      * sizeof (uint32_t));
+		      ctype->map32_b[1],
+		      256 * sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_CLASS32,
 		      ctype->ctype32_b,
-		      (oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256)
-		      * sizeof (char_class32_t));
-
-	  CTYPE_DATA (_NL_CTYPE_NAMES,
-		      ctype->names,
-		      (oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 0)
-		      * sizeof (uint32_t));
+		      256 * sizeof (char_class32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_CLASS_OFFSET,
 		      &ctype->class_offset, sizeof (uint32_t));
@@ -958,11 +947,6 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_TBL,
 		      ctype->translit_to_tbl, ctype->translit_to_tbl_size);
-
-	  CTYPE_DATA (_NL_CTYPE_HASH_SIZE,
-		      &ctype->plane_size, sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_HASH_LAYERS,
-		      &ctype->plane_cnt, sizeof (uint32_t));
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_CLASS_NAMES):
 	    /* The class name array.  */
@@ -1001,12 +985,8 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    break;
 
 	  CTYPE_DATA (_NL_CTYPE_WIDTH,
-		      (oldstyle_tables
-		       ? ctype->width
-		       : ctype->width_3level.iov_base),
-		      (oldstyle_tables
-		       ? (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul
-		       : ctype->width_3level.iov_len));
+		      ctype->width.iov_base,
+		      ctype->width.iov_len);
 
 	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
 		      &ctype->mb_cur_max, sizeof (uint32_t));
@@ -1183,38 +1163,23 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
       else
 	{
 	  /* Handle extra maps.  */
-	  if (oldstyle_tables)
+	  size_t nr = elem - _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
+	  if (nr < ctype->nr_charclass)
 	    {
-	      size_t nr = (elem - _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1)) + 2;
+	      iov[2 + elem + offset].iov_base = ctype->class_b[nr];
+	      iov[2 + elem + offset].iov_len = 256 / 32 * sizeof (uint32_t);
+	      idx[elem] += iov[2 + elem + offset].iov_len;
+	      ++offset;
 
-	      iov[2 + elem + offset].iov_base = ctype->map32[nr];
-	      iov[2 + elem + offset].iov_len = ((ctype->plane_size
-						 * ctype->plane_cnt)
-						* sizeof (uint32_t));
-
-	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	      iov[2 + elem + offset] = ctype->class_3level[nr];
 	    }
 	  else
 	    {
-	      size_t nr = elem - _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
-	      if (nr < ctype->nr_charclass)
-		{
-		  iov[2 + elem + offset].iov_base = ctype->class_b[nr];
-		  iov[2 + elem + offset].iov_len = 256 / 32
-						   * sizeof (uint32_t);
-		  idx[elem] += iov[2 + elem + offset].iov_len;
-		  ++offset;
-
-		  iov[2 + elem + offset] = ctype->class_3level[nr];
-		}
-	      else
-		{
-		  nr -= ctype->nr_charclass;
-		  assert (nr < ctype->map_collection_nr);
-		  iov[2 + elem + offset] = ctype->map_3level[nr];
-		}
-	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	      nr -= ctype->nr_charclass;
+	      assert (nr < ctype->map_collection_nr);
+	      iov[2 + elem + offset] = ctype->map_3level[nr];
 	    }
+	  idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	}
     }
 
@@ -3629,135 +3594,23 @@ static void
 allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 		 struct repertoire_t *repertoire)
 {
-  size_t idx;
-  size_t width_table_size;
+  size_t idx, nr;
   const void *key;
   size_t len;
   void *vdata;
   void *curs;
-
-  /* First we have to decide how we organize the arrays.  It is easy
-     for a one-byte character set.  But multi-byte character set
-     cannot be stored flat because the chars might be sparsely used.
-     So we determine an optimal hashing function for the used
-     characters.
-
-     We use a very trivial hashing function to store the sparse
-     table.  CH % TABSIZE is used as an index.  To solve multiple hits
-     we have N planes.  This guarantees a fixed search time for a
-     character [N / 2].  In the following code we determine the minimum
-     value for TABSIZE * N, where TABSIZE >= 256.
-
-     Some people complained that this algorithm takes too long.  Well,
-     go on, improve it.  But changing the step size is *not* an
-     option.  Some people changed this to use only sizes of prime
-     numbers.  Think again, do some math.  We are looking for the
-     optimal solution, not something which works in general.  Unless
-     somebody can provide a dynamic programming solution I think this
-     implementation is as good as it can get.  */
-  size_t min_total = UINT_MAX;
-  size_t act_size = 256;
-
-  if (oldstyle_tables)
-    {
-      if (!be_quiet && ctype->charnames_act > 512)
-	fputs (_("\
-Computing table size for character classes might take a while..."),
-	       stderr);
-
-      /* While we want to have a small total size we are willing to use a
-	 little bit larger table if this reduces the number of layers.
-	 Therefore we add a little penalty to the number of planes.
-	 Maybe this constant has to be adjusted a bit.  */
-#define PENALTY 128
-      do
-	{
-	  size_t cnt[act_size];
-	  size_t act_planes = 1;
-
-	  memset (cnt, '\0', sizeof cnt);
-
-	  for (idx = 0; idx < 256; ++idx)
-	    cnt[idx] = 1;
-
-	  for (idx = 0; idx < ctype->charnames_act; ++idx)
-	    if (ctype->charnames[idx] >= 256)
-	      {
-		size_t nr = ctype->charnames[idx] % act_size;
-
-		if (++cnt[nr] > act_planes)
-		  {
-		    act_planes = cnt[nr];
-		    if ((act_size + PENALTY) * act_planes >= min_total)
-		      break;
-		  }
-	      }
-
-	  if ((act_size + PENALTY) * act_planes < min_total)
-	    {
-	      min_total = (act_size + PENALTY) * act_planes;
-	      ctype->plane_size = act_size;
-	      ctype->plane_cnt = act_planes;
-	    }
-
-	  ++act_size;
-	}
-      while (act_size < min_total);
-
-      if (!be_quiet && ctype->charnames_act > 512)
-	fputs (_(" done\n"), stderr);
-
-
-      ctype->names = (uint32_t *) xcalloc (ctype->plane_size
-					   * ctype->plane_cnt,
-					   sizeof (uint32_t));
-
-      for (idx = 1; idx < 256; ++idx)
-	ctype->names[idx] = idx;
-
-      /* Trick: change the 0th entry's name to 1 to mark the cell occupied.  */
-      ctype->names[0] = 1;
-
-      for (idx = 256; idx < ctype->charnames_act; ++idx)
-	{
-	  size_t nr = (ctype->charnames[idx] % ctype->plane_size);
-	  size_t depth = 0;
-
-	  while (ctype->names[nr + depth * ctype->plane_size])
-	    ++depth;
-	  assert (depth < ctype->plane_cnt);
-
-	  ctype->names[nr + depth * ctype->plane_size] = ctype->charnames[idx];
-
-	  /* Now for faster access remember the index in the NAMES_B array.  */
-	  ctype->charnames[idx] = nr + depth * ctype->plane_size;
-	}
-      ctype->names[0] = 0;
-    }
-  else
-    {
-      ctype->plane_size = 0;
-      ctype->plane_cnt = 0;
-      ctype->names = NULL;
-    }
 
   /* You wonder about this amount of memory?  This is only because some
      users do not manage to address the array with unsigned values or
      data types with range >= 256.  '\200' would result in the array
      index -128.  To help these poor people we duplicate the entries for
      128 up to 255 below the entry for \0.  */
-  ctype->ctype_b = (char_class_t *) xcalloc (256 + 128,
-					     sizeof (char_class_t));
-  ctype->ctype32_b = (char_class32_t *)
-    xcalloc ((oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256),
-	     sizeof (char_class32_t));
-  if (!oldstyle_tables)
-    {
-      ctype->class_b = (uint32_t **)
-	xmalloc (ctype->nr_charclass * sizeof (uint32_t *));
-      ctype->class_3level = (struct iovec *)
-	xmalloc (ctype->nr_charclass * sizeof (struct iovec));
-    }
+  ctype->ctype_b = (char_class_t *) xcalloc (256 + 128, sizeof (char_class_t));
+  ctype->ctype32_b = (char_class32_t *) xcalloc (256, sizeof (char_class32_t));
+  ctype->class_b = (uint32_t **)
+    xmalloc (ctype->nr_charclass * sizeof (uint32_t *));
+  ctype->class_3level = (struct iovec *)
+    xmalloc (ctype->nr_charclass * sizeof (struct iovec));
 
   /* This is the array accessed using the multibyte string elements.  */
   for (idx = 0; idx < 256; ++idx)
@@ -3768,65 +3621,49 @@ Computing table size for character classes might take a while..."),
   for (idx = 0; idx < 127; ++idx)
     ctype->ctype_b[idx] = ctype->ctype_b[256 + idx];
 
-  if (oldstyle_tables)
+  /* The 32 bit array contains all characters < 0x100.  */
+  for (idx = 0; idx < ctype->class_collection_act; ++idx)
+    if (ctype->charnames[idx] < 0x100)
+      ctype->ctype32_b[ctype->charnames[idx]] = ctype->class_collection[idx];
+
+  for (nr = 0; nr < ctype->nr_charclass; nr++)
     {
-      /* The 32 bit array contains all characters.  */
-      for (idx = 0; idx < ctype->class_collection_act; ++idx)
-	ctype->ctype32_b[ctype->charnames[idx]] = ctype->class_collection[idx];
+      ctype->class_b[nr] = (uint32_t *) xcalloc (256 / 32, sizeof (uint32_t));
+
+      for (idx = 0; idx < 256; ++idx)
+	if (ctype->class256_collection[idx] & _ISbit (nr))
+	  ctype->class_b[nr][idx >> 5] |= (uint32_t)1 << (idx & 0x1f);
     }
-  else
+
+  for (nr = 0; nr < ctype->nr_charclass; nr++)
     {
-      /* The 32 bit array contains all characters < 0x100.  */
+      struct wctype_table t;
+
+      t.p = 4; /* or: 5 */
+      t.q = 7; /* or: 6 */
+      wctype_table_init (&t);
+
       for (idx = 0; idx < ctype->class_collection_act; ++idx)
-	if (ctype->charnames[idx] < 0x100)
-	  ctype->ctype32_b[ctype->charnames[idx]] = ctype->class_collection[idx];
-    }
+	if (ctype->class_collection[idx] & _ISwbit (nr))
+	  wctype_table_add (&t, ctype->charnames[idx]);
 
-  if (!oldstyle_tables)
-    {
-      size_t nr;
+      wctype_table_finalize (&t);
 
-      for (nr = 0; nr < ctype->nr_charclass; nr++)
-	{
-	  ctype->class_b[nr] = (uint32_t *)
-	    xcalloc (256 / 32, sizeof (uint32_t));
+      if (verbose)
+	fprintf (stderr, _("%s: table for class \"%s\": %lu bytes\n"),
+		 "LC_CTYPE", ctype->classnames[nr],
+		 (unsigned long int) t.result_size);
 
-	  for (idx = 0; idx < 256; ++idx)
-	    if (ctype->class256_collection[idx] & _ISbit (nr))
-	      ctype->class_b[nr][idx >> 5] |= (uint32_t)1 << (idx & 0x1f);
-	}
-
-      for (nr = 0; nr < ctype->nr_charclass; nr++)
-	{
-	  struct wctype_table t;
-
-	  t.p = 4; /* or: 5 */
-	  t.q = 7; /* or: 6 */
-	  wctype_table_init (&t);
-
-	  for (idx = 0; idx < ctype->class_collection_act; ++idx)
-	    if (ctype->class_collection[idx] & _ISwbit (nr))
-	      wctype_table_add (&t, ctype->charnames[idx]);
-
-	  wctype_table_finalize (&t);
-
-	  if (verbose)
-	    fprintf (stderr, _("%s: table for class \"%s\": %lu bytes\n"),
-		     "LC_CTYPE", ctype->classnames[nr],
-		     (unsigned long int) t.result_size);
-
-	  ctype->class_3level[nr].iov_base = t.result;
-	  ctype->class_3level[nr].iov_len = t.result_size;
-	}
+      ctype->class_3level[nr].iov_base = t.result;
+      ctype->class_3level[nr].iov_len = t.result_size;
     }
 
   /* Room for table of mappings.  */
-  ctype->map = (uint32_t **) xmalloc (2 * sizeof (uint32_t *));
-  ctype->map32 = (uint32_t **) xmalloc (ctype->map_collection_nr
-					* sizeof (uint32_t *));
-  if (!oldstyle_tables)
-    ctype->map_3level = (struct iovec *)
-      xmalloc (ctype->map_collection_nr * sizeof (struct iovec));
+  ctype->map_b = (uint32_t **) xmalloc (2 * sizeof (uint32_t *));
+  ctype->map32_b = (uint32_t **) xmalloc (ctype->map_collection_nr
+					  * sizeof (uint32_t *));
+  ctype->map_3level = (struct iovec *)
+    xmalloc (ctype->map_collection_nr * sizeof (struct iovec));
 
   /* Fill in all mappings.  */
   for (idx = 0; idx < 2; ++idx)
@@ -3834,19 +3671,20 @@ Computing table size for character classes might take a while..."),
       unsigned int idx2;
 
       /* Allocate table.  */
-      ctype->map[idx] = (uint32_t *) xmalloc ((256 + 128) * sizeof (uint32_t));
+      ctype->map_b[idx] = (uint32_t *)
+	xmalloc ((256 + 128) * sizeof (uint32_t));
 
       /* Copy values from collection.  */
       for (idx2 = 0; idx2 < 256; ++idx2)
-	ctype->map[idx][128 + idx2] = ctype->map256_collection[idx][idx2];
+	ctype->map_b[idx][128 + idx2] = ctype->map256_collection[idx][idx2];
 
       /* Mirror first 127 entries.  We must take care not to map entry
 	 -1 because EOF == -1.  */
       for (idx2 = 0; idx2 < 127; ++idx2)
-	ctype->map[idx][idx2] = ctype->map[idx][256 + idx2];
+	ctype->map_b[idx][idx2] = ctype->map_b[idx][256 + idx2];
 
       /* EOF must map to EOF.  */
-      ctype->map[idx][127] = EOF;
+      ctype->map_b[idx][127] = EOF;
     }
 
   for (idx = 0; idx < ctype->map_collection_nr; ++idx)
@@ -3854,60 +3692,38 @@ Computing table size for character classes might take a while..."),
       unsigned int idx2;
 
       /* Allocate table.  */
-      ctype->map32[idx] = (uint32_t *)
-	xmalloc ((oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256)
-		 * sizeof (uint32_t));
+      ctype->map32_b[idx] = (uint32_t *) xmalloc (256 * sizeof (uint32_t));
 
-      /* Copy default value (identity mapping).  */
-      if (oldstyle_tables)
-	memcpy (ctype->map32[idx], ctype->names,
-		ctype->plane_size * ctype->plane_cnt * sizeof (uint32_t));
-      else
-	for (idx2 = 0; idx2 < 256; ++idx2)
-	  ctype->map32[idx][idx2] = idx2;
-
-      /* Copy values from collection.  */
+      /* Copy values from collection.  Default is identity mapping.  */
       for (idx2 = 0; idx2 < 256; ++idx2)
-	if (ctype->map_collection[idx][idx2] != 0)
-	  ctype->map32[idx][idx2] = ctype->map_collection[idx][idx2];
-
-      if (oldstyle_tables)
-	while (idx2 < ctype->map_collection_act[idx])
-	  {
-	    if (ctype->map_collection[idx][idx2] != 0)
-	      ctype->map32[idx][ctype->charnames[idx2]] =
-		ctype->map_collection[idx][idx2];
-	    ++idx2;
-	  }
+	ctype->map32_b[idx][idx2] =
+	  (ctype->map_collection[idx][idx2] != 0
+	   ? ctype->map_collection[idx][idx2]
+	   : idx2);
     }
 
-  if (!oldstyle_tables)
+  for (nr = 0; nr < ctype->map_collection_nr; nr++)
     {
-      size_t nr;
+      struct wctrans_table t;
 
-      for (nr = 0; nr < ctype->map_collection_nr; nr++)
-	{
-	  struct wctrans_table t;
+      t.p = 7;
+      t.q = 9;
+      wctrans_table_init (&t);
 
-	  t.p = 7;
-	  t.q = 9;
-	  wctrans_table_init (&t);
+      for (idx = 0; idx < ctype->map_collection_act[nr]; ++idx)
+	if (ctype->map_collection[nr][idx] != 0)
+	  wctrans_table_add (&t, ctype->charnames[idx],
+			     ctype->map_collection[nr][idx]);
 
-	  for (idx = 0; idx < ctype->map_collection_act[nr]; ++idx)
-	    if (ctype->map_collection[nr][idx] != 0)
-	      wctrans_table_add (&t, ctype->charnames[idx],
-				 ctype->map_collection[nr][idx]);
+      wctrans_table_finalize (&t);
 
-	  wctrans_table_finalize (&t);
+      if (verbose)
+	fprintf (stderr, _("%s: table for map \"%s\": %lu bytes\n"),
+		 "LC_CTYPE", ctype->mapnames[nr],
+		 (unsigned long int) t.result_size);
 
-	  if (verbose)
-	    fprintf (stderr, _("%s: table for map \"%s\": %lu bytes\n"),
-		     "LC_CTYPE", ctype->mapnames[nr],
-		     (unsigned long int) t.result_size);
-
-	  ctype->map_3level[nr].iov_base = t.result;
-	  ctype->map_3level[nr].iov_len = t.result_size;
-	}
+      ctype->map_3level[nr].iov_base = t.result;
+      ctype->map_3level[nr].iov_len = t.result_size;
     }
 
   /* Extra array for class and map names.  */
@@ -3916,229 +3732,106 @@ Computing table size for character classes might take a while..."),
   ctype->map_name_ptr = (uint32_t *) xmalloc (ctype->map_collection_nr
 					      * sizeof (uint32_t));
 
-  if (oldstyle_tables)
-    {
-      ctype->class_offset = 0; /* not really used */
-      ctype->map_offset = 0; /* not really used */
-    }
-  else
-    {
-      ctype->class_offset = _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
-      ctype->map_offset = ctype->class_offset + ctype->nr_charclass;
-    }
+  ctype->class_offset = _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
+  ctype->map_offset = ctype->class_offset + ctype->nr_charclass;
 
   /* Array for width information.  Because the expected width are very
      small we use only one single byte.  This saves space.  */
-  if (oldstyle_tables)
-    {
-      width_table_size = (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul;
-      ctype->width = (unsigned char *) xmalloc (width_table_size);
+  {
+    struct wcwidth_table t;
 
-      /* Initialize with -1.  */
-      memset (ctype->width, '\xff', width_table_size);
-      if (charmap->width_rules != NULL)
-	{
-	  size_t cnt;
+    t.p = 7;
+    t.q = 9;
+    wcwidth_table_init (&t);
 
-	  for (cnt = 0; cnt < charmap->nwidth_rules; ++cnt)
-	    {
-	      unsigned char bytes[charmap->mb_cur_max];
-	      int nbytes = charmap->width_rules[cnt].from->nbytes;
+    /* First set all the characters of the character set to the default width.  */
+    curs = NULL;
+    while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
+      {
+	struct charseq *data = (struct charseq *) vdata;
 
-	      /* We have the range of character for which the width is
-		 specified described using byte sequences of the multibyte
-		 charset.  We have to convert this to UCS4 now.  And we
-		 cannot simply convert the beginning and the end of the
-		 sequence, we have to iterate over the byte sequence and
-		 convert it for every single character.  */
-	      memcpy (bytes, charmap->width_rules[cnt].from->bytes, nbytes);
+	if (data->ucs4 == UNINITIALIZED_CHAR_VALUE)
+	  data->ucs4 = repertoire_find_value (ctype->repertoire,
+					      data->name, len);
 
-	      while (nbytes < charmap->width_rules[cnt].to->nbytes
-		     || memcmp (bytes, charmap->width_rules[cnt].to->bytes,
-				nbytes) <= 0)
-		{
-		  /* Find the UCS value for `bytes'.  */
-		  int inner;
-		  uint32_t wch;
-		  struct charseq *seq =
-		    charmap_find_symbol (charmap, bytes, nbytes);
+	if (data->ucs4 != ILLEGAL_CHAR_VALUE)
+	  wcwidth_table_add (&t, data->ucs4, charmap->width_default);
+      }
 
-		  if (seq == NULL)
-		    wch = ILLEGAL_CHAR_VALUE;
-		  else if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
-		    wch = seq->ucs4;
-		  else
-		    wch = repertoire_find_value (ctype->repertoire, seq->name,
-						 strlen (seq->name));
+    /* Now add the explicitly specified widths.  */
+    if (charmap->width_rules != NULL)
+      {
+	size_t cnt;
 
-		  if (wch != ILLEGAL_CHAR_VALUE)
-		    {
-		      /* Store the value.  */
-		      size_t nr = wch % ctype->plane_size;
-		      size_t depth = 0;
+	for (cnt = 0; cnt < charmap->nwidth_rules; ++cnt)
+	  {
+	    unsigned char bytes[charmap->mb_cur_max];
+	    int nbytes = charmap->width_rules[cnt].from->nbytes;
 
-		      while (ctype->names[nr + depth * ctype->plane_size] != wch)
-			{
-			  ++depth;
-			  assert (depth < ctype->plane_cnt);
-			}
+	    /* We have the range of character for which the width is
+	       specified described using byte sequences of the multibyte
+	       charset.  We have to convert this to UCS4 now.  And we
+	       cannot simply convert the beginning and the end of the
+	       sequence, we have to iterate over the byte sequence and
+	       convert it for every single character.  */
+	    memcpy (bytes, charmap->width_rules[cnt].from->bytes, nbytes);
 
-		      ctype->width[nr + depth * ctype->plane_size]
-			= charmap->width_rules[cnt].width;
-		    }
+	    while (nbytes < charmap->width_rules[cnt].to->nbytes
+		   || memcmp (bytes, charmap->width_rules[cnt].to->bytes,
+			      nbytes) <= 0)
+	      {
+		/* Find the UCS value for `bytes'.  */
+		int inner;
+		uint32_t wch;
+		struct charseq *seq =
+		  charmap_find_symbol (charmap, bytes, nbytes);
 
-		  /* "Increment" the bytes sequence.  */
-		  inner = nbytes - 1;
-		  while (inner >= 0 && bytes[inner] == 0xff)
-		    --inner;
+		if (seq == NULL)
+		  wch = ILLEGAL_CHAR_VALUE;
+		else if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
+		  wch = seq->ucs4;
+		else
+		  wch = repertoire_find_value (ctype->repertoire, seq->name,
+					       strlen (seq->name));
 
-		  if (inner < 0)
-		    {
-		      /* We have to extend the byte sequence.  */
-		      if (nbytes >= charmap->width_rules[cnt].to->nbytes)
-			break;
+		if (wch != ILLEGAL_CHAR_VALUE)
+		  /* Store the value.  */
+		  wcwidth_table_add (&t, wch, charmap->width_rules[cnt].width);
 
-		      bytes[0] = 1;
-		      memset (&bytes[1], 0, nbytes);
-		      ++nbytes;
-		    }
-		  else
-		    {
-		      ++bytes[inner];
-		      while (++inner < nbytes)
-			bytes[inner] = 0;
-		    }
-		}
-	    }
-	}
+		/* "Increment" the bytes sequence.  */
+		inner = nbytes - 1;
+		while (inner >= 0 && bytes[inner] == 0xff)
+		  --inner;
 
-      /* Now set all the other characters of the character set to the
-	 default width.  */
-      curs = NULL;
-      while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
-	{
-	  struct charseq *data = (struct charseq *) vdata;
-	  size_t nr;
-	  size_t depth;
+		if (inner < 0)
+		  {
+		    /* We have to extend the byte sequence.  */
+		    if (nbytes >= charmap->width_rules[cnt].to->nbytes)
+		      break;
 
-	  if (data->ucs4 == UNINITIALIZED_CHAR_VALUE)
-	    data->ucs4 = repertoire_find_value (ctype->repertoire,
-						data->name, len);
+		    bytes[0] = 1;
+		    memset (&bytes[1], 0, nbytes);
+		    ++nbytes;
+		  }
+		else
+		  {
+		    ++bytes[inner];
+		    while (++inner < nbytes)
+		      bytes[inner] = 0;
+		  }
+	      }
+	  }
+      }
 
-	  if (data->ucs4 != ILLEGAL_CHAR_VALUE)
-	    {
-	      nr = data->ucs4 % ctype->plane_size;
-	      depth = 0;
+    wcwidth_table_finalize (&t);
 
-	      while (ctype->names[nr + depth * ctype->plane_size] != data->ucs4)
-		{
-		  ++depth;
-		  assert (depth < ctype->plane_cnt);
-		}
+    if (verbose)
+      fprintf (stderr, _("%s: table for width: %lu bytes\n"),
+	       "LC_CTYPE", (unsigned long int) t.result_size);
 
-	      if (ctype->width[nr + depth * ctype->plane_size]
-		  == (unsigned char) '\xff')
-		ctype->width[nr + depth * ctype->plane_size] =
-		  charmap->width_default;
-	    }
-	}
-    }
-  else
-    {
-      struct wcwidth_table t;
-
-      t.p = 7;
-      t.q = 9;
-      wcwidth_table_init (&t);
-
-      /* First set all the characters of the character set to the default width.  */
-      curs = NULL;
-      while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
-	{
-	  struct charseq *data = (struct charseq *) vdata;
-
-	  if (data->ucs4 == UNINITIALIZED_CHAR_VALUE)
-	    data->ucs4 = repertoire_find_value (ctype->repertoire,
-						data->name, len);
-
-	  if (data->ucs4 != ILLEGAL_CHAR_VALUE)
-	    wcwidth_table_add (&t, data->ucs4, charmap->width_default);
-	}
-
-      /* Now add the explicitly specified widths.  */
-      if (charmap->width_rules != NULL)
-	{
-	  size_t cnt;
-
-	  for (cnt = 0; cnt < charmap->nwidth_rules; ++cnt)
-	    {
-	      unsigned char bytes[charmap->mb_cur_max];
-	      int nbytes = charmap->width_rules[cnt].from->nbytes;
-
-	      /* We have the range of character for which the width is
-		 specified described using byte sequences of the multibyte
-		 charset.  We have to convert this to UCS4 now.  And we
-		 cannot simply convert the beginning and the end of the
-		 sequence, we have to iterate over the byte sequence and
-		 convert it for every single character.  */
-	      memcpy (bytes, charmap->width_rules[cnt].from->bytes, nbytes);
-
-	      while (nbytes < charmap->width_rules[cnt].to->nbytes
-		     || memcmp (bytes, charmap->width_rules[cnt].to->bytes,
-				nbytes) <= 0)
-		{
-		  /* Find the UCS value for `bytes'.  */
-		  int inner;
-		  uint32_t wch;
-		  struct charseq *seq =
-		    charmap_find_symbol (charmap, bytes, nbytes);
-
-		  if (seq == NULL)
-		    wch = ILLEGAL_CHAR_VALUE;
-		  else if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
-		    wch = seq->ucs4;
-		  else
-		    wch = repertoire_find_value (ctype->repertoire, seq->name,
-						 strlen (seq->name));
-
-		  if (wch != ILLEGAL_CHAR_VALUE)
-		    /* Store the value.  */
-		    wcwidth_table_add (&t, wch, charmap->width_rules[cnt].width);
-
-		  /* "Increment" the bytes sequence.  */
-		  inner = nbytes - 1;
-		  while (inner >= 0 && bytes[inner] == 0xff)
-		    --inner;
-
-		  if (inner < 0)
-		    {
-		      /* We have to extend the byte sequence.  */
-		      if (nbytes >= charmap->width_rules[cnt].to->nbytes)
-			break;
-
-		      bytes[0] = 1;
-		      memset (&bytes[1], 0, nbytes);
-		      ++nbytes;
-		    }
-		  else
-		    {
-		      ++bytes[inner];
-		      while (++inner < nbytes)
-			bytes[inner] = 0;
-		    }
-		}
-	    }
-	}
-
-      wcwidth_table_finalize (&t);
-
-      if (verbose)
-	fprintf (stderr, _("%s: table for width: %lu bytes\n"),
-		 "LC_CTYPE", (unsigned long int) t.result_size);
-
-      ctype->width_3level.iov_base = t.result;
-      ctype->width_3level.iov_len = t.result_size;
-    }
+    ctype->width.iov_base = t.result;
+    ctype->width.iov_len = t.result_size;
+  }
 
   /* Set MB_CUR_MAX.  */
   ctype->mb_cur_max = charmap->mb_cur_max;

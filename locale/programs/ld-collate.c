@@ -41,6 +41,24 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
+static inline void
+obstack_int32_grow (struct obstack *obstack, int32_t data)
+{
+  if (sizeof (int32_t) == sizeof (int))
+    obstack_int_grow (obstack, data);
+  else
+    obstack_grow (obstack, &data, sizeof (int32_t));
+}
+
+static inline void
+obstack_int32_grow_fast (struct obstack *obstack, int32_t data)
+{
+  if (sizeof (int32_t) == sizeof (int))
+    obstack_int_grow_fast (obstack, data);
+  else
+    obstack_grow (obstack, &data, sizeof (int32_t));
+}
+
 /* Forward declaration.  */
 struct element_t;
 
@@ -212,19 +230,13 @@ struct locale_collate_t
      the multibyte sequences.  */
   struct element_t *mbheads[256];
 
-  /* Table size of wide character hash table.  */
-  uint32_t plane_size;
-  uint32_t plane_cnt;
-
   /* Arrays with heads of the list for each of the leading bytes in
      the multibyte sequences.  */
-  struct element_t **wcheads;
-  struct wchead_table wcheads_3level;
+  struct wchead_table wcheads;
 
   /* The arrays with the collation sequence order.  */
   unsigned char mbseqorder[256];
-  uint32_t *wcseqorder;
-  struct collseq_table wcseqorder_3level;
+  struct collseq_table wcseqorder;
 };
 
 
@@ -1468,8 +1480,6 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
   struct section_list *sect;
   int ruleidx;
   int nr_wide_elems = 0;
-  size_t min_total;
-  size_t act_size;
 
   if (collate == NULL)
     {
@@ -1645,125 +1655,13 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
       }
 
   /* Now to the wide character case.  */
-  if (oldstyle_tables)
-    {
-      /*  Here we have to find first a good mapping function to get the
-	  wide range of wide character values (0x00000000 to 0x7fffffff)
-	  to a managable table.  This might take some time so we issue
-	  a warning.
+  collate->wcheads.p = 6;
+  collate->wcheads.q = 10;
+  wchead_table_init (&collate->wcheads);
 
-	  We use a very trivial hashing function to store the sparse
-	  table.  CH % TABSIZE is used as an index.  To solve multiple hits
-	  we have N planes.  This guarantees a fixed search time for a
-	  character [N / 2].  In the following code we determine the minimum
-	  value for TABSIZE * N, where TABSIZE >= 256.
-
-	  Some people complained that this algorithm takes too long.  Well,
-	  go on, improve it.  But changing the step size is *not* an
-	  option.  Some people changed this to use only sizes of prime
-	  numbers.  Think again, do some math.  We are looking for the
-	  optimal solution, not something which works in general.  Unless
-	  somebody can provide a dynamic programming solution I think this
-	  implementation is as good as it can get.  */
-      if (nr_wide_elems > 512 && !be_quiet)
-	fputs (_("\
-Computing table size for collation table might take a while..."),
-	       stderr);
-
-      min_total = UINT_MAX;
-      act_size = 256;
-
-      /* While we want to have a small total size we are willing to use a
-	 little bit larger table if this reduces the number of layers.
-	 Therefore we add a little penalty to the number of planes.
-	 Maybe this constant has to be adjusted a bit.  */
-#define PENALTY 128
-      do
-	{
-	  size_t cnt[act_size];
-	  struct element_t *elem[act_size];
-	  size_t act_planes = 1;
-
-	  memset (cnt, '\0', sizeof cnt);
-	  memset (elem, '\0', sizeof elem);
-
-	  runp = collate->start;
-	  while (runp != NULL)
-	    {
-	      if (runp->wcs != NULL)
-		{
-		  size_t nr = runp->wcs[0] % act_size;
-		  struct element_t *elemp = elem[nr];
-
-		  while (elemp != NULL)
-		    {
-		      if (elemp->wcs[0] == runp->wcs[0])
-			break;
-		      elemp = elemp->wcnext;
-		    }
-
-		  if (elemp == NULL && ++cnt[nr] > act_planes)
-		    {
-		      act_planes = cnt[nr];
-
-		      runp->wcnext = elem[nr];
-		      elem[nr] = runp;
-
-		      if ((act_size + PENALTY) * act_planes >= min_total)
-			break;
-		    }
-		}
-
-	      /* Up to the next entry.  */
-	      runp = runp->next;
-	    }
-
-	  if ((act_size + PENALTY) * act_planes < min_total)
-	    {
-	      min_total = (act_size + PENALTY) * act_planes;
-	      collate->plane_size = act_size;
-	      collate->plane_cnt = act_planes;
-	    }
-
-	  ++act_size;
-	}
-      while (act_size < min_total);
-
-      if (nr_wide_elems > 512 && !be_quiet)
-	fputs (_(" done\n"), stderr);
-
-      /* Now that we know how large the table has to be we are able to
-	 allocate the array and start adding the characters to the lists
-	 in the same way we did it for the multibyte characters.  */
-      collate->wcheads = (struct element_t **)
-	obstack_alloc (&collate->mempool, (collate->plane_size
-					   * collate->plane_cnt
-					   * sizeof (struct element_t *)));
-      memset (collate->wcheads, '\0', (collate->plane_size
-				       * collate->plane_cnt
-				       * sizeof (struct element_t *)));
-
-      collate->wcseqorder = (uint32_t *)
-	obstack_alloc (&collate->mempool, (collate->plane_size
-					   * collate->plane_cnt
-					   * sizeof (uint32_t)));
-      memset (collate->wcseqorder, '\0', (collate->plane_size
-					  * collate->plane_cnt
-					  * sizeof (uint32_t)));
-    }
-  else
-    {
-      collate->plane_size = 0;
-      collate->plane_cnt = 0;
-
-      collate->wcheads_3level.p = 6;
-      collate->wcheads_3level.q = 10;
-      wchead_table_init (&collate->wcheads_3level);
-
-      collate->wcseqorder_3level.p = 6;
-      collate->wcseqorder_3level.q = 10;
-      collseq_table_init (&collate->wcseqorder_3level);
-    }
+  collate->wcseqorder.p = 6;
+  collate->wcseqorder.q = 10;
+  collseq_table_init (&collate->wcseqorder);
 
   /* Start adding.  */
   runp = collate->start;
@@ -1774,38 +1672,14 @@ Computing table size for collation table might take a while..."),
 	  struct element_t *e;
 	  struct element_t **eptr;
 	  struct element_t *lastp;
-	  size_t idx;
 
-	  if (oldstyle_tables)
-	    {
-	      /* Find a free index.  */
-	      idx = runp->wcs[0] % collate->plane_size;
-	      while (collate->wcheads[idx] != NULL)
-		{
-		  /* Stop if this is an entry with the same starting character.  */
-		  if (collate->wcheads[idx]->wcs[0] == runp->wcs[0])
-		    break;
+	  /* Insert the collation sequence value.  */
+	  collseq_table_add (&collate->wcseqorder, runp->wcs[0],
+			     runp->wcseqorder);
 
-		  idx += collate->plane_size;
-		}
-
-	      /* Insert the collation sequence value.  */
-	      collate->wcseqorder[idx] = runp->wcseqorder;
-
-	      /* Find the point where to insert in the list.  */
-	      eptr = &collate->wcheads[idx];
-	    }
-	  else
-	    {
-	      /* Insert the collation sequence value.  */
-	      collseq_table_add (&collate->wcseqorder_3level, runp->wcs[0],
-				 runp->wcseqorder);
-
-	      /* Find the point where to insert in the list.  */
-	      e = wchead_table_get (&collate->wcheads_3level, runp->wcs[0]);
-	      eptr = &e;
-	    }
-
+	  /* Find the point where to insert in the list.  */
+	  e = wchead_table_get (&collate->wcheads, runp->wcs[0]);
+	  eptr = &e;
 	  lastp = NULL;
 	  while (*eptr != NULL)
 	    {
@@ -1845,8 +1719,8 @@ Computing table size for collation table might take a while..."),
 	  if (*eptr != NULL)
 	    (*eptr)->wclast = runp;
 	  *eptr = runp;
-	  if (!oldstyle_tables && eptr == &e)
-	    wchead_table_add (&collate->wcheads_3level, runp->wcs[0], e);
+	  if (eptr == &e)
+	    wchead_table_add (&collate->wcheads, runp->wcs[0], e);
 	dont_insertwc:
 	}
 
@@ -1854,8 +1728,7 @@ Computing table size for collation table might take a while..."),
       runp = runp->next;
     }
 
-  if (!oldstyle_tables)
-    collseq_table_finalize (&collate->wcseqorder_3level);
+  collseq_table_finalize (&collate->wcseqorder);
 
   /* Now determine whether the UNDEFINED entry is needed and if yes,
      whether it was defined.  */
@@ -1987,10 +1860,7 @@ output_weightwc (struct obstack *pool, struct locale_collate_t *collate,
 	  buf[j++] = elem->weights[cnt].w[i]->wcorder;
 
       /* And add the buffer content.  */
-      if (sizeof (int) == sizeof (int32_t))
-	obstack_int_grow (pool, j);
-      else
-	obstack_grow (pool, &j, sizeof (int32_t));
+      obstack_int32_grow (pool, j);
 
       obstack_grow (pool, buf, j * sizeof (int32_t));
     }
@@ -2015,10 +1885,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   struct obstack extrapool;
   struct obstack indirectpool;
   struct section_list *sect;
-  size_t table_size;
-  uint32_t *names;
-  uint32_t *tablewc;
-  struct collidx_table tablewc_3level;
+  struct collidx_table tablewc;
   uint32_t elem_size;
   uint32_t *elem_table;
   int i;
@@ -2049,16 +1916,14 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
       while (cnt < _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE))
 	{
 	  /* The words have to be handled specially.  */
-	  if (cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)
-	      || cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)
-	      || cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB))
+	  if (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB))
 	    {
 	      iov[2 + cnt].iov_base = &dummy;
 	      iov[2 + cnt].iov_len = sizeof (int32_t);
 	    }
 	  else
 	    {
-	      iov[2 + cnt].iov_base = (char *) "";
+	      iov[2 + cnt].iov_base = NULL;
 	      iov[2 + cnt].iov_len = 0;
 	    }
 
@@ -2081,17 +1946,8 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   /* Since we are using the sign of an integer to mark indirection the
      offsets in the arrays we are indirectly referring to must not be
      zero since -0 == 0.  Therefore we add a bit of dummy content.  */
-  if (sizeof (int) == sizeof (int32_t))
-    {
-      obstack_int_grow (&extrapool, 0);
-      obstack_int_grow (&indirectpool, 0);
-    }
-  else
-    {
-      int32_t zero = 0;
-      obstack_grow (&extrapool, &zero, sizeof (zero));
-      obstack_grow (&indirectpool, &zero, sizeof (zero));
-    }
+  obstack_int32_grow (&extrapool, 0);
+  obstack_int32_grow (&indirectpool, 0);
 
   /* Prepare the ruleset table.  */
   for (sect = collate->sections, i = 0; sect != NULL; sect = sect->next)
@@ -2195,16 +2051,9 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 		/* More than one consecutive entry.  We mark this by having
 		   a negative index into the indirect table.  */
-		if (sizeof (int32_t) == sizeof (int))
-		  obstack_int_grow_fast (&extrapool,
+		obstack_int32_grow_fast (&extrapool,
 					 -(obstack_object_size (&indirectpool)
 					   / sizeof (int32_t)));
-		else
-		  {
-		    int32_t i = -(obstack_object_size (&indirectpool)
-				  / sizeof (int32_t));
-		    obstack_grow (&extrapool, &i, sizeof (int32_t));
-		  }
 
 		/* Now search first the end of the series.  */
 		do
@@ -2229,11 +2078,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		do
 		  {
 		    weightidx = output_weight (&weightpool, collate, curp);
-		    if (sizeof (int32_t) == sizeof (int))
-		      obstack_int_grow (&indirectpool, weightidx);
-		    else
-		      obstack_grow (&indirectpool, &weightidx,
-				    sizeof (int32_t));
+		    obstack_int32_grow (&indirectpool, weightidx);
 
 		    curp = curp->mblast;
 		  }
@@ -2241,10 +2086,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 		/* Add the final weight.  */
 		weightidx = output_weight (&weightpool, collate, curp);
-		if (sizeof (int32_t) == sizeof (int))
-		  obstack_int_grow (&indirectpool, weightidx);
-		else
-		  obstack_grow (&indirectpool, &weightidx, sizeof (int32_t));
+		obstack_int32_grow (&indirectpool, weightidx);
 
 		/* And add the end byte sequence.  Without length this
                    time.  */
@@ -2268,10 +2110,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 			 & (__alignof__ (int32_t) - 1)) == 0);
 		obstack_make_room (&extrapool, added);
 
-		if (sizeof (int32_t) == sizeof (int))
-		  obstack_int_grow_fast (&extrapool, weightidx);
-		else
-		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+		obstack_int32_grow_fast (&extrapool, weightidx);
 		assert (runp->nmbs <= 256);
 		obstack_1grow_fast (&extrapool, runp->nmbs - 1);
 
@@ -2301,13 +2140,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 			 & ~(__alignof__ (int32_t) - 1));
 	    obstack_make_room (&extrapool, added);
 
-	    if (sizeof (int32_t) == sizeof (int))
-	      obstack_int_grow_fast (&extrapool, 0);
-	    else
-	      {
-		int32_t zero = 0;
-		obstack_grow (&extrapool, &zero, sizeof (int32_t));
-	      }
+	    obstack_int32_grow_fast (&extrapool, 0);
 	    /* XXX What rule? We just pick the first.  */
 	    obstack_1grow_fast (&extrapool, 0);
 	    /* Length is zero.  */
@@ -2355,41 +2188,23 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   /* Now the same for the wide character table.  We need to store some
      more information here.  */
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE));
-  iov[2 + cnt].iov_base = &collate->plane_size;
-  iov[2 + cnt].iov_len = sizeof (uint32_t);
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_GAP1));
+  iov[2 + cnt].iov_base = NULL;
+  iov[2 + cnt].iov_len = 0;
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (idx[cnt] % 4 == 0);
   ++cnt;
 
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS));
-  iov[2 + cnt].iov_base = &collate->plane_cnt;
-  iov[2 + cnt].iov_len = sizeof (collate->plane_cnt);
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_GAP2));
+  iov[2 + cnt].iov_base = NULL;
+  iov[2 + cnt].iov_len = 0;
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (idx[cnt] % 4 == 0);
   ++cnt;
 
-  if (oldstyle_tables)
-    {
-      /* Construct a table with the names.  The size of the table is the same
-	 as the table with the pointers.  */
-      table_size = collate->plane_size * collate->plane_cnt;
-      names = (uint32_t *) alloca (table_size * sizeof (uint32_t));
-      for (ch = 0; ch < table_size; ++ch)
-	if (collate->wcheads[ch] == NULL)
-	  names[ch] = 0;
-	else
-	  names[ch] = collate->wcheads[ch]->wcs[0];
-    }
-  else
-    {
-      table_size = 0;
-      names = NULL;
-    }
-
-  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_NAMES));
-  iov[2 + cnt].iov_base = names;
-  iov[2 + cnt].iov_len = table_size * sizeof (uint32_t);
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_GAP3));
+  iov[2 + cnt].iov_base = NULL;
+  iov[2 + cnt].iov_len = 0;
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (idx[cnt] % 4 == 0);
   ++cnt;
@@ -2397,17 +2212,8 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   /* Since we are using the sign of an integer to mark indirection the
      offsets in the arrays we are indirectly referring to must not be
      zero since -0 == 0.  Therefore we add a bit of dummy content.  */
-  if (sizeof (int) == sizeof (int32_t))
-    {
-      obstack_int_grow (&extrapool, 0);
-      obstack_int_grow (&indirectpool, 0);
-    }
-  else
-    {
-      int32_t zero = 0;
-      obstack_grow (&extrapool, &zero, sizeof (zero));
-      obstack_grow (&indirectpool, &zero, sizeof (zero));
-    }
+  obstack_int32_grow (&extrapool, 0);
+  obstack_int32_grow (&indirectpool, 0);
 
   /* Now insert the `UNDEFINED' value if it is used.  Since this value
      will probably be used more than once it is good to store the
@@ -2425,10 +2231,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	if (runp->wcnext == NULL && runp->nwcs == 1)
 	  {
 	    int32_t weigthidx = output_weightwc (&weightpool, collate, runp);
-	    if (oldstyle_tables)
-	      tablewc[ch] = weigthidx;
-	    else
-	      collidx_table_add (&tablewc_3level, ch, weigthidx);
+	    collidx_table_add (&tablewc, ch, weigthidx);
 	  }
 	else
 	  {
@@ -2436,11 +2239,8 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	       compress them.  */
 	    struct element_t *lastp;
 
-	    if (oldstyle_tables)
-	      tablewc[ch] = -(obstack_object_size (&extrapool) / sizeof (uint32_t));
-	    else
-	      collidx_table_add (&tablewc_3level, ch,
-				 -(obstack_object_size (&extrapool) / sizeof (uint32_t)));
+	    collidx_table_add (&tablewc, ch,
+			       -(obstack_object_size (&extrapool) / sizeof (uint32_t)));
 
 	    do
 	      {
@@ -2471,21 +2271,10 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 		    /* More than one consecutive entry.  We mark this by having
 		       a negative index into the indirect table.  */
-		    if (sizeof (int32_t) == sizeof (int))
-		      {
-			obstack_int_grow_fast (&extrapool,
-					       -(obstack_object_size (&indirectpool)
-						 / sizeof (int32_t)));
-			obstack_int_grow_fast (&extrapool, runp->nwcs - 1);
-		      }
-		    else
-		      {
-			int32_t i = -(obstack_object_size (&indirectpool)
-				      / sizeof (int32_t));
-			obstack_grow (&extrapool, &i, sizeof (int32_t));
-			i = runp->nwcs - 1;
-			obstack_grow (&extrapool, &i, sizeof (int32_t));
-		      }
+		    obstack_int32_grow_fast (&extrapool,
+					     -(obstack_object_size (&indirectpool)
+					       / sizeof (int32_t)));
+		    obstack_int32_grow_fast (&extrapool, runp->nwcs - 1);
 
 		    do
 		      runp = runp->wcnext;
@@ -2501,11 +2290,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		    curp = runp;
 
 		    for (i = 1; i < runp->nwcs; ++i)
-		      if (sizeof (int32_t) == sizeof (int))
-			obstack_int_grow_fast (&extrapool, curp->wcs[i]);
-		      else
-			obstack_grow (&extrapool, &curp->wcs[i],
-				      sizeof (int32_t));
+		      obstack_int32_grow_fast (&extrapool, curp->wcs[i]);
 
 		    /* Now find the end of the consecutive sequence and
 		       add all the indeces in the indirect pool.  */
@@ -2513,11 +2298,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		      {
 			weightidx = output_weightwc (&weightpool, collate,
 						     curp);
-			if (sizeof (int32_t) == sizeof (int))
-			  obstack_int_grow (&indirectpool, weightidx);
-			else
-			  obstack_grow (&indirectpool, &weightidx,
-					sizeof (int32_t));
+			obstack_int32_grow (&indirectpool, weightidx);
 
 			curp = curp->wclast;
 		      }
@@ -2525,20 +2306,12 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 		    /* Add the final weight.  */
 		    weightidx = output_weightwc (&weightpool, collate, curp);
-		    if (sizeof (int32_t) == sizeof (int))
-		      obstack_int_grow (&indirectpool, weightidx);
-		    else
-		      obstack_grow (&indirectpool, &weightidx,
-				    sizeof (int32_t));
+		    obstack_int32_grow (&indirectpool, weightidx);
 
 		    /* And add the end byte sequence.  Without length this
 		       time.  */
 		    for (i = 1; i < curp->nwcs; ++i)
-		      if (sizeof (int32_t) == sizeof (int))
-			obstack_int_grow (&extrapool, curp->wcs[i]);
-		      else
-			obstack_grow (&extrapool, &curp->wcs[i],
-				      sizeof (int32_t));
+		      obstack_int32_grow (&extrapool, curp->wcs[i]);
 		  }
 		else
 		  {
@@ -2554,24 +2327,10 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		    if (sizeof (int) == sizeof (int32_t))
 		      obstack_make_room (&extrapool, added);
 
-		    if (sizeof (int32_t) == sizeof (int))
-		      {
-			obstack_int_grow_fast (&extrapool, weightidx);
-			obstack_int_grow_fast (&extrapool, runp->nwcs - 1);
-		      }
-		    else
-		      {
-			int32_t l = runp->nwcs - 1;
-			obstack_grow (&extrapool, &weightidx,
-				      sizeof (int32_t));
-			obstack_grow (&extrapool, &l, sizeof (int32_t));
-		      }
+		    obstack_int32_grow_fast (&extrapool, weightidx);
+		    obstack_int32_grow_fast (&extrapool, runp->nwcs - 1);
 		    for (i = 1; i < runp->nwcs; ++i)
-		      if (sizeof (int32_t) == sizeof (int))
-			obstack_int_grow_fast (&extrapool, runp->wcs[i]);
-		      else
-			obstack_grow (&extrapool, &runp->wcs[i],
-				      sizeof (int32_t));
+		      obstack_int32_grow_fast (&extrapool, runp->wcs[i]);
 		  }
 
 		/* Next entry.  */
@@ -2582,37 +2341,19 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  }
       }
 
-    if (oldstyle_tables)
-      {
-	tablewc = (uint32_t *) alloca (table_size * sizeof (uint32_t));
+    tablewc.p = 6;
+    tablewc.q = 10;
+    collidx_table_init (&tablewc);
 
-	for (ch = 0; ch < table_size; ++ch)
-	  if (collate->wcheads[ch] == NULL)
-	    /* Set the entry to zero.  */
-	    tablewc[ch] = 0;
-	  else
-	    add_to_tablewc (ch, collate->wcheads[ch]);
-      }
-    else
-      {
-	tablewc_3level.p = 6;
-	tablewc_3level.q = 10;
-	collidx_table_init (&tablewc_3level);
+    wchead_table_iterate (&collate->wcheads, add_to_tablewc);
 
-	wchead_table_iterate (&collate->wcheads_3level, add_to_tablewc);
-
-	collidx_table_finalize (&tablewc_3level);
-      }
+    collidx_table_finalize (&tablewc);
   }
 
   /* Now add the four tables.  */
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_TABLEWC));
-  iov[2 + cnt].iov_base = (oldstyle_tables
-			   ? (void *) tablewc
-			   : (void *) tablewc_3level.result);
-  iov[2 + cnt].iov_len = (oldstyle_tables
-			  ? table_size * sizeof (uint32_t)
-			  : tablewc_3level.result_size);
+  iov[2 + cnt].iov_base = tablewc.result;
+  iov[2 + cnt].iov_len = tablewc.result_size;
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
   assert (idx[cnt] % 4 == 0);
@@ -2630,7 +2371,6 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
   iov[2 + cnt].iov_base = obstack_finish (&extrapool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
   assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
   assert (idx[cnt] % 4 == 0);
   ++cnt;
@@ -2723,13 +2463,13 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	      /* Now some 32-bit values: multibyte collation sequence,
 		 wide char string (including length), and wide char
 		 collation sequence.  */
-	      obstack_int_grow (&extrapool, runp->mbseqorder);
+	      obstack_int32_grow (&extrapool, runp->mbseqorder);
 
-	      obstack_int_grow (&extrapool, runp->nwcs);
+	      obstack_int32_grow (&extrapool, runp->nwcs);
 	      obstack_grow (&extrapool, runp->wcs,
 			    runp->nwcs * sizeof (uint32_t));
 
-	      obstack_int_grow (&extrapool, runp->wcseqorder);
+	      obstack_int32_grow (&extrapool, runp->wcseqorder);
 	    }
 	}
 
@@ -2764,12 +2504,8 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_COLLSEQWC));
-  iov[2 + cnt].iov_base = (oldstyle_tables
-			   ? (void *) collate->wcseqorder
-			   : (void *) collate->wcseqorder_3level.result);
-  iov[2 + cnt].iov_len = (oldstyle_tables
-			  ? table_size * sizeof (uint32_t)
-			  : collate->wcseqorder_3level.result_size);
+  iov[2 + cnt].iov_base = collate->wcseqorder.result;
+  iov[2 + cnt].iov_len = collate->wcseqorder.result_size;
   assert (idx[cnt] % 4 == 0);
   ++cnt;
 

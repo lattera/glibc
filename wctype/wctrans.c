@@ -17,21 +17,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ctype.h>
 #include <inttypes.h>
 #include <string.h>
 #include <wctype.h>
 #include "../locale/localeinfo.h"
-
-/* These are not exported.  */
-extern const uint32_t *__ctype32_toupper;
-extern const uint32_t *__ctype32_tolower;
 
 wctrans_t
 wctrans (const char *property)
 {
   const char *names;
   size_t cnt;
+  size_t i;
 
   names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_MAP_NAMES);
   cnt = 0;
@@ -47,21 +43,6 @@ wctrans (const char *property)
   if (names[0] == '\0')
     return 0;
 
-  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
-    {
-      /* Old locale format.  */
-      if (cnt == __TOW_toupper)
-	return (wctrans_t) __ctype32_toupper;
-      else if (cnt == __TOW_tolower)
-	return (wctrans_t) __ctype32_tolower;
-
-      /* We have to search the table.  */
-      return (wctrans_t) (const int32_t *) _NL_CURRENT (LC_CTYPE, _NL_NUM_LC_CTYPE + cnt - 2);
-    }
-  else
-    {
-      /* New locale format.  */
-      size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
-      return (wctrans_t) _nl_current_LC_CTYPE->values[i].string;
-    }
+  i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
+  return (wctrans_t) _nl_current_LC_CTYPE->values[i].string;
 }

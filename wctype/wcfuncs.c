@@ -16,20 +16,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define	__NO_WCTYPE
 #include <wctype.h>
-#include <ctype.h>	/* For __ctype_tolower and __ctype_toupper.  */
+#include <locale/localeinfo.h>
 
-#include "cname-lookup.h"
 #include "wchar-lookup.h"
 
-/* If the program is compiled without optimization the following declaration
-   is not visible in the header.   */
-extern unsigned int *__ctype32_b;
-
 /* These are not exported.  */
-extern const uint32_t *__ctype32_toupper;
-extern const uint32_t *__ctype32_tolower;
 extern const char *__ctype32_wctype[12];
 extern const char *__ctype32_wctrans[2];
 
@@ -39,22 +31,7 @@ extern const char *__ctype32_wctrans[2];
   int									      \
   __##name (wint_t wc)							      \
   {									      \
-    if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)		      \
-      {									      \
-	/* Old locale format.  */					      \
-	size_t idx;							      \
-									      \
-	idx = cname_lookup (wc);					      \
-	if (idx == ~((size_t) 0))					      \
-	  return 0;							      \
-									      \
-	return __ctype32_b[idx] & _ISwbit (type);			      \
-      }									      \
-    else								      \
-      {									      \
-	/* New locale format.  */					      \
-	return wctype_table_lookup (__ctype32_wctype[type], wc);	      \
-      }									      \
+    return wctype_table_lookup (__ctype32_wctype[type], wc);		      \
   }									      \
   weak_alias (__##name, name)
 
@@ -62,6 +39,8 @@ extern const char *__ctype32_wctrans[2];
 func (iswalnum, __ISwalnum)
 #undef iswalpha
 func (iswalpha, __ISwalpha)
+#undef iswblank
+func (iswblank, __ISwblank)
 #undef iswcntrl
 func (iswcntrl, __ISwcntrl)
 #undef iswdigit
@@ -85,44 +64,12 @@ wint_t
 (towlower) (wc)
      wint_t wc;
 {
-  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
-    {
-      /* Old locale format.  */
-      size_t idx;
-
-      idx = cname_lookup (wc);
-      if (idx == ~((size_t) 0))
-	/* Character is not known.  Default action is to simply return it.  */
-	return wc;
-
-      return (wint_t) __ctype32_tolower[idx];
-    }
-  else
-    {
-      /* New locale format.  */
-      return wctrans_table_lookup (__ctype32_wctrans[__TOW_tolower], wc);
-    }
+  return wctrans_table_lookup (__ctype32_wctrans[__TOW_tolower], wc);
 }
 
 wint_t
 (towupper) (wc)
      wint_t wc;
 {
-  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
-    {
-      /* Old locale format.  */
-      size_t idx;
-
-      idx = cname_lookup (wc);
-      if (idx == ~((size_t) 0))
-	/* Character is not known.  Default action is to simply return it.  */
-	return wc;
-
-      return (wint_t) __ctype32_toupper[idx];
-    }
-  else
-    {
-      /* New locale format.  */
-      return wctrans_table_lookup (__ctype32_wctrans[__TOW_toupper], wc);
-    }
+  return wctrans_table_lookup (__ctype32_wctrans[__TOW_toupper], wc);
 }

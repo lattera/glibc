@@ -28,6 +28,7 @@ __wctype_l (const char *property, __locale_t locale)
   const char *names;
   unsigned int result;
   size_t proplen = strlen (property);
+  size_t i;
 
   names = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_NAMES)].string;
   for (result = 0; ; result++)
@@ -42,21 +43,6 @@ __wctype_l (const char *property, __locale_t locale)
 	return 0;
     }
 
-  if (locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE)].word == 0)
-    {
-      /* Old locale format.  */
-#if __BYTE_ORDER == __BIG_ENDIAN
-      return 1 << result;
-#else
-# define SWAPU32(w) \
-  (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
-      return 1 << (result ^ 0x18); /* = SWAPU32 (1 << result); */
-#endif
-    }
-  else
-    {
-      /* New locale format.  */
-      size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + result;
-      return (wctype_t) locale->__locales[LC_CTYPE]->values[i].string;
-    }
+  i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + result;
+  return (wctype_t) locale->__locales[LC_CTYPE]->values[i].string;
 }

@@ -48,8 +48,6 @@ const __int32_t *__ctype_tolower = b (__int32_t, tolower, 128);
 const __int32_t *__ctype_toupper = b (__int32_t, toupper, 128);
 const __uint32_t *__ctype32_tolower = b (__uint32_t, tolower, 128);
 const __uint32_t *__ctype32_toupper = b (__uint32_t, toupper, 128);
-const __uint32_t *__ctype_names;
-const unsigned char *__ctype_width;
 const char *__ctype32_wctype[12] =
 {
   b(char, class_upper, 32),

@@ -28,6 +28,7 @@ __wctype (const char *property)
   const char *names;
   unsigned int result;
   size_t proplen = strlen (property);
+  size_t i;
 
   names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS_NAMES);
   for (result = 0; ; result++)
@@ -42,22 +43,7 @@ __wctype (const char *property)
 	return 0;
     }
 
-  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
-    {
-      /* Old locale format.  */
-#if __BYTE_ORDER == __BIG_ENDIAN
-      return 1 << result;
-#else
-# define SWAPU32(w) \
-  (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
-      return 1 << (result ^ 0x18); /* = SWAPU32 (1 << result); */
-#endif
-    }
-  else
-    {
-      /* New locale format.  */
-      size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + result;
-      return (wctype_t) _nl_current_LC_CTYPE->values[i].string;
-    }
+  i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + result;
+  return (wctype_t) _nl_current_LC_CTYPE->values[i].string;
 }
 weak_alias (__wctype, wctype)

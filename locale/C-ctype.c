@@ -550,14 +550,14 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: NULL },
     /* _NL_CTYPE_CLASS32 */
     { string: _nl_C_LC_CTYPE_class32 },
-    /* _NL_CTYPE_NAMES */
-    { string: NULL },
     /* _NL_CTYPE_GAP3 */
     { string: NULL },
-    /* _NL_CTYPE_HASH_SIZE */
-    { word: 0 },
-    /* _NL_CTYPE_HASH_LAYERS */
-    { word: 0 },
+    /* _NL_CTYPE_GAP4 */
+    { string: NULL },
+    /* _NL_CTYPE_GAP5 */
+    { string: NULL },
+    /* _NL_CTYPE_GAP6 */
+    { string: NULL },
     /* _NL_CTYPE_CLASS_NAMES */
     { string: "upper\0" "lower\0" "alpha\0" "digit\0" "xdigit\0" "space\0"
 	      "print\0" "graph\0" "blank\0" "cntrl\0" "punct\0"  "alnum\0"

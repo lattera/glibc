@@ -1,3 +1,100 @@
+2000-08-31  Bruno Haible  <haible@clisp.cons.org>
+
+	* wctype/wcfuncs.c (iswblank): New function.
+	* wctype/wcfuncs_l.c (__iswblank_l): New function.
+	* wctype/wcextra.c: Remove file.
+	* wctype/wcextra_l.c: Remove file.
+	* wctype/Makefile (distribute): Remove wcextra and wcextra_l.
+
+2000-08-31  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-collate.c (collate_output): Remove redundant
+	assert call.
+	* string/strcoll.c: Likewise.
+	* string/strxfrm.c: Include assert.h.  Add assert calls like in
+	string/strcoll.c.
+
+2000-08-31  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/categories.def (_NL_COLLATE_HASH_SIZE,
+	_NL_COLLATE_HASH_LAYERS, _NL_COLLATE_NAMES, _NL_CTYPE_NAMES,
+	_NL_CTYPE_HASH_SIZE, _NL_CTYPE_HASH_LAYERS): Remove definitions.
+	* locale/langinfo.h (_NL_COLLATE_HASH_SIZE, _NL_COLLATE_HASH_LAYERS,
+	_NL_COLLATE_NAMES): Rename to _NL_COLLATE_GAP1/2/3 respectively.
+	(_NL_CTYPE_NAMES): Rename to _NL_CTYPE_GAP3.
+	(_NL_CTYPE_GAP3): Rename to _NL_CTYPE_GAP4.
+	(_NL_CTYPE_HASH_SIZE, _NL_CTYPE_HASH_LAYERS): Rename to
+	_NL_CTYPE_GAP5/6 respectively.
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE): Update.
+	* ctype/ctype-info.c (__ctype_names, __ctype_width): Remove variables.
+	* locale/lc-ctype.c (_nl_postload_ctype): Assume new locale format.
+	Don't initialize __ctype_names and __ctype_width.
+	* wctype/cname-lookup.h: Remove file.
+	* wctype/Makefile (distribute): Remove cname-lookup.h.
+	* wctype/wchar-lookup.h: Include stdint.h.
+	* wctype/wctype.c (__wctype): Assume new locale format.
+	* wctype/wctype_l.c (__wctype_l): Likewise.
+	* wctype/iswctype.c: Don't include cname-lookup.h.
+	(__iswctype): Assume new locale format.
+	* wctype/iswctype_l.c: Don't include cname-lookup.h.
+	(__iswctype_l): Assume new locale format.
+	* wctype/wctrans.c: Don't include ctype.h.
+	(wctrans): Assume new locale format.
+	* wctype/wctrans_l.c (__wctrans_l): Likewise.
+	* wctype/towctrans.c: Don't include cname-lookup.h.
+	(__towctrans): Assume new locale format.
+	* wctype/towctrans_l.c: Don't include cname-lookup.h.
+	(__towctrans_l): Assume new locale format.
+	* wctype/wcfuncs.c: Don't include ctype.h and cname-lookup.h. Include
+	localeinfo.h instead.
+	(__NO_WCTYPE): Remove unused macro.
+	(__ctype32_b, __ctype32_toupper, __ctype32_tolower): Remove
+	declarations.
+	(iswalnum, iswalpha, iswcntrl, iswdigit, iswlower, iswgraph, iswprint,
+	iswpunct, iswspace, iswupper, iswxdigit): Assume new locale format.
+	(towlower, towupper): Likewise.
+	* wctype/wcfuncs_l.c: Don't include cname-lookup.h. Include
+	localeinfo.h instead.
+	(__NO_WCTYPE): Remove unused macro.
+	(__iswalnum_l, __iswalpha_l, __iswcntrl_l, __iswdigit_l, __iswlower_l,
+	__iswgraph_l, __iswprint_l, __iswpunct_l, __iswspace_l, __iswupper_l,
+	__iswxdigit_l): Assume new locale format.
+	(__towlower_l, __towupper_l): Likewise.
+	* wcsmbs/wcwidth.h: Don't include cname-lookup.h.
+	(__ctype32_b): Remove declaration.
+	(internal_wcwidth): Assume new locale format.
+	* locale/programs/ld-ctype.c (struct locale_ctype_t): Remove fields
+	plane_size, plane_cnt, names, width. Rename map to map_b, rename map32
+	to map32_b, rename width_3level to width.
+	(ctype_output): Always create new locale format. Don't emit
+	_NL_CTYPE_NAMES, _NL_CTYPE_HASH_SIZE, _NL_CTYPE_HASH_LAYERS any more.
+	(allocate_arrays): Always create new locale format.
+
+	* locale/C-collate.c (_nl_C_LC_COLLATE): Update.
+	* locale/weightwc.h (findidx): Assume new locale format.
+	* string/strcoll.c (wcscoll): Remove local variables size, layers,
+	names.
+	* string/strxfrm.c (wcsxfrm): Likewise.
+	* posix/fnmatch_loop.c (internal_fnwmatch): Likewise. Change type of
+	local variable collseq to 'const char *'.
+	(SUFFIX): Don't use, don't undefine.
+	* posix/fnmatch.c: Remove SUFFIX definition.
+	* locale/programs/ld-collate.c (struct locale_collate_t): Remove
+	fields plane_size, plane_cnt, wcheads, wcseqorder. Rename
+	wcheads_3level to wcheads, rename wcseqorder_3level to wcseqorder.
+	(collate_finish): Always create new locale format. Remove local
+	variables min_total, act_size.
+	(collate_output): Always create new locale format. Remove local
+	variables table_size, names, tablewc. Rename tablewc_3level to
+	tablewc.
+
+2000-08-31  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-collate.c (obstack_int32_grow,
+	obstack_int32_grow_fast): New inline functions.
+	(output_weightwc, collate_output): Use them where possible.
+
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/libio.h (_IO_flockfile, _IO_funlockfile): Fix typo in last

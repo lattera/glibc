@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <langinfo.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -114,11 +115,6 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   size_t idxmax;
   size_t idxcnt;
   int use_malloc;
-#ifdef WIDE_CHAR_VERSION
-  size_t size;
-  size_t layers;
-  const wint_t *names;
-#endif
 
 #include WEIGHT_H
 
@@ -141,12 +137,6 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
     current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_EXTRA,SUFFIX))].string;
   indirect = (const int32_t *)
     current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_INDIRECT,SUFFIX))].string;
-# ifdef WIDE_CHAR_VERSION
-  names = (const wint_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_NAMES)].string;
-  size = current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)].word;
-  layers = current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].word;
-# endif
 #else
   rulesets = (const unsigned char *)
     _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULESETS);
@@ -158,13 +148,13 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
     _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_EXTRA,SUFFIX));
   indirect = (const int32_t *)
     _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_INDIRECT,SUFFIX));
-# ifdef WIDE_CHAR_VERSION
-  names = (const wint_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_NAMES);
-  size = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_SIZE);
-  layers = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_LAYERS);
-# endif
 #endif
   use_malloc = 0;
+
+  assert (((uintptr_t) table) % sizeof (table[0]) == 0);
+  assert (((uintptr_t) weights) % sizeof (weights[0]) == 0);
+  assert (((uintptr_t) extra) % sizeof (extra[0]) == 0);
+  assert (((uintptr_t) indirect) % sizeof (indirect[0]) == 0);
 
   /* Handle an empty string as a special case.  */
   if (srclen == 0)
