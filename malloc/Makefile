@@ -98,3 +98,6 @@ $(objpfx)mtrace: mtrace.pl
 	sed -e 's|@PERL@|$(PERL)|' -e 's|@XXX@|$(address-width)|' \
 	    -e 's|@VERSION@|$(version)|' $^ > $@.new \
 	&& rm -fr $@ && mv $@.new $@ && chmod +x $@
+
+# The implementation uses `dlsym'
+$(objpfx)libmemprof.so: $(common-objpfx)dlfcn/libdl.so
