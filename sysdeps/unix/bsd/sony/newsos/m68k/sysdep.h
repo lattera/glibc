@@ -39,23 +39,14 @@ Cambridge, MA 02139, USA.  */
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
   ENTRY (name)								      \
-  DO_CALL (syscall_name, args)
+  DO_CALL (POUND (SYS_ify (syscall_name)), args)
 
-#ifdef __STDC__
-#define DO_CALL(syscall_name, args)					      \
+#define DO_CALL(syscall, args)						      \
+  movel syscall, d0;							      \
   linkw fp, POUND(0);							      \
-  movel POUND(SYS_##syscall_name), d0;					      \
   trap POUND(0);							      \
   unlk fp;								      \
   bcs error
-#else
-#define DO_CALL(syscall_name, args)					      \
-  linkw fp, POUND(0);							      \
-  movel POUND(SYS_/**/syscall_name), d0;				      \
-  trap POUND(0);							      \
-  unlk fp;								      \
-  bcs error
-#endif
 
 #define	ret	rts
 #define	r0	d0
