@@ -1,5 +1,6 @@
 2003-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/Makefile (CFLAGS-error.c): Define.
 	* misc/error.c (error): Disable cancellation handling around the
 	actual output.  The message should in any case be printed.
 	(error_at_line): Likewise.
