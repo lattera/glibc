@@ -109,7 +109,7 @@ static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
 					re_charset_t *mbcset,
 					int *equiv_class_alloc,
 					const unsigned char *name);
-static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
+static reg_errcode_t build_charclass (unsigned RE_TRANSLATE_TYPE trans,
 				      re_bitset_ptr_t sbcset,
 				      re_charset_t *mbcset,
 				      int *char_class_alloc,
@@ -118,12 +118,13 @@ static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
 #else  /* not RE_ENABLE_I18N */
 static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
 					const unsigned char *name);
-static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
+static reg_errcode_t build_charclass (unsigned RE_TRANSLATE_TYPE trans,
 				      re_bitset_ptr_t sbcset,
 				      const unsigned char *class_name,
 				      reg_syntax_t syntax);
 #endif /* not RE_ENABLE_I18N */
-static bin_tree_t *build_charclass_op (re_dfa_t *dfa, RE_TRANSLATE_TYPE trans,
+static bin_tree_t *build_charclass_op (re_dfa_t *dfa,
+				       unsigned RE_TRANSLATE_TYPE trans,
 				       const unsigned char *class_name,
 				       const unsigned char *extra, int not,
 				       reg_errcode_t *err);
@@ -502,7 +503,7 @@ regcomp (preg, pattern, cflags)
   /* We have already checked preg->fastmap != NULL.  */
   if (BE (ret == REG_NOERROR, 1))
     /* Compute the fastmap now, since regexec cannot modify the pattern
-       buffer.  This function nevers fails in this implementation.  */
+       buffer.  This function never fails in this implementation.  */
     (void) re_compile_fastmap (preg);
   else
     {
@@ -631,8 +632,14 @@ regfree (preg)
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   if (BE (dfa != NULL, 1))
     free_dfa_content (dfa);
+  preg->buffer = NULL;
+  preg->allocated = 0;
 
   re_free (preg->fastmap);
+  preg->fastmap = NULL;
+
+  re_free (preg->translate);
+  preg->translate = NULL;
 }
 #ifdef _LIBC
 weak_alias (__regfree, regfree)
@@ -3401,7 +3408,7 @@ build_charclass (trans, sbcset, mbcset, char_class_alloc, class_name, syntax)
 #else /* not RE_ENABLE_I18N */
 build_charclass (trans, sbcset, class_name, syntax)
 #endif /* not RE_ENABLE_I18N */
-     RE_TRANSLATE_TYPE trans;
+     unsigned RE_TRANSLATE_TYPE trans;
      re_bitset_ptr_t sbcset;
      const unsigned char *class_name;
      reg_syntax_t syntax;
@@ -3476,7 +3483,7 @@ build_charclass (trans, sbcset, class_name, syntax)
 static bin_tree_t *
 build_charclass_op (dfa, trans, class_name, extra, not, err)
      re_dfa_t *dfa;
-     RE_TRANSLATE_TYPE trans;
+     unsigned RE_TRANSLATE_TYPE trans;
      const unsigned char *class_name;
      const unsigned char *extra;
      int not;
