@@ -1525,7 +1525,7 @@ print_statistics (void)
 #endif
   _dl_debug_printf ("                 number of relocations: %lu\n",
 		    _dl_num_relocations);
-  _dl_debug_printf ("                 number of relocations from cache: %lu\n",
+  _dl_debug_printf ("      number of relocations from cache: %lu\n",
 		    _dl_num_cache_relocations);
 
 #ifndef HP_TIMING_NONAVAIL
