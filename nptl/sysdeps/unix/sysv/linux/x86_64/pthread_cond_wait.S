@@ -87,7 +87,7 @@ __condvar_cleanup:
 	movq	16(%r8), %rdi
 	callq	__pthread_mutex_cond_lock
 
-3:	retq
+	retq
 	.size	__condvar_cleanup, .-__condvar_cleanup
 
 
@@ -121,6 +121,8 @@ __pthread_cond_wait:
 	movq	%rdi, 8(%rsp)
 	movq	%rsi, 16(%rsp)
 
+	movq	%rsi, dep_mutex(%rdi)
+
 	/* Get internal lock.  */
 	movl	$1, %esi
 	LOCK
@@ -133,9 +135,7 @@ __pthread_cond_wait:
 	jne	1f
 
 	/* Unlock the mutex.  */
-2:	movq	%rdi, %rax
-	movq	16(%rsp), %rdi
-	movq	%rdi, dep_mutex(%rax)
+2:	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_unlock_internal
 
 	testl	%eax, %eax
@@ -169,7 +169,7 @@ __pthread_cond_wait:
 	jne	3f
 
 4:	callq	__pthread_enable_asynccancel
-	movq	%rax, (%rsp)
+	movl	%eax, (%rsp)
 
 	movq	8(%rsp), %rdi
 	xorq	%r10, %r10
@@ -179,7 +179,7 @@ __pthread_cond_wait:
 	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	syscall
 
-	movq	(%rsp), %rdi
+	movl	(%rsp), %edi
 	callq	__pthread_disable_asynccancel
 
 	/* Lock.  */
