@@ -323,6 +323,7 @@ send_again:
   reply_msg.acpted_rply.ar_results.proc = xresults;
   fd.fd = cu->cu_sock;
   fd.events = POLLIN;
+  anyup = 0;
   for (;;)
     {
       switch (__poll (&fd, 1, milliseconds))

@@ -1,3 +1,7 @@
+1999-04-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sunrpc/clnt_udp.c (clntudp_call): Initialize anyup.
+
 1999-04-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_db.c (__gconv_find_transform): If conversion is
