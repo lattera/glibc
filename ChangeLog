@@ -1,3 +1,8 @@
+2004-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/gnu/netinet/udp.h: Cosmetic changes.  Remove unnecessary
+	__BEGIN_DECLS/__END_DECLS.
+
 2004-08-23  Andreas Jaeger  <aj@suse.de>
 
 	[BZ #341]
