@@ -1,8 +1,16 @@
+2000-04-02  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* stdio-common/tmpfile.c [! USE_IN_LIBIO]: No alias needed,
+	since we define the function with the name `tmpfile'.
+
+	* mach/Versions: Define SHARED instead of PIC to affect shlib-compat.h.
+	* hurd/Versions: Likewise.
+
 2000-04-02  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-runtime.c (ElfW): Fxi typo in comment.
+	* elf/dl-runtime.c (fixup): Fix typo in comment.
 
-	* resolv/netdb.h (getnameinfo): All lenght parameters are of type
+	* resolv/netdb.h (getnameinfo): All length parameters are of type
 	socklen_t.
 	* inet/getnameinfo.c: Likewise.
 
@@ -127,7 +135,7 @@
 	* elf/dep4.c: New file.
 	* elf/order.c: New file.
 
-	* elf/dl-init.c: Fix type in comment.
+	* elf/dl-init.c: Fix typo in comment.
 
 2000-03-31  Andreas Jaeger  <aj@suse.de>
 
@@ -144,7 +152,7 @@
 	* sysdeps/mips/fpu/fesetenv.c: Likewise.
 
 	* sysdeps/generic/ldsodefs.h: DT_INIT_ARRAY is not relocated
-	  anymore, update comment.
+	anymore, update comment.
 
 	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
 

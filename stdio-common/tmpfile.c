@@ -56,8 +56,4 @@ tmpfile (void)
 # undef tmpfile
 # include <shlib-compat.h>
 versioned_symbol (libc, __new_tmpfile, tmpfile, GLIBC_2_1);
-# else
-#  ifdef weak_alias
-weak_alias (__new_tmpfile, tmpfile)
-#  endif
 #endif
