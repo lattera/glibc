@@ -1,5 +1,8 @@
 2001-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/mcheck.c (mcheck): Call malloc once before setting the
+	hooks to allow the internal check hooks to be set up if necessary.
+
 	* nis/nss-nis.h: Move yperr2nss_tab definition into separate file
 	and rename to __yperr2nss_tab.  Change YPERR_COUNT into variable
 	__yperr2nss_count.

@@ -315,6 +315,10 @@ mcheck (func)
   /* These hooks may not be safely inserted if malloc is already in use.  */
   if (__malloc_initialized <= 0 && !mcheck_used)
     {
+      /* We call malloc() once here to ensure it is initialized.  */
+      void *p = malloc (0);
+      free (p);
+
       old_free_hook = __free_hook;
       __free_hook = freehook;
       old_malloc_hook = __malloc_hook;
