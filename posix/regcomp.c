@@ -121,7 +121,8 @@ static reg_errcode_t build_equiv_class (re_charset_t *mbcset,
 static reg_errcode_t build_charclass (re_charset_t *mbcset,
                                       re_bitset_ptr_t sbcset,
                                       int *char_class_alloc,
-                                      const unsigned char *name);
+                                      const unsigned char *class_name,
+                                      reg_syntax_t syntax);
 static bin_tree_t *build_word_op (re_dfa_t *dfa, int not, reg_errcode_t *err);
 static void free_bin_tree (bin_tree_t *tree);
 static bin_tree_t *create_tree (bin_tree_t *left, bin_tree_t *right,
@@ -1987,7 +1988,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
     {
       tree = parse_dup_op (tree, regexp, dfa, token, syntax, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
-        return *err = REG_ESPACE, NULL;
+        return NULL;
     }
 
   return tree;
@@ -2072,32 +2073,43 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
   re_token_t start_token = *token;
   if (token->type == OP_OPEN_DUP_NUM)
     {
-      int i, end, start = fetch_number (regexp, token, syntax);
+      int i;
+      int end = 0;
+      int start = fetch_number (regexp, token, syntax);
       bin_tree_t *elem;
       if (start == -1)
-        start = 0; /* We treat "{,m}" as "{0,m}".  */
-      if (start != -2 && token->type == OP_CLOSE_DUP_NUM)
         {
-          if (start == 0)
+          if (token->type == CHARACTER && token->opr.c == ',')
+            start = 0; /* We treat "{,m}" as "{0,m}".  */
+          else
             {
-              /* We treat "<re>{0}" as null string.  */
-              *token = fetch_token (regexp, syntax);
-              free_bin_tree (dup_elem);
+              *err = REG_BADBR; /* <re>{} is invalid.  */
               return NULL;
             }
-          end = start; /* We treat "{n}" as "{n,n}".  */
         }
-      else if (BE (start == -2 || token->type != CHARACTER
-                   || token->opr.c != ',', 0))
-        /* Invalid sequence.  */
-        goto parse_dup_op_invalid_interval;
-      else
+      if (BE (start != -2, 1))
         {
-          end = fetch_number (regexp, token, syntax);
-          if (BE (end == -2 || token->type != OP_CLOSE_DUP_NUM, 0))
-            /* Invalid sequence.  */
-            goto parse_dup_op_invalid_interval;
+          /* We treat "{n}" as "{n,n}".  */
+          end = ((token->type == OP_CLOSE_DUP_NUM) ? start
+                 : ((token->type == CHARACTER && token->opr.c == ',')
+                    ? fetch_number (regexp, token, syntax) : -2));
         }
+      if (BE (start == -2 || end == -2, 0))
+        {
+          /* Invalid sequence.  */
+          if (token->type == OP_CLOSE_DUP_NUM)
+            goto parse_dup_op_invalid_interval;
+          else
+            goto parse_dup_op_ebrace;
+        }
+      if (BE (start == 0 && end == 0, 0))
+        {
+          /* We treat "<re>{0}" and "<re>{0,0}" as null string.  */
+          *token = fetch_token (regexp, syntax);
+          free_bin_tree (dup_elem);
+          return NULL;
+        }
+
       /* Extract "<re>{n,m}" to "<re><re>...<re><re>{0,<m-n>}".  */
       elem = tree;
       for (i = 0; i < start; ++i)
@@ -2175,12 +2187,20 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
   *err = REG_ESPACE;
   return NULL;
 
- parse_dup_op_invalid_interval:
+ parse_dup_op_ebrace:
   if (BE (!(syntax & RE_INVALID_INTERVAL_ORD), 0))
     {
       *err = REG_EBRACE;
       return NULL;
     }
+  goto parse_dup_op_rollback;
+ parse_dup_op_invalid_interval:
+  if (BE (!(syntax & RE_INVALID_INTERVAL_ORD), 0))
+    {
+      *err = REG_BADBR;
+      return NULL;
+    }
+ parse_dup_op_rollback:
   re_string_set_index (regexp, start_idx);
   *token = start_token;
   token->type = CHARACTER;
@@ -2524,7 +2544,12 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       ret = parse_bracket_element (&start_elem, regexp, token, token_len, dfa,
                                    syntax);
       if (BE (ret != REG_NOERROR, 0))
-        goto parse_bracket_exp_espace;
+        {
+          re_free (sbcset);
+          free_charset (mbcset);
+          *err = ret;
+          return NULL;
+        }
 
       token_len = peek_token_bracket (token, regexp, syntax);
       if (BE (token->type == END_OF_RE, 0))
@@ -2561,7 +2586,12 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
           ret = parse_bracket_element (&end_elem, regexp, &token2, token_len2,
                                        dfa, syntax);
           if (BE (ret != REG_NOERROR, 0))
-            goto parse_bracket_exp_espace;
+            {
+              re_free (sbcset);
+              free_charset (mbcset);
+              *err = ret;
+              return NULL;
+            }
 
           token_len = peek_token_bracket (token, regexp, syntax);
           if (BE (token->type == END_OF_RE, 0))
@@ -2624,7 +2654,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
               break;
             case CHAR_CLASS:
               ret = build_charclass (mbcset, sbcset, &char_class_alloc,
-				     start_elem.opr.name);
+                                     start_elem.opr.name, syntax);
               if (BE (ret != REG_NOERROR, 0))
                goto parse_bracket_exp_espace;
               break;
@@ -2720,11 +2750,10 @@ parse_bracket_symbol (elem, regexp, token)
 {
   unsigned char ch, delim = token->opr.c;
   int i = 0;
-  for (;; i++)
+  for (;; ++i)
     {
-#ifdef DEBUG
-      assert (i < BRACKET_NAME_BUF_SIZE);
-#endif
+      if (re_string_eoi(regexp) || i >= BRACKET_NAME_BUF_SIZE)
+        return REG_EBRACK;
       if (token->type == OP_OPEN_CHAR_CLASS)
         ch = re_string_fetch_byte_case (regexp);
       else
@@ -2847,14 +2876,15 @@ build_equiv_class (mbcset, sbcset, equiv_class_alloc, name)
      is a pointer argument sinse we may update it.  */
 
 static reg_errcode_t
-build_charclass (mbcset, sbcset, char_class_alloc, name)
+build_charclass (mbcset, sbcset, char_class_alloc, class_name, syntax)
      re_charset_t *mbcset;
      re_bitset_ptr_t sbcset;
      int *char_class_alloc;
-     const unsigned char *name;
+     const unsigned char *class_name;
+     reg_syntax_t syntax;
 {
   int i;
-
+  const unsigned char *name = class_name;
   /* Check the space of the arrays.  */
   if (*char_class_alloc == mbcset->nchar_classes)
     {
@@ -2867,6 +2897,12 @@ build_charclass (mbcset, sbcset, char_class_alloc, name)
       if (BE (mbcset->char_classes == NULL, 0))
         return REG_ESPACE;
     }
+
+  /* In case of REG_ICASE "upper" and "lower" match the both of
+     upper and lower cases.  */
+  if ((syntax & RE_ICASE)
+      && (strcmp (name, "upper") == 0 || strcmp (name, "lower") == 0))
+    name = "alpha";
 
   mbcset->char_classes[mbcset->nchar_classes++] = __wctype (name);
 
@@ -2942,7 +2978,8 @@ build_word_op (dfa, not, err)
             bitset_set (sbcset, i);
     }
 
-  ret = build_charclass (mbcset, sbcset, &alloc, "alpha");
+  /* We don't care the syntax in this case.  */
+  ret = build_charclass (mbcset, sbcset, &alloc, "alpha", 0);
   if (BE (ret != REG_NOERROR, 0))
     {
       re_free (sbcset);
@@ -3011,14 +3048,14 @@ fetch_number (input, token, syntax)
     {
       *token = fetch_token (input, syntax);
       c = token->opr.c;
+      if (BE (token->type == END_OF_RE, 0))
+        return -2;
       if (token->type == OP_CLOSE_DUP_NUM || c == ',')
         break;
-      if (BE (token->type != CHARACTER || c < '0' || '9' < c, 0))
-        return -2;
-      num = (num == -1) ? c - '0' : num * 10 + c - '0';
+      num = ((token->type != CHARACTER || c < '0' || '9' < c || num == -2)
+             ? -2 : ((num == -1) ? c - '0' : num * 10 + c - '0'));
+      num = (num > RE_DUP_MAX) ? -2 : num;
     }
-  if (BE (num > RE_DUP_MAX, 0))
-    return -2;
   return num;
 }
 
