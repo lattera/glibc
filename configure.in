@@ -1407,8 +1407,7 @@ AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
 echo '*** Do NOT install this release on any production system!'
-echo '*** It is known to be broken and will be so for quite some time.'
-echo '*** Use the latest released version instead.'
+echo '*** We are in early testing stages.'
 
 AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, [
 case $CONFIG_FILES in *config.make*)

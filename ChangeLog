@@ -1,5 +1,15 @@
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h (VERSION): Bump to 2.1.91.
+
+	* configure.in: Update warning comment.  glibc should not be
+	broken anymore.
+
+	* sysdeps/unix/sysv/linux/ia64/Dist: Remove old content.  Add
+	ioperm.c, sys/procfs.h, and sys/io.h.
+
+	* sysdeps/powerpc/Dist: Add bp-asm.h.
+
 	* assert/Depend: Add localedata.
 	* assert/Makefile (test-assert-ENV): New.  Define LANGUAGE=C.
 	(test-assert-perr-ENV): New.  Define LANGUAGE=C.
@@ -17,7 +27,7 @@
 
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
-	* sunrpc/rpc_cout.c (inline_struct): Add missing braces in
+	* sunrpc/rpc_cout.c (inline_struct): Add missing parenthesis in
 	generated expressions.
 	Patch by Darren McClelland <dmcclell@zetec.com>.
 

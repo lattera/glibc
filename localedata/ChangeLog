@@ -1,5 +1,8 @@
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (distribute): Add locale test suite files, fmon test
+	suite files, gen-locale.sh, and show-ucs-data.c.
+
 	* Depend: New file.
 
 	* Makefile: Rewrite rules to generate locale data.
