@@ -1,5 +1,5 @@
 /* Signal number definitions.  Solaris 2 version.
-   Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,9 @@
 #define	SIG_ERR	((__sighandler_t) -1) /* Error return.  */
 #define	SIG_DFL	((__sighandler_t) 0) /* Default action.  */
 #define	SIG_IGN	((__sighandler_t) 1) /* Ignore signal.  */
+#ifdef __USE_UNIX98
+# define SIG_HOLD ((__sighandler_t) 2) /* Add signal to hold mask.  */
+#endif
 
 
 /* Signals.  */
