@@ -1,3 +1,8 @@
+2002-11-13  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_storage): Zero the space
+	for the new TCB.
+
 2002-11-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sigaction.c: Check for visibility

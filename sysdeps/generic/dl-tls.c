@@ -262,6 +262,10 @@ _dl_allocate_tls_storage (void)
       result = (char *) result + GL(dl_tls_static_size) - TLS_TCB_SIZE;
 # endif
 
+      /* Clear the TCB data structure.  We can't ask the caller (i.e.
+	 libpthread) to do it, because we will initialize the DTV et al.  */
+      memset (result, 0, TLS_TCB_SIZE);
+
       result = allocate_dtv (result);
       if (result == NULL)
 	free (allocated);
