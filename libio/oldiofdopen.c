@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -127,7 +127,7 @@ _IO_old_fdopen (fd, mode)
     _IO_mask_flags (&new_f->fp.file, read_write,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  return (_IO_FILE *) &new_f->fp;
+  return &new_f->fp.file;
 }
 
 strong_alias (_IO_old_fdopen, __old_fdopen)

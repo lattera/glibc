@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -39,6 +39,9 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <errno.h>
+#ifdef __STDC__
+#include <stdlib.h>
+#endif
 #ifndef errno
 extern int errno;
 #endif
@@ -318,7 +321,15 @@ _IO_old_file_underflow (fp)
     return *(unsigned char *) fp->_IO_read_ptr;
 
   if (fp->_IO_buf_base == NULL)
-    _IO_doallocbuf (fp);
+    {
+      /* Maybe we already have a push back pointer.  */
+      if (fp->_IO_save_base != NULL)
+	{
+	  free (fp->_IO_save_base);
+	  fp->_flags &= ~_IO_IN_BACKUP;
+	}
+      _IO_doallocbuf (fp);
+    }
 
   /* Flush all line buffered files before reading. */
   /* FIXME This can/should be moved to genops ?? */
@@ -408,11 +419,9 @@ int
 _IO_old_file_sync (fp)
      _IO_FILE *fp;
 {
-  _IO_size_t delta;
+  _IO_ssize_t delta;
   int retval = 0;
 
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
   /*    char* ptr = cur_ptr(); */
   if (fp->_IO_write_ptr > fp->_IO_write_base)
     if (_IO_old_do_flush(fp)) return EOF;
@@ -437,8 +446,6 @@ _IO_old_file_sync (fp)
     fp->_old_offset = _IO_pos_BAD;
   /* FIXME: Cleanup - can this be shared? */
   /*    setg(base(), ptr, ptr); */
-  _IO_funlockfile (fp);
-  _IO_cleanup_region_end (0);
   return retval;
 }
 
@@ -474,6 +481,12 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
 
   if (fp->_IO_buf_base == NULL)
     {
+      /* It could be that we already have a pushback buffer.  */
+      if (fp->_IO_read_base != NULL)
+	{
+	  free (fp->_IO_read_base);
+	  fp->_flags &= ~_IO_IN_BACKUP;
+	}
       _IO_doallocbuf (fp);
       _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
       _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
@@ -507,6 +520,10 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
     }
   /* At this point, dir==_IO_seek_set. */
 
+  /* If we are only interested in the current position we've found it now.  */
+  if (mode == 0)
+    return offset;
+
   /* If destination is within current buffer, optimize: */
   if (fp->_old_offset != _IO_pos_BAD && fp->_IO_read_base != NULL
       && !_IO_in_backup (fp))
@@ -525,7 +542,10 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
 	      _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + rel_offset,
 			fp->_IO_read_end);
 	      _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
-	      goto resync;
+	      {
+		_IO_mask_flags (fp, 0, _IO_EOF_SEEN);
+		goto resync;
+	      }
 	    }
 #ifdef TODO
 	    /* If we have streammarkers, seek forward by reading ahead. */
@@ -535,6 +555,7 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
 		  - (fp->_IO_read_ptr - fp->_IO_read_base);
 		if (ignore (to_skip) != to_skip)
 		  goto dumb;
+		_IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 		goto resync;
 	      }
 #endif
@@ -545,6 +566,7 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
 	  if (!_IO_in_backup (fp))
 	    _IO_switch_to_backup_area (fp);
 	  gbump (fp->_IO_read_end + rel_offset - fp->_IO_read_ptr);
+	  _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 	  goto resync;
 	}
 #endif
@@ -680,7 +702,12 @@ _IO_old_file_xsputn (f, data, n)
 	count = to_do;
       if (count > 20)
 	{
+#ifdef _LIBC
+	  f->_IO_write_ptr = __mempcpy (f->_IO_write_ptr, s, count);
+#else
 	  memcpy (f->_IO_write_ptr, s, count);
+	  f->_IO_write_ptr += count;
+#endif
 	  s += count;
 	}
       else
@@ -689,8 +716,8 @@ _IO_old_file_xsputn (f, data, n)
 	  register int i = (int) count;
 	  while (--i >= 0)
 	    *p++ = *s++;
+	  f->_IO_write_ptr = p;
 	}
-      f->_IO_write_ptr += count;
       to_do -= count;
     }
   if (to_do + must_flush > 0)
