@@ -1,3 +1,8 @@
+2004-09-01  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h [g++ >= 3.5]: Use
+	__builtin_offsetof.
+
 2004-09-01  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #361]
