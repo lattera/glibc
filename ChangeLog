@@ -1,3 +1,8 @@
+1999-07-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Recognize 2.95 as gcc version number.
+	Patch by Joel Klecker <jk@espy.org>.
+
 1999-07-12  Andreas Schwab  <schwab@suse.de>
 
 	* elf/rtld.c (dl_main): When putting back the interpreter object
