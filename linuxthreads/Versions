@@ -18,8 +18,6 @@ libc {
   }
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread
-    __libc_internal_tsd_get; __libc_internal_tsd_set;
-    __libc_internal_tsd_address; __libc_alloca_cutoff;
     __libc_dl_error_tsd;
 
     __libc_pthread_init; __libc_current_sigrtmin_private;
@@ -160,8 +158,6 @@ libpthread {
   }
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread
-    __libc_internal_tsd_get; __libc_internal_tsd_set;
-    __libc_internal_tsd_address;
     __pthread_kill_other_threads_np;
   }
 }
