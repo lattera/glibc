@@ -37,9 +37,9 @@ pthread_barrier_wait:
 	mov	r4, r8
 
 	/* Get the mutex.  */
-	mov	#-1, r3
-	XADD (r3, @(MUTEX,r8), r2)
-	tst	r3, r3
+	mov	#0, r3
+	mov	#1, r4
+	CMPXCHG (r3, @(MUTEX,r8), r4, r2)
 	bf	1f
 
 	/* One less waiter.  If this was the last one needed wake
@@ -55,8 +55,8 @@ pthread_barrier_wait:
 	mov.l	@(CURR_EVENT,r8), r6
 
 	/* Release the mutex.  */
-	INC (@(MUTEX,r8), r2)
-	cmp/pl	r2
+	DEC (@(MUTEX,r8), r2)
+	tst	r2, r2
 	bf	6f
 7:
 	/* Wait for the remaining threads.  The call will return immediately
@@ -109,8 +109,8 @@ pthread_barrier_wait:
 	SYSCALL_INST_PAD
 
 	/* Release the mutex.  */
-	INC (@(MUTEX,r8), r2)
-	cmp/pl	r2
+	DEC (@(MUTEX,r8), r2)
+	tst	r2, r2
 	bf	4f
 5:
 	mov	#-1, r0		/* == PTHREAD_BARRIER_SERIAL_THREAD */
@@ -152,9 +152,9 @@ pthread_barrier_wait:
 .Lall:
 	.long	0x7fffffff
 .Lwait0:
-	.long	__lll_lock_wait-.Lwait0b
+	.long	__lll_mutex_lock_wait-.Lwait0b
 .Lwake0:
-	.long	__lll_unlock_wake-.Lwake0b
+	.long	__lll_mutex_unlock_wake-.Lwake0b
 .Lwake1:
-	.long	__lll_unlock_wake-.Lwake1b
+	.long	__lll_mutex_unlock_wake-.Lwake1b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

@@ -49,13 +49,13 @@ __pthread_cond_timedwait:
 	mov	r6, r13
 
 	/* Get internal lock.  */
-	mov	#1, r3
+	mov	#0, r3
+	mov	#1, r4
 #if cond_lock != 0
-	XADD (r3, @(cond_lock,r8), r2)
+	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
 #else
-	XADD (r3, @r8, r2)
+	CMPXCHG (r3, @r8, r4, r2)
 #endif
-	tst	r2, r2
 	bt	2f
 	bra	1f
 	 nop
@@ -180,13 +180,13 @@ __pthread_cond_timedwait:
 .Ldisable1b:
 
 	/* Lock.  */
-	mov	#1, r3
+	mov	#0, r3
+	mov	#1, r4
 #if cond_lock != 0
-	XADD (r3, @(cond_lock,r8), r2)
+	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
 #else
-	XADD (r3, @r8, r2)
+	CMPXCHG (r3, @r8, r4, r2)
 #endif
-	tst	r2, r2
 	bf	5f
 6:
 	mov.l	@(woken_seq,r8), r0

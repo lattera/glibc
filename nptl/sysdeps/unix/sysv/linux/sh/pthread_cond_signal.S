@@ -41,13 +41,13 @@ __pthread_cond_signal:
 	mov	r4, r8
 
 	/* Get internal lock.  */
-	mov	#1, r3
+	mov	#0, r3
+	mov	#1, r4
 #if cond_lock != 0
-	XADD (r3, @(cond_lock,r8), r2)
+	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
 #else
-	XADD (r3, @r8, r2)
+	CMPXCHG (r3, @r8, r4, r2)
 #endif
-	tst	r2, r2
 	bf	1f
 2:
 	mov.l	@(total_seq+4,r8),r0
@@ -73,28 +73,15 @@ __pthread_cond_signal:
 	mov.l	r0,@(wakeup_seq,r8)
 	mov.l	r1,@(wakeup_seq+4,r8)
 
+	/* Wake up one thread by moving it to the internal lock futex.  */
 	mov	r8, r4
 	add	#wakeup_seq, r4
-#ifdef __ASSUME_FUTEX_REQUEUE
-	/* Wake up one thread by moving it to the internal lock futex.  */
-	mov	#FUTEX_REQUEUE, r5
-	mov	#0, r6
-	mov	#1, r7
-	mov	r8, r0
-# if cond_lock != 0
-	add	#cond_lock, r0
-# endif
-	mov	#SYS_futex, r3
-	extu.b	r3, r3
-	trapa	#0x15
-#else
 	mov	#FUTEX_WAKE, r5
 	mov	#1, r6
 	mov	#0, r7
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
 	trapa	#0x14
-#endif
 	SYSCALL_INST_PAD
 
 4:

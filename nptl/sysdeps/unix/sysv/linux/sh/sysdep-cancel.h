@@ -33,6 +33,9 @@
   ENTRY (name); \
     SINGLE_THREAD_P; \
     bf .Lpseudo_cancel; \
+    .type __##syscall_name##_nocancel,@function; \
+    .globl __##syscall_name##_nocancel; \
+    __##syscall_name##_nocancel: \
     DO_CALL (syscall_name, args); \
     mov r0,r1; \
     mov _IMM12,r2; \
@@ -42,6 +45,7 @@
     bt .Lsyscall_error; \
     bra .Lpseudo_end; \
      nop; \
+    .size __##syscall_name##_nocancel,.-__##syscall_name##_nocancel; \
  .Lpseudo_cancel: \
     sts.l pr,@-r15; \
     add _IMM16,r15; \

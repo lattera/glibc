@@ -40,22 +40,21 @@ __condvar_cleanup:
 	mov.l	@(4,r9), r8
 
 	/* Get internal lock.  */
-	mov	#1, r3
+	mov	#0, r3
+	mov	#1, r4
 #if cond_lock != 0
-	XADD (r3, @(cond_lock,r8), r2)
+	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
 #else
-	XADD (r3, @r8, r2)
+	CMPXCHG (r3, @r8, r4, r2)
 #endif
-	tst	r2, r2
 	bt	1f
 	mov	r8, r5
 #if cond_lock != 0
 	add	#cond_lock, r5
 #endif
-	mov	r2, r4
 	mov.l	.Lwait0, r1
 	bsrf	r1
-	 nop
+	 mov	r2, r4
 .Lwait0b:
 1:
 	mov	#1, r2
@@ -144,13 +143,13 @@ __pthread_cond_wait:
 	mov	r5, r9
 
 	/* Get internal lock.  */
-	mov	#1, r3
+	mov	#0, r3
+	mov	#1, r4
 #if cond_lock != 0
-	XADD (r3, @(cond_lock,r8), r2)
+	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
 #else
-	XADD (r3, @r8, r2)
+	CMPXCHG (r3, @r8, r4, r2)
 #endif
-	tst	r2, r2
 	bt	2f
 	bra	1f
 	 nop
@@ -241,13 +240,13 @@ __pthread_cond_wait:
 .Ldisable0b:	
 
 	/* Lock.  */
-	mov	#1, r3
+	mov	#0, r3
+	mov	#1, r4
 #if cond_lock != 0
-	XADD (r3, @(cond_lock,r8), r2)
+	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
 #else
-	XADD (r3, @r8, r2)
+	CMPXCHG (r3, @r8, r4, r2)
 #endif
-	tst	r2, r2
 	bf	5f
 6:
 	mov.l	@(woken_seq,r8), r0

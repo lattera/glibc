@@ -1,3 +1,27 @@
+2003-10-09  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Completely revamp the
+	locking macros.  No distinction between normal and mutex locking
+	anymore.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Rewrite mutex locking.
+	Merge bits from lowlevelmutex.S we still need.
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevelmutex.S: Remove.
+	* sysdeps/unix/sysv/linux/sh/lowlevelmutex.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/not-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S: Adjust for
+	new mutex implementation.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (PSEUDO): Also defined
+	symbol for entry point to avoid cancellation.
+
 2003-10-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Backout 2003-10-02
