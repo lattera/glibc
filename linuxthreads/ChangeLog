@@ -1,3 +1,15 @@
+1999-01-07  Xavier Leroy  <Xavier.Leroy@inria.fr>
+
+	* pthread.c: Use a third signal __pthread_sig_debug distinct
+	from __pthread_sig_cancel to notify gdb when a thread is
+	created
+	* manager.c: Likewise.
+	* internals.h: Likewise.
+	* signals.c: The implementation of sigwait(s) assumed that
+	all signals in s have signal handlers already attached.
+	This is not required by the standard, so make it work
+	also if some of the signals have no handlers.
+
 1999-01-05  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* linuxthreads.texi: Remove pointers from first @node.  Move old

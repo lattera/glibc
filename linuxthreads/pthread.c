@@ -150,9 +150,11 @@ const int __pthread_offsetof_pid = offsetof(struct _pthread_descr_struct,
 #ifdef SIGRTMIN
 int __pthread_sig_restart;
 int __pthread_sig_cancel;
+int __pthread_sig_debug;
 #else
 int __pthread_sig_restart = DEFAULT_SIG_RESTART;
 int __pthread_sig_cancel = DEFAULT_SIG_CANCEL;
+int __pthread_sig_debug = 0;    /* disabled */
 #endif
 
 /* These variables are used by the setup code.  */
@@ -169,6 +171,7 @@ static void pthread_handle_sigrestart(int sig);
 static void pthread_handle_sigcancel(int sig, struct sigcontext ctx);
 static void pthread_handle_sigrestart(int sig, struct sigcontext ctx);
 #endif
+static void pthread_handle_sigdebug(int sig);
 
 /* Initialize the pthread library.
    Initialization is split in two functions:
@@ -220,12 +223,17 @@ static void pthread_initialize(void)
   /* Allocate the signals used.  */
   __pthread_sig_restart = __libc_allocate_rtsig (1);
   __pthread_sig_cancel = __libc_allocate_rtsig (1);
-  if (__pthread_sig_restart < 0 || __pthread_sig_cancel < 0)
+  __pthread_sig_debug = __libc_allocate_rtsig (2);
+  if (__pthread_sig_restart < 0 ||
+      __pthread_sig_cancel < 0 ||
+      __pthread_sig_debug < 0)
     {
       /* The kernel does not support real-time signals.  Use as before
-	 the available signals in the fixed set.  */
+	 the available signals in the fixed set.
+         Debugging is not supported in this case. */
       __pthread_sig_restart = DEFAULT_SIG_RESTART;
       __pthread_sig_cancel = DEFAULT_SIG_CANCEL;
+      __pthread_sig_debug = 0;
     }
 #endif
   /* Setup signal handlers for the initial thread.
@@ -237,8 +245,7 @@ static void pthread_initialize(void)
   sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart;
 #endif
   sigemptyset(&sa.sa_mask);
-  sa.sa_flags = SA_RESTART; /* does not matter for regular threads, but
-                               better for the thread manager */
+  sa.sa_flags = 0;
   __sigaction(__pthread_sig_restart, &sa, NULL);
 #ifndef __i386__
   sa.sa_handler = pthread_handle_sigcancel;
@@ -247,7 +254,12 @@ static void pthread_initialize(void)
 #endif
   sa.sa_flags = 0;
   __sigaction(__pthread_sig_cancel, &sa, NULL);
-
+  if (__pthread_sig_debug > 0) {
+    sa.sa_handler = pthread_handle_sigdebug;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    __sigaction(__pthread_sig_debug, &sa, NULL);
+  }
   /* Initially, block __pthread_sig_restart. Will be unblocked on demand. */
   sigemptyset(&mask);
   sigaddset(&mask, __pthread_sig_restart);
@@ -479,16 +491,8 @@ static void pthread_handle_sigrestart(int sig, struct sigcontext ctx)
 
 /* The handler for the CANCEL signal checks for cancellation
    (in asynchronous mode), for process-wide exit and exec requests.
-   For the thread manager thread, redirect the signal to 
-   __pthread_manager_sighandler.
-   The debugging strategy is as follows:
-   On reception of a REQ_DEBUG request (sent by new threads created to
-   the thread manager under debugging mode), the thread manager throws
-   __pthread_sig_cancel to itself. The debugger (if active) intercepts
-   this signal, takes into account new threads and continue execution
-   of the thread manager by propagating the signal because it doesn't
-   know what it is specifically done for. In the current implementation,
-   the thread manager simply discards it. */
+   For the thread manager thread, redirect the signal to
+   __pthread_manager_sighandler. */
 
 #ifndef __i386__
 static void pthread_handle_sigcancel(int sig)
@@ -526,6 +530,21 @@ static void pthread_handle_sigcancel(int sig, struct sigcontext ctx)
       siglongjmp(*jmpbuf, 1);
     }
   }
+}
+
+/* Handler for the DEBUG signal.
+   The debugging strategy is as follows:
+   On reception of a REQ_DEBUG request (sent by new threads created to
+   the thread manager under debugging mode), the thread manager throws
+   __pthread_sig_cancel to itself. The debugger (if active) intercepts
+   this signal, takes into account new threads and continue execution
+   of the thread manager by propagating the signal because it doesn't
+   know what it is specifically done for. In the current implementation,
+   the thread manager simply discards it. */
+
+static void pthread_handle_sigdebug(int sig)
+{
+  /* Nothing */
 }
 
 /* Reset the state of the thread machinery after a fork().

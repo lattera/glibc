@@ -91,19 +91,23 @@ static void pthread_sighandler(int signo)
     THREAD_SETMEM(self, p_in_sighandler, NULL);
 }
 
+/* The wrapper around sigaction.  Install our own signal handler
+   around the signal. */
 int sigaction(int sig, const struct sigaction * act,
               struct sigaction * oact)
 {
   struct sigaction newact;
   struct sigaction *newactp;
 
-  if (sig == __pthread_sig_restart || sig == __pthread_sig_cancel)
+  if (sig == __pthread_sig_restart ||
+      sig == __pthread_sig_cancel ||
+      (sig == __pthread_sig_debug && __pthread_sig_debug > 0))
     return EINVAL;
   if (act)
     {
       newact = *act;
       if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL
-	  && sig < NSIG)
+	  && sig > 0 && sig < NSIG)
 	newact.sa_handler = pthread_sighandler;
       newactp = &newact;
     }
@@ -111,7 +115,7 @@ int sigaction(int sig, const struct sigaction * act,
     newactp = NULL;
   if (__sigaction(sig, newactp, oact) == -1)
     return -1;
-  if (sig < NSIG)
+  if (sig > 0 && sig < NSIG)
     {
       if (oact != NULL)
 	oact->sa_handler = sighandler[sig];
@@ -121,20 +125,41 @@ int sigaction(int sig, const struct sigaction * act,
   return 0;
 }
 
+/* A signal handler that does nothing */
+static void pthread_null_sighandler(int sig) { }
+
+/* sigwait -- synchronously wait for a signal */
 int sigwait(const sigset_t * set, int * sig)
 {
   volatile pthread_descr self = thread_self();
   sigset_t mask;
   int s;
   sigjmp_buf jmpbuf;
+  struct sigaction sa;
 
   /* Get ready to block all signals except those in set
-     and the cancellation signal */
+     and the cancellation signal.
+     Also check that handlers are installed on all signals in set,
+     and if not, install our dummy handler.  This is conformant to
+     POSIX: "The effect of sigwait() on the signal actions for the
+     signals in set is unspecified." */
   sigfillset(&mask);
   sigdelset(&mask, __pthread_sig_cancel);
   for (s = 1; s <= NSIG; s++) {
-    if (sigismember(set, s) && s != __pthread_sig_cancel)
+    if (sigismember(set, s) &&
+        s != __pthread_sig_restart &&
+        s != __pthread_sig_cancel &&
+        s != __pthread_sig_debug) {
       sigdelset(&mask, s);
+      if (sighandler[s] == NULL ||
+          sighandler[s] == SIG_DFL ||
+          sighandler[s] == SIG_IGN) {
+        sa.sa_handler = pthread_null_sighandler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;
+        sigaction(s, &sa, NULL);
+      }
+    }
   }
   /* Test for cancellation */
   if (sigsetjmp(jmpbuf, 1) == 0) {
@@ -157,6 +182,8 @@ int sigwait(const sigset_t * set, int * sig)
   return 0;
 }
 
+/* Redefine raise() to send signal to calling thread only,
+   as per POSIX 1003.1c */
 int raise (int sig)
 {
   int retcode = pthread_kill(pthread_self(), sig);

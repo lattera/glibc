@@ -161,7 +161,8 @@ int __pthread_manager(void *arg)
         break;
       case REQ_DEBUG:
         /* Make gdb aware of new thread */
-	if (__pthread_threads_debug) raise(__pthread_sig_cancel);
+	if (__pthread_threads_debug && __pthread_sig_debug > 0)
+          raise(__pthread_sig_debug);
         restart(request.req_thread);
         break;
       }
@@ -554,7 +555,7 @@ static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode)
   _exit(0);
 }
 
-/* Handler for __pthread_sig_restart in thread manager thread */
+/* Handler for __pthread_sig_cancel in thread manager thread */
 
 void __pthread_manager_sighandler(int sig)
 {

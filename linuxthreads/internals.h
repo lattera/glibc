@@ -148,6 +148,10 @@ struct pthread_request {
 extern int __pthread_sig_restart;
 extern int __pthread_sig_cancel;
 
+/* Signal used for interfacing with gdb */
+
+extern int __pthread_sig_debug;
+
 /* Default signals used if we don't have realtime signals */
 
 #define DEFAULT_SIG_RESTART SIGUSR1
