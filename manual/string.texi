@@ -1110,9 +1110,10 @@ is this:
 There is no restriction on the second parameter of @code{strchr} so it
 could very well also be the NUL character.  Those readers thinking very
 hard about this might now point out that the @code{strchr} function is
-more expensive than the @code{strlen} since we have two abort criteria.
-This is right.  But when using the GNU C library this @code{strchr} call
-gets optimized in a special way so that this version actually is faster.
+more expensive than the @code{strlen} function since we have two abort
+criteria.  This is right.  But when using the GNU C library is used this
+@code{strchr} call gets optimized in a special way so that this version
+actually is faster.
 
 @comment string.h
 @comment ISO

@@ -24,6 +24,10 @@
 
 #include "cname-lookup.h"
 
+/* If the program is compiled without optimization the following declaration
+   is not visible in the header.   */
+extern unsigned int *__ctype32_b;
+
 int
 (iswblank) (wint_t wc)
 {
