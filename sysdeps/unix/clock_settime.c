@@ -31,6 +31,13 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
   struct timeval tv;
   int retval;
 
+  /* Make sure the time cvalue is OK.  */
+  if (tp->tv_nsec < 0 || tp->tv_nsec >= 1000000000)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   switch (clock_id)
     {
     case CLOCK_REALTIME:
