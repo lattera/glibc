@@ -1,3 +1,8 @@
+1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c: Compute rtld_search_dir array size correctly.
+	Reported by Yasushi Saito <yasushi@cs.washington.edu>.
+
 1999-03-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* manual/libc.texinfo: Undo last change for now.

@@ -481,7 +481,8 @@ _dl_init_paths (const char *llp)
 
   /* First set up the rest of the default search directory entries.  */
   aelem = rtld_search_dirs = (struct r_search_path_elem **)
-    malloc ((ncapstr + 1) * sizeof (struct r_search_path_elem *));
+    malloc (((sizeof (system_dirs) / sizeof (system_dirs[0]) + 1)
+	     * sizeof (struct r_search_path_elem *));
   if (rtld_search_dirs == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create search path array");
 
