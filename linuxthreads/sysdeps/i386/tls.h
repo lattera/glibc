@@ -94,6 +94,8 @@ typedef struct
     if (__builtin_expect (result, 0) != 0)				      \
       /* Nothing else we can do.  */					      \
       asm ("hlt");							      \
+									      \
+    asm ("movw %w0, %%gs" : : "q" (7));					      \
   } while (0)
 
 

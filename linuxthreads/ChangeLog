@@ -1,3 +1,7 @@
+2002-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/tls.h (TLS_INIT_TP): Also initialize %gs.
+
 2002-02-08  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/elf/pt-initfini.c: Use \n\ for multiline string.
