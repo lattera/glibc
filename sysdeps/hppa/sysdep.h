@@ -20,6 +20,11 @@
 
 #include <sysdeps/generic/sysdep.h>
 #include <sys/syscall.h>
+#include "config.h"
+
+#ifndef ASM_LINE_SEP
+#define ASM_LINE_SEP ;
+#endif
 
 #ifdef	__ASSEMBLER__
 
@@ -34,13 +39,12 @@
    incomplete stabs information.  Fake some entries here which specify
    the current source file.  */
 #define	ENTRY(name)							      \
-  .SPACE $TEXT$;							      \
-  .SUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY;			      \
-  .align ALIGNARG(4);							      \
-  .NSUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY;			      \
-  .EXPORT C_SYMBOL_NAME(name),ENTRY,PRIV_LEV=3,ARGW0=GR,RTNVAL=GR;	      \
+  .SPACE $TEXT$							ASM_LINE_SEP  \
+  .SUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY		ASM_LINE_SEP  \
+  .align ALIGNARG(4)						ASM_LINE_SEP  \
+  .NSUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY		ASM_LINE_SEP  \
+  .EXPORT C_SYMBOL_NAME(name),ENTRY,PRIV_LEV=3,ARGW0=GR,RTNVAL=GR ASM_LINE_SEP\
   C_LABEL(name)								      \
-
   CALL_MCOUNT
 
 #undef	END
@@ -53,7 +57,7 @@
 /* The mcount code relies on a normal frame pointer being on the stack
    to locate our caller, so push one just for its benefit.  */
 #define CALL_MCOUNT \
-  XXX
+  XXX	ASM_LINE_SEP
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif
