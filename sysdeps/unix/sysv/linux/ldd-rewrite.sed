@@ -4,7 +4,7 @@
   lddlibc4 $file\
   # Test the result.\
   if test $? -lt 3; then\
-    exit 0;\
+    return 0;\
   fi\
   # In case of an error punt.
 /LD_TRACE_LOADED_OBJECTS=1/a\
