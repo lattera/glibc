@@ -5,7 +5,7 @@ libc {
   }
 }
 libm {
-  GLIBC_2.3.3 {
+  GLIBC_2.3.4 {
     # functions implementing old complex float abi
     __c1_cabsf; __c1_cacosf; __c1_cacoshf; __c1_cargf; __c1_casinf;
     __c1_casinhf; __c1_catanf; __c1_catanhf; __c1_ccosf; __c1_ccoshf;

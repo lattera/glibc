@@ -60,7 +60,7 @@
 
 #include <shlib-compat.h>
 
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_3_3)
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_3_4)
 #define cfloat_versions_compat(func) \
   compat_symbol (libm, __c1_##func, func, GLIBC_2_1)
 #else
@@ -69,6 +69,6 @@
 
 #define cfloat_versions(func) \
   cfloat_versions_compat(func); \
-  versioned_symbol (libm, __c2_##func, func, GLIBC_2_3_3); \
+  versioned_symbol (libm, __c2_##func, func, GLIBC_2_3_4); \
   extern typeof(__c2_##func) __##func attribute_hidden; \
   strong_alias (__c2_##func, __##func)
