@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 # define _GNU_SOURCE	1
 #endif
 
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,6 +60,10 @@ static testcase ecvt_tests[] =
   { 123.01, -4, 3, "" },
   { 126.71, -4, 3, "" },
   { 0.0, 4, 1, "0000" },
+#if DBL_MANT_DIG == 53
+  { 0x1p-1074, 3, -323, "494" },
+  { -0x1p-1074, 3, -323, "494" },
+#endif
   /* -1.0 is end marker.  */
   { -1.0, 0, 0, "" }
 };
