@@ -19,7 +19,10 @@
 
 #include <langinfo.h>
 #include <limits.h>
+#include <stdlib.h>
+#include <string.h>
 
+#include <locale/localeinfo.h>
 #include <wcsmbsload.h>
 #include <bits/libc-lock.h>
 #include <iconv/gconv_int.h>
@@ -85,6 +88,54 @@ getfct (const char *to, const char *from)
 }
 
 
+/* Extract from the given locale name the character set portion.  Since
+   only the XPG form of the name includes this information we don't have
+   to take care for the CEN form.  */
+#define extract_charset_name(str) \
+  ({									      \
+    const char *cp = str;						      \
+    char *result = NULL;						      \
+									      \
+    while (strchr ("@._+,", *cp) == NULL)				      \
+      ++cp;								      \
+    if (*cp == '.')							      \
+      {									      \
+	const char *endp = cp;						      \
+	while (*endp != '\0' && *endp != '@')				      \
+	  ++endp;							      \
+	if (endp != cp)							      \
+	  result = strndupa (str, endp - cp);				      \
+      }									      \
+    result;								      \
+  })
+
+
+/* The gconv functions expects the name to be complete, including the
+   trailing shashes if necessary.  */
+#define add_slashes(str) \
+  ({									      \
+    const char *cp = str;						      \
+    char *result;							      \
+    char *tmp;								      \
+    size_t cnt = 0;							      \
+									      \
+    while (*cp != '\0')							      \
+      if (*cp++ == '/')							      \
+	++cnt;								      \
+									      \
+    result = alloca (cp - str + 3);					      \
+    tmp = __mempcpy (result, str, cp - str);				      \
+    if (cnt < 2)							      \
+      {									      \
+	*tmp++ = '/';							      \
+	if (cnt < 1)							      \
+	  *tmp++ = '/';							      \
+      }									      \
+    *tmp = '\0';							      \
+    result;								      \
+  })
+
+
 /* Load conversion functions for the currently selected locale.  */
 void
 __wcsmbs_load_conv (const struct locale_data *new_category)
@@ -109,12 +160,22 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	{
 	  /* We must find the real functions.  */
 	  const char *charset_name;
+	  const char *complete_name;
 
-	  /* Get name of charset of the locale.  */
-	  charset_name = new_category->values[_NL_ITEM_INDEX(CODESET)].string;
+	  /* Get name of charset of the locale.  We first examine
+	     whether we have a character set mentioned in the locale
+	     name.  If this isn't the case we use the information from
+	     the locale files.  */
+	  charset_name = extract_charset_name (setlocale (LC_CTYPE, NULL));
+	  if (charset_name == NULL)
+	    charset_name =
+	      new_category->values[_NL_ITEM_INDEX(CODESET)].string;
 
-	  __wcsmbs_gconv_fcts.tomb = getfct (charset_name, "INTERNAL");
-	  __wcsmbs_gconv_fcts.towc = getfct ("INTERNAL", charset_name);
+	  /* Add the slashes necessary for a complete lookup.  */
+	  complete_name = add_slashes (charset_name);
+
+	  __wcsmbs_gconv_fcts.tomb = getfct (complete_name, "INTERNAL");
+	  __wcsmbs_gconv_fcts.towc = getfct ("INTERNAL", complete_name);
 
 	  /* If any of the conversion functions is not available we don't
 	     use any since this would mean we cannot convert back and

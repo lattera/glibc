@@ -1,3 +1,9 @@
+1998-05-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcsmbsload.c (extract_charset_name): Pass correctly
+	formed charset names to getfct.  Let user override charset
+	selection by mention charset in locale name.
+
 1998-05-12 12:15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/glob.c: Move to ...
