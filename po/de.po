@@ -293,22 +293,22 @@ msgid "cannot open output file"
 msgstr "Kann die Ausgabedatei nicht öffnen"
 
 #: iconv/iconv_prog.c:241
-#, fuzzy, c-format
+#, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "Konvertierung von »%s« nach »%s« wird nicht unterstützt"
 
 #: iconv/iconv_prog.c:246
-#, fuzzy, c-format
+#, c-format
 msgid "conversion from `%s' is not supported"
-msgstr "Konvertierung von »%s« nach »%s« wird nicht unterstützt"
+msgstr "Konvertierung von »%s« wird nicht unterstützt"
 
 #: iconv/iconv_prog.c:253
-#, fuzzy, c-format
+#, c-format
 msgid "conversion to `%s' is not supported"
-msgstr "Konvertierung von »%s« nach »%s« wird nicht unterstützt"
+msgstr "Konvertierung nach »%s« wird nicht unterstützt"
 
 #: iconv/iconv_prog.c:257
-#, fuzzy, c-format
+#, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "Konvertierung von »%s« nach »%s« wird nicht unterstützt"
 
@@ -368,7 +368,6 @@ msgid "unknown iconv() error %d"
 msgstr "unbekannter iconv()-Fehler %d"
 
 #: iconv/iconv_prog.c:753
-#, fuzzy
 msgid ""
 "The following list contain all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -381,10 +380,6 @@ msgstr ""
 "bedeutet nicht, dass zwischen allen Kombinationen dieser Namen als FROM\n"
 "und TO Parameter konvertiert werden kann.  Eine Zeichensatzkodierung kann\n"
 "unter verschiedenen Namen aufgeführt sein (sog. Aliasnamen).\n"
-"\n"
-"Einige Namen sind keine normalen Zeichenketten, sondern Reguläre Ausdrücke;\n"
-"diese passen zu einer Reihe von Namen, die als Parameter angegeben\n"
-"werden können.\n"
 "\n"
 "  "
 

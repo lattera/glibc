@@ -48,6 +48,9 @@ eintr_source (void *arg)
 
       nanosleep (&ts, NULL);
     }
+
+  /* NOTREACHED */
+  return NULL;
 }
 
 

@@ -1,5 +1,7 @@
 2003-02-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/iconv_prog.c (main): Unify messages.
+
 	* stdlib/strtod.c (INTERNAL): Remove bogus clearing of second word
 	when shifting retval.
 	* stdlib/tst-strtod.c (main): Add strtold test case.

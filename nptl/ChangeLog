@@ -1,3 +1,12 @@
+2003-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (before-compile): Add $(objpfx)banner.h.
+
+	* eintr.c (eintr_source): Add unnecessary return but the compiler
+	insists.
+
+	* tst-kill3.c: Include <unistd.h>.
+
 2003-02-21  Roland McGrath  <roland@redhat.com>
 
 	* pthread_create.c (start_thread): Call __libc_thread_freeres.
