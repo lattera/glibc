@@ -1,3 +1,8 @@
+2004-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/bits/nan.h (__nan_union): Add __attribute_used__
+	attribute to keep gcc quiet.
+
 2004-04-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/syslog.c (vsyslog): Avoid freeing failbuf.

@@ -96,19 +96,21 @@
 #  define CENABLE	call __pthread_enable_asynccancel;
 #  define CDISABLE	call __pthread_disable_asynccancel
 # elif defined IS_IN_librt
-#  ifdef __PIC__
+#  ifdef PIC
 #   define CENABLE	pushl %ebx; \
-			SETUP_PIC_REG(bx); \
+			call __i686.get_pc_thunk.bx; \
+			addl     $_GLOBAL_OFFSET_TABLE_, %ebx; \
 			call __librt_enable_asynccancel@PLT; \
 			popl %ebx;
 #   define CDISABLE	pushl %ebx; \
-			SETUP_PIC_REG(bx); \
+			call __i686.get_pc_thunk.bx; \
+			addl     $_GLOBAL_OFFSET_TABLE_, %ebx; \
 			call __librt_disable_asynccancel@PLT; \
 			popl %ebx;
 #  else
 #   define CENABLE	call __librt_enable_asynccancel;
 #   define CDISABLE	call __librt_disable_asynccancel
-   #endif
+#  endif
 # else
 #  define CENABLE	call __libc_enable_asynccancel;
 #  define CDISABLE	call __libc_disable_asynccancel
