@@ -22,6 +22,10 @@
 #include <stdint.h>
 #include <sys/ioctl.h>
 
+/* The major device number for raw devices.  */
+#define RAW_MAJOR	162
+
+/* `ioctl' commands for raw devices.  */
 #define RAW_SETBIND     _IO(0xac, 0)
 #define RAW_GETBIND     _IO(0xac, 1)
 

@@ -160,10 +160,11 @@ Those indicate that something is really wrong.
 
    The compilation process takes several hours even on fast hardware.
 Expect at least two hours for the default configuration on i586 for
-Linux.  For Hurd times are much longer.  Except for EGCS 1.1 (and later
-versions of EGCS), all supported versions of GCC have a problem which
-causes them to take several minutes to compile certain files in the
-iconvdata directory.  Do not panic if the compiler appears to hang.
+Linux.  For Hurd times are much longer.  Except for EGCS 1.1 and GCC
+2.95 (and later versions of GCC), all supported versions of GCC have a
+problem which causes them to take several minutes to compile certain
+files in the iconvdata directory.  Do not panic if the compiler appears
+to hang.
 
    If you want to run a parallel make, you can't just give `make' the
 `-j' option, because it won't be passed down to the sub-makes.
@@ -272,12 +273,13 @@ build the GNU C library:
      to have bugs which only show up in big projects like GNU `libc'.
      Version 3.76.1 seems OK but some people have reported problems.
 
-   * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1
+   * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95, 2.95.1
 
      The GNU C library can only be compiled with the GNU C compiler
      family.  As of the 2.1 release, EGCS 1.0.3 or higher is required.
      GCC 2.8.1 can also be used (but see the FAQ for reasons why you
-     might not want to).  Earlier versions simply are too buggy.
+     might not want to).  Earlier versions simply are too buggy.  As of
+     this writing, GCC 2.95.1 is the compiler we advise to use.
 
      You can use whatever compiler you like to compile programs that
      use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in

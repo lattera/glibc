@@ -1,5 +1,19 @@
 1999-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/sys/raw.h (RAW_MAJOR): Added.
+
+1999-09-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Configuring and compiling): Mention GCC 2.95.
+
+1999-09-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Fix make version test for make 3.77.95 and later
+	versions.
+	Based on a patch by Paul D. Smith <psmith@baynetworks.com>.
+
+1999-09-10  Ulrich Drepper  <drepper@cygnus.com>
+
 	* wcsmbs/wchar.h (WCHAR_MIN, WCHAR_MAX): Use all-numeric values.
 
 	* sysdeps/generic/stdint.h: Correct WCHAR_MIN, WCHAR_MAX, and
