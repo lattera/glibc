@@ -1,3 +1,21 @@
+2003-12-30  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (check_result): Use less-confusing report format.
+	"long" -> "long int", as per usual GNU style.
+	(main): Likewise.
+	Don't loop if the iteration overflows time_t.
+	Allow a negative step in the iteration.
+
+	* time/mktime.c: Assume freestanding C89 or better.
+	(HAVE_LIMITS_H, STDC_HEADERS) [defined _LIBC]: Remove;
+	assume they're 1.
+	(__P): Remove; not used.
+	(CHAR_BIT, INT_MIN, INT_MAX): Remove; <limits.h> defines them.
+	(mktime, not_equal_tm, print_tm, check_result, main): Use prototypes.
+	Prototypes use const * where appropriate.
+	(main) [DEBUG]: Fix typo in testing code uncovered by above changes,
+	which caused the testing code to dump core on some hosts.
+
 2003-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/setlocale.c (setlocale): Avoid duplicating locale names
