@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 subdir	:= wctype
 
 headers		:= wctype.h
-distribute	:= cname-lookup.h
+distribute	:= cname-lookup.h wchar-lookup.h
 routines	:= wcfuncs wctype iswctype wctrans towctrans wcextra \
 		   wcfuncs_l wctype_l iswctype_l wctrans_l towctrans_l \
 		   wcextra_l

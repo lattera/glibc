@@ -21,7 +21,7 @@
 #
 subdir	:= hesiod
 
-distribute := hesiod.h hesiod_p.h README.hesiod
+distribute := hesiod.h hesiod_p.h README.hesiod nss_hesiod/nss_hesiod.h
 
 extra-libs := libnss_hesiod
 extra-libs-others = $(extra-libs)
