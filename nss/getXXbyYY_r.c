@@ -49,6 +49,10 @@
 |* NEED__RES     - the global _res variable might be used so we	   *|
 |* 		   will have to initialize it if necessary	   *|
 |* 								   *|
+|* PREPROCESS    - code run before anything else		   *|
+|* 								   *|
+|* POSTPROCESS   - code run after the lookup			   *|
+|* 								   *|
 \*******************************************************************/
 
 /* To make the real sources a bit prettier.  */
@@ -113,6 +117,10 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   enum nss_status status = NSS_STATUS_UNAVAIL;
 #ifdef USE_NSCD
   int nscd_status;
+#endif
+
+#ifdef PREPROCESS
+  PREPROCESS;
 #endif
 
 #ifdef HANDLE_DIGITS_DOTS

@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <netdb.h>
+#include <string.h>
 
 
 #define LOOKUP_TYPE	struct hostent
@@ -28,6 +29,17 @@
 #define NEED_H_ERRNO	1
 #define NEED__RES	1
 #define NEED__RES_HCONF	1
+/* If the addr parameter is the IPv6 unspecified address no query must
+   be performed.  */
+#define PREPROCESS \
+  if (__builtin_expect (len == sizeof (struct in6_addr)			      \
+			&& memcmp (&in6addr_any, addr,			      \
+				   sizeof (struct in6_addr)) == 0, 0))	      \
+    {									      \
+      *h_errnop = HOST_NOT_FOUND;					      \
+      *result = NULL;							      \
+      return ENOENT;							      \
+    }
 #define POSTPROCESS \
   if (status == NSS_STATUS_SUCCESS)					      \
     {									      \

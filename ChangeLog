@@ -1,3 +1,10 @@
+1999-07-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/gethstbyad_r.c (PREPROCESS): Test for unspecified IPv6 address
+	and return an error in this case.
+	* nss/getXXbyYY_r.c: Allow PREPROCESS be defined and use it if
+	available.
+
 1999-07-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* nscd/nscd_proto.h (__nscd_gethostbyaddr_r): Follow change from
