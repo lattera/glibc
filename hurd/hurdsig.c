@@ -818,7 +818,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 				      /* In a critical section, any RPC
 					 should be cancelled instead of
 					 restarted, regardless of
-					 SA_RESTART, so the the entire
+					 SA_RESTART, so the entire
 					 "atomic" operation can be aborted
 					 as a unit.  */
 				      crit ? 0 : signo, 1,

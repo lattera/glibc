@@ -327,7 +327,7 @@ The process does not have search permission for a directory component
 of the file name.
 
 @item ENAMETOOLONG
-This error is used when either the the total length of a file name is
+This error is used when either the total length of a file name is
 greater than @code{PATH_MAX}, or when an individual file name component
 has a length greater than @code{NAME_MAX}.  @xref{Limits for Files}.
 

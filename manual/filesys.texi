@@ -780,7 +780,7 @@ file does not copy the contents of the file; it simply makes a new name
 by which the file can be known, in addition to the file's existing name
 or names.
 
-One file can have names in several directories, so the the organization
+One file can have names in several directories, so the organization
 of the file system is not a strict hierarchy or tree.
 
 In most implementations, it is not possible to have hard links to the

@@ -78,7 +78,7 @@ handle values like this.
 Beside @code{INFINITY} also the value @code{-INFINITY} is representable
 and it is handled differently if needed.  It is possible to test a
 value for infiniteness using a simple comparison but the
-recommended way is to use the the @code{isinf} function.
+recommended way is to use the @code{isinf} function.
 
 This macro was introduced in the @w{ISO C 9X} standard.
 @end deftypevr

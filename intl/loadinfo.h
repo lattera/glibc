@@ -75,3 +75,5 @@ extern int _nl_explode_name PARAMS ((char *name, const char **language,
 				     const char **special,
 				     const char **sponsor,
 				     const char **revision));
+
+extern char *_nl_find_language PARAMS ((const char *name));

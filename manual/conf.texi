@@ -1623,7 +1623,7 @@ to the application if a source is compiled using the
 @comment Unix98
 @item _CS_LFS_LINTFLAGS
 The returned string specifies which additional flags must be given to
-the the lint tool if a source is compiled using the
+the lint tool if a source is compiled using the
 @code{_LARGEFILE_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 
 @comment unistd.h
@@ -1651,7 +1651,7 @@ to the application if a source is compiled using the
 @comment Unix98
 @item _CS_LFS64_LINTFLAGS
 The returned string specifies which additional flags must be given to
-the the lint tool if a source is compiled using the
+the lint tool if a source is compiled using the
 @code{_LARGEFILE64_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 @end table
 

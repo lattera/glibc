@@ -31,11 +31,19 @@ ENTRY(strlen)
 	rsb     r0, r3, $0              @ get - that number into counter.
 	beq     Laligned                @ skip into main check routine if no
 					@ more
+#ifdef __ARMEB__
 	orr     r2, r2, $0xff000000     @ set this byte to non-zero
 	subs    r3, r3, $1              @ any more to do?
 	orrgt   r2, r2, $0x00ff0000     @ if so, set this byte
 	subs    r3, r3, $1              @ more?
 	orrgt   r2, r2, $0x0000ff00     @ then set.
+#else
+	orr     r2, r2, $0x000000ff     @ set this byte to non-zero
+	subs    r3, r3, $1              @ any more to do?
+	orrgt   r2, r2, $0x0000ff00     @ if so, set this byte
+	subs    r3, r3, $1              @ more?
+	orrgt   r2, r2, $0x00ff0000     @ then set.
+#endif
 Laligned:				@ here, we have a word in r2.  Does it
 	tst     r2, $0x000000ff         @ contain any zeroes?
 	tstne   r2, $0x0000ff00         @

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -360,7 +360,7 @@ setlocale (int category, const char *locale)
 	  /* We must not simply free a global locale since we have no
 	     control over the usage.  So we mark it as un-deletable.
 
-	     Note: do ont remove the `if', it's necessary to copy with
+	     Note: do not remove the `if', it's necessary to copy with
 	     the builtin locale data.  */
 	  if (newdata->usage_count != UNDELETABLE)
 	    newdata->usage_count = UNDELETABLE;

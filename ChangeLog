@@ -1,3 +1,48 @@
+1998-05-19 15:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (process_envvars): Fix typo.  Don't handle
+	LD_PROFILE_OUTPUT in SUID binaries.
+	* intl/dcgettext.c: In SUID binaries don't let language part of
+	locale value contain path elements.
+	* intl/explodename.h: Define new function _nl_find_language.
+	* intl/loadinfo.h: Declare _nl_find_language.
+	* locale/findlocale.c (_nl_find_locale): Use _nl_find_locale to get
+	language part it drop the value is path element is contained.
+
+	* locale/setlocale.c: Fix typo.
+
+1998-05-18  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/arm/socket.S: Correct handling of arguments.
+
+	* sysdeps/arm/strlen.S: Support both big and little endian processors.
+
+	* sysdeps/arm/sysdep.h (ALIGNARG): ELF .align directive uses a
+	log, not a byte-count.
+
+	* sysdeps/unix/arm/sysdep.S (syscall_error): Use C_SYMBOL_NAME for
+	a.out compatibility.
+
+1998-05-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/bsd/vax/vfork.S: Fix the "the the" problems.
+	* sysdeps/unix/bsd/sun/m68k/vfork.S: Likewise.
+	* sysdeps/unix/bsd/hp/m68k/vfork.S: Likewise.
+	* posix/unistd.h: Likewise.
+	* math/math.h: Likewise.
+	* manual/users.texi (Manipulating the Database): Likewise.
+	* manual/signal.texi (Job Control Signals): Likewise.
+	* manual/message.texi (The gencat program): Likewise.
+	* manual/filesys.texi (Hard Links): Likewise.
+	* manual/math.texi (SVID Random): Likewise.
+	* manual/llio.texi (Waiting for I/O): Likewise.
+	* manual/io.texi (File Name Errors): Likewise.
+	* manual/conf.texi (String Parameters): Likewise.
+	* manual/arith.texi (Infinity): Likewise.
+	* malloc/malloc.c: Likewise.
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Likewise.
+	* csu/Makefile: Likewise.
+
 1998-05-19 12:16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/memory.texi: Add back accidently removed line.

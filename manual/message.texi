@@ -460,7 +460,7 @@ these source files to learn about the file format.
 The @code{gencat} program is specified in the X/Open standard and the
 GNU implementation follows this specification and so allows to process
 all correctly formed input files.  Additionally some extension are
-implemented which help to work in a more reasonable way with the the
+implemented which help to work in a more reasonable way with the
 @code{catgets} functions.
 
 The @code{gencat} program can be invoked in two ways:

@@ -1113,7 +1113,7 @@ process_envvars (enum mode *modep, int *lazyp)
 	  break;
 
 	case 10:
-	  /* mask for the important hardware capabilities.  */
+	  /* Mask for the important hardware capabilities.  */
 	  if (memcmp (&envline[3], "HWCAP_MASK", 10) == 0)
 	    _dl_hwcap_mask = strtoul (&envline[14], NULL, 0);
 	  break;
@@ -1133,7 +1133,8 @@ process_envvars (enum mode *modep, int *lazyp)
 
 	case 14:
 	  /* Where to place the profiling data file.  */
-	  if (memcmp (&envline[3], "PROFILE_OUTPUT", 14) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (&envline[3], "PROFILE_OUTPUT", 14) == 0)
 	    {
 	      _dl_profile_output = &envline[18];
 	      if (*_dl_profile_output == '\0')

@@ -135,7 +135,7 @@ extern int signgam;
     FP_FAST_FMA
     FP_FAST_FMAF
     FP_FAST_FMAL
-		If defined it indicates that the the `fma' function
+		If defined it indicates that the `fma' function
 		generally executes about as fast as a multiply and an add.
 		This macro is defined only iff the `fma' function is
 		implemented directly with a hardware multiply-add instructions.

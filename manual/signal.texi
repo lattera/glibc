@@ -720,7 +720,7 @@ support, see @ref{Special Characters}.
 @comment signal.h
 @comment POSIX.1
 @deftypevr Macro int SIGTTIN
-A process cannot read from the the user's terminal while it is running
+A process cannot read from the user's terminal while it is running
 as a background job.  When any process in a background job tries to
 read from the terminal, all of the processes in the job are sent a
 @code{SIGTTIN} signal.  The default action for this signal is to

@@ -2555,7 +2555,7 @@ malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
          mallocs with other sbrk calls.
 
 
-      All allocations are made from the the `lowest' part of any found
+      All allocations are made from the `lowest' part of any found
       chunk. (The implementation invariant is that prev_inuse is
       always true of any allocated chunk; i.e., that each allocated
       chunk borders either a previously allocated and still in-use chunk,

@@ -35,10 +35,26 @@
 #define __socket P(__,socket)
 #endif
 
+#define PUSHARGS_1	stmfd ip!, {a1}
+#define PUSHARGS_2	stmfd ip!, {a1, a2}
+#define PUSHARGS_3	stmfd ip!, {a1, a2, a3}
+#define PUSHARGS_4	stmfd ip!, {a1, a2, a3, a4}
+#define PUSHARGS_5	stmfd ip!, {a1, a2, a3, a4}	/* Caller has already pushed arg 5 */
+#define PUSHARGS_6	stmfd ip!, {a1, a2, a3, a4}
+
+#ifndef NARGS
+#define NARGS 3			/* If we were called with no wrapper, this is really socket() */
+#endif
+
 .globl __socket
 ENTRY (__socket)
+	/* Push args onto the stack.  */
+	mov ip, sp
+	P(PUSHARGS_,NARGS)
 
         /* Do the system call trap.  */
+	mov a1, $P(SOCKOP_,socket)
+	mov a2, ip
 	swi SYS_ify(socketcall)
 
 	/* r0 is < 0 if there was an error.  */
@@ -46,7 +62,7 @@ ENTRY (__socket)
 	bhs PLTJMP(syscall_error)
 
 	/* Successful; return the syscall's value.  */
-	RETINSTR(mov,pc,r14)
+	ret
 
 PSEUDO_END (__socket)
 

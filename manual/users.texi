@@ -1002,7 +1002,7 @@ for an entry that matches @var{id}.  If the @code{ut_type} member of the
 @code{OLD_TIME} or @code{NEW_TIME} the entries match if the
 @code{ut_type} members are identical.  If the @code{ut_type} member of
 the @var{id} structure is @code{INIT_PROCESS}, @code{LOGIN_PROCESS},
-@code{USER_PROCESS} or @code{DEAD_PROCESS}, the entries match if the the
+@code{USER_PROCESS} or @code{DEAD_PROCESS}, the entries match if the
 @code{ut_type} member of the entry read from the database is one of
 these four, and the @code{ut_id} members match.  However if the
 @code{ut_id} member of either the @var{id} structure or the entry read

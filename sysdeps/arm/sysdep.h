@@ -25,8 +25,7 @@
 
 #ifdef HAVE_ELF
 
-/* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
-#define ALIGNARG(log2) 1<<log2
+#define ALIGNARG(log2) log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
 #define ASM_TYPE_DIRECTIVE(name,typearg) .type name,%##typearg;
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name

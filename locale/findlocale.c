@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -20,6 +20,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/mman.h>
 
 #include "localeinfo.h"
@@ -51,7 +52,11 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   const char *revision;
   struct loaded_l10nfile *locale_file;
 
-  if ((*name)[0] == '\0')
+  if ((*name)[0] == '\0'
+      /* In SUID binaries we must not allow people to access files
+	 outside the dedicated locale directories.  */
+      || (__libc_enable_secure
+	  && memchr (*name, '/', _nl_find_language (*name) - *name) != NULL))
     {
       /* The user decides which locale to use by setting environment
 	 variables.  */

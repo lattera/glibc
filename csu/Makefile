@@ -121,7 +121,7 @@ endef
 ifndef start-installed-name-rule
 ifeq (yes,$(elf))
 # We link the ELF startfile along with a SHT_NOTE section indicating
-# the the kernel ABI the binaries linked with this library will require.
+# the kernel ABI the binaries linked with this library will require.
 $(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
 				  $(objpfx)init.o
 	$(link-relocatable)

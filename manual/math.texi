@@ -1786,7 +1786,7 @@ congruential formula.
 
 From the seven elements in the array @var{param} the least significant
 16 bits of the entries @code{@var{param}[0]} to @code{@var{param}[2]}
-determine the the initial state, the least 16 bits of
+determine the initial state, the least 16 bits of
 @code{@var{param}[3]} to @code{@var{param}[5]} determine the 48 bit
 constant @code{a} and @code{@var{param}[6]} determines the 16 bit value
 @code{c}.
