@@ -1,3 +1,14 @@
+2003-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/ftwtest.c: Get current working directory before and after the
+	nftw call and make sure they match.
+
+2003-02-08  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c (ftw_startup): When using FTW_CHDIR, always remember
+	the current directory, not just when DIR contains a slash.
+	Reported by Manoj Srivastava.
+
 2003-02-07  Jim Meyering  <jim@meyering.net>
 
 	* io/ftw.c: Add autoconf-recommended block of alloca-related code.

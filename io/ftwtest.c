@@ -70,9 +70,22 @@ main (int argc, char *argv[])
   if (do_phys)
     flag |= FTW_PHYS;
 
+  char *cw1 = getcwd (NULL, 0);
+
   r = nftw (optind < argc ? argv[optind] : ".", cb, do_exit ? 1 : 3, flag);
   if (r < 0)
     perror ("nftw");
+
+  char *cw2 = getcwd (NULL, 0);
+
+  if (strcmp (cw1, cw2) != 0)
+    {
+      printf ("current working directory before and after nftw call differ:\n"
+	      "before: %s\n"
+	      "after:  %s\n", cw1, cw2);
+      exit (1);
+    }
+
   if (do_exit)
     {
       puts (r == 26 ? "succeeded" : "failed");
