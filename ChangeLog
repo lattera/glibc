@@ -1,7 +1,7 @@
 2000-07-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (collate_read): Allow collating
-	symbols be named in reorder-after instructions.
+	symbols and elements be named in reorder-after instructions.
 	Reported by Yoshito Kawada <KAWADA@jp.ibm.com>.
 
 	* locale/programs/ld-collate.c (handle_ellipsis): Test for

@@ -3385,6 +3385,25 @@ error while adding equivalent collating symbol"));
 			  no_error = 0;
 			}
 		    }
+		  else if (find_entry (&collate->elem_table,
+				       arg->val.str.startmb,
+				       arg->val.str.lenmb,
+				       (void **) &insp) == 0)
+		    {
+		      if (insp->last != NULL || insp->next != NULL)
+			collate->cursor = insp;
+		      else
+			{
+			  /* This is a collating element but its position
+			     is not yet defined.  */
+			  lr_error (ldfile, _("\
+%s: order for collating element %.*s not yet defined"),
+				    "LC_COLLATE", (int) arg->val.str.lenmb,
+				    arg->val.str.startmb);
+			  collate->cursor = NULL;
+			  no_error = 0;
+			}
+		    }
 		  else
 		    {
 		      /* This is bad.  The symbol after which we have to
