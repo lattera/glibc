@@ -2557,6 +2557,8 @@ fdim_test (void)
   TEST_ff_f (fdim, nan_value, minus_infty, nan_value);
   TEST_ff_f (fdim, nan_value, nan_value, nan_value);
 
+  TEST_ff_f (fdim, plus_infty, plus_infty, 0);
+
   END (fdim);
 }
 

@@ -1,5 +1,16 @@
 2004-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/s_fdim.c: Handle +inf/+inf
+	* sysdeps/generic/s_fdimf.c: Likewise.
+	* sysdeps/generic/s_fdiml.c: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdim.S: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdimf.S: Likewise.
+	* sysdeps/i386/i686/fpu/s_fdiml.S: Likewise.
+	* sysdeps/powerpc/fpu/s_fdim.c: Likewise.
+	* sysdeps/powerpc/fpu/s_fdimf.c: Likewise.
+	* sysdeps/x86_64/fpu/s_fdiml.S: Likewise.
+	* math/libm-test.inc (fdim_test): Add test case.  [BZ #376].
+
 	* sysdeps/generic/bits/types.h: Fix __SQUAD_TYPE and __UQUAD_TYPE
 	for compilers without __GLIBC_HAVE_LONG_LONG.  [BZ #362]
 

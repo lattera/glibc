@@ -1,5 +1,5 @@
 /* Return positive difference between arguments.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -31,6 +31,6 @@ __fdimf (float x, float y)
     /* Raise invalid flag.  */
     return x - y;
 
-  return x < y ? 0 : x - y;
+  return x <= y ? 0 : x - y;
 }
 weak_alias (__fdimf, fdimf)
