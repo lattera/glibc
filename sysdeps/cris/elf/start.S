@@ -42,7 +42,7 @@
 
 	.text
 	.globl	_start
-	type _start,@function
+	.type _start,@function
 _start:
 	/* Clear the frame pointer, to mark the outermost frame.  */
 	moveq	0,r8
