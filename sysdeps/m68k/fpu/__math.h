@@ -274,6 +274,14 @@ __m81_defun (float_type, __CONCAT(__nearbyint,s), (float_type __x))	  \
   __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		  \
 		      : "dmi" (__ctrl_reg));				  \
   return __result;							  \
+}									  \
+									  \
+__m81_inline void							  \
+__m81_u(__CONCAT(__sincos,s))(float_type __x, float_type *__sinx,	  \
+			      float_type *__cosx)			  \
+{									  \
+  __asm ("fsincos%.x %2,%1:%0"						  \
+	 : "=f" (*__sinx), "=f" (*__cosx) : "f" (__x));			  \
 }
 
 /* This defines the three variants of the inline functions.  */
@@ -324,6 +332,10 @@ __inline_forward_c(int,ilogb, (double __value), (__value))
 #ifdef __USE_ISOC9X
 __inline_forward_c(double,nearbyint, (double __value), (__value))
 #endif
+#ifdef __USE_GNU
+__inline_forward(void,sincos, (double __x, double *__sinx, double *__cosx),
+		 (__x, __sinx, __cosx))
+#endif
 
 #if defined __USE_MISC || defined __USE_ISOC9X
 
@@ -340,6 +352,10 @@ __inline_forward_c(int,ilogbf, (float __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(float,nearbyintf, (float __value), (__value))
+#endif
+#ifdef __USE_GNU
+__inline_forward(void,sincosf, (float __x, float *__sinx, float *__cosx),
+		 (__x, __sinx, __cosx))
 #endif
 
 __inline_forward(long double,frexpl, (long double __value, int *__expptr),
@@ -358,11 +374,71 @@ __inline_forward_c(int,ilogbl, (long double __value), (__value))
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
 __inline_forward_c(long int,rinttol, (long double __value), (__value))
 #endif
+#ifdef __USE_GNU
+__inline_forward(void,sincosl,
+		 (long double __x, long double *__sinx, long double *__cosx),
+		 (__x, __sinx, __cosx))
+#endif
 
 #endif /* Use misc or ISO C9X */
 
 #undef __inline_forward
 #undef __inline_forward_c
+
+#ifdef __USE_ISOC9X
+
+/* ISO C 9X defines some macros to perform unordered comparisons.  The
+   m68k FPU supports this with special opcodes and we should use them.
+   These must not be inline functions since we have to be able to handle
+   all floating-point types.  */
+#undef isgreater
+#define isgreater(x, y)					\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp %2,%1; fsogt %0"			\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+#undef isgreaterequal
+#define isgreaterequal(x, y)				\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp %2,%1; fsoge %0"			\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+#undef isless
+#define isless(x, y)					\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp %2,%1; fsolt %0"			\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+#undef islessequal
+#define islessequal(x, y)				\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp %2,%1; fsole %0"			\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+#undef islessgreater
+#define islessgreater(x, y)				\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp %2,%1; fsogl %0"			\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+#undef isunordered
+#define isunordered(x, y)				\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp %2,%1; fsun %0"			\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+#endif
 
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 
