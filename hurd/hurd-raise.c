@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 
 void
 _hurd_raise_signal (struct hurd_sigstate *ss,
-		    int signo, long int sigcode, int sigerror)
+		    int signo, const struct hurd_signal_detail *detail)
 {
   if (ss == NULL)
     {
@@ -37,12 +37,11 @@ _hurd_raise_signal (struct hurd_sigstate *ss,
 
   /* Mark SIGNO as pending to be delivered.  */
   __sigaddset (&ss->pending, signo);
-  ss->pending_data[signo].code = sigcode;
-  ss->pending_data[signo].error = sigerror;
+  ss->pending_data[signo] = *detail;
 
   __spin_unlock (&ss->lock);
 
   /* Send a message to the signal thread so it
      will wake up and check for pending signals.  */
-  __msg_sig_post (_hurd_msgport, signo, sigcode, __mach_task_self ());
+  __msg_sig_post (_hurd_msgport, signo, detail->code, __mach_task_self ());
 }

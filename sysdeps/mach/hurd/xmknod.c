@@ -102,7 +102,7 @@ __xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
 
   if (! err)
     /* Link the node, now a valid device, into the target directory.  */
-    err = __dir_link (dir, node, name);
+    err = __dir_link (dir, node, name, 1);
 
   __mach_port_deallocate (__mach_task_self (), dir);
   __mach_port_deallocate (__mach_task_self (), node);

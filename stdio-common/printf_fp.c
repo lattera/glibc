@@ -28,7 +28,6 @@ Cambridge, MA 02139, USA.  */
 #  include <stdio.h>
 #endif
 #include <alloca.h>
-#include <ansidecl.h>
 #include <ctype.h>
 #include <float.h>
 #include <gmp-mparam.h>
@@ -69,7 +68,7 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
 #define outchar(ch)							      \
   do									      \
     {									      \
-      register CONST int outc = (ch);					      \
+      register const int outc = (ch);					      \
       if (putc (outc, fp) == EOF)					      \
 	return -1;							      \
       ++done;								      \
@@ -107,10 +106,10 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
    An MP variable occupies a varying number of entries in its array.  We keep
    track of this number for efficiency reasons.  Otherwise we would always
    have to process the whole array.  */
-#define MPN_VAR(name) mp_limb *name; mp_size_t name##size
+#define MPN_VAR(name) mp_limb_t *name; mp_size_t name##size
 
 #define MPN_ASSIGN(dst,src)						      \
-  memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb))
+  memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb_t))
 #define MPN_GE(u,v) \
   (u##size > v##size || (u##size == v##size && __mpn_cmp (u, v, u##size) >= 0))
 
@@ -139,7 +138,7 @@ __printf_fp (FILE *fp,
   union
     {
       double dbl;
-      LONG_DOUBLE ldbl;
+      __long_double_t ldbl;
     }
   fpnum;
 
@@ -151,11 +150,11 @@ __printf_fp (FILE *fp,
   const char *grouping;
 
   /* "NaN" or "Inf" for the special cases.  */
-  CONST char *special = NULL;
+  const char *special = NULL;
 
   /* We need just a few limbs for the input before shifting to the right
      position.	*/
-  mp_limb fp_input[(LDBL_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB];
+  mp_limb_t fp_input[(LDBL_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB];
   /* We need to shift the contents of fp_input by this amount of bits.	*/
   int to_shift;
 
@@ -184,11 +183,11 @@ __printf_fp (FILE *fp,
   int done = 0;
 
   /* General helper (carry limb).  */
-  mp_limb cy;
+  mp_limb_t cy;
 
   char hack_digit (void)
     {
-      mp_limb hi;
+      mp_limb_t hi;
 
       if (expsign != 0 && type == 'f' && exponent-- > 0)
 	hi = 0;
@@ -337,10 +336,10 @@ __printf_fp (FILE *fp,
      would be really big it could lead to memory problems.  */
   {
     mp_size_t bignum_size = ((ABS (exponent) + BITS_PER_MP_LIMB - 1)
-			     / BITS_PER_MP_LIMB + 4) * sizeof (mp_limb);
-    frac = (mp_limb *) alloca (bignum_size);
-    tmp = (mp_limb *) alloca (bignum_size);
-    scale = (mp_limb *) alloca (bignum_size);
+			     / BITS_PER_MP_LIMB + 4) * sizeof (mp_limb_t);
+    frac = (mp_limb_t *) alloca (bignum_size);
+    tmp = (mp_limb_t *) alloca (bignum_size);
+    scale = (mp_limb_t *) alloca (bignum_size);
   }
 
   /* We now have to distinguish between numbers with positive and negative
@@ -515,7 +514,7 @@ __printf_fp (FILE *fp,
 	  if (exponent >= tens->m_expo)
 	    {
 	      int i, incr, cnt_h, cnt_l;
-	      mp_limb topval[2];
+	      mp_limb_t topval[2];
 
 	      /* The __mpn_mul function expects the first argument to be
 		 bigger than the second.  */
@@ -545,11 +544,11 @@ __printf_fp (FILE *fp,
 		  {
 		    topval[0] = 0;
 		    topval[1]
-		      = ((mp_limb) 10) << (BITS_PER_MP_LIMB - 4 - cnt_h);
+		      = ((mp_limb_t) 10) << (BITS_PER_MP_LIMB - 4 - cnt_h);
 		  }
 		else
 		  {
-		    topval[0] = ((mp_limb) 10) << (BITS_PER_MP_LIMB - 4);
+		    topval[0] = ((mp_limb_t) 10) << (BITS_PER_MP_LIMB - 4);
 		    topval[1] = 0;
 		    (void) __mpn_lshift (topval, topval, 2,
 					 BITS_PER_MP_LIMB - cnt_h);

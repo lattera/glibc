@@ -69,7 +69,9 @@ ecvt_r (value, ndigit, decpt, sign, buf, len)
      char *buf;
      size_t len;
 {
-  if (&log10)
+  double (*log10_function) (double) = &log10;
+  
+  if (log10_function)
     {
       /* Use the reasonable code if -lm is included.  */
       ndigit -= (int) floor (log10 (fabs (value)));

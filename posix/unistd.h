@@ -650,6 +650,9 @@ extern int chroot __P ((__const char *__path));
    This call is restricted to the super-user.  */
 extern int swapon __P ((__const char *__path));
 
+/* Stop using block special device PATH for swapping.  */
+extern int swapoff __P ((__const char *__path));
+
 /* Reboot or halt the system.  */
 extern int reboot __P ((int __howto));
 

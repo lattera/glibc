@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -15,23 +16,19 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-/* On Linux we must not ask __getdtablesize for te value for _SC_OPEN_MAX
-   because this would mean an endless loop.  */
+#ifndef _SYS_ACCT_H
 
-#include <limits.h>
-#include <unistd.h>
+#define _SYS_ACCT_H	1
+#include <features.h>
 
-extern long int __default_sysconf (int name);
+/* Get needed constants.  */
+#include <linux/acct.h>
 
-long int
-__sysconf (int name)
-{
-  if (name == _SC_OPEN_MAX)
-    return OPEN_MAX;
+__BEGIN_DECLS
 
-  return __default_sysconf (name);
-}
+/* Switch process accounting on and off.  */
+extern int acct __P ((__const char *__filename));
 
-#define __sysconf __default_sysconf
+__END_DECLS
 
-#include <sysdeps/posix/sysconf.c>
+#endif	/* sys/acct.h */

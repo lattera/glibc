@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,15 +47,15 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
 
   if (! err)
     /* Set the node's translator to make it a symlink.  */
-    err = __file_set_translator (node, 
-				 FS_TRANS_EXCL|FS_TRANS_SET, 
+    err = __file_set_translator (node,
+				 FS_TRANS_EXCL|FS_TRANS_SET,
 				 FS_TRANS_EXCL|FS_TRANS_SET, 0,
 				 buf, sizeof (_HURD_SYMLINK) + len,
 				 MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
 
   if (! err)
     /* Link the node, now a valid symlink, into the target directory.  */
-    err = __dir_link (dir, node, name);
+    err = __dir_link (dir, node, name, 1);
 
   __mach_port_deallocate (__mach_task_self (), dir);
   __mach_port_deallocate (__mach_task_self (), node);

@@ -130,7 +130,7 @@ int _hurd_core_limit;	/* XXX */
 /* Call the crash dump server to mummify us before we die.
    Returns nonzero if a core file was written.  */
 static int
-write_corefile (int signo, long int sigcode, int sigerror)
+write_corefile (int signo, const struct hurd_signal_detail *detail)
 {
   error_t err;
   mach_port_t coreserver;
@@ -168,13 +168,16 @@ write_corefile (int signo, long int sigcode, int sigerror)
   /* Call the core dumping server to write the core file.  */
   err = __crash_dump_task (coreserver,
 			   __mach_task_self (),
-			   file, _hurdsig_getenv ("GNUTARGET"),
-			   signo, sigcode, sigerror);
+			   file,
+			   signo, detail->code, detail->error,
+			   detail->exc, detail->exc_code, detail->exc_subcode,
+			   _hurd_ports[INIT_PORT_CTTYID].port,
+			   MACH_MSG_TYPE_COPY_SEND);
   __mach_port_deallocate (__mach_task_self (), coreserver);
   if (! err)
     /* The core dump into FILE succeeded, so now link it into the
        directory.  */
-    err = __dir_link (file, coredir, name);
+    err = __dir_link (file, coredir, name, 1);
   __mach_port_deallocate (__mach_task_self (), file);
   __mach_port_deallocate (__mach_task_self (), coredir);
   return !err;
@@ -477,7 +480,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		   __mutex_unlock (&_hurd_siglock);
 		   abort_all_rpcs (signo, &thread_state, 1);
 		   reply ();
-		   __proc_mark_stop (port, signo);
+		   __proc_mark_stop (port, signo, detail->code);
 		 }));
       _hurd_stopped = 1;
     }
@@ -546,8 +549,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     {
       __mutex_lock (&_hurd_siglock);
       for (pe = _hurdsig_preempters; pe && handler == SIG_ERR; pe = pe->next)
-	if (HURD_PREEMPT_SIGNAL_P (pe, signo, sigcode))
-	  handler = (*pe->preempter) (pe, ss, &signo, &sigcode, &sigerror);
+	if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->code))
+	  handler = (*pe->preempter) (pe, ss, &signo, detail);
       __mutex_unlock (&_hurd_siglock);
     }
 
@@ -664,7 +667,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       /* If we would ordinarily stop for a job control signal, but we are
 	 orphaned so noone would ever notice and continue us again, we just
 	 quietly die, alone and in the dark.  */
-      sigcode = signo;
+      detail->code = signo;
       signo = SIGKILL;
       act = term;
     }
@@ -686,7 +689,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  /* We are already stopped, but receiving an untraced stop
 	     signal.  Instead of resuming and suspending again, just
 	     notify the proc server of the new stop signal.  */
-	  error_t err = __USEPORT (PROC, __proc_mark_stop (port, signo));
+	  error_t err = __USEPORT (PROC, __proc_mark_stop
+				   (port, signo, detail->code));
 	  assert_perror (err);
 	}
       else
@@ -701,7 +705,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     sigbomb:
       /* We got a fault setting up the stack frame for the handler.
 	 Nothing to do but die; BSD gets SIGILL in this case.  */
-      sigcode = signo;	/* XXX ? */
+      detail->code = signo;	/* XXX ? */
       signo = SIGILL;
       act = core;
       /* FALLTHROUGH */
@@ -721,7 +725,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	int status = W_EXITCODE (0, signo);
 	/* Do a core dump if desired.  Only set the wait status bit saying we
 	   in fact dumped core if the operation was actually successful.  */
-	if (act == core && write_corefile (signo, sigcode, sigerror))
+	if (act == core && write_corefile (signo, detail))
 	  status |= WCOREFLAG;
 	/* Tell proc how we died and then stick the saber in the gut.  */
 	_hurd_exit (status);
@@ -808,8 +812,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 	/* Call the machine-dependent function to set the thread up
 	   to run the signal handler, and preserve its old context.  */
-	scp = _hurd_setup_sighandler (ss, handler,
-				      signo, sigcode,
+	scp = _hurd_setup_sighandler (ss, handler, signo, detail,
 				      wait_for_reply, &thread_state);
 	if (scp == NULL)
 	  goto sigbomb;
@@ -848,7 +851,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	}
 
 	/* Backdoor extra argument to signal handler.  */
-	scp->sc_error = sigerror;
+	scp->sc_error = detail->error;
 
 	/* Block SIGNO and requested signals while running the handler.  */
 	scp->sc_mask = ss->blocked;
@@ -897,8 +900,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  if (__sigismember (&pending, signo))
 	    {
 	      __sigdelset (&ss->pending, signo);
-	      sigcode = ss->pending_data[signo].code;
-	      sigerror = ss->pending_data[signo].error;
+	      *detail = ss->pending_data[signo];
 	      __spin_unlock (&ss->lock);
 	      goto post_signal;
 	    }

@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -15,23 +16,15 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-/* On Linux we must not ask __getdtablesize for te value for _SC_OPEN_MAX
-   because this would mean an endless loop.  */
+#ifndef _SYS_SYSINFO_H
 
-#include <limits.h>
-#include <unistd.h>
+#define _SYS_SYSINFO_H	1
+#include <features.h>
 
-extern long int __default_sysconf (int name);
+/* Get sysinfo structure from kernel header.  */
+#include <linux/kernel.h>
 
-long int
-__sysconf (int name)
-{
-  if (name == _SC_OPEN_MAX)
-    return OPEN_MAX;
+/* Returns information on overall system statistics.  */
+extern int sysinfo __P ((struct sysinfo *__info));
 
-  return __default_sysconf (name);
-}
-
-#define __sysconf __default_sysconf
-
-#include <sysdeps/posix/sysconf.c>
+#endif	/* sys/sysinfo.h */

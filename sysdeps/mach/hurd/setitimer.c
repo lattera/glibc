@@ -114,8 +114,7 @@ timer_thread (void)
 static sighandler_t
 restart_itimer (struct hurd_signal_preempter *preempter,
 		struct hurd_sigstate *ss,
-		int *signo, long int *sigcode,
-		int *sigerror)
+		int *signo, struct hurd_signal_detail *detail)
 {
   static int setitimer_locked (const struct itimerval *new,
 			       struct itimerval *old, void *crit);

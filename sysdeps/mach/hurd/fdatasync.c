@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -12,26 +13,20 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
-/* On Linux we must not ask __getdtablesize for te value for _SC_OPEN_MAX
-   because this would mean an endless loop.  */
-
-#include <limits.h>
+#include <errno.h>
 #include <unistd.h>
+#include <hurd.h>
+#include <hurd/fd.h>
 
-extern long int __default_sysconf (int name);
-
-long int
-__sysconf (int name)
+/* Make all changes done to FD's file data actually appear on disk.  */
+int
+fdatasync (int fd)
 {
-  if (name == _SC_OPEN_MAX)
-    return OPEN_MAX;
-
-  return __default_sysconf (name);
+  error_t err = HURD_DPORT_USE (fd, __file_sync (port, 1, 1));
+  if (err)
+    return __hurd_dfail (fd, err);
+  return 0;
 }
-
-#define __sysconf __default_sysconf
-
-#include <sysdeps/posix/sysconf.c>

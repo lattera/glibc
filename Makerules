@@ -428,6 +428,71 @@ $(AR) cru$(verbose) $(@:$(objpfx)%=%) \
 $(RANLIB) $@
 endef
 
+# Shared library building.
+
+ifeq (yes,$(build-shared))
+
+# Process the shlib-versions file, which tells us what shared library
+# version numbers to use when we install shared objects on this system.
+-include $(common-objpfx)soversions.mk
+$(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makerules \
+			       $(common-objpfx)config.make
+	sed 's/#.*$$//' $< | while read conf versions; do \
+	  test -n "$$versions" || continue; \
+	  case '$(config-machine)-$(config-vendor)-$(config-os)' in $$conf)\
+	    for v in $$versions; do \
+	      lib="$${v%%=*}"; if eval "test -z \"\$$vers_lib$$lib\""; then \
+		eval vers_lib$${lib}=yes; \
+		echo $$lib.so-version=.$${v##$$lib=}; fi; \
+	  done ;; esac; done > $@T
+	mv -f $@T $@
+
+# Get $(version) defined with the release version number.
+-include $(common-objpfx)version.mk
+
+
+# Pattern rule to build a shared object from an archive of PIC objects.
+# This must come after the installation rules so Make doesn't try to
+# build shared libraries in place from the installed *_pic.a files.
+# $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
+# on other shared objects.
+lib%.so: lib%_pic.a; $(build-shlib)
+
+ifeq ($(have-no-whole-archive),yes)
+no-whole-archive = -Wl,--no-whole-archive
+else
+no-whole-archive =
+endif
+
+define build-shlib
+$(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
+	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
+	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
+	  -Wl,-rpath-link=$(common-objdir) \
+	  -Wl,--whole-archive $^ $(no-whole-archive) \
+	  $(LDLIBS-$(@F:lib%.so=%).so)
+endef
+
+# Don't try to use -lc when making libc.so itself.
+# Also omits crti.o and crtn.o, which we do not want
+# since we define our own `.init' section specially.
+LDFLAGS-c.so = -nostdlib -nostartfiles
+# Give libc.so an entry point and make it directly runnable itself.
+LDFLAGS-c.so += -e __libc_print_version
+# Use our own special initializer and finalizer files for libc.so.
+elfobjdir := $(firstword $(objdir) $(..)elf)
+$(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
+			 $(common-objpfx)libc_pic.a \
+			 $(elfobjdir)/sofini.so
+	$(build-shlib)
+
+ifdef libc.so-version
+$(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
+	rm -f $@
+	ln -s $(<F) $@ || ln $< $@
+endif
+endif
+
 # Installation.
 
 # $(install-lib) are installed from the object directory into $(libdir);
@@ -483,13 +548,56 @@ endef
 install-lib.so := $(filter %.so,$(install-lib:%_pic.a=%.so))
 install-lib := $(filter-out %.so %_pic.a,$(install-lib))
 ifeq (yes,$(build-shared))
-install-lib-nosubdir: $(foreach so,$(install-lib.so),\
-  $(libdir)/$(patsubst $(libprefix)lib%,lib$(libprefix)%,\
-		       $(libprefix)$(so))$($(so)-version))
 
-install: $(slibdir)/libc.so$(libc.so-version)
-$(slibdir)/lib$(libprefix)c.so$(libc.so-version): $(common-objpfx)libc.so
-	$(do-install-so)
+install-lib-nosubdir: $(install-lib.so:%=$(libdir)/%)
+install: $(slibdir)/libc.so
+
+# Find which .so's have versions.
+versioned := $(foreach so,$(install-lib.so),\
+		       $(patsubst %,$(so),$($(so)-version)))
+
+# Install all the unversioned shared libraries.
+$(addprefix $(libdir)/,$(filter-out $(versioned),$(install-lib.so))): \
+$(libdir)/%: $(objpfx)lib%.so; $(do-install-program)
+
+make-link = cd $(@D); rm -f $(@F); $(LN_S) $(<F) $(@F)
+
+ifdef libc.so-version
+# For a library specified to be version N, install three files:
+# libc.so	->	libc.so.N	(e.g. libc.so.6)
+# libc.so.6	->	libc-VERSION.so	(e.g. libc-1.10.so)
+
+$(slibdir)/libc.so: $(slibdir)/libc.so$(libc.so-version)
+	$(make-link)
+$(slibdir)/libc.so$(libc.so-version): $(slibdir)/libc-$(version).so
+	$(make-link)
+$(slibdir)/libc-$(version).so: $(common-objpfx)libc.so; $(do-install-program)
+else
+$(slibdir)/libc.so: $(common-objpfx)libc.so; $(do-install-program)
+endif
+
+
+ifneq (,$(versioned))
+# Produce three sets of rules as above for all the smaller versioned libraries.
+
+define o-iterator-doit
+$$(libdir)/$o: $$(libdir)/$o$$($o-version); $$(make-link)
+endef
+object-suffixes-left := $(versioned)
+include $(..)o-iterator.mk
+
+define o-iterator-doit
+$$(libdir)/$o$$($o-version): $$(libdir)/$(o:.so=)-$$(version).so; $$(make-link)
+endef
+object-suffixes-left := $(versioned)
+include $(..)o-iterator.mk
+
+define o-iterator-doit
+$$(libdir)/$(o:.so=)-$$(version).so: $$(objpfx)$o; $$(do-install-program)
+endef
+object-suffixes-left := $(versioned)
+include $(..)o-iterator.mk
+endif
 
 define do-install-so
 $(do-install-program)
@@ -561,50 +669,6 @@ install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
 			    install-others-nosubdir install-sbin-nosubdir
 install: install-no-libc.a-nosubdir
 
-ifeq (yes,$(build-shared))
-# Pattern rule to build a shared object from an archive of PIC objects.
-# This must come after the installation rules so Make doesn't try to
-# build shared libraries in place from the installed *_pic.a files.
-# $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
-# on other shared objects.
-lib%.so: lib%_pic.a; $(build-shlib)
-
-ifeq ($(have-no-whole-archive),yes)
-no-whole-archive = -Wl,--no-whole-archive
-else
-no-whole-archive =
-endif
-
-define build-shlib
-$(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
-	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
-	  -Wl,-rpath-link=$(common-objdir) \
-	  -Wl,--whole-archive $^ $(no-whole-archive) \
-	  $(LDLIBS-$(@F:lib%.so=%).so)
-endef
-
-# Don't try to use -lc when making libc.so itself.
-# Also omits crti.o and crtn.o, which we do not want
-# since we define our own `.init' section specially.
-LDFLAGS-c.so = -nostdlib -nostartfiles
-# Give libc.so an entry point and make it directly runnable itself.
-LDFLAGS-c.so += -e __libc_print_version
-# Use our own special initializer and finalizer files for libc.so.
-elfobjdir := $(firstword $(objdir) $(..)elf)
-$(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
-			 $(common-objpfx)libc_pic.a \
-			 $(elfobjdir)/sofini.so
-	$(build-shlib)
-
-ifdef libc.so-version
-$(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
-	rm -f $@
-	ln -s $(<F) $@ || ln $< $@
-endif
-endif
-
-
 # Command to compile $< in $(objdir) using the native libraries.
 define native-compile
 cwd=`pwd`; cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) \

@@ -471,9 +471,9 @@ endif
 
 # Figure out the version numbers from version.h.
 
-$(common-objpfx)version.mk: $(..)version.h
-	sed -n -e 's/^.*RELEASE.*\"\([^"]*\)";$$/release=\1/p' \
-	       -e 's/^.*VERSION.*\"\([^"]*\)";$$/version=\1/p' \
+$(common-objpfx)version.mk: $(..)version.h $(..)Makeconfig
+	sed -n -e 's/^.*RELEASE.*"\([^"]*\)".*$$/release=\1/p' \
+	       -e 's/^.*VERSION.*"\([^"]*\)".*$$/version=\1/p' \
 	    < $< > $@-new
 	mv -f $@-new $@
 

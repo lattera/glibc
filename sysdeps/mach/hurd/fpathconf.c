@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ long int
 __fpathconf (int fd, int name)
 {
   error_t err;
-  long int value;
+  int value;
 
   if (err = HURD_DPORT_USE (fd, __io_pathconf (port, name, &value)))
     return __hurd_dfail (fd, err), -1L;

@@ -49,7 +49,7 @@ Cambridge, MA 02139, USA.  */
 struct base_table_t
 {
 #if (UDIV_TIME > 2 * UMUL_TIME)
-  mp_limb base_multiplier;
+  mp_limb_t base_multiplier;
 #endif
   char flag;
   char post_shift;
@@ -58,9 +58,9 @@ struct base_table_t
     {
       char normalization_steps;
       char ndigits;
-      mp_limb base PACK;
+      mp_limb_t base PACK;
 #if UDIV_TIME > 2 * UMUL_TIME
-      mp_limb base_ninv PACK;
+      mp_limb_t base_ninv PACK;
 #endif
     } big;
 #endif
@@ -183,12 +183,12 @@ _itoa (value, buflim, base, upper_case)
       do								  \
         {								  \
 	  /* `unsigned long long int' always has 64 bits.  */		  \
-	  mp_limb work_hi = value >> (64 - BITS_PER_MP_LIMB);		  \
+	  mp_limb_t work_hi = value >> (64 - BITS_PER_MP_LIMB);		  \
 									  \
 	  if (BITS_PER_MP_LIMB == 32)					  \
 	    if (work_hi != 0)						  \
 	      {								  \
-		mp_limb work_lo;					  \
+		mp_limb_t work_lo;					  \
 		int cnt;						  \
 									  \
 		work_lo = value & 0xfffffffful;				  \
@@ -228,11 +228,11 @@ _itoa (value, buflim, base, upper_case)
     default:
       {
 #if BITS_PER_MP_LIMB == 64
-	mp_limb base_multiplier = brec->base_multiplier;
+	mp_limb_t base_multiplier = brec->base_multiplier;
 	if (brec->flag)
 	  while (value != 0)
 	    {
-	      mp_limb quo, rem, x, dummy;
+	      mp_limb_t quo, rem, x, dummy;
 
 	      umul_ppmm (x, dummy, value, base_multiplier);
 	      quo = (x + ((value - x) >> 1)) >> (brec->post_shift - 1);
@@ -243,7 +243,7 @@ _itoa (value, buflim, base, upper_case)
 	else
 	  while (value != 0)
 	    {
-	      mp_limb quo, rem, x, dummy;
+	      mp_limb_t quo, rem, x, dummy;
 
 	      umul_ppmm (x, dummy, value, base_multiplier);
 	      quo = x >> brec->post_shift;
@@ -253,36 +253,36 @@ _itoa (value, buflim, base, upper_case)
 	    }
 #endif
 #if BITS_PER_MP_LIMB == 32
-	mp_limb t[3];
+	mp_limb_t t[3];
 	int n;
 
 	/* First convert x0 to 1-3 words in base s->big.base.
 	   Optimize for frequent cases of 32 bit numbers.  */
-	if ((mp_limb) (value >> 32) >= 1)
+	if ((mp_limb_t) (value >> 32) >= 1)
 	  {
 	    int big_normalization_steps = brec->big.normalization_steps;
-	    mp_limb big_base_norm = brec->big.base << big_normalization_steps;
+	    mp_limb_t big_base_norm = brec->big.base << big_normalization_steps;
 
-	    if ((mp_limb) (value >> 32) >= brec->big.base)
+	    if ((mp_limb_t) (value >> 32) >= brec->big.base)
 	      {
-		mp_limb x1hi, x1lo, r;
+		mp_limb_t x1hi, x1lo, r;
 		/* If you want to optimize this, take advantage of
 		   that the quotient in the first udiv_qrnnd will
 		   always be very small.  It might be faster just to
 		   subtract in a tight loop.  */
 
 #if UDIV_TIME > 2 * UMUL_TIME
-		mp_limb x, xh, xl;
+		mp_limb_t x, xh, xl;
 
 		if (big_normalization_steps == 0)
 		  xh = 0;
 		else
-		  xh = (mp_limb) (value >> 64 - big_normalization_steps);
-		xl = (mp_limb) (value >> 32 - big_normalization_steps);
+		  xh = (mp_limb_t) (value >> 64 - big_normalization_steps);
+		xl = (mp_limb_t) (value >> 32 - big_normalization_steps);
 		udiv_qrnnd_preinv (x1hi, r, xh, xl, big_base_norm,
 				   brec->big.base_ninv);
 
-		xl = ((mp_limb) value) << big_normalization_steps;
+		xl = ((mp_limb_t) value) << big_normalization_steps;
 		udiv_qrnnd_preinv (x1lo, x, r, xl, big_base_norm,
 				   big_normalization_steps);
 		t[2] = x >> big_normalization_steps;
@@ -297,16 +297,16 @@ _itoa (value, buflim, base, upper_case)
 				   big_normalization_steps);
 		t[1] = x >> big_normalization_steps;
 #elif UDIV_NEEDS_NORMALIZATION
-		mp_limb x, xh, xl;
+		mp_limb_t x, xh, xl;
 
 		if (big_normalization_steps == 0)
 		  xh = 0;
 		else
-		  xh = (mp_limb) (value >> 64 - big_normalization_steps);
-		xl = (mp_limb) (value >> 32 - big_normalization_steps);
+		  xh = (mp_limb_t) (value >> 64 - big_normalization_steps);
+		xl = (mp_limb_t) (value >> 32 - big_normalization_steps);
 		udiv_qrnnd (x1hi, r, xh, xl, big_base_norm);
 
-		xl = ((mp_limb) value) << big_normalization_steps;
+		xl = ((mp_limb_t) value) << big_normalization_steps;
 		udiv_qrnnd (x1lo, x, r, xl, big_base_norm);
 		t[2] = x >> big_normalization_steps;
 
@@ -319,9 +319,9 @@ _itoa (value, buflim, base, upper_case)
 		udiv_qrnnd (t[0], x, xh, xl, big_base_norm);
 		t[1] = x >> big_normalization_steps;
 #else
-		udiv_qrnnd (x1hi, r, 0, (mp_limb) (value >> 32),
+		udiv_qrnnd (x1hi, r, 0, (mp_limb_t) (value >> 32),
 			    brec->big.base);
-		udiv_qrnnd (x1lo, t[2], r, (mp_limb) value, brec->big.base);
+		udiv_qrnnd (x1lo, t[2], r, (mp_limb_t) value, brec->big.base);
 		udiv_qrnnd (t[0], t[1], x1hi, x1lo, brec->big.base);
 #endif
 		n = 3;
@@ -329,23 +329,23 @@ _itoa (value, buflim, base, upper_case)
 	    else
 	      {
 #if (UDIV_TIME > 2 * UMUL_TIME)
-		mp_limb x;
+		mp_limb_t x;
 
 		value <<= brec->big.normalization_steps;
-		udiv_qrnnd_preinv (t[0], x, (mp_limb) (value >> 32),
-				   (mp_limb) value, big_base_norm,
+		udiv_qrnnd_preinv (t[0], x, (mp_limb_t) (value >> 32),
+				   (mp_limb_t) value, big_base_norm,
 				   brec->big.base_ninv);
 		t[1] = x >> brec->big.normalization_steps;
 #elif UDIV_NEEDS_NORMALIZATION
-		mp_limb x;
+		mp_limb_t x;
 
 		value <<= big_normalization_steps;
-		udiv_qrnnd (t[0], x, (mp_limb) (value >> 32),
-			    (mp_limb) value, big_base_norm);
+		udiv_qrnnd (t[0], x, (mp_limb_t) (value >> 32),
+			    (mp_limb_t) value, big_base_norm);
 		t[1] = x >> big_normalization_steps;
 #else
-		udiv_qrnnd (t[0], t[1], (mp_limb) (value >> 32),
-			    (mp_limb) value, brec->big.base);
+		udiv_qrnnd (t[0], t[1], (mp_limb_t) (value >> 32),
+			    (mp_limb_t) value, brec->big.base);
 #endif
 		n = 2;
 	      }
@@ -359,15 +359,15 @@ _itoa (value, buflim, base, upper_case)
 	/* Convert the 1-3 words in t[], word by word, to ASCII.  */
 	do
 	  {
-	    mp_limb ti = t[--n];
+	    mp_limb_t ti = t[--n];
 	    int ndig_for_this_limb = 0;
 
 #if UDIV_TIME > 2 * UMUL_TIME
-	    mp_limb base_multiplier = brec->base_multiplier;
+	    mp_limb_t base_multiplier = brec->base_multiplier;
 	    if (brec->flag)
 	      while (ti != 0)
 		{
-		  mp_limb quo, rem, x, dummy;
+		  mp_limb_t quo, rem, x, dummy;
 
 		  umul_ppmm (x, dummy, ti, base_multiplier);
 		  quo = (x + ((ti - x) >> 1)) >> (brec->post_shift - 1);
@@ -379,7 +379,7 @@ _itoa (value, buflim, base, upper_case)
 	    else
 	      while (ti != 0)
 		{
-		  mp_limb quo, rem, x, dummy;
+		  mp_limb_t quo, rem, x, dummy;
 
 		  umul_ppmm (x, dummy, ti, base_multiplier);
 		  quo = x >> brec->post_shift;
@@ -391,7 +391,7 @@ _itoa (value, buflim, base, upper_case)
 #else
 	    while (ti != 0)
 	      {
-		mp_limb quo, rem;
+		mp_limb_t quo, rem;
 
 		quo = ti / base;
 		rem = ti % base;

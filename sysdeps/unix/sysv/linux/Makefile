@@ -15,8 +15,9 @@ sysdep_routines += fxstat lxstat xstat
 endif
 
 ifeq ($(subdir), misc)
-sysdep_routines += xmknod s_ptrace s_sysctl sysctl
-headers += sys/mount.h
+sysdep_routines += mount umount xmknod s_ptrace s_sysctl sysctl llseek \
+setfsgid setfsuid sysinfo uselib
+headers += sys/mount.h sys/sysinfo.h
 endif
 
 ifeq ($(subdir), time)

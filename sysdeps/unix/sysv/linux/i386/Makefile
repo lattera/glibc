@@ -1,4 +1,4 @@
-# Set the shared library version numbers for Linux/i386.
-
-libc.so-version = .6
-libm.so-version = .6
+ifeq ($(subdir), misc)
+sysdep_routines += ioperm iopl vm86
+headers += sys/perm.h sys/vm86.h
+endif

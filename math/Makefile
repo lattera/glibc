@@ -30,7 +30,6 @@ distribute	:= math_private.h machine/asm.h machine/endian.h
 # Build the -lm library.
 
 extra-libs	:= libm
-libm.so-version	:= .0
 libm-routines	:= e_acos e_acosf e_acosh e_acoshf e_asin e_asinf	\
 		   e_atan2 e_atan2f e_atanh e_atanhf e_cosh e_coshf	\
 		   e_exp e_expf e_fmod e_fmodf e_hypot e_hypotf e_j0	\

@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 
 struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
-			int signo, long int sigcode,
+			int signo, struct hurd_signal_detail *detail,
 			volatile int rpc_wait,
 			struct machine_thread_all_state *state)
 {
@@ -137,7 +137,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
       /* Set up the arguments for the signal handler.  */
       stackframe->signo = signo;
-      stackframe->sigcode = sigcode;
+      stackframe->sigcode = detail->code;
       stackframe->scp = stackframe->return_scp = scp = &stackframe->ctx;
       stackframe->sigreturn_addr = &__sigreturn;
       stackframe->sigreturn_returns_here = &&firewall; /* Crash on return.  */

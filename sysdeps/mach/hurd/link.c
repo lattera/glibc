@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
   todir = __file_name_split (to, &toname);
   if (todir != MACH_PORT_NULL)
     {
-      err = __dir_link (todir, linknode, toname);
+      err = __dir_link (todir, linknode, toname, 1);
       __mach_port_deallocate (__mach_task_self (), todir);
     }
   __mach_port_deallocate (__mach_task_self (), linknode);

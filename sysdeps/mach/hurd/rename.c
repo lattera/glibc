@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ DEFUN(rename, (old, new), CONST char *old AND CONST char *new)
       return -1;
     }
 
-  err = __dir_rename (olddir, oldname, newdir, newname);
+  err = __dir_rename (olddir, oldname, newdir, newname, 0);
   __mach_port_deallocate (__mach_task_self (), olddir);
   __mach_port_deallocate (__mach_task_self (), newdir);
   if (err)

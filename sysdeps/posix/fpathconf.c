@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <unistd.h>
 #include <limits.h>
+#include <sys/statfs.h>
 
 
 /* Get file-specific information about descriptor FD.  */
@@ -73,7 +74,14 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 
     case _PC_PATH_MAX:
 #ifdef	PATH_MAX
-      return PATH_MAX;
+      {
+	struct statfs buf;
+
+	if (__fstatfs (fd, &buf) < 0)
+	  return errno == ENOSYS ? PATH_MAX : -1;
+	else
+	  return buf.f_namelen;
+      }
 #else
       errno = ENOSYS;
       return -1;

@@ -2,6 +2,7 @@
 
 adjtimex	adjtime	adjtimex	1	__adjtimex
 fdatasync	-	fdatasync	1	fdatasync
+flock		-	flock		2	__flock		flock
 fork		-	fork		0	__fork		fork
 getegid		-	getegid		0	__getegid	getegid
 geteuid		-	geteuid		0	__geteuid	geteuid
@@ -9,7 +10,10 @@ getpgid		-	getpgid		1	getpgid
 getpgrp		-	getpgrp		0	getpgrp
 getppid		-	getppid		0	__getppid	getppid
 getsid		-	getsid		1	getsid
+ioperm		-	ioperm		3	ioperm
+iopl		-	iopl		1	iopl
 ipc		msgget	ipc		5	__ipc
+llseek		-	_llseek		5	llseek
 mlock		-	mlock		2	__mlock	mlock
 mlockall	-	mlockall	1	__mlockall	mlockall
 mount		-	mount		5	__mount	mount
@@ -18,7 +22,7 @@ munlock		-	munlock		2	__munlock	munlock
 munlockall	-	munlockall	0	__munlockall	munlockall
 nanosleep	-	nanosleep	2	nanosleep
 personality	init-first personality	1	__personality	personality
-pipe		-	pipe		1	__pipe	pipe
+pipe		-	pipe		1	__pipe		pipe
 reboot		-	reboot		3	reboot
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
@@ -31,9 +35,13 @@ sched_yield	-	sched_yield	0	__sched_yield	sched_yield
 sched_primax	-	sched_get_priority_max	1	__sched_get_priority_max	sched_get_priority_max
 sched_primin	-	sched_get_priority_min	1	__sched_get_priority_min	sched_get_priority_min
 sched_rr_gi	-	sched_rr_get_interval	2	__sched_rr_get_interval	sched_rr_get_interval
+setfsgid	-	setfsgid	1	setfsgid
+setfsuid	-	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	setpgid
 sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
 s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
+sysinfo		-	sysinfo		1	sysinfo
 umount		-	umount		1	__umount	umount
+uselib		-	uselib		1	uselib
 wait4		-	wait4		4	__wait4		wait4

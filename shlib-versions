@@ -1,0 +1,21 @@
+# This file defines the shared library version numbers we will install.
+
+# The following lines list filename patterns matching canonical configurations,
+# and the associated versions to use for various libraries.  The entire
+# list processed, with earlier entries taking precedence over later entries.
+# So loose patterns at the end of the list can give defaults.
+
+# Configuration		Library versions
+# -------------		------- --------
+
+# The interface to -lm depends only on cpu, not on operating system.
+i?86-*-*		libm=6
+
+# We provide libc.so.6 for Linux kernel versions 1.3.95 and later.
+i?86-*-linux*		libc=6
+
+# libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
+*-*-gnu*		libmachuser=1
+
+# libhurduser.so.0.0 corresponds to hurd/*.defs as of 7 May 1996.
+*-*-gnu*		libhurduser=0.0

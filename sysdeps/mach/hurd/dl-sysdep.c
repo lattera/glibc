@@ -548,7 +548,7 @@ void
 _exit (int status)
 {
   __proc_mark_exit (_dl_hurd_data->portarray[INIT_PORT_PROC],
-		    W_EXITCODE (status, 0));
+		    W_EXITCODE (status, 0), 0);
   while (__task_terminate (__mach_task_self ()))
     __mach_task_self_ = (__mach_task_self) ();
 }

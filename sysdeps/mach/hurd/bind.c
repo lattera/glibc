@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ DEFUN(bind, (fd, addr, len),
 	  if (! err)
 	    {
 	      /* Link the node, now a socket, into the target directory.  */
-	      err = __dir_link (dir, node, n);
+	      err = __dir_link (dir, node, n, 1);
 	      if (err == EEXIST)
 		err = EADDRINUSE;
 	    }

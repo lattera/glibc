@@ -1,4 +1,169 @@
+Tue May  7 19:00:01 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* string/argz-extract.c: Remove const from decl.
+	* string/argz.h: Here too.
+
+	* Makeconfig (version.mk): Fix regexp in sed cmd.
+	Depend on $(..)Makeconfig.
+
+	* GMP code updated from gmp-2.0 release.
+	* stdlib/Makefile (mpn-routines): Removed add_1, added inlines.
+	* sysdeps/generic/add_1.c: File removed.
+	* stdlib/strtod.c: mp_limb is now mp_limb_t.
+	* stdlib/fpioconst.c, stdlib/fpioconst.h: Likewise.
+	* stdio-common/_itoa.c: Likewise.
+	* stdio-common/printf_fp.c: Likewise.
+	Don't include ansidecl.h.
+
+	* sysdeps/mach/hurd/getcwd.c: Use io_identity instead of io_stat.
+
+	* shlib-versions: New file.
+	* Makerules (soversions.mk): New target, include file generated from
+	shlib-versions.  Moved shared library rules before installation rules.
+	Rewrote shared library installation rules for versioned libraries.
+	* math/Makefile (libm.so-version): Variable removed.
+
+	* sysdeps/mach/hurd/i386/exc2signal.c: Use struct hurd_signal_detail.
+
+	* hurd/report-wait.c (_S_msg_describe_ports): New function.
+
+	* configure.in: Add AC_PROG_LN_S check.
+	* config.make.in (LN_S): New variable.
+
+Sun May  5 03:10:44 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/efgcvt_r.c (ecvt_r): Work aroung gcc bug.  gcc does
+	not know about weak aliases now and optimizes necessary `if'
+	statement away.
+
+	* posix/unistd.h: Add swapoff prototype.
+
+	* sysdeps/generic/confname.h: Add even more POSIX.4 symbols.
+
+	* sysdeps/posix/fpathconf.c (__fpathconf): Get information
+	for _PC_PATH_MAX from fstatfs function if available.
+
+	* sysdeps/posix/sysconf.c: Add code to handle _SC_AIO_LISTIO_MAX,
+	_SC_AIO_MAX, _SC_AIO_PRIO_DELTA_MAX, _SC_DELAYTIMER_MAX,
+	_SC_MQ_OPEN_MAX, _SC_MQ_PRIO_MAX, _SC_RTSIG_MAX,
+	_SC_SEM_NSEMS_MAX, _SC_SEM_VALUE_MAX, _SC_SIGQUEUE_MAX, and
+	_SC_TIMER_MAX.
+	* sysdeps/unix/sysv/sysv4/sysconf.c: Ditto.
+
+	* sysdeps/stub/swapoff.c: New file.  Stub version for swapoff
+	function.
+
+	* sysdeps/unix/syscalls.list:  Add swapoff.
+
+	* sysdeps/unix/sysv/linux/Dist: Add sys/acct.h.
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == misc]
+	(sysdep_routines): Add mount, umount, llseek, setfsgid, setfsuid,
+	sysinfo, and uselib.
+	(headers): Add sys/sysinfo.h.
+
+	* sysdeps/unix/sysv/linux/gethostid.c: Prevent warning.
+
+	* sysdeps/unix/sysv/linux/i386/Makefile [$(subdir) == misc]
+	(sysdep_routines): Add ioperm, iopl, and vm86.
+	(headers): Add sys/perm.h and sys/vm86.h.
+
+	* sysdeps/unix/sysv/linux/i386/sys/perm.h: New file.  Contains
+	prototypes for iopl and ioperm.
+
+	* sysdeps/unix/sysv/linux/i386/sys/vm86.h:  New file.  Contains
+	prototype for vm86.
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: New file.  Add
+	vm86 system call.
+
+	* sysdeps/unix/sysv/linux/sys/acct.h: New file.  Contains
+	prototypes for acct function.
+
+	* sysdeps/unix/sysv/linux/sys/socket.h: Provide real header
+	file with prototypes.
+
+	* sysdeps/unix/sysv/linux/sys/sysinfo.h: New file.  Contains
+	prototype for sysinfo function.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add flock, ioperm, iopl,
+	llseek, setfsgid, setfsuid, sysinfo, and uselib.
+
+	* sysdeps/unix/sysv/linux/sysconf.c: Instead of duplicating
+	posix/sysconf.c now only handle cases different to that
+	implementation.
+
+Tue May  7 15:08:19 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* stdio/linewrap.c (__line_wrap_output): Renamed from lwoutput
+	(all references changed).  Now exported.
+
+	* stdio/linewrap.c (struct data): Type deleted (moved to linewrap.h).
+	(wrap_stream, unwrap_stream, lwclose, lwfileno, lwoutput,
+	line_wrap_stream, line_unwrap_stream): Use struct line_wrap_data
+	instead of struct data.
+	(lwoutput, line_wrap_stream, line_unwrap_stream): Rename various
+	occurences of `wrap' and `wrapmargin' to `wmargin'.
+	(line_wrapped, line_wrap_lmargin, line_wrap_set_lmargin,
+	line_wrap_rmargin, line_wrap_set_rmargin, line_wrap_wmargin,
+	line_wrap_set_wmargin, line_wrap_point): New functions.
+	* stdio/linewrap.h: New file.
+	* stdio/Makefile (headers): Add linewrap.h.
+
+Tue May  7 14:19:12 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile: File removed.
+
+	* stdio/stdio.h: Remove line_wrap_stream, line_unwap_stream decls.
+
+	* sysdeps/unix/sysv/linux/schedbits.h: New file.
+
+Tue May  7 13:47:02 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* stdio/linewrap.c (struct data): Make margin fields not-pointers.
+	(lwoutput): Adjust uses acordingly.
+
 Tue May  7 10:51:52 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/fdatasync.c: New file.
+	* sysdeps/mach/hurd/fsync.c: Pass new flag to file_sync.
+
+	* sysdeps/mach/hurd/xmknod.c: Pass new flag to dir_link.
+	* sysdeps/mach/hurd/symlink.c: Likewise.
+	* sysdeps/mach/hurd/link.c: Likewise.
+	* sysdeps/mach/hurd/bind.c: Likewise.
+	* hurd/hurdsig.c (write_corefile): Likewise.
+
+	* hurd/hurdsig.c (write_corefile): Pass cttyid port to crash server.
+
+	* sysdeps/mach/hurd/fpathconf.c: RPC takes int pointer, not long int.
+
+	* sysdeps/mach/hurd/_exit.c (_hurd_exit): Pass sigcode arg to
+	proc_mark_exit.
+	* sysdeps/mach/hurd/dl-sysdep.c (_exit): Likewise.
+
+	* sysdeps/mach/hurd/wait4.c: Pass sigcode arg to proc_wait.
+
+	* sysdeps/mach/hurd/rename.c: Pass new flag to dir_rename.
+
+	* hurd/hurdfault.c (_hurdsig_fault_catch_exception_raise): Use struct
+	hurd_signal_detail.
+	* hurd/catch-exc.c (_S_catch_exception_raise): Likewise.
+	* hurd/hurd-raise.c (_hurd_raise_signal): Likewise.
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler):
+	Likewise.
+	* sysdeps/mach/hurd/setitimer.c (restart_itimer): Likewise.
+
+	* hurd/hurd/signal.h: Fix _hurd_exception2signal prototype.
+
+	* hurd/hurdsig.c (write_corefile): Take const struct
+	hurd_signal_detail * arg.  Pass all details to crash_dump_task.
+	(_hurd_internal_post_signal): Pass DETAIL to write_corefile.
+	(_hurd_internal_post_signal: suspend): Pass code and error to
+	proc_mark_stop.
+
+	* hurd/hurdprio.c (_hurd_priority_which_map): Pass flags arg to
+	proc_getprocinfo by reference.
 
 	* wcsmbs/wcwidth.c, wcsmbs/wcswidth.c: Fixed typos.
 

@@ -95,12 +95,12 @@ extern FLOAT MPN2FLOAT (mp_srcptr mpn, int exponent, int negative);
 #  define MAX_DIG_PER_LIMB	19
 #  define MAX_FAC_PER_LIMB	10000000000000000000UL
 #else
-#  error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
+#  error "mp_limb_t size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
 
 /* Local data structure.  */
-static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
+static const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 {    0,                   10,                   100,
      1000,                10000,                100000,
      1000000,             10000000,             100000000,
@@ -132,17 +132,17 @@ static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 #define	MPNSIZE		(howmany (MAX_EXP + 2 * MANT_DIG, BITS_PER_MP_LIMB) \
 			 + 2)
 /* Declare an mpn integer variable that big.  */
-#define	MPN_VAR(name)	mp_limb name[MPNSIZE]; mp_size_t name##size
+#define	MPN_VAR(name)	mp_limb_t name[MPNSIZE]; mp_size_t name##size
 /* Copy an mpn integer value.  */
 #define MPN_ASSIGN(dst, src) \
-	memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb))
+	memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb_t))
 
 
 /* Return a floating point number of the needed type according to the given
    multi-precision number after possible rounding.  */
 static inline FLOAT
-round_and_return (mp_limb *retval, int exponent, int negative,
-		  mp_limb round_limb, mp_size_t round_bit, int more_bits)
+round_and_return (mp_limb_t *retval, int exponent, int negative,
+		  mp_limb_t round_limb, mp_size_t round_bit, int more_bits)
 {
   if (exponent < MIN_EXP - 1)
     {
@@ -154,7 +154,7 @@ round_and_return (mp_limb *retval, int exponent, int negative,
 	  return 0.0;
 	}
 
-      more_bits |= (round_limb & ((((mp_limb) 1) << round_bit) - 1)) != 0;
+      more_bits |= (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0;
       if (shift == MANT_DIG)
 	/* This is a special case to handle the very seldom case where
 	   the mantissa will be empty after the shift.  */
@@ -175,7 +175,8 @@ round_and_return (mp_limb *retval, int exponent, int negative,
 	  round_bit = (shift - 1) % BITS_PER_MP_LIMB;
 	  for (i = 0; i < (shift - 1) / BITS_PER_MP_LIMB; ++i)
 	    more_bits |= retval[i] != 0;
-	  more_bits |= (round_limb & ((((mp_limb) 1) << round_bit) - 1)) != 0;
+	  more_bits |= ((round_limb & ((((mp_limb_t) 1) << round_bit) - 1))
+			!= 0);
 
 	  (void) __mpn_rshift (retval, &retval[shift / BITS_PER_MP_LIMB],
                                RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB),
@@ -192,25 +193,25 @@ round_and_return (mp_limb *retval, int exponent, int negative,
       exponent = MIN_EXP - 2;
     }
 
-  if ((round_limb & (((mp_limb) 1) << round_bit)) != 0
+  if ((round_limb & (((mp_limb_t) 1) << round_bit)) != 0
       && (more_bits || (retval[0] & 1) != 0
-          || (round_limb & ((((mp_limb) 1) << round_bit) - 1)) != 0))
+          || (round_limb & ((((mp_limb_t) 1) << round_bit) - 1)) != 0))
     {
-      mp_limb cy = __mpn_add_1 (retval, retval, RETURN_LIMB_SIZE, 1);
+      mp_limb_t cy = __mpn_add_1 (retval, retval, RETURN_LIMB_SIZE, 1);
 
       if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy) ||
           ((MANT_DIG % BITS_PER_MP_LIMB) != 0 &&
            (retval[RETURN_LIMB_SIZE - 1]
-            & (((mp_limb) 1) << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
+            & (((mp_limb_t) 1) << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
 	{
 	  ++exponent;
 	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, 1);
 	  retval[RETURN_LIMB_SIZE - 1]
-	    |= ((mp_limb) 1) << ((MANT_DIG - 1) % BITS_PER_MP_LIMB);
+	    |= ((mp_limb_t) 1) << ((MANT_DIG - 1) % BITS_PER_MP_LIMB);
 	}
       else if (exponent == MIN_EXP - 2
 	       && (retval[RETURN_LIMB_SIZE - 1]
-		   & (((mp_limb) 1) << ((MANT_DIG - 1) % BITS_PER_MP_LIMB)))
+		   & (((mp_limb_t) 1) << ((MANT_DIG - 1) % BITS_PER_MP_LIMB)))
 	       != 0)
 	  /* The number was denormalized but now normalized.  */
 	exponent = MIN_EXP - 1;
@@ -229,13 +230,13 @@ round_and_return (mp_limb *retval, int exponent, int negative,
    value.  If the EXPONENT is small enough to be taken as an additional
    factor for the resulting number (see code) multiply by it.  */
 static inline const STRING_TYPE *
-str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb *n, mp_size_t *nsize,
+str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
 	    int *exponent)
 {
   /* Number of digits for actual limb.  */
   int cnt = 0;
-  mp_limb low = 0;
-  mp_limb base;
+  mp_limb_t low = 0;
+  mp_limb_t base;
 
   *nsize = 0;
   assert (digcnt > 0);
@@ -247,7 +248,7 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb *n, mp_size_t *nsize,
 	    n[0] = low;
 	  else
 	    {
-	      mp_limb cy;
+	      mp_limb_t cy;
 	      cy = __mpn_mul_1 (n, n, *nsize, MAX_FAC_PER_LIMB);
 	      cy += __mpn_add_1 (n, n, *nsize, low);
 	      if (cy != 0)
@@ -284,7 +285,7 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb *n, mp_size_t *nsize,
     }
   else
     {
-      mp_limb cy;
+      mp_limb_t cy;
       cy = __mpn_mul_1 (n, n, *nsize, base);
       cy += __mpn_add_1 (n, n, *nsize, low);
       if (cy != 0)
@@ -300,7 +301,8 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb *n, mp_size_t *nsize,
    Tege doesn't like this function so I have to write it here myself. :)
    --drepper */
 static inline void
-__mpn_lshift_1 (mp_limb *ptr, mp_size_t size, unsigned int count, mp_limb limb)
+__mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
+		mp_limb_t limb)
 {
   if (count == BITS_PER_MP_LIMB)
     {
@@ -347,7 +349,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   MPN_VAR (den);
 
   /* Representation for the return value.  */
-  mp_limb retval[RETURN_LIMB_SIZE];
+  mp_limb_t retval[RETURN_LIMB_SIZE];
   /* Number of bits currently in result value.  */
   int bits;
 
@@ -638,8 +640,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       if (exponent > 0)
 	{
 	  /* We now multiply the gained number by the given power of ten.  */
-	  mp_limb *psrc = num;
-	  mp_limb *pdest = den;
+	  mp_limb_t *psrc = num;
+	  mp_limb_t *pdest = den;
 	  int expbit = 1;
 	  const struct mp_power *ttab = &_fpioconst_pow10[0];
 
@@ -647,7 +649,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	    {
 	      if ((exponent & expbit) != 0)
 		{
-		  mp_limb cy;
+		  mp_limb_t cy;
 		  exponent ^= expbit;
 
 		  /* FIXME: not the whole multiplication has to be done.
@@ -672,7 +674,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	  while (exponent != 0);
 
 	  if (psrc == den)
-	    memcpy (num, den, numsize * sizeof (mp_limb));
+	    memcpy (num, den, numsize * sizeof (mp_limb_t));
 	}
 
       /* Determine how many bits of the result we already have.  */
@@ -702,7 +704,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
 	  if (least_bit == 0)
 	    memcpy (retval, &num[least_idx],
-		    RETURN_LIMB_SIZE * sizeof (mp_limb));
+		    RETURN_LIMB_SIZE * sizeof (mp_limb_t));
 	  else
             {
               for (i = least_idx; i < numsize - 1; ++i)
@@ -730,7 +732,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	  if (target_bit == is_bit)
 	    {
 	      memcpy (&retval[RETURN_LIMB_SIZE - numsize], num,
-		      numsize * sizeof (mp_limb));
+		      numsize * sizeof (mp_limb_t));
 	      /* FIXME: the following loop can be avoided if we assume a
 		 maximal MANT_DIG value.  */
 	      MPN_ZERO (retval, RETURN_LIMB_SIZE - numsize);
@@ -745,7 +747,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	    }
 	  else
 	    {
-	      mp_limb cy;
+	      mp_limb_t cy;
 	      assert (numsize < RETURN_LIMB_SIZE);
 
 	      cy = __mpn_rshift (&retval[RETURN_LIMB_SIZE - numsize],
@@ -761,7 +763,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	}
 
       /* Store the bits we already have.  */
-      memcpy (retval, num, numsize * sizeof (mp_limb));
+      memcpy (retval, num, numsize * sizeof (mp_limb_t));
 #if RETURN_LIMB_SIZE > 1
       if (numsize < RETURN_LIMB_SIZE)
         retval[numsize] = 0;
@@ -779,9 +781,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
     int cnt;
     int neg_exp;
     int more_bits;
-    mp_limb cy;
-    mp_limb *psrc = den;
-    mp_limb *pdest = num;
+    mp_limb_t cy;
+    mp_limb_t *psrc = den;
+    mp_limb_t *pdest = num;
     const struct mp_power *ttab = &_fpioconst_pow10[0];
 
     assert (dig_no > int_no && exponent <= 0);
@@ -810,14 +812,14 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       {
 	if ((neg_exp & expbit) != 0)
 	  {
-	    mp_limb cy;
+	    mp_limb_t cy;
 	    neg_exp ^= expbit;
 
 	    if (densize == 0)
 	      {
 		densize = ttab->arraysize - _FPIO_CONST_OFFSET;
 		memcpy (psrc, &ttab->array[_FPIO_CONST_OFFSET],
-			densize * sizeof (mp_limb));
+			densize * sizeof (mp_limb_t));
 	      }
 	    else
 	      {
@@ -836,7 +838,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
     while (neg_exp != 0);
 
     if (psrc == num)
-      memcpy (den, num, densize * sizeof (mp_limb));
+      memcpy (den, num, densize * sizeof (mp_limb_t));
 
     /* Read the fractional digits from the string.  */
     (void) str_to_mpn (startp, dig_no - int_no, num, &numsize, &exponent);
@@ -873,7 +875,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       {
       case 1:
 	{
-	  mp_limb d, n, quot;
+	  mp_limb_t d, n, quot;
 	  int used = 0;
 
 	  n = num[0];
@@ -930,8 +932,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	}
       case 2:
 	{
-	  mp_limb d0, d1, n0, n1;
-	  mp_limb quot = 0;
+	  mp_limb_t d0, d1, n0, n1;
+	  mp_limb_t quot = 0;
 	  int used = 0;
 
 	  d0 = den[0];
@@ -976,14 +978,14 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
 	  while (bits <= MANT_DIG)
 	    {
-	      mp_limb r;
+	      mp_limb_t r;
 
 	      if (n1 == d1)
 		{
 		  /* QUOT should be either 111..111 or 111..110.  We need
 		     special treatment of this rare case as normal division
 		     would give overflow.  */
-		  quot = ~(mp_limb) 0;
+		  quot = ~(mp_limb_t) 0;
 
 		  r = n0 + d1;
 		  if (r < d1)	/* Carry in the addition?  */
@@ -1024,8 +1026,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       default:
 	{
 	  int i;
-	  mp_limb cy, dX, d1, n0, n1;
-	  mp_limb quot = 0;
+	  mp_limb_t cy, dX, d1, n0, n1;
+	  mp_limb_t quot = 0;
 	  int used = 0;
 
 	  dX = den[densize - 1];
@@ -1105,10 +1107,10 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	      if (n0 == dX)
 		/* This might over-estimate QUOT, but it's probably not
 		   worth the extra code here to find out.  */
-		quot = ~(mp_limb) 0;
+		quot = ~(mp_limb_t) 0;
 	      else
 		{
-		  mp_limb r;
+		  mp_limb_t r;
 
 		  udiv_qrnnd (quot, r, n0, num[densize - 1], dX);
 		  umul_ppmm (n1, n0, d1, quot);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -80,14 +80,14 @@ gethostid ()
     /* This also fails.  Return and arbitrary value.  */
     return 0;
 
-  /* To get the IP address we need to knoe the host name.  */
+  /* To get the IP address we need to know the host name.  */
   hp = gethostbyname (hostname);
   if (hp == NULL)
     return 0;
 
   in.s_addr = 0;
   memcpy (&in, hp->h_addr,
-	  sizeof (in) < hp->h_length ? sizeof (in) : hp->h_length);
+	  (int) sizeof (in) < hp->h_length ? sizeof (in) : hp->h_length);
 
   /* For the return value to be not exactly the IP address we do some
      bit fiddling.  */

@@ -41,7 +41,7 @@ Cambridge, MA 02139, USA.  */
    strtof/strtod/strtold.  */
 struct mp_power
   {
-    const mp_limb *array;	/* The array with the number representation. */
+    const mp_limb_t *array;	/* The array with the number representation. */
     mp_size_t arraysize;	/* Size of the array.  */
     int p_expo;			/* Exponent of the number 10^(2^i).  */
     int m_expo;			/* Exponent of the number 10^-(2^i-1).  */

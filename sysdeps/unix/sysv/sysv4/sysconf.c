@@ -186,6 +186,83 @@ DEFUN(__sysconf, (name), int name)
     case _SC_PAGESIZE:
       return __sysconfig (_CONFIG_PAGESIZE);
 
+    case _SC_AIO_LISTIO_MAX:
+#ifdef	AIO_LISTIO_MAX
+      return AIO_LISTIO_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_AIO_MAX:
+#ifdef	AIO_MAX
+      return AIO_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_AIO_PRIO_DELTA_MAX:
+#ifdef	AIO_PRIO_DELTA_MAX
+      return AIO_PRIO_DELTA_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_DELAYTIMER_MAX:
+#ifdef	DELAYTIMER_MAX
+      return DELAYTIMER_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_MQ_OPEN_MAX:
+#ifdef	MQ_OPEN_MAX
+      return MQ_OPEN_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_MQ_PRIO_MAX:
+#ifdef	MQ_PRIO_MAX
+      return MQ_PRIO_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_RTSIG_MAX:
+#ifdef	RTSIG_MAX
+      return RTSIG_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_SEM_NSEMS_MAX:
+#ifdef	SEM_NSEMS_MAX
+      return SEM_NSEMS_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_SEM_VALUE_MAX:
+#ifdef	SEM_VALUE_MAX
+      return SEM_VALUE_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_SIGQUEUE_MAX:
+#ifdef	SIGQUEUE_MAX
+      return SIGQUEUE_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_TIMER_MAX:
+#ifdef	TIMER_MAX
+      return TIMER_MAX;
+#else
+      return -1;
+#endif
+
     case _SC_BC_BASE_MAX:
 #ifdef	BC_BASE_MAX
       return BC_BASE_MAX;

@@ -149,3 +149,28 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
   __mach_port_deallocate (__mach_task_self (), thread);
   return 0;
 }
+
+kern_return_t
+_S_msg_describe_ports (mach_port_t msgport, mach_port_t refport,
+		       mach_port_t *ports, mach_msg_type_number_t nports,
+		       char **desc, mach_msg_type_number_t *desclen)
+{
+  char *p, *end;
+
+  if (__USEPORT (AUTH, msgport != port))
+    return EPERM;
+
+  end = *desc + *desclen;
+  p = *desc;
+  while (nports-- > 0)
+    {
+      char this[200];
+      describe_port (this, *ports++);
+      p = __stpncpy (p, this, end - p);
+      if (p == end && p[-1] != '\0')
+	return ENOMEM;
+    }
+
+  *desclen = p - *desc;
+  return 0;
+}

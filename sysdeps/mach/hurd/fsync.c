@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(fsync, (fd), int fd)
 {
-  error_t err = HURD_DPORT_USE (fd, __file_sync (port, 1));
+  error_t err = HURD_DPORT_USE (fd, __file_sync (port, 1, 0));
   if (err)
     return __hurd_dfail (fd, err);
   return 0;

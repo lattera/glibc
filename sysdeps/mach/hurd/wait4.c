@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,9 @@ __wait4 (pid_t pid, __WAIT_STATUS_DEFN stat_loc,
   pid_t dead;
   error_t err;
   struct rusage ignored;
+  natural_t sigcode;
 
-  err = __USEPORT (PROC, __proc_wait (port, pid, options, stat_loc,
+  err = __USEPORT (PROC, __proc_wait (port, pid, options, stat_loc, &sigcode,
 				      usage ?: &ignored, &dead));
 
   return err ? (pid_t) __hurd_fail (err) : dead;

@@ -37,5 +37,6 @@ AS = $(CC) -c
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
+LN_S = @LN_S@
 
 # More variables may be inserted below by configure.

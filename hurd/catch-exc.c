@@ -29,18 +29,21 @@ _S_catch_exception_raise (mach_port_t port,
 			  int code,
 			  int subcode)
 {
-  int signo, error;
-  long int sigcode;
   struct hurd_sigstate *ss;
+  int signo;
+  struct hurd_signal_detail d;
 
   if (task != __mach_task_self ())
     /* The sender wasn't the kernel.  */
     return EPERM;
 
+  d.exc = exception;
+  d.exc_code = code;
+  d.exc_subcode = subcode;
+
   /* Call the machine-dependent function to translate the Mach exception
      codes into a signal number and subcode.  */
-  _hurd_exception2signal (exception, code, subcode,
-			  &signo, &sigcode, &error);
+  _hurd_exception2signal (&d, &signo);
 
   /* Find the sigstate structure for the faulting thread.  */
   __mutex_lock (&_hurd_siglock);
@@ -70,7 +73,7 @@ _S_catch_exception_raise (mach_port_t port,
     }
 
   /* Post the signal.  */
-  _hurd_internal_post_signal (ss, signo, sigcode, error,
+  _hurd_internal_post_signal (ss, signo, &d,
 			      MACH_PORT_NULL, MACH_MSG_TYPE_PORT_SEND,
 			      0);
 

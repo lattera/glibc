@@ -39,11 +39,10 @@ char *
 __getcwd (char *buf, size_t size)
 {
   error_t err;
-  dev_t rootdev, thisdev;
+  mach_port_t rootid, thisid, rootdevid, thisdevid;
   ino_t rootino, thisino;
   char *file_name;
   register char *file_namep;
-  struct stat st;
   file_t parent;
   char *dirbuf = NULL;
   unsigned int dirbufsize = 0;
@@ -51,6 +50,10 @@ __getcwd (char *buf, size_t size)
   inline void cleanup (void)
     {
       __mach_port_deallocate (__mach_task_self (), parent);
+      __mach_port_deallocate (__mach_task_self (), thisid);
+      __mach_port_deallocate (__mach_task_self (), thisdevid);
+      __mach_port_deallocate (__mach_task_self (), rootid);
+      __mach_port_deallocate (__mach_task_self (), rootdevid);
 
       if (dirbuf != NULL)
 	__vm_deallocate (__mach_task_self (),
@@ -81,37 +84,30 @@ __getcwd (char *buf, size_t size)
   file_namep = file_name + size;
   *--file_namep = '\0';
 
-  /* Get a port to our root directory and stat it.  */
+  /* Get a port to our root directory and get its identity.  */
 
-  if (err = __USEPORT (CRDIR, __io_stat (port, &st)))
+  if (err = __USEPORT (CRDIR, __io_identity (port,
+					     &rootid, &rootdevid, &rootino)))
     return __hurd_fail (err), NULL;
-  rootdev = st.st_dev;
-  rootino = st.st_ino;
+  __mach_port_deallocate (__mach_task_self (), rootdevid);
 
   /* Get a port to our current working directory and stat it.  */
 
-  if (err = __USEPORT (CWDIR, __mach_port_mod_refs (__mach_task_self (),
-						    (parent = port),
-						    MACH_PORT_RIGHT_SEND,
-						    1)))
-    return __hurd_fail (err), NULL;
-  if (err = __io_stat (parent, &st))
+  if (err = __USEPORT (CRDIR, __io_identity (port,
+					     &thisid, &thisdevid, &thisino)))
     {
-      cleanup ();
+      __mach_port_deallocate (__mach_task_self (), rootid);
       return __hurd_fail (err), NULL;
     }
 
-  thisdev = st.st_dev;
-  thisino = st.st_ino;
-
-  while (!(thisdev == rootdev && thisino == rootino))
+  while (thisid != rootid)
     {
       /* PARENT is a port to the directory we are currently on;
-	 THISDEV and THISINO are its device and node numbers.
-	 Look in its parent (..) for a file with the same numbers.  */
+	 THISID, THISDEV, and THISINO are its identity.
+	 Look in its parent (..) for a file with the same file number.  */
 
       struct dirent *d;
-      dev_t dotdev;
+      mach_port_t dotid, dotdevid;
       ino_t dotino;
       int mount_point;
       file_t newp;
@@ -127,12 +123,12 @@ __getcwd (char *buf, size_t size)
       __mach_port_deallocate (__mach_task_self (), parent);
       parent = newp;
 
-      /* Figure out if this directory is a mount point.  */
-      if (err = __io_stat (parent, &st))
+      /* Get this directory's identity and figure out if it's a mount point. */
+      if (err = __io_identity (parent, &dotid, &dotdevid, &dotino))
 	goto errlose;
-      dotdev = st.st_dev;
-      dotino = st.st_ino;
-      mount_point = dotdev != thisdev;
+      __mach_port_deallocate (__mach_task_self (), dotid);
+      __mach_port_deallocate (__mach_task_self (), dotdevid);
+      mount_point = dotdevid != thisdevid;
 
       /* Search for the last directory.  */
       direntry = 0;
@@ -178,13 +174,17 @@ __getcwd (char *buf, size_t size)
 		{
 		  file_t try = __file_name_lookup_under (parent, d->d_name,
 							 O_NOLINK, 0);
+		  file_t id, devid;
+		  ino_t fileno;
 		  if (try == MACH_PORT_NULL)
 		    goto lose;
-		  err = __io_stat (try, &st);
+		  err = __io_identity (try, &id, &devid, &fileno);
 		  __mach_port_deallocate (__mach_task_self (), try);
 		  if (err)
 		    goto errlose;
-		  if (st.st_dev == thisdev && st.st_ino == thisino)
+		  __mach_port_deallocate (__mach_task_self (), id);
+		  __mach_port_deallocate (__mach_task_self (), devid);
+		  if (id == thisid)
 		    goto found;
 		}
 	    }
@@ -232,7 +232,10 @@ __getcwd (char *buf, size_t size)
 
       /* The next iteration will find the name of the directory we
 	 just searched through.  */
-      thisdev = dotdev;
+      __mach_port_deallocate (__mach_task_self (), thisid);
+      __mach_port_deallocate (__mach_task_self (), thisdevid);
+      thisid = dotid;
+      thisdevid = dotdevid;
       thisino = dotino;
     }
 

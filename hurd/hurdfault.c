@@ -42,19 +42,21 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
 				      int subcode)
 {
   int signo;
-  long int sigcode;
-  int sigerror;
+  struct hurd_signal_detail d;
 
   if (port != forward_sigexc ||
       thread != _hurd_msgport_thread || task != __mach_task_self ())
     return EPERM;		/* Strange bogosity.  */
 
+  d.exc = exception;
+  d.exc_code = code;
+  d.exc_subcode = subcode;
+
   /* Call the machine-dependent function to translate the Mach exception
      codes into a signal number and subcode.  */
-  _hurd_exception2signal (exception, code, subcode,
-			  &signo, &sigcode, &sigerror);
+  _hurd_exception2signal (&d, &signo);
 
-  return HURD_PREEMPT_SIGNAL_P (&_hurdsig_fault_preempter, signo, sigcode)
+  return HURD_PREEMPT_SIGNAL_P (&_hurdsig_fault_preempter, signo, d.code)
     ? 0 : EGREGIOUS;
 }
 

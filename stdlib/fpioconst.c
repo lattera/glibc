@@ -1,5 +1,5 @@
 /* Table of MP integer constants 10^(2^i), used for floating point <-> decimal.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,32 +29,32 @@ Cambridge, MA 02139, USA.  */
 
 /* Table with constants of 10^(2^i), i=0..12 for 32-bit limbs.	*/
 
-static const mp_limb _ten_p0[] =
+static const mp_limb_t _ten_p0[] =
   { 0x00000000, 0x00000000, 0x0000000a };
-static const mp_limb _ten_p1[] =
+static const mp_limb_t _ten_p1[] =
   { 0x00000000, 0x00000000, 0x00000064 };
-static const mp_limb _ten_p2[] =
+static const mp_limb_t _ten_p2[] =
   { 0x00000000, 0x00000000, 0x00002710 };
-static const mp_limb _ten_p3[] =
+static const mp_limb_t _ten_p3[] =
   { 0x00000000, 0x00000000, 0x05f5e100 };
-static const mp_limb _ten_p4[] =
+static const mp_limb_t _ten_p4[] =
   { 0x00000000, 0x00000000, 0x6fc10000, 0x002386f2 };
-static const mp_limb _ten_p5[] =
+static const mp_limb_t _ten_p5[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x85acef81, 0x2d6d415b, 0x000004ee };
-static const mp_limb _ten_p6[] =
+static const mp_limb_t _ten_p6[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0xbf6a1f01, 0x6e38ed64,
     0xdaa797ed, 0xe93ff9f4, 0x00184f03 };
-static const mp_limb _ten_p7[] =
+static const mp_limb_t _ten_p7[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x2e953e01, 0x03df9909, 0x0f1538fd, 0x2374e42f, 0xd3cff5ec, 0xc404dc08,
     0xbccdb0da, 0xa6337f19, 0xe91f2603, 0x0000024e };
-static const mp_limb _ten_p8[] =
+static const mp_limb_t _ten_p8[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x982e7c01, 0xbed3875b,
     0xd8d99f72, 0x12152f87, 0x6bde50c6, 0xcf4a6e70, 0xd595d80f, 0x26b2716e,
     0xadc666b0, 0x1d153624, 0x3c42d35a, 0x63ff540e, 0xcc5573c0, 0x65f9ef17,
     0x55bc28f2, 0x80dcc7f7, 0xf46eeddc, 0x5fdcefce, 0x000553f7 };
-static const mp_limb _ten_p9[] =
+static const mp_limb_t _ten_p9[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -65,7 +65,7 @@ static const mp_limb _ten_p9[] =
     0x93abade4, 0x1366732a, 0x9449775c, 0x69be5b0e, 0x7343afac, 0xb099bc81,
     0x45a71d46, 0xa2699748, 0x8cb07303, 0x8a0b1f13, 0x8cab8a97, 0xc1d238d9,
     0x633415d4, 0x0000001c };
-static const mp_limb _ten_p10[] =
+static const mp_limb_t _ten_p10[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -85,7 +85,7 @@ static const mp_limb _ten_p10[] =
     0x36a8de06, 0x73c55349, 0xa7e6bd2a, 0xc1a6970c, 0x47187094, 0xd2db49ef,
     0x926c3f5b, 0xae6209d4, 0x2d433949, 0x34f4a3c6, 0xd4305d94, 0xd9d61a05,
     0x00000325 };
-static const mp_limb _ten_p11[] =
+static const mp_limb_t _ten_p11[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -122,7 +122,7 @@ static const mp_limb _ten_p11[] =
     0x8c983623, 0xe50f3027, 0x94222771, 0x1d08e2d6, 0xf7e928e6, 0xf2ee5ca6,
     0x1b61b93c, 0x11eb962b, 0x9648b21c, 0xce2bcba1, 0x34f77154, 0x7bbebe30,
     0xe526a319, 0x8ce329ac, 0xde4a74d2, 0xb5dc53d5, 0x0009e8b3 };
-static const mp_limb _ten_p12[] =
+static const mp_limb_t _ten_p12[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -203,32 +203,32 @@ static const mp_limb _ten_p12[] =
 
 /* Table with constants of 10^(2^i), i=0..12 for 64-bit limbs.	*/
 
-static const mp_limb _ten_p0[] =
+static const mp_limb_t _ten_p0[] =
   { 0x0000000000000000, 0x000000000000000a };
-static const mp_limb _ten_p1[] =
+static const mp_limb_t _ten_p1[] =
   { 0x0000000000000000, 0x0000000000000064 };
-static const mp_limb _ten_p2[] =
+static const mp_limb_t _ten_p2[] =
   { 0x0000000000000000, 0x0000000000002710 };
-static const mp_limb _ten_p3[] =
+static const mp_limb_t _ten_p3[] =
   { 0x0000000000000000, 0x0000000005f5e100 };
-static const mp_limb _ten_p4[] =
+static const mp_limb_t _ten_p4[] =
   { 0x0000000000000000, 0x002386f26fc10000 };
-static const mp_limb _ten_p5[] =
+static const mp_limb_t _ten_p5[] =
   { 0x0000000000000000, 0x85acef8100000000, 0x000004ee2d6d415b };
-static const mp_limb _ten_p6[] =
+static const mp_limb_t _ten_p6[] =
   { 0x0000000000000000, 0x0000000000000000, 0x6e38ed64bf6a1f01,
     0xe93ff9f4daa797ed, 0x0000000000184f03 };
-static const mp_limb _ten_p7[] =
+static const mp_limb_t _ten_p7[] =
   { 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x03df99092e953e01, 0x2374e42f0f1538fd, 0xc404dc08d3cff5ec,
     0xa6337f19bccdb0da, 0x0000024ee91f2603 };
-static const mp_limb _ten_p8[] =
+static const mp_limb_t _ten_p8[] =
   { 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0xbed3875b982e7c01,
     0x12152f87d8d99f72, 0xcf4a6e706bde50c6, 0x26b2716ed595d80f,
     0x1d153624adc666b0, 0x63ff540e3c42d35a, 0x65f9ef17cc5573c0,
     0x80dcc7f755bc28f2, 0x5fdcefcef46eeddc, 0x00000000000553f7 };
-static const mp_limb _ten_p9[] =
+static const mp_limb_t _ten_p9[] =
   { 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
@@ -239,7 +239,7 @@ static const mp_limb _ten_p9[] =
     0x1366732a93abade4, 0x69be5b0e9449775c, 0xb099bc817343afac,
     0xa269974845a71d46, 0x8a0b1f138cb07303, 0xc1d238d98cab8a97,
     0x0000001c633415d4 };
-static const mp_limb _ten_p10[] =
+static const mp_limb_t _ten_p10[] =
   { 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
@@ -259,7 +259,7 @@ static const mp_limb _ten_p10[] =
     0x73c5534936a8de06, 0xc1a6970ca7e6bd2a, 0xd2db49ef47187094,
     0xae6209d4926c3f5b, 0x34f4a3c62d433949, 0xd9d61a05d4305d94,
     0x0000000000000325 };
-static const mp_limb _ten_p11[] =
+static const mp_limb_t _ten_p11[] =
   { 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
@@ -296,7 +296,7 @@ static const mp_limb _ten_p11[] =
     0xe50f30278c983623, 0x1d08e2d694222771, 0xf2ee5ca6f7e928e6,
     0x11eb962b1b61b93c, 0xce2bcba19648b21c, 0x7bbebe3034f77154,
     0x8ce329ace526a319, 0xb5dc53d5de4a74d2, 0x000000000009e8b3 };
-static const mp_limb _ten_p12[] =
+static const mp_limb_t _ten_p12[] =
   { 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
@@ -374,7 +374,7 @@ static const mp_limb _ten_p12[] =
 #define _LAST_POW10	12
 
 #else
-#  error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
+#  error "mp_limb_t size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
 

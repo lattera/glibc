@@ -1,6 +1,6 @@
 Dnl Process this file with autoconf to produce a configure script.
 AC_REVISION([$CVSid$])
-AC_PREREQ(2.9)dnl		dnl Minimum Autoconf version required.
+AC_PREREQ(2.10)dnl		dnl Minimum Autoconf version required.
 AC_INIT(features.h)
 AC_CONFIG_HEADER(config.h)
 
@@ -293,6 +293,7 @@ if test "$INSTALL" = "${srcdir}/install-sh"; then
   # The makefiles need to use a different form to find it in $srcdir.
   INSTALL='$(..)./install-sh'
 fi
+AC_PROG_LN_S
 
 AC_CHECK_TOOL(CC, gcc)
 AC_CHECK_TOOL(AR, ar)

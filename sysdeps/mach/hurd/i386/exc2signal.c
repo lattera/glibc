@@ -1,5 +1,5 @@
 /* Translate Mach exception codes into signal numbers.  i386 version.
-Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,48 +25,47 @@ Cambridge, MA 02139, USA.  */
    into a signal number and signal subcode.  */
 
 void
-_hurd_exception2signal (int exception, int code, int subcode,
-			int *signo, long int *sigcode, int *error)
+_hurd_exception2signal (struct hurd_signal_detail *detail, int *signo)
 {
-  *error = 0;
+  detail->error = 0;
 
-  switch (exception)
+  switch (detail->exc)
     {
     default:
       *signo = SIGIOT;
-      *sigcode = exception;
+      detail->code = detail->exc;
       break;
-      
+
     case EXC_BAD_ACCESS:
-      if (code == KERN_PROTECTION_FAILURE)
+      if (detail->exc_code == KERN_PROTECTION_FAILURE)
 	*signo = SIGSEGV;
       else
 	*signo = SIGBUS;
-      *sigcode = subcode;
-      *error = code;
+      detail->code = detail->exc_subcode;
+      detail->error = detail->exc_code;
       break;
 
     case EXC_BAD_INSTRUCTION:
       *signo = SIGILL;
-      if (code == EXC_I386_INVOP)
-	*sigcode = ILL_INVOPR_FAULT;
-      else if (code == EXC_I386_STKFLT)
-	*sigcode = ILL_STACK_FAULT;
+      if (detail->exc_code == EXC_I386_INVOP)
+	detail->code = ILL_INVOPR_FAULT;
+      else if (detail->exc_code == EXC_I386_STKFLT)
+	detail->code = ILL_STACK_FAULT;
       else
-	*sigcode = 0;
+	detail->code = 0;
       break;
-      
+
     case EXC_ARITHMETIC:
-      switch (code)
+      switch (detail->exc_code)
 	{
 	case EXC_I386_DIV:	/* integer divide by zero */
 	  *signo = SIGFPE;
-	  *sigcode = FPE_INTDIV_FAULT;
+	  detail->code = FPE_INTDIV_FAULT;
 	  break;
-	  
+
 	case EXC_I386_INTO:	/* integer overflow */
 	  *signo = SIGFPE;
-	  *sigcode = FPE_INTOVF_TRAP;
+	  detail->code = FPE_INTOVF_TRAP;
 	  break;
 
 	  /* These aren't anywhere documented or used in Mach 3.0.  */
@@ -74,92 +73,92 @@ _hurd_exception2signal (int exception, int code, int subcode,
 	case EXC_I386_EXTOVR:
 	default:
 	  *signo = SIGFPE;
-	  *sigcode = 0;
+	  detail->code = 0;
 	  break;
 
 	case EXC_I386_EXTERR:
 	  /* Subcode is the fp_status word saved by the hardware.
 	     Give an error code corresponding to the first bit set.  */
-	  if (subcode & FPS_IE)
+	  if (detail->exc_subcode & FPS_IE)
 	    {
 	      *signo = SIGILL;
-	      *sigcode = ILL_FPEOPR_FAULT;
+	      detail->code = ILL_FPEOPR_FAULT;
 	    }
-	  else if (subcode & FPS_DE)
+	  else if (detail->exc_subcode & FPS_DE)
 	    {
 	      *signo = SIGFPE;
-	      *sigcode = FPE_FLTDNR_FAULT;
+	      detail->code = FPE_FLTDNR_FAULT;
 	    }
-	  else if (subcode & FPS_ZE)
+	  else if (detail->exc_subcode & FPS_ZE)
 	    {
 	      *signo = SIGFPE;
-	      *sigcode = FPE_FLTDIV_FAULT;
+	      detail->code = FPE_FLTDIV_FAULT;
 	    }
-	  else if (subcode & FPS_OE)
+	  else if (detail->exc_subcode & FPS_OE)
 	    {
 	      *signo = SIGFPE;
-	      *sigcode = FPE_FLTOVF_FAULT;
+	      detail->code = FPE_FLTOVF_FAULT;
 	    }
-	  else if (subcode & FPS_UE)
+	  else if (detail->exc_subcode & FPS_UE)
 	    {
 	      *signo = SIGFPE;
-	      *sigcode = FPE_FLTUND_FAULT;
+	      detail->code = FPE_FLTUND_FAULT;
 	    }
-	  else if (subcode & FPS_PE)
+	  else if (detail->exc_subcode & FPS_PE)
 	    {
 	      *signo = SIGFPE;
-	      *sigcode = FPE_FLTINX_FAULT;
+	      detail->code = FPE_FLTINX_FAULT;
 	    }
 	  else
 	    {
 	      *signo = SIGFPE;
-	      *sigcode = 0;
+	      detail->code = 0;
 	    }
 	  break;
 
-	  /* These two can only be arithmetic exceptions if we 
+	  /* These two can only be arithmetic exceptions if we
 	     are in V86 mode, which sounds like emulation to me.
 	     (See Mach 3.0 i386/trap.c.)  */
 	case EXC_I386_EMERR:
 	  *signo = SIGFPE;
-	  *sigcode = FPE_EMERR_FAULT;
+	  detail->code = FPE_EMERR_FAULT;
 	  break;
 	case EXC_I386_BOUND:
 	  *signo = SIGFPE;
-	  *sigcode = FPE_EMBND_FAULT;
+	  detail->code = FPE_EMBND_FAULT;
 	  break;
 	}
       break;
 
-    case EXC_EMULATION:		
+    case EXC_EMULATION:
       /* 3.0 doesn't give this one, why, I don't know.  */
       *signo = SIGEMT;
-      *sigcode = 0;
+      detail->code = 0;
       break;
 
     case EXC_SOFTWARE:
       /* The only time we get this in Mach 3.0
 	 is for an out of bounds trap.  */
-      if (code == EXC_I386_BOUND)
+      if (detail->exc_code == EXC_I386_BOUND)
 	{
 	  *signo = SIGFPE;
-	  *sigcode = FPE_SUBRNG_FAULT;
+	  detail->code = FPE_SUBRNG_FAULT;
 	}
       else
 	{
 	  *signo = SIGEMT;
-	  *sigcode = 0;
+	  detail->code = 0;
 	}
       break;
-      
+
     case EXC_BREAKPOINT:
       *signo = SIGTRAP;
-      if (code == EXC_I386_SGL)
-	*sigcode = DBG_SINGLE_TRAP;
-      else if (code == EXC_I386_BPT)
-	*sigcode = DBG_BRKPNT_FAULT;
+      if (detail->exc_code == EXC_I386_SGL)
+	detail->code = DBG_SINGLE_TRAP;
+      else if (detail->exc_code == EXC_I386_BPT)
+	detail->code = DBG_BRKPNT_FAULT;
       else
-	*sigcode = 0;
+	detail->code = 0;
       break;
     }
 }

@@ -50,8 +50,8 @@ size_t argz_count __P ((__const char *argz, size_t len));
 
 /* Puts pointers to each string in ARGZ into ARGV, which must be large enough
    to hold them all.  */
-void __argz_extract __P ((__const char *argz, size_t len, char **argv));
-void argz_extract __P ((__const char *argz, size_t len, char **argv));
+void __argz_extract __P ((char *argz, size_t len, char **argv));
+void argz_extract __P ((char *argz, size_t len, char **argv));
 
 /* Make '\0' separated arg vector ARGZ printable by converting all the '\0's
    except the last into the character SEP.  */

@@ -353,22 +353,6 @@ extern FILE *fmemopen __P ((__ptr_t __s, size_t __len, __const char *__modes));
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
 extern FILE *open_memstream __P ((char **__bufloc, size_t *__sizeloc));
-
-
-/* Modify STREAM so that it prefixes lines written on it with *LMARGIN
-   spaces and limits them to *RMARGIN columns total.  If WRAP is not null,
-   words that extend past *RMARGIN are wrapped by replacing the whitespace
-   before them with a newline and *WRAP spaces.  Otherwise, chars beyond
-   *RMARGIN are simply dropped until a newline.  Returns STREAM after
-   modifying it, or NULL if there was an error.  The pointers passed are
-   stored in the stream and so must remain valid until `line_unwrap_stream'
-   is called; the values pointed to can be changed between stdio calls.  */
-extern FILE *line_wrap_stream __P ((FILE *__stream,
-				    size_t *__lmargin, size_t *__rmargin,
-				    size_t *__wrap));
-
-/* Remove the hooks placed in STREAM by `line_wrap_stream'.  */
-extern void line_unwrap_stream __P ((FILE *__stream));
 #endif
 
 

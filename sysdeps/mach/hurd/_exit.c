@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,14 +27,14 @@ void
 _hurd_exit (int status)
 {
   /* Give the proc server our exit status.  */
-  __USEPORT (PROC, __proc_mark_exit (port, status));
+  __USEPORT (PROC, __proc_mark_exit (port, status, 0));
 
   /* Commit suicide.  */
   __task_terminate (__mach_task_self ());
 
   /* Perhaps the cached mach_task_self was bogus.  */
   __task_terminate ((__mach_task_self) ());
-  
+
   /* This sucker really doesn't want to die.  */
   while (1)
     {

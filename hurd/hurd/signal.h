@@ -233,7 +233,8 @@ extern void _hurd_raise_signal (struct hurd_sigstate *ss, int signo,
 
 /* Translate a Mach exception into a signal (machine-dependent).  */
 
-extern void _hurd_exception2signal (struct hurd_signal_detail *);
+extern void _hurd_exception2signal (struct hurd_signal_detail *detail,
+				    int *signo);
 
 
 /* Make the thread described by SS take the signal described by SIGNO and
@@ -259,7 +260,7 @@ extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
 struct machine_thread_all_state;
 extern struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
-			int signo, const struct hurd_signal_detail *detail,
+			int signo, struct hurd_signal_detail *detail,
 			int rpc_wait, struct machine_thread_all_state *state);
 
 /* Function run by the signal thread to receive from the signal port.  */

@@ -48,6 +48,7 @@ settimeofday	-	settimeofday	2	__settimeofday	settimeofday
 setuid		-	setuid		1	__setuid	setuid
 sigsuspend	-	sigsuspend	1	sigsuspend
 sstk		-	sstk		1	sstk
+swapoff		-	swapoff		1	swapoff
 swapon		-	swapon		1	swapon
 symlink		-	symlink		2	__symlink	symlink
 sync		-	sync		0	sync
