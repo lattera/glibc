@@ -185,7 +185,8 @@ fi
 if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   # 64bit libraries on sparc go to /lib64 and not /lib
   if test "$machine" = "sparc/sparc64" -o "$machine" = "x86_64" \
-	  -o "$machine" = "powerpc/powerpc64"; then
+	  -o "$machine" = "powerpc/powerpc64" \
+	  -o "$machine" = "s390/s390-64"; then
     libc_cv_slibdir="/lib64"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib64';
