@@ -1,3 +1,11 @@
+2001-08-01  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/bsd/bsd4.4/Makefile: New file.
+	* sysdeps/unix/bsd/bsd4.4/Versions: New file.
+	* sysdeps/unix/bsd/bsd4.4/cmsg_nxthdr.c: New file.
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h (__cmsg_nxthdr): Correct
+	test for cmsg struct size.
+
 2001-04-23  Paul Eggert  <eggert@twinsun.com>
 
         * posix/getopt.h (getopt_long, getopt_long_only, _getopt_internal):
