@@ -1,3 +1,8 @@
+2003-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c (__pthread_initialize_manager): Remove one last
+	p_multiple_threads call.
+
 2003-04-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread.c (__pthread_initialize_manager): Subtract
