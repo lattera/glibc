@@ -237,6 +237,11 @@ install_handler (void)
 
   /* Preserve the output file name if there is any given.  */
   name = getenv ("SEGFAULT_OUTPUT_NAME");
-  if (name != NULL && name[0] != '\0' && access (name, R_OK | W_OK) == 0)
-    fname = __strdup (name);
+  if (name != NULL && name[0] != '\0')
+    {
+      int ret = access (name, R_OK | W_OK);
+
+      if (ret == 0 || (ret == -1 && errno == ENOENT))
+	fname = __strdup (name);
+    }
 }

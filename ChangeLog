@@ -1,6 +1,25 @@
+2001-07-01  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/dl-sysdep.c (frob_brk): Remove duplicate
+	sbrk.  Closes PR libc/2312.
+
+2001-07-01  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/segfault.c (install_handler): Handle case that
+	the output file does not exists.  Closes PR libc/2345.
+
+2001-07-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/locale.alias: Use he language code for hebrew, not il
+	[PR libc/2382].
+
+2001-07-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconv/gconv_int.h: Fix comment typo.
+
 2001-07-11  Igor Khavkine  <i_khavki@alcor.concordia.ca>
 
-        * hurd/hurdsig.c (_hurdsig_init): Remove a useless line of code.
+	* hurd/hurdsig.c (_hurdsig_init): Remove a useless line of code.
 
 2001-07-07  Roland McGrath  <roland@frob.com>
 
@@ -9,7 +28,7 @@
 2001-07-10  Stephen L Moshier  <moshier@mediaone.net>
 
 	* sysdeps/ieee754/ldbl-128/e_acosl.c (__ieee754_acosl):  Fix
-          backwards conditional in test for x == 1.0.
+	backwards conditional in test for x == 1.0.
 
 2001-07-10  Andreas Jaeger  <aj@suse.de>
 
