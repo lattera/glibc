@@ -24,10 +24,9 @@
 
 #include "kernel-features.h"
 
-extern int __syscall_ugetrlimit __P ((unsigned int resource,
-				      struct rlimit *rlimits));
-extern int __syscall_getrlimit __P ((unsigned int resource,
-				     struct rlimit *rlimits));
+extern int __syscall_ugetrlimit (unsigned int resource,
+				 struct rlimit *rlimits);
+extern int __syscall_getrlimit (unsigned int resource, struct rlimit *rlimits);
 
 /* Linux 2.3.25 introduced a new system call since the types used for
    the limits are now unsigned.  */

@@ -21,14 +21,12 @@
 #include "kernel-features.h"
 
 #define EINVAL	22
-
+	
 	.text
 
-ENTRY (__mmap)
+ENTRY (__mmap64)
 
-/* I don't think it is worthwhile trzing to use mmap2 whenever it
-   is available.  Only use it when we are sure the syscall exists.  */
-#ifdef __ASSUME_MMAP2_SYSCALL
+#ifdef __NR_mmap2
 
 	/* Save registers.  */
 	pushl %ebp
@@ -38,16 +36,25 @@ ENTRY (__mmap)
 
 	movl $SYS_ify(mmap2), %eax	/* System call number in %eax.  */
 
+	movl 40(%esp), %ebp
+	movl 44(%esp), %ecx
+	shrld $12, %ecx, %ebp		/* mmap2 takes the offset in pages.  */
+	shrl $12, %ecx
+	jne L(einval)
+
 	movl 20(%esp), %ebx
 	movl 24(%esp), %ecx
 	movl 28(%esp), %edx
 	movl 32(%esp), %esi
 	movl 36(%esp), %edi
-	movl 40(%esp), %ebp
-	shrl $12, %ebp			/* mmap2 takes the offset in pages.  */
 
 	/* Do the system call trap.  */
+L(do_syscal):
 	int $0x80
+
+	/* If 0 > %eax > -4096 there was an error.  */
+	cmpl $-4096, %eax
+	ja SYSCALL_ERROR_LABEL
 
 	/* Restore registers.  */
 	popl %edi
@@ -55,22 +62,49 @@ ENTRY (__mmap)
 	popl %ebx
 	popl %ebp
 
-#else
+	/* Successful; return the syscall's value.  */
+L(pseudo_end):
+	ret
 
+#ifndef __ASSUME_MMAP2_SYSCALL
+2:
+	cmp $-EINVAL, %eax
+	je 2f
+#endif
+
+	/* This means the offset value is too large.  */
+L(einval):
+	popl %edi
+	popl %esi
+	popl %ebx
+	popl %ebp
+	movl $-EINVAL, %eax
+	jmp SYSCALL_ERROR_LABEL
+#endif
+
+#if !defined __ASSUME_MMAP2_SYSCALL || !defined __NR_mmap2
+
+# ifndef __NR_mmap2
 	/* Save registers.  */
 	movl %ebx, %edx
+# endif
+
+	cmpl $0, 44(%esp)
+	jne L(einval)
 
 	movl $SYS_ify(mmap), %eax	/* System call number in %eax.  */
 
 	lea 4(%esp), %ebx		/* Address of args is 1st arg.  */
+
+# ifdef __NR_mmap2
+	jmp L(do_syscall)
+# else
 
 	/* Do the system call trap.  */
 	int $0x80
 
 	/* Restore registers.  */
 	movl %edx, %ebx
-
-#endif
 
 	/* If 0 > %eax > -4096 there was an error.  */
 	cmpl $-4096, %eax
@@ -80,6 +114,12 @@ ENTRY (__mmap)
 L(pseudo_end):
 	ret
 
-PSEUDO_END (__mmap)
+L(einval):
+	movl $-EINVAL, %eax
+	jmp SYSCALL_ERROR_LABEL
+# endif
+#endif
 
-weak_alias (__mmap, mmap)
+PSEUDO_END (__mmap64)
+
+weak_alias (__mmap64, mmap64)

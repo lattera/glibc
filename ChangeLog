@@ -1,5 +1,15 @@
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/getrlimit.c: Remove K&R compatibility.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_TRUNCATE64_SYSCALL and __ASSUME_MMAP2_SYSCALL for 2.3.31
+	on x86.
+	* sysdeps/unix/sysv/linux/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Allow using mmap2.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: New file.
+
 	* ctype/Versions: Add __ctype32_tolower and __ctype32_toupper.
 	* ctype/ctype-info.c: Define __ctype32_tolower and __ctype32_toupper.
 	* locale/C-ctype.c: Add _nl_C_LC_CTYPE_toupper32 and
