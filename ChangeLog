@@ -3,7 +3,8 @@
 	* sysdeps/generic/htonl.c: Use uint32_t instead of u_int32_t.
 	* sysdeps/generic/htons.c: Use uint16_t instead of u_int16_t.
 
-	* hurd/hurdinit.c (_hurd_ports_use): Return error _hurd_ports is null.
+	* hurd/hurdinit.c (_hurd_ports_use): Return EGRATUITOUS when
+	_hurd_ports is null.
 
 	* hurd/hurdsig.c (_hurdsig_init): Conditionalize exception port setup
 	for old CMU and new OSF Mach interface flavors.
