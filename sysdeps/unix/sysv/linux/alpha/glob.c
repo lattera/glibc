@@ -15,6 +15,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <glob.h>
+
 /* For Linux/Alpha we have to make the glob symbols versioned.  */
 #define glob(pattern, flags, errfunc, pglob) \
   __new_glob (pattern, flags, errfunc, pglob)
