@@ -17,30 +17,57 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-typedef struct
-  {
-    /* Integer registers:
-	   $0 is the return value;
-	   $1-$8, $22-$25, $28 are call-used;
-	   $9-$14 we save here;
-	   $15 is the FP and we save it here;
-	   $16-$21 are input arguments (call-used);
-	   $26 is the return PC and we save it here;
-	   $27 is the procedure value (i.e., the address of __setjmp);
-	   $29 is the global pointer, which the caller will reconstruct
-	   from the return address restored in $26;
-	   $30 is the stack pointer and we save it here;
-	   $31 is always zero.  */
-    long int __9, __10, __11, __12, __13, __14;
-    long int *__pc, *__fp, *__sp;
+/* The previous bits/setjmp.h had __jmp_buf defined as a structure.
+   We use an array of 'long int' instead, to make writing the
+   assembler easier. Naturally, user code should not depend on
+   either representation. */
 
-#if 1				/* XXX need predefine for TARGET_FPREGS */
-    /* Floating-point registers:
-	   $f0 is the floating return value;
-	   $f1, $f10-$f15, $f22-$f30 are call-used;
-	   $f2-$f9 we save here;
-	   $f16-$21 are input args (call-used);
-	   $f31 is always zero.  */
-    double __f2, __f3, __f4, __f5, __f6, __f7, __f8, __f9;
-#endif	/* Have FP regs.  */
-  } __jmp_buf[1];
+/*
+ * Integer registers:
+ *    $0 is the return value (va);
+ *    $1-$8, $22-$25, $28 are call-used (t0-t7, t8-t11, at);
+ *    $9-$14 we save here (s0-s5);
+ *    $15 is the FP and we save it here (fp or s6);
+ *    $16-$21 are input arguments (call-used) (a0-a5);
+ *    $26 is the return PC and we save it here (ra);
+ *    $27 is the procedure value (i.e., the address of __setjmp) (pv or t12);
+ *    $29 is the global pointer, which the caller will reconstruct
+ *        from the return address restored in $26 (gp);
+ *    $30 is the stack pointer and we save it here (sp);
+ *    $31 is always zero (zero).
+ *
+ * Floating-point registers:
+ *    $f0 is the floating return value;
+ *    $f1, $f10-$f15, $f22-$f30 are call-used;
+ *    $f2-$f9 we save here;
+ *    $f16-$21 are input args (call-used);
+ *    $f31 is always zero.
+ *
+ * Note that even on Alpha hardware that does not have an FPU (there
+ * isn't such a thing currently) it is required to implement the FP
+ * registers.
+ */
+
+#if defined(__USE_MISC) || defined(__ASSEMBLY__)
+#define JB_S0  0
+#define JB_S1  1
+#define JB_S2  2
+#define JB_S3  3
+#define JB_S4  4
+#define JB_S5  5
+#define JB_PC  6
+#define JB_FP  7
+#define JB_SP  8
+#define JB_F2  9
+#define JB_F3  10
+#define JB_F4  11
+#define JB_F5  12
+#define JB_F6  13
+#define JB_F7  14
+#define JB_F8  15
+#define JB_F9  16
+#endif
+
+#ifndef __ASSEMBLY__
+typedef long int __jmp_buf[17];
+#endif
