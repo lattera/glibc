@@ -29,6 +29,9 @@
 #define RE_NO_INTERNAL_PROTOTYPES 1
 #include "regex_internal.h"
 
+#define BRE RE_SYNTAX_POSIX_BASIC
+#define ERE RE_SYNTAX_POSIX_EXTENDED
+
 static struct
 {
   int syntax;
@@ -42,71 +45,145 @@ static struct
      \xc3\xb6		LATIN SMALL LETTER O WITH DIAERESIS
      \xe2\x80\x94	EM DASH  */
   /* Should be optimized.  */
-  {RE_SYNTAX_POSIX_BASIC, "foo", "b\xc3\xa4rfoob\xc3\xa4z", 4, 1},
-  {RE_SYNTAX_POSIX_BASIC, "b\xc3\xa4z", "b\xc3\xa4rfoob\xc3\xa4z", 7, 1},
-  {RE_SYNTAX_POSIX_BASIC, "b\xc3\xa4*z", "b\xc3\xa4rfoob\xc3\xa4z", 7, 1},
-  {RE_SYNTAX_POSIX_BASIC, "b\xc3\xa4*z", "b\xc3\xa4rfoobz", 7, 1},
-  {RE_SYNTAX_POSIX_BASIC, "b\xc3\xa4\\+z",
-   "b\xc3\xa4rfoob\xc3\xa4\xc3\xa4z", 7, 1},
-  {RE_SYNTAX_POSIX_BASIC, "b\xc3\xa4\\?z", "b\xc3\xa4rfoob\xc3\xa4z", 7, 1},
-  {RE_SYNTAX_POSIX_BASIC, "b\xc3\xa4\\{1,2\\}z",
-   "b\xc3\xa4rfoob\xc3\xa4z", 7, 1},
-  {RE_SYNTAX_POSIX_BASIC, "^x\\|xy*z$", "\xc3\xb6xyyz", 2, 1},
-  {RE_SYNTAX_POSIX_BASIC, "^x\\\\y\\{6\\}z\\+", "x\\yyyyyyzz\xc3\xb6", 0, 1},
-  {RE_SYNTAX_POSIX_BASIC, "^x\\\\y\\{2,36\\}z\\+", "x\\yzz\xc3\xb6", -1, 1},
-  {RE_SYNTAX_POSIX_BASIC, "^x\\\\y\\{,3\\}z\\+", "x\\yyyzz\xc3\xb6", 0, 1},
-  {RE_SYNTAX_POSIX_BASIC, "^x\\|x\xc3\xa4*z$",
-   "\xc3\xb6x\xc3\xa4\xc3\xa4z", 2, 1},
-  {RE_SYNTAX_POSIX_BASIC, "^x\\\\\xc3\x84\\{6\\}z\\+",
+  {BRE, "foo", "b\xc3\xa4rfoob\xc3\xa4z", 4, 1},
+  {BRE, "b\xc3\xa4z", "b\xc3\xa4rfoob\xc3\xa4z", 7, 1},
+  {BRE, "b\xc3\xa4*z", "b\xc3\xa4rfoob\xc3\xa4z", 7, 1},
+  {BRE, "b\xc3\xa4*z", "b\xc3\xa4rfoobz", 7, 1},
+  {BRE, "b\xc3\xa4\\+z", "b\xc3\xa4rfoob\xc3\xa4\xc3\xa4z", 7, 1},
+  {BRE, "b\xc3\xa4\\?z", "b\xc3\xa4rfoob\xc3\xa4z", 7, 1},
+  {BRE, "b\xc3\xa4\\{1,2\\}z", "b\xc3\xa4rfoob\xc3\xa4z", 7, 1},
+  {BRE, "^x\\|xy*z$", "\xc3\xb6xyyz", 2, 1},
+  {BRE, "^x\\\\y\\{6\\}z\\+", "x\\yyyyyyzz\xc3\xb6", 0, 1},
+  {BRE, "^x\\\\y\\{2,36\\}z\\+", "x\\yzz\xc3\xb6", -1, 1},
+  {BRE, "^x\\\\y\\{,3\\}z\\+", "x\\yyyzz\xc3\xb6", 0, 1},
+  {BRE, "^x\\|x\xc3\xa4*z$", "\xc3\xb6x\xc3\xa4\xc3\xa4z", 2, 1},
+  {BRE, "^x\\\\\xc3\x84\\{6\\}z\\+",
    "x\\\xc3\x84\xc3\x84\xc3\x84\xc3\x84\xc3\x84\xc3\x84zz\xc3\xb6", 0, 1},
-  {RE_SYNTAX_POSIX_BASIC, "^x\\\\\xc3\x84\\{2,36\\}z\\+",
-   "x\\\xc3\x84zz\xc3\xb6", -1, 1},
-  {RE_SYNTAX_POSIX_BASIC, "^x\\\\\xc3\x84\\{,3\\}z\\+",
+  {BRE, "^x\\\\\xc3\x84\\{2,36\\}z\\+", "x\\\xc3\x84zz\xc3\xb6", -1, 1},
+  {BRE, "^x\\\\\xc3\x84\\{,3\\}z\\+",
    "x\\\xc3\x84\xc3\x84\xc3\x84zz\xc3\xb6", 0, 1},
-  {RE_SYNTAX_POSIX_BASIC, "x[C]y", "axCy", 1, 1},
-  {RE_SYNTAX_POSIX_BASIC, "x[ABC]y", "axCy", 1, 1},
-  {RE_SYNTAX_POSIX_BASIC, "\\`x\\|z\\'", "x\xe2\x80\x94", 0, 1},
-  {RE_SYNTAX_POSIX_BASIC, "\\(xy\\)z\\1a\\1", "\xe2\x80\x94xyzxyaxy\xc3\x84", 3, 1},
-  {RE_SYNTAX_POSIX_BASIC, "xy\\?z", "\xc3\x84xz\xc3\xb6", 2, 1},
-  {RE_SYNTAX_POSIX_BASIC, "\\`\xc3\x84\\|z\\'", "\xc3\x84\xe2\x80\x94", 0, 1},
-  {RE_SYNTAX_POSIX_BASIC, "\\(x\xc3\x84\\)z\\1\x61\\1",
+  {BRE, "x[C]y", "axCy", 1, 1},
+  {BRE, "x[ABC]y", "axCy", 1, 1},
+  {BRE, "\\`x\\|z\\'", "x\xe2\x80\x94", 0, 1},
+  {BRE, "\\(xy\\)z\\1a\\1", "\xe2\x80\x94xyzxyaxy\xc3\x84", 3, 1},
+  {BRE, "xy\\?z", "\xc3\x84xz\xc3\xb6", 2, 1},
+  {BRE, "\\`\xc3\x84\\|z\\'", "\xc3\x84\xe2\x80\x94", 0, 1},
+  {BRE, "\\(x\xc3\x84\\)z\\1\x61\\1",
    "\xe2\x80\x94x\xc3\x84zx\xc3\x84\x61x\xc3\x84\xc3\x96", 3, 1},
-  {RE_SYNTAX_POSIX_BASIC, "x\xc3\x96\\?z", "\xc3\x84xz\xc3\xb6", 2, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "foo", "b\xc3\xa4rfoob\xc3\xa4z", 4, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "^x|xy*z$", "\xc3\xb6xyyz", 2, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "^x\\\\y{6}z+", "x\\yyyyyyzz\xc3\xb6", 0, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "^x\\\\y{2,36}z+", "x\\yzz\xc3\xb6", -1, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "^x\\\\y{,3}z+", "x\\yyyzz\xc3\xb6", 0, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "x[C]y", "axCy", 1, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "x[ABC]y", "axCy", 1, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "\\`x|z\\'", "x\xe2\x80\x94", 0, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "(xy)z\\1a\\1", "\xe2\x80\x94xyzxyaxy\xc3\x84", 3, 1},
-  {RE_SYNTAX_POSIX_EXTENDED, "xy?z", "\xc3\x84xz\xc3\xb6", 2, 1},
+  {BRE, "x\xc3\x96\\?z", "\xc3\x84xz\xc3\xb6", 2, 1},
+  {BRE, "x.y", "ax\xe2\x80\x94yz", 1, 1},
+  {BRE, "x.*z", "\xc3\x84xz", 2, 1},
+  {BRE, "x.*z", "\xc3\x84x\xe2\x80\x94z", 2, 1},
+  {BRE, "x.*z", "\xc3\x84x\xe2\x80\x94y\xf1\x90\x80\x90z", 2, 1},
+  {BRE, "x.*z", "\xc3\x84x\xe2\x80\x94\xc3\x94\xf1\x90\x80\x90z", 2, 1},
+  {BRE, "x.\\?z", "axz", 1, 1},
+  {BRE, "x.\\?z", "axyz", 1, 1},
+  {BRE, "x.\\?z", "ax\xc3\x84z", 1, 1},
+  {BRE, "x.\\?z", "ax\xe2\x80\x94z", 1, 1},
+  {BRE, "x.\\?z", "ax\xf0\x9d\x80\x80z", 1, 1},
+  {BRE, "x.\\?z", "ax\xf9\x81\x82\x83\x84z", 1, 1},
+  {BRE, "x.\\?z", "ax\xfd\xbf\xbf\xbf\xbf\xbfz", 1, 1},
+  {BRE, ".", "y", 0, 1},
+  {BRE, ".", "\xc3\x84", 0, 1},
+  {BRE, ".", "\xe2\x80\x94", 0, 1},
+  {BRE, ".", "\xf0\x9d\x80\x80", 0, 1},
+  {BRE, ".", "\xf9\x81\x82\x83\x84", 0, 1},
+  {BRE, ".", "\xfd\xbf\xbf\xbf\xbf\xbf", 0, 1},
+  {BRE, "x.\\?z", "axyyz", -1, 1},
+  {BRE, "x.\\?z", "ax\xc3\x84\xc3\x96z", -1, 1},
+  {BRE, "x.\\?z", "ax\xe2\x80\x94\xc3\xa4z", -1, 1},
+  {BRE, "x.\\?z", "ax\xf0\x9d\x80\x80yz", -1, 1},
+  {BRE, "x.\\?z", "ax\xf9\x81\x82\x83\x84\xf0\xf9\x80\x81z", -1, 1},
+  {BRE, "x.\\?z", "ax\xfd\xbf\xbf\xbf\xbf\xbf\xc3\x96z", -1, 1},
+  {BRE, "x.\\+z", "\xe2\x80\x94xz", -1, 1},
+  {BRE, "x.\\+z", "\xe2\x80\x94xyz", 3, 1},
+  {BRE, "x.\\+z", "\xe2\x80\x94x\xc3\x84y\xe2\x80\x94z", 3, 1},
+  {BRE, "x.\\+z", "\xe2\x80\x94x\xe2\x80\x94z", 3, 1},
+  {BRE, "x.\\+z", "\xe2\x80\x94x\xf0\x9d\x80\x80\xc3\x84z", 3, 1},
+  {BRE, "x.\\+z", "\xe2\x80\x94x.~\xe2\x80\x94\xf9\x81\x82\x83\x84z", 3, 1},
+  {BRE, "x.\\+z", "\xe2\x80\x94x\xfd\xbf\xbf\xbf\xbf\xbfz", 3, 1},
+  {BRE, "x.\\{1,2\\}z", "\xe2\x80\x94xz", -1, 1},
+  {BRE, "x.\\{1,2\\}z", "\xe2\x80\x94x\xc3\x96y\xc3\xa4z", -1, 1},
+  {BRE, "x.\\{1,2\\}z", "\xe2\x80\x94xyz", 3, 1},
+  {BRE, "x.\\{1,2\\}z", "\xe2\x80\x94x\xc3\x84\xe2\x80\x94z", 3, 1},
+  {BRE, "x.\\{1,2\\}z", "\xe2\x80\x94x\xe2\x80\x94z", 3, 1},
+  {BRE, "x.\\{1,2\\}z", "\xe2\x80\x94x\xf0\x9d\x80\x80\xc3\x84z", 3, 1},
+  {BRE, "x.\\{1,2\\}z", "\xe2\x80\x94x~\xe2\x80\x94z", 3, 1},
+  {BRE, "x.\\{1,2\\}z", "\xe2\x80\x94x\xfd\xbf\xbf\xbf\xbf\xbfz", 3, 1},
+  {BRE, "x\\(.w\\|\xc3\x86\\)\\?z", "axz", 1, 1},
+  {BRE, "x\\(.w\\|\xc3\x86\\)\\?z", "ax\xfd\xbf\xbf\xbf\xbf\xbfwz", 1, 1},
+  {BRE, "x\\(.w\\|\xc3\x86\\)\\?z", "ax\xc3\x86z", 1, 1},
+  {BRE, "x\\(.w\\|\xc3\x86\\)\\?z", "ax\xe2\x80\x96wz", 1, 1},
+  {ERE, "foo", "b\xc3\xa4rfoob\xc3\xa4z", 4, 1},
+  {ERE, "^x|xy*z$", "\xc3\xb6xyyz", 2, 1},
+  {ERE, "^x\\\\y{6}z+", "x\\yyyyyyzz\xc3\xb6", 0, 1},
+  {ERE, "^x\\\\y{2,36}z+", "x\\yzz\xc3\xb6", -1, 1},
+  {ERE, "^x\\\\y{,3}z+", "x\\yyyzz\xc3\xb6", 0, 1},
+  {ERE, "x[C]y", "axCy", 1, 1},
+  {ERE, "x[ABC]y", "axCy", 1, 1},
+  {ERE, "\\`x|z\\'", "x\xe2\x80\x94", 0, 1},
+  {ERE, "(xy)z\\1a\\1", "\xe2\x80\x94xyzxyaxy\xc3\x84", 3, 1},
+  {ERE, "xy?z", "\xc3\x84xz\xc3\xb6", 2, 1},
+  {ERE, "x.y", "ax\xe2\x80\x94yz", 1, 1},
+  {ERE, "x.*z", "\xc3\x84xz", 2, 1},
+  {ERE, "x.*z", "\xc3\x84x\xe2\x80\x94z", 2, 1},
+  {ERE, "x.*z", "\xc3\x84x\xe2\x80\x94y\xf1\x90\x80\x90z", 2, 1},
+  {ERE, "x.*z", "\xc3\x84x\xe2\x80\x94\xc3\x94\xf1\x90\x80\x90z", 2, 1},
+  {ERE, "x.?z", "axz", 1, 1},
+  {ERE, "x.?z", "axyz", 1, 1},
+  {ERE, "x.?z", "ax\xc3\x84z", 1, 1},
+  {ERE, "x.?z", "ax\xe2\x80\x94z", 1, 1},
+  {ERE, "x.?z", "ax\xf0\x9d\x80\x80z", 1, 1},
+  {ERE, "x.?z", "ax\xf9\x81\x82\x83\x84z", 1, 1},
+  {ERE, "x.?z", "ax\xfd\xbf\xbf\xbf\xbf\xbfz", 1, 1},
+  {ERE, "x.?z", "axyyz", -1, 1},
+  {ERE, "x.?z", "ax\xc3\x84\xc3\x96z", -1, 1},
+  {ERE, "x.?z", "ax\xe2\x80\x94\xc3\xa4z", -1, 1},
+  {ERE, "x.?z", "ax\xf0\x9d\x80\x80yz", -1, 1},
+  {ERE, "x.?z", "ax\xf9\x81\x82\x83\x84\xf0\xf9\x80\x81z", -1, 1},
+  {ERE, "x.?z", "ax\xfd\xbf\xbf\xbf\xbf\xbf\xc3\x96z", -1, 1},
+  {ERE, "x.+z", "\xe2\x80\x94xz", -1, 1},
+  {ERE, "x.+z", "\xe2\x80\x94xyz", 3, 1},
+  {ERE, "x.+z", "\xe2\x80\x94x\xc3\x84y\xe2\x80\x94z", 3, 1},
+  {ERE, "x.+z", "\xe2\x80\x94x\xe2\x80\x94z", 3, 1},
+  {ERE, "x.+z", "\xe2\x80\x94x\xf0\x9d\x80\x80\xc3\x84z", 3, 1},
+  {ERE, "x.+z", "\xe2\x80\x94x.~\xe2\x80\x94\xf9\x81\x82\x83\x84z", 3, 1},
+  {ERE, "x.+z", "\xe2\x80\x94x\xfd\xbf\xbf\xbf\xbf\xbfz", 3, 1},
+  {ERE, "x.{1,2}z", "\xe2\x80\x94xz", -1, 1},
+  {ERE, "x.{1,2}z", "\xe2\x80\x94x\xc3\x96y\xc3\xa4z", -1, 1},
+  {ERE, "x.{1,2}z", "\xe2\x80\x94xyz", 3, 1},
+  {ERE, "x.{1,2}z", "\xe2\x80\x94x\xc3\x84\xe2\x80\x94z", 3, 1},
+  {ERE, "x.{1,2}z", "\xe2\x80\x94x\xe2\x80\x94z", 3, 1},
+  {ERE, "x.{1,2}z", "\xe2\x80\x94x\xf0\x9d\x80\x80\xc3\x84z", 3, 1},
+  {ERE, "x.{1,2}z", "\xe2\x80\x94x~\xe2\x80\x94z", 3, 1},
+  {ERE, "x.{1,2}z", "\xe2\x80\x94x\xfd\xbf\xbf\xbf\xbf\xbfz", 3, 1},
+  {ERE, "x(.w|\xc3\x86)?z", "axz", 1, 1},
+  {ERE, "x(.w|\xc3\x86)?z", "ax\xfd\xbf\xbf\xbf\xbf\xbfwz", 1, 1},
+  {ERE, "x(.w|\xc3\x86)?z", "ax\xc3\x86z", 1, 1},
+  {ERE, "x(.w|\xc3\x86)?z", "ax\xe2\x80\x96wz", 1, 1},
   /* Should not be optimized.  */
-  {RE_SYNTAX_POSIX_BASIC, "x.y", "ax\xe2\x80\x94yz", 1, 0},
-  {RE_SYNTAX_POSIX_BASIC, "x[\xc3\x84\xc3\xa4]y", "ax\xc3\xa4y", 1, 0},
-  {RE_SYNTAX_POSIX_BASIC, "x[A-Z,]y", "axCy", 1, 0},
-  {RE_SYNTAX_POSIX_BASIC, "x[^y]z", "ax\xe2\x80\x94z", 1, 0},
-  {RE_SYNTAX_POSIX_BASIC, "x[[:alnum:]]z", "ax\xc3\x96z", 1, 0},
-  {RE_SYNTAX_POSIX_BASIC, "x[[=A=]]z", "axAz", 1, 0},
-  {RE_SYNTAX_POSIX_BASIC, "x[[=\xc3\x84=]]z", "ax\xc3\x84z", 1, 0},
-  {RE_SYNTAX_POSIX_BASIC, "\\<g", "\xe2\x80\x94g", 3, 0},
-  {RE_SYNTAX_POSIX_BASIC, "\\bg\\b", "\xe2\x80\x94g", 3, 0},
-  {RE_SYNTAX_POSIX_BASIC, "\\Bg\\B", "\xc3\xa4g\xc3\xa4", 2, 0},
-  {RE_SYNTAX_POSIX_BASIC, "a\\wz", "a\xc3\x84z", 0, 0},
-  {RE_SYNTAX_POSIX_BASIC, "x\\Wz", "\xc3\x96x\xe2\x80\x94z", 2, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "x.y", "ax\xe2\x80\x94yz", 1, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "x[\xc3\x84\xc3\xa4]y", "ax\xc3\xa4y", 1, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "x[A-Z,]y", "axCy", 1, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "x[^y]z", "ax\xe2\x80\x94z", 1, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "x[[:alnum:]]z", "ax\xc3\x96z", 1, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "x[[=A=]]z", "axAz", 1, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "x[[=\xc3\x84=]]z", "ax\xc3\x84z", 1, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "\\<g", "\xe2\x80\x94g", 3, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "\\bg\\b", "\xe2\x80\x94g", 3, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "\\Bg\\B", "\xc3\xa4g\xc3\xa4", 2, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "a\\wz", "a\xc3\x84z", 0, 0},
-  {RE_SYNTAX_POSIX_EXTENDED, "x\\Wz", "\xc3\x96x\xe2\x80\x94z", 2, 0},
+  {BRE, "x[\xc3\x84\xc3\xa4]y", "ax\xc3\xa4y", 1, 0},
+  {BRE, "x[A-Z,]y", "axCy", 1, 0},
+  {BRE, "x[^y]z", "ax\xe2\x80\x94z", 1, 0},
+  {BRE, "x[[:alnum:]]z", "ax\xc3\x96z", 1, 0},
+  {BRE, "x[[=A=]]z", "axAz", 1, 0},
+  {BRE, "x[[=\xc3\x84=]]z", "ax\xc3\x84z", 1, 0},
+  {BRE, "\\<g", "\xe2\x80\x94g", 3, 0},
+  {BRE, "\\bg\\b", "\xe2\x80\x94g", 3, 0},
+  {BRE, "\\Bg\\B", "\xc3\xa4g\xc3\xa4", 2, 0},
+  {BRE, "a\\wz", "a\xc3\x84z", 0, 0},
+  {BRE, "x\\Wz", "\xc3\x96x\xe2\x80\x94z", 2, 0},
+  {ERE, "x[\xc3\x84\xc3\xa4]y", "ax\xc3\xa4y", 1, 0},
+  {ERE, "x[A-Z,]y", "axCy", 1, 0},
+  {ERE, "x[^y]z", "ax\xe2\x80\x94z", 1, 0},
+  {ERE, "x[[:alnum:]]z", "ax\xc3\x96z", 1, 0},
+  {ERE, "x[[=A=]]z", "axAz", 1, 0},
+  {ERE, "x[[=\xc3\x84=]]z", "ax\xc3\x84z", 1, 0},
+  {ERE, "\\<g", "\xe2\x80\x94g", 3, 0},
+  {ERE, "\\bg\\b", "\xe2\x80\x94g", 3, 0},
+  {ERE, "\\Bg\\B", "\xc3\xa4g\xc3\xa4", 2, 0},
+  {ERE, "a\\wz", "a\xc3\x84z", 0, 0},
+  {ERE, "x\\Wz", "\xc3\x96x\xe2\x80\x94z", 2, 0},
 };
 
 int
@@ -144,11 +221,21 @@ main (void)
 	  ret = 1;
         }
 
-      res = re_search (&regbuf, tests[i].string, strlen (tests[i].string), 0,
-		       strlen (tests[i].string), NULL);
+      int str_len = strlen (tests[i].string);
+      res = re_search (&regbuf, tests[i].string, str_len, 0, str_len, NULL);
       if (res != tests[i].res)
 	{
 	  printf ("re_search %zd failed: %d\n", i, res);
+	  ret = 1;
+	  regfree (&regbuf);
+	  continue;
+	}
+
+      res = re_search (&regbuf, tests[i].string, str_len, str_len, -str_len,
+		       NULL);
+      if (res != tests[i].res)
+	{
+	  printf ("backward re_search %zd failed: %d\n", i, res);
 	  ret = 1;
 	  regfree (&regbuf);
 	  continue;
@@ -175,15 +262,25 @@ main (void)
 	  ret = 1;
         }
 
-      res = re_search (&regbuf, tests[i].string, strlen (tests[i].string), 0,
-		       strlen (tests[i].string), NULL);
+      res = re_search (&regbuf, tests[i].string, str_len, 0, str_len, NULL);
       if (res != tests[i].res)
 	{
-	  printf ("re_search %zd failed: %d\n", i, res);
+	  printf ("ICASE re_search %zd failed: %d\n", i, res);
 	  ret = 1;
 	  regfree (&regbuf);
 	  continue;
 	}
+
+      /* XXX: This causes regex segfault.  Disable for now.
+      res = re_search (&regbuf, tests[i].string, str_len, str_len, -str_len,
+		       NULL);
+      if (res != tests[i].res)
+	{
+	  printf ("ICASE backward re_search %zd failed: %d\n", i, res);
+	  ret = 1;
+	  regfree (&regbuf);
+	  continue;
+	}  */
       regfree (&regbuf);
     }
 

@@ -2339,7 +2339,7 @@ transit_state_mb (preg, pstate, mctx)
 	    continue;
 	}
 
-      /* How many bytes the node can accepts?  */
+      /* How many bytes the node can accept?  */
       if (ACCEPT_MB_NODE (dfa->nodes[cur_node_idx].type))
 	naccepted = check_node_accept_bytes (preg, cur_node_idx, mctx->input,
 					     re_string_cur_idx (mctx->input));
@@ -3366,6 +3366,14 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	  if (preg->syntax & RE_DOT_NOT_NULL)
 	    bitset_clear (accepts, '\0');
 	}
+      else if (type == OP_UTF8_PERIOD)
+        {
+	  memset (accepts, 255, sizeof (unsigned int) * BITSET_UINTS / 2);
+	  if (!(preg->syntax & RE_DOT_NEWLINE))
+	    bitset_clear (accepts, '\n');
+	  if (preg->syntax & RE_DOT_NOT_NULL)
+	    bitset_clear (accepts, '\0');
+        }
       else
 	continue;
 
@@ -3480,13 +3488,67 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
 {
   const re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   const re_token_t *node = dfa->nodes + node_idx;
-  int elem_len = re_string_elem_size_at (input, str_idx);
-  int char_len = re_string_char_size_at (input, str_idx);
+  int char_len, elem_len;
   int i;
-  if (elem_len <= 1 && char_len <= 1)
-    return 0;
+
+  if (BE (node->type == OP_UTF8_PERIOD, 0))
+    {
+      unsigned char c = re_string_byte_at (input, str_idx), d;
+      if (BE (c < 0xc2, 1))
+	return 0;
+
+      if (str_idx + 2 > input->len)
+	return 0;
+
+      d = re_string_byte_at (input, str_idx + 1);
+      if (c < 0xe0)
+	return (d < 0x80 || d > 0xbf) ? 0 : 2;
+      else if (c < 0xf0)
+	{
+	  char_len = 3;
+	  if (c == 0xe0 && d < 0xa0)
+	    return 0;
+	}
+      else if (c < 0xf8)
+	{
+	  char_len = 4;
+	  if (c == 0xf0 && d < 0x90)
+	    return 0;
+	}
+      else if (c < 0xfc)
+	{
+	  char_len = 5;
+	  if (c == 0xf8 && d < 0x88)
+	    return 0;
+	}
+      else if (c < 0xfe)
+	{
+	  char_len = 6;
+	  if (c == 0xfc && d < 0x84)
+	    return 0;
+	}
+      else
+	return 0;
+
+      if (str_idx + char_len > input->len)
+	return 0;
+
+      for (i = 1; i < char_len; ++i)
+	{
+	  d = re_string_byte_at (input, str_idx + i);
+	  if (d < 0x80 || d > 0xbf)
+	    return 0;
+	}
+      return char_len;
+    }
+
+  char_len = re_string_char_size_at (input, str_idx);
   if (node->type == OP_PERIOD)
     {
+      if (char_len <= 1)
+        return 0;
+      /* FIXME: I don't think this if is needed, as both '\n'
+	 and '\0' are char_len == 1.  */
       /* '.' accepts any one character except the following two cases.  */
       if ((!(preg->syntax & RE_DOT_NEWLINE) &&
 	   re_string_byte_at (input, str_idx) == '\n') ||
@@ -3495,7 +3557,12 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
 	return 0;
       return char_len;
     }
-  else if (node->type == COMPLEX_BRACKET)
+
+  elem_len = re_string_elem_size_at (input, str_idx);
+  if (elem_len <= 1 && char_len <= 1)
+    return 0;
+
+  if (node->type == COMPLEX_BRACKET)
     {
       const re_charset_t *cset = node->opr.mbcset;
 # ifdef _LIBC
@@ -3731,15 +3798,22 @@ check_node_accept (preg, node, mctx, idx)
 	return 0;
     }
   ch = re_string_byte_at (mctx->input, idx);
-  if (node->type == CHARACTER)
-    return node->opr.c == ch;
-  else if (node->type == SIMPLE_BRACKET)
-    return bitset_contain (node->opr.sbcset, ch);
-  else if (node->type == OP_PERIOD)
-    return !((ch == '\n' && !(preg->syntax & RE_DOT_NEWLINE))
-	     || (ch == '\0' && (preg->syntax & RE_DOT_NOT_NULL)));
-  else
-    return 0;
+  switch (node->type)
+    {
+    case CHARACTER:
+      return node->opr.c == ch;
+    case SIMPLE_BRACKET:
+      return bitset_contain (node->opr.sbcset, ch);
+    case OP_UTF8_PERIOD:
+      if (ch >= 0x80)
+        return 0;
+      /* FALLTHROUGH */
+    case OP_PERIOD:
+      return !((ch == '\n' && !(preg->syntax & RE_DOT_NEWLINE))
+	       || (ch == '\0' && (preg->syntax & RE_DOT_NOT_NULL)));
+    default:
+      return 0;
+    }
 }
 
 /* Extend the buffers, if the buffers have run out.  */

@@ -167,8 +167,31 @@ typedef enum
 {
   NON_TYPE = 0,
 
+  /* Node type, These are used by token, node, tree.  */
+  CHARACTER = 1,
+  END_OF_RE = 2,
+  SIMPLE_BRACKET = 3,
+  OP_BACK_REF = 4,
+  OP_PERIOD = 5,
+#ifdef RE_ENABLE_I18N
+  COMPLEX_BRACKET = 6,
+  OP_UTF8_PERIOD = 7,
+#endif /* RE_ENABLE_I18N */
+
+  EPSILON_BIT = 8,
+  OP_OPEN_SUBEXP = EPSILON_BIT | 0,
+  OP_CLOSE_SUBEXP = EPSILON_BIT | 1,
+  OP_ALT = EPSILON_BIT | 2,
+  OP_DUP_ASTERISK = EPSILON_BIT | 3,
+  OP_DUP_PLUS = EPSILON_BIT | 4,
+  OP_DUP_QUESTION = EPSILON_BIT | 5,
+  ANCHOR = EPSILON_BIT | 6,
+
+  /* Tree type, these are used only by tree. */
+  CONCAT = 16,
+
   /* Token type, these are used only by token.  */
-  OP_OPEN_BRACKET,
+  OP_OPEN_BRACKET = 17,
   OP_CLOSE_BRACKET,
   OP_CHARSET_RANGE,
   OP_OPEN_DUP_NUM,
@@ -184,32 +207,8 @@ typedef enum
   OP_NOTWORD,
   OP_SPACE,
   OP_NOTSPACE,
-  BACK_SLASH,
+  BACK_SLASH
 
-  /* Tree type, these are used only by tree. */
-  CONCAT,
-  ALT,
-  SUBEXP,
-  SIMPLE_BRACKET,
-#ifdef RE_ENABLE_I18N
-  COMPLEX_BRACKET,
-#endif /* RE_ENABLE_I18N */
-
-  /* Node type, These are used by token, node, tree.  */
-  OP_OPEN_SUBEXP,
-  OP_CLOSE_SUBEXP,
-  OP_PERIOD,
-  CHARACTER,
-  END_OF_RE,
-  OP_ALT,
-  OP_DUP_ASTERISK,
-  OP_DUP_PLUS,
-  OP_DUP_QUESTION,
-  OP_BACK_REF,
-  ANCHOR,
-
-  /* Dummy marker.  */
-  END_OF_RE_TOKEN_T
 } re_token_type_t;
 
 #ifdef RE_ENABLE_I18N
@@ -284,13 +283,9 @@ typedef struct
 #endif
 } re_token_t;
 
-#define IS_EPSILON_NODE(type) \
-  ((type) == OP_ALT || (type) == OP_DUP_ASTERISK || (type) == OP_DUP_PLUS \
-   || (type) == OP_DUP_QUESTION || (type) == ANCHOR \
-   || (type) == OP_OPEN_SUBEXP || (type) == OP_CLOSE_SUBEXP)
-
+#define IS_EPSILON_NODE(type) ((type) & EPSILON_BIT)
 #define ACCEPT_MB_NODE(type) \
-  ((type) == COMPLEX_BRACKET || (type) == OP_PERIOD)
+  ((type) >= OP_PERIOD && (type) <= OP_UTF8_PERIOD)
 
 struct re_string_t
 {

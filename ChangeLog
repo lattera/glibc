@@ -1,5 +1,37 @@
 2003-11-18  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/regex_internal.h (re_token_type_t): Remove unused ALT,
+	END_OF_RE_TOKEN_T and SUBEXP.  Reorder values.  Add OP_UTF8_PERIOD
+	and EPSILON_BIT.
+	(IS_EPSILON_NODE): Just test if EPSILON_BIT is set.
+	(ACCEPT_MB_NODE): Return 1 for OP_UTF8_PERIOD as well.
+	* posix/regex_internal.c (create_ci_newstate, create_cd_newstate):
+	Handle OP_UTF8_PERIOD.
+	(re_string_reconstruct): Set valid_len for single byte char searching
+	with no translation and case sensitivity.
+	* posix/regcomp.c (re_compile_fastmap_iter, calc_first): Handle
+	OP_UTF8_PERIOD.
+	(re_compile_internal): Don't call optimize_utf8 if preg->translate
+	!= NULL.
+	(optimize_utf8): Remove BACK_SLASH case.
+	Transform OP_PERIOD into OP_UTF8_PERIOD if the searching can be
+	optimized.
+	(parse_bracket_exp): Don't create SIMPLE_BRACKET if it doesn't have
+	any bits set and COMPLEX_BRACKET is used.
+	* posix/regexec.c (transit_state_mb): Fix comment typo.
+	(group_nodes_into_DFAstates, check_node_accept): Handle
+	OP_UTF8_PERIOD.
+	(check_node_accept_bytes): Likewise.  Reorder slightly so that
+	re_string_char_size_at and re_string_elem_size_at are called
+	only when needed.
+	* posix/bug-regex20.c (BRE, ERE): Define.
+	(tests): Use them to make lines shorter.  Expect . to be
+	optimized.  Add lots of new tests.
+	(main): Run (ATM just case sensitive) test with backwards searching
+	as well.
+
+2003-11-18  Jakub Jelinek  <jakub@redhat.com>
+
 	* io/bug-ftw4.c: Include string.h.
 	* posix/fnmatch.c (mbsinit): Remove define.
 

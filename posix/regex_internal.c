@@ -581,6 +581,8 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 	build_upper_buffer (pstr);
       else if (pstr->trans != NULL)
 	re_string_translate_buffer (pstr);
+      else
+	pstr->valid_len = pstr->len;
     }
   pstr->cur_idx = 0;
 
@@ -1257,6 +1259,7 @@ create_ci_newstate (dfa, nodes, hash)
 	newstate->halt = 1;
 #ifdef RE_ENABLE_I18N
       else if (type == COMPLEX_BRACKET
+	       || type == OP_UTF8_PERIOD
 	       || (type == OP_PERIOD && dfa->mb_cur_max > 1))
 	newstate->accept_mb = 1;
 #endif /* RE_ENABLE_I18N */
@@ -1308,6 +1311,7 @@ create_cd_newstate (dfa, nodes, context, hash)
 	newstate->halt = 1;
 #ifdef RE_ENABLE_I18N
       else if (type == COMPLEX_BRACKET
+	       || type == OP_UTF8_PERIOD
 	       || (type == OP_PERIOD && dfa->mb_cur_max > 1))
 	newstate->accept_mb = 1;
 #endif /* RE_ENABLE_I18N */

@@ -401,7 +401,8 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 	    }
 	}
 #endif /* RE_ENABLE_I18N */
-      else if (type == END_OF_RE || type == OP_PERIOD)
+      else if (type == END_OF_RE || type == OP_PERIOD
+	       || type == OP_UTF8_PERIOD)
 	{
 	  memset (fastmap, '\1', sizeof (char) * SBC_MAX);
 	  if (type == END_OF_RE)
@@ -765,7 +766,7 @@ re_compile_internal (preg, pattern, length, syntax)
 
 #ifdef RE_ENABLE_I18N
   /* If possible, do searching in single byte encoding to speed things up.  */
-  if (dfa->is_utf8 && !(syntax & RE_ICASE))
+  if (dfa->is_utf8 && !(syntax & RE_ICASE) && preg->translate == NULL)
     optimize_utf8 (dfa);
 #endif
 
@@ -965,7 +966,7 @@ static void
 optimize_utf8 (dfa)
      re_dfa_t *dfa;
 {
-  int node, i, mb_chars = 0;
+  int node, i, mb_chars = 0, has_period = 0;
 
   for (node = 0; node < dfa->nodes_len; ++node)
     switch (dfa->nodes[node].type)
@@ -987,10 +988,12 @@ optimize_utf8 (dfa)
 	    return;
 	  }
 	break;
+      case OP_PERIOD:
+        has_period = 1;
+        break;
       case OP_BACK_REF:
       case OP_ALT:
       case END_OF_RE:
-      case BACK_SLASH:
       case OP_DUP_ASTERISK:
       case OP_DUP_QUESTION:
       case OP_DUP_PLUS:
@@ -1007,16 +1010,20 @@ optimize_utf8 (dfa)
 	return;
       }
 
-  if (mb_chars)
+  if (mb_chars || has_period)
     for (node = 0; node < dfa->nodes_len; ++node)
-      if (dfa->nodes[node].type == CHARACTER
-	  && dfa->nodes[node].opr.c >= 0x80)
-	dfa->nodes[node].mb_partial = 0;
+      {
+	if (dfa->nodes[node].type == CHARACTER
+	    && dfa->nodes[node].opr.c >= 0x80)
+	  dfa->nodes[node].mb_partial = 0;
+	else if (dfa->nodes[node].type == OP_PERIOD)
+	  dfa->nodes[node].type = OP_UTF8_PERIOD;
+      }
 
   /* The search can be in single byte locale.  */
   dfa->mb_cur_max = 1;
   dfa->is_utf8 = 0;
-  dfa->has_mb_node = dfa->nbackref > 0;
+  dfa->has_mb_node = dfa->nbackref > 0 || has_period;
 }
 #endif
 
@@ -1124,6 +1131,7 @@ calc_first (dfa, node)
     case OP_DUP_ASTERISK:
     case OP_DUP_QUESTION:
 #ifdef RE_ENABLE_I18N
+    case OP_UTF8_PERIOD:
     case COMPLEX_BRACKET:
 #endif /* RE_ENABLE_I18N */
     case SIMPLE_BRACKET:
@@ -3159,16 +3167,29 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
     {
       re_token_t alt_token;
       bin_tree_t *mbc_tree;
+      int sbc_idx;
       /* Build a tree for complex bracket.  */
+      dfa->has_mb_node = 1;
+      dfa->has_plural_match = 1;
+      for (sbc_idx = 0; sbc_idx < BITSET_UINTS; ++sbc_idx)
+	if (sbcset[sbc_idx])
+	  break;
+      /* If there are no bits set in sbcset, there is no point
+	 of having both SIMPLE_BRACKET and COMPLEX_BRACKET.  */
+      if (sbc_idx == BITSET_UINTS)
+	{
+	  re_free (sbcset);
+	  dfa->nodes[new_idx].type = COMPLEX_BRACKET;
+	  dfa->nodes[new_idx].opr.mbcset = mbcset;
+	  return work_tree;
+	}
       br_token.type = COMPLEX_BRACKET;
       br_token.opr.mbcset = mbcset;
-      dfa->has_mb_node = 1;
       new_idx = re_dfa_add_node (dfa, br_token, 0);
       mbc_tree = create_tree (NULL, NULL, 0, new_idx);
       if (BE (new_idx == -1 || mbc_tree == NULL, 0))
 	goto parse_bracket_exp_espace;
       /* Then join them by ALT node.  */
-      dfa->has_plural_match = 1;
       alt_token.type = OP_ALT;
       new_idx = re_dfa_add_node (dfa, alt_token, 0);
       work_tree = create_tree (work_tree, mbc_tree, 0, new_idx);
