@@ -1,5 +1,5 @@
 /* `sln' program to create symboblic links between files.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,8 @@
 #define	S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
-static int makesymlink __P ((const char *src, const char *dest));
-static int makesymlinks __P ((const char *file));
+static int makesymlink (const char *src, const char *dest);
+static int makesymlinks (const char *file);
 
 int
 main (int argc, char **argv)

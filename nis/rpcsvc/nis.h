@@ -52,7 +52,7 @@ __BEGIN_DECLS
  *      I have removed all the Solaris internal structs and variables,
  *      because they are not supported, Sun changed them between various
  *      releases and they shouldn't be used in user programs.
- *                                              <kukuk@vt.uni-paderborn.de>
+ *                                              <kukuk@suse.de>
  */
 
 
@@ -537,73 +537,78 @@ typedef enum name_pos name_pos;
 #define NIS_VERSION 3
 
 #define NIS_LOOKUP 1
-extern  nis_result * nis_lookup_3 __P ((ns_request *, CLIENT *));
-extern  nis_result * nis_lookup_3_svc __P ((ns_request *, struct svc_req *));
+extern  nis_result * nis_lookup_3 (ns_request *, CLIENT *) __THROW;
+extern  nis_result * nis_lookup_3_svc (ns_request *, struct svc_req *) __THROW;
 #define NIS_ADD 2
-extern  nis_result * nis_add_3 __P ((ns_request *, CLIENT *));
-extern  nis_result * nis_add_3_svc __P ((ns_request *, struct svc_req *));
+extern  nis_result * nis_add_3 (ns_request *, CLIENT *) __THROW;
+extern  nis_result * nis_add_3_svc (ns_request *, struct svc_req *) __THROW;
 #define NIS_MODIFY 3
-extern  nis_result * nis_modify_3 __P ((ns_request *, CLIENT *));
-extern  nis_result * nis_modify_3_svc __P ((ns_request *, struct svc_req *));
+extern  nis_result * nis_modify_3 (ns_request *, CLIENT *) __THROW;
+extern  nis_result * nis_modify_3_svc (ns_request *, struct svc_req *) __THROW;
 #define NIS_REMOVE 4
-extern  nis_result * nis_remove_3 __P ((ns_request *, CLIENT *));
-extern  nis_result * nis_remove_3_svc __P ((ns_request *, struct svc_req *));
+extern  nis_result * nis_remove_3 (ns_request *, CLIENT *) __THROW;
+extern  nis_result * nis_remove_3_svc (ns_request *, struct svc_req *) __THROW;
 #define NIS_IBLIST 5
-extern  nis_result * nis_iblist_3 __P ((ib_request *, CLIENT *));
-extern  nis_result * nis_iblist_3_svc __P ((ib_request *, struct svc_req *));
+extern  nis_result * nis_iblist_3 (ib_request *, CLIENT *) __THROW;
+extern  nis_result * nis_iblist_3_svc (ib_request *, struct svc_req *) __THROW;
 #define NIS_IBADD 6
-extern  nis_result * nis_ibadd_3 __P ((ib_request *, CLIENT *));
-extern  nis_result * nis_ibadd_3_svc __P ((ib_request *, struct svc_req *));
+extern  nis_result * nis_ibadd_3 (ib_request *, CLIENT *) __THROW;
+extern  nis_result * nis_ibadd_3_svc (ib_request *, struct svc_req *) __THROW;
 #define NIS_IBMODIFY 7
-extern  nis_result * nis_ibmodify_3 __P ((ib_request *, CLIENT *));
-extern  nis_result * nis_ibmodify_3_svc __P ((ib_request *, struct svc_req *));
+extern  nis_result * nis_ibmodify_3 (ib_request *, CLIENT *) __THROW;
+extern  nis_result * nis_ibmodify_3_svc (ib_request *, struct svc_req *)
+     __THROW;
 #define NIS_IBREMOVE 8
-extern  nis_result * nis_ibremove_3 __P ((ib_request *, CLIENT *));
-extern  nis_result * nis_ibremove_3_svc __P ((ib_request *, struct svc_req *));
+extern  nis_result * nis_ibremove_3 (ib_request *, CLIENT *) __THROW;
+extern  nis_result * nis_ibremove_3_svc (ib_request *, struct svc_req *)
+     __THROW;
 #define NIS_IBFIRST 9
-extern  nis_result * nis_ibfirst_3 __P ((ib_request *, CLIENT *));
-extern  nis_result * nis_ibfirst_3_svc __P ((ib_request *, struct svc_req *));
+extern  nis_result * nis_ibfirst_3 (ib_request *, CLIENT *) __THROW;
+extern  nis_result * nis_ibfirst_3_svc (ib_request *, struct svc_req *)
+     __THROW;
 #define NIS_IBNEXT 10
-extern  nis_result * nis_ibnext_3 __P ((ib_request *, CLIENT *));
-extern  nis_result * nis_ibnext_3_svc __P ((ib_request *, struct svc_req *));
+extern  nis_result * nis_ibnext_3 (ib_request *, CLIENT *) __THROW;
+extern  nis_result * nis_ibnext_3_svc (ib_request *, struct svc_req *) __THROW;
 #define NIS_FINDDIRECTORY 12
-extern  fd_result * nis_finddirectory_3 __P ((fd_args *, CLIENT *));
-extern  fd_result * nis_finddirectory_3_svc __P ((fd_args *,
-						  struct svc_req *));
+extern  fd_result * nis_finddirectory_3 (fd_args *, CLIENT *) __THROW;
+extern  fd_result * nis_finddirectory_3_svc (fd_args *,
+					     struct svc_req *) __THROW;
 #define NIS_STATUS 14
-extern  nis_taglist * nis_status_3 __P ((nis_taglist *, CLIENT *));
-extern  nis_taglist * nis_status_3_svc __P ((nis_taglist *, struct svc_req *));
+extern  nis_taglist * nis_status_3 (nis_taglist *, CLIENT *) __THROW;
+extern  nis_taglist * nis_status_3_svc (nis_taglist *, struct svc_req *)
+     __THROW;
 #define NIS_DUMPLOG 15
-extern  log_result * nis_dumplog_3 __P ((dump_args *, CLIENT *));
-extern  log_result * nis_dumplog_3_svc __P ((dump_args *, struct svc_req *));
+extern  log_result * nis_dumplog_3 (dump_args *, CLIENT *) __THROW;
+extern  log_result * nis_dumplog_3_svc (dump_args *, struct svc_req *) __THROW;
 #define NIS_DUMP 16
-extern  log_result * nis_dump_3 __P ((dump_args *, CLIENT *));
-extern  log_result * nis_dump_3_svc __P ((dump_args *, struct svc_req *));
+extern  log_result * nis_dump_3 (dump_args *, CLIENT *) __THROW;
+extern  log_result * nis_dump_3_svc (dump_args *, struct svc_req *) __THROW;
 #define NIS_CALLBACK 17
-extern  bool_t * nis_callback_3 __P ((netobj *, CLIENT *));
-extern  bool_t * nis_callback_3_svc __P ((netobj *, struct svc_req *));
+extern  bool_t * nis_callback_3 (netobj *, CLIENT *) __THROW;
+extern  bool_t * nis_callback_3_svc (netobj *, struct svc_req *) __THROW;
 #define NIS_CPTIME 18
-extern  uint32_t * nis_cptime_3 __P ((nis_name *, CLIENT *));
-extern  uint32_t * nis_cptime_3_svc __P ((nis_name *, struct svc_req *));
+extern  uint32_t * nis_cptime_3 (nis_name *, CLIENT *) __THROW;
+extern  uint32_t * nis_cptime_3_svc (nis_name *, struct svc_req *) __THROW;
 #define NIS_CHECKPOINT 19
-extern  cp_result * nis_checkpoint_3 __P ((nis_name *, CLIENT *));
-extern  cp_result * nis_checkpoint_3_svc __P ((nis_name *, struct svc_req *));
+extern  cp_result * nis_checkpoint_3 (nis_name *, CLIENT *) __THROW;
+extern  cp_result * nis_checkpoint_3_svc (nis_name *, struct svc_req *)
+     __THROW;
 #define NIS_PING 20
-extern  void * nis_ping_3 __P ((ping_args *, CLIENT *));
-extern  void * nis_ping_3_svc __P ((ping_args *, struct svc_req *));
+extern  void * nis_ping_3 (ping_args *, CLIENT *) __THROW;
+extern  void * nis_ping_3_svc (ping_args *, struct svc_req *) __THROW;
 #define NIS_SERVSTATE 21
-extern  nis_taglist * nis_servstate_3 __P ((nis_taglist *, CLIENT *));
-extern  nis_taglist * nis_servstate_3_svc __P ((nis_taglist *,
-						struct svc_req *));
+extern  nis_taglist * nis_servstate_3 (nis_taglist *, CLIENT *) __THROW;
+extern  nis_taglist * nis_servstate_3_svc (nis_taglist *,
+					   struct svc_req *) __THROW;
 #define NIS_MKDIR 22
-extern  nis_error * nis_mkdir_3 __P ((nis_name *, CLIENT *));
-extern  nis_error * nis_mkdir_3_svc __P ((nis_name *, struct svc_req *));
+extern  nis_error * nis_mkdir_3 (nis_name *, CLIENT *) __THROW;
+extern  nis_error * nis_mkdir_3_svc (nis_name *, struct svc_req *) __THROW;
 #define NIS_RMDIR 23
-extern  nis_error * nis_rmdir_3 __P ((nis_name *, CLIENT *));
-extern  nis_error * nis_rmdir_3_svc __P ((nis_name *, struct svc_req *));
+extern  nis_error * nis_rmdir_3 (nis_name *, CLIENT *) __THROW;
+extern  nis_error * nis_rmdir_3_svc (nis_name *, struct svc_req *) __THROW;
 #define NIS_UPDKEYS 24
-extern  nis_error * nis_updkeys_3 __P ((nis_name *, CLIENT *));
-extern  nis_error * nis_updkeys_3_svc __P ((nis_name *, struct svc_req *));
+extern  nis_error * nis_updkeys_3 (nis_name *, CLIENT *) __THROW;
+extern  nis_error * nis_updkeys_3_svc (nis_name *, struct svc_req *) __THROW;
 
 __END_DECLS
 

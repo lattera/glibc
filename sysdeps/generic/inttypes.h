@@ -295,27 +295,27 @@ typedef lldiv_t imaxdiv_t;
 
 
 /* Compute absolute value of N.  */
-extern intmax_t imaxabs __P ((intmax_t __n)) __attribute__ ((__const__));
+extern intmax_t imaxabs (intmax_t __n) __THROW __attribute__ ((__const__));
 
 /* Return the `imaxdiv_t' representation of the value of NUMER over DENOM. */
-extern imaxdiv_t imaxdiv __P ((intmax_t __numer, intmax_t __denom))
-     __attribute__ ((__const__));
+extern imaxdiv_t imaxdiv (intmax_t __numer, intmax_t __denom)
+      __THROW __attribute__ ((__const__));
 
 /* Like `strtol' but convert to `intmax_t'.  */
-extern intmax_t strtoimax __P ((__const char *__restrict __nptr,
-				char **__restrict __endptr, int __base));
+extern intmax_t strtoimax (__const char *__restrict __nptr,
+			   char **__restrict __endptr, int __base) __THROW;
 
 /* Like `strtoul' but convert to `uintmax_t'.  */
-extern uintmax_t strtoumax __P ((__const char * __restrict __nptr,
-				 char ** __restrict __endptr, int __base));
+extern uintmax_t strtoumax (__const char * __restrict __nptr,
+			    char ** __restrict __endptr, int __base) __THROW;
 
 /* Like `wcstol' but convert to `intmax_t'.  */
-extern intmax_t wcstoimax __P ((__const wchar_t * __restrict __nptr,
-				wchar_t **__restrict __endptr, int __base));
+extern intmax_t wcstoimax (__const wchar_t * __restrict __nptr,
+			   wchar_t **__restrict __endptr, int __base) __THROW;
 
 /* Like `wcstoul' but convert to `uintmax_t'.  */
-extern uintmax_t wcstoumax __P ((__const wchar_t * __restrict __nptr,
-				 wchar_t ** __restrict __endptr, int __base));
+extern uintmax_t wcstoumax (__const wchar_t * __restrict __nptr,
+			    wchar_t ** __restrict __endptr, int __base) __THROW;
 
 #ifdef __USE_EXTERN_INLINES
 
@@ -323,10 +323,10 @@ extern uintmax_t wcstoumax __P ((__const wchar_t * __restrict __nptr,
 
 /* We ant to use the appropriate functions from <stdlib.h> but cannot
    assume the header is read already.  */
-__extension__ extern long int labs __P ((long int __x))
-     __attribute__ ((__const__));
-__extension__ extern ldiv_t ldiv __P ((long int __numer, long int __denom))
-     __attribute__ ((__const__));
+__extension__ extern long int labs (long int __x)
+      __THROW __attribute__ ((__const__));
+__extension__ extern ldiv_t ldiv (long int __numer, long int __denom)
+      __THROW __attribute__ ((__const__));
 
 
 /* Compute absolute value of N.  */
@@ -345,9 +345,9 @@ imaxdiv (intmax_t __numer, intmax_t __denom) __THROW
 
 /* Like `strtol' but convert to `intmax_t'.  */
 #  ifndef __strtol_internal_defined
-extern long int __strtol_internal __P ((__const char *__restrict __nptr,
-					char **__restrict __endptr,
-					int __base, int __group));
+extern long int __strtol_internal (__const char *__restrict __nptr,
+				   char **__restrict __endptr,
+				   int __base, int __group) __THROW;
 #   define __strtol_internal_defined	1
 #  endif
 extern __inline intmax_t
@@ -359,10 +359,10 @@ strtoimax (__const char *__restrict nptr, char **__restrict endptr,
 
 /* Like `strtoul' but convert to `uintmax_t'.  */
 #  ifndef __strtoul_internal_defined
-extern unsigned long int __strtoul_internal __P ((__const char *
-						  __restrict __nptr,
-						  char ** __restrict __endptr,
-						  int __base, int __group));
+extern unsigned long int __strtoul_internal (__const char *
+					     __restrict __nptr,
+					     char ** __restrict __endptr,
+					     int __base, int __group) __THROW;
 #   define __strtoul_internal_defined	1
 #  endif
 extern __inline uintmax_t
@@ -374,9 +374,9 @@ strtoumax (__const char *__restrict nptr, char **__restrict endptr,
 
 /* Like `wcstol' but convert to `intmax_t'.  */
 #  ifndef __wcstol_internal_defined
-extern long int __wcstol_internal __P ((__const wchar_t * __restrict __nptr,
-					wchar_t **__restrict __endptr,
-					int __base, int __group));
+extern long int __wcstol_internal (__const wchar_t * __restrict __nptr,
+				   wchar_t **__restrict __endptr,
+				   int __base, int __group) __THROW;
 #   define __wcstol_internal_defined	1
 #  endif
 extern __inline intmax_t
@@ -389,11 +389,11 @@ wcstoimax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
 
 /* Like `wcstoul' but convert to `uintmax_t'.  */
 #  ifndef __wcstoul_internal_defined
-extern unsigned long int __wcstoul_internal __P ((__const wchar_t *
-						  __restrict __nptr,
-						  wchar_t **
-						  __restrict __endptr,
-						  int __base, int __group));
+extern unsigned long int __wcstoul_internal (__const wchar_t *
+					     __restrict __nptr,
+					     wchar_t **
+					     __restrict __endptr,
+					     int __base, int __group) __THROW;
 #   define __wcstoul_internal_defined	1
 #  endif
 extern __inline uintmax_t
@@ -405,13 +405,13 @@ wcstoumax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
 
 # else /* __WORDSIZE == 32 */
 
-/* We ant to use the appropriate functions from <stdlib.h> but cannot
+/* We want to use the appropriate functions from <stdlib.h> but cannot
    assume the header is read already.  */
-__extension__ extern long long int llabs __P ((long long int __x))
-     __attribute__ ((__const__));
-__extension__ extern lldiv_t lldiv __P ((long long int __numer,
-					 long long int __denom))
-     __attribute__ ((__const__));
+__extension__ extern long long int llabs (long long int __x)
+      __THROW __attribute__ ((__const__));
+__extension__ extern lldiv_t lldiv (long long int __numer,
+				    long long int __denom)
+     __THROW __attribute__ ((__const__));
 
 
 /* Compute absolute value of N.  */
@@ -431,9 +431,9 @@ imaxdiv (intmax_t __numer, intmax_t __denom) __THROW
 /* Like `strtol' but convert to `intmax_t'.  */
 #  ifndef __strtoll_internal_defined
 __extension__
-extern long long int __strtoll_internal __P ((__const char *__restrict __nptr,
-					      char **__restrict __endptr,
-					      int __base, int __group));
+extern long long int __strtoll_internal (__const char *__restrict __nptr,
+					 char **__restrict __endptr,
+					 int __base, int __group) __THROW;
 #   define __strtoll_internal_defined	1
 #  endif
 extern __inline intmax_t
@@ -446,12 +446,12 @@ strtoimax (__const char *__restrict nptr, char **__restrict endptr,
 /* Like `strtoul' but convert to `uintmax_t'.  */
 #  ifndef __strtoull_internal_defined
 __extension__
-extern unsigned long long int __strtoull_internal __P ((__const char *
-							__restrict __nptr,
-							char **
-							__restrict __endptr,
-							int __base,
-							int __group));
+extern unsigned long long int __strtoull_internal (__const char *
+						   __restrict __nptr,
+						   char **
+						   __restrict __endptr,
+						   int __base,
+						   int __group) __THROW;
 #   define __strtoull_internal_defined	1
 #  endif
 extern __inline uintmax_t
@@ -464,10 +464,10 @@ strtoumax (__const char *__restrict nptr, char **__restrict endptr,
 /* Like `wcstol' but convert to `intmax_t'.  */
 #  ifndef __wcstoll_internal_defined
 __extension__
-extern long long int __wcstoll_internal __P ((__const wchar_t *
-					      __restrict __nptr,
-					      wchar_t **__restrict __endptr,
-					      int __base, int __group));
+extern long long int __wcstoll_internal (__const wchar_t *
+					 __restrict __nptr,
+					 wchar_t **__restrict __endptr,
+					 int __base, int __group) __THROW;
 #   define __wcstoll_internal_defined	1
 #  endif
 extern __inline intmax_t
@@ -481,12 +481,12 @@ wcstoimax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
 /* Like `wcstoul' but convert to `uintmax_t'.  */
 #  ifndef __wcstoull_internal_defined
 __extension__
-extern unsigned long long int __wcstoull_internal __P ((__const wchar_t *
-							__restrict __nptr,
-							wchar_t **
-							__restrict __endptr,
-							int __base,
-							int __group));
+extern unsigned long long int __wcstoull_internal (__const wchar_t *
+						   __restrict __nptr,
+						   wchar_t **
+						   __restrict __endptr,
+						   int __base,
+						   int __group) __THROW;
 #   define __wcstoull_internal_defined	1
 #  endif
 extern __inline uintmax_t

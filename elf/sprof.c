@@ -58,7 +58,7 @@
 #endif
 
 
-extern int __profile_frequency __P ((void));
+extern int __profile_frequency (void);
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);

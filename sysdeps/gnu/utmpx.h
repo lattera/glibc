@@ -48,40 +48,40 @@ struct utmp;
 __BEGIN_DECLS
 
 /* Open user accounting database.  */
-extern void setutxent __P ((void));
+extern void setutxent (void) __THROW;
 
 /* Close user accounting database.  */
-extern void endutxent __P ((void));
+extern void endutxent (void) __THROW;
 
 /* Get the next entry from the user accounting database.  */
-extern struct utmpx *getutxent __P ((void));
+extern struct utmpx *getutxent (void) __THROW;
 
 /* Get the user accounting database entry corresponding to ID.  */
-extern struct utmpx *getutxid __P ((__const struct utmpx *__id));
+extern struct utmpx *getutxid (__const struct utmpx *__id) __THROW;
 
 /* Get the user accounting database entry corresponding to LINE.  */
-extern struct utmpx *getutxline __P ((__const struct utmpx *__line));
+extern struct utmpx *getutxline (__const struct utmpx *__line) __THROW;
 
 /* Write the entry UTMPX into the user accounting database.  */
-extern struct utmpx *pututxline __P ((__const struct utmpx *__utmpx));
+extern struct utmpx *pututxline (__const struct utmpx *__utmpx) __THROW;
 
 
 #ifdef __USE_GNU
 /* Change name of the utmpx file to be examined.  */
-extern int utmpxname __P ((__const char *__file));
+extern int utmpxname (__const char *__file) __THROW;
 
 /* Append entry UTMP to the wtmpx-like file WTMPX_FILE.  */
-extern void updwtmpx __P ((__const char *__wtmpx_file,
-			   __const struct utmpx *__utmpx));
+extern void updwtmpx (__const char *__wtmpx_file,
+		      __const struct utmpx *__utmpx) __THROW;
 
 
 /* Copy the information in UTMPX to UTMP. */
-extern void getutmp __P ((__const struct utmpx *__utmpx,
-			  struct utmp *__utmp));
+extern void getutmp (__const struct utmpx *__utmpx,
+		     struct utmp *__utmp) __THROW;
 
 /* Copy the information in UTMP to UTMPX. */
-extern void getutmpx __P ((__const struct utmp *__utmp,
-			   struct utmpx *__utmpx));
+extern void getutmpx (__const struct utmp *__utmp,
+		      struct utmpx *__utmpx) __THROW;
 #endif
 
 __END_DECLS

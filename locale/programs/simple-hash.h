@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -33,18 +33,19 @@ typedef struct hash_table
 hash_table;
 
 
-extern int init_hash __P ((hash_table *htab, unsigned long int init_size));
-extern int delete_hash __P ((hash_table *htab));
-extern int insert_entry __P ((hash_table *htab, const void *key, size_t keylen,
-			      void *data));
-extern int find_entry __P ((hash_table *htab, const void *key, size_t keylen,
-			    void **result));
-extern int set_entry __P ((hash_table *htab, const void *key, size_t keylen,
-			   void *newval));
+extern int init_hash (hash_table *htab, unsigned long int init_size) __THROW;
+extern int delete_hash (hash_table *htab) __THROW;
+extern int insert_entry (hash_table *htab, const void *key, size_t keylen,
+			 void *data) __THROW;
+extern int find_entry (hash_table *htab, const void *key, size_t keylen,
+		       void **result) __THROW;
+extern int set_entry (hash_table *htab, const void *key, size_t keylen,
+		      void *newval) __THROW;
 
-extern int iterate_table __P ((hash_table *htab, void **ptr,
-			       const void **key, size_t *keylen, void **data));
+extern int iterate_table (hash_table *htab, void **ptr,
+			  const void **key, size_t *keylen, void **data)
+     __THROW;
 
-extern unsigned long int next_prime __P ((unsigned long int seed));
+extern unsigned long int next_prime (unsigned long int seed) __THROW;
 
 #endif /* simple-hash.h */

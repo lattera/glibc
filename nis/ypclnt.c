@@ -603,8 +603,8 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
 }
 
 static void *ypall_data;
-static int (*ypall_foreach) __P ((int status, char *key, int keylen,
-				  char *val, int vallen, char *data));
+static int (*ypall_foreach) (int status, char *key, int keylen,
+			     char *val, int vallen, char *data);
 
 static bool_t
 __xdr_ypresp_all (XDR *xdrs, u_long *objp)

@@ -355,31 +355,29 @@ void __fresetlockfiles(void);
 void __pthread_manager_adjust_prio(int thread_prio);
 
 extern int __pthread_attr_setguardsize (pthread_attr_t *__attr,
-					size_t __guardsize) __THROW;
-extern int __pthread_attr_getguardsize (__const pthread_attr_t *__attr,
-					size_t *__guardsize) __THROW;
+					size_t __guardsize);
+extern int __pthread_attr_getguardsize (const pthread_attr_t *__attr,
+					size_t *__guardsize);
 extern int __pthread_attr_setstackaddr (pthread_attr_t *__attr,
-					void *__stackaddr) __THROW;
-extern int __pthread_attr_getstackaddr (__const pthread_attr_t *__attr,
-					void **__stackaddr) __THROW;
+					void *__stackaddr);
+extern int __pthread_attr_getstackaddr (const pthread_attr_t *__attr,
+					void **__stackaddr);
 extern int __pthread_attr_setstacksize (pthread_attr_t *__attr,
-					size_t __stacksize) __THROW;
-extern int __pthread_attr_getstacksize (__const pthread_attr_t *__attr,
-					size_t *__stacksize) __THROW;
-extern int __pthread_getconcurrency (void) __THROW;
-extern int __pthread_setconcurrency (int __level) __THROW;
-extern int __pthread_mutexattr_gettype (__const pthread_mutexattr_t *__attr,
-					int *__kind) __THROW;
-extern void __pthread_kill_other_threads_np (void) __THROW;
+					size_t __stacksize);
+extern int __pthread_attr_getstacksize (const pthread_attr_t *__attr,
+					size_t *__stacksize);
+extern int __pthread_getconcurrency (void);
+extern int __pthread_setconcurrency (int __level);
+extern int __pthread_mutexattr_gettype (const pthread_mutexattr_t *__attr,
+					int *__kind);
+extern void __pthread_kill_other_threads_np (void);
 
 /* Prototypes for the function without cancelation support when the
    normal version has it.  */
 extern int __libc_close (int fd);
 extern int __libc_nanosleep (const struct timespec *requested_time,
 			     struct timespec *remaining);
-extern ssize_t __libc_read (int fd, void *buf, size_t count);
 extern pid_t __libc_waitpid (pid_t pid, int *stat_loc, int options);
-extern ssize_t __libc_write (int fd, const void *buf, size_t count);
 
 /* Prototypes for some of the new semaphore functions.  */
 extern int __new_sem_post (sem_t * sem);

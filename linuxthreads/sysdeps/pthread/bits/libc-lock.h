@@ -166,6 +166,43 @@ typedef pthread_key_t __libc_key_t;
 #define __libc_atfork(PREPARE, PARENT, CHILD) \
   (__pthread_atfork != NULL ? __pthread_atfork (PREPARE, PARENT, CHILD) : 0)
 
+/* Functions that are used by this file and are internal to the GNU C
+   library.  */
+
+extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
+				 __const pthread_mutexattr_t *__mutex_attr);
+
+extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
+
+extern int __pthread_mutex_trylock (pthread_mutex_t *__mutex);
+
+extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+
+extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
+
+extern int __pthread_mutexattr_init (pthread_mutexattr_t *__attr);
+
+extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *__attr);
+
+extern int __pthread_mutexattr_settype (pthread_mutexattr_t *__attr,
+					int __kind);
+
+extern int __pthread_key_create (pthread_key_t *__key,
+				 void (*__destr_function) (void *));
+
+extern int __pthread_setspecific (pthread_key_t __key,
+				  __const void *__pointer);
+
+extern void *__pthread_getspecific (pthread_key_t __key);
+
+extern int __pthread_once (pthread_once_t *__once_control,
+			   void (*__init_routine) (void));
+
+extern int __pthread_atfork (void (*__prepare) (void),
+			     void (*__parent) (void),
+			     void (*__child) (void));
+
+
 
 /* Make the pthread functions weak so that we can elide them from
    single-threaded processes.  */

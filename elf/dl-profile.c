@@ -1,5 +1,5 @@
 /* Profiling of shared libraries.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on the BSD mcount implementation.
@@ -34,10 +34,6 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <atomicity.h>
-
-/* We have prototype anywhere.  */
-extern ssize_t __libc_write __P ((int __fd, __const __ptr_t __buf,
-				  size_t __n));
 
 /* The LD_PROFILE feature has to be implemented different to the
    normal profiling using the gmon/ functions.  The problem is that an
@@ -124,7 +120,7 @@ extern ssize_t __libc_write __P ((int __fd, __const __ptr_t __buf,
    data structures at the program start.  To do this we'll simply visit all
    entries in the call graph table and add it to the appropriate list.  */
 
-extern int __profile_frequency __P ((void));
+extern int __profile_frequency (void);
 
 /* We define a special type to address the elements of the arc table.
    This is basically the `gmon_cg_arc_record' format but it includes

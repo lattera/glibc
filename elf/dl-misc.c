@@ -1,5 +1,5 @@
 /* Miscellaneous support functions for dynamic linker
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,6 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <stdio-common/_itoa.h>
-
-/* We have prototype anywhere.  */
-extern ssize_t __libc_write __P ((int __fd, __const __ptr_t __buf,
-				  size_t __n));
 
 #ifndef MAP_ANON
 /* This is the only dl-sysdep.c function that is actually needed at run-time

@@ -104,7 +104,7 @@ program RUSERSPROG {
 %	char	ut_line[8];		/* tty name */
 %	char	ut_name[8];		/* user id */
 %	char	ut_host[16];		/* host name, if remote */
-%	long	ut_time;		/* time on */
+%	long int ut_time;		/* time on */
 %};
 %
 %struct utmparr {
@@ -113,11 +113,11 @@ program RUSERSPROG {
 %};
 %typedef struct utmparr utmparr;
 %
-%extern bool_t xdr_utmparr __P ((XDR *xdrs, struct utmparr *objp));
+%extern bool_t xdr_utmparr (XDR *xdrs, struct utmparr *objp) __THROW;
 %
 %struct utmpidle {
 %	struct ru_utmp ui_utmp;
-%	unsigned ui_idle;
+%	unsigned int ui_idle;
 %};
 %
 %struct utmpidlearr {
@@ -125,7 +125,7 @@ program RUSERSPROG {
 %	int uia_cnt;
 %};
 %
-%extern bool_t xdr_utmpidlearr __P ((XDR *xdrs, struct utmpidlearr *objp));
+%extern bool_t xdr_utmpidlearr (XDR *xdrs, struct utmpidlearr *objp) __THROW;
 %
 %#ifdef	__cplusplus
 %}

@@ -1,3 +1,33 @@
+1999-12-31  Andreas Jaeger  <aj@suse.de>
+
+	* libio/strfile.h: Remove K&R compatibility.
+	* locale/langinfo.h: Likewise.
+	* locale/localeconv.c (localeconv): Likewise.
+	* locale/programs/simple-hash.h: Likewise.
+	* nis/nis_xdr.h: Likewise.
+	* nis/rpcsvc/nislib.h: Likewise.
+	* nis/rpcsvc/nis_callback.h: Likewise.
+	* nis/rpcsvc/nis.h: Likewise.
+	* nis/ypclnt.c: Likewise.
+	* nscd/nscd_proto.h: Likewise.
+	* nscd/nscd.c: Likewise.
+	* sysdeps/generic/inttypes.h: Likewise.
+	* sysdeps/gnu/utmpx.h: Likewise.
+
+	* nis/nis_intern.h: Remove K&R compatibility; add missing ints.
+	* sunrpc/rpcsvc/rusers.x: Likewise.
+
+	* nis/rpcsvc/ypclnt.h: Remove K&R compatibility; reformat.
+
+	* elf/dl-misc.c: Remove __libc_write prototype since it's already
+	in include/unistd.h.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-load.c: Likewise for __libc_read.
+
+	* elf/dl-profile.c: Remove __P.
+	* elf/sprof.c: Likewise.
+	* elf/sln.c: Likewise.
+
 1999-12-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/langinfo.h: Add constants for wide character collation

@@ -474,7 +474,7 @@ enum
    The string returned will not change until `setlocale' is called;
    it is usually in read-only memory and cannot be modified.  */
 
-extern char *nl_langinfo __P ((nl_item __item));
+extern char *nl_langinfo (nl_item __item) __THROW;
 
 
 __END_DECLS

@@ -1,6 +1,6 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -36,24 +36,24 @@ struct nis_cb
   };
 typedef struct nis_cb nis_cb;
 
-extern unsigned long inetstr2int __P ((const char *str));
-extern long __nis_findfastest __P ((dir_binding *bind));
-extern nis_error __do_niscall2 __P ((const nis_server *serv, u_int serv_len,
-				     u_long prog, xdrproc_t xargs, caddr_t req,
-				     xdrproc_t xres, caddr_t resp,
-				     unsigned int flags, nis_cb *cb));
-extern nis_error __do_niscall __P ((const_nis_name name, u_long prog,
-				    xdrproc_t xargs, caddr_t req,
-				    xdrproc_t xres, caddr_t resp,
-				    unsigned int flags, nis_cb *cb));
+extern unsigned long int inetstr2int (const char *str);
+extern long int __nis_findfastest (dir_binding *bind);
+extern nis_error __do_niscall2 (const nis_server *serv, u_int serv_len,
+				u_long prog, xdrproc_t xargs, caddr_t req,
+				xdrproc_t xres, caddr_t resp,
+				unsigned int flags, nis_cb *cb);
+extern nis_error __do_niscall (const_nis_name name, u_long prog,
+			       xdrproc_t xargs, caddr_t req,
+			       xdrproc_t xres, caddr_t resp,
+			       unsigned int flags, nis_cb *cb);
 
 /* NIS+ callback */
-extern nis_error __nis_do_callback __P ((struct dir_binding *bptr,
-					 netobj *cookie, struct nis_cb *cb));
+extern nis_error __nis_do_callback (struct dir_binding *bptr,
+				    netobj *cookie, struct nis_cb *cb);
 extern struct nis_cb *__nis_create_callback
-      __P ((int (*callback)(const_nis_name, const nis_object *, const void *),
-	    const void *userdata, unsigned int flags));
-extern nis_error __nis_destroy_callback __P ((struct nis_cb *cb));
+      (int (*callback)(const_nis_name, const nis_object *, const void *),
+       const void *userdata, unsigned int flags);
+extern nis_error __nis_destroy_callback (struct nis_cb *cb);
 
 __END_DECLS
 

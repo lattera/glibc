@@ -270,27 +270,20 @@ extern int pthread_setconcurrency (int __level) __THROW;
 
 /* Initialize MUTEX using attributes in *MUTEX_ATTR, or use the
    default values if later is NULL.  */
-extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
-				 __const pthread_mutexattr_t *__mutex_attr)
-     __THROW;
 extern int pthread_mutex_init (pthread_mutex_t *__mutex,
 			       __const pthread_mutexattr_t *__mutex_attr)
      __THROW;
 
 /* Destroy MUTEX.  */
-extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex) __THROW;
 extern int pthread_mutex_destroy (pthread_mutex_t *__mutex) __THROW;
 
 /* Try to lock MUTEX.  */
-extern int __pthread_mutex_trylock (pthread_mutex_t *__mutex) __THROW;
 extern int pthread_mutex_trylock (pthread_mutex_t *__mutex) __THROW;
 
 /* Wait until lock for MUTEX becomes available and lock it.  */
-extern int __pthread_mutex_lock (pthread_mutex_t *__mutex) __THROW;
 extern int pthread_mutex_lock (pthread_mutex_t *__mutex) __THROW;
 
 /* Unlock MUTEX.  */
-extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex) __THROW;
 extern int pthread_mutex_unlock (pthread_mutex_t *__mutex) __THROW;
 
 
@@ -298,19 +291,15 @@ extern int pthread_mutex_unlock (pthread_mutex_t *__mutex) __THROW;
 
 /* Initialize mutex attribute object ATTR with default attributes
    (kind is PTHREAD_MUTEX_FAST_NP).  */
-extern int __pthread_mutexattr_init (pthread_mutexattr_t *__attr) __THROW;
 extern int pthread_mutexattr_init (pthread_mutexattr_t *__attr) __THROW;
 
 /* Destroy mutex attribute object ATTR.  */
-extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *__attr) __THROW;
 extern int pthread_mutexattr_destroy (pthread_mutexattr_t *__attr) __THROW;
 
 #ifdef __USE_UNIX98
 /* Set the mutex kind attribute in *ATTR to KIND (either PTHREAD_MUTEX_NORMAL,
    PTHREAD_MUTEX_RECURSIVE, PTHREAD_MUTEX_ERRORCHECK, or
    PTHREAD_MUTEX_DEFAULT).  */
-extern int __pthread_mutexattr_settype (pthread_mutexattr_t *__attr,
-					int __kind) __THROW;
 extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
      __THROW;
 
@@ -419,8 +408,6 @@ extern int pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *__attr,
    associated to that key when the key is destroyed.
    DESTR_FUNCTION is not called if the value associated is NULL when
    the key is destroyed.  */
-extern int __pthread_key_create (pthread_key_t *__key,
-				 void (*__destr_function) (void *)) __THROW;
 extern int pthread_key_create (pthread_key_t *__key,
 			       void (*__destr_function) (void *)) __THROW;
 
@@ -428,13 +415,10 @@ extern int pthread_key_create (pthread_key_t *__key,
 extern int pthread_key_delete (pthread_key_t __key) __THROW;
 
 /* Store POINTER in the thread-specific data slot identified by KEY. */
-extern int __pthread_setspecific (pthread_key_t __key,
-				  __const void *__pointer) __THROW;
 extern int pthread_setspecific (pthread_key_t __key,
 				__const void *__pointer) __THROW;
 
 /* Return current value of the thread-specific data slot identified by KEY.  */
-extern void *__pthread_getspecific (pthread_key_t __key) __THROW;
 extern void *pthread_getspecific (pthread_key_t __key) __THROW;
 
 
@@ -444,8 +428,6 @@ extern void *pthread_getspecific (pthread_key_t __key) __THROW;
    only once, even if pthread_once is executed several times with the
    same ONCE_CONTROL argument. ONCE_CONTROL must point to a static or
    extern variable initialized to PTHREAD_ONCE_INIT.  */
-extern int __pthread_once (pthread_once_t *__once_control,
-			   void (*__init_routine) (void)) __THROW;
 extern int pthread_once (pthread_once_t *__once_control,
 			 void (*__init_routine) (void)) __THROW;
 
@@ -533,9 +515,6 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *__buff
    first called before FORK), and the PARENT and CHILD handlers are called
    in FIFO (first added, first called).  */
 
-extern int __pthread_atfork (void (*__prepare) (void),
-			     void (*__parent) (void),
-			     void (*__child) (void)) __THROW;
 extern int pthread_atfork (void (*__prepare) (void),
 			   void (*__parent) (void),
 			   void (*__child) (void)) __THROW;

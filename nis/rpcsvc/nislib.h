@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -52,12 +52,14 @@ typedef const char *const_nis_name;
  * nis_modify (name, obj) can change specific attributes of an object
  *                        that already exists in the namespace.
  */
-extern nis_result *nis_lookup __P ((const_nis_name name, unsigned int flags));
-extern nis_result *nis_add __P ((const_nis_name name, const nis_object *obj));
-extern nis_result *nis_remove __P ((const_nis_name name,
-				    const nis_object *obj));
-extern nis_result *nis_modify __P ((const_nis_name name,
-				    const nis_object *obj));
+extern nis_result *nis_lookup (const_nis_name name, unsigned int flags)
+     __THROW;
+extern nis_result *nis_add (const_nis_name name, const nis_object *obj)
+     __THROW;
+extern nis_result *nis_remove (const_nis_name name,
+			       const nis_object *obj) __THROW;
+extern nis_result *nis_modify (const_nis_name name,
+			       const nis_object *obj) __THROW;
 
 /* nis_tables: These functions are used to search and modify NIS+ tables.
  *
@@ -109,145 +111,145 @@ extern nis_result *nis_modify __P ((const_nis_name name,
  *    const netobj *cookie: The value of cookie from the nis_result structure
  *                          form the previous call.
  */
-extern nis_result *nis_list __P ((const_nis_name name, unsigned int flags,
-				  int (*callback)(const_nis_name table_name,
-						  const nis_object *obj,
-						  const void *userdata),
-				  const void *userdata));
-extern nis_result *nis_add_entry __P ((const_nis_name table_name,
-				       const nis_object *obj,
-				       unsigned int flags));
-extern nis_result *nis_modify_entry __P ((const_nis_name name,
-					  const nis_object *obj,
-					  unsigned int flags));
-extern nis_result *nis_remove_entry __P ((const_nis_name table_name,
-					  const nis_object *obj,
-					  unsigned int flags));
-extern nis_result *nis_first_entry __P ((const_nis_name table_name));
-extern nis_result *nis_next_entry __P ((const_nis_name table_name,
-					const netobj *cookie));
+extern nis_result *nis_list (const_nis_name name, unsigned int flags,
+			     int (*callback)(const_nis_name table_name,
+					     const nis_object *obj,
+					     const void *userdata),
+			     const void *userdata) __THROW;
+extern nis_result *nis_add_entry (const_nis_name table_name,
+				  const nis_object *obj,
+				  unsigned int flags) __THROW;
+extern nis_result *nis_modify_entry (const_nis_name name,
+				     const nis_object *obj,
+				     unsigned int flags) __THROW;
+extern nis_result *nis_remove_entry (const_nis_name table_name,
+				     const nis_object *obj,
+				     unsigned int flags) __THROW;
+extern nis_result *nis_first_entry (const_nis_name table_name) __THROW;
+extern nis_result *nis_next_entry (const_nis_name table_name,
+				   const netobj *cookie) __THROW;
 /*
 ** nis_server
 */
-extern nis_error nis_mkdir __P ((const_nis_name dirname,
-				 const nis_server *machine));
-extern nis_error nis_rmdir __P ((const_nis_name dirname,
-				 const nis_server *machine));
-extern nis_error nis_servstate __P ((const nis_server *machine,
-				     const nis_tag *tags, int numtags,
-				     nis_tag **result));
-extern nis_error nis_stats __P ((const nis_server *machine,
-				 const nis_tag *tags, int numtags,
-				 nis_tag **result));
-extern void nis_freetags __P ((nis_tag *tags, int numtags));
-extern nis_server **nis_getservlist __P ((const_nis_name dirname));
-extern void nis_freeservlist __P ((nis_server **machines));
+extern nis_error nis_mkdir (const_nis_name dirname,
+			    const nis_server *machine) __THROW;
+extern nis_error nis_rmdir (const_nis_name dirname,
+			    const nis_server *machine) __THROW;
+extern nis_error nis_servstate (const nis_server *machine,
+				const nis_tag *tags, int numtags,
+				nis_tag **result) __THROW;
+extern nis_error nis_stats (const nis_server *machine,
+			    const nis_tag *tags, int numtags,
+			    nis_tag **result) __THROW;
+extern void nis_freetags (nis_tag *tags, int numtags) __THROW;
+extern nis_server **nis_getservlist (const_nis_name dirname) __THROW;
+extern void nis_freeservlist (nis_server **machines) __THROW;
 
 /*
 ** nis_subr
 */
-extern nis_name nis_leaf_of __P ((const_nis_name name));
-extern nis_name nis_leaf_of_r __P ((const_nis_name name, char *buffer,
-				    size_t buflen));
-extern nis_name nis_name_of __P ((const_nis_name name));
-extern nis_name nis_name_of_r __P ((const_nis_name name, char *buffer,
-				    size_t buflen));
-extern nis_name nis_domain_of __P ((const_nis_name name));
-extern nis_name nis_domain_of_r __P ((const_nis_name name, char *buffer,
-				      size_t buflen));
-extern nis_name *nis_getnames __P ((const_nis_name name));
-extern void nis_freenames __P ((nis_name *namelist));
-extern name_pos nis_dir_cmp __P ((const_nis_name n1, const_nis_name n2));
-extern nis_object *nis_clone_object __P ((const nis_object *src,
-					  nis_object *dest));
-extern void nis_destroy_object __P ((nis_object *obj));
-extern void nis_print_object __P ((const nis_object *obj));
+extern nis_name nis_leaf_of (const_nis_name name) __THROW;
+extern nis_name nis_leaf_of_r (const_nis_name name, char *buffer,
+			       size_t buflen) __THROW;
+extern nis_name nis_name_of (const_nis_name name) __THROW;
+extern nis_name nis_name_of_r (const_nis_name name, char *buffer,
+			       size_t buflen) __THROW;
+extern nis_name nis_domain_of (const_nis_name name) __THROW;
+extern nis_name nis_domain_of_r (const_nis_name name, char *buffer,
+				 size_t buflen) __THROW;
+extern nis_name *nis_getnames (const_nis_name name) __THROW;
+extern void nis_freenames (nis_name *namelist) __THROW;
+extern name_pos nis_dir_cmp (const_nis_name n1, const_nis_name n2) __THROW;
+extern nis_object *nis_clone_object (const nis_object *src,
+				     nis_object *dest) __THROW;
+extern void nis_destroy_object (nis_object *obj) __THROW;
+extern void nis_print_object (const nis_object *obj) __THROW;
 
 /*
 ** nis_local_names
 */
-extern nis_name nis_local_group __P ((void));
-extern nis_name nis_local_directory __P ((void));
-extern nis_name nis_local_principal __P ((void));
-extern nis_name nis_local_host __P ((void));
+extern nis_name nis_local_group (void) __THROW;
+extern nis_name nis_local_directory (void) __THROW;
+extern nis_name nis_local_principal (void) __THROW;
+extern nis_name nis_local_host (void) __THROW;
 
 /*
 ** nis_error
 */
-extern const char *nis_sperrno __P ((const nis_error status));
-extern void nis_perror __P ((const nis_error status, const char *label));
-extern void nis_lerror __P ((const nis_error status, const char *label));
-extern char *nis_sperror __P ((const nis_error status, const char *label));
-extern char *nis_sperror_r __P ((const nis_error status, const char *label,
-				 char *buffer, size_t buflen));
+extern const char *nis_sperrno (const nis_error status) __THROW;
+extern void nis_perror (const nis_error status, const char *label) __THROW;
+extern void nis_lerror (const nis_error status, const char *label) __THROW;
+extern char *nis_sperror (const nis_error status, const char *label) __THROW;
+extern char *nis_sperror_r (const nis_error status, const char *label,
+			    char *buffer, size_t buflen) __THROW;
 /*
 ** nis_groups
 */
-extern bool_t nis_ismember __P ((const_nis_name principal,
-				 const_nis_name group));
-extern nis_error nis_addmember __P ((const_nis_name member,
-				     const_nis_name group));
-extern nis_error nis_removemember __P ((const_nis_name member,
-					const_nis_name group));
-extern nis_error nis_creategroup __P ((const_nis_name group,
-				       unsigned int flags));
-extern nis_error nis_destroygroup __P ((const_nis_name group));
-extern void nis_print_group_entry __P ((const_nis_name group));
-extern nis_error nis_verifygroup __P ((const_nis_name group));
+extern bool_t nis_ismember (const_nis_name principal,
+			    const_nis_name group) __THROW;
+extern nis_error nis_addmember (const_nis_name member,
+				const_nis_name group) __THROW;
+extern nis_error nis_removemember (const_nis_name member,
+				   const_nis_name group) __THROW;
+extern nis_error nis_creategroup (const_nis_name group,
+				  unsigned int flags) __THROW;
+extern nis_error nis_destroygroup (const_nis_name group) __THROW;
+extern void nis_print_group_entry (const_nis_name group) __THROW;
+extern nis_error nis_verifygroup (const_nis_name group) __THROW;
 
 /*
 ** nis_ping
 */
-extern void nis_ping __P ((const_nis_name dirname, uint32_t utime,
-			   const nis_object *dirobj));
-extern nis_result *nis_checkpoint __P ((const_nis_name dirname));
+extern void nis_ping (const_nis_name dirname, uint32_t utime,
+		      const nis_object *dirobj) __THROW;
+extern nis_result *nis_checkpoint (const_nis_name dirname) __THROW;
 
 /*
 ** nis_print (XXX INTERNAL FUNCTIONS, SHOULD NOT BE USED !!)
 */
-extern void nis_print_result __P ((const nis_result *result));
-extern void nis_print_rights __P ((unsigned int rights));
-extern void nis_print_directory __P ((const directory_obj *dirobj));
-extern void nis_print_group __P ((const group_obj *grpobj));
-extern void nis_print_table __P ((const table_obj *tblobj));
-extern void nis_print_link __P ((const link_obj *lnkobj));
-extern void nis_print_entry __P ((const entry_obj *enobj));
+extern void nis_print_result (const nis_result *result) __THROW;
+extern void nis_print_rights (unsigned int rights) __THROW;
+extern void nis_print_directory (const directory_obj *dirobj) __THROW;
+extern void nis_print_group (const group_obj *grpobj) __THROW;
+extern void nis_print_table (const table_obj *tblobj) __THROW;
+extern void nis_print_link (const link_obj *lnkobj) __THROW;
+extern void nis_print_entry (const entry_obj *enobj) __THROW;
 
 /*
 ** nis_file (XXX INTERNAL FUNCTIONS, SHOULD NOT BE USED !!)
 */
-extern directory_obj *readColdStartFile __P ((void));
-extern bool_t writeColdStartFile __P ((const directory_obj *dirobj));
-extern nis_object *nis_read_obj __P ((const char *obj));
-extern bool_t nis_write_obj __P ((const char *file, const nis_object *obj));
+extern directory_obj *readColdStartFile (void) __THROW;
+extern bool_t writeColdStartFile (const directory_obj *dirobj) __THROW;
+extern nis_object *nis_read_obj (const char *obj) __THROW;
+extern bool_t nis_write_obj (const char *file, const nis_object *obj) __THROW;
 
 /*
 ** nis_clone - (XXX INTERNAL FUNCTIONS, SHOULD NOT BE USED !!)
 */
-extern directory_obj *nis_clone_directory __P ((const directory_obj *src,
-						directory_obj *dest));
-extern nis_result *nis_clone_result __P ((const nis_result *src,
-					  nis_result *dest));
+extern directory_obj *nis_clone_directory (const directory_obj *src,
+					   directory_obj *dest) __THROW;
+extern nis_result *nis_clone_result (const nis_result *src,
+				     nis_result *dest) __THROW;
 
 /* nis_free - nis_freeresult */
-extern void nis_freeresult __P ((nis_result *result));
+extern void nis_freeresult (nis_result *result) __THROW;
 /* (XXX THE FOLLOWING ARE INTERNAL FUNCTIONS, SHOULD NOT BE USED !!) */
-extern void nis_free_request __P ((ib_request *req));
-extern void nis_free_directory __P ((directory_obj *dirobj));
-extern void nis_free_object __P ((nis_object *obj));
+extern void nis_free_request (ib_request *req) __THROW;
+extern void nis_free_directory (directory_obj *dirobj) __THROW;
+extern void nis_free_object (nis_object *obj) __THROW;
 
 /* (XXX INTERNAL FUNCTIONS, SHOULD NOT BE USED !!) */
-extern nis_name __nis_default_owner __P ((char *));
-extern nis_name __nis_default_group __P ((char *));
-extern uint32_t __nis_default_ttl __P ((char *));
-extern unsigned int __nis_default_access __P ((char *, unsigned int));
-extern fd_result *__nis_finddirectory __P ((directory_obj *, const_nis_name));
-extern void __free_fdresult __P ((fd_result *));
-extern uint32_t __nis_hash __P ((const void *keyarg, register size_t len));
+extern nis_name __nis_default_owner (char *) __THROW;
+extern nis_name __nis_default_group (char *) __THROW;
+extern uint32_t __nis_default_ttl (char *) __THROW;
+extern unsigned int __nis_default_access (char *, unsigned int) __THROW;
+extern fd_result *__nis_finddirectory (directory_obj *, const_nis_name) __THROW;
+extern void __free_fdresult (fd_result *) __THROW;
+extern uint32_t __nis_hash (const void *keyarg, register size_t len) __THROW;
 
 /* NIS+ cache locking */
-extern int __nis_lock_cache __P ((void));
-extern int __nis_unlock_cache __P ((void));
+extern int __nis_lock_cache (void) __THROW;
+extern int __nis_unlock_cache (void) __THROW;
 
 /* (XXX INTERNAL FUNCTIONS, ONLY FOR rpc.nisd AND glibc !!) */
 #if defined (NIS_INTERNAL) || defined (_LIBC)
@@ -269,12 +271,12 @@ struct dir_binding
 };
 typedef struct dir_binding dir_binding;
 
-extern nis_error __nisbind_create __P ((dir_binding *, const nis_server *,
-					unsigned int, unsigned int));
-extern nis_error __nisbind_connect __P ((dir_binding *));
-extern nis_error __nisbind_next __P ((dir_binding *));
-extern void __nisbind_destroy __P ((dir_binding *));
-extern nis_error __nisfind_server __P ((const_nis_name, directory_obj **));
+extern nis_error __nisbind_create (dir_binding *, const nis_server *,
+				   unsigned int, unsigned int) __THROW;
+extern nis_error __nisbind_connect (dir_binding *) __THROW;
+extern nis_error __nisbind_next (dir_binding *) __THROW;
+extern void __nisbind_destroy (dir_binding *) __THROW;
+extern nis_error __nisfind_server (const_nis_name, directory_obj **) __THROW;
 
 #endif
 

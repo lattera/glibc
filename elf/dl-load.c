@@ -128,9 +128,6 @@ static const size_t system_dirs_len[] =
   SYSTEM_DIRS_LEN
 };
 
-/* This function has no public prototype.  */
-extern ssize_t __libc_read (int, void *, size_t);
-
 
 /* Local version of `strdup' function.  */
 static inline char *

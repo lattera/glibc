@@ -1,6 +1,6 @@
 /* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -29,25 +29,25 @@ extern int __nss_not_use_nscd_passwd;
 extern int __nss_not_use_nscd_group;
 extern int __nss_not_use_nscd_hosts;
 
-extern int __nscd_getpwnam_r __P ((const char *name, struct passwd *resultbuf,
-				   char *buffer, size_t buflen));
-extern int __nscd_getpwuid_r __P ((uid_t uid, struct passwd *resultbuf,
-				   char *buffer,  size_t buflen));
-extern int __nscd_getgrnam_r __P ((const char *name, struct group *resultbuf,
-				   char *buffer, size_t buflen));
-extern int __nscd_getgrgid_r __P ((uid_t uid, struct group *resultbuf,
-				   char *buffer,  size_t buflen));
-extern int __nscd_gethostbyname_r __P ((const char *name,
-					struct hostent *resultbuf,
-					char *buffer, size_t buflen,
-					int *h_errnop));
-extern int __nscd_gethostbyname2_r __P ((const char *name, int af,
-					 struct hostent *resultbuf,
-					 char *buffer, size_t buflen,
-					 int *h_errnop));
-extern int __nscd_gethostbyaddr_r __P ((const char *addr, size_t len, int type,
-					struct hostent *resultbuf,
-					char *buffer, size_t buflen,
-					int *h_errnop));
+extern int __nscd_getpwnam_r (const char *name, struct passwd *resultbuf,
+			      char *buffer, size_t buflen);
+extern int __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf,
+			      char *buffer,  size_t buflen);
+extern int __nscd_getgrnam_r (const char *name, struct group *resultbuf,
+			      char *buffer, size_t buflen);
+extern int __nscd_getgrgid_r (uid_t uid, struct group *resultbuf,
+			      char *buffer,  size_t buflen);
+extern int __nscd_gethostbyname_r (const char *name,
+				   struct hostent *resultbuf,
+				   char *buffer, size_t buflen,
+				   int *h_errnop);
+extern int __nscd_gethostbyname2_r (const char *name, int af,
+				    struct hostent *resultbuf,
+				    char *buffer, size_t buflen,
+				    int *h_errnop);
+extern int __nscd_gethostbyaddr_r (const char *addr, size_t len, int type,
+				   struct hostent *resultbuf,
+				   char *buffer, size_t buflen,
+				   int *h_errnop);
 
 #endif /* _NSCD_PROTO_H */

@@ -1,5 +1,5 @@
 /* The weak pthread functions for Linux.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,9 @@
 #include <limits.h>
 #include <stdlib.h>
 
-extern int __pthread_return_0 (void) __THROW;
-extern int __pthread_return_1 (void) __THROW;
-extern void __pthread_return_void (void) __THROW;
+extern int __pthread_return_0 (void);
+extern int __pthread_return_1 (void);
+extern void __pthread_return_void (void);
 
 /* Those are pthread functions which return 0 if successful. */
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
