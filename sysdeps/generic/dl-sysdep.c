@@ -109,7 +109,7 @@ _dl_sysdep_start_cleanup (void)
 int
 _dl_sysdep_open_zero_fill (void)
 {
-  return open ("/dev/zero", O_RDONLY);
+  return __open ("/dev/zero", O_RDONLY);
 }
 
 #include <stdarg.h>
@@ -123,7 +123,7 @@ _dl_sysdep_fatal (const char *msg, ...)
   do
     {
       size_t len = strlen (msg);
-      write (STDERR_FILENO, msg, len);
+      __write (STDERR_FILENO, msg, len);
       msg = va_arg (ap, const char *);
     } while (msg);
   va_end (ap);
@@ -141,7 +141,7 @@ _dl_sysdep_message (const char *msg, ...)
   do
     {
       size_t len = strlen (msg);
-      write (STDOUT_FILENO, msg, len);
+      __write (STDOUT_FILENO, msg, len);
       msg = va_arg (ap, const char *);
     } while (msg);
   va_end (ap);

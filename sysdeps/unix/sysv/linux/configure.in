@@ -1,0 +1,25 @@
+sinclude(./aclocal.m4)dnl Autoconf lossage
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local configure fragment for sysdeps/unix/sysv/linux.
+
+# On Linux, the default is to use libio instead of stdio.
+test $stdio = default && stdio=libio
+
+# Don't bother trying to generate any glue code to be compatible with the
+# existing system library, because we are the only system library.
+inhibit_glue=yes
+
+AC_CACHE_CHECK(installed Linux kernel header files, libc_cv_linux2, [dnl
+AC_TRY_COMPILE([#include <linux/version.h>],
+[#if LINUX_VERSION_CODE < (2 *65536+ 0 *256+ 0) /* 2.0.0 */
+eat flaming death
+#endif],
+	       libc_cv_linux2='2.0 or later', libc_cv_linux2='TOO OLD!')])
+if test "$libc_cv_linux2" != '2.0 or later'; then
+  AC_MSG_ERROR([GNU libc requires kernel header files from Linux 2.0
+or later to be installed before configuring.  The kernel header files
+are found usually in /usr/include/asm and /usr/include/linux; make sure
+these directories use files from Linux 2.0 or later.  This check uses
+<linux/version.h>, so make sure that file was built correctly when
+installing the kernel header files.])
+fi

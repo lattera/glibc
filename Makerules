@@ -363,9 +363,15 @@ lib: lib-noranlib $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
 # Pattern rule for libraries: depend on the __.SYMDEF member updated by ranlib.
 lib%.a: lib%.a($(ar-symtab-name)) ;
 
+# For object-suffix $o, the list of objects with that suffix.
+# Makefiles can define `elide-routines.so = foo' to leave foo.so out.
+o-objects = $(patsubst %.o,%$o,$(filter-out $(patsubst %,$(objpfx)%.o,\
+						       $(elide-routines$o)),\
+					    $(objects)))
+
 libobjs: $(foreach o,$(object-suffixes),\
 		   $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
-		   $(notdir $(objects:.o=$o))))
+		   $(notdir $(o-objects))))
 lib-noranlib: libobjs
 others: $(addprefix $(objpfx),$(install-lib))
 
@@ -374,28 +380,33 @@ ifdef objects
 # Define a pattern rule that will match many targets libc.a(foo.%), for
 # each foo.o in $(objects) (% will just happen always to match `o').  This is
 # the only way to define a rule that updates many targets at once with one
-# sequence of commands.  We in fact define the pattern rule to match
-# targets libc.a(foo.%), libc_pic.a(foo.%), etc, to avoid repeating the rule.
-# Each match will only ever be called upon to make member objects of
-# the appropriate type in each library (i.e. libc_pic.a(foo.so)).
-$(foreach l,$(libtypes),\
-	  $(common-objpfx)$(patsubst %,$l,c)($(notdir $(objects:.o=.%)))): \
+# sequence of commands.
+define o-iterator-doit
+$(common-objpfx)$(patsubst %,$(libtype$o),c)(\
+$(addsuffix .%,$(filter-out $(elide-routines$o),$(notdir $(objects:.o=))))): \
   $(objpfx)stamp.%-$(subdir) ;
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
 
 # The pattern rule tells Make to remake $(objpfx)stamp.%-$(subdir) as
-# the way to update all the foo.% object files in $(objects).
-# Now we define a static pattern rule to update each
-# $(objpfx)stamp.SUFFIX-$(subdir) timestamp file;
-# these rules (one explicit rule is generated for each object suffix)
-# will update the parent archive with
-$(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir)): \
-  $(objpfx)stamp%-$(subdir): $(objects:.o=%)
-	$(patsubst %,cd %;,$(objdir)) \
-	$(AR) cru$(verbose) ${O%-lib} \
-	      $(patsubst $(objpfx)%,%,$^)
-# `touch' won't let me touch a world-writable file I don't own.  Sigh.
-	rm -f $@
-	touch $@
+# the way to update all the foo.% object files in $(objects).  Now we
+# define explicit rules to update each $(objpfx)stamp.SUFFIX-$(subdir)
+# timestamp file; these rules (one explicit rule is generated for each
+# object suffix) will update the parent archive with ar.  Use a static
+# pattern rule so $* is set to the object type during the commands.
+define o-iterator-doit
+$(objpfx)stamp$o-$(subdir): $(objpfx)stamp%-$(subdir): $(o-objects); $$(do-ar)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
+define do-ar
+$(patsubst %,cd %;,$(objdir)) \
+$(AR) cru$(verbose) ${O%-lib} \
+      $(patsubst $(objpfx)%,%,$^)
+rm -f $@
+touch $@
+endef
 ifdef subdir
 O%-lib = $(filter ../,$(firstword $(objdir) ../))$(patsubst %,$(libtype$*),c)
 else
@@ -409,7 +420,7 @@ endif
 define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
 	  $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
-	  $(patsubst $(objpfx)%.o,%$o,$(objects))) \
+	    $(patsubst $(objpfx)%,%,$(o-objects))) \
 	  $(filter subdir_lib,$(firstword $(subdir) subdir_lib)); \
 	$$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
 endef
@@ -419,7 +430,7 @@ include $(o-iterator)
 
 # This makes all the object files.
 .PHONY: objects objs
-objects objs: $(foreach o,$(object-suffixes),$(objects:.o=$o)) \
+objects objs: $(foreach o,$(object-suffixes),$(o-objects)) \
 	      $(addprefix $(objpfx),$(extra-objs))
 
 # Canned sequence for building an extra library archive.
@@ -748,7 +759,7 @@ common-mostlyclean:
 	$(rmobjs)
 define rmobjs
 $(foreach o,$(object-suffixes),
--rm -f $(addprefix $(objpfx),stamp$o-$(subdir)) $(objects:.o=$o))
+-rm -f $(addprefix $(objpfx),stamp$o-$(subdir)) $(o-objects))
 endef
 
 # Also remove the dependencies and generated source files.
