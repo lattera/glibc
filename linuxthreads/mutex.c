@@ -171,7 +171,7 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
     __pthread_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_ERRORCHECK_NP:
-    if (mutex->__m_owner != thread_self() || (mutex->__m_lock.__status & 1) == 0)
+    if (mutex->__m_owner != thread_self() || mutex->__m_lock.__status == 0)
       return EPERM;
     mutex->__m_owner = NULL;
     __pthread_alt_unlock(&mutex->__m_lock);
