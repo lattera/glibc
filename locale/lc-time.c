@@ -1,5 +1,5 @@
 /* Define current locale data for LC_TIME category.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 _NL_CURRENT_DEFINE (LC_TIME);
 
 /* Some of the functions here must not be used while setlocale is called.  */
-__libc_lock_define (extern, __libc_setlocale_lock)
+__libc_lock_define (extern, __libc_setlocale_lock attribute_hidden)
 
 
 static int era_initialized;

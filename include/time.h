@@ -8,7 +8,7 @@
 struct tm;
 
 /* Defined in mktime.c.  */
-extern const unsigned short int __mon_yday[2][13];
+extern const unsigned short int __mon_yday[2][13] attribute_hidden;
 
 /* Defined in localtime.c.  */
 extern struct tm _tmbuf attribute_hidden;

@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -134,7 +134,6 @@ localtime_r (t, tp)
 #ifdef _LIBC
 /* This is defined in locale/C-time.c in the GNU libc.  */
 extern const struct locale_data _nl_C_LC_TIME;
-extern const unsigned short int __mon_yday[2][13];
 
 # define weekday_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (DAY_1)].string)
 # define ab_weekday_name \

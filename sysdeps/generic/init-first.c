@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Stub version.
-   Copyright (C) 1995, 1997, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-int __libc_multiple_libcs = 1;
+int __libc_multiple_libcs attribute_hidden = 1;
 
 extern void __libc_init (int, char **, char **);
 #ifdef USE_NONOPTION_FLAGS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -30,7 +30,7 @@
    In the `_nl_C_LC_CTYPE_class' array the value for EOF (== -1)
    is set to always return 0 and the conversion arrays return EOF.  */
 
-const char _nl_C_LC_CTYPE_class[768] =
+const char _nl_C_LC_CTYPE_class[768] attribute_hidden =
   /* 0x80 */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
   /* 0x86 */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
   /* 0x8c */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
@@ -96,7 +96,7 @@ const char _nl_C_LC_CTYPE_class[768] =
   /* 0xf4 */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
   /* 0xfa */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
 ;
-const char _nl_C_LC_CTYPE_class32[1024] =
+const char _nl_C_LC_CTYPE_class32[1024] attribute_hidden =
   /* 0x00 */ "\000\000\002\000" "\000\000\002\000" "\000\000\002\000"
   /* 0x03 */ "\000\000\002\000" "\000\000\002\000" "\000\000\002\000"
   /* 0x06 */ "\000\000\002\000" "\000\000\002\000" "\000\000\002\000"
@@ -184,7 +184,7 @@ const char _nl_C_LC_CTYPE_class32[1024] =
   /* 0xfc */ "\000\000\000\000" "\000\000\000\000" "\000\000\000\000"
   /* 0xff */ "\000\000\000\000"
 ;
-const uint32_t _nl_C_LC_CTYPE_toupper[384] =
+const uint32_t _nl_C_LC_CTYPE_toupper[384] attribute_hidden =
 {
   /* 0x80 */ 0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
   /* 0x88 */ 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f,
@@ -235,7 +235,7 @@ const uint32_t _nl_C_LC_CTYPE_toupper[384] =
   /* 0xf0 */ 0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7,
   /* 0xf8 */ 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff
 };
-const uint32_t _nl_C_LC_CTYPE_tolower[384] =
+const uint32_t _nl_C_LC_CTYPE_tolower[384] attribute_hidden =
 {
   /* 0x80 */ 0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
   /* 0x88 */ 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f,
@@ -297,7 +297,7 @@ const uint32_t _nl_C_LC_CTYPE_tolower[384] =
       uint32_t level3[1 << p];                                                \
     }
 
-const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_upper =
+const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_upper attribute_hidden =
 {
   { 0x00000000, 0x00000000, 0x07fffffe, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -310,7 +310,7 @@ const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_upper =
   /* 3rd-level table */
   { 0x07fffffe, 0x00000000 }
 };
-const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_lower =
+const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_lower attribute_hidden =
 {
   { 0x00000000, 0x00000000, 0x00000000, 0x07fffffe,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -323,7 +323,7 @@ const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_lower =
   /* 3rd-level table */
   { 0x00000000, 0x07fffffe }
 };
-const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_alpha =
+const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_alpha attribute_hidden =
 {
   { 0x00000000, 0x00000000, 0x07fffffe, 0x07fffffe,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -336,7 +336,7 @@ const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_alpha =
   /* 3rd-level table */
   { 0x07fffffe, 0x07fffffe }
 };
-const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_digit =
+const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_digit attribute_hidden =
 {
   { 0x00000000, 0x03ff0000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -349,7 +349,7 @@ const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_digit =
   /* 3rd-level table */
   { 0x00000000, 0x03ff0000 }
 };
-const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_xdigit =
+const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_xdigit attribute_hidden =
 {
   { 0x00000000, 0x03ff0000, 0x0000007e, 0x0000007e,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -362,7 +362,7 @@ const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_xdigit =
   /* 3rd-level table */
   { 0x00000000, 0x03ff0000, 0x0000007e, 0x0000007e }
 };
-const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_space =
+const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_space attribute_hidden =
 {
   { 0x00003e00, 0x00000001, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -375,7 +375,7 @@ const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_space =
   /* 3rd-level table */
   { 0x00003e00, 0x00000001 }
 };
-const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_print =
+const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_print attribute_hidden =
 {
   { 0x00000000, 0xffffffff, 0xffffffff, 0x7fffffff,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -388,7 +388,7 @@ const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_print =
   /* 3rd-level table */
   { 0x00000000, 0xffffffff, 0xffffffff, 0x7fffffff }
 };
-const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_graph =
+const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_graph attribute_hidden =
 {
   { 0x00000000, 0xfffffffe, 0xffffffff, 0x7fffffff,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -401,7 +401,7 @@ const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_graph =
   /* 3rd-level table */
   { 0x00000000, 0xfffffffe, 0xffffffff, 0x7fffffff }
 };
-const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_blank =
+const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_blank attribute_hidden =
 {
   { 0x00000200, 0x00000001, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -414,7 +414,7 @@ const STRUCT_CTYPE_CLASS(1, 0) _nl_C_LC_CTYPE_class_blank =
   /* 3rd-level table */
   { 0x00000200, 0x00000001 }
 };
-const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_cntrl =
+const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_cntrl attribute_hidden =
 {
   { 0xffffffff, 0x00000000, 0x00000000, 0x80000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -427,7 +427,7 @@ const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_cntrl =
   /* 3rd-level table */
   { 0xffffffff, 0x00000000, 0x00000000, 0x80000000 }
 };
-const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_punct =
+const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_punct attribute_hidden =
 {
   { 0x00000000, 0xfc00fffe, 0xf8000001, 0x78000001,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -440,7 +440,7 @@ const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_punct =
   /* 3rd-level table */
   { 0x00000000, 0xfc00fffe, 0xf8000001, 0x78000001 }
 };
-const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_alnum =
+const STRUCT_CTYPE_CLASS(2, 0) _nl_C_LC_CTYPE_class_alnum attribute_hidden =
 {
   { 0x00000000, 0x03ff0000, 0x07fffffe, 0x07fffffe,
     0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -461,7 +461,7 @@ const struct
   uint32_t level2[4];
   int32_t level3[32];
 }
-_nl_C_LC_CTYPE_map_toupper =
+_nl_C_LC_CTYPE_map_toupper attribute_hidden =
 {
   { 7, 1, 5, 3, 31 },
   /* 1st-level table */
@@ -480,7 +480,7 @@ _nl_C_LC_CTYPE_map_toupper =
     0x00000000, 0x00000000, 0x00000000, 0x00000000
   }
 },
-_nl_C_LC_CTYPE_map_tolower =
+_nl_C_LC_CTYPE_map_tolower attribute_hidden =
 {
   { 7, 1, 5, 3, 31 },
   /* 1st-level table */
@@ -507,7 +507,7 @@ const struct
   uint32_t level2[8];
   int8_t level3[33];
 }
-_nl_C_LC_CTYPE_width =
+_nl_C_LC_CTYPE_width attribute_hidden =
 {
   { 7, 1, 4, 7, 15 },
   /* 1st-level table */
@@ -538,7 +538,7 @@ _nl_C_LC_CTYPE_width =
    NR_FIXED == _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1). */
 typedef int assertion1[1 - 2 * (NR_FIXED != _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1))];
 
-const struct locale_data _nl_C_LC_CTYPE =
+const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
 {
   _nl_C_name,
   NULL, 0, 0,	/* no file mapped */

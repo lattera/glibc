@@ -1,5 +1,5 @@
 /* C locale object.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -27,12 +27,12 @@ extern struct locale_data _nl_C_##category;
 #undef	DEFINE_CATEGORY
 
 /* Defined in locale/C-ctype.c.  */
-extern const char _nl_C_LC_CTYPE_class[];
-extern const char _nl_C_LC_CTYPE_toupper[];
-extern const char _nl_C_LC_CTYPE_tolower[];
+extern const char _nl_C_LC_CTYPE_class[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_toupper[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_tolower[] attribute_hidden;
 
 
-struct __locale_struct _nl_C_locobj =
+struct __locale_struct _nl_C_locobj attribute_hidden =
   {
     .__locales =
     {

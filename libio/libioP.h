@@ -435,7 +435,7 @@ extern struct _IO_jump_t _IO_proc_jumps attribute_hidden;
 extern struct _IO_jump_t _IO_old_proc_jumps attribute_hidden;
 extern struct _IO_jump_t _IO_str_jumps attribute_hidden;
 extern struct _IO_jump_t _IO_wstr_jumps attribute_hidden;
-extern struct _IO_codecvt __libio_codecvt;
+extern struct _IO_codecvt __libio_codecvt attribute_hidden;
 extern int _IO_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_old_do_write __P ((_IO_FILE *, const char *, _IO_size_t));

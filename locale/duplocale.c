@@ -1,5 +1,5 @@
 /* Duplicate handle for selection of locales.
-   Copyright (C) 1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -26,7 +26,7 @@
 
 
 /* Lock for protecting global data.  */
-__libc_lock_define (extern , __libc_setlocale_lock)
+__libc_lock_define (extern , __libc_setlocale_lock attribute_hidden)
 
 
 __locale_t

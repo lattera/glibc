@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -50,8 +50,8 @@
 #define _PATH_DEVPTS "/dev/pts/"
 
 /* The are declared in getpt.c.  */
-extern const char __libc_ptyname1[];
-extern const char __libc_ptyname2[];
+extern const char __libc_ptyname1[] attribute_hidden;
+extern const char __libc_ptyname2[] attribute_hidden;
 
 /* Static buffer for `ptsname'.  */
 static char buffer[sizeof (_PATH_DEVPTS) + 20];

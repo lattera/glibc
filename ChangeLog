@@ -1,5 +1,86 @@
 2002-03-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* ctype/ctype-info.c: Declare _nl_C_LC_CTYPE_class,
+	_nl_C_LC_CTYPE_class32, _nl_C_LC_CTYPE_toupper, _nl_C_LC_CTYPE_tolower,
+	_nl_C_LC_CTYPE_class_upper, _nl_C_LC_CTYPE_class_lower,
+	_nl_C_LC_CTYPE_class_alpha, _nl_C_LC_CTYPE_class_digit,
+	_nl_C_LC_CTYPE_class_xdigit, _nl_C_LC_CTYPE_class_space,
+	_nl_C_LC_CTYPE_class_print, _nl_C_LC_CTYPE_class_graph,
+	_nl_C_LC_CTYPE_class_blank, _nl_C_LC_CTYPE_class_cntrl,
+	_nl_C_LC_CTYPE_class_punct, _nl_C_LC_CTYPE_class_alnum,
+	_nl_C_LC_CTYPE_map_toupper, _nl_C_LC_CTYPE_map_tolower, and
+	_nl_C_LC_CTYPE_width: Declare as hidden.
+	* include/locale.h: Declare _nl_locale_file_list.
+	* locale/C-address.c: Define _nl_C_LC_ADDRESS as hidden.
+	* locale/C-collate.c: Define _nl_C_LC_COLLATE as hidden.
+	* locale/C-identification.c: Define _nl_C_LC_IDENTIFICATION as hidden.
+	* locale/C-measurement.c: Define _nl_C_LC_MEASUREMENT as hidden.
+	* locale/C-messages.c: Define _nl_C_LC_MESSAGES as hidden.
+	* locale/C-monetary.c: Define _nl_C_LC_MONETARY as hidden.
+	* locale/C-name.c: Define _nl_C_LC_NAME as hidden.
+	* locale/C-numeric.c: Define _nl_C_LC_NUMERIC as hidden.
+	* locale/C-paper.c: Define _nl_C_LC_PAPER as hidden.
+	* locale/C-telephone.c: Define _nl_C_LC_TELEPHONE as hidden.
+	* locale/C-time.c: Define _nl_C_LC_TIME as hidden.
+	* locale/C-ctype.c: Define _nl_C_LC_CTYPE_class,
+	_nl_C_LC_CTYPE_class32, _nl_C_LC_CTYPE_toupper, _nl_C_LC_CTYPE_tolower,
+	_nl_C_LC_CTYPE_class_upper, _nl_C_LC_CTYPE_class_lower,
+	_nl_C_LC_CTYPE_class_alpha, _nl_C_LC_CTYPE_class_digit,
+	_nl_C_LC_CTYPE_class_xdigit, _nl_C_LC_CTYPE_class_space,
+	_nl_C_LC_CTYPE_class_print, _nl_C_LC_CTYPE_class_graph,
+	_nl_C_LC_CTYPE_class_blank, _nl_C_LC_CTYPE_class_cntrl,
+	_nl_C_LC_CTYPE_class_punct, _nl_C_LC_CTYPE_class_alnum,
+	_nl_C_LC_CTYPE_map_toupper, _nl_C_LC_CTYPE_map_tolower,
+	_nl_C_LC_CTYPE_width, and as hidden.
+	* locale/findlocale.c: Declare _nl_C as hidden.
+	* locale/newlocale.c: Likewise.
+	* locale/setlocale.c: Define _nl_C as hidden.  Remove declaration of
+	_nl_locale_file_list.
+	* locale/xlocale.c: Declare _nl_C_LC_CTYPE_class,
+	_nl_C_LC_CTYPE_toupper, and _nl_C_LC_CTYPE_tolower as hidden.
+	Define _nl_C_locobj as hidden.
+
+	* malloc/mtrace.c (_mtrace_file): Define as hidden.
+	(_mtrace_line): Likewise.
+
+	* include/time.h: Declare __mon_yday as hidden.
+	* time/strptime.c [_LIBC] (__mon_yday): Remove declaration.
+
+	* libio/libioP.h: Declare __libio_codecvt as hidden.
+	* libio/fileops.c: Declare __libio_translit as hidden.
+	* libio/iofwide.c: Define __libio_translit as hidden.
+
+	* login/getutent_r.c: Define __libc_utmp_lock as hidden.
+	* login/getutid_r.c: Declare __libc_utmp_lock as hidden.
+	* login/getutline_r.c: Likewise.
+	* login/utmpname.c: Likewise.
+
+	* login/utmp-private.h: Declare __libc_utmp_file_functions,
+	__libc_utmp_unknown_functions, __libc_utmp_jump_table, and
+	__libc_utmp_file_name as hidden.
+
+	* locale/setlocale.c (__libc_setlocale_lock): Define as hidden.
+	* locale/duplocale.c (__libc_setlocale_lock): Declare as hidden.
+	* locale/freelocale.c: Likewise.
+	* locale/lc-time.c: Likewise.
+
+	* sysdeps/unix/bsd/getpt.c (__libc_ptyname1): Define as hidden.
+	(__libc_ptyname2): Likewise.
+	* sysdeps/unix/sysv/linux/ptsname.c (__libc_ptyname1): Declare as
+	hidden.
+	(__libc_ptyname2): Likewise.
+
+	* sysdeps/generic/sbrk.c: Declare __libc_multiple_libcs as hidden.
+	* sysdeps/arm/init-first.c (__libc_multiple_libcs): Define as hidden.
+	* sysdeps/generic/init-first.c: Likewise.
+	* sysdeps/i386/init-first.c: Likewise.
+	* sysdeps/mach/hurd/i386/init-first.c: Likewise.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/init-first.c: Likewise.
+	* sysdeps/sh/init-first.c: Likewise.
+	* sysdeps/unix/sysv/aix/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+
 	* stdio-common/itowa-digits.c (_itowa_lower_digits): Define as hidden.
 	(_itowa_upper_digits): Likewise.
 

@@ -20,25 +20,25 @@
 #include <locale/localeinfo.h>
 
 /* Defined in locale/C-ctype.c.  */
-extern const char _nl_C_LC_CTYPE_class[];
-extern const char _nl_C_LC_CTYPE_class32[];
-extern const char _nl_C_LC_CTYPE_toupper[];
-extern const char _nl_C_LC_CTYPE_tolower[];
-extern const char _nl_C_LC_CTYPE_class_upper[];
-extern const char _nl_C_LC_CTYPE_class_lower[];
-extern const char _nl_C_LC_CTYPE_class_alpha[];
-extern const char _nl_C_LC_CTYPE_class_digit[];
-extern const char _nl_C_LC_CTYPE_class_xdigit[];
-extern const char _nl_C_LC_CTYPE_class_space[];
-extern const char _nl_C_LC_CTYPE_class_print[];
-extern const char _nl_C_LC_CTYPE_class_graph[];
-extern const char _nl_C_LC_CTYPE_class_blank[];
-extern const char _nl_C_LC_CTYPE_class_cntrl[];
-extern const char _nl_C_LC_CTYPE_class_punct[];
-extern const char _nl_C_LC_CTYPE_class_alnum[];
-extern const char _nl_C_LC_CTYPE_map_toupper[];
-extern const char _nl_C_LC_CTYPE_map_tolower[];
-extern const char _nl_C_LC_CTYPE_width[];
+extern const char _nl_C_LC_CTYPE_class[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class32[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_toupper[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_tolower[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_upper[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_lower[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_alpha[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_digit[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_xdigit[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_space[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_print[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_graph[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_blank[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_cntrl[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_punct[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_class_alnum[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_map_toupper[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_map_tolower[] attribute_hidden;
+extern const char _nl_C_LC_CTYPE_width[] attribute_hidden;
 
 #define b(t,x,o) (((const t *) _nl_C_LC_CTYPE_##x) + o)
 

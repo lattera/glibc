@@ -80,7 +80,7 @@ extern int errno;
 
 
 #ifdef _LIBC
-extern struct __gconv_trans_data __libio_translit;
+extern struct __gconv_trans_data __libio_translit attribute_hidden;
 #endif
 
 

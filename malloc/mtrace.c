@@ -44,6 +44,10 @@
 # define setvbuf(s, b, f, l) INTUSE(_IO_setvbuf) (s, b, f, l)
 #endif
 
+#ifndef attribute_hidden
+# define attribute_hidden
+#endif
+
 #define TRACE_BUFFER_SIZE 512
 
 static FILE *mallstream;
@@ -57,8 +61,8 @@ __ptr_t mallwatch;
 
 /* File name and line number information, for callers that had
    the foresight to call through a macro.  */
-char *_mtrace_file;
-int _mtrace_line;
+char *_mtrace_file attribute_hidden;
+int _mtrace_line attribute_hidden;
 
 /* Old hook values.  */
 static void (*tr_old_free_hook) __P ((__ptr_t ptr, const __ptr_t));

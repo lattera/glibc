@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -31,13 +31,13 @@
 #ifndef PTYNAME1
 #define PTYNAME1 "pqrsPQRS"
 #endif
-const char __libc_ptyname1[] = PTYNAME1;
+const char __libc_ptyname1[] attribute_hidden = PTYNAME1;
 
 /* Letters indicating the position within a series.  */
 #ifndef PTYNAME2
 #define PTYNAME2 "0123456789abcdefghijklmnopqrstuv";
 #endif
-const char __libc_ptyname2[] = PTYNAME2;
+const char __libc_ptyname2[] attribute_hidden = PTYNAME2;
 
 
 /* Open a master pseudo terminal and return its file descriptor.  */

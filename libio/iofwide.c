@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,7 +82,7 @@ struct _IO_codecvt __libio_codecvt =
 
 
 #ifdef _LIBC
-struct __gconv_trans_data __libio_translit =
+struct __gconv_trans_data __libio_translit attribute_hidden =
 {
   .__trans_fct = __gconv_transliterate
 };

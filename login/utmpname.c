@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -32,7 +32,7 @@ static const char default_file_name[] = _PATH_UTMP;
 const char *__libc_utmp_file_name = (const char *) default_file_name;
 
 /* We have to use the lock in getutent_r.c.  */
-__libc_lock_define (extern, __libc_utmp_lock)
+__libc_lock_define (extern, __libc_utmp_lock attribute_hidden)
 
 
 int

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95-99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95-99, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ struct locale_data * *const _nl_current[] =
 
 /* Array indexed by category of pointers to _nl_C_CATEGORY slots.
    Elements are zero for categories whose data is never used.  */
-struct locale_data *const _nl_C[] =
+struct locale_data *const _nl_C[] attribute_hidden =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
     [category] = &_nl_C_##category,
@@ -118,7 +118,7 @@ static const char *_nl_current_names[] =
 
 
 /* Lock for protecting global data.  */
-__libc_lock_define_initialized (, __libc_setlocale_lock)
+__libc_lock_define_initialized (, __libc_setlocale_lock attribute_hidden)
 
 /* Defined in loadmsgcat.c.  */
 extern int _nl_msg_cat_cntr;
@@ -429,8 +429,6 @@ setlocale (int category, const char *locale)
       return (char *) newname[0];
     }
 }
-
-extern struct loaded_l10nfile *_nl_locale_file_list[];
 
 static void __attribute__ ((unused))
 free_mem (void)

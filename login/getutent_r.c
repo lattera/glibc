@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,2000,2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -51,7 +51,7 @@ struct utfuncs __libc_utmp_unknown_functions =
 struct utfuncs *__libc_utmp_jump_table = &__libc_utmp_unknown_functions;
 
 /* We need to protect the opening of the file.  */
-__libc_lock_define_initialized (, __libc_utmp_lock)
+__libc_lock_define_initialized (, __libc_utmp_lock attribute_hidden)
 
 
 static int
