@@ -47,6 +47,12 @@ Version 2.2
 * A port to Hitachi SH3 and SH4 has been contributed by Kazumoto Kojima
   and Yutaka Niibe.
 
+* POSIX clocks and timers implemented by Kaz Kylheku and Ulrich Drepper.
+
+* POSIX spawn function family implemented by Ulrich Drepper.
+
+* POSIX spinlocks are now available.
+
 
 Version 2.1.3
 

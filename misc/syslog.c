@@ -120,6 +120,7 @@ vsyslog(pri, fmt, ap)
 	struct sigaction *oldaction_ptr = NULL;
  	int sigpipe;
 	int saved_errno = errno;
+	char failbuf[3 * sizeof (pid_t) + sizeof "out of memory []"];
 
 #define	INTERNALLOG	LOG_ERR|LOG_CONS|LOG_PERROR|LOG_PID
 	/* Check for invalid bits. */
@@ -139,36 +140,61 @@ vsyslog(pri, fmt, ap)
 
 	/* Build the message in a memory-buffer stream.  */
 	f = open_memstream (&buf, &bufsize);
-	prioff = fprintf (f, "<%d>", pri);
-	(void) time (&now);
+	if (f == NULL)
+	  {
+	    /* We cannot get a stream.  There is not much we can do but
+	       emitting an error messages.  */
+	    char numbuf[3 * sizeof (pid_t)];
+	    char *nump;
+	    char *endp = __stpcpy (failbuf, "out of memory [");
+	    pid_t pid = __getpid ();
+
+	    nump = numbuf + sizeof (numbuf);
+	    /* The PID can never be zero.  */
+	    do
+	      *--nump = '0' + pid % 10;
+	    while ((pid /= 10) != 0);
+
+	    endp = __mempcpy (endp, nump, (nump + sizeof (numbuf)) - nump);
+	    *endp++ = ']';
+	    *endp = '\0';
+	    buf = failbuf;
+	    bufsize = endp - failbuf;
+	  }
+	else
+	  {
+	    prioff = fprintf (f, "<%d>", pri);
+	    (void) time (&now);
 #ifdef USE_IN_LIBIO
-        f->_IO_write_ptr += strftime (f->_IO_write_ptr,
-                                      f->_IO_write_end - f->_IO_write_ptr,
-                                      "%h %e %T ",
-				      __localtime_r (&now, &now_tm));
+	    f->_IO_write_ptr += strftime (f->_IO_write_ptr,
+					  f->_IO_write_end - f->_IO_write_ptr,
+					  "%h %e %T ",
+					  __localtime_r (&now, &now_tm));
 #else
-	f->__bufp += strftime (f->__bufp, f->__put_limit - f->__bufp,
-			       "%h %e %T ", __localtime_r (&now, &now_tm));
+	    f->__bufp += strftime (f->__bufp, f->__put_limit - f->__bufp,
+				   "%h %e %T ", __localtime_r (&now, &now_tm));
 #endif
-	msgoff = ftell (f);
-	if (LogTag == NULL)
-	  LogTag = __progname;
-	if (LogTag != NULL)
-	  fputs_unlocked (LogTag, f);
-	if (LogStat & LOG_PID)
-	  fprintf (f, "[%d]", __getpid ());
-	if (LogTag != NULL)
-	  putc_unlocked (':', f), putc_unlocked (' ', f);
+	    msgoff = ftell (f);
+	    if (LogTag == NULL)
+	      LogTag = __progname;
+	    if (LogTag != NULL)
+	      fputs_unlocked (LogTag, f);
+	    if (LogStat & LOG_PID)
+	      fprintf (f, "[%d]", __getpid ());
+	    if (LogTag != NULL)
+	      putc_unlocked (':', f), putc_unlocked (' ', f);
 
-	/* Restore errno for %m format.  */
-	__set_errno (saved_errno);
+	    /* Restore errno for %m format.  */
+	    __set_errno (saved_errno);
 
-	/* We have the header.  Print the user's format into the buffer.  */
-	vfprintf (f, fmt, ap);
+	    /* We have the header.  Print the user's format into the
+               buffer.  */
+	    vfprintf (f, fmt, ap);
 
-	/* Close the memory stream; this will finalize the data
-	   into a malloc'd buffer in BUF.  */
-	fclose (f);
+	    /* Close the memory stream; this will finalize the data
+	       into a malloc'd buffer in BUF.  */
+	    fclose (f);
+	  }
 
 	/* Output to stderr if requested. */
 	if (LogStat & LOG_PERROR) {
@@ -326,7 +352,7 @@ closelog ()
   closelog_internal ();
   LogTag = NULL;
   LogType = SOCK_DGRAM; /* this is the default */
-  
+
   /* Free the lock.  */
   __libc_cleanup_region_end (1);
 }

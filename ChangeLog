@@ -1,3 +1,9 @@
+2000-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/syslog.c (vsyslog): Allow open_memstream to fail without
+	crashing the application.  Emit some simple error message.
+	Reported by mju@panasas.com [PR libc/1769].
+
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/Makefile (distribute): Add memprof.sh and memprofstat.c.
