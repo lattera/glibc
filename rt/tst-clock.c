@@ -113,6 +113,8 @@ do_test (void)
   if (clock_getcpuclockid (0, &cl) == 0)
     /* XXX It's not yet a bug when this fails.  */
     clock_test (cl);
+  else
+	  printf("CPU clock unavailble, skipping test\n");
 
   return result;
 }

@@ -1,3 +1,18 @@
+2003-12-10  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Update copyright
+	message.  Add include of <stddef.h>.
+	(INIT_NEW_WAY): New macro.
+	(INIT_OLD_WAY): Likewise.
+	(_init): Add unwind directives.  Invoke
+	__pthread_initialize_minimal() via INIT_NEW_WAY or INIT_OLD_WAY,
+	respectively.
+	(_init_EPILOG_BEGINS): Add unwind-directives.  Drop unused .regstk
+	directive.
+	(_fini): Add unwind directives.  Drop unnecessary .align 16
+	directive (bundles are always 16-byte aligned).
+	(_fini_EPILOG_BEGINS): Add unwind-directives.
+
 2003-11-19  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h: New file.

@@ -87,7 +87,12 @@ _init:\n\
 \n\
 /*@_init_EPILOG_BEGINS*/\n\
 	.section .init\n\
-	.regstk 0,2,0,0\n\
+	.proc _init#\n\
+	.prologue\n\
+	.save ar.pfs, r34\n\
+	.vframe r32\n\
+	.save rp, r33\n\
+	.body\n\
 	mov r12 = r32\n\
 	mov ar.pfs = r34\n\
 	mov b0 = r33\n\
@@ -117,6 +122,12 @@ _fini:\n\
 \n\
 /*@_fini_EPILOG_BEGINS*/\n\
 	.section .fini\n\
+	.proc _fini#\n\
+	.prologue\n\
+	.save ar.pfs, r34\n\
+	.vframe r32\n\
+	.save rp, r33\n\
+	.body\n\
 	mov r12 = r32\n\
 	mov ar.pfs = r34\n\
 	mov b0 = r33\n\

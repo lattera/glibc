@@ -1,3 +1,11 @@
+2003-12-01  Jes Sorensen  <jes@wildopensource.com>
+
+	* rt/tst-clock.c (do_test): Print message when skipping
+	CLOCK_PROCESS_CPUTIME_ID test.
+
+	* sysdeps/unix/sysv/linux/ia64/clock_getcpuclockid.c: New file.
+	Provide CLOCK_PROCESS_CPUTIME_ID only if /proc/sal/itc_drift is 0.
+
 2003-12-02  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/elf/initfini.c: Add unwind info.
@@ -511,7 +519,7 @@
 	pointer.  Adjust callers.
 
 	* posix/regcomp.c (fetch_token): Change interface to match
-	peek_token.  This avoid some copying and reduces code size.
+	peek_token.  This avoids some copying and reduces code size.
 
 2003-11-21  Jakub Jelinek  <jakub@redhat.com>
 
@@ -706,12 +714,12 @@
 	(re_dfa_t): Add map_notascii field.
 	* posix/regcomp.c (re_compile_internal): Add call of
 	re_string_construct.
-	(init_dfa): Initialize mpa_notascii.
+	(init_dfa): Initialize map_notascii.
 	* posix/regex_internal.c: Adjust definitions of re_string_allocate
 	and re_string_construct.
 	Pass DFA to re_string_construct.  Adjust definition.  Initialize
 	map_notascii field.
-	(build_wcs_upper_buffer): If map_notascii is zero use simplfied
+	(build_wcs_upper_buffer): If map_notascii is zero use simplified
 	method to map ASCII values to upper case.
 	* posix/regex.c: Include localeinfo.h.
 	* posix/regexec.c: Adjust call of re_string_allocate.

@@ -1,0 +1,65 @@
+/* Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <errno.h>
+#include <time.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+
+
+int
+clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
+{
+  /* We don't allow any process ID but our own.  */
+  if (pid != 0 && pid != getpid ())
+    return EPERM;
+
+  static int itc_usable;
+  int retval = ENOENT;
+
+  if (__builtin_expect (itc_usable == 0, 0))
+    {
+      int newval = 1;
+      int fd = open ("/proc/sal/itc_drift", O_RDONLY);
+      if (__builtin_expect (fd != -1, 1))
+	{
+	  char buf[16];
+	  /* We expect the file to contain a single digit followed by
+	     a newline.  If the format changes we better not rely on
+	     the file content.  */
+	  if (read (fd, buf, sizeof buf) != 2 || buf[0] != '0'
+	      || buf[1] != '\n')
+	    newval = -1;
+
+	  close (fd);
+	}
+
+      itc_usable = newval;
+    }
+
+  if (itc_usable > 0)
+    {
+      /* Store the number.  */
+      *clock_id = CLOCK_PROCESS_CPUTIME_ID;
+      retval = 0;
+    }
+
+  return retval;
+}

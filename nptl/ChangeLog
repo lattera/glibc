@@ -1,3 +1,9 @@
+2003-12-10  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c (_init_EPILOG_BEGINS):
+	Add unwind directives.  Drop unused .regstk directive.
+	(_fini_EPILOG_BEGINS): Add unwind directives.
+
 2003-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_futex_wait):
