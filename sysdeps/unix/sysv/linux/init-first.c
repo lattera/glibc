@@ -22,7 +22,6 @@
 #include <unistd.h>
 #include <sysdep.h>
 #include <fpu_control.h>
-#include <linux/personality.h>
 #include <init-first.h>
 #include <sys/param.h>
 #include <sys/sysctl.h>
@@ -59,10 +58,9 @@ char **__libc_argv;
 static void
 init (int argc, char **argv, char **envp)
 {
-  extern int __personality (int);
   extern void __getopt_clean_environment (char **);
 
-  /* We must not call `personality' twice.  */
+  /* Make sure we don't initialize twice.  */
   if (!__libc_multiple_libcs)
     {
       /* Test whether the kernel is new enough.  This test is only
