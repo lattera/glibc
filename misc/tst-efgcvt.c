@@ -36,6 +36,8 @@ typedef struct
 
 typedef char * ((*efcvt_func) (double, int, int *, int *));
 
+typedef int ((*efcvt_r_func) (double, int, int *, int *, char *, size_t));
+
 
 static testcase ecvt_tests[] =
 {
@@ -96,6 +98,21 @@ output_error (const char *name, double value, int ndigit,
   ++error_count;
 }
 
+
+void
+output_r_error (const char *name, double value, int ndigit,
+		const char *exp_p, int exp_decpt, int exp_sign, int exp_return,
+		char *res_p, int res_decpt, int res_sign, int res_return)
+{
+  printf ("%s returned wrong result for value: %f, ndigits: %d\n",
+	  name, value, ndigit);
+  printf ("Result was buf: \"%s\", decpt: %d, sign: %d return value: %d\n",
+	  res_p, res_decpt, res_sign, res_return);
+  printf ("Should be  buf: \"%s\", decpt: %d, sign: %d\n",
+	  exp_p, exp_decpt, exp_sign, exp_return);
+  ++error_count;
+}
+
 void
 test (testcase tests[], efcvt_func efcvt, const char *name)
 {
@@ -113,6 +130,30 @@ test (testcase tests[], efcvt_func efcvt, const char *name)
 		      tests[no].result, tests[no].decpt,
 		      (tests[no].value < 0),
 		      p, decpt, sign);
+      ++no;
+    }
+}
+
+void
+test_r (testcase tests[], efcvt_r_func efcvt_r, const char *name)
+{
+  int no = 0;
+  int decpt, sign, res;
+  char buf [1024];
+  
+
+  while (tests[no].value != -1.0)
+    {
+      res = efcvt_r (tests[no].value, tests[no].ndigit, &decpt, &sign,
+		     buf, sizeof (buf));
+      if (res != 0
+	  || decpt != tests[no].decpt
+	  || sign != (tests[no].value < 0)
+	  || strcmp (buf, tests[no].result) != 0)
+	output_r_error (name, tests[no].value, tests[no].ndigit,
+			tests[no].result, tests[no].decpt, 0,
+			(tests[no].value < 0),
+			buf, decpt, sign, res);
       ++no;
     }
 }
@@ -158,6 +199,8 @@ main (void)
 {
   test (ecvt_tests, ecvt, "ecvt");
   test (fcvt_tests, fcvt, "fcvt");
+  test_r (ecvt_tests, ecvt_r, "ecvt_r");
+  test_r (fcvt_tests, fcvt_r, "fcvt_r");
   special ();
 
   return error_count;

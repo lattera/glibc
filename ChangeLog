@@ -1,5 +1,9 @@
 1999-11-10  Andreas Jaeger  <aj@suse.de>
 
+	* misc/tst-efgcvt.c: Also test ecvt_r and fcvt_r.
+
+1999-11-10  Andreas Jaeger  <aj@suse.de>
+
 	* string/strsignal.c (strsignal): Correct check for snprintf
 	return value.
 	* argp/argp-fmtstream.c (__argp_fmtstream_printf): Likewise.
