@@ -144,14 +144,13 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
       /* We have to handle the allocation a bit different since the
 	 `_IO_str_init_static' function would handle a size of zero
 	 different from what we expect.  */
-      size = 64;
 
       /* Get more memory.  */
-      obstack_blank (obstack, size);
+      obstack_make_room (obstack, 64);
 
-      /* Recompute who much room we have.  */
+      /* Recompute how much room we have.  */
       room = obstack_room (obstack);
-      size += room;
+      size = room;
 
       assert (size != 0);
     }
