@@ -24,8 +24,8 @@
 char *
 __getcwd_chk (char *buf, size_t size, size_t buflen)
 {
-  char *res = __getcwd (buf, MIN (size, buflen));
-  if (res == NULL && errno == ERANGE && size > buflen)
+  if (size > buflen)
     __chk_fail ();
-  return res;
+
+  return __getcwd (buf, size);
 }

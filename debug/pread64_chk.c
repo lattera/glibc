@@ -23,11 +23,8 @@
 ssize_t
 __pread64_chk (int fd, void *buf, size_t nbytes, off64_t offset, size_t buflen)
 {
-  /* In case NBYTES is greater than BUFLEN, we read BUFLEN+1 bytes.
-     This might overflow the buffer but the damage is reduced to just
-     one byte.  And the program will terminate right away.  */
-  ssize_t n = __pread64 (fd, buf, offset, MIN (nbytes, buflen + 1));
-  if (n > 0 && (size_t) n > buflen)
+  if (nbytes > buflen)
     __chk_fail ();
-  return n;
+
+  return __pread64 (fd, buf, offset, MIN (nbytes, buflen + 1));
 }
