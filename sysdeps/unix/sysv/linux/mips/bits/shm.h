@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1996,1997,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,8 +36,7 @@
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
 /* Segment low boundary address multiple.  */
-#define SHMLBA		(__getpagesize ())
-extern int __getpagesize (void) __THROW __attribute__ ((__const__));
+#define SHMLBA		0x40000
 
 
 /* Type to count number of attaches.  */
