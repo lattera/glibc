@@ -223,7 +223,7 @@ run_test (const char *locname)
   STRTEST (NOSTR, "");
 
   /* Test the new locale mechanisms.  */
-  loc = newlocale (LC_ALL, locname, NULL);
+  loc = newlocale (LC_ALL_MASK, locname, NULL);
   if (loc == NULL)
     {
       printf ("cannot create locale object for locale %s\n", locname);
