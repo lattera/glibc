@@ -1,5 +1,7 @@
 2004-08-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/nl.po: Update from translation team.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Recognize all the IPv4
 	numeric address formats inet_addr knows.
 	(getaddrinfo): Allow AI_NUMERICSERV flag.
