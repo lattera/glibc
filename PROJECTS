@@ -140,6 +140,9 @@ contact <bug-glibc@gnu.org>.
      - the nscd creates the hash tables and the information it stores
        in it in a mmap()ed region.  This means no pointers must be
        used, only offsets.
+     OR
+       if POSIX shared memory is available use a named shared memory
+       region to put the data is
      - each program using NSS functionality tries to open the file
        with the data.
      - by checking some timestamp (which the nscd renew frequently)
