@@ -3,6 +3,7 @@
 	* db2/mutex/sparc.gcc (TSL_UNSET): Dereference pointer.
 
 	* elf/elf.h (PF_MASKOS): New definition.
+	(EM_VAX): New definition.
 
 1999-08-09  Scott Bambrough  <scottb@netwinder.org>
 

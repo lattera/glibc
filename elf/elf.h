@@ -217,7 +217,8 @@ typedef struct
 #define EM_68HC05	72		/* Motorola MC68HC05 microcontroller */
 #define EM_SVX		73		/* Silicon Graphics SVx */
 #define EM_AT19		74		/* STMicroelectronics ST19 8 bit mc */
-#define EM_NUM		75
+#define EM_VAX		75		/* Digital VAX */
+#define EM_NUM		76
 
 /* If it is necessary to assign new unofficial EM_* values, please
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
