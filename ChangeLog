@@ -1,3 +1,9 @@
+1998-06-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_call.c: Don't copy server structure.
+	* nis/nis_intern.h: Remove unused entries.
+	* nis/nis_table.c: Rewrite __create_ib_request.
+
 1998-06-26 14:37  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Check for -fexceptions.

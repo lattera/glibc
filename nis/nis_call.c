@@ -69,8 +69,6 @@ __bind_destroy (dir_binding *bind)
 	auth_destroy (bind->clnt->cl_auth);
       clnt_destroy (bind->clnt);
     }
-  free (bind->server_val);
-  free (bind);
 }
 
 static nis_error
@@ -108,8 +106,7 @@ __bind_next (dir_binding *bind)
   for (j = 0; j < bind->server_val[bind->server_used].ep.ep_len; ++j)
     if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].family,
 		"inet") == 0)
-      if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].proto,
-		  "-") == 0)
+      if (bind->server_val[bind->server_used].ep.ep_val[j].proto[0] == '-')
 	{
 	  bind->current_ep = j;
 	  return NIS_SUCCESS;
@@ -121,9 +118,7 @@ __bind_next (dir_binding *bind)
 static nis_error
 __bind_connect (dir_binding *dbp)
 {
-  struct sockaddr_in check;
   nis_server *serv;
-  int checklen;
 
   if (dbp == NULL)
     return NIS_FAIL;
@@ -182,38 +177,17 @@ __bind_connect (dir_binding *dbp)
       dbp->use_auth = TRUE;
     }
 
-  /* Get port for sanity checks later */
-  checklen = sizeof (struct sockaddr_in);
-  memset (&check, 0, checklen);
-  if (dbp->use_udp)
-    bind (dbp->socket, (struct sockaddr *)&check, checklen);
-  check.sin_family = AF_INET;
-  if (!getsockname (dbp->socket, (struct sockaddr *)&check, &checklen))
-    dbp->port = check.sin_port;
-
-  dbp->create = time (NULL);
-
   return NIS_SUCCESS;
 }
 
-static dir_binding *
-__bind_create (const nis_server *serv_val, u_int serv_len, u_long flags,
-	       cache2_info *cinfo)
+static nis_error
+__bind_create (dir_binding *dbp, const nis_server *serv_val, u_int serv_len,
+	       u_long flags, cache2_info *cinfo)
 {
-  dir_binding *dbp;
-  u_int i;
-
-  dbp = calloc (1, sizeof (dir_binding));
-  if (dbp == NULL)
-    return NULL;
+  dbp->clnt = NULL;
 
   dbp->server_len = serv_len;
-  dbp->server_val = calloc (1, sizeof (nis_server) * serv_len);
-  if (dbp->server_val == NULL)
-    {
-      free (dbp);
-      return NULL;
-    }
+  dbp->server_val = (nis_server *)serv_val;
 
   if (flags & USE_DGRAM)
     dbp->use_udp = TRUE;
@@ -233,54 +207,6 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags,
   /* We try the first server */
   dbp->trys = 1;
 
-  for (i = 0; i < serv_len; ++i)
-    {
-      if (serv_val[i].name != NULL)
-	dbp->server_val[i].name = strdup (serv_val[i].name);
-
-      dbp->server_val[i].ep.ep_len = serv_val[i].ep.ep_len;
-      if (dbp->server_val[i].ep.ep_len > 0)
-	{
-	  unsigned long j;
-
-	  dbp->server_val[i].ep.ep_val =
-	    malloc (serv_val[i].ep.ep_len * sizeof (endpoint));
-	  for (j = 0; j < dbp->server_val[i].ep.ep_len; ++j)
-	    {
-	      if (serv_val[i].ep.ep_val[j].uaddr)
-		dbp->server_val[i].ep.ep_val[j].uaddr =
-		  strdup (serv_val[i].ep.ep_val[j].uaddr);
-	      else
-		dbp->server_val[i].ep.ep_val[j].uaddr = NULL;
-	      if (serv_val[i].ep.ep_val[j].family)
-		dbp->server_val[i].ep.ep_val[j].family =
-		  strdup (serv_val[i].ep.ep_val[j].family);
-	      else
-		dbp->server_val[i].ep.ep_val[j].family = NULL;
-	      if (serv_val[i].ep.ep_val[j].proto)
-		dbp->server_val[i].ep.ep_val[j].proto =
-		  strdup (serv_val[i].ep.ep_val[j].proto);
-	      else
-		dbp->server_val[i].ep.ep_val[j].proto = NULL;
-	    }
-	}
-      else
-	dbp->server_val[i].ep.ep_val = NULL;
-      dbp->server_val[i].key_type = serv_val[i].key_type;
-      dbp->server_val[i].pkey.n_len = serv_val[i].pkey.n_len;
-      if (serv_val[i].pkey.n_len > 0)
-	{
-	  dbp->server_val[i].pkey.n_bytes =
-	    malloc (serv_val[i].pkey.n_len);
-	  if (dbp->server_val[i].pkey.n_bytes == NULL)
-	    return NULL;
-	  memcpy (dbp->server_val[i].pkey.n_bytes, serv_val[i].pkey.n_bytes,
-		  serv_val[i].pkey.n_len);
-	}
-      else
-	dbp->server_val[i].pkey.n_bytes = NULL;
-    }
-
   dbp->class = -1;
   if (cinfo != NULL && cinfo->server_used >= 0)
     {
@@ -291,10 +217,10 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags,
   else if (__nis_findfastest (dbp) < 1)
     {
       __bind_destroy (dbp);
-      return NULL;
+      return NIS_NAMEUNREACHABLE;
     }
 
-  return dbp;
+  return NIS_SUCCESS;
 }
 
 nis_error
@@ -304,19 +230,18 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 {
   enum clnt_stat result;
   nis_error retcode;
-  dir_binding *dbp;
+  dir_binding dbp;
 
   if (flags & MASTER_ONLY)
     server_len = 1;
 
-  dbp = __bind_create (server, server_len, flags, cinfo);
-  if (dbp == NULL)
+  if (__bind_create (&dbp, server, server_len, flags, cinfo) != NIS_SUCCESS)
     return NIS_NAMEUNREACHABLE;
-  while (__bind_connect (dbp) != NIS_SUCCESS)
+  while (__bind_connect (&dbp) != NIS_SUCCESS)
     {
-      if (__bind_next (dbp) != NIS_SUCCESS)
+      if (__bind_next (&dbp) != NIS_SUCCESS)
 	{
-	  __bind_destroy (dbp);
+	  __bind_destroy (&dbp);
 	  return NIS_NAMEUNREACHABLE;
 	}
     }
@@ -324,11 +249,11 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
   do
     {
     again:
-      result = clnt_call (dbp->clnt, prog, xargs, req, xres, resp, RPCTIMEOUT);
+      result = clnt_call (dbp.clnt, prog, xargs, req, xres, resp, RPCTIMEOUT);
 
       if (result != RPC_SUCCESS)
 	{
-	  __bind_destroy (dbp);
+	  __bind_destroy (&dbp);
 	  retcode = NIS_RPCERROR;
 	}
       else
@@ -339,7 +264,7 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	      if ((((nis_result *)resp)->status == NIS_CBRESULTS) &&
 		  (cb != NULL))
 		{
-		  __nis_do_callback(dbp, &((nis_result *)resp)->cookie, cb);
+		  __nis_do_callback(&dbp, &((nis_result *)resp)->cookie, cb);
 		  break;
 		}
 	      /* Yes, this is correct. If we doesn't have to start
@@ -357,13 +282,13 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 		  (((nis_result *)resp)->status == NIS_NOSUCHNAME) ||
 		  (((nis_result *)resp)->status == NIS_NOT_ME))
 		{
-		  if (__bind_next (dbp) == NIS_SUCCESS)
+		  if (__bind_next (&dbp) == NIS_SUCCESS)
 		    {
-		      while (__bind_connect (dbp) != NIS_SUCCESS)
+		      while (__bind_connect (&dbp) != NIS_SUCCESS)
 			{
-			  if (__bind_next (dbp) != NIS_SUCCESS)
+			  if (__bind_next (&dbp) != NIS_SUCCESS)
 			    {
-			      __bind_destroy (dbp);
+			      __bind_destroy (&dbp);
 			      return NIS_SUCCESS;
 			    }
 			}
@@ -378,13 +303,13 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 		  (((fd_result *)resp)->status == NIS_NOSUCHNAME) ||
 		  (((fd_result *)resp)->status == NIS_NOT_ME))
 		{
-		  if (__bind_next (dbp) == NIS_SUCCESS)
+		  if (__bind_next (&dbp) == NIS_SUCCESS)
 		    {
-		      while (__bind_connect (dbp) != NIS_SUCCESS)
+		      while (__bind_connect (&dbp) != NIS_SUCCESS)
 			{
-			  if (__bind_next (dbp) != NIS_SUCCESS)
+			  if (__bind_next (&dbp) != NIS_SUCCESS)
 			    {
-			      __bind_destroy (dbp);
+			      __bind_destroy (&dbp);
 			      return NIS_SUCCESS;
 			    }
 			}
@@ -400,13 +325,13 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 		  (((log_result *)resp)->lr_status == NIS_NOSUCHNAME) ||
 		  (((log_result *)resp)->lr_status == NIS_NOT_ME))
 		{
-		  if (__bind_next (dbp) == NIS_SUCCESS)
+		  if (__bind_next (&dbp) == NIS_SUCCESS)
 		    {
-		      while (__bind_connect (dbp) != NIS_SUCCESS)
+		      while (__bind_connect (&dbp) != NIS_SUCCESS)
 			{
-			  if (__bind_next (dbp) != NIS_SUCCESS)
+			  if (__bind_next (&dbp) != NIS_SUCCESS)
 			    {
-			      __bind_destroy (dbp);
+			      __bind_destroy (&dbp);
 			      return NIS_SUCCESS;
 			    }
 			}
@@ -419,7 +344,7 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	    default:
 	      break;
 	    }
-	  __bind_destroy (dbp);
+	  __bind_destroy (&dbp);
 	  retcode = NIS_SUCCESS;
 	}
     }

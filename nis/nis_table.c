@@ -23,138 +23,89 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 
-static void
-splitname (const_nis_name name, nis_name *ibr_name, int *srch_len,
-	   nis_attr **srch_val)
+
+static struct ib_request *
+__create_ib_request (const_nis_name name, u_long flags)
 {
-  char *cptr, *key, *val, *next;
-  int size;
+  struct ib_request *ibreq = calloc (1, sizeof (ib_request));
+  char buf[strlen (name) + 1];
+  nis_attr *search_val = NULL;
+  int search_len = 0;
+  char *cptr;
+  size_t size = 0;
 
-  if (name == NULL)
-    return;
+  ibreq->ibr_flags = flags;
 
-  cptr = strdup (name);
-  if (srch_len)
-    *srch_len = 0;
-  if (srch_val)
-    *srch_val = NULL;
-  size = 0;
+  cptr = strcpy (buf, name);
 
   /* Not of "[key=value,key=value,...],foo.." format? */
   if (cptr[0] != '[')
     {
-      *ibr_name = cptr;
-      return;
+      ibreq->ibr_name = strdup (cptr);
+      return ibreq;
     }
 
-  *ibr_name = strchr (cptr, ']');
-  if (*ibr_name == NULL || (*ibr_name)[1] != ',')
-    {
-      free (cptr);
-      *ibr_name = NULL;
-      return;
-    }
-
-  *ibr_name[0] = '\0';
-  *ibr_name += 2;
-  *ibr_name = strdup (*ibr_name);
-
-  if (srch_len == NULL || srch_val == NULL)
-    {
-      free (cptr);
-      return;
-    }
-
-  key = (cptr) + 1;
-  do
-    {
-      next = strchr (key, ',');
-      if (next)
-	{
-	  next[0] = '\0';
-	  ++next;
-	}
-
-      val = strchr (key, '=');
-      if (!val)
-	{
-	  free (cptr);
-	  *srch_val = malloc (sizeof (nis_attr));
-	  if (*srch_val == NULL)
-	    {
-	      free (cptr);
-	      free (*ibr_name);
-	      *ibr_name = NULL;
-	      return;
-	    }
-	  (*srch_val)[0].zattr_val.zattr_val_len = 0;
-	  (*srch_val)[0].zattr_val.zattr_val_val = NULL;
-	  return;
-	}
-
-      val[0] = '\0';
-      ++val;
-
-      if ((*srch_len) + 1 >= size)
-	{
-	  size += 10;
-	  if (size == 10)
-	    *srch_val = malloc (size * sizeof (char *));
-	  else
-	    *srch_val = realloc (val, size * sizeof (char *));
-	  if (*srch_val == NULL)
-	    {
-	      free (cptr);
-	      free (*ibr_name);
-	      *ibr_name = NULL;
-	      return;
-	    }
-	}
-
-      (*srch_val)[*srch_len].zattr_ndx = strdup (key);
-      if (((*srch_val)[*srch_len].zattr_ndx) == NULL)
-	{
-	  free (cptr);
-	  free (*ibr_name);
-	  *ibr_name = NULL;
-	  return;
-	}
-      (*srch_val)[*srch_len].zattr_val.zattr_val_len = strlen (val) + 1;
-      (*srch_val)[*srch_len].zattr_val.zattr_val_val = strdup (val);
-      if ((*srch_val)[*srch_len].zattr_val.zattr_val_val == NULL)
-	{
-	  free (cptr);
-	  free (*ibr_name);
-	  *ibr_name = NULL;
-	  return;
-	}
-      ++(*srch_len);
-
-      key = next;
-
-    }
-  while (next);
-
-  free (cptr);
-}
-
-static struct ib_request *
-__create_ib_request (const_nis_name name, struct ib_request *ibreq,
-		     u_long flags)
-{
-  splitname (name, &ibreq->ibr_name, &ibreq->ibr_srch.ibr_srch_len,
-	     &ibreq->ibr_srch.ibr_srch_val);
-  if (ibreq->ibr_name == NULL)
+  /* "[key=value,...],foo" format */
+  ibreq->ibr_name = strchr (cptr, ']');
+  if (ibreq->ibr_name == NULL || ibreq->ibr_name[1] != ',')
     return NULL;
 
-  ibreq->ibr_flags = flags;
-  ibreq->ibr_obj.ibr_obj_len = 0;
-  ibreq->ibr_obj.ibr_obj_val = NULL;
-  ibreq->ibr_cbhost.ibr_cbhost_len = 0;
-  ibreq->ibr_cbhost.ibr_cbhost_val = NULL;
-  ibreq->ibr_bufsize = 0;
-  ibreq->ibr_cookie.n_len = 0;
-  ibreq->ibr_cookie.n_bytes = NULL;
+  /* Check if we have an entry of "[key=value,],bar". If, remove the "," */
+  if (ibreq->ibr_name[-1] == ',')
+    ibreq->ibr_name[-1] = '\0';
+  else
+    ibreq->ibr_name[0] = '\0';
+  ibreq->ibr_name += 2;
+  ibreq->ibr_name = strdup (ibreq->ibr_name);
+
+  ++cptr; /* Remove "[" */
+
+  while (cptr != NULL && cptr[0] != '\0')
+    {
+      char *key = cptr;
+      char *val = strchr (cptr, '=');
+
+      cptr = strchr (key, ',');
+      if (cptr != NULL)
+	*cptr++ = '\0';
+
+      if (!val)
+	{
+	  nis_free_request (ibreq);
+	  return NULL;
+	}
+      *val++ = '\0';
+      if ((search_len + 1) >= size)
+        {
+          size += 1;
+          if (size == 1)
+            search_val = malloc (size * sizeof (nis_attr));
+          else
+            search_val = realloc (search_val, size * sizeof (nis_attr));
+	  if (search_val == NULL)
+	    {
+	      nis_free_request (ibreq);
+	      return NULL;
+	    }
+	}
+      search_val[search_len].zattr_ndx = strdup (key);
+      if ((search_val[search_len].zattr_ndx) == NULL)
+        {
+	  nis_free_request (ibreq);
+	  return NULL;
+        }
+      search_val[search_len].zattr_val.zattr_val_len = strlen (val) + 1;
+      search_val[search_len].zattr_val.zattr_val_val = strdup (val);
+      if (search_val[search_len].zattr_val.zattr_val_val == NULL)
+        {
+	  nis_free_request (ibreq);
+          return NULL;
+        }
+      ++search_len;
+    }
+
+  ibreq->ibr_srch.ibr_srch_val = search_val;
+  ibreq->ibr_srch.ibr_srch_len = search_len;
 
   return ibreq;
 }
@@ -167,7 +118,7 @@ nis_list (const_nis_name name, u_long flags,
 	  const void *userdata)
 {
   nis_result *res = NULL;
-  ib_request *ibreq = calloc (1, sizeof (ib_request));
+  ib_request *ibreq;
   int status;
   int count_links = 0;		/* We will only follow NIS_MAXLINKS links! */
   int done = 0;
@@ -180,13 +131,20 @@ nis_list (const_nis_name name, u_long flags,
   if (res == NULL)
     return NULL;
 
-  if (__create_ib_request (name, ibreq, flags) == NULL)
+  if (name == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
     }
 
-  if (flags & EXPAND_NAME)
+  if ((ibreq = __create_ib_request (name, flags)) == NULL)
+    {
+      NIS_RES_STATUS (res) = NIS_BADNAME;
+      return res;
+    }
+
+  if ((flags & EXPAND_NAME) &&
+      ibreq->ibr_name[strlen (ibreq->ibr_name) - 1] != '.')
     {
       names = nis_getnames (ibreq->ibr_name);
       free (ibreq->ibr_name);
@@ -210,23 +168,23 @@ nis_list (const_nis_name name, u_long flags,
     {
       nis_result *lres;
       u_long newflags = flags & ~FOLLOW_PATH & ~ALL_RESULTS;
-      char table_path[NIS_MAXPATH + 1];
+      char table_path[NIS_MAXPATH + 3];
       char *ntable, *p;
       u_long done = 0, failures = 0;
 
       while (names[name_nr] != NULL && !done)
 	{
-	  lres = nis_lookup (names[name_nr], newflags);
+	  lres = nis_lookup (names[name_nr], newflags | NO_AUTHINFO);
 	  if (lres == NULL || NIS_RES_STATUS (lres) != NIS_SUCCESS)
 	    {
 	      NIS_RES_STATUS (res) = NIS_RES_STATUS (lres);
 	      nis_freeresult (lres);
 	      ++name_nr;
 	      continue;
-	      }
+	    }
 
 	  /* nis_lookup handles FOLLOW_LINKS,
-	     so we must have a table object.  */
+	     so we must have a table object.*/
 	  if (__type_of (NIS_RES_OBJECT (lres)) != NIS_TABLE_OBJ)
 	    {
 	      nis_freeresult (lres);
@@ -235,8 +193,11 @@ nis_list (const_nis_name name, u_long flags,
 	    }
 
 	  /* Save the path, discard everything else.  */
-	  snprintf (table_path, NIS_MAXPATH, "%s:%s", names[name_nr],
-		    NIS_RES_OBJECT (lres)->TA_data.ta_path);
+	  p = __stpncpy (table_path, names[name_nr], NIS_MAXPATH);
+	  *p++ = ':';
+	  p = __stpncpy (p, NIS_RES_OBJECT (lres)->TA_data.ta_path,
+			 NIS_MAXPATH - (p - table_path));
+	  *p = '\0';
 	  nis_freeresult (lres);
 	  free (res);
 	  res = NULL;
@@ -397,21 +358,22 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, u_long flags)
   nis_object obj;
   nis_result *res;
   nis_error status;
-  ib_request *ibreq = calloc (1, sizeof (ib_request));
-  char buf1[strlen (name) + 20];
-  char buf4[strlen (name) + 20];
+  ib_request *ibreq;
+  size_t namelen = strlen (name);
+  char buf1[namelen + 20];
+  char buf4[namelen + 20];
 
   res = calloc (1, sizeof (nis_result));
   if (res == NULL)
     return NULL;
 
-  if (ibreq == NULL)
+  if (name == NULL)
     {
-      NIS_RES_STATUS (res) = NIS_NOMEMORY;
+      NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
     }
 
-  if (__create_ib_request (name, ibreq, flags) == NULL)
+  if ((ibreq = __create_ib_request (name, flags)) == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
@@ -456,13 +418,16 @@ nis_modify_entry (const_nis_name name, const nis_object *obj2, u_long flags)
   nis_object obj;
   nis_result *res;
   nis_error status;
-  ib_request *ibreq = calloc (1, sizeof (ib_request));
-  char buf1[strlen (name) + 20];
-  char buf4[strlen (name) + 20];
+  ib_request *ibreq;
+  size_t namelen = strlen (name);
+  char buf1[namelen + 20];
+  char buf4[namelen + 20];
 
   res = calloc (1, sizeof (nis_result));
+  if (res == NULL)
+    return NULL;
 
-  if (__create_ib_request (name, ibreq, flags) == NULL)
+  if (( ibreq =__create_ib_request (name, flags)) == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
@@ -505,20 +470,20 @@ nis_remove_entry (const_nis_name name, const nis_object *obj,
 		  u_long flags)
 {
   nis_result *res;
-  ib_request *ibreq = calloc (1, sizeof (ib_request));
+  ib_request *ibreq;
   nis_error status;
 
   res = calloc (1, sizeof (nis_result));
   if (res == NULL)
     return NULL;
 
-  if (ibreq == NULL)
+  if (name == NULL)
     {
-      NIS_RES_STATUS (res) = NIS_NOMEMORY;
+      NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
     }
 
-  if (__create_ib_request (name, ibreq, flags) == NULL)
+  if ((ibreq =__create_ib_request (name, flags)) == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
@@ -550,20 +515,20 @@ nis_result *
 nis_first_entry (const_nis_name name)
 {
   nis_result *res;
-  ib_request *ibreq = calloc (1, sizeof (ib_request));
+  ib_request *ibreq;
   nis_error status;
 
   res = calloc (1, sizeof (nis_result));
   if (res == NULL)
     return NULL;
 
-  if (ibreq == NULL)
+  if (name == NULL)
     {
-      NIS_RES_STATUS (res) = NIS_NOMEMORY;
+      NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
     }
 
-  if (__create_ib_request (name, ibreq, 0) == NULL)
+  if ((ibreq =__create_ib_request (name, 0)) == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
@@ -584,20 +549,20 @@ nis_result *
 nis_next_entry (const_nis_name name, const netobj *cookie)
 {
   nis_result *res;
-  ib_request *ibreq = calloc (1, sizeof (ib_request));
+  ib_request *ibreq;
   nis_error status;
 
   res = calloc (1, sizeof (nis_result));
   if (res == NULL)
     return NULL;
 
-  if (ibreq == NULL)
+  if (name == NULL)
     {
-      NIS_RES_STATUS (res) = NIS_NOMEMORY;
+      NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
     }
 
-  if (__create_ib_request (name, ibreq, 0) == NULL)
+  if (( ibreq =__create_ib_request (name, 0)) == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
@@ -605,14 +570,7 @@ nis_next_entry (const_nis_name name, const netobj *cookie)
 
   if (cookie != NULL)
     {
-      ibreq->ibr_cookie.n_bytes = malloc (cookie->n_len);
-      if (ibreq->ibr_cookie.n_bytes == NULL)
-	{
-	  NIS_RES_STATUS (res) = NIS_NOMEMORY;
-	  nis_free_request (ibreq);
-	  return res;
-	}
-      memcpy (ibreq->ibr_cookie.n_bytes, cookie->n_bytes, cookie->n_len);
+      ibreq->ibr_cookie.n_bytes = cookie->n_bytes;
       ibreq->ibr_cookie.n_len = cookie->n_len;
     }
 
@@ -621,6 +579,13 @@ nis_next_entry (const_nis_name name, const netobj *cookie)
 			      (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
 			      (caddr_t) res, 0, NULL)) != NIS_SUCCESS)
     NIS_RES_STATUS (res) = status;
+
+  if (cookie != NULL)
+    {
+      /* Don't give cookie free, it is not from us */
+      ibreq->ibr_cookie.n_bytes = NULL;
+      ibreq->ibr_cookie.n_len = 0;
+    }
 
   nis_free_request (ibreq);
 

@@ -36,10 +36,8 @@ struct dir_binding
   bool_t master_only;            /* Is only binded to the master */
   bool_t use_auth;               /* Do we use AUTH ? */
   bool_t use_udp;                /* Do we use UDP ? */
-  time_t create;                 /* Binding creation time */
   struct sockaddr_in addr;       /* Server's IP address */
   int socket;                    /* Server's local socket */
-  unsigned short port;           /* Local port */
 };
 typedef struct dir_binding dir_binding;
 
