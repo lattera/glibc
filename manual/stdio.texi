@@ -553,11 +553,11 @@ Now that we covered why it is necessary to have these locking it is
 necessary to talk about situations when locking is unwanted and what can
 be done.  The locking operations (explicit or implicit) don't come for
 free.  Even if a lock is not taken the cost is not zero.  The operations
-which have to be performed require memory operations which are save in
+which have to be performed require memory operations that are safe in
 multi-processor environments.  With the many local caches involved in
 such systems this is quite costly.  So it is best to avoid the locking
-completely if it is known that the code using the stream is never used
-in a context where more than one thread can use the stream at one time.
+completely if it is not needed -- because the code in question is never
+used in a context where two or more threads may use a stream at a time.
 This can be determined most of the time for application code; for
 library code which can be used in many contexts one should default to be
 conservative and use locking.
@@ -566,15 +566,16 @@ There are two basic mechanisms to avoid locking.  The first is to use
 the @code{_unlocked} variants of the stream operations.  The POSIX
 standard defines quite a few of those and the GNU library adds a few
 more.  These variants of the functions behave just like the functions
-with the name without the suffix except that they are not locking the
+with the name without the suffix except that they do not lock the
 stream.  Using these functions is very desirable since they are
 potentially much faster.  This is not only because the locking
 operation itself is avoided.  More importantly, functions like
 @code{putc} and @code{getc} are very simple and traditionally (before the
 introduction of threads) were implemented as macros which are very fast
-if the buffer is not empty.  With locking required these functions are
-now no macros anymore (the code generated would be too much).  But these
-macros are still available with the same functionality under the new
+if the buffer is not empty.  With the addition of locking requirements
+these functions are no longer implemented as macros since they would
+would expand to too much code.
+But these macros are still available with the same functionality under the new
 names @code{putc_unlocked} and @code{getc_unlocked}.  This possibly huge
 difference of speed also suggests the use of the @code{_unlocked}
 functions even if locking is required.  The difference is that the
@@ -639,7 +640,7 @@ in @file{stdio_ext.h}.
 
 This function is especially useful when program code has to be used
 which is written without knowledge about the @code{_unlocked} functions
-(or if the programmer was to lazy to use them).
+(or if the programmer was too lazy to use them).
 
 @node Streams and I18N
 @section Streams in Internationalized Applications
