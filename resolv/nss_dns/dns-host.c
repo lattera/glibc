@@ -387,10 +387,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   {
     char *aliases[MAX_NR_ALIASES];
     unsigned char host_addr[16];	/* IPv4 or IPv6 */
-    char *h_addr_ptrs[MAX_NR_ADDRS + 1];
-    char linebuffer[0];
+    char *h_addr_ptrs[0];
   } *host_data = (struct host_data *) buffer;
-  int linebuflen = buflen - offsetof (struct host_data, linebuffer);
+  int linebuflen = buflen - sizeof (struct host_data);
   register const HEADER *hp;
   const u_char *end_of_message, *cp;
   int n, ancount, qdcount;
@@ -432,7 +431,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
    * find first satisfactory answer
    */
   hp = &answer->hdr;
-  bp = host_data->linebuffer;
   ancount = ntohs (hp->ancount);
   qdcount = ntohs (hp->qdcount);
   cp = answer->buf + HFIXEDSZ;
@@ -442,6 +440,10 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       *errnop = ENOENT;
       return NSS_STATUS_UNAVAIL;
     }
+  if (sizeof (struct host_data) + (ancount + 1) * sizeof (char *) >= buflen)
+    goto too_small;
+  bp = (char *) &host_data->h_addr_ptrs[ancount + 1];
+  linebuflen -= (ancount + 1) * sizeof (char *);
 
   n = __ns_name_unpack (answer->buf, end_of_message, cp,
 			packtmp, sizeof packtmp);
@@ -701,11 +703,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 
 	  if (__builtin_expect (n > linebuflen, 0))
 	    goto too_small;
-	  if (hap >= &host_data->h_addr_ptrs[MAX_NR_ADDRS-1])
-	    {
-	      cp += n;
-	      continue;
-	    }
 	  bp = __mempcpy (*hap++ = bp, cp, n);
 	  cp += n;
 	  linebuflen -= n;
