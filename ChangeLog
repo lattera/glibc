@@ -1,5 +1,8 @@
 Fri Sep  8 16:25:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* libc-symbols.h [HAVE_ELF] (symbol_set_declare): Declare the
+	symbols weak.
+
 	* conf/portability.h (NEED_INETADDR, NEED_INETATON): Define to 1,
 	not empty.
 

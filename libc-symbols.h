@@ -214,7 +214,8 @@ Cambridge, MA 02139, USA.  */
 
 /* Declare SET for use in this module, if defined in another module.  */
 #define symbol_set_declare(set)	\
-  extern void *const __start_##set, *const __stop_##set;
+  extern void *const __start_##set __attribute__ ((__weak__));	\
+  extern void *const __stop_##set __attribute__ ((__weak__));
 
 /* Return a pointer (void *const *) to the first element of SET.  */
 #define symbol_set_first_element(set)	(&__start_##set)
