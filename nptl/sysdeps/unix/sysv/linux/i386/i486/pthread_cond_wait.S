@@ -80,7 +80,8 @@ __pthread_cond_wait:
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 
-	subl	$12, %esp
+#define FRAME_SIZE 12
+	subl	$FRAME_SIZE, %esp
 .Lsubl:
 
 	/* Get and store current wakeup_seq value.  */
@@ -153,9 +154,9 @@ __pthread_cond_wait:
 #endif
 	jne	10f
 
-11:	movl	32(%esp), %eax
+11:	movl	20+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
-	addl	$12, %esp
+	addl	$FRAME_SIZE, %esp
 .Laddl:
 
 14:	popl	%ebx
@@ -291,7 +292,7 @@ __condvar_w_cleanup:
 	movl	$0x7fffffff, %edx
 	ENTER_KERNEL
 
-	movl	32(%esp), %eax
+	movl	20+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
 
 	movl	%esi, (%esp)
@@ -403,7 +404,7 @@ __condvar_w_cleanup:
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Lsubl-.Lpush_ebx
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 28
+	.uleb128 16+FRAME_SIZE
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Laddl-.Lsubl
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -431,13 +432,13 @@ __condvar_w_cleanup:
 	.uleb128 4
 	.byte	0x40+.LSbl2-.LSbl1		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 28
+	.uleb128 16+FRAME_SIZE
 	.byte	0x40+.LSbl3-.LSbl2		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte	0x40+.LSbl4-.LSbl3		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 28
+	.uleb128 16+FRAME_SIZE
 	.align	4
 .LENDFDE:
 

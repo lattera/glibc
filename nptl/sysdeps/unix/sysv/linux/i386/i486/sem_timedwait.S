@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -142,13 +142,11 @@ sem_timedwait:
 	popl	%esi
 	cfi_adjust_cfa_offset(-4)
 	cfi_restore(6)
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(6)
 	ret
 
 	cfi_adjust_cfa_offset(24)
 	cfi_offset(6, -8)		/* %esi */
-	cfi_offset(7, -12)		/* %edi */
+	cfi_offset(7, -12)	 	/* %edi */
 	cfi_offset(3, -16)		/* %ebx */
 3:	negl	%esi
 6:

@@ -1,3 +1,12 @@
+2004-05-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Correct some
+	unwind info.
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S:
+	Parametrize frame size.  Correct some unwind info.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+
 2004-05-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-stack3.c: Note testing functionality beyond POSIX.

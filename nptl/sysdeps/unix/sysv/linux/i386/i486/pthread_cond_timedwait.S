@@ -83,7 +83,8 @@ __pthread_cond_timedwait:
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 
-	subl	$20, %esp
+#define FRAME_SIZE 20
+	subl	$FRAME_SIZE, %esp
 .Lsubl:
 
 	/* Get and store current wakeup_seq value.  */
@@ -220,9 +221,9 @@ __pthread_cond_timedwait:
 	jne	10f
 
 	/* Remove cancellation handler.  */
-11:	movl	44(%esp), %eax
+11:	movl	24+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
-	addl	$20, %esp
+	addl	$FRAME_SIZE, %esp
 .Laddl:
 
 	/* We return the result of the mutex_lock operation if it failed.  */
@@ -257,7 +258,7 @@ __pthread_cond_timedwait:
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 3:
 .LSbl2:
 #if cond_lock == 0
@@ -278,7 +279,7 @@ __pthread_cond_timedwait:
 	call	__lll_mutex_lock_wait
 	jmp	6b
 
-	/* Unlock after loop requires waekup.  */
+	/* Unlock after loop requires wakeup.  */
 10:
 #if cond_lock == 0
 	movl	%ebx, %eax
@@ -341,7 +342,7 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 
 	.type	__condvar_tw_cleanup3, @function
 __condvar_tw_cleanup3:
-	movl	40(%esp), %ebx
+	movl	20+FRAME_SIZE(%esp), %ebx
 .LSbl5:
 	jmp	__condvar_tw_cleanup
 	.size	__condvar_tw_cleanup3, .-__condvar_tw_cleanup3
@@ -399,7 +400,7 @@ __condvar_tw_cleanup:
 	movl	$0x7fffffff, %edx
 	ENTER_KERNEL
 
-	movl	44(%esp), %eax
+	movl	24+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
 
 	movl	%esi, (%esp)
@@ -525,7 +526,7 @@ __condvar_tw_cleanup:
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Lsubl-.Lpush_ebx
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 40
+	.uleb128 20+FRAME_SIZE
 	.byte	3				# DW_CFA_advance_loc2
 	.2byte	.Laddl-.Lsubl
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -551,7 +552,7 @@ __condvar_tw_cleanup:
 	.uleb128 20
 	.byte	0x40+.LSbl2-.LSbl1		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 64
+	.uleb128 20+FRAME_SIZE
 	.byte	0x85				# DW_CFA_offset %ebp
 	.uleb128 2
 	.byte	0x87				# DW_CFA_offset %edi
@@ -562,19 +563,15 @@ __condvar_tw_cleanup:
 	.uleb128 5
 	.byte	0x40+.LSbl3-.LSbl2		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 24
+	.uleb128 20
 #if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
 	.byte	0x40+.LSbl4-.LSbl3		# DW_CFA_advance_loc+N
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 64
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.LSbl5-.LSbl4
 #else
 	.byte	4				# DW_CFA_advance_loc4
 	.long	.LSbl5-.LSbl3
 #endif
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 40
+	.uleb128 20+FRAME_SIZE
 	.align	4
 .LENDFDE:
 
