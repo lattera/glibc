@@ -1,3 +1,8 @@
+2002-09-23  Roland McGrath  <roland@redhat.com>
+
+	* elf/Makefile (test-extras): Define this instead of test-srcs.
+	* Makerules (all-nonlib): Include $(test-extras) too.
+
 2002-09-21  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/hppa/abort-instr.h: New file.

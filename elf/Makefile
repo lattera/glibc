@@ -150,7 +150,8 @@ modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
-test-srcs += $(modules-names)
+# We need this variable to be sure the test modules get the right CPPFLAGS.
+test-extras += $(modules-names)
 
 include ../Rules
 

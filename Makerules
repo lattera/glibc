@@ -1040,7 +1040,7 @@ check: tests
 .PHONY: xcheck
 xcheck: xtests
 
-all-nonlib = $(strip $(tests) $(xtests) $(test-srcs) $(others))
+all-nonlib = $(strip $(tests) $(xtests) $(test-srcs) $(test-extras) $(others))
 ifneq (,$(all-nonlib))
 cpp-srcs-left = $(all-nonlib:=.c)
 lib := tests
