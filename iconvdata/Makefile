@@ -98,7 +98,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      run-iconv-test.sh tst-tables.sh tst-table.sh		    \
 	      tst-table-charmap.sh tst-table-from.c tst-table-to.c	    \
 	      EUC-JP.irreversible ISIRI-3342.irreversible SJIS.irreversible \
-	      EUC-KR.irreversible 8bit-generic.c 8bit-gap.c		    \
+	      EUC-KR.irreversible BIG5HKSCS.irreversible		    \
+	      8bit-generic.c 8bit-gap.c					    \
 	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \
 	      cns11643l1.c cns11643l1.h cp1250.c cp1251.c cp1252.c cp1253.c \

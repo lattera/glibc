@@ -1,3 +1,7 @@
+2000-10-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* fr_CA,2.13.in: Removed.
+
 2000-10-26  GOTO Masanori  <gotom@debian.or.jp>
 
 	* locales/POSIX: New support for date_fmt.

@@ -2,6 +2,22 @@
 
 	* version.h (VERSION): Bump to 2.1.96.
 
+	* inet/getipnodebyad.c: Removed.
+	* inet/getipnodebynm.c: Removed.
+	* inet/tst-ipnode.c: Removed.
+	* inet/freehostent.c: Removed.
+
+	* sysdeps/unix/bsd/osf/=dirstream.h: Removed.
+
+	* sysdeps/unix/sysv/linux/Dist: Add bits/initspin.h.
+
+	* elf/Makefile (distribute): Add neededobj4.c.
+
+	* iconvdata/Makefile (distribute): Add BIG5HKSCS.irreversible.
+
+	* sysdeps/hppa/Dist: New file.
+	* sysdeps/unix/sysv/linux/hppa/Dist: New file.
+
 	* posix/tst-chmod.c (do_test): Account for people running the
 	tests as root.
 

@@ -1,3 +1,4 @@
+bits/initspin.h
 bits/pthreadtypes.h
 cmsg_nxthdr.c
 errlist.h
