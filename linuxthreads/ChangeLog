@@ -1,8 +1,13 @@
+2000-06-28  Greg McGary  <greg@mcgary.org>
+
+	* weaks.c: Wrap BP_SYM () around weak extern declarations of
+	pthread functions that have pointers in their return+arg signatures.
+
 2000-06-27  Greg McGary  <greg@mcgary.org>
 
-	* sysdeps/pthread/bits/libc-lock.h:
-	Wrap BP_SYM () around weak extern declarations of pthread
-	functions that have pointers in their return+arg signatures.
+	* sysdeps/pthread/bits/libc-lock.h: Wrap BP_SYM () around weak
+	extern declarations of pthread functions that have pointers in
+	their return+arg signatures.
 
 2000-06-26  Ulrich Drepper  <drepper@redhat.com>
 
