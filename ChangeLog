@@ -1,3 +1,26 @@
+1998-12-27  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/bits/statfs.h (struct statfs, struct statfs64):
+	Remove __ from member names; rename __unused to f_spare.
+
+1998-12-21  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	Implement fstatvfs and statvfs on the Hurd.
+	* sysdeps/mach/hurd/bits/statfs.h: New file.
+	* sysdeps/mach/hurd/bits/statvfs.h: New file.
+	* sysdeps/mach/hurd/fstatvfs.c: New file.
+	* sysdeps/mach/hurd/statvfs.c: New file.
+
+	* sysdeps/generic/fstatfs64.c: Changed into stub.
+	Moved previous contents to...
+	* sysdeps/unix/sysv/linux/fstatfs64.c: ...here.
+	* sysdeps/generic/fstatvfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fstatvfs64.c: Likewise.
+	* sysdeps/generic/statfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/statfs64.c: Likewise.
+	* sysdeps/generic/statvfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/statvfs64.c: Likewise.
+
 1998-12-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-hash.h: Move to...
@@ -51,16 +74,16 @@
 	functions.
 	* nss/getXXbyYY_r.c: Likewise.
 
-1998-12-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
- 
-	* sunrpc/key_call.c (getkeyserv_handle): Use __fcntl instead of 
+1998-12-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sunrpc/key_call.c (getkeyserv_handle): Use __fcntl instead of
 	fcntl.
- 
-1998-12-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
- 
-	* locale/weight.h (get_weight): Extract string elements as 
-	unsigned values. 
- 
+
+1998-12-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* locale/weight.h (get_weight): Extract string elements as
+	unsigned values.
+
 1998-12-06  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	Reverse the change of 1998-04-22.  Providing a struct dirent with

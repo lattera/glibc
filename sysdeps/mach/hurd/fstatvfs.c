@@ -16,16 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
 #include <sys/statfs.h>
+#include <sys/statvfs.h>
 
-/* Return information about the filesystem on which FILE resides.  */
 int
-statfs64 (const char *file, struct statfs64 *buf)
+fstatvfs (int fd, struct statvfs *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return __fstatfs (fd, (struct statfs *)buf);
 }
-
-stub_warning (statfs64)
-#include <stub-tag.h>
