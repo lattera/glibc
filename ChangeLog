@@ -1,3 +1,9 @@
+1999-09-10  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/getenv.c (getenv): Fix lookup for single
+	character variable on bigendian platforms without unaligned memory
+	access.
+
 1999-09-07  Cristian Gafton  <gafton@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/raw.h: New file
