@@ -66,3 +66,4 @@ seteuid (uid)
   __mach_port_deallocate (__mach_task_self (), newauth);
   return err;
 }
+libc_hidden_def (seteuid)

@@ -46,6 +46,7 @@ setegid (gid_t gid)
 
   return result;
 }
+libc_hidden_def (setegid)
 #else
 # include <sysdeps/unix/bsd/setegid.c>
 #endif

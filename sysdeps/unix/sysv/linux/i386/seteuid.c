@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,11 @@ seteuid (uid_t uid)
   /* First try the syscall.  */
 #ifdef __NR_setresuid
   result = __setresuid (-1, uid, -1);
+#if __ASSUME_SETRESUID_SYSCALL > 0
+  if (0)
+#else
   if (result == -1 && errno == ENOSYS)
+#endif
     /* No system call available.  Use emulation.  This may not work
        since `setreuid' also sets the saved user ID when UID is not
        equal to the real user ID, making it impossible to switch back.  */
@@ -42,3 +46,4 @@ seteuid (uid_t uid)
 
   return result;
 }
+libc_hidden_def (seteuid)
