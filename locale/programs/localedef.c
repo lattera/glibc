@@ -490,3 +490,23 @@ find_locale (int locale, const char *name, const char *repertoire_name,
 
   return result;
 }
+
+
+struct localedef_t *
+load_locale (int locale, const char *name, const char *repertoire_name,
+	     struct charmap_t *charmap)
+{
+  struct localedef_t *result;
+
+  /* Generate the locale if it does not exist.  */
+  result = add_to_readlist (locale, name, repertoire_name, 1);
+
+  assert (result != NULL);
+
+  if ((result->avail & (1 << locale)) == 0
+      && locfile_read (result, charmap) != 0)
+    error (4, errno, _("cannot open locale definition file `%s'"),
+	   result->name);
+
+  return result;
+}

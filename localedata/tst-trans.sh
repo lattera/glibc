@@ -31,6 +31,6 @@ exit 1
 # Run the test program.
 LOCPATH=${common_objpfx}localedata LC_ALL=tt_TT \
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-${common_objpfx}localedata/tst-trans
+${common_objpfx}localedata/tst-trans > ${common_objpfx}localedata/tst-trans.out
 
 exit $?

@@ -154,7 +154,8 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (time == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"), "LC_TIME");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"), "LC_TIME");
 	  time_startup (NULL, locale, 0);
 	  time = locale->categories[LC_TIME].time;
 	  nothing = 1;
@@ -481,7 +482,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
     time->cal_direction = 1;
   else if (time->cal_direction > 3)
     error (0, 0, _("\
-%s: values for field `%s' must not be larger than 3"),
+%s: values for field `%s' must not be larger than %d"),
 	   "LC_TIME", "cal_direction", 3);
 
   /* XXX We don't perform any tests on the timezone value since this is

@@ -72,7 +72,7 @@ $(inst_i18ndir)/repertoiremaps/%: repertoiremaps/% $(+force); $(do-install)
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 .PHONY: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch do-tst-trans
-#tests: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch do-tst-trans
+tests: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch do-tst-trans
 do-collate-test: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
 		 $(test-input-data)
 	$(SHELL) -e $< $(common-objpfx) $(test-input)

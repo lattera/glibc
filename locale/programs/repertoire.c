@@ -431,7 +431,8 @@ hexadecimal range format should use only capital characters"));
           && errno == ERANGE)
       || *to_end != '\0')
     {
-      lr_error (lr, _("<%s> and <%s> are invalid names for range"));
+      lr_error (lr, _("<%s> and <%s> are invalid names for range"),
+		from, to);
       return;
     }
 

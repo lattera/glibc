@@ -324,6 +324,8 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
   /* Now resolve copying and also handle completely missing definitions.  */
   if (ctype == NULL)
     {
+      const char *repertoire_name;
+
       /* First see whether we were supposed to copy.  If yes, find the
 	 actual definition.  */
       if (locale->copy_name[LC_CTYPE] != NULL)
@@ -351,6 +353,11 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  ctype_startup (NULL, locale, charmap, 0);
 	  ctype = locale->categories[LC_CTYPE].ctype;
 	}
+
+      /* Get the repertoire we have to use.  */
+      repertoire_name = locale->repertoire_name ?: repertoire_global;
+      if (repertoire_name != NULL)
+	ctype->repertoire = repertoire_read (repertoire_name);
     }
 
   /* Set default value for classes not specified.  */

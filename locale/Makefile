@@ -40,9 +40,8 @@ routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 categories	= ctype messages monetary numeric time paper name \
 		  address telephone measurement identification collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name
-# XXX For testing this is now others-static instead of others.
 others		= localedef locale
-others-static		= localedef locale
+#others-static	= localedef locale
 install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
 		  $(lib-modules:=.o)

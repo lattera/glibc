@@ -131,4 +131,9 @@ extern struct localedef_t *find_locale (int locale, const char *name,
 					const char *repertoire_name,
 					struct charmap_t *charmap);
 
+/* Load (if necessary) the information for the locale NAME.  */
+extern struct localedef_t *load_locale (int locale, const char *name,
+					const char *repertoire_name,
+					struct charmap_t *charmap);
+
 #endif /* localedef.h */

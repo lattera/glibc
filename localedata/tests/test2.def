@@ -4,6 +4,6 @@ upper	<A>
 lower   <a>
 space	<SP>
 blank	<SP>
-alpha	<A>;<a>;<b01>;...;<b03>
+alpha	<A>;<a>;<b01>..<b03>
 
 END LC_CTYPE

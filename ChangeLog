@@ -1,7 +1,32 @@
 1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
 
-	* ld-collate.c (struct element_t): Add field is_character and use it
-	to distinguish real character from collating elements and symbols.
+	* locale/programs/ld-collate.c (collate_output): Don't start with empty
+	extrapool and indirectpool obstacks since we need the offsets to be
+	nonzero.
+	(collate_read): Call load_locale, not find_locale.
+	* locale/programs/ld-ctype.c (ctype_finish): If LC_CTYPE category
+	wasn't defined in the file also initialize repertoire if possible.
+	* locale/programs/ld-time.c (time_finish): Fix message string.
+	* locale/programs/linereader.c: Cast parameters of lr_error to
+	correct type to prevnet warning.
+	* locale/programs/localedef.c (load_locale): New file.
+	* locale/programs/localedef.h: Add its prototype.
+	* locale/programs/repertoire.c (repertoire_new_char): Add missing
+	parameters to lr_error call.
+
+	* localedata/Makefile: Enable running tests again.
+	* localedata/tests/test2.def: Adjust syntax to new specification.
+	* localedata/tests/test3.def: Likewise.
+	* localedata/tst-trans.sh: Redirect output of program into file.
+
+	* string/strcoll.c: Fix many error in new implementation to make it
+	pass (at least) the test suite.
+
+	* locale/Makefile: Don't link localedef statically anymore.
+
+	* locale/ld-collate.c (struct element_t): Add field is_character and
+	use it to distinguish real character from collating elements and
+	symbols.
 	(new_element): Take new parameter to initialize is_character.  Change
 	all callers.
 	(handle_ellipsis): Use is_character field to make sure ellipsis is
@@ -29,6 +54,7 @@
 	* locale/programs/ld-numeric.c: Likewise.
 	* locale/programs/ld-paper.c: Likewise.
 	* locale/programs/ld-telephone.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
 
 	* locale/programs/locfile.c (write_locale_data): Correct memory
 	allocation for fname.

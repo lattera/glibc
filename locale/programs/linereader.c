@@ -711,7 +711,7 @@ non-symbolic character value should not be used"));
 		{
 		  /* This name is not in the repertoire map.  */
 		  lr_error (lr, _("symbol `%.*s' not in repertoire map"),
-			    bufact - startidx, &buf[startidx]);
+			    (int) (bufact - startidx), &buf[startidx]);
 		  illegal_string = 1;
 		}
 	      else
@@ -726,7 +726,7 @@ non-symbolic character value should not be used"));
 	    {
 	      /* This name is not in the charmap.  */
 	      lr_error (lr, _("symbol `%.*s' not in charmap"),
-			bufact - startidx, &buf[startidx]);
+			(int) (bufact - startidx), &buf[startidx]);
 	      illegal_string = 1;
 
 	      /* Now forget about the name we just added.  */

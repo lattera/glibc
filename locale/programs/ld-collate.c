@@ -1677,6 +1677,21 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   obstack_init (&extrapool);
   obstack_init (&indirectpool);
 
+  /* Since we are using the sign of an integer to mark indirection the
+     offsets in the arrays we are indirectly referring to must not be
+     zero since -0 == 0.  Therefore we add a bit of dummy content.  */
+  if (sizeof (int) == sizeof (int32_t))
+    {
+      obstack_int_grow (&extrapool, 0);
+      obstack_int_grow (&indirectpool, 0);
+    }
+  else
+    {
+      int32_t zero = 0;
+      obstack_grow (&extrapool, &zero, sizeof (zero));
+      obstack_grow (&indirectpool, &zero, sizeof (zero));
+    }
+
   /* Prepare the ruleset table.  */
   for (sect = collate->sections, i = 0; sect != NULL; sect = sect->next)
     if (sect->ruleidx == i)
@@ -1978,7 +1993,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Get the locale definition.  */
-      copy_locale = find_locale (LC_COLLATE, now->val.str.startmb,
+      copy_locale = load_locale (LC_COLLATE, now->val.str.startmb,
 				 repertoire_name, charmap);
       if ((copy_locale->avail & COLLATE_LOCALE) == 0)
 	{
