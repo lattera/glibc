@@ -1,1 +1,1 @@
-#include <sysdeps/stub/sethostid.c>
+#include <sysdeps/generic/sethostid.c>
