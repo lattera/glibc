@@ -19,6 +19,8 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
+
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 nis_error
@@ -37,8 +39,8 @@ nis_servstate (const nis_server *serv, const nis_tag *tags,
   if (serv == NULL)
     return NIS_BADOBJECT;
 
-  if (__do_niscall2 (serv, 1, NIS_SERVSTATE, (xdrproc_t) xdr_nis_taglist,
-		     (caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
+  if (__do_niscall2 (serv, 1, NIS_SERVSTATE, (xdrproc_t) _xdr_nis_taglist,
+		     (caddr_t) &taglist, (xdrproc_t) _xdr_nis_taglist,
 		     (caddr_t) &tagres, 0, NULL, NULL) != RPC_SUCCESS)
     return NIS_RPCERROR;
 
@@ -63,8 +65,8 @@ nis_stats (const nis_server *serv, const nis_tag *tags,
   if (serv == NULL)
     return NIS_BADOBJECT;
 
-  if (__do_niscall2 (serv, 1, NIS_STATUS, (xdrproc_t) xdr_nis_taglist,
-		     (caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
+  if (__do_niscall2 (serv, 1, NIS_STATUS, (xdrproc_t) _xdr_nis_taglist,
+		     (caddr_t) &taglist, (xdrproc_t) _xdr_nis_taglist,
 		     (caddr_t) &tagres, 0, NULL, NULL) != RPC_SUCCESS)
     return NIS_RPCERROR;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -19,7 +19,7 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
-
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 nis_result *
@@ -35,20 +35,22 @@ nis_lookup (const_nis_name name, const u_long flags)
   nis_name namebuf[2] = {NULL, NULL};
 
   res = calloc (1, sizeof (nis_result));
+  if (res == NULL)
+    return NULL;
 
   if (flags & EXPAND_NAME)
     {
       names = nis_getnames (name);
       if (names == NULL)
 	{
-	  res->status = NIS_NAMEUNREACHABLE;
+	  NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
 	  return res;
 	}
     }
   else
     {
       names = namebuf;
-      names[0] = (nis_name) name;
+      names[0] = (nis_name)name;
     }
 
   req.ns_name = names[0];
@@ -59,14 +61,14 @@ nis_lookup (const_nis_name name, const u_long flags)
       memset (res, '\0', sizeof (nis_result));
 
       status = __do_niscall (req.ns_name, NIS_LOOKUP,
-			     (xdrproc_t) xdr_ns_request,
+			     (xdrproc_t) _xdr_ns_request,
 			     (caddr_t) & req,
-			     (xdrproc_t) xdr_nis_result,
+			     (xdrproc_t) _xdr_nis_result,
 			     (caddr_t) res, flags, NULL);
       if (status != NIS_SUCCESS)
-	res->status = status;
+	NIS_RES_STATUS (res) = status;
 
-      switch (res->status)
+      switch (NIS_RES_STATUS (res))
 	{
 	case NIS_PARTIAL:
 	case NIS_SUCCESS:
@@ -77,7 +79,7 @@ nis_lookup (const_nis_name name, const u_long flags)
 	      /* if we hit the link limit, bail */
 	      if (count_links > NIS_MAXLINKS)
 		{
-		  res->status = NIS_LINKNAMEERROR;
+		  NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
 		  ++done;
 		  break;
 		}
@@ -87,6 +89,8 @@ nis_lookup (const_nis_name name, const u_long flags)
 	      req.ns_name = strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
 	      nis_freeresult (res);
 	      res = calloc (1, sizeof (nis_result));
+	      if (res == NULL)
+		return NULL;
 	    }
 	  else
 	    ++done;
@@ -104,7 +108,7 @@ nis_lookup (const_nis_name name, const u_long flags)
 	  if (count_links)
 	    {
 	      free (req.ns_name);
-	      res->status = NIS_LINKNAMEERROR;
+	      NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
 	      ++done;
 	      break;
 	    }

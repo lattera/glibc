@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -41,7 +41,7 @@ nis_verifygroup (const_nis_name group)
 	  stpcpy (cp, cp2);
 	}
       res = nis_lookup (buf, 0);
-      status = res->status;
+      status = NIS_RES_STATUS (res);
       nis_freeresult (res);
       return status;
     }

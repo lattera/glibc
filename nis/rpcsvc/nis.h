@@ -81,10 +81,8 @@ struct nis_attr {
 	} zattr_val;
 };
 typedef struct nis_attr nis_attr;
-extern  bool_t xdr_nis_attr __P ((XDR *, nis_attr*));
 
 typedef char *nis_name;
-extern  bool_t xdr_nis_name __P ((XDR *, nis_name*));
 
 enum zotypes {
 	BOGUS_OBJ = 0,
@@ -105,7 +103,6 @@ enum zotypes {
 	NIS_PRIVATE_OBJ = 7
 };
 typedef enum zotypes zotypes;
-extern  bool_t xdr_zotypes __P ((XDR *, zotypes*));
 
 enum nstype {
 	UNKNOWN = 0,
@@ -119,14 +116,12 @@ enum nstype {
 	CDS = 8,
 };
 typedef enum nstype nstype;
-extern  bool_t xdr_nstype __P ((XDR *, nstype*));
 
 struct oar_mask {
 	u_long oa_rights;
 	zotypes oa_otype;
 };
 typedef struct oar_mask oar_mask;
-extern  bool_t xdr_oar_mask __P ((XDR *, oar_mask*));
 
 struct endpoint {
 	char *uaddr;
@@ -134,7 +129,6 @@ struct endpoint {
 	char *proto;
 };
 typedef struct endpoint endpoint;
-extern  bool_t xdr_endpoint __P ((XDR *, endpoint*));
 
 struct nis_server {
 	nis_name name;
@@ -146,7 +140,6 @@ struct nis_server {
 	netobj pkey;
 };
 typedef struct nis_server nis_server;
-extern  bool_t xdr_nis_server __P ((XDR *, nis_server*));
 
 struct directory_obj {
 	nis_name do_name;
@@ -162,7 +155,6 @@ struct directory_obj {
 	} do_armask;
 };
 typedef struct directory_obj directory_obj;
-extern  bool_t xdr_directory_obj __P ((XDR *, directory_obj*));
 
 #define EN_BINARY 1
 #define EN_CRYPT 2
@@ -178,7 +170,6 @@ struct entry_col {
 	} ec_value;
 };
 typedef struct entry_col entry_col;
-extern  bool_t xdr_entry_col __P ((XDR *, entry_col*));
 
 struct entry_obj {
 	char *en_type;
@@ -188,7 +179,6 @@ struct entry_obj {
 	} en_cols;
 };
 typedef struct entry_obj entry_obj;
-extern  bool_t xdr_entry_obj __P ((XDR *, entry_obj*));
 
 struct group_obj {
 	u_long gr_flags;
@@ -198,7 +188,6 @@ struct group_obj {
 	} gr_members;
 };
 typedef struct group_obj group_obj;
-extern  bool_t xdr_group_obj __P ((XDR *, group_obj*));
 
 struct link_obj {
 	zotypes li_rtype;
@@ -209,7 +198,6 @@ struct link_obj {
 	nis_name li_name;
 };
 typedef struct link_obj link_obj;
-extern  bool_t xdr_link_obj __P ((XDR *, link_obj*));
 
 #define TA_BINARY 1
 #define TA_CRYPT 2
@@ -225,7 +213,6 @@ struct table_col {
 	u_long tc_rights;
 };
 typedef struct table_col table_col;
-extern  bool_t xdr_table_col __P ((XDR *, table_col*));
 
 struct table_obj {
 	char *ta_type;
@@ -238,7 +225,6 @@ struct table_obj {
 	char *ta_path;
 };
 typedef struct table_obj table_obj;
-extern  bool_t xdr_table_obj __P ((XDR *, table_obj*));
 
 struct objdata {
 	zotypes zo_type;
@@ -255,14 +241,12 @@ struct objdata {
 	} objdata_u;
 };
 typedef struct objdata objdata;
-extern  bool_t xdr_objdata __P ((XDR *, objdata*));
 
 struct nis_oid {
 	u_long ctime;
 	u_long mtime;
 };
 typedef struct nis_oid nis_oid;
-extern  bool_t xdr_nis_oid __P ((XDR *, nis_oid*));
 
 struct nis_object {
 	nis_oid zo_oid;
@@ -275,7 +259,6 @@ struct nis_object {
 	objdata zo_data;
 };
 typedef struct nis_object nis_object;
-extern  bool_t xdr_nis_object __P ((XDR *, nis_object*));
 
 #endif /* if __nis_object_h */
 
@@ -330,7 +313,6 @@ enum nis_error {
 	NIS_DUMPLATER = 47,
 };
 typedef enum nis_error nis_error;
-extern  bool_t xdr_nis_error __P ((XDR *, nis_error*));
 
 struct nis_result {
 	nis_error status;
@@ -345,7 +327,6 @@ struct nis_result {
 	u_long cticks;
 };
 typedef struct nis_result nis_result;
-extern  bool_t xdr_nis_result __P ((XDR *, nis_result*));
 
 struct ns_request {
 	nis_name ns_name;
@@ -355,7 +336,6 @@ struct ns_request {
 	} ns_object;
 };
 typedef struct ns_request ns_request;
-extern  bool_t xdr_ns_request __P ((XDR *, ns_request*));
 
 struct ib_request {
 	nis_name ibr_name;
@@ -376,14 +356,12 @@ struct ib_request {
 	netobj ibr_cookie;
 };
 typedef struct ib_request ib_request;
-extern  bool_t xdr_ib_request __P ((XDR *, ib_request*));
 
 struct ping_args {
 	nis_name dir;
 	u_long stamp;
 };
 typedef struct ping_args ping_args;
-extern  bool_t xdr_ping_args __P ((XDR *, ping_args*));
 
 enum log_entry_t {
 	LOG_NOP = 0,
@@ -397,7 +375,6 @@ enum log_entry_t {
 	UPD_STAMP = 8,
 };
 typedef enum log_entry_t log_entry_t;
-extern  bool_t xdr_log_entry_t __P ((XDR *, log_entry_t*));
 
 struct log_entry {
 	u_long le_time;
@@ -411,7 +388,6 @@ struct log_entry {
 	nis_object le_object;
 };
 typedef struct log_entry log_entry;
-extern  bool_t xdr_log_entry __P ((XDR *, log_entry*));
 
 struct log_result {
 	nis_error lr_status;
@@ -422,7 +398,6 @@ struct log_result {
 	} lr_entries;
 };
 typedef struct log_result log_result;
-extern  bool_t xdr_log_result __P ((XDR *, log_result*));
 
 struct cp_result {
 	nis_error cp_status;
@@ -430,14 +405,12 @@ struct cp_result {
 	u_long cp_dticks;
 };
 typedef struct cp_result cp_result;
-extern  bool_t xdr_cp_result __P ((XDR *, cp_result*));
 
 struct nis_tag {
 	u_long tag_type;
 	char *tag_val;
 };
 typedef struct nis_tag nis_tag;
-extern  bool_t xdr_nis_tag __P ((XDR *, nis_tag*));
 
 struct nis_taglist {
 	struct {
@@ -446,7 +419,6 @@ struct nis_taglist {
 	} tags;
 };
 typedef struct nis_taglist nis_taglist;
-extern  bool_t xdr_nis_taglist __P ((XDR *, nis_taglist*));
 
 struct dump_args {
 	nis_name da_dir;
@@ -457,14 +429,12 @@ struct dump_args {
 	} da_cbhost;
 };
 typedef struct dump_args dump_args;
-extern  bool_t xdr_dump_args __P ((XDR *, dump_args*));
 
 struct fd_args {
 	nis_name dir_name;
 	nis_name requester;
 };
 typedef struct fd_args fd_args;
-extern  bool_t xdr_fd_args __P ((XDR *, fd_args*));
 
 struct fd_result {
 	nis_error status;
@@ -479,7 +449,6 @@ struct fd_result {
 	} signature;
 };
 typedef struct fd_result fd_result;
-extern  bool_t xdr_fd_result __P ((XDR *, fd_result*));
 
 /* Generic client creating flags */
 #define ZMH_VC		1

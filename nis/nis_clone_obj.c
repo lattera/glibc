@@ -21,6 +21,8 @@
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
 
+#include "nis_xdr.h"
+
 nis_object *
 nis_clone_object (const nis_object *src, nis_object *dest)
 {
@@ -32,7 +34,7 @@ nis_clone_object (const nis_object *src, nis_object *dest)
   if (src == NULL)
     return (NULL);
 
-  size = xdr_sizeof ((xdrproc_t)xdr_nis_object, (char *)src);
+  size = xdr_sizeof ((xdrproc_t)_xdr_nis_object, (char *)src);
   if ((addr = calloc(1, size)) == NULL)
     return NULL;
 
@@ -48,7 +50,7 @@ nis_clone_object (const nis_object *src, nis_object *dest)
     res = dest;
 
   xdrmem_create(&xdrs, addr, size, XDR_ENCODE);
-  if (!xdr_nis_object (&xdrs, (nis_object *)src))
+  if (!_xdr_nis_object (&xdrs, (nis_object *)src))
     {
       xdr_destroy (&xdrs);
       free (addr);
@@ -56,7 +58,7 @@ nis_clone_object (const nis_object *src, nis_object *dest)
     }
   xdr_destroy (&xdrs);
   xdrmem_create(&xdrs, addr, size, XDR_DECODE);
-  if (!xdr_nis_object(&xdrs, res))
+  if (!_xdr_nis_object(&xdrs, res))
     {
       xdr_destroy (&xdrs);
       free (addr);

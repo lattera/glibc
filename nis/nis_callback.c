@@ -31,8 +31,10 @@
 #include <arpa/inet.h>
 #include <rpc/key_prot.h>
 #include <rpcsvc/nis.h>
+#include <rpcsvc/nis_callback.h>
 #include <bits/libc-lock.h>
 
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 /* Sorry, we are not able to make this threadsafe. Stupid. But some
@@ -40,30 +42,12 @@
    cookie. Maybe we could use keys for threads ? Have to learn more
    about pthreads -- kukuk@vt.uni-paderborn.de */
 
-#define CB_PROG ((u_long)100302)
-#define CB_VERS ((u_long)1)
-#define CBPROC_RECEIVE ((u_long)1)
-#define CBPROC_FINISH ((u_long)2)
-#define CBPROC_ERROR ((u_long)3)
-
-typedef nis_object *obj_p;
-
-struct cback_data
-  {
-    struct
-      {
-	u_int entries_len;
-	obj_p *entries_val;
-      }
-    entries;
-  };
-typedef struct cback_data cback_data;
-
 static nis_cb *data;
 
 __libc_lock_define_initialized (static, callback)
 
 
+#if 0
 static char *
 __nis_getpkey(const char *sname)
 {
@@ -91,7 +75,7 @@ __nis_getpkey(const char *sname)
   if (res == NULL)
     return NULL;
 
-  if (res->status != NIS_SUCCESS)
+  if (NIS_RES_STATUS (res) != NIS_SUCCESS)
     {
       nis_freeresult (res);
       return NULL;
@@ -108,9 +92,7 @@ __nis_getpkey(const char *sname)
 
   return strdup (pkey);
 }
-
-
-static bool_t xdr_cback_data (XDR *, cback_data *);
+#endif
 
 static void
 cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
@@ -181,7 +163,7 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
       result = (char *) &bool_result;
       break;
     case CBPROC_ERROR:
-      xdr_argument = (xdrproc_t) xdr_nis_error;
+      xdr_argument = (xdrproc_t) _xdr_nis_error;
       xdr_result = (xdrproc_t) xdr_void;
       memset (&argument, 0, sizeof (argument));
       if (!svc_getargs (transp, xdr_argument, (caddr_t) & argument))
@@ -206,25 +188,6 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
       exit (1);
     }
   return;
-}
-
-static bool_t
-xdr_obj_p (XDR * xdrs, obj_p *objp)
-{
-  if (!xdr_pointer (xdrs, (char **) objp, sizeof (nis_object),
-		    (xdrproc_t) xdr_nis_object))
-    return FALSE;
-  return TRUE;
-}
-
-static bool_t
-xdr_cback_data (XDR *xdrs, cback_data *objp)
-{
-  if (!xdr_array (xdrs, (char **) &objp->entries.entries_val,
-		  (u_int *) & objp->entries.entries_len, ~0, sizeof (obj_p),
-		  (xdrproc_t) xdr_obj_p))
-    return FALSE;
-  return TRUE;
 }
 
 static nis_error
@@ -319,7 +282,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
     {
       free (cb);
       syslog (LOG_ERR, "NIS+: out of memory allocating callback");
-      return (NULL);
+      return NULL;
     }
   cb->serv->name = strdup (nis_local_principal ());
   cb->serv->ep.ep_val = (endpoint *) calloc (2, sizeof (endpoint));
@@ -328,7 +291,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   cb->callback = callback;
   cb->userdata = userdata;
 
-  if ((flags & NO_AUTHINFO) && key_secretkey_is_set ())
+  if ((flags & NO_AUTHINFO) || !key_secretkey_is_set ())
     {
       cb->serv->key_type = NIS_PK_NONE;
       cb->serv->pkey.n_bytes = NULL;
@@ -336,6 +299,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
     }
   else
     {
+#if 0
       if ((cb->serv->pkey.n_bytes = __nis_getpkey (cb->serv->name)) == NULL)
 	{
 	  cb->serv->pkey.n_len = 0;
@@ -346,6 +310,11 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
 	  cb->serv->key_type = NIS_PK_DH;
 	  cb->serv->pkey.n_len = strlen(cb->serv->pkey.n_bytes);
 	}
+#else
+      cb->serv->pkey.n_len =0;
+      cb->serv->pkey.n_bytes = NULL;
+      cb->serv->key_type = NIS_PK_DH;
+#endif
     }
 
   if (flags & USE_DGRAM)
@@ -363,7 +332,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
     {
       xprt_unregister (cb->xprt);
       svc_destroy (cb->xprt);
-      xdr_free ((xdrproc_t) xdr_nis_server, (char *) cb->serv);
+      xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
       free (cb->serv);
       free (cb);
       syslog (LOG_ERR, "NIS+: failed to register callback dispatcher");
@@ -374,11 +343,11 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
     {
       xprt_unregister (cb->xprt);
       svc_destroy (cb->xprt);
-      xdr_free ((xdrproc_t) xdr_nis_server, (char *) cb->serv);
+      xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
       free (cb->serv);
       free (cb);
       syslog (LOG_ERR, "NIS+: failed to read local socket info");
-      return (NULL);
+      return NULL;
     }
   port = sin.sin_port;
   get_myaddress (&sin);
@@ -395,7 +364,7 @@ __nis_destroy_callback (struct nis_cb *cb)
   xprt_unregister (cb->xprt);
   svc_destroy (cb->xprt);
   close (cb->sock);
-  xdr_free ((xdrproc_t) xdr_nis_server, (char *) cb->serv);
+  xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
   free (cb->serv);
   free (cb);
 

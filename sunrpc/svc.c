@@ -374,8 +374,7 @@ svcerr_progvers (xprt, low_vers, high_vers)
  */
 
 void
-svc_getreq (rdfds)
-     int rdfds;
+svc_getreq (int rdfds)
 {
 #ifdef FD_SETSIZE
   fd_set readfds;
@@ -435,6 +434,10 @@ svc_getreqset (readfds)
 	  /* sock has input waiting */
 	  xprt = xports[sock];
 #endif /* def FD_SETSIZE */
+	  if (xprt == NULL)
+	    /* But do we control sock? */
+	    continue;
+
 	  /* now receive msgs from xprtprt (support batch calls) */
 	  do
 	    {
@@ -481,8 +484,7 @@ svc_getreqset (readfds)
 		   * is not served ...
 		   */
 		  if (prog_found)
-		    svcerr_progvers (xprt,
-				     low_vers, high_vers);
+		    svcerr_progvers (xprt, low_vers, high_vers);
 		  else
 		    svcerr_noprog (xprt);
 		  /* Fall through to ... */

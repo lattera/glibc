@@ -51,6 +51,8 @@ GLIBC_2.1 {
     nis_sperror;          nis_sperror_r;       nis_stats;
     nis_verifygroup;      nis_write_obj;
 
+    xdr_cback_data;       xdr_obj_p;
+
     # This functions are needed by the NIS+ tools and rpc.nisd,
     # they should never be used in a normal user program !
     __do_niscall2;        __free_fdresult;     __nis_default_access;

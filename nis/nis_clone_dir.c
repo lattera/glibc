@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -21,6 +21,8 @@
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
 
+#include "nis_xdr.h"
+
 directory_obj *
 nis_clone_directory (const directory_obj *src, directory_obj *dest)
 {
@@ -32,7 +34,7 @@ nis_clone_directory (const directory_obj *src, directory_obj *dest)
   if (src == NULL)
     return (NULL);
 
-  size = xdr_sizeof ((xdrproc_t)xdr_directory_obj, (char *)src);
+  size = xdr_sizeof ((xdrproc_t)_xdr_directory_obj, (char *)src);
   if ((addr = calloc(1, size)) == NULL)
     return NULL;
 
@@ -48,7 +50,7 @@ nis_clone_directory (const directory_obj *src, directory_obj *dest)
     res = dest;
 
   xdrmem_create(&xdrs, addr, size, XDR_ENCODE);
-  if (!xdr_directory_obj (&xdrs, (directory_obj *)src))
+  if (!_xdr_directory_obj (&xdrs, (directory_obj *)src))
     {
       xdr_destroy (&xdrs);
       free (addr);
@@ -56,7 +58,7 @@ nis_clone_directory (const directory_obj *src, directory_obj *dest)
     }
   xdr_destroy (&xdrs);
   xdrmem_create (&xdrs, addr, size, XDR_DECODE);
-  if (!xdr_directory_obj (&xdrs, res))
+  if (!_xdr_directory_obj (&xdrs, res))
     {
       xdr_destroy (&xdrs);
       free (addr);

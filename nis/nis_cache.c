@@ -20,8 +20,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <rpcsvc/nis.h>
-#include "nis_intern.h"
 
+#include "nis_xdr.h"
+#include "nis_intern.h"
 #include "nis_cache2.h"
 
 static struct timeval TIMEOUT = { 25, 0 };
@@ -85,7 +86,7 @@ __nis_cache_search (const_nis_name name, u_long flags, cache2_info *cinfo)
 
   xdrmem_create (&xdrs, fsres.dir_data.dir_data_val,
 		 fsres.dir_data.dir_data_len, XDR_DECODE);
-  xdr_directory_obj (&xdrs, obj);
+  _xdr_directory_obj (&xdrs, obj);
   xdr_destroy (&xdrs);
 
   cinfo->server_used = fsres.server_used;

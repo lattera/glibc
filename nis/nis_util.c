@@ -19,6 +19,8 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
+
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 fd_result *
@@ -34,8 +36,8 @@ __nis_finddirectory (directory_obj *dir, const_nis_name name)
 
   status = __do_niscall2 (dir->do_servers.do_servers_val,
 			  dir->do_servers.do_servers_len,
-			  NIS_FINDDIRECTORY, (xdrproc_t) xdr_fd_args,
-			  (caddr_t) &fd_args, (xdrproc_t) xdr_fd_result,
+			  NIS_FINDDIRECTORY, (xdrproc_t) _xdr_fd_args,
+			  (caddr_t) &fd_args, (xdrproc_t) _xdr_fd_result,
 			  (caddr_t) fd_res, NO_AUTHINFO|USE_DGRAM, NULL, NULL);
   if (status != NIS_SUCCESS)
     fd_res->status = status;

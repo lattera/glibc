@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -43,9 +43,9 @@ nis_removemember (const_nis_name member, const_nis_name group)
           stpcpy (cp, cp2);
         }
       res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
-      if (res->status != NIS_SUCCESS)
+      if (NIS_RES_STATUS (res) != NIS_SUCCESS)
         {
-          status = res->status;
+          status = NIS_RES_STATUS (res);
           nis_freeresult (res);
           return status;
         }
@@ -57,6 +57,8 @@ nis_removemember (const_nis_name member, const_nis_name group)
       newmem =
 	calloc (1, NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len *
 		sizeof (char *));
+      if (newmem == NULL)
+	return NIS_NOMEMORY;
       k = NIS_RES_OBJECT (res)[0].GR_data.gr_members.gr_members_len;
       j = 0;
       for (i = 0; i < NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len;
@@ -76,6 +78,8 @@ nis_removemember (const_nis_name member, const_nis_name group)
 	}
       free (NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val);
       newmem = realloc (newmem, k * sizeof (char*));
+      if (newmem == NULL)
+	return NIS_NOMEMORY;
       NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val = newmem;
       NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len = k;
 
@@ -83,7 +87,7 @@ nis_removemember (const_nis_name member, const_nis_name group)
       *cp++ = '.';
       strncpy (cp, NIS_RES_OBJECT (res)->zo_domain, NIS_MAXNAMELEN);
       res2 = nis_modify (buf, NIS_RES_OBJECT (res));
-      status = res2->status;
+      status = NIS_RES_STATUS (res2);
       nis_freeresult (res);
       nis_freeresult (res2);
 

@@ -62,7 +62,7 @@ nis_creategroup (const_nis_name group, u_long flags)
       res = nis_add (buf, obj);
       if (res == NULL)
 	return NIS_NOMEMORY;
-      status = res->status;
+      status = NIS_RES_STATUS (res);
       nis_freeresult (res);
       nis_free_object (obj);
 

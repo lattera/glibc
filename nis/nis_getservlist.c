@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -19,6 +19,8 @@
 
 #include <string.h>
 #include <rpcsvc/nis.h>
+
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 nis_server **
@@ -111,7 +113,7 @@ nis_freeservlist (nis_server **serv)
   i = 0;
   while (serv[i] != NULL)
     {
-      xdr_free ((xdrproc_t)xdr_nis_server, (char *)serv[i]);
+      xdr_free ((xdrproc_t)_xdr_nis_server, (char *)serv[i]);
       free (serv[i]);
       ++i;
     }

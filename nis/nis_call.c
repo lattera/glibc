@@ -26,6 +26,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 static struct timeval RPCTIMEOUT = {10, 0};
@@ -461,7 +463,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	obj = calloc(1, sizeof(directory_obj));
 	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
 		      fd_res->dir_data.dir_data_len, XDR_DECODE);
-	xdr_directory_obj(&xdrs, obj);
+	_xdr_directory_obj(&xdrs, obj);
 	xdr_destroy(&xdrs);
 	__free_fdresult (fd_res);
 	if (obj != NULL)
@@ -525,7 +527,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	obj = calloc(1, sizeof(directory_obj));
 	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
 		      fd_res->dir_data.dir_data_len, XDR_DECODE);
-	xdr_directory_obj(&xdrs, obj);
+	_xdr_directory_obj(&xdrs, obj);
 	xdr_destroy(&xdrs);
 	__free_fdresult (fd_res);
 	if (obj != NULL)
@@ -576,8 +578,8 @@ first_shoot (const_nis_name name, directory_obj *dir, u_long flags)
     return NULL;
   xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
 		fd_res->dir_data.dir_data_len, XDR_DECODE);
-  xdr_directory_obj(&xdrs, obj);
-  xdr_destroy(&xdrs);
+  _xdr_directory_obj (&xdrs, obj);
+  xdr_destroy (&xdrs);
   __free_fdresult (fd_res);
   if (obj != NULL)
     {

@@ -18,6 +18,8 @@
    Boston, MA 02111-1307, USA. */
 
 #include <rpcsvc/nis.h>
+
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 nis_result *
@@ -26,10 +28,11 @@ nis_checkpoint(const_nis_name dirname)
   nis_result *res;
 
   res = calloc (1, sizeof (nis_result));
+  if (res == NULL)
+    return NULL;
 
   if (dirname != NULL)
     {
-      cp_result *cpres = NULL;
       nis_result *res2;
       u_int i;
 
@@ -48,16 +51,19 @@ nis_checkpoint(const_nis_name dirname)
       for (i = 0;
 	   i < NIS_RES_OBJECT (res2)->DI_data.do_servers.do_servers_len; ++i)
 	{
+	  cp_result cpres;
+
+	  memset (&cpres, '\0', sizeof (cp_result));
 	  if (__do_niscall2 (&NIS_RES_OBJECT(res2)->DI_data.do_servers.do_servers_val[i],
-			     1, NIS_CHECKPOINT, (xdrproc_t) xdr_nis_name,
-			     (caddr_t) &dirname, (xdrproc_t) xdr_cp_result,
-			     (caddr_t) &cpres, 0, NULL, NULL) != RPC_SUCCESS)
+			     1, NIS_CHECKPOINT, (xdrproc_t) _xdr_nis_name,
+			     (caddr_t) &dirname, (xdrproc_t) _xdr_cp_result,
+			     (caddr_t) &cpres, 0, NULL, NULL) != NIS_SUCCESS)
 	    NIS_RES_STATUS (res) = NIS_RPCERROR;
 	  else
 	    {
-	      res->status += cpres->cp_status;
-	      res->zticks += cpres->cp_zticks;
-	      res->dticks += cpres->cp_dticks;
+	      NIS_RES_STATUS (res) = cpres.cp_status;
+	      res->zticks += cpres.cp_zticks;
+	      res->dticks += cpres.cp_dticks;
 	    }
 	}
       nis_freeresult (res2);

@@ -351,7 +351,7 @@ nis_print_result (const nis_result *res)
 {
   unsigned int i;
 
-  printf (_("Status            : %s\n"), nis_sperrno (res->status));
+  printf (_("Status            : %s\n"), nis_sperrno (NIS_RES_STATUS (res)));
   printf (_("Number of objects : %u\n"), res->objects.objects_len);
 
   for (i = 0; i < res->objects.objects_len; i++)

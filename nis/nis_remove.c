@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -19,6 +19,7 @@
 
 #include <rpcsvc/nis.h>
 
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 nis_result *
@@ -29,8 +30,10 @@ nis_remove (const_nis_name name, const nis_object *obj)
   struct ns_request req;
 
   res = calloc (1, sizeof (nis_result));
+  if (res == NULL)
+    return NULL;
 
-  req.ns_name = (char *) name;
+  req.ns_name = (char *)name;
 
   if (obj != NULL)
     {
@@ -43,8 +46,8 @@ nis_remove (const_nis_name name, const nis_object *obj)
       req.ns_object.ns_object_val = NULL;
     }
 
-  if ((status = __do_niscall (name, NIS_REMOVE, (xdrproc_t) xdr_ns_request,
-			      (caddr_t) & req, (xdrproc_t) xdr_nis_result,
+  if ((status = __do_niscall (name, NIS_REMOVE, (xdrproc_t) _xdr_ns_request,
+			      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
 			      (caddr_t) res, MASTER_ONLY,
 			      NULL)) != RPC_SUCCESS)
     NIS_RES_STATUS (res) = status;

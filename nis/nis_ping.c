@@ -18,6 +18,8 @@
    Boston, MA 02111-1307, USA. */
 
 #include <rpcsvc/nis.h>
+
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 void
@@ -34,7 +36,7 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
   if (dirobj == NULL)
     {
       res = nis_lookup (dirname, MASTER_ONLY);
-      if (res->status != NIS_SUCCESS)
+      if (NIS_RES_STATUS (res) != NIS_SUCCESS)
 	return;
       obj = res->objects.objects_val;
     }
@@ -55,9 +57,10 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
     args.dir = (char *) dirname;
   args.stamp = utime;
 
-  for (i = 0; i < obj->DI_data.do_servers.do_servers_len; ++i)
+  /* Send the ping only to replicas */
+  for (i = 1; i < obj->DI_data.do_servers.do_servers_len; ++i)
     __do_niscall2 (&obj->DI_data.do_servers.do_servers_val[i], 1,
-		   NIS_PING, (xdrproc_t) xdr_ping_args,
+		   NIS_PING, (xdrproc_t) _xdr_ping_args,
 		   (caddr_t) &args, (xdrproc_t) xdr_void,
 		   (caddr_t) NULL, 0, NULL, NULL);
   if (res)

@@ -1,3 +1,43 @@
+1998-06-16  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/svc.c: Check for NULL pointer.
+
+	* nis/libnsl.map: Add public NIS+ xdr functions.
+
+	* nis/rpcsvc/nis_callback.h: New file.
+	* nis/rpcsvc/nis.h: Move xdr_* functions from here ...
+	* nis/nis_xdr.h: ... here.
+
+	* nis/nis_add.c: Use internal _xdr_* functions, check for NULL
+	pointers, use NIS+ defines where possible.
+	* nis/nis_cache.c: Likewise.
+	* nis/nis_cache2_xdr.c: Likewise.
+	* nis/nis_call.c: Likewise.
+	* nis/nis_checkpoint.c: Likewise.
+	* nis/nis_clone_dir.c: Likewise.
+	* nis/nis_clone_obj.c: Likewise.
+	* nis/nis_clone_res.c: Likewise.
+	* nis/nis_creategroup.c: Likewise.
+	* nis/nis_file.c: Likewise.
+	* nis/nis_free.c: Likewise.
+	* nis/nis_getservlist.c: Likewise.
+	* nis/nis_local_names.c: likewise.
+	* nis/nis_lookup.c: Likewise.
+	* nis/nis_mkdir.c: Likewise.
+	* nis/nis_modify.c: Likewise.
+	* nis/nis_ping.c: Likewise.
+	* nis/nis_print.c: Likewise.
+	* nis/nis_remove.c: Likewise.
+	* nis/nis_removemember.c: Likewise.
+	* nis/nis_rmdir.c: Likewise.
+	* nis/nis_server.c: Likewise.
+	* nis/nis_table.c: Likewise.
+	* nis/nis_util.c: Likewise.
+	* nis/nis_verifygroup.c: Likewise.
+	* nis/nis_xdr.c: Likewise.
+	* nis/nis_callback.c: Likewise, and move xdr functions from here ...
+	* nis/nis_xdr.c: ... to here.
+
 1998-06-15 18:07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/ksc5601.h: Clean up a bit.

@@ -18,6 +18,8 @@
    Boston, MA 02111-1307, USA. */
 
 #include <rpcsvc/nis.h>
+
+#include "nis_xdr.h"
 #include "nis_intern.h"
 
 nis_error
@@ -26,13 +28,13 @@ nis_mkdir (const_nis_name dir, const nis_server *server)
   nis_error res, res2;
 
   if (server == NULL)
-    res2 = __do_niscall (dir, NIS_MKDIR, (xdrproc_t) xdr_nis_name,
-			 (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
+    res2 = __do_niscall (dir, NIS_MKDIR, (xdrproc_t) _xdr_nis_name,
+			 (caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
 			 (caddr_t) &res, 0, NULL);
   else
     res2 = __do_niscall2 (server, 1, NIS_MKDIR,
-			  (xdrproc_t) xdr_nis_name,
-			  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
+			  (xdrproc_t) _xdr_nis_name,
+			  (caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
 			  (caddr_t) &res, 0, NULL, NULL);
   if (res2 != NIS_SUCCESS)
     return res2;

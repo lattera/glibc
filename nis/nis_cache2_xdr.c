@@ -5,14 +5,16 @@
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
-
-#include "nis_cache2.h"
 #include <rpcsvc/nis.h>
+
+#include "nis_xdr.h"
+#include "nis_cache2.h"
+
 
 bool_t
 xdr_fs_result(XDR *xdrs, fs_result *objp)
 {
-	 if (!xdr_nis_error(xdrs, &objp->status)) {
+	 if (!_xdr_nis_error(xdrs, &objp->status)) {
 		 return FALSE;
 	 }
 	 if (!xdr_long(xdrs, &objp->class)) {
@@ -33,7 +35,7 @@ xdr_fs_result(XDR *xdrs, fs_result *objp)
 bool_t
 xdr_fs_request(XDR *xdrs, fs_request *objp)
 {
-	 if (!xdr_nis_name(xdrs, &objp->name)) {
+	 if (!_xdr_nis_name(xdrs, &objp->name)) {
 		 return FALSE;
 	 }
 	 if (!xdr_long(xdrs, &objp->old_class)) {

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -18,13 +18,14 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <rpcsvc/nis.h>
+#include "nis_xdr.h"
 
 void
 __free_fdresult (fd_result *res)
 {
   if (res != NULL)
     {
-      xdr_free ((xdrproc_t)xdr_fd_result, (char *)res);
+      xdr_free ((xdrproc_t)_xdr_fd_result, (char *)res);
       free (res);
     }
 }
@@ -34,7 +35,7 @@ nis_free_request (ib_request *ibreq)
 {
   if (ibreq != NULL)
     {
-      xdr_free ((xdrproc_t)xdr_ib_request, (char *)ibreq);
+      xdr_free ((xdrproc_t)_xdr_ib_request, (char *)ibreq);
       free (ibreq);
     }
 }
@@ -44,7 +45,7 @@ nis_free_directory (directory_obj *obj)
 {
   if (obj != NULL)
     {
-      xdr_free ((xdrproc_t)xdr_directory_obj, (char *)obj);
+      xdr_free ((xdrproc_t)_xdr_directory_obj, (char *)obj);
       free (obj);
     }
 }
@@ -54,7 +55,7 @@ nis_free_object (nis_object *obj)
 {
   if (obj != NULL)
     {
-      xdr_free ((xdrproc_t)xdr_nis_object, (char *)obj);
+      xdr_free ((xdrproc_t)_xdr_nis_object, (char *)obj);
       free (obj);
     }
 }
@@ -64,7 +65,7 @@ nis_freeresult (nis_result *res)
 {
   if (res != NULL)
     {
-      xdr_free ((xdrproc_t)xdr_nis_result, (char *)res);
+      xdr_free ((xdrproc_t)_xdr_nis_result, (char *)res);
       free (res);
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -18,8 +18,14 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <rpcsvc/nis.h>
+#include <rpcsvc/nis_callback.h> /* for "official" Solaris xdr functions */
 
-bool_t
+/* This functions do exist without beginning "_" under Solaris 2.x, but
+   we have no prototypes for them. To avoid the same problems as with the
+   YP xdr functions, we don't make them public. */
+#include "nis_xdr.h"
+
+static bool_t
 xdr_nis_attr (XDR *xdrs, nis_attr *objp)
 {
   if (!xdr_string (xdrs, &objp->zattr_ndx, ~0))
@@ -31,14 +37,14 @@ xdr_nis_attr (XDR *xdrs, nis_attr *objp)
 }
 
 bool_t
-xdr_nis_name (XDR *xdrs, nis_name *objp)
+_xdr_nis_name (XDR *xdrs, nis_name *objp)
 {
   if (!xdr_string (xdrs, objp, ~0))
     return FALSE;
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_zotypes (XDR *xdrs, zotypes *objp)
 {
   if (!xdr_enum (xdrs, (enum_t *) objp))
@@ -46,7 +52,7 @@ xdr_zotypes (XDR *xdrs, zotypes *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_nstype (XDR *xdrs, nstype *objp)
 {
   if (!xdr_enum (xdrs, (enum_t *) objp))
@@ -54,7 +60,7 @@ xdr_nstype (XDR *xdrs, nstype *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_oar_mask (XDR *xdrs, oar_mask *objp)
 {
   if (!xdr_u_long (xdrs, &objp->oa_rights))
@@ -64,7 +70,7 @@ xdr_oar_mask (XDR *xdrs, oar_mask *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_endpoint (XDR *xdrs, endpoint *objp)
 {
   if (!xdr_string (xdrs, &objp->uaddr, ~0))
@@ -77,9 +83,9 @@ xdr_endpoint (XDR *xdrs, endpoint *objp)
 }
 
 bool_t
-xdr_nis_server (XDR *xdrs, nis_server *objp)
+_xdr_nis_server (XDR *xdrs, nis_server *objp)
 {
-  if (!xdr_nis_name (xdrs, &objp->name))
+  if (!_xdr_nis_name (xdrs, &objp->name))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->ep.ep_val, (u_int *) &objp->ep.ep_len,
 		  ~0, sizeof (endpoint), (xdrproc_t) xdr_endpoint))
@@ -92,15 +98,15 @@ xdr_nis_server (XDR *xdrs, nis_server *objp)
 }
 
 bool_t
-xdr_directory_obj (XDR *xdrs, directory_obj *objp)
+_xdr_directory_obj (XDR *xdrs, directory_obj *objp)
 {
-  if (!xdr_nis_name (xdrs, &objp->do_name))
+  if (!_xdr_nis_name (xdrs, &objp->do_name))
     return FALSE;
   if (!xdr_nstype (xdrs, &objp->do_type))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->do_servers.do_servers_val,
 		  (u_int *) & objp->do_servers.do_servers_len, ~0,
-		  sizeof (nis_server), (xdrproc_t) xdr_nis_server))
+		  sizeof (nis_server), (xdrproc_t) _xdr_nis_server))
     return FALSE;
 
   if (!xdr_u_long (xdrs, &objp->do_ttl))
@@ -112,7 +118,7 @@ xdr_directory_obj (XDR *xdrs, directory_obj *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_entry_col (XDR *xdrs, entry_col *objp)
 {
   if (!xdr_u_long (xdrs, &objp->ec_flags))
@@ -123,7 +129,7 @@ xdr_entry_col (XDR *xdrs, entry_col *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_entry_obj (XDR *xdrs, entry_obj *objp)
 {
   if (!xdr_string (xdrs, &objp->en_type, ~0))
@@ -135,19 +141,19 @@ xdr_entry_obj (XDR *xdrs, entry_obj *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_group_obj (XDR *xdrs, group_obj *objp)
 {
   if (!xdr_u_long (xdrs, &objp->gr_flags))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->gr_members.gr_members_val,
 		  (u_int *) &objp->gr_members.gr_members_len, ~0,
-		  sizeof (nis_name), (xdrproc_t) xdr_nis_name))
+		  sizeof (nis_name), (xdrproc_t) _xdr_nis_name))
     return FALSE;
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_link_obj (XDR *xdrs, link_obj *objp)
 {
   if (!xdr_zotypes (xdrs, &objp->li_rtype))
@@ -156,12 +162,12 @@ xdr_link_obj (XDR *xdrs, link_obj *objp)
 		  (u_int *) &objp->li_attrs.li_attrs_len, ~0,
 		  sizeof (nis_attr), (xdrproc_t) xdr_nis_attr))
     return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->li_name))
+  if (!_xdr_nis_name (xdrs, &objp->li_name))
     return FALSE;
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_table_col (XDR *xdrs, table_col *objp)
 {
   if (!xdr_string (xdrs, &objp->tc_name, 64))
@@ -173,7 +179,7 @@ xdr_table_col (XDR *xdrs, table_col *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_table_obj (XDR *xdrs, table_obj *objp)
 {
   if (!xdr_string (xdrs, &objp->ta_type, 64))
@@ -191,7 +197,7 @@ xdr_table_obj (XDR *xdrs, table_obj *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_objdata (XDR *xdrs, objdata *objp)
 {
   if (!xdr_zotypes (xdrs, &objp->zo_type))
@@ -199,7 +205,7 @@ xdr_objdata (XDR *xdrs, objdata *objp)
   switch (objp->zo_type)
     {
     case NIS_DIRECTORY_OBJ:
-      if (!xdr_directory_obj (xdrs, &objp->objdata_u.di_data))
+      if (!_xdr_directory_obj (xdrs, &objp->objdata_u.di_data))
 	return FALSE;
       break;
     case NIS_GROUP_OBJ:
@@ -233,7 +239,7 @@ xdr_objdata (XDR *xdrs, objdata *objp)
   return TRUE;
 }
 
-bool_t
+static bool_t
 xdr_nis_oid (XDR *xdrs, nis_oid *objp)
 {
   if (!xdr_u_long (xdrs, &objp->ctime))
@@ -244,17 +250,17 @@ xdr_nis_oid (XDR *xdrs, nis_oid *objp)
 }
 
 bool_t
-xdr_nis_object (XDR *xdrs, nis_object *objp)
+_xdr_nis_object (XDR *xdrs, nis_object *objp)
 {
   if (!xdr_nis_oid (xdrs, &objp->zo_oid))
     return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->zo_name))
+  if (!_xdr_nis_name (xdrs, &objp->zo_name))
     return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->zo_owner))
+  if (!_xdr_nis_name (xdrs, &objp->zo_owner))
     return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->zo_group))
+  if (!_xdr_nis_name (xdrs, &objp->zo_group))
     return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->zo_domain))
+  if (!_xdr_nis_name (xdrs, &objp->zo_domain))
     return FALSE;
   if (!xdr_u_long (xdrs, &objp->zo_access))
     return FALSE;
@@ -266,7 +272,7 @@ xdr_nis_object (XDR *xdrs, nis_object *objp)
 }
 
 bool_t
-xdr_nis_error (XDR *xdrs, nis_error *objp)
+_xdr_nis_error (XDR *xdrs, nis_error *objp)
 {
   if (!xdr_enum (xdrs, (enum_t *) objp))
     return FALSE;
@@ -274,17 +280,17 @@ xdr_nis_error (XDR *xdrs, nis_error *objp)
 }
 
 bool_t
-xdr_nis_result (XDR *xdrs, nis_result *objp)
+_xdr_nis_result (XDR *xdrs, nis_result *objp)
 {
   register long *buf;
 
   if (xdrs->x_op == XDR_ENCODE)
     {
-      if (!xdr_nis_error (xdrs, &objp->status))
+      if (!_xdr_nis_error (xdrs, &objp->status))
 	return FALSE;
       if (!xdr_array (xdrs, (char **) &objp->objects.objects_val,
 		      (u_int *) &objp->objects.objects_len, ~0,
-		      sizeof (nis_object), (xdrproc_t) xdr_nis_object))
+		      sizeof (nis_object), (xdrproc_t) _xdr_nis_object))
 	return FALSE;
       if (!xdr_netobj (xdrs, &objp->cookie))
 	return FALSE;
@@ -292,22 +298,13 @@ xdr_nis_result (XDR *xdrs, nis_result *objp)
       if (buf == NULL)
 	{
 	  if (!xdr_u_long (xdrs, &objp->zticks))
-	    {
-	      return FALSE;
-	    }
+	    return FALSE;
 	  if (!xdr_u_long (xdrs, &objp->dticks))
-	    {
-	      return FALSE;
-	    }
+	    return FALSE;
 	  if (!xdr_u_long (xdrs, &objp->aticks))
-	    {
-	      return FALSE;
-	    }
+	    return FALSE;
 	  if (!xdr_u_long (xdrs, &objp->cticks))
-	    {
-	      return FALSE;
-	    }
-
+	    return FALSE;
 	}
       else
 	{
@@ -316,45 +313,29 @@ xdr_nis_result (XDR *xdrs, nis_result *objp)
 	  IXDR_PUT_U_LONG (buf, objp->aticks);
 	  IXDR_PUT_U_LONG (buf, objp->cticks);
 	}
-
       return TRUE;
     }
   else if (xdrs->x_op == XDR_DECODE)
     {
-      if (!xdr_nis_error (xdrs, &objp->status))
-	{
-	  return FALSE;
-	}
+      if (!_xdr_nis_error (xdrs, &objp->status))
+	return FALSE;
       if (!xdr_array (xdrs, (char **) &objp->objects.objects_val,
 		      (u_int *) &objp->objects.objects_len, ~0,
-		      sizeof (nis_object), (xdrproc_t) xdr_nis_object))
-	{
-	  return FALSE;
-	}
+		      sizeof (nis_object), (xdrproc_t) _xdr_nis_object))
+	return FALSE;
       if (!xdr_netobj (xdrs, &objp->cookie))
-	{
-	  return FALSE;
-	}
+	return FALSE;
       buf = XDR_INLINE (xdrs, 4 * BYTES_PER_XDR_UNIT);
       if (buf == NULL)
 	{
 	  if (!xdr_u_long (xdrs, &objp->zticks))
-	    {
-	      return FALSE;
-	    }
+	    return FALSE;
 	  if (!xdr_u_long (xdrs, &objp->dticks))
-	    {
-	      return FALSE;
-	    }
+	    return FALSE;
 	  if (!xdr_u_long (xdrs, &objp->aticks))
-	    {
-	      return FALSE;
-	    }
+	    return FALSE;
 	  if (!xdr_u_long (xdrs, &objp->cticks))
-	    {
-	      return FALSE;
-	    }
-
+	    return FALSE;
 	}
       else
 	{
@@ -366,55 +347,41 @@ xdr_nis_result (XDR *xdrs, nis_result *objp)
       return TRUE;
     }
 
-  if (!xdr_nis_error (xdrs, &objp->status))
-    {
-      return FALSE;
-    }
+  if (!_xdr_nis_error (xdrs, &objp->status))
+    return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->objects.objects_val,
 		  (u_int *) &objp->objects.objects_len, ~0,
-		  sizeof (nis_object), (xdrproc_t) xdr_nis_object))
-    {
-      return FALSE;
-    }
+		  sizeof (nis_object), (xdrproc_t) _xdr_nis_object))
+    return FALSE;
   if (!xdr_netobj (xdrs, &objp->cookie))
-    {
-      return FALSE;
-    }
+    return FALSE;
   if (!xdr_u_long (xdrs, &objp->zticks))
-    {
-      return FALSE;
-    }
+    return FALSE;
   if (!xdr_u_long (xdrs, &objp->dticks))
-    {
-      return FALSE;
-    }
+    return FALSE;
   if (!xdr_u_long (xdrs, &objp->aticks))
-    {
-      return FALSE;
-    }
+    return FALSE;
   if (!xdr_u_long (xdrs, &objp->cticks))
-    {
-      return FALSE;
-    }
+    return FALSE;
   return TRUE;
 }
 
 bool_t
-xdr_ns_request (XDR *xdrs, ns_request *objp)
+_xdr_ns_request (XDR *xdrs, ns_request *objp)
 {
-  if (!xdr_nis_name (xdrs, &objp->ns_name))
+  if (!_xdr_nis_name (xdrs, &objp->ns_name))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->ns_object.ns_object_val,
 		  (u_int *) &objp->ns_object.ns_object_len, 1,
-		  sizeof (nis_object), (xdrproc_t) xdr_nis_object))
+		  sizeof (nis_object), (xdrproc_t) _xdr_nis_object))
     return FALSE;
   return TRUE;
 }
 
 bool_t
-xdr_ib_request (XDR *xdrs, ib_request *objp)
+_xdr_ib_request (XDR *xdrs, ib_request *objp)
 {
-  if (!xdr_nis_name (xdrs, &objp->ibr_name))
+  if (!_xdr_nis_name (xdrs, &objp->ibr_name))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->ibr_srch.ibr_srch_val,
 		  (u_int *) &objp->ibr_srch.ibr_srch_len, ~0,
@@ -424,11 +391,11 @@ xdr_ib_request (XDR *xdrs, ib_request *objp)
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->ibr_obj.ibr_obj_val,
 		  (u_int *) &objp->ibr_obj.ibr_obj_len, 1,
-		  sizeof (nis_object), (xdrproc_t) xdr_nis_object))
+		  sizeof (nis_object), (xdrproc_t) _xdr_nis_object))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->ibr_cbhost.ibr_cbhost_val,
 		  (u_int *) &objp->ibr_cbhost.ibr_cbhost_len, 1,
-		  sizeof (nis_server), (xdrproc_t) xdr_nis_server))
+		  sizeof (nis_server), (xdrproc_t) _xdr_nis_server))
     return FALSE;
   if (!xdr_u_long (xdrs, &objp->ibr_bufsize))
     return FALSE;
@@ -438,9 +405,9 @@ xdr_ib_request (XDR *xdrs, ib_request *objp)
 }
 
 bool_t
-xdr_ping_args (XDR *xdrs, ping_args *objp)
+_xdr_ping_args (XDR *xdrs, ping_args *objp)
 {
-  if (!xdr_nis_name (xdrs, &objp->dir))
+  if (!_xdr_nis_name (xdrs, &objp->dir))
     return FALSE;
   if (!xdr_u_long (xdrs, &objp->stamp))
     return FALSE;
@@ -448,57 +415,9 @@ xdr_ping_args (XDR *xdrs, ping_args *objp)
 }
 
 bool_t
-xdr_log_entry_t (XDR *xdrs, log_entry_t *objp)
+_xdr_cp_result (XDR *xdrs, cp_result *objp)
 {
-  if (!xdr_enum (xdrs, (enum_t *) objp))
-    return FALSE;
-  return TRUE;
-}
-
-bool_t
-xdr_log_entry (XDR *xdrs, log_entry *objp)
-{
-  if (!xdr_u_long (xdrs, &objp->le_time))
-    return FALSE;
-  if (!xdr_log_entry_t (xdrs, &objp->le_type))
-    return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->le_princp))
-    return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->le_name))
-    return FALSE;
-  if (!xdr_array (xdrs, (char **) &objp->le_attrs.le_attrs_val,
-		  (u_int *) &objp->le_attrs.le_attrs_len, ~0,
-		  sizeof (nis_attr), (xdrproc_t) xdr_nis_attr))
-    return FALSE;
-  if (!xdr_nis_object (xdrs, &objp->le_object))
-    return FALSE;
-  return TRUE;
-}
-
-bool_t
-xdr_log_result (XDR *xdrs, log_result *objp)
-{
-  if (!xdr_nis_error (xdrs, &objp->lr_status))
-    {
-      return FALSE;
-    }
-  if (!xdr_netobj (xdrs, &objp->lr_cookie))
-    {
-      return FALSE;
-    }
-  if (!xdr_array (xdrs, (char **) &objp->lr_entries.lr_entries_val,
-		  (u_int *) &objp->lr_entries.lr_entries_len, ~0,
-		  sizeof (log_entry), (xdrproc_t) xdr_log_entry))
-    {
-      return FALSE;
-    }
-  return TRUE;
-}
-
-bool_t
-xdr_cp_result (XDR *xdrs, cp_result *objp)
-{
-  if (!xdr_nis_error (xdrs, &objp->cp_status))
+  if (!_xdr_nis_error (xdrs, &objp->cp_status))
     return FALSE;
   if (!xdr_u_long (xdrs, &objp->cp_zticks))
     return FALSE;
@@ -508,7 +427,7 @@ xdr_cp_result (XDR *xdrs, cp_result *objp)
 }
 
 bool_t
-xdr_nis_tag (XDR *xdrs, nis_tag *objp)
+_xdr_nis_tag (XDR *xdrs, nis_tag *objp)
 {
   if (!xdr_u_long (xdrs, &objp->tag_type))
     {
@@ -522,51 +441,58 @@ xdr_nis_tag (XDR *xdrs, nis_tag *objp)
 }
 
 bool_t
-xdr_nis_taglist (XDR *xdrs, nis_taglist *objp)
+_xdr_nis_taglist (XDR *xdrs, nis_taglist *objp)
 {
   if (!xdr_array (xdrs, (char **) &objp->tags.tags_val,
 		  (u_int *) &objp->tags.tags_len, ~0, sizeof (nis_tag),
-		  (xdrproc_t) xdr_nis_tag))
+		  (xdrproc_t) _xdr_nis_tag))
     return FALSE;
   return TRUE;
 }
 
 bool_t
-xdr_dump_args (XDR *xdrs, dump_args *objp)
+_xdr_fd_args (XDR *xdrs, fd_args *objp)
 {
-  if (!xdr_nis_name (xdrs, &objp->da_dir))
+  if (!_xdr_nis_name (xdrs, &objp->dir_name))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->da_time))
-    return FALSE;
-  if (!xdr_array (xdrs, (char **) &objp->da_cbhost.da_cbhost_val,
-		  (u_int *) &objp->da_cbhost.da_cbhost_len, 1,
-		  sizeof (nis_server), (xdrproc_t) xdr_nis_server))
+  if (!_xdr_nis_name (xdrs, &objp->requester))
     return FALSE;
   return TRUE;
 }
 
 bool_t
-xdr_fd_args (XDR *xdrs, fd_args *objp)
+_xdr_fd_result (XDR *xdrs, fd_result *objp)
 {
-  if (!xdr_nis_name (xdrs, &objp->dir_name))
+  if (!_xdr_nis_error (xdrs, &objp->status))
     return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->requester))
-    return FALSE;
-  return TRUE;
-}
-
-bool_t
-xdr_fd_result (XDR *xdrs, fd_result *objp)
-{
-  if (!xdr_nis_error (xdrs, &objp->status))
-    return FALSE;
-  if (!xdr_nis_name (xdrs, &objp->source))
+  if (!_xdr_nis_name (xdrs, &objp->source))
     return FALSE;
   if (!xdr_bytes (xdrs, (char **) &objp->dir_data.dir_data_val,
 		  (u_int *) &objp->dir_data.dir_data_len, ~0))
     return FALSE;
   if (!xdr_bytes (xdrs, (char **) &objp->signature.signature_val,
 		  (u_int *) &objp->signature.signature_len, ~0))
+    return FALSE;
+  return TRUE;
+}
+
+/* The following functions have prototypes in nis_callback.h.  So
+   we make them public */
+bool_t
+xdr_obj_p (XDR *xdrs, obj_p *objp)
+{
+  if (!xdr_pointer (xdrs, (char **)objp, sizeof (nis_object),
+		    (xdrproc_t)_xdr_nis_object))
+    return FALSE;
+  return TRUE;
+}
+
+bool_t
+xdr_cback_data (XDR *xdrs, cback_data *objp)
+{
+  if (!xdr_array (xdrs, (char **)&objp->entries.entries_val,
+		  (u_int *) &objp->entries.entries_len, ~0,
+		  sizeof (obj_p), (xdrproc_t) xdr_obj_p))
     return FALSE;
   return TRUE;
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
+#include "nis_xdr.h"
 
 static const char cold_start_file[] = "/var/nis/NIS_COLD_START";
 
@@ -36,7 +37,7 @@ readColdStartFile (void)
     return NULL;
   memset (&obj, '\0', sizeof (obj));
   xdrstdio_create (&xdrs, in, XDR_DECODE);
-  if (!xdr_directory_obj (&xdrs, &obj))
+  if (!_xdr_directory_obj (&xdrs, &obj))
     return NULL;
 
   return nis_clone_directory (&obj, NULL);
@@ -53,7 +54,7 @@ writeColdStartFile (const directory_obj *obj)
     return FALSE;
 
   xdrstdio_create (&xdrs, out, XDR_ENCODE);
-  if (!xdr_directory_obj (&xdrs, (directory_obj *) obj))
+  if (!_xdr_directory_obj (&xdrs, (directory_obj *) obj))
     return FALSE;
 
   return TRUE;
@@ -72,7 +73,7 @@ nis_read_obj (const char *name)
 
   memset (&obj, '\0', sizeof (obj));
   xdrstdio_create (&xdrs, in, XDR_DECODE);
-  if (!xdr_nis_object (&xdrs, &obj))
+  if (!_xdr_nis_object (&xdrs, &obj))
     return NULL;
 
   return nis_clone_object (&obj, NULL);
@@ -89,7 +90,7 @@ nis_write_obj (const char *name, const nis_object *obj)
     return FALSE;
 
   xdrstdio_create (&xdrs, out, XDR_ENCODE);
-  if (!xdr_nis_object (&xdrs, (nis_object *) obj))
+  if (!_xdr_nis_object (&xdrs, (nis_object *) obj))
     return FALSE;
 
   return TRUE;
