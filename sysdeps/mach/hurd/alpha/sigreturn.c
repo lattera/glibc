@@ -37,7 +37,8 @@ __sigreturn (struct sigcontext *scp)
       return -1;
     }
 
-  ss = _hurd_self_sigstate ();	/* SS->lock now locked.  */
+  ss = _hurd_self_sigstate ();
+  __spin_lock (&ss->lock);
 
   /* Restore the set of blocked signals, and the intr_port slot.  */
   ss->blocked = scp->sc_mask;
@@ -56,10 +57,10 @@ __sigreturn (struct sigcontext *scp)
 	 the SCP context is doing an interruptible RPC, but the signal
 	 thread will examine us while we are blocked in the sig_post RPC.  */
       ss->intr_port = MACH_PORT_NULL;
-      __mutex_unlock (&ss->lock);
-      __sig_post (_hurd_msgport, 0, __mach_task_self ());
+      __spin_unlock (&ss->lock);
+      __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
       /* If a pending signal was handled, sig_post never returned.  */
-      __mutex_lock (&ss->lock);
+      __spin_lock (&ss->lock);
     }
 
   if (scp->sc_onstack)
@@ -69,7 +70,7 @@ __sigreturn (struct sigcontext *scp)
       abort ();
     }
   else
-    __mutex_unlock (&ss->lock);
+    __spin_unlock (&ss->lock);
 
   /* Destroy the MiG reply port used by the signal handler, and restore the
      reply port in use by the thread when interrupted.  */
