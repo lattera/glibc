@@ -1,4 +1,4 @@
-/* Tests of X and POSIX locale contents.
+/* Tests of C and POSIX locale contents.
    Copyright (C) 2000 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -151,6 +151,12 @@ run_test (const char *locname)
   STRTEST (T_FMT, "%H:%M:%S");
   STRTEST (T_FMT_AMPM, "%I:%M:%S %p");
 
+  STRTEST (RADIXCHAR, ".");
+  STRTEST (THOUSEP, "");
+
+  STRTEST (YESEXPR, "^[yY]");
+  STRTEST (NOEXPR, "^[nN]");
+
   /* Extensions.  */
   WSTRTEST (_NL_WABDAY_1, L"Sun");
   WSTRTEST (_NL_WABDAY_2, L"Mon");
@@ -199,6 +205,18 @@ run_test (const char *locname)
 
   STRTEST (_DATE_FMT, "%a %b %e %H:%M:%S %Z %Y");
   WSTRTEST (_NL_W_DATE_FMT, L"%a %b %e %H:%M:%S %Z %Y");
+
+  STRTEST (INT_CURR_SYMBOL, "");
+  STRTEST (CURRENCY_SYMBOL, "");
+  STRTEST (MON_DECIMAL_POINT, "");
+  STRTEST (MON_THOUSANDS_SEP, "");
+  STRTEST (MON_GROUPING, "");
+  STRTEST (POSITIVE_SIGN, "");
+  STRTEST (NEGATIVE_SIGN, "");
+  STRTEST (GROUPING, "");
+
+  STRTEST (YESSTR, "");
+  STRTEST (NOSTR, "");
 
   return result;
 }

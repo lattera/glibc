@@ -146,8 +146,11 @@ do_test (int argc, char *argv[])
   fd = creat (testfile, 0);
   if (fd != -1)
     {
-      puts ("managed to create test file in protected directory");
-      result = 1;
+      if (getuid () != 0)
+	{
+	  puts ("managed to create test file in protected directory");
+	  result = 1;
+	}
       close (fd);
     }
   if (errno != EACCES)
@@ -167,8 +170,11 @@ do_test (int argc, char *argv[])
   fd = creat (testfile, 0);
   if (fd != -1)
     {
-      puts ("managed to create test file in no-x protected directory");
-      result = 1;
+      if (getuid () != 0)
+	{
+	  puts ("managed to create test file in no-x protected directory");
+	  result = 1;
+	}
       close (fd);
     }
   if (errno != EACCES)
@@ -311,8 +317,11 @@ do_test (int argc, char *argv[])
       snprintf (buf, buflen, "./%s/file", basename (testdir));
       if (chmod (buf, 0600) == 0)
 	{
-	  puts ("chmod(\".../file\") with no-exec directory succeeded");
-	  result = 1;
+	  if (getuid () != 0)
+	    {
+	      puts ("chmod(\".../file\") with no-exec directory succeeded");
+	      result = 1;
+	    }
 	}
       else if (errno != EACCES)
 	{
