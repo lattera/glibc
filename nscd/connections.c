@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -460,7 +460,7 @@ nscd_run (void *p)
       if (conn.revents & (POLLRDNORM|POLLERR|POLLHUP|POLLNVAL))
 	{
 	  /* Accept the connection.  */
-	  int fd = accept (conn.fd, NULL, NULL);
+	  int fd = TEMP_FAILURE_RETRY (accept (conn.fd, NULL, NULL));
 	  request_header req;
 	  char buf[256];
 	  uid_t uid = 0;
