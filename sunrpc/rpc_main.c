@@ -291,8 +291,7 @@ open_output (const char *infile, const char *outfile)
   fout = fopen (outfile, "w");
   if (fout == NULL)
     {
-      fprintf (stderr, _ ("%s: unable to open "), cmdname);
-      perror (outfile);
+      fprintf (stderr, _ ("%s: unable to open %s: %m\n"), cmdname, outfile);
       crash ();
     }
   record_open (outfile);
@@ -304,8 +303,8 @@ close_output (const char *outfile)
 {
   if (fclose (fout) == EOF)
     {
-      fprintf (stderr, _("%s: while writing output: "), cmdname);
-      perror (outfile ?: "<stdout>");
+      fprintf (stderr, _("%s: while writing output %s: %m"), cmdname,
+	       outfile ?: "<stdout>");
       crash ();
     }
 }

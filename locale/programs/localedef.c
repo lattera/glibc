@@ -92,10 +92,11 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 static const struct argp_option options[] =
 {
   { NULL, 0, NULL, 0, N_("Input Files:") },
-  { "charmap", 'f', "FILE", 0,
+  { "charmap", 'f', N_("FILE"), 0,
     N_("Symbolic character names defined in FILE") },
-  { "inputfile", 'i', "FILE", 0, N_("Source definitions are found in FILE") },
-  { "repertoire-map", 'u', "FILE", 0,
+  { "inputfile", 'i', N_("FILE"), 0,
+    N_("Source definitions are found in FILE") },
+  { "repertoire-map", 'u', N_("FILE"), 0,
     N_("FILE contains mapping from symbolic names to UCS4 values") },
 
   { NULL, 0, NULL, 0, N_("Output control:") },

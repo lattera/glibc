@@ -1,5 +1,12 @@
 1999-01-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sunrpc/rpc_main.c (open_output): Allow better translation of
+	error message.
+	(close_output): Likewise.
+	* locale/programs/localedef.c: Unify messages.
+	* malloc/obstack.c: Likewise.
+	Suggested by Vladimir Michl <Vladimir.Michl@upol.cz>.
+
 	* grp/putgrent.c (putgrent): Don't insert extra colon.
 	Patch by Michael Schaefer <michael.schaefer@dlr.de>.
 
