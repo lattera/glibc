@@ -21,8 +21,6 @@
 
 #define STX_LINK        0x01
 
-#undef __lxstat
-
 extern int statx (const char *pathname, struct stat *st, int len, int cmd);
 
 int
@@ -31,5 +29,4 @@ __lxstat (int ver, const char *pathname, struct stat *st)
   assert (ver == 0);
   return statx (pathname, st, sizeof (*st), STX_LINK);
 }
-
-INTDEF(__lxstat)
+hidden_def (__lxstat)

@@ -23,12 +23,10 @@
 
 extern int fstatx (int fd, struct stat *st, int len, int cmd);
 
-#undef __fxstat
-
 int
 __fxstat (int ver, int fd, struct stat *st)
 {
   assert (ver == 0);
   return fstatx (fd, st, sizeof (*st), STX_NORMAL);
 }
-INTDEF(__fxstat)
+hidden_def (__fxstat)
