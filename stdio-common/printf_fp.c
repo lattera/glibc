@@ -1076,15 +1076,10 @@ __printf_fp (FILE *fp,
       if (! wide)
 	{
 	  /* Create the single byte string.  */
-	  const char *decimal;
 	  size_t decimal_len;
 	  size_t thousands_sep_len;
 	  wchar_t *copywc;
 
-	  if (info->extra == 0)
-	    decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
-	  else
-	    decimal = _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
 	  decimal_len = strlen (decimal);
 
 	  if (thousands_sep == NULL)
