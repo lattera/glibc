@@ -63,6 +63,11 @@ static char rcsid[] = "$Id$";
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <ctype.h>
+#ifdef _LIBC
+# include <stdlib.h>
+# include <limits.h>
+# include <errno.h>
+#endif
 #include "../conf/portability.h"
 
 /* these are compatibility routines, not needed on recent BSD releases */
@@ -91,7 +96,7 @@ inet_addr(cp)
  */
 int
 inet_aton(cp, addr)
-	register const char *cp;
+	const char *cp;
 	struct in_addr *addr;
 {
 	register u_int32_t val;	/* changed from u_long --david */
@@ -99,7 +104,11 @@ inet_aton(cp, addr)
 	register char c;
 	u_int parts[4];
 	register u_int *pp = parts;
+#ifdef _LIBC
+	int saved_errno = errno;
 
+	__set_errno (0);
+#endif
 	c = *cp;
 	for (;;) {
 		/*
@@ -109,7 +118,7 @@ inet_aton(cp, addr)
 		 */
 		if (!isdigit(c))
 			return (0);
-		val = 0; base = 10;
+		base = 10;
 		if (c == '0') {
 			c = *++cp;
 			if (c == 'x' || c == 'X')
@@ -117,6 +126,16 @@ inet_aton(cp, addr)
 			else
 				base = 8;
 		}
+#ifdef _LIBC
+		val = strtoul (cp, (char **) &cp, base);
+		if (val == ULONG_MAX && errno == ERANGE)
+		{
+			__set_errno (saved_errno);
+			return 0;
+		}
+		c = *cp;
+#else
+		val = 0;
 		for (;;) {
 			if (isascii(c) && isdigit(c)) {
 				val = (val * base) + (c - '0');
@@ -128,6 +147,7 @@ inet_aton(cp, addr)
 			} else
 				break;
 		}
+#endif
 		if (c == '.') {
 			/*
 			 * Internet format:

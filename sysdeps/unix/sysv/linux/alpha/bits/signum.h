@@ -52,6 +52,7 @@
 #define SIGTSTP		18
 #define SIGCONT		19
 #define SIGCHLD		20
+#define SIGCLD          SIGCHLD
 #define SIGTTIN		21
 #define SIGTTOU		22
 #define SIGIO		23

@@ -27,6 +27,8 @@ distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
 
 routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init
 
+tests = tst-aton
+
 include ../Makeconfig
 
 extra-libs := libresolv libnss_dns

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ weak_extern(_dl_hwcap_mask);
 /* Protect some broken versions of gcc from misinterpreting weak addresses.  */
 #define WEAKADDR(x)	({ __typeof(x) *_px = &x;			\
 			   __asm ("" : "=r" (_px) : "0" (_px));		\
-			   _px })
+			   _px; })
 
 
 /* Use a different preload file when running in 32-bit emulation mode

@@ -1,3 +1,15 @@
+1998-04-23 07:31  H.J. Lu  <hjl@gnu.org>
+
+	* resolv/inet_addr.c (inet_aton): Use __strtoul_internal to
+	check overflow.
+	* resolv/Makefile (tests): New, add tst-aton.
+	* resolv/tst-aton.c: New file.
+
+1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (WEAKADDR): Add missing
+	semicolon.
+
 1998-04-29 12:11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/mbsnrtowcs.c: Remove variable to pass to conversion function
@@ -12,6 +24,8 @@
 
 	* wcsmbs/mbsrtowcs.c: Optimize a bit more.
 	* wcsmbs/wcsrtombs.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/signum.h: Add SIGCLD definition.
 
 1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
