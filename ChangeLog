@@ -1,6 +1,28 @@
-Sun Jul 30 01:09:08 1995  Jim Meyering  (meyering@comco.com)
+Fri Aug  4 16:01:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
-	* strtol.c [!defined errno]: Declare it.
+	* Makefile (headers): Added gnu-versions.h.
+
+Thu Aug  3 14:41:11 1995  Michael I. Bushnell  <mib@duality.gnu.ai.mit.edu>
+
+	* inet/netinet/in.h (IN_CLASSD, IN_EXPERIMENTAL, IN_BADCLASS): Use
+	equality, not assignment, to test bitfields.
+
+Sat Jul 29 10:41:06 1995  Miles Bader  <miles@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/sendto.c (sendto): Use the ifsock protocol to
+	resolve AF_LOCAL addresses.
+
+	* sysdeps/mach/hurd/accept.c (accept): If the protocol family
+	can't tell us what an address means, just return a zero-length
+	buffer instead.
+	* sysdeps/mach/hurd/recvfrom.c (recvfrom): Ditto.
+
+Fri Jul 28 15:29:11 1995  Miles Bader  <miles@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/bind.c (bind): Don't use
+	file_invoke_translator, as it doesn't work.  Instead just lookup
+	the translated node again, and hope we're not hit by any race
+	conditions.
 
 Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
