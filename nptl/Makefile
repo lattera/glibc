@@ -205,6 +205,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-align \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
+	tst-raise1 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 \
 	tst-detach1 \
 	tst-eintr1 tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \

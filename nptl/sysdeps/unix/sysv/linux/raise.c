@@ -44,17 +44,19 @@ raise (sig)
 #endif
       THREAD_SETMEM (pd, tid, selftid);
 
+#if __ASSUME_TGKILL || defined __NR_tgkill
       /* We do not set the PID field in the TID here since we might be
 	 called from a signal handler while the thread executes fork.  */
       pid = selftid;
+#endif
     }
 #if __ASSUME_TGKILL || defined __NR_tgkill
   else
     /* raise is an async-safe function.  It could be called while the
        fork function temporarily invalidated the PID field.  Adjust for
        that.  */
-    if (__builtin_expect (pid < 0, 0))
-      pid = -pid;
+    if (__builtin_expect (pid <= 0, 0))
+      pid = pid == 0 ? selftid : -pid;
 #endif
 
 #if __ASSUME_TGKILL

@@ -1,3 +1,16 @@
+2003-12-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/raise.c (raise): Protect pid = selftid
+	setting with __ASSUME_TGKILL || defined __NR_tgkill.
+	If pid is 0, set it to selftid.
+	* sysdeps/unix/sysv/linux/getpid.c (really_getpid): Make inline.
+	Don't set self->pid but self->tid.  If self->pid == 0 and self->tid
+	!= 0, return self->tid without doing a syscall.
+	* descr.h (struct pthread): Move pid field after tid.
+
+	* Makefile (tests): Add tst-raise1.
+	* tst-raise1.c: New file.
+
 2003-12-23  Roland McGrath  <roland@redhat.com>
 
 	* tst-oddstacklimit.c: New file.

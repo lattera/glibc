@@ -23,32 +23,42 @@
 
 
 #ifndef NOT_IN_libc
-static pid_t really_getpid (pid_t oldval);
-#endif
+static inline __attribute__((always_inline)) pid_t really_getpid (pid_t oldval);
 
+static inline __attribute__((always_inline)) pid_t
+really_getpid (pid_t oldval)
+{
+  pid_t selftid;
+  if (__builtin_expect (oldval == 0
+			&& ((selftid = THREAD_GETMEM (THREAD_SELF, tid))
+			    != 0), 1))
+    return selftid;
+
+  INTERNAL_SYSCALL_DECL (err);
+  pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
+
+  /* We do not set the PID field in the TID here since we might be
+     called from a signal handler while the thread executes fork.  */
+  if (oldval == 0)
+    THREAD_SETMEM (THREAD_SELF, tid, result);
+  return result;
+}
+#endif
 
 pid_t
 __getpid (void)
 {
-#ifndef NOT_IN_libc
+#ifdef NOT_IN_libc
+  INTERNAL_SYSCALL_DECL (err);
+  pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
+#else
   pid_t result = THREAD_GETMEM (THREAD_SELF, pid);
   if (__builtin_expect (result <= 0, 0))
     result = really_getpid (result);
+#endif
   return result;
 }
 
-static pid_t
-really_getpid (pid_t oldval)
-{
-#endif
-  INTERNAL_SYSCALL_DECL (err);
-  pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
-#ifndef NOT_IN_libc
-  if (oldval == 0)
-    THREAD_SETMEM (THREAD_SELF, pid, result);
-#endif
-  return result;
-}
 libc_hidden_def (__getpid)
 weak_alias (__getpid, getpid)
 libc_hidden_def (getpid)
