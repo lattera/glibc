@@ -22,10 +22,11 @@
 #include <pthread.h>
 #include <signal.h>
 #include <semaphore.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <pthreaddef.h>
 
 #define THE_SIG SIGUSR1
 
@@ -78,6 +79,12 @@ do_test (void)
 
   return 0;
 #else
+
+  if ((uintptr_t) pthread_self () & (TCB_ALIGNMENT - 1))
+    {
+      puts ("initial thread's struct pthread not aligned enough");
+      exit (1);
+    }
 
   if (pthread_barrier_init (&b, NULL, N + 1) != 0)
     {

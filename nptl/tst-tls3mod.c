@@ -20,10 +20,11 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <pthreaddef.h>
 
 #if HAVE___THREAD
 
@@ -61,6 +62,12 @@ handler (int sig)
 void *
 tf (void *arg)
 {
+  if ((uintptr_t) pthread_self () & (TCB_ALIGNMENT - 1))
+    {
+      puts ("thread's struct pthread not aligned enough");
+      exit (1);
+    }
+
   if (fp != NULL)
     {
       puts ("fp not initially NULL");

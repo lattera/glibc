@@ -1,5 +1,28 @@
 2003-09-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* Makefile (tests): Add tst-tls5.
+	(module-names): Add tst-tls5mod{,a,b,c,d,e,f}.
+	($(objpfx)tst-tls5mod{,a,b,c,d,e,f}.so-no-z-defs): Set to yes.
+	($(objpfx)tst-tls5): New.
+	($(objpfx)tst-tls6.out): Likewise.
+	(tests): Depend on $(objpfx)tst-tls6.out.
+	* tst-tls3.c: Include stdint.h and pthreaddef.h.
+	(do_test): Check pthread_self () return value alignment.
+	* tst-tls3mod.c: Include stdint.h and pthreaddef.h.
+	(tf): Check pthread_self () return value alignment.
+	* tst-tls5.c: New test.
+	* tst-tls5.h: New.
+	* tst-tls5mod.c: New.
+	* tst-tls5moda.c: New.
+	* tst-tls5modb.c: New.
+	* tst-tls5modc.c: New.
+	* tst-tls5modd.c: New.
+	* tst-tls5mode.c: New.
+	* tst-tls5modf.c: New.
+	* tst-tls6.sh: New test.
+
+2003-09-01  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/alpha/timer_create.c: New file.
 	* sysdeps/unix/sysv/linux/alpha/timer_delete.c: New file.
 	* sysdeps/unix/sysv/linux/alpha/timer_getoverr.c: New file.

@@ -252,10 +252,12 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-oncex3 tst-oncex4
 endif
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-tls3 tst-tls4 tst-_res1
+tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1
 endif
 
 modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
+		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
+		tst-tls5modd tst-tls5mode tst-tls5modf \
 		tst-_res1mod1 tst-_res1mod2
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 test-extras += $(modules-names)
@@ -263,6 +265,13 @@ test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
 tst-atfork2mod.so-no-z-defs = yes
 tst-tls3mod.so-no-z-defs = yes
+tst-tls5mod.so-no-z-defs = yes
+tst-tls5moda.so-no-z-defs = yes
+tst-tls5modb.so-no-z-defs = yes
+tst-tls5modc.so-no-z-defs = yes
+tst-tls5modd.so-no-z-defs = yes
+tst-tls5mode.so-no-z-defs = yes
+tst-tls5modf.so-no-z-defs = yes
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
 	$(build-module)
@@ -399,6 +408,18 @@ $(objpfx)tst-tls3mod.so: $(shared-thread-library)
 
 $(objpfx)tst-tls4: $(libdl) $(shared-thread-library)
 $(objpfx)tst-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so
+
+$(objpfx)tst-tls5: $(objpfx)tst-tls5mod.so $(shared-thread-library)
+
+ifeq ($(build-shared),yes)
+tests: $(objpfx)tst-tls6.out
+$(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
+		       $(objpfx)tst-tls5moda.so $(objpfx)tst-tls5modb.so \
+		       $(objpfx)tst-tls5modc.so $(objpfx)tst-tls5modd.so \
+		       $(objpfx)tst-tls5mode.so $(objpfx)tst-tls5modf.so
+	$(SHELL) -e tst-tls6.sh $(common-objpfx) $(elf-objpfx) \
+		    $(rtld-installed-name)
+endif
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 

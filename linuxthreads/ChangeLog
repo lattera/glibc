@@ -1,3 +1,22 @@
+2003-09-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests): Add tst-tls1.
+	(module-names): Add tst-tls1mod{,a,b,c,d,e,f}.
+	($(objpfx)tst-tls1mod{,a,b,c,d,e,f}.so-no-z-defs): Set to yes.
+	($(objpfx)tst-tls1): New.
+	($(objpfx)tst-tls2.out): Likewise.
+	(tests): Depend on $(objpfx)tst-tls2.out.
+	* tst-tls1.c: New test.
+	* tst-tls1.h: New.
+	* tst-tls1mod.c: New.
+	* tst-tls1moda.c: New.
+	* tst-tls1modb.c: New.
+	* tst-tls1modc.c: New.
+	* tst-tls1modd.c: New.
+	* tst-tls1mode.c: New.
+	* tst-tls1modf.c: New.
+	* tst-tls2.sh: New test.
+
 2003-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Don't mark pthread_exit,
