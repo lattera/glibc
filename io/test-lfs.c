@@ -91,7 +91,7 @@ do_test (int argc, char *argv[])
       error (0, errno, "LFS seems not to be supported.");
       exit (EXIT_SUCCESS);
     }
-  
+
   if (ret != 5)
     error (EXIT_FAILURE, errno, "cannot write test string to large file");
 
@@ -102,7 +102,7 @@ do_test (int argc, char *argv[])
 
   ret = stat64 (name, &statbuf);
 
-  if (ret == -1 && errno == ENOSYS)
+  if (ret == -1 && (errno == ENOSYS || errno == EOVERFLOW))
     error (0, errno, "stat64 is not supported");
   else if (ret == -1)
     error (EXIT_FAILURE, errno, "cannot stat file `%s'", name);

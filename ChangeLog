@@ -1,5 +1,8 @@
 2000-09-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/test-lfs.c (do_test): Allow stat64() to return EOVERFLOW and
+	don't fail.
+
 	* elf/elf.h: Add missing official relocations.
 
 	* libio/stdio.h: Define __FILE if __need___FILE is defined.
