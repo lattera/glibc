@@ -44,3 +44,7 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	mv -f $(@:.h=.d)-t2 $(@:.h=.d)
 
 endif
+
+ifeq ($(subdir),stdlib)
+sysdep_routines += __start_context
+endif

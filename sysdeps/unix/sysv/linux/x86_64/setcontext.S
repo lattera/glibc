@@ -55,7 +55,8 @@ ENTRY(__setcontext)
 	ldmxcsr oMXCSR(%rdi)
 
 
-	/* Load the new stack pointer and the preserved registers.  */
+	/* Load the new stack pointer, the preserved registers and
+	   registers used for passing args.  */
 	movq	oRSP(%rdi), %rsp
 	movq	oRBX(%rdi), %rbx
 	movq	oRBP(%rdi), %rbp
@@ -68,6 +69,15 @@ ENTRY(__setcontext)
 	getcontext.  Therefore push the address on the stack.  */
 	movq	oRIP(%rdi), %rcx
 	pushq	%rcx
+
+	movq	oRSI(%rdi), %rsi
+	movq	oRDX(%rdi), %rdx
+	movq	oRCX(%rdi), %rcx
+	movq	oR8(%rdi), %r8
+	movq	oR9(%rdi), %r9
+
+	/* Setup finally  %rdi.  */
+	movq	oRDI(%rdi), %rdi
 
 	/* Clear rax to indicate success.  */
 	xorq	%rax, %rax

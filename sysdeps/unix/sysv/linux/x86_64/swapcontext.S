@@ -35,13 +35,21 @@
   other than the PRESERVED state.  */
 
 ENTRY(__swapcontext)
-	/* Save the preserved registers and the return address.  */
+	/* Save the preserved registers, the registers used for passing args,
+	   and the return address.  */
 	movq	%rbx, oRBX(%rdi)
 	movq	%rbp, oRBP(%rdi)
 	movq	%r12, oR12(%rdi)
 	movq	%r13, oR13(%rdi)
 	movq	%r14, oR14(%rdi)
 	movq	%r15, oR15(%rdi)
+
+	movq	%rdi, oRDI(%rdi)
+	movq	%rsi, oRSI(%rdi)
+	movq	%rdx, oRDX(%rdi)
+	movq	%rcx, oRCX(%rdi)
+	movq	%r8, oR8(%rdi)
+	movq	%r9, oR9(%rdi)
 
 	movq	(%rsp), %rcx
 	movq	%rcx, oRIP(%rdi)
@@ -94,6 +102,16 @@ ENTRY(__swapcontext)
 	getcontext.  Therefore push the address on the stack.  */
 	movq	oRIP(%rsi), %rcx
 	pushq	%rcx
+
+	/* Setup registers used for passing args.  */
+	movq	oRDI(%rsi), %rdi
+	movq	oRDX(%rsi), %rdx
+	movq	oRCX(%rsi), %rcx
+	movq	oR8(%rsi), %r8
+	movq	oR9(%rsi), %r9
+
+	/* Setup finally  %rsi.  */
+	movq	oRSI(%rsi), %rsi
 
 	/* Clear rax to indicate success.  */
 	xorq	%rax, %rax

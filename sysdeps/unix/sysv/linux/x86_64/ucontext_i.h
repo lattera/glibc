@@ -29,11 +29,17 @@
 #define oRBP		120
 #define oRSP		160
 #define oRBX		128
+#define oR8		40
+#define oR9		48
 #define oR12		72
 #define oR13		80
 #define oR14		88
 #define oR15		96
+#define oRDI		104
+#define oRSI		112
+#define oRDX		136
 #define oRAX		144
+#define oRCX		152
 #define oRIP		168
 #define oFPREGS		208
 #define oSIGMASK	280

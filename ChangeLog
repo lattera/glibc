@@ -1,3 +1,24 @@
+2002-08-31  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_routines): Add
+	__start_context.
+
+	* sysdeps/unix/sysv/linux/x86_64/__start_context.S: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h: Add defines for
+	registers used for passing args.
+
+	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: Save and restore
+	all needed registers.
+
+	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: Restore all
+	registers.
+
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: Save all needed
+	registers.
+
 2002-08-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dynamic-link.h (elf_get_dynamic_info): Mark with
