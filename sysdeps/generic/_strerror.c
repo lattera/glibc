@@ -22,11 +22,6 @@
 #include <sys/param.h>
 #include <stdio-common/_itoa.h>
 
-#ifndef HAVE_GNU_LD
-# define _sys_errlist sys_errlist
-# define _sys_nerr sys_nerr
-#endif
-
 /* It is critical here that we always use the `dcgettext' function for
    the message translation.  Since <libintl.h> only defines the macro
    `dgettext' to use `dcgettext' for optimizing programs this is not
@@ -40,8 +35,8 @@
 char *
 __strerror_r (int errnum, char *buf, size_t buflen)
 {
-  if (errnum < 0 || errnum >= INTUSE(_sys_nerr)
-      || INTUSE(_sys_errlist)[errnum] == NULL)
+  if (errnum < 0 || errnum >= _sys_nerr_internal
+      || _sys_errlist_internal[errnum] == NULL)
     {
       /* Buffer we use to print the number in.  For a maximum size for
 	 `int' of 8 bytes we never need more than 20 digits.  */
@@ -66,7 +61,7 @@ __strerror_r (int errnum, char *buf, size_t buflen)
       return buf;
     }
 
-  return (char *) _(INTUSE(_sys_errlist)[errnum]);
+  return (char *) _(_sys_errlist_internal[errnum]);
 }
 weak_alias (__strerror_r, strerror_r)
 libc_hidden_def (__strerror_r)
