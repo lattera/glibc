@@ -1,3 +1,8 @@
+2000-07-04  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/pthread/bits/libc-lock.h: Remove BP_SYM from
+	pragmas.  Include bp-sym.h only if _LIBC.
+
 2000-07-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* spinlock.c (__pthread_unlock): Properly place write barrier.

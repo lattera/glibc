@@ -246,8 +246,12 @@ extern int __pthread_atfork (void (*__prepare) (void),
 /* Make the pthread functions weak so that we can elide them from
    single-threaded processes.  */
 #ifndef __NO_WEAK_PTHREAD_ALIASES
-# include <bp-sym.h>
 # ifdef weak_extern
+#  if _LIBC
+#   include <bp-sym.h>
+#  else
+#   define BP_SYM (sym) sym
+#  endif
 weak_extern (BP_SYM (__pthread_mutex_init))
 weak_extern (BP_SYM (__pthread_mutex_destroy))
 weak_extern (BP_SYM (__pthread_mutex_lock))
@@ -272,28 +276,28 @@ weak_extern (__pthread_atfork)
 weak_extern (BP_SYM (_pthread_cleanup_push_defer))
 weak_extern (BP_SYM (_pthread_cleanup_pop_restore))
 # else
-#  pragma weak BP_SYM (__pthread_mutex_init)
-#  pragma weak BP_SYM (__pthread_mutex_destroy)
-#  pragma weak BP_SYM (__pthread_mutex_lock)
-#  pragma weak BP_SYM (__pthread_mutex_trylock)
-#  pragma weak BP_SYM (__pthread_mutex_unlock)
-#  pragma weak BP_SYM (__pthread_mutexattr_init)
-#  pragma weak BP_SYM (__pthread_mutexattr_destroy)
-#  pragma weak BP_SYM (__pthread_mutexattr_settype)
-#  pragma weak BP_SYM (__pthread_rwlock_destroy)
-#  pragma weak BP_SYM (__pthread_rwlock_rdlock)
-#  pragma weak BP_SYM (__pthread_rwlock_tryrdlock)
-#  pragma weak BP_SYM (__pthread_rwlock_wrlock)
-#  pragma weak BP_SYM (__pthread_rwlock_trywrlock)
-#  pragma weak BP_SYM (__pthread_rwlock_unlock)
-#  pragma weak BP_SYM (__pthread_key_create)
-#  pragma weak BP_SYM (__pthread_setspecific)
-#  pragma weak BP_SYM (__pthread_getspecific)
-#  pragma weak BP_SYM (__pthread_once)
+#  pragma weak __pthread_mutex_init
+#  pragma weak __pthread_mutex_destroy
+#  pragma weak __pthread_mutex_lock
+#  pragma weak __pthread_mutex_trylock
+#  pragma weak __pthread_mutex_unlock
+#  pragma weak __pthread_mutexattr_init
+#  pragma weak __pthread_mutexattr_destroy
+#  pragma weak __pthread_mutexattr_settype
+#  pragma weak __pthread_rwlock_destroy
+#  pragma weak __pthread_rwlock_rdlock
+#  pragma weak __pthread_rwlock_tryrdlock
+#  pragma weak __pthread_rwlock_wrlock
+#  pragma weak __pthread_rwlock_trywrlock
+#  pragma weak __pthread_rwlock_unlock
+#  pragma weak __pthread_key_create
+#  pragma weak __pthread_setspecific
+#  pragma weak __pthread_getspecific
+#  pragma weak __pthread_once
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
-#  pragma weak BP_SYM (_pthread_cleanup_push_defer)
-#  pragma weak BP_SYM (_pthread_cleanup_pop_restore)
+#  pragma weak _pthread_cleanup_push_defer
+#  pragma weak _pthread_cleanup_pop_restore
 # endif
 #endif
 
