@@ -38,7 +38,7 @@ static struct
 } mountpoint;
 
 /* This is the default directory.  */
-const char defaultdir[] = "/var/shm/";
+const char defaultdir[] = "/dev/shm/";
 
 /* Protect the `mountpoint' variable above.  */
 __libc_once_define (static, once);
