@@ -160,7 +160,7 @@ enum
 /* Create a thread with given attributes ATTR (or default attributes
    if ATTR is NULL), and call function START_ROUTINE with given
    arguments ARG.  */
-extern int pthread_create (pthread_t *__restrict __thread,
+extern int pthread_create (pthread_t *__restrict __threadp,
 			   __const pthread_attr_t *__restrict __attr,
 			   void *(*__start_routine) (void *),
 			   void *__restrict __arg) __THROW;
@@ -588,7 +588,7 @@ extern int pthread_setcancelstate (int __state, int *__oldstate) __THROW;
 extern int pthread_setcanceltype (int __type, int *__oldtype) __THROW;
 
 /* Cancel THREAD immediately or at the next possibility.  */
-extern int pthread_cancel (pthread_t __thread) __THROW;
+extern int pthread_cancel (pthread_t __cancelthread) __THROW;
 
 /* Test for pending cancellation for the current thread and terminate
    the thread as per pthread_exit(PTHREAD_CANCELED) if it has been

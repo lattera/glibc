@@ -362,7 +362,7 @@ extern int __new_sem_destroy (sem_t *__sem);
 /* Prototypes for compatibility functions.  */
 extern int __pthread_attr_init_2_1 (pthread_attr_t *__attr);
 extern int __pthread_attr_init_2_0 (pthread_attr_t *__attr);
-extern int __pthread_create_2_1 (pthread_t *__restrict __thread,
+extern int __pthread_create_2_1 (pthread_t *__restrict __threadp,
 				 const pthread_attr_t *__attr,
 				 void *(*__start_routine) (void *),
 				 void *__restrict __arg);

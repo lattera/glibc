@@ -1,3 +1,11 @@
+2002-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_create): Rename first
+	parameter.
+	(pthread_cancel): Likewise.
+	* internals.h (__pthread_create_2_1): Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigthread.h (pthread_kill): Likewise.
+
 2002-05-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/pt-machine.c (THREAD_SELF): Remove clobber.
