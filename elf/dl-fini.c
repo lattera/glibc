@@ -148,7 +148,8 @@ _dl_fini (void)
 	  /* When debugging print a message first.  */
 	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
 	    INTUSE(_dl_debug_printf) ("\ncalling fini: %s\n\n",
-				      l->l_name[0] ? l->l_name : _dl_argv[0]);
+				      l->l_name[0]
+				      ? l->l_name : rtld_progname);
 
 	  /* First see whether an array is given.  */
 	  if (l->l_info[DT_FINI_ARRAY] != NULL)

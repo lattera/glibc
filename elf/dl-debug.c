@@ -40,7 +40,7 @@ _dl_debug_initialize (ElfW(Addr) ldbase)
       _r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
       _r_debug.r_ldbase = ldbase;
       _r_debug.r_map = GL(dl_loaded);
-      _r_debug.r_brk = (ElfW(Addr)) &_dl_debug_state;
+      _r_debug.r_brk = (ElfW(Addr)) &INTUSE(_dl_debug_state);
     }
 
   return &_r_debug;

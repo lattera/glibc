@@ -253,13 +253,12 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  if (sym->st_size > refsym->st_size
 	      || (sym->st_size < refsym->st_size && GL(dl_verbose)))
 	    {
-	      extern char **_dl_argv;
 	      const char *strtab;
 
 	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 	      _dl_error_printf ("\
 %s: Symbol `%s' has different size in shared object, consider re-linking\n",
-				_dl_argv[0] ?: "<program name unknown>",
+				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,

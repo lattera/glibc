@@ -98,6 +98,10 @@ extern void *__sbrk (intptr_t __delta);
    and some functions contained in the C library ignore various
    environment variables that normally affect them.  */
 extern int __libc_enable_secure;
+#ifdef _RTLD_LOCAL
+/* XXX The #ifdef should go.  */
+extern int __libc_enable_secure_internal attribute_hidden;
+#endif
 
 
 /* Various internal function.  */

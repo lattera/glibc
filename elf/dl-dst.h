@@ -62,6 +62,11 @@ extern size_t _dl_dst_count_internal (const char *name, int is_path);
 
 /* Find origin of the executable.  */
 extern const char *_dl_get_origin (void);
+extern const char *_dl_get_origin_internal (void);
+
+#ifdef _RTLD_LOCAL
+# define _dl_get_origin INTUSE(_dl_get_origin)
+#endif
 
 /* Prototype for used function.  */
 extern char *_dl_dst_substitute (struct link_map *l, const char *name,

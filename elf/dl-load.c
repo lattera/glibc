@@ -201,7 +201,7 @@ _dl_dst_count (const char *name, int is_path)
 	 is $ORIGIN alone) and it must always appear first in path.  */
       ++name;
       if ((len = is_dst (start, name, "ORIGIN", is_path,
-			 __libc_enable_secure)) != 0
+			 INTUSE(__libc_enable_secure))) != 0
 	  || ((len = is_dst (start, name, "PLATFORM", is_path, 0))
 	      != 0))
 	++cnt;
@@ -237,7 +237,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 
 	  ++name;
 	  if ((len = is_dst (start, name, "ORIGIN", is_path,
-			     __libc_enable_secure)) != 0)
+			     INTUSE(__libc_enable_secure))) != 0)
 	    repl = l->l_origin;
 	  else if ((len = is_dst (start, name, "PLATFORM", is_path,
 				  0)) != 0)
@@ -494,7 +494,7 @@ decompose_rpath (struct r_search_path_struct *sps,
   /* First see whether we must forget the RUNPATH and RPATH from this
      object.  */
   if (__builtin_expect (GL(dl_inhibit_rpath) != NULL, 0)
-      && !__libc_enable_secure)
+      && !INTUSE(__libc_enable_secure))
     {
       const char *inhp = GL(dl_inhibit_rpath);
 
@@ -711,7 +711,8 @@ _dl_init_paths (const char *llp)
 	}
 
       (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
-			   __libc_enable_secure, "LD_LIBRARY_PATH", NULL);
+			   INTUSE(__libc_enable_secure), "LD_LIBRARY_PATH",
+			   NULL);
 
       if (env_path_list.dirs[0] == NULL)
 	{
@@ -1268,7 +1269,7 @@ print_search_path (struct r_search_path_elem **list,
 
   if (name != NULL)
     _dl_debug_printf_c ("\t\t(%s from file %s)\n", what,
-			name[0] ? name : _dl_argv[0]);
+			name[0] ? name : rtld_progname);
   else
     _dl_debug_printf_c ("\t\t(%s)\n", what);
 }
@@ -1542,7 +1543,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	  here_any |= this_dir->status[cnt] == existing;
 
 	  if (fd != -1 && __builtin_expect (preloaded, 0)
-	      && __libc_enable_secure)
+	      && INTUSE(__libc_enable_secure))
 	    {
 	      /* This is an extra security effort to make sure nobody can
 		 preload broken shared objects which are in the trusted
@@ -1649,7 +1650,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0)
       && loader != NULL)
     INTUSE(_dl_debug_printf) ("\nfile=%s;  needed by %s\n", name,
-			      loader->l_name[0] ? loader->l_name : _dl_argv[0]);
+			      loader->l_name[0]
+			      ? loader->l_name : rtld_progname);
 
   if (strchr (name, '/') == NULL)
     {
@@ -1740,7 +1742,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	}
 
       if (fd == -1
-	  && (__builtin_expect (! preloaded, 1) || ! __libc_enable_secure))
+	  && (__builtin_expect (! preloaded, 1)
+	      || ! INTUSE(__libc_enable_secure)))
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
 	     for compatibility with Linux's ldconfig program.  */

@@ -349,15 +349,27 @@
   strong_alias(real, name)
 #endif
 
+#if defined HAVE_VISIBILITY_ATTRIBUTE && defined SHARED
+# define attribute_hidden __attribute__ ((visibility ("hidden")))
+#else
+# define attribute_hidden
+#endif
+
 /* Handling on non-exported internal names.  We have to do this only
    for shared code.  */
 #ifdef SHARED
 # define INTUSE(name) name##_internal
-# define INTDEF(name) strong_alias (name, name##_internal);
-# define INTDEF2(name, newname) strong_alias (name, newname##_internal);
+# define INTDEF(name) strong_alias (name, name##_internal)
+# define INTVARDEF(name) \
+  _INTVARDEF(name, name##_internal)
+# define _INTVARDEF(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((visibility ("hidden"))); \
+  strong_alias (name, name##_internal)
+# define INTDEF2(name, newname) strong_alias (name, newname##_internal)
 #else
 # define INTUSE(name) name
 # define INTDEF(name)
+# define INTVARDEF(name)
 # define INTDEF2(name, newname)
 #endif
 

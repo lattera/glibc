@@ -35,7 +35,7 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
 {
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_RELOC, 0))
     _dl_printf ("\nconflict processing: %s\n",
-		l->l_name[0] ? l->l_name : _dl_argv[0]);
+		l->l_name[0] ? l->l_name : rtld_progname);
 
   {
     /* Do the conflict relocation of the object and library GOT and other

@@ -60,7 +60,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_RELOC, 0))
     INTUSE(_dl_debug_printf) ("\nrelocation processing: %s%s\n",
-			      l->l_name[0] ? l->l_name : _dl_argv[0],
+			      l->l_name[0] ? l->l_name : rtld_progname,
 			      lazy ? " (lazy)" : "");
 
   /* DT_TEXTREL is now in level 2 and might phase out at some time.
@@ -172,7 +172,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    errstring = N_("%s: profiler found no PLTREL in object %s\n");
 	  fatal:
 	    _dl_fatal_printf (errstring,
-			      _dl_argv[0] ?: "<program name unknown>",
+			      rtld_progname ?: "<program name unknown>",
 			      l->l_name);
 	  }
 

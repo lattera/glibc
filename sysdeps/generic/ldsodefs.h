@@ -394,9 +394,19 @@ extern struct rtld_global _rtld_local __rtld_local_attribute__;
 /* Parameters passed to the dynamic linker.  */
 extern int _dl_argc;
 extern char **_dl_argv;
+#ifdef _RTLD_LOCAL
+extern char **_dl_argv_internal attribute_hidden;
+# define rtld_progname (INTUSE(_dl_argv)[0])
+#else
+# define rtld_progname _dl_argv[0]
+#endif
 
 /* The array with message we print as a last resort.  */
 extern const char _dl_out_of_memory[];
+#ifdef _RTLD_LOCAL
+/* XXX #ifdef should go away.  */
+extern const char _dl_out_of_memory_internal[] attribute_hidden;
+#endif
 
 
 /* OS-dependent function to open the zero-fill device.  */
@@ -645,6 +655,7 @@ extern void _dl_start_profile_internal (struct link_map *map,
 
 /* The actual functions used to keep book on the calls.  */
 extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
+extern void _dl_mcount_internal (ElfW(Addr) frompc, ElfW(Addr) selfpc);
 
 /* This function is simply a wrapper around the _dl_mcount function
    which does not require a FROMPC parameter since this is the

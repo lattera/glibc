@@ -136,7 +136,7 @@ profile_fixup (
 #endif
        struct link_map *l, ElfW(Word) reloc_offset, ElfW(Addr) retaddr)
 {
-  void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = _dl_mcount;
+  void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = INTUSE(_dl_mcount);
   ElfW(Addr) *resultp;
   lookup_t result;
   ElfW(Addr) value;

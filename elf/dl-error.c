@@ -49,6 +49,7 @@ __libc_tsd_define (static, DL_ERROR)
    variable since we have to avoid freeing it and so have to enable
    a pointer comparison.  See below and in dlfcn/dlerror.c.  */
 const char _dl_out_of_memory[] = "out of memory";
+INTVARDEF(_dl_out_of_memory)
 
 
 /* This points to a function which is called when an continuable error is
@@ -92,7 +93,7 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
 	{
 	  /* This is better than nothing.  */
 	  lcatch->objname = "";
-	  lcatch->errstring = _dl_out_of_memory;
+	  lcatch->errstring = INTUSE(_dl_out_of_memory);
 	}
       longjmp (lcatch->env, errcode ?: -1);
     }
@@ -101,7 +102,7 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
       /* Lossage while resolving the program's own symbols is always fatal.  */
       char buffer[1024];
       _dl_fatal_printf ("%s: %s: %s%s%s%s%s\n",
-			_dl_argv[0] ?: "<program name unknown>",
+			rtld_progname ?: "<program name unknown>",
 			occation ?: N_("error while loading shared libraries"),
 			objname, *objname ? ": " : "",
 			errstring, errcode ? ": " : "",

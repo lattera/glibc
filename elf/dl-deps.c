@@ -107,7 +107,7 @@ struct list
 	char *__newp;							      \
 									      \
 	/* DST must not appear in SUID/SGID programs.  */		      \
-	if (__libc_enable_secure)					      \
+	if (INTUSE(__libc_enable_secure))				      \
 	  INTUSE(_dl_signal_error) (0, __str, NULL, N_("\
 DST not allowed in SUID/SGID programs"));				      \
 									      \
@@ -297,7 +297,7 @@ _dl_map_object_deps (struct link_map *map,
 						" requested by file=%s\n",
 						name,
 						l->l_name[0]
-						? l->l_name : _dl_argv[0]);
+						? l->l_name : rtld_progname);
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
@@ -307,7 +307,7 @@ _dl_map_object_deps (struct link_map *map,
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
-			if (errstring != _dl_out_of_memory)
+			if (errstring != INTUSE(_dl_out_of_memory))
 			  free ((char *) errstring);
 
 			/* Simply ignore this error and continue the work.  */
@@ -325,7 +325,7 @@ _dl_map_object_deps (struct link_map *map,
 						" requested by file=%s\n",
 						name,
 						l->l_name[0]
-						? l->l_name : _dl_argv[0]);
+						? l->l_name : rtld_progname);
 
 		    /* For filter objects the dependency must be available.  */
 		    err = INTUSE(_dl_catch_error) (&objname, &errstring,

@@ -47,7 +47,8 @@ extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
 
-int __libc_enable_secure;
+int __libc_enable_secure = 0;
+INTVARDEF(__libc_enable_secure)
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 /* This variable containts the lowest stack address ever used.  */
@@ -128,7 +129,7 @@ _dl_sysdep_start (void **start_argptr,
       else
 	_dl_hurd_data = (void *) p;
 
-      __libc_enable_secure = _dl_hurd_data->flags & EXEC_SECURE;
+      INTUSE(__libc_enable_secure) = _dl_hurd_data->flags & EXEC_SECURE;
 
       if (_dl_hurd_data->flags & EXEC_STACK_ARGS &&
 	  _dl_hurd_data->user_entry == 0)
@@ -208,7 +209,7 @@ unfmh();			/* XXX */
 	 environment list.
 
 	 We use memmove, since the locations might overlap.  */
-      if (__libc_enable_secure || _dl_skip_args)
+      if (INTUSE(__libc_enable_secure) || _dl_skip_args)
 	{
 	  char **newp;
 

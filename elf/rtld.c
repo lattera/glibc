@@ -59,7 +59,8 @@ enum mode { normal, list, verify, trace };
 static void process_envvars (enum mode *modep);
 
 int _dl_argc;
-char **_dl_argv;
+char **_dl_argv = NULL;
+INTDEF(_dl_argv)
 unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
 
 /* Set nonzero during loading and initialization of executable and
@@ -69,7 +70,8 @@ unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
    definition seen by libc.so's initializer; that value must be zero,
    and will be since that dynamic linker's _dl_start and dl_main will
    never be called.  */
-int _dl_starting_up;
+int _dl_starting_up = 0;
+INTVARDEF(_dl_starting_up)
 
 /* This is the structure which defines all variables global to ld.so
    (except those which cannot be added for some reason).  */
@@ -489,7 +491,7 @@ dl_main (const ElfW(Phdr) *phdr,
   process_envvars (&mode);
 
   /* Set up a flag which tells we are just starting.  */
-  _dl_starting_up = 1;
+  INTUSE(_dl_starting_up) = 1;
 
   if (*user_entry == (ElfW(Addr)) ENTRY_POINT)
     {
@@ -511,41 +513,43 @@ dl_main (const ElfW(Phdr) *phdr,
       rtld_is_main = true;
 
       /* Note the place where the dynamic linker actually came from.  */
-      GL(dl_rtld_map).l_name = _dl_argv[0];
+      GL(dl_rtld_map).l_name = rtld_progname;
 
       while (_dl_argc > 1)
-	if (! strcmp (_dl_argv[1], "--list"))
+	if (! strcmp (INTUSE(_dl_argv)[1], "--list"))
 	  {
 	    mode = list;
 	    GL(dl_lazy) = -1;	/* This means do no dependency analysis.  */
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
-	    ++_dl_argv;
+	    ++INTUSE(_dl_argv);
 	  }
-	else if (! strcmp (_dl_argv[1], "--verify"))
+	else if (! strcmp (INTUSE(_dl_argv)[1], "--verify"))
 	  {
 	    mode = verify;
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
-	    ++_dl_argv;
+	    ++INTUSE(_dl_argv);
 	  }
-	else if (! strcmp (_dl_argv[1], "--library-path") && _dl_argc > 2)
+	else if (! strcmp (INTUSE(_dl_argv)[1], "--library-path")
+		 && _dl_argc > 2)
 	  {
-	    library_path = _dl_argv[2];
+	    library_path = INTUSE(_dl_argv)[2];
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
-	    _dl_argv += 2;
+	    INTUSE(_dl_argv) += 2;
 	  }
-	else if (! strcmp (_dl_argv[1], "--inhibit-rpath") && _dl_argc > 2)
+	else if (! strcmp (INTUSE(_dl_argv)[1], "--inhibit-rpath")
+		 && _dl_argc > 2)
 	  {
-	    GL(dl_inhibit_rpath) = _dl_argv[2];
+	    GL(dl_inhibit_rpath) = INTUSE(_dl_argv)[2];
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
-	    _dl_argv += 2;
+	    INTUSE(_dl_argv) += 2;
 	  }
 	else
 	  break;
@@ -577,7 +581,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 
       ++_dl_skip_args;
       --_dl_argc;
-      ++_dl_argv;
+      ++INTUSE(_dl_argv);
 
       /* Initialize the data structures for the search paths for shared
 	 objects.  */
@@ -589,19 +593,17 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  const char *err_str = NULL;
 	  struct map_args args;
 
-	  args.str = _dl_argv[0];
+	  args.str = rtld_progname;
 	  (void) INTUSE(_dl_catch_error) (&objname, &err_str, map_doit, &args);
 	  if (__builtin_expect (err_str != NULL, 0))
-	    {
-	      if (err_str != _dl_out_of_memory)
-		free ((char *) err_str);
-	      _exit (EXIT_FAILURE);
-	    }
+	    /* We don't free the returned string, the programs stops
+	       anyway.  */
+	    _exit (EXIT_FAILURE);
 	}
       else
 	{
 	  HP_TIMING_NOW (start);
-	  INTUSE(_dl_map_object) (NULL, _dl_argv[0], 0, lt_library, 0, 0);
+	  INTUSE(_dl_map_object) (NULL, rtld_progname, 0, lt_library, 0, 0);
 	  HP_TIMING_NOW (stop);
 
 	  HP_TIMING_DIFF (load_time, start, stop);
@@ -814,7 +816,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Prevent optimizing strsep.  Speed is not important here.  */
       while ((p = (strsep) (&list, " :")) != NULL)
 	if (p[0] != '\0'
-	    && (__builtin_expect (! __libc_enable_secure, 1)
+	    && (__builtin_expect (! INTUSE(__libc_enable_secure), 1)
 		|| strchr (p, '/') == NULL))
 	  {
 	    struct link_map *new_map = INTUSE(_dl_map_object) (GL(dl_loaded),
@@ -1029,9 +1031,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 		    GL(dl_trace_prelink_map) = l;
 		  _dl_printf ("\t%s => %s (0x%0*Zx, 0x%0*Zx)\n",
 			      l->l_libname->name[0] ? l->l_libname->name
-			      : _dl_argv[0] ?: "<main program>",
+			      : rtld_progname ?: "<main program>",
 			      l->l_name[0] ? l->l_name
-			      : _dl_argv[0] ?: "<main program>",
+			      : rtld_progname ?: "<main program>",
 			      (int) sizeof l->l_map_start * 2,
 			      l->l_map_start,
 			      (int) sizeof l->l_addr * 2,
@@ -1058,14 +1060,15 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    ElfW(Addr) loadbase;
 	    lookup_t result;
 
-	    result = INTUSE(_dl_lookup_symbol) (_dl_argv[i], GL(dl_loaded),
+	    result = INTUSE(_dl_lookup_symbol) (INTUSE(_dl_argv)[i],
+						GL(dl_loaded),
 						&ref, GL(dl_loaded)->l_scope,
 						ELF_RTYPE_CLASS_PLT, 1);
 
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
 
 	    _dl_printf ("%s found at 0x%0*Zd in object at 0x%0*Zd\n",
-			_dl_argv[i],
+			INTUSE(_dl_argv)[i],
 			(int) sizeof ref->st_value * 2, ref->st_value,
 			(int) sizeof loadbase * 2, loadbase);
 	  }
@@ -1127,7 +1130,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		    }
 
 		  _dl_printf ("\t%s:\n",
-			      map->l_name[0] ? map->l_name : _dl_argv[0]);
+			      map->l_name[0] ? map->l_name : rtld_progname);
 
 		  while (1)
 		    {
@@ -1459,7 +1462,7 @@ print_unresolved (int errcode __attribute__ ((unused)), const char *objname,
 		  const char *errstring)
 {
   if (objname[0] == '\0')
-    objname = _dl_argv[0] ?: "<main program>";
+    objname = rtld_progname ?: "<main program>";
   _dl_error_printf ("%s	(%s)\n", errstring, objname);
 }
 
@@ -1469,7 +1472,7 @@ static void
 print_missing_version (int errcode __attribute__ ((unused)),
 		       const char *objname, const char *errstring)
 {
-  _dl_error_printf ("%s: %s: %s\n", _dl_argv[0] ?: "<program name unknown>",
+  _dl_error_printf ("%s: %s: %s\n", rtld_progname ?: "<program name unknown>",
 		    objname, errstring);
 }
 
@@ -1585,8 +1588,8 @@ process_envvars (enum mode *modep)
   char *debug_output = NULL;
 
   /* This is the default place for profiling data file.  */
-  GL(dl_profile_output) = &"/var/tmp\0/var/profile"[__libc_enable_secure
-						    ? 9 : 0];
+  GL(dl_profile_output)
+    = &"/var/tmp\0/var/profile"[INTUSE(__libc_enable_secure) ? 9 : 0];
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
@@ -1661,7 +1664,7 @@ process_envvars (enum mode *modep)
 
 	case 11:
 	  /* Path where the binary is found.  */
-	  if (!__libc_enable_secure
+	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "ORIGIN_PATH", 11) == 0)
 	    GL(dl_origin_path) = &envline[12];
 	  break;
@@ -1687,7 +1690,7 @@ process_envvars (enum mode *modep)
 
 	case 14:
 	  /* Where to place the profiling data file.  */
-	  if (!__libc_enable_secure
+	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "PROFILE_OUTPUT", 14) == 0
 	      && envline[15] != '\0')
 	    GL(dl_profile_output) = &envline[15];
@@ -1725,7 +1728,7 @@ process_envvars (enum mode *modep)
 
   /* Extra security for SUID binaries.  Remove all dangerous environment
      variables.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
+  if (__builtin_expect (INTUSE(__libc_enable_secure), 0))
     {
       static const char unsecure_envvars[] =
 #ifdef EXTRA_UNSECURE_ENVVARS

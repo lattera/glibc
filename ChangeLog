@@ -1,3 +1,64 @@
+2002-03-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (dl-routines): Add dl-origin.
+	(elide-routines.os): Add dl-origin.
+	* elf/Versions [ld] (GLIBC_PRIVATE): Add _dl_get_origin.
+	* elf/dl-debug.c (_dl_debug_initialize): Add missing INTUSE around
+	_dl_debug_state.
+	* include/libc-symbols.c: Define attribute_hidden depending on
+	HAVE_VISIBILITY_ATTRIBUTE.  Add definition of INTVARDEF.
+
+	* elf/dl-deps.c: Use INTUSE with __libc_enable_secure.
+	* elf/dl-load.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* include/unistd.h: Declare __libc_enable_secure_internal.
+	* sysdeps/generic/dl-sysdep.c: Use INTVARDEF with __libc_enable_secure.
+	Use INTUSE with __libc_enable_secure.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+
+	* elf/dl-deps.c: Use INTUSE with _dl_out_of_memory.
+	* elf/dl-error.c: Likewise,
+	* sysdeps/generic/ldsodefs.h: Declare _dl_out_of_memory_internal.
+
+	* elf/dl-dst.h [_RTLD_GLOBAL]: Define _dl_get_origin to use INTUSE.
+	* sysdeps/generic/dl-origin.c: Undefine _dl_get_origin macro before
+	function definition.  Use INTDEF with _dl_get_origin.
+	* sysdeps/unix/sysv/linux/dl-origin.c: Likewise.
+
+	* elf/dl-init.c: Use INTUSE with _dl_starting_up.
+	* elf/rtld.c: Likewise.  Use INTVARDEF for _dl_starting_up.
+
+	* elf/dl-profile.c: Use INTDEF for _dl_mcount.
+	* elf/dl-runtime.c: Use INTUSE with _dl_mcount.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_mcount_internal.
+
+	* elf/dl-conflict.c: Use rtld_progrname instead of _dl_argv[0].
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/do-lookup.h: Likewise.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/cris/dl-machine.h: Likewise.
+	* sysdeps/hppa/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc-32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc-64/dl-machine.h: Likewise.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+	* elf/rtld.c: Use INTDEF for _dl_argv.  Use rtld_progrname instead of
+	_dl_argv[0].  Use INTUSE with _dl_argv.
+	* sysdeps/generic/dl-sysdep.c: Use INTUSE with _dl_argv.
+	* sysdeps/generic/ldsodefs.h: Define rtld_progname macro.
+
 2002-02-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (_rtld_global): Remove .protected.

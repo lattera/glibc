@@ -171,9 +171,9 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
       if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	INTUSE(_dl_debug_printf) ("\
 \nfile=%s;  needed by %s (relocation dependency)\n\n",
-				  map->l_name[0] ? map->l_name : _dl_argv[0],
+				  map->l_name[0] ? map->l_name : rtld_progname,
 				  undef_map->l_name[0]
-				  ? undef_map->l_name : _dl_argv[0]);
+				  ? undef_map->l_name : rtld_progname);
     }
   else
     /* Whoa, that was bad luck.  We have to search again.  */
@@ -256,7 +256,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	/* XXX We cannot translate the messages.  */
 	_dl_signal_cerror (0, (reference_name[0]
 			       ? reference_name
-			       : (_dl_argv[0] ?: "<main program>")),
+			       : (rtld_progname ?: "<main program>")),
 			   N_("relocation error"),
 			   make_string (undefined_msg, undef_name));
       *ref = NULL;
@@ -419,7 +419,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_cerror (0, (reference_name[0]
 				 ? reference_name
-				 : (_dl_argv[0] ?: "<main program>")),
+				 : (rtld_progname ?: "<main program>")),
 			     N_("relocation error"),
 			     make_string ("symbol ", undef_name, ", version ",
 					  version->name,
@@ -443,7 +443,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_cerror (0, (reference_name[0]
 				 ? reference_name
-				 : (_dl_argv[0] ?: "<main program>")), NULL,
+				 : (rtld_progname ?: "<main program>")), NULL,
 			     make_string (undefined_msg, undef_name,
 					  ", version ",
 					  version->name ?: NULL));
@@ -528,7 +528,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	  /* XXX We cannot translate the messages.  */
 	  _dl_signal_cerror (0, (reference_name[0]
 				 ? reference_name
-				 : (_dl_argv[0] ?: "<main program>")),
+				 : (rtld_progname ?: "<main program>")),
 			     NULL, buf);
 	}
       *ref = NULL;
@@ -604,9 +604,9 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
       INTUSE(_dl_debug_printf) ("binding file %s to %s: %s symbol `%s'",
 				(reference_name[0]
 				 ? reference_name
-				 : (_dl_argv[0] ?: "<main program>")),
+				 : (rtld_progname ?: "<main program>")),
 				value->m->l_name[0]
-				? value->m->l_name : _dl_argv[0],
+				? value->m->l_name : rtld_progname,
 				protected ? "protected" : "normal",
 				undef_name);
       if (version)

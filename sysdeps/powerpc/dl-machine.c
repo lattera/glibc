@@ -474,7 +474,7 @@ __process_machine_rela (struct link_map *map,
 	  strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 	  _dl_error_printf ("\
 %s: Symbol `%s' has different size in shared object, onsider re-linking\n",
-			    _dl_argv[0] ?: "<program name unknown>",
+			    rtld_progname ?: "<program name unknown>",
 			    strtab + refsym->st_name);
 	}
       memcpy (reloc_addr, (char *) finaladdr, MIN (sym->st_size,

@@ -47,7 +47,8 @@ extern void __libc_check_standard_fds (void);
 #ifdef NEED_DL_BASE_ADDR
 ElfW(Addr) _dl_base_addr;
 #endif
-int __libc_enable_secure;
+int __libc_enable_secure = 0;
+INTVARDEF(__libc_enable_secure)
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 /* This variable contains the lowest stack address ever used.  */
@@ -89,7 +90,7 @@ _dl_sysdep_start (void **start_argptr,
 # define set_seen(tag) seen |= M ((tag)->a_type)
 #endif
 
-  DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
+  DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, INTUSE(_dl_argv), _environ,
 			  _dl_auxv);
 
   user_entry = (ElfW(Addr)) ENTRY_POINT;
@@ -156,7 +157,7 @@ _dl_sysdep_start (void **start_argptr,
   SEE (EGID, egid);
 #endif
 
-  __libc_enable_secure = uid != euid || gid != egid;
+  INTUSE(__libc_enable_secure) = uid != euid || gid != egid;
 
 #ifndef HAVE_AUX_PAGESIZE
   if (GL(dl_pagesize) == 0)
@@ -186,7 +187,7 @@ _dl_sysdep_start (void **start_argptr,
   /* If this is a SUID program we make sure that FDs 0, 1, and 2 are
      allocated.  If necessary we are doing it ourself.  If it is not
      possible we stop the program.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
+  if (__builtin_expect (INTUSE(__libc_enable_secure), 0))
     __libc_check_standard_fds ();
 
   (*dl_main) (phdr, phnum, &user_entry);

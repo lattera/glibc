@@ -433,7 +433,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      strtab = (const char *) D_PTR (map, l_info[DT_STRTAB]);
 	      _dl_error_printf ("\
 %s: Symbol `%s' has different size in shared object, consider re-linking\n",
-				_dl_argv[0] ?: "<program name unknown>",
+				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,

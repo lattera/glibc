@@ -31,6 +31,7 @@
    the path of the application from the /proc/self/exe symlink.  Try this
    first and fall back on the generic method if necessary.  */
 
+#undef _dl_get_origin
 const char *
 _dl_get_origin (void)
 {
@@ -38,7 +39,7 @@ _dl_get_origin (void)
   char *result;
   int len;
 
-  if ((len = __readlink ("/proc/self/exe", linkval, PATH_MAX)) > 0
+  if ((len = __readlink ("/proc/self/exe", linkval, sizeof (linkval))) > 0
       && linkval[0] != '[')
     {
       /* We can use this value.  */
@@ -76,3 +77,4 @@ _dl_get_origin (void)
 
   return result;
 }
+INTDEF(_dl_get_origin)

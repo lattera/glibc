@@ -90,7 +90,7 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
     INTUSE(_dl_debug_printf) ("\
 checking for version `%s' in file %s required by file %s\n",
 			      string, map->l_name[0]
-			      ? map->l_name : _dl_argv[0], name);
+			      ? map->l_name : rtld_progname, name);
 
   if (__builtin_expect (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL, 0))
     {
@@ -166,7 +166,7 @@ no version information available (required by ", name, ")");
 			   name, ")");
   result = 1;
  call_cerror:
-  _dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0],
+  _dl_signal_cerror (0, map->l_name[0] ? map->l_name : rtld_progname,
 		     NULL, errstring);
   return result;
 }
@@ -215,7 +215,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 				   " of Verneed record\n");
 	call_error:
 	  INTUSE(_dl_signal_error) (errval, (*map->l_name
-					     ? map->l_name : _dl_argv[0]),
+					     ? map->l_name : rtld_progname),
 				    NULL, errstring);
 	}
 
@@ -240,7 +240,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 		{
 		  /* Match the symbol.  */
 		  result |= match_symbol ((*map->l_name
-					   ? map->l_name : _dl_argv[0]),
+					   ? map->l_name : rtld_progname),
 					  aux->vna_hash,
 					  strtab + aux->vna_name,
 					  needed, verbose,
