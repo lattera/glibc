@@ -1,3 +1,9 @@
+2003-09-11  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/pt-machine.h [MEMORY_BARRIER]: Use lwsync.
+	[READ_MEMORY_BARRIER]: Define.
+	[WRITE_MEMORY_BARRIER]: Define.
+
 2003-09-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/pthread-functions.h (struct pthread_functions): Move

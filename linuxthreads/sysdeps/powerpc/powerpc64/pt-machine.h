@@ -34,7 +34,9 @@ extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 /* For multiprocessor systems, we want to ensure all memory accesses
    are completed before we reset a lock.  On other systems, we still
    need to make sure that the compiler has flushed everything to memory.  */
-#define MEMORY_BARRIER() __asm__ __volatile__ ("sync" : : : "memory")
+#define MEMORY_BARRIER() __asm__ __volatile__ ("lwsync" : : : "memory")
+#define READ_MEMORY_BARRIER() __asm__ __volatile__ ("lwsync" : : : "memory")
+#define WRITE_MEMORY_BARRIER() __asm__ __volatile__ ("eieio" : : : "memory")
 
 /* We want the OS to assign stack addresses.  */
 #define FLOATING_STACKS 1
