@@ -277,7 +277,7 @@ weak_extern (_pthread_cleanup_pop_restore)
 #  pragma weak __pthread_mutexattr_init
 #  pragma weak __pthread_mutexattr_destroy
 #  pragma weak __pthread_mutexattr_settype
-#  pragna weak __pthread_rwlock_destroy
+#  pragma weak __pthread_rwlock_destroy
 #  pragma weak __pthread_rwlock_rdlock
 #  pragma weak __pthread_rwlock_tryrdlock
 #  pragma weak __pthread_rwlock_wrlock

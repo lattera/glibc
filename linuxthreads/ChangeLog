@@ -1,3 +1,8 @@
+2000-03-02  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/pthread/bits/libc-lock.h: Fix typo.
+	Reported by Sean Chen <sean.chen@turbolinux.com>.
+
 2000-02-28  Andreas Jaeger  <aj@suse.de>
 
 	* rwlock.c: Fix typo.
