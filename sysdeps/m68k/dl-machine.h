@@ -324,15 +324,8 @@ static inline void
 elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
-  switch (ELF32_R_TYPE (reloc->r_info))
-    {
-    case R_68K_JMP_SLOT:
-      *reloc_addr += l_addr;
-      break;
-    default:
-      assert (! "unexpected PLT reloc type");
-      break;
-    }
+  assert (ELF32_R_TYPE (reloc->r_info) == R_68K_JMP_SLOT);
+  *reloc_addr += l_addr;
 }
 
 #endif /* RESOLVE */
