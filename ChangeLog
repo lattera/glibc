@@ -1,3 +1,12 @@
+2000-03-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/netdb.h (SCOPE_DELIMITER): New definitions.
+	* inet/netinet/in.h (struct sockaddr_in6): Add sin6_scope_id
+	according to RFC 2553.
+	* sysdeps/posix/getaddrinfo.c: Change to follow latest RFC draft.
+	* inet/getnameinfo.c: Likewise.
+	Patches by YOSHIFUJI Hideaki <yoshfuji@v6.linux.or.jp>.
+
 2000-03-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv_simple.c (internal_ucs4_loop, internal_ucs4le_loop):

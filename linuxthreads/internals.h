@@ -395,6 +395,7 @@ int __pthread_manager(void *reqfd);
 int __pthread_manager_event(void *reqfd);
 void __pthread_manager_sighandler(int sig);
 void __pthread_reset_main_thread(void);
+void __pthread_reset_pthread_once(void);
 void __fresetlockfiles(void);
 void __pthread_manager_adjust_prio(int thread_prio);
 void __pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *peif);

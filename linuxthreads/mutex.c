@@ -223,3 +223,15 @@ int __pthread_once(pthread_once_t * once_control, void (*init_routine)(void))
   return 0;
 }
 strong_alias (__pthread_once, pthread_once)
+
+/*
+ * This is called in the child process after a fork to make
+ * sure that the global mutex pthread_once is not held,
+ * and that the condition variable is reset to an initial state.
+ */
+
+void __pthread_reset_pthread_once(void)
+{
+  pthread_mutex_init(&once_masterlock, NULL);
+  pthread_cond_init(&once_finished, NULL);
+}

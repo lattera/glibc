@@ -89,6 +89,7 @@ pid_t __fork(void)
   pid = __libc_fork();
   if (pid == 0) {
     __pthread_reset_main_thread();
+    __pthread_reset_pthread_once();
     __fresetlockfiles();
     pthread_call_handlers(child);
   } else {
