@@ -673,21 +673,23 @@ AC_CHECK_PROG_VER(SED, sed, --version,
   [3.0[2-9]*|3.[1-9]*|[4-9]*],
   SED=: aux_missing="$aux_missing sed")
 
-AC_CHECK_PROGS(AUTOCONF, autoconf, no)
-case "x$AUTOCONF" in
-xno|x|x:) AUTOCONF=no ;;
-*)
-  AC_CACHE_CHECK(dnl
+if test "x$with_cvs" != xyes; then
+  AC_CHECK_PROGS(AUTOCONF, autoconf, no)
+  case "x$AUTOCONF" in
+  xno|x|x:) AUTOCONF=no ;;
+  *)
+    AC_CACHE_CHECK(dnl
 whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works, libc_cv_autoconf_works, [dnl
-  if (cd $srcdir; $AUTOCONF $ACFLAGS configure.in > /dev/null 2>&1); then
-    libc_cv_autoconf_works=yes
-  else
-    libc_cv_autoconf_works=no
-  fi])
-  test $libc_cv_autoconf_works = yes || AUTOCONF=no
-  ;;
-esac
-test "x$AUTOCONF" != xno || aux_missing="$aux_missing autoconf"
+    if (cd $srcdir; $AUTOCONF $ACFLAGS configure.in > /dev/null 2>&1); then
+      libc_cv_autoconf_works=yes
+    else
+      libc_cv_autoconf_works=no
+    fi])
+    test $libc_cv_autoconf_works = yes || AUTOCONF=no
+    ;;
+  esac
+  test "x$AUTOCONF" != xno || aux_missing="$aux_missing autoconf"
+fi
 
 AC_PROG_CC
 if test $host != $build; then
