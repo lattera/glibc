@@ -67,6 +67,7 @@ _dl_new_object (char *realname, const char *libname, int type,
     }
   else
     _dl_loaded = new;
+  ++_dl_nloaded;
   /* This is our local scope.  */
   if (loader != NULL)
     {

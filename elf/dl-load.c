@@ -1105,13 +1105,14 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
     {
       /* Remove from the module list.  */
       assert (l->l_next == NULL);
-#ifdef SHARED
+#ifndef SHARED
       if (l->l_prev == NULL)
 	/* No other module loaded.  */
 	_dl_loaded = NULL;
       else
 #endif
 	l->l_prev->l_next = NULL;
+      --_dl_nloaded;
 
       /* We are not supposed to load this object.  Free all resources.  */
       __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);

@@ -1,3 +1,23 @@
+2000-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h: Declare _nl_nloaded.
+	* elf/Versions [ld] (GLIBC_2.2): Add _nl_nloaded.
+	* elf/dl-support.c: Define _nl_nloaded.
+	* elf/rtld.c: Likewise.  Increment _nl_nloaded for rtld itself.
+	* elf/dl-object.c (_dl_new_object): Increment _nl_nloaded after adding
+	object to global list.
+	* elf/dl-close.c (_dl_close): Decrement _nl_nloaded after removing
+	from _dl_loaded list.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	* elf/dl-fini.c (_dl_fini): Use _nl_nloaded instead of computing the
+	number here.
+
+	* sysdeps/i386/fpu/fedisblxcpt.c (fedisableexcept): Mask, not
+	unmask, exceptions.
+	* sysdeps/i386/fpu/feenablxcpt.c (feenableexcept): Unmask, not mask,
+	exceptions.
+	Reported by Harvey J. Stein <hjstein@bfr.co.il>.
+
 2000-08-16  Andreas Jaeger  <aj@suse.de>
 
 	* elf/elf.h (EM_X8664): Add official x86-64 specific value.

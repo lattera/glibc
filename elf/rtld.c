@@ -101,6 +101,8 @@ int _dl_bind_not;
 /* This is a pointer to the map for the main object and through it to
    all loaded objects.  */
 struct link_map *_dl_loaded;
+/* Number of object in the _dl_loaded list.  */
+unsigned int _dl_nloaded;
 /* Pointer to the l_searchlist element of the link map of the main object.  */
 struct r_scope_elem *_dl_main_searchlist;
 /* Copy of the content of `_dl_main_searchlist'.  */
@@ -670,6 +672,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   _dl_rtld_map.l_type = lt_library;
   _dl_loaded->l_next = &_dl_rtld_map;
   _dl_rtld_map.l_prev = _dl_loaded;
+  ++_dl_nloaded;
 
   /* We have two ways to specify objects to preload: via environment
      variable and via the file /etc/ld.so.preload.  The latter can also

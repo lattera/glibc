@@ -72,6 +72,8 @@ int _dl_bind_not;
 
 /* Initially empty list of loaded objects.  */
 struct link_map *_dl_loaded;
+/* Number of object in the _dl_loaded list.  */
+unsigned int _dl_nloaded;
 
 /* Fake scope.  In dynamically linked binaries this is the scope of the
    main application but here we don't have something like this.  So

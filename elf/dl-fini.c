@@ -42,29 +42,28 @@ _dl_fini (void)
      using `dlopen' there are possibly several other modules with its
      dependencies to be taken into account.  Therefore we have to start
      determining the order of the modules once again from the beginning.  */
-  unsigned int nloaded = 0;
   unsigned int i;
   struct link_map *l;
   struct link_map **maps;
 
-  /* First count how many objects are there.  */
-  for (l = _dl_loaded; l != NULL; l = l->l_next)
-    ++nloaded;
-
   /* XXX Could it be (in static binaries) that there is no object loaded?  */
-  assert (nloaded > 0);
+  assert (_dl_nloaded > 0);
 
   /* Now we can allocate an array to hold all the pointers and copy
      the pointers in.  */
-  maps = (struct link_map **) alloca (nloaded * sizeof (struct link_map *));
-  for (l = _dl_loaded, nloaded = 0; l != NULL; l = l->l_next)
+  maps = (struct link_map **) alloca (_dl_nloaded
+				      * sizeof (struct link_map *));
+  for (l = _dl_loaded, i = 0; l != NULL; l = l->l_next)
     {
-      maps[nloaded++] = l;
+      assert (i < _dl_nloaded);
+
+      maps[i++] = l;
 
       /* Bump l_opencount of all objects so that they are not dlclose()ed
 	 from underneath us.  */
       ++l->l_opencount;
     }
+  assert (i == _dl_nloaded);
 
   /* Now we have to do the sorting.  */
   for (l = _dl_loaded->l_next; l != NULL; l = l->l_next)
@@ -78,7 +77,7 @@ _dl_fini (void)
 
       /* Find all object for which the current one is a dependency and
 	 move the found object (if necessary) in front.  */
-      for (k = j + 1; k < nloaded; ++k)
+      for (k = j + 1; k < _dl_nloaded; ++k)
 	{
 	  struct link_map **runp;
 
@@ -129,7 +128,7 @@ _dl_fini (void)
 
   /* `maps' now contains the objects in the right order.  Now call the
      destructors.  We have to process this array from the front.  */
-  for (i = 0; i < nloaded; ++i)
+  for (i = 0; i < _dl_nloaded; ++i)
     {
       l = maps[i];
 

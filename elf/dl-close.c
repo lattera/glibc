@@ -166,6 +166,7 @@ _dl_close (void *_map)
 	  else
 	    _dl_loaded = imap->l_next;
 #endif
+	  --_dl_nloaded;
 	  if (imap->l_next)
 	    imap->l_next->l_prev = imap->l_prev;
 
