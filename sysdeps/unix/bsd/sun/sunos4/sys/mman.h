@@ -95,7 +95,7 @@ int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
    file it maps.  Filesystem operations on a file being mapped are
    unpredictable before this is done.  */
-int msync __P ((caddr_t __addr, size_t __len, int __flags));
+int msync __P ((__caddr_t __addr, size_t __len, int __flags));
 
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
