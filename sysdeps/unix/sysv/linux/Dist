@@ -65,7 +65,6 @@ sys/prctl.h
 sys/procfs.h
 sys/quota.h
 sys/raw.h
-sys/sendfile.h
 sys/soundcard.h
 sys/sysctl.h
 sys/sysinfo.h
