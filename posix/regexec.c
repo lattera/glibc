@@ -371,8 +371,8 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
     {
       if (ret_len)
         {
-          assert (pmatch[0].rm_so == 0);
-          rval = pmatch[0].rm_eo;
+          assert (pmatch[0].rm_so == start);
+          rval = pmatch[0].rm_eo - start;
         }
       else
         rval = pmatch[0].rm_so;
