@@ -110,6 +110,17 @@ libc_hidden_proto (fputs_unlocked)
 libc_hidden_proto (open_memstream)
 libc_hidden_proto (__libc_fatal)
 
+#  if !defined NOT_IN_libc && defined SHARED && defined DO_VERSIONING \
+  && defined HAVE_VISIBILITY_ATTRIBUTE && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE\
+  && !defined NO_HIDDEN
+/* Special gcc builtins.  */
+extern size_t __builtin_fwrite (const void *, size_t, size_t, void *)
+     __asm ("__GI_fwrite");
+extern size_t __builtin_fwrite_unlocked (const void *, size_t, size_t, void *)
+     __asm ("__GI_fwrite_unlocked");
+
+#  endif
+
 # endif
 
 #endif

@@ -172,13 +172,12 @@ extern pthread_t pthread_self (void) __THROW;
 extern int pthread_equal (pthread_t __thread1, pthread_t __thread2) __THROW;
 
 /* Terminate calling thread.  */
-extern void pthread_exit (void *__retval)
-     __THROW __attribute__ ((__noreturn__));
+extern void pthread_exit (void *__retval) __attribute__ ((__noreturn__));
 
 /* Make calling thread wait for termination of the thread TH.  The
    exit status of the thread is stored in *THREAD_RETURN, if THREAD_RETURN
    is not NULL.  */
-extern int pthread_join (pthread_t __th, void **__thread_return) __THROW;
+extern int pthread_join (pthread_t __th, void **__thread_return);
 
 /* Indicate that the thread TH is never to be joined with PTHREAD_JOIN.
    The resources of TH will therefore be freed immediately when it
@@ -403,7 +402,7 @@ extern int pthread_cond_broadcast (pthread_cond_t *__cond) __THROW;
 /* Wait for condition variable COND to be signaled or broadcast.
    MUTEX is assumed to be locked before.  */
 extern int pthread_cond_wait (pthread_cond_t *__restrict __cond,
-			      pthread_mutex_t *__restrict __mutex) __THROW;
+			      pthread_mutex_t *__restrict __mutex);
 
 /* Wait for condition variable COND to be signaled or broadcast until
    ABSTIME.  MUTEX is assumed to be locked before.  ABSTIME is an
@@ -412,7 +411,7 @@ extern int pthread_cond_wait (pthread_cond_t *__restrict __cond,
 extern int pthread_cond_timedwait (pthread_cond_t *__restrict __cond,
 				   pthread_mutex_t *__restrict __mutex,
 				   __const struct timespec *__restrict
-				   __abstime) __THROW;
+				   __abstime);
 
 /* Functions for handling condition variable attributes.  */
 

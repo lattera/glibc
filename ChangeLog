@@ -1,3 +1,8 @@
+2003-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdio.h: Add declarations for __builtin_fwrite and
+	__builtin_fwrite_unlocked.
+
 2003-08-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/opendir.c (__opendir): Make sure even struct dirent64

@@ -1,3 +1,9 @@
+2003-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h: Don't mark pthread_exit,
+	pthread_join, pthread_cond_wait, and pthread_cond_timedwait with
+	__THROW to match NPTL.
+
 2003-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/Makefile [subdir=rt] (CPPFLAGS): Add
