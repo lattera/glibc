@@ -1,5 +1,19 @@
 2003-03-10  Roland McGrath  <roland@redhat.com>
 
+	* dlfcn/Makefile (libdl-routines): Add dladdr1.
+	* dlfcn/dladdr1.c: New file.
+	* dlfcn/dlfcn.h [__USE_GNU]: Declare dladdr1.
+	[__USE_GNU] (RTLD_DL_SYMENT, RTLD_DL_LINKMAP): New enum constants.
+	* elf/dl-addr.c (_dl_addr): Take new args, a struct link_map ** and
+	a const ElfNN_Sym ** to fill in.
+	* include/dlfcn.h: Update decl.  Include <link.h>.
+	* dlfcn/dladdr.c (dladdr): Update caller.
+	* malloc/mtrace.c (tr_where): Likewise.
+	* sysdeps/generic/elf/backtracesyms.c: Likewise.
+	* sysdeps/generic/elf/backtracesymsfd.c: Likewise.
+	* dlfcn/Versions (libdl: GLIBC_2.3.3): New set, add dladdr1.
+	* Versions.def (libdl): Define GLIBC_2.3.3 set.
+
 	* sysdeps/unix/make-syscalls.sh: Generate $(compile-syscall) for
 	assembler command.
 	* sysdeps/unix/Makefile (compile-syscall): New variable.
