@@ -78,10 +78,16 @@
 
 #ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
-#else
-/* Store (- %rax) into errno through the GOT.  Note that errno occupies 4 bytes.  */
-#ifdef _LIBC_REENTRANT
-#define SYSCALL_ERROR_HANDLER			\
+#elif USE_TLS && HAVE___THREAD
+# define SYSCALL_ERROR_HANDLER			\
+  movq errno@GOTTPOFF(%rip), %rcx;		\
+  xorq %rdx, %rdx;				\
+  subq %rax, %rdx;				\
+  movl %eax, %fs:0(%rcx)
+#elif defined _LIBC_REENTRANT
+/* Store (- %rax) into errno through the GOT.
+   Note that errno occupies only 4 bytes.  */
+# define SYSCALL_ERROR_HANDLER			\
 0:						\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
@@ -96,15 +102,14 @@
 
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
-#else
-#define SYSCALL_ERROR_HANDLER			\
+#else /* Not _LIBC_REENTRANT.  */
+# define SYSCALL_ERROR_HANDLER			\
 0:movq errno@GOTPCREL(%RIP), %rcx;		\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   movl %edx, (%rcx);				\
   orq $-1, %rax;				\
   jmp L(pseudo_end);
-#endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 
 /* Linux/x86-64 takes system call arguments in registers:

@@ -1,5 +1,8 @@
 2002-09-30  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
+	[USE_TLS && HAVE___THREAD] (SYSCALL_ERROR_HANDLER): Use TLS access.
+
 	* rt/tst-aio7.c (do_test): Don't read from stdin, which could be the
 	terminal when the test is running in a background job.  Instead, make
 	a pipe and read from its read half while never writing anything to it.
