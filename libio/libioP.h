@@ -404,9 +404,13 @@ extern int _IO_seekwmark __P ((_IO_FILE *, struct _IO_marker *, int));
    its lock */
 
 extern _IO_ITER _IO_iter_begin __P ((void));
+libc_hidden_proto (_IO_iter_begin)
 extern _IO_ITER _IO_iter_end __P ((void));
+libc_hidden_proto (_IO_iter_end)
 extern _IO_ITER _IO_iter_next __P ((_IO_ITER));
+libc_hidden_proto (_IO_iter_next)
 extern _IO_FILE *_IO_iter_file __P ((_IO_ITER));
+libc_hidden_proto (_IO_iter_file)
 extern void _IO_list_lock __P ((void));
 extern void _IO_list_unlock __P ((void));
 extern void _IO_list_resetlock __P ((void));

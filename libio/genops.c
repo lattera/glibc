@@ -1194,12 +1194,14 @@ _IO_iter_begin()
 {
   return (_IO_ITER) INTUSE(_IO_list_all);
 }
+libc_hidden_def (_IO_iter_begin)
 
 _IO_ITER
 _IO_iter_end()
 {
   return NULL;
 }
+libc_hidden_def (_IO_iter_end)
 
 _IO_ITER
 _IO_iter_next(iter)
@@ -1207,6 +1209,7 @@ _IO_iter_next(iter)
 {
   return iter->_chain;
 }
+libc_hidden_def (_IO_iter_next)
 
 _IO_FILE *
 _IO_iter_file(iter)
@@ -1214,6 +1217,7 @@ _IO_iter_file(iter)
 {
   return iter;
 }
+libc_hidden_def (_IO_iter_file)
 
 void
 _IO_list_lock()
