@@ -670,6 +670,11 @@ was a `libc.so' from libc 5 in /lib, which gets searched first.  To fix the
 problem, just delete /lib/libc.so.  You may also need to delete other
 symbolic links in /lib, such as /lib/libm.so if it points to libm.so.5.
 
+{AJ} The perl script test-installation.pl which is run as last step during
+an installation of glibc that is configured with --prefix=/usr should help
+detect these situations.  If the script reports problems, something is
+really screwed up.
+
 ? Source and binary incompatibilities, and what to do about them
 
 ??	I expect GNU libc to be 100% source code compatible with
