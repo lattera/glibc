@@ -1,15 +1,26 @@
+1998-10-14  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+ 
+	* string/bits/string2.h (strcmp): Don't cache the result of
+	__builtin_constant_p in variables, otherwise constant folding
+	can fail in big functions.
+ 
+1998-10-14  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+ 
+	* string/bits/string2.h: Add prototypes for the new inline
+	functions.
+ 
 1998-10-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/ioctls.h: Include termios.h to
 	have all types defined.
 	Patch by Matti Aarnio <matti.aarnio@sonera.fi>.
 
-1998-10-08  Paul Eggert  <eggert@twinsun.com> 
+1998-10-08  Paul Eggert  <eggert@twinsun.com>
 
-	* time/mktime.c (my_mktime_localtime_r): Renamed from localtime_r. 
-	Define also if HAVE_LOCALTIME_R && defined localtime_r, with 
-	a body that merely expands localtime_r; this works around a 
-	bug in Digital Unix 4.0A and 4.0D. 
+	* time/mktime.c (my_mktime_localtime_r): Renamed from localtime_r.
+	Define also if HAVE_LOCALTIME_R && defined localtime_r, with
+	a body that merely expands localtime_r; this works around a
+	bug in Digital Unix 4.0A and 4.0D.
 
 1998-10-14  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -28,10 +39,10 @@
 	* sysdeps/unix/sysv/linux/alpha/bits/ioctls.h: Define __kernel_termios
 	here instead of including kernel_termios.h.
 
-1998-10-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+1998-10-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
  
-	* sysdeps/unix/opendir.c (__opendir): Remove label lose2 which is 
-	unnecessary after the changes of 1998-10-12. 
+	* sysdeps/unix/opendir.c (__opendir): Remove label lose2 which is
+	unnecessary after the changes of 1998-10-12.
  
 1998-10-13  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -121,6 +121,9 @@ __STRING2_COPY_TYPE (8);
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 4)
+__STRING_INLINE void *__mempcpy_small (void *, char, char, char, char,
+				       __uint16_t, __uint16_t, __uint32_t,
+				       __uint32_t, size_t);
 __STRING_INLINE void *
 __mempcpy_small (void *__dest1,
 		 char __src0_1, char __src2_1, char __src4_1, char __src6_1,
@@ -200,6 +203,13 @@ __mempcpy_small (void *__dest1,
 	  ((__const char *) (src))[2], ((__const char *) (src))[3],	      \
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], ((__const char *) (src))[7] } })
+__STRING_INLINE void *__mempcpy_small (void *, char, __STRING2_COPY_ARR2,
+				       __STRING2_COPY_ARR3,
+				       __STRING2_COPY_ARR4,
+				       __STRING2_COPY_ARR5,
+				       __STRING2_COPY_ARR6,
+				       __STRING2_COPY_ARR7,
+				       __STRING2_COPY_ARR8, size_t);
 __STRING_INLINE void *
 __mempcpy_small (void *__dest1, char __src1,
 		 __STRING2_COPY_ARR2 __src2, __STRING2_COPY_ARR3 __src3,
@@ -258,6 +268,8 @@ __mempcpy_small (void *__dest1, char __src1,
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 4)
+__STRING_INLINE char *__strcpy_small (char *, __uint16_t, __uint16_t,
+				      __uint32_t, __uint32_t, size_t);
 __STRING_INLINE char *
 __strcpy_small (char *__dest,
 		__uint16_t __src0_2, __uint16_t __src4_2,
@@ -327,6 +339,13 @@ __strcpy_small (char *__dest,
 	  ((__const char *) (src))[2], ((__const char *) (src))[3],	      \
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], '\0' } })
+__STRING_INLINE char *__strcpy_small (char *, __STRING2_COPY_ARR2,
+				      __STRING2_COPY_ARR3,
+				      __STRING2_COPY_ARR4,
+				      __STRING2_COPY_ARR5,
+				      __STRING2_COPY_ARR6,
+				      __STRING2_COPY_ARR7,
+				      __STRING2_COPY_ARR8, size_t);
 __STRING_INLINE char *
 __strcpy_small (char *__dest,
 		__STRING2_COPY_ARR2 __src2, __STRING2_COPY_ARR3 __src3,
@@ -387,6 +406,8 @@ __strcpy_small (char *__dest,
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 4)
+__STRING_INLINE char *__stpcpy_small (char *, __uint16_t, __uint16_t,
+				      __uint32_t, __uint32_t, size_t);
 __STRING_INLINE char *
 __stpcpy_small (char *__dest,
 		__uint16_t __src0_2, __uint16_t __src4_2,
@@ -463,6 +484,13 @@ __stpcpy_small (char *__dest,
 	  ((__const char *) (src))[2], ((__const char *) (src))[3],	      \
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], '\0' } })
+__STRING_INLINE char *__stpcpy_small (char *, __STRING2_COPY_ARR2,
+				      __STRING2_COPY_ARR3,
+				      __STRING2_COPY_ARR4,
+				      __STRING2_COPY_ARR5,
+				      __STRING2_COPY_ARR6,
+				      __STRING2_COPY_ARR7,
+				      __STRING2_COPY_ARR8, size_t);
 __STRING_INLINE char *
 __stpcpy_small (char *__dest,
 		__STRING2_COPY_ARR2 __src2, __STRING2_COPY_ARR3 __src3,
@@ -553,22 +581,20 @@ __stpcpy_small (char *__dest,
 # define strcmp(s1, s2) \
   __extension__								      \
   ({ size_t __s1_len, __s2_len;						      \
-     int __s1_is_const = __builtin_constant_p (s1);			      \
-     int __s2_is_const = __builtin_constant_p (s2);			      \
-     (__s1_is_const && __s2_is_const					      \
+     (__builtin_constant_p (s1) && __builtin_constant_p (s2)		      \
       && (__s1_len = strlen (s1), __s2_len = strlen (s2),		      \
 	  (!__string2_1bptr_p (s1) || __s1_len >= 4)			      \
 	  && (!__string2_1bptr_p (s2) || __s2_len >= 4))		      \
       ? memcmp ((__const char *) (s1), (__const char *) (s2),		      \
 		(__s1_len < __s2_len ? __s1_len : __s2_len) + 1)	      \
-      : (__s1_is_const && __string2_1bptr_p (s1)			      \
+      : (__builtin_constant_p (s1) && __string2_1bptr_p (s1)		      \
 	 && (__s1_len = strlen (s1), __s1_len < 4)			      \
-	 ? (__s2_is_const && __string2_1bptr_p (s2)			      \
+	 ? (__builtin_constant_p (s2) && __string2_1bptr_p (s2)		      \
 	    ? __strcmp_cc (s1, s2, __s1_len)				      \
 	    : __strcmp_cg (s1, s2, __s1_len))				      \
-	 : (__s2_is_const && __string2_1bptr_p (s2)			      \
+	 : (__builtin_constant_p (s2) && __string2_1bptr_p (s2)		      \
 	    && (__s2_len = strlen (s2), __s2_len < 4)			      \
-	    ? (__s1_is_const && __string2_1bptr_p (s1)			      \
+	    ? (__builtin_constant_p (s1) && __string2_1bptr_p (s1)	      \
 	       ? __strcmp_cc (s1, s2, __s2_len)				      \
 	       : __strcmp_gc (s1, s2, __s2_len))			      \
 	    : strcmp (s1, s2)))); })
