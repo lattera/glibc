@@ -21,7 +21,8 @@ headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr eval
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c \
-		   defaultmod1.c defaultmod2.c errmsg1mod.c
+		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
+		   modcxaatexit.c
 
 extra-libs-others := libdl
 
@@ -34,10 +35,10 @@ endif
 libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
-tests = glrefmain failtest tst-dladdr default errmsg1
+tests = glrefmain failtest tst-dladdr default errmsg1 tstatexit tstcxaatexit
 endif
 modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
-		errmsg1mod
+		errmsg1mod modatexit modcxaatexit
 extra-objs += $(modules-names:=.os) eval.os
 generated := $(modules-names:=.so)
 
@@ -67,3 +68,11 @@ $(objpfx)defaultmod2.so: $(libdl)
 
 $(objpfx)errmsg1: $(libdl)
 $(objpfx)errmsg1.out: $(objpfx)errmsg1 $(objpfx)errmsg1mod.so
+
+$(objpfx)tstatexit: $(libdl)
+$(objpfx)tstatexit.out: $(objpfx)tstatexit $(objpfx)modatexit.so
+
+$(objpfx)tstcxaatexit: $(libdl)
+$(objpfx)tstcxaatexit.out: $(objpfx)tstcxaatexit $(objpfx)modcxaatexit.so
+
+$(objpfx)modatexit.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a

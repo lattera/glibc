@@ -29,7 +29,7 @@ routines	:=							      \
 	abort								      \
 	bsearch qsort msort						      \
 	getenv putenv setenv secure-getenv				      \
-	exit on_exit atexit cxa_atexit cxa_finalize			      \
+	exit on_exit atexit cxa_atexit cxa_finalize old_atexit		      \
 	abs labs llabs							      \
 	div ldiv lldiv							      \
 	mblen mbstowcs mbtowc wcstombs wctomb				      \
@@ -48,6 +48,11 @@ routines	:=							      \
 	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg		      \
 	strtoimax strtoumax wcstoimax wcstoumax				      \
 	getcontext setcontext makecontext swapcontext
+
+# These routines will be omitted from the libc shared object.
+# Instead the static object files will be included in a special archive
+# linked against when the shared library will be used.
+static-only-routines = atexit
 
 distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh
 test-srcs	:= tst-fmtmsg
@@ -79,6 +84,10 @@ include ../Makeconfig
 ifneq (,$(filter %REENTRANT, $(defines)))
 CFLAGS-strfmon.c = -D_IO_MTSAFE_IO
 CFLAGS-strfmon_l.c = -D_IO_MTSAFE_IO
+endif
+
+ifeq (yes,$(have-protected))
+CFLAGS-atexit.c = -DHAVE_DOT_HIDDEN
 endif
 
 include ../Rules
@@ -141,7 +150,7 @@ test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 tst-strtod-ENV = LOCPATH=$(common-objpfx)localedata
 
 # Run a test on the header files we use.
-tests: $(objpfx)isomac.out 
+tests: $(objpfx)isomac.out
 
 ifeq (no,$(cross-compiling))
 tests: $(objpfx)tst-fmtmsg.out

@@ -16,6 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <bits/libc-lock.h>
 #include <stdlib.h>
 #include "exit.h"
 
@@ -35,4 +36,58 @@ __cxa_atexit (void (*func) (void *), void *arg, void *d)
   new->func.cxa.arg = arg;
   new->func.cxa.dso_handle = d;
   return 0;
+}
+
+
+/* We change global data, so we need locking.  */
+__libc_lock_define_initialized (static, lock)
+
+
+static struct exit_function_list initial;
+struct exit_function_list *__exit_funcs = &initial;
+
+struct exit_function *
+__new_exitfn (void)
+{
+  struct exit_function_list *l;
+  size_t i = 0;
+
+  __libc_lock_lock (lock);
+
+  for (l = __exit_funcs; l != NULL; l = l->next)
+    {
+      for (i = 0; i < l->idx; ++i)
+	if (l->fns[i].flavor == ef_free)
+	  break;
+      if (i < l->idx)
+	break;
+
+      if (l->idx < sizeof (l->fns) / sizeof (l->fns[0]))
+	{
+	  i = l->idx++;
+	  break;
+	}
+    }
+
+  if (l == NULL)
+    {
+      l = (struct exit_function_list *)
+	malloc (sizeof (struct exit_function_list));
+      if (l != NULL)
+	{
+	  l->next = __exit_funcs;
+	  __exit_funcs = l;
+
+	  l->idx = 1;
+      	  i = 0;
+	}
+    }
+
+  /* Mark entry as used, but we don't know the flavor now.  */
+  if (l != NULL)
+    l->fns[i].flavor = ef_us;
+
+  __libc_lock_unlock (lock);
+
+  return l == NULL ? NULL : &l->fns[i];
 }

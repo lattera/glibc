@@ -1,3 +1,41 @@
+2001-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/Makefile (distribute): Add modatexit.c and modcxaatexit.c.
+	(tests): Add tstatexit and tstcxaatexit.
+	(module-names): Add modatexit and modcxaatexit.
+	Add rules to build and run tstatexit and tstcxaatexit.
+	* dlfcn/modatexit.c: New file.
+	* dlfcn/modcxaatexit.c: New file.
+	* dlfcn/tstatexit.c: New file.
+	* dlfcn/tstcxaatexit.c: New file.
+
+	* io/Makefile: Pass -DHAVE_DOT_HIDDEN to stat and mknod functions if
+	.hidden is available.
+	* io/stat.c: If .hidden is available use it to avoid exporting
+	functions.
+	* io/fstat.c: Likewise.
+	* io/lstat.c: Likewise.
+	* io/stat64.c: Likewise.
+	* io/fstat64.c: Likewise.
+	* io/lstat64.c: Likewise.
+	* sysdeps/generic/mknod.c: Likewise.
+
+	* malloc/mtrace.c: Use __cxa_atexit and not atexit.
+	* sysdeps/generic/bb_init_func.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+
+	* stdlib/atexit.c (__new_exitfn): Move to cxa_atexit.c.
+	(atexit): Implement using __cxa_atexit.
+	Use .hidden if availble to avoid exporting atexit.
+	* stdlib/cxa_atexit.c (__new_exitfn): Moved to here from atexit.c.
+	* stdlib/Versions: Export __new_exitfn for GLIBC_2.2.3.
+	* stdlib/Makefile (routines): Add old_atexit.
+	(static-only-routines): Add atexit.
+	Pass -DHAVE_DOT_HIDDEN for atexit.c if .hidden is available.
+	* stdlib/old_atexit.c: New file.
+
+	* intl/Makefile: Remove bogus endif.
+
 2001-02-26  Andreas Jaeger  <aj@suse.de>
 
 	* iconvdata/Makefile (tests): Fix typo in last patch.

@@ -291,8 +291,10 @@ mtrace ()
 #ifdef _LIBC
 	  if (!added_atexit_handler)
 	    {
+	      extern void *__dso_handle __attribute__ ((__weak__));
 	      added_atexit_handler = 1;
-	      atexit (release_libc_mem);
+	      __cxa_atexit ((void (*) (void *)) release_libc_mem, NULL,
+			     &__dso_handle ? __dso_handle : NULL);
 	    }
 #endif
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,48 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <dlfcn.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include "exit.h"
 
 
-/* This is defined by newer gcc version unique for each module.  */
-extern void *__dso_handle __attribute__ ((__weak__));
-
-
-/* Register FUNC to be executed by `exit'.  */
 int
-atexit (void (*func) (void))
+main (void)
 {
-  return __cxa_atexit ((void (*) (void *)) func, NULL,
-		       &__dso_handle == NULL ? NULL : __dso_handle);
-}
+  const char fname[] = "modatexit.so";
+  void *h;
+  void (*fp) (void *);
+  int v = 0;
 
-/* Hide the symbol so that no definition but the one locally in the
-   executable or DSO is used.  */
-#ifdef HAVE_DOT_HIDDEN
-asm (".hidden\tatexit");
-#endif
+  h = dlopen (fname, RTLD_NOW);
+  if (h == NULL)
+    {
+      printf ("cannot open \"%s\": %s\n", fname, dlerror ());
+      exit (1);
+    }
+
+  fp = dlsym (h, "foo");
+  if (fp == NULL)
+    {
+      printf ("cannot find \"foo\": %s\n", dlerror ());
+      exit (1);
+    }
+
+  fp (&v);
+
+  if (dlclose (h) != 0)
+    {
+      printf ("cannot close \"%s\": %s\n", fname, dlerror ());
+      exit (1);
+    }
+
+  if (v != 1)
+    {
+      puts ("module unload didn't change `v'");
+      exit (1);
+    }
+
+  puts ("finishing now");
+
+  return 0;
+}

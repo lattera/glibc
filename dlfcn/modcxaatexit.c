@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stdio.h>
 #include <stdlib.h>
-#include "exit.h"
+
+int global;
 
 
-/* This is defined by newer gcc version unique for each module.  */
-extern void *__dso_handle __attribute__ ((__weak__));
-
-
-/* Register FUNC to be executed by `exit'.  */
-int
-atexit (void (*func) (void))
+void
+fluffy (void *p)
 {
-  return __cxa_atexit ((void (*) (void *)) func, NULL,
-		       &__dso_handle == NULL ? NULL : __dso_handle);
+  printf ("This is %s\n", __FUNCTION__);
+  *(int *) p = global = 1;
 }
 
-/* Hide the symbol so that no definition but the one locally in the
-   executable or DSO is used.  */
-#ifdef HAVE_DOT_HIDDEN
-asm (".hidden\tatexit");
-#endif
+
+void
+bar (void *p)
+{
+  extern void *__dso_handle;
+  printf ("This is %s\n", __FUNCTION__);
+  __cxa_atexit (fluffy, p, __dso_handle);
+}

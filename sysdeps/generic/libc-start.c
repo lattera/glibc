@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 
 # ifdef HAVE_AUX_VECTOR
   for (auxvec = (void *__unbounded *__unbounded) ubp_ev;
-       *auxvec; auxvec++);
+       *auxvec != NULL; ++auxvec);
   ++auxvec;
   _dl_aux_init ((ElfW(auxv_t) *) auxvec);
 # endif
@@ -100,7 +100,7 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 
   /* Register the destructor of the dynamic linker if there is any.  */
   if (__builtin_expect (rtld_fini != NULL, 1))
-    atexit (rtld_fini);
+    __cxa_atexit ((void (*) (void *)) rtld_fini, NULL, NULL);
 
   /* Call the initializer of the libc.  This is only needed here if we
      are compiling for the static library in which case we haven't
@@ -111,7 +111,7 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 
   /* Register the destructor of the program, if any.  */
   if (fini)
-    atexit (fini);
+    __cxa_atexit ((void (*) (void *)) fini, NULL, NULL);
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED

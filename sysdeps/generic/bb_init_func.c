@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
@@ -47,6 +47,8 @@ __bb_init_func (struct __bb *bb)
     {
       /* we didn't register _mcleanup yet and pc profiling doesn't seem
 	 to be active, so let's register it now: */
-      atexit (_mcleanup);
+      extern void *__dso_handle __attribute__ ((__weak__));
+      __cxa_atexit ((void (*) (void *)) _mcleanup, NULL,
+		    &__dso_handle ? __dso_handle : NULL);
     }
 }

@@ -94,4 +94,8 @@ libc {
     # used by new G++ ABI
     __cxa_atexit; __cxa_finalize;
   }
+  GLIBC_2.2.3 {
+    # Used by atexit in libc_nonshared.
+    __new_exitfn;
+  }
 }
