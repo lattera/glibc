@@ -306,7 +306,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
     assert (i < (*scope)->r_nduplist);
 
-  while (i >= (*scope)->r_nlist
+  if (i >= (*scope)->r_nlist
 	 || ! do_lookup (undef_name, hash, *ref, &current_value, *scope, i,
 			 skip_map, 0, 0))
     while (*++scope)
