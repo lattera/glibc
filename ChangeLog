@@ -1,5 +1,10 @@
 2003-07-22  Andreas Jaeger  <aj@suse.de>
 
+	* elf/sofini.c (__FRAME_END__): Use attribute used so that gcc
+	will not optimize it away.
+	(__DTOR_END__): Likewise.
+	(__CTOR_END__): Likewise.
+
 	* include/libc-symbols.h (_elf_set_element): Use attribute used so
 	that gcc will not optimize it away.
 	(link_warning): Likewise.
