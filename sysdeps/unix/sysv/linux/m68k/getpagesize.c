@@ -25,6 +25,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#undef __getpagesize
+
 /* Return the system page size.  */
 int
 __getpagesize ()
@@ -46,4 +48,5 @@ __getpagesize ()
   return 4096;
 }
 
+INTDEF(__getpagesize)
 weak_alias (__getpagesize, getpagesize)
