@@ -1,3 +1,8 @@
+2004-03-12  Roland McGrath  <roland@redhat.com>
+
+	* db_info.c [TLS_DTV_AT_TP && TLS_TP_OFFSET > 0]
+	(_thread_db_pthread_dtvp): Define differently for this case (PowerPC).
+
 2003-12-11  Ulrich Weigand  <uweigand@de.ibm.com>
 
 	* db_info.c (REGISTER): Add bit size of thread register as second

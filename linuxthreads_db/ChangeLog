@@ -1,3 +1,8 @@
+2004-03-12  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_tlsbase.c [TLS_DTV_AT_TP && TLS_TP_OFFSET > 0]: Handle this
+	case (PowerPC) differently.
+
 2003-11-25  Roland McGrath  <roland@redhat.com>
 
 	* td_symbol_list.c (symbol_list_arr) [HAVE_ASM_GLOBAL_DOT_NAME]:
