@@ -1,5 +1,8 @@
 1999-01-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manual/charset.texi: More misspelling fixes.
+	Reported by Tom Tromey <tromey@cygnus.com>.
+
 	* sysdeps/unix/sysv/linux/vfork.c: Removed.
 	* sysdeps/unix/sysv/linux/i386/vfork.S: New file.
 

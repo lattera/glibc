@@ -198,7 +198,7 @@ oriented character set.
 @cindex multibyte character
 @cindex EBCDIC
    For all the above reasons, an external encoding which is different
-from the internal encoding is often used if the later is UCS2 or UCS4.
+from the internal encoding is often used if the latter is UCS2 or UCS4.
 The external encoding is byte-based and can be chosen appropriately for
 the environment and for the texts to be handled.  There exist a variety
 of different character sets which can be used for this external
@@ -263,7 +263,7 @@ systems such as video text.
 @item
 @cindex UTF-8
 Instead of converting the Unicode or @w{ISO 10646} text used internally
-it is often also sufficient to simply use an encoding different then
+it is often also sufficient to simply use an encoding different than
 UCS2/UCS4.  The Unicode and @w{ISO 10646} standards even specify such an
 encoding: UTF-8.  This encoding is able to represent all of @w{ISO
 10464} 31 bits in a byte string of length one to seven.
@@ -288,7 +288,7 @@ works with use.  If there are no constraints the selection is based on
 the requirements the expected circle of users will have.  I.e., if a
 project is expected to only be used in, say, Russia it is fine to use
 KOI8-R or a similar character set.  But if at the same time people from,
-say, Greek are participating one should use a character set which allows
+say, Greece are participating one should use a character set which allows
 all people to collaborate.
 
 The most widely useful solution seems to be: go with the most general
