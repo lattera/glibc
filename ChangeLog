@@ -1,3 +1,8 @@
+1999-06-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Disable signbit* inline
+	functions for gcc <= 2.7.x.
+
 1999-06-13  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdsock.c (_hurd_socket_server): Fix fencepost error in last
