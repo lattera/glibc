@@ -770,7 +770,10 @@ print_known_names (void)
 	add_known_names (modules);
     }
 
-  fputs (_("\
+  bool human_readable = isatty (fileno (stdout));
+
+  if (human_readable)
+    fputs (_("\
 The following list contain all the coded character sets known.  This does\n\
 not necessarily mean that all combinations of these names can be used for\n\
 the FROM and TO command line parameters.  One coded character set can be\n\
@@ -778,13 +781,8 @@ listed with several different names (aliases).\n\n  "), stdout);
 
   /* Now print the collected names.  */
   column = 2;
-  if (isatty (fileno (stdout)))
-    {
-      twalk (printlist, do_print_human);
+  twalk (printlist, human_readable ? do_print_human : do_print);
 
-      if (column != 0)
-	puts ("");
-    }
-  else
-    twalk (printlist, do_print);
+  if (human_readable && column != 0)
+    puts ("");
 }

@@ -1,3 +1,8 @@
+2004-07-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/iconv_prog.c (print_known_names): Make machine-readable
+	output even less cluttered.
+
 2004-07-16  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #269]
