@@ -1,3 +1,7 @@
+2003-02-21  Roland McGrath  <roland@redhat.com>
+
+	* pthread_create.c (start_thread): Call __libc_thread_freeres.
+
 2003-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-eintr1.
