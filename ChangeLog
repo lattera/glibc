@@ -1,3 +1,8 @@
+2001-02-10  Andreas Jaeger  <aj@suse.de>
+
+	* wctype/wcfuncs.c (func): Add prototype declarations to avoid
+	warning.
+
 2001-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile: Add rules to build and run bug-regex2.
