@@ -1,5 +1,9 @@
 2003-08-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/math_private.h: Declare __copysignf.
+	* sysdeps/ieee754/flt-32/s_scalbnf.c: Use __copysignf instead of
+	copysignf.
+
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Define __signbitf,
 	__signbit, and __signbitl inline functions.
 

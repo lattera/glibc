@@ -232,6 +232,9 @@ extern float __kernel_cosf (float,float);
 extern float __kernel_tanf (float,float,int);
 extern int   __kernel_rem_pio2f (float*,float*,int,int,int, const int32_t*);
 
+/* internal functions.  */
+extern float __copysignf (float x, float __y);
+
 
 /* ieee style elementary long double functions */
 extern long double __ieee754_sqrtl (long double);
