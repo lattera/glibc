@@ -44,6 +44,9 @@ Version 2.2
 
 * The port to MIPS-Linux has been finished by Andreas Jaeger.
 
+* A port to Hitachi SH3 and SH4 has been contributed by Kazumoto Kojima
+  and Yutaka Niibe.
+
 
 Version 2.1.3
 

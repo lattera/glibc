@@ -1,3 +1,9 @@
+2000-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libc-symbols.h (link_warning): Work around a change in
+	GAS which wrns about changing section attributes.
+	Proposed by Nich Clifton <nickc@redhat.com>.
+
 2000-06-12  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (__sgn1l): Add __extension__.
