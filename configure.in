@@ -318,11 +318,7 @@ m68k)		base_machine=m68k machine=m68k/m68020 ;;
 m88???)		base_machine=m88k machine=m88k/$machine ;;
 m88k)		base_machine=m88k machine=m88k/m88100 ;;
 mips64*)	base_machine=mips64 machine=mips/mips64/$machine ;;
-mips*)		base_machine=mips
-		case "`uname -m`" in
-		IP22) machine=mips/mips3 ;;
-		*)    machine=mips/$machine ;;
-		esac ;;
+mips*)		base_machine=mips machine=mips/$machine ;;
 s390)           base_machine=s390 machine=s390/s390-32 ;;
 s390x)          base_machine=s390 machine=s390/s390-64 ;;
 sh3*)		base_machine=sh machine=sh/sh3 ;;
@@ -1389,7 +1385,7 @@ fi
 AC_CACHE_CHECK(for DWARF2 unwind info support, libc_cv_gcc_dwarf2_unwind_info,
 [cat > conftest.c <<EOF
 #line __oline__ "configure"
-static char __EH_FRAME_BEGIN__[];
+static char *__EH_FRAME_BEGIN__;
 _start ()
 {
 #ifdef CHECK__register_frame
@@ -1418,6 +1414,19 @@ if AC_TRY_COMMAND([${CC-cc} $CFLAGS -DCHECK__register_frame_info
 			    -nostdlib -nostartfiles
 			    -o conftest conftest.c -lgcc >&AC_FD_CC]); then
   libc_cv_gcc_dwarf2_unwind_info=static
+else
+  libc_cv_gcc_dwarf2_unwind_info=no
+fi
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS -DCHECK__register_frame_info
+                            -nostdlib -nostartfiles
+                            -o conftest conftest.c -lgcc -lgcc_eh >&AC_FD_CC]); then
+  if ${CC-cc} $CFLAGS -DCHECK__register_frame_info -nostdlib -nostartfiles \
+     -o conftest conftest.c -lgcc -lgcc_eh -v 2>&1 >/dev/null \
+     | grep -q -- --eh-frame-hdr; then
+    libc_cv_gcc_dwarf2_unwind_info=no_registry_needed
+  else
+    libc_cv_gcc_dwarf2_unwind_info=static
+  fi
 else
   libc_cv_gcc_dwarf2_unwind_info=no
 fi

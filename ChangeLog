@@ -1,3 +1,26 @@
+2002-04-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/e_sqrt.c: New file.
+	* sysdeps/x86_64/fpu/e_sqrtf.c: New file.
+
+	* sysdeps/x86_64/fpu/s_fabs.c: New file.
+	* sysdeps/x86_64/fpu/s_fabsf.c: New file.
+	* sysdeps/x86_64/fpu/s_fabsl.c: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/time.S: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/time.S: Removed.
+
+	* configure.in: Handle all mips entries the same.
+
+	* sysdeps/mips/dec/bits/endian.h: Removed since arch is not
+	supported.
+	* sysdeps/mips/mips3/*: Likewise.
+	* sysdeps/mips/p40/bits/endian.h: Likewise.
+
 2002-04-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/dirname.c (dirname): Ignore trailing slashes at end of
