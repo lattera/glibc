@@ -1,5 +1,5 @@
 /* Return the next shared object initializer function not yet run.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,45 +21,35 @@ Cambridge, MA 02139, USA.  */
 #include <link.h>
 
 
-Elf32_Addr
-_dl_init_next (void)
-{
-  struct link_map *l;
-  Elf32_Addr init;
+/* Run initializers for MAP and its dependencies, in inverse dependency
+   order (that is, leaf nodes first).  */
 
-  Elf32_Addr next_init (struct link_map *l)
+Elf32_Addr
+_dl_init_next (struct link_map *map)
+{
+  unsigned int i;
+
+  /* The search list for symbol lookup is a flat list in top-down
+     dependency order, so processing that list from back to front gets us
+     breadth-first leaf-to-root order.  */
+
+  i = map->l_nsearchlist;
+  while (i-- > 0)
     {
+      struct link_map *l = map->l_searchlist[i];
+
       if (l->l_init_called)
 	/* This object is all done.  */
-	return 0;
+	continue;
+
       if (l->l_init_running)
 	{
 	  /* This object's initializer was just running.
 	     Now mark it as having run, so this object
 	     will be skipped in the future.  */
-	  l->l_init_called = 1;
 	  l->l_init_running = 0;
-	  return 0;
-	}
-
-      if (l->l_info[DT_NEEDED])
-	{
-	  /* Find each dependency in order, and see if it
-	     needs to run an initializer.  */
-	  const char *strtab
-	    = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
-	  const Elf32_Dyn *d;
-	  for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
-	    if (d->d_tag == DT_NEEDED)
-	      {
-		struct link_map *needed
-		  = _dl_map_object (l, strtab + d->d_un.d_val);
-		Elf32_Addr init;
-		--needed->l_opencount;
-		init = next_init (needed); /* Recurse on this dependency.  */
-		if (init != 0)
-		  return init;
-	      }
+	  l->l_init_called = 1;
+	  continue;
 	}
 
       if (l->l_info[DT_INIT] &&
@@ -73,17 +63,7 @@ _dl_init_next (void)
       /* No initializer for this object.
 	 Mark it so we will skip it in the future.  */
       l->l_init_called = 1;
-      return 0;
     }
 
-  /* Look for the first initializer not yet called.  */
-  l = _dl_loaded;
-  do
-    {
-      init = next_init (l);
-      l = l->l_next;
-    }
-  while (init == 0 && l);
-
-  return init;
+  return 0;
 }

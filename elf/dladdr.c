@@ -20,7 +20,6 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <link.h>
 #include <dlfcn.h>
-#include <setjmp.h>
 
 
 int
@@ -30,7 +29,6 @@ dladdr (void *address, Dl_info *info)
   struct link_map *l, *match;
   const Elf32_Sym *symtab, *matchsym;
   const char *strtab;
-  Elf32_Word symidx;
 
   /* Find the highest-addressed object that ADDRESS is not below.  */
   match = NULL;

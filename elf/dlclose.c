@@ -1,5 +1,5 @@
 /* dlclose -- Close a handle opened by `dlopen'.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,64 +32,68 @@ dlclose (void *handle)
   void doit (void)
     {
       struct link_map *map = handle;
+      struct link_map **list;
+      unsigned int i;
 
       if (map->l_opencount == 0)
 	LOSE ("shared object not open");
 
       /* Decrement the reference count.  */
-      --map->l_opencount;
+      if (--map->l_opencount > 0 || map->l_type != lt_loaded)
+	/* There are still references to this object.  Do nothing more.  */
+	return;
 
-      if (map->l_opencount == 0 && map->l_type == lt_loaded)
+      list = map->l_searchlist;
+
+      /* The search list contains a counted reference to each object it
+	 points to, the 0th elt being MAP itself.  Decrement the reference
+	 counts on all the objects MAP depends on.  */
+      for (i = 1; i < map->l_nsearchlist; ++i)
+	--list[i]->l_opencount;
+
+      /* Clear the search list so it doesn't get freed while we are still
+         using it.  We have cached it in LIST and will free it when
+         finished.  */
+      map->l_searchlist = NULL;
+
+      /* Check each element of the search list to see if all references to
+         it are gone.  */
+      for (i = 0; i < map->l_nsearchlist; ++i)
 	{
-	  /* That was the last reference, and this was a dlopen-loaded
-	     object.  We can unmap it.  */
-	  const Elf32_Phdr *ph;
-
-	  if (map->l_info[DT_FINI])
-	    /* Call its termination function.  */
-	    (*(void (*) (void)) ((void *) map->l_addr +
-				 map->l_info[DT_FINI]->d_un.d_ptr)) ();
-
-	  if (map->l_info[DT_NEEDED])
+	  struct link_map *map = list[i];
+	  if (map->l_opencount == 0 && map->l_type == lt_loaded)
 	    {
-	      /* Also close all the dependencies.  */
-	      const char *strtab
-		= (void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr;
-	      const Elf32_Dyn *d;
-	      for (d = map->l_ld; d->d_tag != DT_NULL; ++d)
-		if (d->d_tag == DT_NEEDED)
+	      /* That was the last reference, and this was a dlopen-loaded
+		 object.  We can unmap it.  */
+	      const Elf32_Phdr *ph;
+
+	      if (map->l_info[DT_FINI])
+		/* Call its termination function.  */
+		(*(void (*) (void)) ((void *) map->l_addr +
+				     map->l_info[DT_FINI]->d_un.d_ptr)) ();
+
+	      /* Unmap the segments.  */
+	      for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
+		if (ph->p_type == PT_LOAD)
 		  {
-		    /* It must already be open, since this one needed it;
-		       so dlopen will just find us its `struct link_map'
-		       and bump its reference count.  */
-		    struct link_map *o, *dep
-		      = dlopen (strtab + d->d_un.d_val, RTLD_LAZY);
-		    --dep->l_opencount; /* Lose the ref from that dlopen.  */
-		    /* Now we have the handle; we can close it for real.  */
-		    o = map;
-		    map = dep;
-		    doit ();
-		    map = o;
+		    Elf32_Addr mapstart = ph->p_vaddr & ~(ph->p_align - 1);
+		    Elf32_Addr mapend = ((ph->p_vaddr + ph->p_memsz
+					  + ph->p_align - 1)
+					 & ~(ph->p_align - 1));
+		    munmap ((caddr_t) mapstart, mapend - mapstart);
 		  }
+
+	      /* Finally, unlink the data structure and free it.  */
+	      map->l_prev->l_next = map->l_next;
+	      if (map->l_next)
+		map->l_next->l_prev = map->l_prev;
+	      if (map->l_searchlist)
+		free (map->l_searchlist);
+	      free (map);
 	    }
-
-	  /* Unmap the segments.  */
-	  for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
-	    if (ph->p_type == PT_LOAD)
-	      {
-		Elf32_Addr mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-		Elf32_Addr mapend = ((ph->p_vaddr + ph->p_memsz
-				      + ph->p_align - 1)
-				     & ~(ph->p_align - 1));
-		munmap ((caddr_t) mapstart, mapend - mapstart);
-	      }
-
-	  /* Finally, unlink the data structure and free it.  */
-	  map->l_prev->l_next = map->l_next;
-	  if (map->l_next)
-	    map->l_next->l_prev = map->l_prev;
-	  free (map);
 	}
+
+      free (list);
     }
 
   return _dlerror_run (doit) ? -1 : 0;

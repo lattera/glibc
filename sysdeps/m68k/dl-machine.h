@@ -250,14 +250,18 @@ _dl_start_user:
 	lea (%sp, %d0*4), %sp
 	| Push back the modified argument count.
 	move.l %d1, -(%sp)
+	| Push _dl_loaded as argument in _dl_init_next call below.
+	move.l ([_dl_loaded@GOT, %a5]), %d2
+0:	move.l %d2, -(%sp)
 	| Call _dl_init_next to return the address of an initializer
 	| function to run.
-0:	bsr.l _dl_init_next@PLTPC
+	bsr.l _dl_init_next@PLTPC
+	add.l #4, %sp | Pop argument.
 	| Check for zero return, when out of initializers.
 	tst.l %d0
 	jeq 1f
 	| Call the shared object initializer function.
-	| NOTE: We depend only on the registers (%a4 and %a5)
+	| NOTE: We depend only on the registers (%d2, %a4 and %a5)
 	| and the return address pushed by this call;
 	| the initializer is called with the stack just
 	| as it appears on entry, and it is free to move

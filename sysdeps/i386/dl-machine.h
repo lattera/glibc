@@ -225,14 +225,19 @@ _dl_start_user:\n\
 	leal (%esp,%eax,4), %esp\n\
 	# Push back the modified argument count.\n\
 	pushl %ecx\n\
+	# Push _dl_loaded as argument in _dl_init_next call below.\n\
+	movl _dl_loaded@GOT(%ebx), %eax\n\
+	movl (%eax), %esi\n\
+0:	pushl %esi\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\
-0:	call _dl_init_next@PLT\n\
+	call _dl_init_next@PLT\n\
+	addl $4, %esp # Pop argument.\n\
 	# Check for zero return, when out of initializers.\n\
 	testl %eax,%eax\n\
 	jz 1f\n\
 	# Call the shared object initializer function.\n\
-	# NOTE: We depend only on the registers (%ebx and %edi)\n\
+	# NOTE: We depend only on the registers (%ebx, %esi and %edi)\n\
 	# and the return address pushed by this call;\n\
 	# the initializer is called with the stack just\n\
 	# as it appears on entry, and it is free to move\n\

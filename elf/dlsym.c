@@ -27,21 +27,13 @@ void *
 dlsym (void *handle, const char *name)
 {
   struct link_map *map = handle;
-  struct link_map *real_next;
   Elf32_Addr loadbase;
   const Elf32_Sym *ref = NULL;
-  int lose;
   void doit (void)
     {
       struct link_map *scope[2] = { map, NULL };
       loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
     }
 
-  /* Confine the symbol scope to just this map.  */
-  real_next = map->l_next;
-  map->l_next = NULL;
-  lose = _dlerror_run (doit);
-  map->l_next = real_next;
-
-  return lose ? NULL : (void *) (loadbase + ref->st_value);
+  return _dlerror_run (doit) ? NULL : (void *) (loadbase + ref->st_value);
 }

@@ -21,3 +21,6 @@ m68k-*-linux*		libc=6
 
 # libhurduser.so.0.0 corresponds to hurd/*.defs as of 7 May 1996.
 *-*-gnu*		libhurduser=0.0
+
+# The -ldl interface (see <dlfcn.h>) is the same on all platforms.
+*-*-*			libdl=2

@@ -1,10 +1,41 @@
-Tue Jun  4 02:25:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+Tue Jun  4 18:57:57 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/dladdr.c: Remove #include <setjmp.h>, we don't use it.
+
+	* shlib-versions: Set libdl=2.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Use a linked list of alloca'd
+ 	elements and then scan it to fill the single malloc'd array, instead
+ 	of using realloc to grow the array in the first pass.  _dl_map_object
+	may do some mallocs that break our stream of reallocs, and the minimal
+	realloc can't handle that.
+
+	* elf/dl-init.c (_dl_init_next): Take argument, link_map whose
+ 	searchlist describes the piece of the DT_NEEDED graph to be
+ 	initialized.
+	* elf/link.h: Update prototype.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Pass _dl_loaded as argument
+	to _dl_init_next.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* elf/dl-deps.c (_dl_open): Pass new object as arg to _dl_init_next.
+
+	* elf/link.h (struct link_map): Add `l_reserved' member, soaking up
+	extra bits in last byte.
+	* elf/dl-deps.c (_dl_map_object_deps): Use that for mark bit to avoid
+	putting dup elts in search list.
+
+	* elf/dlclose.c: Use MAP->l_searchlist to find deps to close.
+
+	* elf/dlsym.c: Don't tweak linked list.  Scope array given to
+	_dl_lookup_symbol does the right thing.
 
 	* elf/Makefile (subdir_lib): Change this target to lib-noranlib.
 	(lib-noranlib): Depend on on $(extra-objs).
 
 	* errno.h: Move __END_DECLS out of #ifdef's so it matches
 	__BEGIN_DECLS.
+
+Tue Jun  4 02:25:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* stdio-common/vfprintf.c [USE_IN_LIBIO] (size_t): Don't define as
 	macro.  _IO_size_t is just an alias for the real size_t anyway.

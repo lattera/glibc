@@ -111,6 +111,7 @@ struct link_map
     unsigned int l_relocated:1;	/* Nonzero if object's relocations done.  */
     unsigned int l_init_called:1; /* Nonzero if DT_INIT function called.  */
     unsigned int l_init_running:1; /* Nonzero while DT_INIT function runs.  */
+    unsigned int l_reserved:3;	/* Reserved for internal use.  */
   };
 
 /* Internal functions of the run-time dynamic linker.
@@ -231,10 +232,11 @@ extern struct link_map *_dl_new_object (char *realname, const char *libname,
    If LAZY is nonzero, don't relocate its PLT.  */
 extern void _dl_relocate_object (struct link_map *map, int lazy);
 
-/* Return the address of the next initializer function not yet run.
-   When there are no more initializers to be run, this returns zero.
-   The functions are returned in the order they should be called.  */
-extern Elf32_Addr _dl_init_next (void);
+/* Return the address of the next initializer function for MAP or one of
+   its dependencies that has not yet been run.  When there are no more
+   initializers to be run, this returns zero.  The functions are returned
+   in the order they should be called.  */
+extern Elf32_Addr _dl_init_next (struct link_map *map);
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */
