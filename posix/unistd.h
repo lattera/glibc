@@ -1070,7 +1070,7 @@ extern int rename __P ((__const char *__old, __const char *__new));
 #endif
 
 
-#if defined __USE_POSIX199309 || defined __USE_UNIX98
+#ifdef __USE_POSIX199309
 /* This function is only available if the system has POSIX threads.  */
 
 /* Install handlers to be called when a new process is created with FORK.

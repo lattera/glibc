@@ -1,3 +1,10 @@
+1998-07-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/unistd.h: Simplify #ifdefs.
+
+	* libio/libio.h: Undo last change due to possible C++ problems.
+	* libio/fileops.h: Likewise.
+
 1998-07-09 13:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* grp/grp.h: Define gid_t also for __USE_XOPEN.

@@ -947,7 +947,7 @@ new type.
 
 {UD,AJ} On Linux, the use of kernel headers is reduced to the minimum.  This
 gives Linus the ability to change the headers more freely.  Also, user
-programs are now insulated from changes in the size of kernel data
+programs are not insulated from changes in the size of kernel data
 structures.
 
 For example, the sigset_t type is 32 or 64 bits wide in the kernel.  In
@@ -1069,7 +1069,7 @@ To fix those programs you've got to initialize the variable at run time.
 This can be done, e.g. in main, like:
 
 static FILE *InPtr;
-int main(void) 
+int main(void)
 {
   InPtr = stdin;
 }

@@ -286,24 +286,10 @@ extern int __overflow __P ((_IO_FILE *, int));
        ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end \
 	  && __underflow (_fp) == EOF ? EOF \
 	: *(unsigned char *) (_fp)->_IO_read_ptr)
-
-#ifdef __GNUC__
-# define _IO_putc_unlocked(_ch, _fp) \
-  (__extension__ \
-   ({ unsigned char _chl = (_ch); \
-      (((_fp)->_IO_write_ptr >= (_fp)->_IO_write_end \
-	|| (_chl == '\n' && ((_fp)->_flags & _IO_LINE_BUF))) \
-       ? __overflow (_fp, (unsigned char) _chl) \
-       : (unsigned char) (*(_fp)->_IO_write_ptr++ = _chl)); }))
-#else
-# define _IO_putc_unlocked(_ch, _fp) \
+#define _IO_putc_unlocked(_ch, _fp) \
    (((_fp)->_IO_write_ptr >= (_fp)->_IO_write_end) \
     ? __overflow (_fp, (unsigned char) (_ch)) \
-    : ((unsigned char) (*(_fp)->_IO_write_ptr = (_ch)) == '\n' \
-       && ((_fp)->_flags & _IO_LINE_BUF) \
-       ? __overflow (_fp, (unsigned char) *(_fp)->_IO_write_ptr) \
-       : (unsigned char) (*(_fp)->_IO_write_ptr++)))
-#endif
+    : (unsigned char) (*(_fp)->_IO_write_ptr++ = (_ch)))
 
 #define _IO_feof_unlocked(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
 #define _IO_ferror_unlocked(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
