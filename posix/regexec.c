@@ -2193,6 +2193,7 @@ check_subexp_matching_top (dfa, mctx, cur_nodes, str_idx)
     {
       int node = cur_nodes->elems[node_idx];
       if (dfa->nodes[node].type == OP_OPEN_SUBEXP
+	  && dfa->nodes[node].opr.idx < (8 * sizeof (dfa->used_bkref_map))
 	  && dfa->used_bkref_map & (1 << dfa->nodes[node].opr.idx))
 	{
 	  err = match_ctx_add_subtop (mctx, node, str_idx);

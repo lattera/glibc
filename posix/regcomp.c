@@ -1650,12 +1650,11 @@ peek_token (token, input, syntax)
       token->type = OP_PERIOD;
       break;
     case '^':
-      if (!(syntax & RE_CONTEXT_INDEP_ANCHORS) &&
+      if (!(syntax & (RE_CONTEXT_INDEP_ANCHORS | RE_CARET_ANCHORS_HERE)) &&
 	  re_string_cur_idx (input) != 0)
 	{
 	  char prev = re_string_peek_byte (input, -1);
-	  if (prev != '|' && prev != '(' &&
-	      (!(syntax & RE_NEWLINE_ALT) || prev != '\n'))
+	  if (!(syntax & RE_NEWLINE_ALT) || prev != '\n')
 	    break;
 	}
       token->type = ANCHOR;
@@ -1790,7 +1789,7 @@ parse (regexp, preg, syntax, err)
   bin_tree_t *tree, *eor, *root;
   re_token_t current_token;
   int new_idx;
-  current_token = fetch_token (regexp, syntax);
+  current_token = fetch_token (regexp, syntax | RE_CARET_ANCHORS_HERE);
   tree = parse_reg_exp (regexp, preg, &current_token, syntax, 0, err);
   if (BE (*err != REG_NOERROR && tree == NULL, 0))
     return NULL;
@@ -1837,7 +1836,7 @@ parse_reg_exp (regexp, preg, token, syntax, nest, err)
     {
       re_token_t alt_token = *token;
       new_idx = re_dfa_add_node (dfa, alt_token, 0);
-      *token = fetch_token (regexp, syntax);
+      *token = fetch_token (regexp, syntax | RE_CARET_ANCHORS_HERE);
       if (token->type != OP_ALT && token->type != END_OF_RE
 	  && (nest == 0 || token->type != OP_CLOSE_SUBEXP))
 	{

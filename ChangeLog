@@ -1,3 +1,15 @@
+2003-09-20  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (peek_token): Don't look back for ( or |
+	to check whether to treat a caret as special.  It fails
+	for the (extended) regex \(^.
+	(parse, parse_reg_exp): Pass RE_CARET_ANCHORS_HERE to fetch_token.
+	* posix/regex.h: Define RE_CARET_ANCHORS_HERE.
+
+	* posix/regexec.c: Check out of bounds value before shifting.
+
+	* posix/regex_internal.h: Define __attribute for non-gcc.
+
 2003-09-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/atomic.h (atomic_compare_and_exchange_val_rel,

@@ -106,6 +106,12 @@
 # define attribute_hidden
 #endif /* not _LIBC */
 
+#ifdef __GNUC__
+# define __attribute __attribute__
+#else
+# define __attribute
+#endif
+
 extern const char __re_error_msgid[] attribute_hidden;
 extern const size_t __re_error_msgid_idx[] attribute_hidden;
 
