@@ -361,15 +361,17 @@ INTDEF (svc_getreq)
 void
 svc_getreqset (fd_set *readfds)
 {
-  register u_int32_t mask;
-  register u_int32_t *maskp;
+  register fd_mask mask;
+  register fd_mask *maskp;
   register int setsize;
   register int sock;
   register int bit;
 
   setsize = _rpc_dtablesize ();
-  maskp = (u_int32_t *) readfds->fds_bits;
-  for (sock = 0; sock < setsize; sock += 32)
+  if (setsize > FD_SETSIZE)
+    setsize = FD_SETSIZE;
+  maskp = readfds->fds_bits;
+  for (sock = 0; sock < setsize; sock += NFDBITS)
     for (mask = *maskp++; (bit = ffs (mask)); mask ^= (1 << (bit - 1)))
       INTUSE(svc_getreq_common) (sock + bit - 1);
 }

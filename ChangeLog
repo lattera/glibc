@@ -1,3 +1,9 @@
+2003-08-27  Phil Knirsch <pknirsch@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/svc.c (svc_getreqset): Fix fds_bits reading on 64-bit
+	big endian arches.  Don't read beyond end of fds_bits array.
+
 2003-04-27  Bruno Haible  <bruno@clisp.org>
 
 	* manual/message.texi (Advanced gettext functions): Add information
