@@ -1,3 +1,9 @@
+1998-12-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Examples/ex3.c: Wait until all threads are started before
+	searching for the number to avoid race condition on very fast
+	systems.
+
 1998-12-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/pthread/pthread.h: Remove __pthread_setcanceltype

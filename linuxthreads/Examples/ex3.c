@@ -19,6 +19,7 @@ void print_it(void *);
 pthread_t threads[NUM_THREADS];
 pthread_mutex_t lock;
 int tries;
+volatile int started;
 
 int main(int argc, char ** argv)
 {
@@ -33,8 +34,8 @@ int main(int argc, char ** argv)
   pthread_mutex_init(&lock, NULL);
 
   /* Create the searching threads */
-  for (i=0; i<NUM_THREADS; i++)
-    pthread_create(&threads[i], NULL, search, (void *)pid);
+  for (started=0; started<NUM_THREADS; started++)
+    pthread_create(&threads[started], NULL, search, (void *)pid);
 
   /* Wait for (join) all the searching threads */
   for (i=0; i<NUM_THREADS; i++)
@@ -74,7 +75,13 @@ void *search(void *arg)
 
   /* use the thread ID to set the seed for the random number generator */
   /* Since srand and rand are not thread-safe, serialize with lock */
-  pthread_mutex_lock(&lock);
+
+  /* Try to lock the mutex lock --
+     if locked, check to see if the thread has been cancelled
+     if not locked then continue */
+  while (pthread_mutex_trylock(&lock) == EBUSY)
+    pthread_testcancel();
+
   srand((int)tid);
   i = rand() & 0xFFFFFF;
   pthread_mutex_unlock(&lock);
@@ -86,6 +93,9 @@ void *search(void *arg)
 
   pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
   pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+
+  while (started < NUM_THREADS)
+    sched_yield ();
 
   /* Push the cleanup routine (print_it) onto the thread
      cleanup stack.  This routine will be called when the
