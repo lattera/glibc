@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef __GNUC__
-#error This file uses GNU C extensions; you must compile with GCC.
-#endif
-
-/*#include <setjmp.h>*/
-#include "jmp_buf.h"
-#define jmp_buf __jmp_buf
+/* Global register vars must come before any function defn.  */
 
 register long int
   r9 asm ("$9"), r10 asm ("$10"), r11 asm ("$11"), r12 asm ("$12"),
@@ -36,13 +30,14 @@ register double
   f6 asm ("$f6"), f7 asm ("$f7"), f8 asm ("$f8"), f9 asm ("$f9");
 #endif
 
-/* Jump to the position specified by ENV, causing the
-   setjmp call there to return VAL, or 1 if VAL is 0.
+#include <setjmp.h>
 
-   We declare this function to return an `int';
-   in fact, the value being returned is going to the caller of setjmp.  */
-volatile void
-__longjmp (const jmp_buf env, int val)
+
+/* Jump to the position specified by ENV, causing the
+   setjmp call there to return VAL, or 1 if VAL is 0.  */
+__NORETURN 
+void
+__longjmp (const __jmp_buf env, int val)
 {
   /* Restore the integer registers.  */
   r9 = env[0].__9;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
    Derived from @(#)_setjmp.s	5.7 (Berkeley) 6/27/88,
    Copyright (c) 1980 Regents of the University of California.
 
@@ -31,7 +31,7 @@ Cambridge, MA 02139, USA.  */
    setjmp call there to return VAL, or 1 if VAL is 0.  */
 __NORETURN
 void
-DEFUN(__longjmp, (env, val), CONST jmp_buf env AND int val)
+DEFUN(__longjmp, (env, val), CONST __jmp_buf env AND int val)
 {
   register long int *fp asm("fp");
   long int *regsave;
