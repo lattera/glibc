@@ -28,7 +28,7 @@ fedisableexcept (int excepts)
   /* Get the current control word.  */
   __asm__ ("fstcw %0" : "=m" (*&new_exc));
 
-  old_exc = new_exc & FE_ALL_EXCEPT;
+  old_exc = (~new_exc) & FE_ALL_EXCEPT;
 
   excepts &= FE_ALL_EXCEPT;
 

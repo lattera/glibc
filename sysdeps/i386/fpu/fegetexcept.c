@@ -1,5 +1,5 @@
 /* Get enabled floating-point exceptions.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -28,5 +28,5 @@ fegetexcept (void)
   /* Get the current control word.  */
   __asm__ ("fstcw %0" : "=m" (*&exc));
 
-  return exc & FE_ALL_EXCEPT;
+  return (~exc) & FE_ALL_EXCEPT;
 }

@@ -29,7 +29,7 @@ feenableexcept (int excepts)
   __asm__ ("fstcw %0" : "=m" (*&new_exc));
 
   excepts &= FE_ALL_EXCEPT;
-  old_exc = new_exc & FE_ALL_EXCEPT;
+  old_exc = (~new_exc) & FE_ALL_EXCEPT;
 
   new_exc &= ~excepts;
   __asm__ ("fldcw %0" : : "m" (*&new_exc));
