@@ -11,6 +11,8 @@
 	stuff in the current sysdeps/gnu version is no longer required.
 	* sysdeps/generic/Makefile: Remove rules for generating siglist.c.
 	* sysdeps/generic/make_siglist.c: File removed.
+	* sysdeps/mach/hurd/siglist.h: Use #include_next.
+	* sysdeps/unix/sysv/linux/siglist.h: Likewise.
 
 1999-06-16  Roland McGrath  <roland@baalperazim.frob.com>
 

@@ -18,6 +18,6 @@
 
 /* This file is included multiple times.  */
 
-#include <sysdeps/gnu/siglist.h> /* This file defines the canonical list.  */
+#include_next <siglist.h>	/* Get the canonical list.  */
 
 #define	OLD_SIGLIST_SIZE_STR	"33" /* For GLIBC_2.0 binary compatibility.  */
