@@ -1,8 +1,6 @@
 /* gettextP.h -- header describing internals of gettext library
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-
-This file is part of the GNU C Library.  Its master source is NOT part of
-the C library, however.  The master source lives in /gd/gnu/lib.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,11 +14,13 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
 #ifndef _GETTEXTP_H
 #define _GETTEXTP_H
+
+#include "loadinfo.h"
 
 /* @@ end of prolog @@ */
 
@@ -49,12 +49,6 @@ SWAP (i)
 
 struct loaded_domain
 {
-  struct loaded_domain *next;
-  struct loaded_domain *successor[63];
-
-  const char *filename;
-  int decided;
-
   const char *data;
   int must_swap;
   nls_uint32 nstrings;
@@ -71,12 +65,10 @@ struct binding
   char *dirname;
 };
 
-struct loaded_domain *_nl_find_domain PARAMS ((const char *__dirname,
-					       char *__locale,
-					       const char *__domainname));
-void _nl_load_domain PARAMS ((struct loaded_domain *__domain));
-
-const char *_nl_expand_alias PARAMS ((const char *__name));
+struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
+						 char *__locale,
+						 const char *__domainname));
+void _nl_load_domain PARAMS ((struct loaded_l10nfile *__domain));
 
 /* @@ begin of epilog @@ */
 

@@ -253,7 +253,7 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
       |* XXX We should test whether really an unspecified character *|
       |* exists before giving the message.			    *|
       \**************************************************************/
-      u32_t weight;
+      u_int32_t weight;
 
       error (0, 0, _("no definition of `UNDEFINED'"));
 
@@ -262,7 +262,7 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
 
       for (cnt = 0; cnt < collate->nrules; ++cnt)
 	{
-	  u32_t one = 1;
+	  u_int32_t one = 1;
 	  obstack_grow (&collate->element_mem, &one, sizeof (one));
 	}
 
@@ -286,7 +286,7 @@ void
 collate_output (struct localedef_t *locale, const char *output_path)
 {
   struct locale_collate_t *collate = locale->categories[LC_COLLATE].collate;
-  u32_t table_size, table_best, level_best, sum_best;
+  u_int32_t table_size, table_best, level_best, sum_best;
   void *last;
   element_t *pelem;
   wchar_t *name;
@@ -294,11 +294,11 @@ collate_output (struct localedef_t *locale, const char *output_path)
   const size_t nelems = _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE);
   struct iovec iov[2 + nelems];
   struct locale_file data;
-  u32_t idx[nelems];
+  u_int32_t idx[nelems];
   struct obstack non_simple;
   size_t cnt, entry_size;
-  u32_t undefined_offset = UINT_MAX;
-  u32_t *table, *extra, *table2, *extra2;
+  u_int32_t undefined_offset = UINT_MAX;
+  u_int32_t *table, *extra, *table2, *extra2;
   size_t extra_len;
 
   sum_best = UINT_MAX;
@@ -352,12 +352,12 @@ Computing table size for collation information might take a while..."),
   iov[1].iov_len = sizeof (idx);
 
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_NRULES)].iov_base = &collate->nrules;
-  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_NRULES)].iov_len = sizeof (u32_t);
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_NRULES)].iov_len = sizeof (u_int32_t);
 
-  table = (u32_t *) alloca (collate->nrules * sizeof (u32_t));
+  table = (u_int32_t *) alloca (collate->nrules * sizeof (u_int32_t));
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_RULES)].iov_base = table;
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_RULES)].iov_len
-    = collate->nrules * sizeof (u32_t);
+    = collate->nrules * sizeof (u_int32_t);
   /* Another trick here.  Describing the collation method needs only a
      few bits (3, to be exact).  But the binary file should be
      accessible by maschines with both endianesses and so we store both
@@ -366,15 +366,16 @@ Computing table size for collation information might take a while..."),
     table[cnt] = collate->rules[cnt] | SWAPU32 (collate->rules[cnt]);
 
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)].iov_base = &table_best;
-  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)].iov_len = sizeof (u32_t);
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)].iov_len = sizeof (u_int32_t);
 
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].iov_base = &level_best;
-  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].iov_len = sizeof (u32_t);
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].iov_len
+    = sizeof (u_int32_t);
 
   entry_size = 1 + MAX (collate->nrules, 2);
 
-  table = (u32_t *) alloca (table_best * level_best * entry_size
-			    * sizeof (table[0]));
+  table = (u_int32_t *) alloca (table_best * level_best * entry_size
+				* sizeof (table[0]));
   memset (table, '\0', table_best * level_best * entry_size
 	  * sizeof (table[0]));
 
@@ -382,7 +383,7 @@ Computing table size for collation information might take a while..."),
   /* Macros for inserting in output table.  */
 #define ADD_VALUE(expr)							      \
   do {									      \
-    u32_t to_write = (u32_t) expr;					      \
+    u_int32_t to_write = (u_int32_t) expr;				      \
     obstack_grow (&non_simple, &to_write, sizeof (to_write));		      \
   } while (0)
 
@@ -393,7 +394,7 @@ Computing table size for collation information might take a while..."),
     ADD_VALUE (len);							      \
 									      \
     wlen = wcslen (pelem->name);					      \
-    obstack_grow (&non_simple, pelem->name, (wlen + 1) * sizeof (u32_t));     \
+    obstack_grow (&non_simple, pelem->name, (wlen + 1) * sizeof (u_int32_t)); \
 									      \
     idx = collate->nrules;						      \
     for (cnt = 0; cnt < collate->nrules; ++cnt)				      \
@@ -417,14 +418,14 @@ Computing table size for collation information might take a while..."),
     table[(level * table_best + slot) * entry_size + 1]			      \
       = FORWARD_CHAR;							      \
     table[(level * table_best + slot) * entry_size + 2]			      \
-      = obstack_object_size (&non_simple) / sizeof (u32_t);		      \
+      = obstack_object_size (&non_simple) / sizeof (u_int32_t);		      \
 									      \
     /* Here we have to construct the non-simple table entry.  First	      \
        compute the total length of this entry.  */			      \
     for (runp = (pelem); runp != NULL; runp = runp->next)		      \
       if (runp->ordering != NULL)					      \
 	{								      \
-	  u32_t value;							      \
+	  u_int32_t value;						      \
 	  size_t cnt;							      \
 									      \
 	  value = 1 + wcslen (runp->name) + 1;				      \
@@ -513,7 +514,7 @@ Computing table size for collation information might take a while..."),
       {
 	/* We have to fill in the information from the UNDEFINED
 	   entry.  */
-	table[cnt * entry_size] = (u32_t) cnt;
+	table[cnt * entry_size] = (u_int32_t) cnt;
 
 	if (collate->undefined.ordering_len == collate->nrules)
 	  {
@@ -593,18 +594,18 @@ Computing table size for collation information might take a while..."),
 
   /* Finish the extra block.  */
   extra_len = obstack_object_size (&non_simple);
-  extra = (u32_t *) obstack_finish (&non_simple);
-  assert ((extra_len % sizeof (u32_t)) == 0);
+  extra = (u_int32_t *) obstack_finish (&non_simple);
+  assert ((extra_len % sizeof (u_int32_t)) == 0);
 
   /* Now we have to build the two array for the other byte ordering.  */
-  table2 = (u32_t *) alloca (table_best * level_best * entry_size
-			     * sizeof (table[0]));
-  extra2 = (u32_t *) alloca (extra_len);
+  table2 = (u_int32_t *) alloca (table_best * level_best * entry_size
+				 * sizeof (table[0]));
+  extra2 = (u_int32_t *) alloca (extra_len);
 
   for (cnt = 0; cnt < table_best * level_best * entry_size; ++cnt)
     table2[cnt] = SWAPU32 (table[cnt]);
 
-  for (cnt = 0; cnt < extra_len / sizeof (u32_t); ++cnt)
+  for (cnt = 0; cnt < extra_len / sizeof (u_int32_t); ++cnt)
     extra2[cnt] = SWAPU32 (extra2[cnt]);
 
   /* Store table adresses and lengths.   */
@@ -639,7 +640,7 @@ Computing table size for collation information might take a while..."),
 #endif
 
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_UNDEFINED)].iov_base = &undefined_offset;
-  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_UNDEFINED)].iov_len = sizeof (u32_t);
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_UNDEFINED)].iov_len = sizeof (u_int32_t);
 
   /* Update idx array.  */
   idx[0] = iov[0].iov_len + iov[1].iov_len;

@@ -20,6 +20,7 @@ nanosleep	-	nanosleep	2	nanosleep
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe	pipe
 reboot		-	reboot		3	reboot
+s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 sched_setp	-	sched_setparam	2	__sched_setparam	sched_setparam

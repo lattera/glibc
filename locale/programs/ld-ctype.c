@@ -59,9 +59,9 @@ void *xrealloc (void *__ptr, size_t __n);
 /* To be compatible with former implementations we for now restrict
    the number of bits for character classes to 16.  When compatibility
    is not necessary anymore increase the number to 32.  */
-#define char_class_t u16_t
+#define char_class_t u_int16_t
 #define CHAR_CLASS_TRANS SWAPU16
-#define char_class32_t u32_t
+#define char_class32_t u_int32_t
 #define CHAR_CLASS32_TRANS SWAPU32
 
 
@@ -72,13 +72,13 @@ struct locale_ctype_t
   size_t charnames_max;
   size_t charnames_act;
 
-  /* We will allow up to 8 * sizeof(u32_t) - 1 character classes.  */
-#define MAX_NR_CHARCLASS (8 * sizeof (u32_t) - 1)
+  /* We will allow up to 8 * sizeof(u_int32_t) - 1 character classes.  */
+#define MAX_NR_CHARCLASS (8 * sizeof (u_int32_t) - 1)
   int nr_charclass;
   const char *classnames[MAX_NR_CHARCLASS];
   unsigned long int current_class_mask;
   unsigned int last_class_char;
-  u32_t *class_collection;
+  u_int32_t *class_collection;
   size_t class_collection_max;
   size_t class_collection_act;
   unsigned long int class_done;
@@ -87,7 +87,7 @@ struct locale_ctype_t
      increase it.  But I doubt it will.  --drepper@gnu */
 #define MAX_NR_CHARMAP 16
   const char *mapnames[MAX_NR_CHARMAP];
-  u32_t *map_collection[MAX_NR_CHARMAP];
+  u_int32_t *map_collection[MAX_NR_CHARMAP];
   unsigned int map_collection_max[MAX_NR_CHARMAP];
   unsigned int map_collection_act[MAX_NR_CHARMAP];
   size_t map_collection_nr;
@@ -97,16 +97,16 @@ struct locale_ctype_t
   int tolower_done;
 
   /* The arrays for the binary representation.  */
-  u32_t plane_size;
-  u32_t plane_cnt;
+  u_int32_t plane_size;
+  u_int32_t plane_cnt;
   char_class_t *ctype_b;
   char_class32_t *ctype32_b;
-  u32_t *names_el;
-  u32_t *names_eb;
-  u32_t **map_eb;
-  u32_t **map_el;
-  u32_t *class_name_ptr;
-  u32_t *map_name_ptr;
+  u_int32_t *names_el;
+  u_int32_t *names_eb;
+  u_int32_t **map_eb;
+  u_int32_t **map_el;
+  u_int32_t *class_name_ptr;
+  u_int32_t *map_name_ptr;
   unsigned char *width;
 };
 
@@ -117,8 +117,8 @@ static void ctype_class_newP (struct linereader *lr,
 static void ctype_map_newP (struct linereader *lr,
 			    struct locale_ctype_t *ctype,
 			    const char *name, struct charset_t *charset);
-static u32_t *find_idx (struct locale_ctype_t *ctype, u32_t **table,
-			size_t *max, size_t *act, unsigned int idx);
+static u_int32_t *find_idx (struct locale_ctype_t *ctype, u_int32_t **table,
+			    size_t *max, size_t *act, unsigned int idx);
 static void set_class_defaults (struct locale_ctype_t *ctype,
 				struct charset_t *charset);
 static void allocate_arrays (struct locale_ctype_t *ctype,
@@ -167,8 +167,9 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
   ctype_class_newP (lr, ctype, "alnum");
 
   ctype->class_collection_max = charset->mb_cur_max == 1 ? 256 : 512;
-  ctype->class_collection = (u32_t *) xmalloc (sizeof (unsigned long int)
-					       * ctype->class_collection_max);
+  ctype->class_collection
+    = (u_int32_t *) xmalloc (sizeof (unsigned long int)
+			     * ctype->class_collection_max);
   memset (ctype->class_collection, '\0',
 	  sizeof (unsigned long int) * ctype->class_collection_max);
   ctype->class_collection_act = 256;
@@ -348,7 +349,7 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
   struct iovec iov[2 + nelems + ctype->nr_charclass
 		  + ctype->map_collection_nr];
   struct locale_file data;
-  u32_t idx[nelems];
+  u_int32_t idx[nelems];
   size_t elem, cnt, offset, total;
 
 
@@ -397,20 +398,20 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 	  CTYPE_DATA (_NL_CTYPE_TOUPPER_EB,
 		      ctype->map_eb[0],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
-		      * sizeof (u32_t));
+		      * sizeof (u_int32_t));
 	  CTYPE_DATA (_NL_CTYPE_TOLOWER_EB,
 		      ctype->map_eb[1],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
-		      * sizeof (u32_t));
+		      * sizeof (u_int32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TOUPPER_EL,
 		      ctype->map_el[0],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
-		      * sizeof (u32_t));
+		      * sizeof (u_int32_t));
 	  CTYPE_DATA (_NL_CTYPE_TOLOWER_EL,
 		      ctype->map_el[1],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
-		      * sizeof (u32_t));
+		      * sizeof (u_int32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_CLASS32,
 		      ctype->ctype32_b,
@@ -418,16 +419,16 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 		       * sizeof (char_class32_t)));
 
 	  CTYPE_DATA (_NL_CTYPE_NAMES_EB,
-		      ctype->names_eb,
-		      ctype->plane_size * ctype->plane_cnt * sizeof (u32_t));
+		      ctype->names_eb, (ctype->plane_size * ctype->plane_cnt
+					* sizeof (u_int32_t)));
 	  CTYPE_DATA (_NL_CTYPE_NAMES_EL,
-		      ctype->names_el,
-		      ctype->plane_size * ctype->plane_cnt * sizeof (u32_t));
+		      ctype->names_el, (ctype->plane_size * ctype->plane_cnt
+					* sizeof (u_int32_t)));
 
 	  CTYPE_DATA (_NL_CTYPE_HASH_SIZE,
-		      &ctype->plane_size, sizeof (u32_t));
+		      &ctype->plane_size, sizeof (u_int32_t));
 	  CTYPE_DATA (_NL_CTYPE_HASH_LAYERS,
-		      &ctype->plane_cnt, sizeof (u32_t));
+		      &ctype->plane_cnt, sizeof (u_int32_t));
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_CLASS_NAMES):
 	    /* The class name array.  */
@@ -485,7 +486,7 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 
 	  iov[2 + elem + offset].iov_len = ((ctype->plane_size
 					     * ctype->plane_cnt + 128)
-					    * sizeof (u32_t));
+					    * sizeof (u_int32_t));
 
 	  if (elem + 1 < nelems)
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
@@ -825,10 +826,10 @@ implementation limit: no more than %d character maps allowed"),
   else
     ctype->map_collection_max[cnt] = max_chars;
 
-  ctype->map_collection[cnt] =
-    (u32_t *) xmalloc (sizeof (u32_t) * ctype->map_collection_max[cnt]);
+  ctype->map_collection[cnt] = (u_int32_t *)
+    xmalloc (sizeof (u_int32_t) * ctype->map_collection_max[cnt]);
   memset (ctype->map_collection[cnt], '\0',
-	  sizeof (u32_t) * ctype->map_collection_max[cnt]);
+	  sizeof (u_int32_t) * ctype->map_collection_max[cnt]);
   ctype->map_collection_act[cnt] = 256;
 
   ++ctype->map_collection_nr;
@@ -837,8 +838,8 @@ implementation limit: no more than %d character maps allowed"),
 
 /* We have to be prepared that TABLE, MAX, and ACT can be NULL.  This
    is possible if we only want ot extend the name array.  */
-static u32_t *
-find_idx (struct locale_ctype_t *ctype, u32_t **table, size_t *max,
+static u_int32_t *
+find_idx (struct locale_ctype_t *ctype, u_int32_t **table, size_t *max,
 	  size_t *act, unsigned int idx)
 {
   size_t cnt;
@@ -878,8 +879,9 @@ find_idx (struct locale_ctype_t *ctype, u32_t **table, size_t *max,
 	  while (*max <= cnt);
 
 	  *table =
-	    (u32_t *) xrealloc (*table, *max * sizeof (unsigned long int));
-	  memset (&(*table)[old_max], '\0', (*max - old_max) * sizeof (u32_t));
+	    (u_int32_t *) xrealloc (*table, *max * sizeof (unsigned long int));
+	  memset (&(*table)[old_max], '\0',
+		  (*max - old_max) * sizeof (u_int32_t));
 	}
 
       (*table)[cnt] = 0;
@@ -1219,10 +1221,12 @@ Computing table size for character classes might take a while..."),
 # define NAMES_B2 ctype->names_el
 #endif
 
-  ctype->names_eb = (u32_t *) xcalloc (ctype->plane_size * ctype->plane_cnt,
-				       sizeof (u32_t));
-  ctype->names_el = (u32_t *) xcalloc (ctype->plane_size * ctype->plane_cnt,
-				       sizeof (u32_t));
+  ctype->names_eb = (u_int32_t *) xcalloc (ctype->plane_size
+					   * ctype->plane_cnt,
+					   sizeof (u_int32_t));
+  ctype->names_el = (u_int32_t *) xcalloc (ctype->plane_size
+					   * ctype->plane_cnt,
+					   sizeof (u_int32_t));
 
   for (idx = 1; idx < 256; ++idx)
     NAMES_B1[idx] = idx;
@@ -1286,10 +1290,10 @@ Computing table size for character classes might take a while..."),
       = TRANS32 (ctype->class_collection[idx]);
 
   /* Room for table of mappings.  */
-  ctype->map_eb = (u32_t **) xmalloc (ctype->map_collection_nr
-				      * sizeof (u32_t *));
-  ctype->map_el = (u32_t **) xmalloc (ctype->map_collection_nr
-				      * sizeof (u32_t *));
+  ctype->map_eb = (u_int32_t **) xmalloc (ctype->map_collection_nr
+					  * sizeof (u_int32_t *));
+  ctype->map_el = (u_int32_t **) xmalloc (ctype->map_collection_nr
+					  * sizeof (u_int32_t *));
 
   /* Fill in all mappings.  */
   for (idx = 0; idx < ctype->map_collection_nr; ++idx)
@@ -1297,12 +1301,12 @@ Computing table size for character classes might take a while..."),
       unsigned int idx2;
 
       /* Allocate table.  */
-      ctype->map_eb[idx] = (u32_t *) xmalloc ((ctype->plane_size
-					       * ctype->plane_cnt + 128)
-					      * sizeof (u32_t));
-      ctype->map_el[idx] = (u32_t *) xmalloc ((ctype->plane_size
-					       * ctype->plane_cnt + 128)
-					      * sizeof (u32_t));
+      ctype->map_eb[idx] = (u_int32_t *) xmalloc ((ctype->plane_size
+						   * ctype->plane_cnt + 128)
+						  * sizeof (u_int32_t));
+      ctype->map_el[idx] = (u_int32_t *) xmalloc ((ctype->plane_size
+						   * ctype->plane_cnt + 128)
+						  * sizeof (u_int32_t));
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 # define MAP_B1 ctype->map_el
@@ -1314,7 +1318,7 @@ Computing table size for character classes might take a while..."),
 
       /* Copy default value (identity mapping).  */
       memcpy (&MAP_B1[idx][128], NAMES_B1,
-	      ctype->plane_size * ctype->plane_cnt * sizeof (u32_t));
+	      ctype->plane_size * ctype->plane_cnt * sizeof (u_int32_t));
 
       /* Copy values from collection.  */
       for (idx2 = 0; idx2 < ctype->map_collection_act[idx]; ++idx2)
@@ -1336,10 +1340,10 @@ Computing table size for character classes might take a while..."),
     }
 
   /* Extra array for class and map names.  */
-  ctype->class_name_ptr = (u32_t *) xmalloc (ctype->nr_charclass
-					     * sizeof (u32_t));
-  ctype->map_name_ptr = (u32_t *) xmalloc (ctype->map_collection_nr
-					   * sizeof (u32_t));
+  ctype->class_name_ptr = (u_int32_t *) xmalloc (ctype->nr_charclass
+						 * sizeof (u_int32_t));
+  ctype->map_name_ptr = (u_int32_t *) xmalloc (ctype->map_collection_nr
+					       * sizeof (u_int32_t));
 
   /* Array for width information.  Because the expected width are very
      small we use only one single byte.  This save space and we need

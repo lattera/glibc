@@ -1,6 +1,6 @@
 /* strlen -- Compute length og NUL terminated string.
 Highly optimized version for ix86, x>=5.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -102,7 +102,6 @@ L1:
 	jnc L3			/* previous addl caused overflow? */
 
 	xorl %ecx, %edx		/* (word+magic)^word */
-	subl $magic, %ecx	/* undo previous addl to restore word */
 
 	andl $~magic, %edx	/* any of the carry flags set? */
 
@@ -119,7 +118,6 @@ L1:
 	jnc L3			/* previous addl caused overflow? */
 
 	xorl %ecx, %edx		/* (word+magic)^word */
-	subl $magic, %ecx	/* undo previous addl to restore word */
 
 	andl $~magic, %edx	/* any of the carry flags set? */
 
@@ -136,7 +134,6 @@ L1:
 	jnc L3			/* previous addl caused overflow? */
 
 	xorl %ecx, %edx		/* (word+magic)^word */
-	subl $magic, %ecx	/* undo previous addl to restore word */
 
 	andl $~magic, %edx	/* any of the carry flags set? */
 
@@ -149,11 +146,10 @@ L1:
 	subl %ecx, %edx		/* first step to negate word */
 	addl $magic, %ecx	/* add magic word */
 
-	decl %edx		/* wcomplete negation of ord */
+	decl %edx		/* complete negation of word */
 	jnc L3			/* previous addl caused overflow? */
 
 	xorl %ecx, %edx		/* (word+magic)^word */
-	subl $magic, %ecx	/* undo previous addl to restore word */
 
 	andl $~magic, %edx	/* any of the carry flags set? */
 
@@ -161,8 +157,9 @@ L1:
 
 
 L3:	subl $4, %eax		/* correct too early pointer increment */
-	testb %cl, %cl		/* lowest byte NUL? */
+	subl $magic, %ecx
 
+	cmpb $0, %cl		/* lowest byte NUL? */
 	jz L2			/* yes => return */
 
 	inc %eax		/* increment pointer */

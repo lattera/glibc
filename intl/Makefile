@@ -21,19 +21,26 @@
 subdir = intl
 headers = libintl.h
 routines = bindtextdom dcgettext dgettext gettext	\
-	   finddomain loadmsgcat localealias textdomain
-distribute = gettext.h gettextP.h hash-string.h
+	   finddomain loadmsgcat localealias textdomain	\
+	   l10nflist explodename
+distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias
+
+install-others = $(localedir)/locale.alias
 
 include ../Rules
 
 CPPFLAGS += -D'GNULOCALEDIR="$(localedir)"' \
-	    -D'LOCALE_ALIAS_PATH="$(localedir):$(nlsdir)"'
+	    -D'LOCALE_ALIAS_PATH="$(localedir):$(i18ndir)"'
+
+$(localedir)/locale.alias: locale.alias
+	$(do-install)
 
 ifdef gettext-srcdir
 
 %.h:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.glibc; $(copysrc)
 %.c:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.c; $(copysrc)
 %.h:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.h; $(copysrc)
+locale.alias:: ../gpl2lgpl.sed $(gettext-srcdir)/misc/locale.alias; $(copysrc)
 
 define copysrc
 sed -f $^ > $@.new

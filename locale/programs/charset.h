@@ -53,7 +53,7 @@ struct charset_t
 /* We need one value to mark the error case.  Let's use 0xffffffff.
    I.e., it is placed in the last page of ISO 10646.  For now only the
    first is used and we have plenty of room.  */
-#define ILLEGAL_CHAR_VALUE 0xffffffffu
+#define ILLEGAL_CHAR_VALUE ((wchar_t) 0xffffffffu)
 
 
 /* Prototypes for charmap handling functions.  */

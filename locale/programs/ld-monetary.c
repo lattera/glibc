@@ -182,7 +182,7 @@ monetary_output (struct localedef_t *locale, const char *output_path)
     = locale->categories[LC_MONETARY].monetary;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY)];
   struct locale_file data;
-  u32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_MONETARY)];
+  u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_MONETARY)];
   size_t cnt = 0;
 
   if ((locale->binary & (1 << LC_MONETARY)) != 0)

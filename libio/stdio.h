@@ -1,6 +1,6 @@
 /* This is part of the iostream/stdio library, providing -*- C -*- I/O.
    Define ANSI C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public
@@ -165,6 +165,9 @@ extern _IO_ssize_t getline __P ((char **, size_t *, FILE *));
 extern int snprintf __P ((char *, size_t, __const char *, ...));
 extern int __snprintf __P ((char *, size_t, __const char *, ...));
 extern int vsnprintf __P ((char *, size_t, __const char *, _G_va_list));
+
+extern int asprintf __P ((char **, const char *, ...));
+extern int vasprintf __P ((char **, const char *, _G_va_list));
 
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location

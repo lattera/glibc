@@ -1,8 +1,6 @@
 /* loadmsgcat.c -- load needed message catalogs
-   Copyright (C) 1995 Software Foundation, Inc.
-
-This file is part of the GNU C Library.  Its master source is NOT part of
-the C library, however.  The master source lives in /gd/gnu/lib.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,8 +14,8 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -65,8 +63,8 @@ int _nl_msg_cat_cntr;
 /* Load the message catalogs specified by FILENAME.  If it is no valid
    message catalog do nothing.  */
 void
-_nl_load_domain (domain)
-     struct loaded_domain *domain;
+_nl_load_domain (domain_file)
+     struct loaded_l10nfile *domain_file;
 {
   int fd;
   struct stat st;
@@ -75,19 +73,20 @@ _nl_load_domain (domain)
     || defined _LIBC
   int use_mmap = 0;
 #endif
+  struct loaded_domain *domain;
 
-  domain->decided = 1;
-  domain->data = NULL;
+  domain_file->decided = 1;
+  domain_file->data = NULL;
 
   /* If the record does not represent a valid locale the FILENAME
      might be NULL.  This can happen when according to the given
      specification the locale file name is different for XPG and CEN
      syntax.  */
-  if (domain->filename == NULL)
+  if (domain_file->filename == NULL)
     return;
 
   /* Try to open the addressed file.  */
-  fd = open (domain->filename, O_RDONLY);
+  fd = open (domain_file->filename, O_RDONLY);
   if (fd == -1)
     return;
 
@@ -160,6 +159,12 @@ _nl_load_domain (domain)
       return;
     }
 
+  domain_file->data
+    = (struct loaded_domain *) malloc (sizeof (struct loaded_domain *));
+  if (domain->data == NULL)
+    return;
+
+  domain = (struct loaded_domain *) domain_file->data;
   domain->data = (char *) data;
   domain->must_swap = data->magic != _MAGIC;
 
@@ -185,11 +190,12 @@ _nl_load_domain (domain)
       else
 #endif
 	free (data);
-      domain->data = NULL;
+      free (domain);
+      domain_file->data = NULL;
       return;
     }
 
   /* Show that one domain is changed.  This might make some cached
-     translation invalid.  */
+     translations invalid.  */
   ++_nl_msg_cat_cntr;
 }

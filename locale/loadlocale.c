@@ -1,6 +1,6 @@
-/* Functions to read locale data files.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -14,20 +14,21 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <sys/stat.h>
+#include <unistd.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
+
 #include "localeinfo.h"
 
-const size_t _nl_category_num_items[] =
+
+static const size_t _nl_category_num_items[] =
 {
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
   [category] = _NL_ITEM_INDEX (_NL_NUM_##category),
@@ -54,8 +55,8 @@ static const enum value_type *_nl_value_types[] =
 };
 
 
-struct locale_data *
-_nl_load_locale (int category, char **name)
+void
+_nl_load_locale (struct loaded_l10nfile *file, int category)
 {
   int fd;
   struct
@@ -66,7 +67,9 @@ _nl_load_locale (int category, char **name)
     } *filedata;
   struct stat st;
   struct locale_data *newdata;
+  int save_err;
   int swap = 0;
+  size_t cnt;
   inline unsigned int SWAP (const unsigned int *inw)
     {
       const unsigned char *inc = (const unsigned char *) inw;
@@ -74,98 +77,86 @@ _nl_load_locale (int category, char **name)
 	return *inw;
       return (inc[3] << 24) | (inc[2] << 16) | (inc[1] << 8) | inc[0];
     }
-  unsigned int i;
 
-  if ((*name)[0] == '\0')
+  file->decided = 1;
+  file->data = NULL;
+
+  fd = __open (file->filename, O_RDONLY);
+  if (fd < 0)
+    /* Cannot open the file.  */
+    return;
+
+  if (__fstat (fd, &st) < 0)
+    goto puntfd;
+  if (S_ISDIR (st.st_mode))
     {
-      *name = getenv ("LC_ALL");
-      if (! *name || (*name)[0] == '\0')
-	*name = getenv (_nl_category_names[category]);
-      if (! *name || (*name)[0] == '\0')
-	*name = getenv ("LANG");
-      if (! *name || (*name)[0] == '\0')
-	*name = (char *) "local";
+      /* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
+           instead.  */
+      char *newp;
+      
+      __close (fd);
+
+      newp = (char *) alloca (strlen (file->filename)
+			      + 5 + _nl_category_name_sizes[category] + 1);
+      __stpcpy (__stpcpy (__stpcpy (newp, file->filename), "/SYS_"),
+		_nl_category_names[category]);
+
+      fd = __open (newp, O_RDONLY);
+      if (fd < 0)
+	return;
+
+      if (__fstat (fd, &st) < 0)
+	goto puntfd;
     }
 
-  {
-    const char *catname = _nl_category_names[category];
-    size_t namelen = strlen (*name);
-    size_t catlen = strlen (catname);
-    char file[sizeof LOCALE_PATH + 1 + namelen + catlen * 2 + 4];
-    if (strchr (*name, '/') != NULL)
-      sprintf (file, "%s/%s", *name, catname);
-    else
-      sprintf (file, "%s/%s/%s", LOCALE_PATH, *name, catname);
-    fd = __open (file, O_RDONLY);
-    if (fd < 0)
-      return NULL;
-    if (__fstat (fd, &st) < 0)
-      goto puntfd;
-    if (S_ISDIR (st.st_mode))
-      {
-	/* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
-           instead.  */
-	__close (fd);
-	memcpy (stpcpy (strchr (file, '\0'), "SYS_"), catname, catlen);
-	fd = __open (file, O_RDONLY);
-	if (fd < 0)
-	  return NULL;
-	if (__fstat (fd, &st) < 0)
-	  goto puntfd;
-      }
-  }
-
-  {
-    /* Map in the file's data.  */
-    int save = errno;
+  /* Map in the file's data.  */
+  save_err = errno;
 #ifndef MAP_COPY
-    /* Linux seems to lack read-only copy-on-write.  */
+  /* Linux seems to lack read-only copy-on-write.  */
 #define MAP_COPY MAP_PRIVATE
 #endif
 #ifndef	MAP_FILE
-    /* Some systems do not have this flag; it is superfluous.  */
+  /* Some systems do not have this flag; it is superfluous.  */
 #define	MAP_FILE 0
 #endif
 #ifndef MAP_INHERIT
-    /* Some systems might lack this; they lose.  */
+  /* Some systems might lack this; they lose.  */
 #define MAP_INHERIT 0
 #endif
-    filedata = (void *) __mmap ((caddr_t) 0, st.st_size,
-				PROT_READ, MAP_FILE|MAP_COPY|MAP_INHERIT,
-				fd, 0);
-    if (filedata == (void *) -1)
-      {
-	if (errno == ENOSYS)
-	  {
-	    /* No mmap; allocate a buffer and read from the file.  */
-	    filedata = malloc (st.st_size);
-	    if (filedata)
-	      {
-		off_t to_read = st.st_size;
-		ssize_t nread;
-		char *p = (char *) filedata;
-		while (to_read > 0)
-		  {
-		    nread = __read (fd, p, to_read);
-		    if (nread <= 0)
-		      {
-			free (filedata);
-			if (nread == 0)
-			  errno = EINVAL; /* Bizarreness going on.  */
-			goto puntfd;
-		      }
-		    p += nread;
-		    to_read -= nread;
-		  }
-	      }
-	    else
-	      goto puntfd;
-	    errno = save;
-	  }
-	else
-	  goto puntfd;
-      }
-  }
+  filedata = (void *) __mmap ((caddr_t) 0, st.st_size, PROT_READ,
+			      MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
+  if (filedata == (void *) -1)
+    {
+      if (errno == ENOSYS)
+	{
+	  /* No mmap; allocate a buffer and read from the file.  */
+	  filedata = malloc (st.st_size);
+	  if (filedata != NULL)
+	    {
+	      off_t to_read = st.st_size;
+	      ssize_t nread;
+	      char *p = (char *) filedata;
+	      while (to_read > 0)
+		{
+		  nread = __read (fd, p, to_read);
+		  if (nread <= 0)
+		    {
+		      free (filedata);
+		      if (nread == 0)
+			errno = EINVAL; /* Bizarreness going on.  */
+		      goto puntfd;
+		    }
+		  p += nread;
+		  to_read -= nread;
+		}
+	    }
+	  else
+	    goto puntfd;
+	  errno = save_err;
+	}
+      else
+	goto puntfd;
+    }
 
   if (filedata->magic == LIMAGIC (category))
     /* Good data file in our byte order.  */
@@ -181,7 +172,7 @@ _nl_load_locale (int category, char **name)
 	  __munmap ((caddr_t) filedata, st.st_size);
 	puntfd:
 	  __close (fd);
-	  return NULL;
+	  return;
 	}
     }
 
@@ -201,41 +192,46 @@ _nl_load_locale (int category, char **name)
   if (! newdata)
     goto puntmap;
 
+  newdata->name = NULL;	/* This will be filled if necessary in findlocale.c. */
   newdata->filedata = (void *) filedata;
   newdata->filesize = st.st_size;
   newdata->nstrings = W (filedata->nstrings);
-  for (i = 0; i < newdata->nstrings; ++i)
+  for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
-      unsigned int idx = W (filedata->strindex[i]);
+      off_t idx = W (filedata->strindex[cnt]);
       if (idx >= newdata->filesize)
 	{
 	  free (newdata);
 	  errno = EINVAL;
 	  goto puntmap;
 	}
-      if (_nl_value_types[category][i] == word)
-	newdata->values[i].word = W (*((u32_t *) (newdata->filedata + idx)));
+      if (_nl_value_types[category][cnt] == word)
+	newdata->values[cnt].word = W (*((u_int32_t *) (newdata->filedata
+							+ idx)));
       else
-	newdata->values[i].string = newdata->filedata + idx;
+	newdata->values[cnt].string = newdata->filedata + idx;
     }
 
   __close (fd);
-  return newdata;
+  file->data = newdata;
 }
 
 void
-_nl_free_locale (struct locale_data *data)
+_nl_free_locale (const struct locale_data *data)
 {
   int save = errno;
-  if (! data)
+  if (data == NULL)
     /* Ignore a null pointer, like free does.  */
     return;
+  if (data->name != NULL)
+    free ((void *) data->name);
   if (__munmap ((caddr_t) data->filedata, data->filesize) < 0)
     {
       if (errno == ENOSYS)
 	free ((void *) data->filedata);
       errno = save;
     }
-  free (data);
+  free ((void *) data);
 }
+
 

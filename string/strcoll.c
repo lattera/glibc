@@ -71,7 +71,7 @@ STRCOLL (s1, s2)
 	{
 	  int s1ignore = 0;
 	  int s2ignore = 0;
-	  u32_t w1, w2;
+	  u_int32_t w1, w2;
 
 	  /* Here we have to check for IGNORE entries.  If these are
 	     found we count them and go on witht he next value.  */

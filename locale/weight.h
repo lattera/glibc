@@ -35,7 +35,7 @@ typedef struct weight_t
   struct weight_t *next;
   struct data_pair
     {
-      size_t number;
+      int number;
       const u_int32_t *value;
     } data[0];
 } weight_t;
@@ -115,7 +115,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
     {
       size_t idx;
 
-      /* This is a comparison between a u32_t array (aka wchar_t) and
+      /* This is a comparison between a u_int32_t array (aka wchar_t) and
 	 an 8-bit string.  */
       for (idx = 0; __collate_extra[slot + 2 + idx] != 0; ++idx)
 	if (__collate_extra[slot + 2 + idx] != (u_int32_t) str[idx])

@@ -24,17 +24,20 @@ Cambridge, MA 02139, USA.  */
 #include <langinfo.h>
 #include <sys/types.h>
 
+#include "../intl/loadinfo.h"	/* For loaded_l10nfile definition.  */
+
 /* Magic number at the beginning of a locale data file for CATEGORY.  */
 #define	LIMAGIC(category)	(0x960316de ^ (category))
 
 /* Two special weight constants for the collation data.  */
-#define FORWARD_CHAR 0xfffffffd
-#define ELLIPSIS_CHAR 0xfffffffe
-#define IGNORE_CHAR 0xffffffff
+#define FORWARD_CHAR ((wchar_t) 0xfffffffd)
+#define ELLIPSIS_CHAR ((wchar_t) 0xfffffffe)
+#define IGNORE_CHAR ((wchar_t) 0xffffffff)
 
 /* Structure describing locale data in core for a category.  */
 struct locale_data
 {
+  const char *name;
   const char *filedata;		/* Region mapping the file data.  */
   off_t filesize;		/* Size of the file (and the region).  */
 
@@ -78,8 +81,12 @@ extern const struct locale_data *_nl_current_##category;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
-extern const char *const _nl_category_names[LC_ALL];
+extern const char *const _nl_category_names[LC_ALL + 1];
+extern const size_t _nl_category_name_sizes[LC_ALL + 1];
 extern const struct locale_data * *const _nl_current[LC_ALL];
+
+/* Name of the standard locale.  */
+extern const char _nl_C_name[];
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
@@ -96,18 +103,21 @@ extern const struct locale_data * *const _nl_current[LC_ALL];
 
 /* Load the locale data for CATEGORY from the file specified by *NAME.
    If *NAME is "", use environment variables as specified by POSIX,
-   and fill in *NAME with the actual name used.  */
-extern struct locale_data *_nl_load_locale (int category, char **name);
+   and fill in *NAME with the actual name used.  The directories
+   listed in LOCALE_PATH are searched for the locale files.  */
+extern const struct locale_data *_nl_find_locale (const char *locale_path,
+						  size_t locale_path_len,
+						  int category, char **name);
+
+/* Try to load the file described by FILE.  */
+extern void _nl_load_locale (struct loaded_l10nfile *file, int category);
 
 /* Free the locale data read in by a `_nl_load_locale' call.  */
-extern void _nl_free_locale (struct locale_data *);
+extern void _nl_free_locale (const struct locale_data *);
 
-
-/* XXX For now.  */
-typedef unsigned int u32_t;
 
 /* Global variables for LC_COLLATE category data.  */
-extern const u32_t *__collate_table;
-extern const u32_t *__collate_extra;
+extern const u_int32_t *__collate_table;
+extern const u_int32_t *__collate_extra;
 
 #endif	/* localeinfo.h */

@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -36,6 +36,7 @@ Boston, MA 02111-1307, USA.  */
 #include "error.h"
 #include "charset.h"
 #include "locfile.h"
+#include "../intl/loadinfo.h"
 
 /* Undefine the following line in the production version.  */
 /* #define NDEBUG 1 */
@@ -95,7 +96,7 @@ void *xmalloc (size_t __n);
 /* Prototypes for local functions.  */
 static void usage (int status) __attribute__ ((noreturn));
 static void error_print (void);
-static const char *construct_output_path (const char *path);
+static const char *construct_output_path (char *path);
 
 
 int
@@ -424,25 +425,50 @@ error_print ()
    contain a '/' character it is a relativ path.  Otherwise it names the
    locale this definition is for.  */
 static const char *
-construct_output_path (const char *path)
+construct_output_path (char *path)
 {
+  char *normal = NULL;
   char *result;
 
   if (strchr (path, '/') == NULL)
     {
-      /* This is a system path.  */
-      int path_max_len = pathconf (LOCALE_PATH, _PC_PATH_MAX) + 1;
-      result = (char *) xmalloc (path_max_len);
+      /* This is a system path.  First examine whether the locale name
+	 contains a reference to the codeset.  This should be
+	 normalized.  */
+      char *startp, *endp;
 
-      snprintf (result, path_max_len, "%s/%s", LOCALE_PATH, path);
+      startp = path;
+      /* We must be prepared for finding a CEN name or a location of
+	 the introducing `.' where it is not possible anymore.  */
+      while (*startp != '\0' && *startp != '@' && *startp != '.'
+	     && *startp != '+' && *startp != ',')
+	++startp;
+      if (*startp == '.')
+	{
+	  /* We found a codeset specification.  Now find the end.  */
+	  endp = ++startp;
+	  while (*endp != '\0' && *endp != '@')
+	    ++endp;
+
+	  if (endp > startp)
+	    normal = _nl_normalize_codeset (startp, endp - startp);
+	}
+
+      /* We put an additional '\0' at the end of the string because at
+	 the end of the function we need another byte for the trailing
+	 '/'.  */
+      if (normal == NULL)
+	asprintf (&result, "%s/%s\0", LOCALE_PATH, path);
+      else
+	asprintf (&result, "%s/%.*s%s%s\0", LOCALE_PATH, startp - path, path,
+		  normal, endp);
     }
   else
     {
-      char *t;
-      /* This is a user path.  */
+      /* This is a user path.  Please note the additional byte in the
+	 memory allocation.  */
       result = xmalloc (strlen (path) + 2);
-      t = stpcpy (result, path);
-      *t = '\0';
+      strcpy (result, path);
     }
 
   errno = 0;

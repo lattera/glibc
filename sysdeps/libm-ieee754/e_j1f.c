@@ -80,7 +80,7 @@ static float zero    = 0.0;
 	 * j1(x) = 1/sqrt(pi) * (P(1,x)*cc - Q(1,x)*ss) / sqrt(x)
 	 * y1(x) = 1/sqrt(pi) * (P(1,x)*ss + Q(1,x)*cc) / sqrt(x)
 	 */
-		if(ix>0x80000000) z = (invsqrtpi*cc)/__sqrtf(y);
+		if(ix>0x48000000) z = (invsqrtpi*cc)/__sqrtf(y);
 		else {
 		    u = ponef(y); v = qonef(y);
 		    z = invsqrtpi*(u*cc-v*ss)/__sqrtf(y);

@@ -117,7 +117,7 @@ time_output (struct localedef_t *locale, const char *output_path)
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->cur_num_alt_digits];
   struct locale_file data;
-  u32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
+  u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num;
 
   if ((locale->binary & (1 << LC_TIME)) != 0)

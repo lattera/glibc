@@ -24,7 +24,6 @@
 
 
 typedef int wint_t;
-typedef unsigned short int u16_t;
 
 
 #include_next <config.h>

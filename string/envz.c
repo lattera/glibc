@@ -29,8 +29,8 @@
 /* Returns a pointer to the entry in ENVZ for NAME, or 0 if there is none.
    If NAME contains the separator character, only the portion before it is
    used in the comparison.  */
-char *
-envz_entry (char *envz, unsigned envz_len, char *name)
+const char *
+envz_entry (const char *envz, size_t envz_len, const char *name)
 {
   while (envz_len)
     {
@@ -57,8 +57,8 @@ envz_entry (char *envz, unsigned envz_len, char *name)
 
 /* Returns a pointer to the value portion of the entry in ENVZ for NAME, or 0
    if there is none.  */
-char *
-envz_get (char *envz, unsigned envz_len, char *name)
+const char *
+envz_get (const char *envz, size_t envz_len, const char *name)
 {
   char *entry = envz_entry (envz, envz_len, name);
   if (entry)
@@ -75,7 +75,7 @@ envz_get (char *envz, unsigned envz_len, char *name)
 
 /* Remove the entry for NAME from ENVZ & ENVZ_LEN, if any.  */
 void
-envz_remove (char **envz, unsigned *envz_len, char *name)
+envz_remove (char **envz, size_t *envz_len, char *name)
 {
   char *entry = envz_entry (*envz, *envz_len, name);
   if (entry)
@@ -89,7 +89,7 @@ envz_remove (char **envz, unsigned *envz_len, char *name)
    because when merging with another envz, the null entry can override an
    entry in the other one.  Null entries can be removed with envz_strip ().  */
 error_t
-envz_add (char **envz, unsigned *envz_len, char *name, char *value)
+envz_add (char **envz, unsigned *envz_len, const char *name, const char *value)
 {
   envz_remove (envz, envz_len, name);
 
@@ -126,8 +126,8 @@ envz_add (char **envz, unsigned *envz_len, char *name, char *value)
    OVERRIDE is true, then values in ENVZ2 will supercede those with the same
    name in ENV, otherwise not.  */
 error_t
-envz_merge (char **envz, unsigned *envz_len, char *envz2, unsigned envz2_len,
-	    int override)
+envz_merge (char **envz, unsigned *envz_len, const char *envz2,
+	    size_t envz2_len, int override)
 {
   error_t err = 0;
 

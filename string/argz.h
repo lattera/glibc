@@ -20,42 +20,59 @@
 
 #ifndef __ARGZ_H__
 #define __ARGZ_H__	1
+
+#include <features.h>
+
 #include <errno.h>		/* Define error_t.  */
 #include <string.h>		/* Need size_t, and strchr is called below.  */
+
+
+__BEGIN_DECLS
 
 /* Make a '\0' separated arg vector from a unix argv vector, returning it in
    ARGZ, and the total length in LEN.  If a memory allocation error occurs,
    ENOMEM is returned, otherwise 0.  The result can be destroyed using free. */
-error_t __argz_create (char **argv, char **argz, size_t *len);
-error_t argz_create (char **argv, char **argz, size_t *len);
+error_t __argz_create __P ((char **__argv, char **__argz, size_t *__len));
+error_t argz_create __P ((char **__argv, char **__argz, size_t *__len));
+
+/* Make a '\0' separated arg vector from a SEP separated list in
+   STRING, returning it in ARGZ, and the total length in LEN.  If a
+   memory allocation error occurs, ENOMEM is returned, otherwise 0.
+   The result can be destroyed using free.  */
+error_t __argz_create_sep __P ((__const char *__string, int __sep,
+				char **__argz, size_t *__len));
+error_t argz_create_sep __P ((__const char *__string, int __sep,
+			      char **__argz, size_t *__len));
 
 /* Returns the number of strings in ARGZ.  */
-size_t __argz_count (const char *argz, size_t len);
-size_t argz_count (const char *argz, size_t len);
+size_t __argz_count __P ((__const char *__argz, size_t __len));
+size_t argz_count __P ((__const char *__argz, size_t __len));
 
 /* Puts pointers to each string in ARGZ into ARGV, which must be large enough
    to hold them all.  */
-void __argz_extract (const char *argz, size_t len, char **argv);
-void argz_extract (const char *argz, size_t len, char **argv);
+void __argz_extract __P ((__const char *__argz, size_t __len, char **__argv));
+void argz_extract __P ((__const char *__argz, size_t __len, char **__argv));
 
 /* Make '\0' separated arg vector ARGZ printable by converting all the '\0's
    except the last into the character SEP.  */
-void __argz_stringify (char *argz, size_t len, int sep);
-void argz_stringify (char *argz, size_t len, int sep);
+void __argz_stringify __P ((char *__argz, size_t __len, int __sep));
+void argz_stringify __P ((char *__argz, size_t __len, int __sep));
 
 /* Append BUF, of length BUF_LEN to the argz vector in ARGZ & ARGZ_LEN.  */
-error_t __argz_append (char **argz, size_t *argz_len,
-		       const char *buf, size_t buf_len);
-error_t argz_append (char **argz, size_t *argz_len,
-		     const char *buf, size_t buf_len);
+error_t __argz_append __P ((char **__argz, size_t *__argz_len,
+			    __const char *__buf, size_t __buf_len));
+error_t argz_append __P ((char **__argz, size_t *__argz_len,
+			  __const char *__buf, size_t __buf_len));
 
 /* Append STR to the argz vector in ARGZ & ARGZ_LEN.  */
-error_t __argz_add (char **argz, size_t *argz_len, const char *str);
-error_t argz_add (char **argz, size_t *argz_len, const char *str);
+error_t __argz_add __P ((char **__argz, size_t *__argz_len,
+			 __const char *__str));
+error_t argz_add __P ((char **__argz, size_t *__argz_len,
+		       __const char *__str));
 
 /* Delete ENTRY from ARGZ & ARGZ_LEN, if it appears there.  */
-void __argz_delete (char **argz, size_t *argz_len, char *entry);
-void argz_delete (char **argz, size_t *argz_len, char *entry);
+void __argz_delete __P ((char **__argz, size_t *__argz_len, char *__entry));
+void argz_delete __P ((char **__argz, size_t *__argz_len, char *__entry));
 
 /* Insert ENTRY into ARGZ & ARGZ_LEN before BEFORE, which should be an
    existing entry in ARGZ; if BEFORE is NULL, ENTRY is appended to the end.
@@ -63,17 +80,17 @@ void argz_delete (char **argz, size_t *argz_len, char *entry);
    ARGZ, ENTRY) will insert ENTRY at the beginning of ARGZ.  If BEFORE is not
    in ARGZ, EINVAL is returned, else if memory can't be allocated for the new
    ARGZ, ENOMEM is returned, else 0.  */
-error_t __argz_insert (char **argz, size_t *argz_len,
-		       char *before, const char *entry);
-error_t argz_insert (char **argz, size_t *argz_len,
-		     char *before, const char *entry);
+error_t __argz_insert __P ((char **__argz, size_t *__argz_len,
+			    char *__before, __const char *__entry));
+error_t argz_insert __P ((char **__argz, size_t *__argz_len,
+			  char *__before, __const char *__entry));
 
 /* Returns the next entry in ARGZ & ARGZ_LEN after ENTRY, or NULL if there
    are no more.  If entry is NULL, then the first entry is returned.  This
    behavior allows two convenient iteration styles:
 
     char *entry = 0;
-    while (entry = argz_next (argz, argz_len, entry))
+    while ((entry = argz_next (argz, argz_len, entry)))
       ...;
 
    or
@@ -82,19 +99,33 @@ error_t argz_insert (char **argz, size_t *argz_len,
     for (entry = argz; entry; entry = argz_next (argz, argz_len, entry))
       ...;
 */
+extern char *__argz_next __P ((char *__argz, size_t __argz_len,
+			       __const char *__entry));
+extern char *argz_next __P ((char *__argz, size_t __argz_len,
+			     __const char *__entry));
+
+#if defined (__OPTIMIZE__) && __GNUC__ >= 2
 extern inline char *
-argz_next (char *argz, size_t argz_len, const char *entry)
+__argz_next (char *argz, size_t argz_len, const char *entry)
 {
   if (entry)
-    if (entry >= argz + argz_len)
-      return 0;
-    else
-      return strchr (entry, '\0') + 1;
+    {
+      if (entry < argz + argz_len)
+	entry = strchr (entry, '\0') + 1;
+
+      return entry >= argz + argz_len ? NULL : entry;
+    }
   else
     if (argz_len > 0)
       return argz;
     else
       return 0;
 }
+extern inline char *
+argz_next (char *argz, size_t argz_len, const char *entry)
+{
+  return __argz_next (argz, argz_len, entry);
+}
+#endif /* optimizing GCC2 */
 
 #endif /* __ARGZ_H__ */

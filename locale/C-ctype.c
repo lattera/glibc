@@ -896,6 +896,7 @@ const char _nl_C_LC_CTYPE_width[256] =
 
 const struct locale_data _nl_C_LC_CTYPE =
 {
+  _nl_C_name,
   NULL, 0, /* no file mapped */
   13,
   {

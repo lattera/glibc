@@ -33,11 +33,11 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   strcasecmp strncase					\
 		   memccpy memcpy wordcopy strsep			\
 		   swab strfry memfrob memmem				\
-		   $(addprefix argz-,append count create		\
+		   $(addprefix argz-,append count create ctsep next	\
 			             delete extract insert stringify)	\
 		   envz
 
-tests		:= tester testcopy test-ffs
+tests		:= tester testcopy test-ffs tst-strlen
 distribute	:= memcopy.h pagecopy.h
 
 

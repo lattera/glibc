@@ -52,12 +52,12 @@ static struct proglst {
 } *proglst;
 static void universal();
 static SVCXPRT *transp;
-struct proglst *pl;
 
 registerrpc(prognum, versnum, procnum, progname, inproc, outproc)
 	char *(*progname)();
 	xdrproc_t inproc, outproc;
 {
+	struct proglst *pl;
 
 	if (procnum == NULLPROC) {
 		(void) fprintf(stderr,

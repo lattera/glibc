@@ -13,14 +13,17 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
+#include <alloca.h>
+#include <argz.h>
 #include <errno.h>
-#include <string.h>
-#include <stdlib.h>
 #include <locale.h>
-#include <langinfo.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "localeinfo.h"
 
 /* For each category declare two external variables (with weak references):
@@ -33,20 +36,19 @@ Cambridge, MA 02139, USA.  */
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
 extern const struct locale_data *_nl_current_##category;		      \
 extern const struct locale_data _nl_C_##category;			      \
-/* XXX The linker is broken so we cannot do the weak symbols right just now. */
-/* weak_symbol (_nl_current_##category) weak_symbol (_nl_C_##category) */
+weak_symbol (_nl_current_##category) weak_symbol (_nl_C_##category)
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
 /* Array indexed by category of pointers to _nl_current_CATEGORY slots.
    Elements are zero for categories whose data is never used.  */
-const struct locale_data * *const _nl_current[] =
-{
+static const struct locale_data * *const _nl_current[] =
+  {
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
-  [category] = &_nl_current_##category,
+    [category] = &_nl_current_##category,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
-};
+  };
 
 /* Array indexed by category of pointers to _nl_C_CATEGORY slots.
    Elements are zero for categories whose data is never used.  */
@@ -67,6 +69,7 @@ const char *const _nl_category_names[] =
     [category] = category_name,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
+    [LC_ALL] = "LC_ALL"
   };
 /* An array of their lengths, for convenience.  */
 const size_t _nl_category_name_sizes[] =
@@ -75,6 +78,7 @@ const size_t _nl_category_name_sizes[] =
     [category] = sizeof (category_name) - 1,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
+    [LC_ALL] = sizeof ("LC_ALL") - 1
   };
 
 
@@ -98,256 +102,257 @@ void (*const _nl_category_postload[]) (void) =
   };
 
 
+/* Name of our standard locale.  */
 const char _nl_C_name[] = "C";
 
 /* Name of current locale for each individual category.
    Each is malloc'd unless it is nl_C_name.  */
-const char *_nl_current_names[] =
+static const char *_nl_current_names[] =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
-    _nl_C_name,
+    [category] = _nl_C_name,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
+    [LC_ALL] = _nl_C_name		/* For LC_ALL.  */
   };
 
-/* Composite LC_ALL name for current locale.
-   This is malloc'd unless it's _nl_C_name.  */
-char *_nl_current_composite_name = (char *) _nl_C_name;
 
 
-/* Switch to the locale called NAME in CATEGORY.  Return a string
-   describing the locale.  This string can be used as the NAME argument in
-   a later call.  If NAME is NULL, don't switch locales, but return the
-   current one.  If NAME is "", switch to a locale based on the environment
-   variables, as per POSIX.  Return NULL on error.  */
+/* Use this when we come along an error.  */
+#define ERROR_RETURN							      \
+  do {									      \
+    errno = EINVAL;							      \
+    return NULL;							      \
+  } while (0)
+
+
+static inline char *
+clever_copy (const char *string)
+{
+  size_t len;
+  char *new;
+
+  if (strcmp (string, "C") == 0 || strcmp (string, "POSIX") == 0)
+    /* This return is dangerous because the returned string might be
+       placed in read-only memory.  But everything should be set up to
+       handle this case.  */
+    return (char *) _nl_C_name;
+
+  len = strlen (string) + 1;
+  new = (char *) malloc (len);
+  return new != NULL ? memcpy (new, string, len) : NULL;
+}
+
+
+/* Construct a new composite name.  */
+static inline char *
+new_composite_name (int category, char *newnames[LC_ALL])
+{
+  size_t last_len;
+  size_t cumlen = 0;
+  int i;
+  char *new, *p;
+  int same = 1;
+
+  for (i = 0; i < LC_ALL; ++i)
+    {
+      char *name = (category == LC_ALL ? newnames[i] :
+		    category == i ? newnames[0] :
+		    (char *) _nl_current_names[i]);
+      last_len = strlen (name);
+      cumlen += _nl_category_name_sizes[i] + 1 + last_len + 1;
+      if (i > 0 && same && strcmp (name, newnames[0]) != 0)
+	same = 0;
+    }
+
+  if (same)
+    {
+      /* All the categories use the same name.  */
+      if (strcmp (newnames[0], "C") == 0 || strcmp (newnames[0], "POSIX") == 0)
+	return (char *) _nl_C_name;
+
+      new = malloc (last_len + 1);
+      if (new == NULL)
+	return NULL;
+
+      memcpy (new, newnames[0], last_len + 1);
+      return new;
+    }
+
+  new = malloc (cumlen);
+  if (new == NULL)
+    return NULL;
+  p = new;
+  for (i = 0; i < LC_ALL; ++i)
+    {
+      /* Add "CATEGORY=NAME;" to the string.  */
+      char *name = (category == LC_ALL ? newnames[i] :
+		    category == i ? newnames[0] :
+		    (char *) _nl_current_names[i]);
+      p = __stpcpy (p, _nl_category_names[i]);
+      *p++ = '=';
+      p = __stpcpy (p, name);
+      *p++ = ';';
+    }
+  p[-1] = '\0';		/* Clobber the last ';'.  */
+  return new;
+}
+
+
+/* Put NAME in _nl_current_names.  */
+static inline void
+setname (int category, const char *name)
+{
+  if (_nl_current[category] == NULL
+      && _nl_current_names[category] != _nl_C_name)
+    free ((void *) _nl_current_names[category]);
+
+  _nl_current_names[category] = name;
+}
+
+
+/* Put DATA in *_nl_current[CATEGORY].  */
+static inline void
+setdata (int category, const struct locale_data *data)
+{
+  if (_nl_current[category] != NULL)
+    {
+      *_nl_current[category] = data;
+      if (_nl_category_postload[category])
+	(*_nl_category_postload[category]) ();
+    }
+}
+
 
 char *
-setlocale (int category, const char *name)
+setlocale (int category, const char *locale)
 {
-  /* Return a malloc'd copy of STRING.  */
-  char *copy (const char *string)
-    {
-      size_t len = strlen (string) + 1;
-      char *new = malloc (len);
-      return new ? memcpy (new, string, len) : NULL;
-    }
-
-  /* Construct a new composite name.  */
-  char *new_composite_name (int category, char *newnames[LC_ALL])
-  {
-    size_t lens[LC_ALL], cumlen = 0;
-    int i;
-    char *new, *p;
-    int same = 1;
-
-    for (i = 0; i < LC_ALL; ++i)
-      {
-	char *name = (category == LC_ALL ? newnames[i] :
-		      category == i ? newnames[0] :
-		      (char *) _nl_current_names[i]);
-	lens[i] = strlen (name);
-	cumlen += _nl_category_name_sizes[i] + 1 + lens[i] + 1;
-	if (i > 0 && same && strcmp (name, newnames[0]))
-	  same = 0;
-      }
-
-    if (same)
-      {
-	/* All the categories use the same name.  */
-	new = malloc (lens[0] + 1);
-	if (! new)
-	  {
-	    if (!strcmp (newnames[0], "C") || !strcmp (newnames[0], "POSIX"))
-	      return (char *) _nl_C_name;
-	    return NULL;
-	  }
-	memcpy (new, newnames[0], lens[0] + 1);
-	return new;
-      }
-
-    new = malloc (cumlen);
-    if (! new)
-      return NULL;
-    p = new;
-    for (i = 0; i < LC_ALL; ++i)
-      {
-	/* Add "CATEGORY=NAME;" to the string.  */
-	char *name = (category == LC_ALL ? newnames[i] :
-		      category == i ? newnames[0] :
-		      (char *) _nl_current_names[i]);
-	memcpy (p, _nl_category_names[i], _nl_category_name_sizes[i]);
-	p += _nl_category_name_sizes[i];
-	*p++ = '=';
-	memcpy (p, name, lens[i]);
-	p += lens[i];
-	*p++ = ';';
-      }
-    p[-1] = '\0';		/* Clobber the last ';'.  */
-    return new;
-  }
-  /* Put COMPOSITE in _nl_current_composite_name and free the old value.  */
-  void setcomposite (char *composite)
-    {
-      char *old = _nl_current_composite_name;
-      _nl_current_composite_name = composite;
-      if (old != _nl_C_name)
-	free (old);
-    }
-  /* Put NAME in _nl_current_names and free the old value.  */
-  void setname (int category, const char *name)
-    {
-      const char *oldname = _nl_current_names[category];
-      _nl_current_names[category] = name;
-      if (oldname != _nl_C_name)
-	free ((char *) oldname);
-    }
-  /* Put DATA in *_nl_current[CATEGORY] and free the old value.  */
-  void setdata (int category, struct locale_data *data)
-    {
-      if (_nl_current[category])
-	{
-	  const struct locale_data *olddata = *_nl_current[category];
-	  *_nl_current[category] = data;
-	  if (_nl_category_postload[category])
-	    (*_nl_category_postload[category]) ();
-	  if (olddata != _nl_C[category])
-	    _nl_free_locale ((struct locale_data *) olddata);
-	}
-    }
-
-  const char *current_name;
+  char *locpath_var;
+  char *locale_path;
+  size_t locale_path_len;
   char *composite;
 
+  /* Sanity check for CATEGORY argument.  */
   if (category < 0 || category > LC_ALL)
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+    ERROR_RETURN;
 
-  if (category == LC_ALL)
-    current_name = _nl_current_composite_name;
-  else
-    current_name = _nl_current_names[category];
+  /* Does user want name of current locale?  */
+  if (locale == NULL)
+    return (char *) _nl_current_names[category];
 
-  if (name == NULL)
-    /* Return the name of the current locale.  */
-    return (char *) current_name;
-
-  if (name == current_name)
+  if (strcmp (locale, _nl_current_names[category]) == 0)
     /* Changing to the same thing.  */
-    return (char *) current_name;
+    return (char *) _nl_current_names[category];
 
+  /* We perhaps really have to load some data.  So we determine the
+     path in which to look for the data now.  But this environment
+     variable must only be used when the binary has no SUID or SGID
+     bit set.  */
+  locale_path = NULL;
+  locale_path_len = 0;
+
+  locpath_var = getenv ("LOCPATH");
+  if (locpath_var != NULL && locpath_var[0] != '\0'
+      && __getuid () == __geteuid () && __getgid () == __getegid ())
+    if (__argz_create_sep (locpath_var, ':',
+			   &locale_path, &locale_path_len) != 0)
+      return NULL;
+
+  if (__argz_append (&locale_path, &locale_path_len,
+		     LOCALE_PATH, sizeof (LOCALE_PATH)) != 0)
+    return NULL;
+  
   if (category == LC_ALL)
     {
-      const size_t len = strlen (name) + 1;
+      /* The user wants to set all categories.  The desired locales
+	 for the individual categories can be selected by using a
+	 composite locale name.  This is a semi-colon separated list
+	 of entries of the form `CATEGORY=VALUE'.  */
       char *newnames[LC_ALL];
-      char *p;
-      struct locale_data *newdata[LC_ALL];
+      const struct locale_data *newdata[LC_ALL];
 
       /* Set all name pointers to the argument name.  */
       for (category = 0; category < LC_ALL; ++category)
-	newnames[category] = (char *) name;
-
-      p = strchr (name, ';');
-      if (p)
+	newnames[category] = (char *) locale;
+      
+      if (strchr (locale, ';') != NULL)
 	{
-	  /* This is a composite name.  Make a local copy and split it up.  */
-	  int i;
-	  char *n = alloca (len);
-	  memcpy (n, name, len);
+	  /* This is a composite name.  Make a copy and split it up.  */
+	  char *np = strdupa (locale);
+	  char *cp;
+	  int cnt;
 
-	  while ((p = strchr (n, '=')) != NULL)
+	  while ((cp = strchr (np, '=')) != NULL)
 	    {
-	      for (i = 0; i < LC_ALL; ++i)
-		if (_nl_category_name_sizes[i] == p - n &&
-		    !memcmp (_nl_category_names[i], n, p - n))
+	      for (cnt = 0; cnt < LC_ALL; ++cnt)
+		if (cp - np == _nl_category_name_sizes[cnt]
+		    && memcmp (np, _nl_category_names[cnt], cp - np) == 0)
 		  break;
-	      if (i == LC_ALL)
+
+	      if (cnt == LC_ALL)
+		/* Bogus category name.  */
+		ERROR_RETURN;
+
+	      /* Found the category this clause sets.  */
+	      newnames[cnt] = ++cp;
+	      cp = strchr (cp, ';');
+	      if (cp != NULL)
 		{
-		  /* Bogus category name.  */
-		  errno = EINVAL;
-		  return NULL;
+		  /* Examine the next clause.  */
+		  *cp = '\0';
+		  np = cp + 1;
 		}
-	      if (i < LC_ALL)
-		{
-		  /* Found the category this clause sets.  */
-		  char *end = strchr (++p, ';');
-		  newnames[i] = p;
-		  if (end)
-		    {
-		      /* Examine the next clause.  */
-		      *end = '\0';
-		      n = end + 1;
-		    }
-		  else
-		    /* This was the last clause.  We are done.  */
-		    break;
-		}
+	      else
+		/* This was the last clause.  We are done.  */
+		break;
 	    }
 
-	  for (i = 0; i < LC_ALL; ++i)
-	    if (newnames[i] == name)
+	  for (cnt = 0; cnt < LC_ALL; ++cnt)
+	    if (newnames[cnt] == locale)
 	      /* The composite name did not specify all categories.  */
-	      return NULL;
+	      ERROR_RETURN;
 	}
 
       /* Load the new data for each category.  */
       while (category-- > 0)
 	/* Only actually load the data if anything will use it.  */
-	if (_nl_current[category])
+	if (_nl_current[category] != NULL)
 	  {
-	    newdata[category] = _nl_load_locale (category,
+	    newdata[category] = _nl_find_locale (locale_path, locale_path_len,
+						 category,
 						 &newnames[category]);
-	    if (newdata[category])
-	      newnames[category] = copy (newnames[category]);
-	    if (! newdata[category] || ! newnames[category])
+
+	    if (newdata[category] == NULL)
 	      {
-		if (!strcmp (newnames[category], "C") ||
-		    !strcmp (newnames[category], "POSIX"))
-		  {
-		    /* Loading from a file failed, but this is a request
-		       for the default locale.  Use the built-in data.  */
-		    if (! newdata[category])
-		      newdata[category]
-			= (struct locale_data *) _nl_C[category];
-		    newnames[category] = (char *) _nl_C_name;
-		  }
-		else
-		  {
-		    /* Loading this part of the locale failed.
-		       Abort the composite load.  */
-		  abort_composite:
-		    while (++category < LC_ALL)
-		      {
-			if (_nl_current[category])
-			  _nl_free_locale (newdata[category]);
-			if (newnames[category] != _nl_C_name)
-			  free (newnames[category]);
-		      }
-		    return NULL;
-		  }
+		/* Loading this part of the locale failed.  Abort the
+		   composite load.  */
+		int save_errno;
+	      abort_composite:
+		save_errno = errno;
+		
+		while (++category < LC_ALL)
+		  if (_nl_current[category] != NULL)
+		    _nl_free_locale (newdata[category]);
+		  else
+		    if (_nl_current[category] == NULL
+			&& newnames[category] != _nl_C_name)
+		      free (newnames[category]);
+
+		errno = save_errno;
+		return NULL;
 	      }
 	  }
 	else
 	  {
 	    /* The data is never used; just change the name.  */
-	    newnames[category] = copy (newnames[category]);
-	    if (! newnames[category])
-	      {
-		if (!strcmp (newnames[category], "C") ||
-		    !strcmp (newnames[category], "POSIX"))
-		  newnames[category] = (char *) _nl_C_name;
-		else
-		  {
-		    while (++category < LC_ALL)
-		      if (newnames[category] != _nl_C_name)
-			free (newnames[category]);
-		  }
-	      }
+	    newnames[category] = clever_copy (newnames[category]);
+	    if (newnames[category] == NULL)
+	      goto abort_composite;
 	  }
 
+      /* Create new composite name.  */
       composite = new_composite_name (LC_ALL, newnames);
-      if (! composite)
+      if (composite == NULL)
 	{
 	  category = -1;
 	  goto abort_composite;
@@ -359,46 +364,45 @@ setlocale (int category, const char *name)
 	  setdata (category, newdata[category]);
 	  setname (category, newnames[category]);
 	}
-      setcomposite (composite);
+      setname (LC_ALL, composite);
 
       return composite;
     }
   else
     {
-      char *newname = copy (name);
-      if (! newname)
+      const struct locale_data *newdata;
+      char *newname;
+
+      if (_nl_current[category] != NULL)
 	{
-	  if (!strcmp (name, "C") || !strcmp (name, "POSIX"))
-	    newname = (char *) _nl_C_name;
-	  else
+	  /* Only actually load the data if anything will use it.  */
+	  newname = (char *) locale;
+	  newdata = _nl_find_locale (locale_path, locale_path_len, category,
+				     (char **) &newname);
+	  if (newdata == NULL)
 	    return NULL;
 	}
 
+      /* Create new composite name.  */
       composite = new_composite_name (category, &newname);
-      if (! composite)
+      if (composite == NULL)
 	{
-	  if (newname != _nl_C_name)
-	    free (newname);
+	  /* If anything went wrong free what we managed to allocate
+	     so far.  */
+	  int save_errno = errno;
+
+	  if (_nl_current[category] != NULL)
+	    _nl_free_locale (newdata);
+
+	  errno = save_errno;
 	  return NULL;
 	}
 
-      /* Only actually load the data if anything will use it.  */
-      if (_nl_current[category])
-	{
-	  struct locale_data *newdata = _nl_load_locale (category,
-							 (char **) &name);
-	  if (! newdata)
-	    {
-	      if (!strcmp (name, "C") || !strcmp (name, "POSIX"))
-		newdata = (struct locale_data *) _nl_C[category];
-	      else
-		return NULL;
-	    }
-	  setdata (category, newdata);
-	}
+      if (_nl_current[category] != NULL)
+	setdata (category, newdata);
 
       setname (category, newname);
-      setcomposite (composite);
+      setname (LC_ALL, composite);
 
       return newname;
     }

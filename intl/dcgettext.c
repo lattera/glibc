@@ -1,8 +1,6 @@
 /* dcgettext.c -- implementation of the dcgettext(3) function
-   Copyright (C) 1995 Free Software Foundation, Inc.
-
-This file is part of the GNU C Library.  Its master source is NOT part of
-the C library, however.  The master source lives in /gd/gnu/lib.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,8 +14,8 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -155,7 +153,7 @@ const char _nl_default_dirname[] = GNULOCALEDIR;
 struct binding *_nl_domain_bindings;
 
 /* Prototypes for local functions.  */
-static char *find_msg PARAMS ((struct loaded_domain *domain,
+static char *find_msg PARAMS ((struct loaded_l10nfile *domain_file,
 			       const char *msgid));
 static const char *category_to_name PARAMS ((int category));
 static const char *guess_category_value PARAMS ((int category,
@@ -180,7 +178,7 @@ DCGETTEXT (domainname, msgid, category)
      const char *msgid;
      int category;
 {
-  struct loaded_domain *domain;
+  struct loaded_l10nfile *domain;
   struct binding *binding;
   const char *categoryname;
   const char *categoryvalue;
@@ -355,17 +353,20 @@ weak_alias (__dcgettext, dcgettext);
 
 
 static char *
-find_msg (domain, msgid)
-     struct loaded_domain *domain;
+find_msg (domain_file, msgid)
+     struct loaded_l10nfile *domain_file;
      const char *msgid;
 {
   size_t top, act, bottom;
+  struct loaded_domain *domain;
 
-  if (domain->decided == 0)
-    _nl_load_domain (domain);
+  if (domain_file->decided == 0)
+    _nl_load_domain (domain_file);
 
-  if (domain->data == NULL)
+  if (domain_file->data == NULL)
     return NULL;
+
+  domain = (struct loaded_domain *) domain_file->data;
 
   /* Locate the MSGID and its translation.  */
   if (domain->hash_size > 2 && domain->hash_tab != NULL)
@@ -439,7 +440,8 @@ find_msg (domain, msgid)
 
 
 /* Return string representation of locale CATEGORY.  */
-static const char *category_to_name (category)
+static const char *
+category_to_name (category)
      int category;
 {
   const char *retval;

@@ -102,7 +102,7 @@ numeric_output (struct localedef_t *locale, const char *output_path)
   struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
   struct locale_file data;
-  u32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
+  u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
   size_t cnt = 0;
 
   if ((locale->binary & (1 << LC_NUMERIC)) != 0)

@@ -48,7 +48,7 @@ main (int argc, char *argv[])
     {
 #define TEST(test)							      \
       do								      \
-	if (is##test (ch) != iswctype ((wchar_t) ch, bit_##test))	      \
+	if ((is##test (ch) == 0) != (iswctype (ch, bit_##test)) == 0)	      \
 	  {								      \
 	    printf ("class `%s' test for character \\%o failed\n",	      \
 		    #test, ch);						      \

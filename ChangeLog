@@ -1,4 +1,133 @@
+Fri May  3 13:32:08 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* intl/Makefile (CPPFLAGS): Change $(nlsdir) to $(i18ndir) in
+	LOCALE_ALIAS_PATH.
+
+Fri May  3 03:14:02 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/Makefile (routines): Add l10nflist and explodename.
+	(distribute): Add loadinfo.h and locale.alias.
+	(install-others): New variable to install locale.alias.
+
+	* intl/dcgettext.c, intl/finddomain.c, intl/gettextP.h,
+	intl/loadmsgcat.c: Adapt for upcoming gettext-0.10.13.  Some code
+	is now shared with the locale implementation.
+
+	* intl/explodename.c, intl/l10nflist.c, intl/loadinfo.h: New file.
+        Extracted from finddomain.c.  This is also used in the locale
+        implementation.
+
+	* intl/locale.alias: New file.  Locale alias database compatible
+        with X Window System's locale alias file.  Can now be used in
+        locale and gettext code.
+
+	* libio/stdio.h: Add prototypes for asprint and vasprintf.
+
+	* locale/C-collate.c, locale/C-ctype.c, locale/C-messages.c,
+	locale/C-monetary.c, locale/C-numeric.c, locale/C-time.c: Add new
+	field in structure with name of locale ("C" in this case).
+
+	* locale/Makefile (routines): Add findlocale.
+
+	* locale/findlocale.c: New file.  Instead of trying to load the
+        directly described file we now try to be much smarter when this
+        fails.  Use the same code as gettext does.
+
+	* locale/loadlocale.c, locale/setlocale.c: Rewrite to know about
+        new loading scheme.
+
+	* locale/localeinfo.h: Adapt prototypes and declarations for new
+	setlocale implementation.  Remove definition of u32_t type.  We
+	now use u_int32_t from <sys/types.h>.
+
+	* locale/programs/charset.h (ILLEGAL_CHAR_VALUE): Provide type
+        with constant.
+
+	* locale/programs/config.h, locale/lc-collate.c,
+        locale/localeinfo.h, locale/programs/ld-collate.c,
+        locale/programs/ld-ctype.c, locale/programs/ld-messages.c,
+        locale/programs/ld-monetary.c, locale/programs/ld-numeric.c,
+        locale/programs/ld-time.c, locale/weight.h, string/strcoll.c:
+        Change to use u_int32_t and u_int16_t.
+
+	* locale/programs/localedef.c (construct_output_path): Change name
+        of output locale to contain normalized form of the character set
+        portion.
+
+	* string/Makefile (routines): Add agrz-ctsep and argz-next.
+	(tests): Add tst-strlen.
+
+	* string/argz-ctsep.c: New file.  Implement reverse operation
+	from argz-stringify.
+
+	* string/argz-next.c: Non-inline version of function from argz.h.
+
+	* string/argz.h, string/envz.h: Make usable as global header file.
+
+	* string/envz.c: Fix declarations to use size_t where prototypes
+	say so.
+
+	* string/tst-strlen.c: New file.  Another test for critical
+        situation in strlen implementations.
+
+	* sysdeps/i386/i586/strlen.S: Fix bug with highest byte in word
+        being zero.
+
+	* wctype/test_wctype.c: Fix controlling comparison after change to
+        32 bit character class array.
+
+Fri May  3 12:53:12 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/sys/socket.h: Remove spurious doubled line.
+
+Thu May  2 22:50:52 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/getpriority.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add s_getpriority.
+
+Thu May  2 22:41:31 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/fpu_control.h (_FPU_DEFAULT):
+	Disable all exceptions.
+
+Thu May  2 22:33:14 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/e_acos.c, sysdeps/m68k/fpu/e_acosf.c,
+	sysdeps/m68k/fpu/e_fmod.c, sysdeps/m68k/fpu/e_fmodf.c,
+	sysdeps/m68k/fpu/isinfl.c, sysdeps/m68k/fpu/isnanl.c,
+	sysdeps/m68k/fpu/s_atan.c, sysdeps/m68k/fpu/s_atanf.c,
+	sysdeps/m68k/fpu/s_frexp.c, sysdeps/m68k/fpu/s_frexpf.c,
+	sysdeps/m68k/fpu/s_ilogb.c, sysdeps/m68k/fpu/s_ilogbf.c,
+	sysdeps/m68k/fpu/s_isinf.c, sysdeps/m68k/fpu/s_isinff.c,
+	sysdeps/m68k/fpu/s_ldexp.c, sysdeps/m68k/fpu/s_ldexpf.c,
+	sysdeps/m68k/fpu/s_modf.c, sysdeps/m68k/fpu/s_modff.c: Don't
+	define __NO_MATH_INLINES, which is already defined on command
+	line.
+
+Thu May  2 22:18:28 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/e_j0f.c (__ieee754_j0f, __ieee754_y0f):
+	Replace 0x80000000 by 0x48000000.
+	* sysdeps/libm-ieee754/e_j1f.c (__ieee754_j1f): Likewise.
+
+Thu May  2 21:30:33 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/svc_simple.c: Make global variable pl local to
+	registerrpc.
+
+Thu May  2 00:24:04 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/Makefile (tz-cflags): New variable.
+	(CFLAGS-tzfile.c): New variable.
+	(CFLAGS-zic.c): Add $(tz-cflags).
+	(tz-cc): Remove variable.
+	($(objpfx)tzfile.o, $(objpfx)zic.o): Remove targets.
+
 Wed May  1 09:10:04 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getcwd.c: Jump out of both loops when we find a
+	name, instead of checking for reaching end of buffer, which happens
+	when the match is the last entry in the buffer.
 
 	* time/strftime.c: Use canonical autoconf nugget for time.h+sys/time.h
 	include.

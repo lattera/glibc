@@ -128,7 +128,7 @@ messages_output (struct localedef_t *locale, const char *output_path)
     = locale->categories[LC_MESSAGES].messages;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_MESSAGES)];
   struct locale_file data;
-  u32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_MESSAGES)];
+  u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_MESSAGES)];
   size_t cnt = 0;
 
   if ((locale->binary & (1 << LC_MESSAGES)) != 0)
