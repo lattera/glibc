@@ -20,11 +20,30 @@
 
 common_objpfx=$1; shift
 
+generate_locale ()
+{
+    charmap=$1
+    input=$2
+    out=$3
+    I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
+    ${common_objpfx}elf/ld.so --library-path $common_objpfx \
+    ${common_objpfx}locale/localedef --quiet -c -f $charmap -i $input \
+      ${common_objpfx}localedata/$out
+
+    if [ $? -ne 0 ]; then
+	echo "Charmap: \"${charmap}\" Inputfile: \"${input}\"" \
+	     "Outputdir: \"${out}\" failed"
+	exit 1
+    fi
+}
+
+generate_locale EUC-JP ja_JP ja_JP.EUC-JP
+
 status=0
 
 # Run the test programs.
 rm -f ${common_objpfx}localedata/tst-ctype.out
-for loc in de_DE en_US; do
+for loc in de_DE en_US ja_JP.EUC-JP; do
   if test -f tst-ctype-$loc.in; then
     input=tst-ctype-$loc.in
   else
