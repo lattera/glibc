@@ -1,5 +1,8 @@
 2005-01-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/libc-start.c [SHARED] (__libc_start_main): Don't
+	initialize __environ again.
+
 	* sysdeps/unix/sysv/linux/init-first.c: Clean file up.  Don't
 	define unnecessary wrappers or aliases of static functions.
 
