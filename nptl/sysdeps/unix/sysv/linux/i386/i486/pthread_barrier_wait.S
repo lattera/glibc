@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -59,7 +59,11 @@ pthread_barrier_wait:
 	je	3f
 
 	/* There are more threads to come.  */
+#if CURR_EVENT == 0
+	movl	(%ebx), %edx
+#else
 	movl	CURR_EVENT(%ebx), %edx
+#endif
 
 	/* Release the mutex.  */
 	LOCK
@@ -75,7 +79,11 @@ pthread_barrier_wait:
 	/* Don't return on spurious wakeups.  The syscall does not change
 	   any register except %eax so there is no need to reload any of
 	   them.  */
+#if CURR_EVENT == 0
+	cmpl	%edx, (%ebx)
+#else
 	cmpl	%edx, CURR_EVENT(%ebx)
+#endif
 	je,pn	8b
 
 	/* Note: %esi is still zero.  */
@@ -88,7 +96,11 @@ pthread_barrier_wait:
 	/* The necessary number of threads arrived.  */
 3:	movl	INIT_COUNT(%ebx), %eax
 	movl	%eax, LEFT(%ebx)
+#if CURR_EVENT == 0
+	incl	(%ebx)
+#else
 	incl	CURR_EVENT(%ebx)
+#endif
 
 	/* Wake up all waiters.  The count is a signed number in the kernel
 	   so 0x7fffffff is the highest value.  */
