@@ -1,3 +1,8 @@
+2000-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Allow sed versions like 3.02.8.
+	Patch by Rodrigo Barbosa <rodrigob@conectiva.com.br>.
+
 2000-08-21  Marko Myllynen  <myllynen@lut.fi>
 
 	* inet/netinet/icmp6.h: Add Mobile IPv6 extensions structures.
