@@ -106,8 +106,10 @@ typedef struct
        from the user namespace.  */
 #ifdef __USE_XOPEN
     __fd_mask fds_bits[__FD_SETSIZE / __NFDBITS];
+# define __FDS_BITS(set) ((set)->fds_bits)
 #else
     __fd_mask __fds_bits[__FD_SETSIZE / __NFDBITS];
+# define __FDS_BITS(set) ((set)->__fds_bits)
 #endif
   } __fd_set;
 

@@ -1013,7 +1013,7 @@ __strsep_g (char **__s, __const char *__reject)
 /* We need the memory allocation functions for inline strdup().
    Referring to stdlib.h (even minimally) is not allowed 
    in any of the tight standards compliant modes.  */
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 
 # if !defined _HAVE_STRING_ARCH_strdup || !defined _HAVE_STRING_ARCH_strndup
 #  define __need_malloc_and_calloc

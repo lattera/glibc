@@ -1,3 +1,23 @@
+1998-10-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+ 
+	* string/bits/string2.h: __USE_GNU already implies __USE_MISC. 
+ 
+1998-10-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+
+	* sysdeps/generic/bits/types.h (__FDS_BITS): New macro to access 
+	fds_bits member. 
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h (__FDS_BITS): Likewise. 
+	* sysdeps/unix/sysv/linux/bits/types.h (__FDS_BITS): Likewise. 
+	* sysdeps/unix/sysv/linux/mips/bits/types.h (__FDS_BITS): Likewise. 
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h (__FDS_BITS): 
+	Likewise. 
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h (__FDS_BITS): 
+	Likewise. 
+	* sysdeps/generic/bits/select.h (__FD_ZERO, __FD_SET, __FD_CLR, 
+	__FD_ISSET): Use it. 
+	* sysdeps/i386/bits/select.h (__FD_ZERO, __FD_SET, __FD_CLR, 
+	__FD_ISSET): Likewise. 
+
 1998-10-28  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Tidy up, correct
