@@ -49,7 +49,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 
 modules.so := $(addsuffix .so, $(modules))
 
-tests = bug-iconv1 bug-iconv2
+tests = bug-iconv1 bug-iconv2 tst-loading
 
 include ../Makeconfig
 
