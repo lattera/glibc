@@ -25,6 +25,8 @@ SYSCALL (sethostid, 1)
 
 #else
 
+/* <errnos.h> only defines E* #ifdef _ERRNO_H.  */
+#define	_ERRNO_H
 #include <errnos.h>
 
 ENTRY (sethostid)
