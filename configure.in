@@ -823,7 +823,8 @@ else
   libc_cv_ld_version_script_option=no
 fi
 rm -f conftest*])
-if test $libc_cv_asm_symver_directive = yes &&
+if test $shared != no &&
+   test $libc_cv_asm_symver_directive = yes &&
    test $libc_cv_ld_version_script_option = yes &&
    test $enable_versioning = yes; then
   VERSIONING=yes
@@ -833,7 +834,7 @@ else
 fi
 AC_SUBST(VERSIONING)
 
-if test $VERSIONING = no; then
+if test $shared != no && test $VERSIONING = no; then
   echo "\
 *** WARNING: You should not compile GNU libc without versioning. Not using
 *** versioning will introduce incompatibilities so that old binaries

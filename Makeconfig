@@ -762,15 +762,6 @@ ifndef rtld-version-installed-name
 rtld-version-installed-name = ld-$(version).so
 endif
 
-else  # build-shared != yes
-
-# Since symbol versioning is only meaningful for shared objects,
-# turn this variable off when we aren't building any.
-# The setting from config.make just tells us ld would support it if we cared.
-# Clobbering it here avoids having to double-conditionalize everything
-# on both $(versioning) and $(build-shared).
-versioning := no
-
 endif # build-shared
 
 ifneq (,$(findstring linuxthreads,$(add-ons)))

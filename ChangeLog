@@ -1,3 +1,11 @@
+2000-04-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* Makeconfig: Undo last change.
+	* configure.in: If --disable-shared was given, don't set VERSIONING,
+	don't define DO_VERSIONING, and don't give scare warning for no
+	versioning.
+	* configure: Regenerated.
+
 2000-04-04  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* Makeconfig [$(build-shared) != yes] (versioning): Set to `no'.
