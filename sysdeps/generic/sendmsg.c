@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 /* Send a message described MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
-int
+ssize_t
 sendmsg (fd, message, flags)
      int fd;
      const struct msghdr *message;

@@ -128,37 +128,37 @@ extern int getpeername (int __fd, __SOCKADDR_ARG __addr,
 
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
-extern int send (int __fd, __const void *__buf, size_t __n, int __flags)
+extern ssize_t send (int __fd, __const void *__buf, size_t __n, int __flags)
      __THROW;
 
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
-extern int recv (int __fd, void *__buf, size_t __n, int __flags)
+extern ssize_t recv (int __fd, void *__buf, size_t __n, int __flags)
      __THROW;
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
-extern int sendto (int __fd, __const void *__buf, size_t __n,
-		   int __flags, __CONST_SOCKADDR_ARG __addr,
-		   socklen_t __addr_len) __THROW;
+extern ssize_t sendto (int __fd, __const void *__buf, size_t __n,
+		       int __flags, __CONST_SOCKADDR_ARG __addr,
+		       socklen_t __addr_len) __THROW;
 
 /* Read N bytes into BUF through socket FD.
    If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
    the sender, and store the actual size of the address in *ADDR_LEN.
    Returns the number of bytes read or -1 for errors.  */
-extern int recvfrom (int __fd, void *__restrict __buf, size_t __n, int __flags,
-		     __SOCKADDR_ARG __addr, socklen_t *__restrict __addr_len)
+extern ssize_t recvfrom (int __fd, void *__restrict __buf, size_t __n, int __flags,
+			 __SOCKADDR_ARG __addr, socklen_t *__restrict __addr_len)
      __THROW;
 
 
 /* Send a message described MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
-extern int sendmsg (int __fd, __const struct msghdr *__message, int __flags)
+extern ssize_t sendmsg (int __fd, __const struct msghdr *__message, int __flags)
      __THROW;
 
 /* Receive a message as described by MESSAGE from socket FD.
    Returns the number of bytes read or -1 for errors.  */
-extern int recvmsg (int __fd, struct msghdr *__message, int __flags)
+extern ssize_t recvmsg (int __fd, struct msghdr *__message, int __flags)
      __THROW;
 
 

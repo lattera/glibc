@@ -20,7 +20,7 @@ extern int __opensock (void) internal_function;
 extern int __getpeername (int __fd, __SOCKADDR_ARG __addr, socklen_t *__len);
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
-extern int __send (int __fd, __const void *__buf, size_t __n, int __flags);
+extern ssize_t __send (int __fd, __const void *__buf, size_t __n, int __flags);
 
 /* Open a connection on socket FD to peer at ADDR (which LEN bytes long).
    For connectionless socket types, just set the default address to send to

@@ -1,5 +1,5 @@
 /* Wrapper arpund system calls to provide cancelation points.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -195,31 +195,31 @@ CANCELABLE_SYSCALL (int, connect, (int fd, __CONST_SOCKADDR_ARG addr,
 strong_alias (connect, __connect)
 
 /* recv(2).  */
-CANCELABLE_SYSCALL (int, recv, (int fd, __ptr_t buf, size_t n, int flags),
+CANCELABLE_SYSCALL (ssize_t, recv, (int fd, __ptr_t buf, size_t n, int flags),
 		    (fd, buf, n, flags))
 
 /* recvfrom(2).  */
-CANCELABLE_SYSCALL (int, recvfrom, (int fd, __ptr_t buf, size_t n, int flags,
-				    __SOCKADDR_ARG addr, socklen_t *addr_len),
+CANCELABLE_SYSCALL (ssize_t, recvfrom, (int fd, __ptr_t buf, size_t n, int flags,
+					__SOCKADDR_ARG addr, socklen_t *addr_len),
 		    (fd, buf, n, flags, addr, addr_len))
 
 /* recvmsg(2).  */
-CANCELABLE_SYSCALL (int, recvmsg, (int fd, struct msghdr *message, int flags),
+CANCELABLE_SYSCALL (ssize_t, recvmsg, (int fd, struct msghdr *message, int flags),
 		    (fd, message, flags))
 
 /* send(2).  */
-CANCELABLE_SYSCALL (int, send, (int fd, const __ptr_t buf, size_t n,
-				int flags),
+CANCELABLE_SYSCALL (ssize_t, send, (ssize_t fd, const __ptr_t buf, size_t n,
+				    int flags),
 		    (fd, buf, n, flags))
 strong_alias (send, __send)
 
 /* sendmsg(2).  */
-CANCELABLE_SYSCALL (int, sendmsg, (int fd, const struct msghdr *message,
-				   int flags),
+CANCELABLE_SYSCALL (ssize_t, sendmsg, (int fd, const struct msghdr *message,
+				       int flags),
 		    (fd, message, flags))
 
 /* sendto(2).  */
-CANCELABLE_SYSCALL (int, sendto, (int fd, const __ptr_t buf, size_t n,
-				  int flags, __CONST_SOCKADDR_ARG addr,
-				  socklen_t addr_len),
+CANCELABLE_SYSCALL (ssize_t, sendto, (ssize_t fd, const __ptr_t buf, size_t n,
+				      int flags, __CONST_SOCKADDR_ARG addr,
+				      socklen_t addr_len),
 		    (fd, buf, n, flags, addr, addr_len))
