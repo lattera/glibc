@@ -1663,16 +1663,18 @@ ptmalloc_init __MALLOC_P((void))
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();
+  __libc_pagesize = __getpagesize();
 #endif
   mutex_init(&main_arena.mutex);
   mutex_init(&list_lock);
   tsd_key_create(&arena_key, NULL);
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_init_all);
-#endif /* !defined NO_THREADS */
+#else /* !defined NO_THREADS */
 #ifdef _LIBC
   __libc_pagesize = __getpagesize();
 #endif
+#endif /* !defined NO_THREADS */
 #if defined _LIBC || defined MALLOC_HOOKS
   if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
     mALLOPt(M_TRIM_THRESHOLD, atoi(s));

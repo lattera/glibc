@@ -1,3 +1,8 @@
+1999-07-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (ptmalloc_init): Correct last patch.  The
+	assignment cannot be moved.
+
 1999-07-29  H.J. Lu  <hjl@gnu.org>
 
 	* malloc/malloc.c (ptmalloc_init): Also initialize __libc_pagesize
