@@ -1,8 +1,19 @@
 2000-01-04  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/stringtrans.c: Removed.
+	* locale/programs/stringtrans.h: Removed.
+
+	* locale/findlocale.c (_nl_find_locale): Don't try using mmap is
+	_POSIX_MAPPED_FILES is not defined.
+
+	* locale/findlocale.c (_nl_find_locale): Correct memory allocation
+	for loc_name copy.
+
+	* locale/setlocale.c (new_composite_name): Use _nl_C_name and
+	_nl_POSIX_name instead of "C" and "POSIX" strings.
+
 	* ctype/ctype-info.c (__ctype32_tolower): Use _nl_C_CTYPE_tolower.
 	(__ctype32_toupper): Use _nl_C_CTYPE_toupper.
-
 	* locale/C-ctype.c (_nl_C_LC_CTYPE_tolower32): Removed.  We can
 	reuse the _nl_C_LC_CTYPE_tolower table.
 	(_nl_C_LC_CTYPE_toupper32): Likewise.

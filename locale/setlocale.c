@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95-99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -154,8 +154,8 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
   if (same)
     {
       /* All the categories use the same name.  */
-      if (strcmp (newnames[0], "C") == 0
-	  || strcmp (newnames[0], "POSIX") == 0)
+      if (strcmp (newnames[0], _nl_C_name) == 0
+	  || strcmp (newnames[0], _nl_POSIX_name) == 0)
 	return (char *) _nl_C_name;
 
       new = malloc (last_len + 1);
