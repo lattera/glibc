@@ -33,8 +33,8 @@ char *envz_entry __P ((__const char *__envz, size_t __envz_len,
 
 /* Returns a pointer to the value portion of the entry in ENVZ for NAME, or 0
    if there is none.  */
-const char *envz_get __P ((__const char *__envz, size_t __envz_len,
-			   __const char *__name));
+char *envz_get __P ((__const char *__envz, size_t __envz_len,
+		     __const char *__name));
 
 /* Adds an entry for NAME with value VALUE to ENVZ & ENVZ_LEN.  If an entry
    with the same name already exists in ENVZ, it is removed.  If VALUE is
