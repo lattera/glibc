@@ -813,8 +813,14 @@ static pthread_descr thread_self_stack(void)
   if (sp >= __pthread_manager_thread_bos && sp < __pthread_manager_thread_tos)
     return manager_thread;
   h = __pthread_handles + 2;
+# ifdef USE_TLS
+  while (h->h_descr == NULL
+	 || ! (sp <= (char *) h->h_descr->p_stackaddr && sp >= h->h_bottom))
+    h++;
+# else
   while (! (sp <= (char *) h->h_descr && sp >= h->h_bottom))
     h++;
+# endif
   return h->h_descr;
 }
 
