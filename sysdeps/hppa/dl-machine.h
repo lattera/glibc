@@ -248,7 +248,17 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
 
-#define RTLD_START asm ("\
+#define RTLD_START \
+/* Set up dp for any non-PIC lib constructors that may be called.  */	\
+static struct link_map * set_dp (struct link_map *map)		\
+{								\
+  register Elf32_Addr dp asm ("%r27");				\
+  dp = D_PTR (map, l_info[DT_PLTGOT]);				\
+  asm volatile ("" : : "r" (dp));				\
+  return map;							\
+}								\
+								\
+asm ("\
 	.text
 	.globl _start
 	.type _start,@function
@@ -324,7 +334,6 @@ _start:
 	bl	_dl_start,%rp
 	ldo	-4(%r24),%r26
 
-	/* FALLTHRU */
 	.globl _dl_start_user
 	.type _dl_start_user,@function
 _dl_start_user:
@@ -352,10 +361,14 @@ _dl_start_user:
 	stw	%r24,-44(%sp)
 
 .Lnofix:
-	/* Call _dl_init(_dl_loaded, argc, argv, envp). */
 	addil	LT'_dl_loaded,%r19
 	ldw	RT'_dl_loaded(%r1),%r26
+	bl	set_dp, %r2
 	ldw	0(%r26),%r26
+
+	/* Call _dl_init(_dl_loaded, argc, argv, envp). */
+	copy	%r28,%r26
+
 	/* envp = argv + argc + 1 */
 	sh2add	%r25,%r24,%r23
 	bl	_dl_init,%r2
@@ -373,11 +386,18 @@ __dl_fini_plabel:
 	.word	0xdeadbeef
 	.previous
 
+	/* %r3 contains a function pointer, we need to mask out the lower
+	 * bits and load the gp and jump address. */
+	depi	0,31,2,%r3
+	ldw	0(%r3),%r2
 	addil	LT'__dl_fini_plabel,%r19
 	ldw	RT'__dl_fini_plabel(%r1),%r23
 	stw	%r19,4(%r23)
-	bv	%r0(%r3)
-	depi	2,31,2,%r23	/* delay slot */");
+	ldw	4(%r3),%r19	/* load the object's gp */
+	bv	%r0(%r2)
+	depi	2,31,2,%r23	/* delay slot */
+");
+
 
 /* This code gets called via the .plt stub, and is used in
    dl-runtime.c to call the `fixup' function and then redirect to the
