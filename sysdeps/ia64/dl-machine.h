@@ -267,6 +267,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
 #endif
 
+/* Undo the adds out0 = 16, sp below to get at the value we want in
+   __libc_stack_end.  */
+#define DL_STACK_END(cookie) \
+  ((void *) (((long) (cookie)) - 16))
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -318,21 +322,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	 .save ar.pfs, r32\n"						      \
 "	 .body\n"							      \
 "	{ .mii\n"							      \
+"	  addl r3 = @gprel(_dl_skip_args), gp\n"			      \
+"	  adds r11 = 24, sp	/* Load the address of argv. */\n"	      \
 "	  /* Save the pointer to the user entry point fptr in loc2.  */\n"    \
 "	  mov loc2 = ret0\n"						      \
-"	  /* Store the highest stack address.  */\n"			      \
-"	  addl r2 = @ltoff(__libc_stack_end#), gp\n"			      \
-"	  addl r3 = @gprel(_dl_skip_args), gp\n"			      \
-"	  ;;\n"								      \
-"	}\n"								      \
-"	{ .mmi\n"							      \
-"	  ld8 r2 = [r2]\n"						      \
-"	  ld4 r3 = [r3]\n"						      \
-"	  adds r11 = 24, sp	/* Load the address of argv. */\n"	      \
 "	  ;;\n"								      \
 "	}\n"								      \
 "	{ .mii\n"							      \
-"	  st8 [r2] = sp\n"						      \
+"	  ld4 r3 = [r3]\n"						      \
 "	  adds r10 = 16, sp	/* Load the address of argc. */\n"	      \
 "	  mov out2 = r11\n"						      \
 "	  ;;\n"								      \
@@ -401,7 +398,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	  br.call.sptk.many b0 = _dl_init_internal#\n"			      \
 "	  ;;\n"								      \
 "	}\n"								      \
-"	/* Pass our finializer function to the user,\n"			      \
+"	/* Pass our finalizer function to the user,\n"			      \
 "	   and jump to the user's entry point.  */\n"			      \
 "	{ .mmi\n"							      \
 "	  ld8 r3 = [loc2], 8\n"						      \

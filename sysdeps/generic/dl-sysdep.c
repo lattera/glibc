@@ -69,6 +69,9 @@ static ElfW(auxv_t) *_dl_auxv;
   } while (0)
 #endif
 
+#ifndef DL_STACK_END
+# define DL_STACK_END(cookie) ((void *) (cookie))
+#endif
 
 ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,
@@ -98,6 +101,7 @@ _dl_sysdep_start (void **start_argptr,
   ElfW(Word) new_sysinfo = 0;
 #endif
 
+  __libc_stack_end = DL_STACK_END (start_argptr);
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, INTUSE(_dl_argv), _environ,
 			  _dl_auxv);
 

@@ -248,6 +248,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 /* The SPARC overlaps DT_RELA and DT_PLTREL.  */
 #define ELF_MACHINE_PLTREL_OVERLAP 1
 
+/* Undo the sub %sp, 6*4, %sp; add %sp, 22*4, %o0 below to get at the
+   value we want in __libc_stack_end.  */
+#define DL_STACK_END(cookie) \
+  ((void *) (((long) (cookie)) - (22 - 6) * 4))
+
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
@@ -274,16 +279,10 @@ _dl_start_user:\n\
 	add	%l7, %o7, %l7\n\
   /* Save the user entry point address in %l0 */\n\
 	mov	%o0, %l0\n\
-  /* Store the highest stack address.  */\n\
-	sethi	%hi(__libc_stack_end), %g2\n\
-	or	%g2, %lo(__libc_stack_end), %g2\n\
-	ld	[%l7 + %g2], %l1\n\
-	sethi	%hi(_dl_skip_args), %g2\n\
-	add	%sp, 6*4, %l2\n\
-	or	%g2, %lo(_dl_skip_args), %g2\n\
-	st	%l2, [%l1]\n\
   /* See if we were run as a command with the executable file name as an\n\
      extra leading argument.  If so, adjust the contents of the stack.  */\n\
+	sethi	%hi(_dl_skip_args), %g2\n\
+	or	%g2, %lo(_dl_skip_args), %g2\n\
 	ld	[%l7+%g2], %i0\n\
 	ld	[%i0], %i0\n\
 	tst	%i0\n\

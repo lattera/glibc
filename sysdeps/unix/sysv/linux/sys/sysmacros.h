@@ -26,26 +26,29 @@
    not going to hack weird hacks to support the dev_t representation
    they need.  */
 #ifdef __GLIBC_HAVE_LONG_LONG
-extern unsigned int inline major (unsigned long long int __dev) __THROW;
-extern unsigned int inline minor (unsigned long long int __dev) __THROW;
-extern unsigned long long int inline makedev (unsigned int __major,
-					      unsigned int __minor) __THROW;
+extern unsigned int inline gnu_dev_major (unsigned long long int __dev)
+     __THROW;
+extern unsigned int inline gnu_dev_minor (unsigned long long int __dev)
+     __THROW;
+extern unsigned long long int inline gnu_dev_makedev (unsigned int __major,
+						      unsigned int __minor)
+     __THROW;
 
 # if defined __GNUC__ && __GNUC__ >= 2
 extern inline unsigned int
-major (unsigned long long int __dev)
+gnu_dev_major (unsigned long long int __dev) __THROW
 {
   return ((__dev >> 8) & 0xfff) | ((unsigned int) (__dev >> 32) & ~0xfff);
 }
 
 extern inline unsigned int
-minor (unsigned long long int __dev)
+gnu_dev_minor (unsigned long long int __dev) __THROW
 {
   return (__dev & 0xff) | ((unsigned int) (__dev >> 12) & ~0xff);
 }
 
 extern inline unsigned long long int
-makedev (unsigned int __major, unsigned int __minor)
+gnu_dev_makedev (unsigned int __major, unsigned int __minor) __THROW
 {
   return ((__minor & 0xff) | ((__major & 0xfff) << 8)
 	  | (((unsigned long long int) (__minor & ~0xff)) << 12)
@@ -54,11 +57,10 @@ makedev (unsigned int __major, unsigned int __minor)
 # endif
 
 
-/* Historically the three symbols were macros.  In case some programs
-   use #ifdef to check for definition provide some dummy macros.  */
-# define major(dev) major (dev)
-# define minor(dev) minor (dev)
-# define makedev(maj, min) makedev (maj, min)
+/* Access the functions with their traditional names.  */
+# define major(dev) gnu_dev_major (dev)
+# define minor(dev) gnu_dev_minor (dev)
+# define makedev(maj, min) gnu_dev_makedev (maj, min)
 #endif
 
 #endif /* sys/sysmacros.h */

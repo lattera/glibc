@@ -110,7 +110,7 @@ libc {
     epoll_create; epoll_ctl; epoll_wait;
   }
   GLIBC_2.3.3 {
-    major; minor; makedev;
+    gnu_dev_major; gnu_dev_minor; gnu_dev_makedev;
   }
   GLIBC_PRIVATE {
     # needed by libpthread.

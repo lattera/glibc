@@ -666,6 +666,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 /* The PLT uses Elf64_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
 
+/* Undo the sub %sp, 6*8, %sp; add %sp, STACK_BIAS + 22*8, %o0 below
+   to get at the value we want in __libc_stack_end.  */
+#define DL_STACK_END(cookie) \
+  ((void *) (((long) (cookie)) - (22 - 6) * 8 - STACK_BIAS))
+
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
@@ -694,20 +699,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "1:	call	11f\n"							\
 "	 sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7\n"		\
 "11:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7\n"		\
-"  /* Store the highest stack address.  */\n"				\
-"	sethi	%hi(__libc_stack_end), %g5\n"				\
+"	sethi	%hi(_dl_skip_args), %g5\n"				\
 "	add	%l7, %o7, %l7\n"					\
-"	or	%g5, %lo(__libc_stack_end), %g5\n"			\
+"	or	%g5, %lo(_dl_skip_args), %g5\n"				\
 "   /* Save the user entry point address in %l0.  */\n"			\
 "	mov	%o0, %l0\n"						\
-"	ldx	[%l7 + %g5], %l1\n"					\
-"	sethi	%hi(_dl_skip_args), %g5\n"				\
-"	add	%sp, 6*8, %l2\n"					\
 "   /* See if we were run as a command with the executable file name as an\n" \
 "      extra leading argument.  If so, we must shift things around since we\n" \
 "      must keep the stack doubleword aligned.  */\n"			\
-"	or	%g5, %lo(_dl_skip_args), %g5\n"				\
-"	stx	%l2, [%l1]\n"						\
 "	ldx	[%l7 + %g5], %i0\n"					\
 "	ld	[%i0], %i0\n"						\
 "	brz,pt	%i0, 2f\n"						\

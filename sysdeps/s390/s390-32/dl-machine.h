@@ -262,9 +262,6 @@ _dl_start_user:\n\
 	# Point %r12 at the GOT.\n\
 	l     %r12,.Ladr0-.Llit(%r13)\n\
 	ar    %r12,%r13\n\
-	# Store the highest stack address\n\
-	l     %r1,__libc_stack_end@GOT(%r12)\n\
-	st    %r15, 0(%r1)\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	l     %r1,_dl_skip_args@GOT12(0,%r12)\n\

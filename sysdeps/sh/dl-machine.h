@@ -334,11 +334,7 @@ _dl_start_user:\n\
 	 add r0,r12\n\
 	.align 2\n\
 1:	.long _GLOBAL_OFFSET_TABLE_\n\
-2:	! Store the highest stack address\n\
-	mov.l .L_stack_end,r0\n\
-	mov.l @(r0,r12),r0\n\
-	mov.l r15,@r0\n\
-	! See if we were run as a command with the executable file\n\
+2:	! See if we were run as a command with the executable file\n\
 	! name as an extra leading argument.\n\
 	mov.l .L_dl_skip_args,r0\n\
 	mov.l @(r0,r12),r0\n\
@@ -381,8 +377,6 @@ _dl_start_user:\n\
 	.align 2\n\
 .L_dl_start:\n\
 	.long _dl_start@PLT\n\
-.L_stack_end:\n\
-	.long __libc_stack_end@GOT\n\
 .L_dl_skip_args:\n\
 	.long _dl_skip_args@GOT\n\
 .L_dl_init:\n\

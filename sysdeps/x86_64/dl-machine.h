@@ -260,8 +260,6 @@ _dl_runtime_profile:\n\
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
-	# Store the highest stack address\n\
-	movq %rsp, __libc_stack_end(%rip)\n\
 	movq %rsp, %rdi\n\
 	call _dl_start\n\
 _dl_start_user:\n\

@@ -1,3 +1,44 @@
+2003-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/dl-machine.h (RTLD_START): Remove setting of
+	__libc_stack_end.  Patch by David Mosberger.
+
+2003-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Versions (ld): Export __libc_stack_end@GLIBC_2.1 instead of
+	__libc_stack_end@GLIBC_PRIVATE.
+
+	* sysdeps/generic/dl-sysdep.c (DL_STACK_END): Define if not defined.
+	(_dl_sysdep_start): Set __libc_stack_end here.
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Remove setting of
+	__libc_stack_end.
+	* sysdeps/arm/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/cris/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/sh/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/x86_64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/ia64/dl-machine.h (DL_STACK_END): Define.
+	* sysdeps/sparc/sparc32/dl-machine.h (DL_STACK_END): Define.
+	(RTLD_START): Remove setting of __libc_stack_end.
+	* sysdeps/sparc/sparc64/dl-machine.h (DL_STACK_END): Define.
+	(RTLD_START): Remove setting of __libc_stack_end.
+
+2003-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Add gnu_dev_ prefix to
+	function definitions.  Adjust macro expansions accordingly.
+	* sysdeps/unix/sysv/linux/Versions: Add gnu_dev_ prefix to major,
+	minor, makedev name.
+	* sysdeps/unix/sysv/linux/makedev.c: Likewise.
+
+2003-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h (major, minor, makedev):
+	Add __THROW.
+
 2003-09-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/Makefile (others): Add nscd before including ../Rules.

@@ -235,10 +235,6 @@ _dl_start_user:\n\
 	lgr   %r8,%r2\n\
 	# Point %r12 at the GOT.\n\
 	larl  %r12,_GLOBAL_OFFSET_TABLE_\n\
-	# Store the highest stack address\n\
-	lghi  %r1,__libc_stack_end@GOT\n\
-	lg    %r1,0(%r1,%r12)\n\
-	stg   %r15, 0(%r1)\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	lghi  %r1,_dl_skip_args@GOT\n\
