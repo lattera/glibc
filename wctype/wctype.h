@@ -23,11 +23,11 @@
 
 #ifndef _WCTYPE_H
 
+#include <features.h>
+#include <bits/types.h>
+
 #ifndef __need_iswxxx
 # define _WCTYPE_H	1
-
-# include <features.h>
-# include <bits/types.h>
 
 /* We try to get wint_t from <stddef.h>, but not all GCC versions define it
    there.  So define it ourselves if it remains undefined.  */

@@ -1,5 +1,8 @@
 2000-09-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* wctype/wctype.h: Always include <bits/types.h>.
+	Reported by Jim Meyering <meyering@ascend.com>.
+
 	* elf/rtld.c (_dl_dynamic_weak): Set to 1 by default for now.
 	* elf/dl-support.c: Likewise.
 
