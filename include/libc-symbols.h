@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995-1998,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -116,24 +116,8 @@
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
-#  define weak_extern(symbol) _weak_extern (symbol)
-#  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#    define _weak_extern(symbol) \
-        asm (".weakext " __SYMBOL_PREFIX #symbol "\n\t"	\
-	     ".weakext ." __SYMBOL_PREFIX #symbol);
-#   else
-#    define _weak_extern(symbol) asm (".weakext " __SYMBOL_PREFIX #symbol);
-#   endif
-#  else
-#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#    define _weak_extern(symbol) \
-        asm (".weak " __SYMBOL_PREFIX #symbol "\n\t"	\
-	     ".weak ." __SYMBOL_PREFIX #symbol);
-#   else
-#    define _weak_extern(symbol) asm (".weak " __SYMBOL_PREFIX #symbol);
-#   endif
-#  endif
+#  define weak_extern(symbol) _weak_extern (weak symbol)
+#  define _weak_extern(expr) _Pragma (#expr)
 
 # else
 
