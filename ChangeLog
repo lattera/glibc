@@ -1,5 +1,7 @@
 2002-10-18  Jeff Bailey  <jbailey@gnu.org>
 
+	* configure.in: Use AC_CONFIG_SRCDIR and new AC_INIT syntax.
+
         * sysdeps/alpha/elf/configure.in: Remove unneeded sinclude statement.
         * sysdeps/generic/configure.in: Likewise.
         * sysdeps/i386/elf/configure.in: Likewise.
