@@ -51,6 +51,11 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/pmap_clnt.h>
 #include <net/if.h>
 
+#ifdef IP_RECVERR
+#include <errqueue.h>
+#include <sys/uio.h>
+#endif
+
 extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
 extern u_long _create_xid (void);
 
@@ -186,6 +191,12 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
       (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
       /* the sockets rpc controls are non-blocking */
       (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
+#ifdef IP_RECVERR
+      {
+	int on = 1;
+	setsockopt(*sockp, SOL_IP, IP_RECVERR, &on, sizeof(on));
+      }
+#endif
       cu->cu_closeit = TRUE;
     }
   else
@@ -361,6 +372,47 @@ send_again:
 	  cu->cu_error.re_errno = errno;
 	  return (cu->cu_error.re_status = RPC_CANTRECV);
 	}
+#ifdef IP_RECVERR
+      if (fd.revents & POLLERR)
+	{
+	  struct msghdr msg;
+	  struct cmsghdr *cmsg;
+	  struct sock_extended_err *e;
+	  struct sockaddr_in err_addr;
+	  struct iovec iov;
+	  char *cbuf = (char *) alloca (outlen + 256);
+	  int ret;
+
+	  iov.iov_base = cbuf + 256;
+	  iov.iov_len = outlen;
+	  msg.msg_name = (void *) &err_addr;
+	  msg.msg_namelen = sizeof (err_addr);
+	  msg.msg_iov = &iov;
+	  msg.msg_iovlen = 1;
+	  msg.msg_flags = 0;
+	  msg.msg_control = cbuf;
+	  msg.msg_controllen = 256;
+	  ret = recvmsg (cu->cu_sock, &msg, MSG_ERRQUEUE);
+	  if (ret >= 0
+	      && memcmp (cbuf + 256, cu->cu_outbuf, ret) == 0
+	      && (msg.msg_flags & MSG_ERRQUEUE)
+	      && ((msg.msg_namelen == 0
+		   && ret >= 12)
+		  || (msg.msg_namelen == sizeof (err_addr)
+		      && err_addr.sin_family == AF_INET
+		      && memcmp (&err_addr.sin_addr, &cu->cu_raddr.sin_addr,
+				 sizeof (err_addr.sin_addr)) == 0
+		      && err_addr.sin_port == cu->cu_raddr.sin_port)))
+	    for (cmsg = CMSG_FIRSTHDR (&msg); cmsg;
+		 cmsg = CMSG_NXTHDR (&msg, cmsg))
+	      if (cmsg->cmsg_level == SOL_IP && cmsg->cmsg_type == IP_RECVERR)
+		{
+		  e = (struct sock_extended_err *) CMSG_DATA(cmsg);
+		  cu->cu_error.re_errno = e->ee_errno;
+		  return (cu->cu_error.re_status = RPC_CANTRECV);
+		}
+	}
+#endif
       do
 	{
 	  fromlen = sizeof (struct sockaddr);

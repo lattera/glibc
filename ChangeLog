@@ -1,5 +1,18 @@
 2001-01-10  H.J. Lu  <hjl@gnu.org>
 
+	* sysdeps/ia64/dl-machine.h (TRAMPOLINE_TEMPLATE): Also preserve
+	r9, r10 and r11 for language specific registers.
+
+2001-01-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/clnt_udp.c (clntudp_bufcreate): Set IP_RECVERR on the
+	UDP socket.
+	(clntudp_call): Handle MSG_ERRQUEUE.
+	* sysdeps/generic/errqueue.h: New file.
+	* sysdeps/unix/sysv/linux/errqueue.h: New file.
+
+2001-01-10  H.J. Lu  <hjl@gnu.org>
+
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list (s_getpagesize): Removed.
 
 2001-01-10  Joseph S. Myers  <jsm28@cam.ac.uk>

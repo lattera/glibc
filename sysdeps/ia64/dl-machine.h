@@ -163,7 +163,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.proc " #tramp_name "#
 " #tramp_name ":
 	{ .mmi
-	  alloc loc0 = ar.pfs, 8, 3, 3, 0
+	  alloc loc0 = ar.pfs, 8, 6, 3, 0
 	  adds r2 = -144, r12
 	  adds r3 = -128, r12
 	}
@@ -177,6 +177,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  mov loc2 = r8		/* preserve struct value register */
 	  nop.f 0
 	  nop.b 0
+	}
+	{ .mii
+	  mov loc3 = r9		/* preserve language specific register */
+	  mov loc4 = r10	/* preserve language specific register */
+	  mov loc5 = r11	/* preserve language specific register */
 	}
 	{ .mmi
 	  stf.spill [r2] = f8, 32
@@ -230,6 +235,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  ldf.fill f15 = [r3], 32
 	  adds r12 = 160, r12
 	  ;;
+	}
+	{ .mii
+	  mov r9 = loc3		/* restore language specific register */
+	  mov r10 = loc4	/* restore language specific register */
+	  mov r11 = loc5	/* restore language specific register */
 	}
 	{ .mii
 	  ld8 gp = [ret0]
