@@ -1,3 +1,8 @@
+1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/opendir.c (__opendir): Add back fstat call to make
+	sure that descriptor is in any case for a directory.
+
 1998-10-19 18:59 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* math/tgmath.h (__TGMATH_UNARY_REAL_IMAG): Fix typo: val -> Val.
