@@ -50,7 +50,8 @@ do_prepare (void)
     }
 }
 
-volatile int chk_fail_ok, ret;
+volatile int chk_fail_ok;
+volatile int ret;
 jmp_buf chk_fail_buf;
 
 static void
