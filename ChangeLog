@@ -1,4 +1,12 @@
+2000-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* crypt/md5-crypt.c (__md5_crypt_r): Add casts for first
+	parameters of memset calls to avoid warnings.
+
 2000-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/Makefile: Rewrite rules to avoid running isomac unless
+	necessary.
 
 	* sysdeps/unix/sysv/linux/getcwd.c: Correct last patch.
 	Patch by Greg McGary <greg@mcgary.org>.
@@ -10,7 +18,7 @@
 
 2000-07-15  Jakub Jelinek  <jakub@redhat.com>
 
-	* gconv_open (__gconv_open): Initialize whole __gconv_trans_data
+	* iconv/gconv_open (__gconv_open): Initialize whole __gconv_trans_data
 	structure.
 
 2000-07-13  Jakub Jelinek  <jakub@redhat.com>

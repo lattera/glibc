@@ -226,9 +226,9 @@ __md5_crypt_r (key, salt, buffer, buflen)
   memset (&ctx, '\0', sizeof (ctx));
   memset (&alt_ctx, '\0', sizeof (alt_ctx));
   if (key_copied)
-    memset (key, '\0', key_len);
+    memset ((char *) key, '\0', key_len);
   if (salt_copied)
-    memset (salt, '\0', salt_len);
+    memset ((char *) salt, '\0', salt_len);
 
   return buffer;
 }
