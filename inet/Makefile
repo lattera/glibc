@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,8 @@
 #
 subdir	:= inet
 
-headers	:= netinet/ether.h netinet/in.h netinet/if_ether.h \
+headers	:= netinet/ether.h netinet/in.h netinet/in_systm.h \
+	   netinet/if_ether.h \
 	   netinet/tcp.h netinet/ip.h $(wildcard arpa/*.h protocols/*.h) \
 	   aliases.h netinet/ip6.h netinet/icmp6.h bits/in.h
 

@@ -36,7 +36,6 @@ neteconet/ec.h
 netinet/if_fddi.h
 netinet/if_tr.h
 netinet/igmp.h
-netinet/in_systm.h
 netpacket/packet.h
 netipx/ipx.h
 netrom/netrom.h
@@ -64,7 +63,6 @@ sys/prctl.h
 sys/procfs.h
 sys/quota.h
 sys/sendfile.h
-sys/socketvar.h
 sys/soundcard.h
 sys/sysctl.h
 sys/sysinfo.h
