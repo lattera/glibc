@@ -144,6 +144,8 @@ struct known_symbol
   const char *name;
   uintptr_t addr;
   size_t size;
+
+  uintmax_t ticks;
 };
 
 
@@ -192,8 +194,9 @@ struct profdata
 
 /* Search tree for symbols.  */
 void *symroot;
-static const struct known_symbol **sortsym;
+static struct known_symbol **sortsym;
 static size_t symidx;
+static uintmax_t total_ticks;
 
 /* Prototypes for local functions.  */
 static struct shobj *load_shobj (const char *name);
@@ -280,6 +283,14 @@ no filename for profiling data given and shared object `%s' has no soname"),
     {
     case COUNT_TOTAL:
       count_total_ticks (shobj_handle, profdata_handle);
+      {
+	size_t n;
+	for (n = 0; n < symidx; ++n)
+	  if (sortsym[n]->ticks != 0)
+	    printf ("Name: %-30s, Ticks: %" PRIdMAX "\n", sortsym[n]->name,
+		    sortsym[n]->ticks);
+	printf ("Total ticks: %" PRIdMAX "\n", total_ticks);
+      }
       break;
     case NONE:
       /* Do nothing.  */
@@ -443,32 +454,31 @@ load_shobj (const char *name)
 			      * sizeof (struct here_cg_arc_record)));
 
   if (do_test)
-    {
+    printf ("expected size: %Zd\n", result->expected_size);
+
 #define SCALE_1_TO_1	0x10000L
 
-      printf ("expected size: %Zd\n", result->expected_size);
+  if (result->kcountsize < result->highpc - result->lowpc)
+    {
+      size_t range = result->highpc - result->lowpc;
+      size_t quot = range / result->kcountsize;
 
-      if (result->kcountsize < result->highpc - result->lowpc)
-	{
-	  size_t range = result->highpc - result->lowpc;
-	  size_t quot = range / result->kcountsize;
-
-	  if (quot >= SCALE_1_TO_1)
-	    result->s_scale = 1;
-	  else if (quot >= SCALE_1_TO_1 / 256)
-	    result->s_scale = SCALE_1_TO_1 / quot;
-	  else if (range > ULONG_MAX / 256)
-	    result->s_scale = ((SCALE_1_TO_1 * 256)
-			       / (range / (result->kcountsize / 256)));
-	  else
-	    result->s_scale = ((SCALE_1_TO_1 * 256)
-			       / ((range * 256) / result->kcountsize));
-	}
+      if (quot >= SCALE_1_TO_1)
+	result->s_scale = 1;
+      else if (quot >= SCALE_1_TO_1 / 256)
+	result->s_scale = SCALE_1_TO_1 / quot;
+      else if (range > ULONG_MAX / 256)
+	result->s_scale = ((SCALE_1_TO_1 * 256)
+			   / (range / (result->kcountsize / 256)));
       else
-	result->s_scale = SCALE_1_TO_1;
-
-      printf ("s_scale: %d\n", result->s_scale);
+	result->s_scale = ((SCALE_1_TO_1 * 256)
+			   / ((range * 256) / result->kcountsize));
     }
+  else
+    result->s_scale = SCALE_1_TO_1;
+
+  if (do_test)
+    printf ("s_scale: %d\n", result->s_scale);
 
   /* Determine the string table.  */
   if (map->l_info[DT_STRTAB] == NULL)
@@ -775,32 +785,28 @@ static void
 count_total_ticks (struct shobj *shobj, struct profdata *profdata)
 {
   volatile uint16_t *kcount = profdata->kcount;
-  uint64_t sum = 0;
-  size_t idx;
+  size_t maxkidx = shobj->kcountsize;
   size_t factor = 2 * (65536 / shobj->s_scale);
+  size_t kidx = 0;
+  size_t sidx = 0;
 
-  for (idx = shobj->kcountsize / sizeof (*kcount); idx > 0; )
+  while (sidx < symidx)
     {
-      --idx;
-      if (kcount[idx] != 0)
-	{
-	  size_t n;
+      uintptr_t start = sortsym[sidx]->addr;
+      uintptr_t end = start + sortsym[sidx]->size;
 
-	  for (n = 0; n < symidx; ++n)
-	    if (sortsym[n]->addr <= factor * idx
-		&& sortsym[n]->addr + sortsym[n]->size > factor * idx)
-	      break;
+      while (kidx < maxkidx && factor * kidx < start)
+	++kidx;
+      if (kidx == maxkidx)
+	break;
 
-	  if (n < symidx)
-	    printf ("idx = %d, count = %d, name = %s\n", idx, kcount[idx],
-		    sortsym[n]->name);
-	  else
-	    printf ("idx = %d, N/A\n", idx);
-	}
-      sum += kcount[idx];
+      while (kidx < maxkidx && factor * kidx < end)
+	sortsym[sidx]->ticks += kcount[kidx++];
+      if (kidx == maxkidx)
+	break;
+
+      total_ticks += sortsym[sidx++]->ticks;
     }
-
-  printf ("total ticks: %10" PRId64 "\n", sum);
 }
 
 
@@ -818,14 +824,7 @@ static void
 printsym (const void *node, VISIT value, int level)
 {
   if (value == leaf || value == postorder)
-    {
-      const struct known_symbol *sym = *(const struct known_symbol **) node;
-
-      printf ("Name: %30s, Start: %6x, Len: %5d\n",
-	      sym->name, sym->addr, sym->size);
-
-      sortsym[symidx++] = sym;
-    }
+    sortsym[symidx++] = *(const struct known_symbol **) node;
 }
 
 
@@ -882,6 +881,7 @@ read_symbols (struct shobj *shobj)
 	    newsym->name = name0;
 	    newsym->addr = last_addr;
 	    newsym->size = *((uint32_t *) (shobj->stab + idx + VALOFF));
+	    newsym->ticks = 0;
 
 	    tsearch (newsym, &symroot, symorder);
 	    ++n;
@@ -920,6 +920,7 @@ read_symbols (struct shobj *shobj)
 	      newsym->name = &strtab[symtab->st_name];
 	      newsym->addr = symtab->st_value;
 	      newsym->size = symtab->st_size;
+	      newsym->ticks = 0;
 
 	      tsearch (newsym, &symroot, symorder);
 	      ++n;

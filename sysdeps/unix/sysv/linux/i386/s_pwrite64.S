@@ -1,5 +1,5 @@
 /* pwrite64 syscall for Linux/ix86.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,8 @@ ENTRY (__syscall_pwrite64)
 	POPARGS_5		/* Restore register contents.  */
 	cmpl	$-4095, %eax	/* Check %eax for error.  */
 	jae	syscall_error	/* Jump to error handler if error.  */
-	ret			/* Return to caller.  */
 #endif
+L(pseudo_end):
+	ret			/* Return to caller.  */
 
 PSEUDO_END (__syscall_pwrite64)

@@ -40,11 +40,13 @@ __sigsuspend (set)
     {
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
+      int saved_errno = errno;
       int result = __syscall_rt_sigsuspend (set, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;
 
+      __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
 

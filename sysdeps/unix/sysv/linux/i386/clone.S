@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -59,6 +59,7 @@ ENTRY(__clone)
 	jl	syscall_error
 	jz	thread_start
 
+L(pseudo_end):
 	ret
 
 thread_start:

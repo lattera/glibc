@@ -30,6 +30,9 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
+/* ELF-like local names start with `.L'.  */
+#undef L
+#define L(name)	.L##name
 
 #ifdef ASSEMBLER
 

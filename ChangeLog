@@ -1,3 +1,32 @@
+1998-03-03 17:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/sprof.c: Cleanup a bit.
+
+1998-03-03 08:01  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/sysdep.h (L): New. Define.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (L): New. Define.
+
+	* sysdeps/i386/i586/addmul_1.S: Fix a typo.
+
+	* sysdeps/unix/sysv/linux/i386/clone.S: Follow Intel's advice
+	to have only one exit point for functions.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/s_pread64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/s_pwrite64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscall.S: Likewise.
+
+1998-03-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sigaction.c (__sigaction): Safe and
+	reset errno so that errno isn't set to ENOSYS in the first call.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c (__sigprocmask): Likewise.
+	* sysdeps/unix/sysv/linux/sigpending.c (sigpending): Likewise.
+
 1998-03-02 17:55  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/add_n.S: Change to use ENTRY and END macro.

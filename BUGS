@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1998-02-27T13:05:49-0800 drepper>
+Time-stamp: <1998-03-03T15:29:53-0800 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -52,7 +52,7 @@ Severity: [  *] to [***]
        directive, with localedef, not only the copied category is
        checked for errors, but the whole file containing the same
        category.
-       [PR libc/207]
+       [PR libc/207 and PR libc/454]
 
 [  *]  The libm-ieee `gamma' function gives wrong results (at least for
        -0.5).

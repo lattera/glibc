@@ -35,7 +35,7 @@
 #define s2_limb ebp
 
 	.text
-ENRTY(__mpn_addmul_1)
+ENTRY(__mpn_addmul_1)
 
 	INSN1(push,l	,R(edi))
 	INSN1(push,l	,R(esi))

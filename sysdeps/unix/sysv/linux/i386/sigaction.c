@@ -48,6 +48,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   if (!__libc_missing_rt_sigs)
     {
       struct kernel_sigaction kact, koact;
+      int saved_errno = errno;
 
       if (act)
 	{
@@ -76,6 +77,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 	  return result;
 	}
 
+      __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
 
