@@ -73,7 +73,7 @@ s_stat64	xstat64  stat64	2	__syscall_stat64
 s_truncate64	truncate64 truncate64	3	__syscall_truncate64
 
 # Todo: we can pass 6 args in registers, no need for the wrapper
-sysctl		sysctl	_sysctl		1	__syscall_sysctl
+sys_sysctl	sysctl	_sysctl		1	__syscall_sysctl
 sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_lstat	lxstat	lstat		2	__syscall_lstat
 sys_readv	readv	readv		3	__syscall_readv
