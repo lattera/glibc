@@ -1366,17 +1366,21 @@ envsubst:
 	  if (*word == NULL)
 	    return WRDE_NOSPACE;
 
-	  for (p = 1; __libc_argv[p]; p++)
+	  for (p = 2; __libc_argv[p]; p++)
 	    {
+	      size_t len;
+	      char *s;
 	      if (w_addword (pwordexp, *word))
 		return WRDE_NOSPACE;
-	      *word = __strdup (__libc_argv[p]);
-	      *max_length = *word_length = strlen (*word);
-	      if (*word == NULL)
+	      len = strlen (__libc_argv[p]) + 1;
+	      s = malloc (len);
+	      if (s == NULL)
 		return WRDE_NOSPACE;
+	      *word = memcpy (s, __libc_argv[p], len);
+	      *max_length = *word_length = len;
 	    }
 	}
-      
+
       return 0;
     }
 

@@ -1,3 +1,8 @@
+1998-03-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/wordexp.c (parse_param): Fix off-by-on error in $@
+	handling.  Optimize a bit.
+
 1998-03-18 00:25  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp.c (parse_comm): Allow quoting inside $(...).

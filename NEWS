@@ -32,8 +32,8 @@ Version 2.1
 
 * scanf recognizes the %a and %A format for scanning floating point numbers.
 
-* the new header <inttypes.h> from ISO C 9X provides information and
-  interfaces for the available integer types.
+* the new headers <stdint.h> and <inttypes.h> from ISO C 9X provides
+  information and interfaces for the available integer types.
 
 * the new header <complex.h> contains definitions of the complex math
   functions from ISO C 9X.
@@ -59,6 +59,8 @@ Version 2.1
   (nscd).
 
 * Tim Waugh provided an implementation of the POSIX.2 wordexp function family.
+
+* Mark Kettenis provided a Hesiod NSS module.
 
 Version 2.0.5
 
