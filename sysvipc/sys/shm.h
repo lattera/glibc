@@ -35,6 +35,8 @@
 #include <time.h>
 
 
+__BEGIN_DECLS
+
 /* Segment low boundary address multiple.  */
 #define SHMLBA		(__getpagesize ())
 extern int __getpagesize (void) __THROW;
@@ -42,8 +44,6 @@ extern int __getpagesize (void) __THROW;
 
 /* The following System V style IPC functions implement a shared memory
    facility.  The definition is found in XPG4.2.  */
-
-__BEGIN_DECLS
 
 /* Shared memory control operation.  */
 extern int shmctl (int __shmid, int __cmd, struct shmid_ds *__buf) __THROW;

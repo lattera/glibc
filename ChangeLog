@@ -1,5 +1,8 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysvipc/sys/shm.h: Move __getpagesize declaration inside extern C++.
+	Reported by HJ Lu.
+
 	* sysdeps/sh/sh3/bits/setjmp.h: Removed.
 	* sysdeps/sh/sh4/bits/setjmp.h: Moved to...
 	* sysdeps/sh/bits/setjmp.h: ...here.  New file.
