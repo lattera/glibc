@@ -33,16 +33,7 @@ __brk (void *addr)
 {
   void *newbrk;
 
-  {
-    register long d0 __asm__ ("%d0");
-
-    asm ("move%.l %2, %%d1\n"
-	 "trap #0"		/* Perform the system call.  */
-	 : "=d" (d0)
-	 : "0" (SYS_ify (brk)), "g" (addr)
-	 : "%d1");
-    newbrk = (void *) d0;
-  }
+  newbrk = INTERNAL_SYSCALL (brk, 1, addr);
   __curbrk = newbrk;
 
   if (newbrk < addr)
