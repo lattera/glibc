@@ -239,3 +239,9 @@ void **(*const __libc_internal_tsd_address) (enum __libc_tsd_key_t key)
      __THROW __attribute__ ((__const__)) = libc_internal_tsd_address;
 
 #endif
+
+int __libc_alloca_cutoff (size_t size)
+{
+  pthread_descr self = thread_self();
+  return size <= THREAD_GETMEM_NC(self, p_alloca_cutoff);
+}

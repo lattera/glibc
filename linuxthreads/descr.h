@@ -165,6 +165,8 @@ struct _pthread_descr_struct {
 #ifdef USE_TLS
   char *p_stackaddr;		/* Stack address.  */
 #endif
+  size_t p_alloca_cutoff;	/* Maximum size which should be allocated
+				   using alloca() instead of malloc().  */
   /* New elements must be added at the end.  */
 } __attribute__ ((aligned(32))); /* We need to align the structure so that
 				    doubles are aligned properly.  This is 8

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, August 1995.
 
@@ -27,7 +27,7 @@
 #include <bp-checks.h>
 
 int
-msgsnd (msqid, msgp, msgsz, msgflg)
+__libc_msgsnd (msqid, msgp, msgsz, msgflg)
      int msqid;
      const void *msgp;
      size_t msgsz;
@@ -36,3 +36,4 @@ msgsnd (msqid, msgp, msgsz, msgflg)
   return INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz,
 			 msgflg, (void *) CHECK_N (msgp, msgsz));
 }
+weak_alias (__libc_msgsnd, msgsnd)

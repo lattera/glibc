@@ -30,7 +30,7 @@
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
 ssize_t
-__writev (int fd, const struct iovec *vector, int count)
+__libc_writev (int fd, const struct iovec *vector, int count)
 {
   char *buffer;
   register char *bp;
@@ -55,8 +55,8 @@ __writev (int fd, const struct iovec *vector, int count)
   /* Allocate a temporary buffer to hold the data.  We should normally
      use alloca since it's faster and does not require synchronization
      with other threads.  But we cannot if the amount of memory
-     required is too large.  Use 512k as the limit.  */
-  if (bytes < 512 * 1024)
+     required is too large.  */
+  if (__libc_use_alloca (bytes))
     buffer = (char *) __alloca (bytes);
   else
     {
@@ -90,6 +90,7 @@ __writev (int fd, const struct iovec *vector, int count)
 
   return bytes_written;
 }
-#ifndef __writev
-weak_alias (__writev, writev)
+#ifndef __libc_writev
+strong_alias (__libc_writev, __writev)
+weak_alias (__libc_writev, writev)
 #endif

@@ -110,27 +110,47 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
 			 int *herrnop)
 {
   /* Return entry for network with NAME.  */
-  querybuf net_buffer;
-  int anslen;
+  querybuf *net_buffer;
+  int anslen, use_malloc = 0;
   char *qbuf;
+  enum nss_status status;
 
   if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     return NSS_STATUS_UNAVAIL;
 
   qbuf = strdupa (name);
-  anslen = res_nsearch (&_res, qbuf, C_IN, T_PTR, (u_char *) &net_buffer,
-			sizeof (querybuf));
+
+  if (!__libc_use_alloca (MAXPACKET))
+    {
+      net_buffer = (querybuf *) malloc (sizeof (querybuf));
+      if (net_buffer == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_UNAVAIL;
+	}
+      use_malloc = 1;
+    }
+  else
+    net_buffer = (querybuf *) alloca (sizeof (querybuf));
+
+  anslen = res_nsearch (&_res, qbuf, C_IN, T_PTR, net_buffer->buf,
+			sizeof (net_buffer->buf));
   if (anslen < 0)
     {
       /* Nothing found.  */
       *errnop = errno;
+      if (use_malloc)
+	free (net_buffer);
       return (errno == ECONNREFUSED
 	      || errno == EPFNOSUPPORT
 	      || errno == EAFNOSUPPORT)
 	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
-  return getanswer_r (&net_buffer, anslen, result, buffer, buflen, BYNAME);
+  status = getanswer_r (net_buffer, anslen, result, buffer, buflen, BYNAME);
+  if (use_malloc)
+    free (net_buffer);
+  return status;
 }
 
 
@@ -141,10 +161,10 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
 {
   /* Return entry for network with NAME.  */
   enum nss_status status;
-  querybuf net_buffer;
+  querybuf *net_buffer;
   unsigned int net_bytes[4];
   char qbuf[MAXDNAME];
-  int cnt, anslen;
+  int cnt, anslen, use_malloc = 0;
   u_int32_t net2;
   int olderr = errno;
 
@@ -181,20 +201,37 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
       break;
     }
 
-  anslen = res_nquery (&_res, qbuf, C_IN, T_PTR, (u_char *) &net_buffer,
-		       sizeof (querybuf));
+  if (!__libc_use_alloca (MAXPACKET))
+    {
+      net_buffer = (querybuf *) malloc (sizeof (querybuf));
+      if (net_buffer == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_UNAVAIL;
+	}
+      use_malloc = 1;
+    }
+  else
+    net_buffer = (querybuf *) alloca (sizeof (querybuf));
+
+  anslen = res_nquery (&_res, qbuf, C_IN, T_PTR, net_buffer->buf,
+		       sizeof (net_buffer->buf));
   if (anslen < 0)
     {
       /* Nothing found.  */
       int err = errno;
       __set_errno (olderr);
+      if (use_malloc)
+	free (net_buffer);
       return (err == ECONNREFUSED
 	      || err == EPFNOSUPPORT
 	      || err == EAFNOSUPPORT)
 	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
-  status = getanswer_r (&net_buffer, anslen, result, buffer, buflen, BYADDR);
+  status = getanswer_r (net_buffer, anslen, result, buffer, buflen, BYADDR);
+  if (use_malloc)
+    free (net_buffer);
   if (status == NSS_STATUS_SUCCESS)
     {
       /* Strip trailing zeros.  */

@@ -175,7 +175,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
      values.  But since there is no limit on the length of the string
      we have to use `malloc' if the string is too long.  We should be
      very conservative here.  */
-  if (srclen >= 16384)
+  if (! __libc_use_alloca (srclen))
     {
       idxarr = (int32_t *) malloc ((srclen + 1) * (sizeof (int32_t) + 1));
       rulearr = (unsigned char *) &idxarr[srclen];

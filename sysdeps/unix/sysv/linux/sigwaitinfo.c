@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,6 +41,7 @@ __sigwaitinfo (set, info)
   return INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
 			 CHECK_1 (info), NULL, _NSIG / 8);
 }
+libc_hidden_def (__sigwaitinfo)
 weak_alias (__sigwaitinfo, sigwaitinfo)
 #else
 # include <sysdeps/generic/sigwaitinfo.c>

@@ -1039,7 +1039,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	    /* Allocate dynamically an array which definitely is long	      \
 	       enough for the wide character version.  */		      \
-	    if (len < 8192)						      \
+	    if (__libc_use_alloca (len * sizeof (wchar_t)))		      \
 	      string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
 	    else if ((string = (CHAR_T *) malloc (len * sizeof (wchar_t)))    \
 		     == NULL)						      \
@@ -1201,7 +1201,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    if (prec >= 0)						      \
 	      {								      \
 		/* The string `s2' might not be NUL terminated.  */	      \
-		if (prec < 32768)					      \
+		if (__libc_use_alloca (prec))				      \
 		  string = (char *) alloca (prec);			      \
 		else if ((string = (char *) malloc (prec)) == NULL)	      \
 		  {							      \
@@ -1219,7 +1219,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		  {							      \
 		    assert (__mbsinit (&mbstate));			      \
 		    s2 = (const wchar_t *) string;			      \
-		    if (len + 1 < 32768)				      \
+		    if (__libc_use_alloca (len + 1))			      \
 		      string = (char *) alloca (len + 1);		      \
 		    else if ((string = (char *) malloc (len + 1)) == NULL)    \
 		      {							      \
@@ -1448,7 +1448,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  {
 	    /* We have to use a special buffer.  The "32" is just a safe
 	       bet for all the output which is not counted in the width.  */
-	    if (width < (int) (32768 / sizeof (CHAR_T)))
+	    if (__libc_use_alloca ((width + 32) * sizeof (CHAR_T)))
 	      workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
 			 + (width + 32));
 	    else
@@ -1473,7 +1473,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	{
 	  /* We have to use a special buffer.  The "32" is just a safe
 	     bet for all the output which is not counted in the width.  */
-	  if (width < (int) (32768 / sizeof (CHAR_T)))
+	  if (__libc_use_alloca ((width + 32) * sizeof (CHAR_T)))
 	    workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
 		       + (width + 32));
 	  else
@@ -1516,8 +1516,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       if (prec > width
 	  && prec + 32 > (int)(sizeof (work_buffer) / sizeof (work_buffer[0])))
 	{
-	  if (prec < (int) (32768 / sizeof (CHAR_T)))
-	    workend = alloca (prec + 32) + (prec + 32);
+	  if (__libc_use_alloca ((prec + 32) * sizeof (CHAR_T)))
+	    workend = ((CHAR_T *) alloca ((prec + 32) * sizeof (CHAR_T)))
+		      + (prec + 32);
 	  else
 	    {
 	      workstart = (CHAR_T *) malloc ((prec + 32) * sizeof (CHAR_T));
@@ -1832,7 +1833,8 @@ do_positional:
 	if (MAX (prec, width) + 32 > (int) (sizeof (work_buffer)
 					    / sizeof (CHAR_T)))
 	  {
-	    if (MAX (prec, width) < (int) (32768 / sizeof (CHAR_T)))
+	    if (__libc_use_alloca ((MAX (prec, width) + 32)
+				   * sizeof (CHAR_T)))
 	      workend = ((CHAR_T *) alloca ((MAX (prec, width) + 32)
 					    * sizeof (CHAR_T))
 			 + (MAX (prec, width) + 32));

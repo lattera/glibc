@@ -334,7 +334,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
                                   char ** out_new_thread,
                                   char ** out_new_thread_bottom,
                                   char ** out_guardaddr,
-                                  size_t * out_guardsize)
+                                  size_t * out_guardsize,
+                                  size_t * out_stacksize)
 {
   pthread_descr new_thread;
   char * new_thread_bottom;
@@ -388,6 +389,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       /* Clear the thread data structure.  */
       memset (new_thread, '\0', sizeof (*new_thread));
 #endif
+      stacksize = attr->__stacksize;
     }
   else
     {
@@ -559,6 +561,11 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
   *out_new_thread_bottom = new_thread_bottom;
   *out_guardaddr = guardaddr;
   *out_guardsize = guardsize;
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  *out_stacksize = stacksize / 2;
+#else
+  *out_stacksize = stacksize;
+#endif
   return 0;
 }
 
@@ -575,7 +582,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   char * new_thread_bottom;
   pthread_t new_thread_id;
   char *guardaddr = NULL;
-  size_t guardsize = 0;
+  size_t guardsize = 0, stksize = 0;
   int pagesize = __getpagesize();
   int saved_errno = 0;
 
@@ -608,7 +615,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	continue;
       if (pthread_allocate_stack(attr, thread_segment(sseg),
 				 pagesize, &stack_addr, &new_thread_bottom,
-                                 &guardaddr, &guardsize) == 0)
+                                 &guardaddr, &guardsize, &stksize) == 0)
 	{
 #ifdef USE_TLS
 	  new_thread->p_stackaddr = stack_addr;
@@ -639,6 +646,8 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_guardsize = guardsize;
   new_thread->p_nr = sseg;
   new_thread->p_inheritsched = attr ? attr->__inheritsched : 0;
+  new_thread->p_alloca_cutoff = stksize / 4 > __MAX_ALLOCA_CUTOFF
+				 ? __MAX_ALLOCA_CUTOFF : stksize / 4;
   /* Initialize the thread handle */
   __pthread_init_lock(&__pthread_handles[sseg].h_lock);
   __pthread_handles[sseg].h_descr = new_thread;

@@ -63,58 +63,20 @@ static pthread_descr manager_thread;
 /* Descriptor of the initial thread */
 
 struct _pthread_descr_struct __pthread_initial_thread = {
-  {
-    {
-      .self = &__pthread_initial_thread /* pthread_descr self */
-    }
-  },
-  &__pthread_initial_thread,  /* pthread_descr p_nextlive */
-  &__pthread_initial_thread,  /* pthread_descr p_prevlive */
-  NULL,                       /* pthread_descr p_nextwaiting */
-  NULL,			      /* pthread_descr p_nextlock */
-  PTHREAD_THREADS_MAX,        /* pthread_t p_tid */
-  0,                          /* int p_pid */
-  0,                          /* int p_priority */
-  &__pthread_handles[0].h_lock, /* struct _pthread_fastlock * p_lock */
-  0,                          /* int p_signal */
-  NULL,                       /* sigjmp_buf * p_signal_buf */
-  NULL,                       /* sigjmp_buf * p_cancel_buf */
-  0,                          /* char p_terminated */
-  0,                          /* char p_detached */
-  0,                          /* char p_exited */
-  NULL,                       /* void * p_retval */
-  0,                          /* int p_retval */
-  NULL,                       /* pthread_descr p_joining */
-  NULL,                       /* struct _pthread_cleanup_buffer * p_cleanup */
-  0,                          /* char p_cancelstate */
-  0,                          /* char p_canceltype */
-  0,                          /* char p_canceled */
-  NULL,                       /* char * p_in_sighandler */
-  0,                          /* char p_sigwaiting */
-  PTHREAD_START_ARGS_INITIALIZER(NULL),
-                              /* struct pthread_start_args p_start_args */
-  {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
-  {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
-  &_errno,                    /* int *p_errnop */
-  0,                          /* int p_errno */
-  &_h_errno,                  /* int *p_h_errnop */
-  0,                          /* int p_h_errno */
-  &_res,		      /* struct __res_state *p_resp */
-  {},			      /* struct __res_state p_res */
-  1,                          /* int p_userstack */
-  NULL,                       /* void * p_guardaddr */
-  0,                          /* size_t p_guardsize */
-  0,                          /* Always index 0 */
-  0,                          /* int p_report_events */
-  {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
-  __ATOMIC_INITIALIZER,       /* struct pthread_atomic p_resume_count */
-  0,                          /* char p_woken_by_cancel */
-  0,                          /* char p_condvar_avail */
-  0,                          /* char p_sem_avail */
-  NULL,                       /* struct pthread_extricate_if *p_extricate */
-  NULL,	                      /* pthread_readlock_info *p_readlock_list; */
-  NULL,                       /* pthread_readlock_info *p_readlock_free; */
-  0                           /* int p_untracked_readlock_count; */
+  .p_header.data.self = &__pthread_initial_thread,
+  .p_nextlive = &__pthread_initial_thread,
+  .p_prevlive = &__pthread_initial_thread,
+  .p_tid = PTHREAD_THREADS_MAX,
+  .p_lock = &__pthread_handles[0].h_lock,
+  .p_start_args = PTHREAD_START_ARGS_INITIALIZER(NULL),
+#if !(USE_TLS && HAVE___THREAD)
+  .p_errnop = &_errno,
+  .p_h_errnop = &_h_errno,
+  .p_resp = &_res,
+#endif
+  .p_userstack = 1,
+  .p_resume_count = __ATOMIC_INITIALIZER,
+  .p_alloca_cutoff = __MAX_ALLOCA_CUTOFF
 };
 
 /* Descriptor of the manager thread; none of this is used but the error
@@ -123,58 +85,15 @@ struct _pthread_descr_struct __pthread_initial_thread = {
 
 #define manager_thread (&__pthread_manager_thread)
 struct _pthread_descr_struct __pthread_manager_thread = {
-  {
-    {
-      .self = &__pthread_manager_thread /* pthread_descr self */
-    }
-  },
-  NULL,                       /* pthread_descr p_nextlive */
-  NULL,                       /* pthread_descr p_prevlive */
-  NULL,                       /* pthread_descr p_nextwaiting */
-  NULL,			      /* pthread_descr p_nextlock */
-  0,                          /* int p_tid */
-  0,                          /* int p_pid */
-  0,                          /* int p_priority */
-  &__pthread_handles[1].h_lock, /* struct _pthread_fastlock * p_lock */
-  0,                          /* int p_signal */
-  NULL,                       /* sigjmp_buf * p_signal_buf */
-  NULL,                       /* sigjmp_buf * p_cancel_buf */
-  0,                          /* char p_terminated */
-  0,                          /* char p_detached */
-  0,                          /* char p_exited */
-  NULL,                       /* void * p_retval */
-  0,                          /* int p_retval */
-  NULL,                       /* pthread_descr p_joining */
-  NULL,                       /* struct _pthread_cleanup_buffer * p_cleanup */
-  0,                          /* char p_cancelstate */
-  0,                          /* char p_canceltype */
-  0,                          /* char p_canceled */
-  NULL,                       /* char * p_in_sighandler */
-  0,                          /* char p_sigwaiting */
-  PTHREAD_START_ARGS_INITIALIZER(__pthread_manager),
-                              /* struct pthread_start_args p_start_args */
-  {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
-  {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
-  &__pthread_manager_thread.p_errno, /* int *p_errnop */
-  0,                          /* int p_errno */
-  NULL,                       /* int *p_h_errnop */
-  0,                          /* int p_h_errno */
-  NULL,			      /* struct __res_state *p_resp */
-  {},			      /* struct __res_state p_res */
-  0,                          /* int p_userstack */
-  NULL,                       /* void * p_guardaddr */
-  0,                          /* size_t p_guardsize */
-  1,                          /* Always index 1 */
-  0,                          /* int p_report_events */
-  {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
-  __ATOMIC_INITIALIZER,       /* struct pthread_atomic p_resume_count */
-  0,                          /* char p_woken_by_cancel */
-  0,                          /* char p_condvar_avail */
-  0,                          /* char p_sem_avail */
-  NULL,                       /* struct pthread_extricate_if *p_extricate */
-  NULL,	                      /* pthread_readlock_info *p_readlock_list; */
-  NULL,                       /* pthread_readlock_info *p_readlock_free; */
-  0                           /* int p_untracked_readlock_count; */
+  .p_header.data.self = &__pthread_manager_thread,
+  .p_lock = &__pthread_handles[1].h_lock,
+  .p_start_args = PTHREAD_START_ARGS_INITIALIZER(__pthread_manager),
+#if !(USE_TLS && HAVE___THREAD)
+  .p_errnop = &__pthread_manager_thread.p_errno,
+#endif
+  .p_nr = 1,
+  .p_resume_count = __ATOMIC_INITIALIZER,
+  .p_alloca_cutoff = PTHREAD_STACK_MIN / 4
 };
 #endif
 
@@ -418,6 +337,7 @@ __pthread_initialize_minimal(void)
 # if __LT_SPINLOCK_INIT != 0
   self->p_resume_count = (struct pthread_atomic) __ATOMIC_INITIALIZER;
 # endif
+  self->p_alloca_cutoff = __MAX_ALLOCA_CUTOFF;
 
   /* Another variable which points to the thread descriptor.  */
   __pthread_main_thread = self;
@@ -487,6 +407,15 @@ __pthread_init_max_stacksize(void)
   }
 #endif
   __pthread_max_stacksize = max_stack;
+  if (max_stack / 4 < __MAX_ALLOCA_CUTOFF)
+    {
+#ifdef USE_TLS
+      pthread_descr self = THREAD_SELF;
+      self->p_alloca_cutoff = max_stack / 4;
+#else
+      __pthread_initial_thread.p_alloca_cutoff = max_stack / 4;
+#endif
+    }
 }
 
 
@@ -629,6 +558,7 @@ int __pthread_initialize_manager(void)
 # if __LT_SPINLOCK_INIT != 0
   self->p_resume_count = (struct pthread_atomic) __ATOMIC_INITIALIZER;
 # endif
+  tcb->p_alloca_cutoff = PTHREAD_STACK_MIN / 4;
 #else
   tcb = &__pthread_manager_thread;
 #endif

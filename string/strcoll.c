@@ -155,7 +155,7 @@ STRCOLL (s1, s2, l)
 
      Please note that the localedef programs makes sure that `position'
      is not used at the first level.  */
-  if (s1len + s2len >= 16384)
+  if (! __libc_use_alloca (s1len + s2len))
     {
       idx1arr = (int32_t *) malloc ((s1len + s2len) * (sizeof (int32_t) + 1));
       idx2arr = &idx1arr[s1len];

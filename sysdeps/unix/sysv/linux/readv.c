@@ -40,7 +40,7 @@ static ssize_t __atomic_readv_replacement (int, __const struct iovec *,
 /* We should deal with kernel which have a smaller UIO_FASTIOV as well
    as a very big count.  */
 ssize_t
-__readv (fd, vector, count)
+__libc_readv (fd, vector, count)
      int fd;
      const struct iovec *vector;
      int count;
@@ -54,7 +54,8 @@ __readv (fd, vector, count)
 
   return __atomic_readv_replacement (fd, vector, count);
 }
-weak_alias (__readv, readv)
+strong_alias (__libc_readv, __readv)
+weak_alias (__libc_readv, readv)
 
-#define __readv static internal_function __atomic_readv_replacement
+#define __libc_readv static internal_function __atomic_readv_replacement
 #include <sysdeps/posix/readv.c>

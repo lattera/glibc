@@ -4,6 +4,7 @@ adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime __adjtimex_interna
 bdflush		EXTRA	bdflush		i:ii	bdflush
 capget		EXTRA	capget		i:pp	capget
 capset		EXTRA	capset		i:pp	capset
+creat		-	creat		i:si	creat
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
 fdatasync	-	fdatasync	i:i	fdatasync
@@ -79,4 +80,3 @@ flistxattr	EXTRA	flistxattr	i:isi	flistxattr
 removexattr	EXTRA	removexattr	i:ss	removexattr
 lremovexattr	EXTRA	lremovexattr	i:ss	lremovexattr
 fremovexattr	EXTRA	fremovexattr	i:is	fremovexattr
-

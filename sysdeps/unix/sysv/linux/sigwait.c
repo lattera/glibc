@@ -53,6 +53,7 @@ __sigwait (set, sig)
 
   return ret;
 }
+libc_hidden_def (__sigwait)
 weak_alias (__sigwait, sigwait)
 #else
 # include <sysdeps/posix/sigwait.c>

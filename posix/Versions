@@ -114,5 +114,6 @@ libc {
     # are cancelable.
     __libc_wait; __libc_waitpid; __libc_pause; __libc_nanosleep; __libc_fork;
     __libc_pread; __libc_pread64; __libc_pwrite; __libc_pwrite64;
+    __waitid;
   }
 }

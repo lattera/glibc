@@ -869,7 +869,7 @@ __printf_fp (FILE *fp,
        it is possible that we need two more characters in front of all the
        other output.  If the amount of memory we have to allocate is too
        large use `malloc' instead of `alloca'.  */
-    buffer_malloced = chars_needed > 5000;
+    buffer_malloced = ! __libc_use_alloca (chars_needed * 2 * sizeof (wchar_t));
     if (buffer_malloced)
       {
 	wbuffer = (wchar_t *) malloc ((2 + chars_needed) * sizeof (wchar_t));

@@ -1,5 +1,5 @@
 /* Pseudo implementation of waitid.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1997.
 
@@ -28,7 +28,7 @@
 #include <assert.h>
 
 int
-waitid (idtype, id, infop, options)
+__waitid (idtype, id, infop, options)
      idtype_t idtype;
      id_t id;
      siginfo_t *infop;
@@ -118,3 +118,4 @@ waitid (idtype, id, infop, options)
 
   return 0;
 }
+weak_alias (__waitid, waitid)

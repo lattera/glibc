@@ -38,3 +38,8 @@ void **(*__libc_internal_tsd_address) (enum __libc_tsd_key_t)
      __THROW __attribute__ ((__const__));
 
 #endif /* !(USE_TLS && HAVE___THREAD) */
+
+int __libc_alloca_cutoff (size_t size)
+{
+  return size <= __MAX_ALLOCA_CUTOFF;
+}

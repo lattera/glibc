@@ -5,6 +5,7 @@
 extern __pid_t __waitpid (__pid_t __pid, int *__stat_loc,
 			  int __options);
 libc_hidden_proto (__waitpid)
+extern int __waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options);
 
 extern __pid_t __libc_waitpid (pid_t __pid, int *__stat_loc, int __options);
 extern __pid_t __libc_wait (int *__stat_loc);

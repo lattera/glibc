@@ -22,9 +22,12 @@ extern int __sigprocmask (int __how,
 extern int __sigsuspend (__const sigset_t *__set);
 libc_hidden_proto (__sigsuspend)
 extern int __sigwait (__const sigset_t *__set, int *__sig);
+libc_hidden_proto (__sigwait)
 extern int __sigwaitinfo (__const sigset_t *__set, siginfo_t *__info);
+libc_hidden_proto (__sigwaitinfo)
 extern int __sigtimedwait (__const sigset_t *__set, siginfo_t *__info,
 			   __const struct timespec *__timeout);
+libc_hidden_proto (__sigtimedwait)
 extern int __sigqueue (__pid_t __pid, int __sig,
 		       __const union sigval __val);
 extern int __sigvec (int __sig, __const struct sigvec *__vec,

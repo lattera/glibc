@@ -40,7 +40,7 @@ static ssize_t __atomic_writev_replacement (int, const struct iovec *,
 /* We should deal with kernel which have a smaller UIO_FASTIOV as well
    as a very big count.  */
 ssize_t
-__writev (fd, vector, count)
+__libc_writev (fd, vector, count)
      int fd;
      const struct iovec *vector;
      int count;
@@ -54,7 +54,8 @@ __writev (fd, vector, count)
 
   return __atomic_writev_replacement (fd, vector, count);
 }
-weak_alias (__writev, writev)
+strong_alias (__libc_writev, __writev)
+weak_alias (__libc_writev, writev)
 
-#define __writev static internal_function __atomic_writev_replacement
+#define __libc_writev static internal_function __atomic_writev_replacement
 #include <sysdeps/posix/writev.c>

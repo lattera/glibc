@@ -30,7 +30,7 @@
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
 ssize_t
-__readv (int fd, const struct iovec *vector, int count)
+__libc_readv (int fd, const struct iovec *vector, int count)
 {
   char *buffer;
   char *buffer_start;
@@ -55,8 +55,8 @@ __readv (int fd, const struct iovec *vector, int count)
   /* Allocate a temporary buffer to hold the data.  We should normally
      use alloca since it's faster and does not require synchronization
      with other threads.  But we cannot if the amount of memory
-     required is too large.  Use 512k as the limit.  */
-  if (bytes < 512 * 1024)
+     required is too large.  */
+  if (__libc_use_alloca (bytes))
     buffer = (char *) __alloca (bytes);
   else
     {
@@ -94,6 +94,7 @@ __readv (int fd, const struct iovec *vector, int count)
 
   return bytes_read;
 }
-#ifndef __readv
-weak_alias (__readv, readv)
+#ifndef __libc_readv
+strong_alias (__libc_readv, __readv)
+weak_alias (__libc_readv, readv)
 #endif

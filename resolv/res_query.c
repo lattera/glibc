@@ -108,11 +108,21 @@ res_nquery(res_state statp,
 	   u_char *answer,	/* buffer to put answer */
 	   int anslen)		/* size of answer buffer */
 {
-	u_char buf[MAXPACKET];
+	u_char *buf;
 	HEADER *hp = (HEADER *) answer;
-	int n;
+	int n, use_malloc = 0;
 
 	hp->rcode = NOERROR;	/* default */
+
+	if (!__libc_use_alloca (MAXPACKET)) {
+		buf = malloc (MAXPACKET);
+		if (buf == NULL) {
+			__set_h_errno (NETDB_INTERNAL);
+			return -1;
+		}
+		use_malloc = 1;
+	} else
+		buf = alloca (MAXPACKET);
 
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)
@@ -120,16 +130,20 @@ res_nquery(res_state statp,
 #endif
 
 	n = res_nmkquery(statp, QUERY, name, class, type, NULL, 0, NULL,
-			 buf, sizeof(buf));
+			 buf, MAXPACKET);
 	if (n <= 0) {
 #ifdef DEBUG
 		if (statp->options & RES_DEBUG)
 			printf(";; res_query: mkquery failed\n");
 #endif
 		RES_SET_H_ERRNO(statp, NO_RECOVERY);
+		if (use_malloc)
+			free (buf);
 		return (n);
 	}
 	n = res_nsend(statp, buf, n, answer, anslen);
+	if (use_malloc)
+		free (buf);
 	if (n < 0) {
 #ifdef DEBUG
 		if (statp->options & RES_DEBUG)

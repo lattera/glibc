@@ -1,3 +1,74 @@
+2002-10-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def (libc): Add GLIBC_2.3.1.
+	(libpthread): Add GLIBC_2.3.1.
+
+	* include/signal.h: Add libc_hidden_proto for __sigwait, __sigwaitinfo,
+	and __sigtimedwait.
+	* signal/Versions: Add __sigtimedwait, __sigwait, and __sigwaitinfo.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c (__sigtimedwait): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c (__sigwaitinfo): Likewise.
+
+	* include/sys/msg.h: Declare __libc_msgrcv and __libc_msgsnd.
+	* sysdeps/unix/sysv/linux/msgrcv.c (__msgrcv): Rename to __libc_msgrcv
+	and make old name an alias.
+	* sysdeps/unix/sysv/linux/msgsnd.c (__msgsnd): Rename to __libc_msgsnd
+	and make old name an alias.
+	* sysvipc/Versions (libc) [GLIBC_PRIVATE]: Add __libc_msgrcv and
+	__libc_msgsnd.
+
+	* include/sys/uio.h: Declare __libc_readv and __libc_writev.
+	* misc/Versions (libc) [GLIBC_PRIVATE]: Add __libc_readv and
+	__libc_writev.
+	* sysdeps/generic/readv.c (__readv): Rename to __libc_readv and make
+	old name an alias.
+	* sysdeps/posix/readv.c: Likewise
+	* sysdeps/unix/sysv/aix/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/generic/writev.c (__writev): Rename to __libc_writev and make
+	old name an alias.
+	* sysdeps/posix/writev.c: Likewise
+	* sysdeps/unix/sysv/aix/writev.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
+	* include/sys/wait.h: Declare __waitid.
+	* posix/Versions (libc) [GLIBC_PRIVATE]: Add __waitid.
+	* sysdeps/generic/waitid.c (waitid): Rename to __waitid and make old
+	name an alias.
+	* sysdeps/posix/waitid.c: Likewise.
+	* sysdeps/unix/sysv/aix/waitid.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add creat syscall.
+
+2002-10-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/alloca.h (__libc_use_alloca, __libc_alloca_cutoff): New
+	prototypes.
+	(__MAX_ALLOCA_CUTOFF): Define.
+	Include allocalim.h.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r,
+	_nss_dns_gethostbyaddr_r): Use alloca or malloc to allocate
+	host_buffer depending on __libc_use_alloca.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r,
+	_nss_dns_getnetbyaddr_r): Use alloca or malloc to allocate
+	net_buffer depending on __libc_use_alloca.
+	* resolv/res_query.c (res_nquery): Use alloca or malloc to allocate
+	buf depending on __libc_use_alloca.
+	* resolv/gethnamaddr.c (gethostbyname2, gethostbyaddr): Likewise.
+	* stdio-common/vfprintf.c (vfprintf): Use __libc_use_alloca
+	instead of hardcoded constants.
+	Pass proper size argument to alloca and compute end for wide char
+	version.
+	* stdio-common/printf_fp.c (__printf_fp): Use __libc_use_alloca
+	instead of hardcoded constants.
+	* string/strcoll.c (strcoll): Likewise.
+	* string/strxfrm.c (strxfrm): Likewise.
+	* sysdeps/posix/readv.c (__readv): Likewise.
+	* sysdeps/posix/writev.c (__writev): Likewise.
+	* sysdeps/generic/allocalim.h: New file.
+
 2002-10-08  Roland McGrath  <roland@redhat.com>
 
 	* configure.in (aux_missing warning): Change "too old" to
