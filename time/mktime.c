@@ -75,12 +75,17 @@ verify (right_shift_propagates_sign, -1 >> 1 == -1);
 #define TM_YEAR_BASE 1900
 verify (base_year_is_a_multiple_of_100, TM_YEAR_BASE % 100 == 0);
 
-#ifndef __isleap
-/* Nonzero if YEAR is a leap year (every 4 years,
-   except every 100th isn't, and every 400th is).  */
-# define __isleap(year)	\
-  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
-#endif
+/* Return 1 if YEAR + TM_YEAR_BASE is a leap year.  */
+static inline int
+leapyear (int year)
+{
+  /* Don't add YEAR to TM_YEAR_BASE, as that might overflow.
+     Also, work even if YEAR is negative.  */
+  return
+    ((year & 3) == 0
+     && (year % 100 != 0
+	 || ((year / 100) & 3) == (- (TM_YEAR_BASE / 100) & 3)));
+}
 
 /* How many days come before each month (0-12).  */
 #ifndef _LIBC
@@ -234,7 +239,7 @@ __mktime_internal (struct tm *tp,
 
   /* Calculate day of year from year, month, and day of month.
      The result need not be in range.  */
-  int yday = ((__mon_yday[__isleap (year + TM_YEAR_BASE)]
+  int yday = ((__mon_yday[leapyear (year)]
 	       [mon_remainder + 12 * negative_mon_remainder])
 	      + mday - 1);
 

@@ -1,5 +1,10 @@
 2004-10-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	[BZ #469] Imported from gnulib.
+	* time/mktime.c (__isleap): Remove; all uses replaced by:
+	(leapyear): New function, which avoids overflow by not adding
+	1900 to year before testing whether it is a leap year.
+
 	[BZ #472] Imported from gnulib.
 	* time/mktime.c (Local Variables): Remove -DHAVE_TIME_R_POSIX;
 	no longer used.
