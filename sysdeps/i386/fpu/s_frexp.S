@@ -1,5 +1,5 @@
 /* ix87 specific frexp implementation for double.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,6 +19,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <machine/asm.h>
+#include "bp-sym.h"
+#include "bp-asm.h"
 
 #ifdef __ELF__
 	.section .rodata
@@ -37,10 +39,17 @@ two54:	.byte 0, 0, 0, 0, 0, 0, 0x50, 0x43
 #define MO(op) op
 #endif
 
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define VAL0	PARMS
+#define VAL1	VAL0+4
+#define EXPP	VAL1+4
+
 	.text
-ENTRY(__frexp)
-	movl	4(%esp), %ecx
-	movl	8(%esp), %eax
+ENTRY (BP_SYM (__frexp))
+	ENTER
+
+	movl	VAL0(%esp), %ecx
+	movl	VAL1(%esp), %eax
 	movl	%eax, %edx
 	andl	$0x7fffffff, %eax
 	orl	%eax, %ecx
@@ -52,7 +61,7 @@ ENTRY(__frexp)
 	cmpl	$0x00100000, %eax
 	jae	2f
 
-	fldl	4(%esp)
+	fldl	VAL0(%esp)
 #ifdef	PIC
 	call	3f
 3:	popl	%edx
@@ -60,8 +69,8 @@ ENTRY(__frexp)
 #endif
 	fmull	MO(two54)
 	movl	$-54, %ecx
-	fstpl	4(%esp)
-	movl	8(%esp), %eax
+	fstpl	VAL0(%esp)
+	movl	VAL1(%esp), %eax
 	movl	%eax, %edx
 	andl	$0x7fffffff, %eax
 
@@ -70,13 +79,16 @@ ENTRY(__frexp)
 	subl	$1022, %eax
 	orl	$0x3fe00000, %edx
 	addl	%eax, %ecx
-	movl	%edx, 8(%esp)
+	movl	%edx, VAL1(%esp)
 
 	/* Store %ecx in the variable pointed to by the second argument,
 	   get the factor from the stack and return.  */
-1:	movl	12(%esp), %eax
-	fldl	4(%esp)
+1:	movl	EXPP(%esp), %eax
+	CHECK_BOUNDS_BOTH_WIDE (%eax, EXPP(%esp), $4)
+	fldl	VAL0(%esp)
 	movl	%ecx, (%eax)
+
+	LEAVE
 	ret
-END(__frexp)
-weak_alias (__frexp, frexp)
+END (BP_SYM (__frexp))
+weak_alias (BP_SYM (__frexp), BP_SYM (frexp))

@@ -5,10 +5,20 @@
  */
 
 #include <machine/asm.h>
+#include "bp-sym.h"
+#include "bp-asm.h"
 
-ENTRY(__remquof)
-	flds	8(%esp)
-	flds	4(%esp)
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define DVDND	PARMS
+#define DVSOR	DVDND+4
+#define QUOP	DVSOR+4
+
+	.text
+ENTRY (BP_SYM (__remquof))
+	ENTER
+
+	flds	DVSOR(%esp)
+	flds	DVDND(%esp)
 1:	fprem1
 	fstsw	%ax
 	sahf
@@ -24,13 +34,16 @@ ENTRY(__remquof)
 	movl	$0xef2960, %eax
 	shrl	%cl, %eax
 	andl	$3, %eax
-	movl	12(%esp), %ecx
-	movl	4(%esp), %edx
-	xorl	8(%esp), %edx
+	movl	QUOP(%esp), %ecx
+	CHECK_BOUNDS_BOTH_WIDE (%ecx, QUOP(%esp), $4)
+	movl	DVDND(%esp), %edx
+	xorl	DVSOR(%esp), %edx
 	testl	$0x80000000, %edx
 	jz	1f
 	negl	%eax
 1:	movl	%eax, (%ecx)
+
+	LEAVE
 	ret
-END (__remquof)
-weak_alias (__remquof, remquof)
+END (BP_SYM (__remquof))
+weak_alias (BP_SYM (__remquof), BP_SYM (remquof))

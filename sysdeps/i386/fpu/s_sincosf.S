@@ -1,5 +1,5 @@
 /* Compute sine and cosine of argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,18 +19,33 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <machine/asm.h>
+#include "bp-sym.h"
+#include "bp-asm.h"
 
-ENTRY(__sincosf)
-	flds	4(%esp)
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define ANGLE	PARMS
+#define SINP	ANGLE+4
+#define COSP	SINP+PTR_SIZE
+
+	.text
+ENTRY (BP_SYM (__sincosf))
+	ENTER
+
+	flds	ANGLE(%esp)
 	fsincos
-	movl	8(%esp), %ecx
-	movl	12(%esp), %edx
+	movl	SINP(%esp), %ecx
+	CHECK_BOUNDS_BOTH_WIDE (%ecx, SINP(%esp), $4)
+	movl	COSP(%esp), %edx
+	CHECK_BOUNDS_BOTH_WIDE (%edx, COSP(%esp), $4)
 	fnstsw	%ax
 	testl	$0x400,%eax
 	jnz	1f
 	fstps	(%edx)
 	fstps	(%ecx)
+
+	LEAVE
 	ret
+
 	.align ALIGNARG(4)
 1:	fldpi
 	fadd	%st(0)
@@ -43,6 +58,8 @@ ENTRY(__sincosf)
 	fsincos
 	fstps	(%edx)
 	fstps	(%ecx)
+
+	LEAVE
 	ret
-END(__sincosf)
-weak_alias(__sincosf, sincosf)
+END (BP_SYM (__sincosf))
+weak_alias (BP_SYM (__sincosf), BP_SYM (sincosf))

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -24,21 +24,29 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 #include <asm-syntax.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
 
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define FUNC	PARMS
+#define STACK	FUNC+4
+#define FLAGS	STACK+PTR_SIZE
+#define ARG	FLAGS+4
+
         .text
-ENTRY(__clone)
+ENTRY (BP_SYM (__clone))
 	/* Sanity check arguments.  */
 	movl	$-EINVAL,%eax
-	movl	4(%esp),%ecx		/* no NULL function pointers */
+	movl	FUNC(%esp),%ecx		/* no NULL function pointers */
 #ifdef PIC
 	jecxz	SYSCALL_ERROR_LABEL
 #else
 	testl	%ecx,%ecx
 	jz	SYSCALL_ERROR_LABEL
 #endif
-	movl	8(%esp),%ecx		/* no NULL stack pointers */
+	movl	STACK(%esp),%ecx	/* no NULL stack pointers */
 #ifdef PIC
 	jecxz	SYSCALL_ERROR_LABEL
 #else
@@ -48,17 +56,17 @@ ENTRY(__clone)
 
 	/* Insert the argument onto the new stack.  */
 	subl	$8,%ecx
-	movl	16(%esp),%eax		/* no negative argument counts */
+	movl	ARG(%esp),%eax		/* no negative argument counts */
 	movl	%eax,4(%ecx)
 
 	/* Save the function pointer as the zeroth argument.
 	   It will be popped off in the child in the ebx frobbing below.  */
-	movl	4(%esp),%eax
+	movl	FUNC(%esp),%eax
 	movl	%eax,0(%ecx)
 
 	/* Do the system call */
 	pushl	%ebx
-	movl	16(%esp),%ebx
+	movl	FLAGS+4(%esp),%ebx
 	movl	$SYS_ify(clone),%eax
 	int	$0x80
 	popl	%ebx
@@ -82,6 +90,6 @@ L(here):
 	pushl	%eax
 	call	JUMPTARGET (_exit)
 
-PSEUDO_END (__clone)
+PSEUDO_END (BP_SYM (__clone))
 
-weak_alias (__clone, clone)
+weak_alias (BP_SYM (__clone), BP_SYM (clone))

@@ -17,15 +17,26 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 #include "kernel-features.h"
 
 #define EINVAL	22
 #define ENOSYS	38
 
-	.text
+#define SVRSP	16		/* saved register space */
+#define PARMS	LINKAGE+SVRSP	/* space for 4 saved regs */
+#define ADDR	PARMS
+#define LEN	ADDR+PTR_SIZE
+#define PROT	LEN+4
+#define FLAGS	PROT+4
+#define FD	FLAGS+4
+#define OFFLO	FD+4
+#define OFFHI	OFFLO+4
 
-ENTRY (__mmap64)
+	.text
+ENTRY (BP_SYM (__mmap64))
 
 #ifdef __NR_mmap2
 
@@ -35,8 +46,8 @@ ENTRY (__mmap64)
 	pushl %esi
 	pushl %edi
 
-	movl 40(%esp), %edx
-	movl 44(%esp), %ecx
+	movl OFFLO(%esp), %edx
+	movl OFFHI(%esp), %ecx
 	testl $0x3ff, %edx
 	jne L(einval)
 	shrdl $12, %ecx, %edx		/* mmap2 takes the offset in pages.  */
@@ -44,11 +55,11 @@ ENTRY (__mmap64)
 	jne L(einval)
 	movl %edx, %ebp
 
-	movl 20(%esp), %ebx
-	movl 24(%esp), %ecx
-	movl 28(%esp), %edx
-	movl 32(%esp), %esi
-	movl 36(%esp), %edi
+	movl ADDR(%esp), %ebx
+	movl LEN(%esp), %ecx
+	movl PROT(%esp), %edx
+	movl FLAGS(%esp), %esi
+	movl FD(%esp), %edi
 
 	movl $SYS_ify(mmap2), %eax	/* System call number in %eax.  */
 
@@ -91,12 +102,12 @@ L(einval):
 	/* Save registers.  */
 	movl %ebx, %edx
 
-	cmpl $0, 28(%esp)
+	cmpl $0, OFFHI-SVRSP(%esp)
 	jne L(einval2)
 
 	movl $SYS_ify(mmap), %eax	/* System call number in %eax.  */
 
-	lea 4(%esp), %ebx		/* Address of args is 1st arg.  */
+	lea ADDR-SVRSP(%esp), %ebx	/* Address of args is 1st arg.  */
 
 	/* Do the system call trap.  */
 	int $0x80
@@ -120,6 +131,6 @@ L(einval2):
 	jmp SYSCALL_ERROR_LABEL
 #endif
 
-PSEUDO_END (__mmap64)
+PSEUDO_END (BP_SYM (__mmap64))
 
-weak_alias (__mmap64, mmap64)
+weak_alias (BP_SYM (__mmap64), BP_SYM (mmap64))

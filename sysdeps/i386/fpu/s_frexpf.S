@@ -1,5 +1,5 @@
 /* ix87 specific frexp implementation for float.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,6 +19,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <machine/asm.h>
+#include "bp-sym.h"
+#include "bp-asm.h"
 
 #ifdef __ELF__
 	.section .rodata
@@ -37,9 +39,15 @@ two25:	.byte 0, 0, 0, 0x4c
 #define MO(op) op
 #endif
 
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define VAL	PARMS
+#define EXPP	VAL+4
+
 	.text
-ENTRY(__frexpf)
-	movl	4(%esp), %eax
+ENTRY (BP_SYM (__frexpf))
+	ENTER
+
+	movl	VAL(%esp), %eax
 	xorl	%ecx, %ecx
 	movl	%eax, %edx
 	andl	$0x7fffffff, %eax
@@ -50,7 +58,7 @@ ENTRY(__frexpf)
 	cmpl	$0x00800000, %eax
 	jae	2f
 
-	flds	4(%esp)
+	flds	VAL(%esp)
 #ifdef	PIC
 	call	3f
 3:	popl	%edx
@@ -58,8 +66,8 @@ ENTRY(__frexpf)
 #endif
 	fmuls	MO(two25)
 	movl	$-25, %ecx
-	fstps	4(%esp)
-	movl	4(%esp), %eax
+	fstps	VAL(%esp)
+	movl	VAL(%esp), %eax
 	movl	%eax, %edx
 	andl	$0x7fffffff, %eax
 
@@ -68,13 +76,16 @@ ENTRY(__frexpf)
 	subl	$126, %eax
 	orl	$0x3f000000, %edx
 	addl	%eax, %ecx
-	movl	%edx, 4(%esp)
+	movl	%edx, VAL(%esp)
 
 	/* Store %ecx in the variable pointed to by the second argument,
 	   get the factor from the stack and return.  */
-1:	movl	8(%esp), %eax
-	flds	4(%esp)
+1:	movl	EXPP(%esp), %eax
+	CHECK_BOUNDS_BOTH_WIDE (%eax, EXPP(%esp), $4)
+	flds	VAL(%esp)
 	movl	%ecx, (%eax)
+
+	LEAVE
 	ret
-END(__frexpf)
-weak_alias (__frexpf, frexpf)
+END (BP_SYM (__frexpf))
+weak_alias (BP_SYM (__frexpf), BP_SYM (frexpf))
