@@ -75,7 +75,7 @@ elf_machine_load_address (void)
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline void
+static inline int
 elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   Elf32_Addr *got;
@@ -96,8 +96,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
       got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
 
-  /* This code is used in dl-runtime.c to call the `fixup' function
-     and then redirect to the address it returns.  */
+  return lazy;
+}
+
+/* This code is used in dl-runtime.c to call the `fixup' function
+   and then redirect to the address it returns.  */
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 | Trampoline for _dl_runtime_resolver
 	.globl _dl_runtime_resolve
@@ -120,7 +123,6 @@ _dl_runtime_resolve:
 #define ELF_MACHINE_RUNTIME_FIXUP_ARGS long int save_a0, long int save_a1
 /* The PLT uses Elf32_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
-}
 
 
 /* Mask identifying addresses reserved for the user program,
