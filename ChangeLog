@@ -1,3 +1,8 @@
+Wed Sep  9 10:34:06 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/mathinline.h (isinf): Avoid conflict with
+	C9x macro.
+
 1998-09-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* csu/initfini.c: Don't define __gmon_start__ if WEAK_GMON_START is

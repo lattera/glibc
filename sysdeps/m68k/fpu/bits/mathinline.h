@@ -442,7 +442,9 @@ __inline_forward(double,frexp, (double __value, int *__expptr),
 __inline_forward_c(double,floor, (double __x), (__x))
 __inline_forward_c(double,ceil, (double __x), (__x))
 # ifdef __USE_MISC
+#  ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
 __inline_forward_c(int,isinf, (double __value), (__value))
+#  endif
 __inline_forward_c(int,finite, (double __value), (__value))
 __inline_forward_c(double,scalbn, (double __x, int __n), (__x, __n))
 # endif
