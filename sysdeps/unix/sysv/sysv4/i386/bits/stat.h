@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -58,7 +58,7 @@ struct stat
     long st_blksize;		/* Optimal block size for I/O.  */
 #define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
 
-    long st_blocks;		/* Number of 512-byte blocks allocated.  */
+    __blkcnt_t st_blocks;	/* Number of 512-byte blocks allocated.  */
     char st_fstype[16];		/* The type of this filesystem.  */
     int st_aclcnt;
     unsigned long st_level;
