@@ -1,0 +1,413 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_REVISION([$Id$])
+AC_PREREQ(2.1)dnl		dnl Minimum Autoconf version required.
+AC_INIT(features.h)
+AC_CONFIG_HEADER(config.h)
+
+# This will get text that should go into config.make.
+config_vars=
+
+# Check for a --with-gmp argument and set gmp-srcdir in config.make.
+AC_ARG_WITH(gmp, dnl
+  --with-gmp=DIRECTORY	  find GMP source code in DIRECTORY (not needed),
+	    [dnl
+case "$with_gmp" in
+yes) AC_MSG_ERROR(--with-gmp requires an argument; use --with-gmp=DIRECTORY) ;;
+''|no) ;;
+*) config_vars="$config_vars
+gmp-srcdir = $withval" ;;
+esac
+])
+
+AC_ARG_WITH(gnu-binutils, dnl
+  --with-gnu-binutils	  if using GNU binutils (as and ld),
+	    gnu_binutils=yes, gnu_binutils=no)
+AC_ARG_WITH(gnu-ld, dnl
+  --with-gnu-ld		  if using GNU ld (in the binutils package),
+	    gnu_ld=yes, gnu_ld=no)
+AC_ARG_WITH(gnu-as, dnl
+  --with-gnu-as		  if using GNU as (in the binutils package),
+	    gnu_as=yes, gnu_as=no)
+test $gnu_binutils = yes && gnu_as=yes gnu_ld=yes
+AC_ARG_WITH(elf, dnl
+  --with-elf		  if using the ELF object format,
+	    elf=yes, elf=no)
+AC_ARG_WITH(weak-symbols, dnl
+  --with-weak-symbols	  if weak symbols are available in as and ld,
+	    weak=yes, weak=no)
+
+AC_CANONICAL_HOST
+# We keep the original values in `$config_*' and never modify them, so we
+# can write them unchanged into config.make.  Everything else uses
+# $machine, $vendor, and $os, and changes them whenever convenient.
+config_machine=$host_cpu config_vendor=$host_vendor config_os=$host_os
+
+sysdep_dir=$srcdir/sysdeps
+AC_MSG_CHECKING(sysdep dirs)
+AC_CACHE_VAL(libc_cv_sysdirs, [dnl
+machine=$config_machine
+vendor=$config_vendor
+os=$config_os
+
+dnl We need to use [ and ] for other purposes for a while now.
+changequote(,)dnl
+# Expand the configuration machine name into a subdirectory by architecture
+# type and particular chip.
+case "$machine" in
+i[345]86)
+  machine=i386/$machine ;;
+sparc[6789])
+  machine=sparc/$machine ;;
+m68k)
+  machine=m68k/m68020 ;;
+m680?0)
+  machine=m68k/$machine ;;
+m88k)
+  machine=m88k/m88100 ;;
+m88???)
+  machine=m88k/$machine ;;
+mips64*)
+  machine=mips/mips64/$machine ;;
+mips*)
+  machine=mips/$machine ;;
+esac
+
+# Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
+os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
+
+case "$os" in
+gnu*)
+  base_os=mach/hurd ;;
+netbsd* | 386bsd*)
+  base_os=unix/bsd/bsd4.4 ;;
+osf1* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
+  base_os=unix/bsd ;;
+linux* | sysv* | isc* | esix* | sco* | minix* | irix4*)
+  base_os=unix/sysv ;;
+solaris[2-9]*)
+  base_os=unix/sysv/sysv4 ;;
+none)
+  base_os=standalone ;;
+*)
+  base_os='' ;;
+esac
+
+# For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
+tail=$os
+ostry=$os
+while o=`echo $tail | sed 's/\.[^.]*$//'`; test $o != $tail; do
+  ostry="$ostry /$o"
+  tail=$o
+done  
+o=`echo $tail | sed 's/[0-9]*$//'`
+if test $o != $tail; then
+  ostry="$ostry /$o"
+fi
+
+# For unix/sysv/sysv4, try unix/sysv/sysv4, then unix/sysv, then unix.
+base=
+tail=$base_os
+while b=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$b"; do
+  set $b
+  base="$base /$1"
+  tail="$2"
+done
+
+# For sparc/sparc9, try sparc/sparc9 and then sparc.
+mach=
+tail=$machine
+while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
+  set $m
+  mach="$mach /$1"
+  tail="$2"
+done
+
+dnl We are done with glob and regexp uses of [ and ]; return to autoconf.
+changequote([,])dnl
+
+# Find what sysdep directories exist.
+sysnames=
+for b in $base ''; do
+  for m0 in $mach ''; do
+    for v in /$vendor ''; do
+      for o in /$ostry ''; do
+	for m in $mach ''; do
+	  try="$m0$b$v$o$m"
+	  if test -d $sysdep_dir$try; then
+	    sysnames="$sysnames $try"
+	    { test -n "$o" || test -n "$b"; } && os_used=t
+	    { test -n "$m" || test -n "$m0"; } && machine_used=t
+	  fi
+	done
+      done
+    done
+  done
+done
+
+if test -z "$os_used" && test "$os" != none; then
+  AC_MSG_ERROR(Operating system $os is not supported.)
+fi
+if test -z "$machine_used" && test "$machine" != none; then
+  AC_MSG_ERROR(The $machine is not supported.)
+fi
+
+# We have now validated the configuration.
+
+# Remove the leading slashes.
+sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
+
+# Prepend the machine's FPU directory unless --without-fp.
+if test "$with_fp" = no; then
+  fpu_dirs=
+  for m in $mach; do
+    if test -d $sysdep_dir$m/fpu; then
+      fpu_dirs="$fpu_dirs $m/fpu"
+    fi
+  done
+  sysnames="`echo $fpu_dirs | sed -e 's,^/,,' -e 's, /,,g'` $sysnames"
+fi
+
+# Expand the list of system names into a full list of directories
+# from each element's parent name and Implies file (if present).
+set $sysnames
+while test $# -gt 0; do
+  name=$1
+  shift
+
+  if test -f $sysdep_dir/$name/Implies; then
+    # Collect more names from the `Implies' file (removing comments).
+    implied="`sed 's/#.*$//' < $sysdep_dir/$name/Implies`"
+    for x in $implied; do
+      test -d $sysdep_dir/$x || echo "Warning: $name implies nonexistent $x">&2
+    done
+  else
+    implied=
+  fi
+
+  # Add NAME to the list of names.
+  names="$names $name"
+
+  # Find the parent of NAME, using the empty string if it has none.
+changequote(,)dnl
+  parent="`echo $name | sed -n -e '/\//!q' -e 's=/[^/]*$==p'`"
+changequote([,])dnl
+
+  # Add the names implied by NAME, and NAME's parent (if it has one), to
+  # the list of names to be processed (the argument list).  We prepend the
+  # implied names to the list and append the parent.  We want implied
+  # directories to come before further directories inferred from the
+  # configuration components; this ensures that for sysv4, unix/common
+  # (implied by unix/sysv/sysv4) comes before unix/sysv (in ostry (here $*)
+  # after sysv4).
+  sysnames="`echo $implied $* $parent`"
+  test -n "$sysnames" && set $sysnames
+done
+
+# Add the default directories.
+names="$names generic stub"
+
+# Now uniquize the list.
+seen=
+sysnames=
+for name in $names; do
+  if echo "$seen" | fgrep -x $name >/dev/null; then
+    # Already in the list.
+    true;
+  else
+    # A new one.
+    if test -z "$seen"; then
+      seen="$name" sysnames="$name"
+    else
+      seen="$seen
+$name"
+      sysnames="$sysnames $name"
+    fi
+  fi
+done
+libc_cv_sysdirs="$sysnames"])
+AC_SUBST(sysnames) sysnames="$libc_cv_sysdirs"
+AC_MSG_RESULT(${sysnames})
+
+case "$host_os" in
+gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
+  gnu_ld=yes gnu_as=yes
+esac
+case "$host_os" in
+gnu*elf* | linux*elf* | sysv4* | solaris2*)
+  elf=yes
+esac
+
+AC_PROG_INSTALL
+if test "$INSTALL" = "${srcdir}/install-sh"; then
+  # The makefiles need to use a different form to find it in $srcdir.
+  INSTALL='$(..)./install-sh'
+fi
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_CHECK_PROG(AR, ar, ar, ar)
+AC_PROG_RANLIB
+
+AC_MSG_CHECKING(signed size_t type)
+AC_CACHE_VAL(libc_cv_signed_size_t, [dnl
+echo '#include <stddef.h>
+FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
+if eval "$ac_cpp conftest.c 2>/dev/null" \
+| grep '^FOOBAR.*unsigned.*FOOBAR$' >/dev/null; then
+  libc_cv_signed_size_t=no
+else
+  libc_cv_signed_size_t=yes
+fi
+rm -f conftest*])
+AC_MSG_RESULT($libc_cv_signed_size_t)
+if test $libc_cv_signed_size_t = yes; then
+  dnl Do this by hand instead of AC_DEFINE so can add #undef to avoid warnings.
+  cat >> confdefs.h <<\EOF
+#undef __SIZE_TYPE__
+#define __SIZE_TYPE__ unsigned
+EOF
+fi
+
+AC_MSG_CHECKING(libc-friendly stddef.h)
+AC_CACHE_VAL(libc_cv_friendly_stddef, [dnl
+AC_TRY_COMPILE(dnl
+[#define __need_size_t
+#define __need_wchar_t
+#include <stddef.h>
+#define __need_NULL
+#include <stddef.h>], [size_t size; wchar_t wchar;
+#ifdef offsetof
+#error stddef.h ignored __need_*
+#endif
+if (&size == NULL || &wchar == NULL) abort ();],
+               libc_cv_friendly_stddef=yes,
+               libc_cv_friendly_stddef=no)])
+AC_MSG_RESULT($libc_cv_friendly_stddef)
+if test $libc_cv_friendly_stddef = yes; then
+  config_vars="$config_vars
+override stddef.h = # The installed <stddef.h> seems to be libc-friendly."
+fi
+
+AC_MSG_CHECKING(whether we need to use -P to assemble .S files)
+AC_CACHE_VAL(libc_cv_need_minus_P, [dnl
+cat > conftest.S <<EOF
+#include "confdefs.h"
+/* Nothing whatsoever.  */
+EOF
+if ${CC-cc} $CFLAGS -c conftest.S 2>/dev/null; then
+  libc_cv_need_minus_P=no
+else
+  libc_cv_need_minus_P=yes
+fi
+rm -f conftest*])
+AC_MSG_RESULT($libc_cv_need_minus_P)
+if test $libc_cv_need_minus_P = yes; then
+  config_vars="$config_vars
+asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
+fi
+
+# sysdeps configure fragments may set these with files to be linked below.
+libc_link_dests=
+libc_link_sources=
+
+# Iterate over all the sysdep directories we will use, running their
+# configure fragments, and looking for a uname implementation.
+uname=
+for dir in $sysnames; do
+  if test -r $sysdep_dir/$dir/configure; then
+    AC_MSG_RESULT(running configure fragment for $dir)
+    . $sysdep_dir/$dir/configure
+  fi
+  if test -z "$uname"; then
+    { test -r $sysdep_dir/$dir/uname.c || test -r $sysdep_dir/$dir/uname.S; } \
+    && uname=$dir
+  fi
+done
+
+AC_LINK_FILES(`echo $libc_link_sources`, `echo $libc_link_dests`)
+
+# If we will use the generic uname implementation, we must figure out what
+# it will say by examining the system, and write the results in config-name.h.
+if test "$uname" = generic; then
+
+changequote(,)dnl
+  uname_sysname=`echo $config_os | sed 's/[0-9.]*$//'`
+changequote([,])dnl
+  if test $uname_sysname != $config_os; then
+    config_release=`echo $config_os | sed s/$uname_sysname//`
+  fi
+dnl
+AC_DEFUN(LIBC_KERNEL_ID, [dnl
+    if test -r /vmunix; then
+      kernel_id=`strings /vmunix | grep UNIX`
+    elif test -r /dynix; then
+      kernel_id=`strings /dynix | grep DYNIX`
+    else
+      kernel_id=
+    fi
+])dnl
+
+  AC_MSG_CHECKING(OS release for uname)
+  AC_CACHE_VAL(libc_cv_uname_release, [dnl
+AC_REQUIRE([LIBC_KERNEL_ID])dnl
+changequote(,)dnl
+  kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
+changequote([,])dnl
+  if test x`echo "$config_release" | sed "s/^$kernel_release//"` \
+	 != x$config_release; then
+    # The configuration release is a substring of the kernel release.
+    libc_cv_uname_release=$kernel_release
+  elif test x$config_release != x; then
+    libc_cv_uname_release=$config_release
+  elif test x$kernel_release != x; then
+    libc_cv_uname_release=$kernel_release
+  else
+    libc_cv_uname_release=unknown
+  fi])
+  AC_MSG_RESULT($libc_cv_uname_release)
+  uname_release="$libc_cv_uname_release"
+
+  AC_MSG_CHECKING(OS version for uname)
+  AC_CACHE_VAL(libc_cv_uname_version, [dnl
+AC_REQUIRE([LIBC_KERNEL_ID])dnl
+changequote(,)dnl
+  kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
+changequote([,])dnl
+  if test -n "$kernel_version"; then
+    libc_cv_uname_version="$kernel_version"
+  else
+    libc_cv_uname_version=unknown
+  fi])
+  AC_MSG_RESULT($libc_cv_uname_version)
+  uname_version="$libc_cv_uname_version"
+
+AC_SUBST(uname_sysname) AC_SUBST(uname_release) AC_SUBST(uname_version)dnl
+  config_uname=config-name.h:config-name.in
+else
+  # For non-generic uname, we don't need to create config-name.h at all.
+  config_uname=
+fi
+
+AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf) AC_SUBST(weak)
+if test $gnu_ld = yes; then
+  AC_DEFINE(HAVE_GNU_LD)
+fi
+if test $gnu_as = yes; then
+  AC_DEFINE(HAVE_GNU_AS)
+fi
+if test $elf = yes; then
+  AC_DEFINE(HAVE_ELF)
+fi
+if test $weak = yes; then
+  AC_DEFINE(HAVE_WEAK_SYMBOLS)
+fi
+
+
+if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
+  config_makefile=
+else
+  config_makefile=Makefile
+fi
+
+AC_OUTPUT(config.make ${config_makefile} ${config_uname}, ,
+          [echo '$config_vars' >> config.make])

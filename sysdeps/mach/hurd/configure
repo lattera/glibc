@@ -1,0 +1,21 @@
+ 
+# If configure is passed `--with-hurd=DIR', set `hurd-srcdir' to DIR in
+# config.make.
+
+ac_help="$ac_help
+  --with-hurd=DIRECTORY   find Hurd source code in DIRECTORY [../hurd]"
+# Check whether --with-hurd or --without-hurd was given.
+withval="$with_hurd"
+if test -n "$withval"; then
+  case z"$with_hurd" in
+z | zno | zyes) ;; # Not specified, or specified with no value.
+z*) config_vars="$config_vars
+hurd-srcdir = $with_hurd" ;;
+esac
+
+fi
+
+
+# Don't bother trying to generate any glue code to be compatible with the
+# existing system library, because we are the only system library.
+inhibit_glue=yes

@@ -1,0 +1,1091 @@
+@node System Configuration, Language Features, System Information, Top
+@chapter System Configuration Parameters
+
+The functions and macros listed in this chapter give information about
+configuration parameters of the operating system---for example, capacity
+limits, presence of optional POSIX features, and the default path for
+executable files (@pxref{String Parameters}).
+
+@menu
+* General Limits::           Constants and functions that describe
+				various process-related limits that have
+				one uniform value for any given machine.
+* System Options::           Optional POSIX features.
+* Version Supported::        Version numbers of POSIX.1 and POSIX.2.
+* Sysconf::                  Getting specific configuration values
+                                of general limits and system options.
+* Minimums::                 Minimum values for general limits.
+
+* Limits for Files::         Size limitations that pertain to individual files.
+                                These can vary between file systems
+                                or even from file to file.
+* Options for Files::        Optional features that some files may support.
+* File Minimums::            Minimum values for file limits.
+* Pathconf::                 Getting the limit values for a particular file.
+
+* Utility Limits::           Capacity limits of some POSIX.2 utility programs.
+* Utility Minimums::         Minimum allowable values of those limits.
+
+* String Parameters::        Getting the default search path.
+@end menu
+
+@node General Limits
+@section General Capacity Limits
+@cindex POSIX capacity limits
+@cindex limits, POSIX
+@cindex capacity limits, POSIX
+
+The POSIX.1 and POSIX.2 standards specify a number of parameters that
+describe capacity limitations of the system.  These limits can be fixed
+constants for a given operating system, or they can vary from machine to
+machine.  For example, some limit values may be configurable by the
+system administrator, either at run time or by rebuilding the kernel,
+and this should not require recompiling application programs.
+
+@pindex limits.h
+Each of the following limit parameters has a macro that is defined in
+@file{limits.h} only if the system has a fixed, uniform limit for the
+parameter in question.  If the system allows different file systems or
+files to have different limits, then the macro is undefined; use
+@code{sysconf} to find out the limit that applies at a particular time
+on a particular machine.  @xref{Sysconf}.
+
+Each of these parameters also has another macro, with a name starting
+with @samp{_POSIX}, which gives the lowest value that the limit is
+allowed to have on @emph{any} POSIX system.  @xref{Minimums}.
+
+@cindex limits, program argument size
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int ARG_MAX
+If defined, the unvarying maximum combined length of the @var{argv} and
+@var{environ} arguments that can be passed to the @code{exec} functions.
+@end deftypevr
+
+@cindex limits, number of processes
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int CHILD_MAX
+If defined, the unvarying maximum number of processes that can exist
+with the same real user ID at any one time.  In BSD and GNU, this is
+controlled by the @code{RLIMIT_NPROC} resource limit; @pxref{Limits on
+Resources}.
+@end deftypevr
+
+@cindex limits, number of open files
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int OPEN_MAX
+If defined, the unvarying maximum number of files that a single process
+can have open simultaneously.  In BSD and GNU, this is controlled
+by the @code{RLIMIT_NOFILE} resource limit; @pxref{Limits on Resources}.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int STREAM_MAX
+If defined, the unvarying maximum number of streams that a single
+process can have open simultaneously.  @xref{Opening Streams}.
+@end deftypevr
+
+@cindex limits, time zone name length
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int TZNAME_MAX
+If defined, the unvarying maximum length of a time zone name.
+@xref{Time Zone Functions}.
+@end deftypevr
+
+These limit macros are always defined in @file{limits.h}.
+
+@cindex limits, number of supplementary group IDs
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int NGROUPS_MAX
+The maximum number of supplementary group IDs that one process can have.
+
+The value of this macro is actually a lower bound for the maximum.  That
+is, you can count on being able to have that many supplementary group
+IDs, but a particular machine might let you have even more.  You can use
+@code{sysconf} to see whether a particular machine will let you have
+more (@pxref{Sysconf}).
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int SSIZE_MAX
+The largest value that can fit in an object of type @code{ssize_t}.
+Effectively, this is the limit on the number of bytes that can be read
+or written in a single operation.
+
+This macro is defined in all POSIX systems because this limit is never
+configurable.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int RE_DUP_MAX
+The largest number of repetitions you are guaranteed is allowed in the
+construct @samp{\@{@var{min},@var{max}\@}} in a regular expression.
+
+The value of this macro is actually a lower bound for the maximum.  That
+is, you can count on being able to have that many repetitions, but a
+particular machine might let you have even more.  You can use
+@code{sysconf} to see whether a particular machine will let you have
+more (@pxref{Sysconf}).  And even the value that @code{sysconf} tells
+you is just a lower bound---larger values might work.
+
+This macro is defined in all POSIX.2 systems, because POSIX.2 says it
+should always be defined even if there is no specific imposed limit.
+@end deftypevr
+
+@node System Options
+@section Overall System Options
+@cindex POSIX optional features
+@cindex optional POSIX features
+
+POSIX defines certain system-specific options that not all POSIX systems
+support.  Since these options are provided in the kernel, not in the
+library, simply using the GNU C library does not guarantee any of these
+features is supported; it depends on the system you are using.
+
+@pindex unistd.h
+You can test for the availability of a given option using the macros in
+this section, together with the function @code{sysconf}.  The macros are
+defined only if you include @file{unistd.h}.
+
+For the following macros, if the macro is defined in @file{unistd.h},
+then the option is supported.  Otherwise, the option may or may not be
+supported; use @code{sysconf} to find out.  @xref{Sysconf}.
+
+@comment unistd.h
+@comment POSIX.1
+@deftypevr Macro int _POSIX_JOB_CONTROL
+If this symbol is defined, it indicates that the system supports job
+control.  Otherwise, the implementation behaves as if all processes
+within a session belong to a single process group.  @xref{Job Control}.
+@end deftypevr
+
+@comment unistd.h
+@comment POSIX.1
+@deftypevr Macro int _POSIX_SAVED_IDS
+If this symbol is defined, it indicates that the system remembers the
+effective user and group IDs of a process before it executes an
+executable file with the set-user-ID or set-group-ID bits set, and that
+explicitly changing the effective user or group IDs back to these values
+is permitted.  If this option is not defined, then if a nonprivileged
+process changes its effective user or group ID to the real user or group
+ID of the process, it can't change it back again.  @xref{Enable/Disable
+Setuid}.
+@end deftypevr
+
+For the following macros, if the macro is defined in @file{unistd.h},
+then its value indicates whether the option is supported.  A value of
+@code{-1} means no, and any other value means yes.  If the macro is not
+defined, then the option may or may not be supported; use @code{sysconf}
+to find out.  @xref{Sysconf}.
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevr Macro int _POSIX2_C_DEV
+If this symbol is defined, it indicates that the system has the POSIX.2
+C compiler command, @code{c89}.  The GNU C library always defines this
+as @code{1}, on the assumption that you would not have installed it if
+you didn't have a C compiler.
+@end deftypevr
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevr Macro int _POSIX2_FORT_DEV
+If this symbol is defined, it indicates that the system has the POSIX.2
+Fortran compiler command, @code{fort77}.  The GNU C library never
+defines this, because we don't know what the system has.
+@end deftypevr
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevr Macro int _POSIX2_FORT_RUN
+If this symbol is defined, it indicates that the system has the POSIX.2
+@code{asa} command to interpret Fortran carriage control.  The GNU C
+library never defines this, because we don't know what the system has.
+@end deftypevr
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevr Macro int _POSIX2_LOCALEDEF
+If this symbol is defined, it indicates that the system has the POSIX.2
+@code{localedef} command.  The GNU C library never defines this, because
+we don't know what the system has.
+@end deftypevr
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevr Macro int _POSIX2_SW_DEV
+If this symbol is defined, it indicates that the system has the POSIX.2
+commands @code{ar}, @code{make}, and @code{strip}.  The GNU C library
+always defines this as @code{1}, on the assumption that you had to have
+@code{ar} and @code{make} to install the library, and it's unlikely that
+@code{strip} would be absent when those are present.
+@end deftypevr
+
+@node Version Supported
+@section Which Version of POSIX is Supported
+
+@comment unistd.h
+@comment POSIX.1
+@deftypevr Macro {long int} _POSIX_VERSION
+This constant represents the version of the POSIX.1 standard to which
+the implementation conforms.  For an implementation conforming to the
+1990 POSIX.1 standard, the value is the integer @code{199009L}.
+
+@code{_POSIX_VERSION} is always defined (in @file{unistd.h}) in any
+POSIX system.
+
+@strong{Usage Note:} Don't try to test whether the system supports POSIX
+by including @file{unistd.h} and then checking whether
+@code{_POSIX_VERSION} is defined.  On a non-POSIX system, this will
+probably fail because there is no @file{unistd.h}.  We do not know of
+@emph{any} way you can reliably test at compilation time whether your
+target system supports POSIX or whether @file{unistd.h} exists.
+
+The GNU C compiler predefines the symbol @code{__POSIX__} if the target
+system is a POSIX system.  Provided you do not use any other compilers
+on POSIX systems, testing @code{defined (__POSIX__)} will reliably
+detect such systems.
+@end deftypevr
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevr Macro {long int} _POSIX2_C_VERSION
+This constant represents the version of the POSIX.2 standard which the
+library and system kernel support.  We don't know what value this will
+be for the first version of the POSIX.2 standard, because the value is
+based on the year and month in which the standard is officially adopted.
+
+The value of this symbol says nothing about the utilities installed on
+the system.
+
+@strong{Usage Note:} You can use this macro to tell whether a POSIX.1
+system library supports POSIX.2 as well.  Any POSIX.1 system contains
+@file{unistd.h}, so include that file and then test @code{defined
+(_POSIX2_C_VERSION)}.
+@end deftypevr
+
+@node Sysconf
+@section Using @code{sysconf}
+
+When your system has configurable system limits, you can use the
+@code{sysconf} function to find out the value that applies to any
+particular machine.  The function and the associated @var{parameter}
+constants are declared in the header file @file{unistd.h}.
+
+@menu
+* Sysconf Definition::        Detailed specifications of @code{sysconf}.
+* Constants for Sysconf::     The list of parameters @code{sysconf} can read.
+* Examples of Sysconf::       How to use @code{sysconf} and the parameter
+				 macros properly together.
+@end menu
+
+@node Sysconf Definition
+@subsection Definition of @code{sysconf}
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun {long int} sysconf (int @var{parameter})
+This function is used to inquire about runtime system parameters.  The
+@var{parameter} argument should be one of the @samp{_SC_} symbols listed
+below.
+
+The normal return value from @code{sysconf} is the value you requested.
+A value of @code{-1} is returned both if the implementation does not
+impose a limit, and in case of an error.  
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The value of the @var{parameter} is invalid.
+@end table
+@end deftypefun
+
+@node Constants for Sysconf
+@subsection Constants for @code{sysconf} Parameters
+
+Here are the symbolic constants for use as the @var{parameter} argument
+to @code{sysconf}.  The values are all integer constants (more
+specifically, enumeration type values).
+
+@table @code
+@comment unistd.h
+@comment POSIX.1
+@item _SC_ARG_MAX
+Inquire about the parameter corresponding to @code{ARG_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_CHILD_MAX
+Inquire about the parameter corresponding to @code{CHILD_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_OPEN_MAX
+Inquire about the parameter corresponding to @code{OPEN_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_STREAM_MAX
+Inquire about the parameter corresponding to @code{STREAM_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_TZNAME_MAX
+Inquire about the parameter corresponding to @code{TZNAME_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_NGROUPS_MAX
+Inquire about the parameter corresponding to @code{NGROUPS_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_JOB_CONTROL
+Inquire about the parameter corresponding to @code{_POSIX_JOB_CONTROL}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_SAVED_IDS
+Inquire about the parameter corresponding to @code{_POSIX_SAVED_IDS}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_VERSION
+Inquire about the parameter corresponding to @code{_POSIX_VERSION}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _SC_CLK_TCK
+Inquire about the parameter corresponding to @code{CLOCKS_PER_SEC};
+@pxref{Basic CPU Time}.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_2_C_DEV
+Inquire about whether the system has the POSIX.2 C compiler command,
+@code{c89}.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_2_FORT_DEV
+Inquire about whether the system has the POSIX.2 Fortran compiler
+command, @code{fort77}.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_2_FORT_RUN
+Inquire about whether the system has the POSIX.2 @code{asa} command to
+interpret Fortran carriage control.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_2_LOCALEDEF
+Inquire about whether the system has the POSIX.2 @code{localedef}
+command.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_2_SW_DEV
+Inquire about whether the system has the POSIX.2 commands @code{ar},
+@code{make}, and @code{strip}.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_BC_BASE_MAX
+Inquire about the maximum value of @code{obase} in the @code{bc}
+utility.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_BC_DIM_MAX
+Inquire about the maximum size of an array in the @code{bc}
+utility.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_BC_SCALE_MAX
+Inquire about the maximum value of @code{scale} in the @code{bc}
+utility.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_BC_STRING_MAX
+Inquire about the maximum size of a string constant in the
+@code{bc} utility.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_COLL_WEIGHTS_MAX
+Inquire about the maximum number of weights that can necessarily
+be used in defining the collating sequence for a locale.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_EXPR_NEST_MAX
+Inquire about the maximum number of expressions nested within
+parentheses when using the @code{expr} utility.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_LINE_MAX
+Inquire about the maximum size of a text line that the POSIX.2 text
+utilities can handle.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_EQUIV_CLASS_MAX
+Inquire about the maximum number of weights that can be assigned to an
+entry of the @code{LC_COLLATE} category @samp{order} keyword in a locale
+definition.  The GNU C library does not presently support locale
+definitions.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_VERSION
+Inquire about the version number of POSIX.1 that the library and kernel
+support.
+
+@comment unistd.h
+@comment POSIX.2
+@item _SC_2_VERSION
+Inquire about the version number of POSIX.2 that the system utilities
+support.
+
+@comment unistd.h
+@comment GNU
+@item _SC_PAGESIZE
+Inquire about the virtual memory page size of the machine.
+@code{getpagesize} returns the same value.
+@c @xref{XXX getpagesize}. !!! ???
+@end table
+
+@node Examples of Sysconf 
+@subsection Examples of @code{sysconf}
+
+We recommend that you first test for a macro definition for the
+parameter you are interested in, and call @code{sysconf} only if the
+macro is not defined.  For example, here is how to test whether job
+control is supported:
+
+@smallexample
+@group
+int
+have_job_control (void)
+@{
+#ifdef _POSIX_JOB_CONTROL
+  return 1;
+#else
+  int value = sysconf (_SC_JOB_CONTROL);
+  if (value < 0)
+    /* @r{If the system is that badly wedged,}
+       @r{there's no use trying to go on.}  */
+    fatal (strerror (errno));
+  return value;
+#endif
+@}
+@end group
+@end smallexample
+
+Here is how to get the value of a numeric limit:
+
+@smallexample
+int
+get_child_max ()
+@{
+#ifdef CHILD_MAX
+  return CHILD_MAX;
+#else
+  int value = sysconf (_SC_CHILD_MAX);
+  if (value < 0)
+    fatal (strerror (errno));
+  return value;
+#endif
+@}
+@end smallexample
+
+@node Minimums
+@section Minimum Values for General Capacity Limits
+
+Here are the names for the POSIX minimum upper bounds for the system
+limit parameters.  The significance of these values is that you can
+safely push to these limits without checking whether the particular
+system you are using can go that far.
+
+@table @code
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_ARG_MAX
+The value of this macro is the most restrictive limit permitted by POSIX
+for the maximum combined length of the @var{argv} and @var{environ}
+arguments that can be passed to the @code{exec} functions.
+Its value is @code{4096}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_CHILD_MAX
+The value of this macro is the most restrictive limit permitted by POSIX
+for the maximum number of simultaneous processes per real user ID.  Its
+value is @code{6}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_NGROUPS_MAX
+The value of this macro is the most restrictive limit permitted by POSIX
+for the maximum number of supplementary group IDs per process.  Its
+value is @code{0}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_OPEN_MAX
+The value of this macro is the most restrictive limit permitted by POSIX
+for the maximum number of files that a single process can have open
+simultaneously.  Its value is @code{16}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_SSIZE_MAX
+The value of this macro is the most restrictive limit permitted by POSIX
+for the maximum value that can be stored in an object of type
+@code{ssize_t}.  Its value is @code{32767}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_STREAM_MAX
+The value of this macro is the most restrictive limit permitted by POSIX
+for the maximum number of streams that a single process can have open
+simultaneously.  Its value is @code{8}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_TZNAME_MAX
+The value of this macro is the most restrictive limit permitted by POSIX
+for the maximum length of a time zone name.  Its value is @code{3}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_RE_DUP_MAX
+The value of this macro is the most restrictive limit permitted by POSIX
+for the numbers used in the @samp{\@{@var{min},@var{max}\@}} construct
+in a regular expression.  Its value is @code{255}.
+@end table
+
+@node Limits for Files
+@section Limits on File System Capacity
+
+The POSIX.1 standard specifies a number of parameters that describe the
+limitations of the file system.  It's possible for the system to have a
+fixed, uniform limit for a parameter, but this isn't the usual case.  On
+most systems, it's possible for different file systems (and, for some
+parameters, even different files) to have different maximum limits.  For
+example, this is very likely if you use NFS to mount some of the file
+systems from other machines.
+
+@pindex limits.h
+Each of the following macros is defined in @file{limits.h} only if the
+system has a fixed, uniform limit for the parameter in question.  If the
+system allows different file systems or files to have different limits,
+then the macro is undefined; use @code{pathconf} or @code{fpathconf} to
+find out the limit that applies to a particular file.  @xref{Pathconf}.
+
+Each parameter also has another macro, with a name starting with
+@samp{_POSIX}, which gives the lowest value that the limit is allowed to
+have on @emph{any} POSIX system.  @xref{File Minimums}.
+
+@cindex limits, link count of files
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int LINK_MAX
+The uniform system limit (if any) for the number of names for a given
+file.  @xref{Hard Links}.
+@end deftypevr
+
+@cindex limits, terminal input queue
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int MAX_CANON
+The uniform system limit (if any) for the amount of text in a line of
+input when input editing is enabled.  @xref{Canonical or Not}.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int MAX_INPUT
+The uniform system limit (if any) for the total number of characters
+typed ahead as input.  @xref{I/O Queues}.
+@end deftypevr
+
+@cindex limits, file name length
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int NAME_MAX
+The uniform system limit (if any) for the length of a file name component.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int PATH_MAX
+The uniform system limit (if any) for the length of an entire file name (that
+is, the argument given to system calls such as @code{open}).
+@end deftypevr
+
+@cindex limits, pipe buffer size
+@comment limits.h
+@comment POSIX.1
+@deftypevr Macro int PIPE_BUF
+The uniform system limit (if any) for the number of bytes that can be
+written atomically to a pipe.  If multiple processes are writing to the
+same pipe simultaneously, output from different processes might be
+interleaved in chunks of this size.  @xref{Pipes and FIFOs}.
+@end deftypevr
+
+These are alternative macro names for some of the same information.
+
+@comment dirent.h
+@comment BSD
+@deftypevr Macro int MAXNAMLEN
+This is the BSD name for @code{NAME_MAX}.  It is defined in
+@file{dirent.h}.
+@end deftypevr
+
+@comment stdio.h
+@comment ANSI
+@deftypevr Macro int FILENAME_MAX 
+The value of this macro is an integer constant expression that
+represents the maximum length of a file name string.  It is defined in
+@file{stdio.h}.
+
+Unlike @code{PATH_MAX}, this macro is defined even if there is no actual
+limit imposed.  In such a case, its value is typically a very large
+number.  @strong{This is always the case on the GNU system.}
+
+@strong{Usage Note:} Don't use @code{FILENAME_MAX} as the size of an
+array in which to store a file name!  You can't possibly make an array
+that big!  Use dynamic allocation (@pxref{Memory Allocation}) instead.
+@end deftypevr
+
+@node Options for Files
+@section Optional Features in File Support
+
+POSIX defines certain system-specific options in the system calls for
+operating on files.  Some systems support these options and others do
+not.  Since these options are provided in the kernel, not in the
+library, simply using the GNU C library does not guarantee any of these
+features is supported; it depends on the system you are using.  They can
+also vary between file systems on a single machine.
+
+@pindex unistd.h
+This section describes the macros you can test to determine whether a
+particular option is supported on your machine.  If a given macro is
+defined in @file{unistd.h}, then its value says whether the
+corresponding feature is supported.  (A value of @code{-1} indicates no;
+any other value indicates yes.)  If the macro is undefined, it means
+particular files may or may not support the feature.
+
+Since all the machines that support the GNU C library also support NFS,
+one can never make a general statement about whether all file systems
+support the @code{_POSIX_CHOWN_RESTRICTED} and @code{_POSIX_NO_TRUNC}
+features.  So these names are never defined as macros in the GNU C
+library.
+
+@comment unistd.h
+@comment POSIX.1
+@deftypevr Macro int _POSIX_CHOWN_RESTRICTED
+If this option is in effect, the @code{chown} function is restricted so
+that the only changes permitted to nonprivileged processes is to change 
+the group owner of a file to either be the effective group ID of the
+process, or one of its supplementary group IDs.  @xref{File Owner}.
+@end deftypevr
+
+@comment unistd.h
+@comment POSIX.1
+@deftypevr Macro int _POSIX_NO_TRUNC
+If this option is in effect, file name components longer than
+@code{NAME_MAX} generate an @code{ENAMETOOLONG} error.  Otherwise, file
+name components that are too long are silently truncated.
+@end deftypevr
+
+@comment unistd.h
+@comment POSIX.1
+@deftypevr Macro {unsigned char} _POSIX_VDISABLE
+This option is only meaningful for files that are terminal devices.
+If it is enabled, then handling for special control characters can
+be disabled individually.  @xref{Special Characters}.
+@end deftypevr
+
+@pindex unistd.h
+If one of these macros is undefined, that means that the option might be
+in effect for some files and not for others.  To inquire about a
+particular file, call @code{pathconf} or @code{fpathconf}.
+@xref{Pathconf}.
+
+@node File Minimums
+@section Minimum Values for File System Limits
+
+Here are the names for the POSIX minimum upper bounds for some of the
+above parameters.  The significance of these values is that you can
+safely push to these limits without checking whether the particular
+system you are using can go that far.
+
+@table @code
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_LINK_MAX
+The most restrictive limit permitted by POSIX for the maximum value of a
+file's link count.  The value of this constant is @code{8}; thus, you
+can always make up to eight names for a file without running into a
+system limit.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_MAX_CANON
+The most restrictive limit permitted by POSIX for the maximum number of
+bytes in a canonical input line from a terminal device.  The value of
+this constant is @code{255}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_MAX_INPUT
+The most restrictive limit permitted by POSIX for the maximum number of
+bytes in a terminal device input queue (or typeahead buffer).
+@xref{Input Modes}.  The value of this constant is @code{255}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_NAME_MAX
+The most restrictive limit permitted by POSIX for the maximum number of
+bytes in a file name component.  The value of this constant is
+@code{14}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_PATH_MAX
+The most restrictive limit permitted by POSIX for the maximum number of
+bytes in a file name.  The value of this constant is @code{255}.
+
+@comment limits.h
+@comment POSIX.1
+@item _POSIX_PIPE_BUF
+The most restrictive limit permitted by POSIX for the maximum number of
+bytes that can be written atomically to a pipe.  The value of this
+constant is @code{512}.
+@end table
+
+@node Pathconf
+@section Using @code{pathconf}
+
+When your machine allows different files to have different values for a
+file system parameter, you can use the functions in this section to find
+out the value that applies to any particular file.
+
+These functions and the associated constants for the @var{parameter}
+argument are declared in the header file @file{unistd.h}.
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun {long int} pathconf (const char *@var{filename}, int @var{parameter})
+This function is used to inquire about the limits that apply to
+the file named @var{filename}.
+
+The @var{parameter} argument should be one of the @samp{_PC_} constants
+listed below.
+
+The normal return value from @code{pathconf} is the value you requested.
+A value of @code{-1} is returned both if the implementation does not
+impose a limit, and in case of an error.  In the former case,
+@code{errno} is not set, while in the latter case, @code{errno} is set
+to indicate the cause of the problem.  So the only way to use this
+function robustly is to store @code{0} into @code{errno} just before
+calling it.
+
+Besides the usual file name errors (@pxref{File Name Errors}),
+the following error condition is defined for this function:
+
+@table @code
+@item EINVAL
+The value of @var{parameter} is invalid, or the implementation doesn't
+support the @var{parameter} for the specific file.
+@end table
+@end deftypefun
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun {long int} fpathconf (int @var{filedes}, int @var{parameter})
+This is just like @code{pathconf} except that an open file descriptor
+is used to specify the file for which information is requested, instead
+of a file name.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item EINVAL
+The value of @var{parameter} is invalid, or the implementation doesn't
+support the @var{parameter} for the specific file.
+@end table
+@end deftypefun
+
+Here are the symbolic constants that you can use as the @var{parameter}
+argument to @code{pathconf} and @code{fpathconf}.  The values are all
+integer constants.
+
+@table @code
+@comment unistd.h
+@comment POSIX.1
+@item _PC_LINK_MAX
+Inquire about the value of @code{LINK_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_MAX_CANON
+Inquire about the value of @code{MAX_CANON}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_MAX_INPUT
+Inquire about the value of @code{MAX_INPUT}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_NAME_MAX
+Inquire about the value of @code{NAME_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_PATH_MAX
+Inquire about the value of @code{PATH_MAX}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_PIPE_BUF
+Inquire about the value of @code{PIPE_BUF}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_CHOWN_RESTRICTED
+Inquire about the value of @code{_POSIX_CHOWN_RESTRICTED}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_NO_TRUNC
+Inquire about the value of @code{_POSIX_NO_TRUNC}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_VDISABLE
+Inquire about the value of @code{_POSIX_VDISABLE}.
+@end table
+
+@node Utility Limits
+@section Utility Program Capacity Limits
+
+The POSIX.2 standard specifies certain system limits that you can access
+through @code{sysconf} that apply to utility behavior rather than the
+behavior of the library or the operating system.
+
+The GNU C library defines macros for these limits, and @code{sysconf}
+returns values for them if you ask; but these values convey no
+meaningful information.  They are simply the smallest values that
+POSIX.2 permits.
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int BC_BASE_MAX
+The largest value of @code{obase} that the @code{bc} utility is
+guaranteed to support.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int BC_SCALE_MAX
+The largest value of @code{scale} that the @code{bc} utility is
+guaranteed to support.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int BC_DIM_MAX
+The largest number of elements in one array that the @code{bc} utility
+is guaranteed to support.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int BC_STRING_MAX
+The largest number of characters in one string constant that the
+@code{bc} utility is guaranteed to support.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int BC_DIM_MAX
+The largest number of elements in one array that the @code{bc} utility
+is guaranteed to support.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int COLL_WEIGHTS_MAX
+The largest number of weights that can necessarily be used in defining
+the collating sequence for a locale.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int EXPR_NEST_MAX
+The maximum number of expressions that can be nested within parenthesis
+by the @code{expr} utility.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int LINE_MAX
+The largest text line that the text-oriented POSIX.2 utilities can
+support.  (If you are using the GNU versions of these utilities, then
+there is no actual limit except that imposed by the available virtual
+memory, but there is no way that the library can tell you this.)
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
+@deftypevr Macro int EQUIV_CLASS_MAX
+The maximum number of weights that can be assigned to an entry of the
+@code{LC_COLLATE} category @samp{order} keyword in a locale definition.
+The GNU C library does not presently support locale definitions.
+@end deftypevr
+
+@node Utility Minimums
+@section Minimum Values for Utility Limits
+
+@table @code
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_BC_BASE_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum value of
+@code{obase} in the @code{bc} utility.  Its value is @code{99}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_BC_DIM_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum size of
+an array in the @code{bc} utility.  Its value is @code{2048}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_BC_SCALE_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum value of
+@code{scale} in the @code{bc} utility.  Its value is @code{99}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_BC_STRING_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum size of
+a string constant in the @code{bc} utility.  Its value is @code{1000}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_COLL_WEIGHTS_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum number
+of weights that can necessarily be used in defining the collating
+sequence for a locale.  Its value is @code{2}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_EXPR_NEST_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum number
+of expressions nested within parenthesis when using the @code{expr} utility.
+Its value is @code{32}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_LINE_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum size of
+a text line that the text utilities can handle.  Its value is
+@code{2048}.
+
+@comment limits.h
+@comment POSIX.2
+@item _POSIX2_EQUIV_CLASS_MAX
+The most restrictive limit permitted by POSIX.2 for the maximum number
+of weights that can be assigned to an entry of the @code{LC_COLLATE}
+category @samp{order} keyword in a locale definition.  Its value is
+@code{2}.  The GNU C library does not presently support locale
+definitions.
+@end table
+
+@node String Parameters
+@section String-Valued Parameters
+
+POSIX.2 defines a way to get string-valued parameters from the operating
+system with the function @code{confstr}:
+
+@comment unistd.h
+@comment POSIX.2
+@deftypefun size_t confstr (int @var{parameter}, char *@var{buf}, size_t @var{len})
+This function reads the value of a string-valued system parameter,
+storing the string into @var{len} bytes of memory space starting at
+@var{buf}.  The @var{parameter} argument should be one of the
+@samp{_CS_} symbols listed below.
+
+The normal return value from @code{confstr} is the length of the string
+value that you asked for.  If you supply a null pointer for @var{buf},
+then @code{confstr} does not try to store the string; it just returns
+its length.  A value of @code{0} indicates an error.
+
+If the string you asked for is too long for the buffer (that is, longer
+than @code{@var{len} - 1}), then @code{confstr} stores just that much
+(leaving room for the terminating null character).  You can tell that
+this has happened because @code{confstr} returns a value greater than or
+equal to @var{len}.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The value of the @var{parameter} is invalid.
+@end table
+@end deftypefun
+
+Currently there is just one parameter you can read with @code{confstr}:
+
+@table @code
+@comment unistd.h
+@comment POSIX.2
+@item _CS_PATH
+This parameter's value is the recommended default path for searching for
+executable files.  This is the path that a user has by default just
+after logging in.
+@end table
+
+The way to use @code{confstr} without any arbitrary limit on string size
+is to call it twice: first call it to get the length, allocate the
+buffer accordingly, and then call @code{confstr} again to fill the
+buffer, like this:
+
+@smallexample
+@group
+char *
+get_default_path (void)
+@{
+  size_t len = confstr (_CS_PATH, NULL, 0);
+  char *buffer = (char *) xmalloc (len);
+
+  if (confstr (_CS_PATH, buf, len + 1) == 0)
+    @{
+      free (buffer);
+      return NULL;
+    @}
+
+  return buffer;
+@}
+@end group
+@end smallexample

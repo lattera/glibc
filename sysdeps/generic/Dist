@@ -1,0 +1,8 @@
+make_siglist.c signame.c signame.h
+det_endian.c
+mathimpl.h
+trig.h
+sincos.c
+asincos.c
+exp__E.c
+log__L.c

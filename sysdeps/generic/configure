@@ -1,0 +1,52 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ 
+
+if [ ! "$inhibit_glue" ]; then
+
+# For signame.c, used in make_siglist.
+for ac_func in psignal
+do
+ac_tr_func=HAVE_`echo $ac_func | tr '[a-z]' '[A-Z]'`
+echo "checking for ${ac_func}" 1>&4
+if eval "test \"`echo '${'ac_cv_func_${ac_func}'+set}'`\" = set"; then
+  echo "	using cached value for ac_cv_func_${ac_func}" 1>&5
+else
+  cat > conftest.${ac_ext} <<EOF
+#include "confdefs.h"
+#include <ctype.h>
+int main() { return 0; }
+int t() { 
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_${ac_func}) || defined (__stub___${ac_func})
+choke me
+#else
+/* Override any gcc2 internal prototype to avoid an error.  */
+extern char ${ac_func}(); ${ac_func}();
+#endif
+; return 0; }
+EOF
+if eval $ac_compile; then
+  rm -rf conftest*
+  eval "ac_cv_func_${ac_func}=yes"
+else
+  rm -rf conftest*
+  eval "ac_cv_func_${ac_func}=no"
+fi
+rm -f conftest*
+
+fi
+if eval "test \"`echo '$ac_cv_func_'${ac_func}`\" = yes"; then
+  
+{
+test "$verbose" = yes && \
+echo "	defining ${ac_tr_func}"
+echo "#define" ${ac_tr_func} "1" >> confdefs.h
+DEFS="$DEFS -D${ac_tr_func}=1"
+}
+
+fi
+done
+
+fi

@@ -1,0 +1,966 @@
+@c \input /gd/gnu/doc/texinfo
+@c This is for making the `INSTALL' file for the distribution.
+@c Makeinfo ignores it when processing the file from the include.
+@setfilename INSTALL
+
+@node Maintenance, Copying, Library Summary, Top
+@appendix Library Maintenance
+
+@menu
+* Installation::          How to configure, compile and
+                             install the GNU C library.
+* Reporting Bugs::        How to report bugs (if you want to
+                             get them fixed) and other troubles
+                             you may have with the GNU C library.
+* Source Layout::         How to add new functions or header files
+                             to the GNU C library.
+* Porting::               How to port the GNU C library to
+                             a new machine or operating system.
+* Contributors::          Contributors to the GNU C Library.
+@end menu
+
+@node Installation
+@appendixsec How to Install the GNU C Library
+@cindex installing the library
+
+Installation of the GNU C library is relatively simple.
+
+You need the latest version of GNU @code{make}.  Modifying the GNU C
+Library to work with other @code{make} programs would be so hard that we
+recommend you port GNU @code{make} instead.  @strong{Really.}@refill
+
+To configure the GNU C library for your system, run the shell script
+@file{configure} with @code{sh}.  Use an argument which is the
+conventional GNU name for your system configuration---for example,
+@samp{sparc-sun-sunos4.1}, for a Sun 4 running Sunos 4.1.
+@xref{Installation, Installation, Installing GNU CC, gcc.info, Using and
+Porting GNU CC}, for a full description of standard GNU configuration
+names.  If you omit the configuration name, @file{configure} will try to
+guess one for you by inspecting the system it is running on.  It may or
+may not be able to come up with a guess, and the its guess might be
+wrong.  @file{configure} will tell you the canonical name of the chosen
+configuration before proceeding.
+
+The GNU C Library currently supports configurations that match the
+following patterns:
+
+@smallexample
+alpha-dec-osf1
+i386-@var{anything}-bsd4.3
+i386-@var{anything}-gnu
+i386-@var{anything}-isc2.2
+i386-@var{anything}-isc3.@var{n}
+i386-@var{anything}-sco3.2
+i386-@var{anything}-sco3.2v4
+i386-@var{anything}-sysv
+i386-@var{anything}-sysv4
+i386-force_cpu386-none
+i386-sequent-bsd
+i960-nindy960-none
+m68k-hp-bsd4.3
+m68k-mvme135-none
+m68k-mvme136-none
+m68k-sony-newsos3
+m68k-sony-newsos4
+m68k-sun-sunos4.@var{n}
+mips-dec-ultrix4.@var{n}
+mips-sgi-irix4.@var{n}
+sparc-sun-solaris2.@var{n}
+sparc-sun-sunos4.@var{n}
+@end smallexample
+
+While no other configurations are supported, there are handy aliases for
+these few.  (These aliases work in other GNU software as well.)
+
+@smallexample
+decstation
+hp320-bsd4.3 hp300bsd
+i386-sco
+i386-sco3.2v4
+i386-sequent-dynix
+i386-svr4
+news
+sun3-sunos4.@var{n} sun3
+sun4-solaris2.@var{n} sun4-sunos5.@var{n}
+sun4-sunos4.@var{n} sun4
+@end smallexample
+
+Here are some options that you should specify (if appropriate) when
+you run @code{configure}:
+
+@table @samp
+@item --with-gnu-ld
+Use this option if you plan to use GNU @code{ld} to link programs with
+the GNU C Library.  (We strongly recommend that you do.)  This option
+enables use of features that exist only in GNU @code{ld}; so if you
+configure for GNU @code{ld} you must use GNU @code{ld} @emph{every time}
+you link with the GNU C Library, and when building it.
+
+@item --with-gnu-as
+Use this option if you plan to use the GNU assembler, @code{gas}, when
+building the GNU C Library.  On some systems, the library may not build
+properly if you do @emph{not} use @code{gas}.
+
+@c extra blank line makes it look better
+@item --nfp
+
+Use this option if your computer lacks hardware floating point support.
+
+@item --prefix=@var{directory}
+Install machine-independent data files in subdirectories of
+@file{@var{directory}}.  (You can also set this in @file{configparms};
+see below.)
+
+@item --exec-prefix=@var{directory}
+Install the library and other machine-dependent files in subdirectories
+of @file{@var{directory}}.  (You can also set this in
+@file{configparms}; see below.)
+@end table
+
+The simplest way to run @code{configure} is to do it in the directory
+that contains the library sources.  This prepares to build the library
+in that very directory.
+
+You can prepare to build the library in some other directory by going
+to that other directory to run @code{configure}.  In order to run
+configure, you will have to specify a directory for it, like this:
+
+@smallexample
+mkdir sun4
+cd sun4
+../configure sparc-sun-sunos4.1
+@end smallexample
+
+@noindent
+@code{configure} looks for the sources in whatever directory you
+specified for finding @code{configure} itself.  It does not matter where
+in the file system the source and build directories are---as long as you
+specify the source directory when you run @code{configure}, you will get
+the proper results.
+
+This feature lets you keep sources and binaries in different
+directories, and that makes it easy to build the library for several
+different machines from the same set of sources.  Simply create a 
+build directory for each target machine, and run @code{configure} in
+that directory specifying the target machine's configuration name.
+
+The library has a number of special-purpose configuration parameters.
+These are defined in the file @file{Makeconfig}; see the comments in
+that file for the details.
+
+But don't edit the file @file{Makeconfig} yourself---instead, create a
+file @file{configparms} in the directory where you are building the
+library, and define in that file the parameters you want to specify.
+@file{configparms} should @strong{not} be an edited copy of
+@file{Makeconfig}; specify only the parameters that you want to
+override.  To see how to set these parameters, find the section of
+@file{Makeconfig} that says ``These are the configuration variables.''
+Then for each parameter that you want to change, copy the definition
+from @file{Makeconfig} to your new @file{configparms} file, and change
+the value as appropriate for your system.
+
+It is easy to configure the GNU C library for cross-compilation by
+setting a few variables in @file{configparms}.  Set @code{CC} to the
+cross-compiler for the target you configured the library for; it is
+important to use this same @code{CC} value when running
+@code{configure}, like this: @samp{CC=@var{target}-gcc configure
+@var{target}}.  Set @code{BUILD_CC} to the compiler to use for for
+programs run on the build system as part of compiling the library.  You
+may need to set @code{AR} and @code{RANLIB} to cross-compiling versions
+of @code{ar} and @code{ranlib} if the native tools are not configured to
+work with object files for the target you configured for.
+
+Some of the machine-dependent code for some machines uses extensions in
+the GNU C compiler, so you may need to compile the library with GCC.
+(In fact, all of the existing complete ports require GCC.)
+
+The current release of the C library contains some header files that the
+compiler normally provides: @file{stddef.h}, @file{stdarg.h}, and
+several files with names of the form @file{va-@var{machine}.h}.  The
+versions of these files that came with older releases of GCC do not work
+properly with the GNU C library.  The @file{stddef.h} file in release
+2.2 and later of GCC is correct.  If you have release 2.2 or later of
+GCC, use its version of @file{stddef.h} instead of the C library's.  To
+do this, put the line @w{@samp{override stddef.h =}} in
+@file{configparms}.  The other files are corrected in release 2.3 and
+later of GCC.  @file{configure} will automatically detect whether the
+installed @file{stdarg.h} and @file{va-@var{machine}.h} files are
+compatible with the C library, and use its own if not.
+
+There is a potential problem with the @code{size_t} type and versions of
+GCC prior to release 2.4.  ANSI C requires that @code{size_t} always be
+an unsigned type.  For compatibility with existing systems' header
+files, GCC defines @code{size_t} in @file{stddef.h} to be whatever type
+the system's @file{sys/types.h} defines it to be.  Most Unix systems
+that define @code{size_t} in @file{sys/types.h}, define it to be a
+signed type.  Some code in the library depends on @code{size_t} being an
+unsigned type, and will not work correctly if it is signed.
+
+The GNU C library code which expects @code{size_t} to be unsigned is
+correct.  The definition of @code{size_t} as a signed type is incorrect.
+Versions 2.4 and later of GCC always define @code{size_t} as an unsigned
+type, and GCC's @file{fixincludes} script massages the system's
+@file{sys/types.h} so as not to conflict with this.
+
+In the meantime, we work around this problem by telling GCC explicitly
+to use an unsigned type for @code{size_t} when compiling the GNU C
+library.  @file{configure} will automatically detect what type GCC uses
+for @code{size_t} arrange to override it if necessary.
+
+To build the library, type @code{make lib}.  This will produce a lot of
+output, some of which looks like errors from @code{make} (but isn't).
+Look for error messages from @code{make} containing @samp{***}.  Those
+indicate that something is really wrong.
+
+To build and run some test programs which exercise some of the library
+facilities, type @code{make tests}.  This will produce several files
+with names like @file{@var{program}.out}.
+
+To format the @cite{GNU C Library Reference Manual} for printing, type
+@w{@code{make dvi}}.  To format the Info version of the manual for on
+line reading with @kbd{C-h i} in Emacs or with the @code{info} program,
+type @w{@code{make info}}.
+
+To install the library and its header files, and the Info files of the
+manual, type @code{make install}, after setting the installation
+directories in @file{configparms}.  This will build things if necessary,
+before installing them.@refill
+
+@node Reporting Bugs
+@appendixsec Reporting Bugs
+@cindex reporting bugs
+@cindex bugs, reporting
+
+There are probably bugs in the GNU C library.  There are certainly
+errors and omissions in this manual.  If you report them, they will get
+fixed.  If you don't, no one will ever know about them and they will
+remain unfixed for all eternity, if not longer.
+
+To report a bug, first you must find it.  Hopefully, this will be the
+hard part.  Once you've found a bug, make sure it's really a bug.  A
+good way to do this is to see if the GNU C library behaves the same way
+some other C library does.  If so, probably you are wrong and the
+libraries are right (but not necessarily).  If not, one of the libraries
+is probably wrong.
+
+Once you're sure you've found a bug, try to narrow it down to the
+smallest test case that reproduces the problem.  In the case of a C
+library, you really only need to narrow it down to one library
+function call, if possible.  This should not be too difficult.
+
+The final step when you have a simple test case is to report the bug.
+When reporting a bug, send your test case, the results you got, the
+results you expected, what you think the problem might be (if you've
+thought of anything), your system type, and the version of the GNU C
+library which you are using.  Also include the files
+@file{config.status} and @file{config.make} which are created by running
+@file{configure}; they will be in whatever directory was current when
+you ran @file{configure}.
+
+If you think you have found some way in which the GNU C library does not
+conform to the ANSI and POSIX standards (@pxref{Standards and
+Portability}), that is definitely a bug.  Report it!@refill
+
+Send bug reports to the Internet address
+@samp{bug-glibc@@prep.ai.mit.edu} or the UUCP path
+@samp{mit-eddie!prep.ai.mit.edu!bug-glibc}.  If you have other problems
+with installation or use, please report those as well.@refill
+
+If you are not sure how a function should behave, and this manual
+doesn't tell you, that's a bug in the manual.  Report that too!  If the
+function's behavior disagrees with the manual, then either the library
+or the manual has a bug, so report the disagreement.  If you find any
+errors or omissions in this manual, please report them to the Internet
+address @samp{bug-glibc-manual@@prep.ai.mit.edu} or the UUCP path
+@samp{mit-eddie!prep.ai.mit.edu!bug-glibc-manual}.
+
+@node Source Layout
+@appendixsec Adding New Functions
+
+The process of building the library is driven by the makefiles, which
+make heavy use of special features of GNU @code{make}.  The makefiles
+are very complex, and you probably don't want to try to understand them.
+But what they do is fairly straightforward, and only requires that you
+define a few variables in the right places.
+
+The library sources are divided into subdirectories, grouped by topic.
+The @file{string} subdirectory has all the string-manipulation
+functions, @file{stdio} has all the standard I/O functions, etc.
+
+Each subdirectory contains a simple makefile, called @file{Makefile},
+which defines a few @code{make} variables and then includes the global
+makefile @file{Rules} with a line like:
+
+@smallexample
+include ../Rules
+@end smallexample
+
+@noindent
+The basic variables that a subdirectory makefile defines are:
+
+@table @code
+@item subdir
+The name of the subdirectory, for example @file{stdio}.
+This variable @strong{must} be defined.
+
+@item headers
+The names of the header files in this section of the library,
+such as @file{stdio.h}.
+
+@item routines
+@itemx aux
+The names of the modules (source files) in this section of the library.
+These should be simple names, such as @samp{strlen} (rather than
+complete file names, such as @file{strlen.c}).  Use @code{routines} for
+modules that define functions in the library, and @code{aux} for
+auxiliary modules containing things like data definitions.  But the
+values of @code{routines} and @code{aux} are just concatenated, so there
+really is no practical difference.@refill
+
+@item tests
+The names of test programs for this section of the library.  These
+should be simple names, such as @samp{tester} (rather than complete file
+names, such as @file{tester.c}).  @w{@samp{make tests}} will build and
+run all the test programs.  If a test program needs input, put the test
+data in a file called @file{@var{test-program}.input}; it will be given to
+the test program on its standard input.  If a test program wants to be
+run with arguments, put the arguments (all on a single line) in a file
+called @file{@var{test-program}.args}.@refill
+
+@item others
+The names of ``other'' programs associated with this section of the
+library.  These are programs which are not tests per se, but are other
+small programs included with the library.  They are built by
+@w{@samp{make others}}.@refill
+
+@item install-lib
+@itemx install-data
+@itemx install
+Files to be installed by @w{@samp{make install}}.  Files listed in
+@samp{install-lib} are installed in the directory specified by
+@samp{libdir} in @file{configparms} or @file{Makeconfig}
+(@pxref{Installation}).  Files listed in @code{install-data} are
+installed in the directory specified by @samp{datadir} in
+@file{configparms} or @file{Makeconfig}.  Files listed in @code{install}
+are installed in the directory specified by @samp{bindir} in
+@file{configparms} or @file{Makeconfig}.@refill
+
+@item distribute
+Other files from this subdirectory which should be put into a
+distribution tar file.  You need not list here the makefile itself or
+the source and header files listed in the other standard variables.
+Only define @code{distribute} if there are files used in an unusual way
+that should go into the distribution.
+
+@item generated
+Files which are generated by @file{Makefile} in this subdirectory.
+These files will be removed by @w{@samp{make clean}}, and they will
+never go into a distribution.
+
+@item extra-objs
+Extra object files which are built by @file{Makefile} in this
+subdirectory.  This should be a list of file names like @file{foo.o};
+the files will actually be found in whatever directory object files are
+being built in.  These files will be removed by @w{@samp{make clean}}.
+This variable is used for secondary object files needed to build
+@code{others} or @code{tests}.
+@end table
+
+@node Porting
+@appendixsec Porting the GNU C Library
+
+The GNU C library is written to be easily portable to a variety of
+machines and operating systems.  Machine- and operating system-dependent
+functions are well separated to make it easy to add implementations for
+new machines or operating systems.  This section describes the layout of
+the library source tree and explains the mechanisms used to select
+machine-dependent code to use.
+
+All the machine-dependent and operating system-dependent files in the
+library are in the subdirectory @file{sysdeps} under the top-level
+library source directory.  This directory contains a hierarchy of
+subdirectories (@pxref{Hierarchy Conventions}).
+
+Each subdirectory of @file{sysdeps} contains source files for a
+particular machine or operating system, or for a class of machine or
+operating system (for example, systems by a particular vendor, or all
+machines that use IEEE 754 floating-point format).  A configuration
+specifies an ordered list of these subdirectories.  Each subdirectory
+implicitly appends its parent directory to the list.  For example,
+specifying the list @file{unix/bsd/vax} is equivalent to specifying the
+list @file{unix/bsd/vax unix/bsd unix}.  A subdirectory can also specify
+that it implies other subdirectories which are not directly above it in
+the directory hierarchy.  If the file @file{Implies} exists in a
+subdirectory, it lists other subdirectories of @file{sysdeps} which are
+appended to the list, appearing after the subdirectory containing the
+@file{Implies} file.  Lines in an @file{Implies} file that begin with a
+@samp{#} character are ignored as comments.  For example,
+@file{unix/bsd/Implies} contains:@refill
+@smallexample
+# BSD has Internet-related things.
+unix/inet
+@end smallexample
+@noindent
+and @file{unix/Implies} contains:
+@need 300
+@smallexample
+posix
+@end smallexample
+
+@noindent
+So the final list is @file{unix/bsd/vax unix/bsd unix/inet unix posix}.
+
+@file{sysdeps} has two ``special'' subdirectories, called @file{generic}
+and @file{stub}.  These two are always implicitly appended to the list
+of subdirectories (in that order), so you needn't put them in an
+@file{Implies} file, and you should not create any subdirectories under
+them.  @file{generic} is for things that can be implemented in
+machine-independent C, using only other machine-independent functions in
+the C library.  @file{stub} is for @dfn{stub} versions of functions
+which cannot be implemented on a particular machine or operating system.
+The stub functions always return an error, and set @code{errno} to
+@code{ENOSYS} (Function not implemented).  @xref{Error Reporting}.
+
+A source file is known to be system-dependent by its having a version in
+@file{generic} or @file{stub}; every system-dependent function should
+have either a generic or stub implementation (there is no point in
+having both).
+
+If you come across a file that is in one of the main source directories
+(@file{string}, @file{stdio}, etc.), and you want to write a machine- or
+operating system-dependent version of it, move the file into
+@file{sysdeps/generic} and write your new implementation in the
+appropriate system-specific subdirectory.  Note that if a file is to be
+system-dependent, it @strong{must not} appear in one of the main source
+directories.@refill
+
+There are a few special files that may exist in each subdirectory of
+@file{sysdeps}:
+
+@comment Blank lines after items make the table look better.
+@table @file
+@item Makefile
+
+A makefile for this machine or operating system, or class of machine or
+operating system.  This file is included by the library makefile
+@file{Makerules}, which is used by the top-level makefile and the
+subdirectory makefiles.  It can change the variables set in the
+including makefile or add new rules.  It can use GNU @code{make}
+conditional directives based on the variable @samp{subdir} (see above) to
+select different sets of variables and rules for different sections of
+the library.  It can also set the @code{make} variable
+@samp{sysdep-routines}, to specify extra modules to be included in the
+library.  You should use @samp{sysdep-routines} rather than adding
+modules to @samp{routines} because the latter is used in determining
+what to distribute for each subdirectory of the main source tree.@refill
+
+Each makefile in a subdirectory in the ordered list of subdirectories to
+be searched is included in order.  Since several system-dependent
+makefiles may be included, each should append to @samp{sysdep-routines}
+rather than simply setting it:
+
+@smallexample
+sysdep-routines := $(sysdep-routines) foo bar
+@end smallexample
+
+@need 1000
+@item Subdirs
+
+This file contains the names of new whole subdirectories under the
+top-level library source tree that should be included for this system.
+These subdirectories are treated just like the system-independent
+subdirectories in the library source tree, such as @file{stdio} and
+@file{math}.
+
+Use this when there are completely new sets of functions and header
+files that should go into the library for the system this subdirectory
+of @file{sysdeps} implements.  For example,
+@file{sysdeps/unix/inet/Subdirs} contains @file{inet}; the @file{inet}
+directory contains various network-oriented operations which only make
+sense to put in the library on systems that support the Internet.@refill
+
+@item Dist
+
+This file contains the names of files (relative to the subdirectory of
+@file{sysdeps} in which it appears) which should be included in the
+distribution.  List any new files used by rules in the @file{Makefile}
+in the same directory, or header files used by the source files in that
+directory.  You don't need to list files that are implementations
+(either C or assembly source) of routines whose names are given in the
+machine-independent makefiles in the main source tree.
+
+@item configure
+
+This file is a shell script fragment to be run at configuration time.
+The top-level @file{configure} script uses the shell @code{.} command to
+read the @file{configure} file in each system-dependent directory
+chosen, in order.  The @file{configure} files are often generated from
+@file{configure.in} files using Autoconf.
+
+A system-dependent @file{configure} script will usually add things to
+the shell variables @samp{DEFS} and @samp{config_vars}; see the
+top-level @file{configure} script for details.  The script can check for
+@w{@samp{--with-@var{package}}} options that were passed to the
+top-level @file{configure}.  For an option
+@w{@samp{--with-@var{package}=@var{value}}} @file{configure} sets the
+shell variable @w{@samp{with_@var{package}}} (with any dashes in
+@var{package} converted to underscores) to @var{value}; if the option is
+just @w{@samp{--with-@var{package}}} (no argument), then it sets
+@w{@samp{with_@var{package}}} to @samp{yes}.
+
+@item configure.in
+
+This file is an Autoconf input fragment to be processed into the file
+@file{configure} in this subdirectory.  @xref{Introduction,,,
+autoconf.info, Autoconf: Generating Automatic Configuration Scripts},
+for a description of Autoconf.  You should write either @file{configure}
+or @file{configure.in}, but not both.  The first line of
+@file{configure.in} should invoke the @code{m4} macro
+@samp{GLIBC_PROVIDES}.  This macro does several @code{AC_PROVIDE} calls
+for Autoconf macros which are used by the top-level @file{configure}
+script; without this, those macros might be invoked again unnecessarily
+by Autoconf.
+@end table
+
+That is the general system for how system-dependencies are isolated.
+@iftex
+The next section explains how to decide what directories in
+@file{sysdeps} to use.  @ref{Porting to Unix}, has some tips on porting
+the library to Unix variants.
+@end iftex
+
+@menu
+* Hierarchy Conventions::       The layout of the @file{sysdeps} hierarchy.
+* Porting to Unix::             Porting the library to an average
+                                   Unix-like system.
+@end menu
+
+@node Hierarchy Conventions
+@appendixsubsec Layout of the @file{sysdeps} Directory Hierarchy
+
+A GNU configuration name has three parts: the CPU type, the
+manufacturer's name, and the operating system.  @file{configure} uses
+these to pick the list of system-dependent directories to look for.  If
+the @samp{--nfp} option is @emph{not} passed to @file{configure}, the
+directory @file{@var{machine}/fpu} is also used.  The operating system
+often has a @dfn{base operating system}; for example, if the operating
+system is @samp{sunos4.1}, the base operating system is @samp{unix/bsd}.
+The algorithm used to pick the list of directories is simple:
+@file{configure} makes a list of the base operating system,
+manufacturer, CPU type, and operating system, in that order.  It then
+concatenates all these together with slashes in between, to produce a
+directory name; for example, the configuration @w{@samp{sparc-sun-sunos4.1}}
+results in @file{unix/bsd/sun/sparc/sunos4.1}.  @file{configure} then
+tries removing each element of the list in turn, so
+@file{unix/bsd/sparc} and @file{sun/sparc} are also tried, among others.
+Since the precise version number of the operating system is often not
+important, and it would be very inconvenient, for example, to have
+identical @file{sunos4.1.1} and @file{sunos4.1.2} directories,
+@file{configure} tries successively less specific operating system names
+by removing trailing suffixes starting with a period.
+
+As an example, here is the complete list of directories that would be
+tried for the configuration @w{@samp{sparc-sun-sunos4.1}} (without the
+@w{@samp{--nfp}} option):
+
+@smallexample
+sparc/fpu
+unix/bsd/sun/sunos4.1/sparc
+unix/bsd/sun/sunos4.1
+unix/bsd/sun/sunos4/sparc
+unix/bsd/sun/sunos4
+unix/bsd/sun/sunos/sparc
+unix/bsd/sun/sunos
+unix/bsd/sun/sparc
+unix/bsd/sun
+unix/bsd/sunos4.1/sparc
+unix/bsd/sunos4.1
+unix/bsd/sunos4/sparc
+unix/bsd/sunos4
+unix/bsd/sunos/sparc
+unix/bsd/sunos
+unix/bsd/sparc
+unix/bsd
+unix/sun/sunos4.1/sparc
+unix/sun/sunos4.1
+unix/sun/sunos4/sparc
+unix/sun/sunos4
+unix/sun/sunos/sparc
+unix/sun/sunos
+unix/sun/sparc
+unix/sun
+unix/sunos4.1/sparc
+unix/sunos4.1
+unix/sunos4/sparc
+unix/sunos4
+unix/sunos/sparc
+unix/sunos
+unix/sparc
+unix
+sun/sunos4.1/sparc
+sun/sunos4.1
+sun/sunos4/sparc
+sun/sunos4
+sun/sunos/sparc
+sun/sunos
+sun/sparc
+sun
+sunos4.1/sparc
+sunos4.1
+sunos4/sparc
+sunos4
+sunos/sparc
+sunos
+sparc
+@end smallexample
+
+Different machine architectures are conventionally subdirectories at the
+top level of the @file{sysdeps} directory tree.  For example,
+@w{@file{sysdeps/sparc}} and @w{@file{sysdeps/m68k}}.  These contain
+files specific to those machine architectures, but not specific to any
+particular operating system.  There might be subdirectories for
+specializations of those architectures, such as
+@w{@file{sysdeps/m68k/68020}}. Code which is specific to the
+floating-point coprocessor used with a particular machine should go in
+@w{@file{sysdeps/@var{machine}/fpu}}.
+
+There are a few directories at the top level of the @file{sysdeps}
+hierarchy that are not for particular machine architectures.
+
+@table @file
+@item generic
+@itemx stub
+As described above (@pxref{Porting}), these are the two subdirectories
+that every configuration implicitly uses after all others.
+
+@item ieee754
+This directory is for code using the IEEE 754 floating-point format,
+where the C type @code{float} is IEEE 754 single-precision format, and
+@code{double} is IEEE 754 double-precision format.  Usually this
+directory is referred to in the @file{Implies} file in a machine
+architecture-specific directory, such as @file{m68k/Implies}.
+
+@item posix
+This directory contains implementations of things in the library in
+terms of @sc{POSIX.1} functions.  This includes some of the @sc{POSIX.1}
+functions themselves.  Of course, @sc{POSIX.1} cannot be completely
+implemented in terms of itself, so a configuration using just
+@file{posix} cannot be complete.
+
+@item unix
+This is the directory for Unix-like things.  @xref{Porting to Unix}.
+@file{unix} implies @file{posix}.  There are some special-purpose
+subdirectories of @file{unix}:
+
+@table @file
+@item unix/common
+This directory is for things common to both BSD and System V release 4.
+Both @file{unix/bsd} and @file{unix/sysv/sysv4} imply @file{unix/common}.
+
+@item unix/inet
+This directory is for @code{socket} and related functions on Unix systems.
+The @file{inet} top-level subdirectory is enabled by @file{unix/inet/Subdirs}.
+@file{unix/common} implies @file{unix/inet}.
+@end table
+
+@item mach
+This is the directory for things based on the Mach microkernel from CMU
+(including the GNU operating system).  Other basic operating systems
+(VMS, for example) would have their own directories at the top level of
+the @file{sysdeps} hierarchy, parallel to @file{unix} and @file{mach}.
+@end table
+
+@node Porting to Unix
+@appendixsubsec Porting the GNU C Library to Unix Systems
+
+Most Unix systems are fundamentally very similar.  There are variations
+between different machines, and variations in what facilities are
+provided by the kernel.  But the interface to the operating system
+facilities is, for the most part, pretty uniform and simple.
+
+The code for Unix systems is in the directory @file{unix}, at the top
+level of the @file{sysdeps} hierarchy.  This directory contains
+subdirectories (and subdirectory trees) for various Unix variants.
+
+The functions which are system calls in most Unix systems are
+implemented in assembly code in files in @file{sysdeps/unix}.  These
+files are named with a suffix of @samp{.S}; for example,
+@file{__open.S}.  Files ending in @samp{.S} are run through the C
+preprocessor before being fed to the assembler.
+
+These files all use a set of macros that should be defined in
+@file{sysdep.h}.  The @file{sysdep.h} file in @file{sysdeps/unix}
+partially defines them; a @file{sysdep.h} file in another directory must
+finish defining them for the particular machine and operating system
+variant.  See @file{sysdeps/unix/sysdep.h} and the machine-specific
+@file{sysdep.h} implementations to see what these macros are and what
+they should do.@refill
+
+The system-specific makefile for the @file{unix} directory (that is, the
+file @file{sysdeps/unix/Makefile}) gives rules to generate several files
+from the Unix system you are building the library on (which is assumed
+to be the target system you are building the library @emph{for}).  All
+the generated files are put in the directory where the object files are
+kept; they should not affect the source tree itself.  The files
+generated are @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h}, and
+@file{errlist.c} (for the @file{stdio} section of the library).
+
+@ignore
+@c This section might be a good idea if it is finished,
+@c but there's no point including it as it stands. --rms
+@c @appendixsec Compatibility with Traditional C
+
+@c ??? This section is really short now.  Want to keep it? --roland
+
+Although the GNU C library implements the ANSI C library facilities, you
+@emph{can} use the GNU C library with traditional, ``pre-ANSI'' C
+compilers.  However, you need to be careful because the content and
+organization of the GNU C library header files differs from that of
+traditional C implementations.  This means you may need to make changes
+to your program in order to get it to compile.
+@end ignore
+
+@node Contributors
+@appendixsec Contributors to the GNU C Library
+
+The GNU C library was written almost entirely by Roland McGrath, who now
+maintains it.  Some parts of the library were contributed or worked on
+by other people.
+
+@itemize @bullet
+@item
+The @code{getopt} function and related code were written by
+Richard Stallman, @w{David J. MacKenzie}, and @w{Roland McGrath}.
+
+@item
+Most of the math functions are taken from 4.4 BSD; they have been
+modified only slightly to work with the GNU C library.  The
+Internet-related code (most of the @file{inet} subdirectory) and several
+other miscellaneous functions and header files have been included with
+little or no modification.
+
+All code incorporated from 4.4 BSD is under the following copyright:
+
+@quotation
+@display
+Copyright @copyright{} 1991 Regents of the University of California.
+All rights reserved.
+@end display
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+@enumerate
+@item
+Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+@item
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+@item
+All advertising materials mentioning features or use of this software
+must display the following acknowledgement:
+@quotation
+This product includes software developed by the University of
+California, Berkeley and its contributors.
+@end quotation
+@item
+Neither the name of the University nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+@end enumerate
+
+@sc{this software is provided by the regents and contributors ``as is'' and
+any express or implied warranties, including, but not limited to, the
+implied warranties of merchantability and fitness for a particular purpose
+are disclaimed.  in no event shall the regents or contributors be liable
+for any direct, indirect, incidental, special, exemplary, or consequential
+damages (including, but not limited to, procurement of substitute goods
+or services; loss of use, data, or profits; or business interruption)
+however caused and on any theory of liability, whether in contract, strict
+liability, or tort (including negligence or otherwise) arising in any way
+out of the use of this software, even if advised of the possibility of
+such damage.}
+@end quotation
+
+@item
+The random number generation functions @code{random}, @code{srandom},
+@code{setstate} and @code{initstate}, which are also the basis for the
+@code{rand} and @code{srand} functions, were written by Earl T. Cohen
+for the University of California at Berkeley and are copyrighted by the
+Regents of the University of California.  They have undergone minor
+changes to fit into the GNU C library and to fit the ANSI C standard,
+but the functional code is Berkeley's.@refill
+
+@item
+The merge sort function @code{qsort} was written by Michael J. Haertel.
+
+@item
+The quick sort function used as a fallback by @code{qsort} was written
+by Douglas C. Schmidt.
+
+@item
+The memory allocation functions @code{malloc}, @code{realloc} and
+@code{free} and related code were written by Michael J. Haertel.
+
+@comment tege's name has an umlaut.
+@tex
+\xdef\SETtege{Torbj\"orn Granlund}
+@end tex
+@ifinfo
+@set tege Torbjorn Granlund
+@end ifinfo
+@item
+Fast implementations of many of the string functions (@code{memcpy},
+@code{strlen}, etc.) were written by @value{tege}.
+
+@item
+Some of the support code for Mach is taken from Mach 3.0 by CMU,
+and is under the following copyright terms:
+
+@quotation
+@display
+Mach Operating System
+Copyright @copyright{} 1991,1990,1989 Carnegie Mellon University
+All Rights Reserved.
+@end display
+
+Permission to use, copy, modify and distribute this software and its
+documentation is hereby granted, provided that both the copyright
+notice and this permission notice appear in all copies of the
+software, derivative works or modified versions, and any portions
+thereof, and that both notices appear in supporting documentation.
+
+@sc{carnegie mellon allows free use of this software in its ``as is''
+condition.  carnegie mellon disclaims any liability of any kind for
+any damages whatsoever resulting from the use of this software.}
+
+Carnegie Mellon requests users of this software to return to
+
+@display
+ Software Distribution Coordinator
+ School of Computer Science
+ Carnegie Mellon University
+ Pittsburgh PA 15213-3890
+@end display
+
+@noindent
+or @samp{Software.Distribution@@CS.CMU.EDU} any improvements or
+extensions that they make and grant Carnegie Mellon the rights to
+redistribute these changes.
+@end quotation
+
+@item
+The @file{tar.h} header file was written by David J. MacKenzie.
+
+@item
+The port to the MIPS DECStation running Ultrix 4
+(@code{mips-dec-ultrix4})
+was contributed by Brendan Kehoe and Ian Lance Taylor.
+
+@item
+The DES encryption function @code{crypt} and related functions were
+contributed by Michael Glad.
+
+@item
+The @code{ftw} function was contributed by Ian Lance Taylor.
+
+@item
+The code to support SunOS shared libraries was contributed by Tom Quinn.
+
+@item
+The @code{mktime} function was contributed by Noel Cragg.
+
+@item
+The port to the Sequent Symmetry running Dynix version 3
+(@code{i386-sequent-bsd}) was contributed by Jason Merrill.
+
+@item
+The timezone support code is derived from the public-domain timezone
+package by Arthur David Olson.
+
+@item
+The Internet resolver code is taken directly from BIND 4.9.1, which is
+under both the Berkeley copyright above and also:
+
+@quotation
+Portions Copyright @copyright{} 1993 by Digital Equipment Corporation.
+
+Permission to use, copy, modify, and distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies, and
+that the name of Digital Equipment Corporation not be used in
+advertising or publicity pertaining to distribution of the document or
+software without specific, written prior permission.
+
+@sc{the software is provided ``as is'' and digital equipment corp.
+disclaims all warranties with regard to this software, including all
+implied warranties of merchantability and fitness.  in no event shall
+digital equipment corporation be liable for any special, direct,
+indirect, or consequential damages or any damages whatsoever resulting
+from loss of use, data or profits, whether in an action of contract,
+negligence or other tortious action, arising out of or in connection
+with the use or performance of this software.}
+@end quotation
+
+@item
+The port to the DEC Alpha running OSF/1 (@code{alpha-dec-osf1}) was
+contributed by Brendan Kehoe, using some code written by Roland McGrath.
+
+@item
+The floating-point printing function used by @code{printf} and friends
+was written by Roland McGrath and @value{tege}.  The multi-precision
+integer functions used in that function are taken from GNU MP, which was
+contributed by @value{tege}.
+
+@item
+The code to support Sun RPC is taken verbatim from Sun's
+@w{@sc{rpcsrc-4.0}} distribution, and is covered by this copyright:
+
+@quotation
+@display
+Copyright @copyright{} 1984, Sun Microsystems, Inc.
+@end display
+
+Sun RPC is a product of Sun Microsystems, Inc. and is provided for
+unrestricted use provided that this legend is included on all tape media
+and as a part of the software program in whole or part.  Users may copy
+or modify Sun RPC without charge, but are not authorized to license or
+distribute it to anyone else except as part of a product or program
+developed by the user.
+
+@sc{sun rpc is provided as is with no warranties of any kind including the
+warranties of design, merchantibility and fitness for a particular
+purpose, or arising from a course of dealing, usage or trade practice.}
+
+Sun RPC is provided with no support and without any obligation on the
+part of Sun Microsystems, Inc. to assist in its use, correction,
+modification or enhancement.
+
+@sc{sun microsystems, inc. shall have no liability with respect to the
+infringement of copyrights, trade secrets or any patents by sun rpc
+or any part thereof.}
+
+In no event will Sun Microsystems, Inc. be liable for any lost revenue
+or profits or other special, indirect and consequential damages, even if
+Sun has been advised of the possibility of such damages.
+
+@display
+Sun Microsystems, Inc.
+2550 Garcia Avenue
+Mountain View, California  94043
+@end display
+@end quotation
+
+@item
+The port to SGI machines running Irix 4 (@code{mips-sgi-irix4}) was
+contributed by Tom Quinn.
+
+@item
+The port of the Mach and Hurd code to the MIPS architecture
+(@code{mips-@var{anything}-gnu}) was contribued by Kazumoto Kojima.
+@end itemize
+
+@c @bye

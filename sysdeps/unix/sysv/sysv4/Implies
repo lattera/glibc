@@ -1,0 +1,3 @@
+# The directory unix/common contains things which are common to both BSD
+# and SVR4.
+unix/common

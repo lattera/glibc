@@ -1,0 +1,26 @@
+# @configure_input@
+# From $Id$.
+# Don't edit this file.  Put configuration parameters in configparms instead.
+
+config-machine = @host_cpu@
+config-vendor = @host_vendor@
+config-os = @host_os@
+config-sysdirs = @sysnames@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+config-defines = @DEFS@
+gnu-as = @gnu_as@
+gnu-ld = @gnu_ld@
+elf = @elf@
+weak-symbols = @weak@
+
+CC = @CC@
+AR = @AR@
+RANLIB = @RANLIB@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+# More variables may be inserted below by configure.

@@ -1,0 +1,2 @@
+# The Hurd provides a rough superset of the functionality of 4.4 BSD.
+unix/bsd/bsd4.4

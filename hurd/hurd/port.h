@@ -1,0 +1,152 @@
+/* Lightweight user references for ports.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#ifndef	_HURD_PORT_H
+
+#define	_HURD_PORT_H	1
+#include <features.h>
+
+#include <mach.h>
+#include <hurd/userlink.h>
+#include <spin-lock.h>
+#include <hurd/signal.h>
+
+
+/* Structure describing a cell containing a port.  With the lock held, a
+   user extracts PORT, and attaches his own link (in local storage) to the
+   USERS chain.  PORT can then safely be used.  When PORT is no longer
+   needed, with the lock held, the user removes his link from the chain.
+   If his link is the last, and PORT has changed since he fetched it, the
+   user deallocates the port he used.  See <hurd/userlink.h>.  */
+
+struct hurd_port
+  {
+    spin_lock_t lock;		/* Locks rest.  */
+    struct hurd_userlink *users; /* Chain of users; see below.  */
+    mach_port_t port;		/* Port. */
+  };
+
+
+/* Evaluate EXPR with the variable `port' bound to the port in PORTCELL.  */
+
+#define	HURD_PORT_USE(portcell, expr)					      \
+  ({ struct hurd_port *const __p = (portcell);				      \
+     struct hurd_userlink __link;					      \
+     const mach_port_t port = _hurd_port_get (__p, &__link);		      \
+     __typeof(expr) __result = (expr);					      \
+     _hurd_port_free (__p, &__link, port);				      \
+     __result; })
+
+
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE extern __inline
+#endif
+
+
+/* Initialize *PORT to INIT.  */
+
+_EXTERN_INLINE void
+_hurd_port_init (struct hurd_port *port, mach_port_t init)
+{
+  __spin_lock_init (&port->lock);
+  port->users = NULL;
+  port->port = init;
+}
+
+
+/* Get a reference to *PORT, which is locked.
+   Pass return value and LINK to _hurd_port_free when done.  */
+
+_EXTERN_INLINE mach_port_t
+_hurd_port_locked_get (struct hurd_port *port,
+		       struct hurd_userlink *link)
+{
+  mach_port_t result;
+  result = port->port;
+  if (result != MACH_PORT_NULL)
+    _hurd_userlink_link (&port->users, link);
+  __spin_unlock (&port->lock);
+  return result;
+}
+
+/* Same, but locks PORT first.  */
+
+_EXTERN_INLINE mach_port_t
+_hurd_port_get (struct hurd_port *port,
+		struct hurd_userlink *link)
+{
+  mach_port_t result;
+  HURD_CRITICAL_BEGIN;
+  __spin_lock (&port->lock);
+  result = _hurd_port_locked_get (port, link);
+  HURD_CRITICAL_END;
+  return result;
+}
+
+
+/* Free a reference gotten with `USED_PORT = _hurd_port_get (PORT, LINK);' */
+
+_EXTERN_INLINE void
+_hurd_port_free (struct hurd_port *port,
+		 struct hurd_userlink *link,
+		 mach_port_t used_port)
+{
+  int dealloc;
+  if (used_port == MACH_PORT_NULL)
+    /* When we fetch an empty port cell with _hurd_port_get,
+       it does not link us on the users chain, since there is
+       no shared resource.  */
+    return;
+  HURD_CRITICAL_BEGIN;
+  __spin_lock (&port->lock);
+  dealloc = _hurd_userlink_unlink (link);
+  __spin_unlock (&port->lock);
+  HURD_CRITICAL_END;
+  if (dealloc)
+    __mach_port_deallocate (__mach_task_self (), used_port);
+}
+
+
+/* Set *PORT's port to NEWPORT.  NEWPORT's reference is consumed by PORT->port.
+   PORT->lock is locked.  */
+
+_EXTERN_INLINE void
+_hurd_port_locked_set (struct hurd_port *port, mach_port_t newport)
+{
+  mach_port_t old;
+  old = _hurd_userlink_clear (&port->users) ? port->port : MACH_PORT_NULL;
+  port->port = newport;
+  __spin_unlock (&port->lock);
+  if (old != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), old);
+}
+
+/* Same, but locks PORT first.  */
+
+_EXTERN_INLINE void
+_hurd_port_set (struct hurd_port *port, mach_port_t newport)
+{
+  HURD_CRITICAL_BEGIN;
+  __spin_lock (&port->lock);
+  _hurd_port_locked_set (port, newport);
+  HURD_CRITICAL_END;
+}
+
+
+#endif	/* hurd/port.h */

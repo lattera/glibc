@@ -1,0 +1,17 @@
+ 
+# If configure is passed `--with-mach=DIR', set `mach-srcdir' to DIR in
+# config.make.
+
+ac_help="$ac_help
+  --with-mach=DIRECTORY   find Mach kernel source code in DIRECTORY [../mach]"
+# Check whether --with-mach or --without-mach was given.
+withval="$with_mach"
+if test -n "$withval"; then
+  case z"$with_mach" in
+z | zno | zyes) ;; # Not specified, or specified with no value.
+z*) config_vars="$config_vars
+mach-srcdir = $with_mach" ;;
+esac
+
+fi
+

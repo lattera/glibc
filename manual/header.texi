@@ -1,0 +1,14 @@
+@node Library Summary, Maintenance, Language Features, Top
+@appendix Summary of Library Facilities
+
+This appendix is a complete list of the facilities declared within the
+header files supplied with the GNU C library.  Each entry also lists the
+standard or other source from which each facility is derived, and tells
+you where in the manual you can find more information about how to use
+it.
+
+@table @code
+@comment summary.texi is generated from the other Texinfo files.
+@comment See the Makefile and summary.awk for the details.
+@include summary.texi
+@end table

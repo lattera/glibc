@@ -1,0 +1,128 @@
+# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+#
+#	Rules for making a subdirectory in the GNU C library.
+#	Each subdirectory Makefile defines some variables and includes this.
+#
+ifneq (,)
+This makefile requires GNU Make.
+endif
+
+all: # Don't let the default goal come from Makeconfig.
+
+include ../Makeconfig
+
+ifndef	subdir
+Each subdirectory makefile must define the `subdir' variable.
+endif
+# This is benign and useless in GNU make before 3.63.
+export subdir := $(subdir)
+
+# This is the default target; it makes the library and auxiliary programs.
+.PHONY: all
+all: lib others
+
+ifneq	"$(findstring env,$(origin headers))" ""
+headers :=
+endif
+
+ifneq	"$(findstring env,$(origin generated))" ""
+generated :=
+endif
+
+ifeq "$(strip $(headers))" ""
+ifneq "$(wildcard $(subdir).h)" ""
+override headers := $(subdir).h
+endif
+endif
+
+include ../Makerules
+
+.PHONY: subdir_lib
+subdir_lib: lib-noranlib
+
+# Some subdirs need to install a dummy library.
+# They can use "$(objpfx)libfnord.a: $(dep-dummy-lib); $(make-dummy-lib)".
+dep-dummy-lib = $(objpfx)dummy.o
+define make-dummy-lib
+$(AR) cr$(verbose) $@ $<
+endef
+$(objpfx)dummy.o:
+	@rm -f $(@:.o=.c)
+	echo 'void __dummy__ () { }' > $(@:.o=.c)
+	$(CC) -c $(@:.o=.c) -o $@
+
+# This makes all the auxilliary and test programs.
+
+.PHONY: others tests
+others: $(addprefix $(objpfx),$(others))
+ifeq ($(cross-compiling),yes)
+tests: $(addprefix $(objpfx),$(tests))
+else
+tests: $(tests:%=$(objpfx)%.out)
+endif
+
+ifneq "$(strip $(others) $(tests))" ""
+$(addprefix $(objpfx),$(others) $(tests)): %: %.o $(libc.a)
+	$(+link)
+endif
+
+ifneq "$(strip $(tests))" ""
+# These are the implicit rules for making test outputs
+# from the test programs and whatever input files are present.
+$(objpfx)%.out: $(objpfx)% %.args %.input
+	$(dir $<)$(notdir $<) `cat $(word 2,$^)` < $(word 3,$^) > $@
+$(objpfx)%.out: $(objpfx)% %.args
+	$(dir $<)$(notdir $<) `cat $(word 2,$^)` > $@
+$(objpfx)%.out: $(objpfx)% %.input
+	$(dir $<)$(notdir $<) < $(word 2,$^) > $@
+$(objpfx)%.out: $(objpfx)%
+	$(dir $<)$(notdir $<) > $@
+endif	# tests
+
+.PHONY: distclean realclean subdir_distclean subdir_realclean \
+	subdir_clean subdir_mostlyclean
+subdir_mostlyclean: mostlyclean
+subdir_clean: clean
+subdir_distclean: distclean
+subdir_realclean: realclean
+realclean: distclean
+distclean: clean
+
+.PHONY: subdir_echo-headers
+subdir_echo-headers: echo-headers
+
+.PHONY: subdir_echo-distinfo
+subdir_echo-distinfo:
+	@echo $(addprefix +header+,$(headers)) \
+	      $(addprefix +nodist+,$(generated) $(dont_distribute))
+
+# We want to install everything except the library itself, but update all
+# our portions of the library because the parent make will install it later
+# (likewise the stubs file).
+.PHONY: subdir_install
+subdir_install: install-no-libc.a lib-noranlib stubs
+
+.PHONY: subdir_TAGS subdir_dist
+subdir_TAGS: TAGS
+subdir_dist: dist
+
+# Convenient target to update all the generated source files.
+.PHONY: generated
+generated: $(addprefix $(objpfx),$(generated))

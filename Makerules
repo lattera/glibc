@@ -1,0 +1,544 @@
+# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+#
+#	Common rules for making the GNU C library.  This file is included
+#	by the top-level Makefile and by all subdirectory makefiles
+#	(through Rules).
+#
+ifneq (,)
+This makefile requires GNU Make.
+endif
+
+
+ifdef	subdir
+..	:= ../
+endif	# subdir
+
+# If `sources' was defined by the parent makefile, undefine it so
+# we will later get it from wildcard search in this directory.
+ifneq	"$(findstring env,$(origin sources))" ""
+sources :=
+endif
+
+headers := $(headers) $(sysdep_headers)
+
+oPATH := $(PATH)
+PATH := this definition should take precedence over $(oPATH)
+ifeq ($(PATH),$(oPATH))
+You must not use the -e flag when building the GNU C library.
+else
+PATH := $(oPATH)
+endif
+
+ifndef +included-Makeconfig
+include $(..)Makeconfig
+endif
+
+# `configure' writes a definition of `config-sysdirs' in `config.make'.
+sysdirs = $(config-sysdirs)
+
++sysdir_pfx = $(common-objpfx)
+
+export sysdirs := $(sysdirs)
+
++sysdep_dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
+ifdef objdir
++sysdep_dirs := $(objdir) $(+sysdep_dirs)
+endif
+
+# Add -I switches to get the right sysdep directories.
+# `+includes' in Makeconfig references $(+sysdep-includes).
++sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
+
+# Include any system-specific makefiles.
+
+# This is here so things in sysdep Makefiles can easily depend on foo.h as
+# appropriate and not worry about where foo.h comes from, which may be
+# system dependent and not known by that Makefile.
+vpath %.h $(subst $(empty) ,:,$(strip $(common-objpfx) \
+				      $(addprefix $(sysdep_dir)/,$(sysdirs)) \
+				      $(..)))
+
+ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
+# Don't do deps until this exists, because it might change the sources list.
+no_deps=t
+endif
+
+# Some sysdep makefiles use this to distinguish being included here from
+# being included individually by a subdir makefile (hurd/Makefile needs this).
+in-Makerules := yes
+
+ifndef avoid-generated
+include $(+sysdir_pfx)sysd-Makefile
+$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
+	-@rm -f $@T
+	(for dir in $(sysdirs); do		   			      \
+	   file=sysdeps/$$dir/Makefile;					      \
+	   if [ -f $(..)$$file ]; then					      \
+	     echo include "\$$(..)$$file";				      \
+	   else true; fi;						      \
+	 done; \
+	 echo 'sysd-Makefile-done=t') > $@T
+	mv -f $@T $@
+endif
+
+# Reorder before-compile so that mach things come first, and hurd things
+# second, before all else.  The mach and hurd subdirectories have many
+# generated header files which the much of rest of the library depends on,
+# so it is best to build them first (and mach before hurd, at that).
+before-compile := $(filter $(common-objpfx)mach% $(common-objpfx)hurd%,\
+			   $(before-compile)) \
+		  $(filter-out $(common-objpfx)mach% $(common-objpfx)hurd%,\
+			       $(before-compile))
+
+# Remove existing files from `before-compile'.  Things are added there when
+# they must exist for dependency generation to work right, but once they
+# exist there is no further need for every single file to depend on them,
+# and those gratuitous dependencies result in many gratuitous
+# recompilations.
+before-compile := $(filter-out $(wildcard $(before-compile)),$(before-compile))
+
+# Don't let any before-compile file be an intermediate and get removed.
+ifdef before-compile
+$(before-compile):
+endif
+
+# Generate an ordered list of implicit rules which find the source files in
+# each sysdep directory.  The old method was to use vpath to search all the
+# sysdep directories.  However, that had the problem that a .S file in a
+# later directory would be chosen over a .c file in an earlier directory,
+# which does not preserve the desired sysdeps ordering behavior.
+
+# When making the list of .d files to include, we can't know which ones
+# have source in .s files, and thus do not in fact need a .d file.
+# So we must define rules to make .d files for .s files.
+define make-dummy-dep
+$(addprefix ln $(objpfx)dummy.d ,$(filter-out $(wildcard $@),$@))
+endef
+$(objpfx)dummy.d:
+	echo '# .s files cannot contain includes, so they need no deps.' > $@
+
+# It matters that this set of rules, for compiling from sources in
+# the current directory (the $srcdir/$subdir) come before the
+# generated sysdep rules in included from sysd-rules below.  When
+# compiling in the source tree, generated sources go into the current
+# directory, and those should be chosen before any sources in sysdeps.
+$(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
+$(objpfx)%.d: %.S $(before-compile); $(+make-deps)
+$(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
+$(objpfx)%.d: %.s $(objpfx)dummy.d; $(make-dummy-dep)
+$(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
+$(objpfx)%.d: %.c $(before-compile); $(+make-deps)
+
+# Omit the objpfx rules when building in the source tree, because
+# objpfx is empty and so these rules just override the ones above.
+ifdef objpfx
+# Define first rules to find the source files in $(objpfx).
+# Generated source files will end up there.
+$(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
+$(objpfx)%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
+$(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
+$(objpfx)%.d: $(objpfx)%.s $(objpfx)dummy.d; $(make-dummy-dep)
+$(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
+$(objpfx)%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
+endif
+
+# System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
+# patterns matching sysdep directories whose assembly source files should
+# be suppressed.
+ifdef inhibit-sysdep-asm
+define open-check-inhibit-asm
+case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) : ;; *)
+endef
+close-check-inhibit-asm = ;; esac
+endif
+
+# Don't include sysd-rules until sysd-Makefile is already there and has been
+# included.  It might define inhibit-sysdep-asm, which would affect the
+# contents of sysd-rules.
+ifdef sysd-Makefile-done
+include $(+sysdir_pfx)sysd-rules
+endif
+$(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
+			  $(wildcard $(foreach dir,$(sysdirs),\
+					       $(sysdep_dir)/$(dir)/Makefile))
+	-@rm -f $@T
+	(for sysdir in $(sysdirs); do		   			      \
+	   dir="\$$(sysdep_dir)/$$sysdir";				      \
+	   $(open-check-inhibit-asm) \
+	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
+		\$$(compile-command.S)";				      \
+	   echo "\$$(objpfx)%.d: $$dir/%.S \$$(before-compile); \
+		\$$(+make-deps)";					      \
+	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
+		\$$(compile-command.s)";				      \
+	   echo "\$$(objpfx)%.d: $$dir/%.s \$$(objpfx)dummy.d; \
+		\$$(make-dummy-dep)" $(close-check-inhibit-asm);	\
+	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
+		\$$(compile-command.c)";				      \
+	   echo "\$$(objpfx)%.d: $$dir/%.c \$$(before-compile); \
+		\$$(+make-deps)";					      \
+	 done) > $@T
+	mv -f $@T $@
+
+ifndef compile-command.S
+compile-command.S = $(compile.S) $(OUTPUT_OPTION)
+endif
+ifndef compile-command.s
+compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION)
+endif
+ifndef compile-command.c
+compile-command.c = $(compile.c) $(OUTPUT_OPTION)
+endif
+
+ifneq ($(filter %gcc,$(notdir $(firstword $(CC)))),)
+# GCC can grok options after the file name, and it looks nicer that way.
+compile.S = $(CC) $< -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS)
+compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
+else
+compile.S = $(COMPILE.S) -DASSEMBLER $(asm-CPPFLAGS) $<
+compile.c = $(COMPILE.c) $<
+endif
+
+ifndef OUTPUT_OPTION
+ifdef objpfx
+# We need this for the output to go in the right place.  It will default to
+# empty if make was configured to work with a cc that can't grok -c and -o
+# together.  You can't compile the C library with such a compiler.
+OUTPUT_OPTION = -o $@
+endif
+endif
+
+S-CPPFLAGS = $(asm-CPPFLAGS)
+define +make-deps
+-@rm -f $@
+$(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
+sed -e 's,$*\.o,$(@:.d=.o) $@,' $(sed-remove-objpfx) > $(@:.d=.T)
+mv -f $(@:.d=.T) $@
+endef
+ifneq (,$(objpfx))
+sed-remove-objpfx = -e 's@ $(subst @,\@,$(objpfx))@ $$(objpfx)@g' \
+		    -e 's@^$(subst @,\@,$(objpfx))@$$(objpfx)@g'
+endif
+
+# Figure out the source filenames in this directory.
+
+override sources	:= $(addsuffix .c,$(filter-out $(elided-routines),\
+						       $(routines) $(aux) \
+						       $(sysdep_routines)))
+sysdep_routines := $(sysdep_routines)
+
+# This is the list of all object files, gotten by
+# replacing every ".c" in `sources' with a ".o".
+override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
+
++depfiles := $(strip $(sources:.c=.d) \
+		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs))) \
+		     $(addsuffix .d,$(others) $(tests)))
++depfiles := $(addprefix $(objpfx),\
+			 $(filter-out $(addsuffix .d,$(omit-deps)),\
+				      $(+depfiles)))
+
+$(objpfx)depend-$(subdir): Makefile
+ifdef +depfiles
+	for file in $(+depfiles:$(objpfx)%=%); do \
+	  echo "include \$$(objpfx)$$file";	\
+	done > $@-tmp
+	mv -f $@-tmp $@
+else
+	cp /dev/null $@
+endif
+
+ifneq ($(no_deps),t)
+# Include the generated dependencies of the sources in this directory.
+include $(objpfx)depend-$(subdir)
+endif
+
+# Maximize efficiency by minimizing the number of rules.
+.SUFFIXES:	# Clear the suffix list.
+# Add the suffixes we use.
+.SUFFIXES: .a .o .S .s .c .h .d
+
+# Generic rule for making directories.
+%/:
+# mkdir isn't smart enough to strip a trailing /.
+	mkdir $(@:%/=%)
+
+# Make sure that object files are not removed
+# when they are intermediates between sources and library members.
+# This can go away with make v4.
+.PRECIOUS: %.o
+
+# Make sure that the parent library archive is never removed.
+.PRECIOUS: $(libc.a)
+
+# Use the verbose option of ar and tar when not running silently.
+ifeq	"$(findstring s,$(MAKEFLAGS))" ""	# if not -s
+verbose := v
+else	   					# -s
+verbose	:=
+endif						# not -s
+
+ARFLAGS := r$(verbose)
+
+# This makes all the object files in the parent library archive.
+
+.PHONY: lib libobjs lib-noranlib
+$(libc.a): $(libc.a)(__.SYMDEF)
+lib: $(libc.a)
+
++libobjs := $(patsubst %,$(libc.a)(%),$(notdir $(objects)))
+libobjs: $(+libobjs)
+lib-noranlib: libobjs
+
+# Define a pattern rule that will match many targets libc.%(foo.o), for
+# each foo in $(objects) (% will just happen always to match `a').  This is
+# the only way to define a rule that updates many targets at once with one
+# sequence of commands.
+ifdef objects
+$(patsubst %,$(libc.a:a=)\%(%),$(notdir $(objects))): $(objpfx)stamp-$(subdir);
+$(objpfx)stamp-$(subdir): $(objects)
+#	$(+libc_lock_open)
+ifdef objdir
+	cd $(objdir); $(AR) cru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
+else
+	$(AR) cru$(verbose) $(..)libc.a $^
+endif
+#	$(+libc_lock_close)
+	touch $@
+endif
+
+$(libc.a)(__.SYMDEF): $(+libobjs)
+	$(RANLIB) $@
+
+define +libc_lock_open
+@. $(..)libc-lock-open
+endef
+define +libc_lock_close
+@rm -f $(..)LOCK-libc.a
+endef
+
+# This makes all the object files.
+.PHONY: objects objs
+objects objs: $(objects) $(addprefix $(objpfx),$(extra-objs))
+
+# Installation.
+
+# $(install-lib) are installed from the object directory into $(libdir);
+# files in $(install-lib) matching `lib%.a' are ranlib'd after installation
+# unless they also appear in $(non-lib.a).  $(install-data) are installed
+# as they are into $(datadir).  $(headers) are installed as they are in
+# $(includedir).  $(install-bin) and $(install-sbin) are installed from the
+# object directory into $(bindir) and $(sbindir), respectively.
+# $(install-others) are absolute path names of files to install; rules to
+# install them are defined elsewhere.
+
+# The simple library name to install libc.a under.
+# This could be defined by a sysdep Makefile.
+ifndef libc-name
+libc-name := c
+endif
+
+define do-install
+$(make-target-directory)
+$(INSTALL_DATA) $< $@
+endef
+
+# Make the target directory if it doesn't exist.  Because of make's
+# directory cache, this will produce the `mkdir' command when the directory
+# already exists, if it didn't exist at the start of the `make' run.  The
+# `-' prefix ignores errors from mkdir, so there will just be some
+# gratuitous but harmless `File exists' messages.
+define make-target-directory
+$(addprefix -mkdir ,$(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
+endef
+
+# Any directory (parent or subdir) that has any object files to build
+# should install libc.a; this way "make install" in a subdir is guaranteed
+# to install everything it changes.
+ifdef objects
+install: $(libdir)/lib$(libprefix)$(libc-name).a
+# We avoid depending on lib-noranlib because that makes the parent make
+# subdir_lib in all the subdirs, when the make install run they do will
+# update the library anyway.  Running ranlib after installing makes the
+# __.SYMDEF time stamp up to date, which avoids messages from some linkers.
+# Depending on subdir_install gets all the subdirs to update the library,
+# and is optimal for `make install' at top level.
+$(libdir)/lib$(libprefix)$(libc-name).a: libobjs subdir_install
+	$(make-target-directory)
+	$(INSTALL_DATA) $(libc.a) $@
+	$(RANLIB) $@
+endif
+
+ifdef install-bin
+$(addprefix $(bindir)/,$(install-bin)): $(bindir)/%: $(objpfx)%
+	$(make-target-directory)
+	$(INSTALL_PROGRAM) $< $@
+endif
+ifdef install-sbin
+$(addprefix $(sbindir)/,$(install-sbin)): $(sbindir)/%: $(objpfx)%
+	$(make-target-directory)
+	$(INSTALL_PROGRAM) $< $@
+endif
+ifdef install-lib
+install-lib.a := $(filter lib%.a,$(install-lib))
+install-lib-non.a := $(filter-out lib%.a,$(install-lib))
+ifdef install-lib-non.a
+$(addprefix $(libdir)/$(libprefix),$(install-lib-non.a)): \
+  $(libdir)/$(libprefix)%: $(objpfx)%
+	$(do-install)
+endif
+ifdef install-lib.a
+$(install-lib.a:lib%.a=$(libdir)/lib$(libprefix)%.a): \
+  $(libdir)/lib$(libprefix)%.a: $(objpfx)lib%.a
+	$(do-install)
+	$(patsubst %,$(RANLIB) $@,$(filter-out $(non-lib.a),$(<F)))
+endif
+endif
+ifdef install-data
+$(addprefix $(datadir)/,$(install-data)): $(datadir)/%: %;$(do-install)
+endif
+headers := $(strip $(headers))
+ifdef headers
+$(addprefix $(includedir)/,$(headers)): \
+	$(includedir)/%: %;$(do-install)
+endif	# headers
+
+.PHONY: install-bin-nosubdir install-sbin-nosubdir install-lib-nosubdir \
+	install-data-nosubdir install-headers-nosubdir
+install-bin-nosubdir: $(addprefix $(bindir)/,$(install-bin))
+install-sbin-nosubdir: $(addprefix $(sbindir)/,$(install-sbin))
+install-lib-nosubdir: $(addprefix $(libdir)/,\
+		       $(patsubst lib%.a,lib$(libprefix)%.a,$(install-lib.a)) \
+		       $(addprefix $(libprefix),$(install-lib-non.a)))
+install-data-nosubdir: $(addprefix $(datadir)/,$(install-data))
+install-headers-nosubdir: $(addprefix $(includedir)/,$(headers))
+install-others-nosubdir: $(install-others)
+
+# We need all the `-nosubdir' targets so that `install' in the parent
+# doesn't depend on several things which each iterate over the subdirs.
+# This rule makes `install-FOO' always use `install-FOO-nosubdir' as a
+# subroutine.  Then in the parent `install-FOO' also causes subdir makes.
+install-%:: install-%-nosubdir ;
+
+.PHONY: install install-no-libc.a-nosubdir
+install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
+			    install-bin-nosubdir install-lib-nosubdir	\
+			    install-others-nosubdir install-sbin-nosubdir
+install: install-no-libc.a-nosubdir
+
+# Command to compile $< in $(objdir) using the native libraries.
+define native-compile
+cwd=`pwd`; cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) \
+	   $(addprefix $$cwd/,$^) -o $(@F)
+endef
+
+# Command to compile $< in $(common-objdir) using the native libraries.
+define common-objdir-compile
+cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
+endef
+
+# We always want to use configuration definitions.
+BUILD_CFLAGS = -include $(common-objpfx)config.h
+
+# Support the GNU standard name for this target.
+.PHONY: check
+check: tests
+
+.PHONY: TAGS
+TAGS: distinfo $(..)MakeTAGS
+	$(MAKE) $(addprefix -f ,$^)
+
+.PHONY: echo-headers
+echo-headers:
+	@echo $(headers)
+
+
+# Common cleaning targets.
+
+.PHONY: common-mostlyclean common-clean mostlyclean clean
+clean: common-clean
+mostlyclean: common-mostlyclean
+
+# Remove the object files.
+common-mostlyclean:
+	-rm -f $(addprefix $(objpfx),$(tests) $(others) \
+				     $(addsuffix .o,$(tests) $(others)) \
+				     $(addsuffix .out,$(tests)))
+	-rm -f $(objects) $(addprefix $(objpfx),$(extra-objs) stamp-$(subdir))
+	-rm -f core TAGS
+
+# Also remove the dependencies and generated source files.
+common-clean: common-mostlyclean
+	-rm -f $(objpfx)depend-$(subdir) $(+depfiles)
+	-rm -f $(addprefix $(objpfx),$(generated))
+
+# Produce a file `stub-$(subdir)' which contains `#define __stub_FUNCTION'
+# for each function which is a stub.  We grovel over all the .d files
+# looking for references to source files in sysdeps/stub.  Then we grovel
+# over each referenced source file to see what stub function it defines.
+
+.PHONY: stubs # The parent Makefile calls this target.
+stubs: $(common-objpfx)stub-$(subdir)
+s = $(sysdep_dir)/stub
+$(common-objpfx)stub-$(subdir): $(+depfiles)
+# Use /dev/null since `...` might expand to empty.
+	s=`cd $s; /bin/pwd`; \
+	$(patsubst %,cd %;,$(objdir)) \
+	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
+	    `sed -n 's@^.*$s/\([a-z0-9_-]*\.c\).*$$@'"$$s"/'\1@p' \
+		 $(patsubst $(objpfx)%,%,$^) /dev/null` \
+	    /dev/null > $@T
+	mv -f $@T $@
+
+# Make the distribution tar file.
+
+.PHONY: dist
+dist: distinfo $(..)Make-dist 
+	$(MAKE) -f $< -f $(word 2,$^) $(Make-dist-args)
+
+dist: $(distribute)
+
+# We used to simply export all these variables, but that frequently made the
+# environment get too large.  Instead, we write all the information into
+# a generated makefile fragment `distinfo', and then include it with -f in
+# the sub-make that makes the distribution (above).
+distinfo: Makefile $(..)Makerules
+	$(distinfo-vars)
+	mv -f $@.new $@
+
+define distinfo-vars
+rm -f $@.new
+$(foreach var,subdir sources elided-routines headers distribute \
+	      dont_distribute generated others tests,
+echo >> $@.new '$(var)	:= $($(var))')
+echo >> $@.new 'sources := $$(sources) $$(addsuffix .c,$$(elided-routines))'
+endef
+
+ifneq (,$(strip $(gpl2lgpl)))
+ifneq (,$(wildcard $(..)gpl2lgpl.sed))
+# Snarf from the master source and frob the copying notice.
+$(gpl2lgpl): %: $(..)gpl2lgpl.sed /home/gd/gnu/lib/%
+	sed -f $^ > $@-tmp
+# So I don't edit them by mistake.
+	chmod a-w $@-tmp
+	mv -f $@-tmp $@
+	test -d CVS && cvs commit -m'Updated from $^' $@
+endif
+endif

@@ -1,0 +1,6 @@
+# Generated from $Id$.
+
+srcdir = @srcdir@
+
+all .DEFAULT:
+	$(MAKE) -C $(srcdir) objdir=`pwd` $@

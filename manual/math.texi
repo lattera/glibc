@@ -1,0 +1,505 @@
+@node Mathematics, Arithmetic, Low-Level Terminal Interface, Top
+@chapter Mathematics
+
+This chapter contains information about functions for performing
+mathematical computations, such as trigonometric functions.  Most of
+these functions have prototypes declared in the header file
+@file{math.h}.
+@pindex math.h
+
+All of the functions that operate on floating-point numbers accept
+arguments and return results of type @code{double}.  In the future,
+there may be additional functions that operate on @code{float} and
+@code{long double} values.  For example, @code{cosf} and @code{cosl}
+would be versions of the @code{cos} function that operate on
+@code{float} and @code{long double} arguments, respectively.  In the
+meantime, you should avoid using these names yourself.  @xref{Reserved
+Names}.
+
+@menu
+* Domain and Range Errors::     Detecting overflow conditions and the like.
+* Trig Functions::              Sine, cosine, and tangent.
+* Inverse Trig Functions::      Arc sine, arc cosine, and arc tangent.
+* Exponents and Logarithms::    Also includes square root.
+* Hyperbolic Functions::        Hyperbolic sine and friends.
+* Pseudo-Random Numbers::       Functions for generating pseudo-random
+				 numbers.
+@end menu
+
+@node Domain and Range Errors
+@section Domain and Range Errors
+
+@cindex domain error
+Many of the functions listed in this chapter are defined mathematically
+over a domain that is only a subset of real numbers.  For example, the
+@code{acos} function is defined over the domain between @code{-1} and
+@code{1}.  If you pass an argument to one of these functions that is
+outside the domain over which it is defined, the function sets
+@code{errno} to @code{EDOM} to indicate a @dfn{domain error}.  On
+machines that support IEEE floating point, functions reporting error
+@code{EDOM} also return a NaN.
+
+Some of these functions are defined mathematically to result in a
+complex value over parts of their domains.  The most familiar example of
+this is taking the square root of a negative number.  The functions in
+this chapter take only real arguments and return only real values;
+therefore, if the value ought to be nonreal, this is treated as a domain
+error.
+
+@cindex range error
+A related problem is that the mathematical result of a function may not
+be representable as a floating point number.  If magnitude of the
+correct result is too large to be represented, the function sets
+@code{errno} to @code{ERANGE} to indicate a @dfn{range error}, and
+returns a particular very large value (named by the macro
+@code{HUGE_VAL}) or its negation (@w{@code{- HUGE_VAL}}).
+
+If the magnitude of the result is too small, a value of zero is returned
+instead.  In this case, @code{errno} might or might not be
+set to @code{ERANGE}.
+
+The only completely reliable way to check for domain and range errors is
+to set @code{errno} to @code{0} before you call the mathematical function 
+and test @code{errno} afterward.  As a consequence of this use of 
+@code{errno}, use of the mathematical functions is not reentrant if you
+check for errors.
+
+@c !!! this isn't always true at the moment....
+None of the mathematical functions ever generates signals as a result of
+domain or range errors.  In particular, this means that you won't see
+@code{SIGFPE} signals generated within these functions.  (@xref{Signal
+Handling}, for more information about signals.)
+
+@comment math.h
+@comment ANSI
+@deftypevr Macro double HUGE_VAL
+An expression representing a particular very large number.  On machines
+that use IEEE floating point format, the value is ``infinity''.  On
+other machines, it's typically the largest positive number that can be
+represented.
+
+The value of this macro is used as the return value from various 
+mathematical functions in overflow situations.
+@end deftypevr
+
+For more information about floating-point representations and limits,
+see @ref{Floating Point Parameters}.  In particular, the macro
+@code{DBL_MAX} might be more appropriate than @code{HUGE_VAL} for many
+uses other than testing for an error in a mathematical function.
+
+@node Trig Functions
+@section Trigonometric Functions
+@cindex trigonometric functions
+
+These are the familiar @code{sin}, @code{cos}, and @code{tan} functions.
+The arguments to all of these functions are in units of radians; recall
+that pi radians equals 180 degrees.
+
+@cindex pi (trigonometric constant)
+The math library doesn't define a symbolic constant for pi, but you can
+define your own if you need one:
+
+@smallexample
+#define PI 3.14159265358979323846264338327
+@end smallexample
+
+@noindent
+You can also compute the value of pi with the expression @code{acos
+(-1.0)}.
+
+
+@comment math.h
+@comment ANSI
+@deftypefun double sin (double @var{x})
+This function returns the sine of @var{x}, where @var{x} is given in
+radians.  The return value is in the range @code{-1} to @code{1}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double cos (double @var{x})
+This function returns the cosine of @var{x}, where @var{x} is given in
+radians.  The return value is in the range @code{-1} to @code{1}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double tan (double @var{x})
+This function returns the tangent of @var{x}, where @var{x} is given in
+radians.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item ERANGE
+Mathematically, the tangent function has singularities at odd multiples
+of pi/2.  If the argument @var{x} is too close to one of these
+singularities, @code{tan} sets @code{errno} to @code{ERANGE} and returns
+either positive or negative @code{HUGE_VAL}.
+@end table
+@end deftypefun
+
+
+@node Inverse Trig Functions
+@section Inverse Trigonometric Functions
+@cindex inverse trigonmetric functions
+
+These are the usual arc sine, arc cosine and arc tangent functions,
+which are the inverses of the sine, cosine and tangent functions,
+respectively.
+
+@comment math.h
+@comment ANSI
+@deftypefun double asin (double @var{x})
+This function computes the arc sine of @var{x}---that is, the value whose
+sine is @var{x}.  The value is in units of radians.  Mathematically,
+there are infinitely many such values; the one actually returned is the
+one between @code{-pi/2} and @code{pi/2} (inclusive).
+
+@code{asin} fails, and sets @code{errno} to @code{EDOM}, if @var{x} is
+out of range.  The arc sine function is defined mathematically only
+over the domain @code{-1} to @code{1}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double acos (double @var{x})
+This function computes the arc cosine of @var{x}---that is, the value
+whose cosine is @var{x}.  The value is in units of radians.
+Mathematically, there are infinitely many such values; the one actually
+returned is the one between @code{0} and @code{pi} (inclusive).
+
+@code{acos} fails, and sets @code{errno} to @code{EDOM}, if @var{x} is
+out of range.  The arc cosine function is defined mathematically only
+over the domain @code{-1} to @code{1}.
+@end deftypefun
+
+
+@comment math.h
+@comment ANSI
+@deftypefun double atan (double @var{x})
+This function computes the arc tangent of @var{x}---that is, the value
+whose tangent is @var{x}.  The value is in units of radians.
+Mathematically, there are infinitely many such values; the one actually
+returned is the one between @code{-pi/2} and @code{pi/2}
+(inclusive).
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double atan2 (double @var{y}, double @var{x})
+This is the two argument arc tangent function.  It is similar to computing
+the arc tangent of @var{y}/@var{x}, except that the signs of both arguments
+are used to determine the quadrant of the result, and @var{x} is
+permitted to be zero.  The return value is given in radians and is in
+the range @code{-pi} to @code{pi}, inclusive.
+
+If @var{x} and @var{y} are coordinates of a point in the plane,
+@code{atan2} returns the signed angle between the line from the origin
+to that point and the x-axis.  Thus, @code{atan2} is useful for
+converting Cartesian coordinates to polar coordinates.  (To compute the
+radial coordinate, use @code{hypot}; see @ref{Exponents and
+Logarithms}.)
+
+The function @code{atan2} sets @code{errno} to @code{EDOM} if both
+@var{x} and @var{y} are zero; the return value is not defined in this
+case.
+@end deftypefun
+
+
+@node Exponents and Logarithms
+@section Exponentiation and Logarithms
+@cindex exponentiation functions
+@cindex power functions
+@cindex logarithm functions
+
+@comment math.h
+@comment ANSI
+@deftypefun double exp (double @var{x})
+The @code{exp} function returns the value of e (the base of natural
+logarithms) raised to power @var{x}.
+
+The function fails, and sets @code{errno} to @code{ERANGE}, if the
+magnitude of the result is too large to be representable.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double log (double @var{x})
+This function returns the natural logarithm of @var{x}.  @code{exp (log
+(@var{x}))} equals @var{x}, exactly in mathematics and approximately in
+C.
+
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The argument @var{x} is negative.  The log function is defined
+mathematically to return a real result only on positive arguments.
+
+@item ERANGE
+The argument is zero.  The log of zero is not defined.
+@end table
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double log10 (double @var{x})
+This function returns the base-10 logarithm of @var{x}.  Except for the
+different base, it is similar to the @code{log} function.  In fact,
+@code{log10 (@var{x})} equals @code{log (@var{x}) / log (10)}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double pow (double @var{base}, double @var{power})
+This is a general exponentiation function, returning @var{base} raised
+to @var{power}.
+
+@need 250
+The following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EDOM
+The argument @var{base} is negative and @var{power} is not an integral
+value.  Mathematically, the result would be a complex number in this case.
+
+@item ERANGE
+An underflow or overflow condition was detected in the result.
+@end table
+@end deftypefun
+
+@cindex square root function
+@comment math.h
+@comment ANSI
+@deftypefun double sqrt (double @var{x})
+This function returns the nonnegative square root of @var{x}.
+
+The @code{sqrt} function fails, and sets @code{errno} to @code{EDOM}, if
+@var{x} is negative.  Mathematically, the square root would be a complex
+number.
+@end deftypefun
+
+@cindex cube root function
+@comment math.h
+@comment BSD
+@deftypefun double cbrt (double @var{x})
+This function returns the cube root of @var{x}.  This function cannot
+fail; every representable real value has a representable real cube root.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double hypot (double @var{x}, double @var{y})
+The @code{hypot} function returns @code{sqrt (@var{x}*@var{x} +
+@var{y}*@var{y})}.  (This is the length of the hypotenuse of a right
+triangle with sides of length @var{x} and @var{y}, or the distance
+of the point (@var{x}, @var{y}) from the origin.)  See also the function
+@code{cabs} in @ref{Absolute Value}.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double expm1 (double @var{x})
+This function returns a value equivalent to @code{exp (@var{x}) - 1}.
+It is computed in a way that is accurate even if the value of @var{x} is
+near zero---a case where @code{exp (@var{x}) - 1} would be inaccurate due
+to subtraction of two numbers that are nearly equal.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double log1p (double @var{x})
+This function returns a value equivalent to @w{@code{log (1 + @var{x})}}.
+It is computed in a way that is accurate even if the value of @var{x} is
+near zero.
+@end deftypefun
+
+@node Hyperbolic Functions
+@section Hyperbolic Functions
+@cindex hyperbolic functions
+
+The functions in this section are related to the exponential functions;
+see @ref{Exponents and Logarithms}.
+
+@comment math.h
+@comment ANSI
+@deftypefun double sinh (double @var{x})
+The @code{sinh} function returns the hyperbolic sine of @var{x}, defined
+mathematically as @w{@code{exp (@var{x}) - exp (-@var{x}) / 2}}.  The
+function fails, and sets @code{errno} to @code{ERANGE}, if the value of
+@var{x} is too large; that is, if overflow occurs.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double cosh (double @var{x})
+The @code{cosh} function returns the hyperbolic cosine of @var{x},
+defined mathematically as @w{@code{exp (@var{x}) + exp (-@var{x}) / 2}}.
+The function fails, and sets @code{errno} to @code{ERANGE}, if the value
+of @var{x} is too large; that is, if overflow occurs.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double tanh (double @var{x})
+This function returns the hyperbolic tangent of @var{x}, whose 
+mathematical definition is @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
+@end deftypefun
+
+@cindex inverse hyperbolic functions
+
+@comment math.h
+@comment BSD
+@deftypefun double asinh (double @var{x})
+This function returns the inverse hyperbolic sine of @var{x}---the
+value whose hyperbolic sine is @var{x}.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double acosh (double @var{x})
+This function returns the inverse hyperbolic cosine of @var{x}---the
+value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
+@code{1}, @code{acosh} returns @code{HUGE_VAL}.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double atanh (double @var{x})
+This function returns the inverse hyperbolic tangent of @var{x}---the
+value whose hyperbolic tangent is @var{x}.  If the absolute value of
+@var{x} is greater than or equal to @code{1}, @code{atanh} returns
+@code{HUGE_VAL}.
+@end deftypefun
+
+@node Pseudo-Random Numbers
+@section Pseudo-Random Numbers
+@cindex random numbers
+@cindex pseudo-random numbers
+@cindex seed (for random numbers)
+
+This section describes the GNU facilities for generating a series of
+pseudo-random numbers.  The numbers generated are not truly random;
+typically, they form a sequence that repeats periodically, with a
+period so large that you can ignore it for ordinary purposes.  The
+random number generator works by remembering at all times a @dfn{seed}
+value which it uses to compute the next random number and also to
+compute a new seed.
+
+Although the generated numbers look unpredictable within one run of a
+program, the sequence of numbers is @emph{exactly the same} from one run
+to the next.  This is because the initial seed is always the same.  This
+is convenient when you are debugging a program, but it is unhelpful if
+you want the program to behave unpredictably.  If you want truly random
+numbers, not just pseudo-random, specify a seed based on the current
+time.
+
+You can get repeatable sequences of numbers on a particular machine type
+by specifying the same initial seed value for the random number
+generator.  There is no standard meaning for a particular seed value;
+the same seed, used in different C libraries or on different CPU types,
+will give you different random numbers.
+
+The GNU library supports the standard ANSI C random number functions
+plus another set derived from BSD.  We recommend you use the standard
+ones, @code{rand} and @code{srand}.
+
+@menu
+* ANSI Random::      @code{rand} and friends.
+* BSD Random::       @code{random} and friends.
+@end menu
+
+@node ANSI Random
+@subsection ANSI C Random Number Functions
+
+This section describes the random number functions that are part of
+the ANSI C standard.
+
+To use these facilities, you should include the header file
+@file{stdlib.h} in your program.
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment ANSI
+@deftypevr Macro int RAND_MAX
+The value of this macro is an integer constant expression that
+represents the maximum possible value returned by the @code{rand}
+function.  In the GNU library, it is @code{037777777}, which is the
+largest signed integer representable in 32 bits.  In other libraries, it
+may be as low as @code{32767}.
+@end deftypevr
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun int rand ()
+The @code{rand} function returns the next pseudo-random number in the
+series.  The value is in the range from @code{0} to @code{RAND_MAX}.
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun void srand (unsigned int @var{seed})
+This function establishes @var{seed} as the seed for a new series of
+pseudo-random numbers.  If you call @code{rand} before a seed has been
+established with @code{srand}, it uses the value @code{1} as a default
+seed.
+
+To produce truly random numbers (not just pseudo-random), do @code{srand
+(time (0))}.
+@end deftypefun
+
+@node BSD Random
+@subsection BSD Random Number Functions
+
+This section describes a set of random number generation functions that
+are derived from BSD.  There is no advantage to using these functions
+with the GNU C library; we support them for BSD compatibility only.
+
+The prototypes for these functions are in @file{stdlib.h}.
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment BSD
+@deftypefun {long int} random ()
+This function returns the next pseudo-random number in the sequence.
+The range of values returned is from @code{0} to @code{RAND_MAX}.
+@end deftypefun
+
+@comment stdlib.h
+@comment BSD
+@deftypefun void srandom (unsigned int @var{seed})
+The @code{srandom} function sets the seed for the current random number
+state based on the integer @var{seed}.  If you supply a @var{seed} value
+of @code{1}, this will cause @code{random} to reproduce the default set
+of random numbers.
+
+To produce truly random numbers (not just pseudo-random), do
+@code{srandom (time (0))}.
+@end deftypefun
+
+@comment stdlib.h
+@comment BSD
+@deftypefun {void *} initstate (unsigned int @var{seed}, void *@var{state}, size_t @var{size})
+The @code{initstate} function is used to initialize the random number
+generator state.  The argument @var{state} is an array of @var{size}
+bytes, used to hold the state information.  The size must be at least 8
+bytes, and optimal sizes are 8, 16, 32, 64, 128, and 256.  The bigger
+the @var{state} array, the better.
+
+The return value is the previous value of the state information array.
+You can use this value later as an argument to @code{setstate} to
+restore that state.
+@end deftypefun
+
+@comment stdlib.h
+@comment BSD
+@deftypefun {void *} setstate (void *@var{state})
+The @code{setstate} function restores the random number state
+information @var{state}.  The argument must have been the result of
+a previous call to @var{initstate} or @var{setstate}.  
+
+The return value is the previous value of the state information array.
+You can use thise value later as an argument to @code{setstate} to
+restore that state.
+@end deftypefun

@@ -1,0 +1,180 @@
+@node System Information, System Configuration, Users and Groups, Top
+@chapter System Information
+
+This chapter describes functions that return information about the
+particular machine that is in use---the type of hardware, the type of
+software, and the individual machine's name.
+
+@menu
+* Host Identification::         Determining the name of the machine.
+* Hardware/Software Type ID::   Determining the hardware type of the
+                                 machine and what operating system it is
+                                 running. 
+@end menu
+
+
+@node Host Identification
+@section Host Identification
+
+This section explains how to identify the particular machine that your
+program is running on.  The identification of a machine consists of its
+Internet host name and Internet address; see @ref{Internet Namespace}.
+The host name should always be a fully qualified domain name, like
+@w{@samp{crispy-wheats-n-chicken.ai.mit.edu}}, not a simple name like
+just @w{@samp{crispy-wheats-n-chicken}}.
+
+@pindex hostname
+@pindex hostid
+@pindex unistd.h
+Prototypes for these functions appear in @file{unistd.h}.  The shell
+commands @code{hostname} and @code{hostid} work by calling them.
+
+@comment unistd.h
+@comment BSD
+@deftypefun int gethostname (char *@var{name}, size_t @var{size})
+This function returns the name of the host machine in the array
+@var{name}.  The @var{size} argument specifies the size of this array,
+in bytes.
+
+The return value is @code{0} on success and @code{-1} on failure.  In
+the GNU C library, @code{gethostname} fails if @var{size} is not large
+enough; then you can try again with a larger array.  The following
+@code{errno} error condition is defined for this function:
+
+@table @code
+@item ENAMETOOLONG
+The @var{size} argument is less than the size of the host name plus one.
+@end table
+
+@pindex sys/param.h
+On some systems, there is a symbol for the maximum possible host name
+length: @code{MAXHOSTNAMELEN}.  It is defined in @file{sys/param.h}.
+But you can't count on this to exist, so it is cleaner to handle
+failure and try again.
+
+@code{gethostname} stores the beginning of the host name in @var{name}
+even if the host name won't entirely fit.  For some purposes, a
+truncated host name is good enough.  If it is, you can ignore the
+error code.
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun int sethostname (const char *@var{name}, size_t @var{length})
+The @code{sethostname} function sets the name of the host machine to
+@var{name}, a string with length @var{length}.  Only privileged
+processes are allowed to do this.  Usually it happens just once, at
+system boot time.
+
+The return value is @code{0} on success and @code{-1} on failure.
+The following @code{errno} error condition is defined for this function:
+
+@table @code
+@item EPERM
+This process cannot set the host name because it is not privileged.
+@end table
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun {long int} gethostid (void)
+This function returns the ``host ID'' of the machine the program is
+running on.  By convention, this is usually the primary Internet address
+of that machine, converted to a @w{@code{long int}}.  However, some
+systems it is a meaningless but unique number which is hard-coded for
+each machine.
+@end deftypefun
+
+@comment unistd.h
+@comment BSD
+@deftypefun int sethostid (long int @var{id})
+The @code{sethostid} function sets the ``host ID'' of the host machine
+to @var{id}.  Only privileged processes are allowed to do this.  Usually
+it happens just once, at system boot time.
+
+The return value is @code{0} on success and @code{-1} on failure.
+The following @code{errno} error condition is defined for this function:
+
+@table @code
+@item EPERM
+This process cannot set the host name because it is not privileged.
+
+@item ENOSYS
+The operating system does not support setting the host ID.  On some
+systems, the host ID is a meaningless but unique number hard-coded for
+each machine.
+@end table
+@end deftypefun
+
+@node Hardware/Software Type ID
+@section Hardware/Software Type Identification
+
+You can use the @code{uname} function to find out some information about
+the type of computer your program is running on.  This function and the
+associated data type are declared in the header file
+@file{sys/utsname.h}.
+@pindex sys/utsname.h
+
+@comment sys/utsname.h
+@comment POSIX.1
+@deftp {Data Type} {struct utsname}
+The @code{utsname} structure is used to hold information returned
+by the @code{uname} function.  It has the following members:
+
+@table @code
+@item char sysname[]
+This is the name of the operating system in use.
+
+@item char nodename[]
+This is the network name of this particular computer.  In the GNU
+library, the value is the same as that returned by @code{gethostname};
+see @ref{Host Identification}.
+
+@item char release[]
+This is the current release level of the operating system implementation.
+
+@item char version[]
+This is the current version level within the release of the operating
+system.
+
+@item char machine[]
+This is a description of the type of hardware that is in use.
+
+Some systems provide a mechanism to interrogate the kernel directly for
+this information.  On systems without such a mechanism, the GNU C
+library fills in this field based on the configuration name that was
+specified when building and installing the library.
+
+GNU uses a three-part name to describe a system configuration; the three
+parts are @var{cpu}, @var{manufacturer} and @var{system-type}, and they
+are separated with dashes.  Any possible combination of three names is
+potentially meaningful, but most such combinations are meaningless in
+practice and even the meaningful ones are not necessarily supported by
+any particular GNU program.
+
+Since the value in @code{machine} is supposed to describe just the
+hardware, it consists of the first two parts of the configuration name:
+@samp{@var{cpu}-@var{manufacturer}}.  For example, it might be one of these:
+
+@quotation
+@code{"sparc-sun"}, 
+@code{"i386-@var{anything}"},
+@code{"m68k-hp"}, 
+@code{"m68k-sony"},
+@code{"m68k-sun"},
+@code{"mips-dec"}
+@end quotation
+@end table
+@end deftp
+
+@comment sys/utsname.h
+@comment POSIX.1
+@deftypefun int uname (struct utsname *@var{info})
+The @code{uname} function fills in the structure pointed to by
+@var{info} with information about the operating system and host machine.
+A non-negative value indicates that the data was successfully stored.
+
+@code{-1} as the value indicates an error.  The only error possible is
+@code{EFAULT}, which we normally don't mention as it is always a
+possibility.
+@end deftypefun

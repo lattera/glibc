@@ -1,0 +1,4 @@
+*.gz *.Z *.tar *.tgz
+=*
+TODO COPYING* AUTHORS copyr-* copying.*
+glibc-*

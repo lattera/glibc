@@ -1,0 +1,95 @@
+Feature Test Macros
+-------------------
+
+   The exact set of features available when you compile a source file
+is controlled by which "feature test macros" you define.
+
+   If you compile your programs using `gcc -ansi', you get only the
+ANSI C library features, unless you explicitly request additional
+features by defining one or more of the feature macros.  *Note GNU CC
+Command Options: (gcc.info)Invoking GCC, for more information about GCC
+options.
+
+   You should define these macros by using `#define' preprocessor
+directives at the top of your source code files.  These directives
+*must* come before any `#include' of a system header file.  It is best
+to make them the very first thing in the file, preceded only by
+comments.  You could also use the `-D' option to GCC, but it's better
+if you make the source files indicate their own meaning in a
+self-contained way.
+
+ - Macro: _POSIX_SOURCE
+     If you define this macro, then the functionality from the POSIX.1
+     standard (IEEE Standard 1003.1) is available, as well as all of the
+     ANSI C facilities.
+
+ - Macro: _POSIX_C_SOURCE
+     If you define this macro with a value of `1', then the
+     functionality from the POSIX.1 standard (IEEE Standard 1003.1) is
+     made available.  If you define this macro with a value of `2',
+     then both the functionality from the POSIX.1 standard and the
+     functionality from the POSIX.2 standard (IEEE Standard 1003.2) are
+     made available.  This is in addition to the ANSI C facilities.
+
+ - Macro: _BSD_SOURCE
+     If you define this macro, functionality derived from 4.3 BSD Unix
+     is included as well as the ANSI C, POSIX.1, and POSIX.2 material.
+
+     Some of the features derived from 4.3 BSD Unix conflict with the
+     corresponding features specified by the POSIX.1 standard.  If this
+     macro is defined, the 4.3 BSD definitions take precedence over the
+     POSIX definitions.
+
+     Due to the nature of some of the conflicts between 4.3 BSD and
+     POSIX.1, you need to use a special "BSD compatibility library"
+     when linking programs compiled for BSD compatibility.  This is
+     because some functions must be defined in two different ways, one
+     of them in the normal C library, and one of them in the
+     compatibility library.  If your program defines `_BSD_SOURCE', you
+     must give the option `-lbsd-compat' to the compiler or linker when
+     linking the program, to tell it to find functions in this special
+     compatibility library before looking for them in the normal C
+     library.
+
+ - Macro: _SVID_SOURCE
+     If you define this macro, functionality derived from SVID is
+     included as well as the ANSI C, POSIX.1, and POSIX.2 material.
+
+ - Macro: _GNU_SOURCE
+     If you define this macro, everything is included: ANSI C, POSIX.1,
+     POSIX.2, BSD, SVID, and GNU extensions.  In the cases where POSIX.1
+     conflicts with BSD, the POSIX definitions take precedence.
+
+     If you want to get the full effect of `_GNU_SOURCE' but make the
+     BSD definitions take precedence over the POSIX definitions, use
+     this sequence of definitions:
+
+          #define _GNU_SOURCE
+          #define _BSD_SOURCE
+          #define _SVID_SOURCE
+
+     Note that if you do this, you must link your program with the BSD
+     compatibility library by passing the `-lbsd-compat' option to the
+     compiler or linker.  *Note:* If you forget to do this, you may get
+     very strange errors at run time.
+
+   We recommend you use `_GNU_SOURCE' in new programs.  If you don't
+specify the `-ansi' option to GCC and don't define any of these macros
+explicitly, the effect is the same as defining `_GNU_SOURCE'.
+
+   When you define a feature test macro to request a larger class of
+features, it is harmless to define in addition a feature test macro for
+a subset of those features.  For example, if you define
+`_POSIX_C_SOURCE', then defining `_POSIX_SOURCE' as well has no effect.
+Likewise, if you define `_GNU_SOURCE', then defining either
+`_POSIX_SOURCE' or `_POSIX_C_SOURCE' or `_SVID_SOURCE' as well has no
+effect.
+
+   Note, however, that the features of `_BSD_SOURCE' are not a subset of
+any of the other feature test macros supported.  This is because it
+defines BSD features that take precedence over the POSIX features that
+are requested by the other macros.  For this reason, defining
+`_BSD_SOURCE' in addition to the other feature test macros does have an
+effect: it causes the BSD features to take priority over the conflicting
+POSIX features.
+

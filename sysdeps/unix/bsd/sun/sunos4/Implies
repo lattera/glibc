@@ -1,0 +1,2 @@
+# SunOS 4 has the canonical set of <sys/mman.h> system calls.
+unix/mman

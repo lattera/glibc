@@ -1,0 +1,12 @@
+for func in $*; do
+    for file in `find sysdeps -name "${func}.c"`;
+    do
+        script=/tmp/foo$$;
+        ( echo "%s/${func}/__&/g";
+        echo x )>$script ;
+        ex $file <$script ;
+        newfile=`echo $file | sed "s/${func}/__&/"`;
+        mv $file $newfile;
+        echo $newfile;
+    done
+done

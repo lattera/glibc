@@ -1,0 +1,908 @@
+@node Process Startup
+@chapter Process Startup and Termination
+
+@cindex process
+@dfn{Processes} are the primitive units for allocation of system
+resources.  Each process has its own address space and (usually) one
+thread of control.  A process executes a program; you can have multiple
+processes executing the same program, but each process has its own copy
+of the program within its own address space and executes it
+independently of the other copies.
+
+This chapter explains what your program should do to handle the startup
+of a process, to terminate its process, and to receive information
+(arguments and the environment) from the parent process.
+
+@menu
+* Program Arguments::           Parsing your program's command-line arguments.
+* Environment Variables::       How to access parameters inherited from
+				 a parent process.
+* Program Termination::         How to cause a process to terminate and
+				 return status information to its parent.
+@end menu
+
+@node Program Arguments
+@section Program Arguments
+@cindex program arguments
+@cindex command line arguments
+@cindex arguments, to program
+
+@cindex program startup
+@cindex startup of program
+@cindex invocation of program
+@cindex @code{main} function
+@findex main
+The system starts a C program by calling the function @code{main}.  It
+is up to you to write a function named @code{main}---otherwise, you
+won't even be able to link your program without errors.
+
+In ANSI C you can define @code{main} either to take no arguments, or to
+take two arguments that represent the command line arguments to the
+program, like this:
+
+@smallexample
+int main (int @var{argc}, char *@var{argv}[])
+@end smallexample
+
+@cindex argc (program argument count)
+@cindex argv (program argument vector)
+The command line arguments are the whitespace-separated tokens given in
+the shell command used to invoke the program; thus, in @samp{cat foo
+bar}, the arguments are @samp{foo} and @samp{bar}.  The only way a
+program can look at its command line arguments is via the arguments of
+@code{main}.  If @code{main} doesn't take arguments, then you cannot get
+at the command line.
+
+The value of the @var{argc} argument is the number of command line
+arguments.  The @var{argv} argument is a vector of C strings; its
+elements are the individual command line argument strings.  The file
+name of the program being run is also included in the vector as the
+first element; the value of @var{argc} counts this element.  A null
+pointer always follows the last element: @code{@var{argv}[@var{argc}]}
+is this null pointer.
+
+For the command @samp{cat foo bar}, @var{argc} is 3 and @var{argv} has
+three elements, @code{"cat"}, @code{"foo"} and @code{"bar"}.
+
+If the syntax for the command line arguments to your program is simple
+enough, you can simply pick the arguments off from @var{argv} by hand.
+But unless your program takes a fixed number of arguments, or all of the
+arguments are interpreted in the same way (as file names, for example),
+you are usually better off using @code{getopt} to do the parsing.
+
+In Unix systems you can define @code{main} a third way, using three arguments:
+
+@smallexample
+int main (int @var{argc}, char *@var{argv}[], char *@var{envp})
+@end smallexample
+
+The first two arguments are just the same.  The third argument
+@var{envp} gives the process's environment; it is the same as the value
+of @code{environ}.  @xref{Environment Variables}.  POSIX.1 does not
+allow this three-argument form, so to be portable it is best to write
+@code{main} to take two arguments, and use the value of @code{environ}.
+
+@menu
+* Argument Syntax::       By convention, options start with a hyphen.
+* Parsing Options::       The @code{getopt} function.
+* Example of Getopt:: 	  An example of parsing options with @code{getopt}.
+* Long Options::	  GNU suggests utilities accept long-named options.
+			   Here is how to do that.
+* Long Option Example::   An example of using @code{getopt_long}.
+@end menu
+
+@node Argument Syntax
+@subsection Program Argument Syntax Conventions
+@cindex program argument syntax
+@cindex syntax, for program arguments
+@cindex command argument syntax
+
+POSIX recommends these conventions for command line arguments.
+@code{getopt} (@pxref{Parsing Options}) makes it easy to implement them.
+
+@itemize @bullet
+@item
+Arguments are options if they begin with a hyphen delimiter (@samp{-}).
+
+@item
+Multiple options may follow a hyphen delimiter in a single token if
+the options do not take arguments.  Thus, @samp{-abc} is equivalent to
+@samp{-a -b -c}.
+
+@item
+Option names are single alphanumeric characters (as for @code{isalnum};
+see @ref{Classification of Characters}).
+
+@item
+Certain options require an argument.  For example, the @samp{-o} command
+of the @code{ld} command requires an argument---an output file name.
+
+@item
+An option and its argument may or may not appear as separate tokens.  (In
+other words, the whitespace separating them is optional.)  Thus,
+@w{@samp{-o foo}} and @samp{-ofoo} are equivalent.
+
+@item
+Options typically precede other non-option arguments.
+
+The implementation of @code{getopt} in the GNU C library normally makes
+it appear as if all the option arguments were specified before all the
+non-option arguments for the purposes of parsing, even if the user of
+your program intermixed option and non-option arguments.  It does this
+by reordering the elements of the @var{argv} array.  This behavior is
+nonstandard; if you want to suppress it, define the
+@code{_POSIX_OPTION_ORDER} environment variable.  @xref{Standard
+Environment}.
+
+@item
+The argument @samp{--} terminates all options; any following arguments
+are treated as non-option arguments, even if they begin with a hyphen.
+
+@item
+A token consisting of a single hyphen character is interpreted as an
+ordinary non-option argument.  By convention, it is used to specify
+input from or output to the standard input and output streams.
+
+@item
+Options may be supplied in any order, or appear multiple times.  The
+interpretation is left up to the particular application program.
+@end itemize
+
+@cindex long-named options
+GNU adds @dfn{long options} to these conventions.  Long options consist
+of @samp{--} followed by a name made of alphanumeric characters and
+dashes.  Option names are typically one to three words long, with
+hyphens to separate words.  Users can abbreviate the option names as
+long as the abbreviations are unique.
+
+To specify an argument for a long option, write
+@samp{--@var{name}=@var{value}}.  This syntax enables a long option to
+accept an argument that is itself optional.
+
+Eventually, the GNU system will provide completion for long option names
+in the shell.
+
+@node Parsing Options
+@subsection Parsing Program Options
+@cindex program arguments, parsing
+@cindex command arguments, parsing
+@cindex parsing program arguments
+
+Here are the details about how to call the @code{getopt} function.  To
+use this facility, your program must include the header file
+@file{unistd.h}.
+@pindex unistd.h
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevar int opterr
+If the value of this variable is nonzero, then @code{getopt} prints an
+error message to the standard error stream if it encounters an unknown
+option character or an option with a missing required argument.  This is
+the default behavior.  If you set this variable to zero, @code{getopt}
+does not print any messages, but it still returns the character @code{?}
+to indicate an error.
+@end deftypevar
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevar int optopt
+When @code{getopt} encounters an unknown option character or an option
+with a missing required argument, it stores that option character in
+this variable.  You can use this for providing your own diagnostic
+messages.
+@end deftypevar
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevar int optind
+This variable is set by @code{getopt} to the index of the next element
+of the @var{argv} array to be processed.  Once @code{getopt} has found
+all of the option arguments, you can use this variable to determine
+where the remaining non-option arguments begin.  The initial value of
+this variable is @code{1}.
+@end deftypevar
+
+@comment unistd.h
+@comment POSIX.2
+@deftypevar {char *} optarg
+This variable is set by @code{getopt} to point at the value of the
+option argument, for those options that accept arguments.
+@end deftypevar
+
+@comment unistd.h
+@comment POSIX.2
+@deftypefun int getopt (int @var{argc}, char **@var{argv}, const char *@var{options})
+The @code{getopt} function gets the next option argument from the
+argument list specified by the @var{argv} and @var{argc} arguments.
+Normally these values come directly from the arguments received by
+@code{main}.
+
+The @var{options} argument is a string that specifies the option
+characters that are valid for this program.  An option character in this
+string can be followed by a colon (@samp{:}) to indicate that it takes a
+required argument.
+
+If the @var{options} argument string begins with a hyphen (@samp{-}), this
+is treated specially.  It permits arguments that are not options to be
+returned as if they were associated with option character @samp{\0}.
+
+The @code{getopt} function returns the option character for the next
+command line option.  When no more option arguments are available, it
+returns @code{-1}.  There may still be more non-option arguments; you
+must compare the external variable @code{optind} against the @var{argc}
+parameter to check this.
+
+If the option has an argument, @code{getopt} returns the argument by
+storing it in the varables @var{optarg}.  You don't ordinarily need to
+copy the @code{optarg} string, since it is a pointer into the original
+@var{argv} array, not into a static area that might be overwritten.
+
+If @code{getopt} finds an option character in @var{argv} that was not
+included in @var{options}, or a missing option argument, it returns
+@samp{?} and sets the external variable @code{optopt} to the actual
+option character.  If the first character of @var{options} is a colon
+(@samp{:}), then @code{getopt} returns @samp{:} instead of @samp{?} to
+indicate a missing option argument.  In addition, if the external
+variable @code{opterr} is nonzero (which is the default), @code{getopt}
+prints an error message.
+@end deftypefun
+
+@node Example of Getopt
+@subsection Example of Parsing Arguments with @code{getopt}
+
+Here is an example showing how @code{getopt} is typically used.  The
+key points to notice are:
+
+@itemize @bullet
+@item
+Normally, @code{getopt} is called in a loop.  When @code{getopt} returns
+@code{-1}, indicating no more options are present, the loop terminates.
+
+@item
+A @code{switch} statement is used to dispatch on the return value from
+@code{getopt}.  In typical use, each case just sets a variable that
+is used later in the program.
+
+@item
+A second loop is used to process the remaining non-option arguments.
+@end itemize
+
+@smallexample
+@include testopt.c.texi
+@end smallexample
+
+Here are some examples showing what this program prints with different
+combinations of arguments:
+
+@smallexample
+% testopt
+aflag = 0, bflag = 0, cvalue = (null)
+
+% testopt -a -b
+aflag = 1, bflag = 1, cvalue = (null)
+
+% testopt -ab
+aflag = 1, bflag = 1, cvalue = (null)
+
+% testopt -c foo
+aflag = 0, bflag = 0, cvalue = foo
+
+% testopt -cfoo
+aflag = 0, bflag = 0, cvalue = foo
+
+% testopt arg1
+aflag = 0, bflag = 0, cvalue = (null)
+Non-option argument arg1
+
+% testopt -a arg1
+aflag = 1, bflag = 0, cvalue = (null)
+Non-option argument arg1
+
+% testopt -c foo arg1
+aflag = 0, bflag = 0, cvalue = foo
+Non-option argument arg1
+
+% testopt -a -- -b
+aflag = 1, bflag = 0, cvalue = (null)
+Non-option argument -b
+
+% testopt -a -
+aflag = 1, bflag = 0, cvalue = (null)
+Non-option argument -
+@end smallexample
+
+@node Long Options
+@subsection Parsing Long Options
+
+To accept GNU-style long options as well as single-character options,
+use @code{getopt_long} instead of @code{getopt}.  You should make every
+program accept long options if it uses any options, for this takes
+little extra work and helps beginners remember how to use the program.
+
+@comment getopt.h
+@comment GNU
+@deftp {Data Type} {struct option}
+This structure describes a single long option name for the sake of
+@code{getopt_long}.  The argument @var{longopts} must be an array of
+these structures, one for each long option.  Terminate the array with an
+element containing all zeros.
+
+The @code{struct option} structure has these fields:
+
+@table @code
+@item const char *name
+This field is the name of the option.  It is a string.
+
+@item int has_arg
+This field says whether the option takes an argument.  It is an integer,
+and there are three legitimate values: @w{@code{no_argument}},
+@code{required_argument} and @code{optional_argument}.
+
+@item int *flag
+@itemx int val
+These fields control how to report or act on the option when it occurs.
+
+If @code{flag} is a null pointer, then the @code{val} is a value which
+identifies this option.  Often these values are chosen to uniquely
+identify particular long options.
+
+If @code{flag} is not a null pointer, it should be the address of an
+@code{int} variable which is the flag for this option.  The value in
+@code{val} is the value to store in the flag to indicate that the option
+was seen.
+@end table
+@end deftp
+
+@comment getopt.h
+@comment GNU
+@deftypefun int getopt_long (int @var{argc}, char **@var{argv}, const char *@var{shortopts}, struct option *@var{longopts}, int *@var{indexptr})
+Decode options from the vector @var{argv} (whose length is @var{argc}).
+The argument @var{shortopts} describes the short options to accept, just as
+it does in @code{getopt}.  The argument @var{longopts} describes the long
+options to accept (see above).
+
+When @code{getopt_long} encounters a short option, it does the same
+thing that @code{getopt} would do: it returns the character code for the
+option, and stores the options argument (if it has one) in @code{optarg}.
+
+When @code{getopt_long} encounters a long option, it takes actions based
+on the @code{flag} and @code{val} fields of the definition of that
+option.
+
+If @code{flag} is a null pointer, then @code{getopt_long} returns the
+contents of @code{val} to indicate which option it found.  You should
+arrange distinct values in the @code{val} field for options with
+different meanings, so you can decode these values after
+@code{getopt_long} returns.  If the long option is equivalent to a short
+option, you can use the short option's character code in @code{val}.
+
+If @code{flag} is not a null pointer, that means this option should just
+set a flag in the program.  The flag is a variable of type @code{int}
+that you define.  Put the address of the flag in the @code{flag} field.
+Put in the @code{val} field the value you would like this option to
+store in the flag.  In this case, @code{getopt_long} returns @code{0}.
+
+For any long option, @code{getopt_long} tells you the index in the array
+@var{longopts} of the options definition, by storing it into
+@code{*@var{indexptr}}.  You can get the name of the option with
+@code{@var{longopts}[*@var{indexptr}].name}.  So you can distinguish among
+long options either by the values in their @code{val} fields or by their
+indices.  You can also distinguish in this way among long options that
+set flags.
+
+When a long option has an argument, @code{getopt_long} puts the argument
+value in the variable @code{optarg} before returning.  When the option
+has no argument, the value in @code{optarg} is a null pointer.  This is
+how you can tell whether an optional argument was supplied.
+
+When @code{getopt_long} has no more options to handle, it returns
+@code{-1}, and leaves in the variable @code{optind} the index in
+@var{argv} of the next remaining argument.
+@end deftypefun
+
+@node Long Option Example
+@subsection Example of Parsing Long Options
+
+@smallexample
+@include longopt.c.texi
+@end smallexample
+
+@node Environment Variables
+@section Environment Variables
+
+@cindex environment variable
+When a program is executed, it receives information about the context in
+which it was invoked in two ways.  The first mechanism uses the
+@var{argv} and @var{argc} arguments to its @code{main} function, and is
+discussed in @ref{Program Arguments}.  The second mechanism uses
+@dfn{environment variables} and is discussed in this section.
+
+The @var{argv} mechanism is typically used to pass command-line
+arguments specific to the particular program being invoked.  The
+environment, on the other hand, keeps track of information that is
+shared by many programs, changes infrequently, and that is less
+frequently used.
+
+The environment variables discussed in this section are the same
+environment variables that you set using assignments and the
+@code{export} command in the shell.  Programs executed from the shell
+inherit all of the environment variables from the shell.
+@c !!! xref to right part of bash manual when it exists
+
+@cindex environment
+Standard environment variables are used for information about the user's
+home directory, terminal type, current locale, and so on; you can define
+additional variables for other purposes.  The set of all environment
+variables that have values is collectively known as the
+@dfn{environment}.
+
+Names of environment variables are case-sensitive and must not contain
+the character @samp{=}.  System-defined environment variables are
+invariably uppercase.
+
+The values of environment variables can be anything that can be
+represented as a string.  A value must not contain an embedded null
+character, since this is assumed to terminate the string.
+
+
+@menu
+* Environment Access::    How to get and set the values of
+			   environment variables.
+* Standard Environment::  These environment variables have
+			   standard interpretations.
+@end menu
+
+@node Environment Access
+@subsection Environment Access
+@cindex environment access
+@cindex environment representation
+
+The value of an environment variable can be accessed with the
+@code{getenv} function.  This is declared in the header file
+@file{stdlib.h}.
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun {char *} getenv (const char *@var{name})
+This function returns a string that is the value of the environment
+variable @var{name}.  You must not modify this string.  In some non-Unix
+systems not using the GNU library, it might be overwritten by subsequent
+calls to @code{getenv} (but not by any other library function).  If the
+environment variable @var{name} is not defined, the value is a null
+pointer.
+@end deftypefun
+
+
+@comment stdlib.h
+@comment SVID
+@deftypefun int putenv (const char *@var{string})
+The @code{putenv} function adds or removes definitions from the environment.
+If the @var{string} is of the form @samp{@var{name}=@var{value}}, the
+definition is added to the environment.  Otherwise, the @var{string} is
+interpreted as the name of an environment variable, and any definition
+for this variable in the environment is removed.
+
+The GNU library provides this function for compatibility with SVID; it
+may not be available in other systems.
+@end deftypefun
+
+@c !!! BSD function setenv
+
+You can deal directly with the underlying representation of environment
+objects to add more variables to the environment (for example, to
+communicate with another program you are about to execute; see
+@ref{Executing a File}).  
+
+@comment unistd.h
+@comment POSIX.1
+@deftypevar {char **} environ
+The environment is represented as an array of strings.  Each string is
+of the format @samp{@var{name}=@var{value}}.  The order in which
+strings appear in the environment is not significant, but the same
+@var{name} must not appear more than once.  The last element of the
+array is a null pointer.
+
+This variable is declared in the header file @file{unistd.h}.
+
+If you just want to get the value of an environment variable, use
+@code{getenv}.
+@end deftypevar
+
+Unix systems, and the GNU system, pass the initial value of
+@code{environ} as the third argument to @code{main}.
+@xref{Program Arguments}.
+
+@node Standard Environment
+@subsection Standard Environment Variables
+@cindex standard environment variables
+
+These environment variables have standard meanings.  This doesn't mean
+that they are always present in the environment; but if these variables
+@emph{are} present, they have these meanings.  You shouldn't try to use
+these environment variable names for some other purpose.
+
+@comment Extra blank lines make it look better.
+@table @code
+@item HOME
+@cindex HOME environment variable
+@cindex home directory
+
+This is a string representing the user's @dfn{home directory}, or
+initial default working directory.
+
+The user can set @code{HOME} to any value.
+If you need to make sure to obtain the proper home directory
+for a particular user, you should not use @code{HOME}; instead,
+look up the user's name in the user database (@pxref{User Database}).
+
+For most purposes, it is better to use @code{HOME}, precisely because
+this lets the user specify the value.
+
+@c !!! also USER
+@item LOGNAME
+@cindex LOGNAME environment variable
+
+This is the name that the user used to log in.  Since the value in the
+environment can be tweaked arbitrarily, this is not a reliable way to
+identify the user who is running a process; a function like
+@code{getlogin} (@pxref{Who Logged In}) is better for that purpose.
+
+For most purposes, it is better to use @code{LOGNAME}, precisely because
+this lets the user specify the value.
+
+@item PATH
+@cindex PATH environment variable
+
+A @dfn{path} is a sequence of directory names which is used for
+searching for a file.  The variable @code{PATH} holds a path used
+for searching for programs to be run.
+
+The @code{execlp} and @code{execvp} functions (@pxref{Executing a File})
+use this environment variable, as do many shells and other utilities
+which are implemented in terms of those functions.
+
+The syntax of a path is a sequence of directory names separated by
+colons.  An empty string instead of a directory name stands for the 
+current directory (@pxref{Working Directory}).
+
+A typical value for this environment variable might be a string like:
+
+@smallexample
+:/bin:/etc:/usr/bin:/usr/new/X11:/usr/new:/usr/local/bin
+@end smallexample
+
+This means that if the user tries to execute a program named @code{foo},
+the system will look for files named @file{foo}, @file{/bin/foo},
+@file{/etc/foo}, and so on.  The first of these files that exists is
+the one that is executed.
+
+@c !!! also TERMCAP
+@item TERM
+@cindex TERM environment variable
+
+This specifies the kind of terminal that is receiving program output.
+Some programs can make use of this information to take advantage of
+special escape sequences or terminal modes supported by particular kinds
+of terminals.  Many programs which use the termcap library
+(@pxref{Finding a Terminal Description,Find,,termcap,The Termcap Library
+Manual}) use the @code{TERM} environment variable, for example.
+
+@item TZ
+@cindex TZ environment variable
+
+This specifies the time zone.  @xref{TZ Variable}, for information about
+the format of this string and how it is used.
+
+@item LANG
+@cindex LANG environment variable
+
+This specifies the default locale to use for attribute categories where
+neither @code{LC_ALL} nor the specific environment variable for that
+category is set.  @xref{Locales}, for more information about
+locales.
+
+@ignore
+@c I doubt this really exists
+@item LC_ALL
+@cindex LC_ALL environment variable
+
+This is similar to the @code{LANG} environment variable.  However, its
+value takes precedence over any values provided for the individual
+attribute category environment variables, or for the @code{LANG}
+environment variable.
+@end ignore
+
+@item LC_COLLATE
+@cindex LC_COLLATE environment variable
+
+This specifies what locale to use for string sorting.
+
+@item LC_CTYPE
+@cindex LC_CTYPE environment variable
+
+This specifies what locale to use for character sets and character
+classification.
+
+@item LC_MONETARY
+@cindex LC_MONETARY environment variable
+
+This specifies what locale to use for formatting monetary values.
+
+@item LC_NUMERIC
+@cindex LC_NUMERIC environment variable
+
+This specifies what locale to use for formatting numbers.
+
+@item LC_TIME
+@cindex LC_TIME environment variable
+
+This specifies what locale to use for formatting date/time values.
+
+@item _POSIX_OPTION_ORDER
+@cindex _POSIX_OPTION_ORDER environment variable.
+
+If this environment variable is defined, it suppresses the usual
+reordering of command line arguments by @code{getopt}.  @xref{Argument Syntax}.
+
+@c !!! GNU also has COREFILE, CORESERVER, EXECSERVERS
+@end table
+
+@node Program Termination
+@section Program Termination
+@cindex program termination
+@cindex process termination
+
+@cindex exit status value
+The usual way for a program to terminate is simply for its @code{main}
+function to return.  The @dfn{exit status value} returned from the
+@code{main} function is used to report information back to the process's
+parent process or shell.
+
+A program can also terminate normally by calling the @code{exit}
+function.
+
+In addition, programs can be terminated by signals; this is discussed in
+more detail in @ref{Signal Handling}.  The @code{abort} function causes
+a signal that kills the program.
+
+@menu
+* Normal Termination::          If a program calls @code{exit}, a
+                                 process terminates normally.
+* Exit Status::                 The @code{exit status} provides information 
+                                 about why the process terminated. 
+* Cleanups on Exit::            A process can run its own cleanup
+                                 functions upon normal termination. 
+* Aborting a Program::          The @code{abort} function causes
+                                 abnormal program termination. 
+* Termination Internals::       What happens when a process terminates.
+@end menu
+
+@node Normal Termination
+@subsection Normal Termination
+
+A process terminates normally when the program calls @code{exit}.
+Returning from @code{main} is equivalent to calling @code{exit}, and
+the value that @code{main} returns is used as the argument to @code{exit}.
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun void exit (int @var{status})
+The @code{exit} function terminates the process with status
+@var{status}.  This function does not return.
+@end deftypefun
+
+Normal termination causes the following actions:
+
+@enumerate
+@item 
+Functions that were registered with the @code{atexit} or @code{on_exit}
+functions are called in the reverse order of their registration.  This
+mechanism allows your application to specify its own ``cleanup'' actions
+to be performed at program termination.  Typically, this is used to do
+things like saving program state information in a file, or unlocking
+locks in shared data bases.
+
+@item 
+All open streams are closed, writing out any buffered output data.  See
+@ref{Closing Streams}.  In addition, temporary files opened
+with the @code{tmpfile} function are removed; see @ref{Temporary Files}.
+
+@item 
+@code{_exit} is called, terminating the program.  @xref{Termination Internals}.
+@end enumerate
+
+@node Exit Status
+@subsection Exit Status
+@cindex exit status
+
+When a program exits, it can return to the parent process a small
+amount of information about the cause of termination, using the
+@dfn{exit status}.  This is a value between 0 and 255 that the exiting
+process passes as an argument to @code{exit}.
+
+Normally you should use the exit status to report very broad information
+about success or failure.  You can't provide a lot of detail about the
+reasons for the failure, and most parent processes would not want much
+detail anyway.
+
+There are conventions for what sorts of status values certain programs
+should return.  The most common convention is simply 0 for success and 1
+for failure.  Programs that perform comparison use a different
+convention: they use status 1 to indicate a mismatch, and status 2 to
+indicate an inability to compare.  Your program should follow an
+existing convention if an existing convention makes sense for it.
+
+A general convention reserves status values 128 and up for special
+purposes.  In particular, the value 128 is used to indicate failure to
+execute another program in a subprocess.  This convention is not
+universally obeyed, but it is a good idea to follow it in your programs.
+
+@strong{Warning:} Don't try to use the number of errors as the exit
+status.  This is actually not very useful; a parent process would
+generally not care how many errors occurred.  Worse than that, it does
+not work, because the status value is truncated to eight bits.
+Thus, if the program tried to report 256 errors, the parent would
+receive a report of 0 errors---that is, success.
+
+For the same reason, it does not work to use the value of @code{errno}
+as the exit status---these can exceed 255.
+
+@strong{Portability note:} Some non-POSIX systems use different
+conventions for exit status values.  For greater portability, you can
+use the macros @code{EXIT_SUCCESS} and @code{EXIT_FAILURE} for the
+conventional status value for success and failure, respectively.  They
+are declared in the file @file{stdlib.h}.
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment ANSI
+@deftypevr Macro int EXIT_SUCCESS
+This macro can be used with the @code{exit} function to indicate
+successful program completion.
+
+On POSIX systems, the value of this macro is @code{0}.  On other
+systems, the value might be some other (possibly non-constant) integer
+expression.
+@end deftypevr
+
+@comment stdlib.h
+@comment ANSI
+@deftypevr Macro int EXIT_FAILURE
+This macro can be used with the @code{exit} function to indicate
+unsuccessful program completion in a general sense.
+
+On POSIX systems, the value of this macro is @code{1}.  On other
+systems, the value might be some other (possibly non-constant) integer
+expression.  Other nonzero status values also indicate future.  Certain
+programs use different nonzero status values to indicate particular
+kinds of "non-success".  For example, @code{diff} uses status value
+@code{1} to mean that the files are different, and @code{2} or more to
+mean that there was difficulty in opening the files.
+@end deftypevr
+
+@node Cleanups on Exit
+@subsection Cleanups on Exit
+
+Your program can arrange to run its own cleanup functions if normal
+termination happens.  If you are writing a library for use in various
+application programs, then it is unreliable to insist that all
+applications call the library's cleanup functions explicitly before
+exiting.  It is much more robust to make the cleanup invisible to the
+application, by setting up a cleanup function in the library itself
+using @code{atexit} or @code{on_exit}.
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun int atexit (void (*@var{function}) (void))
+The @code{atexit} function registers the function @var{function} to be
+called at normal program termination.  The @var{function} is called with
+no arguments.
+
+The return value from @code{atexit} is zero on success and nonzero if
+the function cannot be registered. 
+@end deftypefun
+
+@comment stdlib.h
+@comment SunOS
+@deftypefun int on_exit (void (*@var{function})(int @var{status}, void *@var{arg}), void *@var{arg})
+This function is a somewhat more powerful variant of @code{atexit}.  It
+accepts two arguments, a function @var{function} and an arbitrary
+pointer @var{arg}.  At normal program termination, the @var{function} is
+called with two arguments:  the @var{status} value passed to @code{exit},
+and the @var{arg}.
+
+This function is included in the GNU C library only for compatibility
+for SunOS, and may not be supported by other implementations.
+@end deftypefun
+
+Here's a trivial program that illustrates the use of @code{exit} and
+@code{atexit}:
+
+@smallexample
+@include atexit.c.texi
+@end smallexample
+
+@noindent
+When this program is executed, it just prints the message and exits.
+
+@node Aborting a Program
+@subsection Aborting a Program
+@cindex aborting a program
+
+You can abort your program using the @code{abort} function.  The prototype
+for this function is in @file{stdlib.h}.
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun void abort (void)
+The @code{abort} function causes abnormal program termination.  This
+does not execute cleanup functions registered with @code{atexit} or
+@code{on_exit}.
+
+This function actually terminates the process by raising a
+@code{SIGABRT} signal, and your program can include a handler to
+intercept this signal; see @ref{Signal Handling}.
+@end deftypefun
+
+@c Put in by rms.  Don't remove.
+@cartouche
+@strong{Future Change Warning:} Proposed Federal censorship regulations
+may prohibit us from giving you information about the possibility of
+calling this function.  We would be required to say that this is not an
+acceptable way of terminating a program.
+@end cartouche
+
+@node Termination Internals
+@subsection Termination Internals
+
+The @code{_exit} function is the primitive used for process termination
+by @code{exit}.  It is declared in the header file @file{unistd.h}.
+@pindex unistd.h
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun void _exit (int @var{status})
+The @code{_exit} function is the primitive for causing a process to
+terminate with status @var{status}.  Calling this function does not
+execute cleanup functions registered with @code{atexit} or
+@code{on_exit}.
+@end deftypefun
+
+When a process terminates for any reason---either by an explicit
+termination call, or termination as a result of a signal---the
+following things happen:
+
+@itemize @bullet
+@item
+All open file descriptors in the process are closed.  @xref{Low-Level I/O}.
+Note that streams are not flushed automatically when the process
+terminates; @xref{I/O on Streams}.
+
+@item
+The low-order 8 bits of the return status code are saved to be reported
+back to the parent process via @code{wait} or @code{waitpid}; see
+@ref{Process Completion}.
+
+@item
+Any child processes of the process being terminated are assigned a new
+parent process.  (On most systems, including GNU, this is the @code{init}
+process, with process ID 1.)
+
+@item
+A @code{SIGCHLD} signal is sent to the parent process.
+
+@item
+If the process is a session leader that has a controlling terminal, then
+a @code{SIGHUP} signal is sent to each process in the foreground job,
+and the controlling terminal is disassociated from that session.
+@xref{Job Control}.
+
+@item
+If termination of a process causes a process group to become orphaned,
+and any member of that process group is stopped, then a @code{SIGHUP}
+signal and a @code{SIGCONT} signal are sent to each process in the
+group.  @xref{Job Control}.
+@end itemize

@@ -1,0 +1,11 @@
+/* This file defines the Mach error system for Hurd server errors.  */
+
+#include <stdio.h>
+#include <errno.h>
+
+/* Omit `const' because we are included with `static'
+   defined to `static const'.  */
+static struct error_subsystem err_hurd_sub[] =
+  {
+    { "(os/hurd)", _HURD_ERRNOS, (const char *const *) _sys_errlist },
+  };

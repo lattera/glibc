@@ -1,0 +1,101 @@
+ 
+if test -z "$inhibit_glue"; then
+
+# Find out what this system calls `sys_siglist'.
+echo $ac_n "checking for sys_siglist""... $ac_c" 1>&4
+if eval "test \"`echo '${'ac_cv_check_symbol_sys_siglist'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&4
+else
+  cat > conftest.$ac_ext <<EOF
+#line 11 "configure"
+#include "confdefs.h"
+
+int main() { return 0; }
+int t() {
+extern char *sys_siglist[]; puts(*sys_siglist);
+; return 0; }
+EOF
+if eval $ac_link; then
+  rm -rf conftest*
+  	    ac_cv_check_symbol_sys_siglist=yes
+else
+  rm -rf conftest*
+  ac_cv_check_symbol_sys_siglist=no
+fi
+rm -f conftest*
+
+fi
+
+if test "$ac_cv_check_symbol_sys_siglist" = yes; then
+  ac_tr_symbol=`echo sys_siglist | tr '[a-z]' '[A-Z]'`
+  cat >> confdefs.h <<EOF
+#define HAVE_${ac_tr_symbol} 1
+EOF
+
+fi
+echo "$ac_t""$ac_cv_check_symbol_sys_siglist" 1>&4
+echo $ac_n "checking for _sys_siglist""... $ac_c" 1>&4
+if eval "test \"`echo '${'ac_cv_check_symbol__sys_siglist'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&4
+else
+  cat > conftest.$ac_ext <<EOF
+#line 43 "configure"
+#include "confdefs.h"
+
+int main() { return 0; }
+int t() {
+extern char *_sys_siglist[]; puts(*_sys_siglist);
+; return 0; }
+EOF
+if eval $ac_link; then
+  rm -rf conftest*
+  	    ac_cv_check_symbol__sys_siglist=yes
+else
+  rm -rf conftest*
+  ac_cv_check_symbol__sys_siglist=no
+fi
+rm -f conftest*
+
+fi
+
+if test "$ac_cv_check_symbol__sys_siglist" = yes; then
+  ac_tr_symbol=`echo _sys_siglist | tr '[a-z]' '[A-Z]'`
+  cat >> confdefs.h <<EOF
+#define HAVE_${ac_tr_symbol} 1
+EOF
+
+fi
+echo "$ac_t""$ac_cv_check_symbol__sys_siglist" 1>&4
+
+# Find out the name of the table the system's <ctype.h> uses for character
+# classification.  This is used by sysdeps/unix/common/glue-ctype.c.
+echo $ac_n "checking ctype array name for glue""... $ac_c" 1>&4
+if eval "test \"`echo '${'libc_cv_ctype_glue'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&4
+else
+  for ctype in _ctype_ __ctype_ __ctype _ctype__ _ctype _locp; do
+cat > conftest.$ac_ext <<EOF
+#line 79 "configure"
+#include "confdefs.h"
+#include <ctype.h>
+int main() { return 0; }
+int t() {
+$ctype[13];
+; return 0; }
+EOF
+if eval $ac_link; then
+  rm -rf conftest*
+  libc_cv_ctype_glue="$ctype"; break
+fi
+rm -f conftest*
+
+done
+fi
+
+echo "$ac_t""$libc_cv_ctype_glue" 1>&4
+cat >> confdefs.h <<EOF
+#define HAVE_`echo $libc_cv_ctype_glue | tr 'a-z' 'A-Z'` 1
+EOF
+
+
+fi

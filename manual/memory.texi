@@ -1,0 +1,1751 @@
+@comment !!! describe mmap et al (here?)
+@c !!! doc brk/sbrk
+
+@node Memory Allocation, Character Handling, Error Reporting, Top
+@chapter Memory Allocation
+@cindex memory allocation
+@cindex storage allocation
+
+The GNU system provides several methods for allocating memory space
+under explicit program control.  They vary in generality and in
+efficiency.
+
+@iftex
+@itemize @bullet
+@item
+The @code{malloc} facility allows fully general dynamic allocation.
+@xref{Unconstrained Allocation}.
+
+@item
+Obstacks are another facility, less general than @code{malloc} but more
+efficient and convenient for stacklike allocation.  @xref{Obstacks}.
+
+@item
+The function @code{alloca} lets you allocate storage dynamically that
+will be freed automatically.  @xref{Variable Size Automatic}.
+@end itemize
+@end iftex
+
+@menu
+* Memory Concepts::             An introduction to concepts and terminology.
+* Dynamic Allocation and C::    How to get different kinds of allocation in C.
+* Unconstrained Allocation::    The @code{malloc} facility allows fully general
+		 		 dynamic allocation.
+* Obstacks::                    Obstacks are less general than malloc
+				 but more efficient and convenient.
+* Variable Size Automatic::     Allocation of variable-sized blocks
+				 of automatic storage that are freed when the
+				 calling function returns.
+* Relocating Allocator::        Waste less memory, if you can tolerate
+				 automatic relocation of the blocks you get.
+* Memory Warnings::		Getting warnings when memory is nearly full.
+@end menu
+
+@node Memory Concepts
+@section Dynamic Memory Allocation Concepts
+@cindex dynamic allocation
+@cindex static allocation
+@cindex automatic allocation
+
+@dfn{Dynamic memory allocation} is a technique in which programs
+determine as they are running where to store some information.  You need
+dynamic allocation when the number of memory blocks you need, or how
+long you continue to need them, depends on the data you are working on.
+
+For example, you may need a block to store a line read from an input file;
+since there is no limit to how long a line can be, you must allocate the
+storage dynamically and make it dynamically larger as you read more of the
+line.
+
+Or, you may need a block for each record or each definition in the input
+data; since you can't know in advance how many there will be, you must
+allocate a new block for each record or definition as you read it.
+
+When you use dynamic allocation, the allocation of a block of memory is an
+action that the program requests explicitly.  You call a function or macro
+when you want to allocate space, and specify the size with an argument.  If
+you want to free the space, you do so by calling another function or macro.
+You can do these things whenever you want, as often as you want.
+
+@node Dynamic Allocation and C
+@section Dynamic Allocation and C
+
+The C language supports two kinds of memory allocation through the variables
+in C programs:
+
+@itemize @bullet
+@item
+@dfn{Static allocation} is what happens when you declare a static or
+global variable.  Each static or global variable defines one block of
+space, of a fixed size.  The space is allocated once, when your program
+is started, and is never freed.
+
+@item
+@dfn{Automatic allocation} happens when you declare an automatic
+variable, such as a function argument or a local variable.  The space
+for an automatic variable is allocated when the compound statement
+containing the declaration is entered, and is freed when that
+compound statement is exited.
+
+In GNU C, the length of the automatic storage can be an expression
+that varies.  In other C implementations, it must be a constant.
+@end itemize
+
+Dynamic allocation is not supported by C variables; there is no storage
+class ``dynamic'', and there can never be a C variable whose value is
+stored in dynamically allocated space.  The only way to refer to
+dynamically allocated space is through a pointer.  Because it is less
+convenient, and because the actual process of dynamic allocation
+requires more computation time, programmers generally use dynamic
+allocation only when neither static nor automatic allocation will serve.
+
+For example, if you want to allocate dynamically some space to hold a
+@code{struct foobar}, you cannot declare a variable of type @code{struct
+foobar} whose contents are the dynamically allocated space.  But you can
+declare a variable of pointer type @code{struct foobar *} and assign it the
+address of the space.  Then you can use the operators @samp{*} and
+@samp{->} on this pointer variable to refer to the contents of the space:
+
+@smallexample
+@{
+  struct foobar *ptr
+     = (struct foobar *) malloc (sizeof (struct foobar));
+  ptr->name = x;
+  ptr->next = current_foobar;
+  current_foobar = ptr;
+@}
+@end smallexample
+
+@node Unconstrained Allocation
+@section Unconstrained Allocation
+@cindex unconstrained storage allocation
+@cindex @code{malloc} function
+@cindex heap, dynamic allocation from
+
+The most general dynamic allocation facility is @code{malloc}.  It
+allows you to allocate blocks of memory of any size at any time, make
+them bigger or smaller at any time, and free the blocks individually at
+any time (or never).
+
+@menu
+* Basic Allocation::            Simple use of @code{malloc}.
+* Malloc Examples::             Examples of @code{malloc}.  @code{xmalloc}.
+* Freeing after Malloc::        Use @code{free} to free a block you
+				 got with @code{malloc}.
+* Changing Block Size::         Use @code{realloc} to make a block
+				 bigger or smaller.
+* Allocating Cleared Space::    Use @code{calloc} to allocate a
+				 block and clear it.
+* Efficiency and Malloc::       Efficiency considerations in use of
+				 these functions.
+* Aligned Memory Blocks::       Allocating specially aligned memory:
+				 @code{memalign} and @code{valloc}.
+* Heap Consistency Checking::   Automatic checking for errors.
+* Hooks for Malloc::            You can use these hooks for debugging
+				 programs that use @code{malloc}.
+* Statistics of Malloc::        Getting information about how much
+				 memory your program is using.
+* Summary of Malloc::           Summary of @code{malloc} and related functions.
+@end menu
+
+@node Basic Allocation
+@subsection Basic Storage Allocation
+@cindex allocation of memory with @code{malloc}
+
+To allocate a block of memory, call @code{malloc}.  The prototype for
+this function is in @file{stdlib.h}.
+@pindex stdlib.h
+
+@comment malloc.h stdlib.h
+@comment ANSI
+@deftypefun {void *} malloc (size_t @var{size})
+This function returns a pointer to a newly allocated block @var{size}
+bytes long, or a null pointer if the block could not be allocated.
+@end deftypefun
+
+The contents of the block are undefined; you must initialize it yourself
+(or use @code{calloc} instead; @pxref{Allocating Cleared Space}).
+Normally you would cast the value as a pointer to the kind of object
+that you want to store in the block.  Here we show an example of doing
+so, and of initializing the space with zeros using the library function
+@code{memset} (@pxref{Copying and Concatenation}):
+
+@smallexample
+struct foo *ptr;
+@dots{}
+ptr = (struct foo *) malloc (sizeof (struct foo));
+if (ptr == 0) abort ();
+memset (ptr, 0, sizeof (struct foo));
+@end smallexample
+
+You can store the result of @code{malloc} into any pointer variable
+without a cast, because ANSI C automatically converts the type
+@code{void *} to another type of pointer when necessary.  But the cast
+is necessary in contexts other than assignment operators or if you might
+want your code to run in traditional C.
+
+Remember that when allocating space for a string, the argument to
+@code{malloc} must be one plus the length of the string.  This is
+because a string is terminated with a null character that doesn't count
+in the ``length'' of the string but does need space.  For example:
+
+@smallexample
+char *ptr;
+@dots{}
+ptr = (char *) malloc (length + 1);
+@end smallexample
+
+@noindent
+@xref{Representation of Strings}, for more information about this.
+
+@node Malloc Examples
+@subsection Examples of @code{malloc}
+
+If no more space is available, @code{malloc} returns a null pointer.
+You should check the value of @emph{every} call to @code{malloc}.  It is
+useful to write a subroutine that calls @code{malloc} and reports an
+error if the value is a null pointer, returning only if the value is
+nonzero.  This function is conventionally called @code{xmalloc}.  Here
+it is:
+
+@smallexample
+void *
+xmalloc (size_t size)
+@{
+  register void *value = malloc (size);
+  if (value == 0)
+    fatal ("virtual memory exhausted");
+  return value;
+@}
+@end smallexample
+
+Here is a real example of using @code{malloc} (by way of @code{xmalloc}).
+The function @code{savestring} will copy a sequence of characters into
+a newly allocated null-terminated string:
+
+@smallexample
+@group
+char *
+savestring (const char *ptr, size_t len)
+@{
+  register char *value = (char *) xmalloc (len + 1);
+  memcpy (value, ptr, len);
+  value[len] = '\0';
+  return value;
+@}
+@end group
+@end smallexample
+
+The block that @code{malloc} gives you is guaranteed to be aligned so
+that it can hold any type of data.  In the GNU system, the address is
+always a multiple of eight; if the size of block is 16 or more, then the
+address is always a multiple of 16.  Only rarely is any higher boundary
+(such as a page boundary) necessary; for those cases, use
+@code{memalign} or @code{valloc} (@pxref{Aligned Memory Blocks}).
+
+Note that the memory located after the end of the block is likely to be
+in use for something else; perhaps a block already allocated by another
+call to @code{malloc}.  If you attempt to treat the block as longer than
+you asked for it to be, you are liable to destroy the data that
+@code{malloc} uses to keep track of its blocks, or you may destroy the
+contents of another block.  If you have already allocated a block and
+discover you want it to be bigger, use @code{realloc} (@pxref{Changing
+Block Size}).
+
+@node Freeing after Malloc
+@subsection Freeing Memory Allocated with @code{malloc}
+@cindex freeing memory allocated with @code{malloc}
+@cindex heap, freeing memory from
+
+When you no longer need a block that you got with @code{malloc}, use the
+function @code{free} to make the block available to be allocated again.
+The prototype for this function is in @file{stdlib.h}.
+@pindex stdlib.h
+
+@comment malloc.h stdlib.h
+@comment ANSI
+@deftypefun void free (void *@var{ptr})
+The @code{free} function deallocates the block of storage pointed at
+by @var{ptr}.
+@end deftypefun
+
+@comment stdlib.h
+@comment Sun
+@deftypefun void cfree (void *@var{ptr})
+This function does the same thing as @code{free}.  It's provided for
+backward compatibility with SunOS; you should use @code{free} instead.
+@end deftypefun
+
+Freeing a block alters the contents of the block.  @strong{Do not expect to
+find any data (such as a pointer to the next block in a chain of blocks) in
+the block after freeing it.}  Copy whatever you need out of the block before
+freeing it!  Here is an example of the proper way to free all the blocks in
+a chain, and the strings that they point to:
+
+@smallexample
+struct chain
+  @{
+    struct chain *next;
+    char *name;
+  @}
+
+void
+free_chain (struct chain *chain)
+@{
+  while (chain != 0)
+    @{
+      struct chain *next = chain->next;
+      free (chain->name);
+      free (chain);
+      chain = next;
+    @}
+@}
+@end smallexample
+
+Occasionally, @code{free} can actually return memory to the operating
+system and make the process smaller.  Usually, all it can do is allow a
+later call to @code{malloc} to reuse the space.  In the meantime, the
+space remains in your program as part of a free-list used internally by
+@code{malloc}.
+
+There is no point in freeing blocks at the end of a program, because all
+of the program's space is given back to the system when the process
+terminates.
+
+@node Changing Block Size
+@subsection Changing the Size of a Block
+@cindex changing the size of a block (@code{malloc})
+
+Often you do not know for certain how big a block you will ultimately need
+at the time you must begin to use the block.  For example, the block might
+be a buffer that you use to hold a line being read from a file; no matter
+how long you make the buffer initially, you may encounter a line that is
+longer.
+
+You can make the block longer by calling @code{realloc}.  This function
+is declared in @file{stdlib.h}.
+@pindex stdlib.h
+
+@comment malloc.h stdlib.h
+@comment ANSI
+@deftypefun {void *} realloc (void *@var{ptr}, size_t @var{newsize})
+The @code{realloc} function changes the size of the block whose address is
+@var{ptr} to be @var{newsize}.
+
+Since the space after the end of the block may be in use, @code{realloc}
+may find it necessary to copy the block to a new address where more free
+space is available.  The value of @code{realloc} is the new address of the
+block.  If the block needs to be moved, @code{realloc} copies the old
+contents.
+
+If you pass a null pointer for @var{ptr}, @code{realloc} behaves just
+like @samp{malloc (@var{newsize})}.  This can be convenient, but beware
+that older implementations (before ANSI C) may not support this
+behavior, and will probably crash when @code{realloc} is passed a null
+pointer.
+@end deftypefun
+
+Like @code{malloc}, @code{realloc} may return a null pointer if no
+memory space is available to make the block bigger.  When this happens,
+the original block is untouched; it has not been modified or relocated.
+
+In most cases it makes no difference what happens to the original block
+when @code{realloc} fails, because the application program cannot continue
+when it is out of memory, and the only thing to do is to give a fatal error
+message.  Often it is convenient to write and use a subroutine,
+conventionally called @code{xrealloc}, that takes care of the error message
+as @code{xmalloc} does for @code{malloc}:
+
+@smallexample
+void *
+xrealloc (void *ptr, size_t size)
+@{
+  register void *value = realloc (ptr, size);
+  if (value == 0)
+    fatal ("Virtual memory exhausted");
+  return value;
+@}
+@end smallexample
+
+You can also use @code{realloc} to make a block smaller.  The reason you
+would do this is to avoid tying up a lot of memory space when only a little
+is needed.  Making a block smaller sometimes necessitates copying it, so it
+can fail if no other space is available.
+
+If the new size you specify is the same as the old size, @code{realloc}
+is guaranteed to change nothing and return the same address that you gave.
+
+@node Allocating Cleared Space
+@subsection Allocating Cleared Space
+
+The function @code{calloc} allocates memory and clears it to zero.  It
+is declared in @file{stdlib.h}.
+@pindex stdlib.h
+
+@comment malloc.h stdlib.h
+@comment ANSI
+@deftypefun {void *} calloc (size_t @var{count}, size_t @var{eltsize})
+This function allocates a block long enough to contain a vector of
+@var{count} elements, each of size @var{eltsize}.  Its contents are
+cleared to zero before @code{calloc} returns.
+@end deftypefun
+
+You could define @code{calloc} as follows:
+
+@smallexample
+void *
+calloc (size_t count, size_t eltsize)
+@{
+  size_t size = count * eltsize;
+  void *value = malloc (size);
+  if (value != 0)
+    memset (value, 0, size);
+  return value;
+@}
+@end smallexample
+
+@node Efficiency and Malloc
+@subsection Efficiency Considerations for @code{malloc}
+@cindex efficiency and @code{malloc}
+
+To make the best use of @code{malloc}, it helps to know that the GNU
+version of @code{malloc} always dispenses small amounts of memory in
+blocks whose sizes are powers of two.  It keeps separate pools for each
+power of two.  This holds for sizes up to a page size.  Therefore, if
+you are free to choose the size of a small block in order to make
+@code{malloc} more efficient, make it a power of two.
+@c !!! xref getpagesize
+
+Once a page is split up for a particular block size, it can't be reused
+for another size unless all the blocks in it are freed.  In many
+programs, this is unlikely to happen.  Thus, you can sometimes make a
+program use memory more efficiently by using blocks of the same size for
+many different purposes.
+
+When you ask for memory blocks of a page or larger, @code{malloc} uses a
+different strategy; it rounds the size up to a multiple of a page, and
+it can coalesce and split blocks as needed.
+
+The reason for the two strategies is that it is important to allocate
+and free small blocks as fast as possible, but speed is less important
+for a large block since the program normally spends a fair amount of
+time using it.  Also, large blocks are normally fewer in number.
+Therefore, for large blocks, it makes sense to use a method which takes
+more time to minimize the wasted space.
+
+@node Aligned Memory Blocks
+@subsection Allocating Aligned Memory Blocks
+
+@cindex page boundary
+@cindex alignment (with @code{malloc})
+@pindex stdlib.h
+The address of a block returned by @code{malloc} or @code{realloc} in
+the GNU system is always a multiple of eight.  If you need a block whose
+address is a multiple of a higher power of two than that, use
+@code{memalign} or @code{valloc}.  These functions are declared in
+@file{stdlib.h}.
+
+With the GNU library, you can use @code{free} to free the blocks that
+@code{memalign} and @code{valloc} return.  That does not work in BSD,
+however---BSD does not provide any way to free such blocks.
+
+@comment malloc.h stdlib.h
+@comment BSD
+@deftypefun {void *} memalign (size_t @var{size}, size_t @var{boundary})
+The @code{memalign} function allocates a block of @var{size} bytes whose
+address is a multiple of @var{boundary}.  The @var{boundary} must be a
+power of two!  The function @code{memalign} works by calling
+@code{malloc} to allocate a somewhat larger block, and then returning an
+address within the block that is on the specified boundary.
+@end deftypefun
+
+@comment malloc.h stdlib.h
+@comment BSD
+@deftypefun {void *} valloc (size_t @var{size})
+Using @code{valloc} is like using @code{memalign} and passing the page size
+as the value of the second argument.  It is implemented like this:
+
+@smallexample
+void *
+valloc (size_t size)
+@{
+  return memalign (size, getpagesize ());
+@}
+@end smallexample
+@c !!! xref getpagesize
+@end deftypefun
+
+@node Heap Consistency Checking
+@subsection Heap Consistency Checking
+
+@cindex heap consistency checking
+@cindex consistency checking, of heap
+
+You can ask @code{malloc} to check the consistency of dynamic storage by
+using the @code{mcheck} function.  This function is a GNU extension,
+declared in @file{malloc.h}.
+@pindex malloc.h
+
+@comment malloc.h
+@comment GNU
+@deftypefun int mcheck (void (*@var{abortfn}) (enum mcheck_status @var{status}))
+Calling @code{mcheck} tells @code{malloc} to perform occasional
+consistency checks.  These will catch things such as writing
+past the end of a block that was allocated with @code{malloc}.
+
+The @var{abortfn} argument is the function to call when an inconsistency
+is found.  If you supply a null pointer, then @code{mcheck} uses a
+default function which prints a message and calls @code{abort}
+(@pxref{Aborting a Program}).  The function you supply is called with
+one argument, which says what sort of inconsistency was detected; its
+type is described below.
+
+It is too late to begin allocation checking once you have allocated
+anything with @code{malloc}.  So @code{mcheck} does nothing in that
+case.  The function returns @code{-1} if you call it too late, and
+@code{0} otherwise (when it is successful).
+
+The easiest way to arrange to call @code{mcheck} early enough is to use
+the option @samp{-lmcheck} when you link your program; then you don't
+need to modify your program source at all.
+@end deftypefun
+
+@deftypefun {enum mcheck_status} mprobe (void *@var{pointer})
+The @code{mprobe} function lets you explicitly check for inconsistencies
+in a particular allocated block.  You must have already called
+@code{mcheck} at the beginning of the program, to do its occasional
+checks; calling @code{mprobe} requests an additional consistency check
+to be done at the time of the call.
+
+The argument @var{pointer} must be a pointer returned by @code{malloc}
+or @code{realloc}.  @code{mprobe} returns a value that says what
+inconsistency, if any, was found.  The values are described below.
+@end deftypefun
+
+@deftp {Data Type} {enum mcheck_status}
+This enumerated type describes what kind of inconsistency was detected
+in an allocated block, if any.  Here are the possible values:
+
+@table @code
+@item MCHECK_DISABLED
+@code{mcheck} was not called before the first allocation.
+No consistency checking can be done.
+@item MCHECK_OK
+No inconsistency detected.
+@item MCHECK_HEAD
+The data immediately before the block was modified.
+This commonly happens when an array index or pointer
+is decremented too far.
+@item MCHECK_TAIL
+The data immediately after the block was modified.
+This commonly happens when an array index or pointer
+is incremented too far.
+@item MCHECK_FREE
+The block was already freed.
+@end table
+@end deftp
+
+@node Hooks for Malloc
+@subsection Storage Allocation Hooks
+@cindex allocation hooks, for @code{malloc}
+
+The GNU C library lets you modify the behavior of @code{malloc},
+@code{realloc}, and @code{free} by specifying appropriate hook
+functions.  You can use these hooks to help you debug programs that use
+dynamic storage allocation, for example.
+
+The hook variables are declared in @file{malloc.h}.
+@pindex malloc.h
+
+@comment malloc.h
+@comment GNU
+@defvar __malloc_hook
+The value of this variable is a pointer to function that @code{malloc}
+uses whenever it is called.  You should define this function to look
+like @code{malloc}; that is, like:
+
+@smallexample
+void *@var{function} (size_t @var{size})
+@end smallexample
+@end defvar
+
+@comment malloc.h
+@comment GNU
+@defvar __realloc_hook
+The value of this variable is a pointer to function that @code{realloc}
+uses whenever it is called.  You should define this function to look
+like @code{realloc}; that is, like:
+
+@smallexample
+void *@var{function} (void *@var{ptr}, size_t @var{size})
+@end smallexample
+@end defvar
+
+@comment malloc.h
+@comment GNU
+@defvar __free_hook
+The value of this variable is a pointer to function that @code{free}
+uses whenever it is called.  You should define this function to look
+like @code{free}; that is, like:
+
+@smallexample
+void @var{function} (void *@var{ptr})
+@end smallexample
+@end defvar
+
+You must make sure that the function you install as a hook for one of
+these functions does not call that function recursively without restoring
+the old value of the hook first!  Otherwise, your program will get stuck
+in an infinite recursion.
+
+Here is an example showing how to use @code{__malloc_hook} properly.  It
+installs a function that prints out information every time @code{malloc}
+is called.
+
+@smallexample
+static void *(*old_malloc_hook) (size_t);
+static void *
+my_malloc_hook (size_t size)
+@{
+  void *result;
+  __malloc_hook = old_malloc_hook;
+  result = malloc (size);
+  /* @r{@code{printf} might call @code{malloc}, so protect it too.} */
+  printf ("malloc (%u) returns %p\n", (unsigned int) size, result);
+  __malloc_hook = my_malloc_hook;
+  return result;
+@}
+
+main ()
+@{
+  ...
+  old_malloc_hook = __malloc_hook;
+  __malloc_hook = my_malloc_hook;
+  ...
+@}
+@end smallexample
+
+The @code{mcheck} function (@pxref{Heap Consistency Checking}) works by
+installing such hooks.
+
+@c __morecore, __after_morecore_hook are undocumented
+@c It's not clear whether to document them.
+
+@node Statistics of Malloc
+@subsection Statistics for Storage Allocation with @code{malloc}
+
+@cindex allocation statistics
+You can get information about dynamic storage allocation by calling the
+@code{mstats} function.  This function and its associated data type are
+declared in @file{malloc.h}; they are a GNU extension.
+@pindex malloc.h
+
+@comment malloc.h
+@comment GNU
+@deftp {Data Type} {struct mstats}
+This structure type is used to return information about the dynamic
+storage allocator.  It contains the following members:
+
+@table @code
+@item size_t bytes_total
+This is the total size of memory managed by @code{malloc}, in bytes.
+
+@item size_t chunks_used
+This is the number of chunks in use.  (The storage allocator internally
+gets chunks of memory from the operating system, and then carves them up
+to satisfy individual @code{malloc} requests; see @ref{Efficiency and
+Malloc}.)
+
+@item size_t bytes_used
+This is the number of bytes in use.
+
+@item size_t chunks_free
+This is the number of chunks which are free -- that is, that have been
+allocated by the operating system to your program, but which are not
+now being used.
+
+@item size_t bytes_free
+This is the number of bytes which are free.
+@end table
+@end deftp
+
+@comment malloc.h
+@comment GNU
+@deftypefun {struct mstats} mstats (void)
+This function returns information about the current dynamic memory usage
+in a structure of type @code{struct mstats}.
+@end deftypefun
+
+@node Summary of Malloc
+@subsection Summary of @code{malloc}-Related Functions
+
+Here is a summary of the functions that work with @code{malloc}:
+
+@table @code
+@item void *malloc (size_t @var{size})
+Allocate a block of @var{size} bytes.  @xref{Basic Allocation}.
+
+@item void free (void *@var{addr})
+Free a block previously allocated by @code{malloc}.  @xref{Freeing after
+Malloc}.
+
+@item void *realloc (void *@var{addr}, size_t @var{size})
+Make a block previously allocated by @code{malloc} larger or smaller,
+possibly by copying it to a new location.  @xref{Changing Block Size}.
+
+@item void *calloc (size_t @var{count}, size_t @var{eltsize})
+Allocate a block of @var{count} * @var{eltsize} bytes using
+@code{malloc}, and set its contents to zero.  @xref{Allocating Cleared
+Space}.
+
+@item void *valloc (size_t @var{size})
+Allocate a block of @var{size} bytes, starting on a page boundary.
+@xref{Aligned Memory Blocks}.
+
+@item void *memalign (size_t @var{size}, size_t @var{boundary})
+Allocate a block of @var{size} bytes, starting on an address that is a
+multiple of @var{boundary}.  @xref{Aligned Memory Blocks}.
+
+@item int mcheck (void (*@var{abortfn}) (void))
+Tell @code{malloc} to perform occasional consistency checks on
+dynamically allocated memory, and to call @var{abortfn} when an
+inconsistency is found.  @xref{Heap Consistency Checking}.
+
+@item void *(*__malloc_hook) (size_t @var{size})
+A pointer to a function that @code{malloc} uses whenever it is called.
+
+@item void *(*__realloc_hook) (void *@var{ptr}, size_t @var{size})
+A pointer to a function that @code{realloc} uses whenever it is called.
+
+@item void (*__free_hook) (void *@var{ptr})
+A pointer to a function that @code{free} uses whenever it is called.
+
+@item struct mstats mstats (void)
+Return information about the current dynamic memory usage.
+@xref{Statistics of Malloc}.
+@end table
+
+@node Obstacks
+@section Obstacks
+@cindex obstacks
+
+An @dfn{obstack} is a pool of memory containing a stack of objects.  You
+can create any number of separate obstacks, and then allocate objects in
+specified obstacks.  Within each obstack, the last object allocated must
+always be the first one freed, but distinct obstacks are independent of
+each other.
+
+Aside from this one constraint of order of freeing, obstacks are totally
+general: an obstack can contain any number of objects of any size.  They
+are implemented with macros, so allocation is usually very fast as long as
+the objects are usually small.  And the only space overhead per object is
+the padding needed to start each object on a suitable boundary.
+
+@menu
+* Creating Obstacks::		How to declare an obstack in your program.
+* Preparing for Obstacks::	Preparations needed before you can
+				 use obstacks.
+* Allocation in an Obstack::    Allocating objects in an obstack.
+* Freeing Obstack Objects::     Freeing objects in an obstack.
+* Obstack Functions::		The obstack functions are both
+				 functions and macros.
+* Growing Objects::             Making an object bigger by stages.
+* Extra Fast Growing::		Extra-high-efficiency (though more
+				 complicated) growing objects.
+* Status of an Obstack::        Inquiries about the status of an obstack.
+* Obstacks Data Alignment::     Controlling alignment of objects in obstacks.
+* Obstack Chunks::              How obstacks obtain and release chunks;
+				 efficiency considerations.
+* Summary of Obstacks::         
+@end menu
+
+@node Creating Obstacks
+@subsection Creating Obstacks
+
+The utilities for manipulating obstacks are declared in the header
+file @file{obstack.h}.
+@pindex obstack.h
+
+@comment obstack.h
+@comment GNU
+@deftp {Data Type} {struct obstack}
+An obstack is represented by a data structure of type @code{struct
+obstack}.  This structure has a small fixed size; it records the status
+of the obstack and how to find the space in which objects are allocated.
+It does not contain any of the objects themselves.  You should not try
+to access the contents of the structure directly; use only the functions
+described in this chapter.
+@end deftp
+
+You can declare variables of type @code{struct obstack} and use them as
+obstacks, or you can allocate obstacks dynamically like any other kind
+of object.  Dynamic allocation of obstacks allows your program to have a
+variable number of different stacks.  (You can even allocate an
+obstack structure in another obstack, but this is rarely useful.)
+
+All the functions that work with obstacks require you to specify which
+obstack to use.  You do this with a pointer of type @code{struct obstack
+*}.  In the following, we often say ``an obstack'' when strictly
+speaking the object at hand is such a pointer.
+
+The objects in the obstack are packed into large blocks called
+@dfn{chunks}.  The @code{struct obstack} structure points to a chain of
+the chunks currently in use.
+
+The obstack library obtains a new chunk whenever you allocate an object
+that won't fit in the previous chunk.  Since the obstack library manages
+chunks automatically, you don't need to pay much attention to them, but
+you do need to supply a function which the obstack library should use to
+get a chunk.  Usually you supply a function which uses @code{malloc}
+directly or indirectly.  You must also supply a function to free a chunk.
+These matters are described in the following section.
+
+@node Preparing for Obstacks
+@subsection Preparing for Using Obstacks
+
+Each source file in which you plan to use the obstack functions
+must include the header file @file{obstack.h}, like this:
+
+@smallexample
+#include <obstack.h>
+@end smallexample
+
+@findex obstack_chunk_alloc
+@findex obstack_chunk_free
+Also, if the source file uses the macro @code{obstack_init}, it must
+declare or define two functions or macros that will be called by the
+obstack library.  One, @code{obstack_chunk_alloc}, is used to allocate
+the chunks of memory into which objects are packed.  The other,
+@code{obstack_chunk_free}, is used to return chunks when the objects in
+them are freed.  These macros should appear before any use of obstacks
+in the source file.
+
+Usually these are defined to use @code{malloc} via the intermediary
+@code{xmalloc} (@pxref{Unconstrained Allocation}).  This is done with
+the following pair of macro definitions:
+
+@smallexample
+#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_free free
+@end smallexample
+
+@noindent
+Though the storage you get using obstacks really comes from @code{malloc},
+using obstacks is faster because @code{malloc} is called less often, for
+larger blocks of memory.  @xref{Obstack Chunks}, for full details.
+
+At run time, before the program can use a @code{struct obstack} object
+as an obstack, it must initialize the obstack by calling
+@code{obstack_init}.
+
+@comment obstack.h
+@comment GNU
+@deftypefun int obstack_init (struct obstack *@var{obstack-ptr})
+Initialize obstack @var{obstack-ptr} for allocation of objects.  This
+function calls the obstack's @code{obstack_chunk_alloc} function.  It
+returns 0 if @code{obstack_chunk_alloc} returns a null pointer, meaning
+that it is out of memory.  Otherwise, it returns 1.  If you supply an
+@code{obstack_chunk_alloc} function that calls @code{exit}
+(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
+Exits}) when out of memory, you can safely ignore the value that
+@code{obstack_init} returns.
+@end deftypefun
+
+Here are two examples of how to allocate the space for an obstack and
+initialize it.  First, an obstack that is a static variable:
+
+@smallexample
+static struct obstack myobstack;
+@dots{}
+obstack_init (&myobstack);
+@end smallexample
+
+@noindent
+Second, an obstack that is itself dynamically allocated:
+
+@smallexample
+struct obstack *myobstack_ptr
+  = (struct obstack *) xmalloc (sizeof (struct obstack));
+
+obstack_init (myobstack_ptr);
+@end smallexample
+
+@node Allocation in an Obstack
+@subsection Allocation in an Obstack
+@cindex allocation (obstacks)
+
+The most direct way to allocate an object in an obstack is with
+@code{obstack_alloc}, which is invoked almost like @code{malloc}.
+
+@comment obstack.h
+@comment GNU
+@deftypefun {void *} obstack_alloc (struct obstack *@var{obstack-ptr}, int @var{size})
+This allocates an uninitialized block of @var{size} bytes in an obstack
+and returns its address.  Here @var{obstack-ptr} specifies which obstack
+to allocate the block in; it is the address of the @code{struct obstack}
+object which represents the obstack.  Each obstack function or macro
+requires you to specify an @var{obstack-ptr} as the first argument.
+
+This function calls the obstack's @code{obstack_chunk_alloc} function if
+it needs to allocate a new chunk of memory; it returns a null pointer if
+@code{obstack_chunk_alloc} returns one.  In that case, it has not
+changed the amount of memory allocated in the obstack.  If you supply an
+@code{obstack_chunk_alloc} function that calls @code{exit}
+(@pxref{Program Termination}) or @code{longjmp} (@pxref{Non-Local
+Exits}) when out of memory, then @code{obstack_alloc} will never return
+a null pointer.
+@end deftypefun
+
+For example, here is a function that allocates a copy of a string @var{str}
+in a specific obstack, which is in the variable @code{string_obstack}:
+
+@smallexample
+struct obstack string_obstack;
+
+char *
+copystring (char *string)
+@{
+  char *s = (char *) obstack_alloc (&string_obstack,
+                                    strlen (string) + 1);
+  memcpy (s, string, strlen (string));
+  return s;
+@}
+@end smallexample
+
+To allocate a block with specified contents, use the function
+@code{obstack_copy}, declared like this:
+
+@comment obstack.h
+@comment GNU
+@deftypefun {void *} obstack_copy (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
+This allocates a block and initializes it by copying @var{size}
+bytes of data starting at @var{address}.  It can return a null pointer
+under the same conditions as @code{obstack_alloc}.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun {void *} obstack_copy0 (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
+Like @code{obstack_copy}, but appends an extra byte containing a null
+character.  This extra byte is not counted in the argument @var{size}.
+@end deftypefun
+
+The @code{obstack_copy0} function is convenient for copying a sequence
+of characters into an obstack as a null-terminated string.  Here is an
+example of its use:
+
+@smallexample
+char *
+obstack_savestring (char *addr, int size)
+@{
+  return obstack_copy0 (&myobstack, addr, size);
+@}
+@end smallexample
+
+@noindent
+Contrast this with the previous example of @code{savestring} using
+@code{malloc} (@pxref{Basic Allocation}).
+
+@node Freeing Obstack Objects
+@subsection Freeing Objects in an Obstack
+@cindex freeing (obstacks)
+
+To free an object allocated in an obstack, use the function
+@code{obstack_free}.  Since the obstack is a stack of objects, freeing
+one object automatically frees all other objects allocated more recently
+in the same obstack.
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_free (struct obstack *@var{obstack-ptr}, void *@var{object})
+If @var{object} is a null pointer, everything allocated in the obstack
+is freed.  Otherwise, @var{object} must be the address of an object
+allocated in the obstack.  Then @var{object} is freed, along with
+everything allocated in @var{obstack} since @var{object}.
+@end deftypefun
+
+Note that if @var{object} is a null pointer, the result is an
+uninitialized obstack.  To free all storage in an obstack but leave it
+valid for further allocation, call @code{obstack_free} with the address
+of the first object allocated on the obstack:
+
+@smallexample
+obstack_free (obstack_ptr, first_object_allocated_ptr);
+@end smallexample
+
+Recall that the objects in an obstack are grouped into chunks.  When all
+the objects in a chunk become free, the obstack library automatically
+frees the chunk (@pxref{Preparing for Obstacks}).  Then other
+obstacks, or non-obstack allocation, can reuse the space of the chunk.
+
+@node Obstack Functions
+@subsection Obstack Functions and Macros
+@cindex macros
+
+The interfaces for using obstacks may be defined either as functions or
+as macros, depending on the compiler.  The obstack facility works with
+all C compilers, including both ANSI C and traditional C, but there are
+precautions you must take if you plan to use compilers other than GNU C.
+
+If you are using an old-fashioned non-ANSI C compiler, all the obstack
+``functions'' are actually defined only as macros.  You can call these
+macros like functions, but you cannot use them in any other way (for
+example, you cannot take their address).
+
+Calling the macros requires a special precaution: namely, the first
+operand (the obstack pointer) may not contain any side effects, because
+it may be computed more than once.  For example, if you write this:
+
+@smallexample
+obstack_alloc (get_obstack (), 4);
+@end smallexample
+
+@noindent
+you will find that @code{get_obstack} may be called several times.
+If you use @code{*obstack_list_ptr++} as the obstack pointer argument,
+you will get very strange results since the incrementation may occur
+several times.
+
+In ANSI C, each function has both a macro definition and a function
+definition.  The function definition is used if you take the address of the
+function without calling it.  An ordinary call uses the macro definition by
+default, but you can request the function definition instead by writing the
+function name in parentheses, as shown here:
+
+@smallexample
+char *x;
+void *(*funcp) ();
+/* @r{Use the macro}.  */
+x = (char *) obstack_alloc (obptr, size);
+/* @r{Call the function}.  */
+x = (char *) (obstack_alloc) (obptr, size);
+/* @r{Take the address of the function}.  */
+funcp = obstack_alloc;
+@end smallexample
+
+@noindent
+This is the same situation that exists in ANSI C for the standard library
+functions.  @xref{Macro Definitions}.
+
+@strong{Warning:} When you do use the macros, you must observe the
+precaution of avoiding side effects in the first operand, even in ANSI
+C.
+
+If you use the GNU C compiler, this precaution is not necessary, because
+various language extensions in GNU C permit defining the macros so as to
+compute each argument only once.
+
+@node Growing Objects
+@subsection Growing Objects
+@cindex growing objects (in obstacks)
+@cindex changing the size of a block (obstacks)
+
+Because storage in obstack chunks is used sequentially, it is possible to
+build up an object step by step, adding one or more bytes at a time to the
+end of the object.  With this technique, you do not need to know how much
+data you will put in the object until you come to the end of it.  We call
+this the technique of @dfn{growing objects}.  The special functions
+for adding data to the growing object are described in this section.
+
+You don't need to do anything special when you start to grow an object.
+Using one of the functions to add data to the object automatically
+starts it.  However, it is necessary to say explicitly when the object is
+finished.  This is done with the function @code{obstack_finish}.
+
+The actual address of the object thus built up is not known until the
+object is finished.  Until then, it always remains possible that you will
+add so much data that the object must be copied into a new chunk.
+
+While the obstack is in use for a growing object, you cannot use it for
+ordinary allocation of another object.  If you try to do so, the space
+already added to the growing object will become part of the other object.
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_blank (struct obstack *@var{obstack-ptr}, int @var{size})
+The most basic function for adding to a growing object is
+@code{obstack_blank}, which adds space without initializing it.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_grow (struct obstack *@var{obstack-ptr}, void *@var{data}, int @var{size})
+To add a block of initialized space, use @code{obstack_grow}, which is
+the growing-object analogue of @code{obstack_copy}.  It adds @var{size}
+bytes of data to the growing object, copying the contents from
+@var{data}.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_grow0 (struct obstack *@var{obstack-ptr}, void *@var{data}, int @var{size})
+This is the growing-object analogue of @code{obstack_copy0}.  It adds
+@var{size} bytes copied from @var{data}, followed by an additional null
+character.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_1grow (struct obstack *@var{obstack-ptr}, char @var{c})
+To add one character at a time, use the function @code{obstack_1grow}.
+It adds a single byte containing @var{c} to the growing object.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun {void *} obstack_finish (struct obstack *@var{obstack-ptr})
+When you are finished growing the object, use the function
+@code{obstack_finish} to close it off and return its final address.
+
+Once you have finished the object, the obstack is available for ordinary
+allocation or for growing another object.
+
+This function can return a null pointer under the same conditions as
+@code{obstack_alloc} (@pxref{Allocation in an Obstack}).
+@end deftypefun
+
+When you build an object by growing it, you will probably need to know
+afterward how long it became.  You need not keep track of this as you grow
+the object, because you can find out the length from the obstack just
+before finishing the object with the function @code{obstack_object_size},
+declared as follows:
+
+@comment obstack.h
+@comment GNU
+@deftypefun int obstack_object_size (struct obstack *@var{obstack-ptr})
+This function returns the current size of the growing object, in bytes.
+Remember to call this function @emph{before} finishing the object.
+After it is finished, @code{obstack_object_size} will return zero.
+@end deftypefun
+
+If you have started growing an object and wish to cancel it, you should
+finish it and then free it, like this:
+
+@smallexample
+obstack_free (obstack_ptr, obstack_finish (obstack_ptr));
+@end smallexample
+
+@noindent
+This has no effect if no object was growing.
+
+@cindex shrinking objects
+You can use @code{obstack_blank} with a negative size argument to make
+the current object smaller.  Just don't try to shrink it beyond zero
+length---there's no telling what will happen if you do that.
+
+@node Extra Fast Growing
+@subsection Extra Fast Growing Objects
+@cindex efficiency and obstacks
+
+The usual functions for growing objects incur overhead for checking
+whether there is room for the new growth in the current chunk.  If you
+are frequently constructing objects in small steps of growth, this
+overhead can be significant.
+
+You can reduce the overhead by using special ``fast growth''
+functions that grow the object without checking.  In order to have a
+robust program, you must do the checking yourself.  If you do this checking
+in the simplest way each time you are about to add data to the object, you
+have not saved anything, because that is what the ordinary growth
+functions do.  But if you can arrange to check less often, or check
+more efficiently, then you make the program faster.
+
+The function @code{obstack_room} returns the amount of room available
+in the current chunk.  It is declared as follows:
+
+@comment obstack.h
+@comment GNU
+@deftypefun int obstack_room (struct obstack *@var{obstack-ptr})
+This returns the number of bytes that can be added safely to the current
+growing object (or to an object about to be started) in obstack
+@var{obstack} using the fast growth functions.
+@end deftypefun
+
+While you know there is room, you can use these fast growth functions
+for adding data to a growing object:
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_1grow_fast (struct obstack *@var{obstack-ptr}, char @var{c})
+The function @code{obstack_1grow_fast} adds one byte containing the
+character @var{c} to the growing object in obstack @var{obstack-ptr}.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun void obstack_blank_fast (struct obstack *@var{obstack-ptr}, int @var{size})
+The function @code{obstack_blank_fast} adds @var{size} bytes to the
+growing object in obstack @var{obstack-ptr} without initializing them.
+@end deftypefun
+
+When you check for space using @code{obstack_room} and there is not
+enough room for what you want to add, the fast growth functions
+are not safe.  In this case, simply use the corresponding ordinary
+growth function instead.  Very soon this will copy the object to a
+new chunk; then there will be lots of room available again. 
+
+So, each time you use an ordinary growth function, check afterward for
+sufficient space using @code{obstack_room}.  Once the object is copied
+to a new chunk, there will be plenty of space again, so the program will
+start using the fast growth functions again.
+
+Here is an example:
+
+@smallexample
+@group
+void
+add_string (struct obstack *obstack, const char *ptr, int len)
+@{
+  while (len > 0)
+    @{
+      int room = obstack_room (obstack);
+      if (room == 0)
+        @{
+          /* @r{Not enough room. Add one character slowly,}
+             @r{which may copy to a new chunk and make room.}  */
+          obstack_1grow (obstack, *ptr++);
+          len--;
+        @}
+      else 
+        @{
+          if (room > len)
+            room = len;
+          /* @r{Add fast as much as we have room for.} */
+          len -= room;
+          while (room-- > 0)
+            obstack_1grow_fast (obstack, *ptr++);
+        @}
+    @}
+@}
+@end group
+@end smallexample
+
+@node Status of an Obstack
+@subsection Status of an Obstack
+@cindex obstack status
+@cindex status of obstack
+
+Here are functions that provide information on the current status of
+allocation in an obstack.  You can use them to learn about an object while
+still growing it.
+
+@comment obstack.h
+@comment GNU
+@deftypefun {void *} obstack_base (struct obstack *@var{obstack-ptr})
+This function returns the tentative address of the beginning of the
+currently growing object in @var{obstack-ptr}.  If you finish the object
+immediately, it will have that address.  If you make it larger first, it
+may outgrow the current chunk---then its address will change!
+
+If no object is growing, this value says where the next object you
+allocate will start (once again assuming it fits in the current
+chunk).
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun {void *} obstack_next_free (struct obstack *@var{obstack-ptr})
+This function returns the address of the first free byte in the current
+chunk of obstack @var{obstack-ptr}.  This is the end of the currently
+growing object.  If no object is growing, @code{obstack_next_free}
+returns the same value as @code{obstack_base}.
+@end deftypefun
+
+@comment obstack.h
+@comment GNU
+@deftypefun int obstack_object_size (struct obstack *@var{obstack-ptr})
+This function returns the size in bytes of the currently growing object.
+This is equivalent to
+
+@smallexample
+obstack_next_free (@var{obstack-ptr}) - obstack_base (@var{obstack-ptr})
+@end smallexample
+@end deftypefun
+
+@node Obstacks Data Alignment
+@subsection Alignment of Data in Obstacks
+@cindex alignment (in obstacks)
+
+Each obstack has an @dfn{alignment boundary}; each object allocated in
+the obstack automatically starts on an address that is a multiple of the
+specified boundary.  By default, this boundary is 4 bytes.
+
+To access an obstack's alignment boundary, use the macro
+@code{obstack_alignment_mask}, whose function prototype looks like
+this:
+
+@comment obstack.h
+@comment GNU
+@deftypefn Macro int obstack_alignment_mask (struct obstack *@var{obstack-ptr})
+The value is a bit mask; a bit that is 1 indicates that the corresponding
+bit in the address of an object should be 0.  The mask value should be one
+less than a power of 2; the effect is that all object addresses are
+multiples of that power of 2.  The default value of the mask is 3, so that
+addresses are multiples of 4.  A mask value of 0 means an object can start
+on any multiple of 1 (that is, no alignment is required).
+
+The expansion of the macro @code{obstack_alignment_mask} is an lvalue,
+so you can alter the mask by assignment.  For example, this statement:
+
+@smallexample
+obstack_alignment_mask (obstack_ptr) = 0;
+@end smallexample
+
+@noindent
+has the effect of turning off alignment processing in the specified obstack.
+@end deftypefn
+
+Note that a change in alignment mask does not take effect until
+@emph{after} the next time an object is allocated or finished in the
+obstack.  If you are not growing an object, you can make the new
+alignment mask take effect immediately by calling @code{obstack_finish}.
+This will finish a zero-length object and then do proper alignment for
+the next object.
+
+@node Obstack Chunks
+@subsection Obstack Chunks
+@cindex efficiency of chunks
+@cindex chunks
+
+Obstacks work by allocating space for themselves in large chunks, and
+then parceling out space in the chunks to satisfy your requests.  Chunks
+are normally 4096 bytes long unless you specify a different chunk size.
+The chunk size includes 8 bytes of overhead that are not actually used
+for storing objects.  Regardless of the specified size, longer chunks
+will be allocated when necessary for long objects.
+
+The obstack library allocates chunks by calling the function
+@code{obstack_chunk_alloc}, which you must define.  When a chunk is no
+longer needed because you have freed all the objects in it, the obstack
+library frees the chunk by calling @code{obstack_chunk_free}, which you
+must also define.
+
+These two must be defined (as macros) or declared (as functions) in each
+source file that uses @code{obstack_init} (@pxref{Creating Obstacks}).
+Most often they are defined as macros like this:
+
+@smallexample
+#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_free free
+@end smallexample
+
+Note that these are simple macros (no arguments).  Macro definitions with
+arguments will not work!  It is necessary that @code{obstack_chunk_alloc}
+or @code{obstack_chunk_free}, alone, expand into a function name if it is
+not itself a function name.
+
+If you allocate chunks with @code{malloc}, the chunk size should be a
+power of 2.  The default chunk size, 4096, was chosen because it is long
+enough to satisfy many typical requests on the obstack yet short enough
+not to waste too much memory in the portion of the last chunk not yet used.
+
+@comment obstack.h
+@comment GNU
+@deftypefn Macro int obstack_chunk_size (struct obstack *@var{obstack-ptr})
+This returns the chunk size of the given obstack.
+@end deftypefn
+
+Since this macro expands to an lvalue, you can specify a new chunk size by
+assigning it a new value.  Doing so does not affect the chunks already
+allocated, but will change the size of chunks allocated for that particular
+obstack in the future.  It is unlikely to be useful to make the chunk size
+smaller, but making it larger might improve efficiency if you are
+allocating many objects whose size is comparable to the chunk size.  Here
+is how to do so cleanly:
+
+@smallexample
+if (obstack_chunk_size (obstack_ptr) < @var{new-chunk-size})
+  obstack_chunk_size (obstack_ptr) = @var{new-chunk-size};
+@end smallexample
+
+@node Summary of Obstacks
+@subsection Summary of Obstack Functions
+
+Here is a summary of all the functions associated with obstacks.  Each
+takes the address of an obstack (@code{struct obstack *}) as its first
+argument.
+
+@table @code
+@item void obstack_init (struct obstack *@var{obstack-ptr})
+Initialize use of an obstack.  @xref{Creating Obstacks}.
+
+@item void *obstack_alloc (struct obstack *@var{obstack-ptr}, int @var{size})
+Allocate an object of @var{size} uninitialized bytes.
+@xref{Allocation in an Obstack}.
+
+@item void *obstack_copy (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
+Allocate an object of @var{size} bytes, with contents copied from
+@var{address}.  @xref{Allocation in an Obstack}.
+
+@item void *obstack_copy0 (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
+Allocate an object of @var{size}+1 bytes, with @var{size} of them copied
+from @var{address}, followed by a null character at the end.
+@xref{Allocation in an Obstack}.
+
+@item void obstack_free (struct obstack *@var{obstack-ptr}, void *@var{object})
+Free @var{object} (and everything allocated in the specified obstack
+more recently than @var{object}).  @xref{Freeing Obstack Objects}.
+
+@item void obstack_blank (struct obstack *@var{obstack-ptr}, int @var{size})
+Add @var{size} uninitialized bytes to a growing object.
+@xref{Growing Objects}.
+
+@item void obstack_grow (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
+Add @var{size} bytes, copied from @var{address}, to a growing object.
+@xref{Growing Objects}.
+
+@item void obstack_grow0 (struct obstack *@var{obstack-ptr}, void *@var{address}, int @var{size})
+Add @var{size} bytes, copied from @var{address}, to a growing object,
+and then add another byte containing a null character.  @xref{Growing
+Objects}.
+
+@item void obstack_1grow (struct obstack *@var{obstack-ptr}, char @var{data-char})
+Add one byte containing @var{data-char} to a growing object.
+@xref{Growing Objects}.
+
+@item void *obstack_finish (struct obstack *@var{obstack-ptr})
+Finalize the object that is growing and return its permanent address.
+@xref{Growing Objects}.
+
+@item int obstack_object_size (struct obstack *@var{obstack-ptr})
+Get the current size of the currently growing object.  @xref{Growing
+Objects}.
+
+@item void obstack_blank_fast (struct obstack *@var{obstack-ptr}, int @var{size})
+Add @var{size} uninitialized bytes to a growing object without checking
+that there is enough room.  @xref{Extra Fast Growing}.
+
+@item void obstack_1grow_fast (struct obstack *@var{obstack-ptr}, char @var{data-char})
+Add one byte containing @var{data-char} to a growing object without
+checking that there is enough room.  @xref{Extra Fast Growing}.
+
+@item int obstack_room (struct obstack *@var{obstack-ptr})
+Get the amount of room now available for growing the current object.
+@xref{Extra Fast Growing}.
+
+@item int obstack_alignment_mask (struct obstack *@var{obstack-ptr})
+The mask used for aligning the beginning of an object.  This is an
+lvalue.  @xref{Obstacks Data Alignment}.
+
+@item int obstack_chunk_size (struct obstack *@var{obstack-ptr})
+The size for allocating chunks.  This is an lvalue.  @xref{Obstack Chunks}.
+
+@item void *obstack_base (struct obstack *@var{obstack-ptr})
+Tentative starting address of the currently growing object.
+@xref{Status of an Obstack}.
+
+@item void *obstack_next_free (struct obstack *@var{obstack-ptr})
+Address just after the end of the currently growing object.
+@xref{Status of an Obstack}.
+@end table
+
+@node Variable Size Automatic
+@section Automatic Storage with Variable Size
+@cindex automatic freeing
+@cindex @code{alloca} function
+@cindex automatic storage with variable size
+
+The function @code{alloca} supports a kind of half-dynamic allocation in
+which blocks are allocated dynamically but freed automatically.
+
+Allocating a block with @code{alloca} is an explicit action; you can
+allocate as many blocks as you wish, and compute the size at run time.  But
+all the blocks are freed when you exit the function that @code{alloca} was
+called from, just as if they were automatic variables declared in that
+function.  There is no way to free the space explicitly.
+
+The prototype for @code{alloca} is in @file{stdlib.h}.  This function is
+a BSD extension.
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment GNU, BSD
+@deftypefun {void *} alloca (size_t @var{size});
+The return value of @code{alloca} is the address of a block of @var{size}
+bytes of storage, allocated in the stack frame of the calling function.
+@end deftypefun
+
+Do not use @code{alloca} inside the arguments of a function call---you
+will get unpredictable results, because the stack space for the
+@code{alloca} would appear on the stack in the middle of the space for
+the function arguments.  An example of what to avoid is @code{foo (x,
+alloca (4), y)}.
+@c This might get fixed in future versions of GCC, but that won't make
+@c it safe with compilers generally.
+
+@menu
+* Alloca Example::              Example of using @code{alloca}.
+* Advantages of Alloca::        Reasons to use @code{alloca}.
+* Disadvantages of Alloca::     Reasons to avoid @code{alloca}.
+* GNU C Variable-Size Arrays::  Only in GNU C, here is an alternative
+				 method of allocating dynamically and
+				 freeing automatically.
+@end menu
+
+@node Alloca Example
+@subsection @code{alloca} Example
+
+As an example of use of @code{alloca}, here is a function that opens a file
+name made from concatenating two argument strings, and returns a file
+descriptor or minus one signifying failure:
+
+@smallexample
+int
+open2 (char *str1, char *str2, int flags, int mode)
+@{
+  char *name = (char *) alloca (strlen (str1) + strlen (str2) + 1);
+  strcpy (name, str1);
+  strcat (name, str2);
+  return open (name, flags, mode);
+@}
+@end smallexample
+
+@noindent
+Here is how you would get the same results with @code{malloc} and
+@code{free}:
+
+@smallexample
+int
+open2 (char *str1, char *str2, int flags, int mode)
+@{
+  char *name = (char *) malloc (strlen (str1) + strlen (str2) + 1);
+  int desc;
+  if (name == 0)
+    fatal ("virtual memory exceeded");
+  strcpy (name, str1);
+  strcat (name, str2);
+  desc = open (name, flags, mode);
+  free (name);
+  return desc;
+@}
+@end smallexample
+
+As you can see, it is simpler with @code{alloca}.  But @code{alloca} has
+other, more important advantages, and some disadvantages.
+
+@node Advantages of Alloca
+@subsection Advantages of @code{alloca}
+
+Here are the reasons why @code{alloca} may be preferable to @code{malloc}:
+
+@itemize @bullet
+@item
+Using @code{alloca} wastes very little space and is very fast.  (It is
+open-coded by the GNU C compiler.)
+
+@item
+Since @code{alloca} does not have separate pools for different sizes of
+block, space used for any size block can be reused for any other size.
+@code{alloca} does not cause storage fragmentation.
+
+@item
+@cindex longjmp
+Nonlocal exits done with @code{longjmp} (@pxref{Non-Local Exits})
+automatically free the space allocated with @code{alloca} when they exit
+through the function that called @code{alloca}.  This is the most
+important reason to use @code{alloca}.
+
+To illustrate this, suppose you have a function
+@code{open_or_report_error} which returns a descriptor, like
+@code{open}, if it succeeds, but does not return to its caller if it
+fails.  If the file cannot be opened, it prints an error message and
+jumps out to the command level of your program using @code{longjmp}.
+Let's change @code{open2} (@pxref{Alloca Example}) to use this
+subroutine:@refill
+
+@smallexample
+int
+open2 (char *str1, char *str2, int flags, int mode)
+@{
+  char *name = (char *) alloca (strlen (str1) + strlen (str2) + 1);
+  strcpy (name, str1);
+  strcat (name, str2);
+  return open_or_report_error (name, flags, mode);
+@}
+@end smallexample
+
+@noindent
+Because of the way @code{alloca} works, the storage it allocates is
+freed even when an error occurs, with no special effort required.
+
+By contrast, the previous definition of @code{open2} (which uses
+@code{malloc} and @code{free}) would develop a storage leak if it were
+changed in this way.  Even if you are willing to make more changes to
+fix it, there is no easy way to do so.
+@end itemize
+
+@node Disadvantages of Alloca
+@subsection Disadvantages of @code{alloca}
+
+@cindex @code{alloca} disadvantages
+@cindex disadvantages of @code{alloca}
+These are the disadvantages of @code{alloca} in comparison with
+@code{malloc}:
+
+@itemize @bullet
+@item
+If you try to allocate more storage than the machine can provide, you
+don't get a clean error message.  Instead you get a fatal signal like
+the one you would get from an infinite recursion; probably a
+segmentation violation (@pxref{Program Error Signals}).
+
+@item
+Some non-GNU systems fail to support @code{alloca}, so it is less
+portable.  However, a slower emulation of @code{alloca} written in C
+is available for use on systems with this deficiency.
+@end itemize
+
+@node GNU C Variable-Size Arrays
+@subsection GNU C Variable-Size Arrays
+@cindex variable-sized arrays
+
+In GNU C, you can replace most uses of @code{alloca} with an array of
+variable size.  Here is how @code{open2} would look then:
+
+@smallexample
+int open2 (char *str1, char *str2, int flags, int mode)
+@{
+  char name[strlen (str1) + strlen (str2) + 1];
+  strcpy (name, str1);
+  strcat (name, str2);
+  return open (name, flags, mode);
+@}
+@end smallexample
+
+But @code{alloca} is not always equivalent to a variable-sized array, for
+several reasons:
+
+@itemize @bullet
+@item
+A variable size array's space is freed at the end of the scope of the
+name of the array.  The space allocated with @code{alloca}
+remains until the end of the function.
+
+@item
+It is possible to use @code{alloca} within a loop, allocating an
+additional block on each iteration.  This is impossible with
+variable-sized arrays.
+@end itemize
+
+@strong{Note:} If you mix use of @code{alloca} and variable-sized arrays
+within one function, exiting a scope in which a variable-sized array was
+declared frees all blocks allocated with @code{alloca} during the
+execution of that scope.
+
+
+@node Relocating Allocator
+@section Relocating Allocator
+
+@cindex relocating memory allocator
+Any system of dynamic memory allocation has overhead: the amount of
+space it uses is more than the amount the program asks for.  The
+@dfn{relocating memory allocator} achieves very low overhead by moving
+blocks in memory as necessary, on its own initiative.
+
+@menu
+* Relocator Concepts::		How to understand relocating allocation.
+* Using Relocator::		Functions for relocating allocation.
+@end menu
+
+@node Relocator Concepts
+@subsection Concepts of Relocating Allocation
+
+@ifinfo
+The @dfn{relocating memory allocator} achieves very low overhead by
+moving blocks in memory as necessary, on its own initiative.
+@end ifinfo
+
+When you allocate a block with @code{malloc}, the address of the block
+never changes unless you use @code{realloc} to change its size.  Thus,
+you can safely store the address in various places, temporarily or
+permanently, as you like.  This is not safe when you use the relocating
+memory allocator, because any and all relocatable blocks can move
+whenever you allocate memory in any fashion.  Even calling @code{malloc}
+or @code{realloc} can move the relocatable blocks.
+
+@cindex handle
+For each relocatable block, you must make a @dfn{handle}---a pointer
+object in memory, designated to store the address of that block.  The
+relocating allocator knows where each block's handle is, and updates the
+address stored there whenever it moves the block, so that the handle
+always points to the block.  Each time you access the contents of the
+block, you should fetch its address anew from the handle.
+
+To call any of the relocating allocator functions from a signal handler
+is almost certainly incorrect, because the signal could happen at any
+time and relocate all the blocks.  The only way to make this safe is to
+block the signal around any access to the contents of any relocatable
+block---not a convenient mode of operation.  @xref{Nonreentrancy}.
+
+@node Using Relocator
+@subsection Allocating and Freeing Relocatable Blocks
+
+@pindex malloc.h
+In the descriptions below, @var{handleptr} designates the address of the
+handle.  All the functions are declared in @file{malloc.h}; all are GNU
+extensions.
+
+@comment malloc.h
+@comment GNU
+@deftypefun {void *} r_alloc (void **@var{handleptr}, size_t @var{size})
+This function allocates a relocatable block of size @var{size}.  It
+stores the block's address in @code{*@var{handleptr}} and returns
+a non-null pointer to indicate success.
+
+If @code{r_alloc} can't get the space needed, it stores a null pointer
+in @code{*@var{handleptr}}, and returns a null pointer.
+@end deftypefun
+
+@comment malloc.h
+@comment GNU
+@deftypefun void r_alloc_free (void **@var{handleptr})
+This function is the way to free a relocatable block.  It frees the
+block that @code{*@var{handleptr}} points to, and stores a null pointer
+in @code{*@var{handleptr}} to show it doesn't point to an allocated
+block any more.
+@end deftypefun
+
+@comment malloc.h
+@comment GNU
+@deftypefun {void *} r_re_alloc (void **@var{handleptr}, size_t @var{size})
+The function @code{r_re_alloc} adjusts the size of the block that
+@code{*@var{handleptr}} points to, making it @var{size} bytes long.  It
+stores the address of the resized block in @code{*@var{handleptr}} and
+returns a non-null pointer to indicate success.
+
+If enough memory is not available, this function returns a null pointer
+and does not modify @code{*@var{handleptr}}.
+@end deftypefun
+
+@node Memory Warnings
+@section Memory Usage Warnings
+@cindex memory usage warnings
+@cindex warnings of memory almost full
+
+@pindex malloc.c
+You can ask for warnings as the program approaches running out of memory
+space, by calling @code{memory_warnings}.  This tells @code{malloc} to
+check memory usage every time it asks for more memory from the operating
+system.  This is a GNU extension declared in @file{malloc.h}.
+
+@comment malloc.h
+@comment GNU
+@deftypefun void memory_warnings (void *@var{start}, void (*@var{warn-func}) (const char *))
+Call this function to request warnings for nearing exhaustion of virtual
+memory.
+
+The argument @var{start} says where data space begins, in memory.  The
+allocator compares this against the last address used and against the
+limit of data space, to determine the fraction of available memory in
+use.  If you supply zero for @var{start}, then a default value is used
+which is right in most circumstances.
+
+For @var{warn-func}, supply a function that @code{malloc} can call to
+warn you.  It is called with a string (a warning message) as argument.
+Normally it ought to display the string for the user to read.
+@end deftypefun
+
+The warnings come when memory becomes 75% full, when it becomes 85%
+full, and when it becomes 95% full.  Above 95% you get another warning
+each time memory usage increases.
+

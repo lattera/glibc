@@ -1,0 +1,1574 @@
+@node Date and Time, Non-Local Exits, Arithmetic, Top
+@chapter Date and Time
+
+This chapter describes functions for manipulating dates and times,
+including functions for determining what the current time is and
+conversion between different time representations.
+
+The time functions fall into three main categories:
+
+@itemize @bullet
+@item 
+Functions for measuring elapsed CPU time are discussed in @ref{Processor
+Time}.
+
+@item
+Functions for measuring absolute clock or calendar time are discussed in
+@ref{Calendar Time}.
+
+@item
+Functions for setting alarms and timers are discussed in @ref{Setting
+an Alarm}.
+@end itemize
+
+@menu
+* Processor Time::              Measures processor time used by a program.
+* Calendar Time::               Manipulation of ``real'' dates and times.
+* Setting an Alarm::            Sending a signal after a specified time.
+* Sleeping::                    Waiting for a period of time.
+* Resource Usage::		Measuring various resources used.
+* Limits on Resources::		Specifying limits on resource usage.
+* Priority::			Reading or setting process run priority.
+@end menu
+
+@node Processor Time
+@section Processor Time
+
+If you're trying to optimize your program or measure its efficiency, it's
+very useful to be able to know how much @dfn{processor time} or @dfn{CPU
+time} it has used at any given point.  Processor time is different from
+actual wall clock time because it doesn't include any time spent waiting
+for I/O or when some other process is running.  Processor time is
+represented by the data type @code{clock_t}, and is given as a number of
+@dfn{clock ticks} relative to an arbitrary base time marking the beginning
+of a single program invocation.
+@cindex CPU time
+@cindex processor time
+@cindex clock ticks
+@cindex ticks, clock
+@cindex time, elapsed CPU
+
+@menu
+* Basic CPU Time::              The @code{clock} function.
+* Detailed CPU Time::           The @code{times} function.
+@end menu
+
+@node Basic CPU Time
+@subsection Basic CPU Time Inquiry
+
+To get the elapsed CPU time used by a process, you can use the
+@code{clock} function.  This facility is declared in the header file
+@file{time.h}.
+@pindex time.h
+
+In typical usage, you call the @code{clock} function at the beginning and
+end of the interval you want to time, subtract the values, and then divide
+by @code{CLOCKS_PER_SEC} (the number of clock ticks per second), like this:
+
+@smallexample
+@group
+#include <time.h>
+
+clock_t start, end;
+double elapsed;
+
+start = clock();
+@dots{} /* @r{Do the work.} */
+end = clock();
+elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+@end group
+@end smallexample
+
+Different computers and operating systems vary wildly in how they keep
+track of processor time.  It's common for the internal processor clock
+to have a resolution somewhere between hundredths and millionths of a
+second.
+
+In the GNU system, @code{clock_t} is equivalent to @code{long int} and
+@code{CLOCKS_PER_SEC} is an integer value.  But in other systems, both
+@code{clock_t} and the type of the macro @code{CLOCKS_PER_SEC} can be
+either integer or floating-point types.  Casting processor time values
+to @code{double}, as in the example above, makes sure that operations
+such as arithmetic and printing work properly and consistently no matter
+what the underlying representation is.
+
+@comment time.h
+@comment ANSI
+@deftypevr Macro int CLOCKS_PER_SEC
+The value of this macro is the number of clock ticks per second measured
+by the @code{clock} function.
+@end deftypevr
+
+@comment time.h
+@comment POSIX.1
+@deftypevr Macro int CLK_TCK
+This is an obsolete name for @code{CLOCKS_PER_SEC}.  
+@end deftypevr
+
+@comment time.h
+@comment ANSI
+@deftp {Data Type} clock_t
+This is the type of the value returned by the @code{clock} function.
+Values of type @code{clock_t} are in units of clock ticks.
+@end deftp
+
+@comment time.h
+@comment ANSI
+@deftypefun clock_t clock (void)
+This function returns the elapsed processor time.  The base time is
+arbitrary but doesn't change within a single process.  If the processor
+time is not available or cannot be represented, @code{clock} returns the
+value @code{(clock_t)(-1)}.
+@end deftypefun
+
+
+@node Detailed CPU Time
+@subsection Detailed Elapsed CPU Time Inquiry
+
+The @code{times} function returns more detailed information about
+elapsed processor time in a @w{@code{struct tms}} object.  You should
+include the header file @file{sys/times.h} to use this facility.
+@pindex sys/times.h
+
+@comment sys/times.h
+@comment POSIX.1
+@deftp {Data Type} {struct tms}
+The @code{tms} structure is used to return information about process
+times.  It contains at least the following members:
+
+@table @code
+@item clock_t tms_utime
+This is the CPU time used in executing the instructions of the calling
+process.
+
+@item clock_t tms_stime
+This is the CPU time used by the system on behalf of the calling process.
+
+@item clock_t tms_cutime
+This is the sum of the @code{tms_utime} values and the @code{tms_cutime}
+values of all terminated child processes of the calling process, whose
+status has been reported to the parent process by @code{wait} or
+@code{waitpid}; see @ref{Process Completion}.  In other words, it
+represents the total CPU time used in executing the instructions of all
+the terminated child processes of the calling process, excluding child
+processes which have not yet been reported by @code{wait} or
+@code{waitpid}.
+
+@item clock_t tms_cstime
+This is similar to @code{tms_cutime}, but represents the total CPU time
+used by the system on behalf of all the terminated child processes of the
+calling process.
+@end table
+
+All of the times are given in clock ticks.  These are absolute values; in a
+newly created process, they are all zero.  @xref{Creating a Process}.
+@end deftp
+
+@comment sys/times.h
+@comment POSIX.1
+@deftypefun clock_t times (struct tms *@var{buffer})
+The @code{times} function stores the processor time information for
+the calling process in @var{buffer}.
+
+The return value is the same as the value of @code{clock()}: the elapsed
+real time relative to an arbitrary base.  The base is a constant within a
+particular process, and typically represents the time since system
+start-up.  A value of @code{(clock_t)(-1)} is returned to indicate failure.
+@end deftypefun
+
+@strong{Portability Note:} The @code{clock} function described in
+@ref{Basic CPU Time}, is specified by the ANSI C standard.  The
+@code{times} function is a feature of POSIX.1.  In the GNU system, the
+value returned by the @code{clock} function is equivalent to the sum of
+the @code{tms_utime} and @code{tms_stime} fields returned by
+@code{times}.
+
+@node Calendar Time
+@section Calendar Time
+
+This section describes facilities for keeping track of dates and times
+according to the Gregorian calendar.
+@cindex Gregorian calendar
+@cindex time, calendar
+@cindex date and time
+
+There are three representations for date and time information:
+
+@itemize @bullet
+@item 
+@dfn{Calendar time} (the @code{time_t} data type) is a compact 
+representation, typically giving the number of seconds elapsed since
+some implementation-specific base time.
+@cindex calendar time
+
+@item
+There is also a @dfn{high-resolution time} representation (the @code{struct
+timeval} data type) that includes fractions of a second.  Use this time
+representation instead of ordinary calendar time when you need greater
+precision.
+@cindex high-resolution time
+
+@item
+@dfn{Local time} or @dfn{broken-down time} (the @code{struct
+tm} data type) represents the date and time as a set of components
+specifying the year, month, and so on, for a specific time zone.
+This time representation is usually used in conjunction with formatting
+date and time values.
+@cindex local time
+@cindex broken-down time
+@end itemize
+
+@menu
+* Simple Calendar Time::        Facilities for manipulating calendar time.
+* High-Resolution Calendar::    A time representation with greater precision.
+* Broken-down Time::            Facilities for manipulating local time.
+* Formatting Date and Time::    Converting times to strings.
+* TZ Variable::                 How users specify the time zone.
+* Time Zone Functions::         Functions to examine or specify the time zone. 
+* Time Functions Example::      An example program showing use of some of
+				 the time functions.
+@end menu
+
+@node Simple Calendar Time
+@subsection Simple Calendar Time
+
+This section describes the @code{time_t} data type for representing
+calendar time, and the functions which operate on calendar time objects.
+These facilities are declared in the header file @file{time.h}.
+@pindex time.h
+
+@cindex epoch
+@comment time.h
+@comment ANSI
+@deftp {Data Type} time_t
+This is the data type used to represent calendar time.  In the GNU C
+library and other POSIX-compliant implementations, @code{time_t} is
+equivalent to @code{long int}.  When interpreted as an absolute time
+value, it represents the number of seconds elapsed since 00:00:00 on
+January 1, 1970, Coordinated Universal Time.  (This date is sometimes
+referred to as the @dfn{epoch}.)
+
+In other systems, @code{time_t} might be either an integer or
+floating-point type.
+@end deftp
+
+@comment time.h
+@comment ANSI
+@deftypefun double difftime (time_t @var{time1}, time_t @var{time0})
+The @code{difftime} function returns the number of seconds elapsed
+between time @var{time1} and time @var{time0}, as a value of type
+@code{double}.  
+
+In the GNU system, you can simply subtract @code{time_t} values.  But on
+other systems, the @code{time_t} data type might use some other encoding
+where subtraction doesn't work directly.
+@end deftypefun
+
+@comment time.h
+@comment ANSI
+@deftypefun time_t time (time_t *@var{result})
+The @code{time} function returns the current time as a value of type
+@code{time_t}.  If the argument @var{result} is not a null pointer, the
+time value is also stored in @code{*@var{result}}.  If the calendar 
+time is not available, the value @w{@code{(time_t)(-1)}} is returned.
+@end deftypefun
+
+
+@node High-Resolution Calendar
+@subsection High-Resolution Calendar
+
+The @code{time_t} data type used to represent calendar times has a 
+resolution of only one second.  Some applications need more precision.
+
+So, the GNU C library also contains functions which are capable of
+representing calendar times to a higher resolution than one second.  The
+functions and the associated data types described in this section are
+declared in @file{sys/time.h}.
+@pindex sys/time.h
+
+@comment sys/time.h
+@comment BSD
+@deftp {Data Type} {struct timeval}
+The @code{struct timeval} structure represents a calendar time.  It
+has the following members:
+
+@table @code
+@item long int tv_sec
+This represents the number of seconds since the epoch.  It is equivalent
+to a normal @code{time_t} value.
+
+@item long int tv_usec
+This is the fractional second value, represented as the number of
+microseconds.
+
+Some times struct timeval values are used for time intervals.  Then the
+@code{tv_sec} member is the number of seconds in the interval, and
+@code{tv_usec} is the number of additional microseconds.
+@end table
+@end deftp
+
+@comment sys/time.h
+@comment BSD
+@deftp {Data Type} {struct timezone}
+The @code{struct timezone} structure is used to hold minimal information
+about the local time zone.  It has the following members:
+
+@table @code
+@item int tz_minuteswest
+This is the number of minutes west of GMT.
+
+@item int tz_dsttime
+If nonzero, daylight savings time applies during some part of the year.
+@end table
+
+The @code{struct timezone} type is obsolete and should never be used.
+Instead, use the facilities described in @ref{Time Zone Functions}.
+@end deftp
+
+It is often necessary to subtract two values of type @w{@code{struct
+timeval}}.  Here is the best way to do this.  It works even on some
+peculiar operating systems where the @code{tv_sec} member has an
+unsigned type.
+
+@smallexample
+/* @r{Subtract the `struct timeval' values X and Y,}
+   @r{storing the result in RESULT.}
+   @r{Return 1 if the difference is negative, otherwise 0.}  */
+
+int
+timeval_subtract (result, x, y)
+     struct timeval *result, *x, *y;
+@{
+  /* @r{Perform the carry for the later subtraction by updating @var{y}.} */
+  if (x->tv_usec < y->tv_usec) @{
+    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
+    y->tv_usec -= 1000000 * nsec;
+    y->tv_sec += nsec;
+  @}
+  if (x->tv_usec - y->tv_usec > 1000000) @{
+    int nsec = (y->tv_usec - x->tv_usec) / 1000000;
+    y->tv_usec += 1000000 * nsec;
+    y->tv_sec -= nsec;
+  @}
+
+  /* @r{Compute the time remaining to wait.}
+     @r{@code{tv_usec} is certainly positive.} */
+  result->tv_sec = x->tv_sec - y->tv_sec;
+  result->tv_usec = x->tv_usec - y->tv_usec;
+
+  /* @r{Return 1 if result is negative.} */
+  return x->tv_sec < y->tv_sec;
+@}
+@end smallexample
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int gettimeofday (struct timeval *@var{tp}, struct timezone *@var{tzp})
+The @code{gettimeofday} function returns the current date and time in the
+@code{struct timeval} structure indicated by @var{tp}.  Information about the
+time zone is returned in the structure pointed at @var{tzp}.  If the @var{tzp}
+argument is a null pointer, time zone information is ignored.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is defined for this function:
+
+@table @code
+@item ENOSYS
+The operating system does not support getting time zone information, and
+@var{tzp} is not a null pointer.  The GNU operating system does not
+support using @w{@code{struct timezone}} to represent time zone
+information; that is an obsolete feature of 4.3 BSD.
+Instead, use the facilities described in @ref{Time Zone Functions}.
+@end table
+@end deftypefun
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int settimeofday (const struct timeval *@var{tp}, const struct timezone *@var{tzp})
+The @code{settimeofday} function sets the current date and time
+according to the arguments.  As for @code{gettimeofday}, time zone
+information is ignored if @var{tzp} is a null pointer.
+
+You must be a privileged user in order to use @code{settimeofday}.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EPERM
+This process cannot set the time because it is not privileged.
+
+@item ENOSYS
+The operating system does not support setting time zone information, and
+@var{tzp} is not a null pointer.
+@end table
+@end deftypefun
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int adjtime (const struct timeval *@var{delta}, struct timeval *@var{olddelta})
+This function speeds up or slows down the system clock in order to make
+gradual adjustments in the current time.  This ensures that the time
+reported by the system clock is always monotonically increasing, which
+might not happen if you simply set the current time.
+
+The @var{delta} argument specifies a relative adjustment to be made to
+the current time.  If negative, the system clock is slowed down for a
+while until it has lost this much time.  If positive, the system clock
+is speeded up for a while.
+
+If the @var{olddelta} argument is not a null pointer, the @code{adjtime}
+function returns information about any previous time adjustment that
+has not yet completed.
+
+This function is typically used to synchronize the clocks of computers
+in a local network.  You must be a privileged user to use it.
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is defined for this function:
+
+@table @code
+@item EPERM
+You do not have privilege to set the time.
+@end table
+@end deftypefun
+
+@strong{Portability Note:}  The @code{gettimeofday}, @code{settimeofday},
+and @code{adjtime} functions are derived from BSD.  
+
+
+@node Broken-down Time
+@subsection Broken-down Time
+@cindex broken-down time
+@cindex calendar time and broken-down time
+
+Calendar time is represented as a number of seconds.  This is convenient
+for calculation, but has no resemblance to the way people normally
+represent dates and times.  By contrast, @dfn{broken-down time} is a binary
+representation separated into year, month, day, and so on.  Broken down
+time values are not useful for calculations, but they are useful for
+printing human readable time.
+
+A broken-down time value is always relative to a choice of local time
+zone, and it also indicates which time zone was used.
+
+The symbols in this section are declared in the header file @file{time.h}.
+
+@comment time.h
+@comment ANSI
+@deftp {Data Type} {struct tm}
+This is the data type used to represent a broken-down time.  The structure
+contains at least the following members, which can appear in any order:
+
+@table @code
+@item int tm_sec
+This is the number of seconds after the minute, normally in the range
+@code{0} to @code{59}.  (The actual upper limit is @code{61}, to allow
+for ``leap seconds''.)
+@cindex leap second
+
+@item int tm_min
+This is the number of minutes after the hour, in the range @code{0} to
+@code{59}.
+
+@item int tm_hour
+This is the number of hours past midnight, in the range @code{0} to
+@code{23}.
+
+@item int tm_mday
+This is the day of the month, in the range @code{1} to @code{31}.
+
+@item int tm_mon
+This is the number of months since January, in the range @code{0} to
+@code{11}.
+
+@item int tm_year
+This is the number of years since @code{1900}.
+
+@item int tm_wday
+This is the number of days since Sunday, in the range @code{0} to @code{6}.
+
+@item int tm_yday
+This is the number of days since January 1, in the range @code{0} to
+@code{365}.
+
+@item int tm_isdst
+@cindex Daylight Saving Time
+@cindex summer time
+This is a flag that indicates whether Daylight Saving Time is (or was, or
+will be) in effect at the time described.  The value is positive if
+Daylight Saving Time is in effect, zero if it is not, and negative if the
+information is not available.
+
+@item long int tm_gmtoff
+This field describes the time zone that was used to compute this
+broken-down time value; it is the amount you must add to the local time
+in that zone to get GMT, in units of seconds.  The value is like that of
+the variable @code{timezone} (@pxref{Time Zone Functions}).  You can
+also think of this as the ``number of seconds west'' of GMT.  The
+@code{tm_gmtoff} field is a GNU library extension.
+
+@item const char *tm_zone
+This field is the three-letter name for the time zone that was used to
+compute this broken-down time value.  It is a GNU library extension.
+@end table
+@end deftp
+
+@comment time.h
+@comment ANSI
+@deftypefun {struct tm *} localtime (const time_t *@var{time})
+The @code{localtime} function converts the calendar time pointed to by
+@var{time} to broken-down time representation, expressed relative to the
+user's specified time zone.
+
+The return value is a pointer to a static broken-down time structure, which
+might be overwritten by subsequent calls to any of the date and time
+functions.  (But no other library function overwrites the contents of this
+object.)
+
+Calling @code{localtime} has one other effect: it sets the variable
+@code{tzname} with information about the current time zone.  @xref{Time
+Zone Functions}.
+@end deftypefun
+
+@comment time.h
+@comment ANSI
+@deftypefun {struct tm *} gmtime (const time_t *@var{time})
+This function is similar to @code{localtime}, except that the broken-down
+time is expressed as Coordinated Universal Time (UTC)---that is, as
+Greenwich Mean Time (GMT) rather than relative to the local time zone.
+
+Recall that calendar times are @emph{always} expressed in coordinated
+universal time.
+@end deftypefun
+
+@comment time.h
+@comment ANSI
+@deftypefun time_t mktime (struct tm *@var{brokentime})
+The @code{mktime} function is used to convert a broken-down time structure
+to a calendar time representation.  It also ``normalizes'' the contents of
+the broken-down time structure, by filling in the day of week and day of
+year based on the other date and time components.
+
+The @code{mktime} function ignores the specified contents of the
+@code{tm_wday} and @code{tm_yday} members of the broken-down time
+structure.  It uses the values of the other components to compute the
+calendar time; it's permissible for these components to have
+unnormalized values outside of their normal ranges.  The last thing that
+@code{mktime} does is adjust the components of the @var{brokentime}
+structure (including the @code{tm_wday} and @code{tm_yday}).
+
+If the specified broken-down time cannot be represented as a calendar time,
+@code{mktime} returns a value of @code{(time_t)(-1)} and does not modify
+the contents of @var{brokentime}.
+
+Calling @code{mktime} also sets the variable @code{tzname} with
+information about the current time zone.  @xref{Time Zone Functions}.
+@end deftypefun
+
+@node Formatting Date and Time
+@subsection Formatting Date and Time
+
+The functions described in this section format time values as strings.
+These functions are declared in the header file @file{time.h}.
+@pindex time.h
+
+@comment time.h
+@comment ANSI
+@deftypefun {char *} asctime (const struct tm *@var{brokentime})
+The @code{asctime} function converts the broken-down time value that
+@var{brokentime} points to into a string in a standard format:
+
+@smallexample
+"Tue May 21 13:46:22 1991\n"
+@end smallexample
+
+The abbreviations for the days of week are: @samp{Sun}, @samp{Mon},
+@samp{Tue}, @samp{Wed}, @samp{Thu}, @samp{Fri}, and @samp{Sat}.
+
+The abbreviations for the months are: @samp{Jan}, @samp{Feb},
+@samp{Mar}, @samp{Apr}, @samp{May}, @samp{Jun}, @samp{Jul}, @samp{Aug},
+@samp{Sep}, @samp{Oct}, @samp{Nov}, and @samp{Dec}.
+
+The return value points to a statically allocated string, which might be
+overwritten by subsequent calls to any of the date and time functions.
+(But no other library function overwrites the contents of this
+string.)
+@end deftypefun
+
+@comment time.h
+@comment ANSI
+@deftypefun {char *} ctime (const time_t *@var{time})
+The @code{ctime} function is similar to @code{asctime}, except that the
+time value is specified as a @code{time_t} calendar time value rather
+than in broken-down local time format.  It is equivalent to
+
+@smallexample
+asctime (localtime (@var{time}))
+@end smallexample
+
+@code{ctime} sets the variable @code{tzname}, because @code{localtime}
+does so.  @xref{Time Zone Functions}.
+@end deftypefun
+
+@comment time.h
+@comment ANSI
+@deftypefun size_t strftime (char *@var{s}, size_t @var{size}, const char *@var{template}, const struct tm *@var{brokentime})
+This function is similar to the @code{sprintf} function (@pxref{Formatted
+Input}), but the conversion specifications that can appear in the format
+template @var{template} are specialized for printing components of the date
+and time @var{brokentime} according to the locale currently specified for
+time conversion (@pxref{Locales}).
+
+Ordinary characters appearing in the @var{template} are copied to the
+output string @var{s}; this can include multibyte character sequences.
+Conversion specifiers are introduced by a @samp{%} character, and are
+replaced in the output string as follows:
+
+@table @code
+@item %a
+The abbreviated weekday name according to the current locale.
+
+@item %A
+The full weekday name according to the current locale.
+
+@item %b
+The abbreviated month name according to the current locale.
+
+@item %B
+The full month name according to the current locale.
+
+@item %c
+The preferred date and time representation for the current locale.
+
+@item %d
+The day of the month as a decimal number (range @code{01} to @code{31}).
+
+@item %H
+The hour as a decimal number, using a 24-hour clock (range @code{00} to
+@code{23}).
+
+@item %I
+The hour as a decimal number, using a 12-hour clock (range @code{01} to
+@code{12}).
+
+@item %j
+The day of the year as a decimal number (range @code{001} to @code{366}).
+
+@item %m
+The month as a decimal number (range @code{01} to @code{12}).
+
+@item %M
+The minute as a decimal number.
+
+@item %p
+Either @samp{am} or @samp{pm}, according to the given time value; or the
+corresponding strings for the current locale.
+
+@item %S
+The second as a decimal number.
+
+@item %U
+The week number of the current year as a decimal number, starting with
+the first Sunday as the first day of the first week.
+
+@item %W
+The week number of the current year as a decimal number, starting with
+the first Monday as the first day of the first week.
+
+@item %w
+The day of the week as a decimal number, Sunday being @code{0}.
+
+@item %x
+The preferred date representation for the current locale, but without the
+time.
+
+@item %X
+The preferred time representation for the current locale, but with no date.
+
+@item %y
+The year as a decimal number, but without a century (range @code{00} to
+@code{99}).
+
+@item %Y
+The year as a decimal number, including the century.
+
+@item %Z
+The time zone or name or abbreviation (empty if the time zone can't be
+determined).
+
+@item %%
+A literal @samp{%} character.
+@end table
+
+The @var{size} parameter can be used to specify the maximum number of
+characters to be stored in the array @var{s}, including the terminating
+null character.  If the formatted time requires more than @var{size}
+characters, the excess characters are discarded.  The return value from
+@code{strftime} is the number of characters placed in the array @var{s},
+not including the terminating null character.  If the value equals
+@var{size}, it means that the array @var{s} was too small; you should
+repeat the call, providing a bigger array.
+
+If @var{s} is a null pointer, @code{strftime} does not actually write
+anything, but instead returns the number of characters it would have written.
+
+For an example of @code{strftime}, see @ref{Time Functions Example}.
+@end deftypefun
+
+@node TZ Variable
+@subsection Specifying the Time Zone with @code{TZ}
+
+In POSIX systems, a user can specify the time zone by means of the
+@code{TZ} environment variable.  For information about how to set
+environment variables, see @ref{Environment Variables}.  The functions
+for accessing the time zone are declared in @file{time.h}.
+@pindex time.h
+@cindex time zone
+
+You should not normally need to set @code{TZ}.  If the system is
+configured properly, the default timezone will be correct.  You might
+set @code{TZ} if you are using a computer over the network from a
+different timezone, and would like times reported to you in the timezone
+that local for you, rather than what is local for the computer.
+
+In POSIX.1 systems the value of the @code{TZ} variable can be of one of
+three formats.  With the GNU C library, the most common format is the
+last one, which can specify a selection from a large database of time
+zone information for many regions of the world.  The first two formats
+are used to describe the time zone information directly, which is both
+more cumbersome and less precise.  But the POSIX.1 standard only
+specifies the details of the first two formats, so it is good to be
+familiar with them in case you come across a POSIX.1 system that doesn't
+support a time zone information database.
+
+The first format is used when there is no Daylight Saving Time (or
+summer time) in the local time zone:
+
+@smallexample
+@r{@var{std} @var{offset}}
+@end smallexample
+
+The @var{std} string specifies the name of the time zone.  It must be
+three or more characters long and must not contain a leading colon or
+embedded digits, commas, or plus or minus signs.  There is no space
+character separating the time zone name from the @var{offset}, so these
+restrictions are necessary to parse the specification correctly.
+
+The @var{offset} specifies the time value one must add to the local time
+to get a Coordinated Universal Time value.  It has syntax like
+[@code{+}|@code{-}]@var{hh}[@code{:}@var{mm}[@code{:}@var{ss}]].  This
+is positive if the local time zone is west of the Prime Meridian and
+negative if it is east.  The hour must be between @code{0} and
+@code{24}, and the minute and seconds between @code{0} and @code{59}.
+
+For example, here is how we would specify Eastern Standard Time, but
+without any daylight savings time alternative:
+
+@smallexample
+EST+5
+@end smallexample
+
+The second format is used when there is Daylight Saving Time:
+
+@smallexample
+@r{@var{std} @var{offset} @var{dst} [@var{offset}]@code{,}@var{start}[@code{/}@var{time}]@code{,}@var{end}[@code{/}@var{time}]}
+@end smallexample
+
+The initial @var{std} and @var{offset} specify the standard time zone, as
+described above.  The @var{dst} string and @var{offset} specify the name
+and offset for the corresponding daylight savings time time zone; if the
+@var{offset} is omitted, it defaults to one hour ahead of standard time.
+
+The remainder of the specification describes when daylight savings time is
+in effect.  The @var{start} field is when daylight savings time goes into
+effect and the @var{end} field is when the change is made back to standard
+time.  The following formats are recognized for these fields:
+
+@table @code
+@item J@var{n}
+This specifies the Julian day, with @var{n} between @code{1} and @code{365}.
+February 29 is never counted, even in leap years.
+
+@item @var{n}
+This specifies the Julian day, with @var{n} between @code{0} and @code{365}.
+February 29 is counted in leap years.
+
+@item M@var{m}.@var{w}.@var{d}
+This specifies day @var{d} of week @var{w} of month @var{m}.  The day
+@var{d} must be between @code{0} (Sunday) and @code{6}.  The week
+@var{w} must be between @code{1} and @code{5}; week @code{1} is the
+first week in which day @var{d} occurs, and week @code{5} specifies the
+@emph{last} @var{d} day in the month.  The month @var{m} should be
+between @code{1} and @code{12}.
+@end table
+
+The @var{time} fields specify when, in the local time currently in
+effect, the change to the other time occurs.  If omitted, the default is
+@code{02:00:00}.
+
+For example, here is how one would specify the Eastern time zone in the
+United States, including the appropriate daylight saving time and its dates
+of applicability.  The normal offset from GMT is 5 hours; since this is
+west of the prime meridian, the sign is positive.  Summer time begins on
+the first Sunday in April at 2:00am, and ends on the last Sunday in October
+at 2:00am.
+
+@smallexample
+EST+5EDT,M4.1.0/M10.5.0
+@end smallexample
+
+The schedule of daylight savings time in any particular jurisdiction has
+changed over the years.  To be strictly correct, the conversion of dates
+and times in the past should be based on the schedule that was in effect
+then.  However, this format has no facilities to let you specify how the
+schedule has changed from year to year.  The most you can do is specify
+one particular schedule---usually the present day schedule---and this is
+used to convert any date, no matter when.  For precise time zone
+specifications, it is best to use the time zone information database
+(see below).
+
+The third format looks like this:
+
+@smallexample
+:@var{characters}
+@end smallexample
+
+Each operating system interprets this format differently; in the GNU C
+library, @var{characters} is the name of a file which describes the time
+zone.
+
+@pindex /etc/localtime
+@pindex localtime
+If the @code{TZ} environment variable does not have a value, the
+operation chooses a time zone by default.  In the GNU C library, the
+default time zone is like the specification @samp{TZ=:/etc/localtime}
+(or @samp{TZ=:/usr/local/etc/localtime}, depending on how GNU C library
+was configured; @pxref{Installation}).  Other C libraries use their own
+rule for choosing the default time zone, so there is little we can say
+about them.
+
+@cindex time zone database
+@pindex /share/lib/zoneinfo
+@pindex zoneinfo
+If @var{characters} begins with a slash, it is an absolute file name;
+otherwise the library looks for the file
+@w{@file{/share/lib/zoneinfo/@var{characters}}}.  The @file{zoneinfo}
+directory contains data files describing local time zones in many
+different parts of the world.  The names represent major cities, with
+subdirectories for geographical areas; for example,
+@file{America/New_York}, @file{Europe/London}, @file{Asia/Hong_Kong}.
+These data files are installed by the system administrator, who also
+sets @file{/etc/localtime} to point to the data file for the local time
+zone.  The GNU C library comes with a large database of time zone
+information for most regions of the world, which is maintained by a
+community of volunteers and put in the public domain.
+
+@node Time Zone Functions
+@subsection Functions and Variables for Time Zones
+
+@comment time.h
+@comment POSIX.1
+@deftypevar char * tzname [2]
+The array @code{tzname} contains two strings, which are the standard
+three-letter names of the pair of time zones (standard and daylight
+savings) that the user has selected.  @code{tzname[0]} is the name of
+the standard time zone (for example, @code{"EST"}), and @code{tzname[1]}
+is the name for the time zone when daylight savings time is in use (for
+example, @code{"EDT"}).  These correspond to the @var{std} and @var{dst}
+strings (respectively) from the @code{TZ} environment variable.
+
+The @code{tzname} array is initialized from the @code{TZ} environment
+variable whenever @code{tzset}, @code{ctime}, @code{strftime},
+@code{mktime}, or @code{localtime} is called.
+@end deftypevar
+
+@comment time.h
+@comment POSIX.1
+@deftypefun void tzset (void)
+The @code{tzset} function initializes the @code{tzname} variable from
+the value of the @code{TZ} environment variable.  It is not usually
+necessary for your program to call this function, because it is called
+automatically when you use the other time conversion functions that
+depend on the time zone.
+@end deftypefun
+
+The following variables are defined for compatibility with System V
+Unix.  These variables are set by calling @code{localtime}.
+
+@comment time.h
+@comment SVID
+@deftypevar {long int} timezone
+This contains the difference between GMT and local standard time, in
+seconds.  For example, in the U.S. Eastern time zone, the value is
+@code{5*60*60}.
+@end deftypevar
+
+@comment time.h
+@comment SVID
+@deftypevar int daylight
+This variable has a nonzero value if the standard U.S. daylight savings
+time rules apply.
+@end deftypevar
+
+@node Time Functions Example
+@subsection Time Functions Example
+
+Here is an example program showing the use of some of the local time and
+calendar time functions.
+
+@smallexample
+@include strftim.c.texi
+@end smallexample
+
+It produces output like this:
+
+@smallexample
+Wed Jul 31 13:02:36 1991
+Today is Wednesday, July 31.
+The time is 01:02 PM.
+@end smallexample
+
+
+@node Setting an Alarm
+@section Setting an Alarm
+
+The @code{alarm} and @code{setitimer} functions provide a mechanism for a
+process to interrupt itself at some future time.  They do this by setting a
+timer; when the timer expires, the process receives a signal.
+
+@cindex setting an alarm
+@cindex interval timer, setting
+@cindex alarms, setting
+@cindex timers, setting
+Each process has three independent interval timers available:
+
+@itemize @bullet
+@item 
+A real-time timer that counts clock time.  This timer sends a
+@code{SIGALRM} signal to the process when it expires.
+@cindex real-time timer
+@cindex timer, real-time
+
+@item 
+A virtual timer that counts CPU time used by the process.  This timer
+sends a @code{SIGVTALRM} signal to the process when it expires.
+@cindex virtual timer
+@cindex timer, virtual
+
+@item 
+A profiling timer that counts both CPU time used by the process, and CPU
+time spent in system calls on behalf of the process.  This timer sends a
+@code{SIGPROF} signal to the process when it expires.
+@cindex profiling timer
+@cindex timer, profiling
+
+This timer is useful for profiling in interpreters.  The interval timer
+mechanism does not have the fine granularity necessary for profiling
+native code.
+@c @xref{profil} !!!
+@end itemize
+
+You can only have one timer of each kind set at any given time.  If you
+set a timer that has not yet expired, that timer is simply reset to the
+new value.
+
+You should establish a handler for the appropriate alarm signal using
+@code{signal} or @code{sigaction} before issuing a call to @code{setitimer}
+or @code{alarm}.  Otherwise, an unusual chain of events could cause the
+timer to expire before your program establishes the handler, and in that
+case it would be terminated, since that is the default action for the alarm
+signals.  @xref{Signal Handling}.
+
+The @code{setitimer} function is the primary means for setting an alarm.
+This facility is declared in the header file @file{sys/time.h}.  The
+@code{alarm} function, declared in @file{unistd.h}, provides a somewhat
+simpler interface for setting the real-time timer.
+@pindex unistd.h
+@pindex sys/time.h
+
+@comment sys/time.h
+@comment BSD
+@deftp {Data Type} {struct itimerval}
+This structure is used to specify when a timer should expire.  It contains
+the following members:
+@table @code
+@item struct timeval it_interval
+This is the interval between successive timer interrupts.  If zero, the
+alarm will only be sent once.
+
+@item struct timeval it_value
+This is the interval to the first timer interrupt.  If zero, the alarm is
+disabled.
+@end table
+
+The @code{struct timeval} data type is described in @ref{High-Resolution
+Calendar}.
+@end deftp
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int setitimer (int @var{which}, struct itimerval *@var{new}, struct itimerval *@var{old})
+The @code{setitimer} function sets the timer specified by @var{which} 
+according to @var{new}.  The @var{which} argument can have a value of
+@code{ITIMER_REAL}, @code{ITIMER_VIRTUAL}, or @code{ITIMER_PROF}.
+
+If @var{old} is not a null pointer, @code{setitimer} returns information
+about any previous unexpired timer of the same kind in the structure it
+points to.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The timer interval was too large.
+@end table
+@end deftypefun
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int getitimer (int @var{which}, struct itimerval *@var{old})
+The @code{getitimer} function stores information about the timer specified
+by @var{which} in the structure pointed at by @var{old}.
+
+The return value and error conditions are the same as for @code{setitimer}.
+@end deftypefun
+
+@comment sys/time.h
+@comment BSD
+@table @code
+@item ITIMER_REAL
+@findex ITIMER_REAL
+This constant can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the real-time
+timer.
+
+@comment sys/time.h
+@comment BSD
+@item ITIMER_VIRTUAL
+@findex ITIMER_VIRTUAL
+This constant can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the virtual
+timer.
+
+@comment sys/time.h
+@comment BSD
+@item ITIMER_PROF
+@findex ITIMER_PROF
+This constant can be used as the @var{which} argument to the
+@code{setitimer} and @code{getitimer} functions to specify the profiling
+timer.
+@end table
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun {unsigned int} alarm (unsigned int @var{seconds})
+The @code{alarm} function sets the real-time timer to expire in
+@var{seconds} seconds.  If you want to cancel any existing alarm, you
+can do this by calling @code{alarm} with a @var{seconds} argument of
+zero.
+
+The return value indicates how many seconds remain before the previous
+alarm would have been sent.  If there is no previous alarm, @code{alarm}
+returns zero.
+@end deftypefun
+
+The @code{alarm} function could be defined in terms of @code{setitimer}
+like this:
+
+@smallexample
+unsigned int
+alarm (unsigned int seconds)
+@{
+  struct itimerval old, new;
+  new.it_interval.tv_usec = 0;
+  new.it_interval.tv_sec = 0;
+  new.it_value.tv_usec = 0;
+  new.it_value.tv_sec = (long int) seconds;
+  if (setitimer (ITIMER_REAL, &new, &old) < 0)
+    return 0;
+  else
+    return old.it_value.tv_sec;
+@}
+@end smallexample
+
+There is an example showing the use of the @code{alarm} function in
+@ref{Handler Returns}.
+
+If you simply want your process to wait for a given number of seconds,
+you should use the @code{sleep} function.  @xref{Sleeping}.
+
+You shouldn't count on the signal arriving precisely when the timer
+expires.  In a multiprocessing environment there is typically some
+amount of delay involved.
+
+@strong{Portability Note:} The @code{setitimer} and @code{getitimer}
+functions are derived from BSD Unix, while the @code{alarm} function is
+specified by the POSIX.1 standard.  @code{setitimer} is more powerful than
+@code{alarm}, but @code{alarm} is more widely used.
+
+@node Sleeping
+@section Sleeping
+
+The function @code{sleep} gives a simple way to make the program wait
+for short periods of time.  If your program doesn't use signals (except
+to terminate), then you can expect @code{sleep} to wait reliably for
+the specified amount of time.  Otherwise, @code{sleep} can return sooner
+if a signal arrives; if you want to wait for a given period regardless
+of signals, use @code{select} (@pxref{Waiting for I/O}) and don't
+specify any descriptors to wait for.
+@c !!! select can get EINTR; using SA_RESTART makes sleep win too.
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun {unsigned int} sleep (unsigned int @var{seconds})
+The @code{sleep} function waits for @var{seconds} or until a signal
+is delivered, whichever happens first.  
+
+If @code{sleep} function returns because the requested time has
+elapsed, it returns a value of zero.  If it returns because of delivery
+of a signal, its return value is the remaining time in the sleep period.
+
+The @code{sleep} function is declared in @file{unistd.h}.
+@end deftypefun
+
+Resist the temptation to implement a sleep for a fixed amount of time by
+using the return value of @code{sleep}, when nonzero, to call
+@code{sleep} again.  This will work with a certain amount of accuracy as
+long as signals arrive infrequently.  But each signal can cause the
+eventual wakeup time to be off by an additional second or so.  Suppose a
+few signals happen to arrive in rapid succession by bad luck---there is
+no limit on how much this could shorten or lengthen the wait.
+
+Instead, compute the time at which the program should stop waiting, and
+keep trying to wait until that time.  This won't be off by more than a
+second.  With just a little more work, you can use @code{select} and
+make the waiting period quite accurate.  (Of course, heavy system load
+can cause unavoidable additional delays---unless the machine is 
+dedicated to one application, there is no way you can avoid this.)
+
+On some systems, @code{sleep} can do strange things if your program uses
+@code{SIGALRM} explicitly.  Even if @code{SIGALRM} signals are being
+ignored or blocked when @code{sleep} is called, @code{sleep} might
+return prematurely on delivery of a @code{SIGALRM} signal.  If you have
+established a handler for @code{SIGALRM} signals and a @code{SIGALRM}
+signal is delivered while the process is sleeping, the action taken
+might be just to cause @code{sleep} to return instead of invoking your
+handler.  And, if @code{sleep} is interrupted by delivery of a signal
+whose handler requests an alarm or alters the handling of @code{SIGALRM},
+this handler and @code{sleep} will interfere.
+
+On the GNU system, it is safe to use @code{sleep} and @code{SIGALRM} in
+the same program, because @code{sleep} does not work by means of
+@code{SIGALRM}.
+
+@node Resource Usage
+@section Resource Usage
+
+@pindex sys/resource.h
+The function @code{getrusage} and the data type @code{struct rusage}
+are used for examining the usage figures of a process.  They are declared
+in @file{sys/resource.h}.
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getrusage (int @var{processes}, struct rusage *@var{rusage})
+This function reports the usage totals for processes specified by
+@var{processes}, storing the information in @code{*@var{rusage}}.
+
+In most systems, @var{processes} has only two valid values:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item RUSAGE_SELF
+Just the current process.
+
+@comment sys/resource.h
+@comment BSD
+@item RUSAGE_CHILDREN
+All child processes (direct and indirect) that have terminated already.
+@end table
+
+In the GNU system, you can also inquire about a particular child process
+by specifying its process ID.
+
+The return value of @code{getrusage} is zero for success, and @code{-1}
+for failure.
+
+@table @code
+@item EINVAL
+The argument @var{processes} is not valid.
+@end table
+@end deftypefun
+
+One way of getting usage figures for a particular child process is with
+the function @code{wait4}, which returns totals for a child when it
+terminates.  @xref{BSD Wait Functions}.
+
+@comment sys/resource.h
+@comment BSD
+@deftp {Data Type} {struct rusage}
+This data type records a collection usage amounts for various sorts of
+resources.  It has the following members, and possibly others:
+
+@table @code
+@item struct timeval ru_utime
+Time spent executing user instructions.
+
+@item struct timeval ru_stime
+Time spent in operating system code on behalf of @var{processes}.
+
+@item long int ru_maxrss
+The maximum resident set size used, in kilobytes.  That is, the maximum
+number of kilobytes that @var{processes} used in real memory simultaneously.
+
+@item long int ru_ixrss
+An integral value expressed in kilobytes times ticks of execution, which
+indicates the amount of memory used by text that was shared with other
+processes.
+
+@item long int ru_idrss
+An integral value expressed the same way, which is the amount of
+unshared memory used in data.
+
+@item long int ru_isrss
+An integral value expressed the same way, which is the amount of
+unshared memory used in stack space.
+
+@item long int ru_minflt
+The number of page faults which were serviced without requiring any I/O.
+
+@item long int ru_majflt
+The number of page faults which were serviced by doing I/O.
+
+@item long int ru_nswap
+The number of times @var{processes} was swapped entirely out of main memory.
+
+@item long int ru_inblock
+The number of times the file system had to read from the disk on behalf
+of @var{processes}.
+
+@item long int ru_oublock
+The number of times the file system had to write to the disk on behalf
+of @var{processes}.
+
+@item long int ru_msgsnd
+Number of IPC messages sent.
+
+@item long ru_msgrcv
+Number of IPC messages received.
+
+@item long int ru_nsignals
+Number of signals received.
+
+@item long int ru_nvcsw
+The number of times @var{processes} voluntarily invoked a context switch
+(usually to wait for some service).
+
+@item long int ru_nivcsw
+The number of times an involuntary context switch took place (because
+the time slice expired, or another process of higher priority became
+runnable).
+@end table
+@end deftp
+
+An additional historical function for examining usage figures,
+@code{vtimes}, is supported but not documented here.  It is declared in
+@file{sys/vtimes.h}.
+
+@node Limits on Resources
+@section Limiting Resource Usage
+@cindex resource limits
+@cindex limits on resource usage
+@cindex usage limits
+
+You can specify limits for the resource usage of a process.  When the
+process tries to exceed a limit, it may get a signal, or the system call
+by which it tried to do so may fail, depending on the limit.  Each
+process initially inherits its limit values from its parent, but it can
+subsequently change them.
+
+@pindex sys/resource.h
+The symbols in this section are defined in @file{sys/resource.h}.
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getrlimit (int @var{resource}, struct rlimit *@var{rlp})
+Read the current value and the maximum value of resource @var{resource}
+and store them in @code{*@var{rlp}}.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+only possible @code{errno} error condition is @code{EFAULT}.
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int setrlimit (int @var{resource}, struct rlimit *@var{rlp})
+Store the current value and the maximum value of resource @var{resource}
+in @code{*@var{rlp}}.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is possible:
+
+@table @code
+@item EPERM
+You tried to change the maximum permissible limit value,
+but you don't have privileges to do so.
+@end table
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftp {Data Type} {struct rlimit}
+This structure is used with @code{getrlimit} to receive limit values,
+and with @code{setrlimit} to specify limit values.  It has two fields:
+
+@table @code
+@item rlim_cur
+The current value of the limit in question.
+This is also called the ``soft limit''.
+@cindex soft limit
+
+@item rlim_max
+The maximum permissible value of the limit in question.  You cannot set
+the current value of the limit to a larger number than this maximum.
+Only the super user can change the maximum permissible value.
+This is also called the ``hard limit''.
+@cindex hard limit
+@end table
+
+In @code{getrlimit}, the structure is an output; it receives the current
+values.  In @code{setrlimit}, it specifies the new values.
+@end deftp
+
+Here is a list of resources that you can specify a limit for.
+Those that are sizes are measured in bytes.
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_CPU
+@vindex RLIMIT_CPU
+The maximum amount of cpu time the process can use.  If it runs for
+longer than this, it gets a signal: @code{SIGXCPU}.  The value is
+measured in seconds.  @xref{Operation Error Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_FSIZE
+@vindex RLIMIT_FSIZE
+The maximum size of file the process can create.  Trying to write a
+larger file causes a signal: @code{SIGXFSZ}.  @xref{Operation Error
+Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_DATA
+@vindex RLIMIT_DATA
+The maximum size of data memory for the process.  If the process tries
+to allocate data memory beyond this amount, the allocation function
+fails.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_STACK
+@vindex RLIMIT_STACK
+The maximum stack size for the process.  If the process tries to extend
+its stack past this size, it gets a @code{SIGSEGV} signal.
+@xref{Program Error Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_CORE
+@vindex RLIMIT_CORE
+The maximum size core file that this process can create.  If the process
+terminates and would dump a core file larger than this maximum size,
+then no core file is created.  So setting this limit to zero prevents
+core files from ever being created.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_RSS
+@vindex RLIMIT_RSS
+The maximum amount of physical memory that this process should get.
+This parameter is a guide for the system's scheduler and memory
+allocator; the system may give the process more memory when there is a
+surplus.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_MEMLOCK
+The maximum amount of memory that can be locked into physical memory (so
+it will never be paged out).
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_NPROC
+The maximum number of processes that can be created with the same user ID.
+If you have reached the limit for your user ID, @code{fork} will fail
+with @code{EAGAIN}.  @xref{Creating a Process}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_NOFILE
+@vindex RLIMIT_NOFILE
+@itemx RLIMIT_OFILE
+@vindex RLIMIT_OFILE
+The maximum number of files that the process can open.  If it tries to
+open more files than this, it gets error code @code{EMFILE}.
+@xref{Error Codes}.  Not all systems support this limit; GNU does, and
+4.4 BSD does.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIM_NLIMITS
+@vindex RLIM_NLIMITS
+The number of different resource limits.  Any valid @var{resource}
+operand must be less than @code{RLIM_NLIMITS}.
+@end table
+
+@comment sys/resource.h
+@comment BSD
+@defvr Constant int RLIM_INFINITY
+This constant stands for a value of ``infinity'' when supplied as
+the limit value in @code{setrlimit}.
+@end defvr
+
+@c ??? Someone want to finish these?
+Two historical functions for setting resource limits, @code{ulimit} and
+@code{vlimit}, are not documented here.  The latter is declared in
+@file{sys/vlimit.h} and comes from BSD.
+
+@node Priority
+@section Process Priority
+@cindex process priority
+@cindex priority of a process
+
+@pindex sys/resource.h
+When several processes try to run, their respective priorities determine
+what share of the CPU each process gets.  This section describes how you
+can read and set the priority of a process.  All these functions and
+macros are declared in @file{sys/resource.h}.
+
+The range of valid priority values depends on the operating system, but
+typically it runs from @code{-20} to @code{20}.  A lower priority value
+means the process runs more often.  These constants describe the range of
+priority values:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item PRIO_MIN
+@vindex PRIO_MIN
+The smallest valid priority value.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_MAX
+@vindex PRIO_MAX
+The smallest valid priority value.
+@end table
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getpriority (int @var{class}, int @var{id})
+Read the priority of a class of processes; @var{class} and @var{id}
+specify which ones (see below).  If the processes specified do not all
+have the same priority, this returns the smallest value that any of them
+has.
+
+The return value is the priority value on success, and @code{-1} on
+failure.  The following @code{errno} error condition are possible for
+this function:
+
+@table @code
+@item ESRCH
+The combination of @var{class} and @var{id} does not match any existing
+process.
+
+@item EINVAL
+The value of @var{class} is not valid.
+@end table
+
+When the return value is @code{-1}, it could indicate failure, or it
+could be the priority value.  The only way to make certain is to set
+@code{errno = 0} before calling @code{getpriority}, then use @code{errno
+!= 0} afterward as the criterion for failure.
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int setpriority (int @var{class}, int @var{id}, int @var{priority})
+Set the priority of a class of processes to @var{priority}; @var{class}
+and @var{id} specify which ones (see below).
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition are defined for this function:
+
+@table @code
+@item ESRCH
+The combination of @var{class} and @var{id} does not match any existing
+process.
+
+@item EINVAL
+The value of @var{class} is not valid.
+
+@item EPERM
+You tried to set the priority of some other user's process, and you
+don't have privileges for that.
+
+@item EACCES
+You tried to lower the priority of a process, and you don't have
+privileges for that.
+@end table
+@end deftypefun
+
+The arguments @var{class} and @var{id} together specify a set of
+processes you are interested in.  These are the possible values for
+@var{class}:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item PRIO_PROCESS
+@vindex PRIO_PROCESS
+Read or set the priority of one process.  The argument @var{id} is a
+process ID.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_PGRP
+@vindex PRIO_PGRP
+Read or set the priority of one process group.  The argument @var{id} is
+a process group ID.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_USER
+@vindex PRIO_USER
+Read or set the priority of one user's processes.  The argument @var{id}
+is a user ID.
+@end table
+
+If the argument @var{id} is 0, it stands for the current process,
+current process group, or the current user, according to @var{class}.
+
+@c ??? I don't know where we should say this comes from.
+@comment Unix
+@comment dunno.h
+@deftypefun int nice (int @var{increment})
+Increment the priority of the current process by @var{increment}.
+The return value is the same as for @code{setpriority}.
+
+Here is an equivalent definition for @code{nice}:
+
+@smallexample
+int
+nice (int increment)
+@{
+  int old = getpriority (PRIO_PROCESS, 0);
+  return setpriority (PRIO_PROCESS, 0, old + increment);
+@}
+@end smallexample
+@end deftypefun

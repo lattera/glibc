@@ -1,0 +1,213 @@
+@node Non-Local Exits, Signal Handling, Date and Time, Top
+@chapter Non-Local Exits
+@cindex non-local exits
+@cindex long jumps
+
+Sometimes when your program detects an unusual situation inside a deeply
+nested set of function calls, you would like to be able to immediately
+return to an outer level of control.  This section describes how you can
+do such @dfn{non-local exits} using the @code{setjmp} and @code{longjmp}
+functions.
+
+@menu
+* Intro: Non-Local Intro.        When and how to use these facilities.
+* Details: Non-Local Details.   Functions for nonlocal exits.
+* Non-Local Exits and Signals::  Portability issues.
+@end menu
+
+@node Non-Local Intro, Non-Local Details,  , Non-Local Exits
+@section Introduction to Non-Local Exits
+
+As an example of a situation where a non-local exit can be useful,
+suppose you have an interactive program that has a ``main loop'' that
+prompts for and executes commands.  Suppose the ``read'' command reads
+input from a file, doing some lexical analysis and parsing of the input
+while processing it.  If a low-level input error is detected, it would
+be useful to be able to return immediately to the ``main loop'' instead
+of having to make each of the lexical analysis, parsing, and processing
+phases all have to explicitly deal with error situations initially
+detected by nested calls.
+
+(On the other hand, if each of these phases has to do a substantial
+amount of cleanup when it exits---such as closing files, deallocating
+buffers or other data structures, and the like---then it can be more
+appropriate to do a normal return and have each phase do its own
+cleanup, because a non-local exit would bypass the intervening phases and
+their associated cleanup code entirely.  Alternatively, you could use a
+non-local exit but do the cleanup explicitly either before or after
+returning to the ``main loop''.)
+
+In some ways, a non-local exit is similar to using the @samp{return}
+statement to return from a function.  But while @samp{return} abandons
+only a single function call, transferring control back to the point at
+which it was called, a non-local exit can potentially abandon many
+levels of nested function calls.
+
+You identify return points for non-local exits calling the function
+@code{setjmp}.  This function saves information about the execution
+environment in which the call to @code{setjmp} appears in an object of
+type @code{jmp_buf}.  Execution of the program continues normally after
+the call to @code{setjmp}, but if a exit is later made to this return
+point by calling @code{longjmp} with the corresponding @w{@code{jmp_buf}}
+object, control is transferred back to the point where @code{setjmp} was
+called.  The return value from @code{setjmp} is used to distinguish
+between an ordinary return and a return made by a call to
+@code{longjmp}, so calls to @code{setjmp} usually appear in an @samp{if}
+statement.
+
+Here is how the example program described above might be set up:  
+
+@smallexample
+@include setjmp.c.texi
+@end smallexample
+
+The function @code{abort_to_main_loop} causes an immediate transfer of
+control back to the main loop of the program, no matter where it is
+called from.
+
+The flow of control inside the @code{main} function may appear a little
+mysterious at first, but it is actually a common idiom with
+@code{setjmp}.  A normal call to @code{setjmp} returns zero, so the
+``else'' clause of the conditional is executed.  If
+@code{abort_to_main_loop} is called somewhere within the execution of
+@code{do_command}, then it actually appears as if the @emph{same} call
+to @code{setjmp} in @code{main} were returning a second time with a value
+of @code{-1}.
+
+@need 250
+So, the general pattern for using @code{setjmp} looks something like:
+
+@smallexample
+if (setjmp (@var{buffer}))
+  /* @r{Code to clean up after premature return.} */
+  @dots{}
+else
+  /* @r{Code to be executed normally after setting up the return point.} */
+  @dots{}
+@end smallexample
+
+@node Non-Local Details, Non-Local Exits and Signals, Non-Local Intro, Non-Local Exits
+@section Details of Non-Local Exits
+
+Here are the details on the functions and data structures used for
+performing non-local exits.  These facilities are declared in
+@file{setjmp.h}.
+@pindex setjmp.h
+
+@comment setjmp.h
+@comment ANSI
+@deftp {Data Type} jmp_buf
+Objects of type @code{jmp_buf} hold the state information to
+be restored by a non-local exit.  The contents of a @code{jmp_buf}
+identify a specific place to return to.
+@end deftp
+
+@comment setjmp.h
+@comment ANSI
+@deftypefn Macro int setjmp (jmp_buf @var{state})
+When called normally, @code{setjmp} stores information about the
+execution state of the program in @var{state} and returns zero.  If
+@code{longjmp} is later used to perform a non-local exit to this
+@var{state}, @code{setjmp} returns a nonzero value.
+@end deftypefn
+
+@comment setjmp.h
+@comment ANSI
+@deftypefun void longjmp (jmp_buf @var{state}, int @var{value}) 
+This function restores current execution to the state saved in
+@var{state}, and continues execution from the call to @code{setjmp} that
+established that return point.  Returning from @code{setjmp} by means of
+@code{longjmp} returns the @var{value} argument that was passed to
+@code{longjmp}, rather than @code{0}.  (But if @var{value} is given as
+@code{0}, @code{setjmp} returns @code{1}).@refill
+@end deftypefun
+
+There are a lot of obscure but important restrictions on the use of
+@code{setjmp} and @code{longjmp}.  Most of these restrictions are
+present because non-local exits require a fair amount of magic on the
+part of the C compiler and can interact with other parts of the language
+in strange ways.
+
+The @code{setjmp} function is actually a macro without an actual
+function definition, so you shouldn't try to @samp{#undef} it or take
+its address.  In addition, calls to @code{setjmp} are safe in only the
+following contexts:
+
+@itemize @bullet
+@item
+As the test expression of a selection or iteration
+statement (such as @samp{if}, @samp{switch}, or @samp{while}).
+
+@item
+As one operand of a equality or comparison operator that appears as the
+test expression of a selection or iteration statement.  The other
+operand must be an integer constant expression.
+
+@item
+As the operand of a unary @samp{!} operator, that appears as the
+test expression of a selection or iteration statement.
+
+@item
+By itself as an expression statement.
+@end itemize
+
+Return points are valid only during the dynamic extent of the function
+that called @code{setjmp} to establish them.  If you @code{longjmp} to
+a return point that was established in a function that has already
+returned, unpredictable and disastrous things are likely to happen.
+
+You should use a nonzero @var{value} argument to @code{longjmp}.  While
+@code{longjmp} refuses to pass back a zero argument as the return value
+from @code{setjmp}, this is intended as a safety net against accidental
+misuse and is not really good programming style.
+
+When you perform a non-local exit, accessible objects generally retain
+whatever values they had at the time @code{longjmp} was called.  The
+exception is that the values of automatic variables local to the
+function containing the @code{setjmp} call that have been changed since
+the call to @code{setjmp} are indeterminate, unless you have declared
+them @code{volatile}.
+
+@node Non-Local Exits and Signals,, Non-Local Details, Non-Local Exits
+@section Non-Local Exits and Signals
+
+In BSD Unix systems, @code{setjmp} and @code{longjmp} also save and
+restore the set of blocked signals; see @ref{Blocking Signals}.  However,
+the POSIX.1 standard requires @code{setjmp} and @code{longjmp} not to
+change the set of blocked signals, and provides an additional pair of
+functions (@code{sigsetjmp} and @code{sigsetjmp}) to get the BSD
+behavior.
+
+The behavior of @code{setjmp} and @code{longjmp} in the GNU library is
+controlled by feature test macros; see @ref{Feature Test Macros}.  The
+default in the GNU system is the POSIX.1 behavior rather than the BSD
+behavior.
+
+The facilities in this section are declared in the header file
+@file{setjmp.h}.
+@pindex setjmp.h
+
+@comment setjmp.h
+@comment POSIX.1
+@deftp {Data Type} sigjmp_buf
+This is similar to @code{jmp_buf}, except that it can also store state
+information about the set of blocked signals.
+@end deftp
+
+@comment setjmp.h
+@comment POSIX.1
+@deftypefun int sigsetjmp (sigjmp_buf @var{state}, int @var{savesigs})
+This is similar to @code{setjmp}.  If @var{savesigs} is nonzero, the set
+of blocked signals is saved in @var{state} and will be restored if a
+@code{siglongjmp} is later performed with this @var{state}.
+@end deftypefun
+
+@comment setjmp.h
+@comment POSIX.1
+@deftypefun void siglongjmp (sigjmp_buf @var{state}, int @var{value})
+This is similar to @code{longjmp} except for the type of its @var{state}
+argument.  If the @code{sigsetjmp} call that set this @var{state} used a
+nonzero @var{savesigs} flag, @code{siglongjmp} also restores the set of
+blocked signals.
+@end deftypefun
+

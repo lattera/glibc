@@ -1,0 +1,29 @@
+#! /bin/csh -f
+
+#
+#	Prints all the files given as arguments.
+#	Files that will fit on less than a printed page
+#	are concatenated together.  Bigger ones are pr'd.
+#
+
+
+set tocat='' topr=''
+
+foreach file ($*)
+	set lines=`wc -l $file | sed "s/$file//"`
+	if ($lines > 40) then
+		set topr=($topr $file)
+	else
+		set tocat=($tocat $file)
+	endif
+end
+
+
+if ("$topr" != '') pr $topr
+
+if ("$tocat" != '') foreach file ($tocat)
+	echo -n "==================== $file ======================"
+	cat $file
+end
+
+exit 0

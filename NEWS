@@ -1,0 +1,323 @@
+GNU C Library NEWS -- history of user-visible changes.  26 January 1995
+
+Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+See the end for copying conditions.
+
+Please send GNU C library bug reports to bug-glibc@prep.ai.mit.edu.
+
+Version 1.10
+
+* The library has changed from using GNU ld symbol aliases to using weak
+  symbols where available.  The ELF object file format supports weak
+  symbols; GNU ld also supports weak symbols in the a.out format.  (There
+  is also now support for other GNU ld extensions in ELF.  Use the
+  `--with-elf' option to configure to indicate you have elf, and
+  `--with-gnu-ld' if using GNU ld.)  This changed resulted in the deletion
+  of many files which contained only symbol aliases, reducing the size of
+  the source and the compiled library; many other files were renamed to
+  less cryptic names previously occupied by the symbol alias files.
+
+* The pgrp functions have been regularized, slightly incompatibly but much
+  less confusingly.  The core functions are now `getpgid' and `setpgid',
+  which take arguments for the PID to operate on; the POSIX.1 `getpgrp' (no
+  argument) and BSD `setpgrp' (identical to `setpgid') functions are
+  provided for compatibility.  There is no longer an incompatible `getpgrp'
+  with an argument declared under _BSD_SOURCE; no BSD code uses it.
+
+* The new header file <fts.h> and suite of functions simplify programs that
+  operate on directory trees.  This code comes from 4.4 BSD.
+
+* Converted to Autoconf version 2, so `configure' has more options.
+  Run `configure --help' to see the details.
+
+* The resolver code has been updated from the BIND-4.9.3-BETA14 release.
+
+* The new function `malloc_find_object_address' finds the starting address
+  of a malloc'd block, given any address within the block.  This can be
+  useful for debugging.
+
+* The new functions `strtoq' and `strtouq' parse integer values from
+  strings, like `strtol' and `strtoul', but they return `long long int' and
+  `unsigned long long int' values, respectively (64-bit quantities).
+
+* There is a new malloc debugging hook `__memalign_hook'.
+
+* There are new typedefs `ushort' for `unsigned short int' and `uint' for
+  `unsigned int' in <sys/types.h>.  These are for compatibility only and
+  their use is discouraged.
+
+* The `-lmcheck' library to enable standard malloc debugging hooks is now
+  done differently, so that it works even without GNU ld.
+
+Version 1.09
+
+* For cross-compilation you should now set `BUILD_CC' instead of `HOST_CC'.
+
+* New header file <fstab.h> and new functions `getfsspec', `getfsent' and
+  friends, for parsing /etc/fstab.  This code comes from 4.4 BSD.
+
+* The new function `daemon' from 4.4 BSD is useful for server programs that
+  want to put themselves in the background.
+
+* Joel Sherrill has contributed support for several standalone boards that
+  run without an operating system.
+
+* `printf', `scanf' and friends now accept a `q' type modifier for long
+  long int as well as `ll'.  Formats using these might be `%qu' or `%lld'.
+
+* All of the code taken from BSD (notably most of the math and networking
+  routines) has been updated from the BSD 4.4-Lite release.
+
+* The resolver code has been updated from the BIND-4.9.3-BETA9 release.
+
+* The new functions `getdomainname' and `setdomainname' fetch or change the
+  YP/NIS domain name.  These are system calls which exist on systems which
+  have YP (aka NIS).
+
+* The time zone data files have been updated for the latest international
+  conventions.
+
+* The SunRPC programs `portmap' and `rpcinfo' are now installed in
+  $(sbindir) (usually /usr/local/sbin) instead of $(bindir).
+
+Version 1.08
+
+* The C library now includes support for Sun RPC, from Sun's free
+  RPCSRC-4.0 distribution.  The `portmap', `rpcinfo', and `rpcgen' programs
+  are included.  (There is still no support for YP.)
+
+* Tom Quinn has contributed a port of the C library to SGI machines running
+  Irix 4 (mips-sgi-irix4).
+
+* The new `lockf' function is a simplified interface to the locking
+  facilities of `fcntl', included for compatibility.
+
+* New time functions `timegm', `timelocal', and `dysize' for compatibility.
+
+* New header file <sys/timeb.h> and new function `ftime' for compatibility.
+
+* New header files <poll.h> and <sys/poll.h> and new function `poll' for
+  compatibility.
+
+* The error message printed by `assert' for a failed assertion now includes
+  the name of the program (if using GNU ld) and the name of the calling
+  function (with versions of GCC that support this).
+
+* The `psignal' function is now declared in <signal.h>, not <stdio.h>.
+
+* The library now includes the <sys/mman.h> header file and memory
+  management functions `mmap', `munmap', `mprotect', `msync', and
+  `madvise', on systems that support those facilities.
+
+* The interface for `mcheck' has changed slightly: the function called to
+  abort the program when an allocation inconsistency is detected now takes
+  an argument that indicates the type of failure.  The new function
+  `mprobe' lets you request a consistency check for a particular block at
+  any time (checks are normally done only when you call `free' or `realloc'
+  on a block).
+
+* It is now possible to easily cross-compile the C library, building on one
+  system a library to run on another machine and/or operating system.  All
+  you need to do is set the variable `HOST_CC' in `configparms' to the
+  native compiler for programs to run on the machine you are building on (a
+  few generator programs are used on Unix systems); set `CC' to the
+  cross-compiler.
+
+* The new function `fexecve' (only implemented on the GNU system) executes
+  a program file given a file descriptor already open on the file.
+
+Version 1.07
+
+* Brendan Kehoe has contributed most of a port to the DEC Alpha
+  running OSF/1 (alpha-dec-osf1).  He says it is 75% complete.
+
+* You can set the variable `libprefix' in `configparms' to specify a prefix
+  to be prepended to installed library files; this makes it easy to install
+  the GNU C library to be linked as `-lgnuc' or whatever.
+
+* The new `stpncpy' is a cross between `stpcpy' and `strncpy': It
+  copies a limited number of characters from a string, and returns the
+  address of the last character written.
+
+* You no longer need to check for whether the installed `stddef.h' is
+  compatible with the GNU C library.  configure now checks for you.
+
+* You can now define a per-stream `fileno' function to convert the
+  stream's cookie into an integral file descriptor.
+
+* ``malloc (0)'' no longer returns a null pointer.  Instead, it
+  allocates zero bytes of storage, and returns a unique pointer which
+  you can pass to `realloc' or `free'.  The behavior is undefined if
+  you dereference this pointer.
+
+* The C library now runs on Sony NEWS m68k machines running either
+  NewsOS 3 or NewsOS 4.
+
+* The new `syscall' function is a system-dependent primitive function
+  for invoking system calls.  It has the canonical behavior on Unix
+  systems, including unreliable return values for some calls (such as
+  `pipe', `fork' and `getppid').
+
+* The error code `EWOULDBLOCK' is now obsolete; it is always defined
+  to `EAGAIN', which is the preferred name.  On systems whose kernels
+  use two distinct codes, the C library now translates EWOULDBLOCK to
+  EAGAIN in every system call function.
+
+Version 1.06
+
+* The GNU C Library Reference Manual is now distributed with the library.
+  `make dvi' will produce a DVI file of the printed manual.
+  `make info' will produce Info files that you can read on line using C-h i
+  in Emacs or the `info' program.
+  Please send comments on the manual to bug-glibc-manual@prep.ai.mit.edu.
+
+* The library now supports SVR4 on i386s (i386-unknown-sysv4).
+
+* Brendan Kehoe has contributed a port to Sun SPARCs running Solaris 2.
+
+* Jason Merrill has contributed a port to the Sequent Symmetry running
+  Dynix version 3 (i386-sequent-dynix).
+
+* The library has been ported to i386s running SCO 3.2.4 (also known as SCO
+  ODT 2.0; i386-unknown-sco3.2.4) or SCO 3.2 (i386-unknown-sco3.2).
+
+* New function `memory_warnings' lets you arrange to get warnings when
+  malloc is running out of memory to allocate, like Emacs gives you.
+
+* The C library now contains the relocating allocator used in Emacs 19 for
+  its editing buffers.  This allocator (ralloc) minimizes allocation
+  overhead and fragmentation by moving allocated regions around whenever it
+  needs to.  You always refer to a ralloc'd region with a "handle" (a
+  pointer to a pointer--an object of type `void **').
+
+* There is a new `printf' format: `%m' gives you the string corresponding
+  to the error code in `errno'.
+
+* In `scanf' formats, you can now use `%as' or `%a[' to do the normal `%s'
+  or `%[' conversion, but instead of filling in a fixed-sized buffer you
+  pass, the `a' modifier says to fill in a `char **' you pass with a
+  malloc'd string.
+
+* The `fnmatch' function supports the new flag bits `FNM_LEADING_DIR' and
+  `FNM_CASEFOLD'.  `FNM_LEADING_DIR' lets a pattern like `foo*' match a
+  name like `foo/bar'.  `FNM_CASEFOLD' says to ignore case in matching.
+
+* `mkstemp' is a traditional Unix function to atomically create and open a
+  uniquely-named temporary file.
+
+Version 1.05
+
+* The standard location for the file that says what the local timezone is
+  has changed again.  It is now `/usr/local/etc/localtime' (or more
+  precisely, `${prefix}/etc/localtime') rather than `/etc/localtime'.
+
+* The distribution no longer contains any files with names longer than 14
+  characters.
+
+* `struct ttyent' has two new flag bits: TTY_TRUSTED and TTY_CONSOLE.
+  These are set by the new `trusted' and `console' keywords in `/etc/ttys'.
+
+* New functions `ttyslot' and `syslog' from 4.4 BSD.
+
+Version 1.04
+
+* The configuration process has changed quite a bit.  The `configure'
+  script is now used just like the configuration scripts for other GNU
+  packages.  The `sysdeps' directory hierarchy is much rearranged.
+  The file `INSTALL' explains the new scheme in detail.
+
+* The header files no longer need to be processed into ANSI C and
+  traditional C versions.  There is just one set of files to install, and
+  it will work with ANSI or old C compilers (including `gcc -traditional').
+
+* Brendan Kehoe and Ian Lance Taylor have ported the library to the
+  MIPS DECStation running Ultrix 4.
+
+* The Sun 4 startup code (crt0) can now properly load SunOS 4 shared libraries.
+  Tom Quinn contributed the initial code.  The GNU C library can NOT yet be
+  made itself into a shared library.
+
+* Yet further improved support for the i386, running 4.3 BSD-like systems
+  (such as Mach 3 with the Unix single-server), or System V.
+
+* New function `strncasecmp' to do case-insensitive string comparison
+  with limited length.
+
+* New function `strsep' is a reentrant alternative to `strtok'.
+
+* New functions `scandir' and `alphasort' for searching directories.
+
+* New function `setenv' is a better interface to `putenv'.
+
+* Ian Lance Taylor has contributed an implementation of the SVID `ftw'
+  function for traversing a directory tree.
+
+* The GNU obstack package is now also part of the C library.
+  The new function `open_obstack_stream' creates a stdio stream that
+  writes onto an obstack; `obstack_printf' and `obstack_vprintf' do
+  formatted output directly to an obstack.
+
+* Miscellaneous new functions: reboot, nice, sigaltstack (4.4 BSD only),
+  cfmakeraw, getusershell, getpass, swab, getttyent, seteuid, setegid.
+
+* `FNM_FILE_NAME' is another name for `FNM_PATHNAME', used with `fnmatch'.
+
+* The new functions `strfry' and `memfrob' do mysterious and wonderful
+  things to your strings.
+
+* There are some new test programs: test-fseek, testmb, and testrand.
+
+* Some work has been done to begin porting the library to 4.4 BSD and Linux.
+  These ports are not finished, but are a good starting place for really
+  supporting those systems.
+
+* `/etc/localtime' is now the standard location for the file that says what
+  the local timezone is, rather than `/usr/local/lib/zoneinfo/localtime'.
+  This follows the general principle that `/etc' is the place for all local
+  configuration files.
+
+* The C library header files now use `extern "C"' when used by the C++
+  compiler, so the C library should now work with C++ code.
+
+* The header file <bstring.h> is gone.  <string.h> now declares bcopy,
+  bcmp, bzero, and ffs.  
+
+* Mike Haertel (of GNU e?grep and malloc fame) has written a new sorting
+  function which uses the `merge sort' algorithm, and is said to be
+  significantly faster than the old GNU `qsort' function.  Merge sort is
+  now the standard `qsort' function.  The new algorithm can require a lot
+  of temporary storage; so, the old sorting function is called when the
+  required storage is not available.
+
+* The C library now includes Michael Glad's Ultra Fast Crypt, which
+  provides the Unix `crypt' function, plus some other entry points.
+  Because of the United States export restriction on DES implementations,
+  we are distributing this code separately from the rest of the C library.
+  There is an extra distribution tar file just for crypt; it is called
+  `glibc-VERSION-crypt.tar.Z', e.g. `glibc-1.04-crypt.tar.Z'.  You can just
+  unpack the crypt distribution along with the rest of the C library and
+  build; you can also build the library without getting crypt.  Users
+  outside the USA can get the crypt distribution via anonymous FTP from
+  ftp.uni-c.dk [129.142.6.74], or another archive site outside the U.S.
+
+* The code and header files taken from 4.4 BSD have been updated with the
+  latest files released from Berkeley.
+
+----------------------------------------------------------------------
+Copyright information:
+
+Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+
+   Permission is granted to anyone to make or distribute verbatim copies
+   of this document as received, in any medium, provided that the
+   copyright notice and this permission notice are preserved,
+   thus giving the recipient permission to redistribute in turn.
+
+   Permission is granted to distribute modified versions
+   of this document, or of portions of it,
+   under the above conditions, provided also that they
+   carry prominent notices stating who last changed them.
+
+Local variables:
+version-control: never
+end:

@@ -1,0 +1,695 @@
+@node Extended Characters, Locales, String and Array Utilities, Top
+@chapter Extended Characters
+
+A number of languages use character sets that are larger than the range
+of values of type @code{char}.  Japanese and Chinese are probably the
+most familiar examples.
+
+The GNU C library includes support for two mechanisms for dealing with
+extended character sets: multibyte characters and wide characters.  This
+chapter describes how to use these mechanisms, and the functions for
+converting between them.
+@cindex extended character sets
+
+The behavior of the functions in this chapter is affected by the current
+locale for character classification---the @code{LC_CTYPE} category; see
+@ref{Locale Categories}.  This choice of locale selects which multibyte
+code is used, and also controls the meanings and characteristics of wide
+character codes.
+
+@menu
+* Extended Char Intro::         Multibyte codes versus wide characters.
+* Locales and Extended Chars::  The locale selects the character codes.
+* Multibyte Char Intro::        How multibyte codes are represented.
+* Wide Char Intro::             How wide characters are represented.
+* Wide String Conversion::      Converting wide strings to multibyte code
+                                 and vice versa.
+* Length of Char::              how many bytes make up one multibyte char.
+* Converting One Char::         Converting a string character by character.
+* Example of Conversion::       Example showing why converting 
+				 one character at a time may be useful.
+* Shift State::                 Multibyte codes with "shift characters".
+@end menu
+
+@node Extended Char Intro, Locales and Extended Chars,  , Extended Characters
+@section Introduction to Extended Characters
+
+You can represent extended characters in either of two ways:
+
+@itemize @bullet
+@item
+As @dfn{multibyte characters} which can be embedded in an ordinary
+string, an array of @code{char} objects.  Their advantage is that many
+programs and operating systems can handle occasional multibyte
+characters scattered among ordinary ASCII characters, without any
+change.
+
+@item
+@cindex wide characters
+As @dfn{wide characters}, which are like ordinary characters except that
+they occupy more bits.  The wide character data type, @code{wchar_t},
+has a range large enough to hold extended character codes as well as
+old-fashioned ASCII codes.
+
+An advantage of wide characters is that each character is a single data
+object, just like ordinary ASCII characters.  There are a few
+disadvantages:
+
+@itemize @bullet
+@item
+Each existing program must be modified and recompiled to make it use
+wide characters.
+
+@item
+Files of wide characters cannot be read by programs that expect ordinary
+characters.
+@end itemize
+@end itemize
+
+Typically, you use the multibyte character representation as part of the
+external program interface, such as reading or writing text to files.
+However, it's usually easier to perform internal manipulations on
+strings containing extended characters on arrays of @code{wchar_t}
+objects, since the uniform representation makes most editing operations
+easier.  If you do use multibyte characters for files and wide
+characters for internal operations, you need to convert between them
+when you read and write data.
+
+If your system supports extended characters, then it supports them both
+as multibyte characters and as wide characters.  The library includes
+functions you can use to convert between the two representations.
+These functions are described in this chapter.
+
+@node Locales and Extended Chars, Multibyte Char Intro, Extended Char Intro, Extended Characters
+@section Locales and Extended Characters
+
+A computer system can support more than one multibyte character code,
+and more than one wide character code.  The user controls the choice of
+codes through the current locale for character classification
+(@pxref{Locales}).  Each locale specifies a particular multibyte
+character code and a particular wide character code.  The choice of locale
+influences the behavior of the conversion functions in the library.
+
+Some locales support neither wide characters nor nontrivial multibyte
+characters.  In these locales, the library conversion functions still
+work, even though what they do is basically trivial.
+
+If you select a new locale for character classification, the internal
+shift state maintained by these functions can become confused, so it's
+not a good idea to change the locale while you are in the middle of
+processing a string.
+
+@node Multibyte Char Intro, Wide Char Intro, Locales and Extended Chars, Extended Characters
+@section Multibyte Characters
+@cindex multibyte characters
+
+In the ordinary ASCII code, a sequence of characters is a sequence of
+bytes, and each character is one byte.  This is very simple, but
+allows for only 256 distinct characters.
+
+In a @dfn{multibyte character code}, a sequence of characters is a
+sequence of bytes, but each character may occupy one or more consecutive
+bytes of the sequence.
+
+@cindex basic byte sequence
+There are many different ways of designing a multibyte character code;
+different systems use different codes.  To specify a particular code
+means designating the @dfn{basic} byte sequences---those which represent
+a single character---and what characters they stand for.  A code that a
+computer can actually use must have a finite number of these basic
+sequences, and typically none of them is more than a few characters
+long.
+
+These sequences need not all have the same length.  In fact, many of
+them are just one byte long.  Because the basic ASCII characters in the
+range from @code{0} to @code{0177} are so important, they stand for
+themselves in all multibyte character codes.  That is to say, a byte
+whose value is @code{0} through @code{0177} is always a character in
+itself.  The characters which are more than one byte must always start
+with a byte in the range from @code{0200} through @code{0377}.
+
+The byte value @code{0} can be used to terminate a string, just as it is
+often used in a string of ASCII characters.
+
+Specifying the basic byte sequences that represent single characters
+automatically gives meanings to many longer byte sequences, as more than
+one character.  For example, if the two byte sequence @code{0205 049}
+stands for the Greek letter alpha, then @code{0205 049 065} must stand
+for an alpha followed by an @samp{A} (ASCII code 065), and @code{0205 049
+0205 049} must stand for two alphas in a row.
+
+If any byte sequence can have more than one meaning as a sequence of
+characters, then the multibyte code is ambiguous---and no good.  The
+codes that systems actually use are all unambiguous.
+
+In most codes, there are certain sequences of bytes that have no meaning
+as a character or characters.  These are called @dfn{invalid}.
+
+The simplest possible multibyte code is a trivial one:
+
+@quotation
+The basic sequences consist of single bytes.
+@end quotation
+
+This particular code is equivalent to not using multibyte characters at
+all.  It has no invalid sequences.  But it can handle only 256 different
+characters.
+
+Here is another possible code which can handle 9376 different
+characters:
+
+@quotation
+The basic sequences consist of
+
+@itemize @bullet
+@item
+single bytes with values in the range @code{0} through @code{0237}.
+
+@item
+two-byte sequences, in which both of the bytes have values in the range
+from @code{0240} through @code{0377}.
+@end itemize
+@end quotation
+
+@noindent
+This code or a similar one is used on some systems to represent Japanese
+characters.  The invalid sequences are those which consist of an odd
+number of consecutive bytes in the range from @code{0240} through
+@code{0377}.
+
+Here is another multibyte code which can handle more distinct extended
+characters---in fact, almost thirty million:
+
+@quotation
+The basic sequences consist of
+
+@itemize @bullet
+@item
+single bytes with values in the range @code{0} through @code{0177}.
+
+@item
+sequences of up to four bytes in which the first byte is in the range
+from @code{0200} through @code{0237}, and the remaining bytes are in the
+range from @code{0240} through @code{0377}.
+@end itemize
+@end quotation
+
+@noindent
+In this code, any sequence that starts with a byte in the range
+from @code{0240} through @code{0377} is invalid.
+
+And here is another variant which has the advantage that removing the
+last byte or bytes from a valid character can never produce another
+valid character.  (This property is convenient when you want to search
+strings for particular characters.)
+
+@quotation
+The basic sequences consist of
+
+@itemize @bullet
+@item
+single bytes with values in the range @code{0} through @code{0177}.
+
+@item
+two-byte sequences in which the first byte is in the range from
+@code{0200} through @code{0207}, and the second byte is in the range
+from @code{0240} through @code{0377}.
+
+@item
+three-byte sequences in which the first byte is in the range from
+@code{0210} through @code{0217}, and the other bytes are in the range
+from @code{0240} through @code{0377}.
+
+@item
+four-byte sequences in which the first byte is in the range from
+@code{0220} through @code{0227}, and the other bytes are in the range
+from @code{0240} through @code{0377}.
+@end itemize
+@end quotation
+
+@noindent
+The list of invalid sequences for this code is long and not worth
+stating in full; examples of invalid sequences include @code{0240} and
+@code{0220 0300 065}.
+
+The number of @emph{possible} multibyte codes is astronomical.  But a
+given computer system will support at most a few different codes.  (One
+of these codes may allow for thousands of different characters.)
+Another computer system may support a completely different code.  The
+library facilities described in this chapter are helpful because they
+package up the knowledge of the details of a particular computer
+system's multibyte code, so your programs need not know them.
+
+You can use special standard macros to find out the maximum possible
+number of bytes in a character in the currently selected multibyte
+code with @code{MB_CUR_MAX}, and the maximum for @emph{any} multibyte
+code supported on your computer with @code{MB_LEN_MAX}.
+
+@comment limits.h
+@comment ANSI
+@deftypevr Macro int MB_LEN_MAX
+This is the maximum length of a multibyte character for any supported
+locale.  It is defined in @file{limits.h}.
+@pindex limits.h
+@end deftypevr
+
+@comment stdlib.h
+@comment ANSI
+@deftypevr Macro int MB_CUR_MAX
+This macro expands into a (possibly non-constant) positive integer
+expression that is the maximum number of bytes in a multibyte character
+in the current locale.  The value is never greater than @code{MB_LEN_MAX}.
+
+@pindex stdlib.h
+@code{MB_CUR_MAX} is defined in @file{stdlib.h}.
+@end deftypevr
+
+Normally, each basic sequence in a particular character code stands for
+one character, the same character regardless of context.  Some multibyte
+character codes have a concept of @dfn{shift state}; certain codes,
+called @dfn{shift sequences}, change to a different shift state, and the
+meaning of some or all basic sequences varies according to the current
+shift state.  In fact, the set of basic sequences might even be
+different depending on the current shift state.  @xref{Shift State}, for
+more information on handling this sort of code.
+
+What happens if you try to pass a string containing multibyte characters
+to a function that doesn't know about them?  Normally, such a function
+treats a string as a sequence of bytes, and interprets certain byte
+values specially; all other byte values are ``ordinary''.  As long as a
+multibyte character doesn't contain any of the special byte values, the
+function should pass it through as if it were several ordinary
+characters.
+
+For example, let's figure out what happens if you use multibyte
+characters in a file name.  The functions such as @code{open} and
+@code{unlink} that operate on file names treat the name as a sequence of
+byte values, with @samp{/} as the only special value.  Any other byte
+values are copied, or compared, in sequence, and all byte values are
+treated alike.  Thus, you may think of the file name as a sequence of
+bytes or as a string containing multibyte characters; the same behavior
+makes sense equally either way, provided no multibyte character contains
+a @samp{/}.
+
+@node Wide Char Intro, Wide String Conversion, Multibyte Char Intro, Extended Characters
+@section Wide Character Introduction
+
+@dfn{Wide characters} are much simpler than multibyte characters.  They
+are simply characters with more than eight bits, so that they have room
+for more than 256 distinct codes.  The wide character data type,
+@code{wchar_t}, has a range large enough to hold extended character
+codes as well as old-fashioned ASCII codes.
+
+An advantage of wide characters is that each character is a single data
+object, just like ordinary ASCII characters.  Wide characters also have
+some disadvantages:
+
+@itemize @bullet
+@item
+A program must be modified and recompiled in order to use wide
+characters at all.
+
+@item
+Files of wide characters cannot be read by programs that expect ordinary
+characters.
+@end itemize
+
+Wide character values @code{0} through @code{0177} are always identical
+in meaning to the ASCII character codes.  The wide character value zero
+is often used to terminate a string of wide characters, just as a single
+byte with value zero often terminates a string of ordinary characters.
+
+@comment stddef.h
+@comment ANSI
+@deftp {Data Type} wchar_t
+This is the ``wide character'' type, an integer type whose range is
+large enough to represent all distinct values in any extended character
+set in the supported locales.  @xref{Locales}, for more information
+about locales.  This type is defined in the header file @file{stddef.h}.
+@pindex stddef.h
+@end deftp
+
+If your system supports extended characters, then each extended
+character has both a wide character code and a corresponding multibyte
+basic sequence.
+
+@cindex code, character
+@cindex character code
+In this chapter, the term @dfn{code} is used to refer to a single
+extended character object to emphasize the distinction from the
+@code{char} data type.
+
+@node Wide String Conversion, Length of Char, Wide Char Intro, Extended Characters
+@section Conversion of Extended Strings
+@cindex extended strings, converting representations
+@cindex converting extended strings
+
+@pindex stdlib.h
+The @code{mbstowcs} function converts a string of multibyte characters
+to a wide character array.  The @code{wcstombs} function does the
+reverse.  These functions are declared in the header file
+@file{stdlib.h}.
+
+In most programs, these functions are the only ones you need for
+conversion between wide strings and multibyte character strings.  But
+they have limitations.  If your data is not null-terminated or is not
+all in core at once, you probably need to use the low-level conversion
+functions to convert one character at a time.  @xref{Converting One
+Char}.
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun size_t mbstowcs (wchar_t *@var{wstring}, const char *@var{string}, size_t @var{size})
+The @code{mbstowcs} (``multibyte string to wide character string'')
+function converts the null-terminated string of multibyte characters
+@var{string} to an array of wide character codes, storing not more than
+@var{size} wide characters into the array beginning at @var{wstring}.
+The terminating null character counts towards the size, so if @var{size}
+is less than the actual number of wide characters resulting from
+@var{string}, no terminating null character is stored.
+
+The conversion of characters from @var{string} begins in the initial
+shift state.
+
+If an invalid multibyte character sequence is found, this function
+returns a value of @code{-1}.  Otherwise, it returns the number of wide
+characters stored in the array @var{wstring}.  This number does not
+include the terminating null character, which is present if the number
+is less than @var{size}.
+
+Here is an example showing how to convert a string of multibyte
+characters, allocating enough space for the result.
+
+@smallexample
+wchar_t *
+mbstowcs_alloc (const char *string)
+@{
+  size_t size = strlen (string) + 1;
+  wchar_t *buf = xmalloc (size * sizeof (wchar_t));
+
+  size = mbstowcs (buf, string, size);
+  if (size == (size_t) -1)
+    return NULL;
+  buf = xrealloc (buf, (size + 1) * sizeof (wchar_t));
+  return buf;
+@}
+@end smallexample
+
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun size_t wcstombs (char *@var{string}, const wchar_t @var{wstring}, size_t @var{size})
+The @code{wcstombs} (``wide character string to multibyte string'')
+function converts the null-terminated wide character array @var{wstring}
+into a string containing multibyte characters, storing not more than
+@var{size} bytes starting at @var{string}, followed by a terminating
+null character if there is room.  The conversion of characters begins in
+the initial shift state.
+
+The terminating null character counts towards the size, so if @var{size}
+is less than or equal to the number of bytes needed in @var{wstring}, no
+terminating null character is stored.
+
+If a code that does not correspond to a valid multibyte character is
+found, this function returns a value of @code{-1}.  Otherwise, the
+return value is the number of bytes stored in the array @var{string}.
+This number does not include the terminating null character, which is
+present if the number is less than @var{size}.
+@end deftypefun
+
+@node Length of Char, Converting One Char, Wide String Conversion, Extended Characters
+@section Multibyte Character Length
+@cindex multibyte character, length of
+@cindex length of multibyte character
+
+This section describes how to scan a string containing multibyte
+characters, one character at a time.  The difficulty in doing this
+is to know how many bytes each character contains.  Your program 
+can use @code{mblen} to find this out.
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun int mblen (const char *@var{string}, size_t @var{size})
+The @code{mblen} function with a non-null @var{string} argument returns
+the number of bytes that make up the multibyte character beginning at
+@var{string}, never examining more than @var{size} bytes.  (The idea is
+to supply for @var{size} the number of bytes of data you have in hand.)
+
+The return value of @code{mblen} distinguishes three possibilities: the
+first @var{size} bytes at @var{string} start with valid multibyte
+character, they start with an invalid byte sequence or just part of a
+character, or @var{string} points to an empty string (a null character).
+
+For a valid multibyte character, @code{mblen} returns the number of
+bytes in that character (always at least @code{1}, and never more than
+@var{size}).  For an invalid byte sequence, @code{mblen} returns
+@code{-1}.  For an empty string, it returns @code{0}.
+
+If the multibyte character code uses shift characters, then @code{mblen}
+maintains and updates a shift state as it scans.  If you call
+@code{mblen} with a null pointer for @var{string}, that initializes the
+shift state to its standard initial value.  It also returns nonzero if
+the multibyte character code in use actually has a shift state.
+@xref{Shift State}.
+
+@pindex stdlib.h
+The function @code{mblen} is declared in @file{stdlib.h}.
+@end deftypefun
+
+@node Converting One Char, Example of Conversion, Length of Char, Extended Characters
+@section Conversion of Extended Characters One by One
+@cindex extended characters, converting
+@cindex converting extended characters
+
+@pindex stdlib.h
+You can convert multibyte characters one at a time to wide characters
+with the @code{mbtowc} function.  The @code{wctomb} function does the
+reverse.  These functions are declared in @file{stdlib.h}.
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun int mbtowc (wchar_t *@var{result}, const char *@var{string}, size_t @var{size})
+The @code{mbtowc} (``multibyte to wide character'') function when called
+with non-null @var{string} converts the first multibyte character
+beginning at @var{string} to its corresponding wide character code.  It
+stores the result in @code{*@var{result}}.
+
+@code{mbtowc} never examines more than @var{size} bytes.  (The idea is
+to supply for @var{size} the number of bytes of data you have in hand.)
+
+@code{mbtowc} with non-null @var{string} distinguishes three
+possibilities: the first @var{size} bytes at @var{string} start with
+valid multibyte character, they start with an invalid byte sequence or
+just part of a character, or @var{string} points to an empty string (a
+null character).
+
+For a valid multibyte character, @code{mbtowc} converts it to a wide
+character and stores that in @code{*@var{result}}, and returns the
+number of bytes in that character (always at least @code{1}, and never
+more than @var{size}).
+
+For an invalid byte sequence, @code{mbtowc} returns @code{-1}.  For an
+empty string, it returns @code{0}, also storing @code{0} in
+@code{*@var{result}}.
+
+If the multibyte character code uses shift characters, then
+@code{mbtowc} maintains and updates a shift state as it scans.  If you
+call @code{mbtowc} with a null pointer for @var{string}, that
+initializes the shift state to its standard initial value.  It also
+returns nonzero if the multibyte character code in use actually has a
+shift state.  @xref{Shift State}.
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun int wctomb (char *@var{string}, wchar_t @var{wchar})
+The @code{wctomb} (``wide character to multibyte'') function converts
+the wide character code @var{wchar} to its corresponding multibyte
+character sequence, and stores the result in bytes starting at
+@var{string}.  At most @code{MB_CUR_MAX} characters are stored.
+
+@code{wctomb} with non-null @var{string} distinguishes three
+possibilities for @var{wchar}: a valid wide character code (one that can
+be translated to a multibyte character), an invalid code, and @code{0}.
+
+Given a valid code, @code{wctomb} converts it to a multibyte character,
+storing the bytes starting at @var{string}.  Then it returns the number
+of bytes in that character (always at least @code{1}, and never more
+than @code{MB_CUR_MAX}).
+
+If @var{wchar} is an invalid wide character code, @code{wctomb} returns
+@code{-1}.  If @var{wchar} is @code{0}, it returns @code{0}, also
+storing @code{0} in @code{*@var{string}}.
+
+If the multibyte character code uses shift characters, then
+@code{wctomb} maintains and updates a shift state as it scans.  If you
+call @code{wctomb} with a null pointer for @var{string}, that
+initializes the shift state to its standard initial value.  It also
+returns nonzero if the multibyte character code in use actually has a
+shift state.  @xref{Shift State}.
+
+Calling this function with a @var{wchar} argument of zero when
+@var{string} is not null has the side-effect of reinitializing the
+stored shift state @emph{as well as} storing the multibyte character
+@code{0} and returning @code{0}.
+@end deftypefun
+
+@node Example of Conversion, Shift State, Converting One Char, Extended Characters
+@section Character-by-Character Conversion Example 
+
+Here is an example that reads multibyte character text from descriptor
+@code{input} and writes the corresponding wide characters to descriptor
+@code{output}.  We need to convert characters one by one for this
+example because @code{mbstowcs} is unable to continue past a null
+character, and cannot cope with an apparently invalid partial character
+by reading more input.
+
+@smallexample
+int
+file_mbstowcs (int input, int output)
+@{
+  char buffer[BUFSIZ + MB_LEN_MAX];
+  int filled = 0;
+  int eof = 0;
+
+  while (!eof)
+    @{
+      int nread;
+      int nwrite;
+      char *inp = buffer;
+      wchar_t outbuf[BUFSIZ];
+      wchar_t *outp = outbuf;
+
+      /* @r{Fill up the buffer from the input file.}  */
+      nread = read (input, buffer + filled, BUFSIZ);
+      if (nread < 0)
+        @{
+          perror ("read");
+          return 0;
+        @}
+      /* @r{If we reach end of file, make a note to read no more.} */
+      if (nread == 0)
+        eof = 1;
+
+      /* @r{@code{filled} is now the number of bytes in @code{buffer}.} */
+      filled += nread;
+
+      /* @r{Convert those bytes to wide characters--as many as we can.} */
+      while (1)
+        @{
+          int thislen = mbtowc (outp, inp, filled);
+          /* Stop converting at invalid character;
+             this can mean we have read just the first part
+             of a valid character.  */
+          if (thislen == -1)
+            break;
+          /* @r{Treat null character like any other,}
+             @r{but also reset shift state.} */
+          if (thislen == 0) @{
+            thislen = 1;
+            mbtowc (NULL, NULL, 0);
+          @}
+          /* @r{Advance past this character.} */
+          inp += thislen;
+          filled -= thislen;
+          outp++;
+        @}
+
+      /* @r{Write the wide characters we just made.}  */
+      nwrite = write (output, outbuf,
+                      (outp - outbuf) * sizeof (wchar_t));
+      if (nwrite < 0)
+        @{
+          perror ("write");
+          return 0;
+        @}
+
+      /* @r{See if we have a @emph{real} invalid character.} */
+      if ((eof && filled > 0) || filled >= MB_CUR_MAX)
+        @{
+          error ("invalid multibyte character");
+          return 0;
+        @}
+
+      /* @r{If any characters must be carried forward,}
+         @r{put them at the beginning of @code{buffer}.} */
+      if (filled > 0)
+        memcpy (inp, buffer, filled);
+      @}
+    @}
+
+  return 1;
+@}
+@end smallexample
+
+@node Shift State,  , Example of Conversion, Extended Characters
+@section Multibyte Codes Using Shift Sequences
+
+In some multibyte character codes, the @emph{meaning} of any particular
+byte sequence is not fixed; it depends on what other sequences have come
+earlier in the same string.  Typically there are just a few sequences
+that can change the meaning of other sequences; these few are called
+@dfn{shift sequences} and we say that they set the @dfn{shift state} for
+other sequences that follow.
+
+To illustrate shift state and shift sequences, suppose we decide that
+the sequence @code{0200} (just one byte) enters Japanese mode, in which
+pairs of bytes in the range from @code{0240} to @code{0377} are single
+characters, while @code{0201} enters Latin-1 mode, in which single bytes
+in the range from @code{0240} to @code{0377} are characters, and
+interpreted according to the ISO Latin-1 character set.  This is a
+multibyte code which has two alternative shift states (``Japanese mode''
+and ``Latin-1 mode''), and two shift sequences that specify particular
+shift states.
+
+When the multibyte character code in use has shift states, then
+@code{mblen}, @code{mbtowc} and @code{wctomb} must maintain and update
+the current shift state as they scan the string.  To make this work
+properly, you must follow these rules:
+
+@itemize @bullet
+@item
+Before starting to scan a string, call the function with a null pointer
+for the multibyte character address---for example, @code{mblen (NULL,
+0)}.  This initializes the shift state to its standard initial value.
+
+@item
+Scan the string one character at a time, in order.  Do not ``back up''
+and rescan characters already scanned, and do not intersperse the
+processing of different strings.
+@end itemize
+
+Here is an example of using @code{mblen} following these rules:
+
+@smallexample
+void
+scan_string (char *s)
+@{
+  int length = strlen (s);
+
+  /* @r{Initialize shift state.} */
+  mblen (NULL, 0);
+
+  while (1)
+    @{
+      int thischar = mblen (s, length);
+      /* @r{Deal with end of string and invalid characters.} */
+      if (thischar == 0)
+        break;
+      if (thischar == -1)
+        @{
+          error ("invalid multibyte character");
+          break;
+        @}
+      /* @r{Advance past this character.} */
+      s += thischar;
+      length -= thischar;
+    @}
+@}
+@end smallexample
+
+The functions @code{mblen}, @code{mbtowc} and @code{wctomb} are not
+reentrant when using a multibyte code that uses a shift state.  However,
+no other library functions call these functions, so you don't have to
+worry that the shift state will be changed mysteriously.

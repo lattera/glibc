@@ -1,0 +1,107 @@
+# Make the TAGS files.
+
+# Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+# Make this the default goal.
+TAGS:
+
+ifdef subdir
+.. := ../
+endif
+
+include $(..)Makeconfig
+
+ifndef tags_sources
+ifeq ($(subdir),ctype)
+# In most cases, we want the C source files to come before
+# the header files so tags for optimizing #define's in the
+# headers won't be put in the tags files, but for ctype,
+# the functions are just backup for the #define's in the header.
+tags_sources = $(all-headers) $(all-sources)
+else	# Not ctype.
+tags_sources = $(all-sources) $(all-headers)
+endif	# ctype
+endif	# No tags_sources
+
+sysdep-dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
+
+ifndef sysdep_dirs
+# Find all sysdep directories.
+sysdep_dirs := $(shell find $(..)sysdeps -type d ! -name RCS -print)
+endif
+
+# Find all sysdep dirs there are, but putting the ones
+# we are configured to use first and preserving their order.
+all-dirs := $(objdir) \
+	    $(sysdep-dirs) \
+	    $(source_dirs) \
+	    $(filter-out $(sysdep-dirs),$(sysdep_dirs))
+
+# Find all the subdirs there are, but putting the ones
+# we are configured to use first and preserving their order.
+ifndef subdir
+subdirs := $(subdirs) \
+	   $(filter-out $(subdirs),\
+			$(shell sed -e 's/\#.*$$//' \
+				    $(wildcard $(addsuffix /Subdirs,\
+							   $(all-dirs)))\
+				    /dev/null))
+all-dist = $(foreach Dist,$(wildcard $(all-dirs:%=%/Dist)),\
+		     $(addprefix $(Dist:%/Dist=%)/,\
+				 $(filter %.c %.h %.S %.s,\
+					  $(shell cat $(Dist)))))
+tags_sources = $(all-sources) $(all-headers) $(all-dist)
+endif
+
+# All different versions of $(sources), preserving the configured sysdep
+# directory order.
+all-sources = $(wildcard $(foreach file,$(sources),\
+				   $(file) \
+				   $(foreach dir,$(all-dirs),\
+					     $(dir)/$(file) \
+					     $(dir)/$(file:.c=.S) \
+					     $(dir)/$(file:.c=.s))))
+
+all-headers = $(wildcard $(foreach file,$(headers),\
+				   $(file) \
+				   $(foreach dir,$(all-dirs),$(dir)/$(file))))
+
+tags_sources := $(strip $(tags_sources))
+
+TAGS: $(tags_sources)
+ifdef subdir
+ifdef tags_sources
+	$(ETAGS) -o $@ $^
+else
+# No sources.  Create a dummy file. 
+	touch $@
+endif # tags_sources
+else # parent
+TAGS: subdir_TAGS
+# Note that this uses the -i switch, and thus requires v19 etags.
+	$(ETAGS) -o $@ \
+		 $(subdirs:%=-i %/TAGS) \
+		 $(filter-out subdir_TAGS,$^)
+
+.PHONY: subdir_TAGS $(subdirs:%=%/TAGS)
+subdir_TAGS: $(subdirs:%=%/TAGS)
+$(subdirs:%=%/TAGS):
+	$(MAKE) -C $(@D) no_deps=t $(@F)
+
+endif # subdir

@@ -1,0 +1,832 @@
+Library Maintenance
+*******************
+
+How to Install the GNU C Library
+================================
+
+   Installation of the GNU C library is relatively simple.
+
+   You need the latest version of GNU `make'.  Modifying the GNU C
+Library to work with other `make' programs would be so hard that we
+recommend you port GNU `make' instead.  *Really.*
+
+   To configure the GNU C library for your system, run the shell script
+`configure' with `sh'.  Use an argument which is the conventional GNU
+name for your system configuration--for example, `sparc-sun-sunos4.1',
+for a Sun 4 running Sunos 4.1.  *Note Installation:
+(gcc.info)Installation, for a full description of standard GNU
+configuration names.  If you omit the configuration name, `configure'
+will try to guess one for you by inspecting the system it is running
+on.  It may or may not be able to come up with a guess, and the its
+guess might be wrong.  `configure' will tell you the canonical name of
+the chosen configuration before proceeding.
+
+   The GNU C Library currently supports configurations that match the
+following patterns:
+
+     alpha-dec-osf1
+     i386-ANYTHING-bsd4.3
+     i386-ANYTHING-gnu
+     i386-ANYTHING-isc2.2
+     i386-ANYTHING-isc3.N
+     i386-ANYTHING-sco3.2
+     i386-ANYTHING-sco3.2v4
+     i386-ANYTHING-sysv
+     i386-ANYTHING-sysv4
+     i386-force_cpu386-none
+     i386-sequent-bsd
+     i960-nindy960-none
+     m68k-hp-bsd4.3
+     m68k-mvme135-none
+     m68k-mvme136-none
+     m68k-sony-newsos3
+     m68k-sony-newsos4
+     m68k-sun-sunos4.N
+     mips-dec-ultrix4.N
+     mips-sgi-irix4.N
+     sparc-sun-solaris2.N
+     sparc-sun-sunos4.N
+
+   While no other configurations are supported, there are handy aliases
+for these few.  (These aliases work in other GNU software as well.)
+
+     decstation
+     hp320-bsd4.3 hp300bsd
+     i386-sco
+     i386-sco3.2v4
+     i386-sequent-dynix
+     i386-svr4
+     news
+     sun3-sunos4.N sun3
+     sun4-solaris2.N sun4-sunos5.N
+     sun4-sunos4.N sun4
+
+   Here are some options that you should specify (if appropriate) when
+you run `configure':
+
+`--with-gnu-ld'
+     Use this option if you plan to use GNU `ld' to link programs with
+     the GNU C Library.  (We strongly recommend that you do.)  This
+     option enables use of features that exist only in GNU `ld'; so if
+     you configure for GNU `ld' you must use GNU `ld' *every time* you
+     link with the GNU C Library, and when building it.
+
+`--with-gnu-as'
+     Use this option if you plan to use the GNU assembler, `gas', when
+     building the GNU C Library.  On some systems, the library may not
+     build properly if you do *not* use `gas'.
+
+`--nfp'
+     Use this option if your computer lacks hardware floating point
+     support.
+
+`--prefix=DIRECTORY'
+     Install machine-independent data files in subdirectories of
+     `DIRECTORY'.  (You can also set this in `configparms'; see below.)
+
+`--exec-prefix=DIRECTORY'
+     Install the library and other machine-dependent files in
+     subdirectories of `DIRECTORY'.  (You can also set this in
+     `configparms'; see below.)
+
+   The simplest way to run `configure' is to do it in the directory
+that contains the library sources.  This prepares to build the library
+in that very directory.
+
+   You can prepare to build the library in some other directory by going
+to that other directory to run `configure'.  In order to run configure,
+you will have to specify a directory for it, like this:
+
+     mkdir sun4
+     cd sun4
+     ../configure sparc-sun-sunos4.1
+
+`configure' looks for the sources in whatever directory you specified
+for finding `configure' itself.  It does not matter where in the file
+system the source and build directories are--as long as you specify the
+source directory when you run `configure', you will get the proper
+results.
+
+   This feature lets you keep sources and binaries in different
+directories, and that makes it easy to build the library for several
+different machines from the same set of sources.  Simply create a build
+directory for each target machine, and run `configure' in that
+directory specifying the target machine's configuration name.
+
+   The library has a number of special-purpose configuration parameters.
+These are defined in the file `Makeconfig'; see the comments in that
+file for the details.
+
+   But don't edit the file `Makeconfig' yourself--instead, create a
+file `configparms' in the directory where you are building the library,
+and define in that file the parameters you want to specify.
+`configparms' should *not* be an edited copy of `Makeconfig'; specify
+only the parameters that you want to override.  To see how to set these
+parameters, find the section of `Makeconfig' that says "These are the
+configuration variables." Then for each parameter that you want to
+change, copy the definition from `Makeconfig' to your new `configparms'
+file, and change the value as appropriate for your system.
+
+   It is easy to configure the GNU C library for cross-compilation by
+setting a few variables in `configparms'.  Set `CC' to the
+cross-compiler for the target you configured the library for; it is
+important to use this same `CC' value when running `configure', like
+this: `CC=TARGET-gcc configure TARGET'.  Set `BUILD_CC' to the compiler
+to use for for programs run on the build system as part of compiling
+the library.  You may need to set `AR' and `RANLIB' to cross-compiling
+versions of `ar' and `ranlib' if the native tools are not configured to
+work with object files for the target you configured for.
+
+   Some of the machine-dependent code for some machines uses extensions
+in the GNU C compiler, so you may need to compile the library with GCC.
+(In fact, all of the existing complete ports require GCC.)
+
+   The current release of the C library contains some header files that
+the compiler normally provides: `stddef.h', `stdarg.h', and several
+files with names of the form `va-MACHINE.h'.  The versions of these
+files that came with older releases of GCC do not work properly with
+the GNU C library.  The `stddef.h' file in release 2.2 and later of GCC
+is correct.  If you have release 2.2 or later of GCC, use its version
+of `stddef.h' instead of the C library's.  To do this, put the line
+`override stddef.h =' in `configparms'.  The other files are corrected
+in release 2.3 and later of GCC.  `configure' will automatically detect
+whether the installed `stdarg.h' and `va-MACHINE.h' files are
+compatible with the C library, and use its own if not.
+
+   There is a potential problem with the `size_t' type and versions of
+GCC prior to release 2.4.  ANSI C requires that `size_t' always be an
+unsigned type.  For compatibility with existing systems' header files,
+GCC defines `size_t' in `stddef.h' to be whatever type the system's
+`sys/types.h' defines it to be.  Most Unix systems that define `size_t'
+in `sys/types.h', define it to be a signed type.  Some code in the
+library depends on `size_t' being an unsigned type, and will not work
+correctly if it is signed.
+
+   The GNU C library code which expects `size_t' to be unsigned is
+correct.  The definition of `size_t' as a signed type is incorrect.
+Versions 2.4 and later of GCC always define `size_t' as an unsigned
+type, and GCC's `fixincludes' script massages the system's
+`sys/types.h' so as not to conflict with this.
+
+   In the meantime, we work around this problem by telling GCC
+explicitly to use an unsigned type for `size_t' when compiling the GNU C
+library.  `configure' will automatically detect what type GCC uses for
+`size_t' arrange to override it if necessary.
+
+   To build the library, type `make lib'.  This will produce a lot of
+output, some of which looks like errors from `make' (but isn't).  Look
+for error messages from `make' containing `***'.  Those indicate that
+something is really wrong.
+
+   To build and run some test programs which exercise some of the
+library facilities, type `make tests'.  This will produce several files
+with names like `PROGRAM.out'.
+
+   To format the `GNU C Library Reference Manual' for printing, type
+`make dvi'.  To format the Info version of the manual for on line
+reading with `C-h i' in Emacs or with the `info' program, type
+`make info'.
+
+   To install the library and its header files, and the Info files of
+the manual, type `make install', after setting the installation
+directories in `configparms'.  This will build things if necessary,
+before installing them.
+
+Reporting Bugs
+==============
+
+   There are probably bugs in the GNU C library.  There are certainly
+errors and omissions in this manual.  If you report them, they will get
+fixed.  If you don't, no one will ever know about them and they will
+remain unfixed for all eternity, if not longer.
+
+   To report a bug, first you must find it.  Hopefully, this will be the
+hard part.  Once you've found a bug, make sure it's really a bug.  A
+good way to do this is to see if the GNU C library behaves the same way
+some other C library does.  If so, probably you are wrong and the
+libraries are right (but not necessarily).  If not, one of the libraries
+is probably wrong.
+
+   Once you're sure you've found a bug, try to narrow it down to the
+smallest test case that reproduces the problem.  In the case of a C
+library, you really only need to narrow it down to one library function
+call, if possible.  This should not be too difficult.
+
+   The final step when you have a simple test case is to report the bug.
+When reporting a bug, send your test case, the results you got, the
+results you expected, what you think the problem might be (if you've
+thought of anything), your system type, and the version of the GNU C
+library which you are using.  Also include the files `config.status'
+and `config.make' which are created by running `configure'; they will
+be in whatever directory was current when you ran `configure'.
+
+   If you think you have found some way in which the GNU C library does
+not conform to the ANSI and POSIX standards (*note Standards and
+Portability::.), that is definitely a bug.  Report it!
+
+   Send bug reports to the Internet address `bug-glibc@prep.ai.mit.edu'
+or the UUCP path `mit-eddie!prep.ai.mit.edu!bug-glibc'.  If you have
+other problems with installation or use, please report those as well.
+
+   If you are not sure how a function should behave, and this manual
+doesn't tell you, that's a bug in the manual.  Report that too!  If the
+function's behavior disagrees with the manual, then either the library
+or the manual has a bug, so report the disagreement.  If you find any
+errors or omissions in this manual, please report them to the Internet
+address `bug-glibc-manual@prep.ai.mit.edu' or the UUCP path
+`mit-eddie!prep.ai.mit.edu!bug-glibc-manual'.
+
+Adding New Functions
+====================
+
+   The process of building the library is driven by the makefiles, which
+make heavy use of special features of GNU `make'.  The makefiles are
+very complex, and you probably don't want to try to understand them.
+But what they do is fairly straightforward, and only requires that you
+define a few variables in the right places.
+
+   The library sources are divided into subdirectories, grouped by
+topic.  The `string' subdirectory has all the string-manipulation
+functions, `stdio' has all the standard I/O functions, etc.
+
+   Each subdirectory contains a simple makefile, called `Makefile',
+which defines a few `make' variables and then includes the global
+makefile `Rules' with a line like:
+
+     include ../Rules
+
+The basic variables that a subdirectory makefile defines are:
+
+`subdir'
+     The name of the subdirectory, for example `stdio'.  This variable
+     *must* be defined.
+
+`headers'
+     The names of the header files in this section of the library, such
+     as `stdio.h'.
+
+`routines'
+`aux'
+     The names of the modules (source files) in this section of the
+     library.  These should be simple names, such as `strlen' (rather
+     than complete file names, such as `strlen.c').  Use `routines' for
+     modules that define functions in the library, and `aux' for
+     auxiliary modules containing things like data definitions.  But the
+     values of `routines' and `aux' are just concatenated, so there
+     really is no practical difference.
+
+`tests'
+     The names of test programs for this section of the library.  These
+     should be simple names, such as `tester' (rather than complete file
+     names, such as `tester.c').  `make tests' will build and run all
+     the test programs.  If a test program needs input, put the test
+     data in a file called `TEST-PROGRAM.input'; it will be given to
+     the test program on its standard input.  If a test program wants
+     to be run with arguments, put the arguments (all on a single line)
+     in a file called `TEST-PROGRAM.args'.
+
+`others'
+     The names of "other" programs associated with this section of the
+     library.  These are programs which are not tests per se, but are
+     other small programs included with the library.  They are built by
+     `make others'.
+
+`install-lib'
+`install-data'
+`install'
+     Files to be installed by `make install'.  Files listed in
+     `install-lib' are installed in the directory specified by `libdir'
+     in `configparms' or `Makeconfig' (*note Installation::.).  Files
+     listed in `install-data' are installed in the directory specified
+     by `datadir' in `configparms' or `Makeconfig'.  Files listed in
+     `install' are installed in the directory specified by `bindir' in
+     `configparms' or `Makeconfig'.
+
+`distribute'
+     Other files from this subdirectory which should be put into a
+     distribution tar file.  You need not list here the makefile itself
+     or the source and header files listed in the other standard
+     variables.  Only define `distribute' if there are files used in an
+     unusual way that should go into the distribution.
+
+`generated'
+     Files which are generated by `Makefile' in this subdirectory.
+     These files will be removed by `make clean', and they will never
+     go into a distribution.
+
+`extra-objs'
+     Extra object files which are built by `Makefile' in this
+     subdirectory.  This should be a list of file names like `foo.o';
+     the files will actually be found in whatever directory object
+     files are being built in.  These files will be removed by
+     `make clean'.  This variable is used for secondary object files
+     needed to build `others' or `tests'.
+
+Porting the GNU C Library
+=========================
+
+   The GNU C library is written to be easily portable to a variety of
+machines and operating systems.  Machine- and operating system-dependent
+functions are well separated to make it easy to add implementations for
+new machines or operating systems.  This section describes the layout of
+the library source tree and explains the mechanisms used to select
+machine-dependent code to use.
+
+   All the machine-dependent and operating system-dependent files in the
+library are in the subdirectory `sysdeps' under the top-level library
+source directory.  This directory contains a hierarchy of
+subdirectories (*note Hierarchy Conventions::.).
+
+   Each subdirectory of `sysdeps' contains source files for a
+particular machine or operating system, or for a class of machine or
+operating system (for example, systems by a particular vendor, or all
+machines that use IEEE 754 floating-point format).  A configuration
+specifies an ordered list of these subdirectories.  Each subdirectory
+implicitly appends its parent directory to the list.  For example,
+specifying the list `unix/bsd/vax' is equivalent to specifying the list
+`unix/bsd/vax unix/bsd unix'.  A subdirectory can also specify that it
+implies other subdirectories which are not directly above it in the
+directory hierarchy.  If the file `Implies' exists in a subdirectory,
+it lists other subdirectories of `sysdeps' which are appended to the
+list, appearing after the subdirectory containing the `Implies' file.
+Lines in an `Implies' file that begin with a `#' character are ignored
+as comments.  For example, `unix/bsd/Implies' contains:
+     # BSD has Internet-related things.
+     unix/inet
+
+and `unix/Implies' contains:
+     posix
+
+So the final list is `unix/bsd/vax unix/bsd unix/inet unix posix'.
+
+   `sysdeps' has two "special" subdirectories, called `generic' and
+`stub'.  These two are always implicitly appended to the list of
+subdirectories (in that order), so you needn't put them in an `Implies'
+file, and you should not create any subdirectories under them.
+`generic' is for things that can be implemented in machine-independent
+C, using only other machine-independent functions in the C library.
+`stub' is for "stub" versions of functions which cannot be implemented
+on a particular machine or operating system.  The stub functions always
+return an error, and set `errno' to `ENOSYS' (Function not
+implemented).  *Note Error Reporting::.
+
+   A source file is known to be system-dependent by its having a
+version in `generic' or `stub'; every system-dependent function should
+have either a generic or stub implementation (there is no point in
+having both).
+
+   If you come across a file that is in one of the main source
+directories (`string', `stdio', etc.), and you want to write a machine-
+or operating system-dependent version of it, move the file into
+`sysdeps/generic' and write your new implementation in the appropriate
+system-specific subdirectory.  Note that if a file is to be
+system-dependent, it *must not* appear in one of the main source
+directories.
+
+   There are a few special files that may exist in each subdirectory of
+`sysdeps':
+
+`Makefile'
+     A makefile for this machine or operating system, or class of
+     machine or operating system.  This file is included by the library
+     makefile `Makerules', which is used by the top-level makefile and
+     the subdirectory makefiles.  It can change the variables set in the
+     including makefile or add new rules.  It can use GNU `make'
+     conditional directives based on the variable `subdir' (see above)
+     to select different sets of variables and rules for different
+     sections of the library.  It can also set the `make' variable
+     `sysdep-routines', to specify extra modules to be included in the
+     library.  You should use `sysdep-routines' rather than adding
+     modules to `routines' because the latter is used in determining
+     what to distribute for each subdirectory of the main source tree.
+
+     Each makefile in a subdirectory in the ordered list of
+     subdirectories to be searched is included in order.  Since several
+     system-dependent makefiles may be included, each should append to
+     `sysdep-routines' rather than simply setting it:
+
+          sysdep-routines := $(sysdep-routines) foo bar
+
+`Subdirs'
+     This file contains the names of new whole subdirectories under the
+     top-level library source tree that should be included for this
+     system.  These subdirectories are treated just like the
+     system-independent subdirectories in the library source tree, such
+     as `stdio' and `math'.
+
+     Use this when there are completely new sets of functions and header
+     files that should go into the library for the system this
+     subdirectory of `sysdeps' implements.  For example,
+     `sysdeps/unix/inet/Subdirs' contains `inet'; the `inet' directory
+     contains various network-oriented operations which only make sense
+     to put in the library on systems that support the Internet.
+
+`Dist'
+     This file contains the names of files (relative to the
+     subdirectory of `sysdeps' in which it appears) which should be
+     included in the distribution.  List any new files used by rules in
+     the `Makefile' in the same directory, or header files used by the
+     source files in that directory.  You don't need to list files that
+     are implementations (either C or assembly source) of routines
+     whose names are given in the machine-independent makefiles in the
+     main source tree.
+
+`configure'
+     This file is a shell script fragment to be run at configuration
+     time.  The top-level `configure' script uses the shell `.' command
+     to read the `configure' file in each system-dependent directory
+     chosen, in order.  The `configure' files are often generated from
+     `configure.in' files using Autoconf.
+
+     A system-dependent `configure' script will usually add things to
+     the shell variables `DEFS' and `config_vars'; see the top-level
+     `configure' script for details.  The script can check for
+     `--with-PACKAGE' options that were passed to the top-level
+     `configure'.  For an option `--with-PACKAGE=VALUE' `configure'
+     sets the shell variable `with_PACKAGE' (with any dashes in PACKAGE
+     converted to underscores) to VALUE; if the option is just
+     `--with-PACKAGE' (no argument), then it sets `with_PACKAGE' to
+     `yes'.
+
+`configure.in'
+     This file is an Autoconf input fragment to be processed into the
+     file `configure' in this subdirectory.  *Note Introduction:
+     (autoconf.info)Introduction, for a description of Autoconf.  You
+     should write either `configure' or `configure.in', but not both.
+     The first line of `configure.in' should invoke the `m4' macro
+     `GLIBC_PROVIDES'.  This macro does several `AC_PROVIDE' calls for
+     Autoconf macros which are used by the top-level `configure'
+     script; without this, those macros might be invoked again
+     unnecessarily by Autoconf.
+
+   That is the general system for how system-dependencies are isolated.
+
+Layout of the `sysdeps' Directory Hierarchy
+-------------------------------------------
+
+   A GNU configuration name has three parts: the CPU type, the
+manufacturer's name, and the operating system.  `configure' uses these
+to pick the list of system-dependent directories to look for.  If the
+`--nfp' option is *not* passed to `configure', the directory
+`MACHINE/fpu' is also used.  The operating system often has a "base
+operating system"; for example, if the operating system is `sunos4.1',
+the base operating system is `unix/bsd'.  The algorithm used to pick
+the list of directories is simple: `configure' makes a list of the base
+operating system, manufacturer, CPU type, and operating system, in that
+order.  It then concatenates all these together with slashes in
+between, to produce a directory name; for example, the configuration
+`sparc-sun-sunos4.1' results in `unix/bsd/sun/sparc/sunos4.1'.
+`configure' then tries removing each element of the list in turn, so
+`unix/bsd/sparc' and `sun/sparc' are also tried, among others.  Since
+the precise version number of the operating system is often not
+important, and it would be very inconvenient, for example, to have
+identical `sunos4.1.1' and `sunos4.1.2' directories, `configure' tries
+successively less specific operating system names by removing trailing
+suffixes starting with a period.
+
+   As an example, here is the complete list of directories that would be
+tried for the configuration `sparc-sun-sunos4.1' (without the `--nfp'
+option):
+
+     sparc/fpu
+     unix/bsd/sun/sunos4.1/sparc
+     unix/bsd/sun/sunos4.1
+     unix/bsd/sun/sunos4/sparc
+     unix/bsd/sun/sunos4
+     unix/bsd/sun/sunos/sparc
+     unix/bsd/sun/sunos
+     unix/bsd/sun/sparc
+     unix/bsd/sun
+     unix/bsd/sunos4.1/sparc
+     unix/bsd/sunos4.1
+     unix/bsd/sunos4/sparc
+     unix/bsd/sunos4
+     unix/bsd/sunos/sparc
+     unix/bsd/sunos
+     unix/bsd/sparc
+     unix/bsd
+     unix/sun/sunos4.1/sparc
+     unix/sun/sunos4.1
+     unix/sun/sunos4/sparc
+     unix/sun/sunos4
+     unix/sun/sunos/sparc
+     unix/sun/sunos
+     unix/sun/sparc
+     unix/sun
+     unix/sunos4.1/sparc
+     unix/sunos4.1
+     unix/sunos4/sparc
+     unix/sunos4
+     unix/sunos/sparc
+     unix/sunos
+     unix/sparc
+     unix
+     sun/sunos4.1/sparc
+     sun/sunos4.1
+     sun/sunos4/sparc
+     sun/sunos4
+     sun/sunos/sparc
+     sun/sunos
+     sun/sparc
+     sun
+     sunos4.1/sparc
+     sunos4.1
+     sunos4/sparc
+     sunos4
+     sunos/sparc
+     sunos
+     sparc
+
+   Different machine architectures are conventionally subdirectories at
+the top level of the `sysdeps' directory tree.  For example,
+`sysdeps/sparc' and `sysdeps/m68k'.  These contain files specific to
+those machine architectures, but not specific to any particular
+operating system.  There might be subdirectories for specializations of
+those architectures, such as `sysdeps/m68k/68020'. Code which is
+specific to the floating-point coprocessor used with a particular
+machine should go in `sysdeps/MACHINE/fpu'.
+
+   There are a few directories at the top level of the `sysdeps'
+hierarchy that are not for particular machine architectures.
+
+`generic'
+`stub'
+     As described above (*note Porting::.), these are the two
+     subdirectories that every configuration implicitly uses after all
+     others.
+
+`ieee754'
+     This directory is for code using the IEEE 754 floating-point
+     format, where the C type `float' is IEEE 754 single-precision
+     format, and `double' is IEEE 754 double-precision format.  Usually
+     this directory is referred to in the `Implies' file in a machine
+     architecture-specific directory, such as `m68k/Implies'.
+
+`posix'
+     This directory contains implementations of things in the library in
+     terms of POSIX.1 functions.  This includes some of the POSIX.1
+     functions themselves.  Of course, POSIX.1 cannot be completely
+     implemented in terms of itself, so a configuration using just
+     `posix' cannot be complete.
+
+`unix'
+     This is the directory for Unix-like things.  *Note Porting to
+     Unix::.  `unix' implies `posix'.  There are some special-purpose
+     subdirectories of `unix':
+
+    `unix/common'
+          This directory is for things common to both BSD and System V
+          release 4.  Both `unix/bsd' and `unix/sysv/sysv4' imply
+          `unix/common'.
+
+    `unix/inet'
+          This directory is for `socket' and related functions on Unix
+          systems.  The `inet' top-level subdirectory is enabled by
+          `unix/inet/Subdirs'.  `unix/common' implies `unix/inet'.
+
+`mach'
+     This is the directory for things based on the Mach microkernel
+     from CMU (including the GNU operating system).  Other basic
+     operating systems (VMS, for example) would have their own
+     directories at the top level of the `sysdeps' hierarchy, parallel
+     to `unix' and `mach'.
+
+Porting the GNU C Library to Unix Systems
+-----------------------------------------
+
+   Most Unix systems are fundamentally very similar.  There are
+variations between different machines, and variations in what
+facilities are provided by the kernel.  But the interface to the
+operating system facilities is, for the most part, pretty uniform and
+simple.
+
+   The code for Unix systems is in the directory `unix', at the top
+level of the `sysdeps' hierarchy.  This directory contains
+subdirectories (and subdirectory trees) for various Unix variants.
+
+   The functions which are system calls in most Unix systems are
+implemented in assembly code in files in `sysdeps/unix'.  These files
+are named with a suffix of `.S'; for example, `__open.S'.  Files ending
+in `.S' are run through the C preprocessor before being fed to the
+assembler.
+
+   These files all use a set of macros that should be defined in
+`sysdep.h'.  The `sysdep.h' file in `sysdeps/unix' partially defines
+them; a `sysdep.h' file in another directory must finish defining them
+for the particular machine and operating system variant.  See
+`sysdeps/unix/sysdep.h' and the machine-specific `sysdep.h'
+implementations to see what these macros are and what they should do.
+
+   The system-specific makefile for the `unix' directory (that is, the
+file `sysdeps/unix/Makefile') gives rules to generate several files
+from the Unix system you are building the library on (which is assumed
+to be the target system you are building the library *for*).  All the
+generated files are put in the directory where the object files are
+kept; they should not affect the source tree itself.  The files
+generated are `ioctls.h', `errnos.h', `sys/param.h', and `errlist.c'
+(for the `stdio' section of the library).
+
+Contributors to the GNU C Library
+=================================
+
+   The GNU C library was written almost entirely by Roland McGrath, who
+now maintains it.  Some parts of the library were contributed or worked
+on by other people.
+
+   * The `getopt' function and related code were written by Richard
+     Stallman, David J. MacKenzie, and Roland McGrath.
+
+   * Most of the math functions are taken from 4.4 BSD; they have been
+     modified only slightly to work with the GNU C library.  The
+     Internet-related code (most of the `inet' subdirectory) and several
+     other miscellaneous functions and header files have been included
+     with little or no modification.
+
+     All code incorporated from 4.4 BSD is under the following
+     copyright:
+
+               Copyright (C) 1991 Regents of the University of California.
+               All rights reserved.
+
+          Redistribution and use in source and binary forms, with or
+          without modification, are permitted provided that the
+          following conditions are met:
+
+            1. Redistributions of source code must retain the above
+               copyright notice, this list of conditions and the
+               following disclaimer.
+
+            2. Redistributions in binary form must reproduce the above
+               copyright notice, this list of conditions and the
+               following disclaimer in the documentation and/or other
+               materials provided with the distribution.
+
+            3. All advertising materials mentioning features or use of
+               this software must display the following acknowledgement:
+                    This product includes software developed by the
+                    University of California, Berkeley and its
+                    contributors.
+
+            4. Neither the name of the University nor the names of its
+               contributors may be used to endorse or promote products
+               derived from this software without specific prior
+               written permission.
+
+          THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS "AS
+          IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+          LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+          FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT
+          SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+          INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+          DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+          SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+          OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+          LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+          (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+          THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+          OF SUCH DAMAGE.
+
+   * The random number generation functions `random', `srandom',
+     `setstate' and `initstate', which are also the basis for the
+     `rand' and `srand' functions, were written by Earl T. Cohen for
+     the University of California at Berkeley and are copyrighted by the
+     Regents of the University of California.  They have undergone minor
+     changes to fit into the GNU C library and to fit the ANSI C
+     standard, but the functional code is Berkeley's.
+
+   * The merge sort function `qsort' was written by Michael J. Haertel.
+
+   * The quick sort function used as a fallback by `qsort' was written
+     by Douglas C. Schmidt.
+
+   * The memory allocation functions `malloc', `realloc' and `free' and
+     related code were written by Michael J. Haertel.
+
+   * Fast implementations of many of the string functions (`memcpy',
+     `strlen', etc.) were written by Torbjorn Granlund.
+
+   * Some of the support code for Mach is taken from Mach 3.0 by CMU,
+     and is under the following copyright terms:
+
+               Mach Operating System
+               Copyright (C) 1991,1990,1989 Carnegie Mellon University
+               All Rights Reserved.
+
+          Permission to use, copy, modify and distribute this software
+          and its documentation is hereby granted, provided that both
+          the copyright notice and this permission notice appear in all
+          copies of the software, derivative works or modified
+          versions, and any portions thereof, and that both notices
+          appear in supporting documentation.
+
+          CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS
+          IS" CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF
+          ANY KIND FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF
+          THIS SOFTWARE.
+
+          Carnegie Mellon requests users of this software to return to
+
+                Software Distribution Coordinator
+                School of Computer Science
+                Carnegie Mellon University
+                Pittsburgh PA 15213-3890
+
+          or `Software.Distribution@CS.CMU.EDU' any improvements or
+          extensions that they make and grant Carnegie Mellon the
+          rights to redistribute these changes.
+
+   * The `tar.h' header file was written by David J. MacKenzie.
+
+   * The port to the MIPS DECStation running Ultrix 4
+     (`mips-dec-ultrix4') was contributed by Brendan Kehoe and Ian
+     Lance Taylor.
+
+   * The DES encryption function `crypt' and related functions were
+     contributed by Michael Glad.
+
+   * The `ftw' function was contributed by Ian Lance Taylor.
+
+   * The code to support SunOS shared libraries was contributed by Tom
+     Quinn.
+
+   * The `mktime' function was contributed by Noel Cragg.
+
+   * The port to the Sequent Symmetry running Dynix version 3
+     (`i386-sequent-bsd') was contributed by Jason Merrill.
+
+   * The timezone support code is derived from the public-domain
+     timezone package by Arthur David Olson.
+
+   * The Internet resolver code is taken directly from BIND 4.9.1,
+     which is under both the Berkeley copyright above and also:
+
+          Portions Copyright (C) 1993 by Digital Equipment Corporation.
+
+          Permission to use, copy, modify, and distribute this software
+          for any purpose with or without fee is hereby granted,
+          provided that the above copyright notice and this permission
+          notice appear in all copies, and that the name of Digital
+          Equipment Corporation not be used in advertising or publicity
+          pertaining to distribution of the document or software
+          without specific, written prior permission.
+
+          THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP.
+          DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+          INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+          FITNESS.  IN NO EVENT SHALL DIGITAL EQUIPMENT CORPORATION BE
+          LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+          DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+          DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+          OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+          WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+   * The port to the DEC Alpha running OSF/1 (`alpha-dec-osf1') was
+     contributed by Brendan Kehoe, using some code written by Roland
+     McGrath.
+
+   * The floating-point printing function used by `printf' and friends
+     was written by Roland McGrath and Torbjorn Granlund.  The
+     multi-precision integer functions used in that function are taken
+     from GNU MP, which was contributed by Torbjorn Granlund.
+
+   * The code to support Sun RPC is taken verbatim from Sun's
+     RPCSRC-4.0 distribution, and is covered by this copyright:
+
+               Copyright (C) 1984, Sun Microsystems, Inc.
+
+          Sun RPC is a product of Sun Microsystems, Inc. and is
+          provided for unrestricted use provided that this legend is
+          included on all tape media and as a part of the software
+          program in whole or part.  Users may copy or modify Sun RPC
+          without charge, but are not authorized to license or
+          distribute it to anyone else except as part of a product or
+          program developed by the user.
+
+          SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND
+          INCLUDING THE WARRANTIES OF DESIGN, MERCHANTIBILITY AND
+          FITNESS FOR A PARTICULAR PURPOSE, OR ARISING FROM A COURSE OF
+          DEALING, USAGE OR TRADE PRACTICE.
+
+          Sun RPC is provided with no support and without any
+          obligation on the part of Sun Microsystems, Inc. to assist in
+          its use, correction, modification or enhancement.
+
+          SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT
+          TO THE INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY
+          PATENTS BY SUN RPC OR ANY PART THEREOF.
+
+          In no event will Sun Microsystems, Inc. be liable for any
+          lost revenue or profits or other special, indirect and
+          consequential damages, even if Sun has been advised of the
+          possibility of such damages.
+
+               Sun Microsystems, Inc.
+               2550 Garcia Avenue
+               Mountain View, California  94043
+
+   * The port to SGI machines running Irix 4 (`mips-sgi-irix4') was
+     contributed by Tom Quinn.
+
+   * The port of the Mach and Hurd code to the MIPS architecture
+     (`mips-ANYTHING-gnu') was contribued by Kazumoto Kojima.
+

@@ -1,0 +1,1189 @@
+@node Pattern Matching, I/O Overview, Searching and Sorting, Top
+@chapter Pattern Matching
+
+The GNU C Library provides pattern matching facilities for two kinds of
+patterns: regular expressions and file-name wildcards.  The library also
+provides a facility for expanding variable and command references and
+parsing text into words in the way the shell does.
+
+@menu
+* Wildcard Matching::    Matching a wildcard pattern against a single string.
+* Globbing::             Finding the files that match a wildcard pattern.
+* Regular Expressions::  Matching regular expressions against strings.
+* Word Expansion::       Expanding shell variables, nested commands,
+			    arithmetic, and wildcards.
+			    This is what the shell does with shell commands.
+@end menu
+
+@node Wildcard Matching
+@section Wildcard Matching
+
+@pindex fnmatch.h
+This section describes how to match a wildcard pattern against a
+particular string.  The result is a yes or no answer: does the
+string fit the pattern or not.  The symbols described here are all
+declared in @file{fnmatch.h}.
+
+@comment fnmatch.h
+@comment POSIX.2
+@deftypefun int fnmatch (const char *@var{pattern}, const char *@var{string}, int @var{flags})
+This function tests whether the string @var{string} matches the pattern
+@var{pattern}.  It returns @code{0} if they do match; otherwise, it
+returns the nonzero value @code{FNM_NOMATCH}.  The arguments
+@var{pattern} and @var{string} are both strings.
+
+The argument @var{flags} is a combination of flag bits that alter the
+details of matching.  See below for a list of the defined flags.
+
+In the GNU C Library, @code{fnmatch} cannot experience an ``error''---it
+always returns an answer for whether the match succeeds.  However, other
+implementations of @code{fnmatch} might sometimes report ``errors''.
+They would do so by returning nonzero values that are not equal to
+@code{FNM_NOMATCH}.
+@end deftypefun
+
+These are the available flags for the @var{flags} argument:
+
+@table @code
+@comment fnmatch.h
+@comment GNU
+@item FNM_FILE_NAME
+Treat the @samp{/} character specially, for matching file names.  If
+this flag is set, wildcard constructs in @var{pattern} cannot match
+@samp{/} in @var{string}.  Thus, the only way to match @samp{/} is with
+an explicit @samp{/} in @var{pattern}.
+
+@comment fnmatch.h
+@comment POSIX.2
+@item FNM_PATHNAME
+This is an alias for @code{FNM_FILE_NAME}; it comes from POSIX.2.  We
+don't recommend this name because we don't use the term ``pathname'' for
+file names.
+
+@comment fnmatch.h
+@comment POSIX.2
+@item FNM_PERIOD
+Treat the @samp{.} character specially if it appears at the beginning of
+@var{string}.  If this flag is set, wildcard constructs in @var{pattern}
+cannot match @samp{.} as the first character of @var{string}.
+
+If you set both @code{FNM_PERIOD} and @code{FNM_FILE_NAME}, then the
+special treatment applies to @samp{.} following @samp{/} as well as to
+@samp{.} at the beginning of @var{string}.  (The shell uses the
+@code{FNM_PERIOD} and @code{FNM_FILE_NAME} falgs together for matching
+file names.)
+
+@comment fnmatch.h
+@comment POSIX.2
+@item FNM_NOESCAPE
+Don't treat the @samp{\} character specially in patterns.  Normally,
+@samp{\} quotes the following character, turning off its special meaning
+(if any) so that it matches only itself.  When quoting is enabled, the
+pattern @samp{\?} matches only the string @samp{?}, because the question
+mark in the pattern acts like an ordinary character.
+
+If you use @code{FNM_NOESCAPE}, then @samp{\} is an ordinary character.
+
+@comment fnmatch.h
+@comment GNU
+@item FNM_LEADING_DIR
+Ignore a trailing sequence of characters starting with a @samp{/} in
+@var{string}; that is to say, test whether @var{string} starts with a
+directory name that @var{pattern} matches.
+
+If this flag is set, either @samp{foo*} or @samp{foobar} as a pattern
+would match the string @samp{foobar/frobozz}.
+
+@comment fnmatch.h
+@comment GNU
+@item FNM_CASEFOLD
+Ignore case in comparing @var{string} to @var{pattern}.
+@end table
+
+@node Globbing
+@section Globbing
+
+@cindex globbing
+The archetypal use of wildcards is for matching against the files in a
+directory, and making a list of all the matches.  This is called
+@dfn{globbing}.
+
+You could do this using @code{fnmatch}, by reading the directory entries
+one by one and testing each one with @code{fnmatch}.  But that would be
+slow (and complex, since you would have to handle subdirectories by
+hand).
+
+The library provides a function @code{glob} to make this particular use
+of wildcards convenient.  @code{glob} and the other symbols in this
+section are declared in @file{glob.h}.
+
+@menu
+* Calling Glob::        Basic use of @code{glob}.
+* Flags for Globbing::  Flags that enable various options in @code{glob}.
+@end menu
+
+@node Calling Glob
+@subsection Calling @code{glob}
+
+The result of globbing is a vector of file names (strings).  To return
+this vector, @code{glob} uses a special data type, @code{glob_t}, which
+is a structure.  You pass @code{glob} the address of the structure, and
+it fills in the structure's fields to tell you about the results.
+
+@comment glob.h
+@comment POSIX.2
+@deftp {Data Type} glob_t
+This data type holds a pointer to a word vector.  More precisely, it
+records both the address of the word vector and its size.
+
+@table @code
+@item gl_pathc
+The number of elements in the vector.
+
+@item gl_pathv
+The address of the vector.  This field has type @w{@code{char **}}.
+
+@item gl_offs
+The offset of the first real element of the vector, from its nominal
+address in the @code{gl_pathv} field.  Unlike the other fields, this
+is always an input to @code{glob}, rather than an output from it.
+
+If you use a nonzero offset, then that many elements at the beginning of
+the vector are left empty.  (The @code{glob} function fills them with
+null pointers.)
+
+The @code{gl_offs} field is meaningful only if you use the
+@code{GLOB_DOOFFS} flag.  Otherwise, the offset is always zero
+regardless of what is in this field, and the first real element comes at
+the beginning of the vector.
+@end table
+@end deftp
+
+@comment glob.h
+@comment POSIX.2
+@deftypefun int glob (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob_t *@var{vector-ptr})
+The function @code{glob} does globbing using the pattern @var{pattern}
+in the current directory.  It puts the result in a newly allocated
+vector, and stores the size and address of this vector into
+@code{*@var{vector-ptr}}.  The argument @var{flags} is a combination of
+bit flags; see @ref{Flags for Globbing}, for details of the flags.
+
+The result of globbing is a sequence of file names.  The function
+@code{glob} allocates a string for each resulting word, then
+allocates a vector of type @code{char **} to store the addresses of
+these strings.  The last element of the vector is a null pointer.
+This vector is called the @dfn{word vector}.
+
+To return this vector, @code{glob} stores both its address and its
+length (number of elements, not counting the terminating null pointer)
+into @code{*@var{vector-ptr}}.
+
+Normally, @code{glob} sorts the file names alphabetically before 
+returning them.  You can turn this off with the flag @code{GLOB_NOSORT}
+if you want to get the information as fast as possible.  Usually it's
+a good idea to let @code{glob} sort them---if you process the files in
+alphabetical order, the users will have a feel for the rate of progress
+that your application is making.
+
+If @code{glob} succeeds, it returns 0.  Otherwise, it returns one
+of these error codes:
+
+@table @code
+@comment glob.h
+@comment POSIX.2
+@item GLOB_ABORTED
+There was an error opening a directory, and you used the flag
+@code{GLOB_ERR} or your specified @var{errfunc} returned a nonzero
+value.
+@iftex
+See below
+@end iftex
+@ifinfo
+@xref{Flags for Globbing},
+@end ifinfo
+for an explanation of the @code{GLOB_ERR} flag and @var{errfunc}.
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_NOMATCH
+The pattern didn't match any existing files.  If you use the
+@code{GLOB_NOCHECK} flag, then you never get this error code, because
+that flag tells @code{glob} to @emph{pretend} that the pattern matched
+at least one file.
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_NOSPACE
+It was impossible to allocate memory to hold the result.
+@end table
+
+In the event of an error, @code{glob} stores information in
+@code{*@var{vector-ptr}} about all the matches it has found so far.
+@end deftypefun
+
+@node Flags for Globbing
+@subsection Flags for Globbing
+
+This section describes the flags that you can specify in the 
+@var{flags} argument to @code{glob}.  Choose the flags you want,
+and combine them with the C bitwise OR operator @code{|}.
+
+@table @code
+@comment glob.h
+@comment POSIX.2
+@item GLOB_APPEND
+Append the words from this expansion to the vector of words produced by
+previous calls to @code{glob}.  This way you can effectively expand
+several words as if they were concatenated with spaces between them.
+
+In order for appending to work, you must not modify the contents of the
+word vector structure between calls to @code{glob}.  And, if you set
+@code{GLOB_DOOFFS} in the first call to @code{glob}, you must also
+set it when you append to the results.
+
+Note that the pointer stored in @code{gl_pathv} may no longer be valid
+after you call @code{glob} the second time, because @code{glob} might
+have relocated the vector.  So always fetch @code{gl_pathv} from the
+@code{glob_t} structure after each @code{glob} call; @strong{never} save
+the pointer across calls.
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_DOOFFS
+Leave blank slots at the beginning of the vector of words.
+The @code{gl_offs} field says how many slots to leave.
+The blank slots contain null pointers.
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_ERR
+Give up right away and report an error if there is any difficulty
+reading the directories that must be read in order to expand @var{pattern}
+fully.  Such difficulties might include a directory in which you don't
+have the requisite access.  Normally, @code{glob} tries its best to keep
+on going despite any errors, reading whatever directories it can.
+
+You can exercise even more control than this by specifying an
+error-handler function @var{errfunc} when you call @code{glob}.  If
+@var{errfunc} is not a null pointer, then @code{glob} doesn't give up
+right away when it can't read a directory; instead, it calls
+@var{errfunc} with two arguments, like this:
+
+@smallexample
+(*@var{errfunc}) (@var{filename}, @var{error-code})
+@end smallexample
+
+@noindent
+The argument @var{filename} is the name of the directory that
+@code{glob} couldn't open or couldn't read, and @var{error-code} is the
+@code{errno} value that was reported to @code{glob}.
+
+If the error handler function returns nonzero, then @code{glob} gives up
+right away.  Otherwise, it continues.
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_MARK
+If the pattern matches the name of a directory, append @samp{/} to the
+directory's name when returning it.
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_NOCHECK
+If the pattern doesn't match any file names, return the pattern itself
+as if it were a file name that had been matched.  (Normally, when the
+pattern doesn't match anything, @code{glob} returns that there were no
+matches.)
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_NOSORT
+Don't sort the file names; return them in no particular order.
+(In practice, the order will depend on the order of the entries in
+the directory.)  The only reason @emph{not} to sort is to save time.
+
+@comment glob.h
+@comment POSIX.2
+@item GLOB_NOESCAPE
+Don't treat the @samp{\} character specially in patterns.  Normally,
+@samp{\} quotes the following character, turning off its special meaning
+(if any) so that it matches only itself.  When quoting is enabled, the
+pattern @samp{\?} matches only the string @samp{?}, because the question
+mark in the pattern acts like an ordinary character.
+
+If you use @code{GLOB_NOESCAPE}, then @samp{\} is an ordinary character.
+
+@code{glob} does its work by calling the function @code{fnmatch}
+repeatedly.  It handles the flag @code{GLOB_NOESCAPE} by turning on the
+@code{FNM_NOESCAPE} flag in calls to @code{fnmatch}.
+@end table
+
+@node Regular Expressions
+@section Regular Expression Matching
+
+The GNU C library supports two interfaces for matching regular
+expressions.  One is the standard POSIX.2 interface, and the other is
+what the GNU system has had for many years.
+
+Both interfaces are declared in the header file @file{regex.h}.
+If you define @w{@code{_POSIX_C_SOURCE}}, then only the POSIX.2
+functions, structures, and constants are declared.
+@c !!! we only document the POSIX.2 interface here!!
+
+@menu
+* POSIX Regexp Compilation::    Using @code{regcomp} to prepare to match.
+* Flags for POSIX Regexps::     Syntax variations for @code{regcomp}.
+* Matching POSIX Regexps::      Using @code{regexec} to match the compiled
+				   pattern that you get from @code{regcomp}.
+* Regexp Subexpressions::       Finding which parts of the string were matched.
+* Subexpression Complications:: Find points of which parts were matched.
+* Regexp Cleanup::		Freeing storage; reporting errors.
+@end menu
+
+@node POSIX Regexp Compilation
+@subsection POSIX Regular Expression Compilation
+
+Before you can actually match a regular expression, you must
+@dfn{compile} it.  This is not true compilation---it produces a special
+data structure, not machine instructions.  But it is like ordinary
+compilation in that its purpose is to enable you to ``execute'' the
+pattern fast.  (@xref{Matching POSIX Regexps}, for how to use the
+compiled regular expression for matching.)
+
+There is a special data type for compiled regular expressions:
+
+@comment regex.h
+@comment POSIX.2
+@deftp {Data Type} regex_t
+This type of object holds a compiled regular expression.
+It is actually a structure.  It has just one field that your programs
+should look at:
+
+@table @code
+@item re_nsub
+This field holds the number of parenthetical subexpressions in the
+regular expression that was compiled.
+@end table
+
+There are several other fields, but we don't describe them here, because
+only the functions in the library should use them.
+@end deftp
+
+After you create a @code{regex_t} object, you can compile a regular
+expression into it by calling @code{regcomp}.
+
+@comment regex.h
+@comment POSIX.2
+@deftypefun int regcomp (regex_t *@var{compiled}, const char *@var{pattern}, int @var{cflags})
+The function @code{regcomp} ``compiles'' a regular expression into a
+data structure that you can use with @code{regexec} to match against a
+string.  The compiled regular expression format is designed for
+efficient matching.  @code{regcomp} stores it into @code{*@var{compiled}}.
+
+It's up to you to allocate an object of type @code{regex_t} and pass its
+address to @code{regcomp}.
+
+The argument @var{cflags} lets you specify various options that control
+the syntax and semantics of regular expressions.  @xref{Flags for POSIX
+Regexps}.
+
+If you use the flag @code{REG_NOSUB}, then @code{regcomp} omits from
+the compiled regular expression the information necessary to record
+how subexpressions actually match.  In this case, you might as well
+pass @code{0} for the @var{matchptr} and @var{nmatch} arguments when
+you call @code{regexec}.
+
+If you don't use @code{REG_NOSUB}, then the compiled regular expression
+does have the capacity to record how subexpressions match.  Also,
+@code{regcomp} tells you how many subexpressions @var{pattern} has, by
+storing the number in @code{@var{compiled}->re_nsub}.  You can use that
+value to decide how long an array to allocate to hold information about
+subexpression matches.
+
+@code{regcomp} returns @code{0} if it succeeds in compiling the regular
+expression; otherwise, it returns a nonzero error code (see the table
+below).  You can use @code{regerror} to produce an error message string
+describing the reason for a nonzero value; see @ref{Regexp Cleanup}.
+
+@end deftypefun
+
+Here are the possible nonzero values that @code{regcomp} can return:
+
+@table @code
+@comment regex.h
+@comment POSIX.2
+@item REG_BADBR
+There was an invalid @samp{\@{@dots{}\@}} construct in the regular
+expression.  A valid @samp{\@{@dots{}\@}} construct must contain either
+a single number, or two numbers in increasing order separated by a
+comma.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_BADPAT
+There was a syntax error in the regular expression.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_BADRPT
+A repetition operator such as @samp{?} or @samp{*} appeared in a bad
+position (with no preceding subexpression to act on).
+
+@comment regex.h
+@comment POSIX.2
+@item REG_ECOLLATE
+The regular expression referred to an invalid collating element (one not
+defined in the current locale for string collation).  @xref{Locale
+Categories}.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_ECTYPE
+The regular expression referred to an invalid character class name.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_EESCAPE
+The regular expression ended with @samp{\}.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_ESUBREG
+There was an invalid number in the @samp{\@var{digit}} construct.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_EBRACK
+There were unbalanced square brackets in the regular expression.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_EPAREN
+An extended regular expression had unbalanced parentheses,
+or a basic regular expression had unbalanced @samp{\(} and @samp{\)}.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_EBRACE
+The regular expression had unbalanced @samp{\@{} and @samp{\@}}.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_ERANGE
+One of the endpoints in a range expression was invalid.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_ESPACE
+@code{regcomp} ran out of memory.
+@end table
+
+@node Flags for POSIX Regexps
+@subsection Flags for POSIX Regular Expressions
+
+These are the bit flags that you can use in the @var{cflags} operand when
+compiling a regular expression with @code{regcomp}.
+ 
+@table @code
+@comment regex.h
+@comment POSIX.2
+@item REG_EXTENDED
+Treat the pattern as an extended regular expression, rather than as a
+basic regular expression.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_ICASE
+Ignore case when matching letters.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_NOSUB
+Don't bother storing the contents of the @var{matches-ptr} array.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_NEWLINE
+Treat a newline in @var{string} as dividing @var{string} into multiple
+lines, so that @samp{$} can match before the newline and @samp{^} can
+match after.  Also, don't permit @samp{.} to match a newline, and don't
+permit @samp{[^@dots{}]} to match a newline.
+
+Otherwise, newline acts like any other ordinary character.
+@end table
+
+@node Matching POSIX Regexps
+@subsection Matching a Compiled POSIX Regular Expression
+
+Once you have compiled a regular expression, as described in @ref{POSIX
+Regexp Compilation}, you can match it against strings using
+@code{regexec}.  A match anywhere inside the string counts as success,
+unless the regular expression contains anchor characters (@samp{^} or
+@samp{$}).
+
+@comment regex.h
+@comment POSIX.2
+@deftypefun int regexec (regex_t *@var{compiled}, char *@var{string}, size_t @var{nmatch}, regmatch_t @var{matchptr} @t{[]}, int @var{eflags})
+This function tries to match the compiled regular expression
+@code{*@var{compiled}} against @var{string}.
+
+@code{regexec} returns @code{0} if the regular expression matches;
+otherwise, it returns a nonzero value.  See the table below for
+what nonzero values mean.  You can use @code{regerror} to produce an
+error message string describing the reason for a nonzero value; 
+see @ref{Regexp Cleanup}.
+
+The argument @var{eflags} is a word of bit flags that enable various
+options.
+
+If you want to get information about what part of @var{string} actually
+matched the regular expression or its subexpressions, use the arguments
+@var{matchptr} and @var{nmatch}.  Otherwise, pass @code{0} for 
+@var{nmatch}, and @code{NULL} for @var{matchptr}.  @xref{Regexp
+Subexpressions}.
+@end deftypefun
+
+You must match the regular expression with the same set of current
+locales that were in effect when you compiled the regular expression.
+
+The function @code{regexec} accepts the following flags in the
+@var{eflags} argument:
+
+@table @code 
+@comment regex.h
+@comment POSIX.2
+@item REG_NOTBOL
+Do not regard the beginning of the specified string as the beginning of
+a line; more generally, don't make any assumptions about what text might
+precede it.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_NOTEOL
+Do not regard the end of the specified string as the end of a line; more
+generally, don't make any assumptions about what text might follow it.
+@end table
+
+Here are the possible nonzero values that @code{regexec} can return:
+
+@table @code
+@comment regex.h
+@comment POSIX.2
+@item REG_NOMATCH
+The pattern didn't match the string.  This isn't really an error.
+
+@comment regex.h
+@comment POSIX.2
+@item REG_ESPACE
+@code{regexec} ran out of memory.
+@end table
+
+@node Regexp Subexpressions
+@subsection Match Results with Subexpressions
+
+When @code{regexec} matches parenthetical subexpressions of
+@var{pattern}, it records which parts of @var{string} they match.  It
+returns that information by storing the offsets into an array whose
+elements are structures of type @code{regmatch_t}.  The first element of
+the array (index @code{0}) records the part of the string that matched
+the entire regular expression.  Each other element of the array records
+the beginning and end of the part that matched a single parenthetical
+subexpression.
+
+@comment regex.h
+@comment POSIX.2
+@deftp {Data Type} regmatch_t
+This is the data type of the @var{matcharray} array that you pass to
+@code{regexec}.  It containes two structure fields, as follows:
+
+@table @code
+@item rm_so
+The offset in @var{string} of the beginning of a substring.  Add this
+value to @var{string} to get the address of that part.
+
+@item rm_eo
+The offset in @var{string} of the end of the substring.
+@end table
+@end deftp
+
+@comment regex.h
+@comment POSIX.2
+@deftp {Data Type} regoff_t
+@code{regoff_t} is an alias for another signed integer type.
+The fields of @code{regmatch_t} have type @code{regoff_t}.
+@end deftp
+
+The @code{regmatch_t} elements correspond to subexpressions
+positionally; the first element (index @code{1}) records where the first
+subexpression matched, the second element records the second
+subexpression, and so on.  The order of the subexpressions is the order
+in which they begin.
+
+When you call @code{regexec}, you specify how long the @var{matchptr}
+array is, with the @var{nmatch} argument.  This tells @code{regexec} how
+many elements to store.  If the actual regular expression has more than
+@var{nmatch} subexpressions, then you won't get offset information about
+the rest of them.  But this doesn't alter whether the pattern matches a
+particular string or not.
+
+If you don't want @code{regexec} to return any information about where
+the subexpressions matched, you can either supply @code{0} for
+@var{nmatch}, or use the flag @code{REG_NOSUB} when you compile the
+pattern with @code{regcomp}.
+
+@node Subexpression Complications
+@subsection Complications in Subexpression Matching
+
+Sometimes a subexpression matches a substring of no characters.  This
+happens when @samp{f\(o*\)} matches the string @samp{fum}.  (It really
+matches just the @samp{f}.)  In this case, both of the offsets identify
+the point in the string where the null substring was found.  In this
+example, the offsets are both @code{1}.
+
+Sometimes the entire regular expression can match without using some of
+its subexpressions at all---for example, when @samp{ba\(na\)*} matches the
+string @samp{ba}, the parenthetical subexpression is not used.  When
+this happens, @code{regexec} stores @code{-1} in both fields of the
+element for that subexpression.
+
+Sometimes matching the entire regular expression can match a particular
+subexpression more than once---for example, when @samp{ba\(na\)*}
+matches the string @samp{bananana}, the parenthetical subexpression
+matches three times.  When this happens, @code{regexec} usually stores
+the offsets of the last part of the string that matched the
+subexpression.  In the case of @samp{bananana}, these offsets are
+@code{6} and @code{8}.
+
+But the last match is not always the one that is chosen.  It's more
+accurate to say that the last @emph{opportunity} to match is the one
+that takes precedence.  What this means is that when one subexpression
+appears within another, then the results reported for the inner
+subexpression reflect whatever happened on the last match of the outer
+subexpression.  For an example, consider @samp{\(ba\(na\)*s \)*} matching
+the string @samp{bananas bas }.  The last time the inner expression
+actually matches is near the end of the first word.  But it is 
+@emph{considered} again in the second word, and fails to match there.
+@code{regexec} reports nonuse of the ``na'' subexpression.
+
+Another place where this rule applies is when the regular expression
+@w{@samp{\(ba\(na\)*s \|nefer\(ti\)* \)*}} matches @samp{bananas nefertiti}.
+The ``na'' subexpression does match in the first word, but it doesn't
+match in the second word because the other alternative is used there.
+Once again, the second repetition of the outer subexpression overrides
+the first, and within that second repetition, the ``na'' subexpression
+is not used.  So @code{regexec} reports nonuse of the ``na''
+subexpression.
+
+@node Regexp Cleanup
+@subsection POSIX Regexp Matching Cleanup
+
+When you are finished using a compiled regular expression, you can
+free the storage it uses by calling @code{regfree}.
+
+@comment regex.h
+@comment POSIX.2
+@deftypefun void regfree (regex_t *@var{compiled})
+Calling @code{regfree} frees all the storage that @code{*@var{compiled}}
+points to.  This includes various internal fields of the @code{regex_t}
+structure that aren't documented in this manual.
+
+@code{regfree} does not free the object @code{*@var{compiled}} itself.
+@end deftypefun
+
+You should always free the space in a @code{regex_t} structure with
+@code{regfree} before using the structure to compile another regular
+expression.
+
+When @code{regcomp} or @code{regexec} reports an error, you can use
+the function @code{regerror} to turn it into an error message string.
+
+@comment regex.h
+@comment POSIX.2
+@deftypefun size_t regerror (int @var{errcode}, regex_t *@var{compiled}, char *@var{buffer}, size_t @var{length})
+This function produces an error message string for the error code
+@var{errcode}, and stores the string in @var{length} bytes of memory
+starting at @var{buffer}.  For the @var{compiled} argument, supply the
+same compiled regular expression structure that @code{regcomp} or
+@code{regexec} was working with when it got the error.  Alternatively,
+you can supply @code{NULL} for @var{compiled}; you will still get a
+meaningful error message, but it might not be as detailed.
+
+If the error message can't fit in @var{length} bytes (including a
+terminating null character), then @code{regerror} truncates it.
+The string that @code{regerror} stores is always null-terminated
+even if it has been truncated.
+
+The return value of @code{regerror} is the minimum length needed to
+store the entire error message.  If this is less than @var{length}, then
+the error message was not truncated, and you can use it.  Otherwise, you
+should call @code{regerror} again with a larger buffer.
+
+Here is a function which uses @code{regerror}, but always dynamically
+allocates a buffer for the error message:
+
+@smallexample
+char *get_regerror (int errcode, regex_t *compiled)
+@{
+  size_t length = regerror (errcode, compiled, NULL, 0);
+  char *buffer = xmalloc (length);
+  (void) regerror (errcode, compiled, buffer, length);
+  return buffer;
+@}
+@end smallexample
+@end deftypefun
+
+@c !!!! this is not actually in the library....
+@node Word Expansion
+@section Shell-Style Word Expansion
+@cindex word expansion
+@cindex expansion of shell words
+
+@dfn{Word expansion} means the process of splitting a string into 
+@dfn{words} and substituting for variables, commands, and wildcards
+just as the shell does.
+
+For example, when you write @samp{ls -l foo.c}, this string is split
+into three separate words---@samp{ls}, @samp{-l} and @samp{foo.c}.
+This is the most basic function of word expansion.
+
+When you write @samp{ls *.c}, this can become many words, because
+the word @samp{*.c} can be replaced with any number of file names.
+This is called @dfn{wildcard expansion}, and it is also a part of
+word expansion.
+
+When you use @samp{echo $PATH} to print your path, you are taking
+advantage of @dfn{variable substitution}, which is also part of word
+expansion.
+
+Ordinary programs can perform word expansion just like the shell by
+calling the library function @code{wordexp}.
+
+@menu
+* Expansion Stages::	What word expansion does to a string.
+* Calling Wordexp::	How to call @code{wordexp}.
+* Flags for Wordexp::   Options you can enable in @code{wordexp}.
+* Wordexp Example::	A sample program that does word expansion.
+@end menu
+
+@node Expansion Stages
+@subsection The Stages of Word Expansion
+
+When word expansion is applied to a sequence of words, it performs the
+following transformations in the order shown here:
+
+@enumerate
+@item
+@cindex tilde expansion
+@dfn{Tilde expansion}: Replacement of @samp{~foo} with the name of
+the home directory of @samp{foo}.
+
+@item
+Next, three different transformations are applied in the same step,
+from left to right:
+
+@itemize @bullet
+@item
+@cindex variable substitution
+@cindex substitution of variables and commands
+@dfn{Variable substitution}: Environment variables are substituted for
+references such as @samp{$foo}.
+
+@item
+@cindex command substitution
+@dfn{Command substitution}: Constructs such as @w{@samp{`cat foo`}} and
+the equivalent @w{@samp{$(cat foo)}} are replaced with the output from
+the inner command.
+
+@item
+@cindex arithmetic expansion
+@dfn{Arithmetic expansion}: Constructs such as @samp{$(($x-1))} are
+replaced with the result of the arithmetic computation.
+@end itemize
+
+@item
+@cindex field splitting
+@dfn{Field splitting}: subdivision of the text into @dfn{words}.
+
+@item
+@cindex wildcard expansion
+@dfn{Wildcard expansion}: The replacement of a construct such as @samp{*.c}
+with a list of @samp{.c} file names.  Wildcard expansion applies to an
+entire word at a time, and replaces that word with 0 or more file names
+that are themselves words.
+
+@item
+@cindex quote removal
+@cindex removal of quotes
+@dfn{Quote removal}: The deletion of string-quotes, now that they have
+done their job by inhibiting the above transformations when appropriate.
+@end enumerate
+
+For the details of these transformations, and how to write the constructs
+that use them, see @w{@cite{The BASH Manual}} (to appear).
+
+@node Calling Wordexp
+@subsection Calling @code{wordexp}
+
+All the functions, constants and data types for word expansion are
+declared in the header file @file{wordexp.h}.
+
+Word expansion produces a vector of words (strings).  To return this
+vector, @code{wordexp} uses a special data type, @code{wordexp_t}, which
+is a structure.  You pass @code{wordexp} the address of the structure,
+and it fills in the structure's fields to tell you about the results.
+
+@comment wordexp.h
+@comment POSIX.2
+@deftp {Data Type} {wordexp_t}
+This data type holds a pointer to a word vector.  More precisely, it
+records both the address of the word vector and its size.
+
+@table @code
+@item we_wordc
+The number of elements in the vector.
+
+@item we_wordv
+The address of the vector.  This field has type @w{@code{char **}}.
+
+@item we_offs
+The offset of the first real element of the vector, from its nominal
+address in the @code{we_wordv} field.  Unlike the other fields, this
+is always an input to @code{wordexp}, rather than an output from it.
+
+If you use a nonzero offset, then that many elements at the beginning of
+the vector are left empty.  (The @code{wordexp} function fills them with
+null pointers.)
+
+The @code{we_offs} field is meaningful only if you use the
+@code{WRDE_DOOFFS} flag.  Otherwise, the offset is always zero
+regardless of what is in this field, and the first real element comes at
+the beginning of the vector.
+@end table
+@end deftp
+
+@comment wordexp.h
+@comment POSIX.2
+@deftypefun int wordexp (const char *@var{words}, wordexp_t *@var{word-vector-ptr}, int @var{flags})
+Perform word expansion on the string @var{words}, putting the result in
+a newly allocated vector, and store the size and address of this vector
+into @code{*@var{word-vector-ptr}}.  The argument @var{flags} is a
+combination of bit flags; see @ref{Flags for Wordexp}, for details of
+the flags.
+
+You shouldn't use any of the characters @samp{|&;<>} in the string
+@var{words} unless they are quoted; likewise for newline.  If you use
+these characters unquoted, you will get the @code{WRDE_BADCHAR} error
+code.  Don't use parentheses or braces unless they are quoted or part of
+a word expansion construct.  If you use quotation characters @samp{'"`},
+they should come in pairs that balance.
+
+The results of word expansion are a sequence of words.  The function
+@code{wordexp} allocates a string for each resulting word, then
+allocates a vector of type @code{char **} to store the addresses of
+these strings.  The last element of the vector is a null pointer.
+This vector is called the @dfn{word vector}.
+
+To return this vector, @code{wordexp} stores both its address and its
+length (number of elements, not counting the terminating null pointer)
+into @code{*@var{word-vector-ptr}}.
+
+If @code{wordexp} succeeds, it returns 0.  Otherwise, it returns one
+of these error codes:
+
+@table @code
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_BADCHAR
+The input string @var{words} contains an unquoted invalid character such
+as @samp{|}.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_BADVAL
+The input string refers to an undefined shell variable, and you used the flag
+@code{WRDE_UNDEF} to forbid such references.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_CMDSUB
+The input string uses command substitution, and you used the flag
+@code{WRDE_NOCMD} to forbid command substitution.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_NOSPACE
+It was impossible to allocate memory to hold the result.  In this case,
+@code{wordexp} can store part of the results---as much as it could
+allocate room for.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_SYNTAX
+There was a syntax error in the input string.  For example, an unmatched
+quoting character is a syntax error.
+@end table
+@end deftypefun
+
+@comment wordexp.h
+@comment POSIX.2
+@deftypefun void wordfree (wordexp_t *@var{word-vector-ptr})
+Free the storage used for the word-strings and vector that
+@code{*@var{word-vector-ptr}} points to.  This does not free the
+structure @code{*@var{word-vector-ptr}} itself---only the other
+data it points to.
+@end deftypefun
+
+@node Flags for Wordexp
+@subsection Flags for Word Expansion
+
+This section describes the flags that you can specify in the 
+@var{flags} argument to @code{wordexp}.  Choose the flags you want,
+and combine them with the C operator @code{|}.
+
+@table @code
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_APPEND
+Append the words from this expansion to the vector of words produced by
+previous calls to @code{wordexp}.  This way you can effectively expand
+several words as if they were concatenated with spaces between them.
+
+In order for appending to work, you must not modify the contents of the
+word vector structure between calls to @code{wordexp}.  And, if you set
+@code{WRDE_DOOFFS} in the first call to @code{wordexp}, you must also
+set it when you append to the results.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_DOOFFS
+Leave blank slots at the beginning of the vector of words.
+The @code{we_offs} field says how many slots to leave.
+The blank slots contain null pointers.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_NOCMD
+Don't do command substitution; if the input requests command substitution,
+report an error.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_REUSE
+Reuse a word vector made by a previous call to @code{wordexp}.
+Instead of allocating a new vector of words, this call to @code{wordexp}
+will use the vector that already exists (making it larger if necessary).
+
+Note that the vector may move, so it is not safe to save an old pointer
+and use it again after calling @code{wordexp}.  You must fetch
+@code{we_pathv} anew after each call.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_SHOWERR
+Do show any error messages printed by commands run by command substitution.
+More precisely, allow these commands to inherit the standard error output
+stream of the current process.  By default, @code{wordexp} gives these
+commands a standard error stream that discards all output.
+
+@comment wordexp.h
+@comment POSIX.2
+@item WRDE_UNDEF
+If the input refers to a shell variable that is not defined, report an
+error.
+@end table
+
+@node Wordexp Example
+@subsection @code{wordexp} Example
+
+Here is an example of using @code{wordexp} to expand several strings
+and use the results to run a shell command.  It also shows the use of
+@code{WRDE_APPEND} to concatenate the expansions and of @code{wordfree}
+to free the space allocated by @code{wordexp}.
+
+@smallexample
+int
+expand_and_execute (const char *program, const char *options)
+@{
+  wordexp_t result;
+  pid_t pid
+  int status, i;
+
+  /* @r{Expand the string for the program to run.}  */
+  switch (wordexp (program, &result, 0))
+    @{
+    case 0:			/* @r{Successful}.  */
+      break;
+    case WRDE_NOSPACE:
+      /* @r{If the error was @code{WRDE_NOSPACE},}
+         @r{then perhaps part of the result was allocated.}  */
+      wordfree (&result);
+    default:                    /* @r{Some other error.}  */
+      return -1;
+    @}
+
+  /* @r{Expand the strings specified for the arguments.}  */
+  for (i = 0; args[i]; i++)
+    @{
+      if (wordexp (options, &result, WRDE_APPEND))
+        @{
+          wordfree (&result);
+          return -1;
+        @}
+    @}
+
+  pid = fork ();
+  if (pid == 0)
+    @{
+      /* @r{This is the child process.  Execute the command.} */
+      execv (result.we_wordv[0], result.we_wordv);
+      exit (EXIT_FAILURE);
+    @}
+  else if (pid < 0)
+    /* @r{The fork failed.  Report failure.}  */
+    status = -1;
+  else
+    /* @r{This is the parent process.  Wait for the child to complete.}  */
+    if (waitpid (pid, &status, 0) != pid)
+      status = -1;
+
+  wordfree (&result);
+  return status;
+@}
+@end smallexample
+
+In practice, since @code{wordexp} is executed by running a subshell, it
+would be faster to do this by concatenating the strings with spaces
+between them and running that as a shell command using @samp{sh -c}.
+
+@c No sense finishing this for here.
+@ignore
+@node Tilde Expansion
+@subsection Details of Tilde Expansion
+
+It's a standard part of shell syntax that you can use @samp{~} at the
+beginning of a file name to stand for your own home directory.  You
+can use @samp{~@var{user}} to stand for @var{user}'s home directory.
+
+@dfn{Tilde expansion} is the process of converting these abbreviations
+to the directory names that they stand for.
+
+Tilde expansion applies to the @samp{~} plus all following characters up
+to whitespace or a slash.  It takes place only at the beginning of a
+word, and only if none of the characters to be transformed is quoted in
+any way.
+
+Plain @samp{~} uses the value of the environment variable @code{HOME}
+as the proper home directory name.  @samp{~} followed by a user name
+uses @code{getpwname} to look up that user in the user database, and
+uses whatever directory is recorded there.  Thus, @samp{~} followed
+by your own name can give different results from plain @samp{~}, if
+the value of @code{HOME} is not really your home directory.
+
+@node Variable Substitution
+@subsection Details of Variable Substitution
+
+Part of ordinary shell syntax is the use of @samp{$@var{variable}} to
+substitute the value of a shell variable into a command.  This is called
+@dfn{variable substitution}, and it is one part of doing word expansion.
+
+There are two basic ways you can write a variable reference for
+substitution:
+
+@table @code
+@item $@{@var{variable}@}
+If you write braces around the variable name, then it is completely
+unambiguous where the variable name ends.  You can concatenate
+additional letters onto the end of the variable value by writing them
+immediately after the close brace.  For example, @samp{$@{foo@}s}
+expands into @samp{tractors}.
+
+@item $@var{variable}
+If you do not put braces around the variable name, then the variable
+name consists of all the alphanumeric characters and underscores that
+follow the @samp{$}.  The next punctuation character ends the variable
+name.  Thus, @samp{$foo-bar} refers to the variable @code{foo} and expands
+into @samp{tractor-bar}.
+@end table
+
+When you use braces, you can also use various constructs to modify the
+value that is substituted, or test it in various ways.
+
+@table @code
+@item $@{@var{variable}:-@var{default}@}
+Substitute the value of @var{variable}, but if that is empty or
+undefined, use @var{default} instead.
+
+@item $@{@var{variable}:=@var{default}@}
+Substitute the value of @var{variable}, but if that is empty or
+undefined, use @var{default} instead and set the variable to
+@var{default}.
+
+@item $@{@var{variable}:?@var{message}@}
+If @var{variable} is defined and not empty, substitute its value.
+
+Otherwise, print @var{message} as an error message on the standard error
+stream, and consider word expansion a failure.
+
+@c ??? How does wordexp report such an error?
+
+@item $@{@var{variable}:+@var{replacement}@}
+Substitute @var{replacement}, but only if @var{variable} is defined and
+nonempty.  Otherwise, substitute nothing for this construct.
+@end table
+
+@table @code
+@item $@{#@var{variable}@}
+Substitute a numeral which expresses in base ten the number of
+characters in the value of @var{variable}.  @samp{$@{#foo@}} stands for
+@samp{7}, because @samp{tractor} is seven characters.
+@end table
+
+These variants of variable substitution let you remove part of the
+variable's value before substituting it.  The @var{prefix} and 
+@var{suffix} are not mere strings; they are wildcard patterns, just
+like the patterns that you use to match multiple file names.  But
+in this context, they match against parts of the variable value
+rather than against file names.
+
+@table @code
+@item $@{@var{variable}%%@var{suffix}@}
+Substitute the value of @var{variable}, but first discard from that
+variable any portion at the end that matches the pattern @var{suffix}.
+
+If there is more than one alternative for how to match against
+@var{suffix}, this construct uses the longest possible match.
+
+Thus, @samp{$@{foo%%r*@}} substitutes @samp{t}, because the largest
+match for @samp{r*} at the end of @samp{tractor} is @samp{ractor}.
+
+@item $@{@var{variable}%@var{suffix}@}
+Substitute the value of @var{variable}, but first discard from that
+variable any portion at the end that matches the pattern @var{suffix}.
+
+If there is more than one alternative for how to match against
+@var{suffix}, this construct uses the shortest possible alternative.
+
+Thus, @samp{$@{foo%%r*@}} substitutes @samp{tracto}, because the shortest
+match for @samp{r*} at the end of @samp{tractor} is just @samp{r}.
+
+@item $@{@var{variable}##@var{prefix}@}
+Substitute the value of @var{variable}, but first discard from that
+variable any portion at the beginning that matches the pattern @var{prefix}.
+
+If there is more than one alternative for how to match against
+@var{prefix}, this construct uses the longest possible match.
+
+Thus, @samp{$@{foo%%r*@}} substitutes @samp{t}, because the largest
+match for @samp{r*} at the end of @samp{tractor} is @samp{ractor}.
+
+@item $@{@var{variable}#@var{prefix}@}
+Substitute the value of @var{variable}, but first discard from that
+variable any portion at the beginning that matches the pattern @var{prefix}.
+
+If there is more than one alternative for how to match against
+@var{prefix}, this construct uses the shortest possible alternative.
+
+Thus, @samp{$@{foo%%r*@}} substitutes @samp{tracto}, because the shortest
+match for @samp{r*} at the end of @samp{tractor} is just @samp{r}.
+
+@end ignore

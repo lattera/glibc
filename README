@@ -1,0 +1,67 @@
+This directory contains the version 1.09.5 test release of the GNU C Library.
+Many bugs have been fixed since the last release.
+Some bugs surely remain.
+
+As of this release, the GNU C library has been ported to the following
+configurations:
+
+		alpha-dec-osf1
+		i386-bsd4.3
+		i386-force_cpu386-none
+		i386-gnu (for Hurd development only)
+		i386-isc2.2
+		i386-isc3
+		i386-sco3.2
+		i386-sco3.2v4
+		i386-sequent-bsd
+		i386-sysv
+		i386-sysv4
+		i960-nindy960-none
+		m68k-hp-bsd4.3
+		m68k-mvme135-none
+		m68k-mvme136-none
+		m68k-sony-newsos3
+		m68k-sony-newsos4
+		m68k-sun-sunos4
+		mips-dec-ultrix4
+		mips-sgi-irix4
+		sparc-sun-solaris2
+		sparc-sun-sunos4
+
+Porting the library is not hard.  If you are interested in doing a port,
+please get on the mailing list by sending electronic mail to
+bug-glibc-request@prep.ai.mit.edu.
+
+The GNU C library now includes Michael Glad's Ultra Fast Crypt, which
+provides the Unix `crypt' function, plus some other entry points.
+Because of the United States export restriction on DES implementations,
+we are distributing this code separately from the rest of the C
+library.  There is an extra distribution tar file just for crypt; it is
+called `glibc-1.09.5-crypt.tar.gz'.  You can just unpack the crypt
+distribution along with the rest of the C library and build; you can
+also build the library without getting crypt.  Users outside the USA
+can get the crypt distribution via anonymous FTP from ftp.uni-c.dk
+[129.142.6.74], or another archive site outside the USA.  Archive
+maintainers are encouraged to copy this distribution to their archives
+outside the USA.  Please get it from ftp.uni-c.dk; transferring this
+distribution from prep.ai.mit.edu (or any other site in the USA) to a
+site outside the USA is in violation of US export laws.
+
+See the file INSTALL to find out how to configure, build, install, and port
+the GNU C library.
+
+The GNU C Library is completely documented by the Texinfo manual found
+in the `manual/' subdirectory.  The manual is still being updated and
+contains some known errors and omissions; we regret that we do not have
+the resources to work on the manual as much as we would like.  Please
+send comments on the manual to bug-glibc-manual@prep.ai.mit.edu, and
+not to the library bug-reporting address.
+
+The file NOTES contains a description of the feature-test macros used
+in the GNU C library, explaining how you can tell the library what
+facilities you want it to make available.
+
+Send bug reports to bug-glibc@prep.ai.mit.edu.
+
+The GNU C Library is free software.  See the file COPYING.LIB for copying
+conditions.

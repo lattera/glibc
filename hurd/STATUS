@@ -1,0 +1,72 @@
+Status of Hurd support in libc.  Last updated 22 Nov 1994.
+Roland McGrath <roland@gnu.ai.mit.edu>
+
+Everything not noted below is implemented, most of it tested.  There are
+various very small things unfinished or thought to be perhaps wrong
+throughout the code, marked by comments containing `XXX'.
+
+
+* Signals and job control work, but are a very hairy area.
+  There are various ways the signal thread can block and fail
+  to respond when the program is losing badly.
+
+* We are not sure about possible races between setpgrp (A, pgrp) from
+  process B vs process A receiving proc_newids.
+
+* The rest of libc (stdio et al) is not safe for multithreaded programs.
+  mutex locks should be added to various things.
+
+* Recovery from faults in the signal thread is not implemented yet.
+
+* longjmp needs to clean up reply port, intr_port; needs thought about.
+
+* Cooperation with cthreads is not finished.  If you link with cthreads,
+  libc internal code still does not use real condition variables.
+  sigsuspend currently does a busy wait where it should use a condition.
+  Signal state is per kernel thread; for unwired cthreads it should be per
+  cthread instead.
+
+* sigaltstack/sigstack do not really work: the signal stack needs thread
+  variables and cthread data set up, which is not done.
+
+* malloc is a kludge.
+
+* Nothing uses mapped io.  Eventually stdio and read/write/seek should.  I
+  have written a little code for this, but it is far from finished.
+
+* Resource limits do not really work; current implementation is patchy and
+  inconsistent.
+
+* libc implicitly uses some environment variables.  This is a security
+  problem for setuid exec.  Probably crt0 should remove the variables from
+  the environment if setuid.
+
+* The miscellaneous msg.defs calls are only partially implemented.
+
+* The default SIGINFO handler needs to be written.
+
+* File locking is not implemented; the RPC interface is not there yet.
+
+* The current getitimer/setitimer implementation is a kludge.
+
+* mmap cannot do MAP_NOEXTEND.
+
+* Unimplemented calls (from the 4.4 system call list):
+acct
+fstatfs
+getfh
+getfsstat
+getrusage
+madvise
+mincore
+mount
+msync
+profil
+recvmsg
+revoke
+sendmsg
+setpriority
+sstk
+statfs
+swapon
+unmount

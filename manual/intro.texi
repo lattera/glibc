@@ -1,0 +1,689 @@
+@node Introduction, Error Reporting, Top, Top
+@chapter Introduction
+
+The C language provides no built-in facilities for performing such
+common operations as input/output, memory management, string
+manipulation, and the like.  Instead, these facilities are defined
+in a standard @dfn{library}, which you compile and link with your
+programs.
+@cindex library
+
+The GNU C library, described in this document, defines all of the
+library functions that are specified by the ANSI C standard, as well as
+additional features specific to POSIX and other derivatives of the Unix
+operating system, and extensions specific to the GNU system.
+
+The purpose of this manual is to tell you how to use the facilities
+of the GNU library.  We have mentioned which features belong to which
+standards to help you identify things that are potentially nonportable
+to other systems.  But the emphasis in this manual is not on strict
+portability.
+
+@menu
+* Getting Started::             What this manual is for and how to use it.
+* Standards and Portability::   Standards and sources upon which the GNU
+                                 C library is based.
+* Using the Library::           Some practical uses for the library.
+* Roadmap to the Manual::       Overview of the remaining chapters in
+                                 this manual.
+@end menu
+
+@node Getting Started, Standards and Portability,  , Introduction
+@section Getting Started
+
+This manual is written with the assumption that you are at least
+somewhat familiar with the C programming language and basic programming
+concepts.  Specifically, familiarity with ANSI standard C
+(@pxref{ANSI C}), rather than ``traditional'' pre-ANSI C dialects, is
+assumed.
+
+The GNU C library includes several @dfn{header files}, each of which
+provides definitions and declarations for a group of related facilities;
+this information is used by the C compiler when processing your program.
+For example, the header file @file{stdio.h} declares facilities for
+performing input and output, and the header file @file{string.h}
+declares string processing utilities.  The organization of this manual
+generally follows the same division as the header files.
+
+If you are reading this manual for the first time, you should read all
+of the introductory material and skim the remaining chapters.  There are
+a @emph{lot} of functions in the GNU C library and it's not realistic to
+expect that you will be able to remember exactly @emph{how} to use each
+and every one of them.  It's more important to become generally familiar
+with the kinds of facilities that the library provides, so that when you
+are writing your programs you can recognize @emph{when} to make use of
+library functions, and @emph{where} in this manual you can find more
+specific information about them.
+
+
+@node Standards and Portability, Using the Library, Getting Started, Introduction
+@section Standards and Portability
+@cindex standards
+
+This section discusses the various standards and other sources that the
+GNU C library is based upon.  These sources include the ANSI C and
+POSIX standards, and the System V and Berkeley Unix implementations.
+
+The primary focus of this manual is to tell you how to make effective
+use of the GNU library facilities.  But if you are concerned about
+making your programs compatible with these standards, or portable to
+operating systems other than GNU, this can affect how you use the
+library.  This section gives you an overview of these standards, so that
+you will know what they are when they are mentioned in other parts of
+the manual.
+
+@xref{Library Summary}, for an alphabetical list of the functions and
+other symbols provided by the library.  This list also states which
+standards each function or symbol comes from.
+
+@menu
+* ANSI C::                      The American National Standard for the
+				 C programming language.  
+* POSIX::                       The IEEE 1003 standards for operating
+                                 systems. 
+* Berkeley Unix::               BSD and SunOS.
+* SVID::                        The System V Interface Description.  
+@end menu
+
+@node ANSI C, POSIX,  , Standards and Portability
+@subsection ANSI C
+@cindex ANSI C
+
+The GNU C library is compatible with the C standard adopted by the
+American National Standards Institute (ANSI):
+@cite{American National Standard X3.159-1989---``ANSI C''}.
+The header files and library facilities that make up the GNU library are
+a superset of those specified by the ANSI C standard.@refill
+
+@pindex gcc
+If you are concerned about strict adherence to the ANSI C standard, you
+should use the @samp{-ansi} option when you compile your programs with
+the GNU C compiler.  This tells the compiler to define @emph{only} ANSI
+standard features from the library header files, unless you explicitly
+ask for additional features.  @xref{Feature Test Macros}, for
+information on how to do this.
+
+Being able to restrict the library to include only ANSI C features is
+important because ANSI C puts limitations on what names can be defined
+by the library implementation, and the GNU extensions don't fit these
+limitations.  @xref{Reserved Names}, for more information about these
+restrictions.
+
+This manual does not attempt to give you complete details on the
+differences between ANSI C and older dialects.  It gives advice on how
+to write programs to work portably under multiple C dialects, but does
+not aim for completeness.
+
+@node POSIX, Berkeley Unix, ANSI C, Standards and Portability
+@subsection POSIX (The Portable Operating System Interface)
+@cindex POSIX
+@cindex POSIX.1
+@cindex IEEE Std 1003.1
+@cindex POSIX.2
+@cindex IEEE Std 1003.2
+
+The GNU library is also compatible with the IEEE @dfn{POSIX} family of
+standards, known more formally as the @dfn{Portable Operating System
+Interface for Computer Environments}.  POSIX is derived mostly from
+various versions of the Unix operating system.
+
+The library facilities specified by the POSIX standards are a superset
+of those required by ANSI C; POSIX specifies additional features for
+ANSI C functions, as well as specifying new additional functions.  In
+general, the additional requirements and functionality defined by the
+POSIX standards are aimed at providing lower-level support for a
+particular kind of operating system environment, rather than general
+programming language support which can run in many diverse operating
+system environments.@refill
+
+The GNU C library implements all of the functions specified in
+@cite{IEEE Std 1003.1-1990, the POSIX System Application Program
+Interface}, commonly referred to as POSIX.1.  The primary extensions to
+the ANSI C facilities specified by this standard include file system
+interface primitives (@pxref{File System Interface}), device-specific
+terminal control functions (@pxref{Low-Level Terminal Interface}), and
+process control functions (@pxref{Processes}).
+
+Some facilities from @cite{IEEE Std 1003.2-1992, the POSIX Shell and
+Utilities standard} (POSIX.2) are also implemented in the GNU library.
+These include utilities for dealing with regular expressions and other
+pattern matching facilities (@pxref{Pattern Matching}).
+
+@comment Roland sez:
+@comment The GNU C library as it stands conforms to 1003.2 draft 11, which
+@comment specifies:
+@comment 
+@comment Several new macros in <limits.h>.
+@comment popen, pclose
+@comment <regex.h> (which is not yet fully implemented--wait on this)
+@comment fnmatch
+@comment getopt
+@comment <glob.h>
+@comment <wordexp.h> (not yet implemented)
+@comment confstr
+
+
+@node Berkeley Unix, SVID, POSIX, Standards and Portability
+@subsection Berkeley Unix
+@cindex BSD Unix
+@cindex 4.@var{n} BSD Unix
+@cindex Berkeley Unix
+@cindex SunOS
+@cindex Unix, Berkeley
+
+The GNU C library defines facilities from some versions of Unix which
+are not formally standardized, specifically from the 4.2 BSD, 4.3 BSD,
+and 4.4 BSD Unix systems (also known as @dfn{Berkeley Unix}) and from
+@dfn{SunOS} (a popular 4.2 BSD derivative that includes some Unix System
+V functionality).  These systems support most of the ANSI and POSIX
+facilities, and 4.4 BSD and newer releases of SunOS in fact support them all.
+
+The BSD facilities include symbolic links (@pxref{Symbolic Links}), the
+@code{select} function (@pxref{Waiting for I/O}), the BSD signal
+functions (@pxref{BSD Signal Handling}), and sockets (@pxref{Sockets}).
+
+@node SVID,  , Berkeley Unix, Standards and Portability
+@subsection SVID (The System V Interface Description)
+@cindex SVID
+@cindex System V Unix
+@cindex Unix, System V
+
+The @dfn{System V Interface Description} (SVID) is a document describing
+the AT&T Unix System V operating system.  It is to some extent a
+superset of the POSIX standard (@pxref{POSIX}).
+
+The GNU C library defines some of the facilities required by the SVID
+that are not also required by the ANSI or POSIX standards, for
+compatibility with  System V Unix and other Unix systems (such as
+SunOS) which include these facilities.  However, many of the more
+obscure and less generally useful facilities required by the SVID are
+not included.  (In fact, Unix System V itself does not provide them all.)
+
+@c !!! mention sysv ipc/shmem when it is there.
+
+
+@node Using the Library, Roadmap to the Manual, Standards and Portability, Introduction
+@section Using the Library
+
+This section describes some of the practical issues involved in using
+the GNU C library.
+
+@menu
+* Header Files::                How to include the header files in your
+                                 programs. 
+* Macro Definitions::           Some functions in the library may really
+                                 be implemented as macros.
+* Reserved Names::              The C standard reserves some names for
+                                 the library, and some for users.
+* Feature Test Macros::         How to control what names are defined.
+@end menu
+
+@node Header Files, Macro Definitions,  , Using the Library
+@subsection Header Files
+@cindex header files
+
+Libraries for use by C programs really consist of two parts: @dfn{header
+files} that define types and macros and declare variables and
+functions; and the actual library or @dfn{archive} that contains the
+definitions of the variables and functions.
+
+(Recall that in C, a @dfn{declaration} merely provides information that
+a function or variable exists and gives its type.  For a function
+declaration, information about the types of its arguments might be
+provided as well.  The purpose of declarations is to allow the compiler
+to correctly process references to the declared variables and functions.
+A @dfn{definition}, on the other hand, actually allocates storage for a
+variable or says what a function does.)
+@cindex definition (compared to declaration)
+@cindex declaration (compared to definition)
+
+In order to use the facilities in the GNU C library, you should be sure
+that your program source files include the appropriate header files.
+This is so that the compiler has declarations of these facilities
+available and can correctly process references to them.  Once your
+program has been compiled, the linker resolves these references to
+the actual definitions provided in the archive file.
+
+Header files are included into a program source file by the
+@samp{#include} preprocessor directive.  The C language supports two
+forms of this directive; the first,
+
+@smallexample
+#include "@var{header}"
+@end smallexample
+
+@noindent
+is typically used to include a header file @var{header} that you write
+yourself; this would contain definitions and declarations describing the
+interfaces between the different parts of your particular application.
+By contrast,
+
+@smallexample
+#include <file.h>
+@end smallexample
+
+@noindent
+is typically used to include a header file @file{file.h} that contains
+definitions and declarations for a standard library.  This file would
+normally be installed in a standard place by your system administrator.
+You should use this second form for the C library header files.
+
+Typically, @samp{#include} directives are placed at the top of the C
+source file, before any other code.  If you begin your source files with
+some comments explaining what the code in the file does (a good idea),
+put the @samp{#include} directives immediately afterwards, following the
+feature test macro definition (@pxref{Feature Test Macros}).
+
+For more information about the use of header files and @samp{#include}
+directives, @pxref{Header Files,,, cpp.info, The GNU C Preprocessor
+Manual}.@refill
+
+The GNU C library provides several header files, each of which contains
+the type and macro definitions and variable and function declarations
+for a group of related facilities.  This means that your programs may
+need to include several header files, depending on exactly which
+facilities you are using.
+
+Some library header files include other library header files
+automatically.  However, as a matter of programming style, you should
+not rely on this; it is better to explicitly include all the header
+files required for the library facilities you are using.  The GNU C
+library header files have been written in such a way that it doesn't
+matter if a header file is accidentally included more than once;
+including a header file a second time has no effect.  Likewise, if your
+program needs to include multiple header files, the order in which they
+are included doesn't matter.
+
+@strong{Compatibility Note:} Inclusion of standard header files in any
+order and any number of times works in any ANSI C implementation.
+However, this has traditionally not been the case in many older C
+implementations.
+
+Strictly speaking, you don't @emph{have to} include a header file to use
+a function it declares; you could declare the function explicitly
+yourself, according to the specifications in this manual.  But it is
+usually better to include the header file because it may define types
+and macros that are not otherwise available and because it may define
+more efficient macro replacements for some functions.  It is also a sure
+way to have the correct declaration.
+
+@node Macro Definitions, Reserved Names, Header Files, Using the Library
+@subsection Macro Definitions of Functions
+@cindex shadowing functions with macros
+@cindex removing macros that shadow functions
+@cindex undefining macros that shadow functions
+
+If we describe something as a function in this manual, it may have a
+macro definition as well.  This normally has no effect on how your
+program runs---the macro definition does the same thing as the function
+would.  In particular, macro equivalents for library functions evaluate
+arguments exactly once, in the same way that a function call would.  The
+main reason for these macro definitions is that sometimes they can
+produce an inline expansion that is considerably faster than an actual
+function call.
+
+Taking the address of a library function works even if it is also
+defined as a macro.  This is because, in this context, the name of the
+function isn't followed by the left parenthesis that is syntactically
+necessary to recognize a macro call.
+
+You might occasionally want to avoid using the macro definition of a
+function---perhaps to make your program easier to debug.  There are
+two ways you can do this:
+
+@itemize @bullet
+@item 
+You can avoid a macro definition in a specific use by enclosing the name
+of the function in parentheses.  This works because the name of the
+function doesn't appear in a syntactic context where it is recognizable
+as a macro call.
+
+@item
+You can suppress any macro definition for a whole source file by using
+the @samp{#undef} preprocessor directive, unless otherwise stated
+explicitly in the description of that facility.
+@end itemize
+
+For example, suppose the header file @file{stdlib.h} declares a function
+named @code{abs} with
+
+@smallexample
+extern int abs (int);
+@end smallexample
+
+@noindent
+and also provides a macro definition for @code{abs}.  Then, in:
+
+@smallexample
+#include <stdlib.h>
+int f (int *i) @{ return (abs (++*i)); @}
+@end smallexample
+
+@noindent
+the reference to @code{abs} might refer to either a macro or a function.
+On the other hand, in each of the following examples the reference is
+to a function and not a macro.
+
+@smallexample
+#include <stdlib.h>
+int g (int *i) @{ return ((abs)(++*i)); @}
+
+#undef abs
+int h (int *i) @{ return (abs (++*i)); @}
+@end smallexample
+
+Since macro definitions that double for a function behave in
+exactly the same way as the actual function version, there is usually no
+need for any of these methods.  In fact, removing macro definitions usually
+just makes your program slower.
+
+
+@node Reserved Names, Feature Test Macros, Macro Definitions, Using the Library
+@subsection Reserved Names
+@cindex reserved names
+@cindex name space
+
+The names of all library types, macros, variables and functions that
+come from the ANSI C standard are reserved unconditionally; your program
+@strong{may not} redefine these names.  All other library names are
+reserved if your program explicitly includes the header file that
+defines or declares them.  There are several reasons for these
+restrictions:
+
+@itemize @bullet
+@item
+Other people reading your code could get very confused if you were using
+a function named @code{exit} to do something completely different from
+what the standard @code{exit} function does, for example.  Preventing
+this situation helps to make your programs easier to understand and
+contributes to modularity and maintainability.
+
+@item
+It avoids the possibility of a user accidentally redefining a library
+function that is called by other library functions.  If redefinition
+were allowed, those other functions would not work properly.
+
+@item
+It allows the compiler to do whatever special optimizations it pleases
+on calls to these functions, without the possibility that they may have
+been redefined by the user.  Some library facilities, such as those for
+dealing with variadic arguments (@pxref{Variadic Functions})
+and non-local exits (@pxref{Non-Local Exits}), actually require a
+considerable amount of cooperation on the part of the C compiler, and
+implementationally it might be easier for the compiler to treat these as
+built-in parts of the language.
+@end itemize
+
+In addition to the names documented in this manual, reserved names
+include all external identifiers (global functions and variables) that
+begin with an underscore (@samp{_}) and all identifiers regardless of
+use that begin with either two underscores or an underscore followed by
+a capital letter are reserved names.  This is so that the library and
+header files can define functions, variables, and macros for internal
+purposes without risk of conflict with names in user programs.
+
+Some additional classes of identifier names are reserved for future
+extensions to the C language or the POSIX.1 environment.  While using these
+names for your own purposes right now might not cause a problem, they do
+raise the possibility of conflict with future versions of the C
+or POSIX standards, so you should avoid these names.
+
+@itemize @bullet
+@item 
+Names beginning with a capital @samp{E} followed a digit or uppercase
+letter may be used for additional error code names.  @xref{Error
+Reporting}.
+
+@item
+Names that begin with either @samp{is} or @samp{to} followed by a
+lowercase letter may be used for additional character testing and
+conversion functions.  @xref{Character Handling}.
+
+@item
+Names that begin with @samp{LC_} followed by an uppercase letter may be
+used for additional macros specifying locale attributes.
+@xref{Locales}.
+
+@item
+Names of all existing mathematics functions (@pxref{Mathematics})
+suffixed with @samp{f} or @samp{l} are reserved for corresponding
+functions that operate on @code{float} and @code{long double} arguments,
+respectively.
+
+@item
+Names that begin with @samp{SIG} followed by an uppercase letter are
+reserved for additional signal names.  @xref{Standard Signals}.
+
+@item
+Names that begin with @samp{SIG_} followed by an uppercase letter are
+reserved for additional signal actions.  @xref{Basic Signal Handling}.
+
+@item
+Names beginning with @samp{str}, @samp{mem}, or @samp{wcs} followed by a
+lowercase letter are reserved for additional string and array functions.
+@xref{String and Array Utilities}.
+
+@item
+Names that end with @samp{_t} are reserved for additional type names.
+@end itemize
+
+In addition, some individual header files reserve names beyond
+those that they actually define.  You only need to worry about these
+restrictions if your program includes that particular header file.
+
+@itemize @bullet
+@item
+The header file @file{dirent.h} reserves names prefixed with
+@samp{d_}.
+@pindex dirent.h
+
+@item
+The header file @file{fcntl.h} reserves names prefixed with
+@samp{l_}, @samp{F_}, @samp{O_}, and @samp{S_}.
+@pindex fcntl.h
+
+@item
+The header file @file{grp.h} reserves names prefixed with @samp{gr_}.
+@pindex grp.h
+
+@item
+The header file @file{limits.h} reserves names suffixed with @samp{_MAX}.
+@pindex limits.h
+
+@item
+The header file @file{pwd.h} reserves names prefixed with @samp{pw_}.
+@pindex pwd.h
+
+@item
+The header file @file{signal.h} reserves names prefixed with @samp{sa_}
+and @samp{SA_}.
+@pindex signal.h
+
+@item
+The header file @file{sys/stat.h} reserves names prefixed with @samp{st_}
+and @samp{S_}.
+@pindex sys/stat.h
+
+@item
+The header file @file{sys/times.h} reserves names prefixed with @samp{tms_}.
+@pindex sys/times.h
+
+@item
+The header file @file{termios.h} reserves names prefixed with @samp{c_},
+@samp{V}, @samp{I}, @samp{O}, and @samp{TC}; and names prefixed with
+@samp{B} followed by a digit.
+@pindex termios.h
+@end itemize
+
+@comment Include the section on Creature Nest Macros.
+@comment It is in a separate file so it can be formatted into ../NOTES.
+@include creature.texi
+
+@node Roadmap to the Manual,  , Using the Library, Introduction
+@section Roadmap to the Manual
+
+Here is an overview of the contents of the remaining chapters of
+this manual.
+
+@itemize @bullet
+@item 
+@ref{Error Reporting}, describes how errors detected by the library
+are reported.
+
+@item 
+@ref{Language Features}, contains information about library support for
+standard parts of the C language, including things like the @code{sizeof}
+operator and the symbolic constant @code{NULL}, how to write functions
+accepting variable numbers of arguments, and constants describing the
+ranges and other properties of the numerical types.  There is also a simple
+debugging mechanism which allows you to put assertions in your code, and
+have diagnostic messages printed if the tests fail.
+
+@item 
+@ref{Memory Allocation}, describes the GNU library's facilities for
+dynamic allocation of storage.  If you do not know in advance how much
+storage your program needs, you can allocate it dynamically instead,
+and manipulate it via pointers.
+
+@item 
+@ref{Character Handling}, contains information about character
+classification functions (such as @code{isspace}) and functions for
+performing case conversion.
+
+@item 
+@ref{String and Array Utilities}, has descriptions of functions for
+manipulating strings (null-terminated character arrays) and general
+byte arrays, including operations such as copying and comparison.
+
+@item
+@ref{I/O Overview}, gives an overall look at the input and output
+facilities in the library, and contains information about basic concepts
+such as file names.
+
+@item
+@ref{I/O on Streams}, describes I/O operations involving streams (or
+@w{@code{FILE *}} objects).  These are the normal C library functions
+from @file{stdio.h}.
+
+@item
+@ref{Low-Level I/O}, contains information about I/O operations
+on file descriptors.  File descriptors are a lower-level mechanism
+specific to the Unix family of operating systems.
+
+@item
+@ref{File System Interface}, has descriptions of operations on entire
+files, such as functions for deleting and renaming them and for creating
+new directories.  This chapter also contains information about how you
+can access the attributes of a file, such as its owner and file protection
+modes.
+
+@item
+@ref{Pipes and FIFOs}, contains information about simple interprocess
+communication mechanisms.  Pipes allow communication between two related
+processes (such as between a parent and child), while FIFOs allow
+communication between processes sharing a common file system on the same
+machine.
+
+@item
+@ref{Sockets}, describes a more complicated interprocess communication
+mechanism that allows processes running on different machines to
+communicate over a network.  This chapter also contains information about
+Internet host addressing and how to use the system network databases.
+
+@item
+@ref{Low-Level Terminal Interface}, describes how you can change the
+attributes of a terminal device.  If you want to disable echo of
+characters typed by the user, for example, read this chapter.
+
+@item 
+@ref{Mathematics}, contains information about the math library
+functions.  These include things like random-number generators and
+remainder functions on integers as well as the usual trigonometric and
+exponential functions on floating-point numbers.
+
+@item
+@ref{Arithmetic,, Low-Level Arithmetic Functions}, describes functions
+for simple arithmetic, analysis of floating-point values, and reading
+numbers from strings.
+
+@item 
+@ref{Searching and Sorting}, contains information about functions
+for searching and sorting arrays.  You can use these functions on any
+kind of array by providing an appropriate comparison function.
+
+@item
+@ref{Pattern Matching}, presents functions for matching regular expressions
+and shell file name patterns, and for expanding words as the shell does.
+
+@item
+@ref{Date and Time}, describes functions for measuring both calendar time
+and CPU time, as well as functions for setting alarms and timers.
+
+@item 
+@ref{Extended Characters}, contains information about manipulating
+characters and strings using character sets larger than will fit in
+the usual @code{char} data type.  
+
+@item 
+@ref{Locales}, describes how selecting a particular country 
+or language affects the behavior of the library.  For example, the locale
+affects collation sequences for strings and how monetary values are
+formatted.
+
+@item
+@ref{Non-Local Exits}, contains descriptions of the @code{setjmp} and
+@code{longjmp} functions.  These functions provide a facility for
+@code{goto}-like jumps which can jump from one function to another.
+
+@item
+@ref{Signal Handling}, tells you all about signals---what they are,
+how to establish a handler that is called when a particular kind of
+signal is delivered, and how to prevent signals from arriving during
+critical sections of your program.
+
+@item
+@ref{Process Startup}, tells how your programs can access their
+command-line arguments and environment variables.
+
+@item 
+@ref{Processes}, contains information about how to start new processes
+and run programs.
+
+@item
+@ref{Job Control}, describes functions for manipulating process groups
+and the controlling terminal.  This material is probably only of
+interest if you are writing a shell or other program which handles job
+control specially.
+
+@item
+@ref{User Database}, and @ref{Group Database}, tell you how to access
+the system user and group databases.
+
+@item
+@ref{System Information}, describes functions for getting information
+about the hardware and software configuration your program is executing
+under.
+
+@item 
+@ref{System Configuration}, tells you how you can get information about
+various operating system limits.  Most of these parameters are provided for
+compatibility with POSIX.
+
+@item
+@ref{Library Summary}, gives a summary of all the functions, variables, and
+macros in the library, with complete data types and function prototypes,
+and says what standard or system each is derived from.
+
+@item
+@ref{Maintenance}, explains how to build and install the GNU C library on
+your system, how to report any bugs you might find, and how to add new
+functions or port the library to a new system.
+@end itemize
+
+If you already know the name of the facility you are interested in, you
+can look it up in @ref{Library Summary}.  This gives you a summary of
+its syntax and a pointer to where you can find a more detailed
+description.  This appendix is particularly useful if you just want to
+verify the order and type of arguments to a function, for example.  It
+also tells you what standard or system each function, variable, or macro
+is derived from.

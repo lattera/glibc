@@ -1,0 +1,46 @@
+#!/bin/sh
+# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 1, or (at your option)
+# any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with the GNU C Library; see the file COPYING.  If not, write to
+# the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
+sysincludedir=${sysincludedir-/usr/include}
+
+if [ ! "$snarfexclude" ]; then
+  # Filter out some headers which cause trouble.
+  snarfexclude="`echo !${sysincludedir}/sys/param.h! \
+		      !${sysincludedir}/sys/time.h! \
+		      !${sysincludedir}/sys/types.h! \
+		 | sed -e 's,/,\\\\/,g' \
+		       -e 's,!\\([^!]*\\)!,-e /\\1/d,g'`"
+fi
+
+for file in $*; do
+  sed -n 's/^#define[ 	]*\([A-Z][A-Z0-9_]*\)[ 	][ 	]*[^ 	].*$/\1/p' \
+    < $file
+
+  snarfexclude="$snarfexclude \
+		`echo $file | sed -e 's,/,\\\\/,g' -e 's,^.*$,-e /&/d,'`"
+  export snarfexclude
+
+  included="`sed -n < $file \
+		 -e 's,^#include[ 	]*<\(.*\)>.*$,'${sysincludedir}'/\1,p'\
+	     | sed $snarfexclude`"
+  if [ "$included" ]; then
+    $0 $included
+  fi
+done
+
+exit 0

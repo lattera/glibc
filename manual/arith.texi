@@ -1,0 +1,623 @@
+@node Arithmetic, Date and Time, Mathematics, Top
+@chapter Low-Level Arithmetic Functions
+
+This chapter contains information about functions for doing basic
+arithmetic operations, such as splitting a float into its integer and
+fractional parts.  These functions are declared in the header file
+@file{math.h}.
+
+@menu
+* Not a Number::                Making NaNs and testing for NaNs.
+* Predicates on Floats::        Testing for infinity and for NaNs.
+* Absolute Value::              Absolute value functions.
+* Normalization Functions::     Hacks for radix-2 representations.
+* Rounding and Remainders::     Determinining the integer and
+			         fractional parts of a float.
+* Integer Division::            Functions for performing integer
+				 division.
+* Parsing of Numbers::          Functions for ``reading'' numbers
+			         from strings.
+@end menu
+
+@node Not a Number
+@section ``Not a Number'' Values
+@cindex NaN
+@cindex not a number
+@cindex IEEE floating point
+
+The IEEE floating point format used by most modern computers supports
+values that are ``not a number''.  These values are called @dfn{NaNs}.
+``Not a number'' values result from certain operations which have no
+meaningful numeric result, such as zero divided by zero or infinity
+divided by infinity.
+
+One noteworthy property of NaNs is that they are not equal to
+themselves.  Thus, @code{x == x} can be 0 if the value of @code{x} is a
+NaN.  You can use this to test whether a value is a NaN or not: if it is
+not equal to itself, then it is a NaN.  But the recommended way to test
+for a NaN is with the @code{isnan} function (@pxref{Predicates on Floats}).
+
+Almost any arithmetic operation in which one argument is a NaN returns
+a NaN.
+
+@comment math.h
+@comment GNU
+@deftypevr Macro double NAN
+An expression representing a value which is ``not a number''.  This
+macro is a GNU extension, available only on machines that support ``not
+a number'' values---that is to say, on all machines that support IEEE
+floating point.
+
+You can use @samp{#ifdef NAN} to test whether the machine supports
+NaNs.  (Of course, you must arrange for GNU extensions to be visible,
+such as by defining @code{_GNU_SOURCE}, and then you must include
+@file{math.h}.)
+@end deftypevr
+
+@node Predicates on Floats
+@section Predicates on Floats
+
+@pindex math.h
+This section describes some miscellaneous test functions on doubles.
+Prototypes for these functions appear in @file{math.h}.  These are BSD
+functions, and thus are available if you define @code{_BSD_SOURCE} or
+@code{_GNU_SOURCE}.
+
+@comment math.h
+@comment BSD
+@deftypefun int isinf (double @var{x})
+This function returns @code{-1} if @var{x} represents negative infinity,
+@code{1} if @var{x} represents positive infinity, and @code{0} otherwise.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun int isnan (double @var{x})
+This function returns a nonzero value if @var{x} is a ``not a number''
+value, and zero otherwise.  (You can just as well use @code{@var{x} !=
+@var{x}} to get the same result).
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun int finite (double @var{x})
+This function returns a nonzero value if @var{x} is finite or a ``not a
+number'' value, and zero otherwise.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double infnan (int @var{error})
+This function is provided for compatibility with BSD.  The other
+mathematical functions use @code{infnan} to decide what to return on
+occasion of an error.  Its argument is an error code, @code{EDOM} or
+@code{ERANGE}; @code{infnan} returns a suitable value to indicate this
+with.  @code{-ERANGE} is also acceptable as an argument, and corresponds
+to @code{-HUGE_VAL} as a value.
+
+In the BSD library, on certain machines, @code{infnan} raises a fatal
+signal in all cases.  The GNU library does not do likewise, because that
+does not fit the ANSI C specification.
+@end deftypefun
+
+@strong{Portability Note:} The functions listed in this section are BSD
+extensions.
+
+@node Absolute Value
+@section Absolute Value
+@cindex absolute value functions
+
+These functions are provided for obtaining the @dfn{absolute value} (or
+@dfn{magnitude}) of a number.  The absolute value of a real number
+@var{x} is @var{x} is @var{x} is positive, @minus{}@var{x} if @var{x} is
+negative.  For a complex number @var{z}, whose real part is @var{x} and
+whose imaginary part is @var{y}, the absolute value is @w{@code{sqrt
+(@var{x}*@var{x} + @var{y}*@var{y})}}.
+
+@pindex math.h
+@pindex stdlib.h
+Prototypes for @code{abs} and @code{labs} are in @file{stdlib.h};
+@code{fabs} and @code{cabs} are declared in @file{math.h}.
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun int abs (int @var{number})
+This function returns the absolute value of @var{number}.
+
+Most computers use a two's complement integer representation, in which
+the absolute value of @code{INT_MIN} (the smallest possible @code{int})
+cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun {long int} labs (long int @var{number})
+This is similar to @code{abs}, except that both the argument and result
+are of type @code{long int} rather than @code{int}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double fabs (double @var{number})
+This function returns the absolute value of the floating-point number
+@var{number}.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double cabs (struct @{ double real, imag; @} @var{z})
+The @code{cabs} function returns the absolute value of the complex
+number @var{z}, whose real part is @code{@var{z}.real} and whose
+imaginary part is @code{@var{z}.imag}.  (See also the function
+@code{hypot} in @ref{Exponents and Logarithms}.)  The value is:
+
+@smallexample
+sqrt (@var{z}.real*@var{z}.real + @var{z}.imag*@var{z}.imag)
+@end smallexample
+@end deftypefun
+
+@node Normalization Functions
+@section Normalization Functions
+@cindex normalization functions (floating-point)
+
+The functions described in this section are primarily provided as a way
+to efficiently perform certain low-level manipulations on floating point
+numbers that are represented internally using a binary radix;
+see @ref{Floating Point Concepts}.  These functions are required to
+have equivalent behavior even if the representation does not use a radix
+of 2, but of course they are unlikely to be particularly efficient in
+those cases.
+
+@pindex math.h
+All these functions are declared in @file{math.h}.
+
+@comment math.h
+@comment ANSI
+@deftypefun double frexp (double @var{value}, int *@var{exponent})
+The @code{frexp} function is used to split the number @var{value}
+into a normalized fraction and an exponent.
+
+If the argument @var{value} is not zero, the return value is @var{value}
+times a power of two, and is always in the range 1/2 (inclusive) to 1
+(exclusive).  The corresponding exponent is stored in
+@code{*@var{exponent}}; the return value multiplied by 2 raised to this
+exponent equals the original number @var{value}.
+
+For example, @code{frexp (12.8, &exponent)} returns @code{0.8} and
+stores @code{4} in @code{exponent}.
+
+If @var{value} is zero, then the return value is zero and
+zero is stored in @code{*@var{exponent}}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double ldexp (double @var{value}, int @var{exponent})
+This function returns the result of multiplying the floating-point
+number @var{value} by 2 raised to the power @var{exponent}.  (It can
+be used to reassemble floating-point numbers that were taken apart
+by @code{frexp}.)
+
+For example, @code{ldexp (0.8, 4)} returns @code{12.8}.
+@end deftypefun
+
+The following functions which come from BSD provide facilities
+equivalent to those of @code{ldexp} and @code{frexp}:
+
+@comment math.h
+@comment BSD
+@deftypefun double scalb (double @var{value}, int @var{exponent})
+The @code{scalb} function is the BSD name for @code{ldexp}.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double logb (double @var{x})
+This BSD function returns the integer part of the base-2 logarithm of
+@var{x}, an integer value represented in type @code{double}.  This is
+the highest integer power of @code{2} contained in @var{x}.  The sign of
+@var{x} is ignored.  For example, @code{logb (3.5)} is @code{1.0} and
+@code{logb (4.0)} is @code{2.0}.
+
+When @code{2} raised to this power is divided into @var{x}, it gives a
+quotient between @code{1} (inclusive) and @code{2} (exclusive).
+
+If @var{x} is zero, the value is minus infinity (if the machine supports
+such a value), or else a very small number.  If @var{x} is infinity, the
+value is infinity.
+
+The value returned by @code{logb} is one less than the value that
+@code{frexp} would store into @code{*@var{exponent}}.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double copysign (double @var{value}, double @var{sign})
+The @code{copysign} function returns a value whose absolute value is the
+same as that of @var{value}, and whose sign matches that of @var{sign}.
+This is a BSD function.
+@end deftypefun
+
+@node Rounding and Remainders
+@section Rounding and Remainder Functions
+@cindex rounding functions
+@cindex remainder functions
+@cindex converting floats to integers
+
+@pindex math.h
+The functions listed here perform operations such as rounding,
+truncation, and remainder in division of floating point numbers.  Some
+of these functions convert floating point numbers to integer values.
+They are all declared in @file{math.h}.
+
+You can also convert floating-point numbers to integers simply by
+casting them to @code{int}.  This discards the fractional part,
+effectively rounding towards zero.  However, this only works if the
+result can actually be represented as an @code{int}---for very large
+numbers, this is impossible.  The functions listed here return the
+result as a @code{double} instead to get around this problem.
+
+@comment math.h
+@comment ANSI
+@deftypefun double ceil (double @var{x})
+The @code{ceil} function rounds @var{x} upwards to the nearest integer,
+returning that value as a @code{double}.  Thus, @code{ceil (1.5)}
+is @code{2.0}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double floor (double @var{x})
+The @code{ceil} function rounds @var{x} downwards to the nearest
+integer, returning that value as a @code{double}.  Thus, @code{floor
+(1.5)} is @code{1.0} and @code{floor (-1.5)} is @code{-2.0}.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double rint (double @var{x})
+This function rounds @var{x} to an integer value according to the
+current rounding mode.  @xref{Floating Point Parameters}, for
+information about the various rounding modes.  The default
+rounding mode is to round to the nearest integer; some machines
+support other modes, but round-to-nearest is always used unless
+you explicit select another.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double modf (double @var{value}, double *@var{integer-part})
+This function breaks the argument @var{value} into an integer part and a
+fractional part (between @code{-1} and @code{1}, exclusive).  Their sum
+equals @var{value}.  Each of the parts has the same sign as @var{value},
+so the rounding of the integer part is towards zero.
+
+@code{modf} stores the integer part in @code{*@var{integer-part}}, and
+returns the fractional part.  For example, @code{modf (2.5, &intpart)}
+returns @code{0.5} and stores @code{2.0} into @code{intpart}.
+@end deftypefun
+
+@comment math.h
+@comment ANSI
+@deftypefun double fmod (double @var{numerator}, double @var{denominator})
+This function computes the remainder from the division of
+@var{numerator} by @var{denominator}.  Specifically, the return value is
+@code{@var{numerator} - @w{@var{n} * @var{denominator}}}, where @var{n}
+is the quotient of @var{numerator} divided by @var{denominator}, rounded
+towards zero to an integer.  Thus, @w{@code{fmod (6.5, 2.3)}} returns
+@code{1.9}, which is @code{6.5} minus @code{4.6}.
+
+The result has the same sign as the @var{numerator} and has magnitude
+less than the magnitude of the @var{denominator}.
+
+If @var{denominator} is zero, @code{fmod} fails and sets @code{errno} to
+@code{EDOM}.
+@end deftypefun
+
+@comment math.h
+@comment BSD
+@deftypefun double drem (double @var{numerator}, double @var{denominator})
+The function @code{drem} is like @code{fmod} except that it rounds the
+internal quotient @var{n} to the nearest integer instead of towards zero
+to an integer.  For example, @code{drem (6.5, 2.3)} returns @code{-0.4},
+which is @code{6.5} minus @code{6.9}.
+
+The absolute value of the result is less than or equal to half the
+absolute value of the @var{denominator}.  The difference between
+@code{fmod (@var{numerator}, @var{denominator})} and @code{drem
+(@var{numerator}, @var{denominator})} is always either
+@var{denominator}, minus @var{denominator}, or zero.
+
+If @var{denominator} is zero, @code{drem} fails and sets @code{errno} to
+@code{EDOM}.
+@end deftypefun
+
+
+@node Integer Division
+@section Integer Division
+@cindex integer division functions
+
+This section describes functions for performing integer division.  These
+functions are redundant in the GNU C library, since in GNU C the @samp{/}
+operator always rounds towards zero.  But in other C implementations,
+@samp{/} may round differently with negative arguments.  @code{div} and
+@code{ldiv} are useful because they specify how to round the quotient:
+towards zero.  The remainder has the same sign as the numerator.
+
+These functions are specified to return a result @var{r} such that the value
+@code{@var{r}.quot*@var{denominator} + @var{r}.rem} equals
+@var{numerator}.
+
+@pindex stdlib.h
+To use these facilities, you should include the header file
+@file{stdlib.h} in your program.
+
+@comment stdlib.h
+@comment ANSI
+@deftp {Data Type} div_t
+This is a structure type used to hold the result returned by the @code{div}
+function.  It has the following members:
+
+@table @code
+@item int quot
+The quotient from the division.
+
+@item int rem
+The remainder from the division.
+@end table
+@end deftp
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun div_t div (int @var{numerator}, int @var{denominator})
+This function @code{div} computes the quotient and remainder from
+the division of @var{numerator} by @var{denominator}, returning the
+result in a structure of type @code{div_t}.
+
+If the result cannot be represented (as in a division by zero), the
+behavior is undefined.
+
+Here is an example, albeit not a very useful one.
+
+@smallexample
+div_t result;
+result = div (20, -6);
+@end smallexample
+
+@noindent
+Now @code{result.quot} is @code{-3} and @code{result.rem} is @code{2}.
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftp {Data Type} ldiv_t
+This is a structure type used to hold the result returned by the @code{ldiv}
+function.  It has the following members:
+
+@table @code
+@item long int quot
+The quotient from the division.
+
+@item long int rem
+The remainder from the division.
+@end table
+
+(This is identical to @code{div_t} except that the components are of
+type @code{long int} rather than @code{int}.)
+@end deftp
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun ldiv_t ldiv (long int @var{numerator}, long int @var{denominator})
+The @code{ldiv} function is similar to @code{div}, except that the
+arguments are of type @code{long int} and the result is returned as a
+structure of type @code{ldiv}.
+@end deftypefun
+
+
+@node Parsing of Numbers
+@section Parsing of Numbers
+@cindex parsing numbers (in formatted input)
+@cindex converting strings to numbers
+@cindex number syntax, parsing
+@cindex syntax, for reading numbers
+
+This section describes functions for ``reading'' integer and
+floating-point numbers from a string.  It may be more convenient in some
+cases to use @code{sscanf} or one of the related functions; see
+@ref{Formatted Input}.  But often you can make a program more robust by
+finding the tokens in the string by hand, then converting the numbers
+one by one.
+
+@menu
+* Parsing of Integers::         Functions for conversion of integer values.
+* Parsing of Floats::           Functions for conversion of floating-point
+				 values.
+@end menu
+
+@node Parsing of Integers
+@subsection Parsing of Integers
+
+@pindex stdlib.h
+These functions are declared in @file{stdlib.h}.
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun {long int} strtol (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtol} (``string-to-long'') function converts the initial
+part of @var{string} to a signed integer, which is returned as a value
+of type @code{long int}.  
+
+This function attempts to decompose @var{string} as follows:
+
+@itemize @bullet
+@item 
+A (possibly empty) sequence of whitespace characters.  Which characters
+are whitespace is determined by the @code{isspace} function
+(@pxref{Classification of Characters}).  These are discarded.
+
+@item 
+An optional plus or minus sign (@samp{+} or @samp{-}).
+
+@item 
+A nonempty sequence of digits in the radix specified by @var{base}.
+
+If @var{base} is zero, decimal radix is assumed unless the series of
+digits begins with @samp{0} (specifying octal radix), or @samp{0x} or
+@samp{0X} (specifying hexadecimal radix); in other words, the same
+syntax used for integer constants in C.
+
+Otherwise @var{base} must have a value between @code{2} and @code{35}.
+If @var{base} is @code{16}, the digits may optionally be preceded by
+@samp{0x} or @samp{0X}.
+
+@item 
+Any remaining characters in the string.  If @var{tailptr} is not a null
+pointer, @code{strtol} stores a pointer to this tail in
+@code{*@var{tailptr}}.
+@end itemize
+
+If the string is empty, contains only whitespace, or does not contain an
+initial substring that has the expected syntax for an integer in the
+specified @var{base}, no conversion is performed.  In this case,
+@code{strtol} returns a value of zero and the value stored in
+@code{*@var{tailptr}} is the value of @var{string}.
+
+In a locale other than the standard @code{"C"} locale, this function
+may recognize additional implementation-dependent syntax.
+
+If the string has valid syntax for an integer but the value is not
+representable because of overflow, @code{strtol} returns either
+@code{LONG_MAX} or @code{LONG_MIN} (@pxref{Range of Type}), as
+appropriate for the sign of the value.  It also sets @code{errno}
+to @code{ERANGE} to indicate there was overflow.
+
+There is an example at the end of this section.
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun {unsigned long int} strtoul (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtoul} (``string-to-unsigned-long'') function is like
+@code{strtol} except that it returns its value with type @code{unsigned
+long int}.  The value returned in case of overflow is @code{ULONG_MAX}
+(@pxref{Range of Type}).
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun {long int} atol (const char *@var{string})
+This function is similar to the @code{strtol} function with a @var{base}
+argument of @code{10}, except that it need not detect overflow errors.
+The @code{atol} function is provided mostly for compatibility with
+existing code; using @code{strtol} is more robust.
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun int atoi (const char *@var{string})
+This function is like @code{atol}, except that it returns an @code{int}
+value rather than @code{long int}.  The @code{atoi} function is also
+considered obsolete; use @code{strtol} instead.
+@end deftypefun
+
+Here is a function which parses a string as a sequence of integers and
+returns the sum of them:
+
+@smallexample
+int
+sum_ints_from_string (char *string)
+@{
+  int sum = 0;
+
+  while (1) @{
+    char *tail;
+    int next;
+
+    /* @r{Skip whitespace by hand, to detect the end.}  */
+    while (isspace (*string)) string++;
+    if (*string == 0)
+      break;
+
+    /* @r{There is more nonwhitespace,}  */
+    /* @r{so it ought to be another number.}  */
+    errno = 0;
+    /* @r{Parse it.}  */
+    next = strtol (string, &tail, 0);
+    /* @r{Add it in, if not overflow.}  */
+    if (errno)
+      printf ("Overflow\n");
+    else
+      sum += next;
+    /* @r{Advance past it.}  */
+    string = tail;
+  @}
+
+  return sum;
+@}
+@end smallexample
+
+@node Parsing of Floats
+@subsection Parsing of Floats
+
+@pindex stdlib.h
+These functions are declared in @file{stdlib.h}.
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun double strtod (const char *@var{string}, char **@var{tailptr})
+The @code{strtod} (``string-to-double'') function converts the initial
+part of @var{string} to a floating-point number, which is returned as a
+value of type @code{double}.  
+
+This function attempts to decompose @var{string} as follows:
+
+@itemize @bullet
+@item 
+A (possibly empty) sequence of whitespace characters.  Which characters
+are whitespace is determined by the @code{isspace} function
+(@pxref{Classification of Characters}).  These are discarded.
+
+@item
+An optional plus or minus sign (@samp{+} or @samp{-}).
+
+@item
+A nonempty sequence of digits optionally containing a decimal-point
+character---normally @samp{.}, but it depends on the locale
+(@pxref{Numeric Formatting}).
+
+@item
+An optional exponent part, consisting of a character @samp{e} or
+@samp{E}, an optional sign, and a sequence of digits.
+
+@item
+Any remaining characters in the string.  If @var{tailptr} is not a null
+pointer, a pointer to this tail of the string is stored in
+@code{*@var{tailptr}}.
+@end itemize
+
+If the string is empty, contains only whitespace, or does not contain an
+initial substring that has the expected syntax for a floating-point
+number, no conversion is performed.  In this case, @code{strtod} returns
+a value of zero and the value returned in @code{*@var{tailptr}} is the
+value of @var{string}.
+
+In a locale other than the standard @code{"C"} locale, this function may
+recognize additional locale-dependent syntax.
+
+If the string has valid syntax for a floating-point number but the value
+is not representable because of overflow, @code{strtod} returns either
+positive or negative @code{HUGE_VAL} (@pxref{Mathematics}), depending on
+the sign of the value.  Similarly, if the value is not representable
+because of underflow, @code{strtod} returns zero.  It also sets @code{errno}
+to @code{ERANGE} if there was overflow or underflow.
+@end deftypefun
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun double atof (const char *@var{string})
+This function is similar to the @code{strtod} function, except that it
+need not detect overflow and underflow errors.  The @code{atof} function
+is provided mostly for compatibility with existing code; using
+@code{strtod} is more robust.
+@end deftypefun

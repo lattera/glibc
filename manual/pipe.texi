@@ -1,0 +1,208 @@
+@node Pipes and FIFOs, Sockets, File System Interface, Top
+@chapter Pipes and FIFOs
+
+@cindex pipe
+A @dfn{pipe} is a mechanism for interprocess communication; data written
+to the pipe by one process can be read by another process.  The data is
+handled in a first-in, first-out (FIFO) order.  The pipe has no name; it
+is created for one use and both ends must be inherited from the single
+process which created the pipe.
+
+@cindex FIFO special file
+A @dfn{FIFO special file} is similar to a pipe, but instead of being an
+anonymous, temporary connection, a FIFO has a name or names like any
+other file.  Processes open the FIFO by name in order to communicate
+through it.
+
+A pipe or FIFO has to be open at both ends simultaneously.  If you read
+from a pipe or FIFO file that doesn't have any processes writing to it
+(perhaps because they have all closed the file, or exited), the read
+returns end-of-file.  Writing to a pipe or FIFO that doesn't have a
+reading process is treated as an error condition; it generates a
+@code{SIGPIPE} signal, and fails with error code @code{EPIPE} if the
+signal is handled or blocked.
+
+Neither pipes nor FIFO special files allow file positioning.  Both
+reading and writing operations happen sequentially; reading from the
+beginning of the file and writing at the end.
+
+@menu
+* Creating a Pipe::             Making a pipe with the @code{pipe} function.
+* Pipe to a Subprocess::        Using a pipe to communicate with a
+				 child process.
+* FIFO Special Files::          Making a FIFO special file.
+* Pipe Atomicity::		When pipe (or FIFO) I/O is atomic.
+@end menu
+
+@node Creating a Pipe
+@section Creating a Pipe
+@cindex creating a pipe
+@cindex opening a pipe
+@cindex interprocess communication, with pipes
+
+The primitive for creating a pipe is the @code{pipe} function.  This
+creates both the reading and writing ends of the pipe.  It is not very
+useful for a single process to use a pipe to talk to itself.  In typical
+use, a process creates a pipe just before it forks one or more child
+processes (@pxref{Creating a Process}).  The pipe is then used for
+communication either between the parent or child processes, or between
+two sibling processes.
+
+The @code{pipe} function is declared in the header file
+@file{unistd.h}.
+@pindex unistd.h
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun int pipe (int @var{filedes}@t{[2]})
+The @code{pipe} function creates a pipe and puts the file descriptors
+for the reading and writing ends of the pipe (respectively) into
+@code{@var{filedes}[0]} and @code{@var{filedes}[1]}.
+
+An easy way to remember that the input end comes first is that file
+descriptor @code{0} is standard input, and file descriptor @code{1} is
+standard output.
+
+If successful, @code{pipe} returns a value of @code{0}.  On failure,
+@code{-1} is returned.  The following @code{errno} error conditions are
+defined for this function:
+
+@table @code
+@item EMFILE
+The process has too many files open.
+
+@item ENFILE
+There are too many open files in the entire system.  @xref{Error Codes},
+for more information about @code{ENFILE}.  This error never occurs in
+the GNU system.
+@end table
+@end deftypefun
+
+Here is an example of a simple program that creates a pipe.  This program
+uses the @code{fork} function (@pxref{Creating a Process}) to create
+a child process.  The parent process writes data to the pipe, which is
+read by the child process.
+
+@smallexample
+@include pipe.c.texi
+@end smallexample
+
+@node Pipe to a Subprocess
+@section Pipe to a Subprocess
+@cindex creating a pipe to a subprocess
+@cindex pipe to a subprocess
+@cindex filtering i/o through subprocess
+
+A common use of pipes is to send data to or receive data from a program
+being run as subprocess.  One way of doing this is by using a combination of
+@code{pipe} (to create the pipe), @code{fork} (to create the subprocess),
+@code{dup2} (to force the subprocess to use the pipe as its standard input
+or output channel), and @code{exec} (to execute the new program).  Or,
+you can use @code{popen} and @code{pclose}.
+
+The advantage of using @code{popen} and @code{pclose} is that the
+interface is much simpler and easier to use.  But it doesn't offer as
+much flexibility as using the low-level functions directly.
+
+@comment stdio.h
+@comment POSIX.2, SVID, BSD
+@deftypefun {FILE *} popen (const char *@var{command}, const char *@var{mode})
+The @code{popen} function is closely related to the @code{system}
+function; see @ref{Running a Command}.  It executes the shell command
+@var{command} as a subprocess.  However, instead of waiting for the
+command to complete, it creates a pipe to the subprocess and returns a
+stream that corresponds to that pipe.
+
+If you specify a @var{mode} argument of @code{"r"}, you can read from the 
+stream to retrieve data from the standard output channel of the subprocess.
+The subprocess inherits its standard input channel from the parent process.
+
+Similarly, if you specify a @var{mode} argument of @code{"w"}, you can
+write to the stream to send data to the standard input channel of the
+subprocess.  The subprocess inherits its standard output channel from
+the parent process.
+
+In the event of an error, @code{popen} returns a null pointer.  This
+might happen if the pipe or stream cannot be created, if the subprocess
+cannot be forked, or if the program cannot be executed.
+@end deftypefun
+
+@comment stdio.h
+@comment POSIX.2, SVID, BSD
+@deftypefun int pclose (FILE *@var{stream})
+The @code{pclose} function is used to close a stream created by @code{popen}.
+It waits for the child process to terminate and returns its status value,
+as for the @code{system} function.
+@end deftypefun
+
+Here is an example showing how to use @code{popen} and @code{pclose} to
+filter output through another program, in this case the paging program
+@code{more}.
+
+@smallexample
+@include popen.c.texi
+@end smallexample
+
+@node FIFO Special Files
+@section FIFO Special Files
+@cindex creating a FIFO special file
+@cindex interprocess communication, with FIFO
+
+A FIFO special file is similar to a pipe, except that it is created in a
+different way.  Instead of being an anonymous communications channel, a
+FIFO special file is entered into the file system by calling
+@code{mkfifo}.
+
+Once you have created a FIFO special file in this way, any process can
+open it for reading or writing, in the same way as an ordinary file.
+However, it has to be open at both ends simultaneously before you can
+proceed to do any input or output operations on it.  Opening a FIFO for
+reading normally blocks until some other process opens the same FIFO for
+writing, and vice versa.
+
+The @code{mkfifo} function is declared in the header file
+@file{sys/stat.h}.
+@pindex sys/stat.h
+
+@comment sys/stat.h
+@comment POSIX.1
+@deftypefun int mkfifo (const char *@var{filename}, mode_t @var{mode})
+The @code{mkfifo} function makes a FIFO special file with name
+@var{filename}.  The @var{mode} argument is used to set the file's
+permissions; see @ref{Setting Permissions}.
+
+The normal, successful return value from @code{mkfifo} is @code{0}.  In
+the case of an error, @code{-1} is returned.  In addition to the usual
+file name errors (@pxref{File Name Errors}), the following
+@code{errno} error conditions are defined for this function:
+
+@table @code
+@item EEXIST
+The named file already exists.
+
+@item ENOSPC
+The directory or file system cannot be extended.
+
+@item EROFS
+The directory that would contain the file resides on a read-only file
+system.
+@end table
+@end deftypefun
+
+@node Pipe Atomicity
+@section Atomicity of Pipe I/O
+
+Reading or writing pipe data is @dfn{atomic} if the size of data written
+is less than @code{PIPE_BUF}.  This means that the data transfer seems
+to be an instantaneous unit, in that nothing else in the system can
+observe a state in which it is partially complete.  Atomic I/O may not
+begin right away (it may need to wait for buffer space or for data), but
+once it does begin, it finishes immediately.
+
+Reading or writing a larger amount of data may not be atomic; for
+example, output data from other processes sharing the descriptor may be
+interspersed.  Also, once @code{PIPE_BUF} characters have been written,
+further writes will block until some characters are read.
+
+@xref{Limits for Files}, for information about the @code{PIPE_BUF}
+parameter.

@@ -1,0 +1,195 @@
+@node Searching and Sorting, Pattern Matching, Locales, Top
+@chapter Searching and Sorting 
+
+This chapter describes functions for searching and sorting arrays of
+arbitrary objects.  You pass the appropriate comparison function to be
+applied as an argument, along with the size of the objects in the array
+and the total number of elements.
+
+@menu
+* Comparison Functions::        Defining how to compare two objects.
+				 Since the sort and search facilities
+                                 are general, you have to specify the
+                                 ordering. 
+* Array Search Function::       The @code{bsearch} function.
+* Array Sort Function::         The @code{qsort} function.
+* Search/Sort Example::         An example program.
+@end menu
+
+@node Comparison Functions, Array Search Function,  , Searching and Sorting
+@section Defining the Comparison Function
+@cindex Comparison Function
+
+In order to use the sorted array library functions, you have to describe
+how to compare the elements of the array.
+
+To do this, you supply a comparison function to compare two elements of
+the array.  The library will call this function, passing as arguments
+pointers to two array elements to be compared.  Your comparison function
+should return a value the way @code{strcmp} (@pxref{String/Array
+Comparison}) does: negative if the first argument is ``less'' than the
+second, zero if they are ``equal'', and positive if the first argument
+is ``greater''.
+
+Here is an example of a comparison function which works with an array of
+numbers of type @code{double}:
+
+@smallexample
+int
+compare_doubles (const double *a, const double *b)
+@{
+  return (int) (*a - *b);
+@}
+@end smallexample
+
+The header file @file{stdlib.h} defines a name for the data type of
+comparison functions.  This type is a GNU extension.
+
+@comment stdlib.h
+@comment GNU
+@tindex comparison_fn_t
+@smallexample
+int comparison_fn_t (const void *, const void *);
+@end smallexample
+
+@node Array Search Function, Array Sort Function, Comparison Functions, Searching and Sorting
+@section Array Search Function
+@cindex search function (for arrays)
+@cindex binary search function (for arrays)
+@cindex array search function
+
+To search a sorted array for an element matching the key, use the
+@code{bsearch} function.  The prototype for this function is in
+the header file @file{stdlib.h}.
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
+The @code{bsearch} function searches the sorted array @var{array} for an object
+that is equivalent to @var{key}.  The array contains @var{count} elements,
+each of which is of size @var{size} bytes.  
+
+The @var{compare} function is used to perform the comparison.  This
+function is called with two pointer arguments and should return an
+integer less than, equal to, or greater than zero corresponding to
+whether its first argument is considered less than, equal to, or greater
+than its second argument.  The elements of the @var{array} must already
+be sorted in ascending order according to this comparison function.
+
+The return value is a pointer to the matching array element, or a null
+pointer if no match is found.  If the array contains more than one element
+that matches, the one that is returned is unspecified.
+
+This function derives its name from the fact that it is implemented
+using the binary search algorithm.
+@end deftypefun
+
+@node Array Sort Function, Search/Sort Example, Array Search Function, Searching and Sorting
+@section Array Sort Function
+@cindex sort function (for arrays)
+@cindex quick sort function (for arrays)
+@cindex array sort function
+
+To sort an array using an arbitrary comparison function, use the
+@code{qsort} function.  The prototype for this function is in
+@file{stdlib.h}.
+@pindex stdlib.h
+
+@comment stdlib.h
+@comment ANSI
+@deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
+The @var{qsort} function sorts the array @var{array}.  The array contains
+@var{count} elements, each of which is of size @var{size}.
+
+The @var{compare} function is used to perform the comparison on the
+array elements.  This function is called with two pointer arguments and
+should return an integer less than, equal to, or greater than zero
+corresponding to whether its first argument is considered less than,
+equal to, or greater than its second argument.
+
+@cindex stable sorting
+@strong{Warning:} If two objects compare as equal, their order after
+sorting is unpredictable.  That is to say, the sorting is not stable.
+This can make a difference when the comparison considers only part of
+the elements.  Two elements with the same sort key may differ in other
+respects.
+
+If you want the effect of a stable sort, you can get this result by
+writing the comparison function so that, lacking other reason
+distinguish between two elements, it compares them by their addresses.
+Note that doing this may make the sorting algorithm less efficient, so
+do it only if necessary.
+
+Here is a simple example of sorting an array of doubles in numerical
+order, using the comparison function defined above (@pxref{Comparison
+Functions}):
+
+@smallexample
+@{
+  double *array;
+  int size;
+  @dots{}
+  qsort (array, size, sizeof (double), compare_doubles);
+@}
+@end smallexample
+
+The @code{qsort} function derives its name from the fact that it was
+originally implemented using the ``quick sort'' algorithm.
+@end deftypefun
+
+@node Search/Sort Example,  , Array Sort Function, Searching and Sorting
+@section Searching and Sorting Example
+
+Here is an example showing the use of @code{qsort} and @code{bsearch}
+with an array of structures.  The objects in the array are sorted
+by comparing their @code{name} fields with the @code{strcmp} function.
+Then, we can look up individual objects based on their names.
+
+@comment This example is dedicated to the memory of Jim Henson.  RIP.
+@smallexample
+@include search.c.texi
+@end smallexample
+
+@cindex Kermit the frog
+The output from this program looks like:
+
+@smallexample
+Kermit, the frog
+Piggy, the pig
+Gonzo, the whatever
+Fozzie, the bear
+Sam, the eagle
+Robin, the frog
+Animal, the animal
+Camilla, the chicken
+Sweetums, the monster
+Dr. Strangepork, the pig
+Link Hogthrob, the pig
+Zoot, the human
+Dr. Bunsen Honeydew, the human
+Beaker, the human
+Swedish Chef, the human
+
+Animal, the animal
+Beaker, the human
+Camilla, the chicken
+Dr. Bunsen Honeydew, the human
+Dr. Strangepork, the pig
+Fozzie, the bear
+Gonzo, the whatever
+Kermit, the frog
+Link Hogthrob, the pig
+Piggy, the pig
+Robin, the frog
+Sam, the eagle
+Swedish Chef, the human
+Sweetums, the monster
+Zoot, the human
+
+Kermit, the frog
+Gonzo, the whatever
+Couldn't find Janice.
+@end smallexample
+
+

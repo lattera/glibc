@@ -1,0 +1,127 @@
+ # Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+
+sysincludedir=/usr/include # XXX
+
+# Find the <syscall.h> file we will be using, or something like it.
+unix_found=
+for unix_dir in $sysnames; do
+  if test -r $sysdep_dir/$unix_dir/syscall.h; then
+    unix_found=$unix_dir
+    break
+  fi
+done
+if test $unix_found = stub; then
+  # XXX This list of possibilities duplicates the list in Makefile.
+  for try in sys.s sys/sys.s sys.S sys/sys.S syscall.h sys/syscall.h; do
+    if test -r $sysincludedir/$try; then
+      unix_syscall_h=$sysincludedir/$try
+      break
+    fi
+  done
+else
+  unix_syscall_h=$sysdep_dir/$unix_dir/syscall.h
+fi
+
+test -n "$unix_syscall_h" && {
+
+# Where to put the .S files we write.
+if test "`pwd`" = "`(cd $srcdir; pwd)`"; then
+  unix_generated_dirpfx=sysdeps/unix/
+else
+  # We are running in a separate build directory.
+  unix_generated_dirpfx=
+fi
+
+# This variable will collect the names of the files we create.
+unix_generated=
+unix_srcs=
+unix_dests=
+
+# These several functions are system calls on Unix systems which have them.
+# The details of these calls are universal enough that if a system's
+# <syscall.h> defines the system call number, we know that the simple
+# system call implementations in unix/common will be sufficient.
+
+for unix_function in \
+  dup2 lstat mkdir rmdir readlink symlink rename swapon \
+  access select getgroups setgroups \
+  getitimer setitimer \
+  getdomainname/getdomain=bsd/bsd4.4 \
+  setdomainname/setdomain=bsd/bsd4.4
+do
+
+  # $unix_function  =>	$unix_syscall		$unix_srcname
+  #	CALL			CALL			CALL
+  #	CALL/NAME		CALL			NAME
+  unix_srcname=
+  unix_srcdir=common
+  eval "unix_syscall=`echo $unix_function | \
+		       sed -e 's@=\(.*\)$@ unix_srcdir=\1@' \
+			   -e 's@/\(.*\)$@ unix_srcname=\1@'`"
+  test -z "$unix_srcname" && unix_srcname=$unix_function
+
+  unix_implementor=none
+  for unix_dir in $sysnames; do
+    if test -r $sysdep_dir/$unix_dir/${unix_srcname}.c ||
+       test -r $sysdep_dir/$unix_dir/${unix_srcname}.S ||
+       test -r $sysdep_dir/$unix_dir/${unix_srcname}.s; then
+      unix_implementor=$unix_dir
+      break
+    fi
+  done
+
+  # mkdir and rmdir have implementations in unix/sysv, but
+  # the simple syscall versions are preferable if available.
+  test $unix_syscall = mkdir -o $unix_syscall = rmdir && \
+  test $unix_implementor = unix/sysv && \
+    unix_implementor=generic
+
+  case $unix_implementor in
+  none|stub|generic|posix)
+    # The chosen implementation of ${unix_syscall} is a boring one.
+    # We want to use the unix/common implementation instead iff
+    # ${unix_syscall} appears in <syscall.h>.
+    echo $ac_n "checking for ${unix_syscall} system call""... $ac_c" 1>&4
+    if grep -i "[ 	_]${unix_syscall}[ 	]" $unix_syscall_h >/dev/null
+    then
+      # It does seem to be present in <syscall.h>.
+      echo "$ac_t""yes" 1>&4
+      unix_dests="$unix_dests ${unix_generated_dirpfx}${unix_srcname}.S"
+      unix_srcs="$unix_srcs sysdeps/unix/${unix_srcdir}/${unix_srcname}.S"
+      unix_generated="$unix_generated $unix_generated_dirpfx${unix_srcname}.S"
+    else
+      echo "$ac_t""no" 1>&4
+    fi
+  ;;
+  *) ;;
+  esac
+
+done
+
+# Autoconf magic in the top-level configure.in causes config.status to
+# actually make the links.
+libc_link_dests="$libc_link_dests $unix_dests"
+libc_link_sources="$libc_link_sources $unix_srcs"
+
+# Store the list of files we created in config.make; Makefile uses it.
+test -n "$unix_generated" && config_vars="$config_vars
+unix-generated := \$(addprefix \$(objpfx),${unix_generated})"
+
+}
