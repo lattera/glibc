@@ -1,3 +1,35 @@
+1999-05-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Versions (ld.so) [GLIBC_2.1.1]: Add _dl_lazy.
+	* elf/dl-open.c (_dl_open_worker): Only relocate newly loaded objects
+	lazily if LD_BIND_NOW is not set.
+	* elf/dl-support.c (_dl_lazy): New variable.
+	(non_dynamic_init): Set _dl_lazy according to LD_BIND_NOW envvar.
+	* elf/rtld.c (_dl_lazy): new global variable.
+	( dl_main): Remove lazy, replace it by _dl_lazy.
+
+1999-05-06  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* locale/setlocale.c (new_composite_name): Check also whether the
+	first category name differs.
+
+1999-05-11  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/ftime.c: Use the bsd implementation, not
+	the generic one.
+
+1999-05-11  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/generic/bits/socket.h (struct sockaddr_storage): New
+	structure; storage suitable for any socket address.
+	* sysdeps/unix/sysv/linux/bits/socket.h (struct sockaddr_storage):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (struct
+	sockaddr_storage): Likewise.
+
+	* inet/netinet/in.h: Use ULONG_MAX not ~0 to test for a 64-bit
+	platform.
+
 1999-05-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* hesiod/Versions: Change _nss_hesiod_getpwuid and

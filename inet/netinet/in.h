@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #define	_NETINET_IN_H	1
 
 #include <features.h>
+#include <limits.h>
 #include <stdint.h>
 
 #include <sys/types.h>
@@ -164,7 +165,7 @@ struct in6_addr
 	uint8_t		u6_addr8[16];
 	uint16_t	u6_addr16[8];
 	uint32_t	u6_addr32[4];
-#if (~0UL) > 0xffffffff
+#if ULONG_MAX > 0xffffffff
 	uint64_t	u6_addr64[2];
 #endif
       } in6_u;

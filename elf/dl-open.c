@@ -46,6 +46,8 @@ extern char **__libc_argv;
 
 extern char **__environ;
 
+extern int _dl_lazy;			/* Do we do lazy relocations?  */
+
 /* Undefine the following for debugging.  */
 /* #define SCOPE_DEBUG 1 */
 #ifdef SCOPE_DEBUG
@@ -85,6 +87,7 @@ dl_open_worker (void *a)
   struct r_debug *r;
   unsigned int global_add;
   const char *dst;
+  int lazy;
 
   /* Maybe we have to expand a DST.  */
   dst = strchr (file, '$');
@@ -145,6 +148,9 @@ dl_open_worker (void *a)
   show_scope (new);
 #endif
 
+  /* Only do lazy relocation if `LD_BIND_NOW' is not set.  */
+  lazy = (mode & RTLD_BINDING_MASK) == RTLD_LAZY && _dl_lazy;
+
   /* Relocate the objects loaded.  We do this in reverse order so that copy
      relocs of earlier objects overwrite the data written by later objects.  */
 
@@ -173,8 +179,7 @@ dl_open_worker (void *a)
 	    }
 	  else
 #endif
-	    _dl_relocate_object (l, l->l_scope,
-				 (mode & RTLD_BINDING_MASK) == RTLD_LAZY, 0);
+	    _dl_relocate_object (l, l->l_scope, lazy, 0);
 	}
 
       if (l == new)

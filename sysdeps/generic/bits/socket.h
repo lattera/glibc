@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Generic/4.3 BSD version.
-   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,9 @@
 #if !defined _SYS_SOCKET_H && !defined _NETINET_IN_H
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
+
+#include <limits.h>
+#include <bits/types.h>
 
 #define	__need_size_t
 #include <stddef.h>
@@ -124,6 +127,24 @@ struct sockaddr
   {
     __SOCKADDR_COMMON (sa_);	/* Common data: address family and length.  */
     char sa_data[14];		/* Address data.  */
+  };
+
+
+/* Structure large enough to hold any socket address (with the historical
+   exception of AF_UNIX).  We reserve 128 bytes.  */
+#if ULONG_MAX > 0xffffffff
+# define __ss_align	__uint64_t
+#else
+# define __ss_align	__uint32_t
+#endif
+#define _SS_SIZE	128
+#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof (__ss_align)))
+
+struct sockaddr_storage
+  {
+    __SOCKADDR_COMMON (__ss_);	/* Address family, etc.  */
+    __ss_align __ss_align;	/* Force desired alignment.  */
+    char __ss_padding[_SS_PADSIZE];
   };
 
 

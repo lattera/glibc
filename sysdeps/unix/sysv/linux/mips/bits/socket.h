@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux/MIPS version.
-   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #define __need_NULL
 #include <stddef.h>
 
+#include <limits.h>
 #include <sys/types.h>
 
 /* Type for length arguments in socket calls.  */
@@ -130,6 +131,24 @@ struct sockaddr
   {
     __SOCKADDR_COMMON (sa_);	/* Common data: address family and length.  */
     char sa_data[14];		/* Address data.  */
+  };
+
+
+/* Structure large enough to hold any socket address (with the historical
+   exception of AF_UNIX).  We reserve 128 bytes.  */
+#if ULONG_MAX > 0xffffffff
+# define __ss_align	__uint64_t
+#else
+# define __ss_align	__uint32_t
+#endif
+#define _SS_SIZE	128
+#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof(__ss_align)))
+
+struct sockaddr_storage
+  {
+    __SOCKADDR_COMMON (__ss_);	/* Address family, etc.  */
+    __ss_align __ss_align;	/* Force desired alignment.  */
+    char __ss_padding[_SS_PADSIZE];
   };
 
 

@@ -82,6 +82,7 @@ struct r_search_path *_dl_search_paths;
 const char *_dl_profile;
 const char *_dl_profile_output;
 struct link_map *_dl_profile_map;
+int _dl_lazy;
 int _dl_debug_libs;
 int _dl_debug_impcalls;
 int _dl_debug_bindings;
@@ -332,7 +333,6 @@ dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Addr) *user_entry)
 {
   const ElfW(Phdr) *ph;
-  int lazy;
   enum mode mode;
   struct link_map **preloads;
   unsigned int npreloads;
@@ -346,7 +346,7 @@ dl_main (const ElfW(Phdr) *phdr,
   hp_timing_t diff;
 
   /* Process the environment variable which control the behaviour.  */
-  process_envvars (&mode, &lazy);
+  process_envvars (&mode, &_dl_lazy);
 
   /* Set up a flag which tells we are just starting.  */
   _dl_starting_up = 1;
@@ -377,7 +377,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	if (! strcmp (_dl_argv[1], "--list"))
 	  {
 	    mode = list;
-	    lazy = -1;	/* This means do no dependency analysis.  */
+	    _dl_lazy = -1;	/* This means do no dependency analysis.  */
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
@@ -853,13 +853,13 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  }
       else
 	{
-	  if (lazy >= 0)
+	  if (_dl_lazy >= 0)
 	    {
 	      /* We have to do symbol dependency testing.  */
 	      struct relocate_args args;
 	      struct link_map *l;
 
-	      args.lazy = lazy;
+	      args.lazy = _dl_lazy;
 
 	      l = _dl_loaded;
 	      while (l->l_next)
@@ -974,7 +974,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     hp_timing_t add;
 
     /* If we are profiling we also must do lazy reloaction.  */
-    lazy |= consider_profiling;
+    _dl_lazy |= consider_profiling;
 
     l = _dl_loaded;
     while (l->l_next)
@@ -984,7 +984,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     do
       {
 	if (l != &_dl_rtld_map)
-	  _dl_relocate_object (l, l->l_scope, lazy, consider_profiling);
+	  _dl_relocate_object (l, l->l_scope, _dl_lazy, consider_profiling);
 
 	l = l->l_prev;
       }

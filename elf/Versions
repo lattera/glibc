@@ -39,7 +39,7 @@ ld.so {
   }
   GLIBC_2.1.1 {
     # global variables
-    _dl_origin_path; _dl_platformlen;
+    _dl_lazy; _dl_origin_path; _dl_platformlen;
 
     # functions used in other libraries
     _dl_dst_count; _dl_dst_substitute;

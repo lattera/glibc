@@ -149,7 +149,7 @@ new_composite_name (int category, const char *newnames[LC_ALL])
 			  _nl_current_names[i]);
       last_len = strlen (name);
       cumlen += _nl_category_name_sizes[i] + 1 + last_len + 1;
-      if (i > 0 && same && strcmp (name, newnames[0]) != 0)
+      if (same && strcmp (name, newnames[0]) != 0)
 	same = 0;
     }
 
