@@ -1,5 +1,8 @@
 1999-12-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/testdata/EUC-CN..UTF8: New file.
+	* iconvdata/testdata/GBK..UTF8: New file.
+
 	* iconvdata/gbk.c: In mapping from UCS4: don't crash for undefined
 	mappings.  Fix last patch.
 	* iconvdata/TESTS: Add GBK.
