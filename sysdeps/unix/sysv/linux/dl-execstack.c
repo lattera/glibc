@@ -23,6 +23,9 @@
 #include <stdbool.h>
 #include <stackinfo.h>
 
+#include "kernel-features.h"
+
+
 extern void *__libc_stack_end;
 
 int
@@ -35,15 +38,20 @@ _dl_make_stack_executable (void)
 
   /* Newer Linux kernels support a flag to make our job easy.  */
 # ifdef PROT_GROWSDOWN
+#  if __ASSUME_PROT_GROWSUPDOWN == 0
   static bool no_growsdown;
   if (! no_growsdown)
+#  endif
     {
       if (__mprotect ((void *) page, GL(dl_pagesize),
 		      PROT_READ|PROT_WRITE|PROT_EXEC|PROT_GROWSDOWN) == 0)
-	return 0;
-      if (errno != EINVAL)
+	goto return_success;
+#  if __ASSUME_PROT_GROWSUPDOWN == 0
+      if (errno == EINVAL)
+	no_growsdown = true;
+      else
+#  endif
 	return errno;
-      no_growsdown = true;
     }
 # endif
 
@@ -54,6 +62,7 @@ _dl_make_stack_executable (void)
      We start with a random guess at how deep the stack might have gotten
      so as to have extended the GROWSDOWN mapping to lower pages.  */
 
+# if __ASSUME_PROT_GROWSUPDOWN == 0
   size_t size = GL(dl_pagesize) * 8;
   page = page + GL(dl_pagesize) - size;
   while (1)
@@ -78,6 +87,7 @@ _dl_make_stack_executable (void)
 	  page += size;
 	}
     }
+# endif
 
 #elif _STACK_GROWS_UP
 
@@ -86,15 +96,20 @@ _dl_make_stack_executable (void)
 
   /* Newer Linux kernels support a flag to make our job easy.  */
 # ifdef PROT_GROWSUP
+#  if __ASSUME_PROT_GROWSUPDOWN == 0
   static bool no_growsup;
   if (! no_growsup)
+#  endif
     {
       if (__mprotect ((void *) page, GL(dl_pagesize),
 		      PROT_READ|PROT_WRITE|PROT_EXEC|PROT_GROWSUP) == 0)
-	return 0;
-      if (errno != EINVAL)
+	goto return_success;
+#  if __ASSUME_PROT_GROWSUPDOWN == 0
+      if (errno == EINVAL)
+	no_growsup = true;
+      else
+#  endif
 	return errno;
-      no_growsup = true;
     }
 # endif
 
@@ -105,6 +120,7 @@ _dl_make_stack_executable (void)
      We start with a random guess at how deep the stack might have gotten
      so as to have extended the GROWSUP mapping to higher pages.  */
 
+# if __ASSUME_PROT_GROWSUPDOWN == 0
   size_t size = GL(dl_pagesize) * 8;
   while (1)
     {
@@ -127,11 +143,13 @@ _dl_make_stack_executable (void)
 	  size /= 2;
 	}
     }
+# endif
 
 #else
 # error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
 
+ return_success:
   /* Remember that we changed the permission.  */
   GL(dl_stack_flags) |= PF_X;
 

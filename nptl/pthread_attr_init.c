@@ -80,11 +80,15 @@ __pthread_attr_init_2_0 (attr)
     int inheritsched;
     int scope;
   };
+  struct pthread_attr *iattr;
 
   /* Many elements are initialized to zero so let us do it all at
      once.  This also takes care of clearing the bytes which are not
      internally used.  */
   memset (attr, '\0', sizeof (struct old_attr));
+
+  iattr = (struct pthread_attr *) attr;
+  iattr->flags |= ATTR_FLAG_OLDATTR;
 
   /* We cannot enqueue the attribute because that member is not in the
      old attribute structure.  */

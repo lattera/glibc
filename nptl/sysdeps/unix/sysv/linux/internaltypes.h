@@ -47,6 +47,7 @@ struct pthread_attr
 #define ATTR_FLAG_NOTINHERITSCHED	0x0002
 #define ATTR_FLAG_SCOPEPROCESS		0x0004
 #define ATTR_FLAG_STACKADDR		0x0008
+#define ATTR_FLAG_OLDATTR		0x0010
 
 
 /* Mutex attribute data structure.  */

@@ -1,3 +1,16 @@
+2003-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_PROT_GROWSUPDOWN): Define for 2.6.1 and up.
+	* sysdeps/unix/sysv/linux/dl-execstack.c: Omit compatibility code
+	if __ASSUME_PROT_GROWSUPDOWN is defined.
+
+2003-11-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/dl-execstack.c
+	(_dl_make_stack_executable): Set dl_stack_flags always for
+	success.
+
 2003-06-22  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locale/program/ld-monetary.c: Only check the first three
