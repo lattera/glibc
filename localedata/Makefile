@@ -51,7 +51,8 @@ generated-dirs := $(basename $(test-input)) en_US $(ld-test-names)
 distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(charmaps) $(locales) $(repertoiremaps)			\
 	      tst-rpmatch.sh tst-locale.sh tst-fmon.sh sort-test.sh	\
-	      tst-fmon.data $(test-input-data) $(ld-test-srcs)
+	      tst-fmon.data $(test-input-data) $(ld-test-srcs)		\
+	      th_TH.in cs_CZ.in
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig

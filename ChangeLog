@@ -1,3 +1,7 @@
+1999-05-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/arm/Dist: Add sigrestorer.S.
+
 1999-05-02  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sunrpc/Makefile: Generate dependencies for all flavors of
