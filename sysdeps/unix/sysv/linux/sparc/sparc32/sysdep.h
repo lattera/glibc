@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, January 1997.
 
@@ -48,7 +48,7 @@
 #define END(name) \
 	.size name, . - name
 
-#define LOC(name)  . ## L ## name
+#define LOC(name)  .L##name
 
 #ifdef PIC
 #define SYSCALL_ERROR_HANDLER					\
