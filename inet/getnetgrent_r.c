@@ -186,7 +186,7 @@ endnetgrent (void)
 {
   __libc_lock_lock (lock);
 
-  __internal_endnetgrent (&dataset);
+  internal_endnetgrent (&dataset);
 
   __libc_lock_unlock (lock);
 }
@@ -285,8 +285,8 @@ __getnetgrent_r (char **hostp, char **userp, char **domainp,
 
   __libc_lock_lock (lock);
 
-  status = __internal_getnetgrent_r (hostp, userp, domainp, &dataset,
-				     buffer, buflen, &errno);
+  status = internal_getnetgrent_r (hostp, userp, domainp, &dataset,
+				   buffer, buflen, &errno);
 
   __libc_lock_unlock (lock);
 
