@@ -1,5 +1,8 @@
 2001-02-03  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/elf/start.S (_start): Align stack to 16-byte
+	boundary for SSE/SSE-2 alignment.
+
 	* posix/Makefile ($(objpfx)annexc.out): Also pass sysincludes to
 	isomac.
 

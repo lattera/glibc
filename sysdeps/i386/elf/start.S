@@ -22,12 +22,12 @@
    point runs, most registers' values are unspecified, except for:
 
    %edx		Contains a function pointer to be registered with `atexit'.
-   		This is how the dynamic linker arranges to have DT_FINI
+		This is how the dynamic linker arranges to have DT_FINI
 		functions called for shared libraries that have been loaded
 		before this code runs.
 
    %esp		The stack contains the arguments and environment:
-   		0(%esp)			argc
+		0(%esp)			argc
 		4(%esp)			argv[0]
 		...
 		(4*argc)(%esp)		NULL
@@ -51,10 +51,11 @@ _start:
 	popl %esi		/* Pop the argument count.  */
 	movl %esp, %ecx		/* argv starts just at the current stack top.*/
 
-	/* Before pushing the arguments align the stack to a double word
-	   boundary to avoid penalties from misaligned accesses.  Thanks
-	   to Edward Seidl <seidl@janed.com> for pointing this out.  */
-	andl $0xfffffff8, %esp
+	/* Before pushing the arguments align the stack to a 16-byte
+	(SSE needs 16-byte alignment) boundary to avoid penalties from
+	misaligned accesses.  Thanks to Edward Seidl <seidl@janed.com>
+	for pointing this out.  */
+	andl $0xfffffff0, %esp
 	pushl %eax		/* Push garbage because we allocate
 				   28 more bytes.  */
 
