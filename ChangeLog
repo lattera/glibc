@@ -1,3 +1,7 @@
+1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_builtin.h: Add ISO registry alias for UTF8.
+
 1999-08-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/job.texi (Process Group Functions): Document getpgid,

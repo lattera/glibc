@@ -1106,7 +1106,6 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <fl>	"<F><L>";"<NONE><NONE>";"<fl><fl>";IGNORE
 <ffi>	"<F><F><I>";"<NONE><NONE><NONE>";"<ffi><ffi><ffi>";IGNORE
 <ffl>	"<F><F><L>";"<NONE><NONE><NONE>";"<ffl><ffl><ffl>";IGNORE
-<ft>	"<F><T>";"<NONE><NONE>";"<ft><ft>";IGNORE
 <G>	<G>;<NONE>;<CAPITAL>;IGNORE
 <g>	<G>;<NONE>;<SMALL>;IGNORE
 <G'>	<G>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1378,6 +1377,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <s,>	<S,>;<NONE>;<SMALL>;IGNORE
 <s1>	<S>;<s1>;<SMALL>;IGNORE
 <ss>	"<S><S>";"<NONE><NONE>";"<SMALL><ss>";IGNORE
+<St>	"<S><T>";"<NONE><NONE>";"<St><St>";IGNORE
 <T>	<T>;<NONE>;<CAPITAL>;IGNORE
 <t>	<T>;<NONE>;<SMALL>;IGNORE
 <T<>	<T>;<CARON>;<CAPITAL>;IGNORE
@@ -2258,7 +2258,7 @@ lower	<a>;<b>;<c>;<d>;<e>;<f>;<g>;/
 	<p-o>;<q-o>;<r-o>;<s-o>;<t-o>;/
 	<u-o>;<v-o>;<w-o>;<x-o>;<y-o>;/
 	<z-o>;<ff>;<fi>;<fl>;<ffi>;/
-	<ffl>;<ft>;<st>
+	<ffl>;<St>;<st>
 
 alpha	<A>;<B>;<C>;<D>;<E>;<F>;<G>;/
 	<H>;<I>;<J>;<K>;<L>;<M>;<N>;/
@@ -2453,7 +2453,7 @@ alpha	<A>;<B>;<C>;<D>;<E>;<F>;<G>;/
 	<Re>;<Ro>;<WA>;<Wa>;<Wi>;<We>;/
 	<Wo>;<N6>;<Vu>;<KA>;<KE>;<Va>;/
 	<Vi>;<Ve>;<Vo>;<ff>;<fi>;<fl>;/
-	<ffi>;<ffl>;<ft>;<st>;<aM.>;/
+	<ffi>;<ffl>;<St>;<st>;<aM.>;/
 	<aH.>;<ah.>;<a+->;<a+.>;<b+->;/
 	<b+.>;<b+,>;<b+;>;<tm->;<tm.>;/
 	<t+->;<t+.>;<t+,>;<t+;>;<tk->;/

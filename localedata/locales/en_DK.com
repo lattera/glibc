@@ -1105,7 +1105,6 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <fl>	"<F><L>";"<NONE><NONE>";"<fl><fl>";IGNORE	<Ufb02>	LATIN SMALL LIGATURE FL
 <ffi>	"<F><F><I>";"<NONE><NONE><NONE>";"<ffi><ffi><ffi>";IGNORE	<Ufb03>	LATIN SMALL LIGATURE FFI
 <ffl>	"<F><F><L>";"<NONE><NONE><NONE>";"<ffl><ffl><ffl>";IGNORE	<Ufb04>	LATIN SMALL LIGATURE FFL
-<ft>	"<F><T>";"<NONE><NONE>";"<ft><ft>";IGNORE	<Ufb05>	LATIN SMALL LIGATURE FT
 <G>	<G>;<NONE>;<CAPITAL>;IGNORE	<U0047>	LATIN CAPITAL LETTER G
 <g>	<G>;<NONE>;<SMALL>;IGNORE	<U0067>	LATIN SMALL LETTER G
 <G'>	<G>;<ACUTE>;<CAPITAL>;IGNORE	<U01f8>	LATIN CAPITAL LETTER G WITH ACUTE
@@ -1376,6 +1375,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <s,>	<S>;<CEDILLA>;<SMALL>;IGNORE	<U015f>	LATIN SMALL LETTER S WITH CEDILLA
 <s8>
 <s1>	<S>;<s1>;<SMALL>;IGNORE	<U017f>	LATIN SMALL LETTER LONG S
+<St>	"<S><T>";"<NONE><NONE>";"<St><St>";IGNORE	<Ufb05>	LATIN SMALL LIGATURE LONG S T
 <ss>	"<S><S>";"<NONE><NONE>";"<SMALL><ss>";IGNORE	<U00df>	LATIN SMALL LETTER SHARP S (German)
 <T>	<T>;<NONE>;<CAPITAL>;IGNORE	<U0054>	LATIN CAPITAL LETTER T
 <t>	<T>;<NONE>;<SMALL>;IGNORE	<U0074>	LATIN SMALL LETTER T
@@ -2257,7 +2257,7 @@ lower   <a>;<b>;<c>;<d>;<e>;<f>;<g>;/
         <p-o>;<q-o>;<r-o>;<s-o>;<t-o>;/
         <u-o>;<v-o>;<w-o>;<x-o>;<y-o>;/
         <z-o>;<ff>;<fi>;<fl>;<ffi>;/
-        <ffl>;<ft>;<st>
+        <ffl>;<St>;<st>
 
 alpha   <A>;<B>;<C>;<D>;<E>;<F>;<G>;/
         <H>;<I>;<J>;<K>;<L>;<M>;<N>;/
@@ -2452,7 +2452,7 @@ alpha   <A>;<B>;<C>;<D>;<E>;<F>;<G>;/
         <Re>;<Ro>;<WA>;<Wa>;<Wi>;<We>;/
         <Wo>;<N6>;<Vu>;<KA>;<KE>;<Va>;/
         <Vi>;<Ve>;<Vo>;<ff>;<fi>;<fl>;/
-        <ffi>;<ffl>;<ft>;<st>;<aM.>;/
+        <ffi>;<ffl>;<St>;<st>;<aM.>;/
         <aH.>;<ah.>;<a+->;<a+.>;<b+->;/
         <b+.>;<b+,>;<b+;>;<tm->;<tm.>;/
         <t+->;<t+.>;<t+,>;<t+;>;<tk->;/

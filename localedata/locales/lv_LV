@@ -1103,7 +1103,6 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <fl>	"<F><L>";"<NONE><NONE>";"<fl><fl>";IGNORE
 <ffi>	"<F><F><I>";"<NONE><NONE><NONE>";"<ffi><ffi><ffi>";IGNORE
 <ffl>	"<F><F><L>";"<NONE><NONE><NONE>";"<ffl><ffl><ffl>";IGNORE
-<ft>	"<F><T>";"<NONE><NONE>";"<ft><ft>";IGNORE
 <G>	<G>;<NONE>;<CAPITAL>;IGNORE
 <g>	<G>;<NONE>;<SMALL>;IGNORE
 <G'>	<G>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1380,6 +1379,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <s<>   <S<>;<NONE>;<SMALL>;IGNORE
 <s1>	<S>;<s1>;<SMALL>;IGNORE
 <ss>	"<S><S>";"<NONE><NONE>";"<SMALL><ss>";IGNORE
+<St>	"<S><T>";"<NONE><NONE>";"<St><St>";IGNORE
 <T>	<T>;<NONE>;<CAPITAL>;IGNORE
 <t>	<T>;<NONE>;<SMALL>;IGNORE
 <T<>	<T>;<CARON>;<CAPITAL>;IGNORE

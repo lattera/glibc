@@ -561,7 +561,6 @@ order_start forward;forward;forward;forward
 <fl>	"<F><L>";"<NONE><NONE>";"<fl><fl>";"<F><L>"
 <ffi>	"<F><F><I>";"<NONE><NONE><NONE>";"<ffi><ffi><ffi>";"<F><F><I>"
 <ffl>	"<F><F><L>";"<NONE><NONE><NONE>";"<ffl><ffl><ffl>";"<F><F><L>"
-<ft>	"<F><T>";"<NONE><NONE>";"<ft><ft>";"<F><T>"
 
 <G>	<G>;<NONE>;<CAPITAL>;<G>
 <g>	<G>;<NONE>;<SMALL>;<G>
@@ -856,6 +855,7 @@ order_start forward;forward;forward;forward
 
 <s1>	<S>;<s1>;<SMALL>;<S>
 <ss>	"<S><S>";"<NONE><NONE>";"<SMALL><ss>";"<S><S>"
+<St>	"<S><T>";"<NONE><NONE>";"<St><St>";IGNORE
 
 <T>	<T>;<NONE>;<CAPITAL>;<T>
 <t>	<T>;<NONE>;<SMALL>;<T>

@@ -1,3 +1,7 @@
+1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/UTF8: Generated from the charDB.
+
 1999-08-13  Andreas Schwab  <schwab@suse.de>
 
 	* locales/cs_CZ: Remove <ft> entry, add <St> entry.
