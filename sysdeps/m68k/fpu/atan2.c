@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	__GNUC__
 
-double
+__CONSTVALUE double
 DEFUN(atan2, (y, x), double y AND double x)
 {
   static CONST double one = 1.0, zero = 0.0;
