@@ -1,3 +1,11 @@
+Thu Sep 26 13:44:29 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/Makefile (installed-sunrpc-headers): New variable.
+	(sunrpc-headers): New variable.
+	(install-headers-nosubir): Depend on $(installed-sunrpc-headers),
+	not just <rpc/netdb.h>.
+	($(installed-sunrpc-headers)): Provide rule for all of these.
+
 Mon Sep 23 15:31:04 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* hurd/Makefile ($(includedir)/rpc/netdb.h): There is no make
