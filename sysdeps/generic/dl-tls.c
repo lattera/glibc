@@ -292,11 +292,11 @@ _dl_allocate_tls_init (void *result)
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
 
-	  /* We don't have to clear the BSS part of the TLS block
-	     since mmap is used to allocate the memory which
-	     guarantees it is initialized to zero.  */
-	  dtv[cnt].pointer = memcpy (dest, map->l_tls_initimage,
-				     map->l_tls_initimage_size);
+	  /* Copy the initialization image and clear the BSS part.  */
+	  dtv[map->l_tls_modid].pointer = dest;
+	  memset (__mempcpy (dest, map->l_tls_initimage,
+			     map->l_tls_initimage_size), '\0',
+		  map->l_tls_blocksize - map->l_tls_initimage_size);
 	}
 
       total += cnt;
