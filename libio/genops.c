@@ -1057,19 +1057,25 @@ _IO_iter_file(iter)
 void
 _IO_list_lock()
 {
+#ifdef _IO_MTSAFE_IO
   _IO_lock_lock (list_all_lock);
+#endif
 }
 
 void
 _IO_list_unlock()
 {
-    _IO_lock_unlock (list_all_lock);
+#ifdef _IO_MTSAFE_IO
+  _IO_lock_unlock (list_all_lock);
+#endif
 }
 
 void
 _IO_list_resetlock()
 {
+#ifdef _IO_MTSAFE_IO
   _IO_lock_init (list_all_lock);
+#endif
 }
 
 
