@@ -88,6 +88,7 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
 #include <sys/ioctl.h>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <netdb.h>
 #include <resolv.h>
 #include <signal.h>
@@ -965,12 +966,73 @@ send_dg(res_state statp,
 			return (0);
 		}
 #endif /* !CANNOT_CONNECT_DGRAM */
+		/* Make socket non-blocking.  */
+		int fl = __fcntl (EXT(statp).nssocks[ns], F_GETFL);
+		if  (fl != -1)
+			__fcntl (EXT(statp).nssocks[ns], F_SETFL,
+				 fl | O_NONBLOCK);
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; new DG socket\n"))
 	}
 	s = EXT(statp).nssocks[ns];
+	/*
+	 * Compute time for the total operation.
+	 */
+	seconds = (statp->retrans << ns);
+	if (ns > 0)
+		seconds /= statp->nscount;
+	if (seconds <= 0)
+		seconds = 1;
+	evNowTime(&now);
+	evConsTime(&timeout, seconds, 0);
+	evAddTime(&finish, &now, &timeout);
+	int need_recompute = 0;
+ resend:
+#ifdef _LIBC
+        /* Convert struct timespec in milliseconds.  */
+	ptimeout = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
+
+	pfd[0].fd = s;
+	pfd[0].events = POLLOUT;
+	n = __poll (pfd, 1, 0);
+	if (__builtin_expect (n == 0, 0)) {
+		n = __poll (pfd, 1, ptimeout);
+		need_recompute = 1;
+	}
+#else
+	FD_ZERO(&dsmask);
+	FD_SET(s, &dsmask);
+	struct timeval zerotime = { 0, 0 };
+	n = pselect(s + 1, NULL, &dsmask, NULL, &zerotime, NULL);
+	if (n == 0) {
+		n = pselect(s + 1, NULL, &dsmask, NULL, &timeout, NULL);
+		need_recompute = 1;
+	}
+#endif
+	if (n == 0) {
+		Dprint(statp->options & RES_DEBUG, (stdout,
+						    ";; timeout sending\n"));
+		*gotsomewhere = 1;
+		return (0);
+	}
+	if (n < 0) {
+		if (errno == EINTR) {
+		recompute_resend:
+			evNowTime(&now);
+			if (evCmpTime(finish, now) > 0) {
+				evSubTime(&timeout, &finish, &now);
+				goto resend;
+			}
+		}
+		Perror(statp, stderr, "select", errno);
+		res_nclose(statp);
+		return (0);
+	}
+	__set_errno (0);
 #ifndef CANNOT_CONNECT_DGRAM
 	if (send(s, (char*)buf, buflen, 0) != buflen) {
+		if (errno == EINTR || errno == EAGAIN)
+			goto recompute_resend;
 		Perror(statp, stderr, "send", errno);
 		res_nclose(statp);
 		return (0);
@@ -984,6 +1046,8 @@ send_dg(res_state statp,
 	if (sendto(s, (char*)buf, buflen, 0,
 		   (struct sockaddr *)nsap, sizeof *nsap) != buflen)
 	{
+		if (errno == EINTR || errno == EAGAIN)
+			goto recompute_resend;
 		Aerror(statp, stderr, "sendto", errno,
 		       (struct sockaddr *) nsap);
 		res_nclose(statp);
@@ -991,46 +1055,38 @@ send_dg(res_state statp,
 	}
 #endif /* !CANNOT_CONNECT_DGRAM */
 
-	/*
-	 * Wait for reply.
-	 */
-	seconds = (statp->retrans << ns);
-	if (ns > 0)
-		seconds /= statp->nscount;
-	if (seconds <= 0)
-		seconds = 1;
-	evNowTime(&now);
-	evConsTime(&timeout, seconds, 0);
-	evAddTime(&finish, &now, &timeout);
  wait:
+	if (need_recompute) {
+		evNowTime(&now);
+		if (evCmpTime(finish, now) <= 0) {
+		err_return:
+			Perror(statp, stderr, "select", errno);
+			res_nclose(statp);
+			return (0);
+		}
+		evSubTime(&timeout, &finish, &now);
+	}
 #ifdef _LIBC
         /* Convert struct timespec in milliseconds.  */
 	ptimeout = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
 
-	pfd[0].fd = s;
 	pfd[0].events = POLLIN;
 	n = __poll (pfd, 1, ptimeout);
 #else
-	FD_ZERO(&dsmask);
-	FD_SET(s, &dsmask);
 	n = pselect(s + 1, &dsmask, NULL, NULL, &timeout, NULL);
 #endif
 	if (n == 0) {
-		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
+		Dprint(statp->options & RES_DEBUG, (stdout,
+						    ";; timeout receiving\n"));
 		*gotsomewhere = 1;
 		return (0);
 	}
 	if (n < 0) {
 		if (errno == EINTR) {
-			evNowTime(&now);
-			if (evCmpTime(finish, now) > 0) {
-				evSubTime(&timeout, &finish, &now);
-				goto wait;
-			}
+			need_recompute = 1;
+			goto wait;
 		}
-		Perror(statp, stderr, "select", errno);
-		res_nclose(statp);
-		return (0);
+		goto err_return;
 	}
 	__set_errno (0);
 #ifdef _LIBC
@@ -1056,6 +1112,10 @@ send_dg(res_state statp,
 	resplen = recvfrom(s, (char*)ans, anssiz,0,
 			   (struct sockaddr *)&from, &fromlen);
 	if (resplen <= 0) {
+		if (errno == EINTR || errno == EAGAIN) {
+			need_recompute = 1;
+			goto wait;
+		}
 		Perror(statp, stderr, "recvfrom", errno);
 		res_nclose(statp);
 		return (0);
