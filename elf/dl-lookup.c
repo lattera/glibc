@@ -97,14 +97,13 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 
   /* Determine whether UNDEF_MAP already has a reference to MAP.  First
      look in the normal dependencies.  */
-  list = undef_map->l_searchlist.r_list;
-  act = undef_map->l_searchlist.r_nlist;
+  list = undef_map->l_initfini;
 
-  for (i = 0; i < act; ++i)
+  for (i = 0; list[i] != NULL; ++i)
     if (list[i] == map)
       break;
 
-  if (__builtin_expect (i == act, 1))
+  if (__builtin_expect (list[i] == NULL, 1))
     {
       /* No normal dependency.  See whether we already had to add it
 	 to the special list of dynamic dependencies.  */

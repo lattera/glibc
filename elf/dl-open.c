@@ -255,7 +255,7 @@ dl_open_worker (void *a)
 			     "\n\n", NULL);
 	}
 
-      /* If the user requested the object t be in the global namespace
+      /* If the user requested the object to be in the global namespace
 	 but it is not so far, add it now.  */
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
 	(void) add_to_global (new);

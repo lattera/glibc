@@ -246,7 +246,7 @@ $(objpfx)testobj2.so: $(objpfx)testobj1.so $(libdl)
 $(objpfx)testobj3.so: $(libdl)
 $(objpfx)testobj4.so: $(libdl)
 $(objpfx)testobj5.so: $(libdl)
-$(objpfx)testobj6.so: $(libdl)
+$(objpfx)testobj6.so: $(objpfx)testobj1.so $(objpfx)testobj2.so $(libdl)
 $(objpfx)failobj.so: $(objpfx)testobj6.so
 $(objpfx)dep1.so: $(objpfx)dep2.so $(objpfx)dep4.so
 $(objpfx)dep2.so: $(objpfx)dep3.so $(objpfx)dep4.so

@@ -148,15 +148,27 @@ main (int argc, char *argv[])
   /* Unload all loaded modules.  */
   for (count = 0; count < NOBJS; ++count)
     if (testobjs[count].handle != NULL)
-{	  printf ("\nclose: %s: l_initfini = %p, l_versions = %p\n",
-		  testobjs[count].name,
-		  ((struct link_map*)testobjs[count].handle)->l_initfini,
-		  ((struct link_map*)testobjs[count].handle)->l_versions);
-      if (dlclose (testobjs[count].handle) != 0)
-	{
-	  printf ("failed to close %s\n", testobjs[count].name);
-	  result = 1;
-}	}
+      {
+	printf ("\nclose: %s: l_initfini = %p, l_versions = %p\n",
+		testobjs[count].name,
+		((struct link_map*)testobjs[count].handle)->l_initfini,
+		((struct link_map*)testobjs[count].handle)->l_versions);
+
+	if (dlclose (testobjs[count].handle) != 0)
+	  {
+	    printf ("failed to close %s\n", testobjs[count].name);
+	    result = 1;
+	  }
+      }
+
+  /* Check whether all files are unloaded.  */
+  for (map = _r_debug.r_map; map != NULL; map = map->l_next)
+    if (map->l_type == lt_loaded)
+      {
+	printf ("name = \"%s\", opencount = %d\n",
+		map->l_name, (int) map->l_opencount);
+	result = 1;
+      }
 
   return result;
 }
