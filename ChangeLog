@@ -1,3 +1,9 @@
+2003-11-01  Randolph Chung  <tausq@debian.org>
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (LOAD_ARGS_0, LOAD_ARGS_1,
+	LOAD_ARGS_2, LOAD_ARGS_3, LOAD_ARGS_4, LOAD_ARGS_5, LOAD_ARGS_6):
+	Add missing parentheses.
+
 2003-11-01  Roland McGrath  <roland@redhat.com>
 
 	* libio/bug-ftell.c (do_test): Add a cast.
