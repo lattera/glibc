@@ -1,3 +1,11 @@
+2002-11-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/Versions (libc: GLIBC_2.0): Change
+	#errlist-compat magic comment to give 123 as size.
+	(libc: GLIBC_2.1): Remove this set, moving #errlist-compat magic to ...
+	(libc: GLIBC_2.2): ... here.
+	(libc: GLIBC_2.3): Likewise.
+
 2002-11-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_dl.c (do_release_all): Call __libc_dlclose as many
