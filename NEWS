@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2002-2-26
+GNU C Library NEWS -- history of user-visible changes.  2002-7-24
 Copyright (C) 1992-2000, 2001, 2002 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -31,6 +31,16 @@ Version 2.3
 
 * Bruno Haible upgraded the iconv and locale implementation to support
   Unicode 3.2.
+
+* Content of The LC_* and LANG environments in the CEN style is not recognized
+  anymore.   It never was used.  Change by Ulrich Drepper.
+
+* The runtime (ld.so, libc, libpthread for Linux) now can handle the TLS
+  ABI on some platforms.  Changes by Ulrich Drepper.
+  SH support by Kaz Kojima.
+
+* Bruno Haible contributed iconv converters for ISO-2022-JP-3, SHIFT JIS-X0213,
+  and EUC-JISX0213.
 
 Version 2.2.5
 

@@ -1,3 +1,8 @@
+2002-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/opensock.c (__opensock): Prefer inet
+	sockets on old kernels.
+
 2002-07-22  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/errlist.c: Remove extra weak alias
