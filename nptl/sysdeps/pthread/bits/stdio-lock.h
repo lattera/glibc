@@ -90,15 +90,10 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 # ifdef __EXCEPTIONS
 #  define _IO_acquire_lock(_fp) \
   do {									      \
-    auto inline __attribute__((always_inline)) void			      \
-    _IO_acquire_lock_fct (int *p __attribute__ ((__unused__)))		      \
-      {									      \
-	if (((_fp)->_flags & _IO_USER_LOCK) == 0)			      \
-	  _IO_funlockfile (_fp);					      \
-      }									      \
-    int _IO_acquire_lock_dummy						      \
-      __attribute__ ((cleanup (_IO_acquire_lock_fct)));			      \
-    _IO_flockfile (_fp)
+    _IO_FILE *_IO_acquire_lock_file					      \
+	__attribute__((cleanup (_IO_acquire_lock_fct)))			      \
+	= (_fp);							      \
+    _IO_flockfile (_IO_acquire_lock_file);
 
 # else
 #  define _IO_acquire_lock(_fp) _IO_acquire_lock_needs_exceptions_enabled

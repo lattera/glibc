@@ -1,3 +1,8 @@
+2003-08-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Remove __syscall_
+	functions.
+
 2003-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/libio.h (_IO_acquire_lock_fct): Define as inline function.
