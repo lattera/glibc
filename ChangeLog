@@ -1,5 +1,8 @@
 2001-10-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/fnmatch_loop.c: Recognize - at end of bracket expression
+	correctly.
+
 	* string/strxfrm.c [USE_IN_EXTENDED_LOCALE_MODEL]: Correctly get
 	nrules value.
 

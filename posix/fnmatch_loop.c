@@ -592,7 +592,8 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 			/* We have to handling the symbols differently in
 			   ranges since then the collation sequence is
 			   important.  */
-			is_range = *p == L('-') && p[1] != L('\0');
+			is_range = (*p == L('-') && p[1] != L('\0')
+				    && p[1] != L(']'));
 
 			if (!is_range && c == fn)
 			  goto matched;
