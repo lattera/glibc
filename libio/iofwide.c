@@ -30,6 +30,7 @@
 # include <dlfcn.h>
 # include <wchar.h>
 #endif
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -81,7 +82,7 @@ struct _IO_codecvt __libio_codecvt =
 
 
 #ifdef _LIBC
-static struct __gconv_trans_data libio_translit =
+struct __gconv_trans_data __libio_translit =
 {
   .__trans_fct = __gconv_transliterate
 };
@@ -134,11 +135,13 @@ _IO_fwide (fp, mode)
 	memset (&fp->_wide_data->_IO_last_state, '\0', sizeof (__mbstate_t));
 
 	__wcsmbs_clone_conv (&fcts);
+	assert (fcts.towc_nsteps == 1);
+	assert (fcts.tomb_nsteps == 1);
 
 	/* The functions are always the same.  */
 	*cc = __libio_codecvt;
 
-	cc->__cd_in.__cd.__nsteps = 1; /* Only one step allowed.  */
+	cc->__cd_in.__cd.__nsteps = fcts.towc_nsteps;
 	cc->__cd_in.__cd.__steps = fcts.towc;
 
 	cc->__cd_in.__cd.__data[0].__invocation_counter = 0;
@@ -149,7 +152,7 @@ _IO_fwide (fp, mode)
 	/* XXX For now no transliteration.  */
 	cc->__cd_in.__cd.__data[0].__trans = NULL;
 
-	cc->__cd_out.__cd.__nsteps = 1; /* Only one step allowed.  */
+	cc->__cd_out.__cd.__nsteps = fcts.tomb_nsteps;
 	cc->__cd_out.__cd.__steps = fcts.tomb;
 
 	cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
@@ -158,11 +161,7 @@ _IO_fwide (fp, mode)
 	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
 
 	/* And now the transliteration.  */
-#ifdef _LIBC
-	cc->__cd_out.__cd.__data[0].__trans = &libio_translit;
-#else
-	cc->__cd_out.__cd.__data[0].__trans = NULL;
-#endif
+	cc->__cd_out.__cd.__data[0].__trans = &__libio_translit;
       }
 #else
 # ifdef _GLIBCPP_USE_WCHAR_T
@@ -188,8 +187,12 @@ _IO_fwide (fp, mode)
 	  cc->__cd_out = iconv_open (external_ccs, internal_ccs);
 
 	if (cc->__cd_in == (iconv_t) -1 || cc->__cd_out == (iconv_t) -1)
-	  /* XXX */
-	  abort ();
+	  {
+	    if (cc->__cd_in != (iconv_t) -1)
+	      iconv_close (cc->__cd_in);
+	    /* XXX */
+	    abort ();
+	  }
       }
 # else
 #  error "somehow determine this from LC_CTYPE"

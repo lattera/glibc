@@ -125,6 +125,19 @@ sub location {
 	    }
 	}
 	$cache{$addr} = $str = $addr;
+    } elsif ($str =~ /^.*[[](0x[^]]*)]$/) {
+	my $addr = $1;
+	return $cache{$addr} if (exists $cache{$addr});
+	if ($binary ne "" && open (ADDR, "addr2line -e $binary $addr|")) {
+	    my $line = <ADDR>;
+	    chomp $line;
+	    close (ADDR);
+	    if ($line ne '??:0') {
+		$cache{$addr} = $line;
+		return $cache{$addr};
+	    }
+	}
+	$cache{$addr} = $str = $addr;
     }
     return $str;
 }

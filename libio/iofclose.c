@@ -72,16 +72,8 @@ _IO_new_fclose (fp)
 	 the conversion functions.  */
       struct _IO_codecvt *cc = fp->_codecvt;
 
-      if (cc->__cd_in.__cd.__steps->__shlib_handle != NULL)
-	{
-	  --cc->__cd_in.__cd.__steps->__counter;
-	  __gconv_close_transform (cc->__cd_in.__cd.__steps, 1);
-	}
-      if (cc->__cd_out.__cd.__steps->__shlib_handle != NULL)
-	{
-	  --cc->__cd_out.__cd.__steps->__counter;
-	  __gconv_close_transform (cc->__cd_out.__cd.__steps, 1);
-	}
+      __gconv_release_step (cc->__cd_in.__cd.__steps);
+      __gconv_release_step (cc->__cd_out.__cd.__steps);
 #endif
     }
   _IO_cleanup_region_end (0);

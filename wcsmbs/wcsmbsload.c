@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -41,8 +41,8 @@ static struct __gconv_step to_wc =
   .__shlib_handle = NULL,
   .__modname = NULL,
   .__counter = INT_MAX,
-  .__from_name = "ANSI_X3.4-1968//TRANSLIT",
-  .__to_name = "INTERNAL",
+  .__from_name = (char *) "ANSI_X3.4-1968//TRANSLIT",
+  .__to_name = (char *) "INTERNAL",
   .__fct = __gconv_transform_ascii_internal,
   .__init_fct = NULL,
   .__end_fct = NULL,
@@ -59,8 +59,8 @@ static struct __gconv_step to_mb =
   .__shlib_handle = NULL,
   .__modname = NULL,
   .__counter = INT_MAX,
-  .__from_name = "INTERNAL",
-  .__to_name = "ANSI_X3.4-1968//TRANSLIT",
+  .__from_name = (char *) "INTERNAL",
+  .__to_name = (char *) "ANSI_X3.4-1968//TRANSLIT",
   .__fct = __gconv_transform_internal_ascii,
   .__init_fct = NULL,
   .__end_fct = NULL,
@@ -77,22 +77,33 @@ static struct __gconv_step to_mb =
 struct gconv_fcts __wcsmbs_gconv_fcts =
 {
   .towc = &to_wc,
-  .tomb = &to_mb
+  .towc_nsteps = 1,
+  .tomb = &to_mb,
+  .tomb_nsteps = 1
 };
 
 
 static inline struct __gconv_step *
-getfct (const char *to, const char *from)
+getfct (const char *to, const char *from, size_t *nstepsp)
 {
   size_t nsteps;
   struct __gconv_step *result;
+#if 0
   size_t nstateful;
   size_t cnt;
+#endif
 
   if (__gconv_find_transform (to, from, &result, &nsteps, 0) != __GCONV_OK)
     /* Loading the conversion step is not possible.  */
     return NULL;
 
+  /* Maybe it is someday necessary to allow more than one step.
+     Currently this is not the case since the conversions handled here
+     are from and to INTERNAL and there always is a converted for
+     that.  It the directly following code is enabled the libio
+     functions will have to allocate appropriate __gconv_step_data
+     elements instead of only one.  */
+#if 0
   /* Count the number of stateful conversions.  Since we will only
      have one 'mbstate_t' object available we can only deal with one
      stateful conversion.  */
@@ -101,11 +112,16 @@ getfct (const char *to, const char *from)
     if (result[cnt].__stateful)
       ++nstateful;
   if (nstateful > 1)
+#else
+  if (nsteps > 1)
+#endif
     {
       /* We cannot handle this case.  */
       __gconv_close_transform (result, nsteps);
       result = NULL;
     }
+  else
+    *nstepsp = nsteps;
 
   return result;
 }
@@ -160,12 +176,18 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	  const char *charset_name;
 	  const char *complete_name;
 	  struct __gconv_step *new_towc;
+	  size_t new_towc_nsteps;
 	  struct __gconv_step *new_tomb;
+	  size_t new_tomb_nsteps;
 	  int use_translit;
 
 	  /* Free the old conversions.  */
-	  __gconv_close_transform (__wcsmbs_gconv_fcts.tomb, 1);
-	  __gconv_close_transform (__wcsmbs_gconv_fcts.towc, 1);
+	  if (__wcsmbs_gconv_fcts.tomb != &to_mb)
+	    __gconv_close_transform (__wcsmbs_gconv_fcts.tomb,
+				     __wcsmbs_gconv_fcts.tomb_nsteps);
+	  if (__wcsmbs_gconv_fcts.towc != &to_wc)
+	    __gconv_close_transform (__wcsmbs_gconv_fcts.towc,
+				     __wcsmbs_gconv_fcts.towc_nsteps);
 
 	  /* Get name of charset of the locale.  */
 	  charset_name = new_category->values[_NL_ITEM_INDEX(CODESET)].string;
@@ -181,9 +203,10 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	  /* It is not necessary to use transliteration in this direction
 	     since the internal character set is supposed to be able to
 	     represent all others.  */
-	  new_towc = getfct ("INTERNAL", complete_name);
+	  new_towc = getfct ("INTERNAL", complete_name, &new_towc_nsteps);
 	  new_tomb = (new_towc != NULL
-		      ? getfct (complete_name, "INTERNAL") : NULL);
+		      ? getfct (complete_name, "INTERNAL", &new_tomb_nsteps)
+		      : NULL);
 
 	  /* If any of the conversion functions is not available we don't
 	     use any since this would mean we cannot convert back and
@@ -197,7 +220,9 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	    }
 
 	  __wcsmbs_gconv_fcts.tomb = new_tomb;
+	  __wcsmbs_gconv_fcts.tomb_nsteps = new_tomb_nsteps;
 	  __wcsmbs_gconv_fcts.towc = new_towc;
+	  __wcsmbs_gconv_fcts.towc_nsteps = new_towc_nsteps;
 	}
 
       /* Set last-used variable for current locale.  */
@@ -232,27 +257,44 @@ __wcsmbs_clone_conv (struct gconv_fcts *copy)
 }
 
 
-/* Clone the current conversion function set.  */
+/* Get converters for named charset.  */
 int
 internal_function
 __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
 {
-  copy->towc = getfct ("INTERNAL", name);
+  copy->towc = getfct ("INTERNAL", name, &copy->towc_nsteps);
   if (copy->towc != NULL)
     {
-      copy->tomb = getfct (name, "INTERNAL");
+      copy->tomb = getfct (name, "INTERNAL", &copy->tomb_nsteps);
       if (copy->tomb == NULL)
-	__gconv_close_transform (copy->towc, 1);
+	__gconv_close_transform (copy->towc, copy->towc_nsteps);
     }
 
-  if (copy->towc == NULL || copy->tomb == NULL)
-    return 1;
-
-  /* Now increment the usage counters.  */
-  if (copy->towc->__shlib_handle != NULL)
-    ++copy->towc->__counter;
-  if (copy->tomb->__shlib_handle != NULL)
-    ++copy->tomb->__counter;
-
-  return 0;
+  return copy->towc == NULL || copy->tomb == NULL ? 1 : 0;
 }
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (__wcsmbs_gconv_fcts.tomb != &to_mb)
+    {
+      struct __gconv_step *old = __wcsmbs_gconv_fcts.tomb;
+      size_t nold = __wcsmbs_gconv_fcts.tomb_nsteps;
+      __wcsmbs_gconv_fcts.tomb = &to_mb;
+      __wcsmbs_gconv_fcts.tomb_nsteps = 1;
+      __gconv_release_cache (old, nold);
+    }
+
+  if (__wcsmbs_gconv_fcts.towc != &to_wc)
+    {
+      struct __gconv_step *old = __wcsmbs_gconv_fcts.towc;
+      size_t nold = __wcsmbs_gconv_fcts.towc_nsteps;
+      __wcsmbs_gconv_fcts.towc = &to_wc;
+      __wcsmbs_gconv_fcts.towc_nsteps = 1;
+      __gconv_release_cache (old, nold);
+    }
+}
+
+text_set_element (__libc_subfreeres, free_mem);

@@ -1,5 +1,22 @@
 2001-07-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/fileops.c (_IO_new_file_fopen): Correctly locate ccs=
+	substring.  Don't handle ccs= if no descriptor was allocated.
+	Normalize codeset name before calling __wcsmbs_named_conv.
+	Initialize transliteration elements.  Free step data structure.
+	* libio/iofclose.c (_IO_new_fclose): Correct freeing of the step data.
+	* libio/iofwide.c (__libio_translit): Renamed from libio_translit
+	and made public.  Various little cleanup changes.
+	* wcsmbs/wcsmbsload.h (struct gconv_fcts): Add towc_nsteps and
+	tomb_nsteps member.
+	* wcsmbs/wcsmbsload.c: Add some casts to avoid warnings.
+	(__wcsmbs_gconv_fcts): Initialize towc_nsteps and tomb_nsteps member.
+	(getfct): Take additional parameter with pointer to variable where the
+	number of steps is stored in.  Disable code which allows to use more
+	than one step for now.  Adjust all callers.
+	(free_mem): New function.  Frees data associated with currently
+	selected converters.
+
 	* malloc/mtrace.pl: Extract addresses from DSOs.
 
 2001-07-26  Ulrich Drepper  <drepper@redhat.com>
@@ -29,7 +46,6 @@
 	* sysdeps/generic/tcsetattr.c (bad_speed): Accept those values.
 	* termios/cfsetspeed.c (speeds): Likewise.
 
->>>>>>> 1.5525
 2001-07-26  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/dl-machine.h (elf_machine_load_address): Don't use

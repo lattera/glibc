@@ -31,6 +31,7 @@
 # define _POSIX_SOURCE
 #endif
 #include "libioP.h"
+#include <assert.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -42,6 +43,8 @@
 #endif
 #if _LIBC
 # include "../wcsmbs/wcsmbsload.h"
+# include "../iconv/gconv_charset.h"
+# include "../iconv/gconv_int.h"
 # include <shlib-compat.h>
 #endif
 #ifndef errno
@@ -73,6 +76,12 @@ extern int errno;
 # define _IO_new_file_write _IO_file_write
 # define _IO_new_file_xsputn _IO_file_xsputn
 #endif
+
+
+#ifdef _LIBC
+extern struct __gconv_trans_data __libio_translit;
+#endif
+
 
 /* An fstream can be in at most one of put mode, get mode, or putback mode.
    Putback mode is a variant of get mode.
@@ -238,8 +247,9 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
   int oprot = 0666;
   int i;
   _IO_FILE *result;
-#if _LIBC
+#ifdef _LIBC
   const char *cs;
+  const char *last_recognized;
 #endif
 
   if (_IO_file_is_open (fp))
@@ -264,6 +274,9 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
       __set_errno (EINVAL);
       return NULL;
     }
+#ifdef _LIBC
+  last_recognized = mode;
+#endif
   for (i = 1; i < 4; ++i)
     {
       switch (*++mode)
@@ -273,11 +286,20 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	case '+':
 	  omode = O_RDWR;
 	  read_write &= _IO_IS_APPENDING;
+#ifdef _LIBC
+	  last_recognized = mode;
+#endif
 	  continue;
 	case 'x':
 	  oflags |= O_EXCL;
+#ifdef _LIBC
+	  last_recognized = mode;
+#endif
 	  continue;
 	case 'b':
+#ifdef _LIBC
+	  last_recognized = mode;
+#endif
 	default:
 	  /* Ignore.  */
 	  continue;
@@ -289,48 +311,78 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 			  is32not64);
 
 
-#if _LIBC
-  /* Test whether the mode string specifies the conversion.  */
-  cs = strstr (mode, ",ccs=");
-  if (cs != NULL)
+#ifdef _LIBC
+  if (result != NULL)
     {
-      /* Yep.  Load the appropriate conversions and set the orientation
-	 to wide.  */
-	struct gconv_fcts fcts;
-	struct _IO_codecvt *cc;
+      /* Test whether the mode string specifies the conversion.  */
+      cs = strstr (last_recognized + 1, ",ccs=");
+      if (cs != NULL)
+	{
+	  /* Yep.  Load the appropriate conversions and set the orientation
+	     to wide.  */
+	  struct gconv_fcts fcts;
+	  struct _IO_codecvt *cc;
+	  char *endp = __strchrnul (cs + 5, ',');
+	  char ccs[endp - (cs + 5) + 3];
 
-	if (! _IO_CHECK_WIDE (fp) || __wcsmbs_named_conv (&fcts, cs + 5) != 0)
-	  {
-	    /* Something went wrong, we cannot load the conversion modules.
-	       This means we cannot proceed since the user explicitly asked
-	       for these.  */
-	    _IO_new_fclose (result);
-	    return NULL;
-	  }
+	  *((char *) __mempcpy (ccs, cs + 5, endp - (cs + 5))) = '\0';
+	  strip (ccs, ccs);
 
-	cc = fp->_codecvt = &fp->_wide_data->_codecvt;
+	  if (__wcsmbs_named_conv (&fcts, ccs[2] == '\0'
+				   ? upstr (ccs, cs + 5) : ccs) != 0)
+	    {
+	      /* Something went wrong, we cannot load the conversion modules.
+		 This means we cannot proceed since the user explicitly asked
+		 for these.  */
+	      __set_errno (EINVAL);
+	      return NULL;
+	    }
 
-	/* The functions are always the same.  */
-	*cc = __libio_codecvt;
+	  assert (fcts.towc_nsteps == 1);
+	  assert (fcts.tomb_nsteps == 1);
 
-	cc->__cd_in.__cd.__nsteps = 1; /* Only one step allowed.  */
-	cc->__cd_in.__cd.__steps = fcts.towc;
+	  fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
+	  fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_write_base;
 
-	cc->__cd_in.__cd.__data[0].__invocation_counter = 0;
-	cc->__cd_in.__cd.__data[0].__internal_use = 1;
-	cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
-	cc->__cd_in.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
+	  /* Clear the state.  We start all over again.  */
+	  memset (&fp->_wide_data->_IO_state, '\0', sizeof (__mbstate_t));
+	  memset (&fp->_wide_data->_IO_last_state, '\0', sizeof (__mbstate_t));
 
-	cc->__cd_out.__cd.__nsteps = 1; /* Only one step allowed.  */
-	cc->__cd_out.__cd.__steps = fcts.tomb;
+	  cc = fp->_codecvt = &fp->_wide_data->_codecvt;
 
-	cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
-	cc->__cd_out.__cd.__data[0].__internal_use = 1;
-	cc->__cd_out.__cd.__data[0].__flags = __GCONV_IS_LAST;
-	cc->__cd_out.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
+	  /* The functions are always the same.  */
+	  *cc = __libio_codecvt;
 
-	/* Set the mode now.  */
-	result->_mode = 1;
+	  cc->__cd_in.__cd.__nsteps = fcts.towc_nsteps;
+	  cc->__cd_in.__cd.__steps = fcts.towc;
+
+	  cc->__cd_in.__cd.__data[0].__invocation_counter = 0;
+	  cc->__cd_in.__cd.__data[0].__internal_use = 1;
+	  cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
+	  cc->__cd_in.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
+
+	  /* XXX For now no transliteration.  */
+	  cc->__cd_in.__cd.__data[0].__trans = NULL;
+
+	  cc->__cd_out.__cd.__nsteps = fcts.tomb_nsteps;
+	  cc->__cd_out.__cd.__steps = fcts.tomb;
+
+	  cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
+	  cc->__cd_out.__cd.__data[0].__internal_use = 1;
+	  cc->__cd_out.__cd.__data[0].__flags = __GCONV_IS_LAST;
+	  cc->__cd_out.__cd.__data[0].__statep =
+	    &result->_wide_data->_IO_state;
+
+	  /* And now the transliteration.  */
+	  cc->__cd_out.__cd.__data[0].__trans = &__libio_translit;
+
+	  /* Set the mode now.  */
+	  result->_mode = 1;
+
+	  /* We don't need the step data structure anymore.  */
+	  __gconv_release_cache (fcts.towc, fcts.towc_nsteps);
+	  __gconv_release_cache (fcts.tomb, fcts.tomb_nsteps);
+	}
     }
 #endif	/* GNU libc */
 

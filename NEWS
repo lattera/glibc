@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-7-25
+GNU C Library NEWS -- history of user-visible changes.  2001-7-27
 Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -28,6 +28,8 @@ Version 2.2.4
 
 * The Hurd port got a lot more functionality like AIO, various stdio
   extensions, etc.  Mainly done by Roland McGrath.
+
+* mtrace can now lookup symbols in shared libraries.
 
 Version 2.2.3
 
