@@ -1,3 +1,8 @@
+2000-06-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/findlocale.c: Add __builtin_expect in many places.
+	* locale/loadlocale.c: Likewise.
+
 2000-06-06  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/mips/elf/start.S: Trim redundant code.
