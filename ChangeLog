@@ -1,3 +1,17 @@
+1999-03-26  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Makerules: Add $(common-objpfx)Versions.all to common-generated
+	outside of ifndef avoid-generated.
+
+	* libio/oldiofdopen.c (_IO_old_fdopen): Bring over recent changes
+	in iofdopen.c.
+	* libio/oldiofopen.c (_IO_old_fopen): Bring over recent changes in
+	iofopen.c.
+	* libio/oldiofclose.c (_IO_old_fclose): Bring over recent changes
+	in iofclose.c.
+	* libio/oldfileops.c (_IO_old_file_underflow, _IO_old_file_sync,
+	_IO_old_file_seekoff): Bring over recent changes in fileops.c.
+
 1999-03-26  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/Makefile: Only install libc_p.a linker script
