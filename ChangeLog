@@ -1,6 +1,6 @@
 Tue Jun  4 02:25:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
-	* sysdeps/libm-i387/s_finite.S: Use %eax instead of %al in setnel insn.
+	* sysdeps/libm-i387/s_finite.S: Use `setne' instead of `setnel'.
 
 	* intl/l10nflist.c: Fix conditional on #include <argz.h>.
 
