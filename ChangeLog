@@ -188,6 +188,37 @@
 	* sysdeps/i386/bits/string.h (strcmp): Use 8bit register in 8bit
 	instruction.
 
+2000-06-29  David Mosberger-Tang  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/ioperm.c: New file.
+
+2000-06-29  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add __fstatfs64
+	alias to the fstatfs call.
+
+	* sysdeps/unix/sysv/linux/ia64/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/setrlimit64.c: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/truncate64.c: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/readdir.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/readdir_r.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/readdir64_r.c: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/glob.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/glob64.c: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/fstatfs64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/statfs64.c: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/pwrite64.c: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/shmctl.c: New file.
+
 2000-06-29  Andreas Jaeger  <aj@suse.de>
 
 	* sunrpc/rpc_svcout.c (write_msg_out): Always use format string
