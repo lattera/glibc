@@ -1,3 +1,8 @@
+2002-10-12  Roland McGrath  <roland@redhat.com>
+
+	* stdio-common/tst-rndseek.c (TIMEOUT): Increase to 10 seconds.
+	Some machines are slow.  Guido Guenther <agx@sigxcpu.org> has one.
+
 2002-10-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sv.po: Update from translation team.
