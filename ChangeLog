@@ -1,3 +1,12 @@
+2004-10-30  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/waitid.c: Include <stddef.h> for NULL.
+
+2004-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_free): Use unique comments for the error
+	cases.
+
 2004-10-28  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/i386/tls.h (_hurd_tls_fork): Use i386_thread_state

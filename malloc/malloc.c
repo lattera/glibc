@@ -4198,6 +4198,8 @@ _int_free(mstate av, Void_t* mem)
 
   /* free(0) has no effect */
   if (mem != 0) {
+    const char *errstr = NULL;
+
     p = mem2chunk(mem);
     size = chunksize(p);
 
@@ -4207,7 +4209,9 @@ _int_free(mstate av, Void_t* mem)
        here by accident or by "design" from some intruder.  */
     if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0))
       {
-	malloc_printerr (check_action, "free(): invalid pointer", mem);
+	errstr = "free(): invalid pointer";
+      errout:
+	malloc_printerr (check_action, errstr, mem);
 	return;
       }
 
@@ -4235,9 +4239,8 @@ _int_free(mstate av, Void_t* mem)
 	 record we are going to add (i.e., double free).  */
       if (__builtin_expect (*fb == p, 0))
 	{
-	double_free:
-	  malloc_printerr (check_action, "double free or corruption", mem);
-	  return;
+	  errstr = "double free or corruption (fasttop)";
+	  goto errout;
 	}
       p->fd = *fb;
       *fb = p;
@@ -4253,15 +4256,24 @@ _int_free(mstate av, Void_t* mem)
       /* Lightweight tests: check whether the block is already the
 	 top block.  */
       if (__builtin_expect (p == av->top, 0))
-	goto double_free;
+	{
+	  errstr = "double free or corruption (top)";
+	  goto errout;
+	}
       /* Or whether the next chunk is beyond the boundaries of the arena.  */
       if (__builtin_expect (contiguous (av)
 			    && (char *) nextchunk
 			       >= ((char *) av->top + chunksize(av->top)), 0))
-	goto double_free;
+	{
+	  errstr = "double free or corruption (out)";
+	  goto errout;
+	}
       /* Or whether the block is actually not marked used.  */
       if (__builtin_expect (!prev_inuse(nextchunk), 0))
-	goto double_free;
+	{
+	  errstr = "double free or corruption (!prev)";
+	  goto errout;
+	}
 
       nextsize = chunksize(nextchunk);
       assert(nextsize > 0);
