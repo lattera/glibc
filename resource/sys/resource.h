@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 94, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,94,96,97,98,99,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ __BEGIN_DECLS
    `int' as the type for the first argument.  When we are compiling with
    GNU extensions we change this slightly to provide better error
    checking.  */
-#ifdef __USE_GNU
+#if defined __USE_GNU && !defined __cplusplus
 typedef enum __rlimit_resource __rlimit_resource_t;
 typedef enum __rusage_who __rusage_who_t;
 typedef enum __priority_which __priority_which_t;

@@ -1,3 +1,8 @@
+2002-07-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* resource/sys/resource.h (__rlimit_resource_t, __rusage_who_t,
+	__priority_which_t): Always typedef to int for C++.
+
 2002-07-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Add test for __thread support in compiler.
