@@ -1,19 +1,19 @@
 2004-03-29  Ulrich Drepper  <drepper@redhat.com>
 
-	* nis/nss_nis/nis-rpc.c (saveit): Improve memory.  No need to
+	* nis/nss_nis/nis-rpc.c (saveit): Improve memory handling.  No need to
 	allocate multiple blocks.
 	(internal_nis_endrpcent): Adjust accordingly.
-	* nis/nss_nis/nis-proto.c (saveit): Improve memory.  No need to
-	allocate multiple blocks.
-	(internal_nis_endprotoent): Adjust accordingly.
-	* nis/nss_nis/nis-initgroups.c (saveit): Improve memory.  No need
+	* nis/nss_nis/nis-proto.c (saveit): Improve memory handling.  No need
 	to allocate multiple blocks.
+	(internal_nis_endprotoent): Adjust accordingly.
+	* nis/nss_nis/nis-initgroups.c (saveit): Improve memory handling.  No
+	need to allocate multiple blocks.
 	(_nss_nis_initgroups_dyn): Adjust accordingly.
-	* nis/nss_nis/nis-ethers.c (saveit): Improve memory.  No need to
-	allocate multiple blocks.
+	* nis/nss_nis/nis-ethers.c (saveit): Improve memory handling.  No need
+	to allocate multiple blocks.
 	(internal_nis_endetherent): Adjust accordingly.
-	* nis/nss_nis/nis-service.c (saveit): Improve memory.  No need to
-	allocate multiple blocks.
+	* nis/nss_nis/nis-service.c (saveit): Improve memory handling.  No need
+	to allocate multiple blocks.
 	(internal_nis_endservent): Adjust accordingly.
 
 	* nss/getXXbyYY_r.c: Return 0 for NSS_STATUS_NOTFOUND.
