@@ -1,10 +1,10 @@
 #!/bin/sh
-# Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 1, or (at your option)
+# the Free Software Foundation; either version 2, or (at your option)
 # any later version.
 
 # The GNU C Library is distributed in the hope that it will be useful,
@@ -20,11 +20,13 @@ sysincludedir=${sysincludedir-/usr/include}
 
 if [ ! "$snarfexclude" ]; then
   # Filter out some headers which cause trouble.
+  # Reportedly a bug in sunos4.1.2's sed makes this lose if
+  # the two cmds are in a single sed invocation.
   snarfexclude="`echo !${sysincludedir}/sys/param.h! \
 		      !${sysincludedir}/sys/time.h! \
 		      !${sysincludedir}/sys/types.h! \
-		 | sed -e 's,/,\\\\/,g' \
-		       -e 's,!\\([^!]*\\)!,-e /\\1/d,g'`"
+		 | sed 's,/,\\\\/,g' \
+		 | sed 's,!\\([^!]*\\)!,-e /\\1/d,g'`"
 fi
 
 for file in $*; do

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -59,10 +59,6 @@ extern int open __P ((__const char *__file, int __oflag,...));
    This takes an `int' MODE argument because that is
    what `mode_t' will be widened to.  */
 extern int creat __P ((__const char *__file, __mode_t __mode));
-
-#ifdef	__OPTIMIZE__
-#define	creat(file, m)	__open((file), O_WRONLY|O_CREAT|O_TRUNC, (m))
-#endif /* Optimizing.  */
 
 #if defined (__USE_MISC) && !defined (F_LOCK)
 /* NOTE: These declarations also appear in <unistd.h>; be sure to keep both

@@ -278,7 +278,7 @@ DEFUN(strftime, (s, maxsize, format, tp),
 	  break;
 
 	case 'y':
-	  fmt(2, (p, "%.2d", tp->tm_year));
+	  fmt(2, (p, "%.2d", tp->tm_year % 100));
 	  break;
 
 	case 'Z':

@@ -21,6 +21,11 @@ Cambridge, MA 02139, USA.  */
 # include <config.h>
 #endif
 
+#ifdef _LIBC
+# define USE_NUMBER_GROUPING
+# define STDC_HEADERS
+#endif
+
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
@@ -32,10 +37,6 @@ Cambridge, MA 02139, USA.  */
 # ifndef NULL
 #  define NULL 0
 # endif
-#endif
-
-#ifdef _LIBC
-# define USE_NUMBER_GROUPING
 #endif
 
 #ifdef USE_NUMBER_GROUPING

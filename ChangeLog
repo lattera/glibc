@@ -1,5 +1,20 @@
 Tue Jul 25 09:14:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* stdlib/strtol.c [_LIBC]: Define STDC_HEADERS.
+
+	* sysdeps/unix/sysv/ftime.S: New file.
+
+	* locale/locfile-parse.c (categories_write): Cast "" to char *.
+
+	* io/fcntl.h [__OPTIMIZE__] (creat): Macro removed.
+
+	* time/strftime.c: Use year modulo 100 for %y.
+
+	* time/sys/timeb.h: Add __BEGIN_DECLS and __END_DECLS.
+
+	* sysdeps/unix/snarf-ioctls (snarfexclude): Use two sed's instead
+ 	of one, to work around bug in sunos4.1.2 sed.
+
 	* stdio/vfprintf.c (vfprintf): For %s with precision spec, use
  	memchr instead of strlen to limit search for NUL by precision.
 

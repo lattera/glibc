@@ -571,7 +571,7 @@ categories_write (void)
 			{
 			  data->idx[cnt] = len;
 			  ++len;
-			  iov[1 + cnt].iov_base = "";
+			  iov[1 + cnt].iov_base = (char *) "";
 			  iov[1 + cnt].iov_len = 1;
 			  ++cnt;
 			}
