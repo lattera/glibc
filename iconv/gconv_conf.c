@@ -177,12 +177,12 @@ add_alias (char *rp, void *modules)
     ++rp;
   from = wp = rp;
   while (*rp != '\0' && !isspace (*rp))
-    *wp = toupper (*rp++);
+    *wp++ = toupper (*rp++);
   if (*rp == '\0')
     /* There is no `to' string on the line.  Ignore it.  */
     return;
-  *rp++ = '\0';
-  to = wp = rp;
+  *wp++ = '\0';
+  to = ++rp;
   while (isspace (*rp))
     ++rp;
   while (*rp != '\0' && !isspace (*rp))

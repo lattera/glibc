@@ -1,3 +1,17 @@
+1998-12-29  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sunrpc/Versions: Include _authenticate, it's defined in a user
+	header (in fact, it's the whole contents of rpc/svc_auth.h).
+
+1999-01-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/ftw.c (process_entry): Initialize flag since not all gcc
+	versions are smart enough to see that this is no problem.
+
+	* elf/dl-open.c (_dl_init_paths): Check malloc result.
+
+	* csu/Versions: Add __frame_state_for.
+
 1999-01-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/gnu/errlist.awk: Mark ENOTSUP as alias for EOPNOTSUPP.

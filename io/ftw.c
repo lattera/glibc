@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -240,7 +240,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 {
   struct STAT st;
   int result = 0;
-  int flag;
+  int flag = 0;
 
   if (name[0] == '.' && (name[1] == '\0'
 			 || (name[1] == '.' && name[2] == '\0')))

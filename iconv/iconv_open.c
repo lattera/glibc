@@ -53,12 +53,12 @@ strip (char *wp, const char *s)
 
 
 static char *
-upstr (char *str)
+upstr (char *dst, const char *str)
 {
-  char *cp = str;
-  while ((*cp = toupper (*cp)) != '\0')
-    ++cp;
-  return str;
+  char *cp = dst;
+  while ((*cp++ = toupper (*str++)) != '\0')
+    /* nothing */;
+  return dst;
 }
 
 
@@ -77,12 +77,13 @@ iconv_open (const char *tocode, const char *fromcode)
   tocode_len = strlen (tocode);
   tocode_conv = alloca (tocode_len + 3);
   strip (tocode_conv, tocode);
-  tocode = tocode_conv[2] == '\0' ? upstr (tocode) : tocode_conv;
+  tocode = tocode_conv[2] == '\0' ? upstr (tocode_conv, tocode) : tocode_conv;
 
   fromcode_len = strlen (fromcode);
   fromcode_conv = alloca (fromcode_len + 3);
   strip (fromcode_conv, fromcode);
-  fromcode = romcode_conv[2] == '\0' ? upstr (fromcode) : fromcode_conv;
+  fromcode = (fromcode_conv[2] == '\0'
+	      ? upstr (fromcode_conv, fromcode) : fromcode_conv);
 
   res = __gconv_open (tocode, fromcode, &cd);
 

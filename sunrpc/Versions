@@ -55,6 +55,9 @@ libc {
     __key_decryptsession_pk_LOCAL; __key_encryptsession_pk_LOCAL;
     __key_gendes_LOCAL;
 
+    # _*
+    _authenticate;
+
     # a*
     authdes_create; authdes_getucred; authdes_pk_create;
 
