@@ -29,7 +29,7 @@ const char _dl_x86_cap_flags[][7] =
     "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
     "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
     "pat", "pse36", "psn", "19", "20", "21", "22", "mmx",
-    "osfxsr", "xmm", "26", "27", "28", "29", "30", "amd3d"
+    "osfxsr", "xmm", "xmm2", "27", "28", "29", "30", "amd3d"
   };
 
 const char _dl_x86_platforms[][5] =

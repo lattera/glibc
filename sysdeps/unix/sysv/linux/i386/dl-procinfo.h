@@ -29,12 +29,12 @@ extern const char _dl_x86_cap_flags[][7];
 #define _DL_HWCAP_COUNT 32
 
 extern const char _dl_x86_platforms[][5];
-#define _DL_PLATFORMS_COUNT 	4
+#define _DL_PLATFORMS_COUNT	4
 
 /* Start at 48 to reserve some space.  */
-#define _DL_FIRST_PLATFORM 	48
+#define _DL_FIRST_PLATFORM	48
 /* Mask to filter out platforms.  */
-#define _DL_HWCAP_PLATFORM 	(7ULL << _DL_FIRST_PLATFORM)
+#define _DL_HWCAP_PLATFORM	(7ULL << _DL_FIRST_PLATFORM)
 
 
 static inline int
@@ -90,6 +90,8 @@ enum
   HWCAP_I386_FCMOV = 1 << 16,
   HWCAP_I386_MMX   = 1 << 23,
   HWCAP_I386_OSFXSR = 1 << 24,
+  HWCAP_I386_XMM   = 1 << 25,
+  HWCAP_I386_XMM2  = 1 << 26,
   HWCAP_I386_AMD3D = 1 << 31,
 
   /* XXX Which others to add here?  */

@@ -1,3 +1,10 @@
+2001-07-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.c: Name entry for xmm2.
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Add HWCAP_I386_XMM,
+	HWCAP_I386_XMM2 to enum.
+
 2001-07-13  Andreas Jaeger  <aj@suse.de>
 
 	* libio/fileops.c: Include unistd.h for lseek64 prototype.  Closes
