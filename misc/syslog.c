@@ -252,6 +252,8 @@ openlog_internal(const char *ident, int logstat, int logfac)
 			}
 		}
 		if (LogFile != -1 && !connected)
+		{
+			int old_errno = errno;
 			if (__connect(LogFile, &SyslogAddr, sizeof(SyslogAddr))
 			    == -1)
 			{
@@ -263,6 +265,7 @@ openlog_internal(const char *ident, int logstat, int logfac)
 				{
 					/* retry with next SOCK_STREAM: */
 					LogType = SOCK_STREAM;
+					__set_errno (old_errno);
 					continue;
 				}
 			} else

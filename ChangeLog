@@ -1,5 +1,16 @@
 1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* misc/syslog.c: Change to allow user the interpretation of the
+	outcome even with syslog having no return value.
+
+1998-02-05 20:41  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* elf/dl-addr.c: Fix search algorithms in dladdr(); don't assume
+	that the number of program headers is >0 (which is wrong for the
+	loader itself).
+
+1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
+
 	* Makefile (distribute): Add README.libm.
 
 1998-02-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>

@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,13 +41,16 @@ _dl_addr (const void *address, Dl_info *info)
       /* We know ADDRESS lies within MATCH if in any shared object.
 	 Make sure it isn't past the end of MATCH's segments.  */
       size_t n = match->l_phnum;
-      do
-	--n;
-      while (match->l_phdr[n].p_type != PT_LOAD);
-      if (addr >= (match->l_addr +
-		   match->l_phdr[n].p_vaddr + match->l_phdr[n].p_memsz))
-	/* Off the end of the highest-addressed shared object.  */
-	return 0;
+      if (n > 0)
+	{
+	  do
+	    --n;
+	  while (match->l_phdr[n].p_type != PT_LOAD);
+	  if (addr >= (match->l_addr +
+		       match->l_phdr[n].p_vaddr + match->l_phdr[n].p_memsz))
+	    /* Off the end of the highest-addressed shared object.  */
+	    return 0;
+	}
     }
   else
     return 0;
