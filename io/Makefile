@@ -49,7 +49,7 @@ routines :=							      \
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
 # linked against when the shared library will be used.
-static-only-routines = stat fstat lstat mknod
+static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64
 
 others		:= pwd
 test-srcs	:= ftwtest

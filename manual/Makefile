@@ -144,7 +144,7 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
 	-rm -f libc.dvi libc.info* dir-add.info $(common-objpfx)stub-manual
-	-rm -f $(foreach o,$(object-suffixes),$(objpfx)stamp$o)
+	-rm -f $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
 clean: mostlyclean
 distclean: clean
 indices = cp fn pg tp vr ky
@@ -207,7 +207,7 @@ $(glibc-targets):
 # Create stamp files if they don't exist, so the parent makefile's rules for
 # updating the library archives are happy with us, and never think we have
 # changed the library.
-lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o)
+lib: $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
 stubs: $(common-objpfx)stub-manual
 $(common-objpfx)stub-manual ../po/manual.pot $(objpfx)stamp%:
 	$(make-target-directory)

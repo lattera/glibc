@@ -1,4 +1,22 @@
-Wed Apr  1 10:50:23 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-04-01 13:20  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* io/Makefile (static-only-routines): Add stat64, fstat64 and
+	lstat64.
+
+1998-03-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile: Use object-suffixes-for-libc instead of
+	object-suffixes.
+	* rpm/Makefile (install-lib): Likewise.
+
+1998-03-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/lddlibc4.c: Fix OB1 bug.
+
+	* sysdeps/unix/sysv/linux/configure.in: Match $machine against
+	`m68*', not only `m68k'.
+
+1998-04-01 10:50  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/dl-librecon.h: New file.
 

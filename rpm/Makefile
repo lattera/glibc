@@ -43,7 +43,7 @@ install-slib += $(foreach lib,$(versioned),\
 install-lib += $(versioned)
 
 # Add libc.a and libc_p.a.
-install-lib += $(foreach o,$(filter-out .os,$(object-suffixes)),\
+install-lib += $(foreach o,$(filter-out .os,$(object-suffixes-for-libc)),\
 			 $(patsubst %,$(libtype$o),c))
 
 ifeq (yes,$(build-shared))

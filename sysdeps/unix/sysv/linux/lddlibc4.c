@@ -75,11 +75,11 @@ main (int argc, char *argv[])
   /* We don't need the file open anymore.  */
   fclose (fp);
 
-  /* We must put `__LDD=ARGV0=<program-name>' in the environment.  */
+  /* We must put `__LDD_ARGV0=<program-name>' in the environment.  */
   filename_len = strlen (filename);
   buf = (char *) alloca (sizeof "__LDD_ARGV0=" + filename_len);
   mempcpy (mempcpy (buf, "__LDD_ARGV0=", sizeof "__LDD_ARGV0=" - 1),
-	   filename, filename_len);
+	   filename, filename_len + 1);
   /* ...and put the value in the environment.  */
   putenv (buf);
 
