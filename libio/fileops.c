@@ -63,6 +63,7 @@ extern int errno;
 # define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
 # define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)
 # define _IO_do_write _IO_new_do_write /* For macro uses.  */
+# define _IO_file_close_it _IO_new_file_close_it
 #else
 # define _IO_new_do_write _IO_do_write
 # define _IO_new_file_attach _IO_file_attach
@@ -1545,6 +1546,7 @@ _IO_file_xsgetn_maybe_mmap (fp, data, n)
 
 #ifdef _LIBC
 # undef _IO_do_write
+# undef _IO_file_close_it
 versioned_symbol (libc, _IO_new_do_write, _IO_do_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_attach, _IO_file_attach, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_close_it, _IO_file_close_it, GLIBC_2_1);

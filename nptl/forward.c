@@ -173,6 +173,7 @@ FORWARD (pthread_setcancelstate, (int state, int *oldstate), (state, oldstate),
 
 FORWARD (pthread_setcanceltype, (int type, int *oldtype), (type, oldtype), 0)
 
+#define return /* value is void */
 FORWARD2(__pthread_unwind,
 	 void attribute_hidden __attribute ((noreturn)) __cleanup_fct_attribute,
 	 (__pthread_unwind_buf_t *buf), (buf), {
@@ -180,3 +181,4 @@ FORWARD2(__pthread_unwind,
 		       INTERNAL_SYSCALL_DECL (err);
 		       INTERNAL_SYSCALL (kill, err, 1, SIGKILL);
 		     })
+#undef return

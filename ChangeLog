@@ -1,3 +1,10 @@
+2003-04-15  Roland McGrath  <roland@redhat.com>
+
+	* libio/fileops.c (_IO_file_close_it): Macro tweak to avoid warning.
+
+	* sysdeps/generic/libc-start.c [NEED_DL_SYSINFO]: Add decl for
+	INTUSE(__register_frame_info_bases).
+
 2003-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Define AT_SYSINFO_EH_FRAME.
