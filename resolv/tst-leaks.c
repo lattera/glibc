@@ -1,5 +1,5 @@
 /* Tests for res_query in libresolv
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 extern int do_test (int argc, char *argv[]);
 
 /* This defines the `main' function and some more.  */
+#define TIMEOUT 40
 #include <test-skeleton.c>
 
 int
