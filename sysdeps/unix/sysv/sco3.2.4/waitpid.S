@@ -18,5 +18,17 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-SYSCALL__ (waitpid, 3)
-	ret
+ENTRY (__waitpid)
+	/* The `waitpid' system call is distinguished from plain
+	   `wait' by setting lots of bits in the processor flags.  */
+	pushfl			/* Push the flags word.  */
+	popl %eax		/* Pop it into the accumulator.  */
+	orl $0x8c4, %eax	/* Set lots of bits.  */
+	pushl $eax		/* Push the new flags word.  */
+	popfl			/* Pop it into the flags.  */
+	DO_CALL (wait, 2)
+	movl 4(%esp), scratch	/* Put status pointer in scratch register.  */
+	testl scratch, scratch	/* Is it non-nil?  */
+	je null
+	movl r1, (scratch)	/* Yes; store the status there.  */
+null:	ret
