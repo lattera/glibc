@@ -1,3 +1,8 @@
+1999-03-21  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/Makefile (subdir_lib): Depend on
+	$(link-rpcuserlibs).
+
 1999-03-22  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* elf/Makefile ($(inst_slibdir)/$(rtld-version-installed-name),
@@ -24,7 +29,7 @@ Mon Mar 22 15:48:06 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
  	require the dynamic linker which is not available with
  	--disable-shared.  Skip the test if --disable-shared is given.
 
-	* linuxthreads/Makefile: Link test against static libpthread if no 
+	* linuxthreads/Makefile: Link test against static libpthread if no
  	shared lib is available.
 
 	* iconvdata/Makefile (tests): Run iconv-test only if we're
