@@ -500,7 +500,10 @@ __tls_get_addr (GET_ADDR_ARGS)
 		      /* If this modid was used at some point the memory
 			 might still be allocated.  */
 		      if (dtv[total + cnt].pointer != TLS_DTV_UNALLOCATED)
-			free (dtv[total + cnt].pointer);
+			{
+			  free (dtv[total + cnt].pointer);
+			  dtv[total + cnt].pointer = TLS_DTV_UNALLOCATED;
+			}
 
 		      continue;
 		    }

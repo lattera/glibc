@@ -39,7 +39,7 @@ do_test (void)
 	modid1 = ((struct link_map *) h1)->l_tls_modid;
       else if (((struct link_map *) h1)->l_tls_modid != modid1)
 	{
-	  printf ("round %d: modid now %d, initially %d\n",
+	  printf ("round %d: modid now %zd, initially %d\n",
 		  i, ((struct link_map *) h1)->l_tls_modid, modid1);
 	  result = 1;
 	}
@@ -69,7 +69,7 @@ do_test (void)
 	modid2 = ((struct link_map *) h1)->l_tls_modid;
       else if (((struct link_map *) h1)->l_tls_modid != modid2)
 	{
-	  printf ("round %d: modid now %d, initially %d\n",
+	  printf ("round %d: modid now %zd, initially %d\n",
 		  i, ((struct link_map *) h1)->l_tls_modid, modid2);
 	  result = 1;
 	}
@@ -108,7 +108,7 @@ do_test (void)
 	 time.  The value of the first round is used.  */
       if (((struct link_map *) h1)->l_tls_modid != modid1)
 	{
-	  printf ("round %d: modid now %d, initially %d\n",
+	  printf ("round %d: modid now %zd, initially %d\n",
 		  i, ((struct link_map *) h1)->l_tls_modid, modid1);
 	  result = 1;
 	}
@@ -136,7 +136,7 @@ do_test (void)
 	 time.  The value of the first round is used.  */
       if (((struct link_map *) h1)->l_tls_modid != modid2)
 	{
-	  printf ("round %d: modid now %d, initially %d\n",
+	  printf ("round %d: modid now %zd, initially %d\n",
 		  i, ((struct link_map *) h1)->l_tls_modid, modid2);
 	  result = 1;
 	}

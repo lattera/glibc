@@ -1,3 +1,13 @@
+2002-10-11  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (__tls_get_addr): After freeing block in
+	now-unused dtv slot, reset the slot to TLS_DTV_UNALLOCATED.
+
+	* elf/tls-macros.h [__x86_64__] (TLS_GD): Fix the sequence with the
+	proper set of no-op insn prefixes.
+
+	* elf/tst-tls8.c (do_test): Use %zd format for l_tls_modid members.
+
 2002-10-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/pselect.c: Avoid unnecessary sigprocmask calls.
