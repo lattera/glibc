@@ -58,6 +58,7 @@ __lll_lock_wait:
 	.size	__lll_lock_wait,.-__lll_lock_wait
 
 
+#ifdef NOT_IN_libc
 	.globl	lll_unlock_wake_cb
 	.type	lll_unlock_wake_cb,@function
 	.hidden	lll_unlock_wake_cb
@@ -79,6 +80,7 @@ lll_unlock_wake_cb:
 	rts
 	 nop
 	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
+#endif
 
 
 	.globl	__lll_unlock_wake
@@ -99,6 +101,7 @@ __lll_unlock_wake:
 	.size	__lll_unlock_wake,.-__lll_unlock_wake
 
 
+#ifdef NOT_IN_libc
 	.globl	__lll_wait_tid
 	.type	__lll_wait_tid,@function
 	.hidden	__lll_wait_tid
@@ -203,3 +206,4 @@ __lll_timedwait_tid:
 	.long	1000000000
 
 	.size	__lll_timedwait_tid,.-__lll_timedwait_tid
+#endif

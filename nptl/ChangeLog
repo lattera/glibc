@@ -1,5 +1,16 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sh/lowlevelmutex.S: Define
+	__lll_mutex_timedlock_wait only for NOT_IN_libc.
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevelmutex.S: Include
+	lowlevelmutex.S.
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Define
+	lll_unlock_wake_cb, __lll_wait_tid, and __lll_timedwait_tid only
+	for NOT_IN_libc.
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevellock.S: Include
+	lowlevellock.S.
+
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S: Don't define
 	LOCK is already defined.  Don't define __lll_mutex_timedlock_wait
 	for libc.so.
