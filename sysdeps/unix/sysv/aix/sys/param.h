@@ -13,6 +13,9 @@
 /* The pagesize is 4096.  */
 #define EXEC_PAGESIZE	4096
 
+/* maximum number of supplemental groups.  */
+#define NGROUPS		32
+
 /* Macros for min/max.  */
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
