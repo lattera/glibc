@@ -1,5 +1,12 @@
 2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/strfmon.c: Don't report an error if final NUL is at the
+	end of the buffer.  Set errno correctly if floating-point number
+	would overflow buffer.
+
+	* posix/regex.h: Update comment of
+	RE_SYNTAX_POSIX_MINIMAL_EXTENDED.
+
 	* locale/weight.h (findidx): Little optimization.  Correctly return
 	offset in indirect table.
 	* locale/programs/ld-collate.c (struct element_t): Add mblast

@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -465,7 +465,10 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	}
 
       if (s[maxsize - 1] != '\0')
-	return -1;
+	{
+	  __set_errno (E2BIG);
+	  return -1;
+	}
 
       dest += done;
 
@@ -521,9 +524,9 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
     }
 
   /* Terminate the string.  */
-  out_char ('\0');
+  *dest = '\0';
 
   va_end (ap);
 
-  return dest - s - 1;
+  return dest - s;
 }

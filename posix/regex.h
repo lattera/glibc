@@ -226,8 +226,8 @@ extern reg_syntax_t re_syntax_options;
    | RE_NO_BK_PARENS        | RE_NO_BK_VBAR				\
    | RE_CONTEXT_INVALID_OPS | RE_UNMATCHED_RIGHT_PAREN_ORD)
 
-/* Differs from ..._POSIX_EXTENDED in that RE_CONTEXT_INVALID_OPS
-   replaces RE_CONTEXT_INDEP_OPS and RE_NO_BK_REFS is added.  */
+/* Differs from ..._POSIX_EXTENDED in that RE_CONTEXT_INDEP_OPS is
+   removed and RE_NO_BK_REFS is added.  */
 #define RE_SYNTAX_POSIX_MINIMAL_EXTENDED				\
   (_RE_SYNTAX_POSIX_COMMON  | RE_CONTEXT_INDEP_ANCHORS			\
    | RE_CONTEXT_INVALID_OPS | RE_NO_BK_BRACES				\
