@@ -1,5 +1,16 @@
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/genops.c (_IO_list_all_stamp): New variable.
+	(_IO_un_link): Bump _IO_list_all_stamp after removing from list.
+	(_IO_link): Likewise for insertion.
+	(flush_cleanup): New function.
+	(_IO_flush_all): Get list_all_lock and all individual locks for the
+	streams.  Detect and handle changes to the _IO_list_all list.
+	(_IO_flush_all_linebuffered): Likewise.
+	* sysdeps/generic/bits/stdio-lock.h: Define
+	_IO_cleanup_region_start_noarg.
+	* sysdeps/mach/hurd/bits/stdio-lock.c: Likewise.
+
 	* stdio-common/printf.h: Fix typo in comment.
 
 	* iconv/gconv_cache.c (__gconv_lookup_cache): Handle encoding from

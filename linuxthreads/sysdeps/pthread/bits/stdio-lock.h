@@ -1,5 +1,5 @@
 /* Thread package specific definitions of stream lock type.
-   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,12 @@ typedef pthread_mutex_t _IO_lock_t;
 		  && _pthread_cleanup_push_defer != NULL);		      \
     if (_avail) {							      \
       _pthread_cleanup_push_defer (&_buffer, (_fct), (_fp));		      \
+    }
+#define _IO_cleanup_region_start_noarg(_fct) \
+  { struct _pthread_cleanup_buffer _buffer;				      \
+    int _avail = _pthread_cleanup_push_defer != NULL;			      \
+    if (_avail) {							      \
+      _pthread_cleanup_push_defer (&_buffer, (_fct), NULL);		      \
     }
 #define _IO_cleanup_region_end(_doit) \
      __libc_cleanup_region_end (_doit)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,9 @@
 static _IO_lock_t list_all_lock = _IO_lock_initializer;
 #endif
 
+/* Used to signal modifications to the list of FILE decriptors.  */
+static int _IO_list_all_stamp;
+
 void
 _IO_un_link (fp)
      struct _IO_FILE_plus *fp;
@@ -52,6 +55,7 @@ _IO_un_link (fp)
 	  if (*f == fp)
 	    {
 	      *f = (struct _IO_FILE_plus *) fp->file._chain;
+	      ++_IO_list_all_stamp;
 	      break;
 	    }
 	}
@@ -74,6 +78,7 @@ _IO_link_in (fp)
 #endif
 	fp->file._chain = (_IO_FILE *) _IO_list_all;
 	_IO_list_all = fp;
+	++_IO_list_all_stamp;
 #ifdef _IO_MTSAFE_IO
 	_IO_lock_unlock (list_all_lock);
 #endif
@@ -750,21 +755,65 @@ _IO_get_column (fp)
 }
 #endif
 
+
+static _IO_FILE *run_fp;
+
+static void
+flush_cleanup (void *not_used)
+{
+  if (run_fp != NULL)
+    _IO_funlockfile (run_fp);
+  _IO_lock_unlock (list_all_lock);
+}
+
+
 int
 _IO_flush_all ()
 {
   int result = 0;
   struct _IO_FILE *fp;
-  for (fp = (_IO_FILE *) _IO_list_all; fp; fp = fp->_chain)
-    if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-	 || (fp->_vtable_offset == 0
-	     && fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
-				  > fp->_wide_data->_IO_write_base))
+  int last_stamp;
+
+#ifdef _IO_MTSAFE_IO
+  _IO_cleanup_region_start_noarg (flush_cleanup);
+  _IO_lock_lock (list_all_lock);
 #endif
-	 )
-	&& _IO_OVERFLOW (fp, EOF) == EOF)
-      result = EOF;
+
+  last_stamp = _IO_list_all_stamp;
+  fp = (_IO_FILE *) _IO_list_all;
+  while (fp != NULL)
+    {
+      run_fp = fp;
+      _IO_flockfile (fp);
+
+      if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+	   || (fp->_vtable_offset == 0
+	       && fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
+				    > fp->_wide_data->_IO_write_base))
+#endif
+	   )
+	  && _IO_OVERFLOW (fp, EOF) == EOF)
+	result = EOF;
+
+      _IO_funlockfile (fp);
+      run_fp = NULL;
+
+      if (last_stamp != _IO_list_all_stamp)
+	{
+	  /* Something was added to the list.  Start all over again.  */
+	  fp = (_IO_FILE *) _IO_list_all;
+	  last_stamp = _IO_list_all_stamp;
+	}
+      else
+	fp = fp->_chain;
+    }
+
+#ifdef _IO_MTSAFE_IO
+  _IO_lock_unlock (list_all_lock);
+  _IO_cleanup_region_end (0);
+#endif
+
   return result;
 }
 
@@ -772,9 +821,40 @@ void
 _IO_flush_all_linebuffered ()
 {
   struct _IO_FILE *fp;
-  for (fp = (_IO_FILE *) _IO_list_all; fp; fp = fp->_chain)
-    if ((fp->_flags & _IO_NO_WRITES) == 0 && fp->_flags & _IO_LINE_BUF)
-      _IO_OVERFLOW (fp, EOF);
+  int last_stamp;
+
+#ifdef _IO_MTSAFE_IO
+  _IO_cleanup_region_start_noarg (flush_cleanup);
+  _IO_lock_lock (list_all_lock);
+#endif
+
+  last_stamp = _IO_list_all_stamp;
+  fp = (_IO_FILE *) _IO_list_all;
+  while (fp != NULL)
+    {
+      run_fp = fp;
+      _IO_flockfile (fp);
+
+      if ((fp->_flags & _IO_NO_WRITES) == 0 && fp->_flags & _IO_LINE_BUF)
+	_IO_OVERFLOW (fp, EOF);
+
+      _IO_funlockfile (fp);
+      run_fp = NULL;
+
+      if (last_stamp != _IO_list_all_stamp)
+	{
+	  /* Something was added to the list.  Start all over again.  */
+	  fp = (_IO_FILE *) _IO_list_all;
+	  last_stamp = _IO_list_all_stamp;
+	}
+      else
+	fp = fp->_chain;
+    }
+
+#ifdef _IO_MTSAFE_IO
+  _IO_lock_unlock (list_all_lock);
+  _IO_cleanup_region_end (0);
+#endif
 }
 #ifdef _LIBC
 weak_alias (_IO_flush_all_linebuffered, _flushlbf)
