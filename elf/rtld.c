@@ -1182,12 +1182,6 @@ process_dl_debug (const char *dl_debug)
 	      if (memcmp (dl_debug, "help", 4) == 0)
 		{
 		  /* The `statistics' flag is not always implemented.  */
-#ifdef HP_TIMING_NONAVAIL
-# define LD_DEBUG_STATISTICS_TEXT
-#else
-# define LD_DEBUG_STATISTICS_TEXT \
-"  statistics display relocation statistics\n"
-#endif
 		  _dl_sysdep_message ("\
 Valid options for the LD_DEBUG environment variable are:\n\
 \n\
@@ -1195,9 +1189,9 @@ Valid options for the LD_DEBUG environment variable are:\n\
   files      display processing of files and libraries\n\
   help       display this help message and exit\n\
   libs       display library search paths\n\
-  reloc      display relocation processing\n"
-LD_DEBUG_STATISTICS_TEXT
-"  symbols    display symbol table processing\n\
+  reloc      display relocation processing\n\
+  statistics display relocation statistics\n\
+  symbols    display symbol table processing\n\
   versions   display version dependencies\n\
 \n\
 To direct the debugging output into a file instead of standard output\n\

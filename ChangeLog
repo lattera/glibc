@@ -1,5 +1,8 @@
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c: Display statitics option also if hp timing is not
+	available.
+
 	* login/programs/connection.c: Removed.
 	* login/programs/database.c Removed.
 	* login/programs/error.c: Removed.
