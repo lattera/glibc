@@ -1,5 +1,8 @@
 2001-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/pt-initfini.c (_init): We don't have to call
+	__gmon_start__ in the libpthread DSO.
+
 	* Makefile (libpthread-routines): Add ptclock_gettime and
 	ptclock_settime.
 	* internals.h: Don't use cpuclock-init.h definitions, use
