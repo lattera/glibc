@@ -90,6 +90,14 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
   (((CMD) == F_GETLK || (CMD) == F_SETLK || (CMD) == F_SETLKW)	\
    ? CHECK_1 ((struct flock *) ARG) : (unsigned long) (ARG))
 
+/* Check bounds of an array of mincore residency-status flags that
+   cover a region of NBYTES.  Such a vector occupies one byte per page
+   of memory.  */
+# define CHECK_N_PAGES(ARG, NBYTES)				\
+  ({ int _page_size_ = sysconf (_SC_PAGE_SIZE);			\
+     CHECK_N ((const char *) (ARG),				\
+	      ((NBYTES) + _page_size_ - 1) / _page_size_); })
+
 /* Return a bounded pointer with value PTR that satisfies CHECK_N (PTR, N).  */
 # define BOUNDED_N(PTR, N) 				\
   ({ __typeof (PTR) __bounded _p_;			\
@@ -113,6 +121,7 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 # define CHECK_SIGSET_NULL_OK(SET) (SET)
 # define CHECK_IOCTL(ARG, CMD) (ARG)
 # define CHECK_FCNTL(ARG, CMD) (ARG)
+# define CHECK_N_PAGES(ARG, NBYTES) (ARG)
 # define BOUNDED_N(PTR, N) (PTR)
 
 #endif /* !__BOUNDED_POINTERS__ */

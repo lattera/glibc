@@ -1,3 +1,9 @@
+2000-09-08  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/unix/sysv/linux/syscalls.list (mincore): Fix arg signature.
+	* sysdeps/unix/make-syscalls.sh: New signature keyletter `V'.
+	* sysdeps/generic/bp-checks.h (CHECK_N_PAGES): New macro.
+
 2000-09-08  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/arm/lockf64.c: New file.

@@ -21,6 +21,7 @@
 # s: non-NULL string (e.g., 1st arg to open)
 # S: optionally-NULL string (e.g., 1st arg to acct)
 # v: vararg scalar (e.g., optional 3rd arg to open)
+# V: byte-per-page vector (3rd arg to mincore)
 # W: wait status, optionally-NULL pointer to int (e.g., 2nd arg of wait4)
 
 ptr='[abBfFINpPsSW]'	# all pointer keyletters
@@ -232,7 +233,7 @@ shared-only-routines += $file
     # generate extern decls of dummy variables for each arg
     echo "	 echo '`echo $args | \
 	    sed -e 's/<\('$typ'[1-9]\)>/extern \1, \1v;/g' \
-		-e 's/<\([abBFIsS][1-9]\)>/extern char \1v;/g' \
+		-e 's/<\([abBFIsSV][1-9]\)>/extern char \1v;/g' \
 		-e 's/<\([Wv][1-9]\)>/extern int \1v;/g'` \\'; \\"
 
     # generate bounded-pointer thunk declarator
@@ -255,6 +256,7 @@ shared-only-routines += $file
 	    sed -e 's/<b0>/BOUNDED_N (/' \
 		-e 's/<.0>//'`($callname) (`echo $arglist | \
 	    sed -e 's/<\(a[1-9]\)>/__ptrvalue (\1a)/g' \
+		-e 's/<\(n[1-9]\)>, <\(V[1-9]\)>/\1a, CHECK_N_PAGES (\2a, \1a)/g' \
 		-e 's/<\(b[1-9]\)>, <\(n[1-9]\)>/CHECK_N (\1a, \2a), \2a/g' \
 		-e 's/<\(b[1-9]\)>, <\(N[1-9]\)>/CHECK_N (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
 		-e 's/<\(B[1-9]\)>, <\(n[1-9]\)>/CHECK_N_NULL_OK (\1a, \2a), \2a/g' \
