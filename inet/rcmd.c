@@ -345,7 +345,7 @@ iruserok (raddr, superuser, ruser, luser)
      int superuser;
      const char *ruser, *luser;
 {
-  FILE *hostf;
+  FILE *hostf = NULL;
   int isbad;
 
   if (!superuser)

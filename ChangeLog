@@ -1,5 +1,9 @@
 1998-04-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/rcmd.c (iruserok): Initialize hostf variable to NULL.
+
+1998-04-24  Ulrich Drepper  <drepper@cygnus.com>
+
 	* iconvdata/Makefile: Put generated headers in build directory.
 
 1998-04-23 22:43  Ulrich Drepper  <drepper@cygnus.com>
