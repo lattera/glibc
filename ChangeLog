@@ -1,3 +1,7 @@
+2004-11-29  Roland McGrath  <roland@redhat.com>
+
+	* posix/confstr.c: Avoid punctuation in #error text.
+
 2004-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add tst-sysconf.
