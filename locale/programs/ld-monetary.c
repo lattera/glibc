@@ -82,7 +82,6 @@ struct locale_monetary_t
   uint32_t duo_valid_from;
   uint32_t duo_valid_to;
   uint32_t conversion_rate[2];
-  uint32_t conversion_rate_ob[2];
 };
 
 
@@ -324,9 +323,6 @@ not correspond to a valid name in ISO 4217"),
       monetary->conversion_rate[0] = 1;
       monetary->conversion_rate[1] = 1;
     }
-
-  monetary->conversion_rate_ob[0] = bswap_32 (monetary->conversion_rate[0]);
-  monetary->conversion_rate_ob[1] = bswap_32 (monetary->conversion_rate[1]);
 }
 
 
@@ -556,21 +552,8 @@ monetary_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[cnt].iov_len = 4;
   ++cnt;
 
-#if BYTE_ORDER == LITTLE_ENDIAN
-# define conversion_rate_el conversion_rate
-# define conversion_rate_eb conversion_rate_ob
-#else
-# define conversion_rate_el conversion_rate_ob
-# define conversion_rate_eb conversion_rate
-#endif
-
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->conversion_rate_el;
-  iov[cnt].iov_len = 8;
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->conversion_rate_eb;
+  iov[cnt].iov_base = (void *) monetary->conversion_rate;
   iov[cnt].iov_len = 8;
   ++cnt;
 

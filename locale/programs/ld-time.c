@@ -491,8 +491,8 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   struct locale_time_t *time = locale->categories[LC_TIME].time;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->num_era - 1
-		  + 3 * 99
-		  + 1 + (time->num_era * 10 - 1) * 2];
+		  + 2 * 99
+		  + 1 + time->num_era * 10 - 1];
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num, n;
@@ -839,8 +839,8 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->num_era - 1
-		  + 3 * 99
-		  + 1 + (time->num_era * 10 - 1) * 2));
+		  + 2 * 99
+		  + 1 + time->num_era * 10 - 1));
   assert (last_idx  == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
   write_locale_data (output_path, "LC_TIME", 2 + cnt, iov);

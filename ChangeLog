@@ -1,5 +1,11 @@
 1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-monetary.c (monetary_output): Remove
+	byte-order code.
+
+	* locale/programs/ld-time.c (time_output): Correct expected number
+	of iov entries.
+
 	* manual/filesys.texi (Testing File Access): Correct description of
 	SUID.
 
