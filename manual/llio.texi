@@ -33,7 +33,6 @@ directly.)
 @menu
 * Opening and Closing Files::           How to open and close file
                                          descriptors.
-* Truncating Files::                    Change the size of a file.
 * I/O Primitives::                      Reading and writing data.
 * File Position Primitive::             Setting a descriptor's file
                                          position.

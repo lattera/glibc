@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-02-21.16}%
+\def\texinfoversion{1999-05-25.6}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -67,7 +67,6 @@
   \catcode`+=\active \catcode`\_=\active}
 
 % Save some parts of plain tex whose names we will redefine.
-
 \let\ptexb=\b
 \let\ptexbullet=\bullet
 \let\ptexc=\c
@@ -87,6 +86,13 @@
 % For @tex, we can use \tabalign.
 \let\+ = \relax
 
+% Get ready for pdf.
+\newif\ifpdf
+\ifx\pdfoutput\undefined\else
+  \input pdfcolor
+  \pdfoutput=1
+  \pdftrue
+\fi
 
 \message{Basics,}
 \chardef\other=12
@@ -99,9 +105,11 @@
 \ifx\putwordAppendix\undefined  \gdef\putwordAppendix{Appendix}\fi
 \ifx\putwordChapter\undefined   \gdef\putwordChapter{Chapter}\fi
 \ifx\putwordfile\undefined      \gdef\putwordfile{file}\fi
+\ifx\putwordin\undefined        \gdef\putwordin{in}\fi
 \ifx\putwordIndexIsEmpty\undefined     \gdef\putwordIndexIsEmpty{(Index is empty)}\fi
 \ifx\putwordIndexNonexistent\undefined \gdef\putwordIndexNonexistent{(Index is nonexistent)}\fi
 \ifx\putwordInfo\undefined      \gdef\putwordInfo{Info}\fi
+\ifx\putwordInstanceVariableof\undefined \gdef\putwordInstanceVariableof{Instance Variable of}\fi
 \ifx\putwordMethodon\undefined  \gdef\putwordMethodon{Method on}\fi
 \ifx\putwordNoTitle\undefined   \gdef\putwordNoTitle{No Title}\fi
 \ifx\putwordof\undefined        \gdef\putwordof{of}\fi
@@ -129,7 +137,6 @@
 %
 \ifx\putwordDefmac\undefined    \gdef\putwordDefmac{Macro}\fi
 \ifx\putwordDefspec\undefined   \gdef\putwordDefspec{Special Form}\fi
-\ifx\putwordDefivar\undefined   \gdef\putwordDefivar{Instance Variable}\fi
 \ifx\putwordDefvar\undefined    \gdef\putwordDefvar{Variable}\fi
 \ifx\putwordDefopt\undefined    \gdef\putwordDefopt{User Option}\fi
 \ifx\putwordDeftypevar\undefined\gdef\putwordDeftypevar{Variable}\fi
@@ -243,6 +250,8 @@
         \vskip 2\baselineskip
         \unvbox\footlinebox
       \fi
+      %
+      \ifpdf\pdfmkdest{\the\pageno}\fi
       %
       \ifcropmarks
           \egroup % end of \vbox\bgroup
@@ -756,6 +765,23 @@ where each line of input produces a line of output.}
   \parindent = \defaultparindent
 }
 
+% @exampleindent NCHARS
+% We'll use ems for NCHARS like @paragraphindent.
+% It seems @exampleindent asis isn't necessary, but
+% I preserve it to make it similar to @paragraphindent.
+\def\exampleindent{\parsearg\doexampleindent}
+\def\doexampleindent#1{%
+  \def\temp{#1}%
+  \ifx\temp\asisword
+  \else
+    \ifx\temp\noneword
+      \lispnarrowing = 0pt
+    \else
+      \lispnarrowing = #1em
+    \fi
+  \fi
+}
+
 % @asis just yields its argument.  Used with @table, for example.
 %
 \def\asis#1{#1}
@@ -823,6 +849,126 @@ where each line of input produces a line of output.}
 % @bye.
 \outer\def\bye{\pagealignmacro\tracingstats=1\ptexend}
 
+
+\message{pdf,}
+% adobe `portable' document format
+
+\newcount\tempnum
+\newcount\lnkcount
+\newtoks\filename
+\newcount\filenamelength
+\newcount\pgn
+
+\ifpdf
+\def\pdfmkdest#1{\pdfdest name{#1@} xyz}
+\def\pdfmkpgn#1{#1@}
+
+% Adding outlines to PDF; macros for calculating structure of outlines
+% come from Petr Olsak
+\def\expnumber#1{\expandafter\ifx\csname#1\endcsname\relax 0%
+  \else \csname#1\endcsname \fi}
+\def\advancenumber#1{\tempnum=\expnumber{#1}\relax
+  \advance\tempnum by1
+  \expandafter\xdef\csname#1\endcsname{\the\tempnum}}
+\def\pdfmakeoutlines{{%
+  \openin 1 \jobname.toc
+  \ifeof 1\else\bgroup
+    \closein 1 
+    \def\code##1{##1}
+    \def\file##1{##1}
+    \def\TeX##1{TeX}
+    \def\tt{}
+    \def\char{char}
+    \def\samp##1{##1}
+    \def\kbd##1{##1}
+    \def\key##1{##1}
+    \def\rawbackslashxx{\string\\}
+    \def\chapentry ##1##2##3{}
+    \def\unnumbchapentry ##1##2{}
+    \def\secentry ##1##2##3##4{\advancenumber{chap##2}}
+    \def\unnumbsecentry ##1##2{}
+    \def\subsecentry ##1##2##3##4##5{\advancenumber{sec##2.##3}}
+    \def\unnumbsubsecentry ##1##2{}
+    \def\subsubsecentry ##1##2##3##4##5##6{\advancenumber{subsec##2.##3.##4}}
+    \def\unnumbsubsubsecentry ##1##2{}
+    \input \jobname.toc
+    \def\chapentry ##1##2##3{%
+      \pdfoutline goto name{\pdfmkpgn{##3}}count-\expnumber{chap##2}{##1}}
+    \def\unnumbchapentry ##1##2{%
+      \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+    \def\secentry ##1##2##3##4{%
+      \pdfoutline goto name{\pdfmkpgn{##4}}count-\expnumber{sec##2.##3}{##1}}
+    \def\unnumbsecentry ##1##2{%
+      \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+    \def\subsecentry ##1##2##3##4##5{%
+      \pdfoutline goto name{\pdfmkpgn{##5}}count-\expnumber{subsec##2.##3.##4}{##1}}
+    \def\unnumbsubsecentry ##1##2{%
+      \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+    \def\subsubsecentry ##1##2##3##4##5##6{%
+      \pdfoutline goto name{\pdfmkpgn{##6}}{##1}}
+    \def\unnumbsubsubsecentry ##1##2{%
+      \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+    \input \jobname.toc
+  \egroup\fi
+}}
+\pdfmakeoutlines
+
+\def\makelinks #1,{%
+  \def\params{#1}\def\E{END}%
+  \ifx\params\E
+    \let\nextmakelinks=\relax
+  \else
+    \let\nextmakelinks=\makelinks
+    \ifnum\lnkcount>0,\fi
+    \picknum{#1}%
+    \Blue\pdfannotlink attr{/Border [0 0 0]} 
+      goto name{\pdfmkpgn{\the\pgn}}%
+    #1%
+    \advance\lnkcount by 1%
+    \Black\pdfendlink
+  \fi
+  \nextmakelinks
+}
+
+\def\picknum#1{\expandafter\pn#1}
+\def\pn#1{%
+  \def\p{#1}%
+  \ifx\p\lbrace
+    \let\nextpn=\ppn
+  \else
+    \let\nextpn=\ppnn
+    \def\first{#1}
+  \fi
+  \nextpn
+}
+\def\ppn#1{\pgn=#1\gobble}
+\def\ppnn{\pgn=\first}
+\def\pdfmklnk#1{\lnkcount=0\makelinks #1,END,}
+
+\def\addtokens#1#2{\edef\addtoks{\noexpand#1={\the#1#2}}\addtoks}
+\def\skipspaces#1{\def\PP{#1}\def\D{|}%
+  \ifx\PP\D\let\nextsp\relax
+  \else\let\nextsp\skipspaces
+    \ifx\p\space\else\addtokens{\filename}{\PP}%
+      \advance\filenamelength by 1
+    \fi
+  \fi
+  \nextsp}
+\def\getfilename#1{\filenamelength=0\expandafter\skipspaces#1|\relax}
+
+\def\pdflink#1{%
+  \leavevmode\Red
+  \begingroup
+    \normalturnoffactive\def\@{@}%
+    \pdfannotlink
+      attr{/Border [0 0 0]}%
+      user{/Subtype /Link /A << /S /URI /URI (#1) >>}%
+  \endgroup
+}
+
+\else
+\let\pdflink = \gobble
+\fi % end \ifpdf
 
 \message{fonts,}
 % Font-change commands.
@@ -1190,23 +1336,43 @@ where each line of input produces a line of output.}
 %
 \def\uref#1{\douref #1,,,\finish}
 \def\douref#1,#2,#3,#4\finish{%
+  \pdflink{#1}%
   \setbox0 = \hbox{\ignorespaces #3}%
   \ifdim\wd0 > 0pt
     \unhbox0 % third arg given, show only that
   \else
     \setbox0 = \hbox{\ignorespaces #2}%
     \ifdim\wd0 > 0pt
-      \unhbox0\ (\code{#1})% second arg given, show both it and url
+      \ifpdf
+        \unhbox0             % PDF: 2nd arg given, show only it
+      \else
+        \unhbox0\ (\code{#1})% DVI: 2nd arg given, show both it and url
+      \fi
     \else
       \code{#1}% only url given, so show it
     \fi
   \fi
+  %
+  \ifpdf
+    \Black\pdfendlink
+  \fi
 }
 
-% rms does not like the angle brackets --karl, 17may97.
-% So now @email is just like @uref.
+% rms does not like angle brackets --karl, 17may97.
+% So now @email is just like @uref, unless we are pdf.
+% 
 %\def\email#1{\angleleft{\tt #1}\angleright}
-\let\email=\uref
+\ifpdf
+  \def\email#1{\doemail#1,,\finish}
+  \def\doemail#1,#2,#3\finish{%
+    \pdflink{mailto:#1}%
+    \setbox0 = \hbox{\ignorespaces #2}%
+    \ifdim\wd0>0pt\unhbox0\else\code{#1}\fi
+    \Black\pdfendlink
+  }
+\else
+  \let\email=\uref
+\fi
 
 % Check if we are currently using a typewriter font.  Since all the
 % Computer Modern typewriter fonts have zero interword stretch (and
@@ -1890,10 +2056,11 @@ where each line of input produces a line of output.}
   \go
 }
 
-% multitable syntax
-\def\tab{&\hskip1sp\relax} % 2/2/96
-                           % tiny skip here makes sure this column space is
-                           % maintained, even if it is never used.
+% This used to have \hskip1sp.  But then the space in a template line is
+% not enough.  That is bad.  So let's go back to just & until we
+% encounter the problem it was intended to solve again.
+% --karl, nathan@acm.org, 20apr99.
+\def\tab{&}
 
 % @multitable ... @end multitable definitions:
 %
@@ -2044,6 +2211,7 @@ width0pt\relax} \fi
   \let\deftp = \relax
   \let\deftypefn = \relax
   \let\deftypefun = \relax
+  \let\deftypeivar = \relax
   \let\deftypevar = \relax
   \let\deftypevr = \relax
   \let\defun = \relax
@@ -3010,7 +3178,7 @@ width0pt\relax} \fi
 
 
 \message{sectioning,}
-% Define chapters, sections, etc.
+% Chapters, sections, etc.
 
 \newcount\chapno
 \newcount\secno        \secno=0
@@ -3018,6 +3186,10 @@ width0pt\relax} \fi
 \newcount\subsubsecno  \subsubsecno=0
 
 % This counter is funny since it counts through charcodes of letters A, B, ...
+% The \the is necessary, despite appearances, because \appendixletter is
+% expanded while writing the .toc file.  \char\appendixno is not
+% expandable, thus it is written literally, thus all appendixes come out
+% with the same letter (or @) in the toc without it.
 \newcount\appendixno  \appendixno = `\@
 \def\appendixletter{\char\the\appendixno}
 
@@ -3492,6 +3664,7 @@ width0pt\relax} \fi
 
 
 \message{toc,}
+% Table of contents.
 \newwrite\tocfile
 
 % Write an entry to the toc file, opening it if necessary.
@@ -3587,6 +3760,10 @@ width0pt\relax} \fi
    \pageno = \savepageno
 }
 \let\shortcontents = \summarycontents
+
+\ifpdf
+  \pdfcatalog{/PageMode /UseOutlines}%
+\fi
 
 % These macros generate individual entries in the table of contents.
 % The first argument is the chapter or section name.
@@ -3696,6 +3873,7 @@ width0pt\relax} \fi
 
 
 \message{environments,}
+% @foo ... @end foo.
 
 % Since these characters are used in examples, it should be an even number of
 % \tt widths. Each \tt character is 1en, so two makes it 1em.
@@ -4019,8 +4197,9 @@ width0pt\relax} \fi
 
 
 \message{defuns,}
-% Define formatter for defuns
-% First, allow user to change definition object font (\df) internally
+% @defun etc.
+
+% Allow user to change definition object font (\df) internally
 \def\setdeffont #1 {\csname DEF#1\endcsname}
 
 \newskip\defbodyindent \defbodyindent=.4in
@@ -4074,9 +4253,15 @@ width0pt\relax} \fi
 %% contained text.  This is especially needed for [ and ]
 \def\opnr{{\sf\char`\(}\global\advance\parencount by 1 }
 \def\clnr{{\sf\char`\)}\global\advance\parencount by -1 }
-\def\ampnr{\&}
+\let\ampnr = \&
 \def\lbrb{{\bf\char`\[}}
 \def\rbrb{{\bf\char`\]}}
+
+% Active &'s sneak into the index arguments, so make sure it's defined.
+{
+  \catcode`& = 13
+  \global\let& = \ampnr
+}
 
 % First, defname, which formats the header line itself.
 % #1 should be the function name.
@@ -4268,12 +4453,13 @@ width0pt\relax} \fi
 % First, define the processing that is wanted for arguments of \defun
 % Use this to expand the args and terminate the paragraph they make up
 
-\def\defunargs #1{\functionparens \sl
+\def\defunargs#1{\functionparens \sl
 % Expand, preventing hyphenation at `-' chars.
 % Note that groups don't affect changes in \hyphenchar.
-\hyphenchar\tensl=0
+% Set the font temporarily and use \font in case \setfont made \tensl a macro.
+{\tensl\hyphenchar\font=0}%
 #1%
-\hyphenchar\tensl=45
+{\tensl\hyphenchar\font=45}%
 \ifnum\parencount=0 \else \errmessage{Unbalanced parentheses in @def}\fi%
 \interlinepenalty=10000
 \advance\rightskip by 0pt plus 1fil
@@ -4367,27 +4553,14 @@ width0pt\relax} \fi
 \catcode 61=\other % Turn off change made in \defparsebody
 }
 
-% This definition is run if you use @defunx
-% anywhere other than immediately after a @defun or @defunx.
-
-\def\deffnx #1 {\errmessage{@deffnx in invalid context}}
-\def\defunx #1 {\errmessage{@defunx in invalid context}}
-\def\defmacx #1 {\errmessage{@defmacx in invalid context}}
-\def\defspecx #1 {\errmessage{@defspecx in invalid context}}
-\def\deftypefnx #1 {\errmessage{@deftypefnx in invalid context}}
-\def\deftypemethodx #1 {\errmessage{@deftypemethodx in invalid context}}
-\def\deftypefunx #1 {\errmessage{@deftypefunx in invalid context}}
-
-% @defmethod, and so on
-
 % @defop CATEGORY CLASS OPERATION ARG...
-
+%
 \def\defop #1 {\def\defoptype{#1}%
 \defopparsebody\Edefop\defopx\defopheader\defoptype}
-
+%
 \def\defopheader #1#2#3{%
 \dosubind {fn}{\code{#2}}{\putwordon\ #1}% Make entry in function index
-\begingroup\defname {#2}{\defoptype{}\putwordon\ #1}%
+\begingroup\defname {#2}{\defoptype\ \putwordon\ #1}%
 \defunargs {#3}\endgroup %
 }
 
@@ -4402,6 +4575,20 @@ width0pt\relax} \fi
   \begingroup
     \defname{\defheaderxcond#2\relax$$$#3}{\putwordMethodon\ \code{#1}}%
     \deftypefunargs{#4}%
+  \endgroup
+}
+
+% @deftypeivar CLASS TYPE VARNAME
+%
+\def\deftypeivar{%
+  \deftypemethparsebody\Edeftypeivar\deftypeivarx\deftypeivarheader}
+%
+% #1 is the class name, #2 the data type, #3 the variable name.
+\def\deftypeivarheader#1#2#3{%
+  \dosubind{vr}{\code{#3}}{\putwordof\ \code{#1}}% entry in variable index
+  \begingroup
+    \defname{#3}{\putwordInstanceVariableof\ \code{#1}}%
+    \defvarargs{#3}%
   \endgroup
 }
 
@@ -4429,26 +4616,19 @@ width0pt\relax} \fi
 \defvarargs {#3}\endgroup %
 }
 
-% @defivar == @defcv {Instance Variable}
-
+% @defivar CLASS VARNAME == @defcv {Instance Variable} CLASS VARNAME
+%
 \def\defivar{\defvrparsebody\Edefivar\defivarx\defivarheader}
-
-\def\defivarheader #1#2#3{%
-\dosubind {vr}{\code{#2}}{\putwordof\ #1}% Make entry in var index
-\begingroup\defname {#2}{\putwordDefivar\ \putwordof\ #1}%
-\defvarargs {#3}\endgroup %
+%
+\def\defivarheader#1#2#3{%
+  \dosubind {vr}{\code{#2}}{\putwordof\ #1}% entry in var index
+  \begingroup
+    \defname{#2}{\putwordInstanceVariableof\ #1}%
+    \defvarargs{#3}%
+  \endgroup
 }
 
-% These definitions are run if you use @defmethodx, etc.,
-% anywhere other than immediately after a @defmethod, etc.
-
-\def\defopx #1 {\errmessage{@defopx in invalid context}}
-\def\defmethodx #1 {\errmessage{@defmethodx in invalid context}}
-\def\defcvx #1 {\errmessage{@defcvx in invalid context}}
-\def\defivarx #1 {\errmessage{@defivarx in invalid context}}
-
-% Now @defvar
-
+% @defvar
 % First, define the processing that is wanted for arguments of @defvar.
 % This is actually simple: just print them in roman.
 % This must expand the args and terminate the paragraph they make up
@@ -4505,15 +4685,6 @@ width0pt\relax} \fi
 \endgraf\nobreak\vskip -\parskip\nobreak
 \endgroup}
 
-% This definition is run if you use @defvarx
-% anywhere other than immediately after a @defvar or @defvarx.
-
-\def\defvrx #1 {\errmessage{@defvrx in invalid context}}
-\def\defvarx #1 {\errmessage{@defvarx in invalid context}}
-\def\defoptx #1 {\errmessage{@defoptx in invalid context}}
-\def\deftypevarx #1 {\errmessage{@deftypevarx in invalid context}}
-\def\deftypevrx #1 {\errmessage{@deftypevrx in invalid context}}
-
 % Now define @deftp
 % Args are printed in bold, a slight difference from @defvar.
 
@@ -4526,10 +4697,27 @@ width0pt\relax} \fi
 \def\deftpheader #1#2#3{\doind {tp}{\code{#2}}%
 \begingroup\defname {#2}{#1}\deftpargs{#3}\endgroup}
 
-% This definition is run if you use @deftpx, etc
-% anywhere other than immediately after a @deftp, etc.
-
-\def\deftpx #1 {\errmessage{@deftpx in invalid context}}
+% These definitions are used if you use @defunx (etc.)
+% anywhere other than immediately after a @defun or @defunx.
+% 
+\def\defcvx#1 {\errmessage{@defcvx in invalid context}}
+\def\deffnx#1 {\errmessage{@deffnx in invalid context}}
+\def\defivarx#1 {\errmessage{@defivarx in invalid context}}
+\def\defmacx#1 {\errmessage{@defmacx in invalid context}}
+\def\defmethodx#1 {\errmessage{@defmethodx in invalid context}}
+\def\defoptx #1 {\errmessage{@defoptx in invalid context}}
+\def\defopx#1 {\errmessage{@defopx in invalid context}}
+\def\defspecx#1 {\errmessage{@defspecx in invalid context}}
+\def\deftpx#1 {\errmessage{@deftpx in invalid context}}
+\def\deftypefnx#1 {\errmessage{@deftypefnx in invalid context}}
+\def\deftypefunx#1 {\errmessage{@deftypefunx in invalid context}}
+\def\deftypeivarx#1 {\errmessage{@deftypeivarx in invalid context}}
+\def\deftypemethodx#1 {\errmessage{@deftypemethodx in invalid context}}
+\def\deftypevarx#1 {\errmessage{@deftypevarx in invalid context}}
+\def\deftypevrx#1 {\errmessage{@deftypevrx in invalid context}}
+\def\defunx#1 {\errmessage{@defunx in invalid context}}
+\def\defvarx#1 {\errmessage{@defvarx in invalid context}}
+\def\defvrx#1 {\errmessage{@defvrx in invalid context}}
 
 
 \message{macros,}
@@ -4816,6 +5004,8 @@ width0pt\relax} \fi
 
 
 \message{cross references,}
+% @xref etc.
+
 \newwrite\auxfile
 
 \newif\ifhavexrefs    % True if xref values are known.
@@ -4858,8 +5048,20 @@ width0pt\relax} \fi
 
 % @anchor{NAME} -- define xref target at arbitrary point.
 %
-\def\anchor#1{\setref{#1}{Ynothing}}
-
+{ \catcode`\@ = 11
+% From latex.ltx, to make @anchor truely invisible.
+\newdimen\@savsk
+\newcount\@savsf
+\gdef\@bsphack{\relax
+  \ifhmode \@savsk\lastskip \@savsf\spacefactor \fi
+}
+\gdef\@esphack{\relax
+  \ifhmode \spacefactor\@savsf
+    \ifdim\@savsk>\z@ \ignorespaces \fi
+  \fi
+}
+\gdef\anchor#1{\@bsphack \setref{#1}{Ynothing}\@esphack}
+}
 
 % \setref{NAME}{SNT} defines a cross-reference point NAME, namely
 % NAME-title, NAME-pg, and NAME-SNT.  Called from \foonoderef.  We have
@@ -4869,6 +5071,7 @@ width0pt\relax} \fi
 %
 \def\setref#1#2{{%
   \indexdummies
+  \ifpdf \pdfmkdest{#1}\fi
   \dosetq{#1-title}{Ytitle}%
   \dosetq{#1-pg}{Ypagenumber}%
   \dosetq{#1-snt}{#2}%
@@ -4916,8 +5119,21 @@ width0pt\relax} \fi
   % are best written with fairly long node names, containing hyphens, this
   % is a loss.  Therefore, we give the text of the node name again, so it
   % is as if TeX is seeing it for the first time.
+  \ifpdf
+    \leavevmode
+    \getfilename{#4}%
+    \ifnum\filenamelength>0
+      \pdfannotlink attr{/Border [0 0 0]}%
+        goto file{\the\filename.pdf} name{#1@}%
+    \else
+      \pdfannotlink attr{/Border [0 0 0]}%
+        goto name{#1@}%
+    \fi
+    \BlueGreen
+  \fi
+  %
   \ifdim \wd1 > 0pt
-    \putwordsection{} ``\printednodename'' in \cite{\printedmanual}%
+    \putwordsection{} ``\printednodename'' \putwordin{} \cite{\printedmanual}%
   \else
     % _ (for example) has to be the character _ for the purposes of the
     % control sequence corresponding to the node, but it has to expand
@@ -4935,6 +5151,7 @@ width0pt\relax} \fi
     % page 3
     \turnoffactive \putwordpage\tie\refx{#1-pg}{}%
   \fi
+  \ifpdf \Black\pdfendlink \fi
 \endgroup}
 
 % \dosetq is the interface for calls from other macros
@@ -4942,7 +5159,7 @@ width0pt\relax} \fi
 % Use \normalturnoffactive so that punctuation chars such as underscore
 % and backslash work in node names.  (\turnoffactive doesn't do \.)
 \def\dosetq#1#2{%
-  {\let\folio=0
+  {\let\folio=0%
    \normalturnoffactive
    \edef\next{\write\auxfile{\internalsetq{#1}{#2}}}%
    \iflinks
@@ -5257,25 +5474,21 @@ width0pt\relax} \fi
   \input epsf.tex
 \fi
 %
+% We will only complain once about lack of epsf.tex.
 \newif\ifwarnednoepsf
 \newhelp\noepsfhelp{epsf.tex must be installed for images to
   work.  It is also included in the Texinfo distribution, or you can get
   it from ftp://tug.org/tex/epsf.tex.}
 %
-% Only complain once about lack of epsf.tex.
 \def\image#1{%
-  \ifx\pdfoutput\undefined
-    \ifx\epsfbox\undefined
-      \ifwarnednoepsf \else
-        \errhelp = \noepsfhelp
-        \errmessage{epsf.tex not found, images will be ignored}%
-        \global\warnednoepsftrue
-      \fi
-    \else
-      \imagexxx #1,,,\finish
+  \ifx\epsfbox\undefined
+    \ifwarnednoepsf \else
+      \errhelp = \noepsfhelp
+      \errmessage{epsf.tex not found, images will be ignored}%
+      \global\warnednoepsftrue
     \fi
   \else
-    \centerline{\pdfimage #1.pdf}%
+    \imagexxx #1,,,\finish
   \fi
 }
 %
@@ -5284,23 +5497,35 @@ width0pt\relax} \fi
 % #2 is (optional) width, #3 is (optional) height.
 % #4 is just the usual extra ignored arg for parsing this stuff.
 \def\imagexxx#1,#2,#3,#4\finish{%
-  % \epsfbox itself resets \epsf?size at each figure.
-  \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
-  \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
-  % If the image is by itself, center it.
-  \ifvmode
-    \nobreak\medskip
-    \nobreak
-    \centerline{\epsfbox{#1.eps}}%
-    \bigbreak
+  \ifx\pdfoutput\undefined
+    % \epsfbox itself resets \epsf?size at each figure.
+    \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
+    \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
+    \begingroup
+      \catcode`\^^M = 5 % in case we're inside an example
+      % If the image is by itself, center it.
+      \ifvmode
+        \nobreak\bigskip
+        % Usually we'll have text after the image which will insert
+        % \parskip glue, so insert it here too to equalize the space
+        % above and below. 
+        \nobreak\vskip\parskip
+        \nobreak
+        \centerline{\epsfbox{#1.eps}}%
+        \bigbreak
+      \else
+        % In the middle of a paragraph, no extra space.
+        \epsfbox{#1.eps}%
+      \fi
+    \endgroup
   \else
-    % In the middle of a paragraph, no extra space.
-    \epsfbox{#1.eps}%
+    \centerline{\pdfimage #1.pdf}%
   \fi
 }
 
 
 \message{localization,}
+% and i18n.
 
 % @documentlanguage is usually given very early, just after
 % @setfilename.  If done too late, it may not override everything
@@ -5360,8 +5585,7 @@ should work if nowhere else does.}
     % Allow us to assign to \emergencystretch anyway.
     \def\emergencystretch{\dimen0}%
   \else
-    \emergencystretch = \hsize
-    \divide\emergencystretch by 40
+    \emergencystretch = .15\hsize
   \fi
 }
 
@@ -5471,6 +5695,7 @@ should work if nowhere else does.}
 %
 \letterpaper
 
+
 \message{and turning on texinfo input format.}
 
 % Define macros to output various characters with catcode for normal text.
@@ -5482,6 +5707,7 @@ should work if nowhere else does.}
 \catcode`\<=\other
 \catcode`\>=\other
 \catcode`\+=\other
+\catcode`\$=\other
 \def\normaldoublequote{"}
 \def\normaltilde{~}
 \def\normalcaret{^}
@@ -5490,6 +5716,7 @@ should work if nowhere else does.}
 \def\normalless{<}
 \def\normalgreater{>}
 \def\normalplus{+}
+\def\normaldollar{$}
 
 % This macro is used to make a character print one way in ttfont
 % where it can probably just be output, and another way in other fonts,
@@ -5500,7 +5727,13 @@ should work if nowhere else does.}
 % interword stretch (and shrink), and it is reasonable to expect all
 % typewriter fonts to have this, we can check that font parameter.
 %
-\def\ifusingtt#1#2{\ifdim \fontdimen3\the\font=0pt #1\else #2\fi}
+\def\ifusingtt#1#2{\ifdim \fontdimen3\font=0pt #1\else #2\fi}
+
+% Same as above, but check for italic font.  Actually this also catches
+% non-italic slanted fonts since it is impossible to distinguish them from
+% italic fonts.  But since this is only used by $ and it uses \sl anyway
+% this is not a problem.
+\def\ifusingit#1#2{\ifdim \fontdimen1\font>0pt #1\else #2\fi}
 
 % Turn off all special characters except @
 % (and those which the user can use as if they were ordinary).
@@ -5531,6 +5764,8 @@ should work if nowhere else does.}
 \def>{{\tt \gtr}}
 \catcode`\+=\active
 \def+{{\tt \char 43}}
+\catcode`\$=\active
+\def${\ifusingit{{\sl\$}}\normaldollar}
 %\catcode 27=\active
 %\def^^[{$\diamondsuit$}
 
@@ -5561,9 +5796,6 @@ should work if nowhere else does.}
 % \normalbackslash outputs one backslash in fixed width font.
 \def\normalbackslash{{\tt\rawbackslashxx}}
 
-% Say @foo, not \foo, in error messages.
-\escapechar=`\@
-
 % \catcode 17=0   % Define control-q
 \catcode`\\=\active
 
@@ -5577,7 +5809,8 @@ should work if nowhere else does.}
 @let|=@normalverticalbar
 @let<=@normalless
 @let>=@normalgreater
-@let+=@normalplus}
+@let+=@normalplus
+@let$=@normaldollar}
 
 @def@normalturnoffactive{@let"=@normaldoublequote
 @let\=@normalbackslash
@@ -5587,7 +5820,8 @@ should work if nowhere else does.}
 @let|=@normalverticalbar
 @let<=@normalless
 @let>=@normalgreater
-@let+=@normalplus}
+@let+=@normalplus
+@let$=@normaldollar}
 
 % Make _ and + \other characters, temporarily.
 % This is canceled by @fixbackslash.
@@ -5606,15 +5840,24 @@ should work if nowhere else does.}
 % Also back turn on active characters that might appear in the input
 % file name, in case not using a pre-dumped format.
 %
-@gdef@fixbackslash{@ifx\@eatinput @let\ = @normalbackslash @fi
-  @catcode`+=@active @catcode`@_=@active}
+@gdef@fixbackslash{%
+  @ifx\@eatinput @let\ = @normalbackslash @fi
+  @catcode`+=@active
+  @catcode`@_=@active
+}
 
-% These look ok in all fonts, so just make them not special.  The @rm below
-% makes sure that the current font starts out as the newly loaded cmr10
-@catcode`@$=@other @catcode`@%=@other @catcode`@&=@other @catcode`@#=@other
+% Say @foo, not \foo, in error messages.
+@escapechar = `@@
 
+% These look ok in all fonts, so just make them not special.  
+@catcode`@& = @other
+@catcode`@# = @other
+@catcode`@% = @other
+
+@c Set initial fonts.
 @textfonts
 @rm
+
 
 @c Local variables:
 @c eval: (add-hook 'write-file-hooks 'time-stamp)

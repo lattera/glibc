@@ -37,9 +37,6 @@ int __libc_missing_rt_sigs;
 
 extern int __syscall_sigaction (int, const struct old_kernel_sigaction *,
 				struct old_kernel_sigaction *);
-# define rtsignals_guaranteed 0
-#else
-# define rtsignals_guaranteed 1
 #endif
 extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
 				   struct kernel_sigaction *, size_t);
@@ -53,10 +50,12 @@ __sigaction (sig, act, oact)
      const struct sigaction *act;
      struct sigaction *oact;
 {
+#if __ASSUME_REALTIME_SIGNALS == 0
   struct old_kernel_sigaction k_sigact, k_osigact;
+#endif
   int result;
 
-#if defiend __NR_rt_sigaction || __ASSUME_REALTIME_SIGNALS > 0
+#if defined __NR_rt_sigaction || __ASSUME_REALTIME_SIGNALS > 0
   /* First try the RT signals.  */
 # if __ASSUME_REALTIME_SIGNALS == 0
   if (!__libc_missing_rt_sigs)

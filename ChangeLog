@@ -1,3 +1,17 @@
+1999-06-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/llio.texi: Remove menu entry for removed section.
+
+1999-05-29  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sigaction.c: Fix typo and avoid unused
+	variables.
+
+1999-06-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_DDCMP): Add it
+	(from Linux 2.3.4).
+
 1999-05-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/netinet/in.h: Mark ntoh* and hton* as constant functions.
