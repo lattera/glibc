@@ -1,3 +1,7 @@
+2004-07-21  Roland McGrath  <roland@redhat.com>
+
+	* Makefile ($(objpfx)multidir.mk): Use $(make-target-directory).
+
 2004-07-02  Roland McGrath  <roland@redhat.com>
 
 	* configure: Don't exit.

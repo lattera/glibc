@@ -1,3 +1,11 @@
+2004-07-21  Roland McGrath  <roland@redhat.com>
+
+	* Makefile ($(objpfx)multidir.mk): Use $(make-target-directory).
+
+2004-07-19  Roland McGrath  <roland@redhat.com>
+
+	* tst-cancel4.c (tf_waitid): Use WEXITED flag bit if available.
+
 2004-07-02  Roland McGrath  <roland@redhat.com>
 
 	* configure: Don't exit.
