@@ -46,9 +46,10 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 {
   const unsigned char *srcend;
   struct __gconv_step_data data;
-  size_t result = 0;
+  size_t result;
   int status;
   struct __gconv_step *towc;
+  size_t non_reversible;
 
   /* Tell where we want the result.  */
   data.__invocation_counter = 0;
@@ -72,13 +73,16 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
       wchar_t buf[64];		/* Just an arbitrary size.  */
       const unsigned char *inbuf = *src;
 
-      data.__outbufend = (char *) buf + sizeof (buf);
+      result = 0;
+      data.__outbufend = (unsigned char *) buf + sizeof (buf);
       do
 	{
-	  data.__outbuf = (char *) buf;
+	  data.__outbuf = (unsigned char *) buf;
 
 	  status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data, &inbuf,
-				   srcend, &result, 0, 1);
+				   srcend, &non_reversible, 0, 1);
+
+	  result += (wchar_t *) data.__outbuf - buf;
 	}
       while (status == __GCONV_FULL_OUTPUT);
 
@@ -97,14 +101,16 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
       status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data,
 			       (const unsigned char **) src, srcend,
-			       &result, 0, 1);
+			       &non_reversible, 0, 1);
+
+      result = (wchar_t *) data.__outbuf - dst;
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
       if ((status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
-	  && ((wchar_t *) dst)[result - 1] == L'\0')
+	  && (assert (result > 0),
+	      ((wchar_t *) dst)[result - 1] == L'\0'))
 	{
-	  assert (result > 0);
 	  assert (__mbsinit (data.__statep));
 	  *src = NULL;
 	  --result;
@@ -113,13 +119,13 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
   /* There must not be any problems with the conversion but illegal input
      characters.  */
-  assert (status == __GCONV_OK || status != __GCONV_EMPTY_INPUT
+  assert (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
 	  || status == __GCONV_ILLEGAL_INPUT
 	  || status == __GCONV_INCOMPLETE_INPUT
 	  || status == __GCONV_FULL_OUTPUT);
 
   if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
-      && status != __GCONV_EMPTY_INPUT)
+      && status != __GCONV_EMPTY_INPUT && status != __GCONV_INCOMPLETE_INPUT)
     {
       result = (size_t) -1;
       __set_errno (EILSEQ);

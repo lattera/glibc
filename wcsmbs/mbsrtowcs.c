@@ -131,7 +131,7 @@ __mbsrtowcs (dst, src, len, ps)
 	  || status == __GCONV_FULL_OUTPUT);
 
   if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
-      && status != __GCONV_EMPTY_INPUT)
+      && status != __GCONV_EMPTY_INPUT && status != __GCONV_INCOMPLETE_INPUT)
     {
       result = (size_t) -1;
       __set_errno (EILSEQ);

@@ -1,5 +1,13 @@
 2000-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/mbsnrtowcs.c: Correctly compute number of converted
+	characters.  Don't handle incomplete characters as errors.
+	* wcsmbs/mbsrtowcs.c: Don't handle incomplete characters as errors.
+	* localedata/Makefile (test-srcs): Add tst-mbswcs2.
+	Add rule to build tst-mbswcs2 before running tst-mbswcs.sh.
+	* localedata/tst-mbswcs.sh: Run tst-mbswcs2.
+	* localedata/tst-mbswcs2.c: New file.
+
 	* iconv/gconv_simple.c (utf8_internal_loop): Correctly reconstruct
 	stored character in state in UNPACK_BYTES macro.
 	* iconv/loop.c (SINGLE(LOOPFCT)): Make it actually work.  Correct
