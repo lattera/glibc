@@ -1,5 +1,8 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: Recognize options --headers and
+	--dialect.  Add dialect-specific CFLAGS.
+
 	* conform/conformtest.pl: Implement handling of recursive
 	allow-header.
 
