@@ -60,8 +60,6 @@ DEFUN_VOID(_start)
 /* Make an alias called `start' (no leading underscore, so it can't
    conflict with C symbols) for `_start'.  This is the name vendor crt0.o's
    tend to use, and thus the name most linkers expect.  */
-void _start (void) asm ("start");
-#endif
 asm (".set start, __start");
 #endif
 

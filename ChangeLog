@@ -1,5 +1,7 @@
 Tue Apr  4 00:48:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/start.c: Remove spurious decl and #endif.
+
 	* misc/progname.c (program_invocation_name,
  	program_invocation_short_name): Make these initialized data
  	definitions.
