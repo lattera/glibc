@@ -1,3 +1,7 @@
+2000-06-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/loop.c: Fix comment.
+
 2000-06-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/link.h: Remove libc internal declarations.
