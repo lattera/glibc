@@ -21,7 +21,7 @@
 
 wint_t
 putwc (wc, fp)
-     wint_t wc;
+     wchar_t wc;
      _IO_FILE *fp;
 {
   wint_t result;

@@ -418,7 +418,7 @@ extern _IO_wint_t __woverflow __P ((_IO_FILE *, _IO_wint_t));
 extern int _IO_getc __P ((_IO_FILE *__fp));
 extern int _IO_putc __P ((int __c, _IO_FILE *__fp));
 extern _IO_wint_t _IO_getwc __P ((_IO_FILE *__fp));
-extern _IO_wint_t _IO_putwc __P ((_IO_wint_t __wc, _IO_FILE *__fp));
+extern _IO_wint_t _IO_putwc __P ((_IO_wchar_t __wc, _IO_FILE *__fp));
 extern int _IO_feof __P ((_IO_FILE *__fp));
 extern int _IO_ferror __P ((_IO_FILE *__fp));
 

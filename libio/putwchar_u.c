@@ -21,7 +21,7 @@
 
 wint_t
 putwchar_unlocked (c)
-     wint_t c;
+     wchar_t c;
 {
   CHECK_FILE (stdout, WEOF);
   return _IO_putwc_unlocked (wc, stdout);

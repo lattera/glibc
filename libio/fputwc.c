@@ -28,7 +28,7 @@
 
 wint_t
 fputwc (wc, fp)
-     wint_t wc;
+     wchar_t wc;
      _IO_FILE *fp;
 {
   int result;

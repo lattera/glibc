@@ -21,7 +21,7 @@
 
 wint_t
 putwchar (wc)
-     wint_t wc;
+     wchar_t wc;
 {
   wint_t result;
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
