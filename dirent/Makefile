@@ -32,4 +32,4 @@ tests	   := list tst-seekdir opendir-tst1
 
 include ../Rules
 
-opendir-tst1.args = --test-dir=${objdir}
+opendir-tst1-ARGS = --test-dir=${objdir}

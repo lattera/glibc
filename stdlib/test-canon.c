@@ -1,5 +1,5 @@
 /* Test program for returning the canonical absolute name of a given file.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>.
 
@@ -28,6 +28,10 @@
 #include <unistd.h>
 #include <sys/param.h>
 
+/* Prototype for our test function.  */
+extern int do_test (int argc, char *argv[]);
+#include <test-skeleton.c>
+
 #ifndef PATH_MAX
 # define PATH_MAX 4096
 #endif
@@ -55,7 +59,7 @@ struct {
   {"/////////////////////////////////",	"/"},
   {"/.././.././.././..///",		"/"},
   {"/etc",				"/etc"},
-  {"/etc/../etc",		 	"/etc"},
+  {"/etc/../etc",			"/etc"},
   /*  5 */
   {"/doesNotExist/../etc",		0, "/doesNotExist", ENOENT},
   {"./././././././././.",		"."},
@@ -111,7 +115,7 @@ check_path (const char * result, const char * expected)
 
 
 int
-main (int argc, char ** argv)
+do_test (int argc, char ** argv)
 {
   char * result;
   int fd, i, errors = 0;
@@ -198,7 +202,7 @@ main (int argc, char ** argv)
   if (errors != 0)
     {
       printf ("%d errors.\n", errors);
-      exit (EXIT_FAILURE);
+      return EXIT_FAILURE;
     }
 
   puts ("No errors.");

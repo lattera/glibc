@@ -101,6 +101,8 @@ endif
 
 CFLAGS-regex.c = -Wno-strict-prototypes
 CFLAGS-getaddrinfo.c = -DRESOLVER
+tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
+		--none random
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)
 lib: $(objpfx)libposix.a

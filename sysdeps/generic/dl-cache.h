@@ -17,11 +17,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define _DL_CACHE_DEFAULT_ID	3
+#ifndef _DL_CACHE_DEFAULT_ID
+# define _DL_CACHE_DEFAULT_ID	3
+#endif
 
-#define _dl_cache_check_flags(flags)			\
+#ifndef _dl_cache_check_flags
+# define _dl_cache_check_flags(flags)			\
   ((flags) == 1 || (flags) == _DL_CACHE_DEFAULT_ID)
-
+#endif
 
 #ifndef LD_SO_CACHE
 # define LD_SO_CACHE "/etc/ld.so.cache"
@@ -32,12 +35,14 @@
 /* libc5 and glibc 2.0/2.1 use the same format.  For glibc 2.2 another
    format has been added in a compatible way:
    The beginning of the string table is used for the new table:
-   	old_magic
+	old_magic
 	nlibs
 	libs[0]
 	...
 	libs[nlibs-1]
-	new magic
+	pad, new magic needs to be aligned
+	     - this is string[0] for the old format
+	new magic - this is string[0] for the new format
 	newnlibs
 	...
 	newlibs[0]
@@ -81,6 +86,11 @@ struct cache_file_new
   struct file_entry_new libs[0]; /* Entries describing libraries.  */
   /* After this the string table of size len_strings is found.  */
 };
+
+/* Used to align cache_file_new.  */
+#define ALIGN_CACHE(addr)				\
+(((addr) + __alignof__ (struct cache_file_new) -1)	\
+ & (~(__alignof__ (struct cache_file_new) - 1)))
 
 static int
 _dl_cache_libcmp (const char *p1, const char *p2)

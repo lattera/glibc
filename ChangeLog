@@ -1,8 +1,60 @@
+2000-05-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/dl-cache.h (_DL_CACHE_DEFAULT_ID): Only define if
+	not yet defined.
+	(_dl_cache_check_flags): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-cache.h: include_next
+	dl-cache.h.
+
+2000-05-17  Andreas Jaeger  <aj@suse.de>
+
+	* manual/creature.texi (Feature Test Macros): Remove paragraph
+	since the description is wrong.
+	Closes PR libc/1691, reported by Geoff Clare <gwc@unisoft.com>.
+
 2000-05-17  Andreas Jaeger  <aj@suse.de>
 
 	* scripts/config.sub: New version.
 	* scripts/config.guess: Likewise.
 	* manual/texinfo.tex: Likewise.
+
+2000-05-17  Andreas Jaeger  <aj@suse.de>
+
+	* time/test_time.args: Removed.
+	* time/Makefile (test_time-ARGS): Added contents here instead.
+
+	* posix/tstgetopt.args: Removed.
+	* posix/Makefile (tstgetopt-ARGS): Added contents here instead.
+
+	* Rules: Allow arguments for test files to be specified in
+	Makefile with testname-ARGS; remove rules with .args in it.
+
+	* dirent/Makefile (opendir-tst1-ARGS): Use this for opendir-tst1,
+	remove old bogus rule for opendir-tst1.args.
+
+	* stdlib/test-canon.c: Rewrite to use test-skeleton.c.
+
+	* stdlib/Makefile (test-canon-ARGS): New, supply argument to chdir
+	into objdir.  This allows a readonly sourcetree.
+	Reported by lrgallardo@yahoo.com, closes PR libc/1421.
+
+2000-05-16  Andreas Jaeger  <aj@suse.de>,
+            David Huggins-Daines <dhd@linuxcare.com>
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Set
+	cache_data in case of only new cache format correctly.
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Align struct
+	cache_file_new.
+
+	* sysdeps/generic/dl-cache.h (ALIGN_CACHE): New macro to align
+	struct cache_file_new.
+
+	* elf/cache.c (save_cache): Fix str_offset if only new cache is
+	present.
+
+	* elf/cache.c (save_cache): Align struct new_file_cache.
+	(print_cache): Likewise.
 
 2000-05-13  Jakub Jelinek  <jakub@redhat.com>
 

@@ -49,7 +49,6 @@ static struct cache_entry *entries;
 static const char *flag_descr[] =
 { "libc4", "ELF", "libc5", "libc6"};
 
-
 /* Print a single entry.  */
 static void
 print_entry (const char *lib, int flag, unsigned long int hwcap, const char *key)
@@ -130,25 +129,29 @@ print_cache (const char *cache_name)
 	error (EXIT_FAILURE, 0, _("File is not a cache file.\n"));
       format = 1;
       /* This is where the strings start.  */
-      cache_data = (const char *) cache;
+      cache_data = (const char *) cache_new;
     }
   else
     {
+      size_t offset = ALIGN_CACHE (sizeof (struct cache_file)
+				   + cache->nlibs * sizeof (struct file_entry));
       /* This is where the strings start.  */
       cache_data = (const char *) &cache->libs[cache->nlibs];
 
       /* Check for a new cache embedded in the old format.  */
       if (cache_size >
-	  (sizeof (struct cache_file)
-	   + cache->nlibs * sizeof (struct file_entry)
-	   + sizeof (struct cache_file_new)))
+	  (offset + sizeof (struct cache_file_new)))
 	{
-	  cache_new = (struct cache_file_new *) cache_data;
+
+	  cache_new = (struct cache_file_new *) ((void *)cache + offset);
 
 	  if (!memcmp (cache_new->magic, CACHEMAGIC_NEW, sizeof CACHEMAGIC_NEW - 1)
 	      && !memcmp (cache_new->version, CACHE_VERSION,
 			  sizeof CACHE_VERSION - 1))
-	    format = 1;
+	    {
+	      cache_data = (const char *) cache_new;
+	      format = 1;
+	    }
 	}
     }
 
@@ -230,6 +233,8 @@ save_cache (const char *cache_name)
   int cache_entry_count = 0;
   /* Number of normal cache entries.  */
   int cache_entry_old_count = 0;
+  /* Pad for alignment of cache_file_new.  */
+  size_t pad;
 
   /* The cache entries are sorted already, save them in this order. */
 
@@ -280,11 +285,13 @@ save_cache (const char *cache_name)
       file_entries_new->nlibs = cache_entry_count;
       file_entries_new->len_strings = total_strlen;
     }
-
+  
+  pad = ALIGN_CACHE (file_entries_size) - file_entries_size;
+  
   /* If we have both formats, we hide the new format in the strings
      table, we have to adjust all string indices for this so that
      old libc5/glibc 2 dynamic linkers just ignore them.  */
-  if (opt_format == 1)
+  if (opt_format != 0)
     str_offset = file_entries_new_size;
   else
     str_offset = 0;
@@ -298,7 +305,7 @@ save_cache (const char *cache_name)
 	{
 	  file_entries->libs[idx_old].flags = entry->flags;
 	  /* XXX: Actually we can optimize here and remove duplicates.  */
-	  file_entries->libs[idx_old].key = str_offset;
+	  file_entries->libs[idx_old].key = str_offset + pad;
 	}
       if (opt_format != 0)
 	{
@@ -317,7 +324,7 @@ save_cache (const char *cache_name)
       str_offset += len + 1;
       /* Then the path.  */
       if (opt_format != 2)
-	file_entries->libs[idx_old].value = str_offset;
+	file_entries->libs[idx_old].value = str_offset + pad;
       if (opt_format != 0)
 	file_entries_new->libs[idx_new].value = str_offset;
       len = strlen (entry->path);
@@ -354,6 +361,13 @@ save_cache (const char *cache_name)
     }
   if (opt_format != 0)
     {
+      /* Align cache.  */
+      if (opt_format != 2)
+	{
+	  char zero [pad];
+	  if (write (fd, zero, pad) != (ssize_t)pad)
+	    error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
+	}
       if (write (fd, file_entries_new, file_entries_new_size)
 	  != (ssize_t)file_entries_new_size)
 	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));

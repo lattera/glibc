@@ -46,3 +46,4 @@ CFLAGS-tzset.c = $(tz-cflags)
 CFLAGS-test_time.c = -Wno-format
 
 tst-getdate-ENV= DATEMSK=datemsk
+test_time-ARGS= EST5EDT CST

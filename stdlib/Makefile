@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -125,6 +125,9 @@ clean-mpn:
 	rm -f $(mpn-stuff)
 
 endif
+
+# Testdir has to be named stdlib and needs to be writable
+test-canon-ARGS = --test-dir=${objdir}/stdlib
 
 # Run a test on the header files we use.
 tests: $(objpfx)isomac

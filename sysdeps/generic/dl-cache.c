@@ -52,7 +52,7 @@ do									  \
     right = cache->nlibs - 1;						  \
     middle = (left + right) / 2;					  \
     cmpres = 1;								  \
-    									  \
+									  \
     while (left <= right)						  \
       {									  \
 	/* Make sure string table indices are not bogus before using	  \
@@ -121,7 +121,7 @@ do									  \
 		  {							  \
 		    HWCAP_CHECK;					  \
 		    best = cache_data + cache->libs[middle].value;	  \
-		    							  \
+									  \
 		    if (flags == _dl_correct_cache_id)			  \
 		      /* We've found an exact match for the shared	  \
 			 object and no general `ELF' release.  Stop	  \
@@ -166,14 +166,16 @@ _dl_load_cache_lookup (const char *name)
       if (file && cachesize > sizeof *cache &&
 	  !memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1))
 	{
+	  size_t offset;
 	  /* Looks ok.  */
 	  cache = file;
 
 	  /* Check for new version.  */
-	  cache_new = (struct cache_file_new *) &cache->libs[cache->nlibs];
-	  if (cachesize <
-	      (sizeof (struct cache_file) + cache->nlibs * sizeof (struct file_entry)
-	       + sizeof (struct cache_file_new))
+	  offset = ALIGN_CACHE (sizeof (struct cache_file)
+				+ cache->nlibs * sizeof (struct file_entry));
+
+	  cache_new = (struct cache_file_new *) ((void *)cache + offset);
+	  if (cachesize < (offset + sizeof (struct cache_file_new))
 	      || memcmp (cache_new->magic, CACHEMAGIC_NEW,
 			  sizeof CACHEMAGIC_NEW - 1)
 	      || memcmp (cache_new->version, CACHE_VERSION,
@@ -202,9 +204,6 @@ _dl_load_cache_lookup (const char *name)
     /* Previously looked for the cache file and didn't find it.  */
     return NULL;
 
-  /* This is where the strings start.  */
-  cache_data = (const char *) &cache->libs[cache->nlibs];
-
   best = NULL;
 
   if (cache_new != (void *) -1)
@@ -212,6 +211,9 @@ _dl_load_cache_lookup (const char *name)
       /* This file ends in static libraries where we don't have a hwcap.  */
       unsigned long int *hwcap;
       weak_extern (_dl_hwcap);
+
+      /* This is where the strings start.  */
+      cache_data = (const char *) cache_new;
 
       hwcap = &_dl_hwcap;
 
@@ -221,9 +223,13 @@ _dl_load_cache_lookup (const char *name)
       SEARCH_CACHE (cache_new);
     }
   else
+    {
+      /* This is where the strings start.  */
+      cache_data = (const char *) &cache->libs[cache->nlibs];
 #undef HWCAP_CHECK
 #define HWCAP_CHECK do {} while (0)
-    SEARCH_CACHE (cache);
+      SEARCH_CACHE (cache);
+    }
 
   /* Print our result if wanted.  */
   if (_dl_debug_libs && best != NULL)

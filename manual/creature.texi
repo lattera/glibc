@@ -70,11 +70,6 @@ The 1996 edition of POSIX.1 (ISO/IEC 9945-1: 1996) states that
 if you define @code{_POSIX_C_SOURCE} to a value greater than
 or equal to @code{199506L}, then the functionality from the 1996
 edition is made available.
-
-The Single Unix Specification specify that setting this macro to the
-value @code{199506L} selects all the values specified by the POSIX
-standards plus those of the Single Unix Specification, i.e., is the
-same as if @code{_XOPEN_SOURCE} is set to @code{500} (see below).
 @end defvr
 
 @comment (none)
