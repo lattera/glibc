@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fpu_control.h>
-#include <stdlib.h>
+#include <stdio.h>
 
 int
 main (void)
@@ -33,7 +33,7 @@ main (void)
     printf ("control word is 0x%x but should be 0x%x.\n", cw, _FPU_DEFAULT);
 
   return (cw != _FPU_DEFAULT);
-  
+
 #else
   return 0;
 #endif
