@@ -40,6 +40,46 @@
 
 2002-08-28  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h (__rtld_global_attribute__): Define.
+	(_rtld_global): Use it.
+
+	* sysdeps/gnu/Dist: Remove errlist-compat.c.
+	* sysdeps/gnu/Makefile (errlist-compat.c): Build this file in the
+	object directory.  Pass all Versions files to the awk script.
+	* sysdeps/gnu/errlist-compat.c: Removed.
+	* sysdeps/gnu/errlist.awk: Use #errlist-compat comments from the
+	first Versions file in the search path which has them.
+	Allow multiple errlist symbol versions to have the same count of
+	errors.
+	* sysdeps/gnu/errlist-compat.awk: Include <errlist-compat.c> instead
+	of "errlist-compat.c".
+	* sysdeps/gnu/errlist.c: Regenerated.
+	* sysdeps/unix/sysv/linux/mips/Versions (libc): Add #errlist-compat
+	comments at GLIBC_2.0, GLIBC_2.1 and GLIBC_2.3.
+	* sysdeps/unix/sysv/linux/alpha/Versions: Likewise.
+	(librt): Add aio_cancel and aio_cancel64 as GLIBC_2.3.
+	* sysdeps/unix/sysv/linux/hppa/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Versions: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/errno.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/errno.h (ECANCELED): Define to
+	ECANCELLED if not defined by kernel headers.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Don't redefine ECANCELED if
+	already defined by kernel headers.
+	* sysdeps/unix/sysv/linux/sparc/bits/errno.h: New file.
+	* sysdeps/pthread/aio_cancel.c: Don't include aio.h and its
+	aio_cancel64 renaming hack nor provide weak_alias if aio_cancel
+	is a macro.
+	* Versions.def (GLIBC_2.3) [librt]: Add.
+
+	* sysdeps/unix/sysv/linux/alpha/pipe.S: New file.
+
+2002-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libc-symbols.h [!__ASSEMBLER__] (declare_symbol_1): Add
+	missing comma to .type directive.
+
+2002-08-28  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/ia64/elf/configure.in (PI_STATIC_AND_HIDDEN): Define
 	unconditionally.
 	* sysdeps/alpha/elf/configure.in (libc_cv_alpha_hidden_gprel): New

@@ -29,24 +29,24 @@ ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
 endif
 
+ifeq ($(subdir),stdio-common)
+
 vpath errlist.c $(full_config_sysdirs)
-$(..)sysdeps/gnu/errlist-compat.c: errlist.c \
+$(objpfx)errlist-compat.c: errlist.c \
 				   $(..)sysdeps/gnu/errlist-compat.awk \
-				   $(..)sysdeps/gnu/Versions
+				   $(common-objpfx)Versions.v.i
 	$(AWK) -v maxerr=`\
 	  $(CC) -S $(CPPFLAGS) $(CFLAGS) -DNOT_IN_libc -DEMIT_ERR_MAX $< -o - \
 	  | sed -n 's/^.*@@@[^0-9]*\([0-9]*\)[^0-9]*@@@.*$$/\1/p'` \
-	       -f $(filter-out $<,$^) > $@T
+	       -f $(..)sysdeps/gnu/errlist-compat.awk \
+	       $(wildcard $(patsubst %,$(..)%/Versions,\
+		 $(config-sysdirs) $(add-ons))) > $@T
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@T
 	mv -f $@T $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
-endif
 
-ifeq ($(subdir),stdio-common)
 # This will force the generation above to happy if need be.
-$(objpfx)errlist.d: $(..)sysdeps/gnu/errlist-compat.c
+$(objpfx)errlist.d: $(objpfx)errlist-compat.c
 endif
 
 ifeq ($(subdir),login)

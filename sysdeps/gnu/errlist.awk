@@ -101,7 +101,7 @@ END {
   print "  = sizeof _sys_errlist_internal / sizeof _sys_errlist_internal [0];";
   print "";
   print "#if !defined NOT_IN_libc && !ERRLIST_NO_COMPAT";
-  print "# include \"errlist-compat.c\"";
+  print "# include <errlist-compat.c>";
   print "#endif";
   print "";
   print "#ifdef EMIT_ERR_MAX";

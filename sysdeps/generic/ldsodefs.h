@@ -374,12 +374,14 @@ struct rtld_global
   EXTERN struct link_map _dl_rtld_map;
 #ifdef SHARED
 };
-extern struct rtld_global _rtld_global;
+# define __rtld_global_attribute__
 # ifdef IS_IN_rtld
 #  ifdef HAVE_VISIBILITY_ATTRIBUTE
 #   ifdef HAVE_SDATA_SECTION
 #    define __rtld_local_attribute__ \
 	    __attribute__ ((visibility ("hidden"), section (".sdata")))
+#    undef __rtld_global_attribute__
+#    define __rtld_global_attribute__ __attribute__ ((section (".sdata")))
 #   else
 #    define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
 #   endif
@@ -388,6 +390,7 @@ extern struct rtld_global _rtld_global;
 #  endif
 extern struct rtld_global _rtld_local __rtld_local_attribute__;
 # endif
+extern struct rtld_global _rtld_global __rtld_global_attribute__;
 #endif
 #undef EXTERN
 

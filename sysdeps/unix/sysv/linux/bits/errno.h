@@ -27,9 +27,11 @@
 /* Linux has no ENOTSUP error code.  */
 # define ENOTSUP EOPNOTSUPP
 
-/* Linux also has no ECANCELED error code.  Since it is not used here
+/* Linux also had no ECANCELED error code.  Since it is not used here
    we define it to an invalid value.  */
-# define ECANCELED	125
+# ifndef ECANCELED
+#  define ECANCELED	125
+# endif
 
 # ifndef __ASSEMBLER__
 /* Function to get address of global `errno' variable.  */

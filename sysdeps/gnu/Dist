@@ -1,5 +1,4 @@
 errlist.awk
-errlist-compat.c
 errlist-compat.awk
 utmpx.h
 bits/utmpx.h

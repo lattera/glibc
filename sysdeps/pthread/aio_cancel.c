@@ -24,10 +24,12 @@
    we want to avoid code duplication by using aliases.  But gcc sees
    the different parameter lists and prints a warning.  We define here
    a function so that aio_cancel64 has no prototype.  */
+#ifndef aio_cancel
 #define aio_cancel64 XXX
 #include <aio.h>
 /* And undo the hack.  */
 #undef aio_cancel64
+#endif
 
 #include <assert.h>
 #include <errno.h>
@@ -146,4 +148,6 @@ aio_cancel (fildes, aiocbp)
   return result;
 }
 
+#ifndef aio_cancel
 weak_alias (aio_cancel, aio_cancel64)
+#endif

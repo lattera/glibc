@@ -1,3 +1,9 @@
+2002-08-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/hppa/aio_cancel.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/aio_cancel.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/aio_cancel.c: New file.
+
 2002-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/timer_routines.c (thread_func): Change return
@@ -14,7 +20,7 @@
 	__pthread_handles[0] and __pthread_handles[1].
 	* Makefile (libpthread-routines): Add pthandles (must be last).
 
-2002-08-26  Brian Youmans <3diff@gnu.org>
+2002-08-26  Brian Youmans  <3diff@gnu.org>
 
 	* Examples/ex10.c: Corrected version number in Lesser GPL copying
 	permission notice from 2 to 2.1.

@@ -1406,7 +1406,7 @@ const int _sys_nerr_internal
   = sizeof _sys_errlist_internal / sizeof _sys_errlist_internal [0];
 
 #if !defined NOT_IN_libc && !ERRLIST_NO_COMPAT
-# include "errlist-compat.c"
+# include <errlist-compat.c>
 #endif
 
 #ifdef EMIT_ERR_MAX

@@ -5,32 +5,21 @@ libc {
   # for all GNU/Linux configurations.
 
   GLIBC_2.0 {
-    #errlist-compat	1134
+    #errlist-compat	127
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
-
-    # Exception handling support functions from libgcc
-    __register_frame; __register_frame_table; __deregister_frame;
-    __frame_state_for; __register_frame_info_table;
-
-    # Needed by gcc:
-    _flush_cache;
-
-    # c*
-    cachectl; cacheflush;
-
-    # s*
-    sysmips;
   }
   GLIBC_2.1 {
-    #errlist-compat	1134
+    #errlist-compat	127
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
-  }
-  GLIBC_2.2 {
-    # _*
-    _test_and_set;
   }
   GLIBC_2.3 {
-    #errlist-compat	1134
+    #errlist-compat	128
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+  }
+}
+librt {
+  GLIBC_2.3 {
+    # AIO functions.
+    aio_cancel; aio_cancel64;
   }
 }
