@@ -130,7 +130,7 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
       }
 
   if (weak_value.s == NULL &&
-      !*ref || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
+      (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
     {
       /* We could find no value for a strong reference.  */
       const char msg[] = "undefined symbol: ";
