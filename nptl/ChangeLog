@@ -4,8 +4,6 @@
 	sizeof (struct pthread).
 	(allocate_stack): Subtract TLS_PRE_TCB_SIZE bytes instead of
 	1 struct pthread.
-	* sysdeps/pthread/createthread.c (create_thread): Use
-	p_multiple_threads macro if TLS_DTV_AT_TP.
 	* sysdeps/powerpc/tls.h (TLS_INIT_TCB_SIZE, TLS_TCB_SIZE): Define
 	to 0.
 	(TLS_INIT_TCB_ALIGN, TLS_TCB_ALIGN): Define to alignment of
