@@ -1,5 +1,5 @@
 /* Convert between the kernel's `struct stat' format, and libc's.
-   Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,7 +96,7 @@ xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 
 	/* Convert to current kernel version of `struct stat64'.  */
 	buf->st_dev = kbuf->st_dev;
-#ifdef _HAVE___PAD1
+#if defined _HAVE___PAD1 && !defined _NO_LFS___PAD1
 	buf->__pad1 = 0;
 #endif
 	buf->st_ino = kbuf->st_ino;
