@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF Mips ABI.
-   Copyright (C) 1995, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#define __ASSEMBLY__ 1
 #include <entry.h>
 
 #ifndef ENTRY_POINT
