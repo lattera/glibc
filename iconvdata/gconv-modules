@@ -826,6 +826,13 @@ module	IBM918//		INTERNAL		IBM918		1
 module	INTERNAL		IBM918//		IBM918		1
 
 #	from			to			module		cost
+alias	IBM-922//		IBM922//
+alias	CP922//			IBM922//
+alias	CSIBM922//		IBM922//
+module	IBM922//		INTERNAL		IBM922		1
+module	INTERNAL		IBM922//		IBM922		1
+
+#	from			to			module		cost
 alias	IBM-930//		IBM930//
 alias	CP930//			IBM930//
 alias	EBCDIC-CP-AR2//		IBM930//
@@ -892,6 +899,20 @@ alias	1047//			IBM1047//
 alias	OSF10020417//		IBM1047//
 module	IBM1047//		INTERNAL		IBM1047		1
 module	INTERNAL		IBM1047//		IBM1047		1
+
+#	from			to			module		cost
+alias	IBM-1124//		IBM1124//
+alias	CP1124//		IBM1124//
+alias	CSIBM1124//		IBM1124//
+module	IBM1124//		INTERNAL		IBM1124		1
+module	INTERNAL		IBM1124//		IBM1124		1
+
+#	from			to			module		cost
+alias	IBM-1129//		IBM1129//
+alias	CP1129//		IBM1129//
+alias	CSIBM1129//		IBM1129//
+module	IBM1129//		INTERNAL		IBM1129		1
+module	INTERNAL		IBM1129//		IBM1129		1
 
 #	from			to			module		cost
 alias	EUCKR//			EUC-KR//

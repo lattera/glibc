@@ -1,3 +1,23 @@
+2000-11-28  Masahide Washizawa  <washi@jp.ibm.com>
+
+	* iconvdata/Makefile (modules): Add IBM922, IBM1124, and IBM1129.
+	(distribute): Add ibm922.c, ibm1124.c, ibm1129.c, ibm922.h, ibm1124.h,
+	and ibm1129.h.
+	* iconvdata/gconv-modules: Add entries for IBM922, IBM1124, and
+	IBM1129.
+	* iconvdata/ibm922.c: New file.
+	* iconvdata/ibm922.h: New file.
+	* iconvdata/ibm1124.c: New file.
+	* iconvdata/ibm1124.h: New file.
+	* iconvdata/ibm1129.c: New file.
+	* iconvdata/ibm1129.h: New file.
+	* iconvdata/testdata/IBM922: New file.
+	* iconvdata/testdata/IBM922..UTF8: New file.
+	* iconvdata/testdata/IBM1124: New file.
+	* iconvdata/testdata/IBM1124..UTF8: New file.
+	* iconvdata/testdata/IBM1129: New file.
+	* iconvdata/testdata/IBM1129..UTF8: New file.
+
 2000-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/gencat.c (normalize_line): Take extra parameter with escape

@@ -1,3 +1,7 @@
+2000-11-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (LOCALES): Add ja_JP.SJIS.
+
 2000-11-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-digits.c (main): Add casts to avoid warnings.
