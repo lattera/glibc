@@ -1,3 +1,12 @@
+2003-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/register-atfork.c: Define malloc_prepare,
+	malloc_parent, and malloc_child statically.
+	(__register_atfork_malloc): New function.
+	(free_mem): Don't free any of the malloc_* variables on the list.
+	* sysdeps/unix/sysv/linux/fork.h: Declare __register_atfork_malloc.
+	Define HAVE_register_atfork_malloc.
+
 2003-04-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/createthread.c (create_thread): Add some more

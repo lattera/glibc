@@ -89,7 +89,45 @@ __register_atfork (prepare, parent, child, dso_handle)
 
   return 0;
 }
-libc_hidden_def (__register_atfork)
+
+
+/* Three static memory blocks used when registering malloc.  */
+static struct fork_handler malloc_prepare;
+static struct fork_handler malloc_parent;
+static struct fork_handler malloc_child;
+
+
+void
+attribute_hidden
+__register_atfork_malloc (prepare, parent, child, dso_handle)
+     void (*prepare) (void);
+     void (*parent) (void);
+     void (*child) (void);
+     void *dso_handle;
+{
+  /* Pre-fork handler.  */
+  malloc_prepare.handler = prepare;
+  malloc_prepare.dso_handle = dso_handle;
+
+  /* Parent handler.  */
+  malloc_parent.handler = parent;
+  malloc_parent.dso_handle = dso_handle;
+
+  /* Child handler.  */
+  malloc_child.handler = child;
+  malloc_child.dso_handle = dso_handle;
+
+  /* Get the lock to not conflict with running forks.  */
+  lll_lock (__fork_lock);
+
+  /* Now that we have all the handlers allocate enqueue them.  */
+  list_add_tail (&malloc_prepare.list, &__fork_prepare_list);
+  list_add_tail (&malloc_parent.list, &__fork_parent_list);
+  list_add_tail (&malloc_child.list, &__fork_child_list);
+
+  /* Release the lock.  */
+  lll_unlock (__fork_lock);
+}
 
 
 libc_freeres_fn (free_mem)
@@ -104,22 +142,26 @@ libc_freeres_fn (free_mem)
     {
       list_del (runp);
 
-      free (list_entry (runp, struct fork_handler, list));
+      struct fork_handler *p = list_entry (runp, struct fork_handler, list);
+      if (p != &malloc_prepare)
+	free (p);
     }
 
   list_for_each_prev_safe (runp, prevp, &__fork_parent_list)
     {
       list_del (runp);
 
-      free (list_entry (runp, struct fork_handler, list));
+      struct fork_handler *p = list_entry (runp, struct fork_handler, list);
+      if (p != &malloc_parent)
+	free (p);
     }
 
   list_for_each_prev_safe (runp, prevp, &__fork_child_list)
     {
       list_del (runp);
 
-      void *p = list_entry (runp, struct fork_handler, list);
-      if (p != (void *) &__pthread_child_handler)
+      struct fork_handler *p = list_entry (runp, struct fork_handler, list);
+      if (p != &__pthread_child_handler && p != &malloc_child)
 	free (p);
     }
 

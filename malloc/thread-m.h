@@ -1,6 +1,6 @@
 /* Basic platform-independent macro definitions for mutexes and
    thread-specific data.
-   Copyright (C) 1996,1997,1998,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-1998,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -77,13 +77,24 @@ extern void *__dso_handle __attribute__ ((__weak__));
 
 #include <fork.h>
 
-#ifdef SHARED
-# define thread_atfork(prepare, parent, child) \
-   __register_atfork (prepare, parent, child, __dso_handle)
+#ifdef HAVE_register_atfork_malloc
+# ifdef SHARED
+#  define thread_atfork(prepare, parent, child) \
+   __register_atfork_malloc (prepare, parent, child, __dso_handle)
+# else
+#  define thread_atfork(prepare, parent, child) \
+   __register_atfork_malloc (prepare, parent, child,			      \
+			     &__dso_handle == NULL ? NULL : __dso_handle)
+# endif
 #else
-# define thread_atfork(prepare, parent, child) \
+# ifdef SHARED
+#  define thread_atfork(prepare, parent, child) \
+   __register_atfork (prepare, parent, child, __dso_handle)
+# else
+#  define thread_atfork(prepare, parent, child) \
    __register_atfork (prepare, parent, child,				      \
 		      &__dso_handle == NULL ? NULL : __dso_handle)
+# endif
 #endif
 
 #elif defined(MUTEX_INITIALIZER)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -54,4 +54,9 @@ extern int __register_atfork (void (*__prepare) (void),
 			      void (*__parent) (void),
 			      void (*__child) (void),
 			      void *dso_handle);
-libc_hidden_proto (__register_atfork)
+
+extern void __register_atfork_malloc (void (*prepare) (void),
+				      void (*parent) (void),
+				      void (*child) (void),
+				      void *dso_handle) attribute_hidden;
+#define HAVE_register_atfork_malloc
