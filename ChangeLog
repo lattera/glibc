@@ -1,3 +1,9 @@
+Sat Feb 25 02:17:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/kill.c: When the process has no message port
+ 	registered and we have its task port, translate a few signals to
+ 	task_suspend/task_resume/task_terminate.
+
 Fri Feb 24 14:40:48 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* io/Makefile (routines): Add euidaccess.

@@ -37,6 +37,8 @@ __kill (pid_t pid, int sig)
 
   inline void kill_pid (pid_t pid) /* Kill one PID.  */
     {
+
+
       /* SIGKILL is not delivered as a normal signal.
 	 Sending SIGKILL to a process means to terminate its task.  */
       if (sig == SIGKILL)
@@ -58,12 +60,48 @@ __kill (pid_t pid, int sig)
 	  } while (err == MACH_SEND_INVALID_DEST ||
 		   err == MIG_SERVER_DIED);
       else
-	err = HURD_MSGPORT_RPC (__proc_getmsgport (proc, pid, &msgport),
-				__proc_pid2task (proc, pid, &refport) ?
-				__proc_getsidport (proc, &refport) : 0, 1,
-				/* If no msgport, we cannot send a signal.  */
-				msgport == MACH_PORT_NULL ? EPERM :
-				__msg_sig_post (msgport, sig, refport));
+	{
+	  error_t taskerr;
+	  error_t kill_port (mach_port_t msgport, mach_port_t refport)
+	    {
+	      if (msgport != MACH_PORT_NULL)
+		/* Send a signal message to his message port.  */
+		return __msg_sig_post (msgport, sig, refport);
+
+	      /* The process has no message port.  Perhaps try direct
+		 frobnication of the task.  */
+
+	      if (taskerr)
+		/* If we could not get the task port, we can do nothing.  */
+		return taskerr;
+
+	      /* For user convenience in the case of a task that has
+		 not registered any message port with the proc server,
+		 translate a few signals to direct task operations.  */
+	      switch (sig)
+		{
+		  /* The only signals that really make sense for an
+		     unregistered task are kill, suspend, and continue.  */
+		case SIGSTOP:
+		case SIGTSTP:
+		  return __task_suspend (refport);
+		case SIGCONT:
+		  return __task_resume (refport);
+		case SIGQUIT:
+		case SIGINT:
+		  return __task_terminate (refport);
+		default:
+		  /* We have full permission to send signals, but there is
+		     no meaningful way to express this signal.  */
+		  return EPERM;
+		}
+	    }
+	  err = HURD_MSGPORT_RPC (__proc_getmsgport (proc, pid, &msgport),
+				  (taskerr = __proc_pid2task (proc, pid,
+							      &refport)) ?
+				  __proc_getsidport (proc, &refport) : 0, 1,
+				  kill_port (msgport, refport));
+	}
       if (! err)
 	delivered = 1;
     }
