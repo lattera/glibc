@@ -1,3 +1,50 @@
+2002-07-30  Roland McGrath  <roland@redhat.com>
+
+	* resolv/resolv.h (_res): Define macro unconditionally.
+	[! _LIBC_REENTRANT] (_res): Move this conditional decl to ...
+	* include/resolv.h: ... here.
+	[USE_TLS && HAVE___THREAD] (_res): #undef it and declare
+	as a __thread variable.
+	* resolv/res_libc.c [USE_TLS && HAVE___THREAD] (_res): Define it as
+	a __thread variable instead of a global.
+	* resolv/res_data.c [_LIBC]: Don't #undef _res.
+
+	* include/errno.h: Include <tls.h> to make sure USE_TLS defined by the
+	time we test it.
+
+	* intl/loadmsgcat.c [__GNUC__]: #undef alloca before defining it.
+
+	* malloc/malloc.c [_LIBC]: Include <string.h> instead of using local
+	decls of memset and memcpy.
+
+	* sysdeps/generic/sysdep.h (END): Conditionalize on [__ASSEMBLER__].
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (L): Likewise.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Comment fix.
+
+	* sysdeps/generic/bits/libc-tsd.h [USE_TLS && HAVE___THREAD]
+	(__libc_tsd_define): Define using __thread.
+
+	* sunrpc/rpc_thread.c: Use __libc_tsd_define.
+	(__rpc_thread_variables): Use __libc_tsd_get.
+	(__rpc_thread_destroy): Use __libc_tsd_get instead of calling
+	__rpc_thread_variables, which might allocate what we're about to free.
+
+	* inet/herrno.c [USE_TLS && HAVE___THREAD] (h_errno): Define as a
+	thread-local variable.
+	* resolv/netdb.h (h_errno): Define macro unconditionally.
+	[_LIBC] (__set_h_errno): Macro moved to ...
+	* include/netdb.h: ... here.
+	[USE_TLS && HAVE___THREAD] (h_errno): Declare __thread variable.
+	[USE_TLS && HAVE___THREAD] (__set_h_errno): Define using that.
+	[! _LIBC_REENTRANT]: #undef h_errno here.
+
+	* include/errno.h: Protect from multiple inclusion.
+
+	* misc/sys/select.h (__NFDBITS, __FDELT, __FDMASK): #undef these
+	before defining them, since Linux's <linux/posix_types.h> might have
+	defined them.
+
 2002-08-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/malloc.c (public_cALLOc): Check for overflow on
@@ -11,14 +58,14 @@
 	* sysdeps/unix/sysv/linux/kernel-features.h
 	(__ASSUME_SET_THREAD_AREA_SYSCALL): Define.
 
-2002-08-01  Roland McGrath  <roland@frob.com>
+2002-08-01  Roland McGrath  <roland@redhat.com>
 
 	* libio/fileops.c (_IO_file_sync_mmap): New function.
 	(_IO_file_jumps_mmap): Use it.
 	(_IO_file_underflow_mmap): Rewritten.  If after EOF or fflush,
 	repeat the stat check and resize the mapped buffer as necessary.
 
-2002-07-31  Roland McGrath  <roland@frob.com>
+2002-07-31  Roland McGrath  <roland@redhat.com>
 
 	* libio/fileops.c (decide_maybe_mmap): New static function.
 	Code taken from libio/iofopen.c:__fopen_maybe_mmap to try to
@@ -56,7 +103,7 @@
 	* sysdeps/unix/sysv/linux/bits/sys_errlist.h: New file.  Does
 	provide declarations.
 
-2002-07-31  Roland McGrath  <roland@frob.com>
+2002-07-31  Roland McGrath  <roland@redhat.com>
 
 	* elf/rtld.c (dl_main): Fix typo in error message.
 

@@ -17,6 +17,7 @@
 	* manager.c (pthread_handle_create): Likewise.
 	* specific.c (libc_internal_tsd_set, libc_internal_tsd_get):
 	Conditionalize these on [!(USE_TLS && HAVE___THREAD)].
+	* no-tsd.c: Conditionalize contents on [!(USE_TLS && HAVE___THREAD)].
 	* errno.c [USE_TLS && HAVE___THREAD]
 	(__h_errno_location, __res_state): Don't define these at all.
 
