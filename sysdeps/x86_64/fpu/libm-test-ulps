@@ -2492,17 +2492,17 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "cpow":
-double: 1
+double: 2
 float: 4
-idouble: 1
+idouble: 2
 ifloat: 4
 ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "cpow":
-double: 1.1031
+double: 2
 float: 2
-idouble: 1.1031
+idouble: 2
 ifloat: 2
 ildouble: 2
 ldouble: 2
