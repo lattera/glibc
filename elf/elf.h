@@ -666,7 +666,12 @@ typedef struct
    If any adjustment is made to the ELF object after it has been
    built these entries will need to be adjusted.  */
 #define DT_ADDRRNGLO	0x6ffffe00
-#define DT_SYMINFO	0x6ffffeff	/* syminfo table */
+#define DT_CONFIG	0x6ffffefa	/* Configuration information.  */
+#define DT_DEPAUDIT	0x6ffffefb	/* Dependency auditing.  */
+#define DT_AUDIT	0x6ffffefc	/* Object auditing.  */
+#define	DT_PLTPAD	0x6ffffefd	/* PLT padding.  */
+#define	DT_MOVETAB	0x6ffffefe	/* Move table.  */
+#define DT_SYMINFO	0x6ffffeff	/* Syminfo table.  */
 #define DT_ADDRRNGHI	0x6ffffeff
 
 /* The versioning entry types.  The next are defined as part of the
@@ -714,9 +719,11 @@ typedef struct
 #define DF_1_TRANS	0x00000200
 #define DF_1_INTERPOSE	0x00000400	/* Object is used to interpose.  */
 #define DF_1_NODEFLIB	0x00000800	/* Ignore default lib search path.  */
-#define DF_1_NODUMP	0x00001000
-#define DF_1_CONFALT	0x00002000
-#define DF_1_ENDFILTEE	0x00004000
+#define DF_1_NODUMP	0x00001000	/* Object can't be dldump'ed.  */
+#define DF_1_CONFALT	0x00002000	/* Configuration alternative created.*/
+#define DF_1_ENDFILTEE	0x00004000	/* Filtee terminates filters search. */
+#define	DF_1_DISPRELDNE	0x00008000	/* Disp reloc applied at build time. */
+#define	DF_1_DISPRELPND	0x00010000	/* Disp reloc applied at run-time.  */
 
 /* Flags for the feature selection in DT_FEATURE_1.  */
 #define DTF_1_PARINIT	0x00000001
@@ -762,6 +769,12 @@ typedef struct
 /* Legal values for vd_flags (version information flags).  */
 #define VER_FLG_BASE	0x1		/* Version definition of file itself */
 #define VER_FLG_WEAK	0x2		/* Weak version identifier */
+
+/* Versym symbol index values.  */
+#define	VER_NDX_LOCAL		0	/* Symbol is local.  */
+#define	VER_NDX_GLOBAL		1	/* Symbol is global.  */
+#define	VER_NDX_LORESERVE	0xff00	/* Beginning of reserved entries.  */
+#define	VER_NDX_ELIMINATE	0xff01	/* Symbol is to be eliminated.  */
 
 /* Auxialiary version information.  */
 
