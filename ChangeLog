@@ -1,3 +1,9 @@
+2001-04-02  Andreas Jaeger  <aj@suse.de>
+
+	* string/string.h (strndupa): Add cast for C++ conformance.
+	(strdupa): Likewise.
+	Fixes PR libc/2173, reported by tbrowder@home.com. 
+
 2001-03-30  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/Makefile ($(link-rpcuserlibs)): Don't append
