@@ -1,3 +1,11 @@
+2003-12-30  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (verify): New macro.
+	(time_t_is_integer, twos_complement_arithmetic,
+	right_shift_propagates_sign, base_year_is_a_multiple_of_100,
+	C99_integer_division): Document these longstanding assumptions in the
+	code, and verify them at compile-time.
+
 2004-01-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex_internal.c (re_node_set_insert): Remove unused variables.
