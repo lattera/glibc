@@ -78,7 +78,7 @@ typedef union
 typedef union
 {
   char __size[__SIZEOF_PTHREAD_MUTEXATTR_T];
-  long int __align;
+  int __align;
 } pthread_mutexattr_t;
 
 
@@ -101,7 +101,7 @@ typedef union
 typedef union
 {
   char __size[__SIZEOF_PTHREAD_CONDATTR_T];
-  long int __align;
+  int __align;
 } pthread_condattr_t;
 
 
