@@ -153,6 +153,7 @@ $(link-rpcuserlibs): %-link.so: %_pic.a
 # so they don't need abi-note.o linked into them.
 	$(build-shlib-helper) \
 		-nostdlib -o $@ \
+		-Wl,-soname=$(*F).so$($(*F).so-version) \
 		$(build-shlib-objlist)
 
 # And get them into the libc.so ldscript.

@@ -1,3 +1,8 @@
+2001-06-28  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/Makefile ($(link-rpcuserlibs)): Add back
+	-Wl,-soname option lost in 2001-06-16 change.
+
 2001-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/tst-regex.c: Pass REG_NEWLINE to regcomp.  Add extra tests.
