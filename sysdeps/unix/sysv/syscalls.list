@@ -6,7 +6,7 @@ nice		-	nice		i:i	nice
 pause		-	pause		i:	pause
 poll		-	poll		i:pii	poll
 s_getdents	getdents getdents	i:ipi	__getdents
-setrlimit	-	setrlimit	i:ip	setrlimit
+setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 signal		-	signal		i:ii	signal
 stime		-	stime		i:p	stime
