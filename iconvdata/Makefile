@@ -1,4 +1,4 @@
-# Copyright (C) 1997-2004,2005,2006 Free Software Foundation, Inc.
+# Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,22 +51,14 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5 CP10007 KOI8-T		 \
 	   GEORGIAN-PS GEORGIAN-ACADEMY ISO-IR-209 MAC-SAMI ARMSCII-8	 \
 	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213		 \
-	   ISO-2022-JP-3 TSCII IBM866NAV CP932 EUC-JP-MS PT154 RK1048	 \
-	   IBM1025 IBM1122 IBM1137 IBM1153 IBM1154 IBM1155 IBM1156	 \
-	   IBM1157 IBM1158 IBM803 IBM901 IBM902 IBM921 IBM1008 		 \
-	   IBM1008_420 IBM1097 IBM1112 IBM1123 IBM1130 IBM1140 IBM1141 	 \
-	   IBM1142 IBM1143 IBM1144 IBM1145 IBM1146 IBM1147 IBM1148 	 \
-	   IBM1149 IBM1166 IBM1167 IBM4517 IBM4899 IBM4909 IBM4971 	 \
-	   IBM5347 IBM9030 IBM9066 IBM9448 IBM12712 IBM16804             \
-	   IBM1364 IBM1371 IBM1388 IBM1390 IBM1399 ISO_11548-1 MIK
+	   ISO-2022-JP-3 TSCII IBM866NAV CP932 EUC-JP-MS PT154 RK1048
 
 modules.so := $(addsuffix .so, $(modules))
 
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
-tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4 \
-	tst-iconv6
+tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4
 ifeq ($(have-thread-library),yes)
 tests += bug-iconv3
 endif
@@ -180,23 +172,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      mac-sami.c ibm1160.c ibm1160.h ibm1161.c ibm1161.h	    \
 	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h jisx0213.c jisx0213.h \
 	      euc-jisx0213.c shift_jisx0213.c iso-2022-jp-3.c		    \
-	      tcvn5712-1.c armscii-8.c tscii.c ibm866nav.c pt154.c rk1048.c \
-	      ibm1025.c ibm1025.h ibm1122.c ibm1122.h ibm1137.c ibm1137.h   \
-	      ibm1153.c ibm1153.h ibm1154.c ibm1154.h ibm1155.c ibm1155.h   \
-	      ibm1156.c ibm1156.h ibm1157.c ibm1157.h ibm1158.c ibm1158.h   \
-	      ibm803.c ibm803.h ibm901.c ibm901.h ibm902.c ibm902.h	    \
-	      ibm921.c ibm921.h ibm1008.c ibm1008.h ibm1008_420.c	    \
-	      ibm1097.c ibm1097.h ibm1112.c ibm1112.h ibm1123.c ibm1123.h   \
-	      ibm1130.c ibm1130.h ibm1140.c ibm1140.h ibm1141.c ibm1141.h   \
-	      ibm1142.c ibm1142.h ibm1143.c ibm1143.h ibm1144.c ibm1144.h   \
-	      ibm1145.c ibm1145.h ibm1146.c ibm1146.h ibm1147.c ibm1147.h   \
-	      ibm1148.c ibm1148.h ibm1149.c ibm1149.h ibm1166.c ibm1166.h   \
-	      ibm1167.c ibm1167.h ibm4517.c ibm4517.h ibm4899.c ibm4899.h   \
-	      ibm4909.c ibm4909.h ibm4971.c ibm4971.h ibm5347.c ibm5347.h   \
-	      ibm9030.c ibm9030.h ibm9066.c ibm9066.h ibm9448.c ibm9448.h   \
-	      ibm12712.c ibm12712.h ibm16804.c ibm16804.h                   \
-	      ibm1364.c ibm1364.h ibm1371.c ibm1371.h ibm1388.c ibm1388.h   \
-	      ibm1390.c ibm1390.h ibm1399.c ibm1399.h iso_11548-1.c mik.c
+	      tcvn5712-1.c armscii-8.c tscii.c ibm866nav.c pt154.c rk1048.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -237,7 +213,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
 			georgian-ps georgian-academy iso-ir-209 mac-sami   \
-			iso8859-11 ibm866nav pt154 rk1048 mik
+			iso8859-11 ibm866nav pt154 rk1048
 
 gen-special-modules := iso8859-7jp
 
@@ -256,14 +232,14 @@ export AWK
 
 define generate-8bit-table
 $(make-target-directory)
-LC_ALL=C $(SHELL) ./gen-8bit.sh $< > $(@:stmp=T)
+$(SHELL) ./gen-8bit.sh $< > $(@:stmp=T)
 $(move-if-change) $(@:stmp=T) $(@:stmp=h)
 touch $@
 endef
 
 define generate-8bit-gap-table
 $(make-target-directory)
-LC_ALL=C $(SHELL) ./gen-8bit-gap.sh $< > $(@:stmp=T)
+$(SHELL) ./gen-8bit-gap.sh $< > $(@:stmp=T)
 $(move-if-change) $(@:stmp=T) $(@:stmp=h)
 touch $@
 endef
@@ -305,7 +281,7 @@ $(gen-8bit-gap-modules:%=$(objpfx)%.stmp): $(objpfx)%.stmp: $(objpfx)iconv-rules
 
 $(objpfx)iso8859-7jp.stmp: $(charmaps)/ISO-8859-7 gen-8bit-gap-1.sh
 	$(make-target-directory)
-	LC_ALL=C $(SHELL) ./gen-8bit-gap-1.sh $< > $(@:stmp=T)
+	$(SHELL) ./gen-8bit-gap-1.sh $< > $(@:stmp=T)
 	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
 	touch $@
 

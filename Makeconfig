@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2003,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright (C) 1991-2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -99,21 +99,7 @@ binfmt-subdir = aout
 endif
 
 # Complete path to sysdep dirs.
-# `configure' writes a definition of `config-sysdirs' in `config.make'.
-sysdirs := $(foreach D,$(config-sysdirs),$(firstword $(filter /%,$D) $(..)$D))
-
-# Add-ons that contribute sysdeps trees get added to the include list
-# after sysdeps/generic.  This makes #include <sysdeps/...> work right
-# to find specific add-on files without assuming the add-on directory name.
-# It also means that headers can go into an add-on's base directory
-# instead of the add-on needing a sysdeps/generic of its own.
-sysdeps-srcdirs := $(foreach add-on,$(sysdeps-add-ons),\
-			     $(firstword $(filter /%,$(add-on)) \
-					 $(..)$(add-on)))
-+sysdep_dirs = $(sysdirs) $(sysdeps-srcdirs)
-ifdef objdir
-+sysdep_dirs := $(objdir) $(+sysdep_dirs)
-endif
+export full_config_sysdirs := $(addprefix $(..),$(config-sysdirs))
 
 # Run config.status to update config.make and config.h.  We don't show the
 # dependence of config.h to Make, because it is only touched when it
@@ -127,16 +113,16 @@ $(common-objpfx)config.make: $(common-objpfx)config.status \
 # Find all the add-on and sysdeps configure fragments, to make sure we
 # re-run configure when any of them changes.
 $(common-objpfx)config.status: $(..)version.h $(..)configure \
-			       $(foreach dir,$(sysdirs),\
-					 $(wildcard $(dir)/Implies) \
+			       $(foreach dir,$(full_config_sysdirs),\
+					 $(wildcard \
+					   $(dir)/Implies) \
 					 $(patsubst %.in,%,\
 						    $(firstword $(wildcard \
  $(addprefix $(dir)/,configure configure.in))))) \
 			       $(patsubst %.in,%,\
-					  $(foreach add-on,$(add-ons),\
+					  $(foreach dir,$(add-ons),\
 						    $(firstword $(wildcard \
- $(addprefix $(firstword $(filter /%,$(add-on)) $(..)$(add-on))/,\
-	     configure configure.in)))))
+ $(addprefix $(..)$(dir)/,configure configure.in)))))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \
@@ -413,20 +399,11 @@ LDFLAGS.so += $(relro-LDFLAGS)
 LDFLAGS-rtld += $(relro-LDFLAGS)
 endif
 
-ifeq (yes,$(have-hash-style))
-# For the time being we unconditionally use 'both'.  At some time we
-# should declare statically linked code as 'out of luck' and compile
-# with --hash-style=gnu only.
-hashstyle-LDFLAGS = -Wl,--hash-style=both
-LDFLAGS.so += $(hashstyle-LDFLAGS)
-LDFLAGS-rtld += $(hashstyle-LDFLAGS)
-endif
-
 # Command for linking programs with the C library.
 ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
-	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
+	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) \
 	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
 	      $(+preinit) $(+prector) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
@@ -438,7 +415,7 @@ endif
 # Command for statically linking programs with the C library.
 ifndef +link-static
 +link-static = $(CC) -nostdlib -nostartfiles -static -o $@ \
-	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F))  \
+	      $(sysdep-LDFLAGS) $(LDFLAGS)  \
 	      $(addprefix $(csu-objpfx),$(static-start-installed-name)) \
 	      $(+preinit) $(+prector) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
@@ -503,21 +480,32 @@ default-rpath = $(libdir)
 endif
 
 ifndef link-extra-libs
-link-extra-libs = $(LDLIBS-$(@F))
-link-extra-libs-static = $(link-extra-libs)
-link-extra-libs-bounded = $(link-extra-libs)
+ifeq (yes,$(build-shared))
+ifneq ($(common-objpfx),$(objpfx))
+link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),\
+	$(wildcard $(common-objpfx)$(lib).so$($(notdir $(lib)).so-version) \
+		   $(objpfx)$(lib).so$($(notdir $(lib)).so-version)))
+else
+link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).so$($(notdir $(lib)).so-version))
+endif
+else
+link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
+endif
 endif
 
 # The static libraries.
 ifeq (yes,$(build-static))
 link-libc-static = $(common-objpfx)libc.a $(static-gnulib) $(common-objpfx)libc.a
+link-extra-libs-static = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
 else
 ifeq (yes,$(build-shared))
 # We can try to link the programs with lib*_pic.a...
 link-libc-static = $(static-gnulib) $(common-objpfx)libc_pic.a
+link-extra-libs-static = $(link-extra-libs)
 endif
 endif
 link-libc-bounded = $(common-objpfx)libc_b.a $(gnulib) $(common-objpfx)libc_b.a
+link-extra-libs-bounded = $(foreach lib,$(LDLIBS-$(@F:%-bp=%)),$(common-objpfx)$(lib)_b.a)
 
 ifndef gnulib
 ifneq ($(have-cc-with-libunwind),yes)
@@ -575,15 +563,10 @@ endif
 
 # Extra flags to pass to GCC.
 ifeq ($(all-warnings),yes)
-+gccwarn := -Wall -Wwrite-strings -Winline -Wcast-qual -Wbad-function-cast -Wmissing-noreturn -Wmissing-prototypes -Wmissing-declarations -Wcomment -Wcomments -Wtrigraphs -Wsign-compare -Wfloat-equal -Wmultichar
++gccwarn := -Wall -Wwrite-strings -Winline -Wstrict-prototypes -Wcast-qual -Wbad-function-cast -Wmissing-noreturn -Wmissing-prototypes -Wmissing-declarations -Wcomment -Wcomments -Wtrigraphs -Wsign-compare -Wfloat-equal -Wmultichar
 else
-+gccwarn := -Wall -Wwrite-strings -Winline
++gccwarn := -Wall -Wwrite-strings -Winline -Wstrict-prototypes
 endif
-+gccwarn-c = -Wstrict-prototypes
-
-# We do not depend on the address of constants in different files to be
-# actually different, so allow the compiler to merge them all.
-+merge-constants = -fmerge-all-constants
 
 # This is the program that generates makefile dependencies from C source files.
 # The -MP flag tells GCC >= 3.2 (which we now require) to produce dummy
@@ -594,11 +577,6 @@ endif
 
 # The program that makes Emacs-style TAGS files.
 ETAGS	:= etags
-
-# The `xgettext' program for producing .pot files from sources.
-ifndef XGETTEXT
-XGETTEXT = xgettext
-endif
 
 # The `m4' macro processor; this is used by sysdeps/sparc/Makefile (and
 # perhaps others) to preprocess assembly code in some cases.
@@ -644,21 +622,21 @@ ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
 
-+cflags += $(addprefix -mcpu=,$(with-cpu)) $(+gccwarn) $(+merge-constants)
++cflags := $(+cflags) $(+gccwarn)
 +gcc-nowarn := -w
 
 # Don't duplicate options if we inherited variables from the parent.
 +cflags	:= $(sort $(+cflags))
 
 
-# These are flags given to the C compiler to tell it to look for
-# include files (including ones given in angle brackets) in the parent
-# library source directory, in the include directory, and in the
-# current directory.
-+sysdep-includes = $(addprefix -I,$(+sysdep_dirs))
-+includes = -I$(..)include $(if $(subdir),$(objpfx:%/=-I%)) \
-	    $(+sysdep-includes) $(includes) \
-	    $(patsubst %/,-I%,$(..)) $(libio-include) -I. $(sysincludes)
+# These are flags given to the C compiler to tell it to look for include
+# files (including ones given in angle brackets) in the current directory,
+# in the parent library source directory and in the include directory.
+# `+sysdep-includes' will be defined by Makerules.
++includes = -I$(..)include -I. \
+	    $(patsubst %/,-I%,$(objpfx)) $(patsubst %/,-I%,$(..)) \
+	    $(libio-include) $(includes) \
+	    $(+sysdep-includes) $(sysincludes)
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.
@@ -675,12 +653,8 @@ CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 		         $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
 override CFLAGS	= -std=gnu99 \
-		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
-		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
-		  $(CFLAGS-$(@F))
-override CXXFLAGS = $(c++-sysincludes) \
-		    $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
-		    $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
+		  $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
+		  $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 
 # If everything is compiled with -fPIC (implicitly) we must tell this by
 # defining the PIC symbol.
@@ -769,16 +743,20 @@ endif
 endif
 ASFLAGS += $(ASFLAGS-config)
 
++gnu-stabs = $(shell echo>&2 '*** BARF ON ME')
+
 ifndef BUILD_CC
 BUILD_CC = $(CC)
 endif
 
 move-if-change = $(SHELL) $(..)scripts/move-if-change
 
+-include $(common-objpfx)sysd-dirs
+
+ifeq ($(sysd-dirs-done),t)
 -include $(common-objpfx)sysd-sorted
 subdirs = $(sorted-subdirs)
-subdir-srcdirs = $(foreach dir,$(subdirs),\
-			   $(firstword $($(dir)-srcdir) $(..)$(dir)))
+endif
 
 ifeq (yes, $(build-shared))
 
@@ -792,7 +770,8 @@ ifeq (yes, $(build-shared))
 # (but no commands).
 %.v.i: $(common-objpfx)config.h
 	sed '/^[ 	]*#/d;s/^[ 	]*%/#/' $(filter-out FORCE %.h,$^) \
-	| $(CC) -E -undef $(CPPFLAGS) -x assembler-with-cpp - \
+	| $(CC) -E -undef $(CPPFLAGS) \
+		   -DASSEMBLER -x assembler-with-cpp - \
 		   > $@T
 	mv -f $@T $@
 %.v: %.v.i
@@ -808,8 +787,9 @@ ifndef avoid-generated
 # This lets add-ons give more-specific matches that override defaults
 # in the top-level file.
 $(common-objpfx)shlib-versions.v.i: \
-	$(wildcard $(+sysdep_dirs:=/shlib-versions) \
-		   $(subdir-srcdirs:=/shlib-versions)) \
+	$(wildcard $(patsubst %, $(..)%/shlib-versions,$(add-ons) \
+						       $(config-sysdirs) \
+						       $(subdirs))) \
 	$(..)shlib-versions
 
 soversions-default-setname = $(patsubst %, %,\
@@ -818,16 +798,11 @@ soversions-default-setname = $(patsubst %, %,\
 $(common-objpfx)soversions.i: $(..)scripts/soversions.awk \
 			      $(common-objpfx)shlib-versions.v
 	$(AWK) -v default_setname='$(soversions-default-setname)' \
-	       -v cpu='$(config-machine)' \
-	       -v vendor='$(config-vendor)' \
-	       -v os='$(config-os)' \
+	       -v config='$(config-machine)-$(config-vendor)-$(config-os)' \
 	       -f $^ > $@T
 	mv -f $@T $@
-$(common-objpfx)soversions.mk: $(common-objpfx)soversions.i $(..)Makeconfig
-	(seen_DEFAULT=0; seen_WORDSIZE32=0; seen_WORDSIZE64=0; \
-	 while read which lib number setname; do \
-	   eval seen_$$which=1; \
-	   test x"$$which" = xDEFAULT || continue; \
+$(common-objpfx)soversions.mk: $(common-objpfx)soversions.i
+	(while read lib number setname; do \
 	   case $$number in \
 	     [0-9]*) echo "$$lib.so-version=.$$number"; \
 		     echo "all-sonames+=$$lib=$$lib.so\$$($$lib.so-version)";;\
@@ -835,12 +810,6 @@ $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i $(..)Makeconfig
 		     echo "all-sonames+=$$lib=\$$($$lib.so-version)";;\
 	   esac; \
 	 done; \
-	 case "$$seen_DEFAULT$$seen_WORDSIZE32$$seen_WORDSIZE64" in \
-	   100) echo biarch = no;; \
-	   101) echo biarch = 32;; \
-	   ?1?) echo biarch = 64;; \
-	   *) echo >&2 BUG; exit 2;; \
-	 esac; \
 	 echo soversions.mk-done = t;) < $< > $@T; exit 0
 	mv -f $@T $@
 endif
@@ -854,11 +823,31 @@ postclean-generated += soversions.mk soversions.i \
 before-compile += $(common-objpfx)gnu/lib-names.h
 ifeq ($(soversions.mk-done),t)
 $(common-objpfx)gnu/lib-names.h: $(common-objpfx)gnu/lib-names.stmp; @:
-$(common-objpfx)gnu/lib-names.stmp: $(..)scripts/lib-names.awk \
-				    $(common-objpfx)soversions.i
+$(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	$(make-target-directory)
 	@rm -f ${@:stmp=T} $@
-	$(AWK) -f $^ > ${@:stmp=T}
+	(echo '/* This file is automatically generated.';\
+	 echo '   It defines macros to allow user program to find the shared';\
+	 echo '   library files which come as part of GNU libc.  */';\
+	 echo '#ifndef __GNU_LIB_NAMES_H'; \
+	 echo '#define __GNU_LIB_NAMES_H	1'; \
+	 echo; \
+	 (libs='$(all-sonames)';\
+	  for l in $$libs; do \
+	    name=`echo $$l | sed 's/.*=//'`; \
+	    upname=`echo $$l | sed 's/=.*//' | \
+		    tr 'abcdefghijklmnopqrstuvwxyz-' \
+		       'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'`; \
+	    upname2=`echo $$name | sed 's/[.]so.*//' | \
+		     tr 'abcdefghijklmnopqrstuvwxyz-' \
+		        'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'`; \
+	    echo "#define	$${upname}_SO	\"$$name\""; \
+	    if test $$upname != $$upname2; then \
+	      echo "#define	$${upname2}_SO	\"$$name\""; \
+	    fi; \
+	  done;) | sort; \
+	 echo; \
+	 echo '#endif	/* gnu/lib-names.h */';) > ${@:stmp=T}
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
 endif
@@ -909,38 +898,79 @@ endif
 
 # These are the subdirectories containing the library source.  The order
 # is more or less arbitrary.  The sorting step will take care of the
-# dependencies.
+# dependencies.  Only the $(binfmt-subdir) should always be kept at the
+# end of the list.
 all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
-	      stdlib stdio-common libio malloc string wcsmbs time dirent    \
+	      stdlib stdio-common libio malloc string wcsmbs time dirent \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow po argp	    \
-	      crypt nss localedata timezone rt conform debug		    \
-	      $(add-on-subdirs) $(dlfcn) $(binfmt-subdir)
+	      crypt $(add-ons) nss localedata timezone rt conform debug	    \
+	      $(sysdep-subdirs) $(dlfcn) $(binfmt-subdir)
+all-subdirs := $(filter-out $(sysdep-inhibit-subdirs),$(all-subdirs))
+
+# The mach and hurd subdirectories have many generated header files which
+# much of the rest of the library depends on, so it is best to build them
+# first (and mach before hurd, at that).  The before-compile additions in
+# sysdeps/{mach,hurd}/Makefile should make it reliably work for these files
+# not to exist when making in other directories, but it will be slower that
+# way with more somewhat expensive `make' invocations.
+subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
+	   $(filter-out mach hurd,$(subdirs))
 
 ifndef avoid-generated
-all-Depend-files := $(wildcard $(foreach dir,$(all-subdirs),\
-					 $(firstword $($(dir)-srcdir) \
-						     $(..)$(dir))/Depend))
-$(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk \
-			     $(common-objpfx)config.make $(..)Makeconfig \
-			     $(wildcard $(sysdirs:=/Subdirs)) \
-			     $(all-Depend-files)
-	$(AWK) -f $< \
-	       -v subdirs='$(all-subdirs)' \
-	       -v srcpfx='$(..)' \
-	       $(filter %/Subdirs %/Depend,$^) > $@-tmp
+all-Subdirs-files = $(wildcard $(config-sysdirs:%=$(..)%/Subdirs))
+$(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
+	$(AWK) 'BEGIN { subdirs = ""; inhibit = "" };			\
+		/^#/ { next };						\
+		/^[^-]/ { subdirs = subdirs " " $$0 };			\
+		/^-/ { inhibit = inhibit " " substr($$0, 2) };		\
+		END { printf "sysdep-subdirs =%s\n", subdirs;		\
+		      printf "sysdep-inhibit-subdirs =%s\n", inhibit;	\
+		      print "sysd-dirs-done = t" }'			\
+	       $(patsubst $<,/dev/null,$^) > $@-tmp
 	mv -f $@-tmp $@
-$(all-Depend-files): ;
+
+all-Depend-files = $(wildcard $(..)*/Depend)
+$(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
+			     $(common-objpfx)sysd-dirs $(..)Makeconfig
+	{ { dirs='$(patsubst $(..)%/Depend,%,$(filter %/Depend,$^))';	  \
+	    for d in $$dirs; do						  \
+	      while read on; do						  \
+		echo "depend $$d $$on";					  \
+	      done < $(..)$$d/Depend;					  \
+	    done;							  \
+	    for f in $(all-subdirs); do					  \
+	      echo $$f;							  \
+	    done;							  \
+	  } | $(AWK) -f $< &&						  \
+	  echo sysd-sorted-done = t;					  \
+	} > $@-tmp
+	mv -f $@-tmp $@
 endif
 
 # Let sysdeps/ subdirs contain a Makeconfig fragment for us to include here.
-sysdep-makeconfigs := $(wildcard $(+sysdep_dirs:=/Makeconfig))
+sysdep-makeconfigs := $(wildcard $(patsubst %,$(..)%/Makeconfig,\
+					    $(config-sysdirs) $(add-ons)))
+
 ifneq (,$(sysdep-makeconfigs))
-include $(sysdep-makeconfigs)
+Makeconfig-doing-sysdep := $(sysdep-makeconfigs)
+# Before each one, include ourselves again to do the bit below that
+# will set `Makeconfig-add-on' in an add-on's Makeconfig fragment.
+include $(foreach M,$(sysdep-makeconfigs),$(..)Makeconfig $M)
 endif
 
 
 endif # Makeconfig not yet included
+
+# The whole body above didn't run when we are included as a subroutine
+# of ourselves in the sysdep-makeconfigs include line.  This bit runs.
+ifneq (,$(Makeconfig-doing-sysdep))
+sysdep-Makeconfig := $(firstword $(Makeconfig-doing-sysdep))
+Makeconfig-doing-sysdep := $(filter-out $(sysdep-Makeconfig),\
+					$(Makeconfig-doing-sysdep))
+Makeconfig-add-on := $(filter $(add-ons),$(patsubst $(..)%/Makeconfig,%,\
+						    $(sysdep-Makeconfig)))
+endif
 
 # Local Variables:
 # mode: makefile

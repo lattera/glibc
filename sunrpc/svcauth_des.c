@@ -315,7 +315,7 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
   /*
    * xdr the timestamp before encrypting
    */
-  ixdr = (uint32_t *) cryptbuf;
+  ixdr = (int32_t *) cryptbuf;
   IXDR_PUT_INT32 (ixdr, timestamp.tv_sec - 1);
   IXDR_PUT_INT32 (ixdr, timestamp.tv_usec);
 
@@ -396,9 +396,11 @@ cache_init (void)
   register int i;
 
   authdes_cache = (struct cache_entry *)
-    calloc (sizeof (struct cache_entry) * AUTHDES_CACHESZ, 1);
+    mem_alloc (sizeof (struct cache_entry) * AUTHDES_CACHESZ);
   if (authdes_cache == NULL)
     return;
+  __bzero ((char *) authdes_cache,
+	   sizeof (struct cache_entry) * AUTHDES_CACHESZ);
 
   authdes_lru = (int *) mem_alloc (sizeof (int) * AUTHDES_CACHESZ);
   /*

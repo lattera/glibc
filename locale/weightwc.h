@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001,2003,2004,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper, <drepper@cygnus.com>.
 
@@ -22,8 +22,12 @@ auto inline int32_t
 __attribute ((always_inline))
 findidx (const wint_t **cpp)
 {
-  wint_t ch = *(*cpp)++;
-  int32_t i = __collidx_table_lookup ((const char *) table, ch);
+  int32_t i;
+  const wint_t *cp;
+  wint_t ch;
+
+  ch = *(*cpp)++;
+  i = __collidx_table_lookup ((const char *) table, ch);
 
   if (i >= 0)
     /* This is an index into the weight table.  Cool.  */
@@ -31,11 +35,11 @@ findidx (const wint_t **cpp)
 
   /* Oh well, more than one sequence starting with this byte.
      Search for the correct one.  */
-  const int32_t *cp = &extra[-i];
+  cp = &extra[-i];
   while (1)
     {
       size_t nhere;
-      const int32_t *usrc = (const int32_t *) *cpp;
+      const wint_t *usrc = *cpp;
 
       /* The first thing is the index.  */
       i = *cp++;

@@ -17,23 +17,5 @@ extern int __open (__const char *__file, int __oflag, ...);
 libc_hidden_proto (__open)
 extern int __fcntl (int __fd, int __cmd, ...);
 libc_hidden_proto (__fcntl)
-extern int __openat (int __fd, __const char *__file, int __oflag, ...)
-  __nonnull ((2));
-libc_hidden_proto (__openat)
-extern int __openat64 (int __fd, __const char *__file, int __oflag, ...)
-  __nonnull ((2));
-libc_hidden_proto (__openat64)
-
-
-/* Helper functions for the various *at functions.  For Linux.  */
-extern void __atfct_seterrno (int errval, int fd, const char *buf)
-  attribute_hidden;
-extern void __atfct_seterrno_2 (int errval, int fd1, const char *buf1,
-				int fd2, const char *buf2)
-  attribute_hidden;
-
-
-/* Flag determining whether the *at system calls are available.  */
-extern int __have_atfcts attribute_hidden;
 
 #endif

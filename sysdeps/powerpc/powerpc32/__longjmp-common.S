@@ -1,6 +1,5 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995-1997, 1999-2001, 2003, 2004, 2005, 2006
-	Free Software Foundation, Inc.
+   Copyright (C) 1995-1997,1999-2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +19,11 @@
 
 #include <sysdep.h>
 #define _ASM
+#define _SETJMP_H
 #ifdef __NO_VMX__
 # include <novmxsetjmp.h>
 #else
-# include <jmpbuf-offsets.h>
+# include <bits/setjmp.h>
 #endif
 #include <bp-sym.h>
 #include <bp-asm.h>
@@ -31,11 +31,7 @@
 ENTRY (BP_SYM (__longjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 
-#ifdef PTR_DEMANGLE
-	lwz r24,(JB_GPR1*4)(r3)
-#else
 	lwz r1,(JB_GPR1*4)(r3)
-#endif
 	lwz r0,(JB_LR*4)(r3)
 	lwz r14,((JB_GPRS+0)*4)(r3)
 	lwz r15,((JB_GPRS+1)*4)(r3)
@@ -44,10 +40,6 @@ ENTRY (BP_SYM (__longjmp))
 	lwz r18,((JB_GPRS+4)*4)(r3)
 	lwz r19,((JB_GPRS+5)*4)(r3)
 	lwz r20,((JB_GPRS+6)*4)(r3)
-#ifdef PTR_DEMANGLE
-	PTR_DEMANGLE3 (r1, r24, r25)
-	PTR_DEMANGLE2 (r0, r25)
-#endif
 	mtlr r0
 	lwz r21,((JB_GPRS+7)*4)(r3)
 	lwz r22,((JB_GPRS+8)*4)(r3)

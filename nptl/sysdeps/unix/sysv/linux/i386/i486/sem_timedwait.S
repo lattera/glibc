@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -49,12 +49,12 @@ sem_timedwait:
 
 	movl	(%ecx), %eax
 2:	testl	%eax, %eax
-	je	1f
+	je,pn	1f
 
 	leal	-1(%eax), %edx
 	LOCK
 	cmpxchgl %edx, (%ecx)
-	jne	2b
+	jne,pn	2b
 
 	xorl	%eax, %eax
 	ret
@@ -79,7 +79,10 @@ sem_timedwait:
 	jae	6f
 
 	cfi_offset(3, -16)		/* %ebx */
-7:	xorl	%ecx, %ecx
+7:	call	__pthread_enable_asynccancel
+	movl	%eax, 8(%esp)
+
+	xorl	%ecx, %ecx
 	movl	%esp, %ebx
 	movl	%ecx, %edx
 	movl	$SYS_gettimeofday, %eax
@@ -102,10 +105,6 @@ sem_timedwait:
 
 	movl	%ecx, (%esp)	/* Store relative timeout.  */
 	movl	%edx, 4(%esp)
-
-	call	__pthread_enable_asynccancel
-	movl	%eax, 8(%esp)
-
 	movl	28(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	%esp, %esi
@@ -118,7 +117,7 @@ sem_timedwait:
 	call	__pthread_disable_asynccancel
 
 	testl	%esi, %esi
-	je	9f
+	je,pt	9f
 	cmpl	$-EWOULDBLOCK, %esi
 	jne	3f
 
@@ -129,7 +128,7 @@ sem_timedwait:
 	leal	-1(%eax), %ecx
 	LOCK
 	cmpxchgl %ecx, (%ebx)
-	jne	8b
+	jne,pn	8b
 
 	addl	$12, %esp
 	cfi_adjust_cfa_offset(-12)
@@ -159,14 +158,9 @@ sem_timedwait:
 #endif
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
 #if USE___THREAD
-# ifdef NO_TLS_DIRECT_SEG_REFS
-	movl	errno@gotntpoff(%ebx), %edx
-	addl	%gs:0, %edx
+	movl	%gs:0, %edx
+	subl	errno@gottpoff(%ebx), %edx
 	movl	%esi, (%edx)
-# else
-	movl	errno@gotntpoff(%ebx), %edx
-	movl	%esi, %gs:(%edx)
-# endif
 #else
 	call	__errno_location@plt
 	movl	%esi, (%eax)

@@ -33,7 +33,7 @@ END LC_IDENTIFICATION
 
 
 LC_CTYPE
-copy "ar_EG"
+copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE
@@ -166,7 +166,14 @@ END LC_TIME
 
 
 LC_MESSAGES
-copy "ar_EG"
+% This is the POSIX Locale definition for the LC_MESSAGES category.
+% These are generated based on XML base Locale difintion file
+% for IBM Class for Unicode/Java
+%
+yesexpr     "<U005E><U005B><U0646><U005D><U002E><U002A>"
+%
+noexpr      "<U005E><U005B><U0644><U005D><U002E><U002A>"
+%
 END LC_MESSAGES
 
 

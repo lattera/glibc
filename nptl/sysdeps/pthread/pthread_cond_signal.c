@@ -43,11 +43,6 @@ __pthread_cond_signal (cond)
       ++cond->__data.__futex;
 
       /* Wake one.  */
-      if (! __builtin_expect (lll_futex_wake_unlock (&cond->__data.__futex, 1,
-						     1, &cond->__data.__lock),
-						     0))
-	return 0;
-
       lll_futex_wake (&cond->__data.__futex, 1);
     }
 

@@ -26,9 +26,6 @@ extern int __sigprocmask (int __how,
 			  __const sigset_t *__set, sigset_t *__oset);
 extern int __sigsuspend (__const sigset_t *__set);
 libc_hidden_proto (__sigsuspend)
-#ifndef NO_CANCELLATION
-extern int __sigsuspend_nocancel (__const sigset_t *__set) attribute_hidden;
-#endif
 extern int __sigwait (__const sigset_t *__set, int *__sig);
 libc_hidden_proto (__sigwait)
 extern int __sigwaitinfo (__const sigset_t *__set, siginfo_t *__info);
@@ -51,9 +48,6 @@ extern int __sigpause (int sig_or_mask, int is_sig);
 extern int __default_sigpause (int mask);
 extern int __xpg_sigpause (int sig);
 
-/* Simplified sigemptyset() implementation without the parameter checking.  */
-#undef __sigemptyset
-#define __sigemptyset(ss) (__builtin_memset (ss, '\0', sizeof (sigset_t)), 0)
 
 
 /* Allocate real-time signal with highest/lowest available priority.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -53,34 +53,35 @@
 
 /* Environment vars that all user to override default behavior:  */
 #define ENV_HOSTCONF	"RESOLV_HOST_CONF"
+#define ENV_SERVORDER	"RESOLV_SERV_ORDER"
 #define ENV_SPOOF	"RESOLV_SPOOF_CHECK"
 #define ENV_TRIM_OVERR	"RESOLV_OVERRIDE_TRIM_DOMAINS"
 #define ENV_TRIM_ADD	"RESOLV_ADD_TRIM_DOMAINS"
 #define ENV_MULTI	"RESOLV_MULTI"
 #define ENV_REORDER	"RESOLV_REORDER"
 
-enum parse_cbs
-  {
-    CB_none,
-    CB_arg_trimdomain_list,
-    CB_arg_spoof,
-    CB_arg_bool
-  };
+static const char *arg_service_list (const char *, int, const char *,
+				     unsigned int);
+static const char *arg_trimdomain_list (const char *, int, const char *,
+					unsigned int);
+static const char *arg_spoof (const char *, int, const char *, unsigned int);
+static const char *arg_bool (const char *, int, const char *, unsigned int);
 
-static const struct cmd
+static struct cmd
 {
-  const char name[11];
-  uint8_t cb;
+  const char *name;
+  const char *(*parse_args) (const char * filename, int line_num,
+			     const char * args, unsigned int arg);
   unsigned int arg;
 } cmd[] =
 {
-  {"order",		CB_none,		0},
-  {"trim",		CB_arg_trimdomain_list,	0},
-  {"spoof",		CB_arg_spoof,		0},
-  {"multi",		CB_arg_bool,		HCONF_FLAG_MULTI},
-  {"nospoof",		CB_arg_bool,		HCONF_FLAG_SPOOF},
-  {"spoofalert",	CB_arg_bool,		HCONF_FLAG_SPOOFALERT},
-  {"reorder",		CB_arg_bool,		HCONF_FLAG_REORDER}
+  {"order",		arg_service_list,	0},
+  {"trim",		arg_trimdomain_list,	0},
+  {"spoof",		arg_spoof,		0},
+  {"multi",		arg_bool,		HCONF_FLAG_MULTI},
+  {"nospoof",		arg_bool,		HCONF_FLAG_SPOOF},
+  {"spoofalert",	arg_bool,		HCONF_FLAG_SPOOFALERT},
+  {"reorder",		arg_bool,		HCONF_FLAG_REORDER}
 };
 
 /* Structure containing the state.  */
@@ -106,7 +107,118 @@ skip_string (const char *str)
 
 
 static const char *
-arg_trimdomain_list (const char *fname, int line_num, const char *args)
+arg_service_list (const char *fname, int line_num, const char *args,
+		  unsigned int arg)
+{
+  enum Name_Service service;
+  const char *start;
+  size_t len;
+  size_t i;
+  static struct
+  {
+    const char * name;
+    enum Name_Service service;
+  } svcs[] =
+    {
+      {"bind",	SERVICE_BIND},
+      {"hosts",	SERVICE_HOSTS},
+      {"nis",	SERVICE_NIS},
+    };
+
+  do
+    {
+      start = args;
+      args = skip_string (args);
+      len = args - start;
+
+      service = SERVICE_NONE;
+      for (i = 0; i < sizeof (svcs) / sizeof (svcs[0]); ++i)
+	{
+	  if (__strncasecmp (start, svcs[i].name, len) == 0
+	      && len == strlen (svcs[i].name))
+	  {
+	    service = svcs[i].service;
+	    break;
+	  }
+      }
+      if (service == SERVICE_NONE)
+	{
+	  char *buf;
+
+	  if (__asprintf (&buf,
+			  _("%s: line %d: expected service, found `%s'\n"),
+			  fname, line_num, start) < 0)
+	    return 0;
+
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stderr, 0) > 0)
+	    __fwprintf (stderr, L"%s", buf);
+	  else
+#endif
+	    fputs (buf, stderr);
+
+	  free (buf);
+	  return 0;
+	}
+      if (_res_hconf.num_services >= SERVICE_MAX)
+	{
+	  char *buf;
+
+	  if (__asprintf (&buf, _("\
+%s: line %d: cannot specify more than %d services"),
+			  fname, line_num, SERVICE_MAX) < 0)
+	    return 0;
+
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stderr, 0) > 0)
+	    __fwprintf (stderr, L"%s", buf);
+	  else
+#endif
+	    fputs (buf, stderr);
+
+	  free (buf);
+	  return 0;
+	}
+      _res_hconf.service[_res_hconf.num_services++] = service;
+
+      args = skip_ws (args);
+      switch (*args)
+	{
+	case ',':
+	case ';':
+	case ':':
+	  args = skip_ws (++args);
+	  if (!*args || *args == '#')
+	    {
+	      char *buf;
+
+	      if (__asprintf (&buf, _("\
+%s: line %d: list delimiter not followed by keyword"),
+			      fname, line_num) < 0)
+		return 0;
+
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stderr, 0) > 0)
+		__fwprintf (stderr, L"%s", buf);
+	      else
+#endif
+		fputs (buf, stderr);
+
+	      free (buf);
+	      return 0;
+	    }
+	default:
+	  break;
+	}
+    }
+  while (*args && *args != '#');
+  return args;
+}
+
+
+static const char *
+arg_trimdomain_list (const char *fname, int line_num, const char *args,
+		     unsigned int flag)
 {
   const char * start;
   size_t len;
@@ -126,9 +238,14 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args)
 			  fname, line_num, TRIMDOMAINS_MAX) < 0)
 	    return 0;
 
-	  __fxprintf (NULL, "%s", buf);
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stderr, 0) > 0)
+		__fwprintf (stderr, L"%s", buf);
+	      else
+#endif
+		fputs (buf, stderr);
 
-	  free (buf);
+	      free (buf);
 	  return 0;
 	}
       _res_hconf.trimdomain[_res_hconf.num_trimdomains++] =
@@ -147,7 +264,12 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args)
 			      fname, line_num) < 0)
 		return 0;
 
-	      __fxprintf (NULL, "%s", buf);
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stderr, 0) > 0)
+		__fwprintf (stderr, L"%s", buf);
+	      else
+#endif
+		fputs (buf, stderr);
 
 	      free (buf);
 	      return 0;
@@ -162,7 +284,7 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args)
 
 
 static const char *
-arg_spoof (const char *fname, int line_num, const char *args)
+arg_spoof (const char *fname, int line_num, const char *args, unsigned flag)
 {
   const char *start = args;
   size_t len;
@@ -205,7 +327,12 @@ arg_bool (const char *fname, int line_num, const char *args, unsigned flag)
 		      fname, line_num, args) < 0)
 	return 0;
 
-      __fxprintf (NULL, "%s", buf);
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	__fwprintf (stderr, L"%s", buf);
+      else
+#endif
+	fputs (buf, stderr);
 
       free (buf);
       return 0;
@@ -218,7 +345,7 @@ static void
 parse_line (const char *fname, int line_num, const char *str)
 {
   const char *start;
-  const struct cmd *c = 0;
+  struct cmd *c = 0;
   size_t len;
   size_t i;
 
@@ -248,7 +375,12 @@ parse_line (const char *fname, int line_num, const char *str)
 		      fname, line_num, start) < 0)
 	return;
 
-      __fxprintf (NULL, "%s", buf);
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	__fwprintf (stderr, L"%s", buf);
+      else
+#endif
+	fputs (buf, stderr);
 
       free (buf);
       return;
@@ -256,17 +388,7 @@ parse_line (const char *fname, int line_num, const char *str)
 
   /* process args: */
   str = skip_ws (str);
-
-  if (c->cb == CB_arg_trimdomain_list)
-    str = arg_trimdomain_list (fname, line_num, str);
-  else if (c->cb == CB_arg_spoof)
-    str = arg_spoof (fname, line_num, str);
-  else if (c->cb == CB_arg_bool)
-    str = arg_bool (fname, line_num, str, c->arg);
-  else
-    /* Ignore the line.  */
-    return;
-
+  str = (*c->parse_args) (fname, line_num, str, c->arg);
   if (!str)
     return;
 
@@ -283,7 +405,12 @@ parse_line (const char *fname, int line_num, const char *str)
 			    fname, line_num, str) < 0)
 	      break;
 
-	    __fxprintf (NULL, "%s", buf);
+#ifdef USE_IN_LIBIO
+	    if (_IO_fwide (stderr, 0) > 0)
+	      __fwprintf (stderr, L"%s", buf);
+	    else
+#endif
+	      fputs (buf, stderr);
 
 	    free (buf);
 	  }
@@ -309,7 +436,10 @@ do_init (void)
     hconf_name = _PATH_HOSTCONF;
 
   fp = fopen (hconf_name, "rc");
-  if (fp)
+  if (!fp)
+    /* make up something reasonable: */
+    _res_hconf.service[_res_hconf.num_services++] = SERVICE_BIND;
+  else
     {
       /* No threads using this stream.  */
       __fsetlocking (fp, FSETLOCKING_BYCALLER);
@@ -323,9 +453,16 @@ do_init (void)
       fclose (fp);
     }
 
+  envval = getenv (ENV_SERVORDER);
+  if (envval)
+    {
+      _res_hconf.num_services = 0;
+      arg_service_list (ENV_SERVORDER, 1, envval, 0);
+    }
+
   envval = getenv (ENV_SPOOF);
   if (envval)
-    arg_spoof (ENV_SPOOF, 1, envval);
+    arg_spoof (ENV_SPOOF, 1, envval, 0);
 
   envval = getenv (ENV_MULTI);
   if (envval)
@@ -337,13 +474,13 @@ do_init (void)
 
   envval = getenv (ENV_TRIM_ADD);
   if (envval)
-    arg_trimdomain_list (ENV_TRIM_ADD, 1, envval);
+    arg_trimdomain_list (ENV_TRIM_ADD, 1, envval, 0);
 
   envval = getenv (ENV_TRIM_OVERR);
   if (envval)
     {
       _res_hconf.num_trimdomains = 0;
-      arg_trimdomain_list (ENV_TRIM_OVERR, 1, envval);
+      arg_trimdomain_list (ENV_TRIM_OVERR, 1, envval, 0);
     }
 
   _res_hconf.initialized = 1;

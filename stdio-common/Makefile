@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= stdio-common
 
-headers	:= stdio_ext.h printf.h bits/printf-ldbl.h
+headers	:= printf.h stdio_ext.h
 
 routines	:=							      \
 	ctermid cuserid							      \
@@ -33,14 +33,14 @@ routines	:=							      \
 	perror psignal							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
 	getline getw putw						      \
-	remove rename renameat						      \
+	remove rename							      \
 	flockfile ftrylockfile funlockfile
 
 install-others = $(inst_includedir)/bits/stdio_lim.h
 
 include ../Makeconfig
 
-aux	:= errlist siglist printf-parsemb printf-parsewc fxprintf
+aux	:= errlist siglist printf-parsemb printf-parsewc
 distribute := _itoa.h _itowa.h _i18n_number.h \
 	      printf-parse.h stdio_lim.h.in tst-unbputc.sh tst-printf.sh
 
@@ -53,8 +53,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 scanf11 scanf12 tst-tmpnam tst-cookie tst-obprintf tst-sscanf \
 	 tst-swprintf tst-fseek tst-fmemopen test-vfprintf tst-gets \
 	 tst-perror tst-sprintf tst-rndseek tst-fdopen tst-fphex bug14 bug15 \
-	 tst-popen tst-unlockedio tst-fmemopen2 tst-put-error tst-fgets \
-	 tst-fwrite bug16 bug17 tst-sprintf2
+	 tst-popen tst-unlockedio
 
 test-srcs = tst-unbputc tst-printf
 

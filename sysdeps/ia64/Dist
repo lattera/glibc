@@ -1,0 +1,9 @@
+_mcount.S
+dl-symaddr.c
+dl-fptr.c
+elf/entry.h
+hp-timing.c
+ia64libgcc.S
+ieee754.h
+softpipe.h
+bits/link.h

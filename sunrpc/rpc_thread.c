@@ -20,7 +20,7 @@ __rpc_thread_destroy (void)
 {
 	struct rpc_thread_variables *tvp = __libc_tsd_get (RPC_VARS);
 
-	if (tvp != NULL) {
+	if (tvp != NULL && tvp != &__libc_tsd_RPC_VARS_mem) {
 		__rpc_thread_svc_cleanup ();
 		__rpc_thread_clnt_cleanup ();
 		__rpc_thread_key_cleanup ();
@@ -29,8 +29,7 @@ __rpc_thread_destroy (void)
 		free (tvp->svcraw_private_s);
 		free (tvp->authdes_cache_s);
 		free (tvp->authdes_lru_s);
-		if (tvp != &__libc_tsd_RPC_VARS_mem)
-			free (tvp);
+		free (tvp);
 		__libc_tsd_set (RPC_VARS, NULL);
 	}
 }

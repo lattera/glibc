@@ -43,7 +43,7 @@
 	.text
 	.align	4
 	.globl	__remq
-	.type	__remq, @funcnoplt
+	.type	__remq, @function
 	.usepv	__remq, no
 
 	cfi_startproc

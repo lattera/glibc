@@ -1,5 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,99,2000,2002,2005
-	Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,16 +57,7 @@ __ioctl (int fd, unsigned long int request, ...)
   struct
   {
 #ifdef MACH_MSG_TYPE_BIT
-    union
-    {
-      mig_reply_header_t header;
-      struct
-      {
-	mach_msg_header_t	Head;
-	int			RetCodeType;
-	kern_return_t		RetCode;
-      } header_typecheck;
-    };
+    mig_reply_header_t header;
     char data[3 * sizeof (mach_msg_type_t) +
 	     msg_align (_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type))) +
 	     msg_align (_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type))) +
@@ -146,11 +136,9 @@ __ioctl (int fd, unsigned long int request, ...)
 	     Rather than pointing to the value, ARG is the value itself.  */
 #ifdef MACH_MSG_TYPE_BIT
 	  *t++ = io2mach_type (1, _IOTS (integer_t));
-	  *(integer_t *) t = (integer_t) arg;
-	  t = (void *) t + sizeof (integer_t);
+	  *((integer_t *) t)++ = (integer_t) arg;
 #else
-	  *(integer_t *) p = (integer_t) arg;
-	  p = (void *) p + sizeof (integer_t);
+	  *((integer_t *) p)++ = (integer_t) arg;
 #endif
 	}
 
@@ -201,7 +189,7 @@ __ioctl (int fd, unsigned long int request, ...)
 	return MIG_TYPE_ERROR;
 
 #ifdef MACH_MSG_TYPE_BIT
-      if (msg.header_typecheck.RetCodeType !=
+      if (*(int *) &msg.header.RetCodeType !=
 	  ((union { mach_msg_type_t t; int i; })
 	   { t: io2mach_type (1, _IOTS (msg.header.RetCode)) }).i)
 	return MIG_TYPE_ERROR;

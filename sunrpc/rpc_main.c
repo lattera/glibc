@@ -31,6 +31,10 @@
 /*
  * From @(#)rpc_main.c 1.30 89/03/30 (C) 1987 SMI;
  */
+#if defined(LIBC_SCCS) && !defined(lint)
+static const char main_rcsid[] =
+  "$Id$";
+#endif
 
 /*
  * rpc_main.c, Top level of the RPC protocol compiler.
@@ -531,7 +535,7 @@ generate_guard (const char *pathname)
 
   filename = strrchr (pathname, '/');	/* find last component */
   filename = ((filename == NULL) ? pathname : filename + 1);
-  guard = extendfile (filename, "_H_RPCGEN");
+  guard = strdup (filename);
   /* convert to upper case */
   tmp = guard;
   while (*tmp)
@@ -541,6 +545,7 @@ generate_guard (const char *pathname)
       tmp++;
     }
 
+  guard = extendfile (guard, "_H_RPCGEN");
   return guard;
 }
 
@@ -660,7 +665,6 @@ h_output (const char *infile, const char *define, int extend,
     }
 
   fprintf (fout, "\n#endif /* !_%s */\n", guard);
-  free (guard);
   close_input ();
   close_output (outfilename);
 }
@@ -691,9 +695,11 @@ s_output (int argc, const char *argv[], const char *infile, const char *define,
 
   fprintf (fout, "#include <stdio.h>\n");
   fprintf (fout, "#include <stdlib.h>\n");
-  fprintf (fout, "#include <rpc/pmap_clnt.h>\n");
   if (Cflag)
-    fprintf (fout, "#include <string.h>\n");
+    {
+      fprintf (fout, "#include <rpc/pmap_clnt.h>\n");
+      fprintf (fout, "#include <string.h>\n");
+    }
   if (strcmp (svcclosetime, "-1") == 0)
     indefinitewait = 1;
   else if (strcmp (svcclosetime, "0") == 0)
@@ -946,8 +952,6 @@ clnt_output (const char *infile, const char *define, int extend,
   close_output (outfilename);
 }
 
-static const char space[] = " ";
-
 static char *
 file_name (const char *file, const char *ext)
 {
@@ -956,17 +960,16 @@ file_name (const char *file, const char *ext)
 
   if (access (temp, F_OK) != -1)
     return (temp);
-
-  free (temp);
-  return (char *) space;
+  else
+    return ((char *) " ");
 }
 
 static void
 mkfile_output (struct commandline *cmd)
 {
   char *mkfilename;
-  char *clientname, *clntname, *xdrname, *hdrname;
-  char *servername, *svcname, *servprogname, *clntprogname;
+  const char *clientname, *clntname, *xdrname, *hdrname;
+  const char *servername, *svcname, *servprogname, *clntprogname;
 
   svcname = file_name (cmd->infile, "_svc.c");
   clntname = file_name (cmd->infile, "_clnt.c");
@@ -980,8 +983,8 @@ mkfile_output (struct commandline *cmd)
     }
   else
     {
-      servername = (char *) space;
-      clientname = (char *) space;
+      servername = " ";
+      clientname = " ";
     }
   servprogname = extendfile (cmd->infile, "_server");
   clntprogname = extendfile (cmd->infile, "_client");
@@ -991,8 +994,6 @@ mkfile_output (struct commandline *cmd)
       char *cp, *temp;
 
       mkfilename = alloc (strlen ("Makefile.") + strlen (cmd->infile) + 1);
-      if (mkfilename == NULL)
-	abort ();
       temp = rindex (cmd->infile, '.');
       cp = stpcpy (mkfilename, "Makefile.");
       strncpy (cp, cmd->infile, (temp - cmd->infile));
@@ -1051,23 +1052,6 @@ $(LDLIBS) \n\n");
   f_print (fout, "clean:\n\t $(RM) core $(TARGETS) $(OBJECTS_CLNT) \
 $(OBJECTS_SVC) $(CLIENT) $(SERVER)\n\n");
   close_output (mkfilename);
-
-  free (clntprogname);
-  free (servprogname);
-  if (servername != space)
-    free (servername);
-  if (clientname != space)
-    free (clientname);
-  if (mkfilename != (char *) cmd->outfile)
-    free (mkfilename);
-  if (svcname != space)
-    free (svcname);
-  if (clntname != space)
-    free (clntname);
-  if (xdrname != space)
-    free (xdrname);
-  if (hdrname != space)
-    free (hdrname);
 }
 
 /*

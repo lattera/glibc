@@ -1,5 +1,5 @@
 /* getifaddrs -- get names and addresses of all network interfaces
-   Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <alloca.h>
 #include <assert.h>
 #include <errno.h>
 #include <ifaddrs.h>
@@ -25,7 +24,6 @@
 #include <netinet/in.h>
 #include <netpacket/packet.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
@@ -86,14 +84,13 @@ __netlink_free_handle (struct netlink_handle *h)
 }
 
 
-static int
+int
 __netlink_sendreq (struct netlink_handle *h, int type)
 {
-  struct req
+  struct
   {
     struct nlmsghdr nlh;
     struct rtgenmsg g;
-    char pad[0];
   } req;
   struct sockaddr_nl nladdr;
 
@@ -106,8 +103,6 @@ __netlink_sendreq (struct netlink_handle *h, int type)
   req.nlh.nlmsg_pid = 0;
   req.nlh.nlmsg_seq = h->seq;
   req.g.rtgen_family = AF_UNSPEC;
-  if (sizeof (req) != offsetof (struct req, pad))
-    memset (req.pad, '\0', sizeof (req) - offsetof (struct req, pad));
 
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
@@ -119,39 +114,15 @@ __netlink_sendreq (struct netlink_handle *h, int type)
 
 
 int
-__netlink_request (struct netlink_handle *h, int type)
+__netlink_receive (struct netlink_handle *h)
 {
   struct netlink_res *nlm_next;
+  char buf[4096];
+  struct iovec iov = { buf, sizeof (buf) };
   struct sockaddr_nl nladdr;
   struct nlmsghdr *nlmh;
-  ssize_t read_len;
+  int read_len;
   bool done = false;
-
-#ifdef PAGE_SIZE
-  /* Help the compiler optimize out the malloc call if PAGE_SIZE
-     is constant and smaller or equal to PTHREAD_STACK_MIN/4.  */
-  const size_t buf_size = PAGE_SIZE;
-#else
-  const size_t buf_size = __getpagesize ();
-#endif
-  bool use_malloc = false;
-  char *buf;
-
-  if (__libc_use_alloca (buf_size))
-    buf = alloca (buf_size);
-  else
-    {
-      buf = malloc (buf_size);
-      if (buf != NULL)
-	use_malloc = true;
-      else
-	goto out_fail;
-    }
-
-  struct iovec iov = { buf, buf_size };
-
-  if (__netlink_sendreq (h, type) < 0)
-    goto out_fail;
 
   while (! done)
     {
@@ -165,25 +136,33 @@ __netlink_request (struct netlink_handle *h, int type)
 
       read_len = TEMP_FAILURE_RETRY (__recvmsg (h->fd, &msg, 0));
       if (read_len < 0)
-	goto out_fail;
+	return -1;
 
-      if (nladdr.nl_pid != 0)
-	continue;
+      if (msg.msg_flags & MSG_TRUNC)
+	return -1;
 
-      if (__builtin_expect (msg.msg_flags & MSG_TRUNC, 0))
-	goto out_fail;
+      nlm_next = (struct netlink_res *) malloc (sizeof (struct netlink_res)
+						+ read_len);
+      if (nlm_next == NULL)
+	return -1;
+      nlm_next->next = NULL;
+      nlm_next->nlh = memcpy (nlm_next + 1, buf, read_len);
+      nlm_next->size = read_len;
+      nlm_next->seq = h->seq;
+      if (h->nlm_list == NULL)
+	h->nlm_list = nlm_next;
+      else
+	h->end_ptr->next = nlm_next;
+      h->end_ptr = nlm_next;
 
-      size_t count = 0;
-      size_t remaining_len = read_len;
       for (nlmh = (struct nlmsghdr *) buf;
-	   NLMSG_OK (nlmh, remaining_len);
-	   nlmh = (struct nlmsghdr *) NLMSG_NEXT (nlmh, remaining_len))
+	   NLMSG_OK (nlmh, (size_t) read_len);
+	   nlmh = (struct nlmsghdr *) NLMSG_NEXT (nlmh, read_len))
 	{
-	  if ((pid_t) nlmh->nlmsg_pid != h->pid
+	  if (nladdr.nl_pid != 0 || (pid_t) nlmh->nlmsg_pid != h->pid
 	      || nlmh->nlmsg_seq != h->seq)
 	    continue;
 
-	  ++count;
 	  if (nlmh->nlmsg_type == NLMSG_DONE)
 	    {
 	      /* We found the end, leave the loop.  */
@@ -197,38 +176,11 @@ __netlink_request (struct netlink_handle *h, int type)
 		errno = EIO;
 	      else
 		errno = -nlerr->error;
-	      goto out_fail;
+	      return -1;
 	    }
 	}
-
-      /* If there was nothing with the expected nlmsg_pid and nlmsg_seq,
-	 there is no point to record it.  */
-      if (count == 0)
-	continue;
-
-      nlm_next = (struct netlink_res *) malloc (sizeof (struct netlink_res)
-						+ read_len);
-      if (nlm_next == NULL)
-	goto out_fail;
-      nlm_next->next = NULL;
-      nlm_next->nlh = memcpy (nlm_next + 1, buf, read_len);
-      nlm_next->size = read_len;
-      nlm_next->seq = h->seq;
-      if (h->nlm_list == NULL)
-	h->nlm_list = nlm_next;
-      else
-	h->end_ptr->next = nlm_next;
-      h->end_ptr = nlm_next;
     }
-
-  if (use_malloc)
-    free (buf);
   return 0;
-
-out_fail:
-  if (use_malloc)
-    free (buf);
-  return -1;
 }
 
 
@@ -316,11 +268,12 @@ getifaddrs (struct ifaddrs **ifap)
   unsigned int i, newlink, newaddr, newaddr_idx;
   int *map_newlink_data;
   size_t ifa_data_size = 0;  /* Size to allocate for all ifa_data.  */
-  char *ifa_data_ptr;	/* Pointer to the unused part of memory for
+  char *ifa_data_ptr;        /* Pointer to the unused part of memory for
 				ifa_data.  */
   int result = 0;
 
-  *ifap = NULL;
+  if (ifap)
+    *ifap = NULL;
 
   if (! __no_netlink_support && __netlink_open (&nh) < 0)
     {
@@ -335,20 +288,28 @@ getifaddrs (struct ifaddrs **ifap)
 #endif
 
   /* Tell the kernel that we wish to get a list of all
-     active interfaces, collect all data for every interface.  */
-  if (__netlink_request (&nh, RTM_GETLINK) < 0)
+     active interfaces.  */
+  if (__netlink_sendreq (&nh, RTM_GETLINK) < 0)
+    {
+      result = -1;
+      goto exit_close;
+    }
+  /* Collect all data for every interface.  */
+  if (__netlink_receive (&nh) < 0)
     {
       result = -1;
       goto exit_free;
     }
 
+
   /* Now ask the kernel for all addresses which are assigned
-     to an interface and collect all data for every interface.
-     Since we store the addresses after the interfaces in the
-     list, we will later always find the interface before the
-     corresponding addresses.  */
+     to an interface.  Since we store the addresses after the
+     interfaces in the list, we will later always find the
+     interface before the corresponding addresses.  */
   ++nh.seq;
-  if (__netlink_request (&nh, RTM_GETADDR) < 0)
+  if (__netlink_sendreq (&nh, RTM_GETADDR) < 0
+      /* Collect all data for every interface.  */
+      || __netlink_receive (&nh) < 0)
     {
       result = -1;
       goto exit_free;
@@ -366,7 +327,7 @@ getifaddrs (struct ifaddrs **ifap)
 	continue;
 
       /* Walk through all entries we got from the kernel and look, which
-	 message type they contain.  */
+         message type they contain.  */
       for (nlh = nlp->nlh; NLMSG_OK (nlh, size); nlh = NLMSG_NEXT (nlh, size))
 	{
 	  /* Check if the message is what we want.  */
@@ -462,7 +423,7 @@ getifaddrs (struct ifaddrs **ifap)
 	      /* Interfaces are stored in the first "newlink" entries
 		 of our list, starting in the order as we got from the
 		 kernel.  */
-	      ifa_index = map_newlink (ifim->ifi_index - 1, ifas,
+              ifa_index = map_newlink (ifim->ifi_index - 1, ifas,
 				       map_newlink_data, newlink);
 	      ifas[ifa_index].ifa.ifa_flags = ifim->ifi_flags;
 
@@ -801,10 +762,13 @@ getifaddrs (struct ifaddrs **ifap)
 	memmove (ifas, &ifas[newlink], sizeof (struct ifaddrs_storage));
     }
 
-  *ifap = &ifas[0].ifa;
+  if (ifap != NULL)
+    *ifap = &ifas[0].ifa;
 
  exit_free:
   __netlink_free_handle (&nh);
+
+ exit_close:
   __netlink_close (&nh);
 
   return result;

@@ -125,9 +125,8 @@ xdr_rmtcall_args (XDR *xdrs, struct rmtcallargs *cap)
       INTUSE(xdr_u_long) (xdrs, &(cap->vers)) &&
       INTUSE(xdr_u_long) (xdrs, &(cap->proc)))
     {
-      u_long dummy_arglen = 0;
       lenposition = XDR_GETPOS (xdrs);
-      if (!INTUSE(xdr_u_long) (xdrs, &dummy_arglen))
+      if (!INTUSE(xdr_u_long) (xdrs, &(cap->arglen)))
 	return FALSE;
       argposition = XDR_GETPOS (xdrs);
       if (!(*(cap->xdr_args)) (xdrs, cap->args_ptr))

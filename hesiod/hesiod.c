@@ -83,9 +83,6 @@ hesiod_init(void **context) {
 	ctx->LHS = NULL;
 	ctx->RHS = NULL;
 	ctx->res = NULL;
-	/* Set default query classes. */
-	ctx->classes[0] = C_IN;
-	ctx->classes[1] = C_HS;
 
 	configname = __secure_getenv("HESIOD_CONFIG");
 	if (!configname)
@@ -237,12 +234,15 @@ hesiod_resolve(void *context, const char *name, const char *type) {
 		return (NULL);
 	}
 
-	retvec = get_txt_records(ctx, ctx->classes[0], bindname);
+	if ((retvec = get_txt_records(ctx, C_IN, bindname))) {
+		free(bindname);
+		return (retvec);
+	}
 
-	if (retvec == NULL && (errno == ENOENT || errno == ECONNREFUSED) && ctx->classes[1])
-		retvec = get_txt_records(ctx, ctx->classes[1], bindname);
+	if (errno != ENOENT && errno != ECONNREFUSED)
+		return (NULL);
 
-
+	retvec = get_txt_records(ctx, C_HS, bindname);
 	free(bindname);
 	return (retvec);
 }
@@ -261,6 +261,7 @@ hesiod_free_list(void *context, char **list) {
  */
 static int
 parse_config_file(struct hesiod_p *ctx, const char *filename) {
+	char *key, *data, *cp, **cpp;
 	char buf[MAXDNAME+7];
 	FILE *fp;
 
@@ -271,9 +272,6 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 	free(ctx->RHS);
 	free(ctx->LHS);
 	ctx->RHS = ctx->LHS = 0;
-	/* Set default query classes. */
-	ctx->classes[0] = C_IN;
-	ctx->classes[1] = C_HS;
 
 	/*
 	 * Now open and parse the file...
@@ -282,8 +280,6 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 		return (-1);
 
 	while (fgets(buf, sizeof(buf), fp) != NULL) {
-		char *key, *data, *cp, **cpp;
-
 		cp = buf;
 		if (*cp == '#' || *cp == '\n' || *cp == '\r')
 			continue;
@@ -301,36 +297,17 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 			cp++;
 		*cp++ = '\0';
 
-		cpp = NULL;
-		if (strcasecmp(key, "lhs") == 0)
+		if (strcmp(key, "lhs") == 0)
 			cpp = &ctx->LHS;
-		else if (strcasecmp(key, "rhs") == 0)
+		else if (strcmp(key, "rhs") == 0)
 			cpp = &ctx->RHS;
-		if (cpp) {
-			*cpp = strdup(data);
-			if (!*cpp)
-				goto cleanup;
-		} else if (strcasecmp(key, "classes") == 0) {
-			int n = 0;
-			while (*data && n < 2) {
-				cp = strchrnul(data, ',');
-				if (*cp != '\0')
-					*cp++ = '\0';
-				if (strcasecmp(data, "IN") == 0)
-					ctx->classes[n++] = C_IN;
-				else if (strcasecmp(data, "HS") == 0)
-					ctx->classes[n++] = C_HS;
-				data = cp;
-			}
-			if (n == 0) {
-				/* Restore the default.  Better than
-				   nother at all.  */
-				ctx->classes[0] = C_IN;
-				ctx->classes[1] = C_HS;
-			} else if (n == 1
-				   || ctx->classes[0] == ctx->classes[1])
-				ctx->classes[1] = 0;
-		}
+		else
+			continue;
+
+		*cpp = malloc(strlen(data) + 1);
+		if (!*cpp)
+			goto cleanup;
+		strcpy(*cpp, data);
 	}
 	fclose(fp);
 	return (0);
@@ -487,6 +464,12 @@ __hesiod_res_set(void *context, struct __res_state *res,
 
 	if (ctx->res && ctx->free_res) {
 		res_nclose(ctx->res);
+		if ((ctx->res->options & RES_INIT) && ctx->res->nscount > 0) {
+			for (int ns = 0; ns < MAXNS; ns++) {
+				free (ctx->res->_u._ext.nsaddrs[ns]);
+				ctx->res->_u._ext.nsaddrs[ns] = NULL;
+			}
+		}
 		(*ctx->free_res)(ctx->res);
 	}
 

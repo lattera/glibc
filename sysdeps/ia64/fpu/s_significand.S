@@ -1,10 +1,10 @@
 .file "significand.s"
 
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
-//
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
+// 
+// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
+// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,15 +35,13 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// http://developer.intel.com/opensource.
 //
 // History
 //==============================================================
-// 02/02/00 Initial version
-// 04/04/00 Unwind support added
-// 05/31/00 Fixed bug when x a double-extended denormal
-// 05/20/02 Cleaned up namespace and sf0 syntax
-// 02/10/03 Reordered header: .section, .global, .proc, .align
+// 2/02/00: Initial version
+// 4/04/00  Unwind support added
+// 5/31/00: Fixed bug when x a double-extended denormal
 //
 // API
 //==============================================================
@@ -58,10 +56,18 @@
 // p6, p7
 //
 // floating-point registers used:  
-// f8, f9, f10 
+// f8, f9, f10
+
+#include "libm_support.h"
+
+.align 32
+.global significand#
 
 .section .text
-GLOBAL_LIBM_ENTRY(significand)
+.proc  significand#
+.align 32
+
+significand: 
 
 // qnan snan inf norm     unorm 0 -+
 // 1    1    1   0        0     1 11
@@ -69,19 +75,19 @@ GLOBAL_LIBM_ENTRY(significand)
 // f10 gets f8(sign) with f1(exp,significand)
 { .mfi
       nop.m 999
-      fmerge.s       f10 = f8,f1               
+(p0)  fmerge.s       f10 = f8,f1               
       nop.i 999
 }
 { .mfi
       nop.m 999
-      fnorm.s0          f9  = f8                  
+(p0)  fnorm          f9  = f8                  
       nop.i 999 ;;
 }
 
 // Test for denormal input
 { .mfi
       nop.m 999
-      fclass.m.unc   p7,p0 = f8, 0x0b
+(p0)  fclass.m.unc   p7,p0 = f8, 0x0b
       nop.i 999 ;;
 }
 
@@ -91,14 +97,14 @@ GLOBAL_LIBM_ENTRY(significand)
 //               return sign(f8) exp(f8) significand(f8), normalized.
 { .mfi
       nop.m 999
-      fclass.m.unc   p0,p6 = f8, 0xe7          
+(p0)  fclass.m.unc   p0,p6 = f8, 0xe7          
       nop.i 999 ;;
 }
 
 { .mmb
       nop.m 999
       nop.m 999
-(p7)  br.cond.spnt SIGNIFICAND_DENORM ;; // Branch if x denormal
+(p7)  br.cond.spnt L(SIGNIFICAND_DENORM) ;; // Branch if x denormal
 }
 
 { .mfi
@@ -109,29 +115,29 @@ GLOBAL_LIBM_ENTRY(significand)
 
 { .mfb
       nop.m 999
-      fnorm.d.s0        f8 = f8                   
-      br.ret.sptk    b0 ;;
+(p0)  fnorm.d        f8 = f8                   
+(p0)  br.ret.sptk    b0 ;;
 }
 
-SIGNIFICAND_DENORM:
+L(SIGNIFICAND_DENORM):
 // Here if x denorm
 { .mfi
       nop.m 999
-      fmerge.se      f8 = f10,f9
+(p0)  fmerge.se      f8 = f10,f9
       nop.i 999 ;;
 }
 
 // Check if fnorm(x) still denormal, means x double-extended denormal
 { .mfi
       nop.m 999
-      fclass.m.unc   p7,p0 = f9, 0x0b
+(p0)  fclass.m.unc   p7,p0 = f9, 0x0b
       nop.i 999 ;;
 }
 
 // This will be the final result unless x double-extended denormal
 { .mfi
       nop.m 999
-      fnorm.d.s0        f8 = f8
+(p0)  fnorm.d        f8 = f8
       nop.i 999 ;;
 }
 
@@ -146,8 +152,9 @@ SIGNIFICAND_DENORM:
 // Final normalization if x double-extended denorm
 { .mfb
       nop.m 999
-(p7)  fnorm.d.s0        f8 = f8
-      br.ret.sptk    b0 ;;
+(p7)  fnorm.d        f8 = f8
+(p0)  br.ret.sptk    b0 ;;
 }
 
-GLOBAL_LIBM_END(significand)
+.endp significand
+ASM_SIZE_DIRECTIVE(significand)

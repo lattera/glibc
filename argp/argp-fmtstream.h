@@ -26,6 +26,10 @@
 #ifndef _ARGP_FMTSTREAM_H
 #define _ARGP_FMTSTREAM_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>

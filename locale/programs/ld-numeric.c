@@ -1,19 +1,21 @@
-/* Copyright (C) 1995-2002,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -302,7 +304,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	    {
 	      size_t act = 0;
 	      size_t max = 10;
-	      char *grouping = xmalloc (max);
+	      char *grouping = ignore_content ? NULL : xmalloc (max);
 
 	      do
 		{
@@ -321,20 +323,24 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 		    }
 
 		  if (now->tok == tok_minus1)
-		    grouping[act++] = '\177';
+		    {
+		      if (!ignore_content)
+			grouping[act++] = '\177';
+		    }
 		  else if (now->val.num == 0)
 		    {
 		      /* A value of 0 disables grouping from here on but
 			 we must not store a NUL character since this
 			 terminates the string.  Use something different
 			 which must not be used otherwise.  */
-		      grouping[act++] = '\377';
+		      if (!ignore_content)
+			grouping[act++] = '\377';
 		    }
 		  else if (now->val.num > 126)
 		    lr_error (ldfile, _("\
 %s: values for field `%s' must be smaller than 127"),
 			      "LC_NUMERIC", "grouping");
-		  else
+		  else if (!ignore_content)
 		    grouping[act++] = now->val.num;
 
 		  /* Next must be semicolon.  */
@@ -349,10 +355,13 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (now->tok != tok_eol)
 		goto err_label;
 
-	      grouping[act++] = '\0';
+	      if (!ignore_content)
+		{
+		  grouping[act++] = '\0';
 
-	      numeric->grouping = xrealloc (grouping, act);
-	      numeric->grouping_len = act;
+		  numeric->grouping = xrealloc (grouping, act);
+		  numeric->grouping_len = act;
+		}
 	    }
 	  break;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -17,12 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Hack: make sure GCC doesn't know __chk_fail () will not return.  */
-#define __noreturn__
-
-#include <assert.h>
 #include <fcntl.h>
-#include <locale.h>
 #include <paths.h>
 #include <setjmp.h>
 #include <signal.h>
@@ -30,9 +25,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <wchar.h>
-#include <sys/socket.h>
-#include <sys/un.h>
 
 char *temp_filename;
 static void do_prepare (void);
@@ -77,20 +69,13 @@ handler (int sig)
 }
 
 char buf[10];
-wchar_t wbuf[10];
 volatile size_t l0;
 volatile char *p;
-volatile wchar_t *wp;
 const char *str1 = "JIHGFEDCBA";
 const char *str2 = "F";
 const char *str3 = "%s%n%s%n";
 const char *str4 = "Hello, ";
 const char *str5 = "World!\n";
-const wchar_t *wstr1 = L"JIHGFEDCBA";
-const wchar_t *wstr2 = L"F";
-const wchar_t *wstr3 = L"%s%n%s%n";
-const wchar_t *wstr4 = L"Hello, ";
-const wchar_t *wstr5 = L"World!\n";
 char buf2[10] = "%s";
 int num1 = 67;
 int num2 = 987654;
@@ -135,7 +120,6 @@ do_test (void)
   setenv ("LIBC_FATAL_STDERR_", "1", 1);
 
   struct A { char buf1[9]; char buf2[1]; } a;
-  struct wA { wchar_t buf1[9]; wchar_t buf2[1]; } wa;
 
   printf ("Test checking routines at fortify level %d\n",
 #ifdef __USE_FORTIFY_LEVEL
@@ -151,8 +135,7 @@ do_test (void)
   if (memcmp (buf, "aabcdefghi", 10))
     FAIL ();
 
-  if (mempcpy (buf + 5, "abcde", 5) != buf + 10
-      || memcmp (buf, "aabcdabcde", 10))
+  if (mempcpy (buf + 5, "abcde", 5) != buf + 10 || memcmp (buf, "aabcdabcde", 10))
     FAIL ();
 
   memset (buf + 8, 'j', 2);
@@ -183,8 +166,7 @@ do_test (void)
   if (memcmp (buf, "aabcdefghi", 10))
     FAIL ();
 
-  if (mempcpy (buf + 5, "abcde", l0 + 5) != buf + 10
-      || memcmp (buf, "aabcdabcde", 10))
+  if (mempcpy (buf + 5, "abcde", l0 + 5) != buf + 10 || memcmp (buf, "aabcdabcde", 10))
     FAIL ();
 
   memset (buf + 8, 'j', l0 + 2);
@@ -202,24 +184,20 @@ do_test (void)
   if (memcmp (buf, "aabcEDX\0\0", 10))
     FAIL ();
 
-  if (stpncpy (buf + 5, "cd", l0 + 5) != buf + 7
-      || memcmp (buf, "aabcEcd\0\0", 10))
+  if (sprintf (buf + 7, "%d", num1) != 2 || memcmp (buf, "aabcEDX67", 10))
     FAIL ();
 
-  if (sprintf (buf + 7, "%d", num1) != 2 || memcmp (buf, "aabcEcd67", 10))
-    FAIL ();
-
-  if (snprintf (buf + 7, 3, "%d", num2) != 6 || memcmp (buf, "aabcEcd98", 10))
+  if (snprintf (buf + 7, 3, "%d", num2) != 6 || memcmp (buf, "aabcEDX98", 10))
     FAIL ();
 
   buf[l0 + 8] = '\0';
   strcat (buf, "A");
-  if (memcmp (buf, "aabcEcd9A", 10))
+  if (memcmp (buf, "aabcEDX9A", 10))
     FAIL ();
 
   buf[l0 + 7] = '\0';
   strncat (buf, "ZYXWV", l0 + 2);
-  if (memcmp (buf, "aabcEcdZY", 10))
+  if (memcmp (buf, "aabcEDXZY", 10))
     FAIL ();
 
   memcpy (a.buf1, "abcdefghij", l0 + 10);
@@ -235,7 +213,7 @@ do_test (void)
   if (memcmp (a.buf1, "aabcdabcjj", 10))
     FAIL ();
 
-#if __USE_FORTIFY_LEVEL < 2 || !__GNUC_PREREQ (4, 0)
+#if __USE_FORTIFY_LEVEL < 2
   /* The following tests are supposed to crash with -D_FORTIFY_SOURCE=2
      and sufficient GCC support, as the string operations overflow
      from a.buf1 into a.buf2.  */
@@ -243,16 +221,14 @@ do_test (void)
   if (memcmp (a.buf1, "aabcEDCBA", 10))
     FAIL ();
 
-  if (stpcpy (a.buf1 + 8, str2) != a.buf1 + 9
-      || memcmp (a.buf1, "aabcEDCBF", 10))
+  if (stpcpy (a.buf1 + 8, str2) != a.buf1 + 9 || memcmp (a.buf1, "aabcEDCBF", 10))
     FAIL ();
 
   strncpy (a.buf1 + 6, "X", l0 + 4);
   if (memcmp (a.buf1, "aabcEDX\0\0", 10))
     FAIL ();
 
-  if (sprintf (a.buf1 + 7, "%d", num1) != 2
-      || memcmp (a.buf1, "aabcEDX67", 10))
+  if (sprintf (a.buf1 + 7, "%d", num1) != 2 || memcmp (a.buf1, "aabcEDX67", 10))
     FAIL ();
 
   if (snprintf (a.buf1 + 7, 3, "%d", num2) != 6
@@ -303,10 +279,6 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
-  stpncpy (buf + 6, "cd", l0 + 5);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
   sprintf (buf + 8, "%d", num1);
   CHK_FAIL_END
 
@@ -340,7 +312,7 @@ do_test (void)
   memset (a.buf1 + 9, 'j', l0 + 2);
   CHK_FAIL_END
 
-#if __USE_FORTIFY_LEVEL >= 2 && __GNUC_PREREQ (4, 0)
+#if __USE_FORTIFY_LEVEL >= 2
 # define O 0
 #else
 # define O 1
@@ -376,219 +348,6 @@ do_test (void)
   strncat (a.buf1, "ZYXWV", l0 + 3);
   CHK_FAIL_END
 #endif
-
-
-  /* These ops can be done without runtime checking of object size.  */
-  wmemcpy (wbuf, L"abcdefghij", 10);
-  wmemmove (wbuf + 1, wbuf, 9);
-  if (wmemcmp (wbuf, L"aabcdefghi", 10))
-    FAIL ();
-
-  if (wmempcpy (wbuf + 5, L"abcde", 5) != wbuf + 10
-      || wmemcmp (wbuf, L"aabcdabcde", 10))
-    FAIL ();
-
-  wmemset (wbuf + 8, L'j', 2);
-  if (wmemcmp (wbuf, L"aabcdabcjj", 10))
-    FAIL ();
-
-  wcscpy (wbuf + 4, L"EDCBA");
-  if (wmemcmp (wbuf, L"aabcEDCBA", 10))
-    FAIL ();
-
-  if (wcpcpy (wbuf + 8, L"F") != wbuf + 9 || wmemcmp (wbuf, L"aabcEDCBF", 10))
-    FAIL ();
-
-  wcsncpy (wbuf + 6, L"X", 4);
-  if (wmemcmp (wbuf, L"aabcEDX\0\0", 10))
-    FAIL ();
-
-  if (swprintf (wbuf + 7, 3, L"%ls", L"987654") >= 0
-      || wmemcmp (wbuf, L"aabcEDX98", 10))
-    FAIL ();
-
-  if (swprintf (wbuf + 7, 3, L"64") != 2
-      || wmemcmp (wbuf, L"aabcEDX64", 10))
-    FAIL ();
-
-  /* These ops need runtime checking, but shouldn't __chk_fail.  */
-  wmemcpy (wbuf, L"abcdefghij", l0 + 10);
-  wmemmove (wbuf + 1, wbuf, l0 + 9);
-  if (wmemcmp (wbuf, L"aabcdefghi", 10))
-    FAIL ();
-
-  if (wmempcpy (wbuf + 5, L"abcde", l0 + 5) != wbuf + 10
-      || wmemcmp (wbuf, L"aabcdabcde", 10))
-    FAIL ();
-
-  wmemset (wbuf + 8, L'j', l0 + 2);
-  if (wmemcmp (wbuf, L"aabcdabcjj", 10))
-    FAIL ();
-
-  wcscpy (wbuf + 4, wstr1 + 5);
-  if (wmemcmp (wbuf, L"aabcEDCBA", 10))
-    FAIL ();
-
-  if (wcpcpy (wbuf + 8, wstr2) != wbuf + 9 || wmemcmp (wbuf, L"aabcEDCBF", 10))
-    FAIL ();
-
-  wcsncpy (wbuf + 6, L"X", l0 + 4);
-  if (wmemcmp (wbuf, L"aabcEDX\0\0", 10))
-    FAIL ();
-
-  if (wcpncpy (wbuf + 5, L"cd", l0 + 5) != wbuf + 7
-      || wmemcmp (wbuf, L"aabcEcd\0\0", 10))
-    FAIL ();
-
-  if (swprintf (wbuf + 7, 3, L"%d", num2) >= 0
-      || wmemcmp (wbuf, L"aabcEcd98", 10))
-    FAIL ();
-
-  wbuf[l0 + 8] = L'\0';
-  wcscat (wbuf, L"A");
-  if (wmemcmp (wbuf, L"aabcEcd9A", 10))
-    FAIL ();
-
-  wbuf[l0 + 7] = L'\0';
-  wcsncat (wbuf, L"ZYXWV", l0 + 2);
-  if (wmemcmp (wbuf, L"aabcEcdZY", 10))
-    FAIL ();
-
-  wmemcpy (wa.buf1, L"abcdefghij", l0 + 10);
-  wmemmove (wa.buf1 + 1, wa.buf1, l0 + 9);
-  if (wmemcmp (wa.buf1, L"aabcdefghi", 10))
-    FAIL ();
-
-  if (wmempcpy (wa.buf1 + 5, L"abcde", l0 + 5) != wa.buf1 + 10
-      || wmemcmp (wa.buf1, L"aabcdabcde", 10))
-    FAIL ();
-
-  wmemset (wa.buf1 + 8, L'j', l0 + 2);
-  if (wmemcmp (wa.buf1, L"aabcdabcjj", 10))
-    FAIL ();
-
-#if __USE_FORTIFY_LEVEL < 2
-  /* The following tests are supposed to crash with -D_FORTIFY_SOURCE=2
-     and sufficient GCC support, as the string operations overflow
-     from a.buf1 into a.buf2.  */
-  wcscpy (wa.buf1 + 4, wstr1 + 5);
-  if (wmemcmp (wa.buf1, L"aabcEDCBA", 10))
-    FAIL ();
-
-  if (wcpcpy (wa.buf1 + 8, wstr2) != wa.buf1 + 9
-      || wmemcmp (wa.buf1, L"aabcEDCBF", 10))
-    FAIL ();
-
-  wcsncpy (wa.buf1 + 6, L"X", l0 + 4);
-  if (wmemcmp (wa.buf1, L"aabcEDX\0\0", 10))
-    FAIL ();
-
-  if (swprintf (wa.buf1 + 7, 3, L"%d", num2) >= 0
-      || wmemcmp (wa.buf1, L"aabcEDX98", 10))
-    FAIL ();
-
-  wa.buf1[l0 + 8] = L'\0';
-  wcscat (wa.buf1, L"A");
-  if (wmemcmp (wa.buf1, L"aabcEDX9A", 10))
-    FAIL ();
-
-  wa.buf1[l0 + 7] = L'\0';
-  wcsncat (wa.buf1, L"ZYXWV", l0 + 2);
-  if (wmemcmp (wa.buf1, L"aabcEDXZY", 10))
-    FAIL ();
-
-#endif
-
-#if __USE_FORTIFY_LEVEL >= 1
-  /* Now check if all buffer overflows are caught at runtime.  */
-
-  CHK_FAIL_START
-  wmemcpy (wbuf + 1, L"abcdefghij", l0 + 10);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wmemmove (wbuf + 2, wbuf + 1, l0 + 9);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-    wp = wmempcpy (wbuf + 6, L"abcde", l0 + 5);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wmemset (wbuf + 9, L'j', l0 + 2);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wcscpy (wbuf + 5, wstr1 + 5);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wp = wcpcpy (wbuf + 9, wstr2);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wcsncpy (wbuf + 7, L"X", l0 + 4);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wcpncpy (wbuf + 6, L"cd", l0 + 5);
-  CHK_FAIL_END
-
-  wmemcpy (wbuf, wstr1 + 2, l0 + 9);
-  CHK_FAIL_START
-  wcscat (wbuf, L"AB");
-  CHK_FAIL_END
-
-  wmemcpy (wbuf, wstr1 + 3, l0 + 8);
-  CHK_FAIL_START
-  wcsncat (wbuf, L"ZYXWV", l0 + 3);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wmemcpy (wa.buf1 + 1, L"abcdefghij", l0 + 10);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wmemmove (wa.buf1 + 2, wa.buf1 + 1, l0 + 9);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wp = wmempcpy (wa.buf1 + 6, L"abcde", l0 + 5);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wmemset (wa.buf1 + 9, L'j', l0 + 2);
-  CHK_FAIL_END
-
-#if __USE_FORTIFY_LEVEL >= 2
-# define O 0
-#else
-# define O 1
-#endif
-
-  CHK_FAIL_START
-  wcscpy (wa.buf1 + (O + 4), wstr1 + 5);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wp = wcpcpy (wa.buf1 + (O + 8), wstr2);
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  wcsncpy (wa.buf1 + (O + 6), L"X", l0 + 4);
-  CHK_FAIL_END
-
-  wmemcpy (wa.buf1, wstr1 + (3 - O), l0 + 8 + O);
-  CHK_FAIL_START
-  wcscat (wa.buf1, L"AB");
-  CHK_FAIL_END
-
-  wmemcpy (wa.buf1, wstr1 + (4 - O), l0 + 7 + O);
-  CHK_FAIL_START
-  wcsncat (wa.buf1, L"ZYXWV", l0 + 3);
-  CHK_FAIL_END
-#endif
-
 
   /* Now checks for %n protection.  */
 
@@ -696,121 +455,6 @@ do_test (void)
   CHK_FAIL_END
 #endif
 
-  rewind (stdin);
-
-  if (fgets (buf, sizeof (buf), stdin) != buf
-      || memcmp (buf, "abcdefgh\n", 10))
-    FAIL ();
-  if (fgets (buf, sizeof (buf), stdin) != buf || memcmp (buf, "ABCDEFGHI", 10))
-    FAIL ();
-
-  rewind (stdin);
-
-  if (fgets (buf, l0 + sizeof (buf), stdin) != buf
-      || memcmp (buf, "abcdefgh\n", 10))
-    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  if (fgets (buf, sizeof (buf) + 1, stdin) != buf)
-    FAIL ();
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  if (fgets (buf, l0 + sizeof (buf) + 1, stdin) != buf)
-    FAIL ();
-  CHK_FAIL_END
-#endif
-
-  rewind (stdin);
-
-  if (fgets_unlocked (buf, sizeof (buf), stdin) != buf
-      || memcmp (buf, "abcdefgh\n", 10))
-    FAIL ();
-  if (fgets_unlocked (buf, sizeof (buf), stdin) != buf
-      || memcmp (buf, "ABCDEFGHI", 10))
-    FAIL ();
-
-  rewind (stdin);
-
-  if (fgets_unlocked (buf, l0 + sizeof (buf), stdin) != buf
-      || memcmp (buf, "abcdefgh\n", 10))
-    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  if (fgets_unlocked (buf, sizeof (buf) + 1, stdin) != buf)
-    FAIL ();
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  if (fgets_unlocked (buf, l0 + sizeof (buf) + 1, stdin) != buf)
-    FAIL ();
-  CHK_FAIL_END
-#endif
-
-  lseek (fileno (stdin), 0, SEEK_SET);
-
-  if (read (fileno (stdin), buf, sizeof (buf) - 1) != sizeof (buf) - 1
-      || memcmp (buf, "abcdefgh\n", 9))
-    FAIL ();
-  if (read (fileno (stdin), buf, sizeof (buf) - 1) != sizeof (buf) - 1
-      || memcmp (buf, "ABCDEFGHI", 9))
-    FAIL ();
-
-  lseek (fileno (stdin), 0, SEEK_SET);
-
-  if (read (fileno (stdin), buf, l0 + sizeof (buf) - 1) != sizeof (buf) - 1
-      || memcmp (buf, "abcdefgh\n", 9))
-    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  if (read (fileno (stdin), buf, sizeof (buf) + 1) != sizeof (buf) + 1)
-    FAIL ();
-  CHK_FAIL_END
-#endif
-
-  if (pread (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 2)
-      != sizeof (buf) - 1
-      || memcmp (buf, "\nABCDEFGH", 9))
-    FAIL ();
-  if (pread (fileno (stdin), buf, sizeof (buf) - 1, 0) != sizeof (buf) - 1
-      || memcmp (buf, "abcdefgh\n", 9))
-    FAIL ();
-  if (pread (fileno (stdin), buf, l0 + sizeof (buf) - 1, sizeof (buf) - 3)
-      != sizeof (buf) - 1
-      || memcmp (buf, "h\nABCDEFG", 9))
-    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  if (pread (fileno (stdin), buf, sizeof (buf) + 1, 2 * sizeof (buf))
-      != sizeof (buf) + 1)
-    FAIL ();
-  CHK_FAIL_END
-#endif
-
-  if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 2)
-      != sizeof (buf) - 1
-      || memcmp (buf, "\nABCDEFGH", 9))
-    FAIL ();
-  if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, 0) != sizeof (buf) - 1
-      || memcmp (buf, "abcdefgh\n", 9))
-    FAIL ();
-  if (pread64 (fileno (stdin), buf, l0 + sizeof (buf) - 1, sizeof (buf) - 3)
-      != sizeof (buf) - 1
-      || memcmp (buf, "h\nABCDEFG", 9))
-    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  if (pread64 (fileno (stdin), buf, sizeof (buf) + 1, 2 * sizeof (buf))
-      != sizeof (buf) + 1)
-    FAIL ();
-  CHK_FAIL_END
-#endif
-
   if (freopen (temp_filename, "r", stdin) == NULL)
     {
       puts ("could not open temporary file");
@@ -846,475 +490,6 @@ do_test (void)
   CHK_FAIL2_START
   snprintf (buf, sizeof (buf), "%3$d\n", 1, 2, 3, 4);
   CHK_FAIL2_END
-
-  int sp[2];
-  if (socketpair (PF_UNIX, SOCK_STREAM, 0, sp))
-    FAIL ();
-  else
-    {
-      const char *sendstr = "abcdefgh\nABCDEFGH\n0123456789\n";
-      if (send (sp[0], sendstr, strlen (sendstr), 0) != strlen (sendstr))
-	FAIL ();
-
-      char recvbuf[12];
-      if (recv (sp[1], recvbuf, sizeof recvbuf, MSG_PEEK)
-	  != sizeof recvbuf
-	  || memcmp (recvbuf, sendstr, sizeof recvbuf) != 0)
-	FAIL ();
-
-      if (recv (sp[1], recvbuf + 6, l0 + sizeof recvbuf - 7, MSG_PEEK)
-	  != sizeof recvbuf - 7
-	  || memcmp (recvbuf + 6, sendstr, sizeof recvbuf - 7) != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      if (recv (sp[1], recvbuf + 1, sizeof recvbuf, MSG_PEEK)
-	  != sizeof recvbuf)
-	FAIL ();
-      CHK_FAIL_END
-
-      CHK_FAIL_START
-      if (recv (sp[1], recvbuf + 4, l0 + sizeof recvbuf - 3, MSG_PEEK)
-	  != sizeof recvbuf - 3)
-	FAIL ();
-      CHK_FAIL_END
-#endif
-
-      socklen_t sl;
-      struct sockaddr_un sa_un;
-
-      sl = sizeof (sa_un);
-      if (recvfrom (sp[1], recvbuf, sizeof recvbuf, MSG_PEEK, &sa_un, &sl)
-	  != sizeof recvbuf
-	  || memcmp (recvbuf, sendstr, sizeof recvbuf) != 0)
-	FAIL ();
-
-      sl = sizeof (sa_un);
-      if (recvfrom (sp[1], recvbuf + 6, l0 + sizeof recvbuf - 7, MSG_PEEK,
-	  &sa_un, &sl) != sizeof recvbuf - 7
-	  || memcmp (recvbuf + 6, sendstr, sizeof recvbuf - 7) != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      sl = sizeof (sa_un);
-      if (recvfrom (sp[1], recvbuf + 1, sizeof recvbuf, MSG_PEEK, &sa_un, &sl)
-	  != sizeof recvbuf)
-	FAIL ();
-      CHK_FAIL_END
-
-      CHK_FAIL_START
-      sl = sizeof (sa_un);
-      if (recvfrom (sp[1], recvbuf + 4, l0 + sizeof recvbuf - 3, MSG_PEEK,
-	  &sa_un, &sl) != sizeof recvbuf - 3)
-	FAIL ();
-      CHK_FAIL_END
-#endif
-
-      close (sp[0]);
-      close (sp[1]);
-    }
-
-  char fname[] = "/tmp/tst-chk1-dir-XXXXXX\0foo";
-  char *enddir = strchr (fname, '\0');
-  if (mkdtemp (fname) == NULL)
-    {
-      printf ("mkdtemp failed: %m\n");
-      return 1;
-    }
-  *enddir = '/';
-  if (symlink ("bar", fname) != 0)
-    FAIL ();
-
-  char readlinkbuf[4];
-  if (readlink (fname, readlinkbuf, 4) != 3
-      || memcmp (readlinkbuf, "bar", 3) != 0)
-    FAIL ();
-  if (readlink (fname, readlinkbuf + 1, l0 + 3) != 3
-      || memcmp (readlinkbuf, "bbar", 4) != 0)
-    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  if (readlink (fname, readlinkbuf + 2, l0 + 3) != 3)
-    FAIL ();
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  if (readlink (fname, readlinkbuf + 3, 4) != 3)
-    FAIL ();
-  CHK_FAIL_END
-#endif
-
-  int tmpfd = open ("/tmp", O_RDONLY | O_DIRECTORY);
-  if (tmpfd < 0)
-    FAIL ();
-
-  if (readlinkat (tmpfd, fname + sizeof ("/tmp/") - 1, readlinkbuf, 4) != 3
-      || memcmp (readlinkbuf, "bar", 3) != 0)
-    FAIL ();
-  if (readlinkat (tmpfd, fname + sizeof ("/tmp/") - 1, readlinkbuf + 1,
-		  l0 + 3) != 3
-      || memcmp (readlinkbuf, "bbar", 4) != 0)
-    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  if (readlinkat (tmpfd, fname + sizeof ("/tmp/") - 1, readlinkbuf + 2,
-		  l0 + 3) != 3)
-    FAIL ();
-  CHK_FAIL_END
-
-  CHK_FAIL_START
-  if (readlinkat (tmpfd, fname + sizeof ("/tmp/") - 1, readlinkbuf + 3,
-		  4) != 3)
-    FAIL ();
-  CHK_FAIL_END
-#endif
-
-  close (tmpfd);
-
-  char *cwd1 = getcwd (NULL, 0);
-  if (cwd1 == NULL)
-    FAIL ();
-
-  char *cwd2 = getcwd (NULL, 250);
-  if (cwd2 == NULL)
-    FAIL ();
-
-  if (cwd1 && cwd2)
-    {
-      if (strcmp (cwd1, cwd2) != 0)
-	FAIL ();
-
-      *enddir = '\0';
-      if (chdir (fname))
-	FAIL ();
-
-      char *cwd3 = getcwd (NULL, 0);
-      if (cwd3 == NULL)
-	FAIL ();
-      if (strcmp (fname, cwd3) != 0)
-	printf ("getcwd after chdir is '%s' != '%s',"
-		"get{c,}wd tests skipped\n", cwd3, fname);
-      else
-	{
-	  char getcwdbuf[sizeof fname - 3];
-
-	  char *cwd4 = getcwd (getcwdbuf, sizeof getcwdbuf);
-	  if (cwd4 != getcwdbuf
-	      || strcmp (getcwdbuf, fname) != 0)
-	    FAIL ();
-
-	  cwd4 = getcwd (getcwdbuf + 1, l0 + sizeof getcwdbuf - 1);
-	  if (cwd4 != getcwdbuf + 1
-	      || getcwdbuf[0] != fname[0]
-	      || strcmp (getcwdbuf + 1, fname) != 0)
-	    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-	  CHK_FAIL_START
-	  if (getcwd (getcwdbuf + 2, l0 + sizeof getcwdbuf)
-	      != getcwdbuf + 2)
-	    FAIL ();
-	  CHK_FAIL_END
-
-	  CHK_FAIL_START
-	  if (getcwd (getcwdbuf + 2, sizeof getcwdbuf)
-	      != getcwdbuf + 2)
-	    FAIL ();
-	  CHK_FAIL_END
-#endif
-
-	  if (getwd (getcwdbuf) != getcwdbuf
-	      || strcmp (getcwdbuf, fname) != 0)
-	    FAIL ();
-
-	  if (getwd (getcwdbuf + 1) != getcwdbuf + 1
-	      || strcmp (getcwdbuf + 1, fname) != 0)
-	    FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-	  CHK_FAIL_START
-	  if (getwd (getcwdbuf + 2) != getcwdbuf + 2)
-	    FAIL ();
-	  CHK_FAIL_END
-#endif
-	}
-
-      if (chdir (cwd1) != 0)
-	FAIL ();
-      free (cwd3);
-    }
-
-  free (cwd1);
-  free (cwd2);
-  *enddir = '/';
-  if (unlink (fname) != 0)
-    FAIL ();
-
-  *enddir = '\0';
-  if (rmdir (fname) != 0)
-    FAIL ();
-
-
-#if PATH_MAX > 0
-  char largebuf[PATH_MAX];
-  char *realres = realpath (".", largebuf);
-  if (realres != largebuf)
-    FAIL ();
-
-# if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  char realbuf[1];
-  realres = realpath (".", realbuf);
-  if (realres != realbuf)
-    FAIL ();
-  CHK_FAIL_END
-# endif
-#endif
-
-  if (setlocale (LC_ALL, "de_DE.UTF-8") != NULL)
-    {
-      assert (MB_CUR_MAX <= 10);
-
-      /* First a simple test.  */
-      char enough[10];
-      if (wctomb (enough, L'A') != 1)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      /* We know the wchar_t encoding is ISO 10646.  So pick a
-	 character which has a multibyte representation which does not
-	 fit.  */
-      CHK_FAIL_START
-      char smallbuf[2];
-      if (wctomb (smallbuf, L'\x100') != 2)
-	FAIL ();
-      CHK_FAIL_END
-#endif
-
-      mbstate_t s;
-      memset (&s, '\0', sizeof (s));
-      if (wcrtomb (enough, L'D', &s) != 1 || enough[0] != 'D')
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      /* We know the wchar_t encoding is ISO 10646.  So pick a
-	 character which has a multibyte representation which does not
-	 fit.  */
-      CHK_FAIL_START
-      char smallbuf[2];
-      if (wcrtomb (smallbuf, L'\x100', &s) != 2)
-	FAIL ();
-      CHK_FAIL_END
-#endif
-
-      wchar_t wenough[10];
-      memset (&s, '\0', sizeof (s));
-      const char *cp = "A";
-      if (mbsrtowcs (wenough, &cp, 10, &s) != 1
-	  || wcscmp (wenough, L"A") != 0)
-	FAIL ();
-
-      cp = "BC";
-      if (mbsrtowcs (wenough, &cp, l0 + 10, &s) != 2
-	  || wcscmp (wenough, L"BC") != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      wchar_t wsmallbuf[2];
-      cp = "ABC";
-      mbsrtowcs (wsmallbuf, &cp, 10, &s);
-      CHK_FAIL_END
-#endif
-
-      cp = "A";
-      if (mbstowcs (wenough, cp, 10) != 1
-	  || wcscmp (wenough, L"A") != 0)
-	FAIL ();
-
-      cp = "DEF";
-      if (mbstowcs (wenough, cp, l0 + 10) != 3
-	  || wcscmp (wenough, L"DEF") != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      wchar_t wsmallbuf[2];
-      cp = "ABC";
-      mbstowcs (wsmallbuf, cp, 10);
-      CHK_FAIL_END
-#endif
-
-      memset (&s, '\0', sizeof (s));
-      cp = "ABC";
-      wcscpy (wenough, L"DEF");
-      if (mbsnrtowcs (wenough, &cp, 1, 10, &s) != 1
-	  || wcscmp (wenough, L"AEF") != 0)
-	FAIL ();
-
-      cp = "IJ";
-      if (mbsnrtowcs (wenough, &cp, 1, l0 + 10, &s) != 1
-	  || wcscmp (wenough, L"IEF") != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      wchar_t wsmallbuf[2];
-      cp = "ABC";
-      mbsnrtowcs (wsmallbuf, &cp, 3, 10, &s);
-      CHK_FAIL_END
-#endif
-
-      memset (&s, '\0', sizeof (s));
-      const wchar_t *wcp = L"A";
-      if (wcsrtombs (enough, &wcp, 10, &s) != 1
-	  || strcmp (enough, "A") != 0)
-	FAIL ();
-
-      wcp = L"BC";
-      if (wcsrtombs (enough, &wcp, l0 + 10, &s) != 2
-	  || strcmp (enough, "BC") != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      char smallbuf[2];
-      wcp = L"ABC";
-      wcsrtombs (smallbuf, &wcp, 10, &s);
-      CHK_FAIL_END
-#endif
-
-      memset (enough, 'Z', sizeof (enough));
-      wcp = L"EF";
-      if (wcstombs (enough, wcp, 10) != 2
-	  || strcmp (enough, "EF") != 0)
-	FAIL ();
-
-      wcp = L"G";
-      if (wcstombs (enough, wcp, l0 + 10) != 1
-	  || strcmp (enough, "G") != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      char smallbuf[2];
-      wcp = L"ABC";
-      wcstombs (smallbuf, wcp, 10);
-      CHK_FAIL_END
-#endif
-
-      memset (&s, '\0', sizeof (s));
-      wcp = L"AB";
-      if (wcsnrtombs (enough, &wcp, 1, 10, &s) != 1
-	  || strcmp (enough, "A") != 0)
-	FAIL ();
-
-      wcp = L"BCD";
-      if (wcsnrtombs (enough, &wcp, 1, l0 + 10, &s) != 1
-	  || strcmp (enough, "B") != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      char smallbuf[2];
-      wcp = L"ABC";
-      wcsnrtombs (smallbuf, &wcp, 3, 10, &s);
-      CHK_FAIL_END
-#endif
-    }
-  else
-    {
-      puts ("cannot set locale");
-      ret = 1;
-    }
-
-  fd = posix_openpt (O_RDWR);
-  if (fd != -1)
-    {
-      char enough[1000];
-      if (ptsname_r (fd, enough, sizeof (enough)) != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      char smallbuf[2];
-      if (ptsname_r (fd, smallbuf, sizeof (smallbuf) + 1) == 0)
-	FAIL ();
-      CHK_FAIL_END
-#endif
-      close (fd);
-    }
-
-#if PATH_MAX > 0
-  confstr (_CS_GNU_LIBC_VERSION, largebuf, sizeof (largebuf));
-# if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  char smallbuf[1];
-  confstr (_CS_GNU_LIBC_VERSION, smallbuf, sizeof (largebuf));
-  CHK_FAIL_END
-# endif
-#endif
-
-  gid_t grpslarge[5];
-  int ngr = getgroups (5, grpslarge);
-  asm volatile ("" : : "r" (ngr));
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  char smallbuf[1];
-  ngr = getgroups (5, (gid_t *) smallbuf);
-  asm volatile ("" : : "r" (ngr));
-  CHK_FAIL_END
-#endif
-
-  fd = open (_PATH_TTY, O_RDONLY);
-  if (fd != -1)
-    {
-      char enough[1000];
-      if (ttyname_r (fd, enough, sizeof (enough)) != 0)
-	FAIL ();
-
-#if __USE_FORTIFY_LEVEL >= 1
-      CHK_FAIL_START
-      char smallbuf[2];
-      if (ttyname_r (fd, smallbuf, sizeof (smallbuf) + 1) == 0)
-	FAIL ();
-      CHK_FAIL_END
-#endif
-      close (fd);
-    }
-
-  char hostnamelarge[1000];
-  gethostname (hostnamelarge, sizeof (hostnamelarge));
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  char smallbuf[1];
-  gethostname (smallbuf, sizeof (hostnamelarge));
-  CHK_FAIL_END
-#endif
-
-  char loginlarge[1000];
-  getlogin_r (loginlarge, sizeof (hostnamelarge));
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  char smallbuf[1];
-  getlogin_r (smallbuf, sizeof (loginlarge));
-  CHK_FAIL_END
-#endif
-
-  char domainnamelarge[1000];
-  int res = getdomainname (domainnamelarge, sizeof (domainnamelarge));
-  asm volatile ("" : : "r" (res));
-#if __USE_FORTIFY_LEVEL >= 1
-  CHK_FAIL_START
-  char smallbuf[1];
-  res = getdomainname (smallbuf, sizeof (domainnamelarge));
-  asm volatile ("" : : "r" (res));
-  CHK_FAIL_END
-#endif
 
   return ret;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -24,14 +24,12 @@
 #include <wchar.h>
 #include <wcsmbsload.h>
 
-#include <sysdep.h>
-
 
 int
 wctob (c)
      wint_t c;
 {
-  unsigned char buf[MB_LEN_MAX];
+  char buf[MB_LEN_MAX];
   struct __gconv_step_data data;
   wchar_t inbuf[1];
   wchar_t *inptr = inbuf;
@@ -41,11 +39,6 @@ wctob (c)
 
   if (c == WEOF)
     return EOF;
-
-  /* We know that only ASCII compatible encodings are used for the
-     locale and that the wide character encoding is ISO 10646.  */
-  if (c >= L'\0' && c <= L'\x7f')
-    return (int) c;
 
   /* Tell where we want the result.  */
   data.__outbuf = buf;
@@ -66,12 +59,7 @@ wctob (c)
   inbuf[0] = c;
 
   const unsigned char *argptr = (const unsigned char *) inptr;
-  __gconv_fct fct = fcts->tomb->__fct;
-#ifdef PTR_DEMANGLE
-  if (fcts->tomb->__shlib_handle != NULL)
-    PTR_DEMANGLE (fct);
-#endif
-  status = DL_CALL_FCT (fct,
+  status = DL_CALL_FCT (fcts->tomb->__fct,
 			(fcts->tomb, &data, &argptr,
 			 argptr + sizeof (inbuf[0]), NULL, &dummy, 0, 1));
 
@@ -81,5 +69,5 @@ wctob (c)
       || data.__outbuf != (unsigned char *) (buf + 1))
     return EOF;
 
-  return buf[0];
+  return (unsigned char) buf[0];
 }

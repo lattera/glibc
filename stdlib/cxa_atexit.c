@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001, 2002, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
-#include <stdlib.h>
-
 #include <bits/libc-lock.h>
+#include <stdlib.h>
 #include "exit.h"
-#include <atomic.h>
-#include <sysdep.h>
 
 #undef __cxa_atexit
 
@@ -37,14 +33,10 @@ __cxa_atexit (void (*func) (void *), void *arg, void *d)
   if (new == NULL)
     return -1;
 
-#ifdef PTR_MANGLE
-  PTR_MANGLE (func);
-#endif
+  new->flavor = ef_cxa;
   new->func.cxa.fn = (void (*) (void *, int)) func;
   new->func.cxa.arg = arg;
   new->func.cxa.dso_handle = d;
-  atomic_write_barrier ();
-  new->flavor = ef_cxa;
   return 0;
 }
 INTDEF(__cxa_atexit)
@@ -56,68 +48,49 @@ __libc_lock_define_initialized (static, lock)
 
 static struct exit_function_list initial;
 struct exit_function_list *__exit_funcs = &initial;
-uint64_t __new_exitfn_called;
 
 struct exit_function *
 __new_exitfn (void)
 {
-  struct exit_function_list *p = NULL;
   struct exit_function_list *l;
-  struct exit_function *r = NULL;
   size_t i = 0;
 
   __libc_lock_lock (lock);
 
-  for (l = __exit_funcs; l != NULL; p = l, l = l->next)
+  for (l = __exit_funcs; l != NULL; l = l->next)
     {
-      for (i = l->idx; i > 0; --i)
-	if (l->fns[i - 1].flavor != ef_free)
+      for (i = 0; i < l->idx; ++i)
+	if (l->fns[i].flavor == ef_free)
 	  break;
-
-      if (i > 0)
+      if (i < l->idx)
 	break;
 
-      /* This block is completely unused.  */
-      l->idx = 0;
-    }
-
-  if (l == NULL || i == sizeof (l->fns) / sizeof (l->fns[0]))
-    {
-      /* The last entry in a block is used.  Use the first entry in
-	 the previous block if it exists.  Otherwise create a new one.  */
-      if (p == NULL)
+      if (l->idx < sizeof (l->fns) / sizeof (l->fns[0]))
 	{
-	  assert (l != NULL);
-	  p = (struct exit_function_list *)
-	    calloc (1, sizeof (struct exit_function_list));
-	  if (p != NULL)
-	    {
-	      p->next = __exit_funcs;
-	      __exit_funcs = p;
-	    }
-	}
-
-      if (p != NULL)
-	{
-	  r = &p->fns[0];
-	  p->idx = 1;
+	  i = l->idx++;
+	  break;
 	}
     }
-  else
+
+  if (l == NULL)
     {
-      /* There is more room in the block.  */
-      r = &l->fns[i];
-      l->idx = i + 1;
+      l = (struct exit_function_list *)
+	malloc (sizeof (struct exit_function_list));
+      if (l != NULL)
+	{
+	  l->next = __exit_funcs;
+	  __exit_funcs = l;
+
+	  l->idx = 1;
+      	  i = 0;
+	}
     }
 
   /* Mark entry as used, but we don't know the flavor now.  */
-  if (r != NULL)
-    {
-      r->flavor = ef_us;
-      ++__new_exitfn_called;
-    }
+  if (l != NULL)
+    l->fns[i].flavor = ef_us;
 
   __libc_lock_unlock (lock);
 
-  return r;
+  return l == NULL ? NULL : &l->fns[i];
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1997,1999-2002,2004,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997,1999-2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,8 +46,6 @@ _IO_vasprintf (result_ptr, format, args)
   int ret;
   _IO_size_t needed;
   _IO_size_t allocated;
-  /* No need to clear the memory here (unlike for open_memstream) since
-     we know we will never seek on the stream.  */
   string = (char *) malloc (init_string_size);
   if (string == NULL)
     return -1;
@@ -89,4 +87,7 @@ _IO_vasprintf (result_ptr, format, args)
   (*result_ptr)[needed - 1] = '\0';
   return ret;
 }
-ldbl_weak_alias (_IO_vasprintf, vasprintf)
+
+#ifdef weak_alias
+weak_alias (_IO_vasprintf, vasprintf)
+#endif

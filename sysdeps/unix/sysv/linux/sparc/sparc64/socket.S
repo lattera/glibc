@@ -40,15 +40,11 @@
    The .S files for the other calls just #define socket and #include this.  */
 
 #ifndef __socket
-# ifndef NO_WEAK_ALIAS
-#  define __socket P(__,socket)
-# else
-#  define __socket socket
-# endif
+#define __socket P(__,socket)
 #endif
 
-	.globl	__syscall_error
-ENTRY(__socket)
+.globl __socket
+ENTRY (__socket)
 
 	/* Drop up to 6 arguments (recvfrom) into the memory allocated by
 	   the caller for varargs, since that's really what we have.  */
@@ -77,15 +73,14 @@ ENTRY(__socket)
 	LOADSYSCALL(socketcall)
 	ta	0x6d
 
-	bcc,pt	%xcc, 1f
-	 mov	%o7, %g1
-	call	__syscall_error
-	 mov	%g1, %o7
-1:	retl
+	bcs,pn	%xcc, __syscall_error_handler
+	 nop
+	retl
 	 nop
 
 #if defined NEED_CANCELLATION && defined CENABLE
 .Lsocket_cancel:
+	cfi_startproc
 	save	%sp, -160, %sp
 	cfi_def_cfa_register (%fp)
 	cfi_window_save
@@ -98,22 +93,18 @@ ENTRY(__socket)
 	LOADSYSCALL(socketcall)
 	ta	0x6d
 
-	bcc,pt	%xcc, 1f
+	bcs,pn	%xcc, __syscall_error_handler2
 	 mov	%o0, %l1
-	CDISABLE;
-	 mov	%l0, %o0;
-	call	__syscall_error;
-	 mov	%l1, %o0;
-	ba,pt	%xcc, 2f
-	 mov	-1, %l1;
-1:	CDISABLE
+	CDISABLE
 	 mov	%l0, %o0
-2:	jmpl	%i7 + 8, %g0
+	jmpl	%i7 + 8, %g0
 	 restore %g0, %l1, %o0
+	cfi_endproc
+	SYSCALL_ERROR_HANDLER2
 #endif
 
-END(__socket)
+	SYSCALL_ERROR_HANDLER
 
-#ifndef NO_WEAK_ALIAS
+END (__socket)
+
 weak_alias (__socket, socket)
-#endif

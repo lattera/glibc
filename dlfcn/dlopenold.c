@@ -19,8 +19,6 @@
 
 #include <dlfcn.h>
 #include <stddef.h>
-#include <unistd.h>
-#include <ldsodefs.h>
 
 /* This file is for compatibility with glibc 2.0.  Compile it only if
    versioning is used.  */
@@ -52,10 +50,8 @@ dlopen_doit (void *a)
 {
   struct dlopen_args *args = (struct dlopen_args *) a;
 
-  args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
-			     args->caller,
-			     args->file == NULL ? LM_ID_BASE : NS,
-			     __dlfcn_argc, __dlfcn_argv, __environ);
+  args->new = _dl_open (args->file ?: "", args->mode | __RTLD_DLOPEN,
+			args->caller, args->file == NULL ? LM_ID_BASE : NS);
 }
 
 extern void *__dlopen_nocheck (const char *file, int mode);

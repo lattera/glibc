@@ -64,7 +64,9 @@ ENTRY(__ieee754_scalb)
 	/* y is -inf */
 1:	fxam
 #ifdef  PIC
-	LOAD_PIC_REG (cx)
+        call    1f
+1:      popl    %ecx
+        addl    $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
 #endif
 	fnstsw
 	movl	8(%esp), %edx
@@ -84,7 +86,9 @@ ENTRY(__ieee754_scalb)
 2:	fstp	%st
 	fstp	%st
 #ifdef  PIC
-	LOAD_PIC_REG (cx)
+        call    1f
+1:      popl    %ecx
+        addl    $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
 #endif
 	fldl	MO(nan)
 	ret

@@ -1,5 +1,5 @@
 /* setjmp for PowerPC.
-   Copyright (C) 1995-2000, 2003-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-99, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,15 +14,16 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 1 Franklin Street, Fifth Floor, Boston MA
-   02110-1301 USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <sysdep.h>
 #define _ASM
+#define _SETJMP_H
 #ifdef __NO_VMX__
 # include <novmxsetjmp.h>
 #else
-# include <jmpbuf-offsets.h>
+# include <bits/setjmp.h>
 #endif
 #include <bp-sym.h>
 #include <bp-asm.h>
@@ -31,19 +32,10 @@
 ENTRY (BP_SYM (__sigsetjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 
-#ifdef PTR_MANGLE
-	mr   r5,r1
-	PTR_MANGLE(r5, r6)
-	stw  r5,(JB_GPR1*4)(3)
-#else
 	stw  r1,(JB_GPR1*4)(3)
-#endif
 	mflr r0
 	stw  r14,((JB_GPRS+0)*4)(3)
 	stfd fp14,((JB_FPRS+0*2)*4)(3)
-#ifdef PTR_MANGLE
-	PTR_MANGLE2 (r0, r6)
-#endif
 	stw  r0,(JB_LR*4)(3)
 	stw  r15,((JB_GPRS+1)*4)(3)
 	stfd fp15,((JB_FPRS+1*2)*4)(3)
@@ -82,31 +74,23 @@ ENTRY (BP_SYM (__sigsetjmp))
 	stw  r31,((JB_GPRS+17)*4)(3)
 	stfd fp31,((JB_FPRS+17*2)*4)(3)
 #ifndef __NO_VMX__
-# ifdef PIC
+#ifdef PIC
 	mflr    r6
-	cfi_register(lr,r6)
-#  ifdef HAVE_ASM_PPC_REL16
-	bcl	20,31,1f
-1:	mflr	r5
-	addis	r5,r5,_GLOBAL_OFFSET_TABLE_-1b@ha
-	addi	r5,r5,_GLOBAL_OFFSET_TABLE_-1b@l
-#  else
 	bl      _GLOBAL_OFFSET_TABLE_@local-4
 	mflr    r5
-#  endif
-	mtlr	r6
-	cfi_same_value (lr)
-#  ifdef SHARED
+#ifdef SHARED
 	lwz     r5,_rtld_global_ro@got(r5)
+	mtlr    r6
 	lwz     r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
-#  else
-	lwz     r5,_dl_hwcap@got(r5)
+#else
+	lwz     r5,_rtld_global_ro@got(r5)
+	mtlr    r6
 	lwz     r5,0(r5)
-#  endif
-# else
-	lis	r6,_dl_hwcap@ha
-	lwz     r5,_dl_hwcap@l(r6)
-# endif
+#endif
+#else
+	lis	r5,_dl_hwcap@ha
+	lwz     r5,_dl_hwcap@l(r5)
+#endif
 	andis.	r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	L(no_vmx)
 	la	r5,((JB_VRS)*4)(3)
@@ -180,5 +164,5 @@ L(aligned_save_vmx):
 	stvx	31,0,r6
 L(no_vmx):
 #endif
-	b BP_SYM (__sigjmp_save@local)
+	b JUMPTARGET (BP_SYM (__sigjmp_save))
 END (BP_SYM (__sigsetjmp))

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -74,12 +74,8 @@ __pthread_rwlock_rdlock:
 	jne	10f
 
 11:	addq	$READERS_WAKEUP, %rdi
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
-#else
-	movl	$FUTEX_WAIT, %esi
-#endif
-	movl	$SYS_futex, %eax
+	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
+	movq	$SYS_futex, %rax
 	syscall
 
 	subq	$READERS_WAKEUP, %rdi
@@ -98,7 +94,7 @@ __pthread_rwlock_rdlock:
 13:	decl	READERS_QUEUED(%rdi)
 	jmp	2b
 
-5:	xorl	%edx, %edx
+5:	xorq	%rdx, %rdx
 	incl	NR_READERS(%rdi)
 	je	8f
 9:	LOCK
@@ -126,7 +122,7 @@ __pthread_rwlock_rdlock:
 14:	cmpl	%fs:TID, %eax
 	jne	3b
 	/* Deadlock detected.  */
-	movl	$EDEADLK, %edx
+	movq	$EDEADLK, %rdx
 	jmp	9b
 
 6:
@@ -141,12 +137,12 @@ __pthread_rwlock_rdlock:
 
 	/* Overflow.  */
 8:	decl	NR_READERS(%rdi)
-	movl	$EAGAIN, %edx
+	movq	$EAGAIN, %rdx
 	jmp	9b
 
 	/* Overflow.  */
 4:	decl	READERS_QUEUED(%rdi)
-	movl	$EAGAIN, %edx
+	movq	$EAGAIN, %rdx
 	jmp	9b
 
 10:

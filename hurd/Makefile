@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001,2002,2004,2006
+# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001,2002
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -46,7 +46,7 @@ server-interfaces	:= hurd/msg faultexc
 
 routines = hurdstartup hurdinit \
 	   hurdid hurdpid hurdrlimit hurdprio hurdexec hurdselect \
-	   hurdlookup lookup-retry lookup-at \
+	   hurdlookup lookup-retry \
 	   get-host set-host \
 	   path-lookup \
 	   setauth \
@@ -60,7 +60,7 @@ routines = hurdstartup hurdinit \
 	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
 	   errno-loc \
-	   $(sig) $(dtable) $(inlines) port-cleanup report-wait xattr
+	   $(sig) $(dtable) $(inlines) port-cleanup report-wait
 sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
 	  thread-self thread-cancel intr-msg catch-signal

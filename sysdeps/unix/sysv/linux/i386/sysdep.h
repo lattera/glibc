@@ -1,5 +1,5 @@
-/* Copyright (C) 1992,1993,1995-2000,2002-2005,2006
-   	Free Software Foundation, Inc.
+/* Copyright (C) 1992,1993,1995-2000,2002,2003,2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -109,6 +109,27 @@
 # define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #else
 
+# ifndef HAVE_HIDDEN
+#  define SETUP_PIC_REG(reg) \
+  call 1f;								      \
+  .subsection 1;							      \
+1:movl (%esp), %e##reg;							      \
+  ret;									      \
+  .previous
+# else
+#  define SETUP_PIC_REG(reg) \
+  .section .gnu.linkonce.t.__i686.get_pc_thunk.reg,"ax",@progbits;	      \
+  .globl __i686.get_pc_thunk.reg;					      \
+  .hidden __i686.get_pc_thunk.reg;					      \
+  .type __i686.get_pc_thunk.reg,@function;				      \
+__i686.get_pc_thunk.reg:						      \
+  movl (%esp), %e##reg;							      \
+  ret;									      \
+  .size __i686.get_pc_thunk.reg, . - __i686.get_pc_thunk.reg;		      \
+  .previous;								      \
+  call __i686.get_pc_thunk.reg
+# endif
+
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER						      \
 0:SETUP_PIC_REG(cx);							      \
@@ -133,36 +154,22 @@
   movl SYSCALL_ERROR_ERRNO@GOTNTPOFF(%ecx), %ecx;			      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
-  SYSCALL_ERROR_HANDLER_TLS_STORE (%edx, %ecx);				      \
+  movl %edx, %gs:0(%ecx);						      \
   orl $-1, %eax;							      \
   jmp L(pseudo_end);
-#   ifndef NO_TLS_DIRECT_SEG_REFS
-#    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
-  movl src, %gs:(destoff)
-#   else
-#    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
-  addl %gs:0, destoff;							      \
-  movl src, (destoff)
-#   endif
 #  else
 #   define SYSCALL_ERROR_HANDLER					      \
 0:pushl %ebx;								      \
-  cfi_adjust_cfa_offset (4);						      \
-  cfi_rel_offset (ebx, 0);						      \
   SETUP_PIC_REG (bx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ebx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
   pushl %edx;								      \
-  cfi_adjust_cfa_offset (4);						      \
   PUSH_ERRNO_LOCATION_RETURN;						      \
   call BP_SYM (__errno_location)@PLT;					      \
   POP_ERRNO_LOCATION_RETURN;						      \
   popl %ecx;								      \
-  cfi_adjust_cfa_offset (-4);						      \
   popl %ebx;								      \
-  cfi_adjust_cfa_offset (-4);						      \
-  cfi_restore (ebx);							      \
   movl %ecx, (%eax);							      \
   orl $-1, %eax;							      \
   jmp L(pseudo_end);
@@ -258,11 +265,9 @@
 #define PUSHARGS_1	movl %ebx, %edx; L(SAVEBX1): PUSHARGS_0
 #define	DOARGS_1	_DOARGS_1 (4)
 #define	POPARGS_1	POPARGS_0; movl %edx, %ebx; L(RESTBX1):
-#define	_PUSHARGS_1	pushl %ebx; cfi_adjust_cfa_offset (4); \
-			cfi_rel_offset (ebx, 0); L(PUSHBX1): _PUSHARGS_0
+#define	_PUSHARGS_1	pushl %ebx; L(PUSHBX1): _PUSHARGS_0
 #define _DOARGS_1(n)	movl n(%esp), %ebx; _DOARGS_0(n-4)
-#define	_POPARGS_1	_POPARGS_0; popl %ebx; cfi_adjust_cfa_offset (-4); \
-			cfi_restore (ebx); L(POPBX1):
+#define	_POPARGS_1	_POPARGS_0; popl %ebx; L(POPBX1):
 
 #define PUSHARGS_2	PUSHARGS_1
 #define	DOARGS_2	_DOARGS_2 (8)
@@ -281,29 +286,23 @@
 #define PUSHARGS_4	_PUSHARGS_4
 #define DOARGS_4	_DOARGS_4 (24)
 #define POPARGS_4	_POPARGS_4
-#define _PUSHARGS_4	pushl %esi; cfi_adjust_cfa_offset (4); \
-			cfi_rel_offset (esi, 0); L(PUSHSI1): _PUSHARGS_3
+#define _PUSHARGS_4	pushl %esi; L(PUSHSI1): _PUSHARGS_3
 #define _DOARGS_4(n)	movl n(%esp), %esi; _DOARGS_3 (n-4)
-#define _POPARGS_4	_POPARGS_3; popl %esi; cfi_adjust_cfa_offset (-4); \
-			cfi_restore (esi); L(POPSI1):
+#define _POPARGS_4	_POPARGS_3; popl %esi; L(POPSI1):
 
 #define PUSHARGS_5	_PUSHARGS_5
 #define DOARGS_5	_DOARGS_5 (32)
 #define POPARGS_5	_POPARGS_5
-#define _PUSHARGS_5	pushl %edi; cfi_adjust_cfa_offset (4); \
-			cfi_rel_offset (edi, 0); L(PUSHDI1): _PUSHARGS_4
+#define _PUSHARGS_5	pushl %edi; L(PUSHDI1): _PUSHARGS_4
 #define _DOARGS_5(n)	movl n(%esp), %edi; _DOARGS_4 (n-4)
-#define _POPARGS_5	_POPARGS_4; popl %edi; cfi_adjust_cfa_offset (-4); \
-			cfi_restore (edi); L(POPDI1):
+#define _POPARGS_5	_POPARGS_4; popl %edi; L(POPDI1):
 
 #define PUSHARGS_6	_PUSHARGS_6
-#define DOARGS_6	_DOARGS_6 (40)
+#define DOARGS_6	_DOARGS_6 (36)
 #define POPARGS_6	_POPARGS_6
-#define _PUSHARGS_6	pushl %ebp; cfi_adjust_cfa_offset (4); \
-			cfi_rel_offset (ebp, 0); L(PUSHBP1): _PUSHARGS_5
+#define _PUSHARGS_6	pushl %ebp; L(PUSHBP1): _PUSHARGS_5
 #define _DOARGS_6(n)	movl n(%esp), %ebp; _DOARGS_5 (n-4)
-#define _POPARGS_6	_POPARGS_5; popl %ebp; cfi_adjust_cfa_offset (-4); \
-			cfi_restore (ebp); L(POPBP1):
+#define _POPARGS_6	_POPARGS_5; popl %ebp; L(POPBP1):
 
 #else	/* !__ASSEMBLER__ */
 
@@ -447,7 +446,7 @@ asm (".L__X'%ebx = 1\n\t"
 
 #define LOADARGS_0
 #ifdef __PIC__
-# if defined I386_USE_SYSENTER && defined SHARED
+# if defined I386_USE_SYSENTER
 #  define LOADARGS_1 \
     "bpushl .L__X'%k3, %k3\n\t"
 #  define LOADARGS_5 \
@@ -533,49 +532,6 @@ asm (".L__X'%ebx = 1\n\t"
 # define EXTRAVAR_5
 #endif
 
-/* Consistency check for position-independent code.  */
-#ifdef __PIC__
-# define check_consistency()						      \
-  ({ int __res;								      \
-     __asm__ __volatile__						      \
-       ("call __i686.get_pc_thunk.cx;"					      \
-	"addl $_GLOBAL_OFFSET_TABLE_, %%ecx;"				      \
-	"subl %%ebx, %%ecx;"						      \
-	"je 1f;"							      \
-	"ud2;"								      \
-	"1:\n"								      \
-	".section .gnu.linkonce.t.__i686.get_pc_thunk.cx,\"ax\",@progbits;"   \
-	".globl __i686.get_pc_thunk.cx;"				      \
-	".hidden __i686.get_pc_thunk.cx;"				      \
-	".type __i686.get_pc_thunk.cx,@function;"			      \
-	"__i686.get_pc_thunk.cx:"					      \
-	"movl (%%esp), %%ecx;"						      \
-	"ret;"								      \
-	".previous"							      \
-	: "=c" (__res));						      \
-     __res; })
-#endif
-
 #endif	/* __ASSEMBLER__ */
-
-
-/* Pointer mangling support.  */
-#if defined NOT_IN_libc && defined IS_IN_rtld
-/* We cannot use the thread descriptor because in ld.so we use setjmp
-   earlier than the descriptor is initialized.  Using a global variable
-   is too complicated here since we have no PC-relative addressing mode.  */
-#else
-# ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)	xorl %gs:POINTER_GUARD, reg
-#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
-# else
-#  define PTR_MANGLE(var)	asm ("xorl %%gs:%c2, %0"		      \
-				     : "=r" (var)			      \
-				     : "0" (var),			      \
-				       "i" (offsetof (tcbhead_t,	      \
-						      pointer_guard)))
-#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
-# endif
-#endif
 
 #endif /* linux/i386/sysdep.h */

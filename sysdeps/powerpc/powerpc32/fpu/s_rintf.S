@@ -1,5 +1,5 @@
 /* Round float to int floating-point values.  PowerPC32 version.
-   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,37 +14,38 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 1 Franklin Street, Fifth Floor, Boston MA
-   02110-1301 USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <sysdep.h>
 
-	.section	.rodata.cst4,"aM",@progbits,4
-	.align	2
+
+	.section	.rodata
+	.align 3
+	.type	TWO23.0,@object
+	.size	TWO23.0,8
+TWO23.0:
+	.long 0x41600000
+	.long 0
+
+	.section	.rodata.cst8,"aM",@progbits,8
+	.align 3
 .LC0:	/* 2**23 */
-	.long 0x4b000000
+	.long 0x41600000
+	.long 0
 
 	.section	".text"
 ENTRY (__rintf)
 #ifdef SHARED
 	mflr	r11
-	cfi_register(lr,r11)
-# ifdef HAVE_ASM_PPC_REL16
-	bcl	20,31,1f
-1:	mflr	r9
-	addis	r9,r9,.LC0-1b@ha
-	lfs	fp13,.LC0-1b@l(r9)
-# else
 	bl	_GLOBAL_OFFSET_TABLE_@local-4
 	mflr	r10
 	lwz	r9,.LC0@got(10)
-	lfs	fp13,0(r9)
-# endif
 	mtlr	r11
-	cfi_same_value (lr)
+	lfd	fp13,0(r9)
 #else
 	lis	r9,.LC0@ha
-	lfs	fp13,.LC0@l(r9)
+	lfd	fp13,.LC0@l(r9)
 #endif
 	fabs	fp0,fp1
 	fsubs	fp12,fp13,fp13	/* generate 0.0  */
@@ -54,14 +55,13 @@ ENTRY (__rintf)
 	bng-	cr6,.L4
 	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
-	fabs	fp1,fp1		/* if (x == 0.0)  */
-	blr			/* x = 0.0; */
+	blr
 .L4:
 	bnllr-	cr6		/* if (x < 0.0)  */
-	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
-	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
-	fnabs	fp1,fp1		/* if (x == 0.0)  */
-	blr			/* x = -0.0; */
+	fsubs	fp1,fp13,fp1	/* x = TWO23 - x;  */
+	fsubs	fp0,fp1,fp13	/* x = - (x - TWO23);  */
+	fneg	fp1,fp0
+	blr
 	END (__rintf)
 
 weak_alias (__rintf, rintf)

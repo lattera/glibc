@@ -23,5 +23,7 @@
 int
 fegetround (void)
 {
-  return __fegetround();
+  int result;
+  asm ("mcrfs 7,7 ; mfcr %0" : "=r"(result) : : "cr7"); \
+  return result & 3;
 }

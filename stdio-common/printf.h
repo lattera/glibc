@@ -1,5 +1,4 @@
-/* Copyright (C) 1991-1993,1995-1999,2000,2001,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -140,9 +139,6 @@ extern int printf_size_info (__const struct printf_info *__restrict
 			     __info, size_t __n, int *__restrict __argtypes)
      __THROW;
 
-#ifdef __LDBL_COMPAT
-# include <bits/printf-ldbl.h>
-#endif
 
 __END_DECLS
 

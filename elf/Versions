@@ -19,7 +19,7 @@ libc {
 %endif
   GLIBC_PRIVATE {
     # functions used in other libraries
-    _dl_addr;
+    _dl_open; _dl_close; _dl_addr;
     _dl_sym; _dl_vsym;
     _dl_open_hook;
     __libc_dlopen_mode; __libc_dlsym; __libc_dlclose;
@@ -43,10 +43,6 @@ ld {
     # runtime interface to TLS
     __tls_get_addr;
   }
-  GLIBC_2.4 {
-    # stack canary
-    __stack_chk_guard;
-  }
   GLIBC_PRIVATE {
     # Those are in the dynamic linker, but used by libc.so.
     __libc_enable_secure;
@@ -57,11 +53,8 @@ ld {
     _dl_allocate_tls; _dl_deallocate_tls;
     _dl_get_tls_static_info; _dl_allocate_tls_init;
     _dl_tls_setup; _dl_rtld_di_serinfo;
-    _dl_tls_get_addr_soft;
     _dl_make_stack_executable;
     # Only here for gdb while a better method is developed.
     _dl_debug_state;
-    # Pointer protection.
-    __pointer_chk_guard;
   }
 }

@@ -50,7 +50,7 @@ int fd;
 void
 do_prepare (int argc, char *argv[])
 {
-  size_t name_len;
+  char name_len;
   struct rlimit64 rlim;
 
   name_len = strlen (test_dir);

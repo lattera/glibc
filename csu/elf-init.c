@@ -1,5 +1,5 @@
 /* Startup support for ELF initializers/finalizers in the main executable.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,36 +36,15 @@
 
 #include <stddef.h>
 
-
+#ifdef HAVE_INITFINI_ARRAY
 /* These magic symbols are provided by the linker.  */
-extern void (*__preinit_array_start []) (int, char **, char **)
-  attribute_hidden;
-extern void (*__preinit_array_end []) (int, char **, char **)
-  attribute_hidden;
-extern void (*__init_array_start []) (int, char **, char **)
-  attribute_hidden;
-extern void (*__init_array_end []) (int, char **, char **)
-  attribute_hidden;
+extern void (*__preinit_array_start []) (void) attribute_hidden;
+extern void (*__preinit_array_end []) (void) attribute_hidden;
+extern void (*__init_array_start []) (void) attribute_hidden;
+extern void (*__init_array_end []) (void) attribute_hidden;
 extern void (*__fini_array_start []) (void) attribute_hidden;
 extern void (*__fini_array_end []) (void) attribute_hidden;
-
-#if defined HAVE_VISIBILITY_ATTRIBUTE \
-    && (defined SHARED || defined LIBC_NONSHARED)
-# define hidden_undef_2(x) #x
-# define hidden_undef_1(x) hidden_undef_2 (x)
-# define hidden_undef(x) \
-  __asm (hidden_undef_1 (ASM_GLOBAL_DIRECTIVE) " " #x); \
-  __asm (".hidden " #x);
-#else
-# define hidden_undef(x)
 #endif
-
-hidden_undef (__preinit_array_start)
-hidden_undef (__preinit_array_end)
-hidden_undef (__init_array_start)
-hidden_undef (__init_array_end)
-hidden_undef (__fini_array_start)
-hidden_undef (__fini_array_end)
 
 /* These function symbols are provided for the .init/.fini section entry
    points automagically by the linker.  */
@@ -78,39 +57,43 @@ extern void _fini (void);
    the libc.a module in that it doesn't call the preinit array.  */
 
 void
-__libc_csu_init (int argc, char **argv, char **envp)
+__libc_csu_init (void)
 {
+#ifdef HAVE_INITFINI_ARRAY
   /* For dynamically linked executables the preinit array is executed by
      the dynamic linker (before initializing any shared object.  */
 
-#ifndef LIBC_NONSHARED
+# ifndef LIBC_NONSHARED
   /* For static executables, preinit happens rights before init.  */
   {
     const size_t size = __preinit_array_end - __preinit_array_start;
     size_t i;
     for (i = 0; i < size; i++)
-      (*__preinit_array_start [i]) (argc, argv, envp);
+      (*__preinit_array_start [i]) ();
   }
+# endif
 #endif
 
   _init ();
 
-  const size_t size = __init_array_end - __init_array_start;
-  for (size_t i = 0; i < size; i++)
-      (*__init_array_start [i]) (argc, argv, envp);
+#ifdef HAVE_INITFINI_ARRAY
+  {
+    const size_t size = __init_array_end - __init_array_start;
+    size_t i;
+    for (i = 0; i < size; i++)
+      (*__init_array_start [i]) ();
+  }
+#endif
 }
 
-/* This function should not be used anymore.  We run the executable's
-   destructor now just like any other.  We cannot remove the function,
-   though.  */
 void
 __libc_csu_fini (void)
 {
-#ifndef LIBC_NONSHARED
+#ifdef HAVE_INITFINI_ARRAY
   size_t i = __fini_array_end - __fini_array_start;
   while (i-- > 0)
     (*__fini_array_start [i]) ();
+#endif
 
   _fini ();
-#endif
 }

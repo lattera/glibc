@@ -54,12 +54,6 @@ __gconv_transliterate (struct __gconv_step *step,
   winbuf = (const uint32_t *) *inbufp;
   winbufend = (const uint32_t *) inbufend;
 
-  __gconv_fct fct = step->__fct;
-#ifdef PTR_DEMANGLE
-  if (step->__shlib_handle != NULL)
-    PTR_DEMANGLE (fct);
-#endif
-
   /* If there is no transliteration information in the locale don't do
      anything and return the error.  */
   size = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_TAB_SIZE);
@@ -125,7 +119,7 @@ __gconv_transliterate (struct __gconv_step *step,
 	      /* Try this input text.  */
 	      toinptr = (const unsigned char *) &to_tbl[idx2];
 	      outptr = *outbufstart;
-	      res = DL_CALL_FCT (fct,
+	      res = DL_CALL_FCT (step->__fct,
 				 (step, step_data, &toinptr,
 				  (const unsigned char *) &to_tbl[idx2 + len],
 				  &outptr, NULL, 0, 0));
@@ -210,7 +204,7 @@ __gconv_transliterate (struct __gconv_step *step,
 		? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);
 
       outptr = *outbufstart;
-      res = DL_CALL_FCT (fct,
+      res = DL_CALL_FCT (step->__fct,
 			 (step, step_data, &toinptr,
 			  (const unsigned char *) (default_missing + len),
 			  &outptr, NULL, 0, 0));

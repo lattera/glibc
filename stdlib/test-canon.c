@@ -1,6 +1,5 @@
 /* Test program for returning the canonical absolute name of a given file.
-   Copyright (C) 1996,1997,2000,2002,2004,2005,2006
-   Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>.
 
@@ -90,10 +89,7 @@ struct {
   {"SYMLINK_5",				0, "./doesNotExist", ENOENT},
   {"SYMLINK_5/foobar",			0, "./doesNotExist", ENOENT},
   {"doesExist/../../stdlib/doesExist",	"./doesExist"},
-  {"doesExist/.././../stdlib/.",	"."},
-  /* 30 */
-  {"./doesExist/someFile/",		0, "./doesExist/someFile", ENOTDIR},
-  {"./doesExist/someFile/..",		0, "./doesExist/someFile", ENOTDIR},
+  {"doesExist/.././../stdlib/.",	"."}
 };
 
 
@@ -122,7 +118,7 @@ int
 do_test (int argc, char ** argv)
 {
   char * result;
-  int i, errors = 0;
+  int fd, i, errors = 0;
   char buf[PATH_MAX];
 
   getcwd (cwd, sizeof(buf));
@@ -158,9 +154,7 @@ do_test (int argc, char ** argv)
   for (i = 0; i < (int) (sizeof (symlinks) / sizeof (symlinks[0])); ++i)
     symlink (symlinks[i].value, symlinks[i].name);
 
-  int has_dir = mkdir ("doesExist", 0777) == 0;
-
-  int fd = has_dir ? creat ("doesExist/someFile", 0777) : -1;
+  fd = open("doesExist", O_CREAT | O_EXCL, 0777);
 
   for (i = 0; i < (int) (sizeof (tests) / sizeof (tests[0])); ++i)
     {
@@ -214,13 +208,7 @@ do_test (int argc, char ** argv)
     }
 
   if (fd >= 0)
-    {
-      close (fd);
-      unlink ("doesExist/someFile");
-    }
-
-  if (has_dir)
-    rmdir ("doesExist");
+    unlink("doesExist");
 
   for (i = 0; i < (int) (sizeof (symlinks) / sizeof (symlinks[0])); ++i)
     unlink (symlinks[i].name);

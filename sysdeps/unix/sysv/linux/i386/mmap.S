@@ -1,5 +1,4 @@
-/* Copyright (C) 1995,96,97,98,99,2000,2002,2005,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,98,99,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +18,7 @@
 
 #include <sysdep.h>
 
-#include <kernel-features.h>
+#include "kernel-features.h"
 
 #define EINVAL	22
 
@@ -27,30 +26,22 @@
 
 ENTRY (__mmap)
 
-/* I don't think it is worthwhile trying to use mmap2 whenever it
+/* I don't think it is worthwhile trzing to use mmap2 whenever it
    is available.  Only use it when we are sure the syscall exists.  */
 #ifdef __ASSUME_MMAP2_SYSCALL
 
 	/* Save registers.  */
 	pushl %ebp
-	cfi_adjust_cfa_offset (4)
 	pushl %ebx
-	cfi_adjust_cfa_offset (4)
 	pushl %esi
-	cfi_adjust_cfa_offset (4)
 	pushl %edi
-	cfi_adjust_cfa_offset (4)
 
 	movl 20(%esp), %ebx
-	cfi_rel_offset (ebx, 8)
 	movl 24(%esp), %ecx
 	movl 28(%esp), %edx
 	movl 32(%esp), %esi
-	cfi_rel_offset (esi, 4)
 	movl 36(%esp), %edi
-	cfi_rel_offset (edi, 0)
 	movl 40(%esp), %ebp
-	cfi_rel_offset (ebp, 12)
 	testl $0xfff, %ebp
 	movl $-EINVAL, %eax
 	jne L(skip)
@@ -63,23 +54,14 @@ ENTRY (__mmap)
 L(skip):
 	/* Restore registers.  */
 	popl %edi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (edi)
 	popl %esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	popl %ebx
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (ebx)
 	popl %ebp
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (ebp)
 
 #else
 
 	/* Save registers.  */
 	movl %ebx, %edx
-	cfi_register (ebx, edx)
 
 	movl $SYS_ify(mmap), %eax	/* System call number in %eax.  */
 
@@ -90,7 +72,6 @@ L(skip):
 
 	/* Restore registers.  */
 	movl %edx, %ebx
-	cfi_restore (ebx)
 
 #endif
 

@@ -43,7 +43,7 @@
 	.text
 	.align	4
 	.globl	__remqu
-	.type	__remqu, @funcnoplt
+	.type	__remqu, @function
 	.usepv	__remqu, no
 
 	cfi_startproc
@@ -246,7 +246,7 @@ $y_is_neg:
 	   from the divide will be completely wrong.  Fortunately, the
 	   quotient must be either 0 or 1, so the remainder must be X
 	   or X-Y, so just compute it directly.  */
-	cmpule	Y, X, AT
+	cmpult	Y, X, AT
 	subq	X, Y, RV
 	ldt	$f0, 0(sp)
 	cmoveq	AT, X, RV

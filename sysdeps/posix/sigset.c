@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #define __need_NULL
 #include <stddef.h>
 #include <signal.h>
-#include <string.h>	/* For the real memset prototype.  */
 
 
 /* Set the disposition for SIG.  */
@@ -29,10 +28,8 @@ sigset (sig, disp)
      int sig;
      __sighandler_t disp;
 {
-  struct sigaction act;
-  struct sigaction oact;
+  struct sigaction act, oact;
   sigset_t set;
-  sigset_t oset;
 
 #ifdef SIG_HOLD
   /* Handle SIG_HOLD first.  */
@@ -47,18 +44,10 @@ sigset (sig, disp)
 	return SIG_ERR;
 
       /* Add the signal set to the current signal mask.  */
-      if (__sigprocmask (SIG_BLOCK, &set, &oset) < 0)
+      if (__sigprocmask (SIG_BLOCK, &set, NULL) < 0)
 	return SIG_ERR;
 
-      /* If the signal was already blocked signal this to the caller.  */
-      if (__sigismember (&oset, sig))
-	return SIG_HOLD;
-
-      /* We need to determine whether a specific handler is installed.  */
-      if (__sigaction (sig, NULL, &oact) < 0)
-	return SIG_ERR;
-
-      return oact.sa_handler;
+      return SIG_HOLD;
     }
 #endif	/* SIG_HOLD */
 
@@ -85,9 +74,8 @@ sigset (sig, disp)
     return SIG_ERR;
 
   /* Remove the signal set from the current signal mask.  */
-  if (__sigprocmask (SIG_UNBLOCK, &set, &oset) < 0)
+  if (__sigprocmask (SIG_UNBLOCK, &set, NULL) < 0)
     return SIG_ERR;
 
-  /* If the signal was already blocked return SIG_HOLD.  */
-  return __sigismember (&oset, sig) ? SIG_HOLD : oact.sa_handler;
+  return oact.sa_handler;
 }

@@ -1,5 +1,5 @@
 /* Set up a context to call a function.
-   Copyright (C) 2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
-   02110-1301 USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <sysdep.h>
 #include <shlib-compat.h>
@@ -26,7 +26,9 @@
 
 ENTRY(__makecontext)
 	/* Set up the first 7 args to the function in its registers */
-	lwz	r11,_UC_REGS_PTR(r3)
+	addi	r11,r3,_UC_REG_SPACE+12
+	clrrwi  r11,r11,4
+	stw	r11,_UC_REGS_PTR(r3)
 	stw	r6,_UC_GREGS+(PT_R3*4)(r11)
 	stw	r7,_UC_GREGS+(PT_R4*4)(r11)
 	stw	r8,_UC_GREGS+(PT_R5*4)(r11)
@@ -47,12 +49,10 @@ ENTRY(__makecontext)
 	/* Set the function's LR to point to the exitcode below. */
 #ifdef PIC
 	mflr	r0
-	cfi_register(lr,r0)
 	bl	1f
 1:	mflr	r6
 	addi	r6,r6,L(exitcode)-1b
 	mtlr	r0
-	cfi_same_value (lr)
 #else
 	lis	r6,L(exitcode)@ha
 	addi	r6,r6,L(exitcode)@l
@@ -101,7 +101,7 @@ ENTRY(__makecontext)
 L(exitcode):
 	mr.	r3,r31
 	beq	4f
-	bl	__setcontext@local
+	bl	JUMPTARGET(__setcontext)
 4:	bl	HIDDEN_JUMPTARGET(exit)
 	b	4b
 
@@ -136,12 +136,10 @@ ENTRY(__novec_makecontext)
 	/* Set the function's LR to point to the exitcode below. */
 #ifdef PIC
 	mflr	r0
-	cfi_register(lr,r0)
 	bl	1f
 1:	mflr	r6
 	addi	r6,r6,L(novec_exitcode)-1b
 	mtlr	r0
-	cfi_same_value (lr)
 #else
 	lis	r6,L(novec_exitcode)@ha
 	addi	r6,r6,L(novec_exitcode)@l
@@ -190,7 +188,7 @@ ENTRY(__novec_makecontext)
 L(novec_exitcode):
 	mr.	r3,r31
 	beq	4f
-	bl	__novec_setcontext@local
+	bl	JUMPTARGET(__novec_setcontext)
 4:	bl	HIDDEN_JUMPTARGET(exit)
 	b	4b
 
@@ -208,7 +206,7 @@ compat_symbol (libc, __novec_makecontext, makecontext, GLIBC_2_3_3)
 	compat_text_section
 ENTRY (__makecontext_stub)
 	li	r3,ENOSYS
-	b	__syscall_error@local
+	b	JUMPTARGET(__syscall_error)
 END (__makecontext_stub)
 	.previous
 

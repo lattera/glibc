@@ -1,0 +1,21 @@
+# File name	Caller	Syscall name	Args	Strong name	Weak names
+
+lseek		-	lseek		i:iii	__libc_lseek	__lseek lseek __llseek llseek __libc_lseek64 __lseek64 lseek64
+
+# proper socket implementations:
+recvfrom	-	recvfrom	i:ibniBN __libc_recvfrom __recvfrom recvfrom
+sendto		-	sendto		i:ibnibn __libc_sendto	__sendto sendto
+
+# semaphore and shm system calls
+msgctl		-	msgctl		i:iip	__msgctl	msgctl
+msgget		-	msgget		i:ii	__msgget	msgget
+msgrcv		-	msgrcv		i:ibnii	__msgrcv	msgrcv
+msgsnd		-	msgsnd		i:ibni	__msgsnd	msgsnd
+shmat		-	shmat		i:ipi	__shmat		shmat
+shmctl		-	shmctl		i:iip	__shmctl	shmctl
+shmdt		-	shmdt		i:s	__shmdt		shmdt
+shmget		-	shmget		i:iii	__shmget	shmget
+semop		-	semop		i:ipi	__semop		semop
+semtimedop	-	semtimedop	i:ipip	semtimedop
+semget		-	semget		i:iii	__semget	semget
+semctl		-	semctl		i:iiii	__semctl	semctl

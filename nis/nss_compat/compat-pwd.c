@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001-2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -62,10 +62,9 @@ struct blacklist_t
 
 struct ent_t
 {
-  bool netgroup;
-  bool first;
-  bool files;
-  enum nss_status setent_status;
+  bool_t netgroup;
+  bool_t first;
+  bool_t files;
   FILE *stream;
   struct blacklist_t blacklist;
   struct passwd pwd;
@@ -73,9 +72,8 @@ struct ent_t
 };
 typedef struct ent_t ent_t;
 
-static ent_t ext_ent = { false, false, true, NSS_STATUS_SUCCESS, NULL,
-			 { NULL, 0, 0 },
-			 { NULL, NULL, 0, 0, NULL, NULL, NULL }};
+static ent_t ext_ent = {0, 0, TRUE, NULL, {NULL, 0, 0},
+                        {NULL, NULL, 0, 0, NULL, NULL, NULL}};
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
@@ -204,13 +202,12 @@ copy_pwd_changes (struct passwd *dest, struct passwd *src,
 }
 
 static enum nss_status
-internal_setpwent (ent_t *ent, int stayopen, int needent)
+internal_setpwent (ent_t *ent, int stayopen)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
-  ent->first = ent->netgroup = false;
-  ent->files = true;
-  ent->setent_status = NSS_STATUS_SUCCESS;
+  ent->first = ent->netgroup = FALSE;
+  ent->files = TRUE;
 
   /* If something was left over free it.  */
   if (ent->netgroup)
@@ -260,8 +257,8 @@ internal_setpwent (ent_t *ent, int stayopen, int needent)
 
   give_pwd_free (&ent->pwd);
 
-  if (needent && status == NSS_STATUS_SUCCESS && nss_setpwent)
-    ent->setent_status = nss_setpwent (stayopen);
+  if (status == NSS_STATUS_SUCCESS && nss_setpwent)
+    return nss_setpwent (stayopen);
 
   return status;
 }
@@ -277,7 +274,7 @@ _nss_compat_setpwent (int stayopen)
   if (ni == NULL)
     init_nss_interface ();
 
-  result = internal_setpwent (&ext_ent, stayopen, 1);
+  result = internal_setpwent (&ext_ent, stayopen);
 
   __libc_lock_unlock (lock);
 
@@ -300,7 +297,7 @@ internal_endpwent (ent_t *ent)
   if (ent->netgroup)
     __internal_endnetgrent (&ent->netgrdata);
 
-  ent->first = ent->netgroup = false;
+  ent->first = ent->netgroup = FALSE;
 
   if (ent->blacklist.data != NULL)
     {
@@ -347,17 +344,17 @@ getpwent_next_nss_netgr (const char *name, struct passwd *result, ent_t *ent,
 
   if (yp_get_default_domain (&curdomain) != YPERR_SUCCESS)
     {
-      ent->netgroup = false;
-      ent->first = false;
+      ent->netgroup = FALSE;
+      ent->first = FALSE;
       give_pwd_free (&ent->pwd);
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (ent->first == true)
+  if (ent->first == TRUE)
     {
       memset (&ent->netgrdata, 0, sizeof (struct __netgrent));
       __internal_setnetgrent (group, &ent->netgrdata);
-      ent->first = false;
+      ent->first = FALSE;
     }
 
   while (1)
@@ -426,10 +423,6 @@ getpwent_next_nss (struct passwd *result, ent_t *ent, char *buffer,
   if (!nss_getpwent_r)
     return NSS_STATUS_UNAVAIL;
 
-  /* If the setpwent call failed, say so.  */
-  if (ent->setent_status != NSS_STATUS_SUCCESS)
-    return ent->setent_status;
-
   p2len = pwd_need_buflen (&ent->pwd);
   if (p2len > buflen)
     {
@@ -440,7 +433,7 @@ getpwent_next_nss (struct passwd *result, ent_t *ent, char *buffer,
   buflen -= p2len;
 
   if (ent->first)
-    ent->first = false;
+    ent->first = FALSE;
 
   do
     {
@@ -460,27 +453,29 @@ static enum nss_status
 getpwnam_plususer (const char *name, struct passwd *result, ent_t *ent,
 		   char *buffer, size_t buflen, int *errnop)
 {
+  struct passwd pwd;
+  char *p;
+  size_t plen;
+
   if (!nss_getpwnam_r)
     return NSS_STATUS_UNAVAIL;
 
-  struct passwd pwd;
   memset (&pwd, '\0', sizeof (struct passwd));
 
   copy_pwd_changes (&pwd, result, NULL, 0);
 
-  size_t plen = pwd_need_buflen (&pwd);
+  plen = pwd_need_buflen (&pwd);
   if (plen > buflen)
     {
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
-  char *p = buffer + (buflen - plen);
+  p = buffer + (buflen - plen);
   buflen -= plen;
 
-  enum nss_status status = nss_getpwnam_r (name, result, buffer, buflen,
-					   errnop);
-  if (status != NSS_STATUS_SUCCESS)
-    return status;
+  if (nss_getpwnam_r (name, result, buffer, buflen, errnop) !=
+      NSS_STATUS_SUCCESS)
+    return NSS_STATUS_NOTFOUND;
 
   if (in_blacklist (result->pw_name, strlen (result->pw_name), ent))
     return NSS_STATUS_NOTFOUND;
@@ -573,8 +568,8 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	{
 	  enum nss_status status;
 
-	  ent->netgroup = true;
-	  ent->first = true;
+	  ent->netgroup = TRUE;
+	  ent->first = TRUE;
 	  copy_pwd_changes (&ent->pwd, result, NULL, 0);
 
 	  status = getpwent_next_nss_netgr (NULL, result, ent,
@@ -629,8 +624,8 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
       /* +:... */
       if (result->pw_name[0] == '+' && result->pw_name[1] == '\0')
 	{
-	  ent->files = false;
-	  ent->first = true;
+	  ent->files = FALSE;
+	  ent->first = TRUE;
 	  copy_pwd_changes (&ent->pwd, result, NULL, 0);
 
 	  return getpwent_next_nss (result, ent, buffer, buflen, errnop);
@@ -678,7 +673,7 @@ _nss_compat_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
     init_nss_interface ();
 
   if (ext_ent.stream == NULL)
-    result = internal_setpwent (&ext_ent, 1, 1);
+    result = internal_setpwent (&ext_ent, 1);
 
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getpwent_r (pwd, &ext_ent, buffer, buflen, errnop);
@@ -830,8 +825,8 @@ _nss_compat_getpwnam_r (const char *name, struct passwd *pwd,
 			char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status result;
-  ent_t ent = { false, false, true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 },
-		{ NULL, NULL, 0, 0, NULL, NULL, NULL }};
+  ent_t ent = {0, 0, TRUE, NULL, {NULL, 0, 0},
+               {NULL, NULL, 0, 0, NULL, NULL, NULL}};
 
   if (name[0] == '-' || name[0] == '+')
     return NSS_STATUS_NOTFOUND;
@@ -843,7 +838,7 @@ _nss_compat_getpwnam_r (const char *name, struct passwd *pwd,
 
   __libc_lock_unlock (lock);
 
-  result = internal_setpwent (&ent, 0, 0);
+  result = internal_setpwent (&ent, 0);
 
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getpwnam_r (name, pwd, &ent, buffer, buflen, errnop);
@@ -1072,8 +1067,8 @@ _nss_compat_getpwuid_r (uid_t uid, struct passwd *pwd,
 			char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status result;
-  ent_t ent = { false, false, true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 },
-		{ NULL, NULL, 0, 0, NULL, NULL, NULL }};
+  ent_t ent = {0, 0, TRUE, NULL, {NULL, 0, 0},
+               {NULL, NULL, 0, 0, NULL, NULL, NULL}};
 
   __libc_lock_lock (lock);
 
@@ -1082,7 +1077,7 @@ _nss_compat_getpwuid_r (uid_t uid, struct passwd *pwd,
 
   __libc_lock_unlock (lock);
 
-  result = internal_setpwent (&ent, 0, 0);
+  result = internal_setpwent (&ent, 0);
 
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getpwuid_r (uid, pwd, &ent, buffer, buflen, errnop);
@@ -1139,7 +1134,7 @@ blacklist_store_name (const char *name, ent_t *ent)
   return;
 }
 
-/* Returns TRUE if ent->blacklist contains name, else FALSE.  */
+/* returns TRUE if ent->blacklist contains name, else FALSE */
 static bool_t
 in_blacklist (const char *name, int namelen, ent_t *ent)
 {

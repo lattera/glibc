@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Basic four-word fraction declaration and manipulation.
-   Copyright (C) 1997,1998,1999,2006 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -12,15 +12,6 @@
    License as published by the Free Software Foundation; either
    version 2.1 of the License, or (at your option) any later version.
 
-   In addition to the permissions in the GNU Lesser General Public
-   License, the Free Software Foundation gives you unlimited
-   permission to link the compiled version of this file into
-   combinations with other programs, and to distribute those
-   combinations without any restriction coming from the use of this
-   file.  (The Lesser General Public License restrictions do apply in
-   other respects; for example, they cover modification of the file,
-   and distribution when not linked into a combine executable.)
-
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -28,8 +19,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
-   MA 02110-1301, USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #define _FP_FRAC_DECL_4(X)	_FP_W_TYPE X##_f[4]
 #define _FP_FRAC_COPY_4(D,S)			\
@@ -87,36 +78,31 @@
  * but that if any of the bits that fall off the right hand side
  * were one then we always set the LSbit.
  */
-#define _FP_FRAC_SRST_4(X,S,N,size)			\
-  do {							\
-    _FP_I_TYPE _up, _down, _skip, _i;			\
-    _FP_W_TYPE _s;					\
-    _skip = (N) / _FP_W_TYPE_SIZE;			\
-    _down = (N) % _FP_W_TYPE_SIZE;			\
-    _up = _FP_W_TYPE_SIZE - _down;			\
-    for (_s = _i = 0; _i < _skip; ++_i)			\
-      _s |= X##_f[_i];					\
-    if (!_down)						\
-      for (_i = 0; _i <= 3-_skip; ++_i)			\
-	X##_f[_i] = X##_f[_i+_skip];			\
-    else						\
-      {							\
-	_s |= X##_f[_i] << _up;				\
-	for (_i = 0; _i < 3-_skip; ++_i)		\
-	  X##_f[_i] = X##_f[_i+_skip] >> _down		\
-		      | X##_f[_i+_skip+1] << _up;	\
-	X##_f[_i++] = X##_f[3] >> _down;		\
-      }							\
-    for (; _i < 4; ++_i)				\
-      X##_f[_i] = 0;					\
-    S = (_s != 0);					\
-  } while (0)
-
-#define _FP_FRAC_SRS_4(X,N,size)		\
-  do {						\
-    int _sticky;				\
-    _FP_FRAC_SRST_4(X, _sticky, N, size);	\
-    X##_f[0] |= _sticky;			\
+#define _FP_FRAC_SRS_4(X,N,size)					\
+  do {									\
+    _FP_I_TYPE _up, _down, _skip, _i;					\
+    _FP_W_TYPE _s;							\
+    _skip = (N) / _FP_W_TYPE_SIZE;					\
+    _down = (N) % _FP_W_TYPE_SIZE;					\
+    _up = _FP_W_TYPE_SIZE - _down;					\
+    for (_s = _i = 0; _i < _skip; ++_i)					\
+      _s |= X##_f[_i];							\
+    _s |= X##_f[_i] << _up;						\
+/* s is now != 0 if we want to set the LSbit */				\
+    if (!_down)								\
+      for (_i = 0; _i <= 3-_skip; ++_i)					\
+	X##_f[_i] = X##_f[_i+_skip];					\
+    else								\
+      {									\
+	for (_i = 0; _i < 3-_skip; ++_i)				\
+	  X##_f[_i] = X##_f[_i+_skip] >> _down				\
+		      | X##_f[_i+_skip+1] << _up;			\
+	X##_f[_i++] = X##_f[3] >> _down;				\
+      }									\
+    for (; _i < 4; ++_i)						\
+      X##_f[_i] = 0;							\
+    /* don't fix the LSB until the very end when we're sure f[0] is stable */	\
+    X##_f[0] |= (_s != 0);						\
   } while (0)
 
 #define _FP_FRAC_ADD_4(R,X,Y)						\
@@ -526,7 +512,7 @@
 #ifndef __FP_FRAC_ADD_3
 #define __FP_FRAC_ADD_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
   do {								\
-    _FP_W_TYPE _c1, _c2;					\
+    int _c1, _c2;							\
     r0 = x0 + y0;						\
     _c1 = r0 < x0;						\
     r1 = x1 + y1;						\
@@ -540,7 +526,7 @@
 #ifndef __FP_FRAC_ADD_4
 #define __FP_FRAC_ADD_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
   do {								\
-    _FP_W_TYPE _c1, _c2, _c3;					\
+    int _c1, _c2, _c3;						\
     r0 = x0 + y0;						\
     _c1 = r0 < x0;						\
     r1 = x1 + y1;						\
@@ -558,13 +544,13 @@
 #ifndef __FP_FRAC_SUB_3
 #define __FP_FRAC_SUB_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
   do {								\
-    _FP_W_TYPE _c1, _c2;					\
+    int _c1, _c2;							\
     r0 = x0 - y0;						\
     _c1 = r0 > x0;						\
     r1 = x1 - y1;						\
     _c2 = r1 > x1;						\
     r1 -= _c1;							\
-    _c2 |= _c1 && (y1 == x1);					\
+    _c2 |= r1 > _c1;						\
     r2 = x2 - y2 - _c2;						\
   } while (0)
 #endif
@@ -572,17 +558,17 @@
 #ifndef __FP_FRAC_SUB_4
 #define __FP_FRAC_SUB_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
   do {								\
-    _FP_W_TYPE _c1, _c2, _c3;					\
+    int _c1, _c2, _c3;						\
     r0 = x0 - y0;						\
     _c1 = r0 > x0;						\
     r1 = x1 - y1;						\
     _c2 = r1 > x1;						\
     r1 -= _c1;							\
-    _c2 |= _c1 && (y1 == x1);					\
+    _c2 |= r1 > _c1;						\
     r2 = x2 - y2;						\
     _c3 = r2 > x2;						\
     r2 -= _c2;							\
-    _c3 |= _c2 && (y2 == x2);					\
+    _c3 |= r2 > _c2;						\
     r3 = x3 - y3 - _c3;						\
   } while (0)
 #endif
@@ -623,13 +609,26 @@
  * internally [eg, that 2 word vars are X_f0 and x_f1]. But so do
  * the ones in op-2.h and op-1.h. 
  */
-#define _FP_FRAC_COPY_1_4(D, S)		(D##_f = S##_f[0])
+#define _FP_FRAC_CONV_1_4(dfs, sfs, D, S)				\
+   do {									\
+     if (S##_c != FP_CLS_NAN)						\
+       _FP_FRAC_SRS_4(S, (_FP_WFRACBITS_##sfs - _FP_WFRACBITS_##dfs),	\
+			  _FP_WFRACBITS_##sfs);				\
+     else								\
+       _FP_FRAC_SRL_4(S, (_FP_WFRACBITS_##sfs - _FP_WFRACBITS_##dfs));	\
+     D##_f = S##_f[0];							\
+  } while (0)
 
-#define _FP_FRAC_COPY_2_4(D, S)			\
-do {						\
-  D##_f0 = S##_f[0];				\
-  D##_f1 = S##_f[1];				\
-} while (0)
+#define _FP_FRAC_CONV_2_4(dfs, sfs, D, S)				\
+   do {									\
+     if (S##_c != FP_CLS_NAN)						\
+       _FP_FRAC_SRS_4(S, (_FP_WFRACBITS_##sfs - _FP_WFRACBITS_##dfs),	\
+		      _FP_WFRACBITS_##sfs);				\
+     else								\
+       _FP_FRAC_SRL_4(S, (_FP_WFRACBITS_##sfs - _FP_WFRACBITS_##dfs));	\
+     D##_f0 = S##_f[0];							\
+     D##_f1 = S##_f[1];							\
+  } while (0)
 
 /* Assembly/disassembly for converting to/from integral types.  
  * No shifting or overflow handled here.
@@ -672,15 +671,18 @@ do {						\
     X##_f[3] = (rsize <= 3*_FP_W_TYPE_SIZE ? 0 : r >> 3*_FP_W_TYPE_SIZE); \
   } while (0);
 
-#define _FP_FRAC_COPY_4_1(D, S)			\
-do {						\
-  D##_f[0] = S##_f;				\
-  D##_f[1] = D##_f[2] = D##_f[3] = 0;		\
-} while (0)
+#define _FP_FRAC_CONV_4_1(dfs, sfs, D, S)				\
+   do {									\
+     D##_f[0] = S##_f;							\
+     D##_f[1] = D##_f[2] = D##_f[3] = 0;				\
+     _FP_FRAC_SLL_4(D, (_FP_WFRACBITS_##dfs - _FP_WFRACBITS_##sfs));	\
+   } while (0)
 
-#define _FP_FRAC_COPY_4_2(D, S)			\
-do {						\
-  D##_f[0] = S##_f0;				\
-  D##_f[1] = S##_f1;				\
-  D##_f[2] = D##_f[3] = 0;			\
-} while (0)
+#define _FP_FRAC_CONV_4_2(dfs, sfs, D, S)				\
+   do {									\
+     D##_f[0] = S##_f0;							\
+     D##_f[1] = S##_f1;							\
+     D##_f[2] = D##_f[3] = 0;						\
+     _FP_FRAC_SLL_4(D, (_FP_WFRACBITS_##dfs - _FP_WFRACBITS_##sfs));	\
+   } while (0)
+

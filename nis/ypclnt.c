@@ -1,5 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -46,12 +45,12 @@ struct dom_binding
   };
 typedef struct dom_binding dom_binding;
 
-static const struct timeval RPCTIMEOUT = {25, 0};
-static const struct timeval UDPTIMEOUT = {5, 0};
+static struct timeval RPCTIMEOUT = {25, 0};
+static struct timeval UDPTIMEOUT = {5, 0};
 static int const MAXTRIES = 2;
-static char ypdomainname[NIS_MAXNAMELEN + 1];
+static char __ypdomainname[NIS_MAXNAMELEN + 1] = "\0";
 __libc_lock_define_initialized (static, ypbindlist_lock)
-static dom_binding *ypbindlist = NULL;
+static dom_binding *__ypbindlist = NULL;
 
 
 static void
@@ -111,8 +110,8 @@ yp_bind_ypbindprog (const char *domain, dom_binding *ysd)
   int clnt_sock;
   CLIENT *client;
 
+  memset (&clnt_saddr, '\0', sizeof clnt_saddr);
   clnt_saddr.sin_family = AF_INET;
-  clnt_saddr.sin_port = 0;
   clnt_saddr.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
   clnt_sock = RPC_ANYSOCK;
   client = clnttcp_create (&clnt_saddr, YPBINDPROG, YPBINDVERS,
@@ -142,7 +141,7 @@ yp_bind_ypbindprog (const char *domain, dom_binding *ysd)
 
   if (ypbr.ypbind_status != YPBIND_SUCC_VAL)
     {
-      fprintf (stderr, "YPBINDPROC_DOMAIN: %s\n",
+      fprintf (stderr, _("YPBINDPROC_DOMAIN: %s\n"),
 	       ypbinderr_string (ypbr.ypbind_resp_u.ypbind_error));
       return YPERR_DOMAIN;
     }
@@ -225,7 +224,7 @@ yp_bind (const char *indomain)
 
   __libc_lock_lock (ypbindlist_lock);
 
-  status = __yp_bind (indomain, &ypbindlist);
+  status = __yp_bind (indomain, &__ypbindlist);
 
   __libc_lock_unlock (ypbindlist_lock);
 
@@ -239,7 +238,7 @@ yp_unbind_locked (const char *indomain)
   dom_binding *ydbptr, *ydbptr2;
 
   ydbptr2 = NULL;
-  ydbptr = ypbindlist;
+  ydbptr = __ypbindlist;
 
   while (ydbptr != NULL)
     {
@@ -249,7 +248,7 @@ yp_unbind_locked (const char *indomain)
 
 	  work = ydbptr;
 	  if (ydbptr2 == NULL)
-	    ypbindlist = ypbindlist->dom_pnext;
+	    __ypbindlist = __ypbindlist->dom_pnext;
 	  else
 	    ydbptr2 = ydbptr->dom_pnext;
 	  __yp_unbind (work);
@@ -306,7 +305,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
   status = YPERR_YPERR;
 
   __libc_lock_lock (ypbindlist_lock);
-  ydb = ypbindlist;
+  ydb = __ypbindlist;
   while (ydb != NULL)
     {
       if (strcmp (domain, ydb->dom_domain) == 0)
@@ -349,7 +348,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
   if (status != YPERR_SUCCESS)
     {
       ydb = calloc (1, sizeof (dom_binding));
-      if (ydb != NULL && yp_bind_ypbindprog (domain, ydb) == YPERR_SUCCESS)
+      if (yp_bind_ypbindprog (domain, ydb) == YPERR_SUCCESS)
 	{
 	  status = __ypclnt_call (domain, prog, xargs, req, xres,
 				  resp, &ydb, 1);
@@ -365,21 +364,6 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
   return status;
 }
 
-/* Like do_ypcall, but translate the status value if necessary.  */
-static int
-do_ypcall_tr (const char *domain, u_long prog, xdrproc_t xargs,
-	      caddr_t req, xdrproc_t xres, caddr_t resp)
-{
-  int status = do_ypcall (domain, prog, xargs, req, xres, resp);
-  if (status == YPERR_SUCCESS)
-    /* We cast to ypresp_val although the pointer could also be of
-       type ypresp_key_val or ypresp_master or ypresp_order or
-       ypresp_maplist.  But the stat element is in a common prefix so
-       this does not matter.  */
-    status = ypprot_err (((struct ypresp_val *) resp)->stat);
-  return status;
-}
-
 
 __libc_lock_define_initialized (static, domainname_lock)
 
@@ -391,21 +375,21 @@ yp_get_default_domain (char **outdomain)
 
   __libc_lock_lock (domainname_lock);
 
-  if (ypdomainname[0] == '\0')
+  if (__ypdomainname[0] == '\0')
     {
-      if (getdomainname (ypdomainname, NIS_MAXNAMELEN))
+      if (getdomainname (__ypdomainname, NIS_MAXNAMELEN))
 	result = YPERR_NODOM;
-      else if (strcmp (ypdomainname, "(none)") == 0)
+      else if (strcmp (__ypdomainname, "(none)") == 0)
 	{
 	  /* If domainname is not set, some systems will return "(none)" */
-	  ypdomainname[0] = '\0';
+	  __ypdomainname[0] = '\0';
 	  result = YPERR_NODOM;
 	}
       else
-	*outdomain = ypdomainname;
+	*outdomain = __ypdomainname;
     }
   else
-    *outdomain = ypdomainname;
+    *outdomain = __ypdomainname;
 
   __libc_lock_unlock (domainname_lock);
 
@@ -418,14 +402,14 @@ __yp_check (char **domain)
 {
   char *unused;
 
-  if (ypdomainname[0] == '\0')
+  if (__ypdomainname[0] == '\0')
     if (yp_get_default_domain (&unused))
       return 0;
 
   if (domain)
-    *domain = ypdomainname;
+    *domain = __ypdomainname;
 
-  if (yp_bind (ypdomainname) == 0)
+  if (yp_bind (__ypdomainname) == 0)
     return 1;
   return 0;
 }
@@ -452,26 +436,25 @@ yp_match (const char *indomain, const char *inmap, const char *inkey,
   *outvallen = 0;
   memset (&resp, '\0', sizeof (resp));
 
-  result = do_ypcall_tr (indomain, YPPROC_MATCH, (xdrproc_t) xdr_ypreq_key,
-			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_val,
-			 (caddr_t) &resp);
+  result = do_ypcall (indomain, YPPROC_MATCH, (xdrproc_t) xdr_ypreq_key,
+		      (caddr_t) & req, (xdrproc_t) xdr_ypresp_val,
+		      (caddr_t) & resp);
 
   if (result != YPERR_SUCCESS)
     return result;
+  if (resp.stat != YP_TRUE)
+    return ypprot_err (resp.stat);
 
   *outvallen = resp.val.valdat_len;
   *outval = malloc (*outvallen + 1);
-  int status = YPERR_RESRC;
-  if (__builtin_expect (*outval != NULL, 1))
-    {
-      memcpy (*outval, resp.val.valdat_val, *outvallen);
-      (*outval)[*outvallen] = '\0';
-      status = YPERR_SUCCESS;
-    }
+  if (__builtin_expect (*outval == NULL, 0))
+    return YPERR_RESRC;
+  memcpy (*outval, resp.val.valdat_val, *outvallen);
+  (*outval)[*outvallen] = '\0';
 
   xdr_free ((xdrproc_t) xdr_ypresp_val, (char *) &resp);
 
-  return status;
+  return YPERR_SUCCESS;
 }
 
 int
@@ -494,38 +477,30 @@ yp_first (const char *indomain, const char *inmap, char **outkey,
   memset (&resp, '\0', sizeof (resp));
 
   result = do_ypcall (indomain, YPPROC_FIRST, (xdrproc_t) xdr_ypreq_nokey,
-		      (caddr_t) &req, (xdrproc_t) xdr_ypresp_key_val,
-		      (caddr_t) &resp);
+		      (caddr_t) & req, (xdrproc_t) xdr_ypresp_key_val,
+		      (caddr_t) & resp);
 
   if (result != RPC_SUCCESS)
     return YPERR_RPC;
   if (resp.stat != YP_TRUE)
     return ypprot_err (resp.stat);
 
-  int status;
-  if (__builtin_expect ((*outkey  = malloc (resp.key.keydat_len + 1)) != NULL
-			&& (*outval = malloc (resp.val.valdat_len
-					      + 1)) != NULL, 1))
-    {
-      *outkeylen = resp.key.keydat_len;
-      memcpy (*outkey, resp.key.keydat_val, *outkeylen);
-      (*outkey)[*outkeylen] = '\0';
-
-      *outvallen = resp.val.valdat_len;
-      memcpy (*outval, resp.val.valdat_val, *outvallen);
-      (*outval)[*outvallen] = '\0';
-
-      status = YPERR_SUCCESS;
-    }
-  else
-    {
-      free (*outkey);
-      status = YPERR_RESRC;
-    }
+  *outkeylen = resp.key.keydat_len;
+  *outkey = malloc (*outkeylen + 1);
+  if (__builtin_expect (*outkey == NULL, 0))
+    return YPERR_RESRC;
+  memcpy (*outkey, resp.key.keydat_val, *outkeylen);
+  (*outkey)[*outkeylen] = '\0';
+  *outvallen = resp.val.valdat_len;
+  *outval = malloc (*outvallen + 1);
+  if (__builtin_expect (*outval == NULL, 0))
+    return YPERR_RESRC;
+  memcpy (*outval, resp.val.valdat_val, *outvallen);
+  (*outval)[*outvallen] = '\0';
 
   xdr_free ((xdrproc_t) xdr_ypresp_key_val, (char *) &resp);
 
-  return status;
+  return YPERR_SUCCESS;
 }
 
 int
@@ -551,37 +526,31 @@ yp_next (const char *indomain, const char *inmap, const char *inkey,
   *outkeylen = *outvallen = 0;
   memset (&resp, '\0', sizeof (resp));
 
-  result = do_ypcall_tr (indomain, YPPROC_NEXT, (xdrproc_t) xdr_ypreq_key,
-			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_key_val,
-			 (caddr_t) &resp);
+  result = do_ypcall (indomain, YPPROC_NEXT, (xdrproc_t) xdr_ypreq_key,
+		      (caddr_t) & req, (xdrproc_t) xdr_ypresp_key_val,
+		      (caddr_t) & resp);
 
   if (result != YPERR_SUCCESS)
     return result;
+  if (resp.stat != YP_TRUE)
+    return ypprot_err (resp.stat);
 
-  int status;
-  if (__builtin_expect ((*outkey  = malloc (resp.key.keydat_len + 1)) != NULL
-			&& (*outval = malloc (resp.val.valdat_len
-					      + 1)) != NULL, 1))
-    {
-      *outkeylen = resp.key.keydat_len;
-      memcpy (*outkey, resp.key.keydat_val, *outkeylen);
-      (*outkey)[*outkeylen] = '\0';
-
-      *outvallen = resp.val.valdat_len;
-      memcpy (*outval, resp.val.valdat_val, *outvallen);
-      (*outval)[*outvallen] = '\0';
-
-      status = YPERR_SUCCESS;
-    }
-  else
-    {
-      free (*outkey);
-      status = YPERR_RESRC;
-    }
+  *outkeylen = resp.key.keydat_len;
+  *outkey = malloc (*outkeylen + 1);
+  if (__builtin_expect (*outkey == NULL, 0))
+    return YPERR_RESRC;
+  memcpy (*outkey, resp.key.keydat_val, *outkeylen);
+  (*outkey)[*outkeylen] = '\0';
+  *outvallen = resp.val.valdat_len;
+  *outval = malloc (*outvallen + 1);
+  if (__builtin_expect (*outval == NULL, 0))
+    return YPERR_RESRC;
+  memcpy (*outval, resp.val.valdat_val, *outvallen);
+  (*outval)[*outvallen] = '\0';
 
   xdr_free ((xdrproc_t) xdr_ypresp_key_val, (char *) &resp);
 
-  return status;
+  return YPERR_SUCCESS;
 }
 
 int
@@ -600,12 +569,13 @@ yp_master (const char *indomain, const char *inmap, char **outname)
 
   memset (&resp, '\0', sizeof (ypresp_master));
 
-  result = do_ypcall_tr (indomain, YPPROC_MASTER, (xdrproc_t) xdr_ypreq_nokey,
-			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_master,
-			 (caddr_t) &resp);
+  result = do_ypcall (indomain, YPPROC_MASTER, (xdrproc_t) xdr_ypreq_nokey,
+	  (caddr_t) & req, (xdrproc_t) xdr_ypresp_master, (caddr_t) & resp);
 
   if (result != YPERR_SUCCESS)
     return result;
+  if (resp.stat != YP_TRUE)
+    return ypprot_err (resp.stat);
 
   *outname = strdup (resp.peer);
   xdr_free ((xdrproc_t) xdr_ypresp_master, (char *) &resp);
@@ -622,7 +592,7 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
   enum clnt_stat result;
 
   if (indomain == NULL || indomain[0] == '\0' ||
-      inmap == NULL || inmap[0] == '\0')
+      inmap == NULL || inmap == '\0')
     return YPERR_BADARGS;
 
   req.domain = (char *) indomain;
@@ -630,17 +600,18 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
 
   memset (&resp, '\0', sizeof (resp));
 
-  result = do_ypcall_tr (indomain, YPPROC_ORDER, (xdrproc_t) xdr_ypreq_nokey,
-			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_order,
-			 (caddr_t) &resp);
+  result = do_ypcall (indomain, YPPROC_ORDER, (xdrproc_t) xdr_ypreq_nokey,
+	   (caddr_t) & req, (xdrproc_t) xdr_ypresp_order, (caddr_t) & resp);
 
-  if (result == YPERR_SUCCESS)
+  if (result != YPERR_SUCCESS)
     return result;
+  if (resp.stat != YP_TRUE)
+    return ypprot_err (resp.stat);
 
   *outorder = resp.ordernum;
   xdr_free ((xdrproc_t) xdr_ypresp_order, (char *) &resp);
 
-  return result;
+  return YPERR_SUCCESS;
 }
 
 struct ypresp_all_data
@@ -686,10 +657,10 @@ __xdr_ypresp_all (XDR *xdrs, struct ypresp_all_data *objp)
 	       if we don't modify the length. So add an extra NUL
 	       character to avoid trouble with broken code. */
 	    objp->status = YP_TRUE;
-	    *((char *) __mempcpy (key, resp.ypresp_all_u.val.key.keydat_val,
-				  keylen)) = '\0';
-	    *((char *) __mempcpy (val, resp.ypresp_all_u.val.val.valdat_val,
-				  vallen)) = '\0';
+	    memcpy (key, resp.ypresp_all_u.val.key.keydat_val, keylen);
+	    key[keylen] = '\0';
+	    memcpy (val, resp.ypresp_all_u.val.val.valdat_val, vallen);
+	    val[vallen] = '\0';
 	    xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
 	    if ((*objp->foreach) (objp->status, key, keylen,
 				  val, vallen, objp->data))
@@ -700,7 +671,7 @@ __xdr_ypresp_all (XDR *xdrs, struct ypresp_all_data *objp)
 	  objp->status = resp.ypresp_all_u.val.stat;
 	  xdr_free ((xdrproc_t) xdr_ypresp_all, (char *) &resp);
 	  /* Sun says we don't need to make this call, but must return
-	     immediately. Since Solaris makes this call, we will call
+	     immediatly. Since Solaris makes this call, we will call
 	     the callback function, too. */
 	  (*objp->foreach) (objp->status, NULL, 0, NULL, 0, objp->data);
 	  return TRUE;
@@ -722,8 +693,8 @@ yp_all (const char *indomain, const char *inmap,
   int clnt_sock;
   int saved_errno = errno;
 
-  if (indomain == NULL || indomain[0] == '\0'
-      || inmap == NULL || inmap[0] == '\0')
+  if (indomain == NULL || indomain[0] == '\0' ||
+      inmap == NULL || inmap == '\0')
     return YPERR_BADARGS;
 
   try = 0;
@@ -761,9 +732,9 @@ yp_all (const char *indomain, const char *inmap,
 			  (caddr_t) &req, (xdrproc_t) __xdr_ypresp_all,
 			  (caddr_t) &data, RPCTIMEOUT);
 
-      if (__builtin_expect (result != RPC_SUCCESS, 0))
+      if (result != RPC_SUCCESS)
 	{
-	  /* Print the error message only on the last try.  */
+	  /* Print the error message only on the last try */
 	  if (try == MAXTRIES - 1)
 	    clnt_perror (clnt, "yp_all: clnt_call");
 	  res = YPERR_RPC;
@@ -787,7 +758,6 @@ yp_all (const char *indomain, const char *inmap,
 }
 
 int
-
 yp_maplist (const char *indomain, struct ypmaplist **outmaplist)
 {
   struct ypresp_maplist resp;
@@ -798,92 +768,67 @@ yp_maplist (const char *indomain, struct ypmaplist **outmaplist)
 
   memset (&resp, '\0', sizeof (resp));
 
-  result = do_ypcall_tr (indomain, YPPROC_MAPLIST, (xdrproc_t) xdr_domainname,
-			 (caddr_t) &indomain, (xdrproc_t) xdr_ypresp_maplist,
-			 (caddr_t) &resp);
+  result = do_ypcall (indomain, YPPROC_MAPLIST, (xdrproc_t) xdr_domainname,
+    (caddr_t) & indomain, (xdrproc_t) xdr_ypresp_maplist, (caddr_t) & resp);
 
-  if (__builtin_expect (result == YPERR_SUCCESS, 1))
-    {
-      *outmaplist = resp.maps;
-      /* We don't free the list, this will be done by ypserv
-	 xdr_free((xdrproc_t)xdr_ypresp_maplist, (char *)&resp); */
-    }
+  if (result != YPERR_SUCCESS)
+    return result;
+  if (resp.stat != YP_TRUE)
+    return ypprot_err (resp.stat);
 
-  return result;
+  *outmaplist = resp.maps;
+  /* We give the list not free, this will be done by ypserv
+     xdr_free((xdrproc_t)xdr_ypresp_maplist, (char *)&resp); */
+
+  return YPERR_SUCCESS;
 }
 
 const char *
 yperr_string (const int error)
 {
-  const char *str;
   switch (error)
     {
     case YPERR_SUCCESS:
-      str = N_("Success");
-      break;
+      return _("Success");
     case YPERR_BADARGS:
-      str = N_("Request arguments bad");
-      break;
+      return _("Request arguments bad");
     case YPERR_RPC:
-      str = N_("RPC failure on NIS operation");
-      break;
+      return _("RPC failure on NIS operation");
     case YPERR_DOMAIN:
-      str = N_("Can't bind to server which serves this domain");
-      break;
+      return _("Can't bind to server which serves this domain");
     case YPERR_MAP:
-      str = N_("No such map in server's domain");
-      break;
+      return _("No such map in server's domain");
     case YPERR_KEY:
-      str = N_("No such key in map");
-      break;
+      return _("No such key in map");
     case YPERR_YPERR:
-      str = N_("Internal NIS error");
-      break;
+      return _("Internal NIS error");
     case YPERR_RESRC:
-      str = N_("Local resource allocation failure");
-      break;
+      return _("Local resource allocation failure");
     case YPERR_NOMORE:
-      str = N_("No more records in map database");
-      break;
+      return _("No more records in map database");
     case YPERR_PMAP:
-      str = N_("Can't communicate with portmapper");
-      break;
+      return _("Can't communicate with portmapper");
     case YPERR_YPBIND:
-      str = N_("Can't communicate with ypbind");
-      break;
+      return _("Can't communicate with ypbind");
     case YPERR_YPSERV:
-      str = N_("Can't communicate with ypserv");
-      break;
+      return _("Can't communicate with ypserv");
     case YPERR_NODOM:
-      str = N_("Local domain name not set");
-      break;
+      return _("Local domain name not set");
     case YPERR_BADDB:
-      str = N_("NIS map database is bad");
-      break;
+      return _("NIS map database is bad");
     case YPERR_VERS:
-      str = N_("NIS client/server version mismatch - can't supply service");
-      break;
+      return _("NIS client/server version mismatch - can't supply service");
     case YPERR_ACCESS:
-      str = N_("Permission denied");
-      break;
+      return _("Permission denied");
     case YPERR_BUSY:
-      str = N_("Database is busy");
-      break;
-    default:
-      str = N_("Unknown NIS error code");
-      break;
+      return _("Database is busy");
     }
-  return _(str);
+  return _("Unknown NIS error code");
 }
 
 static const int8_t yp_2_yperr[] =
   {
 #define YP2YPERR(yp, yperr)  [YP_##yp - YP_VERS] = YPERR_##yperr
-    YP2YPERR (TRUE, SUCCESS),
-    YP2YPERR (NOMORE, NOMORE),
-    YP2YPERR (FALSE, YPERR),
-    YP2YPERR (NOMAP, MAP),
-    YP2YPERR (NODOM, DOMAIN),
     YP2YPERR (NOKEY, KEY),
     YP2YPERR (BADOP, YPERR),
     YP2YPERR (BADDB, BADDB),
@@ -894,7 +839,7 @@ static const int8_t yp_2_yperr[] =
 int
 ypprot_err (const int code)
 {
-  if (code < YP_VERS || code > YP_NOMORE)
+  if (code < YP_VERS || code > YP_NOKEY)
     return YPERR_YPERR;
   return yp_2_yperr[code - YP_VERS];
 }
@@ -903,26 +848,19 @@ libnsl_hidden_def (ypprot_err)
 const char *
 ypbinderr_string (const int error)
 {
-  const char *str;
   switch (error)
     {
     case 0:
-      str = N_("Success");
-      break;
+      return _("Success");
     case YPBIND_ERR_ERR:
-      str = N_("Internal ypbind error");
-      break;
+      return _("Internal ypbind error");
     case YPBIND_ERR_NOSERV:
-      str = N_("Domain not bound");
-      break;
+      return _("Domain not bound");
     case YPBIND_ERR_RESC:
-      str = N_("System resource allocation failure");
-      break;
+      return _("System resource allocation failure");
     default:
-      str = N_("Unknown ypbind error");
-      break;
+      return _("Unknown ypbind error");
     }
-  return _(str);
 }
 libnsl_hidden_def (ypbinderr_string)
 
@@ -955,22 +893,16 @@ yp_update (char *domain, char *map, unsigned ypop,
   args.update_args.datum.yp_buf_len = datalen;
   args.update_args.datum.yp_buf_val = data;
 
-  if ((r = yp_master (domain, map, &master)) != YPERR_SUCCESS)
+  if ((r = yp_master (domain, map, &master)) != 0)
     return r;
 
   if (!host2netname (servername, master, domain))
     {
       fputs (_("yp_update: cannot convert host to netname\n"), stderr);
-      free (master);
       return YPERR_YPERR;
     }
 
-  clnt = clnt_create (master, YPU_PROG, YPU_VERS, "tcp");
-
-  /* We do not need the string anymore.  */
-  free (master);
-
-  if (clnt == NULL)
+  if ((clnt = clnt_create (master, YPU_PROG, YPU_VERS, "tcp")) == NULL)
     {
       clnt_pcreateerror ("yp_update: clnt_create");
       return YPERR_RPC;
@@ -1010,7 +942,6 @@ again:
     {
       if (clnt->cl_auth->ah_cred.oa_flavor == AUTH_DES)
 	{
-	  auth_destroy (clnt->cl_auth);
 	  clnt->cl_auth = authunix_create_default ();
 	  goto again;
 	}

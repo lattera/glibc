@@ -32,7 +32,7 @@ category  "zh_HK:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "zh_CN"
+copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE

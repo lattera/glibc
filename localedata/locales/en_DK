@@ -56,7 +56,7 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_CTYPE
-copy "en_GB"
+copy "i18n"
 END LC_CTYPE
 
 LC_MONETARY

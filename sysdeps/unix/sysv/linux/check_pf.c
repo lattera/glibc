@@ -1,5 +1,5 @@
 /* Determine protocol families for which interfaces exist.  Linux version.
-   Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
 #include <errno.h>
 #include <ifaddrs.h>
 #include <netdb.h>
-#include <stddef.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -31,30 +29,16 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include <not-cancel.h>
-#include <kernel-features.h>
-
-
-#ifndef IFA_F_TEMPORARY
-# define IFA_F_TEMPORARY IFA_F_SECONDARY
-#endif
-#ifndef IFA_F_HOMEADDRESS
-# define IFA_F_HOMEADDRESS 0
-#endif
+#include "kernel-features.h"
 
 
 static int
-make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
-	      struct in6addrinfo **in6ai, size_t *in6ailen)
+make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6)
 {
-  struct req
+  struct
   {
     struct nlmsghdr nlh;
     struct rtgenmsg g;
-    /* struct rtgenmsg consists of a single byte.  This means there
-       are three bytes of padding included in the REQ definition.
-       We make them explicit here.  */
-    char pad[3];
   } req;
   struct sockaddr_nl nladdr;
 
@@ -65,50 +49,20 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
   req.nlh.nlmsg_seq = time (NULL);
   req.g.rtgen_family = AF_UNSPEC;
 
-  assert (sizeof (req) - offsetof (struct req, pad) == 3);
-  memset (req.pad, '\0', sizeof (req.pad));
-
   memset (&nladdr, '\0', sizeof (nladdr));
   nladdr.nl_family = AF_NETLINK;
-
-#ifdef PAGE_SIZE
-  /* Help the compiler optimize out the malloc call if PAGE_SIZE
-     is constant and smaller or equal to PTHREAD_STACK_MIN/4.  */
-  const size_t buf_size = PAGE_SIZE;
-#else
-  const size_t buf_size = __getpagesize ();
-#endif
-  bool use_malloc = false;
-  char *buf;
-
-  if (__libc_use_alloca (buf_size))
-    buf = alloca (buf_size);
-  else
-    {
-      buf = malloc (buf_size);
-      if (buf != NULL)
-	use_malloc = true;
-      else
-	goto out_fail;
-    }
-
-  struct iovec iov = { buf, buf_size };
 
   if (TEMP_FAILURE_RETRY (__sendto (fd, (void *) &req, sizeof (req), 0,
 				    (struct sockaddr *) &nladdr,
 				    sizeof (nladdr))) < 0)
-    goto out_fail;
+    return -1;
 
   *seen_ipv4 = false;
   *seen_ipv6 = false;
 
   bool done = false;
-  struct in6ailist
-  {
-    struct in6addrinfo info;
-    struct in6ailist *next;
-  } *in6ailist = NULL;
-  size_t in6ailistlen = 0;
+  char buf[4096];
+  struct iovec iov = { buf, sizeof (buf) };
 
   do
     {
@@ -122,10 +76,10 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 
       ssize_t read_len = TEMP_FAILURE_RETRY (__recvmsg (fd, &msg, 0));
       if (read_len < 0)
-	goto out_fail;
+	return -1;
 
       if (msg.msg_flags & MSG_TRUNC)
-	goto out_fail;
+	return -1;
 
       struct nlmsghdr *nlmh;
       for (nlmh = (struct nlmsghdr *) buf;
@@ -147,47 +101,6 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 		  break;
 		case AF_INET6:
 		  *seen_ipv6 = true;
-
-		  if (ifam->ifa_flags & (IFA_F_DEPRECATED
-					 | IFA_F_TEMPORARY
-					 | IFA_F_HOMEADDRESS))
-		    {
-		      struct rtattr *rta = IFA_RTA (ifam);
-		      size_t len = (nlmh->nlmsg_len
-				    - NLMSG_LENGTH (sizeof (*ifam)));
-		      void *local = NULL;
-		      void *address = NULL;
-		      while (RTA_OK (rta, len))
-			{
-			  switch (rta->rta_type)
-			    {
-			    case IFA_LOCAL:
-			      local = RTA_DATA (rta);
-			      break;
-
-			    case IFA_ADDRESS:
-			      address = RTA_DATA (rta);
-			      break;
-			    }
-
-			  rta = RTA_NEXT (rta, len);
-			}
-
-		      struct in6ailist *newp = alloca (sizeof (*newp));
-		      newp->info.flags = (((ifam->ifa_flags & IFA_F_DEPRECATED)
-					   ? in6ai_deprecated : 0)
-					  | ((ifam->ifa_flags
-					      & IFA_F_TEMPORARY)
-					     ? in6ai_temporary : 0)
-					  | ((ifam->ifa_flags
-					      & IFA_F_HOMEADDRESS)
-					     ? in6ai_homeaddress : 0));
-		      memcpy (newp->info.addr, address ?: local,
-			      sizeof (newp->info.addr));
-		      newp->next = in6ailist;
-		      in6ailist = newp;
-		      ++in6ailistlen;
-		    }
 		  break;
 		default:
 		  /* Ignore.  */
@@ -197,36 +110,14 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6,
 	  else if (nlmh->nlmsg_type == NLMSG_DONE)
 	    /* We found the end, leave the loop.  */
 	    done = true;
+	  else ;
 	}
     }
   while (! done);
 
-  close_not_cancel_no_status (fd);
+  __close (fd);
 
-  if (in6ailist != NULL)
-    {
-      *in6ai = malloc (in6ailistlen * sizeof (**in6ai));
-      if (*in6ai == NULL)
-	goto out_fail;
-
-      *in6ailen = in6ailistlen;
-
-      do
-	{
-	  (*in6ai)[--in6ailistlen] = in6ailist->info;
-	  in6ailist = in6ailist->next;
-	}
-      while (in6ailist != NULL);
-    }
-
-  if (use_malloc)
-    free (buf);
   return 0;
-
-out_fail:
-  if (use_malloc)
-    free (buf);
-  return -1;
 }
 
 
@@ -242,12 +133,8 @@ extern int __no_netlink_support attribute_hidden;
 
 void
 attribute_hidden
-__check_pf (bool *seen_ipv4, bool *seen_ipv6,
-	    struct in6addrinfo **in6ai, size_t *in6ailen)
+__check_pf (bool *seen_ipv4, bool *seen_ipv6)
 {
-  *in6ai = NULL;
-  *in6ailen = 0;
-
   if (! __no_netlink_support)
     {
       int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
@@ -261,8 +148,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
       if (fd >= 0
 	  && __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
 	  && __getsockname (fd, (struct sockaddr *) &nladdr, &addr_len) == 0
-	  && make_request (fd, nladdr.nl_pid, seen_ipv4, seen_ipv6,
-			   in6ai, in6ailen) == 0)
+	  && make_request (fd, nladdr.nl_pid, seen_ipv4, seen_ipv6) == 0)
 	/* It worked.  */
 	return;
 
@@ -291,6 +177,9 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
       *seen_ipv6 = true;
       return;
     }
+
+  *seen_ipv4 = false;
+  *seen_ipv6 = false;
 
   struct ifaddrs *runp;
   for (runp = ifa; runp != NULL; runp = runp->ifa_next)

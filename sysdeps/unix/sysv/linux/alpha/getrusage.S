@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #define _ERRNO_H        1
 #include <bits/errno.h>
-#include <kernel-features.h>
+#include "kernel-features.h"
 
 .text
 
@@ -145,5 +145,5 @@ strong_alias(__getrusage_tv64, ____getrusage_tv64)
 default_symbol_version (____getrusage_tv64, __getrusage, GLIBC_2.1)
 default_symbol_version (__getrusage_tv64, getrusage, GLIBC_2.1)
 #else
-weak_alias (__getrusage, getrusage)
+weak_alias(__getrusage, getrusage)
 #endif

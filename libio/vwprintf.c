@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1997, 1999, 2001, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995,1997,1999,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +16,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <libioP.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <wchar.h>
@@ -25,8 +23,9 @@
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */
 int
-__vwprintf (const wchar_t *format, __gnuc_va_list arg)
+vwprintf (format, arg)
+     const wchar_t *format;
+     __gnuc_va_list arg;
 {
   return __vfwprintf (stdout, format, arg);
 }
-ldbl_strong_alias (__vwprintf, vwprintf)

@@ -3,7 +3,7 @@
 #define wcstoull wcstoull_XXX
 #define wcstouq wcstouq_XXX
 
-#include <wcsmbs/wcstoul.c>
+#include <sysdeps/generic/wcstoul.c>
 
 #undef __wcstoull_internal
 #undef wcstoull

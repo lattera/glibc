@@ -153,7 +153,12 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
 
   if (rstrm == NULL || buf == NULL)
     {
-      (void) __fxprintf (NULL, "%s", _("xdrrec_create: out of memory\n"));
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s", _("xdrrec_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("xdrrec_create: out of memory\n"), stderr);
       mem_free (rstrm, sizeof (RECSTREAM));
       mem_free (buf, sendsize + recvsize + BYTES_PER_XDR_UNIT);
       /*
@@ -176,7 +181,7 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
   /*
    * now the rest ...
    */
-  /* We have to add the cast since the `struct xdr_ops' in `struct XDR'
+  /* We have to add the const since the `struct xdr_ops' in `struct XDR'
      is not `const'.  */
   xdrs->x_ops = (struct xdr_ops *) &xdrrec_ops;
   xdrs->x_private = (caddr_t) rstrm;

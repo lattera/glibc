@@ -44,7 +44,7 @@ copy "fi_FI"
 END LC_COLLATE
 
 LC_CTYPE
-copy "fi_FI"
+copy "i18n"
 END LC_CTYPE
 
 LC_MONETARY

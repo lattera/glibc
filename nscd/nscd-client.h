@@ -1,5 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2003, 2004, 2005, 2006, 2007
-   Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -29,7 +28,6 @@
 #include <sys/types.h>
 #include <atomic.h>
 #include <nscd-types.h>
-#include <sys/uio.h>
 
 
 /* Version number of the daemon interface */
@@ -258,7 +256,6 @@ struct mapped_database
   const char *data;
   size_t mapsize;
   int counter;		/* > 0 indicates it is usable.  */
-  size_t datasize;
 };
 #define NO_MAPPING ((struct mapped_database *) -1l)
 
@@ -278,7 +275,7 @@ extern int __nscd_open_socket (const char *key, size_t keylen,
 /* Get reference of mapping.  */
 extern struct mapped_database *__nscd_get_map_ref (request_type type,
 						   const char *name,
-						   volatile struct locked_map_ptr *mapptr,
+						   struct locked_map_ptr *mapptr,
 						   int *gc_cyclep);
 
 /* Unmap database.  */
@@ -307,20 +304,9 @@ static inline int __nscd_drop_map_ref (struct mapped_database *map,
 
 
 /* Search the mapped database.  */
-extern struct datahead *__nscd_cache_search (request_type type,
-					     const char *key,
-					     size_t keylen,
-					     const struct mapped_database *mapped);
-
-/* Wrappers around read, readv and write that only read/write less than LEN
-   bytes on error or EOF.  */
-extern ssize_t __readall (int fd, void *buf, size_t len)
-  attribute_hidden;
-extern ssize_t __readvall (int fd, const struct iovec *iov, int iovcnt)
-  attribute_hidden;
-extern ssize_t writeall (int fd, const void *buf, size_t len)
-  attribute_hidden;
-extern ssize_t sendfileall (int tofd, int fromfd, off_t off, size_t len)
-  attribute_hidden;
+extern const struct datahead *__nscd_cache_search (request_type type,
+						   const char *key,
+						   size_t keylen,
+						   const struct mapped_database *mapped);
 
 #endif /* nscd.h */

@@ -1,1 +1,4 @@
-#error "Architecture-specific definition needed."
+struct link_map_machine
+  {
+    /* empty by default */
+  };

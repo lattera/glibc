@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,1995-2001,2003,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,1995-2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,20 +22,18 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <termios.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 
 #include <stdio-common/_itoa.h>
-#include <kernel-features.h>
 
 static int getttyname_r (char *buf, size_t buflen,
 			 dev_t mydev, ino64_t myino, int save,
 			 int *dostat) internal_function;
 
 static int
-internal_function attribute_compat_text_section
+internal_function
 getttyname_r (char *buf, size_t buflen, dev_t mydev, ino64_t myino,
 	      int save, int *dostat)
 {
@@ -101,6 +99,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
   struct stat64 st, st1;
   int dostat = 0;
   int save = errno;
+  int ret;
 
   /* Test for the absolute minimal size.  This makes life easier inside
      the loop.  */
@@ -116,34 +115,29 @@ __ttyname_r (int fd, char *buf, size_t buflen)
       return ERANGE;
     }
 
-  /* isatty check, tcgetattr is used because it sets the correct
-     errno (EBADF resp. ENOTTY) on error.  */
-  struct termios term;
-  if (__builtin_expect (__tcgetattr (fd, &term) < 0, 0))
-    return errno;
-
   /* We try using the /proc filesystem.  */
   *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
 
-  ssize_t ret = __readlink (procname, buf, buflen - 1);
-  if (__builtin_expect (ret == -1 && errno == ENOENT, 0))
+  ret = __readlink (procname, buf, buflen - 1);
+  if (ret == -1 && errno == ENOENT)
     {
       __set_errno (EBADF);
       return EBADF;
     }
 
-  if (__builtin_expect (ret == -1 && errno == ENAMETOOLONG, 0))
+  if (!__isatty (fd))
+    {
+      __set_errno (ENOTTY);
+      return ENOTTY;
+    }
+
+  if (ret == -1 && errno == ENAMETOOLONG)
     {
       __set_errno (ERANGE);
       return ERANGE;
     }
 
-  if (__builtin_expect (ret != -1
-#ifndef __ASSUME_PROC_SELF_FD_SYMLINK
-			/* This is for Linux 2.0.  */
-			&& buf[0] != '['
-#endif
-			, 1))
+  if (ret != -1 && buf[0] != '[')
     {
       buf[ret] = '\0';
       return 0;

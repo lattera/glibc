@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -42,8 +42,6 @@ do_test (void)
   char *p;
   int err;
   int s;
-  pthread_barrier_t *b;
-  pthread_barrierattr_t ba;
 
   fd = mkstemp (tmpfname);
   if (fd == -1)
@@ -72,12 +70,9 @@ do_test (void)
       return 1;
     }
 
-  m = (pthread_mutex_t *) (((uintptr_t) mem + __alignof (pthread_mutex_t) - 1)
+  m = (pthread_mutex_t *) (((uintptr_t) mem + __alignof (pthread_mutex_t))
 			   & ~(__alignof (pthread_mutex_t) - 1));
-  b = (pthread_barrier_t *) (((uintptr_t) (m + 1)
-			      + __alignof (pthread_barrier_t) - 1)
-			     & ~(__alignof (pthread_barrier_t) - 1));
-  p = (char *) (b + 1);
+  p = (char *) (m + 1);
 
   if (pthread_mutexattr_init (&a) != 0)
     {
@@ -115,23 +110,8 @@ do_test (void)
       return 1;
     }
 
-#ifdef ENABLE_PI
-  if (pthread_mutexattr_setprotocol (&a, PTHREAD_PRIO_INHERIT) != 0)
+  if (pthread_mutex_init (m, &a) != 0)
     {
-      puts ("pthread_mutexattr_setprotocol failed");
-      return 1;
-    }
-#endif
-
-  if ((err = pthread_mutex_init (m, &a)) != 0)
-    {
-#ifdef ENABLE_PI
-      if (err == ENOTSUP)
-	{
-	  puts ("PI mutexes unsupported");
-	  return 0;
-	}
-#endif
       puts ("mutex_init failed");
       return 1;
     }
@@ -145,30 +125,6 @@ do_test (void)
   if (pthread_mutexattr_destroy (&a) != 0)
     {
       puts ("mutexattr_destroy failed");
-      return 1;
-    }
-
-  if (pthread_barrierattr_init (&ba) != 0)
-    {
-      puts ("barrierattr_init failed");
-      return 1;
-    }
-
-  if (pthread_barrierattr_setpshared (&ba, PTHREAD_PROCESS_SHARED) != 0)
-    {
-      puts ("barrierattr_setpshared failed");
-      return 1;
-    }
-
-  if (pthread_barrier_init (b, &ba, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      return 1;
-    }
-
-  if (pthread_barrierattr_destroy (&ba) != 0)
-    {
-      puts ("barrierattr_destroy failed");
       return 1;
     }
 
@@ -186,12 +142,6 @@ do_test (void)
 
   *p = 0;
 
-  if (pthread_mutex_unlock (m) != 0)
-    {
-      puts ("parent: 1st mutex_unlock failed");
-      return 1;
-    }
-
   puts ("going to fork now");
   pid = fork ();
   if (pid == -1)
@@ -201,19 +151,7 @@ do_test (void)
     }
   else if (pid == 0)
     {
-      if (pthread_mutex_lock (m) != 0)
-	{
-	  puts ("child: mutex_lock failed");
-	  return 1;
-	}
-
-      int e = pthread_barrier_wait (b);
-      if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  puts ("child: barrier_wait failed");
-	  return 1;
-	}
-
+      /* Play some lock ping-pong.  It's our turn to unlock first.  */
       if ((*p)++ != 0)
 	{
 	  puts ("child: *p != 0");
@@ -222,7 +160,7 @@ do_test (void)
 
       if (pthread_mutex_unlock (m) != 0)
 	{
-	  puts ("child: mutex_unlock failed");
+	  puts ("child: 1st mutex_unlock failed");
 	  return 1;
 	}
 
@@ -230,13 +168,6 @@ do_test (void)
     }
   else
     {
-      int e = pthread_barrier_wait (b);
-      if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  puts ("parent: barrier_wait failed");
-	  return 1;
-	}
-
       if (pthread_mutex_lock (m) != 0)
 	{
 	  puts ("parent: 2nd mutex_lock failed");
@@ -246,24 +177,6 @@ do_test (void)
       if (*p != 1)
 	{
 	  puts ("*p != 1");
-	  return 1;
-	}
-
-      if (pthread_mutex_unlock (m) != 0)
-	{
-	  puts ("parent: 2nd mutex_unlock failed");
-	  return 1;
-	}
-
-      if (pthread_mutex_destroy (m) != 0)
-	{
-	  puts ("mutex_destroy failed");
-	  return 1;
-	}
-
-      if (pthread_barrier_destroy (b) != 0)
-	{
-	  puts ("barrier_destroy failed");
 	  return 1;
 	}
 

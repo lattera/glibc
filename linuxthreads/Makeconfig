@@ -1,0 +1,11 @@
+# Makeconfig fragment for linuxthreads add-on.
+# This gets included at the end of the main glibc Makeconfig.
+
+have-thread-library = yes
+
+shared-thread-library = $(common-objpfx)linuxthreads/libpthread_nonshared.a \
+			$(common-objpfx)linuxthreads/libpthread.so
+static-thread-library = $(common-objpfx)linuxthreads/libpthread.a
+bounded-thread-library = $(common-objpfx)linuxthreads/libpthread_b.a
+
+rpath-dirs += linuxthreads

@@ -42,6 +42,4 @@ libnsl_hidden_proto (__nis_default_group)
 libnsl_hidden_proto (__nis_default_access)
 libnsl_hidden_proto (nis_clone_object)
 
-extern const_nis_name __nis_domain_of (const_nis_name) __THROW;
-
 #endif

@@ -1,0 +1,7 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local configure fragment for sysdeps/unix.
+
+if test -z "$inhibit_glue"; then
+# For make_errlist.c, used in make_errlist.
+AC_CHECK_FUNCS(strerror)
+fi

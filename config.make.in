@@ -1,4 +1,5 @@
 # @configure_input@
+# From $Id$.
 # Don't edit this file.  Put configuration parameters in configparms instead.
 
 version = @VERSION@
@@ -30,11 +31,9 @@ base-machine = @base_machine@
 config-vendor = @host_vendor@
 config-os = @host_os@
 config-sysdirs = @sysnames@
-with-cpu = @submachine@
 
 defines = @DEFINES@
 sysincludes = @SYSINCLUDES@
-c++-sysincludes = @CXX_SYSINCLUDES@
 all-warnings = @all_warnings@
 
 elf = @elf@
@@ -54,18 +53,15 @@ with-fp = @with_fp@
 with-cvs = @with_cvs@
 old-glibc-headers = @old_glibc_headers@
 unwind-find-fde = @libc_cv_gcc_unwind_find_fde@
+have-initfini-array = @libc_cv_initfinit_array@
 have-cpp-asm-debuginfo = @libc_cv_cpp_asm_debuginfo@
 enable-check-abi = @enable_check_abi@
 have-forced-unwind = @libc_cv_forced_unwind@
 have-fpie = @libc_cv_fpie@
-have-ssp = @libc_cv_ssp@
 have-selinux = @have_selinux@
-have-libaudit = @have_libaudit@
-have-libcap = @have_libcap@
 have-cc-with-libunwind = @libc_cv_cc_with_libunwind@
 fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@
-have-hash-style = @libc_cv_hashstyle@
 
 static-libgcc = @libc_cv_gcc_static_libgcc@
 
@@ -73,6 +69,7 @@ versioning = @VERSIONING@
 oldest-abi = @oldest_abi@
 no-whole-archive = @no_whole_archive@
 exceptions = @exceptions@
+have_doors = @linux_doors@
 
 mach-interface-list = @mach_interface_list@
 
@@ -82,6 +79,8 @@ have-ksh = @libc_cv_have_ksh@
 sizeof-long-double = @sizeof_long_double@
 
 # Configuration options.
+gnu-as = @gnu_as@
+gnu-ld = @gnu_ld@
 build-static = @static@
 build-shared = @shared@
 build-pic-default= @pic_default@
@@ -90,8 +89,6 @@ build-omitfp = @omitfp@
 build-bounded = @bounded@
 build-static-nss = @static_nss@
 add-ons = @add_ons@
-add-on-subdirs = @add_on_subdirs@
-sysdeps-add-ons = @sysdeps_add_ons@
 cross-compiling = @cross_compiling@
 force-install = @force_install@
 

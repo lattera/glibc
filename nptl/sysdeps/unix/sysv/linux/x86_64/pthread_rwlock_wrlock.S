@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -72,12 +72,8 @@ __pthread_rwlock_wrlock:
 	jne	10f
 
 11:	addq	$WRITERS_WAKEUP, %rdi
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
-#else
-	movl	$FUTEX_WAIT, %esi
-#endif
-	movl	$SYS_futex, %eax
+	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
+	movq	$SYS_futex, %rax
 	syscall
 
 	subq	$WRITERS_WAKEUP, %rdi
@@ -96,7 +92,7 @@ __pthread_rwlock_wrlock:
 13:	decl	WRITERS_QUEUED(%rdi)
 	jmp	2b
 
-5:	xorl	%edx, %edx
+5:	xorq	%rdx, %rdx
 	movl	%fs:TID, %eax
 	movl	%eax, WRITER(%rdi)
 9:	LOCK
@@ -123,7 +119,7 @@ __pthread_rwlock_wrlock:
 
 14:	cmpl	%fs:TID, %eax
 	jne	3b
-	movl	$EDEADLK, %edx
+	movq	$EDEADLK, %rdx
 	jmp	9b
 
 6:

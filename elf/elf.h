@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995-2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -329,8 +329,7 @@ typedef struct
 #define SHT_GROUP	  17		/* Section group */
 #define SHT_SYMTAB_SHNDX  18		/* Extended section indeces */
 #define	SHT_NUM		  19		/* Number of defined types.  */
-#define SHT_LOOS	  0x60000000	/* Start OS-specific.  */
-#define SHT_GNU_HASH	  0x6ffffff6	/* GNU-style hash table.  */
+#define SHT_LOOS	  0x60000000	/* Start OS-specific */
 #define SHT_GNU_LIBLIST	  0x6ffffff7	/* Prelink library list */
 #define SHT_CHECKSUM	  0x6ffffff8	/* Checksum for DSO content.  */
 #define SHT_LOSUNW	  0x6ffffffa	/* Sun-specific low bound.  */
@@ -700,9 +699,6 @@ typedef struct
    If any adjustment is made to the ELF object after it has been
    built these entries will need to be adjusted.  */
 #define DT_ADDRRNGLO	0x6ffffe00
-#define DT_GNU_HASH	0x6ffffef5	/* GNU-style hash table.  */
-#define DT_TLSDESC_PLT	0x6ffffef6
-#define DT_TLSDESC_GOT	0x6ffffef7
 #define DT_GNU_CONFLICT	0x6ffffef8	/* Start of conflict section */
 #define DT_GNU_LIBLIST	0x6ffffef9	/* Library list */
 #define DT_CONFIG	0x6ffffefa	/* Configuration information.  */
@@ -713,7 +709,7 @@ typedef struct
 #define DT_SYMINFO	0x6ffffeff	/* Syminfo table.  */
 #define DT_ADDRRNGHI	0x6ffffeff
 #define DT_ADDRTAGIDX(tag)	(DT_ADDRRNGHI - (tag))	/* Reverse order! */
-#define DT_ADDRNUM 11
+#define DT_ADDRNUM 10
 
 /* The versioning entry types.  The next are defined as part of the
    GNU extension.  */
@@ -903,25 +899,23 @@ typedef struct
 
 typedef struct
 {
-  uint32_t a_type;		/* Entry type */
+  int a_type;			/* Entry type */
   union
     {
-      uint32_t a_val;		/* Integer value */
-      /* We use to have pointer elements added here.  We cannot do that,
-	 though, since it does not work when using 32-bit definitions
-	 on 64-bit platforms and vice versa.  */
+      long int a_val;		/* Integer value */
+      void *a_ptr;		/* Pointer value */
+      void (*a_fcn) (void);	/* Function pointer value */
     } a_un;
 } Elf32_auxv_t;
 
 typedef struct
 {
-  uint64_t a_type;		/* Entry type */
+  long int a_type;		/* Entry type */
   union
     {
-      uint64_t a_val;		/* Integer value */
-      /* We use to have pointer elements added here.  We cannot do that,
-	 though, since it does not work when using 32-bit definitions
-	 on 64-bit platforms and vice versa.  */
+      long int a_val;		/* Integer value */
+      void *a_ptr;		/* Pointer value */
+      void (*a_fcn) (void);	/* Function pointer value */
     } a_un;
 } Elf64_auxv_t;
 
@@ -1254,15 +1248,14 @@ typedef struct
 #define DT_SPARC_REGISTER 0x70000001
 #define DT_SPARC_NUM	2
 
-/* Bits present in AT_HWCAP on SPARC.  */
+/* Bits present in AT_HWCAP, primarily for Sparc32.  */
 
-#define HWCAP_SPARC_FLUSH	1	/* The CPU supports flush insn.  */
+#define HWCAP_SPARC_FLUSH	1	/* The cpu supports flush insn.  */
 #define HWCAP_SPARC_STBAR	2
 #define HWCAP_SPARC_SWAP	4
 #define HWCAP_SPARC_MULDIV	8
-#define HWCAP_SPARC_V9		16	/* The CPU is v9, so v8plus is ok.  */
+#define HWCAP_SPARC_V9		16	/* The cpu is v9, so v8plus is ok.  */
 #define HWCAP_SPARC_ULTRA3	32
-#define HWCAP_SPARC_BLKINIT	64	/* Sun4v with block-init/load-twin.  */
 
 /* MIPS R3000 specific definitions.  */
 
@@ -1498,21 +1491,8 @@ typedef struct
 #define R_MIPS_PJUMP		35
 #define R_MIPS_RELGOT		36
 #define R_MIPS_JALR		37
-#define R_MIPS_TLS_DTPMOD32	38	/* Module number 32 bit */
-#define R_MIPS_TLS_DTPREL32	39	/* Module-relative offset 32 bit */
-#define R_MIPS_TLS_DTPMOD64	40	/* Module number 64 bit */
-#define R_MIPS_TLS_DTPREL64	41	/* Module-relative offset 64 bit */
-#define R_MIPS_TLS_GD		42	/* 16 bit GOT offset for GD */
-#define R_MIPS_TLS_LDM		43	/* 16 bit GOT offset for LDM */
-#define R_MIPS_TLS_DTPREL_HI16	44	/* Module-relative offset, high 16 bits */
-#define R_MIPS_TLS_DTPREL_LO16	45	/* Module-relative offset, low 16 bits */
-#define R_MIPS_TLS_GOTTPREL	46	/* 16 bit GOT offset for IE */
-#define R_MIPS_TLS_TPREL32	47	/* TP-relative offset, 32 bit */
-#define R_MIPS_TLS_TPREL64	48	/* TP-relative offset, 64 bit */
-#define R_MIPS_TLS_TPREL_HI16	49	/* TP-relative offset, high 16 bits */
-#define R_MIPS_TLS_TPREL_LO16	50	/* TP-relative offset, low 16 bits */
 /* Keep this the last entry.  */
-#define R_MIPS_NUM		51
+#define R_MIPS_NUM		38
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
@@ -1871,9 +1851,6 @@ typedef Elf32_Addr Elf32_Conflict;
 #define LITUSE_ALPHA_TLS_GD	4
 #define LITUSE_ALPHA_TLS_LDM	5
 
-/* Legal values for d_tag of Elf64_Dyn.  */
-#define DT_ALPHA_PLTRO		(DT_LOPROC + 0)
-#define DT_ALPHA_NUM		1
 
 /* PowerPC specific declarations */
 
@@ -1984,19 +1961,10 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC_DIAB_RELSDA_HI	184	/* like EMB_RELSDA, but high 16 bit */
 #define R_PPC_DIAB_RELSDA_HA	185	/* like EMB_RELSDA, adjusted high 16 */
 
-/* GNU relocs used in PIC code sequences.  */
-#define R_PPC_REL16		249	/* word32   (sym-.) */
-#define R_PPC_REL16_LO		250	/* half16   (sym-.)@l */
-#define R_PPC_REL16_HI		251	/* half16   (sym-.)@h */
-#define R_PPC_REL16_HA		252	/* half16   (sym-.)@ha */
-
 /* This is a phony reloc to handle any old fashioned TOC16 references
    that may still be in object files.  */
 #define R_PPC_TOC16		255
 
-/* PowerPC specific values for the Dyn d_tag field.  */
-#define DT_PPC_GOT		(DT_LOPROC + 0)
-#define DT_PPC_NUM		1
 
 /* PowerPC64 relocations defined by the ABIs */
 #define R_PPC64_NONE		R_PPC_NONE
@@ -2157,11 +2125,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define PF_ARM_SB          0x10000000   /* Segment contains the location
 					   addressed by the static base */
 
-/* Processor specific values for the Phdr p_type field.  */
-#define PT_ARM_EXIDX	0x70000001	/* .ARM.exidx segment */
-
 /* ARM relocs.  */
-
 #define R_ARM_NONE		0	/* No reloc */
 #define R_ARM_PC24		1	/* PC relative 26 bit branch */
 #define R_ARM_ABS32		2	/* Direct 32 bit  */
@@ -2179,9 +2143,6 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_THM_SWI8		14
 #define R_ARM_XPC25		15
 #define R_ARM_THM_XPC22		16
-#define R_ARM_TLS_DTPMOD32	17	/* ID of module containing symbol */
-#define R_ARM_TLS_DTPOFF32	18	/* Offset in TLS block */
-#define R_ARM_TLS_TPOFF32	19	/* Offset in static TLS block */
 #define R_ARM_COPY		20	/* Copy symbol at runtime */
 #define R_ARM_GLOB_DAT		21	/* Create GOT entry */
 #define R_ARM_JUMP_SLOT		22	/* Create PLT entry */
@@ -2200,16 +2161,6 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_GNU_VTINHERIT	101
 #define R_ARM_THM_PC11		102	/* thumb unconditional branch */
 #define R_ARM_THM_PC9		103	/* thumb conditional branch */
-#define R_ARM_TLS_GD32		104	/* PC-rel 32 bit for global dynamic
-					   thread local data */
-#define R_ARM_TLS_LDM32		105	/* PC-rel 32 bit for local dynamic
-					   thread local data */
-#define R_ARM_TLS_LDO32		106	/* 32 bit offset relative to TLS
-					   block */
-#define R_ARM_TLS_IE32		107	/* PC-rel 32 bit for GOT entry of
-					   static TLS block offset */
-#define R_ARM_TLS_LE32		108	/* 32 bit offset relative to static
-					   TLS block */
 #define R_ARM_RXPC25		249
 #define R_ARM_RSBREL32		250
 #define R_ARM_THM_RPC22		251
@@ -2574,7 +2525,6 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_M32R_SDA16_RELA	42	/* 16 bit offset in SDA */
 #define R_M32R_RELA_GNU_VTINHERIT	43
 #define R_M32R_RELA_GNU_VTENTRY	44
-#define R_M32R_REL32		45	/* PC relative 32 bit.  */
 
 #define R_M32R_GOT24		48	/* 24 bit GOT entry */
 #define R_M32R_26_PLTREL	49	/* 26 bit PC relative to PLT shifted */

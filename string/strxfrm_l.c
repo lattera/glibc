@@ -1,5 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2002, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -97,7 +96,6 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   const int32_t *indirect;
   uint_fast32_t pass;
   size_t needed;
-  size_t last_needed;
   const USTRING_TYPE *usrc;
   size_t srclen = STRLEN (src);
   int32_t *idxarr;
@@ -199,7 +197,6 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 	 this is true for all of them.  */
       int position = rule & sort_position;
 
-      last_needed = needed;
       if (position == 0)
 	{
 	  for (idxcnt = 0; idxcnt < idxmax; ++idxcnt)
@@ -213,9 +210,8 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 		      /* Handle the pushed elements now.  */
 		      size_t backw;
 
-		      for (backw = idxcnt; backw > backw_stop; )
+		      for (backw = idxcnt - 1; backw >= backw_stop; --backw)
 			{
-			  --backw;
 			  len = weights[idxarr[backw]++];
 
 			  if (needed + len < n)
@@ -297,9 +293,8 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 		     /* Handle the pushed elements now.  */
 		      size_t backw;
 
-		      for (backw = idxcnt; backw > backw_stop; )
+		      for (backw = idxcnt - 1; backw >= backw_stop; --backw)
 			{
-			  --backw;
 			  len = weights[idxarr[backw]++];
 			  if (len != 0)
 			    {
@@ -429,11 +424,11 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
      a `position' rule at the end and if no non-ignored character
      is found the last \1 byte is immediately followed by a \0 byte
      signalling this.  We can avoid the \1 byte(s).  */
-  if (needed > 2 && needed == last_needed + 1)
+  if (needed <= n && needed > 2 && dest[needed - 2] == L('\1'))
     {
       /* Remove the \1 byte.  */
-      if (--needed <= n)
-	dest[needed - 1] = L('\0');
+      --needed;
+      dest[needed - 1] = L('\0');
     }
 
   /* Free the memory if needed.  */

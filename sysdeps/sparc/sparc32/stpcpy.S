@@ -38,13 +38,7 @@
 
 	.text
 	.align		4
-
-ENTRY(__stpcpy)
-	andcc		%o1, 3, %g0
-	be		20f
-	 sethi		%hi(0x80808080), %o4
-
-	ldub		[%o1], %o5
+10:	ldub		[%o1], %o5
 	stb		%o5, [%o0]
 	cmp		%o5, 0
 	add		%o0, 1, %o0
@@ -73,7 +67,11 @@ ENTRY(__stpcpy)
 1:	retl
 	 add		%o0, -1, %o0
 
-20:	or		%o4, %lo(0x80808080), %o3
+ENTRY(__stpcpy)
+	andcc		%o1, 3, %g0
+	bne		10b
+	 sethi		%hi(0x80808080), %o4
+	or		%o4, %lo(0x80808080), %o3
 4:	sethi		%hi(0x01010101), %o4
 5:	or		%o4, %lo(0x01010101), %o2
 6:	andcc		%o0, 3, %g0
@@ -162,6 +160,6 @@ ENTRY(__stpcpy)
 	 nop
 END(__stpcpy)
 
-weak_alias (__stpcpy, stpcpy)
+weak_alias(__stpcpy, stpcpy)
 libc_hidden_def (__stpcpy)
 libc_hidden_builtin_def (stpcpy)

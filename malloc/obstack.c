@@ -1,7 +1,8 @@
 /* obstack.c - subroutines used implicitly by object stack macros
-   Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996, 1997, 1998,
-   1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+   Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996, 1997,
+   1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.  Its master source is NOT part of
+   the C library, however.  The master source lives in /gd/gnu/lib.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -15,9 +16,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
-
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -52,38 +52,22 @@
 # endif
 #endif
 
-#include <stddef.h>
+#if defined _LIBC && defined USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 #ifndef ELIDE_CODE
 
 
-# if HAVE_INTTYPES_H
-#  include <inttypes.h>
-# endif
-# if HAVE_STDINT_H || defined _LIBC
-#  include <stdint.h>
-# endif
-
 /* Determine default alignment.  */
-union fooround
-{
-  uintmax_t i;
-  long double d;
-  void *p;
-};
-struct fooalign
-{
-  char c;
-  union fooround u;
-};
+struct fooalign {char x; double d;};
+# define DEFAULT_ALIGNMENT  \
+  ((PTR_INT_TYPE) ((char *) &((struct fooalign *) 0)->d - (char *) 0))
 /* If malloc were really smart, it would round addresses to DEFAULT_ALIGNMENT.
    But in fact it might be less smart and round addresses to as much as
    DEFAULT_ROUNDING.  So we prepare for it to do that.  */
-enum
-  {
-    DEFAULT_ALIGNMENT = offsetof (struct fooalign, u),
-    DEFAULT_ROUNDING = sizeof (union fooround)
-  };
+union fooround {long x; double d;};
+# define DEFAULT_ROUNDING (sizeof (union fooround))
 
 /* When we copy a long block of data, this is the unit to do it with.
    On some machines, copying successive ints does not work;
@@ -159,7 +143,7 @@ _obstack_begin (struct obstack *h,
   register struct _obstack_chunk *chunk; /* points to new chunk */
 
   if (alignment == 0)
-    alignment = DEFAULT_ALIGNMENT;
+    alignment = (int) DEFAULT_ALIGNMENT;
   if (size == 0)
     /* Default size is what GNU malloc can fit in a 4096-byte block.  */
     {
@@ -186,8 +170,7 @@ _obstack_begin (struct obstack *h,
   chunk = h->chunk = CALL_CHUNKFUN (h, h -> chunk_size);
   if (!chunk)
     (*obstack_alloc_failed_handler) ();
-  h->next_free = h->object_base = __PTR_ALIGN ((char *) chunk, chunk->contents,
-					       alignment - 1);
+  h->next_free = h->object_base = chunk->contents;
   h->chunk_limit = chunk->limit
     = (char *) chunk + h->chunk_size;
   chunk->prev = 0;
@@ -206,7 +189,7 @@ _obstack_begin_1 (struct obstack *h, int size, int alignment,
   register struct _obstack_chunk *chunk; /* points to new chunk */
 
   if (alignment == 0)
-    alignment = DEFAULT_ALIGNMENT;
+    alignment = (int) DEFAULT_ALIGNMENT;
   if (size == 0)
     /* Default size is what GNU malloc can fit in a 4096-byte block.  */
     {
@@ -234,8 +217,7 @@ _obstack_begin_1 (struct obstack *h, int size, int alignment,
   chunk = h->chunk = CALL_CHUNKFUN (h, h -> chunk_size);
   if (!chunk)
     (*obstack_alloc_failed_handler) ();
-  h->next_free = h->object_base = __PTR_ALIGN ((char *) chunk, chunk->contents,
-					       alignment - 1);
+  h->next_free = h->object_base = chunk->contents;
   h->chunk_limit = chunk->limit
     = (char *) chunk + h->chunk_size;
   chunk->prev = 0;
@@ -277,7 +259,8 @@ _obstack_newchunk (struct obstack *h, int length)
 
   /* Compute an aligned object_base in the new chunk */
   object_base =
-    __PTR_ALIGN ((char *) new_chunk, new_chunk->contents, h->alignment_mask);
+    __INT_TO_PTR ((__PTR_TO_INT (new_chunk->contents) + h->alignment_mask)
+		  & ~ (h->alignment_mask));
 
   /* Move the existing object to the new chunk.
      Word at a time is fast and is safe if the object
@@ -302,10 +285,7 @@ _obstack_newchunk (struct obstack *h, int length)
   /* If the object just copied was the only data in OLD_CHUNK,
      free that chunk and remove it from the chain.
      But not if that chunk might contain an empty object.  */
-  if (! h->maybe_empty_object
-      && (h->object_base
-	  == __PTR_ALIGN ((char *) old_chunk, old_chunk->contents,
-			  h->alignment_mask)))
+  if (h->object_base == old_chunk->contents && ! h->maybe_empty_object)
     {
       new_chunk->prev = old_chunk->prev;
       CALL_FREEFUN (h, old_chunk);
@@ -430,11 +410,12 @@ print_and_abort (void)
      happen because the "memory exhausted" message appears in other places
      like this and the translation should be reused instead of creating
      a very similar string which requires a separate translation.  */
-# ifdef _LIBC
-  (void) __fxprintf (NULL, "%s\n", _("memory exhausted"));
-# else
-  fprintf (stderr, "%s\n", _("memory exhausted"));
+# if defined _LIBC && defined USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    __fwprintf (stderr, L"%s\n", _("memory exhausted"));
+  else
 # endif
+    fprintf (stderr, "%s\n", _("memory exhausted"));
   exit (obstack_exit_failure);
 }
 

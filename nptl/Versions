@@ -232,14 +232,6 @@ libpthread {
     pthread_setschedprio;
   }
 
-  GLIBC_2.4 {
-    pthread_mutexattr_getrobust_np; pthread_mutexattr_setrobust_np;
-    pthread_mutex_consistent_np;
-    pthread_mutexattr_getprotocol; pthread_mutexattr_setprotocol;
-    pthread_mutexattr_getprioceiling; pthread_mutexattr_setprioceiling;
-    pthread_mutex_getprioceiling; pthread_mutex_setprioceiling;
-  };
-
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
     __pthread_clock_gettime; __pthread_clock_settime;

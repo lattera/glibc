@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -27,11 +27,11 @@
 
 #include "nss-nisplus.h"
 
-#define NISENTRYVAL(idx, col, res) \
-        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val)
+#define NISENTRYVAL(idx,col,res) \
+        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
 
-#define NISENTRYLEN(idx, col, res) \
-        (NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
+#define NISENTRYLEN(idx,col,res) \
+        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
 enum nss_status
 _nss_nisplus_getnetgrent_r (struct __netgrent *result, char *buffer,
@@ -141,23 +141,29 @@ _nss_nisplus_getnetgrent_r (struct __netgrent *result, char *buffer,
 static void
 internal_endnetgrent (struct __netgrent *netgrp)
 {
-  nis_freeresult ((nis_result *) netgrp->data);
-  netgrp->data = NULL;
-  netgrp->data_size = 0;
-  netgrp->position = 0;
+  if (netgrp->data != NULL)
+    {
+      nis_freeresult ((nis_result *) netgrp->data);
+      netgrp->data = NULL;
+      netgrp->data_size = 0;
+      netgrp->position = 0;
+    }
 }
 
 enum nss_status
 _nss_nisplus_setnetgrent (const char *group, struct __netgrent *netgrp)
 {
-  char buf[strlen (group) + 25];
+  enum nss_status status;
+  char buf[strlen (group) + 30];
 
   if (group == NULL || group[0] == '\0')
     return NSS_STATUS_UNAVAIL;
 
-  enum nss_status status = NSS_STATUS_SUCCESS;
+  status = NSS_STATUS_SUCCESS;
 
-  snprintf (buf, sizeof (buf), "[name=%s],netgroup.org_dir", group);
+  internal_endnetgrent (netgrp);
+
+  sprintf (buf, "[name=%s],netgroup.org_dir", group);
 
   netgrp->data = (char *) nis_list (buf, EXPAND_NAME, NULL, NULL);
 

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF startup code.  PowerPC version.
-   Copyright (C) 1995-2000, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
-   02110-1301 USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <sysdep.h>
 
@@ -39,7 +39,7 @@ ENTRY(_start)
 	bl	_dl_start@local
 
 	/* FALLTHRU */
-_dl_start_user:
+ENTRY(_dl_start_user)
 /* Now, we do our main work of calling initialisation procedures.
    The ELF ABI doesn't say anything about parameters for these,
    so we just pass argc, argv, and the environment.
@@ -47,15 +47,8 @@ _dl_start_user:
    passed by value!).  */
 
 /*  Put our GOT pointer in r31, */
-#ifdef HAVE_ASM_PPC_REL16
-	bcl	20,31,1f
-1:	mflr	r31
-	addis	r31,r31,_GLOBAL_OFFSET_TABLE_-1b@ha
-	addi	r31,r31,_GLOBAL_OFFSET_TABLE_-1b@l
-#else
 	bl	_GLOBAL_OFFSET_TABLE_-4@local
 	mflr	r31
-#endif
 /*  the address of _start in r30, */
 	mr	r30,r3
 /*  &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */
@@ -98,7 +91,6 @@ _dl_start_user:
    Take the opportunity to clear LR, so anyone who accidentally returns
    from _start gets SEGV.  Also clear the next few words of the stack.  */
 
-_dl_main_dispatch:
 	li	r31,0
 	stw	r31,0(r1)
 	mtlr	r31

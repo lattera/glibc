@@ -1,5 +1,5 @@
 /* Assembly macros for 32-bit PowerPC.
-   Copyright (C) 1999, 2001, 2002, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
-   02110-1301 USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <sysdeps/powerpc/sysdep.h>
 
@@ -29,11 +29,31 @@
 /* The mcount code relies on a the return address being on the stack
    to locate our caller and so it can restore it; so store one just
    for its benefit.  */
-# define CALL_MCOUNT							      \
+# ifdef PIC
+#  define CALL_MCOUNT							      \
+  .pushsection;								      \
+  .section ".data";    							      \
+  .align ALIGNARG(2);							      \
+0:.long 0;								      \
+  .previous;								      \
   mflr  r0;								      \
-  stw   r0,4(r1);							      \
-  cfi_offset (lr, 4);	       						      \
+  stw   r0,4(r1);	       						      \
+  bl    _GLOBAL_OFFSET_TABLE_@local-4;					      \
+  mflr  r11;								      \
+  lwz   r0,0b@got(r11);							      \
   bl    JUMPTARGET(_mcount);
+# else  /* PIC */
+#  define CALL_MCOUNT							      \
+  .section ".data";							      \
+  .align ALIGNARG(2);							      \
+0:.long 0;								      \
+  .previous;								      \
+  mflr  r0;								      \
+  lis   r11,0b@ha;		       					      \
+  stw   r0,4(r1);	       						      \
+  addi  r0,r11,0b@l;							      \
+  bl    JUMPTARGET(_mcount);
+# endif /* PIC */
 #else  /* PROF */
 # define CALL_MCOUNT		/* Do nothing.  */
 #endif /* PROF */
@@ -43,7 +63,6 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
-  cfi_startproc;							      \
   CALL_MCOUNT
 
 #define EALIGN_W_0  /* No words to insert.  */
@@ -63,7 +82,6 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
-  cfi_startproc;							      \
   CALL_MCOUNT								      \
   b 0f;									      \
   .align ALIGNARG(alignt);						      \
@@ -75,13 +93,11 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(alignt);						      \
   EALIGN_W_##words;							      \
-  C_LABEL(name)								      \
-  cfi_startproc;
+  C_LABEL(name)
 #endif
 
 #undef	END
 #define END(name)							      \
-  cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)
 
 #define DO_CALL(syscall)				      		      \
@@ -108,7 +124,7 @@
 
 #define PSEUDO_RET							      \
     bnslr+;								      \
-    b __syscall_error@local
+    b JUMPTARGET(__syscall_error)
 #define ret PSEUDO_RET
 
 #undef	PSEUDO_END

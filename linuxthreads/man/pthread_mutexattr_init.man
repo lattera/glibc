@@ -1,0 +1,84 @@
+.TH PTHREAD_MUTEXATTR 3 LinuxThreads
+
+.XREF pthread_mutexattr_destroy
+.XREF pthread_mutexattr_settype
+.XREF pthread_mutexattr_gettype
+
+.SH NAME
+pthread_mutexattr_init, pthread_mutexattr_destroy, pthread_mutexattr_settype, pthread_mutexattr_gettype \- mutex creation attributes
+
+.SH SYNOPSIS
+#include <pthread.h>
+
+int pthread_mutexattr_init(pthread_mutexattr_t *attr);
+
+int pthread_mutexattr_destroy(pthread_mutexattr_t *attr);
+
+int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind);
+
+int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *kind);
+
+.SH DESCRIPTION
+
+Mutex attributes can be specified at mutex creation time, by passing a
+mutex attribute object as second argument to !pthread_mutex_init!(3).
+Passing !NULL! is equivalent to passing a mutex attribute object with
+all attributes set to their default values.
+
+!pthread_mutexattr_init! initializes the mutex attribute object |attr|
+and fills it with default values for the attributes.
+
+!pthread_mutexattr_destroy! destroys a mutex attribute object, which
+must not be reused until it is reinitialized. !pthread_mutexattr_destroy!
+does nothing in the LinuxThreads implementation. 
+
+LinuxThreads supports only one mutex attribute: the mutex kind, which
+is either !PTHREAD_MUTEX_FAST_NP! for ``fast'' mutexes,
+!PTHREAD_MUTEX_RECURSIVE_NP! for ``recursive'' mutexes,
+or !PTHREAD_MUTEX_ERRORCHECK_NP! for ``error checking'' mutexes.
+As the !NP! suffix indicates, this is a non-portable extension to the
+POSIX standard and should not be employed in portable programs.
+
+The mutex kind determines what happens if a thread attempts to lock a
+mutex it already owns with !pthread_mutex_lock!(3). If the mutex is of
+the ``fast'' kind, !pthread_mutex_lock!(3) simply suspends the calling
+thread forever.  If the mutex is of the ``error checking'' kind,
+!pthread_mutex_lock!(3) returns immediately with the error code
+!EDEADLK!.  If the mutex is of the ``recursive'' kind, the call to
+!pthread_mutex_lock!(3) returns immediately with a success return
+code. The number of times the thread owning the mutex has locked it is
+recorded in the mutex. The owning thread must call
+!pthread_mutex_unlock!(3) the same number of times before the mutex
+returns to the unlocked state.
+
+The default mutex kind is ``fast'', that is, !PTHREAD_MUTEX_FAST_NP!.
+
+!pthread_mutexattr_settype! sets the mutex kind attribute in |attr|
+to the value specified by |kind|.
+
+!pthread_mutexattr_gettype! retrieves the current value of the
+mutex kind attribute in |attr| and stores it in the location pointed
+to by |kind|.
+
+.SH "RETURN VALUE"
+!pthread_mutexattr_init!, !pthread_mutexattr_destroy! and
+!pthread_mutexattr_gettype! always return 0.
+
+!pthread_mutexattr_settype! returns 0 on success and a non-zero
+error code on error.
+
+.SH ERRORS
+
+On error, !pthread_mutexattr_settype! returns the following error code:
+.TP
+!EINVAL!
+|kind| is neither !PTHREAD_MUTEX_FAST_NP! nor !PTHREAD_MUTEX_RECURSIVE_NP!
+nor !PTHREAD_MUTEX_ERRORCHECK_NP!
+
+.SH AUTHOR
+Xavier Leroy <Xavier.Leroy@inria.fr>
+
+.SH "SEE ALSO"
+!pthread_mutex_init!(3),
+!pthread_mutex_lock!(3),
+!pthread_mutex_unlock!(3).

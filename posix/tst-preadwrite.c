@@ -53,7 +53,7 @@ int fd;
 void
 do_prepare (int argc, char *argv[])
 {
-   size_t name_len;
+   char name_len;
 
 #define FNAME FNAME2(TRUNCATE)
 #define FNAME2(s) "/" STRINGIFY(s) "XXXXXX"

@@ -3,7 +3,7 @@
 #define strtoll strtoll_XXX
 #define strtoq strtoq_XXX
 
-#include <stdlib/strtol.c>
+#include <sysdeps/generic/strtol.c>
 
 #undef __strtoll_internal
 #undef strtoll

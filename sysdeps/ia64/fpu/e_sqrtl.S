@@ -1,10 +1,10 @@
 .file "sqrtl.s"
 
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
-//
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
+// 
+// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
+// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,25 +35,23 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// http://developer.intel.com/opensource.
 //
-//********************************************************************
+// ********************************************************************
 //
 // History:
-// 02/02/00 (hand-optimized)
-// 04/04/00 Unwind support added
-// 08/15/00 Bundle added after call to __libm_error_support to properly
+// 2/02/00 (hand-optimized)
+// 4/04/00  Unwind support added
+// 8/15/00  Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 05/20/02 Cleaned up namespace and sf0 syntax
-// 02/10/03 Reordered header: .section, .global, .proc, .align
 //
-//********************************************************************
+// ********************************************************************
 //
 // Function:   Combined sqrtl(x), where
 //                         _
 //             sqrtl(x) = |x, for double-extended precision x values
 //
-//********************************************************************
+// ********************************************************************
 //
 // Resources Used:
 //
@@ -66,7 +64,7 @@
 //
 //    Predicate Registers:      p6, p7, p8
 //
-//********************************************************************
+// ********************************************************************
 //
 // IEEE Special Conditions:
 //
@@ -76,13 +74,15 @@
 //    sqrtl(+/-0) = +/-0
 //    sqrtl(negative) = QNaN and error handling is called
 //
-//********************************************************************
+// ********************************************************************
 //
 // Implementation:
 //
 //  Modified Newton-Raphson Algorithm
 //
-//********************************************************************
+// ********************************************************************
+
+#include "libm_support.h"
 
 GR_SAVE_PFS         = r33
 GR_SAVE_B0          = r34
@@ -97,7 +97,19 @@ FR_Y                = f0
 FR_RESULT           = f8
 
 .section .text
-GLOBAL_IEEE754_ENTRY(sqrtl)
+.proc sqrtl#
+.global sqrtl#
+.align 64
+
+sqrtl:
+#ifdef _LIBC
+.global __sqrtl
+.type __sqrtl,@function
+__sqrtl:
+.global __ieee754_sqrtl
+.type __ieee754_sqrtl,@function
+__ieee754_sqrtl:
+#endif
 { .mlx
 alloc r32= ar.pfs,0,5,4,0
   // exponent of +1/2 in r2
@@ -139,7 +151,7 @@ alloc r32= ar.pfs,0,5,4,0
 } 
 { .mfi
   nop.m 0
-       mov f15=f8
+  (p0) mov f15=f8
   nop.i 0;;
 } { .mfi
   nop.m 0
@@ -209,8 +221,8 @@ alloc r32= ar.pfs,0,5,4,0
   (p6) br.ret.sptk b0 ;;
 }
 { .mfb
-       mov GR_Parameter_TAG    = 48
-       mov   f8 = f7
+  (p0) mov GR_Parameter_TAG    = 48
+  (p0) mov   f8 = f7
   (p8) br.ret.sptk b0 ;;
 }
 //
@@ -220,9 +232,15 @@ alloc r32= ar.pfs,0,5,4,0
 
 
 // END DOUBLE EXTENDED PRECISION MINIMUM LATENCY SQUARE ROOT ALGORITHM
-GLOBAL_IEEE754_END(sqrtl)
+.endp sqrtl#
+ASM_SIZE_DIRECTIVE(sqrtl)
+#ifdef _LIBC
+ASM_SIZE_DIRECTIVE(__sqrtl)
+ASM_SIZE_DIRECTIVE(__ieee754_sqrtl)
+#endif
 
-LOCAL_LIBM_ENTRY(__libm_error_region)
+.proc __libm_error_region
+__libm_error_region:
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
@@ -270,6 +288,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         br.ret.sptk     b0                     // Return
 };;
 
-LOCAL_LIBM_END(__libm_error_region#)
+.endp __libm_error_region
+ASM_SIZE_DIRECTIVE(__libm_error_region)
 .type   __libm_error_support#,@function
 .global __libm_error_support#

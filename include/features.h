@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,1992,1993,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +38,6 @@
    _FILE_OFFSET_BITS=N	Select default filesystem interface.
    _BSD_SOURCE		ISO C, POSIX, and 4.3BSD things.
    _SVID_SOURCE		ISO C, POSIX, and SVID things.
-   _ATFILE_SOURCE	Additional *at interfaces.
    _GNU_SOURCE		All of the above, plus GNU extensions.
    _REENTRANT		Select additionally reentrant object.
    _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
@@ -49,7 +47,7 @@
    The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
    If none of these are defined, the default is to have _SVID_SOURCE,
    _BSD_SOURCE, and _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
-   200112L.  If more than one of these are defined, they accumulate.
+   199506L.  If more than one of these are defined, they accumulate.
    For example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE
    together give you ISO C, 1003.1, and 1003.2, but nothing else.
 
@@ -71,7 +69,6 @@
    __USE_BSD		Define 4.3BSD things.
    __USE_SVID		Define SVID things.
    __USE_MISC		Define things common to BSD and System V Unix.
-   __USE_ATFILE		Define *at interfaces and AT_* constants for them.
    __USE_GNU		Define GNU extensions.
    __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
    __USE_FORTIFY_LEVEL	Additional security measures used, according to level.
@@ -105,7 +102,6 @@
 #undef	__USE_BSD
 #undef	__USE_SVID
 #undef	__USE_MISC
-#undef	__USE_ATFILE
 #undef	__USE_GNU
 #undef	__USE_REENTRANT
 #undef	__USE_FORTIFY_LEVEL
@@ -151,7 +147,7 @@
 # undef  _POSIX_SOURCE
 # define _POSIX_SOURCE	1
 # undef  _POSIX_C_SOURCE
-# define _POSIX_C_SOURCE	200112L
+# define _POSIX_C_SOURCE	199506L
 # undef  _XOPEN_SOURCE
 # define _XOPEN_SOURCE	600
 # undef  _XOPEN_SOURCE_EXTENDED
@@ -162,8 +158,6 @@
 # define _BSD_SOURCE	1
 # undef  _SVID_SOURCE
 # define _SVID_SOURCE	1
-# undef  _ATFILE_SOURCE
-# define _ATFILE_SOURCE	1
 #endif
 
 /* If nothing (other than _GNU_SOURCE) is defined,
@@ -187,15 +181,13 @@
 
 /* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
    (and IEEE Std 1003.1b-1993 unless _XOPEN_SOURCE is defined).  */
-#if ((!defined __STRICT_ANSI__ || (_XOPEN_SOURCE - 0) >= 500) && \
-     !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE)
+#if (!defined __STRICT_ANSI__ && !defined _POSIX_SOURCE && \
+     !defined _POSIX_C_SOURCE)
 # define _POSIX_SOURCE	1
 # if defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 500
 #  define _POSIX_C_SOURCE	2
-# elif defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 600
-#  define _POSIX_C_SOURCE	199506L
 # else
-#  define _POSIX_C_SOURCE	200112L
+#  define _POSIX_C_SOURCE	199506L
 # endif
 #endif
 
@@ -262,10 +254,6 @@
 # define __USE_SVID	1
 #endif
 
-#ifdef	_ATFILE_SOURCE
-# define __USE_ATFILE	1
-#endif
-
 #ifdef	_GNU_SOURCE
 # define __USE_GNU	1
 #endif
@@ -274,21 +262,12 @@
 # define __USE_REENTRANT	1
 #endif
 
-#if defined _FORTIFY_SOURCE && _FORTIFY_SOURCE > 0 \
-    && defined __OPTIMIZE__ && __OPTIMIZE__ > 0 \
-    && (__GNUC_PREREQ (4, 1) \
-        || (defined __GNUC_RH_RELEASE__ && __GNUC_PREREQ (4, 0)) \
-        || (defined __GNUC_RH_RELEASE__ && __GNUC_PREREQ (3, 4) \
-            && __GNUC_MINOR__ == 4 \
-            && (__GNUC_PATCHLEVEL__ > 2 \
-                || (__GNUC_PATCHLEVEL__ == 2 && __GNUC_RH_RELEASE__ >= 8))))
-# if _FORTIFY_SOURCE > 1
-#  define __USE_FORTIFY_LEVEL 2
-# else
+#if _FORTIFY_SOURCE > 0 && __GNUC_PREREQ (4, 1) && __OPTIMIZE__ > 0
+# if _FORTIFY_SOURCE == 1
 #  define __USE_FORTIFY_LEVEL 1
+# elif _FORTIFY_SOURCE > 1
+#  define __USE_FORTIFY_LEVEL 2
 # endif
-#else
-# define __USE_FORTIFY_LEVEL 0
 #endif
 
 /* We do support the IEC 559 math functionality, real and complex.  */
@@ -310,7 +289,7 @@
 /* Major and minor version number of the GNU C library package.  Use
    these macros to test for features in specific releases.  */
 #define	__GLIBC__	2
-#define	__GLIBC_MINOR__	5
+#define	__GLIBC_MINOR__	4
 
 #define __GLIBC_PREREQ(maj, min) \
 	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))

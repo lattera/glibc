@@ -1,6 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,1998,2002,2004,2005,2006,2007
-   Free Software Foundation, Inc.
+   Copyright (C) 1997,98,2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -29,7 +28,6 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
    `strtof.c', `wcstod.c', `wcstold.c', and `wcstof.c' to produce the
    `long double' and `float' versions of the reader.  */
 #ifndef FLOAT
-# include <math_ldbl_opt.h>
 # define FLOAT		double
 # define FLT		DBL
 # ifdef USE_WIDE_CHAR
@@ -70,8 +68,8 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
    and _LONG_LONG_LIMB in it can take effect into gmp.h.  */
 #include <gmp-mparam.h>
 #include <gmp.h>
-#include "gmp-impl.h"
-#include "longlong.h"
+#include <gmp-impl.h>
+#include <longlong.h>
 #include "fpioconst.h"
 
 #define NDEBUG 1
@@ -102,9 +100,7 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define ISDIGIT(Ch) __iswdigit_l ((Ch), loc)
 # define ISXDIGIT(Ch) __iswxdigit_l ((Ch), loc)
 # define TOLOWER(Ch) __towlower_l ((Ch), loc)
-# define TOLOWER_C(Ch) __towlower_l ((Ch), _nl_C_locobj_ptr)
-# define STRNCASECMP(S1, S2, N) \
-  __wcsncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
+# define STRNCASECMP(S1, S2, N) __wcsncasecmp_l ((S1), (S2), (N), loc)
 # define STRTOULL(S, E, B) ____wcstoull_l_internal ((S), (E), (B), 0, loc)
 #else
 # define STRING_TYPE char
@@ -114,9 +110,7 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 # define ISDIGIT(Ch) __isdigit_l ((Ch), loc)
 # define ISXDIGIT(Ch) __isxdigit_l ((Ch), loc)
 # define TOLOWER(Ch) __tolower_l ((Ch), loc)
-# define TOLOWER_C(Ch) __tolower_l ((Ch), _nl_C_locobj_ptr)
-# define STRNCASECMP(S1, S2, N) \
-  __strncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
+# define STRNCASECMP(S1, S2, N) __strncasecmp_l ((S1), (S2), (N), loc)
 # define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0, loc)
 #endif
 
@@ -408,9 +402,6 @@ __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
 
 #define INTERNAL(x) INTERNAL1(x)
 #define INTERNAL1(x) __##x##_internal
-#ifndef ____STRTOF_INTERNAL
-# define ____STRTOF_INTERNAL INTERNAL (__STRTOF)
-#endif
 
 /* This file defines a function to check for correct grouping.  */
 #include "grouping.h"
@@ -422,7 +413,7 @@ __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
    return 0.0.  If the number is too big to be represented, set `errno' to
    ERANGE and return HUGE_VAL with the appropriate sign.  */
 FLOAT
-____STRTOF_INTERNAL (nptr, endptr, group, loc)
+INTERNAL (__STRTOF) (nptr, endptr, group, loc)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int group;
@@ -563,7 +554,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   else if (c < L_('0') || c > L_('9'))
     {
       /* Check for `INF' or `INFINITY'.  */
-      if (TOLOWER_C (c) == L_('i') && STRNCASECMP (cp, L_("inf"), 3) == 0)
+      if (TOLOWER (c) == L_('i') && STRNCASECMP (cp, L_("inf"), 3) == 0)
 	{
 	  /* Return +/- infinity.  */
 	  if (endptr != NULL)
@@ -574,7 +565,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
 	}
 
-      if (TOLOWER_C (c) == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
+      if (TOLOWER (c) == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
 	{
 	  /* Return NaN.  */
 	  FLOAT retval = NAN;
@@ -651,11 +642,10 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (c != '0')
 	    {
 	      for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
-		if (thousands[cnt] != cp[cnt])
+		if (c != thousands[cnt])
 		  break;
 	      if (thousands[cnt] != '\0')
 		break;
-	      cp += cnt - 1;
 	    }
 	  c = *++cp;
 	}
@@ -664,29 +654,20 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
-  if (!((c >= L_('0') && c <= L_('9'))
-	|| (base == 16 && ((CHAR_TYPE) TOLOWER (c) >= L_('a')
-			   && (CHAR_TYPE) TOLOWER (c) <= L_('f')))
-	|| (
+  if ((c < L_('0') || c > L_('9'))
+      && (base == 16 && (c < (CHAR_TYPE) TOLOWER (L_('a'))
+			 || c > (CHAR_TYPE) TOLOWER (L_('f'))))
 #ifdef USE_WIDE_CHAR
-	    c == (wint_t) decimal
+      && c != (wint_t) decimal
 #else
-	    ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
-		 if (decimal[cnt] != cp[cnt])
-		   break;
-	       decimal[cnt] == '\0'; })
+      && ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
+	      if (decimal[cnt] != cp[cnt])
+		break;
+	    decimal[cnt] != '\0'; })
 #endif
-	    /* '0x.' alone is not a valid hexadecimal number.
-	       '.' alone is not valid either, but that has been checked
-	       already earlier.  */
-	    && (base != 16
-		|| cp != start_of_digits
-		|| (cp[decimal_len] >= L_('0') && cp[decimal_len] <= L_('9'))
-		|| ((CHAR_TYPE) TOLOWER (cp[decimal_len]) >= L_('a')
-		    && (CHAR_TYPE) TOLOWER (cp[decimal_len]) <= L_('f'))))
-	|| (base == 16 && (cp != start_of_digits
-			   && (CHAR_TYPE) TOLOWER (c) == L_('p')))
-	|| (base != 16 && (CHAR_TYPE) TOLOWER (c) == L_('e'))))
+      && (base == 16 && (cp == start_of_digits
+			 || (CHAR_TYPE) TOLOWER (c) != L_('p')))
+      && (base != 16 && (CHAR_TYPE) TOLOWER (c) != L_('e')))
     {
 #ifdef USE_WIDE_CHAR
       tp = __correctly_grouped_prefixwc (start_of_digits, cp, thousands,
@@ -726,14 +707,13 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		  break;
 	      if (thousands[cnt] != '\0')
 		break;
-	      cp += cnt - 1;
 	    }
 #endif
 	}
       c = *++cp;
     }
 
-  if (grouping && cp > start_of_digits)
+  if (grouping && dig_no > 0)
     {
       /* Check the grouping of the digits.  */
 #ifdef USE_WIDE_CHAR
@@ -771,15 +751,13 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	}
     }
 
-  /* We have the number of digits in the integer part.  Whether these
-     are all or any is really a fractional digit will be decided
-     later.  */
+  /* We have the number digits in the integer part.  Whether these are all or
+     any is really a fractional digit will be decided later.  */
   int_no = dig_no;
   lead_zero = int_no == 0 ? -1 : 0;
 
-  /* Read the fractional digits.  A special case are the 'american
-     style' numbers like `16.' i.e. with decimal point but without
-     trailing digits.  */
+  /* Read the fractional digits.  A special case are the 'american style'
+     numbers like `16.' i.e. with decimal but without trailing digits.  */
   if (
 #ifdef USE_WIDE_CHAR
       c == (wint_t) decimal
@@ -829,16 +807,15 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (base == 16)
 	    exp_limit = (exp_negative ?
 			 -MIN_EXP + MANT_DIG + 4 * int_no :
-			 MAX_EXP - 4 * int_no + 4 * lead_zero + 3);
+			 MAX_EXP - 4 * int_no + lead_zero);
 	  else
 	    exp_limit = (exp_negative ?
 			 -MIN_10_EXP + MANT_DIG + int_no :
-			 MAX_10_EXP - int_no + lead_zero + 1);
+			 MAX_10_EXP - int_no + lead_zero);
 
 	  do
 	    {
 	      exponent *= 10;
-	      exponent += c - L_('0');
 
 	      if (exponent > exp_limit)
 		/* The exponent is too large/small to represent a valid
@@ -868,6 +845,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		  /* NOTREACHED */
 		}
 
+	      exponent += c - L_('0');
 	      c = *++cp;
 	    }
 	  while (c >= L_('0') && c <= L_('9'));
@@ -902,7 +880,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	--expp;
 	--dig_no;
 	--int_no;
-	exponent += base == 16 ? 4 : 1;
+	++exponent;
       }
     while (dig_no > 0 && exponent < 0);
 
@@ -1575,7 +1553,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
   /* NOTREACHED */
 }
 #if defined _LIBC && !defined USE_WIDE_CHAR
-libc_hidden_def (____STRTOF_INTERNAL)
+libc_hidden_def (INTERNAL (__STRTOF))
 #endif
 
 /* External user entry point.  */
@@ -1589,23 +1567,6 @@ __STRTOF (nptr, endptr, loc)
      STRING_TYPE **endptr;
      __locale_t loc;
 {
-  return ____STRTOF_INTERNAL (nptr, endptr, 0, loc);
+  return INTERNAL (__STRTOF) (nptr, endptr, 0, loc);
 }
 weak_alias (__STRTOF, STRTOF)
-
-#ifdef LONG_DOUBLE_COMPAT
-# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_1)
-#  ifdef USE_WIDE_CHAR
-compat_symbol (libc, __wcstod_l, __wcstold_l, GLIBC_2_1);
-#  else
-compat_symbol (libc, __strtod_l, __strtold_l, GLIBC_2_1);
-#  endif
-# endif
-# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_3)
-#  ifdef USE_WIDE_CHAR
-compat_symbol (libc, wcstod_l, wcstold_l, GLIBC_2_3);
-#  else
-compat_symbol (libc, strtod_l, strtold_l, GLIBC_2_3);
-#  endif
-# endif
-#endif

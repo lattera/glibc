@@ -1,5 +1,5 @@
 /* Stack executability handling for GNU dynamic linker.  Linux version.
-   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,9 +24,8 @@
 #include <stdbool.h>
 #include <stackinfo.h>
 #include <caller.h>
-#include <sysdep.h>
 
-#include <kernel-features.h>
+#include "kernel-features.h"
 
 
 extern int __stack_prot attribute_relro attribute_hidden;
@@ -39,7 +38,6 @@ _dl_make_stack_executable (void **stack_endp)
   /* This gives us the highest/lowest page that needs to be changed.  */
   uintptr_t page = ((uintptr_t) *stack_endp
 		    & -(intptr_t) GLRO(dl_pagesize));
-  int result = 0;
 
   /* Challenge the caller.  */
   if (__builtin_expect (__check_caller (RETURN_ADDRESS (0),
@@ -62,10 +60,7 @@ _dl_make_stack_executable (void **stack_endp)
 	no_growsupdown = true;
       else
 # endif
-	{
-	  result = errno;
-	  goto out;
-	}
+	return errno;
     }
 #endif
 
@@ -90,10 +85,7 @@ _dl_make_stack_executable (void **stack_endp)
       else
 	{
 	  if (errno != ENOMEM)	/* Unexpected failure mode.  */
-	    {
-	      result = errno;
-	      goto out;
-	    }
+	    return errno;
 
 	  if (size == GLRO(dl_pagesize))
 	    /* We just tried to mprotect the top hole page and failed.
@@ -116,10 +108,7 @@ _dl_make_stack_executable (void **stack_endp)
       else
 	{
 	  if (errno != ENOMEM)	/* Unexpected failure mode.  */
-	    {
-	      result = errno;
-	      goto out;
-	    }
+	    return errno;
 
 	  if (size == GLRO(dl_pagesize))
 	    /* We just tried to mprotect the lowest hole page and failed.
@@ -144,11 +133,6 @@ _dl_make_stack_executable (void **stack_endp)
   /* Remember that we changed the permission.  */
   GL(dl_stack_flags) |= PF_X;
 
- out:
-#ifdef check_consistency
-  check_consistency ();
-#endif
-
-  return result;
+  return 0;
 }
 rtld_hidden_def (_dl_make_stack_executable)

@@ -1,5 +1,4 @@
-# Copyright (C) 1991-2000,2002,2003,2004,2005,2006
-#	Free Software Foundation, Inc.
+# Copyright (C) 1991-2000,2002,2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +26,7 @@ endif
 
 all: # Don't let the default goal come from Makeconfig.
 
-include $(firstword $(..) ../)Makeconfig
+include ../Makeconfig
 
 ifndef	subdir
 Each subdirectory makefile must define the `subdir' variable.
@@ -65,7 +64,7 @@ endif
 # See below.  This must be set before Makerules processes it.
 before-compile += $(common-objpfx)bits/stdio_lim.h
 
-include $(..)Makerules
+include ../Makerules
 
 .PHONY: subdir_lib
 subdir_lib: lib-noranlib
@@ -166,9 +165,8 @@ distclean: clean
 .PHONY: subdir_install
 subdir_install: install-no-libc.a lib-noranlib stubs
 
-.PHONY: subdir_objs subdir_stubs
-subdir_objs: objs
-subdir_stubs: stubs
+.PHONY: subdir_TAGS
+subdir_TAGS: TAGS
 
 # Target required by the Hurd to ensure that all the MiG-generated
 # headers are in place before building a subdirectory.

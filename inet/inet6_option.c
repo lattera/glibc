@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -75,10 +75,6 @@ get_opt_end (const uint8_t **result, const uint8_t *startp,
 }
 
 
-static uint8_t *option_alloc (struct cmsghdr *cmsg, int datalen, int multx,
-			      int plusy);
-
-
 /* RFC 2292, 6.3.1
 
    This function returns the number of bytes required to hold an option
@@ -97,8 +93,6 @@ inet6_option_space (nbytes)
 
   return CMSG_SPACE (roundup (nbytes, 8));
 }
-link_warning (inet6_option_space,
-	      "inet6_option_space is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.2
@@ -133,8 +127,6 @@ inet6_option_init (bp, cmsgp, type)
 
   return 0;
 }
-link_warning (inet6_option_init,
-	      "inet6_option_init is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.3
@@ -158,7 +150,7 @@ inet6_option_append (cmsg, typep, multx, plusy)
   int len = typep[0] == IP6OPT_PAD1 ? 1 : typep[1] + 2;
 
   /* Get the pointer to the space in the message.  */
-  uint8_t *ptr = option_alloc (cmsg, len, multx, plusy);
+  uint8_t *ptr = inet6_option_alloc (cmsg, len, multx, plusy);
   if (ptr == NULL)
     /* Some problem with the parameters.  */
     return -1;
@@ -168,8 +160,6 @@ inet6_option_append (cmsg, typep, multx, plusy)
 
   return 0;
 }
-link_warning (inet6_option_append,
-	      "inet6_option_append is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.4
@@ -179,8 +169,12 @@ link_warning (inet6_option_append,
    inet6_option_init().  This function returns a pointer to the 8-bit
    option type field that starts the option on success, or NULL on an
    error.  */
-static uint8_t *
-option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
+uint8_t *
+inet6_option_alloc (cmsg, datalen, multx, plusy)
+     struct cmsghdr *cmsg;
+     int datalen;
+     int multx;
+     int plusy;
 {
   /* The RFC limits the value of the alignment values.  */
   if ((multx != 1 && multx != 2 && multx != 4 && multx != 8)
@@ -220,19 +214,7 @@ option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
 
   return result;
 }
-
-
-uint8_t *
-inet6_option_alloc (cmsg, datalen, multx, plusy)
-     struct cmsghdr *cmsg;
-     int datalen;
-     int multx;
-     int plusy;
-{
-  return option_alloc (cmsg, datalen, multx, plusy);
-}
-link_warning (inet6_option_alloc,
-	      "inet6_option_alloc is obsolete, use the RFC 3542 interfaces")
+libc_hidden_def (inet6_option_alloc)
 
 
 /* RFC 2292, 6.3.5
@@ -269,7 +251,7 @@ inet6_option_next (cmsg, tptrp)
   const uint8_t *endp = CMSG_DATA (cmsg) + (ip6e->ip6e_len + 1) * 8;
 
   const uint8_t *result;
-  if (*tptrp == NULL)
+  if (tptrp == NULL)
     /* This is the first call, return the first option if there is one.  */
     result = (const uint8_t *) (ip6e + 1);
   else
@@ -290,8 +272,6 @@ inet6_option_next (cmsg, tptrp)
   /* Check the option is fully represented in the message.  */
   return get_opt_end (&result, result, endp);
 }
-link_warning (inet6_option_next,
-	      "inet6_option_next is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.6
@@ -328,7 +308,7 @@ inet6_option_find (cmsg, tptrp, type)
   const uint8_t *endp = CMSG_DATA (cmsg) + (ip6e->ip6e_len + 1) * 8;
 
   const uint8_t *next;
-  if (*tptrp == NULL)
+  if (tptrp == NULL)
     /* This is the first call, return the first option if there is one.  */
     next = (const uint8_t *) (ip6e + 1);
   else
@@ -361,5 +341,3 @@ inet6_option_find (cmsg, tptrp, type)
   /* Success.  */
   return 0;
 }
-link_warning (inet6_option_find,
-	      "inet6_option_find is obsolete, use the RFC 3542 interfaces")

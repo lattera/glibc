@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	8.2";
+static char	elsieid[] = "@(#)zdump.c	7.40";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -11,19 +11,6 @@ static char	elsieid[] = "@(#)zdump.c	8.2";
 #include "sys/types.h"	/* for time_t */
 #include "time.h"	/* for struct tm */
 #include "stdlib.h"	/* for exit, malloc, atoi */
-#include "float.h"	/* for FLT_MAX and DBL_MAX */
-#include "ctype.h"	/* for isalpha et al. */
-#ifndef isascii
-#define isascii(x) 1
-#endif /* !defined isascii */
-
-#ifndef ZDUMP_LO_YEAR
-#define ZDUMP_LO_YEAR	(-500)
-#endif /* !defined ZDUMP_LO_YEAR */
-
-#ifndef ZDUMP_HI_YEAR
-#define ZDUMP_HI_YEAR	2500
-#endif /* !defined ZDUMP_HI_YEAR */
 
 #ifndef MAX_STRING_LENGTH
 #define MAX_STRING_LENGTH	1024
@@ -74,19 +61,8 @@ static char	elsieid[] = "@(#)zdump.c	8.2";
 #endif /* !defined DAYSPERNYEAR */
 
 #ifndef isleap
-#define isleap(y) (((y) % 4) == 0 && (((y) % 100) != 0 || ((y) % 400) == 0))
+#define isleap(y) ((((y) % 4) == 0 && ((y) % 100) != 0) || ((y) % 400) == 0)
 #endif /* !defined isleap */
-
-#ifndef isleap_sum
-/*
-** See tzfile.h for details on isleap_sum.
-*/
-#define isleap_sum(a, b)	isleap((a) % 400 + (b) % 400)
-#endif /* !defined isleap_sum */
-
-#define SECSPERDAY	((long) SECSPERHOUR * HOURSPERDAY)
-#define SECSPERNYEAR	(SECSPERDAY * DAYSPERNYEAR)
-#define SECSPERLYEAR	(SECSPERNYEAR + SECSPERDAY)
 
 #if HAVE_GETTEXT
 #include "locale.h"	/* for setlocale */
@@ -130,106 +106,27 @@ static char	elsieid[] = "@(#)zdump.c	8.2";
 #endif /* !defined TZ_DOMAIN */
 
 #ifndef P
+#ifdef __STDC__
 #define P(x)	x
+#else /* !defined __STDC__ */
+#define P(x)	()
+#endif /* !defined __STDC__ */
 #endif /* !defined P */
 
 extern char **	environ;
 extern int	getopt P((int argc, char * const argv[],
-			const char * options));
+			  const char * options));
 extern char *	optarg;
 extern int	optind;
 extern char *	tzname[2];
 
-static time_t	absolute_min_time;
-static time_t	absolute_max_time;
+static char *	abbr P((struct tm * tmp));
+static long	delta P((struct tm * newp, struct tm * oldp));
+static time_t	hunt P((char * name, time_t lot, time_t	hit));
 static size_t	longest;
 static char *	progname;
-static int	warned;
-
-static char *	abbr P((struct tm * tmp));
-static void	abbrok P((const char * abbrp, const char * zone));
-static long	delta P((struct tm * newp, struct tm * oldp));
-static void	dumptime P((const struct tm * tmp));
-static time_t	hunt P((char * name, time_t lot, time_t	hit));
-static void	setabsolutes P((void));
 static void	show P((char * zone, time_t t, int v));
-static const char *	tformat P((void));
-static time_t	yeartot P((long y));
-
-#ifndef TYPECHECK
-#define my_localtime	localtime
-#else /* !defined TYPECHECK */
-static struct tm *
-my_localtime(tp)
-time_t *	tp;
-{
-	register struct tm *	tmp;
-
-	tmp = localtime(tp);
-	if (tp != NULL && tmp != NULL) {
-		struct tm	tm;
-		register time_t	t;
-
-		tm = *tmp;
-		t = mktime(&tm);
-		if (t - *tp >= 1 || *tp - t >= 1) {
-			(void) fflush(stdout);
-			(void) fprintf(stderr, "\n%s: ", progname);
-			(void) fprintf(stderr, tformat(), *tp);
-			(void) fprintf(stderr, " ->");
-			(void) fprintf(stderr, " year=%d", tmp->tm_year);
-			(void) fprintf(stderr, " mon=%d", tmp->tm_mon);
-			(void) fprintf(stderr, " mday=%d", tmp->tm_mday);
-			(void) fprintf(stderr, " hour=%d", tmp->tm_hour);
-			(void) fprintf(stderr, " min=%d", tmp->tm_min);
-			(void) fprintf(stderr, " sec=%d", tmp->tm_sec);
-			(void) fprintf(stderr, " isdst=%d", tmp->tm_isdst);
-			(void) fprintf(stderr, " -> ");
-			(void) fprintf(stderr, tformat(), t);
-			(void) fprintf(stderr, "\n");
-		}
-	}
-	return tmp;
-}
-#endif /* !defined TYPECHECK */
-
-static void
-abbrok(abbrp, zone)
-const char * const	abbrp;
-const char * const	zone;
-{
-	register const char *	cp;
-	register char *		wp;
-
-	if (warned)
-		return;
-	cp = abbrp;
-	wp = NULL;
-	while (isascii((unsigned char) *cp) && isalpha((unsigned char) *cp))
-		++cp;
-	if (cp - abbrp == 0)
-		wp = _("lacks alphabetic at start");
-	else if (cp - abbrp < 3)
-		wp = _("has fewer than 3 alphabetics");
-	else if (cp - abbrp > 6)
-		wp = _("has more than 6 alphabetics");
-	if (wp == NULL && (*cp == '+' || *cp == '-')) {
-		++cp;
-		if (isascii((unsigned char) *cp) &&
-			isdigit((unsigned char) *cp))
-				if (*cp++ == '1' && *cp >= '0' && *cp <= '4')
-					++cp;
-		if (*cp != '\0')
-			wp = _("differs from POSIX standard");
-	}
-	if (wp == NULL)
-		return;
-	(void) fflush(stdout);
-	(void) fprintf(stderr,
-		_("%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"),
-		progname, zone, abbrp, wp);
-	warned = TRUE;
-}
+static void	dumptime P((const struct tm * tmp));
 
 int
 main(argc, argv)
@@ -239,24 +136,20 @@ char *	argv[];
 	register int		i;
 	register int		c;
 	register int		vflag;
-	register char *		cutarg;
-	register long		cutloyear = ZDUMP_LO_YEAR;
-	register long		cuthiyear = ZDUMP_HI_YEAR;
-	register time_t		cutlotime;
-	register time_t		cuthitime;
-	register char **	fakeenv;
+	register char *		cutoff;
+	register int		cutyear;
+	register long		cuttime;
+	char **			fakeenv;
 	time_t			now;
 	time_t			t;
 	time_t			newt;
+	time_t			hibit;
 	struct tm		tm;
 	struct tm		newtm;
-	register struct tm *	tmp;
-	register struct tm *	newtmp;
 
-	INITIALIZE(cutlotime);
-	INITIALIZE(cuthitime);
+	INITIALIZE(cuttime);
 #if HAVE_GETTEXT
-	(void) setlocale(LC_ALL, "");
+	(void) setlocale(LC_MESSAGES, "");
 #ifdef TZ_DOMAINDIR
 	(void) bindtextdomain(TZ_DOMAIN, TZ_DOMAINDIR);
 #endif /* defined TEXTDOMAINDIR */
@@ -266,60 +159,49 @@ char *	argv[];
 	for (i = 1; i < argc; ++i)
 		if (strcmp(argv[i], "--version") == 0) {
 			(void) printf("%s\n", elsieid);
-			exit(EXIT_SUCCESS);
+			(void) exit(EXIT_SUCCESS);
 		}
 	vflag = 0;
-	cutarg = NULL;
+	cutoff = NULL;
 	while ((c = getopt(argc, argv, "c:v")) == 'c' || c == 'v')
 		if (c == 'v')
 			vflag = 1;
-		else	cutarg = optarg;
+		else	cutoff = optarg;
 	if ((c != EOF && c != -1) ||
 		(optind == argc - 1 && strcmp(argv[optind], "=") == 0)) {
 			(void) fprintf(stderr,
-_("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
-				progname, progname);
-			exit(EXIT_FAILURE);
+_("%s: usage is %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"),
+				argv[0], argv[0]);
+			(void) exit(EXIT_FAILURE);
 	}
-	if (vflag) {
-		if (cutarg != NULL) {
-			long	lo;
-			long	hi;
-			char	dummy;
+	if (cutoff != NULL) {
+		int	y;
 
-			if (sscanf(cutarg, "%ld%c", &hi, &dummy) == 1) {
-				cuthiyear = hi;
-			} else if (sscanf(cutarg, "%ld,%ld%c",
-				&lo, &hi, &dummy) == 2) {
-					cutloyear = lo;
-					cuthiyear = hi;
-			} else {
-(void) fprintf(stderr, _("%s: wild -c argument %s\n"),
-					progname, cutarg);
-				exit(EXIT_FAILURE);
-			}
-		}
-		setabsolutes();
-		cutlotime = yeartot(cutloyear);
-		cuthitime = yeartot(cuthiyear);
+		cutyear = atoi(cutoff);
+		cuttime = 0;
+		for (y = EPOCH_YEAR; y < cutyear; ++y)
+			cuttime += DAYSPERNYEAR + isleap(y);
+		cuttime *= SECSPERHOUR * HOURSPERDAY;
 	}
 	(void) time(&now);
 	longest = 0;
 	for (i = optind; i < argc; ++i)
 		if (strlen(argv[i]) > longest)
 			longest = strlen(argv[i]);
+	for (hibit = 1; (hibit << 1) != 0; hibit <<= 1)
+		continue;
 	{
 		register int	from;
 		register int	to;
 
-		for (i = 0; environ[i] != NULL; ++i)
+		for (i = 0;  environ[i] != NULL;  ++i)
 			continue;
 		fakeenv = (char **) malloc((size_t) ((i + 2) *
 			sizeof *fakeenv));
 		if (fakeenv == NULL ||
 			(fakeenv[0] = (char *) malloc(longest + 4)) == NULL) {
 					(void) perror(progname);
-					exit(EXIT_FAILURE);
+					(void) exit(EXIT_FAILURE);
 		}
 		to = 0;
 		(void) strcpy(fakeenv[to++], "TZ=");
@@ -337,175 +219,85 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 			show(argv[i], now, FALSE);
 			continue;
 		}
-		warned = FALSE;
-		t = absolute_min_time;
+		/*
+		** Get lowest value of t.
+		*/
+		t = hibit;
+		if (t > 0)		/* time_t is unsigned */
+			t = 0;
 		show(argv[i], t, TRUE);
 		t += SECSPERHOUR * HOURSPERDAY;
 		show(argv[i], t, TRUE);
-		if (t < cutlotime)
-			t = cutlotime;
-		tmp = my_localtime(&t);
-		if (tmp != NULL) {
-			tm = *tmp;
-			(void) strncpy(buf, abbr(&tm), (sizeof buf) - 1);
-		}
+		tm = *localtime(&t);
+		(void) strncpy(buf, abbr(&tm), (sizeof buf) - 1);
 		for ( ; ; ) {
-			if (t >= cuthitime)
+			if (cutoff != NULL && t >= cuttime)
 				break;
 			newt = t + SECSPERHOUR * 12;
-			if (newt >= cuthitime)
+			if (cutoff != NULL && newt >= cuttime)
 				break;
 			if (newt <= t)
 				break;
-			newtmp = localtime(&newt);
-			if (newtmp != NULL)
-				newtm = *newtmp;
-			if ((tmp == NULL || newtmp == NULL) ? (tmp != newtmp) :
-				(delta(&newtm, &tm) != (newt - t) ||
+			newtm = *localtime(&newt);
+			if (delta(&newtm, &tm) != (newt - t) ||
 				newtm.tm_isdst != tm.tm_isdst ||
-				strcmp(abbr(&newtm), buf) != 0)) {
+				strcmp(abbr(&newtm), buf) != 0) {
 					newt = hunt(argv[i], t, newt);
-					newtmp = localtime(&newt);
-					if (newtmp != NULL) {
-						newtm = *newtmp;
-						(void) strncpy(buf,
-							abbr(&newtm),
-							(sizeof buf) - 1);
-					}
+					newtm = *localtime(&newt);
+					(void) strncpy(buf, abbr(&newtm),
+						(sizeof buf) - 1);
 			}
 			t = newt;
 			tm = newtm;
-			tmp = newtmp;
 		}
-		t = absolute_max_time;
+		/*
+		** Get highest value of t.
+		*/
+		t = ~((time_t) 0);
+		if (t < 0)		/* time_t is signed */
+			t &= ~hibit;
 		t -= SECSPERHOUR * HOURSPERDAY;
 		show(argv[i], t, TRUE);
 		t += SECSPERHOUR * HOURSPERDAY;
 		show(argv[i], t, TRUE);
 	}
 	if (fflush(stdout) || ferror(stdout)) {
-		(void) fprintf(stderr, "%s: ", progname);
-		(void) perror(_("Error writing to standard output"));
-		exit(EXIT_FAILURE);
+		(void) fprintf(stderr, "%s: ", argv[0]);
+		(void) perror(_("Error writing standard output"));
+		(void) exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
-	/* If exit fails to exit... */
-	return EXIT_FAILURE;
-}
 
-static void
-setabsolutes()
-{
-	if (0.5 == (time_t) 0.5) {
-		/*
-		** time_t is floating.
-		*/
-		if (sizeof (time_t) == sizeof (float)) {
-			absolute_min_time = (time_t) -FLT_MAX;
-			absolute_max_time = (time_t) FLT_MAX;
-		} else if (sizeof (time_t) == sizeof (double)) {
-			absolute_min_time = (time_t) -DBL_MAX;
-			absolute_max_time = (time_t) DBL_MAX;
-		} else {
-			(void) fprintf(stderr,
-_("%s: use of -v on system with floating time_t other than float or double\n"),
-				progname);
-			exit(EXIT_FAILURE);
-		}
-	} else if (0 > (time_t) -1) {
-		/*
-		** time_t is signed.  Assume overflow wraps around.
-		*/
-		time_t t = 0;
-		time_t t1 = 1;
-
-		while (t < t1) {
-			t = t1;
-			t1 = 2 * t1 + 1;
-		}
-		  
-		absolute_max_time = t;
-		t = -t;
-		absolute_min_time = t - 1;
-		if (t < absolute_min_time)
-			absolute_min_time = t;
-	} else {
-		/*
-		** time_t is unsigned.
-		*/
-		absolute_min_time = 0;
-		absolute_max_time = absolute_min_time - 1;
-	}
+	/* gcc -Wall pacifier */
+	for ( ; ; )
+		continue;
 }
 
 static time_t
-yeartot(y)
-const long	y;
+hunt(name, lot, hit)
+char *	name;
+time_t	lot;
+time_t	hit;
 {
-	register long	myy;
-	register long	seconds;
-	register time_t	t;
+	time_t		t;
+	struct tm	lotm;
+	struct tm	tm;
+	static char	loab[MAX_STRING_LENGTH];
 
-	myy = EPOCH_YEAR;
-	t = 0;
-	while (myy != y) {
-		if (myy < y) {
-			seconds = isleap(myy) ? SECSPERLYEAR : SECSPERNYEAR;
-			++myy;
-			if (t > absolute_max_time - seconds) {
-				t = absolute_max_time;
-				break;
-			}
-			t += seconds;
-		} else {
-			--myy;
-			seconds = isleap(myy) ? SECSPERLYEAR : SECSPERNYEAR;
-			if (t < absolute_min_time + seconds) {
-				t = absolute_min_time;
-				break;
-			}
-			t -= seconds;
-		}
-	}
-	return t;
-}
-
-static time_t
-hunt(char *name, time_t lot, time_t hit)
-{
-	time_t			t;
-	long			diff;
-	struct tm		lotm;
-	register struct tm *	lotmp;
-	struct tm		tm;
-	register struct tm *	tmp;
-	char			loab[MAX_STRING_LENGTH];
-
-	lotmp = my_localtime(&lot);
-	if (lotmp != NULL) {
-		lotm = *lotmp;
-		(void) strncpy(loab, abbr(&lotm), (sizeof loab) - 1);
-	}
-	for ( ; ; ) {
-		diff = (long) (hit - lot);
-		if (diff < 2)
-			break;
-		t = lot;
-		t += diff / 2;
+	lotm = *localtime(&lot);
+	(void) strncpy(loab, abbr(&lotm), (sizeof loab) - 1);
+	while ((hit - lot) >= 2) {
+		t = lot / 2 + hit / 2;
 		if (t <= lot)
 			++t;
 		else if (t >= hit)
 			--t;
-		tmp = my_localtime(&t);
-		if (tmp != NULL)
-			tm = *tmp;
-		if ((lotmp == NULL || tmp == NULL) ? (lotmp == tmp) :
-			(delta(&tm, &lotm) == (t - lot) &&
+		tm = *localtime(&t);
+		if (delta(&tm, &lotm) == (t - lot) &&
 			tm.tm_isdst == lotm.tm_isdst &&
-			strcmp(abbr(&tm), loab) == 0)) {
+			strcmp(abbr(&tm), loab) == 0) {
 				lot = t;
 				lotm = tm;
-				lotmp = tmp;
 		} else	hit = t;
 	}
 	show(name, lot, TRUE);
@@ -514,7 +306,7 @@ hunt(char *name, time_t lot, time_t hit)
 }
 
 /*
-** Thanks to Paul Eggert for logic used in delta.
+** Thanks to Paul Eggert (eggert@twinsun.com) for logic used in delta.
 */
 
 static long
@@ -522,14 +314,14 @@ delta(newp, oldp)
 struct tm *	newp;
 struct tm *	oldp;
 {
-	register long	result;
-	register int	tmy;
+	long	result;
+	int	tmy;
 
 	if (newp->tm_year < oldp->tm_year)
 		return -delta(oldp, newp);
 	result = 0;
 	for (tmy = oldp->tm_year; tmy < newp->tm_year; ++tmy)
-		result += DAYSPERNYEAR + isleap_sum(tmy, TM_YEAR_BASE);
+		result += DAYSPERNYEAR + isleap(tmy + (long) TM_YEAR_BASE);
 	result += newp->tm_yday - oldp->tm_yday;
 	result *= HOURSPERDAY;
 	result += newp->tm_hour - oldp->tm_hour;
@@ -541,36 +333,29 @@ struct tm *	oldp;
 }
 
 static void
-show(char *zone, time_t t, int v)
+show(zone, t, v)
+char *	zone;
+time_t	t;
+int	v;
 {
-	register struct tm *	tmp;
+	struct tm *	tmp;
 
 	(void) printf("%-*s  ", (int) longest, zone);
 	if (v) {
-		tmp = gmtime(&t);
-		if (tmp == NULL) {
-			(void) printf(tformat(), t);
-		} else {
-			dumptime(tmp);
-			(void) printf(" UTC");
-		}
-		(void) printf(" = ");
+		dumptime(gmtime(&t));
+		(void) printf(" UTC = ");
 	}
-	tmp = my_localtime(&t);
+	tmp = localtime(&t);
 	dumptime(tmp);
-	if (tmp != NULL) {
-		if (*abbr(tmp) != '\0')
-			(void) printf(" %s", abbr(tmp));
-		if (v) {
-			(void) printf(" isdst=%d", tmp->tm_isdst);
+	if (*abbr(tmp) != '\0')
+		(void) printf(" %s", abbr(tmp));
+	if (v) {
+		(void) printf(" isdst=%d", tmp->tm_isdst);
 #ifdef TM_GMTOFF
-			(void) printf(" gmtoff=%ld", tmp->TM_GMTOFF);
+		(void) printf(" gmtoff=%ld", tmp->TM_GMTOFF);
 #endif /* defined TM_GMTOFF */
-		}
 	}
 	(void) printf("\n");
-	if (tmp != NULL && *abbr(tmp) != '\0')
-		abbrok(abbr(tmp), zone);
 }
 
 static char *
@@ -586,33 +371,6 @@ struct tm *	tmp;
 	return (result == NULL) ? &nada : result;
 }
 
-/*
-** The code below can fail on certain theoretical systems;
-** it works on all known real-world systems as of 2004-12-30.
-*/
-
-static const char *
-tformat()
-{
-	if (0.5 == (time_t) 0.5) {	/* floating */
-		if (sizeof (time_t) > sizeof (double))
-			return "%Lg";
-		return "%g";
-	}
-	if (0 > (time_t) -1) {		/* signed */
-		if (sizeof (time_t) > sizeof (long))
-			return "%lld";
-		if (sizeof (time_t) > sizeof (int))
-			return "%ld";
-		return "%d";
-	}
-	if (sizeof (time_t) > sizeof (unsigned long))
-		return "%llu";
-	if (sizeof (time_t) > sizeof (unsigned int))
-		return "%lu";
-	return "%u";
-}
-
 static void
 dumptime(timeptr)
 register const struct tm *	timeptr;
@@ -626,13 +384,7 @@ register const struct tm *	timeptr;
 	};
 	register const char *	wn;
 	register const char *	mn;
-	register int		lead;
-	register int		trail;
 
-	if (timeptr == NULL) {
-		(void) printf("NULL");
-		return;
-	}
 	/*
 	** The packaged versions of localtime and gmtime never put out-of-range
 	** values in tm_wday or tm_mon, but since this code might be compiled
@@ -646,23 +398,9 @@ register const struct tm *	timeptr;
 		(int) (sizeof mon_name / sizeof mon_name[0]))
 			mn = "???";
 	else		mn = mon_name[timeptr->tm_mon];
-	(void) printf("%.3s %.3s%3d %.2d:%.2d:%.2d ",
+	(void) printf("%.3s %.3s%3d %.2d:%.2d:%.2d %ld",
 		wn, mn,
 		timeptr->tm_mday, timeptr->tm_hour,
-		timeptr->tm_min, timeptr->tm_sec);
-#define DIVISOR	10
-	trail = timeptr->tm_year % DIVISOR + TM_YEAR_BASE % DIVISOR;
-	lead = timeptr->tm_year / DIVISOR + TM_YEAR_BASE / DIVISOR +
-		trail / DIVISOR;
-	trail %= DIVISOR;
-	if (trail < 0 && lead > 0) {
-		trail += DIVISOR;
-		--lead;
-	} else if (lead < 0 && trail > 0) {
-		trail -= DIVISOR;
-		++lead;
-	}
-	if (lead == 0)
-		(void) printf("%d", trail);
-	else	(void) printf("%d%d", lead, ((trail < 0) ? -trail : trail));
+		timeptr->tm_min, timeptr->tm_sec,
+		timeptr->tm_year + (long) TM_YEAR_BASE);
 }

@@ -1,5 +1,5 @@
 /* setjmp for PowerPC64.
-   Copyright (C) 1995-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +19,11 @@
 
 #include <sysdep.h>
 #define _ASM
+#define _SETJMP_H
 #ifdef __NO_VMX__
 #include <novmxsetjmp.h>
 #else
-#include <jmpbuf-offsets.h>
+#include <bits/setjmp.h>
 #endif
 #include <bp-sym.h>
 #include <bp-asm.h>
@@ -45,13 +46,7 @@ ENTRY (BP_SYM (__sigsetjmp))
 	.hidden JUMPTARGET(GLUE(__sigsetjmp,_ent))
 JUMPTARGET(GLUE(__sigsetjmp,_ent)):
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
-#ifdef PTR_MANGLE
-	mr   r5, r1
-	PTR_MANGLE (r5, r6)
-	std  r5,(JB_GPR1*8)(3)
-#else
 	std  r1,(JB_GPR1*8)(3)
-#endif
 	mflr r0
 #if defined SHARED && !defined IS_IN_rtld
 	ld   r5,40(r1)	/* Retrieve the callers TOC.  */
@@ -61,9 +56,6 @@ JUMPTARGET(GLUE(__sigsetjmp,_ent)):
 #endif
 	std  r14,((JB_GPRS+0)*8)(3)
 	stfd fp14,((JB_FPRS+0)*8)(3)
-#ifdef PTR_MANGLE
-	PTR_MANGLE2 (r0, r6)
-#endif
 	std  r0,(JB_LR*8)(3)
 	std  r15,((JB_GPRS+1)*8)(3)
 	stfd fp15,((JB_FPRS+1)*8)(3)
@@ -102,14 +94,14 @@ JUMPTARGET(GLUE(__sigsetjmp,_ent)):
 	std  r31,((JB_GPRS+17)*8)(3)
 	stfd fp31,((JB_FPRS+17)*8)(3)
 #ifndef __NO_VMX__
-	ld    r6,.LC__dl_hwcap@toc(r2)
+	ld    r5,.LC__dl_hwcap@toc(r2)
 # ifdef SHARED
 	/* Load _rtld-global._dl_hwcap.  */
-	ld    r6,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r6)
+	ld    r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
 # else
-	ld    r6,0(r6) /* Load extern _dl_hwcap.  */
+	ld    r5,0(r5) /* Load extern _dl_hwcap.  */
 # endif
-	andis.  r6,r6,(PPC_FEATURE_HAS_ALTIVEC >> 16)
+	andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	L(no_vmx)
 	la	r5,((JB_VRS)*8)(3)
 	andi.	r6,r5,0xf
@@ -184,13 +176,6 @@ L(aligned_save_vmx):
 	stvx	30,0,r5
 	stvx	31,0,r6
 L(no_vmx):
-#else
-	li	r6,0
 #endif
-#if defined NOT_IN_libc && defined IS_IN_rtld
-	li	r3,0
-	blr
-#else
 	b JUMPTARGET (BP_SYM (__sigjmp_save))
-#endif
 END (BP_SYM (__sigsetjmp))

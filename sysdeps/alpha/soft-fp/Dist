@@ -1,0 +1,14 @@
+local-soft-fp.h
+ots_add.c
+ots_cmp.c
+ots_cmpe.c
+ots_cvtqux.c
+ots_cvtqx.c
+ots_cvttx.c
+ots_cvtxq.c
+ots_cvtxt.c
+ots_div.c
+ots_mul.c
+ots_nintxq.c
+ots_sub.c
+sfp-machine.h

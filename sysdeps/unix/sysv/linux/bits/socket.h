@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991,1992,1994-2001,2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1991,1992,1994-2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -221,10 +221,7 @@ struct msghdr
     size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
-    size_t msg_controllen;	/* Ancillary data buffer length.
-				   !! The type should be socklen_t but the
-				   definition of the kernel is incompatible
-				   with this.  */
+    size_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags on received message.  */
   };
@@ -233,10 +230,7 @@ struct msghdr
 struct cmsghdr
   {
     size_t cmsg_len;		/* Length of data in cmsg_data plus length
-				   of cmsghdr structure.
-				   !! The type should be socklen_t but the
-				   definition of the kernel is incompatible
-				   with this.  */
+				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
 #if (!defined __STRICT_ANSI__ && __GNUC__ >= 2) || __STDC_VERSION__ >= 199901L

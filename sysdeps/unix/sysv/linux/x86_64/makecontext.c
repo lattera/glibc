@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -20,7 +20,6 @@
 
 #include <sysdep.h>
 #include <stdarg.h>
-#include <stdint.h>
 #include <ucontext.h>
 
 #include "ucontext_i.h"
@@ -53,29 +52,28 @@ void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
   extern void __start_context (void);
-  unsigned long int *sp, idx_uc_link;
+  unsigned long *sp, idx_uc_link;
   va_list ap;
   int i;
 
   /* Generate room on stack for parameter if needed and uc_link.  */
-  sp = (unsigned long int *) ((uintptr_t) ucp->uc_stack.ss_sp
-			      + ucp->uc_stack.ss_size);
+  sp = (long *) ((long) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
   sp -= (argc > 6 ? argc - 6 : 0) + 1;
   /* Align stack and make space for trampoline address.  */
-  sp = (unsigned long int *) ((((uintptr_t) sp) & -16L) - 8);
+  sp = (long *) ((((long) sp) & -16L) - 8);
 
   idx_uc_link = (argc > 6 ? argc - 6 : 0) + 1;
 
   /* Setup context ucp.  */
   /* Address to jump to.  */
-  ucp->uc_mcontext.gregs[REG_RIP] = (long int) func;
+  ucp->uc_mcontext.gregs[REG_RIP] = (long) func;
   /* Setup rbx.*/
-  ucp->uc_mcontext.gregs[REG_RBX] = (long int) &sp[idx_uc_link];
-  ucp->uc_mcontext.gregs[REG_RSP] = (long int) sp;
+  ucp->uc_mcontext.gregs[REG_RBX] = (long) &sp[idx_uc_link];
+  ucp->uc_mcontext.gregs[REG_RSP] = (long) sp;
 
   /* Setup stack.  */
-  sp[0] = (unsigned long int) &__start_context;
-  sp[idx_uc_link] = (unsigned long int) ucp->uc_link;
+  sp[0] = (long) &__start_context;
+  sp[idx_uc_link] = (long) ucp->uc_link;
 
   va_start (ap, argc);
   /* Handle arguments.  */
@@ -110,4 +108,4 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 }
 
 
-weak_alias (__makecontext, makecontext)
+weak_alias(__makecontext, makecontext)

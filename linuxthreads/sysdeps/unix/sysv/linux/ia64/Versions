@@ -1,0 +1,6 @@
+libpthread {
+  GLIBC_2.3.3 {
+    # Changed PTHREAD_STACK_MIN.
+    pthread_attr_setstack; pthread_attr_setstacksize;
+  }
+}

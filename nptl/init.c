@@ -1,4 +1,4 @@
-/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -59,15 +59,6 @@
 /* Size and alignment of static TLS block.  */
 size_t __static_tls_size;
 size_t __static_tls_align_m1;
-
-#ifndef __ASSUME_SET_ROBUST_LIST
-/* Negative if we do not have the system call and we can use it.  */
-int __set_robust_list_avail;
-# define set_robust_list_not_avail() \
-  __set_robust_list_avail = -1
-#else
-# define set_robust_list_not_avail() do { } while (0)
-#endif
 
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;
@@ -136,9 +127,7 @@ static const struct pthread_functions pthread_functions =
     .ptr_nthreads = &__nptl_nthreads,
     .ptr___pthread_unwind = &__pthread_unwind,
     .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
-    .ptr__nptl_setxid = __nptl_setxid,
-    /* For now only the stack cache needs to be freed.  */
-    .ptr_freeres = __free_stack_cache
+    .ptr__nptl_setxid = __nptl_setxid
   };
 # define ptr_pthread_functions &pthread_functions
 #else
@@ -150,14 +139,6 @@ static const struct pthread_functions pthread_functions =
 static void
 sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 {
-#ifdef __ASSUME_CORRECT_SI_PID
-  /* Determine the process ID.  It might be negative if the thread is
-     in the middle of a fork() call.  */
-  pid_t pid = THREAD_GETMEM (THREAD_SELF, pid);
-  if (__builtin_expect (pid < 0, 0))
-    pid = -pid;
-#endif
-
   /* Safety check.  It would be possible to call this function for
      other signals and send a signal from another process.  This is not
      correct and might even be a security problem.  Try to catch as
@@ -166,7 +147,7 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 #ifdef __ASSUME_CORRECT_SI_PID
       /* Kernels before 2.5.75 stored the thread ID and not the process
 	 ID in si_pid so we skip this test.  */
-      || si->si_pid != pid
+      || si->si_pid != THREAD_GETMEM (THREAD_SELF, pid)
 #endif
       || si->si_code != SI_TKILL)
     return;
@@ -211,14 +192,6 @@ struct xid_command *__xidcmd attribute_hidden;
 static void
 sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 {
-#ifdef __ASSUME_CORRECT_SI_PID
-  /* Determine the process ID.  It might be negative if the thread is
-     in the middle of a fork() call.  */
-  pid_t pid = THREAD_GETMEM (THREAD_SELF, pid);
-  if (__builtin_expect (pid < 0, 0))
-    pid = -pid;
-#endif
-
   /* Safety check.  It would be possible to call this function for
      other signals and send a signal from another process.  This is not
      correct and might even be a security problem.  Try to catch as
@@ -227,7 +200,7 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 #ifdef __ASSUME_CORRECT_SI_PID
       /* Kernels before 2.5.75 stored the thread ID and not the process
 	 ID in si_pid so we skip this test.  */
-      || si->si_pid != pid
+      || si->si_pid != THREAD_GETMEM (THREAD_SELF, pid)
 #endif
       || si->si_code != SI_TKILL)
     return;
@@ -238,15 +211,6 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 
   if (atomic_decrement_val (&__xidcmd->cntr) == 0)
     lll_futex_wake (&__xidcmd->cntr, 1);
-
-  /* Reset the SETXID flag.  */
-  struct pthread *self = THREAD_SELF;
-  int flags = THREAD_GETMEM (self, cancelhandling);
-  THREAD_SETMEM (self, cancelhandling, flags & ~SETXID_BITMASK);
-
-  /* And release the futex.  */
-  self->setxid_futex = 1;
-  lll_futex_wake (&self->setxid_futex, 1);
 }
 
 
@@ -282,21 +246,6 @@ __pthread_initialize_minimal_internal (void)
   THREAD_SETMEM (pd, cpuclock_offset, GL(dl_cpuclock_offset));
 #endif
 
-  /* Initialize the robust mutex data.  */
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
-  pd->robust_prev = &pd->robust_head;
-#endif
-  pd->robust_head.list = &pd->robust_head;
-#ifdef __NR_set_robust_list
-  pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
-				  - offsetof (pthread_mutex_t,
-					      __data.__list.__next));
-  int res = INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
-			      sizeof (struct robust_list_head));
-  if (INTERNAL_SYSCALL_ERROR_P (res, err))
-#endif
-    set_robust_list_not_avail ();
-
   /* Set initial thread's stack block from 0 up to __libc_stack_end.
      It will be bigger than it actually is, but for unwind.c/pt-longjmp.c
      purposes this is good enough.  */
@@ -313,7 +262,7 @@ __pthread_initialize_minimal_internal (void)
   struct sigaction sa;
   sa.sa_sigaction = sigcancel_handler;
   sa.sa_flags = SA_SIGINFO;
-  __sigemptyset (&sa.sa_mask);
+  sigemptyset (&sa.sa_mask);
 
   (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
 
@@ -331,6 +280,26 @@ __pthread_initialize_minimal_internal (void)
   (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &sa.sa_mask,
 			   NULL, _NSIG / 8);
 
+
+  /* Determine the default allowed stack size.  This is the size used
+     in case the user does not specify one.  */
+  struct rlimit limit;
+  if (getrlimit (RLIMIT_STACK, &limit) != 0
+      || limit.rlim_cur == RLIM_INFINITY)
+    /* The system limit is not usable.  Use an architecture-specific
+       default.  */
+    __default_stacksize = ARCH_STACK_DEFAULT_SIZE;
+  else if (limit.rlim_cur < PTHREAD_STACK_MIN)
+    /* The system limit is unusably small.
+       Use the minimal size acceptable.  */
+    __default_stacksize = PTHREAD_STACK_MIN;
+  else
+    {
+      /* Round the resource limit up to page size.  */
+      const uintptr_t pagesz = __sysconf (_SC_PAGESIZE);
+      __default_stacksize = (limit.rlim_cur + pagesz - 1) & -pagesz;
+    }
+
   /* Get the size of the static and alignment requirements for the TLS
      block.  */
   size_t static_tls_align;
@@ -342,30 +311,6 @@ __pthread_initialize_minimal_internal (void)
   __static_tls_align_m1 = static_tls_align - 1;
 
   __static_tls_size = roundup (__static_tls_size, static_tls_align);
-
-  /* Determine the default allowed stack size.  This is the size used
-     in case the user does not specify one.  */
-  struct rlimit limit;
-  if (getrlimit (RLIMIT_STACK, &limit) != 0
-      || limit.rlim_cur == RLIM_INFINITY)
-    /* The system limit is not usable.  Use an architecture-specific
-       default.  */
-    limit.rlim_cur = ARCH_STACK_DEFAULT_SIZE;
-  else if (limit.rlim_cur < PTHREAD_STACK_MIN)
-    /* The system limit is unusably small.
-       Use the minimal size acceptable.  */
-    limit.rlim_cur = PTHREAD_STACK_MIN;
-
-  /* Make sure it meets the minimum size that allocate_stack
-     (allocatestack.c) will demand, which depends on the page size.  */
-  const uintptr_t pagesz = __sysconf (_SC_PAGESIZE);
-  const size_t minstack = pagesz + __static_tls_size + MINIMAL_REST_STACK;
-  if (limit.rlim_cur < minstack)
-    limit.rlim_cur = minstack;
-
-  /* Round the resource limit up to page size.  */
-  limit.rlim_cur = (limit.rlim_cur + pagesz - 1) & -pagesz;
-  __default_stacksize = limit.rlim_cur;
 
 #ifdef SHARED
   /* Transfer the old value from the dynamic linker's internal location.  */
@@ -385,8 +330,6 @@ __pthread_initialize_minimal_internal (void)
 #endif
 
   GL(dl_init_static_tls) = &__pthread_init_static_tls;
-
-  GL(dl_wait_lookup_done) = &__wait_lookup_done;
 
   /* Register the fork generation counter with the libc.  */
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB

@@ -79,13 +79,19 @@ xdr_reference (xdrs, pp, size, proc)
 	return TRUE;
 
       case XDR_DECODE:
-	*pp = loc = (caddr_t) calloc (1, size);
+	*pp = loc = (caddr_t) mem_alloc (size);
 	if (loc == NULL)
 	  {
-	    (void) __fxprintf (NULL, "%s",
-			       _("xdr_reference: out of memory\n"));
+#ifdef USE_IN_LIBIO
+	    if (_IO_fwide (stderr, 0) > 0)
+	      (void) __fwprintf (stderr, L"%s",
+				 _("xdr_reference: out of memory\n"));
+	    else
+#endif
+	      (void) fputs (_("xdr_reference: out of memory\n"), stderr);
 	    return FALSE;
 	  }
+	__bzero (loc, (int) size);
 	break;
       default:
 	break;

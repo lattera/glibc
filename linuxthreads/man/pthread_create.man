@@ -1,0 +1,46 @@
+.TH PTHREAD_CREATE 3 LinuxThreads
+
+.SH NAME
+pthread_create \- create a new thread
+
+.SH SYNOPSIS
+#include <pthread.h>
+
+int pthread_create(pthread_t * thread, pthread_attr_t * attr, void * (*start_routine)(void *), void * arg);
+
+.SH DESCRIPTION
+!pthread_create! creates a new thread of control that executes
+concurrently with the calling thread. The new thread applies the
+function |start_routine| passing it |arg| as first argument. The new
+thread terminates either explicitly, by calling !pthread_exit!(3),
+or implicitly, by returning from the |start_routine| function. The
+latter case is equivalent to calling !pthread_exit!(3) with the result
+returned by |start_routine| as exit code.
+
+The |attr| argument specifies thread attributes to be applied to the
+new thread. See !pthread_attr_init!(3) for a complete list of thread
+attributes. The |attr| argument can also be !NULL!, in which case
+default attributes are used: the created thread is joinable (not
+detached) and has default (non real-time) scheduling policy.
+
+.SH "RETURN VALUE"
+On success, the identifier of the newly created thread is stored in
+the location pointed by the |thread| argument, and a 0 is returned. On
+error, a non-zero error code is returned.
+
+.SH ERRORS
+.TP
+!EAGAIN!
+not enough system resources to create a process for the new thread.
+.TP
+!EAGAIN!
+more than !PTHREAD_THREADS_MAX! threads are already active.
+
+.SH AUTHOR
+Xavier Leroy <Xavier.Leroy@inria.fr>
+
+.SH "SEE ALSO"
+!pthread_exit!(3),
+!pthread_join!(3),
+!pthread_detach!(3),
+!pthread_attr_init!(3).

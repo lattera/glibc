@@ -14,7 +14,15 @@ installation.  It is updated more frequently than this manual.
 Features can be added to GNU Libc via @dfn{add-on} bundles.  These are
 separate tar files, which you unpack into the top level of the source
 tree.  Then you give @code{configure} the @samp{--enable-add-ons} option
-to activate them, and they will be compiled into the library.
+to activate them, and they will be compiled into the library.  As of the
+2.2 release, one important component of glibc is distributed as
+``official'' add-ons: the linuxthreads add-on.  Unless you are doing an
+unusual installation, you should get this.
+
+Support for POSIX threads is maintained by someone else, so it's in a
+separate package.  It is only available for GNU/Linux systems, but this will
+change in the future.  Get it from the same place you got the main
+bundle; the file is @file{glibc-linuxthreads-@var{VERSION}.tar.gz}.
 
 You will need recent versions of several GNU tools: definitely GCC and
 GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
@@ -24,6 +32,7 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 * Running make install::        How to install it once you've got it
  compiled.
 * Tools for Compilation::       You'll need these first.
+* Supported Configurations::    What it runs on, what it doesn't.
 * Linux::                       Specific advice for GNU/Linux systems.
 * Reporting Bugs::              So they'll get fixed.
 @end menu
@@ -33,31 +42,34 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 @cindex configuring
 @cindex compiling
 
-GNU libc cannot be compiled in the source directory.  You must build
-it in a separate build directory.  For example, if you have unpacked
-the glibc sources in @file{/src/gnu/glibc-2.4}, create a directory
+GNU libc can be compiled in the source directory, but we strongly advise
+building it in a separate build directory.  For example, if you have
+ unpacked
+the glibc sources in @file{/src/gnu/glibc-2.3}, create a directory
 @file{/src/gnu/glibc-build} to put the object files in.  This allows
-removing the whole build directory in case an error occurs, which is
-the safest way to get a fresh start and should always be done.
+removing the whole build directory in case an error occurs, which is the
+safest way to get a fresh start and should always be done.
 
 From your object directory, run the shell script @file{configure} located
 at the top level of the source tree.  In the scenario above, you'd type
 
 @smallexample
-$ ../glibc-2.4/configure @var{args@dots{}}
+$ ../glibc-2.3/configure @var{args@dots{}}
 @end smallexample
 
-Please note that even though you're building in a separate build
-directory, the compilation needs to modify a few files in the source
+Please note that even if you're building in a separate build directory,
+the compilation needs to modify a few files in the source
 directory, especially some files in the manual subdirectory.
 
 @noindent
-@code{configure} takes many options, but the only one that is usually
-mandatory is @samp{--prefix}.  This option tells @code{configure}
-where you want glibc installed.  This defaults to @file{/usr/local},
-but the normal setting to install as the standard system library is
-@samp{--prefix=/usr} for GNU/Linux systems and @samp{--prefix=} (an
-empty prefix) for GNU/Hurd systems.
+@code{configure} takes many options, but you can get away with knowing
+only two: @samp{--prefix} and @samp{--enable-add-ons}.  The
+@code{--prefix} option tells @code{configure} where you want glibc
+installed. This defaults to @file{/usr/local}.  The
+@samp{--enable-add-ons} option tells @code{configure} to use all the
+add-on bundles it finds in the source directory.  Since important
+functionality is provided in add-ons, you should always specify this
+option.
 
 It may also be useful to set the @var{CC} and @var{CFLAGS} variables in
 the environment when running @code{configure}.  @var{CC} selects the C
@@ -91,15 +103,11 @@ compile glibc with a newer set of kernel headers than the ones found in
 @file{/usr/include}.
 
 @item --enable-add-ons[=@var{list}]
-Specify add-on packages to include in the build.  If this option is
-specified with no list, it enables all the add-on packages it finds in
-the main source directory; this is the default behavior.  You may
-specify an explicit list of add-ons to use in @var{list}, separated by
-spaces or commas (if you use spaces, remember to quote them from the
-shell).  Each add-on in @var{list} can be an absolute directory name
-or can be a directory name relative to the main source directory, or
-relative to the build directory (that is, the current working directory).
-For example, @samp{--enable-add-ons=nptl,../glibc-libidn-2.4}.
+Enable add-on packages in your source tree.  If this option is specified
+with no list, it enables all the add-on packages it finds.  If you do
+not wish to use some add-on packages that you have present in your source
+tree, give this option a list of the add-ons that you @emph{do} want
+used, like this: @samp{--enable-add-ons=linuxthreads}
 
 @item --enable-kernel=@var{version}
 This option is currently only useful on GNU/Linux systems.  The
@@ -186,10 +194,11 @@ produce a lot of output, some of which may look like errors from
 @code{make} but isn't.  Look for error messages from @code{make}
 containing @samp{***}.  Those indicate that something is seriously wrong.
 
-The compilation process can take a long time, depending on the
-configuration and the speed of your machine.  Some complex modules may
-take a very long time to compile, as much as several minutes on slower
-machines.  Do not panic if the compiler appears to hang.
+The compilation process can take several hours.  Expect at least two
+hours for the default configuration on i586 for GNU/Linux.  For Hurd,
+times are much longer.  Some complex modules may take a very long time
+to compile, as much as several minutes on slower machines.  Do not
+panic if the compiler appears to hang.
 
 If you want to run a parallel make, simply pass the @samp{-j} option
 with an appropriate numeric parameter to @code{make}.  You need a recent
@@ -328,18 +337,11 @@ recommend GNU @code{make} version 3.79.  All earlier versions have severe
 bugs or lack features.
 
 @item
-GCC 3.4 or newer, GCC 4.1 recommended
+GCC 3.2 or newer
 
 The GNU C library can only be compiled with the GNU C compiler family.
-For the 2.3 releases, GCC 3.2 or higher is required; GCC 3.4 is the
-compiler we advise to use for 2.3 versions.
-For the 2.4 release, GCC 3.4 or higher is required; as of this
-writing, GCC 4.1 is the compiler we advise to use for current versions.
-On certain machines including @code{powerpc64}, compilers prior to GCC
-4.0 have bugs that prevent them compiling the C library code in the
-2.4 release.  On other machines, GCC 4.1 is required to build the C
-library with support for the correct @code{long double} type format;
-these include @code{powerpc} (32 bit), @code{s390} and @code{s390x}.
+As of the 2.3 release, GCC 3.2 or higher is required.  As of this
+writing, GCC 3.2 is the compiler we advise to use.
 
 You can use whatever compiler you like to compile programs that use GNU
 libc, but be aware that both GCC 2.7 and 2.8 have bugs in their
@@ -348,7 +350,7 @@ floating-point support that may be triggered by the math library.
 Check the FAQ for any special compiler issues on particular platforms.
 
 @item
-GNU @code{binutils} 2.15 or later
+GNU @code{binutils} 2.13 or later
 
 You must use GNU @code{binutils} (as and ld) to build the GNU C library.
 No other assembler or linker has the necessary functionality at the
@@ -363,10 +365,11 @@ understand all the tags used in the document, and the installation
 mechanism for the info files is not present or works differently.
 
 @item
-GNU @code{awk} 3.0, or higher
+GNU @code{awk} 3.0, or some other POSIX awk
 
-@code{Awk} is used in several places to generate files.
-@code{gawk} 3.0 is known to work.
+@code{Awk} is used in several places to generate files.  The scripts
+should work with any POSIX-compliant @code{awk} implementation;
+@code{gawk} 3.0 and @code{mawk} 1.3 are known to work.
 
 @item
 Perl 5
@@ -405,6 +408,86 @@ GNU @code{gettext} 0.10.36 or later
 @noindent
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
+
+@node Supported Configurations
+@appendixsec Supported Configurations
+@cindex configurations, all supported
+
+The GNU C Library currently supports configurations that match the
+following patterns:
+
+@smallexample
+alpha@var{*}-@var{*}-linux
+arm-@var{*}-linux
+cris-@var{*}-linux
+hppa-@var{*}-linux
+i@var{x}86-@var{*}-gnu
+i@var{x}86-@var{*}-linux
+ia64-@var{*}-linux
+m68k-@var{*}-linux
+mips@var{*}-@var{*}-linux
+powerpc-@var{*}-linux
+s390-@var{*}-linux
+s390x-@var{*}-linux
+sparc-@var{*}-linux
+sparc64-@var{*}-linux
+x86_64-@var{*}-linux
+@end smallexample
+
+Former releases of this library (version 2.1 and/or 2.0) used to run on
+the following configurations:
+
+@smallexample
+arm-@var{*}-linuxaout
+arm-@var{*}-none
+@end smallexample
+
+Very early releases (version 1.09.1 and perhaps earlier versions) used
+to run on the following configurations:
+
+@smallexample
+alpha-dec-osf1
+alpha-@var{*}-linuxecoff
+i@var{x}86-@var{*}-bsd4.3
+i@var{x}86-@var{*}-isc2.2
+i@var{x}86-@var{*}-isc3.@var{n}
+i@var{x}86-@var{*}-sco3.2
+i@var{x}86-@var{*}-sco3.2v4
+i@var{x}86-@var{*}-sysv
+i@var{x}86-@var{*}-sysv4
+i@var{x}86-force_cpu386-none
+i@var{x}86-sequent-bsd
+i960-nindy960-none
+m68k-hp-bsd4.3
+m68k-mvme135-none
+m68k-mvme136-none
+m68k-sony-newsos3
+m68k-sony-newsos4
+m68k-sun-sunos4.@var{n}
+mips-dec-ultrix4.@var{n}
+mips-sgi-irix4.@var{n}
+sparc-sun-solaris2.@var{n}
+sparc-sun-sunos4.@var{n}
+@end smallexample
+
+Since no one has volunteered to test and fix these configurations,
+they are not supported at the moment.  They probably don't compile;
+they definitely don't work anymore.  Porting the library is not hard.
+If you are interested in doing a port, please contact the glibc
+maintainers.  Start at @url{http://www.gnu.org/software/libc/} and
+read the references there on how to go about getting involved and
+contacting the developers.
+
+Valid cases of @samp{i@var{x}86} include @samp{i386}, @samp{i486},
+@samp{i586}, and @samp{i686}.  All of those configurations produce a
+library that can run on this processor and newer processors.  The GCC
+compiler by default generates code that's optimized for the machine it's
+configured for and will use the instructions available on that machine.
+For example if your GCC is configured for @samp{i686}, gcc will optimize
+for @samp{i686} and might issue some @samp{i686} specific instructions.
+To generate code for other models, you have to configure for that model
+and give GCC the appropriate @samp{-march=} and @samp{-mcpu=} compiler
+switches via @var{CFLAGS}.
 
 @node Linux
 @appendixsec Specific advice for GNU/Linux systems

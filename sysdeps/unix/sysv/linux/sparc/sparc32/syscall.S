@@ -17,10 +17,8 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-
 	.text
-	.globl	__syscall_error
-ENTRY(syscall)
+ENTRY (syscall)
 	mov	%o0, %g1
 	mov	%o1, %o0
 	mov	%o2, %o1
@@ -28,10 +26,10 @@ ENTRY(syscall)
 	mov	%o4, %o3
 	mov	%o5, %o4
 	ta	0x10
-	bcc	1f
-	 mov	%o7, %g1
-	call	__syscall_error
-	 mov	%g1, %o7
-1:	retl
+	bcs	__syscall_error_handler
 	 nop
-END(syscall)
+	retl
+	 nop
+	SYSCALL_ERROR_HANDLER
+
+PSEUDO_END (syscall)

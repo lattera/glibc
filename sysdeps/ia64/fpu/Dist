@@ -1,0 +1,11 @@
+libc_libm_error.c
+libm_atan2_reg.S
+libm_error.c
+libm_frexp4.S
+libm_frexp4f.S
+libm_frexp4l.S
+libm_reduce.S
+libm_support.h
+libm_tan.S
+s_matherrf.c
+s_matherrl.c

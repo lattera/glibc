@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -400,7 +400,6 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	    /* Does not match a month name.  */
 	    return NULL;
 	  tm->tm_mon = cnt;
-	  have_mon = 1;
 	  want_xday = 1;
 	  break;
 	case 'c':
@@ -540,12 +539,10 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	    }
 #endif
 	  if (!match_string (HERE_AM_STR, rp))
-	    {
-	      if (match_string (HERE_PM_STR, rp))
-		is_pm = 1;
-	      else
-		return NULL;
-	    }
+	    if (match_string (HERE_PM_STR, rp))
+	      is_pm = 1;
+	    else
+	      return NULL;
 	  break;
 	case 'r':
 #ifdef _NL_CURRENT
@@ -687,42 +684,6 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	  break;
 	case 'Z':
 	  /* XXX How to handle this?  */
-	  break;
-	case 'z':
-	  /* We recognize two formats: if two digits are given, these
-	     specify hours.  If fours digits are used, minutes are
-	     also specified.  */
-	  {
-	    val = 0;
-	    while (*rp == ' ')
-	      ++rp;
-	    if (*rp != '+' && *rp != '-')
-	      return NULL;
-	    bool neg = *rp++ == '-';
-	    int n = 0;
-	    while (n < 4 && *rp >= '0' && *rp <= '9')
-	      {
-		val = val * 10 + *rp++ - '0';
-		++n;
-	      }
-	    if (n == 2)
-	      val *= 100;
-	    else if (n != 4)
-	      /* Only two or four digits recognized.  */
-	      return NULL;
-	    else
-	      {
-		/* We have to convert the minutes into decimal.  */
-		if (val % 100 >= 60)
-		  return NULL;
-		val = (val / 100) * 100 + ((val % 100) * 50) / 30;
-	      }
-	    if (val > 1200)
-	      return NULL;
-	    tm->tm_gmtoff = (val * 3600) / 100;
-	    if (neg)
-	      tm->tm_gmtoff = -tm->tm_gmtoff;
-	  }
 	  break;
 	case 'E':
 #ifdef _NL_CURRENT
@@ -1086,15 +1047,11 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	      tm->tm_mday =
 		(tm->tm_yday
 		 - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1);
-	  have_mon = 1;
-	  have_mday = 1;
 	}
-      /* Don't crash in day_of_the_week if tm_mon is uninitialized.  */
-      if (have_mon || (unsigned) tm->tm_mon <= 11)
-	day_of_the_week (tm);
+      day_of_the_week (tm);
     }
 
-  if (want_xday && !have_yday && (have_mon || (unsigned) tm->tm_mon <= 11))
+  if (want_xday && !have_yday)
     day_of_the_year (tm);
 
   if ((have_uweek || have_wweek) && have_wday)

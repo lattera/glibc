@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -63,14 +63,9 @@ pthread_barrier_wait:
 
 	/* Wait for the remaining threads.  The call will return immediately
 	   if the CURR_EVENT memory has meanwhile been changed.  */
-7:
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
-#else
-	movl	$FUTEX_WAIT, %esi
-#endif
+7:	xorq	%rsi, %rsi		/* movq $FUTEX_WAIT, %rsi */
 	xorq	%r10, %r10
-8:	movl	$SYS_futex, %eax
+8:	movq	$SYS_futex, %rax
 	syscall
 
 	/* Don't return on spurious wakeups.  The syscall does not change
@@ -115,8 +110,8 @@ pthread_barrier_wait:
 	/* Wake up all waiters.  The count is a signed number in the kernel
 	   so 0x7fffffff is the highest value.  */
 	movl	$0x7fffffff, %edx
-	movl	$FUTEX_WAKE, %esi
-	movl	$SYS_futex, %eax
+	movq	$FUTEX_WAKE, %rsi
+	movq	$SYS_futex, %rax
 	syscall
 
 	/* Increment LEFT.  If this brings the count back to the

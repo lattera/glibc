@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2004, 2005, 2006
+/* Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -59,9 +59,9 @@ static service_library *nss_new_service (name_database *database,
 #undef DEFINE_DATABASE
 
 /* Structure to map database name to variable.  */
-static const struct
+static struct
 {
-  const char name[10];
+  const char *name;
   service_user **dbp;
 } databases[] =
 {
@@ -70,7 +70,6 @@ static const struct
 #include "databases.def"
 #undef DEFINE_DATABASE
 };
-#define ndatabases (sizeof (databases) / sizeof (databases[0]))
 
 
 __libc_lock_define_initialized (static, lock)
@@ -212,7 +211,7 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
   service_user *new_db;
   size_t cnt;
 
-  for (cnt = 0; cnt < ndatabases; ++cnt)
+  for (cnt = 0; cnt < sizeof databases; ++cnt)
     {
       int cmp = strcmp (dbname, databases[cnt].name);
       if (cmp == 0)
@@ -224,7 +223,7 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
 	}
     }
 
-  if (cnt == ndatabases)
+  if (cnt == sizeof databases)
     {
       __set_errno (EINVAL);
       return -1;

@@ -1,0 +1,17 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+
+# LinuxThreads fragment for GNU C library configure mechanism.
+# This is a shell script fragment sourced by the main configure script.
+
+for other in $add_ons; do
+  test $other = nptl || continue
+  if test $add_ons_automatic = yes; then
+    echo "$as_me:$LINENO: result: $libc_add_on disabled because $other add-on is also in use" >&5
+echo "${ECHO_T}$libc_add_on disabled because $other add-on is also in use" >&6
+    libc_add_on=
+  else
+    { { echo "$as_me:$LINENO: error: cannot use both $libc_add_on and $other add-ons in one build" >&5
+echo "$as_me: error: cannot use both $libc_add_on and $other add-ons in one build" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+done

@@ -22,8 +22,10 @@
 #define _LINUX_ALPHA_SYSDEP_H 1
 
 #ifdef __ASSEMBLER__
+
 #include <asm/pal.h>
 #include <alpha/regdef.h>
+
 #endif
 
 /* There is some commonality.  */

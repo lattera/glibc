@@ -38,14 +38,7 @@
 
 	.text
 	.align		4
-
-ENTRY(strcpy)
-	mov		%o0, %g2
-	andcc		%o1, 3, %g0
-	be		10f
-	 sethi		%hi(0x80808080), %o4
-
-	ldub		[%o1], %o5
+1:	ldub		[%o1], %o5
 	stb		%o5, [%o0]
 	cmp		%o5, 0
 	add		%o0, 1, %o0
@@ -72,7 +65,12 @@ ENTRY(strcpy)
 	b		6f
 	 andcc		%o0, 3, %g3
 
-10:	or		%o4, %lo(0x80808080), %o3
+ENTRY(strcpy)
+	mov		%o0, %g2
+	andcc		%o1, 3, %g0
+	bne		1b
+	 sethi		%hi(0x80808080), %o4
+	or		%o4, %lo(0x80808080), %o3
 4:	sethi		%hi(0x01010101), %o4
 5:	andcc		%o0, 3, %g3
 6:	bne		10f

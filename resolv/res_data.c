@@ -246,9 +246,7 @@ res_close(void) {
 	if ((_res.options & RES_INIT) == 0)
 	  return;
 #endif
-	/* We don't free the name server addresses because we never
-	   did it and it would be done implicitly on shutdown.  */
-	__res_iclose(&_res, false);
+	res_nclose(&_res);
 }
 
 #ifdef BIND_UPDATE

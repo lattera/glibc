@@ -1,25 +1,26 @@
-/* Copyright (c) 1998, 1999, 2003-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <assert.h>
 #include <atomic.h>
 #include <errno.h>
 #include <error.h>
-#include <inttypes.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
@@ -168,12 +169,6 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
   if (nentries > table->head->maxnentries)
     table->head->maxnentries = nentries;
 
-  if (table->persistent)
-    // XXX async OK?
-    msync ((void *) table->head,
-	   (char *) &table->head->array[hash] - (char *) table->head
-	   + sizeof (ref_t), MS_ASYNC);
-
   return 0;
 }
 
@@ -190,42 +185,21 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
    free the data structures since some hash table entries share the same
    data.  */
 void
-prune_cache (struct database_dyn *table, time_t now, int fd)
+prune_cache (struct database_dyn *table, time_t now)
 {
   size_t cnt = table->head->module;
 
   /* If this table is not actually used don't do anything.  */
   if (cnt == 0)
-    {
-      if (fd != -1)
-	{
-	  /* Reply to the INVALIDATE initiator.  */
-	  int32_t resp = 0;
-	  writeall (fd, &resp, sizeof (resp));
-	}
-      return;
-    }
-
-  /* This function can be called from the cleanup thread but also in
-     response to an invalidate command.  Make sure only one thread is
-     running.  When not serving INVALIDATE request, no need for the
-     second to wait around.  */
-  if (fd == -1)
-    {
-      if (pthread_mutex_trylock (&table->prunelock) != 0)
-	/* The work is already being done.  */
-	return;
-    }
-  else
-    pthread_mutex_lock (&table->prunelock);
+    return;
 
   /* If we check for the modification of the underlying file we invalidate
      the entries also in this case.  */
   if (table->check_file)
     {
-      struct stat64 st;
+      struct stat st;
 
-      if (stat64 (table->filename, &st) < 0)
+      if (stat (table->filename, &st) < 0)
 	{
 	  char buf[128];
 	  /* We cannot stat() the file, disable file checking if the
@@ -258,10 +232,6 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
   char *const data = table->data;
   bool any = false;
 
-  if (__builtin_expect (debug_level > 2, 0))
-    dbg_log (_("pruning %s cache; time %ld"),
-	     dbnames[table - dbs], (long int) now);
-
   do
     {
       ref_t run = table->head->array[--cnt];
@@ -270,25 +240,6 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	{
 	  struct hashentry *runp = (struct hashentry *) (data + run);
 	  struct datahead *dh = (struct datahead *) (data + runp->packet);
-
-	  /* Some debug support.  */
-	  if (__builtin_expect (debug_level > 2, 0))
-	    {
-	      char buf[INET6_ADDRSTRLEN];
-	      const char *str;
-
-	      if (runp->type == GETHOSTBYADDR || runp->type == GETHOSTBYADDRv6)
-		{
-		  inet_ntop (runp->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
-			     data + runp->key, buf, sizeof (buf));
-		  str = buf;
-		}
-	      else
-		str = data + runp->key;
-
-	      dbg_log (_("considering %s entry \"%s\", timeout %" PRIu64),
-		       serv2str[runp->type], str, dh->timeout);
-	    }
 
 	  /* Check whether the entry timed out.  */
 	  if (dh->timeout < now)
@@ -388,14 +339,6 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
     }
   while (cnt > 0);
 
-  if (fd != -1)
-    {
-      /* Reply to the INVALIDATE initiator that the cache has been
-	 invalidated.  */
-      int32_t resp = 0;
-      writeall (fd, &resp, sizeof (resp));
-    }
-
   if (first <= last)
     {
       struct hashentry *head = NULL;
@@ -452,7 +395,7 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
       /* Make sure the data is saved to disk.  */
       if (table->persistent)
 	msync (table->head,
-	       data + table->head->first_free - (char *) table->head,
+	       table->data + table->head->first_free - (char *) table->head,
 	       MS_ASYNC);
 
       /* One extra pass if we do debugging.  */
@@ -468,11 +411,11 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
 	      if (runp->type == GETHOSTBYADDR || runp->type == GETHOSTBYADDRv6)
 		{
 		  inet_ntop (runp->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
-			     data + runp->key, buf, sizeof (buf));
+			     table->data + runp->key, buf, sizeof (buf));
 		  str = buf;
 		}
 	      else
-		str = data + runp->key;
+		str = table->data + runp->key;
 
 	      dbg_log ("remove %s entry \"%s\"", serv2str[runp->type], str);
 
@@ -484,6 +427,4 @@ prune_cache (struct database_dyn *table, time_t now, int fd)
   /* Run garbage collection if any entry has been removed or replaced.  */
   if (any)
     gc (table);
-
-  pthread_mutex_unlock (&table->prunelock);
 }

@@ -1,10 +1,11 @@
-.file "remainderf.s"
-
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+  .file "remainderf.asm"
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
+// Contributed 2/2/2000 by John Harrison, Cristina Iordache, Ted Kubaska, 
+// Bob Norin, Shane Story, and Ping Tak Peter Tang of the Computational 
+// Software Lab, 
+// Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +21,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,19 +36,17 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// http://developer.intel.com/opensource.
 //
 // History
 //====================================================================
-// 02/02/00 Initial version
-// 03/02/00 New algorithm  
-// 04/04/00 Unwind support added
-// 07/21/00 Fixed quotient=2^{24*m+23} bug
-// 08/15/00 Bundle added after call to __libm_error_support to properly
+// 2/02/00 Initial version
+// 3/02/00 New algorithm  
+// 4/04/00 Unwind support added
+// 7/21/00 Fixed quotient=2^{24*m+23} bug
+// 8/15/00  Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 11/29/00 Set FR_Y to f9
-// 05/20/02 Cleaned up namespace and sf0 syntax
-// 02/10/03 Reordered header: .section, .global, .proc, .align
+//11/29/00  Set FR_Y to f9
 //
 // API
 //====================================================================
@@ -79,6 +78,9 @@
 //====================================================================
 // a=+/- Inf, or b=+/-0: return NaN, call libm_error_support
 // a=NaN or b=NaN: return NaN
+
+#include "libm_support.h"
+
 //
 // Registers used
 //====================================================================
@@ -86,6 +88,8 @@
 // General registers:   r2,r3,r28,r29,r32 (ar.pfs), r33-r39
 // Floating point registers: f6-f15
 //
+
+.section .text
 
 GR_SAVE_B0                    = r33
 GR_SAVE_PFS                   = r34
@@ -102,9 +106,17 @@ FR_Y             = f9
 FR_RESULT        = f8
 
 
-.section .text
-GLOBAL_IEEE754_ENTRY(remainderf)
+  .proc  remainderf#
+  .align 32
+  .global remainderf#
+  .align 32
 
+remainderf:
+#ifdef _LIBC
+.global __remainderf
+.type __remainderf,@function
+__remainderf:
+#endif
 // inputs in f8, f9
 // result in f8
 
@@ -129,7 +141,7 @@ GLOBAL_IEEE754_ENTRY(remainderf)
 // Y +-NAN, +-inf, +-0?     p11
 { .mfi
       nop.m 999
-      fclass.m.unc  p11,p0 = f9, 0xe7           
+(p0)  fclass.m.unc  p11,p0 = f9, 0xe7           
       nop.i 999
 }
 // qnan snan inf norm     unorm 0 -+
@@ -138,7 +150,7 @@ GLOBAL_IEEE754_ENTRY(remainderf)
 // X +-NAN, +-inf, ?        p9
 { .mfi
       nop.m 999
-      fclass.m.unc  p9,p0 = f8, 0xe3           
+(p0)  fclass.m.unc  p9,p0 = f8, 0xe3           
       nop.i 999;; 
 }
 
@@ -156,8 +168,8 @@ GLOBAL_IEEE754_ENTRY(remainderf)
   nop.i 0;;
 } 
 {.bbb
-  (p9) br.cond.spnt FREM_X_NAN_INF
-  (p11) br.cond.spnt FREM_Y_NAN_INF_ZERO
+  (p9) br.cond.spnt L(FREM_X_NAN_INF)
+  (p11) br.cond.spnt L(FREM_Y_NAN_INF_ZERO)
   nop.b 0
 }  {.mfi
    nop.m 0
@@ -167,7 +179,7 @@ GLOBAL_IEEE754_ENTRY(remainderf)
 } 
 
 .align 32
-remloop24: 
+L(remloop24): 
   { .mfi
   // f12=2^{24}-2
   setf.s f12=r3
@@ -335,7 +347,7 @@ remloop24:
   // (p9) set r=r2 (new a, if not last iteration)
   // (p10) new a =r
   (p10) mov f13=f6
-  (p12) br.cond.sptk remloop24;;
+  (p12) br.cond.sptk L(remloop24);;
 } 
 
 // last iteration
@@ -396,7 +408,7 @@ remloop24:
 }
 
 
-FREM_X_NAN_INF: 
+L(FREM_X_NAN_INF): 
 
 // Y zero ?
 {.mfi 
@@ -413,19 +425,19 @@ FREM_X_NAN_INF:
   nop.m 0
   nop.i 0
   // if Y zero
-  (p11) br.cond.spnt FREM_Y_ZERO;;                        
+  (p11) br.cond.spnt L(FREM_Y_ZERO);;                        
 }
 
 // X infinity? Return QNAN indefinite
 { .mfi
       nop.m 999
-      fclass.m.unc  p8,p0 = f8, 0x23 
+(p0)  fclass.m.unc  p8,p0 = f8, 0x23 
       nop.i 999
 }
 // X infinity? Return QNAN indefinite
 { .mfi
       nop.m 999
-      fclass.m.unc  p11,p0 = f8, 0x23 
+(p0)  fclass.m.unc  p11,p0 = f8, 0x23 
       nop.i 999;; 
 }
 // Y NaN ?
@@ -453,14 +465,14 @@ FREM_X_NAN_INF:
 }
 { .mfi
       nop.m 999
-(p8) fma.s.s0 f8=f8,f1,f0                     
+(p8) fma.s f8=f8,f1,f0                     
 	  nop.i 0 ;;                        
 }
 
 { .mfb
       nop.m 999
       frcpa.s0 f8,p7=f8,f9                     
-	  (p11) br.cond.spnt EXP_ERROR_RETURN;;                        
+	  (p11) br.cond.spnt L(EXP_ERROR_RETURN);;                        
 }
 { .mib
 	nop.m 0
@@ -469,35 +481,35 @@ FREM_X_NAN_INF:
 }
 
 
-FREM_Y_NAN_INF_ZERO: 
+L(FREM_Y_NAN_INF_ZERO): 
 
 // Y INF
 { .mfi
       nop.m 999
-      fclass.m.unc  p7,p0 = f9, 0x23           
+(p0)  fclass.m.unc  p7,p0 = f9, 0x23           
       nop.i 999 ;;
 }
 
 { .mfb
       nop.m 999
-(p7)  fma.s.s0 f8=f8,f1,f0                     
+(p7)  fma.s f8=f8,f1,f0                     
 (p7)  br.ret.spnt    b0 ;;                        
 }
 
 // Y NAN?
 { .mfi
       nop.m 999
-      fclass.m.unc  p9,p0 = f9, 0xc3           
+(p0)  fclass.m.unc  p9,p0 = f9, 0xc3           
       nop.i 999 ;;
 }
 
 { .mfb
       nop.m 999
-(p9)  fma.s.s0 f8=f9,f1,f0                     
+(p9)  fma.s f8=f9,f1,f0                     
 (p9)  br.ret.spnt    b0 ;;                        
 }
 
-FREM_Y_ZERO:
+L(FREM_Y_ZERO):
 // Y zero? Must be zero at this point
 // because it is the only choice left.
 // Return QNAN indefinite
@@ -505,7 +517,7 @@ FREM_Y_ZERO:
 // X NAN?
 { .mfi
       nop.m 999
-      fclass.m.unc  p9,p10 = f8, 0xc3           
+(p0)  fclass.m.unc  p9,p10 = f8, 0xc3           
       nop.i 999 ;;
 }
 { .mfi
@@ -516,42 +528,47 @@ FREM_Y_ZERO:
 
 {.mfi
  nop.m 999
- (p9) frcpa.s0 f11,p7=f8,f0
+ (p9) frcpa f11,p7=f8,f0
  nop.i 0;;
 }
 
 { .mfi
       nop.m 999
-(p10)  frcpa.s0         f11,p7 = f0,f0           
+(p10)  frcpa         f11,p7 = f0,f0           
 nop.i 999;;
 }
 
 { .mfi
       nop.m 999
-      fmerge.s      f10 = f8, f8             
+(p0)  fmerge.s      f10 = f8, f8             
       nop.i 999
 }
 
 { .mfi
       nop.m 999
-      fma.s.s0 f8=f11,f1,f0                     
+(p0)  fma.s f8=f11,f1,f0                     
       nop.i 999
 }
 
 
-EXP_ERROR_RETURN: 
+L(EXP_ERROR_RETURN): 
 
 { .mib
-      mov   GR_Parameter_TAG = 125                                
+(p0)  mov   GR_Parameter_TAG = 125                                
 	  nop.i 999
-      br.sptk __libm_error_region;; 
+(p0)  br.sptk __libm_error_region;; 
 }
 
-GLOBAL_IEEE754_END(remainderf)
+.endp remainderf
+ASM_SIZE_DIRECTIVE(remainderf)
+#ifdef _LIBC
+ASM_SIZE_DIRECTIVE(__remainderf)
+#endif
 
 
 
-LOCAL_LIBM_ENTRY(__libm_error_region)
+.proc __libm_error_region
+__libm_error_region:
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
@@ -599,11 +616,9 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         br.ret.sptk     b0                     // Return
 };; 
 
-LOCAL_LIBM_END(__libm_error_region)
+.endp __libm_error_region
+ASM_SIZE_DIRECTIVE(__libm_error_region)
 
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#
-
-
-

@@ -1,6 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Stub version.
-   Copyright (C) 1995, 1996, 1997, 1999, 2000, 2001, 2005
-   Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,8 +64,7 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
    LOADADDR is the load address of the object; INFO is an array indexed
    by DT_* of the .dynamic section info.  */
 
-auto inline void
-__attribute__ ((always_inline))
+static inline void
 elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 		 const Elf32_Rel *reloc, const Elf32_Sym *sym,
 		 Elf32_Addr (*resolve) (const Elf32_Sym **ref,
@@ -89,8 +87,7 @@ elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 }
 
 
-auto inline Elf32_Addr
-__attribute__ ((always_inline))
+static inline Elf32_Addr
 elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 		  const Elf32_Rel *reloc, const Elf32_Sym *sym,
 		  Elf32_Addr (*resolve) (const Elf32_Sym **ref,

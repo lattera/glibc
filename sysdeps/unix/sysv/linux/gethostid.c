@@ -1,5 +1,4 @@
-/* Copyright (C) 1995,1996,1998-2001,2003,2004,2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1998-2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +24,7 @@
 #include <not-cancel.h>
 
 #define HOSTIDFILE "/etc/hostid"
+#define OLD_HOSTIDFILE "/etc/hostid"
 
 #ifdef SET_PROCEDURE
 int
@@ -81,6 +81,8 @@ gethostid ()
 
   /* First try to get the ID from a former invocation of sethostid.  */
   fd = open_not_cancel (HOSTIDFILE, O_RDONLY|O_LARGEFILE, 0);
+  if (fd < 0)
+    fd = open_not_cancel (OLD_HOSTIDFILE, O_RDONLY|O_LARGEFILE, 0);
   if (fd >= 0)
     {
       ssize_t n = read_not_cancel (fd, &id, sizeof (id));

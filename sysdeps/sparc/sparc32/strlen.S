@@ -38,41 +38,39 @@
 
 	.text
 	.align		4
-
-ENTRY(strlen)
-	mov		%o0, %o1
-	andcc		%o0, 3, %g0
-	be		20f
-	 sethi		%hi(0x80808080), %o4
-
-	ldub		[%o0], %o5
+10:	ldub		[%o0], %o5
 	cmp		%o5, 0
-	be		21f
+	be		1f
 	 add		%o0, 1, %o0
 	andcc		%o0, 3, %g0
 	be		4f
 	 or		%o4, %lo(0x80808080), %o3
 	ldub		[%o0], %o5
 	cmp		%o5, 0
-	be		22f
+	be		2f
 	 add		%o0, 1, %o0
 	andcc		%o0, 3, %g0
 	be		5f
 	 sethi		%hi(0x01010101), %o4
 	ldub		[%o0], %o5
 	cmp		%o5, 0
-	be		23f
+	be		3f
 	 add		%o0, 1, %o0
 	b		11f
 	 or		%o4, %lo(0x01010101), %o2
-21:	retl
+1:	retl
 	 mov		0, %o0
-22:	retl
+2:	retl
 	 mov		1, %o0
-23:	retl
+3:	retl
 	 mov		2, %o0
 
-20:	or		%o4, %lo(0x80808080), %o3
+ENTRY(strlen)
+	mov		%o0, %o1
+	andcc		%o0, 3, %g0
+	bne		10b
+	 sethi		%hi(0x80808080), %o4
+	or		%o4, %lo(0x80808080), %o3
 4:	sethi		%hi(0x01010101), %o4
 5:	or		%o4, %lo(0x01010101), %o2
 11:	ld		[%o0], %o5

@@ -1,10 +1,10 @@
 .file "asinf.s"
 
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
+// Contributed 2/02/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
+// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,25 +35,21 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// http://developer.intel.com/opensource.
 
 // History
 //==============================================================
-// 02/02/00 Initial version
-// 06/28/00 Improved speed 
-// 06/31/00 Changed register allocation because of some duplicate macros
+// 2/02/00  Initial revision
+// 6/28/00  Improved speed 
+// 6/31/00  Changed register allocation because of some duplicate macros
 //          moved nan exit bundle up to gain a cycle. 
-// 08/08/00 Improved speed by avoiding SIR flush.
-// 08/15/00 Bundle added after call to __libm_error_support to properly
+// 8/08/00  Improved speed by avoiding SIR flush.
+// 8/15/00  Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 08/17/00 Changed predicate register macro-usage to direct predicate
+// 8/17/00  Changed predicate register macro-usage to direct predicate
 //          names due to an assembler bug.
 // 10/17/00 Improved speed of x=0 and x=1 paths, set D flag if x denormal.
-// 03/13/01 Corrected sign of imm1 value in dep instruction.
-// 05/20/02 Cleaned up namespace and sf0 syntax
-// 02/06/03 Reordered header: .section, .global, .proc, .align
 
-	
 // Description
 //=========================================
 // The asinf function computes the arc sine of x in the range [-pi,+pi].
@@ -123,6 +119,7 @@
 //  answer2 = - sign(x) z P(t) + (sign(x) pi/2)
 //
 
+#include "libm_support.h"
 
 // Assembly macros
 //=========================================
@@ -228,30 +225,42 @@ asinf_poly_p1a                   = f90
 // Data tables
 //==============================================================
 
-RODATA
+#ifdef _LIBC
+.rodata
+#else
+.data
+#endif
 
 .align 16
 
-LOCAL_OBJECT_START(asinf_coeff_1_table)
+asinf_coeff_1_table:
+ASM_TYPE_DIRECTIVE(asinf_coeff_1_table,@object)
 data8 0x3FC5555607DCF816 // P1
 data8 0x3F9CF81AD9BAB2C6 // P4
 data8 0x3FC59E0975074DF3 // P7
 data8 0xBFA6F4CC2780AA1D // P6
 data8 0x3FC2DD45292E93CB // P9
 data8 0x3fe6a09e667f3bcd // sqrt(2)/2
-LOCAL_OBJECT_END(asinf_coeff_1_table)
+ASM_SIZE_DIRECTIVE(asinf_coeff_1_table)
 
-LOCAL_OBJECT_START(asinf_coeff_2_table)
+asinf_coeff_2_table:
+ASM_TYPE_DIRECTIVE(asinf_coeff_2_table,@object)
 data8 0x3FA6F108E31EFBA6 // P3
 data8 0xBFCA31BF175D82A0 // P8
 data8 0x3FA30C0337F6418B // P5
 data8 0x3FB332C9266CB1F9 // P2
 data8 0x3ff921fb54442d18 // pi_by_2
-LOCAL_OBJECT_END(asinf_coeff_2_table)
+ASM_SIZE_DIRECTIVE(asinf_coeff_2_table)
 
+
+.align 32
+.global asinf
 
 .section .text
-GLOBAL_LIBM_ENTRY(asinf)
+.proc  asinf
+.align 32
+
+asinf:
  
 // Load the addresses of the two tables.
 // Then, load the coefficients and other constants.
@@ -336,7 +345,7 @@ GLOBAL_LIBM_ENTRY(asinf)
 } 
 {     .mfb 
      nop.m                                               999
-(p8) fma.s.s0 f8                = f8,f1,f0
+(p8) fma.s f8                = f8,f1,f0
 (p8) br.ret.spnt   b0 ;;  // Exit if x=nan
 }
 
@@ -361,7 +370,7 @@ GLOBAL_LIBM_ENTRY(asinf)
 {     .mfb 
      nop.m                      999
      fma.s1    asinf_t4  =    asinf_t2,asinf_t2,f0
-(p6) br.cond.spnt  ASINF_ABS_ONE ;;     // Branch if |x|=1
+(p6) br.cond.spnt  L(ASINF_ABS_ONE) ;;     // Branch if |x|=1
 } 
 
 {     .mfi 
@@ -563,26 +572,27 @@ GLOBAL_LIBM_ENTRY(asinf)
 .pred.rel "mutex",p8,p7    //asinf_pred_GTsqrt2by2,asinf_pred_LEsqrt2by2
 {     .mfi 
                          nop.m            999
-(p8)  fnma.s.s0     f8   =    asinf_z,asinf_Pt,asinf_sgn_x_piby2
+(p8)  fnma.s     f8   =    asinf_z,asinf_Pt,asinf_sgn_x_piby2
                          nop.i            999
 } 
  
 {     .mfb 
                          nop.m            999
-(p7)  fma.s.s0    f8    =    asinf_x11,asinf_poly_Bx,asinf_poly_Ax
+(p7)  fma.s    f8    =    asinf_x11,asinf_poly_Bx,asinf_poly_Ax
                          br.ret.sptk b0 ;;
 } 
 
-ASINF_ABS_ONE:
+L(ASINF_ABS_ONE):
 // Here for short exit if |x|=1
 {     .mfb 
      nop.m                      999
-     fma.s.s0    f8 =    asinf_sgn_x,asinf_const_piby2,f0
+     fma.s    f8 =    asinf_sgn_x,asinf_const_piby2,f0
      br.ret.sptk b0
 } 
 ;;
 
-GLOBAL_LIBM_END(asinf)
+.endp asinf
+ASM_SIZE_DIRECTIVE(asinf)
 
 // Stack operations when calling error support.
 //       (1)               (2)                  
@@ -613,7 +623,8 @@ GLOBAL_LIBM_END(asinf)
 //                              restore gp
 //                              restore ar.pfs
 
-LOCAL_LIBM_ENTRY(__libm_error_region)
+.proc __libm_error_region
+__libm_error_region:
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
@@ -669,7 +680,8 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         br.ret.sptk     b0                     // Return
 };;
 
-LOCAL_LIBM_END(__libm_error_region)
+.endp __libm_error_region
+ASM_SIZE_DIRECTIVE(__libm_error_region)
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

@@ -1,19 +1,21 @@
-/* Copyright (C) 1996, 1998-2004,2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -47,9 +49,8 @@ static void new_width (struct linereader *cmfile, struct charmap_t *result,
 		       const char *from, const char *to,
 		       unsigned long int width);
 static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
-			      size_t nbytes, unsigned char *bytes,
-			      const char *from, const char *to,
-			      int decimal_ellipsis, int step);
+			      int nbytes, char *bytes, const char *from,
+			      const char *to, int decimal_ellipsis, int step);
 
 
 bool enc_not_ascii_compatible;
@@ -86,8 +87,7 @@ cmlr_open (const char *directory, const char *name, kw_hash_fct_t hf)
 }
 
 struct charmap_t *
-charmap_read (const char *filename, int verbose, int error_not_found,
-	      int be_quiet, int use_default)
+charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
 {
   struct charmap_t *result = NULL;
 
@@ -131,11 +131,13 @@ charmap_read (const char *filename, int verbose, int error_not_found,
 	}
 
       if (cmfile != NULL)
-	result = parse_charmap (cmfile, verbose, be_quiet);
+	{
+	  result = parse_charmap (cmfile, verbose, be_quiet);
 
-      if (result == NULL && error_not_found)
-	WITH_CUR_LOCALE (error (0, errno, _("\
+	  if (result == NULL && !be_quiet)
+	    WITH_CUR_LOCALE (error (0, errno, _("\
 character map file `%s' not found"), filename));
+	}
     }
 
   if (result == NULL && filename != NULL && strchr (filename, '/') == NULL)
@@ -925,8 +927,7 @@ charmap_find_value (const struct charmap_t *cm, const char *name, size_t len)
 
 static void
 charmap_new_char (struct linereader *lr, struct charmap_t *cm,
-		  size_t nbytes, unsigned char *bytes,
-		  const char *from, const char *to,
+		  int nbytes, char *bytes, const char *from, const char *to,
 		  int decimal_ellipsis, int step)
 {
   hash_table *ht = &cm->char_table;

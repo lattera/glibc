@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-97,99,2000,2002-2004,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-97,99,2000,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,7 +83,7 @@ open_memstream (bufloc, sizeloc)
   new_f->fp._sf._sbf._f._lock = &new_f->lock;
 #endif
 
-  buf = calloc (1, _IO_BUFSIZ);
+  buf = malloc (_IO_BUFSIZ);
   if (buf == NULL)
     return NULL;
   INTUSE(_IO_init) (&new_f->fp._sf._sbf._f, 0);
@@ -106,6 +106,11 @@ _IO_mem_sync (fp)
      _IO_FILE* fp;
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
+  int res;
+
+  res = _IO_default_sync (fp);
+  if (res < 0)
+    return res;
 
   if (fp->_IO_write_ptr == fp->_IO_write_end)
     {
@@ -135,9 +140,9 @@ _IO_mem_finish (fp, dummy)
     {
       (*mp->bufloc)[fp->_IO_write_ptr - fp->_IO_write_base] = '\0';
       *mp->sizeloc = fp->_IO_write_ptr - fp->_IO_write_base;
-
-      fp->_IO_buf_base = NULL;
     }
 
-  _IO_str_finish (fp, 0);
+  fp->_IO_buf_base = NULL;
+
+  INTUSE(_IO_default_finish) (fp, 0);
 }

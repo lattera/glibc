@@ -209,7 +209,6 @@ ENTRY(bcopy)
 END(bcopy)
 
 	.align		32
-ENTRY(__memcpy_large)
 200:	be,pt		%xcc, 201f			/* CTI				*/
 	 andcc		%o0, 0x38, %g5			/* IEU1		Group		*/
 	mov		8, %g1				/* IEU0				*/
@@ -444,7 +443,6 @@ ENTRY(__memcpy_large)
 	 stb		%o5, [%o0 - 1]			/* Store			*/
 209:	retl
 	 mov		%g4, %o0
-END(__memcpy_large)
 
 #ifdef USE_BPR
 
@@ -700,7 +698,6 @@ ENTRY(memcpy)
 END(memcpy)
 
 	.align		32
-ENTRY(__memmove_slowpath)
 228:	andcc		%o2, 1, %g0			/* IEU1		Group		*/
 	be,pt		%icc, 2f+4			/* CTI				*/
 1:	 ldub		[%o1 - 1], %o5			/* LOAD		Group		*/
@@ -721,7 +718,6 @@ ENTRY(__memmove_slowpath)
 	 mov		%g4, %o0
 219:	retl
 	 nop
-END(__memmove_slowpath)
 
 	.align		32
 ENTRY(memmove)
@@ -918,8 +914,8 @@ ENTRY(memmove)
 END(memmove)
 
 #ifdef USE_BPR
-weak_alias (memcpy, __align_cpy_1)
-weak_alias (memcpy, __align_cpy_2)
+weak_alias(memcpy, __align_cpy_1)
+weak_alias(memcpy, __align_cpy_2)
 #endif
 libc_hidden_builtin_def (memcpy)
 libc_hidden_builtin_def (memmove)

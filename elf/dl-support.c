@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,6 @@
 #include <bits/libc-lock.h>
 #include <dl-cache.h>
 #include <dl-librecon.h>
-#include <dl-procinfo.h>
 #include <unsecvars.h>
 #include <hp-timing.h>
 
@@ -122,7 +121,7 @@ int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
 ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
-uint64_t _dl_hwcap __attribute__ ((nocommon));
+unsigned long int _dl_hwcap __attribute__ ((nocommon));
 
 /* Prevailing state of the stack, PF_X indicating it's executable.  */
 ElfW(Word) _dl_stack_flags = PF_R|PF_W|PF_X;
@@ -133,11 +132,6 @@ ElfW(Word) _dl_stack_flags = PF_R|PF_W|PF_X;
 int (*_dl_make_stack_executable_hook) (void **) internal_function
   = _dl_make_stack_executable;
 
-
-/* Function in libpthread to wait for termination of lookups.  */
-void (*_dl_wait_lookup_done) (void);
-
-struct dl_scope_free_list *_dl_scope_free_list;
 
 #ifdef NEED_DL_SYSINFO
 /* Needed for improved syscall handling on at least x86/Linux.  */
@@ -179,13 +173,13 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	GLRO(dl_clktck) = av->a_un.a_val;
 	break;
       case AT_PHDR:
-	GL(dl_phdr) = (void *) av->a_un.a_val;
+	GL(dl_phdr) = av->a_un.a_ptr;
 	break;
       case AT_PHNUM:
 	GL(dl_phnum) = av->a_un.a_val;
 	break;
       case AT_HWCAP:
-	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
+	GLRO(dl_hwcap) = av->a_un.a_val;
 	break;
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:
@@ -194,7 +188,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
 #endif
 #if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
       case AT_SYSINFO_EHDR:
-	GL(dl_sysinfo_dso) = (void *) av->a_un.a_val;
+	GL(dl_sysinfo_dso) = av->a_un.a_ptr;
 	break;
 #endif
       case AT_UID:

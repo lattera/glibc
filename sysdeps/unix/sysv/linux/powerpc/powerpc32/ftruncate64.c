@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,12 +23,12 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
+#include "kernel-features.h"
 
 #ifdef __NR_ftruncate64
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
 /* The variable is shared between all wrappers around *truncate64 calls.  */
-extern int __have_no_truncate64;
+extern int have_no_truncate64;
 #endif
 
 
@@ -39,7 +39,7 @@ __ftruncate64 (fd, length)
      off64_t length;
 {
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
-  if (! __have_no_truncate64)
+  if (! have_no_truncate64)
 #endif
     {
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
@@ -57,7 +57,7 @@ __ftruncate64 (fd, length)
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       __set_errno (saved_errno);
-      __have_no_truncate64 = 1;
+      have_no_truncate64 = 1;
 #endif
     }
 
@@ -74,5 +74,5 @@ weak_alias (__ftruncate64, ftruncate64)
 
 #else
 /* Use the generic implementation.  */
-# include <misc/ftruncate64.c>
+# include <sysdeps/generic/ftruncate64.c>
 #endif

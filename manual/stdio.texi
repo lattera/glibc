@@ -2357,8 +2357,7 @@ make_message (char *name, char *value)
     @{
       /* @r{Reallocate buffer now that we know
          how much space is needed.} */
-      size = nchars + 1;
-      buffer = (char *) xrealloc (buffer, size);
+      buffer = (char *) xrealloc (buffer, nchars + 1);
 
       if (buffer != NULL)
         /* @r{Try again.} */
@@ -2393,9 +2392,8 @@ This function is similar to @code{sprintf}, except that it dynamically
 allocates a string (as with @code{malloc}; @pxref{Unconstrained
 Allocation}) to hold the output, instead of putting the output in a
 buffer you allocate in advance.  The @var{ptr} argument should be the
-address of a @code{char *} object, and a successful call to
-@code{asprintf} stores a pointer to the newly allocated string at that
-location.
+address of a @code{char *} object, and @code{asprintf} stores a pointer
+to the newly allocated string at that location.
 
 The return value is the number of characters allocated for the buffer, or
 less than zero if an error occurred. Usually this means that the buffer
@@ -4854,9 +4852,8 @@ Got r
 @comment GNU
 @deftypefun {FILE *} open_memstream (char **@var{ptr}, size_t *@var{sizeloc})
 This function opens a stream for writing to a buffer.  The buffer is
-allocated dynamically and grown as necessary, using @code{malloc}.
-After you've closed the stream, this buffer is your responsibility to
-clean up using @code{free} or @code{realloc}.  @xref{Unconstrained Allocation}.
+allocated dynamically (as with @code{malloc}; @pxref{Unconstrained
+Allocation}) and grown as necessary.
 
 When the stream is closed with @code{fclose} or flushed with
 @code{fflush}, the locations @var{ptr} and @var{sizeloc} are updated to
@@ -5070,11 +5067,14 @@ You should define the function to perform seek operations on the cookie
 as:
 
 @smallexample
-int @var{seeker} (void *@var{cookie}, off64_t *@var{position}, int @var{whence})
+int @var{seeker} (void *@var{cookie}, fpos_t *@var{position}, int @var{whence})
 @end smallexample
 
 For this function, the @var{position} and @var{whence} arguments are
-interpreted as for @code{fgetpos}; see @ref{Portable Positioning}.
+interpreted as for @code{fgetpos}; see @ref{Portable Positioning}.  In
+the GNU library, @code{fpos_t} is equivalent to @code{off_t} or
+@code{long int}, and simply represents the number of bytes from the
+beginning of the file.
 
 After doing the seek operation, your function should store the resulting
 file position relative to the beginning of the file in @var{position}.

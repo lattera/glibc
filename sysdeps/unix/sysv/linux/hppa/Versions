@@ -1,0 +1,25 @@
+libc {
+  # The comment lines with "#errlist-compat" are magic; see errlist-compat.awk.
+  # When you get an error from errlist-compat.awk, you need to add a new
+  # version here.  Don't do this blindly, since this means changing the ABI
+  # for all GNU/Linux configurations.
+
+  GLIBC_2.1 {
+    #errlist-compat	253
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+  }
+  GLIBC_2.2 {
+    # New rlimit interface
+    getrlimit; setrlimit; getrlimit64; setrlimit64;
+  }
+  GLIBC_2.3 {
+    #errlist-compat	254
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+  }
+}
+librt {
+  GLIBC_2.3 {
+    # AIO functions.
+    aio_cancel; aio_cancel64;
+  }
+}

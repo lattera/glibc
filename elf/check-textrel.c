@@ -1,5 +1,5 @@
 /* Check for text relocations in DSOs.
-   Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contribute by Ulrich Drepper <drepper@redhat.com>. 2002.
 
@@ -79,36 +79,20 @@ AB(handle_file) (const char *fname, int fd)
 
   /* Search for the PT_DYNAMIC entry.  */
   size_t cnt;
-  E(Phdr) *dynphdr = NULL;
   for (cnt = 0; cnt < phnum; ++cnt)
     if (SWAP (phdr[cnt].p_type) == PT_DYNAMIC)
-      dynphdr = &phdr[cnt];
-    else if (SWAP (phdr[cnt].p_type) == PT_LOAD
-	     && (SWAP (phdr[cnt].p_flags) & (PF_X | PF_W)) == (PF_X | PF_W))
-      {
-	printf ("%s: segment %zu is executable and writable\n",
-		fname, cnt);
-#if !defined __sparc__ \
-    && !defined __alpha__ \
-    && (!defined __powerpc__ || defined __powerpc64__ || defined HAVE_PPC_SECURE_PLT)
-	/* sparc, sparc64, alpha and powerpc32 (the last one only when using
-	   -mbss-plt) are expected to have PF_X | PF_W segment containing .plt
-	   section, it is part of their ABI.  It is bad security wise, nevertheless
-	   this test shouldn't fail because of this.  */
-	return 1;
-#endif
-      }
+      break;
 
-  if (dynphdr == NULL)
+  if (cnt == phnum)
     {
       printf ("%s: no DYNAMIC segment found\n", fname);
       return 1;
     }
 
   /* Read the dynamic segment.  */
-  size_t pmemsz = SWAP(dynphdr->p_memsz);
+  size_t pmemsz = SWAP(phdr[cnt].p_memsz);
   E(Dyn) *dyn = alloca (pmemsz);
-  if (pread (fd, dyn, pmemsz, SWAP(dynphdr->p_offset)) != pmemsz)
+  if (pread (fd, dyn, pmemsz, SWAP(phdr[cnt].p_offset)) != pmemsz)
     goto read_error;
 
   /* Search for an DT_TEXTREL entry of DT_FLAGS with the DF_TEXTREL

@@ -1,0 +1,8 @@
+clone.S
+pipe.S
+setresuid.c
+setresgid.c
+setfsuid.c
+setfsgid.c
+sys/io.h
+sys/user.h

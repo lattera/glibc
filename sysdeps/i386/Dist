@@ -1,0 +1,4 @@
+i386-mcount.S
+machine-gmon.h
+bp-asm.h
+bits/link.h

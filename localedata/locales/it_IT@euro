@@ -43,7 +43,7 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_CTYPE
-copy "it_IT"
+copy "i18n"
 END LC_CTYPE
 
 LC_MESSAGES

@@ -1,4 +1,4 @@
-/* Copyright (C) 1989,91,93,1996-2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1989,91,93,1996-2003, 2004  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@
    02111-1307 USA.  */
 
 #include <alloca.h>
-#include <assert.h>
 #include <errno.h>
 #include <grp.h>
 #include <limits.h>
@@ -74,8 +73,6 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
   /* Start is one, because we have the first group as parameter.  */
   long int start = 1;
 
-  /* Never store more than the starting *SIZE number of elements.  */
-  assert (*size > 0);
   (*groupsp)[0] = group;
 
   if (__nss_group_database != NULL)
@@ -143,9 +140,11 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 int
 getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
 {
+  gid_t *newgroups;
   long int size = MAX (1, *ngroups);
+  int result;
 
-  gid_t *newgroups = (gid_t *) malloc (size * sizeof (gid_t));
+  newgroups = (gid_t *) malloc ((size + 1) * sizeof (gid_t));
   if (__builtin_expect (newgroups == NULL, 0))
     /* No more memory.  */
     // XXX This is wrong.  The user provided memory, we have to use
@@ -154,16 +153,20 @@ getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
     // XXX too small.  For initgroups a flag could say: increase size.
     return -1;
 
-  int total = internal_getgrouplist (user, group, &size, &newgroups, -1);
+  result = internal_getgrouplist (user, group, &size, &newgroups, -1);
 
-  memcpy (groups, newgroups, MIN (*ngroups, total) * sizeof (gid_t));
+  memcpy (groups, newgroups, MIN (*ngroups, result) * sizeof (gid_t));
+
+  if (result > *ngroups)
+    {
+      *ngroups = result;
+      result = -1;
+    }
+  else
+    *ngroups = result;
 
   free (newgroups);
-
-  int retval = total > *ngroups ? -1 : total;
-  *ngroups = total;
-
-  return retval;
+  return result;
 }
 
 static_link_warning (getgrouplist)

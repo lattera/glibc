@@ -1,19 +1,21 @@
-/* Copyright (c) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 /* nscd - Name Service Cache Daemon. Caches passwd, group, and hosts.  */
 
@@ -70,6 +72,7 @@ int disabled_passwd;
 int disabled_group;
 int go_background = 1;
 
+int secure_in_use;
 static const char *conffile = _PATH_NSCDCONF;
 
 time_t start_time;
@@ -119,9 +122,6 @@ static struct argp argp =
   options, parse_opt, NULL, doc,
 };
 
-/* The SIGHUP handler is extern to this file */
-extern void sighup_handler(int signum);
-
 /* True if only statistics are requested.  */
 static bool get_stats;
 
@@ -145,15 +145,17 @@ main (int argc, char **argv)
     {
       error (0, 0, gettext ("wrong number of arguments"));
       argp_help (&argp, stdout, ARGP_HELP_SEE, program_invocation_short_name);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* Read the configuration file.  */
   if (nscd_parse_file (conffile, dbs) != 0)
-    /* We couldn't read the configuration file.  We don't start the
-       server.  */
-    error (EXIT_FAILURE, 0,
-	   _("failure while reading configuration file; this is fatal"));
+    {
+      /* We couldn't read the configuration file.  We don't start the
+	 server.  */
+      dbg_log (_("cannot read configuration file; this is fatal"));
+      exit (1);
+    }
 
   /* Do we only get statistics?  */
   if (get_stats)
@@ -238,9 +240,7 @@ main (int argc, char **argv)
 
       setsid ();
 
-      if (chdir ("/") != 0)
-	error (EXIT_FAILURE, errno,
-	       _("cannot change current working directory to \"/\""));
+      chdir ("/");
 
       openlog ("nscd", LOG_CONS | LOG_ODELAY, LOG_DAEMON);
 
@@ -266,7 +266,6 @@ main (int argc, char **argv)
   signal (SIGINT, termination_handler);
   signal (SIGQUIT, termination_handler);
   signal (SIGTERM, termination_handler);
-  signal (SIGHUP, sighup_handler);
   signal (SIGPIPE, SIG_IGN);
 
   /* Cleanup files created by a previous 'bind'.  */
@@ -302,7 +301,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
     case 'K':
       if (getuid () != 0)
-	error (4, 0, _("Only root is allowed to use this option!"));
+	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
       {
 	int sock = nscd_open_socket ();
 	request_header req;
@@ -314,9 +313,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	req.version = NSCD_VERSION;
 	req.type = SHUTDOWN;
 	req.key_len = 0;
-	nbytes = TEMP_FAILURE_RETRY (send (sock, &req,
-					   sizeof (request_header),
-					   MSG_NOSIGNAL));
+	nbytes = TEMP_FAILURE_RETRY (write (sock, &req,
+					    sizeof (request_header)));
 	close (sock);
 	exit (nbytes != sizeof (request_header) ? EXIT_FAILURE : EXIT_SUCCESS);
       }
@@ -327,7 +325,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
     case 'i':
       if (getuid () != 0)
-	error (4, 0, _("Only root is allowed to use this option!"));
+	error (EXIT_FAILURE, 0, _("Only root is allowed to use this option!"));
       else
 	{
 	  int sock = nscd_open_socket ();
@@ -336,6 +334,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	    exit (EXIT_FAILURE);
 
 	  request_header req;
+	  ssize_t nbytes;
+	  struct iovec iov[2];
+
 	  if (strcmp (arg, "passwd") == 0)
 	    req.key_len = sizeof "passwd";
 	  else if (strcmp (arg, "group") == 0)
@@ -348,38 +349,17 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	  req.version = NSCD_VERSION;
 	  req.type = INVALIDATE;
 
-	  struct iovec iov[2];
 	  iov[0].iov_base = &req;
 	  iov[0].iov_len = sizeof (req);
 	  iov[1].iov_base = arg;
 	  iov[1].iov_len = req.key_len;
 
-	  ssize_t nbytes = TEMP_FAILURE_RETRY (writev (sock, iov, 2));
-
-	  if (nbytes != iov[0].iov_len + iov[1].iov_len)
-	    {
-	      int err = errno;
-	      close (sock);
-	      error (EXIT_FAILURE, err, _("write incomplete"));
-	    }
-
-	  /* Wait for ack.  Older nscd just closed the socket when
-	     prune_cache finished, silently ignore that.  */
-	  int32_t resp = 0;
-	  nbytes = TEMP_FAILURE_RETRY (read (sock, &resp, sizeof (resp)));
-	  if (nbytes != 0 && nbytes != sizeof (resp))
-	    {
-	      int err = errno;
-	      close (sock);
-	      error (EXIT_FAILURE, err, _("cannot read invalidate ACK"));
-	    }
+	  nbytes = TEMP_FAILURE_RETRY (writev (sock, iov, 2));
 
 	  close (sock);
 
-	  if (resp != 0)
-	    error (EXIT_FAILURE, resp, _("invalidation failed"));
-
-	  exit (0);
+	  exit (nbytes != iov[0].iov_len + iov[1].iov_len
+		? EXIT_FAILURE : EXIT_SUCCESS);
 	}
 
     case 't':
@@ -387,7 +367,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case 'S':
+#if 0
+      if (strcmp (arg, "passwd,yes") == 0)
+	secure_in_use = dbs[pwddb].secure = 1;
+      else if (strcmp (arg, "group,yes") == 0)
+	secure_in_use = dbs[grpdb].secure = 1;
+      else if (strcmp (arg, "hosts,yes") == 0)
+	secure_in_use = dbs[hstdb].secure = 1;
+#else
       error (0, 0, _("secure services not implemented anymore"));
+#endif
       break;
 
     default:
@@ -406,7 +395,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2006");
+"), "2004");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Thorsten Kukuk and Ulrich Drepper");
 }
@@ -453,9 +442,6 @@ termination_handler (int signum)
   /* Synchronize memory.  */
   for (int cnt = 0; cnt < lastdb; ++cnt)
     {
-      if (!dbs[cnt].enabled)
-	continue;
-
       /* Make sure nobody keeps using the database.  */
       dbs[cnt].head->timestamp = 0;
 
@@ -509,10 +495,10 @@ write_pid (const char *file)
     return -1;
 
   fprintf (fp, "%d\n", getpid ());
-
-  int result = fflush (fp) || ferror (fp) ? -1 : 0;
+  if (fflush (fp) || ferror (fp))
+    return -1;
 
   fclose (fp);
 
-  return result;
+  return 0;
 }

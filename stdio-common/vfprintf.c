@@ -1,5 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +64,7 @@
 #define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
 
 #ifndef COMPILE_WPRINTF
-# define vfprintf	_IO_vfprintf_internal
+# define vfprintf	_IO_vfprintf
 # define CHAR_T		char
 # define UCHAR_T	unsigned char
 # define INT_T		int
@@ -258,7 +257,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #define NOT_IN_JUMP_RANGE(Ch) ((Ch) < L_(' ') || (Ch) > L_('z'))
 #define CHAR_CLASS(Ch) (jump_table[(INT_T) (Ch) - L_(' ')])
-#ifdef SHARED
+#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined SHARED
   /* 'int' is enough and it saves some space on 64 bit systems.  */
 # define JUMP_TABLE_TYPE const int
 # define JUMP(ChExpr, table)						      \
@@ -530,24 +529,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    {								      \
 	      if (is_long_num)						      \
 		signed_number = va_arg (ap, long int);			      \
-	      else if (is_char)						      \
-	        signed_number = (signed char) va_arg (ap, unsigned int);      \
-	      else if (!is_short)					      \
+	      else  /* `char' and `short int' will be promoted to `int'.  */  \
 		signed_number = va_arg (ap, int);			      \
-	      else							      \
-		signed_number = (short int) va_arg (ap, unsigned int);	      \
 	    }								      \
 	  else								      \
 	    if (is_long_num)						      \
 	      signed_number = args_value[fspec->data_arg].pa_long_int;	      \
-	    else if (is_char)						      \
-	      signed_number = (signed char)				      \
-		args_value[fspec->data_arg].pa_u_int;			      \
-	    else if (!is_short)						      \
+	    else  /* `char' and `short int' will be promoted to `int'.  */    \
 	      signed_number = args_value[fspec->data_arg].pa_int;	      \
-	    else							      \
-	      signed_number = (short int)				      \
-		args_value[fspec->data_arg].pa_u_int;			      \
 									      \
 	  is_negative = signed_number < 0;				      \
 	  number.word = is_negative ? (- signed_number) : signed_number;      \
@@ -769,9 +758,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	if (fspec == NULL)						      \
 	  {								      \
-	    if (__ldbl_is_dbl)						      \
-	      is_long_double = 0;					      \
-									      \
 	    struct printf_info info = { .prec = prec,			      \
 					.width = width,			      \
 					.spec = spec,			      \
@@ -799,11 +785,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	else								      \
 	  {								      \
 	    ptr = (const void *) &args_value[fspec->data_arg];		      \
-	    if (__ldbl_is_dbl)						      \
-	      {								      \
-		fspec->data_arg_type = PA_DOUBLE;			      \
-		fspec->info.is_long_double = 0;				      \
-	      }								      \
 									      \
 	    function_done = __printf_fp (s, &fspec->info, &ptr);	      \
 	  }								      \
@@ -827,9 +808,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	if (fspec == NULL)						      \
 	  {								      \
-	    if (__ldbl_is_dbl)						      \
-	      is_long_double = 0;					      \
-									      \
 	    struct printf_info info = { .prec = prec,			      \
 					.width = width,			      \
 					.spec = spec,			      \
@@ -856,8 +834,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	else								      \
 	  {								      \
 	    ptr = (const void *) &args_value[fspec->data_arg];		      \
-	    if (__ldbl_is_dbl)						      \
-	      fspec->info.is_long_double = 0;				      \
 									      \
 	    function_done = __printf_fphex (s, &fspec->info, &ptr);	      \
 	  }								      \
@@ -1025,11 +1001,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    const char *mbs = (const char *) string;			      \
 	    mbstate_t mbstate;						      \
 									      \
-	    len = prec != -1 ? __strnlen (mbs, (size_t) prec) : strlen (mbs); \
+	    len = prec != -1 ? (size_t) prec : strlen (mbs);		      \
 									      \
 	    /* Allocate dynamically an array which definitely is long	      \
-	       enough for the wide character version.  Each byte in the	      \
-	       multi-byte string can produce at most one wide character.  */  \
+	       enough for the wide character version.  */		      \
 	    if (__libc_use_alloca (len * sizeof (wchar_t)))		      \
 	      string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
 	    else if ((string = (CHAR_T *) malloc (len * sizeof (wchar_t)))    \
@@ -1160,26 +1135,19 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		else							      \
 		  {							      \
 		    /* In case we have a multibyte character set the	      \
-		       situation is more complicated.  We must not copy	      \
+		       situation is more compilcated.  We must not copy	      \
 		       bytes at the end which form an incomplete character. */\
-		    size_t ignore_size = (unsigned) prec > 1024 ? 1024 : prec;\
-		    wchar_t ignore[ignore_size];			      \
+		    wchar_t ignore[prec];				      \
 		    const char *str2 = string;				      \
-		    const char *strend = string + prec;			      \
-		    if (strend < string)				      \
-		      strend = (const char *) UINTPTR_MAX;		      \
-									      \
 		    mbstate_t ps;					      \
+									      \
 		    memset (&ps, '\0', sizeof (ps));			      \
-									      \
-		    while (str2 != NULL && str2 < strend)		      \
-		      if (__mbsnrtowcs (ignore, &str2, strend - str2,	      \
-					ignore_size, &ps) == (size_t) -1)     \
-			{						      \
-			  done = -1;					      \
-			  goto all_done;				      \
-			}						      \
-									      \
+		    if (__mbsnrtowcs (ignore, &str2, prec, prec, &ps)	      \
+			== (size_t) -1)					      \
+		      {							      \
+			done = -1;					      \
+			goto all_done;					      \
+		      }							      \
 		    if (str2 == NULL)					      \
 		      len = strlen (string);				      \
 		    else						      \
@@ -1315,7 +1283,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Process whole format string.  */
   do
     {
-#ifdef SHARED
+#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined SHARED
 # define REF(Name) &&do_##Name - &&do_form_unknown
 #else
 # define REF(Name) &&do_##Name
@@ -1626,8 +1594,6 @@ do_positional:
     /* Just a counter.  */
     size_t cnt;
 
-    free (workstart);
-    workstart = NULL;
 
     if (grouping == (const char *) -1)
       {
@@ -1738,15 +1704,7 @@ do_positional:
 	T (PA_INT|PA_FLAG_LONG_LONG, pa_long_long_int, long long int);
 	T (PA_FLOAT, pa_double, double);	/* Promoted.  */
 	T (PA_DOUBLE, pa_double, double);
-	case PA_DOUBLE|PA_FLAG_LONG_DOUBLE:
-	  if (__ldbl_is_dbl)
-	    {
-	      args_value[cnt].pa_double = va_arg (ap_save, double);
-	      args_type[cnt] &= ~PA_FLAG_LONG_DOUBLE;
-	    }
-	  else
-	    args_value[cnt].pa_long_double = va_arg (ap_save, long double);
-	  break;
+	T (PA_DOUBLE|PA_FLAG_LONG_DOUBLE, pa_long_double, long double);
 	T (PA_STRING, pa_string, const char *);
 	T (PA_WSTRING, pa_wstring, const wchar_t *);
 	T (PA_POINTER, pa_pointer, void *);
@@ -1768,7 +1726,7 @@ do_positional:
     for (; (size_t) nspecs_done < nspecs; ++nspecs_done)
       {
 #undef REF
-#ifdef SHARED
+#if defined HAVE_SUBTRACT_LOCAL_LABELS && defined SHARED
 # define REF(Name) &&do2_##Name - &&do_form_unknown
 #else
 # define REF(Name) &&do2_##Name
@@ -1802,9 +1760,7 @@ do_positional:
 	int use_outdigits = specs[nspecs_done].info.i18n;
 	char pad = specs[nspecs_done].info.pad;
 	CHAR_T spec = specs[nspecs_done].info.spec;
-
-	workstart = NULL;
-	workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
+	CHAR_T *workstart = NULL;
 
 	/* Fill in last information.  */
 	if (specs[nspecs_done].width_arg != -1)
@@ -1900,7 +1856,8 @@ do_positional:
 	    break;
 	  }
 
-	free (workstart);
+	if (__builtin_expect (workstart != NULL, 0))
+	  free (workstart);
 	workstart = NULL;
 
 	/* Write the following constant string.  */
@@ -1928,7 +1885,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
 {
   int done = 0;
-  CHAR_T work_buffer[MAX (sizeof (info->width), sizeof (info->prec)) * 3];
+  CHAR_T work_buffer[MAX (info->width, info->spec) + 32];
   CHAR_T *const workend
     = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
   register CHAR_T *w;
@@ -2197,11 +2154,25 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
 }
 
 #undef vfprintf
-#ifdef COMPILE_WPRINTF
+#ifdef strong_alias
+/* This is for glibc.  */
+# ifdef COMPILE_WPRINTF
 strong_alias (_IO_vfwprintf, __vfwprintf);
-ldbl_weak_alias (_IO_vfwprintf, vfwprintf);
+weak_alias (_IO_vfwprintf, vfwprintf);
+# else
+strong_alias (_IO_vfprintf, vfprintf);
+libc_hidden_def (vfprintf)
+INTDEF(_IO_vfprintf)
+# endif
 #else
-ldbl_strong_alias (_IO_vfprintf_internal, vfprintf);
-ldbl_hidden_def (_IO_vfprintf_internal, vfprintf)
-ldbl_strong_alias (_IO_vfprintf_internal, _IO_vfprintf);
+# if defined __ELF__ || defined __GNU_LIBRARY__
+#  include <gnu-stabs.h>
+#  ifdef weak_alias
+#   ifdef COMPILE_WPRINTF
+weak_alias (_IO_vfwprintf, vfwprintf);
+#   else
+weak_alias (_IO_vfprintf, vfprintf);
+#   endif
+#  endif
+# endif
 #endif

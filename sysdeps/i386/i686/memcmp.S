@@ -1,5 +1,5 @@
 /* Compare two memory blocks for differences in the first COUNT bytes.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,11 +26,8 @@
 #define BLK1		PARMS
 #define BLK2		BLK1+PTR_SIZE
 #define LEN		BLK2+PTR_SIZE
-#define ENTRANCE	pushl %ebx; cfi_adjust_cfa_offset (4); \
-			cfi_rel_offset (ebx, 0); ENTER
-#define RETURN		popl %ebx; cfi_adjust_cfa_offset (-4); \
-			cfi_restore (ebx); LEAVE; ret; \
-			cfi_adjust_cfa_offset (4); cfi_rel_offset (ebx, 0);
+#define ENTRANCE	pushl %ebx; ENTER
+#define RETURN		popl %ebx; LEAVE; ret
 
 /* Load an entry in a jump table into EBX.  TABLE is a jump table
    with relative offsets.  INDEX is a register contains the index
@@ -80,15 +77,11 @@ L(neq):
 	sbbl	$-1, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (4)
-	cfi_rel_offset (ebx, 0)
 L(not_1):
 	jl	L(bye)			/* LEN == 0  */
 
 	pushl	%esi
-	cfi_adjust_cfa_offset (4)
 	movl	%eax, %esi
-	cfi_rel_offset (esi, 0)
 	cmpl	$32, %ecx;
 	jge	L(32bytesormore)	/* LEN => 32  */
 
@@ -135,14 +128,9 @@ L(4bytes):
 	jne	L(find_diff)
 L(0bytes):
 	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	xorl	%eax, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (esi, 0)
-	cfi_rel_offset (ebx, 4)
 L(29bytes):
 	movl	-29(%esi), %eax
 	movl	-29(%edx), %ecx
@@ -183,14 +171,9 @@ L(1bytes):
 	cmpb	-1(%edx), %al
 	jne	L(set)
 	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	xorl	%eax, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (esi, 0)
-	cfi_rel_offset (ebx, 4)
 L(30bytes):
 	movl	-30(%esi), %eax
 	movl	-30(%edx), %ecx
@@ -234,14 +217,9 @@ L(2bytes):
 	cmpl	%ecx, %eax
 	jne	L(set)
 	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	xorl	%eax, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (esi, 0)
-	cfi_rel_offset (ebx, 4)
 L(31bytes):
 	movl	-31(%esi), %eax
 	movl	-31(%edx), %ecx
@@ -288,14 +266,9 @@ L(3bytes):
 	cmpb	-1(%edx), %al
 	jne	L(set)
 	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	xorl	%eax, %eax
 	RETURN
 
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (esi, 0)
-	cfi_rel_offset (ebx, 4)
 	ALIGN (4)
 /* ECX >= 32.  */
 L(32bytesormore):
@@ -376,10 +349,7 @@ L(set):
 	sbbl	%eax, %eax
 	sbbl	$-1, %eax
 	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	RETURN
-END (BP_SYM (memcmp))
 
 	.section	.rodata
 	ALIGN (2)
@@ -417,6 +387,7 @@ L(table_32bytes) :
 	.long	L(30bytes) - . + 0x78
 	.long	L(31bytes) - . + 0x7c
 
+END (BP_SYM (memcmp))
 
 #undef bcmp
 weak_alias (BP_SYM (memcmp), BP_SYM (bcmp))

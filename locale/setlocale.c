@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004, 2006
+/* Copyright (C) 1991, 1992, 1995-2000, 2002, 2003, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -66,27 +66,18 @@ static char *const _nl_current_used[] =
 #endif
 
 
-/* Define an array of category names (also the environment variable names).  */
-const union catnamestr_t _nl_category_names attribute_hidden =
-  {
-    {
-#define DEFINE_CATEGORY(category, category_name, items, a) \
-      category_name,
-#include "categories.def"
-#undef DEFINE_CATEGORY
-    }
-  };
-
-const uint8_t _nl_category_name_idxs[__LC_LAST] attribute_hidden =
+/* Define an array of category names (also the environment variable names),
+   indexed by integral category.  */
+const char *const _nl_category_names[] =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-    [category] = offsetof (union catnamestr_t, CATNAMEMF (__LINE__)),
+    [category] = category_name,
 #include "categories.def"
-#undef DEFINE_CATEGORY
+#undef	DEFINE_CATEGORY
+    [LC_ALL] = "LC_ALL"
   };
-
 /* An array of their lengths, for convenience.  */
-const uint8_t _nl_category_name_sizes[] attribute_hidden =
+const size_t _nl_category_name_sizes[] =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
     [category] = sizeof (category_name) - 1,
@@ -182,7 +173,7 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
 	const char *name = (category == LC_ALL ? newnames[i] :
 			    category == i ? newnames[0] :
 			    _nl_global_locale.__names[i]);
-	p = __stpcpy (p, _nl_category_names.str + _nl_category_name_idxs[i]);
+	p = __stpcpy (p, _nl_category_names[i]);
 	*p++ = '=';
 	p = __stpcpy (p, name);
 	*p++ = ';';
@@ -284,9 +275,7 @@ setlocale (int category, const char *locale)
 	      for (cnt = 0; cnt < __LC_LAST; ++cnt)
 		if (cnt != LC_ALL
 		    && (size_t) (cp - np) == _nl_category_name_sizes[cnt]
-		    && (memcmp (np, (_nl_category_names.str
-				     + _nl_category_name_idxs[cnt]), cp - np)
-			== 0))
+		    && memcmp (np, _nl_category_names[cnt], cp - np) == 0)
 		  break;
 
 	      if (cnt == __LC_LAST)
@@ -383,7 +372,7 @@ setlocale (int category, const char *locale)
       /* Critical section left.  */
       __libc_lock_unlock (__libc_setlocale_lock);
 
-      /* Free the resources (the locale path variable).  */
+      /* Free the resources (the locale path variable.  */
       free (locale_path);
 
       return composite;

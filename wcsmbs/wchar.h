@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2004,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -320,24 +320,6 @@ __END_NAMESPACE_C99
 
 #ifdef __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
-
-# ifndef __cplusplus
-/* We can use the BTOWC and WCTOB optimizations since we know that all
-   locales must use ASCII encoding for the values in the ASCII range
-   and because the wchar_t encoding is always ISO 10646.  */
-extern wint_t __btowc_alias (int __c) __asm ("btowc");
-extern __inline wint_t
-__NTH (btowc (int __c))
-{ return (__builtin_constant_p (__c) && __c >= '\0' && __c <= '\x7f'
-	  ? (wint_t) __c : __btowc_alias (__c)); }
-
-extern int __wctob_alias (wint_t __c) __asm ("wctob");
-extern __inline int
-__NTH (wctob (wint_t __wc))
-{ return (__builtin_constant_p (__wc) && __wc >= L'\0' && __wc <= L'\x7f'
-	  ? (int) __wc : __wctob_alias (__wc)); }
-# endif
-
 extern __inline size_t
 __NTH (mbrlen (__const char *__restrict __s, size_t __n,
 	       mbstate_t *__restrict __ps))
@@ -509,30 +491,26 @@ extern long double __wcstold_internal (__const wchar_t *__restrict __nptr,
 				       wchar_t **__restrict __endptr,
 				       int __group) __THROW;
 
-#if !defined __wcstol_internal_defined \
-    && defined __OPTIMIZE__ && __GNUC__ >= 2
+#ifndef __wcstol_internal_defined
 extern long int __wcstol_internal (__const wchar_t *__restrict __nptr,
 				   wchar_t **__restrict __endptr,
 				   int __base, int __group) __THROW;
 # define __wcstol_internal_defined	1
 #endif
-#if !defined __wcstoul_internal_defined \
-    && defined __OPTIMIZE__ && __GNUC__ >= 2
+#ifndef __wcstoul_internal_defined
 extern unsigned long int __wcstoul_internal (__const wchar_t *__restrict __npt,
 					     wchar_t **__restrict __endptr,
 					     int __base, int __group) __THROW;
 # define __wcstoul_internal_defined	1
 #endif
-#if !defined __wcstoll_internal_defined \
-    && defined __OPTIMIZE__ && __GNUC__ >= 2
+#ifndef __wcstoll_internal_defined
 __extension__
 extern long long int __wcstoll_internal (__const wchar_t *__restrict __nptr,
 					 wchar_t **__restrict __endptr,
 					 int __base, int __group) __THROW;
 # define __wcstoll_internal_defined	1
 #endif
-#if !defined __wcstoull_internal_defined \
-    && defined __OPTIMIZE__ && __GNUC__ >= 2
+#ifndef __wcstoull_internal_defined
 __extension__
 extern unsigned long long int __wcstoull_internal (__const wchar_t *
 						   __restrict __nptr,
@@ -567,12 +545,12 @@ extern __inline float
 __NTH (wcstof (__const wchar_t *__restrict __nptr,
 	       wchar_t **__restrict __endptr))
 { return __wcstof_internal (__nptr, __endptr, 0); }
-#  ifndef __LDBL_COMPAT
 extern __inline long double
 __NTH (wcstold (__const wchar_t *__restrict __nptr,
 		wchar_t **__restrict __endptr))
 { return __wcstold_internal (__nptr, __endptr, 0); }
-#  endif
+
+
 __extension__
 extern __inline long long int
 __NTH (wcstoq (__const wchar_t *__restrict __nptr,
@@ -600,13 +578,6 @@ extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 
 
 /* Wide character I/O functions.  */
-
-#ifdef	__USE_GNU
-/* Like OPEN_MEMSTREAM, but the stream is wide oriented and produces
-   a wide character string.  */
-extern __FILE *open_wmemstream (wchar_t **__bufloc, size_t *__sizeloc) __THROW;
-#endif
-
 #if defined __USE_ISOC99 || defined __USE_UNIX98
 __BEGIN_NAMESPACE_C99
 
@@ -844,15 +815,6 @@ extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 #if defined __USE_UNIX98 && !defined __USE_GNU
 # define __need_iswxxx
 # include <wctype.h>
-#endif
-
-/* Define some macros helping to catch buffer overflows.  */
-#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
-# include <bits/wchar2.h>
-#endif
-
-#ifdef __LDBL_COMPAT
-# include <bits/wchar-ldbl.h>
 #endif
 
 __END_DECLS

@@ -1,0 +1,68 @@
+#!/usr/local/bin/perl
+
+$insynopsis = 0;
+
+open(INPUT, $ARGV[0]) || die("cannot open $ARGV[0]");
+open(OUTPUT, "> $ARGV[1]") || die("cannot create $ARGV[1]");
+
+select(OUTPUT);
+
+line:
+while(<INPUT>) {
+  if (/^\.XREF (.*)$/) {
+    $xref = $1;
+    $_ = $ARGV[1];
+    m/^.*\.(([1-8]).*)$/;
+    $suffix = $1;
+    $extension = $2;
+    open(XREF, "> $xref.$suffix");
+    print XREF ".so man$extension/$ARGV[1]\n";
+    close(XREF);
+    next line;
+  }
+  if (/^\.SH/) {
+    $insynopsis = /SYNOPSIS/;
+    print $_;
+    next;
+  }
+  if ($insynopsis) {
+    if (/^#/) {
+      print ".B ", $_;
+    }
+    elsif (/^[a-z]/) {    
+      chop;
+#      if (m/^([a-zA-Z][a-zA-Z0-9_]*\s+[a-zA-Z][a-zA-Z0-9_]*)\(/) {
+#          print ".B \"", $1, "\"\n";
+#          $_ = '(' . $';
+#      }
+#      s/([a-zA-Z][a-zA-Z0-9_]*)(\s*[,()=])/" \1 "\2/g;
+      s/([ *])([a-zA-Z][a-zA-Z0-9_]*)(\s*[,)=])/\1" \2 "\3/g;
+      print ".BI \"", $_, "\"\n";
+    }
+    else {
+      print $_;
+    }
+    next;
+  }
+  chop;
+  s/!([^!]+)!\|([^|]+)\|([^\s]*)\s*/\n.BI "\1" "\2\3"\n/g;
+  s/([!|])([^!|]+)\1([^\s]*)\s*/do subst($1,$2,$3)/eg;
+  s/^\n+//;
+  s/\n+$//;
+  s/\n\n+/\n/g;
+  print $_, "\n";
+}
+
+close(INPUT);
+close(OUTPUT);
+
+sub subst {
+  local ($a, $b, $c) = @_;
+  if ($c) {
+    "\n" . ($a eq "!" ? ".BR " : ".IR ") . "\"$b\" $c\n"
+  } else {
+    "\n" . ($a eq "!" ? ".B " : ".I ") . "\"$b\"\n"
+  }
+}
+
+  

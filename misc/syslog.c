@@ -35,7 +35,6 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <sys/socket.h>
 #include <sys/syslog.h>
 #include <sys/uio.h>
-#include <sys/un.h>
 #include <netdb.h>
 
 #include <errno.h>
@@ -58,8 +57,6 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #endif
 
 #include <libio/iolibio.h>
-#include <math_ldbl_opt.h>
-
 #define ftell(s) INTUSE(_IO_ftell) (s)
 
 static int	LogType = SOCK_DGRAM;	/* type of socket connection */
@@ -76,13 +73,8 @@ __libc_lock_define_initialized (static, syslog_lock)
 
 static void openlog_internal(const char *, int, int) internal_function;
 static void closelog_internal(void);
-#ifndef NO_SIGPIPE
 static void sigpipe_handler (int);
-#endif
 
-#ifndef send_flags
-# define send_flags 0
-#endif
 
 struct cleanup_arg
 {
@@ -93,13 +85,11 @@ struct cleanup_arg
 static void
 cancel_handler (void *ptr)
 {
-#ifndef NO_SIGPIPE
   /* Restore the old signal handler.  */
   struct cleanup_arg *clarg = (struct cleanup_arg *) ptr;
 
   if (clarg != NULL && clarg->oldaction != NULL)
     __sigaction (SIGPIPE, clarg->oldaction, NULL);
-#endif
 
   /* Free the lock.  */
   __libc_lock_unlock (syslog_lock);
@@ -111,29 +101,32 @@ cancel_handler (void *ptr)
  *	print message on log file; output is intended for syslogd(8).
  */
 void
-__syslog(int pri, const char *fmt, ...)
+#if __STDC__
+syslog(int pri, const char *fmt, ...)
+#else
+syslog(pri, fmt, va_alist)
+	int pri;
+	char *fmt;
+	va_dcl
+#endif
 {
 	va_list ap;
 
+#if __STDC__
 	va_start(ap, fmt);
-	__vsyslog_chk(pri, -1, fmt, ap);
+#else
+	va_start(ap);
+#endif
+	vsyslog(pri, fmt, ap);
 	va_end(ap);
 }
-ldbl_hidden_def (__syslog, syslog)
-ldbl_strong_alias (__syslog, syslog)
+libc_hidden_def (syslog)
 
 void
-__syslog_chk(int pri, int flag, const char *fmt, ...)
-{
+vsyslog(pri, fmt, ap)
+	int pri;
+	register const char *fmt;
 	va_list ap;
-
-	va_start(ap, fmt);
-	__vsyslog_chk(pri, flag, fmt, ap);
-	va_end(ap);
-}
-
-void
-__vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 {
 	struct tm now_tm;
 	time_t now;
@@ -142,10 +135,8 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	char *buf = 0;
 	size_t bufsize = 0;
 	size_t prioff, msgoff;
-#ifndef NO_SIGPIPE
  	struct sigaction action, oldaction;
  	int sigpipe;
-#endif
 	int saved_errno = errno;
 	char failbuf[3 * sizeof (pid_t) + sizeof "out of memory []"];
 
@@ -199,7 +190,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 					      - f->_IO_write_ptr,
 					      "%h %e %T ",
 					      __localtime_r (&now, &now_tm),
-					      _nl_C_locobj_ptr);
+					      &_nl_C_locobj);
 	    msgoff = ftell (f);
 	    if (LogTag == NULL)
 	      LogTag = __progname;
@@ -218,10 +209,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 
 	    /* We have the header.  Print the user's format into the
                buffer.  */
-	    if (flag == -1)
-	      vfprintf (f, fmt, ap);
-	    else
-	      __vfprintf_chk (f, flag, fmt, ap);
+	    vfprintf (f, fmt, ap);
 
 	    /* Close the memory stream; this will finalize the data
 	       into a malloc'd buffer in BUF.  */
@@ -259,7 +247,6 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	__libc_cleanup_push (cancel_handler, &clarg);
 	__libc_lock_lock (syslog_lock);
 
-#ifndef NO_SIGPIPE
 	/* Prepare for a broken connection.  */
  	memset (&action, 0, sizeof (action));
  	action.sa_handler = sigpipe_handler;
@@ -267,7 +254,6 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
  	sigpipe = __sigaction (SIGPIPE, &action, &oldaction);
 	if (sigpipe == 0)
 	  clarg.oldaction = &oldaction;
-#endif
 
 	/* Get connected, output the message to the local logger. */
 	if (!connected)
@@ -278,7 +264,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	if (LogType == SOCK_STREAM)
 	  ++bufsize;
 
-	if (!connected || __send(LogFile, buf, bufsize, send_flags) < 0)
+	if (!connected || __send(LogFile, buf, bufsize, 0) < 0)
 	  {
 	    if (connected)
 	      {
@@ -288,7 +274,7 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 		openlog_internal(LogTag, LogStat | LOG_NDELAY, 0);
 	      }
 
-	    if (!connected || __send(LogFile, buf, bufsize, send_flags) < 0)
+	    if (!connected || __send(LogFile, buf, bufsize, 0) < 0)
 	      {
 		closelog_internal ();	/* attempt re-open next time */
 		/*
@@ -306,10 +292,8 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	      }
 	  }
 
-#ifndef NO_SIGPIPE
 	if (sigpipe == 0)
 		__sigaction (SIGPIPE, &oldaction, (struct sigaction *) NULL);
-#endif
 
 	/* End of critical section.  */
 	__libc_cleanup_pop (0);
@@ -318,17 +302,9 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	if (buf != failbuf)
 		free (buf);
 }
-libc_hidden_def (__vsyslog_chk)
+libc_hidden_def (vsyslog)
 
-void
-__vsyslog(int pri, const char *fmt, va_list ap)
-{
-  __vsyslog_chk (pri, -1, fmt, ap);
-}
-ldbl_hidden_def (__vsyslog, vsyslog)
-ldbl_strong_alias (__vsyslog, vsyslog)
-
-static struct sockaddr_un SyslogAddr;	/* AF_UNIX address of local logger */
+static struct sockaddr SyslogAddr;	/* AF_UNIX address of local logger */
 
 
 static void
@@ -344,9 +320,9 @@ openlog_internal(const char *ident, int logstat, int logfac)
 	int retry = 0;
 	while (retry < 2) {
 		if (LogFile == -1) {
-			SyslogAddr.sun_family = AF_UNIX;
-			(void)strncpy(SyslogAddr.sun_path, _PATH_LOG,
-				      sizeof(SyslogAddr.sun_path));
+			SyslogAddr.sa_family = AF_UNIX;
+			(void)strncpy(SyslogAddr.sa_data, _PATH_LOG,
+				      sizeof(SyslogAddr.sa_data));
 			if (LogStat & LOG_NDELAY) {
 				if ((LogFile = __socket(AF_UNIX, LogType, 0))
 				    == -1)
@@ -392,13 +368,11 @@ openlog (const char *ident, int logstat, int logfac)
   __libc_cleanup_pop (1);
 }
 
-#ifndef NO_SIGPIPE
 static void
 sigpipe_handler (int signo)
 {
   closelog_internal ();
 }
-#endif
 
 static void
 closelog_internal()

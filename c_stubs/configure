@@ -1,5 +1,0 @@
-# This is only to keep the GNU C library configure mechanism happy.
-# This is a shell script fragment sourced by the main configure script.
-
-libc_add_on_canonical=
-libc_add_on_subdirs=.

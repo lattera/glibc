@@ -1,5 +1,4 @@
-/* Copyright (C) 1995, 1997-2000, 2001, 2002, 2003, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997-2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +25,7 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include <libioP.h>
+#include "libioP.h"
 #include <stdio_ext.h>
 
 int
@@ -64,4 +63,7 @@ _IO_vdprintf (d, format, arg)
 
   return done;
 }
-ldbl_weak_alias (_IO_vdprintf, vdprintf)
+
+#ifdef weak_alias
+weak_alias (_IO_vdprintf, vdprintf)
+#endif

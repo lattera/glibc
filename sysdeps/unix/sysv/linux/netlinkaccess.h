@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include <kernel-features.h>
+#include "kernel-features.h"
 
 
 struct netlink_res
@@ -55,7 +55,8 @@ extern int __no_netlink_support attribute_hidden;
 extern int __netlink_open (struct netlink_handle *h);
 extern void __netlink_close (struct netlink_handle *h);
 extern void __netlink_free_handle (struct netlink_handle *h);
-extern int __netlink_request (struct netlink_handle *h, int type);
+extern int __netlink_sendreq (struct netlink_handle *h, int type);
+extern int __netlink_receive (struct netlink_handle *h);
 
 
 #endif /* netlinkaccess.h */

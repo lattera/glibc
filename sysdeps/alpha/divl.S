@@ -36,7 +36,7 @@
 	.text
 	.align	4
 	.globl	__divl
-	.type	__divl, @funcnoplt
+	.type	__divl, @function
 	.usepv	__divl, no
 
 	cfi_startproc

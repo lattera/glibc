@@ -1,10 +1,10 @@
 .file "atan2f.s"
 
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
+// Contributed 6/1/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
+// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,21 +35,18 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// http://developer.intel.com/opensource.
 
 // History
 //==============================================================
-// 06/01/00 Initial version
-// 08/15/00 Bundle added after call to __libm_error_support to properly
+// 6/01/00  Initial version
+// 8/15/00  Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 08/17/00 Changed predicate register macro-usage to direct predicate
+// 8/17/00  Changed predicate register macro-usage to direct predicate
 //          names due to an assembler bug.
-// 01/05/01 Fixed flag settings for denormal input.
-// 01/19/01 Added documentation
-// 01/30/01 Improved speed
-// 02/06/02 Corrected .section statement
-// 05/20/02 Cleaned up namespace and sf0 syntax
-// 02/06/03 Reordered header: .section, .global, .proc, .align
+// 1/05/01  Fixed flag settings for denormal input.
+// 1/19/01  Added documentation
+// 1/30/01  Improved speed
 
 // Description
 //=========================================
@@ -229,6 +226,7 @@
 // atan2f(+-0/+-0) sets single error tag to 38
 // These are domain errors.
 
+#include "libm_support.h"
 
 //
 // Assembly macros
@@ -326,20 +324,22 @@ atan2f_poly_atan_U     = f88
 //atan2f_Pred_Xneg     = p9 //  x  <   0
 
 
-RODATA
+.data
 
 .align 16
 
-LOCAL_OBJECT_START(atan2f_coef_table1)
+atan2f_coef_table1:
+ASM_TYPE_DIRECTIVE(atan2f_coef_table1,@object)
 data8 0xBFD5555512191621 // p1
 data8 0x3F522E5D33BC9BAA // p10
 data8 0xBFA6E10BA401393F // p7
 data8 0x3FB142A73D7C54E3 // p6
 data8 0xBFC2473C5145EE38 // p3
 data8 0x3FC9997E7AFBFF4E // p2
-LOCAL_OBJECT_END(atan2f_coef_table1)
+ASM_SIZE_DIRECTIVE(atan2f_coef_table1)
 
-LOCAL_OBJECT_START(atan2f_coef_table2)
+atan2f_coef_table2:
+ASM_TYPE_DIRECTIVE(atan2f_coef_table2,@object)
 data8 0xBF7DEAADAA336451 // p9
 data8 0x3F97105B4160F86B // p8
 data8 0xBFB68EED6A8CFA32 // p5
@@ -348,12 +348,29 @@ data8 0x3ff921fb54442d18 // pi/2
 data8 0x400921fb54442d18 // pi
 data8 0x3fe921fb54442d18 // pi/4
 data8 0x4002d97c7f3321d2 // 3pi/4
-LOCAL_OBJECT_END(atan2f_coef_table2)
+ASM_SIZE_DIRECTIVE(atan2f_coef_table2)
 
 
 
-.section .text
-GLOBAL_IEEE754_ENTRY(atan2f)
+.global atan2f
+#ifdef _LIBC
+.global __atan2f
+.global __ieee754_atan2f
+#endif
+
+.text
+.align 32
+
+atan2f:
+.proc  atan2f
+#ifdef _LIBC
+.proc  __atan2f
+__atan2f:
+.proc  __ieee754_atan2f
+__ieee754_atan2f:
+#endif
+
+ 
  
 {     .mfi 
      alloc      r32           = ar.pfs,1,5,4,0
@@ -707,7 +724,7 @@ ATAN2F_XY_INF_NAN_ZERO:
 }
 { .mfb
       nop.m 999
-(p10) fma.s.s0 f8  = f9,f8,f0          // Result quietized y if y is nan
+(p10) fma.s f8  = f9,f8,f0          // Result quietized y if y is nan
 (p10) br.ret.spnt b0                // Exit if y is nan
 }
 ;;
@@ -720,7 +737,7 @@ ATAN2F_XY_INF_NAN_ZERO:
 }
 { .mfb
       nop.m 999
-(p12) fnorm.s.s0 f8 = f9               // Result quietized x if x is nan, y not nan
+(p12) fnorm.s f8 = f9               // Result quietized x if x is nan, y not nan
 (p12) br.ret.spnt b0                // Exit if x is nan, y not nan
 }
 ;;
@@ -740,7 +757,7 @@ ATAN2F_XY_INF_NAN_ZERO:
 }
 { .mfb
       nop.m 999
-(p7)  fma.s.s0 f8 = atan2f_sgn_Y, atan2f_const_piby4,f0 // Result +-pi/4
+(p7)  fma.s f8 = atan2f_sgn_Y, atan2f_const_piby4,f0 // Result +-pi/4
 (p7)  br.ret.spnt b0            // Exit if x +inf and y inf
 }
 ;;
@@ -773,19 +790,19 @@ ATAN2F_XY_INF_NAN_ZERO:
 }
 { .mfb
       nop.m 999
-(p13) fma.s.s0   f8 = atan2f_sgn_Y, atan2f_const_piby2,f0 // Result +-pi/2
+(p13) fma.s   f8 = atan2f_sgn_Y, atan2f_const_piby2,f0 // Result +-pi/2
 (p13) br.ret.spnt b0           // Exit if x not -inf and y inf
 }
 ;;
 
 { .mfi
       nop.m 999
-(p14) fma.s.s0   f8 = atan2f_sgn_Y, atan2f_const_3piby4,f0 // Result +-3pi/4
+(p14) fma.s   f8 = atan2f_sgn_Y, atan2f_const_3piby4,f0 // Result +-3pi/4
       nop.i 999
 }
 { .mfb
       nop.m 999
-(p15) fma.s.s0   f8 = atan2f_sgn_Y, atan2f_const_pi,f0 // Result +-pi
+(p15) fma.s   f8 = atan2f_sgn_Y, atan2f_const_pi,f0 // Result +-pi
 (p11) br.ret.spnt b0           // Exit if x -inf
 }
 ;;
@@ -812,29 +829,31 @@ ATAN2F_XY_INF_NAN_ZERO:
 }
 { .mfb
       nop.m 999
-(p9)  fma.s.s0  f8 = atan2f_sgn_Y, atan2f_const_pi,f0 // x < 0, y 0, result +-pi
+(p9)  fma.s  f8 = atan2f_sgn_Y, atan2f_const_pi,f0 // x < 0, y 0, result +-pi
 (p10) br.cond.spnt   __libm_error_region // Branch if x zero and y zero
 }
 ;;
 
 { .mfb
       nop.m 999
-(p11) fma.s.s0  f8 = atan2f_sgn_Y, atan2f_const_piby2,f0 // x zero, y not zero
+(p11) fma.s  f8 = atan2f_sgn_Y, atan2f_const_piby2,f0 // x zero, y not zero
       br.ret.sptk b0         // Final special case exit
 }
 ;;
 
 
-GLOBAL_IEEE754_END(atan2f)
+.endp atan2f
+ASM_SIZE_DIRECTIVE(atan2f)
 
 
-LOCAL_LIBM_ENTRY(__libm_error_region)
+.proc __libm_error_region
+__libm_error_region:
 .prologue
          mov            GR_Parameter_TAG      = 38
          fclass.m       p10,p11               = f9,0x5	// @zero | @pos
 ;;
 (p10)    fmerge.s       f10                   = f8, f0
-(p11)    fma.s.s0          f10                   = atan2f_sgn_Y, atan2f_const_pi,f0
+(p11)    fma.s          f10                   = atan2f_sgn_Y, atan2f_const_pi,f0
 ;;
 
 { .mfi
@@ -894,7 +913,8 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 }
 ;;
 
-LOCAL_LIBM_END(__libm_error_region)
+.endp __libm_error_region
+ASM_SIZE_DIRECTIVE(__libm_error_region)
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

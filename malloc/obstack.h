@@ -1,7 +1,7 @@
 /* obstack.h - object stack macros
-   Copyright (C) 1988-1994,1996-1999,2003,2004,2005
-	Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+   Copyright (C) 1988-1994,1996-1999,2003,2004 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.  Its master source is NOT part of
+   the C library, however.  The master source lives in /gd/gnu/lib.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -15,8 +15,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 /* Summary:
 
@@ -110,7 +110,19 @@ Summary:
 extern "C" {
 #endif
 
-/* We need the type of a pointer subtraction.  If __PTRDIFF_TYPE__ is
+/* We use subtraction of (char *) 0 instead of casting to int
+   because on word-addressable machines a simple cast to int
+   may ignore the byte-within-word field of the pointer.  */
+
+#ifndef __PTR_TO_INT
+# define __PTR_TO_INT(P) ((P) - (char *) 0)
+#endif
+
+#ifndef __INT_TO_PTR
+# define __INT_TO_PTR(P) ((P) + (char *) 0)
+#endif
+
+/* We need the type of the resulting object.  If __PTRDIFF_TYPE__ is
    defined, as with GNU C, use that; that way we don't pollute the
    namespace with <stddef.h>'s symbols.  Otherwise, include <stddef.h>
    and use ptrdiff_t.  */
@@ -121,23 +133,6 @@ extern "C" {
 # include <stddef.h>
 # define PTR_INT_TYPE ptrdiff_t
 #endif
-
-/* If B is the base of an object addressed by P, return the result of
-   aligning P to the next multiple of A + 1.  B and P must be of type
-   char *.  A + 1 must be a power of 2.  */
-
-#define __BPTR_ALIGN(B, P, A) ((B) + (((P) - (B) + (A)) & ~(A)))
-
-/* Similiar to _BPTR_ALIGN (B, P, A), except optimize the common case
-   where pointers can be converted to integers, aligned as integers,
-   and converted back again.  If PTR_INT_TYPE is narrower than a
-   pointer (e.g., the AS/400), play it safe and compute the alignment
-   relative to B.  Otherwise, use the faster strategy of computing the
-   alignment relative to 0.  */
-
-#define __PTR_ALIGN(B, P, A)						    \
-  __BPTR_ALIGN (sizeof (PTR_INT_TYPE) < sizeof (void *) ? (B) : (char *) 0, \
-		P, A)
 
 #include <string.h>
 
@@ -155,11 +150,7 @@ struct obstack		/* control current object in current chunk */
   char	*object_base;		/* address of object we are building */
   char	*next_free;		/* where to add next char to current object */
   char	*chunk_limit;		/* address of char after current chunk */
-  union
-  {
-    PTR_INT_TYPE tempint;
-    void *tempptr;
-  } temp;			/* Temporary for some macros.  */
+  PTR_INT_TYPE temp;		/* Temporary for some macros.  */
   int   alignment_mask;		/* Mask of alignment for each object. */
   /* These prototypes vary based on `use_extra_arg', and we use
      casts to the prototypeless function type in all assignments,
@@ -284,10 +275,7 @@ __extension__								\
 # define obstack_empty_p(OBSTACK)					\
   __extension__								\
   ({ struct obstack const *__o = (OBSTACK);				\
-     (__o->chunk->prev == 0						\
-      && __o->next_free == __PTR_ALIGN ((char *) __o->chunk,		\
-					__o->chunk->contents,		\
-					__o->alignment_mask)); })
+     (__o->chunk->prev == 0 && __o->next_free - __o->chunk->contents == 0); })
 
 # define obstack_grow(OBSTACK,where,length)				\
 __extension__								\
@@ -386,8 +374,8 @@ __extension__								\
    if (__o1->next_free == __value)					\
      __o1->maybe_empty_object = 1;					\
    __o1->next_free							\
-     = __PTR_ALIGN (__o1->object_base, __o1->next_free,			\
-		    __o1->alignment_mask);				\
+     = __INT_TO_PTR ((__PTR_TO_INT (__o1->next_free)+__o1->alignment_mask)\
+		     & ~ (__o1->alignment_mask));			\
    if (__o1->next_free - (char *)__o1->chunk				\
        > __o1->chunk_limit - (char *)__o1->chunk)			\
      __o1->next_free = __o1->chunk_limit;				\
@@ -411,10 +399,7 @@ __extension__								\
  (unsigned) ((h)->chunk_limit - (h)->next_free)
 
 # define obstack_empty_p(h) \
- ((h)->chunk->prev == 0							\
-  && (h)->next_free == __PTR_ALIGN ((char *) (h)->chunk,		\
-				    (h)->chunk->contents,		\
-				    (h)->alignment_mask))
+ ((h)->chunk->prev == 0 && (h)->next_free - (h)->chunk->contents == 0)
 
 /* Note that the call to _obstack_newchunk is enclosed in (..., 0)
    so that we can avoid having void expressions
@@ -423,23 +408,23 @@ __extension__								\
    but some compilers won't accept it.  */
 
 # define obstack_make_room(h,length)					\
-( (h)->temp.tempint = (length),						\
-  (((h)->next_free + (h)->temp.tempint > (h)->chunk_limit)		\
-   ? (_obstack_newchunk ((h), (h)->temp.tempint), 0) : 0))
+( (h)->temp = (length),							\
+  (((h)->next_free + (h)->temp > (h)->chunk_limit)			\
+   ? (_obstack_newchunk ((h), (h)->temp), 0) : 0))
 
 # define obstack_grow(h,where,length)					\
-( (h)->temp.tempint = (length),						\
-  (((h)->next_free + (h)->temp.tempint > (h)->chunk_limit)		\
-   ? (_obstack_newchunk ((h), (h)->temp.tempint), 0) : 0),		\
-  memcpy ((h)->next_free, where, (h)->temp.tempint),			\
-  (h)->next_free += (h)->temp.tempint)
+( (h)->temp = (length),							\
+  (((h)->next_free + (h)->temp > (h)->chunk_limit)			\
+   ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\
+  memcpy ((h)->next_free, where, (h)->temp),				\
+  (h)->next_free += (h)->temp)
 
 # define obstack_grow0(h,where,length)					\
-( (h)->temp.tempint = (length),						\
-  (((h)->next_free + (h)->temp.tempint + 1 > (h)->chunk_limit)		\
-   ? (_obstack_newchunk ((h), (h)->temp.tempint + 1), 0) : 0),		\
-  memcpy ((h)->next_free, where, (h)->temp.tempint),			\
-  (h)->next_free += (h)->temp.tempint,					\
+( (h)->temp = (length),							\
+  (((h)->next_free + (h)->temp + 1 > (h)->chunk_limit)			\
+   ? (_obstack_newchunk ((h), (h)->temp + 1), 0) : 0),			\
+  memcpy ((h)->next_free, where, (h)->temp),				\
+  (h)->next_free += (h)->temp,						\
   *((h)->next_free)++ = 0)
 
 # define obstack_1grow(h,datum)						\
@@ -461,13 +446,13 @@ __extension__								\
   (((const void **) ((h)->next_free += sizeof (void *)))[-1] = (aptr))
 
 # define obstack_int_grow_fast(h,aint)					\
-  (((int *) ((h)->next_free += sizeof (int)))[-1] = (aint))
+  (((int *) ((h)->next_free += sizeof (int)))[-1] = (aptr))
 
 # define obstack_blank(h,length)					\
-( (h)->temp.tempint = (length),						\
-  (((h)->chunk_limit - (h)->next_free < (h)->temp.tempint)		\
-   ? (_obstack_newchunk ((h), (h)->temp.tempint), 0) : 0),		\
-  obstack_blank_fast (h, (h)->temp.tempint))
+( (h)->temp = (length),							\
+  (((h)->chunk_limit - (h)->next_free < (h)->temp)			\
+   ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\
+  obstack_blank_fast (h, (h)->temp))
 
 # define obstack_alloc(h,length)					\
  (obstack_blank ((h), (length)), obstack_finish ((h)))
@@ -482,23 +467,22 @@ __extension__								\
 ( ((h)->next_free == (h)->object_base					\
    ? (((h)->maybe_empty_object = 1), 0)					\
    : 0),								\
-  (h)->temp.tempptr = (h)->object_base,					\
+  (h)->temp = __PTR_TO_INT ((h)->object_base),				\
   (h)->next_free							\
-    = __PTR_ALIGN ((h)->object_base, (h)->next_free,			\
-		   (h)->alignment_mask),				\
+    = __INT_TO_PTR ((__PTR_TO_INT ((h)->next_free)+(h)->alignment_mask)	\
+		    & ~ ((h)->alignment_mask)),				\
   (((h)->next_free - (char *) (h)->chunk				\
     > (h)->chunk_limit - (char *) (h)->chunk)				\
    ? ((h)->next_free = (h)->chunk_limit) : 0),				\
   (h)->object_base = (h)->next_free,					\
-  (h)->temp.tempptr)
+  (void *) __INT_TO_PTR ((h)->temp))
 
 # define obstack_free(h,obj)						\
-( (h)->temp.tempint = (char *) (obj) - (char *) (h)->chunk,		\
-  ((((h)->temp.tempint > 0						\
-    && (h)->temp.tempint < (h)->chunk_limit - (char *) (h)->chunk))	\
+( (h)->temp = (char *) (obj) - (char *) (h)->chunk,			\
+  (((h)->temp > 0 && (h)->temp < (h)->chunk_limit - (char *) (h)->chunk)\
    ? (int) ((h)->next_free = (h)->object_base				\
-	    = (h)->temp.tempint + (char *) (h)->chunk)			\
-   : (((obstack_free) ((h), (h)->temp.tempint + (char *) (h)->chunk), 0), 0)))
+	    = (h)->temp + (char *) (h)->chunk)				\
+   : (((obstack_free) ((h), (h)->temp + (char *) (h)->chunk), 0), 0)))
 
 #endif /* not __GNUC__ or not __STDC__ */
 

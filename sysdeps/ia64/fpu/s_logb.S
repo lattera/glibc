@@ -1,10 +1,10 @@
 .file "logb.s"
 
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
-//
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
+// 
+// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
+// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,43 +20,41 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+// 
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// problem reports or change requests be submitted to it directly at 
+// http://developer.intel.com/opensource.
 //
 // History
 //==============================================================
-// 02/02/00 Initial version
-// 02/16/00 Modified to conform to C9X
-// 03/16/00 Improved speed
-// 04/04/00 Unwind support added
-// 05/30/00 Fixed bug when x double-extended denormal
-// 08/15/00 Bundle added after call to __libm_error_support to properly
+// 2/02/00  Initial version
+// 2/16/00  Modified to conform to C9X 
+// 3/16/00  Improved speed
+// 4/04/00  Unwind support added
+// 5/30/00  Fixed bug when x double-extended denormal
+// 8/15/00  Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 05/20/02 Cleaned up namespace and sf0 syntax
-// 01/20/03 Improved performance
 //
 // API
 //==============================================================
-// double logb( double x );
+// double logb( double x);
 //
 // Overview of operation
 //==============================================================
-// The logb function extracts the exponent of x as an integer in
-// floating-point format.
+// The logb function extracts the exponent of x as an integer in 
+// floating-point format. 
 // logb computes log2 of x as a double
 //
 // logb is similar to ilogb but differs in the  following ways:
@@ -73,169 +71,217 @@
 //
 // Registers used
 //==============================================================
-// general registers used:
-// r26 -> r38
-// r35 -> r38 used as parameters to error path
+// general registers used: 
+// ar.pfs r32 
+// r33 -> r37
+// r38 -> r41 used as parameters to error path
 //
-// predicate registers used:
+// predicate registers used: 
 // p6, p7, p8
-// floating-point registers used:
+// floating-point registers used: 
 // f9, f10, f11
 // f8, input
 
-rExpBias            = r26
-rExpMask            = r27
-rSignexp_x          = r28
-rExp_x              = r29
-rTrueExp_x          = r30
-rExp_2to64          = r31
+#include "libm_support.h"
 
+GR_SAVE_B0          = r34
+GR_SAVE_GP          = r35
 GR_SAVE_PFS         = r32
-GR_SAVE_B0          = r33
-GR_SAVE_GP          = r34
 
-GR_Parameter_X      = r35
-GR_Parameter_Y      = r36
-GR_Parameter_RESULT = r37
-GR_Parameter_TAG    = r38
+GR_Parameter_X      = r38
+GR_Parameter_Y      = r39
+GR_Parameter_RESULT = r40
 
-fExp_in_signif      = f9
-fNorm_x             = f10
-fFloat_Exp          = f10
-f2to64              = f11
+.align 32
+.global logb#
 
 .section .text
-GLOBAL_LIBM_ENTRY(logb)
+.proc  logb#
+.align 32
 
+
+logb: 
+
+// qnan snan inf norm     unorm 0 -+
+// 0    0    0   0        1     0 11
+// 0                      b
+{ .mfi
+      alloc          r32=ar.pfs,1,5,4,0
+(p0)  fclass.m.unc  p8,p0 = f8, 0x0b
+      nop.i 999
+}
 // X NORMAL
-// TrueExp_x = exp(f8) - 0xffff
-// sig = TrueExp_x
+// r37 = exp(f8) - - 0xffff
+// sig(f8) = r37
 // f8 = convert_to_fp (sig))
 { .mfi
-      getf.exp        rSignexp_x = f8
-      fclass.m        p8,p0 = f8, 0x0b   // Test for x unorm
-      mov             rExpBias = 0xffff  // Exponent bias
+(p0)  getf.exp      r35 = f8
+(p0)  fnorm         f10=f8
+      nop.i 999 ;;
 }
-{ .mfi
-      nop.m           0
-      fnorm.s1        fNorm_x = f8
-      mov             rExpMask = 0x1ffff // Exponent mask
-}
-;;
 
-// Form signexp of 2^64 in case need to scale denormal
+// qnan snan inf norm     unorm 0 -+
+// 1    1    1   0        0     0 11
+// e                      3
+{ .mmf
+(p0)  mov      r33 = 0xffff
+(p0)  mov      r34 = 0x1ffff
+(p0)  fclass.m.unc  p6,p0 = f8, 0xe3 ;;
+}
+
 { .mfb
-      mov             rExp_2to64 = 0x1003f
-      fclass.m        p6,p0 = f8, 0x1e3  // Test x natval, nan, inf
-(p8)  br.cond.spnt    LOGB_DENORM        // Branch if x unorm
+(p0)  and           r36 = r35, r34
+(p0)  fclass.m.unc  p7,p0 = f8, 0x07
+(p8)  br.cond.spnt  L(LOGB_DENORM) ;;
 }
-;;
-
-LOGB_COMMON:
-// Return here from LOGB_DENORM
-{ .mfi
-      and             rExp_x = rSignexp_x, rExpMask // Get biased exponent
-      fclass.m        p7,p0 = f8, 0x07   // Test x zero
-      nop.i           0
-}
-;;
-
-// X NAN or INFINITY, return f8 * f8
-{ .mfb
-      sub             rTrueExp_x = rExp_x, rExpBias // Get true exponent
-(p6)  fma.d.s0        f8= f8,f8,f0       // Result if x natval, nan, inf
-(p6)  br.ret.spnt     b0                 // Exit if x natval, nan, inf
-}
-;;
 
 { .mib
-      setf.sig        fExp_in_signif = rTrueExp_x // Exponent as integer in fp
+(p0)  sub           r37 = r36, r33
       nop.i 999
-(p7)  br.cond.spnt    LOGB_ZERO
+(p6)  br.cond.spnt  L(LOGB_NAN_INF) ;;
 }
-;;
 
-// Result can be represented in less than 24 bits, so no precision completer
-// is needed.
+{ .mib
+(p0)  setf.sig      f9  = r37
+      nop.i 999
+(p7)  br.cond.spnt  L(LOGB_ZERO) ;;
+}
+
+{ .mfi
+      nop.m 999
+(p0)  fcvt.xf       f10 = f9
+      nop.i 999 ;;
+}
+
 { .mfb
-      nop.m           0
-      fcvt.xf         f8 = fExp_in_signif
-      br.ret.sptk     b0                 // Exit main path, 0 < |x| < inf
+      nop.m 999
+(p0)  fnorm.d       f8 = f10
+(p0)  br.ret.sptk    b0 ;;
 }
-;;
 
-LOGB_DENORM:
-// Form 2^64 in case need to scale denormal
+L(LOGB_DENORM):
+// Form signexp of 2^64 in case need to scale denormal
 // Check to see if double-extended denormal
 { .mfi
-      setf.exp        f2to64 = rExp_2to64
-      fclass.m        p8,p0 = fNorm_x, 0x0b
-      nop.i           0
+(p0)  mov r38 = 0x1003f
+(p0)  fclass.m.unc  p8,p0 = f10, 0x0b
+      nop.i 999 ;;
 }
-;;
 
+// Form 2^64 in case need to scale denormal
 { .mfi
-      nop.m           0
-      fcmp.eq.s0      p7,p0 = f8, f0           // Dummy op to set denormal flag
-      nop.i           0
+(p0)  setf.exp f11 = r38
+      nop.f 999
+      nop.i 999 ;;
 }
-;;
 
 // If double-extended denormal add 64 to exponent bias for scaling
 // If double-extended denormal form x * 2^64 which is normal
 { .mfi
-(p8)  add             rExpBias = 64, rExpBias
-(p8)  fmpy.s1         fNorm_x = fNorm_x, f2to64
-      nop.i           0
+(p8)  add r33 = 64, r33
+(p8)  fmpy f10 = f10, f11    
+      nop.i 999 ;;
 }
-;;
 
 // Logic is the same as normal path but use normalized input
-{ .mib
-      getf.exp        rSignexp_x = fNorm_x
-      nop.i           0
-      br.cond.sptk    LOGB_COMMON              // Return to main path
+{ .mmi
+(p0)  getf.exp      r35 = f10 ;;
+      nop.m 999
+      nop.i 999 ;;
 }
-;;
 
-LOGB_ZERO:
-// Here if x zero
-// f10  = -|f8|
-// f9  = 1.0/f10 = -1.0/|f8| = -inf
-
-{ .mmf
-      alloc           r32=ar.pfs,1,2,4,0
-      mov             GR_Parameter_TAG = 151  // Error code
-      fmerge.ns       f10 = f0,f8
+{ .mmi
+(p0)  and           r36 = r35, r34 ;;
+(p0)  sub           r37 = r36, r33
+      nop.i 999 ;;
 }
-;;
 
-{ .mfb
-      nop.m           0
-      frcpa.s0        f9,p6 = f1,f10          // Produce -inf, Z flag
-      br.cond.sptk    __libm_error_region     // Call error support
+{ .mmi
+(p0)  setf.sig      f9  = r37
+      nop.m 999
+      nop.i 999 ;;
 }
-;;
-
-GLOBAL_LIBM_END(logb)
-
-
-LOCAL_LIBM_ENTRY(__libm_error_region)
-.prologue
 
 { .mfi
-        add   GR_Parameter_Y=-32,sp           // Parameter 2 value
-        nop.f 0
+      nop.m 999
+(p0)  fcvt.xf       f10 = f9
+      nop.i 999 ;;
+}
+
+{ .mfb
+      nop.m 999
+(p0)  fnorm.d       f8 = f10
+(p0)  br.ret.sptk    b0 ;;
+}
+
+L(LOGB_NAN_INF): 
+
+// X NAN or INFINITY, return f8 * f8
+{ .mfb
+      nop.m 999
+(p0)  fma.d      f8= f8,f8,f0
+(p0)  br.ret.sptk   b0 ;;
+}
+
+.endp logb#
+ASM_SIZE_DIRECTIVE(logb)
+
+// Stack operations when calling error support.
+//       (1)               (2)                          (3) (call)              (4)
+//   sp   -> +          psp -> +                     psp -> +                   sp -> +
+//           |                 |                            |                         |
+//           |                 | <- GR_Y               R3 ->| <- GR_RESULT            | -> f8
+//           |                 |                            |                         |
+//           | <-GR_Y      Y2->|                       Y2 ->| <- GR_Y                 |
+//           |                 |                            |                         |
+//           |                 | <- GR_X               X1 ->|                         |
+//           |                 |                            |                         |
+//  sp-64 -> +          sp ->  +                     sp ->  +                         +
+//    save ar.pfs          save b0                                               restore gp
+//    save gp                                                                    restore ar.pfs
+
+
+
+.proc __libm_error_region
+__libm_error_region:
+L(LOGB_ZERO): 
+.prologue
+
+// f9  = |f8|
+// f10 = -f9 = -|f8|
+// f9  = 1.0/f10 = -1.0/-|f8|
+
+{ .mfi 
+      mov           r41 = 151      // Error code
+(p0)  fmerge.s      f9 = f0,f8
+      nop.i 999
+}
+;;
+
+
+{ .mfi
+      nop.m 999
+      fmerge.ns     f10 = f0,f9
+      nop.i 999
+}
+;;
+
+// (1)
+{ .mfi
+        add   GR_Parameter_Y=-32,sp             // Parameter 2 value
+        frcpa         f9,p6 = f1,f10
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs               // Save ar.pfs
+        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
 .fframe 64
-        add sp=-64,sp                         // Create new stack
+        add sp=-64,sp                          // Create new stack
         nop.f 0
-        mov GR_SAVE_GP=gp                     // Save gp
+        mov GR_SAVE_GP=gp                      // Save gp
 };;
 
+
+// (2)
 { .mmi
         stfd [GR_Parameter_Y] = f0,16         // STORE Parameter 2 on stack
         add GR_Parameter_X    = 16,sp         // Parameter 1 address
@@ -244,38 +290,38 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
 };;
 
 .body
+// (3)
 { .mib
         stfd [GR_Parameter_X] = f8            // STORE Parameter 1 on stack
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y    // Parameter 3 address
-        nop.b 0
+        nop.b 0                                         
 }
 { .mib
         stfd [GR_Parameter_Y] = f9            // Store Parameter 3 on stack
         add   GR_Parameter_Y = -16,GR_Parameter_Y
         br.call.sptk b0=__libm_error_support# // Call error handling function
 };;
-
 { .mmi
-        add   GR_Parameter_RESULT = 48,sp
         nop.m 0
-        nop.i 0
+        nop.m 0
+        add   GR_Parameter_RESULT = 48,sp
 };;
 
+// (4)
 { .mmi
         ldfd  f8 = [GR_Parameter_RESULT]       // Get return result off stack
 .restore sp
         add   sp = 64,sp                       // Restore stack pointer
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
-
 { .mib
         mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk   b0
 };;
 
-LOCAL_LIBM_END(__libm_error_region)
-
+.endp __libm_error_region
+ASM_SIZE_DIRECTIVE(__libm_error_region)
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

@@ -1,0 +1,6 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+
+if test -z "$inhibit_glue"; then
+# For signame.c, used in make_siglist.
+AC_CHECK_FUNCS(psignal)
+fi

@@ -1,2 +1,2 @@
 #define HAVE_PROC_SELF	1
-#include <debug/segfault.c>
+#include <sysdeps/generic/segfault.c>

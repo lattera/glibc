@@ -1,8 +1,0 @@
-This is a stub add-on library for the GNU C library version 2.1.2 and
-above. It is used to create the smaller static binaries by stubbing
-out the gconv related functions. The resulting binaries may not have
-all the functionalities.
-
-H.J. Lu
-hjl@gnu.org
-12/05/1999

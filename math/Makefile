@@ -1,5 +1,4 @@
-# Copyright (C) 1996-2001,2002,2003,2004,2005,2006
-#	Free Software Foundation, Inc.
+# Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -90,7 +89,7 @@ distribute += $(filter-out $(generated),$(long-m-yes:=.c) $(long-c-yes:=.c))
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-misc test-fpucw tst-definitions test-tgmath test-tgmath-ret \
-	bug-nextafter bug-nexttoward bug-tgmath1 test-tgmath-int
+	bug-nextafter bug-nexttoward bug-tgmath1
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
@@ -108,7 +107,7 @@ generated += $(libm-tests-generated) libm-test.stmp
 # This is needed for dependencies
 before-compile += $(objpfx)libm-test.c
 
-ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
+ulps-file = $(firstword $(wildcard $(config-sysdirs:%=$(..)%/libm-test-ulps)))
 
 $(addprefix $(objpfx), $(libm-tests-generated)): $(objpfx)libm-test.stmp
 
@@ -148,15 +147,6 @@ extra-objs += libieee.a ieee-math.o
 distribute += ieee-math.c
 
 include ../Rules
-
-
-# The generated sysd-rules file defines rules like this for sources
-# coming from sysdeps/ directories.  These rules find the generic sources.
-define o-iterator-doit
-$(objpfx)m_%$o: s_%.c $(before-compile); $$(compile-command.c)
-endef
-object-suffixes-left := $(all-object-suffixes)
-include $(o-iterator)
 
 
 # This file defines the default _LIB_VERSION variable that controls

@@ -1,5 +1,4 @@
-/* Copyright (C) 1998,2000,2002,2003,2004,2005,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +20,7 @@
 #include <unistd.h>
 #include <setxid.h>
 #include <linux/posix_types.h>
-#include <kernel-features.h>
+#include "kernel-features.h"
 
 
 #if defined __NR_setresgid || defined __NR_setresgid32
@@ -81,6 +80,6 @@ weak_alias (__setresgid, setresgid)
 
 #else
 
-#include <posix/setresgid.c>
+#include <sysdeps/generic/setresgid.c>
 
 #endif

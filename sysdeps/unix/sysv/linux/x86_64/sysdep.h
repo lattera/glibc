@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02,03,04 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,7 +119,7 @@
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
   leaq rtld_errno(%rip), %rcx;			\
-  xorl %edx, %edx;				\
+  xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   movl %edx, (%rcx);				\
   orq $-1, %rax;				\
@@ -133,7 +133,7 @@
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
   movq SYSCALL_ERROR_ERRNO@GOTTPOFF(%rip), %rcx;\
-  xorl %edx, %edx;				\
+  xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   movl %edx, %fs:(%rcx);			\
   orq $-1, %rax;				\
@@ -143,7 +143,7 @@
    Note that errno occupies only 4 bytes.  */
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
-  xorl %edx, %edx;				\
+  xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   pushq %rdx;					\
   cfi_adjust_cfa_offset(8);			\
@@ -161,7 +161,7 @@
 #else /* Not _LIBC_REENTRANT.  */
 # define SYSCALL_ERROR_HANDLER			\
 0:movq errno@GOTPCREL(%RIP), %rcx;		\
-  xorl %edx, %edx;				\
+  xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   movl %edx, (%rcx);				\
   orq $-1, %rax;				\
@@ -208,7 +208,7 @@
 #undef	DO_CALL
 #define DO_CALL(syscall_name, args)		\
     DOARGS_##args				\
-    movl $SYS_ify (syscall_name), %eax;		\
+    movq $SYS_ify (syscall_name), %rax;		\
     syscall;
 
 #define DOARGS_0 /* nothing */
@@ -310,32 +310,5 @@
 #define ASM_ARGS_6	ASM_ARGS_5, "r" (_a6)
 
 #endif	/* __ASSEMBLER__ */
-
-
-/* Pointer mangling support.  */
-#if defined NOT_IN_libc && defined IS_IN_rtld
-/* We cannot use the thread descriptor because in ld.so we use setjmp
-   earlier than the descriptor is initialized.  */
-# ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)	xorq __pointer_chk_guard_local(%rip), reg
-#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
-# else
-#  define PTR_MANGLE(reg)	asm ("xorq __pointer_chk_guard_local(%%rip), %0"\
-				     : "=r" (reg) : "0" (reg))
-#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
-# endif
-#else
-# ifdef __ASSEMBLER__
-#  define PTR_MANGLE(reg)	xorq %fs:POINTER_GUARD, reg
-#  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
-# else
-#  define PTR_MANGLE(var)	asm ("xorq %%fs:%c2, %0"		      \
-				     : "=r" (var)			      \
-				     : "0" (var),			      \
-				       "i" (offsetof (tcbhead_t,	      \
-						      pointer_guard)))
-#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
-# endif
-#endif
 
 #endif /* linux/x86_64/sysdep.h */

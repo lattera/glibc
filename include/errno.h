@@ -2,7 +2,7 @@
 
 #include <stdlib/errno.h>
 
-#if defined _ERRNO_H && !defined _ISOMAC && !defined __cplusplus
+#if defined _ERRNO_H && !defined _ISOMAC
 
 # ifdef IS_IN_rtld
 #  include <dl-sysdep.h>

@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997-2003, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -46,7 +46,7 @@ struct path_elem *__gconv_path_elem;
 size_t __gconv_max_path_elem_len;
 
 /* We use the following struct if we couldn't allocate memory.  */
-static const struct path_elem empty_path_elem = { NULL, 0 };
+static const struct path_elem empty_path_elem;
 
 /* Name of the file containing the module information in the directories
    along the path.  */
@@ -78,11 +78,11 @@ static struct gconv_module builtin_modules[] =
 #undef BUILTIN_ALIAS
 };
 
-static const char builtin_aliases[] =
+static const char *builtin_aliases[] =
 {
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
 			       MinF, MaxF, MinT, MaxT)
-#define BUILTIN_ALIAS(From, To) From "\0" To "\0"
+#define BUILTIN_ALIAS(From, To) From " " To,
 
 #include "gconv_builtin.h"
 
@@ -124,16 +124,40 @@ detect_conflict (const char *alias)
 }
 
 
-/* The actual code to add aliases.  */
+/* Add new alias.  */
 static void
-add_alias2 (const char *from, const char *to, const char *wp, void *modules)
+add_alias (char *rp, void *modules)
 {
+  /* We now expect two more string.  The strings are normalized
+     (converted to UPPER case) and strored in the alias database.  */
+  struct gconv_alias *new_alias;
+  char *from, *to, *wp;
+
+  while (__isspace_l (*rp, &_nl_C_locobj))
+    ++rp;
+  from = wp = rp;
+  while (*rp != '\0' && !__isspace_l (*rp, &_nl_C_locobj))
+    *wp++ = __toupper_l (*rp++, &_nl_C_locobj);
+  if (*rp == '\0')
+    /* There is no `to' string on the line.  Ignore it.  */
+    return;
+  *wp++ = '\0';
+  to = ++rp;
+  while (__isspace_l (*rp, &_nl_C_locobj))
+    ++rp;
+  while (*rp != '\0' && !__isspace_l (*rp, &_nl_C_locobj))
+    *wp++ = __toupper_l (*rp++, &_nl_C_locobj);
+  if (to == wp)
+    /* No `to' string, ignore the line.  */
+    return;
+  *wp++ = '\0';
+
   /* Test whether this alias conflicts with any available module.  */
   if (detect_conflict (from))
     /* It does conflict, don't add the alias.  */
     return;
 
-  struct gconv_alias *new_alias = (struct gconv_alias *)
+  new_alias = (struct gconv_alias *)
     malloc (sizeof (struct gconv_alias) + (wp - from));
   if (new_alias != NULL)
     {
@@ -150,37 +174,6 @@ add_alias2 (const char *from, const char *to, const char *wp, void *modules)
 	/* Something went wrong, free this entry.  */
 	free (new_alias);
     }
-}
-
-
-/* Add new alias.  */
-static void
-add_alias (char *rp, void *modules)
-{
-  /* We now expect two more string.  The strings are normalized
-     (converted to UPPER case) and strored in the alias database.  */
-  char *from, *to, *wp;
-
-  while (__isspace_l (*rp, _nl_C_locobj_ptr))
-    ++rp;
-  from = wp = rp;
-  while (*rp != '\0' && !__isspace_l (*rp, _nl_C_locobj_ptr))
-    *wp++ = __toupper_l (*rp++, _nl_C_locobj_ptr);
-  if (*rp == '\0')
-    /* There is no `to' string on the line.  Ignore it.  */
-    return;
-  *wp++ = '\0';
-  to = ++rp;
-  while (__isspace_l (*rp, _nl_C_locobj_ptr))
-    ++rp;
-  while (*rp != '\0' && !__isspace_l (*rp, _nl_C_locobj_ptr))
-    *wp++ = __toupper_l (*rp++, _nl_C_locobj_ptr);
-  if (to == wp)
-    /* No `to' string, ignore the line.  */
-    return;
-  *wp++ = '\0';
-
-  add_alias2 (from, to, wp, modules);
 }
 
 
@@ -261,30 +254,30 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
   int need_ext;
   int cost_hi;
 
-  while (__isspace_l (*rp, _nl_C_locobj_ptr))
+  while (__isspace_l (*rp, &_nl_C_locobj))
     ++rp;
   from = rp;
-  while (*rp != '\0' && !__isspace_l (*rp, _nl_C_locobj_ptr))
+  while (*rp != '\0' && !__isspace_l (*rp, &_nl_C_locobj))
     {
-      *rp = __toupper_l (*rp, _nl_C_locobj_ptr);
+      *rp = __toupper_l (*rp, &_nl_C_locobj);
       ++rp;
     }
   if (*rp == '\0')
     return;
   *rp++ = '\0';
   to = wp = rp;
-  while (__isspace_l (*rp, _nl_C_locobj_ptr))
+  while (__isspace_l (*rp, &_nl_C_locobj))
     ++rp;
-  while (*rp != '\0' && !__isspace_l (*rp, _nl_C_locobj_ptr))
-    *wp++ = __toupper_l (*rp++, _nl_C_locobj_ptr);
+  while (*rp != '\0' && !__isspace_l (*rp, &_nl_C_locobj))
+    *wp++ = __toupper_l (*rp++, &_nl_C_locobj);
   if (*rp == '\0')
     return;
   *wp++ = '\0';
   do
     ++rp;
-  while (__isspace_l (*rp, _nl_C_locobj_ptr));
+  while (__isspace_l (*rp, &_nl_C_locobj));
   module = wp;
-  while (*rp != '\0' && !__isspace_l (*rp, _nl_C_locobj_ptr))
+  while (*rp != '\0' && !__isspace_l (*rp, &_nl_C_locobj))
     *wp++ = *rp++;
   if (*rp == '\0')
     {
@@ -399,7 +392,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 	if (rp[n - 1] == '\n')
 	  rp[n - 1] = '\0';
 
-      while (__isspace_l (*rp, _nl_C_locobj_ptr))
+      while (__isspace_l (*rp, &_nl_C_locobj))
 	++rp;
 
       /* If this is an empty line go on with the next one.  */
@@ -407,7 +400,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 	continue;
 
       word = rp;
-      while (*rp != '\0' && !__isspace_l (*rp, _nl_C_locobj_ptr))
+      while (*rp != '\0' && !__isspace_l (*rp, &_nl_C_locobj))
 	++rp;
 
       if (rp - word == sizeof ("alias") - 1
@@ -595,16 +588,12 @@ __gconv_read_conf (void)
     }
 
   /* Add aliases for builtin conversions.  */
-  const char *cp = builtin_aliases;
-  do
+  cnt = sizeof (builtin_aliases) / sizeof (builtin_aliases[0]);
+  while (cnt > 0)
     {
-      const char *from = cp;
-      const char *to = __rawmemchr (from, '\0') + 1;
-      cp = __rawmemchr (to, '\0') + 1;
-
-      add_alias2 (from, to, cp, modules);
+      char *copy = strdupa (builtin_aliases[--cnt]);
+      add_alias (copy, modules);
     }
-  while (*cp != '\0');
 
   /* Restore the error number.  */
   __set_errno (save_errno);

@@ -74,7 +74,7 @@ static bool_t clntudp_freeres (CLIENT *, xdrproc_t, caddr_t);
 static bool_t clntudp_control (CLIENT *, int, char *);
 static void clntudp_destroy (CLIENT *);
 
-static const struct clnt_ops udp_ops =
+static struct clnt_ops udp_ops =
 {
   clntudp_call,
   clntudp_abort,
@@ -136,7 +136,13 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   if (cl == NULL || cu == NULL)
     {
       struct rpc_createerr *ce = &get_rpc_createerr ();
-      (void) __fxprintf (NULL, "%s", _("clntudp_create: out of memory\n"));
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",
+			   _("clntudp_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("clntudp_create: out of memory\n"), stderr);
       ce->cf_stat = RPC_SYSTEMERROR;
       ce->cf_error.re_errno = ENOMEM;
       goto fooy;
@@ -153,7 +159,7 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
 	}
       raddr->sin_port = htons (port);
     }
-  cl->cl_ops = (struct clnt_ops *) &udp_ops;
+  cl->cl_ops = &udp_ops;
   cl->cl_private = (caddr_t) cu;
   cu->cu_raddr = *raddr;
   cu->cu_rlen = sizeof (cu->cu_raddr);

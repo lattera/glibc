@@ -1352,11 +1352,6 @@
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Add missing .mips0 at the
 	end of inline assembler code.
 
-2000-10-02  Jakub Jelinek  <jakub@redhat.com>
-
-	* sunrpc/svc_udp.c (svcudp_recv): Set msg_controllen to all
-	remaining xp_pad space.
-
 2000-10-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/features.h [__USE_FILE_OFFSET && !__REDIRECT]: Define
@@ -9285,12 +9280,6 @@
 	syscall.
 	* sysdeps/unix/sysv/linux/mips/truncate64.c: Likewise.
 
-2000-05-30  Jakub Jelinek  <jakub@redhat.com>
-
-	* resolv/res_query.c (res_nsearch): Remove unused variable
-	root_on_list. If dots >= statp->ndots and as is querydomain
-	fails, keep searching.
-
 2000-05-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/oldglob.c (__old_glob): Loose __P.
@@ -9490,11 +9479,6 @@
 
 	* sysdeps/i386/fpu/bits/mathinline.h: Define expm1 inline only if
 	__FAST_MATH__ is defined.
-
-2000-05-22  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/i386/fpu/bits/mathinline.h (__expm1_code): Avoid using ?:
-	with omitted middle operand.
 
 2000-05-22  Andreas Jaeger  <aj@suse.de>
 
@@ -9733,11 +9717,6 @@
 
 	* manual/arith.texi (Parsing of Integers): Fix typo.
 	Closes PR libc/1744, reported by blp@gnu.org.
-
-2000-05-17  Jakub Jelinek  <jakub@redhat.com>
-
-	* inet/rcmd.c (rcmd_af): If *ahost cannot be resolved, include
-	unresolved hostname in the message.
 
 2000-05-17  Jakub Jelinek  <jakub@redhat.com>
 

@@ -20,8 +20,6 @@ libc {
   GLIBC_2.3.2
   GLIBC_2.3.3
   GLIBC_2.3.4
-  GLIBC_2.4
-  GLIBC_2.5
 %ifdef USE_IN_LIBIO
   HURD_CTHREADS_0.3
 %endif
@@ -37,7 +35,6 @@ libdl {
   GLIBC_2.0
   GLIBC_2.1
   GLIBC_2.3.3
-  GLIBC_2.3.4
 }
 libm {
   GLIBC_2.0
@@ -45,7 +42,6 @@ libm {
   GLIBC_2.2
   GLIBC_2.2.3
   GLIBC_2.3.4
-  GLIBC_2.4
 }
 libnsl {
   GLIBC_2.0
@@ -81,7 +77,6 @@ libpthread {
   GLIBC_2.3.2
   GLIBC_2.3.3
   GLIBC_2.3.4
-  GLIBC_2.4
   GLIBC_PRIVATE
 }
 libresolv {
@@ -95,8 +90,6 @@ librt {
   GLIBC_2.2
   GLIBC_2.3
   GLIBC_2.3.3
-  GLIBC_2.3.4
-  GLIBC_2.4
 }
 libutil {
   GLIBC_2.0
@@ -105,7 +98,6 @@ ld {
   GLIBC_2.0
   GLIBC_2.1
   GLIBC_2.3
-  GLIBC_2.4
   GLIBC_PRIVATE
 }
 libthread_db {

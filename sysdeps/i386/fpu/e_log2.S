@@ -34,7 +34,9 @@ limit:	.double 0.29
 	.text
 ENTRY(__ieee754_log2)
 #ifdef PIC
-	LOAD_PIC_REG (dx)
+	call	1f
+1:	popl	%edx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
 #endif
 	fldl	MO(one)
 	fldl	4(%esp)		// x : 1

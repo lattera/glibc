@@ -53,7 +53,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #endif
 
 
-static FTSENT	*fts_alloc (FTS *, const char *, size_t) internal_function;
+static FTSENT	*fts_alloc (FTS *, const char *, int) internal_function;
 static FTSENT	*fts_build (FTS *, int) internal_function;
 static void	 fts_lfree (FTSENT *) internal_function;
 static void	 fts_load (FTS *, FTSENT *) internal_function;
@@ -93,8 +93,8 @@ fts_open(argv, options, compar)
 	register FTS *sp;
 	register FTSENT *p, *root;
 	register int nitems;
-	FTSENT *parent = NULL;
-	FTSENT *tmp;
+	FTSENT *parent, *tmp;
+	int len;
 
 	/* Options check. */
 	if (options & ~FTS_OPTIONMASK) {
@@ -120,22 +120,18 @@ fts_open(argv, options, compar)
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 1024
 #endif
-	size_t maxarglen = fts_maxarglen(argv);
-	if (fts_palloc(sp, MAX(maxarglen, MAXPATHLEN)))
+	if (fts_palloc(sp, MAX(fts_maxarglen(argv), MAXPATHLEN)))
 		goto mem1;
 
 	/* Allocate/initialize root's parent. */
-	if (*argv != NULL) {
-		if ((parent = fts_alloc(sp, "", 0)) == NULL)
-			goto mem2;
-		parent->fts_level = FTS_ROOTPARENTLEVEL;
-	  }
+	if ((parent = fts_alloc(sp, "", 0)) == NULL)
+		goto mem2;
+	parent->fts_level = FTS_ROOTPARENTLEVEL;
 
 	/* Allocate/initialize root(s). */
 	for (root = NULL, nitems = 0; *argv != NULL; ++argv, ++nitems) {
 		/* Don't allow zero-length paths. */
-		size_t len = strlen(*argv);
-		if (len == 0) {
+		if ((len = strlen(*argv)) == 0) {
 			__set_errno (ENOENT);
 			goto mem3;
 		}
@@ -251,7 +247,8 @@ fts_close(sp)
 	/* Free up child linked list, sort array, path buffer. */
 	if (sp->fts_child)
 		fts_lfree(sp->fts_child);
-	free(sp->fts_array);
+	if (sp->fts_array)
+		free(sp->fts_array);
 	free(sp->fts_path);
 
 	/* Return to original directory, save errno if necessary. */
@@ -376,14 +373,12 @@ fts_read(sp)
 		}
 		p = sp->fts_child;
 		sp->fts_child = NULL;
-		sp->fts_cur = p;
 		goto name;
 	}
 
 	/* Move to the next node on this level. */
 next:	tmp = p;
 	if ((p = p->fts_link) != NULL) {
-		sp->fts_cur = p;
 		free(tmp);
 
 		/*
@@ -396,7 +391,7 @@ next:	tmp = p;
 				return (NULL);
 			}
 			fts_load(sp, p);
-			return p;
+			return (sp->fts_cur = p);
 		}
 
 		/*
@@ -422,12 +417,11 @@ next:	tmp = p;
 name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		*t++ = '/';
 		memmove(t, p->fts_name, p->fts_namelen + 1);
-		return p;
+		return (sp->fts_cur = p);
 	}
 
 	/* Move up to the parent node. */
 	p = tmp->fts_parent;
-	sp->fts_cur = p;
 	free(tmp);
 
 	if (p->fts_level == FTS_ROOTPARENTLEVEL) {
@@ -468,7 +462,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		return (NULL);
 	}
 	p->fts_info = p->fts_errno ? FTS_ERR : FTS_DP;
-	return p;
+	return (sp->fts_cur = p);
 }
 
 /*
@@ -696,7 +690,7 @@ fts_build(sp, type)
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))
 			continue;
 
-		if ((p = fts_alloc(sp, dp->d_name, _D_EXACT_NAMLEN (dp))) == NULL)
+		if ((p = fts_alloc(sp, dp->d_name, (int)_D_EXACT_NAMLEN (dp))) == NULL)
 			goto mem1;
 		if (_D_EXACT_NAMLEN (dp) >= maxlen) {/* include space for NUL */
 			oldaddr = sp->fts_path;
@@ -707,7 +701,8 @@ fts_build(sp, type)
 				 * structures already allocated.
 				 */
 mem1:				saved_errno = errno;
-				free(p);
+				if (p)
+					free(p);
 				fts_lfree(head);
 				(void)__closedir(dirp);
 				cur->fts_info = FTS_ERR;
@@ -748,10 +743,6 @@ mem1:				saved_errno = errno;
 			p->fts_flags |= FTS_ISW;
 #endif
 
-#if 0
-		/* Unreachable code.  cderrno is only ever set to a nonnull
-		   value if dirp is closed at the same time.  But then we
-		   cannot enter this loop.  */
 		if (cderrno) {
 			if (nlinks) {
 				p->fts_info = FTS_NS;
@@ -759,9 +750,7 @@ mem1:				saved_errno = errno;
 			} else
 				p->fts_info = FTS_NSOK;
 			p->fts_accpath = cur->fts_accpath;
-		} else
-#endif
-		if (nlinks == 0
+		} else if (nlinks == 0
 #if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE
 			   || (nostat &&
 			       dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN)
@@ -829,7 +818,6 @@ mem1:				saved_errno = errno;
 	     fts_safe_changedir(sp, cur->fts_parent, -1, ".."))) {
 		cur->fts_info = FTS_ERR;
 		SET(FTS_STOP);
-		fts_lfree(head);
 		return (NULL);
 	}
 
@@ -837,7 +825,6 @@ mem1:				saved_errno = errno;
 	if (!nitems) {
 		if (type == BREAD)
 			cur->fts_info = FTS_DP;
-		fts_lfree(head);
 		return (NULL);
 	}
 
@@ -974,7 +961,7 @@ internal_function
 fts_alloc(sp, name, namelen)
 	FTS *sp;
 	const char *name;
-	size_t namelen;
+	register int namelen;
 {
 	register FTSENT *p;
 	size_t len;
@@ -1044,7 +1031,10 @@ fts_palloc(sp, more)
 	 * We limit fts_pathlen to USHRT_MAX to be safe in both cases.
 	 */
 	if (sp->fts_pathlen < 0 || sp->fts_pathlen >= USHRT_MAX) {
-		free(sp->fts_path);
+		if (sp->fts_path) {
+			free(sp->fts_path);
+			sp->fts_path = NULL;
+		}
 		sp->fts_path = NULL;
 		__set_errno (ENAMETOOLONG);
 		return (1);

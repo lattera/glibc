@@ -1,11 +1,11 @@
 .file "sqrt.s"
 
-
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
 // 
-// Contributed 2000 by the Intel Numerics Group, Intel Corporation
-// 
+// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
+// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,28 +35,27 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://www.intel.com/software/products/opensource/libraries/num.htm.
+// http://developer.intel.com/opensource.
 //
-//********************************************************************
+// ********************************************************************
 // History
-//********************************************************************
-// 02/02/00 Initial version
-// 04/04/00 Unwind support added
-// 08/15/00 Bundle added after call to __libm_error_support to properly
+// ********************************************************************
+// 2/02/00  Initial version
+// 4/04/00  Unwind support added
+// 8/15/00  Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 02/10/03 Reordered header: .section, .global, .proc, .align
 //
-//********************************************************************
+// ********************************************************************
 //
 // Function:   Combined sqrt(x), where
 //                        _
 //             sqrt(x) = |x, for double precision x values
 //
-//********************************************************************
+// ********************************************************************
 //
 // Accuracy:       Correctly Rounded
 //
-//********************************************************************
+// ********************************************************************
 //
 // Resources Used:
 //
@@ -69,7 +68,7 @@
 //
 //    Predicate Registers:      p6, p7, p8
 //
-//*********************************************************************
+// *********************************************************************
 //
 // IEEE Special Conditions:
 //
@@ -79,13 +78,15 @@
 //    sqrt(+/-0) = +/-0
 //    sqrt(negative) = QNaN and error handling is called
 //
-//*********************************************************************
+// *********************************************************************
 //
 // Implementation:
 //
 //  Modified Newton-Raphson Algorithm
 //
-//*********************************************************************
+// *********************************************************************
+
+#include "libm_support.h"
 
 GR_SAVE_PFS          = r33
 GR_SAVE_B0           = r34
@@ -97,7 +98,19 @@ GR_Parameter_RESULT  = r39
 
 
 .section .text
-GLOBAL_IEEE754_ENTRY(sqrt)
+.proc sqrt#
+.global sqrt#
+.align 64 
+
+sqrt:
+#ifdef _LIBC
+.global __sqrt
+.type __sqrt,@function
+__sqrt:
+.global __ieee754_sqrt
+.type __ieee754_sqrt,@function
+__ieee754_sqrt:
+#endif
 { .mfi
   alloc r32= ar.pfs,0,5,4,0
   frsqrta.s0 f7,p6=f8
@@ -242,7 +255,7 @@ GLOBAL_IEEE754_ENTRY(sqrt)
 
 { .mfb
   nop.m 0
-       mov   f8 = f7
+  (p0) mov   f8 = f7
   (p8) br.ret.sptk b0 ;;
 }
 { .mfb
@@ -251,7 +264,12 @@ GLOBAL_IEEE754_ENTRY(sqrt)
   (p7) br.cond.sptk __libm_error_region ;;
 }
 // END DOUBLE PRECISION MINIMUM LATENCY SQUARE ROOT ALGORITHM
-GLOBAL_IEEE754_END(sqrt)
+.endp sqrt#
+ASM_SIZE_DIRECTIVE(sqrt)
+#ifdef _LIBC
+ASM_SIZE_DIRECTIVE(__sqrt)
+ASM_SIZE_DIRECTIVE(__ieee754_sqrt)
+#endif
 
 // Stack operations when calling error support.
 //       (1)               (2)                          (3) (call)              (4)
@@ -268,7 +286,8 @@ GLOBAL_IEEE754_END(sqrt)
 //    save gp                                                                    restore ar.pfs
 
 
-LOCAL_LIBM_ENTRY(__libm_error_region)
+.proc __libm_error_region
+__libm_error_region:
 
 //
 // This branch includes all those special values that are not negative,
@@ -333,9 +352,8 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         br.ret.sptk     b0                     // Return
 };;
 
-LOCAL_LIBM_END(__libm_error_region)
-
-
+.endp __libm_error_region
+ASM_SIZE_DIRECTIVE(__libm_error_region)
 
 
 .type   __libm_error_support#,@function

@@ -39,7 +39,9 @@ ENTRY(__ieee754_log10l)
 	fldlg2			// log10(2)
 	fldt	4(%esp)		// x : log10(2)
 #ifdef PIC
-	LOAD_PIC_REG (dx)
+	call	1f
+1:	popl	%edx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
 #endif
 	fxam
 	fnstsw

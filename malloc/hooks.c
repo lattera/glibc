@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -17,6 +17,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
+
+/* $Id$ */
 
 /* What to do if the standard debugging hooks are in place and a
    corrupt pointer is detected: do nothing (0), print an error message
@@ -144,9 +146,9 @@ mem2mem_check(ptr, sz) Void_t *ptr; size_t sz;
 static mchunkptr
 internal_function
 #if __STD_C
-mem2chunk_check(Void_t* mem, unsigned char **magic_p)
+mem2chunk_check(Void_t* mem)
 #else
-mem2chunk_check(mem, magic_p) Void_t* mem; unsigned char **magic_p;
+mem2chunk_check(mem) Void_t* mem;
 #endif
 {
   mchunkptr p;
@@ -171,6 +173,7 @@ mem2chunk_check(mem, magic_p) Void_t* mem; unsigned char **magic_p;
     for(sz += SIZE_SZ-1; (c = ((unsigned char*)p)[sz]) != magic; sz -= c) {
       if(c<=0 || sz<(c+2*SIZE_SZ)) return NULL;
     }
+    ((unsigned char*)p)[sz] ^= 0xFF;
   } else {
     unsigned long offset, page_mask = malloc_getpagesize-1;
 
@@ -190,10 +193,8 @@ mem2chunk_check(mem, magic_p) Void_t* mem; unsigned char **magic_p;
     for(sz -= 1; (c = ((unsigned char*)p)[sz]) != magic; sz -= c) {
       if(c<=0 || sz<(c+2*SIZE_SZ)) return NULL;
     }
+    ((unsigned char*)p)[sz] ^= 0xFF;
   }
-  ((unsigned char*)p)[sz] ^= 0xFF;
-  if (magic_p)
-    *magic_p = (unsigned char *)p + sz;
   return p;
 }
 
@@ -231,11 +232,7 @@ top_check()
   sbrk_size = front_misalign + mp_.top_pad + MINSIZE;
   sbrk_size += pagesz - ((unsigned long)(brk + sbrk_size) & (pagesz - 1));
   new_brk = (char*)(MORECORE (sbrk_size));
-  if (new_brk == (char*)(MORECORE_FAILURE))
-    {
-      MALLOC_FAILURE_ACTION;
-      return -1;
-    }
+  if (new_brk == (char*)(MORECORE_FAILURE)) return -1;
   /* Call the `morecore' hook if necessary.  */
   if (__after_morecore_hook)
     (*__after_morecore_hook) ();
@@ -256,11 +253,6 @@ malloc_check(sz, caller) size_t sz; const Void_t *caller;
 {
   Void_t *victim;
 
-  if (sz+1 == 0) {
-    MALLOC_FAILURE_ACTION;
-    return NULL;
-  }
-
   (void)mutex_lock(&main_arena.mutex);
   victim = (top_check() >= 0) ? _int_malloc(&main_arena, sz+1) : NULL;
   (void)mutex_unlock(&main_arena.mutex);
@@ -278,7 +270,7 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
 
   if(!mem) return;
   (void)mutex_lock(&main_arena.mutex);
-  p = mem2chunk_check(mem, NULL);
+  p = mem2chunk_check(mem);
   if(!p) {
     (void)mutex_unlock(&main_arena.mutex);
 
@@ -310,19 +302,10 @@ realloc_check(oldmem, bytes, caller)
   mchunkptr oldp;
   INTERNAL_SIZE_T nb, oldsize;
   Void_t* newmem = 0;
-  unsigned char *magic_p;
 
-  if (bytes+1 == 0) {
-    MALLOC_FAILURE_ACTION;
-    return NULL;
-  }
   if (oldmem == 0) return malloc_check(bytes, NULL);
-  if (bytes == 0) {
-    free_check (oldmem, NULL);
-    return NULL;
-  }
   (void)mutex_lock(&main_arena.mutex);
-  oldp = mem2chunk_check(oldmem, &magic_p);
+  oldp = mem2chunk_check(oldmem);
   (void)mutex_unlock(&main_arena.mutex);
   if(!oldp) {
     malloc_printerr(check_action, "realloc(): invalid pointer", oldmem);
@@ -374,12 +357,6 @@ realloc_check(oldmem, bytes, caller)
 #if HAVE_MMAP
   }
 #endif
-
-  /* mem2chunk_check changed the magic byte in the old chunk.
-     If newmem is NULL, then the old chunk will still be used though,
-     so we need to invert that change here.  */
-  if (newmem == NULL) *magic_p ^= 0xFF;
-
   (void)mutex_unlock(&main_arena.mutex);
 
   return mem2mem_check(newmem, bytes);
@@ -399,10 +376,6 @@ memalign_check(alignment, bytes, caller)
   if (alignment <= MALLOC_ALIGNMENT) return malloc_check(bytes, NULL);
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
-  if (bytes+1 == 0) {
-    MALLOC_FAILURE_ACTION;
-    return NULL;
-  }
   checked_request2size(bytes+1, nb);
   (void)mutex_lock(&main_arena.mutex);
   mem = (top_check() >= 0) ? _int_memalign(&main_arena, alignment, bytes+1) :
@@ -582,7 +555,7 @@ public_sET_STATe(Void_t* msptr)
   (void)mutex_lock(&main_arena.mutex);
   /* There are no fastchunks.  */
   clear_fastchunks(&main_arena);
-  set_max_fast(DEFAULT_MXFAST);
+  set_max_fast(&main_arena, DEFAULT_MXFAST);
   for (i=0; i<NFASTBINS; ++i)
     main_arena.fastbins[i] = 0;
   for (i=0; i<BINMAPSIZE; ++i)

@@ -1,7 +1,0 @@
-libc {
-  GLIBC_PRIVATE {
-    __vdso_get_tbfreq;
-    __vdso_clock_gettime;
-    __vdso_clock_getres;
-  }
-}

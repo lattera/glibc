@@ -1,5 +1,5 @@
 # Makefile for csu code for GNU C library.
-# Copyright (C) 1995-2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,8 +39,8 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
 			     S$(start-installed-name))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
-distribute = initfini.c gmon-start.c start.c defs.awk \
-	     abi-note.S init.c c not-cancel.h
+distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
+	     abi-note.S init.c munch-tmpl.c not-cancel.h
 generated = version-info.h
 before-compile = $(objpfx)version-info.h
 
@@ -54,13 +54,11 @@ include ../Makeconfig
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name)
 install-lib += S$(start-installed-name)
-generated += start.os
 endif
 
 ifeq (yes,$(build-bounded))
 extra-objs += b$(start-installed-name)
 install-lib += b$(start-installed-name)
-generated += start.ob
 endif
 
 ifneq ($(start-installed-name),$(static-start-installed-name))
@@ -73,6 +71,19 @@ endif
 ifeq (yes,$(elf))
 before-compile += $(objpfx)abi-tag.h
 generated += abi-tag.h
+endif
+
+ifneq (yes,$(gnu-ld))
+libc-init = munch-init
+$(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
+	$(AWK) -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
+	mv -f $@-t $@
+generated += munch-init.c
+
+# All initialization source files.
++subdir_inits	:= $(wildcard $(foreach dir,$(subdirs),$(dir)/init-$(dir).c))
+# All subdirectories containing initialization source files.
++init_subdirs	:= $(patsubst %/,%,$(dir $(+subdir_inits)))
 endif
 
 ifeq ($(have-initfini),yes)
@@ -95,7 +106,7 @@ $(crtstuff:%=$(objpfx)%.o): %.o: %.S $(objpfx)defs.h
 
 CFLAGS-initfini.s = -g0 -fPIC -fno-inline-functions $(fno-unit-at-a-time)
 
-vpath initfini.c $(sysdirs)
+vpath initfini.c $(full_config_sysdirs)
 
 $(objpfx)initfini.s: initfini.c $(before-compile)
 	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \
@@ -200,9 +211,8 @@ $(objpfx)abi-tag.h: $(..)abi-tags
 	if test -r $@.new; then mv -f $@.new $@; \
 	else echo >&2 'This configuration not matched in $<'; exit 1; fi
 
-all-Banner-files = $(wildcard $(addsuffix /Banner,\
-					  $(sort $(subdir-srcdirs) \
-						 $(sysdeps-srcdirs))))
+all-Banner-files = $(wildcard $(addsuffix /Banner, \
+					$(addprefix $(..), $(subdirs))))
 $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 	$(make-target-directory)
 	(case $(config-os) in \
@@ -229,7 +239,7 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 	 esac; \
 	 files="$(all-Banner-files)";				\
 	 if test -n "$$files"; then				\
-	   printf '"Available extensions:\\n"\n';		\
+	   echo "\"Available extensions:\\n\"";			\
 	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/'		\
 	       -e 's/^\(.*\)$$/\"\1\\n\"/' $$files;		\
 	 fi) > $@T

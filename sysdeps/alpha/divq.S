@@ -43,7 +43,7 @@
 	.text
 	.align	4
 	.globl	__divq
-	.type	__divq, @funcnoplt
+	.type	__divq, @function
 	.usepv	__divq, no
 
 	cfi_startproc

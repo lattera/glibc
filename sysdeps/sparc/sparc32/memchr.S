@@ -32,15 +32,7 @@
 
 	.text
 	.align		4
-ENTRY(__memchr)
-	andcc		%o1, 0xff, %o1
-	sll		%o1, 8, %g6
-	andcc		%o0, 3, %g0
-	or		%o1, %g6, %g6
-	sll		%g6, 16, %o3
-	be		10f
-	 or		%o3, %g6, %g2
-	cmp		%o2, 0
+0:	cmp		%o2, 0
 	be		9f
 	 sethi		%hi(0x80808080), %o4
 	ldub		[%o0], %g4
@@ -72,7 +64,16 @@ ENTRY(__memchr)
 	 clr		%o0
 1:	retl
 	 sub		%o0, 1, %o0
-10:	sethi		%hi(0x80808080), %o4
+
+ENTRY(__memchr)
+	andcc		%o1, 0xff, %o1
+	sll		%o1, 8, %g6
+	andcc		%o0, 3, %g0
+	or		%o1, %g6, %g6
+	sll		%g6, 16, %o3
+	bne		0b
+	 or		%o3, %g6, %g2
+	sethi		%hi(0x80808080), %o4
 	or		%o4, %lo(0x80808080), %o3
 4:	sethi		%hi(0x01010101), %o5
 5:	and		%o2, 3, %g1

@@ -1,5 +1,5 @@
 /* i80386 __mpn_lshift --
-   Copyright (C) 1992, 1994, 1997-2000, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -33,16 +33,11 @@ ENTRY (BP_SYM (__mpn_lshift))
 	ENTER
 
 	pushl	%edi
-	cfi_adjust_cfa_offset (4)
 	pushl	%esi
-	cfi_adjust_cfa_offset (4)
 	pushl	%ebx
-	cfi_adjust_cfa_offset (4)
 
 	movl	RES(%esp),%edi
-	cfi_rel_offset (edi, 8)
 	movl	S(%esp),%esi
-	cfi_rel_offset (esi, 4)
 	movl	SIZE(%esp),%edx
 	movl	CNT(%esp),%ecx
 #if __BOUNDED_POINTERS__
@@ -54,13 +49,11 @@ ENTRY (BP_SYM (__mpn_lshift))
 	subl	$4,%esi			/* adjust s_ptr */
 
 	movl	(%esi,%edx,4),%ebx	/* read most significant limb */
-	cfi_rel_offset (ebx, 0)
 	xorl	%eax,%eax
 	shldl	%cl,%ebx,%eax		/* compute carry limb */
 	decl	%edx
 	jz	L(end)
 	pushl	%eax			/* push carry limb onto stack */
-	cfi_adjust_cfa_offset (4)
 	testb	$1,%dl
 	jnz	L(1)			/* enter loop in the middle */
 	movl	%ebx,%eax
@@ -80,17 +73,10 @@ L(1):	movl	(%esi,%edx,4),%eax
 	movl	%eax,(%edi)		/* store it */
 
 	popl	%eax			/* pop carry limb */
-	cfi_adjust_cfa_offset (-4)
 
 	popl	%ebx
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (ebx)
 	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	popl	%edi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (edi)
 
 	LEAVE
 	ret
@@ -99,14 +85,8 @@ L(end):	shll	%cl,%ebx		/* compute least significant limb */
 	movl	%ebx,(%edi)		/* store it */
 
 	popl	%ebx
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (ebx)
 	popl	%esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	popl	%edi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (edi)
 
 	LEAVE
 	ret

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -74,23 +74,17 @@ __pthread_once:
 	jnz	3f	/* Different for generation -> run initializer.  */
 
 	/* Somebody else got here first.  Wait.  */
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
-#else
-	movl	$FUTEX_WAIT, %esi
-#endif
-	movl	$SYS_futex, %eax
+	movq	%r10, %rsi		/* movq $FUTEX_WAIT, %rsi */
+	movq	$SYS_futex, %rax
 	syscall
 	jmp	6b
 
 	/* Preserve the pointer to the control variable.  */
 3:	pushq	%rdi
 .Lpush_rdi:
-	pushq	%rdi
-.Lpush_rdi2:
 
 .LcleanupSTART:
-	callq	*16(%rsp)
+	callq	*8(%rsp)
 .LcleanupEND:
 
 	/* Get the control variable address back.  */
@@ -101,18 +95,15 @@ __pthread_once:
 	LOCK
 	incl	(%rdi)
 
-	addq	$8, %rsp
-.Ladd1:
-
 	/* Wake up all other threads.  */
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %esi
-	movl	$SYS_futex, %eax
+	movq	$SYS_futex, %rax
 	syscall
 
 4:	addq	$8, %rsp
-.Ladd2:
-	xorl	%eax, %eax
+.Ladd:
+	xorq	%rax, %rax
 	retq
 
 	.size	__pthread_once,.-__pthread_once
@@ -133,8 +124,8 @@ clear_once_control:
 	movl	$0, (%rdi)
 
 	movl	$0x7fffffff, %edx
-	movl	$FUTEX_WAKE, %esi
-	movl	$SYS_futex, %eax
+	movq	$FUTEX_WAKE, %rsi
+	movq	$SYS_futex, %rax
 	syscall
 
 	movq	%r8, %rdi
@@ -229,28 +220,20 @@ clear_once_control:
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 24
 	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_rdi2-.Lpush_rdi
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 32
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_rdi-.Lpush_rdi2
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 24
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Ladd1-.Lpop_rdi
+	.long	.Lpop_rdi-.Lpush_rdi
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte	4				# DW_CFA_advance_loc4
-	.long	.Ladd2-.Ladd1
+	.long	.Ladd-.Lpop_rdi
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 8
 	.byte	4				# DW_CFA_advance_loc4
-	.long	clear_once_control-.Ladd2
+	.long	clear_once_control-.Ladd
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 32
+	.uleb128 24
 #if 0
 	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_rdi3-clear_once_control
+	.long	.Lpop_rdi2-clear_once_control
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 #endif

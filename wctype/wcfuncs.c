@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <ctype.h>
 #include <wctype.h>
 #include <locale/localeinfo.h>
 
@@ -25,47 +24,45 @@
 /* Provide real-function versions of all the wctype macros.  */
 
 #define	func(name, type)						      \
-  extern int __isw##name (wint_t __wc);					      \
+  extern int __##name (wint_t __wc);					      \
   int									      \
-  __isw##name (wint_t wc)						      \
+  __##name (wint_t wc)							      \
   {									      \
-    if (isascii (wc))							      \
-      return is##name ((int) wc);					      \
     size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + type;    \
     const char *desc = _NL_CURRENT (LC_CTYPE, i);			      \
     return wctype_table_lookup (desc, wc);				      \
   }									      \
-  weak_alias (__isw##name, isw##name)
+  weak_alias (__##name, name)
 
 #undef iswalnum
-func (alnum, __ISwalnum)
+func (iswalnum, __ISwalnum)
 libc_hidden_weak (iswalnum)
 #undef iswalpha
-func (alpha, __ISwalpha)
+func (iswalpha, __ISwalpha)
 libc_hidden_weak (iswalpha)
 #undef iswblank
-func (blank, __ISwblank)
+func (iswblank, __ISwblank)
 #undef iswcntrl
-func (cntrl, __ISwcntrl)
+func (iswcntrl, __ISwcntrl)
 #undef iswdigit
-func (digit, __ISwdigit)
+func (iswdigit, __ISwdigit)
 libc_hidden_weak (iswdigit)
 #undef iswlower
-func (lower, __ISwlower)
+func (iswlower, __ISwlower)
 libc_hidden_weak (iswlower)
 #undef iswgraph
-func (graph, __ISwgraph)
+func (iswgraph, __ISwgraph)
 #undef iswprint
-func (print, __ISwprint)
+func (iswprint, __ISwprint)
 #undef iswpunct
-func (punct, __ISwpunct)
+func (iswpunct, __ISwpunct)
 #undef iswspace
-func (space, __ISwspace)
+func (iswspace, __ISwspace)
 libc_hidden_weak (iswspace)
 #undef iswupper
-func (upper, __ISwupper)
+func (iswupper, __ISwupper)
 #undef iswxdigit
-func (xdigit, __ISwxdigit)
+func (iswxdigit, __ISwxdigit)
 libc_hidden_weak (iswxdigit)
 
 #undef towlower

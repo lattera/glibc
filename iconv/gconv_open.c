@@ -1,6 +1,5 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997,1998,1999,2000,2001,2004,2005
-	Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -67,12 +66,11 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	  tok = __strtok_r (tok, ",", &ptr);
 	  while (tok != NULL)
 	    {
-	      if (__strcasecmp_l (tok, "TRANSLIT", _nl_C_locobj_ptr) == 0)
+	      if (__strcasecmp_l (tok, "TRANSLIT", &_nl_C_locobj) == 0)
 		{
 		  /* It's the builtin transliteration handling.  We only
 		     support it for working on the internal encoding.  */
-		  static const char *const internal_trans_names[1]
-		    = { "INTERNAL" };
+		  static const char *internal_trans_names[1] = { "INTERNAL" };
 		  struct trans_struct *lastp = NULL;
 		  struct trans_struct *runp;
 
@@ -91,7 +89,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 		      /* We leave the `name' field zero to signal that
 			 this is an internal transliteration step.  */
-		      newp->csnames = (const char **) internal_trans_names;
+		      newp->csnames = internal_trans_names;
 		      newp->ncsnames = 1;
 		      newp->trans_fct = __gconv_transliterate;
 
@@ -101,7 +99,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 			lastp->next = newp;
 		    }
 		}
-	      else if (__strcasecmp_l (tok, "IGNORE", _nl_C_locobj_ptr) == 0)
+	      else if (__strcasecmp_l (tok, "IGNORE", &_nl_C_locobj) == 0)
 		/* Set the flag to ignore all errors.  */
 		conv_flags |= __GCONV_IGNORE_ERRORS;
 	      else
@@ -115,7 +113,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 		  for (runp = trans; runp != NULL; runp = runp->next)
 		    if (runp->name != NULL
 			&& __strcasecmp_l (tok, runp->name,
-					   _nl_C_locobj_ptr) == 0)
+					   &_nl_C_locobj) == 0)
 		      break;
 		    else
 		      lastp = runp;
@@ -235,7 +233,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	      for (runp = trans; runp != NULL; runp = runp->next)
 		for (n = 0; n < runp->ncsnames; ++n)
 		  if (__strcasecmp_l (steps[cnt].__from_name,
-				      runp->csnames[n], _nl_C_locobj_ptr) == 0)
+				      runp->csnames[n], &_nl_C_locobj) == 0)
 		    {
 		      void *data = NULL;
 
@@ -281,7 +279,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 		  /* Allocate the buffer.  */
 		  size = (GCONV_NCHAR_GOAL * steps[cnt].__max_needed_to);
 
-		  result->__data[cnt].__outbuf = malloc (size);
+		  result->__data[cnt].__outbuf = (char *) malloc (size);
 		  if (result->__data[cnt].__outbuf == NULL)
 		    {
 		      res = __GCONV_NOMEM;

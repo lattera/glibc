@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997, 1998, 2004, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1998, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +16,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <libioP.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -26,8 +24,8 @@
    string FORMAT, writing no more than MAXLEN characters.  */
 /* VARARGS5 */
 int
-___snprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
-		 const char *format, ...)
+__snprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
+		const char *format, ...)
 {
   va_list arg;
   int done;
@@ -38,4 +36,3 @@ ___snprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
 
   return done;
 }
-ldbl_strong_alias (___snprintf_chk, __snprintf_chk)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2000,2002,2003,2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
+#include "kernel-features.h"
 
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must
@@ -128,10 +128,6 @@ __libc_sigaction (sig, act, oact)
 #endif
 }
 libc_hidden_def (__libc_sigaction)
-
-#ifdef WRAPPER_INCLUDE
-# include WRAPPER_INCLUDE
-#endif
 
 #ifndef LIBC_SIGACTION
 weak_alias (__libc_sigaction, __sigaction)

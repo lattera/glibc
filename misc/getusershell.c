@@ -46,15 +46,7 @@ static char sccsid[] = "@(#)getusershell.c	8.1 (Berkeley) 6/4/93";
  * /etc/shells.
  */
 
-/* NB: we do not initialize okshells here.  The initialization needs
-   relocations.  These interfaces are used so rarely that this is not
-   justified.  Instead explicitly initialize the array when it is
-   used.  */
-#if 0
-static const char *const okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
-#else
-static const char *okshells[3];
-#endif
+static const char *okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
 static char **curshell, **shells, *strings;
 static char **initshells (void) __THROW;
 
@@ -78,9 +70,11 @@ void
 endusershell()
 {
 
-	free(shells);
+	if (shells != NULL)
+		free(shells);
 	shells = NULL;
-	free(strings);
+	if (strings != NULL)
+		free(strings);
 	strings = NULL;
 	curshell = NULL;
 }
@@ -98,39 +92,40 @@ initshells()
 	register char **sp, *cp;
 	register FILE *fp;
 	struct stat64 statb;
-	size_t flen;
+	int flen;
 
-	free(shells);
+	if (shells != NULL)
+		free(shells);
 	shells = NULL;
-	free(strings);
+	if (strings != NULL)
+		free(strings);
 	strings = NULL;
 	if ((fp = fopen(_PATH_SHELLS, "rc")) == NULL)
-		goto init_okshells_noclose;
+		return (char **) okshells;
 	if (fstat64(fileno(fp), &statb) == -1) {
-	init_okshells:
 		(void)fclose(fp);
-	init_okshells_noclose:
-		okshells[0] = _PATH_BSHELL;
-		okshells[1] = _PATH_CSHELL;
 		return (char **) okshells;
 	}
-	if (statb.st_size > ~(size_t)0 / sizeof (char *) * 3)
-		goto init_okshells;
-	if ((strings = malloc(statb.st_size + 2)) == NULL)
-		goto init_okshells;
-	shells = malloc(statb.st_size / 3 * sizeof (char *));
+	if ((strings = malloc((u_int)statb.st_size + 1)) == NULL) {
+		(void)fclose(fp);
+		return (char **) okshells;
+	}
+	shells = calloc((unsigned)statb.st_size / 3, sizeof (char *));
 	if (shells == NULL) {
+		(void)fclose(fp);
 		free(strings);
 		strings = NULL;
-		goto init_okshells;
+		return (char **) okshells;
 	}
+	/* No threads using this stream.  */
+	__fsetlocking (fp, FSETLOCKING_BYCALLER);
 	sp = shells;
 	cp = strings;
-	flen = statb.st_size + 2;
+	flen = statb.st_size;
 	while (fgets_unlocked(cp, flen - (cp - strings), fp) != NULL) {
 		while (*cp != '#' && *cp != '/' && *cp != '\0')
 			cp++;
-		if (*cp == '#' || *cp == '\0' || cp[1] == '\0')
+		if (*cp == '#' || *cp == '\0')
 			continue;
 		*sp++ = cp;
 		while (!isspace(*cp) && *cp != '#' && *cp != '\0')

@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -20,14 +20,13 @@ subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
-		   dlmopen dlfcn
-routines	:= $(patsubst %,s%,$(filter-out dlfcn,$(libdl-routines)))
+		   dlmopen
+routines	:= $(patsubst %,s%,$(libdl-routines))
 elide-routines.os := $(routines)
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
 		   modcxaatexit.c modstatic.c modstatic2.c \
-		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c bug-atexit1-lib.c \
-		   bug-atexit2-lib.c
+		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c
 
 extra-libs-others := libdl
 
@@ -35,21 +34,19 @@ include ../Makeconfig
 
 ifeq ($(versioning),yes)
 libdl-routines	+= dlopenold
-libdl-shared-only-routines := dlopenold dlfcn
+libdl-shared-only-routines := dlopenold
 endif
 
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
-	bug-dlopen1 bug-dlsym1 tst-dlinfo bug-atexit1 bug-atexit2 \
-	bug-atexit3
+	bug-dlopen1 bug-dlsym1 tst-dlinfo
 ifeq (yes,$(have-protected))
 tests += tstatexit
 endif
 endif
 modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
 		errmsg1mod modatexit modcxaatexit \
-		bug-dlsym1-lib1 bug-dlsym1-lib2 bug-atexit1-lib \
-		bug-atexit2-lib bug-atexit3-lib
+		bug-dlsym1-lib1 bug-dlsym1-lib2
 
 failtestmod.so-no-z-defs = yes
 glreflib2.so-no-z-defs = yes
@@ -63,12 +60,16 @@ tststatic-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
 tststatic2-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
 endif
 
-extra-test-objs += $(modules-names:=.os)
+extra-objs += $(modules-names:=.os)
 generated := $(modules-names:=.so)
 
 include ../Rules
 
+LDFLAGS-dl.so = -Wl,-dynamic-linker,$(slibdir)/$(rtld-installed-name)
+
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
+$(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
+	$(build-module)
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -126,22 +127,6 @@ $(objpfx)bug-dlsym1-lib1.so: $(objpfx)bug-dlsym1-lib2.so \
 $(objpfx)bug-dlsym1-lib2.so: $(common-objpfx)libc.so \
 			     $(common-objpfx)libc_nonshared.a
 
-$(objpfx)bug-atexit1: $(libdl)
-$(objpfx)bug-atexit1.out: $(objpfx)bug-atexit1-lib.so
-$(objpfx)bug-atexit1-lib.so: $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a
-
-$(objpfx)bug-atexit2: $(libdl)
-$(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
-$(objpfx)bug-atexit2-lib.so: $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a
-
-LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh $(common-objpfx)elf/ld.so \
-			    $(common-objpfx)libc_nonshared.a
-$(objpfx)bug-atexit3: $(libdl)
-$(objpfx)bug-atexit3.out: $(objpfx)bug-atexit3-lib.so
-$(objpfx)bug-atexit3-lib.so: $(common-objpfx)libc.so \
-			     $(common-objpfx)libc_nonshared.a
 
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.

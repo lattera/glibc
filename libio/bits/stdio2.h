@@ -1,5 +1,5 @@
 /* Checking macros for stdio functions.
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ extern int __vsnprintf_chk (char *__restrict __s, size_t __n, int __flag,
   __builtin___vsnprintf_chk (str, len, __USE_FORTIFY_LEVEL - 1, __bos (str), \
 			     fmt, ap)
 
-#endif
+#endif			     
 
 #if __USE_FORTIFY_LEVEL > 1
 
@@ -61,67 +61,18 @@ extern int __vfprintf_chk (FILE *__restrict __stream, int __flag,
 extern int __vprintf_chk (int __flag, __const char *__restrict __format,
 			  _G_va_list __ap);
 
-# if __GNUC_PREREQ (4, 0)
-#  define printf(...) \
+# define printf(...) \
   __printf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
-#  define fprintf(stream, ...) \
+# define fprintf(stream, ...) \
   __fprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
-#  define vprintf(format, ap) \
+# define vprintf(format, ap) \
   __vprintf_chk (__USE_FORTIFY_LEVEL - 1, format, ap)
-#  define vfprintf(stream, format, ap) \
+# define vfprintf(stream, format, ap) \
   __vfprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, format, ap)
-# else
-#  define printf(...) \
-  __builtin___printf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
-#  define fprintf(stream, ...) \
-  __builtin___fprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
-#  define vprintf(format, ap) \
-  __builtin___vprintf_chk (__USE_FORTIFY_LEVEL - 1, format, ap)
-#  define vfprintf(stream, format, ap) \
-  __builtin___vfprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, format, ap)
-# endif
 
 #endif
 
-extern char *__gets_chk (char *__str, size_t) __wur;
-extern char *__REDIRECT (__gets_alias, (char *__str), gets) __wur;
-
-extern __always_inline __wur char *
-gets (char *__str)
-{
-  if (__bos (__str) != (size_t) -1)
-    return __gets_chk (__str, __bos (__str));
-  return __gets_alias (__str);
-}
-
-extern char *__fgets_chk (char *__restrict __s, size_t __size, int __n,
-			  FILE *__restrict __stream) __wur;
-extern char *__REDIRECT (__fgets_alias,
-			 (char *__restrict __s, int __n,
-			  FILE *__restrict __stream), fgets) __wur;
-
-extern __always_inline __wur char *
-fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-{
-  if (__bos (__s) != (size_t) -1
-      && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
-    return __fgets_chk (__s, __bos (__s), __n, __stream);
-  return __fgets_alias (__s, __n, __stream);
-}
-
-#ifdef __USE_GNU
-extern char *__fgets_unlocked_chk (char *__restrict __s, size_t __size,
-				   int __n, FILE *__restrict __stream) __wur;
-extern char *__REDIRECT (__fgets_unlocked_alias,
-			 (char *__restrict __s, int __n,
-			  FILE *__restrict __stream), fgets_unlocked) __wur;
-
-extern __always_inline __wur char *
-fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
-{
-  if (__bos (__s) != (size_t) -1
-      && (!__builtin_constant_p (__n) || (size_t) __n > __bos (__s)))
-    return __fgets_unlocked_chk (__s, __bos (__s), __n, __stream);
-  return __fgets_unlocked_alias (__s, __n, __stream);
-}
-#endif
+extern char *__gets_chk (char *__str, size_t);
+#define gets(__str) \
+  ((__bos (__str) == (size_t) -1)				\
+   ? (gets) (__str) : __gets_chk (__str, __bos (__str)))

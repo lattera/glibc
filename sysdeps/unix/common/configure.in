@@ -1,0 +1,21 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+
+if test -z "$inhibit_glue"; then
+
+# Find out what this system calls `sys_siglist'.
+AC_CHECK_SYMBOL(sys_siglist)
+AC_CHECK_SYMBOL(_sys_siglist)
+
+# Find out the name of the table the system's <ctype.h> uses for character
+# classification.  This is used by sysdeps/unix/common/glue-ctype.c.
+AC_MSG_CHECKING(ctype array name for glue)
+AC_CACHE_VAL(libc_cv_ctype_glue, [dnl
+for ctype in _ctype_ __ctype_ __ctype _ctype__ _ctype _locp; do
+AC_TRY_LINK([#include <ctype.h>],
+	    [$ctype[13];],
+	    [libc_cv_ctype_glue="$ctype"; break])
+done])
+AC_MSG_RESULT($libc_cv_ctype_glue)
+AC_DEFINE_UNQUOTED(HAVE_`echo $libc_cv_ctype_glue | tr '[a-z]' '[A-Z]'`)
+
+fi

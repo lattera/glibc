@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1997,2001,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,9 @@
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
 
+/* XXX should be __recv ? */
 ssize_t
-__recv (fd, buf, n, flags)
+recv (fd, buf, n, flags)
      int fd;
      void *buf;
      size_t n;
@@ -61,4 +62,3 @@ __recv (fd, buf, n, flags)
 
   return nread;
 }
-weak_alias (__recv, recv)

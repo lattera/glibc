@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,9 @@
 #
 subdir	:= stdlib
 
-headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h			      \
-	   monetary.h bits/monetary-ldbl.h				      \
-	   inttypes.h stdint.h bits/wordsize.h				      \
-	   errno.h sys/errno.h bits/errno.h				      \
-	   ucontext.h sys/ucontext.h					      \
-	   alloca.h fmtmsg.h
+headers	:= stdlib.h alloca.h monetary.h fmtmsg.h ucontext.h sys/ucontext.h    \
+	   inttypes.h stdint.h bits/wordsize.h bits/wchar.h		      \
+	   errno.h sys/errno.h bits/errno.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \
@@ -64,17 +61,10 @@ distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh   \
 test-srcs	:= tst-fmtmsg
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
-		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
-		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
-		   test-a64l tst-qsort tst-system testmb2 bug-strtod2	    \
-		   tst-atof1 tst-atof2 tst-strtod2 tst-strtod3 tst-rand48-2 \
-		   tst-makecontext tst-strtod4
+		   tst-xpg-basename tst-random tst-bsearch tst-limits	    \
+		   tst-rand48 bug-strtod tst-setcontext test-a64l tst-qsort \
+		   tst-system testmb2
 
-include ../Makeconfig
-
-ifeq ($(build-shared),yes)
-tests		+= tst-putenv
-endif
 
 # Several mpn functions from GNU MP are used by the strtod function.
 mpn-routines := inlines add_n addmul_1 cmp divmod_1 divrem udiv_qrnnd \
@@ -85,19 +75,17 @@ routines := $(strip $(routines) $(mpn-routines))	\
 	    dbl2mpn ldbl2mpn				\
 	    mpn2flt mpn2dbl mpn2ldbl
 aux += fpioconst mp_clz_tab
-distribute := $(distribute) $(mpn-headers) fpioconst.h tst-putenvmod.c
+distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h
 
-tests-extras += tst-putenvmod
-extra-test-objs += tst-putenvmod.os
-
-generated += isomac isomac.out tst-putenvmod.so
+generated += isomac isomac.out
 
 CFLAGS-bsearch.c = $(uses-callbacks)
 CFLAGS-msort.c = $(uses-callbacks)
 CFLAGS-qsort.c = $(uses-callbacks)
 CFLAGS-system.c = -fexceptions
-CFLAGS-system.os = -fomit-frame-pointer
 CFLAGS-fmtmsg.c = -fexceptions
+
+include ../Makeconfig
 
 ifneq (,$(filter %REENTRANT, $(defines)))
 CFLAGS-strfmon.c = -D_IO_MTSAFE_IO
@@ -117,8 +105,6 @@ include ../Rules
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 
 tst-strtod-ENV = LOCPATH=$(common-objpfx)localedata
-tst-strtod3-ENV = LOCPATH=$(common-objpfx)localedata
-tst-strtod4-ENV = LOCPATH=$(common-objpfx)localedata
 testmb2-ENV = LOCPATH=$(common-objpfx)localedata
 
 # Run a test on the header files we use.
@@ -130,7 +116,7 @@ endif
 
 $(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)'  \
-	'-I../include $(+sysdep-includes) $(sysincludes) -I..' > $<.out
+	'-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $<.out
 
 isomac-CFLAGS = -O
 $(objpfx)isomac: isomac.c
@@ -138,9 +124,3 @@ $(objpfx)isomac: isomac.c
 
 $(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)stdlib/
-
-$(objpfx)tst-putenv: $(objpfx)tst-putenvmod.so
-
-$(objpfx)tst-putenvmod.so: $(objpfx)tst-putenvmod.os
-	$(build-module)
-CFLAGS-tst-putenvmod.c = -DNOT_IN_libc=1

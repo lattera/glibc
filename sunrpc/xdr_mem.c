@@ -177,15 +177,13 @@ xdrmem_setpos (xdrs, pos)
 {
   caddr_t newaddr = xdrs->x_base + pos;
   caddr_t lastaddr = xdrs->x_private + xdrs->x_handy;
-  size_t handy = lastaddr - newaddr;
 
-  if (newaddr > lastaddr
-      || newaddr < xdrs->x_base
-      || handy != (u_int) handy)
+  if ((long) newaddr > (long) lastaddr
+      || (UINT_MAX < LONG_MAX
+	  && (long) UINT_MAX < (long) lastaddr - (long) newaddr))
     return FALSE;
-
   xdrs->x_private = newaddr;
-  xdrs->x_handy = (u_int) handy;
+  xdrs->x_handy = (long) lastaddr - (long) newaddr;
   return TRUE;
 }
 

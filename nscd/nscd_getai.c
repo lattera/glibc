@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -34,7 +34,7 @@ extern int __nss_not_use_nscd_hosts;
 
 
 /* We use the mapping from nscd_gethst.  */
-libc_locked_map_ptr (extern, __hst_map_handle) attribute_hidden;
+libc_locked_map_ptr (extern, __hst_map_handle);
 
 
 int
@@ -42,7 +42,6 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 {
   size_t keylen = strlen (key) + 1;
   int gc_cycle;
-  int nretries = 0;
 
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
@@ -51,53 +50,49 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 			       &gc_cycle);
 
  retry:;
+  const ai_response_header *ai_resp = NULL;
   struct nscd_ai_result *resultbuf = NULL;
   const char *recend = (const char *) ~UINTMAX_C (0);
   char *respdata = NULL;
   int retval = -1;
   int sock = -1;
-  ai_response_header ai_resp;
 
   if (mapped != NO_MAPPING)
     {
-      struct datahead *found = __nscd_cache_search (GETAI, key, keylen,
-						    mapped);
+      const struct datahead *found = __nscd_cache_search (GETAI, key, keylen,
+							  mapped);
       if (found != NULL)
 	{
-	  respdata = (char *) (&found->data[0].aidata + 1);
-	  ai_resp = found->data[0].aidata;
+	  ai_resp = &found->data[0].aidata;
+	  respdata = (char *) (ai_resp + 1);
 	  recend = (const char *) found->data + found->recsize;
-	  /* Now check if we can trust ai_resp fields.  If GC is
-	     in progress, it can contain anything.  */
-	  if (mapped->head->gc_cycle != gc_cycle)
-	    {
-	      retval = -2;
-	      goto out;
-	    }
 	}
     }
 
   /* If we do not have the cache mapped, try to get the data over the
      socket.  */
-  if (respdata == NULL)
+  ai_response_header ai_resp_mem;
+  if (ai_resp == NULL)
     {
-      sock = __nscd_open_socket (key, keylen, GETAI, &ai_resp,
-				 sizeof (ai_resp));
+      sock = __nscd_open_socket (key, keylen, GETAI, &ai_resp_mem,
+				 sizeof (ai_resp_mem));
       if (sock == -1)
 	{
-	  /* nscd not running or wrong version.  */
+	  /* nscd not running or wrong version or hosts caching disabled.  */
 	  __nss_not_use_nscd_hosts = 1;
 	  goto out;
 	}
+
+      ai_resp = &ai_resp_mem;
     }
 
-  if (ai_resp.found == 1)
+  if (ai_resp->found == 1)
     {
-      size_t datalen = ai_resp.naddrs + ai_resp.addrslen + ai_resp.canonlen;
+      size_t datalen = ai_resp->naddrs + ai_resp->addrslen + ai_resp->canonlen;
 
-      /* This check really only affects the case where the data
+      /* This check is really only affects the case where the data
 	 comes from the mapped cache.  */
-      if (respdata + datalen > recend)
+      if ((char *) (ai_resp + 1) + datalen > recend)
 	{
 	  assert (sock == -1);
 	  goto out;
@@ -113,10 +108,10 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 	}
 
       /* Set up the data structure, including pointers.  */
-      resultbuf->naddrs = ai_resp.naddrs;
+      resultbuf->naddrs = ai_resp->naddrs;
       resultbuf->addrs = (char *) (resultbuf + 1);
-      resultbuf->family = (uint8_t *) (resultbuf->addrs + ai_resp.addrslen);
-      if (ai_resp.canonlen != 0)
+      resultbuf->family = (uint8_t *) (resultbuf->addrs + ai_resp->addrslen);
+      if (ai_resp->canonlen != 0)
 	resultbuf->canon = (char *) (resultbuf->family + resultbuf->naddrs);
       else
 	resultbuf->canon = NULL;
@@ -124,7 +119,8 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
       if (respdata == NULL)
 	{
 	  /* Read the data from the socket.  */
-	  if ((size_t) __readall (sock, resultbuf + 1, datalen) == datalen)
+	  if ((size_t) TEMP_FAILURE_RETRY (__read (sock, resultbuf + 1,
+						   datalen)) == datalen)
 	    {
 	      retval = 0;
 	      *result = resultbuf;
@@ -142,13 +138,10 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 
 	  /* Try to detect corrupt databases.  */
 	  if (resultbuf->canon != NULL
-	      && resultbuf->canon[ai_resp.canonlen - 1] != '\0')
+	      && resultbuf->canon[ai_resp->canonlen - 1] != '\0')
 	    /* We cannot use the database.  */
 	    {
-	      if (mapped->head->gc_cycle != gc_cycle)
-		retval = -2;
-	      else
-		free (resultbuf);
+	      free (resultbuf);
 	      goto out_close;
 	    }
 
@@ -158,15 +151,8 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
     }
   else
     {
-      if (__builtin_expect (ai_resp.found == -1, 0))
-	{
-	  /* The daemon does not cache this database.  */
-	  __nss_not_use_nscd_hosts = 1;
-	  goto out_close;
-	}
-
       /* Store the error number.  */
-      *h_errnop = ai_resp.error;
+      *h_errnop = ai_resp->error;
 
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
@@ -178,25 +164,22 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
-  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0)
+  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0 && retval != -1)
     {
       /* When we come here this means there has been a GC cycle while we
 	 were looking for the data.  This means the data might have been
 	 inconsistent.  Retry if possible.  */
-      if ((gc_cycle & 1) != 0 || ++nretries == 5 || retval == -1)
+      if ((gc_cycle & 1) != 0)
 	{
 	  /* nscd is just running gc now.  Disable using the mapping.  */
-	  if (atomic_decrement_val (&mapped->counter) == 0)
-	    __nscd_unmap (mapped);
+	  __nscd_unmap (mapped);
 	  mapped = NO_MAPPING;
 	}
 
-      if (retval != -1)
-	{
-	  *result = NULL;
-	  free (resultbuf);
-	  goto retry;
-	}
+      *result = NULL;
+      free (resultbuf);
+
+      goto retry;
     }
 
   return retval;

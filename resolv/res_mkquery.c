@@ -124,6 +124,10 @@ res_nmkquery(res_state statp,
 	   incremented by one after the initial randomization which
 	   still predictable if the application does multiple
 	   requests.  */
+#if 0
+	hp->id = htons(++statp->id);
+#else
+	hp->id = htons(statp->id);
 	int randombits;
 	do
 	  {
@@ -137,7 +141,7 @@ res_nmkquery(res_state statp,
 	  }
 	while ((randombits & 0xffff) == 0);
 	statp->id = (statp->id + randombits) & 0xffff;
-	hp->id = statp->id;
+#endif
 	hp->opcode = op;
 	hp->rd = (statp->options & RES_RECURSE) != 0;
 	hp->rcode = NOERROR;
@@ -151,36 +155,38 @@ res_nmkquery(res_state statp,
 	 * perform opcode specific processing
 	 */
 	switch (op) {
+	case QUERY:	/*FALLTHROUGH*/
 	case NS_NOTIFY_OP:
-		if ((buflen -= QFIXEDSZ + (data == NULL ? 0 : RRFIXEDSZ)) < 0)
-			return (-1);
-		goto compose;
-
-	case QUERY:
 		if ((buflen -= QFIXEDSZ) < 0)
 			return (-1);
-	compose:
 		if ((n = dn_comp(dname, cp, buflen, dnptrs, lastdnptr)) < 0)
 			return (-1);
 		cp += n;
 		buflen -= n;
-		NS_PUT16 (type, cp);
-		NS_PUT16 (class, cp);
+		__putshort(type, cp);
+		cp += INT16SZ;
+		__putshort(class, cp);
+		cp += INT16SZ;
 		hp->qdcount = htons(1);
 		if (op == QUERY || data == NULL)
 			break;
 		/*
 		 * Make an additional record for completion domain.
 		 */
+		buflen -= RRFIXEDSZ;
 		n = dn_comp((char *)data, cp, buflen, dnptrs, lastdnptr);
-		if (__builtin_expect (n < 0, 0))
+		if (n < 0)
 			return (-1);
 		cp += n;
 		buflen -= n;
-		NS_PUT16 (T_NULL, cp);
-		NS_PUT16 (class, cp);
-		NS_PUT32 (0, cp);
-		NS_PUT16 (0, cp);
+		__putshort(T_NULL, cp);
+		cp += INT16SZ;
+		__putshort(class, cp);
+		cp += INT16SZ;
+		__putlong(0, cp);
+		cp += INT32SZ;
+		__putshort(0, cp);
+		cp += INT16SZ;
 		hp->arcount = htons(1);
 		break;
 
@@ -188,13 +194,17 @@ res_nmkquery(res_state statp,
 		/*
 		 * Initialize answer section
 		 */
-		if (__builtin_expect (buflen < 1 + RRFIXEDSZ + datalen, 0))
+		if (buflen < 1 + RRFIXEDSZ + datalen)
 			return (-1);
 		*cp++ = '\0';	/* no domain name */
-		NS_PUT16 (type, cp);
-		NS_PUT16 (class, cp);
-		NS_PUT32 (0, cp);
-		NS_PUT16 (datalen, cp);
+		__putshort(type, cp);
+		cp += INT16SZ;
+		__putshort(class, cp);
+		cp += INT16SZ;
+		__putlong(0, cp);
+		cp += INT32SZ;
+		__putshort(datalen, cp);
+		cp += INT16SZ;
 		if (datalen) {
 			memcpy(cp, data, datalen);
 			cp += datalen;

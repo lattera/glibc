@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,24 +45,11 @@ static const struct intel_02_cache_info
     { 0x29, _SC_LEVEL3_CACHE_SIZE, 4194304, 8, 64 },
     { 0x2c, _SC_LEVEL1_DCACHE_SIZE, 32768, 8, 64 },
     { 0x30, _SC_LEVEL1_ICACHE_SIZE, 32768, 8, 64 },
-    { 0x39, _SC_LEVEL2_CACHE_SIZE, 131072, 4, 64 },
-    { 0x3a, _SC_LEVEL2_CACHE_SIZE, 196608, 6, 64 },
-    { 0x3b, _SC_LEVEL2_CACHE_SIZE, 131072, 2, 64 },
-    { 0x3c, _SC_LEVEL2_CACHE_SIZE, 262144, 4, 64 },
-    { 0x3d, _SC_LEVEL2_CACHE_SIZE, 393216, 6, 64 },
-    { 0x3e, _SC_LEVEL2_CACHE_SIZE, 524288, 4, 64 },
     { 0x41, _SC_LEVEL2_CACHE_SIZE, 131072, 4, 32 },
     { 0x42, _SC_LEVEL2_CACHE_SIZE, 262144, 4, 32 },
     { 0x43, _SC_LEVEL2_CACHE_SIZE, 524288, 4, 32 },
     { 0x44, _SC_LEVEL2_CACHE_SIZE, 1048576, 4, 32 },
     { 0x45, _SC_LEVEL2_CACHE_SIZE, 2097152, 4, 32 },
-    { 0x46, _SC_LEVEL3_CACHE_SIZE, 4194304, 4, 64 },
-    { 0x47, _SC_LEVEL3_CACHE_SIZE, 8388608, 8, 64 },
-    { 0x49, _SC_LEVEL2_CACHE_SIZE, 4194304, 16, 64 },
-    { 0x4a, _SC_LEVEL3_CACHE_SIZE, 6291456, 12, 64 },
-    { 0x4b, _SC_LEVEL3_CACHE_SIZE, 8388608, 16, 64 },
-    { 0x4c, _SC_LEVEL3_CACHE_SIZE, 12582912, 12, 64 },
-    { 0x4d, _SC_LEVEL3_CACHE_SIZE, 16777216, 16, 64 },
     { 0x60, _SC_LEVEL1_DCACHE_SIZE, 16384, 8, 64 },
     { 0x66, _SC_LEVEL1_DCACHE_SIZE, 8192, 4, 64 },
     { 0x67, _SC_LEVEL1_DCACHE_SIZE, 16384, 4, 64 },
@@ -73,7 +60,6 @@ static const struct intel_02_cache_info
     { 0x7b, _SC_LEVEL2_CACHE_SIZE, 524288, 8, 64 },
     { 0x7c, _SC_LEVEL2_CACHE_SIZE, 1048576, 8, 64 },
     { 0x7d, _SC_LEVEL2_CACHE_SIZE, 2097152, 8, 64 },
-    { 0x7f, _SC_LEVEL2_CACHE_SIZE, 524288, 2, 64 },
     { 0x82, _SC_LEVEL2_CACHE_SIZE, 262144, 8, 32 },
     { 0x83, _SC_LEVEL2_CACHE_SIZE, 524288, 8, 32 },
     { 0x84, _SC_LEVEL2_CACHE_SIZE, 1048576, 8, 32 },
@@ -101,7 +87,6 @@ intel_02_known_compare (const void *p1, const void *p2)
 
 
 static long int
-__attribute__ ((noinline))
 intel_check_word (int name, unsigned int value, bool *has_level_2,
 		  bool *no_level_2_or_3)
 {
@@ -128,33 +113,6 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	}
       else
 	{
-	  if (byte == 0x49 && folded_name == _SC_LEVEL3_CACHE_SIZE)
-	    {
-	      /* Intel reused this value.  For family 15, model 6 it
-		 specifies the 3rd level cache.  Otherwise the 2nd
-		 level cache.  */
-	      unsigned int eax;
-	      unsigned int ebx;
-	      unsigned int ecx;
-	      unsigned int edx;
-	      asm volatile ("xchgl %%ebx, %1; cpuid; xchgl %%ebx, %1"
-			    : "=a" (eax), "=r" (ebx), "=c" (ecx), "=d" (edx)
-			    : "0" (1));
-
-	      unsigned int family = ((eax >> 20) & 0xff) + ((eax >> 8) & 0xf);
-	      unsigned int model = ((((eax >>16) & 0xf) << 4)
-				    + ((eax >> 4) & 0xf));
-	      if (family == 15 && model == 6)
-		{
-		  /* The level 3 cache is encoded for this model like
-		     the level 2 cache is for other models.  Pretend
-		     the caller asked for the level 2 cache.  */
-		  name = (_SC_LEVEL2_CACHE_SIZE
-			  + (name - _SC_LEVEL3_CACHE_SIZE));
-		  folded_name = _SC_LEVEL3_CACHE_SIZE;
-		}
-	    }
-
 	  struct intel_02_cache_info *found;
 	  struct intel_02_cache_info search;
 
@@ -191,7 +149,7 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 }
 
 
-static long int __attribute__ ((noinline))
+static long int
 handle_intel (int name, unsigned int maxidx)
 {
   assert (maxidx >= 2);
@@ -248,7 +206,7 @@ handle_intel (int name, unsigned int maxidx)
 }
 
 
-static long int __attribute__ ((noinline))
+static long int
 handle_amd (int name)
 {
   unsigned int eax;
@@ -321,6 +279,12 @@ handle_amd (int name)
 long int
 __sysconf (int name)
 {
+  if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
+    {
+      /* XXX Test whether TSC is usable.  */
+      return 200112L;
+    }
+
   /* We only handle the cache information here (for now).  */
   if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_LINESIZE)
     return linux_sysconf (name);

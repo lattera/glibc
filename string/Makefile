@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2000,2001,2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -52,9 +52,8 @@ strop-tests	:= memchr memcmp memcpy memmove mempcpy memset memccpy	\
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strlen stratcliff tst-svc tst-inlcall		\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\
-		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
-		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
-		   bug-envz1 tst-strxfrm2
+		   tst-strtok tst-strxfrm bug-strcoll1			\
+		   $(addprefix test-,$(strop-tests))
 distribute	:= memcopy.h pagecopy.h tst-svc.expect test-string.h
 
 
@@ -64,14 +63,11 @@ tester-ENV = LANGUAGE=C
 inl-tester-ENV = LANGUAGE=C
 noinl-tester-ENV = LANGUAGE=C
 tst-strxfrm-ENV = LOCPATH=$(common-objpfx)localedata
-tst-strxfrm2-ENV = LOCPATH=$(common-objpfx)localedata
 bug-strcoll1-ENV = LOCPATH=$(common-objpfx)localedata
-CFLAGS-inl-tester.c = -fno-builtin
 CFLAGS-noinl-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
 CFLAGS-test-ffs.c = -fno-builtin
-CFLAGS-tst-inlcall.c = -fno-builtin
 
 ifeq ($(cross-compiling),no)
 tests: $(objpfx)tst-svc.out

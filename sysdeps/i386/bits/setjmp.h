@@ -1,5 +1,4 @@
-/* Copyright (C) 1997,1998,2000,2001,2003,2005,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +24,23 @@
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
+#if defined __USE_MISC || defined _ASM
+# define JB_BX	0
+# define JB_SI	1
+# define JB_DI	2
+# define JB_BP	3
+# define JB_SP	4
+# define JB_PC	5
+# define JB_SIZE 24
+#endif
+
 #ifndef	_ASM
 typedef int __jmp_buf[6];
 #endif
+
+/* Test if longjmp to JMPBUF would unwind the frame
+   containing a local variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(jmpbuf, address) \
+  ((void *) (address) < (void *) (jmpbuf)[JB_SP])
 
 #endif	/* bits/setjmp.h */

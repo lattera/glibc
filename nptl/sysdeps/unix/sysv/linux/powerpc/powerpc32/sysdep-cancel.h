@@ -1,5 +1,5 @@
 /* Cancellable system call stubs.  Linux/PowerPC version.
-   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>, 2003.
 
@@ -15,8 +15,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
-   02110-1301 USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <sysdep.h>
 #include <tls.h>
@@ -30,6 +30,7 @@
 # define PSEUDO(name, syscall_name, args)				\
   .section ".text";							\
   ENTRY (name)								\
+    cfi_startproc;							\
     SINGLE_THREAD_P;							\
     bne- .Lpseudo_cancel;						\
   .type __##syscall_name##_nocancel,@function;				\
@@ -44,7 +45,6 @@
     mflr 9;								\
     stw 9,52(1);							\
     cfi_offset (lr, 4);							\
-    CGOTSETUP;								\
     DOCARGS_##args;	/* save syscall args around CENABLE.  */	\
     CENABLE;								\
     stw 3,16(1);	/* store CENABLE return value (MASK).  */	\
@@ -58,10 +58,10 @@
     lwz 4,52(1);							\
     lwz 0,12(1);	/* restore CR/R3. */				\
     lwz 3,8(1);								\
-    CGOTRESTORE;							\
     mtlr 4;								\
     mtcr 0;								\
-    addi 1,1,48;
+    addi 1,1,48;							\
+    cfi_endproc;
 
 # define DOCARGS_0
 # define UNDOCARGS_0
@@ -84,30 +84,15 @@
 # define DOCARGS_6	stw 8,40(1); DOCARGS_5
 # define UNDOCARGS_6	lwz 8,40(1); UNDOCARGS_5
 
-# define CGOTSETUP
-# define CGOTRESTORE
-
 # ifdef IS_IN_libpthread
-#  define CENABLE	bl __pthread_enable_asynccancel@local
-#  define CDISABLE	bl __pthread_disable_asynccancel@local
+#  define CENABLE	bl JUMPTARGET(__pthread_enable_asynccancel)
+#  define CDISABLE	bl JUMPTARGET(__pthread_disable_asynccancel)
 # elif !defined NOT_IN_libc
-#  define CENABLE	bl __libc_enable_asynccancel@local
-#  define CDISABLE	bl __libc_disable_asynccancel@local
+#  define CENABLE	bl JUMPTARGET(__libc_enable_asynccancel)
+#  define CDISABLE	bl JUMPTARGET(__libc_disable_asynccancel)
 # elif defined IS_IN_librt
 #  define CENABLE	bl JUMPTARGET(__librt_enable_asynccancel)
 #  define CDISABLE	bl JUMPTARGET(__librt_disable_asynccancel)
-#  if defined HAVE_AS_REL16 && defined PIC
-#   undef CGOTSETUP
-#   define CGOTSETUP							\
-    bcl 20,31,1f;							\
- 1: stw 30,44(1);							\
-    mflr 30;								\
-    addis 30,30,_GLOBAL_OFFSET_TABLE-1b@ha;				\
-    addi 30,30,_GLOBAL_OFFSET_TABLE-1b@l
-#   undef CGOTRESTORE
-#   define CGOTRESTORE							\
-    lwz 30,44(1)
-#  endif
 # else
 #  error Unsupported library
 # endif
@@ -127,10 +112,4 @@
 # define SINGLE_THREAD_P (1)
 # define NO_CANCELLATION 1
 
-#endif
-
-#ifndef __ASSEMBLER__
-# define RTLD_SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.multiple_threads) == 0, 1)
 #endif

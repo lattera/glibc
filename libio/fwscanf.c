@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1999, 2000, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <libioP.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <wchar.h>
@@ -24,7 +23,7 @@
 /* Read formatted input from STREAM according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-__fwscanf (FILE *stream, const wchar_t *format, ...)
+fwscanf (FILE *stream, const wchar_t *format, ...)
 {
   va_list arg;
   int done;
@@ -35,4 +34,3 @@ __fwscanf (FILE *stream, const wchar_t *format, ...)
 
   return done;
 }
-ldbl_strong_alias (__fwscanf, fwscanf)

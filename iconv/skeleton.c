@@ -1,5 +1,5 @@
 /* Skeleton for a conversion module.
-   Copyright (C) 1998-2002, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -57,6 +57,13 @@
                         minimal/maximal number of bytes needed on output
                         of one round through the TO_LOOP.  Defaults
                         to MIN_NEEDED_FROM and MAX_NEEDED_FROM, respectively.
+
+     DEFINE_DIRECTION_OBJECTS
+			two objects will be defined to be used when the
+			`gconv' function must only distinguish two
+			directions.  This is implied by DEFINE_INIT.
+			If this macro is not defined the following
+			macro must be available.
 
      FROM_DIRECTION	this macro is supposed to return a value != 0
 			if we convert from the current character set,
@@ -144,22 +151,21 @@
 # include <dlfcn.h>
 #endif
 
-#include <sysdep.h>
-
 #ifndef DL_CALL_FCT
 # define DL_CALL_FCT(fct, args) fct args
 #endif
 
 /* The direction objects.  */
-#if DEFINE_INIT
+#if DEFINE_DIRECTION_OBJECTS || DEFINE_INIT
+static int from_object;
+static int to_object;
+
 # ifndef FROM_DIRECTION
-#  define FROM_DIRECTION_VAL NULL
-#  define TO_DIRECTION_VAL ((void *) ~((uintptr_t) 0))
-#  define FROM_DIRECTION (step->__data == FROM_DIRECTION_VAL)
+#  define FROM_DIRECTION (step->__data == &from_object)
 # endif
 #else
 # ifndef FROM_DIRECTION
-#  error "FROM_DIRECTION must be provided if non-default init is used"
+#  error "FROM_DIRECTION must be provided if direction objects are not used"
 # endif
 #endif
 
@@ -323,7 +329,7 @@ gconv_init (struct __gconv_step *step)
   /* Determine which direction.  */
   if (strcmp (step->__from_name, CHARSET_NAME) == 0)
     {
-      step->__data = FROM_DIRECTION_VAL;
+      step->__data = &from_object;
 
       step->__min_needed_from = FROM_LOOP_MIN_NEEDED_FROM;
       step->__max_needed_from = FROM_LOOP_MAX_NEEDED_FROM;
@@ -336,7 +342,7 @@ gconv_init (struct __gconv_step *step)
     }
   else if (__builtin_expect (strcmp (step->__to_name, CHARSET_NAME), 0) == 0)
     {
-      step->__data = TO_DIRECTION_VAL;
+      step->__data = &to_object;
 
       step->__min_needed_from = TO_LOOP_MIN_NEEDED_FROM;
       step->__max_needed_from = TO_LOOP_MAX_NEEDED_FROM;
@@ -395,17 +401,10 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 {
   struct __gconv_step *next_step = step + 1;
   struct __gconv_step_data *next_data = data + 1;
-  __gconv_fct fct = NULL;
+  __gconv_fct fct;
   int status;
 
-  if ((data->__flags & __GCONV_IS_LAST) == 0)
-    {
-      fct = next_step->__fct;
-#ifdef PTR_DEMANGLE
-      if (next_step->__shlib_handle != NULL)
-	PTR_DEMANGLE (fct);
-#endif
-    }
+  fct = (data->__flags & __GCONV_IS_LAST) ? NULL : next_step->__fct;
 
   /* If the function is called with no input this means we have to reset
      to the initial state.  The possibly partly converted input is
@@ -682,8 +681,8 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #ifdef RESET_INPUT_BUFFER
 		      RESET_INPUT_BUFFER;
 #else
-		      /* We have a problem in one of the functions below.
-			 Undo the conversion upto the error point.  */
+		      /* We have a problem with the in on of the functions
+			 below.  Undo the conversion upto the error point.  */
 		      size_t nstatus;
 
 		      /* Reload the pointers.  */
@@ -781,11 +780,12 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	  STORE_REST
 # else
+	  size_t cnt;
+
 	  /* Make sure the remaining bytes fit into the state objects
              buffer.  */
 	  assert (inend - *inptrp < 4);
 
-	  size_t cnt;
 	  for (cnt = 0; *inptrp < inend; ++cnt)
 	    data->__statep->__value.__wchb[cnt] = *(*inptrp)++;
 	  data->__statep->__count &= ~7;
@@ -815,6 +815,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #undef TO_LOOP_MAX_NEEDED_FROM
 #undef TO_LOOP_MIN_NEEDED_TO
 #undef TO_LOOP_MAX_NEEDED_TO
+#undef DEFINE_DIRECTION_OBJECTS
 #undef FROM_DIRECTION
 #undef EMIT_SHIFT_TO_INIT
 #undef FROM_LOOP

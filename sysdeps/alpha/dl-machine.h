@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -33,9 +33,6 @@
    where the dynamic linker should not map anything.  */
 #define ELF_MACHINE_USER_ADDRESS_MASK	0x120000000UL
 
-/* Translate a processor specific dynamic tag to the index in l_info array.  */
-#define DT_ALPHA(x) (DT_ALPHA_##x - DT_LOPROC + DT_NUM)
-
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (const Elf64_Ehdr *ehdr)
@@ -58,76 +55,243 @@ elf_machine_dynamic (void)
 }
 
 /* Return the run-time load address of the shared object.  */
-
 static inline Elf64_Addr
 elf_machine_load_address (void)
 {
-  /* This relies on the compiler using gp-relative addresses for static symbols.  */
-  static void *dot = &dot;
-  return (void *)&dot - dot;
+  /* NOTE: While it is generally unfriendly to put data in the text
+     segment, it is only slightly less so when the "data" is an
+     instruction.  While we don't have to worry about GLD just yet, an
+     optimizing linker might decide that our "data" is an unreachable
+     instruction and throw it away -- with the right switches, DEC's
+     linker will do this.  What ought to happen is we should add
+     something to GAS to allow us access to the new GPREL_HI32/LO32
+     relocation types stolen from OSF/1 3.0.  */
+  /* This code relies on the fact that BRADDR relocations do not
+     appear in dynamic relocation tables.  Not that that would be very
+     useful anyway -- br/bsr has a 4MB range and the shared libraries
+     are usually many many terabytes away.  */
+
+  Elf64_Addr dot;
+  long int zero_disp;
+
+  asm("br %0, 1f\n"
+      "0:\n\t"
+      "br $0, 2f\n"
+      "1:\n\t"
+      ".section\t.data\n"
+      "2:\n\t"
+      ".quad 0b\n\t"
+      ".previous"
+      : "=r"(dot));
+
+  zero_disp = *(int *) dot;
+  zero_disp = (zero_disp << 43) >> 41;
+
+  return dot - *(Elf64_Addr *) (dot + 4 + zero_disp);
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int
-elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
+elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
-  extern char _dl_runtime_resolve_new[] attribute_hidden;
-  extern char _dl_runtime_profile_new[] attribute_hidden;
-  extern char _dl_runtime_resolve_old[] attribute_hidden;
-  extern char _dl_runtime_profile_old[] attribute_hidden;
+  Elf64_Addr plt;
+  extern void _dl_runtime_resolve (void);
+  extern void _dl_runtime_profile (void);
 
-  struct pltgot {
-    char *resolve;
-    struct link_map *link;
-  };
-
-  struct pltgot *pg;
-  long secureplt;
-  char *resolve;
-
-  if (map->l_info[DT_JMPREL] == 0 || !lazy)
-    return lazy;
-
-  /* Check to see if we're using the read-only plt form.  */
-  secureplt = map->l_info[DT_ALPHA(PLTRO)] != 0;
-
-  /* If the binary uses the read-only secure plt format, PG points to
-     the .got.plt section, which is the right place for ld.so to place
-     its hooks.  Otherwise, PG is currently pointing at the start of
-     the plt; the hooks go at offset 16.  */
-  pg = (struct pltgot *) D_PTR (map, l_info[DT_PLTGOT]);
-  pg += !secureplt;
-
-  /* This function will be called to perform the relocation.  They're
-     not declared as functions to convince the compiler to use gp
-     relative relocations for them.  */
-  if (secureplt)
-    resolve = _dl_runtime_resolve_new;
-  else
-    resolve = _dl_runtime_resolve_old;
-
-  if (__builtin_expect (profile, 0))
+  if (l->l_info[DT_JMPREL] && lazy)
     {
-      if (secureplt)
-	resolve = _dl_runtime_profile_new;
-      else
-	resolve = _dl_runtime_profile_old;
+      /* The GOT entries for the functions in the PLT have not been
+	 filled in yet.  Their initial contents are directed to the
+	 PLT which arranges for the dynamic linker to be called.  */
+      plt = D_PTR (l, l_info[DT_PLTGOT]);
 
-      if (GLRO(dl_profile) && _dl_name_match_p (GLRO(dl_profile), map))
+      /* This function will be called to perform the relocation.  */
+      if (!profile)
+        *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_resolve;
+      else
 	{
-	  /* This is the object we are looking for.  Say that we really
-	     want profiling and the timers are started.  */
-	  GL(dl_profile_map) = map;
+	  *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_profile;
+
+	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	    {
+	      /* This is the object we are looking for.  Say that we really
+		 want profiling and the timers are started.  */
+	      GL(dl_profile_map) = l;
+	    }
+	}
+
+      /* Identify this shared object */
+      *(Elf64_Addr *)(plt + 24) = (Elf64_Addr) l;
+
+      /* If the first instruction of the plt entry is not
+	 "br $28, plt0", we have to reinitialize .plt for lazy relocation.  */
+      if (*(unsigned int *)(plt + 32) != 0xc39ffff7)
+	{
+	  unsigned int val = 0xc39ffff7;
+	  unsigned int *slot, *end;
+	  const Elf64_Rela *rela = (const Elf64_Rela *)
+				   D_PTR (l, l_info[DT_JMPREL]);
+	  Elf64_Addr l_addr = l->l_addr;
+
+	  /* br t12,.+4; ldq t12,12(t12); nop; jmp t12,(t12),.+4 */
+	  *(unsigned long *)plt = 0xa77b000cc3600000;
+	  *(unsigned long *)(plt + 8) = 0x6b7b000047ff041f;
+	  slot = (unsigned int *)(plt + 32);
+	  end = (unsigned int *)(plt + 32
+				 + l->l_info[DT_PLTRELSZ]->d_un.d_val / 2);
+	  while (slot < end)
+	    {
+	      /* br at,.plt+0 */
+	      *slot = val;
+	      *(Elf64_Addr *) rela->r_offset = (Elf64_Addr) slot - l_addr;
+	      val -= 3;
+	      slot += 3;
+	      ++rela;
+	    }
 	}
     }
 
-  pg->resolve = resolve;
-  pg->link = map;
-
   return lazy;
 }
+
+/* This code is used in dl-runtime.c to call the `fixup' function
+   and then redirect to the address it returns.  */
+#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name, IMB)	\
+  extern void tramp_name (void);				\
+  asm ( "\
+	.globl " #tramp_name "					\n\
+	.ent " #tramp_name "					\n\
+" #tramp_name ":						\n\
+	lda	$sp, -44*8($sp)					\n\
+	.frame	$sp, 44*8, $26					\n\
+	/* Preserve all integer registers that C normally	\n\
+	   doesn't.  */						\n\
+	stq	$26, 0*8($sp)					\n\
+	stq	$0, 1*8($sp)					\n\
+	stq	$1, 2*8($sp)					\n\
+	stq	$2, 3*8($sp)					\n\
+	stq	$3, 4*8($sp)					\n\
+	stq	$4, 5*8($sp)					\n\
+	stq	$5, 6*8($sp)					\n\
+	stq	$6, 7*8($sp)					\n\
+	stq	$7, 8*8($sp)					\n\
+	stq	$8, 9*8($sp)					\n\
+	stq	$16, 10*8($sp)					\n\
+	stq	$17, 11*8($sp)					\n\
+	stq	$18, 12*8($sp)					\n\
+	stq	$19, 13*8($sp)					\n\
+	stq	$20, 14*8($sp)					\n\
+	stq	$21, 15*8($sp)					\n\
+	stq	$22, 16*8($sp)					\n\
+	stq	$23, 17*8($sp)					\n\
+	stq	$24, 18*8($sp)					\n\
+	stq	$25, 19*8($sp)					\n\
+	stq	$29, 20*8($sp)					\n\
+	stt	$f0, 21*8($sp)					\n\
+	stt	$f1, 22*8($sp)					\n\
+	stt	$f10, 23*8($sp)					\n\
+	stt	$f11, 24*8($sp)					\n\
+	stt	$f12, 25*8($sp)					\n\
+	stt	$f13, 26*8($sp)					\n\
+	stt	$f14, 27*8($sp)					\n\
+	stt	$f15, 28*8($sp)					\n\
+	stt	$f16, 29*8($sp)					\n\
+	stt	$f17, 30*8($sp)					\n\
+	stt	$f18, 31*8($sp)					\n\
+	stt	$f19, 32*8($sp)					\n\
+	stt	$f20, 33*8($sp)					\n\
+	stt	$f21, 34*8($sp)					\n\
+	stt	$f22, 35*8($sp)					\n\
+	stt	$f23, 36*8($sp)					\n\
+	stt	$f24, 37*8($sp)					\n\
+	stt	$f25, 38*8($sp)					\n\
+	stt	$f26, 39*8($sp)					\n\
+	stt	$f27, 40*8($sp)					\n\
+	stt	$f28, 41*8($sp)					\n\
+	stt	$f29, 42*8($sp)					\n\
+	stt	$f30, 43*8($sp)					\n\
+	.mask	0x27ff01ff, -44*8				\n\
+	.fmask	0xfffffc03, -(44-21)*8				\n\
+	/* Set up our $gp */					\n\
+	br	$gp, .+4					\n\
+	ldgp	$gp, 0($gp)					\n\
+	.prologue 0						\n\
+	/* Set up the arguments for fixup: */			\n\
+	/* $16 = link_map out of plt0 */			\n\
+	/* $17 = offset of reloc entry = ($28 - $27 - 20) /12 * 24 */\n\
+	/* $18 = return address */				\n\
+	subq	$28, $27, $17					\n\
+	ldq	$16, 8($27)					\n\
+	subq	$17, 20, $17					\n\
+	mov	$26, $18					\n\
+	addq	$17, $17, $17					\n\
+	/* Do the fixup */					\n\
+	bsr	$26, " #fixup_name "	!samegp			\n\
+	/* Move the destination address into position.  */	\n\
+	mov	$0, $27						\n\
+	/* Restore program registers.  */			\n\
+	ldq	$26, 0*8($sp)					\n\
+	ldq	$0, 1*8($sp)					\n\
+	ldq	$1, 2*8($sp)					\n\
+	ldq	$2, 3*8($sp)					\n\
+	ldq	$3, 4*8($sp)					\n\
+	ldq	$4, 5*8($sp)					\n\
+	ldq	$5, 6*8($sp)					\n\
+	ldq	$6, 7*8($sp)					\n\
+	ldq	$7, 8*8($sp)					\n\
+	ldq	$8, 9*8($sp)					\n\
+	ldq	$16, 10*8($sp)					\n\
+	ldq	$17, 11*8($sp)					\n\
+	ldq	$18, 12*8($sp)					\n\
+	ldq	$19, 13*8($sp)					\n\
+	ldq	$20, 14*8($sp)					\n\
+	ldq	$21, 15*8($sp)					\n\
+	ldq	$22, 16*8($sp)					\n\
+	ldq	$23, 17*8($sp)					\n\
+	ldq	$24, 18*8($sp)					\n\
+	ldq	$25, 19*8($sp)					\n\
+	ldq	$29, 20*8($sp)					\n\
+	ldt	$f0, 21*8($sp)					\n\
+	ldt	$f1, 22*8($sp)					\n\
+	ldt	$f10, 23*8($sp)					\n\
+	ldt	$f11, 24*8($sp)					\n\
+	ldt	$f12, 25*8($sp)					\n\
+	ldt	$f13, 26*8($sp)					\n\
+	ldt	$f14, 27*8($sp)					\n\
+	ldt	$f15, 28*8($sp)					\n\
+	ldt	$f16, 29*8($sp)					\n\
+	ldt	$f17, 30*8($sp)					\n\
+	ldt	$f18, 31*8($sp)					\n\
+	ldt	$f19, 32*8($sp)					\n\
+	ldt	$f20, 33*8($sp)					\n\
+	ldt	$f21, 34*8($sp)					\n\
+	ldt	$f22, 35*8($sp)					\n\
+	ldt	$f23, 36*8($sp)					\n\
+	ldt	$f24, 37*8($sp)					\n\
+	ldt	$f25, 38*8($sp)					\n\
+	ldt	$f26, 39*8($sp)					\n\
+	ldt	$f27, 40*8($sp)					\n\
+	ldt	$f28, 41*8($sp)					\n\
+	ldt	$f29, 42*8($sp)					\n\
+	ldt	$f30, 43*8($sp)					\n\
+	/* Flush the Icache after having modified the .plt code.  */\n\
+	" #IMB "						\n\
+	/* Clean up and turn control to the destination */	\n\
+	lda	$sp, 44*8($sp)					\n\
+	jmp	$31, ($27)					\n\
+	.end " #tramp_name)
+
+#ifndef PROF
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
+  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup, imb);	\
+  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup, /* nop */);
+#else
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
+  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup, imb);	\
+  strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
+#endif
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -252,7 +416,7 @@ $fixup_stack:							\n\
 /* Fix up the instructions of a PLT entry to invoke the function
    rather than the dynamic linker.  */
 static inline Elf64_Addr
-elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+elf_machine_fixup_plt (struct link_map *l, lookup_t t,
 		       const Elf64_Rela *reloc,
 		       Elf64_Addr *got_addr, Elf64_Addr value)
 {
@@ -263,16 +427,10 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
   /* Store the value we are going to load.  */
   *got_addr = value;
 
-  /* If this binary uses the read-only secure plt format, we're done.  */
-  if (map->l_info[DT_ALPHA(PLTRO)])
-    return value;
-
-  /* Otherwise we have to modify the plt entry in place to do the branch.  */
-
   /* Recover the PLT entry address by calculating reloc's index into the
      .rela.plt, and finding that entry in the .plt.  */
-  rela_plt = (const Elf64_Rela *) D_PTR (map, l_info[DT_JMPREL]);
-  plte = (Elf64_Word *) (D_PTR (map, l_info[DT_PLTGOT]) + 32);
+  rela_plt = (void *) D_PTR (l, l_info[DT_JMPREL]);
+  plte = (void *) (D_PTR (l, l_info[DT_PLTGOT]) + 32);
   plte += 3 * (reloc - rela_plt);
 
   /* Find the displacement from the plt entry to the function.  */
@@ -343,18 +501,13 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
   return value + reloc->r_addend;
 }
 
-/* Names of the architecture-specific auditing callback functions.  */
-#define ARCH_LA_PLTENTER	alpha_gnu_pltenter
-#define ARCH_LA_PLTEXIT		alpha_gnu_pltexit
-
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE_MAP
+#ifdef RESOLVE
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 auto inline void
-__attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
@@ -402,16 +555,26 @@ elf_machine_rela (struct link_map *map,
       return;
   else
     {
-      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf64_Addr sym_value;
       Elf64_Addr sym_raw_value;
 
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       sym_raw_value = sym_value = reloc->r_addend;
-      if (sym_map)
+      if (sym)
 	{
 	  sym_raw_value += sym->st_value;
 	  sym_value = sym_raw_value + sym_map->l_addr;
 	}
+#else
+      Elf64_Addr loadbase = RESOLVE (&sym, version, r_type);
+      sym_raw_value = sym_value = reloc->r_addend;
+      if (sym)
+	{
+	  sym_raw_value += sym->st_value;
+	  sym_value = sym_raw_value + loadbase;
+	}
+#endif
 
       if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
@@ -483,7 +646,6 @@ elf_machine_rela (struct link_map *map,
 #define ELF_MACHINE_REL_RELATIVE 1
 
 auto inline void
-__attribute__ ((always_inline))
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -500,7 +662,6 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 }
 
 auto inline void
-__attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
@@ -519,4 +680,4 @@ elf_machine_lazy_rel (struct link_map *map,
     _dl_reloc_bad_type (map, r_type, 1);
 }
 
-#endif /* RESOLVE_MAP */
+#endif /* RESOLVE */

@@ -1,0 +1,352 @@
+This file describes how to make a threaded X11R6.
+
+You need the source-code of XFree-3.2. I used the sources of X11R6.1
+(files: xc-1.tar.gz xc-2.tar.gz xc-3.tar.gz) and the patches to
+XFree-3.2 (files: README.X11.patch R6.1pl1-3.2.diff.gz cfont32.tgz).
+
+Untar the xc-?.tar.gz files in a directory called XF3.2 and apply
+the XFree-3.2 patches as described in README.X11.patch or use the
+whole XFree86 source.
+
+Now apply the thread patch with
+
+patch -p0 < XF3.2.xc.diff
+
+Go to the XF3.2/xc directory and make the whole thing:
+nice make World >& world.log &
+tail -f world.log
+
+Wait a few hours or interrupt the process after the shared libs
+are made. The shared libs are:
+
+XF3.2/xc/lib/ICE/libICE.so.6.0*
+XF3.2/xc/lib/PEX5/libPEX5.so.6.0*
+XF3.2/xc/lib/SM/libSM.so.6.0*
+XF3.2/xc/lib/X11/libX11.so.6.1*
+XF3.2/xc/lib/XIE/libXIE.so.6.0*
+XF3.2/xc/lib/XThrStub/libXThrStub.so.6.0*
+XF3.2/xc/lib/Xaw/libXaw.so.6.1*
+XF3.2/xc/lib/Xext/libXext.so.6.1*
+XF3.2/xc/lib/Xi/libXi.so.6.0*
+XF3.2/xc/lib/Xmu/libXmu.so.6.0*
+XF3.2/xc/lib/Xt/libXt.so.6.0*
+XF3.2/xc/lib/Xtst/libXtst.so.6.1*
+
+(The Program dga didn't compile, but I have not check out why.)
+
+Now you can copy the resulting libs   
+
+cp XF3.2/xc/lib/*/*.so.?.? /usr/X11R6/lib/
+
+and create some links
+
+cd /usr/X11R6/lib/
+ln -s libXThrStub.so.6.0 libXThrStub.so.6
+ln -s libXThrStub.so.6 libXThrStub.so
+
+or use make install (not tested, and needs new configuration).
+
+It is possible with the libXThrSub to compile X11 programs without linking
+libpthread to them and not necessary to recompile already installed
+unthreaded X11 programs, because libXThrSub keeps the dynamic linker quit.
+On the other hand you can link libpthread to a X11 program to use threads.
+
+I used linux 2.0.23 and libc 5.4.7 .
+
+Hans-Helmut Bühmann     hans@expmech.ing.tu-bs.de
+
+----------------------------------------------------------------------------
+
+XF3.2.xc.diff:
+-----------------------------------------------------------------------------
+diff -u --recursive XF3.2.orig/xc/config/cf/linux.cf XF3.2/xc/config/cf/linux.cf
+--- XF3.2.orig/xc/config/cf/linux.cf	Sun Nov 10 17:05:30 1996
++++ XF3.2/xc/config/cf/linux.cf	Sun Nov 10 16:30:55 1996
+@@ -61,6 +61,14 @@
+ #define HasSnprintf		YES
+ #endif
+ 
++#define HasPosixThreads         YES
++#define ThreadedX               YES
++#define BuildThreadStubLibrary	YES
++#define NeedUIThrStubs		YES
++#define HasThreadSafeAPI        NO
++#define SystemMTDefines         -D_REENTRANT
++#define ThreadsLibraries        -lpthread
++
+ #define AvoidNullMakeCommand	YES
+ #define StripInstalledPrograms	YES
+ #define CompressAllFonts	YES
+@@ -158,7 +166,7 @@
+ #define LdPostLib		/* Never needed */
+ 
+ #ifdef i386Architecture
+-#define OptimizedCDebugFlags	DefaultGcc2i386Opt -m486
++#define OptimizedCDebugFlags	DefaultGcc2i386Opt -m486 -pipe
+ #define StandardDefines		-Dlinux -D__i386__ -D_POSIX_SOURCE \
+ 				-D_BSD_SOURCE -D_SVID_SOURCE -DX_LOCALE
+ #define XawI18nDefines		-DUSE_XWCHAR_STRING -DUSE_XMBTOWC
+diff -u --recursive XF3.2.orig/xc/config/cf/lnxLib.tmpl XF3.2/xc/config/cf/lnxLib.tmpl
+--- XF3.2.orig/xc/config/cf/lnxLib.tmpl	Sun Nov 10 17:05:30 1996
++++ XF3.2/xc/config/cf/lnxLib.tmpl	Sat Nov  9 14:52:39 1996
+@@ -19,7 +19,7 @@
+ 
+ #define CplusplusLibC
+ 
+-#define SharedX11Reqs
++#define SharedX11Reqs  	-L$(BUILDLIBDIR) -lXThrStub 
+ #define SharedOldXReqs	$(LDPRELIB) $(XLIBONLY)
+ #define SharedXtReqs	$(LDPRELIB) $(XLIBONLY) $(SMLIB) $(ICELIB)
+ #define SharedXawReqs	$(LDPRELIB) $(XMULIB) $(XTOOLLIB) $(XLIB)
+diff -u --recursive XF3.2.orig/xc/include/Xthreads.h XF3.2/xc/include/Xthreads.h
+--- XF3.2.orig/xc/include/Xthreads.h	Thu Dec  7 02:19:09 1995
++++ XF3.2/xc/include/Xthreads.h	Sat Nov  9 01:04:55 1996
+@@ -229,12 +229,12 @@
+ #define xcondition_wait(c,m) pthread_cond_wait(c,m)
+ #define xcondition_signal(c) pthread_cond_signal(c)
+ #define xcondition_broadcast(c) pthread_cond_broadcast(c)
+-#ifdef _DECTHREADS_
++#if defined(_DECTHREADS_) || defined(linux)
+ static xthread_t _X_no_thread_id;
+ #define xthread_have_id(id) !pthread_equal(id, _X_no_thread_id)
+ #define xthread_clear_id(id) id = _X_no_thread_id
+ #define xthread_equal(id1,id2) pthread_equal(id1, id2)
+-#endif /* _DECTHREADS_ */
++#endif /* _DECTHREADS_ || linux */
+ #if _CMA_VENDOR_ == _CMA__IBM
+ #ifdef DEBUG			/* too much of a hack to enable normally */
+ /* see also cma__obj_set_name() */
+diff -u --recursive XF3.2.orig/xc/lib/X11/util/makekeys.c XF3.2/xc/lib/X11/util/makekeys.c
+--- XF3.2.orig/xc/lib/X11/util/makekeys.c	Mon Apr 18 02:22:22 1994
++++ XF3.2/xc/lib/X11/util/makekeys.c	Sat Nov  9 00:44:14 1996
+@@ -73,7 +73,7 @@
+     register char c;
+     int first;
+     int best_max_rehash;
+-    int best_z;
++    int best_z = 0;
+     int num_found;
+     KeySym val;
+ 
+diff -u --recursive XF3.2.orig/xc/lib/XThrStub/Imakefile XF3.2/xc/lib/XThrStub/Imakefile
+--- XF3.2.orig/xc/lib/XThrStub/Imakefile	Sun Nov 10 17:08:12 1996
++++ XF3.2/xc/lib/XThrStub/Imakefile	Sat Nov  9 19:04:51 1996
+@@ -25,7 +25,7 @@
+       DEFINES = $(ALLOC_DEFINES)
+      INCLUDES = 
+          SRCS = $(STUBSRCS)
+-         OBJS = $(STUBOBJS
++         OBJS = $(STUBOBJS)
+      LINTLIBS = $(LINTXLIB)
+ 
+ #include <Library.tmpl>
+diff -u --recursive XF3.2.orig/xc/lib/XThrStub/UIThrStubs.c XF3.2/xc/lib/XThrStub/UIThrStubs.c
+--- XF3.2.orig/xc/lib/XThrStub/UIThrStubs.c	Sun Nov 10 17:08:12 1996
++++ XF3.2/xc/lib/XThrStub/UIThrStubs.c	Sun Nov 10 15:14:55 1996
+@@ -37,16 +37,43 @@
+  * specificies the thread library on the link line.
+  */
+ 
++#if defined(linux)
++#include <pthread.h>
++#else
+ #include <thread.h>
+ #include <synch.h>
++#endif
+ 
++#if defined(linux)
++static pthread_t no_thread_id;
++#endif /* defined(linux) */
++
++#if defined(linux)
++#pragma weak pthread_self = _Xthr_self_stub_
++pthread_t 
++_Xthr_self_stub_()
++{
++    return(no_thread_id);
++}
++#else /* defined(linux) */
+ #pragma weak thr_self = _Xthr_self_stub_
+ thread_t 
+ _Xthr_self_stub_()
+ {
+     return((thread_t)0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak pthread_mutex_init = _Xmutex_init_stub_
++int 
++_Xmutex_init_stub_(m, a)
++    pthread_mutex_t *m;
++    __const pthread_mutexattr_t *a;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak mutex_init = _Xmutex_init_stub_
+ int 
+ _Xmutex_init_stub_(m, t, a)
+@@ -56,7 +83,17 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak pthread_mutex_destroy = _Xmutex_destroy_stub_
++int
++_Xmutex_destroy_stub_(m)
++    pthread_mutex_t *m;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak mutex_destroy = _Xmutex_destroy_stub_
+ int
+ _Xmutex_destroy_stub_(m)
+@@ -64,7 +101,17 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak pthread_mutex_lock = _Xmutex_lock_stub_
++int
++_Xmutex_lock_stub_(m)
++    pthread_mutex_t *m;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak mutex_lock = _Xmutex_lock_stub_
+ int
+ _Xmutex_lock_stub_(m)
+@@ -72,7 +119,17 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak pthread_mutex_unlock = _Xmutex_unlock_stub_
++int
++_Xmutex_unlock_stub_(m)
++    pthread_mutex_t *m;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak mutex_unlock = _Xmutex_unlock_stub_
+ int
+ _Xmutex_unlock_stub_(m)
+@@ -80,7 +137,18 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak  pthread_cond_init = _Xcond_init_stub_
++int 
++_Xcond_init_stub_(c, a)
++    pthread_cond_t *c;
++    __const pthread_condattr_t *a;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak cond_init = _Xcond_init_stub_
+ int 
+ _Xcond_init_stub_(c, t, a)
+@@ -90,7 +158,17 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak pthread_cond_destroy = _Xcond_destroy_stub_
++int
++_Xcond_destroy_stub_(c)
++    pthread_cond_t *c;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak cond_destroy = _Xcond_destroy_stub_
+ int
+ _Xcond_destroy_stub_(c)
+@@ -98,7 +176,18 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak pthread_cond_wait = _Xcond_wait_stub_
++int
++_Xcond_wait_stub_(c,m)
++    pthread_cond_t *c;
++    pthread_mutex_t *m;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak cond_wait = _Xcond_wait_stub_
+ int
+ _Xcond_wait_stub_(c,m)
+@@ -107,7 +196,17 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak pthread_cond_signal = _Xcond_signal_stub_
++int
++_Xcond_signal_stub_(c)
++    pthread_cond_t *c;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak cond_signal = _Xcond_signal_stub_
+ int
+ _Xcond_signal_stub_(c)
+@@ -115,7 +214,17 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
+ 
++#if defined(linux)
++#pragma weak pthread_cond_broadcast = _Xcond_broadcast_stub_
++int
++_Xcond_broadcast_stub_(c)
++    pthread_cond_t *c;
++{
++    return(0);
++}
++#else /* defined(linux) */
+ #pragma weak cond_broadcast = _Xcond_broadcast_stub_
+ int
+ _Xcond_broadcast_stub_(c)
+@@ -123,3 +232,15 @@
+ {
+     return(0);
+ }
++#endif /* defined(linux) */
++
++#if defined(linux)
++#pragma weak pthread_equal = _Xthr_equal_stub_
++int
++_Xthr_equal_stub_(t1, t2)
++    pthread_t t1;
++    pthread_t t2;
++{
++    return(1);
++}
++#endif /* defined(linux) */
+-------------------------------------------------------------------------

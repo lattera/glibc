@@ -39,20 +39,9 @@
 
 	.text
 	.align		4
-ENTRY(strchr)
-	andcc		%o1, 0xff, %o1
-	be		12f
-	 sll		%o1, 8, %o2
-	andcc		%o0, 3, %g0
-	or		%o1, %o2, %o2
-	sethi		%hi(0x80808080), %o4
-	sll		%o2, 16, %o3
-	be		13f
-	 or		%o3, %o2, %g2
-
-	ldub		[%o0], %g4
+10:	ldub		[%o0], %g4
 	cmp		%g4, %o1
-	be		11f
+	be		1f
 	 add		%o0, 1, %o0
 	cmp		%g4, 0
 	be		9f
@@ -61,7 +50,7 @@ ENTRY(strchr)
 	 or		%o4, %lo(0x80808080), %o3
 	ldub		[%o0], %g4
 	cmp		%g4, %o1
-	be		11f
+	be		1f
 	 add		%o0, 1, %o0
 	cmp		%g4, 0
 	be		9f
@@ -70,17 +59,27 @@ ENTRY(strchr)
 	 sethi		%hi(0x01010101), %o5
 	ldub		[%o0], %g4
 	cmp		%g4, %o1
-	be		11f
+	be		1f
 	 add		%o0, 1, %o0
 	cmp		%g4, 0
 	be		9f
 	 or		%o5, %lo(0x01010101), %o2
 	b		6f
 	 ld		[%o0], %g4
-11:	retl
+1:	retl
 	 sub		%o0, 1, %o0
 
-13:	or		%o4, %lo(0x80808080), %o3
+ENTRY(strchr)
+	andcc		%o1, 0xff, %o1
+	be		12f
+	 sll		%o1, 8, %o2
+	andcc		%o0, 3, %g0
+	or		%o1, %o2, %o2
+	sethi		%hi(0x80808080), %o4
+	sll		%o2, 16, %o3
+	bne		10b
+	 or		%o3, %o2, %g2
+	or		%o4, %lo(0x80808080), %o3
 4:	sethi		%hi(0x01010101), %o5
 5:	or		%o5, %lo(0x01010101), %o2
 7:	ld		[%o0], %g4
@@ -279,7 +278,7 @@ ENTRY(strrchr)
 	 mov		%o5, %o0
 END(strrchr)
 
-weak_alias (strchr, index)
-weak_alias (strrchr, rindex)
+weak_alias(strchr, index)
+weak_alias(strrchr, rindex)
 libc_hidden_builtin_def (strchr)
 libc_hidden_builtin_def (strrchr)

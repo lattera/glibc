@@ -38,13 +38,7 @@
 
 	.text
 	.align		4
-
-ENTRY(strcmp)
-	andcc		%o0, 3, %g0
-	be		13f
-	 sethi		%hi(0x80808080), %g1
-
-	ldub		[%o0], %o4
+10:	ldub		[%o0], %o4
 	add		%o0, 1, %o0
 	ldub		[%o1], %o5
 	cmp		%o4, 0
@@ -82,7 +76,11 @@ ENTRY(strcmp)
 2:	retl
 	 mov		%o4, %o0
 
-13:	or		%g1, %lo(0x80808080), %o3
+ENTRY(strcmp)
+	andcc		%o0, 3, %g0
+	bne		10b
+	 sethi		%hi(0x80808080), %g1
+	or		%g1, %lo(0x80808080), %o3
 4:	sethi		%hi(0x01010101), %g1
 5:	andcc		%o1, 3, %g2
 	bne		12f

@@ -74,6 +74,7 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
   caddr_t target = *addrp;
   u_int c;		/* the actual element count */
   bool_t stat = TRUE;
+  u_int nodesize;
 
   /* like strings, arrays are really counted arrays */
   if (!INTUSE(xdr_u_int) (xdrs, sizep))
@@ -89,6 +90,7 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
     {
       return FALSE;
     }
+  nodesize = c * elsize;
 
   /*
    * if we are deserializing, we may need to allocate an array.
@@ -100,12 +102,19 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
       case XDR_DECODE:
 	if (c == 0)
 	  return TRUE;
-	*addrp = target = calloc (c, elsize);
+	*addrp = target = mem_alloc (nodesize);
 	if (target == NULL)
 	  {
-	    (void) __fxprintf (NULL, "%s", _("xdr_array: out of memory\n"));
+#ifdef USE_IN_LIBIO
+	    if (_IO_fwide (stderr, 0) > 0)
+	      (void) __fwprintf (stderr, L"%s",
+				 _("xdr_array: out of memory\n"));
+	    else
+#endif
+	      (void) fputs (_("xdr_array: out of memory\n"), stderr);
 	    return FALSE;
 	  }
+	__bzero (target, nodesize);
 	break;
 
       case XDR_FREE:
@@ -128,7 +137,7 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
    */
   if (xdrs->x_op == XDR_FREE)
     {
-      mem_free (*addrp, c * elsize);
+      mem_free (*addrp, nodesize);
       *addrp = NULL;
     }
   return stat;

@@ -39,7 +39,7 @@ char *name2;
 void
 do_prepare (int argc, char *argv[])
 {
-  size_t test_dir_len;
+  char test_dir_len;
 
   test_dir_len = strlen (test_dir);
 

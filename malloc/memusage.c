@@ -1,5 +1,5 @@
 /* Profile heap and stack memory usage of running program.
-   Copyright (C) 1998-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -18,13 +18,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <atomic.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
 #include <signal.h>
-#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,7 +43,7 @@ static void (*freep) (void *);
 static void *(*mmapp) (void *, size_t, int, int, int, off_t);
 static void *(*mmap64p) (void *, size_t, int, int, int, off64_t);
 static int (*munmapp) (void *, size_t);
-static void *(*mremapp) (void *, size_t, size_t, int, void *);
+static void *(*mremapp) (void *, size_t, size_t, int);
 
 enum
 {
@@ -71,23 +69,24 @@ struct header
 #define MAGIC 0xfeedbeaf
 
 
-static memusage_cntr_t calls[idx_last];
-static memusage_cntr_t failed[idx_last];
-static memusage_size_t total[idx_last];
-static memusage_size_t grand_total;
-static memusage_cntr_t histogram[65536 / 16];
-static memusage_cntr_t large;
-static memusage_cntr_t calls_total;
-static memusage_cntr_t inplace;
-static memusage_cntr_t decreasing;
-static memusage_cntr_t realloc_free;
-static memusage_cntr_t inplace_mremap;
-static memusage_cntr_t decreasing_mremap;
-static memusage_size_t current_heap;
-static memusage_size_t peak_use[3];
-static __thread uintptr_t start_sp;
+static unsigned long int calls[idx_last];
+static unsigned long int failed[idx_last];
+static unsigned long long int total[idx_last];
+static unsigned long long int grand_total;
+static unsigned long int histogram[65536 / 16];
+static unsigned long int large;
+static unsigned long int calls_total;
+static unsigned long int inplace;
+static unsigned long int decreasing;
+static unsigned long int inplace_mremap;
+static unsigned long int decreasing_mremap;
+static long int current_use[2];
+static long int peak_use[3];
+static uintptr_t start_sp;
 
 /* A few macros to make the source more readable.  */
+#define current_heap	current_use[0]
+#define current_stack	current_use[1]
 #define peak_heap	peak_use[0]
 #define peak_stack	peak_use[1]
 #define peak_total	peak_use[2]
@@ -104,14 +103,14 @@ extern const char *__progname;
 
 struct entry
 {
-  uint64_t heap;
-  uint64_t stack;
+  size_t heap;
+  size_t stack;
   uint32_t time_low;
   uint32_t time_high;
 };
 
-static struct entry buffer[2 * DEFAULT_BUFFER_SIZE];
-static uatomic32_t buffer_cnt;
+static struct entry buffer[DEFAULT_BUFFER_SIZE];
+static size_t buffer_cnt;
 static struct entry first;
 
 
@@ -119,6 +118,8 @@ static struct entry first;
 static void
 update_data (struct header *result, size_t len, size_t old_len)
 {
+  long int total_use;
+
   if (result != NULL)
     {
       /* Record the information we need and mark the block using a
@@ -128,60 +129,38 @@ update_data (struct header *result, size_t len, size_t old_len)
     }
 
   /* Compute current heap usage and compare it with the maximum value.  */
-  memusage_size_t heap
-    = atomic_exchange_and_add (&current_heap, len - old_len) + len - old_len;
-  atomic_max (&peak_heap, heap);
+  current_heap += len - old_len;
+  if (current_heap > peak_heap)
+    peak_heap = current_heap;
 
-  /* Compute current stack usage and compare it with the maximum
-     value.  The base stack pointer might not be set if this is not
-     the main thread and it is the first call to any of these
-     functions.  */
-  if (__builtin_expect (!start_sp, 0))
-    start_sp = GETSP ();
-
-  uintptr_t sp = GETSP ();
+  /* Compute current stack usage and compare it with the maximum value.  */
 #ifdef STACK_GROWS_UPWARD
-  /* This can happen in threads where we didn't catch the thread's
-     stack early enough.  */
-  if (__builtin_expect (sp < start_sp, 0))
-    start_sp = sp;
-  size_t current_stack = sp - start_sp;
+  current_stack = GETSP () - start_sp;
 #else
-  /* This can happen in threads where we didn't catch the thread's
-     stack early enough.  */
-  if (__builtin_expect (sp > start_sp, 0))
-    start_sp = sp;
-  size_t current_stack = start_sp - sp;
+  current_stack = start_sp - GETSP ();
 #endif
-  atomic_max (&peak_stack, current_stack);
+  if (current_stack > peak_stack)
+    peak_stack = current_stack;
 
   /* Add up heap and stack usage and compare it with the maximum value.  */
-  atomic_max (&peak_total, heap + current_stack);
+  total_use = current_heap + current_stack;
+  if (total_use > peak_total)
+    peak_total = total_use;
 
   /* Store the value only if we are writing to a file.  */
   if (fd != -1)
     {
-      uatomic32_t idx = atomic_exchange_and_add (&buffer_cnt, 1);
-      if (idx >= 2 * buffer_size)
-	{
-	  /* We try to reset the counter to the correct range.  If
-	     this fails because of another thread increasing the
-	     counter it does not matter since that thread will take
-	     care of the correction.  */
-	  unsigned int reset = idx - 2 * buffer_size;
-	  atomic_compare_and_exchange_val_acq (&buffer_size, reset, idx);
-	  idx = reset;
-	}
-
-      buffer[idx].heap = current_heap;
-      buffer[idx].stack = current_stack;
-      GETTIME (buffer[idx].time_low, buffer[idx].time_high);
+      buffer[buffer_cnt].heap = current_heap;
+      buffer[buffer_cnt].stack = current_stack;
+      GETTIME (buffer[buffer_cnt].time_low, buffer[buffer_cnt].time_high);
+      ++buffer_cnt;
 
       /* Write out buffer if it is full.  */
-      if (idx + 1 == buffer_size)
-	write (fd, buffer, buffer_size * sizeof (struct entry));
-      else if (idx + 1 == 2 * buffer_size)
-	write (fd, &buffer[buffer_size], buffer_size * sizeof (struct entry));
+      if (buffer_cnt == buffer_size)
+	{
+	  write (fd, buffer, buffer_cnt * sizeof (struct entry));
+	  buffer_cnt = 0;
+	}
     }
 }
 
@@ -228,8 +207,8 @@ me (void)
   mmap64p =
     (void *(*) (void *, size_t, int, int, int, off64_t)) dlsym (RTLD_NEXT,
 								"mmap64");
-  mremapp = (void *(*) (void *, size_t, size_t, int, void *)) dlsym (RTLD_NEXT,
-								     "mremap");
+  mremapp = (void *(*) (void *, size_t, size_t, int)) dlsym (RTLD_NEXT,
+							     "mremap");
   munmapp = (int (*) (void *, size_t)) dlsym (RTLD_NEXT, "munmap");
   initialized = 1;
 
@@ -267,7 +246,6 @@ me (void)
 	      first.stack = 0;
 	      GETTIME (first.time_low, first.time_high);
 	      /* Write it two times since we need the starting and end time. */
-	      write (fd, &first, sizeof (first));
 	      write (fd, &first, sizeof (first));
 
 	      /* Determine the buffer size.  We use the default if the
@@ -339,24 +317,24 @@ malloc (size_t len)
     return (*mallocp) (len);
 
   /* Keep track of number of calls.  */
-  atomic_increment (&calls[idx_malloc]);
+  ++calls[idx_malloc];
   /* Keep track of total memory consumption for `malloc'.  */
-  atomic_add (&total[idx_malloc], len);
+  total[idx_malloc] += len;
   /* Keep track of total memory requirement.  */
-  atomic_add (&grand_total, len);
+  grand_total += len;
   /* Remember the size of the request.  */
   if (len < 65536)
-    atomic_increment (&histogram[len / 16]);
+    ++histogram[len / 16];
   else
-    atomic_increment (&large);
+    ++large;
   /* Total number of calls of any of the functions.  */
-  atomic_increment (&calls_total);
+  ++calls_total;
 
   /* Do the real work.  */
   result = (struct header *) (*mallocp) (len + sizeof (struct header));
   if (result == NULL)
     {
-      atomic_increment (&failed[idx_malloc]);
+      ++failed[idx_malloc];
       return NULL;
     }
 
@@ -405,53 +383,36 @@ realloc (void *old, size_t len)
     }
 
   /* Keep track of number of calls.  */
-  atomic_increment (&calls[idx_realloc]);
+  ++calls[idx_realloc];
   if (len > old_len)
     {
       /* Keep track of total memory consumption for `realloc'.  */
-      atomic_add (&total[idx_realloc], len - old_len);
+      total[idx_realloc] += len - old_len;
       /* Keep track of total memory requirement.  */
-      atomic_add (&grand_total, len - old_len);
+      grand_total += len - old_len;
     }
-
-  if (len == 0 && old != NULL)
-    {
-      /* Special case.  */
-      atomic_increment (&realloc_free);
-      /* Keep track of total memory freed using `free'.  */
-      atomic_add (&total[idx_free], real->length);
-
-      /* Update the allocation data and write out the records if necessary.  */
-      update_data (NULL, 0, old_len);
-
-      /* Do the real work.  */
-      (*freep) (real);
-
-      return NULL;
-    }
-
   /* Remember the size of the request.  */
   if (len < 65536)
-    atomic_increment (&histogram[len / 16]);
+    ++histogram[len / 16];
   else
-    atomic_increment (&large);
+    ++large;
   /* Total number of calls of any of the functions.  */
-  atomic_increment (&calls_total);
+  ++calls_total;
 
   /* Do the real work.  */
   result = (struct header *) (*reallocp) (real, len + sizeof (struct header));
   if (result == NULL)
     {
-      atomic_increment (&failed[idx_realloc]);
+      ++failed[idx_realloc];
       return NULL;
     }
 
   /* Record whether the reduction/increase happened in place.  */
   if (real == result)
-    atomic_increment (&inplace);
+    ++inplace;
   /* Was the buffer increased?  */
   if (old_len > len)
-    atomic_increment (&decreasing);
+    ++decreasing;
 
   /* Update the allocation data and write out the records if necessary.  */
   update_data (result, len, old_len);
@@ -482,16 +443,16 @@ calloc (size_t n, size_t len)
     return (*callocp) (n, len);
 
   /* Keep track of number of calls.  */
-  atomic_increment (&calls[idx_calloc]);
+  ++calls[idx_calloc];
   /* Keep track of total memory consumption for `calloc'.  */
-  atomic_add (&total[idx_calloc], size);
+  total[idx_calloc] += size;
   /* Keep track of total memory requirement.  */
-  atomic_add (&grand_total, size);
+  grand_total += size;
   /* Remember the size of the request.  */
   if (size < 65536)
-    atomic_increment (&histogram[size / 16]);
+    ++histogram[size / 16];
   else
-    atomic_increment (&large);
+    ++large;
   /* Total number of calls of any of the functions.  */
   ++calls_total;
 
@@ -499,7 +460,7 @@ calloc (size_t n, size_t len)
   result = (struct header *) (*mallocp) (size + sizeof (struct header));
   if (result == NULL)
     {
-      atomic_increment (&failed[idx_calloc]);
+      ++failed[idx_calloc];
       return NULL;
     }
 
@@ -536,7 +497,7 @@ free (void *ptr)
   /* `free (NULL)' has no effect.  */
   if (ptr == NULL)
     {
-      atomic_increment (&calls[idx_free]);
+      ++calls[idx_free];
       return;
     }
 
@@ -550,9 +511,9 @@ free (void *ptr)
     }
 
   /* Keep track of number of calls.  */
-  atomic_increment (&calls[idx_free]);
+  ++calls[idx_free];
   /* Keep track of total memory freed using `free'.  */
-  atomic_add (&total[idx_free], real->length);
+  total[idx_free] += real->length;
 
   /* Update the allocation data and write out the records if necessary.  */
   update_data (NULL, 0, real->length);
@@ -586,22 +547,22 @@ mmap (void *start, size_t len, int prot, int flags, int fd, off_t offset)
 		 ? idx_mmap_a : prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r);
 
       /* Keep track of number of calls.  */
-      atomic_increment (&calls[idx]);
+      ++calls[idx];
       /* Keep track of total memory consumption for `malloc'.  */
-      atomic_add (&total[idx], len);
+      total[idx] += len;
       /* Keep track of total memory requirement.  */
-      atomic_add (&grand_total, len);
+      grand_total += len;
       /* Remember the size of the request.  */
       if (len < 65536)
-	atomic_increment (&histogram[len / 16]);
+	++histogram[len / 16];
       else
-	atomic_increment (&large);
+	++large;
       /* Total number of calls of any of the functions.  */
-      atomic_increment (&calls_total);
+      ++calls_total;
 
       /* Check for failures.  */
       if (result == NULL)
-	atomic_increment (&failed[idx]);
+	++failed[idx];
       else if (idx == idx_mmap_w)
 	/* Update the allocation data and write out the records if
 	   necessary.  Note the first parameter is NULL which means
@@ -638,22 +599,22 @@ mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
 		 ? idx_mmap_a : prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r);
 
       /* Keep track of number of calls.  */
-      atomic_increment (&calls[idx]);
+      ++calls[idx];
       /* Keep track of total memory consumption for `malloc'.  */
-      atomic_add (&total[idx], len);
+      total[idx] += len;
       /* Keep track of total memory requirement.  */
-      atomic_add (&grand_total, len);
+      grand_total += len;
       /* Remember the size of the request.  */
       if (len < 65536)
-	atomic_increment (&histogram[len / 16]);
+	++histogram[len / 16];
       else
-	atomic_increment (&large);
+	++large;
       /* Total number of calls of any of the functions.  */
-      atomic_increment (&calls_total);
+      ++calls_total;
 
       /* Check for failures.  */
       if (result == NULL)
-	atomic_increment (&failed[idx]);
+	++failed[idx];
       else if (idx == idx_mmap_w)
 	/* Update the allocation data and write out the records if
 	   necessary.  Note the first parameter is NULL which means
@@ -669,14 +630,9 @@ mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
 /* `mmap' replacement.  We do not have to keep track of the sizesince
    `munmap' will get it as a parameter.  */
 void *
-mremap (void *start, size_t old_len, size_t len, int flags,  ...)
+mremap (void *start, size_t old_len, size_t len, int flags)
 {
   void *result = NULL;
-  va_list ap;
-
-  va_start (ap, flags);
-  void *newaddr = (flags & MREMAP_FIXED) ? va_arg (ap, void *) : NULL;
-  va_end (ap);
 
   /* Determine real implementation if not already happened.  */
   if (__builtin_expect (initialized <= 0, 0))
@@ -687,38 +643,38 @@ mremap (void *start, size_t old_len, size_t len, int flags,  ...)
     }
 
   /* Always get a block.  We don't need extra memory.  */
-  result = (*mremapp) (start, old_len, len, flags, newaddr);
+  result = (*mremapp) (start, old_len, len, flags);
 
   if (!not_me && trace_mmap)
     {
       /* Keep track of number of calls.  */
-      atomic_increment (&calls[idx_mremap]);
+      ++calls[idx_mremap];
       if (len > old_len)
 	{
 	  /* Keep track of total memory consumption for `malloc'.  */
-	  atomic_add (&total[idx_mremap], len - old_len);
+	  total[idx_mremap] += len - old_len;
 	  /* Keep track of total memory requirement.  */
-	  atomic_add (&grand_total, len - old_len);
+	  grand_total += len - old_len;
 	}
       /* Remember the size of the request.  */
       if (len < 65536)
-	atomic_increment (&histogram[len / 16]);
+	++histogram[len / 16];
       else
-	atomic_increment (&large);
+	++large;
       /* Total number of calls of any of the functions.  */
-      atomic_increment (&calls_total);
+      ++calls_total;
 
       /* Check for failures.  */
       if (result == NULL)
-	atomic_increment (&failed[idx_mremap]);
+	++failed[idx_mremap];
       else
 	{
 	  /* Record whether the reduction/increase happened in place.  */
 	  if (start == result)
-	    atomic_increment (&inplace_mremap);
+	    ++inplace_mremap;
 	  /* Was the buffer increased?  */
 	  if (old_len > len)
-	    atomic_increment (&decreasing_mremap);
+	    ++decreasing_mremap;
 
 	  /* Update the allocation data and write out the records if
 	     necessary.  Note the first parameter is NULL which means
@@ -752,19 +708,19 @@ munmap (void *start, size_t len)
   if (!not_me && trace_mmap)
     {
       /* Keep track of number of calls.  */
-      atomic_increment (&calls[idx_munmap]);
+      ++calls[idx_munmap];
 
       if (__builtin_expect (result == 0, 1))
 	{
 	  /* Keep track of total memory freed using `free'.  */
-	  atomic_add (&total[idx_munmap], len);
+	  total[idx_munmap] += len;
 
 	  /* Update the allocation data and write out the records if
 	     necessary.  */
 	  update_data (NULL, 0, len);
 	}
       else
-	atomic_increment (&failed[idx_munmap]);
+	++failed[idx_munmap];
     }
 
   return result;
@@ -789,12 +745,7 @@ dest (void)
   if (fd != -1)
     {
       /* Write the partially filled buffer.  */
-      if (buffer_cnt > buffer_size)
-	write (fd, buffer + buffer_size,
-	       (buffer_cnt - buffer_size) * sizeof (struct entry));
-      else
-	write (fd, buffer, buffer_cnt * sizeof (struct entry));
-
+      write (fd, buffer, buffer_cnt * sizeof (struct entry));
       /* Go back to the beginning of the file.  We allocated two records
 	 here when we opened the file.  */
       lseek (fd, 0, SEEK_SET);
@@ -818,58 +769,38 @@ dest (void)
 \e[01;32mMemory usage summary:\e[0;0m heap total: %llu, heap peak: %lu, stack peak: %lu\n\
 \e[04;34m         total calls   total memory   failed calls\e[0m\n\
 \e[00;34m malloc|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
-\e[00;34mrealloc|\e[0m %10lu   %12llu   %s%12lu\e[00;00m  (nomove:%ld, dec:%ld, free:%ld)\n\
+\e[00;34mrealloc|\e[0m %10lu   %12llu   %s%12lu\e[00;00m   (in place: %ld, dec: %ld)\n\
 \e[00;34m calloc|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34m   free|\e[0m %10lu   %12llu\n",
-	   (unsigned long long int) grand_total, (unsigned long int) peak_heap,
+	   grand_total, (unsigned long int) peak_heap,
 	   (unsigned long int) peak_stack,
-	   (unsigned long int) calls[idx_malloc],
-	   (unsigned long long int) total[idx_malloc],
-	   failed[idx_malloc] ? "\e[01;41m" : "",
-	   (unsigned long int) failed[idx_malloc],
-	   (unsigned long int) calls[idx_realloc],
-	   (unsigned long long int) total[idx_realloc],
-	   failed[idx_realloc] ? "\e[01;41m" : "",
-	   (unsigned long int) failed[idx_realloc],
-	   (unsigned long int) inplace,
-	   (unsigned long int) decreasing,
-	   (unsigned long int) realloc_free,
-	   (unsigned long int) calls[idx_calloc],
-	   (unsigned long long int) total[idx_calloc],
-	   failed[idx_calloc] ? "\e[01;41m" : "",
-	   (unsigned long int) failed[idx_calloc],
-	   (unsigned long int) calls[idx_free],
-	   (unsigned long long int) total[idx_free]);
+	   calls[idx_malloc], total[idx_malloc],
+	   failed[idx_malloc] ? "\e[01;41m" : "", failed[idx_malloc],
+	   calls[idx_realloc], total[idx_realloc],
+	   failed[idx_realloc] ? "\e[01;41m" : "", failed[idx_realloc],
+	   inplace, decreasing,
+	   calls[idx_calloc], total[idx_calloc],
+	   failed[idx_calloc] ? "\e[01;41m" : "", failed[idx_calloc],
+	   calls[idx_free], total[idx_free]);
 
   if (trace_mmap)
     fprintf (stderr, "\
 \e[00;34mmmap(r)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34mmmap(w)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34mmmap(a)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
-\e[00;34m mremap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m  (nomove: %ld, dec:%ld)\n\
+\e[00;34m mremap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m   (in place: %ld, dec: %ld)\n\
 \e[00;34m munmap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n",
-	     (unsigned long int) calls[idx_mmap_r],
-	     (unsigned long long int) total[idx_mmap_r],
-	     failed[idx_mmap_r] ? "\e[01;41m" : "",
-	     (unsigned long int) failed[idx_mmap_r],
-	     (unsigned long int) calls[idx_mmap_w],
-	     (unsigned long long int) total[idx_mmap_w],
-	     failed[idx_mmap_w] ? "\e[01;41m" : "",
-	     (unsigned long int) failed[idx_mmap_w],
-	     (unsigned long int) calls[idx_mmap_a],
-	     (unsigned long long int) total[idx_mmap_a],
-	     failed[idx_mmap_a] ? "\e[01;41m" : "",
-	     (unsigned long int) failed[idx_mmap_a],
-	     (unsigned long int) calls[idx_mremap],
-	     (unsigned long long int) total[idx_mremap],
-	     failed[idx_mremap] ? "\e[01;41m" : "",
-	     (unsigned long int) failed[idx_mremap],
-	     (unsigned long int) inplace_mremap,
-	     (unsigned long int) decreasing_mremap,
-	     (unsigned long int) calls[idx_munmap],
-	     (unsigned long long int) total[idx_munmap],
-	     failed[idx_munmap] ? "\e[01;41m" : "",
-	     (unsigned long int) failed[idx_munmap]);
+	     calls[idx_mmap_r], total[idx_mmap_r],
+	     failed[idx_mmap_r] ? "\e[01;41m" : "", failed[idx_mmap_r],
+	     calls[idx_mmap_w], total[idx_mmap_w],
+	     failed[idx_mmap_w] ? "\e[01;41m" : "", failed[idx_mmap_w],
+	     calls[idx_mmap_a], total[idx_mmap_a],
+	     failed[idx_mmap_a] ? "\e[01;41m" : "", failed[idx_mmap_a],
+	     calls[idx_mremap], total[idx_mremap],
+	     failed[idx_mremap] ? "\e[01;41m" : "", failed[idx_mremap],
+	     inplace_mremap, decreasing_mremap,
+	     calls[idx_munmap], total[idx_munmap],
+	     failed[idx_munmap] ? "\e[01;41m" : "", failed[idx_munmap]);
 
   /* Write out a histoogram of the sizes of the allocations.  */
   fprintf (stderr, "\e[01;32mHistogram for block sizes:\e[0;0m\n");
@@ -886,7 +817,7 @@ dest (void)
       {
 	percent = (histogram[cnt / 16] * 100) / calls_total;
 	fprintf (stderr, "%5d-%-5d%12lu ", cnt, cnt + 15,
-		 (unsigned long int) histogram[cnt / 16]);
+		 histogram[cnt / 16]);
 	if (percent == 0)
 	  fputs (" <1% \e[41;37m", stderr);
 	else
@@ -903,7 +834,7 @@ dest (void)
   if (large != 0)
     {
       percent = (large * 100) / calls_total;
-      fprintf (stderr, "   large   %12lu ", (unsigned long int) large);
+      fprintf (stderr, "   large   %12lu ", large);
       if (percent == 0)
 	fputs (" <1% \e[41;37m", stderr);
       else
@@ -913,10 +844,4 @@ dest (void)
         fputc ('=', stderr);
       fputs ("\e[0;0m\n", stderr);
     }
-
-  /* Any following malloc/free etc. calls should generate statistics again,
-     because otherwise freeing something that has been malloced before
-     this destructor (including struct header in front of it) wouldn't
-     be properly freed.  */
-  not_me = false;
 }

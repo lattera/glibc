@@ -1,5 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995-2000,2002,2003,2004,2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,6 @@
 
 #include <dlfcn.h>
 #include <libintl.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,7 +40,6 @@ struct dl_action_result
   {
     int errcode;
     int returned;
-    bool malloced;
     const char *objname;
     const char *errstring;
   };
@@ -156,13 +154,13 @@ _dlerror_run (void (*operate) (void *), void *args)
     {
       /* Free the error string from the last failed command.  This can
 	 happen if `dlerror' was not run after an error was found.  */
-      if (result->malloced)
+      if (strcmp (result->errstring, "out of memory") != 0)
 	free ((char *) result->errstring);
       result->errstring = NULL;
     }
 
   result->errcode = GLRO(dl_catch_error) (&result->objname, &result->errstring,
-					  &result->malloced, operate, args);
+					  operate, args);
 
   /* If no error we mark that no error string is available.  */
   result->returned = result->errstring == NULL;
@@ -182,30 +180,13 @@ init (void)
     static_buf = &last_result;
 }
 
-
-static void
-check_free (struct dl_action_result *rec)
-{
-  if (rec->errstring != NULL
-      && strcmp (rec->errstring, "out of memory") != 0)
-    {
-      /* We can free the string only if the allocation happened in the
-	 C library used by the dynamic linker.  This means, it is
-	 always the C library in the base namespave.  */
-      struct link_map *map = NULL;
-      Dl_info info;
-      if (_dl_addr (check_free, &info, &map, NULL) != 0
-	  && map != NULL && map->l_ns == 0)
-	free ((char *) rec->errstring);
-    }
-}
-
-
 static void
 __attribute__ ((destructor))
 fini (void)
 {
-  check_free (&last_result);
+  if (last_result.errstring != NULL
+      && strcmp (last_result.errstring, "out of memory") != 0)
+    free ((char *) last_result.errstring);
 }
 
 
@@ -213,7 +194,11 @@ fini (void)
 static void
 free_key_mem (void *mem)
 {
-  check_free ((struct dl_action_result *) mem);
+  struct dl_action_result *result = (struct dl_action_result *) mem;
+
+  if (result->errstring != NULL
+      && strcmp (result->errstring, "out of memory") != 0)
+    free ((char *) result->errstring);
 
   free (mem);
   __libc_setspecific (key, NULL);

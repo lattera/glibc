@@ -1,113 +1,9 @@
-GNU C Library NEWS -- history of user-visible changes.  2006-09-29
-Copyright (C) 1992-2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+GNU C Library NEWS -- history of user-visible changes.  2004-12-19
+Copyright (C) 1992-2002,2003,2004 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
-
-Version 2.5
-
-* For Linux, the sorting of addresses returned by getaddrinfo now also
-  handles rules 3, 4, and 7 from RFC 3484.  I.e., all rules are handled.
-  Implemented by Ulrich Drepper.
-
-* Allow system admin to configure getaddrinfo with the /etc/gai.conf file.
-  Implemented by Ulrich Drepper.
-
-* New Linux interfaces: splice, tee, sync_file_range, vmsplice.
-
-* New iconv module for MIK.  Contributed by Alexander Shopov.
-
-* For sites with broken group and/or passwd database, the auto-propagate
-  option of nscd can prevent creating ID lookup entries from the results
-  of a name lookup and vice versa.   This usually is no problem but some
-  site might have problems with the default behavior.
-  Implemented by Ulrich Drepper.
-
-* Iterating over entire database in NIS can be slow.  With the
-  SETENT_BATCH_READ option in /etc/default/nss a system admin can decide
-  to trade time for memory.  The entire database will be read at once.
-  Implemented by Ulrich Drepper.
-
-* The interfaces introduced in RFC 3542 have been implemented by
-  Ulrich Drepper.
-
-* Support for the new ELF hash table format was added by Ulrich Drepper.
-
-* Support for priority inheritance mutexes added by Jakub Jelinek and
-  Ulrich Drepper.
-
-* Support for priority protected mutexes added by Jakub Jelinek.
-
-* New locales: nr_ZA, pa_PK, ca_AD, ca_FR, ca_IT, el_CY, tr_CY, as_IN,
-  or_IN, csb_PL, fy_NL, sr_ME.
-
-Version 2.4
-
-* More overflow detection functions.
-
-* New iconv converters for IBM1025, IBM1122, IBM1137, IBM1153,
-  IBM1154, IBM1155, IBM1156, IBM1157, and IBM1158 contributed by Jiro Sekiba.
-
-  More converters for IBM803, IBM901, IBM902, IBM921, IBM1008, IBM1097,
-  IBM1112, IBM1123, IBM1130, IBM1140, IBM1141, IBM1142, IBM1143, IBM1144,
-  IBM1145, IBM1146, IBM1147, IBM1148, IBM1149, IBM1166, IBM1167, IBM4517,
-  IBM4899, IBM4909, IBM4971, IBM5347, IBM9030, IBM9066, IBM9448, IBM12712,
-  IBM16804, IBM1364, IBM1371, IBM1388, IBM1390, and IBM1399 contributed
-  by Masahide Washizawa.
-
-* It is now possible to install audit libraries for the dynamic linker using
-  LD_AUDIT.  Implemented by Ulrich Drepper.
-
-* The LinuxThreads add-on, providing pthreads on Linux 2.4 kernels, is no
-  longer supported.  The new NPTL implementation requires Linux 2.6 kernels.
-  For a libc and libpthread that works well on Linux 2.4 kernels, we
-  recommend using the stable 2.3 branch.
-
-* The new function open_wmemstream acts like open_memstream,
-  but uses a wchar_t wide character buffer.
-
-* The new function ppoll is an improved version of poll, similar to pselect.
-
-* New interfaces: fdopendir, openat, fstatat, fchmodat, fchownat,
-  futimesat, faccessat, mkdirat, mkfifoat, mknodat,
-  renameat, unlinkat, linkat, symlinkat, readlinkat.
-
-* New Linux kernel system calls: unshare,
-  inotify_init, inotify_add_watch, inotify_rm_watch.
-
-* The euidaccess function is now also known by the alias eaccess,
-  for compatibility with some other systems.
-
-* Timezone data updated to 2006b version.
-
-Version 2.3.6
-
-* The following bugs are resolved with this release:
-
-  38, 253, 549, 622, 653, 721, 758, 851, 877, 915, 934, 955, 961,
-  1016, 1037, 1076, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086,
-  1087, 1088, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098,
-  1099, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109,
-  1110, 1111, 1112, 1113, 1125, 1137, 1138, 1249, 1250, 1251, 1252,
-  1253, 1254, 1350, 1358, 1394, 1438, 1498, 1534
-
-  Visit <http://sources.redhat.com/bugzilla/> for the details of each bug.
-
-* As of this release, GCC 4 can be used to compile the C Library.
-
-* Timezone data updated to 2005m version.
-
-Version 2.3.5
-
-* The following bugs are resolved with this release:
-
-  284, 592, 602, 626, 633, 640, 650, 661, 671, 681, 693, 700, 710, 719,
-  722, 723, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736,
-  737, 738, 739, 740, 741, 742, 743, 744, 745, 765, 767, 768, 769, 776,
-  777, 787, 821, 822, 823, 825
-
-  Visit <http://sources.redhat.com/bugzilla/> for the details of each bug.
 
 Version 2.3.4
 
@@ -1588,8 +1484,7 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2005,2006
-	Free Software Foundation, Inc.
+Copyright (C) 1992-1999,2000,2001,2002 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the

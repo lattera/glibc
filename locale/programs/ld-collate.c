@@ -1,19 +1,21 @@
-/* Copyright (C) 1995-2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -1295,7 +1297,7 @@ order for `%.*s' already defined at %s:%Zu"),
 	    {
 	    invalid_range:
 	      lr_error (ldfile, _("\
-`%s' and `%.*s' are not valid names for symbolic range"),
+`%s' and `%.*s' are no valid names for symbolic range"),
 			startp->name, (int) lento, endp->name);
 	      return;
 	    }
@@ -2467,14 +2469,14 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
   runp = collate->start;
   while (runp != NULL)
     {
-      if (runp->mbs != NULL && runp->weights != NULL && !runp->is_character)
+      if (runp->mbs != NULL && runp->weights != NULL)
 	/* Yep, the element really counts.  */
 	++elem_size;
 
       runp = runp->next;
     }
   /* Add 40% and find the next prime number.  */
-  elem_size = next_prime (elem_size * 1.4);
+  elem_size = MIN (next_prime (elem_size * 1.4), 257);
 
   /* Allocate the table.  Each entry consists of two words: the hash
      value and an index in a secondary table which provides the index
@@ -2494,20 +2496,18 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  uint32_t namelen = strlen (runp->name);
 	  uint32_t hash = elem_hash (runp->name, namelen);
 	  size_t idx = hash % elem_size;
-	  size_t start_idx = idx;
 
 	  if (elem_table[idx * 2] != 0)
 	    {
-	      /* The spot is already taken.  Try iterating using the value
+	      /* The spot is already take.  Try iterating using the value
 		 from the secondary hashing function.  */
-	      size_t iter = hash % (elem_size - 2) + 1;
+	      size_t iter = hash % (elem_size - 2);
 
 	      do
 		{
 		  idx += iter;
 		  if (idx >= elem_size)
 		    idx -= elem_size;
-		  assert (idx != start_idx);
 		}
 	      while (elem_table[idx * 2] != 0);
 	    }
@@ -2671,9 +2671,6 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (locfile_read (copy_locale, charmap) != 0)
 		goto skip_category;
 	    }
-
-	  if (copy_locale->categories[LC_COLLATE].collate == NULL)
-	    return;
 	}
 
       lr_ignore_rest (ldfile, 1);
@@ -3068,7 +3065,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 		  lr_error (ldfile, _("\
 %s: unknown symbol `%s' in equivalent definition"),
 			    "LC_COLLATE", symname);
-		  goto sym_equiv_free;
+		  goto col_sym_free;
 		}
 
 	      if (insert_entry (&collate->sym_table,
@@ -3533,13 +3530,13 @@ error while adding equivalent collating symbol"));
 	      break;
 	    }
 
-	  struct element_t *seqp;
 	  if (state == 0)
 	    {
 	      /* We are outside an `order_start' region.  This means
                  we must only accept definitions of values for
                  collation symbols since these are purely abstract
                  values and don't need directions associated.  */
+	      struct element_t *seqp;
 	      void *ptr;
 
 	      if (find_entry (&collate->seq_table, symstr, symlen, &ptr) == 0)
@@ -3586,6 +3583,7 @@ error while adding equivalent collating symbol"));
 	    {
 	      /* It is possible that we already have this collation sequence.
 		 In this case we move the entry.  */
+	      struct element_t *seqp = NULL;
 	      void *sym;
 	      void *ptr;
 

@@ -1,4 +1,4 @@
-# Copyright (C) 1991,1992,1995-2003,2005 Free Software Foundation, Inc.
+# Copyright (C) 1991,1992,1995-2002,2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -72,8 +72,7 @@ GPERFFLAGS = -acCgopt -k1,2,5,9,$$ -L ANSI-C
 include ../Rules
 
 programs/%-kw.h: programs/%-kw.gperf
-	cd programs \
-	&& $(GPERF) $(GPERFFLAGS) -N $(@F:-kw.h=_hash) $(<F) > $(@F).new
+	$(GPERF) $(GPERFFLAGS) -N $(@F:-kw.h=_hash) $< > $@.new
 	mv -f $@.new $@
 
 $(objpfx)localedef: $(localedef-modules:%=$(objpfx)%.o)
@@ -101,6 +100,7 @@ locale-CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 CFLAGS-charmap.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-charmap-dir.c = -Wno-write-strings
+CFLAGS-loadlocale.c = $(fno-unit-at-a-time)
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
 cpp-srcs-left := $(addsuffix .c,$(localedef-modules) $(localedef-aux) \

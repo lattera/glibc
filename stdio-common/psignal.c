@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2001, 2002, 2004, 2005
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997, 2001, 2002, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,6 +24,10 @@
 #include <wchar.h>
 
 
+#ifndef	HAVE_GNU_LD
+#define	_sys_siglist	sys_siglist
+#endif
+
 /* Defined in sys_siglist.c.  */
 extern const char *const _sys_siglist[];
 extern const char *const _sys_siglist_internal[] attribute_hidden;
@@ -43,16 +47,29 @@ psignal (int sig, const char *s)
     colon = ": ";
 
   if (sig >= 0 && sig < NSIG && (desc = INTUSE(_sys_siglist)[sig]) != NULL)
-    (void) __fxprintf (NULL, "%s%s%s\n", s, colon, _(desc));
+    {
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s%s%s\n", s, colon, _(desc));
+      else
+	(void) fprintf (stderr, "%s%s%s\n", s, colon, _(desc));
+    }
   else
     {
       char *buf;
 
       if (__asprintf (&buf, _("%s%sUnknown signal %d\n"), s, colon, sig) < 0)
-	(void) __fxprintf (NULL, "%s%s%s\n", s, colon, _("Unknown signal"));
+	{
+	  if (_IO_fwide (stderr, 0) > 0)
+	    (void) __fwprintf (stderr, L"%s%s%s\n", s, colon, _("Unknown signal"));
+	  else
+	    (void) fprintf (stderr, "%s%s%s\n", s, colon, _("Unknown signal"));
+	}
       else
 	{
-	  (void) __fxprintf (NULL, "%s", buf);
+	  if (_IO_fwide (stderr, 0) > 0)
+	    (void) __fwprintf (stderr, L"%s",  buf);
+	  else
+	    (void) fputs (buf, stderr);
 
 	  free (buf);
 	}

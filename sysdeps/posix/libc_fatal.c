@@ -1,5 +1,4 @@
-/* Copyright (C) 1993,1994,1995,1997,2000,2004,2005
-	Free Software Foundation, Inc.
+/* Copyright (C) 1993,1994,1995,1997,2000,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +73,7 @@ __libc_message (int do_abort, const char *fmt, ...)
   while (*cp != '\0')
     {
       /* Find the next "%s" or the end of the string.  */
-      const char *next = cp;
+      char *next = cp;
       while (next[0] != '%' || next[1] != 's')
 	{
 	  next = __strchrnul (next + 1, '%');
@@ -115,7 +114,7 @@ __libc_message (int do_abort, const char *fmt, ...)
 
       for (int cnt = nlist - 1; cnt >= 0; --cnt)
 	{
-	  iov[cnt].iov_base = (char *) list->str;
+	  iov[cnt].iov_base = list->str;
 	  iov[cnt].iov_len = list->len;
 	  total += list->len;
 	  list = list->next;

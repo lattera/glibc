@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -97,25 +97,8 @@ struct pthread_unwind_buf
 struct xid_command
 {
   int syscall_no;
-  long int id[3];
+  long id[3];
   volatile int cntr;
-};
-
-
-/* Data structure used by the kernel to find robust futexes.  */
-struct robust_list_head
-{
-  void *list;
-  long int futex_offset;
-  void *list_op_pending;
-};
-
-
-/* Data strcture used to handle thread priority protection.  */
-struct priority_protection_data
-{
-  int priomax;
-  unsigned int priomap[];
 };
 
 
@@ -131,7 +114,6 @@ struct pthread
     struct
     {
       int multiple_threads;
-      int gscope_flag;
     } header;
 #endif
 
@@ -151,82 +133,6 @@ struct pthread
 
   /* Process ID - thread group ID in kernel speak.  */
   pid_t pid;
-
-  /* List of robust mutexes the thread is holding.  */
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
-  void *robust_prev;
-  struct robust_list_head robust_head;
-
-  /* The list above is strange.  It is basically a double linked list
-     but the pointer to the next/previous element of the list points
-     in the middle of the object, the __next element.  Whenever
-     casting to __pthread_list_t we need to adjust the pointer
-     first.  */
-# define QUEUE_PTR_ADJUST (offsetof (__pthread_list_t, __next))
-
-# define ENQUEUE_MUTEX_BOTH(mutex, val)					      \
-  do {									      \
-    __pthread_list_t *next = (__pthread_list_t *)			      \
-      ((((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_head.list)) & ~1ul)   \
-       - QUEUE_PTR_ADJUST);						      \
-    next->__prev = (void *) &mutex->__data.__list.__next;		      \
-    mutex->__data.__list.__next = THREAD_GETMEM (THREAD_SELF,		      \
-						 robust_head.list);	      \
-    mutex->__data.__list.__prev = (void *) &THREAD_SELF->robust_head;	      \
-    THREAD_SETMEM (THREAD_SELF, robust_head.list,			      \
-		   (void *) (((uintptr_t) &mutex->__data.__list.__next)	      \
-			     | val));					      \
-  } while (0)
-# define DEQUEUE_MUTEX(mutex) \
-  do {									      \
-    __pthread_list_t *next = (__pthread_list_t *)			      \
-      ((char *) (((uintptr_t) mutex->__data.__list.__next) & ~1ul)	      \
-       - QUEUE_PTR_ADJUST);						      \
-    next->__prev = mutex->__data.__list.__prev;				      \
-    __pthread_list_t *prev = (__pthread_list_t *)			      \
-      ((char *) (((uintptr_t) mutex->__data.__list.__prev) & ~1ul)	      \
-       - QUEUE_PTR_ADJUST);						      \
-    prev->__next = mutex->__data.__list.__next;				      \
-    mutex->__data.__list.__prev = NULL;					      \
-    mutex->__data.__list.__next = NULL;					      \
-  } while (0)
-#else
-  union
-  {
-    __pthread_slist_t robust_list;
-    struct robust_list_head robust_head;
-  };
-
-# define ENQUEUE_MUTEX_BOTH(mutex, val)					      \
-  do {									      \
-    mutex->__data.__list.__next						      \
-      = THREAD_GETMEM (THREAD_SELF, robust_list.__next);		      \
-    THREAD_SETMEM (THREAD_SELF, robust_list.__next,			      \
-		   (void *) (((uintptr_t) &mutex->__data.__list) | val));     \
-  } while (0)
-# define DEQUEUE_MUTEX(mutex) \
-  do {									      \
-    __pthread_slist_t *runp = (__pthread_slist_t *)			      \
-      (((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_list.__next)) & ~1ul); \
-    if (runp == &mutex->__data.__list)					      \
-      THREAD_SETMEM (THREAD_SELF, robust_list.__next, runp->__next);	      \
-    else								      \
-      {									      \
-	__pthread_slist_t *next = (__pthread_slist_t *)		      \
-	  (((uintptr_t) runp->__next) & ~1ul);				      \
-	while (next != &mutex->__data.__list)				      \
-	  {								      \
-	    runp = next;						      \
-	    next = (__pthread_slist_t *) (((uintptr_t) runp->__next) & ~1ul); \
-	  }								      \
-									      \
-	runp->__next = next->__next;					      \
-	mutex->__data.__list.__next = NULL;				      \
-      }									      \
-  } while (0)
-#endif
-#define ENQUEUE_MUTEX(mutex) ENQUEUE_MUTEX_BOTH (mutex, 0)
-#define ENQUEUE_MUTEX_PI(mutex) ENQUEUE_MUTEX_BOTH (mutex, 1)
 
   /* List of cleanup buffers.  */
   struct _pthread_cleanup_buffer *cleanup;
@@ -255,11 +161,8 @@ struct pthread
   /* Bit set if thread terminated and TCB is freed.  */
 #define TERMINATED_BIT		5
 #define TERMINATED_BITMASK	0x20
-  /* Bit set if thread is supposed to change XID.  */
-#define SETXID_BIT		6
-#define SETXID_BITMASK		0x40
   /* Mask for the rest.  Helps the compiler to optimize.  */
-#define CANCEL_RESTMASK		0xffffff80
+#define CANCEL_RESTMASK		0xffffffc0
 
 #define CANCEL_ENABLED_AND_CANCELED(value) \
   (((value) & (CANCELSTATE_BITMASK | CANCELED_BITMASK | EXITING_BITMASK	      \
@@ -282,11 +185,11 @@ struct pthread
     void *data;
   } specific_1stblock[PTHREAD_KEY_2NDLEVEL_SIZE];
 
-  /* Two-level array for the thread-specific data.  */
-  struct pthread_key_data *specific[PTHREAD_KEY_1STLEVEL_SIZE];
-
   /* Flag which is set when specific data is set.  */
   bool specific_used;
+
+  /* Two-level array for the thread-specific data.  */
+  struct pthread_key_data *specific[PTHREAD_KEY_1STLEVEL_SIZE];
 
   /* True if events must be reported.  */
   bool report_events;
@@ -297,15 +200,8 @@ struct pthread
   /* True if thread must stop at startup time.  */
   bool stopped_start;
 
-  /* The parent's cancel handling at the time of the pthread_create
-     call.  This might be needed to undo the effects of a cancellation.  */
-  int parent_cancelhandling;
-
   /* Lock to synchronize access to the descriptor.  */
   lll_lock_t lock;
-
-  /* Lock for synchronizing setxid calls.  */
-  lll_lock_t setxid_futex;
 
 #if HP_TIMING_AVAIL
   /* Offset of the CPU clock at start thread start time.  */
@@ -356,17 +252,8 @@ struct pthread
   /* This is what the user specified and what we will report.  */
   size_t reported_guardsize;
 
-  /* Thread Priority Protection data.  */
-  struct priority_protection_data *tpp;
-
   /* Resolver state.  */
   struct __res_state res;
-
-  /* This member must be last.  */
-  char end_padding[];
-
-#define PTHREAD_STRUCT_END_PADDING \
-  (sizeof (struct pthread) - offsetof (struct pthread, end_padding))
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
 

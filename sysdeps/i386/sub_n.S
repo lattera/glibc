@@ -1,7 +1,6 @@
 /* i80386 __mpn_sub_n -- Add two limb vectors of the same length > 0 and store
    sum in a third limb vector.
-   Copyright (C) 1992,1994,1995,1997,1998,2000,2005
-   Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -35,14 +34,10 @@ ENTRY (BP_SYM (__mpn_sub_n))
 	ENTER
 
 	pushl %edi
-	cfi_adjust_cfa_offset (4)
 	pushl %esi
-	cfi_adjust_cfa_offset (4)
 
 	movl	RES(%esp),%edi
-	cfi_rel_offset (edi, 4)
 	movl	S1(%esp),%esi
-	cfi_rel_offset (esi, 0)
 	movl	S2(%esp),%edx
 	movl	SIZE(%esp),%ecx
 #if __BOUNDED_POINTERS__
@@ -67,12 +62,10 @@ ENTRY (BP_SYM (__mpn_sub_n))
 /* Calculate start address in loop for PIC.  Due to limitations in some
    assemblers, Loop-L0-3 cannot be put into the leal */
 	call	L(0)
-	cfi_adjust_cfa_offset (4)
 L(0):	leal	(%eax,%eax,8),%eax
 	addl	(%esp),%eax
 	addl	$(L(oop)-L(0)-3),%eax
 	addl	$4,%esp
-	cfi_adjust_cfa_offset (-4)
 #else
 /* Calculate start address in loop for non-PIC.  */
  	leal	(L(oop) - 3)(%eax,%eax,8),%eax
@@ -113,11 +106,7 @@ L(oop):	movl	(%esi),%eax
 	negl	%eax
 
 	popl %esi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (esi)
 	popl %edi
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (edi)
 
 	LEAVE
 	ret

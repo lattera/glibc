@@ -17,5 +17,6 @@
    02111-1307 USA.  */
 
 #define GETSP() ({ register uintptr_t stack_ptr asm ("esp"); stack_ptr; })
+#define GETTIME(low,high) asm ("rdtsc" : "=a" (low), "=d" (high))
 
 #include <sysdeps/generic/memusage.h>

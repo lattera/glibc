@@ -1,5 +1,5 @@
 /* Compute sine and cosine of argument.
-   Copyright (C) 1997, 2000, 2001, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -40,8 +40,9 @@ ENTRY (BP_SYM (__sincosl))
 	fstpt	(%rdi)
 
 	LEAVE
-	retq
+	ret
 
+	.align ALIGNARG(4)
 1:	fldpi
 	fadd	%st(0)
 	fxch	%st(1)
@@ -55,6 +56,6 @@ ENTRY (BP_SYM (__sincosl))
 	fstpt	(%rdi)
 
 	LEAVE
-	retq
+	ret
 END (BP_SYM (__sincosl))
 weak_alias (BP_SYM (__sincosl), BP_SYM (sincosl))

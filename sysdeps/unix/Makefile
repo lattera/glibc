@@ -1,4 +1,4 @@
-# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003, 2006
+# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -212,6 +212,24 @@ common-generated := $(common-generated) \
 		    bits/ioctls.h ioctls make-ioctls make-ioctls.c
 endif
 
+ifeq ($(subdir),stdio-common)
+ifeq (,$(filter-out $(sysdep_dir)/generic/ $(objpfx),\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errlist.c))))))
+
+before-compile: $(objpfx)errlist.c
+$(objpfx)errlist.c: $(objpfx)make_errlist
+	@rm -f $@
+	$(dir $<)$(notdir $<) > $@-tmp
+	mv $@-tmp $@
+
+$(objpfx)make_errlist: $(sysdep_dir)/unix/make_errlist.c
+	$(native-compile)
+
+generated := $(generated) make_errlist errlist.c
+
+endif
+endif # stdio-common
+
 ifeq (,$(filter-out $(sysdep_dir)/generic/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/sys/syscall.h))))))
 
@@ -276,13 +294,7 @@ sysdep_routines += stub-syscalls
 $(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
 			  $(..)sysdeps/unix/Makefile
 	$(make-target-directory)
-	(for call in $(unix-stub-syscalls); do \
-	   echo "#define $$call RENAMED_$$call"; \
-	 done; \
-	 echo '#include <errno.h>'; \
-	 for call in $(unix-stub-syscalls); do \
-	   echo "#undef $$call"; \
-	 done; \
+	(echo '#include <errno.h>'; \
 	 echo 'long int _no_syscall (void)'; \
 	 echo '{ __set_errno (ENOSYS); return -1L; }'; \
 	 for call in $(unix-stub-syscalls); do \
@@ -305,6 +317,9 @@ generated += stub-syscalls.c
 endif
 endif
 
+export sysdirs
+export asm_CPP := $(COMPILE.S) -E -x assembler-with-cpp
+
 # This is the end of the pipeline for compiling the syscall stubs.
 # The stdin in assembler with cpp using sysdep.h macros.
 # Be sure to disable debugging info since it would all just say "<stdin>".
@@ -315,9 +330,7 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	for dir in $(+sysdep_dirs); do \
 	  test -f $$dir/syscalls.list && \
-	  { sysdirs='$(sysdirs)' \
-	    asm_CPP='$(COMPILE.S) -E -x assembler-with-cpp' \
-	    $(SHELL) $(dir $<)$(notdir $<) $$dir || exit 1; }; \
+	  { $(SHELL) $(dir $<)$(notdir $<) $$dir || exit 1; }; \
 	  test $$dir = $(..)sysdeps/unix && break; \
 	done > $@T
 	mv -f $@T $@

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -90,13 +90,13 @@ pthread_rwlock_timedrdlock:
 
 	/* Get current time.  */
 11:	movq	%rsp, %rdi
-	xorl	%esi, %esi
+	xorq	%rsi, %rsi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
-	movl	$1000, %edi
+	movq	$1000, %rdi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rcx
 	movq	8(%r13), %rdi
@@ -112,15 +112,11 @@ pthread_rwlock_timedrdlock:
 	movq	%rcx, (%rsp)	/* Store relative timeout.  */
 	movq	%rdi, 8(%rsp)
 
-#if FUTEX_WAIT == 0
-	xorl	%esi, %esi
-#else
-	movl	$FUTEX_WAIT, %esi
-#endif
+	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	%rsp, %r10
 	movl	%r14d, %edx
 	leaq	READERS_WAKEUP(%r12), %rdi
-	movl	$SYS_futex, %eax
+	movq	$SYS_futex, %rax
 	syscall
 	movq	%rax, %rdx
 17:
@@ -140,11 +136,11 @@ pthread_rwlock_timedrdlock:
 	cmpq	$-ETIMEDOUT, %rdx
 	jne	2b
 
-18:	movl	$ETIMEDOUT, %edx
+18:	movq	$ETIMEDOUT, %rdx
 	jmp	9f
 
 
-5:	xorl	%edx, %edx
+5:	xorq	%rdx, %rdx
 	incl	NR_READERS(%r12)
 	je	8f
 9:	LOCK
@@ -172,7 +168,7 @@ pthread_rwlock_timedrdlock:
 
 14:	cmpl	%fs:TID, %eax
 	jne	3b
-	movl	$EDEADLK, %edx
+	movq	$EDEADLK, %rdx
 	jmp	9b
 
 6:
@@ -186,12 +182,12 @@ pthread_rwlock_timedrdlock:
 
 	/* Overflow.  */
 8:	decl	NR_READERS(%r12)
-	movl	$EAGAIN, %edx
+	movq	$EAGAIN, %rdx
 	jmp	9b
 
 	/* Overflow.  */
 4:	decl	READERS_QUEUED(%r12)
-	movl	$EAGAIN, %edx
+	movq	$EAGAIN, %rdx
 	jmp	9b
 
 10:
@@ -215,6 +211,6 @@ pthread_rwlock_timedrdlock:
 16:	movq	$-ETIMEDOUT, %rdx
 	jmp	17b
 
-19:	movl	$EINVAL, %edx
+19:	movq	$EINVAL, %rdx
 	jmp	9b
 	.size	pthread_rwlock_timedrdlock,.-pthread_rwlock_timedrdlock

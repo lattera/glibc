@@ -1,0 +1,5 @@
+libgcc-compat.c
+dl-symaddr.c
+dl-fptr.c
+bits/link.h
+elf/entry.h

@@ -50,7 +50,7 @@ ENTRY (__vfork)
 	bnslr+
 
 .Lsyscall_error:
-	b	__syscall_error@local
+	b	JUMPTARGET(__syscall_error)
 #endif
 
 PSEUDO_END (__vfork)

@@ -1,4 +1,4 @@
-# Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -100,7 +100,7 @@ libpthread-routines = init vars events version \
 		      cleanup_defer_compat unwind \
 		      pt-longjmp pt-cleanup\
 		      cancellation \
-		      lowlevellock lowlevelrobustlock \
+		      lowlevellock \
 		      pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
 		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \
@@ -108,7 +108,7 @@ libpthread-routines = init vars events version \
 		      ptw-msync ptw-nanosleep ptw-open ptw-open64 ptw-pause \
 		      ptw-pread ptw-pread64 ptw-pwrite ptw-pwrite64 \
 		      ptw-tcdrain ptw-wait ptw-waitpid ptw-msgrcv ptw-msgsnd \
-		      ptw-sigwait ptw-sigsuspend \
+		      ptw-sigwait \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
@@ -116,14 +116,7 @@ libpthread-routines = init vars events version \
 		      pthread_kill_other_threads \
 		      pthread_getaffinity pthread_setaffinity \
 		      pthread_attr_getaffinity pthread_attr_setaffinity \
-		      pthread_mutexattr_getrobust pthread_mutexattr_setrobust \
-		      pthread_mutex_consistent \
-		      cleanup_routine unwind-forcedunwind \
-		      pthread_mutexattr_getprotocol \
-		      pthread_mutexattr_setprotocol \
-		      pthread_mutexattr_getprioceiling \
-		      pthread_mutexattr_setprioceiling tpp \
-		      pthread_mutex_getprioceiling pthread_mutex_setprioceiling
+		      cleanup_routine unwind-forcedunwind
 #		      pthread_setuid pthread_seteuid pthread_setreuid \
 #		      pthread_setresuid \
 #		      pthread_setgid pthread_setegid pthread_setregid \
@@ -196,35 +189,27 @@ CFLAGS-pt-system.c = -fexceptions
 omit-deps = $(unix-syscalls:%=ptw-%)
 
 
-tests = tst-typesizes \
-	tst-attr1 tst-attr2 tst-attr3 \
+tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-mutex7 tst-mutex8 tst-mutex9 tst-mutex5a tst-mutex7a \
-	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 tst-mutexpi5 \
-	tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a tst-mutexpi8 \
-	tst-mutexpi9 \
 	tst-spin1 tst-spin2 tst-spin3 \
 	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
 	tst-cond8 tst-cond9 tst-cond10 tst-cond11 tst-cond12 tst-cond13 \
 	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
-	tst-cond20 tst-cond21 tst-cond22 \
-	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
-	tst-robust6 tst-robust7 tst-robust8 tst-robust9 \
-	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
-	tst-robustpi6 tst-robustpi7 tst-robustpi8 tst-robustpi9 \
+	tst-cond20 tst-cond21 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 tst-rwlock10 \
 	tst-rwlock11 tst-rwlock12 tst-rwlock13 tst-rwlock14 \
 	tst-once1 tst-once2 tst-once3 tst-once4 \
 	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
-	tst-sem8 tst-sem9 tst-sem10 \
+	tst-sem8 tst-sem9 \
 	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
-	tst-align tst-align2 tst-align3 \
+	tst-align tst-align2 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-raise1 \
-	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 \
+	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 \
 	tst-detach1 \
 	tst-eintr1 tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
 	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 \
@@ -235,11 +220,11 @@ tests = tst-typesizes \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
 	tst-cancel16 tst-cancel17 tst-cancel18 tst-cancel19 tst-cancel20 \
-	tst-cancel21 tst-cancel22 tst-cancel23 tst-cancel24 tst-cancel25 \
+	tst-cancel21 tst-cancel22 tst-cancel23 \
 	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 tst-cleanup4 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
-	tst-signal6 tst-signal7 \
+	tst-signal6 \
 	tst-exec1 tst-exec2 tst-exec3 tst-exec4 \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
@@ -250,15 +235,14 @@ tests = tst-typesizes \
 	tst-locale1 tst-locale2 \
 	tst-umask1 \
 	tst-popen1 \
-	tst-clock1 \
+	tst-clock1 tst-clock2 \
 	tst-context1 \
 	tst-sched1 \
 	tst-backtrace1 \
 	tst-oddstacklimit \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
-	tst-getpid1 tst-getpid2 tst-getpid3 \
-	tst-initializers1 $(patsubst %,tst-initializers1-%,c89 gnu89 c99 gnu99)
-xtests = tst-setuid1 tst-setuid1-static tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
+	tst-getpid1 tst-getpid2
+xtests = tst-setuid1 tst-setuid1-static
 
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload
@@ -285,8 +269,7 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-oncex3 tst-oncex4
 endif
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1 tst-fini1 \
-	 tst-stackguard1
+tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1 tst-fini1
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
@@ -297,7 +280,7 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf \
 		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod
-extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
+extra-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
 test-extras += $(modules-names)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
@@ -310,6 +293,9 @@ tst-tls5modc.so-no-z-defs = yes
 tst-tls5modd.so-no-z-defs = yes
 tst-tls5mode.so-no-z-defs = yes
 tst-tls5modf.so-no-z-defs = yes
+
+$(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
+	$(build-module)
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -335,7 +321,7 @@ crti-objs += $(multidir)/crti.o
 crtn-objs += $(multidir)/crtn.o
 omit-deps += $(multidir)/crti $(multidir)/crtn
 $(objpfx)$(multidir):
-	mkdir -p $@
+	mkdir $@
 endif
 extra-objs += $(crti-objs) $(crtn-objs)
 omit-deps += crti crtn
@@ -351,8 +337,7 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
 ifeq ($(build-static),yes)
-tests-static += tst-locale1 tst-locale2 tst-stackguard1-static
-tests += tst-stackguard1-static
+tests-static += tst-locale1 tst-locale2
 xtests-static += tst-setuid1-static
 endif
 # These tests are linked with libc before libpthread
@@ -425,14 +410,6 @@ CFLAGS-tst-cleanupx4.c += -fexceptions
 CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
-CFLAGS-tst-align3.c += $(stack-align-test-flags)
-CFLAGS-tst-initializers1.c = -W -Wall -Werror
-CFLAGS-tst-initializers1-< = $(CFLAGS-tst-initializers1.c) \
-			     $(patsubst tst-initializers1-%.c,-std=%,$<)
-CFLAGS-tst-initializers1-c89.c = $(CFLAGS-tst-initializers1-<)
-CFLAGS-tst-initializers1-c99.c = $(CFLAGS-tst-initializers1-<)
-CFLAGS-tst-initializers1-gnu89.c = $(CFLAGS-tst-initializers1-<)
-CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
 
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
@@ -501,8 +478,6 @@ $(objpfx)tst-clock2: $(common-objpfx)rt/librt.a
 $(objpfx)tst-rwlock14: $(common-objpfx)rt/librt.a
 endif
 
-LDFLAGS-tst-cancel24 = -lstdc++
-
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))
 $(objpfx)libpthread.so: +preinit += $(addprefix $(objpfx),$(crti-objs))
@@ -524,25 +499,21 @@ $(addprefix $(objpfx), \
     $(tests) $(xtests) $(test-srcs))): $(objpfx)libpthread.so \
 				       $(objpfx)libpthread_nonshared.a
 $(objpfx)tst-unload: $(common-objpfx)dlfcn/libdl.so
-# $(objpfx)linklibc.so is used instead of $(common-objpfx)libc.so,
+# $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
 # since otherwise libpthread.so comes before libc.so when linking.
 $(addprefix $(objpfx), $(tests-reverse)): \
-  $(objpfx)linklibc.so $(objpfx)libpthread.so \
+  $(objpfx)../libc.so $(objpfx)libpthread.so \
   $(objpfx)libpthread_nonshared.a
 $(objpfx)../libc.so: $(common-objpfx)libc.so ;
 $(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a
 
 $(objpfx)tst-atfork2.out: $(objpfx)tst-atfork2mod.so
-
-$(objpfx)linklibc.so: $(common-objpfx)libc.so
-	ln -s ../libc.so $@
-generated += libclink.so
 else
 $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 endif
 
 ifeq ($(build-shared),yes)
-vpath pt-initfini.c $(sysdirs)
+vpath pt-initfini.c $(full_config_sysdirs)
 
 $(objpfx)pt-initfini.s: pt-initfini.c
 	$(compile.c) -S $(CFLAGS-pt-initfini.s) -finhibit-size-directive \
@@ -614,9 +585,6 @@ $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
 
 $(objpfx)tst-fini1mod.so: $(shared-thread-library)
-
-tst-stackguard1-ARGS = --command "$(built-program-cmd) --child"
-tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
 
 # The tests here better do not run in parallel
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)

@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,32 +18,65 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef	_PRIVATE_LINK_H
-#define	_PRIVATE_LINK_H	1
+#ifndef	_LINK_H
+#define	_LINK_H	1
 
-#ifdef _LINK_H
-# error this should be impossible
-#endif
-
-/* Get most of the contents from the public header, but we define a
-   different `struct link_map' type for private use.  The la_objopen
-   prototype uses the type, so we have to declare it separately.  */
-#define link_map	link_map_public
-#define la_objopen	la_objopen_wrongproto
-#include <elf/link.h>
-#undef	link_map
-#undef	la_objopen
-
-struct link_map;
-extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
-				uintptr_t *__cookie);
-
-
+#include <elf.h>
+#include <dlfcn.h>
 #include <stddef.h>
-#include <bits/linkmap.h>
+#include <sys/types.h>
+
+/* We use this macro to refer to ELF types independent of the native wordsize.
+   `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
+#define ElfW(type)	_ElfW (Elf, __ELF_NATIVE_CLASS, type)
+#define _ElfW(e,w,t)	_ElfW_1 (e, w, _##t)
+#define _ElfW_1(e,w,t)	e##w##t
+
+#include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
+#include <bits/link.h>
 #include <dl-lookupcfg.h>
-#include <tls.h>
-#include <bits/libc-lock.h>
+#include <tls.h>		/* Defines USE_TLS.  */
+
+/* Rendezvous structure used by the run-time dynamic linker to communicate
+   details of shared object loading to the debugger.  If the executable's
+   dynamic section has a DT_DEBUG element, the run-time linker sets that
+   element's value to the address where this structure can be found.  */
+
+struct r_debug
+  {
+    int r_version;		/* Version number for this protocol.  */
+
+    struct link_map *r_map;	/* Head of the chain of loaded objects.  */
+
+    /* This is the address of a function internal to the run-time linker,
+       that will always be called when the linker begins to map in a
+       library or unmap it, and again when the mapping change is complete.
+       The debugger can set a breakpoint at this address if it wants to
+       notice shared object mapping changes.  */
+    ElfW(Addr) r_brk;
+    enum
+      {
+	/* This state value describes the mapping change taking place when
+	   the `r_brk' address is called.  */
+	RT_CONSISTENT,		/* Mapping change is complete.  */
+	RT_ADD,			/* Beginning to add a new object.  */
+	RT_DELETE		/* Beginning to remove an object mapping.  */
+      } r_state;
+
+    ElfW(Addr) r_ldbase;	/* Base address the linker is loaded at.  */
+  };
+
+/* This is the instance of that structure used by the dynamic linker.  */
+extern struct r_debug _r_debug;
+
+/* This symbol refers to the "dynamic structure" in the `.dynamic' section
+   of whatever module refers to `_DYNAMIC'.  So, to find its own
+   `struct r_debug', a program could do:
+     for (dyn = _DYNAMIC; dyn->d_tag != DT_NULL; ++dyn)
+       if (dyn->d_tag == DT_DEBUG)
+	 r_debug = (struct r_debug *) dyn->d_un.d_ptr;
+   */
+extern ElfW(Dyn) _DYNAMIC[];
 
 
 /* Some internal data structures of the dynamic linker used in the
@@ -125,7 +158,7 @@ struct link_map
     const ElfW(Phdr) *l_phdr;	/* Pointer to program header table in core.  */
     ElfW(Addr) l_entry;		/* Entry point location.  */
     ElfW(Half) l_phnum;		/* Number of program header entries.  */
-    ElfW(Half) l_ldnum;		/* Number of dynamic segment entries.  */
+    ElfW(Half) l_ldnum;	/* Number of dynamic segment entries.  */
 
     /* Array of DT_NEEDED dependencies and their dependencies, in
        dependency order for symbol lookup (with and without
@@ -142,20 +175,9 @@ struct link_map
 
     /* Symbol hash table.  */
     Elf_Symndx l_nbuckets;
-    Elf32_Word l_gnu_bitmask_idxbits;
-    Elf32_Word l_gnu_shift;
-    const ElfW(Addr) *l_gnu_bitmask;
-    union
-    {
-      const Elf32_Word *l_gnu_buckets;
-      const Elf_Symndx *l_chain;
-    };
-    union
-    {
-      const Elf32_Word *l_gnu_chain_zero;
-      const Elf_Symndx *l_buckets;
-    };
+    const Elf_Symndx *l_buckets, *l_chain;
 
+    unsigned int l_opencount;	/* Counter for direct and indirect usage.  */
     unsigned int l_direct_opencount; /* Reference count for dlopen/dlclose.  */
     enum			/* Where this object came from.  */
       {
@@ -177,15 +199,6 @@ struct link_map
 				       should be called on this link map
 				       when relocation finishes.  */
     unsigned int l_used:1;	/* Nonzero if the DSO is used.  */
-    unsigned int l_auditing:1;	/* Nonzero if the DSO is used in auditing.  */
-    unsigned int l_audit_any_plt:1; /* Nonzero if at least one audit module
-				       is interested in the PLT interception.*/
-    unsigned int l_removed:1;	/* Nozero if the object cannot be used anymore
-				   since it is removed.  */
-    unsigned int l_contiguous:1; /* Nonzero if inter-segment holes are
-				    mprotected or if no holes are present at
-				    all.  */
-
     /* Array with version names.  */
     unsigned int l_nversions;
     struct r_found_version *l_versions;
@@ -194,14 +207,7 @@ struct link_map
     struct r_search_path_struct l_rpath_dirs;
 
     /* Collected results of relocation while profiling.  */
-    struct reloc_result
-    {
-      DL_FIXUP_VALUE_TYPE addr;
-      struct link_map *bound;
-      unsigned int boundndx;
-      uint32_t enterexit;
-      unsigned int flags;
-    } *l_reloc_result;
+    ElfW(Addr) *l_reloc_result;
 
     /* Pointer to the version information if available.  */
     ElfW(Versym) *l_versyms;
@@ -220,7 +226,7 @@ struct link_map
     /* Size of array allocated for 'l_scope'.  */
     size_t l_scope_max;
     /* This is an array defining the lookup scope for this link map.
-       There are initially at most three different scope lists.  */
+       There are at most three different scope lists.  */
     struct r_scope_elem **l_scope;
 
     /* A similar array, this time only with the local scope.  This is
@@ -249,7 +255,7 @@ struct link_map
     ElfW(Word) l_flags;
 
     /* Temporarily used in `dl_close'.  */
-    int l_idx;
+    unsigned int l_idx;
 
     struct link_map_machine l_mach;
 
@@ -257,7 +263,11 @@ struct link_map
     {
       const ElfW(Sym) *sym;
       int type_class;
+#ifdef DL_LOOKUP_RETURNS_MAP
       struct link_map *value;
+#else
+      ElfW(Addr) value;
+#endif
       const ElfW(Sym) *ret;
     } l_lookup_cache;
 
@@ -287,27 +297,24 @@ struct link_map
        done.  */
     ElfW(Addr) l_relro_addr;
     size_t l_relro_size;
-
-    /* Audit information.  This array apparent must be the last in the
-       structure.  Never add something after it.  */
-    struct auditstate
-    {
-      uintptr_t cookie;
-      unsigned int bindflags;
-    } l_audit[0];
   };
 
+struct dl_phdr_info
+  {
+    ElfW(Addr) dlpi_addr;
+    const char *dlpi_name;
+    const ElfW(Phdr) *dlpi_phdr;
+    ElfW(Half) dlpi_phnum;
 
-#if __ELF_NATIVE_CLASS == 32
-# define symbind symbind32
-#elif __ELF_NATIVE_CLASS == 64
-# define symbind symbind64
-#else
-# error "__ELF_NATIVE_CLASS must be defined"
-#endif
+    unsigned long long int dlpi_adds;
+    unsigned long long int dlpi_subs;
+  };
 
+extern int dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
+					     size_t size, void *data),
+			    void *data);
 extern int __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 					       size_t size, void *data),
 			      void *data);
 
-#endif /* include/link.h */
+#endif /* link.h */

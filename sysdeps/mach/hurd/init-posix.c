@@ -1,2 +1,2 @@
 /* We don't need the unix/bsd version.  */
-#include <posix/init-posix.c>
+#include <sysdeps/generic/init-posix.c>

@@ -1,0 +1,195 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+
+if test -z "$inhibit_glue"; then
+
+# Find out what this system calls `sys_siglist'.
+
+echo "$as_me:$LINENO: checking for sys_siglist" >&5
+echo $ECHO_N "checking for sys_siglist... $ECHO_C" >&6
+if test "${ac_cv_check_symbol_sys_siglist+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+extern char *sys_siglist[]; puts(*sys_siglist);
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  	    ac_cv_check_symbol_sys_siglist=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_cv_check_symbol_sys_siglist=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+fi
+
+if test "$ac_cv_check_symbol_sys_siglist" = yes; then
+  ac_tr_symbol=`echo sys_siglist | tr '[a-z]' '[A-Z]'`
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_${ac_tr_symbol} 1
+_ACEOF
+
+fi
+echo "$as_me:$LINENO: result: $ac_cv_check_symbol_sys_siglist" >&5
+echo "${ECHO_T}$ac_cv_check_symbol_sys_siglist" >&6
+echo "$as_me:$LINENO: checking for _sys_siglist" >&5
+echo $ECHO_N "checking for _sys_siglist... $ECHO_C" >&6
+if test "${ac_cv_check_symbol__sys_siglist+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+extern char *_sys_siglist[]; puts(*_sys_siglist);
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  	    ac_cv_check_symbol__sys_siglist=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_cv_check_symbol__sys_siglist=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+fi
+
+if test "$ac_cv_check_symbol__sys_siglist" = yes; then
+  ac_tr_symbol=`echo _sys_siglist | tr '[a-z]' '[A-Z]'`
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_${ac_tr_symbol} 1
+_ACEOF
+
+fi
+echo "$as_me:$LINENO: result: $ac_cv_check_symbol__sys_siglist" >&5
+echo "${ECHO_T}$ac_cv_check_symbol__sys_siglist" >&6
+
+# Find out the name of the table the system's <ctype.h> uses for character
+# classification.  This is used by sysdeps/unix/common/glue-ctype.c.
+echo "$as_me:$LINENO: checking ctype array name for glue" >&5
+echo $ECHO_N "checking ctype array name for glue... $ECHO_C" >&6
+if test "${libc_cv_ctype_glue+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  for ctype in _ctype_ __ctype_ __ctype _ctype__ _ctype _locp; do
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <ctype.h>
+int
+main ()
+{
+$ctype[13];
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  libc_cv_ctype_glue="$ctype"; break
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+done
+fi
+
+echo "$as_me:$LINENO: result: $libc_cv_ctype_glue" >&5
+echo "${ECHO_T}$libc_cv_ctype_glue" >&6
+cat >>confdefs.h <<_ACEOF
+#define HAVE_`echo $libc_cv_ctype_glue | tr 'a-z' 'A-Z'` 1
+_ACEOF
+
+
+fi

@@ -203,40 +203,48 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	if (!(flags & NI_NUMERICHOST))
 	  {
 	    struct hostent *h = NULL;
-	    if (sa->sa_family == AF_INET6)
-	      {
-		while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in6 *) sa)->sin6_addr),
-					  sizeof(struct in6_addr),
-					  AF_INET6, &th, tmpbuf, tmpbuflen,
-					  &h, &herrno))
-		  if (herrno == NETDB_INTERNAL && errno == ERANGE)
-		    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);
-		  else
-		    break;
-	      }
-	    else
-	      {
-		while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in *)sa)->sin_addr),
-					  sizeof(struct in_addr), AF_INET,
-					  &th, tmpbuf, tmpbuflen,
-					  &h, &herrno))
-		  if (herrno == NETDB_INTERNAL && errno == ERANGE)
-		    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);
-		  else
-		    break;
-	      }
-
 	    if (h == NULL)
 	      {
-		if (herrno == NETDB_INTERNAL)
+		if (sa->sa_family == AF_INET6)
 		  {
-		    __set_h_errno (herrno);
-		    return EAI_SYSTEM;
+		    while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in6 *) sa)->sin6_addr),
+					      sizeof(struct in6_addr),
+					      AF_INET6, &th, tmpbuf, tmpbuflen,
+					      &h, &herrno))
+		      {
+			if (herrno == NETDB_INTERNAL)
+			  {
+			    if (errno == ERANGE)
+			      tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+						      2 * tmpbuflen);
+			    else
+			      {
+				__set_h_errno (herrno);
+				__set_errno (serrno);
+				return EAI_SYSTEM;
+			      }
+			  }
+			else
+			  {
+			    break;
+			  }
+		      }
 		  }
-		if (herrno == TRY_AGAIN)
+		else
 		  {
-		    __set_h_errno (herrno);
-		    return EAI_AGAIN;
+		    while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in *)sa)->sin_addr),
+					      sizeof(struct in_addr), AF_INET,
+					      &th, tmpbuf, tmpbuflen,
+					      &h, &herrno))
+		      {
+			if (errno == ERANGE)
+			  tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+						  2 * tmpbuflen);
+			else
+			  {
+			    break;
+			  }
+		      }
 		  }
 	      }
 
@@ -353,7 +361,10 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 				 (const void *) &(((const struct sockaddr_in *) sa)->sin_addr),
 				 host, hostlen);
 		if (c == NULL)
-		  return EAI_SYSTEM;
+		  {
+		    __set_errno (serrno);
+		    return EAI_SYSTEM;
+		  }
 	      }
 	    ok = 1;
 	  }
@@ -392,16 +403,25 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	if (!(flags & NI_NUMERICSERV))
 	  {
 	    struct servent *s, ts;
-	    int e;
-	    while ((e = __getservbyport_r (((const struct sockaddr_in *) sa)->sin_port,
-					   ((flags & NI_DGRAM)
-					    ? "udp" : "tcp"),
-					   &ts, tmpbuf, tmpbuflen, &s)))
+	    while (__getservbyport_r (((const struct sockaddr_in *) sa)->sin_port,
+				      ((flags & NI_DGRAM) ? "udp" : "tcp"),
+				      &ts, tmpbuf, tmpbuflen, &s))
 	      {
-		if (e == ERANGE)
-		  tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);
+		if (herrno == NETDB_INTERNAL)
+		  {
+		    if (errno == ERANGE)
+		      tmpbuf = extend_alloca (tmpbuf, tmpbuflen,
+					      2 * tmpbuflen);
+		    else
+		      {
+			__set_errno (serrno);
+			return EAI_SYSTEM;
+		      }
+		  }
 		else
-		  break;
+		  {
+		    break;
+		  }
 	      }
 	    if (s)
 	      {

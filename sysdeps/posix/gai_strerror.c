@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pjb27@cam.ac.uk>, 1997.
 
@@ -17,54 +17,44 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <libintl.h>
-#include <netdb.h>
-#include <stdint.h>
 #include <stdio.h>
+#include <netdb.h>
+#include <libintl.h>
 
-
-#define MSGSTRFIELD(line) MSGSTRFIELD1 (line)
-#define MSGSTRFIELD1(line) str##line
-static const union msgstr_t
-{
-  struct
+static struct
   {
-#define _S(n, s) char MSGSTRFIELD(__LINE__)[sizeof (s)];
-#include "gai_strerror-strs.h"
-#undef _S
-  };
-  char str[0];
-} msgstr =
+    int code;
+    const char *msg;
+  }
+values[] =
   {
-    {
-#define _S(n, s) s,
-#include "gai_strerror-strs.h"
-#undef _S
-    }
+    { EAI_ADDRFAMILY, N_("Address family for hostname not supported") },
+    { EAI_AGAIN, N_("Temporary failure in name resolution") },
+    { EAI_BADFLAGS, N_("Bad value for ai_flags") },
+    { EAI_FAIL, N_("Non-recoverable failure in name resolution") },
+    { EAI_FAMILY, N_("ai_family not supported") },
+    { EAI_MEMORY, N_("Memory allocation failure") },
+    { EAI_NODATA, N_("No address associated with hostname") },
+    { EAI_NONAME, N_("Name or service not known") },
+    { EAI_SERVICE, N_("Servname not supported for ai_socktype") },
+    { EAI_SOCKTYPE, N_("ai_socktype not supported") },
+    { EAI_SYSTEM, N_("System error") },
+    { EAI_INPROGRESS, N_("Processing request in progress") },
+    { EAI_CANCELED, N_("Request canceled") },
+    { EAI_NOTCANCELED, N_("Request not canceled") },
+    { EAI_ALLDONE, N_("All requests done") },
+    { EAI_INTR, N_("Interrupted by a signal") },
+    { EAI_IDN_ENCODE, N_("Parameter string not correctly encoded") }
   };
-static const struct
-{
-  int16_t code;
-  uint16_t idx;
-} msgidx[] =
-  {
-#define _S(n, s) { n, offsetof (union msgstr_t, MSGSTRFIELD (__LINE__)) },
-#include "gai_strerror-strs.h"
-#undef _S
-  };
-
 
 const char *
 gai_strerror (int code)
 {
-  const char *result = "Unknown error";
-  for (size_t i = 0; i < sizeof (msgidx) / sizeof (msgidx[0]); ++i)
-    if (msgidx[i].code == code)
-      {
-	result = msgstr.str + msgidx[i].idx;
-	break;
-      }
+  size_t i;
+  for (i = 0; i < sizeof (values) / sizeof (values[0]); ++i)
+    if (values[i].code == code)
+      return _(values[i].msg);
 
-  return _(result);
+  return _("Unknown error");
 }
 libc_hidden_def (gai_strerror)

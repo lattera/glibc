@@ -1,5 +1,5 @@
 /* Guts of POSIX spawn interface.  Generic POSIX.1 version.
-   Copyright (C) 2000-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,6 @@
 #include <unistd.h>
 #include "spawn_int.h"
 #include <not-cancel.h>
-#include <local-setxid.h>
 
 
 /* The Unix standard contains a long explanation of the way to signal
@@ -82,15 +81,7 @@ __spawni (pid_t *pid, const char *file,
   short int flags = attrp == NULL ? 0 : attrp->__flags;
 
   /* Generate the new process.  */
-  if ((flags & POSIX_SPAWN_USEVFORK) != 0
-      /* If no major work is done, allow using vfork.  Note that we
-	 might perform the path searching.  But this would be done by
-	 a call to execvp(), too, and such a call must be OK according
-	 to POSIX.  */
-      || ((flags & (POSIX_SPAWN_SETSIGMASK | POSIX_SPAWN_SETSIGDEF
-		    | POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER
-		    | POSIX_SPAWN_SETPGROUP | POSIX_SPAWN_RESETIDS)) == 0
-	  && file_actions == NULL))
+  if (flags & POSIX_SPAWN_USEVFORK)
     new_pid = __vfork ();
   else
     new_pid = __fork ();
@@ -156,8 +147,7 @@ __spawni (pid_t *pid, const char *file,
 
   /* Set the effective user and group IDs.  */
   if ((flags & POSIX_SPAWN_RESETIDS) != 0
-      && (local_seteuid (__getuid ()) != 0
-	  || local_setegid (__getgid ()) != 0))
+      && (seteuid (__getuid ()) != 0 || setegid (__getgid ()) != 0))
     _exit (SPAWN_ERROR);
 
   /* Execute the file actions.  */
@@ -179,10 +169,9 @@ __spawni (pid_t *pid, const char *file,
 
 	    case spawn_do_open:
 	      {
-		int new_fd = open_not_cancel (action->action.open_action.path,
-					      action->action.open_action.oflag
-					      | O_LARGEFILE,
-					      action->action.open_action.mode);
+		int new_fd = __open64 (action->action.open_action.path,
+				       action->action.open_action.oflag,
+				       action->action.open_action.mode);
 
 		if (new_fd == -1)
 		  /* The `open' call failed.  */
@@ -196,7 +185,7 @@ __spawni (pid_t *pid, const char *file,
 		      /* The `dup2' call failed.  */
 		      _exit (SPAWN_ERROR);
 
-		    if (close_not_cancel (new_fd) != 0)
+		    if (__close (new_fd) != 0)
 		      /* The `close' call failed.  */
 		      _exit (SPAWN_ERROR);
 		  }

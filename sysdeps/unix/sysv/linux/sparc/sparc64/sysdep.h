@@ -1,5 +1,4 @@
-/* Copyright (C) 1997, 2000, 2002, 2003, 2004, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -26,7 +25,6 @@
 #ifdef IS_IN_rtld
 # include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
 #endif
-#include <tls.h>
 
 #undef SYS_ify
 #define SYS_ify(syscall_name) __NR_##syscall_name
@@ -49,52 +47,99 @@
 #undef PSEUDO
 #undef PSEUDO_NOERRNO
 #undef PSEUDO_ERRVAL
-#undef PSEUDO_END
 #undef ENTRY
+
+#define ENTRY(name)							\
+	.global C_SYMBOL_NAME(name);					\
+	.align 2;							\
+	C_LABEL(name);							\
+	.type name,@function;
+
+#ifdef LINKER_HANDLES_R_SPARC_WDISP22
+/* Unfortunately, we cannot do this yet.  Linker doesn't seem to
+   handle R_SPARC_WDISP22 against non-STB_LOCAL symbols properly .  */
+# define SYSCALL_ERROR_HANDLER_ENTRY(handler)				\
+	.section .gnu.linkonce.t.handler,"ax",@progbits;		\
+	.globl handler;							\
+	.hidden handler;						\
+	.type handler,@function;					\
+handler:
+#else
+# define SYSCALL_ERROR_HANDLER_ENTRY(handler)				\
+	.subsection 3;							\
+handler:
+#endif
+
+#if RTLD_PRIVATE_ERRNO
+# define SYSCALL_ERROR_HANDLER						\
+	.section .gnu.linkonce.t.__sparc64.get_pic.l7,"ax",@progbits;	\
+	.globl __sparc64.get_pic.l7;					\
+	.hidden __sparc64.get_pic.l7;					\
+	.type __sparc64.get_pic.l7,@function;				\
+__sparc64.get_pic.l7:							\
+	retl;								\
+	 add	%o7, %l7, %l7;						\
+	.previous;							\
+SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
+	save	%sp, -192, %sp;						\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
+	call	__sparc64.get_pic.l7;					\
+	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
+	ldx	[%l7 + rtld_errno], %l0;				\
+	st	%i0, [%l0];						\
+	jmpl	%i7+8, %g0;						\
+	 restore %g0, -1, %o0;						\
+	.previous;
+#else
+# define SYSCALL_ERROR_HANDLER						\
+SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
+	.global __errno_location;					\
+	.type   __errno_location,@function;				\
+	save	%sp, -192, %sp;						\
+	call	__errno_location;					\
+	 nop;								\
+	st	%i0, [%o0];						\
+	jmpl	%i7+8, %g0;						\
+	 restore %g0, -1, %o0;						\
+	.previous;
+#endif
+
+#define PSEUDO(name, syscall_name, args)				\
+	.text;								\
+	ENTRY(name);							\
+	LOADSYSCALL(syscall_name);					\
+	ta	0x6d;							\
+	bcs,pn	%xcc, __syscall_error_handler;				\
+	 nop;								\
+	SYSCALL_ERROR_HANDLER
+
+#define PSEUDO_NOERRNO(name, syscall_name, args)			\
+	.text;								\
+	ENTRY(name);							\
+	LOADSYSCALL(syscall_name);					\
+	ta	0x6d
+
+#define PSEUDO_ERRVAL(name, syscall_name, args)				\
+	.text;								\
+	ENTRY(name);							\
+	LOADSYSCALL(syscall_name);					\
+	ta	0x6d
+
+#undef PSEUDO_END
+#define PSEUDO_END(name)						\
+	.size name,.-name
+
+#undef PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(name)					\
+	.size name,.-name
+
+#undef PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(name)						\
+	.size name,.-name
+
 #undef END
-
-#define ENTRY(name)			\
-	.align	4;			\
-	.global	C_SYMBOL_NAME(name);	\
-	.type	name, @function;	\
-C_LABEL(name)				\
-	cfi_startproc;
-
-#define END(name)			\
-	cfi_endproc;			\
-	.size name, . - name
-
-	/* If the offset to __syscall_error fits into a signed 22-bit
-	 * immediate branch offset, the linker will relax the call into
-	 * a normal branch.
-	 */
-#define PSEUDO(name, syscall_name, args)	\
-	.text;					\
-	.globl		__syscall_error;	\
-ENTRY(name);					\
-	LOADSYSCALL(syscall_name);		\
-	ta		0x6d;			\
-	bcc,pt		%xcc, 1f;		\
-	 mov		%o7, %g1;		\
-	call		__syscall_error;	\
-	 mov		%g1, %o7;		\
-1:
-
-#define	PSEUDO_NOERRNO(name, syscall_name, args)\
-	.text;					\
-ENTRY(name);					\
-	LOADSYSCALL(syscall_name);		\
-	ta		0x6d;
-
-#define	PSEUDO_ERRVAL(name, syscall_name, args) \
-	.text;					\
-ENTRY(name);					\
-	LOADSYSCALL(syscall_name);		\
-	ta		0x6d;
-
-#define PSEUDO_END(name)			\
-	END(name)
-
+#define END(name)							\
+	.size name,.-name
 
 /* Careful here!  This "ret" define can interfere; use jmpl if unsure.  */
 #define ret		retl; nop
@@ -151,25 +196,5 @@ ENTRY(name);					\
 /* This is the offset from the %sp to the backing store above the
    register windows.  So if you poke stack memory directly you add this.  */
 #define STACK_BIAS	2047
-
-/* Pointer mangling support.  */
-#if defined NOT_IN_libc && defined IS_IN_rtld
-/* We cannot use the thread descriptor because in ld.so we use setjmp
-   earlier than the descriptor is initialized.  */
-#else
-# ifdef __ASSEMBLER__
-#  define PTR_MANGLE(dreg, reg, tmpreg) \
-  ldx	[%g7 + POINTER_GUARD], tmpreg; \
-  xor	reg, tmpreg, dreg
-#  define PTR_DEMANGLE(dreg, reg, tmpreg) PTR_MANGLE (dreg, reg, tmpreg)
-#  define PTR_MANGLE2(dreg, reg, tmpreg) \
-  xor	reg, tmpreg, dreg
-#  define PTR_DEMANGLE2(dreg, reg, tmpreg) PTR_MANGLE2 (dreg, reg, tmpreg)
-# else
-#  define PTR_MANGLE(var) \
-  (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
-#  define PTR_DEMANGLE(var)     PTR_MANGLE (var)
-# endif
-#endif
 
 #endif /* linux/sparc64/sysdep.h */

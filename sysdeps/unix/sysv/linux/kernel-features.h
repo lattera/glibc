@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,10 @@
 
 /* This file must not contain any C code.  At least it must be protected
    to allow using the file also in assembler files.  */
+
+#if defined __mips__
+# include <sgidefs.h>
+#endif
 
 #ifndef __LINUX_KERNEL_VERSION
 /* We assume the worst; all kernels should be supported.  */
@@ -75,22 +79,6 @@
 # define __ASSUME_SIOCGIFNAME		1
 #endif
 
-/* MSG_NOSIGNAL was at least available with Linux 2.2.0.  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_MSG_NOSIGNAL		1
-#endif
-
-/* The sendfile syscall was introduced in 2.2.0.  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_SENDFILE		1
-#endif
-
-/* Only very old kernels had no real symlinks for terminal descriptors
-   in /proc/self/fd.  */
-#if __LINUX_KERNEL_VERSION >= 131584
-# define __ASSUME_PROC_SELF_FD_SYMLINK	1
-#endif
-
 /* On x86 another `getrlimit' syscall was added in 2.3.25.  */
 #if __LINUX_KERNEL_VERSION >= 131865 && defined __i386__
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
@@ -111,10 +99,9 @@
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
-/* On sparc the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
+/* On sparc and ARM the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
    syscalls were introduced in 2.3.35.  */
-#if __LINUX_KERNEL_VERSION >= 131875 \
-    && (defined __sparc__ && !defined __arch64__)
+#if __LINUX_KERNEL_VERSION >= 131875 && (defined __sparc__ || defined __arm__)
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1
@@ -135,7 +122,7 @@
 
 /* Linux 2.3.39 introduced 32bit UID/GIDs.  Some platforms had 32
    bit type all along.  */
-#if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__
+#if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__ || defined __mips__
 # define __ASSUME_32BITUIDS		1
 #endif
 
@@ -150,6 +137,11 @@
 
 /* Linux 2.3.39 introduced IPC64.  Except for powerpc.  */
 #if __LINUX_KERNEL_VERSION >= 131879 && !defined __powerpc__
+# define __ASSUME_IPC64		1
+#endif
+
+/* MIPS platforms had IPC64 all along.  */
+#if defined __mips__
 # define __ASSUME_IPC64		1
 #endif
 
@@ -197,7 +189,7 @@
    don't know when it got introduced).  But PowerPC64 does not support
    separate FCNTL64 call, FCNTL is already 64-bit */
 #if __LINUX_KERNEL_VERSION >= 132100 \
-    && (defined __powerpc__ || defined __sh__) \
+    && (defined __arm__ || defined __powerpc__ || defined __sh__) \
     && !defined __powerpc64__
 # define __ASSUME_FCNTL64		1
 #endif
@@ -266,8 +258,22 @@
 #endif
 
 /* The vfork syscall on x86 and arm was definitely available in 2.4.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && defined __i386__
+#if __LINUX_KERNEL_VERSION >= 132097 && (defined __i386__ || defined __arm__)
 # define __ASSUME_VFORK_SYSCALL		1
+#endif
+
+/* There are an infinite number of PA-RISC kernel versions numbered
+   2.4.0.  But they've not really been released as such.  We require
+   and expect the final version here.  */
+#ifdef __hppa__
+# define __ASSUME_32BITUIDS		1
+# define __ASSUME_TRUNCATE64_SYSCALL	1
+# define __ASSUME_MMAP2_SYSCALL		1
+# define __ASSUME_STAT64_SYSCALL	1
+# define __ASSUME_IPC64			1
+# define __ASSUME_ST_INO_64_BIT		1
+# define __ASSUME_FCNTL64		1
+# define __ASSUME_GETDENTS64_SYSCALL	1
 #endif
 
 /* Alpha switched to a 64-bit timeval sometime before 2.2.0.  */
@@ -275,17 +281,25 @@
 # define __ASSUME_TIMEVAL64		1
 #endif
 
+#if defined __mips__ && _MIPS_SIM == _ABIN32
+# define __ASSUME_FCNTL64		1
+#endif
+
 /* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.
-   For i386 we pick 2.5.50 as the first version with support.
-   For ia64, s390*, PPC, x86-64, and SH we pick 2.5.64 as the first
-   version with support.  */
-#if ((__LINUX_KERNEL_VERSION >= 132402 && defined __i386__)		\
-     || (__LINUX_KERNEL_VERSION >= 132416				\
-	 && (defined __ia64__ || defined __s390__			\
-	     || defined __powerpc__ || defined __x86_64__ || defined __sh__)))
+   For i386 we pick 2.5.50 as the first version with support.  */
+#if __LINUX_KERNEL_VERSION >= 132402 && defined __i386__
 # define __ASSUME_CLONE_THREAD_FLAGS	1
+#endif
+
+/* These features were surely available with 2.4.12.  */
+#if __LINUX_KERNEL_VERSION >= 132108 && defined __mc68000__
+# define __ASSUME_MMAP2_SYSCALL		1
+# define __ASSUME_TRUNCATE64_SYSCALL	1
+# define __ASSUME_STAT64_SYSCALL	1
+# define __ASSUME_FCNTL64		1
+# define __ASSUME_VFORK_SYSCALL		1
 #endif
 
 /* Beginning with 2.5.63 support for realtime and monotonic clocks and
@@ -294,9 +308,15 @@
 # define __ASSUME_POSIX_TIMERS		1
 #endif
 
-/* Beginning with 2.6.12 the clock and timer supports CPU clocks.  */
-#if __LINUX_KERNEL_VERSION >= 0x2060c
-# define __ASSUME_POSIX_CPU_TIMERS	1
+/* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
+   their availability with one define.  The changes were made first
+   for i386 and the have to be done separately for the other archs.
+   For ia64, s390*, PPC, x86-64 we pick 2.5.64 as the first version
+   with support.  */
+#if __LINUX_KERNEL_VERSION >= 132416 \
+    && (defined __ia64__ || defined __s390__ || defined __powerpc__ \
+	|| defined __x86_64__ || defined __sh__)
+# define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
 
 /* With kernel 2.4.17 we always have netlink support.  */
@@ -329,24 +349,22 @@
 
 /* The tgkill syscall was instroduced for i386 in 2.5.75.  For Alpha
    it was introduced in 2.6.0-test1 which unfortunately cannot be
-   distinguished from 2.6.0.  On x86-64, ppc, and ppc64 it was
-   introduced in 2.6.0-test3. */
+   distinguished from 2.6.0.  On x86-64 it was introduced in
+   2.6.0-test3. */
 #if (__LINUX_KERNEL_VERSION >= 132427 && defined __i386__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __alpha__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __x86_64__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
 # define __ASSUME_TGKILL	1
 #endif
 
 /* The utimes syscall has been available for some architectures
-   forever.  For x86 it was introduced after 2.5.75, for x86-64,
-   ppc, and ppc64 it was introduced in 2.6.0-test3.  */
-#if defined __alpha__ || defined __ia64__ \
+   forever.  For x86 it was introduced after 2.5.75, for x86-64 in
+   2.6.0-test3.  */
+#if defined __alpha__ || defined __ia64__ || defined __hppa__ \
     || defined __sparc__ \
     || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__) \
     || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __powerpc__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
 # define __ASSUME_UTIMES	1
 #endif
@@ -360,11 +378,8 @@
 #endif
 
 /* The fixed version of the posix_fadvise64 syscall appeared in
-   2.6.0-test3.  At least for x86.  Powerpc support appeared in
-   2.6.2, but for 32-bit userspace only.  */
-#if (__LINUX_KERNEL_VERSION >= 132609 && defined __i386__) \
-    || (__LINUX_KERNEL_VERSION >= 132610 && defined __powerpc__ \
-       && !defined __powerpc64__)
+   2.6.0-test3.  At least for x86.  */
+#if __LINUX_KERNEL_VERSION >= 132609 && defined __i386__
 # define __ASSUME_FADVISE64_64_SYSCALL	1
 #endif
 
@@ -388,10 +403,8 @@
 #endif
 
 /* Starting with version 2.6.4-rc1 the getdents syscall returns d_type
-   information as well and in between 2.6.5 and 2.6.8 most compat wrappers
-   were fixed too.  Except s390{,x} which was fixed in 2.6.11.  */
-#if (__LINUX_KERNEL_VERSION >= 0x020608 && !defined __s390__) \
-    || (__LINUX_KERNEL_VERSION >= 0x02060b && defined __s390__)
+   information as well.  */
+#if __LINUX_KERNEL_VERSION >= 132612
 # define __ASSUME_GETDENTS32_D_TYPE	1
 #endif
 
@@ -401,60 +414,12 @@
 # define __ASSUME_BRK_PAGE_ROUNDED	1
 #endif
 
-/* Starting with version 2.6.9, the waitid system call is available.
-   Except for powerpc{,64} and s390{,x}, where it is available in 2.6.12.  */
-#if (__LINUX_KERNEL_VERSION >= 0x020609 \
-     && !defined __powerpc__ && !defined __s390__) \
-    || (__LINUX_KERNEL_VERSION >= 0x02060c \
-	&& (defined __powerpc__ || defined __s390__))
+/* Starting with version 2.6.9, the waitid system call is available.  */
+#if __LINUX_KERNEL_VERSION >=  0x020609
 # define __ASSUME_WAITID_SYSCALL	1
 #endif
 
 /* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */
 #if __LINUX_KERNEL_VERSION >= 0x020609 && defined __alpha__
 #define __ASSUME_IEEE_RAISE_EXCEPTION	1
-#endif
-
-/* On sparc64 stat64/lstat64/fstat64 syscalls were introduced in 2.6.12.  */
-#if __LINUX_KERNEL_VERSION >= 0x02060c && defined __sparc__ \
-    && defined __arch64__
-# define __ASSUME_STAT64_SYSCALL	1
-#endif
-
-/* Early kernel used "shm" as the filesystem name for the filesystem used
-   for shm_open etc.  Later it is "tmpfs".  2.4.20 is a safe bet for the
-   cutover.  */
-#if __LINUX_KERNEL_VERSION >= 0x02041a
-# define __ASSUME_TMPFS_NAME	1
-#endif
-
-/* pselect was introduced just after 2.6.16-rc1.  Due to the way the
-   kernel versions are advertised we can only rely on 2.6.17 to have
-   the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611 && !defined __x86_64__
-# define __ASSUME_PSELECT	1
-#endif
-
-/* ppoll was introduced just after 2.6.16-rc1.  Due to the way the
-   kernel versions are advertised we can only rely on 2.6.17 to have
-   the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611 && !defined __x86_64__
-# define __ASSUME_PPOLL	1
-#endif
-
-/* The *at syscalls were introduced just after 2.6.16-rc1.  Due to the way the
-   kernel versions are advertised we can only rely on 2.6.17 to have
-   the code.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611
-# define __ASSUME_ATFCTS	1
-#endif
-
-/* Support for inter-process robust mutexes was added in 2.6.17.  */
-#if __LINUX_KERNEL_VERSION >= 0x020611
-# define __ASSUME_SET_ROBUST_LIST	1
-#endif
-
-/* Support for PI futexes was added in 2.6.18.  */
-#if __LINUX_KERNEL_VERSION >= 0x020612
-# define __ASSUME_FUTEX_LOCK_PI	1
 #endif

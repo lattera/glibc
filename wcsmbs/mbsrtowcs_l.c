@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 2002.
 
@@ -17,7 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
 #include <ctype.h>
 #include <string.h>
 #include "wcsmbsload.h"
@@ -29,7 +28,7 @@
 #include <wchar.h>
 #include <wcsmbsload.h>
 
-#include <sysdep.h>
+#include <assert.h>
 
 #ifndef EILSEQ
 # define EILSEQ EINVAL
@@ -64,11 +63,6 @@ __mbsrtowcs_l (dst, src, len, ps, l)
 
   /* Get the structure with the function pointers.  */
   towc = fcts->towc;
-  __gconv_fct fct = towc->__fct;
-#ifdef PTR_DEMANGLE
-  if (towc->__shlib_handle != NULL)
-    PTR_DEMANGLE (fct);
-#endif
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
@@ -76,19 +70,20 @@ __mbsrtowcs_l (dst, src, len, ps, l)
       mbstate_t temp_state;
       wchar_t buf[64];		/* Just an arbitrary size.  */
       const unsigned char *inbuf = (const unsigned char *) *src;
-      const unsigned char *srcend = inbuf + strlen (*src) + 1;
+      const unsigned char *srcend = inbuf + strlen (inbuf) + 1;
 
       temp_state = *data.__statep;
       data.__statep = &temp_state;
 
       result = 0;
-      data.__outbufend = (unsigned char *) buf + sizeof (buf);
+      data.__outbufend = (char *) buf + sizeof (buf);
       do
 	{
-	  data.__outbuf = (unsigned char *) buf;
+	  data.__outbuf = (char *) buf;
 
-	  status = DL_CALL_FCT (fct, (towc, &data, &inbuf, srcend, NULL,
-				      &non_reversible, 0, 1));
+	  status = DL_CALL_FCT (towc->__fct,
+				(towc, &data, &inbuf, srcend, NULL,
+				 &non_reversible, 0, 1));
 
 	  result += (wchar_t *) data.__outbuf - buf;
 	}
@@ -119,10 +114,11 @@ __mbsrtowcs_l (dst, src, len, ps, l)
 	{
 	  /* Pessimistic guess as to how much input we can use.  In the
 	     worst case we need one input byte for one output wchar_t.  */
-	  srcend = srcp + __strnlen ((const char *) srcp, len) + 1;
+	  srcend = srcp + __strnlen (srcp, len) + 1;
 
-	  status = DL_CALL_FCT (fct, (towc, &data, &srcp, srcend, NULL,
-				      &non_reversible, 0, 1));
+	  status = DL_CALL_FCT (towc->__fct,
+				(towc, &data, &srcp, srcend, NULL,
+				 &non_reversible, 0, 1));
 	  if ((status != __GCONV_EMPTY_INPUT
 	       && status != __GCONV_INCOMPLETE_INPUT)
 	      /* Not all input read.  */
@@ -135,7 +131,7 @@ __mbsrtowcs_l (dst, src, len, ps, l)
 	}
 
       /* Make the end if the input known to the caller.  */
-      *src = (const char *) srcp;
+      *src = srcp;
 
       result = (wchar_t *) data.__outbuf - dst;
 

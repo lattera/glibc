@@ -1,5 +1,5 @@
 ifeq ($(subdir),misc)
-sysdep_routines += ioperm iopl vm86 call_pselect6
+sysdep_routines += ioperm iopl vm86
 sysdep_headers += sys/elf.h sys/perm.h sys/reg.h sys/vm86.h sys/debugreg.h sys/io.h
 endif
 
@@ -11,8 +11,4 @@ endif
 
 ifeq ($(subdir),resource)
 sysdep_routines += oldgetrlimit64
-endif
-
-ifeq ($(subdir),stdlib)
-gen-as-const-headers += ucontext_i.sym
 endif

@@ -31,6 +31,10 @@
 /*
  * From: @(#)rpc_scan.c 1.11 89/02/22 (C) 1987 SMI
  */
+#if defined(LIBC_SCCS) && !defined(lint)
+static const char scan_rcsid[] =
+  "$Id$";
+#endif
 
 /*
  * rpc_scan.c, Scanner for the RPC protocol compiler
@@ -535,7 +539,6 @@ docppline (const char *line, int *lineno, const char **fname)
   *p = 0;
   if (*file == 0)
     {
-      free (file);
       *fname = NULL;
     }
   else

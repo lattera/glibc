@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001-2005,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -59,10 +59,9 @@ struct blacklist_t
 
 struct ent_t
 {
-  bool netgroup;
-  bool files;
-  bool first;
-  enum nss_status setent_status;
+  bool_t netgroup;
+  bool_t files;
+  bool_t first;
   FILE *stream;
   struct blacklist_t blacklist;
   struct spwd pwd;
@@ -70,9 +69,8 @@ struct ent_t
 };
 typedef struct ent_t ent_t;
 
-static ent_t ext_ent = { false, true, false, NSS_STATUS_SUCCESS, NULL,
-			 { NULL, 0, 0},
-			 { NULL, NULL, 0, 0, 0, 0, 0, 0, 0}};
+static ent_t ext_ent = {0, TRUE, 0, NULL, {NULL, 0, 0},
+			{NULL, NULL, 0, 0, 0, 0, 0, 0, 0}};
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
@@ -163,7 +161,7 @@ internal_setspent (ent_t *ent, int stayopen)
   enum nss_status status = NSS_STATUS_SUCCESS;
 
   ent->first = ent->netgroup = 0;
-  ent->files = true;
+  ent->files = TRUE;
 
   /* If something was left over free it.  */
   if (ent->netgroup)
@@ -214,7 +212,7 @@ internal_setspent (ent_t *ent, int stayopen)
   give_spwd_free (&ent->pwd);
 
   if (status == NSS_STATUS_SUCCESS && nss_setspent)
-    ent->setent_status = nss_setspent (stayopen);
+    return nss_setspent (stayopen);
 
   return status;
 }
@@ -253,8 +251,8 @@ internal_endspent (ent_t *ent)
   if (ent->netgroup)
     __internal_endnetgrent (&ent->netgrdata);
 
-  ent->first = ent->netgroup = false;
-  ent->files = true;
+  ent->first = ent->netgroup = FALSE;
+  ent->files = TRUE;
 
   if (ent->blacklist.data != NULL)
     {
@@ -296,23 +294,19 @@ getspent_next_nss_netgr (const char *name, struct spwd *result, ent_t *ent,
   if (!nss_getspnam_r)
     return NSS_STATUS_UNAVAIL;
 
-  /* If the setpwent call failed, say so.  */
-  if (ent->setent_status != NSS_STATUS_SUCCESS)
-    return ent->setent_status;
-
   if (yp_get_default_domain (&curdomain) != YPERR_SUCCESS)
     {
-      ent->netgroup = false;
-      ent->first = false;
+      ent->netgroup = FALSE;
+      ent->first = FALSE;
       give_spwd_free (&ent->pwd);
       return NSS_STATUS_UNAVAIL;
     }
 
-  if (ent->first == true)
+  if (ent->first == TRUE)
     {
       memset (&ent->netgrdata, 0, sizeof (struct __netgrent));
       __internal_setnetgrent (group, &ent->netgrdata);
-      ent->first = false;
+      ent->first = FALSE;
     }
 
   while (1)
@@ -327,7 +321,7 @@ getspent_next_nss_netgr (const char *name, struct spwd *result, ent_t *ent,
       if (status != 1)
 	{
 	  __internal_endnetgrent (&ent->netgrdata);
-	  ent->netgroup = false;
+	  ent->netgroup = FALSE;
 	  give_spwd_free (&ent->pwd);
 	  return NSS_STATUS_RETURN;
 	}
@@ -402,16 +396,18 @@ getspent_next_nss (struct spwd *result, ent_t *ent,
   return NSS_STATUS_SUCCESS;
 }
 
-
 /* This function handle the +user entrys in /etc/shadow */
 static enum nss_status
 getspnam_plususer (const char *name, struct spwd *result, ent_t *ent,
 		   char *buffer, size_t buflen, int *errnop)
 {
+  struct spwd pwd;
+  char *p;
+  size_t plen;
+
   if (!nss_getspnam_r)
     return NSS_STATUS_UNAVAIL;
 
-  struct spwd pwd;
   memset (&pwd, '\0', sizeof (struct spwd));
   pwd.sp_warn = -1;
   pwd.sp_inact = -1;
@@ -420,19 +416,18 @@ getspnam_plususer (const char *name, struct spwd *result, ent_t *ent,
 
   copy_spwd_changes (&pwd, result, NULL, 0);
 
-  size_t plen = spwd_need_buflen (&pwd);
+  plen = spwd_need_buflen (&pwd);
   if (plen > buflen)
     {
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
-  char *p = buffer + (buflen - plen);
+  p = buffer + (buflen - plen);
   buflen -= plen;
 
-  enum nss_status status = nss_getspnam_r (name, result, buffer, buflen,
-					   errnop);
-  if (status != NSS_STATUS_SUCCESS)
-    return status;
+  if (nss_getspnam_r (name, result, buffer, buflen, errnop) !=
+      NSS_STATUS_SUCCESS)
+    return NSS_STATUS_NOTFOUND;
 
   if (in_blacklist (result->sp_namp, strlen (result->sp_namp), ent))
     return NSS_STATUS_NOTFOUND;
@@ -442,7 +437,6 @@ getspnam_plususer (const char *name, struct spwd *result, ent_t *ent,
   /* We found the entry.  */
   return NSS_STATUS_SUCCESS;
 }
-
 
 static enum nss_status
 getspent_next_file (struct spwd *result, ent_t *ent,
@@ -524,8 +518,8 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	{
 	  int status;
 
-	  ent->netgroup = true;
-	  ent->first = true;
+	  ent->netgroup = TRUE;
+	  ent->first = TRUE;
 	  copy_spwd_changes (&ent->pwd, result, NULL, 0);
 
 	  status = getspent_next_nss_netgr (NULL, result, ent,
@@ -581,8 +575,8 @@ getspent_next_file (struct spwd *result, ent_t *ent,
       /* +:... */
       if (result->sp_namp[0] == '+' && result->sp_namp[1] == '\0')
 	{
-	  ent->files = false;
-	  ent->first = true;
+	  ent->files = FALSE;
+	  ent->first = TRUE;
 	  copy_spwd_changes (&ent->pwd, result, NULL, 0);
 
 	  return getspent_next_nss (result, ent, buffer, buflen, errnop);
@@ -617,7 +611,6 @@ internal_getspent_r (struct spwd *pw, ent_t *ent,
     return getspent_next_nss (pw, ent, buffer, buflen, errnop);
 }
 
-
 enum nss_status
 _nss_compat_getspent_r (struct spwd *pwd, char *buffer, size_t buflen,
 			int *errnop)
@@ -640,7 +633,6 @@ _nss_compat_getspent_r (struct spwd *pwd, char *buffer, size_t buflen,
 
   return result;
 }
-
 
 /* Searches in /etc/passwd and the NIS/NIS+ map for a special user */
 static enum nss_status
@@ -784,14 +776,13 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
   return NSS_STATUS_SUCCESS;
 }
 
-
 enum nss_status
 _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
 			char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status result;
-  ent_t ent = { false, true, false, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0},
-		{ NULL, NULL, 0, 0, 0, 0, 0, 0, 0}};
+  ent_t ent = {0, TRUE, 0, NULL, {NULL, 0, 0},
+	       {NULL, NULL, 0, 0, 0, 0, 0, 0, 0}};
 
   if (name[0] == '-' || name[0] == '+')
     return NSS_STATUS_NOTFOUND;
@@ -812,7 +803,6 @@ _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
 
   return result;
 }
-
 
 /* Support routines for remembering -@netgroup and -user entries.
    The names are stored in a single string with `|' as separator. */
@@ -860,7 +850,6 @@ blacklist_store_name (const char *name, ent_t *ent)
   return;
 }
 
-
 /* Returns TRUE if ent->blacklist contains name, else FALSE.  */
 static bool_t
 in_blacklist (const char *name, int namelen, ent_t *ent)
@@ -869,7 +858,7 @@ in_blacklist (const char *name, int namelen, ent_t *ent)
   char *cp;
 
   if (ent->blacklist.data == NULL)
-    return false;
+    return FALSE;
 
   buf[0] = '|';
   cp = stpcpy (&buf[1], name);

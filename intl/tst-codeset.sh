@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test of bind_textdomain_codeset.
-# Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -26,11 +26,12 @@ LC_ALL=C
 export LC_ALL
 
 # Generate the test data.
-msgfmt -o ${objpfx}codeset.mo.$$ tstcodeset.po || exit
+test -d ${objpfx}domaindir || mkdir ${objpfx}domaindir
 # Create the domain directories.
-mkdir -p ${objpfx}domaindir/de_DE/LC_MESSAGES
+test -d ${objpfx}domaindir/de_DE || mkdir ${objpfx}domaindir/de_DE
+test -d ${objpfx}domaindir/de_DE/LC_MESSAGES || mkdir ${objpfx}domaindir/de_DE/LC_MESSAGES
 # Populate them.
-mv -f ${objpfx}codeset.mo.$$ ${objpfx}domaindir/de_DE/LC_MESSAGES/codeset.mo
+msgfmt -o ${objpfx}domaindir/de_DE/LC_MESSAGES/codeset.mo tstcodeset.po
 
 GCONV_PATH=${common_objpfx}iconvdata
 export GCONV_PATH

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdio_ext.h>
@@ -34,19 +33,7 @@ __readonly_area (const char *ptr, size_t size)
 
   FILE *fp = fopen ("/proc/self/maps", "rc");
   if (fp == NULL)
-    {
-      /* It is the system administrator's choice to not have /proc
-	 available to this process (e.g., because it runs in a chroot
-	 environment.  Don't fail in this case.  */
-      if (errno == ENOENT
-	  /* The kernel has a bug in that a process is denied access
-	     to the /proc filesystem if it is set[ug]id.  There has
-	     been no willingness to change this in the kernel so
-	     far.  */
-	  || errno == EACCES)
-	return 1;
-      return -1;
-    }
+    return -1;
 
   /* We need no locking.  */
   __fsetlocking (fp, FSETLOCKING_BYCALLER);

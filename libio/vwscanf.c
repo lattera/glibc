@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1999, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,8 +29,9 @@
 #include <wchar.h>
 
 int
-__vwscanf (const wchar_t *format, _IO_va_list args)
+vwscanf (format, args)
+     const wchar_t *format;
+     _IO_va_list args;
 {
   return _IO_vfwscanf (_IO_stdin, format, args, NULL);
 }
-ldbl_strong_alias (__vwscanf, vwscanf)

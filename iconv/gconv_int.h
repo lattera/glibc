@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,8 +22,6 @@
 
 #include "gconv.h"
 #include <stdlib.h>		/* For alloca used in macro below.  */
-#include <ctype.h>		/* For __toupper_l used in macro below.  */
-#include <string.h>		/* For strlen et al used in macro below.  */
 #include <bits/libc-lock.h>
 
 __BEGIN_DECLS
@@ -128,7 +126,7 @@ extern struct gconv_module *__gconv_modules_db attribute_hidden;
 extern const char *__gconv_path_envvar attribute_hidden;
 
 /* Lock for the conversion database content.  */
-__libc_lock_define (extern, __gconv_lock attribute_hidden)
+__libc_lock_define (extern, __gconv_lock);
 
 
 /* The gconv functions expects the name to be in upper case and complete,
@@ -148,7 +146,7 @@ __libc_lock_define (extern, __gconv_lock attribute_hidden)
     tmp = result = __alloca (cp - (str) + 3 + suffix_len);		      \
     cp = (str);								      \
     while (*cp != '\0')							      \
-      *tmp++ = __toupper_l (*cp++, _nl_C_locobj_ptr);			      \
+      *tmp++ = __toupper_l (*cp++, &_nl_C_locobj);			      \
     if (cnt < 2)							      \
       {									      \
 	*tmp++ = '/';							      \

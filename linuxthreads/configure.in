@@ -1,0 +1,14 @@
+GLIBC_PROVIDES dnl See top-level configure.in.
+
+# LinuxThreads fragment for GNU C library configure mechanism.
+# This is a shell script fragment sourced by the main configure script.
+
+for other in $add_ons; do
+  test $other = nptl || continue
+  if test $add_ons_automatic = yes; then
+    AC_MSG_RESULT($libc_add_on disabled because $other add-on is also in use)
+    libc_add_on=
+  else
+    AC_MSG_ERROR(cannot use both $libc_add_on and $other add-ons in one build)
+  fi
+done

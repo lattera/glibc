@@ -1,36 +1,3 @@
-2006-02-27  Roland McGrath  <roland@redhat.com>
-
-	* Makefile: Use $(..) in place of ../.
-	* configure.in (libc_add_on_canonical, libc_add_on_subdirs): Set them.
-	* configure: Regenerated.
-
-2006-02-25  Roland McGrath  <roland@redhat.com>
-
-	* configure.in: New file.
-	* configure: Replaced with generated file.
-	* sysdeps/unix/configure: File removed.
-
-2005-03-08  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* iconvme.c (SIZE_MAX): New macro, if not already defined.
-	(iconv_string): Don't guess a size-zero buffer, as that might cause
-	buffer overrun.  Instead, avoid multiplying by MB_LEN_MAX if the
-	result would be 'too large', where 'too large' is (heuristically)
-	the square root of SIZE_MAX, divided by MB_LEN_MAX to allay
-	overflow concerns.  This will prevent some unwanted malloc failures
-	when the inputs are very large.
-
-2005-02-12  Simon Josefsson  <jas@extundo.com >
-
-	* iconvme.h: New file, extracted from toutf8.c but improved.
-	* iconvme.c: New file.
-	* toutf8.c: Include stringprep.h first, to make the compiler check
-	that stringprep.h is standalone.  Improve comments.  Replace
-	#include of errno.h and sys/param.h with iconvme.h.  Don't define
-	ICONV_CONST.
-	(stringprep_convert): Rewrite to use iconvme.h.
-	* Makefile (libcidn-routines): Add iconvme.
-
 2004-10-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* idn-stub.c (unload_libidn): Don't define outside libc.

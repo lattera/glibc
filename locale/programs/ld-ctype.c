@@ -1,19 +1,21 @@
-/* Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -992,8 +994,8 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		total += iov[2 + elem + offset].iov_len;
 	      }
 	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = 4 - (total % 4);
-	    total += 4 - (total % 4);
+	    iov[2 + elem + offset].iov_len = 1 + (4 - ((total + 1) % 4));
+	    total += 1 + (4 - ((total + 1) % 4));
 
 	    idx[elem + 1] = idx[elem] + total;
 	    break;
@@ -1010,8 +1012,8 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		total += iov[2 + elem + offset].iov_len;
 	      }
 	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = 4 - (total % 4);
-	    total += 4 - (total % 4);
+	    iov[2 + elem + offset].iov_len = 1 + (4 - ((total + 1) % 4));
+	    total += 1 + (4 - ((total + 1) % 4));
 
 	    idx[elem + 1] = idx[elem] + total;
 	    break;
@@ -1153,7 +1155,7 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	    iov[2 + elem + offset].iov_base =
 	      ctype->default_missing ?: (uint32_t *) L"";
 	    iov[2 + elem + offset].iov_len =
-	      wcslen (iov[2 + elem + offset].iov_base) * sizeof (uint32_t);
+	      wcslen (iov[2 + elem + offset].iov_base);
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
@@ -1472,7 +1474,7 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
     {
     invalid_range:
       lr_error (ldfile,
-		_("`%s' and `%.*s' are not valid names for symbolic range"),
+		_("`%s' and `%.*s' are no valid names for symbolic range"),
 		last_str, (int) now->val.str.lenmb, nowstr);
       return;
     }
@@ -1866,9 +1868,6 @@ find_translit (struct localedef_t *locale, const struct charmap_t *charmap,
   assert (locale != NULL);
   ctype = locale->categories[LC_CTYPE].ctype;
 
-  if (ctype == NULL)
-    return NULL;
-
   if (ctype->translit != NULL)
     result = find_translit2 (ctype, charmap, wch);
 
@@ -2248,9 +2247,6 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 	      if (locfile_read (copy_locale, charmap) != 0)
 		goto skip_category;
 	    }
-
-	  if (copy_locale->categories[LC_CTYPE].ctype == NULL)
-	    return;
 	}
 
       lr_ignore_rest (ldfile, 1);
@@ -3772,7 +3768,7 @@ translit_flatten (struct locale_ctype_t *ctype,
 
       other = find_locale (LC_CTYPE, copy_locale, copy_repertoire, charmap);
 
-      if (other == NULL || other->categories[LC_CTYPE].ctype == NULL)
+      if (other == NULL)
 	{
 	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: transliteration data from locale `%s' not available"),
@@ -3850,14 +3846,9 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
     {
       ctype->class_b[nr] = (uint32_t *) xcalloc (256 / 32, sizeof (uint32_t));
 
-      /* We only set CLASS_B for the bits in the ISO C classes, not
-	 the user defined classes.  The number should not change but
-	 who knows.  */
-#define LAST_ISO_C_BIT 11
-      if (nr <= LAST_ISO_C_BIT)
-	for (idx = 0; idx < 256; ++idx)
-	  if (ctype->class256_collection[idx] & _ISbit (nr))
-	    ctype->class_b[nr][idx >> 5] |= (uint32_t) 1 << (idx & 0x1f);
+      for (idx = 0; idx < 256; ++idx)
+	if (ctype->class256_collection[idx] & _ISbit (nr))
+	  ctype->class_b[nr][idx >> 5] |= (uint32_t)1 << (idx & 0x1f);
     }
 
   for (nr = 0; nr < ctype->nr_charclass; nr++)

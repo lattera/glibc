@@ -1,5 +1,4 @@
-# Copyright (C) 1998,2000,2002,2003,2004,2005,2006
-#	Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -37,12 +36,13 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 
 ifeq ($(have-thread-library),yes)
 
+others := nscd_nischeck
 ifneq (yesyes,$(have-fpie)$(build-shared))
 others += nscd
 endif
-install-sbin := nscd
+install-sbin := nscd nscd_nischeck
 
-extra-objs := $(nscd-modules:=.o)
+extra-objs := $(nscd-modules:=.o) nscd_nischeck.o
 
 endif
 
@@ -51,32 +51,15 @@ otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 	     $(resolvobjdir)/libresolv.a
 endif
 
-all-nscd-modules := $(nscd-modules) selinux
 ifeq (yes,$(have-selinux))
-ifeq (yes,$(have-libaudit))
-libaudit = -laudit
-ifeq (yes,$(have-libcap))
-libcap = -lcap
-endif
-endif
-
 nscd-modules += selinux
-selinux-LIBS := -lselinux $(libaudit) $(libcap)
-
-# The configure.in check for libselinux and its headers did not use
-# $SYSINCLUDES.  The directory specified by --with-headers usually
-# contains only the basic kernel interface headers, not something like
-# libselinux.  So the simplest thing is to presume that the standard
-# system headers will be ok for this file.
-$(objpfx)nscd_stat.o: sysincludes = # nothing
-$(objpfx)selinux.o: sysincludes = # nothing
+selinux-LIBS := -lselinux
 endif
-
-LDLIBS-nscd = $(selinux-LIBS)
 
 distribute := nscd.h nscd-client.h dbg_log.h \
-	      $(addsuffix .c, $(filter-out xmalloc,$(all-nscd-modules))) \
-	      nscd.conf nscd.init nscd_proto.h nscd-types.h
+	      $(addsuffix .c, $(filter-out xmalloc, $(nscd-modules))) \
+	      nscd_nischeck.c nscd.conf nscd.init nscd_proto.h \
+	      nscd-types.h
 
 include ../Rules
 
@@ -86,12 +69,9 @@ CFLAGS-nscd_gethst_r.c = -fexceptions
 CFLAGS-nscd_getai.c = -fexceptions
 CFLAGS-nscd_initgroups.c = -fexceptions
 
-nscd-cflags = -DIS_IN_nscd=1 -D_FORTIFY_SOURCE=2
+nscd-cflags = -DIS_IN_nscd=1
 ifeq (yesyes,$(have-fpie)$(build-shared))
 nscd-cflags += -fpie
-endif
-ifeq (yes,$(have-ssp))
-nscd-cflags += -fstack-protector
 endif
 
 CFLAGS-nscd.c += $(nscd-cflags)
@@ -124,13 +104,13 @@ relro-LDFLAGS += -Wl,-z,now
 endif
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
-	$(LINK.o) -pie -Wl,-O1 $(nscd-cflags) \
+	$(LINK.o) -pie -Wl,-O1 \
 	  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(relro-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -o $@ $^ $(LDLIBS-nscd) $(common-objpfx)libc_nonshared.a
+	  -o $@ $^ $(selinux-LIBS) $(common-objpfx)libc_nonshared.a
 endif
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
@@ -139,11 +119,14 @@ lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
+$(objpfx)nscd_nischeck: $(objpfx)nscd_nischeck.o
 
 ifeq ($(build-shared),yes)
 $(objpfx)nscd: $(common-objpfx)rt/librt.so $(shared-thread-library) \
 	       $(common-objpfx)nis/libnsl.so
+$(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.so
 else
 $(objpfx)nscd: $(common-objpfx)rt/librt.a $(static-thread-library) \
 	       $(common-objpfx)nis/libnsl.a
+$(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.a
 endif

@@ -12,8 +12,8 @@ elide-routines.os += hp-timing
 
 ifeq (yes,$(build-shared))
 # Compatibility
-sysdep_routines += libgcc-compat
-shared-only-routines += libgcc-compat
+sysdep_routines += ia64libgcc
+shared-only-routines += ia64libgcc
 endif
 endif
 

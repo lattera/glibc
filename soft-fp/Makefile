@@ -23,18 +23,17 @@
 subdir	:= soft-fp
 
 gcc-single-routines := negsf2 addsf3 subsf3 mulsf3 divsf3 eqsf2 \
-	lesf2 gesf2 unordsf2 fixsfsi fixunssfsi floatsisf fixsfdi        \
-	fixunssfdi floatdisf sqrtsf2 floatunsisf floatundisf
+	lesf2 gesf2 fixsfsi fixunssfsi floatsisf fixsfdi        \
+	fixunssfdi floatdisf sqrtsf2
 
 gcc-double-routines := negdf2 adddf3 subdf3 muldf3 divdf3 eqdf2 \
-	ledf2 gedf2 unorddf2 fixdfsi fixunsdfsi floatsidf fixdfdi        \
-	fixunsdfdi floatdidf extendsfdf2 truncdfsf2 sqrtdf2 floatunsidf \
-	floatundidf
+	ledf2 gedf2 fixdfsi fixunsdfsi floatsidf fixdfdi        \
+	fixunsdfdi floatdidf extendsfdf2 truncdfsf2 sqrtdf2
 
 gcc-quad-routines := negtf2 addtf3 subtf3 multf3 divtf3 eqtf2 \
-	letf2 getf2 unordtf2 fixtfsi fixunstfsi floatsitf fixtfdi      \
+	letf2 getf2 fixtfsi fixunstfsi floatsitf fixtfdi      \
 	fixunstfdi floatditf extendsftf2 trunctfsf2 extenddftf2 \
-	trunctfdf2 sqrttf2 floatunsitf floatunditf
+	trunctfdf2 sqrttf2
 
 distribute := double.h op-1.h op-2.h op-4.h op-common.h quad.h \
 	single.h soft-fp.h extended.h Banner op-8.h testit.c \

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,7 +18,6 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <stdlib.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 
@@ -29,8 +28,6 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
      pthread_mutex_t *mutex;
      int decr;
 {
-  int newowner = 0;
-
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {
     case PTHREAD_MUTEX_RECURSIVE_NP:
@@ -41,214 +38,31 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
       if (--mutex->__data.__count != 0)
 	/* We still hold the mutex.  */
 	return 0;
-      goto normal;
+      break;
 
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Error checking mutex.  */
       if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid)
 	  || ! lll_mutex_islocked (mutex->__data.__lock))
 	return EPERM;
-      /* FALLTHROUGH */
-
-    case PTHREAD_MUTEX_TIMED_NP:
-    case PTHREAD_MUTEX_ADAPTIVE_NP:
-      /* Always reset the owner field.  */
-    normal:
-      mutex->__data.__owner = 0;
-      if (decr)
-	/* One less user.  */
-	--mutex->__data.__nusers;
-
-      /* Unlock.  */
-      lll_mutex_unlock (mutex->__data.__lock);
       break;
-
-    case PTHREAD_MUTEX_ROBUST_RECURSIVE_NP:
-      /* Recursive mutex.  */
-      if ((mutex->__data.__lock & FUTEX_TID_MASK)
-	  == THREAD_GETMEM (THREAD_SELF, tid)
-	  && __builtin_expect (mutex->__data.__owner
-			       == PTHREAD_MUTEX_INCONSISTENT, 0))
-	{
-	  if (--mutex->__data.__count != 0)
-	    /* We still hold the mutex.  */
-	    return ENOTRECOVERABLE;
-
-	  goto notrecoverable;
-	}
-
-      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
-	return EPERM;
-
-      if (--mutex->__data.__count != 0)
-	/* We still hold the mutex.  */
-	return 0;
-
-      goto robust;
-
-    case PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP:
-    case PTHREAD_MUTEX_ROBUST_NORMAL_NP:
-    case PTHREAD_MUTEX_ROBUST_ADAPTIVE_NP:
-      if ((mutex->__data.__lock & FUTEX_TID_MASK)
-	  != THREAD_GETMEM (THREAD_SELF, tid)
-	  || ! lll_mutex_islocked (mutex->__data.__lock))
-	return EPERM;
-
-      /* If the previous owner died and the caller did not succeed in
-	 making the state consistent, mark the mutex as unrecoverable
-	 and make all waiters.  */
-      if (__builtin_expect (mutex->__data.__owner
-			    == PTHREAD_MUTEX_INCONSISTENT, 0))
-      notrecoverable:
-	newowner = PTHREAD_MUTEX_NOTRECOVERABLE;
-
-    robust:
-      /* Remove mutex from the list.  */
-      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
-		     &mutex->__data.__list.__next);
-      DEQUEUE_MUTEX (mutex);
-
-      mutex->__data.__owner = newowner;
-      if (decr)
-	/* One less user.  */
-	--mutex->__data.__nusers;
-
-      /* Unlock.  */
-      lll_robust_mutex_unlock (mutex->__data.__lock);
-
-      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
-      break;
-
-    case PTHREAD_MUTEX_PI_RECURSIVE_NP:
-      /* Recursive mutex.  */
-      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
-	return EPERM;
-
-      if (--mutex->__data.__count != 0)
-	/* We still hold the mutex.  */
-	return 0;
-      goto continue_pi;
-
-    case PTHREAD_MUTEX_PI_ROBUST_RECURSIVE_NP:
-      /* Recursive mutex.  */
-      if ((mutex->__data.__lock & FUTEX_TID_MASK)
-	  == THREAD_GETMEM (THREAD_SELF, tid)
-	  && __builtin_expect (mutex->__data.__owner
-			       == PTHREAD_MUTEX_INCONSISTENT, 0))
-	{
-	  if (--mutex->__data.__count != 0)
-	    /* We still hold the mutex.  */
-	    return ENOTRECOVERABLE;
-
-	  goto pi_notrecoverable;
-	}
-
-      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
-	return EPERM;
-
-      if (--mutex->__data.__count != 0)
-	/* We still hold the mutex.  */
-	return 0;
-
-      goto continue_pi;
-
-    case PTHREAD_MUTEX_PI_ERRORCHECK_NP:
-    case PTHREAD_MUTEX_PI_NORMAL_NP:
-    case PTHREAD_MUTEX_PI_ADAPTIVE_NP:
-    case PTHREAD_MUTEX_PI_ROBUST_ERRORCHECK_NP:
-    case PTHREAD_MUTEX_PI_ROBUST_NORMAL_NP:
-    case PTHREAD_MUTEX_PI_ROBUST_ADAPTIVE_NP:
-      if ((mutex->__data.__lock & FUTEX_TID_MASK)
-	  != THREAD_GETMEM (THREAD_SELF, tid)
-	  || ! lll_mutex_islocked (mutex->__data.__lock))
-	return EPERM;
-
-      /* If the previous owner died and the caller did not succeed in
-	 making the state consistent, mark the mutex as unrecoverable
-	 and make all waiters.  */
-      if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0
-	  && __builtin_expect (mutex->__data.__owner
-			       == PTHREAD_MUTEX_INCONSISTENT, 0))
-      pi_notrecoverable:
-       newowner = PTHREAD_MUTEX_NOTRECOVERABLE;
-
-    continue_pi:
-      if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0)
-	{
-	  /* Remove mutex from the list.
-	     Note: robust PI futexes are signaled by setting bit 0.  */
-	  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
-			 (void *) (((uintptr_t) &mutex->__data.__list.__next)
-				   | 1));
-	  DEQUEUE_MUTEX (mutex);
-	}
-
-      mutex->__data.__owner = newowner;
-      if (decr)
-	/* One less user.  */
-	--mutex->__data.__nusers;
-
-      /* Unlock.  */
-      if ((mutex->__data.__lock & FUTEX_WAITERS) != 0
-	  || atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock, 0,
-						   THREAD_GETMEM (THREAD_SELF,
-								  tid)))
-	{
-	  INTERNAL_SYSCALL_DECL (__err);
-	  INTERNAL_SYSCALL (futex, __err, 2, &mutex->__data.__lock,
-			    FUTEX_UNLOCK_PI);
-	}
-
-      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
-      break;
-
-    case PTHREAD_MUTEX_PP_RECURSIVE_NP:
-      /* Recursive mutex.  */
-      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
-	return EPERM;
-
-      if (--mutex->__data.__count != 0)
-	/* We still hold the mutex.  */
-	return 0;
-      goto pp;
-
-    case PTHREAD_MUTEX_PP_ERRORCHECK_NP:
-      /* Error checking mutex.  */
-      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid)
-	  || (mutex->__data.__lock & ~ PTHREAD_MUTEX_PRIO_CEILING_MASK) == 0)
-	return EPERM;
-      /* FALLTHROUGH */
-
-    case PTHREAD_MUTEX_PP_NORMAL_NP:
-    case PTHREAD_MUTEX_PP_ADAPTIVE_NP:
-      /* Always reset the owner field.  */
-    pp:
-      mutex->__data.__owner = 0;
-
-      if (decr)
-	/* One less user.  */
-	--mutex->__data.__nusers;
-
-      /* Unlock.  */
-      int newval, oldval;
-      do
-	{
-	  oldval = mutex->__data.__lock;
-	  newval = oldval & PTHREAD_MUTEX_PRIO_CEILING_MASK;
-	}
-      while (atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock,
-						   newval, oldval));
-
-      if ((oldval & ~PTHREAD_MUTEX_PRIO_CEILING_MASK) > 1)
-	lll_futex_wake (&mutex->__data.__lock, 1);
-
-      int oldprio = newval >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
-      return __pthread_tpp_change_priority (oldprio, -1);
 
     default:
       /* Correct code cannot set any other type.  */
-      return EINVAL;
+    case PTHREAD_MUTEX_TIMED_NP:
+    case PTHREAD_MUTEX_ADAPTIVE_NP:
+      /* Normal mutex.  Nothing special to do.  */
+      break;
     }
+
+  /* Always reset the owner field.  */
+  mutex->__data.__owner = 0;
+  if (decr)
+    /* One less user.  */
+    --mutex->__data.__nusers;
+
+  /* Unlock.  */
+  lll_mutex_unlock (mutex->__data.__lock);
 
   return 0;
 }

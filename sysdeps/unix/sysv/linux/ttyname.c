@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,1996-2002,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,1996-2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,13 +22,11 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <termios.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 
 #include <stdio-common/_itoa.h>
-#include <kernel-features.h>
 
 #if 0
 /* Is this used anywhere?  It is not exported.  */
@@ -43,7 +41,7 @@ static char *getttyname (const char *dev, dev_t mydev,
 libc_freeres_ptr (static char *getttyname_name);
 
 static char *
-internal_function attribute_compat_text_section
+internal_function
 getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
 {
   static size_t namelen;
@@ -119,11 +117,9 @@ ttyname (int fd)
   int dostat = 0;
   char *name;
   int save = errno;
-  struct termios term;
+  int len;
 
-  /* isatty check, tcgetattr is used because it sets the correct
-     errno (EBADF resp. ENOTTY) on error.  */
-  if (__builtin_expect (__tcgetattr (fd, &term) < 0, 0))
+  if (!__isatty (fd))
     return NULL;
 
   /* We try using the /proc filesystem.  */
@@ -140,19 +136,10 @@ ttyname (int fd)
 	}
     }
 
-  ssize_t len = __readlink (procname, ttyname_buf, buflen);
-  if (__builtin_expect (len == -1 && errno == ENOENT, 0))
-    {
-      __set_errno (EBADF);
-      return NULL;
-    }
-
-  if (__builtin_expect (len != -1
-#ifndef __ASSUME_PROC_SELF_FD_SYMLINK
-			/* This is for Linux 2.0.  */
-			&& ttyname_buf[0] != '['
-#endif
-			, 1))
+  len = __readlink (procname, ttyname_buf, buflen);
+  if (len != -1
+      /* This is for Linux 2.0.  */
+      && ttyname_buf[0] != '[')
     {
       if ((size_t) len >= buflen)
 	return NULL;

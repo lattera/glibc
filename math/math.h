@@ -1,6 +1,5 @@
 /* Declarations for math functions.
-   Copyright (C) 1991-1993, 1995-1999, 2001, 2002, 2004, 2006
-   Free Software Foundation, Inc.
+   Copyright (C) 1991-1993,1995-1999,2001,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,35 +96,9 @@ __BEGIN_DECLS
 # undef _Mdouble_END_NAMESPACE
 # undef	__MATH_PRECNAME
 
-# if (__STDC__ - 0 || __GNUC__ - 0) \
-     && (!defined __NO_LONG_DOUBLE_MATH || defined __LDBL_COMPAT)
-#  ifdef __LDBL_COMPAT
-
-#   ifdef __USE_ISOC99 
-extern float __nldbl_nexttowardf (float __x, long double __y)
-				  __THROW __attribute__ ((__const__));
-#    ifdef __REDIRECT_NTH
-extern float __REDIRECT_NTH (nexttowardf, (float __x, long double __y),
-			     __nldbl_nexttowardf)
-     __attribute__ ((__const__));
-extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
-			      nextafter) __attribute__ ((__const__));
-extern long double __REDIRECT_NTH (nexttowardl,
-				   (long double __x, long double __y),
-				   nextafter) __attribute__ ((__const__));
-#    endif
-#   endif
-
+# if (__STDC__ - 0 || __GNUC__ - 0) && !defined __NO_LONG_DOUBLE_MATH
 /* Include the file of declarations again, this time using `long double'
    instead of `double' and appending l to each function name.  */
-
-#   undef __MATHDECL_1
-#   define __MATHDECL_2(type, function,suffix, args, alias) \
-  extern type __REDIRECT_NTH(__MATH_PRECNAME(function,suffix), \
-			     args, alias)
-#   define __MATHDECL_1(type, function,suffix, args) \
-  __MATHDECL_2(type, function,suffix, args, __CONCAT(function,suffix))
-#  endif
 
 #  ifndef _Mlong_double_
 #   define _Mlong_double_	long double

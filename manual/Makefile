@@ -1,4 +1,4 @@
-# Copyright (C) 1992-1999,2000,2001,2002,2003,2004,2006
+# Copyright (C) 1992-1999,2000,2001,2002,2003,2004
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -80,7 +80,7 @@ libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi dir-add.texi \
 libc.dvi libc.pdf: texinfo.tex
 
 html: libc/index.html
-libc/index.html: chapters.texi top-menu.texi dir-add.texi libm-err.texi
+libc/index.html: chapters.texi top-menu.texi libm-err.texi
 	$(MAKEINFO) --html libc.texinfo
 
 # Generate the summary from the Texinfo source files for each chapter.
@@ -166,7 +166,7 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
 	-rm -f libc.dvi libc.pdf libc.tmp libc.info*
-	-rm -f $(objpfx)stubs
+	-rm -f $(objpfx)stubs $(objpfx)distinfo
 	-rm -f $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
 clean: mostlyclean
 distclean: clean
@@ -220,7 +220,8 @@ subdir_%: ;
 # ../Rules defines them for code subdirectories; for us, they are no-ops.
 # None of these should be `subdir_TARGET'; those targets are transformed
 # by the implicit rule above into `TARGET' deps.
-glibc-targets	:= lib objects objs others tests xtests lint.out echo-headers
+glibc-targets	:= lib objects objs others tests xtests lint.out \
+		   echo-headers echo-distinfo
 .PHONY: $(glibc-targets)
 $(glibc-targets):
 

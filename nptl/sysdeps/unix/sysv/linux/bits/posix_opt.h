@@ -1,18 +1,18 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996-2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 2.1 of the
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
    License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   Library General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
+   You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
@@ -60,9 +60,6 @@
 /* X/Open realtime support is available.  */
 #define _XOPEN_REALTIME	1
 
-/* X/Open thread realtime support is available.  */
-#define _XOPEN_REALTIME_THREADS	1
-
 /* XPG4.2 shared memory is supported.  */
 #define	_XOPEN_SHM	1
 
@@ -81,13 +78,6 @@
 
 /* We support user-defined stacks.  */
 #define _POSIX_THREAD_ATTR_STACKADDR	200112L
-
-/* We support priority inheritence.  */
-#define _POSIX_THREAD_PRIO_INHERIT	200112L
-
-/* We support priority protection, though only for non-robust
-   mutexes.  */
-#define _POSIX_THREAD_PRIO_PROTECT	200112L
 
 /* We support POSIX.1b semaphores.  */
 #define _POSIX_SEMAPHORES	200112L
@@ -180,5 +170,9 @@
 
 /* Typed memory objects are not available.  */
 #define _POSIX_TYPED_MEMORY_OBJECTS	-1
+
+/* No support for priority inheritance or protection so far.  */
+#define _POSIX_THREAD_PRIO_INHERIT	-1
+#define _POSIX_THREAD_PRIO_PROTECT	-1
 
 #endif /* posix_opt.h */

@@ -39,8 +39,7 @@ libc_hidden_def (_setjmp)
 /* int setjmp(jmp_buf) */
 
 ENTRY(setjmp)
-	ba,pt	%xcc, __sigsetjmp_local
-	 set	1, %o1
+	set	1, %o1
 END(setjmp)
 
 /* int __sigsetjmp(jmp_buf, savemask)  */

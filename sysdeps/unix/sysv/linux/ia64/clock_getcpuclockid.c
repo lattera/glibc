@@ -1,5 +1,4 @@
-/* clock_getcpuclockid -- Get a clockid_t for process CPU time.  Linux/IA64
-   Copyright (C) 2000,2001,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +26,22 @@
 
 #include "has_cpuclock.c"
 
-#define HAS_CPUCLOCK (has_cpuclock () > 0)
 
-#include <sysdeps/unix/sysv/linux/clock_getcpuclockid.c>
+int
+clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
+{
+  /* We don't allow any process ID but our own.  */
+  if (pid != 0 && pid != getpid ())
+    return EPERM;
+
+  int retval = ENOENT;
+
+  if (has_cpuclock () > 0)
+    {
+      /* Store the number.  */
+      *clock_id = CLOCK_PROCESS_CPUTIME_ID;
+      retval = 0;
+    }
+
+  return retval;
+}

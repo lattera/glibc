@@ -2114,10 +2114,6 @@ END LC_COLLATE
 
 LC_CTYPE
 copy "i18n"
-
-translit_start
-include "translit_combining";""
-translit_end
 END LC_CTYPE
 
 LC_MESSAGES
@@ -2187,13 +2183,12 @@ t_fmt_ampm ""
 date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
-week    7;19971130;5
-first_weekday   2
-first_workday   2
 END LC_TIME
 
 LC_PAPER
+% FIXME
 height   297
+% FIXME
 width    210
 END LC_PAPER
 

@@ -41,7 +41,4 @@ libc {
     # g*
     getdirentries64;
   }
-  GLIBC_2.4 {
-    fdopendir;
-  }
 }

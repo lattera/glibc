@@ -1,0 +1,14 @@
+errnos-tmpl.c
+errnos.awk
+ioctls-tmpl.c
+ioctls.awk
+snarf-ioctls
+make_errlist.c
+mk-local_lim.c
+s-proto.S
+make-syscalls.sh
+i386/dl-brk.S
+mips/dl-brk.S
+sparc/dl-brk.S
+s-proto-bp.S
+s-proto-cancel.S

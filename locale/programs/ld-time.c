@@ -1,19 +1,21 @@
-/* Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -467,22 +469,10 @@ No definition for %s category found"), "LC_TIME"));
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end offset */
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end start */
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end end */
-	  if (wstr != NULL)
-	    {
-	      time->era_entries[idx].wname = (uint32_t *) wstr + 1;
-	      wstr = wcschr (wstr + 1, L':');	/* end name */
-	      if (wstr != NULL)
-		{
-		  *wstr = L'\0';
-		  time->era_entries[idx].wformat = (uint32_t *) wstr + 1;
-		}
-	      else
-		time->era_entries[idx].wname =
-		  time->era_entries[idx].wformat = (uint32_t *) L"";
-	    }
-	  else
-	    time->era_entries[idx].wname =
-	      time->era_entries[idx].wformat = (uint32_t *) L"";
+	  time->era_entries[idx].wname = (uint32_t *) wstr + 1;
+	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end name */
+	  *wstr = L'\0';
+	  time->era_entries[idx].wformat = (uint32_t *) wstr + 1;
 	}
     }
 
@@ -542,7 +532,7 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
 			      * (2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 				 + time->num_era - 1
 				 + 2 * 99
-				 + 2 + time->num_era * 10));
+				 + 2 + time->num_era * 10 - 1));
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num, n;
@@ -901,12 +891,6 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
   ++cnt;
   ++last_idx;
 
-  /* We must align the following data.  */
-  iov[2 + cnt].iov_base = (void *) "\0\0";
-  iov[2 + cnt].iov_len = -idx[last_idx] & 3;
-  idx[last_idx] += -idx[last_idx] & 3;
-  ++cnt;
-
   iov[2 + cnt].iov_base = (void *) time->wdate_fmt;
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
                           * sizeof (uint32_t));
@@ -922,7 +906,7 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
   assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->num_era - 1
 		  + 2 * 99
-		  + 2 + time->num_era * 10));
+		  + 2 + time->num_era * 10 - 1));
   assert (last_idx  == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
   write_locale_data (output_path, LC_TIME, "LC_TIME", 2 + cnt, iov);

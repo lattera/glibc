@@ -70,8 +70,14 @@ res_init(void) {
 		_res.retry = 4;
 	if (!(_res.options & RES_INIT))
 		_res.options = RES_DEFAULT;
-	else if (_res.nscount > 0)
-		__res_iclose (&_res, true);	/* Close any VC sockets.  */
+	else if (_res.nscount > 0) {
+		__res_nclose (&_res);	/* Close any VC sockets.  */
+
+		for (int ns = 0; ns < MAXNS; ns++) {
+			free (_res._u._ext.nsaddrs[ns]);
+			_res._u._ext.nsaddrs[ns] = NULL;
+		}
+	}
 
 	/*
 	 * This one used to initialize implicitly to zero, so unless the app
@@ -97,7 +103,11 @@ __res_maybe_init (res_state resp, int preinit)
 	if (resp->options & RES_INIT) {
 		if (__res_initstamp != resp->_u._ext.initstamp) {
 			if (resp->nscount > 0) {
-				__res_iclose (resp, true);
+				__res_nclose (resp);
+				for (int ns = 0; ns < MAXNS; ns++) {
+					free (resp->_u._ext.nsaddrs[ns]);
+					resp->_u._ext.nsaddrs[ns] = NULL;
+				}
 				return __res_vinit (resp, 1);
 			}
 		}

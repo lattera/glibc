@@ -1,5 +1,4 @@
-/* Copyright (C) 1992-2001, 2002, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1992-2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -131,7 +130,6 @@
 /* Fortify support.  */
 #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
 #define __bos0(ptr) __builtin_object_size (ptr, 0)
-#define __warndecl(name, msg) extern void name (void)
 
 
 /* Support for flexible arrays.  */
@@ -257,28 +255,6 @@
 # define __nonnull(params)
 #endif
 
-/* If fortification mode, we warn about unused results of certain
-   function calls which can lead to problems.  */
-#if __GNUC_PREREQ (3,4)
-# define __attribute_warn_unused_result__ \
-   __attribute__ ((__warn_unused_result__))
-# if __USE_FORTIFY_LEVEL > 0
-#  define __wur __attribute_warn_unused_result__
-# endif
-#else
-# define __attribute_warn_unused_result__ /* empty */
-#endif
-#ifndef __wur
-# define __wur /* Ignore */
-#endif
-
-/* Forces a function to be always inlined.  */
-#if __GNUC_PREREQ (3,2)
-# define __always_inline __inline __attribute__ ((__always_inline__))
-#else
-# define __always_inline __inline
-#endif
-
 /* It is possible to compile containing GCC extensions even if GCC is
    run in pedantic mode if the uses are carefully marked using the
    `__extension__' keyword.  But this is not generally available before
@@ -308,31 +284,6 @@
 #   define __restrict_arr	/* Not supported.  */
 #  endif
 # endif
-#endif
-
-#include <bits/wordsize.h>
-
-#if defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
-# define __LDBL_COMPAT 1
-# ifdef __REDIRECT
-#  define __LDBL_REDIR1(name, proto, alias) __REDIRECT (name, proto, alias)
-#  define __LDBL_REDIR(name, proto) \
-  __LDBL_REDIR1 (name, proto, __nldbl_##name)
-#  define __LDBL_REDIR1_NTH(name, proto, alias) __REDIRECT_NTH (name, proto, alias)
-#  define __LDBL_REDIR_NTH(name, proto) \
-  __LDBL_REDIR1_NTH (name, proto, __nldbl_##name)
-#  define __LDBL_REDIR1_DECL(name, alias) \
-  extern __typeof (name) name __asm (__ASMNAME (#alias));
-#  define __LDBL_REDIR_DECL(name) \
-  extern __typeof (name) name __asm (__ASMNAME ("__nldbl_" #name));
-# endif
-#endif
-#if !defined __LDBL_COMPAT || !defined __REDIRECT
-# define __LDBL_REDIR1(name, proto, alias) name proto
-# define __LDBL_REDIR(name, proto) name proto
-# define __LDBL_REDIR1_NTH(name, proto, alias) name proto __THROW
-# define __LDBL_REDIR_NTH(name, proto) name proto __THROW
-# define __LDBL_REDIR_DECL(name)
 #endif
 
 #endif	 /* sys/cdefs.h */

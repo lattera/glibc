@@ -1,5 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002, 2004, 2005
-   Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,7 +86,7 @@ libc_hidden_def (_setjmp)
 
 ENTRY(__sigsetjmp)
 	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(2)
-	alloc loc1=ar.pfs,2,5,2,0
+	alloc loc1=ar.pfs,2,3,2,0
 	.save ar.unat, loc2
 	mov loc2=ar.unat
 	;;
@@ -141,13 +140,7 @@ ENTRY(__sigsetjmp)
 	;;
 	stf.spill.nta [r8]=f28,32
 	stf.spill.nta [r9]=f29,32
-#ifdef PTR_MANGLE
-	mov loc3=loc0
 	;;
-	PTR_MANGLE (loc3, loc4)
-#else
-	;;
-#endif
 	stf.spill.nta [r8]=f30
 	stf.spill.nta [r9]=f31
 
@@ -158,11 +151,7 @@ ENTRY(__sigsetjmp)
 	mov r25=ar.unat
 	mov out0=in0
 
-#ifdef PTR_MANGLE
-	st8.nta [r2]=loc3,16		// b0
-#else
 	st8.nta [r2]=loc0,16		// b0
-#endif
 	st8.nta [r3]=r17,16		// b1
 	mov out1=in1
 	;;
@@ -180,12 +169,7 @@ ENTRY(__sigsetjmp)
 	;;
 	st8.nta [r2]=r25		// ar.unat
 	st8.nta [r3]=in0		// &__jmp_buf
-#if defined NOT_IN_libc && defined IS_IN_rtld
-	/* In ld.so we never save the signal mask.  */
-	;;
-#else
 	br.call.dpnt.few rp=__sigjmp_save
-#endif
 .ret0:					// force a new bundle ::q
 	mov.m ar.unat=loc2		// restore caller's unat
 	mov rp=loc0

@@ -1,19 +1,21 @@
-/* Copyright (C) 2000-2001, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 /* Construction of sparse 3-level tables.
    See wchar-lookup.h or coll-lookup.h for their structure and the
@@ -202,42 +204,6 @@ CONCAT(TABLE,_iterate) (struct TABLE *t,
 	}
     }
 }
-
-/* GCC ATM seems to do a poor job with pointers to nested functions passed
-   to inlined functions.  Help it a little bit with this hack.  */
-#define wchead_table_iterate(tp, fn) \
-do									      \
-  {									      \
-    struct wchead_table *t = (tp);					      \
-    uint32_t index1;							      \
-    for (index1 = 0; index1 < t->level1_size; index1++)			      \
-      {									      \
-	uint32_t lookup1 = t->level1[index1];				      \
-	if (lookup1 != ((uint32_t) ~0))					      \
-	  {								      \
-	    uint32_t lookup1_shifted = lookup1 << t->q;			      \
-	    uint32_t index2;						      \
-	    for (index2 = 0; index2 < (1 << t->q); index2++)		      \
-	      {								      \
-		uint32_t lookup2 = t->level2[index2 + lookup1_shifted];	      \
-		if (lookup2 != ((uint32_t) ~0))				      \
-		  {							      \
-		    uint32_t lookup2_shifted = lookup2 << t->p;		      \
-		    uint32_t index3;					      \
-		    for (index3 = 0; index3 < (1 << t->p); index3++)	      \
-		      {							      \
-			struct element_t *lookup3			      \
-			  = t->level3[index3 + lookup2_shifted];	      \
-			if (lookup3 != NULL)				      \
-			  fn ((((index1 << t->q) + index2) << t->p) + index3, \
-			      lookup3);					      \
-		      }							      \
-		  }							      \
-	      }								      \
-	  }								      \
-      }									      \
-  } while (0)
-
 #endif
 
 #ifndef NO_FINALIZE

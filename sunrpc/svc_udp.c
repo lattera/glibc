@@ -149,7 +149,12 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   buf = mem_alloc (((MAX (sendsz, recvsz) + 3) / 4) * 4);
   if (xprt == NULL || su == NULL || buf == NULL)
     {
-      (void) __fxprintf (NULL, "%s", _("svcudp_create: out of memory\n"));
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s", _("svcudp_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("svcudp_create: out of memory\n"), stderr);
       mem_free (xprt, sizeof (SVCXPRT));
       mem_free (su, sizeof (*su));
       mem_free (buf, ((MAX (sendsz, recvsz) + 3) / 4) * 4);
@@ -171,8 +176,14 @@ svcudp_bufcreate (sock, sendsz, recvsz)
        + sizeof(struct cmsghdr) + sizeof (struct in_pktinfo))
       > sizeof (xprt->xp_pad))
     {
-      (void) __fxprintf (NULL,"%s", _("\
-svcudp_create: xp_pad is too small for IP_PKTINFO\n"));
+# ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",
+			   _("svcudp_create: xp_pad is too small for IP_PKTINFO\n"));
+      else
+# endif
+	(void) fputs (_("svcudp_create: xp_pad is too small for IP_PKTINFO\n"),
+		      stderr);
       return NULL;
     }
   pad = 1;
@@ -400,14 +411,22 @@ svcudp_destroy (xprt)
 
 #define SPARSENESS 4		/* 75% sparse */
 
-#define CACHE_PERROR(msg)	\
-	(void) __fxprintf(NULL, "%s\n", msg)
+#ifdef USE_IN_LIBIO
+# define CACHE_PERROR(msg)	\
+	if (_IO_fwide (stderr, 0) > 0)					      \
+		(void) __fwprintf(stderr, L"%s\n", msg);		      \
+	else								      \
+		(void) fprintf(stderr, "%s\n", msg)
+#else
+# define CACHE_PERROR(msg)	\
+	(void) fprintf(stderr,"%s\n", msg)
+#endif
 
 #define ALLOC(type, size)	\
 	(type *) mem_alloc((unsigned) (sizeof(type) * (size)))
 
-#define CALLOC(type, size)	\
-  (type *) calloc (sizeof (type), size)
+#define BZERO(addr, type, size)	 \
+	__bzero((char *) addr, sizeof(type) * (int) (size))
 
 /*
  * An entry in the cache
@@ -482,21 +501,20 @@ svcudp_enablecache (SVCXPRT *transp, u_long size)
     }
   uc->uc_size = size;
   uc->uc_nextvictim = 0;
-  uc->uc_entries = CALLOC (cache_ptr, size * SPARSENESS);
+  uc->uc_entries = ALLOC (cache_ptr, size * SPARSENESS);
   if (uc->uc_entries == NULL)
     {
-      mem_free (uc, sizeof (struct udp_cache));
       CACHE_PERROR (_("enablecache: could not allocate cache data"));
       return 0;
     }
-  uc->uc_fifo = CALLOC (cache_ptr, size);
+  BZERO (uc->uc_entries, cache_ptr, size * SPARSENESS);
+  uc->uc_fifo = ALLOC (cache_ptr, size);
   if (uc->uc_fifo == NULL)
     {
-      mem_free (uc->uc_entries, size * SPARSENESS);
-      mem_free (uc, sizeof (struct udp_cache));
       CACHE_PERROR (_("enablecache: could not allocate cache fifo"));
       return 0;
     }
+  BZERO (uc->uc_fifo, cache_ptr, size);
   su->su_cache = (char *) uc;
   return 1;
 }
@@ -546,7 +564,6 @@ cache_set (SVCXPRT *xprt, u_long replylen)
       newbuf = mem_alloc (su->su_iosz);
       if (newbuf == NULL)
 	{
-	  mem_free (victim, sizeof (struct cache_node));
 	  CACHE_PERROR (_("cache_set: could not allocate new rpc_buffer"));
 	  return;
 	}

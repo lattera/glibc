@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,12 +19,6 @@
 
 #include <pthread.h>
 #include <stdio.h>
-#include <errno.h>
-
-
-#ifndef ATTR
-# define ATTR NULL
-#endif
 
 
 static int
@@ -32,21 +26,9 @@ do_test (void)
 {
   pthread_mutex_t m;
 
-  int e = pthread_mutex_init (&m, ATTR);
-  if (ATTR != NULL && e == ENOTSUP)
-    {
-      puts ("cannot support selected type of mutexes");
-      return 0;
-    }
-  else if (e != 0)
+  if (pthread_mutex_init (&m, NULL) != 0)
     {
       puts ("mutex_init failed");
-      return 1;
-    }
-
-  if (ATTR != NULL && pthread_mutexattr_destroy (ATTR) != 0)
-    {
-      puts ("mutexattr_destroy failed");
       return 1;
     }
 
@@ -71,7 +53,5 @@ do_test (void)
   return 0;
 }
 
-#ifndef TEST_FUNCTION
-# define TEST_FUNCTION do_test ()
-#endif
+#define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

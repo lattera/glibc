@@ -1,0 +1,17 @@
+cthreads.c
+errlist.c
+errnos.awk
+err_hurd.sub
+libc-ldscript
+libc_p-ldscript
+bits/libc-tsd.h
+net/ethernet.h
+net/if_arp.h
+net/if_ether.h
+net/if_ppp.h
+net/route.h
+nfs/nfs.h
+set-init.c
+siglist.h
+statfsconv.c
+xstatconv.c

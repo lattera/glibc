@@ -43,15 +43,14 @@
 int
 bindresvport (int sd, struct sockaddr_in *sin)
 {
+  int res;
   static short port;
   struct sockaddr_in myaddr;
   int i;
 
 #define STARTPORT 600
-#define LOWPORT 512
 #define ENDPORT (IPPORT_RESERVED - 1)
 #define NPORTS	(ENDPORT - STARTPORT + 1)
-  static short startport = STARTPORT;
 
   if (sin == (struct sockaddr_in *) 0)
     {
@@ -69,30 +68,17 @@ bindresvport (int sd, struct sockaddr_in *sin)
     {
       port = (__getpid () % NPORTS) + STARTPORT;
     }
+  res = -1;
+  __set_errno (EADDRINUSE);
 
-  /* Initialize to make gcc happy.  */
-  int res = -1;
-
-  int nports = ENDPORT - startport + 1;
-  int endport = ENDPORT;
- again:
-  for (i = 0; i < nports; ++i)
+  for (i = 0; i < NPORTS && res < 0 && errno == EADDRINUSE; ++i)
     {
       sin->sin_port = htons (port++);
-      if (port > endport)
-	port = startport;
+      if (port > ENDPORT)
+	{
+	  port = STARTPORT;
+	}
       res = __bind (sd, sin, sizeof (struct sockaddr_in));
-      if (res >= 0 || errno != EADDRINUSE)
-	break;
-    }
-
-  if (i == nports && startport != LOWPORT)
-    {
-      startport = LOWPORT;
-      endport = STARTPORT - 1;
-      nports = STARTPORT - LOWPORT;
-      port = LOWPORT + port % (STARTPORT - LOWPORT);
-      goto again;
     }
 
   return res;

@@ -82,7 +82,7 @@ pthread_barrier_wait:
 #else
 	cmpl	%edx, CURR_EVENT(%ebx)
 #endif
-	je	8b
+	je,pn	8b
 
 	/* Increment LEFT.  If this brings the count back to the
 	   initial count unlock the object.  */
@@ -92,7 +92,7 @@ pthread_barrier_wait:
 	xaddl	%edx, LEFT(%ebx)
 	subl	$1, %ecx
 	cmpl	%ecx, %edx
-	jne	10f
+	jne,pt	10f
 
 	/* Release the mutex.  We cannot release the lock before
 	   waking the waiting threads since otherwise a new thread might
@@ -131,7 +131,7 @@ pthread_barrier_wait:
 	xaddl	%edx, LEFT(%ebx)
 	subl	$1, %ecx
 	cmpl	%ecx, %edx
-	jne	5f
+	jne,pt	5f
 
 	/* Release the mutex.  We cannot release the lock before
 	   waking the waiting threads since otherwise a new thread might

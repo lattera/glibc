@@ -1,5 +1,5 @@
 /* Test and measure memset functions.
-   Copyright (C) 1999, 2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -49,12 +49,10 @@ static void
 do_one_test (impl_t *impl, char *s, int c, size_t n)
 {
   char *res = CALL (impl, s, c, n);
-  char tstbuf[n];
-  if (res != s
-      || simple_memset (tstbuf, c, n) != tstbuf
-      || memcmp (s, tstbuf, n) != 0)
+  if (res != s)
     {
-      error (0, 0, "Wrong result in function %s", impl->name);
+      error (0, 0, "Wrong result in function %s %p != %p", impl->name,
+	     res, s);
       ret = 1;
       return;
     }
@@ -89,7 +87,7 @@ do_test (size_t align, int c, size_t len)
     printf ("Length %4zd, alignment %2zd, c %2d:", len, align, c);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (char *) buf1 + align, c, len);
+    do_one_test (impl, buf1 + align, c, len);
 
   if (HP_TIMING_AVAIL)
     putchar ('\n');
@@ -145,7 +143,7 @@ do_random_tests (void)
 	      if (p[i + align] == c)
 		p[i + align] = o;
 	    }
-	  res = (unsigned char *) CALL (impl, (char *) p + align, c, len);
+	  res = CALL (impl, p + align, c, len);
 	  if (res != p + align)
 	    {
 	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %d, %zd) %p != %p",
@@ -193,7 +191,7 @@ test_main (void)
     printf ("\t%s", impl->name);
   putchar ('\n');
 
-  for (c = -65; c <= 130; c += 65)
+  for (c = 0; c <= 65; c += 65)
     {
       for (i = 0; i < 18; ++i)
 	do_test (0, c, 1 << i);

@@ -1,3 +1,5 @@
+# Generated from $Id$.
+
 srcdir = @srcdir@
 
 # Uncomment the line below if you want to do parallel build.

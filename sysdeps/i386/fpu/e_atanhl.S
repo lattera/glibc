@@ -64,7 +64,9 @@ ENTRY(__ieee754_atanhl)
 7:
 
 #ifdef PIC
-	LOAD_PIC_REG (dx)
+	call	1f
+1:	popl	%edx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
 #endif
 
 	andl	$0x8000, %ecx	// ECX == 0 iff X >= 0

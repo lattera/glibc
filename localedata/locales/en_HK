@@ -37,7 +37,7 @@ END LC_IDENTIFICATION
 
 
 LC_CTYPE
-copy "en_GB"
+copy "i18n"
 END LC_CTYPE
 
 

@@ -576,7 +576,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		  ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		  __fxprintf (NULL, "%s", buf);
+		  if (_IO_fwide (stderr, 0) > 0)
+		    __fwprintf (stderr, L"%s", buf);
+		  else
+		    fputs (buf, stderr);
 
 		  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		  _IO_funlockfile (stderr);
@@ -651,7 +654,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			  ((_IO_FILE *) stderr)->_flags2
 			    |= _IO_FLAGS2_NOTCANCEL;
 
-			  __fxprintf (NULL, "%s", buf);
+			  if (_IO_fwide (stderr, 0) > 0)
+			    __fwprintf (stderr, L"%s", buf);
+			  else
+			    fputs (buf, stderr);
 
 			  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			  _IO_funlockfile (stderr);
@@ -688,7 +694,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			  ((_IO_FILE *) stderr)->_flags2
 			    |= _IO_FLAGS2_NOTCANCEL;
 
-			  __fxprintf (NULL, "%s", buf);
+			  if (_IO_fwide (stderr, 0) > 0)
+			    __fwprintf (stderr, L"%s", buf);
+			  else
+			    fputs (buf, stderr);
 
 			  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			  _IO_funlockfile (stderr);
@@ -762,7 +771,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		  ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		  __fxprintf (NULL, "%s", buf);
+		  if (_IO_fwide (stderr, 0) > 0)
+		    __fwprintf (stderr, L"%s", buf);
+		  else
+		    fputs (buf, stderr);
 
 		  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		  _IO_funlockfile (stderr);
@@ -825,7 +837,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		__fxprintf (NULL, "%s", buf);
+		if (_IO_fwide (stderr, 0) > 0)
+		  __fwprintf (stderr, L"%s", buf);
+		else
+		  fputs (buf, stderr);
 
 		((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		_IO_funlockfile (stderr);
@@ -873,7 +888,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		    ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		    __fxprintf (NULL, "%s", buf);
+		    if (_IO_fwide (stderr, 0) > 0)
+		      __fwprintf (stderr, L"%s", buf);
+		    else
+		      fputs (buf, stderr);
 
 		    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		    _IO_funlockfile (stderr);
@@ -942,7 +960,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 		    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 		    ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-		    __fxprintf (NULL, "%s", buf);
+		    if (_IO_fwide (stderr, 0) > 0)
+		      __fwprintf (stderr, L"%s", buf);
+		    else
+		      fputs (buf, stderr);
 
 		    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 		    _IO_funlockfile (stderr);
@@ -984,7 +1005,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			    ((_IO_FILE *) stderr)->_flags2
 			      |= _IO_FLAGS2_NOTCANCEL;
 
-			    __fxprintf (NULL, "%s", buf);
+			    if (_IO_fwide (stderr, 0) > 0)
+			      __fwprintf (stderr, L"%s", buf);
+			    else
+			      fputs (buf, stderr);
 
 			    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			    _IO_funlockfile (stderr);
@@ -1023,7 +1047,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			    ((_IO_FILE *) stderr)->_flags2
 			      |= _IO_FLAGS2_NOTCANCEL;
 
-			    __fxprintf (NULL, "%s", buf);
+			    if (_IO_fwide (stderr, 0) > 0)
+			      __fwprintf (stderr, L"%s", buf);
+			    else
+			      fputs (buf, stderr);
 
 			    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			    _IO_funlockfile (stderr);
@@ -1094,7 +1121,10 @@ _getopt_internal_r (int argc, char *const *argv, const char *optstring,
 			int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
 			((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
-			__fxprintf (NULL, "%s", buf);
+			if (_IO_fwide (stderr, 0) > 0)
+			  __fwprintf (stderr, L"%s", buf);
+			else
+			  fputs (buf, stderr);
 
 			((_IO_FILE *) stderr)->_flags2 = old_flags2;
 			_IO_funlockfile (stderr);

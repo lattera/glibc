@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 1999-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1999,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1999.
 
@@ -18,8 +18,8 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
-memusageso='@SLIBDIR@/libmemusage.so'
-memusagestat='@BINDIR@/memusagestat'
+memusageso=@SLIBDIR@/libmemusage.so
+memusagestat=@BINDIR@/memusagestat
 TEXTDOMAIN=libc
 
 # Print usage message.
@@ -71,20 +71,11 @@ do_version() {
   printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-" "2006"
+" "2004"
   printf $"Written by %s.
 " "Ulrich Drepper"
   exit 0
 }
-
-# These variables are local
-buffer=
-data=
-memusagestat_args=
-notimer=
-png=
-progname=
-tracemmap=
 
 # Process arguments.  But stop as soon as the program name is found.
 while test $# -gt 0; do
@@ -222,8 +213,15 @@ datafile=
 if test -n "$data"; then
   datafile="$data"
 elif test -n "$png"; then
-  datafile=$(mktemp -t memusage.XXXXXX) || exit
-  trap 'rm -f "$datafile"; exit 1' HUP INT QUIT TERM PIPE
+  datafile=$(mktemp ${TMPDIR:-/tmp}/memusage.XXXXXX 2> /dev/null)
+  if test $? -ne 0; then
+    # Lame, but if there is no `mktemp' program the user cannot expect more.
+    if test "$RANDOM" != "$RANDOM"; then
+      datafile=${TMPDIR:-/tmp}/memusage.$RANDOM
+    else
+      datafile=${TMPDIR:-/tmp}/memusage.$$
+    fi
+  fi
 fi
 if test -n "$datafile"; then
   add_env="$add_env MEMUSAGE_OUTPUT=$datafile"

@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,1996,1997,1999,2001,2002,2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991,1996,1997,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +19,6 @@
 #ifndef	_EXIT_H
 #define _EXIT_H 1
 
-#include <stdint.h>
 
 enum
 {
@@ -61,6 +59,5 @@ struct exit_function_list
 extern struct exit_function_list *__exit_funcs attribute_hidden;
 
 extern struct exit_function *__new_exitfn (void);
-extern uint64_t __new_exitfn_called attribute_hidden;
 
 #endif	/* exit.h  */

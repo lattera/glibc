@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.  PowerPC64 version.
-   Copyright (C) 1997,98,99,2000,02,04, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,02, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA
-   02110-1301 USA.  */
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <sysdep.h>
 #define _ERRNO_H	1
@@ -48,16 +48,11 @@ ENTRY (BP_SYM (__clone))
 
 	/* Set up stack frame for parent.  */
 	stdu	r1,-80(r1)
-	cfi_adjust_cfa_offset (80)
 	std	r29,56(r1)
 	std	r30,64(r1)
 	std	r31,72(r1)
-	cfi_offset(r29,-56)
-	cfi_offset(r30,-64)
-	cfi_offset(r31,-72)
 #ifdef RESET_PID
 	std	r28,48(r1)
-	cfi_offset(r28,-48)
 #endif
 
 	/* Set up stack frame for child.  */
@@ -80,10 +75,6 @@ ENTRY (BP_SYM (__clone))
 	mr	r5,r7
 	mr	r6,r8
 	mr	r7,r9
-
-	/* End FDE now, because in the child the unwind info will be
-	   wrong.  */
-	cfi_endproc
 
 	/* Do the call.  */
 	DO_CALL(SYS_ify(clone))
@@ -136,8 +127,6 @@ L(parent):
 L(badargs):
 	li	r3,EINVAL
 	b	JUMPTARGET(__syscall_error)
-
-	cfi_startproc
 END (BP_SYM (__clone))
 
 weak_alias (BP_SYM (__clone), BP_SYM (clone))

@@ -64,14 +64,14 @@ static const char rcsid[] = "$BINDId: herror.c,v 8.11 1999/10/13 16:39:39 vixie 
 #include <libintl.h>
 #include <not-cancel.h>
 
-const char *const h_errlist[] = {
+const char *h_errlist[] = {
 	N_("Resolver Error 0 (no error)"),
 	N_("Unknown host"),			/* 1 HOST_NOT_FOUND */
 	N_("Host name lookup failure"),		/* 2 TRY_AGAIN */
 	N_("Unknown server error"),		/* 3 NO_RECOVERY */
 	N_("No address associated with name"),	/* 4 NO_ADDRESS */
 };
-const int	h_nerr = { sizeof h_errlist / sizeof h_errlist[0] };
+int	h_nerr = { sizeof h_errlist / sizeof h_errlist[0] };
 
 /*
  * herror --
@@ -80,6 +80,7 @@ const int	h_nerr = { sizeof h_errlist / sizeof h_errlist[0] };
 void
 herror(const char *s) {
 	struct iovec iov[4], *v = iov;
+	extern int * __h_errno();
 
 	if (s != NULL && *s != '\0') {
 		v->iov_base = (/*noconst*/ char *)s;

@@ -1,5 +1,5 @@
 /* Assembler macros for i386.
-   Copyright (C) 1991-93,95,96,98,2002,2003,2005 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,95,96,98,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,12 +57,10 @@
   .align ALIGNARG(4);							      \
   STABS_FUN(name)							      \
   C_LABEL(name)								      \
-  cfi_startproc;							      \
   CALL_MCOUNT
 
 #undef	END
 #define END(name)							      \
-  cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)						      \
   STABS_FUN_END(name)
 
@@ -94,9 +92,7 @@
 /* The mcount code relies on a normal frame pointer being on the stack
    to locate our caller, so push one just for its benefit.  */
 #define CALL_MCOUNT \
-  pushl %ebp; cfi_adjust_cfa_offset (4); movl %esp, %ebp; \
-  cfi_def_cfa_register (ebp); call JUMPTARGET(mcount); \
-  popl %ebp; cfi_def_cfa (esp, 4);
+  pushl %ebp; movl %esp, %ebp; call JUMPTARGET(mcount); popl %ebp;
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif
@@ -126,38 +122,9 @@ lose: SYSCALL_PIC_SETUP							      \
 #define JUMPTARGET(name)	name##@PLT
 #define SYSCALL_PIC_SETUP \
     pushl %ebx;								      \
-    cfi_adjust_cfa_offset (4);						      \
     call 0f;								      \
 0:  popl %ebx;								      \
-    cfi_adjust_cfa_offset (-4);						      \
     addl $_GLOBAL_OFFSET_TABLE+[.-0b], %ebx;
-
-# ifndef HAVE_HIDDEN
-#  define SETUP_PIC_REG(reg) \
-  call 1f;								      \
-  .subsection 1;							      \
-1:movl (%esp), %e##reg;							      \
-  ret;									      \
-  .previous
-# else
-#  define SETUP_PIC_REG(reg) \
-  .ifndef __i686.get_pc_thunk.reg;					      \
-  .section .gnu.linkonce.t.__i686.get_pc_thunk.reg,"ax",@progbits;	      \
-  .globl __i686.get_pc_thunk.reg;					      \
-  .hidden __i686.get_pc_thunk.reg;					      \
-  .type __i686.get_pc_thunk.reg,@function;				      \
-__i686.get_pc_thunk.reg:						      \
-  movl (%esp), %e##reg;							      \
-  ret;									      \
-  .size __i686.get_pc_thunk.reg, . - __i686.get_pc_thunk.reg;		      \
-  .previous;								      \
-  .endif;								      \
-  call __i686.get_pc_thunk.reg
-# endif
-
-# define LOAD_PIC_REG(reg) \
-  SETUP_PIC_REG(reg); addl $_GLOBAL_OFFSET_TABLE_, %e##reg
-
 #else
 #define JUMPTARGET(name)	name
 #define SYSCALL_PIC_SETUP	/* Nothing.  */

@@ -1,5 +1,5 @@
 /* Print size value using units for orders of magnitude.
-   Copyright (C) 1997-2002, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on a proposal by Larry McVoy <lm@sgi.com>.
@@ -86,8 +86,7 @@ extern int __printf_fp (FILE *fp, const struct printf_info *info,
 
 
 int
-__printf_size (FILE *fp, const struct printf_info *info,
-	       const void *const *args)
+printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
 {
   /* Units for the both formats.  */
 #define BINARY_UNITS	" kmgtpezy"
@@ -234,7 +233,6 @@ __printf_size (FILE *fp, const struct printf_info *info,
 
   return done;
 }
-ldbl_strong_alias (__printf_size, printf_size);
 
 /* This is the function used by `vfprintf' to determine number and
    type of the arguments.  */

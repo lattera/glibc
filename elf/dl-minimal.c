@@ -1,6 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995-1998,2000-2002,2004-2006,2007
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,21 +74,14 @@ __libc_memalign (size_t align, size_t n)
   alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + align - 1)
 			    & ~(align - 1));
 
-  if (alloc_ptr + n >= alloc_end || n >= -(uintptr_t) alloc_ptr)
+  if (alloc_ptr + n >= alloc_end)
     {
       /* Insufficient space left; allocate another page.  */
       caddr_t page;
       size_t nup = (n + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
-      if (__builtin_expect (nup == 0, 0))
-	{
-	  if (n)
-	    return NULL;
-	  nup = GLRO(dl_pagesize);
-	}
       page = __mmap (0, nup, PROT_READ|PROT_WRITE,
 		     MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
-      if (page == MAP_FAILED)
-	return NULL;
+      assert (page != MAP_FAILED);
       if (page != alloc_end)
 	alloc_ptr = page;
       alloc_end = page + nup;
@@ -115,14 +107,7 @@ calloc (size_t nmemb, size_t size)
   /* New memory from the trivial malloc above is always already cleared.
      (We make sure that's true in the rare occasion it might not be,
      by clearing memory in free, below.)  */
-  size_t bytes = nmemb * size;
-
-#define HALF_SIZE_T (((size_t) 1) << (8 * sizeof (size_t) / 2))
-  if (__builtin_expect ((nmemb | size) >= HALF_SIZE_T, 0)
-      && size != 0 && bytes / size != nmemb)
-    return NULL;
-
-  return malloc (bytes);
+  return malloc (nmemb * size);
 }
 
 /* This will rarely be called.  */
@@ -143,13 +128,14 @@ free (void *ptr)
 void * weak_function
 realloc (void *ptr, size_t n)
 {
+  void *new;
   if (ptr == NULL)
     return malloc (n);
   assert (ptr == alloc_last_block);
-  size_t old_size = alloc_ptr - alloc_last_block;
   alloc_ptr = alloc_last_block;
-  void *new = malloc (n);
-  return new != ptr ? memcpy (new, ptr, old_size) : new;
+  new = malloc (n);
+  assert (new == ptr);
+  return new;
 }
 
 /* Avoid signal frobnication in setjmp/longjmp.  Keeps things smaller.  */
@@ -161,6 +147,12 @@ __sigjmp_save (sigjmp_buf env, int savemask __attribute__ ((unused)))
 {
   env[0].__mask_was_saved = 0;
   return 0;
+}
+
+void weak_function
+longjmp (jmp_buf env, int val)
+{
+  __longjmp (env[0].__jmpbuf, val);
 }
 
 /* Define our own version of the internal function used by strerror.  We
@@ -278,7 +270,7 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
   while (*nptr >= '0' && *nptr <= '9')
     {
       unsigned long int digval = *nptr - '0';
-      if (result > ULONG_MAX / 10
+      if (result > LONG_MAX / 10
 	  || (result == ULONG_MAX / 10 && digval > ULONG_MAX % 10))
 	{
 	  errno = ERANGE;

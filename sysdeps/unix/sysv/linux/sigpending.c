@@ -1,5 +1,4 @@
-/* Copyright (C) 1997,1998,1999,2000,2003,2006
-	Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +24,7 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#include <kernel-features.h>
+#include "kernel-features.h"
 
 
 /* The variable is shared between all wrappers around signal handling

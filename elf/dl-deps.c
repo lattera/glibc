@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ struct list
   {
     int done;			/* Nonzero if this map was processed.  */
     struct link_map *map;	/* The data.  */
-    struct list *next;		/* Elements for normal list.  */
+    struct list *next;	/* Elements for normal list.  */
   };
 
 
@@ -101,9 +101,9 @@ struct list
   ({									      \
     const char *__str = (str);						      \
     const char *__result = __str;					      \
-    size_t __dst_cnt = DL_DST_COUNT (__str, 0);				      \
+    size_t __cnt = DL_DST_COUNT(__str, 0);				      \
 									      \
-    if (__dst_cnt != 0)							      \
+    if (__cnt != 0)							      \
       {									      \
 	char *__newp;							      \
 									      \
@@ -113,9 +113,9 @@ struct list
 DST not allowed in SUID/SGID programs"));				      \
 									      \
 	__newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
-						   __dst_cnt));		      \
+						   __cnt));		      \
 									      \
-	__result = _dl_dst_substitute (l, __str, __newp, 0);		      \
+	__result = _dl_dst_substitute (l, __str, __newp, 0);	      \
 									      \
 	if (*__result == '\0')						      \
 	  {								      \
@@ -235,23 +235,16 @@ _dl_map_object_deps (struct link_map *map,
 	      {
 		/* Map in the needed object.  */
 		struct link_map *dep;
+		int err;
 
 		/* Recognize DSTs.  */
 		name = expand_dst (l, strtab + d->d_un.d_val, 0);
 		/* Store the tag in the argument structure.  */
 		args.name = name;
 
-		bool malloced;
-		int err = _dl_catch_error (&objname, &errstring, &malloced,
-					   openaux, &args);
+		err = _dl_catch_error (&objname, &errstring, openaux, &args);
 		if (__builtin_expect (errstring != NULL, 0))
 		  {
-		    char *new_errstring = strdupa (errstring);
-		    objname = strdupa (objname);
-		    if (malloced)
-		      free ((char *) errstring);
-		    errstring = new_errstring;
-
 		    if (err)
 		      errno_reason = err;
 		    else
@@ -295,6 +288,8 @@ _dl_map_object_deps (struct link_map *map,
 
 		if (d->d_tag == DT_AUXILIARY)
 		  {
+		    int err;
+
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
@@ -306,14 +301,13 @@ _dl_map_object_deps (struct link_map *map,
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
-		    bool malloced;
-		    (void) _dl_catch_error (&objname, &errstring, &malloced,
-					    openaux, &args);
+		    err = _dl_catch_error (&objname, &errstring, openaux,
+					   &args);
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
-			if (malloced)
+			if (errstring != INTUSE(_dl_out_of_memory))
 			  free ((char *) errstring);
 
 			/* Simply ignore this error and continue the work.  */
@@ -322,6 +316,8 @@ _dl_map_object_deps (struct link_map *map,
 		  }
 		else
 		  {
+		    int err;
+
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
@@ -332,17 +328,10 @@ _dl_map_object_deps (struct link_map *map,
 					? l->l_name : rtld_progname);
 
 		    /* For filter objects the dependency must be available.  */
-		    bool malloced;
-		    int err = _dl_catch_error (&objname, &errstring, &malloced,
-					       openaux, &args);
+		    err = _dl_catch_error (&objname, &errstring, openaux,
+					   &args);
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
-			char *new_errstring = strdupa (errstring);
-			objname = strdupa (objname);
-			if (malloced)
-			  free ((char *) errstring);
-			errstring = new_errstring;
-
 			if (err)
 			  errno_reason = err;
 			else
@@ -577,6 +566,8 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	  {
 	    /* A direct or transitive dependency is also on the list
 	       of relocation dependencies.  Remove the latter.  */
+	    --map->l_reldeps[i]->l_opencount;
+
 	    for (j = i + 1; j < map->l_reldepsact; ++j)
 	      map->l_reldeps[j - 1] = map->l_reldeps[j];
 

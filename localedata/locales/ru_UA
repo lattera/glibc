@@ -43,7 +43,7 @@ category  "ru_UA:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "ru_RU"
+copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE

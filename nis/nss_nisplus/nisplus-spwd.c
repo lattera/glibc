@@ -1,5 +1,4 @@
-/* Copyright (C) 1997, 2001, 2002, 2003, 2005, 2007
-   Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -31,12 +30,29 @@
 __libc_lock_define_initialized (static, lock)
 
 static nis_result *result;
+static nis_name tablename_val;
+static u_long tablename_len;
 
-/* Defined in nisplus-pwd.c.  */
-extern nis_name pwd_tablename_val attribute_hidden;
-extern size_t pwd_tablename_len attribute_hidden;
-extern enum nss_status _nss_pwd_create_tablename (int *errnop);
+static enum nss_status
+_nss_create_tablename (int *errnop)
+{
+  if (tablename_val == NULL)
+    {
+      char buf [40 + strlen (nis_local_directory ())];
+      char *p;
 
+      p = __stpcpy (buf, "passwd.org_dir.");
+      p = __stpcpy (p, nis_local_directory ());
+      tablename_val = __strdup (buf);
+      if (tablename_val == NULL)
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      tablename_len = strlen (tablename_val);
+    }
+  return NSS_STATUS_SUCCESS;
+}
 
 enum nss_status
 _nss_nisplus_setspent (int stayopen)
@@ -46,14 +62,12 @@ _nss_nisplus_setspent (int stayopen)
 
   __libc_lock_lock (lock);
 
-  if (result != NULL)
-    {
-      nis_freeresult (result);
-      result = NULL;
-    }
+  if (result)
+    nis_freeresult (result);
+  result = NULL;
 
-  if (pwd_tablename_val == NULL)
-    status = _nss_pwd_create_tablename (&err);
+  if (tablename_val == NULL)
+    status = _nss_create_tablename (&err);
 
   __libc_lock_unlock (lock);
 
@@ -65,11 +79,9 @@ _nss_nisplus_endspent (void)
 {
   __libc_lock_lock (lock);
 
-  if (result != NULL)
-    {
-      nis_freeresult (result);
-      result = NULL;
-    }
+  if (result)
+    nis_freeresult (result);
+  result = NULL;
 
   __libc_lock_unlock (lock);
 
@@ -91,32 +103,25 @@ internal_nisplus_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 	{
 	  saved_res = NULL;
 
-          if (pwd_tablename_val == NULL)
+          if (tablename_val == NULL)
 	    {
-	      enum nss_status status = _nss_pwd_create_tablename (errnop);
+	      enum nss_status status = _nss_create_tablename (errnop);
 
 	      if (status != NSS_STATUS_SUCCESS)
 		return status;
 	    }
 
-	  result = nis_first_entry (pwd_tablename_val);
-	  if (result == NULL)
-	    {
-	      *errnop = errno;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
+	  result = nis_first_entry (tablename_val);
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    return niserr2nss (result->status);
 	}
       else
 	{
+	  nis_result *res;
+
 	  saved_res = result;
-	  result = nis_next_entry (pwd_tablename_val, &result->cookie);
-	  if (result == NULL)
-	    {
-	      *errnop = errno;
-	      return NSS_STATUS_TRYAGAIN;
-	    }
+	  res = nis_next_entry (tablename_val, &result->cookie);
+	  result = res;
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
 	      nis_freeresult (saved_res);
@@ -126,18 +131,19 @@ internal_nisplus_getspent_r (struct spwd *sp, char *buffer, size_t buflen,
 
       parse_res = _nss_nisplus_parse_spent (result, sp, buffer,
 					    buflen, errnop);
-      if (__builtin_expect (parse_res == -1, 0))
+      if (parse_res == -1)
 	{
 	  nis_freeresult (result);
 	  result = saved_res;
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-
-      if (saved_res != NULL)
-	nis_freeresult (saved_res);
-    }
-  while (!parse_res);
+      else
+	{
+	  if (saved_res)
+	    nis_freeresult (saved_res);
+	}
+    } while (!parse_res);
 
   return NSS_STATUS_SUCCESS;
 }
@@ -163,9 +169,9 @@ _nss_nisplus_getspnam_r (const char *name, struct spwd *sp,
 {
   int parse_res;
 
-  if (pwd_tablename_val == NULL)
+  if (tablename_val == NULL)
     {
-      enum nss_status status = _nss_pwd_create_tablename (errnop);
+      enum nss_status status = _nss_create_tablename (errnop);
 
       if (status != NSS_STATUS_SUCCESS)
 	return status;
@@ -176,47 +182,48 @@ _nss_nisplus_getspnam_r (const char *name, struct spwd *sp,
       *errnop = EINVAL;
       return NSS_STATUS_NOTFOUND;
     }
-
-  nis_result *result;
-  char buf[strlen (name) + 9 + pwd_tablename_len];
-  int olderr = errno;
-
-  snprintf (buf, sizeof (buf), "[name=%s],%s", name, pwd_tablename_val);
-
-  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM, NULL, NULL);
-
-  if (result == NULL)
+  else
     {
-      *errnop = ENOMEM;
-      return NSS_STATUS_TRYAGAIN;
-    }
+      nis_result *result;
+      char buf[strlen (name) + 24 + tablename_len];
+      int olderr = errno;
 
-  if (__builtin_expect (niserr2nss (result->status) != NSS_STATUS_SUCCESS, 0))
-    {
-      enum nss_status status = niserr2nss (result->status);
+      sprintf (buf, "[name=%s],%s", name, tablename_val);
 
-      __set_errno (olderr);
+      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
-      nis_freeresult (result);
-      return status;
-    }
-
-  parse_res = _nss_nisplus_parse_spent (result, sp, buffer, buflen, errnop);
-  nis_freeresult (result);
-
-  if (__builtin_expect (parse_res < 1, 0))
-    {
-      if (parse_res == -1)
+      if (result == NULL)
 	{
-	  *errnop = ERANGE;
+	  *errnop = ENOMEM;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      else
+      if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
-	  __set_errno (olderr);
-	  return NSS_STATUS_NOTFOUND;
-	}
-    }
+	  enum nss_status status = niserr2nss (result->status);
 
-  return NSS_STATUS_SUCCESS;
+	  __set_errno (olderr);
+
+	  nis_freeresult (result);
+	  return status;
+	}
+
+      parse_res = _nss_nisplus_parse_spent (result, sp, buffer, buflen,
+					    errnop);
+      nis_freeresult (result);
+
+      if (parse_res < 1)
+	{
+	  if (parse_res == -1)
+	    {
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+	  else
+	    {
+	      __set_errno (olderr);
+	      return NSS_STATUS_NOTFOUND;
+	    }
+	}
+      return NSS_STATUS_SUCCESS;
+    }
 }

@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  NPTL/sparc version.
-   Copyright (C) 2003, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,6 @@
 
 #include <dl-sysdep.h>
 #ifndef __ASSEMBLER__
-# include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
 # include <stdlib.h>
@@ -32,11 +31,7 @@
 typedef union dtv
 {
   size_t counter;
-  struct
-  {
-    void *val;
-    bool is_static;
-  } pointer;
+  void *pointer;
 } dtv_t;
 
 typedef struct
@@ -46,9 +41,6 @@ typedef struct
   dtv_t *dtv;
   void *self;
   int multiple_threads;
-  uintptr_t sysinfo;
-  uintptr_t stack_guard;
-  uintptr_t pointer_guard;
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */
@@ -72,13 +64,11 @@ typedef struct
 
 register struct pthread *__thread_self __asm__("%g7");
 
-/* This is the size of the initial TCB.  Can't be just sizeof (tcbhead_t),
-   because NPTL getpid, __libc_alloca_cutoff etc. need (almost) the whole
-   struct pthread even when not linked with -lpthread.  */
-# define TLS_INIT_TCB_SIZE sizeof (struct pthread)
+/* This is the size of the initial TCB.  */
+# define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
 /* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN __alignof__ (struct pthread)
+# define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
 
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE sizeof (struct pthread)
@@ -128,44 +118,6 @@ register struct pthread *__thread_self __asm__("%g7");
   descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
-
-/* Set the stack guard field in TCB head.  */
-#define THREAD_SET_STACK_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
-# define THREAD_COPY_STACK_GUARD(descr) \
-  ((descr)->header.stack_guard \
-   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
-
-/* Get/set the stack guard field in TCB head.  */
-#define THREAD_GET_POINTER_GUARD() \
-  THREAD_GETMEM (THREAD_SELF, header.pointer_guard)
-#define THREAD_SET_POINTER_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
-# define THREAD_COPY_POINTER_GUARD(descr) \
-  ((descr)->header.pointer_guard = THREAD_GET_POINTER_GUARD ())
-
-/* Get and set the global scope generation counter in struct pthread.  */
-#define THREAD_GSCOPE_FLAG_UNUSED 0
-#define THREAD_GSCOPE_FLAG_USED   1
-#define THREAD_GSCOPE_FLAG_WAIT   2
-#define THREAD_GSCOPE_RESET_FLAG() \
-  do									     \
-    { int __res								     \
-	= atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,	     \
-			       THREAD_GSCOPE_FLAG_UNUSED);		     \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
-	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1);		     \
-    }									     \
-  while (0)
-#define THREAD_GSCOPE_SET_FLAG() \
-  do									     \
-    {									     \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;	     \
-      atomic_write_barrier ();						     \
-    }									     \
-  while (0)
-#define THREAD_GSCOPE_WAIT() \
-  GL(dl_wait_lookup_done) ()
 
 #endif /* !ASSEMBLER */
 

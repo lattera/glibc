@@ -16,7 +16,6 @@
 /* XXX Until we get compiler support we don't need declarations.  */
 #define VAR_INT_DECL(x)
 
-#include_next <tls-macros.h>
 
   /* XXX Each architecture must have its own asm for now.  */
 #ifdef __i386__
@@ -441,74 +440,6 @@ register void *__gp __asm__("$29");
 	    "o5", "o7", "cc");						      \
      __o0; })
 
-#elif defined __sparc__ && defined __arch64__
-
-# define TLS_LE(x) \
-  ({ int *__l;								      \
-     asm ("sethi %%tle_hix22(" #x "), %0" : "=r" (__l));		      \
-     asm ("xor %1, %%tle_lox10(" #x "), %0" : "=r" (__l) : "r" (__l));	      \
-     asm ("add %%g7, %1, %0" : "=r" (__l) : "r" (__l));			      \
-     __l; })
-
-# ifdef __PIC__
-#  define TLS_LOAD_PIC \
-  ({ long pc, got;							      \
-     asm ("sethi %%hi(_GLOBAL_OFFSET_TABLE_-4), %1\n\t"			      \
-	  "rd %%pc, %0\n\t"						      \
-	  "add %1, %%lo(_GLOBAL_OFFSET_TABLE_+4), %1\n\t"		      \
-	  "add %1, %0, %1\n\t"						      \
-	  : "=r" (pc), "=r" (got));					      \
-     got; })
-# else
-#  define TLS_LOAD_PIC \
-   ({ long got;								      \
-      asm (".hidden _GLOBAL_OFFSET_TABLE_\n\t"				      \
-	   "sethi %%hi(_GLOBAL_OFFSET_TABLE_), %0\n\t"			      \
-	   "or %0, %%lo(_GLOBAL_OFFSET_TABLE_), %0"			      \
-	   : "=r" (got));						      \
-      got; })
-# endif
-
-# define TLS_IE(x) \
-  ({ int *__l;								      \
-     asm ("sethi %%tie_hi22(" #x "), %0" : "=r" (__l));			      \
-     asm ("add %1, %%tie_lo10(" #x "), %0" : "=r" (__l) : "r" (__l));	      \
-     asm ("ldx [%1 + %2], %0, %%tie_ldx(" #x ")"			      \
-	  : "=r" (__l) : "r" (TLS_LOAD_PIC), "r" (__l));		      \
-     asm ("add %%g7, %1, %0, %%tie_add(" #x ")" : "=r" (__l) : "r" (__l));    \
-     __l; })
-
-# define TLS_LD(x) \
-  ({ int *__l; register void *__o0 asm ("%o0");				      \
-     long __o;								      \
-     asm ("sethi %%tldm_hi22(" #x "), %0" : "=r" (__l));		      \
-     asm ("add %1, %%tldm_lo10(" #x "), %0" : "=r" (__l) : "r" (__l));	      \
-     asm ("add %1, %2, %0, %%tldm_add(" #x ")"				      \
-	  : "=r" (__o0) : "r" (TLS_LOAD_PIC), "r" (__l));		      \
-     asm ("call __tls_get_addr, %%tgd_call(" #x ")\n\t"			      \
-	  " nop"							      \
-	  : "=r" (__o0) : "0" (__o0)					      \
-	  : "g1", "g2", "g3", "g4", "g5", "g6", "o1", "o2", "o3", "o4",	      \
-	    "o5", "o7", "cc");						      \
-     asm ("sethi %%tldo_hix22(" #x "), %0" : "=r" (__o));		      \
-     asm ("xor %1, %%tldo_lox10(" #x "), %0" : "=r" (__o) : "r" (__o));	      \
-     asm ("add %1, %2, %0, %%tldo_add(" #x ")" : "=r" (__l)		      \
-	  : "r" (__o0), "r" (__o));					      \
-     __l; })
-
-# define TLS_GD(x) \
-  ({ int *__l; register void *__o0 asm ("%o0");				      \
-     asm ("sethi %%tgd_hi22(" #x "), %0" : "=r" (__l));			      \
-     asm ("add %1, %%tgd_lo10(" #x "), %0" : "=r" (__l) : "r" (__l));	      \
-     asm ("add %1, %2, %0, %%tgd_add(" #x ")"				      \
-	  : "=r" (__o0) : "r" (TLS_LOAD_PIC), "r" (__l));		      \
-     asm ("call __tls_get_addr, %%tgd_call(" #x ")\n\t"			      \
-	  " nop"							      \
-	  : "=r" (__o0) : "0" (__o0)					      \
-	  : "g1", "g2", "g3", "g4", "g5", "g6", "o1", "o2", "o3", "o4",	      \
-	    "o5", "o7", "cc");						      \
-     __o0; })
-
 #elif defined __s390x__
 
 # define TLS_LE(x) \
@@ -703,8 +634,6 @@ register void *__gp __asm__("$29");
 
 #elif defined __powerpc__ && !defined __powerpc64__
 
-#include "config.h"
-
 # define __TLS_CALL_CLOBBERS						\
 	"0", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",	\
 	"lr", "ctr", "cr0", "cr1", "cr5", "cr6", "cr7"
@@ -717,20 +646,7 @@ register void *__gp __asm__("$29");
      __result; })
 
 /* PowerPC32 Initial Exec TLS access.  */
-# ifdef HAVE_ASM_PPC_REL16
-#  define TLS_IE(x)					\
-  ({ int *__result;					\
-     asm ("bcl 20,31,1f\n1:\t"				\
-	  "mflr %0\n\t"					\
-	  "addis %0,%0,_GLOBAL_OFFSET_TABLE_-1b@ha\n\t"	\
-	  "addi %0,%0,_GLOBAL_OFFSET_TABLE_-1b@l\n\t"	\
-	  "lwz %0," #x "@got@tprel(%0)\n\t"		\
-	  "add %0,%0," #x "@tls"			\
-	  : "=b" (__result) :				\
-	  : "lr");					\
-     __result; })
-# else
-#  define TLS_IE(x)					\
+# define TLS_IE(x)					\
   ({ int *__result;					\
      asm ("bl _GLOBAL_OFFSET_TABLE_@local-4\n\t"	\
 	  "mflr %0\n\t"					\
@@ -739,24 +655,9 @@ register void *__gp __asm__("$29");
 	  : "=b" (__result) :				\
 	  : "lr");					\
      __result; })
-# endif
 
 /* PowerPC32 Local Dynamic TLS access.  */
-# ifdef HAVE_ASM_PPC_REL16
-#  define TLS_LD(x)					\
-  ({ int *__result;					\
-     asm ("bcl 20,31,1f\n1:\t"				\
-	  "mflr 3\n\t"					\
-	  "addis 3,3,_GLOBAL_OFFSET_TABLE_-1b@ha\n\t"	\
-	  "addi 3,3,_GLOBAL_OFFSET_TABLE_-1b@l\n\t"	\
-	  "addi 3,3," #x "@got@tlsld\n\t"		\
-	  "bl __tls_get_addr@plt\n\t"			\
-	  "addi %0,3," #x "@dtprel"			\
-	  : "=r" (__result) :				\
-	  : __TLS_CALL_CLOBBERS);			\
-     __result; })
-# else
-#  define TLS_LD(x)					\
+# define TLS_LD(x)					\
   ({ int *__result;					\
      asm ("bl _GLOBAL_OFFSET_TABLE_@local-4\n\t"	\
 	  "mflr 3\n\t"					\
@@ -766,23 +667,9 @@ register void *__gp __asm__("$29");
 	  : "=r" (__result) :				\
 	  : __TLS_CALL_CLOBBERS);			\
      __result; })
-# endif
 
 /* PowerPC32 General Dynamic TLS access.  */
-# ifdef HAVE_ASM_PPC_REL16
-#  define TLS_GD(x)					\
-  ({ register int *__result __asm__ ("r3");		\
-     asm ("bcl 20,31,1f\n1:\t"				\
-	  "mflr 3\n\t"					\
-	  "addis 3,3,_GLOBAL_OFFSET_TABLE_-1b@ha\n\t"	\
-	  "addi 3,3,_GLOBAL_OFFSET_TABLE_-1b@l\n\t"	\
-	  "addi 3,3," #x "@got@tlsgd\n\t"		\
-	  "bl __tls_get_addr@plt"			\
-	  : :						\
-	  : __TLS_CALL_CLOBBERS);			\
-     __result; })
-# else
-#  define TLS_GD(x)					\
+# define TLS_GD(x)					\
   ({ register int *__result __asm__ ("r3");		\
      asm ("bl _GLOBAL_OFFSET_TABLE_@local-4\n\t"	\
 	  "mflr 3\n\t"					\
@@ -791,7 +678,6 @@ register void *__gp __asm__("$29");
 	  : :						\
 	  : __TLS_CALL_CLOBBERS);			\
      __result; })
-# endif
 
 #elif defined __powerpc__ && defined __powerpc64__
 
@@ -845,7 +731,6 @@ register void *__gp __asm__("$29");
       __result;  \
   })
 
-#elif !defined TLS_LE || !defined TLS_IE \
-      || !defined TLS_LD || !defined TLS_GD
+#else
 # error "No support for this architecture so far."
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -35,9 +35,6 @@
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
-#define FUTEX_LOCK_PI		6
-#define FUTEX_UNLOCK_PI		7
-#define FUTEX_TRYLOCK_PI	8
 
 
 /* Initializer for compatibility lock.  */
@@ -68,112 +65,18 @@
 #define BUSY_WAIT_NOP          asm ("rep; nop")
 
 
-#define LLL_STUB_UNWIND_INFO_START \
-	".section	.eh_frame,\"a\",@progbits\n"		\
-"5:\t"	".long	7f-6f	# Length of Common Information Entry\n"	\
-"6:\t"	".long	0x0	# CIE Identifier Tag\n\t"		\
-	".byte	0x1	# CIE Version\n\t"			\
-	".ascii \"zR\\0\"	# CIE Augmentation\n\t"		\
-	".uleb128 0x1	# CIE Code Alignment Factor\n\t"	\
-	".sleb128 -4	# CIE Data Alignment Factor\n\t"	\
-	".byte	0x8	# CIE RA Column\n\t"			\
-	".uleb128 0x1	# Augmentation size\n\t"		\
-	".byte	0x1b	# FDE Encoding (pcrel sdata4)\n\t"	\
-	".byte	0xc	# DW_CFA_def_cfa\n\t"			\
-	".uleb128 0x4\n\t"					\
-	".uleb128 0x0\n\t"					\
-	".align 4\n"						\
-"7:\t"	".long	17f-8f	# FDE Length\n"				\
-"8:\t"	".long	8b-5b	# FDE CIE offset\n\t"			\
-	".long	1b-.	# FDE initial location\n\t"		\
-	".long	4b-1b	# FDE address range\n\t"		\
-	".uleb128 0x0	# Augmentation size\n\t"		\
-	".byte	0x16	# DW_CFA_val_expression\n\t"		\
-	".uleb128 0x8\n\t"					\
-	".uleb128 10f-9f\n"					\
-"9:\t"	".byte	0x78	# DW_OP_breg8\n\t"			\
-	".sleb128 3b-1b\n"
-#define LLL_STUB_UNWIND_INFO_END \
-	".byte	0x16	# DW_CFA_val_expression\n\t"		\
-	".uleb128 0x8\n\t"					\
-	".uleb128 12f-11f\n"					\
-"11:\t"	".byte	0x78	# DW_OP_breg8\n\t"			\
-	".sleb128 3b-2b\n"					\
-"12:\t"	".byte	0x40 + (3b-2b-1) # DW_CFA_advance_loc\n\t"	\
-	".byte	0x16	# DW_CFA_val_expression\n\t"		\
-	".uleb128 0x8\n\t"					\
-	".uleb128 16f-13f\n"					\
-"13:\t"	".byte	0x78	# DW_OP_breg8\n\t"			\
-	".sleb128 15f-14f\n\t"					\
-	".byte	0x0d	# DW_OP_const4s\n"			\
-"14:\t"	".4byte	3b-.\n\t"					\
-	".byte	0x1c	# DW_OP_minus\n\t"			\
-	".byte	0x0d	# DW_OP_const4s\n"			\
-"15:\t"	".4byte	18f-.\n\t"					\
-	".byte	0x22	# DW_OP_plus\n"				\
-"16:\t"	".align 4\n"						\
-"17:\t"	".previous\n"
-
-/* Unwind info for
-   1: lea ..., ...
-   2: call ...
-   3: jmp 18f
-   4:
-   snippet.  */
-#define LLL_STUB_UNWIND_INFO_3 \
-LLL_STUB_UNWIND_INFO_START					\
-"10:\t"	".byte	0x40 + (2b-1b) # DW_CFA_advance_loc\n\t"	\
-LLL_STUB_UNWIND_INFO_END
-
-/* Unwind info for
-   1: lea ..., ...
-   0: movl ..., ...
-   2: call ...
-   3: jmp 18f
-   4:
-   snippet.  */
-#define LLL_STUB_UNWIND_INFO_4 \
-LLL_STUB_UNWIND_INFO_START					\
-"10:\t"	".byte	0x40 + (0b-1b) # DW_CFA_advance_loc\n\t"	\
-	".byte	0x16	# DW_CFA_val_expression\n\t"		\
-	".uleb128 0x8\n\t"					\
-	".uleb128 20f-19f\n"					\
-"19:\t"	".byte	0x78	# DW_OP_breg8\n\t"			\
-	".sleb128 3b-0b\n"					\
-"20:\t"	".byte	0x40 + (2b-0b) # DW_CFA_advance_loc\n\t"	\
-LLL_STUB_UNWIND_INFO_END
-
-
 #define lll_futex_wait(futex, val) \
-  ({									      \
-    int __status;							      \
+  do {									      \
+    int __ignore;							      \
     register __typeof (val) _val asm ("edx") = (val);			      \
     __asm __volatile (LLL_EBX_LOAD					      \
 		      LLL_ENTER_KERNEL					      \
 		      LLL_EBX_LOAD					      \
-		      : "=a" (__status)					      \
+		      : "=a" (__ignore)					      \
 		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (0),	      \
 			"c" (FUTEX_WAIT), "d" (_val),			      \
-			"i" (offsetof (tcbhead_t, sysinfo))		      \
-		      : "memory");					      \
-    __status;								      \
-  })
-
-
-#define lll_futex_timed_wait(futex, val, timeout)			      \
-  ({									      \
-    int __status;							      \
-    register __typeof (val) _val asm ("edx") = (val);			      \
-    __asm __volatile (LLL_EBX_LOAD					      \
-		      LLL_ENTER_KERNEL					      \
-		      LLL_EBX_LOAD					      \
-		      : "=a" (__status)					      \
-		      : "0" (SYS_futex), LLL_EBX_REG (futex), "S" (timeout),  \
-			"c" (FUTEX_WAIT), "d" (_val),			      \
-			"i" (offsetof (tcbhead_t, sysinfo))		      \
-		      : "memory");					      \
-    __status;								      \
-  })
+			"i" (offsetof (tcbhead_t, sysinfo)));		      \
+  } while (0)
 
 
 #define lll_futex_wake(futex, nr) \
@@ -218,16 +121,6 @@ extern int __lll_mutex_unlock_wake (int *__futex)
      ret; })
 
 
-#define lll_robust_mutex_trylock(futex, id) \
-  ({ int ret;								      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
-		       : "=a" (ret), "=m" (futex)			      \
-		       : "r" (id), "m" (futex),				      \
-			 "0" (LLL_MUTEX_LOCK_INITIALIZER)		      \
-		       : "memory");					      \
-     ret; })
-
-
 #define lll_mutex_cond_trylock(futex) \
   ({ int ret;								      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
@@ -244,37 +137,16 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 			      "jnz _L_mutex_lock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
 			      ".type _L_mutex_lock_%=,@function\n"	      \
-			      "_L_mutex_lock_%=:\n"			      \
-			      "1:\tleal %2, %%ecx\n"			      \
-			      "2:\tcall __lll_mutex_lock_wait\n"	      \
-			      "3:\tjmp 18f\n"				      \
-			      "4:\t.size _L_mutex_lock_%=, 4b-1b\n\t"	      \
+			      "_L_mutex_lock_%=:\n\t"			      \
+			      "leal %2, %%ecx\n\t"			      \
+			      "call __lll_mutex_lock_wait\n\t"		      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_lock_%=,.-_L_mutex_lock_%=\n"   \
 			      ".previous\n"				      \
-			      LLL_STUB_UNWIND_INFO_3			      \
-			      "18:"					      \
+			      "1:"					      \
 			      : "=a" (ignore1), "=c" (ignore2), "=m" (futex)  \
 			      : "0" (0), "1" (1), "m" (futex)		      \
 			      : "memory"); })
-
-
-#define lll_robust_mutex_lock(futex, id) \
-  ({ int result, ignore;						      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"			      \
-		       "jnz _L_robust_mutex_lock_%=\n\t"		      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_robust_mutex_lock_%=,@function\n"	      \
-		       "_L_robust_mutex_lock_%=:\n"			      \
-		       "1:\tleal %2, %%ecx\n"				      \
-		       "2:\tcall __lll_robust_mutex_lock_wait\n"	      \
-		       "3:\tjmp 18f\n"					      \
-		       "4:\t.size _L_robust_mutex_lock_%=, 4b-1b\n\t"	      \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_3				      \
-		       "18:"						      \
-		       : "=a" (result), "=c" (ignore), "=m" (futex)	      \
-		       : "0" (0), "1" (id), "m" (futex)			      \
-		       : "memory");					      \
-     result; })
 
 
 /* Special version of lll_mutex_lock which causes the unlock function to
@@ -285,37 +157,16 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 			      "jnz _L_mutex_cond_lock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
 			      ".type _L_mutex_cond_lock_%=,@function\n"	      \
-			      "_L_mutex_cond_lock_%=:\n"		      \
-			      "1:\tleal %2, %%ecx\n"			      \
-			      "2:\tcall __lll_mutex_lock_wait\n"	      \
-			      "3:\tjmp 18f\n"				      \
-			      "4:\t.size _L_mutex_cond_lock_%=, 4b-1b\n\t"    \
+			      "_L_mutex_cond_lock_%=:\n\t"		      \
+			      "leal %2, %%ecx\n\t"			      \
+			      "call __lll_mutex_lock_wait\n\t"		      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_cond_lock_%=,.-_L_mutex_cond_lock_%=\n"   \
 			      ".previous\n"				      \
-			      LLL_STUB_UNWIND_INFO_3			      \
-			      "18:"					      \
+			      "1:"					      \
 			      : "=a" (ignore1), "=c" (ignore2), "=m" (futex)  \
 			      : "0" (0), "1" (2), "m" (futex)		      \
 			      : "memory"); })
-
-
-#define lll_robust_mutex_cond_lock(futex, id) \
-  ({ int result, ignore;						      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"			      \
-		       "jnz _L_robust_mutex_cond_lock_%=\n\t"		      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_robust_mutex_cond_lock_%=,@function\n"	      \
-		       "_L_robust_mutex_cond_lock_%=:\n"		      \
-		       "1:\tleal %2, %%ecx\n"				      \
-		       "2:\tcall __lll_robust_mutex_lock_wait\n"	      \
-		       "3:\tjmp 18f\n"					      \
-		       "4:\t.size _L_robust_mutex_cond_lock_%=, 4b-1b\n\t"    \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_3				      \
-		       "18:"						      \
-		       : "=a" (result), "=c" (ignore), "=m" (futex)	      \
-		       : "0" (0), "1" (id | FUTEX_WAITERS), "m" (futex)	      \
-		       : "memory");					      \
-     result; })
 
 
 #define lll_mutex_timedlock(futex, timeout) \
@@ -324,15 +175,14 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 		       "jnz _L_mutex_timedlock_%=\n\t"			      \
 		       ".subsection 1\n\t"				      \
 		       ".type _L_mutex_timedlock_%=,@function\n"	      \
-		       "_L_mutex_timedlock_%=:\n"			      \
-		       "1:\tleal %3, %%ecx\n"				      \
-		       "0:\tmovl %7, %%edx\n"				      \
-		       "2:\tcall __lll_mutex_timedlock_wait\n"		      \
-		       "3:\tjmp 18f\n"					      \
-		       "4:\t.size _L_mutex_timedlock_%=, 4b-1b\n\t"	      \
+		       "_L_mutex_timedlock_%=:\n\t"			      \
+		       "leal %3, %%ecx\n\t"				      \
+		       "movl %7, %%edx\n\t"				      \
+		       "call __lll_mutex_timedlock_wait\n\t"		      \
+		       "jmp 1f\n\t"					      \
+		       ".size _L_mutex_timedlock_%=,.-_L_mutex_timedlock_%=\n"\
 		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_4				      \
-		       "18:"						      \
+		       "1:"						      \
 		       : "=a" (result), "=c" (ignore1), "=&d" (ignore2),      \
 			 "=m" (futex)					      \
 		       : "0" (0), "1" (1), "m" (futex), "m" (timeout)	      \
@@ -340,93 +190,22 @@ extern int __lll_mutex_unlock_wake (int *__futex)
      result; })
 
 
-#define lll_robust_mutex_timedlock(futex, timeout, id) \
-  ({ int result, ignore1, ignore2;					      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %1, %3\n\t"			      \
-		       "jnz _L_robust_mutex_timedlock_%=\n\t"		      \
-		       ".subsection 1\n\t"				      \
-		       ".type _L_robust_mutex_timedlock_%=,@function\n"	      \
-		       "_L_robust_mutex_timedlock_%=:\n"		      \
-		       "1:\tleal %3, %%ecx\n"				      \
-		       "0:\tmovl %7, %%edx\n"				      \
-		       "2:\tcall __lll_robust_mutex_timedlock_wait\n"	      \
-		       "3:\tjmp 18f\n"					      \
-		       "4:\t.size _L_robust_mutex_timedlock_%=, 4b-1b\n\t"    \
-		       ".previous\n"					      \
-		       LLL_STUB_UNWIND_INFO_4				      \
-		       "18:"						      \
-		       : "=a" (result), "=c" (ignore1), "=&d" (ignore2),      \
-			 "=m" (futex)					      \
-		       : "0" (0), "1" (id), "m" (futex), "m" (timeout)	      \
-		       : "memory");					      \
-     result; })
-
-
 #define lll_mutex_unlock(futex) \
   (void) ({ int ignore;							      \
-            __asm __volatile (LOCK_INSTR "subl $1, %0\n\t"		      \
+            __asm __volatile (LOCK_INSTR "subl $1,%0\n\t"		      \
 			      "jne _L_mutex_unlock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
 			      ".type _L_mutex_unlock_%=,@function\n"	      \
-			      "_L_mutex_unlock_%=:\n"			      \
-			      "1:\tleal %0, %%eax\n"			      \
-			      "2:\tcall __lll_mutex_unlock_wake\n"	      \
-			      "3:\tjmp 18f\n"				      \
-			      "4:\t.size _L_mutex_unlock_%=, 4b-1b\n\t"	      \
+			      "_L_mutex_unlock_%=:\n\t"			      \
+			      "leal %0, %%eax\n\t"			      \
+			      "call __lll_mutex_unlock_wake\n\t"	      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_unlock_%=,.-_L_mutex_unlock_%=\n" \
 			      ".previous\n"				      \
-			      LLL_STUB_UNWIND_INFO_3			      \
-			      "18:"					      \
+			      "1:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
 			      : "m" (futex)				      \
 			      : "memory"); })
-
-
-#define lll_robust_mutex_unlock(futex) \
-  (void) ({ int ignore;							      \
-            __asm __volatile (LOCK_INSTR "andl %2, %0\n\t"		      \
-			      "jne _L_robust_mutex_unlock_%=\n\t"	      \
-			      ".subsection 1\n\t"			      \
-			      ".type _L_robust_mutex_unlock_%=,@function\n"   \
-			      "_L_robust_mutex_unlock_%=:\n\t"		      \
-			      "1:\tleal %0, %%eax\n"			      \
-			      "2:\tcall __lll_mutex_unlock_wake\n"	      \
-			      "3:\tjmp 18f\n"				      \
-			      "4:\t.size _L_robust_mutex_unlock_%=, 4b-1b\n\t"\
-			      ".previous\n"				      \
-			      LLL_STUB_UNWIND_INFO_3			      \
-			      "18:"					      \
-			      : "=m" (futex), "=&a" (ignore)		      \
-			      : "i" (FUTEX_WAITERS), "m" (futex)	      \
-			      : "memory"); })
-
-
-#define lll_robust_mutex_dead(futex) \
-  (void) ({ int __ignore;						      \
-	    register int _nr asm ("edx") = 1;				      \
-	    __asm __volatile (LOCK_INSTR "orl %5, (%2)\n\t"		      \
-			      LLL_EBX_LOAD				      \
-			      LLL_ENTER_KERNEL				      \
-			      LLL_EBX_LOAD				      \
-			      : "=a" (__ignore)				      \
-			      : "0" (SYS_futex), LLL_EBX_REG (&(futex)),      \
-				"c" (FUTEX_WAKE), "d" (_nr),		      \
-				"i" (FUTEX_OWNER_DIED),			      \
-				"i" (offsetof (tcbhead_t, sysinfo))); })
-
-
-#define lll_futex_wake(futex, nr) \
-  do {									      \
-    int __ignore;							      \
-    register __typeof (nr) _nr asm ("edx") = (nr);			      \
-    __asm __volatile (LLL_EBX_LOAD					      \
-		      LLL_ENTER_KERNEL					      \
-		      LLL_EBX_LOAD					      \
-		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), LLL_EBX_REG (futex),		      \
-			"c" (FUTEX_WAKE), "d" (_nr),			      \
-			"i" (0) /* phony, to align next arg's number */,      \
-			"i" (offsetof (tcbhead_t, sysinfo)));		      \
-  } while (0)
 
 
 #define lll_mutex_islocked(futex) \
@@ -471,7 +250,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 # define lll_trylock(futex) \
   ({ unsigned char ret;							      \
      __asm __volatile ("cmpl $0, %%gs:%P5\n\t"				      \
-		       "je 0f\n\t"					      \
+		       "je,pt 0f\n\t"					      \
 		       "lock\n"						      \
 		       "0:\tcmpxchgl %2, %1; setne %0"			      \
 		       : "=a" (ret), "=m" (futex)			      \
@@ -485,20 +264,19 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 # define lll_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
 	    __asm __volatile ("cmpl $0, %%gs:%P6\n\t"			      \
-			      "je 0f\n\t"				      \
+			      "je,pt 0f\n\t"				      \
 			      "lock\n"					      \
 			      "0:\tcmpxchgl %1, %2\n\t"			      \
-			      "jnz _L_lock_%=\n\t"			      \
+			      "jnz _L_mutex_lock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
-			      ".type _L_lock_%=,@function\n"		      \
-			      "_L_lock_%=:\n"				      \
-			      "1:\tleal %2, %%ecx\n"			      \
-			      "2:\tcall __lll_mutex_lock_wait\n"	      \
-			      "3:\tjmp 18f\n"				      \
-			      "4:\t.size _L_lock_%=, 4b-1b\n\t"		      \
+			      ".type _L_mutex_lock_%=,@function\n"	      \
+			      "_L_mutex_lock_%=:\n\t"			      \
+			      "leal %2, %%ecx\n\t"			      \
+			      "call __lll_mutex_lock_wait\n\t"		      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_lock_%=,.-_L_mutex_lock_%=\n"   \
 			      ".previous\n"				      \
-			      LLL_STUB_UNWIND_INFO_3			      \
-			      "18:"					      \
+			      "1:"					      \
 			      : "=a" (ignore1), "=c" (ignore2), "=m" (futex)  \
 			      : "0" (0), "1" (1), "m" (futex),		      \
 		                "i" (offsetof (tcbhead_t, multiple_threads))  \
@@ -508,20 +286,19 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 # define lll_unlock(futex) \
   (void) ({ int ignore;							      \
             __asm __volatile ("cmpl $0, %%gs:%P3\n\t"			      \
-			      "je 0f\n\t"				      \
+			      "je,pt 0f\n\t"				      \
 			      "lock\n"					      \
-			      "0:\tsubl $1,%0\n\t"			      \
-			      "jne _L_unlock_%=\n\t"			      \
+			      "0:\tsubl $1,%0\n\t"		      \
+			      "jne _L_mutex_unlock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
-			      ".type _L_unlock_%=,@function\n"		      \
-			      "_L_unlock_%=:\n"				      \
-			      "1:\tleal %0, %%eax\n"			      \
-			      "2:\tcall __lll_mutex_unlock_wake\n"	      \
-			      "3:\tjmp 18f\n\t"				      \
-			      "4:\t.size _L_unlock_%=, 4b-1b\n\t"	      \
+			      ".type _L_mutex_unlock_%=,@function\n"	      \
+			      "_L_mutex_unlock_%=:\n\t"			      \
+			      "leal %0, %%eax\n\t"			      \
+			      "call __lll_mutex_unlock_wake\n\t"	      \
+			      "jmp 1f\n\t"				      \
+			      ".size _L_mutex_unlock_%=,.-_L_mutex_unlock_%=\n" \
 			      ".previous\n"				      \
-			      LLL_STUB_UNWIND_INFO_3			      \
-			      "18:"					      \
+			      "1:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
 			      : "m" (futex),				      \
 				"i" (offsetof (tcbhead_t, multiple_threads))  \
@@ -548,13 +325,12 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			"1:\tmovl %1, %%eax\n\t"			      \
 			LLL_ENTER_KERNEL				      \
 			"cmpl $0, (%%ebx)\n\t"				      \
-			"jne 1b\n\t"					      \
+			"jne,pn 1b\n\t"					      \
 			LLL_EBX_LOAD					      \
 			: "=&a" (__ignore)				      \
 			: "i" (SYS_futex), LLL_EBX_REG (&tid), "S" (0),	      \
 			  "c" (FUTEX_WAIT), "d" (_tid),			      \
-			  "i" (offsetof (tcbhead_t, sysinfo))		      \
-			: "memory");					      \
+			  "i" (offsetof (tcbhead_t, sysinfo)));		      \
   } while (0)
 
 extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)

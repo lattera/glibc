@@ -1,0 +1,188 @@
+libc {
+  GLIBC_2.0 {
+    pthread_attr_destroy; pthread_attr_getdetachstate;
+    pthread_attr_getinheritsched; pthread_attr_getschedparam;
+    pthread_attr_getschedpolicy; pthread_attr_getscope; pthread_attr_init;
+    pthread_attr_setdetachstate; pthread_attr_setinheritsched;
+    pthread_attr_setschedparam; pthread_attr_setschedpolicy;
+    pthread_attr_setscope; pthread_cond_broadcast; pthread_cond_destroy;
+    pthread_cond_init; pthread_cond_signal; pthread_cond_wait;
+    pthread_cond_timedwait;
+    pthread_condattr_destroy; pthread_condattr_init; pthread_equal;
+    pthread_exit; pthread_getschedparam; pthread_mutex_destroy;
+    pthread_mutex_init; pthread_mutex_lock; pthread_mutex_unlock;
+    pthread_self; pthread_setcancelstate; pthread_setcanceltype;
+    pthread_setschedparam;
+  }
+  GLIBC_2.1 {
+    pthread_attr_init;
+  }
+  GLIBC_2.3.2 {
+    # Changed pthread_cond_t.
+    pthread_cond_init; pthread_cond_destroy;
+    pthread_cond_wait; pthread_cond_signal;
+    pthread_cond_broadcast; pthread_cond_timedwait;
+  }
+  GLIBC_PRIVATE {
+    # Internal libc interface to libpthread
+    __libc_dl_error_tsd;
+
+    __libc_pthread_init; __libc_current_sigrtmin_private;
+    __libc_current_sigrtmax_private; __libc_allocate_rtsig_private;
+
+    __libc_creat; __libc_poll; __libc_pselect; __libc_select;
+    __libc_sigpause; __libc_sigsuspend; __libc_sigwait; __libc_sigwaitinfo;
+    __libc_waitid; __libc___xpg_sigpause; __librt_enable_asynccancel;
+    __librt_disable_asynccancel; __librt_multiple_threads;
+
+    __libc_sigaction; __on_exit;
+  }
+}
+
+libpthread {
+  GLIBC_2.0 {
+    # Hidden entry point (through macros).
+    _pthread_cleanup_pop; _pthread_cleanup_pop_restore; _pthread_cleanup_push;
+    _pthread_cleanup_push_defer;
+
+    # Overwritten libc functions.
+    accept; close; connect; fcntl; fork; fsync; longjmp; lseek; msync;
+    nanosleep; open; pause; raise; read; recv; recvfrom; recvmsg; send;
+    sendmsg; sendto; sigaction; siglongjmp; system; tcdrain; wait;
+    waitpid; write;
+    __close; __connect; __fcntl; __lseek; __open; __read; __send; __wait;
+    __write;
+    _IO_flockfile; _IO_ftrylockfile; _IO_funlockfile;
+    vfork; __fork;
+
+    # POSIX.1c extensions to libc.
+    flockfile; funlockfile; ftrylockfile;
+
+    # Non-standard POSIX1.x functions.
+    pthread_kill_other_threads_np; pthread_mutexattr_getkind_np;
+    pthread_mutexattr_setkind_np;
+
+    # Real POSIX.1c functions.
+    pthread_atfork; pthread_attr_destroy; pthread_attr_getdetachstate;
+    pthread_attr_getinheritsched; pthread_attr_getschedparam;
+    pthread_attr_getschedpolicy; pthread_attr_getscope; pthread_attr_init;
+    pthread_attr_setdetachstate; pthread_attr_setinheritsched;
+    pthread_attr_setschedparam; pthread_attr_setschedpolicy;
+    pthread_attr_setscope; pthread_cancel; pthread_cond_broadcast;
+    pthread_cond_destroy; pthread_cond_init; pthread_cond_signal;
+    pthread_cond_timedwait; pthread_cond_wait; pthread_condattr_destroy;
+    pthread_condattr_init; pthread_create; pthread_detach; pthread_equal;
+    pthread_exit; pthread_getschedparam; pthread_getspecific; pthread_join;
+    pthread_key_create; pthread_key_delete; pthread_kill;
+    pthread_mutex_destroy; pthread_mutex_init; pthread_mutex_lock;
+    pthread_mutex_trylock; pthread_mutex_unlock; pthread_mutexattr_destroy;
+    pthread_mutexattr_init; pthread_once; pthread_self; pthread_setcancelstate;
+    pthread_setcanceltype; pthread_setschedparam; pthread_setspecific;
+    pthread_sigmask; pthread_testcancel;
+
+    sem_destroy; sem_getvalue; sem_init; sem_post; sem_trywait; sem_wait;
+    sigwait;
+
+    # Protected names for functions used in other shared objects.
+    __pthread_atfork; __pthread_getspecific;
+    __pthread_key_create; __pthread_mutex_destroy; __pthread_mutex_init;
+    __pthread_mutex_lock; __pthread_mutex_trylock; __pthread_mutex_unlock;
+    __pthread_mutexattr_destroy; __pthread_mutexattr_init;
+    __pthread_mutexattr_settype; __pthread_once; __pthread_setspecific;
+
+    # The error functions.
+    __errno_location; __h_errno_location;
+
+    # Must be preemptible
+    __sigaction;
+  }
+  GLIBC_2.1 {
+    # Functions with changed interface.
+    pthread_attr_init; pthread_create;
+
+    # Unix98 extensions.
+    pthread_rwlock_init; pthread_rwlock_destroy; pthread_rwlock_rdlock;
+    pthread_rwlock_tryrdlock; pthread_rwlock_wrlock; pthread_rwlock_trywrlock;
+    pthread_rwlock_unlock; pthread_rwlockattr_init; pthread_rwlockattr_destroy;
+    pthread_rwlockattr_getpshared; pthread_rwlockattr_setpshared;
+    pthread_rwlockattr_getkind_np; pthread_rwlockattr_setkind_np;
+
+    pthread_attr_getguardsize; pthread_attr_setguardsize;
+    pthread_attr_getstackaddr; pthread_attr_setstackaddr;
+    pthread_attr_getstacksize; pthread_attr_setstacksize;
+
+    pthread_getconcurrency; pthread_setconcurrency;
+
+    pthread_mutexattr_gettype; pthread_mutexattr_settype;
+
+    sem_destroy; sem_getvalue; sem_init; sem_post; sem_trywait; sem_wait;
+
+    # helper functions
+    __libc_current_sigrtmin; __libc_current_sigrtmax;
+    __libc_allocate_rtsig;
+  }
+  GLIBC_2.1.1 {
+    sem_close; sem_open; sem_unlink;
+  }
+  GLIBC_2.1.2 {
+    __vfork;
+  }
+  GLIBC_2.2 {
+    # For the cancelation wrappers.
+    pread; __pread64; pread64; pwrite; __pwrite64; pwrite64; lseek64;
+    open64; __open64;
+
+    __res_state;
+
+    # Names used internally.
+    __pthread_rwlock_init; __pthread_rwlock_destroy; __pthread_rwlock_rdlock;
+    __pthread_rwlock_tryrdlock; __pthread_rwlock_wrlock;
+    __pthread_rwlock_trywrlock; __pthread_rwlock_unlock;
+
+    # No really implemented.
+    pthread_condattr_getpshared; pthread_condattr_setpshared;
+    pthread_mutexattr_getpshared; pthread_mutexattr_setpshared;
+
+    # New functions from IEEE Std. 1003.1-200x.
+    sem_timedwait;
+    pthread_attr_getstack; pthread_attr_setstack;
+    pthread_spin_destroy; pthread_spin_init; pthread_spin_lock;
+    pthread_spin_trylock; pthread_spin_unlock;
+    pthread_getcpuclockid;
+    pthread_barrier_destroy; pthread_barrier_init; pthread_barrier_wait;
+    pthread_barrierattr_destroy; pthread_barrierattr_init;
+    pthread_barrierattr_setpshared;
+    pthread_mutex_timedlock;
+    pthread_rwlock_timedrdlock; pthread_rwlock_timedwrlock;
+
+    # Extensions.
+    pthread_yield;
+  }
+  GLIBC_2.2.3 {
+    # Extensions.
+    pthread_getattr_np;
+  }
+  GLIBC_2.2.6 {
+    # Cancellation wrapper
+    __nanosleep;
+  }
+  GLIBC_2.3.2 {
+    # Changed pthread_cond_t.
+    pthread_cond_init; pthread_cond_destroy;
+    pthread_cond_wait; pthread_cond_timedwait;
+    pthread_cond_signal; pthread_cond_broadcast;
+  }
+
+  # Hey you!!  Yes, YOU!  Do not add new symbols here!
+  # The linuxthreads libpthread ABI froze at GLIBC_2.3.2 and lacks
+  # numerous additions that NPTL's libpthread has.  We can't go adding
+  # any new symbols here unless we support all the new symbols in NPTL,
+  # and we don't want to do that.  Linuxthreads is only alive for
+  # compatibility with old binaries using old interfaces.
+
+  GLIBC_PRIVATE {
+    # Internal libc interface to libpthread
+    __pthread_initialize;
+    __pthread_kill_other_threads_np;
+  }
+}

@@ -1,3 +1,0 @@
-# Make sure this comes before the powerpc/powerpc64/fpu that's
-# listed in unix/sysv/linux/powerpc/powerpc64/fpu/Implies.
-powerpc/powerpc64/power6/fpu

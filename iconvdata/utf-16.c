@@ -1,5 +1,5 @@
 /* Conversion module for UTF-16.
-   Copyright (C) 1999, 2000-2002, 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -44,9 +44,10 @@
 #define PREPARE_LOOP \
   enum direction dir = ((struct utf16_data *) step->__data)->dir;	      \
   enum variant var = ((struct utf16_data *) step->__data)->var;		      \
-  if (__builtin_expect (data->__invocation_counter == 0, 0) && var == UTF_16) \
+  int swap;								      \
+  if (FROM_DIRECTION && var == UTF_16)					      \
     {									      \
-      if (FROM_DIRECTION)						      \
+      if (data->__invocation_counter == 0)				      \
 	{								      \
 	  /* We have to find out which byte order the file is encoded in.  */ \
 	  if (inptr + 2 > inend)					      \
@@ -62,18 +63,19 @@
 	      *inptrp = inptr += 2;					      \
 	    }								      \
 	}								      \
-      else if (!FROM_DIRECTION && !data->__internal_use)		      \
-	{								      \
-	  /* Emit the Byte Order Mark.  */				      \
-	  if (__builtin_expect (outbuf + 2 > outend, 0))		      \
-	    return __GCONV_FULL_OUTPUT;					      \
-									      \
-	  put16u (outbuf, BOM);						      \
-	  outbuf += 2;							      \
-	}								      \
     }									      \
-  int swap = ((struct utf16_data *) step->__data)->swap;
-#define EXTRA_LOOP_ARGS		, swap
+  else if (!FROM_DIRECTION && var == UTF_16 && !data->__internal_use	      \
+	   && data->__invocation_counter == 0)				      \
+    {									      \
+      /* Emit the Byte Order Mark.  */					      \
+      if (__builtin_expect (outbuf + 2 > outend, 0))			      \
+	return __GCONV_FULL_OUTPUT;					      \
+									      \
+      put16u (outbuf, BOM);						      \
+      outbuf += 2;							      \
+    }									      \
+  swap = ((struct utf16_data *) step->__data)->swap;
+#define EXTRA_LOOP_ARGS		, var, swap
 
 
 /* Direction of the transformation.  */
@@ -265,7 +267,7 @@ gconv_end (struct __gconv_step *data)
   }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
-	, int swap
+	, enum variant var, int swap
 #include <iconv/loop.c>
 
 
@@ -326,6 +328,8 @@ gconv_end (struct __gconv_step *data)
 	  }								      \
 	else								      \
 	  {								      \
+	    uint16_t u2;						      \
+									      \
 	    /* It's a surrogate character.  At least the first word says      \
 	       it is.  */						      \
 	    if (__builtin_expect (inptr + 4 > inend, 0))		      \
@@ -337,7 +341,7 @@ gconv_end (struct __gconv_step *data)
 	      }								      \
 									      \
 	    inptr += 2;							      \
-	    uint16_t u2 = get16 (inptr);				      \
+	    u2 = get16 (inptr);						      \
 	    if (__builtin_expect (u2 < 0xdc00, 0)			      \
 		|| __builtin_expect (u2 > 0xdfff, 0))			      \
 	      {								      \
@@ -354,7 +358,7 @@ gconv_end (struct __gconv_step *data)
   }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
-	, int swap
+	, enum variant var, int swap
 #include <iconv/loop.c>
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1997,1999-2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1997,1999-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -123,5 +123,8 @@ _IO_vsnprintf (string, maxlen, format, args)
     *sf.f._sbf._f._IO_write_ptr = '\0';
   return ret;
 }
-ldbl_weak_alias (_IO_vsnprintf, __vsnprintf)
-ldbl_weak_alias (_IO_vsnprintf, vsnprintf)
+
+#ifdef weak_alias
+weak_alias (_IO_vsnprintf, __vsnprintf)
+weak_alias (_IO_vsnprintf, vsnprintf)
+#endif

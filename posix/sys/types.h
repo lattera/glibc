@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1994,1995,1996,1997,1998,1999,2000,2001,2002,2006
+/* Copyright (C) 1991,1992,1994,1995,1996,1997,1998,1999,2000,2001,2002
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -163,9 +163,7 @@ typedef unsigned int uint;
 typedef	char int8_t;
 typedef	short int int16_t;
 typedef	int int32_t;
-#  if __WORDSIZE == 64
-typedef long int int64_t;
-#  elif __GLIBC_HAVE_LONG_LONG
+#  if __GLIBC_HAVE_LONG_LONG
 __extension__ typedef long long int int64_t;
 #  endif
 # endif
@@ -174,9 +172,7 @@ __extension__ typedef long long int int64_t;
 typedef	unsigned char u_int8_t;
 typedef	unsigned short int u_int16_t;
 typedef	unsigned int u_int32_t;
-# if __WORDSIZE == 64
-typedef unsigned long int u_int64_t;
-# elif __GLIBC_HAVE_LONG_LONG
+# if __GLIBC_HAVE_LONG_LONG
 __extension__ typedef unsigned long long int u_int64_t;
 # endif
 

@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997, 1998, 1999, 2001, 2004, 2005, 2007
+   Copyright (C) 1996, 1997, 1998, 1999, 2001, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -67,7 +67,9 @@ ENTRY(__ieee754_powl)
 	fxam
 
 #ifdef	PIC
-	LOAD_PIC_REG (cx)
+	call	1f
+1:	popl	%ecx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
 #endif
 
 	fnstsw
@@ -85,7 +87,6 @@ ENTRY(__ieee754_powl)
 	fldt	4(%esp)		// x : y
 
 	subl	$8,%esp
-	cfi_adjust_cfa_offset (8)
 
 	fxam
 	fnstsw
@@ -119,9 +120,7 @@ ENTRY(__ieee754_powl)
 
 	/* OK, we have an integer value for y.  */
 	popl	%eax
-	cfi_adjust_cfa_offset (-4)
 	popl	%edx
-	cfi_adjust_cfa_offset (-4)
 	orl	$0, %edx
 	fstp	%st(0)		// x
 	jns	4f		// y >= 0, jump
@@ -156,16 +155,14 @@ ENTRY(__ieee754_powl)
 31:	fstp	%st(1)
 	ret
 
-	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 2:	/* y is a real number.  */
 	fxch			// x : y
 	fldl	MO(one)		// 1.0 : x : y
-	fldl	MO(limit)	// 0.29 : 1.0 : x : y
-	fld	%st(2)		// x : 0.29 : 1.0 : x : y
-	fsub	%st(2)		// x-1 : 0.29 : 1.0 : x : y
-	fabs			// |x-1| : 0.29 : 1.0 : x : y
-	fucompp			// 1.0 : x : y
+	fld	%st(1)		// x : 1.0 : x : y
+	fsub	%st(1)		// x-1 : 1.0 : x : y
+	fabs			// |x-1| : 1.0 : x : y
+	fcompl	MO(limit)	// 1.0 : x : y
 	fnstsw
 	fxch			// x : 1.0 : y
 	sahf
@@ -189,16 +186,13 @@ ENTRY(__ieee754_powl)
 	faddl	MO(one)		// 2^fract(y*log2(x)) : int(y*log2(x))
 	fscale			// 2^fract(y*log2(x))*2^int(y*log2(x)) : int(y*log2(x))
 	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
 	ret
 
-	cfi_adjust_cfa_offset (8)
 28:	fstp	%st(1)		// y*log2(x)
 	fldl	MO(one)		// 1 : y*log2(x)
 	fscale			// 2^(y*log2(x)) : y*log2(x)
 	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
 	fstp	%st(1)		// 2^(y*log2(x))
 	ret
 
@@ -211,10 +205,9 @@ ENTRY(__ieee754_powl)
 	// y == ±inf
 	.align ALIGNARG(4)
 12:	fstp	%st(0)		// pop y
-	fldl	MO(one)		// 1
-	fldt	4(%esp)		// x : 1
-	fabs			// abs(x) : 1
-	fucompp			// < 1, == 1, or > 1
+	fldt	4(%esp)		// x
+	fabs
+	fcompl	MO(one)		// < 1, == 1, or > 1
 	fnstsw
 	andb	$0x45, %ah
 	cmpb	$0x45, %ah
@@ -237,7 +230,6 @@ ENTRY(__ieee754_powl)
 13:	fldt	4(%esp)		// load x == NaN
 	ret
 
-	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 	// x is ±inf
 15:	fstp	%st(0)		// y
@@ -255,9 +247,7 @@ ENTRY(__ieee754_powl)
 
 	// OK, the value is an integer, but is it odd?
 	popl	%eax
-	cfi_adjust_cfa_offset (-4)
 	popl	%edx
-	cfi_adjust_cfa_offset (-4)
 	andb	$1, %al
 	jz	18f		// jump if not odd
 	// It's an odd integer.
@@ -265,27 +255,22 @@ ENTRY(__ieee754_powl)
 	fldl	MOX(minf_mzero, %edx, 8)
 	ret
 
-	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 16:	fcompl	MO(zero)
 	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
 	fnstsw
 	shrl	$5, %eax
 	andl	$8, %eax
 	fldl	MOX(inf_zero, %eax, 1)
 	ret
 
-	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 17:	shll	$30, %edx	// sign bit for y in right position
 	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
 18:	shrl	$31, %edx
 	fldl	MOX(inf_zero, %edx, 8)
 	ret
 
-	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 	// x is ±0
 20:	fstp	%st(0)		// y
@@ -306,9 +291,7 @@ ENTRY(__ieee754_powl)
 
 	// OK, the value is an integer, but is it odd?
 	popl	%eax
-	cfi_adjust_cfa_offset (-4)
 	popl	%edx
-	cfi_adjust_cfa_offset (-4)
 	andb	$1, %al
 	jz	27f		// jump if not odd
 	// It's an odd integer.
@@ -318,16 +301,13 @@ ENTRY(__ieee754_powl)
 	fchs
 	ret
 
-	cfi_adjust_cfa_offset (8)
 25:	fstp	%st(0)
 26:	addl	$8, %esp
-	cfi_adjust_cfa_offset (-8)
 27:	// Raise divide-by-zero exception and get infinity value.
 	fldl	MO(one)
 	fdivl	MO(zero)
 	ret
 
-	cfi_adjust_cfa_offset (8)
 	.align ALIGNARG(4)
 	// x is ±0 and y is > 0.  We must find out whether y is an odd integer.
 21:	testb	$2, %dh
@@ -343,19 +323,15 @@ ENTRY(__ieee754_powl)
 
 	// OK, the value is an integer, but is it odd?
 	popl	%eax
-	cfi_adjust_cfa_offset (-4)
 	popl	%edx
-	cfi_adjust_cfa_offset (-4)
 	andb	$1, %al
 	jz	24f		// jump if not odd
 	// It's an odd integer.
 	fldl	MO(mzero)
 	ret
 
-	cfi_adjust_cfa_offset (8)
 22:	fstp	%st(0)
 23:	addl	$8, %esp	// Don't use 2 x pop
-	cfi_adjust_cfa_offset (-8)
 24:	fldl	MO(zero)
 	ret
 

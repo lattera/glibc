@@ -1,5 +1,5 @@
 # Combine version map fragments into version scripts for our shared objects.
-# Copyright (C) 1998,99,2000,2002,2005 Free Software Foundation, Inc.
+# Copyright (C) 1998,99,2000,02 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
 # This script expects the following variables to be defined:
@@ -9,19 +9,17 @@
 
 # Read definitions for the versions.
 BEGIN {
-  lossage = 0;
-
   nlibs=0;
   while (getline < defsfile) {
     if (/^[a-zA-Z0-9_.]+ \{/) {
       libs[$1] = 1;
       curlib = $1;
       while (getline < defsfile && ! /^}/) {
-	if ($2 == "=") {
+      if ($2 == "=") {
 	  renamed[curlib "::" $1] = $3;
-	}
+      }
 	else
-	  versions[curlib "::" $1] = 1;
+	  versions[$1] = 1;
       }
     }
   }
@@ -44,7 +42,7 @@ BEGIN {
   actlib = $1;
   if (!libs[$1]) {
     printf("no versions defined for %s\n", $1) > "/dev/stderr";
-    ++lossage;
+    exit 1;
   }
   next;
 }
@@ -53,9 +51,9 @@ BEGIN {
 /^  [A-Za-z_]/ {
   if (renamed[actlib "::" $1])
     actver = renamed[actlib "::" $1];
-  else if (!versions[actlib "::" $1] && $1 != "GLIBC_PRIVATE") {
+  else if (!versions[$1]) {
     printf("version %s not defined for %s\n", $1, actlib) > "/dev/stderr";
-    ++lossage;
+    exit 1;
   }
   else
     actver = $1;
@@ -95,12 +93,6 @@ function close_and_move(name, real_name) {
 # Now print the accumulated information.
 END {
   close(sort);
-
-  if (lossage) {
-    system("rm -f " tmpfile);
-    exit 1;
-  }
-
   oldlib = "";
   oldver = "";
   printf("version-maps =");

@@ -1,0 +1,1508 @@
+2.0.7-19981020			2.0.98-19981020
+===============================================================================
+
+a64l				a64l
+abort				abort
+abs				abs
+accept				accept
+access				access
+acct				acct
+acos				acos
+acosf				acosf
+acosh				acosh
+acoshf				acoshf
+acoshl				acoshl
+acosl				acosl
+addmntent			addmntent
+			      >	addseverity			NEW: fmtmsg
+adjtime				adjtime
+adjtimex			adjtimex
+advance				advance
+alarm				alarm
+alphasort			alphasort
+			      >	alphasort64			NEW: LFS
+			      >	argp_err_exit_status		NEW: argp
+			      >	argp_error			NEW: argp
+			      >	argp_failure			NEW: argp
+			      >	argp_help			NEW: argp
+			      >	argp_parse			NEW: argp
+			      >	argp_program_bug_address	NEW: argp
+			      >	argp_program_version		NEW: argp
+			      >	argp_program_version_hook	NEW: argp
+			      >	argp_state_help			NEW: argp
+			      >	argp_usage			NEW: argp
+argz_add			argz_add
+argz_add_sep			argz_add_sep
+argz_append			argz_append
+argz_count			argz_count
+argz_create			argz_create
+argz_create_sep			argz_create_sep
+argz_delete			argz_delete
+argz_extract			argz_extract
+argz_insert			argz_insert
+argz_next			argz_next
+argz_replace			argz_replace
+argz_stringify			argz_stringify
+asctime				asctime
+asctime_r			asctime_r
+asin				asin
+asinf				asinf
+asinh				asinh
+asinhf				asinhf
+asinhl				asinhl
+asinl				asinl
+asprintf			asprintf
+atan				atan
+atan2				atan2
+atan2f				atan2f
+atan2l				atan2l
+atanf				atanf
+atanh				atanh
+atanhf				atanhf
+atanhl				atanhl
+atanl				atanl
+atexit				atexit
+atof				atof
+atoi				atoi
+atol				atol
+atoll				atoll
+			      >	authdes_create			NEW: SecureRPC
+			      >	authdes_getucred		NEW: SecureRPC
+			      >	authdes_pk_create		NEW: SecureRPC
+authnone_create			authnone_create
+authunix_create			authunix_create
+authunix_create_default		authunix_create_default
+			      >	backtrace			NEW: GNU ext.
+			      >	backtrace_symbols		NEW: GNU ext.
+			      >	backtrace_symbols_fd		NEW: GNU ext.
+basename			basename
+bcmp				bcmp
+bcopy				bcopy
+bdflush				bdflush
+bind				bind
+bindresvport			bindresvport
+bindtextdomain			bindtextdomain
+brk				brk
+bsd_signal			bsd_signal
+bsearch				bsearch
+btowc				btowc
+bzero				bzero
+cabs				cabs
+cabsf				cabsf
+cabsl				cabsl
+			      >	cacos				NEW: ISO C99
+			      >	cacosf				NEW: ISO C99
+			      >	cacosh				NEW: ISO C99
+			      >	cacoshf				NEW: ISO C99
+			      >	cacoshl				NEW: ISO C99
+			      >	cacosl				NEW: ISO C99
+calloc				calloc
+callrpc				callrpc
+canonicalize_file_name		canonicalize_file_name
+			      >	capget				NEW: kernel
+			      >	capset				NEW: kernel
+			      >	carg				NEW: ISO C99
+			      >	cargf				NEW: ISO C99
+			      >	cargl				NEW: ISO C99
+			      >	casin				NEW: ISO C99
+			      >	casinf				NEW: ISO C99
+			      >	casinh				NEW: ISO C99
+			      >	casinhf				NEW: ISO C99
+			      >	casinhl				NEW: ISO C99
+			      >	casinl				NEW: ISO C99
+			      >	catan				NEW: ISO C99
+			      >	catanf				NEW: ISO C99
+			      >	catanh				NEW: ISO C99
+			      >	catanhf				NEW: ISO C99
+			      >	catanhl				NEW: ISO C99
+			      >	catanl				NEW: ISO C99
+catclose			catclose
+catgets				catgets
+catopen				catopen
+			      >	cbc_crypt			NEW: SecureRPC
+cbrt				cbrt
+cbrtf				cbrtf
+cbrtl				cbrtl
+			      >	ccos				NEW: ISO C99
+			      >	ccosf				NEW: ISO C99
+			      >	ccosh				NEW: ISO C99
+			      >	ccoshf				NEW: ISO C99
+			      >	ccoshl				NEW: ISO C99
+			      >	ccosl				NEW: ISO C99
+ceil				ceil
+ceilf				ceilf
+ceill				ceill
+			      >	cexp				NEW: ISO C99
+			      >	cexpf				NEW: ISO C99
+			      >	cexpl				NEW: ISO C99
+cfgetispeed			cfgetispeed
+cfgetospeed			cfgetospeed
+cfmakeraw			cfmakeraw
+cfree				cfree
+cfsetispeed			cfsetispeed
+cfsetospeed			cfsetospeed
+cfsetspeed			cfsetspeed
+chdir				chdir
+chflags				chflags
+chmod				chmod
+chown				chown
+chroot				chroot
+			      >	cimag				NEW: ISO C99
+			      >	cimagf				NEW: ISO C99
+			      >	cimagl				NEW: ISO C99
+clearenv			clearenv
+clearerr			clearerr
+clearerr_locked		      <					REMOVED
+clearerr_unlocked		clearerr_unlocked
+clnt_broadcast			clnt_broadcast
+clnt_create			clnt_create
+clnt_pcreateerror		clnt_pcreateerror
+clnt_perrno			clnt_perrno
+clnt_perror			clnt_perror
+clnt_spcreateerror		clnt_spcreateerror
+clnt_sperrno			clnt_sperrno
+clnt_sperror			clnt_sperror
+clntraw_create			clntraw_create
+clnttcp_create			clnttcp_create
+clntudp_bufcreate		clntudp_bufcreate
+clntudp_create			clntudp_create
+			      >	clntunix_create			NEW: sunrpc ext
+clock				clock
+			      >	clog				NEW: ISO C99
+			      >	clog10				NEW: ISO C99
+			      >	clog10f				NEW: ISO C99
+			      >	clog10l				NEW: ISO C99
+			      >	clogf				NEW: ISO C99
+			      >	clogl				NEW: ISO C99
+clone				clone
+close				close
+closedir			closedir
+closelog			closelog
+confstr				confstr
+			      >	conj				NEW: ISO C99
+			      >	conjf				NEW: ISO C99
+			      >	conjl				NEW: ISO C99
+connect				connect
+copysign			copysign
+copysignf			copysignf
+copysignl			copysignl
+cos				cos
+cosf				cosf
+cosh				cosh
+coshf				coshf
+coshl				coshl
+cosl				cosl
+			      >	cpow				NEW: ISO C99
+			      >	cpowf				NEW: ISO C99
+			      >	cpowl				NEW: ISO C99
+			      >	cproj				NEW: ISO C99
+			      >	cprojf				NEW: ISO C99
+			      >	cprojl				NEW: ISO C99
+			      >	creal				NEW: ISO C99
+			      >	crealf				NEW: ISO C99
+			      >	creall				NEW: ISO C99
+creat				creat
+			      >	creat64				NEW: LFS
+create_module			create_module
+			      >	csin				NEW: ISO C99
+			      >	csinf				NEW: ISO C99
+			      >	csinh				NEW: ISO C99
+			      >	csinhf				NEW: ISO C99
+			      >	csinhl				NEW: ISO C99
+			      >	csinl				NEW: ISO C99
+			      >	csqrt				NEW: ISO C99
+			      >	csqrtf				NEW: ISO C99
+			      >	csqrtl				NEW: ISO C99
+			      >	ctan				NEW: ISO C99
+			      >	ctanf				NEW: ISO C99
+			      >	ctanh				NEW: ISO C99
+			      >	ctanhf				NEW: ISO C99
+			      >	ctanhl				NEW: ISO C99
+			      >	ctanl				NEW: ISO C99
+ctermid				ctermid
+ctime				ctime
+ctime_r				ctime_r
+cuserid				cuserid
+daemon				daemon
+daylight			daylight
+dcgettext			dcgettext
+delete_module			delete_module
+			      >	des_setparity			NEW: SecureRPC
+dgettext			dgettext
+difftime			difftime
+dirfd				dirfd
+dirname				dirname
+div				div
+dprintf				dprintf
+drand48				drand48
+drand48_r			drand48_r
+drem				drem
+dremf				dremf
+dreml				dreml
+dup				dup
+dup2				dup2
+dysize				dysize
+			      >	ecb_crypt			NEW: SecureRPC
+ecvt				ecvt
+ecvt_r				ecvt_r
+endaliasent			endaliasent
+endfsent			endfsent
+endgrent			endgrent
+endhostent			endhostent
+endmntent			endmntent
+endnetent			endnetent
+endnetgrent			endnetgrent
+endprotoent			endprotoent
+endpwent			endpwent
+endrpcent			endrpcent
+endservent			endservent
+endspent			endspent
+endttyent			endttyent
+endusershell			endusershell
+endutent			endutent
+			      >	endutxent			NEW: utmpx
+environ				environ
+envz_add			envz_add
+envz_entry			envz_entry
+envz_get			envz_get
+envz_merge			envz_merge
+envz_remove			envz_remove
+envz_strip			envz_strip
+erand48				erand48
+erand48_r			erand48_r
+erf				erf
+erfc				erfc
+erfcf				erfcf
+erfcl				erfcl
+erff				erff
+erfl				erfl
+err				err
+errno				errno
+error				error
+error_at_line			error_at_line
+error_message_count		error_message_count
+error_one_per_line		error_one_per_line
+error_print_progname		error_print_progname
+errx				errx
+ether_aton			ether_aton
+ether_aton_r			ether_aton_r
+ether_hostton			ether_hostton
+ether_line			ether_line
+ether_ntoa			ether_ntoa
+ether_ntoa_r			ether_ntoa_r
+ether_ntohost			ether_ntohost
+euidaccess			euidaccess
+execl				execl
+execle				execle
+execlp				execlp
+execv				execv
+execve				execve
+execvp				execvp
+exit				exit
+exp				exp
+			      >	exp10				NEW: ISO C99
+			      >	exp10f				NEW: ISO C99
+			      >	exp10l				NEW: ISO C99
+			      >	exp2				NEW: ISO C99
+			      >	exp2f				NEW: ISO C99
+			      >	exp2l				NEW: ISO C99
+expf				expf
+expl				expl
+expm1				expm1
+expm1f				expm1f
+expm1l				expm1l
+fabs				fabs
+fabsf				fabsf
+fabsl				fabsl
+			      >	fattach				NEW: STREAMS
+fchdir				fchdir
+fchflags			fchflags
+fchmod				fchmod
+fchown				fchown
+fclose				fclose
+fcloseall			fcloseall
+fcntl				fcntl
+fcvt				fcvt
+fcvt_r				fcvt_r
+fdatasync			fdatasync
+			      >	fdetach				NEW: STREAMS
+			      >	fdim				NEW: ISO C99
+			      >	fdimf				NEW: ISO C99
+			      >	fdiml				NEW: ISO C99
+fdopen				fdopen
+			      >	feclearexcept			NEW: ISO C99
+			      >	fegetenv			NEW: ISO C99
+			      >	fegetexceptflag			NEW: ISO C99
+			      >	fegetround			NEW: ISO C99
+			      >	feholdexcept			NEW: ISO C99
+feof				feof
+feof_locked		      <					REMOVED
+feof_unlocked			feof_unlocked
+			      >	feraiseexcept			NEW: ISO C99
+ferror				ferror
+ferror_locked		      <					REMOVED
+ferror_unlocked			ferror_unlocked
+			      >	fesetenv			NEW: ISO C99
+			      >	fesetexceptflag			NEW: ISO C99
+			      >	fesetround			NEW: ISO C99
+			      >	fetestexcept			NEW: ISO C99
+			      >	feupdateenv			NEW: ISO C99
+fexecve				fexecve
+fflush				fflush
+fflush_locked		      <					REMOVED
+fflush_unlocked			fflush_unlocked
+ffs				ffs
+			      >	ffsl				NEW: GNU ext.
+			      >	ffsll				NEW: GNU ext.
+fgetc				fgetc
+fgetgrent			fgetgrent
+fgetgrent_r			fgetgrent_r
+fgetpos				fgetpos
+			      >	fgetpos64			NEW: LFS
+fgetpwent			fgetpwent
+fgetpwent_r			fgetpwent_r
+fgets				fgets
+			      >	fgets_unlocked			NEW: GNU ext.
+fgetspent			fgetspent
+fgetspent_r			fgetspent_r
+fileno				fileno
+fileno_locked		      <					REMOVED
+fileno_unlocked			fileno_unlocked
+finite				finite
+finitef				finitef
+finitel				finitel
+flock				flock
+flockfile			flockfile
+floor				floor
+floorf				floorf
+floorl				floorl
+			      >	fma				NEW: ISO C99
+			      >	fmaf				NEW: ISO C99
+			      >	fmal				NEW: ISO C99
+			      >	fmax				NEW: ISO C99
+			      >	fmaxf				NEW: ISO C99
+			      >	fmaxl				NEW: ISO C99
+			      >	fmin				NEW: ISO C99
+			      >	fminf				NEW: ISO C99
+			      >	fminl				NEW: ISO C99
+fmod				fmod
+fmodf				fmodf
+fmodl				fmodl
+			      >	fmtmsg				NEW: fmtmsg
+fnmatch				fnmatch
+fopen				fopen
+			      >	fopen64				NEW: LFS
+fopencookie			fopencookie
+fork				fork
+fpathconf			fpathconf
+fprintf				fprintf
+fputc				fputc
+fputc_locked		      <					REMOVED
+fputc_unlocked			fputc_unlocked
+fputs				fputs
+			      >	fputs_unlocked			NEW: GNU ext.
+fread				fread
+			      >	fread_unlocked			NEW: GNU ext.
+free				free
+freeaddrinfo			freeaddrinfo
+freopen				freopen
+			      >	freopen64			NEW: LFS
+frexp				frexp
+frexpf				frexpf
+frexpl				frexpl
+fscanf				fscanf
+fseek				fseek
+			      >	fseeko				NEW: Unix98
+			      >	fseeko64
+fsetpos				fsetpos
+			      >	fsetpos64			NEW: LFS
+fstatfs				fstatfs
+			      >	fstatfs64			NEW: LFS
+			      >	fstatvfs			NEW: Unix98
+			      >	fstatvfs64			NEW: LFS
+fsync				fsync
+ftell				ftell
+			      >	ftello				NEW: Unix98
+			      >	ftello64			NEW: LFS
+ftime				ftime
+ftok				ftok
+ftruncate			ftruncate
+			      >	ftruncate64			NEW: LFS
+ftrylockfile			ftrylockfile
+fts_children			fts_children
+fts_close			fts_close
+fts_open			fts_open
+fts_read			fts_read
+fts_set				fts_set
+ftw				ftw
+			      >	ftw64				NEW: LFS
+funlockfile			funlockfile
+fwrite				fwrite
+			      >	fwrite_unlocked			NEW: GNU ext.
+			      >	gai_strerror			NEW: IPv6
+gamma				gamma
+gamma_r			      <					REMOVED
+gammaf				gammaf
+gammaf_r		      <					REMOVED
+gammal				gammal
+gammal_r		      <					REMOVED
+gcvt				gcvt
+get_avphys_pages		get_avphys_pages
+get_current_dir_name		get_current_dir_name
+get_kernel_syms			get_kernel_syms
+get_myaddress			get_myaddress
+get_nprocs			get_nprocs
+get_nprocs_conf			get_nprocs_conf
+get_phys_pages			get_phys_pages
+getaddrinfo			getaddrinfo
+getaliasbyname			getaliasbyname
+getaliasbyname_r		getaliasbyname_r
+getaliasent			getaliasent
+getaliasent_r			getaliasent_r
+getc				getc
+getc_locked		      <					REMOVE
+getc_unlocked			getc_unlocked
+getchar				getchar
+getchar_locked		      <					REMOVED
+getchar_unlocked		getchar_unlocked
+			      >	getcontext
+getcwd				getcwd
+			      >	getdate				NEW: Unix98
+			      >	getdate_err			NEW: Unix98
+			      >	getdate_r			NEW: GNU ext.
+getdelim			getdelim
+getdirentries			getdirentries
+getdomainname			getdomainname
+getdtablesize			getdtablesize
+getegid				getegid
+getenv				getenv
+geteuid				geteuid
+getfsent			getfsent
+getfsfile			getfsfile
+getfsspec			getfsspec
+getgid				getgid
+getgrent			getgrent
+getgrent_r			getgrent_r
+getgrgid			getgrgid
+getgrgid_r			getgrgid_r
+getgrnam			getgrnam
+getgrnam_r			getgrnam_r
+getgroups			getgroups
+gethostbyaddr			gethostbyaddr
+gethostbyaddr_r			gethostbyaddr_r
+gethostbyname			gethostbyname
+gethostbyname2			gethostbyname2
+gethostbyname2_r		gethostbyname2_r
+gethostbyname_r			gethostbyname_r
+gethostent			gethostent
+gethostent_r			gethostent_r
+gethostid			gethostid
+gethostname			gethostname
+getitimer			getitimer
+getline				getline
+getlogin			getlogin
+getlogin_r			getlogin_r
+getmntent			getmntent
+getmntent_r			getmntent_r
+			      >	getmsg				NEW: STREAMS
+			      >	getnameinfo			NEW: IPv6
+getnetbyaddr			getnetbyaddr
+getnetbyaddr_r			getnetbyaddr_r
+getnetbyname			getnetbyname
+getnetbyname_r			getnetbyname_r
+getnetent			getnetent
+getnetent_r			getnetent_r
+getnetgrent			getnetgrent
+getnetgrent_r			getnetgrent_r
+			      >	getnetname			NEW: SecureRPC
+getopt				getopt
+getopt_long			getopt_long
+getopt_long_only		getopt_long_only
+getpagesize			getpagesize
+getpass				getpass
+getpeername			getpeername
+getpgid				getpgid
+getpgrp				getpgrp
+getpid				getpid
+			      >	getpmsg				NEW: STREAMS
+getppid				getppid
+getpriority			getpriority
+getprotobyname			getprotobyname
+getprotobyname_r		getprotobyname_r
+getprotobynumber		getprotobynumber
+getprotobynumber_r		getprotobynumber_r
+getprotoent			getprotoent
+getprotoent_r			getprotoent_r
+			      >	getpt				NEW: Unix98 PTY
+getpublickey			getpublickey
+getpw				getpw
+getpwent			getpwent
+getpwent_r			getpwent_r
+getpwnam			getpwnam
+getpwnam_r			getpwnam_r
+getpwuid			getpwuid
+getpwuid_r			getpwuid_r
+getresgid			getresgid
+getresuid			getresuid
+getrlimit			getrlimit
+			      >	getrlimit64			NEW: LFS
+getrpcbyname			getrpcbyname
+getrpcbyname_r			getrpcbyname_r
+getrpcbynumber			getrpcbynumber
+getrpcbynumber_r		getrpcbynumber_r
+getrpcent			getrpcent
+getrpcent_r			getrpcent_r
+getrpcport			getrpcport
+getrusage			getrusage
+gets				gets
+getsecretkey			getsecretkey
+getservbyname			getservbyname
+getservbyname_r			getservbyname_r
+getservbyport			getservbyport
+getservbyport_r			getservbyport_r
+getservent			getservent
+getservent_r			getservent_r
+getsid				getsid
+getsockname			getsockname
+getsockopt			getsockopt
+getspent			getspent
+getspent_r			getspent_r
+getspnam			getspnam
+getspnam_r			getspnam_r
+getsubopt			getsubopt
+gettext				gettext
+gettimeofday			gettimeofday
+getttyent			getttyent
+getttynam			getttynam
+getuid				getuid
+getusershell			getusershell
+getutent			getutent
+getutent_r			getutent_r
+getutid				getutid
+getutid_r			getutid_r
+getutline			getutline
+getutline_r			getutline_r
+			      >	getutxent			NEW: utmpx
+			      >	getutxid			NEW: utmpx
+			      >	getutxline			NEW: utmpx
+getw				getw
+getwd				getwd
+glob				glob
+			      >	glob64				NEW: GNU ext.
+glob_pattern_p			glob_pattern_p
+globfree			globfree
+			      >	globfree64			NEW: GNU ext.
+gmtime				gmtime
+gmtime_r			gmtime_r
+			      >	gnu_get_libc_release		NEW: GNU ext.
+			      >	gnu_get_libc_version		NEW: GNU ext.
+			      >	grantpt				NEW: Unix98 PTY
+group_member			group_member
+gsignal				gsignal
+gtty				gtty
+h_errlist			h_errlist
+h_errno				h_errno
+h_nerr				h_nerr
+hasmntopt			hasmntopt
+hcreate				hcreate
+hcreate_r			hcreate_r
+hdestroy			hdestroy
+hdestroy_r			hdestroy_r
+herror				herror
+			      >	host2netname			NEW: SecureRPC
+hsearch				hsearch
+hsearch_r			hsearch_r
+hstrerror			hstrerror
+htonl				htonl
+htons				htons
+hypot				hypot
+hypotf				hypotf
+hypotl				hypotl
+			      >	iconv				NEW: iconv
+			      >	iconv_close			NEW: iconv
+			      >	iconv_open			NEW: iconv
+			      >	if_freenameindex		NEW: IPv6
+			      >	if_indextoname			NEW: IPv6
+			      >	if_nameindex			NEW: IPv6
+			      >	if_nametoindex			NEW: IPv6
+ilogb				ilogb
+ilogbf				ilogbf
+ilogbl				ilogbl
+			      >	in6addr_any			NEW: IPv6
+			      >	in6addr_loopback		NEW: IPv6
+index				index
+			      >	inet6_isipv4mapped		NEW: IPv6
+inet_addr			inet_addr
+inet_aton			inet_aton
+inet_lnaof			inet_lnaof
+inet_makeaddr			inet_makeaddr
+inet_netof			inet_netof
+inet_network			inet_network
+inet_nsap_addr			inet_nsap_addr
+inet_nsap_ntoa			inet_nsap_ntoa
+inet_ntoa			inet_ntoa
+inet_ntop			inet_ntop
+inet_pton			inet_pton
+init_module			init_module
+initgroups			initgroups
+initstate			initstate
+initstate_r			initstate_r
+innetgr				innetgr
+insque				insque
+ioctl				ioctl
+ioperm				ioperm
+iopl				iopl
+iruserok			iruserok
+isalnum				isalnum
+isalpha				isalpha
+isascii				isascii
+			      >	isastream			NEW: STREAMS
+isatty				isatty
+isblank				isblank
+iscntrl				iscntrl
+isdigit				isdigit
+isfdtype			isfdtype
+isgraph				isgraph
+isinf				isinf
+isinff				isinff
+isinfl				isinfl
+islower				islower
+isnan				isnan
+isnanf				isnanf
+isnanl				isnanl
+isprint				isprint
+ispunct				ispunct
+isspace				isspace
+isupper				isupper
+iswalnum			iswalnum
+iswalpha			iswalpha
+			      >	iswblank			NEW: GNU ext.
+iswcntrl			iswcntrl
+iswctype			iswctype
+iswdigit			iswdigit
+iswgraph			iswgraph
+iswlower			iswlower
+iswprint			iswprint
+iswpunct			iswpunct
+iswspace			iswspace
+iswupper			iswupper
+iswxdigit			iswxdigit
+isxdigit			isxdigit
+j0				j0
+j0f				j0f
+j0l				j0l
+j1				j1
+j1f				j1f
+j1l				j1l
+jn				jn
+jnf				jnf
+jnl				jnl
+jrand48				jrand48
+jrand48_r			jrand48_r
+			      >	key_decryptsession		NEW: SecureRPC
+			      >	key_decryptsession_pk		NEW: SecureRPC
+			      >	key_encryptsession		NEW: SecureRPC
+			      >	key_encryptsession_pk		NEW: SecureRPC
+			      >	key_gendes			NEW: SecureRPC
+			      >	key_get_conv			NEW: SecureRPC
+			      >	key_secretkey_is_set		NEW: SecureRPC
+			      >	key_setnet			NEW: SecureRPC
+			      >	key_setsecret			NEW: SecureRPC
+kill				kill
+killpg				killpg
+klogctl				klogctl
+l64a				l64a
+labs				labs
+lchown				lchown
+lckpwdf				lckpwdf
+lcong48				lcong48
+lcong48_r			lcong48_r
+ldexp				ldexp
+ldexpf				ldexpf
+ldexpl				ldexpl
+ldiv				ldiv
+lfind				lfind
+lgamma				lgamma
+lgamma_r			lgamma_r
+lgammaf				lgammaf
+lgammaf_r			lgammaf_r
+lgammal				lgammal
+lgammal_r			lgammal_r
+link				link
+listen				listen
+llabs				llabs
+lldiv				lldiv
+			      >	llrint				NEW: ISO C99
+			      >	llrintf				NEW: ISO C99
+			      >	llrintl				NEW: ISO C99
+			      >	llround				NEW: ISO C99
+			      >	llroundf			NEW: ISO C99
+			      >	llroundl			NEW: ISO C99
+llseek				llseek
+loc1				loc1
+loc2				loc2
+localeconv			localeconv
+localtime			localtime
+localtime_r			localtime_r
+lockf				lockf
+locs				locs
+log				log
+log10				log10
+log10f				log10f
+log10l				log10l
+log1p				log1p
+log1pf				log1pf
+log1pl				log1pl
+			      >	log2				NEW: ISO C99
+			      >	log2f				NEW: ISO C99
+			      >	log2l				NEW: ISO C99
+logb				logb
+logbf				logbf
+logbl				logbl
+logf				logf
+logl				logl
+longjmp				longjmp
+lrand48				lrand48
+lrand48_r			lrand48_r
+			      >	lrint				NEW: ISO C99
+			      >	lrintf				NEW: ISO C99
+			      >	lrintl				NEW: ISO C99
+			      >	lround				NEW: ISO C99
+			      >	lroundf				NEW: ISO C99
+			      >	lroundl				NEW: ISO C99
+lsearch				lsearch
+lseek				lseek
+			      >	lseek64				NEW: LFS
+madvise				madvise
+			      >	makecontext			NEW: Unix98
+mallinfo			mallinfo
+malloc				malloc
+malloc_get_state		malloc_get_state
+malloc_set_state		malloc_set_state
+malloc_stats			malloc_stats
+malloc_trim			malloc_trim
+malloc_usable_size		malloc_usable_size
+mallopt				mallopt
+mallwatch			mallwatch
+matherr				matherr
+mblen				mblen
+mbrlen				mbrlen
+mbrtowc				mbrtowc
+mbsinit				mbsinit
+mbsnrtowcs			mbsnrtowcs
+mbsrtowcs			mbsrtowcs
+mbstowcs			mbstowcs
+mbtowc				mbtowc
+mcheck				mcheck
+mcount				mcount
+memalign			memalign
+memccpy				memccpy
+memchr				memchr
+memcmp				memcmp
+memcpy				memcpy
+memfrob				memfrob
+memmem				memmem
+memmove				memmove
+			      >	mempcpy				NEW: GNU ext.
+memset				memset
+mkdir				mkdir
+mkfifo				mkfifo
+mkstemp				mkstemp
+mktemp				mktemp
+mktime				mktime
+mlock				mlock
+mlockall			mlockall
+mmap				mmap
+			      >	mmap64				NEW: LFS
+modf				modf
+modff				modff
+modfl				modfl
+moncontrol		      <					REMOVED
+			      >	modify_ldt			NEW: kernel
+monstartup			monstartup
+mount				mount
+mprobe				mprobe
+mprotect			mprotect
+mrand48				mrand48
+mrand48_r			mrand48_r
+mremap				mremap
+msgctl				msgctl
+msgget				msgget
+msgrcv				msgrcv
+msgsnd				msgsnd
+msync				msync
+mtrace				mtrace
+munlock				munlock
+munlockall			munlockall
+munmap				munmap
+muntrace			muntrace
+			      >	nan				NEW: ISO C99
+			      >	nanf				NEW: ISO C99
+			      >	nanl				NEW: ISO C99
+nanosleep			nanosleep
+			      >	nearbyint			NEW: ISO C99
+			      >	nearbyintf			NEW: ISO C99
+			      >	nearbyintl			NEW: ISO C99
+			      >	netname2host			NEW: Secure RPC
+			      >	netname2user			NEW: Secure RPC
+nextafter			nextafter
+nextafterf			nextafterf
+nextafterl			nextafterl
+			      >	nexttoward			NEW: ISO C99
+			      >	nexttowardf			NEW: ISO C99
+			      >	nexttowardl			NEW: ISO C99
+nfsservctl			nfsservctl
+			      >	nftw				NEW: Unix98
+			      >	nftw64				NEW: LFS
+nice				nice
+nl_langinfo			nl_langinfo
+nrand48				nrand48
+nrand48_r			nrand48_r
+ntohl				ntohl
+ntohs				ntohs
+obstack_alloc_failed_handler	obstack_alloc_failed_handler
+obstack_exit_failure		obstack_exit_failure
+obstack_free			obstack_free
+obstack_printf			obstack_printf
+obstack_vprintf			obstack_vprintf
+on_exit				on_exit
+open				open
+			      >	open64				NEW: LFS
+open_memstream			open_memstream
+opendir				opendir
+openlog				openlog
+optarg				optarg
+opterr				opterr
+optind				optind
+optopt				optopt
+parse_printf_format		parse_printf_format
+			      >	passwd2des			NEW: SecureRPC
+pathconf			pathconf
+pause				pause
+pclose				pclose
+perror				perror
+personality			personality
+pipe				pipe
+pmap_getmaps			pmap_getmaps
+pmap_getport			pmap_getport
+pmap_rmtcall			pmap_rmtcall
+pmap_set			pmap_set
+pmap_unset			pmap_unset
+poll				poll
+popen				popen
+pow				pow
+			      >	pow10				NEW: GNU ext.
+			      >	pow10f				NEW: GNU ext.
+			      >	pow10l				NEW: GNU ext.
+powf				powf
+powl				powl
+prctl				prctl
+			      >	pread				NEW: Unix98
+			      >	pread64				NEW: LFS
+printf				printf
+			      >	printf_size			NEW: GNU ext.
+			      >	printf_size_info		NEW: GNU ext.
+profil				profil
+profil_counter		      <					REMOVED
+program_invocation_name		program_invocation_name
+program_invocation_short_name	program_invocation_short_name
+pselect				pselect
+psignal				psignal
+pthread_attr_destroy		pthread_attr_destroy
+pthread_attr_getdetachstate	pthread_attr_getdetachstate
+pthread_attr_getinheritsched	pthread_attr_getinheritsched
+pthread_attr_getschedparam	pthread_attr_getschedparam
+pthread_attr_getschedpolicy	pthread_attr_getschedpolicy
+pthread_attr_getscope		pthread_attr_getscope
+pthread_attr_init		pthread_attr_init
+pthread_attr_setdetachstate	pthread_attr_setdetachstate
+pthread_attr_setinheritsched	pthread_attr_setinheritsched
+pthread_attr_setschedparam	pthread_attr_setschedparam
+pthread_attr_setschedpolicy	pthread_attr_setschedpolicy
+pthread_attr_setscope		pthread_attr_setscope
+pthread_cond_broadcast		pthread_cond_broadcast
+pthread_cond_destroy		pthread_cond_destroy
+pthread_cond_init		pthread_cond_init
+pthread_cond_signal		pthread_cond_signal
+pthread_cond_wait		pthread_cond_wait
+pthread_condattr_destroy	pthread_condattr_destroy
+pthread_condattr_init		pthread_condattr_init
+pthread_equal			pthread_equal
+pthread_exit			pthread_exit
+pthread_getschedparam		pthread_getschedparam
+pthread_mutex_destroy		pthread_mutex_destroy
+pthread_mutex_init		pthread_mutex_init
+pthread_mutex_lock		pthread_mutex_lock
+pthread_mutex_unlock		pthread_mutex_unlock
+pthread_mutexattr_getkind_np  <					REPLACED
+pthread_mutexattr_setkind_np  <					REPLACED
+pthread_self			pthread_self
+pthread_setcancelstate		pthread_setcancelstate
+pthread_setcanceltype		pthread_setcanceltype
+pthread_setschedparam		pthread_setschedparam
+ptrace				ptrace
+			      >	ptsname				NEW: Unix98 PTY
+			      >	ptsname_r			NEW: Unix98 PTY
+putc				putc
+putc_locked		      <					REMOVED
+putc_unlocked			putc_unlocked
+putchar				putchar
+putchar_locked		      <					REMOVED
+putchar_unlocked		putchar_unlocked
+putenv				putenv
+			      >	putgrent			NEW: GNU ext.
+			      >	putmsg				NEW: STREAMS
+			      >	putpmsg				NEW: STREAMS
+putpwent			putpwent
+puts				puts
+putspent			putspent
+pututline			pututline
+			      >	pututxline			NEW: utmpx
+putw				putw
+pvalloc				pvalloc
+			      >	pwrite				NEW: Unix98
+			      >	pwrite64			NEW: LFS
+qecvt				qecvt
+qecvt_r				qecvt_r
+qfcvt				qfcvt
+qfcvt_r				qfcvt_r
+qgcvt				qgcvt
+qsort				qsort
+query_module			query_module
+quotactl			quotactl
+raise				raise
+rand				rand
+rand_r				rand_r
+random				random
+random_r			random_r
+rcmd				rcmd
+re_comp				re_comp
+re_compile_fastmap		re_compile_fastmap
+re_compile_pattern		re_compile_pattern
+re_exec				re_exec
+re_match			re_match
+re_match_2			re_match_2
+re_max_failures			re_max_failures
+re_search			re_search
+re_search_2			re_search_2
+re_set_registers		re_set_registers
+re_set_syntax			re_set_syntax
+re_syntax_options		re_syntax_options
+read				read
+readdir				readdir
+			      >	readdir64			NEW: LFS
+			      >	readdir64_r			NEW: LFS
+readdir_r			readdir_r
+readlink			readlink
+readv				readv
+realloc				realloc
+realpath			realpath
+reboot				reboot
+recv				recv
+recvfrom			recvfrom
+recvmsg				recvmsg
+regcomp				regcomp
+regerror			regerror
+regexec				regexec
+regfree				regfree
+register_printf_function	register_printf_function
+registerrpc			registerrpc
+remainder			remainder
+remainderf			remainderf
+remainderl			remainderl
+remove				remove
+remque				remque
+			      >	remquo				NEW: ISO C99
+			      >	remquof				NEW: ISO C99
+			      >	remquol				NEW: ISO C99
+rename				rename
+res_init			res_init
+revoke				revoke
+rewind				rewind
+rewinddir			rewinddir
+rexec				rexec
+rexecoptions			rexecoptions
+rindex				rindex
+rint				rint
+rintf				rintf
+rintl				rintl
+rmdir				rmdir
+			      >	round				NEW: ISO C99
+			      >	roundf				NEW: ISO C99
+			      >	roundl				NEW: ISO C99
+rpc_createerr			rpc_createerr
+rpmatch				rpmatch
+rresvport			rresvport
+			      >	rtime				NEW: GNU ext.
+ruserok				ruserok
+ruserpass			ruserpass
+sbrk				sbrk
+scalb				scalb
+scalbf				scalbf
+scalbl				scalbl
+			      >	scalbln				NEW: ISO C99
+			      >	scalblnf			NEW: ISO C99
+			      >	scalblnl			NEW: ISO C99
+scalbn				scalbn
+scalbnf				scalbnf
+scalbnl				scalbnl
+scandir				scandir
+			      >	scandir64			NEW: LFS
+scanf				scanf
+sched_get_priority_max		sched_get_priority_max
+sched_get_priority_min		sched_get_priority_min
+sched_getparam			sched_getparam
+sched_getscheduler		sched_getscheduler
+sched_rr_get_interval		sched_rr_get_interval
+sched_setparam			sched_setparam
+sched_setscheduler		sched_setscheduler
+sched_yield			sched_yield
+seed48				seed48
+seed48_r			seed48_r
+seekdir				seekdir
+select				select
+semctl				semctl
+semget				semget
+semop				semop
+send				send
+			      >	sendfile			NEW: kernel
+sendmsg				sendmsg
+sendto				sendto
+setaliasent			setaliasent
+setbuf				setbuf
+setbuffer			setbuffer
+			      >	setcontext			NEW: Unix98
+setdomainname			setdomainname
+setegid				setegid
+setenv				setenv
+seteuid				seteuid
+setfsent			setfsent
+setfsgid			setfsgid
+setfsuid			setfsuid
+setgid				setgid
+setgrent			setgrent
+setgroups			setgroups
+sethostent			sethostent
+sethostid			sethostid
+sethostname			sethostname
+setitimer			setitimer
+setjmp				setjmp
+setlinebuf			setlinebuf
+setlocale			setlocale
+setlogin			setlogin
+setlogmask			setlogmask
+setmntent			setmntent
+setnetent			setnetent
+setnetgrent			setnetgrent
+setpgid				setpgid
+setpgrp				setpgrp
+setpriority			setpriority
+setprotoent			setprotoent
+setpwent			setpwent
+setregid			setregid
+setresgid			setresgid
+setresuid			setresuid
+setreuid			setreuid
+setrlimit			setrlimit
+			      >	setrlimit64			NEW: LFS
+setrpcent			setrpcent
+setservent			setservent
+setsid				setsid
+setsockopt			setsockopt
+setspent			setspent
+setstate			setstate
+setstate_r			setstate_r
+settimeofday			settimeofday
+setttyent			setttyent
+setuid				setuid
+setusershell			setusershell
+setutent			setutent
+			      >	setutxent			NEW: utmpx
+setvbuf				setvbuf
+sgetspent			sgetspent
+sgetspent_r			sgetspent_r
+shmat				shmat
+shmctl				shmctl
+shmdt				shmdt
+shmget				shmget
+shutdown			shutdown
+sigaction			sigaction
+sigaddset			sigaddset
+sigaltstack			sigaltstack
+sigandset			sigandset
+sigblock			sigblock
+sigdelset			sigdelset
+sigemptyset			sigemptyset
+sigfillset			sigfillset
+siggetmask			siggetmask
+			      >	sighold				NEW: Unix98
+			      >	sigignore			NEW: Unix98
+siginterrupt			siginterrupt
+sigisemptyset			sigisemptyset
+sigismember			sigismember
+siglongjmp			siglongjmp
+signal				signal
+signgam				signgam
+significand			significand
+significandf			significandf
+significandl			significandl
+sigorset			sigorset
+sigpause			sigpause
+sigpending			sigpending
+sigprocmask			sigprocmask
+			      >	sigqueue			NEW: POSIX.1b
+			      >	sigrelse			NEW: Unix98
+sigreturn			sigreturn
+			      >	sigset				NEW: POSIX.1b
+sigsetmask			sigsetmask
+sigstack			sigstack
+sigsuspend			sigsuspend
+			      >	sigtimedwait			NEW: POSIX.1b
+sigvec				sigvec
+sigwait				sigwait
+			      >	sigwaitinfo			NEW: POSIX.1b
+sin				sin
+			      >	sincos				NEW: GNU ext.
+			      >	sincosf				NEW: GNU ext.
+			      >	sincosl				NEW: GNU ext.
+sinf				sinf
+sinh				sinh
+sinhf				sinhf
+sinhl				sinhl
+sinl				sinl
+sleep				sleep
+snprintf			snprintf
+socket				socket
+socketpair			socketpair
+sprintf				sprintf
+sqrt				sqrt
+sqrtf				sqrtf
+sqrtl				sqrtl
+srand				srand
+srand48				srand48
+srand48_r			srand48_r
+srandom				srandom
+srandom_r			srandom_r
+sscanf				sscanf
+ssignal				ssignal
+sstk				sstk
+statfs				statfs
+			      >	statfs64			NEW: LFS
+			      >	statvfs				NEW: Unix98
+			      >	statvfs64			NEW: LFS
+stderr				stderr
+stdin				stdin
+stdout				stdout
+step				step
+stime				stime
+stpcpy				stpcpy
+stpncpy				stpncpy
+strcasecmp			strcasecmp
+			      >	strcasestr			NEW: GNU ext.
+strcat				strcat
+strchr				strchr
+strcmp				strcmp
+strcoll				strcoll
+strcpy				strcpy
+strcspn				strcspn
+strdup				strdup
+strerror			strerror
+strerror_r			strerror_r
+strfmon				strfmon
+strfry				strfry
+strftime			strftime
+strlen				strlen
+strncasecmp			strncasecmp
+strncat				strncat
+strncmp				strncmp
+strncpy				strncpy
+strndup				strndup
+strnlen				strnlen
+strpbrk				strpbrk
+strptime			strptime
+strrchr				strrchr
+strsep				strsep
+strsignal			strsignal
+strspn				strspn
+strstr				strstr
+strtod				strtod
+strtof				strtof
+			      >	strtoimax			NEW: ISO C99
+strtok				strtok
+strtok_r			strtok_r
+strtol				strtol
+strtold				strtold
+strtoll				strtoll
+strtoq				strtoq
+strtoul				strtoul
+strtoull			strtoull
+			      >	strtoumax			NEW: ISO C99
+strtouq				strtouq
+			      >	strverscmp			NEW: GNU ext.
+strxfrm				strxfrm
+stty				stty
+svc_exit			svc_exit
+svc_fdset			svc_fdset
+svc_getreq			svc_getreq
+svc_getreqset			svc_getreqset
+svc_register			svc_register
+svc_run				svc_run
+svc_sendreply			svc_sendreply
+svc_unregister			svc_unregister
+			      >	svcauthdes_stats		NEW: SecureRPC
+svcerr_auth			svcerr_auth
+svcerr_decode			svcerr_decode
+svcerr_noproc			svcerr_noproc
+svcerr_noprog			svcerr_noprog
+svcerr_progvers			svcerr_progvers
+svcerr_systemerr		svcerr_systemerr
+svcerr_weakauth			svcerr_weakauth
+svcfd_create			svcfd_create
+svcraw_create			svcraw_create
+svctcp_create			svctcp_create
+svcudp_bufcreate		svcudp_bufcreate
+svcudp_create			svcudp_create
+svcudp_enablecache		svcudp_enablecache
+			      >	svcunix_create			NEW: sunrpc etx
+			      >	svcunixfd_create		NEW: sunrpc ext
+swab				swab
+			      >	swapcontext			NEW: Unix98
+swapoff				swapoff
+swapon				swapon
+symlink				symlink
+sync				sync
+sys_errlist			sys_errlist
+sys_nerr			sys_nerr
+sys_sigabbrev			sys_sigabbrev
+sys_siglist			sys_siglist
+syscall				syscall
+sysconf				sysconf
+sysctl				sysctl
+sysinfo				sysinfo
+syslog				syslog
+system				system
+sysv_signal			sysv_signal
+tan				tan
+tanf				tanf
+tanh				tanh
+tanhf				tanhf
+tanhl				tanhl
+tanl				tanl
+tcdrain				tcdrain
+tcflow				tcflow
+tcflush				tcflush
+tcgetattr			tcgetattr
+tcgetpgrp			tcgetpgrp
+			      >	tcgetsid			NEW: Unix98 PTY
+tcsendbreak			tcsendbreak
+tcsetattr			tcsetattr
+tcsetpgrp			tcsetpgrp
+tdelete				tdelete
+			      >	tdestroy			NEW: GNU ext.
+telldir				telldir
+tempnam				tempnam
+textdomain			textdomain
+tfind				tfind
+			      >	tgamma				NEW: ISO C99
+			      >	tgammaf				NEW: ISO C99
+			      >	tgammal				NEW: ISO C99
+time				time
+timegm				timegm
+timelocal			timelocal
+times				times
+timezone			timezone
+tmpfile				tmpfile
+			      >	tmpfile64			NEW: LFS
+tmpnam				tmpnam
+tmpnam_r			tmpnam_r
+toascii				toascii
+tolower				tolower
+toupper				toupper
+towctrans			towctrans
+towlower			towlower
+towupper			towupper
+tr_break			tr_break
+			      >	trunc				NEW: ISO C99
+truncate			truncate
+			      >	truncate64			NEW: LFS
+			      >	truncf				NEW: ISO C99
+			      >	truncl				NEW: ISO C99
+tsearch				tsearch
+ttyname				ttyname
+ttyname_r			ttyname_r
+ttyslot				ttyslot
+twalk				twalk
+tzname				tzname
+tzset				tzset
+ualarm				ualarm
+ulckpwdf			ulckpwdf
+ulimit				ulimit
+umask				umask
+umount				umount
+			      >	umount2				NEW: kernel
+uname				uname
+ungetc				ungetc
+unlink				unlink
+			      >	unlockpt			NEW: Unix98 PTY
+unsetenv			unsetenv
+updwtmp				updwtmp
+			      >	updwtmpx			NEW: utmpx
+uselib				uselib
+			      >	user2netname			NEW: SecureRPC
+usleep				usleep
+ustat				ustat
+utime				utime
+utimes				utimes
+utmpname			utmpname
+			      >	utmpxname			NEW: utmpx
+valloc				valloc
+vasprintf			vasprintf
+vdprintf			vdprintf
+verr				verr
+verrx				verrx
+			      >	versionsort			NEW: GNU ext.
+			      >	versionsort64			NEW: LFS
+vfork				vfork
+vfprintf			vfprintf
+vfscanf				vfscanf
+vhangup				vhangup
+vlimit				vlimit
+vm86				vm86
+vprintf				vprintf
+vscanf				vscanf
+vsnprintf			vsnprintf
+vsprintf			vsprintf
+vsscanf				vsscanf
+vsyslog				vsyslog
+vtimes				vtimes
+vwarn				vwarn
+vwarnx				vwarnx
+wait				wait
+wait3				wait3
+wait4				wait4
+			      >	waitid				NEW: Unix98
+waitpid				waitpid
+warn				warn
+warnx				warnx
+wcpcpy				wcpcpy
+wcpncpy				wcpncpy
+wcrtomb				wcrtomb
+			      >	wcscasecmp			NEW: GNU ext.
+wcscat				wcscat
+wcschr				wcschr
+wcscmp				wcscmp
+wcscoll				wcscoll
+wcscpy				wcscpy
+wcscspn				wcscspn
+wcsdup				wcsdup
+wcslen				wcslen
+			      >	wcsncasecmp			NEW: GNU ext.
+wcsncat				wcsncat
+wcsncmp				wcsncmp
+wcsncpy				wcsncpy
+			      >	wcsnlen				NEW: GNU ext.
+wcsnrtombs			wcsnrtombs
+wcspbrk				wcspbrk
+wcsrchr				wcsrchr
+wcsrtombs			wcsrtombs
+wcsspn				wcsspn
+wcsstr				wcsstr
+wcstod				wcstod
+wcstof				wcstof
+			      >	wcstoimax			NEW: ISO C99
+wcstok				wcstok
+wcstol				wcstol
+wcstold				wcstold
+			      >	wcstoll				NEW: ISO C99
+wcstombs			wcstombs
+wcstoq				wcstoq
+wcstoul				wcstoul
+			      >	wcstoull			NEW: ISO C99
+			      >	wcstoumax			NEW: ISO C99
+wcstouq				wcstouq
+			      >	wcswcs				NEW: Unix98
+wcswidth			wcswidth
+wcsxfrm				wcsxfrm
+wctob				wctob
+wctomb				wctomb
+wctrans				wctrans
+wctype				wctype
+wcwidth				wcwidth
+wmemchr				wmemchr
+wmemcmp				wmemcmp
+wmemcpy				wmemcpy
+wmemmove			wmemmove
+wmemset				wmemset
+			      >	wordexp				NEW: POSIX.2
+			      >	wordfree			NEW: POSIX.2
+write				write
+write_profiling		      <					REMOVED
+writev				writev
+			      >	xdecrypt			NEW: SecureRPC
+xdr_accepted_reply		xdr_accepted_reply
+xdr_array			xdr_array
+			      >	xdr_authdes_cred		NEW: SecureRPC
+			      >	xdr_authdes_verf		NEW: SecureRPC
+xdr_authunix_parms		xdr_authunix_parms
+xdr_bool			xdr_bool
+xdr_bytes			xdr_bytes
+xdr_callhdr			xdr_callhdr
+xdr_callmsg			xdr_callmsg
+xdr_char			xdr_char
+			      >	xdr_cryptkeyarg			NEW: SecureRPC
+			      >	xdr_cryptkeyarg2		NEW: SecureRPC
+			      >	xdr_cryptkeyres			NEW: SecureRPC
+xdr_des_block			xdr_des_block
+xdr_double			xdr_double
+xdr_enum			xdr_enum
+xdr_float			xdr_float
+xdr_free			xdr_free
+			      >	xdr_getcredres			NEW: SecureRPC
+xdr_int				xdr_int
+			      >	xdr_key_netstarg		NEW: SecureRPC
+			      >	xdr_key_netstres		NEW: SecureRPC
+			      >	xdr_keybuf			NEW: SecureRPC
+			      >	xdr_keystatus			NEW: SecureRPC
+xdr_long			xdr_long
+			      >	xdr_netnamestr			NEW: SecureRPC
+xdr_netobj			xdr_netobj
+xdr_opaque			xdr_opaque
+xdr_opaque_auth			xdr_opaque_auth
+xdr_pmap			xdr_pmap
+xdr_pmaplist			xdr_pmaplist
+xdr_pointer			xdr_pointer
+xdr_reference			xdr_reference
+xdr_rejected_reply		xdr_rejected_reply
+xdr_replymsg			xdr_replymsg
+xdr_rmtcall_args		xdr_rmtcall_args
+xdr_rmtcallres			xdr_rmtcallres
+xdr_short			xdr_short
+			      >	xdr_sizeof			NEW: SecureRPC
+xdr_string			xdr_string
+xdr_u_char			xdr_u_char
+xdr_u_int			xdr_u_int
+xdr_u_long			xdr_u_long
+xdr_u_short			xdr_u_short
+xdr_union			xdr_union
+			      >	xdr_unixcred			NEW: sunrpc ext
+xdr_vector			xdr_vector
+xdr_void			xdr_void
+xdr_wrapstring			xdr_wrapstring
+xdrmem_create			xdrmem_create
+xdrrec_create			xdrrec_create
+xdrrec_endofrecord		xdrrec_endofrecord
+xdrrec_eof			xdrrec_eof
+xdrrec_skiprecord		xdrrec_skiprecord
+xdrstdio_create			xdrstdio_create
+			      >	xencrypt			NEW: SecureRPC
+xprt_register			xprt_register
+xprt_unregister			xprt_unregister
+y0				y0
+y0f				y0f
+y0l				y0l
+y1				y1
+y1f				y1f
+y1l				y1l
+yn				yn
+ynf				ynf
+ynl				ynl

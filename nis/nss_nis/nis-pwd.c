@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1998,2001,2002,2003,2006 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -17,18 +17,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
+#include <nss.h>
+/* The following is an ugly trick to avoid a prototype declaration for
+   _nss_nis_endpwent.  */
+#define _nss_nis_endpwent _nss_nis_endpwent_XXX
+#include <pwd.h>
+#undef _nss_nis_endpwent
 #include <ctype.h>
 #include <errno.h>
-#include <nss.h>
-#include <pwd.h>
 #include <string.h>
 #include <bits/libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 
 #include "nss-nis.h"
-#include <libnsl.h>
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME pwent
@@ -42,72 +44,12 @@ __libc_lock_define_initialized (static, lock)
 static bool_t new_start = 1;
 static char *oldkey;
 static int oldkeylen;
-static intern_t intern;
 
-
-int
-_nis_saveit (int instatus, char *inkey, int inkeylen, char *inval,
-	     int invallen, char *indata)
+enum nss_status
+_nss_nis_setpwent (int stayopen)
 {
-  intern_t *intern = (intern_t *) indata;
+  __libc_lock_lock (lock);
 
-  if (instatus != YP_TRUE)
-    return 1;
-
-  if (inkey && inkeylen > 0 && inval && invallen > 0)
-    {
-      struct response_t *bucket = intern->next;
-
-      if (__builtin_expect (bucket == NULL, 0))
-	{
-#define MINSIZE 4096 - 4 * sizeof (void *)
-	  const size_t minsize = MAX (MINSIZE, 2 * (invallen + 1));
-	  bucket = malloc (sizeof (struct response_t) + minsize);
-	  if (bucket == NULL)
-	    /* We have no error code for out of memory.  */
-	    return 1;
-
-	  bucket->next = NULL;
-	  bucket->size = minsize;
-	  intern->start = intern->next = bucket;
-	  intern->offset = 0;
-	}
-      else if (__builtin_expect (invallen + 1 > bucket->size - intern->offset,
-				 0))
-	{
-	  /* We need a new (larger) buffer.  */
-	  const size_t newsize = 2 * MAX (bucket->size, invallen + 1);
-	  struct response_t *newp = malloc (sizeof (struct response_t)
-					    + newsize);
-	  if (newp == NULL)
-	    /* We have no error code for out of memory.  */
-	    return 1;
-
-	  /* Mark the old bucket as full.  */
-	  bucket->size = intern->offset;
-
-	  newp->next = NULL;
-	  newp->size = newsize;
-	  bucket = intern->next = bucket->next = newp;
-	  intern->offset = 0;
-	}
-
-      char *p = mempcpy (&bucket->mem[intern->offset], inval, invallen);
-      if (__builtin_expect (p[-1] != '\0', 0))
-	{
-	  *p = '\0';
-	  ++invallen;
-	}
-      intern->offset += invallen;
-    }
-
-  return 0;
-}
-
-
-static void
-internal_nis_endpwent (void)
-{
   new_start = 1;
   if (oldkey != NULL)
     {
@@ -116,159 +58,52 @@ internal_nis_endpwent (void)
       oldkeylen = 0;
     }
 
-  struct response_t *curr = intern.next;
-
-  while (curr != NULL)
-    {
-      struct response_t *last = curr;
-      curr = curr->next;
-      free (last);
-    }
-
-  intern.next = intern.start = NULL;
-}
-
-
-enum nss_status
-_nss_nis_endpwent (void)
-{
-  __libc_lock_lock (lock);
-
-  internal_nis_endpwent ();
-
   __libc_lock_unlock (lock);
 
   return NSS_STATUS_SUCCESS;
 }
-
-
-enum nss_status
-internal_nis_setpwent (void)
-{
-  /* We have to read all the data now.  */
-  char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
-    return NSS_STATUS_UNAVAIL;
-
-  struct ypall_callback ypcb;
-
-  ypcb.foreach = _nis_saveit;
-  ypcb.data = (char *) &intern;
-  enum nss_status status = yperr2nss (yp_all (domain, "passwd.byname", &ypcb));
-
-
-  /* Mark the last buffer as full.  */
-  if (intern.next != NULL)
-    intern.next->size = intern.offset;
-
-  intern.next = intern.start;
-  intern.offset = 0;
-
-  return status;
-}
-
-
-enum nss_status
-_nss_nis_setpwent (int stayopen)
-{
-  enum nss_status result = NSS_STATUS_SUCCESS;
-
-  __libc_lock_lock (lock);
-
-  internal_nis_endpwent ();
-
-  if (_nsl_default_nss () & NSS_FLAG_SETENT_BATCH_READ)
-    result = internal_nis_setpwent ();
-
-  __libc_lock_unlock (lock);
-
-  return result;
-}
-
+/* Make _nss_nis_endpwent an alias of _nss_nis_setpwent.  We do this
+   even though the prototypes don't match.  The argument of setpwent
+   is not used so this makes no difference.  */
+strong_alias (_nss_nis_setpwent, _nss_nis_endpwent)
 
 static enum nss_status
 internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 			 int *errnop)
 {
-  /* If we read the entire database at setpwent time we just iterate
-     over the data we have in memory.  */
-  bool batch_read = intern.start != NULL;
+  struct parser_data *data = (void *) buffer;
+  char *domain;
+  int parse_res;
 
-  char *domain = NULL;
-  if (!batch_read && __builtin_expect (yp_get_default_domain (&domain), 0))
+  if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
   /* Get the next entry until we found a correct one. */
-  int parse_res;
   do
     {
-      char *result;
-      char *outkey;
-      int len;
-      int keylen;
+      enum nss_status retval;
+      char *result, *outkey, *result2, *p;
+      int len, keylen, len2;
+      size_t namelen;
 
-      if (batch_read)
-	{
-	  struct response_t *bucket;
-
-	handle_batch_read:
-	  bucket = intern.next;
-
-	  if (__builtin_expect (intern.offset >= bucket->size, 0))
-	    {
-	      if (bucket->next == NULL)
-		return NSS_STATUS_NOTFOUND;
-
-	      /* We look at all the content in the current bucket.  Go on
-		 to the next.  */
-	      bucket = intern.next = bucket->next;
-	      intern.offset = 0;
-	    }
-
-	  for (result = &bucket->mem[intern.offset]; isspace (*result);
-	       ++result)
-	    ++intern.offset;
-
-	  len = strlen (result);
-	}
+      if (new_start)
+        retval = yperr2nss (yp_first (domain, "passwd.byname",
+                                      &outkey, &keylen, &result, &len));
       else
-	{
-	  int yperr;
+        retval = yperr2nss ( yp_next (domain, "passwd.byname",
+                                      oldkey, oldkeylen,
+                                      &outkey, &keylen, &result, &len));
 
-	  if (new_start)
-	    {
-	      /* Maybe we should read the database in one piece.  */
-	      if ((_nsl_default_nss () & NSS_FLAG_SETENT_BATCH_READ)
-		  && internal_nis_setpwent () == NSS_STATUS_SUCCESS
-		  && intern.start != NULL)
-		{
-		  batch_read = true;
-		  goto handle_batch_read;
-		}
-
-	      yperr = yp_first (domain, "passwd.byname", &outkey, &keylen,
-				&result, &len);
-	    }
-	  else
-	    yperr = yp_next (domain, "passwd.byname", oldkey, oldkeylen,
-			     &outkey, &keylen, &result, &len);
-
-	  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
-	    {
-	      enum nss_status retval = yperr2nss (yperr);
-
-	      if (retval == NSS_STATUS_TRYAGAIN)
-		*errnop = errno;
-	      return retval;
-	    }
-	}
+      if (retval != NSS_STATUS_SUCCESS)
+        {
+          if (retval == NSS_STATUS_TRYAGAIN)
+            *errnop = errno;
+          return retval;
+        }
 
       /* Check for adjunct style secret passwords.  They can be
 	 recognized by a password starting with "##".  */
-      char *p = strchr (result, ':');
-      size_t namelen;
-      char *result2;
-      int len2;
+      p = strchr (result, ':');
       if (p != NULL	/* This better should be true in all cases.  */
 	  && p[1] == '#' && p[2] == '#'
 	  && (namelen = p - result,
@@ -293,8 +128,7 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	    }
 
 	  restlen = len - (p - result);
-	  if (__builtin_expect ((size_t) (namelen + (endp - encrypted)
-					  + restlen + 2) > buflen, 0))
+	  if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
 	    {
 	      free (result2);
 	      free (result);
@@ -302,10 +136,10 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 
-	  mempcpy (mempcpy (mempcpy (mempcpy (buffer, result, namelen),
-				     ":", 1),
-			    encrypted, endp - encrypted),
-		   p, restlen + 1);
+	  __mempcpy (__mempcpy (__mempcpy (__mempcpy (buffer, result, namelen),
+					   ":", 1),
+				encrypted, endp - encrypted),
+		     p, restlen + 1);
 	  p = buffer;
 
 	  free (result2);
@@ -313,41 +147,33 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
       else
 	{
 	non_adjunct:
-	  if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+	  if ((size_t) (len + 1) > buflen)
 	    {
 	      free (result);
 	      *errnop = ERANGE;
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 
-	  p = buffer;
-	  *((char *) mempcpy (buffer, result, len)) = '\0';
+	  p = strncpy (buffer, result, len);
+	  buffer[len] = '\0';
 	}
 
       while (isspace (*p))
         ++p;
-      if (!batch_read)
-	free (result);
+      free (result);
 
-      parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
-					  errnop);
-      if (__builtin_expect (parse_res == -1, 0))
+      parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
+      if (parse_res == -1)
 	{
-	  if (!batch_read)
-	    free (outkey);
+	  free (outkey);
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      if (batch_read)
-	intern.offset += len + 1;
-      else
-	{
-	  free (oldkey);
-	  oldkey = outkey;
-	  oldkeylen = keylen;
-	  new_start = 0;
-	}
+      free (oldkey);
+      oldkey = outkey;
+      oldkeylen = keylen;
+      new_start = 0;
     }
   while (parse_res < 1);
 
@@ -373,26 +199,28 @@ enum nss_status
 _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 		     char *buffer, size_t buflen, int *errnop)
 {
+  struct parser_data *data = (void *) buffer;
+  enum nss_status retval;
+  char *domain, *result, *result2, *p;
+  int len, len2, parse_res;
+  size_t namelen;
+
   if (name == NULL)
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
-  char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
-  size_t namelen = strlen (name);
+  namelen = strlen (name);
 
-  char *result;
-  int len;
-  int yperr = yp_match (domain, "passwd.byname", name, namelen, &result, &len);
+  retval = yperr2nss (yp_match (domain, "passwd.byname", name,
+				namelen, &result, &len));
 
-  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+  if (retval != NSS_STATUS_SUCCESS)
     {
-      enum nss_status retval = yperr2nss (yperr);
-
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
@@ -400,9 +228,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 
   /* Check for adjunct style secret passwords.  They can be recognized
      by a password starting with "##".  */
-  char *result2;
-  int len2;
-  char *p = strchr (result, ':');
+  p = strchr (result, ':');
   if (p != NULL	/* This better should be true in all cases.  */
       && p[1] == '#' && p[2] == '#'
       && yp_match (domain, "passwd.adjunct.byname", name, namelen,
@@ -412,6 +238,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 	 therein into original result.  */
       char *encrypted = strchr (result2, ':');
       char *endp;
+      size_t restlen;
 
       if (encrypted == NULL
 	  || (endp = strchr (++encrypted, ':')) == NULL
@@ -424,9 +251,8 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 	  goto non_adjunct;
 	}
 
-      size_t restlen = len - (p - result);
-      if (__builtin_expect ((size_t) (namelen + (endp - encrypted)
-				      + restlen + 2) > buflen, 0))
+      restlen = len - (p - result);
+      if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
 	{
 	  free (result2);
 	  free (result);
@@ -445,7 +271,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
   else
     {
     non_adjunct:
-      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+      if ((size_t) (len + 1) > buflen)
 	{
 	  free (result);
 	  *errnop = ERANGE;
@@ -460,9 +286,8 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
     ++p;
   free (result);
 
-  int parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
-					  errnop);
-  if (__builtin_expect (parse_res < 1, 0))
+  parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
+  if (parse_res < 1)
     {
       if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
@@ -477,21 +302,23 @@ enum nss_status
 _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 		     char *buffer, size_t buflen, int *errnop)
 {
-  char *domain;
-  if (__builtin_expect (yp_get_default_domain (&domain), 0))
+  struct parser_data *data = (void *) buffer;
+  enum nss_status retval;
+  char *domain, *result, *p, *result2;
+  int len, nlen, parse_res, len2;
+  char buf[32];
+  size_t namelen;
+
+  if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
-  char buf[32];
-  int nlen = snprintf (buf, sizeof (buf), "%lu", (unsigned long int) uid);
+  nlen = sprintf (buf, "%lu", (unsigned long int) uid);
 
-  char *result;
-  int len;
-  int yperr = yp_match (domain, "passwd.byuid", buf, nlen, &result, &len);
+  retval = yperr2nss (yp_match (domain, "passwd.byuid", buf,
+				nlen, &result, &len));
 
-  if (__builtin_expect (yperr != YPERR_SUCCESS, 0))
+  if (retval != NSS_STATUS_SUCCESS)
     {
-      enum nss_status retval = yperr2nss (yperr);
-
       if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
@@ -499,10 +326,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 
   /* Check for adjunct style secret passwords.  They can be recognized
      by a password starting with "##".  */
-  char *result2;
-  int len2;
-  size_t namelen;
-  char *p = strchr (result, ':');
+  p = strchr (result, ':');
   if (p != NULL	/* This better should be true in all cases.  */
       && p[1] == '#' && p[2] == '#'
       && (namelen = p - result,
@@ -527,8 +351,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 	}
 
       restlen = len - (p - result);
-      if (__builtin_expect ((size_t) (namelen + (endp - encrypted)
-				      + restlen + 2) > buflen, 0))
+      if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
 	{
 	  free (result2);
 	  free (result);
@@ -547,7 +370,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
   else
     {
     non_adjunct:
-      if (__builtin_expect ((size_t) (len + 1) > buflen, 0))
+      if ((size_t) (len + 1) > buflen)
 	{
 	  free (result);
 	  *errnop = ERANGE;
@@ -562,9 +385,8 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
     ++p;
   free (result);
 
-  int parse_res = _nss_files_parse_pwent (p, pwd, (void *) buffer, buflen,
-					  errnop);
-  if (__builtin_expect (parse_res < 1, 0))
+  parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
+  if (parse_res < 1)
     {
       if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;

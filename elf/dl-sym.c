@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1999-2002,2004,2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
 #include <stddef.h>
 #include <setjmp.h>
 #include <libintl.h>
@@ -25,7 +24,6 @@
 #include <dlfcn.h>
 #include <ldsodefs.h>
 #include <dl-hash.h>
-#include <sysdep-cancel.h>
 #ifdef USE_TLS
 # include <dl-tls.h>
 #endif
@@ -60,29 +58,6 @@ _dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
 #endif
 
 
-struct call_dl_lookup_args
-{
-  /* Arguments to do_dlsym.  */
-  struct link_map *map;
-  const char *name;
-  struct r_found_version *vers;
-  int flags;
-
-  /* Return values of do_dlsym.  */
-  lookup_t loadbase;
-  const ElfW(Sym) **refp;
-};
-
-static void
-call_dl_lookup (void *ptr)
-{
-  struct call_dl_lookup_args *args = (struct call_dl_lookup_args *) ptr;
-  args->map = GLRO(dl_lookup_symbol_x) (args->name, args->map, args->refp,
-					args->map->l_scope, args->vers, 0,
-					args->flags, NULL);
-}
-
-
 static void *
 internal_function
 do_sym (void *handle, const char *name, void *who,
@@ -100,59 +75,19 @@ do_sym (void *handle, const char *name, void *who,
   for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
     for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL;
 	 l = l->l_next)
-      if (caller >= l->l_map_start && caller < l->l_map_end
-	  && (l->l_contiguous || _dl_addr_inside_object (l, caller)))
+      if (caller >= l->l_map_start && caller < l->l_map_end)
 	{
+	  /* There must be exactly one DSO for the range of the virtual
+	     memory.  Otherwise something is really broken.  */
 	  match = l;
 	  break;
 	}
 
   if (handle == RTLD_DEFAULT)
-    {
-      /* Search the global scope.  We have the simple case where
-	 we look up in the scope of an object which was part of
-	 the initial binary.  And then the more complex part
-	 where the object is dynamically loaded and the scope
-	 array can change.  */
-      if (RTLD_SINGLE_THREAD_P)
-	result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
-					   match->l_scope, vers, 0,
-					   flags | DL_LOOKUP_ADD_DEPENDENCY,
-					   NULL);
-      else
-	{
-	  struct call_dl_lookup_args args;
-	  args.name = name;
-	  args.map = match;
-	  args.vers = vers;
-	  args.flags = flags | DL_LOOKUP_ADD_DEPENDENCY;
-	  args.refp = &ref;
-
-	  THREAD_GSCOPE_SET_FLAG ();
-
-	  const char *objname;
-	  const char *errstring = NULL;
-	  bool malloced;
-	  int err = GLRO(dl_catch_error) (&objname, &errstring, &malloced,
-					  call_dl_lookup, &args);
-
-	  THREAD_GSCOPE_RESET_FLAG ();
-
-	  if (__builtin_expect (errstring != NULL, 0))
-	    {
-	      /* The lookup was unsuccessful.  Rethrow the error.  */
-	      char *errstring_dup = strdupa (errstring);
-	      char *objname_dup = strdupa (objname);
-	      if (malloced)
-		free ((char *) errstring);
-
-	      GLRO(dl_signal_error) (err, objname_dup, NULL, errstring_dup);
-	      /* NOTREACHED */
-	    }
-
-	  result = args.map;
-	}
-    }
+    /* Search the global scope.  */
+    result = GLRO(dl_lookup_symbol_x) (name, match, &ref, match->l_scope,
+				       vers, 0, flags|DL_LOOKUP_ADD_DEPENDENCY,
+				       NULL);
   else if (handle == RTLD_NEXT)
     {
       if (__builtin_expect (match == GL(dl_ns)[LM_ID_BASE]._ns_loaded, 0))
@@ -168,7 +103,7 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader != NULL)
 	l = l->l_loader;
 
-      result = GLRO(dl_lookup_symbol_x) (name, match, &ref, l->l_local_scope,
+      result = GLRO(dl_lookup_symbol_x) (name, l, &ref, l->l_local_scope,
 					 vers, 0, 0, match);
     }
   else
@@ -181,69 +116,14 @@ RTLD_NEXT used in code not dynamically loaded"));
 
   if (ref != NULL)
     {
-      void *value;
-
 #if defined USE_TLS && defined SHARED
       if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
 	/* The found symbol is a thread-local storage variable.
 	   Return the address for to the current thread.  */
-	value = _dl_tls_symaddr (result, ref);
-      else
-#endif
-	value = DL_SYMBOL_ADDRESS (result, ref);
-
-#ifdef SHARED
-      /* Auditing checkpoint: we have a new binding.  Provide the
-	 auditing libraries the possibility to change the value and
-	 tell us whether further auditing is wanted.  */
-      if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
-	{
-	  const char *strtab = (const char *) D_PTR (result,
-						     l_info[DT_STRTAB]);
-	  /* Compute index of the symbol entry in the symbol table of
-	     the DSO with the definition.  */
-	  unsigned int ndx = (ref - (ElfW(Sym) *) D_PTR (result,
-							 l_info[DT_SYMTAB]));
-
-	  if ((match->l_audit_any_plt | result->l_audit_any_plt) != 0)
-	    {
-	      unsigned int altvalue = 0;
-	      struct audit_ifaces *afct = GLRO(dl_audit);
-	      /* Synthesize a symbol record where the st_value field is
-		 the result.  */
-	      ElfW(Sym) sym = *ref;
-	      sym.st_value = (ElfW(Addr)) value;
-
-	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-		{
-		  if (afct->symbind != NULL
-		      && ((match->l_audit[cnt].bindflags & LA_FLG_BINDFROM)
-			  != 0
-			  || ((result->l_audit[cnt].bindflags & LA_FLG_BINDTO)
-			      != 0)))
-		    {
-		      unsigned int flags = altvalue | LA_SYMB_DLSYM;
-		      uintptr_t new_value
-			= afct->symbind (&sym, ndx,
-					 &match->l_audit[cnt].cookie,
-					 &result->l_audit[cnt].cookie,
-					 &flags, strtab + ref->st_name);
-		      if (new_value != (uintptr_t) sym.st_value)
-			{
-			  altvalue = LA_SYMB_ALTVALUE;
-			  sym.st_value = new_value;
-			}
-		    }
-
-		  afct = afct->next;
-		}
-
-	      value = (void *) sym.st_value;
-	    }
-	}
+	return _dl_tls_symaddr (result, ref);
 #endif
 
-      return value;
+      return DL_SYMBOL_ADDRESS (result, ref);
     }
 
   return NULL;

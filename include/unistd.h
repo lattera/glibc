@@ -15,7 +15,6 @@ libc_hidden_proto (getlogin_r)
 libc_hidden_proto (seteuid)
 libc_hidden_proto (setegid)
 libc_hidden_proto (tcgetpgrp)
-libc_hidden_proto (readlinkat)
 
 /* Now define the internal interfaces.  */
 extern int __access (__const char *__name, int __type);
@@ -97,10 +96,10 @@ extern int __setgid (__gid_t __gid);
 extern int __setpgid (__pid_t __pid, __pid_t __pgid);
 libc_hidden_proto (__setpgid)
 extern int __setregid (__gid_t __rgid, __gid_t __egid);
-extern int __getresuid (__uid_t *__ruid, __uid_t *__euid, __uid_t *__suid);
-extern int __getresgid (__gid_t *__rgid, __gid_t *__egid, __gid_t *__sgid);
-extern int __setresuid (__uid_t __ruid, __uid_t __euid, __uid_t __suid);
-extern int __setresgid (__gid_t __rgid, __gid_t __egid, __gid_t __sgid);
+extern int __getresuid (__uid_t *__euid, __uid_t *__ruid, __uid_t *__suid);
+extern int __getresgid (__gid_t *__egid, __gid_t *__rgid, __gid_t *__sgid);
+extern int __setresuid (__uid_t __euid, __uid_t __ruid, __uid_t __suid);
+extern int __setresgid (__gid_t __egid, __gid_t __rgid, __gid_t __sgid);
 libc_hidden_proto (__getresuid)
 libc_hidden_proto (__getresgid)
 libc_hidden_proto (__setresuid)
@@ -162,7 +161,5 @@ extern __pid_t __libc_fork (void);
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets `errno' to EINTR.  */
 extern int __libc_pause (void);
-/* Not cancelable variant.  */
-extern int __pause_nocancel (void) attribute_hidden;
 
 #endif

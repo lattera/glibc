@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
+ * software is freely granted, provided that this notice 
  * is preserved.
  * ====================================================
  */
@@ -20,8 +20,7 @@ static char rcsid[] = "$NetBSD: s_expm1f.c,v 1.5 1995/05/10 20:47:11 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-static const volatile float huge = 1.0e+30;
-static const volatile float tiny = 1.0e-30;
+static const volatile float huge = 1.0e+30, tiny = 1.0e-30;
 
 #ifdef __STDC__
 static const float
@@ -72,7 +71,7 @@ Q5  =  -2.0109921195e-07; /* 0xb457edbb */
 	}
 
     /* argument reduction */
-	if(hx > 0x3eb17218) {		/* if  |x| > 0.5 ln2 */
+	if(hx > 0x3eb17218) {		/* if  |x| > 0.5 ln2 */ 
 	    if(hx < 0x3F851592) {	/* and |x| < 1.5 ln2 */
 		if(xsb==0)
 		    {hi = x - ln2_hi; lo =  ln2_lo;  k =  1;}
@@ -86,10 +85,10 @@ Q5  =  -2.0109921195e-07; /* 0xb457edbb */
 	    }
 	    x  = hi - lo;
 	    c  = (hi-x)-lo;
-	}
+	} 
 	else if(hx < 0x33000000) {  	/* when |x|<2**-25, return x */
 	    t = huge+x;	/* return x with inexact flags when x!=0 */
-	    return x - (t-(huge+x));
+	    return x - (t-(huge+x));	
 	}
 	else k = 0;
 

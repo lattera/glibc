@@ -1,5 +1,5 @@
 /* ix87 specific implementation of arctanh function.
-   Copyright (C) 1996, 1999, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -57,7 +57,9 @@ ENTRY(__ieee754_atanhf)
 	ja	5f
 
 #ifdef PIC
-	LOAD_PIC_REG (dx)
+	call	1f
+1:	popl	%edx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
 #endif
 
 	andl	$0x80000000, %ecx // ECX == 0 iff X >= 0

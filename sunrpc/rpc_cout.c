@@ -31,6 +31,10 @@
 /*
  * From: @(#)rpc_cout.c 1.13 89/02/22 (C) 1987 SMI
  */
+#if defined(LIBC_SCCS) && !defined(lint)
+static const char cout_rcsid[] =
+"$Id$";
+#endif
 
 /*
  * rpc_cout.c, XDR routine outputter for the RPC protocol compiler
@@ -551,7 +555,6 @@ inline_struct (definition *def, int flag)
 	    }
 	  size = 0;
 	  i = 0;
-	  free (sizestr);
 	  sizestr = NULL;
 	  print_stat (indent + 1, &dl->decl);
 	}

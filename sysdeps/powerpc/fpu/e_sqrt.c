@@ -24,6 +24,7 @@
 
 #include <sysdep.h>
 #include <ldsodefs.h>
+#include <dl-procinfo.h>
 
 static const double almost_half = 0.5000000000000001;	/* 0.5 + 2^-53 */
 static const ieee_float_shape_type a_nan = {.word = 0x7fc00000 };
@@ -169,8 +170,8 @@ __ieee754_sqrt (x)
 {
   double z;
 
-  /* If the CPU is 64-bit we can use the optional FP instructions.  */
-  if (__CPU_HAS_FSQRT)
+  /* If the CPU is 64-bit we can use the optional FP instructions we.  */
+  if ((GLRO (dl_hwcap) & PPC_FEATURE_64) != 0)
     {
       /* Volatile is required to prevent the compiler from moving the 
          fsqrt instruction above the branch.  */

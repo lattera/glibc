@@ -1,0 +1,6 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+msync		-	msync		3	msync
+poll		-	poll		3	poll
+sys_mmap	mmap	mmap		5	__mmap_syscall
+sys_wait4	wait4	wait4		4	__wait4_syscall

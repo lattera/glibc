@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)scheck.c	8.17";
+static char	elsieid[] = "@(#)scheck.c	8.15";
 #endif /* !defined lint */
 #endif /* !defined NOID */
 
@@ -8,7 +8,7 @@ static char	elsieid[] = "@(#)scheck.c	8.17";
 
 #include "private.h"
 
-const char *
+char *
 scheck(string, format)
 const char * const	string;
 const char * const	format;
@@ -17,10 +17,11 @@ const char * const	format;
 	register const char *	fp;
 	register char *		tp;
 	register int		c;
-	register const char *	result;
+	register char *		result;
 	char			dummy;
+	static char		nada;
 
-	result = "";
+	result = &nada;
 	if (string == NULL || format == NULL)
 		return result;
 	fbuf = imalloc((int) (2 * strlen(format) + 4));

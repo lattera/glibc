@@ -1,25 +1,26 @@
 /* Cache memory handling.
-   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
-#include <fcntl.h>
 #include <inttypes.h>
 #include <libintl.h>
 #include <limits.h>
@@ -31,6 +32,12 @@
 
 #include "dbg_log.h"
 #include "nscd.h"
+
+
+/* Maximum alignment requirement we will encounter.  */
+#define BLOCK_ALIGN_LOG 3
+#define BLOCK_ALIGN (1 << BLOCK_ALIGN_LOG)
+#define BLOCK_ALIGN_M1 (BLOCK_ALIGN - 1)
 
 
 static int
@@ -187,7 +194,7 @@ gc (struct database_dyn *db)
       highref -= BLOCK_ALIGN;
     }
 
-  /* Now we can iterate over the MARK array and find bits which are not
+  /* No we can iterate over the MARK array and find bits which are not
      set.  These represent memory which can be recovered.  */
   size_t byte = 0;
   /* Find the first gap.  */
@@ -479,26 +486,17 @@ mempool_alloc (struct database_dyn *db, size_t len)
       if (! tried_resize)
 	{
 	  /* Try to resize the database.  Grow size of 1/8th.  */
+	  size_t new_data_size = db->head->data_size + db->head->data_size / 8;
 	  size_t oldtotal = (sizeof (struct database_pers_head)
-			     + roundup (db->head->module * sizeof (ref_t), ALIGN)
+			     + db->head->module * sizeof (ref_t)
 			     + db->head->data_size);
-	  size_t new_data_size = (db->head->data_size
-				  + MAX (2 * len, db->head->data_size / 8));
 	  size_t newtotal = (sizeof (struct database_pers_head)
-			     + roundup (db->head->module * sizeof (ref_t), ALIGN)
+			     + db->head->module * sizeof (ref_t)
 			     + new_data_size);
-	  if (newtotal > db->max_db_size)
-	    {
-	      new_data_size -= newtotal - db->max_db_size;
-	      newtotal = db->max_db_size;
-	    }
 
-	  if (db->mmap_used && newtotal > oldtotal
-	      /* We only have to adjust the file size.  The new pages
-		 become magically available.  */
-	      && TEMP_FAILURE_RETRY_VAL (posix_fallocate (db->wr_fd, oldtotal,
-							  newtotal
-							  - oldtotal)) == 0)
+	  if ((!db->mmap_used || ftruncate (db->wr_fd, newtotal) != 0)
+	      /* Try to resize the mapping.  Note: no MREMAP_MAYMOVE.  */
+	      && mremap (db->head, oldtotal, newtotal, 0) == 0)
 	    {
 	      db->head->data_size = new_data_size;
 	      tried_resize = true;
