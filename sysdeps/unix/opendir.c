@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ __opendir (const char *name)
   DIR *dirp;
   struct stat statbuf;
   int fd;
+  size_t allocation;
+  int save_errno;
 
   if (name[0] == '\0')
     {
@@ -45,7 +47,7 @@ __opendir (const char *name)
       return NULL;
     }
 
-  fd = __open (name, O_RDONLY);
+  fd = __open (name, O_RDONLY|O_NDELAY);
   if (fd < 0)
     return NULL;
 
@@ -56,39 +58,31 @@ __opendir (const char *name)
     goto lose;
   if (! S_ISDIR (statbuf.st_mode))
     {
-      __set_errno (ENOTDIR);
-      goto lose;
-    }
-
-  dirp = (DIR *) calloc (1, sizeof (DIR)); /* Zero-fill.  */
-  if (dirp == NULL)
-  lose:
-    {
-      int save = errno;
-      (void) __close (fd);
-      __set_errno (save);
-      return NULL;
+      save_errno = ENOTDIR;
+      goto lose2;
     }
 
 #ifdef _STATBUF_ST_BLKSIZE
   if (statbuf.st_blksize < sizeof (struct dirent))
-    dirp->allocation = sizeof (struct dirent);
+    allocation = sizeof (struct dirent);
   else
-    dirp->allocation = statbuf.st_blksize;
+    allocation = statbuf.st_blksize;
 #else
-  dirp->allocation = (BUFSIZ < sizeof (struct dirent) ?
-		      sizeof (struct dirent) : BUFSIZ);
+  allocation = (BUFSIZ < sizeof (struct dirent)
+		? sizeof (struct dirent) : BUFSIZ);
 #endif
-  dirp->data = (char *) malloc (dirp->allocation);
-  if (dirp->data == NULL)
+
+  dirp = (DIR *) calloc (1, sizeof (DIR) + allocation); /* Zero-fill.  */
+  if (dirp == NULL)
+  lose:
     {
-      int save = errno;
-      free (dirp);
+      save_errno = errno;
+    lose2:
       (void) __close (fd);
-      __set_errno (save);
+      __set_errno (save_errno);
       return NULL;
     }
-
+  dirp->data = (char *) (dirp + 1);
   dirp->fd = fd;
 
   __libc_lock_init (dirp->lock);

@@ -1377,7 +1377,7 @@ envsubst:
 	      if (s == NULL)
 		return WRDE_NOSPACE;
 	      *word = memcpy (s, __libc_argv[p], len);
-	      *max_length = *word_length = len;
+	      *max_length = *word_length = len - 1;
 	    }
 	}
 

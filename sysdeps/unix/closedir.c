@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,6 @@ __closedir (DIR *dirp)
   __libc_lock_lock (dirp->lock);
 
   fd = dirp->fd;
-  free ((void *) dirp->data);
 
   __libc_lock_fini (dirp->lock);
 

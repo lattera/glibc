@@ -1,3 +1,9 @@
+1998-03-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/opendir.c (__opendir): Don't block on FIFOs etc.
+	Optimize memmory handling.
+	* sysdeps/unix/closedir.c: Optmize memory handling.
+
 1998-03-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/wordexp.c (parse_param): Fix off-by-on error in $@
