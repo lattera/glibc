@@ -1,5 +1,7 @@
 2002-11-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (tests): Don't run test-arrayX tests for now.
+
 	* sysdeps/unix/sysv/linux/bits/sched.h: Add new CLONE_* flags.
 	* sysdeps/unix/sysv/linux/i386/clone.S: Add support for
 	CLONE_CHILD_*TID flags.

@@ -118,7 +118,7 @@ endif
 
 tests = tst-tls1 tst-tls2 tst-tls9
 ifeq (yes,$(have-initfini-array))
-tests += tst-array1 tst-array2 tst-array3
+#tests += tst-array1 tst-array2 tst-array3
 endif
 ifeq (yes,$(build-static))
 tests-static = tst-tls1-static tst-tls2-static
