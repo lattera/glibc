@@ -99,7 +99,9 @@ $do32:	ldi	v0, SYS_ify(osf_getrusage)
 	ldt	$f25, 96(a1)		# ru_msgrcv
 	ldt	$f26, 104(a1)		# ru_nsignals
 	ldt	$f27, 112(a1)		# ru_nvcsw
+	.set noat
 	ldt	$f28, 120(a1)		# ru_nivcsw
+	.set at
 	stq	t0, 0(a1)
 	stq	t1, 8(a1)
 	stq	t2, 16(a1)
@@ -117,7 +119,9 @@ $do32:	ldi	v0, SYS_ify(osf_getrusage)
 	stt	$f25, 112(a1)
 	stt	$f26, 120(a1)
 	stt	$f27, 128(a1)
+	.set noat
 	stt	$f28, 136(a1)
+	.set at
 
 	addq	sp, 16, sp
 	ret
