@@ -1,3 +1,8 @@
+2003-03-03  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/clock_settime.c (HANDLE_REALTIME): Add missing
+	brace.
+
 2003-03-02  Roland McGrath  <roland@redhat.com>
 
 	* scripts/abilist.awk: Reject data items with apparent 0 size.
