@@ -17,15 +17,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <nss.h>
 #include <grp.h>
-#include <ctype.h>
-#include <bits/libc-lock.h>
+#include <nss.h>
+#include <nsswitch.h>
+#include <stdio_lock.h>
 #include <string.h>
 #include <rpc/types.h>
-#include <nsswitch.h>
+#include <bits/libc-lock.h>
 
 static service_user *ni;
 static enum nss_status (*nss_setgrent) (int stayopen);
@@ -106,7 +107,7 @@ internal_setgrent (ent_t *ent, int stayopen)
 
   if (ent->stream == NULL)
     {
-      ent->stream = fopen ("/etc/group", "r");
+      ent->stream = fopen ("/etc/group", "rm");
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
@@ -115,11 +116,11 @@ internal_setgrent (ent_t *ent, int stayopen)
 	  /* We have to make sure the file is  `closed on exec'.  */
 	  int result, flags;
 
-	  result = flags = fcntl (fileno (ent->stream), F_GETFD, 0);
+	  result = flags = fcntl (fileno_unlocked (ent->stream), F_GETFD, 0);
 	  if (result >= 0)
 	    {
 	      flags |= FD_CLOEXEC;
-	      result = fcntl (fileno (ent->stream), F_SETFD, flags);
+	      result = fcntl (fileno_unlocked (ent->stream), F_SETFD, flags);
 	    }
 	  if (result < 0)
 	    {
@@ -129,6 +130,9 @@ internal_setgrent (ent_t *ent, int stayopen)
 	      ent->stream = NULL;
 	      status = NSS_STATUS_UNAVAIL;
 	    }
+	  else
+	    /* We take care of locking ourself.  */
+	    __fsetlocking (ent->stream, FSETLOCKING_BYCALLER);
 	}
     }
   else
@@ -252,8 +256,8 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	{
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
-	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL && feof (ent->stream))
+	  p = fgets_unlocked (buffer, buflen, ent->stream);
+	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
@@ -380,8 +384,8 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	{
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
-	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL && feof (ent->stream))
+	  p = fgets_unlocked (buffer, buflen, ent->stream);
+	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
@@ -507,8 +511,8 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 	{
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
-	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL && feof (ent->stream))
+	  p = fgets_unlocked (buffer, buflen, ent->stream);
+	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
 	  if (p == NULL || buffer[buflen - 1] != '\xff')

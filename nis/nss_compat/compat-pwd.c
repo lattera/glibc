@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -223,7 +223,7 @@ internal_setpwent (ent_t *ent, int stayopen)
 
   if (ent->stream == NULL)
     {
-      ent->stream = fopen ("/etc/passwd", "r");
+      ent->stream = fopen ("/etc/passwd", "rm");
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
@@ -232,11 +232,11 @@ internal_setpwent (ent_t *ent, int stayopen)
 	  /* We have to make sure the file is  `closed on exec'.  */
 	  int result, flags;
 
-	  result = flags = fcntl (fileno (ent->stream), F_GETFD, 0);
+	  result = flags = fcntl (fileno_unlocked (ent->stream), F_GETFD, 0);
 	  if (result >= 0)
 	    {
 	      flags |= FD_CLOEXEC;
-	      result = fcntl (fileno (ent->stream), F_SETFD, flags);
+	      result = fcntl (fileno_unlocked (ent->stream), F_SETFD, flags);
 	    }
 	  if (result < 0)
 	    {
@@ -246,6 +246,9 @@ internal_setpwent (ent_t *ent, int stayopen)
 	      ent->stream = NULL;
 	      status = NSS_STATUS_UNAVAIL;
 	    }
+	  else
+	    /* We take care of locking ourself.  */
+	    __fsetlocking (ent->stream, FSETLOCKING_BYCALLER);
 	}
     }
   else
@@ -497,8 +500,8 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	{
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
-	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL && feof (ent->stream))
+	  p = fgets_unlocked (buffer, buflen, ent->stream);
+	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
@@ -691,8 +694,8 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	{
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
-	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL && feof (ent->stream))
+	  p = fgets_unlocked (buffer, buflen, ent->stream);
+	  if (p == NULL && feof_unlocked (ent->stream))
 	    {
 	      return NSS_STATUS_NOTFOUND;
 	    }
@@ -894,8 +897,8 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	{
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
-	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL && feof (ent->stream))
+	  p = fgets_unlocked (buffer, buflen, ent->stream);
+	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
 	  if (p == NULL || buffer[buflen - 1] != '\xff')

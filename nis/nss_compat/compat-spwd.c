@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -17,17 +17,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <nss.h>
-#include <errno.h>
 #include <ctype.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <netdb.h>
+#include <nss.h>
+#include <nsswitch.h>
 #include <shadow.h>
+#include <stdio_ext.h>
 #include <string.h>
-#include <bits/libc-lock.h>
 #include <rpc/types.h>
 #include <rpcsvc/ypclnt.h>
-#include <nsswitch.h>
+#include <bits/libc-lock.h>
 
 #include "netgroup.h"
 
@@ -177,7 +178,7 @@ internal_setspent (ent_t *ent, int stayopen)
 
   if (ent->stream == NULL)
     {
-      ent->stream = fopen ("/etc/shadow", "r");
+      ent->stream = fopen ("/etc/shadow", "rm");
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
@@ -186,11 +187,11 @@ internal_setspent (ent_t *ent, int stayopen)
 	  /* We have to make sure the file is  `closed on exec'.  */
 	  int result, flags;
 
-	  result = flags = fcntl (fileno (ent->stream), F_GETFD, 0);
+	  result = flags = fcntl (fileno_unlocked (ent->stream), F_GETFD, 0);
 	  if (result >= 0)
 	    {
 	      flags |= FD_CLOEXEC;
-	      result = fcntl (fileno (ent->stream), F_SETFD, flags);
+	      result = fcntl (fileno_unlocked (ent->stream), F_SETFD, flags);
 	    }
 	  if (result < 0)
 	    {
@@ -200,6 +201,9 @@ internal_setspent (ent_t *ent, int stayopen)
 	      ent->stream = NULL;
 	      status = NSS_STATUS_UNAVAIL;
 	    }
+	  else
+	    /* We take care of locking ourself.  */
+	    __fsetlocking (ent->stream, FSETLOCKING_BYCALLER);
 	}
     }
   else
@@ -449,8 +453,8 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	{
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
-	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL && feof (ent->stream))
+	  p = fgets_unlocked (buffer, buflen, ent->stream);
+	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
@@ -638,8 +642,8 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	{
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
-	  p = fgets (buffer, buflen, ent->stream);
-	  if (p == NULL && feof (ent->stream))
+	  p = fgets_unlocked (buffer, buflen, ent->stream);
+	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
