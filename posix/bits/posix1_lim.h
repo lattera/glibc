@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,96,98,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,96,98,2000,01,02,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,11 @@
 #define _POSIX_MQ_PRIO_MAX	32
 
 /* Number of simultaneous supplementary group IDs per process.  */
-#define	_POSIX_NGROUPS_MAX	0
+#ifdef __USE_XOPEN2K
+# define _POSIX_NGROUPS_MAX	8
+#else
+# define _POSIX_NGROUPS_MAX	0
+#endif
 
 /* Number of files one process can have open at once.  */
 #define	_POSIX_OPEN_MAX		16
@@ -135,7 +139,7 @@
    The current maximum can be got from `sysconf'.  */
 
 #ifndef	NGROUPS_MAX
-# define NGROUPS_MAX	_POSIX_NGROUPS_MAX
+# define NGROUPS_MAX	8
 #endif
 
 #endif	/* bits/posix1_lim.h  */
