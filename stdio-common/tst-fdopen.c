@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#undef assert
 #define assert(x) \
   if (!(x)) \
     { \

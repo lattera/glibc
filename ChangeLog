@@ -1,3 +1,7 @@
+2002-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tst-fdopen.c: Undefine assert before redefining it.
+
 2002-12-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/system.c (do_system): Add support for installation
