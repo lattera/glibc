@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #define SIGCONTEXT int _a2, int _a3, int _a4, union k_sigcontext
+#define SIGCONTEXT_EXTRA_ARGS _a2, _a3, _a4,
 
 #define GET_PC(ctx)	((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
 			 ctx.v20.reg.ARM_pc : ctx.v21.arm_pc))

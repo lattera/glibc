@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>, 1998.
 
@@ -17,7 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define SIGCONTEXT int code, struct sigcontext *
+#define SIGCONTEXT int _code, struct sigcontext *
+#define SIGCONTEXT_EXTRA_ARGS _code,
 #define GET_PC(ctx)	((void *) (ctx)->sc_pc)
 #define GET_FRAME(ctx)	((void *) __builtin_frame_address (1))
 #define GET_STACK(ctx)	((void *) (ctx)->sc_usp)
