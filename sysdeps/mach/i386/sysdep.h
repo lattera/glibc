@@ -51,4 +51,12 @@ Cambridge, MA 02139, USA.  */
 
 #define STACK_GROWTH_DOWN
 
+
+#ifdef PIC
+#define JUMPTARGET(name) name##@PLT
+#else
+#define JUMPTARGET(name) name
+#endif
+
+
 #include_next <sysdep.h>

@@ -48,7 +48,7 @@ Cambridge, MA 02139, USA.  */
   jb JUMPTARGET(syscall_error)
 
 #ifdef PIC
-#define JUMPTARGET(name) name@PLT
+#define JUMPTARGET(name) name##@PLT
 #else
 #define JUMPTARGET(name) name
 #endif

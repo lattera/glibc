@@ -1,3 +1,11 @@
+Sat Jul 22 20:53:18 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/i386/sysdep.h (JUMPTARGET): Use ## to avoid space
+ 	before @PLT.
+	* sysdeps/mach/i386/sysdep.h (JUMPTARGET): New macro.
+	* sysdeps/i386/bsd-_setjmp.S: Use JUMPTARGET macro in jmp insn.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+
 Sat Jul 22 19:58:54 1995  Michael I Bushnell  <mib@geech.gnu.ai.mit.edu>
 
 	* inet/Makefile (routines): Added `ruserpass'.
