@@ -1,3 +1,19 @@
+2003-08-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/fcntl.h (posix_fallocate): Change type of third parameter to
+	off_t.
+	(posix_fallocate64): Change type of third parameter to off64_t.
+	* sysdeps/generic/posix_fallocate.c: Adjust for type change.
+	* sysdeps/posix/posix_fallocate.c: Likewise.
+	* sysdeps/generic/posix_fallocate64.c: Likewise.
+	* sysdeps/posix/posix_fallocate64.c: Likewise.  Add compatibility
+	code for 32-bit platforms.
+	* sysdeps/unix/sysv/linux/i386/Versions: Add new version for
+	posix_fallocate64.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: Likewise.
+
 2003-08-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/bits/string2.h (__STRING2_COPY_TYPE): Add attribute to

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /* Reserve storage for the data of the file associated with FD.  */
 
 int
-posix_fallocate64 (int fd, __off64_t offset, size_t len)
+__posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 {
   struct stat64 st;
   struct statfs64 f;
@@ -33,7 +33,7 @@ posix_fallocate64 (int fd, __off64_t offset, size_t len)
 
   /* `off64_t´ is a signed type.  Therefore we can determine whether
      OFFSET + LEN is too large if it is a negative value.  */
-  if (offset < 0 || len == 0)
+  if (offset < 0 || len < 0)
     return EINVAL;
   if (offset + len < 0)
     return EFBIG;
@@ -69,3 +69,21 @@ posix_fallocate64 (int fd, __off64_t offset, size_t len)
 
   return 0;
 }
+
+#include <shlib-compat.h>
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 32 && SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3)
+
+int
+__posix_fallocate64_l32 (int fd, off64_t offset, size_t len)
+{
+  return __posix_fallocate64_l64 (fd, offset, len);
+}
+
+versioned_symbol (libc, __posix_fallocate64_l64, posix_fallocate64,
+		  GLIBC_2_3_3);
+compat_symbol (libc, __posix_fallocate64_l32, posix_fallocate64, GLIBC_2_2);
+#else
+strong_alias (__posix_fallocate64_l64, posix_fallocate64);
+#endif

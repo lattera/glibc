@@ -156,18 +156,18 @@ extern int posix_fadvise64 (int __fd, __off64_t __offset, __off64_t __len,
    This function is a possible cancellation points and therefore not
    marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
-extern int posix_fallocate (int __fd, __off_t __offset, size_t __len);
+extern int posix_fallocate (int __fd, __off_t __offset, __off_t __len);
 # else
 # ifdef __REDIRECT
 extern int __REDIRECT (posix_fallocate, (int __fd, __off64_t __offset,
-					 size_t __len),
+					 __off64_t __len),
 		       posix_fallocate64);
 # else
 #  define posix_fallocate posix_fallocate64
 # endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int posix_fallocate64 (int __fd, __off64_t __offset, size_t __len);
+extern int posix_fallocate64 (int __fd, __off64_t __offset, __off64_t __len);
 # endif
 #endif
 
