@@ -1238,7 +1238,8 @@ siginterrupt().
 
 {AJ} glibc 2.1 has special string functions that are faster than the normal
 library functions.  Some of the functions are additionally implemented as
-inline functions and others as macros.
+inline functions and others as macros.  This might lead to problems with
+existing codes but it is explicitly allowed by ISO C.
 
 The optimized string functions are only used when compiling with
 optimizations (-O1 or higher).  The behavior can be changed with two feature

@@ -78,6 +78,9 @@ install-rootsbin += ldconfig
 endif
 
 tests = loadtest restest1 preloadtest loadfail
+modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
+		testobj1_1 failobj
+extra-objs += $(modules-names:=.os)
 
 ifeq ($(build-shared),yes)
 libdl = $(objpfx)libdl.so$(libdl.so-version)
@@ -206,8 +209,6 @@ $(objpfx)ldd: ldd.bash.in $(common-objpfx)soversions.mk \
 
 $(objpfx)sprof: $(libdl)
 
-modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
-		testobj1_1 failobj
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 generated += $(test-modules)
 

@@ -1,5 +1,14 @@
 1999-01-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/strptime.c (strptime_internal, case 's'): Initialize secs
+	to zero.  Patch by Bruce Elliott <bde@nwlink.com>.
+
+1999-01-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/Makefile (extra-objs): Add test modules objects.
+
+1999-01-27  Ulrich Drepper  <drepper@cygnus.com>
+
 	* wctype/wcextra.c: Declare __ctype32_b.
 
 	* manual/string.texi: Add optimization examples for strcat and strchr.

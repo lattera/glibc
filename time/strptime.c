@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -537,7 +537,7 @@ strptime_internal (buf, format, tm, decided)
 	       the `get_number' macro.  Instead read the number
 	       character for character and construct the result while
 	       doing this.  */
-	    time_t secs;
+	    time_t secs = 0;
 	    if (*rp < '0' || *rp > '9')
 	      /* We need at least one digit.  */
 	      return NULL;
