@@ -1,5 +1,9 @@
 2004-08-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/resolv.h (RES_DEFAULT): Add RES_NOIP6DOTINT.
+	* resolv/res_init.c (res_setoptions): Recognize ip6-dotint option.
+	Reset RES_NOIP6DOTINT flag in this case..
+
 	* sysdeps/posix/getaddrinfo.c: Fix memory handling of
 	ai_canonname.
 

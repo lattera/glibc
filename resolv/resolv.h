@@ -210,7 +210,7 @@ struct res_sym {
 #define RES_NOIP6DOTINT	0x00080000	/* Do not use .ip6.int in IPv6
 					   reverse lookup */
 
-#define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
+#define RES_DEFAULT	(RES_RECURSE|RES_DEFNAMES|RES_DNSRCH|RES_NOIP6DOTINT)
 
 /*
  * Resolver "pfcode" values.  Used by dig.
