@@ -17,12 +17,15 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <string.h>
 #include <unistd.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
+
+extern int __syscall_gethostname (char *name, size_t len);
 
 
 int
