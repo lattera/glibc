@@ -243,17 +243,30 @@ of this helper program; chances are you did not intend to run this program.\n",
   __close (_dl_zerofd);
   _dl_zerofd = -1;
 
-  /* XXX if kept, move it so l_next list is in dep order because
-     it will determine gdb's search order.
-     Perhaps do this always, so later dlopen by name finds it?
-     XXX But then gdb always considers it present.  */
-  if (_dl_rtld_map.l_opencount == 0)
+  /* Remove _dl_rtld_map from the chain.  */
+  _dl_rtld_map.l_prev->l_next = _dl_rtld_map.l_next;
+  if (_dl_rtld_map.l_next)
+    _dl_rtld_map.l_next->l_prev = _dl_rtld_map.l_prev;
+
+  if (_dl_rtld_map.l_opencount)
     {
-      /* No DT_NEEDED entry referred to the interpreter object itself,
-	 so remove it from the list of visible objects.  */
-      _dl_rtld_map.l_prev->l_next = _dl_rtld_map.l_next;
+      /* Some DT_NEEDED entry referred to the interpreter object itself, so
+	 put it back in the list of visible objects.  We insert it into the
+	 chain in symbol search order because gdb uses the chain's order as
+	 its symbol search order.  */
+      unsigned int i = 1;
+      while (l->l_searchlist[i] != &_dl_rtld_map)
+	++i;
+      _dl_rtld_map.l_prev = l->l_searchlist[i - 1];
+      _dl_rtld_map.l_next = (i + 1 < l->l_nsearchlist ?
+			     l->l_searchlist[i + 1] : NULL);
+      assert (_dl_rtld_map.l_prev->l_next == _dl_rtld_map.l_next);
+      _dl_rtld_map.l_prev->l_next = &_dl_rtld_map;
       if (_dl_rtld_map.l_next)
-	_dl_rtld_map.l_next->l_prev = _dl_rtld_map.l_prev;
+	{
+	  assert (_dl_rtld_map.l_next->l_prev == _dl_rtld_map.l_prev);
+	  _dl_rtld_map.l_next->l_prev = &_dl_rtld_map;
+	}
     }
 
   if (list_only)

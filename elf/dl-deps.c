@@ -38,6 +38,10 @@ _dl_map_object_deps (struct link_map *map)
   head.next = NULL;
   nlist = 1;
 
+  /* We use `l_reserved' as a mark bit to detect objects we have already
+     put in the search list and avoid adding duplicate elements later in
+     the list.  */
+  map->l_reserved = 1;
 
   /* Process each element of the search list, loading each of its immediate
      dependencies and appending them to the list as we step through it.
@@ -46,11 +50,6 @@ _dl_map_object_deps (struct link_map *map)
   for (scanp = tailp = &head; scanp; scanp = scanp->next)
     {
       struct link_map *l = scanp->map;
-
-      /* We use `l_reserved' as a mark bit to detect objects we have
-         already put in the search list and avoid adding duplicate elements
-         later in the list.  */
-      l->l_reserved = 1;
 
       if (l->l_info[DT_NEEDED])
 	{
@@ -79,6 +78,8 @@ _dl_map_object_deps (struct link_map *map)
 		    tailp->map = dep;
 		    tailp->next = NULL;
 		    ++nlist;
+		    /* Set the mark bit that says it's already in the list.  */
+		    dep->l_reserved = 1;
 		  }
 	      }
 	}

@@ -745,12 +745,10 @@ esac
 
 
 # Compute the list of sysdep directories for this configuration.
+# This can take a while to compute.
 sysdep_dir=$srcdir/sysdeps
 echo $ac_n "checking sysdep dirs""... $ac_c" 1>&6
-if eval "test \"`echo '$''{'libc_cv_sysdirs'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  # Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
+# Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
 os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
 
 case "$os" in
@@ -858,15 +856,26 @@ sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
 # Expand the list of system names into a full list of directories
 # from each element's parent name and Implies file (if present).
 set $sysnames
+names= seen=
 while test $# -gt 0; do
   name=$1
   shift
+
+  if echo "$seen" | fgrep -x $name >/dev/null; then
+    # Already in the list.
+    continue
+  fi
+
+  # Report each name as we discover it, so there is no long pause in output.
+  echo $ac_n "$name $ac_c" >&6
 
   if test -f $sysdep_dir/$name/Implies; then
     # Collect more names from the `Implies' file (removing comments).
     implied="`sed 's/#.*$//' < $sysdep_dir/$name/Implies`"
     for x in $implied; do
-      test -d $sysdep_dir/$x || echo "Warning: $name implies nonexistent $x">&2
+      test -d $sysdep_dir/$x || {
+        echo "configure: warning: sysdeps/$name/Implies specifies nonexistent $x" 1>&2
+      }
     done
   else
     implied=
@@ -874,6 +883,9 @@ while test $# -gt 0; do
 
   # Add NAME to the list of names.
   names="$names $name"
+  # We maintain a parallel newline-separated list for the fgrep check above.
+  seen="$seen
+$name"
 
   # Find the parent of NAME, using the empty string if it has none.
   parent="`echo $name | sed -n -e '/\//!q' -e 's=/[^/]*$==p'`"
@@ -890,31 +902,13 @@ while test $# -gt 0; do
 done
 
 # Add the default directories.
-names="$names generic stub"
+sysnames="$names generic stub"
 
-# Now uniquize the list.
-seen=
-sysnames=
-for name in $names; do
-  if echo "$seen" | fgrep -x $name >/dev/null; then
-    # Already in the list.
-    true;
-  else
-    # A new one.
-    if test -z "$seen"; then
-      seen="$name" sysnames="$name"
-    else
-      seen="$seen
-$name"
-      sysnames="$sysnames $name"
-    fi
-  fi
-done
-libc_cv_sysdirs="$sysnames"
-fi
+# The other names were emitted during the scan.
+echo "$ac_t""generic stub" 1>&6
 
-echo "$ac_t""$libc_cv_sysdirs" 1>&6
- sysnames="$libc_cv_sysdirs"
+
+### Locate tools.
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -1101,13 +1095,13 @@ else
   # On the NeXT, cc -E runs the code through the compiler's parser,
   # not just through cpp.
   cat > conftest.$ac_ext <<EOF
-#line 1105 "configure"
+#line 1099 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:1111: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:1105: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out`
 if test -z "$ac_err"; then
   :
@@ -1116,13 +1110,13 @@ else
   rm -rf conftest*
   CPP="${CC-cc} -E -traditional-cpp"
   cat > conftest.$ac_ext <<EOF
-#line 1120 "configure"
+#line 1114 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:1126: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:1120: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out`
 if test -z "$ac_err"; then
   :
@@ -1264,7 +1258,7 @@ if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1268 "configure"
+#line 1262 "configure"
 #include "confdefs.h"
 #define __need_size_t
 #define __need_wchar_t
@@ -1280,7 +1274,7 @@ size_t size; wchar_t wchar;
 if (&size == NULL || &wchar == NULL) abort ();
 ; return 0; }
 EOF
-if { (eval echo configure:1284: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1278: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_friendly_stddef=yes
 else
@@ -1387,7 +1381,7 @@ if eval "test \"`echo '$''{'libc_cv_have_initfini'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1391 "configure"
+#line 1385 "configure"
 #include "confdefs.h"
 
 int main() { return 0; }
@@ -1397,7 +1391,7 @@ asm (".section .init");
 				    asm (".text");
 ; return 0; }
 EOF
-if { (eval echo configure:1401: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1395: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_have_initfini=yes
 else
@@ -1425,7 +1419,7 @@ if eval "test \"`echo '$''{'libc_cv_asm_underscores'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1429 "configure"
+#line 1423 "configure"
 #include "confdefs.h"
 asm ("_glibc_foobar:");
 int main() { return 0; }
@@ -1433,7 +1427,7 @@ int t() {
 glibc_foobar ();
 ; return 0; }
 EOF
-if { (eval echo configure:1437: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if { (eval echo configure:1431: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
   rm -rf conftest*
   libc_cv_asm_underscores=yes
 else

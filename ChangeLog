@@ -1,5 +1,14 @@
 Sat Jun 15 18:13:43 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/dl-deps.c (_dl_map_object_deps): Set MAP's mark bit before loop.
+	Set mark bits of deps as opened, instead of as scanned.
+
+	* elf/rtld.c (dl_main): Remove _dl_rtld_map from chain unconditionally.
+	Then if it has a nonzero l_opencount, add it back in search order.
+
+	* elf/dl-load.c (_dl_map_object): Don't use _dl_loaded's DT_RPATH if
+ 	it ain't got one!
+
 	* sysdeps/unix/sysv/linux/Dist: Add sys/klog.h.
 
 	* elf/dl-open.c (_dl_open): Remove PARENT argument, pass null.

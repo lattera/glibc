@@ -479,7 +479,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
 				   l->l_info[DT_RPATH]->d_un.d_val));
       /* If dynamically linked, try the DT_RPATH of the executable itself.  */
       l = _dl_loaded;
-      if (fd == -1 && l && l->l_type != lt_loaded)
+      if (fd == -1 && l && l->l_type != lt_loaded && l->l_info[DT_RPATH])
 	trypath ((const char *) (l->l_addr +
 				 l->l_info[DT_STRTAB]->d_un.d_ptr +
 				 l->l_info[DT_RPATH]->d_un.d_val));
