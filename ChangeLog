@@ -1,3 +1,58 @@
+2004-03-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h: Define new structure rtld_global_ro.
+	Declare _rtld_global_ro and _rtld_local_ro.  Move members of
+	rtld_global structure into the new one if they are modified only
+	at startup time.  Define GLRO to access _rtld_global_ro.
+	* elf/Versions: Export _rtld_global_ro.
+	* elf/dl-close.c: Use GLRO instead of GL where appropriate.
+	* elf/dl-conflict.c: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-dst.h: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-minimal.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/do-lookup.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/dl-origin.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/i386/setfpucw.c: Likewise.
+	* sysdeps/i386/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fedisblexcpt.c: Likewise.
+	* sysdeps/i386/fpu/feenablxcpt.c: Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fesetround.c: Likewise.
+	* sysdeps/i386/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/i386/fpu/ftestexcept.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-execstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-librecon.h: Likewise.
+	* sysdeps/unix/sysv/linux/dl-origin.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/getclktck.c: Likewise.
+	* sysdeps/unix/sysv/linux/getpagesize.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/prof-freq.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+
 2004-03-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h: Don't define _dl_name_match_p as inline.

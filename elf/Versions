@@ -53,7 +53,8 @@ ld {
     _dl_map_object; _dl_map_object_deps; _dl_out_of_memory;
     _dl_relocate_object; _dl_signal_error; _dl_start_profile; _dl_starting_up;
     _dl_unload_cache;
-    _rtld_global; _dl_tls_symaddr; _dl_allocate_tls; _dl_deallocate_tls;
+    _rtld_global; _rtld_global_ro;
+    _dl_tls_symaddr; _dl_allocate_tls; _dl_deallocate_tls;
     _dl_get_tls_static_info; _dl_allocate_tls_init;
     _dl_get_origin; _dl_tls_setup; _dl_rtld_di_serinfo;
     _dl_make_stack_executable;

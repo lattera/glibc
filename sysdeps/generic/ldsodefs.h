@@ -220,23 +220,6 @@ struct rtld_global
      reset if in _dl_close if the last global object is removed.  */
   EXTERN size_t _dl_global_scope_alloc;
 
-  /* If nonzero the appropriate debug information is printed.  */
-  EXTERN int _dl_debug_mask;
-#define DL_DEBUG_LIBS	    (1 << 0)
-#define DL_DEBUG_IMPCALLS   (1 << 1)
-#define DL_DEBUG_BINDINGS   (1 << 2)
-#define DL_DEBUG_SYMBOLS    (1 << 3)
-#define DL_DEBUG_VERSIONS   (1 << 4)
-#define DL_DEBUG_RELOC      (1 << 5)
-#define DL_DEBUG_FILES      (1 << 6)
-#define DL_DEBUG_STATISTICS (1 << 7)
-/* These two are used only internally.  */
-#define DL_DEBUG_HELP       (1 << 8)
-#define DL_DEBUG_PRELINK    (1 << 9)
-
-  /* Cached value of `getpagesize ()'.  */
-  EXTERN size_t _dl_pagesize;
-
   /* During the program run we must not modify the global data of
      loaded shared object simultanously in two threads.  Therefore we
      protect `_dl_open' and `_dl_close' in dl-close.c.
@@ -246,12 +229,6 @@ struct rtld_global
      At this time it is not anymore a problem to modify the tables.  */
   __rtld_lock_define_recursive (EXTERN, _dl_load_lock)
 
-  /* OS version.  */
-  EXTERN unsigned int _dl_osversion;
-  /* Platform name.  */
-  EXTERN const char *_dl_platform;
-  EXTERN size_t _dl_platformlen;
-
   /* Incremented whenever something may have been added to dl_loaded.  */
   EXTERN unsigned long long _dl_load_adds;
 
@@ -259,25 +236,6 @@ struct rtld_global
   /* File descriptor referring to the zero-fill device.  */
   EXTERN int _dl_zerofd;
 #endif
-
-  /* CLK_TCK as reported by the kernel.  */
-  EXTERN int _dl_clktck;
-
-  /* If nonzero print warnings messages.  */
-  EXTERN int _dl_verbose;
-
-  /* Do we do lazy relocations?  */
-  EXTERN int _dl_lazy;
-
-  /* Nonzero if runtime lookups should not update the .got/.plt.  */
-  EXTERN int _dl_bind_not;
-
-  /* Nonzero if references should be treated as weak during runtime
-     linking.  */
-  EXTERN int _dl_dynamic_weak;
-
-  /* Default floating-point control word.  */
-  EXTERN fpu_control_t _dl_fpu_control;
 
   /* The object to be initialized first.  */
   EXTERN struct link_map *_dl_initfirst;
@@ -290,35 +248,12 @@ struct rtld_global
   EXTERN hp_timing_t _dl_hp_timing_overhead;
 #endif
 
-  /* Name of the shared object to be profiled (if any).  */
-  EXTERN const char *_dl_profile;
   /* Map of shared object to be profiled.  */
   EXTERN struct link_map *_dl_profile_map;
-  /* Filename of the output file.  */
-  EXTERN const char *_dl_profile_output;
-  /* Map of shared object to be prelink traced.  */
-  EXTERN struct link_map *_dl_trace_prelink_map;
-  /* Name of the object we want to trace the prelinking.  */
-  EXTERN const char *_dl_trace_prelink;
-
-  /* Expected cache ID.  */
-  EXTERN int _dl_correct_cache_id;
 
   /* Counters for the number of relocations performed.  */
   EXTERN unsigned long int _dl_num_relocations;
   EXTERN unsigned long int _dl_num_cache_relocations;
-
-  /* Mask for hardware capabilities that are available.  */
-  EXTERN unsigned long int _dl_hwcap;
-
-  /* Mask for important hardware capabilities we honour. */
-  EXTERN unsigned long int _dl_hwcap_mask;
-
-  /* Names of shared object for which the RPATH should be ignored.  */
-  EXTERN const char *_dl_inhibit_rpath;
-
-  /* Location of the binary.  */
-  EXTERN const char *_dl_origin_path;
 
   /* List of search directories.  */
   EXTERN struct r_search_path_elem *_dl_all_dirs;
@@ -326,11 +261,6 @@ struct rtld_global
 
   /* File descriptor to write debug messages to.  */
   EXTERN int _dl_debug_fd;
-
-  /* -1 if the dynamic linker should honor library load bias,
-     0 if not, -2 use the default (honor biases for normal
-     binaries, don't honor for PIEs).  */
-  EXTERN ElfW(Addr) _dl_use_load_bias;
 
 #ifdef _LIBC_REENTRANT
   EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
@@ -403,15 +333,6 @@ struct rtld_global
   EXTERN void (*_dl_init_static_tls) (struct link_map *);
 #endif
 
-#ifdef NEED_DL_SYSINFO
-  /* Syscall handling improvements.  This is very specific to x86.  */
-  EXTERN uintptr_t _dl_sysinfo;
-
-  /* The vsyscall page is a virtual DSO pre-mapped by the kernel.
-     This points to its ELF header.  */
-  EXTERN const ElfW(Ehdr) *_dl_sysinfo_dso;
-#endif
-
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
@@ -431,6 +352,109 @@ struct rtld_global
 extern struct rtld_global _rtld_local __rtld_local_attribute__;
 # endif
 extern struct rtld_global _rtld_global __rtld_global_attribute__;
+#endif
+
+#ifndef SHARED
+# define GLRO(name) _##name
+#else
+# ifdef IS_IN_rtld
+#  define GLRO(name) _rtld_local_ro._##name
+# else
+#  define GLRO(name) _rtld_global_ro._##name
+# endif
+struct rtld_global_ro
+{
+#endif
+
+  /* If nonzero the appropriate debug information is printed.  */
+  EXTERN int _dl_debug_mask;
+#define DL_DEBUG_LIBS	    (1 << 0)
+#define DL_DEBUG_IMPCALLS   (1 << 1)
+#define DL_DEBUG_BINDINGS   (1 << 2)
+#define DL_DEBUG_SYMBOLS    (1 << 3)
+#define DL_DEBUG_VERSIONS   (1 << 4)
+#define DL_DEBUG_RELOC      (1 << 5)
+#define DL_DEBUG_FILES      (1 << 6)
+#define DL_DEBUG_STATISTICS (1 << 7)
+/* These two are used only internally.  */
+#define DL_DEBUG_HELP       (1 << 8)
+#define DL_DEBUG_PRELINK    (1 << 9)
+
+  /* Cached value of `getpagesize ()'.  */
+  EXTERN size_t _dl_pagesize;
+
+  /* OS version.  */
+  EXTERN unsigned int _dl_osversion;
+  /* Platform name.  */
+  EXTERN const char *_dl_platform;
+  EXTERN size_t _dl_platformlen;
+
+  /* CLK_TCK as reported by the kernel.  */
+  EXTERN int _dl_clktck;
+
+  /* If nonzero print warnings messages.  */
+  EXTERN int _dl_verbose;
+
+  /* Do we do lazy relocations?  */
+  EXTERN int _dl_lazy;
+
+  /* Nonzero if runtime lookups should not update the .got/.plt.  */
+  EXTERN int _dl_bind_not;
+
+  /* Nonzero if references should be treated as weak during runtime
+     linking.  */
+  EXTERN int _dl_dynamic_weak;
+
+  /* Default floating-point control word.  */
+  EXTERN fpu_control_t _dl_fpu_control;
+
+  /* Expected cache ID.  */
+  EXTERN int _dl_correct_cache_id;
+
+  /* Mask for hardware capabilities that are available.  */
+  EXTERN unsigned long int _dl_hwcap;
+
+  /* Mask for important hardware capabilities we honour. */
+  EXTERN unsigned long int _dl_hwcap_mask;
+
+  /* Names of shared object for which the RPATH should be ignored.  */
+  EXTERN const char *_dl_inhibit_rpath;
+
+  /* Location of the binary.  */
+  EXTERN const char *_dl_origin_path;
+
+  /* -1 if the dynamic linker should honor library load bias,
+     0 if not, -2 use the default (honor biases for normal
+     binaries, don't honor for PIEs).  */
+  EXTERN ElfW(Addr) _dl_use_load_bias;
+
+  /* Name of the shared object to be profiled (if any).  */
+  EXTERN const char *_dl_profile;
+  /* Filename of the output file.  */
+  EXTERN const char *_dl_profile_output;
+  /* Name of the object we want to trace the prelinking.  */
+  EXTERN const char *_dl_trace_prelink;
+  /* Map of shared object to be prelink traced.  */
+  EXTERN struct link_map *_dl_trace_prelink_map;
+
+#ifdef NEED_DL_SYSINFO
+  /* Syscall handling improvements.  This is very specific to x86.  */
+  EXTERN uintptr_t _dl_sysinfo;
+
+  /* The vsyscall page is a virtual DSO pre-mapped by the kernel.
+     This points to its ELF header.  */
+  EXTERN const ElfW(Ehdr) *_dl_sysinfo_dso;
+#endif
+
+#ifdef SHARED
+};
+# define __rtld_global_attribute__
+# ifdef IS_IN_rtld
+extern struct rtld_global_ro _rtld_local_ro
+    attribute_relro __rtld_local_attribute__;
+# endif
+extern struct rtld_global_ro _rtld_global_ro
+    attribute_relro __rtld_global_attribute__;
 #endif
 #undef EXTERN
 
