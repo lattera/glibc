@@ -1,3 +1,8 @@
+Sun Feb 26 15:51:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* malloc/malloc.c (morecore): Account in NEWSIZE for the
+ 	malloc_info structures for each new block.
+
 Sat Feb 25 02:17:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/kill.c: When the process has no message port
