@@ -1,5 +1,8 @@
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/getaddrinfo.c: Add support for SOCK_RAW.
+	Patch by YOSHIFUJI Hideaki <yoshifuji@ecei.tohoku.ac.jp>.
+
 	* io/ftw.c (process_entry): Cache object dev/inode only for
 	directories (PR libc/1514).
 

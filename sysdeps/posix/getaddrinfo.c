@@ -92,14 +92,19 @@ struct gaih_typeproto
     int socktype;
     int protocol;
     char *name;
+    int protoflag;
   };
+
+/* Values for `protoflag'.  */
+#define GAI_PROTO_NOSERVICE	1
 
 static struct gaih_typeproto gaih_inet_typeproto[] =
 {
   { 0, 0, NULL },
-  { SOCK_STREAM, IPPROTO_TCP, (char *) "tcp" },
-  { SOCK_DGRAM, IPPROTO_UDP, (char *) "udp" },
-  { 0, 0, NULL }
+  { SOCK_STREAM, IPPROTO_TCP, (char *) "tcp" ,0 },
+  { SOCK_DGRAM, IPPROTO_UDP, (char *) "udp", 0 },
+  { SOCK_RAW, IPPROTO_RAW, (char *) "raw", GAI_PROTO_NOSERVICE },
+  { 0, 0, NULL, 0 }
 };
 
 struct gaih
@@ -134,11 +139,15 @@ gaih_local (const char *name, const struct gaih_service *service,
 
   if (req->ai_protocol || req->ai_socktype)
     {
-      struct gaih_typeproto *tp = gaih_inet_typeproto;
+      struct gaih_typeproto *tp = gaih_inet_typeproto + 1;
 
-      for (tp++; tp->name &&
-	     ((req->ai_socktype != tp->socktype) || !req->ai_socktype) &&
-	     ((req->ai_protocol != tp->protocol) || !req->ai_protocol); tp++);
+      while (tp->name != NULL
+	     && (req->ai_socktype != tp->socktype || req->ai_socktype == 0)
+	     && ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0
+		 || req->ai_protocol != tp->protocol
+		 || req->ai_protocol == 0))
+	++tp;
+
       if (tp->name == NULL)
 	{
 	  if (req->ai_socktype)
@@ -284,9 +293,15 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
   if (req->ai_protocol || req->ai_socktype)
     {
-      for (tp++; tp->name &&
-	     ((req->ai_socktype != tp->socktype) || !req->ai_socktype) &&
-	     ((req->ai_protocol != tp->protocol) || !req->ai_protocol); tp++);
+      ++tp;
+
+      while (tp->name != NULL
+	     && (req->ai_socktype != tp->socktype || req->ai_socktype == 0)
+	     && ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0
+		 || req->ai_protocol != tp->protocol
+		 || req->ai_protocol == 0))
+	++tp;
+
       if (tp->name == NULL)
 	{
 	  if (req->ai_socktype)
@@ -298,6 +313,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
   if (service != NULL)
     {
+      if ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0)
+	return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+
       if (service->num < 0)
 	{
 	  if (tp->name != NULL)
