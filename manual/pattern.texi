@@ -99,6 +99,38 @@ would match the string @samp{foobar/frobozz}.
 @comment GNU
 @item FNM_CASEFOLD
 Ignore case in comparing @var{string} to @var{pattern}.
+
+@comment fnmatch.h
+@comment GNU
+@item FNM_EXTMATCH
+@cindex Korn Shell
+@pindex ksh
+Recognize beside the normal patterns also the extended patterns
+introduced in @file{ksh}.  The patterns are written in the form
+explained in the following table where @var{pattern-list} is a @code{|}
+separated list of patterns.
+
+@table @code
+@item ?(@var{pattern-list})
+The pattern matches if zero or one occurences of any of the patterns
+in the @var{pattern-list} allow matching the input string.
+
+@item *(@var{pattern-list})
+The pattern matches if zero or more occurences of any of the patterns
+in the @var{pattern-list} allow matching the input string.
+
+@item +(@var{pattern-list})
+The pattern matches if one or more occurences of any of the patterns
+in the @var{pattern-list} allow matching the input string.
+
+@item @@(@var{pattern-list})
+The pattern matches if exactly one occurence of any of the patterns in
+the @var{pattern-list} allows matching the input string.
+
+@item !(@var{pattern-list})
+The pattern matches if the input string cannot be matched with any of
+the patterns in the @var{pattern-list}.
+@end table
 @end table
 
 @node Globbing

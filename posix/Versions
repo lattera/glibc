@@ -109,4 +109,8 @@ libc {
     # Used in macros.
     __sysconf;
   }
+  GLIBC_2.2.3 {
+    # Extended Interface.
+    fnmatch;
+  }
 }

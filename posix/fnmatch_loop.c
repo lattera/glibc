@@ -1011,6 +1011,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
     CHAR str[0];
   } *list = NULL;
   struct patternlist **lastp = &list;
+  size_t pattern_len = STRLEN (pattern);
   const CHAR *p;
   const CHAR *rs;
 
@@ -1049,9 +1050,14 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	  {
 	    /* This means we found the end of the pattern.  */
 #define NEW_PATTERN \
-	    struct patternlist *newp = alloca (sizeof (struct patternlist)    \
-					       + ((p - startp + 1)	      \
-						  * sizeof (CHAR)));	      \
+	    struct patternlist *newp;					      \
+									      \
+	    if (opt == L('?') || opt == L('@'))				      \
+	      newp = alloca (sizeof (struct patternlist)		      \
+			     + (pattern_len * sizeof (CHAR)));		      \
+	    else							      \
+	      newp = alloca (sizeof (struct patternlist)		      \
+			     + ((p - startp + 1) * sizeof (CHAR)));	      \
 	    *((CHAR *) MEMPCPY (newp->str, startp, p - startp)) = L('\0');    \
 	    newp->next = NULL;						      \
 	    *lastp = newp;						      \
@@ -1117,24 +1123,15 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
     case L('@'):
       do
-	{
-	  for (rs = string; rs <= string_end; ++rs)
-	    /* First match the prefix with the current pattern with the
-	       current pattern.  */
-	    if (FCT (list->str, string, rs, no_leading_period,
-		     flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD) == 0
-		/* This was successful.  Now match the rest of the strings
-		   with the rest of the pattern.  */
-		&& (FCT (p, rs, string_end,
-			 rs == string
-			 ? no_leading_period
-			 : (rs[-1] == '/' && NO_LEADING_PERIOD (flags)
-			    ? 1 : 0),
-			 flags & FNM_FILE_NAME
-			 ? flags : flags & ~FNM_PERIOD) == 0))
-	      /* It worked.  Signal success.  */
-	      return 0;
-	}
+	/* I cannot believe it but `strcat' is actually acceptable
+	   here.  Match the entire string with the prefix from the
+	   pattern list and the rest of the pattern following the
+	   pattern list.  */
+	if (FCT (STRCAT (list->str, p), string, string_end,
+		 no_leading_period,
+		 flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD) == 0)
+	  /* It worked.  Signal success.  */
+	  return 0;
       while ((list = list->next) != NULL);
 
       /* None of the patterns lead to a match.  */

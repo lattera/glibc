@@ -11,6 +11,7 @@ extern int __wcsncasecmp (__const wchar_t *__s1, __const wchar_t *__s2,
 extern size_t __wcslen (__const wchar_t *__s) __attribute_pure__;
 extern size_t __wcsnlen (__const wchar_t *__s, size_t __maxlen)
      __attribute_pure__;
+extern wchar_t *__wcscat (wchar_t *dest, const wchar_t *src);
 extern wint_t __btowc (int __c);
 extern int __mbsinit (__const __mbstate_t *__ps);
 extern size_t __mbrtowc (wchar_t *__restrict __pwc,

@@ -55,10 +55,13 @@
 # include "../locale/localeinfo.h"
 # include "../locale/elem-hash.h"
 # include "../locale/coll-lookup.h"
+# include <shlib-compat.h>
 
 # define CONCAT(a,b) __CONCAT(a,b)
 # define mbsinit __mbsinit
 # define mbsrtowcs __mbsrtowcs
+# define fnmatch __fnmatch
+extern int fnmatch (const char *pattern, const char *string, int flags);
 #endif
 
 /* We often have to test for FNM_FILE_NAME and FNM_PERIOD being both set.  */
@@ -212,6 +215,8 @@ __wcschrnul (s, c)
 # else
 #  define BTOWC(C)	btowc (C)
 # endif
+# define STRLEN(S) strlen (S)
+# define STRCAT(D, S) strcat (D, S)
 # define MEMPCPY(D, S, N) __mempcpy (D, S, N)
 # define MEMCHR(S, C, N) memchr (S, C, N)
 # define STRCOLL(S1, S2) strcoll (S1, S2)
@@ -233,6 +238,8 @@ __wcschrnul (s, c)
 # define END	end_wpattern
 #  define L(CS)	L##CS
 #  define BTOWC(C)	(C)
+#  define STRLEN(S) __wcslen (S)
+#  define STRCAT(D, S) __wcscat (D, S)
 #  define MEMPCPY(D, S, N) __wmempcpy (D, S, N)
 #  define MEMCHR(S, C, N) wmemchr (S, C, N)
 #  define STRCOLL(S1, S2) wcscoll (S1, S2)
@@ -354,5 +361,14 @@ fnmatch (pattern, string, flags)
   return internal_fnmatch (pattern, string, string + strlen (string),
 			   flags & FNM_PERIOD, flags);
 }
+
+# ifdef _LIBC
+#  undef fnmatch
+versioned_symbol (libc, __fnmatch, fnmatch, GLIBC_2_2_3);
+#  if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_2_3)
+strong_alias (__fnmatch, __fnmatch_old)
+compat_symbol (libc, __fnmatch_old, fnmatch, GLIBC_2_0);
+#  endif
+# endif
 
 #endif	/* _LIBC or not __GNU_LIBRARY__.  */

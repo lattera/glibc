@@ -1,5 +1,18 @@
 2001-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/tst-fnmatch.input: Add test case for FNM_PERIOD handling with
+	FNM_EXTMATCH.
+
+	* posix/fnmatch_loop.c: Optimize handling of ?() and @().
+	* posix/fnmatch.c: Define STRLEN and STRCAT appropriately.
+
+	* posix/Versions [libc] (GLIBC_2.2.3): Add fnmatch.
+	* posix/fnmatch.c: Define with new default version GLIBC_2.2.3 to
+	avoid running binaries with libc versions without FNM_EXTMATCH support.
+
+	* include/wchar.h: Add prototype for __wcscat.
+	* wcsmbs/wcscat.c: Define __wcscat and make wcscat weak alias.
+
 	* posix/fnmatch.h (FNM_EXTMATCH): Define.
 	* posix/fnmatch.c (NO_LEADING_PERIOD): Define.
 	(posixly_correct): Move global variable here.
