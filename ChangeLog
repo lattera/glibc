@@ -1,3 +1,7 @@
+1998-09-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/pwdcache.c (cache_pwdinit): Allocate uidtbl of correct size.
+
 1998-09-14 15:29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/Makefile (headers): Remove bits/stdio_lim.h.

@@ -110,7 +110,7 @@ cache_pwdinit ()
   pwdtbl = calloc (modulo, sizeof (pwdhash));
   if (pwdtbl == NULL)
     return -1;
-  uidtbl = calloc (modulo, sizeof (pwdhash));
+  uidtbl = calloc (modulo, sizeof (uidhash));
   if (uidtbl == NULL)
     return -1;
   negtbl = calloc (modulo, sizeof (neghash));
