@@ -623,11 +623,13 @@ read_len:
 			if (timeout <= 0)
 				timeout = 1000;
     wait:
+#if 0
 			if (s < 0 || s >= FD_SETSIZE) {
 				Perror(stderr, "s out-of-bounds", EMFILE);
 				res_close_internal();
 				goto next_ns;
 			}
+#endif
 			pfd[0].fd = s;
 			pfd[0].events = POLLIN;
 			n = __poll(pfd, 1, timeout);

@@ -1,3 +1,8 @@
+1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_send.c (res_send): Don't test file descriptor for
+	range, we use poll now.  [PR libc/1240]
+
 1999-08-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/genops.c (_IO_flush_all): Don't access elements beyond what
