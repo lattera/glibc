@@ -52,6 +52,7 @@
 #include "usncs.h"
 #include "MathLib.h"
 #include "sincos.tbl"
+#include "math_private.h"
 
 static const double
           sn3 = -1.66666666666664880952546298448555E-01,

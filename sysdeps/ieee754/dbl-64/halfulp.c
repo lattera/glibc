@@ -1,4 +1,3 @@
-
 /*
  * IBM Accurate Mathematical Library
  * Copyright (c) International Business Machines Corp., 2001
@@ -38,6 +37,7 @@
 #include "endian.h"
 #include "mydefs.h"
 #include "dla.h"
+#include "math_private.h"
 
 double __ieee754_sqrt(double x);
 

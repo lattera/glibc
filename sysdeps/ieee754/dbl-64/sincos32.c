@@ -1,4 +1,3 @@
-
 /*
  * IBM Accurate Mathematical Library
  * Copyright (c) International Business Machines Corp., 2001
@@ -43,6 +42,7 @@
 #include "endian.h"
 #include "mpa.h"
 #include "sincos32.h"
+#include "math_private.h"
 
 /****************************************************************/
 /* Compute Multi-Precision sin() function for given p.  Receive */

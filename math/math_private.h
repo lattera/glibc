@@ -292,4 +292,23 @@ extern long double fabsl (long double x);
 extern void __sincosl (long double, long double *, long double *);
 #endif
 
+/* Prototypes for functions of the IBM Accurate Mathematical Library.  */
+extern double __exp1 (double __x, double __xx, double __error);
+extern double __sin (double __x);
+extern double __cos (double __x);
+extern int __branred (double __x, double *__a, double *__aa);
+extern void __doasin (double __x, double __dx, double __v[]);
+extern void __dubsin (double __x, double __dx, double __v[]);
+extern void __dubcos (double __x, double __dx, double __v[]);
+extern double __halfulp (double __x, double __y);
+extern double __sin32 (double __x, double __res, double __res1);
+extern double __cos32 (double __x, double __res, double __res1);
+extern double __mpsin (double __x, double __dx);
+extern double __mpcos (double __x, double __dx);
+extern double __mpsin1 (double __x);
+extern double __mpcos1 (double __x);
+extern double __slowexp (double __x);
+extern double __slowpow (double __x, double __y, double __z);
+extern void __docos (double __x, double __dx, double __v[]);
+
 #endif /* _MATH_PRIVATE_H_ */

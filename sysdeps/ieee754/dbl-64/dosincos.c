@@ -1,4 +1,3 @@
-
 /*
  * IBM Accurate Mathematical Library
  * Copyright (c) International Business Machines Corp., 2001
@@ -38,6 +37,8 @@
 #include "sincos.tbl"
 #include "dla.h"
 #include "dosincos.h"
+#include "math_private.h"
+
 /***********************************************************************/
 /* Routine receive Double-Length number (x+dx) and computing sin(x+dx) */
 /* as Double-Length number and store it at array v .It computes it by  */

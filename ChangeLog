@@ -1,5 +1,21 @@
 2001-05-12  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c: Include "math_private.h" for
+	internal prototypes.
+	* sysdeps/ieee754/dbl-64/doasin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/dosincos.c: Likewise.
+	* sysdeps/ieee754/dbl-64/halfulp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/sincos32.c: Likewise.
+	* sysdeps/ieee754/dbl-64/slowexp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/slowpow.c: Likewise.
+
+	* math/math_private.h: Add prototypes for internal functions of
+	the IBM Accurate Mathematical Library.
+
+	* sysdeps/ieee754/dbl-64/s_atan.c: Include "math.h" for
+	prototypes.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+
 	* sysdeps/ieee754/dbl-64/e_asin.c: Include "math_private.h" for
 	internal prototypes.
 	* sysdeps/ieee754/dbl-64/s_atan.c: Likewise.

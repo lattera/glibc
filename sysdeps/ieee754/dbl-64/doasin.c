@@ -1,4 +1,3 @@
-
 /*
  * IBM Accurate Mathematical Library
  * Copyright (c) International Business Machines Corp., 2001
@@ -32,6 +31,7 @@
 #include "endian.h"
 #include "mydefs.h"
 #include "dla.h"
+#include "math_private.h"
 
 /********************************************************************/
 /* Compute arcsin(x,dx,v) of double-length number (x+dx) the result */
