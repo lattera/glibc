@@ -143,6 +143,9 @@ __res_vinit(res_state statp, int preinit) {
 	register int n;
 	char buf[BUFSIZ];
 	int nserv = 0;    /* number of nameserver records read from file */
+#ifdef _LIBC
+	int nservall = 0; /* number of NS records read, nserv IPv4 only */
+#endif
 	int haveenv = 0;
 	int havesearch = 0;
 #ifdef RESOLVSORT
@@ -175,6 +178,11 @@ __res_vinit(res_state statp, int preinit) {
 	statp->qhook = NULL;
 	statp->rhook = NULL;
 	statp->_u._ext.nscount = 0;
+#ifdef _LIBC
+	statp->_u._ext.nscount6 = 0;
+	for (n = 0; n < MAXNS; n++)
+	    statp->_u._ext.nsaddrs[n] = NULL;
+#endif
 
 	/* Allow user to override the local domain definition */
 	if ((cp = __secure_getenv("LOCALDOMAIN")) != NULL) {
@@ -276,7 +284,11 @@ __res_vinit(res_state statp, int preinit) {
 		    continue;
 		}
 		/* read nameservers to query */
+#ifdef _LIBC
+		if (MATCH(buf, "nameserver") && nservall < MAXNS) {
+#else
 		if (MATCH(buf, "nameserver") && nserv < MAXNS) {
+#endif
 		    struct in_addr a;
 
 		    cp = buf + sizeof("nameserver") - 1;
@@ -288,6 +300,30 @@ __res_vinit(res_state statp, int preinit) {
 			statp->nsaddr_list[nserv].sin_port =
 				htons(NAMESERVER_PORT);
 			nserv++;
+#ifdef _LIBC
+			nservall++;
+                    } else {
+                        struct in6_addr a6;
+                        char *el;
+
+                        if ((el = strchr(cp, '\n')) != NULL)
+                            *el = '\0';
+                        if ((*cp != '\0') &&
+                            (inet_pton(AF_INET6, cp, &a6) > 0)) {
+                            struct sockaddr_in6 *sa6;
+
+                            sa6 = malloc(sizeof(*sa6));
+                            if (sa6 != NULL) {
+                                sa6->sin6_addr = a6;
+                                sa6->sin6_family = AF_INET6;
+                                sa6->sin6_port = htons(NAMESERVER_PORT);
+				statp->_u._ext.nsaddrs[nservall] = sa6;
+				statp->_u._ext.nstimes[nservall] = RES_MAXTIME;
+				statp->_u._ext.nssocks[nservall] = -1;
+                                nservall++;
+                            }
+                        }
+#endif
 		    }
 		    continue;
 		}
@@ -341,6 +377,10 @@ __res_vinit(res_state statp, int preinit) {
 	    }
 	    if (nserv > 1) 
 		statp->nscount = nserv;
+#ifdef _LIBC
+	    if (nservall - nserv > 0)
+		statp->_u._ext.nscount6 = nservall - nserv;
+#endif
 #ifdef RESOLVSORT
 	    statp->nsort = nsort;
 #endif
@@ -491,7 +531,13 @@ res_nclose(res_state statp) {
 		statp->_vcsock = -1;
 		statp->_flags &= ~(RES_F_VC | RES_F_CONN);
 	}
-	for (ns = 0; ns < statp->_u._ext.nscount; ns++) {
+#ifdef _LIBC
+	for (ns = 0; ns < statp->_u._ext.nscount + statp->_u._ext.nscount6;
+	     ns++)
+#else
+	for (ns = 0; ns < statp->_u._ext.nscount; ns++)
+#endif
+	{
 		if (statp->_u._ext.nssocks[ns] != -1) {
 			(void) close(statp->_u._ext.nssocks[ns]);
 			statp->_u._ext.nssocks[ns] = -1;

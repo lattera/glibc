@@ -163,7 +163,12 @@ struct __res_state {
 			u_int16_t		nscount;
 			u_int16_t		nstimes[MAXNS];	/* ms. */
 			int			nssocks[MAXNS];
+#ifdef _LIBC
+			u_int16_t		nscount6;
+			struct sockaddr_in6	*nsaddrs[MAXNS];
+#else
 			struct __sockaddr_in	nsaddrs[MAXNS];
+#endif
 		} _ext;
 	} _u;
 };

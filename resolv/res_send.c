@@ -202,7 +202,11 @@ static void		Aerror(const res_state, FILE *, const char *, int,
 			       struct sockaddr_in);
 static void		Perror(const res_state, FILE *, const char *, int);
 #endif
+#ifdef _LIBC
+static int		sock_eq(struct sockaddr_in6 *, struct sockaddr_in6 *);
+#else
 static int		sock_eq(struct sockaddr_in *, struct sockaddr_in *);
+#endif
 #ifdef NEED_PSELECT
 static int		pselect(int, void *, void *, void *,
 				struct timespec *,
@@ -211,6 +215,9 @@ static int		pselect(int, void *, void *, void *,
 
 /* Reachover. */
 
+#ifdef _LIBC
+static void convaddr4to6(struct sockaddr_in6 *sa);
+#endif
 void res_pquery(const res_state, const u_char *, int, FILE *);
 
 /* Public. */
@@ -225,10 +232,42 @@ void res_pquery(const res_state, const u_char *, int, FILE *);
  *	paul vixie, 29may94
  */
 int
-res_ourserver_p(const res_state statp, const struct sockaddr_in *inp) {
+#ifdef _LIBC
+res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
+#else
+res_ourserver_p(const res_state statp, const struct sockaddr_in *inp)
+#endif
+{
 	struct sockaddr_in ina;
 	int ns;
 
+#ifdef _LIBC
+        if (inp->sin6_family == AF_INET) {
+            ina = *(struct sockaddr_in *)inp;
+
+            for (ns = 0;  ns < MAXNS;  ns++) {
+                const struct sockaddr_in *srv =
+		    (struct sockaddr_in *)EXT(statp).nsaddrs[ns];
+
+                if ((srv != NULL) && (srv->sin_family == AF_INET) &&
+                    (srv->sin_port == ina.sin_port) &&
+                    (srv->sin_addr.s_addr == INADDR_ANY ||
+                     srv->sin_addr.s_addr == ina.sin_addr.s_addr))
+                    return (1);
+            }
+        } else if (inp->sin6_family == AF_INET6) {
+            for (ns = 0;  ns < MAXNS;  ns++) {
+                const struct sockaddr_in6 *srv = EXT(statp).nsaddrs[ns];
+                if ((srv != NULL) && (srv->sin6_family == AF_INET6) &&
+                    (srv->sin6_port == inp->sin6_port) &&
+                    !(memcmp(&srv->sin6_addr, &in6addr_any,
+                             sizeof (struct in6_addr)) &&
+                      memcmp(&srv->sin6_addr, &inp->sin6_addr,
+                             sizeof (struct in6_addr))))
+                    return (1);
+            }
+        }
+#else
 	ina = *inp;
 	for (ns = 0; ns < statp->nscount; ns++) {
 		const struct sockaddr_in *srv = &statp->nsaddr_list[ns];
@@ -239,6 +278,7 @@ res_ourserver_p(const res_state statp, const struct sockaddr_in *inp) {
 		     srv->sin_addr.s_addr == ina.sin_addr.s_addr))
 			return (1);
 	}
+#endif
 	return (0);
 }
 
@@ -360,11 +400,15 @@ res_nsend(res_state statp,
 			needclose++;
 		else
 			for (ns = 0; ns < statp->nscount; ns++)
-				if (!sock_eq(&statp->nsaddr_list[ns],
 #ifdef _LIBC
-					     (struct sockaddr_in *)
+				if (!sock_eq((struct sockaddr_in6 *)
+					     &statp->nsaddr_list[ns],
+					     EXT(statp).nsaddrs[ns]))
+#else
+				if (!sock_eq(&statp->nsaddr_list[ns],
+					     &EXT(statp).nsaddrs[ns]))
 #endif
-					     &EXT(statp).nsaddrs[ns])) {
+				{
 					needclose++;
 					break;
 				}
@@ -376,18 +420,52 @@ res_nsend(res_state statp,
 	 * Maybe initialize our private copy of the ns_addr_list.
 	 */
 	if (EXT(statp).nscount == 0) {
+#ifdef _LIBC
+		n = 0;
+#endif
 		for (ns = 0; ns < statp->nscount; ns++) {
 #ifdef _LIBC
-			memcpy(&EXT(statp).nsaddrs[ns],
-			       &statp->nsaddr_list[ns],
-			       sizeof (&EXT(statp).nsaddrs[0]));
+			/* find a hole */  
+		  	while ((n < MAXNS) &&
+			    (EXT(statp).nsaddrs[n] != NULL) &&
+			    (EXT(statp).nsaddrs[n]->sin6_family == AF_INET6) &&
+			    !IN6_IS_ADDR_V4MAPPED(
+			        &EXT(statp).nsaddrs[n]->sin6_addr))
+				n++;
+			if (n == MAXNS)
+				break;
+
+			if (EXT(statp).nsaddrs[n] == NULL)
+				EXT(statp).nsaddrs[n] =
+				    malloc(sizeof (struct sockaddr_in6));
+			if (EXT(statp).nsaddrs[n] != NULL) {
+				memcpy(EXT(statp).nsaddrs[n],
+				       &statp->nsaddr_list[ns],
+				       sizeof (struct sockaddr_in));
+				EXT(statp).nstimes[n] = RES_MAXTIME;
+				EXT(statp).nssocks[n] = -1;
+				n++;
+			}
 #else
 			EXT(statp).nsaddrs[ns] = statp->nsaddr_list[ns];
-#endif
 			EXT(statp).nstimes[ns] = RES_MAXTIME;
 			EXT(statp).nssocks[ns] = -1;
+#endif
 		}
 		EXT(statp).nscount = statp->nscount;
+#ifdef _LIBC
+		/* If holes left, free memory and set to NULL */
+		while (n < MAXNS) {
+			if ((EXT(statp).nsaddrs[n] != NULL) &&
+			    ((EXT(statp).nsaddrs[n]->sin6_family != AF_INET6)
+			    || IN6_IS_ADDR_V4MAPPED(
+				   &EXT(statp).nsaddrs[n]->sin6_addr))) {
+				free(EXT(statp).nsaddrs[n]);
+				EXT(statp).nsaddrs[n] = NULL;
+			}
+			n++;
+		}
+#endif
 	}
 
 	/*
@@ -396,6 +474,15 @@ res_nsend(res_state statp,
 	 */
 	if ((statp->options & RES_ROTATE) != 0 &&
 	    (statp->options & RES_BLAST) == 0) {
+#ifdef _LIBC
+		struct sockaddr_in6 *ina;
+		int lastns = statp->nscount + EXT(statp).nscount6 - 1;
+
+		ina = EXT(statp).nsaddrs[0];
+		for (ns = 0; ns < lastns; ns++)
+			EXT(statp).nsaddrs[ns] = EXT(statp).nsaddrs[ns + 1];
+		EXT(statp).nsaddrs[lastns] = ina;
+#else
 		struct sockaddr_in ina;
 		int lastns = statp->nscount - 1;
 
@@ -403,14 +490,27 @@ res_nsend(res_state statp,
 		for (ns = 0; ns < lastns; ns++)
 			statp->nsaddr_list[ns] = statp->nsaddr_list[ns + 1];
 		statp->nsaddr_list[lastns] = ina;
+#endif
 	}
 
 	/*
 	 * Send request, RETRY times, or until successful.
 	 */
 	for (try = 0; try < statp->retry; try++) {
-	    for (ns = 0; ns < statp->nscount; ns++) {
+#ifdef _LIBC
+	    for (ns = 0; ns < MAXNS; ns++)
+#else
+	    for (ns = 0; ns < statp->nscount; ns++)
+#endif
+	    {
+#ifdef _LIBC
+		struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
+
+		if (nsap == NULL)
+			goto next_ns;
+#else
 		struct sockaddr_in *nsap = &statp->nsaddr_list[ns];
+#endif
  same_ns:
 		if (statp->qhook) {
 			int done = 0, loops = 0;
@@ -418,8 +518,14 @@ res_nsend(res_state statp,
 			do {
 				res_sendhookact act;
 
+#ifdef _LIBC
+				act = (*statp->qhook)((struct sockaddr_in **)
+						      &nsap, &buf, &buflen,
+						      ans, anssiz, &resplen);
+#else
 				act = (*statp->qhook)(&nsap, &buf, &buflen,
 						      ans, anssiz, &resplen);
+#endif
 				switch (act) {
 				case res_goahead:
 					done = 1;
@@ -494,8 +600,14 @@ res_nsend(res_state statp,
 			do {
 				res_sendhookact act;
 
+#ifdef _LIBC
+				act = (*statp->rhook)((struct sockaddr_in *)
+						      nsap, buf, buflen,
+						      ans, anssiz, &resplen);
+#else
 				act = (*statp->rhook)(nsap, buf, buflen,
 						      ans, anssiz, &resplen);
+#endif
 				switch (act) {
 				case res_goahead:
 				case res_done:
@@ -541,7 +653,11 @@ send_vc(res_state statp,
 {
 	const HEADER *hp = (HEADER *) buf;
 	HEADER *anhp = (HEADER *) ans;
+#ifdef _LIBC
+	struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
+#else
 	struct sockaddr_in *nsap = &statp->nsaddr_list[ns];
+#endif
 	int truncating, connreset, resplen, n;
 	struct iovec iov[2];
 	u_short len;
@@ -553,7 +669,11 @@ send_vc(res_state statp,
 
 	/* Are we still talking to whom we want to talk to? */
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
+#ifdef _LIBC
+		struct sockaddr_in6 peer;
+#else
 		struct sockaddr_in peer;
+#endif
 		int size = sizeof peer;
 
 		if (getpeername(statp->_vcsock,
@@ -568,8 +688,10 @@ send_vc(res_state statp,
 		if (statp->_vcsock >= 0)
 			res_nclose(statp);
 
+#ifdef _LIBC
+		statp->_vcsock = socket(nsap->sin6_family, SOCK_STREAM, 0);
+#else
 		statp->_vcsock = socket(PF_INET, SOCK_STREAM, 0);
-#ifndef _LIBC
 		if (statp->_vcsock > highestFD) {
 			res_nclose(statp);
 			__set_errno (ENOTSOCK);
@@ -711,20 +833,36 @@ send_dg(res_state statp,
 {
 	const HEADER *hp = (HEADER *) buf;
 	HEADER *anhp = (HEADER *) ans;
+#ifdef _LIBC
+	struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
+#else
 	const struct sockaddr_in *nsap = &statp->nsaddr_list[ns];
+#endif
 	struct timespec now, timeout, finish;
 #ifdef _LIBC
 	struct pollfd pfd[1];
         int ptimeout;
+	struct sockaddr_in6 from;
+	static int socket_pf = 0;
 #else
 	fd_set dsmask;
-#endif
 	struct sockaddr_in from;
+#endif
 	int fromlen, resplen, seconds, n, s;
 
 	if (EXT(statp).nssocks[ns] == -1) {
+#ifdef _LIBC
+		/* only try IPv6 if IPv6 NS and if not failed before */
+		if ((EXT(statp).nscount6 > 0) && (socket_pf != PF_INET)) {
+			EXT(statp).nssocks[ns] =
+			    socket(PF_INET6, SOCK_DGRAM, 0);
+			socket_pf = EXT(statp).nssocks[ns] < 0 ? PF_INET
+			                                       : PF_INET6;
+		}
+		if (EXT(statp).nssocks[ns] < 0)
+			EXT(statp).nssocks[ns] = socket(PF_INET, SOCK_DGRAM, 0);
+#else
 		EXT(statp).nssocks[ns] = socket(PF_INET, SOCK_DGRAM, 0);
-#ifndef _LIBC
 		if (EXT(statp).nssocks[ns] > highestFD) {
 			res_nclose(statp);
 			__set_errno (ENOTSOCK);
@@ -736,6 +874,11 @@ send_dg(res_state statp,
 			return (-1);
 		}
 #ifndef CANNOT_CONNECT_DGRAM
+#ifdef _LIBC
+		/* If IPv6 socket and nsap is IPv4, make it IPv4-mapped */
+		if ((socket_pf == PF_INET6) && (nsap->sin6_family == AF_INET))
+			convaddr4to6(nsap);
+#endif
 		/*
 		 * On a 4.3BSD+ machine (client and server,
 		 * actually), sending to a nameserver datagram
@@ -765,6 +908,11 @@ send_dg(res_state statp,
 		return (0);
 	}
 #else /* !CANNOT_CONNECT_DGRAM */
+#ifdef _LIBC
+	/* If IPv6 socket and nsap is IPv4, make it IPv4-mapped */
+	if ((socket_pf == PF_INET6) && (nsap->sin6_family == AF_INET))
+		convaddr4to6(nsap);
+#endif
 	if (sendto(s, (char*)buf, buflen, 0,
 		   (struct sockaddr *)nsap, sizeof *nsap) != buflen)
 	{
@@ -816,7 +964,11 @@ send_dg(res_state statp,
 		return (0);
 	}
 	__set_errno (0);
+#ifdef _LIBC
+	fromlen = sizeof(struct sockaddr_in6);
+#else
 	fromlen = sizeof(struct sockaddr_in);
+#endif
 	resplen = recvfrom(s, (char*)ans, anssiz,0,
 			   (struct sockaddr *)&from, &fromlen);
 	if (resplen <= 0) {
@@ -936,11 +1088,55 @@ Perror(const res_state statp, FILE *file, const char *string, int error) {
 #endif
 
 static int
+#ifdef _LIBC
+sock_eq(struct sockaddr_in6 *a1, struct sockaddr_in6 *a2) {
+	if (a1->sin6_family == a2->sin6_family) {
+		if (a1->sin6_family == AF_INET)
+			return ((((struct sockaddr_in *)a1)->sin_port ==
+				 ((struct sockaddr_in *)a2)->sin_port) &&
+				(((struct sockaddr_in *)a1)->sin_addr.s_addr ==
+				 ((struct sockaddr_in *)a2)->sin_addr.s_addr));
+		else
+			return ((a1->sin6_port == a2->sin6_port) &&
+				!memcmp(&a1->sin6_addr, &a2->sin6_addr,
+					sizeof (struct in6_addr)));
+	}
+	if (a1->sin6_family == AF_INET) {
+		struct sockaddr_in6 *sap = a1;
+		a1 = a2;
+		a2 = sap;
+	} /* assumes that AF_INET and AF_INET6 are the only possibilities */
+	return ((a1->sin6_port == ((struct sockaddr_in *)a2)->sin_port) &&
+		IN6_IS_ADDR_V4MAPPED(&a1->sin6_addr) &&
+		(a1->sin6_addr.s6_addr32[3] ==
+		 ((struct sockaddr_in *)a2)->sin_addr.s_addr));
+}
+#else
 sock_eq(struct sockaddr_in *a1, struct sockaddr_in *a2) {
 	return ((a1->sin_family == a2->sin_family) &&
 		(a1->sin_port == a2->sin_port) &&
 		(a1->sin_addr.s_addr == a2->sin_addr.s_addr));
 }
+#endif
+
+#ifdef _LIBC
+/*
+ * Converts IPv4 family, address and port to
+ * IPv6 family, IPv4-mapped IPv6 address and port.
+ */
+static void
+convaddr4to6(struct sockaddr_in6 *sa)
+{
+    const struct sockaddr_in sa4 = *(struct sockaddr_in *)sa;
+
+    sa->sin6_family = AF_INET6;
+    sa->sin6_port = sa4.sin_port;
+    sa->sin6_addr.s6_addr32[0] = 0;
+    sa->sin6_addr.s6_addr32[1] = 0;
+    sa->sin6_addr.s6_addr32[2] = htonl(0xFFFF);
+    sa->sin6_addr.s6_addr32[3] = sa4.sin_addr.s_addr;
+}
+#endif
 
 #ifdef NEED_PSELECT
 /* XXX needs to move to the porting library. */

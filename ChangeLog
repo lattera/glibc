@@ -1,3 +1,12 @@
+2000-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_init.c: Add support for nameserver communication with
+	IPv6.
+	* resolv/res_send.c: Likewise.
+	* resolv/resolv.h (struct __res_state): Store IPv6 address, not IPv4
+	in nsaddrs field.
+	Patch by <venaas@nvg.ntnu.no>.
+
 2000-07-25  Bruno Haible  <haible@clisp.cons.org>
 
 	* locale/programs/ld-ctype.c (wctype_table_get): New function.
