@@ -24,13 +24,8 @@
 
 struct statfs
   {
-#if __WORDSIZE == 64
     long int f_type;
     long int f_bsize;
-#else
-    int f_type;
-    int f_bsize;
-#endif
 #ifndef __USE_FILE_OFFSET64
     __fsblkcnt_t f_blocks;
     __fsblkcnt_t f_bfree;
@@ -45,37 +40,22 @@ struct statfs
     __fsfilcnt64_t f_ffree;
 #endif
     __fsid_t f_fsid;
-#if __WORDSIZE == 64
     long int f_namelen;
     long int f_spare[6];
-#else    
-    int f_namelen;
-    int f_spare[6];
-#endif
   };
 
 #ifdef __USE_LARGEFILE64
 struct statfs64
   {
-#if __WORDSIZE == 64
     long int f_type;
     long int f_bsize;
-#else
-    int f_type;
-    int f_bsize;
-#endif
     __fsblkcnt64_t f_blocks;
     __fsblkcnt64_t f_bfree;
     __fsblkcnt64_t f_bavail;
     __fsfilcnt64_t f_files;
     __fsfilcnt64_t f_ffree;
     __fsid_t f_fsid;
-#if __WORDSIZE == 64
     long int f_namelen;
     long int f_spare[6];
-#else    
-    int f_namelen;
-    int f_spare[6];
-#endif
   };
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,10 +38,10 @@ typedef unsigned long int __u_long;
 typedef unsigned long int __u_quad_t;
 typedef long int __quad_t;
 #else
-#ifdef __GNUC__
+# ifdef __GNUC__
 __extension__ typedef unsigned long long int __u_quad_t;
 __extension__ typedef long long int __quad_t;
-#else
+# else
 typedef struct
   {
     long int __val[2];
@@ -50,7 +50,7 @@ typedef struct
   {
     __u_long __val[2];
   } __u_quad_t;
-#endif
+# endif
 #endif
 typedef signed char __int8_t;
 typedef unsigned char __uint8_t;
@@ -63,10 +63,10 @@ typedef signed long int __int64_t;
 typedef unsigned long int __uint64_t;
 typedef __quad_t *__qaddr_t;
 #else
-#ifdef __GNUC__
+# ifdef __GNUC__
 __extension__ typedef signed long long int __int64_t;
 __extension__ typedef unsigned long long int __uint64_t;
-#endif
+# endif
 #endif
 
 typedef __u_quad_t __dev_t;		/* Type of device numbers.  */
@@ -125,10 +125,10 @@ typedef struct
        from the user namespace.  */
 #ifdef __USE_XOPEN
     __fd_mask fds_bits[__FD_SETSIZE / __NFDBITS];
-# define __FDS_BITS(set) ((set)->fds_bits) 
+# define __FDS_BITS(set) ((set)->fds_bits)
 #else
     __fd_mask __fds_bits[__FD_SETSIZE / __NFDBITS];
-# define __FDS_BITS(set) ((set)->__fds_bits) 
+# define __FDS_BITS(set) ((set)->__fds_bits)
 #endif
   } __fd_set;
 
@@ -150,11 +150,7 @@ typedef long int __blkcnt_t;
 typedef __quad_t __blkcnt64_t;
 
 /* Type to count file system blocks.  */
-#if __WORDSIZE == 64
 typedef __u_long     __fsblkcnt_t;
-#else
-typedef unsigned int __fsblkcnt_t;
-#endif
 typedef __u_quad_t __fsblkcnt64_t;
 
 /* Type to count file system inodes.  */

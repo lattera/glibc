@@ -1,3 +1,28 @@
+1999-05-24  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/sparc/bits/wordsize.h: New file.
+	* sysdeps/sparc/bits/fenv.h: New file.
+	* sysdeps/sparc/fpu_control.h: New file.
+	* sysdeps/sparc/gmp-mparam.h: New file.
+
+	* sysdeps/sparc/sparc32/fpu/bits/fenv.h: Remove.
+	* sysdeps/sparc/sparc32/fpu/fpu_control.h: Remove.
+	* sysdeps/sparc/sparc64/bits/wordsize.h: Remove.
+	* sysdeps/sparc/sparc64/fpu/bits/fenv.h: Remove.
+	* sysdeps/sparc/sparc64/fpu/fpu_control.h: Remove.
+	* sysdeps/sparc/sparc64/gmp-mparam.h: Remove.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/setjmp.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/statfs.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h: New file.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sys/ucontext.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/setjmp.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/statfs.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sys/ucontext.h: Remove.
+
 1999-05-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* login/openpty.c (openpty): Make sure pty does not because
@@ -47,7 +72,7 @@
 
 	* configure.in: Recognize and allow gcc 2.95.
 
-1999-05-19  Jakub Jelinek   <jj@ultra.linux.cz>
+1999-05-19  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/generic/bits/elfclass.h: Version common to
 	wordsize-32 and wordsize-64.
@@ -80,7 +105,7 @@
 	* sysdeps/wordsize-32/inttypes.h: Remove.
 	* sysdeps/wordsize-32/bits/wordsize.h: New file.
 
-1999-05-19  Jakub Jelinek   <jj@ultra.linux.cz>
+1999-05-19  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/sparc64/memcpy.S (__align_cpy_4, __align_cpy_8,
 	__align_cpy_16): New functions.
@@ -90,7 +115,7 @@
 	* sysdeps/sparc/sparc64/Versions: New file.
 	* sysdeps/sparc/Versions: Remove.
 
-1999-05-19  Jakub Jelinek   <jj@ultra.linux.cz>
+1999-05-19  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/unix/sysv/linux/configure.in:
 	On sparc64-*-linux*, set slibdir to /lib64 if prefix
