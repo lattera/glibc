@@ -125,8 +125,6 @@ ifloat: 1
 Test "Imaginary part of: ccos (-2 - 3 i) == -4.18962569096880723013255501961597373 - 9.10922789375533659797919726277886212 i":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 Test "Real part of: ccos (0.75 + 1.25 i) == 1.38173873063425888530729933139078645 - 1.09193013555397466170919531722024128 i":
 float: 1
 ifloat: 1
@@ -190,9 +188,6 @@ Test "Imaginary part of: clog10 (-0 - inf i) == inf - pi/2*log10(e) i":
 float: 1
 ifloat: 1
 Test "Real part of: clog10 (-2 - 3 i) == 0.556971676153418384603252578971164214 - 0.937554462986374708541507952140189646 i":
-ildouble: 1
-ldouble: 1
-Test "Imaginary part of: clog10 (-2 - 3 i) == 0.556971676153418384603252578971164214 - 0.937554462986374708541507952140189646 i":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: clog10 (-3 + inf i) == inf + pi/2*log10(e) i":
@@ -358,8 +353,6 @@ ifloat: 1
 Test "Imaginary part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
 float: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
 Test "Real part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
 float: 1
 ifloat: 1
@@ -371,9 +364,8 @@ ifloat: 1
 
 # ctan
 Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
-ildouble: 439
-ldouble: 439
-Test "Imaginary part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 Test "Real part of: ctan (0.75 + 1.25 i) == 0.160807785916206426725166058173438663 + 0.975363285031235646193581759755216379 i":
@@ -384,12 +376,9 @@ ildouble: 2
 ldouble: 2
 
 # ctanh
-Test "Real part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
-ildouble: 2
-ldouble: 2
 Test "Imaginary part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
-ildouble: 25
-ldouble: 25
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 double: 1
 idouble: 1
@@ -1032,18 +1021,14 @@ ldouble: 1
 Function: Imaginary part of "csinh":
 float: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
 
 Function: Real part of "ctan":
-ildouble: 439
-ldouble: 439
+double: 1
+idouble: 1
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "ctan":
-ildouble: 2
-ldouble: 2
-
-Function: Real part of "ctanh":
 ildouble: 2
 ldouble: 2
 
@@ -1052,8 +1037,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 25
-ldouble: 25
+ildouble: 1
+ldouble: 1
 
 Function: "erfc":
 float: 1
