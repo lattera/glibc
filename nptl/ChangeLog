@@ -1,3 +1,9 @@
+2003-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_getattr_np.c (pthread_getattr_np): Make sure stack info
+	returned for main thread does not overlap with any other VMA.
+	Patch by Jakub Jelinek.
+
 2003-12-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-raise1.c: Include stdio.h.
