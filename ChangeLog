@@ -1,3 +1,16 @@
+2000-04-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/fcntl.h (F_SETOWN, F_GETOWN): Make
+	available if __USE_XOPEN2K.
+	* sysdeps/mach/hurd/bits/fcntl.h: Likewise.
+	* sysdeps/unix/common/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/aix/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Likewise.
+
 2000-04-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv_prog.c (main): Handle input file name "-" correctly.

@@ -74,7 +74,7 @@
 #define F_SETLK64	6	/* Set record locking info (non-blocking).  */
 #define F_SETLKW64	7	/* Set record locking info (blocking).  */
 
-#ifdef __USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN2K
 # define F_SETOWN	8	/* Get owner of socket (receiver of SIGIO).  */
 # define F_GETOWN	9	/* Set owner of socket (receiver of SIGIO).  */
 #endif

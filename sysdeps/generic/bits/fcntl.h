@@ -20,7 +20,7 @@
 /* These values should be changed as appropriate for your system.  */
 
 #ifndef	_FCNTL_H
-#error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
+# error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
 #endif
 
 
@@ -41,7 +41,7 @@
 #define	O_NONBLOCK	0x0004	/* Non-blocking I/O.  */
 
 #ifdef __USE_BSD
-#define	O_NDELAY	O_NONBLOCK
+# define O_NDELAY	O_NONBLOCK
 #endif
 
 /* Mask for file access modes.  This is system-dependent in case
@@ -54,9 +54,9 @@
 #define	F_SETFD		2	/* Set file descriptor flags.  */
 #define	F_GETFL		3	/* Get file status flags.  */
 #define	F_SETFL		4	/* Set file status flags.  */
-#ifdef __USE_BSD
-#define	F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
-#define	F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
+#if defined __USE_BSD || defined __USE_XOPEN2K
+# define F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
+# define F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
 #endif
 #define	F_GETLK		7	/* Get record locking info.  */
 #define	F_SETLK		8	/* Set record locking info.  */

@@ -75,7 +75,7 @@
 #define F_SETFD		2	/* Set file descriptor flags.  */
 #define F_GETFL		3	/* Get file status flags.  */
 #define F_SETFL		4	/* Set file status flags.  */
-#ifdef __USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN2K
 # define F_GETOWN	5	/* Get owner of socket (receiver of SIGIO).  */
 # define F_SETOWN	6	/* Set owner of socket (receiver of SIGIO).  */
 #endif

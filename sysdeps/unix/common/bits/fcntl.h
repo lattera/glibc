@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for general Unix system.
-   Copyright (C) 1991, 1992, 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1995, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_FCNTL_H
-#error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
+# error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
 #endif
 
 
@@ -34,9 +34,9 @@
 #define	O_TRUNC		0x0200	/* Truncate file to zero length.  */
 #define	O_NOCTTY	0x0800	/* Don't assign a controlling terminal.  */
 #ifdef	__USE_MISC
-#define	O_ASYNC		0x0040	/* Send SIGIO to owner when data is ready.  */
-#define	O_FSYNC		0x0010	/* Synchronous writes.  */
-#define	O_SYNC		O_FSYNC
+# define O_ASYNC	0x0040	/* Send SIGIO to owner when data is ready.  */
+# define O_FSYNC	0x0010	/* Synchronous writes.  */
+# define O_SYNC		O_FSYNC
 #endif
 
 /* File status flags for `open' and `fcntl'.  */
@@ -44,7 +44,7 @@
 #define	O_NONBLOCK	0x0080	/* Non-blocking I/O.  */
 
 #ifdef __USE_MISC
-#define	O_NDELAY	0x0004
+# define O_NDELAY	0x0004
 #endif
 
 #ifdef __USE_MISC
@@ -52,21 +52,21 @@
    These are all the O_* flags, plus FREAD and FWRITE, which are
    independent bits set by which of O_RDONLY, O_WRONLY, and O_RDWR, was
    given to `open'.  */
-#define FREAD		1
-#define	FWRITE		2
+# define FREAD		1
+# define FWRITE		2
 
 /* Traditional Unix names the O_* bits.  */
-#define FASYNC		O_ASYNC
-#define FCREAT		O_CREAT
-#define FEXCL		O_EXCL
-#define FTRUNC		O_TRUNC
-#define FNOCTTY		O_NOCTTY
-#define FFSYNC		O_FSYNC
-#define FSYNC		O_SYNC
-#define FAPPEND		O_APPEND
-#define FNONBLOCK	O_NONBLOCK
-#define FNONBIO		O_NONBLOCK
-#define FNDELAY		O_NDELAY
+# define FASYNC		O_ASYNC
+# define FCREAT		O_CREAT
+# define FEXCL		O_EXCL
+# define FTRUNC		O_TRUNC
+# define FNOCTTY	O_NOCTTY
+# define FFSYNC		O_FSYNC
+# define FSYNC		O_SYNC
+# define FAPPEND	O_APPEND
+# define FNONBLOCK	O_NONBLOCK
+# define FNONBIO	O_NONBLOCK
+# define FNDELAY	O_NDELAY
 #endif
 
 /* Mask for file access modes.  This is system-dependent in case
@@ -79,19 +79,19 @@
 #define	F_SETFD		2	/* Set file descriptor flags.  */
 #define	F_GETFL		3	/* Get file status flags.  */
 #define	F_SETFL		4	/* Set file status flags.  */
-#ifdef __USE_BSD
-#define	F_GETOWN	23	/* Get owner (receiver of SIGIO).  */
-#define	F_SETOWN	24	/* Set owner (receiver of SIGIO).  */
+#if defined __USE_BSD || defined __USE_XOPEN2K
+# define F_GETOWN	23	/* Get owner (receiver of SIGIO).  */
+# define F_SETOWN	24	/* Set owner (receiver of SIGIO).  */
 #endif
 #define	F_GETLK		14	/* Get record locking info.  */
 #define	F_SETLK		6	/* Set record locking info (non-blocking).  */
 #define	F_SETLKW	7	/* Set record locking info (blocking).  */
 #ifdef	__USE_SVID
-#define	F_ALLOCSP	10	/* Allocate space in the file.  */
-#define	F_FREESP	11	/* Free space in the file.  */
-#define	F_RGETLK	20	/* Get remote record locking info.  */
-#define	F_RSETLK	21	/* Set remote locking info (non-blocking).  */
-#define	F_RSETLKW	22	/* Set remote locking info (blocking).  */
+# define F_ALLOCSP	10	/* Allocate space in the file.  */
+# define F_FREESP	11	/* Free space in the file.  */
+# define F_RGETLK	20	/* Get remote record locking info.  */
+# define F_RSETLK	21	/* Set remote locking info (non-blocking).  */
+# define F_RSETLKW	22	/* Set remote locking info (blocking).  */
 #endif
 
 /* File descriptor flags used with F_GETFD and F_SETFD.  */
