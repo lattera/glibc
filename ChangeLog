@@ -1,3 +1,28 @@
+2000-06-16  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/xstat.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/lxstat.c: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/xstatconv.c: Deleted.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Update after latest
+	kernel change.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/types.h: Make __ino_t,
+	__nlink_t and __blkcnt_t 64 bit to accomodate new kernel stat data
+	structure.
+	Change __fsblkcnt_t and __fsfilcnt_t to 64 bit to match kernel
+	implementation.
+
+2000-06-15  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/kernel_stat.h: Deleted.
+
+2000-06-08  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/mmap64.c: New file.
+
 2000-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_int.h (strict gconv_module): Remove all members

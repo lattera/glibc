@@ -31,30 +31,23 @@
 struct stat
   {
     __dev_t st_dev;		/* Device.  */
-#ifdef __USE_FILE_OFFSET64
-    __ino64_t st_ino;		/* File serial number.  */
-#else
     __ino_t st_ino;		/* File serial number.	*/
-    int __pad1;
-#endif
-    __mode_t st_mode;		/* File mode.  */
     __nlink_t st_nlink;		/* Link count.  */
+    __mode_t st_mode;		/* File mode.  */
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
+    int pad0;
     __dev_t st_rdev;		/* Device number, if device.  */
     __off_t st_size;		/* Size of file, in bytes.  */
     __time_t st_atime;		/* Time of last access.  */
+    long int __reserved0;	/* Reserved for atime.nanoseconds.  */
     __time_t st_mtime;		/* Time of last modification.  */
+    long int __reserved1;	/* Reserved for mtime.nanoseconds.  */
     __time_t st_ctime;		/* Time of last status change.  */
-#ifdef __USE_FILE_OFFSET64
-    __blkcnt64_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
-#else
+    long int __reserved2;	/* Reserved for ctime.nanoseconds.  */
     __blkcnt_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
-    int __pad2;
-#endif
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
-    int __pad3;
-    long __unused[6];
+    long int __unused[3];
   };
 
 #ifdef __USE_LARGEFILE64
@@ -63,19 +56,22 @@ struct stat64
   {
     __dev_t st_dev;		/* Device.  */
     __ino64_t st_ino;		/* File serial number.  */
-    __mode_t st_mode;		/* File mode.  */
     __nlink_t st_nlink;		/* Link count.  */
+    __mode_t st_mode;		/* File mode.  */
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
+    int pad0;
     __dev_t st_rdev;		/* Device number, if device.  */
     __off_t st_size;		/* Size of file, in bytes.  */
     __time_t st_atime;		/* Time of last access.  */
+    long int __reserved0;	/* Reserved for atime.nanoseconds.  */
     __time_t st_mtime;		/* Time of last modification.  */
+    long int __reserved1;	/* Reserved for mtime.nanoseconds.  */
     __time_t st_ctime;		/* Time of last status change.  */
+    long int __reserved2;	/* Reserved for ctime.nanoseconds.  */
     __blkcnt64_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
-    int __pad3;
-    long __unused[6];
+    long int __unused[3];
   };
 #endif
 
