@@ -1,3 +1,11 @@
+1999-04-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/TESTS: Add ISO-8859-14 and ISO-8859-15.
+	* iconvdata/testdata/ISO-8859-14: New file.
+	* iconvdata/testdata/ISO-8859-14..UTF8: New file.
+	* iconvdata/testdata/ISO-8859-15: New file.
+	* iconvdata/testdata/ISO-8859-15..UTF8: New file.
+
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/testdata/CP1258: New file.
