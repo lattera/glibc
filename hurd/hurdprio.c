@@ -19,6 +19,7 @@
 
 #include <hurd/resource.h>
 #include <hurd.h>
+#include <unistd.h>
 
 error_t
 _hurd_priority_which_map (enum __priority_which which, int who,
