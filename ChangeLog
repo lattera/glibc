@@ -1,3 +1,10 @@
+2002-09-30  Andreas Jaeger  <aj@suse.de>
+
+	* iconvdata/tst-e2big.c (test): Use %td in printf for ptrdiff_t.
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Store 4 bytes into errno, not 8 bytes.
+
 2002-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regexec.c (sift_states_bkref): Remove ret variable.  Use
