@@ -1,3 +1,18 @@
+2002-11-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rela): Handle R_386_COPY.
+	* sysdeps/arm/dl-machine.h (elf_machine_rela): Handle R_ARM_COPY.
+
+2002-11-15  Roland McGrath  <roland@redhat.com>
+
+	* math/Makefile (libm-calls): Change s_ldexp to m_ldexp.
+	* Makerules ($(+sysdir_pfx)sysd-rules): Emit pattern rules for m_%.[Sc]
+	from sysdeps/.../s_%.[Sc] with commands $(+make-include-of-dep).
+	(+make-include-of-dep): New canned sequence.
+
+	* stdlib/canonicalize.c (__realpath): Check for malloc failure.
+	From Dmitry V. Levin <ldv@altlinux.org>.
+
 2002-11-14  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/errno.c (__libc_errno): Remove alias.

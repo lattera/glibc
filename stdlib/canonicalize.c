@@ -73,7 +73,14 @@ __realpath (const char *name, char *resolved)
     path_max = 1024;
 #endif
 
-  rpath = resolved ? __alloca (path_max) : malloc (path_max);
+  if (resolved == NULL)
+    {
+      rpath = malloc (path_max);
+      if (rpath == NULL)
+	return NULL;
+    }
+  else
+    rpath = resolved;
   rpath_limit = rpath + path_max;
 
   if (name[0] != '/')

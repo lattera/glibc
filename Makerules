@@ -283,6 +283,8 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)rtld-%.d: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
+	   echo "\$$(objpfx)m_%.S: $$dir/s_%.S; \$$(+make-include-of-dep)";   \
+	   echo "\$$(objpfx)m_%.c: $$dir/s_%.c; \$$(+make-include-of-dep)";   \
 	 done;								      \
 	 echo 'sysd-rules-done = t') > $@T
 	mv -f $@T $@
@@ -291,6 +293,12 @@ ifndef sysd-rules-done
 # Don't do deps until this exists, because it provides rules to make the deps.
 no_deps=t
 endif
+
+# This is used by the m_%.[Sc] pattern rules in sysd-rules.
+define +make-include-of-dep
+echo '#include <$<>' > $@T
+mv -f $@T $@
+endef
 
 # Generate version maps, but wait until sysdep-subdirs is known
 ifeq ($(sysd-sorted-done),t)

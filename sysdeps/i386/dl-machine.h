@@ -514,6 +514,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     *reloc_addr = map->l_addr + reloc->r_addend;
   else if (r_type != R_386_NONE)
     {
+# ifndef RESOLVE_CONFLICT_FIND_MAP
+      const Elf32_Sym *const refsym = sym;
+# endif
 # ifdef USE_TLS
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
@@ -568,6 +571,29 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  CHECK_STATIC_TLS (map, sym_map);
 	  break;
 # endif	/* use TLS */
+# ifndef RESOLVE_CONFLICT_FIND_MAP
+	  /* Not needed for dl-conflict.c.  */
+	case R_386_COPY:
+	  if (sym == NULL)
+	    /* This can happen in trace mode if an object could not be
+	       found.  */
+	    break;
+	  if (__builtin_expect (sym->st_size > refsym->st_size, 0)
+	      || (__builtin_expect (sym->st_size < refsym->st_size, 0)
+		  && GL(dl_verbose)))
+	    {
+	      const char *strtab;
+
+	      strtab = (const char *) D_PTR (map, l_info[DT_STRTAB]);
+	      _dl_error_printf ("\
+%s: Symbol `%s' has different size in shared object, consider re-linking\n",
+				rtld_progname ?: "<program name unknown>",
+				strtab + refsym->st_name);
+	    }
+	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
+						   refsym->st_size));
+	  break;
+# endif /* !RESOLVE_CONFLICT_FIND_MAP */
 	default:
 	  /* We add these checks in the version to relocate ld.so only
 	     if we are still debugging.  */
