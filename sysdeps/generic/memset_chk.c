@@ -90,7 +90,3 @@ __memset_chk (dstpp, c, len, dstlen)
 
   return dstpp;
 }
-strong_alias (__memset_chk, __memset_zero_constant_len_parameter)
-
-link_warning (__memset_zero_constant_len_parameter,
-	      "memset used with constant zero length parameter; this could be due to transposed parameters")

@@ -130,6 +130,7 @@
 /* Fortify support.  */
 #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
 #define __bos0(ptr) __builtin_object_size (ptr, 0)
+#define __warndecl(name, msg) extern void name (void)
 
 
 /* Support for flexible arrays.  */

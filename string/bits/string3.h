@@ -85,11 +85,11 @@ __mempcpy_ichk (void *__restrict __dest, const void *__restrict __src,
    especially problematic if the intended fill value is zero.  In this
    case no work is done at all.  We detect these problems by referring
    non-existing functions.  */
-extern char *__memset_zero_constant_len_parameter (void *, int, size_t,
-						   size_t);
+__warndecl (__warn_memset_zero_len,
+	    "memset used with constant zero length parameter; this could be due to transposed parameters");
 #define memset(dest, ch, len) \
   (__builtin_constant_p (len) && (len) == 0				      \
-   ? __memset_zero_constant_len_parameter (dest, ch, len, 0)		      \
+   ? (__warn_memset_zero_len (), (void) (ch), (void) (len), (void *) (dest))  \
    : ((__bos0 (dest) != (size_t) -1)					      \
       ? __builtin___memset_chk (dest, ch, len, __bos0 (dest))		      \
       : __memset_ichk (dest, ch, len)))

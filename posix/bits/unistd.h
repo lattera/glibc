@@ -25,6 +25,7 @@ extern ssize_t __read_chk (int __fd, void *__buf, size_t __nbytes,
 			   size_t __buflen) __wur;
 #define read(fd, buf, nbytes) \
   (__bos (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos (buf))	      \
    ? __read_chk (fd, buf, nbytes, __bos (buf))				      \
    : read (fd, buf, nbytes))
 
@@ -36,11 +37,13 @@ extern ssize_t __pread64_chk (int __fd, void *__buf, size_t __nbytes,
 # ifndef __USE_FILE_OFFSET64
 #  define pread(fd, buf, nbytes, offset) \
   (__bos (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos (buf))	      \
    ? __pread64_chk (fd, buf, nbytes, offset, __bos (buf))		      \
    : pread (fd, buf, offset, nbytes))
 # else
 #  define pread(fd, buf, nbytes, offset) \
   (__bos (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos (buf))	      \
    ? __pread_chk (fd, buf, nbytes, offset, __bos (buf))			      \
    : pread (fd, buf, offset, nbytes))
 # endif
@@ -48,6 +51,7 @@ extern ssize_t __pread64_chk (int __fd, void *__buf, size_t __nbytes,
 # ifdef __USE_LARGEFILE64
 #  define pread64(fd, buf, nbytes, offset) \
   (__bos (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos (buf))	      \
    ? __pread64_chk (fd, buf, nbytes, offset, __bos (buf))		      \
    : pread64 (fd, buf, offset, nbytes))
 # endif
@@ -60,6 +64,7 @@ extern int __readlink_chk (__const char *__restrict __path,
      __THROW __nonnull ((1, 2)) __wur;
 # define readlink(path, buf, len) \
   (__bos (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (len) || (len) > __bos (buf))		      \
    ? __readlink_chk (path, buf, len, __bos (buf))			      \
    : readlink (path, buf, len))
 #endif
@@ -68,6 +73,7 @@ extern char *__getcwd_chk (char *__buf, size_t __size, size_t __buflen)
      __THROW __wur;
 #define getcwd(buf, size) \
   (__bos (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (size) || (size) > __bos (buf))		      \
    ? __getcwd_chk (buf, size, buflen) : getcwd (buf, size))
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED

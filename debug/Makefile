@@ -24,14 +24,16 @@ subdir	:= debug
 headers	:= execinfo.h
 distribute = sigcontextinfo.h register-dump.h frame.h
 
-routines := backtrace backtracesyms backtracesymsfd noophooks \
+routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    memcpy_chk memmove_chk mempcpy_chk memset_chk stpcpy_chk \
 	    strcat_chk strcpy_chk strncat_chk strncpy_chk \
 	    sprintf_chk vsprintf_chk snprintf_chk vsnprintf_chk \
 	    printf_chk fprintf_chk vprintf_chk vfprintf_chk \
 	    gets_chk chk_fail readonly-area fgets_chk fgets_u_chk \
 	    read_chk pread_chk pread64_chk recv_chk recvfrom_chk \
-	    readlink_chk getwd_chk getcwd_chk
+	    readlink_chk getwd_chk getcwd_chk \
+	    $(static-only-routines)
+static-only-routines := warning-nop
 
 CFLAGS-backtrace.c = -fno-omit-frame-pointer
 CFLAGS-sprintf_chk.c = -D_IO_MTSAFE_IO

@@ -1,4 +1,5 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* Dummy nop functions to elicit link-time warnings.
+   Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +17,22 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <unistd.h>
-#include <sys/param.h>
+#include <sys/cdefs.h>
 
-
-ssize_t
-__pread_chk (int fd, void *buf, size_t nbytes, off_t offset, size_t buflen)
+void __nop (void)
 {
-  if (nbytes > buflen)
-    __chk_fail ();
-
-  return __pread (fd, buf, offset, MIN (nbytes, buflen + 1));
 }
+
+/* Don't insert any other #include's before this #undef!  */
+
+#undef __warndecl
+#define __warndecl(name, msg) \
+  strong_alias (__nop, name) link_warning (name, msg)
+
+#undef	__USE_FORTIFY_LEVEL
+#define __USE_FORTIFY_LEVEL 99
+
+/* Following here we need an #include for each public header file
+   that uses __warndecl.  */
+
+#include <string.h>

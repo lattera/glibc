@@ -1,3 +1,24 @@
+2005-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/bits/unistd.h: Avoid calling __*_chk variants if we can
+	determine the call will never trigger a failure.
+
+	* sysdeps/i386/i686/memset_chk.S: Remove alias and warning.
+	* sysdeps/x86_64/memset_chk.S: Likewise.
+
+2005-02-24  Roland McGrath  <roland@redhat.com>
+
+	* debug/Versions (libc: GLIBC_2.4): Remove
+	__memset_zero_constant_len_parameter.
+	* sysdeps/generic/memset_chk.c: Remove alias and warning.
+	* misc/sys/cdefs.h (__warndecl): New macro.
+	* debug/warning-nop.c: New file.
+	* string/bits/string3.h (memset): Call __warn_memset_zero_len with no
+	arguments, instead of calling __memset_zero_constant_len_parameter.
+	Use __warndecl for __warn_memset_zero_len.
+	* debug/Makefile (routines): Add $(static-only-routines).
+	(static-only-routines): New variable.
+
 2005-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/tr.po: Update from translation team.

@@ -27,15 +27,12 @@
 ssize_t
 __read_chk (int fd, void *buf, size_t nbytes, size_t buflen)
 {
-  /* In case NBYTES is greater than BUFLEN, we read BUFLEN+1 bytes.
-     This might overflow the buffer but the damage is reduced to just
-     one byte.  And the program will terminate right away.  */
-#ifdef HAVE_INLINED_SYSCALLS
-  ssize_t n = INLINE_SYSCALL (read, 3, fd, buf, MIN (nbytes, buflen + 1));
-#else
-  ssize_t n = __read (fd, buf, MIN (nbytes, buflen + 1));
-#endif
-  if (n > 0 && (size_t) n > buflen)
+  if (nbytes > buflen)
     __chk_fail ();
-  return n;
+
+#ifdef HAVE_INLINED_SYSCALLS
+  return = INLINE_SYSCALL (read, 3, fd, buf, nbytes);
+#else
+  return = __read (fd, buf, nbytes);
+#endif
 }
