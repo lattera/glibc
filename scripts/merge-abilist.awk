@@ -1,11 +1,18 @@
 # awk script to merge a config-specific .symlist file with others.
-# The input files should be an existing .abilist file, and a .symlist file.
-# This must be passed run with awk -v config=REGEXP to specify a regexp
-# matching configuration tuples for which the .symlist input defines an ABI.
-# The result merges all duplicate occurrences of any symbol in a version set
-# into a stanza listing the regexps matching configurations that contain it.
+# The input files should be existing .abilist files, and a .symlist
+# file.  This must be run with awk -v config=REGEXP to specify a
+# regexp matching configuration tuples for which the .symlist input
+# defines an ABI.  The result merges all duplicate occurrences of any
+# symbol into a stanza listing the regexps matching configurations
+# that contain it and giving associated versions.
+# The merged file contains stanzas in the form:
+#	GLIBC_x.y regexp...
+#	| GLIBC_x.y.z regexp...
+#	| GLIBC_m.n regexp...
+#	 function F
+#	 variable D 0x4
 
-/^[^ ]/ {
+/^[^| ]/ {
   if (NF < 2 && config == "") {
     print "BAD LINE:", $0 > "/dev/stderr";
     exit 2;
@@ -36,127 +43,94 @@
   next;
 }
 
+/^\| / {
+  if (NF < 3) {
+    print "BAD LINE:", $0 > "/dev/stderr";
+    exit 2;
+  }
+
+  nc = 0;
+  for (i = 3; i <= NF; ++i)
+    if ($i != config)
+      c[nc++] = $i;
+  for (i = 0; i < nc; ++i)
+    current = current "," $2 ":" c[i];
+
+  next;
+}
+
 {
   if (current == "") next;
 
-  if ($0 in seen) {
-    seen[$0] = seen[$0] "\n" current;
+  ns = split(seen[$0], s, ",");
+  nc = split(current, c, ",");
+  for (i = 1; i <= nc; ++i) {
+    # Sorted insert.
+    for (j = 1; j <= ns; ++j) {
+      if (c[i] < s[j]) {
+	for (k = ns; k >= j; --k)
+	  s[k + 1] = s[k];
+	s[j] = c[i];
+	++ns;
+	break;
+      }
+    }
+    if (j >= ns)
+      s[++ns] = c[i];
   }
-  else {
-    seen[$0] = current;
-  }
+
+  seen[$0] = s[1];
+  for (i = 2; i <= ns; ++i)
+    seen[$0] = seen[$0] "," s[i];
 
   next;
 }
 
 END {
   for (line in seen) {
-    split(seen[line], setlist, "\n");
-    for (i in setlist) {
-      split(setlist[i], configs, ",");
-      for (j in configs) {
-	split(configs[j], temp, ":");
-	version = temp[1];
-	conf = temp[2];
-
-	if ((version,conf) in have) continue;
-	have[version,conf] = 1;
-
-	if (version in confs) {
-	  split(confs[version], c, " ");
-	  if (conf < c[1]) {
-	    confs[version] = conf;
-	    for (k = 1; k <= nconfs[version]; ++k) {
-	      confs[version] = confs[version] " " c[k];
-	    }
-	  }
-	  else {
-	    confs[version] = c[1];
-	    for (k = 2; k <= nconfs[version]; ++k) {
-	      if (conf < c[k]) break;
-	      confs[version] = confs[version] " " c[k];
-	    }
-	    confs[version] = confs[version] " " conf;
-	    for (; k <= nconfs[version]; ++k) {
-	      confs[version] = confs[version] " " c[k];
-	    }
-	  }
-	  ++nconfs[version];
-	}
-	else {
-	  confs[version] = conf;
-	  nconfs[version] = 1;
-	}
-      }
-    }
-    for (idx in have) delete have[idx];
-
-    for (version in confs) {
-
-      # Hack: if an element is foo.*/bar and there is also a foo.*,
-      # then we can omit the foo.*/bar since foo.* matches already.
-      nc = split(confs[version], c, " ");
-      for (i = 1; i <= nc; ++i) {
-	slash = index(c[i], ".*/");
-	if (slash > 0) {
-	  beforeslash = substr(c[i], 1, slash + 2 - 1);
-	  for (j = 1; j <= nc; ++j)
-	    if (j != i && c[j] == beforeslash) {
-	      c[i] = c[nc--];
-	      break;
-	    }
-	}
-      }
-
-      idx = version;
-      for (i = 1; i <= nc; ++i)
-	idx = idx " " c[i];
-
-      if (idx in final) {
-	final[idx] = final[idx] "\n" line;
-      }
-      else {
-	final[idx] = line;
-      }
-      delete confs[version];
-      delete nconfs[version];
-    }
+    if (seen[line] in stanzas)
+      stanzas[seen[line]] = stanzas[seen[line]] "\n" line;
+    else
+      stanzas[seen[line]] = line;
   }
 
-  nstanzas = 0;
-  for (stanza in final) {
-    if (nstanzas == 0) {
-      stanzas = stanza;
-      nstanzas = 1;
-      continue;
-    }
-    split(stanzas, s, "\n");
-    if (stanza < s[1]) {
-      stanzas = stanza;
-      for (i = 1; i <= nstanzas; ++i) {
-	stanzas = stanzas "\n" s[i];
+  ns = split("", s);
+  for (configs in stanzas) {
+    # Sorted insert.
+    for (j = 1; j <= ns; ++j)
+      if (configs < s[j]) {
+	for (k = ns; k >= j; --k)
+	  s[k + 1] = s[k];
+	s[j] = configs;
+	++ns;
+	break;
       }
-    }
-    else {
-      stanzas = s[1];
-      for (i = 2; i <= nstanzas; ++i) {
-	if (stanza < s[i]) break;
-	stanzas = stanzas "\n" s[i];
-      }
-      stanzas = stanzas "\n" stanza;
-      for (; i <= nstanzas; ++i) {
-	stanzas = stanzas "\n" s[i];
-      }
-    }
-    ++nstanzas;
+    if (j >= ns)
+      s[++ns] = configs;
   }
 
-  split(stanzas, order, "\n");
-  for (i = 1; i <= nstanzas; ++i) {
-    stanza = order[i];
-    print stanza;
+  # S[1..NS] is now a sorted list of stanza identifiers.
+  # STANZAS[ID] contains the lines for that stanza.
+  # All we have to do is pretty-print the stanza ID,
+  # and then print the sorted list.
+
+  for (i = 1; i <= ns; ++i) {
+    # S[I] is a sorted, comma-separated list of SET:CONFIG pairs.
+    # All we have to do is pretty-print them.
+    nc = split(s[i], c, ",");
+    lastvers = "";
+    for (j = 1; j <= nc; ++j) {
+      split(c[j], temp, ":");
+      version = temp[1];
+      conf = temp[2];
+      if (version != lastvers)
+	printf "%s%s", (lastvers != "" ? "\n| " : ""), version;
+      printf " %s", conf;
+      lastvers = version;
+    }
+    print "";
     outpipe = "sort";
-    print final[stanza] | outpipe;
+    print stanzas[s[i]] | outpipe;
     close(outpipe);
   }
 }
