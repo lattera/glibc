@@ -1,3 +1,8 @@
+1999-03-24  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* Makeconfig (sysd-sorted): Use $(..) on rhs of patsubst, so this rule
+	works properly in subdirs.
+
 1999-03-23  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/Makefile: Undo last change.
