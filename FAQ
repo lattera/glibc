@@ -44,6 +44,8 @@ please let me know.
 1.18.	How can I compile on my fast ix86 machine a working libc for my slow
 	i386?  After installing libc, programs abort with "Illegal
 	Instruction".
+1.19.	`make' complains about a missing dlfcn/libdl.so when building
+	malloc/libmemprof.so.  How can I fix this?
 
 2. Installation and configuration issues
 
@@ -547,6 +549,23 @@ And you need to tell gcc to only generate i386 code, just add `-mcpu=i386'
 
 {UD} This applies not only to the i386.  Compiling on a i686 for any older
 model will also fail if the above  methods are not used.
+
+
+1.19.	`make' complains about a missing dlfcn/libdl.so when building
+	malloc/libmemprof.so.  How can I fix this?
+
+{AJ} Older make version (<= 3.78.90) have a bug which was hidden by a bug in
+glibc (<= 2.1.2).  You need to upgrade make to a newer or fixed version.  A
+patch is available via
+<http://sourceware.cygnus.com//ml/libc-alpha/2000-02/msg00067.html>.
+
+After upgrading make, you should remove the file sysd-sorted in your build
+directory.  The problem is that the broken make creates a wrong order for
+one list in that file.  The list has to be recreated with the new make -
+which happens if you remove the file.
+
+You might encounter this bug also in other situations where make scans
+directories.  I strongly advise to upgrade your make version.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
