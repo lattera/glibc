@@ -1,5 +1,9 @@
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
+	* locale/nl_langinfo.c [NL_CURRENT_INDIRECT]: Use a categories.def
+	iterator to refer to each category's _nl_current_LC_FOO symbol, so
+	we know they are all linked in.
+
 	* NEWS: Added 2.2.6 text from 2.2 branch version.
 
 	* time/strptime.c (strptime_internal): Remove spurious const.

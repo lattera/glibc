@@ -47,6 +47,18 @@ nl_langinfo (item)
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
   data = l->__locales[category];
+#elif defined NL_CURRENT_INDIRECT
+  /* Make direct reference to every _nl_current_CATEGORY symbol,
+     since we know only at runtime which categories are used.  */
+  switch (category)
+    {
+# define DEFINE_CATEGORY(category, category_name, items, a) \
+      case category: data = *_nl_current_##category; break;
+# include "categories.def"
+# undef	DEFINE_CATEGORY
+    default:			/* Should be impossible.  */
+      return (char *) "";
+    }
 #else
   data = _NL_CURRENT_DATA (category);
 #endif
