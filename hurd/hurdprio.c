@@ -36,7 +36,7 @@ _hurd_priority_which_map (enum __priority_which which, int who,
     {
     case PRIO_PROCESS:
       npids = 1;
-      pids[0] = who;
+      pids[0] = who ?: getpid (); /* XXX function could special-case self? */
       err = 0;
       break;
 
@@ -45,6 +45,8 @@ _hurd_priority_which_map (enum __priority_which which, int who,
       break;
 
     case PRIO_USER:
+      if (who == 0)
+	who = geteuid ();
       err = __USEPORT (PROC, __proc_getallpids (port, &pids, &npids));
       break;
 
