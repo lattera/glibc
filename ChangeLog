@@ -1,3 +1,12 @@
+2001-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tst-sprintf.c: New file.
+
+2001-12-13  Andreas Schwab  <schwab@suse.de>
+
+	* stdio-common/vfprintf.c (process_string_arg): Correctly handle
+	zero precision with wide character string format.
+
 2001-12-13  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/posix/cuserid.c (cuserid): If we don't find the UID,

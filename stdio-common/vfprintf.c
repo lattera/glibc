@@ -1195,7 +1195,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
 									      \
-	    if (prec > 0)						      \
+	    if (prec >= 0)						      \
 	      {								      \
 		/* The string `s2' might not be NUL terminated.  */	      \
 		if (prec < 32768					      \
