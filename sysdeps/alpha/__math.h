@@ -18,8 +18,6 @@ Cambridge, MA 02139, USA.  */
 
 #if defined (__GNUC__) && !defined (__NO_MATH_INLINES)
 
-extern __inline double __copysign (double __x, double __y) __attribute__ ((__const__));
-
 extern __inline double
 __copysign (double __x, double __y)
 {
