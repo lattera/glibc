@@ -1540,7 +1540,7 @@ fi
 rm -f conftest*])
 if test $libc_cv_asm_cfi_directives = yes; then
   AC_DEFINE(HAVE_ASM_CFI_DIRECTIVES)
-fi  
+fi
 
 AC_CACHE_CHECK(if -g produces usable source locations for assembler-with-cpp,
 	       libc_cv_cpp_asm_debuginfo, [dnl
@@ -1960,6 +1960,7 @@ AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_localedir)
 AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_rootsbindir)
+AC_SUBST(libc_cv_forced_unwind)
 
 AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)

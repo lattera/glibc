@@ -1,3 +1,8 @@
+2003-06-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* config.h.in: Add have-forced-unwind.
+	* configure.in: Add AC_SUBST(libc_cv_forced_unwind).
+
 2003-06-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* test-skeleton.c (main): If EXPECTED_STATUS is defined check that
@@ -15,23 +20,22 @@
 
 2003-06-04  Richard Henderson  <rth@redhat.com>
 
-        * sysdeps/alpha/dl-machine.h (RTLD_START): Fix top-of-stack backtrace.
-        * sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
-        * sysdeps/alpha/elf/start.S: Likewise.  Remove pointless allocation.
-        * sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Use standard ldgp
-        entry sequence and explicit relocs.  Add unwind info for sigreturn
-        and rt_sigreturn.
-        * configure.in (libc_cv_asm_cfi_directives): Test .cfi_remember_state.
-        * configure: Regenerate.
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Fix top-of-stack backtrace.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/alpha/elf/start.S: Likewise.  Remove pointless allocation.
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Use standard ldgp
+	entry sequence and explicit relocs.  Add unwind info for sigreturn
+	and rt_sigreturn.
+	* configure.in (libc_cv_asm_cfi_directives): Test .cfi_remember_state.
 
-        * sysdeps/unix/sysv/linux/alpha/syscalls.list (semtimedop): New.
-        Annotate some parameters.
-        * sysdeps/unix/sysv/linux/alpha/sysdep.h (__NR_semtimedop): New.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (semtimedop): New.
+	Annotate some parameters.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (__NR_semtimedop): New.
 
-        * sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Fix typo in conversion.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Fix typo in conversion.
 
-        * include/libc-symbols.h (symbol_set_declare): Use arrays
-        of unspecified size.
+	* include/libc-symbols.h (symbol_set_declare): Use arrays
+	of unspecified size.
 
 2003-06-04  Jakub Jelinek  <jakub@redhat.com>
 
