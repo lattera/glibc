@@ -935,7 +935,7 @@ write_locale_data (const char *output_path, const char *category,
   int fd;
   char *fname;
 
-  asprintf (&fname, "%s/%s", output_path, category);
+  asprintf (&fname, "%s%s", output_path, category);
   fd = creat (fname, 0666);
   if (fd == -1)
     {
@@ -944,7 +944,7 @@ write_locale_data (const char *output_path, const char *category,
       if (errno == EISDIR)
 	{
 	  free (fname);
-	  asprintf (&fname, "%1$s/%2$s/SYS_%2$s", output_path, category);
+	  asprintf (&fname, "%1$s%2$s/SYS_%2$s", output_path, category);
 	  fd = creat (fname, 0666);
 	  if (fd == -1)
 	    save_err = errno;

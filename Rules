@@ -96,13 +96,13 @@ ifneq "$(strip $(tests))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
 $(objpfx)%.out: %.args $(objpfx)% %.input
-	$(built-program-cmd) `cat $(word 1,$^)` < $(word 3,$^) > $@
+	$($*-ENV) $(built-program-cmd) `cat $(word 1,$^)` < $(word 3,$^) > $@
 $(objpfx)%.out: %.args $(objpfx)%
-	$(built-program-cmd) `cat $(word 1,$^)` > $@
+	$($*-ENV) $(built-program-cmd) `cat $(word 1,$^)` > $@
 $(objpfx)%.out: %.input $(objpfx)%
-	$(built-program-cmd) < $(word 1,$^) > $@
+	$($*-ENV) $(built-program-cmd) < $(word 1,$^) > $@
 $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
-	$(built-program-cmd) > $@
+	$($*-ENV) $(built-program-cmd) > $@
 endif	# tests
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \

@@ -836,7 +836,7 @@ of error you get if you request them and they are not supported.
 @end deftypevr
 
 @comment errno.h
-@comment ISO C: Invalid or incomplete multibyte or wide character
+@comment ISO: Invalid or incomplete multibyte or wide character
 @deftypevr Macro int EILSEQ
 @comment errno 106 @c DO NOT REMOVE
 While decoding a multibyte character the function came along an invalid

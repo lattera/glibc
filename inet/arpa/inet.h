@@ -42,7 +42,7 @@
 #include <sys/types.h>
 
 __BEGIN_DECLS
-u_int32_t	 inet_addr __P((const char *));
+u_long		 inet_addr __P((const char *));
 int		 inet_aton __P((const char *, struct in_addr *));
 u_int32_t	 inet_lnaof __P((struct in_addr));
 struct in_addr	 inet_makeaddr __P((u_int32_t , u_int32_t));

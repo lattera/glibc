@@ -228,6 +228,16 @@ extern struct _IO_FILE_plus _IO_stdin_, _IO_stdout_, _IO_stderr_;
 #define _IO_stdout ((_IO_FILE*)(&_IO_stdout_))
 #define _IO_stderr ((_IO_FILE*)(&_IO_stderr_))
 
+
+/* Special file type for fopencookie function.  */
+struct _IO_cookie_file {
+  struct _IO_FILE file;
+  const void *vtable;
+  void *cookie;
+  _IO_cookie_io_functions_t io_functions;
+};
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif

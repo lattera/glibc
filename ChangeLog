@@ -1,6 +1,157 @@
+Wed May 22 22:10:01 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* stdlib/canonicalize.c: New file.
+	* stdlib/stdlib.h: Declare canonicalize_file_name, realpath.
+	* stdlib/Makefile (routines): Add canonicalize.
+
+	* posix/unistd.h: Declare __canonicalize_directory_name_internal.
+
+Thu May 23 00:01:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/recno/rec_seq.c: Prevent `sccsid' definition by using the
+	same #if condition as in the other db files.
+
+	* intl/Makefile: Add -Wno-unused CFLAGS for compilation of
+	bindtextdom.c, finddomain.c, and localealias.c.
+
+	* intl/dcgettext.c: Don't define prototype for getcwd() when
+	compiling in glibc.
+
+	* libio/cleanup.c: Add prototype for _IO_register_cleanup.
+
+	* libio/filedoalloc.c, libio/fileops.c, libio/iopopen.c: Don't
+        define _POSIX_SOURCE unconditionally.
+
+	* libio/filedoalloc.c, libio/iopopen.c: Include <unistd.h> if
+        compiling in glibc.
+
+	* libio/fileops.c (_IO_file_close_it): Don't sync file, call
+	flush instead.  This relaxes the rules from POSIX.1 about
+	changing the active handle a bit.
+
+	* libio/iofopncook.c (struct _IO_cookie_file): Move definition
+	into <libio.h>.
+	Add prototypes for local functions to prevent warnings.
+
+	* libio/iopopen.c: Change prototypes for _IO_fork, _IO_pipe, and
+        _IO_DUP2 to contain complete parameter list.
+
+	* libio/libio.h: Add definition of struct _IO_cookie_file.
+
+	* libio/libioP.h: Add prototypes for _IO_vasprintf, _IO_vdprintf,
+        and _IO_vsnprintf.
+
+	* libio/memstream.c: Include <stdio.h>.
+
+	* libio/stdio.h: Add prototypes for fopencookie,
+        __stdio_gen_tempname, __vfscanf, __vsscanf, and __vsnprintf.
+
+	* libio/strops.c: Avoid useless expression in `for' initializer.
+
+	* locale/findlocale.c: Add some casts to prevent warnings.
+
+	* locale/programs/locfile.c (write_locale_data): Don't use
+	double `/' in locale binary file.
+
+	* posix/unistd.h: Remove prototype for `reboot'.
+
+	Update from bind-4.9.4-T1A.
+	* resolv/Makefile (routines): Add inet_ntop and inet_pton.
+	* resolv/arpa/nameser.h: Add definition of IN6ADDRSZ.
+	* resolv/gethnamaddr.c, resolv/getnetnamadr.c, resolv/res_comp.c,
+	resolv/res_debug.c, resolv/res_init.c
+
+	* resolv/inet_ntop.c, resolv/inet_pton.c: New files.
+
+	* resolv/resolv.h: Add RES_USE_INET6 flag.
+	(__dn_isvalid): Renamed to __res_dnok.
+	Add prototypes for __res_ownok and __res_mailok.
+
+	* stdio-common/Makefile: Add -Wno-unused to CFLAGS for _itoa.c.
+
+	* stdio-common/getline.c, stdio-common/vfscanf.c,
+        sysdeps/posix/tempname.c: Don't use <ansidecl.h> anymore.
+
+	* sysdeps/unix/sysv/linux/Makefile [$subdir == misc]
+        (sysdep_routines): Add s_reboot.
+	(install-others): Add $(includedir)/sys/syscall.h.
+	New rule for $(includedir)/sys/syscall.h to produce from
+	<asm/unistd.h>.
+
+	* sysdeps/unix/sysv/linux/reboot.c: New file.  Make single
+        argument function call 3 argument system call.
+
+	* sysdeps/unix/sysv/linux/sys/reboot.h: New file.  Linux specific
+	definition for reboot function.
+
+	* sysdeps/unix/sysv/linux/syscall.h: Remove old and obsolete
+        comment.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Rename function for
+	reboot syscall to __syscall_reboot.
+
+	* wcsmbs/wchar.h: Protect prototypes for wcstof and wcstold by
+	__USE_GNU, not USE_GNU.
+
+Tue May 21 21:55:49 1996  David Mosberger-Tang  <davidm@AZStarNet.com>
+
+	* locale/programs/charset.c, locale/programs/ld-collate.c:
+	Add casts to prevent warnings on 64-bit machines.
+
+	* locale/programs/ld-monetary.c: Don't do unnecessary tests for
+	int_frac_digits and frac_digits which only produce warnings.
+
+Mon May 13 23:45:29 1996  David Mosberger-Tang  <davidm@AZStarNet.com>
+
+	* inet/arpa/inet.h: Backup return type of inet_addr to u_long.
+	* resolv/inet_addr.c: Likewise.
+
+	* resolv/Makefile (distribute): Add res_hconf.h
+	(routines): Add res_hconf.
+
+	* resolv/gethnamaddr.c: Add support for /etc/host.conf.
+
+	* resolv/res_init.c: Initialize /etc/host.conf reader.
+
+	* resolv/res_hconf.c, resolv/res_hconf.h: New files.
+        Implementation of reading /etc/host.conf.
+
+Wed May 22 21:21:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Rules (%.out rules): Prepend $($*-ENV) to the command.
+
+	* sysdeps/unix/sysv/linux/i386/brk.c (___brk_addr): Define as weak
+	alias for __curbrk.
+
+Wed May 22 19:37:27 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/hurdexec.c (_hurd_exec): Pass INIT_TRACEMASK.
+	* hurd/hurdmsg.c (set_int): Support INIT_TRACEMASK.
+
+Wed May 22 18:47:31 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): New function, broken out
+	of __getcwd.
+	(__getcwd): Use it.
+	(__canonicalize_directory_name_internal): New function using it.
+
+	* sysdeps/posix/getcwd.c (__canonicalize_directory_name_internal): New
+	function, broken out of __getcwd.
+	(__getcwd): Use it.
+
+Wed May 22 18:14:05 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* string/argz-create.c (__argz_create): Correctly calculate length.
+
+	* string/argz-extract.c (__argz_extract): Add terminating 0 entry.
+	* hurd/hurdstartup.c (_hurd_startup): ... and don't so here.
+
 Wed May 22 17:22:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* posix/glob.c [VMS]: Don't include <pwd.h>.
+	[HAVE_VMSDIR_H]: Include "vmsdir.h".
+	(glob) [VMS]: Don't grok ~.
 
 Wed May 22 14:46:53 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 

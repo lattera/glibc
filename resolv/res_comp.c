@@ -3,7 +3,7 @@
  * -
  * Copyright (c) 1985, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,7 +19,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,14 +33,14 @@
  * SUCH DAMAGE.
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -343,7 +343,7 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
 /****
 To: "Lawrence R. Rogers" <lrr@cert.org>
 cc: cert@cert.org, pvm@home.net
-Subject: Re: VU#14542 
+Subject: Re: VU#14542
 In-reply-to: Your message of "Mon, 19 Feb 1996 17:16:27 PST."
 Date: Tue, 20 Feb 1996 22:37:21 -0800
 From: Paul A Vixie <vixie@wisdom.home.vix.com>
@@ -359,7 +359,7 @@ in retrospect,
 should have been
 
 	hostname = label ( "." label )+
-	firstchar = [a-zA-Z0-9_]
+	firstchar = [a-zA-Z0-9]
 	otherchar = [a-zA-Z0-9_-]
 	label = firstchar otherchar*
 
@@ -368,53 +368,98 @@ earlier.  since i'm only trying to bend the spec to fit actual known uses,
 i should not have widened the rules as far as i did earlier.
 ****/
 
-#define firstchar(c) ((isascii(c) && isalnum(c)) || (c) == '_')
-#define otherchar(c) (firstchar(c) || (c) == '-')
-#define	wildlabel(firstlabel, ch, nch) \
-	((firstlabel) && (ch) == '*' && ((nch) == '.' || (nch) == '\0'))
+/*
+ * Note the conspicuous absence of ctype macros in these definitions.  On
+ * non-ASCII hosts, we can't depend on string literals or ctype macros to
+ * tell us anything about network-format data.  The rest of the BIND system
+ * is not careful about this, but for some reason, we're doing it right here.
+ */
+#define PERIOD 0x2e
+#define	hyphenchar(c) ((c) == 0x2d)
+#define bslashchar(c) ((c) == 0x5c)
+#define periodchar(c) ((c) == PERIOD)
+#define asterchar(c) ((c) == 0x2a)
+#define alphachar(c) (((c) >= 0x41 && (c) <= 0x5a) \
+		   || ((c) >= 0x61 && (c) <= 0x7a))
+#define digitchar(c) ((c) >= 0x30 && (c) <= 0x39)
+
+#define borderchar(c) (alphachar(c) || digitchar(c))
+#define middlechar(c) (borderchar(c) || hyphenchar(c))
+#define	domainchar(c) ((c) > 0x20 && (c) < 0x7f)
 
 int
 res_hnok(dn)
 	const char *dn;
 {
-	int ppch = '\0', pch = '.', ch = *dn++, firstlabel = 1;
+	int ppch = '\0', pch = PERIOD, ch = *dn++;
 
 	while (ch != '\0') {
 		int nch = *dn++;
 
-		if (ch == '.' || (ch == '\\' && nch == '.')) {
+		if (periodchar(ch)) {
 			NULL;
-		} else if (pch == '.' && ppch != '\\') {
-			if (!firstchar(ch) && !wildlabel(firstlabel, ch, nch))
+		} else if (periodchar(pch)) {
+			if (!borderchar(ch))
+				return (0);
+		} else if (periodchar(nch) || nch == '\0') {
+			if (!borderchar(ch))
 				return (0);
 		} else {
-			if (!otherchar(ch))
+			if (!middlechar(ch))
 				return (0);
 		}
 		ppch = pch, pch = ch, ch = nch;
-		firstlabel = 0;
 	}
 	return (1);
 }
 
 /*
- * This function is quite liberal, since RFC 1034's character sets are only
- * recommendations.
- *
- * Note that some char's are signed, so we have to cast to unsigned.
+ * hostname-like (A, MX, WKS) owners can have "*" as their first label
+ * but must otherwise be as a host name.
  */
 int
-dn_isvalid(dn)
+res_ownok(dn)
 	const char *dn;
 {
-	unsigned char *t = (unsigned char *)dn;
+	if (asterchar(dn[0]) && periodchar(dn[1]))
+		dn += 2;
+	return (res_hnok(dn));
+}
+
+/*
+ * SOA RNAMEs and RP RNAMEs can have any printable character in their first
+ * label, but the rest of the name has to look like a host name.
+ */
+int
+res_mailok(dn)
+	const char *dn;
+{
+	int ch, pch;
+
+	pch = '\0';
+	while ((ch = *dn++) != '\0') {
+		if (!domainchar(ch))
+			return (0);
+		if (periodchar(ch) && !bslashchar(pch))
+			break;
+		pch = ch;
+	}
+	return (res_hnok(dn));
+}
+
+/*
+ * This function is quite liberal, since RFC 1034's character sets are only
+ * recommendations.
+ */
+int
+res_dnok(dn)
+	const char *dn;
+{
 	int ch;
 
-	while ((ch = *t++) != '\0')
-		if (ch <= 0x1f || ch >= 0x7f) {
-			/* Unprintable in ASCII. */
+	while ((ch = *dn++) != '\0')
+		if (!domainchar(ch))
 			return (0);
-		}
 	return (1);
 }
 
@@ -498,7 +543,7 @@ putlong(l, msgp)
 {
 	__putlong(l, msgp);
 }
- 
+
 #undef dn_skipname
 dn_skipname(comp_dn, eom)
 	const u_char *comp_dn, *eom;

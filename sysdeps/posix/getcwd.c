@@ -180,18 +180,15 @@ extern char *alloca ();
 #define	__lstat	stat
 #endif
 
-#ifndef _LIBC
-#define __getcwd getcwd
-#endif
-
-/* Get the pathname of the current working directory, and put it in SIZE
+/* Get the canonical absolute name of the named directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
    SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
    NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
    unless SIZE <= 0, in which case it is as big as necessary.  */
 
 char *
-__getcwd (buf, size)
+__canonicalize_directory_name_internal (thisdir, buf, size)
+     const char *thisdir;
      char *buf;
      size_t size;
 {
@@ -230,7 +227,7 @@ __getcwd (buf, size)
   pathp = path + size;
   *--pathp = '\0';
 
-  if (__lstat (".", &st) < 0)
+  if (__lstat (thisdir, &st) < 0)
     return NULL;
   thisdev = st.st_dev;
   thisino = st.st_ino;
@@ -368,6 +365,24 @@ __getcwd (buf, size)
   if (dotlist != dots)
     free ((__ptr_t) dotlist);
   return NULL;
+}
+
+/* Get the pathname of the current working directory, and put it in SIZE
+   bytes of BUF.  Returns NULL if the directory couldn't be determined or
+   SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
+   NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
+   unless SIZE <= 0, in which case it is as big as necessary.  */
+
+#ifndef _LIBC
+#define __getcwd getcwd
+#endif
+
+char *
+__getcwd (buf, size)
+     char *buf;
+     size_t size;
+{
+  return __canonicalize_directory_name_internal (".", buf, size);
 }
 
 #ifdef _LIBC

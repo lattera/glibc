@@ -192,7 +192,7 @@ extern int wcswidth __P ((__const wchar_t *__s, size_t __n));
    representation.  */
 extern double wcstod __P ((__const wchar_t *__nptr, wchar_t **__endptr));
 
-#ifdef USE_GNU
+#ifdef __USE_GNU
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
 extern float wcstof __P ((__const wchar_t *__nptr, wchar_t **__endptr));
 extern __long_double_t wcstold __P ((__const wchar_t *__nptr,

@@ -85,7 +85,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   /* We really have to load some data.  First see whether the name is
      an alias.  Please note that this makes it impossible to have "C"
      or "POSIX" as aliases.  */
-  loc_name = _nl_expand_alias (*name);
+  loc_name = (char *) _nl_expand_alias (*name);
   if (loc_name == NULL)
     /* It is no alias.  */
     loc_name = *name;
@@ -144,7 +144,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
     /* If the addressed locale is already available it should be freed.
        If we would not do this switching back and force between two
        locales would slowly eat up all memory.*/
-    free (loc_name);
+    free ((void *) loc_name);
 
   if (locale_file->decided == 0)
     _nl_load_locale (locale_file, category);

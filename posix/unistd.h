@@ -252,6 +252,16 @@ extern char *getcwd __P ((char *__buf, size_t __size));
    If the environment variable `PWD' is set, and its value is correct,
    that value is used.  */
 extern char *get_current_dir_name __P ((void));
+
+/* Get the canonical absolute name of the named directory, and put it in SIZE
+   bytes of BUF.  Returns NULL if the directory couldn't be determined or
+   SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
+   NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
+   unless SIZE <= 0, in which case it is as big as necessary.  */
+
+char *__canonicalize_directory_name_internal __P ((const char *__thisdir,
+						   char *__buf,
+						   size_t __size));
 #endif
 
 #ifdef	__USE_BSD
@@ -652,9 +662,6 @@ extern int swapon __P ((__const char *__path));
 
 /* Stop using block special device PATH for swapping.  */
 extern int swapoff __P ((__const char *__path));
-
-/* Reboot or halt the system.  */
-extern int reboot __P ((int __howto));
 
 
 /* Successive calls return the shells listed in `/etc/shells'.  */

@@ -24,7 +24,9 @@ the executable file might be covered by the GNU General Public License. */
 
 /*  written by Per Bothner (bothner@cygnus.com) */
 
-#define _POSIX_SOURCE
+#ifndef _POSIX_SOURCE
+# define _POSIX_SOURCE
+#endif
 #include "libioP.h"
 #if _IO_HAVE_SYS_WAIT
 #include <signal.h>
@@ -32,24 +34,27 @@ the executable file might be covered by the GNU General Public License. */
 #ifdef __STDC__
 #include <stdlib.h>
 #endif
+#ifdef _LIBC
+# include <unistd.h>
+#endif
 #include <sys/types.h>
 #include <sys/wait.h>
 
 #ifndef _IO_fork
 #define _IO_fork vfork /* defined in libiberty, if needed */
-_IO_pid_t _IO_fork();
+extern _IO_pid_t _IO_fork __P ((void));
 #endif
 
 #endif /* _IO_HAVE_SYS_WAIT */
 
 #ifndef _IO_pipe
 #define _IO_pipe pipe
-extern int _IO_pipe();
+extern int _IO_pipe __P ((int des[2]));
 #endif
 
 #ifndef _IO_dup2
 #define _IO_dup2 dup2
-extern int _IO_dup2();
+extern int _IO_dup2 __P ((int fd, int fd2));
 #endif
 
 #ifndef _IO_waitpid

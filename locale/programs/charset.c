@@ -66,7 +66,7 @@ charset_find_value (const struct charset_t *cs, const char *name, size_t len)
   if (find_entry ((hash_table *) &cs->char_table, name, len, &result) < 0)
     return ILLEGAL_CHAR_VALUE;
 
-  return (unsigned int) result;
+  return (unsigned int) ((unsigned long int) result);
 }
 
 
@@ -81,7 +81,8 @@ insert_char (struct linereader *lr, struct charset_t *cs, int bytes,
 
   if (to == NULL)
     {
-      if (insert_entry (&cs->char_table, from, strlen (from), (void *) value)
+      if (insert_entry (&cs->char_table, from, strlen (from),
+			(void *) (unsigned long int) value)
 	  < 0)
 	lr_error (lr, _("duplicate character name `%s'"), from);
 
@@ -126,7 +127,8 @@ insert_char (struct linereader *lr, struct charset_t *cs, int bytes,
     {
       sprintf (&buf[prefix_len], "%0d", cnt);
 
-      if (insert_entry (&cs->char_table, buf, len1, (void *) cnt) < 0)
+      if (insert_entry (&cs->char_table, buf, len1,
+			(void *) (unsigned long int) cnt) < 0)
 	lr_error (lr, _("duplicate character name `%s'"), buf);
     }
 }

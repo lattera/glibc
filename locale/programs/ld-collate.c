@@ -233,7 +233,7 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
       else if (find_entry (&collate->symbols, patch->token, toklen, &ptmp)
 	       >= 0)
 	{
-	  value = (unsigned int) ptmp;
+	  value = (unsigned long int) ptmp;
 	}
       else
 	value = 0;

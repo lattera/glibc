@@ -266,6 +266,13 @@ extern void _IO_str_init_static __P((_IO_FILE *, char*, int, char*));
 extern void _IO_str_init_readonly __P((_IO_FILE *, const char*, int));
 extern _IO_ssize_t _IO_str_count __P ((_IO_FILE*));
 
+extern int _IO_vasprintf __P ((char **result_ptr, __const char *format,
+			       _IO_va_list args));
+extern int _IO_vdprintf __P ((int d, __const char *format, _IO_va_list arg));
+extern int _IO_vsnprintf __P ((char *string, _IO_size_t maxlen,
+			       __const char *format, _IO_va_list args));
+
+
 extern _IO_size_t _IO_getline __P((_IO_FILE*,char*,_IO_size_t,int,int));
 extern _IO_ssize_t _IO_getdelim __P((char**, _IO_size_t*, int, _IO_FILE*));
 extern double _IO_strtod __P((const char *, char **));

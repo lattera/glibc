@@ -108,6 +108,8 @@ extern int fgetc __P ((FILE *));
 extern int fgetpos __P ((FILE* fp, fpos_t *pos));
 extern char* fgets __P ((char*, int, FILE*));
 extern FILE* fopen __P ((__const char*, __const char*));
+extern FILE* fopencookie __P ((void *cookie, __const char *mode, 
+			       _IO_cookie_io_functions_t io_functions));
 extern int fprintf __P ((FILE*, __const char* format, ...));
 extern int fputc __P ((int, FILE*));
 extern int fputs __P ((__const char *str, FILE *fp));
@@ -138,6 +140,9 @@ extern int sprintf __P ((char*, __const char* format, ...));
 extern int sscanf __P ((__const char* string, __const char* format, ...));
 extern FILE* tmpfile __P ((void));
 extern char* tmpnam __P ((char*));
+extern char *__stdio_gen_tempname __P ((__const char *dir, __const char *pfx,
+					int dir_search, size_t *lenptr,
+					FILE **streamptr));
 extern int ungetc __P ((int c, FILE* fp));
 extern int vfprintf __P ((FILE *fp, char __const *fmt0, _G_va_list));
 extern int vprintf __P ((char __const *fmt, _G_va_list));
@@ -147,8 +152,10 @@ extern int vsprintf __P ((char* string, __const char* format, _G_va_list));
 extern int dprintf __P ((int, __const char *, ...));
 extern int vdprintf __P ((int, __const char *, _G_va_list));
 extern int vfscanf __P ((FILE*, __const char *, _G_va_list));
+extern int __vfscanf __P ((FILE*, __const char *, _G_va_list));
 extern int vscanf __P ((__const char *, _G_va_list));
 extern int vsscanf __P ((__const char *, __const char *, _G_va_list));
+extern int __vsscanf __P ((__const char *, __const char *, _G_va_list));
 #endif
 
 #if !defined(__STRICT_ANSI__) || defined(_POSIX_SOURCE)
@@ -166,6 +173,7 @@ extern _IO_ssize_t __getline __P ((char **, size_t *, FILE *));
 extern int snprintf __P ((char *, size_t, __const char *, ...));
 extern int __snprintf __P ((char *, size_t, __const char *, ...));
 extern int vsnprintf __P ((char *, size_t, __const char *, _G_va_list));
+extern int __vsnprintf __P ((char *, size_t, __const char *, _G_va_list));
 
 extern int asprintf __P ((char **, const char *, ...));
 extern int vasprintf __P ((char **, const char *, _G_va_list));

@@ -29,14 +29,16 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 
 
-/* Get the pathname of the current working directory, and put it in SIZE
-   bytes of BUF.  Returns NULL if the directory couldn't be determined or
-   SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
-   NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
-   unless SIZE <= 0, in which case it is as big as necessary.  */
+/* Get the canonical absolute name of the given directory port, and put it
+   in SIZE bytes of BUF.  Returns NULL if the directory couldn't be
+   determined or SIZE was too small.  If successful, returns BUF.  In GNU,
+   if BUF is NULL, an array is allocated with `malloc'; the array is SIZE
+   bytes long, unless SIZE <= 0, in which case it is as big as necessary.  */
 
 char *
-__getcwd (char *buf, size_t size)
+_hurd_canonicalize_directory_name_internal (file_t thisdir,
+					    char *buf,
+					    size_t size)
 {
   error_t err;
   mach_port_t rootid, thisid, rootdevid, thisdevid;
@@ -91,10 +93,9 @@ __getcwd (char *buf, size_t size)
     return __hurd_fail (err), NULL;
   __mach_port_deallocate (__mach_task_self (), rootdevid);
 
-  /* Get a port to our current working directory and stat it.  */
+  /* Stat the port to the directory of interest.  */
 
-  if (err = __USEPORT (CRDIR, __io_identity (port,
-					     &thisid, &thisdevid, &thisino)))
+  if (err = __io_identity (thisdir, &thisid, &thisdevid, &thisino))
     {
       __mach_port_deallocate (__mach_task_self (), rootid);
       return __hurd_fail (err), NULL;
@@ -254,5 +255,33 @@ __getcwd (char *buf, size_t size)
  lose:
   cleanup ();
   return NULL;
+}
+
+char *
+__canonicalize_directory_name_internal (thisdir, buf, size)
+     const char *thisdir;
+     char *buf;
+     size_t size;
+{
+  char *result;
+  file_t port = __file_name_lookup (thisdir, 0, 0);
+  if (port == MACH_PORT_NULL)
+    return NULL;
+  result = _hurd_canonicalize_directory_name_internal (port, buf, size);
+  __mach_port_deallocate (__mach_task_self (), port);
+  return result;
+}
+
+/* Get the pathname of the current working directory, and put it in SIZE
+   bytes of BUF.  Returns NULL if the directory couldn't be determined or
+   SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
+   NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
+   unless SIZE <= 0, in which case it is as big as necessary.  */
+char *
+__getcwd (char *buf, size_t size)
+{
+  return __USEPORT (CWDIR,
+		    _hurd_canonicalize_directory_name_internal (port,
+								buf, size));
 }
 weak_alias (__getcwd, getcwd)

@@ -3,7 +3,7 @@
  * -
  * Copyright (c) 1985, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,7 +19,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,14 +33,14 @@
  * SUCH DAMAGE.
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -75,6 +75,8 @@ static char rcsid[] = "$Id$";
 #else
 # include "../conf/portability.h"
 #endif
+
+#include "res_hconf.h"
 
 /*-------------------------------------- info about "sortlist" --------------
  * Marc Majka		1994/04/16
@@ -137,7 +139,7 @@ struct __res_state _res;
  * since it was noted that INADDR_ANY actually meant ``the first interface
  * you "ifconfig"'d at boot time'' and if this was a SLIP or PPP interface,
  * it had to be "up" in order for you to reach your own name server.  It
- * was later decided that since the recommended practice is to always 
+ * was later decided that since the recommended practice is to always
  * install local static routes through 127.0.0.1 for all your network
  * interfaces, that we could solve this problem without a code change.
  *
@@ -354,11 +356,11 @@ res_init()
 				if (inet_aton(net, &a)) {
 				    _res.sort_list[nsort].mask = a.s_addr;
 				} else {
-				    _res.sort_list[nsort].mask = 
+				    _res.sort_list[nsort].mask =
 					net_mask(_res.sort_list[nsort].addr);
 				}
 			    } else {
-				_res.sort_list[nsort].mask = 
+				_res.sort_list[nsort].mask =
 				    net_mask(_res.sort_list[nsort].addr);
 			    }
 			    nsort++;
@@ -373,7 +375,7 @@ res_init()
 		    continue;
 		}
 	    }
-	    if (nserv > 1) 
+	    if (nserv > 1)
 		_res.nscount = nserv;
 #ifdef RESOLVSORT
 	    _res.nsort = nsort;
@@ -419,6 +421,8 @@ res_init()
 	if ((cp = getenv("RES_OPTIONS")) != NULL)
 		res_setoptions(cp, "env");
 	_res.options |= RES_INIT;
+
+	_res_hconf_init ();
 	return (0);
 }
 
@@ -458,6 +462,8 @@ res_setoptions(options, source)
 			}
 			printf(";;\tdebug\n");
 #endif
+		} else if (!strncmp(cp, "inet6", sizeof("inet6") - 1)) {
+			_res.options |= RES_USE_INET6;
 		} else {
 			/* XXX - print a warning here? */
 		}
@@ -562,7 +568,7 @@ netinfo_res_init(haveenv, havesearch)
 		    }
 		    ni_namelist_free(&nl);
 		}
-		
+
 		if (nserv > 1)
 		    _res.nscount = nserv;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,15 +13,16 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYSCALL_H
-#define _SYSCALL_H
+#include <unistd.h>
 
-/* This file should list the numbers of the system the system knows.
-   But instead of duplicating this we use the information available
-   from the kernel sources.  */
-#include <asm/unistd.h>
+extern int __syscall_reboot (int magic, int magic_too, int flag);
 
-#endif
+/* Call kernel with additional two arguments the syscall requires.  */
+int
+reboot (int howto)
+{
+  return __syscall_reboot (0xfee1dead, 672274793, howto);
+}

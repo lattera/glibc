@@ -40,7 +40,7 @@ routines	:=							      \
 	drand48-iter							      \
 	strtol strtoul strtoq strtouq					      \
 	strtof strtod strtold						      \
-	system realpath							      \
+	system canonicalize						      \
 	a64l l64a							      \
 	rpmatch strfmon
 

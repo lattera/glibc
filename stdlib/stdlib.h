@@ -364,6 +364,24 @@ extern void unsetenv __P ((__const char *__name));
 extern int system __P ((__const char *__command));
 
 
+#ifdef	__USE_GNU
+/* Return a malloc'd string containing the canonical absolute name of the
+   named file.  The last file name component need not exist, and may be a
+   symlink to a nonexistent file.  */
+extern char *canonicalize_file_name __P ((__const char *__name));
+#endif
+
+#ifdef	__USE_BSD
+/* Return the canonical absolute name of file NAME.  The last file name
+   component need not exist, and may be a symlink to a nonexistent file.
+   If RESOLVED is null, the result is malloc'd; otherwise, if the canonical
+   name is PATH_MAX chars or more, returns null with `errno' set to
+   ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars, returns the
+   name in RESOLVED.  */
+extern char *realpath __P ((__const char *__name, char *__resolved));
+#endif
+
+
 /* Shorthand for type of comparison functions.  */
 #ifndef __COMPAR_FN_T
 #define __COMPAR_FN_T

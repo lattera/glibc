@@ -41,12 +41,17 @@ the executable file might be covered by the GNU General Public License. */
 
 /* Modified for GNU iostream by Per Bothner 1991, 1992. */
 
-#define _POSIX_SOURCE
+#ifndef _POSIX_SOURCE
+# define _POSIX_SOURCE
+#endif
 #include "libioP.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #ifdef __STDC__
 #include <stdlib.h>
+#endif
+#ifdef _LIBC
+# include <unistd.h>
 #endif
 
 /*

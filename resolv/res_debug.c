@@ -3,7 +3,7 @@
  * -
  * Copyright (c) 1985, 1990, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,7 +19,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,14 +33,14 @@
  * SUCH DAMAGE.
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -59,6 +59,8 @@ static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/param.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
@@ -66,7 +68,7 @@ static char rcsid[] = "$Id$";
 #include <stdio.h>
 #include <netdb.h>
 #include <resolv.h>
-#if defined(BSD) && (BSD >= 199103)
+#if defined(BSD) && (BSD >= 199103) && defined(AF_INET6)
 # include <string.h>
 #else
 # include "../conf/portability.h"
@@ -295,7 +297,7 @@ __fp_nquery(msg, len, file)
 		fprintf(file, ", Auth: %d", ntohs(hp->nscount));
 		fprintf(file, ", Addit: %d", ntohs(hp->arcount));
 	}
-	if ((!_res.pfcode) || (_res.pfcode & 
+	if ((!_res.pfcode) || (_res.pfcode &
 		(RES_PRF_HEADX | RES_PRF_HEAD2 | RES_PRF_HEAD1))) {
 		putc('\n',file);
 	}
@@ -589,6 +591,13 @@ __p_rr(cp, msg, file)
 		(void) fprintf(file, "\t%s", inet_nsap_ntoa(dlen, cp, NULL));
 		cp += dlen;
 		break;
+
+	case T_AAAA: {
+		char t[sizeof "ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255"];
+
+		fprintf(file, "\t%s\n", inet_ntop(AF_INET6, cp, t, sizeof t));
+		break;
+	}
 
 	case T_MINFO:
 	case T_RP:

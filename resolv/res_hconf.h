@@ -1,0 +1,50 @@
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+   Contributed by David Mosberger (davidm@azstarnet.com).
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#ifndef _RES_HCONF_H_
+#define _RES_HCONF_H_
+
+#include <netdb.h>
+
+#define TRIMDOMAINS_MAX	4
+
+enum Name_Service {
+  SERVICE_NONE = 0,
+  SERVICE_BIND, SERVICE_HOSTS, SERVICE_NIS,
+  SERVICE_MAX
+};
+
+struct hconf {
+  int			num_services;
+  enum Name_Service	service[SERVICE_MAX];
+  int			num_trimdomains;
+  const char *		trimdomain[TRIMDOMAINS_MAX];
+  unsigned		flags;
+#  define HCONF_FLAG_INITED	(1 << 0) /* initialized? */
+#  define HCONF_FLAG_SPOOF	(1 << 1) /* refuse spoofed addresses */
+#  define HCONF_FLAG_SPOOFALERT	(1 << 2) /* syslog warning of spoofed */
+#  define HCONF_FLAG_REORDER	(1 << 3) /* list best address first */
+#  define HCONF_FLAG_MULTI	(1 << 4) /* see comments for gethtbyname() */
+} _res_hconf;
+
+extern void	_res_hconf_init (void);
+extern void	_res_hconf_trim_domain (char * domain);
+extern void	_res_hconf_trim_domains (struct hostent * hp);
+extern void	_res_hconf_reorder_addrs (struct hostent * hp);
+
+#endif /* _RES_HCONF_H_ */

@@ -24,7 +24,9 @@ the executable file might be covered by the GNU General Public License. */
 
 /*  written by Per Bothner (bothner@cygnus.com) */
 
-#define _POSIX_SOURCE
+#ifndef _POSIX_SOURCE
+# define _POSIX_SOURCE
+#endif
 #include "libioP.h"
 #include <fcntl.h>
 #include <sys/types.h>
@@ -102,11 +104,11 @@ int
 DEFUN(_IO_file_close_it, (fp),
       register _IO_FILE* fp)
 {
-  int sync_status, close_status;
+  int write_status, close_status;
   if (!_IO_file_is_open(fp))
     return EOF;
 
-  sync_status = _IO_file_sync (fp);
+  write_status = _IO_do_flush (fp);
 
   _IO_unsave_markers(fp);
 
@@ -122,7 +124,7 @@ DEFUN(_IO_file_close_it, (fp),
   fp->_fileno = EOF;
   fp->_offset = _IO_pos_BAD;
 
-  return close_status ? close_status : sync_status;
+  return close_status ? close_status : write_status;
 }
 
 void

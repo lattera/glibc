@@ -22,11 +22,12 @@
 subdir	:= resolv
 
 headers	:= resolv.h netdb.h arpa/nameser.h sys/bitypes.h
-distribute := ../conf/portability.h
+distribute := ../conf/portability.h res_hconf.h
 
 routines := gethnamaddr getnetbyaddr getnetbyname getnetent getnetnamadr \
 	    herror nsap_addr res_comp res_debug res_data res_init res_mkquery \
-	    res_query res_send sethostent inet_addr
+	    res_query res_send sethostent inet_addr inet_ntop inet_pton \
+	    res_hconf
 
 include ../Rules
 

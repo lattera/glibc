@@ -87,13 +87,13 @@ void free ();
    file and the name space must not be polluted.  */
 # define getcwd __getcwd
 # define stpcpy __stpcpy
-#endif
-
-#if !defined HAVE_GETCWD && !defined _LIBC
-char *getwd ();
-# define getcwd(buf, max) getwd (buf)
 #else
+# if !defined HAVE_GETCWD
+char *getwd ();
+#  define getcwd(buf, max) getwd (buf)
+# else
 char *getcwd ();
+# endif
 #endif
 
 /* Amount to increase buffer size by in each try.  */

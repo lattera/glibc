@@ -164,8 +164,12 @@ value for field `%s' in category `%s' must not be the empty string"),
 value for field `%s' in category `%s' must be in range %d...%d"),	      \
 	   #cat, "LC_MONETARY", min, max)
 
+#if 0
+										/* The following two test are not really necessary because all values
+    the variable could have are valid.  */
   TEST_ELEM (int_frac_digits, -128, 127);	/* No range check.  */
   TEST_ELEM (frac_digits, -128, 127);		/* No range check.  */
+#endif
   TEST_ELEM (p_cs_precedes, -1, 1);
   TEST_ELEM (p_sep_by_space, -1, 2);
   TEST_ELEM (n_cs_precedes, -1, 1);

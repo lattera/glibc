@@ -4,6 +4,9 @@
 
 typedef void (*voidfunc) __P((void));
 
+/* Prototype.  */
+static void DEFUN_VOID (_IO_register_cleanup);
+
 static void
 DEFUN_VOID(_IO_register_cleanup)
 {

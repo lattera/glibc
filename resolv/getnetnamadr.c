@@ -139,7 +139,7 @@ static	char *net_aliases[MAXALIASES], netbuf[BUFSIZ+1];
 	haveanswer = 0;
 	while (--ancount >= 0 && cp < eom) {
 		n = dn_expand(answer->buf, eom, cp, bp, buflen);
-		if ((n < 0) || !dn_isvalid(bp))
+		if ((n < 0) || !res_dnok(bp))
 			break;
 		cp += n;
 		ans[0] = '\0';
@@ -209,7 +209,7 @@ getnetbyaddr(net, net_type)
 	int nn, anslen;
 	querybuf buf;
 	char qbuf[MAXDNAME];
-	u_int32_t net2;
+	u_int32_t net2;		/* Changed from unsigned long --roland */
 	struct netent *net_entry;
 
 	if (net_type != AF_INET)

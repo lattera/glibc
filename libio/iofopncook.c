@@ -23,14 +23,18 @@ This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
 #include <libioP.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-struct _IO_cookie_file {
-  struct _IO_FILE file;
-  const void *vtable;
-  void *cookie;
-  _IO_cookie_io_functions_t io_functions;
-};
+
+/* Prototyped for local functions.  */
+static _IO_ssize_t _IO_cookie_read __P ((register _IO_FILE* fp, void* buf,
+					 _IO_ssize_t size));
+static _IO_ssize_t _IO_cookie_write __P ((register _IO_FILE* fp,
+					  const void* buf, _IO_ssize_t size));
+static _IO_fpos_t _IO_cookie_seek __P ((_IO_FILE *fp, _IO_off_t offset,
+					int dir));
+static int _IO_cookie_close __P ((_IO_FILE* fp));
 
 
 static _IO_ssize_t

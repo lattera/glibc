@@ -3,7 +3,7 @@
  * -
  * Copyright (c) 1983, 1987, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,7 +19,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,14 +33,14 @@
  * SUCH DAMAGE.
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -140,6 +140,7 @@ struct __res_state {
 #define	RES_INSECURE1	0x00000400	/* type 1 security disabled */
 #define	RES_INSECURE2	0x00000800	/* type 2 security disabled */
 #define	RES_NOALIASES	0x00001000	/* shuts off HOSTALIASES feature */
+#define	RES_USE_INET6	0x00002000	/* use/map IPv6 in gethostbyname() */
 
 #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
 
@@ -185,7 +186,9 @@ extern struct __res_state _res;
 
 /* Private routines shared between libc/net, named, nslookup and others. */
 #define	res_hnok	__res_hnok
-#define	dn_isvalid	__dn_isvalid
+#define	res_ownok	__res_ownok
+#define	res_mailok	__res_mailok
+#define	res_dnok	__res_dnok
 #define	dn_skipname	__dn_skipname
 #define	fp_query	__fp_query
 #define	fp_nquery	__fp_nquery
@@ -206,7 +209,9 @@ extern struct __res_state _res;
 #define	res_queriesmatch __res_queriesmatch
 __BEGIN_DECLS
 int	 __res_hnok __P((const char *));
-int	 __dn_isvalid __P((const char *));
+int	 __res_ownok __P((const char *));
+int	 __res_mailok __P((const char *));
+int	 __res_dnok __P((const char *));
 int	 __dn_skipname __P((const u_char *, const u_char *));
 void	 __fp_resstat __P((struct __res_state *, FILE *));
 void	 __fp_query __P((const u_char *, FILE *));

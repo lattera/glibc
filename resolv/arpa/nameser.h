@@ -3,7 +3,7 @@
  * -
  * Copyright (c) 1983, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,7 +19,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,14 +33,14 @@
  * SUCH DAMAGE.
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -97,7 +97,8 @@
 #define RRFIXEDSZ	10		/* #/bytes of fixed data in r record */
 #define	INT32SZ		4		/* for systems without 32-bit ints */
 #define	INT16SZ		2		/* for systems without 16-bit ints */
-#define	INADDRSZ	4		/* for sizeof(struct inaddr) != 4 */
+#define	INADDRSZ	4		/* IPv4 T_A */
+#define IN6ADDRSZ	16		/* IPv6 T_AAAA */
 
 /*
  * Internet nameserver port number
@@ -110,7 +111,7 @@
 #define QUERY		0x0		/* standard query */
 #define IQUERY		0x1		/* inverse query */
 #define STATUS		0x2		/* nameserver status query */
-/*#define xxx		0x3		/* 0x3 reserved */
+/*#define xxx		0x3*/		/* 0x3 reserved */
 #define	NS_NOTIFY_OP	0x4		/* notify secondary of SOA change */
 #ifdef ALLOW_UPDATES
 	/* non standard - supports ALLOW_UPDATES stuff from Mike Schwartz */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -34,7 +33,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Return nonzero if DIR is an existent directory.  */
 static int
-DEFUN(diraccess, (dir), CONST char *dir)
+diraccess (const char *dir)
 {
   struct stat buf;
   return __stat (dir, &buf) == 0 && S_ISDIR (buf.st_mode);
@@ -42,7 +41,7 @@ DEFUN(diraccess, (dir), CONST char *dir)
 
 /* Return nonzero if FILE exists.  */
 static int
-DEFUN(exists, (file), CONST char *file)
+exists (const char *file)
 {
   /* We can stat the file even if we can't read its data.  */
   struct stat st;
@@ -64,7 +63,7 @@ DEFUN(exists, (file), CONST char *file)
 
 
 /* These are the characters used in temporary filenames.  */
-static CONST char letters[] =
+static const char letters[] =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 /* Generate a temporary filename and return it (in a static buffer).  If
@@ -82,13 +81,11 @@ static CONST char letters[] =
    existing file will be returned.  When the cycle reaches its end
    (12345ZZZ), NULL is returned.  */
 char *
-DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
-      CONST char *dir AND CONST char *pfx AND
-      int dir_search AND size_t *lenptr AND
-      FILE **streamptr)
+__stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
+		      size_t *lenptr, FILE **streamptr)
 {
   int saverrno = errno;
-  static CONST char tmpdir[] = P_tmpdir;
+  static const char tmpdir[] = P_tmpdir;
   static size_t indices[2];
   size_t *idx;
   static char buf[FILENAME_MAX];
@@ -98,7 +95,7 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
 
   if (dir_search)
     {
-      register CONST char *d = getenv ("TMPDIR");
+      register const char *d = getenv ("TMPDIR");
       if (d != NULL && !diraccess (d))
 	d = NULL;
       if (d == NULL && dir != NULL && diraccess (dir))
