@@ -1,3 +1,7 @@
+1998-03-26 18:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/lddlibc4.c: New file.
+
 1998-03-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/install.texi (Supported Configurations): Add
