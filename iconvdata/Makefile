@@ -50,7 +50,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO-2022-CN libISOIR165 UTF-16 UNICODE UTF-32 UTF-7 BIG5HKSCS \
 	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5 CP10007 KOI8-T		 \
 	   GEORGIAN-PS GEORGIAN-ACADEMY ISO-IR-209 MAC-SAMI ARMSCII-8	 \
-	   TCVN5712-1
+	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -67,6 +67,7 @@ libKSC-routines := ksc5601
 libGB-routines := gb2312
 libCNS-routines := cns11643l1 cns11643
 libISOIR165-routines := iso-ir-165
+libJISX0213-routines := jisx0213
 
 LDFLAGS-EUC-KR.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-KR.so: $(objpfx)libKSC.so
@@ -80,6 +81,10 @@ LDFLAGS-EUC-CN.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-CN.so: $(objpfx)libGB.so
 LDFLAGS-EUC-TW.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-TW.so: $(objpfx)libCNS.so
+LDFLAGS-EUC-JISX0213.so = $(LDFLAGS-rpath-ORIGIN)
+$(objpfx)EUC-JISX0213.so: $(objpfx)libJISX0213.so
+LDFLAGS-SHIFT_JISX0213.so = $(LDFLAGS-rpath-ORIGIN)
+$(objpfx)SHIFT_JISX0213.so: $(objpfx)libJISX0213.so
 
 LDFLAGS-ISO-2022-JP.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)ISO-2022-JP.so: $(objpfx)libJIS.so $(objpfx)libGB.so \
@@ -97,6 +102,7 @@ LDFLAGS-libKSC.so = $(LDFLAGS-soname-fname)
 LDFLAGS-libGB.so = $(LDFLAGS-soname-fname)
 LDFLAGS-libCNS.so = $(LDFLAGS-soname-fname)
 LDFLAGS-libISOIR165.so = $(LDFLAGS-soname-fname)
+LDFLAGS-libJISX0213.so = $(LDFLAGS-soname-fname)
 
 distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
@@ -110,6 +116,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      IBM1133.irreversible IBM1160.irreversible IBM1161.irreversible\
 	      IBM1163.irreversible IBM1164.irreversible			    \
 	      ARMSCII-8.irreversible TCVN5712-1.precomposed		    \
+	      JISX0213.TXT EUC-JISX0213.precomposed			    \
+	      SHIFT_JISX0213.precomposed SHIFT_JISX0213.irreversible	    \
 	      8bit-generic.c 8bit-gap.c					    \
 	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \
@@ -150,7 +158,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      ibm932.c ibm932.h ibm943.c ibm943.h gbbig5.c cp10007.c	    \
 	      koi8-t.c georgian-ps.c georgian-academy.c iso-ir-209.c	    \
 	      mac-sami.c ibm1160.c ibm1160.h ibm1161.c ibm1161.h	    \
-	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h
+	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h jisx0213.c jisx0213.h \
+	      euc-jisx0213.c shift_jisx0213.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

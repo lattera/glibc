@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -76,9 +76,15 @@ main (int argc, char *argv[])
 	size_t inbytesleft = incount;
 	char *outbuf = (char *) buf;
 	size_t outbytesleft = sizeof (buf);
-	size_t result = iconv (cd,
-			       (char **) &inbuf, &inbytesleft,
-			       &outbuf, &outbytesleft);
+	size_t result;
+
+	iconv (cd, NULL, NULL, NULL, NULL);
+	result = iconv (cd,
+			(char **) &inbuf, &inbytesleft,
+			&outbuf, &outbytesleft);
+	if (result != (size_t)(-1))
+	  result = iconv (cd, NULL, NULL, &outbuf, &outbytesleft);
+
 	if (result == (size_t)(-1))
 	  {
 	    if (errno != EILSEQ)

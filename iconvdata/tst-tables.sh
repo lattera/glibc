@@ -218,6 +218,8 @@ cat <<EOF |
   GBK
   EUC-TW
   GB18030
+  EUC-JISX0213
+  SHIFT_JISX0213
   #
   # Stateful encodings not testable this way
   #

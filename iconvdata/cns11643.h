@@ -1,5 +1,5 @@
 /* Access functions for CNS 11643 handling.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -136,6 +136,7 @@ extern const char __cns11643l1_from_ucs4_tab13[][2];
 extern const char __cns11643l1_from_ucs4_tab14[][2];
 extern const char __cns11643_from_ucs4p0_tab[][3];
 extern const char __cns11643_from_ucs4p2_tab[][3];
+extern const char __cns11643_from_ucs4p2c_tab[][3];
 
 
 static inline size_t
@@ -225,6 +226,10 @@ ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
       needed = 3;
       cp = __cns11643_from_ucs4p0_tab[ch - 0x3400];
       break;
+    case 0xfa28:
+      needed = 3;
+      cp = "\x0f\x58\x4c";
+      break;
     case 0xfe30 ... 0xfe6b:
       cp = __cns11643l1_from_ucs4_tab13[ch - 0xfe30];
       break;
@@ -243,6 +248,10 @@ ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
     case 0x20000 ... 0x2a6d6:
       needed = 3;
       cp = __cns11643_from_ucs4p2_tab[ch - 0x20000];
+      break;
+    case 0x2f800 ... 0x2fa1d:
+      needed = 3;
+      cp = __cns11643_from_ucs4p2c_tab[ch - 0x2f800];
       break;
     default:
       return __UNKNOWN_10646_CHAR;

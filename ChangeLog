@@ -1,5 +1,60 @@
 2002-04-15  Bruno Haible  <bruno@clisp.org>
 
+	* iconvdata/JISX0213.TXT: New file.
+	* iconvdata/jisx0213.h: New file.
+	* iconvdata/jisx0213.c: New file.
+	* iconvdata/euc-jisx0213.c: New file.
+	* iconvdata/shift_jisx0213.c: New file.
+	* iconvdata/gconv-modules (EUC-JISX0213, SHIFT_JISX0213): New modules.
+	* iconvdata/EUC-JISX0213.precomposed: New file.
+	* iconvdata/SHIFT_JISX0213.precomposed: New file.
+	* iconvdata/SHIFT_JISX0213.irreversible: New file.
+	* iconvdata/tst-table-to.c (main): Make it work for encodings for
+	which the "to" direction is stateful.
+	* iconvdata/tst-tables.sh: Add EUC-JISX0213, SHIFT_JISX0213.
+	* iconvdata/Makefile (modules): Add libJISX0213, EUC-JISX0213,
+	SHIFT_JISX0213.
+	(libJISX0213-routines): New variable.
+	(LDFLAGS-EUC-JISX0213.so, LDFLAGS-SHIFT_JISX0213.so): New variables.
+	(EUC-JISX0213.so, SHIFT_JISX0213.so): Depend on libJISX0213.so.
+	(LDFLAGS-libJISX0213.so): New variable.
+	(distribute): Add JISX0213.TXT, EUC-JISX0213.precomposed,
+	SHIFT_JISX0213.precomposed, SHIFT_JISX0213.irreversible,
+	jisx0213.c, jisx0213.h, euc-jisx0213.c, shift_jisx0213.c.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/big5hkscs.c (big5hkscs_to_ucs): Change element type to
+	uint32_t.  Update to Unicode 3.2.
+	(from_ucs4, from_ucs4_idx): Update to Unicode 3.2.
+	(BODY for TO_LOOP): Handle the ASCII range specially.
+	* iconvdata/BIG5HKSCS.irreversible: Add one more entry.
+	* iconvdata/testdata/BIG5HKSCS: Remove a character.
+	* iconvdata/testdata/BIG5HKSCS..UTF-8: Regenerated.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/gb18030.c (__twobyte_to_ucs, __fourbyte_to_ucs,
+	__ucs_to_gb18030_tab1, __ucs_to_gb18030_tab2): Update to Unicode 3.2.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/cns11643.h (__cns11643_from_ucs4p2c_tab): New declaration.
+	(ucs4_to_cns11643): Update.
+	* iconvdata/cns11643.c: Update to Unicode 3.2.
+	(__cns11643l2*_to_ucs4_tab, __cns11643_from_ucs4p0_tab,
+	__cns11643_from_ucs4p2_tab): Regenerated.
+	(__cns11643_from_ucs4p2c_tab): New array.
+	* iconvdata/EUC-TW.irreversible: Remove two entries.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* locale/C-translit.h.in: Update to Unicode 3.2.
+	Add <U2047>, <U205F>..<U2063>, <U2145>..<U2149>, <U2A74>..<U2A76>,
+	<U30A0>, <U3251>..<U325F>, <U32B1>..<U32BF>, <UFE00>..<UFE0F>.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
 	* iconvdata/sjis.c (halfkana_to_ucs4): Remove array.
 	(BODY for FROM_LOOP): Optimize the JISX0201:GR to Unicode conversion.
 
