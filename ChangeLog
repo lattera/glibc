@@ -1,3 +1,8 @@
+2004-03-24  Roland McGrath  <roland@redhat.com>
+
+	* Makefile ($(objpfx)c++-types-check.out): Reduce duplication in
+	defining this target.  Also elide -Wstrict-prototypes from CFLAGS.
+
 2004-03-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfscanf.c [!COMPILE_WSCANF] (TOLOWER): Cast first
