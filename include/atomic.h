@@ -113,22 +113,21 @@
 
 /* Decrement *MEM if it is > 0, and return the old value.  */
 #ifndef atomic_decrement_if_positive
-# define atomic_decrement_if_positive(mem)				      \
-  ({ __typeof (*mem) __val;						      \
-     __typeof (*mem) __oldval;						      \
+# define atomic_decrement_if_positive(mem) \
+  ({ __typeof (*mem) __oldval;						      \
      __typeof (mem) __memp;						      \
-     									      \
+									      \
      __val = *__memp;							      \
      do									      \
        {								      \
-	 if (__builtin_expect (__val <= 0, 0))				      \
+	 __oldval = *__memp;						      \
+	 if (__builtin_expect (__oldval <= 0, 0))			      \
 	   break;							      \
-	 __oldval = __val;						      \
-	 __val = atomic_compare_and_exchange_acq (__memp, __oldval - 1,	      \
-						  __oldval);		      \
        }								      \
-     while (__builtin_expect (__val != __oldval, 0));			      \
-     __val; })
+     while (__builtin_expect (atomic_compare_and_exchange_acq (__memp,	      \
+							       __oldval - 1,  \
+							       __oldval), 0));\
+     __oldval; })
 #endif
 
 
