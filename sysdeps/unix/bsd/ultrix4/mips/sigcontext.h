@@ -1,5 +1,5 @@
 /* Copyright (C) 1992 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@cs.widener.edu).
+   Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -27,7 +27,7 @@ struct sigcontext
     sigset_t sc_mask;
     
     /* Program counter when the signal hit.  */
-    PTR sc_pc;
+    __ptr_t sc_pc;
     
     /* Registers 0 through 31.  */
     int sc_regs[32];
@@ -52,9 +52,9 @@ struct sigcontext
     int sc_cause;
     
     /* CPU bad virtual address.  */
-    PTR sc_badvaddr;
+    __ptr_t sc_badvaddr;
     
     /* CPU board bad physical address.  */
-    PTR sc_badpaddr;
+    __ptr_t sc_badpaddr;
   };
 

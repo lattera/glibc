@@ -1,5 +1,5 @@
 /* Copyright (C) 1992 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@cs.widener.edu).
+   Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -18,6 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <setjmp.h>
+
+#ifndef	__GNUC__
+  #error This file uses GNU C extensions; you must compile with GCC.
+#endif
 
 /* This function is only called via the assembly language routine
    __setjmp, which arranges to pass in the stack pointer and the frame

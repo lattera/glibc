@@ -1,5 +1,5 @@
 /* Copyright (C) 1992 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@cs.widener.edu).
+   Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -21,6 +21,10 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 
 #undef __longjmp
+
+#ifndef	__GNUC__
+  #error This file uses GNU C extensions; you must compile with GCC.
+#endif
 
 __NORETURN
 void
@@ -66,7 +70,7 @@ DEFUN(__longjmp, (env, val_arg), CONST __jmp_buf env AND int val_arg)
   /* Get the PC.  */
   asm volatile ("lw $31, %0" : : "m" (env[0].__pc));
   
-  /* Give setjmp() 1 if given a 0, or what they gave us if non-zero.  */
+  /* Give setjmp 1 if given a 0, or what they gave us if non-zero.  */
   if (val == 0)
     asm volatile ("li $2, 1");
   else
@@ -74,6 +78,5 @@ DEFUN(__longjmp, (env, val_arg), CONST __jmp_buf env AND int val_arg)
 
   asm volatile ("j $31");
 
-  /* Follow the trend.. */
   abort ();
 }

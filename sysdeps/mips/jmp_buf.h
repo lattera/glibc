@@ -1,6 +1,6 @@
 /* Define the machine-dependent type `jmp_buf'.  Mips version.
    Copyright (C) 1992, 1993 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@cygnus.com).
+   Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -41,5 +41,7 @@ typedef struct
     double __fpregs[6];
   } __jmp_buf[1];
 
+#ifdef __USE_MISC
 /* Offset to the program counter in `jmp_buf'.  */
 #define JB_PC	0
+#endif
