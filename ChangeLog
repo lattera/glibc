@@ -1,3 +1,17 @@
+2001-04-23  Paul Eggert  <eggert@twinsun.com>
+
+        * posix/getopt.h (getopt_long, getopt_long_only, _getopt_internal):
+        Rename __argc to ___argc in prototypes to avoid compatibility
+        problems with systems that reserve the identifier "__argc".
+        Similarly for __argv.
+
+2001-08-21  Roland McGrath  <roland@frob.com>
+
+	* stdio-common/tst-fseek.c: Include <time.h> for `time' declaration.
+
+	* mach/Makefile (tests): Removed.
+	* mach/hello.c: File removed.
+
 2001-08-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sv.po: Update from translation team.

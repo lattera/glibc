@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,6 @@ mach/mach_interface.defs = mach/mach.defs
 # Similarly for memory_object_user vs. memory_object
 mach/memory_object_user.defs = mach/memory_object.defs
 server-interfaces := mach/exc
-tests := hello
 # It is important that we do not use the wildcard function to expand
 # `err_*.sub'.  Leaving the wildcard allows Make-dist to find all matching
 # files in all sysdep directories.
