@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1998,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,6 +41,7 @@
 #endif
 
 .globl __socket
+	cfi_startproc
 ENTRY (__socket)
 #if defined NEED_CANCELLATION && defined CENABLE
 	SINGLE_THREAD_P
@@ -49,6 +50,7 @@ ENTRY (__socket)
 
 	/* Save registers.  */
 	movl %ebx, %edx
+	cfi_register (3, 2)
 
 	movl $SYS_ify(socketcall), %eax	/* System call number in %eax.  */
 
@@ -61,6 +63,7 @@ ENTRY (__socket)
 
 	/* Restore registers.  */
 	movl %edx, %ebx
+	cfi_restore (3)
 
 	/* %eax is < 0 if there was an error.  */
 	cmpl $-125, %eax
@@ -74,13 +77,16 @@ L(pseudo_end):
 #if defined NEED_CANCELLATION && defined CENABLE
 	/* We need one more register.  */
 1:	pushl %esi
+	cfi_adjust_cfa_offset(4)
 
 	/* Enable asynchronous cancellation.  */
 	CENABLE
 	movl %eax, %esi
+	cfi_offset(6, -8)		/* %esi */
 
 	/* Save registers.  */
 	movl %ebx, %edx
+	cfi_register (3, 2)
 
 	movl $SYS_ify(socketcall), %eax	/* System call number in %eax.  */
 
@@ -93,6 +99,7 @@ L(pseudo_end):
 
 	/* Restore registers.  */
 	movl %edx, %ebx
+	cfi_restore (3)
 
 	/* Restore the cancellation.  */
 	xchgl %esi, %eax
@@ -101,6 +108,8 @@ L(pseudo_end):
 	/* Restore registers.  */
 	movl %esi, %eax
 	popl %esi
+	cfi_restore (6)
+	cfi_adjust_cfa_offset(-4)
 
 	/* %eax is < 0 if there was an error.  */
 	cmpl $-125, %eax
@@ -109,6 +118,7 @@ L(pseudo_end):
 	/* Successful; return the syscall's value.  */
 	ret
 #endif
+	cfi_endproc
 PSEUDO_END (__socket)
 
 #ifndef NO_WEAK_ALIAS

@@ -1,3 +1,10 @@
+2003-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/socket.S: Add unwind information.
+
+	* sysdeps/unix/sysv/linux/wait.c (__libc_wait): Fix type of result
+	variable.
+
 2003-06-16  Thorsten Kukuk  <kukuk@suse.de>
 
 	* include/libc-symbols.h: Add static_link_warning macro.
@@ -195,7 +202,7 @@
 
 2003-06-12  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/posix/getaddrinfo.c (gaih_inet): Set no_inet6_date alse
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Set no_inet6_date also
 	if only PF_INET address is needed.
 
 	* nss/getXXbyYY_r.c: Make sure we always return a nonzero value in
