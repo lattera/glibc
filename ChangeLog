@@ -1,3 +1,9 @@
+2003-10-22  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/Makefile (+cflags, asm-CPPFLAGS): Don't
+	append options to these.
+	* sysdeps/powerpc/powerpc64/Makefile (+cflags, asm-CPPFLAGS): Likewise.
+
 2003-10-18  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Fix merge error.
