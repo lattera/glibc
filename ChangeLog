@@ -1,3 +1,18 @@
+2001-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/gnu/netinet/tcp.h: Correct values of TCP_ macros.
+	Patch by Pekka.Pietikainen@cern.ch.
+
+	* posix/regex.c: Correct several problems with 64-bit architectures
+	introduced in the MBS changes.
+	Patch by Isamu Hasegawa <isamu@yamato.ibm.com>.
+
+2001-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/tgmath.h: Only add l suffixes if __NO_LONG_DOUBLE_MATH is
+	not defined.
+	* sysdeps/alpha/fpu/bits/mathinline.h: Honour __NO_MATH_INLINES.
+
 2001-02-07  Andreas Jaeger  <aj@suse.de>
 
 	* manual/install.texi (Tools for Compilation): Fix typo.

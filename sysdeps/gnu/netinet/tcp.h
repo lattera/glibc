@@ -37,17 +37,17 @@
 /*
  * User-settable options (used with setsockopt).
  */
-#define	TCP_NODELAY	 0x01	/* Don't delay send to coalesce packets  */
-#define	TCP_MAXSEG	 0x02	/* Set maximum segment size  */
-#define TCP_CORK	 0x03	/* Control sending of partial frames  */
-#define TCP_KEEPIDLE	 0x04	/* Start keeplives after this period */
-#define TCP_KEEPINTVL	 0x05	/* Interval between keepalives */
-#define TCP_KEEPCNT	 0x06	/* Number of keepalives before death */
-#define TCP_SYNCNT	 0x07	/* Number of SYN retransmits */
-#define TCP_LINGER2	 0x08	/* Life time of orphaned FIN-WAIT-2 state */
-#define TCP_DEFER_ACCEPT 0x09	/* Wake up listener only when data arrive */
-#define TCP_WINDOW_CLAMP 0x10	/* Bound advertised window */
-#define TCP_INFO	 0x11	/* Information about this connection. */
+#define	TCP_NODELAY	 1	/* Don't delay send to coalesce packets  */
+#define	TCP_MAXSEG	 2	/* Set maximum segment size  */
+#define TCP_CORK	 3	/* Control sending of partial frames  */
+#define TCP_KEEPIDLE	 4	/* Start keeplives after this period */
+#define TCP_KEEPINTVL	 5	/* Interval between keepalives */
+#define TCP_KEEPCNT	 6	/* Number of keepalives before death */
+#define TCP_SYNCNT	 7	/* Number of SYN retransmits */
+#define TCP_LINGER2	 8	/* Life time of orphaned FIN-WAIT-2 state */
+#define TCP_DEFER_ACCEPT 9	/* Wake up listener only when data arrive */
+#define TCP_WINDOW_CLAMP 10	/* Bound advertised window */
+#define TCP_INFO	 11	/* Information about this connection. */
 
 #ifdef __USE_MISC
 # include <sys/types.h>

@@ -1,5 +1,5 @@
 /* Inline math functions for Alpha.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang.
 
@@ -57,6 +57,8 @@
    ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
       !isunordered(__x, __y) && __x != __y; }))
 #endif /* ISO C99 */
+
+#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 #define __inline_copysign(NAME, TYPE)					\
 __MATH_INLINE TYPE							\
@@ -174,4 +176,6 @@ __MATH_INLINE double fdim (double __x, double __y) __THROW
   return __x < __y ? 0.0 : __x - __y;
 }
 
-#endif
+#endif /* C99 */
+
+#endif /* __NO_MATH_INLINES */
