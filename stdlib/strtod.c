@@ -1167,12 +1167,12 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 /* External user entry point.  */
 
 FLOAT
+#ifdef weak_function
+weak_function
+#endif
 STRTOF (nptr, endptr)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
 {
   return INTERNAL (STRTOF) (nptr, endptr, 0);
 }
-
-#define weak_this(x) weak_symbol(x)
-weak_this (STRTOF)

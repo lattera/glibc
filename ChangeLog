@@ -16,6 +16,7 @@ Mon Jul  8 00:11:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* elf/dl-minimal.c: Use weak_function as keyword in function defns
  	instead of weak_symbol (NAME) after the defn.
 	* stdlib/strtol.c: Likewise.
+	* stdlib/strtod.c: Likewise.
 	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela) [RTLD_BOOTSTRAP]:
