@@ -68,7 +68,7 @@ EBCDIC-AT-DE-routines := ebcdic-at-de
 EBCDIC-AT-DE-A-routines := ebcdic-at-de-a
 EBCDIC-CA-FR-routines := ebcdic-ca-fr
 EBCDIC-DK-NO-routines := ebcdic-dk-no
-EBCDIC-DK-NO-A_routines := ebcdic-dk-no-a
+EBCDIC-DK-NO-A-routines := ebcdic-dk-no-a
 EBCDIC-ES-routines := ebcdic-es
 EBCDIC-ES-A-routines := ebcdic-es-a
 EBCDIC-ES-S-routines := ebcdic-es-s
@@ -479,7 +479,7 @@ tests: $(objpfx)iconv-test.out
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
-			 $(common-objdir)/iconv/iconv_prog 
+			 $(common-objdir)/iconv/iconv_prog
 	$(SHELL) -e $< $(common-objdir) > $@
 
 ifdef objpfx

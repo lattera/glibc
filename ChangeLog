@@ -1,3 +1,13 @@
+1998-04-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconv/gconv_simple.c: Fix endian bug.  Don't put side effects in
+	argument of bswap_XX macro.
+
+1998-04-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/Makefile (EBCDIC-DK-NO-A-routines): Fix typo in
+	variable name.
+
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/semctl.c (semctl): Define own union

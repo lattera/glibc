@@ -107,8 +107,8 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
   /* Sigh, we have to do some real work.  */
   size_t cnt;
 
-  for (cnt = 0; cnt < n_convert; ++cnt)
-    *((uint32_t *) outptr)++ = bswap_32 (*((uint32_t *) inptr)++);
+  for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
+    *((uint32_t *) outptr)++ = bswap_32 (*(uint32_t *) inptr);
 
   *inptrp = inptr;
   *outptrp = outptr;
@@ -370,7 +370,8 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 #define LOOPFCT			FROM_LOOP
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 # define BODY \
-  *((uint32_t *) outptr)++ = bswap_16 (*((uint16_t *) inptr)++);
+  *((uint32_t *) outptr)++ = bswap_16 (*(uint16_t *) inptr);		      \
+  inptr += 2;
 #else
 # define BODY \
   *((uint32_t *) outptr)++ = *((uint16_t *) inptr)++;
@@ -438,7 +439,8 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
   *((uint32_t *) outptr)++ = *((uint16_t *) inptr)++;
 #else
 # define BODY \
-  *((uint32_t *) outptr)++ = bswap_16 (*((uint16_t *) inptr)++);
+  *((uint32_t *) outptr)++ = bswap_16 (*(uint16_t *) inptr);		      \
+  inptr += 2;
 #endif
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -475,9 +477,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	result = GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
-    /* Please note that we use the `uint32_t' from-pointer as an `uint16_t'   \
-       pointer which works since we are on a little endian machine.  */	      \
-    *((uint16_t *) outptr)++ = bswap_16 (*((uint16_t *) inptr));	      \
+    *((uint16_t *) outptr)++ = bswap_16 (((uint16_t *) inptr)[1]);	      \
     inptr += 4;								      \
   }
 #endif
