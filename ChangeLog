@@ -1,8 +1,8 @@
 2001-03-04  Andreas Jaeger  <aj@suse.de>
 
-	* resolv/tst-aton.c: Add testcase for IP with four points.
+	* resolv/tst-aton.c: Add testcase for IP with four periods.
 
-	* resolv/inet_addr.c: Don't recognize an IP with four points.
+	* resolv/inet_addr.c: Don't recognize an IP with four periods.
 	Patch by Andre' Breiler <A.Breiler@gmx.net>.
 
 2001-02-27  Philip Blundell  <pb@futuretv.com>
