@@ -841,6 +841,12 @@ module	IBM930//		INTERNAL		IBM930		1
 module	INTERNAL		IBM930//		IBM930		1
 
 #	from			to			module		cost
+alias	IBM-932//		IBM932//
+alias	CSIBM932//		IBM932//
+module	IBM932//		INTERNAL		IBM932		1
+module	INTERNAL		IBM932//		IBM932		1
+
+#	from			to			module		cost
 alias	IBM-933//		IBM933//
 alias	CP933//			IBM933//
 alias	EBCDIC-CP-AR2//		IBM933//
@@ -871,6 +877,12 @@ alias	EBCDIC-CP-AR2//		IBM939//
 alias	CSIBM939//		IBM939//
 module	IBM939//		INTERNAL		IBM939		1
 module	INTERNAL		IBM939//		IBM939		1
+
+#	from			to			module		cost
+alias	IBM-943//		IBM943//
+alias	CSIBM943//		IBM943//
+module	IBM943//		INTERNAL		IBM943		1
+module	INTERNAL		IBM943//		IBM943		1
 
 #	from			to			module		cost
 alias	CP1004//		IBM1004//

@@ -1,6 +1,6 @@
 #! /bin/sh -f
 # Run available iconv(1) tests.
-# Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -51,71 +51,78 @@ fi
 failed=0
 while read from to subset targets; do
   # Ignore empty and comment lines.
-  if test -z "$targets" || test "$from" = '#'; then continue; fi
+  if test -z "$subset" || test "$from" = '#'; then continue; fi
 
   # Expand the variables now.
   PROG=`eval echo $ICONV`
 
-  for t in $targets; do
-    echo $ac_n "test data: $from -> $t $ac_c"
-    $PROG -f $from -t $t testdata/$from > $temp1 ||
-      { if test $? -gt 128; then exit 1; fi
-	echo "FAILED"
-	failed=1
-	continue
-      }
-    echo $ac_n "OK$ac_c"
-    if test -s testdata/$from..$t; then
-      cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
-	{ echo "/FAILED"; failed=1; continue; }
-      echo $ac_n "/OK$ac_c"
-    fi
-    echo $ac_n " -> $from $ac_c"
-    $PROG -f $t -t $to -o $temp2 $temp1 ||
-      { if test $? -gt 128; then exit 1; fi
-	echo "FAILED"
-	failed=1
-	continue
-      }
-    echo $ac_n "OK$ac_c"
-    test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
-      { echo "/FAILED"; failed=1; continue; }
-    echo "/OK"
-    rm -f $temp1 $temp2
+  if test -n "$targets"; then
+    for t in $targets; do
+      if test -f testdata/$from; then
+	echo $ac_n "test data: $from -> $t $ac_c"
+	$PROG -f $from -t $t testdata/$from > $temp1 ||
+	  { if test $? -gt 128; then exit 1; fi
+	    echo "FAILED"
+	    failed=1
+	    continue
+	  }
+	echo $ac_n "OK$ac_c"
+	if test -s testdata/$from..$t; then
+	  cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
+	    { echo "/FAILED"; failed=1; continue; }
+	  echo $ac_n "/OK$ac_c"
+	fi
+	echo $ac_n " -> $from $ac_c"
+	$PROG -f $t -t $to -o $temp2 $temp1 ||
+	  { if test $? -gt 128; then exit 1; fi
+	    echo "FAILED"
+	    failed=1
+	    continue
+	  }
+	echo $ac_n "OK$ac_c"
+	test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
+	  { echo "/FAILED"; failed=1; continue; }
+	echo "/OK"
+	rm -f $temp1 $temp2
+      fi
 
-    # Now test some bigger text, entirely in ASCII.  If ASCII is no subset
-    # of the coded character set we convert the text to this coded character
-    # set.  Otherwise we convert to all the TARGETS.
-    if test $subset = Y; then
-      echo $ac_n "   suntzu: $from -> $t -> $to $ac_c"
-      $PROG -f $from -t $t testdata/suntzus |
-      $PROG -f $t -t $to > $temp1 ||
-	{ if test $? -gt 128; then exit 1; fi
-	  echo "FAILED"
-	  failed=1
-	  continue
-	}
-      echo $ac_n "OK$ac_c"
-      cmp testdata/suntzus $temp1 ||
-	{ echo "/FAILED";
-	  failed=1; continue; }
-    else
-      echo $ac_n "   suntzu: ASCII -> $to -> ASCII $ac_c"
-      $PROG -f ASCII -t $to testdata/suntzus |
-      $PROG -f $to -t ASCII > $temp1 ||
-        { if test $? -gt 128; then exit 1; fi
-	  echo "FAILED"
-	  failed=1
-	  continue
-	}
-      echo $ac_n "OK$ac_c"
-      cmp testdata/suntzus $temp1 ||
-        { echo "/FAILED";
-	  failed=1; continue; }
-    fi
+      # Now test some bigger text, entirely in ASCII.  If ASCII is no subset
+      # of the coded character set we convert the text to this coded character
+      # set.  Otherwise we convert to all the TARGETS.
+      if test $subset = Y; then
+	echo $ac_n "   suntzu: $from -> $t -> $to $ac_c"
+	$PROG -f $from -t $t testdata/suntzus |
+	$PROG -f $t -t $to > $temp1 ||
+	  { if test $? -gt 128; then exit 1; fi
+	    echo "FAILED"
+	    failed=1
+	    continue
+	  }
+	echo $ac_n "OK$ac_c"
+	cmp testdata/suntzus $temp1 ||
+	  { echo "/FAILED";
+	    failed=1; continue; }
+	echo "/OK"
+      fi
+      rm -f $temp1
+    done
+  fi
+
+  if test "$subset" != Y; then
+    echo $ac_n "   suntzu: ASCII -> $to -> ASCII $ac_c"
+    $PROG -f ASCII -t $to testdata/suntzus |
+    $PROG -f $to -t ASCII > $temp1 ||
+      { if test $? -gt 128; then exit 1; fi
+	echo "FAILED"
+	failed=1
+	continue
+      }
+    echo $ac_n "OK$ac_c"
+    cmp testdata/suntzus $temp1 ||
+      { echo "/FAILED";
+	failed=1; continue; }
     echo "/OK"
-    rm -f $temp1
-  done
+  fi
 done < TESTS
 
 exit $failed

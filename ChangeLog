@@ -1,5 +1,17 @@
 2001-01-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/run-iconv-test.sh: Reorgnize a bit to allow running only
+	the ASCII test.
+	* iconvdata/TESTS: Add entries for IBM932 and IBM943.
+
+	* iconvdata/Makefile (modules): Add IBM932 and IBM943.
+	* iconvdata/gconv-modules: Add entries for IBM932 and IBM943.
+	* iconvdata/ibm932.c: New file.
+	* iconvdata/ibm932.h: New file.
+	* iconvdata/ibm943.c: New file.
+	* iconvdata/ibm943.h: New file.
+	Patches by Masahide Washizawa <washi@jp.ibm.com>.
+
 	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Fix typo
 	preventing optimization from being done.  Set the correct type bit
 	in seen.  Don't define and use _dl_base_addr unless

@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM424	 \
 	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
 	   IBM862 IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880	 \
-	   IBM866 CP1258 IBM922 IBM1124 IBM1129 			 \
+	   IBM866 CP1258 IBM922 IBM1124 IBM1129 IBM932 IBM943		 \
 	   IBM856 IBM930 IBM933 IBM935 IBM937 IBM939 IBM1046		 \
 	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
 	   CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH IEC_P27-1		 \
@@ -135,7 +135,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      t.61.c uhc.c sami-ws2.c iso-ir-197.c tis-620.c koi8-u.c	    \
 	      isiri-3342.c isiri-3342.h gbgbk.c iso-2022-cn.c cns11643l2.h  \
 	      iso8859-16.c utf-16.c unicode.c utf-7.c big5hkscs.c	    \
-	      iso-ir-165.c iso-ir-165.h gb18030.c iso-2022-cn-ext.c
+	      iso-ir-165.c iso-ir-165.h gb18030.c iso-2022-cn-ext.c	    \
+	      ibm932.c ibm932.h ibm943.c ibm943.h
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

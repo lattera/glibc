@@ -1,5 +1,5 @@
 # Available tests for iconv(1) (and therefore iconv(3)) in GNU libc.
-# Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -95,3 +95,5 @@ IBM935			IBM935			N	UTF8
 IBM937			IBM937			N	UTF8
 IBM939			IBM939			N	UTF8
 IBM1046			IBM1046			Y	UTF8
+IBM932			IBM932			N
+IBM943			IBM943			N
