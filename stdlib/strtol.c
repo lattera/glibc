@@ -17,55 +17,77 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ctype.h>
-#include <limits.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <errno.h>
-#include "../locale/localeinfo.h"
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
+#include <ctype.h>
+#include <errno.h>
+#include <limits.h>
+
+#ifdef STDC_HEADERS
+# include <stddef.h>
+# include <stdlib.h>
+#else
+# ifndef NULL
+#  define NULL 0
+# endif
+#endif
+
+#ifdef _LIBC
+# define USE_NUMBER_GROUPING
+#endif
+
+#ifdef USE_NUMBER_GROUPING
+# include "../locale/localeinfo.h"
+#endif
 
 /* Nonzero if we are defining `strtoul' or `strtouq', operating on
    unsigned integers.  */
 #ifndef UNSIGNED
-#define	UNSIGNED	0
-#define INT		LONG int
+# define UNSIGNED 0
+# define INT LONG int
 #else
-#define	strtol		strtoul
-#define INT		unsigned LONG int
+# define strtol strtoul
+# define INT unsigned LONG int
 #endif
 
 /* If QUAD is defined, we are defining `strtoq' or `strtouq',
    operating on `long long int's.  */
 #ifdef QUAD
-#if UNSIGNED
-#define strtoul		strtouq
+# if UNSIGNED
+#  define strtoul strtouq
+# else
+#  define strtol strtoq
+# endif
+# define LONG long long
+# undef LONG_MIN
+# define LONG_MIN LONG_LONG_MIN
+# undef LONG_MAX
+# define LONG_MAX LONG_LONG_MAX
+# undef ULONG_MAX
+# define ULONG_MAX ULONG_LONG_MAX
+# if __GNUC__ == 2 && __GNUC_MINOR__ < 7
+   /* Work around gcc bug with using this constant.  */
+   static const unsigned long long int maxquad = ULONG_LONG_MAX;
+#  undef ULONG_MAX
+#  define ULONG_MAX maxquad
+# endif
 #else
-#define strtol		strtoq
+# define LONG long
 #endif
-#define	LONG		long long
-#undef	LONG_MIN
-#define	LONG_MIN	LONG_LONG_MIN
-#undef	LONG_MAX
-#define LONG_MAX	LONG_LONG_MAX
-#undef	ULONG_MAX
-#define ULONG_MAX	ULONG_LONG_MAX
-#if __GNUC__ == 2 && __GNUC_MINOR__ < 7
-/* Work around gcc bug with using this constant.  */
-static const unsigned long long int maxquad = ULONG_LONG_MAX;
-#undef	ULONG_MAX
-#define ULONG_MAX	maxquad
-#endif
+
+#ifdef __STDC__
+# define INTERNAL(x) INTERNAL1(x)
+# define INTERNAL1(x) __##x##_internal
 #else
-#define	LONG	long
+# define INTERNAL(x) __/**/x/**/_internal
 #endif
 
-
-#define INTERNAL(x) INTERNAL1(x)
-#define INTERNAL1(x) __##x##_internal
-
+#ifdef USE_NUMBER_GROUPING
 /* This file defines a function to check for correct grouping.  */
-#include "grouping.h"
+# include "grouping.h"
+#endif
 
 
 /* Convert NPTR to an `unsigned long int' or `long int' in base BASE.
@@ -91,6 +113,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   const char *save, *end;
   int overflow;
 
+#ifdef USE_NUMBER_GROUPING
   /* The thousands character of the current locale.  */
   wchar_t thousands;
   /* The numeric grouping specification of the current locale,
@@ -114,7 +137,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
     }
   else
     grouping = NULL;
-
+#endif
 
   if (base < 0 || base == 1 || base > 36)
     base = 10;
@@ -162,6 +185,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   /* Save the pointer so we can check later if anything happened.  */
   save = s;
 
+#ifdef USE_NUMBER_GROUPING
   if (group)
     {
       /* Find the end of the digit string and check its grouping.  */
@@ -176,6 +200,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 	end = correctly_grouped_prefix (s, end, thousands, grouping);
     }
   else
+#endif
     end = NULL;
 
   cutoff = ULONG_MAX / (unsigned LONG int) base;
@@ -214,7 +239,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   if (endptr != NULL)
     *endptr = (char *) s;
 
-#if	!UNSIGNED
+#if !UNSIGNED
   /* Check for a value that is within the range of
      `unsigned LONG int', but outside the range of `LONG int'.  */
   if (i > (negative ?
@@ -225,7 +250,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   if (overflow)
     {
       errno = ERANGE;
-#if	UNSIGNED
+#if UNSIGNED
       return ULONG_MAX;
 #else
       return negative ? LONG_MIN : LONG_MAX;
@@ -244,7 +269,9 @@ noconv:
 
 /* External user entry point.  */
 
+#ifdef weak_symbol
 weak_symbol (strtol)
+#endif
 
 INT
 strtol (nptr, endptr, base)
