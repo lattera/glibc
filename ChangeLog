@@ -1,3 +1,8 @@
+2003-04-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/swapcontext.S: Rewrite register
+	restoration as done for setcontext yesterday.
+
 2003-04-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c: Revert 2003-03-14 change.
