@@ -20,6 +20,8 @@
 
 2002-09-12  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Regenerate.
+
 	* elf/rtld.c (struct dl_start_final_info): New.
 	(_dl_start_final): Change second argument to struct
 	dl_start_final_info *.  Set start_time from info.
