@@ -58,7 +58,13 @@ _dl_fini (void)
      the pointers in.  */
   maps = (struct link_map **) alloca (nloaded * sizeof (struct link_map *));
   for (l = _dl_loaded, nloaded = 0; l != NULL; l = l->l_next)
-    maps[nloaded++] = l;
+    {
+      maps[nloaded++] = l;
+
+      /* Bump l_opencount of all objects so that they are not dlclose()ed
+	 from underneath us.  */
+      ++l->l_opencount;
+    }
 
   /* Now we have to do the sorting.  */
   for (l = _dl_loaded->l_next; l != NULL; l = l->l_next)

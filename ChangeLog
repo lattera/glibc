@@ -1,3 +1,8 @@
+2000-05-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Bump l_opencount of all objects so that
+	they are not dlclose'd from underneath us.
+
 2000-05-08  Andreas Schwab  <schwab@suse.de>
 
 	* posix/execle.c: Fix size parameter of memcpy.
