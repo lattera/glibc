@@ -1,3 +1,7 @@
+1998-03-10 10:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/filesys.texi: Document the change below.
+
 1998-03-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/posix/mkstemp.c (mkstemp): Open temporary file mode

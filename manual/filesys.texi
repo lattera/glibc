@@ -2402,6 +2402,9 @@ for reading and writing.  If @code{mkstemp} cannot create a
 uniquely-named file, it makes @var{template} an empty string and returns
 @code{-1}.  If @var{template} does not end with @samp{XXXXXX},
 @code{mkstemp} returns @code{-1} and does not modify @var{template}.
+
+The file is opened using mode @code{0600}.  If the file is meant to be
+used by other users the mode must explicitly changed.
 @end deftypefun
 
 Unlike @code{mktemp}, @code{mkstemp} is actually guaranteed to create a
