@@ -41,7 +41,7 @@
 #include "dl-procinfo.h"
 
 #ifndef LD_SO_CONF
-# define LD_SO_CONF "/etc/ld.so.conf"
+# define LD_SO_CONF SYSCONFDIR "/ld.so.conf"
 #endif
 
 /* Get libc version number.  */
@@ -152,7 +152,7 @@ static int
 is_hwcap (const char *name)
 {
   int hwcap_idx = _dl_string_hwcap (name);
-  
+
   if (hwcap_idx != -1 && ((1 << hwcap_idx) & HWCAP_IMPORTANT))
     return 1;
   return 0;
@@ -802,8 +802,9 @@ main (int argc, char **argv)
   if (!opt_only_cline)
     {
       /* Always add the standard search paths.  */
-      add_dir ("/lib");
-      add_dir ("/usr/lib");
+      add_dir (SLIBDIR);
+      if (strcmp (SLIBDIR, LIBDIR))
+	add_dir (LIBDIR);
 
       parse_conf (config_file);
     }

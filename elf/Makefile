@@ -215,6 +215,10 @@ $(objpfx)ldd: ldd.bash.in $(common-objpfx)soversions.mk \
 $(objpfx)sprof: $(libdl)
 
 $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
+SYSCONF-FLAGS := -D'SYSCONFDIR="$(sysconfdir)"'
+CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' -D'SLIBDIR="$(slibdir)"'
+CFLAGS-dl-cache.c = $(SYSCONF-FLAGS)
+CFLAGS-cache.c = $(SYSCONF-FLAGS)
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))

@@ -135,21 +135,21 @@ __MATHDECL (_Mdouble_,creal, (_Mdouble_complex_ __z));
 
 /* Imaginary part of Z.  */
 extern __inline _Mdouble_
-__MATH_PRECNAME(cimag) (_Mdouble_complex_ __z)
+__MATH_PRECNAME(cimag) (_Mdouble_complex_ __z) __THROW
 {
   return __imag__ __z;
 }
 
 /* Real part of Z.  */
 extern __inline _Mdouble_
-__MATH_PRECNAME(creal) (_Mdouble_complex_ __z)
+__MATH_PRECNAME(creal) (_Mdouble_complex_ __z) __THROW
 {
   return __real__ __z;
 }
 
 /* Complex conjugate of Z.  */
 extern __inline _Mdouble_complex_
-__MATH_PRECNAME(conj) (_Mdouble_complex_ __z)
+__MATH_PRECNAME(conj) (_Mdouble_complex_ __z) __THROW
 {
   return ~__z;
 }

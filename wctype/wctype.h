@@ -70,10 +70,10 @@ typedef unsigned long int wctype_t;
 #   define _ISwbit(bit)	(1 << (bit))
 #  else /* __BYTE_ORDER == __LITTLE_ENDIAN */
 #   define _ISwbit(bit)	\
-	((bit) < 8 ? (int) (1UL << ((bit) + 24))			      \
-	 : ((bit) < 16 ? (int) (1UL << ((bit) + 8))			      \
-	    : ((bit) < 24 ? (int) (1UL << ((bit) - 8 ))			      \
-	       : (int) (1UL << ((bit) - 24 )))))
+	((bit) < 8 ? (int) ((1UL << (bit)) << 24)			      \
+	 : ((bit) < 16 ? (int) ((1UL << (bit)) << 8)			      \
+	    : ((bit) < 24 ? (int) ((1UL << (bit)) >> 8)			      \
+	       : (int) ((1UL << (bit)) >> 24))))
 #  endif
 
 enum

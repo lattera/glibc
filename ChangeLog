@@ -1,3 +1,23 @@
+2000-07-12  Andreas Jaeger  <aj@suse.de>
+
+	* elf/Makefile (SYSCONF-FLAGS): Added to pass sysconfdir to
+	compiler.
+	(CFLAGS-cache.c): Added, uses SYSCONF-FLAGS.
+	(CFLAGS-dl-cache.c): Likewise.
+	(CFLAGS-ldconfig.c): Added, passes directory locations.
+
+	* sysdeps/generic/dl-cache.h (LD_SO_CACHE): Use SYSCONFDIR to
+	locate cache.
+	* elf/ldconfig.c (LD_SO_CONF): Likewise.
+	(main): Use configured LIBDIR and SLIBDIR.
+
+2000-07-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/bits/cmathcalls.h (cimag): Add __THROW.
+	(creal, conj): Likewise.
+	* wctype/wctype.h (_ISwbit): Avoid warnings about shifting left
+	by negative value.
+
 2000-07-12  H.J. Lu  <hjl@gnu.org>
 
 	* resolv/Versions (libresolv): Add __res_hostalias to GLIBC_2.2
