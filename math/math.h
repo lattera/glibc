@@ -1,5 +1,5 @@
 /* Declarations for math functions.
-   Copyright (C) 1991-1993,1995-1999,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991-1993,1995-1999,2001,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,7 +132,7 @@ extern int signgam;
 
 
 /* ISO C99 defines some generic macros which work on any data type.  */
-#if __USE_ISOC99
+#ifdef __USE_ISOC99
 
 /* Get the architecture specific values describing the floating-point
    evaluation.  The following symbols will get defined:
@@ -362,7 +362,7 @@ extern int matherr (struct exception *__exc);
 # define __NO_MATH_INLINES	1
 #endif
 
-#if __USE_ISOC99 && __GNUC_PREREQ(2,97)
+#if defined __USE_ISOC99 && __GNUC_PREREQ(2,97)
 /* ISO C99 defines some macros to compare number while taking care for
    unordered numbers.  Many FPUs provide special instructions to support
    these operations.  Generic support in GCC for these as builtins went
@@ -382,7 +382,7 @@ extern int matherr (struct exception *__exc);
 # include <bits/mathinline.h>
 #endif
 
-#if __USE_ISOC99
+#ifdef __USE_ISOC99
 /* If we've still got undefined comparison macros, provide defaults.  */
 
 /* Return nonzero value if X is greater than Y.  */
