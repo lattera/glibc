@@ -55,8 +55,30 @@ Version 2.1
 
 * An implementation of profiling shared libraries was added by Ulrich Drepper.
 
-* Thorsten Kukuk provided an implementation for a caching daemon for NSS
-  (nscd).
+* Thorsten Kukuk and Ulrich Drepper provided an implementation for a caching
+  daemon for NSS (nscd).
+
+  Missing a better place here are some numbers on improvements.  Under
+  Linux 2.1.125 un-tar-ing the kernel sources takes
+
+				user	system	wall
+
+    using local files		12.19s	 6.88s	22.91s
+
+    using NIS			13.92s	 8.91s	26.34s
+
+    using NIS & nscd		10.37s	 7.34s	25.30s
+
+    using NIS & old nscd [1]	13.83s	 8.32s	29.60s
+
+  When NIS+ is used instead of NIS the benefit from using nscd is much bigger.
+  Keep in mind that non-namelookup related operations dominate above times.
+  It was just a common complain that using NIS+ unpacking the kernel is
+  horribly slow.  When using nscd unpacking is now even faster than using
+  NIS.
+
+  [1] The old nscd implementation is not anymore available since it was
+  distributed with glibc up to version 2.0.98.
 
 * Tim Waugh provided an implementation of the POSIX.2 wordexp function family.
 
@@ -66,6 +88,340 @@ Version 2.1
   and $PLATFORM) in RPATHs and similar strings (Ulrich Drepper).
 
 * rcmd can now handle netgroups (Dick Streefland).
+
+* Interface changes relative to the latest 2.0.x release:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+addseverity			NEW: fmtmsg
+alphasort64			NEW: LFS
+argp_err_exit_status		NEW: argp
+argp_error			NEW: argp
+argp_failure			NEW: argp
+argp_help			NEW: argp
+argp_parse			NEW: argp
+argp_program_bug_address	NEW: argp
+argp_program_version		NEW: argp
+argp_program_version_hook	NEW: argp
+argp_state_help			NEW: argp
+argp_usage			NEW: argp
+authdes_create			NEW: NIS+
+authdes_getucred		NEW: NIS+
+authdes_pk_create		NEW: NIS+
+backtrace			NEW: GNU ext.
+backtrace_symbols		NEW: GNU ext.
+backtrace_symbols_fd		NEW: GNU ext.
+cacos				NEW: ISO C 9x
+cacosf				NEW: ISO C 9x
+cacosh				NEW: ISO C 9x
+cacoshf				NEW: ISO C 9x
+cacoshl				NEW: ISO C 9x
+cacosl				NEW: ISO C 9x
+capget				NEW: kernel
+capset				NEW: kernel
+carg				NEW: ISO C 9x
+cargf				NEW: ISO C 9x
+cargl				NEW: ISO C 9x
+casin				NEW: ISO C 9x
+casinf				NEW: ISO C 9x
+casinh				NEW: ISO C 9x
+casinhf				NEW: ISO C 9x
+casinhl				NEW: ISO C 9x
+casinl				NEW: ISO C 9x
+catan				NEW: ISO C 9x
+catanf				NEW: ISO C 9x
+catanh				NEW: ISO C 9x
+catanhf				NEW: ISO C 9x
+catanhl				NEW: ISO C 9x
+catanl				NEW: ISO C 9x
+cbc_crypt			NEW: NIS+
+ccos				NEW: ISO C 9x
+ccosf				NEW: ISO C 9x
+ccosh				NEW: ISO C 9x
+ccoshf				NEW: ISO C 9x
+ccoshl				NEW: ISO C 9x
+ccosl				NEW: ISO C 9x
+cexp				NEW: ISO C 9x
+cexpf				NEW: ISO C 9x
+cexpl				NEW: ISO C 9x
+cimag				NEW: ISO C 9x
+cimagf				NEW: ISO C 9x
+cimagl				NEW: ISO C 9x
+clearerr_locked			REMOVED
+clntunix_create			NEW: sunrpc ext
+clog				NEW: ISO C 9x
+clog10				NEW: ISO C 9x
+clog10f				NEW: ISO C 9x
+clog10l				NEW: ISO C 9x
+clogf				NEW: ISO C 9x
+clogl				NEW: ISO C 9x
+conj				NEW: ISO C 9x
+conjf				NEW: ISO C 9x
+conjl				NEW: ISO C 9x
+cpow				NEW: ISO C 9x
+cpowf				NEW: ISO C 9x
+cpowl				NEW: ISO C 9x
+cproj				NEW: ISO C 9x
+cprojf				NEW: ISO C 9x
+cprojl				NEW: ISO C 9x
+creal				NEW: ISO C 9x
+crealf				NEW: ISO C 9x
+creall				NEW: ISO C 9x
+creat64				NEW: LFS
+csin				NEW: ISO C 9x
+csinf				NEW: ISO C 9x
+csinh				NEW: ISO C 9x
+csinhf				NEW: ISO C 9x
+csinhl				NEW: ISO C 9x
+csinl				NEW: ISO C 9x
+csqrt				NEW: ISO C 9x
+csqrtf				NEW: ISO C 9x
+csqrtl				NEW: ISO C 9x
+ctan				NEW: ISO C 9x
+ctanf				NEW: ISO C 9x
+ctanh				NEW: ISO C 9x
+ctanhf				NEW: ISO C 9x
+ctanhl				NEW: ISO C 9x
+ctanl				NEW: ISO C 9x
+des_setparity			NEW: NIS+
+ecb_crypt			NEW: NIS+
+endutxent			NEW: utmpx
+exp10				NEW: ISO C 9x
+exp10f				NEW: ISO C 9x
+exp10l				NEW: ISO C 9x
+exp2				NEW: ISO C 9x
+exp2f				NEW: ISO C 9x
+exp2l				NEW: ISO C 9x
+fattach				NEW: STREAMS
+fdetach				NEW: STREAMS
+fdim				NEW: ISO C 9x
+fdimf				NEW: ISO C 9x
+fdiml				NEW: ISO C 9x
+feclearexcept			NEW: ISO C 9x
+fegetenv			NEW: ISO C 9x
+fegetexceptflag			NEW: ISO C 9x
+fegetround			NEW: ISO C 9x
+feholdexcept			NEW: ISO C 9x
+feof_locked			REMOVED
+feraiseexcept			NEW: ISO C 9x
+ferror_locked			REMOVED
+fesetenv			NEW: ISO C 9x
+fesetexceptflag			NEW: ISO C 9x
+fesetround			NEW: ISO C 9x
+fetestexcept			NEW: ISO C 9x
+feupdateenv			NEW: ISO C 9x
+fflush_locked			REMOVED
+ffsl				NEW: GNU ext.
+ffsll				NEW: GNU ext.
+fgetpos64			NEW: LFS
+fgets_unlocked			NEW: GNU ext.
+fileno_locked			REMOVED
+fma				NEW: ISO C 9x
+fmaf				NEW: ISO C 9x
+fmal				NEW: ISO C 9x
+fmax				NEW: ISO C 9x
+fmaxf				NEW: ISO C 9x
+fmaxl				NEW: ISO C 9x
+fmin				NEW: ISO C 9x
+fminf				NEW: ISO C 9x
+fminl				NEW: ISO C 9x
+fmtmsg				NEW: fmtmsg
+fopen64				NEW: LFS
+fputc_locked			REMOVED
+fputs_unlocked			NEW: GNU ext.
+fread_unlocked			NEW: GNU ext.
+freopen64			NEW: LFS
+fseeko				NEW: Unix98
+fsetpos64			NEW: LFS
+fstatfs64			NEW: LFS
+fstatvfs			NEW: Unix98
+fstatvfs64			NEW: LFS
+ftello				NEW: Unix98
+ftello64			NEW: LFS
+ftruncate64			NEW: LFS
+ftw64				NEW: LFS
+fwrite_unlocked			NEW: GNU ext.
+gai_strerror			NEW: IPv6
+gamma_r				REMOVED
+gammaf_r			REMOVED
+gammal_r			REMOVED
+getchar_locked			REMOVED
+getdate				NEW: Unix98
+getdate_err			NEW: Unix98
+getdate_r			NEW: GNU ext.
+getmsg				NEW: STREAMS
+getnameinfo			NEW: IPv6
+getnetname			NEW: IPv6
+getpmsg				NEW: STREAMS
+getpt				NEW: Unix98 PTY
+getrlimit64			NEW: LFS
+getutxent			NEW: utmpx
+getutxid			NEW: utmpx
+getutxline			NEW: utmpx
+glob64				NEW: GNU ext.
+globfree64			NEW: GNU ext.
+gnu_get_libc_release		NEW: GNU ext.
+gnu_get_libc_version		NEW: GNU ext.
+grantpt				NEW: Unix98 PTY
+host2netname			NEW: IPv6
+iconv				NEW: iconv
+iconv_close			NEW: iconv
+iconv_open			NEW: iconv
+if_freenameindex		NEW: IPv6
+if_indextoname			NEW: IPv6
+if_nameindex			NEW: IPv6
+if_nametoindex			NEW: IPv6
+in6addr_any			NEW: IPv6
+in6addr_loopback		NEW: IPv6
+inet6_isipv4mapped		NEW: IPv6
+isastream			NEW: STREAMS
+iswblank			NEW: GNU ext.
+key_decryptsession		NEW: NIS+
+key_decryptsession_pk		NEW: NIS+
+key_encryptsession		NEW: NIS+
+key_encryptsession_pk		NEW: NIS+
+key_gendes			NEW: NIS+
+key_get_conv			NEW: NIS+
+key_secretkey_is_set		NEW: NIS+
+key_setnet			NEW: NIS+
+key_setsecret			NEW: NIS+
+llrint				NEW: ISO C 9x
+llrintf				NEW: ISO C 9x
+llrintl				NEW: ISO C 9x
+llround				NEW: ISO C 9x
+llroundf			NEW: ISO C 9x
+llroundl			NEW: ISO C 9x
+log2				NEW: ISO C 9x
+log2f				NEW: ISO C 9x
+log2l				NEW: ISO C 9x
+lrint				NEW: ISO C 9x
+lrintf				NEW: ISO C 9x
+lrintl				NEW: ISO C 9x
+lround				NEW: ISO C 9x
+lroundf				NEW: ISO C 9x
+lroundl				NEW: ISO C 9x
+lseek64				NEW: LFS
+makecontext			NEW: Unix98
+mempcpy				NEW: GNU ext.
+mmap64				NEW: LFS
+moncontrol			REMOVED
+modify_ldt			NEW: kernel
+nan				NEW: ISO C 9x
+nanf				NEW: ISO C 9x
+nanl				NEW: ISO C 9x
+nearbyint			NEW: ISO C 9x
+nearbyintf			NEW: ISO C 9x
+nearbyintl			NEW: ISO C 9x
+netname2host			NEW: IPv6
+netname2user			NEW: IPv6
+nextafterx			NEW: ISO C 9x
+nextafterxf			NEW: ISO C 9x
+nftw				NEW: Unix98
+nftw64				NEW: LFS
+open64				NEW: LFS
+passwd2des			NEW: NIS+
+pow10				NEW: GNU ext.
+pow10f				NEW: GNU ext.
+pow10l				NEW: GNU ext.
+pread				NEW: Unix98
+pread64				NEW: LFS
+printf_size			NEW: GNU ext.
+printf_size_info		NEW: GNU ext.
+profil_counter			REMOVED
+pthread_mutexattr_getkind_np	REPLACED
+pthread_mutexattr_setkind_np	REPLACED
+ptsname				NEW: Unix98 PTY
+ptsname_r			NEW: Unix98 PTY
+putc_locked			REMOVED
+putchar_locked			REMOVED
+putgrent			NEW: GNU ext.
+putmsg				NEW: STREAMS
+putpmsg				NEW: STREAMS
+pututxline			NEW: utmpx
+pwrite				NEW: Unix98
+pwrite64			NEW: LFS
+readdir64			NEW: LFS
+readdir64_r			NEW: LFS
+remquo				NEW: ISO C 9x
+remquof				NEW: ISO C 9x
+remquol				NEW: ISO C 9x
+round				NEW: ISO C 9x
+roundf				NEW: ISO C 9x
+roundl				NEW: ISO C 9x
+rtime				NEW: GNU ext.
+scalbln				NEW: ISO C 9x
+scalblnf			NEW: ISO C 9x
+scalblnl			NEW: ISO C 9x
+scandir64			NEW: LFS
+sendfile			NEW: kernel
+setcontext			NEW: Unix98
+setrlimit64			NEW: LFS
+setutxent			NEW: utmpx
+sighold				NEW: Unix98
+sigignore			NEW: Unix98
+sigqueue			NEW: POSIX.1b
+sigrelse			NEW: Unix98
+sigset				NEW: POSIX.1b
+sigtimedwait			NEW: POSIX.1b
+sigwaitinfo			NEW: POSIX.1b
+sincos				NEW: GNU ext.
+sincosf				NEW: GNU ext.
+sincosl				NEW: GNU ext.
+statfs64			NEW: LFS
+statvfs				NEW: Unix98
+statvfs64			NEW: LFS
+strcasestr			NEW: GNU ext.
+strfxtime			NEW: ISO C 9x
+strtoimax			NEW: ISO C 9x
+strtoumax			NEW: ISO C 9x
+strverscmp			NEW: GNU ext.
+svcauthdes_stats		NEW: NIS+
+svcunix_create			NEW: sunrpc etx
+svcunixfd_create		NEW: sunrpc ext
+swapcontext			NEW: Unix98
+tcgetsid			NEW: Unix98 PTY
+tdestroy			NEW: GNU ext.
+tgamma				NEW: ISO C 9x
+tgammaf				NEW: ISO C 9x
+tgammal				NEW: ISO C 9x
+tmpfile64			NEW: LFS
+trunc				NEW: ISO C 9x
+truncate64			NEW: LFS
+truncf				NEW: ISO C 9x
+truncl				NEW: ISO C 9x
+umount2				NEW: kernel
+unlockpt			NEW: Unix98 PTY
+updwtmpx			NEW: utmpx
+user2netname			NEW: IPv6
+utmpxname			NEW: utmpx
+versionsort			NEW: GNU ext.
+versionsort64			NEW: LFS
+waitid				NEW: Unix98
+wcscasecmp			NEW: GNU ext.
+wcsncasecmp			NEW: GNU ext.
+wcsnlen				NEW: GNU ext.
+wcstoimax			NEW: ISO C 9x
+wcstoll				NEW: ISO C 9x
+wcstoull			NEW: ISO C 9x
+wcstoumax			NEW: ISO C 9x
+wcswcs				NEW: Unix98
+wordexp				NEW: POSIX.2
+wordfree			NEW: POSIX.2
+write_profiling			REMOVED
+xdecrypt			NEW: NIS+
+xdr_authdes_cred		NEW: NIS+
+xdr_authdes_verf		NEW: NIS+
+xdr_cryptkeyarg			NEW: NIS+
+xdr_cryptkeyarg2		NEW: NIS+
+xdr_cryptkeyres			NEW: NIS+
+xdr_getcredres			NEW: NIS+
+xdr_key_netstarg		NEW: NIS+
+xdr_key_netstres		NEW: NIS+
+xdr_keybuf			NEW: NIS+
+xdr_keystatus			NEW: NIS+
+xdr_netnamestr			NEW: NIS+
+xdr_sizeof			NEW: NIS+
+xdr_unixcred			NEW: sunrpc ext
+xencrypt			NEW: NIS+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Version 2.0.5
 

@@ -40,87 +40,133 @@
    only defined on real valued parameters and those which are defined
    for complex functions as well.  */
 # define __TGMATH_UNARY_REAL_ONLY(Val, Fct) \
-     (__extension__ (sizeof (Val) == sizeof (double)			      \
-		     ? Fct (Val)					      \
-		     : (sizeof (Val) == sizeof (long double)		      \
-			? Fct##l (Val)					      \
-			: Fct##f (Val))))
+     (__extension__ ({ __typeof__ (Val) __tgmres;			      \
+		       if (sizeof (Val) == sizeof (double))		      \
+			 __tgmres = Fct (Val);				      \
+		       else if (sizeof (Val) == sizeof (float))		      \
+			 __tgmres = Fct##f (Val);			      \
+		       else 						      \
+			 __tgmres = Fct##l (Val);			      \
+		       __tgmres; }))
 
 # define __TGMATH_BINARY_FIRST_REAL_ONLY(Val1, Val2, Fct) \
-     (__extension__ (sizeof (Val1) > sizeof (double)			      \
-		     ? Fct##l (Val1, Val2)				      \
-		     : (sizeof (Val1) == sizeof (double)		      \
-			? Fct (Val1, Val2)				      \
-			: Fct##f (Val1, Val2))))
+     (__extension__ ({ __typeof__ (Val1) __tgmres;			      \
+		       if (sizeof (Val1) == sizeof (double))		      \
+			 __tgmres = Fct (Val1, Val2);			      \
+		       else if (sizeof (Val1) == sizeof (float))	      \
+			 __tgmres = Fct##f (Val1, Val2);		      \
+		       else 						      \
+			 __tgmres = Fct##l (Val1, Val2);		      \
+		       __tgmres; }))
 
 # define __TGMATH_BINARY_REAL_ONLY(Val1, Val2, Fct) \
-     (__extension__ (sizeof (Val1) > sizeof (double)			      \
-		     || sizeof (Val2) > sizeof (double)			      \
-		     ? Fct##l (Val1, Val2)				      \
-		     : (sizeof (Val1) == sizeof (double)		      \
-			|| sizeof (Val2) == sizeof (double)		      \
-			? Fct (Val1, Val2)				      \
-			: Fct##f (Val1, Val2))))
+     (__extension__ ({ __typeof__ ((Val1) + (Val2)) __tgmres;		      \
+		       if (sizeof (Val1) > sizeof (double)		      \
+			   || sizeof (Val2) > sizeof (double))		      \
+			 __tgmres = Fct##l (Val1, Val2);		      \
+		       else if (sizeof (Val1) == sizeof (double)	      \
+				|| sizeof (Val2) == sizeof (double))	      \
+			 __tgmres = Fct (Val1, Val2);			      \
+		       else						      \
+			 __tgmres = Fct (Val1, Val2);			      \
+		       __tgmres; }))
 
 # define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ (sizeof (Val1) > sizeof (double)			      \
-		     || sizeof (Val2) > sizeof (double)			      \
-		     ? Fct##l (Val1, Val2, Val3)			      \
-		     : (sizeof (Val1) == sizeof (double)		      \
-			|| sizeof (Val2) == sizeof (double)		      \
-			? Fct (Val1, Val2, Val3)			      \
-			: Fct##f (Val1, Val2, Val3))))
+     (__extension__ ({ __typeof__ ((Val1) + (Val2)) __tgmres;		      \
+		       if (sizeof (Val1) > sizeof (double)		      \
+			   || sizeof (Val2) > sizeof (double))		      \
+			 __tgmres = Fct##l (Val1, Val2, Val3);		      \
+		       else if (sizeof (Val1) == sizeof (double)	      \
+				|| sizeof (Val2) == sizeof (double))	      \
+			 __tgmres = Fct (Val1, Val2, Val3);		      \
+		       else						      \
+			 __tgmres = Fct (Val1, Val2, Val3);		      \
+		       __tgmres; }))
 
 # define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ (sizeof (Val1) > sizeof (double)			      \
-		     || sizeof (Val2) > sizeof (double)			      \
-		     || sizeof (Val3) > sizeof (double)			      \
-		     ? Fct##l (Val1, Val2, Val3)			      \
-		     : (sizeof (Val1) == sizeof (double)		      \
-			|| sizeof (Val2) == sizeof (double)		      \
-			|| sizeof (Val3) == sizeof (double)		      \
-			? Fct (Val1, Val2, Val3)			      \
-			: Fct##f (Val1, Val2, Val3))))
+     (__extension__ ({ __typeof__ ((Val1) + (Val2) + (Val3)) __tgmres;	      \
+		       if (sizeof (Val1) > sizeof (double)		      \
+			   || sizeof (Val2) > sizeof (double)		      \
+			   || sizeof (Val3) > sizeof (double))		      \
+			 __tgmres = Fct##l (Val1, Val2, Val3);		      \
+		       else if (sizeof (Val1) == sizeof (double)	      \
+				|| sizeof (Val2) == sizeof (double)	      \
+				|| sizeof (Val3) == sizeof (double))	      \
+			 __tgmres = Fct (Val1, Val2, Val3);		      \
+		       else						      \
+			 __tgmres = Fct (Val1, Val2, Val3);		      \
+		       __tgmres; }))
 
+/* XXX This definition has to be changed as soon as the compiler understands
+   the imaginary keyword.  */
 # define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
-     (__extension__ (sizeof (__real__ (Val)) > sizeof (double)		      \
-		     ? (sizeof (__real__ (Val)) == sizeof (Val)		      \
-			? Fct##l (Val)					      \
-			: Cfct##l (Val))				      \
-		     : (sizeof (__real__ (Val)) == sizeof (double)	      \
-			? (sizeof (__real__ (Val)) == sizeof (Val)	      \
-			   ? Fct (Val)					      \
-			   : Cfct (Val))				      \
-			: (sizeof (__real__ (Val)) == sizeof (Val)	      \
-			   ? Fct##f (Val)				      \
-			   : Cfct##f (Val)))))
+     (__extension__ ({ __typeof__ (Val) __tgmres;			      \
+		       if (sizeof (__real__ (Val)) > sizeof (double))	      \
+			 {						      \
+			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
+			     __tgmres = Fct##l (Val);			      \
+			   else						      \
+			     __tgmres = Cfct##l (Val);			      \
+			 }						      \
+		       else if (sizeof (__real__ (Val)) == sizeof (double))   \
+			 {						      \
+			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
+			     __tgmres = Fct (Val);			      \
+			   else						      \
+			     __tgmres = Cfct (Val);			      \
+			 }						      \
+		       else 						      \
+			 {						      \
+			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
+			     __tgmres = Fct##f (Val);			      \
+			   else						      \
+			     __tgmres = Cfct##f (Val);			      \
+			 }						      \
+		       __tgmres; }))
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
 # define __TGMATH_UNARY_IMAG_ONLY(Val, Fct) \
-     (__extension__ (sizeof (Val) > sizeof (__complex__ double)		      \
-		     ? Fct##l (Val)					      \
-		     : (sizeof (Val) == sizeof (__complex__ double)	      \
-			? Fct (Val)					      \
-			: Fct##f (Val))))
+     (__extension__ ({ __typeof__ (Val) __tgmres;			      \
+		       if (sizeof (Val) == sizeof (__complex__ double))	      \
+			 __tgmres = Fct (Val);				      \
+		       else if (sizeof (Val) == sizeof (__complex__ float))   \
+			 __tgmres = Fct##f (Val);			      \
+		       else 						      \
+			 __tgmres = Fct##l (Val);			      \
+		       __tgmres; }))
 
+/* XXX This definition has to be changed as soon as the compiler understands
+   the imaginary keyword.  */
 # define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct) \
-     (__extension__ (sizeof (__real__ (Val1)) > sizeof (double)		      \
-		     || sizeof (__real__ (Val2)) > sizeof (double)	      \
-		     ? (sizeof (__real__ (Val1)) == sizeof (Val1)	      \
-			&& sizeof (__real__ (Val2)) == sizeof (Val2)	      \
-			? Fct##l (Val1, Val2)				      \
-			: Cfct##l (Val1, Val2))				      \
-		     : (sizeof (__real__ (Val1)) == sizeof (double)	      \
-			|| sizeof (__real__ (Val2)) == sizeof (double)	      \
-			? (sizeof (__real__ (Val1)) == sizeof (Val1)	      \
-			   && sizeof (__real__ (Val2)) == sizeof (Val2)	      \
-			   ? Fct (Val1, Val2)				      \
-			   : Cfct (Val1, Val2))				      \
-			: (sizeof (__real__ (Val1)) == sizeof (Val1)	      \
-			   && sizeof (__real__ (Val2)) == sizeof (Val2)	      \
-			   ? Fct##f (Val1, Val2)			      \
-			   : Cfct##f (Val1, Val2)))))
+     (__extension__ ({ __typeof__ ((Val1) + (Val2)) __tgmres;		      \
+		       if (sizeof (__real__ (Val1)) > sizeof (double)	      \
+			   || sizeof (__real__ (Val2)) > sizeof (double))     \
+			 {						      \
+			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
+			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
+			     __tgmres = Fct##l (Val1, Val2);		      \
+			   else						      \
+			     __tgmres = Cfct##l (Val1, Val2);		      \
+			 }						      \
+		       else if (sizeof (__real__ (Val1)) == sizeof (double)   \
+				|| sizeof (__real__ (Val2)) == sizeof(double))\
+			 {						      \
+			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
+			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
+			     __tgmres = Fct (Val1, Val2);		      \
+			   else						      \
+			     __tgmres = Cfct (Val1, Val2);		      \
+			 }						      \
+		       else						      \
+			 {						      \
+			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
+			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
+			     __tgmres = Fct##f (Val1, Val2);		      \
+			   else						      \
+			     __tgmres = Cfct##f (Val1, Val2);		      \
+			 }						      \
+		       __tgmres; }))
 #else
 # error "Unsupported compiler; you cannot use <tgmath.h>"
 #endif

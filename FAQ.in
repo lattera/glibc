@@ -731,6 +731,18 @@ an installation of glibc that is configured with --prefix=/usr should help
 detect these situations.  If the script reports problems, something is
 really screwed up.
 
+??	When I use nscd the machine freezes.
+
+{UD} It is well known that you cannot use nscd with Linux 2.0.*.  There
+is functionality missing in the kernel and work-arounds are not suitable.
+Beside this some parts of the kernel are too buggy when it comes to using
+threads.
+
+So you have the possibilities to run Linux 2.0.* or update to a higher
+version and start using nscd.
+
+Note that I have at this point no information about any other platform.
+
 ? Source and binary incompatibilities, and what to do about them
 
 ??	I expect GNU libc to be 100% source code compatible with

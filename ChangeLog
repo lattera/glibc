@@ -1,5 +1,7 @@
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* math/tgmath.h: Make nested function calls work.
+
 	* include/ldsodefs.h: Fix typo.
 
 	* posix/Makefile (tests): Add tst-preadwrite.

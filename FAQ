@@ -89,6 +89,7 @@ please let me know.
 	which is not acceptable for me.  What can I do?
 2.22.	I just upgraded my Linux system to glibc and now I get
 	errors whenever I try to link any program.
+2.23.	When I use nscd the machine freezes.
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -223,16 +224,16 @@ to them.
 
 1.5.	Which compiler should I use for powerpc?
 
-{GK} You want to use egcs 1.0.1 or later (together with the right versions
+{GK} You want to use egcs 1.1 or later (together with the right versions
 of all the other tools, of course).
 
-In fact, egcs 1.0.1 has a serious bug that prevents a clean make, relating
-to switch statement folding.  It also causes the resulting shared libraries
-to use more memory than they should.  There is a patch at:
+In fact, egcs 1.1 has a bug that causes linuxthreads to be
+miscompiled, resulting in segmentation faults when using condition
+variables.  There is a temporary patch at:
 
-<http://discus.anu.edu.au/~geoffk/egcs-1.0.1-geoffk.diff>
+<http://discus.anu.edu.au/~geoffk/egcs-3.diff>
 
-Later versions of egcs may fix these problems.
+Later versions of egcs may fix this problem.
 
 
 1.6.	Do I need some more things to compile GNU C Library?
@@ -888,6 +889,19 @@ symbolic links in /lib, such as /lib/libm.so if it points to libm.so.5.
 an installation of glibc that is configured with --prefix=/usr should help
 detect these situations.  If the script reports problems, something is
 really screwed up.
+
+
+2.23.	When I use nscd the machine freezes.
+
+{UD} It is well known that you cannot use nscd with Linux 2.0.*.  There
+is functionality missing in the kernel and work-arounds are not suitable.
+Beside this some parts of the kernel are too buggy when it comes to using
+threads.
+
+So you have the possibilities to run Linux 2.0.* or update to a higher
+version and start using nscd.
+
+Note that I have at this point no information about any other platform.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
