@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,5 +71,8 @@
 # define _POSIX_V6_LPBIG_OFFBIG	-1
 # define _XBS5_LP64_OFF64	-1
 # define _XBS5_LPBIG_OFFBIG	-1
+
+/* CFLAGS.  */
+#define __ILP32_OFFBIG_CFLAGS   "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 
 #endif /* __WORDSIZE == 32 */

@@ -917,12 +917,12 @@ static const struct conf vars[] =
   };
 
 
-static const char *specs[] =
+static struct { const char *name; int num; } specs[] =
   {
-    "POSIX_V6_ILP32_OFF32",
-    "POSIX_V6_ILP32_OFFBIG",
-    "POSIX_V6_LP64_OFF64",
-    "POSIX_V6_LPBIG_OFFBIG"
+    { "POSIX_V6_ILP32_OFF32", _SC_V6_ILP32_OFF32 },
+    { "POSIX_V6_ILP32_OFFBIG", _SC_V6_ILP32_OFFBIG },
+    { "POSIX_V6_LP64_OFF64", _SC_V6_LP64_OFF64 },
+    { "POSIX_V6_LPBIG_OFFBIG", _SC_V6_LPBIG_OFFBIG }
   };
 static const int nspecs = sizeof (specs) / sizeof (specs[0]);
 
@@ -963,11 +963,14 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
       return 0;
     }
 
+  const char *getconf_dir = getenv ("GETCONF_DIR") ?: GETCONF_DIR;
+  size_t getconf_dirlen = strlen (getconf_dir);
+
+  const char *spec = NULL;
+  char buf[sizeof "POSIX_V6_LPBIG_OFFBIG"];
+  char *argv0 = argv[0];
   if (argc > 1 && strncmp (argv[1], "-v", 2) == 0)
     {
-      const char *spec;
-      int i;
-
       if (argv[1][2] == '\0')
 	{
 	  if (argc < 3)
@@ -983,18 +986,62 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	  argv += 1;
 	  argc += 1;
 	}
+    }
+  else
+    {
+      char default_name[getconf_dirlen + sizeof "/default"];
+      memcpy (mempcpy (default_name, getconf_dir, getconf_dirlen),
+              "/default", sizeof "/default");
+      int len = readlink (default_name, buf, sizeof buf - 1);
+      if (len > 0)
+	{
+	  buf[len] = '\0';
+	  spec = buf;
+	}
+    }
 
-      /* Check for the specifications we know.  This is simple in the
-	 moment.  */
+  /* Check for the specifications we know.  */
+  if (spec != NULL)
+    {
+      int i;
       for (i = 0; i < nspecs; ++i)
-	if (strcmp (spec, specs[i]) == 0)
+	if (strcmp (spec, specs[i].name) == 0)
 	  break;
 
       if (i == nspecs)
 	error (2, 0, _("unknown specification \"%s\""), spec);
 
-      /* And now we forget the specification.  We don't do anything different
-	 with or without it.  */
+      switch (specs[i].num)
+	{
+#ifndef _POSIX_V6_ILP32_OFF32
+	  case _SC_V6_ILP32_OFF32:
+#endif
+#ifndef _POSIX_V6_ILP32_OFFBIG
+	  case _SC_V6_ILP32_OFFBIG:
+#endif
+#ifndef _POSIX_V6_LP64_OFF64
+	  case _SC_V6_LP64_OFF64:
+#endif
+#ifndef _POSIX_V6_LPBIG_OFFBIG
+	  case _SC_V6_LPBIG_OFFBIG:
+#endif
+	    {
+	      const char *args[argc + 3];
+	      size_t spec_len = strlen (spec);
+	      char getconf_name[getconf_dirlen + 2 + spec_len + 1];
+	      memcpy (mempcpy (mempcpy (getconf_name, getconf_dir,
+	                                getconf_dirlen),
+                               "/_", 2), spec, spec_len + 1);
+	      args[0] = argv0;
+	      args[1] = "-v";
+	      args[2] = spec;
+	      memcpy (&args[3], &argv[1], argc * sizeof (argv[1]));
+	      execv (getconf_name, (char * const *) args);
+	      error (4, errno, _("Couldn't execute %s"), getconf_name);
+	    }
+	  default:
+	    break;
+	}
     }
 
   if (argc < 2 || argc > 3)

@@ -91,6 +91,7 @@ tests           += wordexp-test tst-exec tst-spawn
 endif
 others		:= getconf
 install-bin	:= getconf
+install-others	:= $(inst_libexecdir)/getconf
 
 before-compile	:= testcases.h ptestcases.h
 
@@ -138,7 +139,7 @@ CFLAGS-waitid.c = -fexceptions
 CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-getopt.c = -fexceptions
 CFLAGS-wordexp.c = -fexceptions
-CFLAGS-sysconf.c = -fexceptions
+CFLAGS-sysconf.c = -fexceptions -DGETCONF_DIR='"$(libexecdir)/getconf"'
 CFLAGS-pathconf.c = -fexceptions
 CFLAGS-fpathconf.c = -fexceptions
 CFLAGS-spawn.c = -fexceptions
@@ -147,6 +148,7 @@ CFLAGS-spawni.c = -fexceptions
 CFLAGS-pause.c = -fexceptions
 CFLAGS-glob.c = $(uses-callbacks) -fexceptions
 CFLAGS-glob64.c = $(uses-callbacks) -fexceptions
+CFLAGS-getconf.c = -DGETCONF_DIR='"$(libexecdir)/getconf"'
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
@@ -260,3 +262,13 @@ bug-glob2-ENV = MALLOC_TRACE=$(objpfx)bug-glob2.mtrace
 
 $(objpfx)bug-glob2-mem: $(objpfx)bug-glob2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-glob2.mtrace > $@
+
+$(inst_libexecdir)/getconf: $(objpfx)getconf FORCE
+	$(addprefix $(..)./scripts/mkinstalldirs ,\
+		    $(filter-out $(wildcard $@),$@))
+	for spec in `LC_ALL=C GETCONF_DIR=/dev/null \
+		     $(run-program-prefix) $< \
+		     _POSIX_V6_WIDTH_RESTRICTED_ENVS`; do \
+		$(INSTALL_PROGRAM) $< $@/$$spec.new; \
+		mv -f $@/$$spec.new $@/$$spec; \
+	done

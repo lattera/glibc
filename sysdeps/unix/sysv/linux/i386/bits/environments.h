@@ -20,8 +20,6 @@
 # error "Never include this file directly.  Use <unistd.h> instead"
 #endif
 
-#include <bits/wordsize.h>
-
 /* This header should define the following symbols under the described
    situations.  A value `1' means that the model is always supported,
    `-1' means it is never supported.  Undefined means it cannot be
@@ -38,41 +36,27 @@
    and are available only for compatibility.
 */
 
-#if __WORDSIZE == 64
-
-/* We can never provide environments with 32-bit wide pointers.  */
-# define _POSIX_V6_ILP32_OFF32	-1
-# define _POSIX_V6_ILP32_OFFBIG	-1
-# define _XBS5_ILP32_OFF32	-1
-# define _XBS5_ILP32_OFFBIG	-1
-/* We also have no use (for now) for an environment with bigger pointers
-   and offsets.  */
-# define _POSIX_V6_LPBIG_OFFBIG	-1
-# define _XBS5_LPBIG_OFFBIG	-1
-
-/* By default we have 64-bit wide `long int', pointers and `off_t'.  */
-# define _POSIX_V6_LP64_OFF64	1
-# define _XBS5_LP64_OFF64	1
-
-#else /* __WORDSIZE == 32 */
-
 /* By default we have 32-bit wide `int', `long int', pointers and `off_t'
    and all platforms support LFS.  */
-# define _POSIX_V6_ILP32_OFF32	1
-# define _POSIX_V6_ILP32_OFFBIG	1
-# define _XBS5_ILP32_OFF32	1
-# define _XBS5_ILP32_OFFBIG	1
+#define _POSIX_V6_ILP32_OFF32	1
+#define _POSIX_V6_ILP32_OFFBIG	1
+#define _XBS5_ILP32_OFF32	1
+#define _XBS5_ILP32_OFFBIG	1
 
 /* We optionally provide an environment with the above size but an 64-bit
    side `off_t'.  Therefore we don't define _XBS5_ILP32_OFFBIG.  */
 
-/* We can never provide environments with 64-bit wide pointers.  */
-# define _POSIX_V6_LP64_OFF64	-1
-# define _POSIX_V6_LPBIG_OFFBIG	-1
-# define _XBS5_LP64_OFF64	-1
-# define _XBS5_LPBIG_OFFBIG	-1
+/* Environments with 64-bit wide pointers can be provided,
+   so these macros aren't defined:
+   # undef _POSIX_V6_LP64_OFF64
+   # undef _POSIX_V6_LPBIG_OFFBIG
+   # undef _XBS5_LP64_OFF64
+   # undef _XBS5_LPBIG_OFFBIG
+   and sysconf tests for it at runtime.  */
 
-/* CFLAGS.  */
-#define __ILP32_OFFBIG_CFLAGS   "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
-
-#endif /* __WORDSIZE == 32 */
+#define __ILP32_OFF32_CFLAGS	"-m32"
+#define __ILP32_OFFBIG_CFLAGS	"-m32 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+#define __ILP32_OFF32_LDFLAGS	"-m32"
+#define __ILP32_OFFBIG_LDFLAGS	"-m32"
+#define __LP64_OFF64_CFLAGS	"-m64"
+#define __LP64_OFF64_LDFLAGS	"-m64"

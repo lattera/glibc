@@ -23,12 +23,18 @@
 #include <pwd.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <sys/param.h>
+#include <sys/stat.h>
 #include <sys/sysinfo.h>
 #include <sys/types.h>
 #include <regex.h>
+
+
+static long int __sysconf_check_spec (const char *spec);
 
 
 /* Get the value of the system variable NAME.  */
@@ -781,50 +787,50 @@ __sysconf (name)
 #ifdef _XBS5_ILP32_OFF32
       return _XBS5_ILP32_OFF32;
 #else
-      return -1;
+      return __sysconf_check_spec ("ILP32_OFF32");
 #endif
     case _SC_XBS5_ILP32_OFFBIG:
 #ifdef _XBS5_ILP32_OFFBIG
       return _XBS5_ILP32_OFFBIG;
 #else
-      return -1;
+      return __sysconf_check_spec ("ILP32_OFFBIG");
 #endif
     case _SC_XBS5_LP64_OFF64:
 #ifdef _XBS5_LP64_OFF64
       return _XBS5_LP64_OFF64;
 #else
-      return -1;
+      return __sysconf_check_spec ("LP64_OFF64");
 #endif
     case _SC_XBS5_LPBIG_OFFBIG:
 #ifdef _XBS5_LPBIG_OFFBIG
       return _XBS5_LPBIG_OFFBIG;
 #else
-      return -1;
+      return __sysconf_check_spec ("LPBIG_OFFBIG");
 #endif
 
     case _SC_V6_ILP32_OFF32:
 #ifdef _POSIX_V6_ILP32_OFF32
       return _POSIX_V6_ILP32_OFF32;
 #else
-      return -1;
+      return __sysconf_check_spec ("ILP32_OFF32");
 #endif
     case _SC_V6_ILP32_OFFBIG:
 #ifdef _POSIX_V6_ILP32_OFFBIG
       return _POSIX_V6_ILP32_OFFBIG;
 #else
-      return -1;
+      return __sysconf_check_spec ("ILP32_OFFBIG");
 #endif
     case _SC_V6_LP64_OFF64:
 #ifdef _POSIX_V6_LP64_OFF64
       return _POSIX_V6_LP64_OFF64;
 #else
-      return -1;
+      return __sysconf_check_spec ("LP64_OFF64");
 #endif
     case _SC_V6_LPBIG_OFFBIG:
 #ifdef _POSIX_V6_LPBIG_OFFBIG
       return _POSIX_V6_LPBIG_OFFBIG;
 #else
-      return -1;
+      return __sysconf_check_spec ("LPBIG_OFFBIG");
 #endif
 
     case _SC_XOPEN_LEGACY:
@@ -1189,3 +1195,24 @@ __sysconf (name)
 #undef __sysconf
 weak_alias (__sysconf, sysconf)
 libc_hidden_def (__sysconf)
+
+static long int
+__sysconf_check_spec (const char *spec)
+{
+  int save_errno = errno;
+
+  const char *getconf_dir = __secure_getenv ("GETCONF_DIR") ?: GETCONF_DIR;
+  size_t getconf_dirlen = strlen (getconf_dir);
+  size_t speclen = strlen (spec);
+
+  char name[getconf_dirlen + sizeof ("/_POSIX_V6_") + speclen];
+  memcpy (mempcpy (mempcpy (name, getconf_dir, getconf_dirlen),
+		   "/_POSIX_V6_", sizeof ("/_POSIX_V6_") - 1),
+	  spec, speclen + 1);
+
+  struct stat64 st;
+  long int ret = __xstat64 (_STAT_VER, name, &st) >= 0 ? 1 : -1;
+
+  __set_errno (save_errno);
+  return ret;
+}

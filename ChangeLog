@@ -1,5 +1,32 @@
 2004-11-26  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/Makefile (install-others): Add $(inst_libexecdir)/getconf.
+	(CFLAGS-sysconf.c): Add -D_GETCONF_DIR.
+	(CFLAGS-getconf.c): New.
+	($(inst_libexecdir)/getconf): New.
+	* posix/confstr.c (confstr): Use __sysconf to query specifications
+	that don't have _POSIX_V6_* macros defined.  Use __*_{C,LD}FLAGS
+	macros defined in bits/environments.h.
+	* sysdeps/posix/sysconf.c: Include stdlib.h, string.h and
+	sys/stat.h.
+	(__sysconf_check_spec): New routine.
+	(__sysconf): Use it.
+	* posix/getconf.c (specs): Change into structure array.
+	(main): If -v is not given, try to get default from
+	$(libexecdir)/getconf/default.  If specification is not
+	supported by this getconf, try to execute
+	$(libexecdir)/getconf/$(specification).
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/environments.h: New file.
+	* sysdeps/unix/sysv/linux/s390/bits/environments.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/environments.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/environments.h: New file.
+	* sysdeps/unix/sysv/linux/i386/bits/environments.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/bits/environments.h: New file.
+	* sysdeps/generic/bits/environments.h (__ILP32_OFFBIG_CFLAGS):
+	Define.
+
+2004-11-26  Jakub Jelinek  <jakub@redhat.com>
+
 	* stdlib/stdlib.h (setenv): Use nonnull only for second argument.
 	(unsetenv): Remove.
 
