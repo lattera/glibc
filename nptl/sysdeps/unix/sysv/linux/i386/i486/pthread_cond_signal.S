@@ -65,6 +65,9 @@ __pthread_cond_signal:
 	movl	total_seq+4(%edi), %eax
 	movl	total_seq(%edi), %ecx
 	cmpl	4(%ebx), %eax
+#if cond_lock != 0
+	leal	cond_lock(%edi), %edi
+#endif
 	ja	3f
 	jb	4f
 	cmpl	(%ebx), %ecx
@@ -90,13 +93,10 @@ __pthread_cond_signal:
 	testl	%eax, %eax
 	jne	5f
 
-	/* Unlock.  */
+	/* Unlock.  Note that at this point %edi always points to
+	   cond_lock.  */
 4:	LOCK
-#if cond_lock == 0
 	subl	$1, (%edi)
-#else
-	subl	$1, cond_lock(%edi)
-#endif
 	jne	5f
 
 6:	xorl	%eax, %eax
