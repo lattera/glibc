@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -47,7 +47,7 @@ typedef struct dom_binding dom_binding;
 
 static struct timeval RPCTIMEOUT = {25, 0};
 static struct timeval UDPTIMEOUT = {5, 0};
-static int const MAXTRIES = 5;
+static int const MAXTRIES = 2;
 static char __ypdomainname[NIS_MAXNAMELEN + 1] = "\0";
 __libc_lock_define_initialized (static, ypbindlist_lock)
 static dom_binding *__ypbindlist = NULL;
@@ -285,7 +285,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 	      free (ydb);
 	      ydb = NULL;
 	    }
-	  status = YPERR_RPC;;
+	  status = YPERR_RPC;
 	}
       else
 	status = YPERR_SUCCESS;
