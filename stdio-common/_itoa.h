@@ -34,23 +34,27 @@ extern const char _itoa_upper_digits_internal[] attribute_hidden;
 extern const char _itoa_lower_digits[];
 extern const char _itoa_lower_digits_internal[] attribute_hidden;
 
+#ifndef NOT_IN_libc
+extern char *_itoa_word (unsigned long value, char *buflim,
+			 unsigned int base, int upper_case);
+#else
 static inline char * __attribute__ ((unused, always_inline))
 _itoa_word (unsigned long value, char *buflim,
 	    unsigned int base, int upper_case)
 {
   const char *digits = (upper_case
-#if !defined NOT_IN_libc || defined IS_IN_rtld
+# if defined IS_IN_rtld
 			? INTUSE(_itoa_upper_digits)
 			: INTUSE(_itoa_lower_digits)
-#else
+# else
 			? _itoa_upper_digits
 			: _itoa_lower_digits
-#endif
+# endif
 		       );
 
   switch (base)
     {
-#define SPECIAL(Base)							      \
+# define SPECIAL(Base)							      \
     case Base:								      \
       do								      \
 	*--buflim = digits[value % Base];				      \
@@ -67,7 +71,8 @@ _itoa_word (unsigned long value, char *buflim,
     }
   return buflim;
 }
-#undef SPECIAL
+# undef SPECIAL
+#endif
 
 /* Similar to the _itoa functions, but output starts at buf and pointer
    after the last written character is returned.  */
