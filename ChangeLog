@@ -1,5 +1,8 @@
 2001-07-15  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/unix/sysv/linux/m68k/sys/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h: New file.
+
 	* sysdeps/unix/sysv/linux/m68k/getpagesize.c: Check _dl_pagesize
 	first.  Default to 4096, not EXEC_PAGESIZE.
 
