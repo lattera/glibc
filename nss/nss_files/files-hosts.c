@@ -279,11 +279,3 @@ DB_LOOKUP (hostbyaddr, ,,
 		 && ! memcmp (addr, result->h_addr_list[0], len))
 	       break;
 	   }, const void *addr, socklen_t len, int af)
-
-#undef EXTRA_ARGS_VALUE
-#define EXTRA_ARGS_VALUE \
-  , af, flags
-HOST_DB_LOOKUP (ipnodebyname, ,,
-		{
-		  LOOKUP_NAME_CASE (h_name, h_aliases)
-		}, const char *name, int af, int flags)

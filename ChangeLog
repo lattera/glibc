@@ -1,5 +1,9 @@
 2000-11-23  Andreas Jaeger  <aj@suse.de>
 
+	* nss/nss_files/files-hosts.c: Remove getipnodebyname.
+
+	* nss/Versions: Remove _nss_files_getipnodebyname_r.
+
 	* sysdeps/unix/sysv/linux/Versions: Fix typo in last patch.
 
 2000-11-18  Martin Buchholz  <martin@xemacs.org>

@@ -83,7 +83,4 @@ libnss_files {
     _nss_files_getpublickey;
     _nss_files_getsecretkey;
   }
-  GLIBC_2.2 {
-    _nss_files_getipnodebyname_r;
-  }
 }
