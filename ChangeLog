@@ -1,3 +1,8 @@
+2003-12-10  Andreas Jaeger  <aj@suse.de>
+	    Ruediger Oertel  <ro@suse.de>
+
+	* sysdeps/alpha/fpu/e_sqrt.c: Mark sqrt_data as used.
+
 2003-12-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/s_nexttowardf.c: Construct overflow value correctly.
