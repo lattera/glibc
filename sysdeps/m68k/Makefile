@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1993, 1994, 1996, 1997, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@ endif
 asm-CPPFLAGS += $(m68k-syntax-flag)
 
 pic-ccflag = -fpic
+CFLAGS-.oS += -fPIC
 
 # Make sure setjmp.c is compiled with a frame pointer
 CFLAGS-setjmp.c := -fno-omit-frame-pointer
@@ -35,9 +36,4 @@ long-double-fcts = yes
 
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
-endif
-
-ifeq ($(subdir),math)
-# Avoid a bug in gcc
-CFLAGS-s_copysignl.c += -mnobitfield
 endif
