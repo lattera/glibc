@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@cs.arizona.edu>, 1995.
 
@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /* sigsuspend is a special syscall since it needs to dereference the
-   sigset.  */
+   sigset.  This will have to change when we have more than 64 signals.  */
 
 #include <sysdep.h>
 

@@ -26,6 +26,8 @@ llseek		EXTRA	lseek		3	llseek
 # these are actually common with the x86:
 fstatfs		-	fstatfs		2	__fstatfs	fstatfs
 statfs		-	statfs		2	__statfs	statfs
+sys_ustat	ustat	ustat		2	__syscall_ustat
+sys_mknod	xmknod	mknod		3	__syscall_mknod
 
 # override select.S in parent directory:
 select		-	select		5	__select	select

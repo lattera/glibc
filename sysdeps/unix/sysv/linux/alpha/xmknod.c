@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/sysmacros.h>
 
 extern int __syscall_mknod (const char *, unsigned int, unsigned int);
 
