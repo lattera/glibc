@@ -275,7 +275,7 @@ strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
      LOCALE_PARAM_DECL
 {
 #if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
-  const struct locale_data *const current = locale->__locales[LC_TIME];
+  struct locale_data *const current = locale->__locales[LC_TIME];
 #endif
 
   const char *rp_backup;
