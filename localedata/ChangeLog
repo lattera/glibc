@@ -1,3 +1,7 @@
+2004-07-17  Petter Reinholdtsen  <pere@hungry.com>
+
+	* charmaps/IBM874: Add new alias WINDOWS-874 for IBM874 [BZ #244].
+
 2004-05-18  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/sl_SI [LC_TIME]: Correct d_fmt date format from

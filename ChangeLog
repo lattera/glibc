@@ -2,6 +2,7 @@
 
 	* inet/netinet/in.h: Define struct ip_mreq and struct
 	ip_mreq_source.
+	Define struct group_req and struct group_source_req.
 	* sysdeps/unix/sysv/linux/bits/in.h: Define IP_UNBLOCK_SOURCE,
 	IP_BLOCK_SOURCE, IP_ADD_SOURCE_MEMBERSHIP,
 	IP_DROP_SOURCE_MEMBERSHIP, IP_MSFILTER, MCAST_JOIN_GROUP,

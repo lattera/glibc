@@ -43,12 +43,12 @@
 #define IP_ADD_SOURCE_MEMBERSHIP 39 /* ip_mreq_source: join source group */
 #define IP_DROP_SOURCE_MEMBERSHIP 40 /* ip_mreq_source: leave source group */
 #define IP_MSFILTER 41
-#define MCAST_JOIN_GROUP 42
-#define MCAST_BLOCK_SOURCE 43
-#define MCAST_UNBLOCK_SOURCE 44
-#define MCAST_LEAVE_GROUP 45
-#define MCAST_JOIN_SOURCE_GROUP 46
-#define MCAST_LEAVE_SOURCE_GROUP 47
+#define MCAST_JOIN_GROUP 42	/* group_req: join any-source group */
+#define MCAST_BLOCK_SOURCE 43	/* group_source_req: block from given group */
+#define MCAST_UNBLOCK_SOURCE 44	/* group_source_req: unblock from given group*/
+#define MCAST_LEAVE_GROUP 45	/* group_req: leave any-source group */
+#define MCAST_JOIN_SOURCE_GROUP 46 /* group_source_req: join source-spec gr */
+#define MCAST_LEAVE_SOURCE_GROUP 47 /* group_source_req: leave source-spec gr*/
 #define MCAST_MSFILTER 48
 
 #define MCAST_EXCLUDE   0

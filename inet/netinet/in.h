@@ -273,6 +273,29 @@ struct ipv6_mreq
   };
 
 
+/* Multicast group request.  */
+struct group_req
+  {
+    /* Interface index.  */
+    uint32_t gr_interface;
+
+    /* Group address.  */
+    struct sockaddr_storage gr_group;
+  };
+
+struct group_source_req
+  {
+    /* Interface index.  */
+    uint32_t gsr_interface;
+
+    /* Group address.  */
+    struct sockaddr_storage gsr_group;
+
+    /* Source address.  */
+    struct sockaddr_storage gsr_source;
+  };
+
+
 /* Get system-specific definitions.  */
 #include <bits/in.h>
 
