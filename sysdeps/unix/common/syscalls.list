@@ -7,6 +7,7 @@ ftruncate	-	ftruncate	2	ftruncate
 getpgid		-	getpgrp		1	__getpgid	getpgid
 getrusage	-	getrusage	2	__getrusage	getrusage
 gettimeofday	-	gettimeofday	2	__gettimeofday	gettimeofday
+settimeofday	-	settimeofday	2	__settimeofday	settimeofday
 setpgid		-	setpgrp		2	__setpgid	setpgid setpgrp
 setregid	-	setregid	2	__setregid	setregid
 setreuid	-	setreuid	2	__setreuid	setreuid

@@ -281,7 +281,7 @@ ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS)  \
 	      $(addprefix $(csu-objpfx),start.o $(+preinit)) \
-	      $(^:$(common-objpfx)libc%=$(link-libc)) \
+	      $(filter-out $(common-objpfx)libc%,$^) $(link-libc) \
 	      $(addprefix $(csu-objpfx),$(+postinit))
 endif
 ifndef config-LDFLAGS

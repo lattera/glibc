@@ -1,5 +1,15 @@
 Mon Feb 12 03:10:41 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/syscalls.list: Add setrlimit and settimeofday,
+ 	so real syscalls override unix/sysv/*.c on sysv-derived systems
+ 	that have them.
+	* sysdeps/unix/common/syscalls.list: Add settimeofday here, to
+	override unix/sysv/settimeofday.c since that overrides
+	unix/syscalls.list.
+
+	* Makeconfig (+link): Put $(link-libc) after deps from $^,
+	regardless of where libc.a appears in the deps.
+
 	* sysdeps/unix/sysv/sysv4/syscalls.list: Remove redundancies.
 	Add __waitid.
 	* sysdeps/unix/sysv/linux/syscalls.list: Remove redundancies.

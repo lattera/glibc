@@ -6,6 +6,8 @@ nice		-	nice		1	nice
 pause		-	pause		0	pause
 poll		-	poll		3	poll
 s_getdents	getdents getdents	3	__getdents
+setrlimit	-	setrlimit	2	setrlimit
+settimeofday	-	settimeofday	2	__settimeofday	settimeofday
 signal		-	signal		2	signal
 stime		-	stime		1	stime
 time		-	time		1	time
