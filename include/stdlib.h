@@ -8,7 +8,7 @@
 
 /* Now define the internal interfaces.  */
 #ifndef __Need_M_And_C
-extern int32_t __random (void);
+extern long int __random (void);
 extern void __srandom (unsigned int __seed);
 extern char *__initstate (unsigned int __seed, char *__statebuf,
 			  size_t __statelen);
