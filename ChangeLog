@@ -1,3 +1,8 @@
+1998-05-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c: When precision is specified for %ls or
+	%S handle it correctly.
+
 1998-05-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/bsd/vax/vfork.S: Missed double occurences of "the
