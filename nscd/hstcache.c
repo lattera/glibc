@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -450,12 +450,7 @@ addhstbynamev6 (struct database *db, int fd, request_header *req,
   bool use_malloc = false;
 
   if (__builtin_expect (debug_level > 0, 0))
-    {
-      char buf[INET6_ADDRSTRLEN];
-
-      dbg_log (_("Haven't found \"%s\" in hosts cache!"),
-	       inet_ntop (AF_INET6, key, buf, sizeof (buf)));
-    }
+    dbg_log (_("Haven't found \"%s\" in hosts cache!"), key);
 
   if (secure[hstdb])
     {
