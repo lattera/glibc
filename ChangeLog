@@ -1,3 +1,10 @@
+2003-10-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/backtrace.c: New file.
+	* sysdeps/x86_64/backtrace.c: New file.
+	* sysdeps/generic/unwind.h (_Unwind_Trace_Fn): New type.
+	(_Unwind_Backtrace): New prototype.
+
 2003-10-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/elf/bsd-setjmp.S: Use linkonce section for PIC stub.
