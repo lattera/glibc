@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 95, 96, 97, 98, 99, 00 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -22,6 +22,8 @@
 
 /* There is some commonality.  */
 #include <sysdeps/unix/i386/sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
@@ -82,7 +84,9 @@
   addl $_GLOBAL_OFFSET_TABLE_+[.-1b], %ebx;				      \
   subl %eax, %edx;							      \
   pushl %edx;								      \
-  call __errno_location@PLT;						      \
+  PUSH_ERRNO_LOCATION_RETURN;						      \
+  call BP_SYM (__errno_location)@PLT;					      \
+  POP_ERRNO_LOCATION_RETURN;						      \
   popl %ecx;								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \

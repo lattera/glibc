@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 #include <sysdep.h>
 #define _ERRNO_H
 #include <bits/errno.h>
+#include <bp-asm.h>
+#include <bp-sym.h>
 
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error
@@ -39,31 +41,35 @@ syscall_error:
 notb:
 #endif
 #ifndef	PIC
-#ifndef	_LIBC_REENTRANT
+# ifndef _LIBC_REENTRANT
 	movl %eax, C_SYMBOL_NAME(errno)
-#else
+# else
 	pushl %eax
-	call __errno_location
+	PUSH_ERRNO_LOCATION_RETURN
+	call BP_SYM (__errno_location)
+	POP_ERRNO_LOCATION_RETURN
 	popl %ecx
 	movl %ecx, (%eax)
-#endif
+# endif
 #else
 	/* The caller has pushed %ebx and then set it up to
 	   point to the GOT before calling us through the PLT.  */
-#ifndef	_LIBC_REENTRANT
+# ifndef _LIBC_REENTRANT
 	movl C_SYMBOL_NAME(errno@GOT)(%ebx), %ecx
 
 	/* Pop %ebx value saved before jumping here.  */
 	popl %ebx
 	movl %eax, (%ecx)
-#else
+# else
 	pushl %eax
-	call C_SYMBOL_NAME(__errno_location@PLT)
+	PUSH_ERRNO_LOCATION_RETURN
+	call C_SYMBOL_NAME (BP_SYM (__errno_location)@PLT)
+	POP_ERRNO_LOCATION_RETURN
 	popl %ecx
 	/* Pop %ebx value saved before jumping here.  */
 	popl %ebx
 	movl %ecx, (%eax)
-#endif
+# endif
 #endif
 	movl $-1, %eax
 	ret

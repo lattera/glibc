@@ -1,5 +1,14 @@
 2000-06-26  Greg McGary  <greg@mcgary.org>
 
+	* sysdeps/i386/bp-asm.h (POP_ERRNO_LOCATION_RETURN): Fold insns.
+	* sysdeps/unix/i386/sysdep.S (syscall_error): Push & pop space
+	for BP return value & push implicit struct-return pointer to
+	__errno_location.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	(SYSCALL_ERROR_HANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/i386/i686/sysdep.h
+	(SYSCALL_ERROR_HANDLER): Likewise.
+
 	* Makeconfig: Add missing comment.
 	* csu/Makefile (extra-objs, omit-deps, install-lib): Add
 	BP-flavored startup object.
@@ -828,8 +837,8 @@
 
 2000-06-07  Greg McGary  <greg@mcgary.org>
 
-	* Makeconfig (CPPFLAGS-.ob): Pass -fbounded-pointers for all files
-	*.[cS].
+	* Makeconfig (CPPFLAGS-.ob): Pass -fbounded-pointers
+	for all files *.[cS].
 	(CFLAGS-.ob): Don't optimize sibling calls.
 	(bppfx): New variable.
 	* Makerules (elide-bp-thunks): New variable.

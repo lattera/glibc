@@ -22,6 +22,8 @@
 
 /* There is some commonality.  */
 #include <sysdeps/unix/sysv/linux/i386/sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* We define special versions of the error handler code to match the i686's
    deep branch prediction mechanism.  */
@@ -39,7 +41,9 @@
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
   pushl %edx;								      \
-  call __errno_location@PLT;						      \
+  PUSH_ERRNO_LOCATION_RETURN;						      \
+  call BP_SYM (__errno_location)@PLT;					      \
+  POP_ERRNO_LOCATION_RETURN;						      \
   popl %ecx;								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \
