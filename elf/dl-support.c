@@ -20,6 +20,7 @@
 /* This file defines some things that for the dynamic linker are defined in
    rtld.c and dl-sysdep.c in ways appropriate to bootstrap dynamic linking.  */
 
+#include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <elf/ldsodefs.h>
@@ -35,6 +36,7 @@ const char *_dl_rpath = DEFAULT_RPATH;
 /* Name of the architecture.  */
 const char *_dl_platform;
 size_t _dl_platformlen;
+
 int _dl_debug_libs;
 int _dl_debug_impcalls;
 int _dl_debug_bindings;
@@ -76,3 +78,22 @@ non_dynamic_init (void)
     _dl_platformlen = strlen (_dl_platform);
 }
 text_set_element (__libc_subinit, non_dynamic_init);
+
+const struct r_strlenpair *
+internal_function
+_dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
+		      size_t *max_capstrlen)
+{
+  struct r_strlenpair *result;
+
+  /* XXX We don't try to find the capabilities in this case.  */
+  result = (struct r_strlenpair *) malloc (sizeof (*result));
+  if (result == NULL)
+    _dl_signal_error (ENOMEM, NULL, "cannot create capability list");
+
+  result[0].str = (char *) result;	/* Does not really matter.  */
+  result[0].len = 0;
+
+  *sz = 1;
+  return result;
+}

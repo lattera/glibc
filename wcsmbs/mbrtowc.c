@@ -28,7 +28,6 @@
 # define EILSEQ EINVAL
 #endif
 
-
 /* This is the private state used if PS is NULL.  */
 static mbstate_t state;
 
@@ -69,12 +68,15 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
      characters.  The output buffer must be large enough, otherwise the
      definition of MB_CUR_MAX is not correct.  All the other possible
      errors also must not happen.  */
-  assert (status == GCONV_OK || status == GCONV_ILLEGAL_INPUT
-	  || status == GCONV_INCOMPLETE_INPUT);
+  assert (status == GCONV_OK || status == GCONV_EMPTY_INPUT
+	  || status == GCONV_ILLEGAL_INPUT
+	  || status == GCONV_INCOMPLETE_INPUT
+	  || status == GCONV_FULL_OUTPUT);
 
-  if (status == GCONV_OK)
+  if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
+      || status == GCONV_FULL_OUTPUT)
     {
-      if (*(wchar_t *)data.outbuf == L'\0')
+      if (data.outbufavail > 0 && *(wchar_t *)data.outbuf == L'\0')
 	{
 	  /* The converted character is the NUL character.  */
 	  assert (mbsinit (data.statep));

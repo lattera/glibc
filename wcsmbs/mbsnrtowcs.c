@@ -84,7 +84,8 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 	}
       while (status == GCONV_FULL_OUTPUT);
 
-      if (status == GCONV_OK && ((wchar_t *) dst)[written - 1] == L'\0')
+      if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)
+	  && buf[written - 1] == L'\0')
 	/* Don't count the NUL character in.  */
 	--result;
     }
@@ -105,7 +106,8 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
-      if (status == GCONV_OK && ((wchar_t *) dst)[result - 1] == L'\0')
+      if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)
+	  && ((wchar_t *) dst)[result - 1] == L'\0')
 	{
 	  assert (result > 0);
 	  assert (mbsinit (data.statep));
@@ -118,10 +120,12 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
   /* There must not be any problems with the conversion but illegal input
      characters.  */
-  assert (status == GCONV_OK || status == GCONV_ILLEGAL_INPUT
+  assert (status == GCONV_OK || status != GCONV_EMPTY_INPUT
+	  || status == GCONV_ILLEGAL_INPUT
 	  || status == GCONV_INCOMPLETE_INPUT || status == GCONV_FULL_OUTPUT);
 
-  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT)
+  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT
+      && status != GCONV_EMPTY_INPUT)
     {
       result = (size_t) -1;
       __set_errno (EILSEQ);

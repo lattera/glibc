@@ -61,7 +61,8 @@ btowc (c)
 					     &data, inbuf, &inbytes,
 					     &converted, 0);
   /* The conversion failed.  */
-  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT)
+  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT
+      && status != GCONV_EMPTY_INPUT)
     return WEOF;
 
   return *(wchar_t *)buf;

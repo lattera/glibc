@@ -56,9 +56,10 @@ wctob (c)
 					     (const char *) inbuf, &inbytes,
 					     &converted, 0);
   /* The conversion failed or the output is too long.  */
-  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT
+  if ((status != GCONV_OK && status != GCONV_FULL_OUTPUT
+       && status != GCONV_EMPTY_INPUT)
       || data.outbufavail != 1)
-    return WEOF;
+    return EOF;
 
   return buf[0];
 }

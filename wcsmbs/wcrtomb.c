@@ -70,7 +70,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 						 &data, NULL, &inbytes,
 						 NULL, 1);
 
-      if (status == GCONV_OK)
+      if (status == GCONV_OK || status == GCONV_EMPTY_INPUT)
 	data.outbuf[data.outbufavail++] = '\0';
     }
   else
@@ -87,10 +87,13 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
      characters.  The output buffer must be large enough, otherwise the
      definition of MB_CUR_MAX is not correct.  All the other possible
      errors also must not happen.  */
-  assert (status == GCONV_OK || status == GCONV_ILLEGAL_INPUT
-	  || status == GCONV_INCOMPLETE_INPUT);
+  assert (status == GCONV_OK || status == GCONV_EMPTY_INPUT
+	  || status == GCONV_ILLEGAL_INPUT
+	  || status == GCONV_INCOMPLETE_INPUT
+	  || status == GCONV_FULL_OUTPUT);
 
-  if (status == GCONV_OK)
+  if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
+      || status == GCONV_FULL_OUTPUT)
     result = data.outbufavail;
   else
     {

@@ -826,6 +826,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	mbstate_t mbstate;						      \
 	size_t len;							      \
 									      \
+	memset (&mbstate, '\0', sizeof (mbstate_t));			      \
 	len = __wcrtomb (buf, (fspec == NULL ? va_arg (ap, wint_t)	      \
 			       : args_value[fspec->data_arg].pa_wchar),	      \
 			 &mbstate);					      \
@@ -880,6 +881,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    const wchar_t *s2 = (const wchar_t *) string;		      \
 	    mbstate_t mbstate;						      \
 									      \
+	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
 	    len = __wcsrtombs (NULL, &s2, 0, &mbstate);			      \
 	    if (len == (size_t) -1)					      \
 	      /* Illegal wide-character string.  */			      \
@@ -887,6 +889,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	    s2 = (const wchar_t *) string;				      \
 	    string = alloca (len + 1);					      \
+	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
 	    (void) __wcsrtombs (string, &s2, prec != -1 ? prec : UINT_MAX,    \
 				&mbstate);				      \
 	  }								      \
@@ -992,6 +995,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   ap_save = ap;
 #endif
   nspecs_done = 0;
+
+  /* Put state for processing format string in initial state.  */
+  memset (&mbstate, '\0', sizeof (mbstate_t));
 
   /* Find the first format specifier.  */
   f = lead_str_end = find_spec (format, &mbstate);

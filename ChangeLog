@@ -1,3 +1,32 @@
+1998-04-07 20:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/btowc.c: Fix dozends of bugs in untested code.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+
+	* iconv/gconv-simple.c (__gconv_transform_ascii_ucs4): Compute
+	position of next output character correctly.
+	(__gconv_transform_ucs4_ascii): Count used input bytes correctly.
+
+	* stdio-common/vfprintf.c (vfprintf): Clear state before used.
+
+	* stdlib/strtod.c: Don't use mbtowc.
+
+1998-04-07 19:07  H.J. Lu  <hjl@gnu.org>
+
+	* libio/fileops.c (_IO_file_xsgetn): Call __underflow () when
+	what we want is smaller than a buffer.
+
+1998-04-07 18:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-support.c (_dl_important_hwcaps): Define dummy version of
+	this function.
+
 1998-04-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Recognize --with-headers flag and determine

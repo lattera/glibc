@@ -816,7 +816,7 @@ _IO_file_xsgetn (fp, data, n)
 	  /* If we now want less than a buffer, underflow and repeat
 	     the copy.  Otherwise, _IO_SYSREAD directly to
 	     the user buffer. */
-	  if (fp->_IO_buf_base && want <= fp->_IO_buf_end - fp->_IO_buf_base)
+	  if (fp->_IO_buf_base && want < fp->_IO_buf_end - fp->_IO_buf_base)
 	    {
 	      if (__underflow (fp) == EOF)
 		break;

@@ -134,8 +134,9 @@ __gconv_transform_ascii_ucs4 (struct gconv_step *step,
 		}
 
 	      /* It's an one byte sequence.  */
-	      *(wchar_t *) &data->outbuf[data->outbufavail++]
+	      *(wchar_t *) &data->outbuf[data->outbufavail]
 		= (wchar_t) *newinbuf;
+	      data->outbufavail += sizeof (wchar_t);
 	      ++actually;
 
 	      ++newinbuf;
@@ -252,12 +253,12 @@ __gconv_transform_ucs4_ascii (struct gconv_step *step,
 	      ++actually;
 
 	      ++newinbuf;
-	      ++cnt;
+	      cnt += sizeof (wchar_t);
 	    }
 
 	  /* Remember how much we converted.  */
-	  do_write += cnt;
-	  *inlen -= cnt * sizeof (wchar_t);
+	  do_write += cnt / sizeof (wchar_t);
+	  *inlen -= cnt;
 
 	  /* Check whether an illegal character appeared.  */
 	  if (result != GCONV_OK)
