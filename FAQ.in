@@ -236,6 +236,11 @@ files, provide support for additional architectures, and just about anything
 else.  The existing makefiles do most of the work; only some few stub rules
 must be written to get everything running.
 
+Most add-ons are tightly coupled to a specific GNU libc version.  Please
+check that the add-ons work with the GNU libc.  For example the crypt and
+linuxthreads add-ons have the same numbering scheme as the libc and will in
+general only work with the corresponding libc.
+
 ??	My XXX kernel emulates a floating-point coprocessor for me.
 	Should I enable --with-fp?
 
