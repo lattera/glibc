@@ -1,3 +1,15 @@
+2000-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_trans.c: Implement handling if translit_ignore.
+	* locale/langinfo.h: Add entries for translit_ignore information.
+	* locale/categories.def: Add entries for new LC_CTYPE elements.
+	* locale/C-ctype.c: Add initializers for new fields.  Use NULL
+	pointer instead of "" where possible.
+	* locale/programs/ld-ctype.c: Write out translit_ignore information.
+	* intl/Depend: Add localedata.
+	* intl/tst-gettext.c: Call setlocale for LC_CTYPE.
+	* intl/tst-gettext.sh: Set LOCPATH to localedata build dir.
+
 2000-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/langinfo.h: Add entries for default_missing information.

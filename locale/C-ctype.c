@@ -345,7 +345,7 @@ const struct locale_data _nl_C_LC_CTYPE =
   UNDELETABLE,
   0,
   NULL,
-  64,
+  66,
   {
     { string: _nl_C_LC_CTYPE_class },
     { string: (const char *) _nl_C_LC_CTYPE_toupper },
@@ -419,11 +419,13 @@ const struct locale_data _nl_C_LC_CTYPE =
     { word: L'9' },
     { word: 0 },
     { word: 0 },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { word: 1 },
     { wstr: (uint32_t *) L"?" },
-    { word: 1 }
+    { word: 0 },
+    { wstr: NULL }
   }
 };

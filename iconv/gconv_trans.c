@@ -123,6 +123,7 @@ __gconv_transliterate (struct __gconv_step *step,
 		    {
 		      *inbufp += cnt * sizeof (uint32_t);
 		      ++*irreversible;
+		      res = __GCONV_OK;
 		    }
 
 		  return res;
@@ -135,6 +136,11 @@ __gconv_transliterate (struct __gconv_step *step,
 
 	  /* Nothing found, continue searching.  */
 	}
+      else if (cnt > 0)
+	/* This means that the input buffer contents matches a prefix of
+	   an entry.  Since we cannot match it unless we get more input,
+	   we will tell the caller about it.  */
+	return __GCONV_INCOMPLETE_INPUT;
 
       if (winbuf + cnt >= winbufend || from_tbl[idx + cnt] < winbuf[cnt])
 	low = idx;
@@ -142,8 +148,37 @@ __gconv_transliterate (struct __gconv_step *step,
 	high = idx;
     }
 
-  /* One last chance: use the default replacement.  */
  no_rules:
+  /* Maybe the character is supposed to be ignored.  */
+  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_IGNORE_LEN) != 0)
+    {
+      int n = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_IGNORE_LEN);
+      uint32_t *ranges = (uint32_t *) _NL_CURRENT (LC_CTYPE,
+						   _NL_CTYPE_TRANSLIT_IGNORE);
+      uint32_t wc = *(uint32_t *) (*inbufp);
+      int i;
+
+      /* Test whether there is enough input.  */
+      if (winbuf + 1 > winbufend)
+	return (winbuf == winbufend
+		? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);
+
+      for (i = 0; i < n; ranges += 3, ++i)
+	if (ranges[0] <= wc && wc <= ranges[1]
+	    && (wc - ranges[0]) % ranges[2] == 0)
+	  {
+	    /* Matches the range.  Ignore it.  */
+	    *inbufp += 4;
+	    ++*irreversible;
+	    return __GCONV_OK;
+	  }
+	else if (wc < ranges[0])
+	  /* There cannot be any other matching range since they are
+             sorted.  */
+	  break;
+    }
+
+  /* One last chance: use the default replacement.  */
   default_missing = (uint32_t *)
     _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_DEFAULT_MISSING);
   if (default_missing[0] != L'\0')
@@ -152,6 +187,11 @@ __gconv_transliterate (struct __gconv_step *step,
       uint32_t len = _NL_CURRENT_WORD (LC_CTYPE,
 				       _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN);
       int res;
+
+      /* Test whether there is enough input.  */
+      if (winbuf + 1 > winbufend)
+	return (winbuf == winbufend
+		? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);
 
       res = DL_CALL_FCT (step->__fct,
 			 (step, step_data, &toinptr,
@@ -165,9 +205,10 @@ __gconv_transliterate (struct __gconv_step *step,
 	     input buffer.  */
 	  if (res == __GCONV_EMPTY_INPUT)
 	    {
-	      /* We consuming one character.  */
-	      ++*inbufp;
+	      /* This worked but is not reversible.  */
 	      ++*irreversible;
+	      *inbufp += 4;
+	      res = __GCONV_OK;
 	    }
 
 	  return res;

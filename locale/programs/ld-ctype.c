@@ -154,6 +154,7 @@ struct locale_ctype_t
   const char *translit_copy_repertoire;
   struct translit_t *translit;
   struct translit_ignore_t *translit_ignore;
+  uint32_t ntranslit_ignore;
 
   uint32_t *default_missing;
   const char *default_missing_file;
@@ -774,6 +775,33 @@ not all characters used in `outdigit' are available in the repertoire"));
 
 	ctype->wcoutdigits[cnt] = L'?';
       }
+
+  /* Sort the entries in the translit_ignore list.  */
+  if (ctype->translit_ignore != NULL)
+    {
+      struct translit_ignore_t *firstp = ctype->translit_ignore;
+      struct translit_ignore_t *runp;
+
+      ctype->ntranslit_ignore = 1;
+
+      for (runp = firstp->next; runp != NULL; runp = runp->next)
+	{
+	  struct translit_ignore_t *lastp = NULL;
+	  struct translit_ignore_t *cmpp;
+
+	  ++ctype->ntranslit_ignore;
+
+	  for (cmpp = firstp; cmpp != NULL; lastp = cmpp, cmpp = cmpp->next)
+	    if (runp->from < cmpp->from)
+	      break;
+
+	  runp->next = lastp;
+	  if (lastp == NULL)
+	    firstp = runp;
+	}
+
+      ctype->translit_ignore = firstp;
+    }
 }
 
 
@@ -1007,6 +1035,15 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
+	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN):
+	    default_missing_len = (ctype->default_missing
+				   ? wcslen ((wchar_t *)ctype->default_missing)
+				   : 1);
+	    iov[2 + elem + offset].iov_base = &default_missing_len;
+	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    break;
+
 	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING):
 	    iov[2 + elem + offset].iov_base =
 	      ctype->default_missing ?: (uint32_t *) L"";
@@ -1015,12 +1052,30 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
-	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN):
-	    default_missing_len = (ctype->default_missing
-				   ? wcslen ((wchar_t *)ctype->default_missing)
-				   : 1);
-	    iov[2 + elem + offset].iov_base = &default_missing_len;
+	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_IGNORE_LEN):
+	    iov[2 + elem + offset].iov_base = &ctype->ntranslit_ignore;
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    break;
+
+	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_IGNORE):
+	    {
+	      uint32_t *ranges = (uint32_t *) alloca (ctype->ntranslit_ignore
+						      * 3 * sizeof (uint32_t));
+	      struct translit_ignore_t *runp;
+
+	      iov[2 + elem + offset].iov_base = ranges;
+	      iov[2 + elem + offset].iov_len = (ctype->ntranslit_ignore
+						* 3 * sizeof (uint32_t));
+
+	      for (runp = ctype->translit_ignore; runp != NULL;
+		   runp = runp->next)
+		{
+		  *ranges++ = runp->from;
+		  *ranges++ = runp->to;
+		  *ranges++ = runp->step;
+		}
+	    }
 	    /* Remove the following line in case a new entry is added
 	       after _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN.  */
 	    if (elem < nelems)

@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <libintl.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -70,6 +71,7 @@ main (int argc, char *argv[])
   setenv ("LC_MESSAGES", "non-existing-locale", 1);
   setenv ("LC_CTYPE", "non-existing-locale", 1);
   setenv ("LANG", "non-existing-locale", 1);
+  setlocale (LC_CTYPE, "de_DE");
   unsetenv ("OUTPUT_CHARSET");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
