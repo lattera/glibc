@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.4\n"
-"POT-Creation-Date: 2001-08-13 15:08-0700\n"
+"POT-Creation-Date: 2001-08-17 13:03-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -300,17 +300,17 @@ msgstr ""
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr ""
 
-#: assert/assert.c:52
+#: assert/assert.c:54
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr ""
 
-#: assert/assert-perr.c:54
+#: assert/assert-perr.c:56
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr ""
 
-#: stdio-common/psignal.c:48
+#: stdio-common/psignal.c:62
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr ""
@@ -624,7 +624,7 @@ msgstr ""
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr ""
 
-#: posix/getopt.c:788
+#: posix/getopt.c:887 posix/getopt.c:890
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr ""
@@ -660,7 +660,7 @@ msgstr ""
 msgid "%s: invalid number of sorting rules"
 msgstr ""
 
-#: posix/getopt.c:791
+#: posix/getopt.c:896 posix/getopt.c:899
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr ""
@@ -683,6 +683,46 @@ msgstr ""
 #: locale/programs/ld-address.c:242 locale/programs/ld-address.c:270
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
+msgstr ""
+
+#: resolv/res_hconf.c:366
+#, c-format
+msgid "%s: line %d: bad command `%s'\n"
+msgstr ""
+
+#: resolv/res_hconf.c:165
+#, c-format
+msgid "%s: line %d: cannot specify more than %d services"
+msgstr ""
+
+#: resolv/res_hconf.c:231
+#, c-format
+msgid "%s: line %d: cannot specify more than %d trim domains"
+msgstr ""
+
+#: resolv/res_hconf.c:319
+#, c-format
+msgid "%s: line %d: expected `on' or `off', found `%s'\n"
+msgstr ""
+
+#: resolv/res_hconf.c:147
+#, c-format
+msgid "%s: line %d: expected service, found `%s'\n"
+msgstr ""
+
+#: resolv/res_hconf.c:395
+#, c-format
+msgid "%s: line %d: ignoring trailing garbage `%s'\n"
+msgstr ""
+
+#: resolv/res_hconf.c:256
+#, c-format
+msgid "%s: line %d: list delimiter not followed by domain"
+msgstr ""
+
+#: resolv/res_hconf.c:191
+#, c-format
+msgid "%s: line %d: list delimiter not followed by keyword"
 msgstr ""
 
 #: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365
@@ -746,37 +786,39 @@ msgstr ""
 msgid "%s: numeric country code `%d' not valid"
 msgstr ""
 
-#: posix/getopt.c:711
+#: posix/getopt.c:743 posix/getopt.c:748
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:681
+#: posix/getopt.c:688 posix/getopt.c:698
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:729 posix/getopt.c:902
+#: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070
+#: posix/getopt.c:1082
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr ""
 
-#: posix/getopt.c:706
+#: posix/getopt.c:730 posix/getopt.c:734
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:886
+#: posix/getopt.c:1038 posix/getopt.c:1049
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:868
+#: posix/getopt.c:1004 posix/getopt.c:1014
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:821 posix/getopt.c:951
+#: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136
+#: posix/getopt.c:1147
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
@@ -964,12 +1006,12 @@ msgstr ""
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr ""
 
-#: posix/getopt.c:762
+#: posix/getopt.c:841 posix/getopt.c:844
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr ""
 
-#: posix/getopt.c:758
+#: posix/getopt.c:830 posix/getopt.c:833
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""
@@ -1055,7 +1097,7 @@ msgstr ""
 msgid "(Unknown object)\n"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:132
+#: sunrpc/clnt_perr.c:133
 #, c-format
 msgid "(unknown authentication error - %d)"
 msgstr ""
@@ -1089,12 +1131,12 @@ msgstr ""
 msgid ".lib section in a.out corrupted"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:118 sunrpc/clnt_perr.c:139
+#: sunrpc/clnt_perr.c:119 sunrpc/clnt_perr.c:140
 #, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:125
+#: sunrpc/clnt_perr.c:126
 msgid "; why = "
 msgstr ""
 
@@ -1211,7 +1253,7 @@ msgstr ""
 msgid "Attempting to link in too many shared libraries"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:338
+#: sunrpc/clnt_perr.c:354
 msgid "Authentication OK"
 msgstr ""
 
@@ -1514,7 +1556,7 @@ msgstr ""
 msgid "Child exited"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:373
 msgid "Client credential too weak"
 msgstr ""
 
@@ -1939,7 +1981,7 @@ msgstr ""
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:365
+#: sunrpc/clnt_perr.c:381
 msgid "Failed (unspecified error)"
 msgstr ""
 
@@ -2268,27 +2310,27 @@ msgstr ""
 msgid "Invalid argument"
 msgstr ""
 
-#: posix/regex.c:1380
+#: posix/regex.c:1384
 msgid "Invalid back reference"
 msgstr ""
 
-#: posix/regex.c:1374
+#: posix/regex.c:1378
 msgid "Invalid character class name"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:357
 msgid "Invalid client credential"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:365
 msgid "Invalid client verifier"
 msgstr ""
 
-#: posix/regex.c:1371
+#: posix/regex.c:1375
 msgid "Invalid collation character"
 msgstr ""
 
-#: posix/regex.c:1392
+#: posix/regex.c:1396
 msgid "Invalid content of \\{\\}"
 msgstr ""
 
@@ -2313,15 +2355,15 @@ msgstr ""
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr ""
 
-#: posix/regex.c:1401
+#: posix/regex.c:1405
 msgid "Invalid preceding regular expression"
 msgstr ""
 
-#: posix/regex.c:1395
+#: posix/regex.c:1399
 msgid "Invalid range end"
 msgstr ""
 
-#: posix/regex.c:1368
+#: posix/regex.c:1372
 msgid "Invalid regular expression"
 msgstr ""
 
@@ -2333,7 +2375,7 @@ msgstr ""
 msgid "Invalid request descriptor"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:377
 msgid "Invalid server verifier"
 msgstr ""
 
@@ -2460,7 +2502,7 @@ msgstr ""
 msgid "Memory allocation failure"
 msgstr ""
 
-#: posix/regex.c:1398
+#: posix/regex.c:1402
 msgid "Memory exhausted"
 msgstr ""
 
@@ -2678,7 +2720,7 @@ msgstr ""
 msgid "No locks available"
 msgstr ""
 
-#: posix/regex.c:1365
+#: posix/regex.c:1369
 msgid "No match"
 msgstr ""
 
@@ -2695,7 +2737,7 @@ msgstr ""
 msgid "No more records in map database"
 msgstr ""
 
-#: posix/regex.c:7919
+#: posix/regex.c:7956
 msgid "No previous regular expression"
 msgstr ""
 
@@ -3027,7 +3069,7 @@ msgstr ""
 msgid "Power failure"
 msgstr ""
 
-#: posix/regex.c:1404
+#: posix/regex.c:1408
 msgid "Premature end of regular expression"
 msgstr ""
 
@@ -3144,79 +3186,79 @@ msgstr ""
 msgid "RPC version wrong"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:278
+#: sunrpc/clnt_perr.c:284
 msgid "RPC: (unknown error code)"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:197
+#: sunrpc/clnt_perr.c:203
 msgid "RPC: Authentication error"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:177
+#: sunrpc/clnt_perr.c:183
 msgid "RPC: Can't decode result"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:173
+#: sunrpc/clnt_perr.c:179
 msgid "RPC: Can't encode arguments"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:237
+#: sunrpc/clnt_perr.c:243
 msgid "RPC: Failed (unspecified error)"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:193
+#: sunrpc/clnt_perr.c:199
 msgid "RPC: Incompatible versions of RPC"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:229
+#: sunrpc/clnt_perr.c:235
 msgid "RPC: Port mapper failure"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:209
+#: sunrpc/clnt_perr.c:215
 msgid "RPC: Procedure unavailable"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:233
+#: sunrpc/clnt_perr.c:239
 msgid "RPC: Program not registered"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:201
+#: sunrpc/clnt_perr.c:207
 msgid "RPC: Program unavailable"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:205
+#: sunrpc/clnt_perr.c:211
 msgid "RPC: Program/version mismatch"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:217
+#: sunrpc/clnt_perr.c:223
 msgid "RPC: Remote system error"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:213
+#: sunrpc/clnt_perr.c:219
 msgid "RPC: Server can't decode arguments"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:170
+#: sunrpc/clnt_perr.c:176
 msgid "RPC: Success"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:189
+#: sunrpc/clnt_perr.c:195
 msgid "RPC: Timed out"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:185
+#: sunrpc/clnt_perr.c:191
 msgid "RPC: Unable to receive"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:181
+#: sunrpc/clnt_perr.c:187
 msgid "RPC: Unable to send"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:221
+#: sunrpc/clnt_perr.c:227
 msgid "RPC: Unknown host"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:225
+#: sunrpc/clnt_perr.c:231
 msgid "RPC: Unknown protocol"
 msgstr ""
 
@@ -3248,7 +3290,7 @@ msgstr ""
 msgid "Real-time signal %d"
 msgstr ""
 
-#: posix/regex.c:1407
+#: posix/regex.c:1411
 msgid "Regular expression too big"
 msgstr ""
 
@@ -3390,11 +3432,11 @@ msgstr ""
 msgid "Server out of memory"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:361
 msgid "Server rejected credential"
 msgstr ""
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:369
 msgid "Server rejected verifier"
 msgstr ""
 
@@ -3492,7 +3534,7 @@ msgstr ""
 msgid "Structure needs cleaning"
 msgstr ""
 
-#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1362
+#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1366
 #: stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr ""
@@ -3653,7 +3695,7 @@ msgstr ""
 msgid "Trace/breakpoint trap"
 msgstr ""
 
-#: posix/regex.c:1377
+#: posix/regex.c:1381
 msgid "Trailing backslash"
 msgstr ""
 
@@ -3683,6 +3725,11 @@ msgstr ""
 #: argp/argp-help.c:1611
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
+msgstr ""
+
+#: inet/rcmd.c:223
+#, c-format
+msgid "Trying %s...\n"
 msgstr ""
 
 #: nis/nis_print.c:167
@@ -3774,7 +3821,7 @@ msgstr ""
 msgid "Unknown signal %d"
 msgstr ""
 
-#: misc/error.c:113 timezone/zic.c:390
+#: misc/error.c:117 timezone/zic.c:390
 msgid "Unknown system error"
 msgstr ""
 
@@ -3782,19 +3829,19 @@ msgstr ""
 msgid "Unknown ypbind error"
 msgstr ""
 
-#: posix/regex.c:1386
+#: posix/regex.c:1390
 msgid "Unmatched ( or \\("
 msgstr ""
 
-#: posix/regex.c:1410
+#: posix/regex.c:1414
 msgid "Unmatched ) or \\)"
 msgstr ""
 
-#: posix/regex.c:1383
+#: posix/regex.c:1387
 msgid "Unmatched [ or [^"
 msgstr ""
 
-#: posix/regex.c:1389
+#: posix/regex.c:1393
 msgid "Unmatched \\{"
 msgstr ""
 
@@ -3993,11 +4040,12 @@ msgstr ""
 msgid "argument to `%s' must be a single character"
 msgstr ""
 
-#: sunrpc/auth_unix.c:311
+#: sunrpc/auth_unix.c:322
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr ""
 
-#: sunrpc/auth_unix.c:106 sunrpc/auth_unix.c:112 sunrpc/auth_unix.c:142
+#: sunrpc/auth_unix.c:114 sunrpc/auth_unix.c:117 sunrpc/auth_unix.c:150
+#: sunrpc/auth_unix.c:153
 msgid "authunix_create: out of memory\n"
 msgstr ""
 
@@ -4006,7 +4054,7 @@ msgstr ""
 msgid "bad argument"
 msgstr ""
 
-#: inet/rcmd.c:425
+#: inet/rcmd.c:514
 msgid "bad owner"
 msgstr ""
 
@@ -4034,15 +4082,15 @@ msgstr ""
 msgid "broadcast: ioctl (get interface flags)"
 msgstr ""
 
-#: sunrpc/svc_udp.c:528
+#: sunrpc/svc_udp.c:541
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr ""
 
-#: sunrpc/svc_udp.c:522
+#: sunrpc/svc_udp.c:535
 msgid "cache_set: victim alloc failed"
 msgstr ""
 
-#: sunrpc/svc_udp.c:511
+#: sunrpc/svc_udp.c:524
 msgid "cache_set: victim not found"
 msgstr ""
 
@@ -4050,7 +4098,7 @@ msgstr ""
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 
-#: sunrpc/svc_simple.c:85
+#: sunrpc/svc_simple.c:88
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr ""
@@ -4173,7 +4221,7 @@ msgstr ""
 msgid "cannot map zero-fill pages"
 msgstr ""
 
-#: inet/rcmd.c:421
+#: inet/rcmd.c:510
 msgid "cannot open"
 msgstr ""
 
@@ -4344,16 +4392,21 @@ msgstr ""
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr ""
 
-#: sunrpc/clnt_tcp.c:127 sunrpc/clnt_tcp.c:136
+#: sunrpc/clnt_tcp.c:134 sunrpc/clnt_tcp.c:137
 msgid "clnttcp_create: out of memory\n"
 msgstr ""
 
-#: sunrpc/clnt_udp.c:132 sunrpc/clnt_udp.c:143
+#: sunrpc/clnt_udp.c:141 sunrpc/clnt_udp.c:144
 msgid "clntudp_create: out of memory\n"
 msgstr ""
 
-#: sunrpc/clnt_unix.c:125 sunrpc/clnt_unix.c:134
+#: sunrpc/clnt_unix.c:131 sunrpc/clnt_unix.c:134
 msgid "clntunix_create: out of memory\n"
+msgstr ""
+
+#: inet/rcmd.c:209
+#, c-format
+msgid "connect to address %s: "
 msgstr ""
 
 #: sunrpc/rpc_scan.c:116
@@ -4377,11 +4430,11 @@ msgstr ""
 msgid "conversion stopped due to problem in writing the output"
 msgstr ""
 
-#: sunrpc/svc_simple.c:93
+#: sunrpc/svc_simple.c:97
 msgid "couldn't create an rpc server\n"
 msgstr ""
 
-#: sunrpc/svc_simple.c:101
+#: sunrpc/svc_simple.c:105
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
 msgstr ""
@@ -4443,19 +4496,19 @@ msgstr ""
 msgid "empty dynamics string token substitution"
 msgstr ""
 
-#: sunrpc/svc_udp.c:454
+#: sunrpc/svc_udp.c:467
 msgid "enablecache: cache already enabled"
 msgstr ""
 
-#: sunrpc/svc_udp.c:460
+#: sunrpc/svc_udp.c:473
 msgid "enablecache: could not allocate cache"
 msgstr ""
 
-#: sunrpc/svc_udp.c:468
+#: sunrpc/svc_udp.c:481
 msgid "enablecache: could not allocate cache data"
 msgstr ""
 
-#: sunrpc/svc_udp.c:475
+#: sunrpc/svc_udp.c:488
 msgid "enablecache: could not allocate cache fifo"
 msgstr ""
 
@@ -4548,7 +4601,7 @@ msgstr ""
 msgid "file too short"
 msgstr ""
 
-#: inet/rcmd.c:423
+#: inet/rcmd.c:512
 msgid "fstat failed"
 msgstr ""
 
@@ -4585,7 +4638,7 @@ msgstr ""
 msgid "hard link failed, symbolic link used"
 msgstr ""
 
-#: inet/rcmd.c:429
+#: inet/rcmd.c:518
 msgid "hard linked somewhere"
 msgstr ""
 
@@ -4790,7 +4843,7 @@ msgstr ""
 msgid "locale name should consist only of portable characters"
 msgstr ""
 
-#: inet/rcmd.c:414
+#: inet/rcmd.c:503
 msgid "lstat failed"
 msgstr ""
 
@@ -4826,7 +4879,8 @@ msgstr ""
 msgid "memory clobbered past end of allocated block\n"
 msgstr ""
 
-#: locale/programs/xmalloc.c:70 malloc/obstack.c:484 posix/getconf.c:996
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493
+#: posix/getconf.c:996
 msgid "memory exhausted"
 msgstr ""
 
@@ -4878,7 +4932,7 @@ msgstr ""
 msgid "netname2user: should not have uid 0"
 msgstr ""
 
-#: sunrpc/svc_simple.c:168
+#: sunrpc/svc_simple.c:183
 #, c-format
 msgid "never registered prog %d\n"
 msgstr ""
@@ -4939,7 +4993,7 @@ msgstr ""
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr ""
 
-#: inet/rcmd.c:416
+#: inet/rcmd.c:505
 msgid "not regular file"
 msgstr ""
 
@@ -4984,11 +5038,15 @@ msgstr ""
 msgid "output file"
 msgstr ""
 
+#: posix/../sysdeps/generic/wordexp.c:1801
+msgid "parameter null or not set"
+msgstr ""
+
 #: sunrpc/pm_getmaps.c:74
 msgid "pmap_getmaps rpc problem"
 msgstr ""
 
-#: inet/rcmd.c:234
+#: inet/rcmd.c:293
 msgid "poll: protocol failure in circuit setup\n"
 msgstr ""
 
@@ -5034,26 +5092,26 @@ msgstr ""
 msgid "program %lu version %lu ready and waiting\n"
 msgstr ""
 
-#: inet/rcmd.c:271
+#: inet/rcmd.c:354
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr ""
 
-#: inet/rcmd.c:231
+#: inet/rcmd.c:290
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr ""
 
-#: inet/rcmd.c:159
+#: inet/rcmd.c:172 inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr ""
 
-#: inet/rcmd.c:221
+#: inet/rcmd.c:270
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr ""
 
-#: sunrpc/svc_simple.c:108
+#: sunrpc/svc_simple.c:112
 msgid "registerrpc: out of memory\n"
 msgstr ""
 
@@ -5129,7 +5187,7 @@ msgstr ""
 msgid "short write in %s: %s"
 msgstr ""
 
-#: inet/rcmd.c:261
+#: inet/rcmd.c:335
 msgid "socket: protocol failure in circuit setup\n"
 msgstr ""
 
@@ -5161,51 +5219,51 @@ msgstr ""
 msgid "svc_run: - poll failed"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:170
+#: sunrpc/svc_tcp.c:171
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:155
+#: sunrpc/svc_tcp.c:156
 msgid "svc_tcp.c - tcp socket creation problem"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:219 sunrpc/svc_tcp.c:225
+#: sunrpc/svc_tcp.c:224 sunrpc/svc_tcp.c:227
 msgid "svc_tcp: makefd_xprt: out of memory\n"
 msgstr ""
 
-#: sunrpc/svc_unix.c:146
+#: sunrpc/svc_unix.c:150
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr ""
 
-#: sunrpc/svc_unix.c:162
+#: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr ""
 
-#: sunrpc/svc_unix.c:212 sunrpc/svc_unix.c:218
+#: sunrpc/svc_unix.c:220 sunrpc/svc_unix.c:223
 msgid "svc_unix: makefd_xprt: out of memory\n"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:178 sunrpc/svc_tcp.c:186
+#: sunrpc/svc_tcp.c:182 sunrpc/svc_tcp.c:185
 msgid "svctcp_create: out of memory\n"
 msgstr ""
 
-#: sunrpc/svc_udp.c:141
+#: sunrpc/svc_udp.c:143
 msgid "svcudp_create - cannot getsockname"
 msgstr ""
 
-#: sunrpc/svc_udp.c:149 sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:161
+#: sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:158
 msgid "svcudp_create: out of memory\n"
 msgstr ""
 
-#: sunrpc/svc_udp.c:127
+#: sunrpc/svc_udp.c:129
 msgid "svcudp_create: socket creation problem"
 msgstr ""
 
-#: sunrpc/svc_udp.c:177
+#: sunrpc/svc_udp.c:179 sunrpc/svc_udp.c:182
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr ""
 
-#: sunrpc/svc_unix.c:171 sunrpc/svc_unix.c:179
+#: sunrpc/svc_unix.c:178 sunrpc/svc_unix.c:181
 msgid "svcunix_create: out of memory\n"
 msgstr ""
 
@@ -5312,7 +5370,7 @@ msgstr ""
 msgid "trailing garbage at end of line"
 msgstr ""
 
-#: sunrpc/svc_simple.c:160
+#: sunrpc/svc_simple.c:175
 #, c-format
 msgid "trouble replying to prog %d\n"
 msgstr ""
@@ -5470,7 +5528,7 @@ msgstr ""
 msgid "write incomplete"
 msgstr ""
 
-#: inet/rcmd.c:427
+#: inet/rcmd.c:516
 msgid "writeable by other than owner"
 msgstr ""
 
@@ -5498,11 +5556,23 @@ msgstr ""
 msgid "wrong number of fields on Zone line"
 msgstr ""
 
-#: sunrpc/xdr_ref.c:85
+#: sunrpc/xdr_array.c:106 sunrpc/xdr_array.c:109
+msgid "xdr_array: out of memory\n"
+msgstr ""
+
+#: sunrpc/xdr.c:558 sunrpc/xdr.c:561
+msgid "xdr_bytes: out of memory\n"
+msgstr ""
+
+#: sunrpc/xdr_ref.c:89 sunrpc/xdr_ref.c:92
 msgid "xdr_reference: out of memory\n"
 msgstr ""
 
-#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+#: sunrpc/xdr.c:710 sunrpc/xdr.c:713
+msgid "xdr_string: out of memory\n"
+msgstr ""
+
+#: sunrpc/xdr_rec.c:155 sunrpc/xdr_rec.c:158
 msgid "xdrrec_create: out of memory\n"
 msgstr ""
 

@@ -1,7 +1,11 @@
+2001-08-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/data/netdb.h-data: Adjust gai_strerror return type.
+
 2001-08-17  Andreas Jaeger  <aj@suse.de>
 
-        * misc/getpass.c: Include wchar.h for prototypes.
-        * malloc/obstack.c: Likewise.
+	* misc/getpass.c: Include wchar.h for prototypes.
+	* malloc/obstack.c: Likewise.
 
 2001-08-17  Ulrich Drepper  <drepper@redhat.com>
 
