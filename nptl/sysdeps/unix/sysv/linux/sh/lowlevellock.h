@@ -215,14 +215,6 @@ extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
     __result; })
 
 
-extern int __lll_wake_tid (int *tid) attribute_hidden;
-#define lll_wake_tid(tid) \
-  do { \
-    (tid) = 0; \
-    ___lll_wake_tid (&tid); \
-  } while (0)
-
-
 /* Conditional variable handling.  */
 
 extern void __lll_cond_wait (pthread_cond_t *cond) attribute_hidden;

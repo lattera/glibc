@@ -1,5 +1,15 @@
 2003-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i486/bits/atomic.h: Fix a few unused definitions.
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Remove all trace of
+	lll_wake_tid.  This was used only to work around kernel limits in
+	the early days.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: Likewise.
+
 	* init.c (__static_tls_align_m1): Renamed from __static_tls_align.
 	(__pthread_initialize_minimal_internal): Change initialization of
 	__static_tls_align_m1 appropriately.

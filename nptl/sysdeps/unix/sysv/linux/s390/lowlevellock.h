@@ -260,16 +260,6 @@ __lll_timedwait_tid (int *ptid, const struct timespec *abstime)
 #define lll_timedwait_tid(tid, abstime) __lll_timedwait_tid (&(tid), abstime)
 
 
-static inline void
-__attribute__ ((always_inline))
-__lll_wake_tid (int *ptid)
-{
-  *ptid = 0;
-  lll_futex_wake (ptid, INT_MAX);
-}
-#define lll_wake_tid(tid) __lll_wake_tid (&(tid))
-
-
 /* Conditional variable handling.  */
 
 extern void __lll_cond_wait (pthread_cond_t *cond)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -298,20 +298,6 @@ extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
 	  __result = __lll_timedwait_tid (&tid, abstime);		      \
       }									      \
     __result; })
-
-
-#define lll_wake_tid(tid) \
-  do {									      \
-    int __ignore;							      \
-    (tid) = 0;								      \
-    __asm __volatile (LLL_TID_EBX_LOAD					      \
-		      LLL_TID_ENTER_KERNEL				      \
-		      LLL_TID_EBX_LOAD					      \
-		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), LLL_TID_EBX_REG (&(tid)), "S" (0),   \
-			"c" (FUTEX_WAKE), "d" (0x7fffffff)		      \
-			"i" (offsetof (tcbhead_t, sysinfo)));		      \
-  } while (0)
 
 
 /* Conditional variable handling.  */

@@ -121,7 +121,7 @@ __lll_wait_tid:
 	 nop
 	.size	__lll_wait_tid,.-__lll_wait_tid
 
-	
+
 	.globl	__lll_timedwait_tid
 	.type	__lll_timedwait_tid,@function
 	.hidden	__lll_timedwait_tid
@@ -202,20 +202,3 @@ __lll_timedwait_tid:
 	.long	1000000000
 
 	.size	__lll_timedwait_tid,.-__lll_timedwait_tid
-
-
-	.globl	__lll_wake_tid
-	.type	__lll_wake_tid,@function
-	.hidden	__lll_wake_tid
-__lll_wake_tid:
-	mov	#FUTEX_WAKE, r5
-	mov	#-1, r6
-	shlr	r6		/* r6 = 0x7fffffff */
-	mov	#0, r7
-	mov	#SYS_futex, r3
-	extu.b	r3, r3
-	trapa	#0x14
-	SYSCALL_INST_PAD
-	rts
-	 nop
-	.size	__lll_wake_tid,.-__lll_wake_tid
