@@ -20,6 +20,9 @@
 #include <sys/ustat.h>
 #include <sys/sysmacros.h>
 
+
+extern int __syscall_ustat (unsigned int dev, struct ustat *ubuf);
+
 int
 ustat (dev_t dev, struct ustat *ubuf)
 {
