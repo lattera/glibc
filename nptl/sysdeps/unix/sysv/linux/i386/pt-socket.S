@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <socketcall.h>
+#include <tls.h>
 
 #define P(a, b) P2(a, b)
 #define P2(a, b) a##b
@@ -37,8 +38,34 @@
 
 .globl __socket
 ENTRY (__socket)
+	cmpl $0, %gs:MULTIPLE_THREADS_OFFSET
+	jne 1f
+
+	/* Save registers.  */
+	movl %ebx, %edx
+
+	movl $SYS_ify(socketcall), %eax	/* System call number in %eax.  */
+
+	/* Use ## so `socket' is a separate token that might be #define'd.  */
+	movl $P(SOCKOP_,socket), %ebx	/* Subcode is first arg to syscall.  */
+	lea 4(%esp), %ecx		/* Address of args is 2nd arg.  */
+
+        /* Do the system call trap.  */
+	int $0x80
+
+	/* Restore registers.  */
+	movl %edx, %ebx
+
+	/* %eax is < 0 if there was an error.  */
+	cmpl $-125, %eax
+	jae SYSCALL_ERROR_LABEL
+
+	/* Successful; return the syscall's value.  */
+	ret
+
+
 	/* We need one more register.  */
-	pushl %esi
+1:	pushl %esi
 
 	/* Enable asynchronous cancellation.  */
 	call __libc_enable_asynccancel	/* No @plt */

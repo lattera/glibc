@@ -17,38 +17,46 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <sysdep.h>
+#include <stdarg.h>
 #include <unistd.h>
-#include <list.h>
-#include "fork.h"
+#include <nptl/pthreadP.h>
 #include <tls.h>
-#include <bits/libc-lock.h>
 
 
-static struct fork_handler pthread_child_handler;
-
-
-void
-__libc_pthread_init (ptr, reclaim)
-     unsigned long int *ptr;
-     void (*reclaim) (void);
+int
+__libc_open (const char *file, int oflag, ...)
 {
-  /* Remember the pointer to the generation counter in libpthread.  */
-  __fork_generation_pointer = ptr;
+  int mode = 0;
 
-  /* Called by a child after fork.  */
-  pthread_child_handler.handler = reclaim;
-
-  /* The fork handler needed by libpthread.  */
-  list_add_tail (&pthread_child_handler.list, &__fork_child_list);
-
-  /* We have a macro which is used in asm code describing data layout.
-     Make sure it does not get out of date.  */
-  if (offsetof (struct pthread, header.data.multiple_threads)
-      != MULTIPLE_THREADS_OFFSET)
+  if (oflag & O_CREAT)
     {
-#define str_n_len(str) str, sizeof (str) - 1
-      __libc_write (STDERR_FILENO,
-		    str_n_len ("*** MULTIPLE_THREADS_OFFSET out of date\n"));
-      _exit (1);
+      va_list arg;
+      va_start (arg, oflag);
+      mode = va_arg (arg, int);
+      va_end (arg);
     }
+
+#ifndef NOT_IN_libc
+  if (__builtin_expect (THREAD_GETMEM (THREAD_SELF,
+				       header.data.multiple_threads) == 0, 1))
+    return INLINE_SYSCALL (open, 3, file, oflag, mode);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+#endif
+
+  int result = INLINE_SYSCALL (open, 3, file, oflag, mode);
+
+#ifndef NOT_IN_libc
+  LIBC_CANCEL_RESET (oldtype);
+#endif
+
+  return result;
 }
+libc_hidden_def (__libc_open)
+strong_alias (__libc_open, __open)
+libc_hidden_weak (__open)
+weak_alias (__libc_open, open)

@@ -126,7 +126,7 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-tsd1 tst-tsd2 \
 	tst-fork1 tst-fork2 tst-fork3 \
 	tst-atfork1 \
-	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 \
+	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
 	tst-cleanup1 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 \
@@ -164,6 +164,8 @@ CFLAGS-funlockfile.c = -D_IO_MTSAFE_IO
 ifeq ($(build-static),yes)
 tests-static += tst-locale1 tst-locale2
 endif
+# These tests are linked with libc before libpthread
+tests-reverse += tst-cancel5
 
 include ../Rules
 
@@ -205,10 +207,13 @@ $(objpfx)libpthread.so: $(common-objpfx)libc.so \
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \
-  $(filter-out $(tests-static), \
+  $(filter-out $(tests-static) $(tests-reverse), \
     $(tests) $(test-srcs))): $(objpfx)libpthread.so \
 			     $(objpfx)libpthread_nonshared.a
 $(objpfx)tst-unload: $(common-objpfx)dlfcn/libdl.so
+$(addprefix $(objpfx), $(tests-reverse)): \
+  $(common-objpfx)libc.so $(objpfx)libpthread.so \
+  $(objpfx)libpthread_nonshared.a
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libpthread.a
 else
 $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a

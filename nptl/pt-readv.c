@@ -24,7 +24,7 @@
 #include "pthreadP.h"
 
 
-/* Not all versions of the kernel support extremely the large number
+/* Not all versions of the kernel support extremely large numbers
    of records.  */
 #ifndef UIO_FASTIOV
 /* 1024 is what the kernels with NPTL support use.  */

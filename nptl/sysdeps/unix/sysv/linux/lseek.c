@@ -17,38 +17,32 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <stdlib.h>
+#include <sysdep.h>
 #include <unistd.h>
-#include <list.h>
-#include "fork.h"
+#include <nptl/pthreadP.h>
 #include <tls.h>
-#include <bits/libc-lock.h>
 
 
-static struct fork_handler pthread_child_handler;
-
-
-void
-__libc_pthread_init (ptr, reclaim)
-     unsigned long int *ptr;
-     void (*reclaim) (void);
+off_t
+__libc_lseek (int fd, off_t offset, int whence)
 {
-  /* Remember the pointer to the generation counter in libpthread.  */
-  __fork_generation_pointer = ptr;
+#ifndef NOT_IN_libc
+  if (__builtin_expect (THREAD_GETMEM (THREAD_SELF,
+				       header.data.multiple_threads) == 0, 1))
+    return INLINE_SYSCALL (lseek, 3, fd, offset, whence);
 
-  /* Called by a child after fork.  */
-  pthread_child_handler.handler = reclaim;
+  int oldtype = LIBC_CANCEL_ASYNC ();
+#endif
 
-  /* The fork handler needed by libpthread.  */
-  list_add_tail (&pthread_child_handler.list, &__fork_child_list);
+  off_t result = INLINE_SYSCALL (lseek, 3, fd, offset, whence);
 
-  /* We have a macro which is used in asm code describing data layout.
-     Make sure it does not get out of date.  */
-  if (offsetof (struct pthread, header.data.multiple_threads)
-      != MULTIPLE_THREADS_OFFSET)
-    {
-#define str_n_len(str) str, sizeof (str) - 1
-      __libc_write (STDERR_FILENO,
-		    str_n_len ("*** MULTIPLE_THREADS_OFFSET out of date\n"));
-      _exit (1);
-    }
+#ifndef NOT_IN_libc
+  LIBC_CANCEL_RESET (oldtype);
+#endif
+
+  return result;
 }
+strong_alias (__libc_lseek, __lseek)
+weak_alias (__libc_lseek, lseek)

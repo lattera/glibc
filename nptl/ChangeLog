@@ -1,3 +1,61 @@
+2002-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/pt-socket.S: Check multiple_threads
+	element in TCB to see whether locking is needed.
+
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c: Check that
+	MULTIPLE_THREADS_OFFSET value is correct.
+
+	* sysdeps/unix/sysv/linux/close.c: New file.
+	* sysdeps/unix/sysv/linux/connect.S: New file.
+	* sysdeps/unix/sysv/linux/creat.c: New file.
+	* sysdeps/unix/sysv/linux/fsync.c: New file.
+	* sysdeps/unix/sysv/linux/llseek.c: New file.
+	* sysdeps/unix/sysv/linux/lseek.c: New file.
+	* sysdeps/unix/sysv/linux/msgrcv.c: New file.
+	* sysdeps/unix/sysv/linux/msgsnd.c: New file.
+	* sysdeps/unix/sysv/linux/msync.c: New file.
+	* sysdeps/unix/sysv/linux/nanosleep.c: New file.
+	* sysdeps/unix/sysv/linux/open.c: New file.
+	* sysdeps/unix/sysv/linux/open64.c: New file.
+	* sysdeps/unix/sysv/linux/pause.c: New file.
+	* sysdeps/unix/sysv/linux/poll.c: New file.
+	* sysdeps/unix/sysv/linux/pread.c: New file.
+	* sysdeps/unix/sysv/linux/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/pselect.c: New file.
+	* sysdeps/unix/sysv/linux/pwrite.c: New file.
+	* sysdeps/unix/sysv/linux/pwrite64.c: New file.
+	* sysdeps/unix/sysv/linux/readv.c: New file.
+	* sysdeps/unix/sysv/linux/recv.S: New file.
+	* sysdeps/unix/sysv/linux/recvfrom.S: New file.
+	* sysdeps/unix/sysv/linux/recvmsg.S: New file.
+	* sysdeps/unix/sysv/linux/select.c: New file.
+	* sysdeps/unix/sysv/linux/send.S: New file.
+	* sysdeps/unix/sysv/linux/sendmsg.S: New file.
+	* sysdeps/unix/sysv/linux/sendto.S: New file.
+	* sysdeps/unix/sysv/linux/sigpause.c: New file.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: New file.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: New file.
+	* sysdeps/unix/sysv/linux/sigwait.c: New file.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: New file.
+	* sysdeps/unix/sysv/linux/system.c: New file.
+	* sysdeps/unix/sysv/linux/tcdrain.c: New file.
+	* sysdeps/unix/sysv/linux/wait.c: New file.
+	* sysdeps/unix/sysv/linux/waitid.c: New file.
+	* sysdeps/unix/sysv/linux/waitpid.c: New file.
+	* sysdeps/unix/sysv/linux/writev.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: New file.
+
+	* pt-readv.c: Fix comment.
+
+2002-12-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-cleanup1.c: Include stdlib.h.
+
+	* tst-cancel5.c: New test.
+	* Makefile (tests): Add tst-cancel5.
+	(tst-cancel5): Link against libc.so libpthread.so in that order.
+
 2002-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* forward.c (test_loaded): Prevent recursive calls.

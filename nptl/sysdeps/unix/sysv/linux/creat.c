@@ -17,38 +17,41 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <sysdep.h>
 #include <unistd.h>
-#include <list.h>
-#include "fork.h"
+#include <nptl/pthreadP.h>
 #include <tls.h>
-#include <bits/libc-lock.h>
 
 
-static struct fork_handler pthread_child_handler;
-
-
-void
-__libc_pthread_init (ptr, reclaim)
-     unsigned long int *ptr;
-     void (*reclaim) (void);
+int
+creat (const char *pathname, mode_t mode)
 {
-  /* Remember the pointer to the generation counter in libpthread.  */
-  __fork_generation_pointer = ptr;
-
-  /* Called by a child after fork.  */
-  pthread_child_handler.handler = reclaim;
-
-  /* The fork handler needed by libpthread.  */
-  list_add_tail (&pthread_child_handler.list, &__fork_child_list);
-
-  /* We have a macro which is used in asm code describing data layout.
-     Make sure it does not get out of date.  */
-  if (offsetof (struct pthread, header.data.multiple_threads)
-      != MULTIPLE_THREADS_OFFSET)
+#ifndef NOT_IN_libc
+  if (__builtin_expect (THREAD_GETMEM (THREAD_SELF,
+				       header.data.multiple_threads) == 0, 1))
     {
-#define str_n_len(str) str, sizeof (str) - 1
-      __libc_write (STDERR_FILENO,
-		    str_n_len ("*** MULTIPLE_THREADS_OFFSET out of date\n"));
-      _exit (1);
+#ifdef __NR_creat
+      return INLINE_SYSCALL (creat, 2, pathname, mode);
+#else
+      return __libc_open (pathname, O_WRONLY|O_CREAT|O_TRUNC, mode);
+#endif
     }
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+#endif
+
+#ifdef __NR_creat
+  int result = INLINE_SYSCALL (creat, 2, pathname, mode);
+#else
+  int result = __libc_open (pathname, O_WRONLY|O_CREAT|O_TRUNC, mode);
+#endif
+
+#ifndef NOT_IN_libc
+  LIBC_CANCEL_RESET (oldtype);
+#endif
+
+  return result;
 }

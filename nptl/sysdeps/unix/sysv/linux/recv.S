@@ -1,0 +1,5 @@
+#define	socket	recv
+#define	__socket __libc_recv
+#define	NARGS	4
+#include <pt-socket.S>
+weak_alias (__libc_recv, __recv)
