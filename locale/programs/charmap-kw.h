@@ -1,23 +1,23 @@
-/* ANSI-C code produced by gperf version 2.7.1 (19981006 egcs) */
-/* Command-line: gperf -acCgopt -k1,2,5,9,$ -L ANSI-C -N charmap_hash programs/charmap-kw.gperf  */
+/* ANSI-C code produced by gperf version 2.7.2 */
+/* Command-line: gperf -acCgopt -k'1,2,5,9,$' -L ANSI-C -N charmap_hash programs/charmap-kw.gperf  */
 /* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <string.h>
 
@@ -33,6 +33,10 @@ struct keyword_t ;
 
 #ifdef __GNUC__
 __inline
+#else
+#ifdef __cplusplus
+inline
+#endif
 #endif
 static unsigned int
 hash (register const char *str, register unsigned int len)
@@ -131,7 +135,7 @@ charmap_hash (register const char *str, register unsigned int len)
         {
           register const char *s = wordlist[key].name;
 
-          if (*str == *s && !strncmp (str + 1, s + 1, len - 1))
+          if (*str == *s && !strncmp (str + 1, s + 1, len - 1) && s[len] == '\0')
             return &wordlist[key];
         }
     }

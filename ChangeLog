@@ -4,6 +4,11 @@
 	not appropriate for documentation anyway.
 	* manual/libc-texinfo.sh: "Library General Public License" ->
 	"Lesser General Public License".
+        * COPYING: Fix Y2k bug in sample copyright notices.
+        * manual/lesser.texi: Renamed from manual/lgpl.texinfo,
+        as fsf.org uses the name "lesser.texi".
+	* manual/Makefile (texis): Follow rename.
+
 
 2001-07-06  Andreas Jaeger  <aj@suse.de>
 

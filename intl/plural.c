@@ -21,22 +21,23 @@
 
 /* Expression parsing for plural form selection.
    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -59,13 +60,13 @@
 #define YYLEX_PARAM	&((struct parse_args *) arg)->cp
 #define YYPARSE_PARAM	arg
 
-#line 45 "plural.y"
+#line 46 "plural.y"
 typedef union {
   unsigned long int num;
   enum operator op;
   struct expression *exp;
 } YYSTYPE;
-#line 51 "plural.y"
+#line 52 "plural.y"
 
 /* Prototypes for local functions.  */
 static struct expression *new_exp PARAMS ((int nargs, enum operator op,
@@ -227,8 +228,8 @@ static const short yyrhs[] = {    17,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-   170,   178,   182,   186,   190,   194,   198,   202,   206,   210,
-   214,   219
+   171,   179,   183,   187,   191,   195,   199,   203,   207,   211,
+   215,   220
 };
 #endif
 
@@ -295,7 +296,7 @@ static const short yycheck[] = {     1,
 #define YYPURE 1
 
 /* -*-C-*-  Note some compilers choke on comments on `#line' lines.  */
-#line 3 "/usr/lib/bison.simple"
+#line 3 "/usr/share/bison.simple"
 /* This file comes from bison-1.28.  */
 
 /* Skeleton output parser for bison,
@@ -325,6 +326,11 @@ static const short yycheck[] = {     1,
   when the %semantic_parser declaration is not specified in the grammar.
   It was written by Richard Stallman by simplifying the hairy parser
   used when %semantic_parser is specified.  */
+
+#ifndef YYPARSE_RETURN_TYPE
+#define YYPARSE_RETURN_TYPE int
+#endif
+
 
 #ifndef YYSTACK_USE_ALLOCA
 #ifdef alloca
@@ -509,7 +515,7 @@ __yy_memcpy (char *to, char *from, unsigned int count)
 #endif
 #endif
 
-#line 217 "/usr/lib/bison.simple"
+#line 222 "/usr/share/bison.simple"
 
 /* The user can define YYPARSE_PARAM as the name of an argument to be passed
    into yyparse.  The argument should have type void *.
@@ -533,13 +539,15 @@ __yy_memcpy (char *to, char *from, unsigned int count)
 /* Prevent warning if -Wstrict-prototypes.  */
 #ifdef __GNUC__
 #ifdef YYPARSE_PARAM
-int yyparse (void *);
+YYPARSE_RETURN_TYPE
+yyparse (void *);
 #else
-int yyparse (void);
+YYPARSE_RETURN_TYPE
+yyparse (void);
 #endif
 #endif
 
-int
+YYPARSE_RETURN_TYPE
 yyparse(YYPARSE_PARAM_ARG)
      YYPARSE_PARAM_DECL
 {
@@ -567,7 +575,9 @@ yyparse(YYPARSE_PARAM_ARG)
 #endif
 
   int yystacksize = YYINITDEPTH;
+#ifndef YYSTACK_USE_ALLOCA
   int yyfree_stacks = 0;
+#endif
 
 #ifdef YYPURE
   int yychar;
@@ -652,6 +662,7 @@ yynewstate:
       if (yystacksize >= YYMAXDEPTH)
 	{
 	  yyerror("parser stack overflow");
+#ifndef YYSTACK_USE_ALLOCA
 	  if (yyfree_stacks)
 	    {
 	      free (yyss);
@@ -660,6 +671,7 @@ yynewstate:
 	      free (yyls);
 #endif
 	    }
+#endif	    
 	  return 2;
 	}
       yystacksize *= 2;
@@ -838,7 +850,7 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 171 "plural.y"
+#line 172 "plural.y"
 {
 	    if (yyvsp[0].exp == NULL)
 	      YYABORT;
@@ -846,75 +858,75 @@ case 1:
 	  ;
     break;}
 case 2:
-#line 179 "plural.y"
+#line 180 "plural.y"
 {
 	    yyval.exp = new_exp_3 (qmop, yyvsp[-4].exp, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 3:
-#line 183 "plural.y"
+#line 184 "plural.y"
 {
 	    yyval.exp = new_exp_2 (lor, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 4:
-#line 187 "plural.y"
+#line 188 "plural.y"
 {
 	    yyval.exp = new_exp_2 (land, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 5:
-#line 191 "plural.y"
+#line 192 "plural.y"
 {
 	    yyval.exp = new_exp_2 (yyvsp[-1].op, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 6:
-#line 195 "plural.y"
+#line 196 "plural.y"
 {
 	    yyval.exp = new_exp_2 (yyvsp[-1].op, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 7:
-#line 199 "plural.y"
+#line 200 "plural.y"
 {
 	    yyval.exp = new_exp_2 (yyvsp[-1].op, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 8:
-#line 203 "plural.y"
+#line 204 "plural.y"
 {
 	    yyval.exp = new_exp_2 (yyvsp[-1].op, yyvsp[-2].exp, yyvsp[0].exp);
 	  ;
     break;}
 case 9:
-#line 207 "plural.y"
+#line 208 "plural.y"
 {
 	    yyval.exp = new_exp_1 (lnot, yyvsp[0].exp);
 	  ;
     break;}
 case 10:
-#line 211 "plural.y"
+#line 212 "plural.y"
 {
 	    yyval.exp = new_exp_0 (var);
 	  ;
     break;}
 case 11:
-#line 215 "plural.y"
+#line 216 "plural.y"
 {
 	    if ((yyval.exp = new_exp_0 (num)) != NULL)
 	      yyval.exp->val.num = yyvsp[0].num;
 	  ;
     break;}
 case 12:
-#line 220 "plural.y"
+#line 221 "plural.y"
 {
 	    yyval.exp = yyvsp[-1].exp;
 	  ;
     break;}
 }
    /* the action file gets copied in in place of this dollarsign */
-#line 543 "/usr/lib/bison.simple"
+#line 554 "/usr/share/bison.simple"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1112,6 +1124,7 @@ yyerrhandle:
 
  yyacceptlab:
   /* YYACCEPT comes here.  */
+#ifndef YYSTACK_USE_ALLOCA
   if (yyfree_stacks)
     {
       free (yyss);
@@ -1120,10 +1133,12 @@ yyerrhandle:
       free (yyls);
 #endif
     }
+#endif
   return 0;
 
  yyabortlab:
   /* YYABORT comes here.  */
+#ifndef YYSTACK_USE_ALLOCA
   if (yyfree_stacks)
     {
       free (yyss);
@@ -1132,9 +1147,10 @@ yyerrhandle:
       free (yyls);
 #endif
     }
+#endif    
   return 1;
 }
-#line 225 "plural.y"
+#line 226 "plural.y"
 
 
 void

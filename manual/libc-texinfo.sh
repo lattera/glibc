@@ -68,7 +68,7 @@ mv -f incl.$$ chapters.texi
   !/^\*/ { print; }
  ' smenu.$$
  cat <<EOF
-* Copying::                      The GNU Library General Public License says
+* Copying::                      The GNU Lesser General Public License says
                                   how you can copy and share the GNU C Library.
 
 Indices

@@ -43,7 +43,7 @@ notice identical to this one except for the removal of this paragraph
 @end ignore
 Permission is granted to copy and distribute modified versions of this
 manual under the conditions for verbatim copying, provided also that the
-section entitled ``GNU Library General Public License'' is included
+section entitled ``GNU Lesser General Public License'' is included
 exactly as in the original, and provided that the entire resulting
 derived work is distributed under the terms of a permission notice
 identical to this one.
@@ -51,7 +51,7 @@ identical to this one.
 Permission is granted to copy and distribute translations of this manual
 into another language, under the above conditions for modified versions,
 except that the text of the translation of the section entitled ``GNU
-Library General Public License'' must be approved for accuracy by the
+Lesser General Public License'' must be approved for accuracy by the
 Foundation.
 @end ifinfo
 
@@ -88,7 +88,7 @@ are preserved on all copies.
 
 Permission is granted to copy and distribute modified versions of this
 manual under the conditions for verbatim copying, provided also that the
-section entitled ``GNU Library General Public License'' is included
+section entitled ``GNU Lesser General Public License'' is included
 exactly as in the original, and provided that the entire resulting
 derived work is distributed under the terms of a permission notice
 identical to this one.
@@ -96,7 +96,7 @@ identical to this one.
 Permission is granted to copy and distribute translations of this manual
 into another language, under the above conditions for modified versions,
 except that the text of the translation of the section entitled ``GNU
-Library General Public License'' must be approved for accuracy by the
+Lesser General Public License'' must be approved for accuracy by the
 Foundation.
 @end titlepage
 @page
@@ -114,7 +114,7 @@ of the GNU C Library.
 
 @set lgpl-appendix
 @node Copying, Concept Index, Contributors, Top
-@include lgpl.texinfo
+@include lesser.texi
 
 
 @node Concept Index, Type Index, Copying, Top
