@@ -60,6 +60,30 @@ timer_create (clock_id, evp, timerid)
       if (evp == NULL
 	  || __builtin_expect (evp->sigev_notify != SIGEV_THREAD, 1))
 	{
+	  struct sigevent local_evp;
+
+	  /* We avoid allocating too much memory by basically
+	     using struct timer as a derived class with the
+	     first two elements being in the superclass.  We only
+	     need these two elements here.  */
+	  struct timer *newp = (struct timer *) malloc (offsetof (struct timer,
+								  thrfunc));
+	  if (newp == NULL)
+	    /* No more memory.  */
+	    return -1;
+
+	  if (evp == NULL)
+	    {
+	      /* The kernel has to pass up the timer ID which is a
+		 userlevel object.  Therefore we cannot leave it up to
+		 the kernel to determine it.  */
+	      local_evp.sigev_notify = SIGEV_SIGNAL;
+	      local_evp.sigev_signo = SIGALRM;
+	      local_evp.sigev_value.sival_ptr = newp;
+
+	      evp = &local_evp;
+	    }
+
 	  kernel_timer_t ktimerid;
 	  int retval = INLINE_SYSCALL (timer_create, 3, clock_id, evp,
 				       &ktimerid);
@@ -70,43 +94,31 @@ timer_create (clock_id, evp, timerid)
 	    {
 # ifndef __ASSUME_POSIX_TIMERS
 	      __no_posix_timers = 1;
-#endif
+# endif
 
 	      if (retval != -1)
 		{
-		  struct timer *newp;
+		  newp->sigev_notify = (evp != NULL
+					? evp->sigev_notify : SIGEV_SIGNAL);
+		  newp->ktimerid = ktimerid;
 
-		  /* We avoid allocating too much memory by basically
-		     using struct timer as a derived class with the
-		     first two elements being in the superclass.  We only
-		     need these two elements here.  */
-		  newp = (struct timer *) malloc (offsetof (struct timer,
-							    thrfunc));
-		  if (newp != NULL)
-		    {
-		      newp->sigev_notify = (evp != NULL
-					    ? evp->sigev_notify
-					    : SIGEV_SIGNAL);
-		      newp->ktimerid = ktimerid;
-
-		      *timerid = (timer_t) newp;
-		    }
-		  else
-		    {
-		      /* No memory.  Free the kernel timer.  */
-		      INTERNAL_SYSCALL_DECL (err);
-		      (void) INTERNAL_SYSCALL (timer_delete, err, 1, ktimerid);
-
-		      retval = -1;
-		    }
+		  *timerid = (timer_t) newp;
+		}
+	      else
+		{
+		  /* Cannot allocate the timer, fail.  */
+		  free (newp);
+		  retval = -1;
 		}
 
 	      return retval;
 	    }
+
+	  free (newp);
 	}
       else
 	{
-#ifndef __ASSUME_POSIX_TIMERS
+# ifndef __ASSUME_POSIX_TIMERS
 	  /* Make sure we have the necessary kernel support.  */
 	  if (__no_posix_timers == 0)
 	    {
@@ -118,7 +130,7 @@ timer_create (clock_id, evp, timerid)
 	    }
 
 	  if (__no_posix_timers > 0)
-#endif
+# endif
 	    {
 		  sigset_t ss;
 		  sigemptyset (&ss);

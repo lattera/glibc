@@ -1,3 +1,7 @@
+2003-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* abilist/librt.abilist: Add new timer interfaces for 64-bit archs.
+
 2003-03-25  Jiro SEKIBA  <jir@yamato.ibm.com>
 
 	* iconvdata/euc-tw.c (from_euc_tw): Fix return value of TO_LOOP.

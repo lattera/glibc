@@ -1,3 +1,8 @@
+2003-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_create.c (timer_create): If EVP ==
+	NULL provide default definition to syscall.
+
 2003-03-25  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/posix-timer.h (TIMER_MAX): Define if not defined.
