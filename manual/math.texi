@@ -236,9 +236,9 @@ the implementation.)
 These functions return the complex sine of @var{z}.
 The mathematical definition of the complex sine is
 
-@ifinfo
+@ifnottex
 @math{sin (z) = 1/(2*i) * (exp (z*i) - exp (-z*i))}.
-@end ifinfo
+@end ifnottex
 @tex
 $$\sin(z) = {1\over 2i} (e^{zi} - e^{-zi})$$
 @end tex
@@ -256,9 +256,9 @@ $$\sin(z) = {1\over 2i} (e^{zi} - e^{-zi})$$
 These functions return the complex cosine of @var{z}.
 The mathematical definition of the complex cosine is
 
-@ifinfo
+@ifnottex
 @math{cos (z) = 1/2 * (exp (z*i) + exp (-z*i))}
-@end ifinfo
+@end ifnottex
 @tex
 $$\cos(z) = {1\over 2} (e^{zi} + e^{-zi})$$
 @end tex
@@ -276,9 +276,9 @@ $$\cos(z) = {1\over 2} (e^{zi} + e^{-zi})$$
 These functions return the complex tangent of @var{z}.
 The mathematical definition of the complex tangent is
 
-@ifinfo
+@ifnottex
 @math{tan (z) = -i * (exp (z*i) - exp (-z*i)) / (exp (z*i) + exp (-z*i))}
-@end ifinfo
+@end ifnottex
 @tex
 $$\tan(z) = -i \cdot {e^{zi} - e^{-zi}\over e^{zi} + e^{-zi}}$$
 @end tex
@@ -723,9 +723,9 @@ These functions return @code{e} (the base of natural
 logarithms) raised to the power of @var{z}.
 Mathematically, this corresponds to the value
 
-@ifinfo
+@ifnottex
 @math{exp (z) = exp (creal (z)) * (cos (cimag (z)) + I * sin (cimag (z)))}
-@end ifinfo
+@end ifnottex
 @tex
 $$\exp(z) = e^z = e^{{\rm Re}\,z} (\cos ({\rm Im}\,z) + i \sin ({\rm Im}\,z))$$
 @end tex
@@ -743,9 +743,9 @@ $$\exp(z) = e^z = e^{{\rm Re}\,z} (\cos ({\rm Im}\,z) + i \sin ({\rm Im}\,z))$$
 These functions return the natural logarithm of @var{z}.
 Mathematically, this corresponds to the value
 
-@ifinfo
+@ifnottex
 @math{log (z) = log (cabs (z)) + I * carg (z)}
-@end ifinfo
+@end ifnottex
 @tex
 $$\log(z) = \log |z| + i \arg z$$
 @end tex
@@ -769,9 +769,9 @@ or is very close to 0.  It is well-defined for all other values of
 These functions return the base 10 logarithm of the complex value
 @var{z}. Mathematically, this corresponds to the value
 
-@ifinfo
+@ifnottex
 @math{log (z) = log10 (cabs (z)) + I * carg (z)}
-@end ifinfo
+@end ifnottex
 @tex
 $$\log_{10}(z) = \log_{10}|z| + i \arg z$$
 @end tex
@@ -1409,6 +1409,64 @@ You can use this value later as an argument to @code{setstate} to
 restore that state.
 
 If the function fails the return value is @code{NULL}.
+@end deftypefun
+
+The four functions described so far in this section all work on a state
+which is shared by all threads.  The state is not directly accessible to
+the user and can only be modified by these functions.  This makes it
+hard to deal with situations where each thread should have its own
+pseudo-random number generator.
+
+The GNU C library contains four additional functions which contain the
+state as an explicit parameter and therefore make it possible to handle
+thread-local PRNGs.  Beside this there are no difference.  In fact, the
+four functions already discussed are implemented internally using the
+following interfaces.
+
+The @file{stdlib.h} header contains a definition of the following type:
+
+@comment stdlib.h
+@comment GNU
+@deftp {Data Type} {struct random_data}
+
+Objects of type @code{struct random_data} contain the information
+necessary to represent the state of the PRNG.  Although a complete
+definition of the type is present the type should be treated as opaque.
+@end deftp
+
+The functions modifying the state follow exactly the already described
+functions.
+
+@comment stdlib.h
+@comment GNU
+@deftypefun int random_r (struct random_data *restrict @var{buf}, int32_t *restrict @var{result})
+The @code{random_r} function behaves exactly like the @code{random}
+function except that it uses and modifies the state in the object
+pointed to by the first parameter instead of the global state.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun int srandom_r (unsigned int @var{seed}, struct random_data *@var{buf})
+The @code{srandom_r} function behaves exactly like the @code{srandom}
+function except that it uses and modifies the state in the object
+pointed to by the second parameter instead of the global state.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun int initstate_r (unsigned int @var{seed}, char *restrict @var{statebuf}, size_t @var{statelen}, struct random_data *restrict @var{buf})
+The @code{initstate_r} function behaves exactly like the @code{initstate}
+function except that it uses and modifies the state in the object
+pointed to by the fourth parameter instead of the global state.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun int setstate_r (char *restrict @var{statebuf}, struct random_data *restrict @var{buf})
+The @code{setstate_r} function behaves exactly like the @code{setstate}
+function except that it uses and modifies the state in the object
+pointed to by the first parameter instead of the global state.
 @end deftypefun
 
 @node SVID Random

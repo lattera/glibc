@@ -1,3 +1,8 @@
+2001-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (distribute): Add scripts/documented.sh.
+	* scripts/documented.sh: New file.
+
 2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
 
 	* sysdeps/unix/sysv/linux/cris/Dist: New file.

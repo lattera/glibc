@@ -625,7 +625,7 @@ anyway.
 
 @comment unistd.h
 @comment ???
-@deftypefun long int syscall (long int @var{sysno}, ...)
+@deftypefun {long int} syscall (long int @var{sysno}, ...)
 
 @code{syscall} performs a generic system call.
 

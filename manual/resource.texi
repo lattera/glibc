@@ -1379,7 +1379,7 @@ get this information two functions.  They are declared in the file
 
 @comment sys/sysinfo.h
 @comment GNU
-@deftypefun long int get_phys_pages (void)
+@deftypefun {long int} get_phys_pages (void)
 The @code{get_phys_pages} function returns the total number of pages of
 physical the system has.  To get the amount of memory this number has to
 be multiplied by the page size.
@@ -1389,7 +1389,7 @@ This function is a GNU extension.
 
 @comment sys/sysinfo.h
 @comment GNU
-@deftypefun long int get_avphys_pages (void)
+@deftypefun {long int} get_avphys_pages (void)
 The @code{get_phys_pages} function returns the number of available pages of
 physical the system has.  To get the amount of memory this number has to
 be multiplied by the page size.
