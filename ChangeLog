@@ -1,3 +1,7 @@
+2001-02-10  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/setitimer.c: Include <time.h>.
+
 2001-02-10  Andreas Jaeger  <aj@suse.de>
 
 	* manual/string.texi (Search Functions): Fix typo.
