@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,6 +22,8 @@
 
 #include "gconv.h"
 #include <stdlib.h>		/* For alloca used in macro below.  */
+#include <ctype.h>		/* For __toupper_l used in macro below.  */
+#include <string.h>		/* For strlen et al used in macro below.  */
 #include <bits/libc-lock.h>
 
 __BEGIN_DECLS

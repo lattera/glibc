@@ -1,3 +1,7 @@
+2005-04-05  Roland McGrath  <roland@redhat.com>
+
+	* iconv/gconv_int.h: Include <ctype.h> and <string.h>.
+
 2005-04-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/fpu/e_acosh.S: Update from Intel libm 2005-04-05
