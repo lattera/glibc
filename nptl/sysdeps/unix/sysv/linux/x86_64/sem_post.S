@@ -26,7 +26,7 @@
 # define
 #endif
 
-#define SYS_futex		240
+#define SYS_futex		202
 #define FUTEX_WAKE		1
 
 #define EINVAL			22
@@ -38,61 +38,36 @@
 	.type	__new_sem_post,@function
 	.align	16
 __new_sem_post:
-	pushl	%ebx
-
-	movl	8(%esp), %ebx
 	movl	$1, %edx
 	LOCK
 	xaddl	%edx, (%ebx)
 
-	movl	$SYS_futex, %eax
-	movl	$FUTEX_WAKE, %ecx
-	addl	$1, %edx
-	ENTER_KERNEL
+	movq	$SYS_futex, %rax
+	movq	$FUTEX_WAKE, %rsi
+	incl	%edx
+	syscall
 
-	testl	%eax, %eax
+	testq	%rax, %rax
 	js	1f
 
 	xorl	%eax, %eax
-	popl	%ebx
-	ret
+	retq
 
 1:
-#ifdef PIC
-	call	__i686.get_pc_thunk.bx
-#else
-	movl	$4f, %ebx
-4:
-#endif
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
 #if USE___THREAD
-	movl	%gs:0, %edx
-	subl	errno@gottpoff(%ebx), %edx
-	movl	$EINVAL, (%edx)
+	movq	errno@gottpoff(%rip), %rdx
+	movl	$EINVAL, %fs:(%rdx)
 #else
 	call	__errno_location@plt
-	movl	$EINVAL, (%eax)
+	movl	$EINVAL, (%rax)
 #endif
 
 	orl	$-1, %eax
-	popl	%ebx
-	ret
+	retq
 	.size	__new_sem_post,.-__new_sem_post
 	.symver	__new_sem_post, sem_post@@GLIBC_2.1
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 	.global	__old_sem_post
 __old_sem_post = __new_sem_post
 	.symver	__old_sem_post, sem_post@GLIBC_2.0
-#endif
-
-
-#ifdef PIC
-	.section .gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits
-	.globl	__i686.get_pc_thunk.bx
-	.hidden	__i686.get_pc_thunk.bx
-	.type	__i686.get_pc_thunk.bx,@function
-__i686.get_pc_thunk.bx:
-	movl (%esp), %ebx;
-	ret
-	.size	__i686.get_pc_thunk.bx,.-__i686.get_pc_thunk.bx
 #endif

@@ -26,73 +26,54 @@
 # define
 #endif
 
-#define SYS_futex		240
-#define FUTEX_WAKE		1
+#define SYS_futex		202
 
-#define EINVAL			22
+#define EWOULDBLOCK		11
 
 
 	.text
 
-	.globl	__new_sem_post
-	.type	__new_sem_post,@function
+	.globl	__new_sem_wait
+	.type	__new_sem_wait,@function
 	.align	16
-__new_sem_post:
-	pushl	%ebx
+__new_sem_wait:
+3:	movl	(%rdi), %eax
+2:	testl	%eax, %eax
+	je	1f
 
-	movl	8(%esp), %ebx
-	movl	$1, %edx
+	leal	-1(%eax), %edx
 	LOCK
-	xaddl	%edx, (%ebx)
-
-	movl	$SYS_futex, %eax
-	movl	$FUTEX_WAKE, %ecx
-	addl	$1, %edx
-	ENTER_KERNEL
-
-	testl	%eax, %eax
-	js	1f
-
+	cmpxchgl %edx, (%rdi)
+	jne	2b
 	xorl	%eax, %eax
-	popl	%ebx
-	ret
 
-1:
-#ifdef PIC
-	call	__i686.get_pc_thunk.bx
-#else
-	movl	$4f, %ebx
-4:
-#endif
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	retq
+
+1:	xorq	%r10, %r10
+	movq	$SYS_futex, %rax
+	movq	%r10, %rsi
+	movq	%r10, %rdx
+	syscall
+
+	testq	%rax, %rax
+	je	3b
+	cmpq	$-EWOULDBLOCK, %rax
+	je	3b
+	negq	%rax
 #if USE___THREAD
-	movl	%gs:0, %edx
-	subl	errno@gottpoff(%ebx), %edx
-	movl	$EINVAL, (%edx)
+	movq	errno@gottpoff(%rip), %rdx
+	movl	%eax, %fs:(%rdx)
 #else
+	movl	%eax, %edx
 	call	__errno_location@plt
-	movl	$EINVAL, (%eax)
+	movl	%edx, (%rax)
 #endif
-
 	orl	$-1, %eax
-	popl	%ebx
-	ret
-	.size	__new_sem_post,.-__new_sem_post
-	.symver	__new_sem_post, sem_post@@GLIBC_2.1
+	retq
+	.size	__new_sem_wait,.-__new_sem_wait
+	.symver	__new_sem_wait, sem_wait@@GLIBC_2.1
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
-	.global	__old_sem_post
-__old_sem_post = __new_sem_post
-	.symver	__old_sem_post, sem_post@GLIBC_2.0
-#endif
-
-
-#ifdef PIC
-	.section .gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits
-	.globl	__i686.get_pc_thunk.bx
-	.hidden	__i686.get_pc_thunk.bx
-	.type	__i686.get_pc_thunk.bx,@function
-__i686.get_pc_thunk.bx:
-	movl (%esp), %ebx;
-	ret
-	.size	__i686.get_pc_thunk.bx,.-__i686.get_pc_thunk.bx
+	.global	__old_sem_wait
+__old_sem_wait = __new_sem_wait
+	.symver	__old_sem_wait, sem_wait@GLIBC_2.0
 #endif

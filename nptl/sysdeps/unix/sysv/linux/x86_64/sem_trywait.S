@@ -26,73 +26,44 @@
 # define
 #endif
 
-#define SYS_futex		240
+#define SYS_futex		202
 #define FUTEX_WAKE		1
 
-#define EINVAL			22
+#define EAGAIN			11
 
 
 	.text
 
-	.globl	__new_sem_post
-	.type	__new_sem_post,@function
+	.globl	__new_sem_trywait
+	.type	__new_sem_trywait,@function
 	.align	16
-__new_sem_post:
-	pushl	%ebx
+__new_sem_trywait:
+	movl	(%rdi), %eax
+2:	testl	%eax, %eax
+	jz	1f
 
-	movl	8(%esp), %ebx
-	movl	$1, %edx
+	leal	-1(%eax), %edx
 	LOCK
-	xaddl	%edx, (%ebx)
-
-	movl	$SYS_futex, %eax
-	movl	$FUTEX_WAKE, %ecx
-	addl	$1, %edx
-	ENTER_KERNEL
-
-	testl	%eax, %eax
-	js	1f
+	cmpxchgl %edx, (%rdi)
+	jne	2b
 
 	xorl	%eax, %eax
-	popl	%ebx
-	ret
+	retq
 
 1:
-#ifdef PIC
-	call	__i686.get_pc_thunk.bx
-#else
-	movl	$4f, %ebx
-4:
-#endif
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
 #if USE___THREAD
-	movl	%gs:0, %edx
-	subl	errno@gottpoff(%ebx), %edx
-	movl	$EINVAL, (%edx)
+	movq	errno@gottpoff(%rip), %rdx
+	movl	$EAGAIN, %fs:(%rdx)
 #else
 	call	__errno_location@plt
-	movl	$EINVAL, (%eax)
+	movl	$EAGAIN, (%rax)
 #endif
-
 	orl	$-1, %eax
-	popl	%ebx
-	ret
-	.size	__new_sem_post,.-__new_sem_post
-	.symver	__new_sem_post, sem_post@@GLIBC_2.1
+	retq
+	.size	__new_sem_trywait,.-__new_sem_trywait
+	.symver	__new_sem_trywait, sem_trywait@@GLIBC_2.1
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
-	.global	__old_sem_post
-__old_sem_post = __new_sem_post
-	.symver	__old_sem_post, sem_post@GLIBC_2.0
-#endif
-
-
-#ifdef PIC
-	.section .gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits
-	.globl	__i686.get_pc_thunk.bx
-	.hidden	__i686.get_pc_thunk.bx
-	.type	__i686.get_pc_thunk.bx,@function
-__i686.get_pc_thunk.bx:
-	movl (%esp), %ebx;
-	ret
-	.size	__i686.get_pc_thunk.bx,.-__i686.get_pc_thunk.bx
+	.global	__old_sem_trywait
+__old_sem_trywait = __new_sem_trywait
+	.symver	__old_sem_trywait, sem_trywait@GLIBC_2.0
 #endif

@@ -1,5 +1,13 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: New file.
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Fix error value in
+	unused code.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_barrier_wait.S: New file
 
 	* sysdeps/unix/sysv/linux/Makefile (gen-as-const-headers): Add
