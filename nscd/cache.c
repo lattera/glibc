@@ -150,8 +150,11 @@ prune_cache (struct database *table, time_t now)
       else
 	{
 	  if (st.st_mtime != table->file_mtime)
-	    /* The file changed.  Invalidate all entries.  */
-	    now = LONG_MAX;
+	    {
+	      /* The file changed.  Invalidate all entries.  */
+	      now = LONG_MAX;
+	      st.st_mtime = table->file_mtime;
+	    }
 	}
     }
 
