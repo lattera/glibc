@@ -78,9 +78,14 @@ __libc_global_ctors (void)
 
 /* This function becomes the DT_FINI termination function
    for the C library.  */
+#ifndef HAVE_INITFINI_ARRAY
 void _fini (void) __attribute__ ((section (".fini"))); /* Just for kicks.  */
 void
 _fini (void)
+#else
+void
+__libc_fini (void)
+#endif
 {
   /* Call destructor functions.  */
   run_hooks (__DTOR_LIST__);
@@ -96,3 +101,7 @@ _fini (void)
 # endif
 #endif
 }
+#ifdef HAVE_INITFINI_ARRAY
+void (*_fini_ptr) (void) __attribute__ ((section (".fini_array")))
+     = &__libc_fini;
+#endif

@@ -1,3 +1,8 @@
+2003-11-21  David Mosberger  <davidm@hpl.hp.com>
+
+	* elf/soinit.c (_fini): Put _fini() in .init_array section if
+	HAVE_INITFINI_ARRAY is defined.
+
 2003-11-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h: Introduce __libc_sqrtl symbol.
