@@ -1,3 +1,7 @@
+2004-05-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/obstack.c: Don't allow linking with _obstack.
+
 2004-05-23  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/m68020/bits/atomic.h: Use "+m" constraint instead
