@@ -1,3 +1,7 @@
+2004-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_conf.c: Include <stdio_ext.h>.
+
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/test-canon.c (do_test): Test realpath(,NULL) in the loop
