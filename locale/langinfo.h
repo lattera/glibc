@@ -1,5 +1,5 @@
 /* Access to locale-dependent parameters.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 #ifndef _LANGINFO_H
 #define	_LANGINFO_H 1
 
-#include <locale.h>		/* Define the LC_* category names.  */
-
 /* Get the type definition.  */
 #include <nl_types.h>
+
+#include <bits/locale.h>	/* Define the __LC_* category names.  */
 
 
 __BEGIN_DECLS
@@ -45,7 +45,7 @@ enum
   /* LC_TIME category: date and time formatting.  */
 
   /* Abbreviated days of the week. */
-  ABDAY_1 = _NL_ITEM (LC_TIME, 0), /* Sun */
+  ABDAY_1 = _NL_ITEM (__LC_TIME, 0), /* Sun */
 #define ABDAY_1			ABDAY_1
   ABDAY_2,
 #define ABDAY_2			ABDAY_2
@@ -236,7 +236,7 @@ enum
   /* LC_COLLATE category: text sorting.
      This information is accessed by the strcoll and strxfrm functions.
      These `nl_langinfo' names are used only internally.  */
-  _NL_COLLATE_NRULES = _NL_ITEM (LC_COLLATE, 0),
+  _NL_COLLATE_NRULES = _NL_ITEM (__LC_COLLATE, 0),
   _NL_COLLATE_RULESETS,
   _NL_COLLATE_TABLEMB,
   _NL_COLLATE_WEIGHTMB,
@@ -259,7 +259,7 @@ enum
   /* LC_CTYPE category: character classification.
      This information is accessed by the functions in <ctype.h>.
      These `nl_langinfo' names are used only internally.  */
-  _NL_CTYPE_CLASS = _NL_ITEM (LC_CTYPE, 0),
+  _NL_CTYPE_CLASS = _NL_ITEM (__LC_CTYPE, 0),
   _NL_CTYPE_TOUPPER,
   _NL_CTYPE_GAP1,
   _NL_CTYPE_TOLOWER,
@@ -350,7 +350,7 @@ enum
   /* LC_MONETARY category: formatting of monetary quantities.
      These items each correspond to a member of `struct lconv',
      defined in <locale.h>.  */
-  __INT_CURR_SYMBOL = _NL_ITEM (LC_MONETARY, 0),
+  __INT_CURR_SYMBOL = _NL_ITEM (__LC_MONETARY, 0),
 #ifdef __USE_GNU
 # define INT_CURR_SYMBOL	__INT_CURR_SYMBOL
 #endif
@@ -463,7 +463,7 @@ enum
 
   /* LC_NUMERIC category: formatting of numbers.
      These also correspond to members of `struct lconv'; see <locale.h>.  */
-  __DECIMAL_POINT = _NL_ITEM (LC_NUMERIC, 0),
+  __DECIMAL_POINT = _NL_ITEM (__LC_NUMERIC, 0),
 #ifdef __USE_GNU
 # define DECIMAL_POINT		__DECIMAL_POINT
 #endif
@@ -483,7 +483,7 @@ enum
   _NL_NUMERIC_THOUSANDS_SEP_WC,
   _NL_NUM_LC_NUMERIC,
 
-  __YESEXPR = _NL_ITEM (LC_MESSAGES, 0), /* Regex matching ``yes'' input.  */
+  __YESEXPR = _NL_ITEM (__LC_MESSAGES, 0), /* Regex matching ``yes'' input.  */
 #define YESEXPR			__YESEXPR
   __NOEXPR,			/* Regex matching ``no'' input.  */
 #define NOEXPR			__NOEXPR
@@ -497,11 +497,11 @@ enum
 #endif
   _NL_NUM_LC_MESSAGES,
 
-  _NL_PAPER_HEIGHT = _NL_ITEM (LC_PAPER, 0),
+  _NL_PAPER_HEIGHT = _NL_ITEM (__LC_PAPER, 0),
   _NL_PAPER_WIDTH,
   _NL_NUM_LC_PAPER,
 
-  _NL_NAME_NAME_FMT = _NL_ITEM (LC_NAME, 0),
+  _NL_NAME_NAME_FMT = _NL_ITEM (__LC_NAME, 0),
   _NL_NAME_NAME_GEN,
   _NL_NAME_NAME_MR,
   _NL_NAME_NAME_MRS,
@@ -509,7 +509,7 @@ enum
   _NL_NAME_NAME_MS,
   _NL_NUM_LC_NAME,
 
-  _NL_ADDRESS_POSTAL_FMT = _NL_ITEM (LC_ADDRESS, 0),
+  _NL_ADDRESS_POSTAL_FMT = _NL_ITEM (__LC_ADDRESS, 0),
   _NL_ADDRESS_COUNTRY_NAME,
   _NL_ADDRESS_COUNTRY_POST,
   _NL_ADDRESS_COUNTRY_AB2,
@@ -523,16 +523,16 @@ enum
   _NL_ADDRESS_LANG_LIB,
   _NL_NUM_LC_ADDRESS,
 
-  _NL_TELEPHONE_TEL_INT_FMT = _NL_ITEM (LC_TELEPHONE, 0),
+  _NL_TELEPHONE_TEL_INT_FMT = _NL_ITEM (__LC_TELEPHONE, 0),
   _NL_TELEPHONE_TEL_DOM_FMT,
   _NL_TELEPHONE_INT_SELECT,
   _NL_TELEPHONE_INT_PREFIX,
   _NL_NUM_LC_TELEPHONE,
 
-  _NL_MEASUREMENT_MEASUREMENT = _NL_ITEM (LC_MEASUREMENT, 0),
+  _NL_MEASUREMENT_MEASUREMENT = _NL_ITEM (__LC_MEASUREMENT, 0),
   _NL_NUM_LC_MEASUREMENT,
 
-  _NL_IDENTIFICATION_TITLE = _NL_ITEM (LC_IDENTIFICATION, 0),
+  _NL_IDENTIFICATION_TITLE = _NL_ITEM (__LC_IDENTIFICATION, 0),
   _NL_IDENTIFICATION_SOURCE,
   _NL_IDENTIFICATION_ADDRESS,
   _NL_IDENTIFICATION_CONTACT,

@@ -1,5 +1,14 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/Makefile (headers): Add bits/locale.h.
+	* locale/langinfo.h: Don't include <locale.h>.  Include <bits/locale.h>
+	and use __LC_ constants instead of LC_.
+	* locale/locale.h: Include <bits/locale.h> and define LC_ constants
+	using __LC_ constants.
+	* locale/bits/locale.h: New file.
+	* locale/loadlocale.c: Include <locale.h>.
+	* locale/nl_langinfo.h: Likewise.
+
 	* posix/glob.h: Cleanup namespace for non-_GNU_SOURCE case.
 
 	* io/sys/stat.h: Define S_IFSOCK for XPG6.

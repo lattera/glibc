@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,95,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,1995-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,24 +27,25 @@
 
 #define __need_NULL
 #include <stddef.h>
+#include <bits/locale.h>
 
 __BEGIN_DECLS
 
 /* These are the possibilities for the first argument to setlocale.
    The code assumes that the lowest LC_* symbol has the value zero.  */
-#define LC_CTYPE          0
-#define LC_NUMERIC        1
-#define LC_TIME           2
-#define LC_COLLATE        3
-#define LC_MONETARY       4
-#define LC_MESSAGES       5
-#define	LC_ALL		  6
-#define LC_PAPER	  7
-#define LC_NAME		  8
-#define LC_ADDRESS	  9
-#define LC_TELEPHONE	  10
-#define LC_MEASUREMENT	  11
-#define LC_IDENTIFICATION 12
+#define LC_CTYPE          __LC_CTYPE
+#define LC_NUMERIC        __LC_NUMERIC
+#define LC_TIME           __LC_TIME
+#define LC_COLLATE        __LC_COLLATE
+#define LC_MONETARY       __LC_MONETARY
+#define LC_MESSAGES       __LC_MESSAGES
+#define	LC_ALL		  __LC_ALL
+#define LC_PAPER	  __LC_PAPER
+#define LC_NAME		  __LC_NAME
+#define LC_ADDRESS	  __LC_ADDRESS
+#define LC_TELEPHONE	  __LC_TELEPHONE
+#define LC_MEASUREMENT	  __LC_MEASUREMENT
+#define LC_IDENTIFICATION __LC_IDENTIFICATION
 
 
 /* Structure giving information about numeric and monetary notation.  */
