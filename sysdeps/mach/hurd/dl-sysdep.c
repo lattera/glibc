@@ -401,12 +401,16 @@ libc_hidden_weak (__libc_write)
 __ssize_t weak_function
 __writev (int fd, const struct iovec *iov, int niov)
 {
+  if (fd >= _hurd_init_dtablesize)
+    {
+      errno = EBADF;
+      return -1;
+    }
+
   int i;
   size_t total = 0;
   for (i = 0; i < niov; ++i)
     total += iov[i].iov_len;
-
-  assert (fd < _hurd_init_dtablesize);
 
   if (total != 0)
     {
