@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -19,34 +19,30 @@
 
 #include <math.h>
 
+/* Use the -inf rounding mode conversion instructions to implement
+   ceil, via something akin to -floor(-x).  This is much faster than
+   playing with the fpcr to achieve +inf rounding mode.  */
+
 double
 __ceil (double x)
 {
-  if (x != 0 && fabs (x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
+  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
     {
-      double tmp1;
-      unsigned long fpcr0, fpcr1;
-      unsigned long pinf = 3UL << 58;
+      double tmp1, new_x;
 
-      /* Set round to +inf.  */
-      __asm __volatile("excb; mf_fpcr %0" : "=f"(fpcr0));
-      __asm __volatile("mt_fpcr %0; excb" : : "f"(fpcr0 | pinf));
-
-      /* Calculate!  */
+      new_x = -x;
+      __asm (
 #ifdef _IEEE_FP_INEXACT
-      __asm("cvttq/svid %2,%1\n\tcvtqt/suid %1,%0"
-	    : "=f"(x), "=&f"(tmp1)
-	    : "f"(x));
+	     "cvttq/svim %2,%1\n\t"
 #else
-      __asm("cvttq/svd %2,%1\n\tcvtqt/d %1,%0"
-	    : "=f"(x), "=&f"(tmp1)
-	    : "f"(x));
+	     "cvttq/svm %2,%1\n\t"
 #endif
+	     "cvtqt/m %1,%0\n\t"
+	     : "=f"(new_x), "=&f"(tmp1)
+	     : "f"(new_x));
 
-      /* Reset rounding mode, while retaining new exception bits.  */
-      __asm __volatile("excb; mf_fpcr %0" : "=f"(fpcr1));
-      fpcr0 = (fpcr0 & pinf) | (fpcr1 & ~pinf);
-      __asm __volatile("mt_fpcr %0; excb" : : "f"(fpcr0));
+      /* Fix up the negation we did above, as well as handling -0 properly. */
+      x = copysign(new_x, x);
     }
   return x;
 }
