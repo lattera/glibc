@@ -40,6 +40,9 @@ __pthread_cond_broadcast (cond)
       /* Yes.  Mark them all as woken.  */
       cond->__data.__wakeup_seq = cond->__data.__total_seq;
 
+      /* We are done.  */
+      lll_mutex_unlock (cond->__data.__lock);
+
       /* The futex syscall operates on a 32-bit word.  That is fine,
 	 we just use the low 32 bits of the sequence counter.  */
 #if BYTE_ORDER == LITTLE_ENDIAN
@@ -52,6 +55,9 @@ __pthread_cond_broadcast (cond)
 
       /* Wake everybody.  */
       lll_futex_wake (futex, INT_MAX);
+
+      /* That's all.  */
+      return 0;
     }
 
   /* We are done.  */
