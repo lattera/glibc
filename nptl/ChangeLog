@@ -1,3 +1,8 @@
+2003-08-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/stdio-lock.h (_IO_acquire_lock,
+	_IO_release_lock): Define.
+
 2003-08-29  Jakub Jelinek  <jakuB@redhat.com>
 
 	* tst-cancel.c (tf_sigwait, tf_sigwaitinfo, tf_sigtimedwait): Add
