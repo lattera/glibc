@@ -40,7 +40,7 @@ fesetenv (const fenv_t *envp)
   if (envp == FE_DFL_ENV)
     {
       temp.control_word |= FE_ALL_EXCEPT;
-      temp.control_word &= ~FE_TOWARDSZERO;
+      temp.control_word &= ~FE_TOWARDZERO;
       temp.status_word &= ~FE_ALL_EXCEPT;
       temp.eip = 0;
       temp.cs_selector = 0;

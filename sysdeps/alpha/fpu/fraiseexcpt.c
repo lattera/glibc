@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1997.
 
@@ -24,7 +24,7 @@
 void
 feraiseexcept (int excepts)
 {
-  double tmp;
+  double tmp, dummy;
 
   /* Raise exceptions represented by EXPECTS.  But we must raise only
      one signal at a time.  It is important the if the overflow/underflow
@@ -45,8 +45,8 @@ feraiseexcept (int excepts)
   /* Next: division by zero.  */
   if (FE_DIVBYZERO & excepts)
     {
-      __asm__ __volatile__("cmpteq $f31,$f31,%0; divt/sui %0,$f31,%0; trapb"
-			   : "=f"(tmp));
+      __asm__ __volatile__("cmpteq $f31,$f31,%1; divt/sui %1,$f31,%0; trapb"
+			   : "=f"(tmp), "=f"(dummy));
     }
 
   /* Next: overflow.  */
@@ -60,7 +60,8 @@ feraiseexcept (int excepts)
   if (FE_UNDERFLOW & excepts)
     {
       __asm__ __volatile__("divt/sui %1,%2,%0; trapb"
-			   : "=f"(tmp) : "f"(DBL_MIN), "f"(16.0));
+			   : "=f"(tmp) : "f"(DBL_MIN),
+					 "f"((double) (1UL << 60)));
     }
 
   /* Last: inexact.  */

@@ -104,7 +104,7 @@
 #else
 # define ungetc(c, s)	((void) (c != EOF && --read_in), ungetc (c, s))
 # define inchar()	(c == EOF ? EOF					      \
-			 : (c = getc (s)), (void) (c != EOF && ++read_in), c)
+			 : ((c = getc (s)), (void) (c != EOF && ++read_in), c))
 # define encode_error()	do {						      \
 			  funlockfile (s);				      \
 			  __set_errno (EILSEQ);				      \

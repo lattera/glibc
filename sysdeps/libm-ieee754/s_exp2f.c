@@ -94,7 +94,7 @@ __ieee754_exp2f (float x)
       /* 'tval & 255' is the same as 'tval%256' except that it's always
 	 positive.
 	 Compute x = x2.  */
-      x -= __exp2_deltatable[tval & 255];
+      x -= __exp2f_deltatable[tval & 255];
 
       /* 3. Compute ex2 = 2^(t/255+e+ex).  */
       ex2_u.f = __exp2f_atable[tval & 255];

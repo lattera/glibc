@@ -269,7 +269,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
   else
     __libc_lock_unlock (ypbindlist_lock);
 
-  while (try < MAXTRIES && status != YPERR_SUCCESS))
+  while (try < MAXTRIES && status != YPERR_SUCCESS)
     {
       if (__yp_bind (domain, &ydb) != 0)
 	{
