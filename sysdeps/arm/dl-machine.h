@@ -566,7 +566,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	     if (topbits != 0xfe000000 && topbits != 0x00000000)
 	       {
 		 newvalue = fix_bad_pc24(reloc_addr, value)
-		   - (Elf32_Addr)reloc_addr + (addend << 2);
+		   - (Elf32_Addr)reloc_addr + (reloc->r_addend << 2);
 		 topbits = newvalue & 0xfe000000;
 		 if (topbits != 0xfe000000 && topbits != 0x00000000)
 		   {
