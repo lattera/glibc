@@ -125,14 +125,14 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
       static struct magic magic[] =
 	{
 	  { 0xd6a2a5e, "_GNU_libc_dl_open", (Elf32_Addr) &_dl_open },
-	  { 0x69ef845, "_GNU_libc_dl_close", (Elf32_Addr) &_dl_close },
+/*	  { 0x69ef845, "_GNU_libc_dl_close", (Elf32_Addr) &_dl_close },*/
 	  { 0xae4d63c, "_GNU_libc_dl_symbol", (Elf32_Addr) &_dl_symbol_value },
 	  { 0, NULL, 0 }
 	};
       struct magic *m;
 
       for (m = magic; m->hash; ++m)
-	if (hash == m->hash && !strcmp (name, m->name))
+	if (hash == m->hash && !strcmp (undef_name, m->name))
 	  return m->value;
 
       {
