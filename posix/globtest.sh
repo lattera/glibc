@@ -4,8 +4,17 @@ common_objpfx=$1; shift
 elf_objpfx=$1; shift
 rtld_installed_name=$1; shift
 
+# We have to make the paths `common_objpfx' absolute.
+case "$common_objpfx" in
+  .*)
+    common_objpfx="`pwd`/$common_objpfx"
+    ;;
+  *)
+    ;;
+esac
+
 # We have to find the libc and the NSS modules.
-library_path=${common_objpfx}:${common_objpfx}nss:${common_objpfx}nis
+library_path=${common_objpfx}:${common_objpfx}nss:${common_objpfx}nis:${common_objpfx}db2:${common_objpfx}hesiod
 
 # Since we use `sort' we must make sure to use the same locale everywhere.
 LC_ALL=C
