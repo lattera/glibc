@@ -1,5 +1,8 @@
 2004-03-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/setgroups.c (setgroups): Avoid
+	comparison with limit if we can rely on the syscall being available.
+
 	* nis/nss_nis/nis-initgroups.c: Implement getting the information
 	from the netid.byname map if the system administrator allows this.
 	* nis/Makefile (distribute): Add nss.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,9 @@ extern int __libc_missing_32bit_uids;
 int
 setgroups (size_t n, const gid_t *groups)
 {
+#if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (setgroups32, 2, n, CHECK_N (groups, n));
+#else
   if (n > (size_t) __sysconf (_SC_NGROUPS_MAX))
     {
       __set_errno (EINVAL);
@@ -50,9 +53,6 @@ setgroups (size_t n, const gid_t *groups)
     }
   else
     {
-#if __ASSUME_32BITUIDS > 0
-      return INLINE_SYSCALL (setgroups32, 2, n, CHECK_N (groups, n));
-#else
       size_t i;
       __kernel_gid_t kernel_groups[n];
 
@@ -81,7 +81,7 @@ setgroups (size_t n, const gid_t *groups)
 	}
 
       return INLINE_SYSCALL (setgroups, 2, n, CHECK_N (kernel_groups, n));
-#endif
     }
+#endif
 }
 libc_hidden_def (setgroups)
