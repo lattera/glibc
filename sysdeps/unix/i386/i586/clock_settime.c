@@ -19,7 +19,7 @@
 #include <time.h>
 
 #include "cpuclock-init.h"
-
+#include "libc-internal.h"
 
 /* This implementation uses the TSC register in modern (i586 and up) IA-32
    processors (most modern clones also provide it).  Since we need the
