@@ -1935,7 +1935,7 @@ the whole @code{struct stat} structure.
 
 @comment sys/stat.h
 @comment POSIX
-@deftypefn Macro int S_TYPEISMQ (struct stat @var{s})
+@deftypefn Macro int S_TYPEISMQ (struct stat *@var{s})
 If the system implement POSIX message queues as distinct objects and the
 file is a message queue object, this macro returns a non-zero value.
 In all other cases the result is zero.
@@ -1943,7 +1943,7 @@ In all other cases the result is zero.
 
 @comment sys/stat.h
 @comment POSIX
-@deftypefn Macro int S_TYPEISSEM (struct stat @var{s})
+@deftypefn Macro int S_TYPEISSEM (struct stat *@var{s})
 If the system implement POSIX semaphores as distinct objects and the
 file is a semaphore object, this macro returns a non-zero value.
 In all other cases the result is zero.
@@ -1951,7 +1951,7 @@ In all other cases the result is zero.
 
 @comment sys/stat.h
 @comment POSIX
-@deftypefn Macro int S_TYPEISSHM (struct stat @var{s})
+@deftypefn Macro int S_TYPEISSHM (struct stat *@var{s})
 If the system implement POSIX shared memory objects as distinct objects
 and the file is an shared memory object, this macro returns a non-zero
 value.  In all other cases the result is zero.
