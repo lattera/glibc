@@ -36,7 +36,7 @@ sys_ustat	ustat	ustat		2	__syscall_ustat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
 
 # proper socket implementations:
-accept		-	accept		C:3	__libc_accept	__accept accept __GI_accept
+accept		-	accept		C:3	__libc_accept	__accept accept
 bind		-	bind		3	__bind		bind
 connect		-	connect		C:3	__libc_connect	__connect_internal __connect connect
 getpeername	-	getpeername	3	__getpeername	getpeername
