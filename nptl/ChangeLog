@@ -1,3 +1,9 @@
+2003-08-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/createthread.c (do_clone): Move error handling
+	to first syscall error check.  Move syscall error check for tkill
+	into __ASSUME_CLONE_STOPPED #ifdef.
+
 2003-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/createthread.c (do_clone): If __ASSUME_CLONE_STOPPED

@@ -88,7 +88,20 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 				  sizeof (cpu_set_t), attr->cpuset);
 
 	  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
-	    goto err_out;
+	    {
+	      /* The operation failed.  We have to kill the thread.  First
+		 send it the cancellation signal.  */
+	      INTERNAL_SYSCALL_DECL (err2);
+	    err_out:
+	      (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCANCEL);
+
+#ifdef __ASSUME_CLONE_STOPPED
+	      /* Then wake it up so that the signal can be processed.  */
+	      (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCONT);
+#endif
+
+	      return INTERNAL_SYSCALL_ERRNO (res, err);
+	    }
 	}
 
       /* Set the scheduling parameters.  */
@@ -104,24 +117,11 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 #ifdef __ASSUME_CLONE_STOPPED
       /* Now start the thread for real.  */
       res = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCONT);
-#endif
 
       /* If something went wrong, kill the thread.  */
       if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
-	{
-	  /* The operation failed.  We have to kill the thread.  First
-             send it the cancellation signal.  */
-	  INTERNAL_SYSCALL_DECL (err2);
-	err_out:
-	  (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCANCEL);
-
-#ifdef __ASSUME_CLONE_STOPPED
-	  /* Then wake it up so that the signal can be processed.  */
-	  (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCONT);
+	goto err_out;
 #endif
-
-	  return INTERNAL_SYSCALL_ERRNO (res, err);
-	}
     }
 
   /* We now have for sure more than one thread.  The main thread might
