@@ -56,9 +56,9 @@ ifeq (yes,$(build-shared))
 ifneq ($(strip $(MSGFMT)),:)
 tests: $(objpfx)tst-translit.out $(objpfx)tst-gettext2.out \
        $(objpfx)tst-codeset.out
-endif
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-gettext
+endif
 endif
 $(objpfx)mtrace-tst-gettext: $(objpfx)tst-gettext.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@
