@@ -1,5 +1,7 @@
 2000-08-27  Geoff Keating  <geoffk@cygnus.com>
 
+	* sysdeps/powerpc/fpu/feenablxcpt.c: Correct bogus checkin.
+
 	* sysdeps/powerpc/fpu/fedisblxcpt.c: New file.
 	* sysdeps/powerpc/fpu/feenablxcpt.c: New file.
 	* sysdeps/powerpc/fpu/fegetexcept.c: New file.

@@ -46,9 +46,9 @@ feenableexcept (int excepts)
 
   new = fegetexcept ();
   if (new != 0 && result == 0)
-    (void)__fe_nomask_env (void);
+    (void)__fe_nomask_env ();
 
-  if ((old & excepts) != excepts)
+  if ((new & excepts) != excepts)
     result = -1;
 
   return result;
