@@ -1,3 +1,19 @@
+2000-06-21  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/resource.h: Reorder elements
+	in __rlimit_resource to make them match the kernel order.
+	rlim_t is always 64 bit, use __rlim64_t to declare it
+	unconditionally.
+
+2000-05-04  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/resource.h: Undef
+	RLIM_INFINITY before defining it to avoid clash with kernel header
+
+2000-05-03  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/resource.h: New file.
+
 2000-06-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/Versions: New file.
