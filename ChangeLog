@@ -1,3 +1,17 @@
+1998-04-01 16:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add __gconv_alias_db, __gconv_nmodules, __gconv_modules_db.
+	* iconv/iconv_prog.c: Implement --list option to print available
+	coded character sets.
+
+1998-04-01 18:10  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	Make fread() read large blocks straight to the user buffer.
+
+	* libio/fileops.c (_IO_file_xsgetn): New function.
+	(_IO_file_jumps): Use it.
+	* libio/libioP.h: Prototype it.
+
 1998-04-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_conf.c (builtin_aliases): New variable.

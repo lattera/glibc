@@ -775,80 +775,72 @@ _IO_file_xsputn (f, data, n)
   return n - to_do;
 }
 
-#if 0
-/* Work in progress */
 _IO_size_t
 _IO_file_xsgetn (fp, data, n)
      _IO_FILE *fp;
      void *data;
      _IO_size_t n;
 {
-  register _IO_size_t more = n;
+  register _IO_size_t want, have, count;
   register char *s = data;
-  for (;;)
-    {
-      /* Data available. */
-      _IO_ssize_t count = fp->_IO_read_end - fp->_IO_read_ptr;
-      if (count > 0)
-	{
-	  if (count > more)
-	    count = more;
-	  if (count > 20)
-	    {
-#ifdef _LIBC
-	      s = __mempcpy (s, fp->_IO_read_ptr, count);
-#else
-	      memcpy (s, fp->_IO_read_ptr, count);
-	      s += count;
-#endif
-	      fp->_IO_read_ptr += count;
-	    }
-	  else if (count <= 0)
-	    count = 0;
-	  else
-	    {
-	      register char *p = fp->_IO_read_ptr;
-	      register int i = (int) count;
-	      while (--i >= 0)
-		*s++ = *p++;
-	      fp->_IO_read_ptr = p;
-            }
-            more -= count;
-        }
-#if 0
-      if (! _IO_in put_mode (fp)
-	  && ! _IO_have_markers (fp) && ! IO_have_backup (fp))
-	{
-	  /* This is an optimization of _IO_file_underflow */
-	  if (fp->_flags & _IO_NO_READS)
-	    break;
-	  /* If we're reading a lot of data, don't bother allocating
-	     a buffer.  But if we're only reading a bit, perhaps we should ??*/
-	  if (count <= 512 && fp->_IO_buf_base == NULL)
-	    _IO_doallocbuf (fp);
-	  if (fp->_flags & (_IO_LINE_BUF|_IO_UNBUFFERED))
-	    _IO_flush_all_linebuffered ();
 
-	  _IO_switch_to_get_mode (fp); ???;
-	  count = _IO_SYSREAD (fp, s, more);
+  want = n;
+
+  while (want > 0)
+    {
+      have = fp->_IO_read_end - fp->_IO_read_ptr;
+      if (want <= have)
+	{
+	  memcpy (s, fp->_IO_read_ptr, want);
+	  fp->_IO_read_ptr += want;
+	  want = 0;
+	}
+      else
+	{
+	  if (have > 0)
+	    {
+	      memcpy (s, fp->_IO_read_ptr, have);
+	      want -= have;
+	      s += have;
+	      fp->_IO_read_ptr += have;
+	    }
+
+	  /* Check for backup and repeat */
+	  if (_IO_in_backup (fp))
+	    {
+	      _IO_switch_to_main_get_area (fp);
+	      continue;
+	    }
+
+	  /* If we now want less than a buffer, underflow and repeat
+	     the copy.  Otherwise, _IO_SYSREAD directly to
+	     the user buffer. */
+	  if (fp->_IO_buf_base && want < fp->_IO_buf_end - fp->_IO_buf_base)
+	    {
+	      if (__underflow (fp) == EOF)
+		break;
+
+	      continue;
+	    }
+
+	  count = _IO_SYSREAD (fp, s, want);
 	  if (count <= 0)
-	     {
-	       if (count == 0)
-		 fp->_flags |= _IO_EOF_SEEN;
-	       else
-		 fp->_flags |= _IO_ERR_SEEN, count = 0;
-	     }
+	    {
+	      if (count == 0)
+		fp->_flags |= _IO_EOF_SEEN;
+	      else
+		fp->_flags |= _IO_ERR_SEEN;
+
+	      break;
+	    }
 
 	  s += count;
-	  more -= count;
+	  want -= count;
 	}
-#endif
-      if (more == 0 || __underflow (fp) == EOF)
-	break;
     }
-  return n - more;
+
+  return n - want;
 }
-#endif
 
 struct _IO_jump_t _IO_file_jumps =
 {
@@ -859,7 +851,7 @@ struct _IO_jump_t _IO_file_jumps =
   JUMP_INIT(uflow, _IO_default_uflow),
   JUMP_INIT(pbackfail, _IO_default_pbackfail),
   JUMP_INIT(xsputn, _IO_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
+  JUMP_INIT(xsgetn, _IO_file_xsgetn),
   JUMP_INIT(seekoff, _IO_file_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_file_setbuf),

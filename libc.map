@@ -427,6 +427,7 @@ GLIBC_2.1 {
   global:
     # global variables
     _IO_2_1_stdin_; _IO_2_1_stdout_; _IO_2_1_stderr_;
+    __gconv_alias_db; __gconv_nmodules; __gconv_modules_db;
 
     # This is for ix86 only.
     _fp_hw;

@@ -19,11 +19,14 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <argp.h>
+#include <ctype.h>
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
+#include <gconv.h>
 #include <iconv.h>
 #include <locale.h>
+#include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,6 +44,7 @@ static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 
 #define OPT_VERBOSE	1000
+#define OPT_LIST	1001
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
@@ -48,6 +52,8 @@ static const struct argp_option options[] =
   { NULL, 0, NULL, 0, N_("Input/Output format specification:") },
   { "from-code", 'f', "NAME", 0, N_("encoding of original text") },
   { "to-code", 't', "NAME", 0, N_("encoding for output") },
+  { NULL, 0, NULL, 0, N_("Information:") },
+  { "list", OPT_LIST, NULL, 0, N_("list all known coded character sets") },
   { NULL, 0, NULL, 0, N_("Output control:") },
   { "output", 'o', "FILE", 0, N_("output file") },
   { "verbose", OPT_VERBOSE, NULL, 0, N_("print progress information") },
@@ -83,11 +89,15 @@ static const char *output_file;
 /* Nonzero if verbose ouput is wanted.  */
 static int verbose;
 
+/* Nonzero if list of all coded character sets is wanted.  */
+static int list;
+
 /* Prototypes for the functions doing the actual work.  */
 static int process_block (iconv_t cd, const char *addr, size_t len,
 			  FILE *output);
 static int process_fd (iconv_t cd, int fd, FILE *output);
 static int process_file (iconv_t cd, FILE *input, FILE *output);
+static void print_known_names (void);
 
 
 int
@@ -106,6 +116,13 @@ main (int argc, char *argv[])
 
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
+
+  /* List all coded character sets if wanted.  */
+  if (list)
+    {
+      print_known_names ();
+      exit (EXIT_SUCCESS);
+    }
 
   /* If either the from- or to-code is not specified this is an error
      since we do not know what to do.  */
@@ -236,6 +253,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case OPT_VERBOSE:
       verbose = 1;
+      break;
+    case OPT_LIST:
+      list = 1;
       break;
     default:
       return ARGP_ERR_UNKNOWN;
@@ -411,4 +431,107 @@ process_file (iconv_t cd, FILE *input, FILE *output)
   /* This should be safe since we use this function only for `stdin' and
      we haven't read anything so far.  */
   return process_fd (cd, fileno (input), output);
+}
+
+
+/* Print all known character sets/encodings.  */
+static void *printlist;
+static size_t column;
+static int not_first;
+
+static void
+insert_print_list (const void *nodep, VISIT value, int level)
+{
+  if (value == leaf || value == postorder)
+    {
+      const struct gconv_alias *s = *(const struct gconv_alias **) nodep;
+      tsearch (s->fromname, &printlist, (__compar_fn_t) strcoll);
+    }
+}
+
+static void
+do_print  (const void *nodep, VISIT value, int level)
+{
+  if (value == leaf || value == postorder)
+    {
+      const char *s = *(const char **) nodep;
+      size_t len = strlen (s);
+      size_t cnt;
+
+      while (len > 0 && s[len - 1] == '/')
+	--len;
+
+      for (cnt = 0; cnt < len; ++cnt)
+	if (isalnum (s[cnt]))
+	  break;
+      if (cnt == len)
+	return;
+
+      if (not_first)
+	{
+	  putchar (',');
+	  ++column;
+
+	  if (column > 2 && column + len > 77)
+	    {
+	      fputs ("\n  ", stdout);
+	      column = 2;
+	    }
+	  else
+	    {
+	      putchar (' ');
+	      ++column;
+	    }
+	}
+      else
+	  not_first = 1;
+
+      fwrite (s, len, 1, stdout);
+      column += len;
+    }
+}
+
+static void
+print_known_names (void)
+{
+  size_t cnt;
+  iconv_t h;
+
+  /* We must initialize the internal databases first.  */
+  h = iconv_open ("L1", "L1");
+  iconv_close (h);
+
+  /* First add the aliases.  */
+  twalk (__gconv_alias_db, insert_print_list);
+
+  /* Add the from- and to-names from the known modules.  */
+  for (cnt = 0; cnt < __gconv_nmodules; ++cnt)
+    {
+      if (__gconv_modules_db[cnt]->from_pattern == NULL)
+	{
+	  tsearch (__gconv_modules_db[cnt]->from_constpfx, &printlist,
+		   (__compar_fn_t) strcoll);
+	  tsearch (__gconv_modules_db[cnt]->to_string, &printlist,
+		   (__compar_fn_t) strcoll);
+	}
+      else
+	tsearch (__gconv_modules_db[cnt]->from_pattern, &printlist,
+		 (__compar_fn_t) strcoll);
+    }
+
+  fputs (_("\
+The following list contain all the coded character sets known.  This does\n\
+not necessarily mean that all combinations of these names can be used for\n\
+the FROM and TO command line parameters.  One coded character set can be\n\
+listed with several different names (aliases).\n\
+  Some of the names are no plain strings but instead regular expressions and\n\
+they match a variety of names which can be given as parameters to the\n\
+program.\n\n  "), stdout);
+
+  /* Now print the collected names.  */
+  column = 2;
+  twalk (printlist, do_print);
+
+  if (column != 0)
+    puts ("");
 }

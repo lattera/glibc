@@ -368,6 +368,7 @@ extern int _IO_file_doallocate __P ((_IO_FILE *));
 extern _IO_FILE* _IO_file_setbuf __P ((_IO_FILE *, char *, _IO_ssize_t));
 extern _IO_fpos64_t _IO_file_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
 extern _IO_size_t _IO_file_xsputn __P ((_IO_FILE *, const void *, _IO_size_t));
+extern _IO_size_t _IO_file_xsgetn __P ((_IO_FILE *, void *, _IO_size_t));
 extern int _IO_file_stat __P ((_IO_FILE *, void *));
 extern int _IO_file_close __P ((_IO_FILE *));
 extern int _IO_file_underflow __P ((_IO_FILE *));
