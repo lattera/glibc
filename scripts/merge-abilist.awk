@@ -15,9 +15,21 @@
     current = $1 ":" config;
   }
   else {
-    current = $1 ":" $2;
-    for (i = 3; i <= NF; ++i) {
-      current = current "," $1 ":" $i;
+    # Filter out the old stanzas from the config we are merging in.
+    # That way, if a set disappears from the .symlist file for this
+    # config, the old stanza doesn't stay in the merged output tagged
+    # for this config.  (Disappearing sets might happen during development,
+    # and between releases could happen on a soname change).
+    nc = 0;
+    for (i = 2; i <= NF; ++i)
+      if ($i != config)
+        c[nc++] = $i;
+    if (nc == 0)
+      current = "";
+    else {
+      current = $1 ":" c[0];
+      for (i = 1; i < nc; ++i)
+        current = current "," $1 ":" c[i];
     }
   }
 
@@ -25,6 +37,8 @@
 }
 
 {
+  if (current == "") next;
+
   if ($0 in seen) {
     seen[$0] = seen[$0] "\n" current;
   }
@@ -78,7 +92,26 @@ END {
     for (idx in have) delete have[idx];
 
     for (version in confs) {
-      idx = version " " confs[version];
+
+      # Hack: if an element is foo.*/bar and there is also a foo.*,
+      # then we can omit the foo.*/bar since foo.* matches already.
+      nc = split(confs[version], c, " ");
+      for (i = 1; i <= nc; ++i) {
+	slash = index(c[i], ".*/");
+	if (slash > 0) {
+	  beforeslash = substr(c[i], 1, slash + 2 - 1);
+	  for (j = 1; j <= nc; ++j)
+	    if (j != i && c[j] == beforeslash) {
+	      c[i] = c[nc--];
+	      break;
+	    }
+	}
+      }
+
+      idx = version;
+      for (i = 1; i <= nc; ++i)
+	idx = idx " " c[i];
+
       if (idx in final) {
 	final[idx] = final[idx] "\n" line;
       }
