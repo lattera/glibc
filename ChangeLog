@@ -1,3 +1,27 @@
+2000-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h (__STDC_ISO_10646__): Set to correct date.
+	Patch by Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>.
+
+2000-10-06  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/fpu/fraiseexcpt.c (feraiseexcept): Implement
+	overflow generation by adding DBL_MAX to DBL_MAX instead of
+	setting the bits manually in the fpsr and generating the exception
+	with kill() if necessary.
+	(feraiseexcept): Implement underflow by dividing DBL_MIN by
+	DBL_MIN - similar to the overflow change described above.
+
+2000-08-27  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/ia64/clone.S: Make it a dummy as clone
+	is not supported under Linux/ia64, use clone2.
+
+2000-10-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.h (__THROW): Define to nothing if not gcc.
+	* misc/sys/cdefs.h (__THROW): Likewise.
+
 2000-10-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: New file.

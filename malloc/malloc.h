@@ -1,5 +1,5 @@
 /* Prototypes and definition for malloc implementation.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,6 +75,8 @@
 # define __MALLOC_PMT(args)	args
 
 #else	/* Not GCC.  */
+
+# define __THROW
 
 # if (defined __STDC__ && __STDC__) || defined __cplusplus
 

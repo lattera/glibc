@@ -51,35 +51,20 @@ feraiseexcept (int excepts)
   if (FE_DIVBYZERO & excepts)
     __asm__ __volatile__ ("frcpa.s0 %0,p1=f1,f0" : "=f" (tmp) : : "p1" );
 
-  /* XXX There seem to be no reliable way to generate
-     overflow/underflow exceptions without causing inexact exceptions
-     as well.  */
   /* Next: overflow.  */
   if (FE_OVERFLOW & excepts)
     {
-      __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
-      fpsr |= (FE_OVERFLOW << 13);
-      __asm__ __volatile__ ("mov.m ar.fpsr=%0" : : "r" (fpsr));
+      dummy = DBL_MAX;
 
-      if (!((unsigned long int) fpsr & FE_OVERFLOW))
-	{
-	  pid_t pid = getpid ();
-	  kill (pid, SIGFPE);
-	}
+      __asm__ __volatile__ ("fadd.d.s0 %0=%1,%1" : "=f" (dummy) : "0" (dummy));
     }
 
   /* Next: underflow.  */
   if (FE_UNDERFLOW & excepts)
     {
-      __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
-      fpsr |= (FE_UNDERFLOW << 13);
-      __asm__ __volatile__ ("mov.m ar.fpsr=%0" : : "r" (fpsr));
+      dummy = DBL_MIN;
 
-      if (!((unsigned long int) fpsr & FE_UNDERFLOW))
-	{
-	  pid_t pid = getpid();
-	  kill (pid, SIGFPE);
-	}
+      __asm__ __volatile__ ("fnma.d.s0 %0=%1,%1,f0" : "=f" (tmp) : "f" (dummy));
   }
 
   /* Last: inexact.  */

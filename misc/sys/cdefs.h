@@ -54,6 +54,7 @@
 
 # define __inline		/* No inline functions.  */
 
+# define __THROW
 # define __P(args)	args
 # define __PMT(args)	args
 
