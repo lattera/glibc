@@ -5,7 +5,7 @@
 <escape_char> /
 %
 % Chinese charmap for BIG5 (CP950)
-% version: 0.91
+% version: 0.92
 % Contact: Tung-Han Hsieh   <thhsieh@linux.org.tw>
 %	   Yuan-Chung Cheng <platin@ms31.hinet.net>
 % Distribution and use is free, even for comercial purpose.
@@ -18,9 +18,6 @@
 % Irrevsible mapping Big5 characters (using %IRREVERSIBLE% notation):
 %     /xa2/xcc, /xa2/xce, /xf9/xe9, /xf9/xea, /xf9/xeb, 
 %     /xf9/xf9, /xf9/xfa, /xf9/xfb, /xf9/xfc, /xf9/xfd
-%
-% The mapping /xa3/xe1 <==> <U20AC> is removed because only CP950.TXT contains
-%     this mapping, but not found in elsewhere. It might be a mistake.
 %
 % alias BIG5-CP950
 
@@ -565,6 +562,7 @@ CHARMAP
 <U02CA>		/xa3/xbd	MODIFIER LETTER ACUTE ACCENT
 <U02C7>		/xa3/xbe	CARON
 <U02CB>		/xa3/xbf	MODIFIER LETTER GRAVE ACCENT
+<U20AC>		/xa3/xe1	EURO SIGN
 <U4E00>		/xa4/x40	<CJK>
 <U4E59>		/xa4/x41	<CJK>
 <U4E01>		/xa4/x42	<CJK>

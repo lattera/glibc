@@ -183,7 +183,7 @@ _dl_load_cache_lookup (const char *name)
 	    cache_new = (void *) -1;
 	}
       else if (file != NULL && cachesize > sizeof *cache_new
-	       && memcmp (cache_new->magic, CACHEMAGIC_VERSION_NEW,
+	       && memcmp (file, CACHEMAGIC_VERSION_NEW,
 			  sizeof CACHEMAGIC_VERSION_NEW - 1) == 0)
 	{
 	  cache_new = file;

@@ -1,3 +1,8 @@
+2000-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/BIG5: Add mapping for <U20AC> back.
+	Patch by Tung-Han Hsieh <thhsieh@twcpro.phys.ntu.edu.tw>.
+
 2000-11-03  Bruno Haible  <haible@clisp.cons.org>
 
 	* locales/translit_neutral: Add more entries.  Mostly from Markus Kuhn.

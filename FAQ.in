@@ -1022,13 +1022,26 @@ be needed after upgrading:
 Please read also the NEWS file which is the authoritative source for this
 and gives more details for some topics.
 
-
 ??	The makefiles want to do a CVS commit.
 
 {UD} Only if you are not specifying the --without-cvs flag at configure
 time.  This is what you always have to use if you are checking sources
 directly out of the public CVS repository or you have your own private
 repository.
+
+??	When compiling C++ programs, I get a compilation error in streambuf.h.
+
+{BH} You are using g++ 2.95.2? After upgrading to glibc 2.2, you need to
+apply a patch to the include files in /usr/include/g++, because the fpos_t
+type has changed in glibc 2.2.  The patch is at
+http://clisp.cons.org/~haible/gccinclude-glibc-2.2-compat.diff
+
+??	When recompiling GCC, I get compilation errors in libio.
+
+{BH} You are trying to recompile gcc 2.95.2?  After upgrading to glibc 2.2,
+you need to apply a patch to the gcc sources, because the fpos_t type and
+a few libio internals have changed in glibc 2.2. T he patch is at
+http://clisp.cons.org/~haible/gcc-glibc-2.2-compat.diff
 
 
 ? Source and binary incompatibilities, and what to do about them
@@ -1580,6 +1593,7 @@ Answers were given by:
 {HJ} H.J. Lu, <hjl@gnu.org>
 {CG} Cristian Gafton, <gafton@redhat.com>
 {AO} Alexandre Oliva, <oliva@lsd.ic.unicamp.br>
+{BH} Bruno Haible, <haible@clisp.cons.org>
 
 Local Variables:
  mode:outline
