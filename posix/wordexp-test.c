@@ -51,11 +51,15 @@ struct test_case_struct
     { 0, "two three", "one $var", 0, 3, { "one", "two", "three", }, IFS },
     { 0, "two three", "one \"$var\"", 0, 2, { "one", "two three", }, "" },
     { 0, "two three", "one $var", 0, 2, { "one", "two three", }, "" },
-    { 0, ":abc:", "$var", 0, 3, { "", "abc", "", }, ":" },
-    { 0, NULL, "$(echo :abc:)", 0, 3, { "", "abc", "", }, ":" },
-    { 0, NULL, "$(echo :abc:\\ )", 0, 3, { "", "abc", "", }, ": " },
+
+    /* The non-whitespace IFS char at the end delimits the second field
+     * but does NOT start a new field. */
+    { 0, ":abc:", "$var", 0, 2, { "", "abc", }, ":" },
+
+    { 0, NULL, "$(echo :abc:)", 0, 2, { "", "abc", }, ":" },
+    { 0, NULL, "$(echo :abc:\\ )", 0, 2, { "", "abc", }, ": " },
     { 0, NULL, "$(echo :abc\\ )", 0, 2, { "", "abc", }, ": " },
-    { 0, ":abc:", "$(echo $var)", 0, 3, { "", "abc", "", }, ":" },
+    { 0, ":abc:", "$(echo $var)", 0, 2, { "", "abc", }, ":" },
     { 0, NULL, ":abc:", 0, 1, { " abc ", }, ":" },
     { 0, NULL, "$(echo :abc:)def", 0, 3, { "", "abc", "def", }, ":" },
     { 0, NULL, "$(echo abc:de)f", 0, 2, { "abc", "def", }, ":" },

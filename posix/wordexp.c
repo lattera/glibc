@@ -136,21 +136,6 @@ w_addmem (char *buffer, size_t *actlen, size_t *maxlen, const char *str,
   return buffer;
 }
 
-
-/* Result of w_emptyword will not be ignored even if it is the last. */
-static inline char *
-w_emptyword (size_t *actlen, size_t *maxlen)
-{
-  char *word = malloc (1 + W_CHUNK);
-  *maxlen = W_CHUNK;
-  *actlen = 0;
-
-  if (word)
-    *word = '\0';
-
-  return word;
-}
-
 static char *
 internal_function
 w_addstr (char *buffer, size_t *actlen, size_t *maxlen, const char *str)
@@ -835,7 +820,6 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   int i;
   char *buffer;
   pid_t pid;
-  int keep_empty_word = 0;
 
   /* Don't fork() unless necessary */
   if (!comm || !*comm)
@@ -933,11 +917,6 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		  if (strchr (ifs_white, buffer[i]) == NULL)
 		    {
 		      /* Current character is IFS but not whitespace */
-
-		      /* After this delimiter, another field must result.
-		       * Make a note. */
-		      keep_empty_word = 1;
-
 		      if (copying == 2)
 			{
 			  /*            current character
@@ -971,23 +950,13 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		  if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
 		    goto no_space;
 
-		  if (keep_empty_word)
-		    {
-		      *word = w_emptyword (word_length, max_length);
-		      if (*word == NULL)
-			goto no_space;
-		    }
-		  else
-		    *word = w_newword (word_length, max_length);
+		  *word = w_newword (word_length, max_length);
 		  /* fall back round the loop.. */
 		}
 	      else
 		{
 		  /* Not IFS character */
 		  copying = 1;
-
-		  if (buffer[i] != '\n')
-		    keep_empty_word = 0;
 
 		  *word = w_addchar (*word, word_length, max_length,
 				     buffer[i]);
@@ -1003,13 +972,13 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
     {
       (*word)[--*word_length] = '\0';
 
-      /* If the last word was entirely newlines, and the previous word
-       * wasn't delimited with IFS non-whitespace, turn it into a new word
+      /* If the last word was entirely newlines, turn it into a new word
        * which can be ignored if there's nothing following it. */
-      if (!keep_empty_word && *word_length == 0)
+      if (*word_length == 0)
 	{
 	  free (*word);
 	  *word = w_newword (word_length, max_length);
+	  break;
 	}
     }
 
@@ -1768,7 +1737,7 @@ envsubst:
 		  goto no_space;
 		}
 
-	      *word = w_emptyword (word_length, max_length);
+	      *word = w_newword (word_length, max_length);
 	    }
 
 	  /* Skip IFS whitespace before the field */

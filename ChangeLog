@@ -1,3 +1,13 @@
+1998-09-14 22:46  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: Chet Ramey confirmed that bash's behaviour
+	for field-splitting :abc: is correct, and that two fields should
+	result. Revert tests to reflect this.
+
+	* posix/wordexp.c (w_emptyword): Remove function.
+	(exec_comm): Don't use w_emptyword.
+	(parse_param): Likewise.
+
 1998-09-14 15:00  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/arm/fpu/Dist: Moved to...
