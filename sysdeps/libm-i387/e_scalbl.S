@@ -14,4 +14,4 @@ ENTRY(__ieee754_scalbl)
 	fldt	4(%esp)
 	fscale
 	ret
-PSEUDO_END(__ieee754_scalbl)
+END(__ieee754_scalbl)

@@ -12,5 +12,5 @@ ENTRY(__atanf)
 	fld1
 	fpatan
 	ret
-PSEUDO_END (__atanf)
+END (__atanf)
 weak_alias (__atanf, atanf)

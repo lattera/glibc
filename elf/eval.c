@@ -128,7 +128,7 @@ _start (void)
   char *buf = NULL;
   size_t bufsz = 0;
 
-  while (getline (&buf, &bufsz, stdin) > 0)
+  while (__getline (&buf, &bufsz, stdin) > 0)
     {
       char *p = buf;
       eval (&p);

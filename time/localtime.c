@@ -1,4 +1,4 @@
-/* localtime -- convert `time_t' to `struct tm' in local time zone
+/* Convert `time_t' to `struct tm' in local time zone.
    Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,29 +26,22 @@ struct tm _tmbuf;
 
 /* Prototype for the internal function to get information based on TZ.  */
 extern void __tzset_internal __P ((void));
+extern int __tz_compute __P ((time_t timer, struct tm *tp));
+extern int __tzfile_compute __P ((time_t timer,
+				  long int *leap_correct, int *leap_hit));
+
+extern int __use_tzfile;
+
+/* This lock is defined in tzset.c and locks all the data defined there
+   and in tzfile.c; the internal functions do no locking themselves.
+   This lock is only taken here and in `tzset'.  */
+__libc_lock_define (extern, __tzset_lock)
 
 
 /* Return the `struct tm' representation of *TIMER in the local timezone.  */
-struct tm *
-localtime (timer)
-     const time_t *timer;
+static struct tm *
+localtime_internal (const time_t *timer, struct tm *tp)
 {
-  return __localtime_r (timer, &_tmbuf);
-}
-
-struct tm *
-__localtime_r (timer, tp)
-     const time_t *timer;
-     struct tm *tp;
-{
-  /* This lock is defined in tzset.c and locks all the data defined there
-     and in tzfile.c; the internal functions do no locking themselves.
-     This lock is only taken here and in `tzset'.  */
-  __libc_lock_define (extern, __tzset_lock)
-  extern int __use_tzfile;
-  extern int __tz_compute __P ((time_t timer, struct tm *tp));
-  extern int __tzfile_compute __P ((time_t timer,
-				    long int *leap_correct, int *leap_hit));
   long int leap_correction;
   int leap_extra_secs;
 
@@ -57,11 +50,6 @@ __localtime_r (timer, tp)
       __set_errno (EINVAL);
       return NULL;
     }
-
-  __libc_lock_lock (__tzset_lock);
-
-  /* Make sure the database is initialized.  */
-  __tzset_internal ();
 
   if (__use_tzfile)
     {
@@ -86,8 +74,46 @@ __localtime_r (timer, tp)
       tp->tm_zone = __tzname[__daylight];
     }
 
+  return tp;
+}
+
+
+/* POSIX.1 8.3.7.2 says that localtime_r is not required to set
+   tzname.  This is a good idea since this allows at least a bit more
+   parallelism.  */
+
+struct tm *
+localtime (timer)
+     const time_t *timer;
+{
+  struct tm *result;
+
+  __libc_lock_lock (__tzset_lock);
+
+  /* Make sure the database is initialized.  */
+  __tzset_internal ();
+
+  result = localtime_internal (timer, &_tmbuf);
+
   __libc_lock_unlock (__tzset_lock);
 
-  return tp;
+  return result;
+}
+
+
+struct tm *
+__localtime_r (timer, tp)
+     const time_t *timer;
+     struct tm *tp;
+{
+  struct tm *result;
+
+  __libc_lock_lock (__tzset_lock);
+
+  result = localtime_internal (timer, tp);
+
+  __libc_lock_unlock (__tzset_lock);
+
+  return result;
 }
 weak_alias (__localtime_r, localtime_r)

@@ -43,7 +43,6 @@ _IO_vsprintf (string, format, args)
   _IO_init (&sf._sbf._f, 0);
   _IO_JUMPS (&sf._sbf._f) = &_IO_str_jumps;
   _IO_str_init_static (&sf._sbf._f, string, -1, string);
-  _IO_str_init_static ((_IO_FILE *) &sf, string, -1, string);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, &sf);
   _IO_flockfile (&sf._sbf._f);
   ret = _IO_vfprintf (&sf._sbf._f, format, args);

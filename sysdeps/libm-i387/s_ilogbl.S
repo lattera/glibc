@@ -21,5 +21,5 @@ ENTRY(__ilogbl)
 
 	leave
 	ret
-PSEUDO_END (__ilogbl)
+END (__ilogbl)
 weak_alias (__ilogbl, ilogbl)

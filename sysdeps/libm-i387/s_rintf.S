@@ -11,5 +11,5 @@ ENTRY(__rintf)
 	flds	4(%esp)
 	frndint
 	ret
-PSEUDO_END (__rintf)
+END (__rintf)
 weak_alias (__rintf, rintf)

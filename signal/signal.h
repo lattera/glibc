@@ -22,7 +22,7 @@
 
 #ifndef	_SIGNAL_H
 
-#if	!defined(__need_sig_atomic_t) && !defined(__need_sigset_t)
+#if !defined __need_sig_atomic_t && !defined __need_sigset_t
 #define	_SIGNAL_H	1
 #include <features.h>
 #endif
@@ -32,15 +32,15 @@ __BEGIN_DECLS
 #include <gnu/types.h>
 #include <sigset.h>		/* __sigset_t, __sig_atomic_t.  */
 
-#if	!defined(__sig_atomic_t_defined) &&	\
-  (defined(_SIGNAL_H) || defined(__need_sig_atomic_t))
+#if !defined __sig_atomic_t_defined \
+    && (defined _SIGNAL_H || defined __need_sig_atomic_t)
 /* An integral type that can be modified atomically, without the
    possibility of a signal arriving in the middle of the operation.  */
 typedef __sig_atomic_t sig_atomic_t;
 #endif /* `sig_atomic_t' undefined and <signal.h> or need `sig_atomic_t'.  */
-#undef	__need_sig_atomic_t
+#undef __need_sig_atomic_t
 
-#ifdef	_SIGNAL_H
+#ifdef _SIGNAL_H
 
 #include <signum.h>
 
@@ -51,15 +51,27 @@ typedef void (*__sighandler_t) __P ((int));
    returning the old handler, or SIG_ERR on error.  */
 extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
 
+#if defined __FAVOR_BSD || defined __USE_XOPEN
+/* The X/Open definition of `signal' conflicts with the BSD version.
+   So they defined another function `bsd_signal'.  We will use this
+   implementation as the official `signal' function if the BSD
+   interface is preferred.  */
+extern __sighandler_t bsd_signal __P ((int __sig, __sighandler_t __handler));
+
+#ifdef __FAVOR_BSD
+#define signal(sig, handler) bsd_signal ((sig), (handler))
+#endif
+#endif
+
 /* Send signal SIG to process number PID.  If PID is zero,
    send SIG to all processes in the current process's process group.
    If PID is < -1, send SIG to all processes in process group - PID.  */
 extern int __kill __P ((__pid_t __pid, int __sig));
-#ifdef	__USE_POSIX
+#ifdef __USE_POSIX
 extern int kill __P ((__pid_t __pid, int __sig));
 #endif /* Use POSIX.  */
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Send SIG to all processes in process group PGRP.
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
@@ -69,13 +81,13 @@ extern int killpg __P ((__pid_t __pgrp, int __sig));
 /* Raise signal SIG, i.e., send SIG to yourself.  */
 extern int raise __P ((int __sig));
 
-#ifdef	__USE_SVID
+#ifdef __USE_SVID
 /* SVID names for the same things.  */
 extern __sighandler_t ssignal __P ((int __sig, __sighandler_t __handler));
 extern int gsignal __P ((int __sig));
 #endif /* Use SVID.  */
 
-#ifdef	__USE_MISC
+#ifdef __USE_MISC
 /* Print a message describing the meaning of the given signal number.  */
 extern void psignal __P ((int __sig, __const char *__s));
 #endif /* Use misc.  */
@@ -95,7 +107,7 @@ extern int __sigsetmask __P ((int __mask));
    explitcly selects the BSD version.  */
 extern int __sigpause __P ((int __sig_or_mask, int __is_sig));
 
-#if defined(__USE_BSD) && !defined(__USE_XOPEN)
+#if defined __USE_BSD  && !defined __USE_XOPEN
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
 #define sigpause(mask) __sigpause ((mask), 0)
@@ -107,7 +119,7 @@ extern int __sigpause __P ((int __sig_or_mask, int __is_sig));
 #endif
 
 
-#ifdef	__USE_BSD
+#ifdef __USE_BSD
 #define	sigmask(sig)	__sigmask(sig)
 
 extern int sigblock __P ((int __mask));
@@ -119,32 +131,32 @@ extern int siggetmask __P ((void));
 #endif /* Use BSD.  */
 
 
-#ifdef	__USE_MISC
+#ifdef __USE_MISC
 #define	NSIG	_NSIG
 #endif
 
-#ifdef	__USE_GNU
+#ifdef __USE_GNU
 typedef __sighandler_t sighandler_t;
 #endif
 
 /* 4.4 BSD uses the name `sig_t' for this.  */
-#ifdef	__USE_BSD
+#ifdef __USE_BSD
 typedef __sighandler_t sig_t;
 #endif
 
 #endif /* <signal.h> included.  */
 
 
-#ifdef	__USE_POSIX
+#ifdef __USE_POSIX
 
-#if	!defined(__sigset_t_defined) &&	\
-   (defined(_SIGNAL_H) || defined(__need_sigset_t))
+#if !defined __sigset_t_defined \
+    && (defined _SIGNAL_H  || defined __need_sigset_t)
 typedef __sigset_t sigset_t;
 #define	__sigset_t_defined	1
 #endif /* `sigset_t' not defined and <signal.h> or need `sigset_t'.  */
-#undef	__need_sigset_t
+#undef __need_sigset_t
 
-#ifdef	_SIGNAL_H
+#ifdef _SIGNAL_H
 
 /* Clear all signals from SET.  */
 extern int sigemptyset __P ((sigset_t *__set));
@@ -194,7 +206,7 @@ extern int sigwait __P ((__const sigset_t *__set, int *__sig));
 
 #endif /* Use POSIX.  */
 
-#if	defined(_SIGNAL_H) && defined(__USE_BSD)
+#if defined _SIGNAL_H && defined __USE_BSD
 
 /* Names of the signals.  This variable exists only for compatibility.
    Use `strsignal' instead (see <string.h>).  */
@@ -238,7 +250,7 @@ extern int sigreturn __P ((struct sigcontext *__scp));
 #endif /* signal.h included and use BSD.  */
 
 
-#if defined(_SIGNAL_H) && (defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED))
+#if defined _SIGNAL_H && (defined __USE_BSD || defined __USE_XOPEN_EXTENDED)
 
 #define	 __need_size_t
 #include <stddef.h>

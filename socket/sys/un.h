@@ -21,6 +21,8 @@
 #define	_SYS_UN_H	1
 #include <sys/cdefs.h>
 
+#include <string.h>		/* For prototype of `strlen'.  */
+
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <sockaddrcom.h>
 
@@ -32,6 +34,11 @@ struct sockaddr_un
     __SOCKADDR_COMMON (sun_);
     char sun_path[108];		/* Path name.  */
   };
+
+
+/* Evaluate to actual length of the `sockaddr_un' structure.  */
+#define SUN_LEN(ptr) (((struct sockaddr_un *) 0)->sun_path		      \
+		      + strlen ((ptr)->sun_path))
 
 __END_DECLS
 

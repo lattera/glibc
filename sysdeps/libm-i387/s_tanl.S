@@ -13,7 +13,7 @@ ENTRY(__tanl)
 	fldt	4(%esp)
 	fptan
 	fnstsw	%ax
-	andw	$0x400,%ax
+	testl	$0x400,%eax
 	jnz	1f
 	fstp	%st(0)
 	ret
@@ -22,11 +22,11 @@ ENTRY(__tanl)
 	fxch	%st(1)
 2:	fprem1
 	fstsw	%ax
-	andw	$0x400,%ax
+	testl	$0x400,%eax
 	jnz	2b
 	fstp	%st(1)
 	fptan
 	fstp	%st(0)
 	ret
-PSEUDO_END (__tanl)
+END (__tanl)
 weak_alias (__tanl, tanl)

@@ -13,4 +13,4 @@ ENTRY(__ieee754_sqrtl)
 	fldt	4(%esp)
 	fsqrt
 	ret
-PSEUDO_END (__ieee754_sqrtl)
+END (__ieee754_sqrtl)

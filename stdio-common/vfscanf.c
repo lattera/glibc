@@ -524,7 +524,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  if (First)						      \
 		    input_error ();					      \
 		  else							      \
-		    break;						      \
+		    {							      \
+		      --read_in;					      \
+		      break;						      \
+		    }							      \
 		val = c;						      \
 		if (val >= 0x80)					      \
 		  {							      \
@@ -666,6 +669,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		}
 	      STRING_ADD_CHAR (str, c, char);
 	    } while ((width <= 0 || --width > 0) && inchar () != EOF);
+
+	  if (c == EOF)
+	    --read_in;
 
 	  if (!(flags & SUPPRESS))
 	    {

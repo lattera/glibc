@@ -12,5 +12,5 @@ ENTRY(__rintl)
 	fldt	4(%esp)
 	frndint
 	ret
-PSEUDO_END (__rintl)
+END (__rintl)
 weak_alias (__rintl, rintl)

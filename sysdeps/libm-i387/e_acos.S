@@ -18,4 +18,4 @@ ENTRY(__ieee754_acos)
 	fxch	%st(1)
 	fpatan
 	ret
-PSEUDO_END (__ieee754_acos)
+END (__ieee754_acos)

@@ -12,5 +12,5 @@ ENTRY(__scalbn)
 	fldl	4(%esp)
 	fscale
 	ret
-PSEUDO_END (__scalbn)
+END (__scalbn)
 weak_alias (__scalbn, scalbn)

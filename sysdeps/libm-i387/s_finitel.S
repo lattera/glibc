@@ -16,5 +16,5 @@ ENTRY(__finitel)
 	setne	%al
 	andl	$0x000000ff, %eax
 	ret
-PSEUDO_END (__finitel)
+END (__finitel)
 weak_alias (__finitel, finitel)

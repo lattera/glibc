@@ -1,3 +1,164 @@
+Mon Dec 30 01:32:59 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* tme/localtime.c: Rewrite so that localtime_r does not call tzset,
+	but localtime does.
+
+	* features.h: Rename ANSI C to ISO C.
+	Mention __GLIBC__ and __GLIBC_MINOR__ macros.
+
+	* gnu-versions.h: Add _GNU_GETOPT_INTERFACE_VERSION.
+	* posix/getopt.c: Use _GNU_GETOPT_INTERFACE_VERSION to check
+	whether we can elide the code.
+	* posix/getopt1.c: Likewise.
+	* posix/Makefile: Correct copyright.
+
+	* elf/dl-error.c (_dl_catch_error): Clear `catch' also when error
+	occurred.
+	* elf/dl-support.c (_dl_sysdep_open_zero_fill): Don't define if
+	MAP_ANON is defined.
+	* elf/eval.c: Use __getline instead of getline.
+	* elf/rtld.c (dl_main): Check return value of _dl_new_object
+	function for NULL.
+	* sysdeps/generic/dl-cache.c: Update copyright.
+
+	* signal/Makefile: Correct copyright.
+	(routines): Remove gsignal and ssignal.  Add bsd_signal.
+	* signal/gsignal.c: Removed.  Now is made an alias.
+	* signal/ssignal.c: Likewise.
+	* sysdeps/posix/raise.c: Add alias gsignal.
+	* sysdeps/stub/raise.c: Likewise.
+	* sysdeps/posix/signal.c: Add alias ssignal.
+	* sysdeps/stub/signal.c: Likewise.
+	* signal/signal.h: Declare bsd_signal.  Define signal as bsd_signal
+	if __FAVOR_BSD.
+	* sysdeps/posix/bsd_signal.c: New file.  Implementation of XPG
+	function.
+
+	* sysdeps/unix/sysv/linux/signal.c: Add explanation.
+
+	* socket/sys/un.h: Define SUN_LEN according to POSIX.1g.
+
+	* stdio-common/Makefile (tests): Add scanf10.
+	* stdio-common/scanf10.c: New file.
+	* stdio-common/vfscanf.c: Decrement counter if EOF is read while
+	reading string.
+
+	* sysdeps/libm-i387/e_acos.S: Use END, not PSEUDO_END.
+	* sysdeps/libm-i387/e_acosl.S: Likewise.
+	* sysdeps/libm-i387/e_asin.S: Likewise.
+	* sysdeps/libm-i387/e_asinl.S: Likewise.
+	* sysdeps/libm-i387/e_atan2.S: Likewise.
+	* sysdeps/libm-i387/e_atan2f.S: Likewise.
+	* sysdeps/libm-i387/e_atan2l.S: Likewise.
+	* sysdeps/libm-i387/e_exp.S: Likewise.
+	* sysdeps/libm-i387/e_expl.S: Likewise.
+	* sysdeps/libm-i387/e_fmod.S: Likewise.
+	* sysdeps/libm-i387/e_fmodl.S: Likewise.
+	* sysdeps/libm-i387/e_log.S: Likewise.
+	* sysdeps/libm-i387/e_log10.S: Likewise.
+	* sysdeps/libm-i387/e_log10l.S: Likewise.
+	* sysdeps/libm-i387/e_logl.S: Likewise.
+	* sysdeps/libm-i387/e_remainder.S: Likewise.
+	* sysdeps/libm-i387/e_remainderf.S: Likewise.
+	* sysdeps/libm-i387/e_remainderl.S: Likewise.
+	* sysdeps/libm-i387/e_scalb.S: Likewise.
+	* sysdeps/libm-i387/e_scalbl.S: Likewise.
+	* sysdeps/libm-i387/e_sqrt.S: Likewise.
+	* sysdeps/libm-i387/e_sqrtf.S: Likewise.
+	* sysdeps/libm-i387/e_sqrtl.S: Likewise.
+	* sysdeps/libm-i387/s_atan.S: Likewise.
+	* sysdeps/libm-i387/s_atanf.S: Likewise.
+	* sysdeps/libm-i387/s_atanl.S: Likewise.
+	* sysdeps/libm-i387/s_ceil.S: Likewise.
+	* sysdeps/libm-i387/s_ceilf.S: Likewise.
+	* sysdeps/libm-i387/s_ceill.S: Likewise.
+	* sysdeps/libm-i387/s_copysign.S: Likewise.
+	* sysdeps/libm-i387/s_copysignf.S: Likewise.
+	* sysdeps/libm-i387/s_copysignl.S: Likewise.
+	* sysdeps/libm-i387/s_cos.S: Likewise.
+	* sysdeps/libm-i387/s_cosf.S: Likewise.
+	* sysdeps/libm-i387/s_cosl.S: Likewise.
+	* sysdeps/libm-i387/s_finite.S: Likewise.
+	* sysdeps/libm-i387/s_finitef.S: Likewise.
+	* sysdeps/libm-i387/s_finitel.S: Likewise.
+	* sysdeps/libm-i387/s_floor.S: Likewise.
+	* sysdeps/libm-i387/s_floorf.S: Likewise.
+	* sysdeps/libm-i387/s_floorl.S: Likewise.
+	* sysdeps/libm-i387/s_ilogb.S: Likewise.
+	* sysdeps/libm-i387/s_ilogbf.S: Likewise.
+	* sysdeps/libm-i387/s_ilogbl.S: Likewise.
+	* sysdeps/libm-i387/s_log1p.S: Likewise.
+	* sysdeps/libm-i387/s_log1pf.S: Likewise.
+	* sysdeps/libm-i387/s_log1pl.S: Likewise.
+	* sysdeps/libm-i387/s_logb.S: Likewise.
+	* sysdeps/libm-i387/s_logbf.S: Likewise.
+	* sysdeps/libm-i387/s_logbl.S: Likewise.
+	* sysdeps/libm-i387/s_rint.S: Likewise.
+	* sysdeps/libm-i387/s_rintf.S: Likewise.
+	* sysdeps/libm-i387/s_rintl.S: Likewise.
+	* sysdeps/libm-i387/s_scalbn.S: Likewise.
+	* sysdeps/libm-i387/s_scalbnf.S: Likewise.
+	* sysdeps/libm-i387/s_scalbnl.S: Likewise.
+	* sysdeps/libm-i387/s_significand.S: Likewise.
+	* sysdeps/libm-i387/s_significandf.S: Likewise.
+	* sysdeps/libm-i387/s_significandl.S: Likewise.
+	* sysdeps/libm-i387/s_sin.S: Likewise.
+	* sysdeps/libm-i387/s_sinf.S: Likewise.
+	* sysdeps/libm-i387/s_sinl.S: Likewise.
+
+	* sysdeps/libm-i387/e_log.S: Use fyl2xp1 instruction for values
+	near 1 to increase precision.
+	* sysdeps/libm-i387/e_log10.S: Likewise.
+	* sysdeps/libm-i387/e_log10l.S: Likewise.
+	* sysdeps/libm-i387/e_logl.S: Likewise.
+
+	* sysdeps/libm-i387/s_cos.S: Use testl instead of andw.
+	* sysdeps/libm-i387/s_cosl.S: Likewise.
+	* sysdeps/libm-i387/s_sin.S: Likewise.
+	* sysdeps/libm-i387/s_sinl.S: Likewise.
+	* sysdeps/libm-i387/s_tan.S: Likewise.
+	* sysdeps/libm-i387/s_tanl.S: Likewise.
+
+	* sysdeps/libm-i387/e_acosf.S: New file.  Add float versions.
+	* sysdeps/libm-i387/e_asinf.S: Likewise.
+	* sysdeps/libm-i387/e_expf.S: Likewise.
+	* sysdeps/libm-i387/e_fmodf.S: Likewise.
+	* sysdeps/libm-i387/e_log10f.S: Likewise.
+	* sysdeps/libm-i387/e_logf.S: Likewise.
+	* sysdeps/libm-i387/e_scalbf.S: Likewise.
+
+	* sysdeps/libm-i387/e_acosh.S: New file.  Highly optimized versions.
+	* sysdeps/libm-i387/e_acoshf.S: Likewise.
+	* sysdeps/libm-i387/e_acoshl.S: Likewise.
+	* sysdeps/libm-i387/e_atanh.S: Likewise.
+	* sysdeps/libm-i387/e_atanhf.S: Likewise.
+	* sysdeps/libm-i387/e_atanhl.S: Likewise.
+	* sysdeps/libm-i387/e_asinh.S: Likewise.
+	* sysdeps/libm-i387/e_asinhf.S: Likewise.
+	* sysdeps/libm-i387/e_asinhl.S: Likewise.
+
+	* sysdeps/libm-ieee754/s_asinhf.c: Tweak a bit.  Use lower levels
+	for simplified handling.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add query_module.
+
+Sun Dec 22 01:39:29 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* inet/rcmd.c (rcmd): Set h_errno before calling herror.
+	* inet/rexec.c (rexec): Likewise.
+
+Sat Dec 21 21:47:08 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/setjmp.c (__setjmp): Make it really
+	compatible.
+
+Sun Dec 22 03:23:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/s_log1p.S: Use fyl2xp1 for numbers in range
+	-0.29 <= x <= 0.29, otherwise the old method.
+	* sysdeps/libm-i387/s_log1pf.S: Likewise.
+	* sysdeps/libm-i387/s_log1pl.S: Likewise.
+
 Sun Dec 22 00:01:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/getnetgrent.c: Reformat copyright.

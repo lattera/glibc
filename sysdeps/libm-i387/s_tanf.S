@@ -13,5 +13,5 @@ ENTRY(__tanf)
 	fptan
 	fstp	%st(0)
 	ret
-PSEUDO_END (__tanf)
+END (__tanf)
 weak_alias (__tanf, tanf)

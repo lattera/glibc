@@ -52,7 +52,15 @@
    program understand `configure --with-gnu-libc' and omit the object files,
    it is simpler to just do this in the source for each such file.  */
 
-#if defined (_LIBC) || !defined (__GNU_LIBRARY__)
+#define GETOPT_INTERFACE_VERSION 1
+#if !defined (_LIBC) && defined (__GLIBC__) && __GLIBC__ >= 2
+#include <gnu-versions.h>
+#if _GNU_GETOPT_INTERFACE_VERSION == GETOPT_INTERFACE_VERSION
+#define ELIDE_CODE
+#endif
+#endif
+
+#ifndef ELIDE_CODE
 
 
 /* This needs to come after some library #include
@@ -124,8 +132,14 @@ char *optarg = NULL;
    Otherwise, `optind' communicates from one call to the next
    how much of ARGV has been scanned so far.  */
 
-/* XXX 1003.2 says this must be 1 before any call.  */
-int optind = 0;
+/* 1003.2 says this must be 1 before any call.  */
+int optind = 1;
+
+/* Formerly, initialization of getopt depended on optind==0, which
+   causes problems with re-calling getopt as programs generally don't
+   know that. */
+
+int __getopt_initialized = 0;
 
 /* The next char to be scanned in the option-element
    in which the last option character we returned was found.
@@ -431,10 +445,11 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 {
   optarg = NULL;
 
-  if (optind == 0)
+  if (!__getopt_initialized)
     {
       optstring = _getopt_initialize (optstring);
       optind = 1;		/* Don't scan ARGV[0], the program name.  */
+      __getopt_initialized = 1;
     }
 
   /* Test whether ARGV[optind] points to a non-option argument.
@@ -500,6 +515,11 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	     that we previously skipped, so the caller will digest them.  */
 	  if (first_nonopt != last_nonopt)
 	    optind = first_nonopt;
+
+	  /* Before we can be provide the next result we must be
+	     reinitialized.  */
+	  __getopt_initialized = 0;
+
 	  return EOF;
 	}
 
@@ -509,7 +529,12 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       if (NONOPTION_P)
 	{
 	  if (ordering == REQUIRE_ORDER)
-	    return EOF;
+	    {
+	      /* Before we can be provide the next result we must be
+		 reinitialized.  */
+	      __getopt_initialized = 0;
+	      return EOF;
+	    }
 	  optarg = argv[optind++];
 	  return 1;
 	}
@@ -880,7 +905,7 @@ getopt (argc, argv, optstring)
 			   0);
 }
 
-#endif	/* _LIBC or not __GNU_LIBRARY__.  */
+#endif	/* Not ELIDE_CODE.  */
 
 #ifdef TEST
 

@@ -20,8 +20,6 @@
 #include <signal.h>
 
 
-sigset_t _sigintr;		/* Set by siginterrupt.  */
-
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
 __sighandler_t
@@ -41,9 +39,12 @@ signal (sig, handler)
   act.sa_handler = handler;
   if (__sigemptyset (&act.sa_mask) < 0)
     return SIG_ERR;
-  act.sa_flags = __sigismember (&_sigintr, sig) ? 0 : SA_RESTART;
+  act.sa_flags = SA_ONESHOT | SA_NOMASK | SA_INTERRUPT;
+  act.sa_flags &= ~SA_RESTART;
   if (__sigaction (sig, &act, &oact) < 0)
     return SIG_ERR;
 
   return oact.sa_handler;
 }
+
+weak_alias (signal, ssignal)

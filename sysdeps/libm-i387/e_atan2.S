@@ -12,4 +12,4 @@ ENTRY(__ieee754_atan2)
 	fldl	12(%esp)
 	fpatan
 	ret
-PSEUDO_END (__ieee754_atan2)
+END (__ieee754_atan2)

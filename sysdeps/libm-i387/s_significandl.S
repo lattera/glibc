@@ -13,5 +13,5 @@ ENTRY(__significandl)
 	fxtract
 	fincstp
 	ret
-PSEUDO_END (__significandl)
+END (__significandl)
 weak_alias (__significandl, significandl)

@@ -71,6 +71,7 @@ rexec(ahost, rport, name, pass, cmd, fd2p)
 				  &hp, &herr) < 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
 	    {
+	      __set_h_errno (herr);
 	      herror(*ahost);
 	      return -1;
 	    }

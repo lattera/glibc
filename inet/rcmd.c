@@ -83,6 +83,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 				  &hp, &herr) < 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
 	    {
+	      __set_h_errno (herr);
 	      herror(*ahost);
 	      return -1;
 	    }
@@ -322,7 +323,7 @@ again:
 		char *pbuf;
 		size_t dirlen;
 		size_t buflen = __sysconf (_SC_GETPW_R_SIZE_MAX);
-		char buffer = __alloca (buflen);
+		char *buffer = __alloca (buflen);
 
 		first = 0;
 		if (getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd) < 0)

@@ -23,14 +23,14 @@
 /* These are defined by the user (or the compiler)
    to specify the desired environment:
 
-   __STRICT_ANSI__	ANSI Standard C.
+   __STRICT_ANSI__	ISO Standard C.
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993
    _XOPEN_SOURCE	Includes POSIX and XPG things.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
-   _BSD_SOURCE		ANSI, POSIX, and 4.3BSD things.
-   _SVID_SOURCE		ANSI, POSIX, and SVID things.
+   _BSD_SOURCE		ISO C, POSIX, and 4.3BSD things.
+   _SVID_SOURCE		ISO C, POSIX, and SVID things.
    _GNU_SOURCE		All of the above, plus GNU extensions.
    _REENTRANT		Select additionally reentrant object.
    _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
@@ -39,7 +39,7 @@
    If none of these are defined, the default is all but _GNU_SOURCE.
    If more than one of these are defined, they accumulate.
    For example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE
-   together give you ANSI C, 1003.1, and 1003.2, but nothing else.
+   together give you ISO C, 1003.1, and 1003.2, but nothing else.
 
    These are defined by this file and are used by the
    header files to decide what to declare or define:
@@ -56,7 +56,10 @@
    __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
    __FAVOR_BSD		Favor 4.3BSD things in cases of conflict.
 
-   The macro `__GNU_LIBRARY__' is defined by this file unconditionally.
+   The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
+   defined by this file unconditionally.  `__GNU_LIBRARY__' is provided
+   only for compatibility.  All new code should use the other symbols
+   to test for features.
 
    All macros listed above as possibly being defined by this file are
    explicitly undefined if they are not explicitly defined.
@@ -85,15 +88,15 @@
 # define __KERNEL_STRICT_NAMES
 #endif
 
-/* Always use ANSI things.  */
+/* Always use ISO C things.  */
 #define	__USE_ANSI	1
 
 
 /* If _BSD_SOURCE was defined by the user, favor BSD over POSIX.  */
-#if defined (_BSD_SOURCE) && \
-    !(defined (_POSIX_SOURCE) || defined (_POSIX_C_SOURCE) || \
-      defined (_XOPEN_SOURCE) || defined (_XOPEN_SOURCE_DEFINED) || \
-      defined (_GNU_SOURCE) || defined (_SVID_SOURCE))
+#if defined _BSD_SOURCE && \
+    !(defined _POSIX_SOURCE || defined _POSIX_C_SOURCE || \
+      defined _XOPEN_SOURCE || defined _XOPEN_SOURCE_DEFINED || \
+      defined _GNU_SOURCE || defined _SVID_SOURCE)
 # define __FAVOR_BSD	1
 #endif
 
@@ -115,37 +118,35 @@
 
 /* If nothing (other than _GNU_SOURCE) is defined,
    define _BSD_SOURCE and _SVID_SOURCE.  */
-#if (!defined (__STRICT_ANSI__) && !defined (_POSIX_SOURCE) && \
-     !defined (_POSIX_C_SOURCE) && !defined (_XOPEN_SOURCE) && \
-     !defined (_XOPEN_SOURCE_EXTENDED) && !defined (_BSD_SOURCE) && \
-     !defined (_SVID_SOURCE))
+#if (!defined __STRICT_ANSI__ && !defined _POSIX_SOURCE && \
+     !defined _POSIX_C_SOURCE && !defined _XOPEN_SOURCE && \
+     !defined _XOPEN_SOURCE_EXTENDED && !defined _BSD_SOURCE && \
+     !defined _SVID_SOURCE)
 #define	_BSD_SOURCE	1
 #define	_SVID_SOURCE	1
 #endif
 
 /* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
    (and IEEE Std 1003.1b-1993 unless _XOPEN_SOURCE is defined).  */
-#if (!defined (__STRICT_ANSI__) && !defined (_POSIX_SOURCE) && \
-     !defined (_POSIX_C_SOURCE))
+#if (!defined __STRICT_ANSI__ && !defined _POSIX_SOURCE && \
+     !defined _POSIX_C_SOURCE)
 #define	_POSIX_SOURCE	1
-#if defined(_XOPEN_SOURCE)
+#ifdef _XOPEN_SOURCE
 #define	_POSIX_C_SOURCE	2
 #else
 #define	_POSIX_C_SOURCE	199309L
 #endif
 #endif
 
-#if	(defined (_POSIX_SOURCE) || _POSIX_C_SOURCE >= 1 || \
-	 defined (_XOPEN_SOURCE))
+#if defined _POSIX_SOURCE || _POSIX_C_SOURCE >= 1 || defined _XOPEN_SOURCE
 #define	__USE_POSIX	1
 #endif
 
-#if	(defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 2 || \
-	 defined (_XOPEN_SOURCE))
+#if defined _POSIX_C_SOURCE && _POSIX_C_SOURCE >= 2 || defined _XOPEN_SOURCE
 #define	__USE_POSIX2	1
 #endif
 
-#if	(defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 199309L)
+#if defined _POSIX_C_SOURCE && _POSIX_C_SOURCE >= 199309L
 #define	__USE_POSIX199309	1
 #endif
 
@@ -156,7 +157,7 @@
 #endif
 #endif
 
-#if defined (_BSD_SOURCE) || defined (_SVID_SOURCE)
+#if defined _BSD_SOURCE || defined _SVID_SOURCE
 #define	__USE_MISC	1
 #endif
 
@@ -172,7 +173,7 @@
 #define	__USE_GNU	1
 #endif
 
-#if defined (_REENTRANT) || defined (_THREAD_SAFE)
+#if defined _REENTRANT || defined _THREAD_SAFE
 #define __USE_REENTRANT	1
 #endif
 
@@ -192,7 +193,7 @@
 #define	__GLIBC_MINOR__	0
 
 
-#if	!defined (__GNUC__) || __GNUC__ < 2
+#if !defined __GNUC__ || __GNUC__ < 2
 /* In GCC version 2, (__extension__ EXPR) will not complain
    about GCC extensions used in EXPR under -ansi or -pedantic.  */
 #define	__extension__

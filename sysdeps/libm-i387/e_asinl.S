@@ -19,4 +19,4 @@ ENTRY(__ieee754_asinl)
 	fsqrt				/* sqrt (1 - x^2) */
 	fpatan
 	ret
-PSEUDO_END (__ieee754_asinl)
+END (__ieee754_asinl)

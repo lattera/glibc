@@ -30,5 +30,5 @@ ENTRY(__ceilf)
 
 	leave
 	ret
-PSEUDO_END (__ceilf)
+END (__ceilf)
 weak_alias (__ceilf, ceilf)

@@ -13,7 +13,7 @@ ENTRY(__cosl)
 	fldt	4(%esp)
 	fcos
 	fnstsw	%ax
-	andw	$0x400,%ax
+	testl	$0x400,%eax
 	jnz	1f
 	ret
 1:	fldpi
@@ -21,10 +21,10 @@ ENTRY(__cosl)
 	fxch	%st(1)
 2:	fprem1
 	fnstsw	%ax
-	andw	$0x400,%ax
+	testl	$0x400,%eax
 	jnz	2b
 	fstp	%st(1)
 	fcos
 	ret
-PSEUDO_END (__cosl)
+END (__cosl)
 weak_alias (__cosl, cosl)

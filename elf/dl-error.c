@@ -90,6 +90,7 @@ _dl_catch_error (char **errstring,
     }
 
   /* We get here only if we longjmp'd out of OPERATE.  */
+  catch = NULL;
   *errstring = c.errstring;
   *objname = c.objname;
   return errcode == -1 ? 0 : errcode;

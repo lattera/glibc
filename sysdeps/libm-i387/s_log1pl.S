@@ -7,20 +7,62 @@
 
 #include <machine/asm.h>
 
-RCSID("$NetBSD: $")
+RCSID("$NetBSD: s_log1p.S,v 1.7 1995/05/09 00:10:58 jtc Exp $")
+
+#ifdef __ELF__
+	.section .rodata
+#else
+	.text
+#endif
+	.align ALIGNARG(4)
+	/* The fyl2xp1 can only be used for values in
+		-1 + sqrt(2) / 2 <= x <= 1 - sqrt(2) / 2
+	   0.29 is a safe value.
+	*/
+limit:	.tfloat 0.29
+	/* Please note:	 we use a double value here.  Since 1.0 has
+	   an exact representation this does not effect the accuracy
+	   but it helps to optimize the code.  */
+one:	.double 1.0
 
 /*
- * Since the fyl2xp1 instruction has such a limited range:
- *	-(1 - (sqrt(2) / 2)) <= x <= sqrt(2) - 1
- * it's not worth trying to use it.
+ * Use the fyl2xp1 function when the argument is in the range -0.29 to 0.29,
+ * otherwise fyl2x with the needed extra computation.
  */
-
+	.text
 ENTRY(__log1pl)
 	fldln2
-	fldt 4(%esp)
-	fld1
-	faddp
+
+	fldt	4(%esp)
+
+#ifdef PIC
+	call	1f
+1:	popl	%edx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b], %edx
+#endif
+
+	fld	%st
+	fabs
+#ifdef PIC
+	fldt	limit@GOTOFF(%edx)
+#else
+	fldt	limit
+#endif
+	fcompp
+	fnstsw
+	sahf
+	jnc	2f
+
+#ifdef PIC
+	faddl	one@GOTOFF(%edx)
+#else
+	faddl	one
+#endif
 	fyl2x
 	ret
-PSEUDO_END (__log1pl)
+
+2:	fyl2xp1
+	ret
+
+END (__log1pl)
 weak_alias (__log1pl, log1pl)

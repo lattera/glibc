@@ -16,5 +16,5 @@ ENTRY(__copysign)
 	movl	%eax,8(%esp)
 	fldl	4(%esp)
 	ret
-PSEUDO_END (__copysign)
+END (__copysign)
 weak_alias (__copysign, copysign)

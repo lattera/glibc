@@ -12,5 +12,5 @@ ENTRY(__cosf)
 	flds	4(%esp)
 	fcos
 	ret
-PSEUDO_END (__cosf)
+END (__cosf)
 weak_alias (__cosf, cosf)

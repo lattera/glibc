@@ -12,5 +12,5 @@ ENTRY(__sinf)
 	flds	4(%esp)
 	fsin
 	ret
-PSEUDO_END (__sinf)
+END (__sinf)
 weak_alias (__sinf, sinf)

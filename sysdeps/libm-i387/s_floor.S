@@ -26,5 +26,5 @@ ENTRY(__floor)
 
 	leave
 	ret
-PSEUDO_END (__floor)
+END (__floor)
 weak_alias (__floor, floor)

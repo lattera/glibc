@@ -33,6 +33,7 @@ char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
    For the dynamic linker it is set by -rpath when linking.  */
 const char *_dl_rpath = DEFAULT_RPATH;
 
+#ifndef MAP_ANON
 /* This is the only dl-sysdep.c function that is actually needed at run-time
    by _dl_map_object.  */
 
@@ -41,6 +42,7 @@ _dl_sysdep_open_zero_fill (void)
 {
   return __open ("/dev/zero", O_RDONLY);
 }
+#endif
 
 /* This should never be called.  */
 void

@@ -16,4 +16,4 @@ ENTRY(__ieee754_remainderf)
 	jp	1b
 	fstpl	%st(1)
 	ret
-PSEUDO_END (__ieee754_remainderf)
+END (__ieee754_remainderf)

@@ -14,5 +14,5 @@ ENTRY(__finitef)
 	setne	%al
 	andl	$0x000000ff, %eax
 	ret
-PSEUDO_END (__finitef)
+END (__finitef)
 weak_alias (__finitef, finitef)

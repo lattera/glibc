@@ -38,4 +38,4 @@ ENTRY(__ieee754_exp)
 	jz	.LpInf			/* If positive, jump.  */
 	fldz				/* Set result to 0.  */
 .LpInf:	ret
-PSEUDO_END (__ieee754_exp)
+END (__ieee754_exp)

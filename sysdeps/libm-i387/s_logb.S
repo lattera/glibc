@@ -12,5 +12,5 @@ ENTRY(__logb)
 	fxtract
 	fstpl	%st
 	ret
-PSEUDO_END (__logb)
+END (__logb)
 weak_alias (__logb, logb)

@@ -13,7 +13,7 @@ ENTRY(__sinl)
 	fldt	4(%esp)
 	fsin
 	fnstsw	%ax
-	andw	$0x400,%ax
+	testl	$0x400,%eax
 	jnz	1f
 	ret
 1:	fldpi
@@ -21,10 +21,10 @@ ENTRY(__sinl)
 	fxch	%st(1)
 2:	fprem1
 	fnstsw	%ax
-	andw	$0x400,%ax
+	testl	$0x400,%eax
 	jnz	2b
 	fstp	%st(1)
 	fsin
 	ret
-PSEUDO_END (__sinl)
+END (__sinl)
 weak_alias (__sinl, sinl)
