@@ -63,13 +63,20 @@ dnl Arguments to enable or disable building the shared, profiled, and
 dnl -fomit-frame-pointer libraries.
 AC_ARG_ENABLE(shared, dnl
 [  --enable-shared         build shared library [default=yes if GNU ld & ELF]],
-	    shared=$enableval, shared=default)
+	      shared=$enableval, shared=default)
 AC_ARG_ENABLE(profile, dnl
 [  --enable-profile        build profiled library [default=yes]],
-	    profile=$enableval, profile=yes)
+	      profile=$enableval, profile=yes)
 AC_ARG_ENABLE(omitfp, dnl
-[  --enable-omitfp       build undebuggable optimized library [default=no]],
-	    omitfp=$enableval, omitfp=no)
+[  --enable-omitfp         build undebuggable optimized library [default=no]],
+	      omitfp=$enableval, omitfp=no)
+
+dnl Generic infrastructure for drop-in additions to libc.
+AC_ARG_ENABLE(add-ons, dnl
+[  --enable-add-ons=DIR... configure and build named extra directories],
+   	      add_ons=`echo "$enableval" | sed 's/,/ /g'`,
+	      add_ons=)
+AC_CONFIG_SUBDIRS($add_ons)
 
 AC_CANONICAL_HOST
 # We keep the original values in `$config_*' and never modify them, so we

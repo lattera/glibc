@@ -29,6 +29,10 @@
  */
 /*      @(#)rpc_msg.h 1.7 86/07/16 SMI      */
 
+#ifndef _RPC_MSG_H
+#define _RPC_MSG_H 1
+#include <sys/cdefs.h>
+
 /*
  * rpc_msg.h
  * rpc message definition

@@ -1,4 +1,14 @@
+Mon Jul 29 01:27:07 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sunrpc/rpc/rpc_msg.h: Fix botched patch for multiple inclusion
+	protection.
+
 Sun Jul 28 23:46:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* configure.in: Grok `--enable-add-ons=DIR1,DIR2,...', and configure
+	in those directories.
+	* config.make.in (add-ons): New varaible, set from @subdirs@.
+	* Makefile (subdirs): Added $(add-ons) at the end.
 
 	* time/strftime.c (strftime: do_number): Initialize PRINTED to
 	MAXDIGITS in case P is null and so sprintf is never actually called.

@@ -27,6 +27,7 @@ build-shared = @shared@
 build-profile = @profile@
 build-omitfp = @omitfp@
 stdio = @stdio@
+add-ons = @subdirs@
 
 # Build tools.
 CC = @CC@

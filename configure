@@ -33,7 +33,9 @@ ac_help="$ac_help
 ac_help="$ac_help
   --enable-profile        build profiled library [default=yes]"
 ac_help="$ac_help
-  --enable-omitfp       build undebuggable optimized library [default=no]"
+  --enable-omitfp         build undebuggable optimized library [default=no]"
+ac_help="$ac_help
+  --enable-add-ons=DIR... configure and build named extra directories"
 
 # Initialize some variables set by options.
 # The variables have the same names as the options, with
@@ -657,6 +659,14 @@ else
 fi
 
 
+# Check whether --enable-add-ons or --disable-add-ons was given.
+if test "${enable_add_ons+set}" = set; then
+  enableval="$enable_add_ons"
+  add_ons=`echo "$enableval" | sed 's/
+else
+  / /g'`
+fi
+
 ac_aux_dir=
 for ac_dir in $srcdir $srcdir/.. $srcdir/../..; do
   if test -f $ac_dir/install-sh; then
@@ -675,6 +685,9 @@ fi
 ac_config_guess=$ac_aux_dir/config.guess
 ac_config_sub=$ac_aux_dir/config.sub
 ac_configure=$ac_aux_dir/configure # This should be Cygnus configure.
+
+subdirs="$add_ons"
+
 
 
 # Make sure we can run config.sub.
@@ -1121,13 +1134,13 @@ else
   # On the NeXT, cc -E runs the code through the compiler's parser,
   # not just through cpp.
   cat > conftest.$ac_ext <<EOF
-#line 1125 "configure"
+#line 1138 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:1131: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:1144: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out`
 if test -z "$ac_err"; then
   :
@@ -1136,13 +1149,13 @@ else
   rm -rf conftest*
   CPP="${CC-cc} -E -traditional-cpp"
   cat > conftest.$ac_ext <<EOF
-#line 1140 "configure"
+#line 1153 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:1146: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:1159: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out`
 if test -z "$ac_err"; then
   :
@@ -1284,7 +1297,7 @@ if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1288 "configure"
+#line 1301 "configure"
 #include "confdefs.h"
 #define __need_size_t
 #define __need_wchar_t
@@ -1300,7 +1313,7 @@ size_t size; wchar_t wchar;
 if (&size == NULL || &wchar == NULL) abort ();
 ; return 0; }
 EOF
-if { (eval echo configure:1304: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1317: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_friendly_stddef=yes
 else
@@ -1407,7 +1420,7 @@ if eval "test \"`echo '$''{'libc_cv_have_initfini'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1411 "configure"
+#line 1424 "configure"
 #include "confdefs.h"
 
 int main() { return 0; }
@@ -1417,7 +1430,7 @@ asm (".section .init");
 				    asm (".text");
 ; return 0; }
 EOF
-if { (eval echo configure:1421: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1434: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_have_initfini=yes
 else
@@ -1445,7 +1458,7 @@ if eval "test \"`echo '$''{'libc_cv_asm_underscores'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1449 "configure"
+#line 1462 "configure"
 #include "confdefs.h"
 asm ("_glibc_foobar:");
 int main() { return 0; }
@@ -1453,7 +1466,7 @@ int t() {
 glibc_foobar ();
 ; return 0; }
 EOF
-if { (eval echo configure:1457: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if { (eval echo configure:1470: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
   rm -rf conftest*
   libc_cv_asm_underscores=yes
 else
@@ -1545,7 +1558,7 @@ _start () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -Wl,--no-whole-archive
-			    -o conftest conftest.c'; { (eval echo configure:1549: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c'; { (eval echo configure:1562: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_ld_no_whole_archive=yes
 else
   libc_cv_ld_no_whole_archive=no
@@ -1797,6 +1810,7 @@ s%@includedir@%$includedir%g
 s%@oldincludedir@%$oldincludedir%g
 s%@infodir@%$infodir%g
 s%@mandir@%$mandir%g
+s%@subdirs@%$subdirs%g
 s%@host@%$host%g
 s%@host_alias@%$host_alias%g
 s%@host_cpu@%$host_cpu%g
@@ -2049,4 +2063,100 @@ EOF
 chmod +x $CONFIG_STATUS
 rm -fr confdefs* $ac_clean_files
 test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
+
+if test "$no_recursion" != yes; then
+
+  # Remove --cache-file and --srcdir arguments so they do not pile up.
+  ac_sub_configure_args=
+  ac_prev=
+  for ac_arg in $ac_configure_args; do
+    if test -n "$ac_prev"; then
+      ac_prev=
+      continue
+    fi
+    case "$ac_arg" in
+    -cache-file | --cache-file | --cache-fil | --cache-fi \
+    | --cache-f | --cache- | --cache | --cach | --cac | --ca | --c)
+      ac_prev=cache_file ;;
+    -cache-file=* | --cache-file=* | --cache-fil=* | --cache-fi=* \
+    | --cache-f=* | --cache-=* | --cache=* | --cach=* | --cac=* | --ca=* | --c=*)
+      ;;
+    -srcdir | --srcdir | --srcdi | --srcd | --src | --sr)
+      ac_prev=srcdir ;;
+    -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=*)
+      ;;
+    *) ac_sub_configure_args="$ac_sub_configure_args $ac_arg" ;;
+    esac
+  done
+
+  for ac_config_dir in $add_ons; do
+
+    # Do not complain, so a configure script can configure whichever
+    # parts of a large source tree are present.
+    if test ! -d $srcdir/$ac_config_dir; then
+      continue
+    fi
+
+    echo configuring in $ac_config_dir
+
+    case "$srcdir" in
+    .) ;;
+    *)
+      if test -d ./$ac_config_dir || mkdir ./$ac_config_dir; then :;
+      else
+        { echo "configure: error: can not create `pwd`/$ac_config_dir" 1>&2; exit 1; }
+      fi
+      ;;
+    esac
+
+    ac_popdir=`pwd`
+    cd $ac_config_dir
+
+    case "$srcdir" in
+    .) # No --srcdir option.  We are building in place.
+      ac_sub_srcdir=$srcdir ;;
+    /*) # Absolute path.
+      ac_sub_srcdir=$srcdir/$ac_config_dir ;;
+    *) # Relative path.
+      ac_sub_srcdir=../$srcdir/$ac_config_dir ;;
+    esac
+
+    # Check for guested configure; otherwise get Cygnus style configure.
+    if test -f $ac_sub_srcdir/configure; then
+      ac_sub_configure=$ac_sub_srcdir/configure
+    elif test -f $ac_sub_srcdir/configure.in; then
+      ac_sub_configure=$ac_configure
+    else
+      echo "configure: warning: no configuration information is in $ac_config_dir" 1>&2
+      ac_sub_configure=
+    fi
+
+    # The recursion is here.
+    if test -n "$ac_sub_configure"; then
+
+      # Make the cache file name correct relative to the subdirectory.
+      # A "../" for each directory in /$ac_config_dir.
+      ac_dots=`echo $ac_config_dir|sed -e 's%^\./%%' -e 's%[^/]$%&/%' -e 's%[^/]*/%../%g'`
+      case "$cache_file" in
+      /*) ac_sub_cache_file=$cache_file ;;
+      *) # Relative path.
+        ac_sub_cache_file="$ac_dots$cache_file" ;;
+      esac
+  case "$ac_given_INSTALL" in
+        [/$]*) INSTALL="$ac_given_INSTALL" ;;
+        *) INSTALL="$ac_dots$ac_given_INSTALL" ;;
+        esac
+
+      echo "running ${CONFIG_SHELL-/bin/sh} $ac_sub_configure $ac_sub_configure_args --cache-file=$ac_sub_cache_file --srcdir=$ac_sub_srcdir"
+      # The eval makes quoting arguments work.
+      if eval ${CONFIG_SHELL-/bin/sh} $ac_sub_configure $ac_sub_configure_args --cache-file=$ac_sub_cache_file --srcdir=$ac_sub_srcdir
+      then :
+      else
+        { echo "configure: error: $ac_sub_configure failed for $ac_config_dir" 1>&2; exit 1; }
+      fi
+    fi
+
+    cd $ac_popdir
+  done
+fi
 
