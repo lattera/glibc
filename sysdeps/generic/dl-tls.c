@@ -217,16 +217,13 @@ _dl_tls_setup (void)
 
   const size_t nelem = 2 + TLS_SLOTINFO_SURPLUS;
 
-  GL(dl_tls_dtv_slotinfo_list) =
-    malloc (sizeof (struct dtv_slotinfo_list)
-	    + nelem * sizeof (struct dtv_slotinfo));
+  GL(dl_tls_dtv_slotinfo_list)
+    = calloc (1, (sizeof (struct dtv_slotinfo_list)
+		  + nelem * sizeof (struct dtv_slotinfo)));
   if (GL(dl_tls_dtv_slotinfo_list) == NULL)
     return -1;
 
-  memset (GL(dl_tls_dtv_slotinfo_list)->slotinfo, '\0',
-	  nelem * sizeof (struct dtv_slotinfo));
   GL(dl_tls_dtv_slotinfo_list)->len = nelem;
-  GL(dl_tls_dtv_slotinfo_list)->next = NULL;
 
   /* Number of elements in the static TLS block.  It can't be zero
      because of various assumptions.  The one element is null.  */
@@ -251,14 +248,14 @@ allocate_dtv (void *result)
      initial set of modules.  This should avoid in most cases expansions
      of the dtv.  */
   dtv_length = GL(dl_tls_max_dtv_idx) + DTV_SURPLUS;
-  dtv = (dtv_t *) malloc ((dtv_length + 2) * sizeof (dtv_t));
+  dtv = calloc (dtv_length + 2, sizeof (dtv_t));
   if (dtv != NULL)
     {
       /* This is the initial length of the dtv.  */
       dtv[0].counter = dtv_length;
-      /* Initialize all of the rest of the dtv (including the
-	 generation counter) with zero to indicate nothing there.  */
-      memset (dtv + 1, '\0', (dtv_length + 1) * sizeof (dtv_t));
+
+      /* The rest of the dtv (including the generation counter) is
+	 Initialize with zero to indicate nothing there.  */
 
       /* Add the dtv to the thread data structures.  */
       INSTALL_DTV (result, dtv);

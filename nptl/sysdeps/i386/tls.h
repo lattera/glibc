@@ -204,7 +204,8 @@ union user_desc_init
 	  which is necessary since we have changed it.   */		      \
        TLS_SET_GS (_segdescr.desc.entry_number * 8 + 3);		      \
 									      \
-     _result; })
+     _result == 0 ? NULL						      \
+     : "set_thread_area failed when setting up thread-local storage"; })
 
 
 /* Return the address of the dtv for the current thread.  */

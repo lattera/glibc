@@ -395,6 +395,17 @@ memalign_check(alignment, bytes, caller)
 
 #ifndef NO_THREADS
 
+# ifdef _LIBC
+#  if USE___THREAD || (defined USE_TLS && !defined SHARED)
+    /* These routines are never needed in this configuration.  */
+#   define NO_STARTER
+#  endif
+# endif
+
+# ifdef NO_STARTER
+#  undef NO_STARTER
+# else
+
 /* The following hooks are used when the global initialization in
    ptmalloc_init() hasn't completed yet. */
 
@@ -408,6 +419,20 @@ malloc_starter(sz, caller) size_t sz; const Void_t *caller;
   Void_t* victim;
 
   victim = _int_malloc(&main_arena, sz);
+
+  return victim ? BOUNDED_N(victim, sz) : 0;
+}
+
+static Void_t*
+#if __STD_C
+memalign_starter(size_t align, size_t sz, const Void_t *caller)
+#else
+memalign_starter(align, sz, caller) size_t align, sz; const Void_t *caller;
+#endif
+{
+  Void_t* victim;
+
+  victim = _int_memalign(&main_arena, align, sz);
 
   return victim ? BOUNDED_N(victim, sz) : 0;
 }
@@ -432,6 +457,7 @@ free_starter(mem, caller) Void_t* mem; const Void_t *caller;
   _int_free(&main_arena, mem);
 }
 
+# endif	/* !defiend NO_STARTER */
 #endif /* NO_THREADS */
 
 

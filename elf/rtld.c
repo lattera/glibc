@@ -404,16 +404,17 @@ _dl_start (void *arg)
 	INSTALL_DTV ((char *) tlsblock + bootstrap_map.l_tls_offset,
 		     initdtv);
 
-	if (TLS_INIT_TP ((char *) tlsblock + bootstrap_map.l_tls_offset, 0)
-	    != 0)
-	  _dl_fatal_printf ("cannot setup thread-local storage\n");
+	const char *lossage = TLS_INIT_TP ((char *) tlsblock
+					   + bootstrap_map.l_tls_offset, 0);
 # elif TLS_DTV_AT_TP
 	INSTALL_DTV (tlsblock, initdtv);
-	if (TLS_INIT_TP (tlsblock, 0) != 0)
-	  _dl_fatal_printf ("cannot setup thread-local storage\n");
+	const char *lossage = TLS_INIT_TP (tlsblock, 0);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
+	if (__builtin_expect (lossage != NULL, 0))
+	  _dl_fatal_printf ("cannot set up thread-local storage: %s\n",
+			    lossage);
 
 	/* So far this is module number one.  */
 	bootstrap_map.l_tls_modid = 1;
@@ -1564,7 +1565,9 @@ cannot allocate TLS data structures for initial thread");
 
       /* And finally install it for the main thread.  If ld.so itself uses
 	 TLS we know the thread pointer was initialized earlier.  */
-      TLS_INIT_TP (tcbp, USE___THREAD);
+      const char *lossage = TLS_INIT_TP (tcbp, USE___THREAD);
+      if (__builtin_expect (lossage != NULL, 0))
+	_dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
     }
 #endif
 

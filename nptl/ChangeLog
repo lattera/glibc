@@ -1,4 +1,13 @@
+2002-12-06  Roland McGrath  <roland@redhat.com>
+
+	* allocatestack.c (__stack_user): Use uninitialized defn.
+	* init.c (__pthread_initialize_minimal): Initialize it here.
+
 2002-12-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/tls.h (TLS_INIT_TP): Make it return zero or an error
+	string.
+	* sysdeps/x86_64/tls.h (TLS_INIT_TP): Likewise.
 
 	* sysdeps/unix/sysv/linux/i386/createthread.c (create_thread): Add
 	missing & here too.

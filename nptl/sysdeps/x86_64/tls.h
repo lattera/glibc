@@ -165,7 +165,8 @@ union user_desc_init
 		     "S" (_descr)					      \
 		   : "memory", "cc", "r11", "cx");			      \
 									      \
-     _result ? -1 : 0; })
+    _result ? "cannot set %fs base address for thread-local storage" : 0;     \
+  })
 
 
 /* Return the address of the dtv for the current thread.  */

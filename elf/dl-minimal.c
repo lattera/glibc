@@ -104,9 +104,10 @@ malloc (size_t n)
 void * weak_function
 calloc (size_t nmemb, size_t size)
 {
-  size_t total = nmemb * size;
-  void *result = malloc (total);
-  return memset (result, '\0', total);
+  /* New memory from the trivial malloc above is always already cleared.
+     (We make sure that's true in the rare occasion it might not be,
+     by clearing memory in free, below.)  */
+  return malloc (nmemb * size);
 }
 
 /* This will rarely be called.  */
@@ -115,7 +116,12 @@ free (void *ptr)
 {
   /* We can free only the last block allocated.  */
   if (ptr == alloc_last_block)
-    alloc_ptr = alloc_last_block;
+    {
+      /* Since this is rare, we clear the freed block here
+	 so that calloc can presume malloc returns cleared memory.  */
+      memset (alloc_last_block, '\0', alloc_ptr - alloc_last_block);
+      alloc_ptr = alloc_last_block;
+    }
 }
 
 /* This is only called with the most recent block returned by malloc.  */

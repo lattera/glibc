@@ -317,6 +317,49 @@ __pthread_initialize_minimal(void)
   /* Unlike in the dynamically linked case the dynamic linker has not
      taken care of initializing the TLS data structures.  */
   __libc_setup_tls (TLS_TCB_SIZE, TLS_TCB_ALIGN);
+# elif !USE___THREAD
+  if (__builtin_expect (GL(dl_tls_max_dtv_idx) == 0, 0))
+    {
+      /* There is no actual TLS being used, so the thread register
+	 was not initialized in the dynamic linker.  */
+
+      /* We need to install special hooks so that the malloc and memalign
+	 calls in _dl_tls_setup and _dl_allocate_tls won't cause full
+	 malloc initialization that will try to set up its thread state.  */
+
+      extern void __libc_malloc_pthread_startup (bool first_time);
+      __libc_malloc_pthread_startup (true);
+
+      if (__builtin_expect (_dl_tls_setup (), 0)
+	  || __builtin_expect ((self = _dl_allocate_tls (NULL)) == NULL, 0))
+	{
+	  static const char msg[] = "\
+cannot allocate TLS data structures for initial thread\n";
+	  TEMP_FAILURE_RETRY (__libc_write (STDERR_FILENO,
+					    msg, sizeof msg - 1));
+	  abort ();
+	}
+      const char *lossage = TLS_INIT_TP (self, 0);
+      if (__builtin_expect (lossage != NULL, 0))
+	{
+	  static const char msg[] = "cannot set up thread-local storage: ";
+	  const char nl = '\n';
+	  TEMP_FAILURE_RETRY (__libc_write (STDERR_FILENO,
+					    msg, sizeof msg - 1));
+	  TEMP_FAILURE_RETRY (__libc_write (STDERR_FILENO,
+					    lossage, strlen (lossage)));
+	  TEMP_FAILURE_RETRY (__libc_write (STDERR_FILENO, &nl, 1));
+	}
+
+      /* Though it was allocated with libc's malloc, that was done without
+	 the user's __malloc_hook installed.  A later realloc that uses
+	 the hooks might not work with that block from the plain malloc.
+	 So we record this block as unfreeable just as the dynamic linker
+	 does when it allocates the DTV before the libc malloc exists.  */
+      GL(dl_initial_dtv) = GET_DTV (self);
+
+      __libc_malloc_pthread_startup (false);
+    }
 # endif
 
   self = THREAD_SELF;
@@ -344,7 +387,9 @@ __pthread_initialize_minimal(void)
 
   /* And fill in the pointer the the thread __pthread_handles array.  */
   __pthread_handles[0].h_descr = self;
-#else
+
+#else  /* USE_TLS */
+
   /* First of all init __pthread_handles[0] and [1].  */
 # if __LT_SPINLOCK_INIT != 0
   __pthread_handles[0].h_lock = __LOCK_INITIALIZER;
@@ -513,6 +558,8 @@ static void pthread_initialize(void)
   __pthread_smp_kernel = is_smp_system ();
 
 #ifdef SHARED
+  /* Transfer the old value from the dynamic linker's internal location.  */
+  *__libc_dl_error_tsd () = *(*GL(dl_error_catch_tsd)) ();
   GL(dl_error_catch_tsd) = &__libc_dl_error_tsd;
 #endif
 }

@@ -123,8 +123,8 @@ __pthread_initialize_minimal (void)
   THREAD_SETMEM (pd, cpuclock_offset, GL(dl_cpuclock_offset));
 #endif
 
-  /* Add the main thread to the list of all running threads.  No need
-     to get the lock we are alone so far.  */
+  /* Initialize the list of all running threads with the main thread.  */
+  INIT_LIST_HEAD (__stack_user);
   list_add (&pd->header.data.list, &__stack_user);
 
 

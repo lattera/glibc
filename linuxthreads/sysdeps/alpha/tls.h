@@ -92,6 +92,7 @@ typedef struct
     register tcbhead_t *__self = (void *)(descr);		\
     __self->tcb = __self;					\
     __builtin_set_thread_pointer(__self);			\
+    0;								\
   })
 
 /* Return the address of the dtv for the current thread.  */

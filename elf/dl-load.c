@@ -513,8 +513,7 @@ decompose_rpath (struct r_search_path_struct *sps,
 	    {
 	      /* This object is on the list of objects for which the
 		 RUNPATH and RPATH must not be used.  */
-	      result = (struct r_search_path_elem **)
-		malloc (sizeof (*result));
+	      result = calloc (1, sizeof *result);
 	      if (result == NULL)
 		{
 		signal_error_cache:
@@ -522,8 +521,6 @@ decompose_rpath (struct r_search_path_struct *sps,
 		signal_error:
 		  INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL, errstring);
 		}
-
-	      result[0] = NULL;
 
 	      sps->dirs = result;
 	      sps->malloced = 1;
@@ -994,7 +991,8 @@ cannot allocate TLS data structures for initial thread");
 		}
 
 	      /* Now we install the TCB in the thread register.  */
-	      if (__builtin_expect (TLS_INIT_TP (tcb, 0), 0) != -1)
+	      errstring = TLS_INIT_TP (tcb, 0);
+	      if (__builtin_expect (errstring == NULL, 1))
 		{
 		  /* Now we are all good.  */
 		  l->l_tls_modid = ++GL(dl_tls_max_dtv_idx);
@@ -1002,7 +1000,9 @@ cannot allocate TLS data structures for initial thread");
 		}
 
 	      /* The kernel is too old or somesuch.  */
+	      errval = 0;
 	      _dl_deallocate_tls (tcb, 1);
+	      goto call_lose;
 	    }
 #endif
 

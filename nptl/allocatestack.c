@@ -68,8 +68,9 @@ static LIST_HEAD (stack_cache);
 /* List of the stacks in use.  */
 static LIST_HEAD (stack_used);
 
-/* List of the threads with user provided stacks in use.  */
-LIST_HEAD (__stack_user);
+/* List of the threads with user provided stacks in use.  No need to
+   initialize this, since it's done in __pthread_initialize_minimal.  */
+list_t __stack_user __attribute__ ((nocommon));
 hidden_def (__stack_user)
 
 /* Number of threads running.  */

@@ -1,3 +1,38 @@
+2002-12-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Cope with zero ALIGN.
+
+	* malloc/hooks.c [_LIBC && (USE___THREAD || (USE_TLS && !SHARED))]
+	(malloc_starter, memalign_starter, free_starter): Don't define these.
+	* malloc/malloc.c [_LIBC && (USE___THREAD || (USE_TLS && !SHARED))]:
+	Don't declare them either.
+	* malloc/arena.c (ptmalloc_init) [_LIBC && USE_TLS]: Don't call
+	__pthread_initialize, so no need to set hooks to *_starter.
+	(ptmalloc_init_minimal): New function, broken out of ptmalloc_init.
+	[_LIBC && SHARED && USE_TLS && !USE___THREAD]
+	(__libc_malloc_pthread_startup): New function.
+	* malloc/Versions (libc: GLIBC_PRIVATE): New set, add that function.
+
+	* malloc/hooks.c (memalign_starter): New function.
+	* malloc/malloc.c: Declare it.
+	* malloc/arena.c (save_memalign_hook): New variable.
+	(ptmalloc_init): Set __memalign_hook to memalign_starter.
+
+	* elf/dl-minimal.c (free): Clear the memory.
+	(calloc): Just call malloc, knowing all memory it returns is cleared.
+
+	* sysdeps/generic/dl-tls.c (allocate_dtv): Use calloc instead of
+	malloc and memset; calloc can avoid the zeroing when redundant.
+	(_dl_tls_setup): Likewise.
+	* elf/dl-load.c (decompose_rpath): Likewise.
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Comment out memset
+	call, since memory from sbrk at startup is already zero.
+
+	* elf/rtld.c (_dl_start, dl_main): TLS_INIT_TP macro now returns an
+	error string for failure, null for success.  Update callers.
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Likewise.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+
 2002-12-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (sendfile): Change

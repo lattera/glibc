@@ -136,6 +136,11 @@ int __malloc_initialized = -1;
 
 static __malloc_ptr_t (*save_malloc_hook) __MALLOC_P ((size_t __size,
 						       __const __malloc_ptr_t));
+# if !defined _LIBC || !defined USE_TLS || (defined SHARED && !USE___THREAD)
+static __malloc_ptr_t (*save_memalign_hook) __MALLOC_P ((size_t __align,
+							 size_t __size,
+						       __const __malloc_ptr_t));
+# endif
 static void           (*save_free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
 						     __const __malloc_ptr_t));
 static Void_t*        save_arena;
@@ -322,6 +327,51 @@ next_env_entry (char ***position)
 }
 #endif /* _LIBC */
 
+/* Set up basic state so that _int_malloc et al can work.  */
+static void
+ptmalloc_init_minimal __MALLOC_P((void))
+{
+#if DEFAULT_TOP_PAD != 0
+  mp_.top_pad        = DEFAULT_TOP_PAD;
+#endif
+  mp_.n_mmaps_max    = DEFAULT_MMAP_MAX;
+  mp_.mmap_threshold = DEFAULT_MMAP_THRESHOLD;
+  mp_.trim_threshold = DEFAULT_TRIM_THRESHOLD;
+  mp_.pagesize       = malloc_getpagesize;
+}
+
+#ifdef _LIBC
+# if defined SHARED && defined USE_TLS && !USE___THREAD
+# include <stdbool.h>
+
+/* This is called by __pthread_initialize_minimal when it needs to use
+   malloc to set up the TLS state.  We cannot do the full work of
+   ptmalloc_init (below) until __pthread_initialize_minimal has finished,
+   so it has to switch to using the special startup-time hooks while doing
+   those allocations.  */
+void
+__libc_malloc_pthread_startup (bool first_time)
+{
+  if (first_time)
+    {
+      ptmalloc_init_minimal ();
+      save_malloc_hook = __malloc_hook;
+      save_memalign_hook = __memalign_hook;
+      save_free_hook = __free_hook;
+      __malloc_hook = malloc_starter;
+      __memalign_hook = memalign_starter;
+      __free_hook = free_starter;
+    }
+  else
+    {
+      __malloc_hook = save_malloc_hook;
+      __memalign_hook = save_memalign_hook;
+      __free_hook = save_free_hook;
+    }
+}
+# endif
+#endif
+
 static void
 ptmalloc_init __MALLOC_P((void))
 {
@@ -335,25 +385,37 @@ ptmalloc_init __MALLOC_P((void))
   if(__malloc_initialized >= 0) return;
   __malloc_initialized = 0;
 
-  mp_.top_pad        = DEFAULT_TOP_PAD;
-  mp_.n_mmaps_max    = DEFAULT_MMAP_MAX;
-  mp_.mmap_threshold = DEFAULT_MMAP_THRESHOLD;
-  mp_.trim_threshold = DEFAULT_TRIM_THRESHOLD;
-  mp_.pagesize       = malloc_getpagesize;
+#ifdef _LIBC
+# if defined SHARED && defined USE_TLS && !USE___THREAD
+  /* ptmalloc_init_minimal may already have been called via
+     __libc_malloc_pthread_startup, above.  */
+  if (mp_.pagesize == 0)
+# endif
+#endif
+    ptmalloc_init_minimal();
 
 #ifndef NO_THREADS
+# if defined _LIBC && defined USE_TLS
+  /* We know __pthread_initialize_minimal has already been called,
+     and that is enough.  */
+#   define NO_STARTER
+# endif
+# ifndef NO_STARTER
   /* With some threads implementations, creating thread-specific data
      or initializing a mutex may call malloc() itself.  Provide a
      simple starter version (realloc() won't work). */
   save_malloc_hook = __malloc_hook;
+  save_memalign_hook = __memalign_hook;
   save_free_hook = __free_hook;
   __malloc_hook = malloc_starter;
+  __memalign_hook = memalign_starter;
   __free_hook = free_starter;
-#ifdef _LIBC
+#  ifdef _LIBC
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();
-#endif
+#  endif /* !defined _LIBC */
+# endif	/* !defined NO_STARTER */
 #endif /* !defined NO_THREADS */
   mutex_init(&main_arena.mutex);
   main_arena.next = &main_arena;
@@ -363,8 +425,13 @@ ptmalloc_init __MALLOC_P((void))
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2);
 #ifndef NO_THREADS
+# ifndef NO_STARTER
   __malloc_hook = save_malloc_hook;
+  __memalign_hook = save_memalign_hook;
   __free_hook = save_free_hook;
+# else
+#  undef NO_STARTER
+# endif
 #endif
 #ifdef _LIBC
   secure = __libc_enable_secure;

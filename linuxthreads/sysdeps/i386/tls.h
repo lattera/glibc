@@ -106,20 +106,18 @@ typedef struct
 #  endif
 
 #  if __ASSUME_LDT_WORKS > 0
-#   define TLS_DO_MODIFY_LDT_KERNEL_CHECK /* Nothing to do.  */
+#   define TLS_DO_MODIFY_LDT_KERNEL_CHECK(doit) (doit) /* Nothing to check.  */
 #  else
 #   include "useldt.h"		/* For the structure.  */
-#   define TLS_DO_MODIFY_LDT_KERNEL_CHECK				      \
-  if (__builtin_expect (GL(dl_osversion) < 131939, 0))			      \
-    _dl_fatal_printf ("kernel %u.%u.%u cannot support thread-local storage\n",\
-		      (GL(dl_osversion) >> 16) & 0xff,			      \
-		      (GL(dl_osversion) >> 8) & 0xff,			      \
-		      (GL(dl_osversion) >> 0) & 0xff);
+#   define TLS_DO_MODIFY_LDT_KERNEL_CHECK(doit)				      \
+  (__builtin_expect (GL(dl_osversion) < 131939, 0)			      \
+   ? "kernel too old for thread-local storage support"			      \
+   : (doit))
 #  endif
 
 #  define TLS_DO_MODIFY_LDT(descr, nr)					      \
+TLS_DO_MODIFY_LDT_KERNEL_CHECK(						      \
 ({									      \
-  TLS_DO_MODIFY_LDT_KERNEL_CHECK					      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { nr, (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
       1, 0, 0, 1, 0, 1, 0 };						      \
@@ -134,8 +132,10 @@ typedef struct
 		   here.  */						      \
 		"m" (ldt_entry), TLS_EBX_ARG (1), "c" (&ldt_entry),	      \
 		"d" (sizeof (ldt_entry)));				      \
-  __builtin_expect (result, 0) != 0 ? -1 : nr * 8 + 7;			      \
-})
+  __builtin_expect (result, 0) == 0					      \
+  ? ({ asm ("movw %w0, %%gs" : : "q" ((nr) * 8 + 7)); NULL; })		      \
+  : "cannot set up LDT for thread-local storage";			      \
+}))
 
 #  define TLS_DO_SET_THREAD_AREA(descr, secondcall)			      \
 ({									      \
@@ -156,41 +156,40 @@ typedef struct
 		   to let the compiler know that we are accessing LDT_ENTRY   \
 		   here.  */						      \
 		TLS_EBX_ARG (&ldt_entry), "m" (ldt_entry));		      \
-    __builtin_expect (result, 0) == 0 ? ldt_entry.entry_number * 8 + 3 : -1;  \
+  if (__builtin_expect (result, 0) == 0)				      \
+    asm ("movw %w0, %%gs" : : "q" (ldt_entry.entry_number * 8 + 3));	      \
+  result;								      \
 })
 
 #  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
-#   define TLS_SETUP_GS_SEGMENT(descr, secondcall) \
-  TLS_DO_SET_THREAD_AREA (descr, firstcall)
+#   define TLS_SETUP_GS_SEGMENT(descr, secondcall)			      \
+  (TLS_DO_SET_THREAD_AREA (descr, firstcall)				      \
+   ? "set_thread_area failed when setting up thread-local storage" : NULL)
 #  elif defined __NR_set_thread_area
 #   define TLS_SETUP_GS_SEGMENT(descr, secondcall) \
-  ({ int __seg = TLS_DO_SET_THREAD_AREA (descr, secondcall); \
-     __seg == -1 ? TLS_DO_MODIFY_LDT (descr, 0) : __seg; })
+  (TLS_DO_SET_THREAD_AREA (descr, secondcall)				      \
+   ? TLS_DO_MODIFY_LDT (descr, 0) : NULL)
 #  else
 #   define TLS_SETUP_GS_SEGMENT(descr, secondcall) \
   TLS_DO_MODIFY_LDT ((descr), 0)
 #  endif
 
+
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
-   operation can cause a failure 'errno' must not be touched.  */
+   operation can cause a failure 'errno' must not be touched.
+
+   The value of this macro is null if successful, or an error string.  */
 #  define TLS_INIT_TP(descr, secondcall)				      \
   ({									      \
     void *_descr = (descr);						      \
     tcbhead_t *head = _descr;						      \
-    int __gs;								      \
 									      \
     head->tcb = _descr;							      \
     /* For now the thread descriptor is at the same address.  */	      \
     head->self = _descr;						      \
 									      \
-    __gs = TLS_SETUP_GS_SEGMENT (_descr, secondcall);			      \
-    if (__builtin_expect (__gs, 7) != -1)				      \
-      {									      \
-	asm ("movw %w0, %%gs" : : "q" (__gs));				      \
-	__gs = 0;							      \
-      }									      \
-    __gs;								      \
+    TLS_SETUP_GS_SEGMENT (_descr, secondcall);				      \
   })
 
 

@@ -1,3 +1,21 @@
+2002-12-05  Roland McGrath  <roland@redhat.com>
+
+	* pthread.c (__pthread_initialize_minimal)
+	[USE_TLS && SHARED && !USE___THREAD]: Initialize TLS and set up the
+	TCB if the dynamic linker didn't do it at startup.
+
+	* sysdeps/i386/tls.h (TLS_INIT_TP): Make it return zero or an error
+	string.
+	(TLS_DO_SET_THREAD_AREA, TLS_DO_MODIFY_LDT, TLS_SETUP_GS_SEGMENT):
+	Submacros updated.
+	* sysdeps/x86_64/tls.h (TLS_INIT_TP): Likewise.
+	* sysdeps/alpha/tls.h (TLS_INIT_TP): Likewise (always zero).
+
+2002-12-03  Roland McGrath  <roland@redhat.com>
+
+	* pthread.c (pthread_initialize) [SHARED]: Copy dl_error_tsd value
+	from dynamic linker internal cell to new libc cell.
+
 2002-11-28  Roland McGrath  <roland@redhat.com>
 
 	* tst-context.c: #define IS_IN_libpthread around #include <tls.h>
