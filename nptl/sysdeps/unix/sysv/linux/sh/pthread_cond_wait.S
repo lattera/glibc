@@ -133,9 +133,11 @@ __condvar_cleanup:
 	.type	__pthread_cond_wait, @function
 	.align	5
 __pthread_cond_wait:
-	mov.l	r12, @-r15
-	mov.l	r9, @-r15
 	mov.l	r8, @-r15
+	mov.l	r9, @-r15
+	mov.l	r10, @-r15
+	mov.l	r11, @-r15
+	mov.l	r12, @-r15
 	sts.l	pr, @-r15
 	add	#-48, r15
 	mov	r4, r8
@@ -149,21 +151,27 @@ __pthread_cond_wait:
 	XADD (r3, @r8, r2)
 #endif
 	tst	r2, r2
-	bf	1f
+	bt	2f
+	bra	1f
+	 nop
 
+2:	
 	/* Store the reference to the mutex.  If there is already a
 	   different value in there this is a bad user bug.  */
 	mov.l	r9, @(dep_mutex,r8)
 
 	/* Unlock the mutex.  */
 	mov.l	.Lmunlock0, r1
+	mov	#0, r5
 	bsrf	r1
 	 mov	r9, r4
 .Lmunlock0b:
 
 	tst	r0, r0
-	bf	12f
-
+	bt	0f
+	bra	12f
+	 nop
+0:
 	mov	#1, r2
 	mov	#0, r3
 
@@ -186,7 +194,11 @@ __pthread_cond_wait:
 	mov.l	.Lccleanup0, r5
 #endif
 	mov	r15, r4
-	add	#20, r4
+	add	#16, r4
+
+	/* Prepare structure passed to cancellation handler.  */
+	mov.l	r8, @(4,r15)
+	mov.l	r9, @(8,r15)
 
 	mov.l	.Lccpush0, r1
 	bsrf	r1
@@ -194,13 +206,8 @@ __pthread_cond_wait:
 .Lccpush0b:
 
 	/* Get and store current wakeup_seq value.  */
-	mov.l	@(wakeup_seq,r8), r0
-	mov.l	@(wakeup_seq+4,r8), r1
-	mov.l	r0, @(12,r15)
-	mov.l	r1, @(16,r15)
-	/* Prepare structure passed to cancellation handler.  */
-	mov.l	r9, @r15
-	mov.l	r8, @(4,r15)
+	mov.l	@(wakeup_seq,r8), r10
+	mov.l	@(wakeup_seq+4,r8), r11
 
 8:
 	/* Unlock.  */
@@ -216,11 +223,11 @@ __pthread_cond_wait:
 	bsrf	r1
 	 nop
 .Lenable0b:
-	mov.l	r0, @(8,r15)
+	mov.l	r0, @r15
 
 	mov	#0, r7
 	mov	#FUTEX_WAIT, r5
-	mov.l	@(12,r15), r6
+	mov	r10, r6
 	mov	r8, r4
 	add	#wakeup_seq, r4
 	mov	#SYS_futex, r3
@@ -230,7 +237,7 @@ __pthread_cond_wait:
 
 	mov.l	.Ldisable0, r1
 	bsrf	r1
-	 mov.l	@(8,r15), r4
+	 mov.l	@r15, r4
 .Ldisable0b:	
 
 	/* Lock.  */
@@ -249,14 +256,12 @@ __pthread_cond_wait:
 	mov.l	@(wakeup_seq,r8), r2
 	mov.l	@(wakeup_seq+4,r8), r3
 
-	mov.l	@(16,r15), r5
-	cmp/hi	r5, r3
+	cmp/hi	r11, r3
 	bt	7f
-	cmp/hi	r3, r5
+	cmp/hi	r3, r11
 	bt	8b
 
-	mov.l	@(12,r15), r5
-	cmp/hs	r2, r5
+	cmp/hs	r2, r10
 	bt	8b
 7:
 	cmp/hi	r1, r3
@@ -288,7 +293,7 @@ __pthread_cond_wait:
 11:
 	/* Remove cancellation handler.  */
 	mov	r15, r4
-	add	#20, r4
+	add	#16, r4
 	mov.l	.Lcpop0, r1
 	bsrf	r1
 	 mov	#0, r5
@@ -304,14 +309,16 @@ __pthread_cond_wait:
 14:
 	add	#48, r15
 	lds.l	@r15+, pr
-	mov.l	@r15+, r8
+	mov.l	@r15+, r12
+	mov.l	@r15+, r11
+	mov.l	@r15+, r10
 	mov.l	@r15+, r9
 	rts
-	 mov.l	@r15+, r12
+	 mov.l	@r15+, r8
 
 	.align	2
 .Lmunlock0:
-	.long	__pthread_mutex_unlock_internal-.Lmunlock0b
+	.long	__pthread_mutex_unlock_usercnt-.Lmunlock0b
 #ifdef PIC
 .Lgot0:
 	.long	_GLOBAL_OFFSET_TABLE_
@@ -385,7 +392,7 @@ __pthread_cond_wait:
 
 12:
 	/* The initial unlocking of the mutex failed.  */
-	mov.l	r0, @-r15
+	mov.l	r0, @(12,r15)
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
 #else
@@ -405,7 +412,7 @@ __pthread_cond_wait:
 
 13:
 	bra	14b
-	 mov.l	@r15+, r0
+	 mov.l	@(12,r15), r0
 
 	.align	2
 .Lmwait0:

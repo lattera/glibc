@@ -94,7 +94,9 @@ ENTRY (__socket)
 #if defined NEED_CANCELLATION && defined CENABLE
 .Lsocket_cancel:
 	/* Enable asynchronous cancellation.  */
+	sts.l pr,@-r15
 	CENABLE
+	lds.l @r15+,pr
 
 	/* Do the system call trap.  */
 	mov #+P(SOCKOP_,socket), r4
@@ -102,9 +104,11 @@ ENTRY (__socket)
 	mov.l .L1,r3
 	trapa #0x12
 
+	sts.l pr,@-r15
 	mov.l r0,@-r15
 	CDISABLE
 	mov.l @r15+,r0
+	lds.l @r15+,pr
 
 	/* Pop args off the stack */
 	P(POPARGS_,NARGS)

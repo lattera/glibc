@@ -90,9 +90,14 @@
 # ifdef IS_IN_libpthread
 #  define __local_enable_asynccancel	__pthread_enable_asynccancel
 #  define __local_disable_asynccancel	__pthread_disable_asynccancel
-# else
+# elif !defined NOT_IN_libc
 #  define __local_enable_asynccancel	__libc_enable_asynccancel
 #  define __local_disable_asynccancel	__libc_disable_asynccancel
+# elif defined IS_IN_librt
+#  define __local_enable_asynccancel	__librt_enable_asynccancel
+#  define __local_disable_asynccancel	__librt_disable_asynccancel
+# else
+#  error Unsupported library
 # endif
 
 # define CENABLE \

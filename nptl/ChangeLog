@@ -1,3 +1,23 @@
+2003-07-12  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/tcb-offsets.sym: Add RESULT, TID, CANCELHANDLING and
+	CLEANUP_JMP_BUF.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Use more
+	registers as variables.  Call __pthread_mutex_unlock_usercnt.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Store TID
+	not self pointer in __writer.  Compare with TID to determine
+	deadlocks.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: Add cancellation support.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: Define all the nice
+	macros also when compiling librt.
+
 2003-07-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (CFLAGS-pthread_once.c): Add -fexceptions

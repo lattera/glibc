@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
+#include <tcb-offsets.h>
 #include "lowlevel-atomic.h"
 
 
@@ -33,6 +34,15 @@
 	.type	sem_timedwait,@function
 	.align	5
 sem_timedwait:
+	/* First check for cancellation.  */
+	stc	gbr, r0
+	mov.w	.Lchand, r1
+	mov.l	@(r0,r1), r0
+	mov	#0xf9, r1
+	and	r1, r0
+	cmp/eq	#8, r0
+	bt	10f
+
 	mov.l	@r4, r0
 2:
 	tst	r0, r0
@@ -48,9 +58,10 @@ sem_timedwait:
 
 1:
 	/* Check whether the timeout value is valid.  */
-	mov.l	r12, @-r15
-	mov.l	r9, @-r15
 	mov.l	r8, @-r15
+	mov.l	r9, @-r15
+	mov.l	r10, @-r15
+	mov.l	r12, @-r15
 	sts.l	pr, @-r15
 	add	#-8, r15
 	mov	r4, r8
@@ -63,6 +74,12 @@ sem_timedwait:
 	bt/s	6f
 	 mov	#EINVAL, r0
 7:
+	mov.l	.Lenable0, r1
+	bsrf	r1
+	 nop
+.Lenable0b:
+	mov	r0, r10
+
 	/* Compute relative timeout.  */
 	mov	r15, r4
 	mov	#0, r5
@@ -102,6 +119,13 @@ sem_timedwait:
 	trapa	#0x14
 	SYSCALL_INST_PAD
 
+	mov.l	.Ldisable0, r1
+	mov	r10, r4
+	bsrf	r1
+	 mov	r0, r10
+.Ldisable0b:	
+	mov	r10, r0
+
 	tst	r0, r0
 	bt	9f
 	cmp/eq	#-EWOULDBLOCK, r0
@@ -121,9 +145,10 @@ sem_timedwait:
 
 	add	#8, r15
 	lds.l	@r15+, pr
-	mov.l	@r15+, r8
-	mov.l	@r15+, r9
 	mov.l	@r15+, r12
+	mov.l	@r15+, r10
+	mov.l	@r15+, r9
+	mov.l	@r15+, r8
 	rts
 	 mov	#0, r0
 
@@ -150,14 +175,35 @@ sem_timedwait:
 #endif
 	add	#8, r15
 	lds.l	@r15+, pr
-	mov.l	@r15+, r8
-	mov.l	@r15+, r9
 	mov.l	@r15+, r12
+	mov.l	@r15+, r10
+	mov.l	@r15+, r9
+	mov.l	@r15+, r8
 	rts
 	 mov	#-1, r0
 
+10:
+	/* Canceled.  */
+	stc	gbr, r0
+	mov.w	.Lresult, r1
+	mov	#-1, r2
+	mov.l	r2, @(r0,r1)
+	mov.w	.Lchand, r0
+	or.b	#0x10, @(r0,gbr)
+	stc	gbr, r0
+	mov.w	.Lclbuf, r1
+	mov.l	.Lunwind, r2
+	jmp	@r2
+	 mov.l	@(r0,r1), r4
+
 .L1k:
 	.word	1000
+.Lchand:
+	.word	CANCELHANDLING - TLS_PRE_TCB_SIZE
+.Lresult:
+	.word	RESULT - TLS_PRE_TCB_SIZE
+.Lclbuf:
+	.word	CLEANUP_JMP_BUF - TLS_PRE_TCB_SIZE
 	.align	2
 .L1g:
 	.long	1000000000
@@ -170,4 +216,10 @@ sem_timedwait:
 .Lerrloc2:
 	.long	__errno_location@PLT-(.Lerrloc2b+2-.)
 #endif
+.Lenable0:
+	.long	__pthread_enable_asynccancel-.Lenable0b
+.Ldisable0:
+	.long	__pthread_disable_asynccancel-.Ldisable0b
+.Lunwind:
+	.long	__pthread_unwind
 	.size	sem_timedwait,.-sem_timedwait

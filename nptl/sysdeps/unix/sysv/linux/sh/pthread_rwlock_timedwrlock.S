@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
+#include <tcb-offsets.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_gettimeofday	__NR_gettimeofday
@@ -154,6 +155,8 @@ pthread_rwlock_timedwrlock:
 5:
 	mov	#0, r3
 	stc	gbr, r0
+	mov.w	.Ltidoff, r1
+	mov.l	@(r0,r1), r0
 	mov.l	r0, @(WRITER,r8)
 9:
 #if MUTEX == 0
@@ -193,6 +196,9 @@ pthread_rwlock_timedwrlock:
 	 nop
 14:
 	stc	gbr, r1
+	mov.w	.Ltidoff, r2
+	add	r2, r1
+	mov.l	@r1, r1
 	cmp/eq	r1, r0
 	bf	3b
 	bra	9b
@@ -208,6 +214,9 @@ pthread_rwlock_timedwrlock:
 .Lwake6b:
 	bra	7b
 	 mov	#0, r3
+
+.Ltidoff:
+	.word	TID - TLS_PRE_TCB_SIZE
 
 4:
 	/* Overflow.  */

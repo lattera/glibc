@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
+#include <tcb-offsets.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_futex		240
@@ -137,12 +138,18 @@ __pthread_rwlock_rdlock:
 	 nop
 14:
 	stc	gbr, r1
+	mov.w	.Ltidoff, r2
+	add	r2, r1
+	mov.l	@r1, r1
 	cmp/eq	r1, r0
 	bf	3b
 	/* Deadlock detected.  */
 	bra	9b
 	 mov	#EDEADLK, r3
 
+.Ltidoff:
+	.word	TID - TLS_PRE_TCB_SIZE
+	
 6:
 	mov	r8, r4
 #if MUTEX != 0

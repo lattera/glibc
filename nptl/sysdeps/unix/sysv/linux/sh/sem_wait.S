@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
+#include <tcb-offsets.h>
 #include "lowlevel-atomic.h"
 
 
@@ -33,8 +34,18 @@
 	.type	__new_sem_wait,@function
 	.align	5
 __new_sem_wait:
-	mov.l	r12, @-r15
+	/* First check for cancellation.  */
+	stc	gbr, r0
+	mov.w	.Lchand, r1
+	mov.l	@(r0,r1), r0
+	mov	#0xf9, r1
+	and	r1, r0
+	cmp/eq	#8, r0
+	bt	5f
+
 	mov.l	r8, @-r15
+	mov.l	r10, @-r15
+	mov.l	r12, @-r15
 	sts.l	pr, @-r15
 	mov	r4, r8
 3:
@@ -48,12 +59,19 @@ __new_sem_wait:
 	CMPXCHG (r4, @r8, r3, r2)
 	bf	2b
 	lds.l	@r15+, pr
-	mov.l	@r15+, r8
 	mov.l	@r15+, r12
+	mov.l	@r15+, r10
+	mov.l	@r15+, r8
 	rts
 	 mov	#0, r0
 
 1:
+	mov.l	.Lenable0, r1
+	bsrf	r1
+	 nop
+.Lenable0b:
+	mov	r0, r10
+
 	mov	r8, r4
 	mov	#FUTEX_WAIT, r5
 	mov	#0, r6
@@ -62,6 +80,13 @@ __new_sem_wait:
 	extu.b	r3, r3
 	trapa	#0x14
 	SYSCALL_INST_PAD
+
+	mov.l	.Ldisable0, r1
+	mov	r10, r4
+	bsrf	r1
+	 mov	r0, r10
+.Ldisable0b:	
+	mov	r10, r0
 
 	tst	r0, r0
 	bt	3b
@@ -88,11 +113,32 @@ __new_sem_wait:
 	mov.l	r8, @r0
 #endif
 	lds.l	@r15+, pr
-	mov.l	@r15+, r8
 	mov.l	@r15+, r12
+	mov.l	@r15+, r10
+	mov.l	@r15+, r8
 	rts
 	 mov	#-1, r0
 
+5:
+	/* Canceled.  */
+	stc	gbr, r0
+	mov.w	.Lresult, r1
+	mov	#-1, r2
+	mov.l	r2, @(r0,r1)
+	mov.w	.Lchand, r0
+	or.b	#0x10, @(r0,gbr)
+	stc	gbr, r0
+	mov.w	.Lclbuf, r1
+	mov.l	.Lunwind, r2
+	jmp	@r2
+	 mov.l	@(r0,r1), r4
+
+.Lchand:
+	.word	CANCELHANDLING - TLS_PRE_TCB_SIZE
+.Lresult:
+	.word	RESULT - TLS_PRE_TCB_SIZE
+.Lclbuf:
+	.word	CLEANUP_JMP_BUF - TLS_PRE_TCB_SIZE
 	.align	2
 .Lgot0:
 	.long	_GLOBAL_OFFSET_TABLE_
@@ -103,5 +149,11 @@ __new_sem_wait:
 .Lerrloc0:
 	.long	__errno_location@PLT-(.Lerrloc0b+2-.)
 #endif
+.Lenable0:
+	.long	__pthread_enable_asynccancel-.Lenable0b
+.Ldisable0:
+	.long	__pthread_disable_asynccancel-.Ldisable0b
+.Lunwind:
+	.long	__pthread_unwind
 	.size	__new_sem_wait,.-__new_sem_wait
 	versioned_symbol(libpthread, __new_sem_wait, sem_wait, GLIBC_2_1)

@@ -1,3 +1,8 @@
+2003-07-12  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/socket.S: Save and restore the PR
+	register across CENABLE and CDISABLE.
+
 2003-07-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sigwait.c: Include string.h.
