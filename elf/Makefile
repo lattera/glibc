@@ -246,7 +246,9 @@ test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))
 
 ifeq (yes,$(build-shared))
+ifeq ($(cross-compiling),no)
 tests: $(objpfx)tst-pathopt.out
+endif
 endif
 
 $(objpfx)testobj1.so: $(libdl)
@@ -389,11 +391,9 @@ $(objpfx)lateglobal: $(libdl)
 $(objpfx)lateglobal.out: $(objpfx)ltglobmod1.so $(objpfx)ltglobmod2.so
 
 $(objpfx)tst-pathopt: $(libdl)
-ifeq ($(cross-compiling),no)
 $(objpfx)tst-pathopt.out: tst-pathopt.sh $(objpfx)tst-pathopt \
 			  $(objpfx)pathoptobj.so
 	$(SHELL) -e $< $(common-objpfx)
-endif
 
 $(objpfx)initfirst: $(libdl)
 $(objpfx)initfirst.out: $(objpfx)firstobj.so
