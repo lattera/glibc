@@ -1,3 +1,8 @@
+2000-11-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/strftime.c: Add const where necessary to avoid warnings.
+	* time/strptime.c (strptime_internal): Add casts to avoid warnings.
+
 2000-11-22  Paul Eggert  <eggert@twinsun.com>
 
 	* time/strftime.c (my_strftime): Do not invoke mbrlen with a
