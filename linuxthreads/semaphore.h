@@ -64,13 +64,12 @@ extern int sem_close (sem_t *__sem) __THROW;
 extern int sem_unlink (__const char *__name) __THROW;
 
 /* Wait for SEM being posted.  */
-extern int sem_wait (sem_t *__sem) __THROW;
+extern int sem_wait (sem_t *__sem);
 
 #ifdef __USE_XOPEN2K
 /* Similar to `sem_wait' but wait only until ABSTIME.  */
 extern int sem_timedwait (sem_t *__restrict __sem,
-			  __const struct timespec *__restrict __abstime)
-     __THROW;
+			  __const struct timespec *__restrict __abstime);
 #endif
 
 /* Test whether SEM is posted.  */
