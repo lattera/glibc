@@ -119,7 +119,8 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	restest2 next dblload dblunload reldep5 reldep6 reldep7 tst-tls1 \
-	tst-tls2 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8
+	tst-tls2 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
+	circleload1
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -138,7 +139,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		dblloadmod1 dblloadmod2 dblloadmod3 reldepmod5 reldepmod6 \
 	        reldep6mod0 reldep6mod1 reldep6mod2 reldep6mod3 reldep6mod4 \
 		reldep7mod1 reldep7mod2 \
-		tst-tlsmod1 tst-tlsmod2 tst-tlsmod3 tst-tlsmod4
+		tst-tlsmod1 tst-tlsmod2 tst-tlsmod3 tst-tlsmod4 \
+		circlemod1 circlemod1a circlemod2 circlemod2a \
+		circlemod3 circlemod3a
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
@@ -360,6 +363,15 @@ endif
 
 $(objpfx)constload1: $(libdl)
 $(objpfx)constload1.out: $(objpfx)constload2.so $(objpfx)constload3.so
+
+$(objpfx)circleload1: $(libdl)
+$(objpfx)circleload1.out: $(objpfx)circlemod1.so \
+			  $(objpfx)circlemod1a.so
+
+$(objpfx)circlemod1.so: $(objpfx)circlemod2.so
+$(objpfx)circlemod2.so: $(objpfx)circlemod3.so
+$(objpfx)circlemod1a.so: $(objpfx)circlemod2a.so
+$(objpfx)circlemod2a.so: $(objpfx)circlemod3a.so
 
 $(objpfx)order: $(addprefix $(objpfx),dep4.so dep3.so dep2.so dep1.so)
 

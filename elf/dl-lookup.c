@@ -94,6 +94,11 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   if (undef_map == map)
     return 0;
 
+  /* Don't create cross-reference between modules which are
+     dynamically loaded by the same dlopen() call.  */
+  if (undef_map->l_opencount == 0 && map->l_opencount == 0)
+    return 0;
+
   /* Make sure nobody can unload the object while we are at it.  */
   __libc_lock_lock_recursive (GL(dl_load_lock));
 

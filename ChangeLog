@@ -1,3 +1,29 @@
+2002-06-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-lookup.c (add_dependency): It is not necessary to add
+	dependencies if they are created between objects which are created
+	while processing RTLD_NOW for objects loaded as part of the same
+	dlopen call.
+
+2002-06-14  H.J. Lu  <hjl@gnu.org>
+
+	* elf/Makefile (tests): Add circleload1.
+	(modules-names): Add circlemod1, circlemod2, circlemod3,
+	circlemod1a, circlemod2a and circlemod3a.
+	($(objpfx)circleload1): New target.
+	($(objpfx)circleload1.out): Likewise.
+	($(objpfx)circlemod1.so): Likewise.
+	($(objpfx)circlemod2.so): Likewise.
+	($(objpfx)circlemod1a.so): Likewise.
+	($(objpfx)circlemod2a.so): Likewise.
+	* elf/circleload1.c: New file.
+	* elf/circlemod1.c: New file.
+	* elf/circlemod1a.c: New file.
+	* elf/circlemod2.c: New file.
+	* elf/circlemod2a.c: New file.
+	* elf/circlemod3.c: New file.
+	* elf/circlemod3a.c: New file.
+
 2002-06-18  Amos Waterland  <apw@us.ibm.com>
 
 	* sysdeps/pthread/aio_cancel.c (aio_cancel): Add check for invalid
