@@ -1,5 +1,11 @@
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (all-rtld-routines): Evaluate $(sysdep-rtld-routines)
+	too.
+	* sysdeps/powerpc/Makefile (sysdep-rtld-routines): New variable.
+	(sysdep_routines): Remove dl-start.
+	Patches by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 	* assert/__assert.c: Undefine NDEBUG before include <assert.h>.
 
 	* sysdeps/unix/sysv/linux/msgsnd.c (msgsnd): Add cast to avoid warning.

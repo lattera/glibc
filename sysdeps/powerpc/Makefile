@@ -41,6 +41,9 @@ CFLAGS-memcmp.c += -Wno-uninitialized
 endif
 
 ifeq ($(subdir),elf)
+# extra shared linker files to link into dl-allobjs.so and libc
 sysdep-dl-routines += dl-machine
-sysdep_routines += dl-machine dl-start
+sysdep_routines += dl-machine
+# extra shared linker files to link only into dl-allobjs.so
+sysdep-rtld-routines += dl-machine dl-start
 endif
