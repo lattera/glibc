@@ -108,7 +108,7 @@
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
 #endif
 
-/* I know for sure that these are in 2.3.35 on powerpc. But PowerPC64 does not 
+/* I know for sure that these are in 2.3.35 on powerpc. But PowerPC64 does not
    support separate 64-bit syscalls, already 64-bit */
 #if __LINUX_KERNEL_VERSION >= 131875 && defined __powerpc__ \
     && !defined __powerpc64__
@@ -124,7 +124,7 @@
 
 /* Linux 2.3.39 sparc added setresuid.  */
 #if __LINUX_KERNEL_VERSION >= 131879 && defined __sparc__
-# define __ASSUME_SETRESUID_SYSCALL
+# define __ASSUME_SETRESUID_SYSCALL	1
 #endif
 
 /* Linux 2.3.39 introduced IPC64.  Except for powerpc.  */
@@ -137,7 +137,7 @@
 # define __ASSUME_IPC64		1
 #endif
 
-/* Linux 2.4.0 on PPC introduced a correct IPC64. But PowerPC64 does not 
+/* Linux 2.4.0 on PPC introduced a correct IPC64. But PowerPC64 does not
    support a separate 64-bit sys call, already 64-bit */
 #if __LINUX_KERNEL_VERSION >= 132096 && defined __powerpc__ \
     && !defined __powerpc64__

@@ -1,5 +1,10 @@
 2002-09-29  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SETRESUID_SYSCALL): On the sparc, define to 1, not empty.
+
+2002-09-29  Jakub Jelinek  <jakub@redhat.com>
+
 	* nss/bug-erange.c (main): Don't fail if /etc/resolv.conf doesn't
 	exist.
 
