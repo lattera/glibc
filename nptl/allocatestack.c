@@ -366,8 +366,11 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
       /* Allocate the DTV for this thread.  */
       if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
-	/* Something went wrong.  */
-	return errno;
+	{
+	  /* Something went wrong.  */
+	  assert (errno == ENOMEM);
+	  return EAGAIN;
+	}
 
 
       /* Prepare to modify global data.  */
@@ -498,12 +501,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  if (_dl_allocate_tls (TLS_TPADJ (pd)) == NULL)
 	    {
 	      /* Something went wrong.  */
-	      int err = errno;
+	      assert (errno == ENOMEM);
 
 	      /* Free the stack memory we just allocated.  */
 	      (void) munmap (mem, size);
 
-	      return err;
+	      return EAGAIN;
 	    }
 
 
