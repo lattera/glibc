@@ -2138,7 +2138,11 @@ typedef Elf32_Addr Elf32_Conflict;
 #define PF_ARM_SB          0x10000000   /* Segment contains the location
 					   addressed by the static base */
 
+/* Processor specific values for the Phdr p_type field.  */
+#define PT_ARM_EXIDX	0x70000001	/* .ARM.exidx segment */
+
 /* ARM relocs.  */
+
 #define R_ARM_NONE		0	/* No reloc */
 #define R_ARM_PC24		1	/* PC relative 26 bit branch */
 #define R_ARM_ABS32		2	/* Direct 32 bit  */
