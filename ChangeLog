@@ -1,5 +1,7 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: Fix handling of macro-str.
+
 	* conform/data/inttypes.h-data: Add missing definition and all of
 	stdint.h-data.
 

@@ -694,7 +694,7 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Test for type of function $fname",
 		   "Function \"$fname\" has incorrect type.", $res, 0);
-    } elsif (/^macro-str *([^	]*)\s*(\".*\")/) {
+    } elsif (/^macro-str *([^	 ]*) *(\".*\")/) {
       # The above regex doesn't handle a \" in a string.
       my($macro) = "$1";
       my($string) = "$2";
@@ -721,7 +721,7 @@ while ($#headers >= 0) {
       print TESTFILE "#include <$h>\n";
       # We can't include <string.h> here.
       print TESTFILE "extern int (strcmp)(const char *, const char *);\n";
-      print TESTFILE "int main (void) { return strcmp ($macro, $string) != 0;}\n";
+      print TESTFILE "int main (void) { return (strcmp) ($macro, $string) != 0;}\n";
       close (TESTFILE);
 
       $res = runtest ($fnamebase, "Testing for value of macro $macro",
