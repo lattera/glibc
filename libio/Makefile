@@ -47,8 +47,6 @@ routines += oldiofopen oldiofdopen oldiofclose oldiopopen oldpclose \
 	    oldtmpfile
 endif
 
-CPPFLAGS-.o += -DIO_DEBUG
-
 ifneq (,$(filter %REENTRANT, $(defines)))
 routines += clearerr_u feof_u ferror_u fputc_u getc_u getchar_u		      \
 	    iofflush_u putc_u putchar_u peekc iofread_u iofwrite_u iofgets_u  \
