@@ -41,21 +41,20 @@ Cambridge, MA 02139, USA.  */
  */
 
 
-1:	br	gp,2f
-2:	ldgp	gp,0(gp)
-	jmp	zero,syscall_error
-
-
-ENTRY (__syscall)
-	bis	a0,a0,v0	# Syscall number -> v0
-	bis	a1,a1,a0	# arg1-arg5 -> a0-a4
-	bis	a2,a2,a1
-	bis	a3,a3,a2
-	bis	a4,a4,a3
-	bis	a5,a5,a4
+LEAF(__syscall, 0)
+	bis	a0, a0, v0	# Syscall number -> v0
+	bis	a1, a1, a0	# arg1-arg5 -> a0-a4
+	bis	a2, a2, a1
+	bis	a3, a3, a2
+	bis	a4, a4, a3
+	bis	a5, a5, a4
 
 	call_pal PAL_callsys	# Invoke system call
-	bne	a3,1b
+	bne	a3, error
 	ret
+
+error:	br	gp, 2f
+2:	ldgp	gp, 0(gp)
+	jmp	zero, syscall_error
 
 weak_alias(__syscall, syscall)

@@ -36,24 +36,23 @@ __curbrk:
 	.quad _end
 
 	.text
-ENTRY(__brk)
+LEAF(__brk, 0)
 	ldgp	gp, 0(t12)
 	.prologue 1
 
 	ldi	v0, __NR_brk
 	call_pal PAL_callsys
 	subq	a0, v0, t0
-	bne t0, error
+	bne	t0, error
 
 	/* Update __curbrk and return cleanly.  */
-	stl a0, __curbrk
-	mov zero, v0
+	stl	a0, __curbrk
+	mov	zero, v0
 	ret
 
 	/* What a horrible way to die.  */
 error:	ldi	v0, ENOMEM
-	lda	pv, syscall_error
-	jmp	zero,(pv)
+	jmp	zero, syscall_error
 
 	.end __brk
 

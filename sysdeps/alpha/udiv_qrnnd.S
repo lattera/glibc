@@ -19,15 +19,15 @@
  # the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  # MA 02111-1307, USA.
 
+#include <sysdep.h>
 
         .set noreorder
         .set noat
-.text
-        .align	3
-        .globl	__udiv_qrnnd
-        .ent	__udiv_qrnnd
-__udiv_qrnnd:
-        .frame $30,0,$26,0
+
+	.text
+
+LEAF(__udiv_qrnnd, 0)
+
         .prologue 0
 #define cnt	$2
 #define tmp	$3

@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 	.text
-ENTRY(__pipe)
+LEAF(__pipe, 0)
 	.prologue 0
 
 	ldi	v0, __NR_pipe
@@ -35,8 +35,7 @@ ENTRY(__pipe)
 
 error:	br	gp, 1f
 1:	ldgp	gp, 0(gp)
-	lda	pv, syscall_error
-	jmp	zero, (pv)
+	jmp	zero, syscall_error
 
 	.end __pipe
 

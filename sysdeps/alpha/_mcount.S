@@ -34,18 +34,15 @@ holds the return address of the function's caller (selfpc and frompc,
 respectively in gmon.c language...). */
 
 #include <sysdep.h>
-#ifdef __linux__
-# include <alpha/regdef.h>
-#else
-# include <regdef.h>
-#endif
 
 #undef ret	/* discard `ret' as defined in sysdep.h */
 
 	.set	noat
 	.set	noreorder
 
-ENTRY(_mcount)
+LEAF(_mcount, 0xb0)
+	.prologue 0
+
 	subq	 sp, 0xb0, sp
 	stq	 a0, 0x00(sp)
 	mov	 ra, a0		# a0 = caller-pc
