@@ -49,7 +49,6 @@ __gconv_transliterate (struct __gconv_step *step,
   uint32_t *winbufend;
   uint_fast32_t low;
   uint_fast32_t high;
-  uint32_t *default_missing;
 
   /* The input buffer.  There are actually 4-byte values.  */
   winbuf = (uint32_t *) *inbufp;
@@ -184,10 +183,10 @@ __gconv_transliterate (struct __gconv_step *step,
     }
 
   /* One last chance: use the default replacement.  */
-  default_missing = (uint32_t *)
-    _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_DEFAULT_MISSING);
-  if (default_missing[0] != L'\0')
+  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN) != 0)
     {
+      uint32_t *default_missing = (uint32_t *)
+	_NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_DEFAULT_MISSING);
       const unsigned char *toinptr = (const unsigned char *) default_missing;
       uint32_t len = _NL_CURRENT_WORD (LC_CTYPE,
 				       _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN);
