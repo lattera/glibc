@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -422,11 +422,9 @@ typedef struct
 /* How to extract and insert information held in the st_other field.  */
 
 #define ELF32_ST_VISIBILITY(o)	((o) & 0x03)
-#define ELF32_ST_OTHER(o)	((o) & 0x03)
 
 /* For ELF64 the definitions are the same.  */
 #define ELF64_ST_VISIBILITY(o)	ELF32_ST_VISIBILITY (o)
-#define ELF64_ST_OTHER(o)	ELF32_ST_OTHER (o)
 
 /* Symbol visibility specification encoded in the st_other field.  */
 #define STV_DEFAULT	0		/* Default symbol visibility rules */

@@ -1,5 +1,8 @@
 2000-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h (ELF32_ST_OTHER): Removed.
+	(ELF64_ST_OTHER): Likewise.
+
 	* sysdeps/alpha/fpu/fpu_control.h: Update comment.
 
 	* malloc/Makefile (tests): Add tst-valloc.
