@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,12 +41,8 @@ typedef __pid_t pid_t;
 # endif
 #endif	/* X/Open */
 
+
 __BEGIN_DECLS
-
-/* Segment low boundary address multiple.  */
-#define SHMLBA		(__getpagesize ())
-extern int __getpagesize (void) __THROW __attribute__ ((__const__));
-
 
 /* The following System V style IPC functions implement a shared memory
    facility.  The definition is found in XPG4.2.  */

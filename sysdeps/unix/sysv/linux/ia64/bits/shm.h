@@ -1,6 +1,5 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-	Contributed by David Mosberger-Tang <davidm@hpl.hp.com>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -35,6 +34,9 @@
 /* Commands for `shmctl'.  */
 #define SHM_LOCK	11		/* lock segment (root only) */
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
+
+/* Segment low boundary address multiple.  */
+#define SHMLBA		(1024 * 1024)
 
 
 /* Data structure describing a set of semaphores.  */

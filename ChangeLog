@@ -1,5 +1,18 @@
 2002-08-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysvipc/sys/shm.h: Remove SHMLBA definition.
+	* sysdeps/generic/bits/shm.h: Define SHMLBA here.
+	* sysdeps/gnu/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h: Define SHMLBA to 2^20
+	since this is what the kernel says.
+
 	* misc/sys/xattr.h: Include <sys/types.h> instead of <stddef.h>
 	since ssize_t is needed as well.  Replace const with __const.
 
