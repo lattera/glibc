@@ -1,3 +1,12 @@
+2000-08-24  Andreas Jaeger  <aj@suse.de>
+
+	* malloc/Makefile (extra-objs): Add memusagestat.o.
+	(generated): Added memusage and memusagestat for make clean.
+
+	* libio/tst_putwc.c (do_test): Delete temporary file.
+
+	* posix/Makefile (generated): Add wordexp-tst.out.
+
 2000-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_hconf.c (free_mem): Remove not needed if.
