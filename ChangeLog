@@ -1,3 +1,10 @@
+Fri Mar  1 17:11:59 1996  Brendan Kehoe  <brendan@zen.org>
+
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sigcontext.h: New file,
+	including <sysdeps/unix/bsd/sun/sparc/sigcontext.h>.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/profil-counter.h: New file,
+	same as linux/m68k/profil-counter.h except the comment.
+
 Fri Mar  1 10:09:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* stdlib/Makefile (mpn-stuff): New target.
