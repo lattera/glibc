@@ -110,7 +110,7 @@ enum __ptrace_request
 
   /* Continue and stop at the next (return from) syscall.  */
   PTRACE_SYSCALL = 24
-#define PTRACE_SYSCALL PTRACE_SYSCALL
+#define PT_SYSCALL PTRACE_SYSCALL
 };
 
 /* Perform process tracing functions.  REQUEST is one of the values

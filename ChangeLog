@@ -1,3 +1,7 @@
+2000-07-06  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PT_SYSCALL): Fix LHS.
+
 2000-07-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path):
