@@ -1,5 +1,14 @@
 2002-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i686/bits/atomic.h: Use i486 version.
+	* sysdeps/i386/i486/bits/atomic.h: New file.
+	* sysdeps/i386/i586/bits/atomic.h: New file.
+	* sysdeps/i386/i686/pthread_spin_trylock.S: Define HAVE_CMOV and
+	include i486 version.
+	* sysdeps/i386/i486/pthread_spin_trylock.S: New file.
+	* sysdeps/i386/i586/pthread_spin_trylock.S: New file.
+	Patch by Marjin Ros <marjin@mad.scientist.com>.
+
 	* allocatestack.c (get_cached_stack): Don't crash if we first
 	found a stack with a larger size then needed.
 	Reported by Hui Huang <hui.huang@sun.com>.
