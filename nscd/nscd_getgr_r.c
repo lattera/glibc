@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <assert.h>
 #include <errno.h>
 #include <grp.h>
@@ -84,19 +85,21 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	      struct group *resultbuf, char *buffer, size_t buflen,
 	      struct group **result)
 {
-  const gr_response_header *gr_resp = NULL;
-  const uint32_t *len = NULL;
-  const char *gr_name = NULL;
-  size_t gr_name_len = 0;
-  int retval = -1;
   int gc_cycle;
-  const char *recend = (const char *) ~UINTMAX_C (0);
+  const uint32_t *len = NULL;
+  size_t lensize = 0;
 
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
   struct mapped_database *mapped = __nscd_get_map_ref (GETFDGR, "group",
 						       &map_handle, &gc_cycle);
- retry:
+ retry:;
+  const gr_response_header *gr_resp = NULL;
+  const char *gr_name = NULL;
+  size_t gr_name_len = 0;
+  int retval = -1;
+  const char *recend = (const char *) ~UINTMAX_C (0);
+
   if (mapped != NO_MAPPING)
     {
       const struct datahead *found = __nscd_cache_search (type, key, keylen,
@@ -176,10 +179,17 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       resultbuf->gr_gid = gr_resp->gr_gid;
 
       /* Read the length information, group name, and password.  */
-      if (len == NULL)
+      if (gr_name == NULL)
 	{
 	  /* Allocate array to store lengths.  */
-	  len = (uint32_t *) alloca (gr_resp->gr_mem_cnt * sizeof (uint32_t));
+	  if (lensize == 0)
+	    {
+	      lensize = gr_resp->gr_mem_cnt * sizeof (uint32_t);
+	      len = (uint32_t *) alloca (lensize);
+	    }
+	  else if (gr_resp->gr_mem_cnt * sizeof (uint32_t) > lensize)
+	    len = extend_alloca (len, lensize,
+				 gr_resp->gr_mem_cnt * sizeof (uint32_t));
 
 	  vec[0].iov_base = (void *) len;
 	  vec[0].iov_len = gr_resp->gr_mem_cnt * sizeof (uint32_t);
@@ -248,11 +258,20 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
-  if (__nscd_drop_map_ref (mapped, gc_cycle) != 0)
-    /* When we come here this means there has been a GC cycle while we
-       were looking for the data.  This means the data might have been
-       inconsistent.  Retry.  */
-    goto retry;
+  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0 && retval != -1)
+    {
+      /* When we come here this means there has been a GC cycle while we
+	 were looking for the data.  This means the data might have been
+	 inconsistent.  Retry if possible.  */
+      if ((gc_cycle & 1) != 0)
+	{
+	  /* nscd is just running gc now.  Disable using the mapping.  */
+	  __nscd_unmap (mapped);
+	  mapped = NO_MAPPING;
+	}
+
+      goto retry;
+    }
 
   return retval;
 }

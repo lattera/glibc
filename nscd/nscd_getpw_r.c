@@ -84,17 +84,18 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	      struct passwd *resultbuf, char *buffer, size_t buflen,
 	      struct passwd **result)
 {
+  int gc_cycle;
+  /* If the mapping is available, try to search there instead of
+     communicating with the nscd.  */
+  struct mapped_database *mapped;
+  mapped = __nscd_get_map_ref (GETFDPW, "passwd", &map_handle, &gc_cycle);
+
+ retry:;
   const pw_response_header *pw_resp = NULL;
   const char *pw_name = NULL;
   int retval = -1;
-  int gc_cycle;
   const char *recend = (const char *) ~UINTMAX_C (0);
 
-  /* If the mapping is available, try to search there instead of
-     communicating with the nscd.  */
-  struct mapped_database *mapped = __nscd_get_map_ref (GETFDPW, "passwd",
-						       &map_handle, &gc_cycle);
- retry:
   if (mapped != NO_MAPPING)
     {
       const struct datahead *found = __nscd_cache_search (type, key, keylen,
@@ -199,11 +200,22 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:
-  if (__nscd_drop_map_ref (mapped, gc_cycle) != 0)
-    /* When we come here this means there has been a GC cycle while we
-       were looking for the data.  This means the data might have been
-       inconsistent.  Retry.  */
-    goto retry;
+  if (__nscd_drop_map_ref (mapped, &gc_cycle) != 0 && retval != -1)
+    {
+      /* When we come here this means there has been a GC cycle while we
+	 were looking for the data.  This means the data might have been
+	 inconsistent.  Retry if possible.  */
+      if ((gc_cycle & 1) != 0)
+	{
+	  /* nscd is just running gc now.  Disable using the mapping.  */
+	  __nscd_unmap (mapped);
+	  mapped = NO_MAPPING;
+	}
+
+      free (resultbuf);
+
+      goto retry;
+    }
 
   return retval;
 }

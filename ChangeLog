@@ -1,3 +1,20 @@
+2004-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd-client.h (__nscd_get_map_ref): Drop volatile from last
+	parameter.
+	(__nscd_drop_map_ref): Change second parameter to be a referenc to
+	a variable.  Update variable when cycle count changed.
+	* nscd/nscd_helper.c (__nscd_get_map_ref): Remove volatile here, too.
+	* nscd/nscd_getai.c: Correctly use __nscd_drop_map_ref.  Reinitialize
+	all variables and avoid memory leak in case of retries.
+	* nscd/nscd_getgr_r.c: Likewise.
+	* nscd/nscd_gethst_r.c: Likewise.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd_initgroups.c: Likewise.
+
+	* nscd/nscd.h: Add declaretion of addinitgroups and
+	readdinitgroups.
+
 2004-09-30  Andreas Jaeger  <aj@suse.de>
 
 	* nscd/Makefile (CFLAGS-nscd_initgroups.c): Set to -fpie.
