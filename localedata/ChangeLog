@@ -1,3 +1,34 @@
+2001-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/af_ZA: Use generic LC_COLLATE data.
+	* locales/el_GR: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/ro_RO: Likewise.  Add transliteration.
+	* locales/be_BY: Likewise.  Handle Ukrainian Ghe.
+	* locales/ru_RU: Likewise.
+	* locales/ru_UA: Likewise.
+	* locales/uk_UA: Likewise.
+	* locales/eu_ES: LC_TIME strings fixed.
+	* locales/am_ET: New file.
+	* locales/translit_et: New file.
+	* locales/az_AZ: New file.
+	* locales/br_FR: New file.
+	* locales/bs_BA: New file.
+	* locales/cy_GB: New file.
+	* locales/hy_AM: New file.
+	* locales/ka_GE: New file.
+	* locales/mi_NZ: New file.
+	* locales/oc_FR: New file.
+	* locales/tg_TJ: New file.
+	* locales/ti_ER: New file.
+	* locales/ti_ET: New file.
+	* locales/tl_PH: New file.
+	* locales/tt_RU: New file.
+	* locales/ur_OK: New file.
+	* locales/uz_UZ: New file.
+	* locales/yi_US: New file.
+	Patches by Pablo Saratxaga <pablo@mandrakesoft.com>.
+
 2001-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/tr_TR: Define missing fields and remove FIXME comments.
