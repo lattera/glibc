@@ -3,6 +3,8 @@
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (pread, pwrite): Use
 	the 64-bit syscall name.
 
+	* sysdeps/alpha/setjmp.S (_setjmp, setjmp): Mark .prologue.
+
 2003-06-24  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Update.
