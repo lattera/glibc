@@ -1,3 +1,8 @@
+2001-08-17  Andreas Jaeger  <aj@suse.de>
+
+        * misc/getpass.c: Include wchar.h for prototypes.
+        * malloc/obstack.c: Likewise.
+
 2001-08-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/svc_simple.c (universal): Use __write instead of write.
