@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -44,7 +44,7 @@ static const char *nis_errlist[] =
   N_("Invalid Object for operation"),
   N_("Malformed Name, or illegal name"),
   N_("Unable to create callback"),
-  N_("Results Sent to callback proc"),
+  N_("Results sent to callback proc"),
   N_("Not Found, no such name"),
   N_("Name/entry isn't unique"),
   N_("Modification failed"),
