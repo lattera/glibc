@@ -4,7 +4,7 @@
 
 2002-04-28  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/generic/tls.h: Describe would must be defined.
+	* sysdeps/generic/tls.h: Describe what must be defined.
 
 	* sysdeps/generic/glob.c (glob): Don't pass GLOB_NOMAGIC flag to
 	glob_in_dir [PR libc/3385].
