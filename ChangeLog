@@ -8,8 +8,6 @@
 	* sunrpc/rpc_main.c (parseargs): Don't accept -M and -N.
 	Closes PR libc/1731.
 
-	* stdio-common/tfformat.c (sprint_doubles): Add testcase for %a.
-
 2000-05-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-load.c (_dl_init_paths): If env_path_list has 0 elements,
