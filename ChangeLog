@@ -1,5 +1,18 @@
 2002-08-06  Roland McGrath  <roland@redhat.com>
 
+	* include/getopt.h: But private decls inside [_GETOPT_H].
+	Use libc_hidden_proto for getopt_long, getopt_long_only.
+	* posix/getopt1.c [_LIBC]: Include <getopt.h> instead of "getopt.h".
+	Add libc_hidden_def.
+
+	* sysdeps/generic/unwind-dw2-fde-glibc.c [_LIBC] (dl_iterate_phdr):
+	Define as a macro for __dl_iterate_phdr.
+
+	* inet/getnetgrent_r.c (internal_setnetgrent): Renamed from __ name,
+	made static.  Add __ name as a strong alias.
+	(internal_endnetgrent): Likewise.
+	(internal_getnetgrent_r): Likewise.
+
 	* locale/Versions (libc: GLIBC_2.3): Add all the *_l functions
 	with no __ prefix.
 	* locale/langinfo.h [__USE_GNU]: Declare nl_langinfo_l.

@@ -67,7 +67,7 @@ struct unw_eh_frame_hdr
 
 /* Like base_of_encoded_value, but take the base from a struct object
    instead of an _Unwind_Context.  */
-   
+
 static _Unwind_Ptr
 base_from_cb_data (unsigned char encoding, struct unw_eh_callback_data *data)
 {
@@ -80,7 +80,7 @@ base_from_cb_data (unsigned char encoding, struct unw_eh_callback_data *data)
     case DW_EH_PE_pcrel:
     case DW_EH_PE_aligned:
       return 0;
-                                 
+
     case DW_EH_PE_textrel:
       return (_Unwind_Ptr) data->tbase;
     case DW_EH_PE_datarel:
@@ -249,6 +249,10 @@ _Unwind_IteratePhdrCallback (struct dl_phdr_info *info, size_t size, void *ptr)
     }
   return 1;
 }
+
+# ifdef _LIBC
+# define dl_iterate_phdr __dl_iterate_phdr
+# endif
 
 fde *
 _Unwind_Find_FDE (void *pc, struct dwarf_eh_bases *bases)

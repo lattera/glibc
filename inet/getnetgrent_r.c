@@ -129,14 +129,15 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
   return status == NSS_STATUS_SUCCESS;
 }
 
-int
-__internal_setnetgrent (const char *group, struct __netgrent *datap)
+static int
+internal_setnetgrent (const char *group, struct __netgrent *datap)
 {
   /* Free list of all netgroup names from last run.  */
   free_memory (datap);
 
   return __internal_setnetgrent_reuse (group, datap, &errno);
 }
+strong_alias (internal_setnetgrent, __internal_setnetgrent)
 
 int
 setnetgrent (const char *group)
@@ -145,7 +146,7 @@ setnetgrent (const char *group)
 
   __libc_lock_lock (lock);
 
-  result = __internal_setnetgrent (group, &dataset);
+  result = internal_setnetgrent (group, &dataset);
 
   __libc_lock_unlock (lock);
 
@@ -153,8 +154,8 @@ setnetgrent (const char *group)
 }
 
 
-void
-__internal_endnetgrent (struct __netgrent *datap)
+static void
+internal_endnetgrent (struct __netgrent *datap)
 {
   service_user *old_nip;
   enum nss_status (*fct) (struct __netgrent *);
@@ -177,6 +178,7 @@ __internal_endnetgrent (struct __netgrent *datap)
   /* Now free list of all netgroup names from last run.  */
   free_memory (datap);
 }
+strong_alias (internal_endnetgrent, __internal_endnetgrent)
 
 
 void
@@ -190,8 +192,8 @@ endnetgrent (void)
 }
 
 
-int
-__internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
+static int
+internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 			  struct __netgrent *datap,
 			  char *buffer, size_t buflen, int *errnop)
 {
@@ -272,6 +274,7 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 
   return status == NSS_STATUS_SUCCESS ? 1 : 0;
 }
+strong_alias (internal_getnetgrent_r, __internal_getnetgrent_r)
 
 /* The real entry point.  */
 int
