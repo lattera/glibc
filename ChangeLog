@@ -1,5 +1,13 @@
 1998-05-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* sysdeps/unix/bsd/vax/vfork.S: Missed double occurences of "the
+	the" in one line - fixed it.
+	* sysdeps/unix/bsd/sun/m68k/vfork.S: Likewise.
+	* sysdeps/unix/bsd/hp/m68k/vfork.S: Likewise.
+	* posix/unistd.h: Likewise
+
+1998-05-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* Makeconfig (rpath-link): Add resolvobjdir.
 	(resolvobjdir): New variable.
 	Reported by Peter Breitenlohner <peb@mppmu.mpg.de> [fixes PR libc/633].
