@@ -249,9 +249,10 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
    loaded objects that will be inserted into MAP->l_searchlist after MAP
    but before its dependencies.  */
-extern void _dl_map_object_deps (struct link_map *map,
-				 struct link_map **preloads,
-				 unsigned int npreloads, int trace_mode)
+extern unsigned int _dl_map_object_deps (struct link_map *map,
+					 struct link_map **preloads,
+					 unsigned int npreloads,
+					 int trace_mode, int global_scope)
      internal_function;
 
 /* Cache the locations of MAP's hash table.  */

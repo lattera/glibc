@@ -667,7 +667,11 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
-  _dl_map_object_deps (_dl_loaded, preloads, npreloads, mode == trace);
+  _dl_map_object_deps (_dl_loaded, preloads, npreloads, mode == trace, 0);
+
+  /* Mark all objects as being in the global scope.  */
+  for (i = _dl_loaded->l_searchlist.r_nlist; i > 0; )
+    _dl_loaded->l_searchlist.r_list[--i]->l_global = 1;
 
 #ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */

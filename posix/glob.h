@@ -150,7 +150,7 @@ typedef struct
    Otherwise, `glob' returns zero.  */
 #if _FILE_OFFSET_BITS != 64
 extern int glob __P ((__const char *__pattern, int __flags,
-		      int (*__errfunc) __P ((__const char *, int)),
+		      int (*__errfunc) (__const char *, int),
 		      glob_t *__pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
@@ -158,7 +158,7 @@ extern void globfree __P ((glob_t *__pglob));
 #else
 # if __GNUC__ >= 2
 extern int glob __P ((__const char *__pattern, int __flags,
-		      int (*__errfunc) __P ((__const char *, int)),
+		      int (*__errfunc) (__const char *, int),
 		      glob_t *__pglob)) __asm__ ("glob64");
 
 extern void globfree __P ((glob_t *__pglob)) __asm__ ("globfree64");
@@ -170,7 +170,7 @@ extern void globfree __P ((glob_t *__pglob)) __asm__ ("globfree64");
 
 #ifdef _LARGEFILE64_SOURCE
 extern int glob64 __P ((__const char *__pattern, int __flags,
-			int (*__errfunc) __P ((__const char *, int)),
+			int (*__errfunc) (__const char *, int),
 			glob64_t *__pglob));
 
 extern void globfree64 __P ((glob64_t *__pglob));

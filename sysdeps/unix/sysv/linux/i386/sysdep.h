@@ -202,14 +202,14 @@
 
 /* We need some help from the assembler to generate optimal code.  We
    define some macros here which later will be used.  */
-asm ("__X'%ebx = 1\n\t"
-     "__X'%ecx = 2\n\t"
-     "__X'%edx = 2\n\t"
-     "__X'%eax = 3\n\t"
-     "__X'%esi = 3\n\t"
-     "__X'%edi = 3\n\t"
-     "__X'%ebp = 3\n\t"
-     "__X'%esp = 3\n\t"
+asm (".L__X'%ebx = 1\n\t"
+     ".L__X'%ecx = 2\n\t"
+     ".L__X'%edx = 2\n\t"
+     ".L__X'%eax = 3\n\t"
+     ".L__X'%esi = 3\n\t"
+     ".L__X'%edi = 3\n\t"
+     ".L__X'%ebp = 3\n\t"
+     ".L__X'%esp = 3\n\t"
      ".macro bpushl name reg\n\t"
      ".if 1 - \\name\n\t"
      ".if 2 - \\name\n\t"
@@ -243,11 +243,11 @@ asm ("__X'%ebx = 1\n\t"
   ({									      \
     unsigned int resultvar;						      \
     asm volatile (							      \
-    "bpushl __X'%k2, %k2\n\t"						      \
-    "bmovl __X'%k2, %k2\n\t"						      \
+    "bpushl .L__X'%k2, %k2\n\t"						      \
+    "bmovl .L__X'%k2, %k2\n\t"						      \
     "movl %1, %%eax\n\t"						      \
     "int $0x80\n\t"							      \
-    "bpopl __X'%k2, %k2\n\t"						      \
+    "bpopl .L__X'%k2, %k2\n\t"						      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
     if (resultvar >= 0xfffff001)					      \

@@ -20,6 +20,7 @@ libc {
     # global variables
     _dl_profile; _dl_profile_map; _dl_profile_output; _dl_start_profile;
     _dl_loaded; _dl_main_searchlist; _dl_fpu_control; _dl_initial_searchlist;
+    _dl_global_scope_alloc;
 
     # functions used in other libraries
     _dl_mcount; _dl_mcount_wrapper; _dl_mcount_wrapper_check; _dl_unload_cache;

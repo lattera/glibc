@@ -34,6 +34,11 @@
 #define FILTERTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM \
 		   + DT_EXTRATAGIDX (DT_FILTER))
 
+/* This is zero at program start to signal that the global scope map is
+   allocated by rtld.  Later it keeps the size of the map.  It might be
+   reset if in _dl_close if the last global object is removed.  */
+size_t _dl_global_scope_alloc;
+
 
 /* When loading auxiliary objects we must ignore errors.  It's ok if
    an object is missing.  */
@@ -79,11 +84,11 @@ struct list
   };
 
 
-void
+unsigned int
 internal_function
 _dl_map_object_deps (struct link_map *map,
 		     struct link_map **preloads, unsigned int npreloads,
-		     int trace_mode)
+		     int trace_mode, int global_scope)
 {
   struct list known[1 + npreloads + 1];
   struct list *runp, *utail, *dtail;
@@ -158,7 +163,7 @@ _dl_map_object_deps (struct link_map *map,
 	  orig = runp;
 
 	  for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
-	    if (d->d_tag == DT_NEEDED)
+	    if (__builtin_expect (d->d_tag, DT_NEEDED) == DT_NEEDED)
 	      {
 		/* Map in the needed object.  */
 		struct link_map *dep
@@ -392,13 +397,98 @@ _dl_map_object_deps (struct link_map *map,
     map->l_searchlist.r_duplist = map->l_searchlist.r_list;
   else
     {
+      unsigned int cnt;
+
       map->l_searchlist.r_duplist = malloc (nduplist
 					    * sizeof (struct link_map *));
       if (map->l_searchlist.r_duplist == NULL)
 	_dl_signal_error (ENOMEM, map->l_name,
 			  "cannot allocate symbol search list");
 
-      for (nlist = 0, runp = known; runp; runp = runp->dup)
-	map->l_searchlist.r_duplist[nlist++] = runp->map;
+      for (cnt = 0, runp = known; runp; runp = runp->dup)
+	map->l_searchlist.r_duplist[cnt++] = runp->map;
     }
+
+  /* Now that all this succeeded put the objects in the global scope if
+     this is necessary.  We put the original object and all the dependencies
+     in the global scope.  If an object is already loaded and not in the
+     global scope we promote it.  */
+  if (global_scope)
+    {
+      unsigned int cnt;
+      unsigned int to_add = 0;
+      struct link_map **new_global;
+
+      /* Count the objects we have to put in the global scope.  */
+      for (cnt = 0; cnt < nlist; ++cnt)
+	if (map->l_searchlist.r_list[cnt]->l_global == 0)
+	  ++to_add;
+
+      /* The symbols of the new objects and its dependencies are to be
+	 introduced into the global scope that will be used to resolve
+	 references from other dynamically-loaded objects.
+
+	 The global scope is the searchlist in the main link map.  We
+	 extend this list if necessary.  There is one problem though:
+	 since this structure was allocated very early (before the libc
+	 is loaded) the memory it uses is allocated by the malloc()-stub
+	 in the ld.so.  When we come here these functions are not used
+	 anymore.  Instead the malloc() implementation of the libc is
+	 used.  But this means the block from the main map cannot be used
+	 in an realloc() call.  Therefore we allocate a completely new
+	 array the first time we have to add something to the locale scope.  */
+
+      if (_dl_global_scope_alloc == 0)
+	{
+	  /* This is the first dynamic object given global scope.  */
+	  _dl_global_scope_alloc = _dl_main_searchlist->r_nlist + to_add + 8;
+	  new_global = (struct link_map **)
+	    malloc (_dl_global_scope_alloc * sizeof (struct link_map *));
+	  if (new_global == NULL)
+	    {
+	      _dl_global_scope_alloc = 0;
+	    nomem:
+	      _dl_signal_error (ENOMEM, map->l_libname->name,
+				"cannot extend global scope");
+	      return 0;
+	    }
+
+	  /* Copy over the old entries.  */
+	  memcpy (new_global, _dl_main_searchlist->r_list,
+		  (_dl_main_searchlist->r_nlist * sizeof (struct link_map *)));
+
+	  _dl_main_searchlist->r_list = new_global;
+	}
+      else if (_dl_main_searchlist->r_nlist + to_add > _dl_global_scope_alloc)
+	{
+	  /* We have to extend the existing array of link maps in the
+	     main map.  */
+	  new_global = (struct link_map **)
+	    realloc (_dl_main_searchlist->r_list,
+		     ((_dl_global_scope_alloc + to_add + 8)
+		      * sizeof (struct link_map *)));
+	  if (new_global == NULL)
+	    goto nomem;
+
+	  _dl_global_scope_alloc += to_add + 8;
+	  _dl_main_searchlist->r_list = new_global;
+	}
+
+      /* Now add the new entries.  */
+      to_add = 0;
+      for (cnt = 0; cnt < nlist; ++cnt)
+	if (map->l_searchlist.r_list[cnt]->l_global == 0)
+	  {
+	    map->l_searchlist.r_list[cnt]->l_global = 1;
+	    _dl_main_searchlist->r_list[_dl_main_searchlist->r_nlist + to_add]
+	      = map->l_searchlist.r_list[cnt];
+	    ++to_add;
+	  }
+
+      /* XXX Do we have to add something to r_dupsearchlist???  --drepper */
+
+      return to_add;
+    }
+
+  return 0;
 }

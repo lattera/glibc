@@ -84,7 +84,7 @@ static tz_rule tz_rules[2];
 
 
 static int compute_change __P ((tz_rule *rule, int year)) internal_function;
-static int tz_compute __P ((time_t timer, const struct tm *tm))
+static int tz_compute __P ((const struct tm *tm))
      internal_function;
 static void tzset_internal __P ((int always)) internal_function;
 
@@ -508,13 +508,12 @@ compute_change (rule, year)
 }
 
 
-/* Figure out the correct timezone for *TIMER and TM (which must be the same)
-   and set `__tzname', `__timezone', and `__daylight' accordingly.
-   Return nonzero on success, zero on failure.  */
+/* Figure out the correct timezone for TM and set `__tzname',
+   `__timezone', and `__daylight' accordingly.  Return nonzero on
+   success, zero on failure.  */
 static int
 internal_function
-tz_compute (timer, tm)
-     time_t timer;
+tz_compute (tm)
      const struct tm *tm;
 {
   if (! compute_change (&tz_rules[0], 1900 + tm->tm_year)
@@ -597,7 +596,7 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
     }
   else
     {
-      if (! (__offtime (timer, 0, tp) && tz_compute (*timer, tp)))
+      if (! (__offtime (timer, 0, tp) && tz_compute (tp)))
 	tp = NULL;
       leap_correction = 0L;
       leap_extra_secs = 0;

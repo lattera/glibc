@@ -48,6 +48,7 @@ _dl_new_object (char *realname, const char *libname, int type,
   new->l_libname = newname;
   new->l_type = type;
   new->l_loader = loader;
+  new->l_global = 0;
 
   /* Counter for the scopes we have to handle.  */
   idx = 0;

@@ -24,6 +24,7 @@
 #include <netash/ash.h>
 #include <netatalk/at.h>
 #include <netax25/ax25.h>
+#include <neteconet/ec.h>
 #include <netinet/in.h>
 #include <netipx/ipx.h>
 #include <netrose/rose.h>
@@ -37,6 +38,7 @@ union sockaddr_union
     struct sockaddr_ash sash;
     struct sockaddr_at sat;
     struct sockaddr_ax25 sax25;
+    struct sockaddr_ec sec;
     struct sockaddr_in sin;
     struct sockaddr_in6 sin6;
     struct sockaddr_ipx sipx;

@@ -1,5 +1,44 @@
 1998-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/Versions [libc, GLIBC_2.01]: Add _dl_global_scope_alloc.
+	* elf/dl-open.c (_dl_global_scope_alloc): Move definition to
+	* elf/dl-deps.c: ...here.
+	* elf/dl-open.c (dl_open_worker): Call _dl_map_object_deps with
+	new parameter and expect result.  Remove code handling RTLD_GLOBAL.
+	Add return value of _dl_map_object_deps to
+	_dl_main_searchlist->r_nlist.
+	* elf/dl-deps.c (_dl_map_object_deps): Change to return value.
+	If we parameter GLOBAL is nonzero add object and dependencies to
+	the global scope.
+	* elf/ldsodefs.h: Adapt prototype for _dl_map_object_deps.
+	* elf/rtld.c (dl_main): Call _dl_map_object_deps with new parameter.
+	Mark all objects as in global scope.
+	* elf/dl-object.c (_dl_new_object): Initialize l_global to zero.
+
+	* sysdeps/unix/sysv/linux/bits/sockunion.h: Add Econet support.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Add .L prefix to symbols
+	used in macro magic.
+
+1998-11-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+        * sysdeps/unix/sysv/linux/netatalk/at.h: Include <linux/atalk.h> 
+        before <sys/socket.h> to make sockaddr_at available to 
+        <sys/socket.h>. 
+
+	* posix/glob.h: Remove __P from parameter lists of declarations.
+ 
+1998-11-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* time/tzset.c (tz_compute): Remove unused parameter timer. 
+	Change caller. 
+ 
+1998-11-02  Mark Kettenis  <kettenis@phys.uva.nl> 
+ 
+	* sysdeps/generic/bits/types.h (__ipc_pid_t): New typedef. 
+ 
+1998-11-02  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/i386/setgroups.c (setgroups): Remove
 	unnecessary test and add cast.
 

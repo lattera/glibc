@@ -109,6 +109,9 @@ typedef struct
 #endif
   } __fd_set;
 
+/* XXX Used in `struct shmid_ds'.  */
+typedef unsigned short int __ipc_pid_t;
+
 
 /* Types from the Large File Support interface.  */
 

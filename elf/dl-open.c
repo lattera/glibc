@@ -42,11 +42,6 @@ extern char **__libc_argv;
 
 extern char **__environ;
 
-/* This is zero at program start to signal that the global scope map is
-   allocated by rtld.  Later it keeps the size of the map.  It might be
-   reset if in _dl_close if the last global object is removed.  */
-size_t _dl_global_scope_alloc;
-
 
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we
@@ -77,6 +72,7 @@ dl_open_worker (void *a)
   struct link_map *new, *l;
   ElfW(Addr) init;
   struct r_debug *r;
+  unsigned int global_add;
 
   /* Load the named object.  */
   args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0);
@@ -85,7 +81,7 @@ dl_open_worker (void *a)
     return;
 
   /* Load that object's dependencies.  */
-  _dl_map_object_deps (new, NULL, 0, 0);
+  global_add = _dl_map_object_deps (new, NULL, 0, 0, mode & RTLD_GLOBAL);
 
   /* So far, so good.  Now check the versions.  */
   (void) _dl_check_all_versions (new, 0);
@@ -127,66 +123,6 @@ dl_open_worker (void *a)
       l = l->l_prev;
     }
 
-  new->l_global = (mode & RTLD_GLOBAL) ? 1 : 0;
-  if (new->l_global)
-    {
-      struct link_map **new_global;
-
-      /* The symbols of the new object and its dependencies are to be
-	 introduced into the global scope that will be used to resolve
-	 references from other dynamically-loaded objects.
-
-	 The global scope is the searchlist in the main link map.  We
-	 extend this list if necessary.  There is one problem though:
-	 since this structure was allocated very early (before the libc
-	 is loaded) the memory it uses is allocated by the malloc()-stub
-	 in the ld.so.  When we come here these functions are not used
-	 anymore.  Instead the malloc() implementation of the libc is
-	 used.  But this means the block from the main map cannot be used
-	 in an realloc() call.  Therefore we allocate a completely new
-	 array the first time we have to add something to the locale scope.  */
-      if (_dl_global_scope_alloc == 0)
-	{
-	  /* This is the first dynamic object given global scope.  */
-	  _dl_global_scope_alloc = _dl_main_searchlist->r_nlist + 8;
-	  new_global = (struct link_map **)
-	    malloc (_dl_global_scope_alloc * sizeof (struct link_map *));
-	  if (new_global == NULL)
-	    {
-	      _dl_global_scope_alloc = 0;
-	    nomem:
-	      new->l_global = 0;
-	      _dl_signal_error (ENOMEM, file, "cannot extend global scope");
-	    }
-
-	  /* Copy over the old entries.  */
-	  memcpy (new_global, _dl_main_searchlist->r_list,
-		  (_dl_main_searchlist->r_nlist * sizeof (struct link_map *)));
-
-	  _dl_main_searchlist->r_list = new_global;
-	}
-      else if (_dl_main_searchlist->r_nlist == _dl_global_scope_alloc)
-	{
-	  /* We have to extend the existing array of link maps in the
-	     main map.  */
-	  new_global = (struct link_map **)
-	    realloc (_dl_main_searchlist->r_list,
-		     ((_dl_global_scope_alloc + 8)
-		      * sizeof (struct link_map *)));
-	  if (new_global == NULL)
-	    goto nomem;
-
-	  _dl_global_scope_alloc += 8;
-	  _dl_main_searchlist->r_list = new_global;
-	}
-
-      /* Now add the new entry.  */
-      _dl_main_searchlist->r_list[_dl_main_searchlist->r_nlist] = new;
-
-      /* XXX Do we have to add something to r_dupsearchlist???  --drepper */
-    }
-
-
   /* Notify the debugger we have added some objects.  We need to call
      _dl_debug_initialize in a static program in case dynamic linking has
      not been used before.  */
@@ -201,7 +137,7 @@ dl_open_worker (void *a)
 
   if (new->l_global)
     /* Now we can make the new map available in the global scope.  */
-    ++_dl_main_searchlist->r_nlist;
+    _dl_main_searchlist->r_nlist += global_add;
 
   if (_dl_sysdep_start == NULL)
     /* We must be the static _dl_open in libc.a.  A static program that
