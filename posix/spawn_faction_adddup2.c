@@ -42,10 +42,13 @@ posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *file_actions,
     return ENOMEM;
 
   /* Add the new value.  */
-  rec = &file_actions->__actions[file_actions->__allocated];
+  rec = &file_actions->__actions[file_actions->__used];
   rec->tag = spawn_do_dup2;
   rec->action.dup2_action.fd = fd;
   rec->action.dup2_action.newfd = newfd;
+
+  /* Account for the new entry.  */
+  ++file_actions->__used;
 
   return 0;
 }

@@ -1,3 +1,16 @@
+2000-05-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (tests): Add tst-spawn.
+	(tst-spawn-ARGS): New variable.
+	* posix/tst-spawn.c: New file.
+
+	* posix/spawn_faction_addclose.c: Correctly account for new entry.
+	* posix/spawn_faction_adddup2.c: Likewise.
+	* posix/spawn_faction_addopen.c: Likewise.
+	* posix/spawni.c: Correctly test for success of dup2 calls.
+
+	* posix/tst-preadwrite.c: Check success of malloc call.
+
 2000-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add tst-exec.

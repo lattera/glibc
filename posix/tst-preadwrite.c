@@ -59,6 +59,8 @@ do_prepare (int argc, char *argv[])
 
    name_len = strlen (test_dir);
    name = malloc (name_len + sizeof (FNAME));
+   if (name == NULL)
+     error (EXIT_FAILURE, errno, "cannot allocate file name");
    mempcpy (mempcpy (name, test_dir, name_len), FNAME, sizeof (FNAME));
    add_temp_file (name);
 

@@ -175,7 +175,8 @@ __spawni (pid_t *pid, const char *file,
 		/* Make sure the desired file descriptor is used.  */
 		if (new_fd != action->action.open_action.fd)
 		  {
-		    if (__dup2 (new_fd, action->action.open_action.fd) != 0)
+		    if (__dup2 (new_fd, action->action.open_action.fd)
+			!= action->action.open_action.fd)
 		      /* The `dup2' call failed.  */
 		      _exit (SPAWN_ERROR);
 
@@ -188,7 +189,8 @@ __spawni (pid_t *pid, const char *file,
 
 	    case spawn_do_dup2:
 	      if (__dup2 (action->action.dup2_action.fd,
-			  action->action.dup2_action.newfd) != 0)
+			  action->action.dup2_action.newfd)
+		  != action->action.dup2_action.newfd)
 		/* The `dup2' call failed.  */
 		_exit (SPAWN_ERROR);
 	      break;

@@ -66,7 +66,7 @@ aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-preadwrite tst-preadwrite64 test-vfork regexbug1 \
 		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
-		   tst-truncate64 tst-fork tst-exec
+		   tst-truncate64 tst-fork tst-exec tst-spawn
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test
@@ -106,6 +106,7 @@ tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random
 
 tst-exec-ARGS = -- $(built-program-cmd)
+tst-spawn-ARGS = -- $(built-program-cmd)
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)
 lib: $(objpfx)libposix.a

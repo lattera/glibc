@@ -43,12 +43,15 @@ posix_spawn_file_actions_addopen (posix_spawn_file_actions_t *file_actions,
     return ENOMEM;
 
   /* Add the new value.  */
-  rec = &file_actions->__actions[file_actions->__allocated];
+  rec = &file_actions->__actions[file_actions->__used];
   rec->tag = spawn_do_open;
   rec->action.open_action.fd = fd;
   rec->action.open_action.path = path;
   rec->action.open_action.oflag = oflag;
   rec->action.open_action.mode = mode;
+
+  /* Account for the new entry.  */
+  ++file_actions->__used;
 
   return 0;
 }
