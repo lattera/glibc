@@ -49,9 +49,11 @@ extern void _dl_sysinfo_int80 (void) attribute_hidden;
   asm (".text\n\t"							      \
        ".type _dl_sysinfo_int80,@function\n\t"				      \
        ".hidden _dl_sysinfo_int80\n"					      \
+       CFI_STARTPROC "\n"						      \
        "_dl_sysinfo_int80:\n\t"						      \
        "int $0x80;\n\t"							      \
        "ret;\n\t"							      \
+       CFI_ENDPROC "\n"							      \
        ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80\n\t"		      \
        ".previous");
 #endif

@@ -51,41 +51,14 @@ extern void _dl_sysinfo_int80 (void) attribute_hidden;
 # define DL_SYSINFO_IMPLEMENTATION \
   asm (".text\n\t"							      \
        ".type _dl_sysinfo_int80,@function\n\t"				      \
-       ".hidden _dl_sysinfo_int80\n"					      \
+       ".hidden _dl_sysinfo_int80\n\t"					      \
+       CFI_STARTPROC "\n"						      \
        "_dl_sysinfo_int80:\n\t"						      \
        "int $0x80;\n\t"							      \
        "ret;\n\t"							      \
-       ".LEND_dl_sysinfo_int80\n\t"					      \
+       CFI_ENDPROC "\n"							      \
        ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80\n\t"		      \
-       ".previous;\n\t"							      \
-       ".section .eh_frame,\"a\",@progbits\n"				      \
-       ".LSTARTFRAMEDLSI:\n\t"						      \
-       ".long .LENDCIEDLSI-.LSTARTCIEDLSI\n"				      \
-       ".LSTARTCIEDLSI:\n\t"						      \
-       ".long 0\n\t"		/* CIE ID */				      \
-       ".byte 1\n\t"		/* Version number */			      \
-       ".string \"zR\"\n\t"	/* NUL-terminated augmentation string */      \
-       ".uleb128 1\n\t"		/* Code alignment factor */		      \
-       ".sleb128 -4\n\t"	/* Data alignment factor */		      \
-       ".byte 8\n\t"		/* Return address register column */	      \
-       ".uleb128 1\n\t"		/* Augmentation value length */		      \
-       ".byte 0x1b\n\t"		/* DW_EH_PE_pcrel|DW_EH_PE_sdata4. */	      \
-       ".byte 0x0c\n\t"		/* DW_CFA_def_cfa */			      \
-       ".uleb128 4\n\t"							      \
-       ".uleb128 4\n\t"							      \
-       ".byte 0x88\n\t"		/* DW_CFA_offset, column 0x8 */		      \
-       ".uleb128 1\n\t"							      \
-       ".align 4\n"							      \
-       ".LENDCIEDLSI:\n\t"						      \
-       ".long .LENDFDEDLSI-.LSTARTFDEDLSI\n"	/* Length FDE */	      \
-       ".LSTARTFDEDLSI:\n\t"						      \
-       ".long .LSTARTFDEDLSI-.LSTARTFRAMEDLSI\n\t" /* CIE pointer */	      \
-       ".long _dl_sysinfo_int80-.\n\t"	/* PC-relative start address */	      \
-       ".long .LEND_dl_sysinfo_int80-_dl_sysinfo_int80\n\t"		      \
-       ".uleb128 0\n\t"							      \
-       ".align 4\n"							      \
-       ".LENDFDEDLSI:\n\t"						      \
-       ".previous");
+       ".previous;");
 #endif
 
 #endif	/* dl-sysdep.h */

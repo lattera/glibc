@@ -1,5 +1,10 @@
 2003-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h
+	(DL_SYSINFO_IMPLEMENTATION): Use CFI opcodes.
+	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h
+	(DL_SYSINFO_IMPLEMENTATION): Likewise.
+
 	* pthreadP.h (LIBC_CANCEL_ASYNC): Also define for librt.
 	(LIBC_CANCEL_RESET): Likewise.
 	Declare __librt_enable_asynccancel and __librt_disable_asynccancel.
