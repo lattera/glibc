@@ -896,8 +896,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  }
       else
 	{
-	  /* Unless LD_WARN is set warn do not about undefined symbols.  */
-	  if (_dl_lazy >= 0 && !_dl_verbose)
+	  /* If LD_WARN is set warn about undefined symbols.  */
+	  if (_dl_lazy >= 0 && _dl_verbose)
 	    {
 	      /* We have to do symbol dependency testing.  */
 	      struct relocate_args args;

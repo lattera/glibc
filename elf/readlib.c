@@ -51,17 +51,18 @@ struct known_names
 static struct known_names interpreters [] =
 {
   {"/lib/" LD_SO, FLAG_ELF_LIBC6},
-  {"/lib/ld-linux.so.1", FLAG_ELF_LIBC5}
+#ifdef SYSDEP_KNOWN_INTERPRETER_NAMES
+  SYSDEP_KNOWN_INTERPRETER_NAMES
+#endif
 };
 
 static struct known_names known_libs [] =
 {
-  /* Old names:  */
-  {"libc.so.5", FLAG_ELF_LIBC5},
-  {"libm.so.5", FLAG_ELF_LIBC5},
-  /* Current names:  */
   {LIBC_SO, FLAG_ELF_LIBC6},
-  {LIBM_SO, FLAG_ELF_LIBC6}
+  {LIBM_SO, FLAG_ELF_LIBC6},
+#ifdef SYSDEP_KNOWN_LIBRARY_NAMES
+  SYSDEP_KNOWN_LIBRARY_NAMES
+#endif
 };
 
 

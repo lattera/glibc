@@ -60,7 +60,10 @@ io_offset (unsigned long int port)
 int
 _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 {
+#if 0
   unsigned long int addr, len, base;
+#endif
+  unsigned long int base;
   int prot;
 
   /* this test isn't as silly as it may look like; consider overflows! */

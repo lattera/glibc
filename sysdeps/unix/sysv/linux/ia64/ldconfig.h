@@ -1,7 +1,5 @@
-/* Enable floating-point exceptions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jes Sorensen <Jes.Sorensen@cern.ch>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,20 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <sysdeps/generic/ldconfig.h>
 
-int
-feenableexcept (int excepts)
-{
-  fenv_t old_fpsr;
-  fenv_t new_fpsr;
-
-  /* Get the current fpsr.  */
-  __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (old_fpsr));
-
-  new_fpsr = old_fpsr & ~((fenv_t) excepts & FE_ALL_EXCEPT);
-
-  __asm__ __volatile__ ("mov.m ar.fpsr=%0" :: "r" (new_fpsr) : "memory");
-
-  return (old_fpsr ^ FE_ALL_EXCEPT) & FE_ALL_EXCEPT;
-}
+#define SYSDEP_KNOWN_INTERPRETER_NAMES \
+  { "/lib/ld-linux.so.2", FLAG_ELF_LIBC6 },
+#define SYSDEP_KNOWN_LIBRARY_NAMES \
+  { "libc.so.6", FLAG_ELF_LIBC6 },	\
+  { "libm.so.6", FLAG_ELF_LIBC6 },

@@ -1,3 +1,38 @@
+2001-03-07  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/bits/fenv.h (FE_NONIEEE_ENV): New macro.
+
+2001-03-07  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/ioperm.c (_ioperm): Remove unused
+	variables addr & len.
+
+2001-02-22  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/fpu/feenablxcpt.c (feenableexcept): Remove
+	punctuation in asm constraint.
+
+2001-03-07  Mark Kettenis  <kettenis@gnu.org>
+
+	* resolv/netdb.h [__USE_GNU]: Define __need_timespec and include
+	<time.h> to get definition of `struct timespec'.
+
+2001-03-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dl_main): If tracing, warn about undefined symbols if
+	LD_WARN=1, not if LD_WARN is unset.
+
+2001-03-07  Andreas Schwab  <schwab@suse.de>
+
+	* elf/ldconfig.h: Moved to ...
+	* sysdeps/generic/ldconfig.h: ... here.
+	* sysdeps/unix/sysv/linux/i386/ldconfig.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/ldconfig.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/ldconfig.h: New file.
+	* elf/readlib.c (interpreters, known_libs): Use
+	SYSDEP_KNOWN_INTERPRETER_NAMES and SYSDEP_KNOWN_LIBRARY_NAMES
+	instead of hard coding old names.
+
 2001-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/Makefile (generated): Add test-gencat.h.

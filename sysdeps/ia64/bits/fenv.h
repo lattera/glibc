@@ -79,4 +79,9 @@ typedef unsigned long int fenv_t;
 /* Floating-point environment where only FE_UNNORMAL is masked since this
    exception is not generally supported by glibc.  */
 # define FE_NOMASK_ENV	((__const fenv_t *) 0xc009804c02700302UL)
+
+/* Floating-point environment with (processor-dependent) non-IEEE
+   floating point.  In this case, turning on flush-to-zero mode for
+   s0, s2, and s3.  */
+# define FE_NONIEEE_ENV ((__const fenv_t *) 0xc009a04d0270037fUL)
 #endif

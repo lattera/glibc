@@ -36,6 +36,8 @@
 #ifdef __USE_GNU
 # define __need_sigevent_t
 # include <bits/siginfo.h>
+# define __need_timespec
+# include <time.h>
 #endif
 
 #include <bits/netdb.h>
@@ -500,7 +502,7 @@ extern int getaddrinfo_a (int __mode, struct gaicb *__list[__restrict_arr],
    in LIST is handled.  If TIMEOUT is not a null pointer it specifies the
    longest time the function keeps waiting before returning with an error.  */
 extern int gai_suspend (__const struct gaicb *__const __list[], int __ent,
-			const struct timespec *__timeout) __THROW;
+			__const struct timespec *__timeout) __THROW;
 
 /* Get the error status of the request REQ.  */
 extern int gai_error (struct gaicb *__req) __THROW;
