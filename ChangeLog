@@ -1,3 +1,8 @@
+Thu Jul 18 11:42:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* crypt/Makefile (lib-noranlib): Depend on
+	$(objpfx)libcrypt.so$(libcrypt.so-version).
+
 Thu Jul 18 04:33:21 1996  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/errnos.awk: Move EWOULDBLOCK check before errno==0
@@ -9,17 +14,17 @@ Thu Jul 18 04:27:21 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 Wed Jul 17 10:54:20 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
-	* sysdeps/unix/sysv/linux/alpha/start.S: Move to ...
-	* sysdeps/alpha/elf/start.S: here.
-
 	* misc/sys/ustat.h: New file.
 	* misc/ustat.h: Ditto.
 	* sysdeps/generic/ustatbits.h: Ditto.
-	* libc-orig/sysdeps/stub/ustat.c: Ditto.
+	* sysdeps/stub/ustat.c: Ditto.
 	* sysdeps/unix/sysv/linux/ustatbits.h: Ditto.
 	* misc/Makefile (headers): Mention ustat.h, sys/ustat.h, and
  	ustatbits.h.
 	(routines): Mention ustat.
+
+	* sysdeps/unix/sysv/linux/alpha/start.S: Move to ...
+	* sysdeps/alpha/elf/start.S: here.
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Mention klogctl in
  	alphabetically correct place.  Mention ustat.
