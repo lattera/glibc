@@ -1,3 +1,10 @@
+Sun Feb 19 20:10:43 1995  Brendan Kehoe  <brendan@zen.org>
+
+	* sysdeps/sparc/mul.S: Renamed to `dotmul.S'.
+        * sysdeps/sparc/Makefile (routines): Reference `dotmul.S', not `mul.S',
+        to avoid a misreference that would override sysdeps/generic/mul.c.
+	* sysdeps/sparc/Dist: Likewise.
+
 Sun Feb 19 17:46:13 1995  Roland McGrath  <roland@duality.gnu.ai.mit.edu>
 
 	* posix/Makefile (aux): Add environ.
