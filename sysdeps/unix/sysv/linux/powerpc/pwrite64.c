@@ -24,13 +24,6 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#ifdef __NR_pwrite64            /* Newer kernels renamed but it's the same.  */
-# ifdef __NR_pwrite
-#  error "__NR_pwrite and __NR_pwrite64 both defined???"
-# endif
-# define __NR_pwrite __NR_pwrite64
-#endif
-
 #ifdef __NR_pwrite
 
 extern ssize_t __syscall_pwrite (int fd, const void *buf, size_t count,
@@ -50,7 +43,7 @@ __libc_pwrite64 (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count, offset);
+  result = __syscall_pwrite (fd, CHECK_N (buf, count), count, offset);
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pwrite64 (fd, buf, count, offset);

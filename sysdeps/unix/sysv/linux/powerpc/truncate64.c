@@ -48,7 +48,7 @@ truncate64 (path, length)
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       int saved_errno = errno;
 #endif
-      int result = INLINE_SYSCALL (truncate64, 2, CHECK_STRING (path), length);
+      int result = __syscall_truncate64 (CHECK_STRING (path), length);
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       if (result != -1 || errno != ENOSYS)

@@ -1,3 +1,21 @@
+2002-11-05  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Handle
+	__NR_pread64 and __NR_pwrite64.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pread.c: Remove __NR_pread64
+	and __NR_pwrite64.
+	Revert change to use INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/ftruncate64.c: Revert change to use
+	INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/powerpc/truncate64.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h (INLINE_SYSCALL):
+	Update clobber list and add a comment about the syscall ABI.
+
 2002-11-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconv/gconv_dl.c (free_mem): Clear loaded.

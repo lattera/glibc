@@ -24,13 +24,6 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#ifdef __NR_pread64             /* Newer kernels renamed but it's the same.  */
-# ifdef __NR_pread
-#  error "__NR_pread and __NR_pread64 both defined???"
-# endif
-# define __NR_pread __NR_pread64
-#endif
-
 #ifdef __NR_pread
 
 extern ssize_t __syscall_pread (int fd, void *buf, size_t count,
@@ -50,7 +43,7 @@ __libc_pread (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (pread, 4, fd, CHECK_N (buf, count), count, offset);
+  result = __syscall_pread (fd, CHECK_N (buf, count), count, (off64_t) offset);
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pread (fd, buf, count, offset);
