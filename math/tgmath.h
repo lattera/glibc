@@ -71,7 +71,7 @@
 # define __TGMATH_BINARY_FIRST_REAL_ONLY(Val1, Val2, Fct) \
      (__extension__ ({ __tgmath_real_type (Val1) __tgmres;		      \
 		       if (sizeof (Val1) == sizeof (double)		      \
-			   || __builtin_classify_type (Val) != 8)	      \
+			   || __builtin_classify_type (Val1) != 8)	      \
 			 __tgmres = Fct (Val1, Val2);			      \
 		       else if (sizeof (Val1) == sizeof (float))	      \
 			 __tgmres = Fct##f (Val1, Val2);		      \
@@ -83,28 +83,30 @@
      (__extension__ ({ __tgmath_real_type ((Val1) + (Val2)) __tgmres;	      \
 		       if ((sizeof (Val1) > sizeof (double)		      \
 			    || sizeof (Val2) > sizeof (double))		      \
-			   && __builtin_classify_type (Val) == 8)	      \
+			   && __builtin_classify_type ((Val1) + (Val2)) == 8) \
 			 __tgmres = Fct##l (Val1, Val2);		      \
 		       else if (sizeof (Val1) == sizeof (double)	      \
 				|| sizeof (Val2) == sizeof (double)	      \
-				|| __builtin_classify_type (Val) != 8)	      \
+				|| __builtin_classify_type ((Val1)	      \
+							    + (Val2)) != 8)   \
 			 __tgmres = Fct (Val1, Val2);			      \
 		       else						      \
-			 __tgmres = Fct (Val1, Val2);			      \
+			 __tgmres = Fct##f (Val1, Val2);		      \
 		       __tgmres; }))
 
 # define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
      (__extension__ ({ __tgmath_real_type ((Val1) + (Val2)) __tgmres;	      \
 		       if ((sizeof (Val1) > sizeof (double)		      \
 			    || sizeof (Val2) > sizeof (double))		      \
-			   && __builtin_classify_type (Val) == 8)	      \
+			   && __builtin_classify_type ((Val1) + (Val2)) == 8) \
 			 __tgmres = Fct##l (Val1, Val2, Val3);		      \
 		       else if (sizeof (Val1) == sizeof (double)	      \
 				|| sizeof (Val2) == sizeof (double)	      \
-				|| __builtin_classify_type (Val) != 8)	      \
+				|| __builtin_classify_type ((Val1)	      \
+							    + (Val2)) != 8)   \
 			 __tgmres = Fct (Val1, Val2, Val3);		      \
 		       else						      \
-			 __tgmres = Fct (Val1, Val2, Val3);		      \
+			 __tgmres = Fct##f (Val1, Val2, Val3);		      \
 		       __tgmres; }))
 
 # define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct) \
@@ -112,15 +114,17 @@
 		       if ((sizeof (Val1) > sizeof (double)		      \
 			    || sizeof (Val2) > sizeof (double)		      \
 			    || sizeof (Val3) > sizeof (double))		      \
-			   && __builtin_classify_type (Val) == 8)	      \
+			   && __builtin_classify_type ((Val1) + (Val2)	      \
+						       + (Val3)) == 8)	      \
 			 __tgmres = Fct##l (Val1, Val2, Val3);		      \
 		       else if (sizeof (Val1) == sizeof (double)	      \
 				|| sizeof (Val2) == sizeof (double)	      \
 				|| sizeof (Val3) == sizeof (double)	      \
-				|| __builtin_classify_type (Val) != 8)	      \
+				|| __builtin_classify_type ((Val1) + (Val2)   \
+							    + (Val3)) != 8)   \
 			 __tgmres = Fct (Val1, Val2, Val3);		      \
 		       else						      \
-			 __tgmres = Fct (Val1, Val2, Val3);		      \
+			 __tgmres = Fct##f (Val1, Val2, Val3);		      \
 		       __tgmres; }))
 
 /* XXX This definition has to be changed as soon as the compiler understands
@@ -136,8 +140,8 @@
 			     __tgmres = Cfct##l (Val);			      \
 			 }						      \
 		       else if (sizeof (__real__ (Val)) == sizeof (double)    \
-				|| (__builtin_classify_type (__real__ (Val))  \
-				    != 8)				      \
+				|| __builtin_classify_type (__real__ (Val))   \
+				   != 8)				      \
 			 {						      \
 			   if (sizeof (__real__ (Val)) == sizeof (Val))	      \
 			     __tgmres = Fct (Val);			      \
@@ -172,7 +176,9 @@
      (__extension__ ({ __tgmath_real_type ((Val1) + (Val2)) __tgmres;	      \
 		       if ((sizeof (__real__ (Val1)) > sizeof (double)	      \
 			    || sizeof (__real__ (Val2)) > sizeof (double))    \
-			   && __builtin_classify_type (__real__ (Val)) == 8)  \
+			   && __builtin_classify_type (__real__ (Val1)	      \
+						       + __real__ (Val2))     \
+			      == 8)					      \
 			 {						      \
 			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
 			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
@@ -182,8 +188,9 @@
 			 }						      \
 		       else if (sizeof (__real__ (Val1)) == sizeof (double)   \
 				|| sizeof (__real__ (Val2)) == sizeof(double) \
-				|| (__builtin_classify_type (__real__ (Val))  \
-				    != 8)				      \
+				|| __builtin_classify_type (__real__ (Val1)   \
+							    + __real__ (Val2))\
+				   != 8)				      \
 			 {						      \
 			   if (sizeof (__real__ (Val1)) == sizeof (Val1)      \
 			       && sizeof (__real__ (Val2)) == sizeof (Val2))  \
@@ -388,7 +395,7 @@
 
 
 /* Multiply-add function computed as a ternary operation.  */
-#define fma(Vat1, Val2, Val3) \
+#define fma(Val1, Val2, Val3) \
      __TGMATH_TERNARY_REAL_ONLY (Val1, Val2, Val3, fma)
 
 

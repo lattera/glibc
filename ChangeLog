@@ -1,3 +1,14 @@
+2001-01-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/tgmath.h (__TGMATH_BINARY_FIRST_REAL_ONLY,
+	__TGMATH_BINARY_REAL_ONLY, __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY,
+	__TGMATH_TERNARY_REAL_ONLY): Use proper arguments to
+	__builtin_classify_type, add ##f suffixes where appropriate.
+	(__TGMATH_UNARY_REAL_IMAG): Remove extraneous left parenthesis.
+	(__TGMATH_BINARY_REAL_IMAG): Likewise, use proper arguments to
+	__builtin_classify_type.
+	(fma): Fix spelling of first argument.
+
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/data/unistd.h-data: Mark functions removed in XPG6
