@@ -1,3 +1,12 @@
+2001-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/fts.h: Prevent using <fts.h> with _FILE_OFFSET_BITS=64.
+
+2001-11-04  Joseph S. Myers  <jsm28@cam.ac.uk>
+
+	* manual/string.texi: Fix typos.
+	* manual/examples/argp-ex2.c: Likewise.
+
 2001-11-05  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/powerpc/elf/sysdep.h: Remove this file, because it overrides
@@ -47,9 +56,9 @@
 
 2001-10-31  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
-	* sysdeps/unix/sysv/linux/s390/s390-32/register-dump (REGISTER_DUMP):
+	* sysdeps/unix/sysv/linux/s390/s390-32/register-dump.h (REGISTER_DUMP):
 	Correct second argument of register_dump call.
-	* sysdeps/unix/sysv/linux/s390/s390-64/register-dump (REGISTER_DUMP):
+	* sysdeps/unix/sysv/linux/s390/s390-64/register-dump.h (REGISTER_DUMP):
 	Likewise.
 
 2001-10-31  Ulrich Drepper  <drepper@redhat.com>

@@ -35,6 +35,13 @@
 #include <features.h>
 #include <sys/types.h>
 
+/* The fts interface is incompatible with the LFS interface which
+   transparently uses the 64-bit file access functions.  */
+#ifdef __USE_FILE_OFFSET64
+# error "<fts.h> cannot be used with -D_FILE_OFFSET_BITS==64"
+#endif
+
+
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */
 	struct _ftsent *fts_child;	/* linked list of children */
