@@ -10,6 +10,7 @@ Wed Apr 19 18:12:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
  	$sysnames, append &/elf after each elt appended to $mach.
 
 Tue Apr 18 14:00:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
 	* configure.in (libc_cv_asm_global_directive): New check to define
  	ASM_GLOBAL_DIRECTIVE.
 	* config.h.in: Add #undef ASM_GLOBAL_DIRECTIVE.
